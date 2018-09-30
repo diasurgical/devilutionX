@@ -1,0 +1,14 @@
+---
+IndentWidth: 4
+TabWidth: 4
+---
+Language: Cpp
+UseTab: ForIndentation
+AlignTrailingComments: false
+BreakBeforeBraces: Linux
+ColumnLimit: 120
+IncludeBlocks: Preserve
+AlignEscapedNewlines: DontAlign
+AlignOperands: true
+AllowShortFunctionsOnASingleLine: Inline
+Standard: Cpp11

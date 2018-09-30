@@ -1,0 +1,3 @@
+/home/krash/CLionProjects/devil-nightly/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/krash/CLionProjects/devil-nightly/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/krash/CLionProjects/devil-nightly/cmake-build-debug/CMakeFiles/devil-test.dir
