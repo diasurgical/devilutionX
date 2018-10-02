@@ -42,25 +42,25 @@ miniwin.h
 
 ../Stub/sound.h
 
-/home/krash/CLionProjects/devil-nightly/3rdParty/PKWare/explode.cpp
+/home/krash/CLionProjects/devilutionX/3rdParty/PKWare/explode.cpp
 assert.h
 -
 string.h
 -
 pkware.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/PKWare/pkware.h
+/home/krash/CLionProjects/devilutionX/3rdParty/PKWare/pkware.h
 
-/home/krash/CLionProjects/devil-nightly/3rdParty/PKWare/implode.cpp
+/home/krash/CLionProjects/devilutionX/3rdParty/PKWare/implode.cpp
 assert.h
 -
 string.h
 -
 pkware.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/PKWare/pkware.h
+/home/krash/CLionProjects/devilutionX/3rdParty/PKWare/pkware.h
 
-/home/krash/CLionProjects/devil-nightly/3rdParty/PKWare/pkware.h
+/home/krash/CLionProjects/devilutionX/3rdParty/PKWare/pkware.h
 
-/home/krash/CLionProjects/devil-nightly/3rdParty/Storm/Source/storm.h
+/home/krash/CLionProjects/devilutionX/3rdParty/Storm/Source/storm.h
 windows.h
 -
 winuser.h
@@ -70,111 +70,111 @@ winsock.h
 ddraw.h
 -
 miniwin.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/Storm/Source/miniwin.h
+/home/krash/CLionProjects/devilutionX/3rdParty/Storm/Source/miniwin.h
 
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/FileStream.cpp
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/FileStream.cpp
 StormLib.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/StormLib.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/StormLib.h
 StormCommon.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/StormCommon.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/StormCommon.h
 FileStream.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/FileStream.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/FileStream.h
 
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/FileStream.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/FileStream.h
 
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/SBaseCommon.cpp
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SBaseCommon.cpp
 StormLib.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/StormLib.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/StormLib.h
 StormCommon.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/StormCommon.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/StormCommon.h
 
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/SBaseFileTable.cpp
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SBaseFileTable.cpp
 StormLib.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/StormLib.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/StormLib.h
 StormCommon.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/StormCommon.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/StormCommon.h
 
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/SBaseSubTypes.cpp
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SBaseSubTypes.cpp
 StormLib.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/StormLib.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/StormLib.h
 StormCommon.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/StormCommon.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/StormCommon.h
 
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/SCompression.cpp
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SCompression.cpp
 StormLib.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/StormLib.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/StormLib.h
 StormCommon.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/StormCommon.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/StormCommon.h
 
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/SFileExtractFile.cpp
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SFileExtractFile.cpp
 StormLib.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/StormLib.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/StormLib.h
 StormCommon.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/StormCommon.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/StormCommon.h
 
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/SFileFindFile.cpp
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SFileFindFile.cpp
 StormLib.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/StormLib.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/StormLib.h
 StormCommon.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/StormCommon.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/StormCommon.h
 
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/SFileGetFileInfo.cpp
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SFileGetFileInfo.cpp
 StormLib.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/StormLib.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/StormLib.h
 StormCommon.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/StormCommon.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/StormCommon.h
 
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/SFileOpenArchive.cpp
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SFileOpenArchive.cpp
 StormLib.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/StormLib.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/StormLib.h
 StormCommon.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/StormCommon.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/StormCommon.h
 
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/SFileOpenFileEx.cpp
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SFileOpenFileEx.cpp
 StormLib.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/StormLib.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/StormLib.h
 StormCommon.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/StormCommon.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/StormCommon.h
 
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/SFileReadFile.cpp
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SFileReadFile.cpp
 StormLib.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/StormLib.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/StormLib.h
 StormCommon.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/StormCommon.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/StormCommon.h
 
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/StormCommon.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/StormCommon.h
 3rdParty/PKWare/pkware.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/3rdParty/PKWare/pkware.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/3rdParty/PKWare/pkware.h
 huffman/huff.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/huffman/huff.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/huffman/huff.h
 adpcm/adpcm.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/adpcm/adpcm.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/adpcm/adpcm.h
 sparse/sparse.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/sparse/sparse.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/sparse/sparse.h
 lzma/C/LzmaEnc.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/lzma/C/LzmaEnc.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/lzma/C/LzmaEnc.h
 lzma/C/LzmaDec.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/lzma/C/LzmaDec.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/lzma/C/LzmaDec.h
 zlib/zlib.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/zlib/zlib.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/zlib/zlib.h
 zlib.h
 -
 bzip2/bzlib.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/bzip2/bzlib.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/bzip2/bzlib.h
 bzlib.h
 -
 libtomcrypt/src/headers/tomcrypt.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/libtomcrypt/src/headers/tomcrypt.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/libtomcrypt/src/headers/tomcrypt.h
 jenkins/lookup.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/jenkins/lookup.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/jenkins/lookup.h
 
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/StormLib.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/StormLib.h
 StormPort.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/StormPort.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/StormPort.h
 ../storm_dll/storm_dll.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/storm_dll/storm_dll.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/storm_dll/storm_dll.h
 
-/home/krash/CLionProjects/devil-nightly/3rdParty/StormLib/src/StormPort.h
+/home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/StormPort.h
 tchar.h
 -
 assert.h
@@ -232,371 +232,371 @@ assert.h
 errno.h
 -
 
-/home/krash/CLionProjects/devil-nightly/DiabloUI/diabloui.h
+/home/krash/CLionProjects/devilutionX/DiabloUI/diabloui.h
 
-/home/krash/CLionProjects/devil-nightly/Source/appfat.h
+/home/krash/CLionProjects/devilutionX/Source/appfat.h
 
-/home/krash/CLionProjects/devil-nightly/Source/automap.cpp
+/home/krash/CLionProjects/devilutionX/Source/automap.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/automap.h
+/home/krash/CLionProjects/devilutionX/Source/automap.h
 
-/home/krash/CLionProjects/devil-nightly/Source/capture.h
+/home/krash/CLionProjects/devilutionX/Source/capture.h
 
-/home/krash/CLionProjects/devil-nightly/Source/codec.cpp
+/home/krash/CLionProjects/devilutionX/Source/codec.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/codec.h
+/home/krash/CLionProjects/devilutionX/Source/codec.h
 
-/home/krash/CLionProjects/devil-nightly/Source/control.cpp
+/home/krash/CLionProjects/devilutionX/Source/control.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/control.h
+/home/krash/CLionProjects/devilutionX/Source/control.h
 
-/home/krash/CLionProjects/devil-nightly/Source/cursor.cpp
+/home/krash/CLionProjects/devilutionX/Source/cursor.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/cursor.h
+/home/krash/CLionProjects/devilutionX/Source/cursor.h
 
-/home/krash/CLionProjects/devil-nightly/Source/dead.cpp
+/home/krash/CLionProjects/devilutionX/Source/dead.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/dead.h
+/home/krash/CLionProjects/devilutionX/Source/dead.h
 
-/home/krash/CLionProjects/devil-nightly/Source/debug.cpp
+/home/krash/CLionProjects/devilutionX/Source/debug.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/debug.h
+/home/krash/CLionProjects/devilutionX/Source/debug.h
 
-/home/krash/CLionProjects/devil-nightly/Source/diablo.cpp
+/home/krash/CLionProjects/devilutionX/Source/diablo.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/diablo.h
+/home/krash/CLionProjects/devilutionX/Source/diablo.h
 
-/home/krash/CLionProjects/devil-nightly/Source/doom.cpp
+/home/krash/CLionProjects/devilutionX/Source/doom.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/doom.h
+/home/krash/CLionProjects/devilutionX/Source/doom.h
 
-/home/krash/CLionProjects/devil-nightly/Source/drlg_l1.cpp
+/home/krash/CLionProjects/devilutionX/Source/drlg_l1.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/drlg_l1.h
+/home/krash/CLionProjects/devilutionX/Source/drlg_l1.h
 
-/home/krash/CLionProjects/devil-nightly/Source/drlg_l2.cpp
+/home/krash/CLionProjects/devilutionX/Source/drlg_l2.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/drlg_l2.h
+/home/krash/CLionProjects/devilutionX/Source/drlg_l2.h
 
-/home/krash/CLionProjects/devil-nightly/Source/drlg_l3.cpp
+/home/krash/CLionProjects/devilutionX/Source/drlg_l3.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/drlg_l3.h
+/home/krash/CLionProjects/devilutionX/Source/drlg_l3.h
 
-/home/krash/CLionProjects/devil-nightly/Source/drlg_l4.cpp
+/home/krash/CLionProjects/devilutionX/Source/drlg_l4.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/drlg_l4.h
+/home/krash/CLionProjects/devilutionX/Source/drlg_l4.h
 
-/home/krash/CLionProjects/devil-nightly/Source/dthread.h
+/home/krash/CLionProjects/devilutionX/Source/dthread.h
 
-/home/krash/CLionProjects/devil-nightly/Source/dx.h
+/home/krash/CLionProjects/devilutionX/Source/dx.h
 
-/home/krash/CLionProjects/devil-nightly/Source/effects.h
+/home/krash/CLionProjects/devilutionX/Source/effects.h
 
-/home/krash/CLionProjects/devil-nightly/Source/encrypt.cpp
+/home/krash/CLionProjects/devilutionX/Source/encrypt.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/encrypt.h
+/home/krash/CLionProjects/devilutionX/Source/encrypt.h
 
-/home/krash/CLionProjects/devil-nightly/Source/engine.cpp
+/home/krash/CLionProjects/devilutionX/Source/engine.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/engine.h
+/home/krash/CLionProjects/devilutionX/Source/engine.h
 
-/home/krash/CLionProjects/devil-nightly/Source/error.cpp
+/home/krash/CLionProjects/devilutionX/Source/error.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/error.h
+/home/krash/CLionProjects/devilutionX/Source/error.h
 
-/home/krash/CLionProjects/devil-nightly/Source/fault.h
+/home/krash/CLionProjects/devilutionX/Source/fault.h
 
-/home/krash/CLionProjects/devil-nightly/Source/gamemenu.cpp
+/home/krash/CLionProjects/devilutionX/Source/gamemenu.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/gamemenu.h
+/home/krash/CLionProjects/devilutionX/Source/gamemenu.h
 
-/home/krash/CLionProjects/devil-nightly/Source/gendung.cpp
+/home/krash/CLionProjects/devilutionX/Source/gendung.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/gendung.h
+/home/krash/CLionProjects/devilutionX/Source/gendung.h
 
-/home/krash/CLionProjects/devil-nightly/Source/gmenu.cpp
+/home/krash/CLionProjects/devilutionX/Source/gmenu.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/gmenu.h
+/home/krash/CLionProjects/devilutionX/Source/gmenu.h
 
-/home/krash/CLionProjects/devil-nightly/Source/help.cpp
+/home/krash/CLionProjects/devilutionX/Source/help.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/help.h
+/home/krash/CLionProjects/devilutionX/Source/help.h
 
-/home/krash/CLionProjects/devil-nightly/Source/init.h
+/home/krash/CLionProjects/devilutionX/Source/init.h
 
-/home/krash/CLionProjects/devil-nightly/Source/interfac.cpp
+/home/krash/CLionProjects/devilutionX/Source/interfac.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/interfac.h
+/home/krash/CLionProjects/devilutionX/Source/interfac.h
 
-/home/krash/CLionProjects/devil-nightly/Source/inv.cpp
+/home/krash/CLionProjects/devilutionX/Source/inv.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/inv.h
+/home/krash/CLionProjects/devilutionX/Source/inv.h
 
-/home/krash/CLionProjects/devil-nightly/Source/items.cpp
+/home/krash/CLionProjects/devilutionX/Source/items.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/items.h
+/home/krash/CLionProjects/devilutionX/Source/items.h
 
-/home/krash/CLionProjects/devil-nightly/Source/lighting.cpp
+/home/krash/CLionProjects/devilutionX/Source/lighting.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/lighting.h
+/home/krash/CLionProjects/devilutionX/Source/lighting.h
 
-/home/krash/CLionProjects/devil-nightly/Source/loadsave.cpp
+/home/krash/CLionProjects/devilutionX/Source/loadsave.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/loadsave.h
+/home/krash/CLionProjects/devilutionX/Source/loadsave.h
 
-/home/krash/CLionProjects/devil-nightly/Source/logging.h
+/home/krash/CLionProjects/devilutionX/Source/logging.h
 
-/home/krash/CLionProjects/devil-nightly/Source/mainmenu.cpp
+/home/krash/CLionProjects/devilutionX/Source/mainmenu.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/mainmenu.h
+/home/krash/CLionProjects/devilutionX/Source/mainmenu.h
 
-/home/krash/CLionProjects/devil-nightly/Source/minitext.cpp
+/home/krash/CLionProjects/devilutionX/Source/minitext.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/minitext.h
+/home/krash/CLionProjects/devilutionX/Source/minitext.h
 
-/home/krash/CLionProjects/devil-nightly/Source/missiles.cpp
+/home/krash/CLionProjects/devilutionX/Source/missiles.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/missiles.h
+/home/krash/CLionProjects/devilutionX/Source/missiles.h
 
-/home/krash/CLionProjects/devil-nightly/Source/monster.cpp
+/home/krash/CLionProjects/devilutionX/Source/monster.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/monster.h
+/home/krash/CLionProjects/devilutionX/Source/monster.h
 
-/home/krash/CLionProjects/devil-nightly/Source/movie.h
+/home/krash/CLionProjects/devilutionX/Source/movie.h
 
-/home/krash/CLionProjects/devil-nightly/Source/mpqapi.cpp
+/home/krash/CLionProjects/devilutionX/Source/mpqapi.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/mpqapi.h
+/home/krash/CLionProjects/devilutionX/Source/mpqapi.h
 
-/home/krash/CLionProjects/devil-nightly/Source/msg.cpp
+/home/krash/CLionProjects/devilutionX/Source/msg.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/msg.h
+/home/krash/CLionProjects/devilutionX/Source/msg.h
 
-/home/krash/CLionProjects/devil-nightly/Source/msgcmd.cpp
+/home/krash/CLionProjects/devilutionX/Source/msgcmd.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/msgcmd.h
+/home/krash/CLionProjects/devilutionX/Source/msgcmd.h
 
-/home/krash/CLionProjects/devil-nightly/Source/multi.cpp
+/home/krash/CLionProjects/devilutionX/Source/multi.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/multi.h
+/home/krash/CLionProjects/devilutionX/Source/multi.h
 
-/home/krash/CLionProjects/devil-nightly/Source/nthread.h
+/home/krash/CLionProjects/devilutionX/Source/nthread.h
 
-/home/krash/CLionProjects/devil-nightly/Source/objects.cpp
+/home/krash/CLionProjects/devilutionX/Source/objects.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/objects.h
+/home/krash/CLionProjects/devilutionX/Source/objects.h
 
-/home/krash/CLionProjects/devil-nightly/Source/pack.cpp
+/home/krash/CLionProjects/devilutionX/Source/pack.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/pack.h
+/home/krash/CLionProjects/devilutionX/Source/pack.h
 
-/home/krash/CLionProjects/devil-nightly/Source/palette.cpp
+/home/krash/CLionProjects/devilutionX/Source/palette.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/palette.h
+/home/krash/CLionProjects/devilutionX/Source/palette.h
 
-/home/krash/CLionProjects/devil-nightly/Source/path.cpp
+/home/krash/CLionProjects/devilutionX/Source/path.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/path.h
+/home/krash/CLionProjects/devilutionX/Source/path.h
 
-/home/krash/CLionProjects/devil-nightly/Source/pfile.cpp
+/home/krash/CLionProjects/devilutionX/Source/pfile.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/pfile.h
+/home/krash/CLionProjects/devilutionX/Source/pfile.h
 
-/home/krash/CLionProjects/devil-nightly/Source/player.cpp
+/home/krash/CLionProjects/devilutionX/Source/player.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/player.h
+/home/krash/CLionProjects/devilutionX/Source/player.h
 
-/home/krash/CLionProjects/devil-nightly/Source/plrmsg.cpp
+/home/krash/CLionProjects/devilutionX/Source/plrmsg.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/plrmsg.h
+/home/krash/CLionProjects/devilutionX/Source/plrmsg.h
 
-/home/krash/CLionProjects/devil-nightly/Source/portal.cpp
+/home/krash/CLionProjects/devilutionX/Source/portal.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/portal.h
+/home/krash/CLionProjects/devilutionX/Source/portal.h
 
-/home/krash/CLionProjects/devil-nightly/Source/quests.cpp
+/home/krash/CLionProjects/devilutionX/Source/quests.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/quests.h
+/home/krash/CLionProjects/devilutionX/Source/quests.h
 
-/home/krash/CLionProjects/devil-nightly/Source/render.cpp
+/home/krash/CLionProjects/devilutionX/Source/render.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/render.h
+/home/krash/CLionProjects/devilutionX/Source/render.h
 
-/home/krash/CLionProjects/devil-nightly/Source/restrict.h
+/home/krash/CLionProjects/devilutionX/Source/restrict.h
 
-/home/krash/CLionProjects/devil-nightly/Source/scrollrt.cpp
+/home/krash/CLionProjects/devilutionX/Source/scrollrt.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/scrollrt.h
+/home/krash/CLionProjects/devilutionX/Source/scrollrt.h
 
-/home/krash/CLionProjects/devil-nightly/Source/setmaps.cpp
+/home/krash/CLionProjects/devilutionX/Source/setmaps.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/setmaps.h
+/home/krash/CLionProjects/devilutionX/Source/setmaps.h
 
-/home/krash/CLionProjects/devil-nightly/Source/sha.cpp
+/home/krash/CLionProjects/devilutionX/Source/sha.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/sha.h
+/home/krash/CLionProjects/devilutionX/Source/sha.h
 
-/home/krash/CLionProjects/devil-nightly/Source/sound.h
+/home/krash/CLionProjects/devilutionX/Source/sound.h
 
-/home/krash/CLionProjects/devil-nightly/Source/spells.cpp
+/home/krash/CLionProjects/devilutionX/Source/spells.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/spells.h
+/home/krash/CLionProjects/devilutionX/Source/spells.h
 
-/home/krash/CLionProjects/devil-nightly/Source/stores.cpp
+/home/krash/CLionProjects/devilutionX/Source/stores.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/stores.h
+/home/krash/CLionProjects/devilutionX/Source/stores.h
 
-/home/krash/CLionProjects/devil-nightly/Source/sync.cpp
+/home/krash/CLionProjects/devilutionX/Source/sync.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/sync.h
+/home/krash/CLionProjects/devilutionX/Source/sync.h
 
-/home/krash/CLionProjects/devil-nightly/Source/textdat.cpp
+/home/krash/CLionProjects/devilutionX/Source/textdat.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/textdat.h
+/home/krash/CLionProjects/devilutionX/Source/textdat.h
 
-/home/krash/CLionProjects/devil-nightly/Source/themes.cpp
+/home/krash/CLionProjects/devilutionX/Source/themes.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/themes.h
+/home/krash/CLionProjects/devilutionX/Source/themes.h
 
-/home/krash/CLionProjects/devil-nightly/Source/tmsg.cpp
+/home/krash/CLionProjects/devilutionX/Source/tmsg.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/tmsg.h
+/home/krash/CLionProjects/devilutionX/Source/tmsg.h
 
-/home/krash/CLionProjects/devil-nightly/Source/town.cpp
+/home/krash/CLionProjects/devilutionX/Source/town.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/town.h
+/home/krash/CLionProjects/devilutionX/Source/town.h
 
-/home/krash/CLionProjects/devil-nightly/Source/towners.cpp
+/home/krash/CLionProjects/devilutionX/Source/towners.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/towners.h
+/home/krash/CLionProjects/devilutionX/Source/towners.h
 
-/home/krash/CLionProjects/devil-nightly/Source/track.cpp
+/home/krash/CLionProjects/devilutionX/Source/track.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/track.h
+/home/krash/CLionProjects/devilutionX/Source/track.h
 
-/home/krash/CLionProjects/devil-nightly/Source/trigs.cpp
+/home/krash/CLionProjects/devilutionX/Source/trigs.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/trigs.h
+/home/krash/CLionProjects/devilutionX/Source/trigs.h
 
-/home/krash/CLionProjects/devil-nightly/Source/wave.cpp
+/home/krash/CLionProjects/devilutionX/Source/wave.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Source/wave.h
+/home/krash/CLionProjects/devilutionX/Source/wave.h
 
-/home/krash/CLionProjects/devil-nightly/Stub/SDL_FontCache.cpp
+/home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.cpp
 SDL_FontCache.h
-/home/krash/CLionProjects/devil-nightly/Stub/SDL_FontCache.h
+/home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
 stdio.h
 -
 stdlib.h
@@ -604,81 +604,81 @@ stdlib.h
 string.h
 -
 
-/home/krash/CLionProjects/devil-nightly/Stub/SDL_FontCache.h
+/home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
 SDL.h
-/home/krash/CLionProjects/devil-nightly/Stub/SDL.h
+/home/krash/CLionProjects/devilutionX/Stub/SDL.h
 SDL_ttf.h
-/home/krash/CLionProjects/devil-nightly/Stub/SDL_ttf.h
+/home/krash/CLionProjects/devilutionX/Stub/SDL_ttf.h
 SDL_gpu.h
-/home/krash/CLionProjects/devil-nightly/Stub/SDL_gpu.h
+/home/krash/CLionProjects/devilutionX/Stub/SDL_gpu.h
 stdarg.h
 -
 
-/home/krash/CLionProjects/devil-nightly/Stub/appfat.cpp
+/home/krash/CLionProjects/devilutionX/Stub/appfat.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devil-nightly/Stub/stubs.h
+/home/krash/CLionProjects/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devil-nightly/Stub/capture.cpp
+/home/krash/CLionProjects/devilutionX/Stub/capture.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devil-nightly/Stub/stubs.h
+/home/krash/CLionProjects/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devil-nightly/Stub/diabloui.cpp
+/home/krash/CLionProjects/devilutionX/Stub/diabloui.cpp
 vector
 -
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devil-nightly/Stub/stubs.h
+/home/krash/CLionProjects/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devil-nightly/Stub/dthread.cpp
+/home/krash/CLionProjects/devilutionX/Stub/dthread.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devil-nightly/Stub/stubs.h
+/home/krash/CLionProjects/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devil-nightly/Stub/dx.cpp
+/home/krash/CLionProjects/devilutionX/Stub/dx.cpp
 miniwin_sdl.h
-/home/krash/CLionProjects/devil-nightly/Stub/miniwin_sdl.h
+/home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.h
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devil-nightly/Stub/stubs.h
+/home/krash/CLionProjects/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devil-nightly/Stub/effects.cpp
+/home/krash/CLionProjects/devilutionX/Stub/effects.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
-/home/krash/CLionProjects/devil-nightly/Stub/fault.cpp
+/home/krash/CLionProjects/devilutionX/Stub/fault.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devil-nightly/Stub/stubs.h
+/home/krash/CLionProjects/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devil-nightly/Stub/init.cpp
+/home/krash/CLionProjects/devilutionX/Stub/init.cpp
 dirent.h
 -
 string
 -
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devil-nightly/Stub/stubs.h
+/home/krash/CLionProjects/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devil-nightly/Stub/main_test.cpp
+/home/krash/CLionProjects/devilutionX/Stub/main_test.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 miniwin_sdl.h
-/home/krash/CLionProjects/devil-nightly/Stub/miniwin_sdl.h
+/home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.h
 stubs.h
-/home/krash/CLionProjects/devil-nightly/Stub/stubs.h
+/home/krash/CLionProjects/devilutionX/Stub/stubs.h
 stddef.h
 -
 
-/home/krash/CLionProjects/devil-nightly/Stub/miniwin.cpp
+/home/krash/CLionProjects/devilutionX/Stub/miniwin.cpp
 fcntl.h
 -
 sys/stat.h
@@ -686,11 +686,11 @@ sys/stat.h
 unistd.h
 -
 miniwin.h
-/home/krash/CLionProjects/devil-nightly/Stub/miniwin.h
+/home/krash/CLionProjects/devilutionX/Stub/miniwin.h
 stubs.h
-/home/krash/CLionProjects/devil-nightly/Stub/stubs.h
+/home/krash/CLionProjects/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devil-nightly/Stub/miniwin.h
+/home/krash/CLionProjects/devilutionX/Stub/miniwin.h
 ctype.h
 -
 math.h
@@ -710,19 +710,19 @@ time.h
 x86intrin.h
 -
 miniwin_ddraw.h
-/home/krash/CLionProjects/devil-nightly/Stub/miniwin_ddraw.h
+/home/krash/CLionProjects/devilutionX/Stub/miniwin_ddraw.h
 miniwin_dsound.h
-/home/krash/CLionProjects/devil-nightly/Stub/miniwin_dsound.h
+/home/krash/CLionProjects/devilutionX/Stub/miniwin_dsound.h
 
-/home/krash/CLionProjects/devil-nightly/Stub/miniwin_ddraw.h
+/home/krash/CLionProjects/devilutionX/Stub/miniwin_ddraw.h
 miniwin.h
-/home/krash/CLionProjects/devil-nightly/Stub/miniwin.h
+/home/krash/CLionProjects/devilutionX/Stub/miniwin.h
 
-/home/krash/CLionProjects/devil-nightly/Stub/miniwin_dsound.h
+/home/krash/CLionProjects/devilutionX/Stub/miniwin_dsound.h
 miniwin.h
-/home/krash/CLionProjects/devil-nightly/Stub/miniwin.h
+/home/krash/CLionProjects/devilutionX/Stub/miniwin.h
 
-/home/krash/CLionProjects/devil-nightly/Stub/miniwin_io.cpp
+/home/krash/CLionProjects/devilutionX/Stub/miniwin_io.cpp
 fcntl.h
 -
 sys/stat.h
@@ -730,27 +730,27 @@ sys/stat.h
 unistd.h
 -
 miniwin.h
-/home/krash/CLionProjects/devil-nightly/Stub/miniwin.h
+/home/krash/CLionProjects/devilutionX/Stub/miniwin.h
 stubs.h
-/home/krash/CLionProjects/devil-nightly/Stub/stubs.h
+/home/krash/CLionProjects/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devil-nightly/Stub/miniwin_rand.cpp
+/home/krash/CLionProjects/devilutionX/Stub/miniwin_rand.cpp
 miniwin.h
-/home/krash/CLionProjects/devil-nightly/Stub/miniwin.h
+/home/krash/CLionProjects/devilutionX/Stub/miniwin.h
 stubs.h
-/home/krash/CLionProjects/devil-nightly/Stub/stubs.h
+/home/krash/CLionProjects/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devil-nightly/Stub/miniwin_sdl.cpp
+/home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.cpp
 deque
 -
 miniwin_sdl.h
-/home/krash/CLionProjects/devil-nightly/Stub/miniwin_sdl.h
+/home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.h
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devil-nightly/Stub/stubs.h
+/home/krash/CLionProjects/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devil-nightly/Stub/miniwin_sdl.h
+/home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.h
 assert.h
 -
 SDL2/SDL.h
@@ -760,39 +760,39 @@ SDL_image.h
 SDL_mixer.h
 -
 SDL_FontCache.h
-/home/krash/CLionProjects/devil-nightly/Stub/SDL_FontCache.h
+/home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
 direct.h
 -
 unistd.h
 -
 
-/home/krash/CLionProjects/devil-nightly/Stub/movie.cpp
+/home/krash/CLionProjects/devilutionX/Stub/movie.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devil-nightly/Stub/stubs.h
+/home/krash/CLionProjects/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devil-nightly/Stub/nthread.cpp
+/home/krash/CLionProjects/devilutionX/Stub/nthread.cpp
 algorithm
 -
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devil-nightly/Stub/stubs.h
+/home/krash/CLionProjects/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devil-nightly/Stub/restrict.cpp
+/home/krash/CLionProjects/devilutionX/Stub/restrict.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devil-nightly/Stub/stubs.h
+/home/krash/CLionProjects/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devil-nightly/Stub/sdlrender.cpp
+/home/krash/CLionProjects/devilutionX/Stub/sdlrender.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devil-nightly/Stub/stubs.h
+/home/krash/CLionProjects/devilutionX/Stub/stubs.h
 miniwin_sdl.h
-/home/krash/CLionProjects/devil-nightly/Stub/miniwin_sdl.h
+/home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.h
 SDL2/SDL.h
 -
 SDL_image.h
@@ -800,35 +800,35 @@ SDL_image.h
 SDL_mixer.h
 -
 SDL_FontCache.h
-/home/krash/CLionProjects/devil-nightly/Stub/SDL_FontCache.h
+/home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
 
-/home/krash/CLionProjects/devil-nightly/Stub/sound.cpp
+/home/krash/CLionProjects/devilutionX/Stub/sound.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devil-nightly/Stub/stubs.h
+/home/krash/CLionProjects/devilutionX/Stub/stubs.h
 SDL_image.h
 -
 SDL_mixer.h
 -
 
-/home/krash/CLionProjects/devil-nightly/Stub/storm.cpp
+/home/krash/CLionProjects/devilutionX/Stub/storm.cpp
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devil-nightly/Stub/stubs.h
+/home/krash/CLionProjects/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devil-nightly/Stub/storm_net.cpp
+/home/krash/CLionProjects/devilutionX/Stub/storm_net.cpp
 deque
 -
 string
 -
 ../types.h
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devil-nightly/Stub/stubs.h
+/home/krash/CLionProjects/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devil-nightly/Stub/stubs.h
+/home/krash/CLionProjects/devilutionX/Stub/stubs.h
 SDL2/SDL.h
 -
 SDL_image.h
@@ -836,29 +836,29 @@ SDL_image.h
 SDL_mixer.h
 -
 SDL_FontCache.h
-/home/krash/CLionProjects/devil-nightly/Stub/SDL_FontCache.h
+/home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
 assert.h
 -
 stdio.h
 -
 
-/home/krash/CLionProjects/devil-nightly/defs.h
+/home/krash/CLionProjects/devilutionX/defs.h
 limits
 -
 
-/home/krash/CLionProjects/devil-nightly/enums.h
+/home/krash/CLionProjects/devilutionX/enums.h
 
-/home/krash/CLionProjects/devil-nightly/resource.h
+/home/krash/CLionProjects/devilutionX/resource.h
 
-/home/krash/CLionProjects/devil-nightly/structs.h
+/home/krash/CLionProjects/devilutionX/structs.h
 
-/home/krash/CLionProjects/devil-nightly/types.h
+/home/krash/CLionProjects/devilutionX/types.h
 resource.h
-/home/krash/CLionProjects/devil-nightly/resource.h
+/home/krash/CLionProjects/devilutionX/resource.h
 miniwin.h
-/home/krash/CLionProjects/devil-nightly/miniwin.h
+/home/krash/CLionProjects/devilutionX/miniwin.h
 sound.h
-/home/krash/CLionProjects/devil-nightly/sound.h
+/home/krash/CLionProjects/devilutionX/sound.h
 windows.h
 -
 mmsystem.h
@@ -884,153 +884,153 @@ shellapi.h
 ctype.h
 -
 defs.h
-/home/krash/CLionProjects/devil-nightly/defs.h
+/home/krash/CLionProjects/devilutionX/defs.h
 enums.h
-/home/krash/CLionProjects/devil-nightly/enums.h
+/home/krash/CLionProjects/devilutionX/enums.h
 structs.h
-/home/krash/CLionProjects/devil-nightly/structs.h
+/home/krash/CLionProjects/devilutionX/structs.h
 DiabloUI/diabloui.h
-/home/krash/CLionProjects/devil-nightly/DiabloUI/diabloui.h
+/home/krash/CLionProjects/devilutionX/DiabloUI/diabloui.h
 3rdParty/Storm/Source/storm.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/Storm/Source/storm.h
+/home/krash/CLionProjects/devilutionX/3rdParty/Storm/Source/storm.h
 3rdParty/PKWare/pkware.h
-/home/krash/CLionProjects/devil-nightly/3rdParty/PKWare/pkware.h
+/home/krash/CLionProjects/devilutionX/3rdParty/PKWare/pkware.h
 Source/appfat.h
-/home/krash/CLionProjects/devil-nightly/Source/appfat.h
+/home/krash/CLionProjects/devilutionX/Source/appfat.h
 Source/automap.h
-/home/krash/CLionProjects/devil-nightly/Source/automap.h
+/home/krash/CLionProjects/devilutionX/Source/automap.h
 Source/capture.h
-/home/krash/CLionProjects/devil-nightly/Source/capture.h
+/home/krash/CLionProjects/devilutionX/Source/capture.h
 Source/codec.h
-/home/krash/CLionProjects/devil-nightly/Source/codec.h
+/home/krash/CLionProjects/devilutionX/Source/codec.h
 Source/control.h
-/home/krash/CLionProjects/devil-nightly/Source/control.h
+/home/krash/CLionProjects/devilutionX/Source/control.h
 Source/cursor.h
-/home/krash/CLionProjects/devil-nightly/Source/cursor.h
+/home/krash/CLionProjects/devilutionX/Source/cursor.h
 Source/dead.h
-/home/krash/CLionProjects/devil-nightly/Source/dead.h
+/home/krash/CLionProjects/devilutionX/Source/dead.h
 Source/debug.h
-/home/krash/CLionProjects/devil-nightly/Source/debug.h
+/home/krash/CLionProjects/devilutionX/Source/debug.h
 Source/diablo.h
-/home/krash/CLionProjects/devil-nightly/Source/diablo.h
+/home/krash/CLionProjects/devilutionX/Source/diablo.h
 Source/doom.h
-/home/krash/CLionProjects/devil-nightly/Source/doom.h
+/home/krash/CLionProjects/devilutionX/Source/doom.h
 Source/drlg_l1.h
-/home/krash/CLionProjects/devil-nightly/Source/drlg_l1.h
+/home/krash/CLionProjects/devilutionX/Source/drlg_l1.h
 Source/drlg_l2.h
-/home/krash/CLionProjects/devil-nightly/Source/drlg_l2.h
+/home/krash/CLionProjects/devilutionX/Source/drlg_l2.h
 Source/drlg_l3.h
-/home/krash/CLionProjects/devil-nightly/Source/drlg_l3.h
+/home/krash/CLionProjects/devilutionX/Source/drlg_l3.h
 Source/drlg_l4.h
-/home/krash/CLionProjects/devil-nightly/Source/drlg_l4.h
+/home/krash/CLionProjects/devilutionX/Source/drlg_l4.h
 Source/dthread.h
-/home/krash/CLionProjects/devil-nightly/Source/dthread.h
+/home/krash/CLionProjects/devilutionX/Source/dthread.h
 Source/dx.h
-/home/krash/CLionProjects/devil-nightly/Source/dx.h
+/home/krash/CLionProjects/devilutionX/Source/dx.h
 Source/effects.h
-/home/krash/CLionProjects/devil-nightly/Source/effects.h
+/home/krash/CLionProjects/devilutionX/Source/effects.h
 Source/encrypt.h
-/home/krash/CLionProjects/devil-nightly/Source/encrypt.h
+/home/krash/CLionProjects/devilutionX/Source/encrypt.h
 Source/engine.h
-/home/krash/CLionProjects/devil-nightly/Source/engine.h
+/home/krash/CLionProjects/devilutionX/Source/engine.h
 Source/error.h
-/home/krash/CLionProjects/devil-nightly/Source/error.h
+/home/krash/CLionProjects/devilutionX/Source/error.h
 Source/fault.h
-/home/krash/CLionProjects/devil-nightly/Source/fault.h
+/home/krash/CLionProjects/devilutionX/Source/fault.h
 Source/gamemenu.h
-/home/krash/CLionProjects/devil-nightly/Source/gamemenu.h
+/home/krash/CLionProjects/devilutionX/Source/gamemenu.h
 Source/gendung.h
-/home/krash/CLionProjects/devil-nightly/Source/gendung.h
+/home/krash/CLionProjects/devilutionX/Source/gendung.h
 Source/gmenu.h
-/home/krash/CLionProjects/devil-nightly/Source/gmenu.h
+/home/krash/CLionProjects/devilutionX/Source/gmenu.h
 Source/help.h
-/home/krash/CLionProjects/devil-nightly/Source/help.h
+/home/krash/CLionProjects/devilutionX/Source/help.h
 Source/init.h
-/home/krash/CLionProjects/devil-nightly/Source/init.h
+/home/krash/CLionProjects/devilutionX/Source/init.h
 Source/interfac.h
-/home/krash/CLionProjects/devil-nightly/Source/interfac.h
+/home/krash/CLionProjects/devilutionX/Source/interfac.h
 Source/inv.h
-/home/krash/CLionProjects/devil-nightly/Source/inv.h
+/home/krash/CLionProjects/devilutionX/Source/inv.h
 Source/items.h
-/home/krash/CLionProjects/devil-nightly/Source/items.h
+/home/krash/CLionProjects/devilutionX/Source/items.h
 Source/lighting.h
-/home/krash/CLionProjects/devil-nightly/Source/lighting.h
+/home/krash/CLionProjects/devilutionX/Source/lighting.h
 Source/loadsave.h
-/home/krash/CLionProjects/devil-nightly/Source/loadsave.h
+/home/krash/CLionProjects/devilutionX/Source/loadsave.h
 Source/logging.h
-/home/krash/CLionProjects/devil-nightly/Source/logging.h
+/home/krash/CLionProjects/devilutionX/Source/logging.h
 Source/mainmenu.h
-/home/krash/CLionProjects/devil-nightly/Source/mainmenu.h
+/home/krash/CLionProjects/devilutionX/Source/mainmenu.h
 Source/minitext.h
-/home/krash/CLionProjects/devil-nightly/Source/minitext.h
+/home/krash/CLionProjects/devilutionX/Source/minitext.h
 Source/missiles.h
-/home/krash/CLionProjects/devil-nightly/Source/missiles.h
+/home/krash/CLionProjects/devilutionX/Source/missiles.h
 Source/monster.h
-/home/krash/CLionProjects/devil-nightly/Source/monster.h
+/home/krash/CLionProjects/devilutionX/Source/monster.h
 Source/movie.h
-/home/krash/CLionProjects/devil-nightly/Source/movie.h
+/home/krash/CLionProjects/devilutionX/Source/movie.h
 Source/mpqapi.h
-/home/krash/CLionProjects/devil-nightly/Source/mpqapi.h
+/home/krash/CLionProjects/devilutionX/Source/mpqapi.h
 Source/msg.h
-/home/krash/CLionProjects/devil-nightly/Source/msg.h
+/home/krash/CLionProjects/devilutionX/Source/msg.h
 Source/msgcmd.h
-/home/krash/CLionProjects/devil-nightly/Source/msgcmd.h
+/home/krash/CLionProjects/devilutionX/Source/msgcmd.h
 Source/multi.h
-/home/krash/CLionProjects/devil-nightly/Source/multi.h
+/home/krash/CLionProjects/devilutionX/Source/multi.h
 Source/nthread.h
-/home/krash/CLionProjects/devil-nightly/Source/nthread.h
+/home/krash/CLionProjects/devilutionX/Source/nthread.h
 Source/objects.h
-/home/krash/CLionProjects/devil-nightly/Source/objects.h
+/home/krash/CLionProjects/devilutionX/Source/objects.h
 Source/pack.h
-/home/krash/CLionProjects/devil-nightly/Source/pack.h
+/home/krash/CLionProjects/devilutionX/Source/pack.h
 Source/palette.h
-/home/krash/CLionProjects/devil-nightly/Source/palette.h
+/home/krash/CLionProjects/devilutionX/Source/palette.h
 Source/path.h
-/home/krash/CLionProjects/devil-nightly/Source/path.h
+/home/krash/CLionProjects/devilutionX/Source/path.h
 Source/pfile.h
-/home/krash/CLionProjects/devil-nightly/Source/pfile.h
+/home/krash/CLionProjects/devilutionX/Source/pfile.h
 Source/player.h
-/home/krash/CLionProjects/devil-nightly/Source/player.h
+/home/krash/CLionProjects/devilutionX/Source/player.h
 Source/plrmsg.h
-/home/krash/CLionProjects/devil-nightly/Source/plrmsg.h
+/home/krash/CLionProjects/devilutionX/Source/plrmsg.h
 Source/portal.h
-/home/krash/CLionProjects/devil-nightly/Source/portal.h
+/home/krash/CLionProjects/devilutionX/Source/portal.h
 Source/quests.h
-/home/krash/CLionProjects/devil-nightly/Source/quests.h
+/home/krash/CLionProjects/devilutionX/Source/quests.h
 Source/restrict.h
-/home/krash/CLionProjects/devil-nightly/Source/restrict.h
+/home/krash/CLionProjects/devilutionX/Source/restrict.h
 Source/scrollrt.h
-/home/krash/CLionProjects/devil-nightly/Source/scrollrt.h
+/home/krash/CLionProjects/devilutionX/Source/scrollrt.h
 Source/setmaps.h
-/home/krash/CLionProjects/devil-nightly/Source/setmaps.h
+/home/krash/CLionProjects/devilutionX/Source/setmaps.h
 Source/sha.h
-/home/krash/CLionProjects/devil-nightly/Source/sha.h
+/home/krash/CLionProjects/devilutionX/Source/sha.h
 Source/sound.h
-/home/krash/CLionProjects/devil-nightly/Source/sound.h
+/home/krash/CLionProjects/devilutionX/Source/sound.h
 Source/spells.h
-/home/krash/CLionProjects/devil-nightly/Source/spells.h
+/home/krash/CLionProjects/devilutionX/Source/spells.h
 Source/stores.h
-/home/krash/CLionProjects/devil-nightly/Source/stores.h
+/home/krash/CLionProjects/devilutionX/Source/stores.h
 Source/sync.h
-/home/krash/CLionProjects/devil-nightly/Source/sync.h
+/home/krash/CLionProjects/devilutionX/Source/sync.h
 Source/textdat.h
-/home/krash/CLionProjects/devil-nightly/Source/textdat.h
+/home/krash/CLionProjects/devilutionX/Source/textdat.h
 Source/themes.h
-/home/krash/CLionProjects/devil-nightly/Source/themes.h
+/home/krash/CLionProjects/devilutionX/Source/themes.h
 Source/tmsg.h
-/home/krash/CLionProjects/devil-nightly/Source/tmsg.h
+/home/krash/CLionProjects/devilutionX/Source/tmsg.h
 Source/town.h
-/home/krash/CLionProjects/devil-nightly/Source/town.h
+/home/krash/CLionProjects/devilutionX/Source/town.h
 Source/towners.h
-/home/krash/CLionProjects/devil-nightly/Source/towners.h
+/home/krash/CLionProjects/devilutionX/Source/towners.h
 Source/track.h
-/home/krash/CLionProjects/devil-nightly/Source/track.h
+/home/krash/CLionProjects/devilutionX/Source/track.h
 Source/trigs.h
-/home/krash/CLionProjects/devil-nightly/Source/trigs.h
+/home/krash/CLionProjects/devilutionX/Source/trigs.h
 Source/wave.h
-/home/krash/CLionProjects/devil-nightly/Source/wave.h
+/home/krash/CLionProjects/devilutionX/Source/wave.h
 Source/render.h
-/home/krash/CLionProjects/devil-nightly/Source/render.h
+/home/krash/CLionProjects/devilutionX/Source/render.h
 
 /usr/include/SDL2/SDL.h
 SDL_main.h

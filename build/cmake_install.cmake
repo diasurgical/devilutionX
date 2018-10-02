@@ -1,4 +1,4 @@
-# Install script for directory: /home/krash/CLionProjects/devil-nightly
+# Install script for directory: /home/krash/CLionProjects/devilutionX
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/krash/CLionProjects/devil-nightly/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/krash/CLionProjects/devilutionX/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

@@ -121,8 +121,10 @@ SDL_SetCursor(g_cursor);
 
 void SDL_Diablo_UI() // I anticipate to move this later.
 {
+	
+	init_archives();
 	snd_init();
-	//music_start(5);
+	music_start(5);
 	printf("This is Run And We need a Wile Loop");
 
 	int menu = 0;

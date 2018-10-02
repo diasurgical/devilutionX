@@ -58,7 +58,7 @@ void __fastcall init_create_window(int nCmdShow)
 	dx_init(NULL);
 	snd_init();
 
-	init_archives();
+	//init_archives();
 }
 
 LRESULT __stdcall MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
