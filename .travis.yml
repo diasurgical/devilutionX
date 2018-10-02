@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 language: cpp
 
 os:
@@ -32,3 +33,76 @@ script:
 
 after_script:
   - make clean
+=======
+language: cpp
+
+os:
+  - linux
+  - osx
+
+notifications:
+  email:
+    on_failure: change # default: always
+
+addons:
+  # Packages for Linux
+  apt:
+    packages:
+      - mingw-w64
+
+env:
+  - MAKE_BUILD=make
+  - MAKE_BUILD=debug
+
+before_install:
+  # Packages for OSX
+  - if [ $TRAVIS_OS_NAME = osx ]; then brew install mingw-w64; fi
+
+before_script:
+  - touch storm.dll
+  - touch diabloui.dll
+
+script:
+  - if [ $MAKE_BUILD = make ]; then make; fi
+  - if [ $MAKE_BUILD = debug ]; then make debug; fi
+
+after_script:
+  - make clean
+
+stages:
+  - Riivaaja
+  - test
+
+jobs:
+  include:
+    - stage: Riivaaja
+      name: "Build using Riivaaja (original toolset)"
+      language: minimal
+      sudo: required
+      services:
+        - docker
+      addons: {}
+      script: docker run -v $(pwd):/root/devilution diasurgical/riivaaja:stable
+    - stage: test
+      name: "Riivaaja: Calculate binary accuracy"
+      language: minimal
+      sudo: required
+      services:
+        - docker
+      addons: {}
+      script:
+        - |
+          set -e
+          wget https://github.com/diasurgical/devilution-comparer/releases/download/v0.3.4/devilution-comparer-v0.3.4-x86_64-unknown-linux-gnu.tar.xz
+          tar xf devilution-comparer-v0.3.4-x86_64-unknown-linux-gnu.tar.xz
+          echo '#!/bin/sh' | sudo tee /bin/wine
+          echo 'docker run -v $(pwd):/root/devilution --entrypoint "/usr/bin/wine" diasurgical/riivaaja:stable $(basename $1) $2 $3' | sudo tee --append /bin/wine
+          sudo chmod +x /bin/wine
+          docker run -v $(pwd):/root/devilution -e MAKE_BUILD=pdb diasurgical/riivaaja:stable
+          ./devilution-comparer generate-full Diablo.exe --no-mem-disp
+          docker run -v $(pwd):/root/devilution diasurgical/riivaaja:stable ../status.sh
+      after_success:
+        - |
+          set -e
+          .travis/are-we-d1-yet.sh "$(< accuracy.txt)" $DISCORD_WEBHOOK
+>>>>>>> f6e2020b172a7b4e6592aa3703c0c2245f69cc6f

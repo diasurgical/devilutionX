@@ -9,14 +9,14 @@ extern void *sfx_stream;
 extern TSFX *sfx_data_cur;
 
 void __cdecl effects_cpp_init();
-bool __fastcall effect_is_playing(int nSFX);
+BOOL __fastcall effect_is_playing(int nSFX);
 void __cdecl sfx_stop();
 void __fastcall InitMonsterSND(int monst);
 void __cdecl FreeEffects();
 void __fastcall PlayEffect(int i, int mode);
-int __fastcall calc_snd_position(int x, int y, int *plVolume, int *plPan);
+BOOL __fastcall calc_snd_position(int x, int y, int *plVolume, int *plPan);
 void __fastcall PlaySFX(int psfx);
-void __fastcall PlaySFX_priv(TSFX *pSFX, char loc, int x, int y);
+void __fastcall PlaySFX_priv(TSFX *pSFX, BOOL loc, int x, int y);
 void __fastcall stream_play(TSFX *pSFX, int lVolume, int lPan);
 int __fastcall RndSFX(int psfx);
 void __fastcall PlaySfxLoc(int psfx, int x, int y);

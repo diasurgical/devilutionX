@@ -828,15 +828,15 @@ int __fastcall NetInit(int bSinglePlayer, int *pfExitProgram)
 		memset(&UiData, 0, 0x50u);
 		UiData.size = 80;
 		UiData.parentwindow = SDrawGetFrameWindow(0);
-		UiData.artcallback = UiArtCallback;
-		UiData.createcallback = UiCreateGameCallback;
-		UiData.drawdesccallback = UiDrawDescCallback;
-		UiData.messageboxcallback = UiMessageBoxCallback;
-		UiData.soundcallback = UiSoundCallback;
-		UiData.authcallback = UiAuthCallback;
-		UiData.getdatacallback = UiGetDataCallback;
-		UiData.categorycallback = UiCategoryCallback;
-		UiData.selectnamecallback = (void (__cdecl *)())mainmenu_select_hero_dialog;
+		UiData.artcallback = (void (__cdecl *)())UiArtCallback;
+		UiData.createcallback = (void (__cdecl *)())UiCreateGameCallback;
+		UiData.drawdesccallback = (void (__cdecl *)())UiDrawDescCallback;
+		UiData.messageboxcallback = (void (__cdecl *)())UiMessageBoxCallback;
+		UiData.soundcallback = (void (__cdecl *)())UiSoundCallback;
+		UiData.authcallback = (void (__cdecl *)())UiAuthCallback;
+		UiData.getdatacallback = (void (__cdecl *)())UiGetDataCallback;
+		UiData.categorycallback = (void (__cdecl *)())UiCategoryCallback;
+		UiData.selectnamecallback = mainmenu_select_hero_dialog;
 		UiData.changenamecallback = (void (__cdecl *)())mainmenu_create_hero;
 		UiData.profilebitmapcallback = UiProfileDraw;
 		UiData.profilecallback = UiProfileCallback;
@@ -983,7 +983,7 @@ void __cdecl SetupLocalCoords()
 	plr[myplr]._pLvlChanging = 1;
 	plr[myplr].pLvlLoad = 0;
 	plr[myplr]._pmode = PM_NEWLVL;
-	plr[myplr].destAction = -1;
+	plr[myplr].destAction = ACTION_NONE;
 }
 // 52572C: using guessed type int leveldebug;
 // 5BB1ED: using guessed type char leveltype;
@@ -1144,7 +1144,7 @@ void __fastcall multi_player_joins(int pnum, TCmdPlrInfoHdr *cmd, int a3)
 							plr[v6]._pVar8 = 2 * v11;
 							v13 = plr[v6].WorldX;
 							plr[v6]._pAnimFrame = v12;
-							dFlags[v13][plr[v6].WorldY] |= 4u;
+							dFlags[v13][plr[v6].WorldY] |= DFLAG_DEAD_PLAYER;
 						}
 						else
 						{

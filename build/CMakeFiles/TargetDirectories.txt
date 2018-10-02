@@ -1,3 +1,6 @@
 /home/krash/CLionProjects/devilutionX/build/CMakeFiles/edit_cache.dir
 /home/krash/CLionProjects/devilutionX/build/CMakeFiles/rebuild_cache.dir
-/home/krash/CLionProjects/devilutionX/build/CMakeFiles/devil-test.dir
+/home/krash/CLionProjects/devilutionX/build/CMakeFiles/sanitize_coverage.dir
+/home/krash/CLionProjects/devilutionX/build/CMakeFiles/devilution.dir
+/home/krash/CLionProjects/devilutionX/build/CMakeFiles/xxhash.dir
+/home/krash/CLionProjects/devilutionX/build/CMakeFiles/devil-sanitize.dir

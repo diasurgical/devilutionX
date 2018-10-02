@@ -12,6 +12,6 @@ void __fastcall DoHealOther(int pnum, int rid);
 
 /* rdata */
 
-extern SpellData spelldata[37];
+extern SpellData spelldata[MAX_SPELLS];
 
 #endif /* __SPELLS_H__ */

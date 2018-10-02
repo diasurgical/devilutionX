@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/krash/CLionProjects/devilutionX/Stub/asserts.h
+assert.h
+-
+stdio.h
+-
+stdlib.h
+-
+
+/home/krash/CLionProjects/devilutionX/Stub/sanitize_coverage.cpp
+asserts.h
+/home/krash/CLionProjects/devilutionX/Stub/asserts.h
+malloc.h
+-
+stdint.h
+-
+string.h
+-
+sanitize_coverage.h
+/home/krash/CLionProjects/devilutionX/Stub/sanitize_coverage.h
+
+/home/krash/CLionProjects/devilutionX/Stub/sanitize_coverage.h
+

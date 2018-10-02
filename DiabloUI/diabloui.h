@@ -6,32 +6,57 @@
 extern "C" {
 #endif
 
+struct FontStruct
+{
+	unsigned char fontbin[258];
+	HANDLE fonttrans[256];
+	BOOL active;
+};
+
+struct ProfileStruct
+{
+	char *name;
+	char field_4;
+	int msg;
+	int field_C;
+};
+
+struct ProfFntStruct
+{
+	int size;
+	char *fontname;
+	int field_8;
+};
+
 void __cdecl UiDestroy();
-void __stdcall UiTitleDialog(int a1);
+BOOL __stdcall UiTitleDialog(int a1);
 void __cdecl UiInitialize();
-void __stdcall UiCopyProtError(int a1);
-void __stdcall UiAppActivate(int a1);
-int __stdcall UiValidPlayerName(char *a1);
-int __stdcall UiSelHeroMultDialog(void *fninfo, void *fncreate, void *fnremove, void *fnstats, int *a5, int *a6, char *name);
-int __stdcall UiSelHeroSingDialog(void (*fninfo)(void (__stdcall *ui_add_hero_info)(_uiheroinfo *)), void (*fncreate)(_uiheroinfo *heroinfo), void (*fnremove)(), void (*fnstats)(), int *a5, char *name, int *difficulty);
-void __stdcall UiCreditsDialog(int a1);
-int __stdcall UiMainMenuDialog(char *name, int *a2, void *fnSound, int a4);
+BOOL __stdcall UiCopyProtError(int *pdwResult);
+void __stdcall UiAppActivate(BOOL bActive);
+BOOL __fastcall UiValidPlayerName(char *name); /* check __stdcall */
+BOOL __stdcall UiSelHeroMultDialog(BOOL (__stdcall *fninfo)(BOOL (__stdcall *fninfofunc)(_uiheroinfo *)), BOOL (__stdcall *fncreate)(_uiheroinfo *), BOOL (__stdcall *fnremove)(_uiheroinfo *), BOOL (__stdcall *fnstats)(int, _uidefaultstats *), int *dlgresult, int *a6, char *name);
+BOOL __stdcall UiSelHeroSingDialog(BOOL (__stdcall *fninfo)(BOOL (__stdcall *fninfofunc)(_uiheroinfo *)), BOOL (__stdcall *fncreate)(_uiheroinfo *), BOOL (__stdcall *fnremove)(_uiheroinfo *), BOOL (__stdcall *fnstats)(int, _uidefaultstats *), int *dlgresult, char *name, int *difficulty);
+BOOL __stdcall UiCreditsDialog(int a1);
+BOOL __stdcall UiMainMenuDialog(char *name, int *pdwResult, void (__stdcall *fnSound)(char *file), int a4);
 int __stdcall UiProgressDialog(HWND window, char *msg, int a3, void *fnfunc, int a5);
 int __cdecl UiProfileGetString();
 void __cdecl UiProfileCallback();
 void __cdecl UiProfileDraw();
-void __cdecl UiCategoryCallback();
-void __cdecl UiGetDataCallback();
-void __cdecl UiAuthCallback();
-void __cdecl UiSoundCallback();
-void __cdecl UiMessageBoxCallback();
-void __cdecl UiDrawDescCallback();
-void __cdecl UiCreateGameCallback();
-void __cdecl UiArtCallback();
+BOOL __stdcall UiCategoryCallback(int a1, int a2, int a3, int a4, int a5, _DWORD *a6, _DWORD *a7);
+BOOL __stdcall UiGetDataCallback(int game_type, int data_code, void *a3, int a4, int a5);
+BOOL __stdcall UiAuthCallback(int a1, char *a2, char *a3, char a4, char *a5, LPSTR lpBuffer, int cchBufferMax);
+BOOL __stdcall UiSoundCallback(int a1, int type, int a3);
+void __stdcall UiMessageBoxCallback(HWND hWnd, char *lpText, LPCSTR lpCaption, UINT uType);
+BOOL __stdcall UiDrawDescCallback(int arg0, COLORREF color, LPCSTR lpString, char *a4, int a5, UINT align, time_t a7, HDC *a8);
+BOOL __stdcall UiCreateGameCallback(int a1, int a2, int a3, int a4, int a5, int a6);
+BOOL __stdcall UiArtCallback(int game_type, unsigned int art_code, PALETTEENTRY *pPalette, void *pBuffer, DWORD dwBuffersize, DWORD *pdwWidth, DWORD *pdwHeight, DWORD *pdwBpp);
 int __stdcall UiSelectGame(int a1, _SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info, _SNETUIDATA *ui_info, _SNETVERSIONDATA *file_info, int *a6);
 int __stdcall UiSelectProvider(int a1, _SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info, _SNETUIDATA *ui_info, _SNETVERSIONDATA *file_info, int *type);
-int __stdcall UiCreatePlayerDescription(_uiheroinfo *info, int mode, char *desc);
-int __stdcall UiSetupPlayerInfo(char *str, _uiheroinfo *info, int mode);
+BOOL __stdcall UiCreatePlayerDescription(_uiheroinfo *info, int mode, char *desc);
+void __stdcall UiSetupPlayerInfo(char *infostr, _uiheroinfo *pInfo, int type);
+void __stdcall UiCreateGameCriteria(_uiheroinfo *pInfo, char *str);
+BOOL __stdcall UiGetDefaultStats(int pclass, _uidefaultstats *pStats);
+BOOL __stdcall UiBetaDisclaimer(int a1);
 
 #ifdef __GNUC__
 }

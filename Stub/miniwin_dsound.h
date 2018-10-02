@@ -2,7 +2,10 @@
 
 #include "miniwin.h"
 
-typedef void *LPDSBCAPS, *LPDIRECTSOUND, *LPCDSBUFFERDESC;
+typedef void *LPDSBCAPS, *LPCDSBUFFERDESC;
+
+struct IDirectSound;
+typedef IDirectSound *LPDIRECTSOUND;
 
 DECLARE_INTERFACE_(IDirectSoundBuffer, IUnknown)
 {

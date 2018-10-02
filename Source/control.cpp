@@ -7,7 +7,7 @@ char sgbNextTalkSave; // weak
 char sgbTalkSavePos; // weak
 void *pDurIcons;
 void *pChrButtons;
-int drawhpflag; // idb
+BOOL drawhpflag; // idb
 int dropGoldFlag; // weak
 int panbtn[8];
 int chrbtn[4];
@@ -17,7 +17,7 @@ void *pChrPanel;
 int lvlbtndown; // weak
 char sgszTalkSave[8][80];
 int dropGoldValue; // idb
-int drawmanaflag; // idb
+BOOL drawmanaflag; // idb
 int chrbtnactive; // weak
 char sgszTalkMsg[80];
 void *pPanelText;
@@ -145,7 +145,7 @@ const unsigned char fontidx[256] =
 
 /* data */
 
-unsigned char SpellITbl[37] =
+unsigned char SpellITbl[MAX_SPELLS] =
 {
 	1,   1,   2,   3,   4,   5,   6,   7,   8,   9,
    28,  13,  12,  18,  16,  14,  18,  19,  11,  20,
@@ -393,7 +393,7 @@ void __cdecl DrawSpell()
 		if ( v4 <= 0 )
 			v2 = 4;
 	}
-	if ( !currlevel && v2 != 4 && !*(_DWORD *)&spelldata[v3].sTownSpell )
+	if ( !currlevel && v2 != 4 && !spelldata[v3].sTownSpell )
 		v2 = 4;
 	if ( plr[v0]._pRSpell < 0 )
 		v2 = 4;
@@ -426,7 +426,7 @@ void __cdecl DrawSpellList()
 	int v17; // [esp+Ch] [ebp-34h]
 	__int32 xp; // [esp+10h] [ebp-30h]
 	__int32 yp; // [esp+14h] [ebp-2Ch]
-	unsigned char *v20; // [esp+18h] [ebp-28h]
+	BOOL *v20; // [esp+18h] [ebp-28h]
 	__int32 nCel; // [esp+1Ch] [ebp-24h]
 	int v22; // [esp+20h] [ebp-20h]
 	__int32 v23; // [esp+24h] [ebp-1Ch]
@@ -500,7 +500,7 @@ LABEL_10:
 			{
 				v9 = nCel;
 			}
-			if ( !currlevel && !*(_DWORD *)v20 )
+			if ( !currlevel && !*v20 )
 				SetSpellTrans(4);
 			DrawSpellCel(v17, xp, (char *)pSpellCels, (char)SpellITbl[v4], 56);
 			if ( MouseX >= v17 - 64 && MouseX < v17 - 64 + 56 && MouseY >= v22 && MouseY < v22 + 56 )
@@ -548,7 +548,7 @@ LABEL_32:
 								while ( v12 );
 							}
 							v14 = &plr[v10].SpdList[0]._iMiscId;
-							v15 = 8;
+							v15 = MAXBELTITEMS;
 							do
 							{
 								if ( *(v14 - 53) != -1
@@ -608,12 +608,12 @@ LABEL_66:
 				v17 = 636;
 			}
 LABEL_68:
-			v20 += 56;
+			v20 += 14;
 			++v4;
 			v26 *= (__int64)2;
 			v23 = v4;
 		}
-		while ( (signed int)v20 < (signed int)&spelldata[37].sTownSpell );
+		while ( (signed int)v20 < (signed int)&spelldata[MAX_SPELLS].sTownSpell );
 		if ( v25 && v17 != 636 )
 			v17 -= 56;
 		if ( v17 == 20 )
@@ -1220,8 +1220,8 @@ void __cdecl InitControlPan()
 	pDurIcons = LoadFileInMem("Items\\DurIcons.CEL", 0);
 	strcpy(infostr, &empty_string);
 	ClearPanel();
-	drawhpflag = 1;
-	drawmanaflag = 1;
+	drawhpflag = TRUE;
+	drawmanaflag = TRUE;
 	chrflag = 0;
 	spselflag = 0;
 	pSpellBkCel = LoadFileInMem("Data\\SpellBk.CEL", 0);
@@ -1384,7 +1384,7 @@ void __cdecl DoSpeedBook()
 				++v10;
 				v7 = v4;
 			}
-			while ( v10 < 37 );
+			while ( v10 < MAX_SPELLS );
 			if ( v3 && v13 != 636 )
 				v13 -= 56;
 			if ( v13 == 20 )
@@ -1595,7 +1595,7 @@ LABEL_54:
 					}
 					v8 = v12;
 					v9 = &plr[v5].SpdList[0]._iMiscId;
-					v10 = 8;
+					v10 = MAXBELTITEMS;
 					do
 					{
 						if ( *(v9 - 53) != -1 && (*v9 == IMISC_SCROLL || *v9 == IMISC_SCROLLT) && v9[1] == v4 )
@@ -2715,7 +2715,7 @@ int __fastcall GetSBookTrans(int ii, unsigned char townok)
 		if ( (char)(plr[myplr]._pISplLvlAdd + plr[myplr]._pSplLvl[v2]) <= 0 )
 			v6 = 4;
 	}
-	if ( v7 && !currlevel && v6 != 4 && !*(_DWORD *)&spelldata[v2].sTownSpell )
+	if ( v7 && !currlevel && v6 != 4 && !spelldata[v2].sTownSpell )
 		v6 = 4;
 	_LOBYTE(result) = v6;
 	return result;
@@ -2750,11 +2750,11 @@ void __cdecl DrawSpellBook()
 		{
 			v7 = GetSBookTrans(v2, 1u);
 			SetSpellTrans(v7);
-			DrawSpellCel(395, v8 + 1, (char *)pSBkIconCels, (char)SpellITbl[v2], 37);
+			DrawSpellCel(395, v8 + 1, (char *)pSBkIconCels, (char)SpellITbl[v2], MAX_SPELLS);
 			if ( v2 == plr[myplr]._pRSpell && v7 == _LOBYTE(plr[myplr]._pRSplType) )
 			{
 				SetSpellTrans(0);
-				DrawSpellCel(395, v8 + 1, (char *)pSBkIconCels, 43, 37);
+				DrawSpellCel(395, v8 + 1, (char *)pSBkIconCels, 43, MAX_SPELLS);
 			}
 			PrintSBookStr(10, v8 - 22, 0, spelldata[v2].sNameText, 0);
 			v3 = GetSBookTrans(v2, 0);
@@ -2958,7 +2958,7 @@ void __fastcall control_drop_gold(int vkey)
 		dropGoldValue = 0;
 		return;
 	}
-	memset(v6, 0, 6u);
+	memset(v6, 0, sizeof(v6));
 	_itoa(dropGoldValue, v6, 10);
 	if ( v1 != VK_RETURN )
 	{
@@ -3063,14 +3063,14 @@ void __fastcall control_set_gold_curs(int pnum)
 		v5 = v2 - 1000 < 0;
 		v3 = &plr[v1].HoldItem._iCurs;
 		if ( (unsigned char)(v5 ^ v6) | v4 )
-			*v3 = 4;
+			*v3 = ICURS_GOLD_SMALL;
 		else
-			*v3 = 5;
+			*v3 = ICURS_GOLD_MEDIUM;
 	}
 	else
 	{
 		v3 = &plr[v1].HoldItem._iCurs;
-		plr[v1].HoldItem._iCurs = 6;
+		plr[v1].HoldItem._iCurs = ICURS_GOLD_LARGE;
 	}
 	SetCursor(*v3 + 12);
 }

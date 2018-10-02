@@ -8,10 +8,10 @@ void __cdecl UiDestroy()
 	DUMMY();
 }
 
-void __stdcall UiTitleDialog(int a1)
+BOOL __stdcall UiTitleDialog(int a1)
 {
-	printf("UiTitleDialog\n");
 	DUMMY();
+	return TRUE;
 }
 
 void __cdecl UiInitialize()
@@ -19,48 +19,31 @@ void __cdecl UiInitialize()
 	DUMMY();
 }
 
-void __stdcall UiCopyProtError(int a1)
-{
-	UNIMPLEMENTED();
-}
+static std::vector<_uiheroinfo> hero_infos;
 
-void __stdcall UiAppActivate(int a1)
-{
-	UNIMPLEMENTED();
-}
-
-int __stdcall UiValidPlayerName(char *a1)
-{
-	UNIMPLEMENTED();
-}
-
-int __stdcall UiSelHeroMultDialog(void *fninfo, void *fncreate, void *fnremove, void *fnstats, int *a5, int *a6,
-                                  char *name)
-{
-	UNIMPLEMENTED();
-}
-
-std::vector<_uiheroinfo> hero_infos;
-
-static void __stdcall ui_add_hero_info(_uiheroinfo *info)
+static BOOL __stdcall ui_add_hero_info(_uiheroinfo *info)
 {
 	hero_infos.emplace_back(*info);
+	return TRUE;
 }
 
-int __stdcall UiSelHeroSingDialog(void (*fninfo)(void(__stdcall *ui_add_hero_info)(_uiheroinfo *)),
-                                  void (*fncreate)(_uiheroinfo *heroinfo), void (*fnremove)(), void (*fnstats)(),
-                                  int *a5, char *name, int *difficulty)
+BOOL __stdcall UiSelHeroSingDialog(BOOL(__stdcall *fninfo)(BOOL(__stdcall *fninfofunc)(_uiheroinfo *)),
+                                   BOOL(__stdcall *fncreate)(_uiheroinfo *), BOOL(__stdcall *fnremove)(_uiheroinfo *),
+                                   BOOL(__stdcall *fnstats)(int, _uidefaultstats *), int *dlgresult, char *name,
+                                   int *difficulty)
 {
 	DUMMY();
 
+	hero_infos.clear();
 	fninfo(&ui_add_hero_info);
 
+	// If a hero is available, load it, otherwise create a new one
 	if (!hero_infos.empty()) {
-		//const char *hero_name = hero_infos[0].name;
-		DUMMY_PRINT("use hero: %s", chr_name_str);
-		strcpy(name, chr_name_str);
+		const char *hero_name = hero_infos[0].name;
+		DUMMY_PRINT("use hero: %s", hero_name);
+		strcpy(name, hero_name);
 
-		*a5 = 2;
+		*dlgresult = 2;
 	} else {
 		const char *test_name = "tester";
 		DUMMY_PRINT("create hero: %s", test_name);
@@ -69,7 +52,7 @@ int __stdcall UiSelHeroSingDialog(void (*fninfo)(void(__stdcall *ui_add_hero_inf
 
 		_uiheroinfo hero_info = {0};
 		strcpy(hero_info.name, test_name);
-		hero_info.heroclass = 2; // Sorcerer
+		hero_info.heroclass = PC_SORCERER;
 
 		fncreate(&hero_info);
 	}
@@ -77,16 +60,38 @@ int __stdcall UiSelHeroSingDialog(void (*fninfo)(void(__stdcall *ui_add_hero_inf
 	return TRUE;
 }
 
-void __stdcall UiCreditsDialog(int a1)
+BOOL __stdcall UiMainMenuDialog(char *name, int *pdwResult, void(__stdcall *fnSound)(char *file), int a4)
+{
+	DUMMY();
+	// Pretend we selected Single Player from the main menu
+	*pdwResult = MAINMENU_SINGLE_PLAYER;
+	return TRUE;
+}
+
+int __cdecl UiProfileGetString()
+{
+	DUMMY();
+	return 0;
+}
+
+void __stdcall UiSetupPlayerInfo(char *infostr, _uiheroinfo *pInfo, int type)
+{
+	DUMMY_PRINT("chr: %s", infostr);
+}
+
+BOOL __stdcall UiCopyProtError(int *pdwResult)
 {
 	UNIMPLEMENTED();
 }
 
-int __stdcall UiMainMenuDialog(char *name, int *a2, void *fnSound, int a4)
+void __stdcall UiAppActivate(BOOL bActive)
 {
-	DUMMY();
-	*a2 = MAINMENU_SINGLE_PLAYER;
-	return TRUE;
+	UNIMPLEMENTED();
+}
+
+BOOL __fastcall UiValidPlayerName(char *name)
+{
+	UNIMPLEMENTED();
 }
 
 int __stdcall UiProgressDialog(HWND window, char *msg, int a3, void *fnfunc, int a5)
@@ -94,10 +99,17 @@ int __stdcall UiProgressDialog(HWND window, char *msg, int a3, void *fnfunc, int
 	UNIMPLEMENTED();
 }
 
-int __cdecl UiProfileGetString()
+BOOL __stdcall UiSelHeroMultDialog(BOOL(__stdcall *fninfo)(BOOL(__stdcall *fninfofunc)(_uiheroinfo *)),
+                                   BOOL(__stdcall *fncreate)(_uiheroinfo *), BOOL(__stdcall *fnremove)(_uiheroinfo *),
+                                   BOOL(__stdcall *fnstats)(int, _uidefaultstats *), int *dlgresult, int *a6,
+                                   char *name)
 {
-	DUMMY();
-	return 0;
+	UNIMPLEMENTED();
+}
+
+BOOL __stdcall UiCreditsDialog(int a1)
+{
+	UNIMPLEMENTED();
 }
 
 void __cdecl UiProfileCallback()
@@ -110,42 +122,44 @@ void __cdecl UiProfileDraw()
 	UNIMPLEMENTED();
 }
 
-void __cdecl UiCategoryCallback()
+BOOL __stdcall UiCategoryCallback(int a1, int a2, int a3, int a4, int a5, _DWORD *a6, _DWORD *a7)
 {
 	UNIMPLEMENTED();
 }
 
-void __cdecl UiGetDataCallback()
+BOOL __stdcall UiGetDataCallback(int game_type, int data_code, void *a3, int a4, int a5)
 {
 	UNIMPLEMENTED();
 }
 
-void __cdecl UiAuthCallback()
+BOOL __stdcall UiAuthCallback(int a1, char *a2, char *a3, char a4, char *a5, LPSTR lpBuffer, int cchBufferMax)
 {
 	UNIMPLEMENTED();
 }
 
-void __cdecl UiSoundCallback()
+BOOL __stdcall UiSoundCallback(int a1, int type, int a3)
 {
 	UNIMPLEMENTED();
 }
 
-void __cdecl UiMessageBoxCallback()
+void __stdcall UiMessageBoxCallback(HWND hWnd, char *lpText, LPCSTR lpCaption, UINT uType)
 {
 	UNIMPLEMENTED();
 }
 
-void __cdecl UiDrawDescCallback()
+BOOL __stdcall UiDrawDescCallback(int arg0, COLORREF color, LPCSTR lpString, char *a4, int a5, UINT align, time_t a7,
+                                  HDC *a8)
 {
 	UNIMPLEMENTED();
 }
 
-void __cdecl UiCreateGameCallback()
+BOOL __stdcall UiCreateGameCallback(int a1, int a2, int a3, int a4, int a5, int a6)
 {
 	UNIMPLEMENTED();
 }
 
-void __cdecl UiArtCallback()
+BOOL __stdcall UiArtCallback(int game_type, unsigned int art_code, PALETTEENTRY *pPalette, void *pBuffer,
+                             DWORD dwBuffersize, DWORD *pdwWidth, DWORD *pdwHeight, DWORD *pdwBpp)
 {
 	UNIMPLEMENTED();
 }
@@ -165,11 +179,4 @@ int __stdcall UiSelectProvider(int a1, _SNETPROGRAMDATA *client_info, _SNETPLAYE
 int __stdcall UiCreatePlayerDescription(_uiheroinfo *info, int mode, char *desc)
 {
 	UNIMPLEMENTED();
-}
-
-int __stdcall UiSetupPlayerInfo(char *str, _uiheroinfo *info, int mode)
-{
-	printf("UiSetupPlayerInfo\n");
-	DUMMY_PRINT("chr: %s", str);
-	return TRUE;
 }

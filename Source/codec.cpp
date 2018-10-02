@@ -43,7 +43,7 @@ int __fastcall codec_decode(void *pbSrcDst, int size, char *pszPassword)
 			}
 			while ( v7 < 64 );
 			SHA1Calculate(0, v9, 0);
-			memset(dst, 0, 0x14u);
+			memset(dst, 0, sizeof(dst));
 			memcpy(v4, v9, 0x40u);
 			v4 += 64;
 			passworda -= 64;
@@ -51,7 +51,7 @@ int __fastcall codec_decode(void *pbSrcDst, int size, char *pszPassword)
 		while ( passworda );
 		v5 = v11;
 	}
-	memset(v9, 0, 0x80u);
+	memset(v9, 0, sizeof(v9));
 	if ( !v4[4] )
 	{
 		SHA1Result(0, dst);
@@ -60,7 +60,7 @@ int __fastcall codec_decode(void *pbSrcDst, int size, char *pszPassword)
 			v8 = v5 + (unsigned char)v4[5] - 64;
 			goto LABEL_14;
 		}
-		memset(dst, 0, 0x14u);
+		memset(dst, 0, sizeof(dst));
 	}
 	v8 = 0;
 LABEL_14:
@@ -113,8 +113,8 @@ void __fastcall codec_init_key(int unused, char *pszPassword)
 		++v7;
 	}
 	while ( v7 < 0x88 );
-	memset(v10, 0, 0x40u);
-	memset(dst, 0, 0x14u);
+	memset(v10, 0, sizeof(v10));
+	memset(dst, 0, sizeof(dst));
 	v8 = 0;
 	do
 	{
@@ -122,7 +122,7 @@ void __fastcall codec_init_key(int unused, char *pszPassword)
 		SHA1Calculate(v8++, &v9[72], 0);
 	}
 	while ( v8 < 3 );
-	memset(v9, 0, 0x88u);
+	memset(v9, 0, sizeof(v9));
 }
 // 4035DB: using guessed type char var_E0[72];
 // 4035DB: using guessed type char var_58[64];
@@ -171,7 +171,7 @@ void __fastcall codec_encode(void *pbSrcDst, int size, int size_64, char *pszPas
 				++v7;
 			}
 			while ( v7 < 64 );
-			memset(dst, 0, 0x14u);
+			memset(dst, 0, sizeof(dst));
 			memcpy(v4, v9, 0x40u);
 			v4 += 64;
 			v12 -= v6;
@@ -179,7 +179,7 @@ void __fastcall codec_encode(void *pbSrcDst, int size, int size_64, char *pszPas
 		while ( v12 );
 		v5 = v6;
 	}
-	memset(v9, 0, 0x80u);
+	memset(v9, 0, sizeof(v9));
 	SHA1Result(0, v10);
 	v4[4] = 0;
 	*((_WORD *)v4 + 3) = 0;

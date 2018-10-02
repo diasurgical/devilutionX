@@ -2,8 +2,11 @@
 
 #include "../types.h"
 
+#ifndef NO_GLOBALS
 void *sgpBackBuf;
+#endif
 int dx_cpp_init_value; // weak
+#ifndef NO_GLOBALS
 IDirectDraw *lpDDInterface;
 IDirectDrawPalette *lpDDPalette; // idb
 int sgdwLockCount;
@@ -14,6 +17,7 @@ static CRITICAL_SECTION sgMemCrit;
 char gbBackBuf; // weak
 char gbEmulate; // weak
 HMODULE ghDiabMod; // idb
+#endif
 
 int dx_inf = 0x7F800000; // weak
 
@@ -125,10 +129,10 @@ void __cdecl dx_create_back_buffer()
 		if ( v1 != DDERR_CANTLOCKSURFACE )
 			ErrDlg(IDD_DIALOG1, v1, "C:\\Src\\Diablo\\Source\\dx.cpp", 81);
 	}
-	memset(&v4, 0, 0x6Cu);
+	memset(&v4, 0, sizeof(v4));
 	v4.dwWidth = 768;
 	v4.lPitch = 768;
-	v4.dwSize = 108;
+	v4.dwSize = sizeof(v4);
 	v4.dwFlags = DDSD_PIXELFORMAT|DDSD_PITCH|DDSD_WIDTH|DDSD_HEIGHT|DDSD_CAPS;
 	v4.ddsCaps.dwCaps = DDSCAPS_SYSTEMMEMORY|DDSCAPS_OFFSCREENPLAIN;
 	v4.dwHeight = 656;
@@ -147,8 +151,8 @@ void __cdecl dx_create_primary_surface()
 	int v0; // eax
 	DDSURFACEDESC v1; // [esp+0h] [ebp-6Ch]
 
-	memset(&v1, 0, 0x6Cu);
-	v1.dwSize = 108;
+	memset(&v1, 0, sizeof(v1));
+	v1.dwSize = sizeof(v1);
 	v1.dwFlags = DDSD_CAPS;
 	v1.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE;
 	v0 = lpDDInterface->CreateSurface(&v1, &lpDDSPrimary, NULL);
@@ -198,7 +202,7 @@ void __cdecl lock_buf_priv()
 	{
 		if ( sgdwLockCount )
 			goto LABEL_9;
-		v2.dwSize = 108;
+		v2.dwSize = sizeof(v2);
 		v1 = lpDDSBackBuf->Lock(NULL, &v2, DDLOCK_WAIT, NULL);
 		if ( v1 )
 			DDErrMsg(v1, 235, "C:\\Src\\Diablo\\Source\\dx.cpp");

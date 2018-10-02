@@ -15,7 +15,7 @@ int dolighting; // weak
 char dung_map_rgba[16384]; /* int [64][64] short [64][128] char [64][256] */
 int visionid;
 char *pLightTbl; /* todo: struct? */
-int lightflag; // weak
+BOOL lightflag;
 #endif
 
 char CrawlTable[2749] =
@@ -837,7 +837,7 @@ void __fastcall DoUnVision(int nXPos, int nYPos, int nRadius)
 		do
 		{
 			for ( j = y1; j < y2; ++j )
-				v7[j] &= 0xBDu;
+				v7[j] &= ~(DFLAG_VISIBLE | DFLAG_LIT);
 			v7 += 112;
 			--i;
 		}
@@ -888,11 +888,11 @@ void __fastcall DoVision(int nXPos, int nYPos, int nRadius, unsigned char doauto
 				nYPos = v28;
 				nXPos = v29;
 			}
-			*v5 |= 0x80u;
+			*v5 |= DFLAG_EXPLORED;
 		}
 		if ( visible )
-			dFlags[nXPos][nYPos] |= 0x40u;
-		dFlags[nXPos][nYPos] |= 2u;
+			dFlags[nXPos][nYPos] |= DFLAG_LIT;
+		dFlags[nXPos][nYPos] |= DFLAG_VISIBLE;
 	}
 	v27 = 0;
 	v6 = doautomap;
@@ -984,11 +984,11 @@ void __fastcall DoVision(int nXPos, int nYPos, int nRadius, unsigned char doauto
 								v16 = v7 + 112 * v6;
 								v8 = v19;
 							}
-							dFlags[0][v16] |= 0x80u;
+							dFlags[0][v16] |= DFLAG_EXPLORED;
 						}
 						if ( visible )
-							dFlags[0][v16] |= 0x40u;
-						dFlags[0][v16] |= 2u;
+							dFlags[0][v16] |= DFLAG_LIT;
+						dFlags[0][v16] |= DFLAG_VISIBLE;
 						if ( !v21 )
 						{
 							v17 = dung_map[0][v16];
@@ -1375,11 +1375,11 @@ void __cdecl ToggleLighting()
 	lightflag ^= 1;
 	if ( lightflag )
 	{
-		memset(dTransVal, 0, 0x3100u);
+		memset(dTransVal, 0, sizeof(dTransVal));
 	}
 	else
 	{
-		memcpy(dTransVal, dTransVal2, 0x3100u);
+		memcpy(dTransVal, dTransVal2, sizeof(dTransVal));
 		for(i = 0; i < 4; i++)
 		{
 			if ( plr[i].plractive )

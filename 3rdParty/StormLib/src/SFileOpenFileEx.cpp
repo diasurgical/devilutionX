@@ -322,9 +322,7 @@ bool WINAPI SFileOpenFileEx(HANDLE hMpq, const char * szFileName, DWORD dwSearch
         // Allocate file handle
         hf = CreateFileHandle(ha, pFileEntry);
         if(hf != NULL)
-        
         {
-
             // Get the hash index for the file
             if(ha->pHashTable != NULL && dwHashIndex == HASH_ENTRY_FREE)
                 dwHashIndex = FindHashIndex(ha, dwFileIndex);

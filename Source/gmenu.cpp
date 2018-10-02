@@ -472,7 +472,7 @@ int __fastcall gmenu_left_mouse(int a1)
 // 634464: using guessed type char byte_634464;
 // 63448C: using guessed type int dword_63448C;
 
-void __fastcall gmenu_enable(TMenuItem *pMenuItem, bool enable)
+void __fastcall gmenu_enable(TMenuItem *pMenuItem, BOOL enable)
 {
 	if ( enable )
 		pMenuItem->dwFlags |= 0x80000000;

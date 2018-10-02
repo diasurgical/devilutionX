@@ -158,6 +158,115 @@ enum affix_item_type
 	PLT_ARMO = 0x100000,
 };
 
+/// Item graphic IDs; frame_num-11 of objcurs.cel.
+enum item_cursor_graphic {
+	ICURS_POTION_OF_FULL_MANA         = 0,
+	ICURS_SCROLL_OF                   = 1,
+	ICURS_GOLD_SMALL                  = 4,
+	ICURS_GOLD_MEDIUM                 = 5,
+	ICURS_GOLD_LARGE                  = 6,
+	ICURS_RING_OF_TRUTH               = 10,
+	ICURS_RING                        = 12,
+	ICURS_SPECTRAL_ELIXIR             = 15,
+	ICURS_GOLDEN_ELIXIR               = 17,
+	ICURS_EMPYREAN_BAND               = 18,
+	ICURS_EAR_SORCEROR                = 19,
+	ICURS_EAR_WARRIOR                 = 20,
+	ICURS_EAR_ROGUE                   = 21,
+	ICURS_BLOOD_STONE                 = 25,
+	ICURS_ELIXIR_OF_VITALITY          = 31,
+	ICURS_POTION_OF_HEALING           = 32,
+	ICURS_POTION_OF_FULL_REJUVENATION = 33,
+	ICURS_ELIXIR_OF_MAGIC             = 34,
+	ICURS_POTION_OF_FULL_HEALING      = 35,
+	ICURS_ELIXIR_OF_DEXTERITY         = 36,
+	ICURS_POTION_OF_REJUVENATION      = 37,
+	ICURS_ELIXIR_OF_STRENGTH          = 38,
+	ICURS_POTION_OF_MANA              = 39,
+	ICURS_BRAIN                       = 40,
+	ICURS_OPTIC_AMULET                = 44,
+	ICURS_AMULET                      = 45,
+	ICURS_DAGGER                      = 51,
+	ICURS_BLADE                       = 56,
+	ICURS_BASTARD_SWORD               = 57,
+	ICURS_MACE                        = 59,
+	ICURS_LONG_SWORD                  = 60,
+	ICURS_BROAD_SWORD                 = 61,
+	ICURS_FALCHION                    = 62,
+	ICURS_MORNING_STAR                = 63,
+	ICURS_SHORT_SWORD                 = 64,
+	ICURS_CLAYMORE                    = 65,
+	ICURS_CLUB                        = 66,
+	ICURS_SABRE                       = 67,
+	ICURS_SPIKED_CLUB                 = 70,
+	ICURS_SCIMITAR                    = 72,
+	ICURS_FULL_HELM                   = 75,
+	ICURS_MAGIC_ROCK                  = 76,
+	ICURS_THE_UNDEAD_CROWN            = 78,
+	ICURS_HELM                        = 82,
+	ICURS_BUCKLER                     = 83,
+	ICURS_VIEL_OF_STEEL               = 85,
+	ICURS_BOOK_GREY                   = 86,
+	ICURS_BOOK_RED                    = 87,
+	ICURS_BOOK_BLUE                   = 88,
+	ICURS_BLACK_MUSHROOM              = 89,
+	ICURS_SKULL_CAP                   = 90,
+	ICURS_CAP                         = 91,
+	ICURS_HARLEQUIN_CREST             = 93,
+	ICURS_CROWN                       = 95,
+	ICURS_MAP_OF_THE_STARS            = 96,
+	ICURS_FUNGAL_TOME                 = 97,
+	ICURS_GREAT_HELM                  = 98,
+	ICURS_BATTLE_AXE                  = 101,
+	ICURS_HUNTERS_BOW                 = 102,
+	ICURS_FIELD_PLATE                 = 103,
+	ICURS_SMALL_SHIELD                = 105,
+	ICURS_CLEAVER                     = 106,
+	ICURS_STUDDED_LEATHER_ARMOR       = 107,
+	ICURS_SHORT_STAFF                 = 109,
+	ICURS_TWO_HANDED_SWORD            = 110,
+	ICURS_CHAIN_MAIL                  = 111,
+	ICURS_SMALL_AXE                   = 112,
+	ICURS_KITE_SHIELD                 = 113,
+	ICURS_SCALE_MAIL                  = 114,
+	ICURS_SHORT_BOW                   = 118,
+	ICURS_LONG_WAR_BOW                = 119,
+	ICURS_WAR_HAMMER                  = 121,
+	ICURS_MAUL                        = 122,
+	ICURS_LONG_STAFF                  = 123,
+	ICURS_WAR_STAFF                   = 124,
+	ICURS_TAVERN_SIGN                 = 126,
+	ICURS_HARD_LEATHER_ARMOR          = 127,
+	ICURS_RAGS                        = 128,
+	ICURS_QUILTED_ARMOR               = 129,
+	ICURS_FLAIL                       = 131,
+	ICURS_TOWER_SHIELD                = 132,
+	ICURS_COMPOSITE_BOW               = 133,
+	ICURS_GREAT_SWORD                 = 134,
+	ICURS_LEATHER_ARMOR               = 135,
+	ICURS_SPLINT_MAIL                 = 136,
+	ICURS_ROBE                        = 137,
+	ICURS_ANVIL_OF_FURY               = 140,
+	ICURS_BROAD_AXE                   = 141,
+	ICURS_LARGE_AXE                   = 142,
+	ICURS_GREAT_AXE                   = 143,
+	ICURS_AXE                         = 144,
+	ICURS_LARGE_SHIELD                = 147,
+	ICURS_GOTHIC_SHIELD               = 148,
+	ICURS_CLOAK                       = 149,
+	ICURS_CAPE                        = 150,
+	ICURS_FULL_PLATE_MAIL             = 151,
+	ICURS_GOTHIC_PLATE                = 152,
+	ICURS_BREAST_PLATE                = 153,
+	ICURS_RING_MAIL                   = 154,
+	ICURS_STAFF_OF_LAZARUS            = 155,
+	ICURS_ARKAINES_VALOR              = 157,
+	ICURS_SHORT_WAR_BOW               = 165,
+	ICURS_COMPOSITE_STAFF             = 166,
+	ICURS_SHORT_BATTLE_BOW            = 167,
+	ICURS_GOLD                        = 168,
+};
+
 enum _sfx_id
 {
 	PS_WALK1 = 0x0,
@@ -1020,6 +1129,17 @@ enum _sfx_id
 	USFX_DIABLOD = 0x359,
 };
 
+enum sfx_flag {
+	SFX_STREAM   = 0x01,
+	SFX_MISC     = 0x02,
+	SFX_UI       = 0x04,
+	SFX_08       = 0x08,
+	SFX_ROGUE    = 0x10,
+	SFX_WARRIOR  = 0x20,
+	SFX_SORCEROR = 0x40,
+	SFX_LOADED   = 0x80,
+};
+
 enum item_equip_type
 {
 	ILOC_NONE = 0x0,
@@ -1652,6 +1772,27 @@ enum dungeon_type
 	DTYPE_NONE = 0xFF,
 };
 
+enum dflag
+{
+	DFLAG_MISSILE		= 0x01,
+	DFLAG_VISIBLE		= 0x02,
+	DFLAG_DEAD_PLAYER	= 0x04,
+	DFLAG_POPULATED		= 0x08,
+	DFLAG_MONSTER		= 0x10,
+	DFLAG_PLAYER		= 0x20,
+	DFLAG_LIT			= 0x40,
+	DFLAG_EXPLORED		= 0x80,
+};
+
+enum dungeon_message
+{
+	DMSG_CATHEDRAL = 1 << 0,
+	DMSG_CATACOMBS = 1 << 1,
+	DMSG_CAVES = 1 << 2,
+	DMSG_HELL = 1 << 3,
+	DMSG_DIABLO = 1 << 4,
+};
+
 enum magic_type
 {
 	STYPE_FIRE = 0x0,
@@ -1797,6 +1938,18 @@ enum direction
 	DIR_E = 0x6,
 	DIR_SE = 0x7,
 	DIR_OMNI = 0x8,
+};
+
+enum _scroll_direction
+{
+	SDIR_N = 0x1,
+	SDIR_NE = 0x2,
+	SDIR_E = 0x3,
+	SDIR_SE = 0x4,
+	SDIR_S = 0x5,
+	SDIR_SW = 0x6,
+	SDIR_W = 0x7,
+	SDIR_NW = 0x8,
 };
 
 enum interface_mode
@@ -2270,6 +2423,18 @@ enum quest_id
 	QTYPE_INVALID = 0xFFFFFFFF,
 };
 
+enum quest_mush_state
+{
+	QS_INIT = 0,
+	QS_TOMESPAWNED = 1,
+	QS_TOMEGIVEN = 2,
+	QS_MUSHSPAWNED = 3,
+	QS_MUSHPICKED = 4,
+	QS_MUSHGIVEN = 5,
+	QS_BRAINSPAWNED = 6,
+	QS_BRAINGIVEN = 7
+};
+
 enum talk_id
 {
 	STORE_NONE = 0x0,
@@ -2411,7 +2576,6 @@ enum _ui_classes
 
 enum _walk_path
 {
-	WALK_NONE = 0x0,
 	WALK_NE = 0x1,
 	WALK_NW = 0x2,
 	WALK_SE = 0x3,
@@ -2420,6 +2584,7 @@ enum _walk_path
 	WALK_E = 0x6,
 	WALK_S = 0x7,
 	WALK_W = 0x8,
+	WALK_NONE = -1,
 };
 
 enum item_class {
@@ -2569,4 +2734,24 @@ enum shrine_type {
 	SHRINE_GLIMMERING = 24,
 	SHRINE_TAINTED = 25,
 	NUM_SHRINETYPE
+};
+
+enum action_id {
+	ACTION_NONE = -1,
+	ACTION_ATTACK = 9,
+	ACTION_RATTACK = 10,
+	ACTION_SPELL = 12,
+	ACTION_OPERATE = 13,
+	ACTION_DISARM = 14,
+	ACTION_PICKUPITEM = 15,  // put item in hand (inventory screen open)
+	ACTION_PICKUPAITEM = 16, // put item in inventory
+	ACTION_TALK = 17,
+	ACTION_OPERATETK = 18, // operate via telekinesis
+	ACTION_ATTACKMON = 20,
+	ACTION_ATTACKPLR = 21,
+	ACTION_RATTACKMON = 22,
+	ACTION_RATTACKPLR = 23,
+	ACTION_SPELLMON = 24,
+	ACTION_SPELLPLR = 25,
+	ACTION_SPELLWALL = 26,
 };

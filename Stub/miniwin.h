@@ -1,5 +1,11 @@
 #pragma once
 
+#ifdef NO_GLOBALS
+#define STATIC extern
+#else
+#define STATIC static
+#endif
+
 #include <ctype.h>
 #include <math.h>
 #include <stdarg.h>
@@ -19,13 +25,12 @@
 #define NO_ERROR 0
 
 // Calling conventions
-#define __cdecl
-#define __fastcall
-#define __stdcall
+#define __cdecl __attribute__((cdecl))
+#define __fastcall __attribute__((fastcall))
+#define __stdcall __attribute__((stdcall))
 #define CALLBACK __stdcall
 #define WINAPI __stdcall
 #define WINAPIV __cdecl
-#define APIENTRY __stdcall
 
 #define ALIGNED(n) __attribute__((aligned(n)))
 
@@ -42,25 +47,25 @@ typedef uint16_t SHORT;
 typedef int32_t LONG;
 
 typedef LONG *PLONG;
-typedef uint32_t ULONG;
+typedef unsigned long ULONG;
 typedef ULONG *PULONG;
-typedef uint16_t USHORT;
+typedef unsigned short USHORT;
 typedef USHORT *PUSHORT;
 typedef unsigned char UCHAR;
 typedef UCHAR *PUCHAR;
 typedef char *PSZ;
 
-typedef uint32_t DWORD;
+typedef unsigned long DWORD;
 typedef int BOOL, WINBOOL;
 typedef unsigned char BYTE;
-typedef uint16_t WORD;
+typedef unsigned short WORD;
 typedef float FLOAT;
 typedef FLOAT *PFLOAT;
 typedef BOOL *LPBOOL;
 typedef BYTE *LPBYTE;
 typedef int *LPINT;
 typedef WORD *LPWORD;
-typedef int32_t *LPLONG;
+typedef long *LPLONG;
 typedef DWORD *LPDWORD;
 typedef void *LPVOID;
 typedef CONST void *LPCVOID;
@@ -93,10 +98,13 @@ typedef LONG_PTR LRESULT;
 // Handles
 //
 typedef void *HANDLE;
+#define INVALID_HANDLE ((HANDLE)-1)
 
-typedef HANDLE HWND, HGDIOBJ, HMODULE, HDC, HRGN, HINSTANCE, HPALETTE, HFILE;
+typedef HANDLE HWND, HGDIOBJ, HMODULE, HDC, HRGN, HINSTANCE, HPALETTE, HFILE, HCURSOR;
 
 typedef LONG LCID;
+
+typedef DWORD COLORREF;
 
 typedef LONG HRESULT;
 
@@ -110,10 +118,7 @@ typedef LRESULT(CALLBACK *WNDPROC)(HWND, UINT, WPARAM, LPARAM);
 #define LOWORD(l) ((WORD)(((DWORD_PTR)(l)) & 0xffff))
 #define HIWORD(l) ((WORD)((((DWORD_PTR)(l)) >> 16) & 0xffff))
 
-static inline LONG InterlockedIncrement(LONG volatile *Addend)
-{
-	return __sync_add_and_fetch(Addend, 1);
-}
+#define InterlockedIncrement(x) __sync_add_and_fetch(x, 1)
 
 typedef struct waveformat_tag {
 	WORD wFormatTag;
@@ -373,6 +378,7 @@ typedef struct _WIN32_FIND_DATAA *LPWIN32_FIND_DATAA;
 typedef void *LPOVERLAPPED;
 
 #define OFS_MAXPATHNAME 128
+#define MAX_PATH 260
 
 typedef struct _OFSTRUCT {
 	BYTE cBytes;
@@ -490,7 +496,6 @@ HFILE WINAPI OpenFile(LPCSTR lpFileName, LPOFSTRUCT lpReOpenBuff, UINT uStyle);
 
 #define VK_RETURN 0x0D
 #define VK_BACK 0x08
-#define VK_LSHIFT 0xA0
 #define VK_SHIFT 0x10
 #define VK_ESCAPE 0x1B
 #define VK_SPACE 0x20
@@ -536,7 +541,7 @@ HFILE WINAPI OpenFile(LPCSTR lpFileName, LPOFSTRUCT lpReOpenBuff, UINT uStyle);
 // Total fakes
 //
 typedef struct {
-} SOCKADDR, GUID;
+} SOCKADDR, GUID, *LPGUID;
 
 typedef struct {
 	DWORD cb;
@@ -551,4 +556,3 @@ void srand_miniwin(unsigned int seed);
 
 #include "miniwin_ddraw.h"
 #include "miniwin_dsound.h"
-

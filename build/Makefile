@@ -111,17 +111,56 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named devil-test
+# Target rules for targets named sanitize_coverage
 
 # Build rule for target.
-devil-test: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 devil-test
-.PHONY : devil-test
+sanitize_coverage: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 sanitize_coverage
+.PHONY : sanitize_coverage
 
 # fast build rule for target.
-devil-test/fast:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/build
-.PHONY : devil-test/fast
+sanitize_coverage/fast:
+	$(MAKE) -f CMakeFiles/sanitize_coverage.dir/build.make CMakeFiles/sanitize_coverage.dir/build
+.PHONY : sanitize_coverage/fast
+
+#=============================================================================
+# Target rules for targets named devilution
+
+# Build rule for target.
+devilution: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 devilution
+.PHONY : devilution
+
+# fast build rule for target.
+devilution/fast:
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/build
+.PHONY : devilution/fast
+
+#=============================================================================
+# Target rules for targets named xxhash
+
+# Build rule for target.
+xxhash: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 xxhash
+.PHONY : xxhash
+
+# fast build rule for target.
+xxhash/fast:
+	$(MAKE) -f CMakeFiles/xxhash.dir/build.make CMakeFiles/xxhash.dir/build
+.PHONY : xxhash/fast
+
+#=============================================================================
+# Target rules for targets named devil-sanitize
+
+# Build rule for target.
+devil-sanitize: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 devil-sanitize
+.PHONY : devil-sanitize
+
+# fast build rule for target.
+devil-sanitize/fast:
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/build
+.PHONY : devil-sanitize/fast
 
 3rdParty/PKWare/explode.o: 3rdParty/PKWare/explode.cpp.o
 
@@ -129,7 +168,8 @@ devil-test/fast:
 
 # target to build an object file
 3rdParty/PKWare/explode.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/PKWare/explode.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/PKWare/explode.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/PKWare/explode.cpp.o
 .PHONY : 3rdParty/PKWare/explode.cpp.o
 
 3rdParty/PKWare/explode.i: 3rdParty/PKWare/explode.cpp.i
@@ -138,7 +178,8 @@ devil-test/fast:
 
 # target to preprocess a source file
 3rdParty/PKWare/explode.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/PKWare/explode.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/PKWare/explode.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/PKWare/explode.cpp.i
 .PHONY : 3rdParty/PKWare/explode.cpp.i
 
 3rdParty/PKWare/explode.s: 3rdParty/PKWare/explode.cpp.s
@@ -147,7 +188,8 @@ devil-test/fast:
 
 # target to generate assembly for a file
 3rdParty/PKWare/explode.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/PKWare/explode.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/PKWare/explode.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/PKWare/explode.cpp.s
 .PHONY : 3rdParty/PKWare/explode.cpp.s
 
 3rdParty/PKWare/implode.o: 3rdParty/PKWare/implode.cpp.o
@@ -156,7 +198,8 @@ devil-test/fast:
 
 # target to build an object file
 3rdParty/PKWare/implode.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/PKWare/implode.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/PKWare/implode.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/PKWare/implode.cpp.o
 .PHONY : 3rdParty/PKWare/implode.cpp.o
 
 3rdParty/PKWare/implode.i: 3rdParty/PKWare/implode.cpp.i
@@ -165,7 +208,8 @@ devil-test/fast:
 
 # target to preprocess a source file
 3rdParty/PKWare/implode.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/PKWare/implode.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/PKWare/implode.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/PKWare/implode.cpp.i
 .PHONY : 3rdParty/PKWare/implode.cpp.i
 
 3rdParty/PKWare/implode.s: 3rdParty/PKWare/implode.cpp.s
@@ -174,7 +218,8 @@ devil-test/fast:
 
 # target to generate assembly for a file
 3rdParty/PKWare/implode.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/PKWare/implode.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/PKWare/implode.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/PKWare/implode.cpp.s
 .PHONY : 3rdParty/PKWare/implode.cpp.s
 
 3rdParty/StormLib/src/FileStream.o: 3rdParty/StormLib/src/FileStream.cpp.o
@@ -183,7 +228,8 @@ devil-test/fast:
 
 # target to build an object file
 3rdParty/StormLib/src/FileStream.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/FileStream.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/FileStream.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/FileStream.cpp.o
 .PHONY : 3rdParty/StormLib/src/FileStream.cpp.o
 
 3rdParty/StormLib/src/FileStream.i: 3rdParty/StormLib/src/FileStream.cpp.i
@@ -192,7 +238,8 @@ devil-test/fast:
 
 # target to preprocess a source file
 3rdParty/StormLib/src/FileStream.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/FileStream.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/FileStream.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/FileStream.cpp.i
 .PHONY : 3rdParty/StormLib/src/FileStream.cpp.i
 
 3rdParty/StormLib/src/FileStream.s: 3rdParty/StormLib/src/FileStream.cpp.s
@@ -201,7 +248,8 @@ devil-test/fast:
 
 # target to generate assembly for a file
 3rdParty/StormLib/src/FileStream.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/FileStream.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/FileStream.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/FileStream.cpp.s
 .PHONY : 3rdParty/StormLib/src/FileStream.cpp.s
 
 3rdParty/StormLib/src/SBaseCommon.o: 3rdParty/StormLib/src/SBaseCommon.cpp.o
@@ -210,7 +258,8 @@ devil-test/fast:
 
 # target to build an object file
 3rdParty/StormLib/src/SBaseCommon.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SBaseCommon.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseCommon.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseCommon.cpp.o
 .PHONY : 3rdParty/StormLib/src/SBaseCommon.cpp.o
 
 3rdParty/StormLib/src/SBaseCommon.i: 3rdParty/StormLib/src/SBaseCommon.cpp.i
@@ -219,7 +268,8 @@ devil-test/fast:
 
 # target to preprocess a source file
 3rdParty/StormLib/src/SBaseCommon.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SBaseCommon.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseCommon.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseCommon.cpp.i
 .PHONY : 3rdParty/StormLib/src/SBaseCommon.cpp.i
 
 3rdParty/StormLib/src/SBaseCommon.s: 3rdParty/StormLib/src/SBaseCommon.cpp.s
@@ -228,7 +278,8 @@ devil-test/fast:
 
 # target to generate assembly for a file
 3rdParty/StormLib/src/SBaseCommon.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SBaseCommon.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseCommon.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseCommon.cpp.s
 .PHONY : 3rdParty/StormLib/src/SBaseCommon.cpp.s
 
 3rdParty/StormLib/src/SBaseFileTable.o: 3rdParty/StormLib/src/SBaseFileTable.cpp.o
@@ -237,7 +288,8 @@ devil-test/fast:
 
 # target to build an object file
 3rdParty/StormLib/src/SBaseFileTable.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.o
 .PHONY : 3rdParty/StormLib/src/SBaseFileTable.cpp.o
 
 3rdParty/StormLib/src/SBaseFileTable.i: 3rdParty/StormLib/src/SBaseFileTable.cpp.i
@@ -246,7 +298,8 @@ devil-test/fast:
 
 # target to preprocess a source file
 3rdParty/StormLib/src/SBaseFileTable.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.i
 .PHONY : 3rdParty/StormLib/src/SBaseFileTable.cpp.i
 
 3rdParty/StormLib/src/SBaseFileTable.s: 3rdParty/StormLib/src/SBaseFileTable.cpp.s
@@ -255,7 +308,8 @@ devil-test/fast:
 
 # target to generate assembly for a file
 3rdParty/StormLib/src/SBaseFileTable.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.s
 .PHONY : 3rdParty/StormLib/src/SBaseFileTable.cpp.s
 
 3rdParty/StormLib/src/SBaseSubTypes.o: 3rdParty/StormLib/src/SBaseSubTypes.cpp.o
@@ -264,7 +318,8 @@ devil-test/fast:
 
 # target to build an object file
 3rdParty/StormLib/src/SBaseSubTypes.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SBaseSubTypes.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseSubTypes.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseSubTypes.cpp.o
 .PHONY : 3rdParty/StormLib/src/SBaseSubTypes.cpp.o
 
 3rdParty/StormLib/src/SBaseSubTypes.i: 3rdParty/StormLib/src/SBaseSubTypes.cpp.i
@@ -273,7 +328,8 @@ devil-test/fast:
 
 # target to preprocess a source file
 3rdParty/StormLib/src/SBaseSubTypes.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SBaseSubTypes.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseSubTypes.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseSubTypes.cpp.i
 .PHONY : 3rdParty/StormLib/src/SBaseSubTypes.cpp.i
 
 3rdParty/StormLib/src/SBaseSubTypes.s: 3rdParty/StormLib/src/SBaseSubTypes.cpp.s
@@ -282,7 +338,8 @@ devil-test/fast:
 
 # target to generate assembly for a file
 3rdParty/StormLib/src/SBaseSubTypes.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SBaseSubTypes.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseSubTypes.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseSubTypes.cpp.s
 .PHONY : 3rdParty/StormLib/src/SBaseSubTypes.cpp.s
 
 3rdParty/StormLib/src/SCompression.o: 3rdParty/StormLib/src/SCompression.cpp.o
@@ -291,7 +348,8 @@ devil-test/fast:
 
 # target to build an object file
 3rdParty/StormLib/src/SCompression.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SCompression.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SCompression.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SCompression.cpp.o
 .PHONY : 3rdParty/StormLib/src/SCompression.cpp.o
 
 3rdParty/StormLib/src/SCompression.i: 3rdParty/StormLib/src/SCompression.cpp.i
@@ -300,7 +358,8 @@ devil-test/fast:
 
 # target to preprocess a source file
 3rdParty/StormLib/src/SCompression.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SCompression.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SCompression.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SCompression.cpp.i
 .PHONY : 3rdParty/StormLib/src/SCompression.cpp.i
 
 3rdParty/StormLib/src/SCompression.s: 3rdParty/StormLib/src/SCompression.cpp.s
@@ -309,7 +368,8 @@ devil-test/fast:
 
 # target to generate assembly for a file
 3rdParty/StormLib/src/SCompression.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SCompression.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SCompression.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SCompression.cpp.s
 .PHONY : 3rdParty/StormLib/src/SCompression.cpp.s
 
 3rdParty/StormLib/src/SFileExtractFile.o: 3rdParty/StormLib/src/SFileExtractFile.cpp.o
@@ -318,7 +378,8 @@ devil-test/fast:
 
 # target to build an object file
 3rdParty/StormLib/src/SFileExtractFile.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SFileExtractFile.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileExtractFile.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileExtractFile.cpp.o
 .PHONY : 3rdParty/StormLib/src/SFileExtractFile.cpp.o
 
 3rdParty/StormLib/src/SFileExtractFile.i: 3rdParty/StormLib/src/SFileExtractFile.cpp.i
@@ -327,7 +388,8 @@ devil-test/fast:
 
 # target to preprocess a source file
 3rdParty/StormLib/src/SFileExtractFile.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SFileExtractFile.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileExtractFile.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileExtractFile.cpp.i
 .PHONY : 3rdParty/StormLib/src/SFileExtractFile.cpp.i
 
 3rdParty/StormLib/src/SFileExtractFile.s: 3rdParty/StormLib/src/SFileExtractFile.cpp.s
@@ -336,7 +398,8 @@ devil-test/fast:
 
 # target to generate assembly for a file
 3rdParty/StormLib/src/SFileExtractFile.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SFileExtractFile.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileExtractFile.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileExtractFile.cpp.s
 .PHONY : 3rdParty/StormLib/src/SFileExtractFile.cpp.s
 
 3rdParty/StormLib/src/SFileFindFile.o: 3rdParty/StormLib/src/SFileFindFile.cpp.o
@@ -345,7 +408,8 @@ devil-test/fast:
 
 # target to build an object file
 3rdParty/StormLib/src/SFileFindFile.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SFileFindFile.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileFindFile.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileFindFile.cpp.o
 .PHONY : 3rdParty/StormLib/src/SFileFindFile.cpp.o
 
 3rdParty/StormLib/src/SFileFindFile.i: 3rdParty/StormLib/src/SFileFindFile.cpp.i
@@ -354,7 +418,8 @@ devil-test/fast:
 
 # target to preprocess a source file
 3rdParty/StormLib/src/SFileFindFile.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SFileFindFile.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileFindFile.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileFindFile.cpp.i
 .PHONY : 3rdParty/StormLib/src/SFileFindFile.cpp.i
 
 3rdParty/StormLib/src/SFileFindFile.s: 3rdParty/StormLib/src/SFileFindFile.cpp.s
@@ -363,7 +428,8 @@ devil-test/fast:
 
 # target to generate assembly for a file
 3rdParty/StormLib/src/SFileFindFile.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SFileFindFile.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileFindFile.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileFindFile.cpp.s
 .PHONY : 3rdParty/StormLib/src/SFileFindFile.cpp.s
 
 3rdParty/StormLib/src/SFileGetFileInfo.o: 3rdParty/StormLib/src/SFileGetFileInfo.cpp.o
@@ -372,7 +438,8 @@ devil-test/fast:
 
 # target to build an object file
 3rdParty/StormLib/src/SFileGetFileInfo.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SFileGetFileInfo.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileGetFileInfo.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileGetFileInfo.cpp.o
 .PHONY : 3rdParty/StormLib/src/SFileGetFileInfo.cpp.o
 
 3rdParty/StormLib/src/SFileGetFileInfo.i: 3rdParty/StormLib/src/SFileGetFileInfo.cpp.i
@@ -381,7 +448,8 @@ devil-test/fast:
 
 # target to preprocess a source file
 3rdParty/StormLib/src/SFileGetFileInfo.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SFileGetFileInfo.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileGetFileInfo.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileGetFileInfo.cpp.i
 .PHONY : 3rdParty/StormLib/src/SFileGetFileInfo.cpp.i
 
 3rdParty/StormLib/src/SFileGetFileInfo.s: 3rdParty/StormLib/src/SFileGetFileInfo.cpp.s
@@ -390,7 +458,8 @@ devil-test/fast:
 
 # target to generate assembly for a file
 3rdParty/StormLib/src/SFileGetFileInfo.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SFileGetFileInfo.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileGetFileInfo.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileGetFileInfo.cpp.s
 .PHONY : 3rdParty/StormLib/src/SFileGetFileInfo.cpp.s
 
 3rdParty/StormLib/src/SFileOpenArchive.o: 3rdParty/StormLib/src/SFileOpenArchive.cpp.o
@@ -399,7 +468,8 @@ devil-test/fast:
 
 # target to build an object file
 3rdParty/StormLib/src/SFileOpenArchive.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SFileOpenArchive.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileOpenArchive.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileOpenArchive.cpp.o
 .PHONY : 3rdParty/StormLib/src/SFileOpenArchive.cpp.o
 
 3rdParty/StormLib/src/SFileOpenArchive.i: 3rdParty/StormLib/src/SFileOpenArchive.cpp.i
@@ -408,7 +478,8 @@ devil-test/fast:
 
 # target to preprocess a source file
 3rdParty/StormLib/src/SFileOpenArchive.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SFileOpenArchive.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileOpenArchive.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileOpenArchive.cpp.i
 .PHONY : 3rdParty/StormLib/src/SFileOpenArchive.cpp.i
 
 3rdParty/StormLib/src/SFileOpenArchive.s: 3rdParty/StormLib/src/SFileOpenArchive.cpp.s
@@ -417,7 +488,8 @@ devil-test/fast:
 
 # target to generate assembly for a file
 3rdParty/StormLib/src/SFileOpenArchive.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SFileOpenArchive.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileOpenArchive.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileOpenArchive.cpp.s
 .PHONY : 3rdParty/StormLib/src/SFileOpenArchive.cpp.s
 
 3rdParty/StormLib/src/SFileOpenFileEx.o: 3rdParty/StormLib/src/SFileOpenFileEx.cpp.o
@@ -426,7 +498,8 @@ devil-test/fast:
 
 # target to build an object file
 3rdParty/StormLib/src/SFileOpenFileEx.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SFileOpenFileEx.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileOpenFileEx.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileOpenFileEx.cpp.o
 .PHONY : 3rdParty/StormLib/src/SFileOpenFileEx.cpp.o
 
 3rdParty/StormLib/src/SFileOpenFileEx.i: 3rdParty/StormLib/src/SFileOpenFileEx.cpp.i
@@ -435,7 +508,8 @@ devil-test/fast:
 
 # target to preprocess a source file
 3rdParty/StormLib/src/SFileOpenFileEx.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SFileOpenFileEx.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileOpenFileEx.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileOpenFileEx.cpp.i
 .PHONY : 3rdParty/StormLib/src/SFileOpenFileEx.cpp.i
 
 3rdParty/StormLib/src/SFileOpenFileEx.s: 3rdParty/StormLib/src/SFileOpenFileEx.cpp.s
@@ -444,7 +518,8 @@ devil-test/fast:
 
 # target to generate assembly for a file
 3rdParty/StormLib/src/SFileOpenFileEx.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SFileOpenFileEx.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileOpenFileEx.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileOpenFileEx.cpp.s
 .PHONY : 3rdParty/StormLib/src/SFileOpenFileEx.cpp.s
 
 3rdParty/StormLib/src/SFileReadFile.o: 3rdParty/StormLib/src/SFileReadFile.cpp.o
@@ -453,7 +528,8 @@ devil-test/fast:
 
 # target to build an object file
 3rdParty/StormLib/src/SFileReadFile.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SFileReadFile.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileReadFile.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileReadFile.cpp.o
 .PHONY : 3rdParty/StormLib/src/SFileReadFile.cpp.o
 
 3rdParty/StormLib/src/SFileReadFile.i: 3rdParty/StormLib/src/SFileReadFile.cpp.i
@@ -462,7 +538,8 @@ devil-test/fast:
 
 # target to preprocess a source file
 3rdParty/StormLib/src/SFileReadFile.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SFileReadFile.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileReadFile.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileReadFile.cpp.i
 .PHONY : 3rdParty/StormLib/src/SFileReadFile.cpp.i
 
 3rdParty/StormLib/src/SFileReadFile.s: 3rdParty/StormLib/src/SFileReadFile.cpp.s
@@ -471,8 +548,36 @@ devil-test/fast:
 
 # target to generate assembly for a file
 3rdParty/StormLib/src/SFileReadFile.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/3rdParty/StormLib/src/SFileReadFile.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileReadFile.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileReadFile.cpp.s
 .PHONY : 3rdParty/StormLib/src/SFileReadFile.cpp.s
+
+3rdParty/xxhash/xxhash.o: 3rdParty/xxhash/xxhash.c.o
+
+.PHONY : 3rdParty/xxhash/xxhash.o
+
+# target to build an object file
+3rdParty/xxhash/xxhash.c.o:
+	$(MAKE) -f CMakeFiles/xxhash.dir/build.make CMakeFiles/xxhash.dir/3rdParty/xxhash/xxhash.c.o
+.PHONY : 3rdParty/xxhash/xxhash.c.o
+
+3rdParty/xxhash/xxhash.i: 3rdParty/xxhash/xxhash.c.i
+
+.PHONY : 3rdParty/xxhash/xxhash.i
+
+# target to preprocess a source file
+3rdParty/xxhash/xxhash.c.i:
+	$(MAKE) -f CMakeFiles/xxhash.dir/build.make CMakeFiles/xxhash.dir/3rdParty/xxhash/xxhash.c.i
+.PHONY : 3rdParty/xxhash/xxhash.c.i
+
+3rdParty/xxhash/xxhash.s: 3rdParty/xxhash/xxhash.c.s
+
+.PHONY : 3rdParty/xxhash/xxhash.s
+
+# target to generate assembly for a file
+3rdParty/xxhash/xxhash.c.s:
+	$(MAKE) -f CMakeFiles/xxhash.dir/build.make CMakeFiles/xxhash.dir/3rdParty/xxhash/xxhash.c.s
+.PHONY : 3rdParty/xxhash/xxhash.c.s
 
 Source/automap.o: Source/automap.cpp.o
 
@@ -480,7 +585,8 @@ Source/automap.o: Source/automap.cpp.o
 
 # target to build an object file
 Source/automap.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/automap.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/automap.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/automap.cpp.o
 .PHONY : Source/automap.cpp.o
 
 Source/automap.i: Source/automap.cpp.i
@@ -489,7 +595,8 @@ Source/automap.i: Source/automap.cpp.i
 
 # target to preprocess a source file
 Source/automap.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/automap.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/automap.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/automap.cpp.i
 .PHONY : Source/automap.cpp.i
 
 Source/automap.s: Source/automap.cpp.s
@@ -498,7 +605,8 @@ Source/automap.s: Source/automap.cpp.s
 
 # target to generate assembly for a file
 Source/automap.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/automap.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/automap.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/automap.cpp.s
 .PHONY : Source/automap.cpp.s
 
 Source/codec.o: Source/codec.cpp.o
@@ -507,7 +615,8 @@ Source/codec.o: Source/codec.cpp.o
 
 # target to build an object file
 Source/codec.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/codec.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/codec.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/codec.cpp.o
 .PHONY : Source/codec.cpp.o
 
 Source/codec.i: Source/codec.cpp.i
@@ -516,7 +625,8 @@ Source/codec.i: Source/codec.cpp.i
 
 # target to preprocess a source file
 Source/codec.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/codec.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/codec.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/codec.cpp.i
 .PHONY : Source/codec.cpp.i
 
 Source/codec.s: Source/codec.cpp.s
@@ -525,7 +635,8 @@ Source/codec.s: Source/codec.cpp.s
 
 # target to generate assembly for a file
 Source/codec.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/codec.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/codec.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/codec.cpp.s
 .PHONY : Source/codec.cpp.s
 
 Source/control.o: Source/control.cpp.o
@@ -534,7 +645,8 @@ Source/control.o: Source/control.cpp.o
 
 # target to build an object file
 Source/control.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/control.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/control.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/control.cpp.o
 .PHONY : Source/control.cpp.o
 
 Source/control.i: Source/control.cpp.i
@@ -543,7 +655,8 @@ Source/control.i: Source/control.cpp.i
 
 # target to preprocess a source file
 Source/control.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/control.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/control.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/control.cpp.i
 .PHONY : Source/control.cpp.i
 
 Source/control.s: Source/control.cpp.s
@@ -552,7 +665,8 @@ Source/control.s: Source/control.cpp.s
 
 # target to generate assembly for a file
 Source/control.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/control.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/control.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/control.cpp.s
 .PHONY : Source/control.cpp.s
 
 Source/cursor.o: Source/cursor.cpp.o
@@ -561,7 +675,8 @@ Source/cursor.o: Source/cursor.cpp.o
 
 # target to build an object file
 Source/cursor.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/cursor.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/cursor.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/cursor.cpp.o
 .PHONY : Source/cursor.cpp.o
 
 Source/cursor.i: Source/cursor.cpp.i
@@ -570,7 +685,8 @@ Source/cursor.i: Source/cursor.cpp.i
 
 # target to preprocess a source file
 Source/cursor.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/cursor.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/cursor.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/cursor.cpp.i
 .PHONY : Source/cursor.cpp.i
 
 Source/cursor.s: Source/cursor.cpp.s
@@ -579,7 +695,8 @@ Source/cursor.s: Source/cursor.cpp.s
 
 # target to generate assembly for a file
 Source/cursor.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/cursor.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/cursor.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/cursor.cpp.s
 .PHONY : Source/cursor.cpp.s
 
 Source/dead.o: Source/dead.cpp.o
@@ -588,7 +705,8 @@ Source/dead.o: Source/dead.cpp.o
 
 # target to build an object file
 Source/dead.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/dead.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/dead.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/dead.cpp.o
 .PHONY : Source/dead.cpp.o
 
 Source/dead.i: Source/dead.cpp.i
@@ -597,7 +715,8 @@ Source/dead.i: Source/dead.cpp.i
 
 # target to preprocess a source file
 Source/dead.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/dead.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/dead.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/dead.cpp.i
 .PHONY : Source/dead.cpp.i
 
 Source/dead.s: Source/dead.cpp.s
@@ -606,7 +725,8 @@ Source/dead.s: Source/dead.cpp.s
 
 # target to generate assembly for a file
 Source/dead.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/dead.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/dead.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/dead.cpp.s
 .PHONY : Source/dead.cpp.s
 
 Source/debug.o: Source/debug.cpp.o
@@ -615,7 +735,8 @@ Source/debug.o: Source/debug.cpp.o
 
 # target to build an object file
 Source/debug.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/debug.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/debug.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/debug.cpp.o
 .PHONY : Source/debug.cpp.o
 
 Source/debug.i: Source/debug.cpp.i
@@ -624,7 +745,8 @@ Source/debug.i: Source/debug.cpp.i
 
 # target to preprocess a source file
 Source/debug.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/debug.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/debug.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/debug.cpp.i
 .PHONY : Source/debug.cpp.i
 
 Source/debug.s: Source/debug.cpp.s
@@ -633,7 +755,8 @@ Source/debug.s: Source/debug.cpp.s
 
 # target to generate assembly for a file
 Source/debug.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/debug.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/debug.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/debug.cpp.s
 .PHONY : Source/debug.cpp.s
 
 Source/diablo.o: Source/diablo.cpp.o
@@ -642,7 +765,8 @@ Source/diablo.o: Source/diablo.cpp.o
 
 # target to build an object file
 Source/diablo.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/diablo.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/diablo.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/diablo.cpp.o
 .PHONY : Source/diablo.cpp.o
 
 Source/diablo.i: Source/diablo.cpp.i
@@ -651,7 +775,8 @@ Source/diablo.i: Source/diablo.cpp.i
 
 # target to preprocess a source file
 Source/diablo.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/diablo.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/diablo.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/diablo.cpp.i
 .PHONY : Source/diablo.cpp.i
 
 Source/diablo.s: Source/diablo.cpp.s
@@ -660,7 +785,8 @@ Source/diablo.s: Source/diablo.cpp.s
 
 # target to generate assembly for a file
 Source/diablo.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/diablo.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/diablo.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/diablo.cpp.s
 .PHONY : Source/diablo.cpp.s
 
 Source/doom.o: Source/doom.cpp.o
@@ -669,7 +795,8 @@ Source/doom.o: Source/doom.cpp.o
 
 # target to build an object file
 Source/doom.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/doom.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/doom.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/doom.cpp.o
 .PHONY : Source/doom.cpp.o
 
 Source/doom.i: Source/doom.cpp.i
@@ -678,7 +805,8 @@ Source/doom.i: Source/doom.cpp.i
 
 # target to preprocess a source file
 Source/doom.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/doom.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/doom.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/doom.cpp.i
 .PHONY : Source/doom.cpp.i
 
 Source/doom.s: Source/doom.cpp.s
@@ -687,7 +815,8 @@ Source/doom.s: Source/doom.cpp.s
 
 # target to generate assembly for a file
 Source/doom.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/doom.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/doom.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/doom.cpp.s
 .PHONY : Source/doom.cpp.s
 
 Source/drlg_l1.o: Source/drlg_l1.cpp.o
@@ -696,7 +825,8 @@ Source/drlg_l1.o: Source/drlg_l1.cpp.o
 
 # target to build an object file
 Source/drlg_l1.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/drlg_l1.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/drlg_l1.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/drlg_l1.cpp.o
 .PHONY : Source/drlg_l1.cpp.o
 
 Source/drlg_l1.i: Source/drlg_l1.cpp.i
@@ -705,7 +835,8 @@ Source/drlg_l1.i: Source/drlg_l1.cpp.i
 
 # target to preprocess a source file
 Source/drlg_l1.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/drlg_l1.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/drlg_l1.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/drlg_l1.cpp.i
 .PHONY : Source/drlg_l1.cpp.i
 
 Source/drlg_l1.s: Source/drlg_l1.cpp.s
@@ -714,7 +845,8 @@ Source/drlg_l1.s: Source/drlg_l1.cpp.s
 
 # target to generate assembly for a file
 Source/drlg_l1.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/drlg_l1.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/drlg_l1.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/drlg_l1.cpp.s
 .PHONY : Source/drlg_l1.cpp.s
 
 Source/drlg_l2.o: Source/drlg_l2.cpp.o
@@ -723,7 +855,8 @@ Source/drlg_l2.o: Source/drlg_l2.cpp.o
 
 # target to build an object file
 Source/drlg_l2.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/drlg_l2.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/drlg_l2.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/drlg_l2.cpp.o
 .PHONY : Source/drlg_l2.cpp.o
 
 Source/drlg_l2.i: Source/drlg_l2.cpp.i
@@ -732,7 +865,8 @@ Source/drlg_l2.i: Source/drlg_l2.cpp.i
 
 # target to preprocess a source file
 Source/drlg_l2.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/drlg_l2.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/drlg_l2.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/drlg_l2.cpp.i
 .PHONY : Source/drlg_l2.cpp.i
 
 Source/drlg_l2.s: Source/drlg_l2.cpp.s
@@ -741,7 +875,8 @@ Source/drlg_l2.s: Source/drlg_l2.cpp.s
 
 # target to generate assembly for a file
 Source/drlg_l2.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/drlg_l2.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/drlg_l2.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/drlg_l2.cpp.s
 .PHONY : Source/drlg_l2.cpp.s
 
 Source/drlg_l3.o: Source/drlg_l3.cpp.o
@@ -750,7 +885,8 @@ Source/drlg_l3.o: Source/drlg_l3.cpp.o
 
 # target to build an object file
 Source/drlg_l3.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/drlg_l3.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/drlg_l3.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/drlg_l3.cpp.o
 .PHONY : Source/drlg_l3.cpp.o
 
 Source/drlg_l3.i: Source/drlg_l3.cpp.i
@@ -759,7 +895,8 @@ Source/drlg_l3.i: Source/drlg_l3.cpp.i
 
 # target to preprocess a source file
 Source/drlg_l3.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/drlg_l3.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/drlg_l3.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/drlg_l3.cpp.i
 .PHONY : Source/drlg_l3.cpp.i
 
 Source/drlg_l3.s: Source/drlg_l3.cpp.s
@@ -768,7 +905,8 @@ Source/drlg_l3.s: Source/drlg_l3.cpp.s
 
 # target to generate assembly for a file
 Source/drlg_l3.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/drlg_l3.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/drlg_l3.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/drlg_l3.cpp.s
 .PHONY : Source/drlg_l3.cpp.s
 
 Source/drlg_l4.o: Source/drlg_l4.cpp.o
@@ -777,7 +915,8 @@ Source/drlg_l4.o: Source/drlg_l4.cpp.o
 
 # target to build an object file
 Source/drlg_l4.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/drlg_l4.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/drlg_l4.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/drlg_l4.cpp.o
 .PHONY : Source/drlg_l4.cpp.o
 
 Source/drlg_l4.i: Source/drlg_l4.cpp.i
@@ -786,7 +925,8 @@ Source/drlg_l4.i: Source/drlg_l4.cpp.i
 
 # target to preprocess a source file
 Source/drlg_l4.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/drlg_l4.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/drlg_l4.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/drlg_l4.cpp.i
 .PHONY : Source/drlg_l4.cpp.i
 
 Source/drlg_l4.s: Source/drlg_l4.cpp.s
@@ -795,7 +935,8 @@ Source/drlg_l4.s: Source/drlg_l4.cpp.s
 
 # target to generate assembly for a file
 Source/drlg_l4.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/drlg_l4.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/drlg_l4.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/drlg_l4.cpp.s
 .PHONY : Source/drlg_l4.cpp.s
 
 Source/encrypt.o: Source/encrypt.cpp.o
@@ -804,7 +945,8 @@ Source/encrypt.o: Source/encrypt.cpp.o
 
 # target to build an object file
 Source/encrypt.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/encrypt.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/encrypt.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/encrypt.cpp.o
 .PHONY : Source/encrypt.cpp.o
 
 Source/encrypt.i: Source/encrypt.cpp.i
@@ -813,7 +955,8 @@ Source/encrypt.i: Source/encrypt.cpp.i
 
 # target to preprocess a source file
 Source/encrypt.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/encrypt.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/encrypt.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/encrypt.cpp.i
 .PHONY : Source/encrypt.cpp.i
 
 Source/encrypt.s: Source/encrypt.cpp.s
@@ -822,7 +965,8 @@ Source/encrypt.s: Source/encrypt.cpp.s
 
 # target to generate assembly for a file
 Source/encrypt.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/encrypt.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/encrypt.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/encrypt.cpp.s
 .PHONY : Source/encrypt.cpp.s
 
 Source/engine.o: Source/engine.cpp.o
@@ -831,7 +975,8 @@ Source/engine.o: Source/engine.cpp.o
 
 # target to build an object file
 Source/engine.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/engine.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/engine.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/engine.cpp.o
 .PHONY : Source/engine.cpp.o
 
 Source/engine.i: Source/engine.cpp.i
@@ -840,7 +985,8 @@ Source/engine.i: Source/engine.cpp.i
 
 # target to preprocess a source file
 Source/engine.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/engine.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/engine.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/engine.cpp.i
 .PHONY : Source/engine.cpp.i
 
 Source/engine.s: Source/engine.cpp.s
@@ -849,7 +995,8 @@ Source/engine.s: Source/engine.cpp.s
 
 # target to generate assembly for a file
 Source/engine.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/engine.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/engine.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/engine.cpp.s
 .PHONY : Source/engine.cpp.s
 
 Source/error.o: Source/error.cpp.o
@@ -858,7 +1005,8 @@ Source/error.o: Source/error.cpp.o
 
 # target to build an object file
 Source/error.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/error.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/error.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/error.cpp.o
 .PHONY : Source/error.cpp.o
 
 Source/error.i: Source/error.cpp.i
@@ -867,7 +1015,8 @@ Source/error.i: Source/error.cpp.i
 
 # target to preprocess a source file
 Source/error.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/error.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/error.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/error.cpp.i
 .PHONY : Source/error.cpp.i
 
 Source/error.s: Source/error.cpp.s
@@ -876,7 +1025,8 @@ Source/error.s: Source/error.cpp.s
 
 # target to generate assembly for a file
 Source/error.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/error.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/error.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/error.cpp.s
 .PHONY : Source/error.cpp.s
 
 Source/gamemenu.o: Source/gamemenu.cpp.o
@@ -885,7 +1035,8 @@ Source/gamemenu.o: Source/gamemenu.cpp.o
 
 # target to build an object file
 Source/gamemenu.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/gamemenu.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/gamemenu.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/gamemenu.cpp.o
 .PHONY : Source/gamemenu.cpp.o
 
 Source/gamemenu.i: Source/gamemenu.cpp.i
@@ -894,7 +1045,8 @@ Source/gamemenu.i: Source/gamemenu.cpp.i
 
 # target to preprocess a source file
 Source/gamemenu.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/gamemenu.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/gamemenu.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/gamemenu.cpp.i
 .PHONY : Source/gamemenu.cpp.i
 
 Source/gamemenu.s: Source/gamemenu.cpp.s
@@ -903,7 +1055,8 @@ Source/gamemenu.s: Source/gamemenu.cpp.s
 
 # target to generate assembly for a file
 Source/gamemenu.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/gamemenu.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/gamemenu.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/gamemenu.cpp.s
 .PHONY : Source/gamemenu.cpp.s
 
 Source/gendung.o: Source/gendung.cpp.o
@@ -912,7 +1065,8 @@ Source/gendung.o: Source/gendung.cpp.o
 
 # target to build an object file
 Source/gendung.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/gendung.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/gendung.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/gendung.cpp.o
 .PHONY : Source/gendung.cpp.o
 
 Source/gendung.i: Source/gendung.cpp.i
@@ -921,7 +1075,8 @@ Source/gendung.i: Source/gendung.cpp.i
 
 # target to preprocess a source file
 Source/gendung.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/gendung.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/gendung.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/gendung.cpp.i
 .PHONY : Source/gendung.cpp.i
 
 Source/gendung.s: Source/gendung.cpp.s
@@ -930,7 +1085,8 @@ Source/gendung.s: Source/gendung.cpp.s
 
 # target to generate assembly for a file
 Source/gendung.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/gendung.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/gendung.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/gendung.cpp.s
 .PHONY : Source/gendung.cpp.s
 
 Source/gmenu.o: Source/gmenu.cpp.o
@@ -939,7 +1095,8 @@ Source/gmenu.o: Source/gmenu.cpp.o
 
 # target to build an object file
 Source/gmenu.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/gmenu.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/gmenu.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/gmenu.cpp.o
 .PHONY : Source/gmenu.cpp.o
 
 Source/gmenu.i: Source/gmenu.cpp.i
@@ -948,7 +1105,8 @@ Source/gmenu.i: Source/gmenu.cpp.i
 
 # target to preprocess a source file
 Source/gmenu.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/gmenu.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/gmenu.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/gmenu.cpp.i
 .PHONY : Source/gmenu.cpp.i
 
 Source/gmenu.s: Source/gmenu.cpp.s
@@ -957,7 +1115,8 @@ Source/gmenu.s: Source/gmenu.cpp.s
 
 # target to generate assembly for a file
 Source/gmenu.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/gmenu.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/gmenu.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/gmenu.cpp.s
 .PHONY : Source/gmenu.cpp.s
 
 Source/help.o: Source/help.cpp.o
@@ -966,7 +1125,8 @@ Source/help.o: Source/help.cpp.o
 
 # target to build an object file
 Source/help.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/help.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/help.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/help.cpp.o
 .PHONY : Source/help.cpp.o
 
 Source/help.i: Source/help.cpp.i
@@ -975,7 +1135,8 @@ Source/help.i: Source/help.cpp.i
 
 # target to preprocess a source file
 Source/help.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/help.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/help.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/help.cpp.i
 .PHONY : Source/help.cpp.i
 
 Source/help.s: Source/help.cpp.s
@@ -984,7 +1145,8 @@ Source/help.s: Source/help.cpp.s
 
 # target to generate assembly for a file
 Source/help.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/help.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/help.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/help.cpp.s
 .PHONY : Source/help.cpp.s
 
 Source/interfac.o: Source/interfac.cpp.o
@@ -993,7 +1155,8 @@ Source/interfac.o: Source/interfac.cpp.o
 
 # target to build an object file
 Source/interfac.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/interfac.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/interfac.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/interfac.cpp.o
 .PHONY : Source/interfac.cpp.o
 
 Source/interfac.i: Source/interfac.cpp.i
@@ -1002,7 +1165,8 @@ Source/interfac.i: Source/interfac.cpp.i
 
 # target to preprocess a source file
 Source/interfac.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/interfac.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/interfac.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/interfac.cpp.i
 .PHONY : Source/interfac.cpp.i
 
 Source/interfac.s: Source/interfac.cpp.s
@@ -1011,7 +1175,8 @@ Source/interfac.s: Source/interfac.cpp.s
 
 # target to generate assembly for a file
 Source/interfac.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/interfac.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/interfac.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/interfac.cpp.s
 .PHONY : Source/interfac.cpp.s
 
 Source/inv.o: Source/inv.cpp.o
@@ -1020,7 +1185,8 @@ Source/inv.o: Source/inv.cpp.o
 
 # target to build an object file
 Source/inv.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/inv.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/inv.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/inv.cpp.o
 .PHONY : Source/inv.cpp.o
 
 Source/inv.i: Source/inv.cpp.i
@@ -1029,7 +1195,8 @@ Source/inv.i: Source/inv.cpp.i
 
 # target to preprocess a source file
 Source/inv.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/inv.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/inv.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/inv.cpp.i
 .PHONY : Source/inv.cpp.i
 
 Source/inv.s: Source/inv.cpp.s
@@ -1038,7 +1205,8 @@ Source/inv.s: Source/inv.cpp.s
 
 # target to generate assembly for a file
 Source/inv.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/inv.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/inv.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/inv.cpp.s
 .PHONY : Source/inv.cpp.s
 
 Source/items.o: Source/items.cpp.o
@@ -1047,7 +1215,8 @@ Source/items.o: Source/items.cpp.o
 
 # target to build an object file
 Source/items.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/items.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/items.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/items.cpp.o
 .PHONY : Source/items.cpp.o
 
 Source/items.i: Source/items.cpp.i
@@ -1056,7 +1225,8 @@ Source/items.i: Source/items.cpp.i
 
 # target to preprocess a source file
 Source/items.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/items.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/items.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/items.cpp.i
 .PHONY : Source/items.cpp.i
 
 Source/items.s: Source/items.cpp.s
@@ -1065,7 +1235,8 @@ Source/items.s: Source/items.cpp.s
 
 # target to generate assembly for a file
 Source/items.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/items.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/items.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/items.cpp.s
 .PHONY : Source/items.cpp.s
 
 Source/lighting.o: Source/lighting.cpp.o
@@ -1074,7 +1245,8 @@ Source/lighting.o: Source/lighting.cpp.o
 
 # target to build an object file
 Source/lighting.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/lighting.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/lighting.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/lighting.cpp.o
 .PHONY : Source/lighting.cpp.o
 
 Source/lighting.i: Source/lighting.cpp.i
@@ -1083,7 +1255,8 @@ Source/lighting.i: Source/lighting.cpp.i
 
 # target to preprocess a source file
 Source/lighting.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/lighting.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/lighting.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/lighting.cpp.i
 .PHONY : Source/lighting.cpp.i
 
 Source/lighting.s: Source/lighting.cpp.s
@@ -1092,7 +1265,8 @@ Source/lighting.s: Source/lighting.cpp.s
 
 # target to generate assembly for a file
 Source/lighting.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/lighting.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/lighting.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/lighting.cpp.s
 .PHONY : Source/lighting.cpp.s
 
 Source/loadsave.o: Source/loadsave.cpp.o
@@ -1101,7 +1275,8 @@ Source/loadsave.o: Source/loadsave.cpp.o
 
 # target to build an object file
 Source/loadsave.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/loadsave.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/loadsave.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/loadsave.cpp.o
 .PHONY : Source/loadsave.cpp.o
 
 Source/loadsave.i: Source/loadsave.cpp.i
@@ -1110,7 +1285,8 @@ Source/loadsave.i: Source/loadsave.cpp.i
 
 # target to preprocess a source file
 Source/loadsave.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/loadsave.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/loadsave.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/loadsave.cpp.i
 .PHONY : Source/loadsave.cpp.i
 
 Source/loadsave.s: Source/loadsave.cpp.s
@@ -1119,7 +1295,8 @@ Source/loadsave.s: Source/loadsave.cpp.s
 
 # target to generate assembly for a file
 Source/loadsave.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/loadsave.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/loadsave.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/loadsave.cpp.s
 .PHONY : Source/loadsave.cpp.s
 
 Source/mainmenu.o: Source/mainmenu.cpp.o
@@ -1128,7 +1305,8 @@ Source/mainmenu.o: Source/mainmenu.cpp.o
 
 # target to build an object file
 Source/mainmenu.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/mainmenu.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/mainmenu.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/mainmenu.cpp.o
 .PHONY : Source/mainmenu.cpp.o
 
 Source/mainmenu.i: Source/mainmenu.cpp.i
@@ -1137,7 +1315,8 @@ Source/mainmenu.i: Source/mainmenu.cpp.i
 
 # target to preprocess a source file
 Source/mainmenu.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/mainmenu.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/mainmenu.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/mainmenu.cpp.i
 .PHONY : Source/mainmenu.cpp.i
 
 Source/mainmenu.s: Source/mainmenu.cpp.s
@@ -1146,7 +1325,8 @@ Source/mainmenu.s: Source/mainmenu.cpp.s
 
 # target to generate assembly for a file
 Source/mainmenu.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/mainmenu.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/mainmenu.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/mainmenu.cpp.s
 .PHONY : Source/mainmenu.cpp.s
 
 Source/minitext.o: Source/minitext.cpp.o
@@ -1155,7 +1335,8 @@ Source/minitext.o: Source/minitext.cpp.o
 
 # target to build an object file
 Source/minitext.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/minitext.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/minitext.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/minitext.cpp.o
 .PHONY : Source/minitext.cpp.o
 
 Source/minitext.i: Source/minitext.cpp.i
@@ -1164,7 +1345,8 @@ Source/minitext.i: Source/minitext.cpp.i
 
 # target to preprocess a source file
 Source/minitext.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/minitext.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/minitext.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/minitext.cpp.i
 .PHONY : Source/minitext.cpp.i
 
 Source/minitext.s: Source/minitext.cpp.s
@@ -1173,7 +1355,8 @@ Source/minitext.s: Source/minitext.cpp.s
 
 # target to generate assembly for a file
 Source/minitext.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/minitext.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/minitext.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/minitext.cpp.s
 .PHONY : Source/minitext.cpp.s
 
 Source/missiles.o: Source/missiles.cpp.o
@@ -1182,7 +1365,8 @@ Source/missiles.o: Source/missiles.cpp.o
 
 # target to build an object file
 Source/missiles.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/missiles.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/missiles.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/missiles.cpp.o
 .PHONY : Source/missiles.cpp.o
 
 Source/missiles.i: Source/missiles.cpp.i
@@ -1191,7 +1375,8 @@ Source/missiles.i: Source/missiles.cpp.i
 
 # target to preprocess a source file
 Source/missiles.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/missiles.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/missiles.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/missiles.cpp.i
 .PHONY : Source/missiles.cpp.i
 
 Source/missiles.s: Source/missiles.cpp.s
@@ -1200,7 +1385,8 @@ Source/missiles.s: Source/missiles.cpp.s
 
 # target to generate assembly for a file
 Source/missiles.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/missiles.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/missiles.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/missiles.cpp.s
 .PHONY : Source/missiles.cpp.s
 
 Source/monster.o: Source/monster.cpp.o
@@ -1209,7 +1395,8 @@ Source/monster.o: Source/monster.cpp.o
 
 # target to build an object file
 Source/monster.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/monster.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/monster.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/monster.cpp.o
 .PHONY : Source/monster.cpp.o
 
 Source/monster.i: Source/monster.cpp.i
@@ -1218,7 +1405,8 @@ Source/monster.i: Source/monster.cpp.i
 
 # target to preprocess a source file
 Source/monster.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/monster.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/monster.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/monster.cpp.i
 .PHONY : Source/monster.cpp.i
 
 Source/monster.s: Source/monster.cpp.s
@@ -1227,7 +1415,8 @@ Source/monster.s: Source/monster.cpp.s
 
 # target to generate assembly for a file
 Source/monster.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/monster.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/monster.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/monster.cpp.s
 .PHONY : Source/monster.cpp.s
 
 Source/mpqapi.o: Source/mpqapi.cpp.o
@@ -1236,7 +1425,8 @@ Source/mpqapi.o: Source/mpqapi.cpp.o
 
 # target to build an object file
 Source/mpqapi.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/mpqapi.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/mpqapi.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/mpqapi.cpp.o
 .PHONY : Source/mpqapi.cpp.o
 
 Source/mpqapi.i: Source/mpqapi.cpp.i
@@ -1245,7 +1435,8 @@ Source/mpqapi.i: Source/mpqapi.cpp.i
 
 # target to preprocess a source file
 Source/mpqapi.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/mpqapi.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/mpqapi.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/mpqapi.cpp.i
 .PHONY : Source/mpqapi.cpp.i
 
 Source/mpqapi.s: Source/mpqapi.cpp.s
@@ -1254,7 +1445,8 @@ Source/mpqapi.s: Source/mpqapi.cpp.s
 
 # target to generate assembly for a file
 Source/mpqapi.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/mpqapi.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/mpqapi.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/mpqapi.cpp.s
 .PHONY : Source/mpqapi.cpp.s
 
 Source/msg.o: Source/msg.cpp.o
@@ -1263,7 +1455,8 @@ Source/msg.o: Source/msg.cpp.o
 
 # target to build an object file
 Source/msg.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/msg.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/msg.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/msg.cpp.o
 .PHONY : Source/msg.cpp.o
 
 Source/msg.i: Source/msg.cpp.i
@@ -1272,7 +1465,8 @@ Source/msg.i: Source/msg.cpp.i
 
 # target to preprocess a source file
 Source/msg.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/msg.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/msg.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/msg.cpp.i
 .PHONY : Source/msg.cpp.i
 
 Source/msg.s: Source/msg.cpp.s
@@ -1281,7 +1475,8 @@ Source/msg.s: Source/msg.cpp.s
 
 # target to generate assembly for a file
 Source/msg.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/msg.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/msg.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/msg.cpp.s
 .PHONY : Source/msg.cpp.s
 
 Source/msgcmd.o: Source/msgcmd.cpp.o
@@ -1290,7 +1485,8 @@ Source/msgcmd.o: Source/msgcmd.cpp.o
 
 # target to build an object file
 Source/msgcmd.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/msgcmd.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/msgcmd.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/msgcmd.cpp.o
 .PHONY : Source/msgcmd.cpp.o
 
 Source/msgcmd.i: Source/msgcmd.cpp.i
@@ -1299,7 +1495,8 @@ Source/msgcmd.i: Source/msgcmd.cpp.i
 
 # target to preprocess a source file
 Source/msgcmd.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/msgcmd.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/msgcmd.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/msgcmd.cpp.i
 .PHONY : Source/msgcmd.cpp.i
 
 Source/msgcmd.s: Source/msgcmd.cpp.s
@@ -1308,7 +1505,8 @@ Source/msgcmd.s: Source/msgcmd.cpp.s
 
 # target to generate assembly for a file
 Source/msgcmd.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/msgcmd.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/msgcmd.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/msgcmd.cpp.s
 .PHONY : Source/msgcmd.cpp.s
 
 Source/multi.o: Source/multi.cpp.o
@@ -1317,7 +1515,8 @@ Source/multi.o: Source/multi.cpp.o
 
 # target to build an object file
 Source/multi.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/multi.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/multi.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/multi.cpp.o
 .PHONY : Source/multi.cpp.o
 
 Source/multi.i: Source/multi.cpp.i
@@ -1326,7 +1525,8 @@ Source/multi.i: Source/multi.cpp.i
 
 # target to preprocess a source file
 Source/multi.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/multi.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/multi.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/multi.cpp.i
 .PHONY : Source/multi.cpp.i
 
 Source/multi.s: Source/multi.cpp.s
@@ -1335,7 +1535,8 @@ Source/multi.s: Source/multi.cpp.s
 
 # target to generate assembly for a file
 Source/multi.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/multi.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/multi.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/multi.cpp.s
 .PHONY : Source/multi.cpp.s
 
 Source/objects.o: Source/objects.cpp.o
@@ -1344,7 +1545,8 @@ Source/objects.o: Source/objects.cpp.o
 
 # target to build an object file
 Source/objects.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/objects.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/objects.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/objects.cpp.o
 .PHONY : Source/objects.cpp.o
 
 Source/objects.i: Source/objects.cpp.i
@@ -1353,7 +1555,8 @@ Source/objects.i: Source/objects.cpp.i
 
 # target to preprocess a source file
 Source/objects.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/objects.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/objects.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/objects.cpp.i
 .PHONY : Source/objects.cpp.i
 
 Source/objects.s: Source/objects.cpp.s
@@ -1362,7 +1565,8 @@ Source/objects.s: Source/objects.cpp.s
 
 # target to generate assembly for a file
 Source/objects.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/objects.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/objects.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/objects.cpp.s
 .PHONY : Source/objects.cpp.s
 
 Source/pack.o: Source/pack.cpp.o
@@ -1371,7 +1575,8 @@ Source/pack.o: Source/pack.cpp.o
 
 # target to build an object file
 Source/pack.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/pack.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/pack.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/pack.cpp.o
 .PHONY : Source/pack.cpp.o
 
 Source/pack.i: Source/pack.cpp.i
@@ -1380,7 +1585,8 @@ Source/pack.i: Source/pack.cpp.i
 
 # target to preprocess a source file
 Source/pack.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/pack.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/pack.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/pack.cpp.i
 .PHONY : Source/pack.cpp.i
 
 Source/pack.s: Source/pack.cpp.s
@@ -1389,7 +1595,8 @@ Source/pack.s: Source/pack.cpp.s
 
 # target to generate assembly for a file
 Source/pack.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/pack.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/pack.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/pack.cpp.s
 .PHONY : Source/pack.cpp.s
 
 Source/palette.o: Source/palette.cpp.o
@@ -1398,7 +1605,8 @@ Source/palette.o: Source/palette.cpp.o
 
 # target to build an object file
 Source/palette.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/palette.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/palette.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/palette.cpp.o
 .PHONY : Source/palette.cpp.o
 
 Source/palette.i: Source/palette.cpp.i
@@ -1407,7 +1615,8 @@ Source/palette.i: Source/palette.cpp.i
 
 # target to preprocess a source file
 Source/palette.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/palette.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/palette.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/palette.cpp.i
 .PHONY : Source/palette.cpp.i
 
 Source/palette.s: Source/palette.cpp.s
@@ -1416,7 +1625,8 @@ Source/palette.s: Source/palette.cpp.s
 
 # target to generate assembly for a file
 Source/palette.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/palette.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/palette.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/palette.cpp.s
 .PHONY : Source/palette.cpp.s
 
 Source/path.o: Source/path.cpp.o
@@ -1425,7 +1635,8 @@ Source/path.o: Source/path.cpp.o
 
 # target to build an object file
 Source/path.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/path.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/path.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/path.cpp.o
 .PHONY : Source/path.cpp.o
 
 Source/path.i: Source/path.cpp.i
@@ -1434,7 +1645,8 @@ Source/path.i: Source/path.cpp.i
 
 # target to preprocess a source file
 Source/path.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/path.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/path.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/path.cpp.i
 .PHONY : Source/path.cpp.i
 
 Source/path.s: Source/path.cpp.s
@@ -1443,7 +1655,8 @@ Source/path.s: Source/path.cpp.s
 
 # target to generate assembly for a file
 Source/path.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/path.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/path.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/path.cpp.s
 .PHONY : Source/path.cpp.s
 
 Source/pfile.o: Source/pfile.cpp.o
@@ -1452,7 +1665,8 @@ Source/pfile.o: Source/pfile.cpp.o
 
 # target to build an object file
 Source/pfile.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/pfile.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/pfile.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/pfile.cpp.o
 .PHONY : Source/pfile.cpp.o
 
 Source/pfile.i: Source/pfile.cpp.i
@@ -1461,7 +1675,8 @@ Source/pfile.i: Source/pfile.cpp.i
 
 # target to preprocess a source file
 Source/pfile.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/pfile.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/pfile.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/pfile.cpp.i
 .PHONY : Source/pfile.cpp.i
 
 Source/pfile.s: Source/pfile.cpp.s
@@ -1470,7 +1685,8 @@ Source/pfile.s: Source/pfile.cpp.s
 
 # target to generate assembly for a file
 Source/pfile.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/pfile.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/pfile.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/pfile.cpp.s
 .PHONY : Source/pfile.cpp.s
 
 Source/player.o: Source/player.cpp.o
@@ -1479,7 +1695,8 @@ Source/player.o: Source/player.cpp.o
 
 # target to build an object file
 Source/player.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/player.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/player.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/player.cpp.o
 .PHONY : Source/player.cpp.o
 
 Source/player.i: Source/player.cpp.i
@@ -1488,7 +1705,8 @@ Source/player.i: Source/player.cpp.i
 
 # target to preprocess a source file
 Source/player.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/player.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/player.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/player.cpp.i
 .PHONY : Source/player.cpp.i
 
 Source/player.s: Source/player.cpp.s
@@ -1497,7 +1715,8 @@ Source/player.s: Source/player.cpp.s
 
 # target to generate assembly for a file
 Source/player.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/player.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/player.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/player.cpp.s
 .PHONY : Source/player.cpp.s
 
 Source/plrmsg.o: Source/plrmsg.cpp.o
@@ -1506,7 +1725,8 @@ Source/plrmsg.o: Source/plrmsg.cpp.o
 
 # target to build an object file
 Source/plrmsg.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/plrmsg.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/plrmsg.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/plrmsg.cpp.o
 .PHONY : Source/plrmsg.cpp.o
 
 Source/plrmsg.i: Source/plrmsg.cpp.i
@@ -1515,7 +1735,8 @@ Source/plrmsg.i: Source/plrmsg.cpp.i
 
 # target to preprocess a source file
 Source/plrmsg.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/plrmsg.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/plrmsg.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/plrmsg.cpp.i
 .PHONY : Source/plrmsg.cpp.i
 
 Source/plrmsg.s: Source/plrmsg.cpp.s
@@ -1524,7 +1745,8 @@ Source/plrmsg.s: Source/plrmsg.cpp.s
 
 # target to generate assembly for a file
 Source/plrmsg.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/plrmsg.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/plrmsg.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/plrmsg.cpp.s
 .PHONY : Source/plrmsg.cpp.s
 
 Source/portal.o: Source/portal.cpp.o
@@ -1533,7 +1755,8 @@ Source/portal.o: Source/portal.cpp.o
 
 # target to build an object file
 Source/portal.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/portal.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/portal.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/portal.cpp.o
 .PHONY : Source/portal.cpp.o
 
 Source/portal.i: Source/portal.cpp.i
@@ -1542,7 +1765,8 @@ Source/portal.i: Source/portal.cpp.i
 
 # target to preprocess a source file
 Source/portal.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/portal.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/portal.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/portal.cpp.i
 .PHONY : Source/portal.cpp.i
 
 Source/portal.s: Source/portal.cpp.s
@@ -1551,7 +1775,8 @@ Source/portal.s: Source/portal.cpp.s
 
 # target to generate assembly for a file
 Source/portal.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/portal.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/portal.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/portal.cpp.s
 .PHONY : Source/portal.cpp.s
 
 Source/quests.o: Source/quests.cpp.o
@@ -1560,7 +1785,8 @@ Source/quests.o: Source/quests.cpp.o
 
 # target to build an object file
 Source/quests.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/quests.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/quests.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/quests.cpp.o
 .PHONY : Source/quests.cpp.o
 
 Source/quests.i: Source/quests.cpp.i
@@ -1569,7 +1795,8 @@ Source/quests.i: Source/quests.cpp.i
 
 # target to preprocess a source file
 Source/quests.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/quests.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/quests.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/quests.cpp.i
 .PHONY : Source/quests.cpp.i
 
 Source/quests.s: Source/quests.cpp.s
@@ -1578,7 +1805,8 @@ Source/quests.s: Source/quests.cpp.s
 
 # target to generate assembly for a file
 Source/quests.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/quests.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/quests.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/quests.cpp.s
 .PHONY : Source/quests.cpp.s
 
 Source/render.o: Source/render.cpp.o
@@ -1587,7 +1815,8 @@ Source/render.o: Source/render.cpp.o
 
 # target to build an object file
 Source/render.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/render.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/render.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/render.cpp.o
 .PHONY : Source/render.cpp.o
 
 Source/render.i: Source/render.cpp.i
@@ -1596,7 +1825,8 @@ Source/render.i: Source/render.cpp.i
 
 # target to preprocess a source file
 Source/render.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/render.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/render.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/render.cpp.i
 .PHONY : Source/render.cpp.i
 
 Source/render.s: Source/render.cpp.s
@@ -1605,7 +1835,8 @@ Source/render.s: Source/render.cpp.s
 
 # target to generate assembly for a file
 Source/render.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/render.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/render.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/render.cpp.s
 .PHONY : Source/render.cpp.s
 
 Source/scrollrt.o: Source/scrollrt.cpp.o
@@ -1614,7 +1845,8 @@ Source/scrollrt.o: Source/scrollrt.cpp.o
 
 # target to build an object file
 Source/scrollrt.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/scrollrt.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/scrollrt.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/scrollrt.cpp.o
 .PHONY : Source/scrollrt.cpp.o
 
 Source/scrollrt.i: Source/scrollrt.cpp.i
@@ -1623,7 +1855,8 @@ Source/scrollrt.i: Source/scrollrt.cpp.i
 
 # target to preprocess a source file
 Source/scrollrt.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/scrollrt.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/scrollrt.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/scrollrt.cpp.i
 .PHONY : Source/scrollrt.cpp.i
 
 Source/scrollrt.s: Source/scrollrt.cpp.s
@@ -1632,7 +1865,8 @@ Source/scrollrt.s: Source/scrollrt.cpp.s
 
 # target to generate assembly for a file
 Source/scrollrt.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/scrollrt.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/scrollrt.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/scrollrt.cpp.s
 .PHONY : Source/scrollrt.cpp.s
 
 Source/setmaps.o: Source/setmaps.cpp.o
@@ -1641,7 +1875,8 @@ Source/setmaps.o: Source/setmaps.cpp.o
 
 # target to build an object file
 Source/setmaps.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/setmaps.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/setmaps.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/setmaps.cpp.o
 .PHONY : Source/setmaps.cpp.o
 
 Source/setmaps.i: Source/setmaps.cpp.i
@@ -1650,7 +1885,8 @@ Source/setmaps.i: Source/setmaps.cpp.i
 
 # target to preprocess a source file
 Source/setmaps.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/setmaps.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/setmaps.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/setmaps.cpp.i
 .PHONY : Source/setmaps.cpp.i
 
 Source/setmaps.s: Source/setmaps.cpp.s
@@ -1659,7 +1895,8 @@ Source/setmaps.s: Source/setmaps.cpp.s
 
 # target to generate assembly for a file
 Source/setmaps.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/setmaps.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/setmaps.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/setmaps.cpp.s
 .PHONY : Source/setmaps.cpp.s
 
 Source/sha.o: Source/sha.cpp.o
@@ -1668,7 +1905,8 @@ Source/sha.o: Source/sha.cpp.o
 
 # target to build an object file
 Source/sha.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/sha.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/sha.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/sha.cpp.o
 .PHONY : Source/sha.cpp.o
 
 Source/sha.i: Source/sha.cpp.i
@@ -1677,7 +1915,8 @@ Source/sha.i: Source/sha.cpp.i
 
 # target to preprocess a source file
 Source/sha.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/sha.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/sha.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/sha.cpp.i
 .PHONY : Source/sha.cpp.i
 
 Source/sha.s: Source/sha.cpp.s
@@ -1686,7 +1925,8 @@ Source/sha.s: Source/sha.cpp.s
 
 # target to generate assembly for a file
 Source/sha.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/sha.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/sha.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/sha.cpp.s
 .PHONY : Source/sha.cpp.s
 
 Source/spells.o: Source/spells.cpp.o
@@ -1695,7 +1935,8 @@ Source/spells.o: Source/spells.cpp.o
 
 # target to build an object file
 Source/spells.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/spells.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/spells.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/spells.cpp.o
 .PHONY : Source/spells.cpp.o
 
 Source/spells.i: Source/spells.cpp.i
@@ -1704,7 +1945,8 @@ Source/spells.i: Source/spells.cpp.i
 
 # target to preprocess a source file
 Source/spells.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/spells.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/spells.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/spells.cpp.i
 .PHONY : Source/spells.cpp.i
 
 Source/spells.s: Source/spells.cpp.s
@@ -1713,7 +1955,8 @@ Source/spells.s: Source/spells.cpp.s
 
 # target to generate assembly for a file
 Source/spells.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/spells.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/spells.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/spells.cpp.s
 .PHONY : Source/spells.cpp.s
 
 Source/stores.o: Source/stores.cpp.o
@@ -1722,7 +1965,8 @@ Source/stores.o: Source/stores.cpp.o
 
 # target to build an object file
 Source/stores.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/stores.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/stores.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/stores.cpp.o
 .PHONY : Source/stores.cpp.o
 
 Source/stores.i: Source/stores.cpp.i
@@ -1731,7 +1975,8 @@ Source/stores.i: Source/stores.cpp.i
 
 # target to preprocess a source file
 Source/stores.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/stores.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/stores.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/stores.cpp.i
 .PHONY : Source/stores.cpp.i
 
 Source/stores.s: Source/stores.cpp.s
@@ -1740,7 +1985,8 @@ Source/stores.s: Source/stores.cpp.s
 
 # target to generate assembly for a file
 Source/stores.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/stores.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/stores.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/stores.cpp.s
 .PHONY : Source/stores.cpp.s
 
 Source/sync.o: Source/sync.cpp.o
@@ -1749,7 +1995,8 @@ Source/sync.o: Source/sync.cpp.o
 
 # target to build an object file
 Source/sync.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/sync.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/sync.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/sync.cpp.o
 .PHONY : Source/sync.cpp.o
 
 Source/sync.i: Source/sync.cpp.i
@@ -1758,7 +2005,8 @@ Source/sync.i: Source/sync.cpp.i
 
 # target to preprocess a source file
 Source/sync.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/sync.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/sync.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/sync.cpp.i
 .PHONY : Source/sync.cpp.i
 
 Source/sync.s: Source/sync.cpp.s
@@ -1767,7 +2015,8 @@ Source/sync.s: Source/sync.cpp.s
 
 # target to generate assembly for a file
 Source/sync.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/sync.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/sync.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/sync.cpp.s
 .PHONY : Source/sync.cpp.s
 
 Source/textdat.o: Source/textdat.cpp.o
@@ -1776,7 +2025,8 @@ Source/textdat.o: Source/textdat.cpp.o
 
 # target to build an object file
 Source/textdat.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/textdat.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/textdat.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/textdat.cpp.o
 .PHONY : Source/textdat.cpp.o
 
 Source/textdat.i: Source/textdat.cpp.i
@@ -1785,7 +2035,8 @@ Source/textdat.i: Source/textdat.cpp.i
 
 # target to preprocess a source file
 Source/textdat.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/textdat.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/textdat.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/textdat.cpp.i
 .PHONY : Source/textdat.cpp.i
 
 Source/textdat.s: Source/textdat.cpp.s
@@ -1794,7 +2045,8 @@ Source/textdat.s: Source/textdat.cpp.s
 
 # target to generate assembly for a file
 Source/textdat.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/textdat.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/textdat.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/textdat.cpp.s
 .PHONY : Source/textdat.cpp.s
 
 Source/themes.o: Source/themes.cpp.o
@@ -1803,7 +2055,8 @@ Source/themes.o: Source/themes.cpp.o
 
 # target to build an object file
 Source/themes.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/themes.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/themes.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/themes.cpp.o
 .PHONY : Source/themes.cpp.o
 
 Source/themes.i: Source/themes.cpp.i
@@ -1812,7 +2065,8 @@ Source/themes.i: Source/themes.cpp.i
 
 # target to preprocess a source file
 Source/themes.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/themes.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/themes.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/themes.cpp.i
 .PHONY : Source/themes.cpp.i
 
 Source/themes.s: Source/themes.cpp.s
@@ -1821,7 +2075,8 @@ Source/themes.s: Source/themes.cpp.s
 
 # target to generate assembly for a file
 Source/themes.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/themes.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/themes.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/themes.cpp.s
 .PHONY : Source/themes.cpp.s
 
 Source/tmsg.o: Source/tmsg.cpp.o
@@ -1830,7 +2085,8 @@ Source/tmsg.o: Source/tmsg.cpp.o
 
 # target to build an object file
 Source/tmsg.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/tmsg.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/tmsg.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/tmsg.cpp.o
 .PHONY : Source/tmsg.cpp.o
 
 Source/tmsg.i: Source/tmsg.cpp.i
@@ -1839,7 +2095,8 @@ Source/tmsg.i: Source/tmsg.cpp.i
 
 # target to preprocess a source file
 Source/tmsg.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/tmsg.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/tmsg.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/tmsg.cpp.i
 .PHONY : Source/tmsg.cpp.i
 
 Source/tmsg.s: Source/tmsg.cpp.s
@@ -1848,7 +2105,8 @@ Source/tmsg.s: Source/tmsg.cpp.s
 
 # target to generate assembly for a file
 Source/tmsg.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/tmsg.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/tmsg.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/tmsg.cpp.s
 .PHONY : Source/tmsg.cpp.s
 
 Source/town.o: Source/town.cpp.o
@@ -1857,7 +2115,8 @@ Source/town.o: Source/town.cpp.o
 
 # target to build an object file
 Source/town.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/town.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/town.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/town.cpp.o
 .PHONY : Source/town.cpp.o
 
 Source/town.i: Source/town.cpp.i
@@ -1866,7 +2125,8 @@ Source/town.i: Source/town.cpp.i
 
 # target to preprocess a source file
 Source/town.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/town.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/town.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/town.cpp.i
 .PHONY : Source/town.cpp.i
 
 Source/town.s: Source/town.cpp.s
@@ -1875,7 +2135,8 @@ Source/town.s: Source/town.cpp.s
 
 # target to generate assembly for a file
 Source/town.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/town.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/town.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/town.cpp.s
 .PHONY : Source/town.cpp.s
 
 Source/towners.o: Source/towners.cpp.o
@@ -1884,7 +2145,8 @@ Source/towners.o: Source/towners.cpp.o
 
 # target to build an object file
 Source/towners.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/towners.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/towners.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/towners.cpp.o
 .PHONY : Source/towners.cpp.o
 
 Source/towners.i: Source/towners.cpp.i
@@ -1893,7 +2155,8 @@ Source/towners.i: Source/towners.cpp.i
 
 # target to preprocess a source file
 Source/towners.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/towners.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/towners.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/towners.cpp.i
 .PHONY : Source/towners.cpp.i
 
 Source/towners.s: Source/towners.cpp.s
@@ -1902,7 +2165,8 @@ Source/towners.s: Source/towners.cpp.s
 
 # target to generate assembly for a file
 Source/towners.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/towners.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/towners.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/towners.cpp.s
 .PHONY : Source/towners.cpp.s
 
 Source/track.o: Source/track.cpp.o
@@ -1911,7 +2175,8 @@ Source/track.o: Source/track.cpp.o
 
 # target to build an object file
 Source/track.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/track.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/track.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/track.cpp.o
 .PHONY : Source/track.cpp.o
 
 Source/track.i: Source/track.cpp.i
@@ -1920,7 +2185,8 @@ Source/track.i: Source/track.cpp.i
 
 # target to preprocess a source file
 Source/track.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/track.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/track.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/track.cpp.i
 .PHONY : Source/track.cpp.i
 
 Source/track.s: Source/track.cpp.s
@@ -1929,7 +2195,8 @@ Source/track.s: Source/track.cpp.s
 
 # target to generate assembly for a file
 Source/track.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/track.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/track.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/track.cpp.s
 .PHONY : Source/track.cpp.s
 
 Source/trigs.o: Source/trigs.cpp.o
@@ -1938,7 +2205,8 @@ Source/trigs.o: Source/trigs.cpp.o
 
 # target to build an object file
 Source/trigs.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/trigs.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/trigs.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/trigs.cpp.o
 .PHONY : Source/trigs.cpp.o
 
 Source/trigs.i: Source/trigs.cpp.i
@@ -1947,7 +2215,8 @@ Source/trigs.i: Source/trigs.cpp.i
 
 # target to preprocess a source file
 Source/trigs.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/trigs.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/trigs.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/trigs.cpp.i
 .PHONY : Source/trigs.cpp.i
 
 Source/trigs.s: Source/trigs.cpp.s
@@ -1956,7 +2225,8 @@ Source/trigs.s: Source/trigs.cpp.s
 
 # target to generate assembly for a file
 Source/trigs.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/trigs.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/trigs.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/trigs.cpp.s
 .PHONY : Source/trigs.cpp.s
 
 Source/wave.o: Source/wave.cpp.o
@@ -1965,7 +2235,8 @@ Source/wave.o: Source/wave.cpp.o
 
 # target to build an object file
 Source/wave.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/wave.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/wave.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/wave.cpp.o
 .PHONY : Source/wave.cpp.o
 
 Source/wave.i: Source/wave.cpp.i
@@ -1974,7 +2245,8 @@ Source/wave.i: Source/wave.cpp.i
 
 # target to preprocess a source file
 Source/wave.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/wave.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/wave.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/wave.cpp.i
 .PHONY : Source/wave.cpp.i
 
 Source/wave.s: Source/wave.cpp.s
@@ -1983,7 +2255,8 @@ Source/wave.s: Source/wave.cpp.s
 
 # target to generate assembly for a file
 Source/wave.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Source/wave.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/wave.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/wave.cpp.s
 .PHONY : Source/wave.cpp.s
 
 Stub/SDL_FontCache.o: Stub/SDL_FontCache.cpp.o
@@ -1992,7 +2265,8 @@ Stub/SDL_FontCache.o: Stub/SDL_FontCache.cpp.o
 
 # target to build an object file
 Stub/SDL_FontCache.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/SDL_FontCache.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.o
 .PHONY : Stub/SDL_FontCache.cpp.o
 
 Stub/SDL_FontCache.i: Stub/SDL_FontCache.cpp.i
@@ -2001,7 +2275,8 @@ Stub/SDL_FontCache.i: Stub/SDL_FontCache.cpp.i
 
 # target to preprocess a source file
 Stub/SDL_FontCache.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/SDL_FontCache.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.i
 .PHONY : Stub/SDL_FontCache.cpp.i
 
 Stub/SDL_FontCache.s: Stub/SDL_FontCache.cpp.s
@@ -2010,7 +2285,8 @@ Stub/SDL_FontCache.s: Stub/SDL_FontCache.cpp.s
 
 # target to generate assembly for a file
 Stub/SDL_FontCache.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/SDL_FontCache.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.s
 .PHONY : Stub/SDL_FontCache.cpp.s
 
 Stub/appfat.o: Stub/appfat.cpp.o
@@ -2019,7 +2295,8 @@ Stub/appfat.o: Stub/appfat.cpp.o
 
 # target to build an object file
 Stub/appfat.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/appfat.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/appfat.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/appfat.cpp.o
 .PHONY : Stub/appfat.cpp.o
 
 Stub/appfat.i: Stub/appfat.cpp.i
@@ -2028,7 +2305,8 @@ Stub/appfat.i: Stub/appfat.cpp.i
 
 # target to preprocess a source file
 Stub/appfat.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/appfat.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/appfat.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/appfat.cpp.i
 .PHONY : Stub/appfat.cpp.i
 
 Stub/appfat.s: Stub/appfat.cpp.s
@@ -2037,7 +2315,8 @@ Stub/appfat.s: Stub/appfat.cpp.s
 
 # target to generate assembly for a file
 Stub/appfat.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/appfat.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/appfat.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/appfat.cpp.s
 .PHONY : Stub/appfat.cpp.s
 
 Stub/capture.o: Stub/capture.cpp.o
@@ -2046,7 +2325,8 @@ Stub/capture.o: Stub/capture.cpp.o
 
 # target to build an object file
 Stub/capture.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/capture.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/capture.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/capture.cpp.o
 .PHONY : Stub/capture.cpp.o
 
 Stub/capture.i: Stub/capture.cpp.i
@@ -2055,7 +2335,8 @@ Stub/capture.i: Stub/capture.cpp.i
 
 # target to preprocess a source file
 Stub/capture.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/capture.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/capture.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/capture.cpp.i
 .PHONY : Stub/capture.cpp.i
 
 Stub/capture.s: Stub/capture.cpp.s
@@ -2064,7 +2345,8 @@ Stub/capture.s: Stub/capture.cpp.s
 
 # target to generate assembly for a file
 Stub/capture.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/capture.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/capture.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/capture.cpp.s
 .PHONY : Stub/capture.cpp.s
 
 Stub/diabloui.o: Stub/diabloui.cpp.o
@@ -2073,7 +2355,8 @@ Stub/diabloui.o: Stub/diabloui.cpp.o
 
 # target to build an object file
 Stub/diabloui.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/diabloui.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/diabloui.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/diabloui.cpp.o
 .PHONY : Stub/diabloui.cpp.o
 
 Stub/diabloui.i: Stub/diabloui.cpp.i
@@ -2082,7 +2365,8 @@ Stub/diabloui.i: Stub/diabloui.cpp.i
 
 # target to preprocess a source file
 Stub/diabloui.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/diabloui.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/diabloui.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/diabloui.cpp.i
 .PHONY : Stub/diabloui.cpp.i
 
 Stub/diabloui.s: Stub/diabloui.cpp.s
@@ -2091,7 +2375,8 @@ Stub/diabloui.s: Stub/diabloui.cpp.s
 
 # target to generate assembly for a file
 Stub/diabloui.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/diabloui.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/diabloui.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/diabloui.cpp.s
 .PHONY : Stub/diabloui.cpp.s
 
 Stub/dthread.o: Stub/dthread.cpp.o
@@ -2100,7 +2385,8 @@ Stub/dthread.o: Stub/dthread.cpp.o
 
 # target to build an object file
 Stub/dthread.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/dthread.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/dthread.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/dthread.cpp.o
 .PHONY : Stub/dthread.cpp.o
 
 Stub/dthread.i: Stub/dthread.cpp.i
@@ -2109,7 +2395,8 @@ Stub/dthread.i: Stub/dthread.cpp.i
 
 # target to preprocess a source file
 Stub/dthread.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/dthread.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/dthread.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/dthread.cpp.i
 .PHONY : Stub/dthread.cpp.i
 
 Stub/dthread.s: Stub/dthread.cpp.s
@@ -2118,7 +2405,8 @@ Stub/dthread.s: Stub/dthread.cpp.s
 
 # target to generate assembly for a file
 Stub/dthread.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/dthread.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/dthread.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/dthread.cpp.s
 .PHONY : Stub/dthread.cpp.s
 
 Stub/dx.o: Stub/dx.cpp.o
@@ -2127,7 +2415,8 @@ Stub/dx.o: Stub/dx.cpp.o
 
 # target to build an object file
 Stub/dx.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/dx.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/dx.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/dx.cpp.o
 .PHONY : Stub/dx.cpp.o
 
 Stub/dx.i: Stub/dx.cpp.i
@@ -2136,7 +2425,8 @@ Stub/dx.i: Stub/dx.cpp.i
 
 # target to preprocess a source file
 Stub/dx.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/dx.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/dx.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/dx.cpp.i
 .PHONY : Stub/dx.cpp.i
 
 Stub/dx.s: Stub/dx.cpp.s
@@ -2145,7 +2435,8 @@ Stub/dx.s: Stub/dx.cpp.s
 
 # target to generate assembly for a file
 Stub/dx.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/dx.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/dx.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/dx.cpp.s
 .PHONY : Stub/dx.cpp.s
 
 Stub/effects.o: Stub/effects.cpp.o
@@ -2154,7 +2445,8 @@ Stub/effects.o: Stub/effects.cpp.o
 
 # target to build an object file
 Stub/effects.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/effects.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/effects.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/effects.cpp.o
 .PHONY : Stub/effects.cpp.o
 
 Stub/effects.i: Stub/effects.cpp.i
@@ -2163,7 +2455,8 @@ Stub/effects.i: Stub/effects.cpp.i
 
 # target to preprocess a source file
 Stub/effects.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/effects.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/effects.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/effects.cpp.i
 .PHONY : Stub/effects.cpp.i
 
 Stub/effects.s: Stub/effects.cpp.s
@@ -2172,7 +2465,8 @@ Stub/effects.s: Stub/effects.cpp.s
 
 # target to generate assembly for a file
 Stub/effects.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/effects.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/effects.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/effects.cpp.s
 .PHONY : Stub/effects.cpp.s
 
 Stub/fault.o: Stub/fault.cpp.o
@@ -2181,7 +2475,8 @@ Stub/fault.o: Stub/fault.cpp.o
 
 # target to build an object file
 Stub/fault.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/fault.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/fault.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/fault.cpp.o
 .PHONY : Stub/fault.cpp.o
 
 Stub/fault.i: Stub/fault.cpp.i
@@ -2190,7 +2485,8 @@ Stub/fault.i: Stub/fault.cpp.i
 
 # target to preprocess a source file
 Stub/fault.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/fault.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/fault.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/fault.cpp.i
 .PHONY : Stub/fault.cpp.i
 
 Stub/fault.s: Stub/fault.cpp.s
@@ -2199,7 +2495,8 @@ Stub/fault.s: Stub/fault.cpp.s
 
 # target to generate assembly for a file
 Stub/fault.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/fault.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/fault.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/fault.cpp.s
 .PHONY : Stub/fault.cpp.s
 
 Stub/init.o: Stub/init.cpp.o
@@ -2208,7 +2505,8 @@ Stub/init.o: Stub/init.cpp.o
 
 # target to build an object file
 Stub/init.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/init.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/init.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/init.cpp.o
 .PHONY : Stub/init.cpp.o
 
 Stub/init.i: Stub/init.cpp.i
@@ -2217,7 +2515,8 @@ Stub/init.i: Stub/init.cpp.i
 
 # target to preprocess a source file
 Stub/init.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/init.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/init.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/init.cpp.i
 .PHONY : Stub/init.cpp.i
 
 Stub/init.s: Stub/init.cpp.s
@@ -2226,8 +2525,36 @@ Stub/init.s: Stub/init.cpp.s
 
 # target to generate assembly for a file
 Stub/init.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/init.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/init.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/init.cpp.s
 .PHONY : Stub/init.cpp.s
+
+Stub/main.o: Stub/main.cpp.o
+
+.PHONY : Stub/main.o
+
+# target to build an object file
+Stub/main.cpp.o:
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/main.cpp.o
+.PHONY : Stub/main.cpp.o
+
+Stub/main.i: Stub/main.cpp.i
+
+.PHONY : Stub/main.i
+
+# target to preprocess a source file
+Stub/main.cpp.i:
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/main.cpp.i
+.PHONY : Stub/main.cpp.i
+
+Stub/main.s: Stub/main.cpp.s
+
+.PHONY : Stub/main.s
+
+# target to generate assembly for a file
+Stub/main.cpp.s:
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/main.cpp.s
+.PHONY : Stub/main.cpp.s
 
 Stub/main_test.o: Stub/main_test.cpp.o
 
@@ -2235,7 +2562,7 @@ Stub/main_test.o: Stub/main_test.cpp.o
 
 # target to build an object file
 Stub/main_test.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/main_test.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/main_test.cpp.o
 .PHONY : Stub/main_test.cpp.o
 
 Stub/main_test.i: Stub/main_test.cpp.i
@@ -2244,7 +2571,7 @@ Stub/main_test.i: Stub/main_test.cpp.i
 
 # target to preprocess a source file
 Stub/main_test.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/main_test.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/main_test.cpp.i
 .PHONY : Stub/main_test.cpp.i
 
 Stub/main_test.s: Stub/main_test.cpp.s
@@ -2253,7 +2580,7 @@ Stub/main_test.s: Stub/main_test.cpp.s
 
 # target to generate assembly for a file
 Stub/main_test.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/main_test.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/main_test.cpp.s
 .PHONY : Stub/main_test.cpp.s
 
 Stub/miniwin.o: Stub/miniwin.cpp.o
@@ -2262,7 +2589,8 @@ Stub/miniwin.o: Stub/miniwin.cpp.o
 
 # target to build an object file
 Stub/miniwin.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/miniwin.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/miniwin.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/miniwin.cpp.o
 .PHONY : Stub/miniwin.cpp.o
 
 Stub/miniwin.i: Stub/miniwin.cpp.i
@@ -2271,7 +2599,8 @@ Stub/miniwin.i: Stub/miniwin.cpp.i
 
 # target to preprocess a source file
 Stub/miniwin.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/miniwin.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/miniwin.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/miniwin.cpp.i
 .PHONY : Stub/miniwin.cpp.i
 
 Stub/miniwin.s: Stub/miniwin.cpp.s
@@ -2280,7 +2609,8 @@ Stub/miniwin.s: Stub/miniwin.cpp.s
 
 # target to generate assembly for a file
 Stub/miniwin.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/miniwin.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/miniwin.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/miniwin.cpp.s
 .PHONY : Stub/miniwin.cpp.s
 
 Stub/miniwin_io.o: Stub/miniwin_io.cpp.o
@@ -2289,7 +2619,8 @@ Stub/miniwin_io.o: Stub/miniwin_io.cpp.o
 
 # target to build an object file
 Stub/miniwin_io.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/miniwin_io.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/miniwin_io.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/miniwin_io.cpp.o
 .PHONY : Stub/miniwin_io.cpp.o
 
 Stub/miniwin_io.i: Stub/miniwin_io.cpp.i
@@ -2298,7 +2629,8 @@ Stub/miniwin_io.i: Stub/miniwin_io.cpp.i
 
 # target to preprocess a source file
 Stub/miniwin_io.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/miniwin_io.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/miniwin_io.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/miniwin_io.cpp.i
 .PHONY : Stub/miniwin_io.cpp.i
 
 Stub/miniwin_io.s: Stub/miniwin_io.cpp.s
@@ -2307,8 +2639,39 @@ Stub/miniwin_io.s: Stub/miniwin_io.cpp.s
 
 # target to generate assembly for a file
 Stub/miniwin_io.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/miniwin_io.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/miniwin_io.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/miniwin_io.cpp.s
 .PHONY : Stub/miniwin_io.cpp.s
+
+Stub/miniwin_msg_sdl.o: Stub/miniwin_msg_sdl.cpp.o
+
+.PHONY : Stub/miniwin_msg_sdl.o
+
+# target to build an object file
+Stub/miniwin_msg_sdl.cpp.o:
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/miniwin_msg_sdl.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/miniwin_msg_sdl.cpp.o
+.PHONY : Stub/miniwin_msg_sdl.cpp.o
+
+Stub/miniwin_msg_sdl.i: Stub/miniwin_msg_sdl.cpp.i
+
+.PHONY : Stub/miniwin_msg_sdl.i
+
+# target to preprocess a source file
+Stub/miniwin_msg_sdl.cpp.i:
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/miniwin_msg_sdl.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/miniwin_msg_sdl.cpp.i
+.PHONY : Stub/miniwin_msg_sdl.cpp.i
+
+Stub/miniwin_msg_sdl.s: Stub/miniwin_msg_sdl.cpp.s
+
+.PHONY : Stub/miniwin_msg_sdl.s
+
+# target to generate assembly for a file
+Stub/miniwin_msg_sdl.cpp.s:
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/miniwin_msg_sdl.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/miniwin_msg_sdl.cpp.s
+.PHONY : Stub/miniwin_msg_sdl.cpp.s
 
 Stub/miniwin_rand.o: Stub/miniwin_rand.cpp.o
 
@@ -2316,7 +2679,8 @@ Stub/miniwin_rand.o: Stub/miniwin_rand.cpp.o
 
 # target to build an object file
 Stub/miniwin_rand.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/miniwin_rand.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/miniwin_rand.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/miniwin_rand.cpp.o
 .PHONY : Stub/miniwin_rand.cpp.o
 
 Stub/miniwin_rand.i: Stub/miniwin_rand.cpp.i
@@ -2325,7 +2689,8 @@ Stub/miniwin_rand.i: Stub/miniwin_rand.cpp.i
 
 # target to preprocess a source file
 Stub/miniwin_rand.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/miniwin_rand.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/miniwin_rand.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/miniwin_rand.cpp.i
 .PHONY : Stub/miniwin_rand.cpp.i
 
 Stub/miniwin_rand.s: Stub/miniwin_rand.cpp.s
@@ -2334,35 +2699,9 @@ Stub/miniwin_rand.s: Stub/miniwin_rand.cpp.s
 
 # target to generate assembly for a file
 Stub/miniwin_rand.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/miniwin_rand.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/miniwin_rand.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/miniwin_rand.cpp.s
 .PHONY : Stub/miniwin_rand.cpp.s
-
-Stub/miniwin_sdl.o: Stub/miniwin_sdl.cpp.o
-
-.PHONY : Stub/miniwin_sdl.o
-
-# target to build an object file
-Stub/miniwin_sdl.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/miniwin_sdl.cpp.o
-.PHONY : Stub/miniwin_sdl.cpp.o
-
-Stub/miniwin_sdl.i: Stub/miniwin_sdl.cpp.i
-
-.PHONY : Stub/miniwin_sdl.i
-
-# target to preprocess a source file
-Stub/miniwin_sdl.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/miniwin_sdl.cpp.i
-.PHONY : Stub/miniwin_sdl.cpp.i
-
-Stub/miniwin_sdl.s: Stub/miniwin_sdl.cpp.s
-
-.PHONY : Stub/miniwin_sdl.s
-
-# target to generate assembly for a file
-Stub/miniwin_sdl.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/miniwin_sdl.cpp.s
-.PHONY : Stub/miniwin_sdl.cpp.s
 
 Stub/movie.o: Stub/movie.cpp.o
 
@@ -2370,7 +2709,8 @@ Stub/movie.o: Stub/movie.cpp.o
 
 # target to build an object file
 Stub/movie.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/movie.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/movie.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/movie.cpp.o
 .PHONY : Stub/movie.cpp.o
 
 Stub/movie.i: Stub/movie.cpp.i
@@ -2379,7 +2719,8 @@ Stub/movie.i: Stub/movie.cpp.i
 
 # target to preprocess a source file
 Stub/movie.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/movie.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/movie.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/movie.cpp.i
 .PHONY : Stub/movie.cpp.i
 
 Stub/movie.s: Stub/movie.cpp.s
@@ -2388,7 +2729,8 @@ Stub/movie.s: Stub/movie.cpp.s
 
 # target to generate assembly for a file
 Stub/movie.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/movie.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/movie.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/movie.cpp.s
 .PHONY : Stub/movie.cpp.s
 
 Stub/nthread.o: Stub/nthread.cpp.o
@@ -2397,7 +2739,8 @@ Stub/nthread.o: Stub/nthread.cpp.o
 
 # target to build an object file
 Stub/nthread.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/nthread.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/nthread.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/nthread.cpp.o
 .PHONY : Stub/nthread.cpp.o
 
 Stub/nthread.i: Stub/nthread.cpp.i
@@ -2406,7 +2749,8 @@ Stub/nthread.i: Stub/nthread.cpp.i
 
 # target to preprocess a source file
 Stub/nthread.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/nthread.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/nthread.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/nthread.cpp.i
 .PHONY : Stub/nthread.cpp.i
 
 Stub/nthread.s: Stub/nthread.cpp.s
@@ -2415,7 +2759,8 @@ Stub/nthread.s: Stub/nthread.cpp.s
 
 # target to generate assembly for a file
 Stub/nthread.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/nthread.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/nthread.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/nthread.cpp.s
 .PHONY : Stub/nthread.cpp.s
 
 Stub/restrict.o: Stub/restrict.cpp.o
@@ -2424,7 +2769,8 @@ Stub/restrict.o: Stub/restrict.cpp.o
 
 # target to build an object file
 Stub/restrict.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/restrict.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/restrict.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/restrict.cpp.o
 .PHONY : Stub/restrict.cpp.o
 
 Stub/restrict.i: Stub/restrict.cpp.i
@@ -2433,7 +2779,8 @@ Stub/restrict.i: Stub/restrict.cpp.i
 
 # target to preprocess a source file
 Stub/restrict.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/restrict.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/restrict.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/restrict.cpp.i
 .PHONY : Stub/restrict.cpp.i
 
 Stub/restrict.s: Stub/restrict.cpp.s
@@ -2442,8 +2789,63 @@ Stub/restrict.s: Stub/restrict.cpp.s
 
 # target to generate assembly for a file
 Stub/restrict.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/restrict.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/restrict.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/restrict.cpp.s
 .PHONY : Stub/restrict.cpp.s
+
+Stub/sanitize.o: Stub/sanitize.cpp.o
+
+.PHONY : Stub/sanitize.o
+
+# target to build an object file
+Stub/sanitize.cpp.o:
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/sanitize.cpp.o
+.PHONY : Stub/sanitize.cpp.o
+
+Stub/sanitize.i: Stub/sanitize.cpp.i
+
+.PHONY : Stub/sanitize.i
+
+# target to preprocess a source file
+Stub/sanitize.cpp.i:
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/sanitize.cpp.i
+.PHONY : Stub/sanitize.cpp.i
+
+Stub/sanitize.s: Stub/sanitize.cpp.s
+
+.PHONY : Stub/sanitize.s
+
+# target to generate assembly for a file
+Stub/sanitize.cpp.s:
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/sanitize.cpp.s
+.PHONY : Stub/sanitize.cpp.s
+
+Stub/sanitize_coverage.o: Stub/sanitize_coverage.cpp.o
+
+.PHONY : Stub/sanitize_coverage.o
+
+# target to build an object file
+Stub/sanitize_coverage.cpp.o:
+	$(MAKE) -f CMakeFiles/sanitize_coverage.dir/build.make CMakeFiles/sanitize_coverage.dir/Stub/sanitize_coverage.cpp.o
+.PHONY : Stub/sanitize_coverage.cpp.o
+
+Stub/sanitize_coverage.i: Stub/sanitize_coverage.cpp.i
+
+.PHONY : Stub/sanitize_coverage.i
+
+# target to preprocess a source file
+Stub/sanitize_coverage.cpp.i:
+	$(MAKE) -f CMakeFiles/sanitize_coverage.dir/build.make CMakeFiles/sanitize_coverage.dir/Stub/sanitize_coverage.cpp.i
+.PHONY : Stub/sanitize_coverage.cpp.i
+
+Stub/sanitize_coverage.s: Stub/sanitize_coverage.cpp.s
+
+.PHONY : Stub/sanitize_coverage.s
+
+# target to generate assembly for a file
+Stub/sanitize_coverage.cpp.s:
+	$(MAKE) -f CMakeFiles/sanitize_coverage.dir/build.make CMakeFiles/sanitize_coverage.dir/Stub/sanitize_coverage.cpp.s
+.PHONY : Stub/sanitize_coverage.cpp.s
 
 Stub/sdlrender.o: Stub/sdlrender.cpp.o
 
@@ -2451,7 +2853,8 @@ Stub/sdlrender.o: Stub/sdlrender.cpp.o
 
 # target to build an object file
 Stub/sdlrender.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/sdlrender.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/sdlrender.cpp.o
 .PHONY : Stub/sdlrender.cpp.o
 
 Stub/sdlrender.i: Stub/sdlrender.cpp.i
@@ -2460,7 +2863,8 @@ Stub/sdlrender.i: Stub/sdlrender.cpp.i
 
 # target to preprocess a source file
 Stub/sdlrender.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/sdlrender.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/sdlrender.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/sdlrender.cpp.i
 .PHONY : Stub/sdlrender.cpp.i
 
 Stub/sdlrender.s: Stub/sdlrender.cpp.s
@@ -2469,7 +2873,8 @@ Stub/sdlrender.s: Stub/sdlrender.cpp.s
 
 # target to generate assembly for a file
 Stub/sdlrender.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/sdlrender.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/sdlrender.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/sdlrender.cpp.s
 .PHONY : Stub/sdlrender.cpp.s
 
 Stub/sound.o: Stub/sound.cpp.o
@@ -2478,7 +2883,8 @@ Stub/sound.o: Stub/sound.cpp.o
 
 # target to build an object file
 Stub/sound.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/sound.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/sound.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/sound.cpp.o
 .PHONY : Stub/sound.cpp.o
 
 Stub/sound.i: Stub/sound.cpp.i
@@ -2487,7 +2893,8 @@ Stub/sound.i: Stub/sound.cpp.i
 
 # target to preprocess a source file
 Stub/sound.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/sound.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/sound.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/sound.cpp.i
 .PHONY : Stub/sound.cpp.i
 
 Stub/sound.s: Stub/sound.cpp.s
@@ -2496,7 +2903,8 @@ Stub/sound.s: Stub/sound.cpp.s
 
 # target to generate assembly for a file
 Stub/sound.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/sound.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/sound.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/sound.cpp.s
 .PHONY : Stub/sound.cpp.s
 
 Stub/storm.o: Stub/storm.cpp.o
@@ -2505,7 +2913,8 @@ Stub/storm.o: Stub/storm.cpp.o
 
 # target to build an object file
 Stub/storm.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/storm.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/storm.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/storm.cpp.o
 .PHONY : Stub/storm.cpp.o
 
 Stub/storm.i: Stub/storm.cpp.i
@@ -2514,7 +2923,8 @@ Stub/storm.i: Stub/storm.cpp.i
 
 # target to preprocess a source file
 Stub/storm.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/storm.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/storm.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/storm.cpp.i
 .PHONY : Stub/storm.cpp.i
 
 Stub/storm.s: Stub/storm.cpp.s
@@ -2523,7 +2933,8 @@ Stub/storm.s: Stub/storm.cpp.s
 
 # target to generate assembly for a file
 Stub/storm.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/storm.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/storm.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/storm.cpp.s
 .PHONY : Stub/storm.cpp.s
 
 Stub/storm_net.o: Stub/storm_net.cpp.o
@@ -2532,7 +2943,8 @@ Stub/storm_net.o: Stub/storm_net.cpp.o
 
 # target to build an object file
 Stub/storm_net.cpp.o:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/storm_net.cpp.o
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/storm_net.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/storm_net.cpp.o
 .PHONY : Stub/storm_net.cpp.o
 
 Stub/storm_net.i: Stub/storm_net.cpp.i
@@ -2541,7 +2953,8 @@ Stub/storm_net.i: Stub/storm_net.cpp.i
 
 # target to preprocess a source file
 Stub/storm_net.cpp.i:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/storm_net.cpp.i
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/storm_net.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/storm_net.cpp.i
 .PHONY : Stub/storm_net.cpp.i
 
 Stub/storm_net.s: Stub/storm_net.cpp.s
@@ -2550,8 +2963,66 @@ Stub/storm_net.s: Stub/storm_net.cpp.s
 
 # target to generate assembly for a file
 Stub/storm_net.cpp.s:
-	$(MAKE) -f CMakeFiles/devil-test.dir/build.make CMakeFiles/devil-test.dir/Stub/storm_net.cpp.s
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/storm_net.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/storm_net.cpp.s
 .PHONY : Stub/storm_net.cpp.s
+
+Stub/test_utils.o: Stub/test_utils.cpp.o
+
+.PHONY : Stub/test_utils.o
+
+# target to build an object file
+Stub/test_utils.cpp.o:
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/test_utils.cpp.o
+.PHONY : Stub/test_utils.cpp.o
+
+Stub/test_utils.i: Stub/test_utils.cpp.i
+
+.PHONY : Stub/test_utils.i
+
+# target to preprocess a source file
+Stub/test_utils.cpp.i:
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/test_utils.cpp.i
+.PHONY : Stub/test_utils.cpp.i
+
+Stub/test_utils.s: Stub/test_utils.cpp.s
+
+.PHONY : Stub/test_utils.s
+
+# target to generate assembly for a file
+Stub/test_utils.cpp.s:
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/test_utils.cpp.s
+.PHONY : Stub/test_utils.cpp.s
+
+Stub/validate.o: Stub/validate.cpp.o
+
+.PHONY : Stub/validate.o
+
+# target to build an object file
+Stub/validate.cpp.o:
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/validate.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/validate.cpp.o
+.PHONY : Stub/validate.cpp.o
+
+Stub/validate.i: Stub/validate.cpp.i
+
+.PHONY : Stub/validate.i
+
+# target to preprocess a source file
+Stub/validate.cpp.i:
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/validate.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/validate.cpp.i
+.PHONY : Stub/validate.cpp.i
+
+Stub/validate.s: Stub/validate.cpp.s
+
+.PHONY : Stub/validate.s
+
+# target to generate assembly for a file
+Stub/validate.cpp.s:
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/validate.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/validate.cpp.s
+.PHONY : Stub/validate.cpp.s
 
 # Help Target
 help:
@@ -2561,7 +3032,10 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... devil-test"
+	@echo "... sanitize_coverage"
+	@echo "... devilution"
+	@echo "... xxhash"
+	@echo "... devil-sanitize"
 	@echo "... 3rdParty/PKWare/explode.o"
 	@echo "... 3rdParty/PKWare/explode.i"
 	@echo "... 3rdParty/PKWare/explode.s"
@@ -2601,6 +3075,9 @@ help:
 	@echo "... 3rdParty/StormLib/src/SFileReadFile.o"
 	@echo "... 3rdParty/StormLib/src/SFileReadFile.i"
 	@echo "... 3rdParty/StormLib/src/SFileReadFile.s"
+	@echo "... 3rdParty/xxhash/xxhash.o"
+	@echo "... 3rdParty/xxhash/xxhash.i"
+	@echo "... 3rdParty/xxhash/xxhash.s"
 	@echo "... Source/automap.o"
 	@echo "... Source/automap.i"
 	@echo "... Source/automap.s"
@@ -2796,6 +3273,9 @@ help:
 	@echo "... Stub/init.o"
 	@echo "... Stub/init.i"
 	@echo "... Stub/init.s"
+	@echo "... Stub/main.o"
+	@echo "... Stub/main.i"
+	@echo "... Stub/main.s"
 	@echo "... Stub/main_test.o"
 	@echo "... Stub/main_test.i"
 	@echo "... Stub/main_test.s"
@@ -2805,12 +3285,12 @@ help:
 	@echo "... Stub/miniwin_io.o"
 	@echo "... Stub/miniwin_io.i"
 	@echo "... Stub/miniwin_io.s"
+	@echo "... Stub/miniwin_msg_sdl.o"
+	@echo "... Stub/miniwin_msg_sdl.i"
+	@echo "... Stub/miniwin_msg_sdl.s"
 	@echo "... Stub/miniwin_rand.o"
 	@echo "... Stub/miniwin_rand.i"
 	@echo "... Stub/miniwin_rand.s"
-	@echo "... Stub/miniwin_sdl.o"
-	@echo "... Stub/miniwin_sdl.i"
-	@echo "... Stub/miniwin_sdl.s"
 	@echo "... Stub/movie.o"
 	@echo "... Stub/movie.i"
 	@echo "... Stub/movie.s"
@@ -2820,6 +3300,12 @@ help:
 	@echo "... Stub/restrict.o"
 	@echo "... Stub/restrict.i"
 	@echo "... Stub/restrict.s"
+	@echo "... Stub/sanitize.o"
+	@echo "... Stub/sanitize.i"
+	@echo "... Stub/sanitize.s"
+	@echo "... Stub/sanitize_coverage.o"
+	@echo "... Stub/sanitize_coverage.i"
+	@echo "... Stub/sanitize_coverage.s"
 	@echo "... Stub/sdlrender.o"
 	@echo "... Stub/sdlrender.i"
 	@echo "... Stub/sdlrender.s"
@@ -2832,6 +3318,12 @@ help:
 	@echo "... Stub/storm_net.o"
 	@echo "... Stub/storm_net.i"
 	@echo "... Stub/storm_net.s"
+	@echo "... Stub/test_utils.o"
+	@echo "... Stub/test_utils.i"
+	@echo "... Stub/test_utils.s"
+	@echo "... Stub/validate.o"
+	@echo "... Stub/validate.i"
+	@echo "... Stub/validate.s"
 .PHONY : help
 
 

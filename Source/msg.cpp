@@ -101,7 +101,7 @@ int __cdecl msg_wait_resync()
 	sgbRecvCmd = CMD_DLEVEL_END;
 	gbBufferMsgs = 1;
 	sgdwOwnerWait = GetTickCount();
-	v0 = UiProgressDialog(ghMainWnd, "Waiting for game data...", 1, msg_wait_for_turns, 20);
+	v0 = UiProgressDialog(ghMainWnd, "Waiting for game data...", 1, (void*)msg_wait_for_turns, 20);
 	gbBufferMsgs = 0;
 	if ( !v0 )
 		goto LABEL_6;
@@ -398,7 +398,7 @@ int __fastcall msg_comp_level(char *buffer, int size)
 
 	v2 = buffer;
 	v3 = size - (_DWORD)buffer - 1;
-	v4 = encrypt_compress(buffer + 1, v3);
+	v4 = PkwareCompress(buffer + 1, v3);
 	*v2 = v3 != v4;
 	return v4 + 1;
 }
@@ -788,7 +788,7 @@ void __cdecl DeltaLoadLevel()
 				{
 					v14 = itemavail[0];
 					v33 = itemavail[0];
-					v15 = &itemavail[-numitems + 126];
+					v15 = &itemavail[MAXITEMS - numitems - 1];
 					itemactive[numitems] = itemavail[0];
 					v16 = *(short *)((char *)&sgLevels[0].item[0].wIndx + v13);
 					itemavail[0] = *v15;
@@ -909,7 +909,7 @@ void __cdecl DeltaLoadLevel()
 // 676190: using guessed type int deltaload;
 // 679660: using guessed type char gbMaxPlayers;
 
-void __fastcall NetSendCmd(unsigned char bHiPri, unsigned char bCmd)
+void __fastcall NetSendCmd(BOOL bHiPri, unsigned char bCmd)
 {
 	TCmd cmd; // [esp+3h] [ebp-1h]
 
@@ -934,7 +934,7 @@ void __fastcall NetSendCmdGolem(unsigned char mx, unsigned char my, unsigned cha
 	NetSendLoPri((unsigned char *)&cmd, 0xAu);
 }
 
-void __fastcall NetSendCmdLoc(unsigned char bHiPri, unsigned char bCmd, unsigned char x, unsigned char y)
+void __fastcall NetSendCmdLoc(BOOL bHiPri, unsigned char bCmd, unsigned char x, unsigned char y)
 {
 	TCmdLoc cmd; // [esp+1h] [ebp-3h]
 
@@ -947,7 +947,7 @@ void __fastcall NetSendCmdLoc(unsigned char bHiPri, unsigned char bCmd, unsigned
 		NetSendLoPri((unsigned char *)&cmd, 3u);
 }
 
-void __fastcall NetSendCmdLocParam1(unsigned char bHiPri, unsigned char bCmd, unsigned char x, unsigned char y, int wParam1)
+void __fastcall NetSendCmdLocParam1(BOOL bHiPri, unsigned char bCmd, unsigned char x, unsigned char y, unsigned short wParam1)
 {
 	TCmdLocParam1 cmd; // [esp+0h] [ebp-8h]
 
@@ -961,7 +961,7 @@ void __fastcall NetSendCmdLocParam1(unsigned char bHiPri, unsigned char bCmd, un
 		NetSendLoPri((unsigned char *)&cmd, 5u);
 }
 
-void __fastcall NetSendCmdLocParam2(unsigned char bHiPri, unsigned char bCmd, unsigned char x, unsigned char y, int wParam1, int wParam2)
+void __fastcall NetSendCmdLocParam2(BOOL bHiPri, unsigned char bCmd, unsigned char x, unsigned char y, unsigned short wParam1, unsigned short wParam2)
 {
 	TCmdLocParam2 cmd; // [esp+0h] [ebp-8h]
 
@@ -976,7 +976,7 @@ void __fastcall NetSendCmdLocParam2(unsigned char bHiPri, unsigned char bCmd, un
 		NetSendLoPri((unsigned char *)&cmd, 7u);
 }
 
-void __fastcall NetSendCmdLocParam3(unsigned char bHiPri, unsigned char bCmd, unsigned char x, unsigned char y, int wParam1, int wParam2, int wParam3)
+void __fastcall NetSendCmdLocParam3(BOOL bHiPri, unsigned char bCmd, unsigned char x, unsigned char y, unsigned short wParam1, unsigned short wParam2, unsigned short wParam3)
 {
 	TCmdLocParam3 cmd; // [esp+0h] [ebp-Ch]
 
@@ -1017,7 +1017,7 @@ void __fastcall NetSendCmdParam2(BOOL bHiPri, unsigned char bCmd, unsigned short
 		NetSendLoPri((unsigned char *)&cmd, 5u);
 }
 
-void __fastcall NetSendCmdParam3(unsigned char bHiPri, unsigned char bCmd, unsigned short wParam1, unsigned short wParam2, int wParam3)
+void __fastcall NetSendCmdParam3(BOOL bHiPri, unsigned char bCmd, unsigned short wParam1, unsigned short wParam2, unsigned short wParam3)
 {
 	TCmdParam3 cmd; // [esp+0h] [ebp-8h]
 
@@ -1031,7 +1031,7 @@ void __fastcall NetSendCmdParam3(unsigned char bHiPri, unsigned char bCmd, unsig
 		NetSendLoPri((unsigned char *)&cmd, 7u);
 }
 
-void __fastcall NetSendCmdQuest(unsigned char bHiPri, unsigned char q)
+void __fastcall NetSendCmdQuest(BOOL bHiPri, unsigned char q)
 {
 	int v2; // eax
 	char v3; // dl
@@ -1051,7 +1051,7 @@ void __fastcall NetSendCmdQuest(unsigned char bHiPri, unsigned char q)
 		NetSendLoPri((unsigned char *)&cmd, 5u);
 }
 
-void __fastcall NetSendCmdGItem(unsigned char bHiPri, unsigned char bCmd, unsigned char mast, unsigned char pnum, int ii)
+void __fastcall NetSendCmdGItem(BOOL bHiPri, unsigned char bCmd, unsigned char mast, unsigned char pnum, int ii)
 {
 	int v5; // eax
 	bool v6; // zf
@@ -1179,7 +1179,7 @@ void __fastcall NetSendCmdExtra(struct TCmdGItem *p)
 	NetSendHiPri((unsigned char *)&cmd, 0x1Eu);
 }
 
-void __fastcall NetSendCmdPItem(unsigned char bHiPri, unsigned char bCmd, unsigned char x, unsigned char y)
+void __fastcall NetSendCmdPItem(BOOL bHiPri, unsigned char bCmd, unsigned char x, unsigned char y)
 {
 	int v4; // eax
 	short *v5; // edx
@@ -1236,7 +1236,7 @@ void __fastcall NetSendCmdPItem(unsigned char bHiPri, unsigned char bCmd, unsign
 		NetSendLoPri((unsigned char *)&cmd, 0x16u);
 }
 
-void __fastcall NetSendCmdChItem(unsigned char bHiPri, unsigned char bLoc)
+void __fastcall NetSendCmdChItem(BOOL bHiPri, unsigned char bLoc)
 {
 	short v2; // dx
 	char v3; // al
@@ -1268,7 +1268,7 @@ void __fastcall NetSendCmdDelItem(BOOL bHiPri, unsigned char bLoc)
 		NetSendLoPri((unsigned char *)&cmd, 2u);
 }
 
-void __fastcall NetSendCmdDItem(unsigned char bHiPri, int ii)
+void __fastcall NetSendCmdDItem(BOOL bHiPri, int ii)
 {
 	int v2; // eax
 	short *v3; // edx
@@ -1325,7 +1325,7 @@ void __fastcall NetSendCmdDItem(unsigned char bHiPri, int ii)
 		NetSendLoPri((unsigned char *)&cmd, 0x16u);
 }
 
-void __fastcall NetSendCmdDamage(unsigned char bHiPri, unsigned char bPlr, unsigned int dwDam)
+void __fastcall NetSendCmdDamage(BOOL bHiPri, unsigned char bPlr, unsigned int dwDam)
 {
 	TCmdDamage cmd; // [esp+0h] [ebp-8h]
 
@@ -1600,7 +1600,7 @@ void __fastcall DeltaImportData(unsigned char cmd, int recv_offset)
 
 	v2 = cmd;
 	if ( sgRecvBuf[0] )
-		encrypt_decompress(&sgRecvBuf[1], recv_offset, 4721);
+		PkwareDecompress(&sgRecvBuf[1], recv_offset, 4721);
 	if ( v2 == CMD_DLEVEL_JUNK )
 	{
 		DeltaImportJunk((int)&sgRecvBuf[1]);
@@ -1766,7 +1766,7 @@ int __fastcall On_WALKXY(struct TCmdLoc *pCmd, int pnum)
 		{
 			ClrPlrPath(pnum);
 			MakePlrPath(v2, (unsigned char)v3->x, (unsigned char)v3->y, 1u);
-			plr[v4].destAction = -1;
+			plr[v4].destAction = ACTION_NONE;
 		}
 	}
 	return 3;
@@ -1851,13 +1851,13 @@ int __fastcall On_SBSPELL(struct TCmdParam1 *pCmd, int pnum)
 
 	if ( gbBufferMsgs != 1 )
 	{
-		if ( currlevel || *(_DWORD *)&spelldata[(unsigned short)pCmd->wParam1].sTownSpell )
+		if ( currlevel || spelldata[(unsigned short)pCmd->wParam1].sTownSpell )
 		{
 			v2 = pnum;
 			plr[v2]._pSpell = (unsigned short)pCmd->wParam1;
 			plr[v2]._pSplType = plr[v2]._pSBkSplType;
 			plr[v2]._pSplFrom = 1;
-			plr[v2].destAction = 12;
+			plr[v2].destAction = ACTION_SPELL;
 		}
 		else
 		{
@@ -1897,7 +1897,7 @@ int __fastcall On_GOTOGETITEM(struct TCmdLocParam1 *pCmd, int pnum)
 		if ( currlevel == plr[pnum].plrlevel )
 		{
 			MakePlrPath(pnum, (unsigned char)pCmd->x, (unsigned char)pCmd->y, 0);
-			plr[v3].destAction = 15;
+			plr[v3].destAction = ACTION_PICKUPITEM;
 			plr[v3].destParam1 = (unsigned short)v2->wParam1;
 		}
 	}
@@ -2129,7 +2129,7 @@ int __fastcall On_GOTOAGETITEM(struct TCmdLocParam1 *pCmd, int pnum)
 		if ( currlevel == plr[pnum].plrlevel )
 		{
 			MakePlrPath(pnum, (unsigned char)pCmd->x, (unsigned char)pCmd->y, 0);
-			plr[v3].destAction = 16;
+			plr[v3].destAction = ACTION_PICKUPAITEM;
 			plr[v3].destParam1 = (unsigned short)v2->wParam1;
 		}
 	}
@@ -2495,7 +2495,7 @@ int __fastcall On_ATTACKXY(struct TCmdLoc *pCmd, int pnum)
 		if ( currlevel == plr[pnum].plrlevel )
 		{
 			MakePlrPath(pnum, (unsigned char)pCmd->x, (unsigned char)pCmd->y, 0);
-			plr[v3].destAction = 9;
+			plr[v3].destAction = ACTION_ATTACK;
 			plr[v3].destParam1 = (unsigned char)v2->x;
 			plr[v3].destParam2 = (unsigned char)v2->y;
 		}
@@ -2516,7 +2516,7 @@ int __fastcall On_SATTACKXY(struct TCmdLoc *pCmd, int pnum)
 		if ( currlevel == plr[pnum].plrlevel )
 		{
 			ClrPlrPath(pnum);
-			plr[v3].destAction = 9;
+			plr[v3].destAction = ACTION_ATTACK;
 			plr[v3].destParam1 = (unsigned char)v2->x;
 			plr[v3].destParam2 = (unsigned char)v2->y;
 		}
@@ -2537,7 +2537,7 @@ int __fastcall On_RATTACKXY(struct TCmdLoc *pCmd, int pnum)
 		if ( currlevel == plr[pnum].plrlevel )
 		{
 			ClrPlrPath(pnum);
-			plr[v3].destAction = 10;
+			plr[v3].destAction = ACTION_RATTACK;
 			plr[v3].destParam1 = (unsigned char)v2->x;
 			plr[v3].destParam2 = (unsigned char)v2->y;
 		}
@@ -2558,10 +2558,10 @@ int __fastcall On_SPELLXYD(struct TCmdLocParam3 *pCmd, int pnum)
 		v3 = pnum;
 		if ( currlevel == plr[pnum].plrlevel )
 		{
-			if ( currlevel || *(_DWORD *)&spelldata[(unsigned short)pCmd->wParam1].sTownSpell )
+			if ( currlevel || spelldata[(unsigned short)pCmd->wParam1].sTownSpell )
 			{
 				ClrPlrPath(pnum);
-				plr[v3].destAction = 26;
+				plr[v3].destAction = ACTION_SPELLWALL;
 				plr[v3].destParam1 = (unsigned char)v2->x;
 				plr[v3].destParam2 = (unsigned char)v2->y;
 				plr[v3].destParam3 = (unsigned short)v2->wParam2;
@@ -2593,10 +2593,10 @@ int __fastcall On_SPELLXY(struct TCmdLocParam2 *pCmd, int pnum)
 		v3 = pnum;
 		if ( currlevel == plr[pnum].plrlevel )
 		{
-			if ( currlevel || *(_DWORD *)&spelldata[(unsigned short)pCmd->wParam1].sTownSpell )
+			if ( currlevel || spelldata[(unsigned short)pCmd->wParam1].sTownSpell )
 			{
 				ClrPlrPath(pnum);
-				plr[v3].destAction = 12;
+				plr[v3].destAction = ACTION_SPELL;
 				plr[v3].destParam1 = (unsigned char)v2->x;
 				plr[v3].destParam2 = (unsigned char)v2->y;
 				plr[v3].destParam3 = (unsigned short)v2->wParam2;
@@ -2626,10 +2626,10 @@ int __fastcall On_TSPELLXY(struct TCmdLocParam2 *pCmd, int pnum)
 		v3 = pnum;
 		if ( currlevel == plr[pnum].plrlevel )
 		{
-			if ( currlevel || *(_DWORD *)&spelldata[(unsigned short)pCmd->wParam1].sTownSpell )
+			if ( currlevel || spelldata[(unsigned short)pCmd->wParam1].sTownSpell )
 			{
 				ClrPlrPath(pnum);
-				plr[v3].destAction = 12;
+				plr[v3].destAction = ACTION_SPELL;
 				plr[v3].destParam1 = (unsigned char)v2->x;
 				plr[v3].destParam2 = (unsigned char)v2->y;
 				plr[v3].destParam3 = (unsigned short)v2->wParam2;
@@ -2664,7 +2664,7 @@ int __fastcall On_OPOBJXY(struct TCmdLocParam1 *pCmd, int pnum)
 				MakePlrPath(pnum, (unsigned char)pCmd->x, (unsigned char)pCmd->y, 0);
 			else
 				MakePlrPath(pnum, (unsigned char)pCmd->x, (unsigned char)pCmd->y, 1u);
-			plr[v3].destAction = 13;
+			plr[v3].destAction = ACTION_OPERATE;
 			plr[v3].destParam1 = (unsigned short)v2->wParam1;
 		}
 	}
@@ -2689,7 +2689,7 @@ int __fastcall On_DISARMXY(struct TCmdLocParam1 *pCmd, int pnum)
 				MakePlrPath(pnum, (unsigned char)pCmd->x, (unsigned char)pCmd->y, 0);
 			else
 				MakePlrPath(pnum, (unsigned char)pCmd->x, (unsigned char)pCmd->y, 1u);
-			plr[v3].destAction = 14;
+			plr[v3].destAction = ACTION_DISARM;
 			plr[v3].destParam1 = (unsigned short)v2->wParam1;
 		}
 	}
@@ -2706,7 +2706,7 @@ int __fastcall On_OPOBJT(struct TCmdParam1 *pCmd, int pnum)
 		v2 = pnum;
 		if ( currlevel == plr[pnum].plrlevel )
 		{
-			plr[v2].destAction = 18;
+			plr[v2].destAction = ACTION_OPERATETK;
 			plr[v2].destParam1 = (unsigned short)pCmd->wParam1;
 		}
 	}
@@ -2737,7 +2737,7 @@ int __fastcall On_ATTACKID(struct TCmdParam1 *pCmd, int pnum)
 					monster[(unsigned short)v3->wParam1]._mfutx,
 					monster[(unsigned short)v3->wParam1]._mfuty,
 					0);
-			plr[v4].destAction = 20;
+			plr[v4].destAction = ACTION_ATTACKMON;
 			plr[v4].destParam1 = (unsigned short)v3->wParam1;
 		}
 	}
@@ -2757,7 +2757,7 @@ int __fastcall On_ATTACKPID(struct TCmdParam1 *pCmd, int pnum)
 		if ( currlevel == plr[pnum].plrlevel )
 		{
 			MakePlrPath(pnum, plr[(unsigned short)pCmd->wParam1]._px, plr[(unsigned short)pCmd->wParam1]._py, 0);
-			plr[v3].destAction = 21;
+			plr[v3].destAction = ACTION_ATTACKPLR;
 			plr[v3].destParam1 = (unsigned short)v2->wParam1;
 		}
 	}
@@ -2777,7 +2777,7 @@ int __fastcall On_RATTACKID(struct TCmdParam1 *pCmd, int pnum)
 		if ( currlevel == plr[pnum].plrlevel )
 		{
 			ClrPlrPath(pnum);
-			plr[v3].destAction = 22;
+			plr[v3].destAction = ACTION_RATTACKMON;
 			plr[v3].destParam1 = (unsigned short)v2->wParam1;
 		}
 	}
@@ -2797,7 +2797,7 @@ int __fastcall On_RATTACKPID(struct TCmdParam1 *pCmd, int pnum)
 		if ( currlevel == plr[pnum].plrlevel )
 		{
 			ClrPlrPath(pnum);
-			plr[v3].destAction = 23;
+			plr[v3].destAction = ACTION_RATTACKPLR;
 			plr[v3].destParam1 = (unsigned short)v2->wParam1;
 		}
 	}
@@ -2817,10 +2817,10 @@ int __fastcall On_SPELLID(struct TCmdLocParam2 *pCmd, int pnum)
 		v3 = pnum;
 		if ( currlevel == plr[pnum].plrlevel )
 		{
-			if ( currlevel || *(_DWORD *)&spelldata[(unsigned short)pCmd->wParam1].sTownSpell )
+			if ( currlevel || spelldata[(unsigned short)pCmd->wParam1].sTownSpell )
 			{
 				ClrPlrPath(pnum);
-				plr[v3].destAction = 24;
+				plr[v3].destAction = ACTION_SPELLMON;
 				plr[v3].destParam1 = *(unsigned short *)&v2->x;
 				plr[v3].destParam2 = (unsigned short)v2->wParam2;
 				v4 = (unsigned short)v2->wParam1;
@@ -2850,10 +2850,10 @@ int __fastcall On_SPELLPID(struct TCmdLocParam2 *pCmd, int pnum)
 		v3 = pnum;
 		if ( currlevel == plr[pnum].plrlevel )
 		{
-			if ( currlevel || *(_DWORD *)&spelldata[(unsigned short)pCmd->wParam1].sTownSpell )
+			if ( currlevel || spelldata[(unsigned short)pCmd->wParam1].sTownSpell )
 			{
 				ClrPlrPath(pnum);
-				plr[v3].destAction = 25;
+				plr[v3].destAction = ACTION_SPELLPLR;
 				plr[v3].destParam1 = *(unsigned short *)&v2->x;
 				plr[v3].destParam2 = (unsigned short)v2->wParam2;
 				v4 = (unsigned short)v2->wParam1;
@@ -2882,10 +2882,10 @@ int __fastcall On_TSPELLID(struct TCmdLocParam2 *pCmd, int pnum)
 		v3 = pnum;
 		if ( currlevel == plr[pnum].plrlevel )
 		{
-			if ( currlevel || *(_DWORD *)&spelldata[(unsigned short)pCmd->wParam1].sTownSpell )
+			if ( currlevel || spelldata[(unsigned short)pCmd->wParam1].sTownSpell )
 			{
 				ClrPlrPath(pnum);
-				plr[v3].destAction = 24;
+				plr[v3].destAction = ACTION_SPELLMON;
 				plr[v3].destParam1 = *(unsigned short *)&v2->x;
 				plr[v3].destParam2 = (unsigned short)v2->wParam2;
 				plr[v3]._pSpell = (unsigned short)v2->wParam1;
@@ -2913,10 +2913,10 @@ int __fastcall On_TSPELLPID(struct TCmdLocParam2 *pCmd, int pnum)
 		v3 = pnum;
 		if ( currlevel == plr[pnum].plrlevel )
 		{
-			if ( currlevel || *(_DWORD *)&spelldata[(unsigned short)pCmd->wParam1].sTownSpell )
+			if ( currlevel || spelldata[(unsigned short)pCmd->wParam1].sTownSpell )
 			{
 				ClrPlrPath(pnum);
-				plr[v3].destAction = 25;
+				plr[v3].destAction = ACTION_SPELLPLR;
 				plr[v3].destParam1 = *(unsigned short *)&v2->x;
 				plr[v3].destParam2 = (unsigned short)v2->wParam2;
 				plr[v3]._pSpell = (unsigned short)v2->wParam1;
@@ -2987,7 +2987,7 @@ int __fastcall On_TALKXY(struct TCmdLocParam1 *pCmd, int pnum)
 		if ( currlevel == plr[pnum].plrlevel )
 		{
 			MakePlrPath(pnum, (unsigned char)pCmd->x, (unsigned char)pCmd->y, 0);
-			plr[v3].destAction = 17;
+			plr[v3].destAction = ACTION_TALK;
 			plr[v3].destParam1 = (unsigned short)v2->wParam1;
 		}
 	}
@@ -3204,7 +3204,7 @@ int __fastcall On_PLRDAMAGE(struct TCmdDamage *pCmd, int pnum)
 				v4 = plr[myplr]._pHitPoints;
 				if ( (signed int)(v4 & 0xFFFFFFC0) > 0 )
 				{
-					drawhpflag = 1;
+					drawhpflag = TRUE;
 					plr[v3]._pHitPoints = v4 - pCmd->dwDam;
 					v5 = &plr[v3]._pHPBase;
 					*v5 -= pCmd->dwDam;
@@ -3480,7 +3480,7 @@ int __fastcall On_PLAYER_JOINLEVEL(struct TCmdLocParam1 *pCmd, int pnum)
 						plr[v4]._pVar8 = 2 * v8;
 						v10 = plr[v4].WorldX;
 						plr[v4]._pAnimFrame = v9;
-						dFlags[v10][plr[v4].WorldY] |= 4u;
+						dFlags[v10][plr[v4].WorldY] |= DFLAG_DEAD_PLAYER;
 					}
 					else
 					{
@@ -3810,7 +3810,7 @@ int __fastcall On_NOVA(struct TCmdLoc *pCmd, int pnum)
 			plr[v3]._pSpell = SPL_NOVA;
 			plr[v3]._pSplType = 4;
 			plr[v3]._pSplFrom = 3;
-			plr[v3].destAction = 12;
+			plr[v3].destAction = ACTION_SPELL;
 			plr[v3].destParam1 = (unsigned char)v2->x;
 			plr[v3].destParam2 = (unsigned char)v2->y;
 		}

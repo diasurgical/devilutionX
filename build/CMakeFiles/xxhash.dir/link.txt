@@ -1,0 +1,2 @@
+/usr/bin/ar qc libxxhash.a  CMakeFiles/xxhash.dir/3rdParty/xxhash/xxhash.c.o
+/usr/bin/ranlib libxxhash.a

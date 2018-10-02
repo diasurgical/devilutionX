@@ -2,6 +2,7 @@
 
 #include "../types.h"
 
+// BUGFIX: constant data should be const
 unsigned char SkelKingTrans1[8] =
 {
 	19, 47, 26, 55,
@@ -64,7 +65,7 @@ unsigned char SkelChamTrans3[36] =
 
 char *quest_level_names[] =
 {
-  &empty_string,
+  "",
   "Skeleton King's Lair",
   "Bone Chamber",
   "Maze",
@@ -74,21 +75,13 @@ char *quest_level_names[] =
 
 int __fastcall ObjIndex(int x, int y)
 {
-	int i; // edi
-	int oi; // esi
+	int i;
+	int oi;
 
-	i = 0;
-
-	if ( nobjects > 0 )
-	{
-		while ( 1 )
-		{
-			oi = objectactive[i];
-			if ( object[oi]._ox == x && object[oi]._oy == y )
-				return oi;
-			if ( ++i >= nobjects )
-				break;
-		}
+	for ( i = 0; i < nobjects; i++ ) {
+		oi = objectactive[i];
+		if ( object[oi]._ox == x && object[oi]._oy == y )
+			return oi;
 	}
 	TermMsg("ObjIndex: Active object not found at (%d,%d)", x, y);
 	return -1;
@@ -119,69 +112,49 @@ void __cdecl AddVileObjs()
 
 void __fastcall DRLG_SetMapTrans(char *sFileName)
 {
-	unsigned char *pLevelMap; // ecx
-	int v2; // ebx
-	int v3; // edi
-	int v4; // eax
-	int v5; // edi
-	int v6; // eax
-	int v7; // ebx
-	char *v8; // esi
-	char *v9; // eax
-	int v10; // [esp+Ch] [ebp-8h]
-	int v11; // [esp+10h] [ebp-4h]
+	int x, y;
+	int i, j;
+	UCHAR *pLevelMap;
+	UCHAR *d;
+	DWORD dwOffset;
 
-	pLevelMap = LoadFileInMem(sFileName, 0);
-	v11 = 0;
-	v2 = *pLevelMap;
-	v3 = pLevelMap[2];
-	v4 = v3;
-	v5 = 2 * v3;
-	v6 = v2 * v4;
-	v7 = 2 * v2;
-	v8 = (char *)&pLevelMap[6 * v7 * v5 + 4 + 2 * v6];
-	if ( v5 > 0 )
-	{
-		do
-		{
-			if ( v7 > 0 )
-			{
-				v10 = v7;
-				v9 = &dung_map[16][v11 + 16];
-				do
-				{
-					*v9 = *v8;
-					v8 += 2;
-					v9 += 112;
-					--v10;
-				}
-				while ( v10 );
-			}
-			++v11;
+	pLevelMap = LoadFileInMem(sFileName, NULL);
+	d = pLevelMap+2;
+	x = pLevelMap[0];
+	y = *d;
+	dwOffset = (x * y + 1) * 2;
+	x <<= 1;
+	y <<= 1;
+	dwOffset += 3 * x * y * 2;
+	d += dwOffset;
+
+	for ( j = 0; j < y; j++ ) {
+		for ( i = 0; i < x; i++ ) {
+			dung_map[16+i][16+j] = *d;
+			d += 2;
 		}
-		while ( v11 < v5 );
 	}
 	mem_free_dbg(pLevelMap);
 }
 
 void __cdecl LoadSetMap()
 {
-	switch ( setlvlnum )
+	switch ( (UCHAR)setlvlnum )
 	{
 		case SL_SKELKING:
-			if ( quests[12]._qactive == 1 )
+			if ( quests[QTYPE_KING]._qactive == 1 )
 			{
-				quests[12]._qactive = 2;
-				quests[12]._qvar1 = 1;
+				quests[QTYPE_KING]._qactive = 2;
+				quests[QTYPE_KING]._qvar1 = 1;
 			}
 			LoadPreL1Dungeon("Levels\\L1Data\\SklKng1.DUN", 83, 45);
 			LoadL1Dungeon("Levels\\L1Data\\SklKng2.DUN", 83, 45);
 			LoadPalette("Levels\\L1Data\\L1_2.pal");
-			DRLG_AreaTrans(2, SkelKingTrans1);
-			DRLG_ListTrans(2, SkelKingTrans2);
-			DRLG_AreaTrans(5, SkelKingTrans3);
-			DRLG_ListTrans(7, SkelKingTrans4);
-			AddL1Objs(0, 0, 112, 112);
+			DRLG_AreaTrans(sizeof(SkelKingTrans1)/4, SkelKingTrans1);
+			DRLG_ListTrans(sizeof(SkelKingTrans2)/4, SkelKingTrans2);
+			DRLG_AreaTrans(sizeof(SkelKingTrans3)/4, SkelKingTrans3);
+			DRLG_ListTrans(sizeof(SkelKingTrans4)/4, SkelKingTrans4);
+			AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
 			AddSKingObjs();
 			InitSKingTriggers();
 			break;
@@ -189,10 +162,10 @@ void __cdecl LoadSetMap()
 			LoadPreL2Dungeon("Levels\\L2Data\\Bonecha2.DUN", 69, 39);
 			LoadL2Dungeon("Levels\\L2Data\\Bonecha1.DUN", 69, 39);
 			LoadPalette("Levels\\L2Data\\L2_2.pal");
-			DRLG_ListTrans(5, SkelChamTrans1);
-			DRLG_AreaTrans(2, SkelChamTrans2);
-			DRLG_ListTrans(9, SkelChamTrans3);
-			AddL2Objs(0, 0, 112, 112);
+			DRLG_ListTrans(sizeof(SkelChamTrans1)/4, SkelChamTrans1);
+			DRLG_AreaTrans(sizeof(SkelChamTrans2)/4, SkelChamTrans2);
+			DRLG_ListTrans(sizeof(SkelChamTrans3)/4, SkelChamTrans3);
+			AddL2Objs(0, 0, MAXDUNX, MAXDUNY);
 			AddSChamObjs();
 			InitSChambTriggers();
 			break;
@@ -200,30 +173,30 @@ void __cdecl LoadSetMap()
 			LoadPreL1Dungeon("Levels\\L1Data\\Lv1MazeA.DUN", 20, 50);
 			LoadL1Dungeon("Levels\\L1Data\\Lv1MazeB.DUN", 20, 50);
 			LoadPalette("Levels\\L1Data\\L1_5.pal");
-			AddL1Objs(0, 0, 112, 112);
+			AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
 			DRLG_SetMapTrans("Levels\\L1Data\\Lv1MazeA.DUN");
 			break;
 		case SL_POISONWATER:
-			if ( quests[13]._qactive == 1 )
-				quests[13]._qactive = 2;
+			if ( quests[QTYPE_PW]._qactive == 1 )
+				quests[QTYPE_PW]._qactive = 2;
 			LoadPreL3Dungeon("Levels\\L3Data\\Foulwatr.DUN", 19, 50);
 			LoadL3Dungeon("Levels\\L3Data\\Foulwatr.DUN", 20, 50);
 			LoadPalette("Levels\\L3Data\\L3pfoul.pal");
 			InitPWaterTriggers();
 			break;
 		case SL_VILEBETRAYER:
-			if ( quests[15]._qactive == 3 )
+			if ( quests[QTYPE_VB]._qactive == 3 )
 			{
-				quests[15]._qvar2 = 4;
+				quests[QTYPE_VB]._qvar2 = 4;
 			}
-			else if ( quests[15]._qactive == 2 )
+			else if ( quests[QTYPE_VB]._qactive == 2 )
 			{
-				quests[15]._qvar2 = 3;
+				quests[QTYPE_VB]._qvar2 = 3;
 			}
 			LoadPreL1Dungeon("Levels\\L1Data\\Vile1.DUN", 35, 36);
 			LoadL1Dungeon("Levels\\L1Data\\Vile2.DUN", 35, 36);
 			LoadPalette("Levels\\L1Data\\L1_2.pal");
-			AddL1Objs(0, 0, 112, 112);
+			AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
 			AddVileObjs();
 			DRLG_SetMapTrans("Levels\\L1Data\\Vile1.DUN");
 			InitNoTriggers();

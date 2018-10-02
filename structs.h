@@ -212,22 +212,19 @@ struct PlayerStruct
 	int _pSBkSpell;
 	char _pSBkSplType;
 	char _pSplLvl[64];
-	union
-	{
-		UINT64 _pMemSpells64;
+	union {
+		unsigned __int64 _pMemSpells64;
 		int _pMemSpells[2];
 	};
-	union
-	{
-		UINT64 _pAblSpells64;
+	union {
+		unsigned __int64 _pAblSpells64;
 		int _pAblSpells[2];
 	};
-	union
-	{
-		UINT64 _pScrlSpells64;
+	union {
+		unsigned __int64 _pScrlSpells64;
 		int _pScrlSpells[2];
 	};
-	int _pSpellFlags;
+	UCHAR _pSpellFlags;
 	int _pSplHotKey[4];
 	char _pSplTHotKey[4];
 	int _pwtype;
@@ -315,7 +312,7 @@ struct PlayerStruct
 	ItemStruct InvList[NUM_INV_GRID_ELEM];
 	int _pNumInv;
 	char InvGrid[NUM_INV_GRID_ELEM];
-	ItemStruct SpdList[8];
+	ItemStruct SpdList[MAXBELTITEMS];
 	ItemStruct HoldItem;
 	int _pIMinDam;
 	int _pIMaxDam;
@@ -325,7 +322,7 @@ struct PlayerStruct
 	int _pIBonusAC;
 	int _pIBonusDamMod;
 	union {
-		UINT64 _pISpells64;
+		unsigned __int64 _pISpells64;
 		int _pISpells[2];
 	};
 	int _pIFlags;
@@ -463,11 +460,6 @@ struct MissileStruct
 //////////////////////////////////////////////////
 // effects/sound
 //////////////////////////////////////////////////
-struct foo{
- char * text;
-
-};
-
 
 struct TSnd
 {
@@ -475,7 +467,7 @@ struct TSnd
 	int len;
 	int offset;
 	char *sound_path;
-	IDirectSoundBuffer *DSB;
+	LPDIRECTSOUNDBUFFER DSB;
 	int start_tc;
 };
 
@@ -527,7 +519,7 @@ struct MonsterData
 	unsigned char mAFNum2;
 	unsigned char mMinDamage2;
 	unsigned char mMaxDamage2;
-	char mArmorClass;
+	unsigned char mArmorClass;
 	char mMonstClass;
 	unsigned short mMagicRes;
 	unsigned short mMagicRes2;
@@ -542,7 +534,7 @@ struct CMonster
 	// TODO: Add enum for place flags
 	unsigned char mPlaceFlags;
 	AnimStruct Anims[6];
-	TSnd *Snds[8];
+	TSnd *Snds[4][2];
 	int flags_1; // width
 	int flags_2; // width 2
 	unsigned char mMinHP;
@@ -621,7 +613,7 @@ struct MonsterStruct // note: missing field _mAFNum
 	unsigned char mHit2;
 	unsigned char mMinDamage2;
 	unsigned char mMaxDamage2;
-	char mArmorClass;
+	unsigned char mArmorClass;
 	char falign_CB;
 	unsigned short mMagicRes;
 	int mtalkmsg;
@@ -669,7 +661,7 @@ struct ObjDataStruct
 	int oAnimDelay;
 	int oAnimLen;
 	int oAnimWidth;
-	int oSolidFlag;
+	BOOL oSolidFlag;
 	int oMissFlag;
 	int oLightFlag;
 	char oBreak;
@@ -693,7 +685,7 @@ struct ObjectStruct
 	int _oAnimWidth2;
 	int _oDelFlag;
 	char _oBreak; // check
-	int _oSolidFlag;
+	BOOL _oSolidFlag;
 	int _oMissFlag;
 	char _oSelFlag; // check
 	int _oPreFlag;
@@ -1073,8 +1065,8 @@ struct SpellData
 	char *sSkillText;
 	int sBookLvl;
 	int sStaffLvl;
-	int sTargeted;
-	unsigned char sTownSpell;
+	BOOL sTargeted;
+	BOOL sTownSpell;
 	int sMinInt;
 	unsigned char sSFX;
 	unsigned char sMissiles[3];
@@ -1375,7 +1367,7 @@ struct _SNETUIDATA
 	void (__cdecl *profilecallback)();
 	int profilefields;
 	void (__cdecl *profilebitmapcallback)();
-	void (__cdecl *selectnamecallback)(int u1, int u2, int u3, int u4, int mode, char *cname, int clen, char *cdesc, int cdlen, int *multi);
+	int (__stdcall *selectnamecallback)(int u1, int u2, int u3, int u4, int mode, char *cname, int clen, char *cdesc, int cdlen, int *multi);
 	void (__cdecl *changenamecallback)();
 };
 
@@ -1479,14 +1471,14 @@ struct PkPlayerStruct
 	int pMaxHPBase;
 	int pManaBase;
 	int pMaxManaBase;
-	char pSplLvl[37];
+	char pSplLvl[MAX_SPELLS];
 	int pMemSpells; /* __int64 */
 	int pMemSpells2;
 	PkItemStruct InvBody[7];
 	PkItemStruct InvList[40];
 	char InvGrid[40];
 	char _pNumInv;
-	PkItemStruct SpdList[8];
+	PkItemStruct SpdList[MAXBELTITEMS];
 	char pTownWarps;
 	char pDungMsgs;
 	char pLvlLoad;

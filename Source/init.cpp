@@ -173,8 +173,6 @@ void __fastcall init_disable_screensaver(bool disable)
 
 void __fastcall init_create_window(int nCmdShow)
 {
-
-	
 	int nHeight; // eax
 	HWND hWnd; // esi
 	WNDCLASSEXA wcex; // [esp+8h] [ebp-34h]
@@ -282,7 +280,7 @@ void __cdecl init_archives()
 #ifdef COPYPROT
 		if ( diabdat_mpq )
 			break;
-		UiCopyProtError((int)&v1);
+		UiCopyProtError(&v1);
 		if ( v1 == COPYPROT_CANCEL )
 			FileErrDlg("diabdat.mpq");
 	}
@@ -520,7 +518,7 @@ LRESULT __stdcall WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 	return result;
 }
 
-WNDPROC __stdcall SetWindowProc(WNDPROC NewProc)
+WNDPROC __fastcall SetWindowProc(WNDPROC NewProc)
 {
 	WNDPROC OldProc; // eax
 

@@ -1133,7 +1133,7 @@ void __fastcall PutMissile(int i)
 	if ( !missile[v1]._miDelFlag )
 	{
 		v4 = v3 + 112 * v2;
-		dFlags[0][v4] |= 1u;
+		dFlags[0][v4] |= DFLAG_MISSILE;
 		v5 = (unsigned char *)dMissile + v4;
 		if ( *v5 )
 			*v5 = -1;
@@ -1720,7 +1720,7 @@ LABEL_70:
 				if ( v27 != 2 )
 				{
 LABEL_78:
-					drawhpflag = 1;
+					drawhpflag = TRUE;
 					return 1;
 				}
 				v28 = PS_MAGE69;
@@ -2339,7 +2339,7 @@ void __cdecl InitMissiles()
 		v8 = 112;
 		do
 		{
-			*v7 &= 0xFEu;
+			*v7 &= ~DFLAG_MISSILE;
 			v7 += 112;
 			--v8;
 		}
@@ -3565,7 +3565,7 @@ void __fastcall AddFlare(int mi, int sx, int sy, int dx, int dy, int midir, int 
 	{
 		UseMana(id, 35);
 		v14 = id;
-		drawhpflag = 1;
+		drawhpflag = TRUE;
 		plr[v14]._pHPBase -= 320;
 		plr[v14]._pHitPoints -= 320;
 		if ( plr[id]._pHitPoints <= 0 )
@@ -3900,7 +3900,7 @@ void __fastcall AddHeal(int mi, int sx, int sy, int dx, int dy, int midir, int m
 		*v17 = v18;
 	UseMana(id, 2);
 	missile[i]._miDelFlag = 1;
-	drawhpflag = 1;
+	drawhpflag = TRUE;
 }
 
 void __fastcall AddHealOther(int mi, int sx, int sy, int dx, int dy, int midir, int mienemy, int id, int dam)
@@ -4454,7 +4454,7 @@ void __fastcall AddBoneSpirit(int mi, int sx, int sy, int dx, int dy, int midir,
 	{
 		UseMana(id, 36);
 		v13 = id;
-		drawhpflag = 1;
+		drawhpflag = TRUE;
 		plr[v13]._pHPBase -= 384;
 		plr[v13]._pHitPoints -= 384;
 		if ( plr[id]._pHitPoints <= 0 )
@@ -5718,8 +5718,8 @@ void __fastcall MI_Manashield(int i)
 	}
 	if ( v10 < 0 )
 		v10 = 0;
-	drawmanaflag = 1;
-	drawhpflag = 1;
+	drawmanaflag = TRUE;
+	drawhpflag = TRUE;
 	if ( v8 >= v10 )
 	{
 		plr[v2]._pHitPoints = v9;
@@ -7370,7 +7370,7 @@ void __cdecl ProcessMissiles()
 	for ( i = 0; i < v0; dMissile[0][v2] = 0 )
 	{
 		v2 = 112 * missile[missileactive[i]]._mix + missile[missileactive[i]]._miy;
-		dFlags[0][v2] &= 0xFEu;
+		dFlags[0][v2] &= ~DFLAG_MISSILE;
 		++i;
 	}
 	v3 = 0;
@@ -7492,6 +7492,6 @@ void __cdecl missiles_process_charge()
 
 void __fastcall ClearMissileSpot(int mi)
 {
-	dFlags[missile[mi]._mix][missile[mi]._miy] &= 0xFE;
+	dFlags[missile[mi]._mix][missile[mi]._miy] &= ~DFLAG_MISSILE;
 	dMissile[missile[mi]._mix][missile[mi]._miy] = 0;
 }

@@ -38,8 +38,8 @@ void __cdecl CheckDungeonClear()
 			if ( dPlayer[i][j] )
 				TermMsg("Players not cleared");
 
-			dMonsDbg[currlevel][i][j] = dFlags[i][j] & 2;
-			dFlagDbg[currlevel][i][j] = dFlags[i][j] & 8;
+			dMonsDbg[currlevel][i][j] = dFlags[i][j] & DFLAG_VISIBLE;
+			dFlagDbg[currlevel][i][j] = dFlags[i][j] & DFLAG_POPULATED;
 		}
 	}
 }
@@ -94,7 +94,7 @@ void __cdecl TakeGoldCheat()
 			RemoveInvItem(myplr, ig - 1);
 	}
 
-	for(i = 0; i < 8; i++)
+	for(i = 0; i < MAXBELTITEMS; i++)
 	{
 		if ( plr[myplr].SpdList[i]._itype == ITYPE_GOLD )
 			plr[myplr].SpdList[i]._itype = -1;
@@ -107,7 +107,7 @@ void __cdecl MaxSpellsCheat()
 {
 	int i; // ebp
 
-	for(i = 1; i < 37; i++)
+	for(i = 1; i < MAX_SPELLS; i++)
 	{
 		if ( spelldata[i].sBookLvl != -1 )
 		{

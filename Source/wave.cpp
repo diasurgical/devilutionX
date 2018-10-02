@@ -2,7 +2,9 @@
 
 #include "../types.h"
 
+#ifndef NO_GLOBALS
 int wave_cpp_init_value; // weak
+#endif
 
 const int wave_inf = 0x7F800000; // weak
 
@@ -84,26 +86,23 @@ int __fastcall WOpenFile(char *dwInitParam, HANDLE *phsFile, int a3)
 	return 0;
 }
 
-char __fastcall WReadFile(HANDLE hsFile, char *buf, int a3)
+void __fastcall WReadFile(HANDLE hsFile, LPVOID buf, int a3)
 {
-	char *v3; // ebx
 	HANDLE v4; // edi
 	int v5; // eax
 	int nread; // [esp+Ch] [ebp-Ch]
 	int offset; // [esp+10h] [ebp-8h]
 	int a2a; // [esp+14h] [ebp-4h]
 
-	v3 = buf;
 	v4 = hsFile;
 	a2a = 0;
 	for ( offset = WSetFilePointer(hsFile, 0, 0, 1); ; WSetFilePointer(v4, offset, 0, 0) )
 	{
-		v5 = SFileReadFile(v4, v3, a3, (unsigned long *)&nread, 0);
+		v5 = SFileReadFile(v4, buf, a3, (unsigned long *)&nread, 0);
 		if ( v5 )
 			break;
 		WGetFileArchive(v4, &a2a, 0);
 	}
-	return v5;
 }
 
 int __fastcall WSetFilePointer(HANDLE file1, int offset, HANDLE file2, int whence)

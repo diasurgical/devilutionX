@@ -185,7 +185,7 @@ void __fastcall gamemenu_sound_music_toggle(char **names, TMenuItem *menu_item, 
 		menu_item->dwFlags |= 0xC0000000;
 		menu_item->pszStr = *names;
 		gmenu_slider_3(menu_item, 17);
-		gmenu_slider_1(menu_item, -1600, 0, gamma);
+		gmenu_slider_1(menu_item, VOLUME_MIN, VOLUME_MAX, gamma);
 	}
 	else
 	{
@@ -220,18 +220,18 @@ void __fastcall gamemenu_music_volume(int a1)
 		{
 			gbMusicOn = 0;
 			music_stop();
-			sound_get_or_set_music_volume(-1600);
+			sound_get_or_set_music_volume(VOLUME_MIN);
 			goto LABEL_11;
 		}
 		gbMusicOn = 1;
-		sound_get_or_set_music_volume(0);
+		sound_get_or_set_music_volume(VOLUME_MAX);
 LABEL_10:
 		music_start((unsigned char)leveltype);
 		goto LABEL_11;
 	}
 	v1 = gamemenu_slider_music_sound(sgOptionMenu);
 	sound_get_or_set_music_volume(v1);
-	if ( v1 != -1600 )
+	if ( v1 != VOLUME_MIN )
 	{
 		if ( gbMusicOn )
 			goto LABEL_11;
@@ -251,7 +251,7 @@ LABEL_11:
 
 int __fastcall gamemenu_slider_music_sound(TMenuItem *menu_item)
 {
-	return gmenu_slider_get(menu_item, -1600, 0);
+	return gmenu_slider_get(menu_item, VOLUME_MIN, VOLUME_MAX);
 }
 
 void __fastcall gamemenu_sound_volume(int a1)
@@ -259,35 +259,24 @@ void __fastcall gamemenu_sound_volume(int a1)
 	int v1; // ecx
 	int v2; // esi
 
-	if ( a1 )
-	{
-		if ( gbSoundOn )
-		{
+	if ( a1 ) {
+		if ( gbSoundOn ) {
 			gbSoundOn = 0;
 			FreeMonsterSnd();
-			v1 = -1600;
-		}
-		else
-		{
+			v1 = VOLUME_MIN;
+		} else {
 			gbSoundOn = 1;
-			v1 = 0;
 		}
-		sound_get_or_set_sound_volume(v1);
-	}
-	else
-	{
+		sound_get_or_set_sound_volume(VOLUME_MAX);
+	} else {
 		v2 = gamemenu_slider_music_sound(&sgOptionMenu[1]);
 		sound_get_or_set_sound_volume(v2);
-		if ( v2 == -1600 )
-		{
-			if ( gbSoundOn )
-			{
+		if ( v2 == VOLUME_MIN ) {
+			if ( gbSoundOn ) {
 				gbSoundOn = 0;
 				FreeMonsterSnd();
 			}
-		}
-		else if ( !gbSoundOn )
-		{
+		} else if ( !gbSoundOn ) {
 			gbSoundOn = 1;
 		}
 	}

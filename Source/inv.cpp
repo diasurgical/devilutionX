@@ -3,7 +3,7 @@
 #include "../types.h"
 
 #ifndef NO_GLOBALS
-int invflag;
+BOOL invflag;
 void *pInvCels;
 int drawsbarflag; // idb
 int sgdwLastTime; // check name
@@ -541,7 +541,7 @@ void __cdecl DrawInvBelt()
 			v0 += 368;
 			v13 = v0;
 		}
-		while ( v11 < 8 );
+		while ( v11 < MAXBELTITEMS );
 	}
 }
 // 4B8960: using guessed type int talkflag;
@@ -743,7 +743,7 @@ LABEL_25:
 		{
 			++v11;
 			v12 += 92;
-			if ( v11 >= 8 )
+			if ( v11 >= MAXBELTITEMS )
 				goto LABEL_24;
 		}
 		v6 = 1;
@@ -1863,7 +1863,7 @@ void __fastcall RemoveInvItem(int pnum, int iv)
 	{
 		if ( plr[pnum]._pRSpell != SPL_INVALID )
 		{
-			// BUGFIX: Cast the literal `1` to `UINT64` to make that bitshift 64bit
+			// BUGFIX: Cast the literal `1` to `unsigned __int64` to make that bitshift 64bit
 			// this causes the last 4 skills to not reset correctly after use
 			if ( !(
 				plr[pnum]._pScrlSpells64
@@ -1887,7 +1887,7 @@ void __fastcall RemoveSpdBarItem(int pnum, int iv)
 	{
 		if ( plr[pnum]._pRSpell != SPL_INVALID )
 		{
-			// BUGFIX: Cast the literal `1` to `UINT64` to make that bitshift 64bit
+			// BUGFIX: Cast the literal `1` to `unsigned __int64` to make that bitshift 64bit
 			// this causes the last 4 skills to not reset correctly after use
 			if ( !(
 				plr[pnum]._pScrlSpells64
@@ -1981,8 +1981,8 @@ void __fastcall CheckQuestItem(int pnum)
 	v1 = pnum;
 	v2 = plr[v1].HoldItem.IDidx;
 	if ( v2 == IDI_OPTAMULET )
-		quests[8]._qactive = 3;
-	if ( v2 == IDI_MUSHROOM && quests[1]._qactive == 2 && quests[1]._qvar1 == 3 )
+		quests[QTYPE_BLIND]._qactive = 3;
+	if ( v2 == IDI_MUSHROOM && quests[QTYPE_BLKM]._qactive == 2 && quests[QTYPE_BLKM]._qvar1 == QS_MUSHSPAWNED )
 	{
 		v3 = plr[v1]._pClass;
 		sfxdelay = IDI_OPTAMULET;
@@ -2001,16 +2001,16 @@ void __fastcall CheckQuestItem(int pnum)
 		{
 			sfxdnum = PS_WARR95;
 		}
-		quests[1]._qvar1 = 4;
+		quests[QTYPE_BLKM]._qvar1 = QS_MUSHPICKED;
 	}
 	if ( v2 == IDI_ANVIL )
 	{
-		if ( quests[10]._qactive == 1 )
+		if ( quests[QTYPE_ANVIL]._qactive == 1 )
 		{
-			quests[10]._qactive = 2;
-			quests[10]._qvar1 = 1;
+			quests[QTYPE_ANVIL]._qactive = 2;
+			quests[QTYPE_ANVIL]._qvar1 = 1;
 		}
-		if ( quests[10]._qlog == 1 )
+		if ( quests[QTYPE_ANVIL]._qlog == 1 )
 		{
 			sfxdelay = IDI_OPTAMULET;
 			v4 = plr[myplr]._pClass;
@@ -2053,12 +2053,12 @@ void __fastcall CheckQuestItem(int pnum)
 	}
 	if ( v2 == IDI_ROCK )
 	{
-		if ( quests[0]._qactive == 1 )
+		if ( quests[QTYPE_INFRA]._qactive == 1 )
 		{
-			quests[0]._qactive = 2;
-			quests[0]._qvar1 = 1;
+			quests[QTYPE_INFRA]._qactive = 2;
+			quests[QTYPE_INFRA]._qvar1 = 1;
 		}
-		if ( quests[0]._qlog == 1 )
+		if ( quests[QTYPE_INFRA]._qlog == 1 )
 		{
 			sfxdelay = IDI_OPTAMULET;
 			v6 = plr[myplr]._pClass;
@@ -2081,7 +2081,7 @@ void __fastcall CheckQuestItem(int pnum)
 	}
 	if ( v2 == IDI_ARMOFVAL )
 	{
-		quests[9]._qactive = 3;
+		quests[QTYPE_BLOOD]._qactive = 3;
 		sfxdelay = 20;
 		v7 = plr[myplr]._pClass;
 		if ( v7 )
@@ -2694,7 +2694,7 @@ int __fastcall InvPutItem(int pnum, int x, int y)
 	v15 = itemavail[0];
 	dItem[xa][v5] = _LOBYTE(itemavail[0]) + 1;
 	yc = v15;
-	v16 = &itemavail[-numitems + 126];
+	v16 = &itemavail[MAXITEMS - numitems - 1];
 	itemactive[numitems] = v15;
 	itemavail[0] = *v16;
 	v17 = v15;
@@ -2814,7 +2814,7 @@ int __fastcall SyncPutItem(int pnum, int x, int y, int idx, int icreateinfo, int
 	v25 = itemavail[0];
 	ic = itemavail[0];
 	dItem[v13][v15] = _LOBYTE(itemavail[0]) + 1;
-	v26 = &itemavail[-numitems + 126];
+	v26 = &itemavail[MAXITEMS - numitems - 1];
 	itemactive[numitems] = v25;
 	itemavail[0] = *v26;
 	if ( idx == IDI_EAR )
@@ -3011,7 +3011,7 @@ LABEL_8:
 		{
 			++v5;
 			v6 += 92;
-			if ( v5 >= 8 )
+			if ( v5 >= MAXBELTITEMS )
 				return;
 		}
 		RemoveSpdBarItem(p, v5);
@@ -3031,7 +3031,7 @@ LABEL_8:
 	CalcPlrScrolls(p);
 }
 
-bool __cdecl UseScroll()
+BOOL __cdecl UseScroll()
 {
 	int v0; // eax
 	int v1; // esi
@@ -3040,8 +3040,8 @@ bool __cdecl UseScroll()
 	signed int v4; // esi
 	int *v5; // ecx
 
-	if ( pcurs != CURSOR_HAND || leveltype == DTYPE_TOWN && !*(_DWORD *)&spelldata[plr[myplr]._pRSpell].sTownSpell )
-		return 0;
+	if ( pcurs != CURSOR_HAND || leveltype == DTYPE_TOWN && !spelldata[plr[myplr]._pRSpell].sTownSpell )
+		return FALSE;
 	v0 = myplr;
 	v1 = 0;
 	v2 = plr[myplr]._pNumInv;
@@ -3054,8 +3054,8 @@ LABEL_11:
 		{
 			++v4;
 			v5 += 92;
-			if ( v4 >= 8 )
-				return 0;
+			if ( v4 >= MAXBELTITEMS )
+				return FALSE;
 		}
 	}
 	else
@@ -3069,7 +3069,7 @@ LABEL_11:
 				goto LABEL_11;
 		}
 	}
-	return 1;
+	return TRUE;
 }
 // 5BB1ED: using guessed type char leveltype;
 
@@ -3092,12 +3092,12 @@ void __fastcall UseStaffCharge(int pnum)
 	}
 }
 
-bool __cdecl UseStaff()
+BOOL __cdecl UseStaff()
 {
 	int v0; // eax
-	bool result; // al
+	BOOL result; // al
 
-	result = 0;
+	result = FALSE;
 	if ( pcurs == CURSOR_HAND )
 	{
 		v0 = myplr;
@@ -3106,7 +3106,7 @@ bool __cdecl UseStaff()
 			&& plr[v0].InvBody[4]._iSpell == plr[v0]._pRSpell
 			&& plr[v0].InvBody[4]._iCharges > 0 )
 		{
-			result = 1;
+			result = TRUE;
 		}
 	}
 	return result;
@@ -3251,8 +3251,8 @@ int __fastcall UseInvItem(int pnum, int cii)
 			dropGoldFlag = 0;
 			dropGoldValue = 0;
 		}
-		if ( v9 == 21 && !currlevel && !*(_DWORD *)&spelldata[v6[56]].sTownSpell
-			|| v9 == 22 && !currlevel && !*(_DWORD *)&spelldata[v6[56]].sTownSpell )
+		if ( v9 == 21 && !currlevel && !spelldata[v6[56]].sTownSpell
+			|| v9 == 22 && !currlevel && !spelldata[v6[56]].sTownSpell )
 		{
 			return 1;
 		}
@@ -3311,7 +3311,7 @@ int __fastcall CalculateGold(int pnum)
 	result = 0;
 	v2 = pnum;
 	v3 = &plr[v2].SpdList[0]._ivalue;
-	v4 = 8;
+	v4 = MAXBELTITEMS;
 	do
 	{
 		if ( *(v3 - 47) == 11 )

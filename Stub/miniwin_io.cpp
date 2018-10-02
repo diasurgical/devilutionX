@@ -119,7 +119,7 @@ DWORD WINAPI GetFileAttributesA(LPCSTR lpFileName)
 
 	if (res == -1) {
 		SetLastError(ERROR_FILE_NOT_FOUND);
-		return -1;
+		return (DWORD)-1;
 	}
 
 	return 0x80;

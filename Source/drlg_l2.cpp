@@ -470,7 +470,7 @@ void __fastcall LoadL2Dungeon(char *sFileName, int vx, int vy)
 					v14 = *v12;
 					if ( *v12 )
 					{
-						dflags[0][v13] |= 0x80u;
+						dflags[0][v13] |= DFLAG_EXPLORED;
 						dungeon[0][v13] = v14;
 					}
 					else
@@ -719,7 +719,7 @@ void __fastcall LoadPreL2Dungeon(char *sFileName, int vx, int vy)
 					v12 = *v10;
 					if ( *v10 )
 					{
-						dflags[0][v11] |= 0x80u;
+						dflags[0][v11] |= DFLAG_EXPLORED;
 						dungeon[0][v11] = v12;
 					}
 					else
@@ -782,7 +782,7 @@ void __fastcall CreateL2Dungeon(int rseed, int entry)
 	{
 		if ( currlevel == 7 )
 		{
-			if ( quests[8]._qactive )
+			if ( quests[QTYPE_BLIND]._qactive )
 				goto LABEL_10;
 			currlevel = 6;
 			CreateL2Dungeon(glSeedTbl[6], 4);
@@ -790,7 +790,7 @@ void __fastcall CreateL2Dungeon(int rseed, int entry)
 		}
 		if ( currlevel == 8 )
 		{
-			if ( quests[8]._qactive )
+			if ( quests[QTYPE_BLIND]._qactive )
 			{
 				v4 = glSeedTbl[7];
 				currlevel = 7;
@@ -830,19 +830,19 @@ void __cdecl DRLG_LoadL2SP()
 	char *v1; // ecx
 
 	setloadflag_2 = 0;
-	if ( QuestStatus(8) )
+	if ( QuestStatus(QTYPE_BLIND) )
 	{
 		v1 = "Levels\\L2Data\\Blind2.DUN";
 	}
 	else
 	{
-		if ( QuestStatus(9) )
+		if ( QuestStatus(QTYPE_BLOOD) )
 		{
 			v1 = "Levels\\L2Data\\Blood1.DUN";
 		}
 		else
 		{
-			if ( !QuestStatus(14) )
+			if ( !QuestStatus(QTYPE_BONE) )
 				return;
 			v1 = "Levels\\L2Data\\Bonestr2.DUN";
 		}
@@ -1584,7 +1584,7 @@ void __fastcall DRLG_L2SetRoom(int rx1, int ry1)
 					v5 = *v7;
 					if ( *v7 )
 					{
-						dflags[0][v4] |= 0x80u;
+						dflags[0][v4] |= DFLAG_EXPLORED;
 						dungeon[0][v4] = v5;
 					}
 					else
@@ -1667,7 +1667,7 @@ bool __cdecl CreateDungeon()
 	v2 = 0;
 	if ( currlevel == 5 )
 	{
-		if ( !quests[9]._qactive )
+		if ( !quests[QTYPE_BLOOD]._qactive )
 			goto LABEL_12;
 		v1 = 20;
 		v0 = 14;
@@ -1676,13 +1676,13 @@ bool __cdecl CreateDungeon()
 	{
 		if ( currlevel == 6 )
 		{
-			if ( !quests[14]._qactive )
+			if ( !quests[QTYPE_BONE]._qactive )
 				goto LABEL_12;
 			v12 = 10;
 		}
 		else
 		{
-			if ( currlevel != 7 || !quests[8]._qactive )
+			if ( currlevel != 7 || !quests[QTYPE_BLIND]._qactive )
 				goto LABEL_12;
 			v12 = 15;
 		}
@@ -2016,7 +2016,7 @@ void __fastcall DefineRoom(int nX1, int nY1, int nX2, int nY2, int ForceHW)
 				i = nY2;
 				do
 				{
-					*ForceHWa |= 0x80u;
+					*ForceHWa |= DFLAG_EXPLORED;
 					v9 = v14-- == 1;
 					ForceHWa += 40;
 				}

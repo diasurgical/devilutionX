@@ -3,6 +3,15 @@
 #include <SDL_image.h>
 #include <SDL_mixer.h>
 
+/*
+#ifndef NO_GLOBALS
+char gbSndInited;
+char gbDupSounds;
+UCHAR gbMusicOn;
+UCHAR gbSoundOn;
+#endif
+*/
+
 bool SoundInited;
 char gbSndInited;
 char gbDupSounds;
@@ -15,10 +24,10 @@ Mix_Music *music;
 char *sgszMusicTracks[6] = {"Music\\DTowne.wav", "Music\\DLvlA.wav", "Music\\DLvlB.wav",
                             "Music\\DLvlC.wav",  "Music\\DLvlD.wav", "Music\\Dintro.wav"};
 
-bool IsMusicPlaying = 0;
-
-void __fastcall snd_init()
+void __fastcall snd_init(HWND hWnd)
 {
+	DUMMY();
+
 	printf("SND INIT\n\n");
 	// Initialize SDL.
 	if (SDL_Init(SDL_INIT_AUDIO) < 0) {
@@ -39,13 +48,10 @@ void *buffer;
 int bytestoread;
 int channel = 2;
 
-
-
 SDL_AudioSpec wanted;
-    static Uint8 *audio_chunk;
-    static Uint32 audio_len;
-    static Uint8 *audio_pos;
-
+static Uint8 *audio_chunk;
+static Uint32 audio_len;
+static Uint8 *audio_pos;
 
 void fill_audio(void *udata, Uint8 *stream, int len)
     {
@@ -61,9 +67,13 @@ void fill_audio(void *udata, Uint8 *stream, int len)
     }
 
 
+
+
+
 void __fastcall music_start(int nTrack)
 {
-	wanted.freq = 22050;
+	DUMMY();
+		wanted.freq = 22050;
     wanted.format = AUDIO_S8;
     wanted.channels = 5;    /* 1 = mono, 2 = stereo */
     wanted.samples = 1024;  /* Good low-latency value for callback */
@@ -114,27 +124,6 @@ void __fastcall music_start(int nTrack)
 	}
 }
 
-void IsPlayMusic()
-{
-	// if (Mix_PlayingMusic() == 0) {
-	// 	// Play the music
-	// 	Mix_PlayMusic(gMusic, -1);
-	// }
-}
-
-void __cdecl music_stop()
-{
-
-	// memset(buffer, 0, sizeof(bytestoread));
-	// Mix_HaltMusic();
-	// DUMMY();
-}
-
-bool __fastcall snd_playing(TSnd *pSnd)
-{
-	printf("snd_playing!!!!\n");
-	// UNIMPLEMENTED();
-}
 
 void *SFXbuffer;
 int SFXsoundch = 1;
@@ -155,73 +144,58 @@ void LoadAndPlaySound(char *FilePath, int lVolume, int lPan)
 	//Mix_FreeChunk(SoundFX);
 }
 
+
+
+
+void __cdecl music_stop()
+{
+	DUMMY();
+	Mix_HaltMusic();
+}
+
+BOOL __fastcall snd_playing(TSnd *pSnd)
+{
+	UNIMPLEMENTED();
+}
+
 void __fastcall snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 {
-
-	void *file;
-
-	file = pSnd;
-
-	// bytestoread = (int)SFileGetFileSize((HANDLE)file, 0);
-	// sbuffer = DiabloAllocPtr(bytestoread);
-	// SFileReadFile(file, (char *)sbuffer, bytestoread, (unsigned long *)&nrread, 0);
-	// Mix_Chunk *sound = Mix_QuickLoad_WAV((Uint8 *)sbuffer);
-	// Mix_PlayChannel(channel, sound, 0);
-
-	printf("snd_play_snd!!!!\n");
-
-	// UNIMPLEMENTED();
+	
+	//printf("Sound File %s",pSnd );
+	//UNIMPLEMENTED();
 }
 
 void __fastcall snd_stop_snd(TSnd *pSnd)
 {
 	DUMMY();
-}
-// effects_play_sound
-// void effects_play_sound()
-
-// added
-void __fastcall SDL_PlayEffect(int i, int mode)
-{
-
-	printf("113Debug Mode delete me\n\n");
-	UNIMPLEMENTED();
+	Mix_HaltMusic();
 }
 
-// void *ptr[900];
+
 TSnd *__fastcall sound_file_load(char *path)
 {
-	printf("File Is Being Loaded %s\n", path);
-
-	SFileOpenFile(path, &SFXbuffer);
-
-	// UNIMPLEMENTED();
+	printf("Sound_File_Load %s", path);
+	//UNIMPLEMENTED();
 }
 
 void __fastcall sound_file_cleanup(TSnd *sound_file)
 {
-	printf("125Debug Mode delete me\n\n");
 	UNIMPLEMENTED();
 }
 
 int __fastcall sound_get_or_set_sound_volume(int volume)
 {
-	printf("131Debug Mode delete me\n\n");
 	DUMMY_PRINT("volume: %d", volume);
 	return volume;
 }
 
 int __fastcall sound_get_or_set_music_volume(int volume)
 {
-	printf("138Debug Mode delete me\n\n");
-	Mix_Volume(1, MIX_MAX_VOLUME / 2);
-
 	DUMMY_PRINT("volume: %d", volume);
 	return volume;
 }
 
-void __fastcall snd_update(bool bStopAll)
+void __fastcall snd_update(BOOL bStopAll)
 {
-	// printf("147Debug Mode delete me\n\n");
-	// DUMMY_PRINT("stopall: %d", bStopAll);
+	//DUMMY_PRINT("stopall: %d", bStopAll);
 }

@@ -715,7 +715,7 @@ void __cdecl SaveGame()
 		v47 = 112;
 		do
 		{
-			BSave(*v23 & 0xF8);
+			BSave(*v23 & (DFLAG_POPULATED | DFLAG_MONSTER | DFLAG_PLAYER | DFLAG_LIT | DFLAG_EXPLORED));
 			v23 += 112;
 			--v47;
 		}
@@ -874,7 +874,7 @@ void __cdecl SaveGame()
 	v44 = codec_get_encoded_len((_BYTE *)tbuff - (_BYTE *)ptr);
 	pfile_write_save_file(v45, v43, (_BYTE *)tbuff - (_BYTE *)v43, v44);
 	mem_free_dbg(v43);
-	*(_DWORD *)&gbValidSaveFile = 1;
+	gbValidSaveFile = TRUE;
 	pfile_rename_temp_to_perm();
 	pfile_write_hero();
 }
@@ -1047,7 +1047,7 @@ void __cdecl SaveLevel()
 	{
 		for(j = 0; j < 112; j++)
 		{
-			BSave(dFlags[j][i] & 0xF8);
+			BSave(dFlags[j][i] & (DFLAG_POPULATED | DFLAG_MONSTER | DFLAG_PLAYER | DFLAG_LIT | DFLAG_EXPLORED));
 		}
 	}
 

@@ -14,7 +14,7 @@ extern int dolighting; // weak
 extern char dung_map_rgba[16384]; /* int [64][64] short [64][128] char [64][256] */
 extern int visionid;
 extern char *pLightTbl; /* todo: struct? */
-extern int lightflag; // weak
+extern BOOL lightflag;
 
 void __fastcall SetLightFX(int *x, int *y, short *s_r, short *s_g, int *s_b, int *d_r, int *d_g, int *d_b);
 void __fastcall DoLighting(int nXPos, int nYPos, int nRadius, int Lnum);

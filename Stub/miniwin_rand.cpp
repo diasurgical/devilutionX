@@ -1,3 +1,7 @@
+/** @file
+ *
+ * An implementation of the MSVCRT random number generator for codec_encode().
+ */
 #include "miniwin.h"
 
 #include "stubs.h"

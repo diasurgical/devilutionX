@@ -483,7 +483,7 @@ LABEL_5:
 			{
 				if ( dung_map[0][v6] == tv )
 				{
-					if ( dFlags[0][v6] & 8 )
+					if ( dFlags[0][v6] & DFLAG_POPULATED )
 						return 0;
 					++v3;
 				}
@@ -610,9 +610,9 @@ void __cdecl InitThemes()
 			v9 = themeCount;
 			for ( j = 0; j < v9; ++j )
 				themes[j].ttype = -1;
-			//_LOBYTE(v11) = QuestStatus(3);
+			//_LOBYTE(v11) = QuestStatus(QTYPE_ZHAR);
 			v13 = &themeLoc[0].ttval;
-			if ( QuestStatus(3) )
+			if ( QuestStatus(QTYPE_ZHAR) )
 			{
 				v14 = 0;
 				if ( themeCount > 0 )
@@ -692,7 +692,7 @@ void __cdecl HoldThemeRooms()
 					do
 					{
 						if ( dung_map[0][v4] == v2 )
-							dFlags[0][v4] |= 8u;
+							dFlags[0][v4] |= DFLAG_POPULATED;
 						v4 += 112;
 						--v5;
 					}
@@ -1013,8 +1013,8 @@ void __fastcall Theme_Library(int t)
 		++v1;
 	}
 	while ( (signed int)v11 < (signed int)&dMonster[1][111] );
-	//LOBYTE(v8) = QuestStatus(3);
-	if ( !QuestStatus(3) || ta != zharlib )
+	//LOBYTE(v8) = QuestStatus(QTYPE_ZHAR);
+	if ( !QuestStatus(QTYPE_ZHAR) || ta != zharlib )
 		PlaceThemeMonsts(ta, monstrnd[leveltype-1]);
 }
 // 5BB1ED: using guessed type char leveltype;

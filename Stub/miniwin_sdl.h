@@ -27,6 +27,10 @@ extern SDL_Texture *texture;
 
 //My SDL inclusions // 
 
+
+
+
+
 extern int totalFrames;
 //extern SDL_Texture* spriteSheet;
 extern SDL_Surface* DiabloTitle;
@@ -60,3 +64,4 @@ void  CreateMainDiabloMenu();
 void SDLCreateDiabloCursor();
 void SDL_RenderDiabloSinglePlayerPage();
 void RenderCharNames();
+void SDL_Diablo_UI();

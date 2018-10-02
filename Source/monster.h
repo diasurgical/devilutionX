@@ -158,7 +158,7 @@ bool __fastcall SpawnSkeleton(int ii, int x, int y);
 int __cdecl PreSpawnSkeleton();
 void __fastcall TalktoMonster(int i);
 void __fastcall SpawnGolum(int i, int x, int y, int mi);
-bool __fastcall CanTalkToMonst(int m);
+BOOL __fastcall CanTalkToMonst(int m);
 BOOL __fastcall CheckMonsterHit(int m, BOOL *ret);
 int __fastcall encode_enemy(int m);
 void __fastcall decode_enemy(int m, int enemy);

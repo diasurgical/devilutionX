@@ -4,7 +4,7 @@
 #include <SDL_image.h>
 #include <SDL_mixer.h>
 #include "SDL_FontCache.h"
-
+#include "miniwin_sdl.h"
 
 
 #include <assert.h>
@@ -18,7 +18,7 @@
 		abort(); \
 	}
 
-#define DUMMY() //eprintf("DUMMY: %s @ %s:%d\n", __FUNCTION__, __FILE__, __LINE__)
+#define DUMMY() eprintf("DUMMY: %s @ %s:%d\n", __FUNCTION__, __FILE__, __LINE__)
 
 #define DUMMY_ONCE() \
 	{ \
@@ -35,4 +35,3 @@ static inline const char *nullstr(const char *a)
 {
 	return a ? a : "(null)";
 }
-

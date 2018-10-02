@@ -2,13 +2,13 @@
 
 #include "../types.h"
 
-#ifndef NO_GLOBALS
 int doom_quest_time; // weak
 int doom_stars_drawn; // weak
+#ifndef NO_GLOBALS
 void *pDoomCel;
 int doomflag; // weak
-int DoomQuestState; // idb
 #endif
+int DoomQuestState; // idb
 
 /*
 void __cdecl doom_reset_state()

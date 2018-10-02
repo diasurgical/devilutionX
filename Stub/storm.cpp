@@ -133,7 +133,7 @@ BOOL STORMAPI SFileOpenFile(const char *filename, HANDLE *phFile)
 	}
 
 	if (!result || !*phFile) {
-	//	eprintf("%s: Not found: %s\n", __FUNCTION__, filename);
+		eprintf("%s: Not found: %s\n", __FUNCTION__, filename);
 	}
 	return result;
 }
@@ -355,7 +355,9 @@ int __stdcall SNetInitializeProvider(unsigned long a1, struct _SNETPROGRAMDATA *
                                      struct _SNETVERSIONDATA *fileinfo)
 {
 	DUMMY();
-	ui_info->selectnamecallback(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+	ui_info->selectnamecallback(0, 0, 0, 0, 0, NULL, 0, NULL, 0, NULL);
+
 	return TRUE;
 }
 

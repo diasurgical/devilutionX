@@ -1394,7 +1394,7 @@ void __cdecl S_StartWSell()
 		}
 	}
 
-	for(i = 0; i < 8; i++)
+	for(i = 0; i < MAXBELTITEMS; i++)
 	{
 		if ( plr[myplr].SpdList[i]._itype != -1 && WitchSellOk(~i) )
 		{
@@ -2539,13 +2539,13 @@ void __fastcall SetGoldCurs(int pnum, int i)
 	if ( plr[pnum].InvList[i]._ivalue < 2500 )
 	{
 		if ( plr[pnum].InvList[i]._ivalue > 1000 )
-			plr[pnum].InvList[i]._iCurs = 5;
+			plr[pnum].InvList[i]._iCurs = ICURS_GOLD_MEDIUM;
 		else
-			plr[pnum].InvList[i]._iCurs = 4;
+			plr[pnum].InvList[i]._iCurs = ICURS_GOLD_SMALL;
 	}
 	else
 	{
-		plr[pnum].InvList[i]._iCurs = 6;
+		plr[pnum].InvList[i]._iCurs = ICURS_GOLD_LARGE;
 	}
 }
 
@@ -2554,13 +2554,13 @@ void __fastcall SetSpdbarGoldCurs(int pnum, int i)
 	if ( plr[pnum].SpdList[i]._ivalue < 2500 )
 	{
 		if ( plr[pnum].SpdList[i]._ivalue > 1000 )
-			plr[pnum].SpdList[i]._iCurs = 5;
+			plr[pnum].SpdList[i]._iCurs = ICURS_GOLD_MEDIUM;
 		else
-			plr[pnum].SpdList[i]._iCurs = 4;
+			plr[pnum].SpdList[i]._iCurs = ICURS_GOLD_SMALL;
 	}
 	else
 	{
-		plr[pnum].SpdList[i]._iCurs = 6;
+		plr[pnum].SpdList[i]._iCurs = ICURS_GOLD_LARGE;
 	}
 }
 
@@ -2617,7 +2617,7 @@ void __fastcall TakePlrsMoney(int cost)
 				}
 			}
 		}
-		if ( ++v4 >= 8 )
+		if ( ++v4 >= MAXBELTITEMS )
 		{
 			if ( v1 > 0 )
 			{
@@ -2647,7 +2647,7 @@ void __fastcall TakePlrsMoney(int cost)
 					}
 					++v8;
 				}
-				while ( v8 < 8 );
+				while ( v8 < MAXBELTITEMS );
 			}
 			break;
 		}
@@ -3746,7 +3746,7 @@ LABEL_12:
 	}
 	if ( plr[myplr]._pHitPoints != plr[myplr]._pMaxHP )
 		PlaySFX(IS_CAST8);
-	drawhpflag = 1;
+	drawhpflag = TRUE;
 	v1 = myplr;
 	plr[v1]._pHitPoints = plr[myplr]._pMaxHP;
 	plr[v1]._pHPBase = plr[v1]._pMaxHPBase;

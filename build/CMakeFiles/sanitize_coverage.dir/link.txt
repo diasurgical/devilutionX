@@ -1,0 +1,2 @@
+/usr/bin/ar qc libsanitize_coverage.a  CMakeFiles/sanitize_coverage.dir/Stub/sanitize_coverage.cpp.o
+/usr/bin/ranlib libsanitize_coverage.a

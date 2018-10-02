@@ -70,9 +70,6 @@ extern "C" {
 
 BOOL STORMAPI SNetCreateGame(const char *pszGameName, const char *pszGamePassword, const char *pszGameStatString, DWORD dwGameType, char *GameTemplateData, int GameTemplateSize, int playerCount, char *creatorName, char *a11, int *playerID);
 BOOL STORMAPI SNetDestroy();
-BOOL STORMAPI SNetEnumProviders(int (STORMAPI *callback)(DWORD, DWORD, DWORD, DWORD), int mincaps);
-
-BOOL STORMAPI SNetEnumGames(int (STORMAPI *callback)(DWORD, DWORD, DWORD), int *hintnextcall);
 
 /*  SNetDropPlayer @ 106
  *
@@ -468,6 +465,7 @@ BOOL STORMAPI SDlgSetControlBitmaps(HWND parentwindow, int *id, int a3, char *bu
 BOOL STORMAPI SDlgSetSystemCursor(void *lpSrcBuffer, void *p_a2, LPSIZE lpSize, LPCSTR lpCursorName);
 */
 
+BOOL STORMAPI SDlgBltToWindowI(HWND hWnd, HRGN a2, char *a3, int a4, void *buffer, RECT *rct, SIZE *size, int a8, int a9, DWORD rop);
 BOOL STORMAPI SDlgBltToWindowE(HWND hWnd, HRGN a2, char *a3, int a4, void *buffer, RECT *rct, SIZE *size, int a8, int a9, DWORD rop);
 BOOL STORMAPI SDlgSetBitmapE(HWND hWnd, int a2, char *src, int mask1, int flags, int a6, int a7, int width, int a9, int mask2);
 
@@ -542,6 +540,7 @@ BOOL STORMAPI SFileLoadFileEx(void *hArchive, char *filename, int a3, int a4, in
 
 BOOL STORMAPI SBltROP3(void *lpDstBuffer, void *lpSrcBuffer, int srcDrawWidth, int srcDrawHeight, int dstWidth, int srcWidth, int a7, DWORD rop);
 BOOL STORMAPI SBltROP3Clipped(void *lpDstBuffer, RECT *lpDstRect, POINT *lpDstPt, int a4, void *lpSrcBuffer, RECT *lpSrcRect, POINT *lpSrcPt, int a8, int a9, DWORD rop);
+BOOL STORMAPI SBltROP3Tiled(void *lpDstBuffer, RECT *lpDstRect, POINT *lpDstPt, int a4, void *lpSrcBuffer, RECT *lpSrcRect, POINT *lpSrcPt, int a8, int a9, DWORD rop);
 
 #define SBMP_DEFAULT  0
 #define SBMP_BMP      1
@@ -898,6 +897,7 @@ BOOL STORMAPI STransPointInMask(HANDLE hTrans, int x, int y); // Name is a pure 
 BOOL STORMAPI STransCombineMasks(HANDLE hTransA, HANDLE hTransB, int left, int top, int flags, HANDLE * phTransResult);
 
 BOOL STORMAPI STransCreateE(void *pBuffer, int width, int height, int bpp, int a5, int bufferSize, HANDLE *phTransOut);
+BOOL STORMAPI STransCreateI(void *pBuffer, int width, int height, int bpp, int a5, int bufferSize, HANDLE *phTransOut);
 
 BOOL STORMAPI SVidDestroy();
 BOOL STORMAPI SVidGetSize(HANDLE video, int width, int height, int zero);
@@ -1130,7 +1130,7 @@ SStrHash(
       DWORD flags = 0,
       DWORD Seed  = 0);
 
-int   STORMAPI SStrNCat(char *dest, const char *src, DWORD max_length);
+int   STORMAPI SStrPack(char *dest, const char *src, DWORD max_length);
 
 /*  SStrLen @ 506
  *
@@ -1303,6 +1303,17 @@ bool __stdcall SNetSetBasePlayer(int);
 int __stdcall SNetInitializeProvider(unsigned long,struct _SNETPROGRAMDATA *,struct _SNETPLAYERDATA *,struct _SNETUIDATA *,struct _SNETVERSIONDATA *);
 int __stdcall SNetGetProviderCaps(struct _SNETCAPS *);
 int __stdcall SFileSetFilePointer(HANDLE,int,HANDLE,int);
+void __stdcall SDrawClearSurface(int a1);
+BOOL __stdcall SDlgSetBitmapI(HWND hWnd, int a2, char *src, int mask1, int flags, void *pBuff, int a7, int width, int height, int mask2);
+void __stdcall SDlgBeginPaint(HWND hWnd, char *a2);
+void __stdcall SDlgEndPaint(HWND hWnd, char *a2);
+void __stdcall SDlgSetSystemCursor(BYTE *a1, BYTE *a2, int *a3, int a4);
+void __stdcall SDlgSetCursor(HWND hWnd, HCURSOR a2, int a3, int *a4);
+BOOL __stdcall SDlgSetTimer(int a1, int a2, int a3, void (__stdcall *a4)(int, int, int, int));
+BOOL __stdcall SDlgKillTimer(int a1, int a2);
+BOOL __stdcall SDlgDrawBitmap(HWND hWnd, int a2, int a3, int a4, int a5, int a6, int a7);
+BOOL __stdcall SDlgDialogBoxParam(HINSTANCE hInst, char *szDialog, int a3, WNDPROC func, int a5);
+BOOL __stdcall SGdiTextOut(void *pBuffer, int x, int y, int mask, char *str, int len);
 
 #ifdef __GNUC__
 }

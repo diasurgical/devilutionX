@@ -844,7 +844,7 @@ LABEL_223:
 				pcursplr = v52;
 			}
 		}
-		if ( dFlags[0][v27 + v8] & 4 )
+		if ( dFlags[0][v27 + v8] & DFLAG_DEAD_PLAYER )
 		{
 			v53 = 0;
 			v54 = &plr[0].WorldY;
@@ -871,7 +871,7 @@ LABEL_223:
 				v55 = v8 - 1;
 				do
 				{
-					if ( v77[v80] & 4 )
+					if ( v77[v80] & DFLAG_DEAD_PLAYER )
 					{
 						v82 = 0;
 						v56 = &plr[0].WorldY;
@@ -1048,7 +1048,7 @@ LABEL_296:
 		v15 = dMonster[1][v14 + 2];
 		if ( !v15 )
 			goto LABEL_74;
-		v16 = (dFlags[1][v12 + 2] & 0x40) == 0;
+		v16 = (dFlags[1][v12 + 2] & DFLAG_LIT) == 0;
 	}
 	else
 	{
@@ -1056,7 +1056,7 @@ LABEL_296:
 		v15 = dMonster[2][v14 + 1];
 		if ( !v15 )
 			goto LABEL_74;
-		v16 = (dFlags[2][v12 + 1] & 0x40) == 0;
+		v16 = (dFlags[2][v12 + 1] & DFLAG_LIT) == 0;
 	}
 	if ( !v16 )
 	{
@@ -1073,7 +1073,7 @@ LABEL_296:
 	}
 LABEL_74:
 	v18 = dMonster[2][v14 + 2];
-	if ( v18 && dFlags[2][v81 + 2] & 0x40 )
+	if ( v18 && dFlags[2][v81 + 2] & DFLAG_LIT )
 	{
 		v19 = v18 <= 0 ? -1 - v18 : v18 - 1;
 		if ( v19 == dword_4B8CCC
@@ -1089,7 +1089,7 @@ LABEL_74:
 	if ( v83 )
 	{
 		v22 = dMonster[0][v14 + 1];
-		if ( v22 && dFlags[0][v81 + 1] & 0x40 )
+		if ( v22 && dFlags[0][v81 + 1] & DFLAG_LIT )
 		{
 			v21 = v22 <= 0 ? -1 - v22 : v22 - 1;
 			if ( v21 == dword_4B8CCC
@@ -1105,7 +1105,7 @@ LABEL_74:
 	else
 	{
 		v20 = dMonster[1][v14];
-		if ( v20 && dFlags[1][v81] & 0x40 )
+		if ( v20 && dFlags[1][v81] & DFLAG_LIT )
 		{
 			v21 = v20 <= 0 ? -1 - v20 : v20 - 1;
 			if ( v21 == dword_4B8CCC
@@ -1123,7 +1123,7 @@ LABEL_102:
 	}
 LABEL_103:
 	v23 = dMonster[0][v14];
-	if ( v23 && dFlags[0][v81] & 0x40 )
+	if ( v23 && dFlags[0][v81] & DFLAG_LIT )
 	{
 		v24 = v23 <= 0 ? -1 - v23 : v23 - 1;
 		if ( v24 == dword_4B8CCC
@@ -1137,7 +1137,7 @@ LABEL_103:
 		}
 	}
 	v25 = dMonster[1][v14 + 1];
-	if ( v25 && dFlags[1][v81 + 1] & 0x40 )
+	if ( v25 && dFlags[1][v81 + 1] & DFLAG_LIT )
 	{
 		v26 = v25 <= 0 ? -1 - v25 : v25 - 1;
 		if ( v26 == dword_4B8CCC
@@ -1175,7 +1175,7 @@ LABEL_128:
 		{
 			v28 = v27 + v8;
 			v32 = dMonster[1][v28 + 2];
-			if ( v32 && dFlags[1][v27 + 2 + v8] & 0x40 )
+			if ( v32 && dFlags[1][v27 + 2 + v8] & DFLAG_LIT )
 			{
 				v30 = v32 <= 0 ? -1 - v32 : v32 - 1;
 				if ( (signed int)(monster[v30]._mhitpoints & 0xFFFFFFC0) > 0 && monster[v30].MData->mSelFlag & 4 )
@@ -1190,7 +1190,7 @@ LABEL_128:
 		{
 			v28 = v27 + v8;
 			v29 = dMonster[2][v28 + 1];
-			if ( v29 && dFlags[2][v27 + 1 + v8] & 0x40 )
+			if ( v29 && dFlags[2][v27 + 1 + v8] & DFLAG_LIT )
 			{
 				v30 = v29 <= 0 ? -1 - v29 : v29 - 1;
 				if ( (signed int)(monster[v30]._mhitpoints & 0xFFFFFFC0) > 0 && monster[v30].MData->mSelFlag & 4 )
@@ -1206,7 +1206,7 @@ LABEL_145:
 		}
 LABEL_146:
 		v33 = dMonster[2][v28 + 2];
-		if ( v33 && dFlags[2][v27 + 2 + v8] & 0x40 )
+		if ( v33 && dFlags[2][v27 + 2 + v8] & DFLAG_LIT )
 		{
 			v34 = v33 <= 0 ? -1 - v33 : v33 - 1;
 			if ( (signed int)(monster[v34]._mhitpoints & 0xFFFFFFC0) > 0 && monster[v34].MData->mSelFlag & 4 )
@@ -1219,7 +1219,7 @@ LABEL_146:
 		if ( v83 )
 		{
 			v37 = dMonster[0][v28 + 1];
-			if ( v37 && dFlags[0][v27 + 1 + v8] & 0x40 )
+			if ( v37 && dFlags[0][v27 + 1 + v8] & DFLAG_LIT )
 			{
 				v36 = v37 <= 0 ? -1 - v37 : v37 - 1;
 				if ( (signed int)(monster[v36]._mhitpoints & 0xFFFFFFC0) > 0 && monster[v36].MData->mSelFlag & 2 )
@@ -1233,7 +1233,7 @@ LABEL_146:
 		else
 		{
 			v35 = dMonster[1][v28];
-			if ( v35 && dFlags[1][v27 + v8] & 0x40 )
+			if ( v35 && dFlags[1][v27 + v8] & DFLAG_LIT )
 			{
 				v36 = v35 <= 0 ? -1 - v35 : v35 - 1;
 				if ( (signed int)(monster[v36]._mhitpoints & 0xFFFFFFC0) > 0 && monster[v36].MData->mSelFlag & 2 )
@@ -1248,7 +1248,7 @@ LABEL_171:
 		}
 LABEL_172:
 		v38 = dMonster[0][v28];
-		if ( v38 && dFlags[0][v27 + v8] & 0x40 )
+		if ( v38 && dFlags[0][v27 + v8] & DFLAG_LIT )
 		{
 			v39 = v38 <= 0 ? -1 - v38 : v38 - 1;
 			if ( (signed int)(monster[v39]._mhitpoints & 0xFFFFFFC0) > 0 && monster[v39].MData->mSelFlag & 1 )
@@ -1259,7 +1259,7 @@ LABEL_172:
 			}
 		}
 		v40 = dMonster[1][v28 + 1];
-		if ( v40 && dFlags[1][v27 + 1 + v8] & 0x40 )
+		if ( v40 && dFlags[1][v27 + 1 + v8] & DFLAG_LIT )
 		{
 			v41 = v40 <= 0 ? -1 - v40 : v40 - 1;
 			if ( (signed int)(monster[v41]._mhitpoints & 0xFFFFFFC0) > 0 && monster[v41].MData->mSelFlag & 2 )

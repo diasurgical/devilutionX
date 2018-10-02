@@ -2,9 +2,9 @@
 
 #include "../types.h"
 
+#ifndef NO_GLOBALS
 int diablo_cpp_init_value; // weak
 
-#ifndef NO_GLOBALS
 HWND ghMainWnd;
 int glMid1Seed[NUMLEVELS];
 int glMid2Seed[NUMLEVELS];
@@ -26,7 +26,7 @@ char cineflag; // weak
 int drawpanflag; // weak
 int visiondebug; // weak
 int scrollflag; /* unused */
-int light4flag; // weak
+BOOL light4flag;
 int leveldebug; // weak
 int monstdebug; // weak
 int trigdebug; /* unused */
@@ -61,8 +61,7 @@ int frameend;
 int framerate;
 int framestart;
 #endif
-int FriendlyMode = 1; // weak
-
+BOOL FriendlyMode = TRUE;
 char *spszMsgTbl[4] =
 {
   "I need help! Come Here!",
@@ -109,7 +108,7 @@ void __cdecl FreeGameMem()
 	FreeMissiles();
 	FreeMonsters();
 	FreeObjectGFX();
-	FreeEffects();
+	//FreeEffects(); // Not Working Yet....
 	FreeTownerGFX();
 }
 
@@ -130,8 +129,8 @@ int __fastcall diablo_init_menu(int a1, int bSinglePlayer)
 		if ( !NetInit(v2, &pfExitProgram) )
 			break;
 		byte_678640 = 0;
-		if ( (v3 || !*(_DWORD *)&gbValidSaveFile)
-		  && (InitLevels(), InitQuests(), InitPortals(), InitDungMsgs(myplr), !*(_DWORD *)&gbValidSaveFile)
+		if ( (v3 || !gbValidSaveFile)
+		  && (InitLevels(), InitQuests(), InitPortals(), InitDungMsgs(myplr), !gbValidSaveFile)
 		  || (v4 = WM_DIABLOADGAME, !dword_5256E8) )
 		{
 			v4 = WM_DIABNEWGAME;
@@ -174,12 +173,11 @@ void __fastcall run_game_loop(int uMsg)
 	drawpanflag = 255;
 	gbGameLoopStartup = 1;
 	nthread_ignore_mutex(0);
-	while ( gbRunGame ){ 
-	/*printf("In Main Loop\n"); */
-	IsPlayMusic();
+	while ( gbRunGame )
+	{
 		diablo_color_cyc_logic();
 		if ( PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE) )
-		{	
+		{
 			SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_ABOVE_NORMAL);
 			while ( PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) )
 			{
@@ -284,9 +282,8 @@ bool __cdecl diablo_get_not_running()
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
-{
+{  
 	HINSTANCE v4; // esi
-	//int v11; // ecx
 	char Filename[260]; // [esp+8h] [ebp-10Ch]
 	char value_name[8]; // [esp+10Ch] [ebp-8h]
 
@@ -305,7 +302,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 	ShowCursor(FALSE);
 	srand(GetTickCount());
-	encrypt_init_lookup_table();
+	InitHash();
 	exception_get_filter();
 	if ( !diablo_find_window("DIABLO") && diablo_get_not_running() )
 	{
@@ -336,7 +333,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		UiTitleDialog(7);
 		BlackPalette();
 #endif
-		mainmenu_action(0); /* v11 fix unused arg */
+		mainmenu_loop();
 		UiDestroy();
 		SaveGamma();
 		if ( ghMainWnd )
@@ -1753,7 +1750,7 @@ LABEL_27:
 				case 'a':
 					if ( debug_mode_key_inverted_v )
 					{
-						spelldata[SPL_TELEPORT].sTownSpell = 1;
+						spelldata[SPL_TELEPORT].sTownSpell = TRUE;
 						plr[myplr]._pSplLvl[plr[myplr]._pSpell]++;
 					}
 					return;
@@ -2055,7 +2052,7 @@ LABEL_55:
 		for(i = 0; i < 112; i++)
 		{
 			for(j = 0; j < 112; j++)
-				dFlags[i][j] |= 0x40;
+				dFlags[i][j] |= DFLAG_LIT;
 		}
 
 		InitTowners();
@@ -2121,7 +2118,7 @@ LABEL_72:
 		if ( plr[i].plractive && plr[i].plrlevel == currlevel && (!plr[i]._pLvlChanging || i == myplr) )
 		{
 			if ( plr[i]._pHitPoints <= 0 )
-				dFlags[plr[i].WorldX][plr[i].WorldY] |= 4;
+				dFlags[plr[i].WorldX][plr[i].WorldY] |= DFLAG_DEAD_PLAYER;
 			else if ( gbMaxPlayers == 1 )
 				dPlayer[plr[i].WorldX][plr[i].WorldY] = i + 1;
 			else
@@ -2148,7 +2145,7 @@ LABEL_72:
 	//do
 	//	_LOBYTE(v19) = IncProgress();
 	while ( !IncProgress() );
-	if ( setlevel && setlvlnum == SL_SKELKING && quests[12]._qactive == 2 )
+	if ( setlevel && setlvlnum == SL_SKELKING && quests[QTYPE_KING]._qactive == 2 )
 		PlaySFX(USFX_SKING1);
 }
 // 525738: using guessed type int setseed;

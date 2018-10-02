@@ -12,11 +12,13 @@
 #define MAX_LVLMTYPES			16
 // #define MAX_PATH				260
 #define MAX_SEND_STR_LEN		80
+#define MAX_SPELLS				37
 
 #define MAXDEAD					31
 #define MAXDUNX					112
 #define MAXDUNY					112
 #define MAXITEMS				127
+#define MAXBELTITEMS			8
 #define MAXMISSILES				125
 #define MAXMONSTERS				200
 #define MAXMULTIQUESTS			4
@@ -29,10 +31,15 @@
 #define MDMAXX					40
 #define MDMAXY					40
 
-
 // number of inventory grid cells
 #define NUM_INV_GRID_ELEM			40
 #define INV_SLOT_SIZE_PX		28
+
+// Item indestructible durability
+#define DUR_INDESTRUCTIBLE		255
+
+#define VOLUME_MIN				-1600
+#define VOLUME_MAX				0
 
 // todo: enums
 #define NUM_SFX					858
@@ -63,7 +70,9 @@
 #define PAL16_RED		224
 #define PAL16_GRAY		240
 
-
+#ifndef INVALID_FILE_ATTRIBUTES
+#define INVALID_FILE_ATTRIBUTES ((DWORD)-1)
+#endif
 
 
 

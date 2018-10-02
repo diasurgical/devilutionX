@@ -127,7 +127,7 @@ bool __fastcall OperateFountains(int pnum, int i);
 void __fastcall OperateWeaponRack(int pnum, int i, unsigned char sendmsg);
 void __fastcall OperateStoryBook(int pnum, int i);
 void __fastcall OperateLazStand(int pnum, int i);
-void __fastcall OperateObject(int pnum, int i, unsigned char TeleFlag);
+void __fastcall OperateObject(int pnum, int i, BOOL TeleFlag);
 void __fastcall SyncOpL1Door(int pnum, int cmd, int i);
 void __fastcall SyncOpL2Door(int pnum, int cmd, int i);
 void __fastcall SyncOpL3Door(int pnum, int cmd, int i);

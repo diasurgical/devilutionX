@@ -10,7 +10,7 @@ bool __fastcall WCloseFile(void *file);
 int __fastcall WGetFileSize(HANDLE hsFile, unsigned long *a2);
 void __fastcall WGetFileArchive(HANDLE hsFile, int *a2, char *dwInitParam);
 int __fastcall WOpenFile(char *dwInitParam, HANDLE *phsFile, int a3);
-char __fastcall WReadFile(HANDLE hsFile, char *buf, int a3);
+void __fastcall WReadFile(HANDLE hsFile, LPVOID buf, int a3);
 int __fastcall WSetFilePointer(HANDLE file1, int offset, HANDLE file2, int whence);
 int __fastcall LoadWaveFormat(HANDLE hsFile, WAVEFORMATEX *pwfx);
 void *__fastcall AllocateMemFile(HANDLE hsFile, MEMFILE *pMemFile, unsigned int dwPos);

@@ -39,9 +39,9 @@ void __fastcall Cel2DrawHdrLightRed(int screen_x, int screen_y, char *pCelBuff, 
 void __fastcall CelDecodeRect(char *pBuff, int always_0, int dst_height, int dst_width, char *pCelBuff, int frame, int frame_width);
 void __fastcall CelDecodeClr(BYTE colour, int screen_x, int screen_y, char *pCelBuff, int frame, int frame_width, int a7, int direction);
 void __fastcall CelDrawHdrClrHL(char colour, int screen_x, int screen_y, char *pCelBuff, int frame, int frame_width, int a7, int direction);
-void __fastcall ENG_set_pixel(int screen_x, int screen_y, char pixel);
+void __fastcall ENG_set_pixel(int screen_x, int screen_y, UCHAR pixel);
 void __fastcall engine_draw_pixel(int x, int y);
-void __fastcall DrawLine(int x0, int y0, int x1, int y1, char col);
+void __fastcall DrawLine(int x0, int y0, int x1, int y1, UCHAR col);
 int __fastcall GetDirection(int x1, int y1, int x2, int y2);
 void __fastcall SetRndSeed(int s);
 int __cdecl GetRndSeed();

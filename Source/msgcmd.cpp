@@ -4,8 +4,8 @@
 
 /* TODO: decompile and fix, commands are NOT deleted properly */
 
-int msgcmd_cpp_init_value; // weak
 #ifndef NO_GLOBALS
+int msgcmd_cpp_init_value; // weak
 ChatCmd sgChat_Cmd;
 int sgdwMsgCmdTimer;
 #endif

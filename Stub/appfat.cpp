@@ -1,3 +1,5 @@
+#include <stdarg.h>
+
 #include "../types.h"
 #include "stubs.h"
 
@@ -5,7 +7,14 @@ char empty_string = 0;
 
 void TermMsg(char *pszFmt, ...)
 {
-	eprintf("%s: %s\n", __FUNCTION__, pszFmt);
+	char buf[256];
+
+	va_list args;
+	va_start(args, pszFmt);
+
+	vsnprintf(buf, sizeof(buf), pszFmt, args);
+
+	eprintf("%s: %s\n", __FUNCTION__, buf);
 	abort();
 }
 
@@ -51,5 +60,7 @@ void DrawDlg(char *pszFmt, ...)
 
 char *__cdecl TraceLastError()
 {
+	DUMMY();
+
 	return NULL;
 }

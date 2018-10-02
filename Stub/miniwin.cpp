@@ -3,6 +3,7 @@
 #include <unistd.h>
 
 #include "miniwin.h"
+
 #include "stubs.h"
 
 DWORD last_error;
@@ -23,6 +24,23 @@ char __cdecl *_strlwr(char *str)
 		*p = tolower(*p);
 	}
 	return str;
+}
+
+int WINAPIV wsprintfA(LPSTR dest, LPCSTR format, ...)
+{
+	va_list args;
+	va_start(args, format);
+	return vsprintf(dest, format, args);
+}
+
+int __cdecl _strcmpi(const char *_Str1, const char *_Str2)
+{
+	return strcasecmp(_Str1, _Str2);
+}
+
+char *__cdecl _itoa(int _Value, char *_Dest, int _Radix)
+{
+	UNIMPLEMENTED();
 }
 
 DWORD WINAPI GetTickCount(VOID)
@@ -182,7 +200,9 @@ WINBOOL WINAPI SetThreadPriority(HANDLE hThread, int nPriority)
 
 VOID WINAPI GetSystemInfo(LPSYSTEM_INFO lpSystemInfo)
 {
-	UNIMPLEMENTED();
+	DUMMY();
+	memset(lpSystemInfo, 0, sizeof(*lpSystemInfo));
+	lpSystemInfo->dwPageSize = 4096;
 }
 
 HDC WINAPI GetDC(HWND hWnd)
@@ -211,23 +231,6 @@ uintptr_t __cdecl _beginthreadex(void *_Security, unsigned _StackSize, unsigned(
 	UNIMPLEMENTED();
 }
 
-int WINAPIV wsprintfA(LPSTR dest, LPCSTR format, ...)
-{
-	va_list args;
-	va_start(args, format);
-	return vsprintf(dest, format, args);
-}
-
-int __cdecl _strcmpi(const char *_Str1, const char *_Str2)
-{
-	return strcasecmp(_Str1, _Str2);
-}
-
-char *__cdecl _itoa(int _Value, char *_Dest, int _Radix)
-{
-	UNIMPLEMENTED();
-}
-
 WINBOOL WINAPI CreateProcessA(LPCSTR lpApplicationName, LPSTR lpCommandLine, LPSECURITY_ATTRIBUTES lpProcessAttributes,
                               LPSECURITY_ATTRIBUTES lpThreadAttributes, WINBOOL bInheritHandles, DWORD dwCreationFlags,
                               LPVOID lpEnvironment, LPCSTR lpCurrentDirectory, LPSTARTUPINFOA lpStartupInfo,
@@ -249,7 +252,9 @@ DWORD WINAPI GetCurrentProcessId(VOID)
 HANDLE WINAPI CreateFileMappingA(HANDLE hFile, LPSECURITY_ATTRIBUTES lpFileMappingAttributes, DWORD flProtect,
                                  DWORD dwMaximumSizeHigh, DWORD dwMaximumSizeLow, LPCSTR lpName)
 {
-	UNIMPLEMENTED();
+	DUMMY();
+	assert(hFile == (HANDLE)-1);
+	return NULL;
 }
 
 LPVOID WINAPI MapViewOfFile(HANDLE hFileMappingObject, DWORD dwDesiredAccess, DWORD dwFileOffsetHigh,

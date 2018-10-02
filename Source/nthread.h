@@ -6,25 +6,23 @@ extern int nthread_cpp_init_value; // weak
 extern char byte_679704; // weak
 extern int gdwMsgLenTbl[4];
 extern int gdwDeltaBytesSec; // weak
-extern char byte_679734; // weak
+extern char nthread_should_run; // weak
 extern int gdwTurnsInTransit; // weak
 extern int glpMsgTbl[4];
 extern unsigned int glpNThreadId;
 extern char sgbSyncCountdown; // weak
-extern int dword_679754; // weak
+extern int turn_upper_bit; // weak
 extern char byte_679758; // weak
 extern char sgbPacketCountdown; // weak
 extern char sgbThreadIsRunning; // weak
 extern int gdwLargestMsgSize; // weak
 extern int gdwNormalMsgSize; // weak
-extern int dword_679764; // weak
+extern int last_tick; // weak
 
-void __cdecl nthread_cpp_init_1();
-void __cdecl nthread_cpp_init_2();
 void __cdecl nthread_init_mutex();
 void __cdecl nthread_cleanup_mutex_atexit();
 void __cdecl nthread_cleanup_mutex();
-void __fastcall nthread_terminate_game(char *pszFcn);
+void __fastcall nthread_terminate_game(const char *pszFcn);
 int __fastcall nthread_send_and_recv_turn(int cur_turn, int turn_delta);
 int __fastcall nthread_recv_turns(int *pfSendAsync);
 void __cdecl nthread_set_turn_upper_bit();

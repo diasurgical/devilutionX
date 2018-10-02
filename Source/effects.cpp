@@ -2,9 +2,9 @@
 
 #include "../types.h"
 
+#ifndef NO_GLOBALS
 int effects_cpp_init_value; // weak
 
-#ifndef NO_GLOBALS
 int sfxdelay; // weak
 int sfxdnum;
 void *sfx_stream;
@@ -888,255 +888,161 @@ struct effects_cpp_init
 // 47A468: using guessed type int effects_inf;
 // 52A550: using guessed type int effects_cpp_init_value;
 
-bool __fastcall effect_is_playing(int nSFX)
+BOOL __fastcall effect_is_playing(int nSFX)
 {
 	TSFX *v1; // eax
 	TSnd *v2; // ecx
 
-  
-  
 	v1 = &sgSFX[nSFX];
 	v2 = v1->pSnd;
 	if ( v2 )
 		return snd_playing(v2);
-	if ( v1->bFlags & 1 )
+	if ( v1->bFlags & SFX_STREAM )
 		return v1 == sfx_data_cur;
-	return 0;
+	return FALSE;
 }
 
 void __cdecl sfx_stop()
 {
-	if ( sfx_stream )
-	{
+	if ( sfx_stream ) {
 		SFileDdaEnd(sfx_stream);
 		SFileCloseFile(sfx_stream);
-		sfx_stream = 0;
-		sfx_data_cur = 0;
+		sfx_stream = NULL;
+		sfx_data_cur = NULL;
 	}
 }
 
 void __fastcall InitMonsterSND(int monst)
 {
-	signed int v1; // ebx
-	int v2; // eax
-	TSnd **v3; // esi
-	int v4; // edi
-	size_t v5; // eax
-	TSnd *v6; // eax
-	char v7[260]; // [esp+0h] [ebp-110h]
-	int v8; // [esp+104h] [ebp-Ch]
-	int v9; // [esp+108h] [ebp-8h]
-	char *ptr; // [esp+10Ch] [ebp-4h]
+	TSnd *pSnd;
+	char name[MAX_PATH];
+	char *path;
 
-	v8 = monst;
-	if ( gbSndInited )
-	{
-		v1 = 0;
-		v9 = Monsters[monst].mtype << 7;
-		do
-		{
-			if ( monster_action_sounds[v1] != 's' || *(int *)((char *)&monsterdata[0].snd_special + v9) )
-			{
-				v2 = 0;
-				v3 = &Monsters[0].Snds[2 * (v1 + 41 * v8)];
-				do
-				{
-					v4 = v2 + 1;
-					sprintf(
-						v7,
-						*(const char **)((char *)&monsterdata[0].sndfile + v9),
-						monster_action_sounds[v1],
-						v2 + 1);
-					v5 = strlen(v7);
-					ptr = (char *)DiabloAllocPtr(v5 + 1);
-					strcpy(ptr, v7);
-					
-          v6 = sound_file_load(ptr);
-					*v3 = v6;
-					if ( !v6 )
-						mem_free_dbg(ptr);
-					v2 = v4;
-					++v3;
-				}
-				while ( v4 < 2 );
+	if ( !gbSndInited ) {
+		return;
+	}
+
+	int mtype = Monsters[monst].mtype;
+	for ( int i = 0; i < 4; i++ ) {
+		if ( monster_action_sounds[i] != 's' || monsterdata[mtype].snd_special ) {
+			for ( int j = 0; j < 2; j++ ) {
+				sprintf(name, monsterdata[mtype].sndfile, monster_action_sounds[i], j + 1);
+				path = (char *)DiabloAllocPtr(strlen(name) + 1);
+				strcpy(path, name);
+				pSnd = sound_file_load(path);
+				Monsters[monst].Snds[i][j] = pSnd;
+				if ( !pSnd )
+					mem_free_dbg(path);
 			}
-			++v1;
 		}
-		while ( v1 < 4 );
 	}
 }
 
 void __cdecl FreeEffects()
 {
-	TSnd **v0; // esi
-	signed int v1; // ebp
-	signed int v2; // ebx
-	TSnd *v3; // ecx
-	void *v4; // edi
-	TSnd **v5; // [esp+0h] [ebp-8h]
-	int v6; // [esp+4h] [ebp-4h]
-
-	v6 = 0;
-	if ( nummtypes > 0 )
-	{
-		v5 = Monsters[0].Snds;
-		do
-		{
-			v0 = v5;
-			v1 = 4;
-			do
-			{
-				v2 = 2;
-				do
-				{
-					v3 = *v0;
-					if ( *v0 )
-					{
-						*v0 = 0;
-						v4 = (void *)v3->sound_path;
-						v3->sound_path = 0;
-						sound_file_cleanup(v3);
-						mem_free_dbg(v4);
-					}
-					++v0;
-					--v2;
+	for ( int i = 0; i < nummtypes; i++ ) {
+		int mtype = Monsters[i].mtype;
+		for ( int j = 0; j < 4; ++j ) {
+			for ( int k = 0; k < 2; ++k ) {
+				TSnd *pSnd = Monsters[i].Snds[j][k];
+				if ( pSnd ) {
+					Monsters[i].Snds[j][k] = NULL;
+					char *file = pSnd->sound_path;
+					pSnd->sound_path = NULL;
+					sound_file_cleanup(pSnd);
+					mem_free_dbg(file);
 				}
-				while ( v2 );
-				--v1;
 			}
-			while ( v1 );
-			++v6;
-			v5 += 82;
 		}
-		while ( v6 < nummtypes );
 	}
 }
 
 void __fastcall PlayEffect(int i, int mode)
 {
-	int v2; // edi
-	int v3; // esi
-	int v4; // eax
-	int v5; // esi
-	int v6; // eax
-	TSnd *v7; // edi
-	//int v8; // eax
-	int volume_delta; // [esp+8h] [ebp-8h]
-	int pan; // [esp+Ch] [ebp-4h]
-
-
-
-	v2 = mode;
-	v3 = i;
-	if ( !plr[myplr].pLvlLoad )
-	{
-		v4 = random(164, 2);
-		if ( gbSndInited )
-		{
-			if ( gbSoundOn )
-			{
-				if ( !gbBufferMsgs )
-				{
-					v5 = v3;
-					v6 = v4 + 2 * (v2 + 41 * monster[v5]._mMTidx);
-					v7 = Monsters[0].Snds[v6];
-					if ( v7 )
-					{
-						//_LOBYTE(v8) = snd_playing(Monsters[0].Snds[v6]);
-						if ( !snd_playing(Monsters[0].Snds[v6]) )
-						{
-							if ( calc_snd_position(monster[v5]._mx, monster[v5]._my, &volume_delta, &pan) )
-								snd_play_snd(v7, volume_delta, pan);
-						}
-					}
-				}
-			}
-		}
+	if ( plr[myplr].pLvlLoad ) {
+		return;
 	}
+
+	int sndIdx = random(164, 2);
+	if ( !gbSndInited || !gbSoundOn || gbBufferMsgs ) {
+		return;
+	}
+
+	int mi = monster[i]._mMTidx;
+	TSnd *snd = Monsters[mi].Snds[mode][sndIdx];
+	if ( !snd || snd_playing(snd) ) {
+		return;
+	}
+
+	int lVolume, lPan;
+	if ( !calc_snd_position(monster[i]._mx, monster[i]._my, &lVolume, &lPan) )
+		return;
+
+	snd_play_snd(snd, lVolume, lPan);
 }
 // 4A22D5: using guessed type char gbSoundOn;
 // 676194: using guessed type char gbBufferMsgs;
 
-int __fastcall calc_snd_position(int x, int y, int *plVolume, int *plPan)
+BOOL __fastcall calc_snd_position(int x, int y, int *plVolume, int *plPan)
 {
-	int v4; // edi
-	int v5; // esi
-	int v6; // eax
-	int v7; // ebx
-	int v8; // eax
-	int v9; // eax
+	x -= plr[myplr].WorldX;
+	y -= plr[myplr].WorldY;
 
-	v4 = x - plr[myplr].WorldX;
-	v5 = y - plr[myplr].WorldY;
-	v6 = (v4 - v5) << 8;
-	*plPan = v6;
-	if ( abs(v6) > 6400 )
-		return 0;
-	v7 = abs(v4);
-	v8 = v7 <= abs(v5) ? abs(v5) : abs(v4);
-	v9 = v8 << 6;
-	*plVolume = v9;
-	if ( v9 >= 6400 )
-		return 0;
-	*plVolume = -v9;
-	return 1;
+	int pan = (x - y) << 8;
+	*plPan = pan;
+
+	if ( abs(pan) > 6400 )
+		return FALSE;
+
+	int volume = abs(x) > abs(y) ? abs(x) : abs(y);
+	volume <<= 6;
+	*plVolume = volume;
+
+	if ( volume >= 6400 )
+		return FALSE;
+
+	*plVolume = -volume;
+
+	return TRUE;
 }
 
 void __fastcall PlaySFX(int psfx)
 {
-  	int v1; // eax
- printf("1091\n");
+	int v1; // eax
+
 	v1 = RndSFX(psfx);
 	PlaySFX_priv(&sgSFX[v1], 0, 0, 0);
 }
 
-void __fastcall PlaySFX_priv(TSFX *pSFX, char loc, int x, int y)
+void __fastcall PlaySFX_priv(TSFX *pSFX, BOOL loc, int x, int y)
 {
-	int v4; // edi
-	TSFX *v5; // esi
-	TSnd *v6; // ecx
-	//int v7; // eax
-	TSnd *v8; // ecx
-	int volume_delta; // [esp+Ch] [ebp-8h]
-	int pan; // [esp+10h] [ebp-4h]
-
-  
-	v4 = loc;
-	v5 = pSFX;
-	if ( !plr[myplr].pLvlLoad || gbMaxPlayers == 1 )
-	{
-		if ( gbSndInited )
-		{
-			if ( gbSoundOn )
-			{
-				if ( !gbBufferMsgs )
-				{
-					if ( pSFX->bFlags & 3 || (v6 = pSFX->pSnd) == 0 || !snd_playing(v6) )
-					{
-						pan = 0;
-						volume_delta = 0;
-						if ( !v4 || calc_snd_position(x, y, &volume_delta, &pan) )
-						{
-							if ( v5->bFlags & 1 )
-							{
-
-							//	stream_play(v5, volume_delta, pan); // Debuf
-							}
-							else
-							{
-								if ( !v5->pSnd )
-									v5->pSnd = sound_file_load(v5->pszName);
-								v8 = v5->pSnd;
-								if ( v8 )
-
-									snd_play_snd(v8, volume_delta, pan);
-							}
-						}
-					}
-				}
-			}
-		}
+	if ( plr[myplr].pLvlLoad && gbMaxPlayers != 1 ) {
+		return;
 	}
+	if ( !gbSndInited || !gbSoundOn || gbBufferMsgs ) {
+		return;
+	}
+
+	if ( !(pSFX->bFlags & (SFX_STREAM | SFX_MISC)) && pSFX->pSnd != 0 && snd_playing(pSFX->pSnd) ) {
+		return;
+	}
+
+	int lPan = 0;
+	int lVolume = 0;
+	if ( loc && !calc_snd_position(x, y, &lVolume, &lPan) ) {
+		return;
+	}
+
+	if ( pSFX->bFlags & SFX_STREAM ) {
+		stream_play(pSFX, lVolume, lPan);
+		return;
+	}
+
+	if ( !pSFX->pSnd )
+		pSFX->pSnd = sound_file_load(pSFX->pszName);
+
+	if ( pSFX->pSnd )
+		snd_play_snd(pSFX->pSnd, lVolume, lPan);
 }
 // 4A22D5: using guessed type char gbSoundOn;
 // 676194: using guessed type char gbBufferMsgs;
@@ -1144,33 +1050,18 @@ void __fastcall PlaySFX_priv(TSFX *pSFX, char loc, int x, int y)
 
 void __fastcall stream_play(TSFX *pSFX, int lVolume, int lPan)
 {
-   printf("stream_play\n");
-	int v3; // esi
-	TSFX *v4; // edi
-	int v5; // esi
-	//int v6; // eax
-	//int v7; // eax
-
-	v3 = lVolume;
-	v4 = pSFX;
 	sfx_stop();
-	v5 = sound_get_or_set_sound_volume(1) + v3;
-	if ( v5 >= -1600 )
-	{
-		if ( v5 > 0 )
-			v5 = 0;
-		//_LOBYTE(v6) = SFileOpenFile(v4->pszName, &sfx_stream);
-		if ( SFileOpenFile(v4->pszName, &sfx_stream) )
-		{
-			//_LOBYTE(v7) = SFileDdaBeginEx(sfx_stream, 0x40000, 0, 0, v5, lPan, 0);
-			if ( SFileDdaBeginEx(sfx_stream, 0x40000, 0, 0, v5, lPan, 0) )// This shouldn't be called but it does get called
-				sfx_data_cur = v4;
-			else
-				sfx_stop();
-		}
-		else
-		{
+	lVolume += sound_get_or_set_sound_volume(1);
+	if ( lVolume >= VOLUME_MIN ) {
+		if ( lVolume > VOLUME_MAX )
+			lVolume = VOLUME_MAX;
+		if ( !SFileOpenFile(pSFX->pszName, &sfx_stream) ) {
 			sfx_stream = 0;
+		} else {
+			if ( !SFileDdaBeginEx(sfx_stream, 0x40000, 0, 0, lVolume, lPan, 0) )
+				sfx_stop();
+			else
+				sfx_data_cur = pSFX;
 		}
 	}
 }
@@ -1215,58 +1106,34 @@ void __fastcall PlaySfxLoc(int psfx, int x, int y)
 	TSnd *v5; // ecx
 
 	v3 = x;
-	v4 = RndSFX(psfx);// Crash here....
-	// if ( v4 >= 0 && v4 <= 3 )
-	// {
-	// 	v5 = sgSFX[v4].pSnd;
-	// 	if ( v5 )
-	// 		v5->start_tc = 0;
-	// }
-	// PlaySFX_priv(&sgSFX[v4], 1, v3, y);
+	v4 = RndSFX(psfx);
+	if ( v4 >= 0 && v4 <= 3 )
+	{
+		v5 = sgSFX[v4].pSnd;
+		if ( v5 )
+			v5->start_tc = 0;
+	}
+	PlaySFX_priv(&sgSFX[v4], 1, v3, y);
 }
 
 void __cdecl FreeMonsterSnd()
 {
-	TSnd **v0; // esi
-	signed int v1; // ebx
-	signed int v2; // edi
-	int v3; // [esp+0h] [ebp-8h]
-	TSnd **v4; // [esp+4h] [ebp-4h]
-
-	snd_update(1);
+	snd_update(TRUE);
 	sfx_stop();
 	sound_stop();
-	v3 = 0;
-	if ( nummtypes > 0 )
-	{
-		v4 = Monsters[0].Snds;
-		do
-		{
-			v0 = v4;
-			v1 = 4;
-			do
-			{
-				v2 = 2;
-				do
-				{
-					snd_stop_snd(*v0);
-					++v0;
-					--v2;
-				}
-				while ( v2 );
-				--v1;
+
+	for ( int i = 0; i < nummtypes; i++ ) {
+		for ( int j = 0; j < 4; j++ ) {
+			for ( int k = 0; k < 2; k++ ) {
+				snd_stop_snd(Monsters[i].Snds[j][k]);
 			}
-			while ( v1 );
-			++v3;
-			v4 += 82;
+
 		}
-		while ( v3 < nummtypes );
 	}
 }
 
 void __cdecl sound_stop()
 {
-  
 	int i; // edi
 
 	for(i = 0; i < NUM_SFX; i++)
@@ -1370,10 +1237,13 @@ void __fastcall priv_sound_init(int bLoadMask)
 	TSnd *v5; // eax
 	unsigned char v6; // [esp+0h] [ebp-4h]
 
+
+
+
 	if ( gbSndInited )
 	{
-		v1 = bLoadMask & 0x70;
-		v2 = bLoadMask & 0x70 ^ bLoadMask;
+		v1 = bLoadMask & (SFX_ROGUE | SFX_WARRIOR | SFX_SORCEROR);
+		v2 = bLoadMask & (SFX_ROGUE | SFX_WARRIOR | SFX_SORCEROR) ^ bLoadMask;
 		v3 = 0;
 		v6 = v2;
 		do
@@ -1381,7 +1251,7 @@ void __fastcall priv_sound_init(int bLoadMask)
 			if ( !sgSFX[v3].pSnd )
 			{
 				v4 = sgSFX[v3].bFlags;
-				if ( !(v4 & 1) && (!v2 || v4 & v2) && (!(v4 & 0x70) || v4 & v1) )
+				if ( !(v4 & SFX_STREAM) && (!v2 || v4 & v2) && (!(v4 & (SFX_ROGUE | SFX_WARRIOR | SFX_SORCEROR)) || v4 & v1) )
 				{
 					v5 = sound_file_load(sgSFX[v3].pszName);
 					v2 = v6;

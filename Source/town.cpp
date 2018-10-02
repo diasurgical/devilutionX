@@ -178,7 +178,7 @@ void __fastcall town_draw_clipped_town(void *unused, int x, int y, int sx, int s
 				8);
 		Cel2DrawHdrOnly(v11, sy, (char *)item[v10]._iAnimData, item[v10]._iAnimFrame, item[v10]._iAnimWidth, 0, 8);
 	}
-	if ( dFlags[0][v7] & 0x10 )
+	if ( dFlags[0][v7] & DFLAG_MONSTER )
 	{
 		v12 = -1 - dMonster[x][y-1]; // -1 - *(&dword_52D204 + v7); /* check */
 		v13 = sx - towner[v12]._tAnimWidth2;
@@ -212,7 +212,7 @@ void __fastcall town_draw_clipped_town(void *unused, int x, int y, int sx, int s
 				8);
 		Cel2DrawHdrOnly(v17, sy, (char *)towner[v16]._tAnimData, towner[v16]._tAnimFrame, towner[v16]._tAnimWidth, 0, 8);
 	}
-	if ( dFlags[0][v7] & 0x20 )
+	if ( dFlags[0][v7] & DFLAG_PLAYER )
 	{
 		v18 = -1 - dPlayer[x][y-1]; // -1 - *((_BYTE *)&themeLoc[49].height + v7 + 3);
 		v19 = v18;
@@ -225,7 +225,7 @@ void __fastcall town_draw_clipped_town(void *unused, int x, int y, int sx, int s
 			town_draw_clipped_e_flag(v27 - 64, xa - 1, y + 1, sx - 64, sy);
 		v7 = v29;
 	}
-	if ( dFlags[0][v7] & 4 )
+	if ( dFlags[0][v7] & DFLAG_DEAD_PLAYER )
 		DrawDeadPlayer(xa, y, sx, sy, 0, 8, 1);
 	v22 = dPlayer[0][v7];
 	if ( v22 > 0 )
@@ -241,7 +241,7 @@ void __fastcall town_draw_clipped_town(void *unused, int x, int y, int sx, int s
 			town_draw_clipped_e_flag(v27 - 64, xa - 1, y + 1, sx - 64, sy);
 		v7 = v29;
 	}
-	if ( dFlags[0][v7] & 1 )
+	if ( dFlags[0][v7] & DFLAG_MISSILE )
 		DrawClippedMissile(xa, y, sx, sy, 0, 8, 0);
 }
 // 4B8CC0: using guessed type char pcursitem;
@@ -478,7 +478,7 @@ void __fastcall town_draw_clipped_town_2(int x, int y, int a3, int a4, int a5, i
 				8);
 		Cel2DrawHdrOnly(v13, sy, (char *)item[v12]._iAnimData, item[v12]._iAnimFrame, item[v12]._iAnimWidth, a5, 8);
 	}
-	if ( dFlags[0][v9] & 0x10 )
+	if ( dFlags[0][v9] & DFLAG_MONSTER )
 	{
 		v14 = -1 - dMonster[x][y-1]; // -1 - *(&dword_52D204 + v9); /* check */
 		v15 = sx - towner[v14]._tAnimWidth2;
@@ -512,7 +512,7 @@ void __fastcall town_draw_clipped_town_2(int x, int y, int a3, int a4, int a5, i
 				8);
 		Cel2DrawHdrOnly(v19, sy, (char *)towner[v18]._tAnimData, towner[v18]._tAnimFrame, towner[v18]._tAnimWidth, a5, 8);
 	}
-	if ( dFlags[0][v9] & 0x20 )
+	if ( dFlags[0][v9] & DFLAG_PLAYER )
 	{
 		v20 = -1 - dPlayer[x][y-1]; // -1 - *((_BYTE *)&themeLoc[49].height + v9 + 3);
 		v21 = v20;
@@ -525,7 +525,7 @@ void __fastcall town_draw_clipped_town_2(int x, int y, int a3, int a4, int a5, i
 			town_draw_clipped_e_flag_2((void *)(v29 - 64), xa - 1, a3 + 1, a4, a5, sx - 64, sy);
 		v9 = v31;
 	}
-	if ( dFlags[0][v9] & 4 )
+	if ( dFlags[0][v9] & DFLAG_DEAD_PLAYER )
 		DrawDeadPlayer(xa, a3, sx, sy, a5, 8, 1);
 	v24 = dPlayer[0][v9];
 	if ( v24 > 0 )
@@ -541,7 +541,7 @@ void __fastcall town_draw_clipped_town_2(int x, int y, int a3, int a4, int a5, i
 			town_draw_clipped_e_flag_2((void *)(v29 - 64), xa - 1, a3 + 1, a4, a5, sx - 64, sy);
 		v9 = v31;
 	}
-	if ( dFlags[0][v9] & 1 )
+	if ( dFlags[0][v9] & DFLAG_MISSILE )
 		DrawClippedMissile(xa, a3, sx, sy, a5, 8, 0);
 }
 // 4B8CC0: using guessed type char pcursitem;
@@ -763,7 +763,7 @@ void __fastcall town_draw_town_all(void *buffer, int x, int y, int a4, int dir, 
 			CelDecodeClr(181, xx, sy, (char *)item[id]._iAnimData, item[id]._iAnimFrame, item[id]._iAnimWidth, 0, dir);
 		CelDrawHdrOnly(xx, sy, (char *)item[id]._iAnimData, item[id]._iAnimFrame, item[id]._iAnimWidth, 0, dir);
 	}
-	if ( dFlags[x][y] & 0x10 )
+	if ( dFlags[x][y] & DFLAG_MONSTER )
 	{
 		id = -1 - dMonster[x][y-1]; // -1 - *(&dword_52D204 + v9); /* check */
 		xx = sx - towner[id]._tAnimWidth2;
@@ -779,7 +779,7 @@ void __fastcall town_draw_town_all(void *buffer, int x, int y, int a4, int dir, 
 			CelDecodeClr(166, xx, sy, (char *)towner[id]._tAnimData, towner[id]._tAnimFrame, towner[id]._tAnimWidth, 0, dir);
 		CelDrawHdrOnly(xx, sy, (char *)towner[id]._tAnimData, towner[id]._tAnimFrame, towner[id]._tAnimWidth, 0, dir);
 	}
-	if ( dFlags[x][y] & 0x20 )
+	if ( dFlags[x][y] & DFLAG_PLAYER )
 	{
 		id = -1 - dPlayer[x][y-1]; // -1 - *((_BYTE *)&themeLoc[49].height + v9 + 3);
 		yy = sy + plr[id]._pyoff;
@@ -790,7 +790,7 @@ void __fastcall town_draw_town_all(void *buffer, int x, int y, int a4, int dir, 
 		if ( some_flag && plr[id]._peflag )
 			town_draw_e_flag((char *)buffer - 64, x - 1, y + 1, a4, dir, sx - 64, sy);
 	}
-	if ( dFlags[x][y] & 4 )
+	if ( dFlags[x][y] & DFLAG_DEAD_PLAYER )
 		DrawDeadPlayer(x, y, sx, sy, 0, dir, 0);
 	if ( dPlayer[x][y] > 0 )
 	{
@@ -803,7 +803,7 @@ void __fastcall town_draw_town_all(void *buffer, int x, int y, int a4, int dir, 
 		if ( some_flag && plr[id]._peflag )
 			town_draw_e_flag((char *)buffer - 64, x - 1, y + 1, a4, dir, sx - 64, sy);
 	}
-	if ( dFlags[x][y] & 1 )
+	if ( dFlags[x][y] & DFLAG_MISSILE )
 		DrawMissile(x, y, sx, sy, 0, dir, 0);
 }
 // 4B8CC0: using guessed type char pcursitem;
@@ -1584,7 +1584,7 @@ void __cdecl T_Pass3()
 			while ( xx < 46 );
 		}
 	}
-	if ( quests[13]._qactive != 3 && quests[13]._qactive )
+	if ( quests[QTYPE_PW]._qactive != 3 && quests[QTYPE_PW]._qactive )
 		T_FillTile(P3Tiles, 60, 70, 342);
 	else
 		T_FillTile(P3Tiles, 60, 70, 71);
@@ -1639,13 +1639,13 @@ void __fastcall CreateTown(int entry)
 		ViewY = 68;
 	}
 	T_Pass3();
-	memset(dTransVal, 0, 0x3100u);
-	memset(dFlags, 0, 0x3100u);
-	memset(dPlayer, 0, 0x3100u);
-	memset(dMonster, 0, 0xC400u);
-	memset(dObject, 0, 0x3100u);
-	memset(dItem, 0, 0x3100u);
-	memset(dArch, 0, 0x3100u);
+	memset(dTransVal, 0, sizeof(dTransVal));
+	memset(dFlags, 0, sizeof(dFlags));
+	memset(dPlayer, 0, sizeof(dPlayer));
+	memset(dMonster, 0, sizeof(dMonster));
+	memset(dObject, 0, sizeof(dObject));
+	memset(dItem, 0, sizeof(dItem));
+	memset(dArch, 0, sizeof(dArch));
 	v2 = dPiece;
 	do
 	{

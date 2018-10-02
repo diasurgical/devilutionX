@@ -1,8 +1,14 @@
+<<<<<<< HEAD
 Devilution: [![Build Status](https://travis-ci.org/diasurgical/devilution.svg?branch=master)](https://travis-ci.org/diasurgical/devilution)
 [![Build status](https://ci.appveyor.com/api/projects/status/ssk0xjhoka1uu940?svg=true)](https://ci.appveyor.com/project/galaxyhaxz/devilution)
 
 Nightly: [![Build Status](https://travis-ci.com/diasurgical/devil-nightly.svg?branch=master)](https://travis-ci.com/diasurgical/devil-nightly)
 
+=======
+[![Build Status](https://travis-ci.org/diasurgical/devilution.svg?branch=master)](https://travis-ci.org/diasurgical/devilution)
+[![Build status](https://ci.appveyor.com/api/projects/status/ssk0xjhoka1uu940?svg=true)](https://ci.appveyor.com/project/galaxyhaxz/devilution)
+
+>>>>>>> f6e2020b172a7b4e6592aa3703c0c2245f69cc6f
 [Discord](https://discord.gg/XEKDxHK)
 
 # Devilution
@@ -47,6 +53,7 @@ Make sure to enable these when installing (or modify your installation):
 - Requires "Visual C++ MFC for x86 and x64" (For afxres.h)
 - Requires "Windows Universal CRT SDK" (For ctype.h)
 
+<<<<<<< HEAD
 ### Building XDiablo (For Linux)
 Install the following libs on your machine.
 -  apt-get install g++-multilib libc6-dev-i386
@@ -77,6 +84,8 @@ Keep in mind please that this is still being worked on and is missing parts of U
 
 
 
+=======
+>>>>>>> f6e2020b172a7b4e6592aa3703c0c2245f69cc6f
 ### Building with MinGW
 - Execute `make MINGW32=1` for **MinGW32** or `make` for **MinGW64**. Optionally add `debug` to build with debug features.
 

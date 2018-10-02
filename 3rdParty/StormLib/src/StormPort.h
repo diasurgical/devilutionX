@@ -166,7 +166,8 @@
     #define _countof(x)  (sizeof(x) / sizeof(x[0]))
   #endif
 
-  #define WINAPI
+  // MINIWIN change
+  #define WINAPI __attribute__((stdcall))
 
   #define FILE_BEGIN    SEEK_SET
   #define FILE_CURRENT  SEEK_CUR
@@ -297,6 +298,10 @@
 #define STORMLIB_DEPRECATED_FLAG(type, oldflag, newflag) static type oldflag = (type)newflag;
 #endif
 */
+
+//
+// MINIWIN changes
+//
 
 #define bool int
 void TranslateFileName(char* dst, int dstLen, const char* src);

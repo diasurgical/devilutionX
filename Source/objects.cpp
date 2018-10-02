@@ -377,7 +377,7 @@ void __cdecl InitObjectGFX()
 	unsigned char fileload[56]; // [esp+4h] [ebp-58h]
 	char filestr[32]; // [esp+3Ch] [ebp-20h]
 
-	memset(fileload, 0, 0x38u);
+	memset(fileload, 0, sizeof(fileload));
 	if ( AllObjects[0].oload != -1 )
 	{
 		v0 = AllObjects;
@@ -451,7 +451,7 @@ bool __fastcall RndLocOk(int xp, int yp)
 	v2 = xp;
 	v3 = v2 * 112 + yp;
 	result = 0;
-	if ( !dMonster[0][v3] && !dPlayer[v2][yp] && !dObject[v2][yp] && !(dFlags[v2][yp] & 8) )
+	if ( !dMonster[0][v3] && !dPlayer[v2][yp] && !dObject[v2][yp] && !(dFlags[v2][yp] & DFLAG_POPULATED) )
 	{
 		v4 = dPiece[0][v3];
 		if ( !nSolidTable[v4] && (leveltype != 1 || v4 <= 126 || v4 >= 144) )
@@ -710,10 +710,10 @@ void __cdecl AddCandles()
 	int v1; // edi
 	int v2; // ebx
 
-	v0 = quests[13]._qtx;
-	v1 = quests[13]._qty;
-	v2 = quests[13]._qty + 1;
-	AddObject(OBJ_STORYCANDLE, quests[13]._qtx - 2, quests[13]._qty + 1);
+	v0 = quests[QTYPE_PW]._qtx;
+	v1 = quests[QTYPE_PW]._qty;
+	v2 = quests[QTYPE_PW]._qty + 1;
+	AddObject(OBJ_STORYCANDLE, quests[QTYPE_PW]._qtx - 2, quests[QTYPE_PW]._qty + 1);
 	AddObject(OBJ_STORYCANDLE, v0 + 3, v2);
 	v1 += 2;
 	AddObject(OBJ_STORYCANDLE, v0 - 1, v1);
@@ -760,14 +760,14 @@ void __fastcall AddBookLever(int lx1, int ly1, int lx2, int ly2, int x1, int y1,
 		if ( ++v18 > 20000 )
 			return;
 	}
-	//_LOBYTE(v13) = QuestStatus(8);
-	if ( QuestStatus(8) )
+	//_LOBYTE(v13) = QuestStatus(QTYPE_BLIND);
+	if ( QuestStatus(QTYPE_BLIND) )
 		AddObject(OBJ_BLINDBOOK, v9, v10);
-	//_LOBYTE(v14) = QuestStatus(11);
-	if ( QuestStatus(11) )
+	//_LOBYTE(v14) = QuestStatus(QTYPE_WARLRD);
+	if ( QuestStatus(QTYPE_WARLRD) )
 		AddObject(OBJ_STEELTOME, v9, v10);
-	//_LOBYTE(v15) = QuestStatus(9);
-	if ( QuestStatus(9) )
+	//_LOBYTE(v15) = QuestStatus(QTYPE_BLOOD);
+	if ( QuestStatus(QTYPE_BLOOD) )
 	{
 		v9 = 2 * setpc_x + 25;
 		v10 = 2 * setpc_y + 40;
@@ -934,7 +934,7 @@ void __fastcall AddL3Objs(int x1, int y1, int x2, int y2)
 
 bool __fastcall WallTrapLocOk(int xp, int yp)
 {
-	return (~dFlags[xp][yp] & 8u) >> 3;
+	return (~dFlags[xp][yp] & DFLAG_POPULATED) >> 3;
 }
 
 void __cdecl AddL2Torches()
@@ -1001,7 +1001,7 @@ bool __fastcall TorchLocOK(int xp, int yp)
 	bool result; // al
 
 	v2 = xp;
-	if ( dFlags[v2][yp] & 8 )
+	if ( dFlags[v2][yp] & DFLAG_POPULATED )
 		result = 0;
 	else
 		result = nTrapTable[dPiece[0][yp + v2 * 112]] != 0;
@@ -1498,7 +1498,7 @@ void __cdecl InitObjects()
 		GetRndSeed();
 		if ( currlevel == 9 && gbMaxPlayers == 1 )
 			AddSlainHero();
-		if ( currlevel == quests[1]._qlevel && quests[1]._qactive == 1 )
+		if ( currlevel == quests[QTYPE_BLKM]._qlevel && quests[QTYPE_BLKM]._qactive == 1 )
 			AddMushPatch();
 		if ( currlevel == 4 )
 			AddStoryBooks();
@@ -1508,14 +1508,14 @@ void __cdecl InitObjects()
 			AddStoryBooks();
 		if ( leveltype == DTYPE_CATHEDRAL )
 		{
-			//_LOBYTE(v1) = QuestStatus(6);
-			if ( QuestStatus(6) )
+			//_LOBYTE(v1) = QuestStatus(QTYPE_BUTCH);
+			if ( QuestStatus(QTYPE_BUTCH) )
 				AddTortures();
-			//_LOBYTE(v2) = QuestStatus(13);
-			if ( QuestStatus(13) )
+			//_LOBYTE(v2) = QuestStatus(QTYPE_PW);
+			if ( QuestStatus(QTYPE_PW) )
 				AddCandles();
-			//_LOBYTE(v3) = QuestStatus(7);
-			if ( QuestStatus(7) )
+			//_LOBYTE(v3) = QuestStatus(QTYPE_BOL);
+			if ( QuestStatus(QTYPE_BOL) )
 				AddObject(OBJ_SIGNCHEST, 2 * setpc_x + 26, 2 * setpc_y + 19);
 			InitRndLocBigObj(10, 15, OBJ_SARC);
 			AddL1Objs(0, 0, 112, 112);
@@ -1523,16 +1523,16 @@ void __cdecl InitObjects()
 		}
 		if ( leveltype == DTYPE_CATACOMBS )
 		{
-			//_LOBYTE(v4) = QuestStatus(0);
-			if ( QuestStatus(0) )
+			//_LOBYTE(v4) = QuestStatus(QTYPE_INFRA);
+			if ( QuestStatus(QTYPE_INFRA) )
 				InitRndLocObj5x5(1, 1, OBJ_STAND);
-			//_LOBYTE(v5) = QuestStatus(14);
-			if ( QuestStatus(14) )
+			//_LOBYTE(v5) = QuestStatus(QTYPE_BONE);
+			if ( QuestStatus(QTYPE_BONE) )
 				InitRndLocObj5x5(1, 1, OBJ_BOOK2R);
 			AddL2Objs(0, 0, 112, 112);
 			AddL2Torches();
-			//_LOBYTE(v6) = QuestStatus(8);
-			if ( QuestStatus(8) )
+			//_LOBYTE(v6) = QuestStatus(QTYPE_BLIND);
+			if ( QuestStatus(QTYPE_BLIND) )
 			{
 				v7 = plr[myplr]._pClass;
 				if ( v7 )
@@ -1550,14 +1550,14 @@ void __cdecl InitObjects()
 				{
 					v8 = QUEST_BLINDING;
 				}
-				quests[8]._qmsg = v8;
+				quests[QTYPE_BLIND]._qmsg = v8;
 				AddBookLever(0, 0, 112, 112, setpc_x, setpc_y, setpc_w + setpc_x + 1, setpc_h + setpc_y + 1, v8);
 				v9 = LoadFileInMem("Levels\\L2Data\\Blind2.DUN", 0);
 				LoadMapObjs(v9, 2 * setpc_x, 2 * setpc_y);
 				mem_free_dbg(v9);
 			}
-			//_LOBYTE(v10) = QuestStatus(9);
-			if ( QuestStatus(9) )
+			//_LOBYTE(v10) = QuestStatus(QTYPE_BLOOD);
+			if ( QuestStatus(QTYPE_BLOOD) )
 			{
 				v11 = plr[myplr]._pClass;
 				if ( v11 )
@@ -1575,7 +1575,7 @@ void __cdecl InitObjects()
 				{
 					v8 = QUEST_BLOODY;
 				}
-				quests[9]._qmsg = v8;
+				quests[QTYPE_BLOOD]._qmsg = v8;
 				AddBookLever(0, 0, 112, 112, setpc_x, setpc_y + 3, setpc_x + 2, setpc_y + 7, v8);
 				AddObject(OBJ_PEDISTAL, 2 * setpc_x + 25, 2 * setpc_y + 32);
 			}
@@ -1588,8 +1588,8 @@ void __cdecl InitObjects()
 		}
 		if ( leveltype == DTYPE_HELL )
 		{
-			//_LOBYTE(v12) = QuestStatus(11);
-			if ( QuestStatus(11) )
+			//_LOBYTE(v12) = QuestStatus(QTYPE_WARLRD);
+			if ( QuestStatus(QTYPE_WARLRD) )
 			{
 				v13 = plr[myplr]._pClass;
 				if ( v13 )
@@ -1607,14 +1607,14 @@ void __cdecl InitObjects()
 				{
 					v8 = QUEST_BLOODWAR;
 				}
-				quests[11]._qmsg = v8;
+				quests[QTYPE_WARLRD]._qmsg = v8;
 				AddBookLever(0, 0, 112, 112, setpc_x, setpc_y, setpc_x + setpc_w, setpc_y + setpc_h, v8);
 				v14 = LoadFileInMem("Levels\\L4Data\\Warlord.DUN", 0);
 				LoadMapObjs(v14, 2 * setpc_x, 2 * setpc_y);
 				mem_free_dbg(v14);
 			}
-			//_LOBYTE(v15) = QuestStatus(15);
-			if ( QuestStatus(15) && gbMaxPlayers == 1 )
+			//_LOBYTE(v15) = QuestStatus(QTYPE_VB);
+			if ( QuestStatus(QTYPE_VB) && gbMaxPlayers == 1 )
 				AddLazStand();
 			InitRndBarrels();
 			AddL4Goodies();
@@ -2568,8 +2568,8 @@ void __fastcall Obj_Circle(int i)
 			v6 = object[v1]._oVar2;
 			object[v1]._oVar6 = 4;
 			ObjChangeMapResync(object[v1]._oVar1, v6, object[v1]._oVar3, v5);
-			if ( quests[15]._qactive == 2 )
-				quests[15]._qvar1 = 4;
+			if ( quests[QTYPE_VB]._qactive == 2 )
+				quests[QTYPE_VB]._qvar1 = 4;
 			AddMissile(plr[myplr].WorldX, plr[myplr].WorldY, 35, 46, plr[myplr]._pdir, 3, 0, myplr, 0, 0);
 			track_repeat_walk(0);
 			sgbMouseDown = 0;
@@ -2864,7 +2864,7 @@ void __fastcall Obj_BCrossDamage(int i)
 			{
 				SyncPlrKill(myplr, 0);
 LABEL_15:
-				drawhpflag = 1;
+				drawhpflag = TRUE;
 				return;
 			}
 			v5 = plr[v1]._pClass;
@@ -4090,7 +4090,7 @@ LABEL_17:
 					v8[1] = v8[1];
 					if ( plr[v3]._pSplLvl[SPL_GUARDIAN] < 15 )
 						++plr[0]._pSplLvl[v7 + SPL_GUARDIAN];
-					quests[14]._qactive = 3;
+					quests[QTYPE_BONE]._qactive = 3;
 					if ( !deltaload )
 						PlaySfxLoc(IS_QUESTDN, object[esi1]._ox, object[esi1]._oy);
 					_LOBYTE(v7) = 43;
@@ -4153,27 +4153,27 @@ void __fastcall OperateBookLever(int pnum, int i)
 	if ( object[i]._oSelFlag && !qtextflag )
 	{
 		v5 = object[v2]._otype;
-		if ( v5 == OBJ_BLINDBOOK && !quests[8]._qvar1 )
+		if ( v5 == OBJ_BLINDBOOK && !quests[QTYPE_BLIND]._qvar1 )
 		{
-			quests[8]._qactive = 2;
-			quests[8]._qlog = 1;
-			quests[8]._qvar1 = 1;
+			quests[QTYPE_BLIND]._qactive = 2;
+			quests[QTYPE_BLIND]._qlog = 1;
+			quests[QTYPE_BLIND]._qvar1 = 1;
 		}
-		if ( v5 == OBJ_BLOODBOOK && !quests[9]._qvar1 )
+		if ( v5 == OBJ_BLOODBOOK && !quests[QTYPE_BLOOD]._qvar1 )
 		{
-			quests[9]._qactive = 2;
-			quests[9]._qlog = 1;
-			quests[9]._qvar1 = 1;
+			quests[QTYPE_BLOOD]._qactive = 2;
+			quests[QTYPE_BLOOD]._qlog = 1;
+			quests[QTYPE_BLOOD]._qvar1 = 1;
 			SpawnQuestItem(21, 2 * setpc_x + 19, 2 * setpc_y + 26, 0, 1);
 			SpawnQuestItem(21, 2 * setpc_x + 31, 2 * setpc_y + 26, 0, 1);
 			SpawnQuestItem(21, 2 * setpc_x + 25, 2 * setpc_y + 33, 0, 1);
 		}
 		v6 = object[v2]._otype;
-		if ( v6 == OBJ_STEELTOME && !quests[11]._qvar1 )
+		if ( v6 == OBJ_STEELTOME && !quests[QTYPE_WARLRD]._qvar1 )
 		{
-			quests[11]._qactive = 2;
-			quests[11]._qlog = 1;
-			quests[11]._qvar1 = 1;
+			quests[QTYPE_WARLRD]._qactive = 2;
+			quests[QTYPE_WARLRD]._qlog = 1;
+			quests[QTYPE_WARLRD]._qvar1 = 1;
 		}
 		if ( object[v2]._oAnimFrame != object[v2]._oVar6 )
 		{
@@ -4220,10 +4220,10 @@ void __fastcall OperateSChambBk(int pnum, int i)
 				SyncObjectAnim(objectactive[j]);
 		}
 		object[v2]._oAnimFrame = object[v2]._oVar6;
-		if ( quests[14]._qactive == 1 )
+		if ( quests[QTYPE_BONE]._qactive == 1 )
 		{
-			quests[14]._qactive = 2;
-			quests[14]._qlog = 1;
+			quests[QTYPE_BONE]._qactive = 2;
+			quests[QTYPE_BONE]._qlog = 1;
 		}
 		v4 = plr[myplr]._pClass;
 		if ( v4 )
@@ -4243,7 +4243,7 @@ void __fastcall OperateSChambBk(int pnum, int i)
 		{
 			v5 = QUEST_BONER;
 		}
-		quests[14]._qmsg = v5;
+		quests[QTYPE_BONE]._qmsg = v5;
 		InitQTextMsg(v5);
 	}
 }
@@ -4352,7 +4352,7 @@ void __fastcall OperateMushPatch(int pnum, int i)
 	int xx; // [esp+8h] [ebp-8h]
 	int yy; // [esp+Ch] [ebp-4h]
 
-	if ( quests[1]._qactive != 2 || quests[1]._qvar1 < 2u )
+	if ( quests[QTYPE_BLKM]._qactive != 2 || quests[QTYPE_BLKM]._qvar1 < QS_TOMEGIVEN )
 	{
 		if ( !deltaload && pnum == myplr )
 		{
@@ -4390,8 +4390,8 @@ void __fastcall OperateMushPatch(int pnum, int i)
 			if ( v3 )
 			{
 				GetSuperItemLoc(object[v2]._ox, object[v2]._oy, &xx, &yy);
-				SpawnQuestItem(17, xx, yy, 0, 0);
-				quests[1]._qvar1 = 3;
+				SpawnQuestItem(IDI_MUSHROOM, xx, yy, 0, 0);
+				quests[QTYPE_BLKM]._qvar1 = QS_MUSHSPAWNED;
 			}
 		}
 	}
@@ -4407,7 +4407,7 @@ void __fastcall OperateInnSignChest(int pnum, int i)
 	int xx; // [esp+8h] [ebp-8h]
 	int yy; // [esp+Ch] [ebp-4h]
 
-	if ( quests[7]._qvar1 == 2 )
+	if ( quests[QTYPE_BOL]._qvar1 == 2 )
 	{
 		v4 = i;
 		if ( object[i]._oSelFlag )
@@ -4451,7 +4451,6 @@ void __fastcall OperateSlainHero(int pnum, int i, unsigned char sendmsg)
 	int v4; // esi
 	int v5; // eax
 	bool v6; // zf
-	char v7; // cl
 	int v8; // ecx
 
 	v3 = i;
@@ -4461,31 +4460,19 @@ void __fastcall OperateSlainHero(int pnum, int i, unsigned char sendmsg)
 	{
 		v6 = deltaload == 0;
 		object[v5]._oSelFlag = 0;
-		if ( v6 )
-		{
-			v7 = plr[pnum]._pClass;
-			if ( v7 )
-			{
-				if ( v7 == 1 )
-				{
-					CreateMagicItem(object[v5]._ox, object[v5]._oy, 3, 119, 0, 1);
-					v8 = PS_ROGUE9;
-				}
-				else
-				{
-					if ( v7 != 2 )
-						goto LABEL_10;
-					CreateSpellBook(object[v5]._ox, object[v5]._oy, 3, 0, 1);
-					v8 = PS_MAGE9;
-				}
-			}
-			else
-			{
-				CreateMagicItem(object[v5]._ox, object[v5]._oy, 9, 153, 0, 1);
+		if ( v6 ) {
+			if ( plr[pnum]._pClass == PC_WARRIOR ) {
+				CreateMagicItem(object[v5]._ox, object[v5]._oy, 9, ICURS_BREAST_PLATE, 0, 1);
 				v8 = PS_WARR9;
+			} else if ( plr[pnum]._pClass == PC_ROGUE ) {
+				CreateMagicItem(object[v5]._ox, object[v5]._oy, 3, ICURS_LONG_WAR_BOW, 0, 1);
+				v8 = PS_ROGUE9;
+			} else if ( plr[pnum]._pClass == PC_SORCERER ) {
+				CreateSpellBook(object[v5]._ox, object[v5]._oy, 3, 0, 1);
+				v8 = PS_MAGE9;
 			}
 			PlaySfxLoc(v8, plr[myplr].WorldX, plr[myplr].WorldY);
-LABEL_10:
+
 			if ( v4 == myplr )
 				NetSendCmdParam1(0, CMD_OPERATEOBJ, v3);
 			return;
@@ -5202,7 +5189,7 @@ LABEL_47:
 					while ( v41 < plr[v38]._pNumInv );
 				}
 				v43 = &plr[v38].SpdList[0]._iMaxCharges;
-				v44 = 8;
+				v44 = MAXBELTITEMS;
 				do
 				{
 					if ( *(v43 - 56) == 10 )
@@ -5241,7 +5228,7 @@ LABEL_47:
 					while ( v48 < plr[v45]._pNumInv );
 				}
 				v50 = &plr[v45].SpdList[0]._iDurability;
-				v51 = 8;
+				v51 = MAXBELTITEMS;
 				do
 				{
 					*v50 = v50[1];
@@ -5289,10 +5276,10 @@ LABEL_47:
 						v57 *= 2;
 						++v59;
 					}
-					while ( v59 <= 37 );
+					while ( v59 <= MAX_SPELLS );
 					do
 					{
-						v60 = random(0, 37);
+						v60 = random(0, MAX_SPELLS);
 						v7 = v60;
 					}
 					while ( !(plr[v53]._pMemSpells[1] & ((unsigned __int64)((__int64)1 << v60) >> 32) | plr[v53]._pMemSpells[0] & (unsigned int)((__int64)1 << v60)) );
@@ -5426,7 +5413,7 @@ LABEL_47:
 					while ( sfx_idb < plr[v78]._pNumInv );
 				}
 				v82 = &plr[v78].SpdList[0]._iMiscId;
-				v141 = 8;
+				v141 = MAXBELTITEMS;
 				sfx_idc = &plr[v78].SpdList[0]._iMiscId;
 				do
 				{
@@ -5716,7 +5703,7 @@ LABEL_47:
 					while ( v128 < plr[v125]._pNumInv );
 				}
 				v130 = &plr[v125].SpdList[0]._iIdentified;
-				v131 = 8;
+				v131 = MAXBELTITEMS;
 				do
 				{
 					if ( *((_BYTE *)v130 + 4) && !*v130 )
@@ -5857,8 +5844,8 @@ void __fastcall OperateBookCase(int pnum, int i, unsigned char sendmsg)
 		{
 			SetRndSeed(object[v5]._oRndSeed);
 			CreateTypeItem(object[v5]._ox, object[v5]._oy, 0, ITYPE_MISC, 24, sendmsg, 0);
-			//_LOBYTE(v7) = QuestStatus(3);
-			if ( QuestStatus(3)
+			//_LOBYTE(v7) = QuestStatus(QTYPE_ZHAR);
+			if ( QuestStatus(QTYPE_ZHAR)
 			  && monster[4].mName == UniqMonst[2].mName
 			  && monster[4]._msquelch == -1
 			  && monster[4]._mhitpoints )
@@ -6305,7 +6292,7 @@ void __fastcall OperateLazStand(int pnum, int i)
 // 646D00: using guessed type char qtextflag;
 // 676190: using guessed type int deltaload;
 
-void __fastcall OperateObject(int pnum, int i, unsigned char TeleFlag)
+void __fastcall OperateObject(int pnum, int i, BOOL TeleFlag)
 {
 	int v3; // esi
 	int v4; // edi
@@ -6637,7 +6624,7 @@ void __fastcall BreakCrux(int i)
 	object[v1]._oAnimFlag = 1;
 	object[v1]._oAnimFrame = 1;
 	object[v1]._oAnimDelay = 1;
-	object[v1]._oSolidFlag = 1;
+	object[v1]._oSolidFlag = TRUE;
 	object[v1]._oMissFlag = 1;
 	if ( v2 <= 0 )
 		goto LABEL_15;
@@ -6707,7 +6694,7 @@ void __fastcall BreakBarrel(int pnum, int i, int dam, unsigned char forcebreak, 
 			object[v5]._oAnimFlag = 1;
 			object[v5]._oAnimFrame = 1;
 			object[v5]._oAnimDelay = 1;
-			object[v5]._oSolidFlag = 0;
+			object[v5]._oSolidFlag = FALSE;
 			object[v5]._oMissFlag = 1;
 			object[v5]._oSelFlag = 0;
 			object[v5]._oPreFlag = 1;

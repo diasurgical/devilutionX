@@ -4,11 +4,11 @@
 #define _TYPES_H
 
 
+
 #include "resource.h"
 
 #ifdef MINIWIN
 #include "miniwin.h"
-#include "sound.h"
 #else
 #define WIN32_LEAN_AND_MEAN
 

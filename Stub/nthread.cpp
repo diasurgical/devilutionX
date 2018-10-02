@@ -3,12 +3,14 @@
 #include "../types.h"
 #include "stubs.h"
 
+#ifndef NO_GLOBALS
 int gdwNormalMsgSize;
 int gdwLargestMsgSize;
 int gdwMsgLenTbl[4];
 int glpMsgTbl[4];
 int gdwTurnsInTransit;
 char byte_679704;
+#endif
 
 void __fastcall nthread_start(bool set_turn_upper_bit)
 {
@@ -24,7 +26,7 @@ void __cdecl nthread_cleanup()
 	DUMMY();
 }
 
-void __fastcall nthread_terminate_game(char *pszFcn)
+void __fastcall nthread_terminate_game(const char *pszFcn)
 {
 	UNIMPLEMENTED();
 }

@@ -209,7 +209,7 @@ LABEL_38:
 			IncProgress();
 			FreeGameMem();
 			IncProgress();
-//			pfile_remove_temp_files();
+			pfile_remove_temp_files();
 			v3 = TRUE;
 LABEL_39:
 			v5 = 0;

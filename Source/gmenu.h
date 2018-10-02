@@ -31,7 +31,7 @@ void __fastcall gmenu_left_right(int a1);
 int __fastcall gmenu_on_mouse_move(LPARAM lParam);
 bool __fastcall gmenu_valid_mouse_pos(int *plOffset);
 int __fastcall gmenu_left_mouse(int a1);
-void __fastcall gmenu_enable(TMenuItem *pMenuItem, bool enable);
+void __fastcall gmenu_enable(TMenuItem *pMenuItem, BOOL enable);
 void __fastcall gmenu_slider_1(TMenuItem *pItem, int min, int max, int gamma);
 int __fastcall gmenu_slider_get(TMenuItem *pItem, int min, int max);
 void __fastcall gmenu_slider_3(TMenuItem *pItem, int dwTicks);

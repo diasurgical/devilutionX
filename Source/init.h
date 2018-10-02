@@ -32,7 +32,7 @@ void __cdecl init_get_file_info();
 LRESULT __stdcall MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 void __fastcall init_activate_window(HWND hWnd, bool bActive);
 LRESULT __stdcall WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
-WNDPROC __stdcall SetWindowProc(WNDPROC NewProc);
+WNDPROC __fastcall SetWindowProc(WNDPROC NewProc);
 
 /* rdata */
 extern const int init_inf; // weak

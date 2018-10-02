@@ -86,7 +86,11 @@
       <ModuleDefinitionFile>diabloui.def</ModuleDefinitionFile>
       <OutputFile>.\WinRel\DiabloUI.dll</OutputFile>
       <ImportLibrary>.\WinRel\DiabloUI.lib</ImportLibrary>
+<<<<<<< HEAD
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+=======
+      <AdditionalDependencies>../3rdParty/Storm/Source/WinRel/Storm.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+>>>>>>> f6e2020b172a7b4e6592aa3703c0c2245f69cc6f
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -128,7 +132,11 @@
       <ModuleDefinitionFile>diabloui.def</ModuleDefinitionFile>
       <OutputFile>.\WinDebug\DiabloUI.dll</OutputFile>
       <ImportLibrary>.\WinDebug\DiabloUI.lib</ImportLibrary>
+<<<<<<< HEAD
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+=======
+      <AdditionalDependencies>../3rdParty/Storm/Source/WinDebug/Storm.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+>>>>>>> f6e2020b172a7b4e6592aa3703c0c2245f69cc6f
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -143,4 +151,8 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+<<<<<<< HEAD
 </Project>
+=======
+</Project>
+>>>>>>> f6e2020b172a7b4e6592aa3703c0c2245f69cc6f
