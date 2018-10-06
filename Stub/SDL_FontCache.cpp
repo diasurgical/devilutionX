@@ -417,7 +417,7 @@ static FC_GlyphData* FC_MapFind(FC_Map* map, Uint32 codepoint)
 struct FC_Font
 {
 #ifndef FC_USE_SDL_GPU
-	SDL_Renderer* renderer;
+	SDL_Renderer* Frenderer;
 #endif
 
 	TTF_Font* ttf_source;  // TTF_Font source of characters
@@ -839,7 +839,7 @@ static void FC_Init(FC_Font* font)
 		return;
 
 #ifndef FC_USE_SDL_GPU
-	font->renderer = NULL;
+	font->Frenderer = NULL;
 #endif
 
 	font->ttf_source = NULL;
@@ -894,7 +894,7 @@ static Uint8 FC_GrowGlyphCache(FC_Font* font)
 #ifdef FC_USE_SDL_GPU
 	GPU_Image* new_level = GPU_CreateImage(font->height * 12, font->height * 12, GPU_FORMAT_RGBA);
 #else
-	SDL_Texture* new_level = SDL_CreateTexture(font->renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, font->height * 12, font->height * 12);
+	SDL_Texture* new_level = SDL_CreateTexture(font->Frenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, font->height * 12, font->height * 12);
 #endif
 	if (new_level == NULL || !FC_SetGlyphCacheLevel(font, font->glyph_cache_count, new_level))
 	{
@@ -922,11 +922,11 @@ Uint8 FC_UploadGlyphCache(FC_Font* font, int cache_level, SDL_Surface* data_surf
 #else
 	SDL_Texture* new_level;
 	if (!fc_has_render_target_support)
-		new_level = SDL_CreateTextureFromSurface(font->renderer, data_surface);
+		new_level = SDL_CreateTextureFromSurface(font->Frenderer, data_surface);
 	else
 	{
 		// Must upload with render target enabled so we can put more glyphs on later
-		SDL_Renderer* renderer = font->renderer;
+		SDL_Renderer* Frenderer = font->Frenderer;
 
 		// Set filter mode for new texture
 		char old_filter_mode[16];  // Save it so we can change the hint value in the meantime
@@ -937,7 +937,7 @@ Uint8 FC_UploadGlyphCache(FC_Font* font, int cache_level, SDL_Surface* data_surf
 		else
 			SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 
-		new_level = SDL_CreateTexture(renderer, data_surface->format->format, SDL_TEXTUREACCESS_TARGET, data_surface->w, data_surface->h);
+		new_level = SDL_CreateTexture(Frenderer, data_surface->format->format, SDL_TEXTUREACCESS_TARGET, data_surface->w, data_surface->h);
 		SDL_SetTextureBlendMode(new_level, SDL_BLENDMODE_BLEND);
 
 		// Reset filter mode for the temp texture
@@ -945,17 +945,17 @@ Uint8 FC_UploadGlyphCache(FC_Font* font, int cache_level, SDL_Surface* data_surf
 
 		{
 			Uint8 r, g, b, a;
-			SDL_Texture* temp = SDL_CreateTextureFromSurface(renderer, data_surface);
+			SDL_Texture* temp = SDL_CreateTextureFromSurface(Frenderer, data_surface);
 			SDL_SetTextureBlendMode(temp, SDL_BLENDMODE_NONE);
-			SDL_SetRenderTarget(renderer, new_level);
+			SDL_SetRenderTarget(Frenderer, new_level);
 
-			SDL_GetRenderDrawColor(renderer, &r, &g, &b, &a);
-			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-			SDL_RenderClear(renderer);
-			SDL_SetRenderDrawColor(renderer, r, g, b, a);
+			SDL_GetRenderDrawColor(Frenderer, &r, &g, &b, &a);
+			SDL_SetRenderDrawColor(Frenderer, 0, 0, 0, 0);
+			SDL_RenderClear(Frenderer);
+			SDL_SetRenderDrawColor(Frenderer, r, g, b, a);
 
-			SDL_RenderCopy(renderer, temp, NULL, NULL);
-			SDL_SetRenderTarget(renderer, NULL);
+			SDL_RenderCopy(Frenderer, temp, NULL, NULL);
+			SDL_SetRenderTarget(Frenderer, NULL);
 
 			SDL_DestroyTexture(temp);
 		}
@@ -1074,13 +1074,13 @@ FC_Font* FC_CreateFont(void)
 #ifdef FC_USE_SDL_GPU
 Uint8 FC_LoadFontFromTTF(FC_Font* font, TTF_Font* ttf, SDL_Color color)
 #else
-Uint8 FC_LoadFontFromTTF(FC_Font* font, SDL_Renderer* renderer, TTF_Font* ttf, SDL_Color color)
+Uint8 FC_LoadFontFromTTF(FC_Font* font, SDL_Renderer* Frenderer, TTF_Font* ttf, SDL_Color color)
 #endif
 {
 	if (font == NULL || ttf == NULL)
 		return 0;
 #ifndef FC_USE_SDL_GPU
-	if (renderer == NULL)
+	if (Frenderer == NULL)
 		return 0;
 #endif
 
@@ -1092,10 +1092,10 @@ Uint8 FC_LoadFontFromTTF(FC_Font* font, SDL_Renderer* renderer, TTF_Font* ttf, S
 	fc_has_render_target_support = GPU_IsFeatureEnabled(GPU_FEATURE_RENDER_TARGETS);
 #else
 	SDL_RendererInfo info;
-	SDL_GetRendererInfo(renderer, &info);
+	SDL_GetRendererInfo(Frenderer, &info);
 	fc_has_render_target_support = (info.flags & SDL_RENDERER_TARGETTEXTURE);
 
-	font->renderer = renderer;
+	font->Frenderer = Frenderer;
 #endif
 
 	font->ttf_source = ttf;
@@ -1196,7 +1196,7 @@ Uint8 FC_LoadFontFromTTF(FC_Font* font, SDL_Renderer* renderer, TTF_Font* ttf, S
 #ifdef FC_USE_SDL_GPU
 Uint8 FC_LoadFont(FC_Font* font, const char* filename_ttf, Uint32 pointSize, SDL_Color color, int style)
 #else
-Uint8 FC_LoadFont(FC_Font* font, FC_Target* renderer, const char* filename_ttf, Uint32 pointSize, SDL_Color color, int style)
+Uint8 FC_LoadFont(FC_Font* font, FC_Target* Frenderer, const char* filename_ttf, Uint32 pointSize, SDL_Color color, int style)
 #endif
 {
 	SDL_RWops* rwops;
@@ -1215,14 +1215,14 @@ Uint8 FC_LoadFont(FC_Font* font, FC_Target* renderer, const char* filename_ttf, 
 #ifdef FC_USE_SDL_GPU
 	return FC_LoadFont_RW(font, rwops, 1, pointSize, color, style);
 #else
-	return FC_LoadFont_RW(font, renderer, rwops, 1, pointSize, color, style);
+	return FC_LoadFont_RW(font, Frenderer, rwops, 1, pointSize, color, style);
 #endif
 }
 
 #ifdef FC_USE_SDL_GPU
 Uint8 FC_LoadFont_RW(FC_Font* font, SDL_RWops* file_rwops_ttf, Uint8 own_rwops, Uint32 pointSize, SDL_Color color, int style)
 #else
-Uint8 FC_LoadFont_RW(FC_Font* font, FC_Target* renderer, SDL_RWops* file_rwops_ttf, Uint8 own_rwops, Uint32 pointSize, SDL_Color color, int style)
+Uint8 FC_LoadFont_RW(FC_Font* font, FC_Target* Frenderer, SDL_RWops* file_rwops_ttf, Uint8 own_rwops, Uint32 pointSize, SDL_Color color, int style)
 #endif
 {
 	Uint8 result;
@@ -1261,7 +1261,7 @@ Uint8 FC_LoadFont_RW(FC_Font* font, FC_Target* renderer, SDL_RWops* file_rwops_t
 #ifdef FC_USE_SDL_GPU
 	result = FC_LoadFontFromTTF(font, ttf, color);
 #else
-	result = FC_LoadFontFromTTF(font, renderer, ttf, color);
+	result = FC_LoadFontFromTTF(font, Frenderer, ttf, color);
 #endif
 
 	// Can only load new (uncached) glyphs if we can keep the SDL_RWops open.
@@ -1371,29 +1371,29 @@ Uint8 FC_AddGlyphToCache(FC_Font* font, SDL_Surface* glyph_surface)
 	}
 #else
 	{
-		SDL_Renderer* renderer = font->renderer;
+		SDL_Renderer* Frenderer = font->Frenderer;
 		Uint8 use_clip;
 		FC_Rect clip_rect;
 		SDL_Texture* img;
 		SDL_Rect destrect;
 
-		use_clip = has_clip(renderer);
+		use_clip = has_clip(Frenderer);
 		if (use_clip)
 		{
-			clip_rect = get_clip(renderer);
-			set_clip(renderer, NULL);
+			clip_rect = get_clip(Frenderer);
+			set_clip(Frenderer, NULL);
 		}
 
-		img = SDL_CreateTextureFromSurface(renderer, glyph_surface);
+		img = SDL_CreateTextureFromSurface(Frenderer, glyph_surface);
 
 		destrect = font->last_glyph.rect;
-		SDL_SetRenderTarget(renderer, dest);
-		SDL_RenderCopy(renderer, img, NULL, &destrect);
-		SDL_SetRenderTarget(renderer, NULL);
+		SDL_SetRenderTarget(Frenderer, dest);
+		SDL_RenderCopy(Frenderer, img, NULL, &destrect);
+		SDL_SetRenderTarget(Frenderer, NULL);
 		SDL_DestroyTexture(img);
 
 		if (use_clip)
-			set_clip(renderer, &clip_rect);
+			set_clip(Frenderer, &clip_rect);
 	}
 #endif
 

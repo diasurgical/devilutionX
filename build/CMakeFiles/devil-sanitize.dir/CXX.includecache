@@ -795,18 +795,18 @@ stubs.h
 /home/krash/CLionProjects/devilutionX/Stub/sdlrender.cpp
 ../types.h
 /home/krash/CLionProjects/devilutionX/types.h
-stubs.h
-/home/krash/CLionProjects/devilutionX/Stub/stubs.h
 miniwin_sdl.h
 /home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.h
+stubs.h
+/home/krash/CLionProjects/devilutionX/Stub/stubs.h
+SDL_FontCache.h
+/home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
 SDL2/SDL.h
 -
 SDL_image.h
 -
 SDL_mixer.h
 -
-SDL_FontCache.h
-/home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
 
 /home/krash/CLionProjects/devilutionX/Stub/sound.cpp
 ../types.h

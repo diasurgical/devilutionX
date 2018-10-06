@@ -28,7 +28,9 @@ extern SDL_Texture *texture;
 //My SDL inclusions // 
 
 
-
+extern bool SorcerorCreateSelected;
+extern bool WarriorCreateSelected;
+extern bool RogueCreateSelected;
 
 
 extern int totalFrames;
@@ -52,10 +54,13 @@ extern SDL_Rect ReplayIntroBox;
 extern SDL_Rect ShowCreditsBox;
 extern SDL_Rect ExitBox;
 
+
+
+
 //Menu2 // Single player menu rects
 extern SDL_Rect SinglePlayerMenuCancelBox;
-
-
+extern SDL_Rect CreateHeroBox;
+void CreateMenuDialogBox();
 void CreateDiabloMainMenuz();
 void SdlDiabloMainWindow();
 void SDL_RenderDiabloMainPage();
