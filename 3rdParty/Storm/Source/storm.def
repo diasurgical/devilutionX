@@ -3,15 +3,9 @@ LIBRARY      "Storm"
 EXPORTS
   SNetCreateGame                @101 NONAME
   SNetDestroy                   @102 NONAME
-<<<<<<< HEAD
-  SNetEnumProviders             @103 NONAME
-  ;SNetEnumDevices               @104 NONAME
-  SNetEnumGames                 @105 NONAME
-=======
   ;SNetEnumDevices               @103 NONAME
   ;SNetEnumGames                 @104 NONAME
   ;SNetEnumProviders             @105 NONAME
->>>>>>> f6e2020b172a7b4e6592aa3703c0c2245f69cc6f
   SNetDropPlayer                @106 NONAME
   SNetGetGameInfo               @107 NONAME
   ;SNetGetNetworkLatency         @108 NONAME
@@ -57,32 +51,14 @@ EXPORTS
   ;Ordinal150                    @150 NONAME
   ;Ordinal151                    @151 NONAME
 
-<<<<<<< HEAD
-  ;SDlgBeginPaint                @201 NONAME
-  ;SDlgBltToWindowI              @202 NONAME
-=======
   SDlgBeginPaint                @201 NONAME
   SDlgBltToWindowI              @202 NONAME
->>>>>>> f6e2020b172a7b4e6592aa3703c0c2245f69cc6f
   ;SDlgCheckTimers               @203 NONAME
   ;SDlgCreateDialogIndirectParam @204 NONAME
   ;SDlgCreateDialogParam         @205 NONAME
   SDlgDefDialogProc             @206 NONAME
   
   SDlgDialogBoxIndirectParam    @208 NONAME
-<<<<<<< HEAD
-  ;SDlgDialogBoxParam            @209 NONAME
-  ;SDlgDrawBitmap                @210 NONAME
-  SDlgEndDialog                 @211 NONAME
-  ;SDlgEndPaint                  @212 NONAME
-  ;SDlgKillTimer                 @213 NONAME
-  ;SDlgSetBaseFont               @214 NONAME
-  ;SDlgSetBitmapI                @215 NONAME
-  SDlgSetControlBitmaps         @216 NONAME
-  ;SDlgSetCursor                 @217 NONAME
-  ;SDlgSetSystemCursor           @218 NONAME
-  ;SDlgSetTimer                  @219 NONAME
-=======
   SDlgDialogBoxParam            @209 NONAME
   SDlgDrawBitmap                @210 NONAME
   SDlgEndDialog                 @211 NONAME
@@ -94,7 +70,6 @@ EXPORTS
   SDlgSetCursor                 @217 NONAME
   SDlgSetSystemCursor           @218 NONAME
   SDlgSetTimer                  @219 NONAME
->>>>>>> f6e2020b172a7b4e6592aa3703c0c2245f69cc6f
   ;SDlgUpdateCursor              @220 NONAME
   SDlgBltToWindowE              @221 NONAME
   SDlgSetBitmapE                @222 NONAME
@@ -159,11 +134,7 @@ EXPORTS
   ;SBltGetSCode                  @312 NONAME
   SBltROP3                      @313 NONAME
   SBltROP3Clipped               @314 NONAME
-<<<<<<< HEAD
-  ;SBltROP3Tiled                 @315 NONAME
-=======
   SBltROP3Tiled                 @315 NONAME
->>>>>>> f6e2020b172a7b4e6592aa3703c0c2245f69cc6f
 
   SBmpDecodeImage               @321 NONAME
 
@@ -180,11 +151,7 @@ EXPORTS
 
   SDrawAutoInitialize           @341 NONAME
   SDrawCaptureScreen            @342 NONAME
-<<<<<<< HEAD
-  ;SDrawClearSurface             @343 NONAME
-=======
   SDrawClearSurface             @343 NONAME
->>>>>>> f6e2020b172a7b4e6592aa3703c0c2245f69cc6f
   SDrawDestroy                  @344 NONAME
   ;SDrawFlipPage                 @345 NONAME
   SDrawGetFrameWindow           @346 NONAME
@@ -220,11 +187,7 @@ EXPORTS
   ;SGdiRectangle                 @388 NONAME
   SGdiSelectObject              @389 NONAME
   SGdiSetPitch                  @390 NONAME
-<<<<<<< HEAD
-  ;SGdiTextOut                   @391 NONAME
-=======
   SGdiTextOut                   @391 NONAME
->>>>>>> f6e2020b172a7b4e6592aa3703c0c2245f69cc6f
   ;SGdi392                       @392 NONAME
   Ordinal393                    @393 NONAME
 
@@ -258,11 +221,7 @@ EXPORTS
   ;SReg430                       @430 NONAME
   STransBlt                     @431 NONAME
   STransBltUsingMask            @432 NONAME
-<<<<<<< HEAD
-  ;STransCreateI                 @433 NONAME
-=======
   STransCreateI                 @433 NONAME
->>>>>>> f6e2020b172a7b4e6592aa3703c0c2245f69cc6f
   STransDelete                  @434 NONAME
   
   STransDuplicate               @436 NONAME
@@ -329,11 +288,7 @@ EXPORTS
 
   SStrCopy                      @501 NONAME
   SStrHash                      @502 NONAME
-<<<<<<< HEAD
-  SStrNCat                      @503 NONAME
-=======
   SStrPack                      @503 NONAME
->>>>>>> f6e2020b172a7b4e6592aa3703c0c2245f69cc6f
   ;SStrTokenize                  @504 NONAME
   ;SStrPack                      @505 NONAME
   SStrLen                       @506 NONAME

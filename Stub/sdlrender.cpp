@@ -8,7 +8,7 @@
 #include <SDL_mixer.h>
 
 int SCREEN_WIDTH = 640;
-int SCREEN_HEIGHT = 480;
+int SCREEN_HEIGHT = 500;
 
 int LogoWidth;
 int LogoHeight;
@@ -254,7 +254,7 @@ void SDL_RenderDiabloMainPage()
 
 	if (FontLoaded == 0) {
 
-		FC_LoadFont(Subfont, renderer, LDirectory, 12, FC_MakeColor(112, 106, 70, 255), TTF_STYLE_NORMAL);
+		FC_LoadFont(Subfont, renderer, LDirectory, 13, FC_MakeColor(112, 106, 70, 255), TTF_STYLE_NORMAL);
 
 		printf("LoadFont\n\n");
 		FontLoaded = 1;

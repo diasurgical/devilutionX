@@ -7,22 +7,6 @@
 CFG=Diablo - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
-<<<<<<< HEAD
-!MESSAGE 
-!MESSAGE NMAKE /f "Diablo.mak".
-!MESSAGE 
-!MESSAGE You can specify a configuration when running NMAKE
-!MESSAGE by defining the macro CFG on the command line. For example:
-!MESSAGE 
-!MESSAGE NMAKE /f "Diablo.mak" CFG="Diablo - Win32 Debug"
-!MESSAGE 
-!MESSAGE Possible choices for configuration are:
-!MESSAGE 
-!MESSAGE "Diablo - Win32 Release" (based on "Win32 (x86) Application")
-!MESSAGE "Diablo - Win32 Debug" (based on "Win32 (x86) Application")
-!MESSAGE "Diablo - Win32 Release with PDB" (based on "Win32 (x86) Application")
-!MESSAGE 
-=======
 !MESSAGE
 !MESSAGE NMAKE /f "Diablo.mak".
 !MESSAGE
@@ -37,7 +21,6 @@ CFG=Diablo - Win32 Debug
 !MESSAGE "Diablo - Win32 Debug" (based on "Win32 (x86) Application")
 !MESSAGE "Diablo - Win32 Release with PDB" (based on "Win32 (x86) Application")
 !MESSAGE
->>>>>>> f6e2020b172a7b4e6592aa3703c0c2245f69cc6f
 
 # Begin Project
 # PROP AllowPerConfigDependencies 0
@@ -62,10 +45,6 @@ RSC=rc.exe
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
 # ADD CPP /nologo /MT /W3 /GX /O1 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-<<<<<<< HEAD
-# SUBTRACT CPP /WX
-=======
->>>>>>> f6e2020b172a7b4e6592aa3703c0c2245f69cc6f
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /o "NUL" /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -90,17 +69,6 @@ LINK32=link.exe
 # PROP Intermediate_Dir "Source/WinDebug"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-<<<<<<< HEAD
-# ADD BASE CPP /nologo /MT /W3 /Gm /GX /Zi /O1 /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "NDEBUG" /YX /FD /c
-# ADD CPP /nologo /MTd /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD BASE MTL /nologo /D "_DEBUG" /D "NDEBUG" /mktyplib203 /o "NUL" /win32 /win32
-# ADD MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32 /win32
-# ADD BASE RSC /l 0x409 /d "_DEBUG" /d "NDEBUG"
-# ADD RSC /l 0x409 /d "_DEBUG"
-BSC32=bscmake.exe
-# ADD BASE BSC32 /nologo
-# ADD BSC32 /nologo
-=======
 # ADD BASE CPP /nologo /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
 # ADD CPP /nologo /MTd /W3 /Gm /GX /Zi /O1 /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /o "NUL" /win32
@@ -109,7 +77,6 @@ BSC32=bscmake.exe
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
->>>>>>> f6e2020b172a7b4e6592aa3703c0c2245f69cc6f
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib user32.lib gdi32.lib advapi32.lib shell32.lib version.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib advapi32.lib shell32.lib version.lib /nologo /subsystem:windows /machine:I386
@@ -143,11 +110,7 @@ LINK32=link.exe
 # ADD BASE LINK32 DiabloUI/WinRel/DiabloUI.lib 3rdParty/Storm/Source/WinRel/Storm.lib kernel32.lib user32.lib gdi32.lib advapi32.lib shell32.lib version.lib /nologo /subsystem:windows /machine:I386
 # ADD LINK32 DiabloUI/WinRel/DiabloUI.lib 3rdParty/Storm/Source/WinRel/Storm.lib kernel32.lib user32.lib gdi32.lib advapi32.lib shell32.lib version.lib /nologo /subsystem:windows /debug /machine:I386
 
-<<<<<<< HEAD
-!ENDIF 
-=======
 !ENDIF
->>>>>>> f6e2020b172a7b4e6592aa3703c0c2245f69cc6f
 
 # Begin Target
 
@@ -445,8 +408,6 @@ SOURCE=.\Diablo.rc
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
-<<<<<<< HEAD
-=======
 
 # Begin Source File
 
@@ -736,7 +697,6 @@ SOURCE=.\Source\trigs.h
 
 SOURCE=.\Source\wave.h
 # End Source File
->>>>>>> f6e2020b172a7b4e6592aa3703c0c2245f69cc6f
 # Begin Source File
 
 SOURCE=.\resource.h

@@ -1,39 +1,3 @@
-<<<<<<< HEAD
-language: cpp
-
-os:
-  - linux
-  - osx
-
-notifications:
-  email:
-    on_failure: change # default: always
-
-addons:
-  # Packages for Linux
-  apt:
-    packages:
-      - mingw-w64
-
-env:
-  - MAKE_BUILD=make
-  - MAKE_BUILD=debug
-
-before_install:
-  # Packages for OSX
-  - if [ $TRAVIS_OS_NAME = osx ]; then brew install mingw-w64; fi
-
-before_script:
-  - touch storm.dll
-  - touch diabloui.dll
-
-script:
-  - if [ $MAKE_BUILD = make ]; then make; fi
-  - if [ $MAKE_BUILD = debug ]; then make debug; fi
-
-after_script:
-  - make clean
-=======
 language: cpp
 
 os:
@@ -93,8 +57,8 @@ jobs:
       script:
         - |
           set -e
-          wget https://github.com/diasurgical/devilution-comparer/releases/download/v0.3.4/devilution-comparer-v0.3.4-x86_64-unknown-linux-gnu.tar.xz
-          tar xf devilution-comparer-v0.3.4-x86_64-unknown-linux-gnu.tar.xz
+          wget https://github.com/diasurgical/devilution-comparer/releases/download/v0.3.5/devilution-comparer-v0.3.5-x86_64-unknown-linux-gnu.tar.xz
+          tar xf devilution-comparer-v0.3.5-x86_64-unknown-linux-gnu.tar.xz
           echo '#!/bin/sh' | sudo tee /bin/wine
           echo 'docker run -v $(pwd):/root/devilution --entrypoint "/usr/bin/wine" diasurgical/riivaaja:stable $(basename $1) $2 $3' | sudo tee --append /bin/wine
           sudo chmod +x /bin/wine
@@ -105,4 +69,3 @@ jobs:
         - |
           set -e
           .travis/are-we-d1-yet.sh "$(< accuracy.txt)" $DISCORD_WEBHOOK
->>>>>>> f6e2020b172a7b4e6592aa3703c0c2245f69cc6f

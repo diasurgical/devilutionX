@@ -1,34 +1,6 @@
 LIBRARY "DiabloUI"
 
 EXPORTS
-<<<<<<< HEAD
-	UiDestroy
-	UiTitleDialog
-	UiInitialize
-	UiCopyProtError
-	UiAppActivate
-	UiValidPlayerName
-	UiSelHeroMultDialog
-	UiSelHeroSingDialog
-	UiCreditsDialog
-	UiMainMenuDialog
-	UiProgressDialog
-	UiProfileGetString
-	UiProfileCallback
-	UiProfileDraw
-	UiCategoryCallback
-	UiGetDataCallback
-	UiAuthCallback
-	UiSoundCallback
-	UiMessageBoxCallback
-	UiDrawDescCallback
-	UiCreateGameCallback
-	UiArtCallback
-	UiSelectGame
-	UiSelectProvider
-	UiCreatePlayerDescription
-	UiSetupPlayerInfo
-=======
 	UiValidPlayerName
 	UiAppActivate
 	UiArtCallback
@@ -62,4 +34,3 @@ EXPORTS
 	UiSetupPlayerInfo
 	UiSoundCallback
 	UiTitleDialog
->>>>>>> f6e2020b172a7b4e6592aa3703c0c2245f69cc6f

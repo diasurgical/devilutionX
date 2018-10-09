@@ -1,53 +1,3 @@
-<<<<<<< HEAD
-LIBRARY "DiabloUI"
-
-EXPORTS
-  UiValidPlayerName              @1 NONAME
-  UiValidPlayerName@4            @1 NONAME
-  UiAppActivate                  @2 NONAME
-  UiAppActivate@4                @2 NONAME
-  UiArtCallback                  @3 NONAME
-  UiAuthCallback                 @4 NONAME
-  UiBetaDisclaimer               @5 NONAME
-  UiCategoryCallback             @6 NONAME
-  UiCopyProtError                @7 NONAME
-  UiCreateGameCallback           @8 NONAME
-  UiCreateGameCriteria           @9 NONAME
-  UiCreatePlayerDescription      @10 NONAME
-  UiCreatePlayerDescription@12   @10 NONAME
-  UiCreditsDialog                @11 NONAME
-  UiCreditsDialog@4              @11 NONAME
-  UiDestroy                      @12 NONAME
-  UiDrawDescCallback             @13 NONAME
-  UiGetDataCallback              @14 NONAME
-  UiGetDefaultStats              @15 NONAME
-  UiInitialize                   @16 NONAME
-  UiMainMenuDialog               @17 NONAME
-  UiMainMenuDialog@16            @17 NONAME
-  UiMessageBoxCallback           @18 NONAME
-  UiOnPaint                      @19 NONAME
-  UiProfileCallback              @20 NONAME
-  UiProfileDraw                  @21 NONAME
-  UiProfileGetString             @22 NONAME
-  UiProgressDialog               @23 NONAME
-  UiProgressDialog@20            @23 NONAME
-  UiSelHeroMultDialog            @24 NONAME
-  UiSelHeroMultDialog@28         @24 NONAME
-  UiSelHeroSingDialog            @25 NONAME
-  UiSelHeroSingDialog@28         @25 NONAME
-  UiSelectGame                   @26 NONAME
-  UiSelectGame@24                @26 NONAME
-  UiSelectProvider               @27 NONAME
-  UiSelectProvider@24            @27 NONAME
-  UiSelectRegion                 @28 NONAME
-  UiSetBackgroundBitmap          @29 NONAME
-  UiSetSpawned                   @30 NONAME
-  UiSetupPlayerInfo              @31 NONAME
-  UiSetupPlayerInfo@12           @31 NONAME
-  UiSoundCallback                @32 NONAME
-  UiTitleDialog                  @33 NONAME
-  UiTitleDialog@4                @33 NONAME
-=======
 LIBRARY "DiabloUI"
 
 EXPORTS
@@ -105,4 +55,3 @@ EXPORTS
 	UiSoundCallback@12             @32 NONAME
 	UiTitleDialog                  @33
 	UiTitleDialog@4                @33 NONAME
->>>>>>> f6e2020b172a7b4e6592aa3703c0c2245f69cc6f
