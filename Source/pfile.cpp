@@ -5,8 +5,8 @@
 #define PASSWORD_SINGLE    "xrgyrkj1"
 #define PASSWORD_MULTI     "szqnlsk1"
 
-STATIC int pfile_cpp_init_value;
-STATIC char hero_names[MAX_CHARACTERS][PLR_NAME_LEN];
+static int pfile_cpp_init_value;
+static char hero_names[MAX_CHARACTERS][PLR_NAME_LEN];
 #ifndef NO_GLOBALS
 BOOL gbValidSaveFile; // idb
 #endif
@@ -281,7 +281,7 @@ BOOL __stdcall pfile_ui_set_hero_infos(BOOL (__stdcall *ui_add_hero_info)(_uiher
 				break;
 			GetSaveDirectory(FileName, 260, (int)lpSrcStr);
 			v1 = strrchr(FileName, '\\') + 1;
-			if ( v1 != (char *)1 && OpenFile(FileName, &ReOpenBuff, 0x4000u) != INVALID_HANDLE )
+			if ( v1 != (char *)1 && OpenFile(FileName, &ReOpenBuff, 0x4000u) != HFILE_ERROR )
 			{
 				if ( !SRegLoadString("Diablo\\Converted", (const char *)v1, 0, NewFileName, 260) )
 				{
@@ -289,7 +289,7 @@ BOOL __stdcall pfile_ui_set_hero_infos(BOOL (__stdcall *ui_add_hero_info)(_uiher
 					{
 						v3 = save_num++;
 						pfile_get_save_path(NewFileName, 260, v3);
-						if ( OpenFile(NewFileName, &ReOpenBuff, 0x4000u) == INVALID_HANDLE )
+						if ( OpenFile(NewFileName, &ReOpenBuff, 0x4000u) == HFILE_ERROR )
 							break;
 						if ( (unsigned int)save_num >= MAX_CHARACTERS )
 							goto LABEL_13;
