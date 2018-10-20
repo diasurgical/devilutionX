@@ -554,5 +554,9 @@ typedef struct {
 int rand_miniwin(void);
 void srand_miniwin(unsigned int seed);
 
+
+extern void LoadAndPlaySound(char *FilePath, int lVolume, int lPan);
+
+
 #include "miniwin_ddraw.h"
 #include "miniwin_dsound.h"

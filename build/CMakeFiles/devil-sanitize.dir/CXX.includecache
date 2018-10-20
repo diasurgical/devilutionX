@@ -657,6 +657,16 @@ SDL2/SDL.h
 /home/krash/CLionProjects/devilutionX/Stub/effects.cpp
 ../types.h
 /home/krash/CLionProjects/devilutionX/types.h
+iostream
+-
+fstream
+-
+iterator
+-
+vector
+-
+string
+-
 
 /home/krash/CLionProjects/devilutionX/Stub/fault.cpp
 ../types.h
@@ -816,6 +826,12 @@ stubs.h
 SDL_image.h
 -
 SDL_mixer.h
+-
+functional
+-
+iostream
+-
+utility
 -
 
 /home/krash/CLionProjects/devilutionX/Stub/storm.cpp

@@ -2,6 +2,12 @@
 
 #include "../types.h"
 
+#include <iostream>
+#include <fstream>
+#include <iterator>
+#include <vector>
+#include <string>
+
 #ifndef NO_GLOBALS
 int effects_cpp_init_value; // weak
 
@@ -893,6 +899,7 @@ BOOL __fastcall effect_is_playing(int nSFX)
 	TSFX *v1; // eax
 	TSnd *v2; // ecx
 
+printf("effect_is_playing\n");
 	v1 = &sgSFX[nSFX];
 	v2 = v1->pSnd;
 	if ( v2 )
@@ -912,12 +919,18 @@ void __cdecl sfx_stop()
 	}
 }
 
+
+
+
+void * MSounds[10][2];
+
 void __fastcall InitMonsterSND(int monst)
 {
 	TSnd *pSnd;
 	char name[MAX_PATH];
 	char *path;
 
+  
 	if ( !gbSndInited ) {
 		return;
 	}
@@ -929,13 +942,21 @@ void __fastcall InitMonsterSND(int monst)
 				sprintf(name, monsterdata[mtype].sndfile, monster_action_sounds[i], j + 1);
 				path = (char *)DiabloAllocPtr(strlen(name) + 1);
 				strcpy(path, name);
+        //printf("Name : %s\n\n\n", name);
 				pSnd = sound_file_load(path);
+        
 				Monsters[monst].Snds[i][j] = pSnd;
+
+        
+        printf("\n\nPSND %p\n\n\n", pSnd);
 				if ( !pSnd )
 					mem_free_dbg(path);
 			}
+     
 		}
+     
 	}
+  printf("MonsterWAV %s\n\n", path);
 }
 
 void __cdecl FreeEffects()
@@ -969,19 +990,27 @@ void __fastcall PlayEffect(int i, int mode)
 	}
 
 	int mi = monster[i]._mMTidx;
+
+  printf("Monster %d\n", mi);
 	TSnd *snd = Monsters[mi].Snds[mode][sndIdx];
-	if ( !snd || snd_playing(snd) ) {
-		return;
-	}
+  printf("MONSTER %i, MI %d, MODE %d, SNDINDX %d\n", Monsters[mi], mi, mode,sndIdx);
+  
+	// if ( !snd || snd_playing(snd) ) {
+	// 	return;
+
+	// }
 
 	int lVolume, lPan;
-	if ( !calc_snd_position(monster[i]._mx, monster[i]._my, &lVolume, &lPan) )
-		return;
+	// if ( !calc_snd_position(monster[i]._mx, monster[i]._my, &lVolume, &lPan) )
+	// 	return;
 
+ 
 	snd_play_snd(snd, lVolume, lPan);
 }
-// 4A22D5: using guessed type char gbSoundOn;
-// 676194: using guessed type char gbBufferMsgs;
+
+
+
+
 
 BOOL __fastcall calc_snd_position(int x, int y, int *plVolume, int *plPan)
 {
@@ -1010,12 +1039,21 @@ void __fastcall PlaySFX(int psfx)
 {
 	int v1; // eax
 
+  printf("PlaySFX\n");
 	v1 = RndSFX(psfx);
 	PlaySFX_priv(&sgSFX[v1], 0, 0, 0);
 }
 
 void __fastcall PlaySFX_priv(TSFX *pSFX, BOOL loc, int x, int y)
-{// Crash here.,, I forgot what the problem is but we can change that.
+{
+  
+  printf("PlaySFX_priv %s\n", pSFX->pszName);
+
+  char * WAV = pSFX->pszName;
+
+  LoadAndPlaySound(WAV,1,1);
+  
+  // Crash here.,, I forgot what the problem is but we can change that.
 	// if ( plr[myplr].pLvlLoad && gbMaxPlayers != 1 ) {
 	// 	return;
 	// }
@@ -1050,6 +1088,8 @@ void __fastcall PlaySFX_priv(TSFX *pSFX, BOOL loc, int x, int y)
 
 void __fastcall stream_play(TSFX *pSFX, int lVolume, int lPan)
 {
+ 
+  printf("stream_play\n");
 	sfx_stop();
 	lVolume += sound_get_or_set_sound_volume(1);
 	if ( lVolume >= VOLUME_MIN ) {
@@ -1105,6 +1145,9 @@ void __fastcall PlaySfxLoc(int psfx, int x, int y)
 	int v4; // eax
 	TSnd *v5; // ecx
 
+
+
+    printf("PlaySfxLoc\n");
 	v3 = x;
 	v4 = RndSFX(psfx);
 	if ( v4 >= 0 && v4 <= 3 )
@@ -1276,6 +1319,7 @@ void __stdcall effects_play_sound(char *snd_file)
 	TSnd **v3; // esi
 	//int v4; // eax
 
+
 	if ( gbSndInited && gbSoundOn )
 	{
 		v1 = 0;
@@ -1288,6 +1332,8 @@ void __stdcall effects_play_sound(char *snd_file)
 				return;
 		}
 		v3 = &sgSFX[v1].pSnd;
+  
+
 		//_LOBYTE(v4) = snd_playing(*v3);
 		if ( !snd_playing(*v3) )
 			snd_play_snd(*v3, 0, 0);

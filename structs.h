@@ -528,6 +528,10 @@ struct MonsterData
 	unsigned short mExp;
 };
 
+extern void * MSounds[10][2];
+
+
+
 struct CMonster
 {
 	unsigned char mtype;

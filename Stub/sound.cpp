@@ -2,6 +2,9 @@
 #include "stubs.h"
 #include <SDL_image.h>
 #include <SDL_mixer.h>
+#include <functional>
+#include <iostream>
+#include <utility>
 
 /*
 #ifndef NO_GLOBALS
@@ -34,7 +37,11 @@ void __fastcall snd_init(HWND hWnd)
 
 		printf("ERROR : %s\n\n", SDL_GetError());
 	}
-	if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) < 0) {
+	if (Mix_AllocateChannels(2) == true) {
+		printf("Opened 3 channels\n\n\n");
+	}
+
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
 		printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
 	}
 
@@ -45,7 +52,7 @@ void __fastcall snd_init(HWND hWnd)
 
 void *sgpMusicTrack;
 void *buffer;
-int bytestoread;
+// int bytestoread;
 int channel = 2;
 
 SDL_AudioSpec wanted;
@@ -54,35 +61,31 @@ static Uint32 audio_len;
 static Uint8 *audio_pos;
 
 void fill_audio(void *udata, Uint8 *stream, int len)
-    {
-        /* Only play if we have data left */
-        if ( audio_len == 0 )
-            return;
+{
+	/* Only play if we have data left */
+	if (audio_len == 0)
+		return;
 
-        /* Mix as much data as possible */
-        len = ( len > audio_len ? audio_len : len );
-        SDL_MixAudio(stream, audio_pos, len, SDL_MIX_MAXVOLUME);
-        audio_pos += len;
-        audio_len -= len;
-    }
-
-
-
-
+	/* Mix as much data as possible */
+	len = (len > audio_len ? audio_len : len);
+	SDL_MixAudio(stream, audio_pos, len, SDL_MIX_MAXVOLUME);
+	audio_pos += len;
+	audio_len -= len;
+}
 
 void __fastcall music_start(int nTrack)
 {
 	DUMMY();
-		wanted.freq = 22050;
-    wanted.format = AUDIO_S8;
-    wanted.channels = 5;    /* 1 = mono, 2 = stereo */
-    wanted.samples = 1024;  /* Good low-latency value for callback */
-    wanted.callback = fill_audio;
-    wanted.userdata = NULL;
-
+	wanted.freq = 22050;
+	wanted.format = AUDIO_S8;
+	wanted.channels = 5; /* 1 = mono, 2 = stereo */
+	wanted.samples = 1024; /* Good low-latency value for callback */
+	wanted.callback = fill_audio;
+	wanted.userdata = NULL;
 
 	gbSoundOn = true;
 	gbMusicOn = true;
+	int bytestoread;
 	int nread;
 	void *file;
 	int v6;
@@ -98,54 +101,42 @@ void __fastcall music_start(int nTrack)
 		// This is a hack.... I don't like it .
 		// If you know this better than I , please help clean it up.
 
-		
-
-		//SDL_OpenAudio(&wanted, NULL);
-
-		 if (nTrack == 0) {
-		   Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 16);
-			
-		 	channel = 2;
-		 }
-		 if (nTrack == 1) {
-		 	Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 1, 16);
-		 	channel = 1;
-		 }
-
+		Mix_OpenAudio(22050, AUDIO_S8, 1, 1024);
 		file = sgpMusicTrack;
 		bytestoread = (int)SFileGetFileSize((HANDLE)file, 0);
 		buffer = DiabloAllocPtr(bytestoread);
 		SFileReadFile(file, (char *)buffer, bytestoread, (unsigned long *)&nread, 0);
-		Mix_Chunk *Music = Mix_QuickLoad_WAV((Uint8 *)buffer);
 
+		SDL_RWops *rw = SDL_RWFromMem(buffer, bytestoread);
 
+		Mix_Music *Song = Mix_LoadMUS_RW(rw, 1);
 
-		Mix_PlayChannel(channel, Music, 0);
+		Mix_PlayMusic(Song, -1);
+		// Mix_PlayChannel(2, Music, 0);
 	}
 }
-
 
 void *SFXbuffer;
 int SFXsoundch = 1;
 void LoadAndPlaySound(char *FilePath, int lVolume, int lPan)
 {
+	int bytestoread;
 	int nrread;
 	void *file;
 
 	SFileOpenFile(FilePath, &SFXbuffer);
-	//Mix_OpenAudio(20000, AUDIO_S8, 3, 4096);
 	file = SFXbuffer;
 	bytestoread = (int)SFileGetFileSize((HANDLE)file, 0);
 	SFXbuffer = DiabloAllocPtr(bytestoread);
 	SFileReadFile(file, (char *)SFXbuffer, bytestoread, (unsigned long *)&nrread, 0);
-	Mix_Chunk *SoundFX = Mix_QuickLoad_WAV((Uint8 *)SFXbuffer);
 
-	Mix_PlayChannel(3, SoundFX, 0);
-	//Mix_FreeChunk(SoundFX);
+	SDL_RWops *rw = SDL_RWFromMem(SFXbuffer, bytestoread);
+
+	Mix_Chunk *SoundFX = Mix_LoadWAV_RW(rw, 1);
+
+	Mix_PlayChannel(-1, SoundFX, 0);
+	// Mix_FreeChunk(SoundFX);
 }
-
-
-
 
 void __cdecl music_stop()
 {
@@ -155,14 +146,20 @@ void __cdecl music_stop()
 
 BOOL __fastcall snd_playing(TSnd *pSnd)
 {
-	UNIMPLEMENTED();
+
+	printf("snd_playing \n");
+	// DUMMY();
+	// UNIMPLEMENTED();
 }
 
+
+//
 void __fastcall snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 {
-	
-	//printf("Sound File %s",pSnd );
-	//UNIMPLEMENTED();
+
+
+	Mix_PlayChannel(-1, (Mix_Chunk*)pSnd, 0);
+
 }
 
 void __fastcall snd_stop_snd(TSnd *pSnd)
@@ -172,10 +169,39 @@ void __fastcall snd_stop_snd(TSnd *pSnd)
 }
 
 
+
+
+
+void *MSFXBuffer;
 TSnd *__fastcall sound_file_load(char *path)
 {
-	printf("Sound_File_Load %s", path);
-	//UNIMPLEMENTED();
+
+	int bytestoread;
+	int nrread;
+	void *file;
+
+	SFileOpenFile(path, &file);
+
+
+	 bytestoread = (int)SFileGetFileSize((HANDLE)file, 0);	 
+	 MSFXBuffer = DiabloAllocPtr(bytestoread);
+	 SFileReadFile(file, (char *)MSFXBuffer, bytestoread, (unsigned long *)&nrread, 0);
+
+	 SDL_RWops *rw = SDL_RWFromMem(MSFXBuffer, bytestoread);
+
+
+
+
+	Mix_Chunk *SoundFX = Mix_LoadWAV_RW(rw, 1);
+
+	
+
+
+
+	return (TSnd*)SoundFX;
+
+//	printf("Sound_File_Load %s\n", path);
+	// UNIMPLEMENTED();
 }
 
 void __fastcall sound_file_cleanup(TSnd *sound_file)
@@ -197,5 +223,6 @@ int __fastcall sound_get_or_set_music_volume(int volume)
 
 void __fastcall snd_update(BOOL bStopAll)
 {
-	//DUMMY_PRINT("stopall: %d", bStopAll);
+
+	// DUMMY_PRINT("stopall: %d", bStopAll);
 }
