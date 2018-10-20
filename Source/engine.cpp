@@ -11,7 +11,7 @@ int orgseed; // weak
 int sgnWidth;
 int sglGameSeed; // weak
 #endif
-STATIC CRITICAL_SECTION sgMemCrit;
+static CRITICAL_SECTION sgMemCrit;
 #ifndef NO_GLOBALS
 int SeedCount; // weak
 int dword_52B99C; // bool valid - if x/y are in bounds

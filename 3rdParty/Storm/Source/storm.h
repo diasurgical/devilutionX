@@ -1295,7 +1295,7 @@ void __cdecl SDrawDestroy(void);
 bool __cdecl StormDestroy(void);
 bool __stdcall SFileSetBasePath(char *);
 void __cdecl SDrawRealizePalette(void);
-bool __cdecl SVidPlayContinue(void);
+BOOL __cdecl SVidPlayContinue(void);
 bool __stdcall SNetGetOwnerTurnsWaiting(int *);
 void * __stdcall SNetUnregisterEventHandler(int,void (__stdcall*)(struct _SNETEVENT *));
 void * __stdcall SNetRegisterEventHandler(int,void (__stdcall*)(struct _SNETEVENT *));

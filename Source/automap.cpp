@@ -5,8 +5,8 @@
 #ifndef NO_GLOBALS
 USHORT automaptype[512];
 #endif
-STATIC int MapX;
-STATIC int MapY;
+static int MapX;
+static int MapY;
 #ifndef NO_GLOBALS
 bool automapflag; // idb
 char AMbyte_4B7E4C[32];
