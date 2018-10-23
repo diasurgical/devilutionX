@@ -2189,6 +2189,9 @@ void __fastcall game_loop(bool bStartup)
 // 525650: using guessed type int gbRunGame;
 // 679660: using guessed type char gbMaxPlayers;
 
+
+bool CUSTOM_SDL_KEY_LSHIFT;
+
 void __cdecl game_logic()
 {
 	if ( PauseMode != 2 )
@@ -2223,6 +2226,11 @@ void __cdecl game_logic()
 				ProcessItems();
 				ProcessMissiles();
 			}
+
+
+
+
+
 #ifdef _DEBUG
 			if ( debug_mode_key_inverted_v )
 			{

@@ -759,36 +759,6 @@ Source/debug.cpp.s:
 	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/debug.cpp.s
 .PHONY : Source/debug.cpp.s
 
-Source/diablo.o: Source/diablo.cpp.o
-
-.PHONY : Source/diablo.o
-
-# target to build an object file
-Source/diablo.cpp.o:
-	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/diablo.cpp.o
-	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/diablo.cpp.o
-.PHONY : Source/diablo.cpp.o
-
-Source/diablo.i: Source/diablo.cpp.i
-
-.PHONY : Source/diablo.i
-
-# target to preprocess a source file
-Source/diablo.cpp.i:
-	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/diablo.cpp.i
-	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/diablo.cpp.i
-.PHONY : Source/diablo.cpp.i
-
-Source/diablo.s: Source/diablo.cpp.s
-
-.PHONY : Source/diablo.s
-
-# target to generate assembly for a file
-Source/diablo.cpp.s:
-	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/diablo.cpp.s
-	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/diablo.cpp.s
-.PHONY : Source/diablo.cpp.s
-
 Source/doom.o: Source/doom.cpp.o
 
 .PHONY : Source/doom.o
@@ -2349,6 +2319,36 @@ Stub/capture.cpp.s:
 	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/capture.cpp.s
 .PHONY : Stub/capture.cpp.s
 
+Stub/diablo.o: Stub/diablo.cpp.o
+
+.PHONY : Stub/diablo.o
+
+# target to build an object file
+Stub/diablo.cpp.o:
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/diablo.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/diablo.cpp.o
+.PHONY : Stub/diablo.cpp.o
+
+Stub/diablo.i: Stub/diablo.cpp.i
+
+.PHONY : Stub/diablo.i
+
+# target to preprocess a source file
+Stub/diablo.cpp.i:
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/diablo.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/diablo.cpp.i
+.PHONY : Stub/diablo.cpp.i
+
+Stub/diablo.s: Stub/diablo.cpp.s
+
+.PHONY : Stub/diablo.s
+
+# target to generate assembly for a file
+Stub/diablo.cpp.s:
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/diablo.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/diablo.cpp.s
+.PHONY : Stub/diablo.cpp.s
+
 Stub/diabloui.o: Stub/diabloui.cpp.o
 
 .PHONY : Stub/diabloui.o
@@ -3096,9 +3096,6 @@ help:
 	@echo "... Source/debug.o"
 	@echo "... Source/debug.i"
 	@echo "... Source/debug.s"
-	@echo "... Source/diablo.o"
-	@echo "... Source/diablo.i"
-	@echo "... Source/diablo.s"
 	@echo "... Source/doom.o"
 	@echo "... Source/doom.i"
 	@echo "... Source/doom.s"
@@ -3255,6 +3252,9 @@ help:
 	@echo "... Stub/capture.o"
 	@echo "... Stub/capture.i"
 	@echo "... Stub/capture.s"
+	@echo "... Stub/diablo.o"
+	@echo "... Stub/diablo.i"
+	@echo "... Stub/diablo.s"
 	@echo "... Stub/diabloui.o"
 	@echo "... Stub/diabloui.i"
 	@echo "... Stub/diabloui.s"

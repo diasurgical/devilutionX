@@ -34,6 +34,9 @@ extern int PauseMode; // weak
 extern int sgnTimeoutCurs;
 extern char sgbMouseDown; // weak
 extern int color_cycle_timer; // weak
+extern bool CUSTOM_SDL_KEY_LSHIFT;
+
+
 
 void __cdecl diablo_cpp_init();
 void __cdecl FreeGameMem();

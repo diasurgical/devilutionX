@@ -62,7 +62,6 @@ static int translate_sdl_key(SDL_Keysym key)
 		return VK_OEM_COMMA;
 
 	case SDLK_LSHIFT:
-		printf("LEFT SHIFT\n");
 		return VK_LSHIFT;
 	case SDLK_RSHIFT:
 		// Not handled yet

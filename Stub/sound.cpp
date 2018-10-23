@@ -180,19 +180,16 @@ TSnd *__fastcall sound_file_load(char *path)
 	int nrread;
 	void *file;
 
+
+//This opens the file and reads it, makes Mix_chunk pointer to it.
+//Once this is done the pointer is stored TSnd Struct
+
 	SFileOpenFile(path, &file);
-
-
 	 bytestoread = (int)SFileGetFileSize((HANDLE)file, 0);	 
 	 MSFXBuffer = DiabloAllocPtr(bytestoread);
 	 SFileReadFile(file, (char *)MSFXBuffer, bytestoread, (unsigned long *)&nrread, 0);
-
 	 SDL_RWops *rw = SDL_RWFromMem(MSFXBuffer, bytestoread);
-
-
-
-
-	Mix_Chunk *SoundFX = Mix_LoadWAV_RW(rw, 1);
+	 Mix_Chunk *SoundFX = Mix_LoadWAV_RW(rw, 1);
 
 	
 

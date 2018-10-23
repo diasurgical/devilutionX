@@ -9,10 +9,22 @@
 #include "../types.h"
 #include "stubs.h"
 
+
+PlayerStruct *PlayerS;
+
+
+
+
+
+
 static std::deque<MSG> message_queue;
 
 static int translate_sdl_key(SDL_Keysym key)
 {
+
+
+
+
 	int sym = key.sym;
 	switch (sym) {
 	case SDLK_ESCAPE:
@@ -63,13 +75,18 @@ static int translate_sdl_key(SDL_Keysym key)
 		return VK_OEM_PERIOD;
 	case SDLK_COMMA:
 		return VK_OEM_COMMA;
-
-	case SDLK_LSHIFT:
+	
+//	case SDLK_LSHIFT:
+//	printf("Fooooooo\n");
+		//PlayerS._pmode = 5;
+		//
+//		return VK_SHIFT;
 	case SDLK_RSHIFT:
 		// Not handled yet
 		return -1;
 
 	default:
+
 		if (sym >= SDLK_a && sym <= SDLK_z) {
 			return 'A' + (sym - SDLK_a);
 		} else if (sym >= SDLK_0 && sym <= SDLK_9) {
@@ -77,6 +94,8 @@ static int translate_sdl_key(SDL_Keysym key)
 		} else if (sym >= SDLK_F1 && sym <= SDLK_F12) {
 			return VK_F1 + (sym - SDLK_F1);
 		}
+		CUSTOM_SDL_KEY_LSHIFT = 0;
+		
 
 		DUMMY_PRINT("unknown key: name=%s sym=0x%X scan=%d mod=0x%X", SDL_GetKeyName(sym), sym, key.scancode, key.mod);
 		return -1;
