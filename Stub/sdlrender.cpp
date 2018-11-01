@@ -13,8 +13,7 @@ int SCREEN_HEIGHT = 500;
 int LogoWidth;
 int LogoHeight;
 
-SDL_Texture *DiablologoAnimT;
-FC_Font *font;
+
 
 SDL_Rect textureRect;
 SDL_Rect windowRect;
@@ -26,24 +25,80 @@ SDL_Rect ReplayIntroBox;
 SDL_Rect ShowCreditsBox;
 SDL_Rect ExitBox;
 
-SDL_Surface *DiabloTitle;
+
+// DiabloMenu Items
+
+SDL_Rect MainMenuItemsWRect;
+SDL_Rect MainMenuItemsTRect;
+SDL_Rect CreateHeroBox;
+SDL_Rect SinglePlayerMenuCancelBox;
+
+
+
 SDL_Event input;
-SDL_Texture *CursorTexture;
+
 
 bool SinglePlayerMenuItemsLoaded = 0;
 bool DiabloImageLoaded = 0;
 bool DiabloMainMenuListLoaded = 0;
-SDL_Texture *MenuSelectNewHeroTexture;
-SDL_Rect SinglePlayerMenuCancelBox;
+
 struct timespec ts;
 
-// DiabloMenu Items
-SDL_Surface *MainMenuItemsSurface;
-SDL_Texture *MainMenuItemsTexture;
-SDL_Rect MainMenuItemsWRect;
-SDL_Rect MainMenuItemsTRect;
 
-SDL_Rect CreateHeroBox;
+
+//////////////////////////////////////
+// things I need to unload...
+
+int FontLoaded = 0;
+
+
+FC_Font     *  Subfont = FC_CreateFont();
+
+SDL_Texture *  MainMenuItemsTexture;
+SDL_Texture *  DiablologoAnimT;
+SDL_Texture *  CursorTexture;
+SDL_Texture *  MenuSelectNewHeroTexture;
+SDL_Texture *  CreateHeroDialogTextureW;
+SDL_Texture *  CreateHeroDialogTextureR;
+SDL_Texture *  CreateHeroDialogTextureS;
+
+SDL_Surface *  MainMenuItemsSurface;
+SDL_Surface *  MenuSelectNewHeroSurface;
+SDL_Surface *  CreateHeroDialogSurface;
+SDL_Surface *  CursorImg ;
+SDL_Surface *  DiabloTitle;
+
+FC_Font     *  font;
+
+/////////////////////////////////////////
+
+
+void FreeMenuItems(){
+
+SDL_FreeSurface(MainMenuItemsSurface);
+SDL_FreeSurface(MenuSelectNewHeroSurface);
+SDL_FreeSurface(CreateHeroDialogSurface);
+SDL_FreeSurface(CreateHeroDialogSurface);
+SDL_FreeSurface(CursorImg);
+SDL_FreeSurface(DiabloTitle);
+
+
+SDL_DestroyTexture(MainMenuItemsTexture);
+SDL_DestroyTexture(DiablologoAnimT);
+SDL_DestroyTexture(CursorTexture);
+SDL_DestroyTexture(MenuSelectNewHeroTexture);
+SDL_DestroyTexture(CreateHeroDialogTextureW);
+SDL_DestroyTexture(CreateHeroDialogTextureR);
+SDL_DestroyTexture(CreateHeroDialogTextureS);
+
+
+}
+
+
+
+
+
+
 
 char gLDirectory[FILENAME_MAX];
 void GetWorkingLocationOfFile(char *RelativeFile)
@@ -54,14 +109,17 @@ void GetWorkingLocationOfFile(char *RelativeFile)
 
 uint32_t XgetTick()
 {
-	// struct timespec ts;
+
 	unsigned theTick = 0U;
 	printf("This is supposed to replace GitTicks()");
-	//	if (clock_gettime(CLOCK_MONOTONIC, &ts) != 0) {
-	// error
-	//	}
 	return theTick;
 }
+
+
+
+
+
+
 
 void SDLCreateDiabloCursor()
 {
@@ -74,34 +132,19 @@ void SDLCreateDiabloCursor()
 	CusorLocation.w = 33;
 
 	GetWorkingLocationOfFile("/Xresources/cursor.png");
-	SDL_Surface *CursorImg = IMG_Load(gLDirectory);
+	CursorImg = IMG_Load(gLDirectory);
 	CursorTexture = SDL_CreateTextureFromSurface(renderer, CursorImg);
 	SDL_UpdateWindowSurface(window);
 }
 
-void SDL_MAGICAL_RENDER(int x, int y, int w, int h)
-{
 
-	printf("SDL_MAGICAL RENDER I Am Not Implemented\n");
-	// if (window != 0) {
-
-	// 	int depth = 12;
-
-	// 	SDL_Surface  * image = SDL_CreateRGBSurfaceFrom(destmemarea, SCREEN_WIDTH / 2, SCREEN_HEIGHT, depth,
-	// SCREEN_WIDTH, 0, 0, 0, 0); 	SDL_Texture  * texture = SDL_CreateTextureFromSurface(renderer, image);
-	// 	SDL_RenderCopy(renderer, texture, NULL, NULL);
-	// 	SDL_RenderPresent(renderer);
-	// 	SDL_UpdateWindowSurface(window);
-	// }
-}
 
 void SdlDiabloMainWindow()
 {
 
 	SDL_Init(SDL_INIT_EVERYTHING);
 	IMG_Init(IMG_INIT_PNG);
-	window = SDL_CreateWindow("Diablo", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT,
-	                          SDL_WINDOW_SHOWN);
+	window = SDL_CreateWindow("Diablo", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 	renderer = SDL_CreateRenderer(window, -1, 0);
 	printf("Window And Renderer Created!\n");
 }
@@ -112,7 +155,7 @@ void LoadDiabloMenuLogoImage()
 	int LogoHeight;
 
 	GetWorkingLocationOfFile("/Xresources/Diablo_Logo.png");
-	DiabloTitle = IMG_Load(gLDirectory);
+	DiabloTitle     = IMG_Load(gLDirectory);
 	DiablologoAnimT = SDL_CreateTextureFromSurface(renderer, DiabloTitle);
 
 	// SDL_QueryTexture() method gets the width and height of the texture
@@ -121,6 +164,9 @@ void LoadDiabloMenuLogoImage()
 	SDL_QueryTexture(DiablologoAnimT, NULL, NULL, &LogoWidth, &LogoHeight);
 	SDL_FreeSurface(DiabloTitle);
 }
+
+
+
 
 void DiabloMainMenuItemsLoaded()
 {
@@ -155,9 +201,7 @@ void CreateMainDiabloMenu()
 		DiabloImageLoaded = 1;
 	}
 
-	//  font = FC_CreateFont();
-	//	FC_LoadFont(font, renderer, "C:/Users/Krash/Desktop/devilutionX/fonts/Exocet.ttf", 40, FC_MakeColor(112, 106,
-	// 70, 255), TTF_STYLE_NORMAL);
+
 
 	// get the width of a frame by dividing with 4
 	textureRect.w /= totalFrames;
@@ -201,8 +245,7 @@ void RenderDiabloLogo()
 	// SDL_RenderCopy(renderer, MainMenuItemsTexture, &MainMenuItemsWRect, &MainMenuItemsTRect);
 }
 
-int FontLoaded = 0;
-FC_Font *Subfont = FC_CreateFont();
+
 
 void SDL_RenderDiabloMainPage()
 {
@@ -259,8 +302,7 @@ void SDL_RenderDiabloMainPage()
 		printf("LoadFont\n\n");
 		FontLoaded = 1;
 	}
-	FC_Draw(Subfont, renderer, 10, SCREEN_HEIGHT - 40,
-	        "DedicaTed To David Brevik, Erich Schaefer, Max Schaefer, MaTT Uelman and");
+	FC_Draw(Subfont, renderer, 10, SCREEN_HEIGHT - 40, "DedicaTed To David Brevik, Erich Schaefer, Max Schaefer, MaTT Uelman and");
 	FC_Draw(Subfont, renderer, 10, SCREEN_HEIGHT - 25, "The Blizzard North Team ThaT Gave Us A Childhood.");
 
 	SDL_RenderPresent(renderer);
@@ -268,13 +310,16 @@ void SDL_RenderDiabloMainPage()
 
 void CreateNewHeroClickBox() {}
 
+
+
+
 void LoadSinglePlayerMenuItems()
 {
 
 	CreateNewHeroClickBox();
 
 	GetWorkingLocationOfFile("/Xresources/MenuSelectNewHero.png");
-	SDL_Surface *MenuSelectNewHeroSurface = IMG_Load(gLDirectory);
+	MenuSelectNewHeroSurface = IMG_Load(gLDirectory);
 	MenuSelectNewHeroTexture = SDL_CreateTextureFromSurface(renderer, MenuSelectNewHeroSurface);
 	SinglePlayerMenuItemsLoaded = 1;
 }
@@ -297,12 +342,6 @@ void SDL_RenderDiabloSinglePlayerPage()
 
 		LoadSinglePlayerMenuItems();
 	}
-
-	/*
-
-	X 520 , Y 454
-	X 615 , Y 471
-*/
 
 	SinglePlayerMenuCancelBox.x = 520;
 	SinglePlayerMenuCancelBox.y = 454;
@@ -421,19 +460,17 @@ void RenderCharNames()
 	SDL_RenderPresent(renderer);
 }
 
-bool LoadCreateHeroDialogImages = 0;
-SDL_Texture *  CreateHeroDialogTextureW;
-SDL_Texture *  CreateHeroDialogTextureR;
-SDL_Texture *  CreateHeroDialogTextureS;
 
-bool SorcerorCreateSelected  = 0;
-bool RogueCreateSelected     = 0;
-bool WarriorCreateSelected   = 1;  
+
+bool LoadCreateHeroDialogImages = 0;
+bool SorcerorCreateSelected     = 0;
+bool RogueCreateSelected        = 0;
+bool WarriorCreateSelected      = 1;  
 
 void LoadCreateHeroDialogMenu(){
 		GetWorkingLocationOfFile("/Xresources/warriorcreate.bmp");
 
-		SDL_Surface *CreateHeroDialogSurface = IMG_Load(gLDirectory);
+		CreateHeroDialogSurface = IMG_Load(gLDirectory);
 		CreateHeroDialogTextureW = SDL_CreateTextureFromSurface(renderer, CreateHeroDialogSurface);
 
 		GetWorkingLocationOfFile("/Xresources/roguecreate.bmp");

@@ -18,7 +18,7 @@
 		abort(); \
 	}
 
-#define DUMMY() eprintf("DUMMY: %s @ %s:%d\n", __FUNCTION__, __FILE__, __LINE__)
+#define DUMMY() /*eprintf("DUMMY: %s @ %s:%d\n", __FUNCTION__, __FILE__, __LINE__)*/
 
 #define DUMMY_ONCE() \
 	{ \

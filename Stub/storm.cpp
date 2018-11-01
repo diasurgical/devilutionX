@@ -133,7 +133,7 @@ BOOL STORMAPI SFileOpenFile(const char *filename, HANDLE *phFile)
 	}
 
 	if (!result || !*phFile) {
-		eprintf("%s: Not found: %s\n", __FUNCTION__, filename);
+		/*eprintf("%s: Not found: %s\n", __FUNCTION__, filename);*/
 	}
 	return result;
 }

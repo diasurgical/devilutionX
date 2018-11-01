@@ -39,7 +39,7 @@ BOOL __stdcall UiSelHeroSingDialog(BOOL(__stdcall *fninfo)(BOOL(__stdcall *fninf
 
 	// If a hero is available, load it, otherwise create a new one
 	if (!hero_infos.empty()) {
-		const char *hero_name = hero_infos[0].name;
+		const char *hero_name = chr_name_str;
 		DUMMY_PRINT("use hero: %s", hero_name);
 		strcpy(name, hero_name);
 

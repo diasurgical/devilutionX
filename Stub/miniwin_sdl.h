@@ -70,3 +70,4 @@ void SDLCreateDiabloCursor();
 void SDL_RenderDiabloSinglePlayerPage();
 void RenderCharNames();
 void SDL_Diablo_UI();
+void FreeMenuItems();

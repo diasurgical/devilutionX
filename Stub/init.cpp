@@ -262,6 +262,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 							effects_play_sound("Sfx\\Items\\Titlslct.wav");
 							strcpy(chr_name_str, hero_names[0]);
 							printf("Player %s\n", chr_name_str);
+							FreeMenuItems();
 							break;
 						}
 
@@ -272,6 +273,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 							effects_play_sound("Sfx\\Items\\Titlslct.wav");
 							strcpy(chr_name_str, hero_names[1]);
 							printf("Player %s\n", chr_name_str);
+							FreeMenuItems();
 							// XStartGame();
 							break;
 						}
@@ -282,6 +284,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 							effects_play_sound("Sfx\\Items\\Titlslct.wav");
 							strcpy(chr_name_str, hero_names[2]);
 							printf("Player %s\n", chr_name_str);
+							FreeMenuItems();
 							break;
 							// XStartGame();
 						}
@@ -292,6 +295,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 							effects_play_sound("Sfx\\Items\\Titlslct.wav");
 							strcpy(chr_name_str, hero_names[3]);
 							printf("Player %s\n", chr_name_str);
+							FreeMenuItems();
 							break;
 							// XStartGame();
 						}
@@ -302,7 +306,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 							effects_play_sound("Sfx\\Items\\Titlslct.wav");
 							strcpy(chr_name_str, hero_names[4]);
 							printf("Player %s\n", chr_name_str);
-
+							FreeMenuItems();
 							break;
 							// XStartGame();
 						}
@@ -313,6 +317,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 							effects_play_sound("Sfx\\Items\\Titlslct.wav");
 							strcpy(chr_name_str, hero_names[5]);
 							printf("Player %s\n", chr_name_str);
+							FreeMenuItems();
 							break;
 							// XStartGame();
 						}
@@ -321,9 +326,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 						    (x < SinglePlayerMenuCancelBox.w) && (y < SinglePlayerMenuCancelBox.h)) { // ExitBox clicked
 							printf("CancelBox Diablo\n");
 							effects_play_sound("Sfx\\Items\\Titlslct.wav");
-
-							//	quit = true;
-							//	goto LABEL_16;
+							
 							menu = 0;
 						}
 						if ((x > CreateHeroBox.x) && (y > CreateHeroBox.y) && (x < CreateHeroBox.w) &&
