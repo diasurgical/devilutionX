@@ -54,6 +54,8 @@ int FontLoaded = 0;
 
 FC_Font     *  Subfont = FC_CreateFont();
 
+
+SDL_Texture *  CreditsTexture;
 SDL_Texture *  MainMenuItemsTexture;
 SDL_Texture *  DiablologoAnimT;
 SDL_Texture *  CursorTexture;
@@ -62,6 +64,7 @@ SDL_Texture *  CreateHeroDialogTextureW;
 SDL_Texture *  CreateHeroDialogTextureR;
 SDL_Texture *  CreateHeroDialogTextureS;
 
+SDL_Surface *  CreditsSurface;
 SDL_Surface *  MainMenuItemsSurface;
 SDL_Surface *  MenuSelectNewHeroSurface;
 SDL_Surface *  CreateHeroDialogSurface;
@@ -95,6 +98,30 @@ SDL_DestroyTexture(CreateHeroDialogTextureS);
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/////Not mine
+
+
+
+
+
+////
 
 
 
@@ -326,8 +353,11 @@ void LoadSinglePlayerMenuItems()
 
 void SDL_RenderDiabloSinglePlayerPage()
 {
+	SDL_RenderClear(renderer);
 	RenderDiabloLogo();
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+
+
 
 	int cx, cy;
 	SDL_GetMouseState(&cx, &cy);
@@ -373,7 +403,7 @@ void SDL_RenderDiabloSinglePlayerPage()
 	SDL_RenderCopy(renderer, DiablologoAnimT, &textureRect, &windowRect);
 	SDL_RenderCopy(renderer, CursorTexture, NULL, &CusorLocation);
 
-	// SDL_RenderPresent(renderer);
+	
 }
 
 void LoadFont()

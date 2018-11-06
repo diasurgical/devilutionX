@@ -49,6 +49,7 @@ void __stdcall mainmenu_create_hero(char *a1, char *a2)
 
 int __stdcall mainmenu_select_hero_dialog(int u1, int u2, int u3, int u4, int mode, char *cname, int clen, char *cdesc, int cdlen, int *multi) /* fix args */
 {
+
 	int v10; // eax
 	int a6; // [esp+8h] [ebp-8h]
 	int a5; // [esp+Ch] [ebp-4h]

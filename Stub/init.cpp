@@ -139,8 +139,9 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 	snd_init(0);
 	init_archives();
 	music_start(5);
-	printf("This is Run And We need a Wile Loop");
 
+	char NewHeroName[17] = {0};
+	signed int NewHeroNameIndex = 0;
 	int menu = 0;
 	SDL_Event event;
 	int x, y;
@@ -153,6 +154,10 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 
 	SDLCreateDiabloCursor();
 	HideCursor();
+	//ClearScreenBuffer();
+
+	SDL_StartTextInput();
+	const Uint8 *state = SDL_GetKeyboardState(NULL);
 
 	while (1 && quit == false) {
 
@@ -179,6 +184,34 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 
 			CreateMenuDialogBox();
 		}
+		if (menu == 4) {
+			SDL_RenderDiabloSinglePlayerPage();
+			SDL_RenderPresent(renderer);
+
+
+			
+
+							// NewHeroName[NewHeroNameIndex] = '\0';
+				// memset(&NewHeroName[NewHeroNameIndex], 0, sizeof(char));
+				// --NewHeroNameIndex;
+				// printf("HeroName %s \n", NewHeroName);
+		
+
+
+
+
+			
+
+			if (event.type == SDL_KEYDOWN && NewHeroNameIndex < 17) {
+
+				// char *keyz = SDL_GetKeyName(event.key.keysym.sym);
+				// printf("SDLKEY PRESSED %s\n", keyz);
+				// NewHeroName[NewHeroNameIndex] = *keyz;
+				// NewHeroNameIndex++;
+
+				//	printf("HeroName %s", NewHeroName);
+			}
+		}
 
 		if (SDL_PollEvent(&event)) {
 
@@ -186,7 +219,6 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 
 				quit = true;
 				SDL_Quit();
-				//	goto LABEL_16;
 			}
 
 			if (event.type == SDL_MOUSEMOTION) {
@@ -195,8 +227,14 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 				y = event.motion.y;
 			}
 
+			// if (event.type == SDL_KEYDOWN && menu == 4 ){
+			// 	char * keyz = SDL_GetKeyName(event.key.keysym.sym);
+			// 	printf("SDLKEY PRESSED %s", keyz);
+
+			// 	}
+
 			// If a key was pressed
-			if (event.type == SDL_MOUSEBUTTONDOWN) {
+			if (event.type == SDL_MOUSEBUTTONDOWN /*&& event.button.clicks == 2*/) {
 
 				if (event.button.button == SDL_BUTTON_LEFT) {
 					x = event.button.x;
@@ -209,22 +247,18 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 						    (y < SinglePlrBox.h)) { // Single clicked
 							printf("SinglePlayer Diablo\n");
 							// effects_play_sound("Sfx\\Items\\Titlslct.wav");
-							// a2 = 2;
 							menu = 2;
 						}
 
 						if ((x > MultiPlrBox.x) && (y > MultiPlrBox.y) && (x < MultiPlrBox.w) &&
 						    (y < MultiPlrBox.h)) { // MultiBox clicked
 							printf("MultiPlayer Diablo\n");
-							// effects_play_sound("Sfx\\Items\\Titlslct.wav");
-							// v1 = mainmenu_multi_player();
-							//	goto LABEL_15;
+
 						}
 						if ((x > ReplayIntroBox.x) && (y > ReplayIntroBox.y) && (x < ReplayIntroBox.w) &&
 						    (y < ReplayIntroBox.h)) { // Reply Intro clicked
 							printf("Replay Intro\n");
-							// effects_play_sound("Sfx\\Items\\Titlslct.wav");
-							//	goto LABEL_10;
+
 						}
 						if ((x > ShowCreditsBox.x) && (y > ShowCreditsBox.y) && (x < ShowCreditsBox.w) &&
 						    (y < ShowCreditsBox.h)) { // ShowCredits clicked
@@ -326,7 +360,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 						    (x < SinglePlayerMenuCancelBox.w) && (y < SinglePlayerMenuCancelBox.h)) { // ExitBox clicked
 							printf("CancelBox Diablo\n");
 							effects_play_sound("Sfx\\Items\\Titlslct.wav");
-							
+
 							menu = 0;
 						}
 						if ((x > CreateHeroBox.x) && (y > CreateHeroBox.y) && (x < CreateHeroBox.w) &&
@@ -337,7 +371,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 					}
 					if (menu == 3) {
 						// SinglePlayerMenuItemsLoaded = 0;
-						printf("menu X%d Y%d", x, y);
+						printf("\n\nmenu3 X%d Y%d \n ", x, y);
 
 						int WarriorSelectBoxY = 379;
 						int WarriorSelectBoxW = 100;
@@ -370,36 +404,69 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 						SorcerorSelectBox.w = SorcerorSelectBox.x + 100;
 						SorcerorSelectBox.h = SorcerorSelectBox.y + 30;
 
-						//	397 323
+						SDL_Rect CreateHeroCancelBox;
+						CreateHeroCancelBox.y = 450;
+						CreateHeroCancelBox.x = 450;
+						CreateHeroCancelBox.w = CreateHeroCancelBox.x + 100;
+						CreateHeroCancelBox.h = CreateHeroCancelBox.y + 30;
 
 						if ((x > WarriorSelectBox.x) && (y > WarriorSelectBox.y) && (x < WarriorSelectBox.w) &&
 						    (y < WarriorSelectBox.h)) {
 
 							printf("I was hit\n\n\n");
-							WarriorCreateSelected  = 1;
-							RogueCreateSelected    = 0;
+							WarriorCreateSelected = 1;
+							RogueCreateSelected = 0;
 							SorcerorCreateSelected = 0;
+							menu = 4;
 						}
 						if ((x > RogueSelectBox.x) && (y > RogueSelectBox.y) && (x < RogueSelectBox.w) &&
 						    (y < RogueSelectBox.h)) {
 
 							printf("I was hit\n\n\n");
-							WarriorCreateSelected  = 0;
-							RogueCreateSelected    = 1;
+							WarriorCreateSelected = 0;
+							RogueCreateSelected = 1;
 							SorcerorCreateSelected = 0;
+							menu = 4;
 						}
 						if ((x > SorcerorSelectBox.x) && (y > SorcerorSelectBox.y) && (x < SorcerorSelectBox.w) &&
 						    (y < SorcerorSelectBox.h)) {
 
 							printf("I was hit\n\n\n");
-							WarriorCreateSelected  = 0;
-							RogueCreateSelected    = 0;
+							WarriorCreateSelected = 0;
+							RogueCreateSelected = 0;
 							SorcerorCreateSelected = 1;
+							menu = 4;
 						}
 
-						// SorcerorCreateSelected;
-						// WarriorCreateSelected;
-						// RogueCreateSelected;
+						if ((x > CreateHeroCancelBox.x) && (y > CreateHeroCancelBox.y) && (x < CreateHeroCancelBox.w) &&
+						    (y < CreateHeroCancelBox.h)) {
+
+							printf("Cancel\n\n\n");
+							menu = 2;
+						}
+					}
+					if (menu == 4) {
+						printf("sozdat geroya");
+
+						// if (SDL_PollEvent(&event)) {
+						// 	if (event.type == SDL_KEYDOWN && menu == 4) {
+						// 		char *keyz = SDL_GetKeyName(event.key.keysym.sym);
+						// 		printf("SDLKEY PRESSED %s\n", keyz);
+						// 	}
+						// }
+
+						SDL_Rect CreateHeroCancelBox;
+						CreateHeroCancelBox.y = 450;
+						CreateHeroCancelBox.x = 450;
+						CreateHeroCancelBox.w = CreateHeroCancelBox.x + 100;
+						CreateHeroCancelBox.h = CreateHeroCancelBox.y + 30;
+
+						if ((x > CreateHeroCancelBox.x) && (y > CreateHeroCancelBox.y) && (x < CreateHeroCancelBox.w) &&
+						    (y < CreateHeroCancelBox.h)) {
+
+							printf("Cancel\n\n\n");
+							menu = 3;
+						}
 					}
 				}
 			}

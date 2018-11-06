@@ -282,6 +282,7 @@ void sdl_present_surface()
 
 void __cdecl lock_buf_priv()
 {
+
 	const int pitch = 640 + 64 + 64;
 
 	if (!gpBuffer) {
