@@ -61,6 +61,7 @@ class StubSurface : public IDirectDrawSurface
 	{
 		DUMMY_ONCE();
 
+
 		assert(lpDDSrcSurface == lpDDSBackBuf);
 
 		int w = lpSrcRect->right - lpSrcRect->left + 1;
@@ -69,11 +70,24 @@ class StubSurface : public IDirectDrawSurface
 		SDL_Rect src_rect = {lpSrcRect->left, lpSrcRect->top, w, h};
 		SDL_Rect dst_rect = {(int)dwX, (int)dwY, w, h};
 
+
+		//printf("SRC   %d %d %d %d \n",src_rect.x, src_rect.y, src_rect.w, src_rect.h  );
+		//printf("DST   %d %d %d %d \n",dst_rect.x, dst_rect.y, dst_rect.w, dst_rect.h  );
+
 		// Convert from 8-bit to 32-bit
+
+
 		SDL_CHECK(SDL_BlitSurface(pal_surface, &src_rect, surface, &dst_rect));
 
+		//char * foo = "dasdasdas";
+		//printf("I CRASH\n %s ", *foo);
+
+
+		//64 160 640 480
+		//0 0 640 480
 		surface_dirty = true;
 		return S_OK;
+
 	}
 
 	METHOD HRESULT DeleteAttachedSurface(DWORD dwFlags, LPDIRECTDRAWSURFACE lpDDSAttachedSurface) { UNIMPLEMENTED(); }
@@ -223,9 +237,11 @@ static StubPalette stub_palette;
 void sdl_init_video()
 {
 	SDL_CHECK(SDL_Init(SDL_INIT_VIDEO));
+	//moved to SDLrender.cpp
 
-	window =
-	    SDL_CreateWindow("devil-test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_SHOWN);
+/*
+
+	window =  SDL_CreateWindow("devil-test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_SHOWN);
 	assert(window);
 
 	// Hack since ShowCursor is called before dx_init()
@@ -234,16 +250,11 @@ void sdl_init_video()
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
 	assert(renderer);
 
+
 	// FUTURE: Use SDL_CreateRGBSurfaceWithFormat with SDL_PIXELFORMAT_RGBA8888
-	surface = SDL_CreateRGBSurface(0, 640, 480, 32, 0xFF000000, 0x00FF0000, 0x0000FF00, 0x000000FF);
-	assert(surface);
+	palette = SDL_AllocPalette(256);
 
-	texture =
-	    SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, 640, 480);
-	assert(texture);
-
-    palette = SDL_AllocPalette(256);
-	assert(palette);
+	assert(palette);*/
 }
 
 void __fastcall dx_init(HWND hWnd)
@@ -263,8 +274,8 @@ void __fastcall dx_init(HWND hWnd)
 /** Copy the palette surface to the main backbuffer */
 void sdl_update_entire_surface()
 {
-	assert(surface && pal_surface);
 
+	assert(surface && pal_surface);
 	SDL_Rect src_rect = {64, 160, 640, 480};
 	SDL_CHECK(SDL_BlitSurface(pal_surface, &src_rect, surface, NULL));
 }
@@ -272,7 +283,7 @@ void sdl_update_entire_surface()
 void sdl_present_surface()
 {
 	assert(!SDL_MUSTLOCK(surface));
-	SDL_CHECK(SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch));
+	SDL_CHECK(SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch));//pitch is 2560
 
 	SDL_CHECK(SDL_RenderCopy(renderer, texture, NULL, NULL));
 	SDL_RenderPresent(renderer);
@@ -283,22 +294,32 @@ void sdl_present_surface()
 void __cdecl lock_buf_priv()
 {
 
-	const int pitch = 640 + 64 + 64;
-
 	if (!gpBuffer) {
+		printf(" GpBuffer Created\n ");
+		const int pitch = 640 + 64 + 64;
 		gpBuffer = (Screen *)malloc(sizeof(Screen));
+		printf("SIZE OF SCREEN %d", sizeof(Screen));
 		gpBufEnd += (unsigned int)gpBuffer;
 
+
 		pal_surface = SDL_CreateRGBSurfaceFrom(gpBuffer, pitch, 160 + 480 + 16, 8, pitch, 0, 0, 0, 0);
+		SDL_SetSurfacePalette(pal_surface, palette);
 		assert(pal_surface);
 
 		SDL_CHECK(SDL_SetSurfacePalette(pal_surface, palette));
 	}
+
+	unlock_buf_priv();
+
+
 }
 
 void __cdecl unlock_buf_priv()
 {
+	
 	gpBufEnd -= (unsigned int)gpBufEnd;
+		
+
 
 	if (!surface_dirty) {
 		return;
@@ -316,9 +337,14 @@ void __cdecl dx_reinit()
 // Storm functions
 //
 
+
+
 BOOL STORMAPI SDrawUpdatePalette(unsigned int firstentry, unsigned int numentries, PALETTEENTRY *pPalEntries, int a4)
 {
-	DUMMY_PRINT("first: %d num: %d", firstentry, numentries);
+//	DUMMY_PRINT("first: %d num: %d", firstentry, numentries);
+
+
+
 
 	assert(firstentry == 0);
 	assert(numentries == 256);

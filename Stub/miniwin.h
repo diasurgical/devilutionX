@@ -6,6 +6,7 @@
 #define STATIC static
 #endif
 
+#include <vector>
 #include <ctype.h>
 #include <math.h>
 #include <stdarg.h>
@@ -555,9 +556,8 @@ typedef struct {
 int rand_miniwin(void);
 void srand_miniwin(unsigned int seed);
 
-
+extern void LoadCharNames();
 extern void LoadAndPlaySound(char *FilePath, int lVolume, int lPan);
-
 
 #include "miniwin_ddraw.h"
 #include "miniwin_dsound.h"

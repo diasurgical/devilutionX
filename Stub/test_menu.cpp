@@ -216,7 +216,23 @@ BOOL __cdecl LoadArtImage(char *pszFile, void **pBuffer, int frames, DWORD *data
     }
     return 1;
 }
+/*
 
+
+// Test sample.pcx to see if it is a PCX
+SDL_RWops *rwop;
+rwop=SDL_RWFromFile("sample.pcx", "rb");
+if(IMG_isPCX(rwop))
+printf("sample.pcx is a PCX file.\n");
+else
+printf("sample.pcx is not a PCX file, or PCX support is not available.\n");
+
+
+
+
+
+
+*/
 BOOL __cdecl LoadArtWithPal(char *pszFile, void **pBuffer, int frames, DWORD *data)
 {
     DWORD width; // [esp+44h] [ebp-8h]
@@ -1575,7 +1591,7 @@ void __cdecl interfac_init_title_play_music()
 		SFileOpenFile("Music\\Dintro.WAV", &dword_4BC180);
 		SFileDdaBegin(dword_4BC180, 0x40000, 0x40000);
 	} */
-	//pTitlgrayCel_sgpBackCel = LoadFileInMem("Gendata\\Titlgray.CEL", 0);
+	pTitlgrayCel_sgpBackCel = LoadFileInMem("Gendata\\Titlgray.CEL", 0);
 	//pPlayerGFX = LoadFileInMem("PlrGFX\\warrior\\whn\\whnat.CL2", 0);
 	pPentSmall = LoadFileInMem("Data\\PentSpn2.CEL", 0);
 	pPanelText = LoadFileInMem("CtrlPan\\SmalText.CEL", 0);
@@ -2112,6 +2128,7 @@ int __stdcall ui_add_hero_infos(_uiheroinfo *a1)
 
 void __cdecl mainmenu_loop()
 {
+	printf("MainMenu_Loop? \n\n");
 	WNDPROC saveProc; // edi
 	MSG Msg; // [esp+8h] [ebp-24h]
 

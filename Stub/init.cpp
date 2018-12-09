@@ -7,6 +7,7 @@
 #ifndef NO_GLOBALS
 void *diabdat_mpq;
 void *patch_rt_mpq;
+void *prealpha_mpq;
 
 _SNETVERSIONDATA fileinfo;
 WNDPROC CurrentProc;
@@ -55,7 +56,7 @@ static std::string find_file_in_std_directories(const char *file)
 void __fastcall init_create_window(int nCmdShow)
 {
 	DUMMY();
-	SDL_Diablo_UI();
+	
 
 	init_get_file_info();
 
@@ -65,6 +66,8 @@ void __fastcall init_create_window(int nCmdShow)
 	snd_init(NULL);
 
 	init_archives();
+	gmenu_init_menu();
+	SDL_Diablo_UI();
 }
 
 LRESULT __stdcall MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
@@ -88,12 +91,25 @@ void __cdecl init_archives()
 
 	SFileOpenArchive(find_file_in_std_directories("patch_rt.mpq").c_str(), 1000, 0, &patch_rt_mpq);
 	assert(patch_rt_mpq);
+
+	SFileOpenArchive(find_file_in_std_directories("prealpha.mpq").c_str(), 1000, 0, &prealpha_mpq);
+	assert(prealpha_mpq);
+
 }
 
 void __cdecl init_get_file_info()
 {
 	strcpy(gszVersionNumber, "0.1");
 	strcpy(gszProductName, "devil-test");
+}
+
+void GetAvailableHeroes(){
+
+
+
+
+
+
 }
 
 void LoadCharNamesintoMemory(int start, int end)
@@ -119,7 +135,8 @@ void LoadCharNamesintoMemory(int start, int end)
 		p_hero_names += 32;
 		start++;
 	}
-	// memcpy(shero_names, hero_names, sizeof(hero_names));
+
+	 //memcpy(shero_names, hero_names, sizeof(hero_names));
 }
 
 void HideCursor()
@@ -136,48 +153,54 @@ void HideCursor()
 
 void SDL_Diablo_UI() // I anticipate to move this later.
 {
+	//WNDPROC saveProc;
+	
 	snd_init(0);
-	init_archives();
 	music_start(5);
 
-	char NewHeroName[17] = {0};
+
+
 	signed int NewHeroNameIndex = 0;
 	int menu = 0;
 	SDL_Event event;
 	int x, y;
 	bool quit = false;
 	int CharsLoaded = 0;
-	/* Comment out these functions */
+	
+	
 	printf("Main Menu Init\n");
-	// SDL_ShowCursor(SDL_DISABLE);//Doesn't really work... Use HideCursor() instead.
+	//SDL_ShowCursor(SDL_DISABLE);//Doesn't really work... Use HideCursor() instead.
 	SdlDiabloMainWindow();
 
-	SDLCreateDiabloCursor();
-	HideCursor();
-	//ClearScreenBuffer();
+ 	ClearScreenBuffer();
+	LoadPalette("Levels\\L3Data\\L3pwater.pal");
+	//LoadPalette("Gendata\\Cutstart.pal"); // Doesn't exist.??
+	
 
-	SDL_StartTextInput();
+
 	const Uint8 *state = SDL_GetKeyboardState(NULL);
 
 	while (1 && quit == false) {
+		//DrawMouse(); Doesn't work yet ; Too slow. 
+			PaletteFadeIn(8);
+
 
 		if (menu == 0) {
-
 			CreateMainDiabloMenu();
 			SDL_RenderDiabloMainPage();
-			// printf("I am 0\n");
+			sdl_present_surface();		
+
 		}
 
 		if (menu == 2) {
-
+			
 			if (CharsLoaded == 0) {
-				LoadCharNamesintoMemory(0, 10);
+				LoadCharNamesintoMemory(0, 2);
 				CharsLoaded = 1;
 			}
-
-			RenderCharNames();
 			SDL_RenderDiabloSinglePlayerPage();
 			gbMaxPlayers = 1;
+
 		}
 
 		if (menu == 3) {
@@ -186,45 +209,32 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 		}
 		if (menu == 4) {
 			SDL_RenderDiabloSinglePlayerPage();
-			SDL_RenderPresent(renderer);
-
-
-			
-
-							// NewHeroName[NewHeroNameIndex] = '\0';
-				// memset(&NewHeroName[NewHeroNameIndex], 0, sizeof(char));
-				// --NewHeroNameIndex;
-				// printf("HeroName %s \n", NewHeroName);
-		
-
-
-
-
-			
-
 			if (event.type == SDL_KEYDOWN && NewHeroNameIndex < 17) {
-
-				// char *keyz = SDL_GetKeyName(event.key.keysym.sym);
-				// printf("SDLKEY PRESSED %s\n", keyz);
-				// NewHeroName[NewHeroNameIndex] = *keyz;
-				// NewHeroNameIndex++;
-
-				//	printf("HeroName %s", NewHeroName);
+				/*put stuff*/
 			}
 		}
 
 		if (SDL_PollEvent(&event)) {
+			
 
 			if (event.type == SDL_QUIT) {
 
 				quit = true;
 				SDL_Quit();
+				exit(0); // SDL quit doesn't always work.
 			}
 
 			if (event.type == SDL_MOUSEMOTION) {
 				// Get the mouse offsets
 				x = event.motion.x;
 				y = event.motion.y;
+				MouseX = x;
+				MouseY = y;
+			
+				//SDL_GetMouseState(&MouseX, &MouseY);
+				
+			   
+
 			}
 
 			// if (event.type == SDL_KEYDOWN && menu == 4 ){
@@ -243,32 +253,43 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 
 					if (menu == 0) {
 
-						if ((x > SinglePlrBox.x) && (y > SinglePlrBox.y) && (x < SinglePlrBox.w) &&
-						    (y < SinglePlrBox.h)) { // Single clicked
+					    int ClickListStart = 195;
+						int sizeOfBox = 60;
+						int WidthOfBox = 400;
+						int ClickListEnd = 343;
+							
+
+
+						if ((x > ClickListStart) && (y > ClickListStart) &&
+						    (x < ClickListStart + WidthOfBox) && (y < ClickListStart + sizeOfBox)) { // Single clicked
 							printf("SinglePlayer Diablo\n");
 							// effects_play_sound("Sfx\\Items\\Titlslct.wav");
 							menu = 2;
 						}
 
-						if ((x > MultiPlrBox.x) && (y > MultiPlrBox.y) && (x < MultiPlrBox.w) &&
-						    (y < MultiPlrBox.h)) { // MultiBox clicked
+						if ((x > ClickListStart) && (y > ClickListStart + (sizeOfBox)) &&
+						    (x < ClickListStart + WidthOfBox) &&
+						    (y < ClickListStart + (sizeOfBox) + sizeOfBox)) { // MultiBox clicked
 							printf("MultiPlayer Diablo\n");
 
 						}
-						if ((x > ReplayIntroBox.x) && (y > ReplayIntroBox.y) && (x < ReplayIntroBox.w) &&
-						    (y < ReplayIntroBox.h)) { // Reply Intro clicked
+						if ((x > ClickListStart) && (y > ClickListStart + (sizeOfBox * 2)) &&
+						    (x < ClickListStart + WidthOfBox) &&
+						    (y < ClickListStart + (sizeOfBox * 2) + sizeOfBox)) { // Reply Intro clicked
 							printf("Replay Intro\n");
 
 						}
-						if ((x > ShowCreditsBox.x) && (y > ShowCreditsBox.y) && (x < ShowCreditsBox.w) &&
-						    (y < ShowCreditsBox.h)) { // ShowCredits clicked
+						if ((x > ClickListStart) && (y > ClickListStart + (sizeOfBox * 4)) &&
+						    (x < ClickListStart + WidthOfBox) &&
+						    (y < ClickListStart + (sizeOfBox * 4) + sizeOfBox)) { // ShowCredits clicked
 							printf("Show Credits\n");
 							// effects_play_sound("Sfx\\Items\\Titlslct.wav");
-							UiCreditsDialog(16);
+							//UiCreditsDialog(16);
 						}
 
-						if ((x > ExitBox.x) && (y > ExitBox.y) && (x < ExitBox.w) &&
-						    (y < ExitBox.h)) { // ExitBox clicked
+						if ((x > ClickListStart) && (y > ClickListStart + (sizeOfBox * 5)) &&
+						    (x < ClickListStart + WidthOfBox) &&
+						    (y < ClickListStart + (sizeOfBox * 5) + sizeOfBox)) { // ExitBox clicked
 							printf("Exiting Diablo\n");
 							// effects_play_sound("Sfx\\Items\\Titlslct.wav");
 
@@ -281,33 +302,38 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 					} // End of this Menu0
 
 					if (menu == 2) {
-
-						//	int x = 364;
-						//  int y = 240;
-						int ClickListStart = 250;
+					//	int x = 440;
+					//	int y = 430;
+						int ClickListStart = 315;
 						int sizeOfBox = 30;
 						int WidthOfBox = 400;
 						int ClickListEnd = 343;
 
+
+
 						// Render Clicks
 						if (TotalPlayers >= 1 && (x > ClickListStart) && (y > ClickListStart) &&
 						    (x < ClickListStart + WidthOfBox) && (y < ClickListStart + sizeOfBox)) { // MultiBox clicked
-							printf("Player %s\n", hero_names[0]);
-							effects_play_sound("Sfx\\Items\\Titlslct.wav");
+//							printf("Player %s\n", hero_names[0]);
+							//effects_play_sound("Sfx\\Items\\Titlslct.wav");
 							strcpy(chr_name_str, hero_names[0]);
 							printf("Player %s\n", chr_name_str);
-							FreeMenuItems();
+							//FreeMenuItems();
 							break;
+							
+
+
+
 						}
 
 						if (TotalPlayers >= 2 && (x > ClickListStart) && (y > ClickListStart + (sizeOfBox)) &&
 						    (x < ClickListStart + WidthOfBox) &&
 						    (y < ClickListStart + (sizeOfBox) + sizeOfBox)) { // MultiBox clicked
 							printf("Player 2 Diablo\n");
-							effects_play_sound("Sfx\\Items\\Titlslct.wav");
+						//	effects_play_sound("Sfx\\Items\\Titlslct.wav");
 							strcpy(chr_name_str, hero_names[1]);
 							printf("Player %s\n", chr_name_str);
-							FreeMenuItems();
+							//FreeMenuItems();
 							// XStartGame();
 							break;
 						}
@@ -318,7 +344,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 							effects_play_sound("Sfx\\Items\\Titlslct.wav");
 							strcpy(chr_name_str, hero_names[2]);
 							printf("Player %s\n", chr_name_str);
-							FreeMenuItems();
+							//FreeMenuItems();
 							break;
 							// XStartGame();
 						}
@@ -329,7 +355,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 							effects_play_sound("Sfx\\Items\\Titlslct.wav");
 							strcpy(chr_name_str, hero_names[3]);
 							printf("Player %s\n", chr_name_str);
-							FreeMenuItems();
+						//	FreeMenuItems();
 							break;
 							// XStartGame();
 						}
@@ -340,7 +366,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 							effects_play_sound("Sfx\\Items\\Titlslct.wav");
 							strcpy(chr_name_str, hero_names[4]);
 							printf("Player %s\n", chr_name_str);
-							FreeMenuItems();
+						//	FreeMenuItems();
 							break;
 							// XStartGame();
 						}
@@ -351,7 +377,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 							effects_play_sound("Sfx\\Items\\Titlslct.wav");
 							strcpy(chr_name_str, hero_names[5]);
 							printf("Player %s\n", chr_name_str);
-							FreeMenuItems();
+						//	FreeMenuItems();
 							break;
 							// XStartGame();
 						}
@@ -470,6 +496,9 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 					}
 				}
 			}
+			
 		}
+		
 	}
+
 }

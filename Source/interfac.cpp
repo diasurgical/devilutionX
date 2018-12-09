@@ -63,6 +63,8 @@ void __cdecl DrawCutscene()
 				progress_id);
 		while ( v0 < sgdwProgress );
 	}
+	
+
 	unlock_buf_priv();
 	drawpanflag = 255;
 	scrollrt_draw_game_screen(0);
@@ -104,7 +106,7 @@ void __fastcall ShowProgress(int uMsg)
 	DrawCutscene();
 	PaletteFadeIn(8);
 	IncProgress();
-	stream_update();
+	stream_update(); // What is this?
 	IncProgress();
 	switch ( uMsg )
 	{

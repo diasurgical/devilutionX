@@ -1,6 +1,10 @@
 //HEADER_GOES_HERE
-
+#include "SDL_FontCache.h"
+#include <SDL2/SDL.h>
+#include <SDL_image.h>
+#include <SDL_mixer.h>
 #include "../types.h"
+#include "miniwin_sdl.h"
 
 #ifndef NO_GLOBALS
 int engine_cpp_init_value; // weak
@@ -98,12 +102,14 @@ void __fastcall CelDecodeOnly(int screen_x, int screen_y, void *pCelBuff, int fr
 	if ( gpBuffer )
 	{
 		if ( pCelBuff )
+	
 			CelDrawDatOnly(
 				(char *)gpBuffer + screen_y_times_768[screen_y] + screen_x,
 				(char *)pCelBuff + *((_DWORD *)pCelBuff + frame),
 				*((_DWORD *)pCelBuff + frame + 1) - *((_DWORD *)pCelBuff + frame),
 				frame_width);
 	}
+
 }
 
 void __fastcall CelDecDatOnly(char *pBuff, char *pCelBuff, int frame, int frame_width)

@@ -139,6 +139,7 @@ void __cdecl DrawQTextBack()
 
 void __fastcall PrintQTextChr(int screen_x, int screen_y, char *cel_buf, int frame)
 {
+
 	char *v4; // ebx
 	char *v5; // esi
 	char *v6; // edi

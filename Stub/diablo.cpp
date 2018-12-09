@@ -90,6 +90,7 @@ struct diablo_cpp_init
 
 void __cdecl FreeGameMem()
 {
+	DUMMY();
 	void *v0; // ecx
 	void *v1; // ecx
 	void *v2; // ecx
@@ -121,6 +122,7 @@ void __cdecl FreeGameMem()
 
 int __fastcall diablo_init_menu(int a1, int bSinglePlayer)
 {
+	DUMMY();// This is probably used. 
 	int v2; // esi
 	int v3; // edi
 	int v4; // ecx
@@ -159,6 +161,7 @@ LABEL_11:
 
 void __fastcall run_game_loop(int uMsg)
 {
+	DUMMY();
 	//int v3; // eax
 	bool v5; // zf
 	//int v6; // eax
@@ -244,6 +247,7 @@ void __fastcall run_game_loop(int uMsg)
 
 void __fastcall start_game(int uMsg)
 {
+	DUMMY();
 	cineflag = 0;
 	zoomflag = 1;
 	InitCursor();
@@ -251,7 +255,7 @@ void __fastcall start_game(int uMsg)
 	LoadDebugGFX();
 	music_stop();
 	ShowProgress(uMsg);
-	gmenu_init_menu();
+    //gmenu_init_menu();  /*change removed*/
 	InitLevelCursor();
 	sgnTimeoutCurs = 0;
 	sgbMouseDown = 0;
@@ -263,6 +267,7 @@ void __fastcall start_game(int uMsg)
 
 void __cdecl free_game()
 {
+	DUMMY();
 	int i; // esi
 
 	FreeControlPan();
@@ -290,6 +295,7 @@ bool __cdecl diablo_get_not_running()
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {  
+	DUMMY();
 	HINSTANCE v4; // esi
 	char Filename[260]; // [esp+8h] [ebp-10Ch]
 	char value_name[8]; // [esp+10Ch] [ebp-8h]
@@ -315,7 +321,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	{
 		diablo_init_screen();
 		diablo_parse_flags(lpCmdLine);
-		init_create_window(nCmdShow);
+		init_create_window(nCmdShow);// My code calls a function inside here...
 		sound_init();
 		UiInitialize();
 #ifdef _DEBUG
@@ -334,7 +340,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		if ( showintrodebug )
 		{
 			UiTitleDialog(7);
-			BlackPalette();
+			BlackPalette();//Here is the start?
 		}
 #else
 		UiTitleDialog(7);
@@ -356,6 +362,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 void __fastcall diablo_parse_flags(char *args)
 {
+	DUMMY();
 #ifdef _DEBUG
 	int n; // edi
 	int v15; // eax

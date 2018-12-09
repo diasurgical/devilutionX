@@ -75,7 +75,7 @@ void fill_audio(void *udata, Uint8 *stream, int len)
 
 void __fastcall music_start(int nTrack)
 {
-	DUMMY();
+	//DUMMY();
 	wanted.freq = 22050;
 	wanted.format = AUDIO_S8;
 	wanted.channels = 5; /* 1 = mono, 2 = stereo */

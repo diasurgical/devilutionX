@@ -2,12 +2,14 @@
 
 #include "../types.h"
 
+
+
 #ifndef NO_GLOBALS
 void *optbar_cel;
 bool byte_634464; // weak
 void *PentSpin_cel;
 TMenuItem *sgpCurrItem;
-void *BigTGold_cel;
+
 int dword_634474; // weak
 char byte_634478; // weak
 void (__cdecl *dword_63447C)();
@@ -15,6 +17,36 @@ TMenuItem *dword_634480; // idb
 void *option_cel;
 void *sgpLogo;
 int dword_63448C; // weak
+
+void * pPentSmall;
+void * pTitlqtxtCel;
+void * pDiabfrCel ;
+void *BigTGold_cel;
+int gdwLogoWidth;
+int gdwLogoHeight;
+void *pPcxLogoImage;
+void * pTitlgrayCel_sgpBackCel;
+
+int gdwTitleWidth;
+int gdwTitleHeight;
+void *pPcxTitleImage;
+
+
+int gdwCursorWidth;
+int gdwCursorHeight;
+void *pPcxCursorImage;
+
+
+int gdwHeroHeight;
+int gdwHeroWidth;
+void * pPcxHeroImage;
+
+int gdwSHeroHeight;
+int gdwSHeroWidth;
+void * pPcxSHeroImage;
+
+
+void* pPcxGameImage;
 #endif
 
 const unsigned char lfontframe[127] =
@@ -55,6 +87,232 @@ void __cdecl gmenu_draw_pause()
 }
 // 69BEF8: using guessed type int light_table_index;
 
+PALETTEENTRY pcxPal[256];
+
+
+void __fastcall LoadPalInMem(PALETTEENTRY *pPal)
+{
+	int i; // eax
+
+	for(i = 0; i < 256; i++)
+	{
+		orig_palette[i].peFlags = 0;
+		orig_palette[i].peRed = pPal[i].peRed;
+		orig_palette[i].peGreen = pPal[i].peGreen;
+		orig_palette[i].peBlue = pPal[i].peBlue;
+	}
+}
+
+BOOL __cdecl LoadArtImage(char *pszFile, void **pBuffer, int frames, DWORD *data)
+{
+    DWORD width; // [esp+44h] [ebp-8h]
+    DWORD height; // [esp+48h] [ebp-4h] MAPDST
+
+	*pBuffer = NULL;
+
+    if ( !SBmpLoadImage(pszFile, 0, 0, 0, &width, &height, 0) )
+        return 0;
+    *pBuffer = SMemAlloc(height * width, "U:\\DiabloUI\\Ui\\local.cpp", 88);
+    if ( !SBmpLoadImage(pszFile, NULL, *pBuffer, height * width, 0, 0, 0) )
+        return 0;
+    if ( pBuffer && data )
+    {
+        data[0] = width;
+        data[1] = height / frames;
+    }
+    return 1;
+}
+
+
+
+
+
+BOOL __cdecl LoadArtWithPal(char *pszFile, void **pBuffer, int frames, DWORD *data)
+{
+    DWORD width; // [esp+44h] [ebp-8h]
+    DWORD height; // [esp+48h] [ebp-4h] MAPDST
+
+	*pBuffer = NULL;
+
+    if ( !SBmpLoadImage(pszFile, 0, 0, 0, &width, &height, 0) )
+        return 0;
+    *pBuffer = SMemAlloc(height * width, "U:\\DiabloUI\\Ui\\local.cpp", 88);
+    if ( !SBmpLoadImage(pszFile, pcxPal, *pBuffer, height * width, 0, 0, 0) )
+        return 0;
+
+	LoadPalInMem(pcxPal);
+//	lpDDPalette->SetEntries(0, 0, 256, orig_palette);
+
+    if ( pBuffer && data )
+    {
+        data[0] = width;
+        data[1] = height / frames;
+    }
+    return 1;
+}
+
+
+
+
+BOOL __stdcall SBmpLoadImage(const char *pszFileName, PALETTEENTRY *pPalette, void *pBuffer, DWORD dwBuffersize, DWORD *pdwWidth, DWORD *dwHeight, DWORD *pdwBpp)
+{
+	char *v7; // ebx
+	unsigned char *v8; // edi
+	PALETTEENTRY *v9; // esi
+	int v10; // esi
+	signed int v11; // ebx
+	int v12; // ebp
+	size_t v13; // ebp
+	unsigned char *v14; // eax
+	unsigned char *v15; // edx
+	int v16; // ebp
+	unsigned char v17; // cl
+	unsigned char v18; // al
+	int v19; // ecx
+	bool v20; // zf
+	bool v21; // sf
+	unsigned char (*v22)[3]; // eax
+	BYTE v23; // cl
+	unsigned char *Memory; // [esp+14h] [ebp-38Ch]
+	HANDLE hFile; // [esp+18h] [ebp-388h] MAPDST
+	DWORD v28; // [esp+1Ch] [ebp-384h]
+	PCXHeader pcxhdr; // [esp+20h] [ebp-380h]
+	unsigned char paldata[256][3]; // [esp+A0h] [ebp-300h]
+	int z;
+
+	if ( pdwWidth )
+		*pdwWidth = 0;
+	if ( dwHeight )
+		*dwHeight = 0;
+	if ( pdwBpp )
+		*pdwBpp = 0;
+	v7 = (char *)pszFileName;
+	if ( pszFileName )
+	{
+		if ( *pszFileName )
+		{
+			v8 = (unsigned char *)pBuffer;
+			if ( !pBuffer || dwBuffersize )
+			{
+				v9 = pPalette;
+				if ( pPalette || pBuffer || pdwWidth || dwHeight )
+				{
+					if ( SFileOpenFile(pszFileName, &hFile) )
+					{
+						if ( strchr(pszFileName, 92) )
+						{
+							do
+								v7 = strchr(v7, 92) + 1;
+							while ( strchr(v7, 92) );
+						}
+						for ( ; strchr(v7 + 1, 46); v7 = strchr(v7, 46) )
+							;
+						if ( !v7 || _strcmpi(v7, ".pcx") ) // omit all types except PCX
+						{
+							return 0;
+							//v10 = sub_15001C70(hFile, pPalette, pBuffer, dwBuffersize, pdwWidth, dwHeight, pdwBpp);
+							//goto LABEL_51;
+						}
+						if ( !SFileReadFile(hFile, &pcxhdr, 128u, 0, 0) )
+						{
+							v10 = 0;
+LABEL_51:
+							SFileCloseFile(hFile);
+							return v10;
+						}
+						*(_DWORD *)&paldata[0][0] = pcxhdr.xmax - pcxhdr.xmin + 1;
+						v11 = pcxhdr.ymax - pcxhdr.ymin + 1;
+						v28 = pcxhdr.bitsPerPixel;
+						if ( pdwWidth )
+							*pdwWidth = *(_DWORD *)&paldata[0][0];
+						if ( dwHeight )
+							*dwHeight = v11;
+						if ( pdwBpp )
+							*pdwBpp = v28;
+						if ( !pBuffer )
+						{
+							SFileSetFilePointer(hFile, 0, 0, 2);
+							goto LABEL_45;
+						}
+						v12 = SFileGetFileSize(hFile, 0);
+						v13 = v12 - SFileSetFilePointer(hFile, 0, 0, 1);
+						v14 = (unsigned char *)SMemAlloc(v13, "SBMP.CPP", 171);
+						Memory = v14;
+						if ( !v14 )
+						{
+LABEL_45:
+							if ( pPalette && v28 == 8 )
+							{
+								SFileSetFilePointer(hFile, -768, 0, 1);
+								SFileReadFile(hFile, paldata, 768u, 0, 0);
+								v22 = paldata;
+								for(z = 0; z < 256; z++)
+								{
+									v23 = *(_BYTE *)v22;
+									++v9;
+									++v22;
+									v9[-1].peRed = v23;
+									v9[-1].peGreen = (*v22)[-2];
+									v9[-1].peBlue = (*v22)[-1];
+									v9[-1].peFlags = 0;
+								}
+							}
+							v10 = 1;
+							goto LABEL_51;
+						}
+						SFileReadFile(hFile, v14, v13, 0, 0);
+						v15 = Memory;
+						if ( v11 <= 0 )
+							goto LABEL_43;
+LABEL_33:
+						v16 = *(_DWORD *)&paldata[0][0];
+						while ( 1 )
+						{
+							v17 = *v15++;
+							if ( v17 < 0xC0u )
+							{
+								*v8++ = v17;
+								--v16;
+							}
+							else
+							{
+								v18 = *v15;
+								v19 = v17 & 0x3F;
+								++v15;
+								for ( ; v19; --v16 )
+								{
+									v20 = v16 == 0;
+									v21 = v16 < 0;
+									if ( !v16 )
+										goto LABEL_41;
+									*v8++ = v18;
+									--v19;
+								}
+							}
+							v20 = v16 == 0;
+							v21 = v16 < 0;
+LABEL_41:
+							if ( v21 || v20 )
+							{
+								if ( !--v11 )
+								{
+LABEL_43:
+									SMemFree(Memory, "SBMP.CPP", 178);
+									goto LABEL_45;
+								}
+								goto LABEL_33;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return 0;
+}
+
+
+
 void __fastcall gmenu_print_text(int x, int y, char *pszStr)
 {
 	char *v3; // edi
@@ -63,6 +321,7 @@ void __fastcall gmenu_print_text(int x, int y, char *pszStr)
 	unsigned char i; // al
 	unsigned char v7; // bl
 
+	//printf("X:%d Y: %d \n", x, y );
 	v3 = pszStr;
 	v4 = y;
 	v5 = x;
@@ -101,23 +360,75 @@ void __cdecl FreeGMenu()
 	mem_free_dbg(v4);
 }
 
+
+
 void __cdecl gmenu_init_menu()
 {
+	DWORD dwData[2];
 	byte_634478 = 1;
 	dword_634480 = 0;
 	sgpCurrItem = 0;
 	dword_63447C = 0;
 	dword_63448C = 0;
 	byte_634464 = 0;
+
+
+	LoadArtImage("ui_art\\cursor.pcx", &pPcxCursorImage, 1, dwData);
+	gdwCursorWidth = dwData[0];
+	gdwCursorHeight = dwData[1];
+
+
+	LoadArtWithPal("ui_art\\mainmenu.pcx", &pPcxTitleImage, 1, dwData);
+	gdwTitleWidth = dwData[0];
+	gdwTitleHeight = dwData[1];
+
+	LoadArtImage("ui_art\\smlogo.pcx", &pPcxLogoImage, 15, dwData);
+	gdwLogoWidth = dwData[0];
+	gdwLogoHeight = dwData[1];
+
+
+
+	LoadArtImage("ui_art\\heros.pcx", &pPcxHeroImage, 4, dwData);
+	gdwHeroWidth = dwData[0];
+	gdwHeroHeight = dwData[1];
+
+	LoadArtImage("ui_art\\selhero.pcx", &pPcxSHeroImage, 1, dwData);
+	gdwSHeroWidth = dwData[0];
+	gdwSHeroHeight = dwData[1];
+
+    LoadArtImage("ui_art\\selgame.pcx", &pPcxGameImage, 1, dwData);
+	gdwSHeroWidth = dwData[0];
+	gdwSHeroHeight = dwData[1];
+
+
 	sgpLogo = LoadFileInMem("Data\\Diabsmal.CEL", 0);
 	BigTGold_cel = LoadFileInMem("Data\\BigTGold.CEL", 0);
 	PentSpin_cel = LoadFileInMem("Data\\PentSpin.CEL", 0);
 	option_cel = LoadFileInMem("Data\\option.CEL", 0);
 	optbar_cel = LoadFileInMem("Data\\optbar.CEL", 0);
+	pPentSmall = LoadFileInMem("Data\\PentSpn2.CEL", 0);
+	pPanelText = LoadFileInMem("CtrlPan\\SmalText.CEL", 0);
+	pSTextBoxCels = LoadFileInMem("Data\\TextBox2.CEL", 0);
+	pMedTextCels = LoadFileInMem("Data\\MedTextS.CEL", 0);
+	pDiabfrCel = LoadFileInMem("Data\\Diabsmal.CEL", 0);
+	
+
+
 }
 // 634464: using guessed type char byte_634464;
 // 634478: using guessed type char byte_634478;
 // 63448C: using guessed type int dword_63448C;
+
+
+
+
+
+
+
+
+
+
+
 
 bool __cdecl gmenu_exception()
 {
@@ -272,6 +583,8 @@ void __fastcall gmenu_draw_menu_item(TMenuItem *pItem, int a2)
 	if ( v3 == sgpCurrItem )
 	{
 		v13 = v2 + 1;
+
+
 		CelDecodeOnly(v11 - 54, v13, PentSpin_cel, (unsigned char)byte_634478, 48);
 		CelDecodeOnly(v11 + v5 + 4, v13, PentSpin_cel, (unsigned char)byte_634478, 48);
 	}

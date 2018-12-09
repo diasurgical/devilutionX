@@ -556,6 +556,7 @@ void __fastcall DrawGame(int x, int y)
 	signed int a5; // [esp+14h] [ebp-8h]
 	int ya; // [esp+18h] [ebp-4h]
 
+
 	dword_5C2FF8 = 10;
 	v2 = ScrollInfo._sxoff + 64;
 	v3 = x - 10;
@@ -2833,7 +2834,7 @@ void __cdecl ClearScreenBuffer()
 	lock_buf_priv();
 
 	for(i = 0; i < 480; i++)
-		memset(gpBuffer->row[i].pixels, 0, 640);
+		memset(gpBuffer->row[i].pixels, 0xff, 640);
 
 	unlock_buf_priv();
 }
@@ -3138,10 +3139,10 @@ void __fastcall DrawMain(int dwHgt, int draw_desc, int draw_hp, int draw_mana, i
 	int v8; // esi
 	int v9; // eax
 	signed int a4; // [esp+1Ch] [ebp-8h]
-
 	a4 = dwHgt;
 	if ( gbActive && lpDDSPrimary )
 	{
+
 		if ( lpDDSPrimary->IsLost() == DDERR_SURFACELOST )
 		{
 			if ( lpDDSPrimary->Restore() )
@@ -3279,10 +3280,14 @@ void __fastcall DoBlitScreen(int dwX, int dwY, int dwWdt, int dwHgt)
 	int error_codea; // [esp+34h] [ebp+8h]
 	int a4; // [esp+38h] [ebp+Ch]
 
+	
+
 	v4 = dwY;
 	v5 = dwX;
 	if ( lpDDSBackBuf )
 	{
+//	printf("FFFFFFFFFFFF\n");
+
 		Rect.left = dwX + 64;
 		Rect.right = dwX + 64 + dwWdt - 1;
 		Rect.top = dwY + 160;
@@ -3290,6 +3295,9 @@ void __fastcall DoBlitScreen(int dwX, int dwY, int dwWdt, int dwHgt)
 		a4 = GetTickCount();
 		while ( 1 )
 		{
+
+
+
 			error_code = lpDDSPrimary->BltFast(v5, v4, lpDDSBackBuf, &Rect, DDBLTFAST_WAIT);
 			if ( !error_code )
 				break;
@@ -3320,6 +3328,7 @@ void __fastcall DoBlitScreen(int dwX, int dwY, int dwWdt, int dwHgt)
 		v9 = dwHgt;
 		do
 		{
+
 			qmemcpy(v8, v7, 4 * error_codea);
 			v7 += 4 * error_codea + v16;
 			v8 += 4 * error_codea + v17;
@@ -3332,6 +3341,8 @@ void __fastcall DoBlitScreen(int dwX, int dwY, int dwWdt, int dwHgt)
 
 void __cdecl DrawAndBlit()
 {
+
+//printf("DRAWANDBBLIT\n\n");
 	bool ddsdesc; // ebp
 	bool ctrlPan; // esi
 	int dwHgt; // edi

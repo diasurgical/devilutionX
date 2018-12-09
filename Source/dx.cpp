@@ -190,13 +190,20 @@ HRESULT __fastcall dx_DirectDrawCreate(GUID *guid, IDirectDraw **DD, void *unkno
 
 void __cdecl lock_buf_priv()
 {
+
+			UNIMPLEMENTED();
+
+
+
 	Screen *v0; // eax
 	int v1; // eax
 	DDSURFACEDESC v2; // [esp+0h] [ebp-6Ch]
 
 	EnterCriticalSection(&sgMemCrit);
 	v0 = (Screen *)sgpBackBuf;
+
 	if ( sgpBackBuf )
+
 		goto LABEL_8;
 	if ( lpDDSBackBuf )
 	{

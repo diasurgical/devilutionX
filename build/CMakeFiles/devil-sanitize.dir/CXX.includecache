@@ -8,7 +8,19 @@
 
 .././3rdParty/PKWare/pkware.h
 
+../Stub/SDL_FontCache.h
+SDL.h
+../Stub/SDL.h
+SDL_ttf.h
+../Stub/SDL_ttf.h
+SDL_gpu.h
+../Stub/SDL_gpu.h
+stdarg.h
+-
+
 ../Stub/miniwin.h
+vector
+-
 ctype.h
 -
 math.h
@@ -39,6 +51,24 @@ miniwin.h
 ../Stub/miniwin_dsound.h
 miniwin.h
 ../Stub/miniwin.h
+
+../Stub/miniwin_sdl.h
+assert.h
+-
+vector
+-
+SDL2/SDL.h
+-
+SDL_image.h
+-
+SDL_mixer.h
+-
+SDL_FontCache.h
+../Stub/SDL_FontCache.h
+direct.h
+-
+unistd.h
+-
 
 /home/krash/CLionProjects/devilutionX/3rdParty/PKWare/explode.cpp
 assert.h
@@ -317,8 +347,18 @@ errno.h
 /home/krash/CLionProjects/devilutionX/Source/encrypt.h
 
 /home/krash/CLionProjects/devilutionX/Source/engine.cpp
+SDL_FontCache.h
+/home/krash/CLionProjects/devilutionX/Source/SDL_FontCache.h
+SDL2/SDL.h
+-
+SDL_image.h
+-
+SDL_mixer.h
+-
 ../types.h
 /home/krash/CLionProjects/devilutionX/types.h
+miniwin_sdl.h
+/home/krash/CLionProjects/devilutionX/Source/miniwin_sdl.h
 
 /home/krash/CLionProjects/devilutionX/Source/engine.h
 
@@ -709,6 +749,8 @@ stubs.h
 /home/krash/CLionProjects/devilutionX/Stub/stubs.h
 
 /home/krash/CLionProjects/devilutionX/Stub/miniwin.h
+vector
+-
 ctype.h
 -
 math.h
@@ -770,6 +812,8 @@ stubs.h
 
 /home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.h
 assert.h
+-
+vector
 -
 SDL2/SDL.h
 -
