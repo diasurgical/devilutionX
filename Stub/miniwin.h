@@ -6,6 +6,7 @@
 #define STATIC static
 #endif
 
+#include <SDL2/SDL.h>
 #include <vector>
 #include <ctype.h>
 #include <math.h>
@@ -558,6 +559,9 @@ void srand_miniwin(unsigned int seed);
 
 extern void LoadCharNames();
 extern void LoadAndPlaySound(char *FilePath, int lVolume, int lPan);
+extern void DrawArtWithMask(int SX, int SY, int SW, int SH, int nFrame, BYTE bMask, void *pBuffer);
+extern BOOL __cdecl LoadArtWithPal(char *pszFile, void **pBuffer, int frames, DWORD *data);
+
 
 #include "miniwin_ddraw.h"
 #include "miniwin_dsound.h"

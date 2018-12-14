@@ -1225,7 +1225,7 @@ int ybase = 0;
 int linecount = 24;
 int nottheend = 1;
 
-void pain_credts()
+void ShowCredts()
 {
 	ClearScreenBuffer();
 
@@ -1441,9 +1441,9 @@ void DrawMouse()
 	if(my < 0) my = 0;
 	if(my > 480) my = 480;
 
-	lock_buf_priv();
+//	lock_buf_priv();
 	DrawArtWithMask(mx, my, gdwCursorWidth, lines, 0, 0, pPcxCursorImage);
-	unlock_buf_priv();
+	//unlock_buf_priv();
 }
 int gbStopGame = 0;
 void __fastcall interface_pump_title_message(HWND hWnd)

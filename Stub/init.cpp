@@ -56,7 +56,6 @@ static std::string find_file_in_std_directories(const char *file)
 void __fastcall init_create_window(int nCmdShow)
 {
 	DUMMY();
-	
 
 	init_get_file_info();
 
@@ -94,7 +93,6 @@ void __cdecl init_archives()
 
 	SFileOpenArchive(find_file_in_std_directories("prealpha.mpq").c_str(), 1000, 0, &prealpha_mpq);
 	assert(prealpha_mpq);
-
 }
 
 void __cdecl init_get_file_info()
@@ -103,14 +101,7 @@ void __cdecl init_get_file_info()
 	strcpy(gszProductName, "devil-test");
 }
 
-void GetAvailableHeroes(){
-
-
-
-
-
-
-}
+void GetAvailableHeroes() {}
 
 void LoadCharNamesintoMemory(int start, int end)
 {
@@ -136,7 +127,7 @@ void LoadCharNamesintoMemory(int start, int end)
 		start++;
 	}
 
-	 //memcpy(shero_names, hero_names, sizeof(hero_names));
+	// memcpy(shero_names, hero_names, sizeof(hero_names));
 }
 
 void HideCursor()
@@ -153,12 +144,10 @@ void HideCursor()
 
 void SDL_Diablo_UI() // I anticipate to move this later.
 {
-	//WNDPROC saveProc;
-	
+	// WNDPROC saveProc;
+
 	snd_init(0);
 	music_start(5);
-
-
 
 	signed int NewHeroNameIndex = 0;
 	int menu = 0;
@@ -166,41 +155,38 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 	int x, y;
 	bool quit = false;
 	int CharsLoaded = 0;
-	
-	
+
 	printf("Main Menu Init\n");
-	//SDL_ShowCursor(SDL_DISABLE);//Doesn't really work... Use HideCursor() instead.
+	// SDL_ShowCursor(SDL_DISABLE);//Doesn't really work... Use HideCursor() instead.
 	SdlDiabloMainWindow();
 
- 	ClearScreenBuffer();
+	ClearScreenBuffer();
 	LoadPalette("Levels\\L3Data\\L3pwater.pal");
-	//LoadPalette("Gendata\\Cutstart.pal"); // Doesn't exist.??
-	
-
+	// LoadPalette("Gendata\\Cutstart.pal"); // Doesn't exist.??
 
 	const Uint8 *state = SDL_GetKeyboardState(NULL);
 
-	while (1 && quit == false) {
-		//DrawMouse(); Doesn't work yet ; Too slow. 
-			PaletteFadeIn(8);
+	// static std::deque<MSG> message_queue;
 
+	while (1 && quit == false) {
+		DrawMouse();
+		PaletteFadeIn(8);
 
 		if (menu == 0) {
-			CreateMainDiabloMenu();
+			//	CreateMainDiabloMenu();
 			SDL_RenderDiabloMainPage();
-			sdl_present_surface();		
-
+			DrawMouse();
+			// sdl_present_surface();
 		}
 
 		if (menu == 2) {
-			
+
 			if (CharsLoaded == 0) {
 				LoadCharNamesintoMemory(0, 2);
 				CharsLoaded = 1;
 			}
 			SDL_RenderDiabloSinglePlayerPage();
 			gbMaxPlayers = 1;
-
 		}
 
 		if (menu == 3) {
@@ -213,292 +199,300 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 				/*put stuff*/
 			}
 		}
+		if (menu == 10) {
+			ShowCredts();
+		}
 
 		if (SDL_PollEvent(&event)) {
-			
+			// DrawMouse(); //Doesn't work yet ; Too slow.
 
-			if (event.type == SDL_QUIT) {
+			switch (event.type) {
+			case SDL_KEYDOWN:
+				printf("Key press detected\n");
+				switch( event.key.keysym.sym ){
+                    case SDLK_ESCAPE:
+						menu = 0;
+                        break;
 
-				quit = true;
-				SDL_Quit();
-				exit(0); // SDL quit doesn't always work.
+				}
+				break;
+
+			case SDL_KEYUP:
+				printf("Key release detected\n");
+				break;
+
+			default:
+				break;
 			}
+		
 
-			if (event.type == SDL_MOUSEMOTION) {
-				// Get the mouse offsets
-				x = event.motion.x;
-				y = event.motion.y;
-				MouseX = x;
-				MouseY = y;
-			
-				//SDL_GetMouseState(&MouseX, &MouseY);
-				
-			   
+		if (event.type == SDL_QUIT) {
 
-			}
+			quit = true;
+			SDL_Quit();
+			exit(0); // SDL quit doesn't always work.
+		}
 
-			// if (event.type == SDL_KEYDOWN && menu == 4 ){
-			// 	char * keyz = SDL_GetKeyName(event.key.keysym.sym);
-			// 	printf("SDLKEY PRESSED %s", keyz);
+		if (event.type == SDL_MOUSEMOTION) {
+			// Get the mouse offsets
+			x = event.motion.x;
+			y = event.motion.y;
+			MouseX = x;
+			MouseY = y;
 
-			// 	}
+			// SDL_GetMouseState(&MouseX, &MouseY);
+		}
 
-			// If a key was pressed
-			if (event.type == SDL_MOUSEBUTTONDOWN /*&& event.button.clicks == 2*/) {
+		// if (event.type == SDL_KEYDOWN && menu == 4 ){
+		// 	char * keyz = SDL_GetKeyName(event.key.keysym.sym);
+		// 	printf("SDLKEY PRESSED %s", keyz);
 
-				if (event.button.button == SDL_BUTTON_LEFT) {
-					x = event.button.x;
-					y = event.button.y;
-					printf("X %d , Y %d\n", x, y);
+		// 	}
 
-					if (menu == 0) {
+		// If a key was pressed
+		if (event.type == SDL_MOUSEBUTTONDOWN /*&& event.button.clicks == 2*/) {
 
-					    int ClickListStart = 195;
-						int sizeOfBox = 60;
-						int WidthOfBox = 400;
-						int ClickListEnd = 343;
-							
+			if (event.button.button == SDL_BUTTON_LEFT) {
+				x = event.button.x;
+				y = event.button.y;
+				printf("X %d , Y %d\n", x, y);
 
+				if (menu == 0) {
 
-						if ((x > ClickListStart) && (y > ClickListStart) &&
-						    (x < ClickListStart + WidthOfBox) && (y < ClickListStart + sizeOfBox)) { // Single clicked
-							printf("SinglePlayer Diablo\n");
-							// effects_play_sound("Sfx\\Items\\Titlslct.wav");
-							menu = 2;
-						}
+					int ClickListStart = 195;
+					int sizeOfBox = 60;
+					int WidthOfBox = 400;
+					int ClickListEnd = 343;
 
-						if ((x > ClickListStart) && (y > ClickListStart + (sizeOfBox)) &&
-						    (x < ClickListStart + WidthOfBox) &&
-						    (y < ClickListStart + (sizeOfBox) + sizeOfBox)) { // MultiBox clicked
-							printf("MultiPlayer Diablo\n");
+					if ((x > ClickListStart) && (y > ClickListStart) && (x < ClickListStart + WidthOfBox) &&
+					    (y < ClickListStart + sizeOfBox)) { // Single clicked
+						printf("SinglePlayer Diablo\n");
+						// effects_play_sound("Sfx\\Items\\Titlslct.wav");
+						menu = 2;
+					}
 
-						}
-						if ((x > ClickListStart) && (y > ClickListStart + (sizeOfBox * 2)) &&
-						    (x < ClickListStart + WidthOfBox) &&
-						    (y < ClickListStart + (sizeOfBox * 2) + sizeOfBox)) { // Reply Intro clicked
-							printf("Replay Intro\n");
+					if ((x > ClickListStart) && (y > ClickListStart + (sizeOfBox)) &&
+					    (x < ClickListStart + WidthOfBox) &&
+					    (y < ClickListStart + (sizeOfBox) + sizeOfBox)) { // MultiBox clicked
+						printf("MultiPlayer Diablo\n");
+					}
+					if ((x > ClickListStart) && (y > ClickListStart + (sizeOfBox * 2)) &&
+					    (x < ClickListStart + WidthOfBox) &&
+					    (y < ClickListStart + (sizeOfBox * 2) + sizeOfBox)) { // Reply Intro clicked
+						printf("Replay Intro\n");
+					}
+					if ((x > ClickListStart) && (y > ClickListStart + (sizeOfBox * 4)) &&
+					    (x < ClickListStart + WidthOfBox) &&
+					    (y < ClickListStart + (sizeOfBox * 4) + sizeOfBox)) { // ShowCredits clicked
+						printf("Show Credits\n");
+						menu = 10;
+						// effects_play_sound("Sfx\\Items\\Titlslct.wav");
+						// UiCreditsDialog(16);
+					}
 
-						}
-						if ((x > ClickListStart) && (y > ClickListStart + (sizeOfBox * 4)) &&
-						    (x < ClickListStart + WidthOfBox) &&
-						    (y < ClickListStart + (sizeOfBox * 4) + sizeOfBox)) { // ShowCredits clicked
-							printf("Show Credits\n");
-							// effects_play_sound("Sfx\\Items\\Titlslct.wav");
-							//UiCreditsDialog(16);
-						}
+					if ((x > ClickListStart) && (y > ClickListStart + (sizeOfBox * 5)) &&
+					    (x < ClickListStart + WidthOfBox) &&
+					    (y < ClickListStart + (sizeOfBox * 5) + sizeOfBox)) { // ExitBox clicked
+						printf("Exiting Diablo\n");
+						// effects_play_sound("Sfx\\Items\\Titlslct.wav");
 
-						if ((x > ClickListStart) && (y > ClickListStart + (sizeOfBox * 5)) &&
-						    (x < ClickListStart + WidthOfBox) &&
-						    (y < ClickListStart + (sizeOfBox * 5) + sizeOfBox)) { // ExitBox clicked
-							printf("Exiting Diablo\n");
-							// effects_play_sound("Sfx\\Items\\Titlslct.wav");
+						quit = true;
+						SDL_Quit();
+						exit(0);
+						// goto LABEL_16;
+					}
 
-							quit = true;
-							SDL_Quit();
-							exit(0);
-							// goto LABEL_16;
-						}
+				} // End of this Menu0
 
-					} // End of this Menu0
-
-					if (menu == 2) {
+				if (menu == 2) {
 					//	int x = 440;
 					//	int y = 430;
-						int ClickListStart = 315;
-						int sizeOfBox = 30;
-						int WidthOfBox = 400;
-						int ClickListEnd = 343;
+					int ClickListStart = 315;
+					int sizeOfBox = 30;
+					int WidthOfBox = 400;
+					int ClickListEnd = 343;
 
+					// Render Clicks
+					if (TotalPlayers >= 1 && (x > ClickListStart) && (y > ClickListStart) &&
+					    (x < ClickListStart + WidthOfBox) && (y < ClickListStart + sizeOfBox)) { // MultiBox clicked
+						//							printf("Player %s\n", hero_names[0]);
+						// effects_play_sound("Sfx\\Items\\Titlslct.wav");
+						strcpy(chr_name_str, hero_names[0]);
+						printf("Player %s\n", chr_name_str);
+						// FreeMenuItems();
+						break;
+					}
 
-
-						// Render Clicks
-						if (TotalPlayers >= 1 && (x > ClickListStart) && (y > ClickListStart) &&
-						    (x < ClickListStart + WidthOfBox) && (y < ClickListStart + sizeOfBox)) { // MultiBox clicked
-//							printf("Player %s\n", hero_names[0]);
-							//effects_play_sound("Sfx\\Items\\Titlslct.wav");
-							strcpy(chr_name_str, hero_names[0]);
-							printf("Player %s\n", chr_name_str);
-							//FreeMenuItems();
-							break;
-							
-
-
-
-						}
-
-						if (TotalPlayers >= 2 && (x > ClickListStart) && (y > ClickListStart + (sizeOfBox)) &&
-						    (x < ClickListStart + WidthOfBox) &&
-						    (y < ClickListStart + (sizeOfBox) + sizeOfBox)) { // MultiBox clicked
-							printf("Player 2 Diablo\n");
+					if (TotalPlayers >= 2 && (x > ClickListStart) && (y > ClickListStart + (sizeOfBox)) &&
+					    (x < ClickListStart + WidthOfBox) &&
+					    (y < ClickListStart + (sizeOfBox) + sizeOfBox)) { // MultiBox clicked
+						printf("Player 2 Diablo\n");
 						//	effects_play_sound("Sfx\\Items\\Titlslct.wav");
-							strcpy(chr_name_str, hero_names[1]);
-							printf("Player %s\n", chr_name_str);
-							//FreeMenuItems();
-							// XStartGame();
-							break;
-						}
-						if (TotalPlayers >= 3 && (x > ClickListStart) && (y > ClickListStart + (sizeOfBox * 2)) &&
-						    (x < ClickListStart + WidthOfBox) &&
-						    (y < ClickListStart + (sizeOfBox * 2) + sizeOfBox)) { // MultiBox clicked
-							printf("Player 3 Diablo\n");
-							effects_play_sound("Sfx\\Items\\Titlslct.wav");
-							strcpy(chr_name_str, hero_names[2]);
-							printf("Player %s\n", chr_name_str);
-							//FreeMenuItems();
-							break;
-							// XStartGame();
-						}
-						if (TotalPlayers >= 4 && (x > ClickListStart) && (y > ClickListStart + (sizeOfBox * 3)) &&
-						    (x < ClickListStart + WidthOfBox) &&
-						    (y < ClickListStart + (sizeOfBox * 3) + sizeOfBox)) { // MultiBox clicked
-							printf("Player 4 Diablo\n");
-							effects_play_sound("Sfx\\Items\\Titlslct.wav");
-							strcpy(chr_name_str, hero_names[3]);
-							printf("Player %s\n", chr_name_str);
-						//	FreeMenuItems();
-							break;
-							// XStartGame();
-						}
-						if (TotalPlayers >= 5 && (x > ClickListStart) && (y > ClickListStart + (sizeOfBox * 4)) &&
-						    (x < ClickListStart + WidthOfBox) &&
-						    (y < ClickListStart + (sizeOfBox * 4) + sizeOfBox)) { // MultiBox clicked
-							printf("Player 5 Diablo\n");
-							effects_play_sound("Sfx\\Items\\Titlslct.wav");
-							strcpy(chr_name_str, hero_names[4]);
-							printf("Player %s\n", chr_name_str);
-						//	FreeMenuItems();
-							break;
-							// XStartGame();
-						}
-						if (TotalPlayers >= 6 && (x > ClickListStart) && (y > ClickListStart + (sizeOfBox * 5)) &&
-						    (x < ClickListStart + WidthOfBox) &&
-						    (y < ClickListStart + (sizeOfBox * 5) + sizeOfBox)) { // MultiBox clicked
-							printf("Player 6 Diablo\n");
-							effects_play_sound("Sfx\\Items\\Titlslct.wav");
-							strcpy(chr_name_str, hero_names[5]);
-							printf("Player %s\n", chr_name_str);
-						//	FreeMenuItems();
-							break;
-							// XStartGame();
-						}
-
-						if ((x > SinglePlayerMenuCancelBox.x) && (y > SinglePlayerMenuCancelBox.y) &&
-						    (x < SinglePlayerMenuCancelBox.w) && (y < SinglePlayerMenuCancelBox.h)) { // ExitBox clicked
-							printf("CancelBox Diablo\n");
-							effects_play_sound("Sfx\\Items\\Titlslct.wav");
-
-							menu = 0;
-						}
-						if ((x > CreateHeroBox.x) && (y > CreateHeroBox.y) && (x < CreateHeroBox.w) &&
-						    (y < CreateHeroBox.h)) {
-							printf("Clicked Create Hero Box\n");
-							menu = 3;
-						}
+						strcpy(chr_name_str, hero_names[1]);
+						printf("Player %s\n", chr_name_str);
+						// FreeMenuItems();
+						// XStartGame();
+						break;
 					}
-					if (menu == 3) {
-						// SinglePlayerMenuItemsLoaded = 0;
-						printf("\n\nmenu3 X%d Y%d \n ", x, y);
-
-						int WarriorSelectBoxY = 379;
-						int WarriorSelectBoxW = 100;
-						int WarriorSelectBoxS = 100;
-
-						int RogueSelectBoxX = 360;
-						int RogueSelectBoxY = 345;
-						int SorcerorSelectBoxX = 383;
-						int SorcerorSelectBoxY = 365;
-						int CreateHeroOkBoxX = 330;
-						int CreateHeroOkBoxY = 441;
-						int CreateHeroCanBBoxX = 445;
-						int CreateHeroCanBBoxY = 473;
-
-						SDL_Rect WarriorSelectBox;
-						WarriorSelectBox.y = 280;
-						WarriorSelectBox.x = 375;
-						WarriorSelectBox.w = WarriorSelectBox.x + 100;
-						WarriorSelectBox.h = WarriorSelectBox.y + 30;
-
-						SDL_Rect RogueSelectBox;
-						RogueSelectBox.y = 320;
-						RogueSelectBox.x = 400;
-						RogueSelectBox.w = RogueSelectBox.x + 100;
-						RogueSelectBox.h = RogueSelectBox.y + 30;
-
-						SDL_Rect SorcerorSelectBox;
-						SorcerorSelectBox.y = 360;
-						SorcerorSelectBox.x = 380;
-						SorcerorSelectBox.w = SorcerorSelectBox.x + 100;
-						SorcerorSelectBox.h = SorcerorSelectBox.y + 30;
-
-						SDL_Rect CreateHeroCancelBox;
-						CreateHeroCancelBox.y = 450;
-						CreateHeroCancelBox.x = 450;
-						CreateHeroCancelBox.w = CreateHeroCancelBox.x + 100;
-						CreateHeroCancelBox.h = CreateHeroCancelBox.y + 30;
-
-						if ((x > WarriorSelectBox.x) && (y > WarriorSelectBox.y) && (x < WarriorSelectBox.w) &&
-						    (y < WarriorSelectBox.h)) {
-
-							printf("I was hit\n\n\n");
-							WarriorCreateSelected = 1;
-							RogueCreateSelected = 0;
-							SorcerorCreateSelected = 0;
-							menu = 4;
-						}
-						if ((x > RogueSelectBox.x) && (y > RogueSelectBox.y) && (x < RogueSelectBox.w) &&
-						    (y < RogueSelectBox.h)) {
-
-							printf("I was hit\n\n\n");
-							WarriorCreateSelected = 0;
-							RogueCreateSelected = 1;
-							SorcerorCreateSelected = 0;
-							menu = 4;
-						}
-						if ((x > SorcerorSelectBox.x) && (y > SorcerorSelectBox.y) && (x < SorcerorSelectBox.w) &&
-						    (y < SorcerorSelectBox.h)) {
-
-							printf("I was hit\n\n\n");
-							WarriorCreateSelected = 0;
-							RogueCreateSelected = 0;
-							SorcerorCreateSelected = 1;
-							menu = 4;
-						}
-
-						if ((x > CreateHeroCancelBox.x) && (y > CreateHeroCancelBox.y) && (x < CreateHeroCancelBox.w) &&
-						    (y < CreateHeroCancelBox.h)) {
-
-							printf("Cancel\n\n\n");
-							menu = 2;
-						}
+					if (TotalPlayers >= 3 && (x > ClickListStart) && (y > ClickListStart + (sizeOfBox * 2)) &&
+					    (x < ClickListStart + WidthOfBox) &&
+					    (y < ClickListStart + (sizeOfBox * 2) + sizeOfBox)) { // MultiBox clicked
+						printf("Player 3 Diablo\n");
+						effects_play_sound("Sfx\\Items\\Titlslct.wav");
+						strcpy(chr_name_str, hero_names[2]);
+						printf("Player %s\n", chr_name_str);
+						// FreeMenuItems();
+						break;
+						// XStartGame();
 					}
-					if (menu == 4) {
-						printf("sozdat geroya");
+					if (TotalPlayers >= 4 && (x > ClickListStart) && (y > ClickListStart + (sizeOfBox * 3)) &&
+					    (x < ClickListStart + WidthOfBox) &&
+					    (y < ClickListStart + (sizeOfBox * 3) + sizeOfBox)) { // MultiBox clicked
+						printf("Player 4 Diablo\n");
+						effects_play_sound("Sfx\\Items\\Titlslct.wav");
+						strcpy(chr_name_str, hero_names[3]);
+						printf("Player %s\n", chr_name_str);
+						//	FreeMenuItems();
+						break;
+						// XStartGame();
+					}
+					if (TotalPlayers >= 5 && (x > ClickListStart) && (y > ClickListStart + (sizeOfBox * 4)) &&
+					    (x < ClickListStart + WidthOfBox) &&
+					    (y < ClickListStart + (sizeOfBox * 4) + sizeOfBox)) { // MultiBox clicked
+						printf("Player 5 Diablo\n");
+						effects_play_sound("Sfx\\Items\\Titlslct.wav");
+						strcpy(chr_name_str, hero_names[4]);
+						printf("Player %s\n", chr_name_str);
+						//	FreeMenuItems();
+						break;
+						// XStartGame();
+					}
+					if (TotalPlayers >= 6 && (x > ClickListStart) && (y > ClickListStart + (sizeOfBox * 5)) &&
+					    (x < ClickListStart + WidthOfBox) &&
+					    (y < ClickListStart + (sizeOfBox * 5) + sizeOfBox)) { // MultiBox clicked
+						printf("Player 6 Diablo\n");
+						effects_play_sound("Sfx\\Items\\Titlslct.wav");
+						strcpy(chr_name_str, hero_names[5]);
+						printf("Player %s\n", chr_name_str);
+						//	FreeMenuItems();
+						break;
+						// XStartGame();
+					}
 
-						// if (SDL_PollEvent(&event)) {
-						// 	if (event.type == SDL_KEYDOWN && menu == 4) {
-						// 		char *keyz = SDL_GetKeyName(event.key.keysym.sym);
-						// 		printf("SDLKEY PRESSED %s\n", keyz);
-						// 	}
-						// }
+					if ((x > SinglePlayerMenuCancelBox.x) && (y > SinglePlayerMenuCancelBox.y) &&
+					    (x < SinglePlayerMenuCancelBox.w) && (y < SinglePlayerMenuCancelBox.h)) { // ExitBox clicked
+						printf("CancelBox Diablo\n");
+						effects_play_sound("Sfx\\Items\\Titlslct.wav");
 
-						SDL_Rect CreateHeroCancelBox;
-						CreateHeroCancelBox.y = 450;
-						CreateHeroCancelBox.x = 450;
-						CreateHeroCancelBox.w = CreateHeroCancelBox.x + 100;
-						CreateHeroCancelBox.h = CreateHeroCancelBox.y + 30;
+						menu = 0;
+					}
+					if ((x > CreateHeroBox.x) && (y > CreateHeroBox.y) && (x < CreateHeroBox.w) &&
+					    (y < CreateHeroBox.h)) {
+						printf("Clicked Create Hero Box\n");
+						menu = 3;
+					}
+				}
+				if (menu == 3) {
+					// SinglePlayerMenuItemsLoaded = 0;
+					printf("\n\nmenu3 X%d Y%d \n ", x, y);
 
-						if ((x > CreateHeroCancelBox.x) && (y > CreateHeroCancelBox.y) && (x < CreateHeroCancelBox.w) &&
-						    (y < CreateHeroCancelBox.h)) {
+					int WarriorSelectBoxY = 379;
+					int WarriorSelectBoxW = 100;
+					int WarriorSelectBoxS = 100;
 
-							printf("Cancel\n\n\n");
-							menu = 3;
-						}
+					int RogueSelectBoxX = 360;
+					int RogueSelectBoxY = 345;
+					int SorcerorSelectBoxX = 383;
+					int SorcerorSelectBoxY = 365;
+					int CreateHeroOkBoxX = 330;
+					int CreateHeroOkBoxY = 441;
+					int CreateHeroCanBBoxX = 445;
+					int CreateHeroCanBBoxY = 473;
+
+					SDL_Rect WarriorSelectBox;
+					WarriorSelectBox.y = 280;
+					WarriorSelectBox.x = 375;
+					WarriorSelectBox.w = WarriorSelectBox.x + 100;
+					WarriorSelectBox.h = WarriorSelectBox.y + 30;
+
+					SDL_Rect RogueSelectBox;
+					RogueSelectBox.y = 320;
+					RogueSelectBox.x = 400;
+					RogueSelectBox.w = RogueSelectBox.x + 100;
+					RogueSelectBox.h = RogueSelectBox.y + 30;
+
+					SDL_Rect SorcerorSelectBox;
+					SorcerorSelectBox.y = 360;
+					SorcerorSelectBox.x = 380;
+					SorcerorSelectBox.w = SorcerorSelectBox.x + 100;
+					SorcerorSelectBox.h = SorcerorSelectBox.y + 30;
+
+					SDL_Rect CreateHeroCancelBox;
+					CreateHeroCancelBox.y = 450;
+					CreateHeroCancelBox.x = 450;
+					CreateHeroCancelBox.w = CreateHeroCancelBox.x + 100;
+					CreateHeroCancelBox.h = CreateHeroCancelBox.y + 30;
+
+					if ((x > WarriorSelectBox.x) && (y > WarriorSelectBox.y) && (x < WarriorSelectBox.w) &&
+					    (y < WarriorSelectBox.h)) {
+
+						printf("I was hit\n\n\n");
+						WarriorCreateSelected = 1;
+						RogueCreateSelected = 0;
+						SorcerorCreateSelected = 0;
+						menu = 4;
+					}
+					if ((x > RogueSelectBox.x) && (y > RogueSelectBox.y) && (x < RogueSelectBox.w) &&
+					    (y < RogueSelectBox.h)) {
+
+						printf("I was hit\n\n\n");
+						WarriorCreateSelected = 0;
+						RogueCreateSelected = 1;
+						SorcerorCreateSelected = 0;
+						menu = 4;
+					}
+					if ((x > SorcerorSelectBox.x) && (y > SorcerorSelectBox.y) && (x < SorcerorSelectBox.w) &&
+					    (y < SorcerorSelectBox.h)) {
+
+						printf("I was hit\n\n\n");
+						WarriorCreateSelected = 0;
+						RogueCreateSelected = 0;
+						SorcerorCreateSelected = 1;
+						menu = 4;
+					}
+
+					if ((x > CreateHeroCancelBox.x) && (y > CreateHeroCancelBox.y) && (x < CreateHeroCancelBox.w) &&
+					    (y < CreateHeroCancelBox.h)) {
+
+						printf("Cancel\n\n\n");
+						menu = 2;
+					}
+				}
+				if (menu == 4) {
+					printf("sozdat geroya");
+
+					// if (SDL_PollEvent(&event)) {
+					// 	if (event.type == SDL_KEYDOWN && menu == 4) {
+					// 		char *keyz = SDL_GetKeyName(event.key.keysym.sym);
+					// 		printf("SDLKEY PRESSED %s\n", keyz);
+					// 	}
+					// }
+
+					SDL_Rect CreateHeroCancelBox;
+					CreateHeroCancelBox.y = 450;
+					CreateHeroCancelBox.x = 450;
+					CreateHeroCancelBox.w = CreateHeroCancelBox.x + 100;
+					CreateHeroCancelBox.h = CreateHeroCancelBox.y + 30;
+
+					if ((x > CreateHeroCancelBox.x) && (y > CreateHeroCancelBox.y) && (x < CreateHeroCancelBox.w) &&
+					    (y < CreateHeroCancelBox.h)) {
+
+						printf("Cancel\n\n\n");
+						menu = 3;
 					}
 				}
 			}
-			
 		}
-		
 	}
-
+}
 }

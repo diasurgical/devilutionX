@@ -19,6 +19,8 @@ stdarg.h
 -
 
 ../Stub/miniwin.h
+SDL2/SDL.h
+-
 vector
 -
 ctype.h
@@ -385,6 +387,8 @@ miniwin_sdl.h
 /home/krash/CLionProjects/devilutionX/Source/gmenu.cpp
 ../types.h
 /home/krash/CLionProjects/devilutionX/types.h
+miniwin_sdl.h
+/home/krash/CLionProjects/devilutionX/Source/miniwin_sdl.h
 
 /home/krash/CLionProjects/devilutionX/Source/gmenu.h
 
@@ -749,6 +753,8 @@ stubs.h
 /home/krash/CLionProjects/devilutionX/Stub/stubs.h
 
 /home/krash/CLionProjects/devilutionX/Stub/miniwin.h
+SDL2/SDL.h
+-
 vector
 -
 ctype.h

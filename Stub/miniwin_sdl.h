@@ -91,7 +91,20 @@ extern void * pPcxSHeroImage;
 extern void * pMedTextCels;
 
 extern void * pPcxGameImage;
+extern void * pPcxCreditsImage;
+extern int gdwCreditsWidth;
+extern int gdwCreditsHeight;
 
+
+extern int gdwFont2Width;
+extern int gdwFont2Height;
+extern void *pPcxFont2Image;
+extern unsigned char *pFont2;
+
+extern int gdwFont3Width;
+extern int gdwFont3Height;
+extern void *pPcxFont3Image;
+extern unsigned char *pFont3;
 
 
 
@@ -107,11 +120,15 @@ char *GetWorkingDirectory();
 void  CreateMainDiabloMenu();
 void SDLCreateDiabloCursor();
 void SDL_RenderDiabloSinglePlayerPage();
+void ShowCredts();
 void RenderCharNames();
 void SDL_Diablo_UI();
 void FreeMenuItems();
 void DrawMouse();
 void DrawCursor(int mx, int my);
+
+
+
 
 typedef unsigned char BYTE;
 void DrawArtWithMask(int SX, int SY, int SW, int SH, int nFrame, BYTE bMask, void *pBuffer);
