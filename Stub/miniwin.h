@@ -44,6 +44,8 @@
 
 #define VOID void
 
+extern void *prealpha_mpq;
+
 typedef char CHAR;
 typedef uint16_t SHORT;
 typedef int32_t LONG;

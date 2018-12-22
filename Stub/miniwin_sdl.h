@@ -106,7 +106,9 @@ extern int gdwFont3Height;
 extern void *pPcxFont3Image;
 extern unsigned char *pFont3;
 
-
+extern char HeroUndecidedName[17];
+extern bool CreateSinglePlayerChar;
+extern int HeroChosen;
 
 //Menu2 // Single player menu rects
 //extern static std::vector<_uiheroinfo> hero_infos;
@@ -126,9 +128,12 @@ void SDL_Diablo_UI();
 void FreeMenuItems();
 void DrawMouse();
 void DrawCursor(int mx, int my);
-
-
-
+void CreateHeroMenu();
+void DrawNewHeroKartinka(int image , int ShowClasses);
+void ConstantButtons();
+void RenderUndecidedHeroName();
+void LoadHeroStats();
+void RenderDefaultStats(int HeroChosen);
 
 typedef unsigned char BYTE;
 void DrawArtWithMask(int SX, int SY, int SW, int SH, int nFrame, BYTE bMask, void *pBuffer);

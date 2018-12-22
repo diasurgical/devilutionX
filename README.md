@@ -65,7 +65,7 @@ set(SDL2_LIBRARIES "-L${SDL2_LIBDIR}  -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_tt
 
 
 Copy the "diablodat.mpq" from your Diablo CD to the Diablo Directory and make sure it is LOWERCASE.
-Copy the Xresources and fonts file to your Diablo Directory. 
+COPY THE *prealpha.mpq* from this directory TO YOUR DIABLO DIRECTORY. 
 
 
 Keep in mind please that this is still being worked on and is missing parts of UI and SoundEffects are not properly playing now.

@@ -37,24 +37,33 @@ BOOL __stdcall UiSelHeroSingDialog(BOOL(__stdcall *fninfo)(BOOL(__stdcall *fninf
 	hero_infos.clear();
 	fninfo(&ui_add_hero_info);
 
+
+	if (CreateSinglePlayerChar) {
+			const char *test_name = HeroUndecidedName;
+			DUMMY_PRINT("create hero: %s", test_name);
+
+			strcpy(name, test_name);
+
+			_uiheroinfo hero_info = {1 };
+			strcpy(hero_info.name, test_name);
+			hero_info.heroclass = HeroChosen;
+
+			fncreate(&hero_info);
+		}
+
+
+
+
 	// If a hero is available, load it, otherwise create a new one
-	if (!hero_infos.empty()) {
+	//if (!hero_infos.empty()) {
+		
+	else {
 		const char *hero_name = chr_name_str;
 		DUMMY_PRINT("use hero: %s", hero_name);
 		strcpy(name, hero_name);
 
 		*dlgresult = 2;
-	} else {
-		const char *test_name = "tester";
-		DUMMY_PRINT("create hero: %s", test_name);
-
-		strcpy(name, test_name);
-
-		_uiheroinfo hero_info = {0};
-		strcpy(hero_info.name, test_name);
-		hero_info.heroclass = PC_SORCERER;
-
-		fncreate(&hero_info);
+		
 	}
 
 	return TRUE;

@@ -21,6 +21,10 @@ void *pPentSmall;
 void *pTitlqtxtCel;
 void *pDiabfrCel;
 void *BigTGold_cel;
+
+//int gb_Lfont_pix_width;
+//int gb_Lfont_str_len;
+
 int gdwLogoWidth;
 int gdwLogoHeight;
 void *pPcxLogoImage;
@@ -61,6 +65,10 @@ void *pPcxFont3Image;
 unsigned char *pFont3;
 
 
+void *GameTitle;
+int GameTitleHeight;
+int GameTitleWidth;
+
 
 #endif
 
@@ -99,6 +107,7 @@ void __cdecl gmenu_draw_pause()
 	}
 }
 // 69BEF8: using guessed type int light_table_index;
+
 
 PALETTEENTRY pcxPal[256];
 
@@ -149,6 +158,10 @@ BOOL __cdecl LoadArtWithPal(char *pszFile, void **pBuffer, int frames, DWORD *da
 		return 0;
 
 	LoadPalInMem(pcxPal);
+	
+
+
+
 	//	lpDDPalette->SetEntries(0, 0, 256, orig_palette);
 
 	if (pBuffer && data)
@@ -373,9 +386,12 @@ void __cdecl gmenu_init_menu()
 	dword_63448C = 0;
 	byte_634464 = 0;
 
-	LoadArtImage("ui_art\\cursor.pcx", &pPcxCursorImage, 1, dwData);
-	gdwCursorWidth = dwData[0];
-	gdwCursorHeight = dwData[1];
+	// LoadArtImage("ui_art\\cursor.pcx", &pPcxCursorImage, 1, dwData);
+	// gdwCursorWidth = dwData[0];
+	// gdwCursorHeight = dwData[1];
+	// printf("%d\n",gdwCursorWidth);
+
+	
 
 	LoadArtWithPal("ui_art\\mainmenu.pcx", &pPcxTitleImage, 1, dwData);
 	gdwTitleWidth = dwData[0];
@@ -416,6 +432,10 @@ void __cdecl gmenu_init_menu()
 	gdwFont3Height = dwData[1];
 	pFont3 = LoadFileInMem("ui_art\\font16.bin", 0);
 
+
+
+	//pPcxCursorImage = LoadFileInMem("data\\inv\\objcurs.cel",0);
+	GameTitle= LoadFileInMem("Gendata\\Diabfr.CEL",0);
 	sgpLogo = LoadFileInMem("Data\\Diabsmal.CEL", 0);
 	BigTGold_cel = LoadFileInMem("Data\\BigTGold.CEL", 0);
 	PentSpin_cel = LoadFileInMem("Data\\PentSpin.CEL", 0);

@@ -7,6 +7,7 @@ extern bool byte_634464; // weak
 extern void *PentSpin_cel;
 extern TMenuItem *sgpCurrItem;
 extern void *BigTGold_cel;
+extern void *GameTitle;
 extern int dword_634474; // weak
 extern char byte_634478; // weak
 extern void (__cdecl *dword_63447C)();
