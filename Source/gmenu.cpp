@@ -69,7 +69,8 @@ void *GameTitle;
 int GameTitleHeight;
 int GameTitleWidth;
 
-
+void * TitleMenuText; 
+void * MenuPentegram;
 #endif
 
 const unsigned char lfontframe[127] =
@@ -341,12 +342,20 @@ void __fastcall gmenu_print_text(int x, int y, char *pszStr)
 	v3 = pszStr;
 	v4 = y;
 	v5 = x;
+
+
+	// for(int z = 0; z < 30; z++){
+	// 	char * A = TitleMenuText;
+	// 	printf("BIG TEXT %c\n", A[z]);
+	// }
+
 	for (i = *pszStr; *v3; i = *v3)
 	{
 		++v3;
 		v7 = lfontframe[fontidx[i]];
 		if (v7)
-			CelDecodeLightOnly(v5, v4, (char *)BigTGold_cel, v7, 46);
+			//CelDecodeLightOnly(v5, v4, (char *)BigTGold_cel, v7, 46);
+			CelDecodeLightOnly(v5, v4, (char *)TitleMenuText, v7, 46);
 		v5 += lfontkern[v7] + 2;
 	}
 }
@@ -433,9 +442,10 @@ void __cdecl gmenu_init_menu()
 	pFont3 = LoadFileInMem("ui_art\\font16.bin", 0);
 
 
-
-	//pPcxCursorImage = LoadFileInMem("data\\inv\\objcurs.cel",0);
-	GameTitle= LoadFileInMem("Gendata\\Diabfr.CEL",0);
+	MenuPentegram = LoadFileInMem("Gendata\\Pentitle.CEL",0);
+	pTitlgrayCel_sgpBackCel = LoadFileInMem("Gendata\\Titlgray.CEL", 0);
+	TitleMenuText = LoadFileInMem("Gendata\\Titltext.CEL",0);
+	GameTitle = LoadFileInMem("Gendata\\Diabfr.CEL",0);
 	sgpLogo = LoadFileInMem("Data\\Diabsmal.CEL", 0);
 	BigTGold_cel = LoadFileInMem("Data\\BigTGold.CEL", 0);
 	PentSpin_cel = LoadFileInMem("Data\\PentSpin.CEL", 0);
@@ -444,7 +454,7 @@ void __cdecl gmenu_init_menu()
 	pPentSmall = LoadFileInMem("Data\\PentSpn2.CEL", 0);
 	pPanelText = LoadFileInMem("CtrlPan\\SmalText.CEL", 0);
 	pSTextBoxCels = LoadFileInMem("Data\\TextBox2.CEL", 0);
-	pMedTextCels = LoadFileInMem("Data\\MedTextS.CEL", 0);
+	pMedTextCels = LoadFileInMem("Gendata\\Titlqtxt.CEL", 0);
 	pDiabfrCel = LoadFileInMem("Data\\Diabsmal.CEL", 0);
 }
 // 634464: using guessed type char byte_634464;

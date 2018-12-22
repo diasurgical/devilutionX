@@ -110,6 +110,10 @@ extern char HeroUndecidedName[17];
 extern bool CreateSinglePlayerChar;
 extern int HeroChosen;
 
+extern void * TitleMenuText; 
+
+extern void * MenuPentegram;
+
 //Menu2 // Single player menu rects
 //extern static std::vector<_uiheroinfo> hero_infos;
 extern SDL_Rect SinglePlayerMenuCancelBox;

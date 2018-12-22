@@ -48,7 +48,7 @@ static std::string find_file_in_std_directories(const char *file)
 {
 	for (auto dir : {".", "..", "../.."}) {
 		auto path = find_file_in_directory(dir, file);
-		
+
 		if (!path.empty()) {
 			printf("%s \n", path.c_str());
 			return path;
@@ -169,8 +169,8 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 	SdlDiabloMainWindow();
 
 	ClearScreenBuffer();
-	//LoadPalette("gendata\\charscrn.pal"); // Uncomenting this fixes the the PCXs...
-	LoadPalette("Gendata\\Title.pal"); 
+	 //LoadPalette("gendata\\delchar.pal"); // Uncomenting this fixes the the PCXs...
+	LoadPalette("Gendata\\Title.pal");
 
 	const Uint8 *state = SDL_GetKeyboardState(NULL);
 
@@ -178,13 +178,12 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 
 	while (1 && quit == false) {
 		// DrawMouse();
-		PaletteFadeIn(8);
+		PaletteFadeIn(32);
 
 		if (menu == 0) {
 			//	CreateMainDiabloMenu();
 			SDL_RenderDiabloMainPage();
 			DrawMouse();
-			
 		}
 
 		if (menu == 2) {
@@ -201,9 +200,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 		}
 
 		if (menu == 3) {
-			// HeroPortrait = 3;
 			CreateHeroMenu();
-
 			DrawNewHeroKartinka(HeroPortrait, 1);
 			ConstantButtons();
 			DrawMouse();
@@ -222,9 +219,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 			ShowCredts();
 		}
 
-		if (SDL_PollEvent(&event)) { // Technically if this is a while look then it would probably work fine...
-			                         // but my code above wouldnt escape
-
+		if (SDL_PollEvent(&event)) { 
 			switch (event.type) {
 			case SDL_KEYDOWN:
 				switch (event.key.keysym.sym) {
@@ -242,25 +237,21 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 				case SDLK_RETURN:
 
 				default:
-					char letter = event.key.keysym.sym; // This is just a way to ensure alpha keys are pressed only
-					//printf("%d", event.key.keysym.sym);
+					char letter = event.key.keysym.sym;
 					if (int(letter) > 96 && int(letter) < 123 || int(letter) == 32)
 
 						if (NewHeroNameIndex < 17) {
 							HeroUndecidedName[NewHeroNameIndex] = letter;
 							NewHeroNameIndex++;
-						//	printf("%s\n ", HeroUndecidedName);
 						}
 
 					break;
 				}
 
 			case SDL_KEYUP:
-				//printf("Key release detected\n");
 				break;
 
 			default:
-				//	printf("%c", event.key.keysym.sym);
 				break;
 			}
 
@@ -279,12 +270,6 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 				MouseY = y;
 			}
 
-			// if (event.type == SDL_KEYDOWN && menu == 4 ){
-			// 	char * keyz = SDL_GetKeyName(event.key.keysym.sym);
-			// 	printf("SDLKEY PRESSED %s", keyz);
-
-			// 	}
-
 			// If a key was pressed
 			if (event.type == SDL_MOUSEBUTTONDOWN /*&& event.button.clicks == 2*/) {
 
@@ -295,15 +280,14 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 
 					if (menu == 0) {
 
-						int ClickListStart = 195;
-						int sizeOfBox = 60;
-						int WidthOfBox = 400;
+						int ClickListStart = 230;
+						int sizeOfBox = 72;
+						int WidthOfBox = 430;
 						int ClickListEnd = 343;
 
 						if ((x > ClickListStart) && (y > ClickListStart) && (x < ClickListStart + WidthOfBox) &&
 						    (y < ClickListStart + sizeOfBox)) { // Single clicked
 							printf("SinglePlayer Diablo\n");
-							// effects_play_sound("Sfx\\Items\\Titlslct.wav");
 							menu = 2;
 						}
 
@@ -315,27 +299,17 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 						if ((x > ClickListStart) && (y > ClickListStart + (sizeOfBox * 2)) &&
 						    (x < ClickListStart + WidthOfBox) &&
 						    (y < ClickListStart + (sizeOfBox * 2) + sizeOfBox)) { // Reply Intro clicked
-							printf("Replay Intro\n");
+							printf("Credits\n");
+							menu = 10;
 						}
 						if ((x > ClickListStart) && (y > ClickListStart + (sizeOfBox * 4)) &&
 						    (x < ClickListStart + WidthOfBox) &&
 						    (y < ClickListStart + (sizeOfBox * 4) + sizeOfBox)) { // ShowCredits clicked
-							printf("Show Credits\n");
-							menu = 10;
-							// effects_play_sound("Sfx\\Items\\Titlslct.wav");
-							// UiCreditsDialog(16);
-						}
-
-						if ((x > ClickListStart) && (y > ClickListStart + (sizeOfBox * 5)) &&
-						    (x < ClickListStart + WidthOfBox) &&
-						    (y < ClickListStart + (sizeOfBox * 5) + sizeOfBox)) { // ExitBox clicked
 							printf("Exiting Diablo\n");
-							// effects_play_sound("Sfx\\Items\\Titlslct.wav");
-
 							quit = true;
 							SDL_Quit();
 							exit(0);
-							// goto LABEL_16;
+
 						}
 
 					} // End of this Menu0
@@ -378,7 +352,6 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 						    (x < ClickListStart + WidthOfBox) &&
 						    (y < ClickListStart + (sizeOfBox * 2) + sizeOfBox)) { // MultiBox clicked
 							printf("Player 3 Diablo\n");
-							//							effects_play_sound("Sfx\\Items\\Titlslct.wav");
 							strcpy(chr_name_str, hero_names[2]);
 							printf("Player %s\n", chr_name_str);
 							break;
@@ -431,6 +404,8 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 						// SinglePlayerMenuItemsLoaded = 0;
 						printf("\n\nmenu3 X%d Y%d \n ", x, y);
 
+						
+
 						int WarriorSelectBoxY = 430;
 						int WarriorSelectBoxW = 100;
 						int WarriorSelectBoxS = 100;
@@ -444,22 +419,26 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 						int CreateHeroCanBBoxX = 445;
 						int CreateHeroCanBBoxY = 473;
 
+						//int x = 280;
+						//int y = 430;
+
+
 						SDL_Rect WarriorSelectBox;
 						WarriorSelectBox.y = 350;
-						WarriorSelectBox.x = 450;
+						WarriorSelectBox.x = 280;
 						WarriorSelectBox.w = WarriorSelectBox.x + 100;
 						WarriorSelectBox.h = WarriorSelectBox.y + 30;
 
 						SDL_Rect RogueSelectBox;
 						RogueSelectBox.y = 392;
-						RogueSelectBox.x = 450;
+						RogueSelectBox.x = 280;
 						RogueSelectBox.w = RogueSelectBox.x + 100;
 						RogueSelectBox.h = RogueSelectBox.y + 30;
 						// X450 Y 392 ;
 
 						SDL_Rect SorcerorSelectBox;
 						SorcerorSelectBox.y = 428;
-						SorcerorSelectBox.x = 450;
+						SorcerorSelectBox.x = 280;
 						SorcerorSelectBox.w = SorcerorSelectBox.x + 100;
 						SorcerorSelectBox.h = SorcerorSelectBox.y + 30;
 						// X 447 Y 428
@@ -520,6 +499,10 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 						if ((x > CreateHeroCancelBox.x) && (y > CreateHeroCancelBox.y) && (x < CreateHeroCancelBox.w) &&
 						    (y < CreateHeroCancelBox.h)) {
 							memset(HeroUndecidedName, 0, 17);
+
+						// 	if (NewHeroNameIndex > 0) {
+						// HeroUndecidedName[NewHeroNameIndex - 1] = 0;
+						NewHeroNameIndex = 0;
 
 							printf("Cancel\n\n\n");
 							HeroPortrait = 3;
