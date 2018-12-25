@@ -72,6 +72,7 @@ void __fastcall init_create_window(int nCmdShow)
 	init_archives();
 	gmenu_init_menu();
 	SDL_Diablo_UI();
+	SDL_ShowCursor(SDL_DISABLE);
 }
 
 LRESULT __stdcall MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)

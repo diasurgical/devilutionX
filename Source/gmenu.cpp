@@ -596,7 +596,9 @@ void __fastcall gmenu_draw_menu_item(TMenuItem *pItem, int a2)
 		MyPcxFRAME = 1;
 	}
 
-	DrawArtWithMask(320 - (gdwLogoWidth / 2), -50, gdwLogoWidth, gdwLogoHeight, MyPcxFRAME, 250, pPcxLogoImage);
+	//DrawArtWithMask(320 - (gdwLogoWidth / 2), -50, gdwLogoWidth, gdwLogoHeight, MyPcxFRAME, 250, pPcxLogoImage);
+	CelDecodeOnly(64, 275, GameTitle, MyPcxFRAME, 640);
+
 
 	if (++diablogo_cel_frame == 29)
 	{
