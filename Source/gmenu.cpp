@@ -446,6 +446,8 @@ void __cdecl gmenu_init_menu()
 	gdwFont3Height = dwData[1];
 	pFont3 = LoadFileInMem("ui_art\\font16.bin", 0);
 
+		
+	pCursCels = LoadFileInMem("Data\\Inv\\Objcurs.CEL", 0); 
 
 	MenuPentegram = LoadFileInMem("Gendata\\Pentitle.CEL",0);
 	pTitlgrayCel_sgpBackCel = LoadFileInMem("Gendata\\Titlgray.CEL", 0);

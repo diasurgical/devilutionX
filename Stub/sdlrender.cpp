@@ -616,7 +616,8 @@ void SdlDiabloMainWindow()
 	SDL_Init(SDL_INIT_VIDEO);
 
 	window = SDL_CreateWindow("Diablo", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, Window_Width, Window_Height,
-	                          SDL_WINDOW_SHOWN);
+	                          SDL_WINDOW_RESIZABLE);
+
 	renderer = SDL_CreateRenderer(window, -1, 0);
 	printf("Window And Renderer Created!\n");
 
@@ -846,7 +847,13 @@ void DrawMouse()
 
 	SDL_GetMouseState(&MouseX, &MouseY);
 
-	CelDecodeOnly(MouseX, MouseY, pPcxCursorImage, 1, 36);
+    //CelDecodeOnly(64, 64, pCursCels, 1, 28);
+
+	//CelDecodeOnly(MouseX, MouseY, pCursCels, 1, 36);
+
+   // frame_width = InvItemWidth[frame];
+
+    
 
 	//	lock_buf_priv();
 	// DrawArtWithMask(MouseX, MouseY, gdwCursorWidth, lines, 0, 0, pPcxCursorImage);

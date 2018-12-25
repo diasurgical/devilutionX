@@ -73,6 +73,9 @@ void __fastcall init_create_window(int nCmdShow)
 	gmenu_init_menu();
 	SDL_Diablo_UI();
 	SDL_ShowCursor(SDL_DISABLE);
+	SDL_SetWindowSize(window, 1920,1080); //2560x1440
+	SDL_SetRelativeMouseMode(SDL_TRUE);
+
 }
 
 LRESULT __stdcall MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
@@ -165,6 +168,8 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 	int CharsLoaded = 0;
 	int HeroPortrait = 3;
 
+	int Selection[4];
+
 	printf("Main Menu Init\n");
 	// SDL_ShowCursor(SDL_DISABLE);//Doesn't really work... Use HideCursor() instead.
 	SdlDiabloMainWindow();
@@ -178,13 +183,11 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 	// static std::deque<MSG> message_queue;
 
 	while (1 && quit == false) {
-		// DrawMouse();
+		 DrawMouse();
 		PaletteFadeIn(32);
 
 		if (menu == 0) {
-			//	CreateMainDiabloMenu();
 			SDL_RenderDiabloMainPage();
-			DrawMouse();
 		}
 
 		if (menu == 2) {
@@ -196,7 +199,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 			}
 			SDL_RenderDiabloSinglePlayerPage();
 			gbMaxPlayers = 1;
-			DrawMouse(); // Not accurate for some reason. It adds too much  and I am not sure why.
+			//DrawMouse(); // Not accurate for some reason. It adds too much  and I am not sure why.
 			ConstantButtons();
 		}
 
@@ -204,7 +207,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 			CreateHeroMenu();
 			DrawNewHeroKartinka(HeroPortrait, 1);
 			ConstantButtons();
-			DrawMouse();
+			//DrawMouse();
 		}
 
 		int m4Loaded = 0;
