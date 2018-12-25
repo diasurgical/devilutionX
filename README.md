@@ -22,6 +22,14 @@ In order to ensure that everything is preserved, Devilution keeps everything as 
 
 As a side goal Devilution tries to document the unused and cut content from the final game. Development of Diablo was rushed near the end--many ideas were scrapped and multiplayer was quickly hacked in. By examining the source, we can see various quirks of planned development.
 
+
+# How To Play:
+ - Install Diablo
+ - copy diabdat.mpq to Diablo game directory ; Make sure it is all lowercase.
+ - [Download This Pre-Alpha MPQ ](https://github.com/diasurgical/devilutionX/blob/master/prealpha.mpq)
+ - [Download Devilution](https://github.com/diasurgical/devilutionX/blob/master/build/devilution)
+
+
 # Compiling
 Diablo was developed on Windows 95 using Visual C++ 4.20 and later 5.10 and 6 for newer patches. Devilution is optimized for the same tools originally used but is also compatible with modern setups.
 
