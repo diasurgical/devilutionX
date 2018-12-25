@@ -354,8 +354,13 @@ void __fastcall gmenu_print_text(int x, int y, char *pszStr)
 		++v3;
 		v7 = lfontframe[fontidx[i]];
 		if (v7)
-			//CelDecodeLightOnly(v5, v4, (char *)BigTGold_cel, v7, 46);
-			CelDecodeLightOnly(v5, v4, (char *)TitleMenuText, v7, 46);
+			if(gbRunGame == 1){
+				CelDecodeLightOnly(v5, v4, (char *)BigTGold_cel, v7, 46);
+			}
+			else{
+				CelDecodeLightOnly(v5, v4, (char *)TitleMenuText, v7, 46);
+			}
+			
 		v5 += lfontkern[v7] + 2;
 	}
 }
