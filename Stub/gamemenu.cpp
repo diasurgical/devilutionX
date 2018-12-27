@@ -56,6 +56,7 @@ void __cdecl gamemenu_enable_single()
 {
 	bool v0; // dl
 
+	gmenu_enable(&sgSingleMenu[2], false);// Remove this when new game is working.
 	gmenu_enable(&sgSingleMenu[3], gbValidSaveFile);
 	v0 = 0;
 	if ( plr[myplr]._pmode != PM_DEATH && !deathflag )
