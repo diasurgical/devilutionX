@@ -372,10 +372,6 @@ miniwin_sdl.h
 
 /home/krash/CLionProjects/devilutionX/Source/fault.h
 
-/home/krash/CLionProjects/devilutionX/Source/gamemenu.cpp
-../types.h
-/home/krash/CLionProjects/devilutionX/types.h
-
 /home/krash/CLionProjects/devilutionX/Source/gamemenu.h
 
 /home/krash/CLionProjects/devilutionX/Source/gendung.cpp
@@ -721,6 +717,10 @@ string
 /home/krash/CLionProjects/devilutionX/types.h
 stubs.h
 /home/krash/CLionProjects/devilutionX/Stub/stubs.h
+
+/home/krash/CLionProjects/devilutionX/Stub/gamemenu.cpp
+../types.h
+/home/krash/CLionProjects/devilutionX/types.h
 
 /home/krash/CLionProjects/devilutionX/Stub/init.cpp
 dirent.h

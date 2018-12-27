@@ -138,6 +138,8 @@ void ConstantButtons();
 void RenderUndecidedHeroName();
 void LoadHeroStats();
 void RenderDefaultStats(int HeroChosen);
+void DrawPreGameOptions(int image , int ShowClasses);
+
 
 typedef unsigned char BYTE;
 void DrawArtWithMask(int SX, int SY, int SW, int SH, int nFrame, BYTE bMask, void *pBuffer);

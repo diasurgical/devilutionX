@@ -393,33 +393,9 @@ CMakeFiles/devilution.dir/Source/error.cpp.o.provides: CMakeFiles/devilution.dir
 CMakeFiles/devilution.dir/Source/error.cpp.o.provides.build: CMakeFiles/devilution.dir/Source/error.cpp.o
 
 
-CMakeFiles/devilution.dir/Source/gamemenu.cpp.o: CMakeFiles/devilution.dir/flags.make
-CMakeFiles/devilution.dir/Source/gamemenu.cpp.o: ../Source/gamemenu.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/devilution.dir/Source/gamemenu.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/gamemenu.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/gamemenu.cpp
-
-CMakeFiles/devilution.dir/Source/gamemenu.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/devilution.dir/Source/gamemenu.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/krash/CLionProjects/devilutionX/Source/gamemenu.cpp > CMakeFiles/devilution.dir/Source/gamemenu.cpp.i
-
-CMakeFiles/devilution.dir/Source/gamemenu.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/devilution.dir/Source/gamemenu.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/krash/CLionProjects/devilutionX/Source/gamemenu.cpp -o CMakeFiles/devilution.dir/Source/gamemenu.cpp.s
-
-CMakeFiles/devilution.dir/Source/gamemenu.cpp.o.requires:
-
-.PHONY : CMakeFiles/devilution.dir/Source/gamemenu.cpp.o.requires
-
-CMakeFiles/devilution.dir/Source/gamemenu.cpp.o.provides: CMakeFiles/devilution.dir/Source/gamemenu.cpp.o.requires
-	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/gamemenu.cpp.o.provides.build
-.PHONY : CMakeFiles/devilution.dir/Source/gamemenu.cpp.o.provides
-
-CMakeFiles/devilution.dir/Source/gamemenu.cpp.o.provides.build: CMakeFiles/devilution.dir/Source/gamemenu.cpp.o
-
-
 CMakeFiles/devilution.dir/Source/gendung.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/gendung.cpp.o: ../Source/gendung.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/devilution.dir/Source/gendung.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/devilution.dir/Source/gendung.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/gendung.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/gendung.cpp
 
 CMakeFiles/devilution.dir/Source/gendung.cpp.i: cmake_force
@@ -443,7 +419,7 @@ CMakeFiles/devilution.dir/Source/gendung.cpp.o.provides.build: CMakeFiles/devilu
 
 CMakeFiles/devilution.dir/Source/gmenu.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/gmenu.cpp.o: ../Source/gmenu.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/devilution.dir/Source/gmenu.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/devilution.dir/Source/gmenu.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/gmenu.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/gmenu.cpp
 
 CMakeFiles/devilution.dir/Source/gmenu.cpp.i: cmake_force
@@ -467,7 +443,7 @@ CMakeFiles/devilution.dir/Source/gmenu.cpp.o.provides.build: CMakeFiles/deviluti
 
 CMakeFiles/devilution.dir/Source/help.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/help.cpp.o: ../Source/help.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/devilution.dir/Source/help.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/devilution.dir/Source/help.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/help.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/help.cpp
 
 CMakeFiles/devilution.dir/Source/help.cpp.i: cmake_force
@@ -491,7 +467,7 @@ CMakeFiles/devilution.dir/Source/help.cpp.o.provides.build: CMakeFiles/devilutio
 
 CMakeFiles/devilution.dir/Source/interfac.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/interfac.cpp.o: ../Source/interfac.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/devilution.dir/Source/interfac.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/devilution.dir/Source/interfac.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/interfac.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/interfac.cpp
 
 CMakeFiles/devilution.dir/Source/interfac.cpp.i: cmake_force
@@ -515,7 +491,7 @@ CMakeFiles/devilution.dir/Source/interfac.cpp.o.provides.build: CMakeFiles/devil
 
 CMakeFiles/devilution.dir/Source/inv.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/inv.cpp.o: ../Source/inv.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/devilution.dir/Source/inv.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/devilution.dir/Source/inv.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/inv.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/inv.cpp
 
 CMakeFiles/devilution.dir/Source/inv.cpp.i: cmake_force
@@ -539,7 +515,7 @@ CMakeFiles/devilution.dir/Source/inv.cpp.o.provides.build: CMakeFiles/devilution
 
 CMakeFiles/devilution.dir/Source/items.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/items.cpp.o: ../Source/items.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/devilution.dir/Source/items.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/devilution.dir/Source/items.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/items.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/items.cpp
 
 CMakeFiles/devilution.dir/Source/items.cpp.i: cmake_force
@@ -563,7 +539,7 @@ CMakeFiles/devilution.dir/Source/items.cpp.o.provides.build: CMakeFiles/deviluti
 
 CMakeFiles/devilution.dir/Source/lighting.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/lighting.cpp.o: ../Source/lighting.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building CXX object CMakeFiles/devilution.dir/Source/lighting.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/devilution.dir/Source/lighting.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/lighting.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/lighting.cpp
 
 CMakeFiles/devilution.dir/Source/lighting.cpp.i: cmake_force
@@ -587,7 +563,7 @@ CMakeFiles/devilution.dir/Source/lighting.cpp.o.provides.build: CMakeFiles/devil
 
 CMakeFiles/devilution.dir/Source/loadsave.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/loadsave.cpp.o: ../Source/loadsave.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object CMakeFiles/devilution.dir/Source/loadsave.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building CXX object CMakeFiles/devilution.dir/Source/loadsave.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/loadsave.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/loadsave.cpp
 
 CMakeFiles/devilution.dir/Source/loadsave.cpp.i: cmake_force
@@ -611,7 +587,7 @@ CMakeFiles/devilution.dir/Source/loadsave.cpp.o.provides.build: CMakeFiles/devil
 
 CMakeFiles/devilution.dir/Source/mainmenu.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/mainmenu.cpp.o: ../Source/mainmenu.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building CXX object CMakeFiles/devilution.dir/Source/mainmenu.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object CMakeFiles/devilution.dir/Source/mainmenu.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/mainmenu.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/mainmenu.cpp
 
 CMakeFiles/devilution.dir/Source/mainmenu.cpp.i: cmake_force
@@ -635,7 +611,7 @@ CMakeFiles/devilution.dir/Source/mainmenu.cpp.o.provides.build: CMakeFiles/devil
 
 CMakeFiles/devilution.dir/Source/minitext.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/minitext.cpp.o: ../Source/minitext.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Building CXX object CMakeFiles/devilution.dir/Source/minitext.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building CXX object CMakeFiles/devilution.dir/Source/minitext.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/minitext.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/minitext.cpp
 
 CMakeFiles/devilution.dir/Source/minitext.cpp.i: cmake_force
@@ -659,7 +635,7 @@ CMakeFiles/devilution.dir/Source/minitext.cpp.o.provides.build: CMakeFiles/devil
 
 CMakeFiles/devilution.dir/Source/missiles.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/missiles.cpp.o: ../Source/missiles.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building CXX object CMakeFiles/devilution.dir/Source/missiles.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Building CXX object CMakeFiles/devilution.dir/Source/missiles.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/missiles.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/missiles.cpp
 
 CMakeFiles/devilution.dir/Source/missiles.cpp.i: cmake_force
@@ -683,7 +659,7 @@ CMakeFiles/devilution.dir/Source/missiles.cpp.o.provides.build: CMakeFiles/devil
 
 CMakeFiles/devilution.dir/Source/monster.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/monster.cpp.o: ../Source/monster.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building CXX object CMakeFiles/devilution.dir/Source/monster.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building CXX object CMakeFiles/devilution.dir/Source/monster.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/monster.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/monster.cpp
 
 CMakeFiles/devilution.dir/Source/monster.cpp.i: cmake_force
@@ -707,7 +683,7 @@ CMakeFiles/devilution.dir/Source/monster.cpp.o.provides.build: CMakeFiles/devilu
 
 CMakeFiles/devilution.dir/Source/mpqapi.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/mpqapi.cpp.o: ../Source/mpqapi.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building CXX object CMakeFiles/devilution.dir/Source/mpqapi.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building CXX object CMakeFiles/devilution.dir/Source/mpqapi.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/mpqapi.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/mpqapi.cpp
 
 CMakeFiles/devilution.dir/Source/mpqapi.cpp.i: cmake_force
@@ -731,7 +707,7 @@ CMakeFiles/devilution.dir/Source/mpqapi.cpp.o.provides.build: CMakeFiles/devilut
 
 CMakeFiles/devilution.dir/Source/msgcmd.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/msgcmd.cpp.o: ../Source/msgcmd.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building CXX object CMakeFiles/devilution.dir/Source/msgcmd.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building CXX object CMakeFiles/devilution.dir/Source/msgcmd.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/msgcmd.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/msgcmd.cpp
 
 CMakeFiles/devilution.dir/Source/msgcmd.cpp.i: cmake_force
@@ -755,7 +731,7 @@ CMakeFiles/devilution.dir/Source/msgcmd.cpp.o.provides.build: CMakeFiles/devilut
 
 CMakeFiles/devilution.dir/Source/msg.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/msg.cpp.o: ../Source/msg.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Building CXX object CMakeFiles/devilution.dir/Source/msg.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building CXX object CMakeFiles/devilution.dir/Source/msg.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/msg.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/msg.cpp
 
 CMakeFiles/devilution.dir/Source/msg.cpp.i: cmake_force
@@ -779,7 +755,7 @@ CMakeFiles/devilution.dir/Source/msg.cpp.o.provides.build: CMakeFiles/devilution
 
 CMakeFiles/devilution.dir/Source/multi.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/multi.cpp.o: ../Source/multi.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_31) "Building CXX object CMakeFiles/devilution.dir/Source/multi.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Building CXX object CMakeFiles/devilution.dir/Source/multi.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/multi.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/multi.cpp
 
 CMakeFiles/devilution.dir/Source/multi.cpp.i: cmake_force
@@ -803,7 +779,7 @@ CMakeFiles/devilution.dir/Source/multi.cpp.o.provides.build: CMakeFiles/deviluti
 
 CMakeFiles/devilution.dir/Source/objects.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/objects.cpp.o: ../Source/objects.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_32) "Building CXX object CMakeFiles/devilution.dir/Source/objects.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_31) "Building CXX object CMakeFiles/devilution.dir/Source/objects.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/objects.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/objects.cpp
 
 CMakeFiles/devilution.dir/Source/objects.cpp.i: cmake_force
@@ -827,7 +803,7 @@ CMakeFiles/devilution.dir/Source/objects.cpp.o.provides.build: CMakeFiles/devilu
 
 CMakeFiles/devilution.dir/Source/pack.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/pack.cpp.o: ../Source/pack.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_33) "Building CXX object CMakeFiles/devilution.dir/Source/pack.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_32) "Building CXX object CMakeFiles/devilution.dir/Source/pack.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/pack.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/pack.cpp
 
 CMakeFiles/devilution.dir/Source/pack.cpp.i: cmake_force
@@ -851,7 +827,7 @@ CMakeFiles/devilution.dir/Source/pack.cpp.o.provides.build: CMakeFiles/devilutio
 
 CMakeFiles/devilution.dir/Source/palette.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/palette.cpp.o: ../Source/palette.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_34) "Building CXX object CMakeFiles/devilution.dir/Source/palette.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_33) "Building CXX object CMakeFiles/devilution.dir/Source/palette.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/palette.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/palette.cpp
 
 CMakeFiles/devilution.dir/Source/palette.cpp.i: cmake_force
@@ -875,7 +851,7 @@ CMakeFiles/devilution.dir/Source/palette.cpp.o.provides.build: CMakeFiles/devilu
 
 CMakeFiles/devilution.dir/Source/path.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/path.cpp.o: ../Source/path.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_35) "Building CXX object CMakeFiles/devilution.dir/Source/path.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_34) "Building CXX object CMakeFiles/devilution.dir/Source/path.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/path.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/path.cpp
 
 CMakeFiles/devilution.dir/Source/path.cpp.i: cmake_force
@@ -899,7 +875,7 @@ CMakeFiles/devilution.dir/Source/path.cpp.o.provides.build: CMakeFiles/devilutio
 
 CMakeFiles/devilution.dir/Source/pfile.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/pfile.cpp.o: ../Source/pfile.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_36) "Building CXX object CMakeFiles/devilution.dir/Source/pfile.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_35) "Building CXX object CMakeFiles/devilution.dir/Source/pfile.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/pfile.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/pfile.cpp
 
 CMakeFiles/devilution.dir/Source/pfile.cpp.i: cmake_force
@@ -923,7 +899,7 @@ CMakeFiles/devilution.dir/Source/pfile.cpp.o.provides.build: CMakeFiles/deviluti
 
 CMakeFiles/devilution.dir/Source/player.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/player.cpp.o: ../Source/player.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_37) "Building CXX object CMakeFiles/devilution.dir/Source/player.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_36) "Building CXX object CMakeFiles/devilution.dir/Source/player.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/player.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/player.cpp
 
 CMakeFiles/devilution.dir/Source/player.cpp.i: cmake_force
@@ -947,7 +923,7 @@ CMakeFiles/devilution.dir/Source/player.cpp.o.provides.build: CMakeFiles/devilut
 
 CMakeFiles/devilution.dir/Source/plrmsg.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/plrmsg.cpp.o: ../Source/plrmsg.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_38) "Building CXX object CMakeFiles/devilution.dir/Source/plrmsg.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_37) "Building CXX object CMakeFiles/devilution.dir/Source/plrmsg.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/plrmsg.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/plrmsg.cpp
 
 CMakeFiles/devilution.dir/Source/plrmsg.cpp.i: cmake_force
@@ -971,7 +947,7 @@ CMakeFiles/devilution.dir/Source/plrmsg.cpp.o.provides.build: CMakeFiles/devilut
 
 CMakeFiles/devilution.dir/Source/portal.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/portal.cpp.o: ../Source/portal.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_39) "Building CXX object CMakeFiles/devilution.dir/Source/portal.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_38) "Building CXX object CMakeFiles/devilution.dir/Source/portal.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/portal.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/portal.cpp
 
 CMakeFiles/devilution.dir/Source/portal.cpp.i: cmake_force
@@ -995,7 +971,7 @@ CMakeFiles/devilution.dir/Source/portal.cpp.o.provides.build: CMakeFiles/devilut
 
 CMakeFiles/devilution.dir/Source/quests.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/quests.cpp.o: ../Source/quests.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_40) "Building CXX object CMakeFiles/devilution.dir/Source/quests.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_39) "Building CXX object CMakeFiles/devilution.dir/Source/quests.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/quests.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/quests.cpp
 
 CMakeFiles/devilution.dir/Source/quests.cpp.i: cmake_force
@@ -1019,7 +995,7 @@ CMakeFiles/devilution.dir/Source/quests.cpp.o.provides.build: CMakeFiles/devilut
 
 CMakeFiles/devilution.dir/Source/render.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/render.cpp.o: ../Source/render.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_41) "Building CXX object CMakeFiles/devilution.dir/Source/render.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_40) "Building CXX object CMakeFiles/devilution.dir/Source/render.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/render.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/render.cpp
 
 CMakeFiles/devilution.dir/Source/render.cpp.i: cmake_force
@@ -1043,7 +1019,7 @@ CMakeFiles/devilution.dir/Source/render.cpp.o.provides.build: CMakeFiles/devilut
 
 CMakeFiles/devilution.dir/Source/scrollrt.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/scrollrt.cpp.o: ../Source/scrollrt.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_42) "Building CXX object CMakeFiles/devilution.dir/Source/scrollrt.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_41) "Building CXX object CMakeFiles/devilution.dir/Source/scrollrt.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/scrollrt.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/scrollrt.cpp
 
 CMakeFiles/devilution.dir/Source/scrollrt.cpp.i: cmake_force
@@ -1067,7 +1043,7 @@ CMakeFiles/devilution.dir/Source/scrollrt.cpp.o.provides.build: CMakeFiles/devil
 
 CMakeFiles/devilution.dir/Source/setmaps.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/setmaps.cpp.o: ../Source/setmaps.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_43) "Building CXX object CMakeFiles/devilution.dir/Source/setmaps.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_42) "Building CXX object CMakeFiles/devilution.dir/Source/setmaps.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/setmaps.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/setmaps.cpp
 
 CMakeFiles/devilution.dir/Source/setmaps.cpp.i: cmake_force
@@ -1091,7 +1067,7 @@ CMakeFiles/devilution.dir/Source/setmaps.cpp.o.provides.build: CMakeFiles/devilu
 
 CMakeFiles/devilution.dir/Source/sha.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/sha.cpp.o: ../Source/sha.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_44) "Building CXX object CMakeFiles/devilution.dir/Source/sha.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_43) "Building CXX object CMakeFiles/devilution.dir/Source/sha.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/sha.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/sha.cpp
 
 CMakeFiles/devilution.dir/Source/sha.cpp.i: cmake_force
@@ -1115,7 +1091,7 @@ CMakeFiles/devilution.dir/Source/sha.cpp.o.provides.build: CMakeFiles/devilution
 
 CMakeFiles/devilution.dir/Source/spells.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/spells.cpp.o: ../Source/spells.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_45) "Building CXX object CMakeFiles/devilution.dir/Source/spells.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_44) "Building CXX object CMakeFiles/devilution.dir/Source/spells.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/spells.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/spells.cpp
 
 CMakeFiles/devilution.dir/Source/spells.cpp.i: cmake_force
@@ -1139,7 +1115,7 @@ CMakeFiles/devilution.dir/Source/spells.cpp.o.provides.build: CMakeFiles/devilut
 
 CMakeFiles/devilution.dir/Source/stores.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/stores.cpp.o: ../Source/stores.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_46) "Building CXX object CMakeFiles/devilution.dir/Source/stores.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_45) "Building CXX object CMakeFiles/devilution.dir/Source/stores.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/stores.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/stores.cpp
 
 CMakeFiles/devilution.dir/Source/stores.cpp.i: cmake_force
@@ -1163,7 +1139,7 @@ CMakeFiles/devilution.dir/Source/stores.cpp.o.provides.build: CMakeFiles/devilut
 
 CMakeFiles/devilution.dir/Source/sync.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/sync.cpp.o: ../Source/sync.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_47) "Building CXX object CMakeFiles/devilution.dir/Source/sync.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_46) "Building CXX object CMakeFiles/devilution.dir/Source/sync.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/sync.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/sync.cpp
 
 CMakeFiles/devilution.dir/Source/sync.cpp.i: cmake_force
@@ -1187,7 +1163,7 @@ CMakeFiles/devilution.dir/Source/sync.cpp.o.provides.build: CMakeFiles/devilutio
 
 CMakeFiles/devilution.dir/Source/textdat.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/textdat.cpp.o: ../Source/textdat.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_48) "Building CXX object CMakeFiles/devilution.dir/Source/textdat.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_47) "Building CXX object CMakeFiles/devilution.dir/Source/textdat.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/textdat.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/textdat.cpp
 
 CMakeFiles/devilution.dir/Source/textdat.cpp.i: cmake_force
@@ -1211,7 +1187,7 @@ CMakeFiles/devilution.dir/Source/textdat.cpp.o.provides.build: CMakeFiles/devilu
 
 CMakeFiles/devilution.dir/Source/themes.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/themes.cpp.o: ../Source/themes.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_49) "Building CXX object CMakeFiles/devilution.dir/Source/themes.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_48) "Building CXX object CMakeFiles/devilution.dir/Source/themes.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/themes.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/themes.cpp
 
 CMakeFiles/devilution.dir/Source/themes.cpp.i: cmake_force
@@ -1235,7 +1211,7 @@ CMakeFiles/devilution.dir/Source/themes.cpp.o.provides.build: CMakeFiles/devilut
 
 CMakeFiles/devilution.dir/Source/tmsg.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/tmsg.cpp.o: ../Source/tmsg.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_50) "Building CXX object CMakeFiles/devilution.dir/Source/tmsg.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_49) "Building CXX object CMakeFiles/devilution.dir/Source/tmsg.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/tmsg.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/tmsg.cpp
 
 CMakeFiles/devilution.dir/Source/tmsg.cpp.i: cmake_force
@@ -1259,7 +1235,7 @@ CMakeFiles/devilution.dir/Source/tmsg.cpp.o.provides.build: CMakeFiles/devilutio
 
 CMakeFiles/devilution.dir/Source/town.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/town.cpp.o: ../Source/town.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_51) "Building CXX object CMakeFiles/devilution.dir/Source/town.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_50) "Building CXX object CMakeFiles/devilution.dir/Source/town.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/town.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/town.cpp
 
 CMakeFiles/devilution.dir/Source/town.cpp.i: cmake_force
@@ -1283,7 +1259,7 @@ CMakeFiles/devilution.dir/Source/town.cpp.o.provides.build: CMakeFiles/devilutio
 
 CMakeFiles/devilution.dir/Source/towners.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/towners.cpp.o: ../Source/towners.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_52) "Building CXX object CMakeFiles/devilution.dir/Source/towners.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_51) "Building CXX object CMakeFiles/devilution.dir/Source/towners.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/towners.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/towners.cpp
 
 CMakeFiles/devilution.dir/Source/towners.cpp.i: cmake_force
@@ -1307,7 +1283,7 @@ CMakeFiles/devilution.dir/Source/towners.cpp.o.provides.build: CMakeFiles/devilu
 
 CMakeFiles/devilution.dir/Source/track.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/track.cpp.o: ../Source/track.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_53) "Building CXX object CMakeFiles/devilution.dir/Source/track.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_52) "Building CXX object CMakeFiles/devilution.dir/Source/track.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/track.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/track.cpp
 
 CMakeFiles/devilution.dir/Source/track.cpp.i: cmake_force
@@ -1331,7 +1307,7 @@ CMakeFiles/devilution.dir/Source/track.cpp.o.provides.build: CMakeFiles/deviluti
 
 CMakeFiles/devilution.dir/Source/trigs.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/trigs.cpp.o: ../Source/trigs.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_54) "Building CXX object CMakeFiles/devilution.dir/Source/trigs.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_53) "Building CXX object CMakeFiles/devilution.dir/Source/trigs.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/trigs.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/trigs.cpp
 
 CMakeFiles/devilution.dir/Source/trigs.cpp.i: cmake_force
@@ -1355,7 +1331,7 @@ CMakeFiles/devilution.dir/Source/trigs.cpp.o.provides.build: CMakeFiles/deviluti
 
 CMakeFiles/devilution.dir/Source/wave.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Source/wave.cpp.o: ../Source/wave.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_55) "Building CXX object CMakeFiles/devilution.dir/Source/wave.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_54) "Building CXX object CMakeFiles/devilution.dir/Source/wave.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Source/wave.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/wave.cpp
 
 CMakeFiles/devilution.dir/Source/wave.cpp.i: cmake_force
@@ -1379,7 +1355,7 @@ CMakeFiles/devilution.dir/Source/wave.cpp.o.provides.build: CMakeFiles/devilutio
 
 CMakeFiles/devilution.dir/3rdParty/PKWare/explode.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/3rdParty/PKWare/explode.cpp.o: ../3rdParty/PKWare/explode.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_56) "Building CXX object CMakeFiles/devilution.dir/3rdParty/PKWare/explode.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_55) "Building CXX object CMakeFiles/devilution.dir/3rdParty/PKWare/explode.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/3rdParty/PKWare/explode.cpp.o -c /home/krash/CLionProjects/devilutionX/3rdParty/PKWare/explode.cpp
 
 CMakeFiles/devilution.dir/3rdParty/PKWare/explode.cpp.i: cmake_force
@@ -1403,7 +1379,7 @@ CMakeFiles/devilution.dir/3rdParty/PKWare/explode.cpp.o.provides.build: CMakeFil
 
 CMakeFiles/devilution.dir/3rdParty/PKWare/implode.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/3rdParty/PKWare/implode.cpp.o: ../3rdParty/PKWare/implode.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_57) "Building CXX object CMakeFiles/devilution.dir/3rdParty/PKWare/implode.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_56) "Building CXX object CMakeFiles/devilution.dir/3rdParty/PKWare/implode.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/3rdParty/PKWare/implode.cpp.o -c /home/krash/CLionProjects/devilutionX/3rdParty/PKWare/implode.cpp
 
 CMakeFiles/devilution.dir/3rdParty/PKWare/implode.cpp.i: cmake_force
@@ -1427,7 +1403,7 @@ CMakeFiles/devilution.dir/3rdParty/PKWare/implode.cpp.o.provides.build: CMakeFil
 
 CMakeFiles/devilution.dir/Stub/miniwin.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Stub/miniwin.cpp.o: ../Stub/miniwin.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_58) "Building CXX object CMakeFiles/devilution.dir/Stub/miniwin.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_57) "Building CXX object CMakeFiles/devilution.dir/Stub/miniwin.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Stub/miniwin.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/miniwin.cpp
 
 CMakeFiles/devilution.dir/Stub/miniwin.cpp.i: cmake_force
@@ -1451,7 +1427,7 @@ CMakeFiles/devilution.dir/Stub/miniwin.cpp.o.provides.build: CMakeFiles/deviluti
 
 CMakeFiles/devilution.dir/Stub/miniwin_rand.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Stub/miniwin_rand.cpp.o: ../Stub/miniwin_rand.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_59) "Building CXX object CMakeFiles/devilution.dir/Stub/miniwin_rand.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_58) "Building CXX object CMakeFiles/devilution.dir/Stub/miniwin_rand.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Stub/miniwin_rand.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/miniwin_rand.cpp
 
 CMakeFiles/devilution.dir/Stub/miniwin_rand.cpp.i: cmake_force
@@ -1475,7 +1451,7 @@ CMakeFiles/devilution.dir/Stub/miniwin_rand.cpp.o.provides.build: CMakeFiles/dev
 
 CMakeFiles/devilution.dir/Stub/appfat.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Stub/appfat.cpp.o: ../Stub/appfat.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_60) "Building CXX object CMakeFiles/devilution.dir/Stub/appfat.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_59) "Building CXX object CMakeFiles/devilution.dir/Stub/appfat.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Stub/appfat.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/appfat.cpp
 
 CMakeFiles/devilution.dir/Stub/appfat.cpp.i: cmake_force
@@ -1499,7 +1475,7 @@ CMakeFiles/devilution.dir/Stub/appfat.cpp.o.provides.build: CMakeFiles/devilutio
 
 CMakeFiles/devilution.dir/Stub/capture.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Stub/capture.cpp.o: ../Stub/capture.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_61) "Building CXX object CMakeFiles/devilution.dir/Stub/capture.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_60) "Building CXX object CMakeFiles/devilution.dir/Stub/capture.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Stub/capture.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/capture.cpp
 
 CMakeFiles/devilution.dir/Stub/capture.cpp.i: cmake_force
@@ -1523,7 +1499,7 @@ CMakeFiles/devilution.dir/Stub/capture.cpp.o.provides.build: CMakeFiles/deviluti
 
 CMakeFiles/devilution.dir/Stub/dthread.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Stub/dthread.cpp.o: ../Stub/dthread.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_62) "Building CXX object CMakeFiles/devilution.dir/Stub/dthread.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_61) "Building CXX object CMakeFiles/devilution.dir/Stub/dthread.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Stub/dthread.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/dthread.cpp
 
 CMakeFiles/devilution.dir/Stub/dthread.cpp.i: cmake_force
@@ -1547,7 +1523,7 @@ CMakeFiles/devilution.dir/Stub/dthread.cpp.o.provides.build: CMakeFiles/deviluti
 
 CMakeFiles/devilution.dir/Stub/dx.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Stub/dx.cpp.o: ../Stub/dx.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_63) "Building CXX object CMakeFiles/devilution.dir/Stub/dx.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_62) "Building CXX object CMakeFiles/devilution.dir/Stub/dx.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Stub/dx.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/dx.cpp
 
 CMakeFiles/devilution.dir/Stub/dx.cpp.i: cmake_force
@@ -1571,7 +1547,7 @@ CMakeFiles/devilution.dir/Stub/dx.cpp.o.provides.build: CMakeFiles/devilution.di
 
 CMakeFiles/devilution.dir/Stub/fault.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Stub/fault.cpp.o: ../Stub/fault.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_64) "Building CXX object CMakeFiles/devilution.dir/Stub/fault.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_63) "Building CXX object CMakeFiles/devilution.dir/Stub/fault.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Stub/fault.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/fault.cpp
 
 CMakeFiles/devilution.dir/Stub/fault.cpp.i: cmake_force
@@ -1595,7 +1571,7 @@ CMakeFiles/devilution.dir/Stub/fault.cpp.o.provides.build: CMakeFiles/devilution
 
 CMakeFiles/devilution.dir/Stub/init.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Stub/init.cpp.o: ../Stub/init.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_65) "Building CXX object CMakeFiles/devilution.dir/Stub/init.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_64) "Building CXX object CMakeFiles/devilution.dir/Stub/init.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Stub/init.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/init.cpp
 
 CMakeFiles/devilution.dir/Stub/init.cpp.i: cmake_force
@@ -1619,7 +1595,7 @@ CMakeFiles/devilution.dir/Stub/init.cpp.o.provides.build: CMakeFiles/devilution.
 
 CMakeFiles/devilution.dir/Stub/movie.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Stub/movie.cpp.o: ../Stub/movie.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_66) "Building CXX object CMakeFiles/devilution.dir/Stub/movie.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_65) "Building CXX object CMakeFiles/devilution.dir/Stub/movie.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Stub/movie.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/movie.cpp
 
 CMakeFiles/devilution.dir/Stub/movie.cpp.i: cmake_force
@@ -1643,7 +1619,7 @@ CMakeFiles/devilution.dir/Stub/movie.cpp.o.provides.build: CMakeFiles/devilution
 
 CMakeFiles/devilution.dir/Stub/nthread.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Stub/nthread.cpp.o: ../Stub/nthread.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_67) "Building CXX object CMakeFiles/devilution.dir/Stub/nthread.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_66) "Building CXX object CMakeFiles/devilution.dir/Stub/nthread.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Stub/nthread.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/nthread.cpp
 
 CMakeFiles/devilution.dir/Stub/nthread.cpp.i: cmake_force
@@ -1667,7 +1643,7 @@ CMakeFiles/devilution.dir/Stub/nthread.cpp.o.provides.build: CMakeFiles/deviluti
 
 CMakeFiles/devilution.dir/Stub/restrict.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Stub/restrict.cpp.o: ../Stub/restrict.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_68) "Building CXX object CMakeFiles/devilution.dir/Stub/restrict.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_67) "Building CXX object CMakeFiles/devilution.dir/Stub/restrict.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Stub/restrict.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/restrict.cpp
 
 CMakeFiles/devilution.dir/Stub/restrict.cpp.i: cmake_force
@@ -1691,7 +1667,7 @@ CMakeFiles/devilution.dir/Stub/restrict.cpp.o.provides.build: CMakeFiles/devilut
 
 CMakeFiles/devilution.dir/Stub/sound.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Stub/sound.cpp.o: ../Stub/sound.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_69) "Building CXX object CMakeFiles/devilution.dir/Stub/sound.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_68) "Building CXX object CMakeFiles/devilution.dir/Stub/sound.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Stub/sound.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/sound.cpp
 
 CMakeFiles/devilution.dir/Stub/sound.cpp.i: cmake_force
@@ -1715,7 +1691,7 @@ CMakeFiles/devilution.dir/Stub/sound.cpp.o.provides.build: CMakeFiles/devilution
 
 CMakeFiles/devilution.dir/Stub/storm.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Stub/storm.cpp.o: ../Stub/storm.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_70) "Building CXX object CMakeFiles/devilution.dir/Stub/storm.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_69) "Building CXX object CMakeFiles/devilution.dir/Stub/storm.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Stub/storm.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/storm.cpp
 
 CMakeFiles/devilution.dir/Stub/storm.cpp.i: cmake_force
@@ -1739,7 +1715,7 @@ CMakeFiles/devilution.dir/Stub/storm.cpp.o.provides.build: CMakeFiles/devilution
 
 CMakeFiles/devilution.dir/Stub/diabloui.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Stub/diabloui.cpp.o: ../Stub/diabloui.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_71) "Building CXX object CMakeFiles/devilution.dir/Stub/diabloui.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_70) "Building CXX object CMakeFiles/devilution.dir/Stub/diabloui.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Stub/diabloui.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/diabloui.cpp
 
 CMakeFiles/devilution.dir/Stub/diabloui.cpp.i: cmake_force
@@ -1763,7 +1739,7 @@ CMakeFiles/devilution.dir/Stub/diabloui.cpp.o.provides.build: CMakeFiles/devilut
 
 CMakeFiles/devilution.dir/Stub/miniwin_io.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Stub/miniwin_io.cpp.o: ../Stub/miniwin_io.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_72) "Building CXX object CMakeFiles/devilution.dir/Stub/miniwin_io.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_71) "Building CXX object CMakeFiles/devilution.dir/Stub/miniwin_io.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Stub/miniwin_io.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/miniwin_io.cpp
 
 CMakeFiles/devilution.dir/Stub/miniwin_io.cpp.i: cmake_force
@@ -1787,7 +1763,7 @@ CMakeFiles/devilution.dir/Stub/miniwin_io.cpp.o.provides.build: CMakeFiles/devil
 
 CMakeFiles/devilution.dir/Stub/miniwin_msg_sdl.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Stub/miniwin_msg_sdl.cpp.o: ../Stub/miniwin_msg_sdl.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_73) "Building CXX object CMakeFiles/devilution.dir/Stub/miniwin_msg_sdl.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_72) "Building CXX object CMakeFiles/devilution.dir/Stub/miniwin_msg_sdl.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Stub/miniwin_msg_sdl.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/miniwin_msg_sdl.cpp
 
 CMakeFiles/devilution.dir/Stub/miniwin_msg_sdl.cpp.i: cmake_force
@@ -1811,7 +1787,7 @@ CMakeFiles/devilution.dir/Stub/miniwin_msg_sdl.cpp.o.provides.build: CMakeFiles/
 
 CMakeFiles/devilution.dir/Stub/storm_net.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Stub/storm_net.cpp.o: ../Stub/storm_net.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_74) "Building CXX object CMakeFiles/devilution.dir/Stub/storm_net.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_73) "Building CXX object CMakeFiles/devilution.dir/Stub/storm_net.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Stub/storm_net.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/storm_net.cpp
 
 CMakeFiles/devilution.dir/Stub/storm_net.cpp.i: cmake_force
@@ -1835,7 +1811,7 @@ CMakeFiles/devilution.dir/Stub/storm_net.cpp.o.provides.build: CMakeFiles/devilu
 
 CMakeFiles/devilution.dir/Stub/validate.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Stub/validate.cpp.o: ../Stub/validate.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_75) "Building CXX object CMakeFiles/devilution.dir/Stub/validate.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_74) "Building CXX object CMakeFiles/devilution.dir/Stub/validate.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Stub/validate.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/validate.cpp
 
 CMakeFiles/devilution.dir/Stub/validate.cpp.i: cmake_force
@@ -1859,7 +1835,7 @@ CMakeFiles/devilution.dir/Stub/validate.cpp.o.provides.build: CMakeFiles/devilut
 
 CMakeFiles/devilution.dir/Stub/effects.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Stub/effects.cpp.o: ../Stub/effects.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_76) "Building CXX object CMakeFiles/devilution.dir/Stub/effects.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_75) "Building CXX object CMakeFiles/devilution.dir/Stub/effects.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Stub/effects.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/effects.cpp
 
 CMakeFiles/devilution.dir/Stub/effects.cpp.i: cmake_force
@@ -1883,7 +1859,7 @@ CMakeFiles/devilution.dir/Stub/effects.cpp.o.provides.build: CMakeFiles/deviluti
 
 CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o: ../Stub/sdlrender.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_77) "Building CXX object CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_76) "Building CXX object CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/sdlrender.cpp
 
 CMakeFiles/devilution.dir/Stub/sdlrender.cpp.i: cmake_force
@@ -1907,7 +1883,7 @@ CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o.provides.build: CMakeFiles/devilu
 
 CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o: ../Stub/SDL_FontCache.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_78) "Building CXX object CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_77) "Building CXX object CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.cpp
 
 CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.i: cmake_force
@@ -1931,7 +1907,7 @@ CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o.provides.build: CMakeFiles/de
 
 CMakeFiles/devilution.dir/Stub/diablo.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Stub/diablo.cpp.o: ../Stub/diablo.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_79) "Building CXX object CMakeFiles/devilution.dir/Stub/diablo.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_78) "Building CXX object CMakeFiles/devilution.dir/Stub/diablo.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Stub/diablo.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/diablo.cpp
 
 CMakeFiles/devilution.dir/Stub/diablo.cpp.i: cmake_force
@@ -1951,6 +1927,30 @@ CMakeFiles/devilution.dir/Stub/diablo.cpp.o.provides: CMakeFiles/devilution.dir/
 .PHONY : CMakeFiles/devilution.dir/Stub/diablo.cpp.o.provides
 
 CMakeFiles/devilution.dir/Stub/diablo.cpp.o.provides.build: CMakeFiles/devilution.dir/Stub/diablo.cpp.o
+
+
+CMakeFiles/devilution.dir/Stub/gamemenu.cpp.o: CMakeFiles/devilution.dir/flags.make
+CMakeFiles/devilution.dir/Stub/gamemenu.cpp.o: ../Stub/gamemenu.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_79) "Building CXX object CMakeFiles/devilution.dir/Stub/gamemenu.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Stub/gamemenu.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/gamemenu.cpp
+
+CMakeFiles/devilution.dir/Stub/gamemenu.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/devilution.dir/Stub/gamemenu.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/krash/CLionProjects/devilutionX/Stub/gamemenu.cpp > CMakeFiles/devilution.dir/Stub/gamemenu.cpp.i
+
+CMakeFiles/devilution.dir/Stub/gamemenu.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/devilution.dir/Stub/gamemenu.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/krash/CLionProjects/devilutionX/Stub/gamemenu.cpp -o CMakeFiles/devilution.dir/Stub/gamemenu.cpp.s
+
+CMakeFiles/devilution.dir/Stub/gamemenu.cpp.o.requires:
+
+.PHONY : CMakeFiles/devilution.dir/Stub/gamemenu.cpp.o.requires
+
+CMakeFiles/devilution.dir/Stub/gamemenu.cpp.o.provides: CMakeFiles/devilution.dir/Stub/gamemenu.cpp.o.requires
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/gamemenu.cpp.o.provides.build
+.PHONY : CMakeFiles/devilution.dir/Stub/gamemenu.cpp.o.provides
+
+CMakeFiles/devilution.dir/Stub/gamemenu.cpp.o.provides.build: CMakeFiles/devilution.dir/Stub/gamemenu.cpp.o
 
 
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/FileStream.cpp.o: CMakeFiles/devilution.dir/flags.make
@@ -2257,7 +2257,6 @@ devilution_OBJECTS = \
 "CMakeFiles/devilution.dir/Source/encrypt.cpp.o" \
 "CMakeFiles/devilution.dir/Source/engine.cpp.o" \
 "CMakeFiles/devilution.dir/Source/error.cpp.o" \
-"CMakeFiles/devilution.dir/Source/gamemenu.cpp.o" \
 "CMakeFiles/devilution.dir/Source/gendung.cpp.o" \
 "CMakeFiles/devilution.dir/Source/gmenu.cpp.o" \
 "CMakeFiles/devilution.dir/Source/help.cpp.o" \
@@ -2322,6 +2321,7 @@ devilution_OBJECTS = \
 "CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o" \
 "CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o" \
 "CMakeFiles/devilution.dir/Stub/diablo.cpp.o" \
+"CMakeFiles/devilution.dir/Stub/gamemenu.cpp.o" \
 "CMakeFiles/devilution.dir/3rdParty/StormLib/src/FileStream.cpp.o" \
 "CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseCommon.cpp.o" \
 "CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.o" \
@@ -2352,7 +2352,6 @@ devilution: CMakeFiles/devilution.dir/Source/drlg_l4.cpp.o
 devilution: CMakeFiles/devilution.dir/Source/encrypt.cpp.o
 devilution: CMakeFiles/devilution.dir/Source/engine.cpp.o
 devilution: CMakeFiles/devilution.dir/Source/error.cpp.o
-devilution: CMakeFiles/devilution.dir/Source/gamemenu.cpp.o
 devilution: CMakeFiles/devilution.dir/Source/gendung.cpp.o
 devilution: CMakeFiles/devilution.dir/Source/gmenu.cpp.o
 devilution: CMakeFiles/devilution.dir/Source/help.cpp.o
@@ -2417,6 +2416,7 @@ devilution: CMakeFiles/devilution.dir/Stub/effects.cpp.o
 devilution: CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o
 devilution: CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o
 devilution: CMakeFiles/devilution.dir/Stub/diablo.cpp.o
+devilution: CMakeFiles/devilution.dir/Stub/gamemenu.cpp.o
 devilution: CMakeFiles/devilution.dir/3rdParty/StormLib/src/FileStream.cpp.o
 devilution: CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseCommon.cpp.o
 devilution: CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.o
@@ -2453,7 +2453,6 @@ CMakeFiles/devilution.dir/requires: CMakeFiles/devilution.dir/Source/drlg_l4.cpp
 CMakeFiles/devilution.dir/requires: CMakeFiles/devilution.dir/Source/encrypt.cpp.o.requires
 CMakeFiles/devilution.dir/requires: CMakeFiles/devilution.dir/Source/engine.cpp.o.requires
 CMakeFiles/devilution.dir/requires: CMakeFiles/devilution.dir/Source/error.cpp.o.requires
-CMakeFiles/devilution.dir/requires: CMakeFiles/devilution.dir/Source/gamemenu.cpp.o.requires
 CMakeFiles/devilution.dir/requires: CMakeFiles/devilution.dir/Source/gendung.cpp.o.requires
 CMakeFiles/devilution.dir/requires: CMakeFiles/devilution.dir/Source/gmenu.cpp.o.requires
 CMakeFiles/devilution.dir/requires: CMakeFiles/devilution.dir/Source/help.cpp.o.requires
@@ -2518,6 +2517,7 @@ CMakeFiles/devilution.dir/requires: CMakeFiles/devilution.dir/Stub/effects.cpp.o
 CMakeFiles/devilution.dir/requires: CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o.requires
 CMakeFiles/devilution.dir/requires: CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o.requires
 CMakeFiles/devilution.dir/requires: CMakeFiles/devilution.dir/Stub/diablo.cpp.o.requires
+CMakeFiles/devilution.dir/requires: CMakeFiles/devilution.dir/Stub/gamemenu.cpp.o.requires
 CMakeFiles/devilution.dir/requires: CMakeFiles/devilution.dir/3rdParty/StormLib/src/FileStream.cpp.o.requires
 CMakeFiles/devilution.dir/requires: CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseCommon.cpp.o.requires
 CMakeFiles/devilution.dir/requires: CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.o.requires

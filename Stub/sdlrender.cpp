@@ -982,6 +982,40 @@ void DrawNewHeroKartinka(int image, int ShowClasses)
 	}
 }
 
+
+void DrawPreGameOptions(int image, int ShowClasses)
+{
+	CelDecodeOnly(64, 639, pTitlgrayCel_sgpBackCel, 1, 640);
+	// DrawArtImage(0, 0, gdwTitleWidth, gdwTitleHeight, 0, pPcxTitleImage);
+	// DrawArtImage(0, 0, gdwSHeroWidth, gdwSHeroHeight, 0, pPcxSHeroImage);
+	RenderDiabloLogo();
+
+	char *GameOptions[2] = {"New Game", "Load Game"};
+
+	// this should not be hard coded.
+	int x = 280;
+	int y = 430;
+	// DrawArtImage(30, 211, gdwHeroWidth, gdwHeroHeight, image, pPcxHeroImage);
+
+	if (ShowClasses == 1) {
+		for (int i = 0; i < 2; i++) {
+			y += 40;
+			// print_title_str_small(x, y, heroclasses[i]);
+			gmenu_print_text(x, y, GameOptions[i]);
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
 void RenderDefaultStats(int HeroChosen)
 {
 	int x = 80;
