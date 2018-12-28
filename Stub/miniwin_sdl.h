@@ -4,9 +4,9 @@
 #include <vector>
 
 #include <SDL2/SDL.h>
-#include <SDL_image.h>
+//#include <SDL_image.h>
 #include <SDL_mixer.h>
-#include "SDL_FontCache.h"
+//#include "SDL_FontCache.h"
 
 
 #define SDL_CHECK(e) assert(e == 0)
@@ -47,7 +47,7 @@ extern int totalFrames;
 //extern SDL_Texture* spriteSheet;
 extern SDL_Surface* DiabloTitle;
 extern SDL_Event input;
-extern FC_Font* font;
+
 extern int SCREEN_WIDTH;
 extern int SCREEN_HEIGHT;
 extern int TotalPlayers;

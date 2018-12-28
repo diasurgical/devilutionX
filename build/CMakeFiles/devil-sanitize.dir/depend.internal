@@ -1145,7 +1145,6 @@ CMakeFiles/devil-sanitize.dir/Source/engine.cpp.o
  /usr/include/SDL2/SDL_gesture.h
  /usr/include/SDL2/SDL_haptic.h
  /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
  /usr/include/SDL2/SDL_joystick.h
  /usr/include/SDL2/SDL_keyboard.h
  /usr/include/SDL2/SDL_keycode.h
@@ -1338,7 +1337,6 @@ CMakeFiles/devil-sanitize.dir/Source/gendung.cpp.o
  /home/krash/CLionProjects/devilutionX/structs.h
  /home/krash/CLionProjects/devilutionX/types.h
 CMakeFiles/devil-sanitize.dir/Source/gmenu.cpp.o
- ../Stub/SDL_FontCache.h
  ../Stub/miniwin.h
  ../Stub/miniwin_ddraw.h
  ../Stub/miniwin_dsound.h
@@ -1420,50 +1418,18 @@ CMakeFiles/devil-sanitize.dir/Source/gmenu.cpp.o
  /home/krash/CLionProjects/devilutionX/resource.h
  /home/krash/CLionProjects/devilutionX/structs.h
  /home/krash/CLionProjects/devilutionX/types.h
- /usr/include/SDL2/SDL.h
- /usr/include/SDL2/SDL_assert.h
  /usr/include/SDL2/SDL_atomic.h
  /usr/include/SDL2/SDL_audio.h
- /usr/include/SDL2/SDL_blendmode.h
- /usr/include/SDL2/SDL_clipboard.h
  /usr/include/SDL2/SDL_config.h
- /usr/include/SDL2/SDL_cpuinfo.h
  /usr/include/SDL2/SDL_endian.h
  /usr/include/SDL2/SDL_error.h
- /usr/include/SDL2/SDL_events.h
- /usr/include/SDL2/SDL_filesystem.h
- /usr/include/SDL2/SDL_gamecontroller.h
- /usr/include/SDL2/SDL_gesture.h
- /usr/include/SDL2/SDL_haptic.h
- /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
- /usr/include/SDL2/SDL_joystick.h
- /usr/include/SDL2/SDL_keyboard.h
- /usr/include/SDL2/SDL_keycode.h
- /usr/include/SDL2/SDL_loadso.h
- /usr/include/SDL2/SDL_log.h
- /usr/include/SDL2/SDL_main.h
- /usr/include/SDL2/SDL_messagebox.h
  /usr/include/SDL2/SDL_mixer.h
- /usr/include/SDL2/SDL_mouse.h
  /usr/include/SDL2/SDL_mutex.h
- /usr/include/SDL2/SDL_pixels.h
  /usr/include/SDL2/SDL_platform.h
- /usr/include/SDL2/SDL_power.h
- /usr/include/SDL2/SDL_quit.h
- /usr/include/SDL2/SDL_rect.h
- /usr/include/SDL2/SDL_render.h
  /usr/include/SDL2/SDL_rwops.h
- /usr/include/SDL2/SDL_scancode.h
  /usr/include/SDL2/SDL_stdinc.h
- /usr/include/SDL2/SDL_surface.h
- /usr/include/SDL2/SDL_system.h
  /usr/include/SDL2/SDL_thread.h
- /usr/include/SDL2/SDL_timer.h
- /usr/include/SDL2/SDL_touch.h
- /usr/include/SDL2/SDL_ttf.h
  /usr/include/SDL2/SDL_version.h
- /usr/include/SDL2/SDL_video.h
  /usr/include/SDL2/begin_code.h
  /usr/include/SDL2/close_code.h
 CMakeFiles/devil-sanitize.dir/Source/help.cpp.o
@@ -4691,7 +4657,6 @@ CMakeFiles/devil-sanitize.dir/Stub/appfat.cpp.o
  /usr/include/SDL2/SDL_gesture.h
  /usr/include/SDL2/SDL_haptic.h
  /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
  /usr/include/SDL2/SDL_joystick.h
  /usr/include/SDL2/SDL_keyboard.h
  /usr/include/SDL2/SDL_keycode.h
@@ -4821,7 +4786,6 @@ CMakeFiles/devil-sanitize.dir/Stub/capture.cpp.o
  /usr/include/SDL2/SDL_gesture.h
  /usr/include/SDL2/SDL_haptic.h
  /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
  /usr/include/SDL2/SDL_joystick.h
  /usr/include/SDL2/SDL_keyboard.h
  /usr/include/SDL2/SDL_keycode.h
@@ -4951,7 +4915,6 @@ CMakeFiles/devil-sanitize.dir/Stub/diablo.cpp.o
  /usr/include/SDL2/SDL_gesture.h
  /usr/include/SDL2/SDL_haptic.h
  /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
  /usr/include/SDL2/SDL_joystick.h
  /usr/include/SDL2/SDL_keyboard.h
  /usr/include/SDL2/SDL_keycode.h
@@ -5081,7 +5044,6 @@ CMakeFiles/devil-sanitize.dir/Stub/diabloui.cpp.o
  /usr/include/SDL2/SDL_gesture.h
  /usr/include/SDL2/SDL_haptic.h
  /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
  /usr/include/SDL2/SDL_joystick.h
  /usr/include/SDL2/SDL_keyboard.h
  /usr/include/SDL2/SDL_keycode.h
@@ -5211,7 +5173,6 @@ CMakeFiles/devil-sanitize.dir/Stub/dthread.cpp.o
  /usr/include/SDL2/SDL_gesture.h
  /usr/include/SDL2/SDL_haptic.h
  /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
  /usr/include/SDL2/SDL_joystick.h
  /usr/include/SDL2/SDL_keyboard.h
  /usr/include/SDL2/SDL_keycode.h
@@ -5342,7 +5303,6 @@ CMakeFiles/devil-sanitize.dir/Stub/dx.cpp.o
  /usr/include/SDL2/SDL_gesture.h
  /usr/include/SDL2/SDL_haptic.h
  /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
  /usr/include/SDL2/SDL_joystick.h
  /usr/include/SDL2/SDL_keyboard.h
  /usr/include/SDL2/SDL_keycode.h
@@ -5553,7 +5513,6 @@ CMakeFiles/devil-sanitize.dir/Stub/fault.cpp.o
  /usr/include/SDL2/SDL_gesture.h
  /usr/include/SDL2/SDL_haptic.h
  /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
  /usr/include/SDL2/SDL_joystick.h
  /usr/include/SDL2/SDL_keyboard.h
  /usr/include/SDL2/SDL_keycode.h
@@ -5764,7 +5723,6 @@ CMakeFiles/devil-sanitize.dir/Stub/init.cpp.o
  /usr/include/SDL2/SDL_gesture.h
  /usr/include/SDL2/SDL_haptic.h
  /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
  /usr/include/SDL2/SDL_joystick.h
  /usr/include/SDL2/SDL_keyboard.h
  /usr/include/SDL2/SDL_keycode.h
@@ -5894,7 +5852,6 @@ CMakeFiles/devil-sanitize.dir/Stub/main_test.cpp.o
  /usr/include/SDL2/SDL_gesture.h
  /usr/include/SDL2/SDL_haptic.h
  /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
  /usr/include/SDL2/SDL_joystick.h
  /usr/include/SDL2/SDL_keyboard.h
  /usr/include/SDL2/SDL_keycode.h
@@ -5948,7 +5905,6 @@ CMakeFiles/devil-sanitize.dir/Stub/miniwin.cpp.o
  /usr/include/SDL2/SDL_gesture.h
  /usr/include/SDL2/SDL_haptic.h
  /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
  /usr/include/SDL2/SDL_joystick.h
  /usr/include/SDL2/SDL_keyboard.h
  /usr/include/SDL2/SDL_keycode.h
@@ -6002,7 +5958,6 @@ CMakeFiles/devil-sanitize.dir/Stub/miniwin_io.cpp.o
  /usr/include/SDL2/SDL_gesture.h
  /usr/include/SDL2/SDL_haptic.h
  /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
  /usr/include/SDL2/SDL_joystick.h
  /usr/include/SDL2/SDL_keyboard.h
  /usr/include/SDL2/SDL_keycode.h
@@ -6132,7 +6087,6 @@ CMakeFiles/devil-sanitize.dir/Stub/miniwin_msg_sdl.cpp.o
  /usr/include/SDL2/SDL_gesture.h
  /usr/include/SDL2/SDL_haptic.h
  /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
  /usr/include/SDL2/SDL_joystick.h
  /usr/include/SDL2/SDL_keyboard.h
  /usr/include/SDL2/SDL_keycode.h
@@ -6186,7 +6140,6 @@ CMakeFiles/devil-sanitize.dir/Stub/miniwin_rand.cpp.o
  /usr/include/SDL2/SDL_gesture.h
  /usr/include/SDL2/SDL_haptic.h
  /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
  /usr/include/SDL2/SDL_joystick.h
  /usr/include/SDL2/SDL_keyboard.h
  /usr/include/SDL2/SDL_keycode.h
@@ -6316,7 +6269,6 @@ CMakeFiles/devil-sanitize.dir/Stub/movie.cpp.o
  /usr/include/SDL2/SDL_gesture.h
  /usr/include/SDL2/SDL_haptic.h
  /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
  /usr/include/SDL2/SDL_joystick.h
  /usr/include/SDL2/SDL_keyboard.h
  /usr/include/SDL2/SDL_keycode.h
@@ -6446,7 +6398,6 @@ CMakeFiles/devil-sanitize.dir/Stub/nthread.cpp.o
  /usr/include/SDL2/SDL_gesture.h
  /usr/include/SDL2/SDL_haptic.h
  /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
  /usr/include/SDL2/SDL_joystick.h
  /usr/include/SDL2/SDL_keyboard.h
  /usr/include/SDL2/SDL_keycode.h
@@ -6576,7 +6527,6 @@ CMakeFiles/devil-sanitize.dir/Stub/restrict.cpp.o
  /usr/include/SDL2/SDL_gesture.h
  /usr/include/SDL2/SDL_haptic.h
  /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
  /usr/include/SDL2/SDL_joystick.h
  /usr/include/SDL2/SDL_keyboard.h
  /usr/include/SDL2/SDL_keycode.h
@@ -6708,7 +6658,6 @@ CMakeFiles/devil-sanitize.dir/Stub/sdlrender.cpp.o
  /usr/include/SDL2/SDL_gesture.h
  /usr/include/SDL2/SDL_haptic.h
  /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
  /usr/include/SDL2/SDL_joystick.h
  /usr/include/SDL2/SDL_keyboard.h
  /usr/include/SDL2/SDL_keycode.h
@@ -6838,7 +6787,6 @@ CMakeFiles/devil-sanitize.dir/Stub/sound.cpp.o
  /usr/include/SDL2/SDL_gesture.h
  /usr/include/SDL2/SDL_haptic.h
  /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
  /usr/include/SDL2/SDL_joystick.h
  /usr/include/SDL2/SDL_keyboard.h
  /usr/include/SDL2/SDL_keycode.h
@@ -6968,7 +6916,6 @@ CMakeFiles/devil-sanitize.dir/Stub/storm.cpp.o
  /usr/include/SDL2/SDL_gesture.h
  /usr/include/SDL2/SDL_haptic.h
  /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
  /usr/include/SDL2/SDL_joystick.h
  /usr/include/SDL2/SDL_keyboard.h
  /usr/include/SDL2/SDL_keycode.h
@@ -7098,7 +7045,6 @@ CMakeFiles/devil-sanitize.dir/Stub/storm_net.cpp.o
  /usr/include/SDL2/SDL_gesture.h
  /usr/include/SDL2/SDL_haptic.h
  /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
  /usr/include/SDL2/SDL_joystick.h
  /usr/include/SDL2/SDL_keyboard.h
  /usr/include/SDL2/SDL_keycode.h

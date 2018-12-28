@@ -1,7 +1,7 @@
 //HEADER_GOES_HERE
 #include "SDL_FontCache.h"
 #include <SDL2/SDL.h>
-#include <SDL_image.h>
+//#include <SDL_image.h>
 #include <SDL_mixer.h>
 #include "../types.h"
 #include "miniwin_sdl.h"

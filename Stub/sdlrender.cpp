@@ -4,7 +4,7 @@
 
 #include "SDL_FontCache.h"
 #include <SDL2/SDL.h>
-#include <SDL_image.h>
+//#include <SDL_image.h>
 #include <SDL_mixer.h>
 
 int SCREEN_WIDTH = 800; // 1024×768
@@ -612,7 +612,7 @@ void SdlDiabloMainWindow()
 {
 
 	SDL_Init(SDL_INIT_EVERYTHING);
-	IMG_Init(IMG_INIT_PNG);
+	//IMG_Init(IMG_INIT_PNG);
 	SDL_Init(SDL_INIT_VIDEO);
 
 	window = SDL_CreateWindow("Diablo", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, Window_Width, Window_Height,

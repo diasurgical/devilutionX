@@ -1,6 +1,6 @@
 #include "../types.h"
 #include "stubs.h"
-#include <SDL_image.h>
+//#include <SDL_image.h>
 #include <SDL_mixer.h>
 #include <functional>
 #include <iostream>

@@ -1144,7 +1144,6 @@ CMakeFiles/devilution.dir/Source/engine.cpp.o: /usr/include/SDL2/SDL_gamecontrol
 CMakeFiles/devilution.dir/Source/engine.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devilution.dir/Source/engine.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devilution.dir/Source/engine.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devilution.dir/Source/engine.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devilution.dir/Source/engine.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devilution.dir/Source/engine.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devilution.dir/Source/engine.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -1337,7 +1336,6 @@ CMakeFiles/devilution.dir/Source/gendung.cpp.o: ../resource.h
 CMakeFiles/devilution.dir/Source/gendung.cpp.o: ../structs.h
 CMakeFiles/devilution.dir/Source/gendung.cpp.o: ../types.h
 
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: ../Stub/SDL_FontCache.h
 CMakeFiles/devilution.dir/Source/gmenu.cpp.o: ../Stub/miniwin.h
 CMakeFiles/devilution.dir/Source/gmenu.cpp.o: ../Stub/miniwin_ddraw.h
 CMakeFiles/devilution.dir/Source/gmenu.cpp.o: ../Stub/miniwin_dsound.h
@@ -1419,50 +1417,18 @@ CMakeFiles/devilution.dir/Source/gmenu.cpp.o: ../enums.h
 CMakeFiles/devilution.dir/Source/gmenu.cpp.o: ../resource.h
 CMakeFiles/devilution.dir/Source/gmenu.cpp.o: ../structs.h
 CMakeFiles/devilution.dir/Source/gmenu.cpp.o: ../types.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_assert.h
 CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_atomic.h
 CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_audio.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_blendmode.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_clipboard.h
 CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_config.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_cpuinfo.h
 CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_endian.h
 CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_error.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_events.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_filesystem.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_gamecontroller.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_gesture.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_haptic.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_image.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_joystick.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_keyboard.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_keycode.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_loadso.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_log.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_main.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_messagebox.h
 CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_mixer.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_mouse.h
 CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_mutex.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_pixels.h
 CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_platform.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_power.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_quit.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_rect.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_render.h
 CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_rwops.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_scancode.h
 CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_stdinc.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_surface.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_system.h
 CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_thread.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_timer.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_touch.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_ttf.h
 CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_version.h
-CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_video.h
 CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/begin_code.h
 CMakeFiles/devilution.dir/Source/gmenu.cpp.o: /usr/include/SDL2/close_code.h
 
@@ -4690,7 +4656,6 @@ CMakeFiles/devilution.dir/Stub/appfat.cpp.o: /usr/include/SDL2/SDL_gamecontrolle
 CMakeFiles/devilution.dir/Stub/appfat.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devilution.dir/Stub/appfat.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devilution.dir/Stub/appfat.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devilution.dir/Stub/appfat.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devilution.dir/Stub/appfat.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devilution.dir/Stub/appfat.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devilution.dir/Stub/appfat.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -4820,7 +4785,6 @@ CMakeFiles/devilution.dir/Stub/capture.cpp.o: /usr/include/SDL2/SDL_gamecontroll
 CMakeFiles/devilution.dir/Stub/capture.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devilution.dir/Stub/capture.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devilution.dir/Stub/capture.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devilution.dir/Stub/capture.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devilution.dir/Stub/capture.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devilution.dir/Stub/capture.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devilution.dir/Stub/capture.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -4950,7 +4914,6 @@ CMakeFiles/devilution.dir/Stub/diablo.cpp.o: /usr/include/SDL2/SDL_gamecontrolle
 CMakeFiles/devilution.dir/Stub/diablo.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devilution.dir/Stub/diablo.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devilution.dir/Stub/diablo.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devilution.dir/Stub/diablo.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devilution.dir/Stub/diablo.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devilution.dir/Stub/diablo.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devilution.dir/Stub/diablo.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -5080,7 +5043,6 @@ CMakeFiles/devilution.dir/Stub/diabloui.cpp.o: /usr/include/SDL2/SDL_gamecontrol
 CMakeFiles/devilution.dir/Stub/diabloui.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devilution.dir/Stub/diabloui.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devilution.dir/Stub/diabloui.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devilution.dir/Stub/diabloui.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devilution.dir/Stub/diabloui.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devilution.dir/Stub/diabloui.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devilution.dir/Stub/diabloui.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -5210,7 +5172,6 @@ CMakeFiles/devilution.dir/Stub/dthread.cpp.o: /usr/include/SDL2/SDL_gamecontroll
 CMakeFiles/devilution.dir/Stub/dthread.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devilution.dir/Stub/dthread.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devilution.dir/Stub/dthread.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devilution.dir/Stub/dthread.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devilution.dir/Stub/dthread.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devilution.dir/Stub/dthread.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devilution.dir/Stub/dthread.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -5341,7 +5302,6 @@ CMakeFiles/devilution.dir/Stub/dx.cpp.o: /usr/include/SDL2/SDL_gamecontroller.h
 CMakeFiles/devilution.dir/Stub/dx.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devilution.dir/Stub/dx.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devilution.dir/Stub/dx.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devilution.dir/Stub/dx.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devilution.dir/Stub/dx.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devilution.dir/Stub/dx.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devilution.dir/Stub/dx.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -5552,7 +5512,6 @@ CMakeFiles/devilution.dir/Stub/fault.cpp.o: /usr/include/SDL2/SDL_gamecontroller
 CMakeFiles/devilution.dir/Stub/fault.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devilution.dir/Stub/fault.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devilution.dir/Stub/fault.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devilution.dir/Stub/fault.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devilution.dir/Stub/fault.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devilution.dir/Stub/fault.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devilution.dir/Stub/fault.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -5763,7 +5722,6 @@ CMakeFiles/devilution.dir/Stub/init.cpp.o: /usr/include/SDL2/SDL_gamecontroller.
 CMakeFiles/devilution.dir/Stub/init.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devilution.dir/Stub/init.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devilution.dir/Stub/init.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devilution.dir/Stub/init.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devilution.dir/Stub/init.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devilution.dir/Stub/init.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devilution.dir/Stub/init.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -5893,7 +5851,6 @@ CMakeFiles/devilution.dir/Stub/main.cpp.o: /usr/include/SDL2/SDL_gamecontroller.
 CMakeFiles/devilution.dir/Stub/main.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devilution.dir/Stub/main.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devilution.dir/Stub/main.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devilution.dir/Stub/main.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devilution.dir/Stub/main.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devilution.dir/Stub/main.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devilution.dir/Stub/main.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -5947,7 +5904,6 @@ CMakeFiles/devilution.dir/Stub/miniwin.cpp.o: /usr/include/SDL2/SDL_gamecontroll
 CMakeFiles/devilution.dir/Stub/miniwin.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devilution.dir/Stub/miniwin.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devilution.dir/Stub/miniwin.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devilution.dir/Stub/miniwin.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devilution.dir/Stub/miniwin.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devilution.dir/Stub/miniwin.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devilution.dir/Stub/miniwin.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -6001,7 +5957,6 @@ CMakeFiles/devilution.dir/Stub/miniwin_io.cpp.o: /usr/include/SDL2/SDL_gamecontr
 CMakeFiles/devilution.dir/Stub/miniwin_io.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devilution.dir/Stub/miniwin_io.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devilution.dir/Stub/miniwin_io.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devilution.dir/Stub/miniwin_io.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devilution.dir/Stub/miniwin_io.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devilution.dir/Stub/miniwin_io.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devilution.dir/Stub/miniwin_io.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -6131,7 +6086,6 @@ CMakeFiles/devilution.dir/Stub/miniwin_msg_sdl.cpp.o: /usr/include/SDL2/SDL_game
 CMakeFiles/devilution.dir/Stub/miniwin_msg_sdl.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devilution.dir/Stub/miniwin_msg_sdl.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devilution.dir/Stub/miniwin_msg_sdl.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devilution.dir/Stub/miniwin_msg_sdl.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devilution.dir/Stub/miniwin_msg_sdl.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devilution.dir/Stub/miniwin_msg_sdl.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devilution.dir/Stub/miniwin_msg_sdl.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -6185,7 +6139,6 @@ CMakeFiles/devilution.dir/Stub/miniwin_rand.cpp.o: /usr/include/SDL2/SDL_gamecon
 CMakeFiles/devilution.dir/Stub/miniwin_rand.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devilution.dir/Stub/miniwin_rand.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devilution.dir/Stub/miniwin_rand.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devilution.dir/Stub/miniwin_rand.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devilution.dir/Stub/miniwin_rand.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devilution.dir/Stub/miniwin_rand.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devilution.dir/Stub/miniwin_rand.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -6315,7 +6268,6 @@ CMakeFiles/devilution.dir/Stub/movie.cpp.o: /usr/include/SDL2/SDL_gamecontroller
 CMakeFiles/devilution.dir/Stub/movie.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devilution.dir/Stub/movie.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devilution.dir/Stub/movie.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devilution.dir/Stub/movie.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devilution.dir/Stub/movie.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devilution.dir/Stub/movie.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devilution.dir/Stub/movie.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -6445,7 +6397,6 @@ CMakeFiles/devilution.dir/Stub/nthread.cpp.o: /usr/include/SDL2/SDL_gamecontroll
 CMakeFiles/devilution.dir/Stub/nthread.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devilution.dir/Stub/nthread.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devilution.dir/Stub/nthread.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devilution.dir/Stub/nthread.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devilution.dir/Stub/nthread.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devilution.dir/Stub/nthread.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devilution.dir/Stub/nthread.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -6575,7 +6526,6 @@ CMakeFiles/devilution.dir/Stub/restrict.cpp.o: /usr/include/SDL2/SDL_gamecontrol
 CMakeFiles/devilution.dir/Stub/restrict.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devilution.dir/Stub/restrict.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devilution.dir/Stub/restrict.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devilution.dir/Stub/restrict.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devilution.dir/Stub/restrict.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devilution.dir/Stub/restrict.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devilution.dir/Stub/restrict.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -6705,7 +6655,6 @@ CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o: /usr/include/SDL2/SDL_gamecontro
 CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -6835,7 +6784,6 @@ CMakeFiles/devilution.dir/Stub/sound.cpp.o: /usr/include/SDL2/SDL_gamecontroller
 CMakeFiles/devilution.dir/Stub/sound.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devilution.dir/Stub/sound.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devilution.dir/Stub/sound.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devilution.dir/Stub/sound.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devilution.dir/Stub/sound.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devilution.dir/Stub/sound.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devilution.dir/Stub/sound.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -6965,7 +6913,6 @@ CMakeFiles/devilution.dir/Stub/storm.cpp.o: /usr/include/SDL2/SDL_gamecontroller
 CMakeFiles/devilution.dir/Stub/storm.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devilution.dir/Stub/storm.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devilution.dir/Stub/storm.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devilution.dir/Stub/storm.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devilution.dir/Stub/storm.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devilution.dir/Stub/storm.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devilution.dir/Stub/storm.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -7095,7 +7042,6 @@ CMakeFiles/devilution.dir/Stub/storm_net.cpp.o: /usr/include/SDL2/SDL_gamecontro
 CMakeFiles/devilution.dir/Stub/storm_net.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devilution.dir/Stub/storm_net.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devilution.dir/Stub/storm_net.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devilution.dir/Stub/storm_net.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devilution.dir/Stub/storm_net.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devilution.dir/Stub/storm_net.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devilution.dir/Stub/storm_net.cpp.o: /usr/include/SDL2/SDL_keycode.h

@@ -61,12 +61,8 @@ vector
 -
 SDL2/SDL.h
 -
-SDL_image.h
--
 SDL_mixer.h
 -
-SDL_FontCache.h
-../Stub/SDL_FontCache.h
 direct.h
 -
 unistd.h
@@ -352,8 +348,6 @@ errno.h
 SDL_FontCache.h
 /home/krash/CLionProjects/devilutionX/Source/SDL_FontCache.h
 SDL2/SDL.h
--
-SDL_image.h
 -
 SDL_mixer.h
 -
@@ -823,12 +817,8 @@ vector
 -
 SDL2/SDL.h
 -
-SDL_image.h
--
 SDL_mixer.h
 -
-SDL_FontCache.h
-/home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
 direct.h
 -
 unistd.h
@@ -867,8 +857,6 @@ SDL_FontCache.h
 /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
 SDL2/SDL.h
 -
-SDL_image.h
--
 SDL_mixer.h
 -
 
@@ -877,8 +865,6 @@ SDL_mixer.h
 /home/krash/CLionProjects/devilutionX/types.h
 stubs.h
 /home/krash/CLionProjects/devilutionX/Stub/stubs.h
-SDL_image.h
--
 SDL_mixer.h
 -
 functional
@@ -906,8 +892,6 @@ stubs.h
 
 /home/krash/CLionProjects/devilutionX/Stub/stubs.h
 SDL2/SDL.h
--
-SDL_image.h
 -
 SDL_mixer.h
 -
@@ -1355,16 +1339,6 @@ close_code.h
 /usr/include/SDL2/SDL_hints.h
 SDL_stdinc.h
 /usr/include/SDL2/SDL_stdinc.h
-begin_code.h
-/usr/include/SDL2/begin_code.h
-close_code.h
-/usr/include/SDL2/close_code.h
-
-/usr/include/SDL2/SDL_image.h
-SDL.h
-/usr/include/SDL2/SDL.h
-SDL_version.h
-/usr/include/SDL2/SDL_version.h
 begin_code.h
 /usr/include/SDL2/begin_code.h
 close_code.h
