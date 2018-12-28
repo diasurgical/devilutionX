@@ -37,33 +37,45 @@ BOOL __stdcall UiSelHeroSingDialog(BOOL(__stdcall *fninfo)(BOOL(__stdcall *fninf
 	hero_infos.clear();
 	fninfo(&ui_add_hero_info);
 
-
 	if (CreateSinglePlayerChar) {
-			const char *test_name = HeroUndecidedName;
-			DUMMY_PRINT("create hero: %s", test_name);
+		const char *test_name = HeroUndecidedName;
+		DUMMY_PRINT("create hero: %s", test_name);
 
-			strcpy(name, test_name);
+		strcpy(name, test_name);
 
-			_uiheroinfo hero_info = {1 };
-			strcpy(hero_info.name, test_name);
-			hero_info.heroclass = HeroChosen;
+		_uiheroinfo hero_info = {1};
+		strcpy(hero_info.name, test_name);
+		hero_info.heroclass = HeroChosen;
 
-			fncreate(&hero_info);
-		}
-
-
-
+		fncreate(&hero_info);
+	}
 
 	// If a hero is available, load it, otherwise create a new one
-	//if (!hero_infos.empty()) {
-		
-	else {
-		const char *hero_name = chr_name_str;
-		DUMMY_PRINT("use hero: %s", hero_name);
-		strcpy(name, hero_name);
+	// if (!hero_infos.empty()) {
 
-		*dlgresult = 2;
+	else {
+				// Yes, I undestand that this means new players can start a hell game.
+				// I like this.
+
+		*difficulty = gnDifficulty ;
 		
+
+		if (StartNewGame) {
+			const char *hero_name = chr_name_str;
+			DUMMY_PRINT("New Game use hero: %s\n", hero_name);
+			strcpy(name, hero_name);
+			printf("Difficulty : %d \n",* difficulty);
+
+
+		} else {
+			const char *hero_name = chr_name_str;
+			DUMMY_PRINT("Loading Game : use hero: %s\n", hero_name);
+			strcpy(name, hero_name);
+
+			*dlgresult = 2; // This means load game
+			printf("Difficulty : %d \n",* difficulty);
+		
+		}
 	}
 
 	return TRUE;

@@ -107,6 +107,7 @@ extern void *pPcxFont3Image;
 extern unsigned char *pFont3;
 
 extern char HeroUndecidedName[17];
+extern bool StartNewGame;
 extern bool CreateSinglePlayerChar;
 extern int HeroChosen;
 
@@ -139,6 +140,7 @@ void RenderUndecidedHeroName();
 void LoadHeroStats();
 void RenderDefaultStats(int HeroChosen);
 void DrawPreGameOptions(int image , int ShowClasses);
+void DrawPreGameDifficultySelection(int image, int ShowClasses);
 
 
 typedef unsigned char BYTE;

@@ -17,6 +17,7 @@ int gbActive;
 char gszVersionNumber[260];
 char gszProductName[260];
 char HeroUndecidedName[17] = {0};
+bool StartNewGame;
 bool CreateSinglePlayerChar;
 int HeroChosen = 0;
 
@@ -72,10 +73,9 @@ void __fastcall init_create_window(int nCmdShow)
 	init_archives();
 	gmenu_init_menu();
 	SDL_Diablo_UI();
-	//SDL_ShowCursor(SDL_DISABLE);
-	//SDL_SetWindowSize(window, 1920,1080); //2560x1440
+	// SDL_ShowCursor(SDL_DISABLE);
+	// SDL_SetWindowSize(window, 1920,1080); //2560x1440
 	SDL_SetRelativeMouseMode(SDL_TRUE);
-
 }
 
 LRESULT __stdcall MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
@@ -156,7 +156,6 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 {
 	// WNDPROC saveProc;
 
-
 	snd_init(0);
 	music_start(5);
 
@@ -173,13 +172,12 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 
 	printf("Main Menu Init\n");
 	// SDL_ShowCursor(SDL_DISABLE);//Doesn't really work... Use HideCursor() instead.
-	if (!window){
+	if (!window) {
 		SdlDiabloMainWindow();
 	}
-	
 
 	ClearScreenBuffer();
-	 //LoadPalette("gendata\\delchar.pal"); // Uncomenting this fixes the the PCXs...
+	// LoadPalette("gendata\\delchar.pal"); // Uncomenting this fixes the the PCXs...
 	LoadPalette("Gendata\\Title.pal");
 
 	const Uint8 *state = SDL_GetKeyboardState(NULL);
@@ -187,7 +185,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 	// static std::deque<MSG> message_queue;
 
 	while (1 && quit == false) {
-		 DrawMouse();
+		DrawMouse();
 		PaletteFadeIn(32);
 
 		if (menu == 0) {
@@ -203,7 +201,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 			}
 			SDL_RenderDiabloSinglePlayerPage();
 			gbMaxPlayers = 1;
-			//DrawMouse(); // Not accurate for some reason. It adds too much  and I am not sure why.
+			// DrawMouse(); // Not accurate for some reason. It adds too much  and I am not sure why.
 			ConstantButtons();
 		}
 
@@ -211,7 +209,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 			CreateHeroMenu();
 			DrawNewHeroKartinka(HeroPortrait, 1);
 			ConstantButtons();
-			//DrawMouse();
+			// DrawMouse();
 		}
 
 		int m4Loaded = 0;
@@ -223,27 +221,25 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 			ConstantButtons();
 			DrawMouse();
 		}
-		if(menu == 5){
+		if (menu == 5) {
 
 			DrawPreGameOptions(HeroPortrait, 1);
 			RenderDefaultStats(HeroPortrait);
 			ConstantButtons();
 			DrawMouse();
-
-
 		}
-
-
-
-
-
-
+		if (menu == 6) {
+			DrawPreGameDifficultySelection(HeroPortrait, 1);
+			RenderDefaultStats(HeroPortrait);
+			ConstantButtons();
+			DrawMouse();
+		}
 
 		if (menu == 10) {
 			ShowCredts();
 		}
 
-		if (SDL_PollEvent(&event)) { 
+		if (SDL_PollEvent(&event)) {
 			switch (event.type) {
 			case SDL_KEYDOWN:
 				switch (event.key.keysym.sym) {
@@ -333,7 +329,6 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 							quit = true;
 							SDL_Quit();
 							exit(0);
-
 						}
 
 					} // End of this Menu0
@@ -361,7 +356,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 							strcpy(chr_name_str, hero_names[0]);
 							printf("Player %s\n", chr_name_str);
 							menu = 5;
-							//break;
+							// break;
 						}
 
 						if (TotalPlayers >= 2 && (x > ClickListStart) && (y > ClickListStart + (sizeOfBox)) &&
@@ -371,7 +366,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 							strcpy(chr_name_str, hero_names[1]);
 							printf("Player %s\n", chr_name_str);
 							menu = 5;
-						//	break;
+							//	break;
 						}
 
 						if (TotalPlayers >= 3 && (x > ClickListStart) && (y > ClickListStart + (sizeOfBox * 2)) &&
@@ -381,7 +376,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 							strcpy(chr_name_str, hero_names[2]);
 							printf("Player %s\n", chr_name_str);
 							menu = 5;
-						//	break;
+							//	break;
 						}
 
 						if (TotalPlayers >= 4 && (x > ClickListStart) && (y > ClickListStart + (sizeOfBox * 3)) &&
@@ -392,7 +387,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 							strcpy(chr_name_str, hero_names[3]);
 							printf("Player %s\n", chr_name_str);
 							menu = 5;
-						//	break;
+							//	break;
 						}
 
 						if (TotalPlayers >= 5 && (x > ClickListStart) && (y > ClickListStart + (sizeOfBox * 4)) &&
@@ -403,7 +398,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 							strcpy(chr_name_str, hero_names[4]);
 							printf("Player %s\n", chr_name_str);
 							menu = 5;
-						//	break;
+							//	break;
 						}
 
 						if (TotalPlayers >= 6 && (x > ClickListStart) && (y > ClickListStart + (sizeOfBox * 5)) &&
@@ -414,7 +409,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 							strcpy(chr_name_str, hero_names[5]);
 							printf("Player %s\n", chr_name_str);
 							menu = 5;
-						//	break;
+							//	break;
 						}
 
 						if ((x > CreateHeroCancelBox.x) && (y > CreateHeroCancelBox.y) && (x < CreateHeroCancelBox.w) &&
@@ -434,8 +429,6 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 						// SinglePlayerMenuItemsLoaded = 0;
 						printf("\n\nmenu3 X%d Y%d \n ", x, y);
 
-						
-
 						int WarriorSelectBoxY = 430;
 						int WarriorSelectBoxW = 100;
 						int WarriorSelectBoxS = 100;
@@ -449,9 +442,8 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 						int CreateHeroCanBBoxX = 445;
 						int CreateHeroCanBBoxY = 473;
 
-						//int x = 280;
-						//int y = 430;
-
+						// int x = 280;
+						// int y = 430;
 
 						SDL_Rect WarriorSelectBox;
 						WarriorSelectBox.y = 350;
@@ -530,9 +522,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 						    (y < CreateHeroCancelBox.h)) {
 							memset(HeroUndecidedName, 0, 17);
 
-						// 	if (NewHeroNameIndex > 0) {
-						// HeroUndecidedName[NewHeroNameIndex - 1] = 0;
-						NewHeroNameIndex = 0;
+							NewHeroNameIndex = 0;
 
 							printf("Cancel\n\n\n");
 							HeroPortrait = 3;
@@ -548,37 +538,24 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 							break;
 						}
 					}
-					if(menu == 5){
+					if (menu == 5) {
 
-
-						// int WarriorSelectBoxY = 430;
-						// int WarriorSelectBoxW = 100;
-						// int WarriorSelectBoxS = 100;
-
-						// int RogueSelectBoxX = 450;
-						// int RogueSelectBoxY = 392;
-						// int SorcerorSelectBoxX = 383;
-						// int SorcerorSelectBoxY = 365;
 						int CreateHeroOkBoxX = 330;
 						int CreateHeroOkBoxY = 441;
 						int CreateHeroCanBBoxX = 445;
 						int CreateHeroCanBBoxY = 473;
 
-						//int x = 280;
-						//int y = 430;
+						SDL_Rect NewGameBox;
+						NewGameBox.y = 350;
+						NewGameBox.x = 280;
+						NewGameBox.w = NewGameBox.x + 300;
+						NewGameBox.h = NewGameBox.y + 30;
 
-
-						SDL_Rect WarriorSelectBox;
-						WarriorSelectBox.y = 350;
-						WarriorSelectBox.x = 280;
-						WarriorSelectBox.w = WarriorSelectBox.x + 300;
-						WarriorSelectBox.h = WarriorSelectBox.y + 30;
-
-						SDL_Rect RogueSelectBox;
-						RogueSelectBox.y = 392;
-						RogueSelectBox.x = 280;
-						RogueSelectBox.w = RogueSelectBox.x + 300;
-						RogueSelectBox.h = RogueSelectBox.y + 30;
+						SDL_Rect LoadGameBox;
+						LoadGameBox.y = 392;
+						LoadGameBox.x = 280;
+						LoadGameBox.w = LoadGameBox.x + 300;
+						LoadGameBox.h = LoadGameBox.y + 30;
 						// X450 Y 392 ;
 
 						SDL_Rect SorcerorSelectBox;
@@ -594,62 +571,92 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 						CreateHeroCancelBox.w = CreateHeroCancelBox.x + 100;
 						CreateHeroCancelBox.h = CreateHeroCancelBox.y + 30;
 
-						if ((x > WarriorSelectBox.x) && (y > WarriorSelectBox.y) && (x < WarriorSelectBox.w) &&
-						    (y < WarriorSelectBox.h)) {
+						if ((x > NewGameBox.x) && (y > NewGameBox.y) && (x < NewGameBox.w) && (y < NewGameBox.h)) {
 
 							printf(" New Game I was hit\n\n\n");
-							// HeroPortrait = 0;
-							// HeroChosen = 0;
-							// menu = 4;
+							menu = 6;
+
 						}
-						if ((x > RogueSelectBox.x) && (y > RogueSelectBox.y) && (x < RogueSelectBox.w) &&
-						    (y < RogueSelectBox.h)) {
+						if ((x > LoadGameBox.x) && (y > LoadGameBox.y) && (x < LoadGameBox.w) && (y < LoadGameBox.h)) {
 
 							printf(" Load Game I was hit\n\n\n");
 							break;
-							// HeroPortrait = 1;
-							// HeroChosen = 1;
-							// menu = 4;
 						}
-						// if ((x > SorcerorSelectBox.x) && (y > SorcerorSelectBox.y) && (x < SorcerorSelectBox.w) &&
-						//     (y < SorcerorSelectBox.h)) {
-						// 	HeroPortrait = 2;
-						// 	printf("sorceror I was hit\n\n\n");
-						// 	HeroChosen = 2;
-						// 	menu = 4;
-						// }
 
 						if ((x > CreateHeroCancelBox.x) && (y > CreateHeroCancelBox.y) && (x < CreateHeroCancelBox.w) &&
 						    (y < CreateHeroCancelBox.h)) {
 							HeroPortrait = 3;
 
 							printf("Cancel\n\n\n");
-							menu = 2;
+
+							menu = 2; // Return back to select hero menu.
+						}
+					}
+					if (menu == 6) {
+						// Choose difficulty
+
+		
+						int CreateHeroOkBoxX = 330;
+						int CreateHeroOkBoxY = 441;
+						int CreateHeroCanBBoxX = 445;
+						int CreateHeroCanBBoxY = 473;
+
+						// int x = 280;
+						// int y = 430;
+
+						SDL_Rect NormalSelectBox;
+						NormalSelectBox.y = 350;
+						NormalSelectBox.x = 280;
+						NormalSelectBox.w = NormalSelectBox.x + 300;
+						NormalSelectBox.h = NormalSelectBox.y + 30;
+
+						SDL_Rect NightmareSelectBox;
+						NightmareSelectBox.y = 392;
+						NightmareSelectBox.x = 280;
+						NightmareSelectBox.w = NightmareSelectBox.x + 300;
+						NightmareSelectBox.h = NightmareSelectBox.y + 30;
+						// X450 Y 392 ;
+
+						SDL_Rect HellSelectBox;
+						HellSelectBox.y = 428;
+						HellSelectBox.x = 280;
+						HellSelectBox.w = HellSelectBox.x + 300;
+						HellSelectBox.h = HellSelectBox.y + 30;
+						// X 447 Y 428
+
+						SDL_Rect CreateHeroCancelBox;
+						CreateHeroCancelBox.y = 550;
+						CreateHeroCancelBox.x = 675;
+						CreateHeroCancelBox.w = CreateHeroCancelBox.x + 100;
+						CreateHeroCancelBox.h = CreateHeroCancelBox.y + 30;
+
+						if ((x > NormalSelectBox.x) && (y > NormalSelectBox.y) && (x < NormalSelectBox.w) &&
+						    (y < NormalSelectBox.h)) {
+							StartNewGame = 1;
+							gnDifficulty = DIFF_NORMAL;
+							break;
+						}
+						if ((x > NightmareSelectBox.x) && (y > NightmareSelectBox.y) && (x < NightmareSelectBox.w) &&
+						    (y < NightmareSelectBox.h)) {
+							StartNewGame = 1;
+							gnDifficulty = DIFF_NIGHTMARE;
+							break;
+						}
+						if ((x > HellSelectBox.x) && (y > HellSelectBox.y) && (x < HellSelectBox.w) &&
+						    (y < HellSelectBox.h)) {
+							gnDifficulty = DIFF_HELL;
+							StartNewGame = 1;
+							break;
 						}
 
+						if ((x > CreateHeroCancelBox.x) && (y > CreateHeroCancelBox.y) && (x < CreateHeroCancelBox.w) &&
+						    (y < CreateHeroCancelBox.h)) {
+							HeroPortrait = 3;
 
-
-
-
-
+							printf("Cancel\n\n\n");
+							--menu;
+						}
 					}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 				}
 			}
 		}
