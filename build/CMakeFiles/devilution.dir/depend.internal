@@ -1047,7 +1047,6 @@ CMakeFiles/devilution.dir/Source/encrypt.cpp.o
  /home/krash/CLionProjects/devilutionX/structs.h
  /home/krash/CLionProjects/devilutionX/types.h
 CMakeFiles/devilution.dir/Source/engine.cpp.o
- ../Stub/SDL_FontCache.h
  ../Stub/miniwin.h
  ../Stub/miniwin_ddraw.h
  ../Stub/miniwin_dsound.h
@@ -1129,50 +1128,18 @@ CMakeFiles/devilution.dir/Source/engine.cpp.o
  /home/krash/CLionProjects/devilutionX/resource.h
  /home/krash/CLionProjects/devilutionX/structs.h
  /home/krash/CLionProjects/devilutionX/types.h
- /usr/include/SDL2/SDL.h
- /usr/include/SDL2/SDL_assert.h
  /usr/include/SDL2/SDL_atomic.h
  /usr/include/SDL2/SDL_audio.h
- /usr/include/SDL2/SDL_blendmode.h
- /usr/include/SDL2/SDL_clipboard.h
  /usr/include/SDL2/SDL_config.h
- /usr/include/SDL2/SDL_cpuinfo.h
  /usr/include/SDL2/SDL_endian.h
  /usr/include/SDL2/SDL_error.h
- /usr/include/SDL2/SDL_events.h
- /usr/include/SDL2/SDL_filesystem.h
- /usr/include/SDL2/SDL_gamecontroller.h
- /usr/include/SDL2/SDL_gesture.h
- /usr/include/SDL2/SDL_haptic.h
- /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
- /usr/include/SDL2/SDL_joystick.h
- /usr/include/SDL2/SDL_keyboard.h
- /usr/include/SDL2/SDL_keycode.h
- /usr/include/SDL2/SDL_loadso.h
- /usr/include/SDL2/SDL_log.h
- /usr/include/SDL2/SDL_main.h
- /usr/include/SDL2/SDL_messagebox.h
  /usr/include/SDL2/SDL_mixer.h
- /usr/include/SDL2/SDL_mouse.h
  /usr/include/SDL2/SDL_mutex.h
- /usr/include/SDL2/SDL_pixels.h
  /usr/include/SDL2/SDL_platform.h
- /usr/include/SDL2/SDL_power.h
- /usr/include/SDL2/SDL_quit.h
- /usr/include/SDL2/SDL_rect.h
- /usr/include/SDL2/SDL_render.h
  /usr/include/SDL2/SDL_rwops.h
- /usr/include/SDL2/SDL_scancode.h
  /usr/include/SDL2/SDL_stdinc.h
- /usr/include/SDL2/SDL_surface.h
- /usr/include/SDL2/SDL_system.h
  /usr/include/SDL2/SDL_thread.h
- /usr/include/SDL2/SDL_timer.h
- /usr/include/SDL2/SDL_touch.h
- /usr/include/SDL2/SDL_ttf.h
  /usr/include/SDL2/SDL_version.h
- /usr/include/SDL2/SDL_video.h
  /usr/include/SDL2/begin_code.h
  /usr/include/SDL2/close_code.h
 CMakeFiles/devilution.dir/Source/error.cpp.o
@@ -1204,87 +1171,6 @@ CMakeFiles/devilution.dir/Source/error.cpp.o
  /home/krash/CLionProjects/devilutionX/Source/error.cpp
  /home/krash/CLionProjects/devilutionX/Source/error.h
  /home/krash/CLionProjects/devilutionX/Source/fault.h
- /home/krash/CLionProjects/devilutionX/Source/gamemenu.h
- /home/krash/CLionProjects/devilutionX/Source/gendung.h
- /home/krash/CLionProjects/devilutionX/Source/gmenu.h
- /home/krash/CLionProjects/devilutionX/Source/help.h
- /home/krash/CLionProjects/devilutionX/Source/init.h
- /home/krash/CLionProjects/devilutionX/Source/interfac.h
- /home/krash/CLionProjects/devilutionX/Source/inv.h
- /home/krash/CLionProjects/devilutionX/Source/items.h
- /home/krash/CLionProjects/devilutionX/Source/lighting.h
- /home/krash/CLionProjects/devilutionX/Source/loadsave.h
- /home/krash/CLionProjects/devilutionX/Source/logging.h
- /home/krash/CLionProjects/devilutionX/Source/mainmenu.h
- /home/krash/CLionProjects/devilutionX/Source/minitext.h
- /home/krash/CLionProjects/devilutionX/Source/missiles.h
- /home/krash/CLionProjects/devilutionX/Source/monster.h
- /home/krash/CLionProjects/devilutionX/Source/movie.h
- /home/krash/CLionProjects/devilutionX/Source/mpqapi.h
- /home/krash/CLionProjects/devilutionX/Source/msg.h
- /home/krash/CLionProjects/devilutionX/Source/msgcmd.h
- /home/krash/CLionProjects/devilutionX/Source/multi.h
- /home/krash/CLionProjects/devilutionX/Source/nthread.h
- /home/krash/CLionProjects/devilutionX/Source/objects.h
- /home/krash/CLionProjects/devilutionX/Source/pack.h
- /home/krash/CLionProjects/devilutionX/Source/palette.h
- /home/krash/CLionProjects/devilutionX/Source/path.h
- /home/krash/CLionProjects/devilutionX/Source/pfile.h
- /home/krash/CLionProjects/devilutionX/Source/player.h
- /home/krash/CLionProjects/devilutionX/Source/plrmsg.h
- /home/krash/CLionProjects/devilutionX/Source/portal.h
- /home/krash/CLionProjects/devilutionX/Source/quests.h
- /home/krash/CLionProjects/devilutionX/Source/render.h
- /home/krash/CLionProjects/devilutionX/Source/restrict.h
- /home/krash/CLionProjects/devilutionX/Source/scrollrt.h
- /home/krash/CLionProjects/devilutionX/Source/setmaps.h
- /home/krash/CLionProjects/devilutionX/Source/sha.h
- /home/krash/CLionProjects/devilutionX/Source/sound.h
- /home/krash/CLionProjects/devilutionX/Source/spells.h
- /home/krash/CLionProjects/devilutionX/Source/stores.h
- /home/krash/CLionProjects/devilutionX/Source/sync.h
- /home/krash/CLionProjects/devilutionX/Source/textdat.h
- /home/krash/CLionProjects/devilutionX/Source/themes.h
- /home/krash/CLionProjects/devilutionX/Source/tmsg.h
- /home/krash/CLionProjects/devilutionX/Source/town.h
- /home/krash/CLionProjects/devilutionX/Source/towners.h
- /home/krash/CLionProjects/devilutionX/Source/track.h
- /home/krash/CLionProjects/devilutionX/Source/trigs.h
- /home/krash/CLionProjects/devilutionX/Source/wave.h
- /home/krash/CLionProjects/devilutionX/defs.h
- /home/krash/CLionProjects/devilutionX/enums.h
- /home/krash/CLionProjects/devilutionX/resource.h
- /home/krash/CLionProjects/devilutionX/structs.h
- /home/krash/CLionProjects/devilutionX/types.h
-CMakeFiles/devilution.dir/Source/gamemenu.cpp.o
- ../Stub/miniwin.h
- ../Stub/miniwin_ddraw.h
- ../Stub/miniwin_dsound.h
- /home/krash/CLionProjects/devilutionX/3rdParty/PKWare/pkware.h
- /home/krash/CLionProjects/devilutionX/3rdParty/Storm/Source/storm.h
- /home/krash/CLionProjects/devilutionX/DiabloUI/diabloui.h
- /home/krash/CLionProjects/devilutionX/Source/appfat.h
- /home/krash/CLionProjects/devilutionX/Source/automap.h
- /home/krash/CLionProjects/devilutionX/Source/capture.h
- /home/krash/CLionProjects/devilutionX/Source/codec.h
- /home/krash/CLionProjects/devilutionX/Source/control.h
- /home/krash/CLionProjects/devilutionX/Source/cursor.h
- /home/krash/CLionProjects/devilutionX/Source/dead.h
- /home/krash/CLionProjects/devilutionX/Source/debug.h
- /home/krash/CLionProjects/devilutionX/Source/diablo.h
- /home/krash/CLionProjects/devilutionX/Source/doom.h
- /home/krash/CLionProjects/devilutionX/Source/drlg_l1.h
- /home/krash/CLionProjects/devilutionX/Source/drlg_l2.h
- /home/krash/CLionProjects/devilutionX/Source/drlg_l3.h
- /home/krash/CLionProjects/devilutionX/Source/drlg_l4.h
- /home/krash/CLionProjects/devilutionX/Source/dthread.h
- /home/krash/CLionProjects/devilutionX/Source/dx.h
- /home/krash/CLionProjects/devilutionX/Source/effects.h
- /home/krash/CLionProjects/devilutionX/Source/encrypt.h
- /home/krash/CLionProjects/devilutionX/Source/engine.h
- /home/krash/CLionProjects/devilutionX/Source/error.h
- /home/krash/CLionProjects/devilutionX/Source/fault.h
- /home/krash/CLionProjects/devilutionX/Source/gamemenu.cpp
  /home/krash/CLionProjects/devilutionX/Source/gamemenu.h
  /home/krash/CLionProjects/devilutionX/Source/gendung.h
  /home/krash/CLionProjects/devilutionX/Source/gmenu.h
@@ -1419,7 +1305,6 @@ CMakeFiles/devilution.dir/Source/gendung.cpp.o
  /home/krash/CLionProjects/devilutionX/structs.h
  /home/krash/CLionProjects/devilutionX/types.h
 CMakeFiles/devilution.dir/Source/gmenu.cpp.o
- ../Stub/SDL_FontCache.h
  ../Stub/miniwin.h
  ../Stub/miniwin_ddraw.h
  ../Stub/miniwin_dsound.h
@@ -1501,50 +1386,18 @@ CMakeFiles/devilution.dir/Source/gmenu.cpp.o
  /home/krash/CLionProjects/devilutionX/resource.h
  /home/krash/CLionProjects/devilutionX/structs.h
  /home/krash/CLionProjects/devilutionX/types.h
- /usr/include/SDL2/SDL.h
- /usr/include/SDL2/SDL_assert.h
  /usr/include/SDL2/SDL_atomic.h
  /usr/include/SDL2/SDL_audio.h
- /usr/include/SDL2/SDL_blendmode.h
- /usr/include/SDL2/SDL_clipboard.h
  /usr/include/SDL2/SDL_config.h
- /usr/include/SDL2/SDL_cpuinfo.h
  /usr/include/SDL2/SDL_endian.h
  /usr/include/SDL2/SDL_error.h
- /usr/include/SDL2/SDL_events.h
- /usr/include/SDL2/SDL_filesystem.h
- /usr/include/SDL2/SDL_gamecontroller.h
- /usr/include/SDL2/SDL_gesture.h
- /usr/include/SDL2/SDL_haptic.h
- /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
- /usr/include/SDL2/SDL_joystick.h
- /usr/include/SDL2/SDL_keyboard.h
- /usr/include/SDL2/SDL_keycode.h
- /usr/include/SDL2/SDL_loadso.h
- /usr/include/SDL2/SDL_log.h
- /usr/include/SDL2/SDL_main.h
- /usr/include/SDL2/SDL_messagebox.h
  /usr/include/SDL2/SDL_mixer.h
- /usr/include/SDL2/SDL_mouse.h
  /usr/include/SDL2/SDL_mutex.h
- /usr/include/SDL2/SDL_pixels.h
  /usr/include/SDL2/SDL_platform.h
- /usr/include/SDL2/SDL_power.h
- /usr/include/SDL2/SDL_quit.h
- /usr/include/SDL2/SDL_rect.h
- /usr/include/SDL2/SDL_render.h
  /usr/include/SDL2/SDL_rwops.h
- /usr/include/SDL2/SDL_scancode.h
  /usr/include/SDL2/SDL_stdinc.h
- /usr/include/SDL2/SDL_surface.h
- /usr/include/SDL2/SDL_system.h
  /usr/include/SDL2/SDL_thread.h
- /usr/include/SDL2/SDL_timer.h
- /usr/include/SDL2/SDL_touch.h
- /usr/include/SDL2/SDL_ttf.h
  /usr/include/SDL2/SDL_version.h
- /usr/include/SDL2/SDL_video.h
  /usr/include/SDL2/begin_code.h
  /usr/include/SDL2/close_code.h
 CMakeFiles/devilution.dir/Source/help.cpp.o
@@ -4625,53 +4478,6 @@ CMakeFiles/devilution.dir/Source/wave.cpp.o
  /home/krash/CLionProjects/devilutionX/resource.h
  /home/krash/CLionProjects/devilutionX/structs.h
  /home/krash/CLionProjects/devilutionX/types.h
-CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o
- /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.cpp
- /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
- /usr/include/SDL2/SDL.h
- /usr/include/SDL2/SDL_assert.h
- /usr/include/SDL2/SDL_atomic.h
- /usr/include/SDL2/SDL_audio.h
- /usr/include/SDL2/SDL_blendmode.h
- /usr/include/SDL2/SDL_clipboard.h
- /usr/include/SDL2/SDL_config.h
- /usr/include/SDL2/SDL_cpuinfo.h
- /usr/include/SDL2/SDL_endian.h
- /usr/include/SDL2/SDL_error.h
- /usr/include/SDL2/SDL_events.h
- /usr/include/SDL2/SDL_filesystem.h
- /usr/include/SDL2/SDL_gamecontroller.h
- /usr/include/SDL2/SDL_gesture.h
- /usr/include/SDL2/SDL_haptic.h
- /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_joystick.h
- /usr/include/SDL2/SDL_keyboard.h
- /usr/include/SDL2/SDL_keycode.h
- /usr/include/SDL2/SDL_loadso.h
- /usr/include/SDL2/SDL_log.h
- /usr/include/SDL2/SDL_main.h
- /usr/include/SDL2/SDL_messagebox.h
- /usr/include/SDL2/SDL_mouse.h
- /usr/include/SDL2/SDL_mutex.h
- /usr/include/SDL2/SDL_pixels.h
- /usr/include/SDL2/SDL_platform.h
- /usr/include/SDL2/SDL_power.h
- /usr/include/SDL2/SDL_quit.h
- /usr/include/SDL2/SDL_rect.h
- /usr/include/SDL2/SDL_render.h
- /usr/include/SDL2/SDL_rwops.h
- /usr/include/SDL2/SDL_scancode.h
- /usr/include/SDL2/SDL_stdinc.h
- /usr/include/SDL2/SDL_surface.h
- /usr/include/SDL2/SDL_system.h
- /usr/include/SDL2/SDL_thread.h
- /usr/include/SDL2/SDL_timer.h
- /usr/include/SDL2/SDL_touch.h
- /usr/include/SDL2/SDL_ttf.h
- /usr/include/SDL2/SDL_version.h
- /usr/include/SDL2/SDL_video.h
- /usr/include/SDL2/begin_code.h
- /usr/include/SDL2/close_code.h
 CMakeFiles/devilution.dir/Stub/appfat.cpp.o
  ../Stub/miniwin.h
  ../Stub/miniwin_ddraw.h
@@ -4747,7 +4553,6 @@ CMakeFiles/devilution.dir/Stub/appfat.cpp.o
  /home/krash/CLionProjects/devilutionX/Source/track.h
  /home/krash/CLionProjects/devilutionX/Source/trigs.h
  /home/krash/CLionProjects/devilutionX/Source/wave.h
- /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
  /home/krash/CLionProjects/devilutionX/Stub/appfat.cpp
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.h
  /home/krash/CLionProjects/devilutionX/Stub/stubs.h
@@ -4756,50 +4561,18 @@ CMakeFiles/devilution.dir/Stub/appfat.cpp.o
  /home/krash/CLionProjects/devilutionX/resource.h
  /home/krash/CLionProjects/devilutionX/structs.h
  /home/krash/CLionProjects/devilutionX/types.h
- /usr/include/SDL2/SDL.h
- /usr/include/SDL2/SDL_assert.h
  /usr/include/SDL2/SDL_atomic.h
  /usr/include/SDL2/SDL_audio.h
- /usr/include/SDL2/SDL_blendmode.h
- /usr/include/SDL2/SDL_clipboard.h
  /usr/include/SDL2/SDL_config.h
- /usr/include/SDL2/SDL_cpuinfo.h
  /usr/include/SDL2/SDL_endian.h
  /usr/include/SDL2/SDL_error.h
- /usr/include/SDL2/SDL_events.h
- /usr/include/SDL2/SDL_filesystem.h
- /usr/include/SDL2/SDL_gamecontroller.h
- /usr/include/SDL2/SDL_gesture.h
- /usr/include/SDL2/SDL_haptic.h
- /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
- /usr/include/SDL2/SDL_joystick.h
- /usr/include/SDL2/SDL_keyboard.h
- /usr/include/SDL2/SDL_keycode.h
- /usr/include/SDL2/SDL_loadso.h
- /usr/include/SDL2/SDL_log.h
- /usr/include/SDL2/SDL_main.h
- /usr/include/SDL2/SDL_messagebox.h
  /usr/include/SDL2/SDL_mixer.h
- /usr/include/SDL2/SDL_mouse.h
  /usr/include/SDL2/SDL_mutex.h
- /usr/include/SDL2/SDL_pixels.h
  /usr/include/SDL2/SDL_platform.h
- /usr/include/SDL2/SDL_power.h
- /usr/include/SDL2/SDL_quit.h
- /usr/include/SDL2/SDL_rect.h
- /usr/include/SDL2/SDL_render.h
  /usr/include/SDL2/SDL_rwops.h
- /usr/include/SDL2/SDL_scancode.h
  /usr/include/SDL2/SDL_stdinc.h
- /usr/include/SDL2/SDL_surface.h
- /usr/include/SDL2/SDL_system.h
  /usr/include/SDL2/SDL_thread.h
- /usr/include/SDL2/SDL_timer.h
- /usr/include/SDL2/SDL_touch.h
- /usr/include/SDL2/SDL_ttf.h
  /usr/include/SDL2/SDL_version.h
- /usr/include/SDL2/SDL_video.h
  /usr/include/SDL2/begin_code.h
  /usr/include/SDL2/close_code.h
 CMakeFiles/devilution.dir/Stub/capture.cpp.o
@@ -4877,7 +4650,6 @@ CMakeFiles/devilution.dir/Stub/capture.cpp.o
  /home/krash/CLionProjects/devilutionX/Source/track.h
  /home/krash/CLionProjects/devilutionX/Source/trigs.h
  /home/krash/CLionProjects/devilutionX/Source/wave.h
- /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
  /home/krash/CLionProjects/devilutionX/Stub/capture.cpp
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.h
  /home/krash/CLionProjects/devilutionX/Stub/stubs.h
@@ -4886,50 +4658,18 @@ CMakeFiles/devilution.dir/Stub/capture.cpp.o
  /home/krash/CLionProjects/devilutionX/resource.h
  /home/krash/CLionProjects/devilutionX/structs.h
  /home/krash/CLionProjects/devilutionX/types.h
- /usr/include/SDL2/SDL.h
- /usr/include/SDL2/SDL_assert.h
  /usr/include/SDL2/SDL_atomic.h
  /usr/include/SDL2/SDL_audio.h
- /usr/include/SDL2/SDL_blendmode.h
- /usr/include/SDL2/SDL_clipboard.h
  /usr/include/SDL2/SDL_config.h
- /usr/include/SDL2/SDL_cpuinfo.h
  /usr/include/SDL2/SDL_endian.h
  /usr/include/SDL2/SDL_error.h
- /usr/include/SDL2/SDL_events.h
- /usr/include/SDL2/SDL_filesystem.h
- /usr/include/SDL2/SDL_gamecontroller.h
- /usr/include/SDL2/SDL_gesture.h
- /usr/include/SDL2/SDL_haptic.h
- /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
- /usr/include/SDL2/SDL_joystick.h
- /usr/include/SDL2/SDL_keyboard.h
- /usr/include/SDL2/SDL_keycode.h
- /usr/include/SDL2/SDL_loadso.h
- /usr/include/SDL2/SDL_log.h
- /usr/include/SDL2/SDL_main.h
- /usr/include/SDL2/SDL_messagebox.h
  /usr/include/SDL2/SDL_mixer.h
- /usr/include/SDL2/SDL_mouse.h
  /usr/include/SDL2/SDL_mutex.h
- /usr/include/SDL2/SDL_pixels.h
  /usr/include/SDL2/SDL_platform.h
- /usr/include/SDL2/SDL_power.h
- /usr/include/SDL2/SDL_quit.h
- /usr/include/SDL2/SDL_rect.h
- /usr/include/SDL2/SDL_render.h
  /usr/include/SDL2/SDL_rwops.h
- /usr/include/SDL2/SDL_scancode.h
  /usr/include/SDL2/SDL_stdinc.h
- /usr/include/SDL2/SDL_surface.h
- /usr/include/SDL2/SDL_system.h
  /usr/include/SDL2/SDL_thread.h
- /usr/include/SDL2/SDL_timer.h
- /usr/include/SDL2/SDL_touch.h
- /usr/include/SDL2/SDL_ttf.h
  /usr/include/SDL2/SDL_version.h
- /usr/include/SDL2/SDL_video.h
  /usr/include/SDL2/begin_code.h
  /usr/include/SDL2/close_code.h
 CMakeFiles/devilution.dir/Stub/diablo.cpp.o
@@ -5007,7 +4747,6 @@ CMakeFiles/devilution.dir/Stub/diablo.cpp.o
  /home/krash/CLionProjects/devilutionX/Source/track.h
  /home/krash/CLionProjects/devilutionX/Source/trigs.h
  /home/krash/CLionProjects/devilutionX/Source/wave.h
- /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
  /home/krash/CLionProjects/devilutionX/Stub/diablo.cpp
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.h
  /home/krash/CLionProjects/devilutionX/Stub/stubs.h
@@ -5016,50 +4755,18 @@ CMakeFiles/devilution.dir/Stub/diablo.cpp.o
  /home/krash/CLionProjects/devilutionX/resource.h
  /home/krash/CLionProjects/devilutionX/structs.h
  /home/krash/CLionProjects/devilutionX/types.h
- /usr/include/SDL2/SDL.h
- /usr/include/SDL2/SDL_assert.h
  /usr/include/SDL2/SDL_atomic.h
  /usr/include/SDL2/SDL_audio.h
- /usr/include/SDL2/SDL_blendmode.h
- /usr/include/SDL2/SDL_clipboard.h
  /usr/include/SDL2/SDL_config.h
- /usr/include/SDL2/SDL_cpuinfo.h
  /usr/include/SDL2/SDL_endian.h
  /usr/include/SDL2/SDL_error.h
- /usr/include/SDL2/SDL_events.h
- /usr/include/SDL2/SDL_filesystem.h
- /usr/include/SDL2/SDL_gamecontroller.h
- /usr/include/SDL2/SDL_gesture.h
- /usr/include/SDL2/SDL_haptic.h
- /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
- /usr/include/SDL2/SDL_joystick.h
- /usr/include/SDL2/SDL_keyboard.h
- /usr/include/SDL2/SDL_keycode.h
- /usr/include/SDL2/SDL_loadso.h
- /usr/include/SDL2/SDL_log.h
- /usr/include/SDL2/SDL_main.h
- /usr/include/SDL2/SDL_messagebox.h
  /usr/include/SDL2/SDL_mixer.h
- /usr/include/SDL2/SDL_mouse.h
  /usr/include/SDL2/SDL_mutex.h
- /usr/include/SDL2/SDL_pixels.h
  /usr/include/SDL2/SDL_platform.h
- /usr/include/SDL2/SDL_power.h
- /usr/include/SDL2/SDL_quit.h
- /usr/include/SDL2/SDL_rect.h
- /usr/include/SDL2/SDL_render.h
  /usr/include/SDL2/SDL_rwops.h
- /usr/include/SDL2/SDL_scancode.h
  /usr/include/SDL2/SDL_stdinc.h
- /usr/include/SDL2/SDL_surface.h
- /usr/include/SDL2/SDL_system.h
  /usr/include/SDL2/SDL_thread.h
- /usr/include/SDL2/SDL_timer.h
- /usr/include/SDL2/SDL_touch.h
- /usr/include/SDL2/SDL_ttf.h
  /usr/include/SDL2/SDL_version.h
- /usr/include/SDL2/SDL_video.h
  /usr/include/SDL2/begin_code.h
  /usr/include/SDL2/close_code.h
 CMakeFiles/devilution.dir/Stub/diabloui.cpp.o
@@ -5137,7 +4844,6 @@ CMakeFiles/devilution.dir/Stub/diabloui.cpp.o
  /home/krash/CLionProjects/devilutionX/Source/track.h
  /home/krash/CLionProjects/devilutionX/Source/trigs.h
  /home/krash/CLionProjects/devilutionX/Source/wave.h
- /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
  /home/krash/CLionProjects/devilutionX/Stub/diabloui.cpp
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.h
  /home/krash/CLionProjects/devilutionX/Stub/stubs.h
@@ -5146,50 +4852,18 @@ CMakeFiles/devilution.dir/Stub/diabloui.cpp.o
  /home/krash/CLionProjects/devilutionX/resource.h
  /home/krash/CLionProjects/devilutionX/structs.h
  /home/krash/CLionProjects/devilutionX/types.h
- /usr/include/SDL2/SDL.h
- /usr/include/SDL2/SDL_assert.h
  /usr/include/SDL2/SDL_atomic.h
  /usr/include/SDL2/SDL_audio.h
- /usr/include/SDL2/SDL_blendmode.h
- /usr/include/SDL2/SDL_clipboard.h
  /usr/include/SDL2/SDL_config.h
- /usr/include/SDL2/SDL_cpuinfo.h
  /usr/include/SDL2/SDL_endian.h
  /usr/include/SDL2/SDL_error.h
- /usr/include/SDL2/SDL_events.h
- /usr/include/SDL2/SDL_filesystem.h
- /usr/include/SDL2/SDL_gamecontroller.h
- /usr/include/SDL2/SDL_gesture.h
- /usr/include/SDL2/SDL_haptic.h
- /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
- /usr/include/SDL2/SDL_joystick.h
- /usr/include/SDL2/SDL_keyboard.h
- /usr/include/SDL2/SDL_keycode.h
- /usr/include/SDL2/SDL_loadso.h
- /usr/include/SDL2/SDL_log.h
- /usr/include/SDL2/SDL_main.h
- /usr/include/SDL2/SDL_messagebox.h
  /usr/include/SDL2/SDL_mixer.h
- /usr/include/SDL2/SDL_mouse.h
  /usr/include/SDL2/SDL_mutex.h
- /usr/include/SDL2/SDL_pixels.h
  /usr/include/SDL2/SDL_platform.h
- /usr/include/SDL2/SDL_power.h
- /usr/include/SDL2/SDL_quit.h
- /usr/include/SDL2/SDL_rect.h
- /usr/include/SDL2/SDL_render.h
  /usr/include/SDL2/SDL_rwops.h
- /usr/include/SDL2/SDL_scancode.h
  /usr/include/SDL2/SDL_stdinc.h
- /usr/include/SDL2/SDL_surface.h
- /usr/include/SDL2/SDL_system.h
  /usr/include/SDL2/SDL_thread.h
- /usr/include/SDL2/SDL_timer.h
- /usr/include/SDL2/SDL_touch.h
- /usr/include/SDL2/SDL_ttf.h
  /usr/include/SDL2/SDL_version.h
- /usr/include/SDL2/SDL_video.h
  /usr/include/SDL2/begin_code.h
  /usr/include/SDL2/close_code.h
 CMakeFiles/devilution.dir/Stub/dthread.cpp.o
@@ -5267,7 +4941,6 @@ CMakeFiles/devilution.dir/Stub/dthread.cpp.o
  /home/krash/CLionProjects/devilutionX/Source/track.h
  /home/krash/CLionProjects/devilutionX/Source/trigs.h
  /home/krash/CLionProjects/devilutionX/Source/wave.h
- /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
  /home/krash/CLionProjects/devilutionX/Stub/dthread.cpp
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.h
  /home/krash/CLionProjects/devilutionX/Stub/stubs.h
@@ -5276,50 +4949,18 @@ CMakeFiles/devilution.dir/Stub/dthread.cpp.o
  /home/krash/CLionProjects/devilutionX/resource.h
  /home/krash/CLionProjects/devilutionX/structs.h
  /home/krash/CLionProjects/devilutionX/types.h
- /usr/include/SDL2/SDL.h
- /usr/include/SDL2/SDL_assert.h
  /usr/include/SDL2/SDL_atomic.h
  /usr/include/SDL2/SDL_audio.h
- /usr/include/SDL2/SDL_blendmode.h
- /usr/include/SDL2/SDL_clipboard.h
  /usr/include/SDL2/SDL_config.h
- /usr/include/SDL2/SDL_cpuinfo.h
  /usr/include/SDL2/SDL_endian.h
  /usr/include/SDL2/SDL_error.h
- /usr/include/SDL2/SDL_events.h
- /usr/include/SDL2/SDL_filesystem.h
- /usr/include/SDL2/SDL_gamecontroller.h
- /usr/include/SDL2/SDL_gesture.h
- /usr/include/SDL2/SDL_haptic.h
- /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
- /usr/include/SDL2/SDL_joystick.h
- /usr/include/SDL2/SDL_keyboard.h
- /usr/include/SDL2/SDL_keycode.h
- /usr/include/SDL2/SDL_loadso.h
- /usr/include/SDL2/SDL_log.h
- /usr/include/SDL2/SDL_main.h
- /usr/include/SDL2/SDL_messagebox.h
  /usr/include/SDL2/SDL_mixer.h
- /usr/include/SDL2/SDL_mouse.h
  /usr/include/SDL2/SDL_mutex.h
- /usr/include/SDL2/SDL_pixels.h
  /usr/include/SDL2/SDL_platform.h
- /usr/include/SDL2/SDL_power.h
- /usr/include/SDL2/SDL_quit.h
- /usr/include/SDL2/SDL_rect.h
- /usr/include/SDL2/SDL_render.h
  /usr/include/SDL2/SDL_rwops.h
- /usr/include/SDL2/SDL_scancode.h
  /usr/include/SDL2/SDL_stdinc.h
- /usr/include/SDL2/SDL_surface.h
- /usr/include/SDL2/SDL_system.h
  /usr/include/SDL2/SDL_thread.h
- /usr/include/SDL2/SDL_timer.h
- /usr/include/SDL2/SDL_touch.h
- /usr/include/SDL2/SDL_ttf.h
  /usr/include/SDL2/SDL_version.h
- /usr/include/SDL2/SDL_video.h
  /usr/include/SDL2/begin_code.h
  /usr/include/SDL2/close_code.h
 CMakeFiles/devilution.dir/Stub/dx.cpp.o
@@ -5397,7 +5038,6 @@ CMakeFiles/devilution.dir/Stub/dx.cpp.o
  /home/krash/CLionProjects/devilutionX/Source/track.h
  /home/krash/CLionProjects/devilutionX/Source/trigs.h
  /home/krash/CLionProjects/devilutionX/Source/wave.h
- /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
  /home/krash/CLionProjects/devilutionX/Stub/dx.cpp
  /home/krash/CLionProjects/devilutionX/Stub/dx_stub.h
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.h
@@ -5407,50 +5047,18 @@ CMakeFiles/devilution.dir/Stub/dx.cpp.o
  /home/krash/CLionProjects/devilutionX/resource.h
  /home/krash/CLionProjects/devilutionX/structs.h
  /home/krash/CLionProjects/devilutionX/types.h
- /usr/include/SDL2/SDL.h
- /usr/include/SDL2/SDL_assert.h
  /usr/include/SDL2/SDL_atomic.h
  /usr/include/SDL2/SDL_audio.h
- /usr/include/SDL2/SDL_blendmode.h
- /usr/include/SDL2/SDL_clipboard.h
  /usr/include/SDL2/SDL_config.h
- /usr/include/SDL2/SDL_cpuinfo.h
  /usr/include/SDL2/SDL_endian.h
  /usr/include/SDL2/SDL_error.h
- /usr/include/SDL2/SDL_events.h
- /usr/include/SDL2/SDL_filesystem.h
- /usr/include/SDL2/SDL_gamecontroller.h
- /usr/include/SDL2/SDL_gesture.h
- /usr/include/SDL2/SDL_haptic.h
- /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
- /usr/include/SDL2/SDL_joystick.h
- /usr/include/SDL2/SDL_keyboard.h
- /usr/include/SDL2/SDL_keycode.h
- /usr/include/SDL2/SDL_loadso.h
- /usr/include/SDL2/SDL_log.h
- /usr/include/SDL2/SDL_main.h
- /usr/include/SDL2/SDL_messagebox.h
  /usr/include/SDL2/SDL_mixer.h
- /usr/include/SDL2/SDL_mouse.h
  /usr/include/SDL2/SDL_mutex.h
- /usr/include/SDL2/SDL_pixels.h
  /usr/include/SDL2/SDL_platform.h
- /usr/include/SDL2/SDL_power.h
- /usr/include/SDL2/SDL_quit.h
- /usr/include/SDL2/SDL_rect.h
- /usr/include/SDL2/SDL_render.h
  /usr/include/SDL2/SDL_rwops.h
- /usr/include/SDL2/SDL_scancode.h
  /usr/include/SDL2/SDL_stdinc.h
- /usr/include/SDL2/SDL_surface.h
- /usr/include/SDL2/SDL_system.h
  /usr/include/SDL2/SDL_thread.h
- /usr/include/SDL2/SDL_timer.h
- /usr/include/SDL2/SDL_touch.h
- /usr/include/SDL2/SDL_ttf.h
  /usr/include/SDL2/SDL_version.h
- /usr/include/SDL2/SDL_video.h
  /usr/include/SDL2/begin_code.h
  /usr/include/SDL2/close_code.h
 CMakeFiles/devilution.dir/Stub/effects.cpp.o
@@ -5609,7 +5217,6 @@ CMakeFiles/devilution.dir/Stub/fault.cpp.o
  /home/krash/CLionProjects/devilutionX/Source/track.h
  /home/krash/CLionProjects/devilutionX/Source/trigs.h
  /home/krash/CLionProjects/devilutionX/Source/wave.h
- /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
  /home/krash/CLionProjects/devilutionX/Stub/fault.cpp
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.h
  /home/krash/CLionProjects/devilutionX/Stub/stubs.h
@@ -5618,52 +5225,101 @@ CMakeFiles/devilution.dir/Stub/fault.cpp.o
  /home/krash/CLionProjects/devilutionX/resource.h
  /home/krash/CLionProjects/devilutionX/structs.h
  /home/krash/CLionProjects/devilutionX/types.h
- /usr/include/SDL2/SDL.h
- /usr/include/SDL2/SDL_assert.h
  /usr/include/SDL2/SDL_atomic.h
  /usr/include/SDL2/SDL_audio.h
- /usr/include/SDL2/SDL_blendmode.h
- /usr/include/SDL2/SDL_clipboard.h
  /usr/include/SDL2/SDL_config.h
- /usr/include/SDL2/SDL_cpuinfo.h
  /usr/include/SDL2/SDL_endian.h
  /usr/include/SDL2/SDL_error.h
- /usr/include/SDL2/SDL_events.h
- /usr/include/SDL2/SDL_filesystem.h
- /usr/include/SDL2/SDL_gamecontroller.h
- /usr/include/SDL2/SDL_gesture.h
- /usr/include/SDL2/SDL_haptic.h
- /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
- /usr/include/SDL2/SDL_joystick.h
- /usr/include/SDL2/SDL_keyboard.h
- /usr/include/SDL2/SDL_keycode.h
- /usr/include/SDL2/SDL_loadso.h
- /usr/include/SDL2/SDL_log.h
- /usr/include/SDL2/SDL_main.h
- /usr/include/SDL2/SDL_messagebox.h
  /usr/include/SDL2/SDL_mixer.h
- /usr/include/SDL2/SDL_mouse.h
  /usr/include/SDL2/SDL_mutex.h
- /usr/include/SDL2/SDL_pixels.h
  /usr/include/SDL2/SDL_platform.h
- /usr/include/SDL2/SDL_power.h
- /usr/include/SDL2/SDL_quit.h
- /usr/include/SDL2/SDL_rect.h
- /usr/include/SDL2/SDL_render.h
  /usr/include/SDL2/SDL_rwops.h
- /usr/include/SDL2/SDL_scancode.h
  /usr/include/SDL2/SDL_stdinc.h
- /usr/include/SDL2/SDL_surface.h
- /usr/include/SDL2/SDL_system.h
  /usr/include/SDL2/SDL_thread.h
- /usr/include/SDL2/SDL_timer.h
- /usr/include/SDL2/SDL_touch.h
- /usr/include/SDL2/SDL_ttf.h
  /usr/include/SDL2/SDL_version.h
- /usr/include/SDL2/SDL_video.h
  /usr/include/SDL2/begin_code.h
  /usr/include/SDL2/close_code.h
+CMakeFiles/devilution.dir/Stub/gamemenu.cpp.o
+ ../Stub/miniwin.h
+ ../Stub/miniwin_ddraw.h
+ ../Stub/miniwin_dsound.h
+ /home/krash/CLionProjects/devilutionX/3rdParty/PKWare/pkware.h
+ /home/krash/CLionProjects/devilutionX/3rdParty/Storm/Source/storm.h
+ /home/krash/CLionProjects/devilutionX/DiabloUI/diabloui.h
+ /home/krash/CLionProjects/devilutionX/Source/appfat.h
+ /home/krash/CLionProjects/devilutionX/Source/automap.h
+ /home/krash/CLionProjects/devilutionX/Source/capture.h
+ /home/krash/CLionProjects/devilutionX/Source/codec.h
+ /home/krash/CLionProjects/devilutionX/Source/control.h
+ /home/krash/CLionProjects/devilutionX/Source/cursor.h
+ /home/krash/CLionProjects/devilutionX/Source/dead.h
+ /home/krash/CLionProjects/devilutionX/Source/debug.h
+ /home/krash/CLionProjects/devilutionX/Source/diablo.h
+ /home/krash/CLionProjects/devilutionX/Source/doom.h
+ /home/krash/CLionProjects/devilutionX/Source/drlg_l1.h
+ /home/krash/CLionProjects/devilutionX/Source/drlg_l2.h
+ /home/krash/CLionProjects/devilutionX/Source/drlg_l3.h
+ /home/krash/CLionProjects/devilutionX/Source/drlg_l4.h
+ /home/krash/CLionProjects/devilutionX/Source/dthread.h
+ /home/krash/CLionProjects/devilutionX/Source/dx.h
+ /home/krash/CLionProjects/devilutionX/Source/effects.h
+ /home/krash/CLionProjects/devilutionX/Source/encrypt.h
+ /home/krash/CLionProjects/devilutionX/Source/engine.h
+ /home/krash/CLionProjects/devilutionX/Source/error.h
+ /home/krash/CLionProjects/devilutionX/Source/fault.h
+ /home/krash/CLionProjects/devilutionX/Source/gamemenu.h
+ /home/krash/CLionProjects/devilutionX/Source/gendung.h
+ /home/krash/CLionProjects/devilutionX/Source/gmenu.h
+ /home/krash/CLionProjects/devilutionX/Source/help.h
+ /home/krash/CLionProjects/devilutionX/Source/init.h
+ /home/krash/CLionProjects/devilutionX/Source/interfac.h
+ /home/krash/CLionProjects/devilutionX/Source/inv.h
+ /home/krash/CLionProjects/devilutionX/Source/items.h
+ /home/krash/CLionProjects/devilutionX/Source/lighting.h
+ /home/krash/CLionProjects/devilutionX/Source/loadsave.h
+ /home/krash/CLionProjects/devilutionX/Source/logging.h
+ /home/krash/CLionProjects/devilutionX/Source/mainmenu.h
+ /home/krash/CLionProjects/devilutionX/Source/minitext.h
+ /home/krash/CLionProjects/devilutionX/Source/missiles.h
+ /home/krash/CLionProjects/devilutionX/Source/monster.h
+ /home/krash/CLionProjects/devilutionX/Source/movie.h
+ /home/krash/CLionProjects/devilutionX/Source/mpqapi.h
+ /home/krash/CLionProjects/devilutionX/Source/msg.h
+ /home/krash/CLionProjects/devilutionX/Source/msgcmd.h
+ /home/krash/CLionProjects/devilutionX/Source/multi.h
+ /home/krash/CLionProjects/devilutionX/Source/nthread.h
+ /home/krash/CLionProjects/devilutionX/Source/objects.h
+ /home/krash/CLionProjects/devilutionX/Source/pack.h
+ /home/krash/CLionProjects/devilutionX/Source/palette.h
+ /home/krash/CLionProjects/devilutionX/Source/path.h
+ /home/krash/CLionProjects/devilutionX/Source/pfile.h
+ /home/krash/CLionProjects/devilutionX/Source/player.h
+ /home/krash/CLionProjects/devilutionX/Source/plrmsg.h
+ /home/krash/CLionProjects/devilutionX/Source/portal.h
+ /home/krash/CLionProjects/devilutionX/Source/quests.h
+ /home/krash/CLionProjects/devilutionX/Source/render.h
+ /home/krash/CLionProjects/devilutionX/Source/restrict.h
+ /home/krash/CLionProjects/devilutionX/Source/scrollrt.h
+ /home/krash/CLionProjects/devilutionX/Source/setmaps.h
+ /home/krash/CLionProjects/devilutionX/Source/sha.h
+ /home/krash/CLionProjects/devilutionX/Source/sound.h
+ /home/krash/CLionProjects/devilutionX/Source/spells.h
+ /home/krash/CLionProjects/devilutionX/Source/stores.h
+ /home/krash/CLionProjects/devilutionX/Source/sync.h
+ /home/krash/CLionProjects/devilutionX/Source/textdat.h
+ /home/krash/CLionProjects/devilutionX/Source/themes.h
+ /home/krash/CLionProjects/devilutionX/Source/tmsg.h
+ /home/krash/CLionProjects/devilutionX/Source/town.h
+ /home/krash/CLionProjects/devilutionX/Source/towners.h
+ /home/krash/CLionProjects/devilutionX/Source/track.h
+ /home/krash/CLionProjects/devilutionX/Source/trigs.h
+ /home/krash/CLionProjects/devilutionX/Source/wave.h
+ /home/krash/CLionProjects/devilutionX/Stub/gamemenu.cpp
+ /home/krash/CLionProjects/devilutionX/defs.h
+ /home/krash/CLionProjects/devilutionX/enums.h
+ /home/krash/CLionProjects/devilutionX/resource.h
+ /home/krash/CLionProjects/devilutionX/structs.h
+ /home/krash/CLionProjects/devilutionX/types.h
 CMakeFiles/devilution.dir/Stub/init.cpp.o
  ../Stub/miniwin.h
  ../Stub/miniwin_ddraw.h
@@ -5739,7 +5395,6 @@ CMakeFiles/devilution.dir/Stub/init.cpp.o
  /home/krash/CLionProjects/devilutionX/Source/track.h
  /home/krash/CLionProjects/devilutionX/Source/trigs.h
  /home/krash/CLionProjects/devilutionX/Source/wave.h
- /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
  /home/krash/CLionProjects/devilutionX/Stub/init.cpp
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.h
  /home/krash/CLionProjects/devilutionX/Stub/stubs.h
@@ -5748,50 +5403,18 @@ CMakeFiles/devilution.dir/Stub/init.cpp.o
  /home/krash/CLionProjects/devilutionX/resource.h
  /home/krash/CLionProjects/devilutionX/structs.h
  /home/krash/CLionProjects/devilutionX/types.h
- /usr/include/SDL2/SDL.h
- /usr/include/SDL2/SDL_assert.h
  /usr/include/SDL2/SDL_atomic.h
  /usr/include/SDL2/SDL_audio.h
- /usr/include/SDL2/SDL_blendmode.h
- /usr/include/SDL2/SDL_clipboard.h
  /usr/include/SDL2/SDL_config.h
- /usr/include/SDL2/SDL_cpuinfo.h
  /usr/include/SDL2/SDL_endian.h
  /usr/include/SDL2/SDL_error.h
- /usr/include/SDL2/SDL_events.h
- /usr/include/SDL2/SDL_filesystem.h
- /usr/include/SDL2/SDL_gamecontroller.h
- /usr/include/SDL2/SDL_gesture.h
- /usr/include/SDL2/SDL_haptic.h
- /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
- /usr/include/SDL2/SDL_joystick.h
- /usr/include/SDL2/SDL_keyboard.h
- /usr/include/SDL2/SDL_keycode.h
- /usr/include/SDL2/SDL_loadso.h
- /usr/include/SDL2/SDL_log.h
- /usr/include/SDL2/SDL_main.h
- /usr/include/SDL2/SDL_messagebox.h
  /usr/include/SDL2/SDL_mixer.h
- /usr/include/SDL2/SDL_mouse.h
  /usr/include/SDL2/SDL_mutex.h
- /usr/include/SDL2/SDL_pixels.h
  /usr/include/SDL2/SDL_platform.h
- /usr/include/SDL2/SDL_power.h
- /usr/include/SDL2/SDL_quit.h
- /usr/include/SDL2/SDL_rect.h
- /usr/include/SDL2/SDL_render.h
  /usr/include/SDL2/SDL_rwops.h
- /usr/include/SDL2/SDL_scancode.h
  /usr/include/SDL2/SDL_stdinc.h
- /usr/include/SDL2/SDL_surface.h
- /usr/include/SDL2/SDL_system.h
  /usr/include/SDL2/SDL_thread.h
- /usr/include/SDL2/SDL_timer.h
- /usr/include/SDL2/SDL_touch.h
- /usr/include/SDL2/SDL_ttf.h
  /usr/include/SDL2/SDL_version.h
- /usr/include/SDL2/SDL_video.h
  /usr/include/SDL2/begin_code.h
  /usr/include/SDL2/close_code.h
 CMakeFiles/devilution.dir/Stub/main.cpp.o
@@ -5869,7 +5492,6 @@ CMakeFiles/devilution.dir/Stub/main.cpp.o
  /home/krash/CLionProjects/devilutionX/Source/track.h
  /home/krash/CLionProjects/devilutionX/Source/trigs.h
  /home/krash/CLionProjects/devilutionX/Source/wave.h
- /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
  /home/krash/CLionProjects/devilutionX/Stub/main.cpp
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.h
  /home/krash/CLionProjects/devilutionX/Stub/stubs.h
@@ -5878,158 +5500,60 @@ CMakeFiles/devilution.dir/Stub/main.cpp.o
  /home/krash/CLionProjects/devilutionX/resource.h
  /home/krash/CLionProjects/devilutionX/structs.h
  /home/krash/CLionProjects/devilutionX/types.h
- /usr/include/SDL2/SDL.h
- /usr/include/SDL2/SDL_assert.h
  /usr/include/SDL2/SDL_atomic.h
  /usr/include/SDL2/SDL_audio.h
- /usr/include/SDL2/SDL_blendmode.h
- /usr/include/SDL2/SDL_clipboard.h
  /usr/include/SDL2/SDL_config.h
- /usr/include/SDL2/SDL_cpuinfo.h
  /usr/include/SDL2/SDL_endian.h
  /usr/include/SDL2/SDL_error.h
- /usr/include/SDL2/SDL_events.h
- /usr/include/SDL2/SDL_filesystem.h
- /usr/include/SDL2/SDL_gamecontroller.h
- /usr/include/SDL2/SDL_gesture.h
- /usr/include/SDL2/SDL_haptic.h
- /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
- /usr/include/SDL2/SDL_joystick.h
- /usr/include/SDL2/SDL_keyboard.h
- /usr/include/SDL2/SDL_keycode.h
- /usr/include/SDL2/SDL_loadso.h
- /usr/include/SDL2/SDL_log.h
- /usr/include/SDL2/SDL_main.h
- /usr/include/SDL2/SDL_messagebox.h
  /usr/include/SDL2/SDL_mixer.h
- /usr/include/SDL2/SDL_mouse.h
  /usr/include/SDL2/SDL_mutex.h
- /usr/include/SDL2/SDL_pixels.h
  /usr/include/SDL2/SDL_platform.h
- /usr/include/SDL2/SDL_power.h
- /usr/include/SDL2/SDL_quit.h
- /usr/include/SDL2/SDL_rect.h
- /usr/include/SDL2/SDL_render.h
  /usr/include/SDL2/SDL_rwops.h
- /usr/include/SDL2/SDL_scancode.h
  /usr/include/SDL2/SDL_stdinc.h
- /usr/include/SDL2/SDL_surface.h
- /usr/include/SDL2/SDL_system.h
  /usr/include/SDL2/SDL_thread.h
- /usr/include/SDL2/SDL_timer.h
- /usr/include/SDL2/SDL_touch.h
- /usr/include/SDL2/SDL_ttf.h
  /usr/include/SDL2/SDL_version.h
- /usr/include/SDL2/SDL_video.h
  /usr/include/SDL2/begin_code.h
  /usr/include/SDL2/close_code.h
 CMakeFiles/devilution.dir/Stub/miniwin.cpp.o
- /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
  /home/krash/CLionProjects/devilutionX/Stub/miniwin.cpp
  /home/krash/CLionProjects/devilutionX/Stub/miniwin.h
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_ddraw.h
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_dsound.h
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.h
  /home/krash/CLionProjects/devilutionX/Stub/stubs.h
- /usr/include/SDL2/SDL.h
- /usr/include/SDL2/SDL_assert.h
  /usr/include/SDL2/SDL_atomic.h
  /usr/include/SDL2/SDL_audio.h
- /usr/include/SDL2/SDL_blendmode.h
- /usr/include/SDL2/SDL_clipboard.h
  /usr/include/SDL2/SDL_config.h
- /usr/include/SDL2/SDL_cpuinfo.h
  /usr/include/SDL2/SDL_endian.h
  /usr/include/SDL2/SDL_error.h
- /usr/include/SDL2/SDL_events.h
- /usr/include/SDL2/SDL_filesystem.h
- /usr/include/SDL2/SDL_gamecontroller.h
- /usr/include/SDL2/SDL_gesture.h
- /usr/include/SDL2/SDL_haptic.h
- /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
- /usr/include/SDL2/SDL_joystick.h
- /usr/include/SDL2/SDL_keyboard.h
- /usr/include/SDL2/SDL_keycode.h
- /usr/include/SDL2/SDL_loadso.h
- /usr/include/SDL2/SDL_log.h
- /usr/include/SDL2/SDL_main.h
- /usr/include/SDL2/SDL_messagebox.h
  /usr/include/SDL2/SDL_mixer.h
- /usr/include/SDL2/SDL_mouse.h
  /usr/include/SDL2/SDL_mutex.h
- /usr/include/SDL2/SDL_pixels.h
  /usr/include/SDL2/SDL_platform.h
- /usr/include/SDL2/SDL_power.h
- /usr/include/SDL2/SDL_quit.h
- /usr/include/SDL2/SDL_rect.h
- /usr/include/SDL2/SDL_render.h
  /usr/include/SDL2/SDL_rwops.h
- /usr/include/SDL2/SDL_scancode.h
  /usr/include/SDL2/SDL_stdinc.h
- /usr/include/SDL2/SDL_surface.h
- /usr/include/SDL2/SDL_system.h
  /usr/include/SDL2/SDL_thread.h
- /usr/include/SDL2/SDL_timer.h
- /usr/include/SDL2/SDL_touch.h
- /usr/include/SDL2/SDL_ttf.h
  /usr/include/SDL2/SDL_version.h
- /usr/include/SDL2/SDL_video.h
  /usr/include/SDL2/begin_code.h
  /usr/include/SDL2/close_code.h
 CMakeFiles/devilution.dir/Stub/miniwin_io.cpp.o
- /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
  /home/krash/CLionProjects/devilutionX/Stub/miniwin.h
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_ddraw.h
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_dsound.h
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_io.cpp
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.h
  /home/krash/CLionProjects/devilutionX/Stub/stubs.h
- /usr/include/SDL2/SDL.h
- /usr/include/SDL2/SDL_assert.h
  /usr/include/SDL2/SDL_atomic.h
  /usr/include/SDL2/SDL_audio.h
- /usr/include/SDL2/SDL_blendmode.h
- /usr/include/SDL2/SDL_clipboard.h
  /usr/include/SDL2/SDL_config.h
- /usr/include/SDL2/SDL_cpuinfo.h
  /usr/include/SDL2/SDL_endian.h
  /usr/include/SDL2/SDL_error.h
- /usr/include/SDL2/SDL_events.h
- /usr/include/SDL2/SDL_filesystem.h
- /usr/include/SDL2/SDL_gamecontroller.h
- /usr/include/SDL2/SDL_gesture.h
- /usr/include/SDL2/SDL_haptic.h
- /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
- /usr/include/SDL2/SDL_joystick.h
- /usr/include/SDL2/SDL_keyboard.h
- /usr/include/SDL2/SDL_keycode.h
- /usr/include/SDL2/SDL_loadso.h
- /usr/include/SDL2/SDL_log.h
- /usr/include/SDL2/SDL_main.h
- /usr/include/SDL2/SDL_messagebox.h
  /usr/include/SDL2/SDL_mixer.h
- /usr/include/SDL2/SDL_mouse.h
  /usr/include/SDL2/SDL_mutex.h
- /usr/include/SDL2/SDL_pixels.h
  /usr/include/SDL2/SDL_platform.h
- /usr/include/SDL2/SDL_power.h
- /usr/include/SDL2/SDL_quit.h
- /usr/include/SDL2/SDL_rect.h
- /usr/include/SDL2/SDL_render.h
  /usr/include/SDL2/SDL_rwops.h
- /usr/include/SDL2/SDL_scancode.h
  /usr/include/SDL2/SDL_stdinc.h
- /usr/include/SDL2/SDL_surface.h
- /usr/include/SDL2/SDL_system.h
  /usr/include/SDL2/SDL_thread.h
- /usr/include/SDL2/SDL_timer.h
- /usr/include/SDL2/SDL_touch.h
- /usr/include/SDL2/SDL_ttf.h
  /usr/include/SDL2/SDL_version.h
- /usr/include/SDL2/SDL_video.h
  /usr/include/SDL2/begin_code.h
  /usr/include/SDL2/close_code.h
 CMakeFiles/devilution.dir/Stub/miniwin_msg_sdl.cpp.o
@@ -6107,7 +5631,6 @@ CMakeFiles/devilution.dir/Stub/miniwin_msg_sdl.cpp.o
  /home/krash/CLionProjects/devilutionX/Source/track.h
  /home/krash/CLionProjects/devilutionX/Source/trigs.h
  /home/krash/CLionProjects/devilutionX/Source/wave.h
- /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_msg_sdl.cpp
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.h
  /home/krash/CLionProjects/devilutionX/Stub/stubs.h
@@ -6116,104 +5639,39 @@ CMakeFiles/devilution.dir/Stub/miniwin_msg_sdl.cpp.o
  /home/krash/CLionProjects/devilutionX/resource.h
  /home/krash/CLionProjects/devilutionX/structs.h
  /home/krash/CLionProjects/devilutionX/types.h
- /usr/include/SDL2/SDL.h
- /usr/include/SDL2/SDL_assert.h
  /usr/include/SDL2/SDL_atomic.h
  /usr/include/SDL2/SDL_audio.h
- /usr/include/SDL2/SDL_blendmode.h
- /usr/include/SDL2/SDL_clipboard.h
  /usr/include/SDL2/SDL_config.h
- /usr/include/SDL2/SDL_cpuinfo.h
  /usr/include/SDL2/SDL_endian.h
  /usr/include/SDL2/SDL_error.h
- /usr/include/SDL2/SDL_events.h
- /usr/include/SDL2/SDL_filesystem.h
- /usr/include/SDL2/SDL_gamecontroller.h
- /usr/include/SDL2/SDL_gesture.h
- /usr/include/SDL2/SDL_haptic.h
- /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
- /usr/include/SDL2/SDL_joystick.h
- /usr/include/SDL2/SDL_keyboard.h
- /usr/include/SDL2/SDL_keycode.h
- /usr/include/SDL2/SDL_loadso.h
- /usr/include/SDL2/SDL_log.h
- /usr/include/SDL2/SDL_main.h
- /usr/include/SDL2/SDL_messagebox.h
  /usr/include/SDL2/SDL_mixer.h
- /usr/include/SDL2/SDL_mouse.h
  /usr/include/SDL2/SDL_mutex.h
- /usr/include/SDL2/SDL_pixels.h
  /usr/include/SDL2/SDL_platform.h
- /usr/include/SDL2/SDL_power.h
- /usr/include/SDL2/SDL_quit.h
- /usr/include/SDL2/SDL_rect.h
- /usr/include/SDL2/SDL_render.h
  /usr/include/SDL2/SDL_rwops.h
- /usr/include/SDL2/SDL_scancode.h
  /usr/include/SDL2/SDL_stdinc.h
- /usr/include/SDL2/SDL_surface.h
- /usr/include/SDL2/SDL_system.h
  /usr/include/SDL2/SDL_thread.h
- /usr/include/SDL2/SDL_timer.h
- /usr/include/SDL2/SDL_touch.h
- /usr/include/SDL2/SDL_ttf.h
  /usr/include/SDL2/SDL_version.h
- /usr/include/SDL2/SDL_video.h
  /usr/include/SDL2/begin_code.h
  /usr/include/SDL2/close_code.h
 CMakeFiles/devilution.dir/Stub/miniwin_rand.cpp.o
- /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
  /home/krash/CLionProjects/devilutionX/Stub/miniwin.h
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_ddraw.h
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_dsound.h
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_rand.cpp
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.h
  /home/krash/CLionProjects/devilutionX/Stub/stubs.h
- /usr/include/SDL2/SDL.h
- /usr/include/SDL2/SDL_assert.h
  /usr/include/SDL2/SDL_atomic.h
  /usr/include/SDL2/SDL_audio.h
- /usr/include/SDL2/SDL_blendmode.h
- /usr/include/SDL2/SDL_clipboard.h
  /usr/include/SDL2/SDL_config.h
- /usr/include/SDL2/SDL_cpuinfo.h
  /usr/include/SDL2/SDL_endian.h
  /usr/include/SDL2/SDL_error.h
- /usr/include/SDL2/SDL_events.h
- /usr/include/SDL2/SDL_filesystem.h
- /usr/include/SDL2/SDL_gamecontroller.h
- /usr/include/SDL2/SDL_gesture.h
- /usr/include/SDL2/SDL_haptic.h
- /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
- /usr/include/SDL2/SDL_joystick.h
- /usr/include/SDL2/SDL_keyboard.h
- /usr/include/SDL2/SDL_keycode.h
- /usr/include/SDL2/SDL_loadso.h
- /usr/include/SDL2/SDL_log.h
- /usr/include/SDL2/SDL_main.h
- /usr/include/SDL2/SDL_messagebox.h
  /usr/include/SDL2/SDL_mixer.h
- /usr/include/SDL2/SDL_mouse.h
  /usr/include/SDL2/SDL_mutex.h
- /usr/include/SDL2/SDL_pixels.h
  /usr/include/SDL2/SDL_platform.h
- /usr/include/SDL2/SDL_power.h
- /usr/include/SDL2/SDL_quit.h
- /usr/include/SDL2/SDL_rect.h
- /usr/include/SDL2/SDL_render.h
  /usr/include/SDL2/SDL_rwops.h
- /usr/include/SDL2/SDL_scancode.h
  /usr/include/SDL2/SDL_stdinc.h
- /usr/include/SDL2/SDL_surface.h
- /usr/include/SDL2/SDL_system.h
  /usr/include/SDL2/SDL_thread.h
- /usr/include/SDL2/SDL_timer.h
- /usr/include/SDL2/SDL_touch.h
- /usr/include/SDL2/SDL_ttf.h
  /usr/include/SDL2/SDL_version.h
- /usr/include/SDL2/SDL_video.h
  /usr/include/SDL2/begin_code.h
  /usr/include/SDL2/close_code.h
 CMakeFiles/devilution.dir/Stub/movie.cpp.o
@@ -6291,7 +5749,6 @@ CMakeFiles/devilution.dir/Stub/movie.cpp.o
  /home/krash/CLionProjects/devilutionX/Source/track.h
  /home/krash/CLionProjects/devilutionX/Source/trigs.h
  /home/krash/CLionProjects/devilutionX/Source/wave.h
- /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.h
  /home/krash/CLionProjects/devilutionX/Stub/movie.cpp
  /home/krash/CLionProjects/devilutionX/Stub/stubs.h
@@ -6300,50 +5757,18 @@ CMakeFiles/devilution.dir/Stub/movie.cpp.o
  /home/krash/CLionProjects/devilutionX/resource.h
  /home/krash/CLionProjects/devilutionX/structs.h
  /home/krash/CLionProjects/devilutionX/types.h
- /usr/include/SDL2/SDL.h
- /usr/include/SDL2/SDL_assert.h
  /usr/include/SDL2/SDL_atomic.h
  /usr/include/SDL2/SDL_audio.h
- /usr/include/SDL2/SDL_blendmode.h
- /usr/include/SDL2/SDL_clipboard.h
  /usr/include/SDL2/SDL_config.h
- /usr/include/SDL2/SDL_cpuinfo.h
  /usr/include/SDL2/SDL_endian.h
  /usr/include/SDL2/SDL_error.h
- /usr/include/SDL2/SDL_events.h
- /usr/include/SDL2/SDL_filesystem.h
- /usr/include/SDL2/SDL_gamecontroller.h
- /usr/include/SDL2/SDL_gesture.h
- /usr/include/SDL2/SDL_haptic.h
- /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
- /usr/include/SDL2/SDL_joystick.h
- /usr/include/SDL2/SDL_keyboard.h
- /usr/include/SDL2/SDL_keycode.h
- /usr/include/SDL2/SDL_loadso.h
- /usr/include/SDL2/SDL_log.h
- /usr/include/SDL2/SDL_main.h
- /usr/include/SDL2/SDL_messagebox.h
  /usr/include/SDL2/SDL_mixer.h
- /usr/include/SDL2/SDL_mouse.h
  /usr/include/SDL2/SDL_mutex.h
- /usr/include/SDL2/SDL_pixels.h
  /usr/include/SDL2/SDL_platform.h
- /usr/include/SDL2/SDL_power.h
- /usr/include/SDL2/SDL_quit.h
- /usr/include/SDL2/SDL_rect.h
- /usr/include/SDL2/SDL_render.h
  /usr/include/SDL2/SDL_rwops.h
- /usr/include/SDL2/SDL_scancode.h
  /usr/include/SDL2/SDL_stdinc.h
- /usr/include/SDL2/SDL_surface.h
- /usr/include/SDL2/SDL_system.h
  /usr/include/SDL2/SDL_thread.h
- /usr/include/SDL2/SDL_timer.h
- /usr/include/SDL2/SDL_touch.h
- /usr/include/SDL2/SDL_ttf.h
  /usr/include/SDL2/SDL_version.h
- /usr/include/SDL2/SDL_video.h
  /usr/include/SDL2/begin_code.h
  /usr/include/SDL2/close_code.h
 CMakeFiles/devilution.dir/Stub/nthread.cpp.o
@@ -6421,7 +5846,6 @@ CMakeFiles/devilution.dir/Stub/nthread.cpp.o
  /home/krash/CLionProjects/devilutionX/Source/track.h
  /home/krash/CLionProjects/devilutionX/Source/trigs.h
  /home/krash/CLionProjects/devilutionX/Source/wave.h
- /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.h
  /home/krash/CLionProjects/devilutionX/Stub/nthread.cpp
  /home/krash/CLionProjects/devilutionX/Stub/stubs.h
@@ -6430,50 +5854,18 @@ CMakeFiles/devilution.dir/Stub/nthread.cpp.o
  /home/krash/CLionProjects/devilutionX/resource.h
  /home/krash/CLionProjects/devilutionX/structs.h
  /home/krash/CLionProjects/devilutionX/types.h
- /usr/include/SDL2/SDL.h
- /usr/include/SDL2/SDL_assert.h
  /usr/include/SDL2/SDL_atomic.h
  /usr/include/SDL2/SDL_audio.h
- /usr/include/SDL2/SDL_blendmode.h
- /usr/include/SDL2/SDL_clipboard.h
  /usr/include/SDL2/SDL_config.h
- /usr/include/SDL2/SDL_cpuinfo.h
  /usr/include/SDL2/SDL_endian.h
  /usr/include/SDL2/SDL_error.h
- /usr/include/SDL2/SDL_events.h
- /usr/include/SDL2/SDL_filesystem.h
- /usr/include/SDL2/SDL_gamecontroller.h
- /usr/include/SDL2/SDL_gesture.h
- /usr/include/SDL2/SDL_haptic.h
- /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
- /usr/include/SDL2/SDL_joystick.h
- /usr/include/SDL2/SDL_keyboard.h
- /usr/include/SDL2/SDL_keycode.h
- /usr/include/SDL2/SDL_loadso.h
- /usr/include/SDL2/SDL_log.h
- /usr/include/SDL2/SDL_main.h
- /usr/include/SDL2/SDL_messagebox.h
  /usr/include/SDL2/SDL_mixer.h
- /usr/include/SDL2/SDL_mouse.h
  /usr/include/SDL2/SDL_mutex.h
- /usr/include/SDL2/SDL_pixels.h
  /usr/include/SDL2/SDL_platform.h
- /usr/include/SDL2/SDL_power.h
- /usr/include/SDL2/SDL_quit.h
- /usr/include/SDL2/SDL_rect.h
- /usr/include/SDL2/SDL_render.h
  /usr/include/SDL2/SDL_rwops.h
- /usr/include/SDL2/SDL_scancode.h
  /usr/include/SDL2/SDL_stdinc.h
- /usr/include/SDL2/SDL_surface.h
- /usr/include/SDL2/SDL_system.h
  /usr/include/SDL2/SDL_thread.h
- /usr/include/SDL2/SDL_timer.h
- /usr/include/SDL2/SDL_touch.h
- /usr/include/SDL2/SDL_ttf.h
  /usr/include/SDL2/SDL_version.h
- /usr/include/SDL2/SDL_video.h
  /usr/include/SDL2/begin_code.h
  /usr/include/SDL2/close_code.h
 CMakeFiles/devilution.dir/Stub/restrict.cpp.o
@@ -6551,7 +5943,6 @@ CMakeFiles/devilution.dir/Stub/restrict.cpp.o
  /home/krash/CLionProjects/devilutionX/Source/track.h
  /home/krash/CLionProjects/devilutionX/Source/trigs.h
  /home/krash/CLionProjects/devilutionX/Source/wave.h
- /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.h
  /home/krash/CLionProjects/devilutionX/Stub/restrict.cpp
  /home/krash/CLionProjects/devilutionX/Stub/stubs.h
@@ -6560,50 +5951,18 @@ CMakeFiles/devilution.dir/Stub/restrict.cpp.o
  /home/krash/CLionProjects/devilutionX/resource.h
  /home/krash/CLionProjects/devilutionX/structs.h
  /home/krash/CLionProjects/devilutionX/types.h
- /usr/include/SDL2/SDL.h
- /usr/include/SDL2/SDL_assert.h
  /usr/include/SDL2/SDL_atomic.h
  /usr/include/SDL2/SDL_audio.h
- /usr/include/SDL2/SDL_blendmode.h
- /usr/include/SDL2/SDL_clipboard.h
  /usr/include/SDL2/SDL_config.h
- /usr/include/SDL2/SDL_cpuinfo.h
  /usr/include/SDL2/SDL_endian.h
  /usr/include/SDL2/SDL_error.h
- /usr/include/SDL2/SDL_events.h
- /usr/include/SDL2/SDL_filesystem.h
- /usr/include/SDL2/SDL_gamecontroller.h
- /usr/include/SDL2/SDL_gesture.h
- /usr/include/SDL2/SDL_haptic.h
- /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
- /usr/include/SDL2/SDL_joystick.h
- /usr/include/SDL2/SDL_keyboard.h
- /usr/include/SDL2/SDL_keycode.h
- /usr/include/SDL2/SDL_loadso.h
- /usr/include/SDL2/SDL_log.h
- /usr/include/SDL2/SDL_main.h
- /usr/include/SDL2/SDL_messagebox.h
  /usr/include/SDL2/SDL_mixer.h
- /usr/include/SDL2/SDL_mouse.h
  /usr/include/SDL2/SDL_mutex.h
- /usr/include/SDL2/SDL_pixels.h
  /usr/include/SDL2/SDL_platform.h
- /usr/include/SDL2/SDL_power.h
- /usr/include/SDL2/SDL_quit.h
- /usr/include/SDL2/SDL_rect.h
- /usr/include/SDL2/SDL_render.h
  /usr/include/SDL2/SDL_rwops.h
- /usr/include/SDL2/SDL_scancode.h
  /usr/include/SDL2/SDL_stdinc.h
- /usr/include/SDL2/SDL_surface.h
- /usr/include/SDL2/SDL_system.h
  /usr/include/SDL2/SDL_thread.h
- /usr/include/SDL2/SDL_timer.h
- /usr/include/SDL2/SDL_touch.h
- /usr/include/SDL2/SDL_ttf.h
  /usr/include/SDL2/SDL_version.h
- /usr/include/SDL2/SDL_video.h
  /usr/include/SDL2/begin_code.h
  /usr/include/SDL2/close_code.h
 CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o
@@ -6681,7 +6040,6 @@ CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o
  /home/krash/CLionProjects/devilutionX/Source/track.h
  /home/krash/CLionProjects/devilutionX/Source/trigs.h
  /home/krash/CLionProjects/devilutionX/Source/wave.h
- /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.h
  /home/krash/CLionProjects/devilutionX/Stub/sdlrender.cpp
  /home/krash/CLionProjects/devilutionX/Stub/stubs.h
@@ -6690,50 +6048,18 @@ CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o
  /home/krash/CLionProjects/devilutionX/resource.h
  /home/krash/CLionProjects/devilutionX/structs.h
  /home/krash/CLionProjects/devilutionX/types.h
- /usr/include/SDL2/SDL.h
- /usr/include/SDL2/SDL_assert.h
  /usr/include/SDL2/SDL_atomic.h
  /usr/include/SDL2/SDL_audio.h
- /usr/include/SDL2/SDL_blendmode.h
- /usr/include/SDL2/SDL_clipboard.h
  /usr/include/SDL2/SDL_config.h
- /usr/include/SDL2/SDL_cpuinfo.h
  /usr/include/SDL2/SDL_endian.h
  /usr/include/SDL2/SDL_error.h
- /usr/include/SDL2/SDL_events.h
- /usr/include/SDL2/SDL_filesystem.h
- /usr/include/SDL2/SDL_gamecontroller.h
- /usr/include/SDL2/SDL_gesture.h
- /usr/include/SDL2/SDL_haptic.h
- /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
- /usr/include/SDL2/SDL_joystick.h
- /usr/include/SDL2/SDL_keyboard.h
- /usr/include/SDL2/SDL_keycode.h
- /usr/include/SDL2/SDL_loadso.h
- /usr/include/SDL2/SDL_log.h
- /usr/include/SDL2/SDL_main.h
- /usr/include/SDL2/SDL_messagebox.h
  /usr/include/SDL2/SDL_mixer.h
- /usr/include/SDL2/SDL_mouse.h
  /usr/include/SDL2/SDL_mutex.h
- /usr/include/SDL2/SDL_pixels.h
  /usr/include/SDL2/SDL_platform.h
- /usr/include/SDL2/SDL_power.h
- /usr/include/SDL2/SDL_quit.h
- /usr/include/SDL2/SDL_rect.h
- /usr/include/SDL2/SDL_render.h
  /usr/include/SDL2/SDL_rwops.h
- /usr/include/SDL2/SDL_scancode.h
  /usr/include/SDL2/SDL_stdinc.h
- /usr/include/SDL2/SDL_surface.h
- /usr/include/SDL2/SDL_system.h
  /usr/include/SDL2/SDL_thread.h
- /usr/include/SDL2/SDL_timer.h
- /usr/include/SDL2/SDL_touch.h
- /usr/include/SDL2/SDL_ttf.h
  /usr/include/SDL2/SDL_version.h
- /usr/include/SDL2/SDL_video.h
  /usr/include/SDL2/begin_code.h
  /usr/include/SDL2/close_code.h
 CMakeFiles/devilution.dir/Stub/sound.cpp.o
@@ -6811,7 +6137,6 @@ CMakeFiles/devilution.dir/Stub/sound.cpp.o
  /home/krash/CLionProjects/devilutionX/Source/track.h
  /home/krash/CLionProjects/devilutionX/Source/trigs.h
  /home/krash/CLionProjects/devilutionX/Source/wave.h
- /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.h
  /home/krash/CLionProjects/devilutionX/Stub/sound.cpp
  /home/krash/CLionProjects/devilutionX/Stub/stubs.h
@@ -6820,50 +6145,18 @@ CMakeFiles/devilution.dir/Stub/sound.cpp.o
  /home/krash/CLionProjects/devilutionX/resource.h
  /home/krash/CLionProjects/devilutionX/structs.h
  /home/krash/CLionProjects/devilutionX/types.h
- /usr/include/SDL2/SDL.h
- /usr/include/SDL2/SDL_assert.h
  /usr/include/SDL2/SDL_atomic.h
  /usr/include/SDL2/SDL_audio.h
- /usr/include/SDL2/SDL_blendmode.h
- /usr/include/SDL2/SDL_clipboard.h
  /usr/include/SDL2/SDL_config.h
- /usr/include/SDL2/SDL_cpuinfo.h
  /usr/include/SDL2/SDL_endian.h
  /usr/include/SDL2/SDL_error.h
- /usr/include/SDL2/SDL_events.h
- /usr/include/SDL2/SDL_filesystem.h
- /usr/include/SDL2/SDL_gamecontroller.h
- /usr/include/SDL2/SDL_gesture.h
- /usr/include/SDL2/SDL_haptic.h
- /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
- /usr/include/SDL2/SDL_joystick.h
- /usr/include/SDL2/SDL_keyboard.h
- /usr/include/SDL2/SDL_keycode.h
- /usr/include/SDL2/SDL_loadso.h
- /usr/include/SDL2/SDL_log.h
- /usr/include/SDL2/SDL_main.h
- /usr/include/SDL2/SDL_messagebox.h
  /usr/include/SDL2/SDL_mixer.h
- /usr/include/SDL2/SDL_mouse.h
  /usr/include/SDL2/SDL_mutex.h
- /usr/include/SDL2/SDL_pixels.h
  /usr/include/SDL2/SDL_platform.h
- /usr/include/SDL2/SDL_power.h
- /usr/include/SDL2/SDL_quit.h
- /usr/include/SDL2/SDL_rect.h
- /usr/include/SDL2/SDL_render.h
  /usr/include/SDL2/SDL_rwops.h
- /usr/include/SDL2/SDL_scancode.h
  /usr/include/SDL2/SDL_stdinc.h
- /usr/include/SDL2/SDL_surface.h
- /usr/include/SDL2/SDL_system.h
  /usr/include/SDL2/SDL_thread.h
- /usr/include/SDL2/SDL_timer.h
- /usr/include/SDL2/SDL_touch.h
- /usr/include/SDL2/SDL_ttf.h
  /usr/include/SDL2/SDL_version.h
- /usr/include/SDL2/SDL_video.h
  /usr/include/SDL2/begin_code.h
  /usr/include/SDL2/close_code.h
 CMakeFiles/devilution.dir/Stub/storm.cpp.o
@@ -6941,7 +6234,6 @@ CMakeFiles/devilution.dir/Stub/storm.cpp.o
  /home/krash/CLionProjects/devilutionX/Source/track.h
  /home/krash/CLionProjects/devilutionX/Source/trigs.h
  /home/krash/CLionProjects/devilutionX/Source/wave.h
- /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.h
  /home/krash/CLionProjects/devilutionX/Stub/storm.cpp
  /home/krash/CLionProjects/devilutionX/Stub/stubs.h
@@ -6950,50 +6242,18 @@ CMakeFiles/devilution.dir/Stub/storm.cpp.o
  /home/krash/CLionProjects/devilutionX/resource.h
  /home/krash/CLionProjects/devilutionX/structs.h
  /home/krash/CLionProjects/devilutionX/types.h
- /usr/include/SDL2/SDL.h
- /usr/include/SDL2/SDL_assert.h
  /usr/include/SDL2/SDL_atomic.h
  /usr/include/SDL2/SDL_audio.h
- /usr/include/SDL2/SDL_blendmode.h
- /usr/include/SDL2/SDL_clipboard.h
  /usr/include/SDL2/SDL_config.h
- /usr/include/SDL2/SDL_cpuinfo.h
  /usr/include/SDL2/SDL_endian.h
  /usr/include/SDL2/SDL_error.h
- /usr/include/SDL2/SDL_events.h
- /usr/include/SDL2/SDL_filesystem.h
- /usr/include/SDL2/SDL_gamecontroller.h
- /usr/include/SDL2/SDL_gesture.h
- /usr/include/SDL2/SDL_haptic.h
- /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
- /usr/include/SDL2/SDL_joystick.h
- /usr/include/SDL2/SDL_keyboard.h
- /usr/include/SDL2/SDL_keycode.h
- /usr/include/SDL2/SDL_loadso.h
- /usr/include/SDL2/SDL_log.h
- /usr/include/SDL2/SDL_main.h
- /usr/include/SDL2/SDL_messagebox.h
  /usr/include/SDL2/SDL_mixer.h
- /usr/include/SDL2/SDL_mouse.h
  /usr/include/SDL2/SDL_mutex.h
- /usr/include/SDL2/SDL_pixels.h
  /usr/include/SDL2/SDL_platform.h
- /usr/include/SDL2/SDL_power.h
- /usr/include/SDL2/SDL_quit.h
- /usr/include/SDL2/SDL_rect.h
- /usr/include/SDL2/SDL_render.h
  /usr/include/SDL2/SDL_rwops.h
- /usr/include/SDL2/SDL_scancode.h
  /usr/include/SDL2/SDL_stdinc.h
- /usr/include/SDL2/SDL_surface.h
- /usr/include/SDL2/SDL_system.h
  /usr/include/SDL2/SDL_thread.h
- /usr/include/SDL2/SDL_timer.h
- /usr/include/SDL2/SDL_touch.h
- /usr/include/SDL2/SDL_ttf.h
  /usr/include/SDL2/SDL_version.h
- /usr/include/SDL2/SDL_video.h
  /usr/include/SDL2/begin_code.h
  /usr/include/SDL2/close_code.h
 CMakeFiles/devilution.dir/Stub/storm_net.cpp.o
@@ -7071,7 +6331,6 @@ CMakeFiles/devilution.dir/Stub/storm_net.cpp.o
  /home/krash/CLionProjects/devilutionX/Source/track.h
  /home/krash/CLionProjects/devilutionX/Source/trigs.h
  /home/krash/CLionProjects/devilutionX/Source/wave.h
- /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.h
  /home/krash/CLionProjects/devilutionX/Stub/miniwin_sdl.h
  /home/krash/CLionProjects/devilutionX/Stub/storm_net.cpp
  /home/krash/CLionProjects/devilutionX/Stub/stubs.h
@@ -7080,50 +6339,18 @@ CMakeFiles/devilution.dir/Stub/storm_net.cpp.o
  /home/krash/CLionProjects/devilutionX/resource.h
  /home/krash/CLionProjects/devilutionX/structs.h
  /home/krash/CLionProjects/devilutionX/types.h
- /usr/include/SDL2/SDL.h
- /usr/include/SDL2/SDL_assert.h
  /usr/include/SDL2/SDL_atomic.h
  /usr/include/SDL2/SDL_audio.h
- /usr/include/SDL2/SDL_blendmode.h
- /usr/include/SDL2/SDL_clipboard.h
  /usr/include/SDL2/SDL_config.h
- /usr/include/SDL2/SDL_cpuinfo.h
  /usr/include/SDL2/SDL_endian.h
  /usr/include/SDL2/SDL_error.h
- /usr/include/SDL2/SDL_events.h
- /usr/include/SDL2/SDL_filesystem.h
- /usr/include/SDL2/SDL_gamecontroller.h
- /usr/include/SDL2/SDL_gesture.h
- /usr/include/SDL2/SDL_haptic.h
- /usr/include/SDL2/SDL_hints.h
- /usr/include/SDL2/SDL_image.h
- /usr/include/SDL2/SDL_joystick.h
- /usr/include/SDL2/SDL_keyboard.h
- /usr/include/SDL2/SDL_keycode.h
- /usr/include/SDL2/SDL_loadso.h
- /usr/include/SDL2/SDL_log.h
- /usr/include/SDL2/SDL_main.h
- /usr/include/SDL2/SDL_messagebox.h
  /usr/include/SDL2/SDL_mixer.h
- /usr/include/SDL2/SDL_mouse.h
  /usr/include/SDL2/SDL_mutex.h
- /usr/include/SDL2/SDL_pixels.h
  /usr/include/SDL2/SDL_platform.h
- /usr/include/SDL2/SDL_power.h
- /usr/include/SDL2/SDL_quit.h
- /usr/include/SDL2/SDL_rect.h
- /usr/include/SDL2/SDL_render.h
  /usr/include/SDL2/SDL_rwops.h
- /usr/include/SDL2/SDL_scancode.h
  /usr/include/SDL2/SDL_stdinc.h
- /usr/include/SDL2/SDL_surface.h
- /usr/include/SDL2/SDL_system.h
  /usr/include/SDL2/SDL_thread.h
- /usr/include/SDL2/SDL_timer.h
- /usr/include/SDL2/SDL_touch.h
- /usr/include/SDL2/SDL_ttf.h
  /usr/include/SDL2/SDL_version.h
- /usr/include/SDL2/SDL_video.h
  /usr/include/SDL2/begin_code.h
  /usr/include/SDL2/close_code.h
 CMakeFiles/devilution.dir/Stub/validate.cpp.o

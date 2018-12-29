@@ -170,6 +170,8 @@ void __cdecl DrawInv()
 		int frame = plr[myplr].InvBody[INVLOC_HEAD]._iCurs + 12;
 		int frame_width = InvItemWidth[frame];
 
+		printf("FRAME %d, WIDTH %d", frame, frame_width);
+
 		if ( pcursinvitem == INVITEM_HEAD )
 		{
 			int colour = 197;
@@ -376,6 +378,7 @@ void __cdecl DrawInv()
 
 		int frame = plr[myplr].InvBody[INVLOC_CHEST]._iCurs + 12;
 		int frame_width = InvItemWidth[frame];
+		
 
 		if ( pcursinvitem == INVITEM_CHEST )
 		{

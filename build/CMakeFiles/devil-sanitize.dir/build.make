@@ -393,33 +393,9 @@ CMakeFiles/devil-sanitize.dir/Source/error.cpp.o.provides: CMakeFiles/devil-sani
 CMakeFiles/devil-sanitize.dir/Source/error.cpp.o.provides.build: CMakeFiles/devil-sanitize.dir/Source/error.cpp.o
 
 
-CMakeFiles/devil-sanitize.dir/Source/gamemenu.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
-CMakeFiles/devil-sanitize.dir/Source/gamemenu.cpp.o: ../Source/gamemenu.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/gamemenu.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/gamemenu.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/gamemenu.cpp
-
-CMakeFiles/devil-sanitize.dir/Source/gamemenu.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/devil-sanitize.dir/Source/gamemenu.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/krash/CLionProjects/devilutionX/Source/gamemenu.cpp > CMakeFiles/devil-sanitize.dir/Source/gamemenu.cpp.i
-
-CMakeFiles/devil-sanitize.dir/Source/gamemenu.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/devil-sanitize.dir/Source/gamemenu.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/krash/CLionProjects/devilutionX/Source/gamemenu.cpp -o CMakeFiles/devil-sanitize.dir/Source/gamemenu.cpp.s
-
-CMakeFiles/devil-sanitize.dir/Source/gamemenu.cpp.o.requires:
-
-.PHONY : CMakeFiles/devil-sanitize.dir/Source/gamemenu.cpp.o.requires
-
-CMakeFiles/devil-sanitize.dir/Source/gamemenu.cpp.o.provides: CMakeFiles/devil-sanitize.dir/Source/gamemenu.cpp.o.requires
-	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/gamemenu.cpp.o.provides.build
-.PHONY : CMakeFiles/devil-sanitize.dir/Source/gamemenu.cpp.o.provides
-
-CMakeFiles/devil-sanitize.dir/Source/gamemenu.cpp.o.provides.build: CMakeFiles/devil-sanitize.dir/Source/gamemenu.cpp.o
-
-
 CMakeFiles/devil-sanitize.dir/Source/gendung.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/gendung.cpp.o: ../Source/gendung.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/gendung.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/gendung.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/gendung.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/gendung.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/gendung.cpp.i: cmake_force
@@ -443,7 +419,7 @@ CMakeFiles/devil-sanitize.dir/Source/gendung.cpp.o.provides.build: CMakeFiles/de
 
 CMakeFiles/devil-sanitize.dir/Source/gmenu.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/gmenu.cpp.o: ../Source/gmenu.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/gmenu.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/gmenu.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/gmenu.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/gmenu.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/gmenu.cpp.i: cmake_force
@@ -467,7 +443,7 @@ CMakeFiles/devil-sanitize.dir/Source/gmenu.cpp.o.provides.build: CMakeFiles/devi
 
 CMakeFiles/devil-sanitize.dir/Source/help.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/help.cpp.o: ../Source/help.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/help.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/help.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/help.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/help.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/help.cpp.i: cmake_force
@@ -491,7 +467,7 @@ CMakeFiles/devil-sanitize.dir/Source/help.cpp.o.provides.build: CMakeFiles/devil
 
 CMakeFiles/devil-sanitize.dir/Source/interfac.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/interfac.cpp.o: ../Source/interfac.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/interfac.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/interfac.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/interfac.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/interfac.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/interfac.cpp.i: cmake_force
@@ -515,7 +491,7 @@ CMakeFiles/devil-sanitize.dir/Source/interfac.cpp.o.provides.build: CMakeFiles/d
 
 CMakeFiles/devil-sanitize.dir/Source/inv.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/inv.cpp.o: ../Source/inv.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/inv.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/inv.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/inv.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/inv.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/inv.cpp.i: cmake_force
@@ -539,7 +515,7 @@ CMakeFiles/devil-sanitize.dir/Source/inv.cpp.o.provides.build: CMakeFiles/devil-
 
 CMakeFiles/devil-sanitize.dir/Source/items.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/items.cpp.o: ../Source/items.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/items.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/items.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/items.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/items.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/items.cpp.i: cmake_force
@@ -563,7 +539,7 @@ CMakeFiles/devil-sanitize.dir/Source/items.cpp.o.provides.build: CMakeFiles/devi
 
 CMakeFiles/devil-sanitize.dir/Source/lighting.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/lighting.cpp.o: ../Source/lighting.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/lighting.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/lighting.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/lighting.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/lighting.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/lighting.cpp.i: cmake_force
@@ -587,7 +563,7 @@ CMakeFiles/devil-sanitize.dir/Source/lighting.cpp.o.provides.build: CMakeFiles/d
 
 CMakeFiles/devil-sanitize.dir/Source/loadsave.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/loadsave.cpp.o: ../Source/loadsave.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/loadsave.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/loadsave.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/loadsave.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/loadsave.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/loadsave.cpp.i: cmake_force
@@ -611,7 +587,7 @@ CMakeFiles/devil-sanitize.dir/Source/loadsave.cpp.o.provides.build: CMakeFiles/d
 
 CMakeFiles/devil-sanitize.dir/Source/mainmenu.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/mainmenu.cpp.o: ../Source/mainmenu.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/mainmenu.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/mainmenu.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/mainmenu.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/mainmenu.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/mainmenu.cpp.i: cmake_force
@@ -635,7 +611,7 @@ CMakeFiles/devil-sanitize.dir/Source/mainmenu.cpp.o.provides.build: CMakeFiles/d
 
 CMakeFiles/devil-sanitize.dir/Source/minitext.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/minitext.cpp.o: ../Source/minitext.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/minitext.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/minitext.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/minitext.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/minitext.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/minitext.cpp.i: cmake_force
@@ -659,7 +635,7 @@ CMakeFiles/devil-sanitize.dir/Source/minitext.cpp.o.provides.build: CMakeFiles/d
 
 CMakeFiles/devil-sanitize.dir/Source/missiles.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/missiles.cpp.o: ../Source/missiles.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/missiles.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/missiles.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/missiles.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/missiles.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/missiles.cpp.i: cmake_force
@@ -683,7 +659,7 @@ CMakeFiles/devil-sanitize.dir/Source/missiles.cpp.o.provides.build: CMakeFiles/d
 
 CMakeFiles/devil-sanitize.dir/Source/monster.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/monster.cpp.o: ../Source/monster.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/monster.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/monster.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/monster.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/monster.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/monster.cpp.i: cmake_force
@@ -707,7 +683,7 @@ CMakeFiles/devil-sanitize.dir/Source/monster.cpp.o.provides.build: CMakeFiles/de
 
 CMakeFiles/devil-sanitize.dir/Source/mpqapi.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/mpqapi.cpp.o: ../Source/mpqapi.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/mpqapi.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/mpqapi.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/mpqapi.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/mpqapi.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/mpqapi.cpp.i: cmake_force
@@ -731,7 +707,7 @@ CMakeFiles/devil-sanitize.dir/Source/mpqapi.cpp.o.provides.build: CMakeFiles/dev
 
 CMakeFiles/devil-sanitize.dir/Source/msgcmd.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/msgcmd.cpp.o: ../Source/msgcmd.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/msgcmd.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/msgcmd.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/msgcmd.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/msgcmd.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/msgcmd.cpp.i: cmake_force
@@ -755,7 +731,7 @@ CMakeFiles/devil-sanitize.dir/Source/msgcmd.cpp.o.provides.build: CMakeFiles/dev
 
 CMakeFiles/devil-sanitize.dir/Source/msg.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/msg.cpp.o: ../Source/msg.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/msg.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/msg.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/msg.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/msg.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/msg.cpp.i: cmake_force
@@ -779,7 +755,7 @@ CMakeFiles/devil-sanitize.dir/Source/msg.cpp.o.provides.build: CMakeFiles/devil-
 
 CMakeFiles/devil-sanitize.dir/Source/multi.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/multi.cpp.o: ../Source/multi.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_31) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/multi.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/multi.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/multi.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/multi.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/multi.cpp.i: cmake_force
@@ -803,7 +779,7 @@ CMakeFiles/devil-sanitize.dir/Source/multi.cpp.o.provides.build: CMakeFiles/devi
 
 CMakeFiles/devil-sanitize.dir/Source/objects.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/objects.cpp.o: ../Source/objects.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_32) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/objects.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_31) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/objects.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/objects.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/objects.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/objects.cpp.i: cmake_force
@@ -827,7 +803,7 @@ CMakeFiles/devil-sanitize.dir/Source/objects.cpp.o.provides.build: CMakeFiles/de
 
 CMakeFiles/devil-sanitize.dir/Source/pack.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/pack.cpp.o: ../Source/pack.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_33) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/pack.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_32) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/pack.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/pack.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/pack.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/pack.cpp.i: cmake_force
@@ -851,7 +827,7 @@ CMakeFiles/devil-sanitize.dir/Source/pack.cpp.o.provides.build: CMakeFiles/devil
 
 CMakeFiles/devil-sanitize.dir/Source/palette.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/palette.cpp.o: ../Source/palette.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_34) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/palette.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_33) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/palette.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/palette.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/palette.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/palette.cpp.i: cmake_force
@@ -875,7 +851,7 @@ CMakeFiles/devil-sanitize.dir/Source/palette.cpp.o.provides.build: CMakeFiles/de
 
 CMakeFiles/devil-sanitize.dir/Source/path.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/path.cpp.o: ../Source/path.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_35) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/path.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_34) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/path.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/path.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/path.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/path.cpp.i: cmake_force
@@ -899,7 +875,7 @@ CMakeFiles/devil-sanitize.dir/Source/path.cpp.o.provides.build: CMakeFiles/devil
 
 CMakeFiles/devil-sanitize.dir/Source/pfile.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/pfile.cpp.o: ../Source/pfile.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_36) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/pfile.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_35) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/pfile.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/pfile.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/pfile.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/pfile.cpp.i: cmake_force
@@ -923,7 +899,7 @@ CMakeFiles/devil-sanitize.dir/Source/pfile.cpp.o.provides.build: CMakeFiles/devi
 
 CMakeFiles/devil-sanitize.dir/Source/player.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/player.cpp.o: ../Source/player.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_37) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/player.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_36) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/player.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/player.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/player.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/player.cpp.i: cmake_force
@@ -947,7 +923,7 @@ CMakeFiles/devil-sanitize.dir/Source/player.cpp.o.provides.build: CMakeFiles/dev
 
 CMakeFiles/devil-sanitize.dir/Source/plrmsg.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/plrmsg.cpp.o: ../Source/plrmsg.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_38) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/plrmsg.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_37) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/plrmsg.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/plrmsg.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/plrmsg.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/plrmsg.cpp.i: cmake_force
@@ -971,7 +947,7 @@ CMakeFiles/devil-sanitize.dir/Source/plrmsg.cpp.o.provides.build: CMakeFiles/dev
 
 CMakeFiles/devil-sanitize.dir/Source/portal.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/portal.cpp.o: ../Source/portal.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_39) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/portal.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_38) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/portal.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/portal.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/portal.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/portal.cpp.i: cmake_force
@@ -995,7 +971,7 @@ CMakeFiles/devil-sanitize.dir/Source/portal.cpp.o.provides.build: CMakeFiles/dev
 
 CMakeFiles/devil-sanitize.dir/Source/quests.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/quests.cpp.o: ../Source/quests.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_40) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/quests.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_39) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/quests.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/quests.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/quests.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/quests.cpp.i: cmake_force
@@ -1019,7 +995,7 @@ CMakeFiles/devil-sanitize.dir/Source/quests.cpp.o.provides.build: CMakeFiles/dev
 
 CMakeFiles/devil-sanitize.dir/Source/render.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/render.cpp.o: ../Source/render.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_41) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/render.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_40) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/render.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/render.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/render.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/render.cpp.i: cmake_force
@@ -1043,7 +1019,7 @@ CMakeFiles/devil-sanitize.dir/Source/render.cpp.o.provides.build: CMakeFiles/dev
 
 CMakeFiles/devil-sanitize.dir/Source/scrollrt.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/scrollrt.cpp.o: ../Source/scrollrt.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_42) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/scrollrt.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_41) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/scrollrt.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/scrollrt.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/scrollrt.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/scrollrt.cpp.i: cmake_force
@@ -1067,7 +1043,7 @@ CMakeFiles/devil-sanitize.dir/Source/scrollrt.cpp.o.provides.build: CMakeFiles/d
 
 CMakeFiles/devil-sanitize.dir/Source/setmaps.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/setmaps.cpp.o: ../Source/setmaps.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_43) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/setmaps.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_42) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/setmaps.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/setmaps.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/setmaps.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/setmaps.cpp.i: cmake_force
@@ -1091,7 +1067,7 @@ CMakeFiles/devil-sanitize.dir/Source/setmaps.cpp.o.provides.build: CMakeFiles/de
 
 CMakeFiles/devil-sanitize.dir/Source/sha.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/sha.cpp.o: ../Source/sha.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_44) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/sha.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_43) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/sha.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/sha.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/sha.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/sha.cpp.i: cmake_force
@@ -1115,7 +1091,7 @@ CMakeFiles/devil-sanitize.dir/Source/sha.cpp.o.provides.build: CMakeFiles/devil-
 
 CMakeFiles/devil-sanitize.dir/Source/spells.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/spells.cpp.o: ../Source/spells.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_45) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/spells.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_44) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/spells.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/spells.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/spells.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/spells.cpp.i: cmake_force
@@ -1139,7 +1115,7 @@ CMakeFiles/devil-sanitize.dir/Source/spells.cpp.o.provides.build: CMakeFiles/dev
 
 CMakeFiles/devil-sanitize.dir/Source/stores.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/stores.cpp.o: ../Source/stores.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_46) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/stores.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_45) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/stores.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/stores.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/stores.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/stores.cpp.i: cmake_force
@@ -1163,7 +1139,7 @@ CMakeFiles/devil-sanitize.dir/Source/stores.cpp.o.provides.build: CMakeFiles/dev
 
 CMakeFiles/devil-sanitize.dir/Source/sync.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/sync.cpp.o: ../Source/sync.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_47) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/sync.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_46) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/sync.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/sync.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/sync.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/sync.cpp.i: cmake_force
@@ -1187,7 +1163,7 @@ CMakeFiles/devil-sanitize.dir/Source/sync.cpp.o.provides.build: CMakeFiles/devil
 
 CMakeFiles/devil-sanitize.dir/Source/textdat.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/textdat.cpp.o: ../Source/textdat.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_48) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/textdat.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_47) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/textdat.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/textdat.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/textdat.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/textdat.cpp.i: cmake_force
@@ -1211,7 +1187,7 @@ CMakeFiles/devil-sanitize.dir/Source/textdat.cpp.o.provides.build: CMakeFiles/de
 
 CMakeFiles/devil-sanitize.dir/Source/themes.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/themes.cpp.o: ../Source/themes.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_49) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/themes.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_48) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/themes.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/themes.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/themes.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/themes.cpp.i: cmake_force
@@ -1235,7 +1211,7 @@ CMakeFiles/devil-sanitize.dir/Source/themes.cpp.o.provides.build: CMakeFiles/dev
 
 CMakeFiles/devil-sanitize.dir/Source/tmsg.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/tmsg.cpp.o: ../Source/tmsg.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_50) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/tmsg.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_49) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/tmsg.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/tmsg.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/tmsg.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/tmsg.cpp.i: cmake_force
@@ -1259,7 +1235,7 @@ CMakeFiles/devil-sanitize.dir/Source/tmsg.cpp.o.provides.build: CMakeFiles/devil
 
 CMakeFiles/devil-sanitize.dir/Source/town.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/town.cpp.o: ../Source/town.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_51) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/town.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_50) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/town.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/town.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/town.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/town.cpp.i: cmake_force
@@ -1283,7 +1259,7 @@ CMakeFiles/devil-sanitize.dir/Source/town.cpp.o.provides.build: CMakeFiles/devil
 
 CMakeFiles/devil-sanitize.dir/Source/towners.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/towners.cpp.o: ../Source/towners.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_52) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/towners.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_51) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/towners.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/towners.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/towners.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/towners.cpp.i: cmake_force
@@ -1307,7 +1283,7 @@ CMakeFiles/devil-sanitize.dir/Source/towners.cpp.o.provides.build: CMakeFiles/de
 
 CMakeFiles/devil-sanitize.dir/Source/track.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/track.cpp.o: ../Source/track.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_53) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/track.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_52) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/track.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/track.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/track.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/track.cpp.i: cmake_force
@@ -1331,7 +1307,7 @@ CMakeFiles/devil-sanitize.dir/Source/track.cpp.o.provides.build: CMakeFiles/devi
 
 CMakeFiles/devil-sanitize.dir/Source/trigs.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/trigs.cpp.o: ../Source/trigs.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_54) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/trigs.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_53) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/trigs.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/trigs.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/trigs.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/trigs.cpp.i: cmake_force
@@ -1355,7 +1331,7 @@ CMakeFiles/devil-sanitize.dir/Source/trigs.cpp.o.provides.build: CMakeFiles/devi
 
 CMakeFiles/devil-sanitize.dir/Source/wave.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Source/wave.cpp.o: ../Source/wave.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_55) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/wave.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_54) "Building CXX object CMakeFiles/devil-sanitize.dir/Source/wave.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Source/wave.cpp.o -c /home/krash/CLionProjects/devilutionX/Source/wave.cpp
 
 CMakeFiles/devil-sanitize.dir/Source/wave.cpp.i: cmake_force
@@ -1379,7 +1355,7 @@ CMakeFiles/devil-sanitize.dir/Source/wave.cpp.o.provides.build: CMakeFiles/devil
 
 CMakeFiles/devil-sanitize.dir/3rdParty/PKWare/explode.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/3rdParty/PKWare/explode.cpp.o: ../3rdParty/PKWare/explode.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_56) "Building CXX object CMakeFiles/devil-sanitize.dir/3rdParty/PKWare/explode.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_55) "Building CXX object CMakeFiles/devil-sanitize.dir/3rdParty/PKWare/explode.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/3rdParty/PKWare/explode.cpp.o -c /home/krash/CLionProjects/devilutionX/3rdParty/PKWare/explode.cpp
 
 CMakeFiles/devil-sanitize.dir/3rdParty/PKWare/explode.cpp.i: cmake_force
@@ -1403,7 +1379,7 @@ CMakeFiles/devil-sanitize.dir/3rdParty/PKWare/explode.cpp.o.provides.build: CMak
 
 CMakeFiles/devil-sanitize.dir/3rdParty/PKWare/implode.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/3rdParty/PKWare/implode.cpp.o: ../3rdParty/PKWare/implode.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_57) "Building CXX object CMakeFiles/devil-sanitize.dir/3rdParty/PKWare/implode.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_56) "Building CXX object CMakeFiles/devil-sanitize.dir/3rdParty/PKWare/implode.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/3rdParty/PKWare/implode.cpp.o -c /home/krash/CLionProjects/devilutionX/3rdParty/PKWare/implode.cpp
 
 CMakeFiles/devil-sanitize.dir/3rdParty/PKWare/implode.cpp.i: cmake_force
@@ -1427,7 +1403,7 @@ CMakeFiles/devil-sanitize.dir/3rdParty/PKWare/implode.cpp.o.provides.build: CMak
 
 CMakeFiles/devil-sanitize.dir/Stub/miniwin.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Stub/miniwin.cpp.o: ../Stub/miniwin.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_58) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/miniwin.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_57) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/miniwin.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Stub/miniwin.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/miniwin.cpp
 
 CMakeFiles/devil-sanitize.dir/Stub/miniwin.cpp.i: cmake_force
@@ -1451,7 +1427,7 @@ CMakeFiles/devil-sanitize.dir/Stub/miniwin.cpp.o.provides.build: CMakeFiles/devi
 
 CMakeFiles/devil-sanitize.dir/Stub/miniwin_rand.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Stub/miniwin_rand.cpp.o: ../Stub/miniwin_rand.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_59) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/miniwin_rand.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_58) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/miniwin_rand.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Stub/miniwin_rand.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/miniwin_rand.cpp
 
 CMakeFiles/devil-sanitize.dir/Stub/miniwin_rand.cpp.i: cmake_force
@@ -1475,7 +1451,7 @@ CMakeFiles/devil-sanitize.dir/Stub/miniwin_rand.cpp.o.provides.build: CMakeFiles
 
 CMakeFiles/devil-sanitize.dir/Stub/appfat.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Stub/appfat.cpp.o: ../Stub/appfat.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_60) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/appfat.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_59) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/appfat.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Stub/appfat.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/appfat.cpp
 
 CMakeFiles/devil-sanitize.dir/Stub/appfat.cpp.i: cmake_force
@@ -1499,7 +1475,7 @@ CMakeFiles/devil-sanitize.dir/Stub/appfat.cpp.o.provides.build: CMakeFiles/devil
 
 CMakeFiles/devil-sanitize.dir/Stub/capture.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Stub/capture.cpp.o: ../Stub/capture.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_61) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/capture.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_60) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/capture.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Stub/capture.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/capture.cpp
 
 CMakeFiles/devil-sanitize.dir/Stub/capture.cpp.i: cmake_force
@@ -1523,7 +1499,7 @@ CMakeFiles/devil-sanitize.dir/Stub/capture.cpp.o.provides.build: CMakeFiles/devi
 
 CMakeFiles/devil-sanitize.dir/Stub/dthread.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Stub/dthread.cpp.o: ../Stub/dthread.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_62) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/dthread.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_61) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/dthread.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Stub/dthread.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/dthread.cpp
 
 CMakeFiles/devil-sanitize.dir/Stub/dthread.cpp.i: cmake_force
@@ -1547,7 +1523,7 @@ CMakeFiles/devil-sanitize.dir/Stub/dthread.cpp.o.provides.build: CMakeFiles/devi
 
 CMakeFiles/devil-sanitize.dir/Stub/dx.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Stub/dx.cpp.o: ../Stub/dx.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_63) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/dx.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_62) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/dx.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Stub/dx.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/dx.cpp
 
 CMakeFiles/devil-sanitize.dir/Stub/dx.cpp.i: cmake_force
@@ -1571,7 +1547,7 @@ CMakeFiles/devil-sanitize.dir/Stub/dx.cpp.o.provides.build: CMakeFiles/devil-san
 
 CMakeFiles/devil-sanitize.dir/Stub/fault.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Stub/fault.cpp.o: ../Stub/fault.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_64) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/fault.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_63) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/fault.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Stub/fault.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/fault.cpp
 
 CMakeFiles/devil-sanitize.dir/Stub/fault.cpp.i: cmake_force
@@ -1595,7 +1571,7 @@ CMakeFiles/devil-sanitize.dir/Stub/fault.cpp.o.provides.build: CMakeFiles/devil-
 
 CMakeFiles/devil-sanitize.dir/Stub/init.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Stub/init.cpp.o: ../Stub/init.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_65) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/init.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_64) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/init.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Stub/init.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/init.cpp
 
 CMakeFiles/devil-sanitize.dir/Stub/init.cpp.i: cmake_force
@@ -1619,7 +1595,7 @@ CMakeFiles/devil-sanitize.dir/Stub/init.cpp.o.provides.build: CMakeFiles/devil-s
 
 CMakeFiles/devil-sanitize.dir/Stub/movie.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Stub/movie.cpp.o: ../Stub/movie.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_66) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/movie.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_65) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/movie.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Stub/movie.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/movie.cpp
 
 CMakeFiles/devil-sanitize.dir/Stub/movie.cpp.i: cmake_force
@@ -1643,7 +1619,7 @@ CMakeFiles/devil-sanitize.dir/Stub/movie.cpp.o.provides.build: CMakeFiles/devil-
 
 CMakeFiles/devil-sanitize.dir/Stub/nthread.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Stub/nthread.cpp.o: ../Stub/nthread.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_67) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/nthread.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_66) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/nthread.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Stub/nthread.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/nthread.cpp
 
 CMakeFiles/devil-sanitize.dir/Stub/nthread.cpp.i: cmake_force
@@ -1667,7 +1643,7 @@ CMakeFiles/devil-sanitize.dir/Stub/nthread.cpp.o.provides.build: CMakeFiles/devi
 
 CMakeFiles/devil-sanitize.dir/Stub/restrict.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Stub/restrict.cpp.o: ../Stub/restrict.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_68) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/restrict.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_67) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/restrict.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Stub/restrict.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/restrict.cpp
 
 CMakeFiles/devil-sanitize.dir/Stub/restrict.cpp.i: cmake_force
@@ -1691,7 +1667,7 @@ CMakeFiles/devil-sanitize.dir/Stub/restrict.cpp.o.provides.build: CMakeFiles/dev
 
 CMakeFiles/devil-sanitize.dir/Stub/sound.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Stub/sound.cpp.o: ../Stub/sound.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_69) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/sound.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_68) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/sound.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Stub/sound.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/sound.cpp
 
 CMakeFiles/devil-sanitize.dir/Stub/sound.cpp.i: cmake_force
@@ -1715,7 +1691,7 @@ CMakeFiles/devil-sanitize.dir/Stub/sound.cpp.o.provides.build: CMakeFiles/devil-
 
 CMakeFiles/devil-sanitize.dir/Stub/storm.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Stub/storm.cpp.o: ../Stub/storm.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_70) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/storm.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_69) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/storm.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Stub/storm.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/storm.cpp
 
 CMakeFiles/devil-sanitize.dir/Stub/storm.cpp.i: cmake_force
@@ -1739,7 +1715,7 @@ CMakeFiles/devil-sanitize.dir/Stub/storm.cpp.o.provides.build: CMakeFiles/devil-
 
 CMakeFiles/devil-sanitize.dir/Stub/diabloui.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Stub/diabloui.cpp.o: ../Stub/diabloui.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_71) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/diabloui.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_70) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/diabloui.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Stub/diabloui.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/diabloui.cpp
 
 CMakeFiles/devil-sanitize.dir/Stub/diabloui.cpp.i: cmake_force
@@ -1763,7 +1739,7 @@ CMakeFiles/devil-sanitize.dir/Stub/diabloui.cpp.o.provides.build: CMakeFiles/dev
 
 CMakeFiles/devil-sanitize.dir/Stub/miniwin_io.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Stub/miniwin_io.cpp.o: ../Stub/miniwin_io.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_72) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/miniwin_io.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_71) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/miniwin_io.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Stub/miniwin_io.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/miniwin_io.cpp
 
 CMakeFiles/devil-sanitize.dir/Stub/miniwin_io.cpp.i: cmake_force
@@ -1787,7 +1763,7 @@ CMakeFiles/devil-sanitize.dir/Stub/miniwin_io.cpp.o.provides.build: CMakeFiles/d
 
 CMakeFiles/devil-sanitize.dir/Stub/miniwin_msg_sdl.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Stub/miniwin_msg_sdl.cpp.o: ../Stub/miniwin_msg_sdl.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_73) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/miniwin_msg_sdl.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_72) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/miniwin_msg_sdl.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Stub/miniwin_msg_sdl.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/miniwin_msg_sdl.cpp
 
 CMakeFiles/devil-sanitize.dir/Stub/miniwin_msg_sdl.cpp.i: cmake_force
@@ -1811,7 +1787,7 @@ CMakeFiles/devil-sanitize.dir/Stub/miniwin_msg_sdl.cpp.o.provides.build: CMakeFi
 
 CMakeFiles/devil-sanitize.dir/Stub/storm_net.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Stub/storm_net.cpp.o: ../Stub/storm_net.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_74) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/storm_net.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_73) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/storm_net.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Stub/storm_net.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/storm_net.cpp
 
 CMakeFiles/devil-sanitize.dir/Stub/storm_net.cpp.i: cmake_force
@@ -1835,7 +1811,7 @@ CMakeFiles/devil-sanitize.dir/Stub/storm_net.cpp.o.provides.build: CMakeFiles/de
 
 CMakeFiles/devil-sanitize.dir/Stub/validate.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Stub/validate.cpp.o: ../Stub/validate.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_75) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/validate.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_74) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/validate.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Stub/validate.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/validate.cpp
 
 CMakeFiles/devil-sanitize.dir/Stub/validate.cpp.i: cmake_force
@@ -1859,7 +1835,7 @@ CMakeFiles/devil-sanitize.dir/Stub/validate.cpp.o.provides.build: CMakeFiles/dev
 
 CMakeFiles/devil-sanitize.dir/Stub/effects.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Stub/effects.cpp.o: ../Stub/effects.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_76) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/effects.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_75) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/effects.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Stub/effects.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/effects.cpp
 
 CMakeFiles/devil-sanitize.dir/Stub/effects.cpp.i: cmake_force
@@ -1883,7 +1859,7 @@ CMakeFiles/devil-sanitize.dir/Stub/effects.cpp.o.provides.build: CMakeFiles/devi
 
 CMakeFiles/devil-sanitize.dir/Stub/sdlrender.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Stub/sdlrender.cpp.o: ../Stub/sdlrender.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_77) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/sdlrender.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_76) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/sdlrender.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Stub/sdlrender.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/sdlrender.cpp
 
 CMakeFiles/devil-sanitize.dir/Stub/sdlrender.cpp.i: cmake_force
@@ -1905,33 +1881,9 @@ CMakeFiles/devil-sanitize.dir/Stub/sdlrender.cpp.o.provides: CMakeFiles/devil-sa
 CMakeFiles/devil-sanitize.dir/Stub/sdlrender.cpp.o.provides.build: CMakeFiles/devil-sanitize.dir/Stub/sdlrender.cpp.o
 
 
-CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
-CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.o: ../Stub/SDL_FontCache.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_78) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.cpp
-
-CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.cpp > CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.i
-
-CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.cpp -o CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.s
-
-CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.o.requires:
-
-.PHONY : CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.o.requires
-
-CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.o.provides: CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.o.requires
-	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.o.provides.build
-.PHONY : CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.o.provides
-
-CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.o.provides.build: CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.o
-
-
 CMakeFiles/devil-sanitize.dir/Stub/diablo.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Stub/diablo.cpp.o: ../Stub/diablo.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_79) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/diablo.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_77) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/diablo.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Stub/diablo.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/diablo.cpp
 
 CMakeFiles/devil-sanitize.dir/Stub/diablo.cpp.i: cmake_force
@@ -1953,9 +1905,33 @@ CMakeFiles/devil-sanitize.dir/Stub/diablo.cpp.o.provides: CMakeFiles/devil-sanit
 CMakeFiles/devil-sanitize.dir/Stub/diablo.cpp.o.provides.build: CMakeFiles/devil-sanitize.dir/Stub/diablo.cpp.o
 
 
+CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
+CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.o: ../Stub/gamemenu.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_78) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/gamemenu.cpp
+
+CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/krash/CLionProjects/devilutionX/Stub/gamemenu.cpp > CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.i
+
+CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/krash/CLionProjects/devilutionX/Stub/gamemenu.cpp -o CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.s
+
+CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.o.requires:
+
+.PHONY : CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.o.requires
+
+CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.o.provides: CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.o.requires
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.o.provides.build
+.PHONY : CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.o.provides
+
+CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.o.provides.build: CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.o
+
+
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/FileStream.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/FileStream.cpp.o: ../3rdParty/StormLib/src/FileStream.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_80) "Building CXX object CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/FileStream.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_79) "Building CXX object CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/FileStream.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/FileStream.cpp.o -c /home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/FileStream.cpp
 
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/FileStream.cpp.i: cmake_force
@@ -1979,7 +1955,7 @@ CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/FileStream.cpp.o.provides.bu
 
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseCommon.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseCommon.cpp.o: ../3rdParty/StormLib/src/SBaseCommon.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_81) "Building CXX object CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseCommon.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_80) "Building CXX object CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseCommon.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseCommon.cpp.o -c /home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SBaseCommon.cpp
 
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseCommon.cpp.i: cmake_force
@@ -2003,7 +1979,7 @@ CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseCommon.cpp.o.provides.b
 
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.o: ../3rdParty/StormLib/src/SBaseFileTable.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_82) "Building CXX object CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_81) "Building CXX object CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.o -c /home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SBaseFileTable.cpp
 
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.i: cmake_force
@@ -2027,7 +2003,7 @@ CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.o.provide
 
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseSubTypes.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseSubTypes.cpp.o: ../3rdParty/StormLib/src/SBaseSubTypes.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_83) "Building CXX object CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseSubTypes.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_82) "Building CXX object CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseSubTypes.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseSubTypes.cpp.o -c /home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SBaseSubTypes.cpp
 
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseSubTypes.cpp.i: cmake_force
@@ -2051,7 +2027,7 @@ CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseSubTypes.cpp.o.provides
 
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SCompression.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SCompression.cpp.o: ../3rdParty/StormLib/src/SCompression.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_84) "Building CXX object CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SCompression.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_83) "Building CXX object CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SCompression.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SCompression.cpp.o -c /home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SCompression.cpp
 
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SCompression.cpp.i: cmake_force
@@ -2075,7 +2051,7 @@ CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SCompression.cpp.o.provides.
 
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileExtractFile.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileExtractFile.cpp.o: ../3rdParty/StormLib/src/SFileExtractFile.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_85) "Building CXX object CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileExtractFile.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_84) "Building CXX object CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileExtractFile.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileExtractFile.cpp.o -c /home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SFileExtractFile.cpp
 
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileExtractFile.cpp.i: cmake_force
@@ -2099,7 +2075,7 @@ CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileExtractFile.cpp.o.provi
 
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileFindFile.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileFindFile.cpp.o: ../3rdParty/StormLib/src/SFileFindFile.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_86) "Building CXX object CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileFindFile.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_85) "Building CXX object CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileFindFile.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileFindFile.cpp.o -c /home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SFileFindFile.cpp
 
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileFindFile.cpp.i: cmake_force
@@ -2123,7 +2099,7 @@ CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileFindFile.cpp.o.provides
 
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileGetFileInfo.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileGetFileInfo.cpp.o: ../3rdParty/StormLib/src/SFileGetFileInfo.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_87) "Building CXX object CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileGetFileInfo.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_86) "Building CXX object CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileGetFileInfo.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileGetFileInfo.cpp.o -c /home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SFileGetFileInfo.cpp
 
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileGetFileInfo.cpp.i: cmake_force
@@ -2147,7 +2123,7 @@ CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileGetFileInfo.cpp.o.provi
 
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileOpenArchive.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileOpenArchive.cpp.o: ../3rdParty/StormLib/src/SFileOpenArchive.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_88) "Building CXX object CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileOpenArchive.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_87) "Building CXX object CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileOpenArchive.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileOpenArchive.cpp.o -c /home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SFileOpenArchive.cpp
 
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileOpenArchive.cpp.i: cmake_force
@@ -2171,7 +2147,7 @@ CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileOpenArchive.cpp.o.provi
 
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileOpenFileEx.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileOpenFileEx.cpp.o: ../3rdParty/StormLib/src/SFileOpenFileEx.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_89) "Building CXX object CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileOpenFileEx.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_88) "Building CXX object CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileOpenFileEx.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileOpenFileEx.cpp.o -c /home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SFileOpenFileEx.cpp
 
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileOpenFileEx.cpp.i: cmake_force
@@ -2195,7 +2171,7 @@ CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileOpenFileEx.cpp.o.provid
 
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileReadFile.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileReadFile.cpp.o: ../3rdParty/StormLib/src/SFileReadFile.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_90) "Building CXX object CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileReadFile.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_89) "Building CXX object CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileReadFile.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileReadFile.cpp.o -c /home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SFileReadFile.cpp
 
 CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileReadFile.cpp.i: cmake_force
@@ -2219,7 +2195,7 @@ CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SFileReadFile.cpp.o.provides
 
 CMakeFiles/devil-sanitize.dir/Stub/main_test.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Stub/main_test.cpp.o: ../Stub/main_test.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_91) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/main_test.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_90) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/main_test.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Stub/main_test.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/main_test.cpp
 
 CMakeFiles/devil-sanitize.dir/Stub/main_test.cpp.i: cmake_force
@@ -2243,7 +2219,7 @@ CMakeFiles/devil-sanitize.dir/Stub/main_test.cpp.o.provides.build: CMakeFiles/de
 
 CMakeFiles/devil-sanitize.dir/Stub/test_utils.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Stub/test_utils.cpp.o: ../Stub/test_utils.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_92) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/test_utils.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_91) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/test_utils.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Stub/test_utils.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/test_utils.cpp
 
 CMakeFiles/devil-sanitize.dir/Stub/test_utils.cpp.i: cmake_force
@@ -2267,7 +2243,7 @@ CMakeFiles/devil-sanitize.dir/Stub/test_utils.cpp.o.provides.build: CMakeFiles/d
 
 CMakeFiles/devil-sanitize.dir/Stub/sanitize.cpp.o: CMakeFiles/devil-sanitize.dir/flags.make
 CMakeFiles/devil-sanitize.dir/Stub/sanitize.cpp.o: ../Stub/sanitize.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_93) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/sanitize.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_92) "Building CXX object CMakeFiles/devil-sanitize.dir/Stub/sanitize.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devil-sanitize.dir/Stub/sanitize.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/sanitize.cpp
 
 CMakeFiles/devil-sanitize.dir/Stub/sanitize.cpp.i: cmake_force
@@ -2305,7 +2281,6 @@ devil__sanitize_OBJECTS = \
 "CMakeFiles/devil-sanitize.dir/Source/encrypt.cpp.o" \
 "CMakeFiles/devil-sanitize.dir/Source/engine.cpp.o" \
 "CMakeFiles/devil-sanitize.dir/Source/error.cpp.o" \
-"CMakeFiles/devil-sanitize.dir/Source/gamemenu.cpp.o" \
 "CMakeFiles/devil-sanitize.dir/Source/gendung.cpp.o" \
 "CMakeFiles/devil-sanitize.dir/Source/gmenu.cpp.o" \
 "CMakeFiles/devil-sanitize.dir/Source/help.cpp.o" \
@@ -2368,8 +2343,8 @@ devil__sanitize_OBJECTS = \
 "CMakeFiles/devil-sanitize.dir/Stub/validate.cpp.o" \
 "CMakeFiles/devil-sanitize.dir/Stub/effects.cpp.o" \
 "CMakeFiles/devil-sanitize.dir/Stub/sdlrender.cpp.o" \
-"CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.o" \
 "CMakeFiles/devil-sanitize.dir/Stub/diablo.cpp.o" \
+"CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.o" \
 "CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/FileStream.cpp.o" \
 "CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseCommon.cpp.o" \
 "CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.o" \
@@ -2402,7 +2377,6 @@ devil-sanitize: CMakeFiles/devil-sanitize.dir/Source/drlg_l4.cpp.o
 devil-sanitize: CMakeFiles/devil-sanitize.dir/Source/encrypt.cpp.o
 devil-sanitize: CMakeFiles/devil-sanitize.dir/Source/engine.cpp.o
 devil-sanitize: CMakeFiles/devil-sanitize.dir/Source/error.cpp.o
-devil-sanitize: CMakeFiles/devil-sanitize.dir/Source/gamemenu.cpp.o
 devil-sanitize: CMakeFiles/devil-sanitize.dir/Source/gendung.cpp.o
 devil-sanitize: CMakeFiles/devil-sanitize.dir/Source/gmenu.cpp.o
 devil-sanitize: CMakeFiles/devil-sanitize.dir/Source/help.cpp.o
@@ -2465,8 +2439,8 @@ devil-sanitize: CMakeFiles/devil-sanitize.dir/Stub/storm_net.cpp.o
 devil-sanitize: CMakeFiles/devil-sanitize.dir/Stub/validate.cpp.o
 devil-sanitize: CMakeFiles/devil-sanitize.dir/Stub/effects.cpp.o
 devil-sanitize: CMakeFiles/devil-sanitize.dir/Stub/sdlrender.cpp.o
-devil-sanitize: CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.o
 devil-sanitize: CMakeFiles/devil-sanitize.dir/Stub/diablo.cpp.o
+devil-sanitize: CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.o
 devil-sanitize: CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/FileStream.cpp.o
 devil-sanitize: CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseCommon.cpp.o
 devil-sanitize: CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.o
@@ -2485,7 +2459,7 @@ devil-sanitize: CMakeFiles/devil-sanitize.dir/build.make
 devil-sanitize: libxxhash.a
 devil-sanitize: libsanitize_coverage.a
 devil-sanitize: CMakeFiles/devil-sanitize.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_94) "Linking CXX executable devil-sanitize"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_93) "Linking CXX executable devil-sanitize"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/devil-sanitize.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -2507,7 +2481,6 @@ CMakeFiles/devil-sanitize.dir/requires: CMakeFiles/devil-sanitize.dir/Source/drl
 CMakeFiles/devil-sanitize.dir/requires: CMakeFiles/devil-sanitize.dir/Source/encrypt.cpp.o.requires
 CMakeFiles/devil-sanitize.dir/requires: CMakeFiles/devil-sanitize.dir/Source/engine.cpp.o.requires
 CMakeFiles/devil-sanitize.dir/requires: CMakeFiles/devil-sanitize.dir/Source/error.cpp.o.requires
-CMakeFiles/devil-sanitize.dir/requires: CMakeFiles/devil-sanitize.dir/Source/gamemenu.cpp.o.requires
 CMakeFiles/devil-sanitize.dir/requires: CMakeFiles/devil-sanitize.dir/Source/gendung.cpp.o.requires
 CMakeFiles/devil-sanitize.dir/requires: CMakeFiles/devil-sanitize.dir/Source/gmenu.cpp.o.requires
 CMakeFiles/devil-sanitize.dir/requires: CMakeFiles/devil-sanitize.dir/Source/help.cpp.o.requires
@@ -2570,8 +2543,8 @@ CMakeFiles/devil-sanitize.dir/requires: CMakeFiles/devil-sanitize.dir/Stub/storm
 CMakeFiles/devil-sanitize.dir/requires: CMakeFiles/devil-sanitize.dir/Stub/validate.cpp.o.requires
 CMakeFiles/devil-sanitize.dir/requires: CMakeFiles/devil-sanitize.dir/Stub/effects.cpp.o.requires
 CMakeFiles/devil-sanitize.dir/requires: CMakeFiles/devil-sanitize.dir/Stub/sdlrender.cpp.o.requires
-CMakeFiles/devil-sanitize.dir/requires: CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.o.requires
 CMakeFiles/devil-sanitize.dir/requires: CMakeFiles/devil-sanitize.dir/Stub/diablo.cpp.o.requires
+CMakeFiles/devil-sanitize.dir/requires: CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.o.requires
 CMakeFiles/devil-sanitize.dir/requires: CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/FileStream.cpp.o.requires
 CMakeFiles/devil-sanitize.dir/requires: CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseCommon.cpp.o.requires
 CMakeFiles/devil-sanitize.dir/requires: CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.o.requires

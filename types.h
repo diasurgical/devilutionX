@@ -9,6 +9,7 @@
 
 #ifdef MINIWIN
 #include "miniwin.h"
+
 #else
 #define WIN32_LEAN_AND_MEAN
 

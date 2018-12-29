@@ -4,9 +4,9 @@
 #include <vector>
 
 #include <SDL2/SDL.h>
-#include <SDL_image.h>
+//#include <SDL_image.h>
 #include <SDL_mixer.h>
-#include "SDL_FontCache.h"
+//#include "SDL_FontCache.h"
 
 
 #define SDL_CHECK(e) assert(e == 0)
@@ -47,7 +47,7 @@ extern int totalFrames;
 //extern SDL_Texture* spriteSheet;
 extern SDL_Surface* DiabloTitle;
 extern SDL_Event input;
-extern FC_Font* font;
+
 extern int SCREEN_WIDTH;
 extern int SCREEN_HEIGHT;
 extern int TotalPlayers;
@@ -106,7 +106,14 @@ extern int gdwFont3Height;
 extern void *pPcxFont3Image;
 extern unsigned char *pFont3;
 
+extern char HeroUndecidedName[17];
+extern bool StartNewGame;
+extern bool CreateSinglePlayerChar;
+extern int HeroChosen;
 
+extern void * TitleMenuText; 
+
+extern void * MenuPentegram;
 
 //Menu2 // Single player menu rects
 //extern static std::vector<_uiheroinfo> hero_infos;
@@ -126,8 +133,14 @@ void SDL_Diablo_UI();
 void FreeMenuItems();
 void DrawMouse();
 void DrawCursor(int mx, int my);
-
-
+void CreateHeroMenu();
+void DrawNewHeroKartinka(int image , int ShowClasses);
+void ConstantButtons();
+void RenderUndecidedHeroName();
+void LoadHeroStats();
+void RenderDefaultStats(int HeroChosen);
+void DrawPreGameOptions(int image , int ShowClasses);
+void DrawPreGameDifficultySelection(int image, int ShowClasses);
 
 
 typedef unsigned char BYTE;

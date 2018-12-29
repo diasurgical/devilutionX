@@ -126,10 +126,18 @@ BOOL STORMAPI SFileOpenFile(const char *filename, HANDLE *phFile)
 {
 	BOOL result;
 	//eprintf("%s: %s\n", __FUNCTION__, filename);
+	
+
+
 
 	result = SFileOpenFileEx((HANDLE)patch_rt_mpq, filename, 0, phFile);
 	if (!result) {
 		result = SFileOpenFileEx((HANDLE)diabdat_mpq, filename, 0, phFile);
+		if(!result){
+			
+			result = SFileOpenFileEx((HANDLE)prealpha_mpq, filename, 0, phFile);
+		}
+		
 	}
 
 	if (!result || !*phFile) {

@@ -999,36 +999,6 @@ Source/error.cpp.s:
 	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/error.cpp.s
 .PHONY : Source/error.cpp.s
 
-Source/gamemenu.o: Source/gamemenu.cpp.o
-
-.PHONY : Source/gamemenu.o
-
-# target to build an object file
-Source/gamemenu.cpp.o:
-	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/gamemenu.cpp.o
-	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/gamemenu.cpp.o
-.PHONY : Source/gamemenu.cpp.o
-
-Source/gamemenu.i: Source/gamemenu.cpp.i
-
-.PHONY : Source/gamemenu.i
-
-# target to preprocess a source file
-Source/gamemenu.cpp.i:
-	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/gamemenu.cpp.i
-	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/gamemenu.cpp.i
-.PHONY : Source/gamemenu.cpp.i
-
-Source/gamemenu.s: Source/gamemenu.cpp.s
-
-.PHONY : Source/gamemenu.s
-
-# target to generate assembly for a file
-Source/gamemenu.cpp.s:
-	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Source/gamemenu.cpp.s
-	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/gamemenu.cpp.s
-.PHONY : Source/gamemenu.cpp.s
-
 Source/gendung.o: Source/gendung.cpp.o
 
 .PHONY : Source/gendung.o
@@ -2229,36 +2199,6 @@ Source/wave.cpp.s:
 	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/wave.cpp.s
 .PHONY : Source/wave.cpp.s
 
-Stub/SDL_FontCache.o: Stub/SDL_FontCache.cpp.o
-
-.PHONY : Stub/SDL_FontCache.o
-
-# target to build an object file
-Stub/SDL_FontCache.cpp.o:
-	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o
-	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.o
-.PHONY : Stub/SDL_FontCache.cpp.o
-
-Stub/SDL_FontCache.i: Stub/SDL_FontCache.cpp.i
-
-.PHONY : Stub/SDL_FontCache.i
-
-# target to preprocess a source file
-Stub/SDL_FontCache.cpp.i:
-	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.i
-	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.i
-.PHONY : Stub/SDL_FontCache.cpp.i
-
-Stub/SDL_FontCache.s: Stub/SDL_FontCache.cpp.s
-
-.PHONY : Stub/SDL_FontCache.s
-
-# target to generate assembly for a file
-Stub/SDL_FontCache.cpp.s:
-	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.s
-	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.s
-.PHONY : Stub/SDL_FontCache.cpp.s
-
 Stub/appfat.o: Stub/appfat.cpp.o
 
 .PHONY : Stub/appfat.o
@@ -2498,6 +2438,36 @@ Stub/fault.cpp.s:
 	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/fault.cpp.s
 	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/fault.cpp.s
 .PHONY : Stub/fault.cpp.s
+
+Stub/gamemenu.o: Stub/gamemenu.cpp.o
+
+.PHONY : Stub/gamemenu.o
+
+# target to build an object file
+Stub/gamemenu.cpp.o:
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/gamemenu.cpp.o
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.o
+.PHONY : Stub/gamemenu.cpp.o
+
+Stub/gamemenu.i: Stub/gamemenu.cpp.i
+
+.PHONY : Stub/gamemenu.i
+
+# target to preprocess a source file
+Stub/gamemenu.cpp.i:
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/gamemenu.cpp.i
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.i
+.PHONY : Stub/gamemenu.cpp.i
+
+Stub/gamemenu.s: Stub/gamemenu.cpp.s
+
+.PHONY : Stub/gamemenu.s
+
+# target to generate assembly for a file
+Stub/gamemenu.cpp.s:
+	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/gamemenu.cpp.s
+	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.s
+.PHONY : Stub/gamemenu.cpp.s
 
 Stub/init.o: Stub/init.cpp.o
 
@@ -3120,9 +3090,6 @@ help:
 	@echo "... Source/error.o"
 	@echo "... Source/error.i"
 	@echo "... Source/error.s"
-	@echo "... Source/gamemenu.o"
-	@echo "... Source/gamemenu.i"
-	@echo "... Source/gamemenu.s"
 	@echo "... Source/gendung.o"
 	@echo "... Source/gendung.i"
 	@echo "... Source/gendung.s"
@@ -3243,9 +3210,6 @@ help:
 	@echo "... Source/wave.o"
 	@echo "... Source/wave.i"
 	@echo "... Source/wave.s"
-	@echo "... Stub/SDL_FontCache.o"
-	@echo "... Stub/SDL_FontCache.i"
-	@echo "... Stub/SDL_FontCache.s"
 	@echo "... Stub/appfat.o"
 	@echo "... Stub/appfat.i"
 	@echo "... Stub/appfat.s"
@@ -3270,6 +3234,9 @@ help:
 	@echo "... Stub/fault.o"
 	@echo "... Stub/fault.i"
 	@echo "... Stub/fault.s"
+	@echo "... Stub/gamemenu.o"
+	@echo "... Stub/gamemenu.i"
+	@echo "... Stub/gamemenu.s"
 	@echo "... Stub/init.o"
 	@echo "... Stub/init.i"
 	@echo "... Stub/init.s"

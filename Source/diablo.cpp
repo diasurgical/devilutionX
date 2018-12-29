@@ -239,7 +239,6 @@ void __fastcall start_game(int uMsg)
 {
 	cineflag = 0;
 	zoomflag = 1;
-	InitCursor();
 	InitLightTable();
 	LoadDebugGFX();
 	music_stop();

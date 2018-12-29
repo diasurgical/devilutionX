@@ -22,6 +22,14 @@ In order to ensure that everything is preserved, Devilution keeps everything as 
 
 As a side goal Devilution tries to document the unused and cut content from the final game. Development of Diablo was rushed near the end--many ideas were scrapped and multiplayer was quickly hacked in. By examining the source, we can see various quirks of planned development.
 
+
+# How To Play:
+ - Install Diablo
+ - copy diabdat.mpq to Diablo game directory ; Make sure it is all lowercase.
+ - [Download This Pre-Alpha MPQ ](https://github.com/diasurgical/devilutionX/blob/master/prealpha.mpq)
+ - [Download Devilution](https://github.com/diasurgical/devilutionX/blob/master/build/devilution)
+
+
 # Compiling
 Diablo was developed on Windows 95 using Visual C++ 4.20 and later 5.10 and 6 for newer patches. Devilution is optimized for the same tools originally used but is also compatible with modern setups.
 
@@ -49,8 +57,6 @@ Make sure to enable these when installing (or modify your installation):
 Install the following libs on your machine.
 -  apt-get install g++-multilib libc6-dev-i386
 -  apt-get install libsdl2-dev:i386
--  apt-get install libsdl2-ttf-dev:i386
--  apt-get install libsdl2-image-dev:i386
 -  apt-get install libsdl2-mixer-dev:i386
 -  apt-get install cmake
 
@@ -61,11 +67,11 @@ For me it was located in...
 The last line will have something like...
  set(SDL2_LIBRARIES "-L${SDL2_LIBDIR}  -lSDL2
 Change it to ...
-set(SDL2_LIBRARIES "-L${SDL2_LIBDIR}  -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf ")
+set(SDL2_LIBRARIES "-L${SDL2_LIBDIR}  -lSDL2  -lSDL2_mixer ")
 
 
 Copy the "diablodat.mpq" from your Diablo CD to the Diablo Directory and make sure it is LOWERCASE.
-Copy the Xresources and fonts file to your Diablo Directory. 
+COPY THE *prealpha.mpq* from this directory TO YOUR DIABLO DIRECTORY. 
 
 
 Keep in mind please that this is still being worked on and is missing parts of UI and SoundEffects are not properly playing now.

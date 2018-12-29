@@ -52,7 +52,7 @@ set(SOURCES
     Source/encrypt.cpp
     Source/engine.cpp
     Source/error.cpp
-    Source/gamemenu.cpp
+#   Source/gamemenu.cpp
     Source/gendung.cpp
     Source/gmenu.cpp
     Source/help.cpp
@@ -136,8 +136,8 @@ set(STUB_SOURCES
     Stub/validate.cpp
     Stub/effects.cpp
     Stub/sdlrender.cpp
-    Stub/SDL_FontCache.cpp
     Stub/diablo.cpp
+    Stub/gamemenu.cpp
 
     3rdParty/StormLib/src/FileStream.cpp
     3rdParty/StormLib/src/SBaseCommon.cpp

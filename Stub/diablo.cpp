@@ -122,7 +122,7 @@ void __cdecl FreeGameMem()
 
 int __fastcall diablo_init_menu(int a1, int bSinglePlayer)
 {
-	DUMMY();// This is probably used. 
+	DUMMY();
 	int v2; // esi
 	int v3; // edi
 	int v4; // ecx
@@ -131,6 +131,7 @@ int __fastcall diablo_init_menu(int a1, int bSinglePlayer)
 	v2 = bSinglePlayer;
 	v3 = a1;
 	byte_678640 = 1;
+
 	while ( 1 )
 	{
 		pfExitProgram = 0;
@@ -138,9 +139,7 @@ int __fastcall diablo_init_menu(int a1, int bSinglePlayer)
 		if ( !NetInit(v2, &pfExitProgram) )
 			break;
 		byte_678640 = 0;
-		if ( (v3 || !gbValidSaveFile)
-		  && (InitLevels(), InitQuests(), InitPortals(), InitDungMsgs(myplr), !gbValidSaveFile)
-		  || (v4 = WM_DIABLOADGAME, !dword_5256E8) )
+		if ( (v3 || !gbValidSaveFile) && (InitLevels(), InitQuests(), InitPortals(), InitDungMsgs(myplr), !gbValidSaveFile) || (v4 = WM_DIABLOADGAME, !dword_5256E8) )
 		{
 			v4 = WM_DIABNEWGAME;
 		}
@@ -168,6 +167,8 @@ void __fastcall run_game_loop(int uMsg)
 	signed int v7; // [esp+8h] [ebp-24h]
 	WNDPROC saveProc; // [esp+Ch] [ebp-20h]
 	struct tagMSG msg; // [esp+10h] [ebp-1Ch]
+
+
 
 	nthread_ignore_mutex(1);
 	start_game(uMsg);

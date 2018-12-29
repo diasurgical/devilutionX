@@ -1,9 +1,8 @@
 #pragma once
 
 #include <SDL2/SDL.h>
-#include <SDL_image.h>
+//#include <SDL_image.h>
 #include <SDL_mixer.h>
-#include "SDL_FontCache.h"
 #include "miniwin_sdl.h"
 
 
