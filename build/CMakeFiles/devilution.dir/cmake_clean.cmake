@@ -75,7 +75,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/devilution.dir/Stub/validate.cpp.o"
   "CMakeFiles/devilution.dir/Stub/effects.cpp.o"
   "CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o"
-  "CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o"
   "CMakeFiles/devilution.dir/Stub/diablo.cpp.o"
   "CMakeFiles/devilution.dir/Stub/gamemenu.cpp.o"
   "CMakeFiles/devilution.dir/3rdParty/StormLib/src/FileStream.cpp.o"

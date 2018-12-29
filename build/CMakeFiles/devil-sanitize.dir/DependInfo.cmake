@@ -71,7 +71,6 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/krash/CLionProjects/devilutionX/Source/track.cpp" "/home/krash/CLionProjects/devilutionX/build/CMakeFiles/devil-sanitize.dir/Source/track.cpp.o"
   "/home/krash/CLionProjects/devilutionX/Source/trigs.cpp" "/home/krash/CLionProjects/devilutionX/build/CMakeFiles/devil-sanitize.dir/Source/trigs.cpp.o"
   "/home/krash/CLionProjects/devilutionX/Source/wave.cpp" "/home/krash/CLionProjects/devilutionX/build/CMakeFiles/devil-sanitize.dir/Source/wave.cpp.o"
-  "/home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.cpp" "/home/krash/CLionProjects/devilutionX/build/CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.o"
   "/home/krash/CLionProjects/devilutionX/Stub/appfat.cpp" "/home/krash/CLionProjects/devilutionX/build/CMakeFiles/devil-sanitize.dir/Stub/appfat.cpp.o"
   "/home/krash/CLionProjects/devilutionX/Stub/capture.cpp" "/home/krash/CLionProjects/devilutionX/build/CMakeFiles/devil-sanitize.dir/Stub/capture.cpp.o"
   "/home/krash/CLionProjects/devilutionX/Stub/diablo.cpp" "/home/krash/CLionProjects/devilutionX/build/CMakeFiles/devil-sanitize.dir/Stub/diablo.cpp.o"

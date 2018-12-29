@@ -1881,33 +1881,9 @@ CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o.provides: CMakeFiles/devilution.d
 CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o.provides.build: CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o
 
 
-CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o: CMakeFiles/devilution.dir/flags.make
-CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o: ../Stub/SDL_FontCache.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_77) "Building CXX object CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.cpp
-
-CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.cpp > CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.i
-
-CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/krash/CLionProjects/devilutionX/Stub/SDL_FontCache.cpp -o CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.s
-
-CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o.requires:
-
-.PHONY : CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o.requires
-
-CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o.provides: CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o.requires
-	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o.provides.build
-.PHONY : CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o.provides
-
-CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o.provides.build: CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o
-
-
 CMakeFiles/devilution.dir/Stub/diablo.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Stub/diablo.cpp.o: ../Stub/diablo.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_78) "Building CXX object CMakeFiles/devilution.dir/Stub/diablo.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_77) "Building CXX object CMakeFiles/devilution.dir/Stub/diablo.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Stub/diablo.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/diablo.cpp
 
 CMakeFiles/devilution.dir/Stub/diablo.cpp.i: cmake_force
@@ -1931,7 +1907,7 @@ CMakeFiles/devilution.dir/Stub/diablo.cpp.o.provides.build: CMakeFiles/devilutio
 
 CMakeFiles/devilution.dir/Stub/gamemenu.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Stub/gamemenu.cpp.o: ../Stub/gamemenu.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_79) "Building CXX object CMakeFiles/devilution.dir/Stub/gamemenu.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_78) "Building CXX object CMakeFiles/devilution.dir/Stub/gamemenu.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Stub/gamemenu.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/gamemenu.cpp
 
 CMakeFiles/devilution.dir/Stub/gamemenu.cpp.i: cmake_force
@@ -1955,7 +1931,7 @@ CMakeFiles/devilution.dir/Stub/gamemenu.cpp.o.provides.build: CMakeFiles/devilut
 
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/FileStream.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/FileStream.cpp.o: ../3rdParty/StormLib/src/FileStream.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_80) "Building CXX object CMakeFiles/devilution.dir/3rdParty/StormLib/src/FileStream.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_79) "Building CXX object CMakeFiles/devilution.dir/3rdParty/StormLib/src/FileStream.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/3rdParty/StormLib/src/FileStream.cpp.o -c /home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/FileStream.cpp
 
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/FileStream.cpp.i: cmake_force
@@ -1979,7 +1955,7 @@ CMakeFiles/devilution.dir/3rdParty/StormLib/src/FileStream.cpp.o.provides.build:
 
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseCommon.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseCommon.cpp.o: ../3rdParty/StormLib/src/SBaseCommon.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_81) "Building CXX object CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseCommon.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_80) "Building CXX object CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseCommon.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseCommon.cpp.o -c /home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SBaseCommon.cpp
 
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseCommon.cpp.i: cmake_force
@@ -2003,7 +1979,7 @@ CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseCommon.cpp.o.provides.build
 
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.o: ../3rdParty/StormLib/src/SBaseFileTable.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_82) "Building CXX object CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_81) "Building CXX object CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.o -c /home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SBaseFileTable.cpp
 
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.i: cmake_force
@@ -2027,7 +2003,7 @@ CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseFileTable.cpp.o.provides.bu
 
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseSubTypes.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseSubTypes.cpp.o: ../3rdParty/StormLib/src/SBaseSubTypes.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_83) "Building CXX object CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseSubTypes.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_82) "Building CXX object CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseSubTypes.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseSubTypes.cpp.o -c /home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SBaseSubTypes.cpp
 
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseSubTypes.cpp.i: cmake_force
@@ -2051,7 +2027,7 @@ CMakeFiles/devilution.dir/3rdParty/StormLib/src/SBaseSubTypes.cpp.o.provides.bui
 
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SCompression.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SCompression.cpp.o: ../3rdParty/StormLib/src/SCompression.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_84) "Building CXX object CMakeFiles/devilution.dir/3rdParty/StormLib/src/SCompression.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_83) "Building CXX object CMakeFiles/devilution.dir/3rdParty/StormLib/src/SCompression.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/3rdParty/StormLib/src/SCompression.cpp.o -c /home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SCompression.cpp
 
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SCompression.cpp.i: cmake_force
@@ -2075,7 +2051,7 @@ CMakeFiles/devilution.dir/3rdParty/StormLib/src/SCompression.cpp.o.provides.buil
 
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileExtractFile.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileExtractFile.cpp.o: ../3rdParty/StormLib/src/SFileExtractFile.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_85) "Building CXX object CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileExtractFile.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_84) "Building CXX object CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileExtractFile.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileExtractFile.cpp.o -c /home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SFileExtractFile.cpp
 
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileExtractFile.cpp.i: cmake_force
@@ -2099,7 +2075,7 @@ CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileExtractFile.cpp.o.provides.
 
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileFindFile.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileFindFile.cpp.o: ../3rdParty/StormLib/src/SFileFindFile.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_86) "Building CXX object CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileFindFile.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_85) "Building CXX object CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileFindFile.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileFindFile.cpp.o -c /home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SFileFindFile.cpp
 
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileFindFile.cpp.i: cmake_force
@@ -2123,7 +2099,7 @@ CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileFindFile.cpp.o.provides.bui
 
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileGetFileInfo.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileGetFileInfo.cpp.o: ../3rdParty/StormLib/src/SFileGetFileInfo.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_87) "Building CXX object CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileGetFileInfo.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_86) "Building CXX object CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileGetFileInfo.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileGetFileInfo.cpp.o -c /home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SFileGetFileInfo.cpp
 
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileGetFileInfo.cpp.i: cmake_force
@@ -2147,7 +2123,7 @@ CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileGetFileInfo.cpp.o.provides.
 
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileOpenArchive.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileOpenArchive.cpp.o: ../3rdParty/StormLib/src/SFileOpenArchive.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_88) "Building CXX object CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileOpenArchive.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_87) "Building CXX object CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileOpenArchive.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileOpenArchive.cpp.o -c /home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SFileOpenArchive.cpp
 
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileOpenArchive.cpp.i: cmake_force
@@ -2171,7 +2147,7 @@ CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileOpenArchive.cpp.o.provides.
 
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileOpenFileEx.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileOpenFileEx.cpp.o: ../3rdParty/StormLib/src/SFileOpenFileEx.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_89) "Building CXX object CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileOpenFileEx.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_88) "Building CXX object CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileOpenFileEx.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileOpenFileEx.cpp.o -c /home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SFileOpenFileEx.cpp
 
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileOpenFileEx.cpp.i: cmake_force
@@ -2195,7 +2171,7 @@ CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileOpenFileEx.cpp.o.provides.b
 
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileReadFile.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileReadFile.cpp.o: ../3rdParty/StormLib/src/SFileReadFile.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_90) "Building CXX object CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileReadFile.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_89) "Building CXX object CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileReadFile.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileReadFile.cpp.o -c /home/krash/CLionProjects/devilutionX/3rdParty/StormLib/src/SFileReadFile.cpp
 
 CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileReadFile.cpp.i: cmake_force
@@ -2219,7 +2195,7 @@ CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileReadFile.cpp.o.provides.bui
 
 CMakeFiles/devilution.dir/Stub/main.cpp.o: CMakeFiles/devilution.dir/flags.make
 CMakeFiles/devilution.dir/Stub/main.cpp.o: ../Stub/main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_91) "Building CXX object CMakeFiles/devilution.dir/Stub/main.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_90) "Building CXX object CMakeFiles/devilution.dir/Stub/main.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/devilution.dir/Stub/main.cpp.o -c /home/krash/CLionProjects/devilutionX/Stub/main.cpp
 
 CMakeFiles/devilution.dir/Stub/main.cpp.i: cmake_force
@@ -2319,7 +2295,6 @@ devilution_OBJECTS = \
 "CMakeFiles/devilution.dir/Stub/validate.cpp.o" \
 "CMakeFiles/devilution.dir/Stub/effects.cpp.o" \
 "CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o" \
-"CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o" \
 "CMakeFiles/devilution.dir/Stub/diablo.cpp.o" \
 "CMakeFiles/devilution.dir/Stub/gamemenu.cpp.o" \
 "CMakeFiles/devilution.dir/3rdParty/StormLib/src/FileStream.cpp.o" \
@@ -2414,7 +2389,6 @@ devilution: CMakeFiles/devilution.dir/Stub/storm_net.cpp.o
 devilution: CMakeFiles/devilution.dir/Stub/validate.cpp.o
 devilution: CMakeFiles/devilution.dir/Stub/effects.cpp.o
 devilution: CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o
-devilution: CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o
 devilution: CMakeFiles/devilution.dir/Stub/diablo.cpp.o
 devilution: CMakeFiles/devilution.dir/Stub/gamemenu.cpp.o
 devilution: CMakeFiles/devilution.dir/3rdParty/StormLib/src/FileStream.cpp.o
@@ -2431,7 +2405,7 @@ devilution: CMakeFiles/devilution.dir/3rdParty/StormLib/src/SFileReadFile.cpp.o
 devilution: CMakeFiles/devilution.dir/Stub/main.cpp.o
 devilution: CMakeFiles/devilution.dir/build.make
 devilution: CMakeFiles/devilution.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_92) "Linking CXX executable devilution"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/krash/CLionProjects/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_91) "Linking CXX executable devilution"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/devilution.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -2515,7 +2489,6 @@ CMakeFiles/devilution.dir/requires: CMakeFiles/devilution.dir/Stub/storm_net.cpp
 CMakeFiles/devilution.dir/requires: CMakeFiles/devilution.dir/Stub/validate.cpp.o.requires
 CMakeFiles/devilution.dir/requires: CMakeFiles/devilution.dir/Stub/effects.cpp.o.requires
 CMakeFiles/devilution.dir/requires: CMakeFiles/devilution.dir/Stub/sdlrender.cpp.o.requires
-CMakeFiles/devilution.dir/requires: CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o.requires
 CMakeFiles/devilution.dir/requires: CMakeFiles/devilution.dir/Stub/diablo.cpp.o.requires
 CMakeFiles/devilution.dir/requires: CMakeFiles/devilution.dir/Stub/gamemenu.cpp.o.requires
 CMakeFiles/devilution.dir/requires: CMakeFiles/devilution.dir/3rdParty/StormLib/src/FileStream.cpp.o.requires

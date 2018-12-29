@@ -136,7 +136,6 @@ set(STUB_SOURCES
     Stub/validate.cpp
     Stub/effects.cpp
     Stub/sdlrender.cpp
-    Stub/SDL_FontCache.cpp
     Stub/diablo.cpp
     Stub/gamemenu.cpp
 

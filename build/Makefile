@@ -2199,36 +2199,6 @@ Source/wave.cpp.s:
 	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Source/wave.cpp.s
 .PHONY : Source/wave.cpp.s
 
-Stub/SDL_FontCache.o: Stub/SDL_FontCache.cpp.o
-
-.PHONY : Stub/SDL_FontCache.o
-
-# target to build an object file
-Stub/SDL_FontCache.cpp.o:
-	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.o
-	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.o
-.PHONY : Stub/SDL_FontCache.cpp.o
-
-Stub/SDL_FontCache.i: Stub/SDL_FontCache.cpp.i
-
-.PHONY : Stub/SDL_FontCache.i
-
-# target to preprocess a source file
-Stub/SDL_FontCache.cpp.i:
-	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.i
-	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.i
-.PHONY : Stub/SDL_FontCache.cpp.i
-
-Stub/SDL_FontCache.s: Stub/SDL_FontCache.cpp.s
-
-.PHONY : Stub/SDL_FontCache.s
-
-# target to generate assembly for a file
-Stub/SDL_FontCache.cpp.s:
-	$(MAKE) -f CMakeFiles/devilution.dir/build.make CMakeFiles/devilution.dir/Stub/SDL_FontCache.cpp.s
-	$(MAKE) -f CMakeFiles/devil-sanitize.dir/build.make CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.s
-.PHONY : Stub/SDL_FontCache.cpp.s
-
 Stub/appfat.o: Stub/appfat.cpp.o
 
 .PHONY : Stub/appfat.o
@@ -3240,9 +3210,6 @@ help:
 	@echo "... Source/wave.o"
 	@echo "... Source/wave.i"
 	@echo "... Source/wave.s"
-	@echo "... Stub/SDL_FontCache.o"
-	@echo "... Stub/SDL_FontCache.i"
-	@echo "... Stub/SDL_FontCache.s"
 	@echo "... Stub/appfat.o"
 	@echo "... Stub/appfat.i"
 	@echo "... Stub/appfat.s"

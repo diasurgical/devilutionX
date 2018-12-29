@@ -574,6 +574,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 						if ((x > NewGameBox.x) && (y > NewGameBox.y) && (x < NewGameBox.w) && (y < NewGameBox.h)) {
 
 							printf(" New Game I was hit\n\n\n");
+				
 							menu = 6;
 
 						}

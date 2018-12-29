@@ -2,7 +2,6 @@
 #include "miniwin_sdl.h"
 #include "stubs.h"
 
-#include "SDL_FontCache.h"
 #include <SDL2/SDL.h>
 //#include <SDL_image.h>
 #include <SDL_mixer.h>
@@ -47,8 +46,6 @@ struct timespec ts;
 // things I need to unload...
 
 int FontLoaded = 0;
-
-FC_Font *Subfont = FC_CreateFont();
 
 SDL_Texture *CreditsTexture;
 SDL_Texture *MainMenuItemsTexture;

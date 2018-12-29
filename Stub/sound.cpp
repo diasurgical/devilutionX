@@ -101,7 +101,7 @@ void __fastcall music_start(int nTrack)
 		// This is a hack.... I don't like it .
 		// If you know this better than I , please help clean it up.
 
-		Mix_OpenAudio(44100, AUDIO_S16LSB, 1, 1024);
+		Mix_OpenAudio(44100, AUDIO_S16LSB, 2, 1024);
 		file = sgpMusicTrack;
 		bytestoread = (int)SFileGetFileSize((HANDLE)file, 0);
 		buffer = DiabloAllocPtr(bytestoread);
@@ -131,7 +131,6 @@ void LoadAndPlaySound(char *FilePath, int lVolume, int lPan)
 	SFileReadFile(file, (char *)SFXbuffer, bytestoread, (unsigned long *)&nrread, 0);
 
 	SDL_RWops *rw = SDL_RWFromMem(SFXbuffer, bytestoread);
-
 	Mix_Chunk *SoundFX = Mix_LoadWAV_RW(rw, 1);
 
 	Mix_PlayChannel(-1, SoundFX, 0);

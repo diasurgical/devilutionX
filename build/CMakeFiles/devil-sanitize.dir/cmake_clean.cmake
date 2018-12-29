@@ -75,7 +75,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/devil-sanitize.dir/Stub/validate.cpp.o"
   "CMakeFiles/devil-sanitize.dir/Stub/effects.cpp.o"
   "CMakeFiles/devil-sanitize.dir/Stub/sdlrender.cpp.o"
-  "CMakeFiles/devil-sanitize.dir/Stub/SDL_FontCache.cpp.o"
   "CMakeFiles/devil-sanitize.dir/Stub/diablo.cpp.o"
   "CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.o"
   "CMakeFiles/devil-sanitize.dir/3rdParty/StormLib/src/FileStream.cpp.o"

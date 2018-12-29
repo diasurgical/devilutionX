@@ -57,8 +57,6 @@ Make sure to enable these when installing (or modify your installation):
 Install the following libs on your machine.
 -  apt-get install g++-multilib libc6-dev-i386
 -  apt-get install libsdl2-dev:i386
--  apt-get install libsdl2-ttf-dev:i386
--  apt-get install libsdl2-image-dev:i386
 -  apt-get install libsdl2-mixer-dev:i386
 -  apt-get install cmake
 
@@ -69,7 +67,7 @@ For me it was located in...
 The last line will have something like...
  set(SDL2_LIBRARIES "-L${SDL2_LIBDIR}  -lSDL2
 Change it to ...
-set(SDL2_LIBRARIES "-L${SDL2_LIBDIR}  -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf ")
+set(SDL2_LIBRARIES "-L${SDL2_LIBDIR}  -lSDL2  -lSDL2_mixer ")
 
 
 Copy the "diablodat.mpq" from your Diablo CD to the Diablo Directory and make sure it is LOWERCASE.
