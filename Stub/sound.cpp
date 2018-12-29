@@ -1,6 +1,6 @@
 #include "../types.h"
 #include "stubs.h"
-#include <SDL_image.h>
+//#include <SDL_image.h>
 #include <SDL_mixer.h>
 #include <functional>
 #include <iostream>
@@ -18,6 +18,7 @@ UCHAR gbSoundOn;
 bool SoundInited;
 char gbSndInited;
 char gbDupSounds;
+unsigned char channels = 8; // defines how many channels, respectively how many *.wav files can be played at the same time
 UCHAR gbMusicOn;
 UCHAR gbSoundOn;
 Mix_Music *gMusic = NULL;
@@ -30,18 +31,27 @@ char *sgszMusicTracks[6] = {"Music\\DTowne.wav", "Music\\DLvlA.wav", "Music\\DLv
 void __fastcall snd_init(HWND hWnd)
 {
 	DUMMY();
-
-	printf("SND INIT\n\n");
+    /* for some reason function __fastcall snd_init seems to be used twice at this time*/
+	printf("\nSND INIT\n");
 	// Initialize SDL.
 	if (SDL_Init(SDL_INIT_AUDIO) < 0) {
-
 		printf("ERROR : %s\n\n", SDL_GetError());
 	}
-	if (Mix_AllocateChannels(2) == true) {
-		printf("Opened 3 channels\n\n\n");
-	}
+	
+    /* following function Mix_AllocateChannels allocates the number of channels of simultaneously played sounds.*/
+    printf("Opened %i sound channels\n\n", Mix_AllocateChannels(channels));
+    /* for example following possible channels:
+    1. music is playing
+    2. walking at the same time (walking sound)
+    3. reading a quest book at the same time
+    4. perform a magic spell at the same time
+    5. hitting an enemy at the same time
+    5. enemy is dieing
+    6. enemy is losing an object an so on
+    So it is possible that the channels value has to be modified to adjust an amount of simultaneously played sounds in the future.
+    At this time 8 channels seem to be sufficient */
 
-	if (Mix_OpenAudio(44100, AUDIO_S16LSB, 2, 1024) < 0) {
+	if (Mix_OpenAudio(44100 /*sampling frequency*/, AUDIO_S16LSB /*Signed 16-bit samples, in little-endian byte order*/, 2 /*2 for stereo sound*/, 1024 /*size of each mixed sample*/) < 0) {
 		printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
 	}
 
@@ -76,12 +86,12 @@ void fill_audio(void *udata, Uint8 *stream, int len)
 void __fastcall music_start(int nTrack)
 {
 	//DUMMY();
-	wanted.freq = 44100;
-	wanted.format = AUDIO_S16LSB;
-	wanted.channels = 2; /* 1 = mono, 2 = stereo */
-	wanted.samples = 1024; /* Good low-latency value for callback */
-	wanted.callback = fill_audio;
-	wanted.userdata = NULL;
+	//wanted.freq = 44100; //seems not to be used at this time
+	//wanted.format = AUDIO_S16LSB; //seems not to be used at this time
+	//wanted.channels = 2; /* 1 = mono, 2 = stereo */ //seems not to be used at this time
+	//wanted.samples = 1024; /* Good low-latency value for callback */ //seems not to be used at this time
+	//wanted.callback = fill_audio; //seems not to be used at this time
+	//wanted.userdata = NULL; //seems not to be used at this time
 
 	gbSoundOn = true;
 	gbMusicOn = true;
@@ -101,7 +111,7 @@ void __fastcall music_start(int nTrack)
 		// This is a hack.... I don't like it .
 		// If you know this better than I , please help clean it up.
 
-		Mix_OpenAudio(44100, AUDIO_S16LSB, 1, 1024);
+		//Mix_OpenAudio(44100, AUDIO_S16LSB, 1, 1024); //No need to Mix_OpenAudio. Already done in the function __fastcall snd_init
 		file = sgpMusicTrack;
 		bytestoread = (int)SFileGetFileSize((HANDLE)file, 0);
 		buffer = DiabloAllocPtr(bytestoread);
