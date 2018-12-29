@@ -155,6 +155,7 @@ void __cdecl music_stop()
 {
 	DUMMY();
 	Mix_HaltMusic();
+	Mix_HaltChannel(-1);
 }
 
 BOOL __fastcall snd_playing(TSnd *pSnd)
