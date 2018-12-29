@@ -41,7 +41,7 @@ void __fastcall snd_init(HWND hWnd)
 		printf("Opened 3 channels\n\n\n");
 	}
 
-	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+	if (Mix_OpenAudio(44100, AUDIO_S16LSB, 2, 1024) < 0) {
 		printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
 	}
 
@@ -76,9 +76,9 @@ void fill_audio(void *udata, Uint8 *stream, int len)
 void __fastcall music_start(int nTrack)
 {
 	//DUMMY();
-	wanted.freq = 22050;
-	wanted.format = AUDIO_S8;
-	wanted.channels = 5; /* 1 = mono, 2 = stereo */
+	wanted.freq = 44100;
+	wanted.format = AUDIO_S16LSB;
+	wanted.channels = 2; /* 1 = mono, 2 = stereo */
 	wanted.samples = 1024; /* Good low-latency value for callback */
 	wanted.callback = fill_audio;
 	wanted.userdata = NULL;
@@ -101,7 +101,7 @@ void __fastcall music_start(int nTrack)
 		// This is a hack.... I don't like it .
 		// If you know this better than I , please help clean it up.
 
-		Mix_OpenAudio(22050, AUDIO_S8, 1, 1024);
+		Mix_OpenAudio(44100, AUDIO_S16LSB, 1, 1024);
 		file = sgpMusicTrack;
 		bytestoread = (int)SFileGetFileSize((HANDLE)file, 0);
 		buffer = DiabloAllocPtr(bytestoread);
