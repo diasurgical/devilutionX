@@ -6,7 +6,7 @@
         {
             "label": "Build",
             "type": "shell",
-            "command": "cd /home/krash/CLionProjects/devilutionX/build; cmake .. ; make ;mv devilution /home/krash/Desktop/Diablo/ ",
+            "command": "cd /home/krash/CLionProjects/devilutionX/build; cmake .. ; make ;cp devilution /home/krash/Desktop/Diablo/ ",
             "group": {
                 "kind": "build",
                 "isDefault": true
