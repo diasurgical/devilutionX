@@ -85,6 +85,8 @@ ddraw.h
 -
 miniwin.h
 /home/krash/CLionProjects/devilutionx/3rdParty/Storm/Source/miniwin.h
+miniwin.h
+/home/krash/CLionProjects/devilutionx/3rdParty/Storm/Source/miniwin.h
 
 /home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/FileStream.cpp
 StormLib.h
@@ -811,10 +813,6 @@ miniwin_sdl.h
 /home/krash/CLionProjects/devilutionx/Stub/miniwin_sdl.h
 stubs.h
 /home/krash/CLionProjects/devilutionx/Stub/stubs.h
-SDL2/SDL.h
--
-SDL_mixer.h
--
 
 /home/krash/CLionProjects/devilutionx/Stub/sound.cpp
 ../types.h

@@ -594,7 +594,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 
 						
 
-						if ( cpu_time_used  > 1  &&  (x > NewGameBox.x) && (y > NewGameBox.y) && (x < NewGameBox.w) && (y < NewGameBox.h)) {
+						if ( cpu_time_used  > 0.5  &&  (x > NewGameBox.x) && (y > NewGameBox.y) && (x < NewGameBox.w) && (y < NewGameBox.h)) {
 
 							printf(" New Game I was hit\n\n\n");
 							menu = 6;
@@ -603,7 +603,7 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 							start = 0;
 
 						}
-						if (cpu_time_used  > 1  &&  (x > LoadGameBox.x) && (y > LoadGameBox.y) && (x < LoadGameBox.w) && (y < LoadGameBox.h)) {
+						if (cpu_time_used  > 0.5  &&  (x > LoadGameBox.x) && (y > LoadGameBox.y) && (x < LoadGameBox.w) && (y < LoadGameBox.h)) {
 
 							printf(" Load Game I was hit\n\n\n");
 							break;
@@ -676,13 +676,13 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 						CreateHeroCancelBox.w = CreateHeroCancelBox.x + 100;
 						CreateHeroCancelBox.h = CreateHeroCancelBox.y + 30;
 
-						if (cpu_time_used > 1 &&    (x > NormalSelectBox.x) && (y > NormalSelectBox.y) && (x < NormalSelectBox.w) &&
+						if (cpu_time_used > 0.5 &&    (x > NormalSelectBox.x) && (y > NormalSelectBox.y) && (x < NormalSelectBox.w) &&
 						    (y < NormalSelectBox.h)) {
 							StartNewGame = 1;
 							gnDifficulty = DIFF_NORMAL;
 							break;
 						}
-						if (cpu_time_used > 1 &&    (x > NightmareSelectBox.x) && (y > NightmareSelectBox.y) && (x < NightmareSelectBox.w) &&
+						if (cpu_time_used > 0.5 &&    (x > NightmareSelectBox.x) && (y > NightmareSelectBox.y) && (x < NightmareSelectBox.w) &&
 						    (y < NightmareSelectBox.h)) {
 							StartNewGame = 1;
 							gnDifficulty = DIFF_NIGHTMARE;

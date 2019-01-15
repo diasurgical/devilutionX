@@ -111,6 +111,32 @@ void __fastcall pfile_encode_hero(const PkPlayerStruct *pPack)
 
 BOOL __fastcall pfile_open_archive(BOOL a1, unsigned int save_num)
 {
+#ifdef ANDROID
+    char SaveDir[MAX_PATH] = "/sdcard/Diablo/"; // Full path to SAVDIR
+    char FileName[MAX_PATH];
+
+
+    pfile_get_save_path(FileName, sizeof(FileName), save_num);
+
+    strcat(SaveDir,FileName+2);
+    printf("FULL ITEM ? %s \n", SaveDir );
+    strcpy(FileName, SaveDir);
+    if ( mpqapi_open_archive(FileName, FALSE, save_num) )
+        return TRUE;
+
+    if ( a1 && gbMaxPlayers > 1 )
+        mpqapi_update_multi_creation_time(save_num);
+    return FALSE;
+
+
+
+
+
+#else
+
+
+
+
 	char FileName[MAX_PATH];
 
 	pfile_get_save_path(FileName, sizeof(FileName), save_num);
@@ -120,6 +146,9 @@ BOOL __fastcall pfile_open_archive(BOOL a1, unsigned int save_num)
 	if ( a1 && gbMaxPlayers > 1 )
 		mpqapi_update_multi_creation_time(save_num);
 	return FALSE;
+
+#endif
+
 }
 
 void __fastcall pfile_get_save_path(char *pszBuf, DWORD dwBufSize, unsigned int save_num)
@@ -407,13 +436,32 @@ BOOL __fastcall pfile_read_hero(void *archive, PkPlayerStruct *pPack)
 
 HANDLE __fastcall pfile_open_save_archive(int *unused, unsigned int save_num)
 {
-	char SrcStr[MAX_PATH];
-	HANDLE archive;
+#ifdef ANDROID
+    char SaveDir[MAX_PATH] = "/sdcard/Diablo/"; // Full path to SAVDIR
+    char SrcStr[MAX_PATH];
+    HANDLE archive;
 
-	pfile_get_save_path(SrcStr, sizeof(SrcStr), save_num);
-	if ( SFileOpenArchive(SrcStr, 0x7000, 0, &archive) )
-		return archive;
-	return NULL;
+    pfile_get_save_path(SrcStr, sizeof(SrcStr), save_num);
+
+    strcat(SaveDir,SrcStr+2);
+    printf("FULL ITEM ? %s \n", SaveDir );
+    strcpy(SrcStr, SaveDir);
+    if ( SFileOpenArchive(SrcStr, 0x7000, 0, &archive) )
+        return archive;
+    return NULL;
+
+#else   // IF NOT ANDROID
+
+    char SrcStr[MAX_PATH];
+        HANDLE archive;
+
+        pfile_get_save_path(SrcStr, sizeof(SrcStr), save_num);
+        if (SFileOpenArchive(SrcStr, 0x7000, 0, &archive))
+                return archive;
+        return NULL;
+
+#endif
+
 }
 
 void __fastcall pfile_SFileCloseArchive(HANDLE hsArchive)

@@ -3,12 +3,19 @@
 #ifndef __BLIZZARD_STORM_HEADER
 #define __BLIZZARD_STORM_HEADER
 
-#ifndef MINIWIN
+#ifdef __WIN32__
 #include <windows.h>
 #include <winuser.h>
 #include <winsock.h>
 #include <ddraw.h>
-#else
+#endif
+
+#ifdef MINIWIN
+#include "miniwin.h"
+#endif
+
+
+#ifdef ANDROID
 #include "miniwin.h"
 #endif
 

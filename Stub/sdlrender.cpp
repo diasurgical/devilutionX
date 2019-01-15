@@ -2,9 +2,6 @@
 #include "miniwin_sdl.h"
 #include "stubs.h"
 
-#include <SDL2/SDL.h>
-//#include <SDL_image.h>
-#include <SDL_mixer.h>
 
 int SCREEN_WIDTH = 800; // 1024×768
 int SCREEN_HEIGHT = 600;
