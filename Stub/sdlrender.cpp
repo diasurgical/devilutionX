@@ -618,6 +618,8 @@ void SdlDiabloMainWindow()
 	renderer = SDL_CreateRenderer(window, -1, 0);
 	printf("Window And Renderer Created!\n");
 
+
+	SDL_RenderSetLogicalSize(renderer, 800, 600);
 	const int pitch = SCREEN_WIDTH + 64 + 64;
 
 	surface = SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0xFF000000, 0x00FF0000, 0x0000FF00, 0x000000FF);

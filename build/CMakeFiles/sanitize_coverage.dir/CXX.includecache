@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/krash/CLionProjects/devilutionX/Stub/asserts.h
+/home/krash/CLionProjects/devilutionx/Stub/asserts.h
 assert.h
 -
 stdio.h
@@ -14,9 +14,9 @@ stdio.h
 stdlib.h
 -
 
-/home/krash/CLionProjects/devilutionX/Stub/sanitize_coverage.cpp
+/home/krash/CLionProjects/devilutionx/Stub/sanitize_coverage.cpp
 asserts.h
-/home/krash/CLionProjects/devilutionX/Stub/asserts.h
+/home/krash/CLionProjects/devilutionx/Stub/asserts.h
 malloc.h
 -
 stdint.h
@@ -24,7 +24,7 @@ stdint.h
 string.h
 -
 sanitize_coverage.h
-/home/krash/CLionProjects/devilutionX/Stub/sanitize_coverage.h
+/home/krash/CLionProjects/devilutionx/Stub/sanitize_coverage.h
 
-/home/krash/CLionProjects/devilutionX/Stub/sanitize_coverage.h
+/home/krash/CLionProjects/devilutionx/Stub/sanitize_coverage.h
 

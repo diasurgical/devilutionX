@@ -9,8 +9,21 @@
 
 #ifdef MINIWIN
 #include "miniwin.h"
+#include <SDL2/SDL.h>
+#include <SDL_image.h>
+#include <SDL_mixer.h>
+#endif
 
-#else
+#ifdef ANDROID
+#include "miniwin.h"
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_mixer.h>
+#endif
+
+
+
+#ifdef __WIN32__
 #define WIN32_LEAN_AND_MEAN
 
 #include <windows.h>

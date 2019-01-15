@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/krash/CLionProjects/devilutionX/Stub/sanitize_coverage.cpp" "/home/krash/CLionProjects/devilutionX/build/CMakeFiles/sanitize_coverage.dir/Stub/sanitize_coverage.cpp.o"
+  "/home/krash/CLionProjects/devilutionx/Stub/sanitize_coverage.cpp" "/home/krash/CLionProjects/devilutionx/build/CMakeFiles/sanitize_coverage.dir/Stub/sanitize_coverage.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

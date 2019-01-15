@@ -7,6 +7,13 @@
 #define rand rand_miniwin
 #endif
 
+#ifdef ANDROID
+#define srand srand_miniwin
+#define rand rand_miniwin
+#endif
+
+
+
 int __fastcall codec_decode(void *pbSrcDst, int size, char *pszPassword)
 {
 	unsigned int v3; // ebx

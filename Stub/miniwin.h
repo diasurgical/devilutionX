@@ -6,7 +6,6 @@
 #define STATIC static
 #endif
 
-#include <SDL2/SDL.h>
 #include <vector>
 #include <ctype.h>
 #include <math.h>

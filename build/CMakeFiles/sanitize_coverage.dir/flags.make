@@ -6,5 +6,5 @@ CXX_FLAGS = -m32   -fpermissive -Wno-write-strings -Wno-multichar -fno-aggressiv
 
 CXX_DEFINES = -DFASTER -DMINIWIN -D_DEBUG
 
-CXX_INCLUDES = -I/usr/include/SDL2 -I/home/krash/CLionProjects/devilutionX/. -I/home/krash/CLionProjects/devilutionX/Stub 
+CXX_INCLUDES = -I/usr/include/SDL2 -I/home/krash/CLionProjects/devilutionx/. -I/home/krash/CLionProjects/devilutionx/Stub 
 

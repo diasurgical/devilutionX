@@ -159,6 +159,9 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 	snd_init(0);
 	music_start(5);
 
+	
+	int timestart = 0;
+
 	signed int NewHeroNameIndex = 0;
 
 	int menu = 0;
@@ -222,7 +225,6 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 			DrawMouse();
 		}
 		if (menu == 5) {
-
 			DrawPreGameOptions(HeroPortrait, 1);
 			RenderDefaultStats(HeroPortrait);
 			ConstantButtons();
@@ -538,7 +540,26 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 							break;
 						}
 					}
+					
+					
+					clock_t start, end;
+     					double cpu_time_used;
+ 
 					if (menu == 5) {
+						if(  timestart == 0 ){
+						start = clock();
+						timestart = 1;
+						}
+
+					end = clock();
+	
+				
+						cpu_time_used  =  ((double) (end - start)) / CLOCKS_PER_SEC;
+
+						
+
+						printf("TIEM DELAY %f\n", cpu_time_used);
+
 
 						int CreateHeroOkBoxX = 330;
 						int CreateHeroOkBoxY = 441;
@@ -571,30 +592,54 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 						CreateHeroCancelBox.w = CreateHeroCancelBox.x + 100;
 						CreateHeroCancelBox.h = CreateHeroCancelBox.y + 30;
 
-						if ((x > NewGameBox.x) && (y > NewGameBox.y) && (x < NewGameBox.w) && (y < NewGameBox.h)) {
+						
+
+						if ( cpu_time_used  > 1  &&  (x > NewGameBox.x) && (y > NewGameBox.y) && (x < NewGameBox.w) && (y < NewGameBox.h)) {
 
 							printf(" New Game I was hit\n\n\n");
-				
 							menu = 6;
+							cpu_time_used = 0;
+							timestart = 0;
+							start = 0;
 
 						}
-						if ((x > LoadGameBox.x) && (y > LoadGameBox.y) && (x < LoadGameBox.w) && (y < LoadGameBox.h)) {
+						if (cpu_time_used  > 1  &&  (x > LoadGameBox.x) && (y > LoadGameBox.y) && (x < LoadGameBox.w) && (y < LoadGameBox.h)) {
 
 							printf(" Load Game I was hit\n\n\n");
 							break;
+
 						}
 
 						if ((x > CreateHeroCancelBox.x) && (y > CreateHeroCancelBox.y) && (x < CreateHeroCancelBox.w) &&
 						    (y < CreateHeroCancelBox.h)) {
 							HeroPortrait = 3;
+							timestart = 0;
+							cpu_time_used = 0;
+							start = 0;
+							end = 0;
+							cpu_time_used = 0;
 
 							printf("Cancel\n\n\n");
 
 							menu = 2; // Return back to select hero menu.
 						}
 					}
+
 					if (menu == 6) {
 						// Choose difficulty
+						
+
+
+
+
+                                               if(timestart == 0){
+						start = clock();                                               
+                                                timestart = 1;
+                                                }
+
+
+						end = clock();
+						cpu_time_used  =  ((double) (end - start)) / CLOCKS_PER_SEC;
 
 		
 						int CreateHeroOkBoxX = 330;
@@ -631,19 +676,19 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 						CreateHeroCancelBox.w = CreateHeroCancelBox.x + 100;
 						CreateHeroCancelBox.h = CreateHeroCancelBox.y + 30;
 
-						if ((x > NormalSelectBox.x) && (y > NormalSelectBox.y) && (x < NormalSelectBox.w) &&
+						if (cpu_time_used > 1 &&    (x > NormalSelectBox.x) && (y > NormalSelectBox.y) && (x < NormalSelectBox.w) &&
 						    (y < NormalSelectBox.h)) {
 							StartNewGame = 1;
 							gnDifficulty = DIFF_NORMAL;
 							break;
 						}
-						if ((x > NightmareSelectBox.x) && (y > NightmareSelectBox.y) && (x < NightmareSelectBox.w) &&
+						if (cpu_time_used > 1 &&    (x > NightmareSelectBox.x) && (y > NightmareSelectBox.y) && (x < NightmareSelectBox.w) &&
 						    (y < NightmareSelectBox.h)) {
 							StartNewGame = 1;
 							gnDifficulty = DIFF_NIGHTMARE;
 							break;
 						}
-						if ((x > HellSelectBox.x) && (y > HellSelectBox.y) && (x < HellSelectBox.w) &&
+						if ( cpu_time_used > 1 &&    (x > HellSelectBox.x) && (y > HellSelectBox.y) && (x < HellSelectBox.w) &&
 						    (y < HellSelectBox.h)) {
 							gnDifficulty = DIFF_HELL;
 							StartNewGame = 1;
@@ -653,6 +698,12 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 						if ((x > CreateHeroCancelBox.x) && (y > CreateHeroCancelBox.y) && (x < CreateHeroCancelBox.w) &&
 						    (y < CreateHeroCancelBox.h)) {
 							HeroPortrait = 3;
+							timestart = 0;
+                                                        cpu_time_used = 0;
+                                                        start = 0;
+                                                        end = 0;
+                                                        cpu_time_used = 0;
+
 
 							printf("Cancel\n\n\n");
 							--menu;
