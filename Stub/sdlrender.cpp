@@ -830,22 +830,50 @@ void SDL_RenderDiabloMainPage()
 
 	// scrollrt_draw_cursor_back_buffer(); // Doesn't work?
 
+    char * MENIITEMS[5]= {"Single Player", "Multi Player", "Show Intro", "Play Credits","Exit Diablo"}; 
+
+
 	RenderDiabloLogo();
 
 	// print_title_str_large();
-	gmenu_print_text((SCREEN_WIDTH / 2) - (SCREEN_WIDTH * 0.2), (SCREEN_HEIGHT / 2) + (SCREEN_HEIGHT * 0.2),
-	                 "Single Player");
-	gmenu_print_text((SCREEN_WIDTH / 2) - (SCREEN_WIDTH * 0.2), (SCREEN_HEIGHT / 2) + (SCREEN_HEIGHT * 0.3),
-	                 "Multi Player");
-	// gmenu_print_text((SCREEN_WIDTH / 2) - (SCREEN_WIDTH * 0.2), (SCREEN_HEIGHT / 2) + (SCREEN_HEIGHT * 0.3),  "Show
-	// Replay");
-	gmenu_print_text((SCREEN_WIDTH / 2) - (SCREEN_WIDTH * 0.2), (SCREEN_HEIGHT / 2) + (SCREEN_HEIGHT * 0.4),
-	                 "Play Credits");
-	gmenu_print_text((SCREEN_WIDTH / 2) - (SCREEN_WIDTH * 0.2), (SCREEN_HEIGHT / 2) + (SCREEN_HEIGHT * 0.5),
-	                 "Exit  Diablo");
+    int x = 150;
+    int y = 200;
+    for (int i = 0 ; i < 5 ; i++ ){
 
-	DrawArtWithMask(PentPositionX1-90, PentPositionY1-250, 42, 42, Pentframe, 250, MenuPentegram);
-	DrawArtWithMask(PentPositionX2-90, PentPositionY2-250, 42, 42, Pentframe, 250, MenuPentegram);
+        DrawPCXString( x, y, gdwFontWidth, gdwFontHeight, MENIITEMS[i], pFont, pPcxFontImage);
+
+        y+= 50;
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+	// gmenu_print_text((SCREEN_WIDTH / 2) - (SCREEN_WIDTH * 0.2), (SCREEN_HEIGHT / 2) + (SCREEN_HEIGHT * 0.2),  "Single Player");
+    // DrawPCXString( 150, 165, gdwFontWidth, gdwFontHeight, "Single Player", pFont, pPcxFontImage);
+
+	// gmenu_print_text((SCREEN_WIDTH / 2) - (SCREEN_WIDTH * 0.2), (SCREEN_HEIGHT / 2) + (SCREEN_HEIGHT * 0.3), "Multi Player");
+
+    // DrawPCXString( 150, 215, gdwFontWidth, gdwFontHeight, "Multi Player", pFont, pPcxFontImage);
+
+
+
+	// // gmenu_print_text((SCREEN_WIDTH / 2) - (SCREEN_WIDTH * 0.2), (SCREEN_HEIGHT / 2) + (SCREEN_HEIGHT * 0.3),  "Show
+	// // Replay");
+	// gmenu_print_text((SCREEN_WIDTH / 2) - (SCREEN_WIDTH * 0.2), (SCREEN_HEIGHT / 2) + (SCREEN_HEIGHT * 0.4), "Play Credits");
+	// gmenu_print_text((SCREEN_WIDTH / 2) - (SCREEN_WIDTH * 0.2), (SCREEN_HEIGHT / 2) + (SCREEN_HEIGHT * 0.5),"Exit  Diablo");
+
+	DrawArtWithMask(PentPositionX1-90, PentPositionY1-220, 42, 42, Pentframe, 250, MenuPentegram);
+	DrawArtWithMask(PentPositionX2-90, PentPositionY2-220, 42, 42, Pentframe, 250, MenuPentegram);
 
 	ADD_PlrStringXY(0, 600 - 150, 640, "DedicaTed To David Brevik, Erich Schaefer, Max Schaefer,", COL_BLUE);// Red isn't red
 	ADD_PlrStringXY(0, 600 - 130, 640, " MaTT Uelman, and The Blizzard North Team ThaT Gave Us A Childhood.", COL_BLUE);

@@ -328,6 +328,15 @@ BOOL __stdcall SBmpLoadImage(const char *pszFileName, PALETTEENTRY *pPalette, vo
 	return 0;
 }
 
+
+
+
+
+
+
+
+
+
 void __fastcall gmenu_print_text(int x, int y, char *pszStr)
 {
 	char *v3;		  // edi
@@ -352,6 +361,7 @@ void __fastcall gmenu_print_text(int x, int y, char *pszStr)
 			}
 			else{
 				DrawArtWithMask(v5-90, v4-250, 42, 42, 0, 242, pPcxFontImage); //pPcxFontImage
+
 			}
 
 		v5 += lfontkern[v7] + 2;
