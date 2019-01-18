@@ -70,15 +70,20 @@ The last line will have something like...
 Change it to ...
 set(SDL2_LIBRARIES "-L${SDL2_LIBDIR}  -lSDL2  -lSDL2_mixer ")
 
+*To Compile*
 
-Copy the "diablodat.mpq" from your Diablo CD to the Diablo Directory and make sure it is LOWERCASE.
-COPY THE *prealpha.mpq* from this directory TO YOUR DIABLO DIRECTORY. 
-
-
-Keep in mind please that this is still being worked on and is missing parts of UI and SoundEffects are not properly playing now.
-
+- cd devilutionX/build
+- cmake ..
+- make
 
 
+*To Play:*
+
+- Copy the "diablodat.mpq" from your Diablo CD to the Diablo Directory and make sure it is LOWERCASE.
+- COPY THE *prealpha.mpq* from this directory TO YOUR DIABLO DIRECTORY. 
+
+
+Keep in mind please that this is still being worked on and is missing parts of UI and Sound Effects are not properly playing now.
 
 
 
