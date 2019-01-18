@@ -2,8 +2,8 @@
 /vc60.idb
 
 #ignore cmake cache
-build/
-
+#build/*
+.vscode/tasks.json
 
 
 # ELF object file.
