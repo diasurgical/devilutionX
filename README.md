@@ -26,7 +26,6 @@ As a side goal Devilution tries to document the unused and cut content from the 
 # How To Play:
  - Install Diablo
  - copy diabdat.mpq to Diablo game directory ; Make sure it is all lowercase.
- - [Download This Pre-Alpha MPQ ](https://github.com/diasurgical/devilutionX/blob/master/prealpha.mpq)
  - [Download Devilution](https://github.com/diasurgical/devilutionX/blob/master/build/devilution)
 
 
@@ -54,38 +53,34 @@ Make sure to enable these when installing (or modify your installation):
 - Requires "Windows Universal CRT SDK" (For ctype.h)
 
 ### Building XDiablo (For Linux)
-Install the following libs on your machine.
--  sudo dpkg --add-architecture i386
--  apt-get install g++-multilib libc6-dev-i386
--  apt-get install libsdl2-dev:i386
--  apt-get install libsdl2-mixer-dev:i386
--  apt-get install cmake
+Install the dependencies on your machine:
+```
+sudo dpkg --add-architecture i386
+sudo apt-get install cmake gcovr g++-multilib libc6-dev-i386 libsdl2-dev:i386 libsdl2-mixer-dev:i386 nasm pkg-config
+```
 
-Edit File that is linking all the LIBS for CMAKE.
-For me it was located in...
-/usr/lib/i386-linux-gnu/cmake/SDL2/sdl2-config.cmake
+Add `-lSDL2_mixer` to the `SDL2_LIBRARIES` variables in SDL's CMAKE file.
+Normally found under: `/usr/lib/i386-linux-gnu/cmake/SDL2/sdl2-config.cmake`
 
-The last line will have something like...
- set(SDL2_LIBRARIES "-L${SDL2_LIBDIR}  -lSDL2
-Change it to ...
-set(SDL2_LIBRARIES "-L${SDL2_LIBDIR}  -lSDL2  -lSDL2_mixer ")
+One of the last lines will have smilar to:
+```set(SDL2_LIBRARIES "-L${SDL2_LIBDIR} -lSDL2 ")```
+Add `-lSDL2_mixer` to the end of it's value:
+```set(SDL2_LIBRARIES "-L${SDL2_LIBDIR} -lSDL2 -lSDL2_mixer ")```
 
-*To Compile*
+Now run the following commands:
+```
+cd build
+cmake ..
+make -j$(nproc)
+```
 
-- cd devilutionX/build
-- cmake ..
-- make
+*To run the game:*
 
+Copy the compiled devilution executable to your Diablo directory.
+Copy the "diablodat.mpq" from your Diablo CD to the Diablo directory and make sure it is LOWERCASE.
+Run `./devilution`
 
-*To Play:*
-
-- Copy the "diablodat.mpq" from your Diablo CD to the Diablo Directory and make sure it is LOWERCASE.
-- COPY THE *prealpha.mpq* from this directory TO YOUR DIABLO DIRECTORY. 
-
-
-Keep in mind please that this is still being worked on and is missing parts of UI and Sound Effects are not properly playing now.
-
-
+Please keep in mind that this is still being worked on and is missing parts of UI and SoundEffects are not properly playing now.
 
 ### Building with MinGW
 - Execute `make MINGW32=1` for **MinGW32** or `make` for **MinGW64**. Optionally add `debug` to build with debug features.
