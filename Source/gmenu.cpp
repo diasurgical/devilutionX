@@ -399,7 +399,7 @@ void __cdecl gmenu_init_menu()
 	gdwHeroWidth = dwData[0];
 	gdwHeroHeight = dwData[1];
 
-	LoadArtImage("ui_art\\font42y.pcx", &pPcxFontImage, 256, dwData);
+	LoadArtImage("ui_art\\font42g.pcx", &pPcxFontImage, 256, dwData);
 	gdwFontWidth = dwData[0];
 	gdwFontHeight = dwData[1];
 	pFont = LoadFileInMem("ui_art\\font42.bin", 0);
