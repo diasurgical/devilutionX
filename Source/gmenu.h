@@ -2,7 +2,6 @@
 #ifndef __GMENU_H__
 #define __GMENU_H__
 
-extern void *optbar_cel;
 extern bool byte_634464; // weak
 extern void *PentSpin_cel;
 extern TMenuItem *sgpCurrItem;
