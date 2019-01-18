@@ -61,9 +61,6 @@ SDL_Surface *CursorImg;
 SDL_Surface *DiabloTitle;
 
 int bloaded = 0;
-void *pPcxCreditsImage;
-int gdwCreditsWidth;
-int gdwCreditsHeight;
 
 ////////////////
 // new vars
@@ -738,23 +735,6 @@ int __fastcall GetPCXFontWidth(char *str, BYTE *font)
 
 void ShowCredts()
 {
-
-/*
-
-	int diablogo_cel_frame = 1;
-
-	int MyPcxDelay = 60;
-	int MyPcxFRAME = (SDL_GetTicks() / MyPcxDelay) % 15;
-	if (++MyPcxFRAME == 29) {
-		MyPcxFRAME = 1;
-	}
-
-
-*/
-
-
-
-
 	ybase += 1;
 	if (ybase >= pFont2[1]) {
 		ybase = 0;
@@ -768,20 +748,11 @@ void ShowCredts()
 			creditline++;
 	}
 
-	CelDecodeOnly(64, 639, pTitlgrayCel_sgpBackCel, 1, 640);
-	//	DrawArtImage(0, 0, gdwCreditsWidth, gdwCreditsHeight, 0, pPcxCreditsImage);
-    
+	DrawArtImage(0, 0, gdwTitleWidth, gdwTitleHeight, 0, pPcxTitleImage);
 
 	for (int i = 0; i < linecount; i++) {
-    
-        
-        //int ticks = SDL_GetTicks() / 60) % 15;
-
-
 		// Needs to be slower...
-		if (*the_long_credits[creditline + i] == '$'  ){
-
-
+		if (*the_long_credits[creditline + i] == '$'){
 			DrawPCXString(320 - (GetPCXFontWidth(the_long_credits[creditline + i] + 1, pFont2) / 2),
 			              50 + (i * pFont2[1]) - ybase, gdwFont2Width, gdwFont2Height,
 			              the_long_credits[creditline + i] + 1, pFont2, pPcxFont2Image);
@@ -799,21 +770,14 @@ void ShowCredts()
 
 void RenderDiabloLogo()
 {
-	int diablogo_cel_frame = 1;
-
 	int MyPcxDelay = 60;
 	int MyPcxFRAME = (SDL_GetTicks() / MyPcxDelay) % 15;
-	if (++MyPcxFRAME == 29) {
+	MyPcxFRAME++;
+	if (MyPcxFRAME >= 15) {
 		MyPcxFRAME = 1;
 	}
 
-	CelDecodeOnly(64, 360, GameTitle, MyPcxFRAME, 640);
-
-	//	DrawArtWithMask(320 - (gdwLogoWidth / 2), 0, gdwLogoWidth, gdwLogoHeight, MyPcxFRAME, 250, pPcxLogoImage);
-
-	// if (++diablogo_cel_frame == 29) {
-	// 	diablogo_cel_frame = 1;
-	// }
+	DrawArtWithMask(320 - (gdwLogoWidth / 2), 0, gdwLogoWidth, gdwLogoHeight, MyPcxFRAME, 250, pPcxLogoImage);
 }
 
 void DrawCursor(int mx, int my)
@@ -822,15 +786,14 @@ void DrawCursor(int mx, int my)
 
 	int lines = gdwCursorWidth;
 
-	CelDecodeOnly(403, 326, pPcxCursorImage, 1, 36);
-
-	//	DrawArtWithMask(mx, my, gdwCursorWidth, lines, 0, 0, pPcxCursorImage);
+	DrawArtWithMask(mx, my, gdwCursorWidth, lines, 0, 0, pPcxCursorImage);
 	unlock_buf_priv();
 }
 
 void DrawMouse()
 {
 
+	SDL_GetMouseState(&MouseX, &MouseY);
 	int lines = gdwCursorHeight;
 	// if(MouseY > 480-gdwCursorHeight)
 	// 	lines -= (MouseY - (480-gdwCursorHeight));
@@ -841,31 +804,22 @@ void DrawMouse()
 	// if(my < 0) my = 0;
 	// if(my > 480) my = 480;
 
-	SDL_GetMouseState(&MouseX, &MouseY);
-
-    //CelDecodeOnly(64, 64, pCursCels, 1, 28);
-
-	//CelDecodeOnly(MouseX, MouseY, pCursCels, 1, 36);
-
-   // frame_width = InvItemWidth[frame];
-
-    
+	// frame_width = InvItemWidth[frame];
 
 	//	lock_buf_priv();
-	// DrawArtWithMask(MouseX, MouseY, gdwCursorWidth, lines, 0, 0, pPcxCursorImage);
+	DrawArtWithMask(MouseX, MouseY, gdwCursorWidth, lines, 0, 0, pPcxCursorImage);
 	//	unlock_buf_priv();
 }
 
 void SDL_RenderDiabloMainPage()
 {
-	CelDecodeOnly(64, 639, pTitlgrayCel_sgpBackCel, 1, 640);
-	// DrawArtImage(0, 0, gdwTitleWidth, gdwTitleHeight, 0, pPcxTitleImage);
+	DrawArtImage(0, 0, gdwTitleWidth, gdwTitleHeight, 0, pPcxTitleImage);
 
-	int totalPentFrames = 9;
+	int totalPentFrames = 8;
 	int PentdelayPerFrame = 60;
 	int Pentframe = (SDL_GetTicks() / PentdelayPerFrame) % totalPentFrames;
 
-	if (++Pentframe == 9) {
+	if (++Pentframe == 8) {
 		Pentframe = 1;
 	}
 
@@ -890,8 +844,8 @@ void SDL_RenderDiabloMainPage()
 	gmenu_print_text((SCREEN_WIDTH / 2) - (SCREEN_WIDTH * 0.2), (SCREEN_HEIGHT / 2) + (SCREEN_HEIGHT * 0.5),
 	                 "Exit  Diablo");
 
-	CelDecodeOnly(PentPositionX1, PentPositionY1, MenuPentegram, (int)Pentframe, 48);
-	CelDecodeOnly(PentPositionX2, PentPositionY2, MenuPentegram, (int)Pentframe, 48);
+	DrawArtWithMask(PentPositionX1-90, PentPositionY1-250, 42, 42, Pentframe, 250, MenuPentegram);
+	DrawArtWithMask(PentPositionX2-90, PentPositionY2-250, 42, 42, Pentframe, 250, MenuPentegram);
 
 	ADD_PlrStringXY(0, 600 - 150, 640, "DedicaTed To David Brevik, Erich Schaefer, Max Schaefer,", COL_RED);
 	ADD_PlrStringXY(0, 600 - 130, 640, " MaTT Uelman, and The Blizzard North Team ThaT Gave Us A Childhood.", COL_RED);
@@ -899,9 +853,7 @@ void SDL_RenderDiabloMainPage()
 
 void SDL_RenderDiabloSinglePlayerPage()
 {
-	CelDecodeOnly(64, 639, pTitlgrayCel_sgpBackCel, 1, 640);
-	// DrawArtImage(0, 0, gdwTitleWidth, gdwTitleHeight, 0, pPcxTitleImage);
-	// DrawArtImage(0, 0, gdwSHeroWidth, gdwSHeroHeight, 0, pPcxSHeroImage);
+	DrawArtImage(0, 0, gdwTitleWidth, gdwTitleHeight, 0, pPcxTitleImage);
 	RenderDiabloLogo();
 	RenderCharNames();
 }
@@ -957,9 +909,7 @@ int TotalPlayers = 0;
 
 void DrawNewHeroKartinka(int image, int ShowClasses)
 {
-	CelDecodeOnly(64, 639, pTitlgrayCel_sgpBackCel, 1, 640);
-	// DrawArtImage(0, 0, gdwTitleWidth, gdwTitleHeight, 0, pPcxTitleImage);
-	// DrawArtImage(0, 0, gdwSHeroWidth, gdwSHeroHeight, 0, pPcxSHeroImage);
+	DrawArtImage(0, 0, gdwTitleWidth, gdwTitleHeight, 0, pPcxTitleImage);
 	RenderDiabloLogo();
 
 	char *heroclasses[3] = {"Warrior", "Rogue", "Sorceror"};
@@ -981,9 +931,7 @@ void DrawNewHeroKartinka(int image, int ShowClasses)
 
 void DrawPreGameOptions(int image, int ShowClasses)
 {
-	CelDecodeOnly(64, 639, pTitlgrayCel_sgpBackCel, 1, 640);
-	// DrawArtImage(0, 0, gdwTitleWidth, gdwTitleHeight, 0, pPcxTitleImage);
-	// DrawArtImage(0, 0, gdwSHeroWidth, gdwSHeroHeight, 0, pPcxSHeroImage);
+	DrawArtImage(0, 0, gdwTitleWidth, gdwTitleHeight, 0, pPcxTitleImage);
 	RenderDiabloLogo();
 
 	char *GameOptions[2] = {"New Game", "Load Game"};
@@ -991,7 +939,6 @@ void DrawPreGameOptions(int image, int ShowClasses)
 	// this should not be hard coded.
 	int x = 280;
 	int y = 430;
-	// DrawArtImage(30, 211, gdwHeroWidth, gdwHeroHeight, image, pPcxHeroImage);
 
 	if (ShowClasses == 1) {
 		for (int i = 0; i < 2; i++) {
@@ -1005,9 +952,7 @@ void DrawPreGameOptions(int image, int ShowClasses)
 
 void DrawPreGameDifficultySelection(int image, int ShowClasses)
 {
-	CelDecodeOnly(64, 639, pTitlgrayCel_sgpBackCel, 1, 640);
-	// DrawArtImage(0, 0, gdwTitleWidth, gdwTitleHeight, 0, pPcxTitleImage);
-	// DrawArtImage(0, 0, gdwSHeroWidth, gdwSHeroHeight, 0, pPcxSHeroImage);
+	DrawArtImage(0, 0, gdwTitleWidth, gdwTitleHeight, 0, pPcxTitleImage);
 	RenderDiabloLogo();
 
 	char *GameOptions[3] = {"Normal", "Nightmare", "Hell"};
@@ -1143,8 +1088,6 @@ void LoadCreateHeroDialogMenu() {}
 // Cnacel box is also needed.
 void CreateHeroMenu()
 {
-	CelDecodeOnly(64, 639, pTitlgrayCel_sgpBackCel, 1, 640);
-	// DrawArtImage(0, 0, gdwTitleWidth, gdwTitleHeight, 0, pPcxTitleImage);
-	// DrawArtImage(0, 0, gdwSHeroWidth, gdwSHeroHeight, 0, pPcxSHeroImage);
+	DrawArtImage(0, 0, gdwTitleWidth, gdwTitleHeight, 0, pPcxTitleImage);
 	RenderDiabloLogo();
 }

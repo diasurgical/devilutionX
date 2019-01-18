@@ -4,22 +4,16 @@
 #include "miniwin_sdl.h"
 
 #ifndef NO_GLOBALS
-void *optbar_cel;
 bool byte_634464; // weak
-void *PentSpin_cel;
 TMenuItem *sgpCurrItem;
 
 int dword_634474; // weak
 char byte_634478; // weak
 void(__cdecl *dword_63447C)();
 TMenuItem *dword_634480; // idb
-void *option_cel;
-void *sgpLogo;
 int dword_63448C; // weak
 
 void *pPentSmall;
-void *pTitlqtxtCel;
-void *pDiabfrCel;
 void *BigTGold_cel;
 
 //int gb_Lfont_pix_width;
@@ -28,7 +22,6 @@ void *BigTGold_cel;
 int gdwLogoWidth;
 int gdwLogoHeight;
 void *pPcxLogoImage;
-void *pTitlgrayCel_sgpBackCel;
 
 int gdwTitleWidth;
 int gdwTitleHeight;
@@ -44,9 +37,6 @@ void *pPcxHeroImage;
 
 int gdwSHeroHeight;
 int gdwSHeroWidth;
-void *pPcxSHeroImage;
-
-void *pPcxGameImage;
 
 
 int gdwFontWidth;
@@ -69,7 +59,7 @@ void *GameTitle;
 int GameTitleHeight;
 int GameTitleWidth;
 
-void * TitleMenuText; 
+void * TitleMenuText;
 void * MenuPentegram;
 #endif
 
@@ -159,11 +149,8 @@ BOOL __cdecl LoadArtWithPal(char *pszFile, void **pBuffer, int frames, DWORD *da
 		return 0;
 
 	LoadPalInMem(pcxPal);
-	
 
-
-
-	//	lpDDPalette->SetEntries(0, 0, 256, orig_palette);
+	//lpDDPalette->SetEntries(0, 0, 256, orig_palette);
 
 	if (pBuffer && data)
 	{
@@ -358,36 +345,15 @@ void __fastcall gmenu_print_text(int x, int y, char *pszStr)
 				CelDecodeLightOnly(v5, v4, (char *)BigTGold_cel, v7, 46);
 			}
 			else{
-				CelDecodeLightOnly(v5, v4, (char *)TitleMenuText, v7, 46);
+				DrawArtWithMask(v5-90, v4-250, 42, 42, 0, 242, pPcxFontImage);
 			}
-			
+
 		v5 += lfontkern[v7] + 2;
 	}
 }
 
 void __cdecl FreeGMenu()
 {
-	void *v0; // ecx
-	void *v1; // ecx
-	void *v2; // ecx
-	void *v3; // ecx
-	void *v4; // ecx
-
-	v0 = sgpLogo;
-	sgpLogo = 0;
-	mem_free_dbg(v0);
-	v1 = BigTGold_cel;
-	BigTGold_cel = 0;
-	mem_free_dbg(v1);
-	v2 = PentSpin_cel;
-	PentSpin_cel = 0;
-	mem_free_dbg(v2);
-	v3 = option_cel;
-	option_cel = 0;
-	mem_free_dbg(v3);
-	v4 = optbar_cel;
-	optbar_cel = 0;
-	mem_free_dbg(v4);
 }
 
 void __cdecl gmenu_init_menu()
@@ -400,16 +366,9 @@ void __cdecl gmenu_init_menu()
 	dword_63448C = 0;
 	byte_634464 = 0;
 
-	// LoadArtImage("ui_art\\cursor.pcx", &pPcxCursorImage, 1, dwData);
-	// gdwCursorWidth = dwData[0];
-	// gdwCursorHeight = dwData[1];
-	// printf("%d\n",gdwCursorWidth);
-
-	
-
-	LoadArtWithPal("ui_art\\mainmenu.pcx", &pPcxTitleImage, 1, dwData);
-	gdwTitleWidth = dwData[0];
-	gdwTitleHeight = dwData[1];
+	LoadArtImage("ui_art\\cursor.pcx", &pPcxCursorImage, 1, dwData);
+	gdwCursorWidth = dwData[0];
+	gdwCursorHeight = dwData[1];
 
 	LoadArtImage("ui_art\\smlogo.pcx", &pPcxLogoImage, 15, dwData);
 	gdwLogoWidth = dwData[0];
@@ -419,19 +378,7 @@ void __cdecl gmenu_init_menu()
 	gdwHeroWidth = dwData[0];
 	gdwHeroHeight = dwData[1];
 
-	LoadArtImage("ui_art\\selhero.pcx", &pPcxSHeroImage, 1, dwData);
-	gdwSHeroWidth = dwData[0];
-	gdwSHeroHeight = dwData[1];
-
-	LoadArtImage("ui_art\\selgame.pcx", &pPcxGameImage, 1, dwData);
-	gdwSHeroWidth = dwData[0];
-	gdwSHeroHeight = dwData[1];
-
-	LoadArtWithPal("ui_art\\credits.pcx", &pPcxCreditsImage, 1, dwData);
-	gdwCreditsWidth = dwData[0];
-	gdwCreditsHeight = dwData[1];
-
-	LoadArtImage("ui_art\\font42g.pcx", &pPcxFontImage, 256, dwData);
+	LoadArtImage("ui_art\\font42y.pcx", &pPcxFontImage, 256, dwData);
 	gdwFontWidth = dwData[0];
 	gdwFontHeight = dwData[1];
 	pFont = LoadFileInMem("ui_art\\font42.bin", 0);
@@ -446,23 +393,7 @@ void __cdecl gmenu_init_menu()
 	gdwFont3Height = dwData[1];
 	pFont3 = LoadFileInMem("ui_art\\font16.bin", 0);
 
-		
-	pCursCels = LoadFileInMem("Data\\Inv\\Objcurs.CEL", 0); 
-
-	MenuPentegram = LoadFileInMem("Gendata\\Pentitle.CEL",0);
-	pTitlgrayCel_sgpBackCel = LoadFileInMem("Gendata\\Titlgray.CEL", 0);
-	TitleMenuText = LoadFileInMem("Gendata\\Titltext.CEL",0);
-	GameTitle = LoadFileInMem("Gendata\\Diabfr.CEL",0);
-	sgpLogo = LoadFileInMem("Data\\Diabsmal.CEL", 0);
-	BigTGold_cel = LoadFileInMem("Data\\BigTGold.CEL", 0);
-	PentSpin_cel = LoadFileInMem("Data\\PentSpin.CEL", 0);
-	option_cel = LoadFileInMem("Data\\option.CEL", 0);
-	optbar_cel = LoadFileInMem("Data\\optbar.CEL", 0);
-	pPentSmall = LoadFileInMem("Data\\PentSpn2.CEL", 0);
-	pPanelText = LoadFileInMem("CtrlPan\\SmalText.CEL", 0);
-	pSTextBoxCels = LoadFileInMem("Data\\TextBox2.CEL", 0);
-	pMedTextCels = LoadFileInMem("Gendata\\Titlqtxt.CEL", 0);
-	pDiabfrCel = LoadFileInMem("Data\\Diabsmal.CEL", 0);
+	LoadArtImage("ui_art\\focus42.pcx", &MenuPentegram, 8, dwData);
 }
 // 634464: using guessed type char byte_634464;
 // 634478: using guessed type char byte_634478;
@@ -594,8 +525,6 @@ void __fastcall gmenu_draw_menu_item(TMenuItem *pItem, int a2)
 	int v13;		  // edi
 	unsigned int v14; // [esp+10h] [ebp-4h]
 
-	int diablogo_cel_frame = 1;
-
 	int MyPcxDelay = 60;
 	int MyPcxFRAME = (SDL_GetTicks() / MyPcxDelay) % 15;
 	if (++MyPcxFRAME == 15)
@@ -603,14 +532,7 @@ void __fastcall gmenu_draw_menu_item(TMenuItem *pItem, int a2)
 		MyPcxFRAME = 1;
 	}
 
-	//DrawArtWithMask(320 - (gdwLogoWidth / 2), -50, gdwLogoWidth, gdwLogoHeight, MyPcxFRAME, 250, pPcxLogoImage);
-	CelDecodeOnly(64, 275, GameTitle, MyPcxFRAME, 640);
-
-
-	if (++diablogo_cel_frame == 29)
-	{
-		diablogo_cel_frame = 1;
-	}
+	DrawArtWithMask(320 - (gdwLogoWidth / 2), -50, gdwLogoWidth, gdwLogoHeight, MyPcxFRAME, 250, pPcxLogoImage);
 
 	v2 = a2;
 	v3 = pItem;
@@ -620,7 +542,7 @@ void __fastcall gmenu_draw_menu_item(TMenuItem *pItem, int a2)
 	if (v3->dwFlags & 0x40000000)
 	{
 		v6 = (v4 >> 1) + 80;
-		CelDecodeOnly(v6, v2 - 10, optbar_cel, 1, 287);
+		//CelDecodeOnly(v6, v2 - 10, optbar_cel, 1, 287);
 		v7 = (v3->dwFlags >> 12) & 0xFFF;
 		if (v7 < 2)
 			v7 = 2;
@@ -628,7 +550,7 @@ void __fastcall gmenu_draw_menu_item(TMenuItem *pItem, int a2)
 		v9 = (v5 >> 1) + 82;
 		v10 = v8;
 		gmenu_clear_buffer(v9, v2 - 12, v8 + 13, 28);
-		CelDecodeOnly(v6 + v10 + 2, v2 - 12, option_cel, 1, 27);
+		//CelDecodeOnly(v6 + v10 + 2, v2 - 12, option_cel, 1, 27);
 		v5 = v14;
 	}
 	v11 = 384 - (v5 >> 1);
@@ -640,8 +562,8 @@ void __fastcall gmenu_draw_menu_item(TMenuItem *pItem, int a2)
 	{
 		v13 = v2 + 1;
 
-		CelDecodeOnly(v11 - 54, v13, PentSpin_cel, (unsigned char)byte_634478, 48);
-		CelDecodeOnly(v11 + v5 + 4, v13, PentSpin_cel, (unsigned char)byte_634478, 48);
+		//CelDecodeOnly(v11 - 54, v13, PentSpin_cel, (unsigned char)byte_634478, 48);
+		//CelDecodeOnly(v11 + v5 + 4, v13, PentSpin_cel, (unsigned char)byte_634478, 48);
 	}
 }
 // 634478: using guessed type char byte_634478;

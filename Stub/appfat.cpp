@@ -35,11 +35,13 @@ void __fastcall DirErrorDlg(char *error)
 
 bool __cdecl InsertCDDlg()
 {
-	UNIMPLEMENTED();
+	printf("Please insert cd\n");
+	DUMMY();
 }
 
 void __fastcall FileErrDlg(char *error)
 {
+	printf("Missing file %s\n", error);
 	UNIMPLEMENTED();
 }
 

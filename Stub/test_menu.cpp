@@ -573,7 +573,6 @@ void __cdecl LoadNames(int fuckthem)
 	//DrawArtImage(0, 0, gdwTitleWidth, gdwTitleHeight, 0, pPcxTitleImage);
 	DrawArtImage(0, 0, gdwSHeroWidth, gdwSHeroHeight, 0, pPcxSHeroImage);
 	DrawArtWithMask(320-(gdwLogoWidth/2), 0, gdwLogoWidth, gdwLogoHeight, the_pcx_frame, 250, pPcxLogoImage);
-	//CelDecodeOnly(236, 282, pDiabfrCel, 1, 296);//CelDecodeOnly(64, 377, pDiabfrCel, diablogo_cel_frame, 640);
 	// if ( demo_mode )
 		// strcpy(tempstr, "Pre-release Demo");
 	// else

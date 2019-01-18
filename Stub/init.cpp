@@ -7,7 +7,6 @@
 #ifndef NO_GLOBALS
 void *diabdat_mpq;
 void *patch_rt_mpq;
-void *prealpha_mpq;
 
 _SNETVERSIONDATA fileinfo;
 WNDPROC CurrentProc;
@@ -99,9 +98,6 @@ void __cdecl init_archives()
 
 	SFileOpenArchive(find_file_in_std_directories("patch_rt.mpq").c_str(), 1000, 0, &patch_rt_mpq);
 	assert(patch_rt_mpq);
-	// I don' think this works, like I would intend.
-	SFileOpenArchive(find_file_in_std_directories("prealpha.mpq").c_str(), 1000, 0, &prealpha_mpq);
-	assert(prealpha_mpq);
 }
 
 void __cdecl init_get_file_info()
@@ -154,6 +150,7 @@ void HideCursor()
 
 void SDL_Diablo_UI() // I anticipate to move this later.
 {
+	DWORD dwData[2];
 	// WNDPROC saveProc;
 
 	snd_init(0);
@@ -180,8 +177,6 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 	}
 
 	ClearScreenBuffer();
-	// LoadPalette("gendata\\delchar.pal"); // Uncomenting this fixes the the PCXs...
-	LoadPalette("Gendata\\Title.pal");
 
 	const Uint8 *state = SDL_GetKeyboardState(NULL);
 
@@ -192,11 +187,17 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 		PaletteFadeIn(32);
 
 		if (menu == 0) {
+			LoadArtWithPal("ui_art\\mainmenu.pcx", &pPcxTitleImage, 1, dwData);
+			gdwTitleWidth = dwData[0];
+			gdwTitleHeight = dwData[1];
 			SDL_RenderDiabloMainPage();
 		}
 
 		if (menu == 2) {
 
+			LoadArtWithPal("ui_art\\selhero.pcx", &pPcxTitleImage, 1, dwData);
+			gdwTitleWidth = dwData[0];
+			gdwTitleHeight = dwData[1];
 			if (CharsLoaded == 0) {
 				LoadCharNamesintoMemory(0, 7);
 				//	LoadHeroStats();
@@ -209,6 +210,9 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 		}
 
 		if (menu == 3) {
+			LoadArtWithPal("ui_art\\selhero.pcx", &pPcxTitleImage, 1, dwData);
+			gdwTitleWidth = dwData[0];
+			gdwTitleHeight = dwData[1];
 			CreateHeroMenu();
 			DrawNewHeroKartinka(HeroPortrait, 1);
 			ConstantButtons();
@@ -217,7 +221,9 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 
 		int m4Loaded = 0;
 		if (menu == 4) {
-
+			LoadArtWithPal("ui_art\\selhero.pcx", &pPcxTitleImage, 1, dwData);
+			gdwTitleWidth = dwData[0];
+			gdwTitleHeight = dwData[1];
 			DrawNewHeroKartinka(HeroPortrait, 0);
 			RenderDefaultStats(HeroPortrait);
 			RenderUndecidedHeroName();
@@ -225,12 +231,18 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 			DrawMouse();
 		}
 		if (menu == 5) {
+			LoadArtWithPal("ui_art\\selhero.pcx", &pPcxTitleImage, 1, dwData);
+			gdwTitleWidth = dwData[0];
+			gdwTitleHeight = dwData[1];
 			DrawPreGameOptions(HeroPortrait, 1);
 			RenderDefaultStats(HeroPortrait);
 			ConstantButtons();
 			DrawMouse();
 		}
 		if (menu == 6) {
+			LoadArtWithPal("ui_art\\selhero.pcx", &pPcxTitleImage, 1, dwData);
+			gdwTitleWidth = dwData[0];
+			gdwTitleHeight = dwData[1];
 			DrawPreGameDifficultySelection(HeroPortrait, 1);
 			RenderDefaultStats(HeroPortrait);
 			ConstantButtons();
@@ -238,6 +250,9 @@ void SDL_Diablo_UI() // I anticipate to move this later.
 		}
 
 		if (menu == 10) {
+			LoadArtWithPal("ui_art\\credits.pcx", &pPcxTitleImage, 1, dwData);
+			gdwTitleWidth = dwData[0];
+			gdwTitleHeight = dwData[1];
 			ShowCredts();
 		}
 
