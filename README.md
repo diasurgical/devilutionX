@@ -71,7 +71,7 @@ Now run the following commands:
 ```
 cd build
 cmake ..
-make -j$(nproc)
+make -j$(nproc) devilution
 ```
 
 *To run the game:*
