@@ -1102,8 +1102,14 @@ void RenderCharNames()
 
 void ConstantButtons()
 {
-	print_title_str_small(500, 620, "Ok");
-	print_title_str_small(600, 620, "Cancel");
+	//print_title_str_small(500, 620, "Ok");
+	//print_title_str_small(600, 620, "Cancel");
+    DrawPCXString( 500, 440, gdwFont2Height, gdwFont2Width, "OK", pFont2, pPcxFont2Image);
+    DrawPCXString( 550, 440, gdwFont2Height, gdwFont2Width, "Cancel", pFont2, pPcxFont2Image);
+
+
+
+
 }
 
 bool LoadCreateHeroDialogImages = 0;
