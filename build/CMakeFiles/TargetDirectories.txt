@@ -1,6 +1,0 @@
-/home/backbox/devilutionX/build/CMakeFiles/edit_cache.dir
-/home/backbox/devilutionX/build/CMakeFiles/rebuild_cache.dir
-/home/backbox/devilutionX/build/CMakeFiles/sanitize_coverage.dir
-/home/backbox/devilutionX/build/CMakeFiles/devilution.dir
-/home/backbox/devilutionX/build/CMakeFiles/xxhash.dir
-/home/backbox/devilutionX/build/CMakeFiles/devil-sanitize.dir

@@ -771,13 +771,13 @@ void ShowCredts()
 void RenderDiabloLogo()
 {
 	int MyPcxDelay = 60;
-	int MyPcxFRAME = (SDL_GetTicks() / MyPcxDelay) % 15;
+	int MyPcxFRAME = (SDL_GetTicks() / MyPcxDelay) % 15;        // This is not how this should be done... 
 	MyPcxFRAME++;
 	if (MyPcxFRAME >= 15) {
 		MyPcxFRAME = 1;
 	}
 
-	DrawArtWithMask(320 - (gdwLogoWidth / 2), 0, gdwLogoWidth, gdwLogoHeight, MyPcxFRAME, 250, pPcxLogoImage);
+	DrawArtWithMask(320 - (gdwLogoWidth / 2), -30, gdwLogoWidth, gdwLogoHeight, MyPcxFRAME, 250, pPcxLogoImage);
 }
 
 void DrawCursor(int mx, int my)
@@ -847,8 +847,8 @@ void SDL_RenderDiabloMainPage()
 	DrawArtWithMask(PentPositionX1-90, PentPositionY1-250, 42, 42, Pentframe, 250, MenuPentegram);
 	DrawArtWithMask(PentPositionX2-90, PentPositionY2-250, 42, 42, Pentframe, 250, MenuPentegram);
 
-	ADD_PlrStringXY(0, 600 - 150, 640, "DedicaTed To David Brevik, Erich Schaefer, Max Schaefer,", COL_RED);
-	ADD_PlrStringXY(0, 600 - 130, 640, " MaTT Uelman, and The Blizzard North Team ThaT Gave Us A Childhood.", COL_RED);
+	ADD_PlrStringXY(0, 600 - 150, 640, "DedicaTed To David Brevik, Erich Schaefer, Max Schaefer,", COL_BLUE);// Red isn't red
+	ADD_PlrStringXY(0, 600 - 130, 640, " MaTT Uelman, and The Blizzard North Team ThaT Gave Us A Childhood.", COL_BLUE);
 }
 
 void SDL_RenderDiabloSinglePlayerPage()

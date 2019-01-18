@@ -2,7 +2,8 @@
 /vc60.idb
 
 #ignore cmake cache
-/build/CMakeCache.txt
+build/
+
 
 
 # ELF object file.

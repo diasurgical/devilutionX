@@ -61,6 +61,17 @@ int GameTitleWidth;
 
 void * TitleMenuText;
 void * MenuPentegram;
+
+
+void *optbar_cel;
+void *PentSpin_cel;	
+void *option_cel;	
+void *sgpLogo;
+void *pTitlgrayCel_sgpBackCel;
+void *pDiabfrCel;
+
+
+
 #endif
 
 const unsigned char lfontframe[127] =
@@ -330,22 +341,17 @@ void __fastcall gmenu_print_text(int x, int y, char *pszStr)
 	v4 = y;
 	v5 = x;
 
-
-	// for(int z = 0; z < 30; z++){
-	// 	char * A = TitleMenuText;
-	// 	printf("BIG TEXT %c\n", A[z]);
-	// }
-
 	for (i = *pszStr; *v3; i = *v3)
 	{
 		++v3;
 		v7 = lfontframe[fontidx[i]];
 		if (v7)
 			if(gbRunGame == 1){
-				CelDecodeLightOnly(v5, v4, (char *)BigTGold_cel, v7, 46);
+				//CelDecodeLightOnly(v5, v4, (char *)BigTGold_cel, v7, 46);
+				DrawArtWithMask(v5-90, v4-250, 42, 42, 0, 242, pPcxFontImage); //pPcxFontImage
 			}
 			else{
-				DrawArtWithMask(v5-90, v4-250, 42, 42, 0, 242, pPcxFontImage);
+				DrawArtWithMask(v5-90, v4-250, 42, 42, 0, 242, pPcxFontImage); //pPcxFontImage
 			}
 
 		v5 += lfontkern[v7] + 2;
@@ -366,11 +372,16 @@ void __cdecl gmenu_init_menu()
 	dword_63448C = 0;
 	byte_634464 = 0;
 
+//Dont remove this
+	pPanelText = LoadFileInMem("CtrlPan\\SmalText.CEL", 0);
+	LoadArtImage("ui_art\\focus42.pcx", &MenuPentegram, 8, dwData);
+
+//
 	LoadArtImage("ui_art\\cursor.pcx", &pPcxCursorImage, 1, dwData);
 	gdwCursorWidth = dwData[0];
 	gdwCursorHeight = dwData[1];
 
-	LoadArtImage("ui_art\\smlogo.pcx", &pPcxLogoImage, 15, dwData);
+	LoadArtImage("ui_art\\logo.pcx", &pPcxLogoImage, 15, dwData);
 	gdwLogoWidth = dwData[0];
 	gdwLogoHeight = dwData[1];
 
@@ -393,7 +404,7 @@ void __cdecl gmenu_init_menu()
 	gdwFont3Height = dwData[1];
 	pFont3 = LoadFileInMem("ui_art\\font16.bin", 0);
 
-	LoadArtImage("ui_art\\focus42.pcx", &MenuPentegram, 8, dwData);
+	
 }
 // 634464: using guessed type char byte_634464;
 // 634478: using guessed type char byte_634478;

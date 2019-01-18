@@ -8,6 +8,7 @@
 void *diabdat_mpq;
 void *patch_rt_mpq;
 
+
 _SNETVERSIONDATA fileinfo;
 WNDPROC CurrentProc;
 int gbActive;
@@ -91,13 +92,14 @@ WNDPROC __fastcall SetWindowProc(WNDPROC NewProc)
 
 void __cdecl init_archives()
 {
-	DUMMY();
+	DUMMY(); // We will need to remove the find_file_in_std_directories funct when it comes to mobile
 
 	SFileOpenArchive(find_file_in_std_directories("diabdat.mpq").c_str(), 1000, 0, &diabdat_mpq);
 	assert(diabdat_mpq);
 
 	SFileOpenArchive(find_file_in_std_directories("patch_rt.mpq").c_str(), 1000, 0, &patch_rt_mpq);
 	assert(patch_rt_mpq);
+	
 }
 
 void __cdecl init_get_file_info()
