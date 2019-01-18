@@ -55,6 +55,7 @@ Make sure to enable these when installing (or modify your installation):
 
 ### Building XDiablo (For Linux)
 Install the following libs on your machine.
+-  sudo dpkg --add-architecture i386
 -  apt-get install g++-multilib libc6-dev-i386
 -  apt-get install libsdl2-dev:i386
 -  apt-get install libsdl2-mixer-dev:i386

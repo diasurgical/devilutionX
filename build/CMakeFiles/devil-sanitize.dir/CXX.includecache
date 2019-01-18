@@ -56,25 +56,25 @@ direct.h
 unistd.h
 -
 
-/home/krash/CLionProjects/devilutionx/3rdParty/PKWare/explode.cpp
+/home/backbox/devilutionX/3rdParty/PKWare/explode.cpp
 assert.h
 -
 string.h
 -
 pkware.h
-/home/krash/CLionProjects/devilutionx/3rdParty/PKWare/pkware.h
+/home/backbox/devilutionX/3rdParty/PKWare/pkware.h
 
-/home/krash/CLionProjects/devilutionx/3rdParty/PKWare/implode.cpp
+/home/backbox/devilutionX/3rdParty/PKWare/implode.cpp
 assert.h
 -
 string.h
 -
 pkware.h
-/home/krash/CLionProjects/devilutionx/3rdParty/PKWare/pkware.h
+/home/backbox/devilutionX/3rdParty/PKWare/pkware.h
 
-/home/krash/CLionProjects/devilutionx/3rdParty/PKWare/pkware.h
+/home/backbox/devilutionX/3rdParty/PKWare/pkware.h
 
-/home/krash/CLionProjects/devilutionx/3rdParty/Storm/Source/storm.h
+/home/backbox/devilutionX/3rdParty/Storm/Source/storm.h
 windows.h
 -
 winuser.h
@@ -84,113 +84,113 @@ winsock.h
 ddraw.h
 -
 miniwin.h
-/home/krash/CLionProjects/devilutionx/3rdParty/Storm/Source/miniwin.h
+/home/backbox/devilutionX/3rdParty/Storm/Source/miniwin.h
 miniwin.h
-/home/krash/CLionProjects/devilutionx/3rdParty/Storm/Source/miniwin.h
+/home/backbox/devilutionX/3rdParty/Storm/Source/miniwin.h
 
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/FileStream.cpp
+/home/backbox/devilutionX/3rdParty/StormLib/src/FileStream.cpp
 StormLib.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/StormLib.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/StormLib.h
 StormCommon.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/StormCommon.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/StormCommon.h
 FileStream.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/FileStream.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/FileStream.h
 
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/FileStream.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/FileStream.h
 
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/SBaseCommon.cpp
+/home/backbox/devilutionX/3rdParty/StormLib/src/SBaseCommon.cpp
 StormLib.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/StormLib.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/StormLib.h
 StormCommon.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/StormCommon.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/StormCommon.h
 
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/SBaseFileTable.cpp
+/home/backbox/devilutionX/3rdParty/StormLib/src/SBaseFileTable.cpp
 StormLib.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/StormLib.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/StormLib.h
 StormCommon.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/StormCommon.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/StormCommon.h
 
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/SBaseSubTypes.cpp
+/home/backbox/devilutionX/3rdParty/StormLib/src/SBaseSubTypes.cpp
 StormLib.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/StormLib.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/StormLib.h
 StormCommon.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/StormCommon.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/StormCommon.h
 
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/SCompression.cpp
+/home/backbox/devilutionX/3rdParty/StormLib/src/SCompression.cpp
 StormLib.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/StormLib.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/StormLib.h
 StormCommon.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/StormCommon.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/StormCommon.h
 
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/SFileExtractFile.cpp
+/home/backbox/devilutionX/3rdParty/StormLib/src/SFileExtractFile.cpp
 StormLib.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/StormLib.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/StormLib.h
 StormCommon.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/StormCommon.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/StormCommon.h
 
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/SFileFindFile.cpp
+/home/backbox/devilutionX/3rdParty/StormLib/src/SFileFindFile.cpp
 StormLib.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/StormLib.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/StormLib.h
 StormCommon.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/StormCommon.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/StormCommon.h
 
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/SFileGetFileInfo.cpp
+/home/backbox/devilutionX/3rdParty/StormLib/src/SFileGetFileInfo.cpp
 StormLib.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/StormLib.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/StormLib.h
 StormCommon.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/StormCommon.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/StormCommon.h
 
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/SFileOpenArchive.cpp
+/home/backbox/devilutionX/3rdParty/StormLib/src/SFileOpenArchive.cpp
 StormLib.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/StormLib.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/StormLib.h
 StormCommon.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/StormCommon.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/StormCommon.h
 
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/SFileOpenFileEx.cpp
+/home/backbox/devilutionX/3rdParty/StormLib/src/SFileOpenFileEx.cpp
 StormLib.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/StormLib.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/StormLib.h
 StormCommon.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/StormCommon.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/StormCommon.h
 
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/SFileReadFile.cpp
+/home/backbox/devilutionX/3rdParty/StormLib/src/SFileReadFile.cpp
 StormLib.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/StormLib.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/StormLib.h
 StormCommon.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/StormCommon.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/StormCommon.h
 
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/StormCommon.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/StormCommon.h
 3rdParty/PKWare/pkware.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/3rdParty/PKWare/pkware.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/3rdParty/PKWare/pkware.h
 huffman/huff.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/huffman/huff.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/huffman/huff.h
 adpcm/adpcm.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/adpcm/adpcm.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/adpcm/adpcm.h
 sparse/sparse.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/sparse/sparse.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/sparse/sparse.h
 lzma/C/LzmaEnc.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/lzma/C/LzmaEnc.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/lzma/C/LzmaEnc.h
 lzma/C/LzmaDec.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/lzma/C/LzmaDec.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/lzma/C/LzmaDec.h
 zlib/zlib.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/zlib/zlib.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/zlib/zlib.h
 zlib.h
 -
 bzip2/bzlib.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/bzip2/bzlib.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/bzip2/bzlib.h
 bzlib.h
 -
 libtomcrypt/src/headers/tomcrypt.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/libtomcrypt/src/headers/tomcrypt.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/libtomcrypt/src/headers/tomcrypt.h
 jenkins/lookup.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/jenkins/lookup.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/jenkins/lookup.h
 
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/StormLib.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/StormLib.h
 StormPort.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/StormPort.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/StormPort.h
 ../storm_dll/storm_dll.h
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/storm_dll/storm_dll.h
+/home/backbox/devilutionX/3rdParty/StormLib/storm_dll/storm_dll.h
 
-/home/krash/CLionProjects/devilutionx/3rdParty/StormLib/src/StormPort.h
+/home/backbox/devilutionX/3rdParty/StormLib/src/StormPort.h
 tchar.h
 -
 assert.h
@@ -248,415 +248,415 @@ assert.h
 errno.h
 -
 
-/home/krash/CLionProjects/devilutionx/DiabloUI/diabloui.h
+/home/backbox/devilutionX/DiabloUI/diabloui.h
 
-/home/krash/CLionProjects/devilutionx/Source/appfat.h
+/home/backbox/devilutionX/Source/appfat.h
 
-/home/krash/CLionProjects/devilutionx/Source/automap.cpp
+/home/backbox/devilutionX/Source/automap.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/automap.h
+/home/backbox/devilutionX/Source/automap.h
 
-/home/krash/CLionProjects/devilutionx/Source/capture.h
+/home/backbox/devilutionX/Source/capture.h
 
-/home/krash/CLionProjects/devilutionx/Source/codec.cpp
+/home/backbox/devilutionX/Source/codec.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/codec.h
+/home/backbox/devilutionX/Source/codec.h
 
-/home/krash/CLionProjects/devilutionx/Source/control.cpp
+/home/backbox/devilutionX/Source/control.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/control.h
+/home/backbox/devilutionX/Source/control.h
 
-/home/krash/CLionProjects/devilutionx/Source/cursor.cpp
+/home/backbox/devilutionX/Source/cursor.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/cursor.h
+/home/backbox/devilutionX/Source/cursor.h
 
-/home/krash/CLionProjects/devilutionx/Source/dead.cpp
+/home/backbox/devilutionX/Source/dead.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/dead.h
+/home/backbox/devilutionX/Source/dead.h
 
-/home/krash/CLionProjects/devilutionx/Source/debug.cpp
+/home/backbox/devilutionX/Source/debug.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/debug.h
+/home/backbox/devilutionX/Source/debug.h
 
-/home/krash/CLionProjects/devilutionx/Source/diablo.h
+/home/backbox/devilutionX/Source/diablo.h
 
-/home/krash/CLionProjects/devilutionx/Source/doom.cpp
+/home/backbox/devilutionX/Source/doom.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/doom.h
+/home/backbox/devilutionX/Source/doom.h
 
-/home/krash/CLionProjects/devilutionx/Source/drlg_l1.cpp
+/home/backbox/devilutionX/Source/drlg_l1.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/drlg_l1.h
+/home/backbox/devilutionX/Source/drlg_l1.h
 
-/home/krash/CLionProjects/devilutionx/Source/drlg_l2.cpp
+/home/backbox/devilutionX/Source/drlg_l2.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/drlg_l2.h
+/home/backbox/devilutionX/Source/drlg_l2.h
 
-/home/krash/CLionProjects/devilutionx/Source/drlg_l3.cpp
+/home/backbox/devilutionX/Source/drlg_l3.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/drlg_l3.h
+/home/backbox/devilutionX/Source/drlg_l3.h
 
-/home/krash/CLionProjects/devilutionx/Source/drlg_l4.cpp
+/home/backbox/devilutionX/Source/drlg_l4.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/drlg_l4.h
+/home/backbox/devilutionX/Source/drlg_l4.h
 
-/home/krash/CLionProjects/devilutionx/Source/dthread.h
+/home/backbox/devilutionX/Source/dthread.h
 
-/home/krash/CLionProjects/devilutionx/Source/dx.h
+/home/backbox/devilutionX/Source/dx.h
 
-/home/krash/CLionProjects/devilutionx/Source/effects.h
+/home/backbox/devilutionX/Source/effects.h
 
-/home/krash/CLionProjects/devilutionx/Source/encrypt.cpp
+/home/backbox/devilutionX/Source/encrypt.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/encrypt.h
+/home/backbox/devilutionX/Source/encrypt.h
 
-/home/krash/CLionProjects/devilutionx/Source/engine.cpp
+/home/backbox/devilutionX/Source/engine.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 miniwin_sdl.h
-/home/krash/CLionProjects/devilutionx/Source/miniwin_sdl.h
+/home/backbox/devilutionX/Source/miniwin_sdl.h
 
-/home/krash/CLionProjects/devilutionx/Source/engine.h
+/home/backbox/devilutionX/Source/engine.h
 
-/home/krash/CLionProjects/devilutionx/Source/error.cpp
+/home/backbox/devilutionX/Source/error.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/error.h
+/home/backbox/devilutionX/Source/error.h
 
-/home/krash/CLionProjects/devilutionx/Source/fault.h
+/home/backbox/devilutionX/Source/fault.h
 
-/home/krash/CLionProjects/devilutionx/Source/gamemenu.h
+/home/backbox/devilutionX/Source/gamemenu.h
 
-/home/krash/CLionProjects/devilutionx/Source/gendung.cpp
+/home/backbox/devilutionX/Source/gendung.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/gendung.h
+/home/backbox/devilutionX/Source/gendung.h
 
-/home/krash/CLionProjects/devilutionx/Source/gmenu.cpp
+/home/backbox/devilutionX/Source/gmenu.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 miniwin_sdl.h
-/home/krash/CLionProjects/devilutionx/Source/miniwin_sdl.h
+/home/backbox/devilutionX/Source/miniwin_sdl.h
 
-/home/krash/CLionProjects/devilutionx/Source/gmenu.h
+/home/backbox/devilutionX/Source/gmenu.h
 
-/home/krash/CLionProjects/devilutionx/Source/help.cpp
+/home/backbox/devilutionX/Source/help.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/help.h
+/home/backbox/devilutionX/Source/help.h
 
-/home/krash/CLionProjects/devilutionx/Source/init.h
+/home/backbox/devilutionX/Source/init.h
 
-/home/krash/CLionProjects/devilutionx/Source/interfac.cpp
+/home/backbox/devilutionX/Source/interfac.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/interfac.h
+/home/backbox/devilutionX/Source/interfac.h
 
-/home/krash/CLionProjects/devilutionx/Source/inv.cpp
+/home/backbox/devilutionX/Source/inv.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/inv.h
+/home/backbox/devilutionX/Source/inv.h
 
-/home/krash/CLionProjects/devilutionx/Source/items.cpp
+/home/backbox/devilutionX/Source/items.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/items.h
+/home/backbox/devilutionX/Source/items.h
 
-/home/krash/CLionProjects/devilutionx/Source/lighting.cpp
+/home/backbox/devilutionX/Source/lighting.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/lighting.h
+/home/backbox/devilutionX/Source/lighting.h
 
-/home/krash/CLionProjects/devilutionx/Source/loadsave.cpp
+/home/backbox/devilutionX/Source/loadsave.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/loadsave.h
+/home/backbox/devilutionX/Source/loadsave.h
 
-/home/krash/CLionProjects/devilutionx/Source/logging.h
+/home/backbox/devilutionX/Source/logging.h
 
-/home/krash/CLionProjects/devilutionx/Source/mainmenu.cpp
+/home/backbox/devilutionX/Source/mainmenu.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/mainmenu.h
+/home/backbox/devilutionX/Source/mainmenu.h
 
-/home/krash/CLionProjects/devilutionx/Source/minitext.cpp
+/home/backbox/devilutionX/Source/minitext.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/minitext.h
+/home/backbox/devilutionX/Source/minitext.h
 
-/home/krash/CLionProjects/devilutionx/Source/missiles.cpp
+/home/backbox/devilutionX/Source/missiles.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/missiles.h
+/home/backbox/devilutionX/Source/missiles.h
 
-/home/krash/CLionProjects/devilutionx/Source/monster.cpp
+/home/backbox/devilutionX/Source/monster.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/monster.h
+/home/backbox/devilutionX/Source/monster.h
 
-/home/krash/CLionProjects/devilutionx/Source/movie.h
+/home/backbox/devilutionX/Source/movie.h
 
-/home/krash/CLionProjects/devilutionx/Source/mpqapi.cpp
+/home/backbox/devilutionX/Source/mpqapi.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/mpqapi.h
+/home/backbox/devilutionX/Source/mpqapi.h
 
-/home/krash/CLionProjects/devilutionx/Source/msg.cpp
+/home/backbox/devilutionX/Source/msg.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/msg.h
+/home/backbox/devilutionX/Source/msg.h
 
-/home/krash/CLionProjects/devilutionx/Source/msgcmd.cpp
+/home/backbox/devilutionX/Source/msgcmd.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/msgcmd.h
+/home/backbox/devilutionX/Source/msgcmd.h
 
-/home/krash/CLionProjects/devilutionx/Source/multi.cpp
+/home/backbox/devilutionX/Source/multi.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/multi.h
+/home/backbox/devilutionX/Source/multi.h
 
-/home/krash/CLionProjects/devilutionx/Source/nthread.h
+/home/backbox/devilutionX/Source/nthread.h
 
-/home/krash/CLionProjects/devilutionx/Source/objects.cpp
+/home/backbox/devilutionX/Source/objects.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/objects.h
+/home/backbox/devilutionX/Source/objects.h
 
-/home/krash/CLionProjects/devilutionx/Source/pack.cpp
+/home/backbox/devilutionX/Source/pack.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/pack.h
+/home/backbox/devilutionX/Source/pack.h
 
-/home/krash/CLionProjects/devilutionx/Source/palette.cpp
+/home/backbox/devilutionX/Source/palette.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/palette.h
+/home/backbox/devilutionX/Source/palette.h
 
-/home/krash/CLionProjects/devilutionx/Source/path.cpp
+/home/backbox/devilutionX/Source/path.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/path.h
+/home/backbox/devilutionX/Source/path.h
 
-/home/krash/CLionProjects/devilutionx/Source/pfile.cpp
+/home/backbox/devilutionX/Source/pfile.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/pfile.h
+/home/backbox/devilutionX/Source/pfile.h
 
-/home/krash/CLionProjects/devilutionx/Source/player.cpp
+/home/backbox/devilutionX/Source/player.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/player.h
+/home/backbox/devilutionX/Source/player.h
 
-/home/krash/CLionProjects/devilutionx/Source/plrmsg.cpp
+/home/backbox/devilutionX/Source/plrmsg.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/plrmsg.h
+/home/backbox/devilutionX/Source/plrmsg.h
 
-/home/krash/CLionProjects/devilutionx/Source/portal.cpp
+/home/backbox/devilutionX/Source/portal.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/portal.h
+/home/backbox/devilutionX/Source/portal.h
 
-/home/krash/CLionProjects/devilutionx/Source/quests.cpp
+/home/backbox/devilutionX/Source/quests.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/quests.h
+/home/backbox/devilutionX/Source/quests.h
 
-/home/krash/CLionProjects/devilutionx/Source/render.cpp
+/home/backbox/devilutionX/Source/render.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/render.h
+/home/backbox/devilutionX/Source/render.h
 
-/home/krash/CLionProjects/devilutionx/Source/restrict.h
+/home/backbox/devilutionX/Source/restrict.h
 
-/home/krash/CLionProjects/devilutionx/Source/scrollrt.cpp
+/home/backbox/devilutionX/Source/scrollrt.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/scrollrt.h
+/home/backbox/devilutionX/Source/scrollrt.h
 
-/home/krash/CLionProjects/devilutionx/Source/setmaps.cpp
+/home/backbox/devilutionX/Source/setmaps.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/setmaps.h
+/home/backbox/devilutionX/Source/setmaps.h
 
-/home/krash/CLionProjects/devilutionx/Source/sha.cpp
+/home/backbox/devilutionX/Source/sha.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/sha.h
+/home/backbox/devilutionX/Source/sha.h
 
-/home/krash/CLionProjects/devilutionx/Source/sound.h
+/home/backbox/devilutionX/Source/sound.h
 
-/home/krash/CLionProjects/devilutionx/Source/spells.cpp
+/home/backbox/devilutionX/Source/spells.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/spells.h
+/home/backbox/devilutionX/Source/spells.h
 
-/home/krash/CLionProjects/devilutionx/Source/stores.cpp
+/home/backbox/devilutionX/Source/stores.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/stores.h
+/home/backbox/devilutionX/Source/stores.h
 
-/home/krash/CLionProjects/devilutionx/Source/sync.cpp
+/home/backbox/devilutionX/Source/sync.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/sync.h
+/home/backbox/devilutionX/Source/sync.h
 
-/home/krash/CLionProjects/devilutionx/Source/textdat.cpp
+/home/backbox/devilutionX/Source/textdat.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/textdat.h
+/home/backbox/devilutionX/Source/textdat.h
 
-/home/krash/CLionProjects/devilutionx/Source/themes.cpp
+/home/backbox/devilutionX/Source/themes.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/themes.h
+/home/backbox/devilutionX/Source/themes.h
 
-/home/krash/CLionProjects/devilutionx/Source/tmsg.cpp
+/home/backbox/devilutionX/Source/tmsg.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/tmsg.h
+/home/backbox/devilutionX/Source/tmsg.h
 
-/home/krash/CLionProjects/devilutionx/Source/town.cpp
+/home/backbox/devilutionX/Source/town.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/town.h
+/home/backbox/devilutionX/Source/town.h
 
-/home/krash/CLionProjects/devilutionx/Source/towners.cpp
+/home/backbox/devilutionX/Source/towners.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/towners.h
+/home/backbox/devilutionX/Source/towners.h
 
-/home/krash/CLionProjects/devilutionx/Source/track.cpp
+/home/backbox/devilutionX/Source/track.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/track.h
+/home/backbox/devilutionX/Source/track.h
 
-/home/krash/CLionProjects/devilutionx/Source/trigs.cpp
+/home/backbox/devilutionX/Source/trigs.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/trigs.h
+/home/backbox/devilutionX/Source/trigs.h
 
-/home/krash/CLionProjects/devilutionx/Source/wave.cpp
+/home/backbox/devilutionX/Source/wave.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Source/wave.h
+/home/backbox/devilutionX/Source/wave.h
 
-/home/krash/CLionProjects/devilutionx/Stub/appfat.cpp
+/home/backbox/devilutionX/Stub/appfat.cpp
 stdarg.h
 -
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devilutionx/Stub/stubs.h
+/home/backbox/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devilutionx/Stub/capture.cpp
+/home/backbox/devilutionX/Stub/capture.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devilutionx/Stub/stubs.h
+/home/backbox/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devilutionx/Stub/diablo.cpp
+/home/backbox/devilutionX/Stub/diablo.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 miniwin_sdl.h
-/home/krash/CLionProjects/devilutionx/Stub/miniwin_sdl.h
+/home/backbox/devilutionX/Stub/miniwin_sdl.h
 stubs.h
-/home/krash/CLionProjects/devilutionx/Stub/stubs.h
+/home/backbox/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devilutionx/Stub/diabloui.cpp
+/home/backbox/devilutionX/Stub/diabloui.cpp
 vector
 -
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devilutionx/Stub/stubs.h
+/home/backbox/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devilutionx/Stub/dthread.cpp
+/home/backbox/devilutionX/Stub/dthread.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devilutionx/Stub/stubs.h
+/home/backbox/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devilutionx/Stub/dx.cpp
+/home/backbox/devilutionX/Stub/dx.cpp
 dx_stub.h
-/home/krash/CLionProjects/devilutionx/Stub/dx_stub.h
+/home/backbox/devilutionX/Stub/dx_stub.h
 miniwin_sdl.h
-/home/krash/CLionProjects/devilutionx/Stub/miniwin_sdl.h
+/home/backbox/devilutionX/Stub/miniwin_sdl.h
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devilutionx/Stub/stubs.h
+/home/backbox/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devilutionx/Stub/dx_stub.h
+/home/backbox/devilutionX/Stub/dx_stub.h
 
-/home/krash/CLionProjects/devilutionx/Stub/effects.cpp
+/home/backbox/devilutionX/Stub/effects.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 iostream
 -
 fstream
@@ -668,35 +668,35 @@ vector
 string
 -
 
-/home/krash/CLionProjects/devilutionx/Stub/fault.cpp
+/home/backbox/devilutionX/Stub/fault.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devilutionx/Stub/stubs.h
+/home/backbox/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devilutionx/Stub/gamemenu.cpp
+/home/backbox/devilutionX/Stub/gamemenu.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Stub/init.cpp
+/home/backbox/devilutionX/Stub/init.cpp
 dirent.h
 -
 string
 -
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devilutionx/Stub/stubs.h
+/home/backbox/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devilutionx/Stub/main_test.cpp
+/home/backbox/devilutionX/Stub/main_test.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devilutionx/Stub/stubs.h
+/home/backbox/devilutionX/Stub/stubs.h
 stddef.h
 -
 
-/home/krash/CLionProjects/devilutionx/Stub/miniwin.cpp
+/home/backbox/devilutionX/Stub/miniwin.cpp
 fcntl.h
 -
 sys/stat.h
@@ -704,11 +704,11 @@ sys/stat.h
 unistd.h
 -
 miniwin.h
-/home/krash/CLionProjects/devilutionx/Stub/miniwin.h
+/home/backbox/devilutionX/Stub/miniwin.h
 stubs.h
-/home/krash/CLionProjects/devilutionx/Stub/stubs.h
+/home/backbox/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devilutionx/Stub/miniwin.h
+/home/backbox/devilutionX/Stub/miniwin.h
 vector
 -
 ctype.h
@@ -730,19 +730,19 @@ time.h
 x86intrin.h
 -
 miniwin_ddraw.h
-/home/krash/CLionProjects/devilutionx/Stub/miniwin_ddraw.h
+/home/backbox/devilutionX/Stub/miniwin_ddraw.h
 miniwin_dsound.h
-/home/krash/CLionProjects/devilutionx/Stub/miniwin_dsound.h
+/home/backbox/devilutionX/Stub/miniwin_dsound.h
 
-/home/krash/CLionProjects/devilutionx/Stub/miniwin_ddraw.h
+/home/backbox/devilutionX/Stub/miniwin_ddraw.h
 miniwin.h
-/home/krash/CLionProjects/devilutionx/Stub/miniwin.h
+/home/backbox/devilutionX/Stub/miniwin.h
 
-/home/krash/CLionProjects/devilutionx/Stub/miniwin_dsound.h
+/home/backbox/devilutionX/Stub/miniwin_dsound.h
 miniwin.h
-/home/krash/CLionProjects/devilutionx/Stub/miniwin.h
+/home/backbox/devilutionX/Stub/miniwin.h
 
-/home/krash/CLionProjects/devilutionx/Stub/miniwin_io.cpp
+/home/backbox/devilutionX/Stub/miniwin_io.cpp
 fcntl.h
 -
 sys/stat.h
@@ -750,27 +750,27 @@ sys/stat.h
 unistd.h
 -
 miniwin.h
-/home/krash/CLionProjects/devilutionx/Stub/miniwin.h
+/home/backbox/devilutionX/Stub/miniwin.h
 stubs.h
-/home/krash/CLionProjects/devilutionx/Stub/stubs.h
+/home/backbox/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devilutionx/Stub/miniwin_msg_sdl.cpp
+/home/backbox/devilutionX/Stub/miniwin_msg_sdl.cpp
 deque
 -
 miniwin_sdl.h
-/home/krash/CLionProjects/devilutionx/Stub/miniwin_sdl.h
+/home/backbox/devilutionX/Stub/miniwin_sdl.h
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devilutionx/Stub/stubs.h
+/home/backbox/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devilutionx/Stub/miniwin_rand.cpp
+/home/backbox/devilutionX/Stub/miniwin_rand.cpp
 miniwin.h
-/home/krash/CLionProjects/devilutionx/Stub/miniwin.h
+/home/backbox/devilutionX/Stub/miniwin.h
 stubs.h
-/home/krash/CLionProjects/devilutionx/Stub/stubs.h
+/home/backbox/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devilutionx/Stub/miniwin_sdl.h
+/home/backbox/devilutionX/Stub/miniwin_sdl.h
 assert.h
 -
 vector
@@ -784,41 +784,41 @@ direct.h
 unistd.h
 -
 
-/home/krash/CLionProjects/devilutionx/Stub/movie.cpp
+/home/backbox/devilutionX/Stub/movie.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devilutionx/Stub/stubs.h
+/home/backbox/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devilutionx/Stub/nthread.cpp
+/home/backbox/devilutionX/Stub/nthread.cpp
 algorithm
 -
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devilutionx/Stub/stubs.h
+/home/backbox/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devilutionx/Stub/restrict.cpp
+/home/backbox/devilutionX/Stub/restrict.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devilutionx/Stub/stubs.h
+/home/backbox/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devilutionx/Stub/sanitize.cpp
+/home/backbox/devilutionX/Stub/sanitize.cpp
 
-/home/krash/CLionProjects/devilutionx/Stub/sdlrender.cpp
+/home/backbox/devilutionX/Stub/sdlrender.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 miniwin_sdl.h
-/home/krash/CLionProjects/devilutionx/Stub/miniwin_sdl.h
+/home/backbox/devilutionX/Stub/miniwin_sdl.h
 stubs.h
-/home/krash/CLionProjects/devilutionx/Stub/stubs.h
+/home/backbox/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devilutionx/Stub/sound.cpp
+/home/backbox/devilutionX/Stub/sound.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devilutionx/Stub/stubs.h
+/home/backbox/devilutionX/Stub/stubs.h
 SDL_mixer.h
 -
 functional
@@ -828,65 +828,63 @@ iostream
 utility
 -
 
-/home/krash/CLionProjects/devilutionx/Stub/storm.cpp
+/home/backbox/devilutionX/Stub/storm.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devilutionx/Stub/stubs.h
+/home/backbox/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devilutionx/Stub/storm_net.cpp
+/home/backbox/devilutionX/Stub/storm_net.cpp
 deque
 -
 string
 -
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 stubs.h
-/home/krash/CLionProjects/devilutionx/Stub/stubs.h
+/home/backbox/devilutionX/Stub/stubs.h
 
-/home/krash/CLionProjects/devilutionx/Stub/stubs.h
+/home/backbox/devilutionX/Stub/stubs.h
 miniwin_sdl.h
-/home/krash/CLionProjects/devilutionx/Stub/miniwin_sdl.h
+/home/backbox/devilutionX/Stub/miniwin_sdl.h
 assert.h
 -
 stdio.h
 -
 
-/home/krash/CLionProjects/devilutionx/Stub/test_utils.cpp
+/home/backbox/devilutionX/Stub/test_utils.cpp
 test_utils.h
-/home/krash/CLionProjects/devilutionx/Stub/test_utils.h
+/home/backbox/devilutionX/Stub/test_utils.h
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/Stub/test_utils.h
+/home/backbox/devilutionX/Stub/test_utils.h
 
-/home/krash/CLionProjects/devilutionx/Stub/validate.cpp
+/home/backbox/devilutionX/Stub/validate.cpp
 ../types.h
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 
-/home/krash/CLionProjects/devilutionx/defs.h
+/home/backbox/devilutionX/defs.h
 limits
 -
 
-/home/krash/CLionProjects/devilutionx/enums.h
+/home/backbox/devilutionX/enums.h
 
-/home/krash/CLionProjects/devilutionx/resource.h
+/home/backbox/devilutionX/resource.h
 
-/home/krash/CLionProjects/devilutionx/structs.h
+/home/backbox/devilutionX/structs.h
 
-/home/krash/CLionProjects/devilutionx/types.h
+/home/backbox/devilutionX/types.h
 resource.h
-/home/krash/CLionProjects/devilutionx/resource.h
+/home/backbox/devilutionX/resource.h
 miniwin.h
-/home/krash/CLionProjects/devilutionx/miniwin.h
+/home/backbox/devilutionX/miniwin.h
 SDL2/SDL.h
--
-SDL_image.h
 -
 SDL_mixer.h
 -
 miniwin.h
-/home/krash/CLionProjects/devilutionx/miniwin.h
+/home/backbox/devilutionX/miniwin.h
 SDL.h
 -
 SDL_image.h
@@ -918,153 +916,153 @@ shellapi.h
 ctype.h
 -
 defs.h
-/home/krash/CLionProjects/devilutionx/defs.h
+/home/backbox/devilutionX/defs.h
 enums.h
-/home/krash/CLionProjects/devilutionx/enums.h
+/home/backbox/devilutionX/enums.h
 structs.h
-/home/krash/CLionProjects/devilutionx/structs.h
+/home/backbox/devilutionX/structs.h
 DiabloUI/diabloui.h
-/home/krash/CLionProjects/devilutionx/DiabloUI/diabloui.h
+/home/backbox/devilutionX/DiabloUI/diabloui.h
 3rdParty/Storm/Source/storm.h
-/home/krash/CLionProjects/devilutionx/3rdParty/Storm/Source/storm.h
+/home/backbox/devilutionX/3rdParty/Storm/Source/storm.h
 3rdParty/PKWare/pkware.h
-/home/krash/CLionProjects/devilutionx/3rdParty/PKWare/pkware.h
+/home/backbox/devilutionX/3rdParty/PKWare/pkware.h
 Source/appfat.h
-/home/krash/CLionProjects/devilutionx/Source/appfat.h
+/home/backbox/devilutionX/Source/appfat.h
 Source/automap.h
-/home/krash/CLionProjects/devilutionx/Source/automap.h
+/home/backbox/devilutionX/Source/automap.h
 Source/capture.h
-/home/krash/CLionProjects/devilutionx/Source/capture.h
+/home/backbox/devilutionX/Source/capture.h
 Source/codec.h
-/home/krash/CLionProjects/devilutionx/Source/codec.h
+/home/backbox/devilutionX/Source/codec.h
 Source/control.h
-/home/krash/CLionProjects/devilutionx/Source/control.h
+/home/backbox/devilutionX/Source/control.h
 Source/cursor.h
-/home/krash/CLionProjects/devilutionx/Source/cursor.h
+/home/backbox/devilutionX/Source/cursor.h
 Source/dead.h
-/home/krash/CLionProjects/devilutionx/Source/dead.h
+/home/backbox/devilutionX/Source/dead.h
 Source/debug.h
-/home/krash/CLionProjects/devilutionx/Source/debug.h
+/home/backbox/devilutionX/Source/debug.h
 Source/diablo.h
-/home/krash/CLionProjects/devilutionx/Source/diablo.h
+/home/backbox/devilutionX/Source/diablo.h
 Source/doom.h
-/home/krash/CLionProjects/devilutionx/Source/doom.h
+/home/backbox/devilutionX/Source/doom.h
 Source/drlg_l1.h
-/home/krash/CLionProjects/devilutionx/Source/drlg_l1.h
+/home/backbox/devilutionX/Source/drlg_l1.h
 Source/drlg_l2.h
-/home/krash/CLionProjects/devilutionx/Source/drlg_l2.h
+/home/backbox/devilutionX/Source/drlg_l2.h
 Source/drlg_l3.h
-/home/krash/CLionProjects/devilutionx/Source/drlg_l3.h
+/home/backbox/devilutionX/Source/drlg_l3.h
 Source/drlg_l4.h
-/home/krash/CLionProjects/devilutionx/Source/drlg_l4.h
+/home/backbox/devilutionX/Source/drlg_l4.h
 Source/dthread.h
-/home/krash/CLionProjects/devilutionx/Source/dthread.h
+/home/backbox/devilutionX/Source/dthread.h
 Source/dx.h
-/home/krash/CLionProjects/devilutionx/Source/dx.h
+/home/backbox/devilutionX/Source/dx.h
 Source/effects.h
-/home/krash/CLionProjects/devilutionx/Source/effects.h
+/home/backbox/devilutionX/Source/effects.h
 Source/encrypt.h
-/home/krash/CLionProjects/devilutionx/Source/encrypt.h
+/home/backbox/devilutionX/Source/encrypt.h
 Source/engine.h
-/home/krash/CLionProjects/devilutionx/Source/engine.h
+/home/backbox/devilutionX/Source/engine.h
 Source/error.h
-/home/krash/CLionProjects/devilutionx/Source/error.h
+/home/backbox/devilutionX/Source/error.h
 Source/fault.h
-/home/krash/CLionProjects/devilutionx/Source/fault.h
+/home/backbox/devilutionX/Source/fault.h
 Source/gamemenu.h
-/home/krash/CLionProjects/devilutionx/Source/gamemenu.h
+/home/backbox/devilutionX/Source/gamemenu.h
 Source/gendung.h
-/home/krash/CLionProjects/devilutionx/Source/gendung.h
+/home/backbox/devilutionX/Source/gendung.h
 Source/gmenu.h
-/home/krash/CLionProjects/devilutionx/Source/gmenu.h
+/home/backbox/devilutionX/Source/gmenu.h
 Source/help.h
-/home/krash/CLionProjects/devilutionx/Source/help.h
+/home/backbox/devilutionX/Source/help.h
 Source/init.h
-/home/krash/CLionProjects/devilutionx/Source/init.h
+/home/backbox/devilutionX/Source/init.h
 Source/interfac.h
-/home/krash/CLionProjects/devilutionx/Source/interfac.h
+/home/backbox/devilutionX/Source/interfac.h
 Source/inv.h
-/home/krash/CLionProjects/devilutionx/Source/inv.h
+/home/backbox/devilutionX/Source/inv.h
 Source/items.h
-/home/krash/CLionProjects/devilutionx/Source/items.h
+/home/backbox/devilutionX/Source/items.h
 Source/lighting.h
-/home/krash/CLionProjects/devilutionx/Source/lighting.h
+/home/backbox/devilutionX/Source/lighting.h
 Source/loadsave.h
-/home/krash/CLionProjects/devilutionx/Source/loadsave.h
+/home/backbox/devilutionX/Source/loadsave.h
 Source/logging.h
-/home/krash/CLionProjects/devilutionx/Source/logging.h
+/home/backbox/devilutionX/Source/logging.h
 Source/mainmenu.h
-/home/krash/CLionProjects/devilutionx/Source/mainmenu.h
+/home/backbox/devilutionX/Source/mainmenu.h
 Source/minitext.h
-/home/krash/CLionProjects/devilutionx/Source/minitext.h
+/home/backbox/devilutionX/Source/minitext.h
 Source/missiles.h
-/home/krash/CLionProjects/devilutionx/Source/missiles.h
+/home/backbox/devilutionX/Source/missiles.h
 Source/monster.h
-/home/krash/CLionProjects/devilutionx/Source/monster.h
+/home/backbox/devilutionX/Source/monster.h
 Source/movie.h
-/home/krash/CLionProjects/devilutionx/Source/movie.h
+/home/backbox/devilutionX/Source/movie.h
 Source/mpqapi.h
-/home/krash/CLionProjects/devilutionx/Source/mpqapi.h
+/home/backbox/devilutionX/Source/mpqapi.h
 Source/msg.h
-/home/krash/CLionProjects/devilutionx/Source/msg.h
+/home/backbox/devilutionX/Source/msg.h
 Source/msgcmd.h
-/home/krash/CLionProjects/devilutionx/Source/msgcmd.h
+/home/backbox/devilutionX/Source/msgcmd.h
 Source/multi.h
-/home/krash/CLionProjects/devilutionx/Source/multi.h
+/home/backbox/devilutionX/Source/multi.h
 Source/nthread.h
-/home/krash/CLionProjects/devilutionx/Source/nthread.h
+/home/backbox/devilutionX/Source/nthread.h
 Source/objects.h
-/home/krash/CLionProjects/devilutionx/Source/objects.h
+/home/backbox/devilutionX/Source/objects.h
 Source/pack.h
-/home/krash/CLionProjects/devilutionx/Source/pack.h
+/home/backbox/devilutionX/Source/pack.h
 Source/palette.h
-/home/krash/CLionProjects/devilutionx/Source/palette.h
+/home/backbox/devilutionX/Source/palette.h
 Source/path.h
-/home/krash/CLionProjects/devilutionx/Source/path.h
+/home/backbox/devilutionX/Source/path.h
 Source/pfile.h
-/home/krash/CLionProjects/devilutionx/Source/pfile.h
+/home/backbox/devilutionX/Source/pfile.h
 Source/player.h
-/home/krash/CLionProjects/devilutionx/Source/player.h
+/home/backbox/devilutionX/Source/player.h
 Source/plrmsg.h
-/home/krash/CLionProjects/devilutionx/Source/plrmsg.h
+/home/backbox/devilutionX/Source/plrmsg.h
 Source/portal.h
-/home/krash/CLionProjects/devilutionx/Source/portal.h
+/home/backbox/devilutionX/Source/portal.h
 Source/quests.h
-/home/krash/CLionProjects/devilutionx/Source/quests.h
+/home/backbox/devilutionX/Source/quests.h
 Source/restrict.h
-/home/krash/CLionProjects/devilutionx/Source/restrict.h
+/home/backbox/devilutionX/Source/restrict.h
 Source/scrollrt.h
-/home/krash/CLionProjects/devilutionx/Source/scrollrt.h
+/home/backbox/devilutionX/Source/scrollrt.h
 Source/setmaps.h
-/home/krash/CLionProjects/devilutionx/Source/setmaps.h
+/home/backbox/devilutionX/Source/setmaps.h
 Source/sha.h
-/home/krash/CLionProjects/devilutionx/Source/sha.h
+/home/backbox/devilutionX/Source/sha.h
 Source/sound.h
-/home/krash/CLionProjects/devilutionx/Source/sound.h
+/home/backbox/devilutionX/Source/sound.h
 Source/spells.h
-/home/krash/CLionProjects/devilutionx/Source/spells.h
+/home/backbox/devilutionX/Source/spells.h
 Source/stores.h
-/home/krash/CLionProjects/devilutionx/Source/stores.h
+/home/backbox/devilutionX/Source/stores.h
 Source/sync.h
-/home/krash/CLionProjects/devilutionx/Source/sync.h
+/home/backbox/devilutionX/Source/sync.h
 Source/textdat.h
-/home/krash/CLionProjects/devilutionx/Source/textdat.h
+/home/backbox/devilutionX/Source/textdat.h
 Source/themes.h
-/home/krash/CLionProjects/devilutionx/Source/themes.h
+/home/backbox/devilutionX/Source/themes.h
 Source/tmsg.h
-/home/krash/CLionProjects/devilutionx/Source/tmsg.h
+/home/backbox/devilutionX/Source/tmsg.h
 Source/town.h
-/home/krash/CLionProjects/devilutionx/Source/town.h
+/home/backbox/devilutionX/Source/town.h
 Source/towners.h
-/home/krash/CLionProjects/devilutionx/Source/towners.h
+/home/backbox/devilutionX/Source/towners.h
 Source/track.h
-/home/krash/CLionProjects/devilutionx/Source/track.h
+/home/backbox/devilutionX/Source/track.h
 Source/trigs.h
-/home/krash/CLionProjects/devilutionx/Source/trigs.h
+/home/backbox/devilutionX/Source/trigs.h
 Source/wave.h
-/home/krash/CLionProjects/devilutionx/Source/wave.h
+/home/backbox/devilutionX/Source/wave.h
 Source/render.h
-/home/krash/CLionProjects/devilutionx/Source/render.h
+/home/backbox/devilutionX/Source/render.h
 
 /usr/include/SDL2/SDL.h
 SDL_main.h
@@ -1301,16 +1299,6 @@ close_code.h
 /usr/include/SDL2/SDL_hints.h
 SDL_stdinc.h
 /usr/include/SDL2/SDL_stdinc.h
-begin_code.h
-/usr/include/SDL2/begin_code.h
-close_code.h
-/usr/include/SDL2/close_code.h
-
-/usr/include/SDL2/SDL_image.h
-SDL.h
-/usr/include/SDL2/SDL.h
-SDL_version.h
-/usr/include/SDL2/SDL_version.h
 begin_code.h
 /usr/include/SDL2/begin_code.h
 close_code.h

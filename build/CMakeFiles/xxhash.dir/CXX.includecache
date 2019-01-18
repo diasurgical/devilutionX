@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/krash/CLionProjects/devilutionx/3rdParty/xxhash/xxhash.c
+/home/backbox/devilutionX/3rdParty/xxhash/xxhash.c
 stdlib.h
 -
 string.h
@@ -14,17 +14,17 @@ string.h
 assert.h
 -
 xxhash.h
-/home/krash/CLionProjects/devilutionx/3rdParty/xxhash/xxhash.h
+/home/backbox/devilutionX/3rdParty/xxhash/xxhash.h
 stdint.h
 -
 stdint.h
 -
 
-/home/krash/CLionProjects/devilutionx/3rdParty/xxhash/xxhash.h
+/home/backbox/devilutionX/3rdParty/xxhash/xxhash.h
 stddef.h
 -
 stdint.h
 -
 xxhash.c
-/home/krash/CLionProjects/devilutionx/3rdParty/xxhash/xxhash.c
+/home/backbox/devilutionX/3rdParty/xxhash/xxhash.c
 

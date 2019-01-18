@@ -170,7 +170,6 @@ CMakeFiles/devil-sanitize.dir/Source/automap.cpp.o: /usr/include/SDL2/SDL_gameco
 CMakeFiles/devil-sanitize.dir/Source/automap.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/automap.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/automap.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/automap.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/automap.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/automap.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/automap.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -296,7 +295,6 @@ CMakeFiles/devil-sanitize.dir/Source/codec.cpp.o: /usr/include/SDL2/SDL_gamecont
 CMakeFiles/devil-sanitize.dir/Source/codec.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/codec.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/codec.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/codec.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/codec.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/codec.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/codec.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -422,7 +420,6 @@ CMakeFiles/devil-sanitize.dir/Source/control.cpp.o: /usr/include/SDL2/SDL_gameco
 CMakeFiles/devil-sanitize.dir/Source/control.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/control.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/control.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/control.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/control.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/control.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/control.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -548,7 +545,6 @@ CMakeFiles/devil-sanitize.dir/Source/cursor.cpp.o: /usr/include/SDL2/SDL_gamecon
 CMakeFiles/devil-sanitize.dir/Source/cursor.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/cursor.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/cursor.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/cursor.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/cursor.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/cursor.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/cursor.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -674,7 +670,6 @@ CMakeFiles/devil-sanitize.dir/Source/dead.cpp.o: /usr/include/SDL2/SDL_gamecontr
 CMakeFiles/devil-sanitize.dir/Source/dead.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/dead.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/dead.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/dead.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/dead.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/dead.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/dead.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -800,7 +795,6 @@ CMakeFiles/devil-sanitize.dir/Source/debug.cpp.o: /usr/include/SDL2/SDL_gamecont
 CMakeFiles/devil-sanitize.dir/Source/debug.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/debug.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/debug.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/debug.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/debug.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/debug.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/debug.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -926,7 +920,6 @@ CMakeFiles/devil-sanitize.dir/Source/doom.cpp.o: /usr/include/SDL2/SDL_gamecontr
 CMakeFiles/devil-sanitize.dir/Source/doom.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/doom.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/doom.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/doom.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/doom.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/doom.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/doom.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -1052,7 +1045,6 @@ CMakeFiles/devil-sanitize.dir/Source/drlg_l1.cpp.o: /usr/include/SDL2/SDL_gameco
 CMakeFiles/devil-sanitize.dir/Source/drlg_l1.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/drlg_l1.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/drlg_l1.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/drlg_l1.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/drlg_l1.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/drlg_l1.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/drlg_l1.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -1178,7 +1170,6 @@ CMakeFiles/devil-sanitize.dir/Source/drlg_l2.cpp.o: /usr/include/SDL2/SDL_gameco
 CMakeFiles/devil-sanitize.dir/Source/drlg_l2.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/drlg_l2.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/drlg_l2.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/drlg_l2.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/drlg_l2.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/drlg_l2.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/drlg_l2.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -1304,7 +1295,6 @@ CMakeFiles/devil-sanitize.dir/Source/drlg_l3.cpp.o: /usr/include/SDL2/SDL_gameco
 CMakeFiles/devil-sanitize.dir/Source/drlg_l3.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/drlg_l3.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/drlg_l3.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/drlg_l3.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/drlg_l3.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/drlg_l3.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/drlg_l3.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -1430,7 +1420,6 @@ CMakeFiles/devil-sanitize.dir/Source/drlg_l4.cpp.o: /usr/include/SDL2/SDL_gameco
 CMakeFiles/devil-sanitize.dir/Source/drlg_l4.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/drlg_l4.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/drlg_l4.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/drlg_l4.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/drlg_l4.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/drlg_l4.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/drlg_l4.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -1556,7 +1545,6 @@ CMakeFiles/devil-sanitize.dir/Source/encrypt.cpp.o: /usr/include/SDL2/SDL_gameco
 CMakeFiles/devil-sanitize.dir/Source/encrypt.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/encrypt.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/encrypt.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/encrypt.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/encrypt.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/encrypt.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/encrypt.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -1683,7 +1671,6 @@ CMakeFiles/devil-sanitize.dir/Source/engine.cpp.o: /usr/include/SDL2/SDL_gamecon
 CMakeFiles/devil-sanitize.dir/Source/engine.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/engine.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/engine.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/engine.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/engine.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/engine.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/engine.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -1809,7 +1796,6 @@ CMakeFiles/devil-sanitize.dir/Source/error.cpp.o: /usr/include/SDL2/SDL_gamecont
 CMakeFiles/devil-sanitize.dir/Source/error.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/error.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/error.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/error.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/error.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/error.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/error.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -1935,7 +1921,6 @@ CMakeFiles/devil-sanitize.dir/Source/gendung.cpp.o: /usr/include/SDL2/SDL_gameco
 CMakeFiles/devil-sanitize.dir/Source/gendung.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/gendung.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/gendung.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/gendung.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/gendung.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/gendung.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/gendung.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -2062,7 +2047,6 @@ CMakeFiles/devil-sanitize.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_gamecont
 CMakeFiles/devil-sanitize.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/gmenu.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -2188,7 +2172,6 @@ CMakeFiles/devil-sanitize.dir/Source/help.cpp.o: /usr/include/SDL2/SDL_gamecontr
 CMakeFiles/devil-sanitize.dir/Source/help.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/help.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/help.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/help.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/help.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/help.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/help.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -2314,7 +2297,6 @@ CMakeFiles/devil-sanitize.dir/Source/interfac.cpp.o: /usr/include/SDL2/SDL_gamec
 CMakeFiles/devil-sanitize.dir/Source/interfac.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/interfac.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/interfac.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/interfac.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/interfac.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/interfac.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/interfac.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -2440,7 +2422,6 @@ CMakeFiles/devil-sanitize.dir/Source/inv.cpp.o: /usr/include/SDL2/SDL_gamecontro
 CMakeFiles/devil-sanitize.dir/Source/inv.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/inv.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/inv.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/inv.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/inv.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/inv.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/inv.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -2566,7 +2547,6 @@ CMakeFiles/devil-sanitize.dir/Source/items.cpp.o: /usr/include/SDL2/SDL_gamecont
 CMakeFiles/devil-sanitize.dir/Source/items.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/items.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/items.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/items.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/items.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/items.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/items.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -2692,7 +2672,6 @@ CMakeFiles/devil-sanitize.dir/Source/lighting.cpp.o: /usr/include/SDL2/SDL_gamec
 CMakeFiles/devil-sanitize.dir/Source/lighting.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/lighting.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/lighting.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/lighting.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/lighting.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/lighting.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/lighting.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -2818,7 +2797,6 @@ CMakeFiles/devil-sanitize.dir/Source/loadsave.cpp.o: /usr/include/SDL2/SDL_gamec
 CMakeFiles/devil-sanitize.dir/Source/loadsave.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/loadsave.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/loadsave.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/loadsave.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/loadsave.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/loadsave.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/loadsave.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -2944,7 +2922,6 @@ CMakeFiles/devil-sanitize.dir/Source/mainmenu.cpp.o: /usr/include/SDL2/SDL_gamec
 CMakeFiles/devil-sanitize.dir/Source/mainmenu.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/mainmenu.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/mainmenu.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/mainmenu.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/mainmenu.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/mainmenu.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/mainmenu.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -3070,7 +3047,6 @@ CMakeFiles/devil-sanitize.dir/Source/minitext.cpp.o: /usr/include/SDL2/SDL_gamec
 CMakeFiles/devil-sanitize.dir/Source/minitext.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/minitext.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/minitext.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/minitext.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/minitext.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/minitext.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/minitext.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -3196,7 +3172,6 @@ CMakeFiles/devil-sanitize.dir/Source/missiles.cpp.o: /usr/include/SDL2/SDL_gamec
 CMakeFiles/devil-sanitize.dir/Source/missiles.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/missiles.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/missiles.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/missiles.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/missiles.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/missiles.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/missiles.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -3322,7 +3297,6 @@ CMakeFiles/devil-sanitize.dir/Source/monster.cpp.o: /usr/include/SDL2/SDL_gameco
 CMakeFiles/devil-sanitize.dir/Source/monster.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/monster.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/monster.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/monster.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/monster.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/monster.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/monster.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -3448,7 +3422,6 @@ CMakeFiles/devil-sanitize.dir/Source/mpqapi.cpp.o: /usr/include/SDL2/SDL_gamecon
 CMakeFiles/devil-sanitize.dir/Source/mpqapi.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/mpqapi.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/mpqapi.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/mpqapi.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/mpqapi.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/mpqapi.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/mpqapi.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -3574,7 +3547,6 @@ CMakeFiles/devil-sanitize.dir/Source/msg.cpp.o: /usr/include/SDL2/SDL_gamecontro
 CMakeFiles/devil-sanitize.dir/Source/msg.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/msg.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/msg.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/msg.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/msg.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/msg.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/msg.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -3700,7 +3672,6 @@ CMakeFiles/devil-sanitize.dir/Source/msgcmd.cpp.o: /usr/include/SDL2/SDL_gamecon
 CMakeFiles/devil-sanitize.dir/Source/msgcmd.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/msgcmd.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/msgcmd.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/msgcmd.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/msgcmd.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/msgcmd.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/msgcmd.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -3826,7 +3797,6 @@ CMakeFiles/devil-sanitize.dir/Source/multi.cpp.o: /usr/include/SDL2/SDL_gamecont
 CMakeFiles/devil-sanitize.dir/Source/multi.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/multi.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/multi.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/multi.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/multi.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/multi.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/multi.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -3952,7 +3922,6 @@ CMakeFiles/devil-sanitize.dir/Source/objects.cpp.o: /usr/include/SDL2/SDL_gameco
 CMakeFiles/devil-sanitize.dir/Source/objects.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/objects.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/objects.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/objects.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/objects.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/objects.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/objects.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -4078,7 +4047,6 @@ CMakeFiles/devil-sanitize.dir/Source/pack.cpp.o: /usr/include/SDL2/SDL_gamecontr
 CMakeFiles/devil-sanitize.dir/Source/pack.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/pack.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/pack.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/pack.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/pack.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/pack.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/pack.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -4204,7 +4172,6 @@ CMakeFiles/devil-sanitize.dir/Source/palette.cpp.o: /usr/include/SDL2/SDL_gameco
 CMakeFiles/devil-sanitize.dir/Source/palette.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/palette.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/palette.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/palette.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/palette.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/palette.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/palette.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -4330,7 +4297,6 @@ CMakeFiles/devil-sanitize.dir/Source/path.cpp.o: /usr/include/SDL2/SDL_gamecontr
 CMakeFiles/devil-sanitize.dir/Source/path.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/path.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/path.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/path.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/path.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/path.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/path.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -4456,7 +4422,6 @@ CMakeFiles/devil-sanitize.dir/Source/pfile.cpp.o: /usr/include/SDL2/SDL_gamecont
 CMakeFiles/devil-sanitize.dir/Source/pfile.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/pfile.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/pfile.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/pfile.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/pfile.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/pfile.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/pfile.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -4582,7 +4547,6 @@ CMakeFiles/devil-sanitize.dir/Source/player.cpp.o: /usr/include/SDL2/SDL_gamecon
 CMakeFiles/devil-sanitize.dir/Source/player.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/player.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/player.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/player.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/player.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/player.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/player.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -4708,7 +4672,6 @@ CMakeFiles/devil-sanitize.dir/Source/plrmsg.cpp.o: /usr/include/SDL2/SDL_gamecon
 CMakeFiles/devil-sanitize.dir/Source/plrmsg.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/plrmsg.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/plrmsg.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/plrmsg.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/plrmsg.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/plrmsg.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/plrmsg.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -4834,7 +4797,6 @@ CMakeFiles/devil-sanitize.dir/Source/portal.cpp.o: /usr/include/SDL2/SDL_gamecon
 CMakeFiles/devil-sanitize.dir/Source/portal.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/portal.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/portal.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/portal.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/portal.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/portal.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/portal.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -4960,7 +4922,6 @@ CMakeFiles/devil-sanitize.dir/Source/quests.cpp.o: /usr/include/SDL2/SDL_gamecon
 CMakeFiles/devil-sanitize.dir/Source/quests.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/quests.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/quests.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/quests.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/quests.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/quests.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/quests.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -5086,7 +5047,6 @@ CMakeFiles/devil-sanitize.dir/Source/render.cpp.o: /usr/include/SDL2/SDL_gamecon
 CMakeFiles/devil-sanitize.dir/Source/render.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/render.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/render.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/render.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/render.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/render.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/render.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -5212,7 +5172,6 @@ CMakeFiles/devil-sanitize.dir/Source/scrollrt.cpp.o: /usr/include/SDL2/SDL_gamec
 CMakeFiles/devil-sanitize.dir/Source/scrollrt.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/scrollrt.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/scrollrt.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/scrollrt.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/scrollrt.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/scrollrt.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/scrollrt.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -5338,7 +5297,6 @@ CMakeFiles/devil-sanitize.dir/Source/setmaps.cpp.o: /usr/include/SDL2/SDL_gameco
 CMakeFiles/devil-sanitize.dir/Source/setmaps.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/setmaps.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/setmaps.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/setmaps.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/setmaps.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/setmaps.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/setmaps.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -5464,7 +5422,6 @@ CMakeFiles/devil-sanitize.dir/Source/sha.cpp.o: /usr/include/SDL2/SDL_gamecontro
 CMakeFiles/devil-sanitize.dir/Source/sha.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/sha.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/sha.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/sha.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/sha.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/sha.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/sha.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -5590,7 +5547,6 @@ CMakeFiles/devil-sanitize.dir/Source/spells.cpp.o: /usr/include/SDL2/SDL_gamecon
 CMakeFiles/devil-sanitize.dir/Source/spells.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/spells.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/spells.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/spells.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/spells.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/spells.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/spells.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -5716,7 +5672,6 @@ CMakeFiles/devil-sanitize.dir/Source/stores.cpp.o: /usr/include/SDL2/SDL_gamecon
 CMakeFiles/devil-sanitize.dir/Source/stores.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/stores.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/stores.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/stores.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/stores.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/stores.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/stores.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -5842,7 +5797,6 @@ CMakeFiles/devil-sanitize.dir/Source/sync.cpp.o: /usr/include/SDL2/SDL_gamecontr
 CMakeFiles/devil-sanitize.dir/Source/sync.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/sync.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/sync.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/sync.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/sync.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/sync.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/sync.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -5968,7 +5922,6 @@ CMakeFiles/devil-sanitize.dir/Source/textdat.cpp.o: /usr/include/SDL2/SDL_gameco
 CMakeFiles/devil-sanitize.dir/Source/textdat.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/textdat.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/textdat.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/textdat.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/textdat.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/textdat.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/textdat.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -6094,7 +6047,6 @@ CMakeFiles/devil-sanitize.dir/Source/themes.cpp.o: /usr/include/SDL2/SDL_gamecon
 CMakeFiles/devil-sanitize.dir/Source/themes.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/themes.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/themes.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/themes.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/themes.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/themes.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/themes.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -6220,7 +6172,6 @@ CMakeFiles/devil-sanitize.dir/Source/tmsg.cpp.o: /usr/include/SDL2/SDL_gamecontr
 CMakeFiles/devil-sanitize.dir/Source/tmsg.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/tmsg.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/tmsg.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/tmsg.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/tmsg.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/tmsg.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/tmsg.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -6346,7 +6297,6 @@ CMakeFiles/devil-sanitize.dir/Source/town.cpp.o: /usr/include/SDL2/SDL_gamecontr
 CMakeFiles/devil-sanitize.dir/Source/town.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/town.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/town.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/town.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/town.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/town.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/town.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -6472,7 +6422,6 @@ CMakeFiles/devil-sanitize.dir/Source/towners.cpp.o: /usr/include/SDL2/SDL_gameco
 CMakeFiles/devil-sanitize.dir/Source/towners.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/towners.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/towners.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/towners.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/towners.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/towners.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/towners.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -6598,7 +6547,6 @@ CMakeFiles/devil-sanitize.dir/Source/track.cpp.o: /usr/include/SDL2/SDL_gamecont
 CMakeFiles/devil-sanitize.dir/Source/track.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/track.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/track.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/track.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/track.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/track.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/track.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -6724,7 +6672,6 @@ CMakeFiles/devil-sanitize.dir/Source/trigs.cpp.o: /usr/include/SDL2/SDL_gamecont
 CMakeFiles/devil-sanitize.dir/Source/trigs.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/trigs.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/trigs.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/trigs.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/trigs.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/trigs.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/trigs.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -6850,7 +6797,6 @@ CMakeFiles/devil-sanitize.dir/Source/wave.cpp.o: /usr/include/SDL2/SDL_gamecontr
 CMakeFiles/devil-sanitize.dir/Source/wave.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Source/wave.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Source/wave.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Source/wave.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Source/wave.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Source/wave.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Source/wave.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -6978,7 +6924,6 @@ CMakeFiles/devil-sanitize.dir/Stub/appfat.cpp.o: /usr/include/SDL2/SDL_gamecontr
 CMakeFiles/devil-sanitize.dir/Stub/appfat.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Stub/appfat.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Stub/appfat.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Stub/appfat.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Stub/appfat.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Stub/appfat.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Stub/appfat.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -7106,7 +7051,6 @@ CMakeFiles/devil-sanitize.dir/Stub/capture.cpp.o: /usr/include/SDL2/SDL_gamecont
 CMakeFiles/devil-sanitize.dir/Stub/capture.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Stub/capture.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Stub/capture.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Stub/capture.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Stub/capture.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Stub/capture.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Stub/capture.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -7234,7 +7178,6 @@ CMakeFiles/devil-sanitize.dir/Stub/diablo.cpp.o: /usr/include/SDL2/SDL_gamecontr
 CMakeFiles/devil-sanitize.dir/Stub/diablo.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Stub/diablo.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Stub/diablo.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Stub/diablo.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Stub/diablo.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Stub/diablo.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Stub/diablo.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -7362,7 +7305,6 @@ CMakeFiles/devil-sanitize.dir/Stub/diabloui.cpp.o: /usr/include/SDL2/SDL_gamecon
 CMakeFiles/devil-sanitize.dir/Stub/diabloui.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Stub/diabloui.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Stub/diabloui.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Stub/diabloui.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Stub/diabloui.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Stub/diabloui.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Stub/diabloui.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -7490,7 +7432,6 @@ CMakeFiles/devil-sanitize.dir/Stub/dthread.cpp.o: /usr/include/SDL2/SDL_gamecont
 CMakeFiles/devil-sanitize.dir/Stub/dthread.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Stub/dthread.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Stub/dthread.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Stub/dthread.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Stub/dthread.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Stub/dthread.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Stub/dthread.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -7619,7 +7560,6 @@ CMakeFiles/devil-sanitize.dir/Stub/dx.cpp.o: /usr/include/SDL2/SDL_gamecontrolle
 CMakeFiles/devil-sanitize.dir/Stub/dx.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Stub/dx.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Stub/dx.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Stub/dx.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Stub/dx.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Stub/dx.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Stub/dx.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -7745,7 +7685,6 @@ CMakeFiles/devil-sanitize.dir/Stub/effects.cpp.o: /usr/include/SDL2/SDL_gamecont
 CMakeFiles/devil-sanitize.dir/Stub/effects.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Stub/effects.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Stub/effects.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Stub/effects.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Stub/effects.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Stub/effects.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Stub/effects.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -7873,7 +7812,6 @@ CMakeFiles/devil-sanitize.dir/Stub/fault.cpp.o: /usr/include/SDL2/SDL_gamecontro
 CMakeFiles/devil-sanitize.dir/Stub/fault.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Stub/fault.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Stub/fault.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Stub/fault.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Stub/fault.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Stub/fault.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Stub/fault.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -7999,7 +7937,6 @@ CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.o: /usr/include/SDL2/SDL_gamecon
 CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Stub/gamemenu.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -8127,7 +8064,6 @@ CMakeFiles/devil-sanitize.dir/Stub/init.cpp.o: /usr/include/SDL2/SDL_gamecontrol
 CMakeFiles/devil-sanitize.dir/Stub/init.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Stub/init.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Stub/init.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Stub/init.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Stub/init.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Stub/init.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Stub/init.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -8255,7 +8191,6 @@ CMakeFiles/devil-sanitize.dir/Stub/main_test.cpp.o: /usr/include/SDL2/SDL_gameco
 CMakeFiles/devil-sanitize.dir/Stub/main_test.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Stub/main_test.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Stub/main_test.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Stub/main_test.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Stub/main_test.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Stub/main_test.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Stub/main_test.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -8425,7 +8360,6 @@ CMakeFiles/devil-sanitize.dir/Stub/miniwin_msg_sdl.cpp.o: /usr/include/SDL2/SDL_
 CMakeFiles/devil-sanitize.dir/Stub/miniwin_msg_sdl.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Stub/miniwin_msg_sdl.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Stub/miniwin_msg_sdl.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Stub/miniwin_msg_sdl.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Stub/miniwin_msg_sdl.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Stub/miniwin_msg_sdl.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Stub/miniwin_msg_sdl.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -8574,7 +8508,6 @@ CMakeFiles/devil-sanitize.dir/Stub/movie.cpp.o: /usr/include/SDL2/SDL_gamecontro
 CMakeFiles/devil-sanitize.dir/Stub/movie.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Stub/movie.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Stub/movie.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Stub/movie.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Stub/movie.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Stub/movie.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Stub/movie.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -8702,7 +8635,6 @@ CMakeFiles/devil-sanitize.dir/Stub/nthread.cpp.o: /usr/include/SDL2/SDL_gamecont
 CMakeFiles/devil-sanitize.dir/Stub/nthread.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Stub/nthread.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Stub/nthread.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Stub/nthread.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Stub/nthread.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Stub/nthread.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Stub/nthread.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -8830,7 +8762,6 @@ CMakeFiles/devil-sanitize.dir/Stub/restrict.cpp.o: /usr/include/SDL2/SDL_gamecon
 CMakeFiles/devil-sanitize.dir/Stub/restrict.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Stub/restrict.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Stub/restrict.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Stub/restrict.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Stub/restrict.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Stub/restrict.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Stub/restrict.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -8960,7 +8891,6 @@ CMakeFiles/devil-sanitize.dir/Stub/sdlrender.cpp.o: /usr/include/SDL2/SDL_gameco
 CMakeFiles/devil-sanitize.dir/Stub/sdlrender.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Stub/sdlrender.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Stub/sdlrender.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Stub/sdlrender.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Stub/sdlrender.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Stub/sdlrender.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Stub/sdlrender.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -9088,7 +9018,6 @@ CMakeFiles/devil-sanitize.dir/Stub/sound.cpp.o: /usr/include/SDL2/SDL_gamecontro
 CMakeFiles/devil-sanitize.dir/Stub/sound.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Stub/sound.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Stub/sound.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Stub/sound.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Stub/sound.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Stub/sound.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Stub/sound.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -9216,7 +9145,6 @@ CMakeFiles/devil-sanitize.dir/Stub/storm.cpp.o: /usr/include/SDL2/SDL_gamecontro
 CMakeFiles/devil-sanitize.dir/Stub/storm.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Stub/storm.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Stub/storm.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Stub/storm.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Stub/storm.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Stub/storm.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Stub/storm.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -9344,7 +9272,6 @@ CMakeFiles/devil-sanitize.dir/Stub/storm_net.cpp.o: /usr/include/SDL2/SDL_gameco
 CMakeFiles/devil-sanitize.dir/Stub/storm_net.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Stub/storm_net.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Stub/storm_net.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Stub/storm_net.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Stub/storm_net.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Stub/storm_net.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Stub/storm_net.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -9471,7 +9398,6 @@ CMakeFiles/devil-sanitize.dir/Stub/test_utils.cpp.o: /usr/include/SDL2/SDL_gamec
 CMakeFiles/devil-sanitize.dir/Stub/test_utils.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Stub/test_utils.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Stub/test_utils.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Stub/test_utils.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Stub/test_utils.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Stub/test_utils.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Stub/test_utils.cpp.o: /usr/include/SDL2/SDL_keycode.h
@@ -9597,7 +9523,6 @@ CMakeFiles/devil-sanitize.dir/Stub/validate.cpp.o: /usr/include/SDL2/SDL_gamecon
 CMakeFiles/devil-sanitize.dir/Stub/validate.cpp.o: /usr/include/SDL2/SDL_gesture.h
 CMakeFiles/devil-sanitize.dir/Stub/validate.cpp.o: /usr/include/SDL2/SDL_haptic.h
 CMakeFiles/devil-sanitize.dir/Stub/validate.cpp.o: /usr/include/SDL2/SDL_hints.h
-CMakeFiles/devil-sanitize.dir/Stub/validate.cpp.o: /usr/include/SDL2/SDL_image.h
 CMakeFiles/devil-sanitize.dir/Stub/validate.cpp.o: /usr/include/SDL2/SDL_joystick.h
 CMakeFiles/devil-sanitize.dir/Stub/validate.cpp.o: /usr/include/SDL2/SDL_keyboard.h
 CMakeFiles/devil-sanitize.dir/Stub/validate.cpp.o: /usr/include/SDL2/SDL_keycode.h

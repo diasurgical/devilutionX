@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/krash/CLionProjects/devilutionx
+CMAKE_SOURCE_DIR = /home/backbox/devilutionX
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/krash/CLionProjects/devilutionx/build
+CMAKE_BINARY_DIR = /home/backbox/devilutionX/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/xxhash.dir/depend.make
@@ -59,16 +59,16 @@ include CMakeFiles/xxhash.dir/flags.make
 
 CMakeFiles/xxhash.dir/3rdParty/xxhash/xxhash.c.o: CMakeFiles/xxhash.dir/flags.make
 CMakeFiles/xxhash.dir/3rdParty/xxhash/xxhash.c.o: ../3rdParty/xxhash/xxhash.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionx/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/xxhash.dir/3rdParty/xxhash/xxhash.c.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/xxhash.dir/3rdParty/xxhash/xxhash.c.o -c /home/krash/CLionProjects/devilutionx/3rdParty/xxhash/xxhash.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/backbox/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/xxhash.dir/3rdParty/xxhash/xxhash.c.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/xxhash.dir/3rdParty/xxhash/xxhash.c.o -c /home/backbox/devilutionX/3rdParty/xxhash/xxhash.c
 
 CMakeFiles/xxhash.dir/3rdParty/xxhash/xxhash.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/xxhash.dir/3rdParty/xxhash/xxhash.c.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/krash/CLionProjects/devilutionx/3rdParty/xxhash/xxhash.c > CMakeFiles/xxhash.dir/3rdParty/xxhash/xxhash.c.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/backbox/devilutionX/3rdParty/xxhash/xxhash.c > CMakeFiles/xxhash.dir/3rdParty/xxhash/xxhash.c.i
 
 CMakeFiles/xxhash.dir/3rdParty/xxhash/xxhash.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/xxhash.dir/3rdParty/xxhash/xxhash.c.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/krash/CLionProjects/devilutionx/3rdParty/xxhash/xxhash.c -o CMakeFiles/xxhash.dir/3rdParty/xxhash/xxhash.c.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/backbox/devilutionX/3rdParty/xxhash/xxhash.c -o CMakeFiles/xxhash.dir/3rdParty/xxhash/xxhash.c.s
 
 CMakeFiles/xxhash.dir/3rdParty/xxhash/xxhash.c.o.requires:
 
@@ -91,7 +91,7 @@ xxhash_EXTERNAL_OBJECTS =
 libxxhash.a: CMakeFiles/xxhash.dir/3rdParty/xxhash/xxhash.c.o
 libxxhash.a: CMakeFiles/xxhash.dir/build.make
 libxxhash.a: CMakeFiles/xxhash.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/krash/CLionProjects/devilutionx/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX static library libxxhash.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/backbox/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX static library libxxhash.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/xxhash.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/xxhash.dir/link.txt --verbose=$(VERBOSE)
 
@@ -109,6 +109,6 @@ CMakeFiles/xxhash.dir/clean:
 .PHONY : CMakeFiles/xxhash.dir/clean
 
 CMakeFiles/xxhash.dir/depend:
-	cd /home/krash/CLionProjects/devilutionx/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/krash/CLionProjects/devilutionx /home/krash/CLionProjects/devilutionx /home/krash/CLionProjects/devilutionx/build /home/krash/CLionProjects/devilutionx/build /home/krash/CLionProjects/devilutionx/build/CMakeFiles/xxhash.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/backbox/devilutionX/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/backbox/devilutionX /home/backbox/devilutionX /home/backbox/devilutionX/build /home/backbox/devilutionX/build /home/backbox/devilutionX/build/CMakeFiles/xxhash.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/xxhash.dir/depend
 

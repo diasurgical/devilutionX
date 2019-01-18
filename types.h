@@ -10,14 +10,12 @@
 #ifdef MINIWIN
 #include "miniwin.h"
 #include <SDL2/SDL.h>
-#include <SDL_image.h>
 #include <SDL_mixer.h>
 #endif
 
 #ifdef ANDROID
 #include "miniwin.h"
 #include <SDL.h>
-#include <SDL_image.h>
 #include <SDL_mixer.h>
 #endif
 

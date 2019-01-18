@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/krash/CLionProjects/devilutionx
+CMAKE_SOURCE_DIR = /home/backbox/devilutionX
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/krash/CLionProjects/devilutionx/build
+CMAKE_BINARY_DIR = /home/backbox/devilutionX/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/sanitize_coverage.dir/depend.make
@@ -59,16 +59,16 @@ include CMakeFiles/sanitize_coverage.dir/flags.make
 
 CMakeFiles/sanitize_coverage.dir/Stub/sanitize_coverage.cpp.o: CMakeFiles/sanitize_coverage.dir/flags.make
 CMakeFiles/sanitize_coverage.dir/Stub/sanitize_coverage.cpp.o: ../Stub/sanitize_coverage.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/krash/CLionProjects/devilutionx/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/sanitize_coverage.dir/Stub/sanitize_coverage.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/sanitize_coverage.dir/Stub/sanitize_coverage.cpp.o -c /home/krash/CLionProjects/devilutionx/Stub/sanitize_coverage.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/backbox/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/sanitize_coverage.dir/Stub/sanitize_coverage.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/sanitize_coverage.dir/Stub/sanitize_coverage.cpp.o -c /home/backbox/devilutionX/Stub/sanitize_coverage.cpp
 
 CMakeFiles/sanitize_coverage.dir/Stub/sanitize_coverage.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/sanitize_coverage.dir/Stub/sanitize_coverage.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/krash/CLionProjects/devilutionx/Stub/sanitize_coverage.cpp > CMakeFiles/sanitize_coverage.dir/Stub/sanitize_coverage.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/backbox/devilutionX/Stub/sanitize_coverage.cpp > CMakeFiles/sanitize_coverage.dir/Stub/sanitize_coverage.cpp.i
 
 CMakeFiles/sanitize_coverage.dir/Stub/sanitize_coverage.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/sanitize_coverage.dir/Stub/sanitize_coverage.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/krash/CLionProjects/devilutionx/Stub/sanitize_coverage.cpp -o CMakeFiles/sanitize_coverage.dir/Stub/sanitize_coverage.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/backbox/devilutionX/Stub/sanitize_coverage.cpp -o CMakeFiles/sanitize_coverage.dir/Stub/sanitize_coverage.cpp.s
 
 CMakeFiles/sanitize_coverage.dir/Stub/sanitize_coverage.cpp.o.requires:
 
@@ -91,7 +91,7 @@ sanitize_coverage_EXTERNAL_OBJECTS =
 libsanitize_coverage.a: CMakeFiles/sanitize_coverage.dir/Stub/sanitize_coverage.cpp.o
 libsanitize_coverage.a: CMakeFiles/sanitize_coverage.dir/build.make
 libsanitize_coverage.a: CMakeFiles/sanitize_coverage.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/krash/CLionProjects/devilutionx/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX static library libsanitize_coverage.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/backbox/devilutionX/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX static library libsanitize_coverage.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/sanitize_coverage.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/sanitize_coverage.dir/link.txt --verbose=$(VERBOSE)
 
@@ -109,6 +109,6 @@ CMakeFiles/sanitize_coverage.dir/clean:
 .PHONY : CMakeFiles/sanitize_coverage.dir/clean
 
 CMakeFiles/sanitize_coverage.dir/depend:
-	cd /home/krash/CLionProjects/devilutionx/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/krash/CLionProjects/devilutionx /home/krash/CLionProjects/devilutionx /home/krash/CLionProjects/devilutionx/build /home/krash/CLionProjects/devilutionx/build /home/krash/CLionProjects/devilutionx/build/CMakeFiles/sanitize_coverage.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/backbox/devilutionX/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/backbox/devilutionX /home/backbox/devilutionX /home/backbox/devilutionX/build /home/backbox/devilutionX/build /home/backbox/devilutionX/build/CMakeFiles/sanitize_coverage.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/sanitize_coverage.dir/depend
 

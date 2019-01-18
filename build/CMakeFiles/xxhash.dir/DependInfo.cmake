@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/krash/CLionProjects/devilutionx/3rdParty/xxhash/xxhash.c" "/home/krash/CLionProjects/devilutionx/build/CMakeFiles/xxhash.dir/3rdParty/xxhash/xxhash.c.o"
+  "/home/backbox/devilutionX/3rdParty/xxhash/xxhash.c" "/home/backbox/devilutionX/build/CMakeFiles/xxhash.dir/3rdParty/xxhash/xxhash.c.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
