@@ -84,6 +84,7 @@ int GameTitleWidth;
 
 void *TitleMenuText;
 void *MenuPentegram16;
+void *MenuPentegram;
 void *MenuPentegram42;
 
 void *pDiabfrCel;
@@ -833,14 +834,9 @@ void GetWorkingLocationOfFile(char *RelativeFile)
 
 uint32_t XgetTick()
 {
-
 	unsigned theTick = 0U;
 	printf("This is supposed to replace GitTicks()");
 	return theTick;
-}
-
-void SDLCreateDiabloCursor()
-{
 }
 
 void SdlDiabloMainWindow()
@@ -1104,7 +1100,7 @@ void DrawMouse()
 	//	unlock_buf_priv();
 }
 
-void DrawSelector(int x, int y, int width, int padding, int spacing, int swidth, void *pBuffer)
+void AnimateSelector(int x, int y, int width, int padding, int spacing, int swidth, void *pBuffer)
 {
 	int Pentframe = (SDL_GetTicks() / 60) % 8;
 
@@ -1112,6 +1108,7 @@ void DrawSelector(int x, int y, int width, int padding, int spacing, int swidth,
 	if (Pentframe == 8) {
 		Pentframe = 0;
 	}
+	Pentframe = 0;
 
 	width = width ? width : SCREEN_WIDTH;
 	x += GetCenterOffset(swidth, width);
@@ -1123,15 +1120,20 @@ void DrawSelector(int x, int y, int width, int padding, int spacing, int swidth,
 
 void DrawSelector16(int x, int y, int width, int padding, int spacing)
 {
-	DrawSelector(x, y, width, padding, spacing, 20, MenuPentegram16);
+	AnimateSelector(x, y, width, padding, spacing, 20, MenuPentegram16);
+}
+
+void DrawSelector(int x, int y, int width, int padding, int spacing)
+{
+	AnimateSelector(x, y, width, padding, spacing, 30, MenuPentegram);
 }
 
 void DrawSelector42(int x, int y, int width, int padding, int spacing)
 {
-	DrawSelector(x, y, width, padding, spacing, 42, MenuPentegram42);
+	AnimateSelector(x, y, width, padding, spacing, 42, MenuPentegram42);
 }
 
-void SDL_RenderDiabloSplashPage()
+void RenderDiabloSplashPage()
 {
 	LoadTitelArt("ui_art\\title.pcx");
 	DrawArtImage(0, 0, gdwTitleWidth, gdwTitleHeight, 0, pPcxTitleImage);
@@ -1140,7 +1142,7 @@ void SDL_RenderDiabloSplashPage()
 	RenderDiabloLogo();
 }
 
-void SDL_RenderDiabloMainPage()
+void RenderDiabloMainPage()
 {
 	char *pszFile = "ui_art\\mainmenu.pcx";
 	if (false) //DiabloUI_GetSpawned()
@@ -1150,7 +1152,6 @@ void SDL_RenderDiabloMainPage()
 	DrawArtImage(0, 0, gdwTitleWidth, gdwTitleHeight, 0, pPcxTitleImage);
 
 	// scrollrt_draw_cursor_back_buffer(); // Doesn't work?
-
 
 	RenderDiabloLogoSm();
 
@@ -1178,32 +1179,46 @@ void SDL_RenderDiabloMainPage()
 	ADD_PlrStringXY(0, 600 - 130, 640, " MaTT Uelman, and The Blizzard North Team ThaT Gave Us A Childhood.", COL_BLUE);
 }
 
-void SDL_RenderDiabloSinglePlayerPage()
+void RenderStats(char *lvl, char *str, char *mag, char *dex, char *vit)
+{
+	PrintText16Silver(31, 323, "Level:", JustRight, 118);
+	PrintText16Silver(149, 323, lvl, JustCentre, 61);
+	PrintText16Silver(31, 358, "Strength:", JustRight, 118);
+	PrintText16Silver(149, 358, str, JustCentre, 61);
+	PrintText16Silver(31, 380, "Magic:", JustRight, 118);
+	PrintText16Silver(149, 380, mag, JustCentre, 61);
+	PrintText16Silver(31, 401, "Dexterity:", JustRight, 118);
+	PrintText16Silver(149, 401, dex, JustCentre, 61);
+	PrintText16Silver(31, 422, "Vitality:", JustRight, 118);
+	PrintText16Silver(149, 422, vit, JustCentre, 61);
+}
+
+void RenderDiabloSinglePlayerPage()
 {
 	LoadTitelArt("ui_art\\selhero.pcx");
 	DrawArtImage(0, 0, gdwTitleWidth, gdwTitleHeight, 0, pPcxTitleImage);
 	RenderDiabloLogoSm();
 
-	DrawArtImage(30, 211, gdwHeroWidth, gdwHeroHeight, 0, pPcxHeroImage);
+	DrawArtImage(30, 211, gdwHeroWidth, gdwHeroHeight, 3, pPcxHeroImage);
 
 	PrintText30Silver(-1, 161, "Single Player Characters", JustCentre);
 
-	PrintText30Silver(241 - 1, 211, "Select Hero", JustCentre, 369);
+	int w = 369;
+	int x = 241;
 
-	PrintText24Gold(241 - 1, 256, "New Hero", JustCentre, 369); // 26px spacing
+	PrintText30Silver(x - 1, 211, "Select Hero", JustCentre, w);
 
-	DrawSelector16(241, 256 + 3, 369, 32, 26);
+	int selectorTop = 256;
+	int y = selectorTop;
+	for (int i = 0; i < 0; i++) {
+		PrintText24Gold(x - 1, y, "Hero name", JustCentre, w);
+		y += 26;
+	}
+	PrintText24Gold(x - 1, y, "New Hero", JustCentre, w);
 
-	PrintText16Silver(31, 323, "Level:", JustRight, 118);
-	PrintText16Silver(149, 323, "1", JustCentre, 61);
-	PrintText16Silver(31, 358, "Strength:", JustRight, 118);
-	PrintText16Silver(149, 358, "30", JustCentre, 61);
-	PrintText16Silver(31, 380, "Magic:", JustRight, 118);
-	PrintText16Silver(149, 380, "10", JustCentre, 61);
-	PrintText16Silver(31, 401, "Dexterity:", JustRight, 118);
-	PrintText16Silver(149, 401, "20", JustCentre, 61);
-	PrintText16Silver(31, 422, "Vitality:", JustRight, 118);
-	PrintText16Silver(149, 422, "25", JustCentre, 61);
+	DrawSelector16(x, selectorTop + 3, w, 32, 26);
+
+	RenderStats("-", "-", "-", "-", "-");
 
 	PrintText30Gold(279, 429, "OK");
 	PrintText30Gold(378, 429, "Delete");
@@ -1257,28 +1272,7 @@ void LoadClickBoxes(int numberofchars)
 int LoadedFont = 0;
 int TotalPlayers = 0;
 
-void DrawNewHeroImage(int image, int ShowClasses)
-{
-	LoadTitelArt("ui_art\\selhero.pcx");
-	DrawArtImage(0, 0, gdwTitleWidth, gdwTitleHeight, 0, pPcxTitleImage);
-	RenderDiabloLogoSm();
-
-	DrawArtImage(30, 211, gdwHeroWidth, gdwHeroHeight, 0, pPcxHeroImage);
-
-	char *heroclasses[3] = { "Warrior", "Rogue", "Sorceror" };
-
-	// this should not be hard coded.
-	int x = 280;
-	int y = 430;
-	if (ShowClasses == 1) {
-		for (int i = 0; i < 3; i++) {
-			y += 40;
-			PrintText16Silver(x, y, heroclasses[i]);
-		}
-	}
-}
-
-void DrawPreGameOptions(int image, int ShowClasses)
+void DrawPreGameOptions(int ShowClasses)
 {
 	LoadTitelArt("ui_art\\selhero.pcx");
 	DrawArtImage(0, 0, gdwTitleWidth, gdwTitleHeight, 0, pPcxTitleImage);
@@ -1290,7 +1284,7 @@ void DrawPreGameOptions(int image, int ShowClasses)
 
 	// this should not be hard coded.
 	int x = 280;
-	int y = 430;
+	int y = 256;
 
 	if (ShowClasses == 1) {
 		for (int i = 0; i < 2; i++) {
@@ -1300,7 +1294,7 @@ void DrawPreGameOptions(int image, int ShowClasses)
 	}
 }
 
-void DrawPreGameDifficultySelection(int image, int ShowClasses)
+void DrawPreGameDifficultySelection(int HeroClass, int ShowClasses)
 {
 	LoadTitelArt("ui_art\\selhero.pcx");
 	DrawArtImage(0, 0, gdwTitleWidth, gdwTitleHeight, 0, pPcxTitleImage);
@@ -1308,12 +1302,14 @@ void DrawPreGameDifficultySelection(int image, int ShowClasses)
 
 	DrawArtImage(30, 211, gdwHeroWidth, gdwHeroHeight, 0, pPcxHeroImage);
 
+	RenderStats("1", "30", "10", "20", "25");
+
 	char *GameOptions[3] = { "Normal", "Nightmare", "Hell" };
 
 	// this should not be hard coded.
 	int x = 280;
-	int y = 430;
-	// DrawArtImage(30, 211, gdwHeroWidth, gdwHeroHeight, image, pPcxHeroImage);
+	int y = 256;
+	DrawArtImage(30, 211, gdwHeroWidth, gdwHeroHeight, HeroClass, pPcxHeroImage);
 
 	if (ShowClasses == 1) {
 		for (int i = 0; i < 3; i++) {
@@ -1323,41 +1319,19 @@ void DrawPreGameDifficultySelection(int image, int ShowClasses)
 	}
 }
 
-void RenderDefaultStats(int HeroChosen)
+void RenderDefaultStats(int HeroClass)
 {
-	int x = 80;
-	int y = 530;
-	char *WarriorStats[4] = { "Strenght : 30", "Magic : 10", "Dexterity : 20", "Vitality : 25" };
-	char *RogueStats[4] = { "Strenght : 20", "Magic : 15", "Dexterity : 30", "Vitality : 20" };
-	char *SorcerorStats[4] = { "Strenght : 15", "Magic : 35", "Dexterity : 15", "Vitality : 20" };
-
-	if (HeroChosen == 0) {
-		PrintText16Silver(x, y - 20, "Warrior Stats:");
-		for (int i = 0; i < 4; i++) {
-			PrintText16Silver(x, y, WarriorStats[i]);
-			y += 20;
-		}
+	switch (HeroClass) {
+	case UI_WARRIOR:
+		RenderStats("1", "30", "10", "20", "25");
+		break;
+	case UI_ROGUE:
+		RenderStats("1", "20", "15", "30", "20");
+		break;
+	case UI_SORCERER:
+		RenderStats("1", "15", "35", "15", "20");
+		break;
 	}
-	if (HeroChosen == 1) {
-		PrintText16Silver(x, y - 20, "Rogue Stats:");
-		for (int i = 0; i < 4; i++) {
-			PrintText16Silver(x, y, RogueStats[i]);
-			y += 20;
-		}
-	}
-	if (HeroChosen == 2) {
-		PrintText16Silver(x, y - 20, "Sorceror Stats:");
-
-		for (int i = 0; i < 4; i++) {
-			PrintText16Silver(x, y, SorcerorStats[i]);
-			y += 20;
-		}
-	}
-}
-
-void RenderUndecidedHeroName()
-{
-	gmenu_print_text(270, 450, (char *)HeroUndecidedName);
 }
 
 void SetHeroStats(_uiheroinfo *a1)
@@ -1370,30 +1344,69 @@ void LoadHeroStats()
 	pfile_ui_set_hero_infos(SetHeroStats);
 }
 
-void DrawHeroStats()
-{
-
-	int x = 80;
-	int y = 415;
-
-	/*
-	Render charactor stats if you want.
-
-	*/
-}
-
-bool LoadCreateHeroDialogImages = 0;
-bool SorcerorCreateSelected = 0;
-bool RogueCreateSelected = 0;
-bool WarriorCreateSelected = 1;
-
-void LoadCreateHeroDialogMenu()
-{
-}
 // Have this load the function above and then render it in the main menu.
 // Cnacel box is also needed.
 void CreateHeroMenu()
 {
+	LoadTitelArt("ui_art\\selhero.pcx");
 	DrawArtImage(0, 0, gdwTitleWidth, gdwTitleHeight, 0, pPcxTitleImage);
 	RenderDiabloLogoSm();
+
+	DrawArtImage(30, 211, gdwHeroWidth, gdwHeroHeight, SelectedItem - 1, pPcxHeroImage);
+
+	PrintText30Silver(-1, 161, "New Single Player Hero", JustCentre);
+
+	int w = 369;
+	int x = 241;
+	int y = 285;
+
+	PrintText30Silver(x - 1, 211, "Choose Class", JustCentre, w);
+
+	RenderDefaultStats(SelectedItem - 1);
+
+	char *heroclasses[3] = { "Warrior", "Rogue", "Sorcerer" };
+
+	int selectorTop = y;
+
+	for (int i = 0; i < 3; i++) {
+		if (i > 1) {
+			y += 1; // "Rouge" and "Sorcerer" has a smaller gap then other items
+		}
+		PrintText24Gold(x - 1, y, heroclasses[i], JustCentre, w);
+		y += 33;
+	}
+
+	if (SelectedItem > 1) {
+		selectorTop += 1; // "Rouge" and "Sorcerer" has a smaller gap then other items
+	}
+
+	DrawSelector(x, selectorTop - 2, w, 39, 26);
+
+	PrintText30Gold(329, 429, "OK");
+	PrintText30Gold(451, 429, "Cancel");
+}
+
+void RenderUndecidedHeroName(int HeroClass)
+{
+	LoadTitelArt("ui_art\\selhero.pcx");
+	DrawArtImage(0, 0, gdwTitleWidth, gdwTitleHeight, 0, pPcxTitleImage);
+	RenderDiabloLogoSm();
+
+	DrawArtImage(30, 211, gdwHeroWidth, gdwHeroHeight, HeroClass, pPcxHeroImage);
+
+	PrintText30Silver(-1, 161, "New Single Player Hero", JustCentre);
+
+	int w = 369;
+	int x = 241;
+	int y = 318;
+
+	PrintText30Silver(x - 1, 211, "Enter Name", JustCentre, w);
+
+	RenderDefaultStats(HeroClass);
+
+	DrawSelector(x, y - 2, w, 39, 26);
+	PrintText24Gold(x + 67, y, (char *)HeroUndecidedName); // todo add blinking "|"
+
+	PrintText30Gold(329, 429, "OK");
+	PrintText30Gold(451, 429, "Cancel");
 }

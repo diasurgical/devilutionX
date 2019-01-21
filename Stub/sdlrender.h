@@ -56,11 +56,6 @@ extern int gdwCreditsHeight;
 
 extern bool TitleImageLoaded;
 
-//My SDL inclusions //
-extern bool SorcerorCreateSelected;
-extern bool WarriorCreateSelected;
-extern bool RogueCreateSelected;
-
 extern int totalFrames;
 //extern SDL_Texture* spriteSheet;
 extern SDL_Surface *DiabloTitle;
@@ -87,6 +82,7 @@ extern int HeroChosen;
 extern void *TitleMenuText;
 
 extern void *MenuPentegram16;
+extern void *MenuPentegram;
 extern void *MenuPentegram42;
 
 extern char HeroUndecidedName[17];
@@ -96,26 +92,23 @@ extern SDL_Rect CreateHeroBox;
 void CreateMenuDialogBox();
 void CreateDiabloMainMenuz();
 void SdlDiabloMainWindow();
-void SDL_RenderDiabloSplashPage();
-void SDL_RenderDiabloMainPage();
+void RenderDiabloSplashPage();
+void RenderDiabloMainPage();
 char *GetWorkingDirectory();
 void CreateMainDiabloMenu();
-void SDLCreateDiabloCursor();
-void SDL_RenderDiabloSinglePlayerPage();
+void RenderDiabloSinglePlayerPage();
 void ShowCredts();
 void RenderCharNames();
-void SDL_Diablo_UI();
 void FreeMenuItems();
 BOOL __cdecl LoadArtImage(char *pszFile, void **pBuffer, int frames, DWORD *data);
 void DrawMouse();
 void DrawCursor(int mx, int my);
 void CreateHeroMenu();
-void DrawNewHeroImage(int image, int ShowClasses);
-void RenderUndecidedHeroName();
+void RenderUndecidedHeroName(int HeroClass);
 void LoadHeroStats();
-void RenderDefaultStats(int HeroChosen);
-void DrawPreGameOptions(int image, int ShowClasses);
-void DrawPreGameDifficultySelection(int image, int ShowClasses);
+void RenderDefaultStats(int HeroClass);
+void DrawPreGameOptions(int ShowClasses);
+void DrawPreGameDifficultySelection(int HeroClass, int ShowClasses);
 int GetCenterOffset(int w, int bw = 0);
 void DrawPCXString(int x, int y, int w, int h, char *str, BYTE *font, void *pBuff);
 void DrawArtWithMask(int SX, int SY, int SW, int SH, int nFrame, BYTE bMask, void *pBuffer);
