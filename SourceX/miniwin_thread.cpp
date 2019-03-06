@@ -1,7 +1,7 @@
 #include "pch.h"
 
-static std::set<HANDLE> threads;
-static std::set<HANDLE> events;
+static std::set<uintptr_t> threads;
+static std::set<uintptr_t> events;
 
 struct event_emul {
 	SDL_mutex *mutex;
@@ -20,7 +20,7 @@ uintptr_t __cdecl _beginthreadex(void *_Security, unsigned _StackSize, unsigned(
 	// WARNING: wrong return type of _StartAddress
 	SDL_Thread *ret = SDL_CreateThread((SDL_ThreadFunction)_StartAddress, NULL, _ArgList);
 	*_ThrdAddr = SDL_GetThreadID(ret);
-	threads.insert((HANDLE)ret);
+	threads.insert((uintptr_t)ret);
 	return (uintptr_t)ret;
 }
 
@@ -51,17 +51,17 @@ VOID WINAPI InitializeCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
 
 VOID WINAPI EnterCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
 {
-	SDL_LockMutex(*lpCriticalSection);
+	SDL_LockMutex(*((SDL_mutex **)lpCriticalSection));
 }
 
 VOID WINAPI LeaveCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
 {
-	SDL_UnlockMutex(*lpCriticalSection);
+	SDL_UnlockMutex(*((SDL_mutex **)lpCriticalSection));
 }
 
 VOID WINAPI DeleteCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
 {
-	SDL_DestroyMutex(*lpCriticalSection);
+	SDL_DestroyMutex(*((SDL_mutex **)lpCriticalSection));
 }
 
 HANDLE WINAPI CreateEventA(LPSECURITY_ATTRIBUTES lpEventAttributes, WINBOOL bManualReset, WINBOOL bInitialState,
@@ -85,7 +85,7 @@ HANDLE WINAPI CreateEventA(LPSECURITY_ATTRIBUTES lpEventAttributes, WINBOOL bMan
 	ret = (struct event_emul *)malloc(sizeof(struct event_emul));
 	ret->mutex = SDL_CreateMutex();
 	ret->cond = SDL_CreateCond();
-	events.insert((HANDLE *)ret);
+	events.insert((uintptr_t)ret);
 	return ret;
 }
 
@@ -95,6 +95,13 @@ BOOL WINAPI SetEvent(HANDLE hEvent)
 	SDL_LockMutex(e->mutex);
 	SDL_CondSignal(e->cond);
 	SDL_UnlockMutex(e->mutex);
+	return 1;
+}
+
+BOOL WINAPI DestroyEvent(HANDLE hEvent)
+{
+	struct event_emul *e = (struct event_emul *)hEvent;
+	SDL_DestroyMutex(e->mutex);
 	return 1;
 }
 
@@ -133,9 +140,9 @@ static DWORD wait_for_sdl_thread(HANDLE hHandle, DWORD dwMilliseconds)
 DWORD WINAPI WaitForSingleObject(HANDLE hHandle, DWORD dwMilliseconds)
 {
 	// return value different from WinAPI
-	if (threads.find(hHandle) != threads.end())
+	if (threads.find((uintptr_t)hHandle) != threads.end())
 		return wait_for_sdl_thread(hHandle, dwMilliseconds);
-	if (events.find(hHandle) != threads.end())
+	if (events.find((uintptr_t)hHandle) != threads.end())
 		return wait_for_sdl_cond(hHandle, dwMilliseconds);
 	UNIMPLEMENTED();
 }

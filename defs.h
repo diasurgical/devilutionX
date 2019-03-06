@@ -155,11 +155,13 @@ typedef void (*_PVFV)(void);
 // Define our segment names
 #define SEGMENT_C_INIT ".CRT$XCU"
 
+#if !defined(__MACH__)
 // Build our various function tables and insert them into the correct segments.
 #pragma data_seg(SEGMENT_C_INIT)
 #pragma data_seg() // Switch back to the default segment
+#endif
 // Call function pointer arrays and place them in the segments created above
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && !defined(__MACH__)
 #define SEG_ALLOCATE(SEGMENT) __declspec(allocate(SEGMENT))
 #else
 #define SEG_ALLOCATE(SEGMENT)

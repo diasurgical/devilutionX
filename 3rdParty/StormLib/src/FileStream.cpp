@@ -21,6 +21,11 @@
 #ifdef _MSC_VER
 #pragma comment(lib, "wininet.lib")             // Internet functions for HTTP stream
 #pragma warning(disable: 4800)                  // 'BOOL' : forcing value to bool 'true' or 'false' (performance warning)
+#else
+#include <cstring>
+#include <cassert>
+#include <cctype>
+#include <cstdio>
 #endif
 
 //-----------------------------------------------------------------------------

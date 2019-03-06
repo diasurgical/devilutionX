@@ -36,6 +36,7 @@ typedef enum UiTypes {
 } UiTypes;
 
 typedef enum UiFlags {
+	UIS_NULL     = 0,
 	UIS_SMALL    = 0x1,
 	UIS_MED      = 0x10,
 	UIS_BIG      = 0x100,
@@ -65,7 +66,7 @@ typedef struct UI_Item {
 	UiTypes type;
 	UiFlags flags;
 	int value;
-	BYTE *caption;
+	char *caption;
 	void *context;
 } UI_Item;
 

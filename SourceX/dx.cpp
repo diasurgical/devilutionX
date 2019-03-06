@@ -391,7 +391,7 @@ void __fastcall dx_init(HWND hWnd)
 
 	const int pitch = 64 + SCREEN_WIDTH + 64;
 	gpBuffer = (Screen *)malloc(sizeof(Screen));
-	gpBufEnd += (unsigned int)gpBuffer;
+	gpBufEnd += (uintptr_t)gpBuffer;
 
 	pal_surface = SDL_CreateRGBSurfaceFrom(gpBuffer, pitch, 160 + SCREEN_HEIGHT + 16, 8, pitch, 0, 0, 0, 0);
 	if (pal_surface == NULL) {
@@ -454,7 +454,7 @@ void __fastcall j_lock_buf_priv(BYTE idx)
 
 void __fastcall j_unlock_buf_priv(BYTE idx)
 {
-	gpBufEnd -= (unsigned int)gpBufEnd;
+	gpBufEnd -= (uintptr_t)gpBufEnd;
 
 	if (!surface_dirty) {
 		return;

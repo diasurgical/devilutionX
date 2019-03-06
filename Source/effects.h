@@ -4,7 +4,7 @@
 
 extern int sfxdelay; // weak
 extern int sfxdnum;
-extern void *sfx_stream;
+extern HANDLE sfx_stream;
 extern TSFX *sfx_data_cur;
 
 BOOL __fastcall effect_is_playing(int nSFX);

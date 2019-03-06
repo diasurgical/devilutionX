@@ -316,7 +316,7 @@ DWORD __fastcall GetPlrGFXSize(char *szCel)
 {
 	char prefix[16];
 	char pszName[256];
-	void *file;
+	HANDLE file;
 	int c, a, w;
 	DWORD size, result;
 

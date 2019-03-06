@@ -12,6 +12,11 @@
 #include "StormLib.h"
 #include "StormCommon.h"
 
+#if defined(__MACH__)
+#include <cstring>
+#include <cstdio>
+#endif
+
 //-----------------------------------------------------------------------------
 // Private structure used for file search (search handle)
 

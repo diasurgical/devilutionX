@@ -37,6 +37,11 @@
         "cinttypes": "cpp",
         "type_traits": "cpp",
         "tuple": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "cassert": "cpp",
+        "map": "cpp",
+        "set": "cpp",
+        "locale": "cpp",
+        "*.ipp": "cpp"
     }
 }

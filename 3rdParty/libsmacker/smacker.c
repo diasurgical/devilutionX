@@ -692,7 +692,7 @@ error:
 	return -1;
 }
 
-const unsigned char* smk_get_palette(const smk object)
+unsigned char* smk_get_palette(const smk object)
 {
 	smk_assert(object);
 
@@ -701,7 +701,7 @@ const unsigned char* smk_get_palette(const smk object)
 error:
 	return NULL;
 }
-const unsigned char* smk_get_video(const smk object)
+unsigned char* smk_get_video(const smk object)
 {
 	smk_assert(object);
 
@@ -710,7 +710,7 @@ const unsigned char* smk_get_video(const smk object)
 error:
 	return NULL;
 }
-const unsigned char* smk_get_audio(const smk object, const unsigned char t)
+unsigned char* smk_get_audio(const smk object, const unsigned char t)
 {
 	smk_assert(object);
 

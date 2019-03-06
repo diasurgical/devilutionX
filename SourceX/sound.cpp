@@ -52,28 +52,28 @@ BOOL __fastcall snd_playing(TSnd *pSnd)
 
 void __fastcall snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 {
-	Mix_PlayChannel(-1, (void *)(pSnd->DSB), 0);
+	Mix_PlayChannel(-1, (Mix_Chunk *)(pSnd->DSB), 0);
 }
 
 TSnd *__fastcall sound_file_load(char *path)
 {
 	int bytestoread;
 	int nrread;
-	void *file;
+	HANDLE file;
 
 	//This opens the file and reads it, makes Mix_chunk pointer to it.
 	//Once this is done the pointer is stored TSnd Struct
 
 	SFileOpenFile(path, &file);
 	bytestoread = (int)SFileGetFileSize((HANDLE)file, 0);
-	char *MSFXBuffer = DiabloAllocPtr(bytestoread);
+	unsigned char *MSFXBuffer = DiabloAllocPtr(bytestoread);
 	SFileReadFile(file, MSFXBuffer, bytestoread, (LPDWORD)&nrread, 0);
 	SDL_RWops *rw = SDL_RWFromMem(MSFXBuffer, bytestoread);
 	Mix_Chunk *SoundFX = Mix_LoadWAV_RW(rw, 1);
 
 	TSnd *fx = (TSnd *)malloc(sizeof(TSnd));
 	memset(fx, 0, sizeof(TSnd));
-	fx->DSB = (void *)SoundFX;
+	fx->DSB = (LPDIRECTSOUNDBUFFER)SoundFX;
 	fx->start_tc = 0;
 	fx->sound_path = NULL;
 

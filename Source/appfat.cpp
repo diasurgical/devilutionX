@@ -47,7 +47,7 @@ char *__fastcall GetErrorStr(DWORD error_code)
 }
 
 #define CASE_ERROR(v, errName) \
-	case errName:              \
+	case (DWORD)errName:              \
 		v = #errName;          \
 		break;
 

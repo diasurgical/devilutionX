@@ -15,7 +15,7 @@ Art ArtHero;
 void(__stdcall *gfnSoundFunction)(char *file);
 void(__stdcall *gfnListFocus)(int value);
 void(__stdcall *gfnListSelect)(int value);
-void(__stdcall *gfnListEsc)(int value);
+void(__stdcall *gfnListEsc)();
 UI_Item *gUiItems;
 int gUiItemCnt;
 bool UiItemsWraps;
@@ -48,7 +48,7 @@ char *errorMessages[] = {
 	"Diablo was unable to find the file \"dsound.dll\", which is a component of Microsoft DirectX.\nPlease run the program \"SETUP.EXE\" on the Diablo CD-ROM and install Microsoft DirectX.\n\nIf you continue to have problems with DirectX, please contact Microsoft's Technical Support at:\n\n    USA telephone: 1-800-426-9400\n    International telephone: 206-882-8080\n    http://www.microsoft.com\n\n\nThe error encountered while trying to initialize DirectX was:\n\n    %s",
 	"Diablo requires at least 10 megabytes of free disk space to run properly.\nThe disk:\n\n%s\n\nhas less than 10 megabytes of free space left.\n\nPlease free some space on your drive and run Diablo again.",
 	"Diablo was unable to switch video modes.\nThis is a common problem for computers with more than one video card.\nTo correct this problem, please set your video resolution to 640 x 480 and try running Diablo again.\n\nFor Windows 95 and Windows NT\n    Select \"Settings - Control Panel\" from the \"Start\" menu\n    Run the \"Display\" control panel applet\n    Select the \"Settings\" tab\n    Set the \"Desktop Area\" to \"640 x 480 pixels\"\n\n\nThe error encountered while trying to switch video modes was:\n\n    %s",
-	"Diablo cannot read a required data file.\nYour diabdat.mpq may not be in the Deviluition folder and not read-only.\nPlease ensure that the filename is in all lower case and try again.\n    %s",
+	"Diablo cannot read a required data file.\nYour diabdat.mpq may not be in the Devilution folder and not read-only.\nPlease ensure that the filename is in all lower case and try again.\n    %s",
 	"In order to install, play or patch Diablo using the Windows 2000 operating system,\nyou will need to log in as either an Administrator or as a Power User.\n\nUsers, also known as Restricted Users, do not have sufficient access to install or play the game properly.\n\nIf you have further questions regarding User Rights in Windows 2000, please refer to your Windows 2000 documentation or contact your system administrator.",
 	"Diablo is being run from:\n\n    %s\n\n\nDiablo or the current user does not seem to have write privilages in this directory. Contact your system administrator.\n\nNote that Windows 2000 Restricted Users can not write to the Windows or Program Files directory hierarchies.",
 };
@@ -147,7 +147,7 @@ void UiInitList(int min, int max, void(__stdcall *fnFocus)(int value), void(__st
 	for (int i = 0; i < itemCnt; i++) {
 		if (items[i].type == UI_EDIT) {
 			SDL_StartTextInput();
-			UiTextInput = items[i].caption;
+			UiTextInput = (char *)items[i].caption;
 			UiTextInputLen = items[i].value;
 		}
 	}
@@ -303,7 +303,7 @@ void UiFocusNavigationEsc()
 		UiTextInputLen = 0;
 	}
 	if (gfnListEsc)
-		gfnListEsc(SelectedItem);
+		gfnListEsc();
 }
 
 bool IsInsideRect(const SDL_Event *event, const SDL_Rect *rect)
@@ -544,7 +544,7 @@ int GetCenterOffset(int w, int bw)
 	return bw / 2 - w / 2;
 }
 
-int GetStrWidth(BYTE *str, int size)
+int GetStrWidth(char *str, int size)
 {
 	int strWidth = 0;
 

@@ -5,12 +5,12 @@
 extern _SNETVERSIONDATA fileinfo;
 extern int gbActive; // weak
 extern char diablo_exe_path[260];
-extern void *unused_mpq;
+extern HANDLE unused_mpq;
 extern char patch_rt_mpq_path[260];
 extern WNDPROC CurrentProc;
-extern void *diabdat_mpq;
+extern HANDLE diabdat_mpq;
 extern char diabdat_mpq_path[260];
-extern void *patch_rt_mpq;
+extern HANDLE patch_rt_mpq;
 extern int killed_mom_parent; // weak
 extern BOOLEAN screensaver_enabled_prev;
 
@@ -23,9 +23,9 @@ void __cdecl init_kill_mom_parent();
 HWND __cdecl init_find_mom_parent();
 void __cdecl init_await_mom_parent_exit();
 void __cdecl init_archives();
-void *__fastcall init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags, int fs);
+HANDLE __fastcall init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags, int fs);
 char *__fastcall init_strip_trailing_slash(char *path);
-int __fastcall init_read_test_file(char *mpq_path, char *mpq_name, int flags, void **archive);
+int __fastcall init_read_test_file(char *mpq_path, char *mpq_name, int flags, HANDLE *archive);
 void __cdecl init_get_file_info();
 LRESULT __stdcall MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 void __fastcall init_activate_window(HWND hWnd, BOOLEAN bActive);

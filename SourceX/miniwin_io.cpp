@@ -45,7 +45,7 @@ WINBOOL WINAPI ReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRea
 	DUMMY_ONCE();
 
 	assert(!lpOverlapped);
-	int len = read((int)hFile, lpBuffer, nNumberOfBytesToRead);
+	int len = read((intptr_t)hFile, lpBuffer, nNumberOfBytesToRead);
 	assert(len != -1);
 	*lpNumberOfBytesRead = len;
 	return TRUE;
@@ -57,7 +57,7 @@ DWORD WINAPI GetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh)
 
 	assert(!lpFileSizeHigh);
 	struct stat s;
-	int ret = fstat((int)hFile, &s);
+	int ret = fstat((intptr_t)hFile, &s);
 	assert(ret == 0);
 	return s.st_size;
 }
@@ -68,7 +68,7 @@ WINBOOL WINAPI WriteFile(HANDLE hFile, LPCVOID lpBuffer, DWORD nNumberOfBytesToW
 	DUMMY_ONCE();
 
 	assert(!lpOverlapped);
-	ssize_t len = write((int)hFile, lpBuffer, nNumberOfBytesToWrite);
+	ssize_t len = write((intptr_t)hFile, lpBuffer, nNumberOfBytesToWrite);
 	if (len == -1) {
 		*lpNumberOfBytesWritten = 0;
 		return FALSE;
@@ -90,7 +90,7 @@ DWORD WINAPI SetFilePointer(HANDLE hFile, LONG lDistanceToMove, PLONG lpDistance
 	} else {
 		UNIMPLEMENTED();
 	}
-	off_t ret = lseek((int)hFile, lDistanceToMove, whence);
+	off_t ret = lseek((intptr_t)hFile, lDistanceToMove, whence);
 	return (DWORD)ret;
 }
 
@@ -98,9 +98,9 @@ WINBOOL WINAPI SetEndOfFile(HANDLE hFile)
 {
 	DUMMY_ONCE();
 
-	off_t cur = lseek((int)hFile, 0, SEEK_CUR);
+	off_t cur = lseek((intptr_t)hFile, 0, SEEK_CUR);
 	assert(cur != -1);
-	int res = ftruncate((int)hFile, cur);
+	int res = ftruncate((intptr_t)hFile, cur);
 	assert(res == 0);
 	return TRUE;
 }
@@ -132,7 +132,7 @@ WINBOOL WINAPI SetFileAttributesA(LPCSTR lpFileName, DWORD dwFileAttributes)
 WINBOOL WINAPI CloseHandle(HANDLE hObject)
 {
 	if(files.find(hObject) != files.end()) {
-		int ret = close((int)hObject);
+		int ret = close((intptr_t)hObject);
 		assert(ret == 0);
 		files.erase(hObject);
 	}

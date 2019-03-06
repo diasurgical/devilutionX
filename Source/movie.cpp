@@ -8,7 +8,7 @@ BOOL loop_movie;
 void __fastcall play_movie(char *pszMovie, BOOL user_can_close)
 {
 	WNDPROC saveProc;
-	void *video_stream;
+	HANDLE video_stream;
 
 	if (!gbActive) {
 		return;

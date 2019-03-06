@@ -1614,7 +1614,7 @@ void __fastcall LoadFileWithMem(char *pszName, void *buf)
 	char *v2; // ebx
 	char *v3; // edi
 	int v4;   // esi
-	void *a1; // [esp+Ch] [ebp-4h]
+	HANDLE a1; // [esp+Ch] [ebp-4h]
 
 	v2 = (char *)buf;
 	v3 = pszName;
@@ -1683,7 +1683,7 @@ void __fastcall Cl2DecodeFrm1(int x, int y, char *pCelBuff, int nCel, int width,
 		if (pCelBuff) {
 			if (nCel > 0) {
 				v9 = *(LONG*)&pCelBuff[4 * nCel];
-				pCelBuffa = v9;
+				pCelBuffa = (char *)v9;
 				v10 = (INT_PTR)&v8[v9];
 				if (*(_WORD *)(v10 + dir1)) {
 					if (dir2 == 8 || (v11 = *(unsigned short *)(v10 + dir2), !*(_WORD *)(v10 + dir2)))

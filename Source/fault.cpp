@@ -232,7 +232,7 @@ char *__fastcall exception_get_error_type(DWORD dwMessageId, LPSTR lpString1, DW
 		CASE_EXCEPTION(v4, ACCESS_VIOLATION);
 	default:
 		ntdll = GetModuleHandle("NTDLL.DLL");
-		if (!FormatMessage(FORMAT_MESSAGE_FROM_HMODULE | FORMAT_MESSAGE_IGNORE_INSERTS, ntdll, dwMessageId, 0, lpString1, nSize, NULL)) {
+		if (!FormatMessage(FORMAT_MESSAGE_FROM_HMODULE | FORMAT_MESSAGE_IGNORE_INSERTS, (LPCVOID)ntdll, dwMessageId, 0, lpString1, nSize, NULL)) {
 			v4 = "*unknown*";
 		}
 	}

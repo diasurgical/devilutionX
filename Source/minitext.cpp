@@ -98,15 +98,15 @@ void __fastcall PrintQTextChr(int screen_x, int screen_y, char *cel_buf, int fra
 {
 	char *v4;         // ebx
 	char *v5;         // esi
-	char *v6;         // edi
+	char *v6;         // edi pointer to specific character?
 	int v7;           // ebx
 	signed int v8;    // edx
 	unsigned int v9;  // eax
 	unsigned int v10; // ecx
 	char v11;         // cf
 	unsigned int v12; // ecx
-	char *v13;        // [esp+14h] [ebp-8h]
-	char *v14;        // [esp+18h] [ebp-4h]
+	char *v13;        // [esp+14h] [ebp-8h] top row?
+	char *v14;        // [esp+18h] [ebp-4h] bottom row?
 
 	v13 = (char *)gpBuffer + screen_y_times_768[209];
 	v14 = (char *)gpBuffer + screen_y_times_768[469];

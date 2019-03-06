@@ -363,6 +363,7 @@ HANDLE WINAPI CreateEventA(LPSECURITY_ATTRIBUTES lpEventAttributes, WINBOOL bMan
 BOOL WINAPI SetEvent(HANDLE hEvent);
 BOOL WINAPI ResetEvent(HANDLE hEvent);
 DWORD WINAPI WaitForSingleObject(HANDLE hHandle, DWORD dwMilliseconds);
+BOOL WINAPI DestroyEvent(HANDLE hEvent);
 
 WINBOOL WINAPI SetCursorPos(int X, int Y);
 int WINAPI ShowCursor(WINBOOL bShow);

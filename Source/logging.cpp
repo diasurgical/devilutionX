@@ -43,7 +43,7 @@ void __cdecl log_cleanup_mutex(void)
 
 void __cdecl log_flush(BOOLEAN force_close)
 {
-	void *v1;                   // eax
+	HANDLE v1;                   // eax
 	DWORD NumberOfBytesWritten; // [esp+8h] [ebp-4h]
 
 	EnterCriticalSection(&sgMemCrit);
@@ -51,7 +51,7 @@ void __cdecl log_flush(BOOLEAN force_close)
 		if (log_file == (HANDLE)-1) {
 			v1 = log_create();
 			log_file = v1;
-			if (v1 == (void *)-1) {
+			if (v1 == (HANDLE)-1) {
 				nNumberOfBytesToWrite = 0;
 				return;
 			}
@@ -67,10 +67,10 @@ void __cdecl log_flush(BOOLEAN force_close)
 	LeaveCriticalSection(&sgMemCrit);
 }
 
-void *__cdecl log_create()
+HANDLE __cdecl log_create()
 {
 	char *v0;                   // eax
-	void *v1;                   // ebx
+	HANDLE v1;                   // ebx
 	HANDLE v2;                  // eax
 	char *v3;                   // edx
 	char Filename[260];         // [esp+Ch] [ebp-15Ch]
@@ -97,7 +97,7 @@ void *__cdecl log_create()
 		    file_info.dwProductVersionLS >> 16,
 		    _LOWORD(file_info.dwProductVersionLS));
 	}
-	v1 = (void *)-1;
+	v1 = (HANDLE)-1;
 	for (pcbBuffer = log_not_created == 0; (signed int)pcbBuffer < 2; ++pcbBuffer) {
 		v2 = CreateFile(FileName, GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 		v1 = v2;

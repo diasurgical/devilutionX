@@ -94,7 +94,7 @@ void __fastcall LoadPalette(char *pszFileName)
 {
 	int i;                // eax
 	char PalData[256][3]; // [esp+0h] [ebp-304h]
-	void *pBuf;           // [esp+300h] [ebp-4h]
+	HANDLE pBuf;           // [esp+300h] [ebp-4h]
 
 	WOpenFile(pszFileName, &pBuf, 0);
 	WReadFile(pBuf, (char *)PalData, 768);
