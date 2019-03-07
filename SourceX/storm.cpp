@@ -27,7 +27,7 @@ radon::File ini(getIniPath());
 // }
 
 BOOL STORMAPI SFileDdaBeginEx(HANDLE directsound, DWORD flags, DWORD mask, unsigned __int32 lDistanceToMove,
-    signed __int32 volume, signed int a6, int a7)
+    signed __int32 volume, signed int pan, int a7)
 {
 	DUMMY(); // Todo track when the sound can be released, see sfx_stop()
 	int bytestoread;
@@ -72,8 +72,9 @@ BOOL STORMAPI SFileDdaInitialize(HANDLE directsound)
 
 BOOL STORMAPI SFileDdaSetVolume(HANDLE directsound, signed int bigvolume, signed int volume)
 {
-	DUMMY();
-	return 0;
+	Mix_VolumeMusic(128 - 128 * bigvolume / -1600);
+
+	return TRUE;
 }
 
 BOOL STORMAPI SFileGetFileArchive(HANDLE hFile, HANDLE archive)
@@ -351,11 +352,11 @@ BOOL STORMAPI SRegSaveValue(const char *keyname, const char *valuename, BYTE fla
 	return TRUE;
 }
 
-// BOOL STORMAPI SVidDestroy()
-//{
-//	UNIMPLEMENTED();
-//}
-//
+BOOL STORMAPI SVidDestroy()
+{
+	DUMMY();
+}
+
 // BOOL STORMAPI SVidInitialize(HANDLE video)
 //{
 //	UNIMPLEMENTED();
@@ -470,7 +471,7 @@ BOOL __cdecl SVidPlayContinue(void)
 {
 	if (smk_palette_updated(SVidSMK)) {
 		SDL_Color colors[256];
-		unsigned char *palette_data = smk_get_palette(SVidSMK);
+		const unsigned char *palette_data = smk_get_palette(SVidSMK);
 
 		for (int i = 0; i < 256; i++) {
 			colors[i].r = palette_data[i * 3 + 0];
@@ -495,7 +496,6 @@ BOOL __cdecl SVidPlayContinue(void)
 		return SVidLoadNextFrame(); // Skip video and audio if the system is to slow
 	}
 
-	printf("oiasjdf %d\n", deviceId);
 	if (deviceId && SDL_QueueAudio(deviceId, smk_get_audio(SVidSMK, 0), smk_get_audio_size(SVidSMK, 0)) == -1) {
 		SDL_Log("SDL_QueueAudio: %s\n", SDL_GetError());
 		return FALSE;
@@ -536,6 +536,9 @@ BOOL STORMAPI SVidPlayEnd(HANDLE video)
 		mem_free_dbg(SVidBuffer);
 		SVidBuffer = NULL;
 	}
+
+	SDL_FreePalette(SVidPalette);
+	SDL_FreeSurface(SVidSurface);
 
 	SFileCloseFile(video);
 	video = NULL;

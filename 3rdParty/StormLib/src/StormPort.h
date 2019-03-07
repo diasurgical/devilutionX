@@ -75,6 +75,10 @@
   #include <unistd.h>
   #include <fcntl.h>
   #include <stdlib.h>
+  #include <stdio.h>
+  #include <string.h>
+  #include <ctype.h>
+  #include <assert.h>
   #include <errno.h>
 
   // Support for PowerPC on Max OS X

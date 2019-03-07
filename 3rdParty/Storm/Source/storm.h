@@ -479,7 +479,7 @@ int  STORMAPI Ordinal224(int a1);
 BOOL STORMAPI SFileCloseArchive(HANDLE hArchive);
 BOOL STORMAPI SFileCloseFile(HANDLE hFile);
 
-BOOL STORMAPI SFileDdaBeginEx(HANDLE directsound, DWORD flags, DWORD mask, unsigned __int32 lDistanceToMove, signed __int32 volume, signed int a6, int a7);
+BOOL STORMAPI SFileDdaBeginEx(HANDLE directsound, DWORD flags, DWORD mask, unsigned __int32 lDistanceToMove, signed __int32 volume, signed int pan, int a7);
 BOOL STORMAPI SFileDdaDestroy();
 BOOL STORMAPI SFileDdaEnd(HANDLE directsound);
 BOOL STORMAPI SFileDdaGetPos(HANDLE directsound, int a2, int a3);

@@ -10,3 +10,4 @@ Implementation changes:
 * Use external Storm error handling (`SErrGetLastError()` etc.)
 * Convert pathnames to Unix-style slashes.
 * Bugfixes, with comment: // BUGFIX (devilutionX)
+* Fix missing header includes on macOS (devilutionX)

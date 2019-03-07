@@ -36,21 +36,20 @@ typedef enum UiTypes {
 } UiTypes;
 
 typedef enum UiFlags {
-	UIS_NULL     = 0,
-	UIS_SMALL    = 0x1,
-	UIS_MED      = 0x10,
-	UIS_BIG      = 0x100,
-	UIS_HUGE     = 0x1000,
-	UIS_CENTER   = 0x10000,
-	UIS_RIGHT    = 0x100000,
-	UIS_VCENTER  = 0x1000000,
-	UIS_SILVER   = 0x10000000,
-	UIS_GOLD     = 0x100000000,
-	UIS_SML1     = 0x1000000000,
-	UIS_SML2     = 0x10000000000,
-	UIS_LIST     = 0x100000000000,
-	UIS_DISABLED = 0x1000000000000,
-	UIS_HIDDEN   = 0x10000000000000,
+	UIS_SMALL    = 1 << 0,
+	UIS_MED      = 1 << 1,
+	UIS_BIG      = 1 << 2,
+	UIS_HUGE     = 1 << 3,
+	UIS_CENTER   = 1 << 4,
+	UIS_RIGHT    = 1 << 5,
+	UIS_VCENTER  = 1 << 6,
+	UIS_SILVER   = 1 << 7,
+	UIS_GOLD     = 1 << 8,
+	UIS_SML1     = 1 << 9,
+	UIS_SML2     = 1 << 10,
+	UIS_LIST     = 1 << 11,
+	UIS_DISABLED = 1 << 12,
+	UIS_HIDDEN   = 1 << 13,
 } UiFlags;
 
 typedef struct Art {
@@ -64,7 +63,7 @@ typedef struct Art {
 typedef struct UI_Item {
 	SDL_Rect rect;
 	UiTypes type;
-	UiFlags flags;
+	int flags;
 	int value;
 	char *caption;
 	void *context;

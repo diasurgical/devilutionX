@@ -664,12 +664,16 @@ LSTATUS RegCloseKeyA(HKEY hKey)
 
 void PostQuitMessage(int nExitCode)
 {
-	DUMMY(); // Possibly use SDL_PumpEvents
+	DUMMY();
+	PostMessageA(NULL, WM_QUERYENDSESSION, 0, 0);
 }
 
 LRESULT DefWindowProcA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
-	DUMMY();
+	DUMMY_ONCE();
+	if (Msg == WM_QUERYENDSESSION)
+		exit(0);
+
 	return NULL;
 }
 

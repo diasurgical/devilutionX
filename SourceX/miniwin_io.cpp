@@ -131,7 +131,7 @@ WINBOOL WINAPI SetFileAttributesA(LPCSTR lpFileName, DWORD dwFileAttributes)
 
 WINBOOL WINAPI CloseHandle(HANDLE hObject)
 {
-	if(files.find(hObject) != files.end()) {
+	if (files.find(hObject) != files.end()) {
 		int ret = close((intptr_t)hObject);
 		assert(ret == 0);
 		files.erase(hObject);

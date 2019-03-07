@@ -177,7 +177,12 @@ WINBOOL WINAPI PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMs
 	} break;
 	case SDL_TEXTINPUT:
 	case SDL_WINDOWEVENT:
-		return false_avail();
+		if (e.window.event == SDL_WINDOWEVENT_CLOSE) {
+			lpMsg->message = WM_QUERYENDSESSION;
+		} else {
+			return false_avail();
+		}
+		break;
 	default:
 		DUMMY_PRINT("unknown SDL message 0x%X", e.type);
 		return false_avail();

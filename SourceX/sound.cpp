@@ -41,7 +41,7 @@ void __fastcall snd_update(BOOL bStopAll)
 void __fastcall snd_stop_snd(TSnd *pSnd)
 {
 	DUMMY_ONCE();
-	Mix_HaltMusic();
+	Mix_HaltChannel(-1);
 }
 
 BOOL __fastcall snd_playing(TSnd *pSnd)
@@ -131,7 +131,7 @@ void __fastcall sound_create_primary_buffer(HANDLE music_track)
 void __cdecl sound_cleanup()
 {
 	snd_update(TRUE);
-	//SVidDestroy();
+	SVidDestroy();
 	SFileDdaDestroy();
 
 	if (sglpDS) {
@@ -157,9 +157,12 @@ void __fastcall sound_store_volume(char *key, int value)
 
 void __cdecl music_stop()
 {
-	DUMMY();
-	Mix_HaltMusic();
-	Mix_HaltChannel(-1);
+	if (sgpMusicTrack) {
+		Mix_HaltMusic();
+		SFileCloseFile(sgpMusicTrack);
+		sgpMusicTrack = 0;
+		sgnMusicTrack = 6;
+	}
 }
 
 void *buffer;
@@ -187,6 +190,7 @@ void __fastcall music_start(int nTrack)
 
 			SDL_RWops *rw = SDL_RWFromMem(buffer, bytestoread);
 			Mix_Music *Song = Mix_LoadMUS_RW(rw, 1);
+			Mix_VolumeMusic(128 - 128 * sglMusicVolume / -1600);
 			Mix_PlayMusic(Song, -1);
 
 			sgnMusicTrack = nTrack;
