@@ -17,11 +17,6 @@
 #include "StormLib.h"
 #include "StormCommon.h"
 
-#if defined(__MACH__)
-#include <cassert>
-#include <cstring>
-#endif
-
 #define HEADER_SEARCH_BUFFER_SIZE   0x1000
 
 /*****************************************************************************/

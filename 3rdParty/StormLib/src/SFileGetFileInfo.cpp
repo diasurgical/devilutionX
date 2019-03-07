@@ -12,12 +12,6 @@
 #include "StormLib.h"
 #include "StormCommon.h"
 
-#if defined(__MACH__)
-#include <cassert>
-#include <cstring>
-#include <cstdio>
-#endif
-
 //-----------------------------------------------------------------------------
 // Local defines
 

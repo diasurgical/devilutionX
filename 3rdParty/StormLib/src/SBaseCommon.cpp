@@ -15,11 +15,6 @@
 #include "StormLib.h"
 #include "StormCommon.h"
 
-#if defined(__MACH__)
-#include <cassert>
-#include <cstring>
-#endif
-
 char StormLibCopyright[] = "StormLib v " STORMLIB_VERSION_STRING " Copyright Ladislav Zezula 1998-2014";
 
 //-----------------------------------------------------------------------------
