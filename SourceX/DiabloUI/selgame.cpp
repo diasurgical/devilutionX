@@ -190,7 +190,7 @@ void selgame_Password_Select(int value)
 		return;
 	}
 
-	_gamedata *info = (_gamedata *)m_client_info->initdata;
+	_gamedata *info = m_client_info->initdata;
 	info->bDiff = gbDifficulty;
 
 	if (!SNetCreateGame(NULL, selgame_Password, NULL, 0, (char *)info, sizeof(_gamedata), MAX_PLRS, NULL, NULL, gdwPlayerId)) {

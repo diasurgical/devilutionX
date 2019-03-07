@@ -1204,6 +1204,47 @@ typedef struct Screen { /* create union for work data vs visible data */
 } Screen;
 
 //////////////////////////////////////////////////
+// diabloui
+//////////////////////////////////////////////////
+
+// TPDEF PTR FCN VOID PLAYSND
+
+typedef struct _gamedata {
+	int dwSeed;
+	unsigned char bDiff;
+} _gamedata;
+
+typedef struct _uidefaultstats {
+	unsigned short strength;
+	unsigned short magic;
+	unsigned short dexterity;
+	unsigned short vitality;
+} _uidefaultstats;
+
+typedef struct _uiheroinfo {
+	struct _uiheroinfo *next;
+	char name[16];
+	unsigned short level;
+	unsigned char heroclass;
+	unsigned char herorank;
+	unsigned short strength;
+	unsigned short magic;
+	unsigned short dexterity;
+	unsigned short vitality;
+	int gold;
+	int hassaved;
+	int spawned;
+} _uiheroinfo;
+
+// TPDEF PTR FCN UCHAR ENUMHEROPROC
+// TPDEF PTR FCN UCHAR ENUMHEROS
+// TPDEF PTR FCN UCHAR CREATEHERO
+// TPDEF PTR FCN UCHAR DELETEHERO
+// TPDEF PTR FCN UCHAR GETDEFHERO
+
+// TPDEF PTR FCN INT PROGRESSFCN
+
+//////////////////////////////////////////////////
 // storm
 //////////////////////////////////////////////////
 
@@ -1262,7 +1303,7 @@ typedef struct _SNETPROGRAMDATA {
 	int versionid;
 	int reserved1;
 	int maxplayers;
-	void *initdata;
+	_gamedata *initdata;
 	int initdatabytes;
 	void *reserved2;
 	int optcategorybits;
@@ -1314,47 +1355,6 @@ typedef struct _SNETVERSIONDATA {
 
 // TPDEF PTR FCN UCHAR SNETSPIBIND
 // TPDEF PTR FCN UCHAR SNETSPIQUERY
-
-//////////////////////////////////////////////////
-// diabloui
-//////////////////////////////////////////////////
-
-// TPDEF PTR FCN VOID PLAYSND
-
-typedef struct _gamedata {
-	int dwSeed;
-	unsigned char bDiff;
-} _gamedata;
-
-typedef struct _uidefaultstats {
-	unsigned short strength;
-	unsigned short magic;
-	unsigned short dexterity;
-	unsigned short vitality;
-} _uidefaultstats;
-
-typedef struct _uiheroinfo {
-	struct _uiheroinfo *next;
-	char name[16];
-	unsigned short level;
-	unsigned char heroclass;
-	unsigned char herorank;
-	unsigned short strength;
-	unsigned short magic;
-	unsigned short dexterity;
-	unsigned short vitality;
-	int gold;
-	int hassaved;
-	int spawned;
-} _uiheroinfo;
-
-// TPDEF PTR FCN UCHAR ENUMHEROPROC
-// TPDEF PTR FCN UCHAR ENUMHEROS
-// TPDEF PTR FCN UCHAR CREATEHERO
-// TPDEF PTR FCN UCHAR DELETEHERO
-// TPDEF PTR FCN UCHAR GETDEFHERO
-
-// TPDEF PTR FCN INT PROGRESSFCN
 
 //////////////////////////////////////////////////
 // pack
