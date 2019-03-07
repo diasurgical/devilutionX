@@ -19,9 +19,9 @@ BOOL(__stdcall *gfnHeroCreate)
 (_uiheroinfo *);
 
 UI_Item SELHERO_DIALOG[] = {
-	{ { 0, 0, 640, 480 }, UI_IMAGE, UIS_NULL, 0, NULL, &ArtBackground },
-	{ { 24, 161, 590, 35 }, UI_TEXT, (UiFlags)(UIS_CENTER | UIS_BIG), 0, title },
-	{ { 30, 211, 180, 76 }, UI_IMAGE, UIS_NULL, UI_NUM_CLASSES, NULL, &ArtHero },
+	{ { 0, 0, 640, 480 }, UI_IMAGE, 0, 0, NULL, &ArtBackground },
+	{ { 24, 161, 590, 35 }, UI_TEXT, UIS_CENTER | UIS_BIG, 0, title },
+	{ { 30, 211, 180, 76 }, UI_IMAGE, 0, UI_NUM_CLASSES, NULL, &ArtHero },
 	{ { 39, 323, 110, 21 }, UI_TEXT, UIS_RIGHT, 0, "Level:" },
 	{ { 159, 323, 40, 21 }, UI_TEXT, UIS_CENTER, 0, textStats[0] },
 	{ { 39, 358, 110, 21 }, UI_TEXT, UIS_RIGHT, 0, "Strength:" },
@@ -35,40 +35,40 @@ UI_Item SELHERO_DIALOG[] = {
 };
 
 UI_Item SELLIST_DIALOG[] = {
-	{ { 264, 211, 320, 33 }, UI_TEXT, (UiFlags)(UIS_CENTER | UIS_BIG), 0, "Select Hero" },
-	{ { 265, 256, 320, 26 }, UI_LIST, (UiFlags)(UIS_CENTER | UIS_MED | UIS_GOLD), 0, listItems[0] },
-	{ { 265, 282, 320, 26 }, UI_LIST, (UiFlags)(UIS_CENTER | UIS_MED | UIS_GOLD), 1, listItems[1] },
-	{ { 265, 308, 320, 26 }, UI_LIST, (UiFlags)(UIS_CENTER | UIS_MED | UIS_GOLD), 2, listItems[2] },
-	{ { 265, 334, 320, 26 }, UI_LIST, (UiFlags)(UIS_CENTER | UIS_MED | UIS_GOLD), 3, listItems[3] },
-	{ { 265, 360, 320, 26 }, UI_LIST, (UiFlags)(UIS_CENTER | UIS_MED | UIS_GOLD), 4, listItems[4] },
-	{ { 265, 386, 320, 26 }, UI_LIST, (UiFlags)(UIS_CENTER | UIS_MED | UIS_GOLD), 5, listItems[5] },
-	{ { 239, 429, 120, 35 }, UI_BUTTON, (UiFlags)(UIS_CENTER | UIS_BIG | UIS_GOLD), 0, "OK", (void *)UiFocusNavigationSelect },
-	{ { 364, 429, 120, 35 }, UI_BUTTON, (UiFlags)(UIS_CENTER | UIS_BIG | UIS_DISABLED), 0, "Delete" },
-	{ { 489, 429, 120, 35 }, UI_BUTTON, (UiFlags)(UIS_CENTER | UIS_BIG | UIS_GOLD), 0, "Cancel", (void *)UiFocusNavigationEsc },
+	{ { 264, 211, 320, 33 }, UI_TEXT, UIS_CENTER | UIS_BIG, 0, "Select Hero" },
+	{ { 265, 256, 320, 26 }, UI_LIST, UIS_CENTER | UIS_MED | UIS_GOLD, 0, listItems[0] },
+	{ { 265, 282, 320, 26 }, UI_LIST, UIS_CENTER | UIS_MED | UIS_GOLD, 1, listItems[1] },
+	{ { 265, 308, 320, 26 }, UI_LIST, UIS_CENTER | UIS_MED | UIS_GOLD, 2, listItems[2] },
+	{ { 265, 334, 320, 26 }, UI_LIST, UIS_CENTER | UIS_MED | UIS_GOLD, 3, listItems[3] },
+	{ { 265, 360, 320, 26 }, UI_LIST, UIS_CENTER | UIS_MED | UIS_GOLD, 4, listItems[4] },
+	{ { 265, 386, 320, 26 }, UI_LIST, UIS_CENTER | UIS_MED | UIS_GOLD, 5, listItems[5] },
+	{ { 239, 429, 120, 35 }, UI_BUTTON, UIS_CENTER | UIS_BIG | UIS_GOLD, 0, "OK", (void *)UiFocusNavigationSelect },
+	{ { 364, 429, 120, 35 }, UI_BUTTON, UIS_CENTER | UIS_BIG | UIS_DISABLED, 0, "Delete" },
+	{ { 489, 429, 120, 35 }, UI_BUTTON, UIS_CENTER | UIS_BIG | UIS_GOLD, 0, "Cancel", (void *)UiFocusNavigationEsc },
 };
 
 UI_Item SELCLASS_DIALOG[] = {
-	{ { 264, 211, 320, 33 }, UI_TEXT, (UiFlags)(UIS_CENTER | UIS_BIG), 0, "Choose Class" },
-	{ { 264, 285, 320, 33 }, UI_LIST, (UiFlags)(UIS_CENTER | UIS_MED | UIS_GOLD), UI_WARRIOR, "Warrior" },
-	{ { 264, 318, 320, 33 }, UI_LIST, (UiFlags)(UIS_CENTER | UIS_MED | UIS_GOLD), UI_ROGUE, "Rogue" },
-	{ { 264, 352, 320, 33 }, UI_LIST, (UiFlags)(UIS_CENTER | UIS_MED | UIS_GOLD), UI_SORCERER, "Sorcerer" },
-	{ { 279, 429, 140, 35 }, UI_BUTTON, (UiFlags)(UIS_CENTER | UIS_BIG | UIS_GOLD), 0, "OK", (void *)UiFocusNavigationSelect },
-	{ { 429, 429, 140, 35 }, UI_BUTTON, (UiFlags)(UIS_CENTER | UIS_BIG | UIS_GOLD), 0, "Cancel", (void *)UiFocusNavigationEsc },
+	{ { 264, 211, 320, 33 }, UI_TEXT, UIS_CENTER | UIS_BIG, 0, "Choose Class" },
+	{ { 264, 285, 320, 33 }, UI_LIST, UIS_CENTER | UIS_MED | UIS_GOLD, UI_WARRIOR, "Warrior" },
+	{ { 264, 318, 320, 33 }, UI_LIST, UIS_CENTER | UIS_MED | UIS_GOLD, UI_ROGUE, "Rogue" },
+	{ { 264, 352, 320, 33 }, UI_LIST, UIS_CENTER | UIS_MED | UIS_GOLD, UI_SORCERER, "Sorcerer" },
+	{ { 279, 429, 140, 35 }, UI_BUTTON, UIS_CENTER | UIS_BIG | UIS_GOLD, 0, "OK", (void *)UiFocusNavigationSelect },
+	{ { 429, 429, 140, 35 }, UI_BUTTON, UIS_CENTER | UIS_BIG | UIS_GOLD, 0, "Cancel", (void *)UiFocusNavigationEsc },
 };
 
 UI_Item ENTERNAME_DIALOG[] = {
-	{ { 264, 211, 320, 33 }, UI_TEXT, (UiFlags)(UIS_CENTER | UIS_BIG), 0, "Enter Name" },
-	{ { 265, 317, 320, 33 }, UI_EDIT, (UiFlags)(UIS_LIST | UIS_MED | UIS_GOLD), 15, heroInfo.name },
-	{ { 279, 429, 140, 35 }, UI_BUTTON, (UiFlags)(UIS_CENTER | UIS_BIG | UIS_GOLD), 0, "OK", (void *)UiFocusNavigationSelect },
-	{ { 429, 429, 140, 35 }, UI_BUTTON, (UiFlags)(UIS_CENTER | UIS_BIG | UIS_GOLD), 0, "Cancel", (void *)UiFocusNavigationEsc },
+	{ { 264, 211, 320, 33 }, UI_TEXT, UIS_CENTER | UIS_BIG, 0, "Enter Name" },
+	{ { 265, 317, 320, 33 }, UI_EDIT, UIS_LIST | UIS_MED | UIS_GOLD, 15, heroInfo.name },
+	{ { 279, 429, 140, 35 }, UI_BUTTON, UIS_CENTER | UIS_BIG | UIS_GOLD, 0, "OK", (void *)UiFocusNavigationSelect },
+	{ { 429, 429, 140, 35 }, UI_BUTTON, UIS_CENTER | UIS_BIG | UIS_GOLD, 0, "Cancel", (void *)UiFocusNavigationEsc },
 };
 
 UI_Item SELLOAD_DIALOG[] = {
-	{ { 264, 211, 320, 33 }, UI_TEXT, (UiFlags)(UIS_CENTER | UIS_BIG), 0, "Save File Exists" },
-	{ { 265, 285, 320, 26 }, UI_LIST, (UiFlags)(UIS_CENTER | UIS_MED | UIS_GOLD), 0, "Load Game" },
-	{ { 265, 318, 320, 26 }, UI_LIST, (UiFlags)(UIS_CENTER | UIS_MED | UIS_GOLD), 1, "New Game" },
-	{ { 279, 427, 140, 35 }, UI_BUTTON, (UiFlags)(UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD), 0, "OK", (void *)UiFocusNavigationSelect },
-	{ { 429, 427, 140, 35 }, UI_BUTTON, (UiFlags)(UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD), 0, "Cancel", (void *)UiFocusNavigationEsc },
+	{ { 264, 211, 320, 33 }, UI_TEXT, UIS_CENTER | UIS_BIG, 0, "Save File Exists" },
+	{ { 265, 285, 320, 26 }, UI_LIST, UIS_CENTER | UIS_MED | UIS_GOLD, 0, "Load Game" },
+	{ { 265, 318, 320, 26 }, UI_LIST, UIS_CENTER | UIS_MED | UIS_GOLD, 1, "New Game" },
+	{ { 279, 427, 140, 35 }, UI_BUTTON, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD, 0, "OK", (void *)UiFocusNavigationSelect },
+	{ { 429, 427, 140, 35 }, UI_BUTTON, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD, 0, "Cancel", (void *)UiFocusNavigationEsc },
 };
 
 void selhero_Free()

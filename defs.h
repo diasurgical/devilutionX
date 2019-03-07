@@ -152,7 +152,7 @@ __inline WORD __ROR2__(WORD value, DWORD count)
 // Typedef for the function pointer
 typedef void (*_PVFV)(void);
 
-#ifdef _MSC_VER && !defined(__APPLE__)
+#if defined(_MSC_VER) && !defined(__APPLE__)
 // Define our segment names
 #define SEGMENT_C_INIT ".CRT$XCU"
 
