@@ -434,7 +434,7 @@ BOOL STORMAPI SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int 
 
 	// Copy frame to buffer
 	SVidSurface = SDL_CreateRGBSurfaceWithFormatFrom(
-	    smk_get_video(SVidSMK),
+	    (unsigned char *)smk_get_video(SVidSMK),
 	    width,
 	    height,
 	    8,

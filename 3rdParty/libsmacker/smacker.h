@@ -88,11 +88,11 @@ char smk_enable_video(smk object, unsigned char enable);
 char smk_enable_audio(smk object, unsigned char track, unsigned char enable);
 
 /** Retrieve palette */
-unsigned char* smk_get_palette(const smk object);
+const unsigned char* smk_get_palette(const smk object);
 /** Retrieve video frame, as a buffer of size w*h */
-unsigned char* smk_get_video(const smk object);
+const unsigned char* smk_get_video(const smk object);
 /** Retrieve decoded audio chunk, track N */
-unsigned char* smk_get_audio(const smk object, unsigned char track);
+const unsigned char* smk_get_audio(const smk object, unsigned char track);
 /** Get size of currently pointed decoded audio chunk, track N */
 unsigned long smk_get_audio_size(const smk object, unsigned char track);
 
