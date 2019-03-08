@@ -40,7 +40,20 @@ int __cdecl _strcmpi(const char *_Str1, const char *_Str2)
 
 char *__cdecl _itoa(int _Value, char *_Dest, int _Radix)
 {
-	UNIMPLEMENTED();
+	switch (_Radix) {
+	case 8:
+		sprintf(_Dest, "%o", _Value);
+		break;
+	case 10:
+		sprintf(_Dest, "%d", _Value);
+		break;
+	case 16:
+		sprintf(_Dest, "%x", _Value);
+		break;
+	default:
+		UNIMPLEMENTED();
+		break;
+	}
 }
 
 DWORD WINAPI GetTickCount(VOID)
