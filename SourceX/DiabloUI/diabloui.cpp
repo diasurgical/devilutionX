@@ -147,7 +147,7 @@ void UiInitList(int min, int max, void(__stdcall *fnFocus)(int value), void(__st
 	for (int i = 0; i < itemCnt; i++) {
 		if (items[i].type == UI_EDIT) {
 			SDL_StartTextInput();
-			UiTextInput = (char *)items[i].caption;
+			UiTextInput = items[i].caption;
 			UiTextInputLen = items[i].value;
 		}
 	}
