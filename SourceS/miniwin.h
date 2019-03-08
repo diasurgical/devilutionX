@@ -3,7 +3,12 @@
 #include <ctype.h>
 #include <fcntl.h>
 #include <math.h>
+// work around https://reviews.llvm.org/D51265
+#ifdef __MACH__
+#include "macos_stdarg.h"
+#else
 #include <stdarg.h>
+#endif
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
