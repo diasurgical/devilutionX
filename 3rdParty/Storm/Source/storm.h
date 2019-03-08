@@ -488,7 +488,7 @@ BOOL STORMAPI SFileDdaInitialize(HANDLE directsound);
 BOOL STORMAPI SFileDdaSetVolume(HANDLE directsound, signed int bigvolume, signed int volume);
 BOOL STORMAPI SFileDestroy();
 
-BOOL STORMAPI SFileGetFileArchive(HANDLE hFile, HANDLE archive);
+BOOL STORMAPI SFileGetFileArchive(HANDLE hFile, HANDLE *archive);
 LONG STORMAPI SFileGetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh);
 BOOL STORMAPI SFileOpenArchive(const char *szMpqName, DWORD dwPriority, DWORD dwFlags, HANDLE *phMpq);
 

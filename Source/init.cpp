@@ -156,12 +156,12 @@ void __fastcall init_create_window(int nCmdShow)
 	wcex.style = CS_HREDRAW | CS_VREDRAW;
 	wcex.lpfnWndProc = WindowProc;
 	wcex.hInstance = ghInst;
-	wcex.hIcon = LoadIcon(ghInst, (LPCSTR)MAKEINTRESOURCE(IDI_ICON1));
-	wcex.hCursor = LoadCursor(0, (LPCSTR)IDC_ARROW);
+	wcex.hIcon = LoadIcon(ghInst, MAKEINTRESOURCE(IDI_ICON1));
+	wcex.hCursor = LoadCursor(0, IDC_ARROW);
 	wcex.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 	wcex.lpszMenuName = "DIABLO";
 	wcex.lpszClassName = "DIABLO";
-	wcex.hIconSm = (HICON)LoadImage(ghInst, (LPCSTR)MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
+	wcex.hIconSm = (HICON)LoadImage(ghInst, MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
 	if (!RegisterClassEx(&wcex))
 		TermMsg("Unable to register window class");
 	if (GetSystemMetrics(SM_CXSCREEN) >= 640)

@@ -77,7 +77,7 @@ BOOL STORMAPI SFileDdaSetVolume(HANDLE directsound, signed int bigvolume, signed
 	return TRUE;
 }
 
-BOOL STORMAPI SFileGetFileArchive(HANDLE hFile, HANDLE archive)
+BOOL STORMAPI SFileGetFileArchive(HANDLE hFile, HANDLE *archive)
 {
 	UNIMPLEMENTED();
 }

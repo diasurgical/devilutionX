@@ -66,40 +66,40 @@ DWORD FormatMessage(
 	return 0;
 }
 
-int MAKEINTRESOURCE(int i)
+LPCSTR MAKEINTRESOURCE(int i)
 {
 	switch (i) {
 	case IDD_DIALOG1:
-		return 0;
+		return (LPCSTR)0;
 	case IDD_DIALOG2:
-		return 1;
+		return (LPCSTR)1;
 	case IDD_DIALOG3:
-		return 2;
+		return (LPCSTR)2;
 	case IDD_DIALOG4:
-		return 3;
+		return (LPCSTR)3;
 	case IDD_DIALOG5:
-		return 4;
+		return (LPCSTR)4;
 	case IDD_DIALOG7:
-		return 5;
+		return (LPCSTR)5;
 	case IDD_DIALOG8:
-		return 6;
+		return (LPCSTR)6;
 	case IDD_DIALOG9:
-		return 7;
+		return (LPCSTR)7;
 	case IDD_DIALOG10:
-		return 8;
+		return (LPCSTR)8;
 	case IDD_DIALOG11:
-		return 9;
+		return (LPCSTR)9;
 	}
 
-	return -1;
+	return (LPCSTR)-1;
 }
 
-int DialogBoxParam(HINSTANCE hInstance, int msgId, HWND hWndParent, DLGPROC lpDialogFunc, LPARAM dwInitParam)
+int DialogBoxParam(HINSTANCE hInstance, LPCSTR msgId, HWND hWndParent, DLGPROC lpDialogFunc, LPARAM dwInitParam)
 {
 	char text[1024];
-	snprintf(text, 1024, errorMessages[msgId], dwInitParam);
+	snprintf(text, 1024, errorMessages[(intptr_t)msgId], dwInitParam);
 
-	return SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, errorTitle[msgId], text, window) < 0 ? -1 : 0;
+	return SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, errorTitle[(intptr_t)msgId], text, window) < 0 ? -1 : 0;
 }
 
 BOOL SetDlgItemText(HWND hDlg, int nIDDlgItem, LPCSTR lpString)

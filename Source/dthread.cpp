@@ -155,10 +155,10 @@ void __cdecl dthread_cleanup()
 			error_buf = TraceLastError();
 			TermMsg("dthread3:\n(%s)", error_buf);
 		}
-		DestroyEvent(sghThread);
+		CloseHandle(sghThread);
 		sghThread = INVALID_HANDLE_VALUE;
 	}
-	DestroyEvent(sghWorkToDoEvent);
+	CloseHandle(sghWorkToDoEvent);
 	sghWorkToDoEvent = NULL;
 
 	while (sgpInfoHead) {

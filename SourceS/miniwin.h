@@ -277,7 +277,7 @@ typedef WORD ATOM;
 #define CS_HREDRAW 0x0001
 #define CS_VREDRAW 0x0002
 
-#define IDC_ARROW 0x1 // Dummy value
+#define IDC_ARROW (LPCSTR)0x1 // Dummy value
 
 #define CSIDL_STARTMENU 0x000b
 
@@ -363,7 +363,6 @@ HANDLE WINAPI CreateEventA(LPSECURITY_ATTRIBUTES lpEventAttributes, WINBOOL bMan
 BOOL WINAPI SetEvent(HANDLE hEvent);
 BOOL WINAPI ResetEvent(HANDLE hEvent);
 DWORD WINAPI WaitForSingleObject(HANDLE hHandle, DWORD dwMilliseconds);
-BOOL WINAPI DestroyEvent(HANDLE hEvent);
 
 WINBOOL WINAPI SetCursorPos(int X, int Y);
 int WINAPI ShowCursor(WINBOOL bShow);

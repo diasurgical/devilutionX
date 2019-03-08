@@ -259,7 +259,7 @@ void __cdecl nthread_cleanup()
 		if (WaitForSingleObject(sghThread, 0xFFFFFFFF) == -1) {
 			TermMsg("nthread3:\n(%s)", TraceLastError());
 		}
-		DestroyEvent(sghThread);
+		CloseHandle(sghThread);
 		sghThread = (HANDLE)-1;
 	}
 }

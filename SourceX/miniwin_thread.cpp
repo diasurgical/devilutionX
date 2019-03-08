@@ -98,13 +98,6 @@ BOOL WINAPI SetEvent(HANDLE hEvent)
 	return 1;
 }
 
-BOOL WINAPI DestroyEvent(HANDLE hEvent)
-{
-	struct event_emul *e = (struct event_emul *)hEvent;
-	SDL_DestroyMutex(e->mutex);
-	return 1;
-}
-
 BOOL WINAPI ResetEvent(HANDLE hEvent)
 {
 	struct event_emul *e = (struct event_emul *)hEvent;
