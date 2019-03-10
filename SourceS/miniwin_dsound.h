@@ -5,6 +5,14 @@ typedef void *LPDSBCAPS, *LPCDSBUFFERDESC;
 struct IDirectSound;
 typedef IDirectSound *LPDIRECTSOUND;
 
+typedef struct _DSBUFFERDESC {
+	DWORD dwSize;
+	DWORD dwFlags;
+	DWORD dwBufferBytes;
+	DWORD dwReserved;
+	LPWAVEFORMATEX lpwfxFormat;
+} DSBUFFERDESC, *LPDSBUFFERDESC;
+
 DECLARE_INTERFACE_(IDirectSoundBuffer, IUnknown)
 {
 	// clang-format off
@@ -30,8 +38,44 @@ DECLARE_INTERFACE_(IDirectSoundBuffer, IUnknown)
 	// clang-format on
 };
 
+#define DSBCAPS_PRIMARYBUFFER 0x00000001
+#define DSBCAPS_STATIC 0x00000002
+#define DSBCAPS_CTRLPAN 0x00000040
+#define DSBCAPS_CTRLVOLUME 0x00000080
+
+#define WAVE_FORMAT_PCM 1
+
+#define ERROR_SUCCESS 0L
+
 typedef IDirectSoundBuffer *LPDIRECTSOUNDBUFFER;
-typedef void *LPDSCAPS, *LPUNKNOWN, *LPCGUID;
+typedef void *LPUNKNOWN, *LPCGUID;
+
+typedef struct _DSCAPS {
+	DWORD dwSize;
+	DWORD dwFlags;
+	DWORD dwMinSecondarySampleRate;
+	DWORD dwMaxSecondarySampleRate;
+	DWORD dwPrimaryBuffers;
+	DWORD dwMaxHwMixingAllBuffers;
+	DWORD dwMaxHwMixingStaticBuffers;
+	DWORD dwMaxHwMixingStreamingBuffers;
+	DWORD dwFreeHwMixingAllBuffers;
+	DWORD dwFreeHwMixingStaticBuffers;
+	DWORD dwFreeHwMixingStreamingBuffers;
+	DWORD dwMaxHw3DAllBuffers;
+	DWORD dwMaxHw3DStaticBuffers;
+	DWORD dwMaxHw3DStreamingBuffers;
+	DWORD dwFreeHw3DAllBuffers;
+	DWORD dwFreeHw3DStaticBuffers;
+	DWORD dwFreeHw3DStreamingBuffers;
+	DWORD dwTotalHwMemBytes;
+	DWORD dwFreeHwMemBytes;
+	DWORD dwMaxContigFreeHwMemBytes;
+	DWORD dwUnlockTransferRateHwBuffers;
+	DWORD dwPlayCpuOverheadSwBuffers;
+	DWORD dwReserved1;
+	DWORD dwReserved2;
+} DSCAPS, *LPDSCAPS;
 
 DECLARE_INTERFACE_(IDirectSound, IUnknown)
 {
@@ -47,7 +91,7 @@ DECLARE_INTERFACE_(IDirectSound, IUnknown)
 	// clang-format on
 };
 
-#define	_FACDS	0x878
+#define _FACDS 0x878
 #define MAKE_DSHRESULT(code) MAKE_HRESULT(1, _FACDS, code)
 
 #define E_NOINTERFACE 0x80004002
