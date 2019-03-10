@@ -478,7 +478,7 @@ BOOL STORMAPI SDrawUpdatePalette(unsigned int firstentry, unsigned int numentrie
 	assert(numentries == 256);
 
 	SDL_Color colors[256];
-	for (int i = firstentry; i < numentries; i++) {
+	for (unsigned int i = firstentry; i < numentries; i++) {
 		SDL_Color *c = &colors[i];
 		PALETTEENTRY *p = &pPalEntries[i];
 		c->r = p->peRed;

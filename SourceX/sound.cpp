@@ -146,7 +146,7 @@ BOOL __fastcall sound_file_reload(TSnd *sound_file, LPDIRECTSOUNDBUFFER DSB)
 TSnd *__fastcall sound_file_load(char *path)
 {
 	HANDLE file;
-	char *wave_file;
+	BYTE *wave_file;
 	TSnd *pSnd;
 	LPVOID buf1, buf2;
 	DWORD size1, size2;
@@ -166,8 +166,8 @@ TSnd *__fastcall sound_file_load(char *path)
 
 	size1 = (int)SFileGetFileSize((HANDLE)file, 0);
 	wave_file = DiabloAllocPtr(size1);
-	SFileReadFile(file, wave_file, size1, (LPDWORD)&size2, 0);
-	SDL_RWops *rw = SDL_RWFromConstMem(wave_file, size1);
+	SFileReadFile(file, (void *)wave_file, size1, (LPDWORD)&size2, 0);
+	SDL_RWops *rw = SDL_RWFromConstMem((void *)wave_file, size1);
 	Mix_Chunk *SoundFX = Mix_LoadWAV_RW(rw, 1);
 	pSnd->DSB = (LPDIRECTSOUNDBUFFER)SoundFX;
 	if (!pSnd->DSB)
@@ -175,7 +175,7 @@ TSnd *__fastcall sound_file_load(char *path)
 
 	sound_CreateSoundBuffer(pSnd);
 
-	mem_free_dbg(wave_file);
+	mem_free_dbg((void *)wave_file);
 	WCloseFile(file);
 
 	return pSnd;

@@ -56,6 +56,8 @@ char *__cdecl _itoa(int _Value, char *_Dest, int _Radix)
 		UNIMPLEMENTED();
 		break;
 	}
+
+	return _Dest;
 }
 
 DWORD WINAPI GetTickCount(VOID)
@@ -98,25 +100,25 @@ UINT WINAPI GetWindowsDirectoryA(LPSTR lpBuffer, UINT uSize)
 WINBOOL WINAPI GetDiskFreeSpaceA(LPCSTR lpRootPathName, LPDWORD lpSectorsPerCluster, LPDWORD lpBytesPerSector,
     LPDWORD lpNumberOfFreeClusters, LPDWORD lpTotalNumberOfClusters)
 {
-    #ifndef _WIN32
+#ifndef _WIN32
 	struct statvfs fiData;
 	int success = statvfs("/", &fiData);
 	*lpBytesPerSector = fiData.f_frsize;
 	*lpSectorsPerCluster = 1;
 	*lpNumberOfFreeClusters = fiData.f_bavail;
-    *lpTotalNumberOfClusters = fiData.f_blocks;
-    
-    return success >= 0;
-	#else
-    // Todo give windows the real GetDiskFreeSpace
-    DUMMY();
-    *lpBytesPerSector = 1;
-    *lpSectorsPerCluster = 1;
-    *lpNumberOfFreeClusters = 10 << 20;
-    *lpTotalNumberOfClusters = 10 << 20;
-    
-    return true;
-	#endif
+	*lpTotalNumberOfClusters = fiData.f_blocks;
+
+	return success >= 0;
+#else
+	// Todo give windows the real GetDiskFreeSpace
+	DUMMY();
+	*lpBytesPerSector = 1;
+	*lpSectorsPerCluster = 1;
+	*lpNumberOfFreeClusters = 10 << 20;
+	*lpTotalNumberOfClusters = 10 << 20;
+
+	return true;
+#endif
 }
 
 /**
@@ -466,7 +468,7 @@ int GetClassName(HWND hWnd, LPTSTR lpClassName, int nMaxCount)
  */
 HRESULT SHGetSpecialFolderLocation(HWND hwnd, int csidl, PIDLIST_ABSOLUTE *ppidl)
 {
-	return NULL;
+	return 0;
 }
 
 /**
@@ -531,8 +533,9 @@ int WINAPI GetDeviceCaps(HDC hdc, int index)
 
 	if (index == HORZRES) {
 		return current.w;
-	} else if (index == VERTRES) {
-		current.h;
+	}
+	if (index == VERTRES) {
+		return current.h;
 	}
 
 	return 0;
@@ -643,7 +646,7 @@ int MessageBoxA(HWND hWnd, const char *Text, const char *Title, UINT Flags)
 		SDLFlags |= SDL_MESSAGEBOX_WARNING;
 	}
 
-	SDL_ShowSimpleMessageBox(SDLFlags, Title, Text, window) < 0 ? -1 : 0;
+	return SDL_ShowSimpleMessageBox(SDLFlags, Title, Text, window) < 0 ? -1 : 0;
 }
 
 LSTATUS RegOpenKeyExA(HKEY hKey, LPCSTR lpSubKey, DWORD ulOptions, REGSAM samDesired, PHKEY phkResult)

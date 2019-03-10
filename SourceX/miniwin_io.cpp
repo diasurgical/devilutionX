@@ -33,10 +33,10 @@ HANDLE WINAPI CreateFileA(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShar
 	} else {
 		UNIMPLEMENTED();
 	}
-	int fd = open(name, flags, mode);
+	HANDLE fd = (HANDLE)open(name, flags, mode);
 
-	files.insert((HANDLE)fd);
-	return (HANDLE)fd;
+	files.insert(fd);
+	return fd;
 }
 
 WINBOOL WINAPI ReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead, LPDWORD lpNumberOfBytesRead,

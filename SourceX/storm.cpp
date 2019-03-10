@@ -251,7 +251,7 @@ HWND STORMAPI SDrawGetFrameWindow(HWND *sdraw_framewindow)
 void *STORMAPI SMemAlloc(unsigned int amount, char *logfilename, int logline, char defaultValue)
 {
 	// fprintf(stderr, "%s: %d (%s:%d)\n", __FUNCTION__, amount, logfilename, logline);
-	assert(amount != -1);
+	assert(amount != -1u);
 	return malloc(amount);
 }
 
