@@ -35,8 +35,6 @@
 		43BA36B72236EA71009041FF /* decompress.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = decompress.c; path = ../../decompress.c; sourceTree = "<group>"; };
 		43BA36B82236EA71009041FF /* randtable.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = randtable.c; path = ../../randtable.c; sourceTree = "<group>"; };
 		43BA36B92236EAF5009041FF /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; name = Makefile; path = ../../Makefile; sourceTree = "<group>"; };
-		43BA37032236F73C009041FF /* bzip2_Framework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bzip2_Framework.h; sourceTree = "<group>"; };
-		43BA37042236F73C009041FF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		43BA37172236F91E009041FF /* libbzip2.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libbzip2.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -70,7 +68,6 @@
 				43BA36B52236EA71009041FF /* spewG.c */,
 				43BA36AD2236EA70009041FF /* unzcrash.c */,
 				43BA36B92236EAF5009041FF /* Makefile */,
-				43BA37022236F73C009041FF /* bzip2 Framework */,
 				43BA36BF2236ED53009041FF /* Products */,
 			);
 			sourceTree = "<group>";
@@ -81,15 +78,6 @@
 				43BA37172236F91E009041FF /* libbzip2.a */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		43BA37022236F73C009041FF /* bzip2 Framework */ = {
-			isa = PBXGroup;
-			children = (
-				43BA37032236F73C009041FF /* bzip2_Framework.h */,
-				43BA37042236F73C009041FF /* Info.plist */,
-			);
-			path = "bzip2 Framework";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

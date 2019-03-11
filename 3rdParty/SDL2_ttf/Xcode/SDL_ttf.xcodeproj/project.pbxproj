@@ -10,13 +10,34 @@
 		4362808F2236295900C911AD /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4362808E2236295900C911AD /* SDL2.framework */; };
 		436280AB2236344300C911AD /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 436280AA2236344200C911AD /* libz.tbd */; };
 		43BA37372236FE02009041FF /* libfreetyped.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43BA37362236FE02009041FF /* libfreetyped.a */; };
-		43BA377722370504009041FF /* libpng16d.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43BA377622370504009041FF /* libpng16d.a */; };
+		43BA39A122372AD5009041FF /* libpng16d.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43BA399E22372AC1009041FF /* libpng16d.a */; };
 		BE48FD5F07AFA17000BB41DA /* SDL_ttf.h in Headers */ = {isa = PBXBuildFile; fileRef = 1014BAEA010A4B677F000001 /* SDL_ttf.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BE48FD6207AFA17000BB41DA /* SDL_ttf.c in Sources */ = {isa = PBXBuildFile; fileRef = F567D67A01CD962A01F3E8B9 /* SDL_ttf.c */; };
 		BE48FD6B07AFA17000BB41DA /* SDL_ttf.c in Sources */ = {isa = PBXBuildFile; fileRef = F567D67A01CD962A01F3E8B9 /* SDL_ttf.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		43BA399B22372AC1009041FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 43BA399622372AC1009041FF /* libpng.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 222923A59E25488D9FD6415F;
+			remoteInfo = png;
+		};
+		43BA399D22372AC1009041FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 43BA399622372AC1009041FF /* libpng.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5D4732F44E0341ACB091868D;
+			remoteInfo = png_static;
+		};
+		43BA399F22372AC9009041FF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 43BA399622372AC1009041FF /* libpng.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 93A48D2BF5AB453EA4E1BCC5;
+			remoteInfo = png_static;
+		};
 		BE48FD7907AFA17100BB41DA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
@@ -50,6 +71,7 @@
 		43BA37242236F9A0009041FF /* libbzip2.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libbzip2.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		43BA37362236FE02009041FF /* libfreetyped.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libfreetyped.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		43BA377622370504009041FF /* libpng16d.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libpng16d.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		43BA399622372AC1009041FF /* libpng.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libpng.xcodeproj; path = ../../libpng/Xcode/libpng.xcodeproj; sourceTree = "<group>"; };
 		BE48FD6607AFA17000BB41DA /* Info-Framework.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-Framework.plist"; sourceTree = "<group>"; };
 		BE48FD6707AFA17000BB41DA /* SDL2_ttf.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SDL2_ttf.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE48FD6E07AFA17000BB41DA /* libSDL2_ttf.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSDL2_ttf.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -65,7 +87,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				43BA377722370504009041FF /* libpng16d.a in Frameworks */,
+				43BA39A122372AD5009041FF /* libpng16d.a in Frameworks */,
 				43BA37372236FE02009041FF /* libfreetyped.a in Frameworks */,
 				436280AB2236344300C911AD /* libz.tbd in Frameworks */,
 				4362808F2236295900C911AD /* SDL2.framework in Frameworks */,
@@ -104,6 +126,7 @@
 		0867D691FE84028FC02AAC07 /* SDL_ttfFramework */ = {
 			isa = PBXGroup;
 			children = (
+				43BA399622372AC1009041FF /* libpng.xcodeproj */,
 				F59C70FC00D5CB5801000001 /* pkg-support */,
 				0153844A006D81B07F000001 /* Public Headers */,
 				08FB77ACFE841707C02AAC07 /* Library Source */,
@@ -130,6 +153,15 @@
 				F567D67A01CD962A01F3E8B9 /* SDL_ttf.c */,
 			);
 			name = "Library Source";
+			sourceTree = "<group>";
+		};
+		43BA399722372AC1009041FF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				43BA399C22372AC1009041FF /* libpng16d.16.35.0.dylib */,
+				43BA399E22372AC1009041FF /* libpng16d.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		BE48FD8107AFA26B00BB41DA /* Frameworks */ = {
@@ -201,6 +233,7 @@
 			);
 			comments = "Installed into ~/Library/Frameworks/SDL_ttf.framework\n\nAdd -framework SDL_ttf to your linker flags\nAdd ~/Library/Frameworks/SDL_ttf.framework/Headers to your header search path\nAdd ~/Library/Frameworks to your library search path";
 			dependencies = (
+				43BA39A022372AC9009041FF /* PBXTargetDependency */,
 			);
 			name = Framework;
 			productInstallPath = "@executable_path/../Frameworks";
@@ -262,6 +295,12 @@
 			mainGroup = 0867D691FE84028FC02AAC07 /* SDL_ttfFramework */;
 			productRefGroup = 034768DDFF38A45A11DB9C8B /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 43BA399722372AC1009041FF /* Products */;
+					ProjectRef = 43BA399622372AC1009041FF /* libpng.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				BE48FD5D07AFA17000BB41DA /* Framework */,
@@ -270,6 +309,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		43BA399C22372AC1009041FF /* libpng16d.16.35.0.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			path = libpng16d.16.35.0.dylib;
+			remoteRef = 43BA399B22372AC1009041FF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		43BA399E22372AC1009041FF /* libpng16d.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libpng16d.a;
+			remoteRef = 43BA399D22372AC1009041FF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		BE48FD6007AFA17000BB41DA /* Resources */ = {
@@ -358,6 +414,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		43BA39A022372AC9009041FF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = png_static;
+			targetProxy = 43BA399F22372AC9009041FF /* PBXContainerItemProxy */;
+		};
 		BE48FD7A07AFA17100BB41DA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = BE48FD5D07AFA17000BB41DA /* Framework */;

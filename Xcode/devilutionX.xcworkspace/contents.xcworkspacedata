@@ -2,10 +2,10 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:../3rdParty/libpng/Xcode/libpng.xcodeproj">
+      location = "group:../3rdParty/freetype/Xcode/freetype.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:../3rdParty/freetype/build/freetype.xcodeproj">
+      location = "group:../3rdParty/libpng/Xcode/libpng.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:../3rdParty/bzip2/Xcode/bzip2/bzip2.xcodeproj">

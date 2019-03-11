@@ -73,7 +73,6 @@
 		5D4732F44E0341ACB091868D /* libpng16d.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libpng16d.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DFEEC68B9D74328B583F941 /* pngfix.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = pngfix.c; path = contrib/tools/pngfix.c; sourceTree = SOURCE_ROOT; };
 		5E8F538291FE4699AABCAA05 /* pngmem.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; path = pngmem.c; sourceTree = SOURCE_ROOT; };
-		650FDBD0D9D64C2F83CB6D35 /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
 		65E667F8833B45788B8E10EE /* intel_init.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = intel_init.c; path = intel/intel_init.c; sourceTree = SOURCE_ROOT; };
 		65FF7DF0CC3E49F4B2036CEF /* pngvalid.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = pngvalid.c; path = contrib/libtests/pngvalid.c; sourceTree = SOURCE_ROOT; };
 		698154549B5948F993541EB3 /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
@@ -95,7 +94,6 @@
 		9A435F44BF9F4DF5A3CD187C /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
 		9ACE8283E9194A92BA015682 /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
 		9BC4D24BA1054849B55BAAF3 /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
-		9D8A64D8C46341B6A910F06F /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
 		A0D14E46BE4B47C4BB53115C /* pnglibconf.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = pnglibconf.h; path = Xcode/pnglibconf.h; sourceTree = SOURCE_ROOT; };
 		A169CC43ABEB48928C5429AA /* pnglibconf.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = pnglibconf.h; path = Xcode/pnglibconf.h; sourceTree = SOURCE_ROOT; };
 		A1D2B5D25B8749B8979390A7 /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
@@ -112,7 +110,6 @@
 		C7104BE958574AE3AA886CFE /* pngtest.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; path = pngtest.c; sourceTree = SOURCE_ROOT; };
 		C931A29A1D534A639034A226 /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
 		C9829B137F77451795A03EAC /* pngmem.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; path = pngmem.c; sourceTree = SOURCE_ROOT; };
-		CAF91F07FC68432B954A4FDA /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
 		CB2B7FC828794592BDF8C0E6 /* pnginfo.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; path = pnginfo.h; sourceTree = SOURCE_ROOT; };
 		CDFEFE453B1E4EF1A812365A /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
 		CE5457588CF3467488F2D39E /* pngconf.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; path = pngconf.h; sourceTree = SOURCE_ROOT; };
@@ -198,22 +195,6 @@
 			name = genprebuilt;
 			sourceTree = "<group>";
 		};
-		2E04DCDA9A9B4748A5A61A85 /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "CMake Rules";
-			sourceTree = "<group>";
-		};
-		2E7E5777FB474A62B5657E97 /* ALL_BUILD */ = {
-			isa = PBXGroup;
-			children = (
-				2E04DCDA9A9B4748A5A61A85 /* CMake Rules */,
-				9D8A64D8C46341B6A910F06F /* CMakeLists.txt */,
-			);
-			name = ALL_BUILD;
-			sourceTree = "<group>";
-		};
 		33B268D7B78A43ACA27F93F1 /* CMake Rules */ = {
 			isa = PBXGroup;
 			children = (
@@ -292,15 +273,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		6732A0D322244DCBAAF5EBC8 /* ZERO_CHECK */ = {
-			isa = PBXGroup;
-			children = (
-				C5908827621F477BB2BD3E3F /* CMake Rules */,
-				CAF91F07FC68432B954A4FDA /* CMakeLists.txt */,
-			);
-			name = ZERO_CHECK;
-			sourceTree = "<group>";
-		};
 		6913C62C6B8A4BBB9F604BC7 /* gensym */ = {
 			isa = PBXGroup;
 			children = (
@@ -308,13 +280,6 @@
 				698154549B5948F993541EB3 /* CMakeLists.txt */,
 			);
 			name = gensym;
-			sourceTree = "<group>";
-		};
-		69390FB913E2470286B13A3B /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "CMake Rules";
 			sourceTree = "<group>";
 		};
 		7457261EA754402381D5E9B1 /* pngunknown */ = {
@@ -387,15 +352,6 @@
 			name = "png-fix-itxt";
 			sourceTree = "<group>";
 		};
-		B8671CCC856F412288B27BA7 /* symbol-check */ = {
-			isa = PBXGroup;
-			children = (
-				69390FB913E2470286B13A3B /* CMake Rules */,
-				650FDBD0D9D64C2F83CB6D35 /* CMakeLists.txt */,
-			);
-			name = "symbol-check";
-			sourceTree = "<group>";
-		};
 		BC94A9F4B0024B88BAD75B33 /* Source Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -410,13 +366,6 @@
 				4223A50F335A42C1AD7C9E62 /* pngstest.c */,
 			);
 			name = "Source Files";
-			sourceTree = "<group>";
-		};
-		C5908827621F477BB2BD3E3F /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "CMake Rules";
 			sourceTree = "<group>";
 		};
 		C6225E6A61B349CEA8818478 /* pngtest */ = {
@@ -478,9 +427,6 @@
 				D1551EA5E1FB403990533A23 /* genvers */,
 				AF994795B56C4CDC9F96C88A /* png-fix-itxt */,
 				5E5D98CC00D74513BC4BA5D3 /* pngimage */,
-				B8671CCC856F412288B27BA7 /* symbol-check */,
-				2E7E5777FB474A62B5657E97 /* ALL_BUILD */,
-				6732A0D322244DCBAAF5EBC8 /* ZERO_CHECK */,
 				5F2E4B6A7EA6451B86F05855 /* Products */,
 			);
 			sourceTree = "<group>";

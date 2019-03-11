@@ -212,7 +212,6 @@
 		0EF63E8BD67C4954A26480D5 /* diablo.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = diablo.cpp; path = Source/diablo.cpp; sourceTree = SOURCE_ROOT; };
 		0F235B03C98243B7977D89AA /* tcp_client.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = tcp_client.cpp; path = SourceX/dvlnet/tcp_client.cpp; sourceTree = SOURCE_ROOT; };
 		10734EC51DA24980B38F1854 /* credits.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = credits.cpp; path = SourceX/DiabloUI/credits.cpp; sourceTree = SOURCE_ROOT; };
-		14D731EEFA1C4F0F8187412F /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
 		16C6AB08C75D4A1E993FE50B /* dead.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = dead.cpp; path = Source/dead.cpp; sourceTree = SOURCE_ROOT; };
 		183703645CB04A19AD9E5025 /* drlg_l4.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = drlg_l4.cpp; path = Source/drlg_l4.cpp; sourceTree = SOURCE_ROOT; };
 		1A4D49F7AAB1448BB3796750 /* debug.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = debug.cpp; path = Source/debug.cpp; sourceTree = SOURCE_ROOT; };
@@ -232,10 +231,8 @@
 		33B8313F59E74FECA62AA865 /* abstract_net.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = abstract_net.cpp; path = SourceX/dvlnet/abstract_net.cpp; sourceTree = SOURCE_ROOT; };
 		35E464B787234EC0A3F2839F /* SFileOpenFileEx.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SFileOpenFileEx.cpp; path = 3rdParty/StormLib/src/SFileOpenFileEx.cpp; sourceTree = SOURCE_ROOT; };
 		373F9A9104DF4176A291FC8B /* wave.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = wave.cpp; path = Source/wave.cpp; sourceTree = SOURCE_ROOT; };
-		3ABD4E7040634970B9E7053F /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
 		3B7366F811604AE1B00C8C9A /* capture.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = capture.cpp; path = Source/capture.cpp; sourceTree = SOURCE_ROOT; };
 		3BE695CDAF744977BBD90183 /* SFileExtractFile.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SFileExtractFile.cpp; path = 3rdParty/StormLib/src/SFileExtractFile.cpp; sourceTree = SOURCE_ROOT; };
-		3CADBCA2B2164F6AAEEA3DD5 /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
 		3CC0017809BF45FD9BCC06CA /* textdat.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = textdat.cpp; path = Source/textdat.cpp; sourceTree = SOURCE_ROOT; };
 		3CC4A34B55AA4827B345A6A0 /* gmenu.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = gmenu.cpp; path = Source/gmenu.cpp; sourceTree = SOURCE_ROOT; };
 		3D09D9AFCBB94D86BD283257 /* sync.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = sync.cpp; path = Source/sync.cpp; sourceTree = SOURCE_ROOT; };
@@ -263,7 +260,6 @@
 		4A86F8316B224BF3BA817854 /* pfile.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = pfile.cpp; path = Source/pfile.cpp; sourceTree = SOURCE_ROOT; };
 		4AAA6B648E3846719B499BED /* miniwin.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = miniwin.cpp; path = SourceX/miniwin.cpp; sourceTree = SOURCE_ROOT; };
 		500C9F6E13FE44BFAEFCB81B /* smk_hufftree.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = smk_hufftree.c; path = 3rdParty/libsmacker/smk_hufftree.c; sourceTree = SOURCE_ROOT; };
-		518BE51B940A438DBB94C02D /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
 		51D35B538D574D5BA69C2A1F /* loopback.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = loopback.cpp; path = SourceX/dvlnet/loopback.cpp; sourceTree = SOURCE_ROOT; };
 		54E995CDB4134A309E45BAEC /* miniwin_thread.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = miniwin_thread.cpp; path = SourceX/miniwin_thread.cpp; sourceTree = SOURCE_ROOT; };
 		583D7322BD324E6099AFC6B4 /* SBaseCommon.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SBaseCommon.cpp; path = 3rdParty/StormLib/src/SBaseCommon.cpp; sourceTree = SOURCE_ROOT; };
@@ -279,7 +275,6 @@
 		68977FC478CB4E6CA54A3E38 /* logging.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = logging.cpp; path = Source/logging.cpp; sourceTree = SOURCE_ROOT; };
 		69F278D07BCB4BBEB6DCCFCE /* miniwin_io.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = miniwin_io.cpp; path = SourceX/miniwin_io.cpp; sourceTree = SOURCE_ROOT; };
 		6BDC3D1BA3B64866B84CEB3C /* init.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = init.cpp; path = Source/init.cpp; sourceTree = SOURCE_ROOT; };
-		6C3794E71FAE4E8D929C4164 /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
 		6C84A29CD9C44556A63466E3 /* storm_net.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = storm_net.cpp; path = SourceX/storm_net.cpp; sourceTree = SOURCE_ROOT; };
 		6D7FE30F050049FB933D2788 /* explode.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = explode.cpp; path = 3rdParty/PKWare/explode.cpp; sourceTree = SOURCE_ROOT; };
 		6F074DDFE42C4B46A93CC4A9 /* Section.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Section.cpp; path = 3rdParty/Radon/Radon/source/Section.cpp; sourceTree = SOURCE_ROOT; };
@@ -323,12 +318,10 @@
 		D58130817DEA419984D28AB3 /* lighting.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = lighting.cpp; path = Source/lighting.cpp; sourceTree = SOURCE_ROOT; };
 		D86188B68E494666A2972128 /* automap.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = automap.cpp; path = Source/automap.cpp; sourceTree = SOURCE_ROOT; };
 		D961B8EC59154E98955AE2E7 /* dthread.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = dthread.cpp; path = Source/dthread.cpp; sourceTree = SOURCE_ROOT; };
-		DA54A48BE656413898CE4026 /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
 		DAAD0527F1EA496A8B669415 /* town.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = town.cpp; path = Source/town.cpp; sourceTree = SOURCE_ROOT; };
 		DB292068EC0C4CDD8E7A57CF /* minitext.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = minitext.cpp; path = Source/minitext.cpp; sourceTree = SOURCE_ROOT; };
 		DCC453E263C842279A5E02E7 /* libsmacker.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libsmacker.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDD7341C6712447191FD2C4B /* missiles.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = missiles.cpp; path = Source/missiles.cpp; sourceTree = SOURCE_ROOT; };
-		DF9DA7AB9E264C729300F15C /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
 		E0A46C71A9A74DD6B124D596 /* mainmenu.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = mainmenu.cpp; path = SourceX/DiabloUI/mainmenu.cpp; sourceTree = SOURCE_ROOT; };
 		E421A97655174F4099852AD2 /* gendung.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = gendung.cpp; path = Source/gendung.cpp; sourceTree = SOURCE_ROOT; };
 		E54D4F37A0B24C6B83CE5D22 /* monster.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = monster.cpp; path = Source/monster.cpp; sourceTree = SOURCE_ROOT; };
@@ -342,7 +335,6 @@
 		F0FEC1BE8E6049D593406F4D /* loadsave.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = loadsave.cpp; path = Source/loadsave.cpp; sourceTree = SOURCE_ROOT; };
 		F249E02C422E4EC2B812E004 /* libStormLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libStormLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F69233C1EB4A41B89EF13D7A /* storm.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = storm.cpp; path = SourceX/storm.cpp; sourceTree = SOURCE_ROOT; };
-		FE79D5133FEE472DADA9964A /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -377,7 +369,6 @@
 			isa = PBXGroup;
 			children = (
 				E09D33766D914A78998F2070 /* Source Files */,
-				DF9DA7AB9E264C729300F15C /* CMakeLists.txt */,
 			);
 			name = PKWare;
 			sourceTree = "<group>";
@@ -393,20 +384,6 @@
 				43BF58B52235DEB8001F9748 /* devilutionX.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		26BB227CFA154C5C9F8BCBFA /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "CMake Rules";
-			sourceTree = "<group>";
-		};
-		327147FEA109479991072316 /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "CMake Rules";
 			sourceTree = "<group>";
 		};
 		338E2728766944BB8C4F6A95 /* Source Files */ = {
@@ -425,15 +402,6 @@
 				1CD6E91EE6E344FE87715B46 /* SFileReadFile.cpp */,
 			);
 			name = "Source Files";
-			sourceTree = "<group>";
-		};
-		43602F203C5343C9976624D4 /* ALL_BUILD */ = {
-			isa = PBXGroup;
-			children = (
-				327147FEA109479991072316 /* CMake Rules */,
-				DA54A48BE656413898CE4026 /* CMakeLists.txt */,
-			);
-			name = ALL_BUILD;
 			sourceTree = "<group>";
 		};
 		43BF58ED2235E0E1001F9748 /* Frameworks */ = {
@@ -455,7 +423,6 @@
 			isa = PBXGroup;
 			children = (
 				4B80E244468D4EF285280BBA /* Source Files */,
-				FE79D5133FEE472DADA9964A /* CMakeLists.txt */,
 			);
 			name = smacker;
 			sourceTree = "<group>";
@@ -474,7 +441,6 @@
 			isa = PBXGroup;
 			children = (
 				338E2728766944BB8C4F6A95 /* Source Files */,
-				3CADBCA2B2164F6AAEEA3DD5 /* CMakeLists.txt */,
 			);
 			name = StormLib;
 			sourceTree = "<group>";
@@ -556,25 +522,14 @@
 			isa = PBXGroup;
 			children = (
 				E1EABD1AC2D8479DB77DBAE9 /* Source Files */,
-				518BE51B940A438DBB94C02D /* CMakeLists.txt */,
 			);
 			name = devilutionx;
-			sourceTree = "<group>";
-		};
-		8C2BAD485DA848AEAA5223CB /* ZERO_CHECK */ = {
-			isa = PBXGroup;
-			children = (
-				26BB227CFA154C5C9F8BCBFA /* CMake Rules */,
-				14D731EEFA1C4F0F8187412F /* CMakeLists.txt */,
-			);
-			name = ZERO_CHECK;
 			sourceTree = "<group>";
 		};
 		9C3F8B1EBE5743E5AE9F0B20 /* Radon */ = {
 			isa = PBXGroup;
 			children = (
 				FB4E20065E074B88975B30BC /* Source Files */,
-				6C3794E71FAE4E8D929C4164 /* CMakeLists.txt */,
 			);
 			name = Radon;
 			sourceTree = "<group>";
@@ -590,8 +545,6 @@
 				06E348E3DB0A430587A05BBD /* PKWare */,
 				9C3F8B1EBE5743E5AE9F0B20 /* Radon */,
 				47705255650E4CFC92B1503F /* smacker */,
-				43602F203C5343C9976624D4 /* ALL_BUILD */,
-				8C2BAD485DA848AEAA5223CB /* ZERO_CHECK */,
 				23279744C0AF493896E2217C /* Products */,
 				43BF58ED2235E0E1001F9748 /* Frameworks */,
 			);
@@ -644,7 +597,6 @@
 			isa = PBXGroup;
 			children = (
 				7F95B2EF6FB44A038C321DA7 /* Source Files */,
-				3ABD4E7040634970B9E7053F /* CMakeLists.txt */,
 			);
 			name = devilution;
 			sourceTree = "<group>";

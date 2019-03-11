@@ -1,8 +1,0 @@
-/Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build/CMakeFiles/devilutionx.dir
-/Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build/CMakeFiles/devilution.dir
-/Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build/CMakeFiles/StormLib.dir
-/Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build/CMakeFiles/PKWare.dir
-/Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build/CMakeFiles/Radon.dir
-/Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build/CMakeFiles/smacker.dir
-/Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build/CMakeFiles/ALL_BUILD.dir
-/Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build/CMakeFiles/ZERO_CHECK.dir
