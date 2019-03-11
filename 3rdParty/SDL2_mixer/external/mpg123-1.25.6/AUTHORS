@@ -1,0 +1,175 @@
+This is an attempt to give credit to the people who contributed in some way to the mpg123 project.
+There are names and email addresses listed. Please use these addresses only to contact contributors with some question about their mpg123 contribution.
+You are explicitly not allowed to send them unwanted business offers or to question the quality of their sex life.
+--------------------
+
+Being on the list of contributing authors not necessarily means that there
+is significant copyright in parts of the source code. There are obviously
+contributions of differing complexity. I try to mention people who motivated
+changes at least by suggesting some definite code changes, even if their
+code did not enter the mpg123 source verbatim. Trivial changes like pointing
+out ovbious syntax errors that make compilers cry do not land here.
+
+--------------------
+
+Current maintainers with various sorts of contributions:
+	Thomas Orgis <thomas@orgis.org>
+	Patrick Dehne <patrick@steidle.net>
+	Jonathan Yong <10walls@gmail.com>
+	Taihei Momma <tmkk@mac.com>
+
+Co-initiator of the revived mpg123 project, but not that involved anymore:
+	Nicholas J Humfrey <njh@ecs.soton.ac.uk>
+
+Special thanks go to Taihei, the person who keeps the assembly optimisations alive
+and takes care of portability to OSX/iOS platforms.
+
+Generic address pointing to the current maintainer (hopefully still works in future in case maintainership will change again): <maintainer@mpg123.org>
+
+The creator: Michael Hipp (email: hippm@informatik.uni-tuebingen.de - please bother maintainers first)
+
+Contributions/ideas Thomas Orgis era (includes backports from mhipp trunk):
+
+Won-Kyu Park <wkpark@gmail.com>: patch to get rid of asm textrels (x86 PIC)
+Michael Weiser <michaelweiser@users.sf.net>: update of coreaudio output to AudioComponents API
+Bent Bisballe Nyeng <bbn@dynastrom.com>: patch for MPG123_NO_PEEK_END and MPG123_FORCE_SEEKABLE
+Eric S. Raymond <esr@thyrsus.com>: man page fixes
+Tobias Weber <tobiw@suprafluid.com>: patch for --disable-equalizer
+Hans de Goede <j.w.r.degoede@gmail.com>: patch to skip APE tags
+Stephan Vedder <stephan.vedder@gmail.com>: MSVC++ 2013 port update
+Rajeev V. Pillai <rajeevvp@users.sf.net>: pointing out/patching issues in HTTP code and behaviour of mpg123 remote/terminal control
+Jarno Lehtinen <lehtinen@sci.fi>: tinyalsa output
+Anthony Wells <borgboyone@yahoo.com>: initial version of ID3v2 APIC patch
+David Wohlferd <limegreensocks@yahoo.com>: Win32 WaveOut buffer destructor fix.
+Mike Gorchak <mike.gorchak.qnx@gmail.com>: QNX native audio output (QSA)
+Dan McGee <dpmcgee@gmail.com>: various patches (also for test suite)
+Jonathan Yong (jon_y) <10walls@gmail.com>: win32 hacking, win32 wasapi audio.
+Malcolm Boczek <MBoczek@terraindustries.com>: Common language runtime wrapper
+Elbert Pol (TeLLie) <elbert.pol@gmail.com>: OS/2 port fixup
+Jeroen Valkonet <jvalkon@xs4all.nl>: motivate pitch control, suggestive patch for pitch command in generic control interface
+Andy Hefner <ahefner@gmail.com>: patch for that second UTF16 issue
+Taihei Monma <tmkk@mac.com>: A whole lot of new/improved assembler code, including Altivec!
+Christian Weisgerber <naddy@openbsd.org>, Brad Smith: sndio output
+Patrick Dehne (P4tr3ck) <patrick@steidle.net>: more MSVC++ porting, patch to handle missing bit reservoirs
+Thorsten Glaser <tg@mirbsd.de>: icy2utf8, suggest utf8 locale stuff
+Dan Smith <dan@algenta.com>: ABI fixes for ensuring stack alignment (esp. for MinGW-built DLL with MSVC)
+Michael Ryzhykh <mclroy@gmail.com>: mpg123.spec.in
+Stefan Lenselink <Stefan@lenselink.org>: initial aRts output
+Sergej Kvachonok <ravenexp@gmail.com>: win32 audio rewrite
+Winston: SunOS-4.1.4/gcc-2.7.0 testing and suggestions for fixes (legacy Makefile, integer type headers)
+Mika Tiainen: pointing out the fix for the UTF to ASCII filtering of tags to actually work
+Nick Kurshev <nickols_k@mail.ru>: extended 3dnow (from mplayer)
+Zuxy Meng <zuxy.meng@gmail.com>: SSE (from mplayer)
+Honza <cundrak@quick.cz>: idea and prototype patch for ICY meta data support
+Petr Baudis <pasky@ucw.cz>: patches: term sigcont, id3 display unicode fallback and condensed output
+Petr Salinger <Petr.Salinger@seznam.cz>: i486 enhancement
+mpdavig@users.sourceforge.net: linux-ppc-nas Makefile.legacy entry
+Adrian Bacon <adrian.bacon@xs4all.nl>: patched decode_i586_dither (noise shaped float/int rounding)
+Cool Feet Audio project <nutcase@dtfm.org>: realtime equalizer control
+Steve Grundell <www@grundell.u-net.com>: clean stdout in control mode with stdout decoding
+Romain Dolbeau <romain@dolbeau.org>: Altivec support (taken from mplayer)
+higway <higway@mednet.md>: MMX Patch
+Clemens Ladisch <clemens@ladisch.de>: ALSA 0.9/1.0 support
+
+Debian Daniel Kobras <kobras@debian.org> era:
+
+Steve Kemp <skx@debian.org>
+Dan Olson <theoddone33@icculus.org>
+Syuuhei Kashiyama <squash@mb.kcom.ne.jp>
+Rupert Levene <rupert.debian@hotpop.com>
+Andreas Dilger <adilger@turbolinux.com>
+Erik B. Andersen <andersee@debian.org>
+Chris Butler <chrisb@debian.org>
+Martin Sjogren <md9ms@mdstud.chalmers.se>
+Chet Hosey <chosey@budapress.com>
+Roland Rosenfeld <roland@spinnaker.de>
+
+
+Debian Colin Watson <cjwatson@debian.org> era:
+
+Helge Deller <deller@gmx.de>
+Chet Hosey <chosey@budapress.com>
+Christopher C. Chimelis <chris@debian.org>
+Roland Rosenfeld <roland@spinnaker.de>
+Marcelo E. Magallon <mmagallo@debian.org>
+
+
+Initial Debianers:
+
+Tommi Virtanen <tv@debian.org>
+Paul Haggart <phaggart@debian.org>
+
+
+Contributions/ideas Michael Hipp era:
+
+Mikko Tommila: DCT9
+Oliver Fromme <oliver.fromme@heim3.tu-clausthal.de>
+MPEG Software Simulation Group: reference decoder package
+Tobias Bading: idea for DCT64 in subband synthesis from maplay package
+Jeff Tsay and Mikko Tommila: MDCT36 from maplay package
+Philipp Knirsch <phil@mpik-tueb.mpg.de>: DCT36/manual unroll idea
+Thomas Woerner: SGI Audio
+Damien Clermonte: HP-UX audio fixes
+Niclas Lindstrom <nil@wineasy.se>: OS2 port
+Stefan Bieschewski <stb@acm.org>: Pentium optimizations, decode_i586.s
+Martin Denn <mdenn@unix-ag.uni-kl.de>: NAS port
+Niklas Beisert <nbeisert@physik.tu-muenchen.de>: MPEG 2.5 tables
+<mycroft@NetBSD.ORG> and <augustss@cs.chalmers.se>: NetBSD Patch(es)
+Kevin Brintnall <kbrint@visi.com>: BSD patch
+Tony Million: win32 port
+Steven Tiger Lang: advanced shuffle
+Eric B. Mitchell: esd port
+Ryan R. Prosser <prosser@geocities.com>: esd port for Solaris
+Andreas Neuhaus: initial generic control interface
+
+(additionally fetched from changelog:)
+
+Ralf Hildebrandt <R.Hildebrandt@TU-BS.DE>: audio_alib changes
+<sms@moe.2bsd.com>: BSDOS 4.0 with gcc added to Makefile
+Bertrand Petit <elrond@phoe.netdev.net>: frontend changes
+Erik Mouw <J.A.K.Mouw@its.tudelft.nl>: SGI audio fix for non RAD machines
+Daniel O'Connor <darius@guppy.dons.net.au>: freebsd-esd make-entry
+D. Skarda <0rfelyus@atrey.karlin.mff.cuni.cz>: enhanced head_check
+Wilson, Jeff D <jeff.wilson@wilcom.com>: xterm-title
+Robert Bihlmeyer <robbe@orcus.priv.at>: esd changes
+Hannu Napari's <Hannu.Napari@hut.fi>: SGI audio patches
+<Juergen.Schoew@unix-ag.uni-siegen.de>: native AIX support
+<psst@euskalnet.net>: playlist patch
+Gilles Zunino <Gilles.Zunino@hei.fupl.asso.fr>: SGI audio patches
+Matthew Parslow <roy@alpha.alphalink.com.au>: esdserver patch
+<dlux@dlux.sch.bme.hu>: equalizer patch (equalfile setting)
+Ducroquet Erwan <ducroque@ufr-info-p7.ibp.fr>: HPUX/ALib support
+Shane Wegner <shane@CM.NU>: genrepatch
+Samuel Audet <guardia@step.polymtl.ca>: wav-File patch
+"J. Dean Brederson" <jdb@cs.utah.edu>: SGI-RAD support
+Chou Ye-chi <is84002@cis.nctu.edu.tw>: sajberplay/FreeBSD patch
+Fabrice Bellard <bellard@email.enst.fr>: 486 optimizations
+A. Hermansen <ahermans@vf.telia.no> and J. Kysela <perex@jcu.cz>: ALSA output
+KIMURA Takuhiro <kim@hannah.ipc.miyakyo-u.ac.jp>: K6-3DNow
+Petr Stehlik <stehlik@cas3.zlin.vutbr.cz>: MINT
+Andy <andy@snoogie.demon.co.uk>: float2int speed up proposal
+Brian Foutz <foutz@anise.ee.cornell.edu>: TK3Play
+Thomas Niederreiter <tn@tarantel.rz.fh-muenchen.de>: RIFF header fix
+Stefan Gybas <cab@studbox.uni-stuttgart.de>: m68k patch 
+Grant Erickson <eric0139@tc.umn.edu>: Linux PPC patch
+Peter Berger <peterb@hoopoe.psc.edu>: BSDi patch 
+Henrik P Johnson <king@one.se>: HTTP auth
+Steven Tiger Lang <tiger@tyger.org>: advanced shuffle
+"Brian J. Swetland" <swetland@uiuc.edu>: front-end (remote) patch
+<leo@zycad.com>
+Tillmann Steinbrecher <tst@gmx.de>: shuffle patch
+M.Stekelenburg <m.stekelenburg@student.utwente.nl>: i386-getbits
+Antti Andreimann <anttix@cyberix.edu.ee>: outburst patch
+Hur TaeSung <saturn@arari.snu.ac.kr>: 'http accept' patch 
+
+(from post-0.59 changes that yet have to go into new trunk:)
+
+Hans Schwengeler <schweng@astro.unibas.ch>: audio_dec additions
+Wojciech Barañski's Mp3Play (check the tools folder): Mp3Play frontend
+Daniel Koukola: audio_oss.c patch
+Munechika SUMIKAWA <sumikawa@ebina.hitachi.co.jp>: IPv6
+TEMNOTA <temnota@kmv.ru>: HTTP,FTP patch/playlist fix
+Peter Surda <shurdeek@panorama.sth.ac.at>: VBR patch
+Ben <ben@blaukopf.com>: ARM startup time improvements 
+Dave MacKenzie <djm@pix.net>: init_output() patch
+pasky's <pasky@ju.cz>: close-on-stop patch

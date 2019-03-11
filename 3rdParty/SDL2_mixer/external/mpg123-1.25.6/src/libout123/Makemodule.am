@@ -1,0 +1,59 @@
+# Module for non-recursive mpg123 build system.
+
+include src/libout123/modules/Makemodule.am
+
+# Precursor to the proper libout123.
+# For now only wrapping the module loader or the legacy module.
+noinst_LTLIBRARIES += src/libout123/libmodule.la
+
+lib_LTLIBRARIES += src/libout123/libout123.la
+src_libout123_libout123_la_SOURCES = \
+  src/libout123/libout123.c \
+  src/libout123/stringlists.h \
+  src/libout123/stringlists.c \
+  src/libout123/out123_int.h \
+  src/libout123/wav.c \
+  src/libout123/wav.h \
+  src/libout123/wavhead.h
+
+if BUILD_BUFFER
+src_libout123_libout123_la_SOURCES += \
+  src/libout123/buffer.c \
+  src/libout123/buffer.h \
+  src/libout123/xfermem.c \
+  src/libout123/xfermem.h
+endif
+
+src_libout123_libout123_la_LDFLAGS = \
+  -no-undefined -version-info @LIBOUT123_VERSION@ -export-symbols-regex '^out123_'
+
+src_libout123_libout123_la_LIBADD = \
+  src/libout123/libmodule.la \
+  src/compat/libcompat.la
+
+if !HAVE_MODULES
+src_libout123_libout123_la_LIBADD += \
+  src/libout123/modules/libdefaultmodule.la
+endif
+
+src_libout123_libmodule_la_SOURCES = src/libout123/module.h
+ 
+if HAVE_MODULES
+
+src_libout123_libmodule_la_SOURCES += src/libout123/module.c
+
+else
+
+src_libout123_libmodule_la_SOURCES += src/libout123/legacy_module.c
+
+endif
+
+
+# The sfifo code is directly used in some modules.
+EXTRA_DIST += \
+  src/libout123/out123.h.in \
+  src/libout123/sfifo.c \
+  src/libout123/sfifo.h
+
+nodist_include_HEADERS += \
+  src/libout123/out123.h

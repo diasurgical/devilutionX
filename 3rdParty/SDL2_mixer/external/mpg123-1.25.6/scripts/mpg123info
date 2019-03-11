@@ -1,0 +1,71 @@
+#!/bin/bash
+
+if test $# -eq 0; then
+  echo "Give me some MPEG 1.0/2.0/2.5 layer 1/2/3 audio file name(s) and I give you meta info about it in an easily-parseable format:
+
+name=value
+
+for simple value association and
+
+name.=value
+
+to add another line to existing value (multiline comments)."
+fi
+
+for i in "$@"
+do
+  echo lp "$i"
+  echo tag
+  echo scan
+  echo format
+  echo sample
+done | 
+mpg123 -t -R |
+perl -e '
+while(<STDIN>)
+{
+if(/\@T \{/)
+{
+  print "# meta info for: ".(shift @ARGV)."\n";
+  $field = undef;
+  %count = ();
+  %linecount = ();
+}
+elsif(/\@T ID3:(.*)$/)
+{
+  $field = undef;
+  print "ID3v1.title=".substr($1, 0, 30)."\n";
+  print "ID3v1.artist=".substr($1, 30, 30)."\n";
+  print "ID3v1.album=".substr($1, 60, 30)."\n";
+  print "ID3v1.year=".substr($1, 90, 4)."\n";
+  print "ID3v1.comment=".substr($1, 94, 30)."\n";
+  print "ID3v1.genre=".substr($1, 124)."\n";
+}
+elsif(/\@T ID3\.([^:]+):(.*)$/)
+{
+  $field = undef;
+  print "ID3.$1=$2\n";
+}
+elsif(/\@T (ID3v2\.\S{4})(|\s+lang\(([^\(\)]*)\)\s+desc\(([^\(\)]*)\)):/)
+{
+  $class = $1;
+  $field = ++$count{$class} > 1 ? "$class$count{$class}" : $class;
+  print "$field.lang=$3\n" if(defined $3);
+  print "$field.desc=$4\n" if(defined $4);
+}
+elsif(/\@T =(.*)$/)
+{
+  next unless defined $field;
+  print "$field".(++$linecount{$field} > 1 ? ".=" : "=").$1."\n";
+}
+elsif(/\@FORMAT\s+(\d+)\s+(\d+)/)
+{
+  print "format.rate=$1\n";
+  print "format.channels=$2\n";
+}
+elsif(/\@SAMPLE\s+(\d+)\s+(\d+)/)
+{
+  print "samples=$2\n";
+}
+}
+' "$@"

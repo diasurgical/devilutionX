@@ -1,0 +1,41 @@
+DISCLAIMER: The contents of the ports directory are included for convenience,
+but they usually contain files contributed by various people, not the core
+mpg123 team. The stuff is not tested by us. In some cases, it's even
+impossible to tell what is really inside. Use at your own risk (well, like
+all Free Software, actually;-).
+
+This directory contains some (contributed) works covering usage and/or building
+of mpg123/libmpg123 from different programming environments. Note that those
+may be a bit outdated (especially when a file is added/removed in libmpg123
+sources); as the team lacks resource to test everything. But in any case,
+the ports can provide a good starting point on the respective platform, to get
+it to work with minimal fuzz.
+
+- Delphi: mpg123_.pas
+  Unit for linking against libmpg123 (Win32, DLL).
+  ...by Arthur Pires <arthurprs@gmail.com>
+- Sony PSP: Sony_PSP/; building libmpg123 for the PSP (used for the MODO player).
+  ...by Bastian Pflieger <wb@illogical.de>
+- MSVC++: Microsoft Windows / Visual C++ builds
+  - MSVC++/CMP3Stream:
+    project for building libmpg123 with interface class.
+    ...by "Gates Fan" <gatesfan@gmail.com>
+  - MSVC++/mpg123.h
+    A wrapper header over mpg123.h.in (yes, the template file in
+    ../src/libmpg123) to use in MSVC++ projects that link to libmpg123.
+  - MSVC++/YYYY contain project files for building and using libmpg123 with
+    the corresponding versions of Microsoft Visual C++.
+    To use it add the project to your solution. Then add a reference to
+    libmpg123 from the project that wants to use it.
+    Also add ports/MSVC++ and src/libmpg123 to the include path. 
+	If you want to use the asm build you will need yasm (http://www.tortall.net/projects/yasm/). 
+	Please put yasm.exe into a directory where MSVC++ can find it. Finally
+        switch the libmpg123 project to the 
+	Release_MMX_Dll (outdated! There should be Realease_X86_Dll or similar by now)
+        build using the Visual Studio Configuration Manager.
+  - Xcode contains the project file for building and using libmpg123 with
+    Xcode for Mac and iOS (arm and simulator builds). Please add the
+	ports/Xcode folder to the header search path of your project so that 
+	Xcode can find the right mpg123.h and config.h. Then drag the mpg123
+	Xcode project into your own project. Finally in your build target, build
+	phases, add mpg123-ios or mpg123-mac to the libraries to link.

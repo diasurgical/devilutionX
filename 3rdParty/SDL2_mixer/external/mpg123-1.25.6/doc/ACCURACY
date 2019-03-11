@@ -1,0 +1,2 @@
+We do regular testing of ISO MPEG compliant decoder accuracy, automatic with snapshot generation each night at least, with results shown on the front page of http://mpg123.org .
+Since version 1.8.0, mpg123 really looks fine in that area... it's fast and sounds good;-)

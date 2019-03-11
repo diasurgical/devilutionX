@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="x86">
+      <UniqueIdentifier>{07f853b4-9435-4ad1-a3b8-55d0711ae418}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="x64">
+      <UniqueIdentifier>{6b75b06c-f245-4bb2-83fa-1fb05370324f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{bcf4d3a9-19ff-48f0-b98c-d00107144bbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Public Headers">
+      <UniqueIdentifier>{8c2c480d-888e-47ec-bec8-6e67eb40d529}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\SDL_ttf.c">
+      <Filter>Sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Version.rc">
+      <Filter>Sources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\SDL_ttf.h">
+      <Filter>Public Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="external\lib\x86\libfreetype-6.dll">
+      <Filter>x86</Filter>
+    </CustomBuild>
+    <CustomBuild Include="external\lib\x86\LICENSE.freetype.txt">
+      <Filter>x86</Filter>
+    </CustomBuild>
+    <CustomBuild Include="external\lib\x86\LICENSE.zlib.txt">
+      <Filter>x86</Filter>
+    </CustomBuild>
+    <CustomBuild Include="external\lib\x86\zlib1.dll">
+      <Filter>x86</Filter>
+    </CustomBuild>
+    <CustomBuild Include="external\lib\x64\libfreetype-6.dll">
+      <Filter>x64</Filter>
+    </CustomBuild>
+    <CustomBuild Include="external\lib\x64\LICENSE.freetype.txt">
+      <Filter>x64</Filter>
+    </CustomBuild>
+    <CustomBuild Include="external\lib\x64\LICENSE.zlib.txt">
+      <Filter>x64</Filter>
+    </CustomBuild>
+    <CustomBuild Include="external\lib\x64\zlib1.dll">
+      <Filter>x64</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

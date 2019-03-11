@@ -1,0 +1,121 @@
+diff -ruN libogg-1.3.2.orig/android/ogg/config_types.h libogg-1.3.2/android/ogg/config_types.h
+--- libogg-1.3.2.orig/android/ogg/config_types.h	1969-12-31 16:00:00.000000000 -0800
++++ libogg-1.3.2/android/ogg/config_types.h	2017-10-12 20:31:47.848694044 -0700
+@@ -0,0 +1,25 @@
++#ifndef __CONFIG_TYPES_H__
++#define __CONFIG_TYPES_H__
++
++/* these are filled in by configure */
++#define INCLUDE_INTTYPES_H 1
++#define INCLUDE_STDINT_H 1
++#define INCLUDE_SYS_TYPES_H 1
++
++#if INCLUDE_INTTYPES_H
++#  include <inttypes.h>
++#endif
++#if INCLUDE_STDINT_H
++#  include <stdint.h>
++#endif
++#if INCLUDE_SYS_TYPES_H
++#  include <sys/types.h>
++#endif
++
++typedef int16_t ogg_int16_t;
++typedef uint16_t ogg_uint16_t;
++typedef int32_t ogg_int32_t;
++typedef uint32_t ogg_uint32_t;
++typedef int64_t ogg_int64_t;
++
++#endif
+diff -ruN libogg-1.3.2.orig/Android.mk libogg-1.3.2/Android.mk
+--- libogg-1.3.2.orig/Android.mk	1969-12-31 16:00:00.000000000 -0800
++++ libogg-1.3.2/Android.mk	2017-10-22 11:48:30.793339994 -0700
+@@ -0,0 +1,17 @@
++LOCAL_PATH := $(call my-dir)
++
++include $(CLEAR_VARS)
++
++LOCAL_MODULE := ogg
++
++LOCAL_C_INCLUDES := $(LOCAL_PATH)/include $(LOCAL_PATH)/android
++
++LOCAL_CFLAGS :=
++
++LOCAL_SRC_FILES += \
++    src/framing.c \
++    src/bitwise.c
++
++LOCAL_EXPORT_C_INCLUDES += $(LOCAL_C_INCLUDES)
++
++include $(BUILD_STATIC_LIBRARY)
+diff -ruN libogg-1.3.2.orig/macosx/Ogg.xcodeproj/project.pbxproj libogg-1.3.2/macosx/Ogg.xcodeproj/project.pbxproj
+--- libogg-1.3.2.orig/macosx/Ogg.xcodeproj/project.pbxproj	2014-05-27 12:52:34.000000000 -0700
++++ libogg-1.3.2/macosx/Ogg.xcodeproj/project.pbxproj	2017-10-22 11:30:36.440344213 -0700
+@@ -168,11 +168,19 @@
+ /* Begin PBXProject section */
+ 		0867D690FE84028FC02AAC07 /* Project object */ = {
+ 			isa = PBXProject;
++			attributes = {
++			};
+ 			buildConfigurationList = 730F235809181A3A00AB638C /* Build configuration list for PBXProject "Ogg" */;
++			compatibilityVersion = "Xcode 2.4";
++			developmentRegion = en;
+ 			hasScannedForEncodings = 1;
++			knownRegions = (
++				en,
++			);
+ 			mainGroup = 0867D691FE84028FC02AAC07 /* Ogg */;
+ 			productRefGroup = 034768DDFF38A45A11DB9C8B /* Products */;
+ 			projectDirPath = "";
++			projectRoot = "";
+ 			targets = (
+ 				8D07F2BC0486CC7A007CD1D0 /* Ogg */,
+ 				734FB2E40B18B33E00D561D7 /* libogg (static) */,
+@@ -237,9 +245,10 @@
+ 		730F235509181A3A00AB638C /* Debug */ = {
+ 			isa = XCBuildConfiguration;
+ 			buildSettings = {
++				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+ 				COPY_PHASE_STRIP = NO;
+-				DYLIB_COMPATIBILITY_VERSION = 1;
+-				DYLIB_CURRENT_VERSION = 1;
++				DYLIB_COMPATIBILITY_VERSION = 9.0.0;
++				DYLIB_CURRENT_VERSION = 9.2.0;
+ 				FRAMEWORK_VERSION = A;
+ 				GCC_DYNAMIC_NO_PIC = NO;
+ 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+@@ -248,7 +257,10 @@
+ 				GCC_PREFIX_HEADER = Ogg_Prefix.pch;
+ 				INFOPLIST_FILE = Info.plist;
+ 				INSTALL_PATH = /Library/Frameworks;
++				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_PATH)";
++				MACOSX_DEPLOYMENT_TARGET = 10.6;
+ 				PRODUCT_NAME = Ogg;
++				SDKROOT = macosx;
+ 				WRAPPER_EXTENSION = framework;
+ 				ZERO_LINK = YES;
+ 			};
+@@ -257,9 +269,10 @@
+ 		730F235609181A3A00AB638C /* Release */ = {
+ 			isa = XCBuildConfiguration;
+ 			buildSettings = {
++				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+ 				COPY_PHASE_STRIP = YES;
+-				DYLIB_COMPATIBILITY_VERSION = 1;
+-				DYLIB_CURRENT_VERSION = 1;
++				DYLIB_COMPATIBILITY_VERSION = 9.0.0;
++				DYLIB_CURRENT_VERSION = 9.2.0;
+ 				FRAMEWORK_VERSION = A;
+ 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+ 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+@@ -267,7 +280,10 @@
+ 				GCC_PREFIX_HEADER = Ogg_Prefix.pch;
+ 				INFOPLIST_FILE = Info.plist;
+ 				INSTALL_PATH = /Library/Frameworks;
++				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_PATH)";
++				MACOSX_DEPLOYMENT_TARGET = 10.6;
+ 				PRODUCT_NAME = Ogg;
++				SDKROOT = macosx;
+ 				WRAPPER_EXTENSION = framework;
+ 				ZERO_LINK = NO;
+ 			};

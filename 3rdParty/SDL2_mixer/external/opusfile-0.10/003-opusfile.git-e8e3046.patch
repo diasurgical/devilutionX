@@ -1,0 +1,21 @@
+From: Mark Harris <mark.hsj@gmail.com>
+Date: Mon, 11 Jun 2018 06:47:59 +0000 (-0700)
+Subject: opus_tags_copy: return OP_EFAULT on failure
+X-Git-Url: http://git.xiph.org/?p=opusfile.git;a=commitdiff_plain;h=e8e3046572dd0369b8346a4af8e34d283b385c59
+
+opus_tags_copy: return OP_EFAULT on failure
+---
+
+diff --git a/src/info.c b/src/info.c
+index fba4c16..7abb29d 100644
+--- a/src/info.c
++++ b/src/info.c
+@@ -282,7 +282,7 @@ int opus_tags_copy(OpusTags *_dst,const OpusTags *_src){
+   ret=opus_tags_copy_impl(&dst,_src);
+   if(OP_UNLIKELY(ret<0))opus_tags_clear(&dst);
+   else *_dst=*&dst;
+-  return 0;
++  return ret;
+ }
+ 
+ int opus_tags_add(OpusTags *_tags,const char *_tag,const char *_value){

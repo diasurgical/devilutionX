@@ -1,0 +1,37 @@
+* I don't like the indentation style at all, but for the most part
+  I've left it alone.
+
+* Much of the code looks ugly to me.
+
+* The return value from SDL_RWread() is checked inconsistenly.
+
+* Group the members of MidiSong into logical units, i.e. structs?
+
+* The debug messages are probably a bit too noisy. I've removed one
+  particularly annoying one, but...
+
+  Some of them should be turned into error messages instead.
+
+* Can the instrument handling be made more efficient? At the moment
+  different MidiSongs may separately load the same instrument.
+
+  Note that the MidiSong's audio format affects how the instrument is
+  loaded, so it's not as easy as just letting all MidiSongs share tone
+  and drum banks.
+
+  At the moment they do share the data that is simply read from the
+  config file, but that's just a quick hack to avoid having to read
+  the config file every time a MIDI song is loaded.
+
+* Check if any of MidiStruct's members can safely be made into static
+  globals again.
+
+* TiMidity++ adds a number of undocumented (?) extensions to the
+  configuration syntax. These are not implemented here. In particular,
+  the "map" keyword used by the "eawpats".
+
+* The other decoders generally only read as much of the file as is
+  necessary. Could we do that in this decoder as well? (Currently it
+  seems to convert the entire file into MIDI events first.)
+
+* Can it be optimized?

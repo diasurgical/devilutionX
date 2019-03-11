@@ -1,0 +1,270 @@
+The License of mpg123
+=====================
+
+	by Thomas Orgis <thomas@orgis.org>
+
+1. Story: The Odyssey, The Decision
+-----------------------------------
+
+This is the 17th of July in the year 2006, after half a year of preparation and the contributor email campaign running for over 3 months, I'm going to draw a conclusion about the licensing of the mpg123 project.
+
+
+The license conditions of mpg123 have been subject to dispute and rejection by parts of the free software world in the past...
+We want to have it straight now.
+Michael doesn't have much freetime to maintain the code and bother with requests by companies wanting to use mpglib.
+So, he already decided to place mpglib under LGPL and mpg123 under GPL in the past.
+Now, after I applied for taking over maintainership we decided on placing as much code of the whole project as possible under LGPL to ease future code migration and merging between mpg123 and mpglib.
+
+That decision was followed by a lot of work to track down as many contributors to both Michael's development tree and my -thor one as possible to ask them for explicit LGPL support statements.
+I wrote to every Name/eMail address I could track down (including internet search for new addresses), regardless of the question if there indeed is some code left by that person.
+I asked them to utter any problem they may have with LGPL license as well as contacting me if there are _no_ issues.
+
+Of course, without having to ask again, supporters of LGPL are the initial author and the two current maintainers:
+
+	Michael Hipp
+	Nicholas J. Humfrey
+	Thomas Orgis
+
+Also, new stuff was included with explicit LGPL permission from
+
+	Adrian Bacon
+	Romain Dolbeau
+	Guillaume Outters
+
+Plus there is stuff pending with permission from
+
+	Zuxy Meng
+
+Now for the folks having made suggestions and contributions over the years...
+In the first round starting in March 2006 I wrote the initial mail to anyone I could get. That resulted in some positive responses - examples:
+
+	"I don't remember what I did, but LGPL is fine by me."
+
+	"No problem for me."
+
+	"Any code I may have contributed to the mpg123 project at any time in the
+past are hereby licensed to you under the GNU Lesser General Public"
+
+	"it's fine with me if mpg123 goes LGPL. 
+	However, my contribution to mpg123 was very minor, and I'm not even sure if 
+	any of my code is still in the current version."
+
+A good number of eMail addresses is just broken (years have passed...) and another good number of addresses are either totally unknown or not known to be good or bad since no response (not even bounce - thanks, spam!) came back in over 3 months.
+
+Some statistics for the first run: 86 total , 15 positive, 37 broken email, 34 unknown
+
+Positive:
+	Andreas Neuhaus
+	Chris Butler
+	Colin Watson
+	Daniel Kobras
+	Daniel O'Connor
+	Daniel Skarda
+	Erik B. Andersen
+	Helge Deller
+	Juergen Schoew
+	Martin Denn
+	Munechika SUMIKAWA
+	Oliver Fromme
+	Petr Stehlik
+	Robert Bihlmeyer
+	Samuel Audet
+	Shane Wegner
+	Stefan Bieschewski
+	Steven Schultz
+	Tillmann Steinbrecher
+	Tomas Oegren
+	Tommi Virtanen
+
+Then, an investigation of the code revealed a core of people having actually left traces in the code.
+Some more effort was put in tracking them down, with the partial success of having found some new, working email addresses and thus having some more positive responses .
+But also, it showed that the main number of people is not reachable anymore.
+
+Creators (of a whole file, driver...): 16 total, 5 positive, 2 broken email, 9 unknown
+
+Positive:
+	Andreas Neuhaus
+	Juergen Schoew
+	Oliver Fromme
+	Petr Stehlik
+	Samuel Audet
+
+Modders: 7 total, 1 positive, 2 broken mail, 4 unknown
+
+Positive:
+	Tomas Oegren
+
+
+That shows two things:
+
+	1. It's impossible to get a response from everyone having contributed in some way.
+	2. Everyone who I reached supports the license change to LGPL
+
+
+So, for the sake of getting a reasonable step forward, I'm going to close the case.
+There are three categories of code:
+
+1. written by Michael or some other contributor who explicitly supports LGPL
+
+	Clear case: LGPL
+
+2. contributed years ago without license notice
+
+	The grounded assumption of can be made that the contributor accepted Michael's conditions, esp. the part about the software being available without cost.
+	Furthermore they gave the code into Michael's hands or placed patches in the internet without any claims concerning commercial uses - wich were not covered by the old COPYING file.
+	Based on the assumption of acceptance for the mpg123 COPYING file and the included rule of Michael's decision for any further use, this code is to be placed under LGPL by Michael's decision.
+
+3. contributed with notice
+
+	Some code includes a note about it being GPL. Well, one has to respect that.
+
+
+That results in the bulk of mpg123 being LGPL and possibly some parts GPL only.
+
+
+2. The Inventory
+----------------
+
+I will now examine the files of the mpg123 svn trunk as of 17.07.2006 with their respective legal status:
+
+Stuff added by current maintainers, thus being LGPL:
+
+	scripts/debugdef.pl
+	AUTHORS
+	autogen.sh
+	configure.ac
+	Makefile.am
+	MakeLegacy.sh
+	src/audio_jack.c
+	src/audio_libao.c
+	src/Makefile.am
+	src/audio_alsa09.c
+	src/config.h.legacy
+	src/debug.h
+	src/layer3.h
+
+Non-Code files from Michael, maintainers or just trivial content (safely LGPL, then):
+
+	BENCHMARKING
+	BUGS
+	CHANGES
+	equalize.dat
+	INSTALL
+	mpg123.1
+	COPYING
+	TODO
+	README
+	README.3DNOW
+	README.cfa
+	README.new
+	README.remote
+	README.thor
+	README.WIN32
+	test.pl
+	BENCHMARKING.thor
+	CONTACT
+
+sources under LGPLv2.1:
+
+by Michael:
+
+	audio.c
+	audio_dummy.c
+	audio.h
+	audio_hp.c
+	audio_oss.c
+	audio_sun.c
+	common.c
+	common.h
+	dct64.c
+	dct64_i386.c
+	decode_2to1.c
+	decode_4to1.c
+	decode.c
+	decode_i386.c
+	decode_ntom.c
+	Makefile.legacy
+	equalizer.c 
+	getbits.c
+	getbits.h
+	huffman.h
+	l2tables.h
+	layer1.c
+	layer2.c
+	layer3.c
+	mpg123.c
+	mpg123.h
+	readers.c
+	system.c
+	tabinit.c
+	term.c
+	term.h
+
+by contributors:
+
+	audio_aix.c: Juergen Schoew, Tomas Oegren, Niklas Edmundsson
+	audio_alib.c: Erwan Ducroquet
+	audio_esd.c: Eric B. Mitchell
+	audio_macosx.c: Guillaume Outters
+	audio_mint.c: Petr Stehlik
+	audio_nas.c: Martin Denn
+	audio_os2.c: Samuel Audet
+	audio_sgi.c: Thomas Woerner
+	audio_win32.c: Tony Million 
+	buffer.c: Oliver Fromme
+	buffer.h: Daniel Kobras / Oliver Fromme
+	control_generic.c: Andreas Neuhaus, Michael Hipp, Thomas Orgis
+	dct36_3dnow.s: Syuuhei Kashiyama
+	dct64_3dnow.s: Syuuhei Kashiyama
+	dct64_altivec.c: Romain Dolbeau
+	dct64_i486.c: Fabrice Bellard
+	decode_3dnow.s: Syuuhei Kashiyama
+	decode_i486.c: Fabrice Bellard
+	decode_i586_dither.s: Stefan Bieschewski, Adrian Bacon
+	decode_i586.s: Stefan Bieschewski
+	decode_MMX.s: higway
+	dct64_MMX.s: higway
+	tabinit_MMX.s: higway
+	equalizer_3dnow.s: KIMURA Takuhiro
+	genre.h: Shane Wegner
+	getcpuflags.s: KIMURA Takuhiro
+	getlopt.c: Oliver Fromme
+	getlopt.h: Oliver Fromme
+	httpget.c: Oliver Fromme
+	wav.c: Samuel Audet
+	xfermem.c: Oliver Fromme
+	xfermem.h: Oliver Fromme
+	Makefile.win32: Michael Hipp / Tony Million
+
+GPLv2
+
+	audio_alsa.c: by Anders Semb Hermansen, Jaroslav Kysela, Ville Syrjala
+
+
+To be removed from distribution and thus not licensed in any special way:
+
+precompiled/
+tools/
+
+The mpglib source is not part of the core mpg123 distribution anymore - it's written by Michael, it's LGPL, it shall become a real library with own distribution and be married to mpg123 again.
+
+
+3. Conclusion
+-------------
+
+The decoder core Michael's work and under LGPL without question.
+Oliver Fromme is more of a co-author than "just" a project contributor, but he explicitly agreed to LGPL anyway.
+So, the core functionality is really safe without doubt.
+
+Contributors added mainly output drivers (perhaps coming from some freely available reference implementation) and CPU optimizations.
+Having explicit permission from a good deal of major contributors, the LGPL is quite comfortable here, too.
+I won't hide that there are explicit statements missing for MMX and 3DNow! optimizations (and the i486 opt, for that matter) due to unreachable authors.
+But I feel safe to make it LGPL there, too, because of the argument of them having given the code to Michael to incorporate it into mpg123 - without any own terms, implying that they agree to Michael's terms.
+
+There is one file left that carries an explicit GPL (_no_ LGPL) statement: the old alsa output. This file won't work on current Linux systems, anyway.
+Alsa is available through libao. There will probably be a new alsa output.
+So, even that one GPL exception may vanish in future, but I'll keep it for now as there may be someone who still has an alsa installation for that it works.
+
+For now that means mpg123 is LGPL with the exception of one file that is GPL only.
+
+End.

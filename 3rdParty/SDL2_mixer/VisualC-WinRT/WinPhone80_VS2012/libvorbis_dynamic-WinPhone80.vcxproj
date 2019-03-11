@@ -1,0 +1,238 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{8859e555-5684-436d-ad14-4e8ceb11ead1}</ProjectGuid>
+    <RootNamespace>libvorbis_dynamic_WinPhone</RootNamespace>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110_wp80</PlatformToolset>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110_wp80</PlatformToolset>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v110_wp80</PlatformToolset>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v110_wp80</PlatformToolset>
+    <IgnoreImportLibrary>false</IgnoreImportLibrary>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <GenerateManifest>false</GenerateManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <TargetName>libvorbis</TargetName>
+    <IntDir>Objs\$(Platform)\$(Configuration)\$(MSBuildProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <TargetName>libvorbis</TargetName>
+    <IntDir>Objs\$(Platform)\$(Configuration)\$(MSBuildProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetName>libvorbis</TargetName>
+    <IntDir>Objs\$(Platform)\$(Configuration)\$(MSBuildProjectName)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <TargetName>libvorbis</TargetName>
+    <IntDir>Objs\$(Platform)\$(Configuration)\$(MSBuildProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>_USRDLL;_DEBUG;_WINDOWS;_USRDLL;LIBVORBIS_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <AdditionalUsingDirectories>$(WindowsSDK_MetadataPath);$(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <DisableSpecificWarnings>4244;4100;4267;4189;4305;4127;4706</DisableSpecificWarnings>
+      <AdditionalIncludeDirectories>..\..\external\libvorbis-1.3.5\include;..\..\external\libogg-1.3.2\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ModuleDefinitionFile>..\..\external\libvorbis-1.3.5\win32\vorbis.def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>_USRDLL;NDEBUG;_WINDOWS;_USRDLL;LIBVORBIS_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <AdditionalUsingDirectories>$(WindowsSDK_MetadataPath);$(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <DisableSpecificWarnings>4244;4100;4267;4189;4305;4127;4706</DisableSpecificWarnings>
+      <AdditionalIncludeDirectories>..\..\external\libvorbis-1.3.5\include;..\..\external\libogg-1.3.2\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ModuleDefinitionFile>..\..\external\libvorbis-1.3.5\win32\vorbis.def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <ClCompile>
+      <PreprocessorDefinitions>_USRDLL;_WIN32_WCE;_DEBUG;_WINDOWS;_USRDLL;LIBVORBIS_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <AdditionalUsingDirectories>$(WindowsSDK_MetadataPath);$(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <DisableSpecificWarnings>4244;4100;4267;4189;4305;4127;4706</DisableSpecificWarnings>
+      <AdditionalIncludeDirectories>..\..\external\libvorbis-1.3.5\include;..\..\external\libogg-1.3.2\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ModuleDefinitionFile>..\..\external\libvorbis-1.3.5\win32\vorbis.def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <ClCompile>
+      <PreprocessorDefinitions>_USRDLL;_WIN32_WCE;NDEBUG;_WINDOWS;_USRDLL;LIBVORBIS_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <CompileAsWinRT>false</CompileAsWinRT>
+      <AdditionalUsingDirectories>$(WindowsSDK_MetadataPath);$(AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      <DisableSpecificWarnings>4244;4100;4267;4189;4305;4127;4706</DisableSpecificWarnings>
+      <AdditionalIncludeDirectories>..\..\external\libvorbis-1.3.5\include;..\..\external\libogg-1.3.2\include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ModuleDefinitionFile>..\..\external\libvorbis-1.3.5\win32\vorbis.def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Reference Include="Windows">
+      <IsWinMDFile>true</IsWinMDFile>
+    </Reference>
+    <Reference Include="platform.winmd">
+      <IsWinMDFile>true</IsWinMDFile>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\external\libvorbis-1.3.5\lib\analysis.c" />
+    <ClCompile Include="..\..\external\libvorbis-1.3.5\lib\bitrate.c" />
+    <ClCompile Include="..\..\external\libvorbis-1.3.5\lib\block.c" />
+    <ClCompile Include="..\..\external\libvorbis-1.3.5\lib\codebook.c" />
+    <ClCompile Include="..\..\external\libvorbis-1.3.5\lib\envelope.c" />
+    <ClCompile Include="..\..\external\libvorbis-1.3.5\lib\floor0.c" />
+    <ClCompile Include="..\..\external\libvorbis-1.3.5\lib\floor1.c" />
+    <ClCompile Include="..\..\external\libvorbis-1.3.5\lib\info.c" />
+    <ClCompile Include="..\..\external\libvorbis-1.3.5\lib\lookup.c" />
+    <ClCompile Include="..\..\external\libvorbis-1.3.5\lib\lpc.c" />
+    <ClCompile Include="..\..\external\libvorbis-1.3.5\lib\lsp.c" />
+    <ClCompile Include="..\..\external\libvorbis-1.3.5\lib\mapping0.c" />
+    <ClCompile Include="..\..\external\libvorbis-1.3.5\lib\mdct.c" />
+    <ClCompile Include="..\..\external\libvorbis-1.3.5\lib\psy.c" />
+    <ClCompile Include="..\..\external\libvorbis-1.3.5\lib\registry.c" />
+    <ClCompile Include="..\..\external\libvorbis-1.3.5\lib\res0.c" />
+    <ClCompile Include="..\..\external\libvorbis-1.3.5\lib\sharedbook.c" />
+    <ClCompile Include="..\..\external\libvorbis-1.3.5\lib\smallft.c" />
+    <ClCompile Include="..\..\external\libvorbis-1.3.5\lib\synthesis.c" />
+    <ClCompile Include="..\..\external\libvorbis-1.3.5\lib\vorbisenc.c" />
+    <ClCompile Include="..\..\external\libvorbis-1.3.5\lib\window.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\include\vorbis\codec.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\include\vorbis\vorbisenc.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\include\vorbis\vorbisfile.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\backends.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\bitrate.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\books\coupled\res_books_stereo.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\books\floor\floor_books.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\books\uncoupled\res_books_uncoupled.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\codebook.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\codec_internal.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\envelope.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\highlevel.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\lookup.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\lookup_data.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\lpc.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\lsp.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\masking.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\mdct.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\misc.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\modes\floor_all.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\modes\psych_11.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\modes\psych_16.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\modes\psych_44.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\modes\psych_8.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\modes\residue_16.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\modes\residue_44.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\modes\residue_44u.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\modes\residue_8.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\modes\setup_11.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\modes\setup_16.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\modes\setup_22.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\modes\setup_32.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\modes\setup_44.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\modes\setup_44u.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\modes\setup_8.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\modes\setup_X.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\os.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\psy.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\registry.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\scales.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\smallft.h" />
+    <ClInclude Include="..\..\external\libvorbis-1.3.5\lib\window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\external\libvorbis-1.3.5\win32\vorbis.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="libogg_dynamic-WinPhone80.vcxproj">
+      <Project>{ddb6f9c3-25d1-43c1-b439-20f2016d2f2e}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsPhone\v$(TargetPlatformVersion)\Microsoft.Cpp.WindowsPhone.$(TargetPlatformVersion).targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

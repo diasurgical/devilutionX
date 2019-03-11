@@ -1,0 +1,47 @@
+Source: libsdl2-mixer
+Section: libs
+Priority: optional
+Maintainer: Debian SDL packages maintainers <pkg-sdl-maintainers@lists.alioth.debian.org>
+Uploaders: Manuel A. Fernandez Montecelo <manuel.montezelo@gmail.com>,
+           Sam Lantinga <slouken@libsdl.org>
+Standards-Version: 3.9.2
+Build-Depends: debhelper (>= 8.9.0~),
+               dh-autoreconf,
+               dpkg-dev (>= 1.16.1~),
+               libflac-dev (>= 1.2.1),
+               libfluidsynth-dev,
+               libmikmod2-dev (>= 3.1.11),
+               libogg-dev (>= 1.2.0),
+               libsdl2-dev (>= 2.0.0),
+               libtool,
+               libvorbis-dev (>= 1.2.0)
+Homepage: http://www.libsdl.org/projects/SDL_mixer/
+
+Package: libsdl2-mixer
+Architecture: any
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${misc:Depends},
+         ${shlibs:Depends}
+Description: Mixer library for Simple DirectMedia Layer 2.0
+ This is a multi-channel audio mixer library.  It supports 4 channels of
+ 16 bit stereo audio, plus a single channel of music, mixed by the popular
+ MikMod MOD, Timidity MIDI, and MP3 and Ogg Vorbis libraries.
+ .
+ This package contains the shared library.
+
+Package: libsdl2-mixer-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends},
+         libsdl2-mixer (= ${binary:Version}),
+         libc6-dev,
+         libsdl2-dev (>= 2.0.0)
+Description: Mixer library for Simple DirectMedia Layer 1.2, development files
+ SDL Mixer is a sample multi-channel audio mixer library.  It supports 4
+ channels of 16 bit stereo audio, plus a single channel of music, mixed by
+ the popular MikMod MOD, Timidity MIDI, and MP3 and Ogg Vorbis libraries.
+ .
+ This package contains files needed if you wish to use the SDL mixer
+ library in your own programs.

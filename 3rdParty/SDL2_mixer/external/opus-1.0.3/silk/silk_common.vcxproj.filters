@@ -1,0 +1,315 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="A2NLSF.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ana_filt_bank_1.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="biquad_alt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bwexpander.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bwexpander_32.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="check_control_input.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CNG.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="code_signs.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="control_audio_bandwidth.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="control_codec.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="control_SNR.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="debug.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dec_API.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="decode_core.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="decode_frame.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="decode_indices.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="decode_parameters.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="decode_pitch.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="decode_pulses.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="decoder_set_fs.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="enc_API.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="encode_indices.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="encode_pulses.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gain_quant.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HP_variable_cutoff.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="init_encoder.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="inner_prod_aligned.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="interpolate.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="lin2log.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="log2lin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LP_variable_cutoff.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LPC_analysis_filter.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LPC_inv_pred_gain.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="table_LSF_cos.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NLSF2A.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NLSF_decode.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NLSF_del_dec_quant.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NLSF_encode.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NLSF_stabilize.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NLSF_unpack.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NLSF_VQ.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NLSF_VQ_weights_laroia.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NSQ.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NSQ_del_dec.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pitch_est_tables.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PLC.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="process_NLSFs.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="quant_LTP_gains.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="resampler.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="resampler_down2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="resampler_down2_3.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="resampler_private_AR2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="resampler_private_down_FIR.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="resampler_private_IIR_FIR.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="resampler_private_up2_HQ.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="resampler_rom.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="shell_coder.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sigm_Q15.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sort.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stereo_decode_pred.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stereo_encode_pred.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stereo_find_predictor.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stereo_LR_to_MS.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stereo_MS_to_LR.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stereo_quant_pred.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sum_sqr_shift.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tables_gain.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tables_LTP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tables_NLSF_CB_NB_MB.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tables_NLSF_CB_WB.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tables_other.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tables_pitch_lag.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tables_pulses_per_block.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VAD.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VQ_WMat_EC.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="init_decoder.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\win32\config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="control.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="define.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="errors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inlines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MacroCount.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MacroDebug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="macros.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pitch_est_defines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PLC.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resampler_private.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resampler_rom.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resampler_structs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="structs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tables.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tuning_parameters.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="typedef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="API.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="debug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SigProc_FIX.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\opus_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

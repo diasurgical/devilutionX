@@ -1,0 +1,218 @@
+Control interface to generic frontends
+
+The generic remote interface allows frontends to easily control
+mpg123 by commands through stdin/stdout. To start the generic
+remote interface, start mpg123 with parameter -R.
+
+In case of a frontend that starts mpg123 with the -s option to read the audio from stdout, the --remote-err option is automatically activated to send responses to stderr so that stdout stays clean for audio.
+
+(Still the case?)
+As an example it's used by IRMP3, a tool that allows you to
+control mpg123 with a standard infrared remote control. See
+http://www.fasta.fh-dortmund.de/users/andy/irmp3/ for more
+information.
+
+You can also specify --fifo <path> to create a named pipe at <path> and listen on that for commands instead stdin.
+That way, you can deliberately control mpg123 by echoing into the named pipe from any terminal / program.
+The command respones are still sent to standard out or standard error (depending on -s or --remote-err switches).
+
+
+COMMAND CODES
+-------------
+
+You can get this info via the control command "help".
+
+HELP/H: command listing (LONG/SHORT forms), command case insensitve
+
+LOAD/L <trackname>: load and start playing resource <trackname>
+
+LOADPAUSED/LP <trackname>: load but do not start playing resource <trackname>
+
+LOADLIST/LL <entry> <url>: load a playlist from given <url>, and display its entries, optionally load and play one of these specificed by the integer <entry> (<0: just list, 0: play last track, >0:play track with that position in list)
+
+PAUSE/P: pause playback
+
+STOP/S: stop playback (closes file)
+
+JUMP/J <frame>|<+offset>|<-offset>|<[+|-]seconds>s: jump to mpeg frame <frame> or change position by offset, same in seconds if number followed by "s"
+
+VOLUME/V <percent>: set volume in % (0..100...); float value
+
+RVA off|(mix|radio)|(album|audiophile): set rva mode
+
+EQ/E <channel> <band> <value>: set equalizer value for frequency band 0 to 31 on channel 1 (left) or 2 (right) or 3 (both)
+
+EQFILE <filename>: load EQ settings from a file
+
+SHOWEQ: show all equalizer settings (as <channel> <band> <value> lines in a SHOWEQ block (like TAG))
+
+SEEK/K <sample>|<+offset>|<-offset>: jump to output sample position <samples> or change position by offset
+
+SCAN: scan through the file, building seek index
+
+SAMPLE: print out the sample position and total number of samples
+
+SEQ <bass> <mid> <treble>: simple eq setting...
+
+PITCH <[+|-]value>: adjust playback speed (+0.01 is 1 % faster)
+
+SILENCE: be silent during playback (meaning silence in text form)
+
+STATE: Print auxilliary state info in several lines (just try it to see what info is there).
+
+TAG/T: Print all available (ID3) tag info, for ID3v2 that gives output of all collected text fields, using the ID3v2.3/4 4-character names.
+   The output is multiple lines, begin marked by "@T {", end by "@T }".
+   ID3v1 data is like in the @I info lines (see below), just with "@T" in front.
+   An ID3v2 data field is introduced via ([ ... ] means optional):
+    @T ID3v2.<NAME>[ [lang(<LANG>)] desc(<description>)]:
+   The lines of data follow with "=" prefixed:
+    @T =<one line of content in UTF-8 encoding>
+meaning of the @S stream info:
+
+S <mpeg-version> <layer> <sampling freq> <mode(stereo/mono/...)> <mode_ext> <framesize> <stereo> <copyright> <error_protected> <emphasis> <bitrate> <extension> <vbr(0/1=yes/no)>
+The @I lines after loading a track give some ID3 info, the format:
+     @I ID3:artist  album  year  comment genretext
+    where artist,album and comment are exactly 30 characters each, year is 4 characters, genre text unspecified.
+    You will encounter "@I ID3.genre:<number>" and "@I ID3.track:<number>".
+    Then, there is an excerpt of ID3v2 info in the structure
+     @I ID3v2.title:Blabla bla Bla
+    for every line of the "title" data field. Likewise for other fields (author, album, etc).
+
+
+RESPONSE CODES
+--------------
+
+Note: mpg123 returns errors on stderr, so your frontend should
+      look not only at stdout but also at stderr for responses.
+      It is a good idea to use --remote-err and just look at stderr.
+
+@R MPG123 (ThOr) v7
+	Startup version message. Everything after MPG123 is auxilliary information about behaviour and command support, ID3v2 tag support is new in v3.
+
+@I ID3:<a><b><c>
+	Status message after loading a song (ID3 song info)
+	a = title (exactly 30 chars)
+	b = artist (exactly 30 chars)
+	c = album (exactly 30 chars)
+	d = year (exactly 4 chars)
+	e = comment (exactly 30 chars)
+	f = genre (string)
+
+@I ID3.genre:<number>
+@I ID3.track:<number>
+	Optional lines with additional ID3v1 info (if present): Genre ID and track number in set.
+
+@I ID3v2.title:<text>
+	After loading a track with ID3v2 info, such lines occur for every line of the "title" data field and likewise for other fields (author, album, etc).
+
+@I <a>
+			Status message after loading a song (no ID3 song info)
+			a = filename without path and extension
+
+@I LISTENTRY <n>: <url>
+	printout of playlists loaded with LOADLIST
+
+@S <a> <b> ...
+	Stream info at beginning of playback, meaning
+	S <mpeg-version> <layer> <sampling freq> <mode(stereo/mono/...)> <mode_ext> <framesize> <stereo> <copyright> <error_protected> <emphasis> <bitrate> <extension> <vbr(0/1=yes/no)>
+
+@S <a> <b> <c> <d> <e> <f> <g> <h> <i> <j> <k> <l>
+	Status message after loading a song (stream info)
+	a = mpeg type (string)
+	b = layer (int)
+	c = sampling frequency (int)
+	d = mode (string)
+	e = mode extension (int)
+	f = framesize (int)
+	g = stereo (int)
+	h = copyright (int)
+	i = error protection (int)
+	j = emphasis (int)
+	k = bitrate (int)
+	l = extension (int)
+
+@F <a> <b> <c> <d>
+	Status message during playing (frame info)
+	a = framecount (int)
+	b = frames left this song (int)
+	c = seconds (float)
+	d = seconds left (float)
+
+@P <a>
+	Playing status
+	a = 0: playing stopped
+	a = 1: playing paused
+	a = 2: playing unpaused
+
+@E <a>
+	An error occured
+	Errors may be also reported by mpg123 through
+	stderr (without @E)
+	a = error message (string)
+
+@J <n>
+	Jumped to frame n.
+
+@RVA <mode>
+	Switched to specified RVA mode.
+
+@V <volume>%
+	Set volume to specified value (float, percent).
+
+@<x> : <y> : <z>
+	Set equalizer value z for band y of channel x.
+
+@bass: <b> mid: <m> treble: <t>
+	Set simple equalizer control for bass, mid, treble.
+
+@T <response from TAG command>
+	The output is multiple lines, begin marked by "@T {", end by "@T }".
+	ID3v1 data is like in the @I info lines, just with "@T" in front.
+	An ID3v2 data field is introduced via ([ ... ] means optional):
+		@T ID3v2.<NAME>[ [lang(<LANG>)] desc(<description>)]:
+	The lines of data follow with "=" prefixed:
+		@T =<one line of content in UTF-8 encoding>
+
+
+EQUALIZER CONTROL (History)
+---------------------------
+
+WARNING: The interpretation of the command arguments changed. The channel is either 1 or 2 or 3 (left, right, both).
+It used to be 0 or 1 for left or right but the change slipped through during libmpg123 work and now it is a fact.
+Sorry.
+
+Cold Feet Audio Patch for MPG123
+
+10.07.2002
+
+This is a dirty little hack to enable the equalizer in mpg123's
+generic_control interface.  It works like this, there are two
+different channels on the equalizer and 32 frequencys.
+
+The hack just enables mpg123's built in equalizer to run real-time.
+We haven't built in any capability to save the eq, you're frontend
+will have to handle that part, and init the eq on the startup of
+mpg123.
+
+K, it works like this:
+
+#./mpg123 -R -  <---- This command will start mpg123 in 'frontend' mode.
+
+If you want to send it some eq values you'd send it:
+eq X Y V[ENTER]
+
+X = The channel.  It can be either 0 or 1.  I haven't put any error checking
+    in, so it probably wouldn't be a good idea to go out of bounds. (integer)
+Y = This is the frequency, it can be 0 to 31.  0 being closer to treble and
+    31 being closer to bass. (integer)
+V = The raw value of your equalizer setting.  I've found that the values work 
+    best between 0.00 and 3.00.  When mpg123 starts up, all of them are set
+    to 1.00.
+
+OK, have fun!  If you have any questions or found some bugs, please contact
+nutcase@dtmf.org
+
+Thanks,
+nut
+
+Note by Thomas Orgis: The contact appears to be dead.

@@ -1,0 +1,39 @@
+2.0.15:
+Sam Lantinga - Fri Oct 26 13:26:54 PDT 2018
+ * Updated to FreeType version 2.9.1
+Sam Lantinga - Sun Sep 10 00:18:45 PDT 2017
+ * Text rendering functions now use the alpha component of the text colors
+Sam Lantinga - Sat Sep  9 22:21:55 PDT 2017
+ * Added support for characters greater than 0xFFFF (e.g. emoji) in the UTF-8 APIs
+
+2.0.14:
+Ryan Gordon - Fri Jan 29 12:53:29 PST 2016
+ * Deprecated TTF_GetFontKerningSize() which takes font glyph indices and added TTF_GetFontKerningSizeGlyphs() which takes characters
+
+2.0.13:
+Sylvain - Sat Jun 28 11:42:42 2014
+ * Fixed bug rendering text starting with a glyph with negative starting offset
+beuc - Sun Jun 15 18:27:28 2014
+ * Fixed regression loading non-scalable fonts
+Sam Lantinga - Sun Jun 15 18:21:04 PDT 2014
+ * TTF_GetFontKerningSize() gets kerning between two characters, not two glyph indices
+David Ludwig - Sun Apr 13 22:28:26 2014
+ * Added support for building for Windows RT and Windows Phone
+
+2.0.12:
+Sam Lantinga - Sat Jun  1 19:11:26 PDT 2013
+ * Updated for SDL 2.0 release
+
+2.0.11:
+Sam Lantinga - Sat Dec 31 10:49:42 EST 2011
+ * SDL_ttf is now under the zlib license
+Peter Kosyh - Mon Feb 28 14:57:03 PST 2011
+ * Improved font glyph caching for non-latin languages
+Erik Snoek - Wed Jan 12 09:10:15 PST 2011
+ * Added API to get kerning info: TTF_GetFontKerningSize()
+Sam Lantinga - Mon Jan 10 10:58:34 2011 -0800
+ * Added Android.mk to build on the Android platform
+
+2.0.10:
+Adam Strzelecki - Wed Oct 21 21:02:37 PDT 2009
+ * Find the Unicode or symbol character map if it's available in the font

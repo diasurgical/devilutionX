@@ -1,0 +1,4 @@
+This is a MS Visual C++ project plus wrapper class for libmpg123, contributed by "Gates Fan" <gatesfan@gmail.com>.
+You need to copy the stuff from mgp123-x.y.z/src/libmpg123 to the libMPG123 directory and also ensure that you produce a valid mpg123.h from the mpg123.h.in (replace the @BLABLA@ with the appropriate #includes).
+
+Thomas.

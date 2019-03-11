@@ -268,25 +268,32 @@ void __cdecl DrawInv()
 			CelDecodeClr(colour, screen_x, screen_y, (char *)pCursCels, frame, frame_width, 0, 8);
 		}
 
-		if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
-			CelDrawHdrOnly(screen_x, screen_y, (char *)pCursCels, frame, frame_width, 0, 8);
-		} else {
-			CelDrawHdrLightRed(screen_x, screen_y, (char *)pCursCels, frame, frame_width, 0, 8, 1);
-		}
+        // [TODO] [DON] -- We need to port the following disabled code for Apple systems, used to paint the light red selection when change the weapon place in the inventory
+#if !defined(__APPLE__)
+        if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
+#endif
+            CelDrawHdrOnly(screen_x, screen_y, (char *)pCursCels, frame, frame_width, 0, 8);
+#if !defined(__APPLE__)
+        } else {
+            CelDrawHdrLightRed(screen_x, screen_y, (char *)pCursCels, frame, frame_width, 0, 8, 1);
+        }
+#endif
 
-		if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND) {
-			InvDrawSlotBack(631, 320, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
-			light_table_index = 0;
-			cel_transparency_active = 1;
+#if !defined(__APPLE__)
+        if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND) {
+            InvDrawSlotBack(631, 320, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
+            light_table_index = 0;
+            cel_transparency_active = 1;
 
-			CelDecodeHdrLightTrans(
-			    frame_width == INV_SLOT_SIZE_PX
-			        ? &gpBuffer->row[160].pixels[581]
-			        : &gpBuffer->row[160].pixels[567],
-			    (char *)pCursCels, frame, frame_width, 0, 8);
+            CelDecodeHdrLightTrans(
+                frame_width == INV_SLOT_SIZE_PX
+                    ? &gpBuffer->row[160].pixels[581]
+                    : &gpBuffer->row[160].pixels[567],
+                (char *)pCursCels, frame, frame_width, 0, 8);
 
-			cel_transparency_active = 0;
-		}
+            cel_transparency_active = 0;
+        }
+#endif
 	}
 	if (plr[myplr].InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_NONE) {
 		InvDrawSlotBack(631, 320, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);

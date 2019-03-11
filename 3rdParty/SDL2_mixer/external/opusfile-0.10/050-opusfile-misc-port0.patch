@@ -1,0 +1,35 @@
+make opusfile configury to behave with autoconf-2.63 and libtool-1.5.x
+
+diff --git a/configure.ac b/configure.ac
+index d68666c..7da0066 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -21,7 +21,10 @@ AC_SYS_LARGEFILE
+ 
+ AM_INIT_AUTOMAKE([1.11 foreign no-define dist-zip subdir-objects])
+ AM_MAINTAINER_MODE([enable])
+-LT_INIT
++
++AC_LIBTOOL_WIN32_DLL
++AC_PROG_LIBTOOL
++#LT_INIT([win32-dll])
+ 
+ m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
+ 
+@@ -76,13 +79,13 @@ AM_COND_IF(OP_WIN32,
+   AS_IF([test "$enable_http" != "no"],
+     AC_CHECK_HEADER([winsock2.h],,
+       AC_MSG_WARN([HTTP support requires a Winsock socket library.])
+-      enable_http=no
++      [enable_http=no], []
+     )
+   ),
+   AS_IF([test "$enable_http" != "no"],
+     AC_CHECK_HEADER([sys/socket.h],,
+       AC_MSG_WARN([HTTP support requires a POSIX socket library.])
+-      enable_http=no
++      [enable_http=no], []
+     )
+   )
+ )
+

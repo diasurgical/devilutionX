@@ -1,0 +1,22 @@
+use xmm intrinsics for lrintf with x86_64-w64-mingw32
+
+c.f.: http://git.xiph.org/?p=opus.git;a=commit;h=cd159fd1ec8ae64e6cd1b69854034560b5f1c419
+
+--- opus-1.0.3/celt/float_cast.h~
++++ opus-1.0.3/celt/float_cast.h
+@@ -61,7 +61,14 @@
+ **      the config.h file.
+ */
+ 
+-#if (HAVE_LRINTF)
++#if (defined(__GNUC__) && defined(_WIN64))
++        #include <xmmintrin.h>
++        static __inline long int float2int(float value)
++        {
++                return _mm_cvtss_si32(_mm_load_ss(&value));
++        }
++
++#elif (HAVE_LRINTF)
+ 
+ /*      These defines enable functionality introduced with the 1999 ISO C
+ **      standard. They must be defined before the inclusion of math.h to

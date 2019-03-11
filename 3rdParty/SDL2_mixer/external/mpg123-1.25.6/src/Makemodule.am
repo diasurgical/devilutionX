@@ -1,0 +1,141 @@
+# Module for non-recursive mpg123 build system.
+
+include src/compat/Makemodule.am
+include src/libmpg123/Makemodule.am
+include src/libout123/Makemodule.am
+
+bin_PROGRAMS += \
+  src/mpg123 \
+  src/out123 \
+  src/mpg123-id3dump \
+  src/mpg123-strip
+
+src_mpg123_LDADD = \
+  src/compat/libcompat.la \
+  src/libmpg123/libmpg123.la \
+  src/libout123/libout123.la \
+  $(LIBM)
+
+src_mpg123_LDFLAGS = @EXEC_LT_LDFLAGS@
+
+src_out123_LDADD = \
+  src/compat/libcompat.la \
+  src/libout123/libout123.la
+
+src_out123_LDFLAGS = @EXEC_LT_LDFLAGS@
+
+EXTRA_DIST += \
+  src/intsym.h \
+  src/mpg123-with-modules \
+  src/out123-with-modules
+
+CLEANFILES += src/*.a
+
+src_mpg123_id3dump_LDADD = \
+  src/compat/libcompat.la \
+  src/libmpg123/libmpg123.la
+
+src_mpg123_strip_LDADD = \
+  src/compat/libcompat.la \
+  src/libmpg123/libmpg123.la
+
+EXTRA_PROGRAMS += \
+  src/tests/seek_whence \
+  src/tests/noise \
+  src/tests/text \
+  src/tests/plain_id3
+
+src_mpg123_SOURCES = \
+  src/audio.c \
+  src/audio.h \
+  src/common.c \
+  src/common.h \
+  src/sysutil.c \
+  src/sysutil.h \
+  src/control_generic.c \
+  src/equalizer.c \
+  src/getlopt.c \
+  src/getlopt.h \
+  src/httpget.c \
+  src/httpget.h \
+  src/resolver.c \
+  src/resolver.h \
+  src/genre.h \
+  src/genre.c \
+  src/mpg123.c \
+  src/mpg123app.h \
+  src/metaprint.c \
+  src/metaprint.h \
+  src/local.h \
+  src/local.c \
+  src/playlist.c \
+  src/playlist.h \
+  src/streamdump.h \
+  src/streamdump.c \
+  src/term.c \
+  src/term.h \
+  src/win32_support.h
+
+# Does that finally work to build/link the correct object file?
+src_mpg123_SOURCES += 
+
+# Replace common.h by sysutil.h!
+src_out123_SOURCES = \
+  src/sysutil.c \
+  src/sysutil.h \
+  src/waves.c \
+  src/waves.h \
+  src/common.h \
+  src/getlopt.c \
+  src/getlopt.h \
+  src/out123.c \
+  src/mpg123app.h \
+  src/win32_support.h
+
+src_mpg123_id3dump_SOURCES = \
+  src/mpg123-id3dump.c \
+  src/getlopt.c \
+  src/getlopt.h
+
+src_mpg123_strip_SOURCES = \
+  src/mpg123-strip.c \
+  src/getlopt.c \
+  src/getlopt.h
+
+if WIN32_CODES
+src_mpg123_SOURCES += \
+  src/win32_support.c \
+  src/win32_net.c
+
+src_out123_SOURCES+= \
+  src/win32_support.c
+
+src_mpg123_id3dump_SOURCES += \
+  src/win32_support.c
+endif
+
+src_tests_seek_whence_SOURCES = \
+  src/tests/seek_whence.c
+src_tests_seek_whence_LDADD = \
+  src/compat/libcompat.la \
+  src/libmpg123/libmpg123.la
+
+src_tests_noise_SOURCES = \
+  src/tests/noise.c \
+  src/libmpg123/dither.h \
+  src/libmpg123/dither_impl.h
+src_tests_noise_LDADD = \
+  src/compat/libcompat.la
+
+src_tests_text_SOURCES = \
+  src/tests/text.c \
+  src/tests/testtext.h
+src_tests_text_LDADD = \
+  src/compat/libcompat.la \
+  src/libmpg123/libmpg123.la
+
+src_tests_plain_id3_SOURCES = \
+  src/tests/plain_id3.c
+src_tests_plain_id3_LDADD = \
+  src/compat/libcompat.la \
+  src/libmpg123/libmpg123.la

@@ -1,0 +1,38 @@
+PSPSDK                 = $(shell psp-config --pspsdk-path)
+PSPDIR                 = $(shell psp-config --psp-prefix)
+
+#DEFINES                := PSP OPT_GENERIC REAL_IS_FIXED HAVE_CONFIG_H
+DEFINES                := PSP OPT_GENERIC REAL_IS_FLOAT HAVE_CONFIG_H
+#DEFINES                := PSP OPT_GENERIC FLOATOUT REAL_IS_FLOAT HAVE_CONFIG_H
+DEFINEFLAGS            := $(addprefix -D,$(DEFINES))
+INCDIR                 := ../.
+CFLAGS                 = -g -O2 -Wall -fomit-frame-pointer -funroll-all-loops -finline-functions -ffast-math $(DEFINEFLAGS)
+
+MPG123_OBJS = compat.o parse.o frame.o format.o index.o synth.o synth_8bit.o \
+ ntom.o icy2utf8.o synth_real.o synth_s32.o\
+ equalizer.o icy.o id3.o layer1.o layer2.o layer3.o optimize.o readers.o tabinit.o stringbuf.o libmpg123.o dct64.o 
+
+MPG123_LIB_FILE        = ./libmpg123.a
+
+OBJS                   = $(MPG123_OBJS)
+TARGET_LIB             = $(MPG123_LIB_FILE)
+
+include $(PSPSDK)/lib/build.mak
+
+
+
+####################
+## Makefile rules ##
+####################
+
+install: $(MPG123_LIB_FILE)
+	@echo ""
+	@echo "**********************************************************************"
+	@echo "Installing libstsound into $(PSPDIR)"
+	@mkdir -p $(PSPDIR)/include $(PSPDIR)/lib
+	@cp -v mpg123.h $(PSPDIR)/include
+	@cp -v libmpg123.a $(PSPDIR)/lib
+	@echo "Done"
+	@echo "**********************************************************************"
+	@echo ""
+

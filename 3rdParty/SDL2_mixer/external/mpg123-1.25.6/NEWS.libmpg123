@@ -1,0 +1,198 @@
+Changes in libmpg123 libtool interface versions...
+
+44.0.44
+	- added mpg123_getformat2()
+
+43.0.43
+	- added MPG123_NO_PEEK_END and MPG123_FORCE_SEEKABLE
+
+42.0.42
+	- added mpg123_framelength()
+	  Now mpg123_position() is truly obsolete!
+	- hardened string API to not crash if given NULL pointers
+	  (except mpg123_init_string())
+	- equalizer feature optional
+
+41.0.41
+	- Add checks for NULL handles in some API functions that missed that, changed return value in others to MPG123_BAD_HANDLE where appropriate:
+		- mpg123_format_none(NULL) == MPG123_BAD_HANDLE (was: MPG123_ERR)
+		- mpg123_format_all(NULL)  == MPG123_BAD_HANDLE (was: MPG123_ERR)
+		- mpg123_format(NULL, ...) == MPG123_BAD_HANDLE (was: MPG123_ERR)
+		- mpg123_reset_eq(NULL)    == MPG123_BAD_HANDLE (was: undefined)
+		- mpg123_replace_buffer(NULL, ...) == MPG123_BAD_HANDLE (was: undefined)
+		- mpg123_framedata(NULL, ...) == MPG123_BAD_HANDLE (was: MPG123_ERR)
+		- mpg123_decoder(NULL, ...)   == MPG123_BAD_HANDLE (was: MPG123_ERR)
+		- mpg123_param(NULL, ...)     == MPG123_BAD_HANDLE (was: MPG123_ERR)
+		- mpg123_getparam(NULL, ...)  == MPG123_BAD_HANDLE (was: MPG123_ERR)
+		- mpg123_getstate(NULL, ...)  == MPG123_BAD_HANDLE (was: MPG123_ERR)
+		- mpg123_eq(NULL, ...)        == MPG123_BAD_HANDLE (was: MPG123_ERR)
+		- mpg123_open(NULL, ...)      == MPG123_BAD_HANDLE (was: MPG123_ERR)
+		- mpg123_open_handle(NULL, ...) == MPG123_BAD_HANDLE (was: MPG123_ERR)
+		- mpg123_open_feed(NULL, ...)   == MPG123_BAD_HANDLE (was: MPG123_ERR)
+		- mpg123_replace_reader(NULL, ...) == MPG123_BAD_HANDLE (was: MPG123_ERR)
+		- mpg123_replace_reader_handle(NULL, ...) == MPG123_BAD_HANDLE (was: MPG123_ERR)
+		- mpg123_decode_frame(NULL, ...) == MPG123_BAD_HANDLE (was: MPG123_ERR)
+		- mpg123_feed(NULL, ...)   == MPG123_BAD_HANDLE (was: MPG123_ERR)
+		- mpg123_decode(NULL, ...) == MPG123_BAD_HANDLE (was: MPG123_ERR)
+		- mpg123_info(NULL, ...)   == MPG123_BAD_HANDLE (was: MPG123_ERR)
+		- mpg123_getformat(NULL, ...) == MPG123_BAD_HANDLE (was: MPG123_ERR)
+		- mpg123_set_filesize(NULL, ...) == MPG123_BAD_HANDLE (was: MPG123_ERR)
+		- mpg123_scan(NULL) == MPG123_BAD_HANDLE (was: MPG123_ERR)
+		- mpg123_id3(NULL, ...) == MPG123_BAD_HANDLE (was: MPG123_ERR)
+		- mpg123_icy(NULL, ...) == MPG123_BAD_HANDLE (was: MPG123_ERR)
+		- mpg123_index(NULL, ...) == MPG123_BAD_HANDLE (was: MPG123_ERR)
+		- mpg123_set_index(NULL, ...) == MPG123_BAD_HANDLE (was: MPG123_ERR)
+		- mpg123_close(NULL, ...) == MPG123_BAD_HANDLE (was: MPG123_ERR)
+	- Changed return value of mpg123_geteq() to 0 for NULL handle to be consistent with itself.
+
+
+40.0.40
+	- Bump for marking the first actual implementation of A-Law encoding.
+	  Not that it matters to anyone, though --- I wonder why not even the
+	  Asterisk users wanted this. It's for telephony, dammit!
+	- Added arm_fpu decoder for runtime switch between NEON and generic fpu.
+
+39.2.39
+	- Added more elaborate post-processing to enable 32 and 24 bit output also with low-precision decoder (16 bit, fixed-point).
+
+39.0.39
+	- Added MPG123_FRESH_DECODER.
+	- Also containing several regression fixes.
+
+38.0.38
+	- Added MPG123_PICTURE and associated addition to mpg123_id3v2 struct.
+
+37.0.37
+	- Added mpg123_chomp_string.
+
+36.0.36
+	- Extended MPG123_RESYNC_LIMIT to initial header search.
+	- Not cutting decoder delay unconditionally anymore (only in combination with known encoder delay / padding).
+
+35.0.35
+	- Added mpg123_meta_free().
+
+34.0.34
+	- Added flag MPG123_AUTO_RESAMPLE.
+	- Changed (improved;-) outbuffer behaviour.
+
+33.0.33
+	- Added MPG123_BUFFERFILL.
+
+32.0.32
+	- Added mpg123_framepos()
+
+31.0.31
+	- Added mpg123_framedata() and MPG123_IGNORE_INFOFRAME.
+
+30.0.30
+	- Added MPG123_FEEDPOOL and MPG123_FEEDBUFFER.
+
+29.0.29
+	- New decoder: ARM neon.
+	- Added support for 24 bit output (dumb byte-chopping of 32 bit output).
+
+28.0.28
+	- Add mpg123_strlen().
+
+27.0.27
+	- Implictly disable seeking on streams when client enforced ICY parsing.
+	  This helps debugging dumps of http streams.
+
+26.0.26
+	- Added mpg123_encsize().
+	- Added flag MPG123_SKIP_ID3V2.
+
+25.0.25
+	- Version increase to mark the point where the split between normal and large-file-enabled library vanishes again. The world did not like it.
+	  Now Thomas lost some days of recreation and sleep to give it a dual-mode libmpg123 on large-file-sensitive systems.
+
+24.0.24
+	- Introduce mpg123_replace_reader_handle() and mpg123_open_handle()
+	  ... this is also in preparation for the next version which will drop the separated large-file library again, due to public display of dismay.
+	- Add the experimental mpg123_framebyframe_decode to the off_t-sensitive functions.
+
+23.0.23
+	- Version increase to mark the point where the explicit split between normal and large-file-enabled library has been introduced.
+
+22.0.22
+	- Experimental framebyframe API added.
+
+21.0.21
+	- Added support of unicode file names under windows via UTF-8 argument to mpg123_open.
+	- Added mpg123_feature(), for example to test for the above behaviour.
+
+20.0.20
+	- New flag: MPG123_PLAIN_ID3TEXT
+	- Corresponding text encoding handling API added:
+	  mpg123_enc_from_id3, mpg123_store_utf8
+
+19.0.19
+	- Hm, what was it exactly now... there are candidates:
+		- runtime dithering
+		- free format
+		- ARM optimizations
+
+18.0.18
+	- new parameter: MPG123_PREFRAMES is now tunable (the number of frames to decode and skip before a seek point), also default value increased
+
+17.0.17
+	- introduction optimized stereo synths
+
+16.0.16
+	- introducing floating point x86-64 SSE synth
+
+15.0.15
+	- first addition of x86-64 SSE optimizations
+
+14.0.14
+	- the first libmpg123 with actually working MPG123_UPSPEED
+	- also important regression fix concerning skipping of frames
+
+13.0.13
+	- The whole set of output formats is generally available (8, 16 and 32 bit integer, signed/unsigned, float)
+	- Many features can be absent from libary as build decision (minimize binary size).
+
+12.0.12
+	- added mpg123_current_decoder
+	- fixed value of MPG123_ENC_FLOAT
+	- float output now is a real runtime option
+
+11.0.11
+	- added mpg123_getstate
+	- run-time tunable frame index
+	- officially configured with largefile support where available
+
+10.0.10
+	- new flag MPG123_FUZZY (along with the fuzzy seek functionality)
+
+9.0.9
+	- added mpg123_tell_stream
+
+8.0.8
+	- added mpg123_get_eq
+
+7.0.7
+	- added mpg123_set_filesize
+
+6.0.6
+	- added mpg123_icy2utf8
+
+5.0.5
+	- added mpg123_feed
+	- input buffers now const
+
+4.0.4
+	- extended mpg123_string api (mpg123_add_substring, mpg123_grow_string)
+
+3.0.3
+	- Initial floating point support as compile-time option.
+
+2.0.2
+	- New flag MPG123_SEEKBUFFER.
+
+1.0.1
+	- Added MPG123_RESYNC_LIMIT parameter.
+	- Added MPG123_OUT_OF_SYNC and MPG123_RESYNC_FAIL error codes.
+	- Fix for uninitialized framesize value in handle.
+

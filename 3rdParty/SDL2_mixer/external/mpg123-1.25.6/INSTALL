@@ -1,0 +1,115 @@
+mpg123 install hints
+--------------------
+
+(This file has very long lines - die-hard terminal nostalgists can be satisfied by `fmt -s -w 75 < INSTALL | less`. I think it's better to let the reader's preference rule than to preformat the stuff to some arbitrary width.)
+
+
+0. Prerequesites
+
+You really need:
+
+- a C compiler; we try to keep the code ANSI C89/ISO C90 compatible
+  gcc from 2.95 on should work, others, too - please report any issues
+  Actually, we have a confirmed working build (svn trunk leading to release 0.67) on SunOS 4.1.4 with gcc-2.7.0 .
+
+- an (UNIX-like) operating system with standard tools; MinGW32 and Cygwin are working for Microsoft Windows, too. We also have users happily on OS/2.
+- For the library only, you may get lucky with MSVC++ using the project files under ports/
+- For other exotic platforms, also see ports/
+- If building from direct SCM checkout, you need GNU autotools installed (see below).
+
+You want:
+
+- working assembler (recent GNU binutils) if using certain CPU optimizations
+- headers and lib for certain audio output drivers (libasound for alsa, sdl for sdl...)
+
+1. Build
+
+There is one main supported way to get your mpg123 installation consisting of
+
+	a) the mpg123 binary file
+	    - with libmpg123 as shared library or statically linked
+	    - with audio output plugins, or one statically linked
+	b) a man page
+
+(you may want to copy some of the documentation - README, etc - to /usr/share/doc/mpg123 or the like, too)
+
+This way is the usual GNU 3-step procedure:
+
+	./configure
+	make
+	make install
+
+Run
+
+	./configure --help
+
+for a list of possible parameters you can specify in the configuration step. The obvious are --prefix and the normal GNU autotool bunch, but others include what audio subsystem to use and what CPU optimizations to build in.
+For the optimizations (decoder choice), the default is a build that combines all usable optimizations for the platform and chooses one at runtime (see --cpu, --list-cpu and --test-cpu parameters).
+
+There are various parameters you can tune, but of course the defaults are what is mainly tested.
+
+Also, various library features can be left out via --disable options (like output formats, resampling modes). That way, you can strive for a minimal build that only does what you really need. Not every combination of library features is tested regularily, so you might hit some speed bumps, but usually stuff that is easily worked out (at least for the mpg123 team when you report it).
+
+An example (working on mpg123 trunk r3062):
+
+	CFLAGS="-Os -s" ./configure --with-cpu=generic  --disable-id3v2 --disable-lfs-alias --disable-feature-report --with-seektable=0 --disable-16bit --disable-32bit --disable-8bit --disable-messages --disable-feeder --disable-ntom --disable-downsample --disable-icy && make
+
+That, and further application of `strip --strip-unneeded`, yields a lean 93 KiB shared library for MPEG layer I/II/III decoding to floating point on my x86-64 system (it should be a bit smaller on 32 bit systems). When disabling layers I and II, too, that goes down to 81 KiB.
+
+The shared library of a full build weighs 170 KiB after stripping.
+
+
+2. Developer build
+
+This project uses GNU autotools (no specific version, but they should be fairly recent), also libtool. You need to have those installed, as it is usually the case for build environments based on the GNU toolchain.
+
+One a fresh SCM checkout, or after changing things in configure.ac, you need to run
+
+	autoreconf -iv
+
+to prepare the configure script. Then you can build as per point 1.
+
+
+3. Library-only build
+
+If you do not want to build the whole thing, but only the library, run
+
+	./configure
+	cd src/libmpg123
+	make
+
+You can then find the library itself under src/libmpg123/.libs (libtool likes to hide things there).
+
+
+4. Exotic platforms
+
+See the ports/ directory for some help for building at least libmpg123 without the UNIX shell / autotools. The main strategy is to write a config.h to replace what configure would generate and then have a correct listing of all source files involved in that configuration (there are optional files for different decoder choices, for example).
+
+Then compile objects, link.
+
+
+4a. Preparing Win32 binary packages.
+
+Caution: You should make sure to use some gcc >= 4.2.0, even if it's still the experimental package for MinGW32.
+This helps preventing incompatibilities between generated DLL files and other compilers (it's about stack alignment).
+
+Get MinGW/MSYS installed, run the MSYS shell.
+Enter the mpg123 source directory.
+Execute sh ./windows-builds.sh .
+
+After some time, you should have some relevant files under releases/ (or releases\, for Windows people;-).
+You don't just get one build -- there are several variants, corresponding to what usually is to be found under http://mpg123.org/download/win32 .
+
+
+5. Note on large file support
+
+The libmpg123 API includes the generic off_t type for file offsets and thus is subject to shape-shifting on systems that change off_t depending on build flags.
+To deal with the incompatibilities that can cause, the library needs to separate code paths for small and large off_t.
+Since version 1.12.0, a large-file-enabled libmpg123 (the default set by configure) provides a dual-mode ABI. Depending on _FILE_OFFSET_BITS, the mpg123.h header file selects different library symbols to use for your app.
+In both large-file and normal mode, the library should just work for your app.
+
+6. Security
+
+If you consider installing the mpg123 binary or any program using libout123 as suid root, please don't. Apart from evaluating MPG123_MODDIR from the environment and thus possibly loading any code, the purpose of libout123 is to write audio data to somewhere. That includes writing raw data to files. Any files you specify to the program. You do not install dd or gzip suid root, do you?
+
+Programs using libmpg123 should be fine, as that one does not load runtime modules and also only has code to read files, not write them. Still, if your task involves decoding random MPEG audio files from anywhere, it is only sensible to limit the damage of a possible bug triggered by certain crafted files. This is not specific to libmpg123 but generally a good idea working with data from untrusted sources.

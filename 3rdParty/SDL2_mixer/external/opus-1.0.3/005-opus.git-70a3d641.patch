@@ -1,0 +1,49 @@
+From: Felicia Lim <flim@google.com>
+Date: Thu, 28 Jul 2016 13:21:19 +0000 (+0200)
+Subject: Ensure that NLSF cannot be negative when computing a min distance between them
+X-Git-Tag: v1.1.4~1
+X-Git-Url: http://git.xiph.org/?p=opus.git;a=commitdiff_plain;h=70a3d641b760b3d313b6025f82aed93a460720e5
+
+Ensure that NLSF cannot be negative when computing a min distance between them
+
+Without the fix, very large NLSF values could cause the stabilization code
+in silk/NLSF_stabilize.c to wrap-around and have the last value in
+NLSF_Q15[] to be negative, close to -32768. That value would then be
+used in silk_NLSF2A() to compute f_int, which would be equal to -128. Since
+f_int is used to look up into constant table silk_LSFCosTab_FIX_Q12[], it
+would cause two 16-bit reads, 256 bytes and 254 bytes before the constant
+table. In nornal circumstances the code will simply read from the wrong
+table, resulting in an unstable LPC filter. The filter would then go
+through the LPC stabilization code at the end of silk_NLSF2A(). Ultimately
+the output audio would be garbage, but no worse than with any other harmless
+bad packet.
+
+For this bug to cause a crash, the linker would have to put the relevant
+at the very beginning of the segment, with unaddressable memory just before it.
+Alternatively, if the code is compiled with assertions enable, then it will
+abort. The only way this could cause a data leak would be for the linker to
+put the silk_LSFCosTab_FIX_Q12[] within 256 bytes after sensitive process
+information, which is highly unlikely. Even in that circumstance, only 32 bits
+of data could be read, at location outside of the attacker's control. The
+output would be in the form of audio that would have to be mapped back to
+the original 32-bit data.
+
+This was reported as CVE-2017-0381. Contrary to that report, we do not believe
+that any remote code execution is possible.
+
+Signed-off-by: Jean-Marc Valin <jmvalin@jmvalin.ca>
+---
+
+diff --git a/silk/NLSF_stabilize.c b/silk/NLSF_stabilize.c
+index 1fa1ea3..8f3426b 100644
+--- a/silk/NLSF_stabilize.c
++++ b/silk/NLSF_stabilize.c
+@@ -130,7 +130,7 @@ void silk_NLSF_stabilize(
+ 
+         /* Keep delta_min distance between the NLSFs */
+         for( i = 1; i < L; i++ )
+-            NLSF_Q15[i] = silk_max_int( NLSF_Q15[i], NLSF_Q15[i-1] + NDeltaMin_Q15[i] );
++            NLSF_Q15[i] = silk_max_int( NLSF_Q15[i], silk_ADD_SAT16( NLSF_Q15[i-1], NDeltaMin_Q15[i] ) );
+ 
+         /* Last NLSF should be no higher than 1 - NDeltaMin[L] */
+         NLSF_Q15[L-1] = silk_min_int( NLSF_Q15[L-1], (1<<15) - NDeltaMin_Q15[L] );

@@ -1,0 +1,29 @@
+# Module for non-recursive mpg123 build system.
+
+EXTRA_DIST += \
+  doc/BENCHMARKING \
+  doc/BUGS \
+  doc/CONTACT \
+  doc/PATENTS \
+  doc/README.3DNOW \
+  doc/README.gain \
+  doc/README.remote \
+  doc/ROAD_TO_LGPL \
+  doc/TODO \
+  doc/LICENSE \
+  doc/THANKS \
+  doc/ACCURACY \
+  doc/LARGEFILE \
+  doc/libmpg123_speed.txt \
+  doc/doxyhead.xhtml \
+  doc/doxyfoot.xhtml \
+  doc/doxy_examples.c \
+  doc/doxygen.conf \
+  doc/examples/mpg123_to_out123.c \
+  doc/examples/scan.c \
+  doc/examples/mpglib.c \
+  doc/examples/id3dump.c \
+  doc/examples/feedseek.c \
+  doc/examples/dump_seekindex.c \
+  doc/examples/extract_frames.c \
+  doc/examples/Makefile

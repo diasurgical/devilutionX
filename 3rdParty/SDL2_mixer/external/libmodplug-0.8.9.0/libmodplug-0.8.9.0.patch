@@ -1,0 +1,905 @@
+- disable wav formats handling: SDL_mixer has its own code for it.
+- disable midi formats handling: SDL_mixer has timidity or native midi for it.
+- disable experimental file save support: no one uses it, ever.
+- don't export cplusplus interface from shared libs. SDL_mixer doesn't use it.
+- disable mmcmp unpacking. disable broken pp20 unpacking.
+- merge https://github.com/Konstanty/libmodplug/pull/36 (fix PSM loader overwrites const data)
+- merge https://github.com/Konstanty/libmodplug/pull/39 (case-sensitive STM signature checks)
+- merge https://github.com/Konstanty/libmodplug/pull/40 (big-endian-friendly MDL track length read)
+- merge https://github.com/Konstanty/libmodplug/pull/24 (make some stuff static)
+- merge https://github.com/Konstanty/libmodplug/pull/14 (NO_PACKING / MODPLUG_NO_FILESAVE ifdefs)
+- merge https://github.com/Konstanty/libmodplug/pull/32 (replace setenv)
+- merge https://github.com/Konstanty/libmodplug/pull/41 (timidity paths update)
+
+diff -u libmodplug-0.8.9.0/configure.ac~ libmodplug-0.8.9.0/configure.ac
+--- libmodplug-0.8.9.0/configure.ac~
++++ libmodplug-0.8.9.0/configure.ac
+@@ -29,7 +29,7 @@ LT_INIT([win32-dll])
+ 
+ AC_HEADER_STDC
+ AC_CHECK_HEADERS([inttypes.h stdint.h malloc.h])
+-AC_CHECK_FUNCS(setenv sinf)
++AC_CHECK_FUNCS(sinf)
+ 
+ CXXFLAGS="$CXXFLAGS -fno-exceptions -Wall -ffast-math -fno-common -D_REENTRANT"
+ 
+@@ -99,6 +99,6 @@ MODPLUG_LIBRARY_VERSION=1:0:0
+ AC_SUBST(MODPLUG_LIBRARY_VERSION)
+ 
+ AC_CONFIG_FILES([Makefile
+-          src/Makefile
++	  src/Makefile
+ 	  libmodplug.pc])
+ AC_OUTPUT
+diff -u libmodplug-0.8.9.0/configure~ libmodplug-0.8.9.0/configure
+--- libmodplug-0.8.9.0/configure~
++++ libmodplug-0.8.9.0/configure
+@@ -16702,13 +16702,12 @@ fi
+ 
+ done
+ 
+-for ac_func in setenv sinf
++for ac_func in sinf
+ do :
+-  as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
+-ac_fn_cxx_check_func "$LINENO" "$ac_func" "$as_ac_var"
+-if eval test \"x\$"$as_ac_var"\" = x"yes"; then :
++  ac_fn_cxx_check_func "$LINENO" "sinf" "ac_cv_func_sinf"
++if test "x$ac_cv_func_sinf" = xyes; then :
+   cat >>confdefs.h <<_ACEOF
+-#define `$as_echo "HAVE_$ac_func" | $as_tr_cpp` 1
++#define HAVE_SINF 1
+ _ACEOF
+ 
+ fi
+diff -u libmodplug-0.8.9.0/src/config.h.in~ libmodplug-0.8.9.0/src/config.h.in
+--- libmodplug-0.8.9.0/src/config.h.in~
++++ libmodplug-0.8.9.0/src/config.h.in
+@@ -15,9 +15,6 @@
+ /* Define to 1 if you have the <memory.h> header file. */
+ #undef HAVE_MEMORY_H
+ 
+-/* Define to 1 if you have the `setenv' function. */
+-#undef HAVE_SETENV
+-
+ /* Define to 1 if you have the `sinf' function. */
+ #undef HAVE_SINF
+ 
+diff -up libmodplug-0.8.9.0/src/libmodplug/it_defs.h~ libmodplug-0.8.9.0/src/libmodplug/it_defs.h
+--- libmodplug-0.8.9.0/src/libmodplug/it_defs.h~
++++ libmodplug-0.8.9.0/src/libmodplug/it_defs.h
+@@ -128,7 +128,9 @@ typedef struct ITSAMPLESTRUCT
+ 
+ #pragma pack()
+ 
+-extern BYTE autovibit2xm[8];
+-extern BYTE autovibxm2it[8];
++#if 0/* made these two static to load_it.cpp */
++extern const BYTE autovibit2xm[8];
++extern const BYTE autovibxm2it[8];
++#endif
+ 
+ #endif
+diff -up libmodplug-0.8.9.0/src/libmodplug/sndfile.h~ libmodplug-0.8.9.0/src/libmodplug/sndfile.h
+--- libmodplug-0.8.9.0/src/libmodplug/sndfile.h~
++++ libmodplug-0.8.9.0/src/libmodplug/sndfile.h
+@@ -456,7 +456,7 @@ typedef struct _MODCOMMAND
+ // Mix Plugins
+ #define MIXPLUG_MIXREADY			0x01	// Set when cleared
+ 
+-class MODPLUG_EXPORT IMixPlugin
++class /*MODPLUG_EXPORT*/ IMixPlugin
+ {
+ public:
+ 	virtual ~IMixPlugin() {};
+@@ -535,7 +535,7 @@ typedef VOID (* LPSNDMIXHOOKPROC)(int *,
+ 
+ 
+ //==============
+-class MODPLUG_EXPORT CSoundFile
++class /*MODPLUG_EXPORT*/ CSoundFile
+ //==============
+ {
+ public:	// Static Members
+@@ -638,7 +638,9 @@ public:
+ 	BOOL ReadIT(LPCBYTE lpStream, DWORD dwMemLength);
+ 	BOOL Read669(LPCBYTE lpStream, DWORD dwMemLength);
+ 	BOOL ReadUlt(LPCBYTE lpStream, DWORD dwMemLength);
++#ifndef NO_WAVFORMAT
+ 	BOOL ReadWav(LPCBYTE lpStream, DWORD dwMemLength);
++#endif
+ 	BOOL ReadDSM(LPCBYTE lpStream, DWORD dwMemLength);
+ 	BOOL ReadFAR(LPCBYTE lpStream, DWORD dwMemLength);
+ 	BOOL ReadAMS(LPCBYTE lpStream, DWORD dwMemLength);
+@@ -653,12 +655,14 @@ public:
+ 	BOOL ReadPSM(LPCBYTE lpStream, DWORD dwMemLength);
+ 	BOOL ReadJ2B(LPCBYTE lpStream, DWORD dwMemLength);
+ 	BOOL ReadUMX(LPCBYTE lpStream, DWORD dwMemLength);
++#ifndef NO_MIDIFORMATS
+ 	BOOL ReadABC(LPCBYTE lpStream, DWORD dwMemLength);
+ 	BOOL TestABC(LPCBYTE lpStream, DWORD dwMemLength);
+ 	BOOL ReadMID(LPCBYTE lpStream, DWORD dwMemLength);
+ 	BOOL TestMID(LPCBYTE lpStream, DWORD dwMemLength);
+ 	BOOL ReadPAT(LPCBYTE lpStream, DWORD dwMemLength);
+ 	BOOL TestPAT(LPCBYTE lpStream, DWORD dwMemLength);
++#endif
+ 	// Save Functions
+ #ifndef MODPLUG_NO_FILESAVE
+ 	UINT WriteSample(FILE *f, MODINSTRUMENT *pins, UINT nFlags, UINT nMaxLen=0);
+@@ -666,14 +670,16 @@ public:
+ 	BOOL SaveS3M(LPCSTR lpszFileName, UINT nPacking=0);
+ 	BOOL SaveMod(LPCSTR lpszFileName, UINT nPacking=0);
+ 	BOOL SaveIT(LPCSTR lpszFileName, UINT nPacking=0);
+-#endif // MODPLUG_NO_FILESAVE
+-	// MOD Convert function
+ 	UINT GetBestSaveFormat() const;
+ 	UINT GetSaveFormats() const;
++#endif
++	// MOD Convert function
+ 	void ConvertModCommand(MODCOMMAND *) const;
+ 	void S3MConvert(MODCOMMAND *m, BOOL bIT) const;
++#ifndef MODPLUG_NO_FILESAVE
+ 	void S3MSaveConvert(UINT *pcmd, UINT *pprm, BOOL bIT) const;
+ 	WORD ModSaveCommand(const MODCOMMAND *m, BOOL bXM) const;
++#endif
+ 
+ public:
+ 	// Real-time sound functions
+@@ -759,8 +765,11 @@ public:
+ 	BOOL IsValidBackwardJump(UINT nStartOrder, UINT nStartRow, UINT nJumpOrder, UINT nJumpRow) const;
+ 	// Read/Write sample functions
+ 	signed char GetDeltaValue(signed char prev, UINT n) const { return (signed char)(prev + CompressionTable[n & 0x0F]); }
++#if !(defined(MODPLUG_NO_FILESAVE)||defined(NO_PACKING))
+ 	UINT PackSample(int &sample, int next);
+ 	BOOL CanPackSample(LPSTR pSample, UINT nLen, UINT nPacking, BYTE *result=NULL);
++#endif // NO_FILESAVE, NO_PACKING
++
+ 	UINT ReadSample(MODINSTRUMENT *pIns, UINT nFlags, LPCSTR pMemFile, DWORD dwMemLength);
+ 	BOOL DestroySample(UINT nSample);
+ 	BOOL DestroyInstrument(UINT nInstr);
+diff -up libmodplug-0.8.9.0/src/libmodplug/stdafx.h~ libmodplug-0.8.9.0/src/libmodplug/stdafx.h
+--- libmodplug-0.8.9.0/src/libmodplug/stdafx.h~
++++ libmodplug-0.8.9.0/src/libmodplug/stdafx.h
+@@ -21,9 +21,15 @@
+ # include <stdint.h>
+ #endif
+ 
++/*#define MMCMP_SUPPORT*/
++
+ /* disable AGC and FILESAVE for all targets for uniformity. */
+ #define NO_AGC
+ #define MODPLUG_NO_FILESAVE
++/*#define NO_PACKING*/
++/*#define NO_FILTER */
++#define NO_MIDIFORMATS
++#define NO_WAVFORMAT
+ 
+ #ifdef _WIN32
+ 
+@@ -88,12 +94,6 @@ typedef const char* LPCSTR;
+ typedef void* PVOID;
+ typedef void VOID;
+ 
+-inline LONG MulDiv (long a, long b, long c)
+-{
+-/*if (!c) return 0;*/
+-  return ((uint64_t) a * (uint64_t) b ) / c;
+-}
+-
+ #define LPCTSTR LPCSTR
+ #define lstrcpyn strncpy
+ #define lstrcpy strcpy
+diff -up libmodplug-0.8.9.0/src/load_669.cpp~ libmodplug-0.8.9.0/src/load_669.cpp
+--- libmodplug-0.8.9.0/src/load_669.cpp~
++++ libmodplug-0.8.9.0/src/load_669.cpp
+@@ -17,7 +17,7 @@
+ typedef struct tagFILEHEADER669
+ {
+ 	WORD sig;				// 'if' or 'JN'
+-        signed char songmessage[108];	// Song Message
++	signed char songmessage[108];	// Song Message
+ 	BYTE samples;			// number of samples (1-64)
+ 	BYTE patterns;			// number of patterns (1-128)
+ 	BYTE restartpos;
+@@ -35,7 +35,7 @@ typedef struct tagSAMPLE669
+ 	BYTE loopend[4];
+ } SAMPLE669;
+ 
+-DWORD lengthArrayToDWORD(const BYTE length[4]) {
++static DWORD lengthArrayToDWORD(const BYTE length[4]) {
+ 	DWORD len = (length[3] << 24) +
+ 		(length[2] << 16) +
+ 		(length[1] << 8) +
+diff -up libmodplug-0.8.9.0/src/load_abc.cpp~ libmodplug-0.8.9.0/src/load_abc.cpp
+--- libmodplug-0.8.9.0/src/load_abc.cpp~
++++ libmodplug-0.8.9.0/src/load_abc.cpp
+@@ -37,9 +37,11 @@
+ #include "stdafx.h"
+ #include "sndfile.h"
+ 
++#ifndef NO_MIDIFORMATS
++
+ #include "load_pat.h"
+ 
+-#if _MSC_VER >= 1600
++#if defined(_MSC_VER) && (_MSC_VER >= 1300)
+ #define putenv _putenv
+ #define strdup _strdup
+ #endif
+@@ -256,16 +258,6 @@ static void abc_add_setjumploop(ABCHANDL
+ static uint32_t abc_pattracktime(ABCHANDLE *h, uint32_t tracktime);
+ static int abc_patno(ABCHANDLE *h, uint32_t tracktime);
+ 
+-#ifndef HAVE_SETENV
+-static void setenv(const char *name, const char *value, int overwrite)
+-{
+-	int len = strlen(name)+1+strlen(value)+1;
+-	char *str = (char *)malloc(len);
+-	sprintf(str, "%s=%s", name, value);
+-	putenv(str);
+-	free(str);
+-}
+-#endif
+ 
+ static int abc_isvalidchar(char c) {
+ 	return(isalpha(c) || isdigit(c) || isspace(c) || c == '%' || c == ':');
+@@ -2345,9 +2337,9 @@ BOOL CSoundFile::TestABC(const BYTE *lpS
+ // =====================================================================================
+ static ABCHANDLE *ABC_Init(void)
+ {
++	static char buf[40];
+ 	ABCHANDLE   *retval;
+ 	char *p;
+-	char buf[10];
+ 	retval = (ABCHANDLE *)calloc(1,sizeof(ABCHANDLE));
+ 	if( !retval ) return NULL;
+ 	retval->track       = NULL;
+@@ -2365,16 +2357,16 @@ static ABCHANDLE *ABC_Init(void)
+ 			retval->pickrandom = atoi(p);
+ 		if( *p == '-' ) {
+ 			retval->pickrandom = atoi(p+1)-1; // xmms preloads the file
+-			sprintf(buf,"-%ld",retval->pickrandom+2);
+-			setenv(ABC_ENV_NORANDOMPICK, buf, 1);
++			sprintf(buf,"%s=-%ld",ABC_ENV_NORANDOMPICK,retval->pickrandom+2);
++			putenv(buf);
+ 		}
+ 	}
+ 	else {
+ 		srandom((uint32_t)time(0));	// initialize random generator with seed
+ 		retval->pickrandom = 1+(int)(10000.0*random()/(RAND_MAX+1.0));
+ 		// can handle pickin' from songbooks with 10.000 songs
+-		sprintf(buf,"-%ld",retval->pickrandom); // xmms preloads the file
+-		setenv(ABC_ENV_NORANDOMPICK, buf, 1);
++		sprintf(buf,"%s=-%ld",ABC_ENV_NORANDOMPICK,retval->pickrandom); // xmms preloads the file
++		putenv(buf);
+ 	}
+ 	return retval;
+ }
+@@ -4878,3 +4870,4 @@ BOOL CSoundFile::ReadABC(const uint8_t *
+ 	ABC_Cleanup(h);	// we dont need it anymore
+ 	return 1;
+ }
++#endif // NO_MIDIFORMATS
+diff -up libmodplug-0.8.9.0/src/load_amf.cpp~ libmodplug-0.8.9.0/src/load_amf.cpp
+--- libmodplug-0.8.9.0/src/load_amf.cpp~
++++ libmodplug-0.8.9.0/src/load_amf.cpp
+@@ -44,7 +44,6 @@ typedef struct _AMFSAMPLE
+ 	UCHAR volume;
+ } AMFSAMPLE;
+ 
+-
+ #pragma pack()
+ 
+ 
+@@ -52,7 +51,7 @@ typedef struct _AMFSAMPLE
+ extern void Log(LPCSTR, ...);
+ #endif
+ 
+-VOID AMF_Unpack(MODCOMMAND *pPat, const BYTE *pTrack, UINT nRows, UINT nChannels)
++static VOID AMF_Unpack(MODCOMMAND *pPat, const BYTE *pTrack, UINT nRows, UINT nChannels)
+ //-------------------------------------------------------------------------------
+ {
+ 	UINT lastinstr = 0;
+@@ -163,7 +162,6 @@ VOID AMF_Unpack(MODCOMMAND *pPat, const 
+ }
+ 
+ 
+-
+ BOOL CSoundFile::ReadAMF(LPCBYTE lpStream, const DWORD dwMemLength)
+ //-----------------------------------------------------------
+ {
+diff -up libmodplug-0.8.9.0/src/load_dmf.cpp~ libmodplug-0.8.9.0/src/load_dmf.cpp
+--- libmodplug-0.8.9.0/src/load_dmf.cpp~
++++ libmodplug-0.8.9.0/src/load_dmf.cpp
+@@ -509,7 +509,7 @@ typedef struct DMF_HTREE
+ 
+ 
+ // DMF Huffman ReadBits
+-BYTE DMFReadBits(DMF_HTREE *tree, UINT nbits)
++static BYTE DMFReadBits(DMF_HTREE *tree, UINT nbits)
+ //-------------------------------------------
+ {
+ 	BYTE x = 0, bitv = 1;
+@@ -534,7 +534,7 @@ BYTE DMFReadBits(DMF_HTREE *tree, UINT n
+ // tree: [8-bit value][12-bit index][12-bit index] = 32-bit
+ //
+ 
+-void DMFNewNode(DMF_HTREE *tree)
++static void DMFNewNode(DMF_HTREE *tree)
+ //------------------------------
+ {
+ 	BYTE isleft, isright;
+diff -up libmodplug-0.8.9.0/src/load_it.cpp~ libmodplug-0.8.9.0/src/load_it.cpp
+--- libmodplug-0.8.9.0/src/load_it.cpp~
++++ libmodplug-0.8.9.0/src/load_it.cpp
+@@ -15,19 +15,18 @@
+ #pragma warning(disable:4244)
+ #endif
+ 
++static const
+ BYTE autovibit2xm[8] =
+ { 0, 3, 1, 4, 2, 0, 0, 0 };
+-
++#ifndef MODPLUG_NO_FILESAVE
++static const
+ BYTE autovibxm2it[8] =
+ { 0, 2, 4, 1, 3, 0, 0, 0 };
++#endif
+ 
+ //////////////////////////////////////////////////////////
+ // Impulse Tracker IT file support
+ 
+-// for conversion of XM samples
+-extern WORD XMPeriodTable[96+8];
+-extern UINT XMLinearTable[768];
+-
+ static inline UINT ConvertVolParam(UINT value)
+ //--------------------------------------------
+ {
+diff -up libmodplug-0.8.9.0/src/load_mdl.cpp~ libmodplug-0.8.9.0/src/load_mdl.cpp
+--- libmodplug-0.8.9.0/src/load_mdl.cpp~
++++ libmodplug-0.8.9.0/src/load_mdl.cpp
+@@ -42,7 +42,7 @@ typedef struct MDLPATTERNDATA
+ } MDLPATTERNDATA;
+ 
+ 
+-void ConvertMDLCommand(MODCOMMAND *m, UINT eff, UINT data)
++static void ConvertMDLCommand(MODCOMMAND *m, UINT eff, UINT data)
+ //--------------------------------------------------------
+ {
+ 	UINT command = 0, param = data;
+@@ -91,7 +91,7 @@ void ConvertMDLCommand(MODCOMMAND *m, UI
+ }
+ 
+ 
+-void UnpackMDLTrack(MODCOMMAND *pat, UINT nChannels, UINT nRows, UINT nTrack, const BYTE *lpTracks, UINT len)
++static void UnpackMDLTrack(MODCOMMAND *pat, UINT nChannels, UINT nRows, UINT nTrack, const BYTE *lpTracks, UINT len)
+ //-------------------------------------------------------------------------------------------------
+ {
+ 	MODCOMMAND cmd, *m = pat;
+@@ -168,7 +168,6 @@ void UnpackMDLTrack(MODCOMMAND *pat, UIN
+ }
+ 
+ 
+-
+ BOOL CSoundFile::ReadMDL(const BYTE *lpStream, DWORD dwMemLength)
+ //---------------------------------------------------------------
+ {
+@@ -429,12 +428,13 @@ BOOL CSoundFile::ReadMDL(const BYTE *lpS
+ 		for (UINT ipat=0; ipat<npatterns; ipat++)
+ 		{
+ 			if ((Patterns[ipat] = AllocatePattern(PatternSize[ipat], m_nChannels)) == NULL) break;
+-			for (UINT chn=0; chn<m_nChannels; chn++) if ((patterntracks[ipat*32+chn]) && (patterntracks[ipat*32+chn] <= ntracks) && (*(WORD *)lpStream+dwTrackPos) < dwMemLength-dwTrackPos)
++			for (UINT chn=0; chn<m_nChannels; chn++) if ((patterntracks[ipat*32+chn]) && (patterntracks[ipat*32+chn] <= ntracks))
+ 			{
++			    const BYTE *lpTracks = lpStream + dwTrackPos;
++			    UINT len = lpTracks[0] | (lpTracks[1] << 8);
++			    if (len < dwMemLength-dwTrackPos) {
+ 				MODCOMMAND *m = Patterns[ipat] + chn;
+ 				UINT nTrack = patterntracks[ipat*32+chn];
+-				const BYTE *lpTracks = lpStream + dwTrackPos;
+-				UINT len = lpTracks[0] | (lpTracks[1] << 8);
+ 
+ 				lpTracks += 2;
+ 				for (UINT ntrk=1; ntrk<nTrack && lpTracks < (dwMemLength + lpStream - len); ntrk++)
+@@ -447,6 +447,7 @@ BOOL CSoundFile::ReadMDL(const BYTE *lpS
+ 				if ( len > dwMemLength - dwTrackPos ) len = 0;
+ 
+ 				UnpackMDLTrack(m, m_nChannels, PatternSize[ipat], nTrack, lpTracks, len);
++			    }
+ 			}
+ 		}
+ 	}
+diff -up libmodplug-0.8.9.0/src/load_mid.cpp~ libmodplug-0.8.9.0/src/load_mid.cpp
+--- libmodplug-0.8.9.0/src/load_mid.cpp~
++++ libmodplug-0.8.9.0/src/load_mid.cpp
+@@ -35,6 +35,9 @@
+ 
+ #include "stdafx.h"
+ #include "sndfile.h"
++
++#ifndef NO_MIDIFORMATS
++
+ #define PAN_LEFT    0x30
+ #define PAN_RIGHT   0xD0
+ #define MAX_POLYPHONY 16  // max notes in one midi channel
+@@ -92,7 +95,7 @@ typedef struct _MIDTRACK
+ #undef _mm_free
+ #endif
+ 
+-#define MMSTREAM										FILE
++#define MMSTREAM				FILE
+ #define _mm_fseek(f,pos,whence)			fseek(f,pos,whence)
+ #define _mm_read_UBYTES(buf,sz,f)		fread(buf,sz,1,f)
+ #define _mm_read_SBYTES(buf,sz,f)		fread(buf,sz,1,f)
+@@ -1582,3 +1585,4 @@ BOOL CSoundFile::ReadMID(const BYTE *lpS
+ 	avoid_reentry = 0; // it is safe now, I'm finished
+ 	return TRUE;
+ }
++#endif // NO_MIDIFORMATS
+diff -up libmodplug-0.8.9.0/src/load_mod.cpp~ libmodplug-0.8.9.0/src/load_mod.cpp
+--- libmodplug-0.8.9.0/src/load_mod.cpp~
++++ libmodplug-0.8.9.0/src/load_mod.cpp
+@@ -60,6 +60,7 @@ void CSoundFile::ConvertModCommand(MODCO
+ }
+ 
+ 
++#ifndef MODPLUG_NO_FILESAVE
+ WORD CSoundFile::ModSaveCommand(const MODCOMMAND *m, BOOL bXM) const
+ //------------------------------------------------------------------
+ {
+@@ -144,6 +145,7 @@ WORD CSoundFile::ModSaveCommand(const MO
+ 	}
+ 	return (WORD)((command << 8) | (param));
+ }
++#endif // MODPLUG_NO_FILESAVE
+ 
+ 
+ #pragma pack(1)
+@@ -184,7 +186,7 @@ static BOOL IsValidName(LPCSTR s, int le
+ 	return TRUE;
+ }
+ 
+-BOOL IsMagic(LPCSTR s1, LPCSTR s2)
++static BOOL IsMagic(LPCSTR s1, LPCSTR s2)
+ {
+ 	return ((*(DWORD *)s1) == (*(DWORD *)s2)) ? TRUE : FALSE;
+ }
+diff -up libmodplug-0.8.9.0/src/load_pat.cpp~ libmodplug-0.8.9.0/src/load_pat.cpp
+--- libmodplug-0.8.9.0/src/load_pat.cpp~
++++ libmodplug-0.8.9.0/src/load_pat.cpp
+@@ -44,16 +44,18 @@
+ #include "stdafx.h"
+ #include "sndfile.h"
+ 
++#ifndef NO_MIDIFORMATS
++
+ #include "load_pat.h"
+ 
+-#ifdef MSC_VER
++#ifdef _WIN32
+ #define DIRDELIM		'\\'
+ #define TIMIDITYCFG	"C:\\TIMIDITY\\TIMIDITY.CFG"
+ #define PATHFORPAT	"C:\\TIMIDITY\\INSTRUMENTS"
+ #else
+ #define DIRDELIM		'/'
+-#define TIMIDITYCFG	"/usr/local/share/timidity/timidity.cfg"
+-#define PATHFORPAT	"/usr/local/share/timidity/instruments"
++#define TIMIDITYCFG	"/etc/timidity.cfg" /*"/usr/share/timidity/timidity.cfg"*/
++#define PATHFORPAT	"/usr/share/timidity/instruments"
+ #endif
+ 
+ #define PAT_ENV_PATH2CFG			"MMPAT_PATH_TO_CFG"
+@@ -764,10 +766,7 @@ BOOL CSoundFile::TestPAT(const BYTE *lpS
+ // =====================================================================================
+ static PATHANDLE *PAT_Init(void)
+ {
+-	PATHANDLE   *retval;
+-	retval = (PATHANDLE *)calloc(1,sizeof(PATHANDLE));
+-	if( !retval ) return NULL;
+-	return retval;
++	return (PATHANDLE *)calloc(1,sizeof(PATHANDLE));
+ }
+ 
+ // =====================================================================================
+@@ -1259,3 +1258,4 @@ BOOL CSoundFile::ReadPAT(const BYTE *lpS
+ 	PAT_Cleanup(h);	// we dont need it anymore
+ 	return 1;
+ }
++#endif // NO_MIDIFORMATS
+diff -up libmodplug-0.8.9.0/src/load_psm.cpp~ libmodplug-0.8.9.0/src/load_psm.cpp
+--- libmodplug-0.8.9.0/src/load_psm.cpp~
++++ libmodplug-0.8.9.0/src/load_psm.cpp
+@@ -84,7 +84,9 @@ typedef struct _PSMSAMPLE
+ 	BYTE reserved6[19];
+ } PSMSAMPLE;
+ 
+-void swap_PSMSAMPLE(PSMSAMPLE* p){
++#pragma pack()
++
++static void swap_PSMSAMPLE(PSMSAMPLE* p){
+ 	p->smpid = bswapLE32(p->smpid);
+ 	p->length = bswapLE32(p->length);
+ 	p->loopstart = bswapLE32(p->loopstart);
+@@ -92,13 +94,11 @@ void swap_PSMSAMPLE(PSMSAMPLE* p){
+ 	p->samplerate = bswapLE32(p->samplerate);
+ }
+ 
+-#pragma pack()
+-
+ 
+ BOOL CSoundFile::ReadPSM(LPCBYTE lpStream, DWORD dwMemLength)
+ //-----------------------------------------------------------
+ {
+-	PSMCHUNK *pfh = (PSMCHUNK *)lpStream;
++	PSMCHUNK pfh = *(const PSMCHUNK *)lpStream;
+ 	DWORD dwMemPos, dwSongPos;
+ 	DWORD smpnames[MAX_SAMPLES];
+ 	DWORD patptrs[MAX_PATTERNS];
+@@ -108,17 +108,17 @@ BOOL CSoundFile::ReadPSM(LPCBYTE lpStrea
+ 	if (dwMemLength < 256) return FALSE;
+ 
+ 	// Swap chunk
+-	swap_PSMCHUNK(pfh);
++	swap_PSMCHUNK(&pfh);
+ 
+ 	// Chunk0: "PSM ",filesize,"FILE"
+-	if (pfh->id == PSM_ID_OLD)
++	if (pfh.id == PSM_ID_OLD)
+ 	{
+ 	#ifdef PSM_LOG
+ 		Log("Old PSM format not supported\n");
+ 	#endif
+ 		return FALSE;
+ 	}
+-	if ((pfh->id != PSM_ID_NEW) || (pfh->len+12 > dwMemLength) || (pfh->listid != IFFID_FILE)) return FALSE;
++	if ((pfh.id != PSM_ID_NEW) || (pfh.len+12 > dwMemLength) || (pfh.listid != IFFID_FILE)) return FALSE;
+ 	m_nType = MOD_TYPE_PSM;
+ 	m_nChannels = 16;
+ 	m_nSamples = 0;
+@@ -132,13 +132,13 @@ BOOL CSoundFile::ReadPSM(LPCBYTE lpStrea
+ 	}
+ 	while (dwMemPos+8 < dwMemLength)
+ 	{
+-		PSMCHUNK *pchunk = (PSMCHUNK *)(lpStream+dwMemPos);
+-		swap_PSMCHUNK(pchunk);
+-		if ((pchunk->len >= dwMemLength - 8) || (dwMemPos + pchunk->len + 8 > dwMemLength)) break;
++		PSMCHUNK pchunk = *(const PSMCHUNK *)(lpStream+dwMemPos);
++		swap_PSMCHUNK(&pchunk);
++		if ((pchunk.len >= dwMemLength - 8) || (dwMemPos + pchunk.len + 8 > dwMemLength)) break;
+ 		dwMemPos += 8;
+ 		PUCHAR pdata = (PUCHAR)(lpStream+dwMemPos);
+-		ULONG len = pchunk->len;
+-		if (len) switch(pchunk->id)
++		ULONG len = pchunk.len;
++		if (len) switch(pchunk.id)
+ 		{
+ 		// "TITL": Song title
+ 		case IFFID_TITL:
+@@ -166,21 +166,21 @@ BOOL CSoundFile::ReadPSM(LPCBYTE lpStrea
+ 			{
+ 				m_nSamples++;
+ 				MODINSTRUMENT *pins = &Ins[m_nSamples];
+-				PSMSAMPLE *psmp = (PSMSAMPLE *)pdata;
+-				swap_PSMSAMPLE(psmp);
+-				smpnames[m_nSamples] = psmp->smpid;
+-				memcpy(m_szNames[m_nSamples], psmp->samplename, 31);
++				PSMSAMPLE psmp = *(PSMSAMPLE *)pdata;
++				swap_PSMSAMPLE(&psmp);
++				smpnames[m_nSamples] = psmp.smpid;
++				memcpy(m_szNames[m_nSamples], psmp.samplename, 31);
+ 				m_szNames[m_nSamples][31] = 0;
+ 				samplemap[m_nSamples-1] = (BYTE)m_nSamples;
+ 				// Init sample
+ 				pins->nGlobalVol = 0x40;
+-				pins->nC4Speed = psmp->samplerate;
+-				pins->nLength = psmp->length;
+-				pins->nLoopStart = psmp->loopstart;
+-				pins->nLoopEnd = psmp->loopend;
++				pins->nC4Speed = psmp.samplerate;
++				pins->nLength = psmp.length;
++				pins->nLoopStart = psmp.loopstart;
++				pins->nLoopEnd = psmp.loopend;
+ 				pins->nPan = 128;
+-				pins->nVolume = (psmp->defvol+1) * 2;
+-				pins->uFlags = (psmp->flags & 0x80) ? CHN_LOOP : 0;
++				pins->nVolume = (psmp.defvol+1) * 2;
++				pins->uFlags = (psmp.flags & 0x80) ? CHN_LOOP : 0;
+ 				if (pins->nLoopStart > 0) pins->nLoopStart--;
+ 				// Point to sample data
+ 				pdata += 0x60;
+@@ -199,17 +199,17 @@ BOOL CSoundFile::ReadPSM(LPCBYTE lpStrea
+ 		default:
+ 			{
+ 				CHAR s[8], s2[64];
+-				*(DWORD *)s = pchunk->id;
++				*(DWORD *)s = pchunk.id;
+ 				s[4] = 0;
+-				wsprintf(s2, "%s: %4d bytes @ %4d\n", s, pchunk->len, dwMemPos);
++				wsprintf(s2, "%s: %4d bytes @ %4d\n", s, pchunk.len, dwMemPos);
+ 				OutputDebugString(s2);
+ 			}
+ 	#endif
+ 		}
+-		dwMemPos += pchunk->len;
++		dwMemPos += pchunk.len;
+ 	}
+ 	// Step #1: convert song structure
+-	PSMSONGHDR *pSong = (PSMSONGHDR *)(lpStream+dwSongPos+8);
++	const PSMSONGHDR *pSong = (const PSMSONGHDR *)(lpStream+dwSongPos+8);
+ 	if ((!dwSongPos) || (pSong->channels < 2) || (pSong->channels > 32)) return TRUE;
+ 	m_nChannels = pSong->channels;
+ 	// Valid song header -> convert attached chunks
+@@ -218,13 +218,13 @@ BOOL CSoundFile::ReadPSM(LPCBYTE lpStrea
+ 		dwMemPos = dwSongPos + 8 + 11; // sizeof(PSMCHUNK)+sizeof(PSMSONGHDR)
+ 		while (dwMemPos + 8 < dwSongEnd)
+ 		{
+-			PSMCHUNK *pchunk = (PSMCHUNK *)(lpStream+dwMemPos);
+-			swap_PSMCHUNK(pchunk);
++			PSMCHUNK pchunk = *(const PSMCHUNK *)(lpStream+dwMemPos);
++			swap_PSMCHUNK(&pchunk);
+ 			dwMemPos += 8;
+-			if ((pchunk->len > dwSongEnd) || (dwMemPos + pchunk->len > dwSongEnd)) break;
++			if ((pchunk.len > dwSongEnd) || (dwMemPos + pchunk.len > dwSongEnd)) break;
+ 			PUCHAR pdata = (PUCHAR)(lpStream+dwMemPos);
+-			ULONG len = pchunk->len;
+-			switch(pchunk->id)
++			ULONG len = pchunk.len;
++			switch(pchunk.id)
+ 			{
+ 			case IFFID_OPLH:
+ 				if (len >= 0x20)
+@@ -237,7 +237,7 @@ BOOL CSoundFile::ReadPSM(LPCBYTE lpStrea
+ 						DWORD dwName = *(DWORD *)(pdata+pos);
+ 						for (UINT i=0; i<nPatterns; i++)
+ 						{
+-							DWORD dwPatName = ((PSMPATTERN *)(lpStream+patptrs[i]+8))->name;
++							DWORD dwPatName = ((const PSMPATTERN *)(lpStream+patptrs[i]+8))->name;
+ 							if (dwName == dwPatName)
+ 							{
+ 								bFound = TRUE;
+@@ -258,7 +258,7 @@ BOOL CSoundFile::ReadPSM(LPCBYTE lpStrea
+ 						DWORD dwName = *(DWORD *)(pdata+pos);
+ 						for (UINT i=0; i<nPatterns; i++)
+ 						{
+-							DWORD dwPatName = ((PSMPATTERN *)(lpStream+patptrs[i]+8))->name;
++							DWORD dwPatName = ((const PSMPATTERN *)(lpStream+patptrs[i]+8))->name;
+ 							if (dwName == dwPatName)
+ 							{
+ 								Order[iOrd++] = i;
+@@ -270,23 +270,23 @@ BOOL CSoundFile::ReadPSM(LPCBYTE lpStrea
+ 				}
+ 				break;
+ 			}
+-			dwMemPos += pchunk->len;
++			dwMemPos += pchunk.len;
+ 		}
+ 	}
+ 
+ 	// Step #2: convert patterns
+ 	for (UINT nPat=0; nPat<nPatterns; nPat++)
+ 	{
+-		PSMPATTERN *pPsmPat = (PSMPATTERN *)(lpStream+patptrs[nPat]+8);
+-		swap_PSMPATTERN(pPsmPat);
++		PSMPATTERN pPsmPat = *(const PSMPATTERN *)(lpStream+patptrs[nPat]+8);
++		swap_PSMPATTERN(&pPsmPat);
+ 		ULONG len = *(DWORD *)(lpStream+patptrs[nPat]+4) - 12;
+-		UINT nRows = pPsmPat->rows;
+-		if (len > pPsmPat->size) len = pPsmPat->size;
++		UINT nRows = pPsmPat.rows;
++		if (len > pPsmPat.size) len = pPsmPat.size;
+ 		if ((nRows < 64) || (nRows > 256)) nRows = 64;
+ 		PatternSize[nPat] = nRows;
+ 		if ((Patterns[nPat] = AllocatePattern(nRows, m_nChannels)) == NULL) break;
+ 		MODCOMMAND *m = Patterns[nPat];
+-		BYTE *p = pPsmPat->data;
++		BYTE *p = pPsmPat.data;
+ 		MODCOMMAND *sp, dummy;
+ 		UINT pos = 0;
+ 		UINT row = 0;
+@@ -295,7 +295,7 @@ BOOL CSoundFile::ReadPSM(LPCBYTE lpStrea
+ 		Log("Pattern %d at offset 0x%04X\n", nPat, (DWORD)(p - (BYTE *)lpStream));
+ 	#endif
+ 		UINT flags, ch;
+-		rowlim = bswapLE16(pPsmPat->reserved1)-2;
++		rowlim = bswapLE16(pPsmPat.reserved1)-2;
+ 		while ((row < nRows) && (pos+3 < len))
+ 		{
+ 			if ((pos+1) >= rowlim) {
+@@ -393,7 +393,7 @@ BOOL CSoundFile::ReadPSM(LPCBYTE lpStrea
+ 	#ifdef PSM_LOG
+ 		if (pos < len)
+ 		{
+-			Log("Pattern %d: %d/%d[%d] rows (%d bytes) -> %d bytes left\n", nPat, row, nRows, pPsmPat->rows, pPsmPat->size, len-pos);
++			Log("Pattern %d: %d/%d[%d] rows (%d bytes) -> %d bytes left\n", nPat, row, nRows, pPsmPat.rows, pPsmPat.size, len-pos);
+ 		}
+ 	#endif
+ 	}
+diff -up libmodplug-0.8.9.0/src/load_s3m.cpp~ libmodplug-0.8.9.0/src/load_s3m.cpp
+--- libmodplug-0.8.9.0/src/load_s3m.cpp~
++++ libmodplug-0.8.9.0/src/load_s3m.cpp
+@@ -105,6 +105,7 @@ void CSoundFile::S3MConvert(MODCOMMAND *
+ }
+ 
+ 
++#ifndef MODPLUG_NO_FILESAVE
+ void CSoundFile::S3MSaveConvert(UINT *pcmd, UINT *pprm, BOOL bIT) const
+ //---------------------------------------------------------------------
+ {
+@@ -182,6 +183,7 @@ void CSoundFile::S3MSaveConvert(UINT *pc
+ 	*pcmd = command;
+ 	*pprm = param;
+ }
++#endif // MODPLUG_NO_FILESAVE
+ 
+ static DWORD boundInput(DWORD input, DWORD smin, DWORD smax)
+ {
+diff -up libmodplug-0.8.9.0/src/load_stm.cpp~ libmodplug-0.8.9.0/src/load_stm.cpp
+--- libmodplug-0.8.9.0/src/load_stm.cpp~
++++ libmodplug-0.8.9.0/src/load_stm.cpp
+@@ -64,8 +64,8 @@ BOOL CSoundFile::ReadSTM(const BYTE *lpS
+ 	
+ 	if ((!lpStream) || (dwMemLength < sizeof(STMHEADER))) return FALSE;
+ 	if ((phdr->filetype != 2) || (phdr->unused != 0x1A)
+-	 || ((strncasecmp(phdr->trackername, "!SCREAM!", 8))
+-	  && (strncasecmp(phdr->trackername, "BMOD2STM", 8)))) return FALSE;
++	 || ((strncmp(phdr->trackername, "!Scream!", 8))
++	  && (strncmp(phdr->trackername, "BMOD2STM", 8)))) return FALSE;
+ 	memcpy(m_szNames[0], phdr->songname, 20);
+ 	// Read STM header
+ 	m_nType = MOD_TYPE_STM;
+diff -up libmodplug-0.8.9.0/src/load_wav.cpp~ libmodplug-0.8.9.0/src/load_wav.cpp
+--- libmodplug-0.8.9.0/src/load_wav.cpp~
++++ libmodplug-0.8.9.0/src/load_wav.cpp
+@@ -7,6 +7,8 @@
+ #include "stdafx.h"
+ #include "sndfile.h"
+ 
++#ifndef NO_WAVFORMAT
++
+ #ifndef WAVE_FORMAT_EXTENSIBLE
+ #define WAVE_FORMAT_EXTENSIBLE	0xFFFE
+ #endif
+@@ -170,7 +172,6 @@ static const int gIMAUnpackTable[90] =
+   32767, 0
+ };
+ 
+-
+ BOOL IMAADPCMUnpack16(signed short *pdest, UINT nLen, LPBYTE psrc, DWORD dwBytes, UINT pkBlkAlign)
+ //------------------------------------------------------------------------------------------------
+ {
+@@ -215,3 +216,4 @@ BOOL IMAADPCMUnpack16(signed short *pdes
+ 	}
+ 	return TRUE;
+ }
++#endif // NO_WAVFORMAT
+diff -up libmodplug-0.8.9.0/src/mmcmp.cpp~ libmodplug-0.8.9.0/src/mmcmp.cpp
+--- libmodplug-0.8.9.0/src/mmcmp.cpp~
++++ libmodplug-0.8.9.0/src/mmcmp.cpp
+@@ -8,6 +8,7 @@
+ #include "stdafx.h"
+ #include "sndfile.h"
+ 
++#ifdef MMCMP_SUPPORT
+ BOOL PP20_Unpack(LPCBYTE *ppMemFile, LPDWORD pdwMemLength);
+ 
+ #pragma pack(1)
+@@ -501,3 +502,4 @@ BOOL PP20_Unpack(LPCBYTE *ppMemFile, LPD
+ 	*pdwMemLength = dwDstLen;
+ 	return TRUE;
+ }
++#endif /* MMCMP_SUPPORT */
+diff -up libmodplug-0.8.9.0/src/sndfile.cpp~ libmodplug-0.8.9.0/src/sndfile.cpp
+--- libmodplug-0.8.9.0/src/sndfile.cpp~
++++ libmodplug-0.8.9.0/src/sndfile.cpp
+@@ -9,8 +9,6 @@
+ #include "libmodplug/stdafx.h"
+ #include "libmodplug/sndfile.h"
+ 
+-#define MMCMP_SUPPORT
+-
+ #ifdef MMCMP_SUPPORT
+ extern BOOL MMCMP_Unpack(LPCBYTE *ppMemFile, LPDWORD pdwMemLength);
+ #endif
+@@ -24,9 +22,11 @@ extern void ITUnpack8Bit(signed char *pS
+ extern void ITUnpack16Bit(signed char *pSample, DWORD dwLen, LPBYTE lpMemFile, DWORD dwMemLength, BOOL b215);
+ 
+ 
++#ifndef MODPLUG_NO_FILESAVE
++#ifndef NO_PACKING
++
+ #define MAX_PACK_TABLES		3
+ 
+-
+ // Compression table
+ static const signed char UnpackTable[MAX_PACK_TABLES][16] =
+ //--------------------------------------------
+@@ -40,6 +40,8 @@ static const signed char UnpackTable[MAX
+ 	{0, 1, 2, 3, 5, 7, 12, 19,
+ 	-1, -2, -3, -5, -7, -12, -19, -31}
+ };
++#endif
++#endif
+ 
+ 
+ //////////////////////////////////////////////////////////
+@@ -140,12 +142,16 @@ BOOL CSoundFile::Create(LPCBYTE lpStream
+ 		if ((!ReadXM(lpStream, dwMemLength))
+ 		 && (!ReadS3M(lpStream, dwMemLength))
+ 		 && (!ReadIT(lpStream, dwMemLength))
++#ifndef NO_WAVFORMAT
+ 		 && (!ReadWav(lpStream, dwMemLength))
++#endif
+ #ifndef MODPLUG_BASIC_SUPPORT
++#ifndef NO_MIDIFORMATS
+ /* Sequencer File Format Support */
+ 		 && (!ReadABC(lpStream, dwMemLength))
+ 		 && (!ReadMID(lpStream, dwMemLength))
+ 		 && (!ReadPAT(lpStream, dwMemLength))
++#endif
+ 		 && (!ReadSTM(lpStream, dwMemLength))
+ 		 && (!ReadMed(lpStream, dwMemLength))
+ 		 && (!ReadMTM(lpStream, dwMemLength))
+@@ -753,6 +759,7 @@ void CSoundFile::LoopPattern(int nPat, i
+ }
+ 
+ 
++#ifndef MODPLUG_NO_FILESAVE
+ UINT CSoundFile::GetBestSaveFormat() const
+ //----------------------------------------
+ {
+@@ -767,7 +774,6 @@ UINT CSoundFile::GetBestSaveFormat() con
+ 	return MOD_TYPE_IT;
+ }
+ 
+-
+ UINT CSoundFile::GetSaveFormats() const
+ //-------------------------------------
+ {
+@@ -786,6 +792,7 @@ UINT CSoundFile::GetSaveFormats() const
+ 	}
+ 	return n;
+ }
++#endif // MODPLUG_NO_FILESAVE
+ 
+ 
+ UINT CSoundFile::GetSampleName(UINT nSample,LPSTR s) const
+@@ -817,6 +824,8 @@ UINT CSoundFile::GetInstrumentName(UINT 
+ }
+ 
+ 
++#ifndef MODPLUG_NO_FILESAVE
++
+ #ifndef NO_PACKING
+ UINT CSoundFile::PackSample(int &sample, int next)
+ //------------------------------------------------
+@@ -877,8 +886,6 @@ BOOL CSoundFile::CanPackSample(LPSTR pSa
+ }
+ #endif // NO_PACKING
+ 
+-#ifndef MODPLUG_NO_FILESAVE
+-
+ UINT CSoundFile::WriteSample(FILE *f, MODINSTRUMENT *pins, UINT nFlags, UINT nMaxLen)
+ //-----------------------------------------------------------------------------------
+ {
+diff -up libmodplug-0.8.9.0/src/sndmix.cpp~ libmodplug-0.8.9.0/src/sndmix.cpp
+--- libmodplug-0.8.9.0/src/sndmix.cpp~
++++ libmodplug-0.8.9.0/src/sndmix.cpp
+@@ -60,7 +60,7 @@ UINT gnReverbSend;
+ 
+ // Log tables for pre-amp
+ // We don't want the tracker to get too loud
+-const UINT PreAmpTable[16] =
++static const UINT PreAmpTable[16] =
+ {
+ 	0x60, 0x60, 0x60, 0x70,	// 0-7
+ 	0x80, 0x88, 0x90, 0x98,	// 8-15
+@@ -68,7 +68,7 @@ const UINT PreAmpTable[16] =
+ 	0xB4, 0xB8, 0xBC, 0xC0,	// 24-31
+ };
+ 
+-const UINT PreAmpAGCTable[16] =
++static const UINT PreAmpAGCTable[16] =
+ {
+ 	0x60, 0x60, 0x60, 0x60,
+ 	0x68, 0x70, 0x78, 0x80,

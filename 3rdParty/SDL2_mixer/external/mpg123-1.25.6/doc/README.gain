@@ -1,0 +1,171 @@
+Thomas Orgis on RVA, Gain and Pain
+
+
+Ok, so I'm going to add RVA/ReplayGain support... the problem there is not to read these valus from ID3 or Lame, not even to do the adjustment itself.
+The problem is more to figure out how to interpret the dB values one gets there.
+
+Main players in the field of relative volume adjustment / soft gain (without modifying actual audio data):
+
+http://www1.cs.columbia.edu/~cvaill/normalize/
+	...writing RVA2 ID3v2tags for dB offset to user target amplitude, default being -12dB(FS)
+http://www.replaygain.org/
+	...store the difference to reference of 83dB(SPL) ... somewhere
+
+Both calculate some running RMS and do statistics with this - the main difference is the potentially different target level.
+Also both know two basic types of adjustment: Per track to make all tracks sound at the same sevel (track / radio) and the one with default meaning to keep the loudness relations over albums (batch / audiophile).
+
+dB can mean many things and also the raw value of a PCM sample doesn't equal directly to loudness (power of a wave != amplitude).
+
+So that says the ReplayGain about applying the adjustment:
+
+	scale=10.^(replay_gain/20);
+
+luckily, this is the same that I worked out on my own for the normalize RVA values in my mixplayer script:
+
+	return 10**($s/20);
+
+I'll take that interpretaion of dB -> linear scale factor for samples for granted, then.
+
+The replay_gain value is meant in the standard to represent the offset to 83dB(SPL - depending on your amplifier...), having in mind that actual most wanted average playback level should be 83dB(SPL) (defined by movie ppl as the loudness of a -20dB(FS) signal, leaving room for louder stuff).
+But then there is the proposal to add 6dB preamp for pop music - am I judging music types with mpg123??
+These 6dB are in fact the real world since lots of programs use 89dB(SPL...) as reference.
+Thus, lame since 3.95.1 (according to MADplay's Rob Leslie who discussed with Lame ppl, verified in 3.96 source) stores the adjustment to 89dB.
+To make that all sound the same, one should add 6bB to lame <3.95.1 ReplayGain values and use later ones verbatim - achieving 89dB everytime, whatever that may mean in reality out of my speakers (my Marantz' volume knob doesn't have a scale at all - be it dB or percent;-).
+
+A funny aspect of this 6dB issue is to tell lame 3.95.1 from lame 3.95 
+
+As for normalize... the desired playback level is essentially undefined. Ignoring that and realizing that mpg123 has no way to determine real world sound power anyway, one has to just take the provided dB values and apply with the formula above.
+The user is responsible for providing files with his desired settings... for that reason I also won't follow the ReplayGain demand/suggestion that a player should apply an average of gains of previous tracks if the current one lacks a setting.
+
+So, well. Considering that ReplayGain (at least the radio one) being stored by current lame on encoding, I suppose that if there are RVA2 values in ID3v2 tags, these were added by a conscious user act and are overriding the ReplayGain ones.
+
+I already read ReplayGain entries in Lame tag... should add ID3v2 parsing. Especially since the lame tag is ambignous because of the 6dB issue... I cannot distinguish 3.95.1 from 3.95 by reading the tag - frick!
+But wait... 6dB?
+
+[thomas@thorvas /home/thomas-data/mpg123-neu/lame-3.96.1]$ frontend/lame --cbr -T /mnt/knecht_mp3/music/covenant/2006_skyshaper/03-happy_man.mp3 ../testfiles/happy_man_lame-3.96.1.mp3
+ID3v2 found. Be aware that the ID3 tag is currently lost when transcoding.
+LAME version 3.96.1 (http://lame.sourceforge.net/)
+Using polyphase lowpass filter, transition band: 17249 Hz - 17782 Hz
+Encoding /mnt/knecht_mp3/music/covenant/2006_skyshaper/03-happy_man.mp3
+      to ../testfiles/happy_man_lame-3.96.1.mp3
+Encoding as 44.1 kHz 128 kbps j-stereo MPEG-1 Layer III (11x) qval=3
+    Frame          |  CPU time/estim | REAL time/estim | play/CPU |    ETA 
+  6371/6374  (100%)|    1:41/    1:41|    1:47/    1:47|   1.6353x|    0:00 
+average: 128.0 kbps   LR: 754 (11.83%)   MS: 5620 (88.17%)
+
+Writing LAME Tag...done
+ReplayGain: -7.4dB
+revmethod = 1
+encoder padding: 1728
+
+[thomas@thorvas /home/thomas-data/mpg123-neu/lame-3.95.1]$ frontend/lame --cbr -T /mnt/knecht_mp3/music/covenant/2006_skyshaper/03-happy_man.mp3 ../testfiles/happy_man.mp3
+ID3v2 found. Be aware that the ID3 tag is currently lost when transcoding.
+LAME version 3.95  (http://www.mp3dev.org/)
+Using polyphase lowpass  filter, transition band: 17249 Hz - 17782 Hz
+Encoding /mnt/knecht_mp3/music/covenant/2006_skyshaper/03-happy_man.mp3
+      to ../testfiles/happy_man.mp3
+Encoding as 44.1 kHz 128 kbps j-stereo MPEG-1 Layer III (11x) qval=3
+    Frame          |  CPU time/estim | REAL time/estim | play/CPU |    ETA 
+  6371/6374  (100%)|    1:36/    1:36|    1:48/    1:48|   1.7289x|    0:00 
+average: 128.0 kbps   LR: 759 (11.91%)   MS: 5615 (88.09%)
+
+Writing LAME Tag...done
+ReplayGain: -7.4dB
+
+[thomas@thorvas /home/thomas-data/mpg123-neu/lame-3.95]$ frontend/lame --cbr -T /mnt/knecht_mp3/music/covenant/2006_skyshaper/03-happy_man.mp3 ../testfiles/happy_man_lame-3.95.mp3
+ID3v2 found. Be aware that the ID3 tag is currently lost when transcoding.
+LAME version 3.95  (http://www.mp3dev.org/)
+Using polyphase lowpass  filter, transition band: 17249 Hz - 17782 Hz
+Encoding /mnt/knecht_mp3/music/covenant/2006_skyshaper/03-happy_man.mp3
+      to ../testfiles/happy_man_lame-3.95.mp3
+Encoding as 44.1 kHz 128 kbps j-stereo MPEG-1 Layer III (11x) qval=3
+    Frame          |  CPU time/estim | REAL time/estim | play/CPU |    ETA 
+  6371/6374  (100%)|    1:37/    1:37|    1:43/    1:43|   1.7041x|    0:00 
+average: 128.0 kbps   LR: 759 (11.91%)   MS: 5615 (88.09%)
+
+Writing LAME Tag...done
+ReplayGain: -13.4dB
+
+
+Together with the gain values read from tags: 
+
+3.96.1:	-1.0dB	(claimed -7.4dB)
+3.95:	-1.0dB	(claimed -7.4dB)
+3.95:	-0.6dB	(claimed -13.4dB)
+
+So, the difference of 6dB shows in the values lame prints on the command line... but the lame tags only have 0.4dB difference and are much lower anyway - do I parse them correctly?
+
+Opinion of normalize of these files: -2dB. Great. I guess the -1 is what lame really meant, then... 
+
+
+Storage places
+==============
+
+Points 1, 2 and 4 implemented to some respect.
+
+
+1. Lame/Info tag
+
+supposedly in format according to the proposed standard - but I yet have to verify if Lame really does this.
+see http://gabriel.mp3-tech.org/mp3infotag.html
+
+
+2. ID3v2 RVA2 frame(s)
+
+Normalize does that. Rare is the software reading that.
+I've never seen those frames since id3v2 -l doesn't know them.
+
+
+3. APE tags
+
+Gah, another Tag format. Foobar2000 uses this as default.
+It's getting real-hy messy folks
+
+
+4. Per convention in ID3 tags
+
+Well, I myself once used the ID3v1 comment field for storing the mix rva value (textual) ... but that is a tad too unspecific.
+I then also used user-defined ID3v2 comments like that:
+
+[thomas@thorvas /home/thomas-data/mpg123-neu/svn/trunk]$ id3v2 -l /mnt/knecht_mp3/music/underworld/second_toughest_in_the_infants/02-banstyle_sappys_curry.mp3 
+id3v1 tag info for /mnt/knecht_mp3/music/underworld/second_toughest_in_the_infants/02-banstyle_sappys_curry.mp3:
+Title  : banstyle  sappys curry          Artist: underworld                    
+Album  : second toughest in the infants  Year: 0   , Genre: Other (12)
+Comment: Created by Grip                 Track: 2
+id3v2 tag info for /mnt/knecht_mp3/music/underworld/second_toughest_in_the_infants/02-banstyle_sappys_curry.mp3:
+TYER (Year): 0
+TRCK (Track number/Position in set): 2
+COMM (Comments): (ID3v1 Comment)[XXX]: Created by Grip
+TCON (Content type): Other (12)
+TPE1 (Lead performer(s)/Soloist(s)): underworld
+TALB (Album/Movie/Show title): second toughest in the infants
+TIT2 (Title/songname/content description): banstyle  sappys curry
+COMM (Comments): (RVA)[]: 4.3291
+COMM (Comments): (RVA_ALBUM)[]: 3.666101
+
+That still doesn't look like a bad Idea to me. Not bothering with byte ordering and whatnot. Just atof(id3v2_comm_rva).
+One could still add dB, though.
+
+Another convention is (rockbox mailinglist, not checked myself) used by Foobar:
+
+TXXX (User defined text information): (replaygain_track_gain): -7.17 dB 
+TXXX (User defined text information): (replaygain_track_peak): 1.057122 
+TXXX (User defined text information): (replaygain_album_gain): -6.53 dB 
+TXXX (User defined text information): (replaygain_album_peak): 1.107456
+
+So what are custom comment fields for when there are also custom text fields? They look very similar to me.
+
+
+5. Leave the haunted music file alone and store metadata externally.
+
+That's the only sane way for stuff like album art... and it's the way I do it in my music archive. the wrapper script reads the adjustment values and then sets an adjusted volume.
+That's fine for my mixing daemon that manupulates the pcm data anyway, but it would be nice to have this functionality in the minimalist console mode. too.
+Even more since it can be done without additional cpu power during decoding (well, one-time set up of the decode tables is needed for every track) similar to the equalizer.
+I could simply start with text files with lines like
+
+RVA_MIX: 3.4dB
+RVA_ALBUM: 1.7dB
+
+Prob here is that the effort to open and parse that extra file may hinder gapless decoding between tracks...
+Well, one could parse all metadata files for a list of tracks before playback starts.
+But all this won't work for streams via stdin (hm, one could argue if the stream needs RVA at all).

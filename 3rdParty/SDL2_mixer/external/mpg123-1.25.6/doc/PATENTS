@@ -1,0 +1,39 @@
+Some notes about patents and mpg123 by Thomas Orgis
+---------------------------------------------------
+
+There has been a lot of confusion over mp3 (or more generic mpeg audio) patents and licensing issues due to the patents held by Fraunhofer and marketed by Thomson.
+So, yes, there are patents held by Fraunhofer that are claimed to cover mpeg audio technology. There are also claims that they cover any similar technology (like OGG).
+You may argue if these patents are valid at all (being illegal software patents, or being preceeded by known scientific publications), but they are internationally accepted by patent authorities and if you want to use mp3 commercially you should check
+
+	http://www.mp3licensing.org
+
+for the Fraunhofer/Thomson opinion and their terms.
+
+Since mpg123 is only a mpeg audio player, a good deal of patents that describe the encoding process (the tricky part) will not apply.
+Also, statements from the patent holders up to now always allowed the non-commercial distribution of mpeg audio decoders without any fee.
+They want you to pay for a license when you want to make money by selling a decoder, though. We don't sell mpg123.
+Additionally, one should not forget the fact that the ideas are getting old; the basic (funded by government, btw.) research was somewhen back around the 80s and many patents are going to expire soon, best example in Germany:
+
+P/DE 35 06 912 Method of transmission of an audio signal using grouping of amplitude values
+
+Application was 22.02.1986 in Germany (and around Europe in the same time Jan/Feb 1986).
+German patents last 20 years... now we have 24.07.2006. Time has come...
+
+The idea of a patent is to make the inventor open the invention to the public by giving him some safe time to turn this invention into economical benefit.
+People using (and improving!) the technology freely after that time is _the_ most important aspect of that idea.
+
+Oh, I should mention the "core" mp3 patent (from http://gauss.ffii.org/PatentView/EP287578):
+
+DE 3629434 / EP287578 Digital coding process
+
+Application date in Germany was 29.08.1986 - that means that in a month from now (remember: 24.07.2006) this patent finds its natural end.
+
+Then, there are other patents listed on the Fraunhofer/Thomson website that came very late... The one about join stereo coding was aplied for in Feb 1995. Did mpg123 implement that already back then? History is a bit blurry there...
+There is a patent applied for in 1997, but probably covering encoding only. Still, even if that weren't the case - the basic decoding functionality of mpg123 didn't change that much after 1997; and they couldn't have patented existing functionality.
+In general, few patents seem to cover decoders at all. Of course, with me being no lawyer, that statement is not trustworthy...
+
+Bottom line is:
+
+While Fraunhofer/Thomson don't want to charge free software players - they said that a long time ago, the time for they being able to place such charges is expiring or has already expired. One should really think before adding mp3pro/surround support to mpg123, though, since there are for sure more recent patents for that.
+
+And don't forget: The progress bar is covered by a patent, too.

@@ -1,0 +1,56 @@
+************************************************************************
+* 3DNow! support by KIMURA Takuhiro   <kim@hannah.ipc.miyakyo-u.ac.jp> *
+*                                     <kim@comtec.co.jp>               *
+*                             (http://hannah.ipc.miyakyo-u.ac.jp/kim/) *
+*                   Syuuhei Kashiyama <squash@mb.kcom.ne.jp>           *
+*                             (http://user.ecc.u-tokyo.ac.jp/~g810370/)*
+************************************************************************
+
+-----------------------------
+What's new in patch for 0.59r
+-----------------------------
+- 3DNow! optimized decode routine (decode_3dnow.s,dct36_3dnow.s ;
+  these code based Syuuhei Kashiyama's 3DNow! patch for mpg123-0.59o)
+- 3DNow! optimized equalizer (equalizer_3dnow.s ; do_equalizer() only)
+- target "linux-3dnow-alsa" "linux-3dnow-esd" added (untested)
+- automatic detect 3DNow! support CPU from CPUFLAGS (getcpuflags.s)
+  (i.e. use floating-pointer decode routine if your CPU isn't support
+   3DNow! or MMX instructions)
+
+-------------
+Added options
+-------------
+"--test-3dnow"  : display result of autodetect and exit
+"--force-3dnow" : force use of 3DNow! optimized decoder
+ (it will cause SIGILL if your CPU isn't support 3DNow! or MMX
+  instructions)
+"--no-3dnow"    : force use of floating-pointer decoder
+
+-----------
+How to make
+-----------
+[1] To make 3DNow! optimized mpg123,you need binutils-2.9.1.0.15 or later.
+ You can find the most recent binutils (2.9.1.0.25 until 23.Jun.1999) at
+  - kernel.org (and mirrors) : /pub/linux/devel/gcc/
+  - http://hannah.ipc.miyakyo-u.ac.jp/kim/Linux/binutils/
+    (Takuhiro's local copy)
+ etc.
+[2] Type "make linux-3dnow" (OSS)
+      or "make linux-3dnow-alsa" (ALSA).
+[3] Enjoy!
+
+------------------
+Precompiled binary
+------------------
+You can get precompiled binary of mpg123 (with 3DNow! support) from
+ http://hannah.ipc.miyakyo-u.ac.jp/kim/Linux/mpg123/
+
+----------
+References
+----------
+Useful sources of information on optimizing 3DNow! code include:
+- AMD 3DNow! Technology Manual (Publication #21928)
+     English:  http://www.amd.com/K6/k6docs/pdf/21928d.pdf
+    (Japanese: http://www.amd.com/japan/K6/k6docs/j21928c.pdf)
+- AMD-K6-2 Processor Code Optimization Application Note (Publication #21924)
+     English:	http://www.amd.com/K6/k6docs/pdf/21924b.pdf

@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="apply_sine_window_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="autocorrelation_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="burg_modified_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bwexpander_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="corrMatrix_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="encode_frame_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="energy_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="find_LPC_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="find_LTP_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="find_pitch_lags_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="find_pred_coefs_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="inner_product_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="k2a_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="levinsondurbin_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LPC_analysis_filter_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LPC_inv_pred_gain_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LTP_analysis_filter_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LTP_scale_ctrl_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="noise_shape_analysis_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pitch_analysis_core_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="prefilter_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="process_gains_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="regularize_correlations_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="residual_energy_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="scale_copy_vector_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="scale_vector_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="schur_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="solve_LS_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sort_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="warped_autocorrelation_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="wrappers_FLP.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\win32\config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="main_FLP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SigProc_FLP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="structs_FLP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\opus_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

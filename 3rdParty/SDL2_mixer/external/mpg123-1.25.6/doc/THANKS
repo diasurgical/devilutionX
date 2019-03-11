@@ -1,0 +1,13 @@
+There are authors who write code and there are people who point us to what code to write, show us our errors and generally are trying hard to compensate the time the developers spent coding and not actually using the software.
+These people are very valuable, indeed - let's thank our
+
+Testers (alphapetical):
+
+- Gabor Z. Papp
+- "Gates Fan"
+- JonY
+- Serge Simon and the R.O.M. 106.5 FM Team (http://www.rom.lu/)
+   who motivated the --loop and --timeout modes and furthermore supported the maintainer with a donation on sf.net and a real bottle of wine from Luxembourg!
+- Willy Tarreau
+
+Heck, let's thank all of you who contributed bug reports, suggestions... those who took mpg123 source and compiled it on uncommon platforms.

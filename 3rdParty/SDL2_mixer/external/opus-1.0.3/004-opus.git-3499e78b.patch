@@ -1,0 +1,169 @@
+From: Koen Vos <koenvos74@gmail.com>
+Date: Mon, 10 Aug 2015 16:22:25 +0000 (-0400)
+Subject: Fix for flutter with FEC
+X-Git-Url: http://git.xiph.org/?p=opus.git;a=commitdiff_plain;h=3499e78bd5a93edcef80f6cbd88e7fc1e1666d9b
+
+Fix for flutter with FEC
+
+The bug was caused by an improper feedback of the per-frame bitrate, causing
+the bitrate to jump up and down from frame to frame, within a packet.
+The patch avoids this, and also gives a slight improvement in general for
+multi-frame packets, even without FEC.
+
+Signed-off-by: Jean-Marc Valin <jmvalin@jmvalin.ca>
+---
+
+diff --git a/silk/control_SNR.c b/silk/control_SNR.c
+index f04e69f..cee87eb 100644
+--- a/silk/control_SNR.c
++++ b/silk/control_SNR.c
+@@ -66,16 +66,11 @@ opus_int silk_control_SNR(
+             if( TargetRate_bps <= rateTable[ k ] ) {
+                 frac_Q6 = silk_DIV32( silk_LSHIFT( TargetRate_bps - rateTable[ k - 1 ], 6 ),
+                                                  rateTable[ k ] - rateTable[ k - 1 ] );
+                 psEncC->SNR_dB_Q7 = silk_LSHIFT( silk_SNR_table_Q1[ k - 1 ], 6 ) + silk_MUL( frac_Q6, silk_SNR_table_Q1[ k ] - silk_SNR_table_Q1[ k - 1 ] );
+                 break;
+             }
+         }
+-
+-        /* Reduce coding quality whenever LBRR is enabled, to free up some bits */
+-        if( psEncC->LBRR_enabled ) {
+-            psEncC->SNR_dB_Q7 = silk_SMLABB( psEncC->SNR_dB_Q7, 12 - psEncC->LBRR_GainIncreases, SILK_FIX_CONST( -0.25, 7 ) );
+-        }
+     }
+ 
+     return ret;
+ }
+diff --git a/silk/control_codec.c b/silk/control_codec.c
+index 1f674bd..044eea3 100644
+--- a/silk/control_codec.c
++++ b/silk/control_codec.c
+@@ -393,30 +393,36 @@ static opus_int silk_setup_complexity(
+ }
+ 
+ static inline opus_int silk_setup_LBRR(
+     silk_encoder_state          *psEncC,            /* I/O                      */
+     const opus_int32            TargetRate_bps      /* I                        */
+ )
+ {
+-    opus_int   ret = SILK_NO_ERROR;
++    opus_int   LBRR_in_previous_packet, ret = SILK_NO_ERROR;
+     opus_int32 LBRR_rate_thres_bps;
+ 
++    LBRR_in_previous_packet = psEncC->LBRR_enabled;
+     psEncC->LBRR_enabled = 0;
+     if( psEncC->useInBandFEC && psEncC->PacketLoss_perc > 0 ) {
+         if( psEncC->fs_kHz == 8 ) {
+             LBRR_rate_thres_bps = LBRR_NB_MIN_RATE_BPS;
+         } else if( psEncC->fs_kHz == 12 ) {
+             LBRR_rate_thres_bps = LBRR_MB_MIN_RATE_BPS;
+         } else {
+             LBRR_rate_thres_bps = LBRR_WB_MIN_RATE_BPS;
+         }
+         LBRR_rate_thres_bps = silk_SMULWB( silk_MUL( LBRR_rate_thres_bps, 125 - silk_min( psEncC->PacketLoss_perc, 25 ) ), SILK_FIX_CONST( 0.01, 16 ) );
+ 
+         if( TargetRate_bps > LBRR_rate_thres_bps ) {
+             /* Set gain increase for coding LBRR excitation */
++            if( LBRR_in_previous_packet == 0 ) {
++                /* Previous packet did not have LBRR, and was therefore coded at a higher bitrate */
++                psEncC->LBRR_GainIncreases = 7;
++            } else {
++                psEncC->LBRR_GainIncreases = silk_max_int( 7 - silk_SMULWB( (opus_int32)psEncC->PacketLoss_perc, SILK_FIX_CONST( 0.4, 16 ) ), 2 );
++            }
+             psEncC->LBRR_enabled = 1;
+-            psEncC->LBRR_GainIncreases = silk_max_int( 7 - silk_SMULWB( (opus_int32)psEncC->PacketLoss_perc, SILK_FIX_CONST( 0.4, 16 ) ), 2 );
+         }
+     }
+ 
+     return ret;
+ }
+diff --git a/silk/enc_API.c b/silk/enc_API.c
+index f1993ad..f806028 100644
+--- a/silk/enc_API.c
++++ b/silk/enc_API.c
+@@ -372,34 +372,41 @@ opus_int silk_Encode(                                   /* O    Returns error co
+                     }
+                 }
+ 
+                 /* Reset LBRR flags */
+                 for( n = 0; n < encControl->nChannelsInternal; n++ ) {
+                     silk_memset( psEnc->state_Fxx[ n ].sCmn.LBRR_flags, 0, sizeof( psEnc->state_Fxx[ n ].sCmn.LBRR_flags ) );
+                 }
++
++                psEnc->nBitsUsedLBRR = ec_tell( psRangeEnc );
+             }
+ 
+             silk_HP_variable_cutoff( psEnc->state_Fxx );
+ 
+             /* Total target bits for packet */
+             nBits = silk_DIV32_16( silk_MUL( encControl->bitRate, encControl->payloadSize_ms ), 1000 );
+-            /* Subtract half of the bits already used */
++            /* Subtract bits used for LBRR */
+             if( !prefillFlag ) {
+-                nBits -= ec_tell( psRangeEnc ) >> 1;
++                nBits -= psEnc->nBitsUsedLBRR;
+             }
+             /* Divide by number of uncoded frames left in packet */
+-            nBits = silk_DIV32_16( nBits, psEnc->state_Fxx[ 0 ].sCmn.nFramesPerPacket - psEnc->state_Fxx[ 0 ].sCmn.nFramesEncoded );
++            nBits = silk_DIV32_16( nBits, psEnc->state_Fxx[ 0 ].sCmn.nFramesPerPacket );
+             /* Convert to bits/second */
+             if( encControl->payloadSize_ms == 10 ) {
+                 TargetRate_bps = silk_SMULBB( nBits, 100 );
+             } else {
+                 TargetRate_bps = silk_SMULBB( nBits, 50 );
+             }
+-            /* Subtract fraction of bits in excess of target in previous packets */
++            /* Subtract fraction of bits in excess of target in previous frames and packets */
+             TargetRate_bps -= silk_DIV32_16( silk_MUL( psEnc->nBitsExceeded, 1000 ), BITRESERVOIR_DECAY_TIME_MS );
++            if( !prefillFlag && psEnc->state_Fxx[ 0 ].sCmn.nFramesEncoded > 0 ) {
++                /* Compare actual vs target bits so far in this packet */
++                opus_int32 bitsBalance = ec_tell( psRangeEnc ) - psEnc->nBitsUsedLBRR - nBits * psEnc->state_Fxx[ 0 ].sCmn.nFramesEncoded;
++                TargetRate_bps -= silk_DIV32_16( silk_MUL( bitsBalance, 1000 ), BITRESERVOIR_DECAY_TIME_MS );
++            }
+             /* Never exceed input bitrate */
+             TargetRate_bps = silk_LIMIT( TargetRate_bps, encControl->bitRate, 5000 );
+ 
+             /* Convert Left/Right to Mid/Side */
+             if( encControl->nChannelsInternal == 2 ) {
+                 silk_stereo_LR_to_MS( &psEnc->sStereo, &psEnc->state_Fxx[ 0 ].sCmn.inputBuf[ 2 ], &psEnc->state_Fxx[ 1 ].sCmn.inputBuf[ 2 ],
+                     psEnc->sStereo.predIx[ psEnc->state_Fxx[ 0 ].sCmn.nFramesEncoded ], &psEnc->sStereo.mid_only_flags[ psEnc->state_Fxx[ 0 ].sCmn.nFramesEncoded ],
+diff --git a/silk/fixed/structs_FIX.h b/silk/fixed/structs_FIX.h
+index 244b479..3294b25 100644
+--- a/silk/fixed/structs_FIX.h
++++ b/silk/fixed/structs_FIX.h
+@@ -112,14 +112,15 @@ typedef struct {
+ 
+ /************************/
+ /* Encoder Super Struct */
+ /************************/
+ typedef struct {
+     silk_encoder_state_FIX      state_Fxx[ ENCODER_NUM_CHANNELS ];
+     stereo_enc_state            sStereo;
++    opus_int32                  nBitsUsedLBRR;
+     opus_int32                  nBitsExceeded;
+     opus_int                    nChannelsAPI;
+     opus_int                    nChannelsInternal;
+     opus_int                    nPrevChannelsInternal;
+     opus_int                    timeSinceSwitchAllowed_ms;
+     opus_int                    allowBandwidthSwitch;
+     opus_int                    prev_decode_only_middle;
+diff --git a/silk/float/structs_FLP.h b/silk/float/structs_FLP.h
+index bb529e7..14d647c 100644
+--- a/silk/float/structs_FLP.h
++++ b/silk/float/structs_FLP.h
+@@ -111,14 +111,15 @@ typedef struct {
+ 
+ /************************/
+ /* Encoder Super Struct */
+ /************************/
+ typedef struct {
+     silk_encoder_state_FLP      state_Fxx[ ENCODER_NUM_CHANNELS ];
+     stereo_enc_state            sStereo;
++    opus_int32                  nBitsUsedLBRR;
+     opus_int32                  nBitsExceeded;
+     opus_int                    nChannelsAPI;
+     opus_int                    nChannelsInternal;
+     opus_int                    nPrevChannelsInternal;
+     opus_int                    timeSinceSwitchAllowed_ms;
+     opus_int                    allowBandwidthSwitch;
+     opus_int                    prev_decode_only_middle;

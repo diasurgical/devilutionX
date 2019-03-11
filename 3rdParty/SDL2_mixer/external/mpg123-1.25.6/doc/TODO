@@ -1,0 +1,8 @@
+From Michael (some time after/around pre-0.59s):
+
+- add CRC check.
+- optimize layer2.c:
+   step_two: fraction as pointer .. 
+   process first channel 0 than channel 1
+   copy channel 0 to channel 1 for: i >= jsbound
+- MPEG system stream decoder

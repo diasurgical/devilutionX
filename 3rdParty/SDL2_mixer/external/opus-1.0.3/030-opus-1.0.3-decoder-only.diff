@@ -1,0 +1,716 @@
+diff -urNp opus-1.0.3/celt/bands.c opus-1.0.3-dec/celt/bands.c
+--- opus-1.0.3/celt/bands.c	2013-07-11 07:16:52.000000000 +0300
++++ opus-1.0.3-dec/celt/bands.c	2017-03-03 08:10:00.000000000 +0300
+@@ -295,6 +295,7 @@ void anti_collapse(const CELTMode *m, ce
+    }
+ }
+ 
++#ifdef OPUS_ENABLE_ENCODER
+ static void intensity_stereo(const CELTMode *m, celt_norm *X, celt_norm *Y, const celt_ener *bandE, int bandID, int N)
+ {
+    int i = bandID;
+@@ -332,6 +333,7 @@ static void stereo_split(celt_norm *X, c
+       Y[j] = r-l;
+    }
+ }
++#endif /* OPUS_ENABLE_ENCODER */
+ 
+ static void stereo_merge(celt_norm *X, celt_norm *Y, opus_val16 mid, int N)
+ {
+@@ -675,11 +677,14 @@ static unsigned quant_band(int encode, c
+          int sign=0;
+          if (*remaining_bits>=1<<BITRES)
+          {
++            #ifdef OPUS_ENABLE_ENCODER
+             if (encode)
+             {
+                sign = x[0]<0;
+                ec_enc_bits(ec, sign, 1);
+-            } else {
++            } else
++            #endif
++            {
+                sign = ec_dec_bits(ec, 1);
+             }
+             *remaining_bits -= 1<<BITRES;
+@@ -714,8 +719,10 @@ static unsigned quant_band(int encode, c
+          static const unsigned char bit_interleave_table[16]={
+            0,1,1,1,2,3,3,3,2,3,3,3,2,3,3,3
+          };
++         #ifdef OPUS_ENABLE_ENCODER
+          if (encode)
+             haar1(X, N>>k, 1<<k);
++         #endif
+          if (lowband)
+             haar1(lowband, N>>k, 1<<k);
+          fill = bit_interleave_table[fill&0xF]|bit_interleave_table[fill>>4]<<2;
+@@ -726,8 +733,10 @@ static unsigned quant_band(int encode, c
+       /* Increasing the time resolution */
+       while ((N_B&1) == 0 && tf_change<0)
+       {
++         #ifdef OPUS_ENABLE_ENCODER
+          if (encode)
+             haar1(X, N_B, B);
++         #endif
+          if (lowband)
+             haar1(lowband, N_B, B);
+          fill |= fill<<B;
+@@ -742,8 +751,10 @@ static unsigned quant_band(int encode, c
+       /* Reorganize the samples in time order instead of frequency order */
+       if (B0>1)
+       {
++         #ifdef OPUS_ENABLE_ENCODER
+          if (encode)
+             deinterleave_hadamard(X, N_B>>recombine, B0<<recombine, longBlocks);
++         #endif
+          if (lowband)
+             deinterleave_hadamard(lowband, N_B>>recombine, B0<<recombine, longBlocks);
+       }
+@@ -779,6 +790,7 @@ static unsigned quant_band(int encode, c
+       qn = compute_qn(N, b, offset, pulse_cap, stereo);
+       if (stereo && i>=intensity)
+          qn = 1;
++      #ifdef OPUS_ENABLE_ENCODER
+       if (encode)
+       {
+          /* theta is the atan() of the ratio between the (normalized)
+@@ -787,11 +799,14 @@ static unsigned quant_band(int encode, c
+             2) they are orthogonal. */
+          itheta = stereo_itheta(X, Y, stereo, N);
+       }
++      #endif
+       tell = ec_tell_frac(ec);
+       if (qn!=1)
+       {
++         #ifdef OPUS_ENABLE_ENCODER
+          if (encode)
+             itheta = (itheta*qn+8192)>>14;
++         #endif
+ 
+          /* Entropy coding of the angle. We use a uniform pdf for the
+             time split, a step for stereo, and a triangular one for the rest. */
+@@ -802,10 +817,13 @@ static unsigned quant_band(int encode, c
+             int x0 = qn/2;
+             int ft = p0*(x0+1) + x0;
+             /* Use a probability of p0 up to itheta=8192 and then use 1 after */
++            #ifdef OPUS_ENABLE_ENCODER
+             if (encode)
+             {
+                ec_encode(ec,x<=x0?p0*x:(x-1-x0)+(x0+1)*p0,x<=x0?p0*(x+1):(x-x0)+(x0+1)*p0,ft);
+-            } else {
++            } else
++            #endif
++            {
+                int fs;
+                fs=ec_decode(ec,ft);
+                if (fs<(x0+1)*p0)
+@@ -817,13 +835,16 @@ static unsigned quant_band(int encode, c
+             }
+          } else if (B0>1 || stereo) {
+             /* Uniform pdf */
++            #ifdef OPUS_ENABLE_ENCODER
+             if (encode)
+                ec_enc_uint(ec, itheta, qn+1);
+             else
++            #endif
+                itheta = ec_dec_uint(ec, qn+1);
+          } else {
+             int fs=1, ft;
+             ft = ((qn>>1)+1)*((qn>>1)+1);
++            #ifdef OPUS_ENABLE_ENCODER
+             if (encode)
+             {
+                int fl;
+@@ -833,7 +854,9 @@ static unsigned quant_band(int encode, c
+                 ft - ((qn + 1 - itheta)*(qn + 2 - itheta)>>1);
+ 
+                ec_encode(ec, fl, fl+fs, ft);
+-            } else {
++            } else
++            #endif
++            {
+                /* Triangular pdf */
+                int fl=0;
+                int fm;
+@@ -857,6 +880,7 @@ static unsigned quant_band(int encode, c
+             }
+          }
+          itheta = (opus_int32)itheta*16384/qn;
++         #ifdef OPUS_ENABLE_ENCODER
+          if (encode && stereo)
+          {
+             if (itheta==0)
+@@ -864,9 +888,11 @@ static unsigned quant_band(int encode, c
+             else
+                stereo_split(X, Y, N);
+          }
++         #endif
+          /* NOTE: Renormalising X and Y *may* help fixed-point a bit at very high rate.
+                   Let's do that at higher complexity */
+       } else if (stereo) {
++         #ifdef OPUS_ENABLE_ENCODER
+          if (encode)
+          {
+             inv = itheta > 8192;
+@@ -878,11 +904,14 @@ static unsigned quant_band(int encode, c
+             }
+             intensity_stereo(m, X, Y, bandE, i, N);
+          }
++         #endif
+          if (b>2<<BITRES && *remaining_bits > 2<<BITRES)
+          {
++            #ifdef OPUS_ENABLE_ENCODER
+             if (encode)
+                ec_enc_bit_logp(ec, inv, 2);
+             else
++            #endif
+                inv = ec_dec_bit_logp(ec, 2);
+          } else
+             inv = 0;
+@@ -941,12 +970,15 @@ static unsigned quant_band(int encode, c
+          y2 = c ? X : Y;
+          if (sbits)
+          {
++            #ifdef OPUS_ENABLE_ENCODER
+             if (encode)
+             {
+                /* Here we only need to encode a sign for the side */
+                sign = x2[0]*y2[1] - x2[1]*y2[0] < 0;
+                ec_enc_bits(ec, sign, 1);
+-            } else {
++            } else
++            #endif
++            {
+                sign = ec_dec_bits(ec, 1);
+             }
+          }
+@@ -1057,6 +1089,7 @@ static unsigned quant_band(int encode, c
+          int K = get_pulses(q);
+ 
+          /* Finally do the actual quantization */
++         #ifdef OPUS_ENABLE_ENCODER
+          if (encode)
+          {
+             cm = alg_quant(X, N, K, spread, B, ec
+@@ -1064,7 +1097,9 @@ static unsigned quant_band(int encode, c
+                  , gain
+ #endif
+                  );
+-         } else {
++         } else
++         #endif
++         {
+             cm = alg_unquant(X, N, K, spread, B, ec, gain);
+          }
+       } else {
+diff -urNp opus-1.0.3/celt/celt.c opus-1.0.3-dec/celt/celt.c
+--- opus-1.0.3/celt/celt.c	2013-07-11 07:16:52.000000000 +0300
++++ opus-1.0.3-dec/celt/celt.c	2017-03-03 08:10:00.000000000 +0300
+@@ -135,6 +135,7 @@ static int resampling_factor(opus_int32 
+    return ret;
+ }
+ 
++#ifdef OPUS_ENABLE_ENCODER
+ /** Encoder state
+  @brief Encoder state
+  */
+@@ -282,6 +283,7 @@ OPUS_CUSTOM_NOSTATIC int opus_custom_enc
+ 
+    return OPUS_OK;
+ }
++#endif /* OPUS_ENABLE_ENCODER */
+ 
+ #ifdef CUSTOM_MODES
+ void opus_custom_encoder_destroy(CELTEncoder *st)
+@@ -302,6 +304,7 @@ static inline opus_val16 SIG2WORD16(celt
+ #endif
+ }
+ 
++#ifdef OPUS_ENABLE_ENCODER
+ static int transient_analysis(const opus_val32 * OPUS_RESTRICT in, int len, int C,
+                               int overlap)
+ {
+@@ -419,6 +422,7 @@ static void compute_mdcts(const CELTMode
+       } while (++c<C);
+    }
+ }
++#endif /* OPUS_ENABLE_ENCODER */
+ 
+ /** Compute the IMDCT and apply window for all sub-frames and
+     all channels in a frame */
+@@ -545,6 +549,7 @@ static const signed char tf_select_table
+       {0, -2, 0, -3,    3, 0, 1,-1},
+ };
+ 
++#ifdef OPUS_ENABLE_ENCODER
+ static opus_val32 l1_metric(const celt_norm *tmp, int N, int LM, int width)
+ {
+    int i, j;
+@@ -746,6 +751,7 @@ static void tf_encode(int start, int end
+       tf_res[i] = tf_select_table[LM][4*isTransient+2*tf_select+tf_res[i]];
+    /*printf("%d %d ", isTransient, tf_select); for(i=0;i<end;i++)printf("%d ", tf_res[i]);printf("\n");*/
+ }
++#endif /* OPUS_ENABLE_ENCODER */
+ 
+ static void tf_decode(int start, int end, int isTransient, int *tf_res, int LM, ec_dec *dec)
+ {
+@@ -797,6 +803,7 @@ static void init_caps(const CELTMode *m,
+    }
+ }
+ 
++#ifdef OPUS_ENABLE_ENCODER
+ static int alloc_trim_analysis(const CELTMode *m, const celt_norm *X,
+       const opus_val16 *bandLogE, int end, int LM, int C, int N0)
+ {
+@@ -1912,6 +1919,7 @@ bad_request:
+    va_end(ap);
+    return OPUS_UNIMPLEMENTED;
+ }
++#endif /* OPUS_ENABLE_ENCODER */
+ 
+ /**********************************************************************/
+ /*                                                                    */
+diff -urNp opus-1.0.3/celt/cwrs.c opus-1.0.3-dec/celt/cwrs.c
+--- opus-1.0.3/celt/cwrs.c	2013-07-11 07:16:52.000000000 +0300
++++ opus-1.0.3-dec/celt/cwrs.c	2017-03-03 08:10:00.000000000 +0300
+@@ -587,6 +587,7 @@ void get_required_bits(opus_int16 *_bits
+ }
+ #endif /* CUSTOM_MODES */
+ 
++#ifdef OPUS_ENABLE_ENCODER
+ void encode_pulses(const int *_y,int _n,int _k,ec_enc *_enc){
+   opus_uint32 i;
+   celt_assert(_k>0);
+@@ -620,6 +621,7 @@ void encode_pulses(const int *_y,int _n,
+   }
+ #endif
+ }
++#endif /* OPUS_ENABLE_ENCODER */
+ 
+ void decode_pulses(int *_y,int _n,int _k,ec_dec *_dec)
+ {
+diff -urNp opus-1.0.3/celt/laplace.c opus-1.0.3-dec/celt/laplace.c
+--- opus-1.0.3/celt/laplace.c	2013-03-12 19:43:58.000000000 +0200
++++ opus-1.0.3-dec/celt/laplace.c	2017-03-03 08:10:00.000000000 +0300
+@@ -48,6 +48,7 @@ static unsigned ec_laplace_get_freq1(uns
+    return ft*(opus_int32)(16384-decay)>>15;
+ }
+ 
++#ifdef OPUS_ENABLE_ENCODER
+ void ec_laplace_encode(ec_enc *enc, int *value, unsigned fs, int decay)
+ {
+    unsigned fl;
+@@ -90,6 +91,7 @@ void ec_laplace_encode(ec_enc *enc, int 
+    }
+    ec_encode_bin(enc, fl, fl+fs, 15);
+ }
++#endif /* OPUS_ENABLE_ENCODER */
+ 
+ int ec_laplace_decode(ec_dec *dec, unsigned fs, int decay)
+ {
+diff -urNp opus-1.0.3/celt/quant_bands.c opus-1.0.3-dec/celt/quant_bands.c
+--- opus-1.0.3/celt/quant_bands.c	2013-07-11 07:16:52.000000000 +0300
++++ opus-1.0.3-dec/celt/quant_bands.c	2017-03-03 08:10:00.000000000 +0300
+@@ -139,6 +139,7 @@ static const unsigned char e_prob_model[
+ 
+ static const unsigned char small_energy_icdf[3]={2,1,0};
+ 
++#ifdef OPUS_ENABLE_ENCODER
+ static opus_val32 loss_distortion(const opus_val16 *eBands, opus_val16 *oldEBands, int start, int end, int len, int C)
+ {
+    int c, i;
+@@ -418,6 +419,7 @@ void quant_energy_finalise(const CELTMod
+       }
+    }
+ }
++#endif /* OPUS_ENABLE_ENCODER */
+ 
+ void unquant_coarse_energy(const CELTMode *m, int start, int end, opus_val16 *oldEBands, int intra, ec_dec *dec, int C, int LM)
+ {
+diff -urNp opus-1.0.3/celt/rate.c opus-1.0.3-dec/celt/rate.c
+--- opus-1.0.3/celt/rate.c	2013-07-11 07:16:52.000000000 +0300
++++ opus-1.0.3-dec/celt/rate.c	2017-03-03 08:10:00.000000000 +0300
+@@ -343,6 +343,7 @@ static inline int interp_bits2pulses(con
+         This ensures that we have enough bits to code the skip flag.*/
+       if (band_bits >= IMAX(thresh[j], alloc_floor+(1<<BITRES)))
+       {
++         #ifdef OPUS_ENABLE_ENCODER
+          if (encode)
+          {
+             /*This if() block is the only part of the allocation function that
+@@ -360,7 +361,9 @@ static inline int interp_bits2pulses(con
+                break;
+             }
+             ec_enc_bit_logp(ec, 0, 1);
+-         } else if (ec_dec_bit_logp(ec, 1)) {
++         } else
++         #endif /* OPUS_ENABLE_ENCODER */
++         if (ec_dec_bit_logp(ec, 1)) {
+             break;
+          }
+          /*We used a bit to skip this band.*/
+@@ -387,12 +390,14 @@ static inline int interp_bits2pulses(con
+    /* Code the intensity and dual stereo parameters. */
+    if (intensity_rsv > 0)
+    {
++      #ifdef OPUS_ENABLE_ENCODER
+       if (encode)
+       {
+          *intensity = IMIN(*intensity, codedBands);
+          ec_enc_uint(ec, *intensity-start, codedBands+1-start);
+       }
+       else
++      #endif
+          *intensity = start+ec_dec_uint(ec, codedBands+1-start);
+    }
+    else
+@@ -404,9 +409,11 @@ static inline int interp_bits2pulses(con
+    }
+    if (dual_stereo_rsv > 0)
+    {
++      #ifdef OPUS_ENABLE_ENCODER
+       if (encode)
+          ec_enc_bit_logp(ec, *dual_stereo, 1);
+       else
++      #endif
+          *dual_stereo = ec_dec_bit_logp(ec, 1);
+    }
+    else
+diff -urNp opus-1.0.3/celt/vq.c opus-1.0.3-dec/celt/vq.c
+--- opus-1.0.3/celt/vq.c	2013-05-27 01:54:05.000000000 +0300
++++ opus-1.0.3-dec/celt/vq.c	2017-03-03 08:10:00.000000000 +0300
+@@ -151,6 +151,7 @@ static unsigned extract_collapse_mask(in
+    return collapse_mask;
+ }
+ 
++#ifdef OPUS_ENABLE_ENCODER
+ unsigned alg_quant(celt_norm *X, int N, int K, int spread, int B, ec_enc *enc
+ #ifdef RESYNTH
+    , opus_val16 gain
+@@ -316,6 +317,7 @@ unsigned alg_quant(celt_norm *X, int N, 
+    RESTORE_STACK;
+    return collapse_mask;
+ }
++#endif /* OPUS_ENABLE_ENCODER */
+ 
+ /** Decode pulse vector and combine the result with the pitch vector to produce
+     the final normalised signal in the current band. */
+diff -urNp opus-1.0.3/celt_sources.mk opus-1.0.3-dec/celt_sources.mk
+--- opus-1.0.3/celt_sources.mk	2013-07-11 07:16:52.000000000 +0300
++++ opus-1.0.3-dec/celt_sources.mk	2017-03-03 08:10:00.000000000 +0300
+@@ -3,7 +3,6 @@ celt/celt.c \
+ celt/cwrs.c \
+ celt/entcode.c \
+ celt/entdec.c \
+-celt/entenc.c \
+ celt/kiss_fft.c \
+ celt/laplace.c \
+ celt/mathops.c \
+@@ -14,3 +13,5 @@ celt/celt_lpc.c \
+ celt/quant_bands.c \
+ celt/rate.c \
+ celt/vq.c
++
++CELT_SOURCES_ENC = celt/entenc.c
+diff -urNp opus-1.0.3/opus_sources.mk opus-1.0.3-dec/opus_sources.mk
+--- opus-1.0.3/opus_sources.mk	2013-07-11 07:16:52.000000000 +0300
++++ opus-1.0.3-dec/opus_sources.mk	2017-03-03 08:10:00.000000000 +0300
+@@ -1,5 +1,6 @@
+-OPUS_SOURCES = src/opus.c \
+-src/opus_decoder.c \
++OPUS_SOURCES = src/opus_decoder.c \
++src/opus_multistream.c
++
++OPUS_SOURCES_ENC = src/opus.c \
+ src/opus_encoder.c \
+-src/opus_multistream.c \
+ src/repacketizer.c
+diff -urNp opus-1.0.3/silk/code_signs.c opus-1.0.3-dec/silk/code_signs.c
+--- opus-1.0.3/silk/code_signs.c	2013-07-11 07:16:52.000000000 +0300
++++ opus-1.0.3-dec/silk/code_signs.c	2017-03-03 08:10:00.000000000 +0300
+@@ -37,6 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
+ #define silk_enc_map(a)                  ( silk_RSHIFT( (a), 15 ) + 1 )
+ #define silk_dec_map(a)                  ( silk_LSHIFT( (a),  1 ) - 1 )
+ 
++#ifdef OPUS_ENABLE_ENCODER
+ /* Encodes signs of excitation */
+ void silk_encode_signs(
+     ec_enc                      *psRangeEnc,                        /* I/O  Compressor data structure                   */
+@@ -70,6 +71,7 @@ void silk_encode_signs(
+         q_ptr += SHELL_CODEC_FRAME_LENGTH;
+     }
+ }
++#endif /* OPUS_ENABLE_ENCODER */
+ 
+ /* Decodes signs of excitation */
+ void silk_decode_signs(
+diff -urNp opus-1.0.3/silk/shell_coder.c opus-1.0.3-dec/silk/shell_coder.c
+--- opus-1.0.3/silk/shell_coder.c	2013-07-11 07:16:52.000000000 +0300
++++ opus-1.0.3-dec/silk/shell_coder.c	2017-03-03 08:10:00.000000000 +0300
+@@ -45,6 +45,7 @@ static inline void combine_pulses(
+     }
+ }
+ 
++#ifdef OPUS_ENABLE_ENCODER
+ static inline void encode_split(
+     ec_enc                      *psRangeEnc,    /* I/O  compressor data structure                   */
+     const opus_int              p_child1,       /* I    pulse amplitude of first child subframe     */
+@@ -56,6 +57,7 @@ static inline void encode_split(
+         ec_enc_icdf( psRangeEnc, p_child1, &shell_table[ silk_shell_code_table_offsets[ p ] ], 8 );
+     }
+ }
++#endif /* OPUS_ENABLE_ENCODER */
+ 
+ static inline void decode_split(
+     opus_int                    *p_child1,      /* O    pulse amplitude of first child subframe     */
+@@ -74,6 +76,7 @@ static inline void decode_split(
+     }
+ }
+ 
++#ifdef OPUS_ENABLE_ENCODER
+ /* Shell encoder, operates on one shell code frame of 16 pulses */
+ void silk_shell_encoder(
+     ec_enc                      *psRangeEnc,                    /* I/O  compressor data structure                   */
+@@ -113,7 +116,7 @@ void silk_shell_encoder(
+     encode_split( psRangeEnc, pulses0[ 12 ], pulses1[ 6 ], silk_shell_code_table0 );
+     encode_split( psRangeEnc, pulses0[ 14 ], pulses1[ 7 ], silk_shell_code_table0 );
+ }
+-
++#endif /* OPUS_ENABLE_ENCODER */
+ 
+ /* Shell decoder, operates on one shell code frame of 16 pulses */
+ void silk_shell_decoder(
+diff -urNp opus-1.0.3/silk_sources.mk opus-1.0.3-dec/silk_sources.mk
+--- opus-1.0.3/silk_sources.mk	2013-03-12 19:43:58.000000000 +0200
++++ opus-1.0.3-dec/silk_sources.mk	2017-03-03 08:10:00.000000000 +0300
+@@ -9,15 +9,8 @@ silk/decode_indices.c \
+ silk/decode_pulses.c \
+ silk/decoder_set_fs.c \
+ silk/dec_API.c \
+-silk/enc_API.c \
+-silk/encode_indices.c \
+-silk/encode_pulses.c \
+ silk/gain_quant.c \
+-silk/interpolate.c \
+-silk/LP_variable_cutoff.c \
+ silk/NLSF_decode.c \
+-silk/NSQ.c \
+-silk/NSQ_del_dec.c \
+ silk/PLC.c \
+ silk/shell_coder.c \
+ silk/tables_gain.c \
+@@ -27,25 +20,8 @@ silk/tables_NLSF_CB_WB.c \
+ silk/tables_other.c \
+ silk/tables_pitch_lag.c \
+ silk/tables_pulses_per_block.c \
+-silk/VAD.c \
+-silk/control_audio_bandwidth.c \
+-silk/quant_LTP_gains.c \
+-silk/VQ_WMat_EC.c \
+-silk/HP_variable_cutoff.c \
+-silk/NLSF_encode.c \
+-silk/NLSF_VQ.c \
+ silk/NLSF_unpack.c \
+-silk/NLSF_del_dec_quant.c \
+-silk/process_NLSFs.c \
+-silk/stereo_LR_to_MS.c \
+ silk/stereo_MS_to_LR.c \
+-silk/check_control_input.c \
+-silk/control_SNR.c \
+-silk/init_encoder.c \
+-silk/control_codec.c \
+-silk/A2NLSF.c \
+-silk/ana_filt_bank_1.c \
+-silk/biquad_alt.c \
+ silk/bwexpander_32.c \
+ silk/bwexpander.c \
+ silk/debug.c \
+@@ -61,22 +37,47 @@ silk/NLSF_stabilize.c \
+ silk/NLSF_VQ_weights_laroia.c \
+ silk/pitch_est_tables.c \
+ silk/resampler.c \
+-silk/resampler_down2_3.c \
+-silk/resampler_down2.c \
+ silk/resampler_private_AR2.c \
+ silk/resampler_private_down_FIR.c \
+ silk/resampler_private_IIR_FIR.c \
+ silk/resampler_private_up2_HQ.c \
+ silk/resampler_rom.c \
+-silk/sigm_Q15.c \
+ silk/sort.c \
+ silk/sum_sqr_shift.c \
+-silk/stereo_decode_pred.c \
++silk/stereo_decode_pred.c
++
++SILK_SOURCES_ENC = \
++silk/enc_API.c \
++silk/encode_indices.c \
++silk/encode_pulses.c \
++silk/interpolate.c \
++silk/LP_variable_cutoff.c \
++silk/NSQ.c \
++silk/NSQ_del_dec.c \
++silk/VAD.c \
++silk/control_audio_bandwidth.c \
++silk/quant_LTP_gains.c \
++silk/VQ_WMat_EC.c \
++silk/HP_variable_cutoff.c \
++silk/NLSF_encode.c \
++silk/NLSF_VQ.c \
++silk/NLSF_del_dec_quant.c \
++silk/process_NLSFs.c \
++silk/stereo_LR_to_MS.c \
++silk/check_control_input.c \
++silk/control_SNR.c \
++silk/init_encoder.c \
++silk/control_codec.c \
++silk/A2NLSF.c \
++silk/ana_filt_bank_1.c \
++silk/biquad_alt.c \
++silk/resampler_down2_3.c \
++silk/resampler_down2.c \
++silk/sigm_Q15.c \
+ silk/stereo_encode_pred.c \
+ silk/stereo_find_predictor.c \
+ silk/stereo_quant_pred.c
+ 
+-
+ SILK_SOURCES_FIXED = \
+ silk/fixed/LTP_analysis_filter_FIX.c \
+ silk/fixed/LTP_scale_ctrl_FIX.c \
+diff -urNp opus-1.0.3/src/opus_multistream.c opus-1.0.3-dec/src/opus_multistream.c
+--- opus-1.0.3/src/opus_multistream.c	2017-03-02 05:51:10.000000000 +0300
++++ opus-1.0.3-dec/src/opus_multistream.c	2017-03-03 08:10:00.000000000 +0300
+@@ -50,6 +50,7 @@ typedef struct {
+    unsigned char mapping[8];
+ } VorbisLayout;
+ 
++#ifdef OPUS_ENABLE_ENCODER
+ /* Index is nb_channel-1*/
+ static const VorbisLayout vorbis_mappings[8] = {
+       {1, 0, {0}},                      /* 1: mono */
+@@ -69,6 +70,7 @@ struct OpusMSEncoder {
+    int lfe_stream;
+    /* Encoder states go here */
+ };
++#endif /* OPUS_ENABLE_ENCODER */
+ 
+ struct OpusMSDecoder {
+    ChannelLayout layout;
+@@ -133,6 +135,7 @@ static int get_mono_channel(const Channe
+    return -1;
+ }
+ 
++#ifdef OPUS_ENABLE_ENCODER
+ static int validate_encoder_layout(const ChannelLayout *layout)
+ {
+    int s;
+@@ -832,6 +835,7 @@ void opus_multistream_encoder_destroy(Op
+ {
+     opus_free(st);
+ }
++#endif /* OPUS_ENABLE_ENCODER */
+ 
+ 
+ /* DECODER */
+diff -urNp opus-1.0.3-dec/configure.ac~ opus-1.0.3-dec/configure.ac
+--- opus-1.0.3-dec/configure.ac~	2013-07-11 07:20:57.000000000 +0300
++++ opus-1.0.3-dec/configure.ac	2017-03-03 08:11:00.000000000 +0300
+@@ -180,6 +180,13 @@ if test "$HAVE_DOXYGEN" != "yes" -o "$ac
+ fi
+ AM_CONDITIONAL(HAVE_DOXYGEN, [test $HAVE_DOXYGEN = yes])
+ 
++ac_enable_encoder="no";
++AC_ARG_ENABLE(encoder, [  --enable-encoder           compile with encoder support],
++[if test "$enableval" = yes; then
++  ac_enable_encoder="yes";
++  AC_DEFINE([OPUS_ENABLE_ENCODER], [1], [Compile with encoder support])
++fi])
++
+ saved_CFLAGS="$CFLAGS"
+ CFLAGS="$CFLAGS -fvisibility=hidden"
+ AC_MSG_CHECKING([if ${CC} supports -fvisibility=hidden])
+@@ -241,6 +248,7 @@ AC_SUBST(SIZE32)
+ 
+ AM_CONDITIONAL([FIXED_POINT], [test x$ac_enable_fixed = xyes])
+ AM_CONDITIONAL([CUSTOM_MODES], [test x$ac_enable_custom_modes = xyes])
++AM_CONDITIONAL([USE_ENCODER], [test x$ac_enable_encoder = xyes])
+ 
+ dnl subsitutions for the pkg-config files
+ if test x$ac_enable_float = xyes; then
+@@ -280,6 +288,7 @@ AC_MSG_RESULT([
+       Floating point support: ........ ${ac_enable_float}
+       Fast float approximations: ..... ${float_approx}
+       Fixed point debugging: ......... ${ac_enable_fixed_debug}
++      Encoder support: ............... ${ac_enable_encoder}
+       Custom modes: .................. ${ac_enable_custom_modes}
+       Assertion checking: ............ ${ac_enable_assertions}
+       Fuzzing: ....................... ${ac_enable_fuzzing}
+diff -urNp opus-1.0.3-dec/Makefile.unix~ opus-1.0.3-dec/Makefile.unix
+--- opus-1.0.3-dec/Makefile.unix~	2013-07-11 07:16:52.000000000 +0300
++++ opus-1.0.3-dec/Makefile.unix	2017-03-03 08:11:00.000000000 +0300
+@@ -3,6 +3,9 @@
+ # Uncomment this for fixed-point build
+ #FIXED_POINT=1
+ 
++# Uncomment this to include the opus encoder
++#USE_ENCODER=1
++
+ # It is strongly recommended to uncomment one of these
+ # VAR_ARRAYS: Use C99 variable-length arrays for stack allocation
+ # USE_ALLOCA: Use alloca() for stack allocation
+@@ -26,11 +29,17 @@ include silk_sources.mk
+ include celt_sources.mk
+ include opus_sources.mk
+ 
++ifdef USE_ENCODER
++CFLAGS := -DOPUS_ENABLE_ENCODER $(CFLAGS)
++CELT_SOURCES += $(CELT_SOURCES_ENC)
++SILK_SOURCES += $(SILK_SOURCES_ENC)
++OPUS_SOURCES += $(OPUS_SOURCES_ENC)
+ ifdef FIXED_POINT
+ SILK_SOURCES += $(SILK_SOURCES_FIXED)
+ else
+ SILK_SOURCES += $(SILK_SOURCES_FLOAT)
+ endif
++endif
+ 
+ EXESUFFIX =
+ LIBPREFIX = lib
+diff -urNp opus-1.0.3-dec/Makefile.am~ opus-1.0.3-dec/Makefile.am
+--- opus-1.0.3-dec/Makefile.am~	2013-07-11 07:16:52.000000000 +0300
++++ opus-1.0.3-dec/Makefile.am	2017-03-03 08:11:00.000000000 +0300
+@@ -10,11 +10,16 @@ include celt_sources.mk
+ include silk_sources.mk
+ include opus_sources.mk
+ 
++if USE_ENCODER
++CELT_SOURCES += $(CELT_SOURCES_ENC)
++SILK_SOURCES += $(SILK_SOURCES_ENC)
++OPUS_SOURCES += $(OPUS_SOURCES_ENC)
+ if FIXED_POINT
+ SILK_SOURCES += $(SILK_SOURCES_FIXED)
+ else
+ SILK_SOURCES += $(SILK_SOURCES_FLOAT)
+ endif
++endif
+ 
+ include celt_headers.mk
+ include silk_headers.mk
+@@ -27,6 +32,8 @@ pkginclude_HEADERS = include/opus.h incl
+ 
+ noinst_HEADERS = $(OPUS_HEAD) $(SILK_HEAD) $(CELT_HEAD)
+ 
++# many demo/test programs rely on encoder, ifdef is a lazy way around
++if USE_ENCODER
+ noinst_PROGRAMS = opus_demo repacketizer_demo opus_compare tests/test_opus_api tests/test_opus_encode tests/test_opus_decode celt/tests/test_unit_cwrs32 celt/tests/test_unit_dft celt/tests/test_unit_entropy celt/tests/test_unit_laplace celt/tests/test_unit_mathops celt/tests/test_unit_mdct celt/tests/test_unit_rotation celt/tests/test_unit_types
+ 
+ TESTS = celt/tests/test_unit_types celt/tests/test_unit_mathops celt/tests/test_unit_entropy celt/tests/test_unit_laplace celt/tests/test_unit_dft celt/tests/test_unit_mdct celt/tests/test_unit_rotation celt/tests/test_unit_cwrs32 tests/test_opus_api tests/test_opus_decode tests/test_opus_encode
+@@ -81,6 +88,7 @@ noinst_PROGRAMS += opus_custom_demo
+ opus_custom_demo_SOURCES = celt/opus_custom_demo.c
+ opus_custom_demo_LDADD = libopus.la -lm
+ endif
++endif
+ 
+ EXTRA_DIST = version.mk \
+ 	     opus.pc.in \

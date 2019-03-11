@@ -1,0 +1,28 @@
+From a88d8365d42e5369777afa496b43ea88a1aa9106 Mon Sep 17 00:00:00 2001
+From: Jean-Marc Valin <jmvalin@jmvalin.ca>
+Date: Wed, 18 Jun 2014 17:06:32 -0400
+Subject: [PATCH] Fixes a bug in silk_sum_sqr_shift() that was causing issues with Burg.
+
+When an overflow happened in silk_sum_sqr_shift(), the sample pair causing
+the overflow would be counted twice. This would lead to the C0 in
+silk_burg_modified() being too large and cause problems on loud, tonal
+signals. Thanks to Marcello Caramma for tracking down the problem.
+---
+ silk/sum_sqr_shift.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/silk/sum_sqr_shift.c b/silk/sum_sqr_shift.c
+index 12514c9..129df19 100644
+--- a/silk/sum_sqr_shift.c
++++ b/silk/sum_sqr_shift.c
+@@ -53,6 +53,7 @@ void silk_sum_sqr_shift(
+             /* Scale down */
+             nrg = (opus_int32)silk_RSHIFT_uint( (opus_uint32)nrg, 2 );
+             shft = 2;
++            i+=2;
+             break;
+         }
+     }
+-- 
+1.7.2.5
+
