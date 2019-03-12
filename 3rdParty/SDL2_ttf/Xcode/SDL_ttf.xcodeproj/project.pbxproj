@@ -321,7 +321,8 @@
 		43BA399E22372AC1009041FF /* libpng16d.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = libpng16d.a;
+			name = libpng16d.a;
+			path = libpng16.a;
 			remoteRef = 43BA399D22372AC1009041FF /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -442,6 +443,11 @@
 					"$(PROJECT_DIR)/Frameworks",
 				);
 				FRAMEWORK_VERSION = A;
+				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED)",
+					../../SDL2/include,
+					../../SDL2/include,
+				);
 				INFOPLIST_FILE = "Info-Framework.plist";
 				INSTALL_PATH = "@rpath";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/Frameworks";
@@ -472,6 +478,11 @@
 					"$(PROJECT_DIR)/Frameworks",
 				);
 				FRAMEWORK_VERSION = A;
+				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED)",
+					../../SDL2/include,
+					../../SDL2/include,
+				);
 				INFOPLIST_FILE = "Info-Framework.plist";
 				INSTALL_PATH = "@rpath";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/Frameworks";

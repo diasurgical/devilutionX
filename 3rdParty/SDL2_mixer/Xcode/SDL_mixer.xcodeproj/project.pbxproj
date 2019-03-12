@@ -674,6 +674,11 @@
 					MUSIC_OPUS,
 					"OPUS_HEADER=\"<opusfile.h>\"",
 				);
+				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED)",
+					../../SDL2/include,
+					../../SDL2/include,
+				);
 				INFOPLIST_FILE = "Info-Framework.plist";
 				INSTALL_PATH = "@rpath";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/Frameworks";
@@ -723,6 +728,11 @@
 					MUSIC_FLAC,
 					MUSIC_OPUS,
 					"OPUS_HEADER=\"<opusfile.h>\"",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED)",
+					../../SDL2/include,
+					../../SDL2/include,
 				);
 				INFOPLIST_FILE = "Info-Framework.plist";
 				INSTALL_PATH = "@rpath";
