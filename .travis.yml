@@ -12,6 +12,5 @@ addons:
     - sdl2_ttf
     - libsodium
 
-xcode_workspace: ./Xcode/devilutionX.xcworkspace
-xcode_scheme: devilutionX
-xcode_destination: platform=macOS
+script:
+	- xcodebuild -workspace ./Xcode/devilutionX.xcworkspace -scheme devilutionX build
