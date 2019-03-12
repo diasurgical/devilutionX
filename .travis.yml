@@ -12,12 +12,6 @@ addons:
     - sdl2_ttf
     - libsodium
 
-script:
-  - mkdir build
-  - cd build
-  - cmake ..
-  - make -j$(sysctl -n hw.physicalcpu)
-
 xcode_workspace: ./Xcode/devilutionX.xcworkspace
 xcode_scheme: devilutionX
 xcode_destination: platform=macOS
