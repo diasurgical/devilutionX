@@ -433,7 +433,7 @@ Index/
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
 
-### 3rdParty ###
+### 3rdParty ###*.exp
 **/libsodium/**/*.bc
 **/libsodium/**/*.dSYM
 **/libsodium/**/*.done
@@ -518,6 +518,7 @@ Index/
 **/libsodium/**/test/default/*.asm.js
 **/libsodium/**/test/default/*.res
 **/libsodium/**/test/default/*.trs
+!**/libsodium/**/test/default/*.exp
 **/libsodium/**/test/default/aead_aes256gcm
 **/libsodium/**/test/default/aead_aes256gcm2
 **/libsodium/**/test/default/aead_chacha20poly1305
