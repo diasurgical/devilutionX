@@ -3,6 +3,8 @@ language: cpp
 os:
   - osx
 
+osx_image: xcode9.4
+
 addons:
   homebrew:
     packages:
@@ -15,4 +17,7 @@ script:
   - cd build
   - cmake ..
   - make -j$(sysctl -n hw.physicalcpu)
-	- xcodebuild -workspace ./Xcode/devilutionX.xcworkspace -scheme devilutionX build
+
+xcode_workspace: ./Xcode/devilutionX.xcworkspace
+xcode_scheme: devilutionX
+xcode_destination: platform=macOS
