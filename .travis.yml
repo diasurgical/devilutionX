@@ -5,12 +5,6 @@ os:
 
 osx_image: xcode9.4
 
-addons:
-  homebrew:
-    packages:
-    - sdl2_mixer
-    - sdl2_ttf
-    - libsodium
-
-script:
-	- xcodebuild -workspace "./Xcode/devilutionX.xcworkspace" -scheme "devilutionX" build
+xcode_workspace: ./Xcode/devilutionX.xcworkspace
+xcode_scheme: devilutionX
+xcode_destination: platform=macOS
