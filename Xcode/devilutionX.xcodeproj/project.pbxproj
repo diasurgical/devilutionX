@@ -761,7 +761,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd ../devilutionX/3rdParty/libsodium/\nif [ ! -d \"./libsodium-osx\" ]; then\n    sh ./autogen.sh\n    sh ./dist-build/osx.sh\nelse\n    echo \"Libsodium was build at devilutionX/3rdParty/libsodium/libsodium-osx/\"\nfi";
+			shellScript = "cd ../devilutionX/3rdParty/libsodium/\nif [ ! -d \"./libsodium-osx\" ]; then\n    sh ./dist-build/osx.sh\nelse\n    echo \"Libsodium was build at devilutionX/3rdParty/libsodium/libsodium-osx/\"\nfi";
 		};
 /* End PBXShellScriptBuildPhase section */
 
