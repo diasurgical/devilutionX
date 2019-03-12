@@ -1,9 +1,7 @@
-language: objective-c
-
 os:
   - osx
 
 osx_image: xcode9.4
 
 script:
-	- xcodebuild -workspace ./Xcode/devilutionX.xcworkspace -scheme devilutionX build
+	- xcodebuild -workspace "./Xcode/devilutionX.xcworkspace" -scheme "devilutionX" build
