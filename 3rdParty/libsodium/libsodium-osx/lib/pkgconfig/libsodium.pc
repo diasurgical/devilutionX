@@ -1,0 +1,12 @@
+prefix=/Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libsodium/libsodium-osx
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libsodium
+Version: 1.0.17
+Description: A modern and easy-to-use crypto library
+
+Libs: -L${libdir} -lsodium
+Libs.private:  -pthread 
+Cflags: -I${includedir}
