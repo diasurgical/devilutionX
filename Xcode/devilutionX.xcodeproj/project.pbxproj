@@ -38,7 +38,6 @@
 		43BA36F52236F5EF009041FF /* SDL2_mixer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 43BA36912236E901009041FF /* SDL2_mixer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		43BA36F62236F5EF009041FF /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43BA368F2236E8BB009041FF /* SDL2.framework */; };
 		43BA36F72236F5EF009041FF /* SDL2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 43BA368F2236E8BB009041FF /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		43BA399022371B3B009041FF /* libsodium.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43BA398F22371B3B009041FF /* libsodium.a */; };
 		43BA399222372154009041FF /* libclang_rt.asan_osx_dynamic.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 43BA399122372154009041FF /* libclang_rt.asan_osx_dynamic.dylib */; };
 		43BA399322372168009041FF /* libclang_rt.asan_osx_dynamic.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 43BA399122372154009041FF /* libclang_rt.asan_osx_dynamic.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		43BF58C82235DF30001F9748 /* credits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 10734EC51DA24980B38F1854 /* credits.cpp */; };
@@ -250,7 +249,7 @@
 		43BA368F2236E8BB009041FF /* SDL2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SDL2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		43BA36912236E901009041FF /* SDL2_mixer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SDL2_mixer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		43BA36932236E906009041FF /* SDL2_ttf.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SDL2_ttf.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		43BA398F22371B3B009041FF /* libsodium.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsodium.a; path = "3rdParty/libsodium/libsodium-osx/lib/libsodium.a"; sourceTree = "<group>"; };
+		43BA398F22371B3B009041FF /* libsodium.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsodium.a; path = "3rdParty/libsodium/libsodium-osx/lib/libsodium.a"; sourceTree = SOURCE_ROOT; };
 		43BA399122372154009041FF /* libclang_rt.asan_osx_dynamic.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libclang_rt.asan_osx_dynamic.dylib; path = 3rdParty/darwin/libclang_rt.asan_osx_dynamic.dylib; sourceTree = "<group>"; };
 		43BF58B52235DEB8001F9748 /* devilutionX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = devilutionX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		43BF58FF2235FF89001F9748 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -342,7 +341,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				43BA399022371B3B009041FF /* libsodium.a in Frameworks */,
 				43BA36942236E906009041FF /* SDL2_ttf.framework in Frameworks */,
 				43BA36922236E901009041FF /* SDL2_mixer.framework in Frameworks */,
 				43BA36902236E8BB009041FF /* SDL2.framework in Frameworks */,
@@ -1220,7 +1218,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/3rdParty/libsodium/libsodium-osx/lib",
 					"$(PROJECT_DIR)/3rdParty/darwin",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
@@ -1249,12 +1246,13 @@
 					"-Wl,-headerpad_max_install_names",
 					"-fsanitize=address",
 					"-fsanitize-recover=address",
+					"$(PROJECT_DIR)/3rdParty/libsodium/libsodium-osx/lib/libsodium.a",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = deviution.devilutionX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SYMROOT = "$(PROJECT_DIR)/build";
-				SYSTEM_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Xcode/build/Products/Debug/SDL2.framework/Headers $(PROJECT_DIR)/3rdParty/libsodium/libsodium-osx/include";
+				SYSTEM_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/3rdParty/SDL2/include $(PROJECT_DIR)/3rdParty/libsodium/libsodium-osx/include";
 				VALID_ARCHS = i386;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1337,7 +1335,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/3rdParty/libsodium/libsodium-osx/lib",
 					"$(PROJECT_DIR)/3rdParty/darwin",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
@@ -1364,7 +1361,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SYMROOT = "$(PROJECT_DIR)/build";
-				SYSTEM_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Xcode/build/Products/Debug/SDL2.framework/Headers $(PROJECT_DIR)/3rdParty/libsodium/libsodium-osx/include";
+				SYSTEM_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/3rdParty/SDL2/include $(PROJECT_DIR)/3rdParty/libsodium/libsodium-osx/include";
 				VALID_ARCHS = i386;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1447,7 +1444,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/3rdParty/libsodium/libsodium-osx/lib",
 					"$(PROJECT_DIR)/3rdParty/darwin",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
@@ -1474,7 +1470,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SYMROOT = "$(PROJECT_DIR)/build";
-				SYSTEM_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Xcode/build/Products/Debug/SDL2.framework/Headers $(PROJECT_DIR)/3rdParty/libsodium/libsodium-osx/include";
+				SYSTEM_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/3rdParty/SDL2/include $(PROJECT_DIR)/3rdParty/libsodium/libsodium-osx/include";
 				VALID_ARCHS = i386;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1557,7 +1553,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/3rdParty/libsodium/libsodium-osx/lib",
 					"$(PROJECT_DIR)/3rdParty/darwin",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
@@ -1584,7 +1579,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SYMROOT = "$(PROJECT_DIR)/build";
-				SYSTEM_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Xcode/build/Products/Debug/SDL2.framework/Headers $(PROJECT_DIR)/3rdParty/libsodium/libsodium-osx/include";
+				SYSTEM_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/3rdParty/SDL2/include $(PROJECT_DIR)/3rdParty/libsodium/libsodium-osx/include";
 				VALID_ARCHS = i386;
 				WARNING_CFLAGS = (
 					"-Wmost",
