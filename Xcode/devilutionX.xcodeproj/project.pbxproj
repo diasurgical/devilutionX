@@ -986,7 +986,7 @@
 				PRODUCT_NAME = Radon;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build;
+				SYMROOT = "$(SRCROOT)/build";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1024,7 +1024,7 @@
 				PRODUCT_NAME = PKWare;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build;
+				SYMROOT = "$(SRCROOT)/build";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1059,7 +1059,7 @@
 				PRODUCT_NAME = Radon;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build;
+				SYMROOT = "$(SRCROOT)/build";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1097,7 +1097,7 @@
 				PRODUCT_NAME = Radon;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build;
+				SYMROOT = "$(SRCROOT)/build";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1135,7 +1135,7 @@
 				PRODUCT_NAME = StormLib;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build;
+				SYMROOT = "$(SRCROOT)/build";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1601,7 +1601,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build/build;
+				SYMROOT = "$(SRCROOT)/build";
 			};
 			name = RelWithDebInfo;
 		};
@@ -1632,7 +1632,7 @@
 				PRODUCT_NAME = StormLib;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build;
+				SYMROOT = "$(SRCROOT)/build";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1667,7 +1667,7 @@
 				PRODUCT_NAME = smacker;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build;
+				SYMROOT = "$(SRCROOT)/build";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1698,7 +1698,7 @@
 					FASTER,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/SourceS;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/SourceS";
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
 				ONLY_ACTIVE_ARCH = NO;
@@ -1722,7 +1722,7 @@
 				PRODUCT_NAME = devilution;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build;
+				SYMROOT = "$(SRCROOT)//build";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1753,7 +1753,7 @@
 					FASTER,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/SourceS;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/SourceS";
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
 				ONLY_ACTIVE_ARCH = NO;
@@ -1777,7 +1777,7 @@
 				PRODUCT_NAME = devilution;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build;
+				SYMROOT = "$(SRCROOT)//build";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1808,7 +1808,7 @@
 					FASTER,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/SourceS;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/SourceS";
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
 				ONLY_ACTIVE_ARCH = NO;
@@ -1832,7 +1832,7 @@
 				PRODUCT_NAME = devilution;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build;
+				SYMROOT = "$(SRCROOT)//build";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1870,7 +1870,7 @@
 				PRODUCT_NAME = Radon;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build;
+				SYMROOT = "$(SRCROOT)/build";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1905,7 +1905,7 @@
 				PRODUCT_NAME = smacker;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build;
+				SYMROOT = "$(SRCROOT)/build";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1940,7 +1940,7 @@
 				PRODUCT_NAME = smacker;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build;
+				SYMROOT = "$(SRCROOT)/build";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1957,7 +1957,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build/build;
+				SYMROOT = "$(SRCROOT)/build";
 			};
 			name = Debug;
 		};
@@ -1988,7 +1988,7 @@
 				PRODUCT_NAME = StormLib;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build;
+				SYMROOT = "$(SRCROOT)/build";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -2019,7 +2019,7 @@
 					FASTER,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/SourceS;
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/SourceS";
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
 				ONLY_ACTIVE_ARCH = NO;
@@ -2043,7 +2043,7 @@
 				PRODUCT_NAME = devilution;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build;
+				SYMROOT = "$(SRCROOT)//build";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -2078,7 +2078,7 @@
 				PRODUCT_NAME = PKWare;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build;
+				SYMROOT = "$(SRCROOT)/build";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -2116,7 +2116,7 @@
 				PRODUCT_NAME = PKWare;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build;
+				SYMROOT = "$(SRCROOT)/build";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -2151,7 +2151,7 @@
 				PRODUCT_NAME = smacker;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build;
+				SYMROOT = "$(SRCROOT)/build";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -2189,7 +2189,7 @@
 				PRODUCT_NAME = PKWare;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build;
+				SYMROOT = "$(SRCROOT)/build";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -2224,7 +2224,7 @@
 				PRODUCT_NAME = StormLib;
 				SDKROOT = macosx;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build;
+				SYMROOT = "$(SRCROOT)/build";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -2241,7 +2241,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build/build;
+				SYMROOT = "$(SRCROOT)/build";
 			};
 			name = Release;
 		};
@@ -2251,7 +2251,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/build/build;
+				SYMROOT = "$(SRCROOT)/build";
 			};
 			name = MinSizeRel;
 		};

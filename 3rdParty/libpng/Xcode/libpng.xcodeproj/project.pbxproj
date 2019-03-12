@@ -468,9 +468,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CA6EED5F291A469AAB45480F /* Build configuration list for PBXNativeTarget "png" */;
 			buildPhases = (
-				00A839C6542D4DE290B3F409 /* CMake Rules */,
 				6AF73C2DF77E4E0BBD193B05 /* Sources */,
-				97B95CDAD64D4CD4A16A6B83 /* CMake PostBuild Rules */,
 			);
 			buildRules = (
 			);
@@ -521,31 +519,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		00A839C6542D4DE290B3F409 /* CMake Rules */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			name = "CMake Rules";
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "make -C /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng/Xcode -f /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng/Xcode/CMakeScripts/png_cmakeRulesBuildPhase.make$CONFIGURATION all";
-			showEnvVarsInLog = 0;
-		};
-		97B95CDAD64D4CD4A16A6B83 /* CMake PostBuild Rules */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			name = "CMake PostBuild Rules";
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "make -C /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng/Xcode -f /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng/Xcode/CMakeScripts/png_postBuildPhase.make$CONFIGURATION all";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		6AF73C2DF77E4E0BBD193B05 /* Sources */ = {
@@ -602,6 +575,7 @@
 		2FB0DD405ADD4170A6D4C271 /* MinSizeRel */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = (
 					"$(ARCHS_STANDARD)",
 					i386,
@@ -618,18 +592,20 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					/Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng/Xcode,
-					/Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng,
+					"$(SRCROOT)",
+					"$(SRCROOT)/Xcode",
 				);
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "    -DNDEBUG  ";
 				OTHER_LIBTOOLFLAGS = " ";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = png16;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng/Xcode;
+				SYMROOT = "$(SRCROOT)/Xcode";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/3rdParty/libpng $(SRCROOT)/3rdParty/libpng/Xcode";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -662,8 +638,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					/Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng/Xcode,
-					/Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng,
+					"$(SRCROOT)/3rdParty/libpng/Xcode",
+					"$(SRCROOT)/3rdParty/libpng",
 				);
 				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = "";
@@ -681,7 +657,7 @@
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = png16d.16.35.0;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng/Xcode;
+				SYMROOT = "$(SRCROOT)/3rdParty/libpng/Xcode";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -697,7 +673,7 @@
 			buildSettings = {
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng/Xcode/build;
+				SYMROOT = "$(SRCROOT)/3rdParty/libpng/Xcode/build";
 			};
 			name = RelWithDebInfo;
 		};
@@ -723,8 +699,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					/Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng/Xcode,
-					/Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng,
+					"$(SRCROOT)/3rdParty/libpng/Xcode",
+					"$(SRCROOT)/3rdParty/libpng",
 				);
 				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = "";
@@ -745,7 +721,7 @@
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = png16.16.35.0;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng/Xcode;
+				SYMROOT = "$(SRCROOT)/3rdParty/libpng/Xcode";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -778,8 +754,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					/Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng/Xcode,
-					/Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng,
+					"$(SRCROOT)/3rdParty/libpng/Xcode",
+					"$(SRCROOT)/3rdParty/libpng",
 				);
 				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = "";
@@ -800,7 +776,7 @@
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = png16.16.35.0;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng/Xcode;
+				SYMROOT = "$(SRCROOT)/3rdParty/libpng/Xcode";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -816,7 +792,7 @@
 			buildSettings = {
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng/Xcode/build;
+				SYMROOT = "$(SRCROOT)/3rdParty/libpng/Xcode/build";
 			};
 			name = MinSizeRel;
 		};
@@ -825,7 +801,7 @@
 			buildSettings = {
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng/Xcode/build;
+				SYMROOT = "$(SRCROOT)/3rdParty/libpng/Xcode/build";
 			};
 			name = Debug;
 		};
@@ -834,7 +810,7 @@
 			buildSettings = {
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng/Xcode/build;
+				SYMROOT = "$(SRCROOT)/3rdParty/libpng/Xcode/build";
 			};
 			name = Release;
 		};
@@ -860,8 +836,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					/Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng/Xcode,
-					/Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng,
+					"$(SRCROOT)/3rdParty/libpng/Xcode",
+					"$(SRCROOT)/3rdParty/libpng",
 				);
 				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = "";
@@ -882,7 +858,7 @@
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = png16.16.35.0;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng/Xcode;
+				SYMROOT = "$(SRCROOT)/3rdParty/libpng/Xcode";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -896,6 +872,7 @@
 		D034E0B036A34935A24D9A67 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = (
 					"$(ARCHS_STANDARD)",
 					i386,
@@ -906,24 +883,23 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'PNG_INTEL_SSE_OPT=1'",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "'PNG_INTEL_SSE_OPT=1'";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					/Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng/Xcode,
-					/Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng,
+					"$(SRCROOT)",
+					"$(SRCROOT)/Xcode",
 				);
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "    ";
 				OTHER_LIBTOOLFLAGS = " ";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = png16d;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng/Xcode;
+				SYMROOT = "$(SRCROOT)/Xcode";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/3rdParty/libpng $(SRCROOT)/3rdParty/libpng/Xcode";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -937,6 +913,7 @@
 		F6447B049371449F900CDDDD /* RelWithDebInfo */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = (
 					"$(ARCHS_STANDARD)",
 					i386,
@@ -953,18 +930,20 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					/Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng/Xcode,
-					/Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng,
+					"$(SRCROOT)",
+					"$(SRCROOT)/Xcode",
 				);
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "       -DNDEBUG  ";
 				OTHER_LIBTOOLFLAGS = " ";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = png16;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng/Xcode;
+				SYMROOT = "$(SRCROOT)/Xcode";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/3rdParty/libpng $(SRCROOT)/3rdParty/libpng/Xcode";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -978,6 +957,7 @@
 		FE68027287C84FBEA2255F70 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = (
 					"$(ARCHS_STANDARD)",
 					i386,
@@ -994,18 +974,20 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					/Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng/Xcode,
-					/Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng,
+					"$(SRCROOT)",
+					"$(SRCROOT)/Xcode",
 				);
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "    -DNDEBUG  ";
 				OTHER_LIBTOOLFLAGS = " ";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = png16;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/bennyfrancodennis/Developer/OpenSource/devilutionX/3rdParty/libpng/Xcode;
+				SYMROOT = "$(SRCROOT)/Xcode";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/3rdParty/libpng $(SRCROOT)/3rdParty/libpng/Xcode";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
