@@ -40,6 +40,7 @@
 		43BA36F72236F5EF009041FF /* SDL2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 43BA368F2236E8BB009041FF /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		43BA399222372154009041FF /* libclang_rt.asan_osx_dynamic.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 43BA399122372154009041FF /* libclang_rt.asan_osx_dynamic.dylib */; };
 		43BA399322372168009041FF /* libclang_rt.asan_osx_dynamic.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 43BA399122372154009041FF /* libclang_rt.asan_osx_dynamic.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		43BA39B122375D8A009041FF /* AppIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 43BA39AF22375925009041FF /* AppIcon.xcassets */; };
 		43BF58C82235DF30001F9748 /* credits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 10734EC51DA24980B38F1854 /* credits.cpp */; };
 		43BF58C92235DF30001F9748 /* diabloui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA871B40005B4FD0B555113D /* diabloui.cpp */; };
 		43BF58CA2235DF30001F9748 /* dialogs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055C1A941DBC41FDA77B3DE7 /* dialogs.cpp */; };
@@ -251,6 +252,7 @@
 		43BA36932236E906009041FF /* SDL2_ttf.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SDL2_ttf.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		43BA398F22371B3B009041FF /* libsodium.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsodium.a; path = "3rdParty/libsodium/libsodium-osx/lib/libsodium.a"; sourceTree = SOURCE_ROOT; };
 		43BA399122372154009041FF /* libclang_rt.asan_osx_dynamic.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libclang_rt.asan_osx_dynamic.dylib; path = 3rdParty/darwin/libclang_rt.asan_osx_dynamic.dylib; sourceTree = "<group>"; };
+		43BA39AF22375925009041FF /* AppIcon.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = AppIcon.xcassets; path = Xcode/AppIcon.xcassets; sourceTree = SOURCE_ROOT; };
 		43BF58B52235DEB8001F9748 /* devilutionX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = devilutionX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		43BF58FF2235FF89001F9748 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		471A14F4956744E5827FE3D9 /* SBaseFileTable.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SBaseFileTable.cpp; path = 3rdParty/StormLib/src/SBaseFileTable.cpp; sourceTree = SOURCE_ROOT; };
@@ -535,6 +537,7 @@
 		9D3E0550F1EA4EA2A17A9E26 = {
 			isa = PBXGroup;
 			children = (
+				43BA39AF22375925009041FF /* AppIcon.xcassets */,
 				43BA399122372154009041FF /* libclang_rt.asan_osx_dynamic.dylib */,
 				43BF58FF2235FF89001F9748 /* Info.plist */,
 				86FBB5C8DE834754AAFEC0C4 /* devilutionx */,
@@ -621,6 +624,7 @@
 				43BF58B12235DEB8001F9748 /* Sources */,
 				4362804D22360E6300C911AD /* Frameworks */,
 				436280D12236373A00C911AD /* Embed Frameworks */,
+				43BA39B022375D85009041FF /* Resources */,
 			);
 			buildRules = (
 			);
@@ -748,6 +752,17 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		43BA39B022375D85009041FF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				43BA39B122375D8A009041FF /* AppIcon.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
 		43BA398A2237133B009041FF /* ShellScript */ = {
@@ -1149,6 +1164,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = i386;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-1";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
@@ -1268,6 +1284,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = i386;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-1";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
@@ -1377,6 +1394,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = i386;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-1";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
@@ -1486,6 +1504,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = i386;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-1";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
