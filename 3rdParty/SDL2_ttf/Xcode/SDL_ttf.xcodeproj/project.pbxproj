@@ -9,8 +9,7 @@
 /* Begin PBXBuildFile section */
 		4362808F2236295900C911AD /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4362808E2236295900C911AD /* SDL2.framework */; };
 		436280AB2236344300C911AD /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 436280AA2236344200C911AD /* libz.tbd */; };
-		43BA37372236FE02009041FF /* libfreetyped.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43BA37362236FE02009041FF /* libfreetyped.a */; };
-		43BA39A122372AD5009041FF /* libpng16d.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43BA399E22372AC1009041FF /* libpng16d.a */; };
+		43BA39C422376AD6009041FF /* libfreetype.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43BA39C322376AD6009041FF /* libfreetype.a */; };
 		BE48FD5F07AFA17000BB41DA /* SDL_ttf.h in Headers */ = {isa = PBXBuildFile; fileRef = 1014BAEA010A4B677F000001 /* SDL_ttf.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BE48FD6207AFA17000BB41DA /* SDL_ttf.c in Sources */ = {isa = PBXBuildFile; fileRef = F567D67A01CD962A01F3E8B9 /* SDL_ttf.c */; };
 		BE48FD6B07AFA17000BB41DA /* SDL_ttf.c in Sources */ = {isa = PBXBuildFile; fileRef = F567D67A01CD962A01F3E8B9 /* SDL_ttf.c */; };
@@ -72,6 +71,7 @@
 		43BA37362236FE02009041FF /* libfreetyped.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libfreetyped.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		43BA377622370504009041FF /* libpng16d.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libpng16d.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		43BA399622372AC1009041FF /* libpng.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libpng.xcodeproj; path = ../../libpng/Xcode/libpng.xcodeproj; sourceTree = "<group>"; };
+		43BA39C322376AD6009041FF /* libfreetype.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libfreetype.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE48FD6607AFA17000BB41DA /* Info-Framework.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-Framework.plist"; sourceTree = "<group>"; };
 		BE48FD6707AFA17000BB41DA /* SDL2_ttf.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SDL2_ttf.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE48FD6E07AFA17000BB41DA /* libSDL2_ttf.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSDL2_ttf.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -87,8 +87,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				43BA39A122372AD5009041FF /* libpng16d.a in Frameworks */,
-				43BA37372236FE02009041FF /* libfreetyped.a in Frameworks */,
+				43BA39C422376AD6009041FF /* libfreetype.a in Frameworks */,
 				436280AB2236344300C911AD /* libz.tbd in Frameworks */,
 				4362808F2236295900C911AD /* SDL2.framework in Frameworks */,
 			);
@@ -167,6 +166,7 @@
 		BE48FD8107AFA26B00BB41DA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				43BA39C322376AD6009041FF /* libfreetype.a */,
 				43BA377622370504009041FF /* libpng16d.a */,
 				43BA37362236FE02009041FF /* libfreetyped.a */,
 				43BA37242236F9A0009041FF /* libbzip2.a */,

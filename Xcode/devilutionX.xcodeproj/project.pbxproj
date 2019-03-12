@@ -1374,6 +1374,14 @@
 					"-Wno-unknown-pragmas",
 					"'-std=c++14'",
 				);
+				OTHER_LDFLAGS = (
+					"-liconv",
+					"-Wl,-search_paths_first",
+					"-Wl,-headerpad_max_install_names",
+					"-fsanitize=address",
+					"-fsanitize-recover=address",
+					"$(PROJECT_DIR)/3rdParty/libsodium/libsodium-osx/lib/libsodium.a",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = deviution.devilutionX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;

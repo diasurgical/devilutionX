@@ -896,7 +896,7 @@
 				OTHER_CFLAGS = "    ";
 				OTHER_LIBTOOLFLAGS = " ";
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = png16d;
+				PRODUCT_NAME = png16;
 				SECTORDER_FLAGS = "";
 				SYMROOT = "$(SRCROOT)/Xcode";
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/3rdParty/libpng $(SRCROOT)/3rdParty/libpng/Xcode";
