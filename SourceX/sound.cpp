@@ -37,17 +37,36 @@ void __fastcall snd_update(BOOL bStopAll)
 {
 	DWORD error_code, i;
 
-	if (!bStopAll)
-		return;
+	for (i = 0; i < 8; i++) {
+		if (!DSBs[i])
+			continue;
 
-	Mix_HaltChannel(-1);
+#ifdef __cplusplus
+		if (!bStopAll && !DSBs[i]->GetStatus(&error_code) && error_code == DSBSTATUS_PLAYING)
+			continue;
+
+		DSBs[i]->Stop();
+		DSBs[i]->Release();
+#else
+		if (!bStopAll && !DSBs[i]->lpVtbl->GetStatus(DSBs[i], &error_code) && error_code == DSBSTATUS_PLAYING)
+			continue;
+
+		DSBs[i]->lpVtbl->Stop(DSBs[i]);
+		DSBs[i]->lpVtbl->Release(DSBs[i]);
+#endif
+
+		DSBs[i] = NULL;
+	}
 }
 
 void __fastcall snd_stop_snd(TSnd *pSnd)
 {
-	DUMMY_ONCE();
 	if (pSnd && pSnd->DSB)
-		Mix_HaltChannel(-1);
+#ifdef __cplusplus
+		pSnd->DSB->Stop();
+#else
+		pSnd->DSB->lpVtbl->Stop(pSnd->DSB);
+#endif
 }
 
 BOOL __fastcall snd_playing(TSnd *pSnd)
@@ -60,9 +79,14 @@ BOOL __fastcall snd_playing(TSnd *pSnd)
 	if (pSnd->DSB == NULL)
 		return FALSE;
 
-	DUMMY_ONCE();
+#ifdef __cplusplus
+	if (pSnd->DSB->GetStatus(&error_code))
+#else
+	if (pSnd->DSB->lpVtbl->GetStatus(pSnd->DSB, &error_code))
+#endif
+		return FALSE;
 
-	return FALSE;
+	return error_code == DSBSTATUS_PLAYING;
 }
 
 void __fastcall snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
@@ -86,24 +110,34 @@ void __fastcall snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 		return;
 	}
 
+	if (snd_playing(pSnd)) {
+		DSB = sound_dup_channel(pSnd->DSB);
+		if (DSB == NULL) {
+			return;
+		}
+	}
+
 	lVolume += sglSoundVolume;
 	if (lVolume < VOLUME_MIN) {
 		lVolume = VOLUME_MIN;
 	} else if (lVolume > VOLUME_MAX) {
 		lVolume = VOLUME_MAX;
 	}
+	DSB->SetVolume(lVolume);
+	DSB->SetPan(lPan);
 
-	Mix_VolumeChunk((Mix_Chunk *)(pSnd->DSB), MIX_MAX_VOLUME - MIX_MAX_VOLUME * lVolume / VOLUME_MIN);
-	int channel = Mix_PlayChannel(-1, (Mix_Chunk *)(pSnd->DSB), 0);
-	if (channel != -1) {
-		int panned = 255 * abs(lPan) / 10000;
-		Mix_SetPanning(channel, lPan <= 0 ? 255 : panned, lPan >= 0 ? 255 : panned);
-	}
+	error_code = DSB->Play(0, 0, 0);
 
-	if (channel == -1) {
-		SDL_Log("Mix_PlayChannel: %s\n", SDL_GetError());
+	if (error_code != DSERR_BUFFERLOST) {
+		if (error_code != DS_OK) {
+			DSErrMsg(error_code, 261, "C:\\Src\\Diablo\\Source\\SOUND.CPP");
+		}
 	} else if (sound_file_reload(pSnd, DSB)) {
-		UNIMPLEMENTED();
+#ifdef __cplusplus
+		DSB->Play(0, 0, 0);
+#else
+		DSB->lpVtbl->Play(DSB, 0, 0, 0);
+#endif
 	}
 
 	pSnd->start_tc = tc;
@@ -118,7 +152,17 @@ LPDIRECTSOUNDBUFFER __fastcall sound_dup_channel(LPDIRECTSOUNDBUFFER DSB)
 	}
 
 	for (i = 0; i < 8; i++) {
-		UNIMPLEMENTED();
+		if (!DSBs[i]) {
+#ifdef __cplusplus
+			if (sglpDS->DuplicateSoundBuffer(DSB, &DSBs[i]) != DS_OK) {
+#else
+			if (sglpDS->lpVtbl->DuplicateSoundBuffer(sglpDS, DSB, &DSBs[i]) != DS_OK) {
+#endif
+				return NULL;
+			}
+
+			return DSBs[i];
+		}
 	}
 
 	return NULL;
@@ -131,12 +175,31 @@ BOOL __fastcall sound_file_reload(TSnd *sound_file, LPDIRECTSOUNDBUFFER DSB)
 	DWORD size1, size2;
 	BOOL rv;
 
-	DUMMY_ONCE();
+#ifdef __cplusplus
+	if (DSB->Restore())
+#else
+	if (DSB->lpVtbl->Restore(DSB))
+#endif
+		return FALSE;
 
 	rv = FALSE;
 
 	WOpenFile(sound_file->sound_path, &file, FALSE);
 	WSetFilePointer(file, sound_file->chunk.dwOffset, NULL, 0);
+
+#ifdef __cplusplus
+	if (DSB->Lock(0, sound_file->chunk.dwSize, &buf1, &size1, &buf2, &size2, 0) == DS_OK) {
+		WReadFile(file, buf1, size1);
+		if (DSB->Unlock(buf1, size1, buf2, size2) == DS_OK)
+			rv = TRUE;
+	}
+#else
+	if (DSB->lpVtbl->Lock(DSB, 0, sound_file->chunk.dwSize, &buf1, &size1, &buf2, &size2, 0) == DS_OK) {
+		WReadFile(file, buf1, size1);
+		if (DSB->lpVtbl->Unlock(DSB, buf1, size1, buf2, size2) == DS_OK)
+			rv = TRUE;
+	}
+#endif
 
 	WCloseFile(file);
 
@@ -152,7 +215,7 @@ TSnd *__fastcall sound_file_load(char *path)
 	DWORD size1, size2;
 	HRESULT error_code;
 
-	if (!gbSndInited)
+	if (!sglpDS)
 		return NULL;
 
 	WOpenFile(path, &file, FALSE);
@@ -161,19 +224,29 @@ TSnd *__fastcall sound_file_load(char *path)
 	pSnd->sound_path = path;
 	pSnd->start_tc = GetTickCount() - 81;
 
-	//This opens the file and reads it, makes Mix_chunk pointer to it.
-	//Once this is done the pointer is stored TSnd Struct
-
-	size1 = (int)SFileGetFileSize((HANDLE)file, 0);
-	wave_file = DiabloAllocPtr(size1);
-	SFileReadFile(file, (void *)wave_file, size1, (LPDWORD)&size2, 0);
-	SDL_RWops *rw = SDL_RWFromConstMem((void *)wave_file, size1);
-	Mix_Chunk *SoundFX = Mix_LoadWAV_RW(rw, 1);
-	pSnd->DSB = (LPDIRECTSOUNDBUFFER)SoundFX;
-	if (!pSnd->DSB)
+	wave_file = LoadWaveFile(file, &pSnd->fmt, &pSnd->chunk);
+	if (!wave_file)
 		TermMsg("Invalid sound format on file %s", pSnd->sound_path);
 
 	sound_CreateSoundBuffer(pSnd);
+
+#ifdef __cplusplus
+	error_code = pSnd->DSB->Lock(0, pSnd->chunk.dwSize, &buf1, &size1, &buf2, &size2, 0);
+#else
+	error_code = pSnd->DSB->lpVtbl->Lock(pSnd->DSB, 0, pSnd->chunk.dwSize, &buf1, &size1, &buf2, &size2, 0);
+#endif
+	if (error_code != DS_OK)
+		DSErrMsg(error_code, 318, "C:\\Src\\Diablo\\Source\\SOUND.CPP");
+
+	memcpy(buf1, wave_file + pSnd->chunk.dwOffset, size1);
+
+#ifdef __cplusplus
+	error_code = pSnd->DSB->Unlock(buf1, size1, buf2, size2);
+#else
+	error_code = pSnd->DSB->lpVtbl->Unlock(pSnd->DSB, buf1, size1, buf2, size2);
+#endif
+	if (error_code != DS_OK)
+		DSErrMsg(error_code, 325, "C:\\Src\\Diablo\\Source\\SOUND.CPP");
 
 	mem_free_dbg((void *)wave_file);
 	WCloseFile(file);
@@ -193,14 +266,30 @@ void __fastcall sound_CreateSoundBuffer(TSnd *sound_file)
 	DSB.lpwfxFormat = &sound_file->fmt;
 	DSB.dwSize = sizeof(DSBUFFERDESC);
 	DSB.dwFlags = DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLPAN | DSBCAPS_STATIC;
+
+	sound_file->chunk.dwSize += sound_file->chunk.dwOffset;
+	sound_file->chunk.dwOffset = 0;
+
+#ifdef __cplusplus
+	error_code = sglpDS->CreateSoundBuffer(&DSB, &sound_file->DSB, NULL);
+#else
+	error_code = sglpDS->lpVtbl->CreateSoundBuffer(sglpDS, &DSB, &sound_file->DSB, NULL);
+#endif
+	if (error_code != ERROR_SUCCESS)
+		DSErrMsg(error_code, 282, "C:\\Src\\Diablo\\Source\\SOUND.CPP");
 }
 
 void __fastcall sound_file_cleanup(TSnd *sound_file)
 {
 	if (sound_file) {
 		if (sound_file->DSB) {
-			DUMMY_ONCE();
-			Mix_FreeChunk((Mix_Chunk *)sound_file->DSB);
+#ifdef __cplusplus
+			sound_file->DSB->Stop();
+			sound_file->DSB->Release();
+#else
+			sound_file->DSB->lpVtbl->Stop(sound_file->DSB);
+			sound_file->DSB->lpVtbl->Release(sound_file->DSB);
+#endif
 			sound_file->DSB = NULL;
 		}
 
@@ -210,23 +299,26 @@ void __fastcall sound_file_cleanup(TSnd *sound_file)
 
 void __fastcall snd_init(HWND hWnd)
 {
-	DUMMY();
 	sound_load_volume("Sound Volume", &sglSoundVolume);
 	gbSoundOn = sglSoundVolume > VOLUME_MIN;
 
 	sound_load_volume("Music Volume", &sglMusicVolume);
 	gbMusicOn = sglMusicVolume > VOLUME_MIN;
 
-	if (Mix_OpenAudio(44100, AUDIO_S16LSB, 2, 1024) != 0) {
+	if (sound_DirectSoundCreate(NULL, &sglpDS, NULL) != DS_OK)
 		sglpDS = NULL;
 
+#ifdef __cplusplus
+	if (sglpDS && sglpDS->SetCooperativeLevel(hWnd, DSSCL_EXCLUSIVE) == DS_OK)
+#else
+	if (sglpDS && sglpDS->lpVtbl->SetCooperativeLevel(sglpDS, hWnd, DSSCL_EXCLUSIVE) == DS_OK)
+#endif
 		sound_create_primary_buffer(NULL);
-	}
 
 	SVidInitialize(sglpDS);
 	SFileDdaInitialize(sglpDS);
 
-	gbSndInited = true;
+	gbSndInited = sglpDS != NULL;
 }
 
 void __fastcall sound_load_volume(char *value_name, int *value)
@@ -247,7 +339,6 @@ void __fastcall sound_load_volume(char *value_name, int *value)
 
 void __fastcall sound_create_primary_buffer(HANDLE music_track)
 {
-	DUMMY();
 	HRESULT error_code;
 	DSBUFFERDESC dsbuf;
 	WAVEFORMATEX format;
@@ -301,7 +392,7 @@ void __fastcall sound_create_primary_buffer(HANDLE music_track)
 
 HRESULT __fastcall sound_DirectSoundCreate(LPGUID lpGuid, LPDIRECTSOUND *ppDS, LPUNKNOWN pUnkOuter)
 {
-	UNIMPLEMENTED();
+	DUMMY();
 	HRESULT(WINAPI * DirectSoundCreate)
 	(LPGUID lpGuid, LPDIRECTSOUND * ppDS, LPUNKNOWN pUnkOuter);
 
@@ -310,11 +401,13 @@ HRESULT __fastcall sound_DirectSoundCreate(LPGUID lpGuid, LPDIRECTSOUND *ppDS, L
 		}
 	}
 
-	DirectSoundCreate = NULL;
 	if (DirectSoundCreate == NULL) {
-		ErrDlg(IDD_DIALOG5, GetLastError(), "C:\\Src\\Diablo\\Source\\SOUND.CPP", 427);
 	}
-	return DirectSoundCreate(lpGuid, ppDS, pUnkOuter);
+	*ppDS = new DirectSound();
+	int result = Mix_OpenAudio(44100, AUDIO_S16LSB, 2, 1024);
+	Mix_AllocateChannels(25);
+	Mix_ReserveChannels(1); // reserve one channel for naration (SFileDda*)
+	return result;
 }
 
 void __cdecl sound_cleanup()
@@ -323,8 +416,12 @@ void __cdecl sound_cleanup()
 	SVidDestroy();
 	SFileDdaDestroy();
 
-	if (gbSndInited) {
-		DUMMY();
+	if (sglpDS) {
+#ifdef __cplusplus
+		sglpDS->Release();
+#else
+		sglpDS->lpVtbl->Release(sglpDS);
+#endif
 		sglpDS = NULL;
 	}
 
@@ -356,7 +453,7 @@ void __fastcall music_start(int nTrack)
 
 	/// ASSERT: assert((DWORD) nTrack < NUM_MUSIC);
 	music_stop();
-	if (gbSndInited && gbMusicOn) {
+	if (sglpDS && gbMusicOn) {
 #ifdef _DEBUG
 		SFileEnableDirectAccess(FALSE);
 #endif
@@ -413,30 +510,3 @@ int __fastcall sound_get_or_set_sound_volume(int volume)
 
 	return sglSoundVolume;
 }
-
-/*
-SDL_AudioSpec wanted;
-static Uint32 audio_len;
-static Uint8 *audio_pos;
-
-void fill_audio(void *udata, Uint8 *stream, int len)
-{
-	//DUMMY();
-	//wanted.freq = 44100; //seems not to be used at this time
-	//wanted.format = AUDIO_S16LSB; //seems not to be used at this time
-	//wanted.channels = 2; // 1 = mono, 2 = stereo, seems not to be used at this time
-	//wanted.samples = 1024; // Good low-latency value for callback, seems not to be used at this time
-	//wanted.callback = fill_audio; //seems not to be used at this time
-	//wanted.userdata = NULL; //seems not to be used at this time
-
-	// Only play if we have data left
-	if (audio_len == 0)
-		return;
-
-	// Mix as much data as possible
-	len = (len > audio_len ? audio_len : len);
-	SDL_MixAudio(stream, audio_pos, len, SDL_MIX_MAXVOLUME);
-	audio_pos += len;
-	audio_len -= len;
-}
-*/

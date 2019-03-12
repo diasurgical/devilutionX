@@ -35,6 +35,8 @@
 #define WINAPI
 #define WINAPIV
 
+#define METHOD virtual __stdcall
+
 #define ALIGNED(n) __attribute__((aligned(n)))
 
 // Basic types
@@ -136,6 +138,7 @@ typedef LRESULT(CALLBACK *WNDPROC)(HWND, UINT, WPARAM, LPARAM);
 
 #define INFINITE 0xFFFFFFFF
 
+#pragma pack(push, 1)
 typedef struct waveformat_tag {
 	WORD wFormatTag;
 	WORD nChannels;
@@ -158,6 +161,7 @@ typedef struct tWAVEFORMATEX {
 	WORD wBitsPerSample;
 	WORD cbSize;
 } WAVEFORMATEX, *LPWAVEFORMATEX, *LPCWAVEFORMATEX;
+#pragma pack(pop)
 
 typedef struct _FILETIME {
 	DWORD dwLowDateTime;
@@ -269,7 +273,7 @@ typedef WORD ATOM;
 #define WINUSERAPI
 #define WNDCLASSEX WNDCLASSEXA
 
-#define FOURCC_RIFF MAKEFOURCC('W', 'A', 'V', 'E')
+#define FOURCC_RIFF MAKEFOURCC('R', 'I', 'F', 'F')
 
 //
 // COM
@@ -307,8 +311,6 @@ typedef void *REFIID;
 
 struct IUnknown {
 	// clang-format off
-	STDMETHOD(QueryInterface)(THIS_ REFIID, LPVOID *) PURE;
-	STDMETHOD_(ULONG, AddRef)(THIS) PURE;
 	STDMETHOD_(ULONG, Release)(THIS) PURE;
 	// clang-format on
 };

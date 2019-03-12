@@ -83,6 +83,7 @@ BOOL __fastcall snd_playing(TSnd *pSnd)
 #else
 	if (pSnd->DSB->lpVtbl->GetStatus(pSnd->DSB, &error_code))
 #endif
+		return FALSE;
 
 	return error_code == DSBSTATUS_PLAYING;
 }
