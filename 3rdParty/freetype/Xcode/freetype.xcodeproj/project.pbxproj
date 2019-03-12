@@ -506,7 +506,7 @@
 			buildSettings = {
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
-				SYMROOT = "/Users/bennyfrancodennis/Developer/OpenSource/freetype-2.9.1/build/build";
+				SYMROOT = "$(SRCROOT)/Developer/OpenSource/freetype-2.9.1/build/build";
 			};
 			name = RelWithDebInfo;
 		};
@@ -557,7 +557,7 @@
 			buildSettings = {
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
-				SYMROOT = "/Users/bennyfrancodennis/Developer/OpenSource/freetype-2.9.1/build/build";
+				SYMROOT = "$(SRCROOT)/Developer/OpenSource/freetype-2.9.1/build/build";
 			};
 			name = Release;
 		};
@@ -566,7 +566,7 @@
 			buildSettings = {
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
-				SYMROOT = "/Users/bennyfrancodennis/Developer/OpenSource/freetype-2.9.1/build/build";
+				SYMROOT = "$(SRCROOT)/Developer/OpenSource/freetype-2.9.1/build/build";
 			};
 			name = MinSizeRel;
 		};
@@ -576,7 +576,7 @@
 				LD_MAP_FILE_PATH = "$(TARGET_TEMP_DIR)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_VARIANT)-$(CURRENT_ARCH).txt";
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
-				SYMROOT = "/Users/bennyfrancodennis/Developer/OpenSource/freetype-2.9.1/build/build";
+				SYMROOT = "$(SRCROOT)/Developer/OpenSource/freetype-2.9.1/build/build";
 			};
 			name = Debug;
 		};
