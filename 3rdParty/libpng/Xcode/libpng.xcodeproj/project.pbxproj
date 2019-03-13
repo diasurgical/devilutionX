@@ -8,39 +8,22 @@
 
 /* Begin PBXBuildFile section */
 		03A62046EFAA49218078BE39 /* pngtrans.c in Sources */ = {isa = PBXBuildFile; fileRef = D504CA3F93204EEF884BFE9F /* pngtrans.c */; };
-		0994F1E4DB3C4EDA8B2FE4B3 /* filter_sse2_intrinsics.c in Sources */ = {isa = PBXBuildFile; fileRef = 6AD91927D3834EDB82FD4C28 /* filter_sse2_intrinsics.c */; };
-		0E33804E3BCE47A4833C3EF1 /* pngwio.c in Sources */ = {isa = PBXBuildFile; fileRef = 08F70A8DB66D460B80506779 /* pngwio.c */; };
 		1AECB1AF6FB74C7686E85371 /* pngwrite.c in Sources */ = {isa = PBXBuildFile; fileRef = 19ECD20592A545F48A5BEDE8 /* pngwrite.c */; };
 		1C321F14B93D46A8900DE51E /* intel_init.c in Sources */ = {isa = PBXBuildFile; fileRef = 65E667F8833B45788B8E10EE /* intel_init.c */; };
-		27B9CF13E8B140EF93AFF3CA /* pngget.c in Sources */ = {isa = PBXBuildFile; fileRef = F3C75CA9A77746E69259ABFE /* pngget.c */; };
-		304B30D91F5A4872A5249F1B /* intel_init.c in Sources */ = {isa = PBXBuildFile; fileRef = 939DB93855C94A69BA6979C2 /* intel_init.c */; };
 		327C9B2D48814F68ADB5CFC0 /* pngerror.c in Sources */ = {isa = PBXBuildFile; fileRef = 0D6B28EB39814A4795205608 /* pngerror.c */; };
-		55C852A0101441EBAC355F63 /* pngrutil.c in Sources */ = {isa = PBXBuildFile; fileRef = A84A16C4EF5E4E30B285864E /* pngrutil.c */; };
 		5B6E4035338A41F496887BD7 /* png.c in Sources */ = {isa = PBXBuildFile; fileRef = 8C7ADF4ABFA94D20B6DD8D52 /* png.c */; };
 		61948E4E99A6427FAB200BC1 /* filter_sse2_intrinsics.c in Sources */ = {isa = PBXBuildFile; fileRef = 5070C3522A894E64896E6BAB /* filter_sse2_intrinsics.c */; };
 		6711E6AFE67C4484BACF2DFF /* pngwutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 09CB71FE5F6A4DD9B77D75F6 /* pngwutil.c */; };
 		686F74A2B59943F4903681A9 /* pngread.c in Sources */ = {isa = PBXBuildFile; fileRef = DF382624858C44EAA2D79F7D /* pngread.c */; };
 		6A5F9DEC9ABD45FEA723A802 /* pngmem.c in Sources */ = {isa = PBXBuildFile; fileRef = 5E8F538291FE4699AABCAA05 /* pngmem.c */; };
-		6C1237B1518D45538ADAC94A /* pngrtran.c in Sources */ = {isa = PBXBuildFile; fileRef = 15B23FB8ECCD41618683FC67 /* pngrtran.c */; };
-		77566B6950C04588AF7E7633 /* pngmem.c in Sources */ = {isa = PBXBuildFile; fileRef = C9829B137F77451795A03EAC /* pngmem.c */; };
 		79E18DA5E5D34917B0753E10 /* pngrtran.c in Sources */ = {isa = PBXBuildFile; fileRef = 0832233FA927485998978DEE /* pngrtran.c */; };
 		83EDF6F52A474C7592D683B4 /* pngpread.c in Sources */ = {isa = PBXBuildFile; fileRef = E8F1C8116AE84DFC8CA2F727 /* pngpread.c */; };
-		8425429250A34B0885A17DB8 /* png.c in Sources */ = {isa = PBXBuildFile; fileRef = 1D3FA0F7654548DCA4F73853 /* png.c */; };
-		863478FE1421469EB32D4365 /* pngpread.c in Sources */ = {isa = PBXBuildFile; fileRef = 976FF61951DC473F8181B4C3 /* pngpread.c */; };
-		8EF52F218901435DB67CD920 /* pngwrite.c in Sources */ = {isa = PBXBuildFile; fileRef = 720BD4E2A0104C338C0D7DC0 /* pngwrite.c */; };
 		8F75904639C1440C916A104B /* pngwio.c in Sources */ = {isa = PBXBuildFile; fileRef = E5AA67FA07EA439594405BA1 /* pngwio.c */; };
-		90405ADE718B470B88853111 /* pngread.c in Sources */ = {isa = PBXBuildFile; fileRef = 05D0DE573C294F9C8FD8E39A /* pngread.c */; };
 		90879D352BCD443E8A83C664 /* pngrio.c in Sources */ = {isa = PBXBuildFile; fileRef = 32C435AAFA3D4FE7A43DEB11 /* pngrio.c */; };
 		9B29662EB9DF44DD9795E745 /* pngset.c in Sources */ = {isa = PBXBuildFile; fileRef = 0A3BEF128F524CD7A6B8E810 /* pngset.c */; };
 		A75CE4A5E2DB4CDA9C87344E /* pngwtran.c in Sources */ = {isa = PBXBuildFile; fileRef = 20BF829B7E3D427FA879DE36 /* pngwtran.c */; };
-		ADAEEE61897B4F9C8DB79FE5 /* pngwtran.c in Sources */ = {isa = PBXBuildFile; fileRef = 82E1E70D39A84040B8883680 /* pngwtran.c */; };
-		B28D29F519EC4FBD8763AC36 /* pngwutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 04C2385BC52E4BA4B7804467 /* pngwutil.c */; };
-		BCB6963D985A431694FAE9E3 /* pngset.c in Sources */ = {isa = PBXBuildFile; fileRef = AA4B49B2DD3D464CA7CFD5D0 /* pngset.c */; };
-		D3A6373C09F84581A913FD59 /* pngrio.c in Sources */ = {isa = PBXBuildFile; fileRef = BE4EBA6E70504F70B9454512 /* pngrio.c */; };
 		D3AC9C8528B549A0AAAFA9F0 /* pngrutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 80C43A1CD5034627B32DBA9E /* pngrutil.c */; };
-		E6CAB3267FA94994908C1ED8 /* pngerror.c in Sources */ = {isa = PBXBuildFile; fileRef = FD2C58F0DEF94159832592FF /* pngerror.c */; };
 		F275762ADC054A91B4DE379F /* pngget.c in Sources */ = {isa = PBXBuildFile; fileRef = 7043F016BC704FA1A8253B76 /* pngget.c */; };
-		FCC805C8B9964C0F9ABD0D63 /* pngtrans.c in Sources */ = {isa = PBXBuildFile; fileRef = DFB1B71B18E64CDA8274EA9A /* pngtrans.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,7 +40,6 @@
 		19ECD20592A545F48A5BEDE8 /* pngwrite.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; path = pngwrite.c; sourceTree = SOURCE_ROOT; };
 		1D3FA0F7654548DCA4F73853 /* png.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; path = png.c; sourceTree = SOURCE_ROOT; };
 		20BF829B7E3D427FA879DE36 /* pngwtran.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; path = pngwtran.c; sourceTree = SOURCE_ROOT; };
-		222923A59E25488D9FD6415F /* libpng16d.16.35.0.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; path = libpng16d.16.35.0.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		23CDF72FB6E8411787B0D9E7 /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
 		29F8BC04F7734664BCA89200 /* pngconf.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; path = pngconf.h; sourceTree = SOURCE_ROOT; };
 		32C435AAFA3D4FE7A43DEB11 /* pngrio.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; path = pngrio.c; sourceTree = SOURCE_ROOT; };
@@ -267,7 +249,6 @@
 		5F2E4B6A7EA6451B86F05855 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				222923A59E25488D9FD6415F /* libpng16d.16.35.0.dylib */,
 				5D4732F44E0341ACB091868D /* libpng16d.a */,
 			);
 			name = Products;
@@ -464,21 +445,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		425AEB498F77433495966727 /* png */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = CA6EED5F291A469AAB45480F /* Build configuration list for PBXNativeTarget "png" */;
-			buildPhases = (
-				6AF73C2DF77E4E0BBD193B05 /* Sources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = png;
-			productName = png;
-			productReference = 222923A59E25488D9FD6415F /* libpng16d.16.35.0.dylib */;
-			productType = "com.apple.product-type.library.dynamic";
-		};
 		93A48D2BF5AB453EA4E1BCC5 /* png_static */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5239CDD17D704C5A844C9ECD /* Build configuration list for PBXNativeTarget "png_static" */;
@@ -514,37 +480,12 @@
 			projectDirPath = ../;
 			projectRoot = "";
 			targets = (
-				425AEB498F77433495966727 /* png */,
 				93A48D2BF5AB453EA4E1BCC5 /* png_static */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		6AF73C2DF77E4E0BBD193B05 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0994F1E4DB3C4EDA8B2FE4B3 /* filter_sse2_intrinsics.c in Sources */,
-				304B30D91F5A4872A5249F1B /* intel_init.c in Sources */,
-				8425429250A34B0885A17DB8 /* png.c in Sources */,
-				E6CAB3267FA94994908C1ED8 /* pngerror.c in Sources */,
-				27B9CF13E8B140EF93AFF3CA /* pngget.c in Sources */,
-				77566B6950C04588AF7E7633 /* pngmem.c in Sources */,
-				863478FE1421469EB32D4365 /* pngpread.c in Sources */,
-				90405ADE718B470B88853111 /* pngread.c in Sources */,
-				D3A6373C09F84581A913FD59 /* pngrio.c in Sources */,
-				6C1237B1518D45538ADAC94A /* pngrtran.c in Sources */,
-				55C852A0101441EBAC355F63 /* pngrutil.c in Sources */,
-				BCB6963D985A431694FAE9E3 /* pngset.c in Sources */,
-				FCC805C8B9964C0F9ABD0D63 /* pngtrans.c in Sources */,
-				0E33804E3BCE47A4833C3EF1 /* pngwio.c in Sources */,
-				8EF52F218901435DB67CD920 /* pngwrite.c in Sources */,
-				ADAEEE61897B4F9C8DB79FE5 /* pngwtran.c in Sources */,
-				B28D29F519EC4FBD8763AC36 /* pngwutil.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		904263A8E2BD4C1380EF25CF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -594,15 +535,15 @@
 				);
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = "    -DNDEBUG  ";
+				OTHER_CFLAGS = "-DNDEBUG";
 				OTHER_LIBTOOLFLAGS = " ";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = png16;
 				SECTORDER_FLAGS = "";
 				SYMROOT = "$(SRCROOT)/Xcode";
-				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/3rdParty/libpng $(SRCROOT)/3rdParty/libpng/Xcode";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT) $(SRCROOT)/Xcode";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -612,250 +553,56 @@
 				);
 			};
 			name = MinSizeRel;
-		};
-		33FCE789C8D4443BAFB94EBE /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					i386,
-				);
-				COMBINE_HIDPI_IMAGES = YES;
-				DYLIB_COMPATIBILITY_VERSION = 16.0.0;
-				DYLIB_CURRENT_VERSION = 16.35.0;
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .dylib;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					png_EXPORTS,
-					"'PNG_INTEL_SSE_OPT=1'",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/3rdParty/libpng/Xcode",
-					"$(SRCROOT)/3rdParty/libpng",
-				);
-				INSTALL_PATH = "";
-				LIBRARY_SEARCH_PATHS = "";
-				LIBRARY_STYLE = DYNAMIC;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = "   -fPIC  ";
-				OTHER_LDFLAGS = (
-					"-dynamiclib",
-					"-Wl,-headerpad_max_install_names",
-					"-install_name",
-					"@rpath/libpng16d.16.dylib",
-					/usr/lib/libz.dylib,
-					/usr/lib/libm.dylib,
-				);
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = png16d.16.35.0;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(SRCROOT)/3rdParty/libpng/Xcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-					"$(inherited)",
-				);
-			};
-			name = Debug;
 		};
 		517ABDE763294EF1936584D0 /* RelWithDebInfo */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
-				SYMROOT = "$(SRCROOT)/3rdParty/libpng/Xcode/build";
-			};
-			name = RelWithDebInfo;
-		};
-		7441CD906CE0413084B2E0D9 /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
 				ARCHS = (
 					"$(ARCHS_STANDARD)",
 					i386,
 				);
-				COMBINE_HIDPI_IMAGES = YES;
-				DYLIB_COMPATIBILITY_VERSION = 16.0.0;
-				DYLIB_CURRENT_VERSION = 16.35.0;
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .dylib;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = s;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					png_EXPORTS,
-					"'PNG_INTEL_SSE_OPT=1'",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/3rdParty/libpng/Xcode",
-					"$(SRCROOT)/3rdParty/libpng",
-				);
-				INSTALL_PATH = "";
-				LIBRARY_SEARCH_PATHS = "";
-				LIBRARY_STYLE = DYNAMIC;
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = (
-					"-DNDEBUG",
-					"-fPIC",
-				);
-				OTHER_LDFLAGS = (
-					"-dynamiclib",
-					"-Wl,-headerpad_max_install_names",
-					"-install_name",
-					"@rpath/libpng16.16.dylib",
-					/usr/lib/libz.dylib,
-					/usr/lib/libm.dylib,
-				);
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = png16.16.35.0;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(SRCROOT)/3rdParty/libpng/Xcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-					"$(inherited)",
-				);
-			};
-			name = MinSizeRel;
-		};
-		7494356923514E65AB271DFB /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					i386,
-				);
-				COMBINE_HIDPI_IMAGES = YES;
-				DYLIB_COMPATIBILITY_VERSION = 16.0.0;
-				DYLIB_CURRENT_VERSION = 16.35.0;
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .dylib;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 2;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					png_EXPORTS,
-					"'PNG_INTEL_SSE_OPT=1'",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/3rdParty/libpng/Xcode",
-					"$(SRCROOT)/3rdParty/libpng",
-				);
-				INSTALL_PATH = "";
-				LIBRARY_SEARCH_PATHS = "";
-				LIBRARY_STYLE = DYNAMIC;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = (
-					"-DNDEBUG",
-					"-fPIC",
-				);
-				OTHER_LDFLAGS = (
-					"-dynamiclib",
-					"-Wl,-headerpad_max_install_names",
-					"-install_name",
-					"@rpath/libpng16.16.dylib",
-					/usr/lib/libz.dylib,
-					/usr/lib/libm.dylib,
-				);
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = png16.16.35.0;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(SRCROOT)/3rdParty/libpng/Xcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-					"$(inherited)",
-				);
+				SDKROOT = macosx10.13;
+				SYMROOT = "$(SRCROOT)/build";
 			};
 			name = RelWithDebInfo;
 		};
 		75D11A3245E2404AA6D3733A /* MinSizeRel */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
-				SYMROOT = "$(SRCROOT)/3rdParty/libpng/Xcode/build";
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					i386,
+				);
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = macosx10.13;
+				SYMROOT = "$(SRCROOT)/build";
 			};
 			name = MinSizeRel;
 		};
 		834D512EFD814C12BB820EE4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
-				SYMROOT = "$(SRCROOT)/3rdParty/libpng/Xcode/build";
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					i386,
+				);
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = macosx10.13;
+				SYMROOT = "$(SRCROOT)/build";
 			};
 			name = Debug;
 		};
 		A50D8F160B5C4F59AA2EBE68 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
-				SYMROOT = "$(SRCROOT)/3rdParty/libpng/Xcode/build";
-			};
-			name = Release;
-		};
-		BA18573CA78C41C7A3F5C906 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
 				ARCHS = (
 					"$(ARCHS_STANDARD)",
 					i386,
 				);
-				COMBINE_HIDPI_IMAGES = YES;
-				DYLIB_COMPATIBILITY_VERSION = 16.0.0;
-				DYLIB_CURRENT_VERSION = 16.35.0;
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .dylib;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_PREPROCESSOR_DEFINITIONS = "'PNG_INTEL_SSE_OPT=1'";
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/3rdParty/libpng/Xcode",
-					"$(SRCROOT)/3rdParty/libpng",
-				);
-				INSTALL_PATH = "";
-				LIBRARY_SEARCH_PATHS = "";
-				LIBRARY_STYLE = DYNAMIC;
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = (
-					"-DNDEBUG",
-					"-fPIC",
-				);
-				OTHER_LDFLAGS = (
-					"-dynamiclib",
-					"-Wl,-headerpad_max_install_names",
-					"-install_name",
-					"@rpath/libpng16.16.dylib",
-					/usr/lib/libz.dylib,
-					/usr/lib/libm.dylib,
-				);
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = png16.16.35.0;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(SRCROOT)/3rdParty/libpng/Xcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-					"$(inherited)",
-				);
+				SDKROOT = macosx10.13;
+				SYMROOT = "$(SRCROOT)/build";
 			};
 			name = Release;
 		};
@@ -881,7 +628,7 @@
 				);
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "    ";
 				OTHER_LIBTOOLFLAGS = " ";
@@ -889,7 +636,7 @@
 				PRODUCT_NAME = png16;
 				SECTORDER_FLAGS = "";
 				SYMROOT = "$(SRCROOT)/Xcode";
-				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/3rdParty/libpng $(SRCROOT)/3rdParty/libpng/Xcode";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT) $(SRCROOT)/Xcode";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -922,15 +669,15 @@
 				);
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = "       -DNDEBUG  ";
+				OTHER_CFLAGS = "-DNDEBUG";
 				OTHER_LIBTOOLFLAGS = " ";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = png16;
 				SECTORDER_FLAGS = "";
 				SYMROOT = "$(SRCROOT)/Xcode";
-				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/3rdParty/libpng $(SRCROOT)/3rdParty/libpng/Xcode";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT) $(SRCROOT)/Xcode";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -963,15 +710,15 @@
 				);
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = "    -DNDEBUG  ";
+				OTHER_CFLAGS = "-DNDEBUG";
 				OTHER_LIBTOOLFLAGS = " ";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = png16;
 				SECTORDER_FLAGS = "";
 				SYMROOT = "$(SRCROOT)/Xcode";
-				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/3rdParty/libpng $(SRCROOT)/3rdParty/libpng/Xcode";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT) $(SRCROOT)/Xcode";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -992,17 +739,6 @@
 				D034E0B036A34935A24D9A67 /* Debug */,
 				2FB0DD405ADD4170A6D4C271 /* MinSizeRel */,
 				F6447B049371449F900CDDDD /* RelWithDebInfo */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		CA6EED5F291A469AAB45480F /* Build configuration list for PBXNativeTarget "png" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				BA18573CA78C41C7A3F5C906 /* Release */,
-				33FCE789C8D4443BAFB94EBE /* Debug */,
-				7441CD906CE0413084B2E0D9 /* MinSizeRel */,
-				7494356923514E65AB271DFB /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

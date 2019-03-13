@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "425AEB498F77433495966727"
-               BuildableName = "libpng16.16.35.0.dylib"
-               BlueprintName = "png"
-               ReferencedContainer = "container:Xcode/libpng.xcodeproj">
+               BlueprintIdentifier = "C02BA02E8B7F48C98B582C3E"
+               BuildableName = "libfreetype.a"
+               BlueprintName = "freetype"
+               ReferencedContainer = "container:Xcode/freetype.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,10 +45,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "425AEB498F77433495966727"
-            BuildableName = "libpng16.16.35.0.dylib"
-            BlueprintName = "png"
-            ReferencedContainer = "container:Xcode/libpng.xcodeproj">
+            BlueprintIdentifier = "C02BA02E8B7F48C98B582C3E"
+            BuildableName = "libfreetype.a"
+            BlueprintName = "freetype"
+            ReferencedContainer = "container:Xcode/freetype.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -63,10 +63,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "425AEB498F77433495966727"
-            BuildableName = "libpng16.16.35.0.dylib"
-            BlueprintName = "png"
-            ReferencedContainer = "container:Xcode/libpng.xcodeproj">
+            BlueprintIdentifier = "C02BA02E8B7F48C98B582C3E"
+            BuildableName = "libfreetype.a"
+            BlueprintName = "freetype"
+            ReferencedContainer = "container:Xcode/freetype.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

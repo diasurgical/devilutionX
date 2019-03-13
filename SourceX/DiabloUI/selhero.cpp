@@ -210,7 +210,7 @@ void selhero_Load_Select(int value)
 	selhero_result = NEW_GAME;
 }
 
-BOOL __stdcall SelHero_GetHeroInfo(_uiheroinfo *pInfo)
+BOOL __stdcall SelHero_GetHeroInfo(_uiheroinfo *pInfo) 
 {
 	heros[selhero_SaveCount] = *pInfo;
 	selhero_SaveCount++;

@@ -424,10 +424,7 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					FT2_BUILD_LIBRARY,
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = FT2_BUILD_LIBRARY;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
 					./include,
@@ -436,6 +433,7 @@
 				);
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = (
 					"-DNDEBUG",
@@ -444,6 +442,7 @@
 				OTHER_LIBTOOLFLAGS = " ";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = freetype;
+				SDKROOT = macosx10.13;
 				SECTORDER_FLAGS = "";
 				SYMROOT = "";
 				USE_HEADERMAP = NO;
@@ -469,10 +468,7 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = s;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					FT2_BUILD_LIBRARY,
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = FT2_BUILD_LIBRARY;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
 					./include,
@@ -481,6 +477,7 @@
 				);
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = (
 					"-DNDEBUG",
@@ -489,6 +486,7 @@
 				OTHER_LIBTOOLFLAGS = " ";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = freetype;
+				SDKROOT = macosx10.13;
 				SECTORDER_FLAGS = "";
 				SYMROOT = "";
 				USE_HEADERMAP = NO;
@@ -504,9 +502,9 @@
 		5079658FC9E44353BC6774C7 /* RelWithDebInfo */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
-				SYMROOT = "$(SRCROOT)/Developer/OpenSource/freetype-2.9.1/build/build";
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = macosx10.13;
+				SYMROOT = "$(SRCROOT)build";
 			};
 			name = RelWithDebInfo;
 		};
@@ -523,10 +521,7 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					FT2_BUILD_LIBRARY,
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = FT2_BUILD_LIBRARY;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
 					./include,
@@ -535,11 +530,13 @@
 				);
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "   -fvisibility=hidden  ";
 				OTHER_LIBTOOLFLAGS = " ";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = freetype;
+				SDKROOT = macosx10.13;
 				SECTORDER_FLAGS = "";
 				SYMROOT = "";
 				USE_HEADERMAP = NO;
@@ -555,18 +552,18 @@
 		5F11D5CCAA9544798EB51E05 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
-				SYMROOT = "$(SRCROOT)/Developer/OpenSource/freetype-2.9.1/build/build";
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = macosx10.13;
+				SYMROOT = "$(SRCROOT)build";
 			};
 			name = Release;
 		};
 		753505405BB84A72813D9A4B /* MinSizeRel */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
-				SYMROOT = "$(SRCROOT)/Developer/OpenSource/freetype-2.9.1/build/build";
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = macosx10.13;
+				SYMROOT = "$(SRCROOT)build";
 			};
 			name = MinSizeRel;
 		};
@@ -574,9 +571,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				LD_MAP_FILE_PATH = "$(TARGET_TEMP_DIR)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_VARIANT)-$(CURRENT_ARCH).txt";
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
-				SYMROOT = "$(SRCROOT)/Developer/OpenSource/freetype-2.9.1/build/build";
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = macosx10.13;
+				SYMROOT = "$(SRCROOT)build";
 			};
 			name = Debug;
 		};
@@ -593,10 +590,7 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = 2;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					FT2_BUILD_LIBRARY,
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = FT2_BUILD_LIBRARY;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
 					./include,
@@ -605,6 +599,7 @@
 				);
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = (
 					"-DNDEBUG",
@@ -613,6 +608,7 @@
 				OTHER_LIBTOOLFLAGS = " ";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = freetype;
+				SDKROOT = macosx10.13;
 				SECTORDER_FLAGS = "";
 				SYMROOT = "";
 				USE_HEADERMAP = NO;

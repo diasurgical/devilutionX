@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0448E8AE108B937A00C9D3EA /* native_midi_macosx.c in Sources */ = {isa = PBXBuildFile; fileRef = 0448E8AD108B937A00C9D3EA /* native_midi_macosx.c */; };
-		0448E8AF108B937A00C9D3EA /* native_midi_macosx.c in Sources */ = {isa = PBXBuildFile; fileRef = 0448E8AD108B937A00C9D3EA /* native_midi_macosx.c */; };
 		436280BA223635A800C911AD /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 436280AD2236348100C911AD /* CoreAudio.framework */; };
 		436280BC223635B200C911AD /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 436280BB223635B200C911AD /* SDL2.framework */; };
 		436280BD223635BA00C911AD /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA6442D2175B181D00A2125A /* AudioUnit.framework */; };
@@ -79,16 +78,6 @@
 		AAE8838B1F97321E007B6569 /* mix.c in Sources */ = {isa = PBXBuildFile; fileRef = AAE883741F97321E007B6569 /* mix.c */; };
 		BE1FA8CD07AF96B2004B6283 /* SDL_mixer.h in Headers */ = {isa = PBXBuildFile; fileRef = 1014BAEA010A4B677F000001 /* SDL_mixer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		009BF08F1068AE4D00D68177 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = BE1FA8B407AF96B2004B6283;
-			remoteInfo = Framework;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		001D90F8108A2CB8006E367C /* Copy Frameworks */ = {
@@ -186,8 +175,6 @@
 		BE1FA8AE07AF95F7004B6283 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = /Library/Frameworks/SDL2.framework; sourceTree = "<absolute>"; };
 		BE1FA90507AF96B2004B6283 /* Info-Framework.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-Framework.plist"; sourceTree = "<group>"; };
 		BE1FA90607AF96B2004B6283 /* SDL2_mixer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SDL2_mixer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		BE1FA95407AF96B2004B6283 /* libSDL2_mixer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSDL2_mixer.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		BE1FA95807AF96B3004B6283 /* Create DMG */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Create DMG"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F51BFB0101F724BE01D3D55B /* native_midi.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = native_midi.h; sourceTree = "<group>"; };
 		F59C710300D5CB5801000001 /* ReadMe.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; };
 		F59C710400D5CB5801000001 /* Welcome.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Welcome.txt; sourceTree = "<group>"; };
@@ -208,13 +195,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		BE1FA95207AF96B2004B6283 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -231,8 +211,6 @@
 			children = (
 				089C1665FE841158C02AAC07 /* Resources */,
 				BE1FA90607AF96B2004B6283 /* SDL2_mixer.framework */,
-				BE1FA95407AF96B2004B6283 /* libSDL2_mixer.a */,
-				BE1FA95807AF96B3004B6283 /* Create DMG */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -426,13 +404,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		BE1FA90807AF96B2004B6283 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
@@ -460,42 +431,6 @@
 			productReference = BE1FA90607AF96B2004B6283 /* SDL2_mixer.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		BE1FA90707AF96B2004B6283 /* Static Library */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 00B7E48F097EC6B300826121 /* Build configuration list for PBXNativeTarget "Static Library" */;
-			buildPhases = (
-				BE1FA90807AF96B2004B6283 /* Headers */,
-				BE1FA92107AF96B2004B6283 /* Sources */,
-				BE1FA95207AF96B2004B6283 /* Frameworks */,
-				BE1FA95307AF96B2004B6283 /* Rez */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "Static Library";
-			productInstallPath = /usr/local/lib;
-			productName = "Static Library";
-			productReference = BE1FA95407AF96B2004B6283 /* libSDL2_mixer.a */;
-			productType = "com.apple.product-type.library.static";
-		};
-		BE1FA95507AF96B2004B6283 /* Create DMG */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 00B7E493097EC6B300826121 /* Build configuration list for PBXNativeTarget "Create DMG" */;
-			buildPhases = (
-				BE1FA95707AF96B2004B6283 /* ShellScript */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				009BF0901068AE4D00D68177 /* PBXTargetDependency */,
-			);
-			name = "Create DMG";
-			productInstallPath = /usr/local/bin;
-			productName = "Standard Package";
-			productReference = BE1FA95807AF96B3004B6283 /* Create DMG */;
-			productType = "com.apple.product-type.tool";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -517,8 +452,6 @@
 			projectRoot = "";
 			targets = (
 				BE1FA8B407AF96B2004B6283 /* Framework */,
-				BE1FA90707AF96B2004B6283 /* Static Library */,
-				BE1FA95507AF96B2004B6283 /* Create DMG */,
 			);
 		};
 /* End PBXProject section */
@@ -535,13 +468,6 @@
 
 /* Begin PBXRezBuildPhase section */
 		BE1FA90307AF96B2004B6283 /* Rez */ = {
-			isa = PBXRezBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		BE1FA95307AF96B2004B6283 /* Rez */ = {
 			isa = PBXRezBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -578,15 +504,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "cd $SYMROOT/$CONFIGURATION/$PUBLIC_HEADERS_FOLDER_PATH\nHEADER=SDL_mixer.h\nsed 's,#include \"\\(.*\\)\",#include <SDL2/\\1>,' <$HEADER >$HEADER.new\nmv $HEADER.new $HEADER";
-		};
-		BE1FA95707AF96B2004B6283 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "PRODUCT_NAME=SDL2_mixer\n\n# Sign framework\nif [ \"$SDL_CODESIGN_IDENTITY\" != \"\" ]; then\n    codesign --force --deep --sign \"$SDL_CODESIGN_IDENTITY\" $TARGET_BUILD_DIR/$PRODUCT_NAME.framework/Versions/A\nfi\n\n# clean up the framework, remove headers, extra files\nmkdir -p build/dmg-tmp\nxcrun CpMac -r $TARGET_BUILD_DIR/$PRODUCT_NAME.framework build/dmg-tmp/\ncp pkg-support/resources/ReadMe.txt build/dmg-tmp\n\n# remove the .DS_Store files if any (we may want to provide one in the future for fancy .dmgs)\nrm -rf build/dmg-tmp/.DS_Store\n\n# create the dmg\nhdiutil create -ov -fs HFS+ -volname $PRODUCT_NAME -srcfolder build/dmg-tmp build/$PRODUCT_NAME.dmg\n\n# clean up\nrm -rf build/dmg-tmp";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -627,23 +544,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		BE1FA92107AF96B2004B6283 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				0448E8AF108B937A00C9D3EA /* native_midi_macosx.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		009BF0901068AE4D00D68177 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = BE1FA8B407AF96B2004B6283 /* Framework */;
-			targetProxy = 009BF08F1068AE4D00D68177 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		00B7E48C097EC6B300826121 /* Release */ = {
@@ -682,7 +583,7 @@
 				INFOPLIST_FILE = "Info-Framework.plist";
 				INSTALL_PATH = "@rpath";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
 					FLAC,
@@ -696,6 +597,7 @@
 					OpusFile,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.libsdl.SDL2-mixer";
+				SDKROOT = macosx10.13;
 				VALID_ARCHS = "i386 x86_x64";
 				WRAPPER_EXTENSION = framework;
 			};
@@ -737,7 +639,7 @@
 				INFOPLIST_FILE = "Info-Framework.plist";
 				INSTALL_PATH = "@rpath";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-weak_framework",
@@ -752,99 +654,9 @@
 					OpusFile,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.libsdl.SDL2-mixer";
+				SDKROOT = macosx10.13;
 				VALID_ARCHS = "i386 x86_x64";
 				WRAPPER_EXTENSION = framework;
-			};
-			name = Debug;
-		};
-		00B7E490097EC6B300826121 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					i386,
-				);
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					MUSIC_CMD,
-					MUSIC_WAV,
-					MUSIC_MID,
-					MUSIC_MID_NATIVE,
-					MUSIC_MP3_DISABLED,
-				);
-				LIBRARY_STYLE = STATIC;
-				OTHER_LIBTOOL_FLAGS = "";
-				OTHER_REZFLAGS = "";
-				REZ_EXECUTABLE = YES;
-				SKIP_INSTALL = YES;
-			};
-			name = Release;
-		};
-		00B7E491097EC6B300826121 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					i386,
-				);
-				COMBINE_HIDPI_IMAGES = YES;
-				DEBUGGING_SYMBOLS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					MUSIC_CMD,
-					MUSIC_WAV,
-					MUSIC_MID,
-					MUSIC_MID_NATIVE,
-					MUSIC_MP3_DISABLED,
-				);
-				LIBRARY_STYLE = STATIC;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LIBTOOL_FLAGS = "";
-				OTHER_REZFLAGS = "";
-				REZ_EXECUTABLE = YES;
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
-		00B7E494097EC6B300826121 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "Create DMG";
-				REZ_EXECUTABLE = YES;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-				ZERO_LINK = NO;
-			};
-			name = Release;
-		};
-		00B7E495097EC6B300826121 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				DEBUGGING_SYMBOLS = YES;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = (
-					"-flat_namespace",
-					"-all_load",
-				);
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "Create DMG";
-				REZ_EXECUTABLE = YES;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-				ZERO_LINK = YES;
 			};
 			name = Debug;
 		};
@@ -975,24 +787,6 @@
 			buildConfigurations = (
 				00B7E48C097EC6B300826121 /* Release */,
 				00B7E48D097EC6B300826121 /* Debug */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		00B7E48F097EC6B300826121 /* Build configuration list for PBXNativeTarget "Static Library" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				00B7E490097EC6B300826121 /* Release */,
-				00B7E491097EC6B300826121 /* Debug */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		00B7E493097EC6B300826121 /* Build configuration list for PBXNativeTarget "Create DMG" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				00B7E494097EC6B300826121 /* Release */,
-				00B7E495097EC6B300826121 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
