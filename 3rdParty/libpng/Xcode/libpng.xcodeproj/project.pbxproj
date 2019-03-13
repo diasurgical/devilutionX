@@ -513,73 +513,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		2FB0DD405ADD4170A6D4C271 /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					i386,
-				);
-				COMBINE_HIDPI_IMAGES = YES;
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .a;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = s;
-				GCC_PREPROCESSOR_DEFINITIONS = "'PNG_INTEL_SSE_OPT=1'";
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)",
-					"$(SRCROOT)/Xcode",
-				);
-				INSTALL_PATH = "";
-				LIBRARY_STYLE = STATIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = "-DNDEBUG";
-				OTHER_LIBTOOLFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = png16;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(SRCROOT)/Xcode";
-				USER_HEADER_SEARCH_PATHS = "$(SRCROOT) $(SRCROOT)/Xcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-					"$(inherited)",
-				);
-			};
-			name = MinSizeRel;
-		};
-		517ABDE763294EF1936584D0 /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					i386,
-				);
-				ONLY_ACTIVE_ARCH = NO;
-				SDKROOT = macosx10.13;
-				SYMROOT = "$(SRCROOT)/build";
-			};
-			name = RelWithDebInfo;
-		};
-		75D11A3245E2404AA6D3733A /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					i386,
-				);
-				ONLY_ACTIVE_ARCH = NO;
-				SDKROOT = macosx10.13;
-				SYMROOT = "$(SRCROOT)/build";
-			};
-			name = MinSizeRel;
-		};
 		834D512EFD814C12BB820EE4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -647,47 +580,6 @@
 			};
 			name = Debug;
 		};
-		F6447B049371449F900CDDDD /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					i386,
-				);
-				COMBINE_HIDPI_IMAGES = YES;
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .a;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 2;
-				GCC_PREPROCESSOR_DEFINITIONS = "'PNG_INTEL_SSE_OPT=1'";
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)",
-					"$(SRCROOT)/Xcode",
-				);
-				INSTALL_PATH = "";
-				LIBRARY_STYLE = STATIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = "-DNDEBUG";
-				OTHER_LIBTOOLFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = png16;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(SRCROOT)/Xcode";
-				USER_HEADER_SEARCH_PATHS = "$(SRCROOT) $(SRCROOT)/Xcode";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-					"$(inherited)",
-				);
-			};
-			name = RelWithDebInfo;
-		};
 		FE68027287C84FBEA2255F70 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -737,8 +629,6 @@
 			buildConfigurations = (
 				FE68027287C84FBEA2255F70 /* Release */,
 				D034E0B036A34935A24D9A67 /* Debug */,
-				2FB0DD405ADD4170A6D4C271 /* MinSizeRel */,
-				F6447B049371449F900CDDDD /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -748,8 +638,6 @@
 			buildConfigurations = (
 				A50D8F160B5C4F59AA2EBE68 /* Release */,
 				834D512EFD814C12BB820EE4 /* Debug */,
-				75D11A3245E2404AA6D3733A /* MinSizeRel */,
-				517ABDE763294EF1936584D0 /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

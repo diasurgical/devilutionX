@@ -371,6 +371,7 @@
 					"$(PROJECT_DIR)/Frameworks",
 				);
 				FRAMEWORK_VERSION = A;
+				GCC_OPTIMIZATION_LEVEL = 3;
 				HEADER_SEARCH_PATHS = (
 					"$(HEADER_SEARCH_PATHS_QUOTED)",
 					../../SDL2/include,
