@@ -57,6 +57,40 @@ linux32 make -j$(nproc)
 ```
 
 ### Building devilutionX on macOS
+
+#### Building with Xcode (x86 only)
+
+Install Xcode 9.4 and Xcode Command Line tools, this is the last version with support for **32 bits**
+
+Build **libsodium** from our 3rdParty folder
+```
+cd ./3rdParty/libsodium/
+chmod +x autogen.sh
+sudo ./autogen.sh
+sh ./dist-build/osx.sh
+```
+Now go to devilutionX/Xcode folder and open the workspace **devilutionX.xcworkspace**
+
+Then select **devilutionX** in targets and pres **CMD + B** to build
+
+#### Building with Xcode from terminal (x86 only)
+
+Note: You need build **libsodium** before
+
+Inside devilutionX folder execute:
+```
+xcodebuild -workspace "./Xcode/devilutionX.xcworkspace" -scheme "devilutionX" build -configuration Debug
+```
+
+#### Building using the bash script (x86 only)
+
+Execute the bash script saved in **.travis/xcode-build.sh** this will build **libsodium** and make devilution project and dependencies.
+
+```
+$ ./.travis/xcode-build.sh
+```
+
+#### Building for x64 with CMake
 Note: macOS is 64-bit only so this is not fully playable at this point.
 
 Install the dependencies using [Homebrew](https://brew.sh/):
