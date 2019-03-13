@@ -562,6 +562,7 @@
 					"\"$(SRCROOT)/Frameworks\"",
 					"$(PROJECT_DIR)/Frameworks",
 				);
+				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					MUSIC_CMD,
 					MUSIC_WAV,

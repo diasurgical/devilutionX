@@ -455,59 +455,6 @@
 			};
 			name = Release;
 		};
-		31CCC17AF4494C89A977E3AE /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					i386,
-				);
-				COMBINE_HIDPI_IMAGES = YES;
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .a;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = s;
-				GCC_PREPROCESSOR_DEFINITIONS = FT2_BUILD_LIBRARY;
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					./include,
-					../include,
-					/Library/Frameworks/Mono.framework/Headers,
-				);
-				INSTALL_PATH = "";
-				LIBRARY_STYLE = STATIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = (
-					"-DNDEBUG",
-					"-fvisibility=hidden",
-				);
-				OTHER_LIBTOOLFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = freetype;
-				SDKROOT = macosx10.13;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-					"$(inherited)",
-				);
-			};
-			name = MinSizeRel;
-		};
-		5079658FC9E44353BC6774C7 /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ONLY_ACTIVE_ARCH = NO;
-				SDKROOT = macosx10.13;
-				SYMROOT = "$(SRCROOT)build";
-			};
-			name = RelWithDebInfo;
-		};
 		5C9911EC75664D9E9D828A05 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -558,15 +505,6 @@
 			};
 			name = Release;
 		};
-		753505405BB84A72813D9A4B /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ONLY_ACTIVE_ARCH = NO;
-				SDKROOT = macosx10.13;
-				SYMROOT = "$(SRCROOT)build";
-			};
-			name = MinSizeRel;
-		};
 		84DA222D5C2847C999381AC8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -577,50 +515,6 @@
 			};
 			name = Debug;
 		};
-		C6C2F172F40C419EB09E3241 /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					i386,
-				);
-				COMBINE_HIDPI_IMAGES = YES;
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .a;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 2;
-				GCC_PREPROCESSOR_DEFINITIONS = FT2_BUILD_LIBRARY;
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (
-					./include,
-					../include,
-					/Library/Frameworks/Mono.framework/Headers,
-				);
-				INSTALL_PATH = "";
-				LIBRARY_STYLE = STATIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = (
-					"-DNDEBUG",
-					"-fvisibility=hidden",
-				);
-				OTHER_LIBTOOLFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = freetype;
-				SDKROOT = macosx10.13;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-					"$(inherited)",
-				);
-			};
-			name = RelWithDebInfo;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -629,8 +523,6 @@
 			buildConfigurations = (
 				5C9911EC75664D9E9D828A05 /* Debug */,
 				1BE8EE5BEB9C41329CE24FEC /* Release */,
-				31CCC17AF4494C89A977E3AE /* MinSizeRel */,
-				C6C2F172F40C419EB09E3241 /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -640,8 +532,6 @@
 			buildConfigurations = (
 				84DA222D5C2847C999381AC8 /* Debug */,
 				5F11D5CCAA9544798EB51E05 /* Release */,
-				753505405BB84A72813D9A4B /* MinSizeRel */,
-				5079658FC9E44353BC6774C7 /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

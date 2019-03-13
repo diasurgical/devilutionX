@@ -1795,6 +1795,7 @@
 					"$(PROJECT_DIR)",
 				);
 				FRAMEWORK_VERSION = A;
+				GCC_OPTIMIZATION_LEVEL = 3;
 				INFOPLIST_FILE = "Info-Framework.plist";
 				INSTALL_PATH = "@rpath";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;

@@ -38,8 +38,6 @@
 		43BA36F52236F5EF009041FF /* SDL2_mixer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 43BA36912236E901009041FF /* SDL2_mixer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		43BA36F62236F5EF009041FF /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43BA368F2236E8BB009041FF /* SDL2.framework */; };
 		43BA36F72236F5EF009041FF /* SDL2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 43BA368F2236E8BB009041FF /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		43BA399222372154009041FF /* libclang_rt.asan_osx_dynamic.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 43BA399122372154009041FF /* libclang_rt.asan_osx_dynamic.dylib */; };
-		43BA399322372168009041FF /* libclang_rt.asan_osx_dynamic.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 43BA399122372154009041FF /* libclang_rt.asan_osx_dynamic.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		43BA39B122375D8A009041FF /* AppIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 43BA39AF22375925009041FF /* AppIcon.xcassets */; };
 		43BF58C82235DF30001F9748 /* credits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 10734EC51DA24980B38F1854 /* credits.cpp */; };
 		43BF58C92235DF30001F9748 /* diabloui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA871B40005B4FD0B555113D /* diabloui.cpp */; };
@@ -68,6 +66,8 @@
 		43BF58E02235DF30001F9748 /* storm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F69233C1EB4A41B89EF13D7A /* storm.cpp */; };
 		43BF58E12235DF30001F9748 /* storm_net.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6C84A29CD9C44556A63466E3 /* storm_net.cpp */; };
 		43BF58E22235DF30001F9748 /* stub_rand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D093965A33448478B579231 /* stub_rand.cpp */; };
+		43C61C872238B5BC0097BA4F /* libclang_rt.asan_osx_dynamic.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 43BA399122372154009041FF /* libclang_rt.asan_osx_dynamic.dylib */; };
+		43C61C882238B5C70097BA4F /* libclang_rt.asan_osx_dynamic.dylib in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 43BA399122372154009041FF /* libclang_rt.asan_osx_dynamic.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		4F27D72CD6A448B196008C10 /* encrypt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1F6D083DFE8F4912AD21323E /* encrypt.cpp */; };
 		503716BF6B434A48ACA1BD86 /* drlg_l1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6687A60F94C648A2B5E20FB7 /* drlg_l1.cpp */; };
 		50630CDFA3D444DCA5946A1C /* lighting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D58130817DEA419984D28AB3 /* lighting.cpp */; };
@@ -198,7 +198,7 @@
 				43BA36F52236F5EF009041FF /* SDL2_mixer.framework in Embed Frameworks */,
 				43BA36F32236F5EF009041FF /* SDL2_ttf.framework in Embed Frameworks */,
 				43BA36F72236F5EF009041FF /* SDL2.framework in Embed Frameworks */,
-				43BA399322372168009041FF /* libclang_rt.asan_osx_dynamic.dylib in Embed Frameworks */,
+				43C61C882238B5C70097BA4F /* libclang_rt.asan_osx_dynamic.dylib in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -343,10 +343,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				43C61C872238B5BC0097BA4F /* libclang_rt.asan_osx_dynamic.dylib in Frameworks */,
 				43BA36942236E906009041FF /* SDL2_ttf.framework in Frameworks */,
 				43BA36922236E901009041FF /* SDL2_mixer.framework in Frameworks */,
 				43BA36902236E8BB009041FF /* SDL2.framework in Frameworks */,
-				43BA399222372154009041FF /* libclang_rt.asan_osx_dynamic.dylib in Frameworks */,
 				436280C4223635FD00C911AD /* Foundation.framework in Frameworks */,
 				43BA36F22236F5EF009041FF /* SDL2_ttf.framework in Frameworks */,
 				43BA36F42236F5EF009041FF /* SDL2_mixer.framework in Frameworks */,
@@ -620,7 +620,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 43BF58C72235DEBA001F9748 /* Build configuration list for PBXNativeTarget "devilutionX" */;
 			buildPhases = (
-				43BA398A2237133B009041FF /* ShellScript */,
 				43BF58B12235DEB8001F9748 /* Sources */,
 				4362804D22360E6300C911AD /* Frameworks */,
 				436280D12236373A00C911AD /* Embed Frameworks */,
@@ -763,22 +762,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		43BA398A2237133B009041FF /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "cd ../devilutionX/3rdParty/libsodium/\nif [ ! -d \"./libsodium-osx\" ]; then\n    sh ./dist-build/osx.sh\nelse\n    echo \"Libsodium was build at devilutionX/3rdParty/libsodium/libsodium-osx/\"\nfi";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		19BEEE90D99441CDACDA4A0C /* Sources */ = {
@@ -1012,45 +995,6 @@
 			};
 			name = Release;
 		};
-		20DE13D80D3D431D9C2CAE96 /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					i386,
-				);
-				COMBINE_HIDPI_IMAGES = YES;
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .a;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = s;
-				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				LIBRARY_STYLE = STATIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CPLUSPLUSFLAGS = (
-					"-DNDEBUG",
-					"'-std=c++14'",
-				);
-				OTHER_LIBTOOLFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = PKWare;
-				SDKROOT = macosx10.13;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(SRCROOT)/build";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-					"$(inherited)",
-				);
-			};
-			name = MinSizeRel;
-		};
 		28E8B2DA13AF4D7AA5D60FFC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1087,85 +1031,6 @@
 				);
 			};
 			name = Debug;
-		};
-		3655292C5D614676AA92F51D /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					i386,
-				);
-				CLANG_CXX_LIBRARY = "libc++";
-				COMBINE_HIDPI_IMAGES = YES;
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .a;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 2;
-				GCC_PREPROCESSOR_DEFINITIONS = "";
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				LIBRARY_STYLE = STATIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CPLUSPLUSFLAGS = (
-					"-DNDEBUG",
-					"'-std=c++14'",
-				);
-				OTHER_LIBTOOLFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = Radon;
-				SDKROOT = macosx10.13;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(SRCROOT)/build";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-					"$(inherited)",
-				);
-			};
-			name = RelWithDebInfo;
-		};
-		36AD7F6388954287BB5C9166 /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					i386,
-				);
-				COMBINE_HIDPI_IMAGES = YES;
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .a;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = s;
-				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				LIBRARY_STYLE = STATIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CPLUSPLUSFLAGS = (
-					"-DNDEBUG",
-					"'-std=c++14'",
-				);
-				OTHER_LIBTOOLFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = StormLib;
-				SDKROOT = macosx10.13;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(SRCROOT)/build";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-					"$(inherited)",
-				);
-			};
-			name = MinSizeRel;
 		};
 		43BF58C32235DEBA001F9748 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -1333,7 +1198,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					ASIO_STANDALONE,
 					DEVILUTION_STUB,
@@ -1406,315 +1271,6 @@
 			};
 			name = Release;
 		};
-		43BF58C52235DEBA001F9748 /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = i386;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-1";
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = NO;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = NO;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = NO;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
-				CODE_SIGN_STYLE = Manual;
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
-				CREATE_INFOPLIST_SECTION_IN_BINARY = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = c11;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					ASIO_STANDALONE,
-					DEVILUTION_STUB,
-					_DEBUG,
-					FASTER,
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/SourceS",
-					"$(PROJECT_DIR)/SourceX",
-					"$(PROJECT_DIR)/3rdParty/asio/include",
-					"$(PROJECT_DIR)/.",
-					"$(PROJECT_DIR)/3rdParty/SDL2_mixer",
-					"$(PROJECT_DIR)/3rdParty/SDL2_ttf",
-				);
-				INFOPLIST_EXPAND_BUILD_SETTINGS = YES;
-				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
-				INFOPLIST_PREPROCESS = NO;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/3rdParty/darwin",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CPLUSPLUSFLAGS = (
-					"-DNDEBUG",
-					"-fpermissive",
-					"-Wall",
-					"-Wextra",
-					"-Wno-multichar",
-					"-Wno-unused-parameter",
-					"-Wno-parentheses",
-					"-Wno-logical-op-parentheses",
-					"-Wno-bitwise-op-parentheses",
-					"-Wno-ignored-attributes",
-					"'-fsanitize=address'",
-					"'-fsanitize-recover=address'",
-					"-Wno-unknown-pragmas",
-					"'-std=c++14'",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = deviution.devilutionX;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx10.13;
-				SYMROOT = "$(PROJECT_DIR)/build";
-				SYSTEM_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/3rdParty/SDL2/include $(PROJECT_DIR)/3rdParty/libsodium/libsodium-osx/include";
-				VALID_ARCHS = i386;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-					"$(inherited)",
-				);
-			};
-			name = MinSizeRel;
-		};
-		43BF58C62235DEBA001F9748 /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = i386;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-1";
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = NO;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = NO;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = NO;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
-				CODE_SIGN_STYLE = Manual;
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
-				CREATE_INFOPLIST_SECTION_IN_BINARY = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = c11;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					ASIO_STANDALONE,
-					DEVILUTION_STUB,
-					_DEBUG,
-					FASTER,
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/SourceS",
-					"$(PROJECT_DIR)/SourceX",
-					"$(PROJECT_DIR)/3rdParty/asio/include",
-					"$(PROJECT_DIR)/.",
-					"$(PROJECT_DIR)/3rdParty/SDL2_mixer",
-					"$(PROJECT_DIR)/3rdParty/SDL2_ttf",
-				);
-				INFOPLIST_EXPAND_BUILD_SETTINGS = YES;
-				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
-				INFOPLIST_PREPROCESS = NO;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/3rdParty/darwin",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CPLUSPLUSFLAGS = (
-					"-DNDEBUG",
-					"-fpermissive",
-					"-Wall",
-					"-Wextra",
-					"-Wno-multichar",
-					"-Wno-unused-parameter",
-					"-Wno-parentheses",
-					"-Wno-logical-op-parentheses",
-					"-Wno-bitwise-op-parentheses",
-					"-Wno-ignored-attributes",
-					"'-fsanitize=address'",
-					"'-fsanitize-recover=address'",
-					"-Wno-unknown-pragmas",
-					"'-std=c++14'",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = deviution.devilutionX;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx10.13;
-				SYMROOT = "$(PROJECT_DIR)/build";
-				SYSTEM_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/3rdParty/SDL2/include $(PROJECT_DIR)/3rdParty/libsodium/libsodium-osx/include";
-				VALID_ARCHS = i386;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-					"$(inherited)",
-				);
-			};
-			name = RelWithDebInfo;
-		};
-		4A25ECF3D56E450ABE6F1FAC /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					i386,
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
-				ONLY_ACTIVE_ARCH = NO;
-				SDKROOT = macosx10.13;
-				SYMROOT = "$(SRCROOT)/build";
-			};
-			name = RelWithDebInfo;
-		};
-		5E41B4237FA941CA8BCDFE2B /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					i386,
-				);
-				COMBINE_HIDPI_IMAGES = YES;
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .a;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 2;
-				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				LIBRARY_STYLE = STATIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CPLUSPLUSFLAGS = (
-					"-DNDEBUG",
-					"'-std=c++14'",
-				);
-				OTHER_LIBTOOLFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = StormLib;
-				SDKROOT = macosx10.13;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(SRCROOT)/build";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-					"$(inherited)",
-				);
-			};
-			name = RelWithDebInfo;
-		};
-		63BEECF518734D73A04B8042 /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					i386,
-				);
-				COMBINE_HIDPI_IMAGES = YES;
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .a;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = s;
-				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				LIBRARY_STYLE = STATIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = "    -DNDEBUG  ";
-				OTHER_LIBTOOLFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = smacker;
-				SDKROOT = macosx10.13;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(SRCROOT)/build";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-					"$(inherited)",
-				);
-			};
-			name = MinSizeRel;
-		};
 		7E84C229081641C2ADD91D40 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1771,194 +1327,6 @@
 			};
 			name = Debug;
 		};
-		8BB7E49BB4E7492F95F12B2D /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					i386,
-				);
-				COMBINE_HIDPI_IMAGES = YES;
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .a;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = s;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					DEVILUTION_STUB,
-					_DEBUG,
-					FASTER,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/SourceS";
-				INSTALL_PATH = "";
-				LIBRARY_STYLE = STATIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CPLUSPLUSFLAGS = (
-					"-DNDEBUG",
-					"'-fsanitize=address'",
-					"'-fsanitize-recover=address'",
-					"-fpermissive",
-					"-Wno-write-strings",
-					"-Wno-multichar",
-					"-w",
-					"-fno-strict-aliasing",
-					"-Wno-unknown-pragmas",
-					"-fms-extensions",
-					"-fms-compatibility",
-					"'-fms-compatibility-version=19.00'",
-					"'-std=c++14'",
-				);
-				OTHER_LIBTOOLFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = devilution;
-				SDKROOT = macosx10.13;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(SRCROOT)//build";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-					"$(inherited)",
-				);
-			};
-			name = MinSizeRel;
-		};
-		900C13A8CA3548EA9C11E905 /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					i386,
-				);
-				COMBINE_HIDPI_IMAGES = YES;
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .a;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 2;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					DEVILUTION_STUB,
-					_DEBUG,
-					FASTER,
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/SourceS";
-				INSTALL_PATH = "";
-				LIBRARY_STYLE = STATIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CPLUSPLUSFLAGS = (
-					"-DNDEBUG",
-					"'-fsanitize=address'",
-					"'-fsanitize-recover=address'",
-					"-fpermissive",
-					"-Wno-write-strings",
-					"-Wno-multichar",
-					"-w",
-					"-fno-strict-aliasing",
-					"-Wno-unknown-pragmas",
-					"-fms-extensions",
-					"-fms-compatibility",
-					"'-fms-compatibility-version=19.00'",
-					"'-std=c++14'",
-				);
-				OTHER_LIBTOOLFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = devilution;
-				SDKROOT = macosx10.13;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(SRCROOT)//build";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-					"$(inherited)",
-				);
-			};
-			name = RelWithDebInfo;
-		};
-		9CB3F067E73F4ED399B6D9BA /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					i386,
-				);
-				CLANG_CXX_LIBRARY = "libc++";
-				COMBINE_HIDPI_IMAGES = YES;
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .a;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = s;
-				GCC_PREPROCESSOR_DEFINITIONS = "";
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				LIBRARY_STYLE = STATIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CPLUSPLUSFLAGS = (
-					"-DNDEBUG",
-					"'-std=c++14'",
-				);
-				OTHER_LIBTOOLFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = Radon;
-				SDKROOT = macosx10.13;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(SRCROOT)/build";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-					"$(inherited)",
-				);
-			};
-			name = MinSizeRel;
-		};
-		A28157B8D3FC4E90AD1B1E61 /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					i386,
-				);
-				COMBINE_HIDPI_IMAGES = YES;
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .a;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 2;
-				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				LIBRARY_STYLE = STATIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = "       -DNDEBUG  ";
-				OTHER_LIBTOOLFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = smacker;
-				SDKROOT = macosx10.13;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(SRCROOT)/build";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-					"$(inherited)",
-				);
-			};
-			name = RelWithDebInfo;
-		};
 		A680D30B982E406391897F2C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2002,7 +1370,7 @@
 					"$(ARCHS_STANDARD)",
 					i386,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = macosx10.13;
 				SYMROOT = "$(SRCROOT)/build";
@@ -2215,45 +1583,6 @@
 			};
 			name = Debug;
 		};
-		DE7704B3C88448FD9882845E /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					i386,
-				);
-				COMBINE_HIDPI_IMAGES = YES;
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .a;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 2;
-				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				INSTALL_PATH = "";
-				LIBRARY_STYLE = STATIC;
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CPLUSPLUSFLAGS = (
-					"-DNDEBUG",
-					"'-std=c++14'",
-				);
-				OTHER_LIBTOOLFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = PKWare;
-				SDKROOT = macosx10.13;
-				SECTORDER_FLAGS = "";
-				SYMROOT = "$(SRCROOT)/build";
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-					"$(inherited)",
-				);
-			};
-			name = RelWithDebInfo;
-		};
 		E4B95ABCB9A243F7AA080DCF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2297,26 +1626,12 @@
 					"$(ARCHS_STANDARD)",
 					i386,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = macosx10.13;
 				SYMROOT = "$(SRCROOT)/build";
 			};
 			name = Release;
-		};
-		F62AD12BAA5D4784B5E4649F /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					i386,
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
-				ONLY_ACTIVE_ARCH = NO;
-				SDKROOT = macosx10.13;
-				SYMROOT = "$(SRCROOT)/build";
-			};
-			name = MinSizeRel;
 		};
 /* End XCBuildConfiguration section */
 
@@ -2326,8 +1641,6 @@
 			buildConfigurations = (
 				7E84C229081641C2ADD91D40 /* Debug */,
 				B30650845F614E48B971246A /* Release */,
-				8BB7E49BB4E7492F95F12B2D /* MinSizeRel */,
-				900C13A8CA3548EA9C11E905 /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -2337,8 +1650,6 @@
 			buildConfigurations = (
 				28E8B2DA13AF4D7AA5D60FFC /* Debug */,
 				006FF72AA7574ACEB9316F6B /* Release */,
-				9CB3F067E73F4ED399B6D9BA /* MinSizeRel */,
-				3655292C5D614676AA92F51D /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -2348,8 +1659,6 @@
 			buildConfigurations = (
 				43BF58C32235DEBA001F9748 /* Debug */,
 				43BF58C42235DEBA001F9748 /* Release */,
-				43BF58C52235DEBA001F9748 /* MinSizeRel */,
-				43BF58C62235DEBA001F9748 /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -2359,8 +1668,6 @@
 			buildConfigurations = (
 				BAE593C92EEC43139E0B9396 /* Debug */,
 				BC1EDD41314F4EF0BAA11DE7 /* Release */,
-				20DE13D80D3D431D9C2CAE96 /* MinSizeRel */,
-				DE7704B3C88448FD9882845E /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -2370,8 +1677,6 @@
 			buildConfigurations = (
 				D67B3F354B074C5DAF64C9C0 /* Debug */,
 				A680D30B982E406391897F2C /* Release */,
-				63BEECF518734D73A04B8042 /* MinSizeRel */,
-				A28157B8D3FC4E90AD1B1E61 /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -2381,8 +1686,6 @@
 			buildConfigurations = (
 				E4B95ABCB9A243F7AA080DCF /* Debug */,
 				B238D5DF0A7A45F6B88AA4D6 /* Release */,
-				36AD7F6388954287BB5C9166 /* MinSizeRel */,
-				5E41B4237FA941CA8BCDFE2B /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -2392,8 +1695,6 @@
 			buildConfigurations = (
 				B0AA326A39FD46EA90E99B63 /* Debug */,
 				F2756E2364B146E986697453 /* Release */,
-				F62AD12BAA5D4784B5E4649F /* MinSizeRel */,
-				4A25ECF3D56E450ABE6F1FAC /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
