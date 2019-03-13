@@ -70,7 +70,7 @@
 		52988278CD5F4938877C76D8 /* pngimage.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = pngimage.c; path = contrib/libtests/pngimage.c; sourceTree = SOURCE_ROOT; };
 		55C48C62211E489EBC637D0B /* pngdebug.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; path = pngdebug.h; sourceTree = SOURCE_ROOT; };
 		5C64582E10CB4868BC97354D /* pnglibconf.out.rule */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = pnglibconf.out.rule; path = Xcode/pnglibconf.out.rule; sourceTree = SOURCE_ROOT; };
-		5D4732F44E0341ACB091868D /* libpng16d.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libpng16d.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D4732F44E0341ACB091868D /* libpng16d.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; name = libpng16d.a; path = libpng16.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DFEEC68B9D74328B583F941 /* pngfix.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = pngfix.c; path = contrib/tools/pngfix.c; sourceTree = SOURCE_ROOT; };
 		5E8F538291FE4699AABCAA05 /* pngmem.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; path = pngmem.c; sourceTree = SOURCE_ROOT; };
 		65E667F8833B45788B8E10EE /* intel_init.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = intel_init.c; path = intel/intel_init.c; sourceTree = SOURCE_ROOT; };
@@ -586,10 +586,7 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = s;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'PNG_INTEL_SSE_OPT=1'",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "'PNG_INTEL_SSE_OPT=1'";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)",
@@ -632,7 +629,6 @@
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
 					png_EXPORTS,
 					"'PNG_INTEL_SSE_OPT=1'",
 				);
@@ -693,7 +689,6 @@
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
 					png_EXPORTS,
 					"'PNG_INTEL_SSE_OPT=1'",
 				);
@@ -748,7 +743,6 @@
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = 2;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
 					png_EXPORTS,
 					"'PNG_INTEL_SSE_OPT=1'",
 				);
@@ -829,11 +823,7 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					png_EXPORTS,
-					"'PNG_INTEL_SSE_OPT=1'",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "'PNG_INTEL_SSE_OPT=1'";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/3rdParty/libpng/Xcode",
@@ -924,10 +914,7 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = 2;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'PNG_INTEL_SSE_OPT=1'",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "'PNG_INTEL_SSE_OPT=1'";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)",
@@ -968,10 +955,7 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
-					"'PNG_INTEL_SSE_OPT=1'",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "'PNG_INTEL_SSE_OPT=1'";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)",
