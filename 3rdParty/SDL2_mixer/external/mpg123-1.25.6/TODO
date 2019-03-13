@@ -1,0 +1,40 @@
+BEFORE 1.23 RELEASE:
+
+- add client name as libout123 parameter, to be used by jack backend
+  PID still needed? JACK handles possibly non-unique names.
+
+Things that need to be done...
+
+... as always, mostly outdated.
+
+0. Fix that ugly crash that happens sometimes when Ctrl+C-ing with jack output active:
+
+Program terminated with signal 11, Segmentation fault.
+[New process 6293]
+[New process 6291]
+[New process 6292]
+[New process 6284]
+#0  0x00002aced607695b in memcpy () from /lib/libc.so.6
+(gdb) bt
+#0  0x00002aced607695b in memcpy () from /lib/libc.so.6
+#1  0x00002aced5b4f092 in jack_ringbuffer_read () from /usr/lib/libjack.so.0
+#2  0x00000000004151dd in process_callback ()
+#3  0x00002aced5b4bf40 in Jack::JackClient::Execute () from /usr/lib/libjack.so.0
+#4  0x00002aced5b5f8da in Jack::JackPosixThread::ThreadHandler () from /usr/lib/libjack.so.0
+#5  0x00002aced6354fa7 in start_thread () from /lib/libpthread.so.0
+#6  0x00002aced60c802d in clone () from /lib/libc.so.6
+
+
+1. mpg123 could pick up new sample rates suggested by the output modules (like a jack server fixed to 96kHz) and adapt to that.
+
+Though the practical rates for MPEG audio are up to 48kHz ... but one could easily upsample.
+Currently, we detect standard rates and resample when needed... but not new ones.
+
+4. Prevent ID3v2 tags from being parsed multiple times after seek.
+
+I need to carry a list of ID3v2 frame addresses that already have been parsed into the data structures.
+Currently, this is a possible memory leak when the seek index is disabled (tag data at file beginning) or id3 data is just somewhere in the stream.
+That being said, in the "normal" case, there is no leak.
+
+5. What's about SINGLE_MIX?
+Check what is _really_ happening there, make some test file...

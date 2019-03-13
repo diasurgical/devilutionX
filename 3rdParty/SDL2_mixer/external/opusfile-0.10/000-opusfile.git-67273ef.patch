@@ -1,0 +1,32 @@
+From 67273ef32d5d5a0f8a0fc038948b8348c4387b5c Mon Sep 17 00:00:00 2001
+From: James Zern <jzern@google.com>
+Date: Thu, 7 Dec 2017 15:25:28 -0800
+Subject: [PATCH] op_fetch_and_process_page: Fix int64 overflow
+
+Check for overflow with a negative diff.
+
+Signed-off-by: Timothy B. Terriberry <tterribe@xiph.org>
+---
+ src/opusfile.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/src/opusfile.c b/src/opusfile.c
+index 140503e..8b000a2 100644
+--- a/src/opusfile.c
++++ b/src/opusfile.c
+@@ -2078,7 +2078,11 @@ static int op_fetch_and_process_page(OggOpusFile *_of,
+          &&OP_LIKELY(diff<total_duration)){
+           cur_packet_gp=prev_packet_gp;
+           for(pi=0;pi<op_count;pi++){
+-            diff=durations[pi]-diff;
++            /*Check for overflow.*/
++            if(diff<0&&OP_UNLIKELY(OP_INT64_MAX+diff<durations[pi])){
++              diff=durations[pi]+1;
++            }
++            else diff=durations[pi]-diff;
+             /*If we have samples to trim...*/
+             if(diff>0){
+               /*If we trimmed the entire packet, stop (the spec says encoders
+-- 
+2.1.4
+

@@ -1,0 +1,307 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C303D2FC-FF97-49B8-9DDD-467B4C9A0B16}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>src_common</RootNamespace>
+    <ProjectName>silk_common</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <CustomBuildBeforeTargets>
+    </CustomBuildBeforeTargets>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>HAVE_CONFIG_H;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>fixed;float;../win32;../celt;../include</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Lib>
+    <PreBuildEvent>
+      <Command>"$(ProjectDir)..\win32\genversion.bat" "$(ProjectDir)..\win32\version.h" OPUS_VERSION</Command>
+      <Message>Generating version.h</Message>
+    </PreBuildEvent>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>HAVE_CONFIG_H;WIN32;WIN64;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>fixed;float;../win32;../celt;../include</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Lib>
+    <PreBuildEvent>
+      <Command>"$(ProjectDir)..\win32\genversion.bat" "$(ProjectDir)..\win32\version.h" OPUS_VERSION</Command>
+      <Message>Generating version.h</Message>
+    </PreBuildEvent>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>HAVE_CONFIG_H;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>fixed;float;../win32;../celt;../include</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FloatingPointModel>Fast</FloatingPointModel>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Lib>
+    <PreBuildEvent>
+      <Command>"$(ProjectDir)..\win32\genversion.bat" "$(ProjectDir)..\win32\version.h" OPUS_VERSION</Command>
+      <Message>Generating version.h</Message>
+    </PreBuildEvent>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>HAVE_CONFIG_H;WIN32;WIN64;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>fixed;float;../win32;../celt;../include</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FloatingPointModel>Fast</FloatingPointModel>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Lib>
+    <PreBuildEvent>
+      <Command>"$(ProjectDir)..\win32\genversion.bat" "$(ProjectDir)..\win32\version.h" OPUS_VERSION</Command>
+      <Message>Generating version.h</Message>
+    </PreBuildEvent>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="A2NLSF.c" />
+    <ClCompile Include="ana_filt_bank_1.c" />
+    <ClCompile Include="biquad_alt.c" />
+    <ClCompile Include="bwexpander.c" />
+    <ClCompile Include="bwexpander_32.c" />
+    <ClCompile Include="check_control_input.c" />
+    <ClCompile Include="CNG.c" />
+    <ClCompile Include="code_signs.c" />
+    <ClCompile Include="control_audio_bandwidth.c" />
+    <ClCompile Include="control_codec.c" />
+    <ClCompile Include="control_SNR.c" />
+    <ClCompile Include="debug.c" />
+    <ClCompile Include="decoder_set_fs.c" />
+    <ClCompile Include="decode_core.c" />
+    <ClCompile Include="decode_frame.c" />
+    <ClCompile Include="decode_indices.c" />
+    <ClCompile Include="decode_parameters.c" />
+    <ClCompile Include="decode_pitch.c" />
+    <ClCompile Include="decode_pulses.c" />
+    <ClCompile Include="dec_API.c" />
+    <ClCompile Include="encode_indices.c" />
+    <ClCompile Include="encode_pulses.c" />
+    <ClCompile Include="enc_API.c" />
+    <ClCompile Include="gain_quant.c" />
+    <ClCompile Include="HP_variable_cutoff.c" />
+    <ClCompile Include="init_decoder.c" />
+    <ClCompile Include="init_encoder.c" />
+    <ClCompile Include="inner_prod_aligned.c" />
+    <ClCompile Include="interpolate.c" />
+    <ClCompile Include="lin2log.c" />
+    <ClCompile Include="log2lin.c" />
+    <ClCompile Include="LPC_analysis_filter.c" />
+    <ClCompile Include="LPC_inv_pred_gain.c" />
+    <ClCompile Include="LP_variable_cutoff.c" />
+    <ClCompile Include="table_LSF_cos.c" />
+    <ClCompile Include="NLSF2A.c" />
+    <ClCompile Include="NLSF_decode.c" />
+    <ClCompile Include="NLSF_del_dec_quant.c" />
+    <ClCompile Include="NLSF_encode.c" />
+    <ClCompile Include="NLSF_stabilize.c" />
+    <ClCompile Include="NLSF_unpack.c" />
+    <ClCompile Include="NLSF_VQ.c" />
+    <ClCompile Include="NLSF_VQ_weights_laroia.c" />
+    <ClCompile Include="NSQ.c" />
+    <ClCompile Include="NSQ_del_dec.c" />
+    <ClCompile Include="pitch_est_tables.c" />
+    <ClCompile Include="PLC.c" />
+    <ClCompile Include="process_NLSFs.c" />
+    <ClCompile Include="quant_LTP_gains.c" />
+    <ClCompile Include="resampler.c" />
+    <ClCompile Include="resampler_down2.c" />
+    <ClCompile Include="resampler_down2_3.c" />
+    <ClCompile Include="resampler_private_AR2.c" />
+    <ClCompile Include="resampler_private_down_FIR.c" />
+    <ClCompile Include="resampler_private_IIR_FIR.c" />
+    <ClCompile Include="resampler_private_up2_HQ.c" />
+    <ClCompile Include="resampler_rom.c" />
+    <ClCompile Include="shell_coder.c" />
+    <ClCompile Include="sigm_Q15.c" />
+    <ClCompile Include="sort.c" />
+    <ClCompile Include="stereo_decode_pred.c" />
+    <ClCompile Include="stereo_encode_pred.c" />
+    <ClCompile Include="stereo_find_predictor.c" />
+    <ClCompile Include="stereo_LR_to_MS.c" />
+    <ClCompile Include="stereo_MS_to_LR.c" />
+    <ClCompile Include="stereo_quant_pred.c" />
+    <ClCompile Include="sum_sqr_shift.c" />
+    <ClCompile Include="tables_gain.c" />
+    <ClCompile Include="tables_LTP.c" />
+    <ClCompile Include="tables_NLSF_CB_NB_MB.c" />
+    <ClCompile Include="tables_NLSF_CB_WB.c" />
+    <ClCompile Include="tables_other.c" />
+    <ClCompile Include="tables_pitch_lag.c" />
+    <ClCompile Include="tables_pulses_per_block.c" />
+    <ClCompile Include="VAD.c" />
+    <ClCompile Include="VQ_WMat_EC.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\opus_types.h" />
+    <ClInclude Include="..\win32\config.h" />
+    <ClInclude Include="control.h" />
+    <ClInclude Include="debug.h" />
+    <ClInclude Include="define.h" />
+    <ClInclude Include="errors.h" />
+    <ClInclude Include="Inlines.h" />
+    <ClInclude Include="MacroCount.h" />
+    <ClInclude Include="MacroDebug.h" />
+    <ClInclude Include="macros.h" />
+    <ClInclude Include="main.h" />
+    <ClInclude Include="pitch_est_defines.h" />
+    <ClInclude Include="PLC.h" />
+    <ClInclude Include="resampler_private.h" />
+    <ClInclude Include="resampler_rom.h" />
+    <ClInclude Include="resampler_structs.h" />
+    <ClInclude Include="API.h" />
+    <ClInclude Include="SigProc_FIX.h" />
+    <ClInclude Include="structs.h" />
+    <ClInclude Include="tables.h" />
+    <ClInclude Include="tuning_parameters.h" />
+    <ClInclude Include="typedef.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

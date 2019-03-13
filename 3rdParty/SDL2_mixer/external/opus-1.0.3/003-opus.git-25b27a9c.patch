@@ -1,0 +1,78 @@
+From 25b27a9c167302769db512a9e32c66323bc7904c Mon Sep 17 00:00:00 2001
+From: Mark Harris <mark.hsj@gmail.com>
+Date: Thu, 27 Nov 2014 08:48:09 -0800
+Subject: [PATCH] multistream: improve arg check
+
+Avoid undefined behavior (signed arithmetic overflow) or
+implementation-defined behavior (malloc(0)) on out-of-range arguments,
+e.g. opus_multistream_encoder_create(48000, 2, 2147483647, 1, ...)
+or opus_multistream_surround_encoder_create(48000, 3, 0, ...).
+
+Signed-off-by: Jean-Marc Valin <jmvalin@jmvalin.ca>
+---
+ src/opus_multistream_decoder.c |  4 ++--
+ src/opus_multistream_encoder.c | 14 +++++++++++---
+ 2 files changed, 13 insertions(+), 5 deletions(-)
+
+--- opus-1.0.3/src/opus_multistream.c~	2013-07-11 07:16:52.000000000 +0300
++++ opus-1.0.3/src/opus_multistream.c	2014-12-20 12:20:10.000000000 +0200
+@@ -215,7 +215,7 @@ static int opus_multistream_encoder_init
+    char *ptr;
+ 
+    if ((channels>255) || (channels<1) || (coupled_streams>streams) ||
+-       (coupled_streams+streams>255) || (streams<1) || (coupled_streams<0))
++       (streams<1) || (coupled_streams<0) || (streams>255-coupled_streams))
+       return OPUS_BAD_ARG;
+ 
+    st->layout.nb_channels = channels;
+@@ -325,7 +325,7 @@ OpusMSEncoder *opus_multistream_encoder_
+    int ret;
+    OpusMSEncoder *st;
+    if ((channels>255) || (channels<1) || (coupled_streams>streams) ||
+-       (coupled_streams+streams>255) || (streams<1) || (coupled_streams<0))
++       (streams<1) || (coupled_streams<0) || (streams>255-coupled_streams))
+    {
+       if (error)
+          *error = OPUS_BAD_ARG;
+@@ -361,6 +361,7 @@ OpusMSEncoder *opus_multistream_surround
+ )
+ {
+    int ret;
++   opus_int32 size;
+    OpusMSEncoder *st;
+    if ((channels>255) || (channels<1))
+    {
+@@ -368,7 +369,14 @@ OpusMSEncoder *opus_multistream_surround
+          *error = OPUS_BAD_ARG;
+       return NULL;
+    }
+-   st = (OpusMSEncoder *)opus_alloc(opus_multistream_surround_encoder_get_size(channels, mapping_family));
++   size = opus_multistream_surround_encoder_get_size(channels, mapping_family);
++   if (!size)
++   {
++      if (error)
++         *error = OPUS_UNIMPLEMENTED;
++      return NULL;
++   }
++   st = (OpusMSEncoder *)opus_alloc(size);
+    if (st==NULL)
+    {
+       if (error)
+@@ -856,7 +864,7 @@ int opus_multistream_decoder_init(
+    char *ptr;
+ 
+    if ((channels>255) || (channels<1) || (coupled_streams>streams) ||
+-       (coupled_streams+streams>255) || (streams<1) || (coupled_streams<0))
++       (streams<1) || (coupled_streams<0) || (streams>255-coupled_streams))
+       return OPUS_BAD_ARG;
+ 
+    st->layout.nb_channels = channels;
+@@ -900,7 +908,7 @@ OpusMSDecoder *opus_multistream_decoder_
+    int ret;
+    OpusMSDecoder *st;
+    if ((channels>255) || (channels<1) || (coupled_streams>streams) ||
+-       (coupled_streams+streams>255) || (streams<1) || (coupled_streams<0))
++       (streams<1) || (coupled_streams<0) || (streams>255-coupled_streams))
+    {
+       if (error)
+          *error = OPUS_BAD_ARG;

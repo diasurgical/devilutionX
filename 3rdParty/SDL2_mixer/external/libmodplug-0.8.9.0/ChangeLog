@@ -1,0 +1,299 @@
+changes:
+date = 24-apr-2017 [Konstanty Bialkowski/Lionel Debroux/SEZERO]
+ Version 0.8.9.0
+  OOB Write and Read fixes + a number of divide by zero fixes.
+	 (ABC, PAT, AMF, MDL, PSM, XM, IT, MMCMP, MID)
+ There were some patches 2010-2016 which were recorded here.
+date = 21-apr-2009 [Konstanty Bialkowski/OpenMPT/Novell (Stanislav Brabec)]
+->file: src/load_amf.cpp
+		where: whole file
+		what: added const declarations to read only variables
+		what: fixed delete function
+->file: src/fastmix.cpp
+		where: X86_Convert32To24
+		what: conversion to 24bit was incorrect
+->file: src/load_mdl.cpp
+		where: init of m_lpszSongComments
+		what: fixed delete function to be array version (Reported by
+		David Binderman / Stanislav Brabec)
+->file: src/load_pat.cpp
+		where: memcpy to .reserved
+		what: changed fixed valid of 36 to sizeof(reserved)
+		(Reported by Manfred Tremmel / Stanislav Brabec)
+date = 20-apr-2009 [Konstanty Bialkowski]
+->file: src/load_meb.cpp
+		where: LoadMED
+		what: fixed integer boundary condition checking code (fixing
+		exploit)
+		Details of exploit (and creator of test.s3m for exploit)
+		http://www.securityfocus.com/bid/30801/info
+		http://www.15897.com/blog/post/QianQianJingTing-mod-buffer-overflow-POC.html
+->file: src/load_abc.cpp
+		where: TestABC
+		what: Made ABC detection code more robust
+->file: src/load_abc.cpp, sndfile.cpp, snd_fx.cpp
+		where: various
+		what: change constant variables to explicitly use const
+		definition
+		(Thanks to Leandro Nini/Diego "Flameeyes" Pettenò)
+->file: src/table.cpp -> src/table.h
+		where: rename of file
+		what: moved tables to separate file
+		(Thanks to Leandro Nini/Diego "Flameeyes" Pettenò)
+
+date = 15-apr-2009 [Konstanty Bialkowski]
+->file: src/load_abc.cpp
+		where: TestABC
+		what: made sure obviously binary files do not try to get
+		loaded as ABC
+		where: abc_addchordname
+		what: made sure first argument was const char * (not just char
+		*)
+->file: src/sndfile.cpp
+		where: format conversion routines
+		what: made sure (*a++) = func(*a), is executed properly, by
+		splitting into two lines
+-file: src/libmodplug/sndfile.h
+		where: IMixPlugin
+		what: made sure there is a virtual destructor (to avoid
+		warnings)
+->file: src/load_ptm.cpp
+		where: mixing routine
+		what: bswap32 was used on a uint16_t [2] array, and when gcc
+		uses -O2 (or greater) optimization, this may not do what is
+		intended.
+date = 7-apr-2009 [Konstanty Bialkowski/Anthony Ramine]
+-> file: src/load_abc.cpp,load_mid.cpp,load_pat.cpp
+		where: whole file(s)
+		what: removed use of ULONG, and changed to uint32_t
+		where: few functions
+		what: removed uint, and replaced with uint32_t
+date = 7-apr-2009 [Zed Pobre/Debian]
+-> file: src/libmodplug.pc
+		where: file.
+		what: split Libs into Libs.private
+date = 2-nov-2006 [Alec Berryman/CVE-2006-4192]
+-> file: src/sndfile.cpp
+		where: ReadSample
+		what: prevent buffer overflow [as reported in CVE-2006-4192]
+date = 2-nov-2006 [Konstanty Bialkowski/Macro Trillo]
+-> file: configure.in,config.h,load_abc.cpp,fastmix.cpp
+		where: Automake 2.60 used
+		what: In order to properly use stdint.h we should make use of the new macros for its detection, on systems with automake 2.59 but where stdint.h is available, this can be removed. (Patch by Macro Trillo)
+-> file: src/load_amf.cpp, src/fastmix.cpp
+		where: Licensing
+		what: all old code was relicensed for public domain, and somehow an old version was included with GPL notices
+date = 20-jul-2006 [Peter Grootswagers]
+-> file: src/load_abc.cpp
+		where: instrument loader functions
+		what: replaced with correspondig functions in load_pat.cpp
+-> file: src/load_mid.cpp
+		where: whole source
+		what: new loader for midi files
+-> file: src/load_pat.cpp
+		where: whole source
+		what: new loader for GUS instrument patch files (pat)
+-> file: src/load_pat.h
+		where: whole source
+		what: new header declaring reuseable GUS instrument patch functions (pat)
+-> file: README
+		where: 2. Features
+		what: added description of load_mid.cpp and load_pat.cpp
+-> file: src/Makefile.am
+		where: libmodplug_la_SOURCES
+		what: added load_mid.cpp and load_pat.cpp
+		where: libmodpluginclude_HEADERS
+		what: added load_pat.h
+-> file: src/sndfile.cpp
+		where: function CSoundFile::Create()
+		what: added call to ReadMID and ReadPAT
+-> file: src/libmodplug/sndfile.h
+		where: #define
+		what: added MOD_TYPE_PAT (MOD_TYPE_MID already there...)
+		where: class CSoundFile
+		what: added public function members ReadMID, TestMID, ReadPat, TestPAT and PATsample
+date = 24-jun-2006 [Peter Grootswagers]
+-> file: src/load_abc.cpp
+		where: whole source
+		what: new loader for abc files
+-> file: README
+		where: 2. Features
+		what: added description of load_abc.cpp
+-> file: src/Makefile.am
+		where: libmodplug_la_SOURCES
+		what: added load_abc.cpp
+-> file: src/sndfile.cpp
+		where: function CSoundFile::Create()
+		what: added call to ReadABC
+-> file: src/libmodplug/sndfile.h
+		where: #define
+		what: added MOD_TYPE_ABC
+		where: class CSoundFile
+		what: added public function members ReadABC and TestABC
+date = 20-mar-2006 [Macro Trillo / "Custom libmodplug project"]
+-> file : src/load_s3m.cpp
+-> file : src/load_far.cpp
+		what: fixed endianness
+date = 20-mar-2006 [Alistair John Strachan]
+....
+
+Many other changes need to be documented here...
+
+GCC3 fixes, GCC4 fixes, More Archive Types.
+
+date = 09-feb-2001 [Markus Fick]
+-> file: fastmix.cpp
+		where: spline creation, spline macros
+		what: added unity gain clamp code, added Quantizer_Bits(shift) preprocessor constants
+		where: fir creation, fir macros
+		what: - removed x<pi/2 condition in coef creation
+		      - added quantizer_bits(shift) preprocessor constants
+		      - set default quantizer bits to 15 instead 14 (scale now 32768 instead 16384)
+		        there should not occure any overflows during fir response calculation because
+		        of the symmetric form of filter and the position of the negative fir coefs
+		      - changed final volume calculation for 16bit samples (quality enhancement)
+
+date = 08-feb-2001 [Markus Fick]
+-> file: sndmix.cpp
+		where: function ReadNote()
+		what: modified behaviour of modplug so that interpolation is only deactivated if
+		      a) the user selects "no interpolation"
+			  b) linear interpolation is set and speed incr. > 0xff00
+			 => if spline or fir is active then we use always interpolation
+
+-> file: fastmix.cpp
+		where: spline macros
+		what: changed spline macros to use precalculated tables (way faster)
+		where: file
+		what: - implemented spline table precalculator
+		      - changed fir precalculator + macros (for higher quality and clearer source)
+		      - added some comments and documentation
+		comment:
+		  - preprocessor constant: SPLINE_FRACBITS
+		     ) controls quality/memory usage
+			   range is [4..14] inclusive
+			   4 = low quality, low memory usage
+			   14 = highest quality, highest memory usage (1L<<14)*4*2 bytes
+		  - preprocessor constant: WFIR_FRACBITS
+		     ) controls quality/memory usage
+			   range is [4..12] inclusive
+			   4 = low quality, low mu
+			   12 = highest quality, highest memory usage ((1L<<(12+1))+1)*8*2 bytes
+
+date = 07-feb-2001 [Markus Fick]
+-> file: fastmix.cpp
+		where: spline macros
+		what: fixed error in coef calculation
+
+date = 07-feb-2001 [Markus Fick]
+-> file: sndfile.h
+		where: class definition of soundfile
+		what: removed InitFIR + DoneFIR function prototypes
+-> file: sndfile.cpp
+		function:CSoundFile::CSoundFile()
+		what: [modify] removed call to CSoundFile::InitFIRMixer( )
+
+		function:CSoundFile::~CSoundFile()
+		what: [modify] removed call to CSoundFile::DoneFIRMixer( )
+-> file: fastmix.cpp
+		where: spline macros
+		what: changed formula + added some guard bits to calculation
+
+		where: fir macros + implementation
+		what: - moved CSoundfile::FIR funtions to CzFIR (single instance sfir)
+		      - changed fir macros to support CzFIR class
+
+date = 06-feb-2001 [Markus Fick]
+-> file: fastmix.cpp
+         where: macros
+		 what: - removed fir filter with coef interpolation
+		       - add spline interpolation
+			RM: now modplug->select( SPLINE ) selects spline and
+			        modplug->select( POLYPHASE ) selects 8tap fir filter
+
+date = 05-feb-2001 [Markus Fick]
+-> file: fastmix.cpp
+         where: macros + filter order
+         what: [modify] changed filter order to 8 instead of 10
+
+-> file: fastmix.cpp
+         what: new macros+switch for fir-interpolator with coef interpolation
+
+date = 04-feb-2001 [Markus Fick]
+
+-> file: sndfile.h
+	 where: class CSoundFile (bottom)
+	 what: [add] methods for FIR mixer support
+	             1. int InitFIRInterpolator( );
+				 2. int DoneFIRInterpolator( );
+
+-> file: sndfile.cpp
+     function:CSoundFile::CSoundFile()
+	 what: [modify] add call to CSoundFile::InitFIRMixer( )
+
+	 function:CSoundFile::~CSoundFile()
+	 what: [modify] add call to CSoundFile::DoneFIRMixer( )
+
+-> file:  fastmix.cpp
+	 new include: <math.h>
+		why: need it for fir-coef calculation
+     new function: CSoundFile::InitFIRMixer( ) // initializes fir filter lookup (if necessary)
+	 new function: CSoundFile::DoneFIRMixer( ) // decrements ReferenceCounter (for static vars) and deinitializes fir struct (if possible).
+	 new defs:
+		#define FIRCPWBN 10							// log2 of number of precalculated wings (-(1L<<FIRCPWBN)..(1L<<FIRCPWBN))
+		#define FIRLOPOSSHIFT (16-(FIRCPWBN+1))		// shift for lopos of sampleposition -> (16 - FIRCPWBN - 1)
+		#define FIRLEN 9							// number(-1) of multiplications per sample
+		#define FIRCUT 0.90f						// cutoff of filter
+		#define MIXNDX_FIRMIXERSRC  0x20			// src-type for firfilter
+	 new vars:
+		static signed short *cFirLut;				// lulines
+		static int bFirInitialized	= 0;			// initialized?
+		static int nFirOrder		= FIRLEN;		// order (modplug has 4smps pre/post extension, so limit this to 9)
+		static float nFirFC			= FIRCUT;		// cutoff (normalized to pi/2)
+		static int nFirCpw			= (1L<<FIRCPWBN);	// number of precalculted filter lines
+		static int nFirUsers		= 0;			// reference counter
+	 new macros:
+		#define SNDMIX_GETMONOVOL8FIRFILTER
+		#define SNDMIX_GETMONOVOL16FIRFILTER
+		#define SNDMIX_GETSTEREOVOL8FIRFILTER
+		#define SNDMIX_GETSTEREOVOL16FIRFILTER
+	new mixer interface macros:
+		BEGIN_MIX_INTERFACE(Mono8BitFirFilterMix)
+		BEGIN_MIX_INTERFACE(Mono16BitFirFilterMix)
+		BEGIN_RAMPMIX_INTERFACE(Mono8BitFirFilterRampMix)
+		BEGIN_RAMPMIX_INTERFACE(Mono16BitFirFilterRampMix)
+		BEGIN_MIX_INTERFACE(FastMono8BitFirFilterMix)
+		BEGIN_MIX_INTERFACE(FastMono16BitFirFilterMix)
+		BEGIN_FASTRAMPMIX_INTERFACE(FastMono8BitFirFilterRampMix)
+		BEGIN_FASTRAMPMIX_INTERFACE(FastMono16BitFirFilterRampMix)
+		BEGIN_MIX_INTERFACE(Stereo8BitFirFilterMix)
+		BEGIN_MIX_INTERFACE(Stereo16BitFirFilterMix)
+		BEGIN_RAMPMIX_INTERFACE(Stereo8BitFirFilterRampMix)
+		BEGIN_RAMPMIX_INTERFACE(Stereo16BitFirFilterRampMix)
+		BEGIN_MIX_FLT_INTERFACE(FilterMono8BitFirFilterMix)
+		BEGIN_MIX_FLT_INTERFACE(FilterMono16BitFirFilterMix)
+		BEGIN_RAMPMIX_FLT_INTERFACE(FilterMono8BitFirFilterRampMix)
+		BEGIN_RAMPMIX_FLT_INTERFACE(FilterMono16BitFirFilterRampMix)
+		BEGIN_MIX_STFLT_INTERFACE(FilterStereo8BitFirFilterMix)
+		BEGIN_MIX_STFLT_INTERFACE(FilterStereo16BitFirFilterMix)
+		BEGIN_RAMPMIX_STFLT_INTERFACE(FilterStereo8BitFirFilterRampMix)
+		BEGIN_RAMPMIX_STFLT_INTERFACE(FilterStereo16BitFirFilterRampMix)
+	modified:
+		const LPMIXINTERFACE gpMixFunctionTable[2*2*16] // to hold new fir mixer interface
+		const LPMIXINTERFACE gpFastMixFunctionTable[2*2*16] // to hold new fir mixer interface
+		functioN: UINT CSoundFile::CreateStereoMix(int count)
+			new:
+				if (!(pChannel->dwFlags & CHN_NOIDO))
+				{
+					// use hq-fir mixer?
+					if( ((gdwSoundSetup & (SNDMIX_HQRESAMPLER|SNDMIX_ULTRAHQSRCMODE)) == (SNDMIX_HQRESAMPLER|SNDMIX_ULTRAHQSRCMODE)) ||
+						((gdwSoundSetup & (SNDMIX_HQRESAMPLER)) == (SNDMIX_HQRESAMPLER)) )
+						nFlags += MIXNDX_FIRMIXERSRC;
+					else
+						nFlags += MIXNDX_LINEARSRC; // use
+				}
+			was:
+				if (!(pChannel->dwFlags & CHN_NOIDO))
+				{
+					nFlags += MIXNDX_LINEARSRC; // use
+				}

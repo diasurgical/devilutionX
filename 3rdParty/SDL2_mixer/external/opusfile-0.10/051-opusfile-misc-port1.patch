@@ -1,0 +1,32 @@
+use xmm intrinsics for lrintf with x86_64-w64-mingw32
+
+c.f.: http://git.xiph.org/?p=opus.git;a=commit;h=cd159fd1ec8ae64e6cd1b69854034560b5f1c419
+
+diff -u opusfile-0.10/src/opusfile.c opusfile-0.10-edit/src/opusfile.c
+--- opusfile-0.10/src/opusfile.c
++++ opusfile-0.10-edit/src/opusfile.c
+@@ -25,7 +25,9 @@
+ #include <limits.h>
+ #include <string.h>
+ #include <math.h>
+-
++#if defined(_WIN64) && (defined(__x86_64__) || defined(_M_X64))
++#include <xmmintrin.h>
++#endif
+ #include "opusfile.h"
+ 
+ /*This implementation is largely based off of libvorbisfile.
+@@ -3129,8 +3131,11 @@
+ 
+ #else
+ 
+-# if defined(OP_HAVE_LRINTF)
+-#  include <math.h>
++# if defined(_WIN64) && (defined(__x86_64__) || defined(_M_X64))
++  static __inline long int op_float2int(float _x) {
++    return _mm_cvtss_si32(_mm_load_ss(&_x));
++  }
++# elif defined(OP_HAVE_LRINTF)
+ #  define op_float2int(_x) (lrintf(_x))
+ # else
+ #  define op_float2int(_x) ((int)((_x)+((_x)<0?-0.5F:0.5F)))

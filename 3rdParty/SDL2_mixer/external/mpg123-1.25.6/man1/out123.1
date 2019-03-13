@@ -1,0 +1,210 @@
+.TH out123 1 "26 May 2016"
+.SH NAME
+out123 \- send raw PCM audio or a waveform pattern to an output device
+.SH SYNOPSIS
+.B cat audio.raw | out123
+[
+.B options
+]
+
+.B out123 --wave-freq
+freq1[,freq2,...]
+[
+.B options
+]
+.SH DESCRIPTION
+.B out123
+reads raw PCM data (in host byte order) from standard input 
+and plays it on the audio device specified by given options.
+Alternatively, it can generate periodic signals for playback
+itself.
+.SH OPTIONS
+.B out123
+options may be either the traditional POSIX one letter options,
+or the GNU style long options.  POSIX style options start with a
+single ``\-'', while GNU long options start with ``\-\^\-''.
+Option arguments (if needed) follow separated by whitespace (not ``='').
+Note that some options can be absent from your installation when disabled in the build process.
+.TP
+\fB\-\^\-name \fIname
+Set the name of this instance, possibly used in various places. This sets the client name for JACK output.
+.TP
+\fB\-o \fImodule\fR, \-\^\-output \fImodule\fR
+Select audio output module. You can provide a comma-separated list to use the first one that works.
+.TP
+\fB\-\^\-list\-modules
+List the available modules.
+.TP
+\fB\-a \fIdev\fR, \fB\-\^\-audiodevice \fIdev
+Specify the audio device to use.  The default is
+system-dependent (usually /dev/audio or /dev/dsp).
+Use this option if you have multiple audio devices and
+the default is not what you want.
+.TP
+.BR \-s ", " \-\^\-stdout
+The audio samples are written to standard output,
+instead of playing them through the audio device.
+The output format is the same as the input ... so in this mode, 
+.B out123
+acts like the standard tool \fB cat.
+This shortcut is equivalent to ``-o raw -a -''.
+.TP
+\fB\-O \fIfile\fR, \fB\-\^\-outfile
+Write raw output into a file (instead of simply redirecting standard output to a file with the shell).
+This shortcut is equivalent to ``-o raw -a \fIfile\fR''.
+.TP
+\fB\-w \fIfile\fR, \fB\-\^\-wav
+Write output as WAV file
+.I file
+, or standard output if
+.I -
+is or the empty string used as file name. You can also use
+.I --au
+and
+.I --cdr
+for AU and CDR format, respectively. Note that WAV/AU writing to non-seekable files or redirected stdout needs some thought. The header is written with the first actual data. The result of decoding nothing to WAV/AU is a file consisting just of the header when it is seekable and really nothing when not (not even a header). Correctly writing data with prophetic headers to stdout is no easy business.
+This shortcut is equivalent to ``-o wav -a \fIfile\fR''.
+.TP
+\fB\-\^\-au \fIfile
+Write to
+.I file
+in SUN audio format.  If \- or the empty string is used as the filename, the AU file is
+written to stdout. See paragraph about WAV writing for header fun with non-seekable streams.
+This shortcut is equivalent to ``-o au -a \fIfile\fR''.
+.TP
+\fB\-\^\-cdr \fIfile
+Write to
+.I file
+as a CDR (CD-ROM audio, more correctly CDDA for Compact Disc Digital Audio).
+If \- is or the empty string used as the filename, the CDR file is written
+to stdout.
+This shortcut is equivalent to ``-o cdr -a \fIfile\fR''.
+.TP
+\fB\-r \fIrate\fR, \fB\-\^\-rate \fIrate
+Set sample rate in Hz (default: 44100). If this does not match the actual input
+sampling rate, you get changed pitch. Might be intentional;-)
+.TP
+\fB\-c \fIcount\fR, \fB\-\^\-channels \fIcount
+Set channel count to given value.
+.TP
+\fp\-e \fIenc\fR, \fB\-\^\-encoding \fIenc
+Choose output sample encoding. Possible values look like f32 (32-bit floating point), s32 (32-bit signed integer), u32 (32-bit unsigned integer) and the variants with different numbers of bits (s24, u24, s16, u16, s8, u8) and also special variants like ulaw and alaw 8-bit.
+See the output of \fBout123\fR's longhelp for actually available encodings.
+Default is s16.
+.TP
+.BR \-m ", " \-\^\-mono "
+Set for single-channel audio (default is two channels, stereo).
+.TP
+.BR \-\-stereo
+Select stereo output (2 channels, default).
+.TP
+.BR \-\^\-list\-encodings
+List known encoding short and long names to standard output.
+.TP
+.BR \-\^\-test\-format
+Check if given format is supported by given driver and device (in command line before
+encountering this), silently returning 0 as exit value if it is the case.
+.TP
+.BR \-\^\-test\-encodings
+Print out the short names of encodings supported with the current setup.
+.TP
+.BR \-\^\-query\-format
+If the selected driver and device communicate some default accepted format, print
+out a command line fragment for \fBout123\fR setting that format, always in that order:
+\-\^\-rate <r> -\^\-channels <c> -\^\-encoding <e>
+.TP
+.BR "\-o h" ", " \-\^\-headphones
+Direct audio output to the headphone connector (some hardware only; AIX, HP, SUN).
+.TP
+.BR "\-o s" ", " \-\^\-speaker
+Direct audio output to the speaker  (some hardware only; AIX, HP, SUN).
+.TP
+.BR "\-o l" ", " \-\^\-lineout
+Direct audio output to the line-out connector (some hardware only; AIX, HP, SUN).
+.TP
+\fB\-b \fIsize\fR, \fB\-\^\-buffer \fIsize
+Use an audio output buffer of
+.I size
+Kbytes.  This is useful to bypass short periods of heavy
+system activity, which would normally cause the audio output 
+to be interrupted.  
+You should specify a buffer size of at least 1024 
+(i.e. 1 Mb, which equals about 6 seconds of usual audio data) or more; 
+less than about 300 does not make much sense.  The default is 0, 
+which turns buffering off.
+.TP
+\fB\-\^\-preload \fIfraction
+Wait for the buffer to be filled to
+.I fraction
+before starting playback (fraction between 0 and 1). You can tune this prebuffering to either get sound faster to your ears or safer uninterrupted web radio.
+Default is 0.2 (changed from 1 since version 1.23).
+.TP
+\fB\-\^\-devbuffer \fIseconds
+Set device buffer in seconds; <= 0 means default value. This is the small buffer between the
+application and the audio backend, possibly directly related to hardware buffers.
+.TP
+\fB\-\^\-timelimit \fIsamples
+Set playback time limit in PCM samples if set to a value greater than zero.
+\fBout123\fR will stop reading from stdin or playing from the generated wave
+table after reaching that number of samples.
+.TP
+\fB\-\^\-wave\-freq \fIfrequencies
+Set wave generator frequency or list of those with comma separation for enabling
+a generated test signal instead of standard input. Empty values repeat the
+previous one.
+.TP
+\fB\-\^\-wave\-pat \fIpatterns
+Set the waveform patterns of the generated waves as comma-separated list.
+Choices include sine, square, triangle, sawtooth, gauss, pulse, and shot.
+Empty values repeat the previous one.
+.TP
+\fB\-\^\-wave\-phase \fIphases
+Set waveform phase shift(s) as comma-separated list, negative values
+inverting the pattern in time and empty value repeating the previous.
+.TP
+\fB\-\^\-wave\-limit \fIsamples
+Set a custom soft limit on the wave table size. Small values cause larger changes
+in actual frequencies to make whole periods fit.
+.TP
+.BR \-t ", " \-\^\-test
+Test mode.  The audio stream is read, but no output occurs.
+.TP
+.BR \-v ", " \-\^\-verbose
+Increase the verbosity level.
+.TP
+.BR \-q ", " \-\^\-quiet
+Quiet.  Suppress diagnostic messages.
+.TP
+\fB\-\^\-aggressive
+Tries to get higher priority
+.TP
+.BR \-T ", " \-\-realtime
+Tries to gain realtime priority.  This option usually requires root
+privileges to have any effect.
+.TP
+.BR \-? ", " \-\^\-help
+Shows short usage instructions.
+.TP
+.BR \-\^\-longhelp
+Shows long usage instructions.
+.TP
+.BR \-\^\-version
+Print the version string.
+.SH AUTHORS
+.TP
+Maintainer:
+.br
+Thomas Orgis <maintainer@mpg123.org>, <thomas@orgis.org>
+.TP
+Creator (ancestry of code inside mpg123):
+.br
+Michael Hipp
+.TP
+Uses code or ideas from various people, see the AUTHORS file accompanying the source code.
+.SH LICENSE
+.B out123
+is licensed under the GNU Lesser/Library General Public License, LGPL, version 2.1 .
+.SH WEBSITE
+http://www.mpg123.org
+.br
+http://sourceforge.net/projects/mpg123

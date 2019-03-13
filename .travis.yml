@@ -1,17 +1,9 @@
-language: cpp
+language: bash
 
 os:
   - osx
 
-addons:
-  homebrew:
-    packages:
-    - sdl2_mixer
-    - sdl2_ttf
-    - libsodium
+osx_image: xcode9.4
 
 script:
-  - mkdir build
-  - cd build
-  - cmake ..
-  - make -j$(sysctl -n hw.physicalcpu)
+    - bash ./.travis/xcode-build.sh

@@ -1,0 +1,54 @@
+#!/usr/bin/make -f
+
+#export DH_VERBOSE=1
+
+export DEB_CFLAGS_MAINT_APPEND = -pipe -Wall
+export DEB_LDFLAGS_MAINT_APPEND = -Wl,--no-undefined -Wl,-Bsymbolic -Wl,--as-needed
+
+
+# enable external music player
+confflags = --enable-music-cmd
+
+# explicitly enable/disable all supported sound
+# For mp3 support, libmad disabled by default because it is GPL and not allowed to link with commercial closed-source programs
+# For mod support, modplug is the default because it is in the public domain and used across all platforms.
+confflags += --enable-music-mp3
+confflags += --disable-music-mp3-mad-gpl
+confflags += --enable-music-mod
+confflags += --enable-music-mod-modplug
+confflags += --disable-music-mod-mikmod
+confflags += --enable-music-ogg
+confflags += --enable-music-wave
+
+# MIDI: explicitly state that we use (an in-source copy of) timidity
+confflags += --enable-music-midi
+confflags += --enable-music-midi-fluidsynth
+confflags += --enable-music-midi-timidity
+
+# mafm 20111203: removed the "disable shared" support from previous versions, I
+# couldn't find any reason for it in the changelog
+#
+# mafm 20111204: issue "disable-*-shared" flags for 'configure' again, otherwise
+# SDL_mixer library opens those libraries in a plugin-like way (with
+# SDL_LoadObject), and dpkg-shlibdeps doesn't seem to generate the needed
+# dependencies in the binary library package
+confflags += --disable-music-flac-shared
+confflags += --disable-music-ogg-shared
+confflags += --disable-music-mod-mikmod-shared
+confflags += --disable-music-mod-modplug-shared
+confflags += --disable-music-fluidsynth-shared
+
+%:
+	dh $@ --with autoreconf --parallel
+
+override_dh_autoreconf:
+	dh_autoreconf ./autogen.sh
+
+override_dh_auto_configure:
+	dh_auto_configure -- $(confflags)
+
+override_dh_auto_installchangelogs:
+	dh_auto_installchangelogs -- CHANGES
+
+override_dh_compress:
+	dh_compress -Xplaywave.c -Xplaymus.c

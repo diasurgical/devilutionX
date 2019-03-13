@@ -1,0 +1,3 @@
+This is a dummy file. If you want to see the change log, use subversion:
+
+	svn log -v svn://orgis.org/mpg123

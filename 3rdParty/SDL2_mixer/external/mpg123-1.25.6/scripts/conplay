@@ -1,0 +1,133 @@
+#!/usr/bin/env perl
+
+# Hacked by Thomas Orgis, use at your leisure.
+
+use strict;
+use locale;
+
+use File::Basename qw(basename dirname);
+
+my @mpg123_command = qw(mpg123 --continue -Cv --rva-album);
+my $listfile = "conplay.m3u";
+my $glob = '*.mp[123]';
+
+my $dir = shift;
+
+unless(defined $dir)
+{
+	print STDERR "\nThis little wrapper runs $mpg123_command[0] on a given directory (hand in '.' for the current one), playing all $glob files therein in terminal control mode. The extra trick is that a playlist file ($listfile by default) is read and updated (created) with the position you left playback at (via 'q' key), to return on next invokation.\n";
+	print STDERR "\nIf you give an existing file instead of a directory, or some non-existing path, as first and only paramter, it is used as playlist name and the directory part is used as the base directory for playback.\n";
+	print STDERR "\nThe name stands for CONtinued PLAYback. What did you think?;-)\n\n";
+	exit;
+}
+
+if(-f $dir or (not -e $dir))
+{
+	$listfile = basename($dir);
+	$dir = dirname($dir);
+}
+
+
+chdir($dir) or die "Cannot enter $dir ($!)!\n";
+
+print STDERR "Playing things in: $dir\n";
+
+my @files;
+my $entry = 1;
+my $frame = 0;
+
+if(-e $listfile)
+{
+	open(LIST, '<', $listfile) or die "Cannot read playlist ($!)!\n";
+	while(<LIST>)
+	{
+		chomp;
+		unless(/^#/)
+		{
+			push(@files, $_);
+		}
+		elsif(/^#\s*current entry:\s*(\d+)$/)
+		{
+			$entry = $1;
+		}
+		elsif(/^#\s*current frame:\s*(\d+)$/)
+		{
+			$frame = $1;
+		}
+	}
+	close(LIST);
+}
+else
+{
+	@files = get_files($glob);
+	write_list();
+}
+
+unless(@files)
+{
+	print STDERR "There are no files to play.\n";
+	exit;
+}
+
+if($entry < 0 or $entry > @files or $frame < 0)
+{
+	die "You got bad data in your playlist file (mismatch between current entry and total count, bad frame index). Clean that up.\n";
+}
+
+push(@mpg123_command, '-k', $frame, '--listentry', $entry, '-@', $listfile);
+print STDERR "running player:\n\t@mpg123_command\n\n";
+
+open(MPG123, '-|', @mpg123_command) or die "Cannot run mpg123!";
+while(<MPG123>)
+{
+	print STDOUT $_;
+	if(/^\[CONTINUE\]\s+track\s+(\d+)\s+frame\s+(\d+)/)
+	{
+		$entry = $1;
+		$frame = $2;
+	}
+	if(/^\[BOOKMARK\]\s+track\s+(\d+)\s+frame\s+(\d+)/)
+	{
+		print STDERR "\nGot bookmark at track $1, frame $2; not yet doing anything with that, besides storing.\n";
+		$entry = $1;
+		$frame = $2;
+	}
+}
+close(MPG123);
+
+if($entry > @files)
+{
+	$entry = 0;
+	$frame = 0;
+}
+print STDERR "Continue point is in track $entry, frame $frame.\n";
+write_list();
+
+sub write_list
+{
+	unless(@files)
+	{
+		print STDERR "Refusing to write empty playlist.\n";
+		return;
+	}
+	open(LIST, '>', $listfile) or die "Cannot write Playlist";
+	print LIST "#M3U\n";
+	print LIST "#current entry: $entry\n";
+	print LIST "#current frame: $frame\n";
+	for my $f (@files)
+	{
+		print LIST "$f\n";
+	}
+	close(LIST);
+}
+
+sub get_files
+{
+	my $glob = shift;
+	my @files;
+	open(FIND, '-|', 'find', '.', '-type', 'f', '-name', $glob) or die "Cannot exec find to find files: ($!)\n";
+	@files = <FIND>;
+	close(FIND);
+	chomp(@files);
+	return sort @files;
+}

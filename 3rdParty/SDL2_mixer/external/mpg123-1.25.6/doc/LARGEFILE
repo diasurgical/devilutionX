@@ -1,0 +1,82 @@
+Regarding largefile setup, client apps can be built three ways:
+
+1. _FILE_OFFSET_BITS == 64        (header maps to mpg123_open_64)
+2. _FILE_OFFSET_BITS == 32        (header maps to mpg123_open_32)
+3. _FILE_OFFSET_BITS == <nothing> (header maps to mpg123_open)
+
+The libmpg123 build needs to be prepared for everything. Also, it needs to keep
+in mind the days before introducing large file support --- binaries should still
+work with updated libmpg123. So, mpg123_open should always match what is the
+default build on a platform without added settings. Those are the platform
+variants:
+
+1. 64 bit native system, long == off_t
+libmpg123: mpg123_open
+lfs_alias: mpg123_open_64 -> mpg123_open
+lfs_wrap:  <none>
+
+2. largefile-sensitive, long = 32, off_t = 64 (if enabled)
+libmpg123: mpg123_open_64
+lfs_alias: mpg123_open_32 -> mpg123_open
+lfs_wrap:  mpg123_open -> mpg123_open_64
+
+3. largefile, long = 32, off_t = 64 (FreeBSD)
+libmpg123: mpg123_open
+lfs_alias: mpg123_open_64 -> mpg123_open
+lfs_wrap:  <none>
+
+This is what mpg123 does in version 1.15.4 and it works. Well, for cases 1
+(Linux/Solaris x86-64) and 2 (Linux/Solaris x86). Case 3 needs to be added
+properly. Actually, let's have a second look at case 2: When mpg123 is built
+with --disable-largefile:
+
+2a. largefile-sensitive, mpg123 built with off_t = 32 == long
+libmpg123: mpg123_open
+lfs_alias: mpg123_open_32 -> mpg123_open
+lfs_wrap:  <none>
+
+So, this is still correct. Now, what about case 3? What does mpg123 do
+currently, as of 1.15.4?
+
+3a. largefile, long = 32, off_t = 64 (... and mpg123 not really aware of that)
+libmpg123: mpg123_open
+lfs_alias: mpg123_open_32(long) -> mpg123_open(off_t)
+lfs_wrap:  <none>
+
+This is _wrong_. Luckily, this does not cause binary compatibility issues, as
+mpg123_open_32 won't be called by anyone unless that someone tries to define
+_FILE_OFFSET_BITS=32, which is nonsense. Perhaps old FreeBSD binaries before
+LFS times? Well, back then, there was no libmpg123. So let's ignore that case.
+The issue at hand is that the alias should be from mpg123_open_64 to
+mpg123_open, for clients that insist on defining _FILE_OFFSET_BITS=64.
+
+The change needed now is to fix the naming and also change the type the
+alias functions use: It is not long int anymore!
+
+Let's revisit case 1 for a moment: My old lfs_alias.c provides for the case
+lfs_alias: mpg123_open -> mpg123_open_64. Is that actually possible?
+What means enforcing _FILE_OFFSET_BITS=64 from the outside, which _could_
+happen when libmpg123 is included someplace and folks are on the wrong side
+of paranoid regarding this. So, there is
+
+1a. 64 bit native system, long == off_t = 64 and _FILE_OFFSET_BITS=64
+libmpg123: mpg123_open_64
+lfs_alias: mpg123_open -> mpg123_open_64
+lfs_wrap:  <none>
+
+(Works also for any system with long == off_t in any width)
+Likewise, there is largefile-sensitive system with enforced 32 bits:
+
+2b. largefile-sensitive, mpg123 with enforced _FILE_OFFSET_BITS=32
+libmpg123: mpg123_open_32
+lfs_alias: mpg123_open -> mpg123_open_32
+lfs_wrap:  <none>
+
+All cases are supported with this significant change from 1.15.4:
+Make the aliases use a defined lfs_alias_t, which can be long or off_t,
+depending on what is the default type for offsets on the platform.
+Folks who try _FILE_OFFSET_BITS=32 on a system that only supports
+64 bit get a linking error during mpg123 build (from the _64 aliases),
+which I consider to be a feature.
+
+I salute anyone who is not confused after reading this.

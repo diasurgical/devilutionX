@@ -1,0 +1,571 @@
+libsdl2-mixer (2.0.4) UNRELEASED; urgency=medium
+
+  * Updated to version 2.0.4
+
+ -- Sam Lantinga <slouken@libsdl.org>  Fri, 26 Oct 2018 11:01:42 -0800
+
+libsdl2-mixer (2.0.3) UNRELEASED; urgency=medium
+
+  * Updated to version 2.0.3
+
+ -- Sam Lantinga <slouken@libsdl.org>  Thu, 1 Mar 2018 09:41:07 -0800
+
+libsdl2-mixer (2.0.2) UNRELEASED; urgency=medium
+
+  * Updated to version 2.0.2
+
+ -- Sam Lantinga <slouken@libsdl.org>  Thu, 12 Oct 2017 21:37:49 -0800
+
+libsdl2-mixer (2.0.1) UNRELEASED; urgency=medium
+
+  * Updated to version 2.0.1
+
+ -- Sam Lantinga <slouken@libsdl.org>  Thu, 07 Jan 2016 12:25:45 -0800
+
+libsdl2-mixer (2.0.0) unstable; urgency=low
+
+  * Updated library version to 2.0 for consistency with SDL 2.0
+
+ -- Sam Lantinga <slouken@libsdl.org>  Tue, 26 Feb 2013 15:48:41 -0800
+
+libsdl2-mixer (1.2.13) unstable; urgency=low
+
+  * sdl-mixer for SDL2. Initial release.
+
+ -- Sam Lantinga <slouken@libsdl.org>  Fri, 15 Feb 2013 13:09:44 -0800
+
+sdl-mixer1.2 (1.2.11-7) unstable; urgency=low
+
+  * Improve description and reorganise a bit the control file
+  * Use "Multi-Arch: same" also for the -dev package, following the change in
+    sdl-net1.2 at revision 1.2.7-5
+
+ -- Manuel A. Fernandez Montecelo <manuel.montezelo@gmail.com>  Wed, 21 Dec 2011 19:06:12 +0000
+
+sdl-mixer1.2 (1.2.11-6) unstable; urgency=low
+
+  [ Felix Geyer ]
+  * Switch to debhelper compat level v9.
+    - Build for multiarch.
+
+  [ Manuel A. Fernandez Montecelo ]
+  * Correct watch file, the previous one was detecting versions wrongly
+  * Quell lintian warnings:
+    - binary-control-field-duplicates-source (remove field from binary package
+      libsdl-mixer1.2)
+    - unused-license-paragraph-in-dep5-copyright (remove GPL-2 paragraph)
+
+ -- Manuel A. Fernandez Montecelo <manuel.montezelo@gmail.com>  Mon, 19 Dec 2011 00:04:34 +0000
+
+sdl-mixer1.2 (1.2.11-5) unstable; urgency=low
+
+  [ Felix Geyer ]
+  * Fix Vcs-Browser link.
+
+  [ Manuel A. Fernandez Montecelo ]
+  * debian/rules:
+    - Issue "disable-*-shared" flags for 'configure' again, otherwise SDL_mixer
+      library opens those libraries in a plugin-like way (with SDL_LoadObject),
+      and dpkg-shlibdeps doesn't seem to generate the needed dependencies in the
+      binary library package.
+
+ -- Manuel A. Fernandez Montecelo <manuel.montezelo@gmail.com>  Sun, 04 Dec 2011 12:59:09 +0000
+
+sdl-mixer1.2 (1.2.11-4) unstable; urgency=low
+
+  * Upload to unstable
+  * Improvements in debian/rules:
+    - Remove support for setting some autoconf options directly, newer debhelper
+      takes care of this
+    - Using dpkg-buildflags's options as base, and hardening on top, before
+      preferred flags
+  * Modifications to dependencies and build options:
+    - Depending on newer dpkg-dev (quells lintian warning when using build
+      hardening flags)
+    - Removed Conflict-like dependencies (Breaks, Replaces) on
+      libsdl-mixer{,1.0,1.1}-dev. They are more than 10 years old and not
+      present in any of the last Debian releases, long unsupported.
+    - Use libmad (GPL) instead of unmaintained smpeg (LGPL) for mp3 support
+    - Stating more explicitly in debian/rules the options that we use to build
+      the project
+    - Drop --disable-shared options for the different plugins.  I couldn't find
+      any reason for or against in the changelog, and the default is to enable
+      this support.
+  * Bump Standards-Version to 3.9.2 (no changes needed)
+  * Remove previous Uploaders, all of them not active for years
+  * Removed duplicated entry in previous version's changelog:
+    - "debian/copyright: updated and converted to DEP-5 (dod)"
+
+ -- Manuel A. Fernandez Montecelo <manuel.montezelo@gmail.com>  Sat, 03 Dec 2011 16:42:24 +0000
+
+sdl-mixer1.2 (1.2.11-3) experimental; urgency=low
+
+  * New upstream release (Closes: #568445 #600467)
+  * New maintainer
+    - Add myself to uploaders, and setting DM-Upload-Allowed: yes
+  * Incorporating changes from different sources, unreleased
+    - Changing "Closes" lines to "Closes_in_1.2.11-3"
+  * Changed debhelper compat to level 8 (level 5 before):
+    - Updated dependency on debhelper to (>= 8.0.0)
+    - Removed dependency on quilt
+    - Simplify a lot debian/rules file by leveraging debhelper capabilities,
+      only acting when deviating from auto behaviour
+  * Added 'source/format', with '3.0 (quilt)'
+    - Consequently, removed README.source
+  * Added 'watch' file
+  * Added Vcs-Git and Vcs-Browser in 'control' file
+  * Shipping pkg-config files
+  * Added FLAC support
+  * Updated dependencies:
+    - libsdl1.2-dev (>= 1.2.14) -- was (>= 1.2.4)
+    - libsmpeg-dev (>= 0.4.5+cvs20030824-2.2) -- was (>= 0.4.5+cvs20030824-1.3)
+    - libogg-dev (>= 1.2.0) -- was none
+    - libvorbis-dev (>= 1.2.0) -- was (>= 1.0.0-3)
+    - libmikmod2-dev (>= 3.1.11) -- was none
+    - libflac-dev (>= 1.2.1) -- was none
+  * Patches dropped:
+    - 220_mixer_segfaults.diff (applied upstream)
+    - 200_channel_segfaults.diff (now libmikmod ships in a zip, and it uses
+      system's one anyway)
+    - 00_mikmod_syslibs.patch (seemed to be related to remove tests in SDL_mixer
+      of mikmod versions, probably this restriction is not applicable now, and
+      it's safer to know what's SDL_mixer opinion about it anyway)
+    - 00_link-libm.patch (substituted from another one from upstream)
+    - 01_autoreconf.patch and 01_relibtoolize.patch (handled with dh_autoreconf)
+    - 230_racecondition_hg884a700fb3ff.diff (applied upstream)
+  * Patches added:
+    - 00_link_libm_hgdb31b63abab9.patch (backport from upstream, grabbed by
+      Roman Vasiyarov <rvasiyarov@gmail.com> on #600467, 1.2.11-2 UNRELEASED)
+    - 07_FLAC_SDL_RWops_memory_leaks.patch (Jon Dowland <jmtd@debian.org>,
+      1.2.11-1 UNRELEASED)
+  * Patches renamed:
+    - 00_no_lvorbis_logg.diff -> 01_no_lvorbis_logg.patch
+    - 04_timidity_cfg_opts.diff -> 04_timidity_cfg_opts.patch
+    - 05_fallback_to_freepats.diff -> 05_fallback_to_freepats.patch
+    - 210_dev_snd_seq.patch -> 06_dev_snd_seq.patch
+  * All patches refreshed
+  * debian/copyright: updated and converted to DEP-5 (dod)
+
+ -- Manuel A. Fernandez Montecelo <manuel.montezelo@gmail.com>  Wed, 30 Nov 2011 10:39:07 +0100
+
+sdl-mixer1.2 (1.2.8-6.4) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Stop shipping la file. Closes: #633326.
+
+ -- Regis Boudin <regis@debian.org>  Sat, 24 Sep 2011 16:55:30 +0100
+
+sdl-mixer1.2 (1.2.8-6.3) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * *really* upload to unstable.
+
+ -- Jon Dowland <jmtd@debian.org>  Sat, 11 Dec 2010 09:11:33 +0000
+
+sdl-mixer1.2 (1.2.8-6.2) experimental; urgency=low
+
+  * Non-maintainer upload.
+  * Upload to unstable.
+
+ -- Jon Dowland <jmtd@debian.org>  Fri, 10 Dec 2010 22:55:16 +0000
+
+sdl-mixer1.2 (1.2.8-6.1) experimental; urgency=low
+
+  * Non-maintainer upload.
+  * Backport a fix for a race condition in positional effects.
+    Closes: #605504.
+
+ -- Jon Dowland <jmtd@debian.org>  Wed, 08 Dec 2010 20:07:08 +0000
+
+sdl-mixer1.2 (1.2.8-6) unstable; urgency=low
+
+  [ Barry deFreese ]
+  * Add myself to uploaders.
+  * 04_timidity_cfg_opts.diff - (Closes: #398805).
+    + Ignore unknown options in timidity.cfg.
+    + Thanks to Brandon Barnes for the patch.
+  * 05_fallback_to_freepats.diff - (Closes: #453308).
+    + Use freepats config if timidity isn't present.
+    + Thanks to Fabian Greffrath for the patch.
+  * Bump debhelper build-dep and compat to 5.
+  * Bump Standards Version to 3.8.1.
+    + Move Homepage from package description to source stanza.
+
+ -- Barry deFreese <bdefreese@debian.org>  Fri, 22 May 2009 10:33:13 -0400
+
+sdl-mixer1.2 (1.2.8-5) unstable; urgency=low
+
+  * debian/README.source:
+    + New file.
+
+  * debian/control
+    + Standards-version is 3.8.0.
+
+  * debian/copyright:
+    + Add a copyright entry.
+
+  * 220_mixer_segfaults.diff: 
+    + New patch from upstream to fix a crash when the mixer is closed and
+      reopened (Closes: bug#502006, bug#480569).
+
+ -- Aurelien Jarno <aurel32@debian.org>  Sun, 12 Oct 2008 19:30:42 +0200
+
+sdl-mixer1.2 (1.2.8-4) unstable; urgency=low
+
+  * debian/rules:
+    + Properly link the library with -lvorbisfile and -lsmpeg instead of
+      dynamically opening them at runtime.
+
+  * 00_no_lvorbis_logg.diff:
+    + New patch. Do not uselessly link with -lvorbis -logg.
+
+ -- Sam Hocevar (Debian packages) <sam+deb@zoy.org>  Wed, 21 May 2008 11:54:21 +0000
+
+sdl-mixer1.2 (1.2.8-3) unstable; urgency=low
+
+  * debian/control:
+    + libsdl-mixer1.2-dev: on libmikmod-dev.
+
+ -- Aurelien Jarno <aurel32@debian.org>  Fri, 04 Jan 2008 10:49:21 +0100
+
+sdl-mixer1.2 (1.2.8-2) unstable; urgency=low
+
+  * debian/rules:
+    + Fix build with dpkg-buildpackage -j.
+    + Pass --enable-music-libmikmod to the configure script to
+      enable external libmikmod (Closes: #428348).
+  * debian/control:
+    + Standards-version is 3.7.3 (no changes).
+
+ -- Aurelien Jarno <aurel32@debian.org>  Wed, 02 Jan 2008 15:27:33 +0100
+
+sdl-mixer1.2 (1.2.8-1) unstable; urgency=low
+
+  * New upstream release (Closes: #437004).
+  * Use quilt instead of CDBS.
+
+  * debian/control:
+    + Cleaned up the uploaders field.
+
+  * debian/patches/00_correct_linking.patch:
+    + This patch is now irrelevant. Dropped.
+
+  * debian/patches/00_maintainer_mode.patch:
+    + Upstream no longer uses automake. Dropped.
+
+  * debian/patches/03_awe_voice.patch:
+    + Use the local awe_voice.h file because nothing guarantees its presence.
+
+  * debian/patches/200_channel_segfaults.diff:
+    + Fix a nasty corruption bug when loading songs with varying number of
+      channels (Closes: #422021). Patch courtesy of Brandon Barnes.
+
+  * debian/patches/210_dev_snd_seq.diff:
+    + Autodetect /dev/sequencer or /dev/snd/seq depending on the system
+      (Closes: #437793).
+
+  * debian/patches/timidity_cfg.patch:
+    + Patch implemented upstream. Dropped.
+
+ -- Sam Hocevar (Debian packages) <sam+deb@zoy.org>  Sun, 07 Oct 2007 22:52:58 +0200
+
+sdl-mixer1.2 (1.2.6-3) unstable; urgency=low
+
+  [ Aurelien Jarno ]
+  * debian/rules:
+    + change DEB_CONFIGURE_SCRIPT_ENV += LDFLAGS= into LDFLAGS+=
+    + prepend -Wl,-z,defs before --as-needed in LDFLAGS
+    + don't remove acinclude.m4 in the clean rule (closes: bug#413656,
+      bug#424268, bug#422522).
+  * debian/control:
+    + depends on cdbs (>= 0.4.41)
+    + depends on autotools-dev (closes: bug#413655).
+  * patches/00_link-libm.patch:
+    + new patch from Loïc Minier to link against libm (closes:
+      bug#413662).
+  * patches/01_relibtoolize.patch:
+    + update
+  * patches/02_hurd.patch:
+    + new patch from Samuel Thibault to fix FTBFS on Hurd (closes:
+      bug#428892).
+  * patches/03_awe_voice.patch:
+    + new patch to fix FTBFS with linux-libc-dev (>= 2.6.22) (closes:
+      bug#434303).
+
+ -- Aurelien Jarno <aurel32@debian.org>  Tue, 31 Jul 2007 14:16:36 +0200
+
+sdl-mixer1.2 (1.2.6-2) unstable; urgency=low
+
+  [Josselin Mouette]
+  * rules: link with -Bsymbolic to avoid symbol name conflicts and
+    with --as-needed to reduce indirect dependencies.
+  * Build-depend on libmikmod-dev to use the system's libmikmod.
+
+  [ Aurelien Jarno ]
+  * Package now maintained by the SDL team (closes: bug#393108).
+  * debian/control:
+    + Make the package binNMU safe.
+    + Bump Standards-Version to 3.7.2 (no changes).
+  * Acknowledge NMU (closes: #320370).
+
+ -- Aurelien Jarno <aurel32@debian.org>  Mon,  5 Mar 2007 22:16:56 +0100
+
+sdl-mixer1.2 (1.2.6-1) unstable; urgency=low
+
+  * New upstream release (closes: #286339).
+  * timidity_cfg.patch: contains patch from 1.2.5-9.
+  * 00_correct_linking.patch: contains the patch for correctly linking
+    playwave and playmus.
+  * 00_maintainer_mode.patch: adds AM_MAINTAINER_MODE to configure.in.
+  * 00_mikmod_syslibs.patch: add libmikmod to SYSTEM_LIBS, not to LIBS.
+  * 01_relibtoolize.patch: the result of libtoolize --force --copy ;
+    aclocal ; automake --force-missing --add-missing --foreign --copy ;
+    autoconf ; rm -rf autom4te.cache with the previous patches applied.
+  * copyright: use "License" instead of "Copyright" (closes: #290200).
+  * Disable libmikmod for now.
+  * rules: add a relibtoolize target.
+
+ -- Josselin Mouette <joss@debian.org>  Sat, 22 Jan 2005 04:38:44 +0100
+
+sdl-mixer1.2 (1.2.5-9) unstable; urgency=low
+
+  * timidity/config.h: new location for timidity configuration file
+    (closes: #268567).
+
+ -- Josselin Mouette <joss@debian.org>  Tue, 21 Sep 2004 11:46:42 +0200
+
+sdl-mixer1.2 (1.2.5-8) unstable; urgency=low
+
+  * Makefile.am: only export Mix_.* symbols, to avoid namespace pollution. Yes
+    Sam, that's for you.
+  * Re-run libtoolize --force --copy ; aclocal-1.7 ; automake-1.7
+    --force-missing --add-missing --foreign --copy ; autoconf ; rm -rf
+    autom4te.cache.
+  * debian/rules: remove acinclude.m4 in clean target.
+
+ -- Josselin Mouette <joss@debian.org>  Wed,  4 Aug 2004 02:35:42 +0200
+
+sdl-mixer1.2 (1.2.5-7) unstable; urgency=low
+
+  * native_midi_gpl/native_midi_gpl.c: patch from Andreas Jochens
+    <aj@andaco.de> to build sdl-mixer with GCC 3.4 (closes: #259834).
+
+ -- Josselin Mouette <joss@debian.org>  Sat, 17 Jul 2004 11:53:30 +0200
+
+sdl-mixer1.2 (1.2.5-6) unstable; urgency=low
+
+  * debian/control: Require debhelper 4.1 for cdbs.
+  * mikmod/mikmod{,_internals}.h: Fix from Hans-Frieder Vogt <hfvogt@arcor.de>
+    for distorted sound on AMD64.
+
+ -- Josselin Mouette <joss@debian.org>  Sat, 10 Jul 2004 07:55:02 +0200
+
+sdl-mixer1.2 (1.2.5-5) unstable; urgency=low
+
+  * timidity/config.h: look for configuration file in /etc/timidity.cfg
+    (closes: #235238).
+
+ -- Josselin Mouette <joss@debian.org>  Sat, 28 Feb 2004 12:19:03 +0100
+
+sdl-mixer1.2 (1.2.5-4) unstable; urgency=low
+
+  * Enable timidity again (closes: #222861).
+
+ -- Josselin Mouette <joss@debian.org>  Fri, 20 Feb 2004 12:06:36 +0100
+
+sdl-mixer1.2 (1.2.5-3) unstable; urgency=low
+
+  * debian/control:
+    + Standards-version is 3.6.1 (no changes).
+    + Don't recommend timidity anymore (closes: #213300).
+    + Section for libsdl-mixer1.2-dev is libdevel.
+    + Build-depend on cdbs.
+    + Remove build-deps on libtool, automake, autoconf.
+  * debian/rules:
+    + Rewrite using cdbs.
+    + Enable native midi (closes: #200735).
+    + Disable timidity, it is not in the distribution anymore.
+  * debian/README.Debian: removed.
+  * debian/compat: new file.
+  * Run libtoolize --force --copy ; aclocal-1.7 ;
+    automake-1.7 --force-missing --add-missing --foreign --copy ; autoconf
+  * Now ship patches to autotools stuff instead of regenerating them.
+  * debian/shlibs.local: removed.
+  * debian/copyright: document that the native midi support is now 
+    licensed under the LGPL.
+
+ -- Josselin Mouette <joss@debian.org>  Sun, 26 Oct 2003 13:07:35 +0100
+
+sdl-mixer1.2 (1.2.5-2) unstable; urgency=low
+
+  * Corrected build dependencies.
+
+ -- Josselin Mouette <joss@debian.org>  Sun, 16 Mar 2003 10:46:40 +0100
+
+sdl-mixer1.2 (1.2.5-1) unstable; urgency=low
+
+  * New upstream release.
+  * Build against libvorbis0a by build-depending on version 1.0.0-3
+    (closes: #184712, #184716).
+  * Removed dependencies on xlibs-dev.
+  * Build-depend on debhelper 4.0.4 (closes: #182550).
+  * shlibs.local: removed svgalib, added SDL.
+  * */Makefile.am: don't link sublibs with anything anymore, this should
+    remove unuseful dependencies on libstdc++ and xlibs (closes: #183282).
+  * Makefile.am: SDL_LIBS_FOR_LIBS seems to be deprecated.
+  * configure.in: use AM_MAINTAINER_MODE.
+  * Cleanup in debian/rules.
+
+ -- Josselin Mouette <joss@debian.org>  Sat, 15 Mar 2003 13:48:55 +0100
+
+sdl-mixer1.2 (1.2.4-3) unstable; urgency=low
+
+  * debian/rules: use dh_install.
+  * debian/control: standards version 3.5.8.
+  * mixer.c, Makefile.am, load_ogg.c, load_ogg.h: stolen from CVS; patch
+    from Vaclav Slavik to support OGG Vorbis samples (closes: #171604).
+
+ -- Josselin Mouette <joss@debian.org>  Tue,  3 Dec 2002 21:37:29 +0100
+
+sdl-mixer1.2 (1.2.4-2) unstable; urgency=low
+
+  * New maintainer.
+  * Acknowledge Christopher's changes (closes: #154680, #154714).
+  * Lots of cleanings in debian/rules, use debhelper mode 4.
+  * Follow policy version 3.5.7.
+  * Update upstream URL and add it in description.
+  * Run libtoolize and so on at build time, instead of using gross hacks
+    (closes: #168175). It will reduce the diff size and be more easy to
+    maintain.
+  * Removed debian/patches.
+
+ -- Josselin Mouette <joss@debian.org>  Tue, 12 Nov 2002 14:26:48 +0100
+
+sdl-mixer1.2 (1.2.4-1.1) unstable; urgency=low
+
+  * NMU to fix breakage caused by libvorbis0 split.
+    (closes: #154680, #154714)
+
+ -- Christopher L Cheney <ccheney@debian.org>  Tue, 30 Jul 2002 00:00:00 -0500
+
+sdl-mixer1.2 (1.2.4-1) unstable; urgency=low
+
+  * new upstream version
+  
+ -- Christian T. Steigies <cts@debian.org>  Tue, 21 May 2002 22:01:00 -0400
+
+sdl-mixer1.2 (1.2.3-1) unstable; urgency=low
+
+  * new upstream version
+  * build-depend new SDL 1.2.4
+  * edit acinclude.m4 and configure.in
+  * re-ran libtoolize --force --copy; aclocal; automake --foreign; autoconf
+
+ -- Christian T. Steigies <cts@debian.org>  Tue, 23 Apr 2002 21:45:48 -0400
+
+sdl-mixer1.2 (1.2.1-5) unstable; urgency=low
+
+  * do not build-depend on aalib1-dev (closes: #143047)
+
+ -- Christian T. Steigies <cts@debian.org>  Mon, 15 Apr 2002 14:22:31 -0400
+
+sdl-mixer1.2 (1.2.1-4) unstable; urgency=low
+
+  * Ok, I've had enough. To make it build on slower arches as well we now
+    build-conflict with aclocal, autoconf, automake
+  * "missing" has to be executable
+
+ -- Christian T. Steigies <cts@debian.org>  Sat, 13 Apr 2002 22:57:58 -0400
+
+sdl-mixer1.2 (1.2.1-3) unstable; urgency=low
+
+  * libsdl-mixer1.2-dev should depend on -dev packages 
+    (closes: #142733, #142739 )
+
+ -- Christian T. Steigies <cts@debian.org>  Sat, 13 Apr 2002 19:22:56 -0400
+
+sdl-mixer1.2 (1.2.1-2.2) unstable; urgency=low
+
+  * NMU
+  * built against smpeg 0.4.4-7
+  * Makefile.am: remove occurrences of @SDL_LIBS.*@; these are handled by
+    @SMPEG_LIBS.*@
+  * re-ran libtoolize --force --copy; aclocal; automake --foreign; autoconf
+  * debian/control: updated versioned Build-Depends to libsmpeg-dev (>=
+    0.4.4-7)
+
+ -- Branden Robinson <branden@debian.org>  Mon, 14 Jan 2002 01:00:58 -0500
+
+sdl-mixer1.2 (1.2.1-2.1) unstable; urgency=low
+
+  * NMU per maintainer's request
+  * built against libsdl1.2-dev 1.2.2-3.3 and libsmpeg-dev 0.4.4-5
+  * acinclude.m4: remove AC_DEFUNs for AM_PATH_SDL and AM_PATH_SMPEG so that
+    the ones installed on the system (patched by Debian for static X extension
+    library and SDL plugin support) are used
+  * configure.in: remove LIBS from enable_music_mp3 test, because this should
+    be $SMPEG_LIBS for the executables in this package and
+    $SMPEG_LIBS_FOR_LIBS for the libraries; the proper linkage is hauled in by
+    @SMPEG_LIBS@ and @SMPEG_LIBS_FOR_LIBS@ in Makefile.am anyway, so this bit
+    of code seems redundant, and causes compile problems if left enabled
+  * re-ran libtoolize --force --copy; aclocal; automake --foreign; autoconf
+  * debian/control:
+    - updated versioned Build-Depends to libsdl1.2-dev (>= 1.2.2-3.3) and
+      libsmpeg-dev (>= 0.4.4-5)
+    - updated versioned Depends of libsdl-mixer1.2-dev to libsdl1.2-dev (>=
+      1.2.2-3.3)
+
+ -- Branden Robinson <branden@debian.org>  Mon,  7 Jan 2002 00:32:46 -0500
+
+sdl-mixer1.2 (1.2.1-2) unstable; urgency=low
+
+  * set timidity default path to "/etc/" (closes: #126651)
+
+ -- Christian T. Steigies <cts@debian.org>  Thu, 27 Dec 2001 17:01:03 -0500
+
+sdl-mixer1.2 (1.2.1-1) unstable; urgency=low
+
+  * new upstream version
+  * tried to add Branden's fixes again in Makefile.am, aclocal.m4 and
+    configure.in
+  * re-ran libtoolize --force --copy; aclocal; automake --foreign; autoconf
+
+ -- Christian T. Steigies <cts@debian.org>  Tue, 18 Dec 2001 21:22:33 -0500
+
+sdl-mixer1.2 (1.2.0-2) unstable; urgency=low
+
+  * fix section in control file, libsdl-mixer1.2 goes in libs, -dev in devel
+  * Build-Depends on xlibs-dev, not xlib6g-dev (closes: #114584)
+
+ -- Christian T. Steigies <cts@debian.org>  Mon, 12 Nov 2001 21:07:15 -0500
+
+sdl-mixer1.2 (1.2.0-1.1) unstable; urgency=low
+
+  * NMU to fix the Big SDL and X Extension Library Problem (Closes: #115054)
+  * built against libsdl1.2 1.2.2-3.1 and smpeg 0.4.4-2.1
+  * Thanks to Eric Gillespie, Jr. and Jeff Licquia for help preparing this
+    solution
+  * timidity/config.h: incorporate one-line patch to make "/etc" the
+    DEFAULT_PATH
+  * {,mikmod/,timidity/}Makefile.am:
+    - add @SMPEG_LIBS@ @SDL_LIBS@ to _LDADD targets
+    - add @SMPEG_LIBS_FOR_LIBS@ @SDL_LIBS_FOR_LIBS@ to _LIBADD targets
+  * acinclude.m4: deleted
+  * configure.in:
+    - remove SDL_LIBS line
+    - don't define CFLAGS or LIBS here
+  * re-ran libtoolize --copy --force; aclocal; automake --foreign; autoconf
+  * debian/control:
+    - bumped Standards-Version (lintian-clean)
+    - versioned Build-Depends on libsdl1.2-dev (>= 1.2.2-3.1)
+    - libsdl-mixer1.2-dev Depends on libsdl1.2-dev (>= 1.2.2-3.1)
+    - versioned Build-Depends on libsmpeg-dev (>= 0.4.4-2.1)
+  * debian/postinst: only invoke ldconfig if $1 is "configure"
+
+ -- Branden Robinson <branden@debian.org>  Tue,  9 Oct 2001 16:50:07 -0500
+
+sdl-mixer1.2 (1.2.0-1) unstable; urgency=low
+
+  * sdl-mixer for SDL1.2. Initial Release. (closes: #94453)
+
+ -- Christian T. Steigies <cts@debian.org>  Fri, 20 Apr 2001 15:19:03 -0400

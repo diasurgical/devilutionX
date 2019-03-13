@@ -1,0 +1,110 @@
+O-tone Michael Hipp: The mp3 benchmarking lie?
+----------------------------------------------
+
+Let's write a few notes about benchmarking the different mp3 decoders,
+which are available. 'top' is NOT a benchmark, it's a simple check
+how a program performs. The sad thing with 'top' is, that it has some
+problems with the measurement of threaded programs of programs only
+requesting short chunks of processor time. So, the only real test is
+probably decoding a stream without threads with 100% CPU time and
+measure the time how long your machine needs for it.
+You can do this with mpg123 by doing a
+  time mpg123 -t mp3stream.mp3
+or
+  time mpg123 -s mp3stream.mp3  > /dev/null
+if you additionally want to measure the I/O time. 
+
+If you find a player, which claims to be 10 or even more times faster than the
+current players: just don't believe it. A factor of 2 MAY BE possible.
+
+
+Thomas's mpg123 decision process
+--------------------------------
+
+I made some tests back then when I wondered  if there is a point in using another "modern" mp3 decoder for my mixing daemon. This was around Dec. 2004 till Feb. 2005 with current versions (0.59r-thorX in the case of mpg123). What follows is a copy of the DECODERS file in the dermixd distribution:
+
+What decoder should one use?
+
+-----
+ MP3
+-----
+
+mpg123 is the old-fashioned way, uncertain license, may have some problems with extraordinary files (huge id3v2 tags, other specialities?), but fast. Has EQ control; interactive frontend interface (in parts hacked by me...).
+
+mpg321: is popular these days... interface? speed?
+
+madplay: is becoming popular these days, handles RVA2 by itself... can't provide an interface nor EQ
+
+
+speed:
+
+decoding Dirty Guitar with NULL output, pentium-optimized (not more):
+
+decoder	user time/s
+mpg123	23
+madplay(hq)	46
+madplay(speed)	34
+mpg321(hq)	62
+mpg321(speed)	49
+
+
+So, there is still a strong technical point in using mpg123... even when my 366MHz-Laptop can easily handle several decoders at once with either of the programs, every percent cpu usage drags on the battery... and takes the cpu time from the real work
+
+-----
+ OGG
+-----
+
+7,9M	/tmp/dirty_guitar-q3.ogg
+11M	/tmp/dirty_guitar-q5.ogg
+13M	/tmp/dirty_guitar-q6.ogg
+15M	/tmp/dirty_guitar-q7.ogg
+22M	/tmp/dirty_guitar-q9.ogg
+29M	/tmp/dirty_guitar-q10.ogg
+14M	/tmp/dirty_guitar-std.mp3
+101M	/tmp/dirty_guitar.wav
+
+speed of ogg123:
+
+quality	user time/s
+3	31
+5	36
+6	38
+7	39
+10	55
+
+So, with similar care as mpg123 concerning some (assembler?) optimization, ogg could well come close to "fast" mp3 decoding.
+Does ist sound better, then?
+
+
+A review from the new maintainer
+--------------------------------
+
+Now it's 2006, 23th of July. Still the same laptop, still the same mp3 file.
+I just want to update the number for current mpg123 with the mmx optimization.
+I should also see if competition (well, ogg, at least?) improved in the year that passed... but looking only at mp3, that reduces to the question if mpg123 got faster or slower.
+Neither on the mpg321 site or the MAD site (ftp dir) did I find any new version. MAD is still 0.15.1b (0.15.2b for madplay), mpg321 still 0.2.10 .
+Well, I can look at mplayer's mpg123 spawn called mp3lib that has been taken care for over the time.
+But apart from that, will mpg123 stand alone on the field of console mp3 engines that are actively maintained???
+To have at least some twist, I now measured the output of raw data to stdout (to /dev/null) instead of decoding alone. The hardware and largely the software is still the same (now kernel 2.6.11 instead of 2.6.?).
+I've only used the "high quality" mad players - the earlier measurements give a hint about the difference to the "speed" variant.
+
+mpg123-0.60-beta1, underworld_@_dirty_guitar.mp3
+
+gcc-3.3.3
+CFLAGS=-O2 -finline-functions -march=pentium2
+built with the new autoconf/make system
+machine in X11 running fluxbox, no active load (like a year ago)
+measuring second run (with cached file)
+
+time for -s > /dev/null decode...
+pentium:	24s
+pentium, MMX:	19s
+pentium, MMX, gapless (runtime-disabled): 19s
+pentium, MMX, gapless (also runtime-enabled): 19s
+mpg321 0.2.10, high quality: 64s
+madplay 0.15.2b, high quality: 56s
+
+With the file length being m:s 9:58 (598s), for mpg123 that makes theoretical realtime cpu 3-4% for the PII-366.
+Incidentally, `top` agrees there: it shows 3.0-3.3% CPU usage for the MMX/gapless binary during normal OSS playback.
+
+I feel unable to benchmark the mp3 playback of mplayer - I don't see an option to make it decode audio as fast as possible (I only know -benhcmark and -noaudio; with esp. the latter not helping me there).

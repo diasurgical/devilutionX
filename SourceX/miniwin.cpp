@@ -86,7 +86,12 @@ WINBOOL WINAPI FindClose(HANDLE hFindFile)
  */
 UINT WINAPI GetWindowsDirectoryA(LPSTR lpBuffer, UINT uSize)
 {
-	char *name = SDL_GetPrefPath("diasurgical", "devilution");
+    // Change this for MacOS to do easy the task of copy the gamer data from original diablo
+#ifdef __APPLE__
+    char *name = SDL_GetBasePath();
+#else
+    char *name = SDL_GetPrefPath("diasurgical", "devilution");
+#endif
 	strncpy(lpBuffer, name, uSize);
 	SDL_free(name);
 
@@ -126,7 +131,12 @@ WINBOOL WINAPI GetDiskFreeSpaceA(LPCSTR lpRootPathName, LPDWORD lpSectorsPerClus
  */
 DWORD WINAPI GetModuleFileNameA(HMODULE hModule, LPSTR lpFilename, DWORD nSize)
 {
-	char *name = SDL_GetPrefPath("diasurgical", "devilution");
+    // Change this for MacOS to do easy the task of copy the gamer data from original diablo
+#ifdef __APPLE__
+    char *name = SDL_GetBasePath();
+#else
+    char *name = SDL_GetPrefPath("diasurgical", "devilution");
+#endif
 	strncpy(lpFilename, name, nSize);
 	SDL_free(name);
 
@@ -635,6 +645,8 @@ DWORD WINAPI GetPrivateProfileStringA(LPCSTR lpAppName, LPCSTR lpKeyName, LPCSTR
 		strncpy(lpReturnedString, lpDefault, nSize);
 		SRegSaveString(lpAppName, lpKeyName, 0, lpReturnedString);
 	}
+    
+    return 0;
 }
 
 int MessageBoxA(HWND hWnd, const char *Text, const char *Title, UINT Flags)

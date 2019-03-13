@@ -1,0 +1,70 @@
+#FIXED_POINT=1
+#USE_ENCODER=1
+
+CROSS=
+CC = $(CROSS)gcc
+
+CFLAGS   = -O2 -std=gnu99 -fno-common -fvisibility=hidden
+CFLAGS  += -mmacosx-version-min=10.6
+CFLAGS  += -Wall -W -Wstrict-prototypes -Wextra -Wcast-align -Wnested-externs -Wshadow
+INCLUDES = -Iinclude -Isilk -Icelt
+CPPFLAGS = -DOPUS_BUILD=1
+CPPFLAGS+= -Drestrict=__restrict
+CPPFLAGS+= -DHAVE_LRINT=1 -DHAVE_LRINTF=1 -DHAVE_ALLOCA_H=1 -DHAVE_STDINT_H=1
+#CPPFLAGS += -DCUSTOM_MODES=1
+CPPFLAGS += -DVAR_ARRAYS=1
+#CPPFLAGS += -DUSE_ALLOCA=1
+
+LDFLAGS = -mmacosx-version-min=10.6 -Wl,-single_module
+LDFLAGS+= -Wl,-install_name,@rpath/Opus.framework/Versions/A/Opus
+LDFLAGS+= -Wl,-compatibility_version,5.0 -Wl,-current_version,5.0
+#LDLIBS  = -Wl,-lbundle1.o
+
+-include package_version
+
+include silk_sources.mk
+include celt_sources.mk
+include opus_sources.mk
+
+ifdef USE_ENCODER
+CPPFLAGS+= -DOPUS_ENABLE_ENCODER
+CELT_SOURCES += $(CELT_SOURCES_ENC)
+SILK_SOURCES += $(SILK_SOURCES_ENC)
+OPUS_SOURCES += $(OPUS_SOURCES_ENC)
+ifdef FIXED_POINT
+SILK_SOURCES += $(SILK_SOURCES_FIXED)
+#CPPFLAGS+= -DFIXED_DEBUG=1
+else
+SILK_SOURCES += $(SILK_SOURCES_FLOAT)
+#CPPFLAGS+= -DFLOAT_APPROX=1
+endif
+endif
+
+ifdef FIXED_POINT
+CPPFLAGS+= -DFIXED_POINT=1 -DDISABLE_FLOAT_API
+INCLUDES+= -Isilk/fixed
+else
+INCLUDES+= -Isilk/float
+endif
+
+%.o:%.c
+	$(CC) -c $(CFLAGS) $(CPPFLAGS) $(INCLUDES) -o $@ $<
+
+TARGET = libopus.dylib
+
+SRCS = $(SILK_SOURCES) $(CELT_SOURCES) $(OPUS_SOURCES)
+OBJS := $(patsubst %.c,%.o,$(SRCS))
+
+# Rules
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CC) -dynamiclib -o $(TARGET) $(OBJS) $(LDFLAGS) $(LDLIBS)
+
+celt/celt.o: CFLAGS += -DPACKAGE_VERSION='$(PACKAGE_VERSION)'
+celt/celt.o: package_version
+
+clean:
+	rm -f $(TARGET) $(OBJS)
+
+.PHONY: all clean

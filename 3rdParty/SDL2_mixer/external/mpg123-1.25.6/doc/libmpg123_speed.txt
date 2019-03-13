@@ -1,0 +1,84 @@
+This is historic... one should make a new investigation.
+What I can say that a quick test of pre0.59s versus 1.7.3 with generic decoder on my x86-64 GNU/Linux box is not able to call a winner (or looser, for that matter).
+Though, 1.8.0 will make the new libmpg123 a winner, because there is new optimization code going on!
+
+The move to libmpg123 means some more code separation / interfacing and especially the move of any local static variables into the mpg123_handle to make multiple stream handling possible.
+That may very well have an impact on performance of the mpg123 decoder.
+I made some tests, even using gcc's -pg option and gprof, with mixed result: SSE and MMX on my Thinkpad X31 are slower, especially the asm synth funtion, while the generic code is fine.
+On the other hand, on a K6-3+ using the same gcc version 4.1.2, the library based mpg123 is _faster_ for MMX and 3DNowExt.
+Epecially the mmx synth is faster... while the 3DNowExt synth is slower, too (it's the same code as SSE synth, just calling different dct64) - but speedups in other regions still make 3DNowExt of the library mpg123 more efficient.
+
+What I can clearly say is that dropping the multi-cpu support via ./configure --with-cpu does help in for both monolithic and library mpg123, but that is no wonder as it removes indirection.
+The main point stays, though: On my Thinkpad the library is slow, on the K6-3+ it's fast.
+
+What's the point to get here? I am not sure. We're depending on the compiler optimization (btw: Intel Compiler doesn't change the relation for the Thinkpad; not tested on the K6).
+I guess that for my Thinkpad another gcc version could invert the picture again...
+Also, I am not sure how far I should trust the gprof analysis... but it can be right; even when there is no apparent cause for the speed difference in the code itself, it could be some effect of cache and memory access.
+Some reordering of instructions and data... for sure that happened.
+
+I'll need further numbers to conclude anything about the (positive/negative) impact my code changes have.
+
+OK, ran the test of trunk against branches/mpg123lib on my media box with AMD Geode (AthlonXP, actually):
+
+thomas@kiste:~$ for i in mpg123-lib mpg123-trunk; do for cpu in mmx 3dnowext sse; do echo $i $cpu; time $i/src/mpg123 --cpu $cpu -q -t /thorma/var/music/metallica/ride_the_lightning/*.mp3; done; done
+mpg123-lib mmx
+
+real	0m25.949s
+user	0m25.395s
+sys	0m0.534s
+mpg123-lib 3dnowext
+
+real	0m25.442s
+user	0m24.863s
+sys	0m0.558s
+mpg123-lib sse
+
+real	0m25.794s
+user	0m25.214s
+sys	0m0.562s
+mpg123-trunk mmx
+
+real	0m26.650s
+user	0m26.004s
+sys	0m0.626s
+mpg123-trunk 3dnowext
+
+real	0m25.886s
+user	0m25.262s
+sys	0m0.600s
+mpg123-trunk sse
+
+real	0m25.695s
+user	0m25.136s
+sys	0m0.539s
+thomas@kiste:~$ for i in mpg123-lib mpg123-trunk; do for cpu in 3dnow; do echo $i $cpu; time $i/src/mpg123 --cpu $cpu -q -t /thorma/var/music/metallica/ride_the_lightning/*.mp3; done; done
+mpg123-lib 3dnow
+
+real	0m33.011s
+user	0m32.365s
+sys	0m0.621s
+mpg123-trunk 3dnow
+
+real	0m32.830s
+user	0m32.192s
+sys	0m0.619s
+
+
+You can't really make a decision there. It's tight.
+What worries me a bit is the total loose of 3DNow against MMX - should it be that drastic?
+Well, it's higher quality, at least.
+
+
+Addendum: The game on an K6-3+
+
+On mpg123 < 1.8.0, he 3DNowExt decoder used to be slower than the 3DNow decoder. Only recently it has been observed, that the simplification of the runtime decoder choice code sped up that one significantly, towards the same performance level as the single-decoder build of mpg123 1.6.4 (-with-cpu=3dnowext_alone having broken build in later versions:-/).
+We are talking about a difference of 20% here... there is something special about the K6-3+ that makes is that sensitive to how the function pointers get thrown around.
+
+Example numbers: Dynamic x86 build of 1.6.4, 3DNowExt needs 5.9 s, 3DNow 5.6 s.
+3DNowExt-only build: 4.9 s
+3DNow-only build: 5.6 s
+Now... dynamic build of mpg123 trunk of 2010-05-24: 3DNowExt 4.9 s, 3DNow 5.6 s. That's how it should be. One might investigate how exactly the old ways before mpg123 1.8 worked against the K6-3+ ... possibly helping performance issues seen with the mpg123 coded for MPlayer on that CPU.
+
+-- 
+Thomas.
+

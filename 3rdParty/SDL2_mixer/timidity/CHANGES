@@ -1,0 +1,77 @@
+This version of TiMidity should contain all the fixes from the
+September 25 2003 SDL_mixer CVS snapshot. In addition, I've made some
+changes of my own, e.g.:
+
+* All file access is done through SDL_RWops. This means the MIDI
+  stream no longer has to be a file. (The config file and instruments
+  still have to be though.)
+
+* Replacing of TiMidity's endian-handling with SDL's.
+
+* Removal of much unused or unnecessary code, such as
+
+  + The "hooks" for putting a user interface onto TiMidity.
+  + The antialias filter. It wasn't active, and even at 4 kHz I
+    couldn't hear any difference when activating it.
+  + Removed all traces of LOOKUP_HACK and LOOKUP_INTERPOLATION.
+    According to the code comments they weren't very good anyway.
+    ("degrades sound quality noticeably"). I also removed the
+    disclaimer about the "8-bit uLaw to 16-bit PCM and the 13-bit-PCM
+    to 8-bit uLaw tables" disclaimer, since I believe those were the
+    tables I removed.
+  + Removed LOOKUP_SINE since it was already commented out. I think we
+    can count on our target audience having math co-processors
+    nowadays.
+  + Removed USE_LDEXP since it wasn't being used and "it doesn't make
+    much of a difference either way".
+  + Removed decompress hack from open_file() since it didn't look very
+    portable.
+  + Removed heaps of unnecessary constants.
+  + Removed unused functions.
+  + Assume that LINEAR_INTERPOLATION is always used, so remove all
+    code dealing with it not being so. It's not that I think the
+    difference in audio quality is that great, but since it wouldn't
+    compile without code changes I assume no one's used it for quite
+    some time...
+  + Assume PRECALC_LOOPS is always defined. Judging by the comments it
+    may not make much of a difference either way, so why maintain two
+    versions of the same code?
+
+* Moving several static globals into the MidiSong struct. This
+  includes sample rate, formate, etc. which are now all per-song.
+
+* Moved some typedefs (e.g. MidiSong) to timidity.h for easy inclusion
+  into the MIDI decoder.
+
+* Added free_pathlist().
+
+* Replaced TiMidity's own 8, 16 and 32-bit types with SDL's.
+
+* Made TiMidity look for its configuration file in both /etc and
+  /usr/local/lib/timidity. (Windows version remains unchanged.)
+
+* Timidity_PlaySome() now takes three arguments. A MidiSong, a decode
+  buffer and decode buffer size in bytes. (MidiSong is a new argument,
+  and buffer size used to be in samples.)
+
+  In addition, it will return the number of bytes decoded.
+
+* Added Timidity_Exit().
+
+* Removed Timidity_Stop() and Timidity_Active(). Stopping playback
+  should be handled by SDL_sound, and Timidity_PlaySome() will return
+  0 when the MIDI stream is finished.
+
+* Modified the ToneBank stuff to allow some data to be shared between
+  MidiSongs.
+
+* The following files have been removed: controls.c, controls.h,
+  filter.c, filter.h, sdl_a.c, sdl_c.c
+
+* config.h has been renamed as options.h to avoid confusion with the
+  automatically generated config.h for SDL_sound.
+
+* Added support for loading DLS format instruments:
+	Timidity_LoadDLS(), Timidity_FreeDLS(), Timidity_LoadDLSSong()
+
+* Added Timidity_Init_NoConfig()

@@ -1,0 +1,14 @@
+noinst_LTLIBRARIES += src/compat/libcompat.la
+noinst_LTLIBRARIES += src/compat/libcompat_str.la
+
+src_compat_libcompat_la_SOURCES = \
+  src/compat/compat_str.c \
+  src/compat/compat.c \
+  src/compat/compat.h
+
+# A smaller one for the output modules. Do not want to grow them
+# unnecessarily with unused code.
+src_compat_libcompat_str_la_SOURCES = \
+  src/compat/compat_str.c \
+  src/compat/compat.h
+

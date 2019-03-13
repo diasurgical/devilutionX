@@ -1,0 +1,37 @@
+CROSS=
+CC = $(CROSS)gcc
+
+CFLAGS   = -O2 -fno-common -std=c89 -pedantic
+CFLAGS  += -fvisibility=hidden
+CFLAGS  += -mmacosx-version-min=10.6
+CFLAGS  += -Wall -W -Wno-parentheses -Wno-long-long
+INCLUDES = -I../include -I../include/opus
+CPPFLAGS+= -Drestrict=__restrict
+CPPFLAGS+= -DOP_HAVE_LRINTF=1 -DHAVE_STDINT_H=1
+#CPPFLAGS += -DOP_DISABLE_FLOAT_API=1
+#CPPFLAGS += -DOP_FIXED_POINT=1
+#CPPFLAGS += -DOP_ENABLE_ASSERTIONS=1
+
+LDFLAGS = -mmacosx-version-min=10.6 -Wl,-single_module
+LDFLAGS+= -Wl,-install_name,@rpath/OpusFile.framework/Versions/A/OpusFile
+LDFLAGS+= -Wl,-compatibility_version,5.0 -Wl,-current_version,5.3
+LDLIBS  = -F../Frameworks -Wl,-framework,Opus -Wl,-framework,Ogg
+#LDLIBS += -Wl,-lbundle1.o
+
+%.o:%.c
+	$(CC) -c $(CFLAGS) $(CPPFLAGS) $(INCLUDES) -o $@ $<
+
+TARGET = libopusfile.dylib
+
+OBJS := internal.o info.o stream.o opusfile.o
+
+# Rules
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CC) -dynamiclib -o $(TARGET) $(OBJS) $(LDFLAGS) $(LDLIBS)
+
+clean:
+	rm -f $(TARGET) $(OBJS)
+
+.PHONY: all clean

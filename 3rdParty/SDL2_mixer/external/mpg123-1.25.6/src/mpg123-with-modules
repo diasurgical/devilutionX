@@ -1,0 +1,5 @@
+#!/bin/sh
+# wrapper script to set MPG123_MODDIR automatically so that one can run mpg123
+# from the source directory, even if modules are enabled
+src=$(dirname $0)
+MPG123_MODDIR="$src/libout123/modules/.libs" exec "$src/mpg123" "$@"

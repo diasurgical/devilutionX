@@ -1,0 +1,111 @@
+<html>
+
+<head>
+<title>Tremor - Build</title>
+<link rel=stylesheet href="style.css" type="text/css">
+</head>
+
+<body bgcolor=white text=black link="#5555ff" alink="#5555ff" vlink="#5555ff">
+<table border=0 width=100%>
+<tr>
+<td><p class=tiny>Tremor documentation</p></td>
+<td align=right><p class=tiny>Tremor version 1.0 - 20020403</p></td>
+</tr>
+</table>
+
+<h1>Tremor: Building libvorbisidec</h1>
+
+<p>
+
+The C source in the Tremor package will build on any ANSI C compiler
+and function completely and properly on any platform.  The included
+build system assumes GNU build system and make tools (m4, automake,
+autoconf, libtool and gmake).  GCC is not required, although GCC is
+the most tested compiler.  To build using GNU tools, type in the
+source directory:
+
+<p>
+<pre><tt>
+./autogen.sh
+gmake
+</tt></pre>
+<p>
+or if GNU make is the standard make on the build system:
+<pre><tt>
+./autogen.sh
+make
+</tt></pre>
+
+<p>
+Currently, the source implements playback in pure C on all platforms
+except ARM, where a [currently] small amount of assembly (see the file
+asm_arm.h) is used to implement 64 bit math operations and
+fast LSP computation.  If building on ARM without the benefit of GNU
+build system tools, be sure that <tt>_ARM_ASSEM_</tt> is #defined by
+the build system if this assembly is desired, else the resulting
+library will use whatever 64 bit math builtins the compiler
+implements.
+
+<p>
+No math library is required by this source.  No floating point
+operations are used at any point in either setup or decode.  This
+decoder library will properly decode any past, current or future
+Vorbis I file or stream.
+
+<p>
+The GNU build system produces static and, when supported by the OS,
+dynamic libraries named 'libvorbisidec'.  This library exposes an API
+nearly identical to the BSD reference library's 'libvorbisfile',
+including all the features familiar to users of vorbisfile.  This API
+is similar enough that the proper header file to include is named
+'ivorbisfile.h', included in the source build directory. 
+Lower level libvorbis-style headers and structures are
+in 'ivorbiscodec.h', also included in the source build directory. A
+simple example program, ivorbisfile_example.c, can be built with 'make
+ivorbisfile_example'.
+<p>
+(We've summarized <a href="diff.html">differences between the free,
+reference vorbisfile library and Tremor's libvorbisidec in a separate
+document</a>.)
+
+<h3>Notes</h3>
+
+<p>Tremor requires a native 64 bit integer type to compile and
+function; The GNU build system will locate and typedef
+<tt>ogg_int64_t</tt> to the appropriate native type.  If not using the
+GNU build tools, you will need to define <tt>ogg_int64_t</tt> as a
+64-bit type inside your system's project file/Makefile, etc. On win32,
+for example, this should be defined as <tt>__int64</tt>. 
+<p>
+
+<br><br>
+<hr noshade>
+<table border=0 width=100%>
+<tr valign=top>
+<td><p class=tiny>copyright &copy; 2002 Xiph.org</p></td>
+<td align=right><p class=tiny><a href="http://www.xiph.org/ogg/vorbis/">Ogg Vorbis</a></p></td>
+</tr><tr>
+<td><p class=tiny>Tremor documentation</p></td>
+<td align=right><p class=tiny>Tremor version 1.0 - 20020403</p></td>
+</tr>
+</table>
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

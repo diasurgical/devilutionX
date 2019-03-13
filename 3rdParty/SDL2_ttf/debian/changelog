@@ -1,0 +1,152 @@
+libsdl2-ttf (2.0.15) UNRELEASED; urgency=medium
+
+  * Updated to version 2.0.15
+
+ -- Sam Lantinga <slouken@libsdl.org>  Fri, 26 Oct 2018 12:05:08 -0800
+
+libsdl2-ttf (2.0.14) UNRELEASED; urgency=medium
+
+  * Updated to version 2.0.14
+
+ -- Sam Lantinga <slouken@libsdl.org>  Fri, 29 Jan 2016 12:55:12 -0800
+
+libsdl2-ttf (2.0.13) UNRELEASED; urgency=medium
+
+  * Updated to version 2.0.13
+
+ -- Sam Lantinga <slouken@libsdl.org>  Thu, 07 Jan 2016 12:34:06 -0800
+
+libsdl2-ttf (2.0.12) unstable; urgency=low
+
+  * sdl-ttf for SDL2. Initial release.
+
+ -- Sam Lantinga <slouken@libsdl.org>  Fri, 15 Feb 2013 13:09:44 -0800
+
+sdl-ttf2.0 (2.0.9-1.1ubuntu1) precise; urgency=low
+
+  * Build for multiarch.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Thu, 29 Dec 2011 16:24:00 -0800
+
+sdl-ttf2.0 (2.0.9-1.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Explicitly link against libm, fixing FTBFS with --no-undefined.
+    Closes: #556340.
+  * Stop shipping la file. Closes: #631839, 633341.
+
+ -- Regis Boudin <regis@debian.org>  Wed, 28 Sep 2011 20:12:07 +0100
+
+sdl-ttf2.0 (2.0.9-1) unstable; urgency=low
+
+  [ Aurelien Jarno ]
+  * debian/control:
+    + Make the package binNMU safe.
+
+  [ Samuel Mimram ]
+  * New upstream release.
+  * Removed no_freetype_internals.dpatch and pixel_mode_mono.dpatch,
+    integrated upstream.
+  * Don't ignore errors when cleaning.
+
+ -- Samuel Mimram <smimram@debian.org>  Mon, 23 Jul 2007 14:39:46 +0200
+
+sdl-ttf2.0 (2.0.8-3) unstable; urgency=low
+
+  * Added pixel_mode_mono.dpatch to fix a bug with monochrome bitmaps
+    (thanks Guillaume Cottenceau).
+
+ -- Samuel Mimram <smimram@debian.org>  Tue, 22 Aug 2006 17:02:35 +0000
+
+sdl-ttf2.0 (2.0.8-2) unstable; urgency=low
+
+  * Update config.sub and config.guess in order to be able to build on
+    GNU/kFreeBSD, closes: #373147.
+
+ -- Samuel Mimram <smimram@debian.org>  Tue, 13 Jun 2006 12:39:37 +0000
+
+sdl-ttf2.0 (2.0.8-1) unstable; urgency=low
+
+  * New upstream release.
+  * Added no_freetype_internals.dpatch in order to avoid using freetype
+    internals (cf. http://www.freetype.org/freetype2/freetype-2.2.0.html),
+    closes: #373108.
+  * Added a watch file.
+  * Updated standards version to 3.7.2, no changes needed.
+
+ -- Samuel Mimram <smimram@debian.org>  Mon, 12 Jun 2006 23:04:40 +0000
+
+sdl-ttf2.0 (2.0.7-1) unstable; urgency=low
+
+  * New maintainer.
+  * New upstream release, closes: #318802.
+  * Corrected copyright file, closes: #290203.
+  * Relibtoolized, closes: #269297.
+  * Removed file-opening-fix.dpatch and freetype-fix.dpatch, integrated
+    upstream.
+  * Removed useless call to ldconfig in postinst.
+  * Updated standards version to 3.6.2, no changes needed.
+
+ -- Samuel Mimram <smimram@debian.org>  Wed, 23 Nov 2005 22:04:06 +0100
+
+sdl-ttf2.0 (2.0.6-5) unstable; urgency=low
+
+  * debian/control:
+    - Changed Section field of libsdl-ttf2.0-dev from libs to libdevel.
+
+ -- Jerome Marant <jerome@debian.org>  Sat, 10 Jan 2004 14:59:22 +0100
+
+sdl-ttf2.0 (2.0.6-4) unstable; urgency=low
+
+  * debian/control:
+    - Bumped Standards-Version to 3.6.1.
+    - Added build-dependency on dpatch.
+  * debian/patches/file-opening-fix.dpatch: new patch providing
+    previous fix from Sam Hocevar.
+  * debian/patches/freetype-fix.dpatch: added patch fixing a build
+    failure with last version of Freetype. Closes: Bug#227015.
+    Thanks Daniel Schepler <schepler@math.berkeley.edu>.
+
+ -- Jerome Marant <jerome@debian.org>  Sat, 10 Jan 2004 14:10:04 +0100
+
+sdl-ttf2.0 (2.0.6-3) unstable; urgency=low
+
+  * debian/control:
+    + Set policy to 3.5.10.
+    + Added Sam Hocevar as co-maintainer. 
+  * Backported a fix from HEAD for a crash when opening a font file that
+    does not exist.
+
+ -- Sam Hocevar (Debian packages) <sam+deb@zoy.org>  Sun, 15 Jun 2003 13:15:15 +0200
+
+sdl-ttf2.0 (2.0.6-2) unstable; urgency=low
+
+  * config.{guess,sub}: updated again from versions from
+    autotools-dev. Closes: Bug#183661.
+
+ -- Jerome Marant <jerome@debian.org>  Sun,  6 Apr 2003 00:12:06 +0200
+
+sdl-ttf2.0 (2.0.6-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Jerome Marant <jerome@debian.org>  Thu, 20 Mar 2003 19:39:07 +0100
+
+sdl-ttf2.0 (2.0.5-3) unstable; urgency=low
+
+  * debian/control: changed libsdl-ttf2.0-0 section from devel
+    to libs.
+
+ -- Jerome Marant <jerome@debian.org>  Sat,  8 Mar 2003 15:30:56 +0100
+
+sdl-ttf2.0 (2.0.5-2) unstable; urgency=low
+
+  * config.{guess,sub}: updated from versions from autotools-dev.
+
+ -- Jerome Marant <jerome@debian.org>  Thu,  6 Mar 2003 21:40:49 +0100
+
+sdl-ttf2.0 (2.0.5-1) unstable; urgency=low
+
+  * Initial Release. Closes: Bug#174871.
+  
+ -- Jerome Marant <jerome@debian.org>  Sat,  1 Mar 2003 12:19:52 +0100

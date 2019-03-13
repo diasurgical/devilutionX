@@ -1,0 +1,33 @@
+diff -u a/include/opus_defines.h b/include/opus_defines.h
+--- a/include/opus_defines.h
++++ b/include/opus_defines.h
+@@ -64,7 +64,7 @@ extern "C" {
+ /**Export control for opus functions */
+ 
+ #ifndef OPUS_EXPORT
+-# if defined(WIN32)
++# if defined(_WIN32)
+ #  if defined(OPUS_BUILD) && defined(DLL_EXPORT)
+ #   define OPUS_EXPORT __declspec(dllexport)
+ #  else
+diff -u a/silk/debug.c b/silk/debug.c
+--- a/silk/debug.c
++++ b/silk/debug.c
+@@ -65,7 +65,7 @@
+ int           silk_Timer_nTimers = 0;
+ int           silk_Timer_depth_ctr = 0;
+ char          silk_Timer_tags[silk_NUM_TIMERS_MAX][silk_NUM_TIMERS_MAX_TAG_LEN];
+-#ifdef WIN32
++#ifdef _WIN32
+ LARGE_INTEGER silk_Timer_start[silk_NUM_TIMERS_MAX];
+ #else
+ unsigned long silk_Timer_start[silk_NUM_TIMERS_MAX];
+@@ -76,7 +76,7 @@
+ opus_int64     silk_Timer_max[silk_NUM_TIMERS_MAX];
+ opus_int64     silk_Timer_depth[silk_NUM_TIMERS_MAX];
+ 
+-#ifdef WIN32
++#ifdef _WIN32
+ void silk_TimerSave(char *file_name)
+ {
+     if( silk_Timer_nTimers > 0 )

@@ -1,0 +1,11 @@
+Hi
+
+* Place Makefile.psp in the directory src/libmpg123.
+* Patch readers.c (present in src/libmpg123) using readers.c.patch
+* Place Config.h in directory src/
+* cd to src/libmpg123 and do "make -f Makefile.psp install"
+
+Tested on mpg123 1.4.x and psptoolchain rev. 2398
+
+Regards
+Bastian

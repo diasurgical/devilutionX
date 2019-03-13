@@ -1,0 +1,107 @@
+diff -ru libvorbis-1.3.5.orig/macosx/Vorbis.xcodeproj/project.pbxproj libvorbis-1.3.5/macosx/Vorbis.xcodeproj/project.pbxproj
+--- libvorbis-1.3.5.orig/macosx/Vorbis.xcodeproj/project.pbxproj	2013-11-11 20:01:46.000000000 -0800
++++ libvorbis-1.3.5/macosx/Vorbis.xcodeproj/project.pbxproj	2017-10-12 16:18:35.000000000 -0700
+@@ -137,7 +137,6 @@
+ 		F5D8F63703389C830112CE8F /* masking.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = masking.h; sourceTree = "<group>"; };
+ 		F5D8F63803389C830112CE8F /* mdct.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = mdct.c; sourceTree = "<group>"; };
+ 		F5D8F63903389C830112CE8F /* mdct.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mdct.h; sourceTree = "<group>"; };
+-		F5D8F63A03389C830112CE8F /* misc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = misc.c; sourceTree = "<group>"; };
+ 		F5D8F63B03389C830112CE8F /* misc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = misc.h; sourceTree = "<group>"; };
+ 		F5D8F63E03389C830112CE8F /* floor_all.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = floor_all.h; sourceTree = "<group>"; };
+ 		F5D8F64103389C830112CE8F /* psych_11.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = psych_11.h; sourceTree = "<group>"; };
+@@ -289,7 +288,6 @@
+ 				F5D8F63703389C830112CE8F /* masking.h */,
+ 				F5D8F63803389C830112CE8F /* mdct.c */,
+ 				F5D8F63903389C830112CE8F /* mdct.h */,
+-				F5D8F63A03389C830112CE8F /* misc.c */,
+ 				F5D8F63B03389C830112CE8F /* misc.h */,
+ 				F5D8F63C03389C830112CE8F /* modes */,
+ 				F5D8F65103389C830112CE8F /* os.h */,
+@@ -524,11 +522,19 @@
+ /* Begin PBXProject section */
+ 		0867D690FE84028FC02AAC07 /* Project object */ = {
+ 			isa = PBXProject;
++			attributes = {
++			};
+ 			buildConfigurationList = 730F23F3091827B200AB638C /* Build configuration list for PBXProject "Vorbis" */;
++			compatibilityVersion = "Xcode 2.4";
++			developmentRegion = English;
+ 			hasScannedForEncodings = 0;
++			knownRegions = (
++				en,
++			);
+ 			mainGroup = 0867D691FE84028FC02AAC07 /* vorbis */;
+ 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
+ 			projectDirPath = "";
++			projectRoot = "";
+ 			targets = (
+ 				730F23A1091827B100AB638C /* Vorbis */,
+ 				738835E30B18F870005C7A69 /* libvorbis (static) */,
+@@ -649,20 +655,30 @@
+ 		730F23ED091827B100AB638C /* Debug */ = {
+ 			isa = XCBuildConfiguration;
+ 			buildSettings = {
++				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+ 				COPY_PHASE_STRIP = NO;
+-				DYLIB_COMPATIBILITY_VERSION = 1;
+-				DYLIB_CURRENT_VERSION = 1;
+-				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
++				DYLIB_COMPATIBILITY_VERSION = 5.0.0;
++				DYLIB_CURRENT_VERSION = 5.8.0;
++				FRAMEWORK_SEARCH_PATHS = (
++					/Library/Frameworks,
++					../../../Xcode/Frameworks,
++				);
+ 				FRAMEWORK_VERSION = A;
+ 				GCC_DYNAMIC_NO_PIC = NO;
+ 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+ 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+-				HEADER_SEARCH_PATHS = ../lib;
++				HEADER_SEARCH_PATHS = (
++					../lib,
++					../../../Xcode/Frameworks/Framework.Ogg/Headers,
++				);
+ 				INFOPLIST_FILE = Info.plist;
+ 				INSTALL_PATH = /Library/Frameworks;
++				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_PATH)";
+ 				LIBRARY_SEARCH_PATHS = "";
++				MACOSX_DEPLOYMENT_TARGET = 10.6;
+ 				OTHER_LDFLAGS = "";
+ 				PRODUCT_NAME = Vorbis;
++				SDKROOT = macosx;
+ 				SECTORDER_FLAGS = "";
+ 				WARNING_CFLAGS = (
+ 					"-Wmost",
+@@ -677,18 +693,28 @@
+ 		730F23EE091827B100AB638C /* Release */ = {
+ 			isa = XCBuildConfiguration;
+ 			buildSettings = {
++				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+ 				COPY_PHASE_STRIP = YES;
+-				DYLIB_COMPATIBILITY_VERSION = 1;
+-				DYLIB_CURRENT_VERSION = 1;
+-				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks;
++				DYLIB_COMPATIBILITY_VERSION = 5.0.0;
++				DYLIB_CURRENT_VERSION = 5.8.0;
++				FRAMEWORK_SEARCH_PATHS = (
++					/Library/Frameworks,
++					../../../Xcode/Frameworks,
++				);
+ 				FRAMEWORK_VERSION = A;
+ 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+-				HEADER_SEARCH_PATHS = ../lib;
++				HEADER_SEARCH_PATHS = (
++					../lib,
++					../../../Xcode/Frameworks/Framework.Ogg/Headers,
++				);
+ 				INFOPLIST_FILE = Info.plist;
+ 				INSTALL_PATH = /Library/Frameworks;
++				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_PATH)";
+ 				LIBRARY_SEARCH_PATHS = "";
++				MACOSX_DEPLOYMENT_TARGET = 10.6;
+ 				OTHER_LDFLAGS = "";
+ 				PRODUCT_NAME = Vorbis;
++				SDKROOT = macosx;
+ 				SECTORDER_FLAGS = "";
+ 				WARNING_CFLAGS = (
+ 					"-Wmost",

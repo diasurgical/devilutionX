@@ -1,0 +1,32 @@
+From: Daniel Verkamp <daniel@drv.nu>
+Date: Thu, 22 Oct 2015 00:24:41 +0000 (-0700)
+Subject: win32: only use dllexport when building DLL
+X-Git-Tag: v1.1.3~76
+X-Git-Url: http://git.xiph.org/?p=opus.git;a=commitdiff_plain;h=6e9617371f7cf3f669a60d9540723a01f1128fc8
+
+win32: only use dllexport when building DLL
+
+If building a static library, marking symbols as dllexport causes them
+to be exported from the final executable. For example, run
+objdump -x opus_demo.exe on a --disabled-shared build and look for the
+export table; there should not be one in a normal Win32 .exe file, but
+when linking static libopus, the exe exports all of the opus_* public
+functions.
+
+Use the libtool-defined DLL_EXPORT flag to determine whether we are
+building a DLL and only specify __declspec(dllexport) in that case.
+---
+
+diff --git a/include/opus_defines.h b/include/opus_defines.h
+index 647ed5d..315412d 100644
+--- a/include/opus_defines.h
++++ b/include/opus_defines.h
+@@ -65,7 +65,7 @@ extern "C" {
+ 
+ #ifndef OPUS_EXPORT
+ # if defined(WIN32)
+-#  ifdef OPUS_BUILD
++#  if defined(OPUS_BUILD) && defined(DLL_EXPORT)
+ #   define OPUS_EXPORT __declspec(dllexport)
+ #  else
+ #   define OPUS_EXPORT

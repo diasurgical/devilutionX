@@ -437,7 +437,7 @@ void __fastcall CelDrawHdrLightRed(int screen_x, int screen_y, char *pCelBuff, i
 	_BYTE *v16;     // esi
 	char *v17;      // edi
 	int v18;        // edx
-	int v19;        // eax
+	long v19;        // eax
 	int v20;        // ecx
 	int v21;        // [esp+Ch] [ebp-4h]
 	char *v22;      // [esp+Ch] [ebp-4h]
@@ -445,7 +445,7 @@ void __fastcall CelDrawHdrLightRed(int screen_x, int screen_y, char *pCelBuff, i
 	char *cel_bufa; // [esp+18h] [ebp+8h]
 	int framea;     // [esp+1Ch] [ebp+Ch]
 	int always_0a;  // [esp+24h] [ebp+14h]
-	int directiona; // [esp+28h] [ebp+18h]
+	long directiona; // [esp+28h] [ebp+18h]
 
 	v21 = screen_x;
 	if (gpBuffer) {
@@ -455,14 +455,14 @@ void __fastcall CelDrawHdrLightRed(int screen_x, int screen_y, char *pCelBuff, i
 			v10 = always_0;
 			v11 = &pCelBuff[v9];
 			v12 = *(unsigned short *)&pCelBuff[v9 + always_0];
-			cel_buf = (char *)*(unsigned short *)&pCelBuff[v9 + always_0];
+            cel_buf = pCelBuff;//(char *)*(size_t *)&pCelBuff[v9 + always_0];
 			if (v12) {
 				v13 = *(_DWORD *)&v8[4 * frame + 4] - v9;
 				if (direction != 8 && *(_WORD *)&v11[direction])
 					always_0a = *(unsigned short *)&v11[direction] - (_DWORD)cel_buf;
 				else
 					always_0a = v13 - (_DWORD)cel_buf;
-				directiona = (int)&v11[(_DWORD)cel_buf];
+				directiona = (long)&v11[(_DWORD)cel_buf];
 				cel_bufa = (char *)gpBuffer + screen_y_times_768[screen_y - 16 * v10] + v21;
 				v14 = -(light4flag != 0);
 				_LOWORD(v14) = v14 & 0xF400;

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:../3rdParty/freetype/Xcode/freetype.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../3rdParty/libpng/Xcode/libpng.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../3rdParty/bzip2/Xcode/bzip2/bzip2.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../3rdParty/SDL2_ttf/Xcode/SDL_ttf.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../3rdParty/SDL2_mixer/Xcode/SDL_mixer.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:../3rdParty/SDL2/Xcode/SDL/SDL.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "container:devilutionX.xcodeproj">
+   </FileRef>
+</Workspace>

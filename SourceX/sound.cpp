@@ -210,6 +210,7 @@ void __fastcall sound_file_cleanup(TSnd *sound_file)
 
 void __fastcall snd_init(HWND hWnd)
 {
+    //return;
 	DUMMY();
 	sound_load_volume("Sound Volume", &sglSoundVolume);
 	gbSoundOn = sglSoundVolume > VOLUME_MIN;
@@ -353,6 +354,7 @@ void __cdecl music_stop()
 void __fastcall music_start(int nTrack)
 {
 	BOOL success;
+    //return;
 
 	/// ASSERT: assert((DWORD) nTrack < NUM_MUSIC);
 	music_stop();
