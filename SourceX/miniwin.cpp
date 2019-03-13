@@ -86,7 +86,7 @@ WINBOOL WINAPI FindClose(HANDLE hFindFile)
  */
 UINT WINAPI GetWindowsDirectoryA(LPSTR lpBuffer, UINT uSize)
 {
-    // Change this for MacOS to do easy the task of copy the gamer data from original diablo
+    // Use this for MacOS to do easy the task of copy the gamer data from original diablo
 #ifdef __APPLE__
     char *name = SDL_GetBasePath();
 #else
@@ -131,7 +131,7 @@ WINBOOL WINAPI GetDiskFreeSpaceA(LPCSTR lpRootPathName, LPDWORD lpSectorsPerClus
  */
 DWORD WINAPI GetModuleFileNameA(HMODULE hModule, LPSTR lpFilename, DWORD nSize)
 {
-    // Change this for MacOS to do easy the task of copy the gamer data from original diablo
+    // Use this for MacOS to do easy the task of copy the gamer data from original diablo
 #ifdef __APPLE__
     char *name = SDL_GetBasePath();
 #else

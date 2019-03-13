@@ -268,18 +268,12 @@ void __cdecl DrawInv()
 			CelDecodeClr(colour, screen_x, screen_y, (char *)pCursCels, frame, frame_width, 0, 8);
 		}
 
-        // [TODO] [DON] -- We need to port the following disabled code for Apple systems, used to paint the light red selection when change the weapon place in the inventory
-#if !defined(__APPLE__)
         if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
-#endif
             CelDrawHdrOnly(screen_x, screen_y, (char *)pCursCels, frame, frame_width, 0, 8);
-#if !defined(__APPLE__)
         } else {
             CelDrawHdrLightRed(screen_x, screen_y, (char *)pCursCels, frame, frame_width, 0, 8, 1);
         }
-#endif
 
-#if !defined(__APPLE__)
         if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND) {
             InvDrawSlotBack(631, 320, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
             light_table_index = 0;
@@ -293,7 +287,6 @@ void __cdecl DrawInv()
 
             cel_transparency_active = 0;
         }
-#endif
 	}
 	if (plr[myplr].InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_NONE) {
 		InvDrawSlotBack(631, 320, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
