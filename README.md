@@ -62,6 +62,11 @@ linux32 make -j$(nproc)
 
 Install Xcode 9.4 and Xcode Command Line tools, this is the last version with support for **32 bits**
 
+Install the dependencies using [Homebrew](https://brew.sh/):
+```
+brew install automake autoconf libtool
+```
+
 Build **libsodium** from our 3rdParty folder
 ```
 cd ./3rdParty/libsodium/
