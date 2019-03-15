@@ -1,0 +1,34 @@
+version: 2
+jobs:
+  linux_x86_64:
+    docker:
+      - image: debian:stretch
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: apt-get update -y
+      - run: apt-get install -y cmake g++ libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev libsodium-dev
+      - run: mkdir build
+      - run: cd build && cmake ..
+      - run: cd build && make -j$(nproc)
+      - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64}
+  linux_x86:
+    docker:
+      - image: debian:stretch
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: dpkg --add-architecture i386
+      - run: apt-get update -y
+      - run: apt-get install -y cmake g++-multilib libsdl2-dev:i386 libsdl2-mixer-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev libsodium-dev:i386
+      - run: mkdir build32
+      - run: cd build32 && cmake -DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake ..
+      - run: cd build32 && make -j$(nproc)
+      - store_artifacts: {path: ./build32/devilutionx, destination: devilutionx_linux_x86}
+
+workflows:
+  version: 2
+  testflow:
+    jobs:
+      - linux_x86_64
+      - linux_x86

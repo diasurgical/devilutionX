@@ -1,3 +1,4 @@
+[![CircleCI](https://circleci.com/gh/diasurgical/devilutionX.svg?style=svg)](https://circleci.com/gh/diasurgical/devilutionX)
 [![Build Status](https://travis-ci.org/diasurgical/devilutionX.svg?branch=master)](https://travis-ci.org/diasurgical/devilutionX)
 [![Downloads](https://img.shields.io/github/downloads/diasurgical/devilutionX/total.svg)](https://github.com/diasurgical/devilutionX/releases)
 
@@ -19,7 +20,7 @@ Note: Since 64-bit builds are currently not in a playable state, it is advised t
 
 Install the dependencies on your machine:
 ```
-sudo apt-get install cmake libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev libsodium-dev
+sudo apt-get install cmake g++ libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev libsodium-dev
 ```
 
 Now run the following commands:
