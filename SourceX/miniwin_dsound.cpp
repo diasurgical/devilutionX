@@ -8,7 +8,10 @@ ULONG __stdcall DirectSound::Release()
 
 HRESULT __stdcall DirectSound::CreateSoundBuffer(LPCDSBUFFERDESC pcDSBufferDesc, LPDIRECTSOUNDBUFFER *ppDSBuffer, LPUNKNOWN pUnkOute)
 {
-	*ppDSBuffer = new DirectSoundBuffer();
+	if (pcDSBufferDesc->dwFlags != DSBCAPS_PRIMARYBUFFER) { // Creating primery buffer isn't needed and breaks Music
+		*ppDSBuffer = new DirectSoundBuffer();
+	}
+
 	return DS_OK;
 };
 
@@ -92,7 +95,7 @@ HRESULT __stdcall DirectSoundBuffer::SetPan(LONG lPan)
 
 HRESULT __stdcall DirectSoundBuffer::Stop()
 {
-	for (int i = 1; i < Mix_AllocateChannels(-1); i++){
+	for (int i = 1; i < Mix_AllocateChannels(-1); i++) {
 		if (Mix_GetChunk(i) != chunk) {
 			continue;
 		}

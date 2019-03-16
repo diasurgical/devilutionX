@@ -1,7 +1,5 @@
 #pragma once
 
-typedef void *LPDSBCAPS, *LPCDSBUFFERDESC;
-
 struct IDirectSound;
 typedef IDirectSound *LPDIRECTSOUND;
 
@@ -12,6 +10,8 @@ typedef struct _DSBUFFERDESC {
 	DWORD dwReserved;
 	LPWAVEFORMATEX lpwfxFormat;
 } DSBUFFERDESC, *LPDSBUFFERDESC;
+
+typedef DSBUFFERDESC *LPDSBCAPS, *LPCDSBUFFERDESC;
 
 DECLARE_INTERFACE_(IDirectSoundBuffer, IUnknown)
 {

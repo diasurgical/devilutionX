@@ -123,10 +123,17 @@ void __fastcall snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 	} else if (lVolume > VOLUME_MAX) {
 		lVolume = VOLUME_MAX;
 	}
+#ifdef __cplusplus
 	DSB->SetVolume(lVolume);
 	DSB->SetPan(lPan);
 
 	error_code = DSB->Play(0, 0, 0);
+#else
+	DSB->lpVtbl->SetVolume(DSB, lVolume);
+	DSB->lpVtbl->SetPan(DSB, lPan);
+
+	error_code = DSB->lpVtbl->Play(DSB, 0, 0, 0);
+#endif
 
 	if (error_code != DSERR_BUFFERLOST) {
 		if (error_code != DS_OK) {
@@ -404,7 +411,7 @@ HRESULT __fastcall sound_DirectSoundCreate(LPGUID lpGuid, LPDIRECTSOUND *ppDS, L
 	if (DirectSoundCreate == NULL) {
 	}
 	*ppDS = new DirectSound();
-	int result = Mix_OpenAudio(44100, AUDIO_S16LSB, 2, 1024);
+	int result = Mix_OpenAudio(22050, AUDIO_S16LSB, 2, 1024);
 	Mix_AllocateChannels(25);
 	Mix_ReserveChannels(1); // reserve one channel for naration (SFileDda*)
 	return result;
