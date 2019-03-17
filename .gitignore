@@ -403,5 +403,5 @@ DerivedData/
 !*.xcworkspace/contents.xcworkspacedata
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
-
+/libs
 # End of https://www.gitignore.io/api/xcode
