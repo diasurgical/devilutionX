@@ -25,9 +25,7 @@
 		4339874B223E5D3A001F8420 /* SDL2_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4339873F223E5CAB001F8420 /* SDL2_ttf.framework */; };
 		4339874C223E5D3A001F8420 /* SDL2_ttf.framework in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 4339873F223E5CAB001F8420 /* SDL2_ttf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4339874E223E5D3A001F8420 /* SDL2.framework in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 4339873D223E5C1A001F8420 /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		43398751223E5D84001F8420 /* libsodium.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 43398750223E5D84001F8420 /* libsodium.dylib */; };
 		43398752223E5E0E001F8420 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4339873D223E5C1A001F8420 /* SDL2.framework */; };
-		43398753223E5E1F001F8420 /* libsodium.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 43398750223E5D84001F8420 /* libsodium.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		43398770223E60F8001F8420 /* miniwin_dsound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43398754223E60F3001F8420 /* miniwin_dsound.cpp */; };
 		43398771223E60F8001F8420 /* udp_p2p.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43398755223E60F3001F8420 /* udp_p2p.cpp */; };
 		43398772223E60F8001F8420 /* base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43398756223E60F4001F8420 /* base.cpp */; };
@@ -56,8 +54,6 @@
 		43398789223E60F9001F8420 /* selhero.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4339876D223E60F8001F8420 /* selhero.cpp */; };
 		4339878A223E60F9001F8420 /* credits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4339876E223E60F8001F8420 /* credits.cpp */; };
 		4339878B223E60F9001F8420 /* dialogs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4339876F223E60F8001F8420 /* dialogs.cpp */; };
-		43398790223E712F001F8420 /* libpng16.16.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4339878F223E712F001F8420 /* libpng16.16.dylib */; };
-		43398791223E7147001F8420 /* libpng16.16.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 4339878F223E712F001F8420 /* libpng16.16.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		436280812236241F00C911AD /* libdevilution.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ECD637555514971BCD3E90E /* libdevilution.a */; };
 		436280822236241F00C911AD /* libPKWare.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 646292CBB776434AA4CA1C94 /* libPKWare.a */; };
 		436280832236241F00C911AD /* libRadon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92E1DAF5C7BA48E5A1E39C04 /* libRadon.a */; };
@@ -125,6 +121,8 @@
 		BAC5D4D57F364349B3C2F552 /* control.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2D7327A50AC445CE94B2B4C9 /* control.cpp */; };
 		BB88EC00498744F7914A1484 /* stores.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3D28A84812B34E10AE50E192 /* stores.cpp */; };
 		BFF16F60B46F4B8984D3007C /* quests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0348AAD50CEF4915900FD581 /* quests.cpp */; };
+		C43B4AA2223F075B00CE0DD9 /* libpng16.16.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = C43B4AA1223F074800CE0DD9 /* libpng16.16.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		C43B4AA5223F0DD900CE0DD9 /* libclang_rt.asan_osx_dynamic.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = C43B4AA3223F0DCA00CE0DD9 /* libclang_rt.asan_osx_dynamic.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		C648EEFB6E17468AB8C3943E /* fault.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9C2AEA532E6F4FF8B66083C9 /* fault.cpp */; };
 		C794AF87232B4745B3C48397 /* Key.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0B8A000CA684B9FAF88F313 /* Key.cpp */; };
 		CCB1A17083824600A7FC6DBF /* doom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7119751C6B7A4F40BB3B87B0 /* doom.cpp */; };
@@ -195,9 +193,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				43398791223E7147001F8420 /* libpng16.16.dylib in Embed Libraries */,
+				C43B4AA5223F0DD900CE0DD9 /* libclang_rt.asan_osx_dynamic.dylib in Embed Libraries */,
+				C43B4AA2223F075B00CE0DD9 /* libpng16.16.dylib in Embed Libraries */,
 				4339874E223E5D3A001F8420 /* SDL2.framework in Embed Libraries */,
-				43398753223E5E1F001F8420 /* libsodium.dylib in Embed Libraries */,
 				4339874C223E5D3A001F8420 /* SDL2_ttf.framework in Embed Libraries */,
 				4339874A223E5D3A001F8420 /* SDL2_mixer.framework in Embed Libraries */,
 			);
@@ -235,7 +233,6 @@
 		4339873D223E5C1A001F8420 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../Library/Frameworks/SDL2.framework; sourceTree = SOURCE_ROOT; };
 		4339873F223E5CAB001F8420 /* SDL2_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_ttf.framework; path = ../../../Library/Frameworks/SDL2_ttf.framework; sourceTree = "<group>"; };
 		43398741223E5CB0001F8420 /* SDL2_mixer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_mixer.framework; path = ../../../Library/Frameworks/SDL2_mixer.framework; sourceTree = "<group>"; };
-		43398750223E5D84001F8420 /* libsodium.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsodium.dylib; path = ../../../../../usr/local/lib/libsodium.dylib; sourceTree = "<group>"; };
 		43398754223E60F3001F8420 /* miniwin_dsound.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = miniwin_dsound.cpp; path = SourceX/miniwin_dsound.cpp; sourceTree = "<group>"; };
 		43398755223E60F3001F8420 /* udp_p2p.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = udp_p2p.cpp; path = SourceX/dvlnet/udp_p2p.cpp; sourceTree = "<group>"; };
 		43398756223E60F4001F8420 /* base.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = base.cpp; path = SourceX/dvlnet/base.cpp; sourceTree = "<group>"; };
@@ -264,7 +261,6 @@
 		4339876D223E60F8001F8420 /* selhero.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = selhero.cpp; path = SourceX/DiabloUI/selhero.cpp; sourceTree = "<group>"; };
 		4339876E223E60F8001F8420 /* credits.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = credits.cpp; path = SourceX/DiabloUI/credits.cpp; sourceTree = "<group>"; };
 		4339876F223E60F8001F8420 /* dialogs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dialogs.cpp; path = SourceX/DiabloUI/dialogs.cpp; sourceTree = "<group>"; };
-		4339878F223E712F001F8420 /* libpng16.16.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpng16.16.dylib; path = ../../../../../usr/local/lib/libpng16.16.dylib; sourceTree = "<group>"; };
 		436280B22236351000C911AD /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		436280B42236352000C911AD /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
 		436280B62236354100C911AD /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -318,6 +314,8 @@
 		BA2A3A52015F4859A4C5A6A2 /* plrmsg.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = plrmsg.cpp; path = Source/plrmsg.cpp; sourceTree = SOURCE_ROOT; };
 		BF78F60283044A13A4CE1D1B /* items.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = items.cpp; path = Source/items.cpp; sourceTree = SOURCE_ROOT; };
 		C0B8A000CA684B9FAF88F313 /* Key.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Key.cpp; path = 3rdParty/Radon/Radon/source/Key.cpp; sourceTree = SOURCE_ROOT; };
+		C43B4AA1223F074800CE0DD9 /* libpng16.16.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libpng16.16.dylib; sourceTree = "<group>"; };
+		C43B4AA3223F0DCA00CE0DD9 /* libclang_rt.asan_osx_dynamic.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libclang_rt.asan_osx_dynamic.dylib; path = 3rdParty/darwin/libclang_rt.asan_osx_dynamic.dylib; sourceTree = "<group>"; };
 		C713AED00778486B94CD282B /* objects.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = objects.cpp; path = Source/objects.cpp; sourceTree = SOURCE_ROOT; };
 		C78DC63816DF4F1C867578C7 /* setmaps.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = setmaps.cpp; path = Source/setmaps.cpp; sourceTree = SOURCE_ROOT; };
 		CA4B6FC7C063411F9460CD20 /* codec.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = codec.cpp; path = Source/codec.cpp; sourceTree = SOURCE_ROOT; };
@@ -347,9 +345,7 @@
 			files = (
 				43398752223E5E0E001F8420 /* SDL2.framework in Frameworks */,
 				4339874B223E5D3A001F8420 /* SDL2_ttf.framework in Frameworks */,
-				43398790223E712F001F8420 /* libpng16.16.dylib in Frameworks */,
 				43398749223E5D3A001F8420 /* SDL2_mixer.framework in Frameworks */,
-				43398751223E5D84001F8420 /* libsodium.dylib in Frameworks */,
 				436280B72236354100C911AD /* Cocoa.framework in Frameworks */,
 				436280B52236352000C911AD /* AudioUnit.framework in Frameworks */,
 				436280B32236351000C911AD /* CoreAudio.framework in Frameworks */,
@@ -406,8 +402,8 @@
 		43BF58ED2235E0E1001F9748 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				43398750223E5D84001F8420 /* libsodium.dylib */,
-				4339878F223E712F001F8420 /* libpng16.16.dylib */,
+				C43B4AA3223F0DCA00CE0DD9 /* libclang_rt.asan_osx_dynamic.dylib */,
+				C43B4AA1223F074800CE0DD9 /* libpng16.16.dylib */,
 				43398741223E5CB0001F8420 /* SDL2_mixer.framework */,
 				4339873F223E5CAB001F8420 /* SDL2_ttf.framework */,
 				4339873D223E5C1A001F8420 /* SDL2.framework */,
@@ -1112,6 +1108,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					/usr/local/lib,
+					"$(PROJECT_DIR)/3rdParty/darwin",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				ONLY_ACTIVE_ARCH = NO;
@@ -1134,8 +1131,9 @@
 					"-liconv",
 					"-Wl,-search_paths_first",
 					"-Wl,-headerpad_max_install_names",
-					"-fsanitize=address",
+					/usr/local/lib/libsodium.a,
 					"-fsanitize-recover=address",
+					"-fsanitize=address",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = deviution.devilutionX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1232,6 +1230,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					/usr/local/lib,
+					"$(PROJECT_DIR)/3rdParty/darwin",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				ONLY_ACTIVE_ARCH = NO;
@@ -1254,8 +1253,9 @@
 					"-liconv",
 					"-Wl,-search_paths_first",
 					"-Wl,-headerpad_max_install_names",
-					"-fsanitize=address",
+					/usr/local/lib/libsodium.a,
 					"-fsanitize-recover=address",
+					"-fsanitize=address",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = deviution.devilutionX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
