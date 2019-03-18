@@ -74,6 +74,42 @@ make -j$(nproc)
 ```
 
 ### Building devilutionX on macOS
+
+#### Building with Xcode Build (x86 only)
+
+Install Xcode 9.4.1 and Xcode Command Line tools, this is the last version with support for **32 bits**
+
+Note: Be sure that your to select the command line Xcode if you have two or more installed, for example:
+
+```
+$ sudo xcode-select --switch /Applications/Xcode.app
+```
+
+Install the some tools using [Homebrew](https://brew.sh/):
+```
+brew install automake autoconf libtool
+```
+
+Get and build the dependencies 
+```
+$ ./xcode-build.sh --get-libs --build-libs
+```
+
+Build the devilutionX project
+```
+$ ./xcode-build.sh --build-project
+```
+
+The result bundle should be in the **build** folder
+
+To create a **dmg** execute
+```
+$ ./xcode-build.sh --package
+```
+
+If you want use Xcode to build and debug, you can find the project inside Xcode folder
+
+#### Building for x64 with CMake
 Note: macOS is 64-bit only so this is not fully playable at this point.
 
 Install the dependencies using [Homebrew](https://brew.sh/):
@@ -82,6 +118,11 @@ brew install cmake sdl2_mixer sdl2_ttf libsodium pkg-config
 ```
 
 Now run the following commands:
+```
+mkdir build
+cd build
+cmake ..
+make -j$(sysctl -n hw.physicalcpu)
 ```
 mkdir build
 cd build
