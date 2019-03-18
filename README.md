@@ -124,11 +124,6 @@ cd build
 cmake ..
 make -j$(sysctl -n hw.physicalcpu)
 ```
-mkdir build
-cd build
-cmake ..
-make -j$(sysctl -n hw.physicalcpu)
-```
 
 # Installing
 Once compiled, the devilutionx binary will serve as a replacement for `Diablo.exe`. The following files from the original game patched to 1.09(b) need to be present: `diabdat.mpq`. If `COPYPROT` was defined when compiling, the Diablo CD will also be required.
