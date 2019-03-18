@@ -2,8 +2,6 @@
 
 function get_libs {
     echo "============= Getting Libs ============="
-    mkdir libs
-    cd libs
 
     curl -O https://www.libsdl.org/release/SDL2-2.0.9.zip
     curl -O https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-2.0.4.zip
@@ -78,10 +76,11 @@ function build_libsodium {
     sudo cp  -v -f -a libsodium-osx/lib/ /usr/local/lib/
     sudo cp  -v -f -a libsodium-osx/include/ /usr/local/include/
 
-    cd ../..
+    cd ../../
 }
 
 function build_devilutionx {
+    echo $PROJECT_PATH
     echo "============= Build DevilutionX ============="
     xcodebuild -project "./Xcode/devilutionX.xcodeproj" -scheme "devilutionX" build -configuration Release CONFIGURATION_BUILD_DIR="build"
 }
@@ -98,15 +97,28 @@ function create_dmg {
     rm build/devilutionX_temp.dmg
 }
 
+function set_working_dir() {
+    if [ -d "./libs" ]; then
+        cd libs
+    elif [ -d "../libs" ]; then
+        echo "Info: You're inside libs, maybe you should call this script at parent directory"
+    else
+        mkdir libs
+        cd libs
+    fi
+}
+
 function main {
     for args in "$@"
     do
         case $args in
             "--get-libs")
+                set_working_dir
                 get_libs
                 decompress_libs
             ;;
             "--build-libs")
+                set_working_dir
                 build_sdl2
                 build_sdl2_mixer
                 build_libpng
