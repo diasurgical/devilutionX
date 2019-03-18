@@ -26,12 +26,14 @@ function decompress_libs {
 function build_sdl2 {
     echo "============= Build SDL2 ============="
     xcodebuild -project "SDL2-2.0.9/Xcode/SDL/SDL.xcodeproj" -scheme "Framework" build -configuration Release CONFIGURATION_BUILD_DIR="~/Library/Frameworks" ARCHS="i386 x86_64" ONLY_ACTIVE_ARCH=NO
+    mkdir frameworks
+    cp  -v -f -a ~/Library/Frameworks/SDL2.framework ./frameworks/
 }
 
 function build_sdl2_mixer {
     echo "============= Build SDL2_mixer ============="
     xcodebuild -project "SDL2_mixer-2.0.4/Xcode/SDL_mixer.xcodeproj" -scheme "Framework" build -configuration Release ARCHS="i386 x86_64" ONLY_ACTIVE_ARCH=NO -derivedDataPath "SDL2_mixer-2.0.4/Xcode/DerivedData/"
-    cp  -v -f -a SDL2_mixer-2.0.4/Xcode/DerivedData/Build/Products/Release/SDL2_mixer.framework ~/Library/Frameworks
+    cp  -v -f -a SDL2_mixer-2.0.4/Xcode/DerivedData/Build/Products/Release/SDL2_mixer.framework ./frameworks/
 }
 
 function build_libpng {
@@ -63,7 +65,7 @@ function build_sdl2_ttf {
     rm -vr SDL2_ttf-2.0.15/Xcode/Frameworks/FreeType.framework
     cp  -v -f -a freetype-2.9.1/build/Release/freetype.framework SDL2_ttf-2.0.15/Xcode/Frameworks/FreeType.framework
     xcodebuild -project "SDL2_ttf-2.0.15/Xcode/SDL_ttf.xcodeproj" -scheme "Framework" build -configuration Release ARCHS="i386 x86_64" ONLY_ACTIVE_ARCH=NO  -derivedDataPath "SDL2_ttf-2.0.15/Xcode/DerivedData/"
-    cp  -v -f -a SDL2_ttf-2.0.15/Xcode/DerivedData/Build/Products/Release/SDL2_ttf.framework ~/Library/Frameworks
+    cp  -v -f -a SDL2_ttf-2.0.15/Xcode/DerivedData/Build/Products/Release/SDL2_ttf.framework ./frameworks/
 }
 
 function build_libsodium {
