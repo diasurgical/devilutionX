@@ -231,9 +231,9 @@
 		3ECD637555514971BCD3E90E /* libdevilution.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libdevilution.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4040598A1C254715A8C8673C /* msg.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = msg.cpp; path = Source/msg.cpp; sourceTree = SOURCE_ROOT; };
 		413186B26DE644E197D49314 /* error.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = error.cpp; path = Source/error.cpp; sourceTree = SOURCE_ROOT; };
-		4339873D223E5C1A001F8420 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../Library/Frameworks/SDL2.framework; sourceTree = SOURCE_ROOT; };
-		4339873F223E5CAB001F8420 /* SDL2_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_ttf.framework; path = ../../../Library/Frameworks/SDL2_ttf.framework; sourceTree = "<group>"; };
-		43398741223E5CB0001F8420 /* SDL2_mixer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_mixer.framework; path = ../../../Library/Frameworks/SDL2_mixer.framework; sourceTree = "<group>"; };
+		4339873D223E5C1A001F8420 /* SDL2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = SDL2.framework; path = libs/frameworks/SDL2.framework; sourceTree = SOURCE_ROOT; };
+		4339873F223E5CAB001F8420 /* SDL2_ttf.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = SDL2_ttf.framework; path = libs/frameworks/SDL2_ttf.framework; sourceTree = "<group>"; };
+		43398741223E5CB0001F8420 /* SDL2_mixer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = SDL2_mixer.framework; path = libs/frameworks/SDL2_mixer.framework; sourceTree = "<group>"; };
 		43398754223E60F3001F8420 /* miniwin_dsound.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = miniwin_dsound.cpp; path = SourceX/miniwin_dsound.cpp; sourceTree = "<group>"; };
 		43398755223E60F3001F8420 /* udp_p2p.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = udp_p2p.cpp; path = SourceX/dvlnet/udp_p2p.cpp; sourceTree = "<group>"; };
 		43398756223E60F4001F8420 /* base.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = base.cpp; path = SourceX/dvlnet/base.cpp; sourceTree = "<group>"; };
@@ -1077,7 +1077,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = NO;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(USER_LIBRARY_DIR)/Frameworks",
+					"$(PROJECT_DIR)/libs/frameworks",
 					"$(PROJECT_DIR)",
 				);
 				GCC_C_LANGUAGE_STANDARD = c11;
@@ -1105,7 +1105,7 @@
 				INFOPLIST_EXPAND_BUILD_SETTINGS = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/Xcode/Info.plist";
 				INFOPLIST_PREPROCESS = NO;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks $(USER_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks $(PROJECT_DIR)/libs/frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1142,8 +1142,8 @@
 				SDKROOT = macosx10.13;
 				STRIP_STYLE = all;
 				SYMROOT = "$(PROJECT_DIR)/build";
-				SYSTEM_FRAMEWORK_SEARCH_PATHS = "$(USER_LIBRARY_DIR)/Frameworks";
-				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/include /usr/local/include/sodium $(USER_LIBRARY_DIR)/Frameworks/SDL2.framework/Headers $(USER_LIBRARY_DIR)/Frameworks/SDL2_mixer.framework/Headers $(USER_LIBRARY_DIR)/Frameworks/SDL2_ttf.framework/Headers";
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/libs/frameworks";
+				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/include /usr/local/include/sodium $(PROJECT_DIR)/libs/frameworks/SDL2.framework/Headers $(PROJECT_DIR)/libs/frameworks/SDL2_ttf.framework/Headers $(PROJECT_DIR)/libs/frameworks/SDL2_mixer.framework/Headers";
 				USER_HEADER_SEARCH_PATHS = "";
 				VALID_ARCHS = i386;
 				WARNING_CFLAGS = (
@@ -1200,7 +1200,7 @@
 				ENABLE_NS_ASSERTIONS = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(USER_LIBRARY_DIR)/Frameworks",
+					"$(PROJECT_DIR)/libs/frameworks",
 					"$(PROJECT_DIR)",
 				);
 				GCC_C_LANGUAGE_STANDARD = c11;
@@ -1227,7 +1227,7 @@
 				INFOPLIST_EXPAND_BUILD_SETTINGS = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/Xcode/Info.plist";
 				INFOPLIST_PREPROCESS = NO;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks $(USER_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks $(PROJECT_DIR)/libs/frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1264,8 +1264,8 @@
 				SDKROOT = macosx10.13;
 				STRIP_STYLE = all;
 				SYMROOT = "$(PROJECT_DIR)/build";
-				SYSTEM_FRAMEWORK_SEARCH_PATHS = "$(USER_LIBRARY_DIR)/Frameworks";
-				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/include /usr/local/include/sodium $(USER_LIBRARY_DIR)/Frameworks/SDL2.framework/Headers $(USER_LIBRARY_DIR)/Frameworks/SDL2_mixer.framework/Headers $(USER_LIBRARY_DIR)/Frameworks/SDL2_ttf.framework/Headers";
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/libs/frameworks";
+				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/include /usr/local/include/sodium $(PROJECT_DIR)/libs/frameworks/SDL2.framework/Headers $(PROJECT_DIR)/libs/frameworks/SDL2_ttf.framework/Headers $(PROJECT_DIR)/libs/frameworks/SDL2_mixer.framework/Headers";
 				USER_HEADER_SEARCH_PATHS = "";
 				VALID_ARCHS = i386;
 				WARNING_CFLAGS = (
