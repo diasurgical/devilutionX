@@ -1,4 +1,8 @@
-#include "pch.h"
+#include <set>
+#include <SDL.h>
+
+#include "devilution.h"
+#include "stubs.h"
 
 namespace dvl {
 

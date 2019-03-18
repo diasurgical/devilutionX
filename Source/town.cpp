@@ -4,83 +4,143 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-void __fastcall town_clear_upper_buf(unsigned char *a1)
+void __fastcall town_clear_upper_buf(BYTE *pBuff)
 {
-	unsigned char *v1; // edi
-	signed int v2;     // edx
-	signed int v3;     // ebx
-	unsigned char *v4; // edi
-	signed int v5;     // edx
-	signed int v6;     // ebx
-	unsigned char *v7; // edi
+	/// ASSERT: assert(gpBuffer);
 
-	v1 = a1;
-	v2 = 30;
-	v3 = 1;
-	while (v1 >= gpBufEnd) {
-		v4 = &v1[v2];
-		memset(v4, 0, 4 * v3);
-		v1 = &v4[4 * v3 - 832 + v2];
-		if (!v2) {
-			v5 = 2;
-			v6 = 15;
-			do {
-				if (v1 < gpBufEnd)
-					break;
-				v7 = &v1[v5];
-				memset(v7, 0, 4 * v6);
-				v1 = &v7[4 * v6-- - 832 + v5];
-				v5 += 2;
-			} while (v5 != 32);
-			return;
-		}
-		v2 -= 2;
-		++v3;
+#if (_MSC_VER >= 800) && (_MSC_VER <= 1200)
+	__asm {
+		mov		edi, pBuff
+		mov		edx, 30
+		mov		ebx, 1
+		xor		eax, eax
+	label1:
+		cmp		edi, gpBufEnd
+		jb		label4
+		add		edi, edx
+		mov		ecx, ebx
+		rep stosd
+		add		edi, edx
+		sub		edi, 768 + 64
+		or		edx, edx
+		jz		label2
+		sub		edx, 2
+		inc		ebx
+		jmp		label1
+	label2:
+		mov		edx, 2
+		mov		ebx, 15
+	label3:
+		cmp		edi, gpBufEnd
+		jb		label4
+		add		edi, edx
+		mov		ecx, ebx
+		rep stosd
+		add		edi, edx
+		sub		edi, 768 + 64
+		dec		ebx
+		add		edx, 2
+		cmp		edx, 32
+		jnz		label3
+	label4:
+		nop
 	}
+#else
+	int i, j, k;
+	BYTE *dst;
+
+	dst = pBuff;
+
+	for(i = 30, j = 1; i >= 0 && dst >= gpBufEnd; i -= 2, j++, dst -= 768 + 64) {
+		dst += i;
+		for(k = 0; k < 4 * j; k++)
+			*dst++ = 0;
+		dst += i;
+	}
+	for(i = 2, j = 15; i != 32 && dst >= gpBufEnd; i += 2, j--, dst -= 768 + 64) {
+		dst += i;
+		for(k = 0; k < 4 * j; k++)
+			*dst++ = 0;
+		dst += i;
+	}
+#endif
 }
 // 69CF0C: using guessed type int gpBufEnd;
 
-void __fastcall town_clear_low_buf(unsigned char *y_related)
+void __fastcall town_clear_low_buf(BYTE *pBuff)
 {
-	unsigned char *v1; // edi
-	signed int v2;     // edx
-	signed int i;      // ebx
-	unsigned char *v4; // edi
-	unsigned char *v5; // edi
-	signed int v6;     // edx
-	signed int v7;     // ebx
-	unsigned char *v8; // edi
-	unsigned char *v9; // edi
+	/// ASSERT: assert(gpBuffer);
 
-	v1 = y_related;
-	v2 = 30;
-	for (i = 1;; ++i) {
-		if (v1 < gpBufEnd) {
-			v5 = &v1[v2];
-			memset(v5, 0, 4 * i);
-			v4 = &v5[4 * i + v2];
-		} else {
-			v4 = v1 + 64;
-		}
-		v1 = v4 - 832;
-		if (!v2)
-			break;
-		v2 -= 2;
+#if (_MSC_VER >= 800) && (_MSC_VER <= 1200)
+	__asm {
+		mov		edi, pBuff
+		mov		edx, 30
+		mov		ebx, 1
+		xor		eax, eax
+	label1:
+		cmp		edi, gpBufEnd
+		jb		label2
+		add		edi, 64
+		jmp		label3
+	label2:
+		add		edi, edx
+		mov		ecx, ebx
+		rep stosd
+		add		edi, edx
+	label3:
+		sub		edi, 768 + 64
+		or		edx, edx
+		jz		label4
+		sub		edx, 2
+		inc		ebx
+		jmp		label1
+	label4:
+		mov		edx, 2
+		mov		ebx, 15
+	label5:
+		cmp		edi, gpBufEnd
+		jb		label6
+		add		edi, 64
+		jmp		label7
+	label6:
+		add		edi, edx
+		mov		ecx, ebx
+		rep stosd
+		add		edi, edx
+	label7:
+		sub		edi, 768 + 64
+		dec		ebx
+		add		edx, 2
+		cmp		edx, 32
+		jnz		label5
 	}
-	v6 = 2;
-	v7 = 15;
-	do {
-		if (v1 < gpBufEnd) {
-			v9 = &v1[v6];
-			memset(v9, 0, 4 * v7);
-			v8 = &v9[4 * v7 + v6];
+#else
+	int i, j, k;
+	BYTE *dst;
+
+	dst = pBuff;
+
+	for(i = 30, j = 1; i >= 0; i -= 2, j++, dst -= 768 + 64) {
+		if(dst < gpBufEnd) {
+			dst += i;
+			for(k = 0; k < 4 * j; k++)
+				*dst++ = 0;
+			dst += i;
 		} else {
-			v8 = v1 + 64;
+			dst += 64;
 		}
-		v1 = v8 - 832;
-		--v7;
-		v6 += 2;
-	} while (v6 != 32);
+	}
+	for(i = 2, j = 15; i != 32; i += 2, j--, dst -= 768 + 64) {
+		if(dst < gpBufEnd) {
+			dst += i;
+			for(k = 0; k < 4 * j; k++)
+				*dst++ = 0;
+			dst += i;
+		} else {
+			dst += 64;
+		}
+	}
+#endif
 }
 // 69CF0C: using guessed type int gpBufEnd;
 
@@ -148,7 +208,7 @@ void __fastcall town_draw_clipped_town(BYTE *buffer, int x, int y, int sx, int s
 			    ICOL_BLUE,
 			    v11,
 			    sy,
-			    (char *)item[v10]._iAnimData,
+			    item[v10]._iAnimData,
 			    item[v10]._iAnimFrame,
 			    item[v10]._iAnimWidth,
 			    0,
@@ -163,7 +223,7 @@ void __fastcall town_draw_clipped_town(BYTE *buffer, int x, int y, int sx, int s
 			    166,
 			    v13,
 			    sy,
-			    (char *)towner[v12]._tAnimData,
+			    towner[v12]._tAnimData,
 			    towner[v12]._tAnimFrame,
 			    towner[v12]._tAnimWidth,
 			    0,
@@ -180,7 +240,7 @@ void __fastcall town_draw_clipped_town(BYTE *buffer, int x, int y, int sx, int s
 			    166,
 			    v17,
 			    sy,
-			    (char *)towner[v16]._tAnimData,
+			    towner[v16]._tAnimData,
 			    towner[v16]._tAnimFrame,
 			    towner[v16]._tAnimWidth,
 			    0,
@@ -253,7 +313,7 @@ void __fastcall town_draw_lower(int x, int y, int sx, int sy, int a5, int some_f
 		if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX && (level_cel_block = dPiece[x][y]) != 0) {
 			v6 = sy;
 			v7 = &screen_y_times_768[sy];
-			a1 = (unsigned char *)&gpBuffer->row_unused_1[0].col_unused_1[*v7 + 32 + sx];
+			a1 = (unsigned char *)&gpBuffer[*v7 + 32 + sx];
 			v25 = 1;
 			v8 = (char *)dpiece_defs_map_1 + 32 * gendung_get_dpiece_num_from_coord(x, y);
 			do {
@@ -408,7 +468,7 @@ void __fastcall town_draw_clipped_town_2(int x, int y, int a3, int a4, int a5, i
 			    ICOL_BLUE,
 			    v13,
 			    sy,
-			    (char *)item[v12]._iAnimData,
+			    item[v12]._iAnimData,
 			    item[v12]._iAnimFrame,
 			    item[v12]._iAnimWidth,
 			    a5,
@@ -423,7 +483,7 @@ void __fastcall town_draw_clipped_town_2(int x, int y, int a3, int a4, int a5, i
 			    166,
 			    v15,
 			    sy,
-			    (char *)towner[v14]._tAnimData,
+			    towner[v14]._tAnimData,
 			    towner[v14]._tAnimFrame,
 			    towner[v14]._tAnimWidth,
 			    a5,
@@ -440,7 +500,7 @@ void __fastcall town_draw_clipped_town_2(int x, int y, int a3, int a4, int a5, i
 			    166,
 			    v19,
 			    sy,
-			    (char *)towner[v18]._tAnimData,
+			    towner[v18]._tAnimData,
 			    towner[v18]._tAnimFrame,
 			    towner[v18]._tAnimWidth,
 			    a5,
@@ -655,21 +715,21 @@ void __fastcall town_draw_town_all(BYTE *buffer, int x, int y, int a4, int dir, 
 		ii = dItem[x][y] - 1;
 		xx = sx - item[ii]._iAnimWidth2;
 		if (ii == pcursitem)
-			CelDecodeClr(ICOL_BLUE, xx, sy, (char *)item[ii]._iAnimData, item[ii]._iAnimFrame, item[ii]._iAnimWidth, 0, dir);
+			CelDecodeClr(ICOL_BLUE, xx, sy, item[ii]._iAnimData, item[ii]._iAnimFrame, item[ii]._iAnimWidth, 0, dir);
 		CelDrawHdrOnly(xx, sy, item[ii]._iAnimData, item[ii]._iAnimFrame, item[ii]._iAnimWidth, 0, dir);
 	}
 	if (dFlags[x][y] & DFLAG_MONSTER) {
 		mi = -1 - dMonster[x][y - 1];
 		xx = sx - towner[mi]._tAnimWidth2;
 		if (mi == pcursmonst)
-			CelDecodeClr(PAL16_BEIGE + 6, xx, sy, (char *)towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, dir);
+			CelDecodeClr(PAL16_BEIGE + 6, xx, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, dir);
 		CelDrawHdrOnly(xx, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, dir);
 	}
 	if (dMonster[x][y] > 0) {
 		mi = dMonster[x][y] - 1;
 		xx = sx - towner[mi]._tAnimWidth2;
 		if (mi == pcursmonst)
-			CelDecodeClr(PAL16_BEIGE + 6, xx, sy, (char *)towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, dir);
+			CelDecodeClr(PAL16_BEIGE + 6, xx, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, dir);
 		CelDrawHdrOnly(xx, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, dir);
 	}
 	if (dFlags[x][y] & DFLAG_PLAYER) {
@@ -712,7 +772,7 @@ void __fastcall town_draw_upper(int x, int y, int sx, int sy, INT_PTR a5, int a6
 	int v14;            // esi
 	int v15;            // edi
 	int v16;            // eax
-	Screen *v17;        // eax
+	BYTE *v17;        // eax
 	unsigned char *v18; // ebx
 	char *v19;          // edi
 	int v20;            // eax
@@ -749,7 +809,7 @@ void __fastcall town_draw_upper(int x, int y, int sx, int sy, INT_PTR a5, int a6
 			v10 = v9 == 0;
 			v11 = sy;
 			if (!v10) {
-				a1 = (int *)&gpBuffer->row_unused_1[0].col_unused_1[sx + 32 + screen_y_times_768[sy]];
+				a1 = (int *)&gpBuffer[sx + 32 + screen_y_times_768[sy]];
 				sxa = 0;
 				v12 = &dpiece_defs_map_1[0][16 * gendung_get_dpiece_num_from_coord(x, y) + 1];
 				do {
@@ -1106,7 +1166,7 @@ void __fastcall T_DrawZoom(int x, int y)
 LABEL_24:
 	v11 = (_WORD *)((char *)gpBuffer + a5a);
 	v12 = (char *)gpBuffer + a6b;
-	v13 = &gpBuffer->row_unused_1[1].col_unused_1[a5a];
+	v13 = (char *)&gpBuffer[a5a + 768];
 	v14 = 176;
 	do {
 		v15 = v19;
@@ -1245,94 +1305,121 @@ void __cdecl town_init_dpiece_defs_map()
 // 5C3000: using guessed type int scr_pix_width;
 // 5C3004: using guessed type int scr_pix_height;
 
-void __fastcall T_FillSector(unsigned char *P3Tiles, unsigned char *pSector, int xi, int yi, int w, int h) /* check 7 params: int AddSec */
+void __fastcall T_FillSector(unsigned char *P3Tiles, unsigned char *pSector, int xi, int yi, int w, int h)
 {
-	int v7;             // ebx
-	int v8;             // edx
-	int v9;             // edi
-	int *v10;           // ecx
-	int v11;            // eax
-	unsigned char *v12; // esi
-	unsigned short v13; // ax
-	int v14;            // eax
-	int v15;            // [esp+4h] [ebp-14h]
-	int v16;            // [esp+8h] [ebp-10h]
-	unsigned char *v17; // [esp+Ch] [ebp-Ch]
-	unsigned char *v18; // [esp+10h] [ebp-8h]
-	signed int v19;     // [esp+14h] [ebp-4h]
-	int a4;             // [esp+24h] [ebp+Ch]
-	int a6;             // [esp+2Ch] [ebp+14h]
+	int i, j, xx, yy;
+	long v1, v2, v3, v4, ii;
 
-	v7 = h;
-	v17 = pSector;
-	v8 = yi;
-	v18 = P3Tiles;
-	v19 = 4;
-	if (h > 0) {
-		do {
-			v9 = w;
-			if (w > 0) {
-				v10 = &dPiece[1][v8 + 112 * xi];
-				do {
-					v11 = *(unsigned short *)&v17[v19];
-					if ((_WORD)v11) {
-						v12 = &v18[8 * (v11 - 1)];
-						v13 = *(_WORD *)v12;
-						v12 += 2;
-						v14 = v13 + 1;
-						a4 = v14;
-						_LOWORD(v14) = *(_WORD *)v12;
-						v12 += 2;
-						a6 = ++v14;
-						_LOWORD(v14) = *(_WORD *)v12;
-						v16 = ++v14;
-						_LOWORD(v14) = *((_WORD *)v12 + 1);
-						v15 = v14 + 1;
-					} else {
-						a4 = 0;
-						a6 = 0;
-						v16 = 0;
-						v15 = 0;
-					}
-					v19 += 2;
-					*(v10 - 112) = a4;
-					*v10 = a6;
-					*(v10 - 111) = v16;
-					v10[1] = v15;
-					v10 += 224;
-					--v9;
-				} while (v9);
+	ii = 4;
+	yy = yi;
+	for(j = 0; j < h; j++) {
+		xx = xi;
+		for(i = 0; i < w; i++) {
+#if (_MSC_VER >= 800) && (_MSC_VER <= 1200)
+			__asm {
+				mov		esi, pSector
+				mov		eax, ii
+				add		esi, eax
+				xor		eax, eax
+				lodsw
+				or		eax, eax
+				jz		label1
+				dec		eax
+				mov		esi, P3Tiles
+				shl		eax, 3
+				add		esi, eax
+				xor		eax, eax
+				lodsw
+				inc		eax
+				mov		v1, eax
+				lodsw
+				inc		eax
+				mov		v2, eax
+				lodsw
+				inc		eax
+				mov		v3, eax
+				lodsw
+				inc		eax
+				mov		v4, eax
+				jmp		label2
+			label1:
+				mov		v1, eax
+				mov		v2, eax
+				mov		v3, eax
+				mov		v4, eax
+			label2:
+				nop
 			}
-			v8 += 2;
-			--v7;
-		} while (v7);
+#else
+			WORD *Map;
+
+			Map = (WORD *)&pSector[ii];
+			if(*Map) {
+				v1 = *((WORD *)&P3Tiles[(*Map-1)*8])+1;
+				v2 = *((WORD *)&P3Tiles[(*Map-1)*8]+1)+1;
+				v3 = *((WORD *)&P3Tiles[(*Map-1)*8]+2)+1;
+				v4 = *((WORD *)&P3Tiles[(*Map-1)*8]+3)+1;
+			} else {
+				v1 = 0;
+				v2 = 0;
+				v3 = 0;
+				v4 = 0;
+			}
+#endif
+			dPiece[xx][yy] = v1;
+			dPiece[xx + 1][yy] = v2;
+			dPiece[xx][yy + 1] = v3;
+			dPiece[xx + 1][yy + 1] = v4;
+			xx += 2;
+			ii += 2;
+		}
+		yy += 2;
 	}
 }
 
 void __fastcall T_FillTile(unsigned char *P3Tiles, int xx, int yy, int t)
 {
-	unsigned char *v4; // esi
-	unsigned short v5; // ax
-	int v6;            // eax
-	int v7;            // ST10_4
-	int v8;            // ST0C_4
-	int v9;            // ST08_4
+	long v1, v2, v3, v4;
 
-	v4 = &P3Tiles[8 * (t - 1)];
-	v5 = *(_WORD *)v4;
-	v4 += 2;
-	v6 = v5 + 1;
-	v7 = v6;
-	_LOWORD(v6) = *(_WORD *)v4;
-	v4 += 2;
-	v8 = ++v6;
-	_LOWORD(v6) = *(_WORD *)v4;
-	v9 = ++v6;
-	_LOWORD(v6) = *((_WORD *)v4 + 1);
-	dPiece[xx][yy] = v7;
-	dPiece[xx + 1][yy] = v8;
-	dPiece[xx][yy + 1] = v9;
-	dPiece[xx + 1][yy + 1] = v6 + 1;
+#if (_MSC_VER >= 800) && (_MSC_VER <= 1200)
+	__asm {
+		mov		eax, t
+		dec		eax
+		mov		esi, P3Tiles
+		shl		eax, 3
+		add		esi, eax
+		xor		eax, eax
+		lodsw
+		inc		eax
+		mov		v1, eax
+		lodsw
+		inc		eax
+		mov		v2, eax
+		lodsw
+		inc		eax
+		mov		v3, eax
+		lodsw
+		inc		eax
+		mov		v4, eax
+		jmp		label1
+		mov		v1, eax
+		mov		v2, eax
+		mov		v3, eax
+		mov		v4, eax
+	label1:
+		nop
+	}
+#else
+	v1 = *((WORD *)&P3Tiles[(t-1)*8])+1;
+	v2 = *((WORD *)&P3Tiles[(t-1)*8]+1)+1;
+	v3 = *((WORD *)&P3Tiles[(t-1)*8]+2)+1;
+	v4 = *((WORD *)&P3Tiles[(t-1)*8]+3)+1;
+#endif
+
+	dPiece[xx][yy] = v1;
+	dPiece[xx + 1][yy] = v2;
+	dPiece[xx][yy + 1] = v3;
+	dPiece[xx + 1][yy + 1] = v4;
 }
 
 void __cdecl T_Pass3()

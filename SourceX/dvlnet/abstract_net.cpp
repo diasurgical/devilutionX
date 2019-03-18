@@ -5,7 +5,8 @@
 #include "dvlnet/udp_p2p.h"
 #include "dvlnet/loopback.h"
 
-namespace dvl { namespace net {
+namespace dvl {
+namespace net {
 
 abstract_net::~abstract_net()
 {
@@ -24,4 +25,5 @@ std::unique_ptr<abstract_net> abstract_net::make_net(provider_t provider)
 	}
 }
 
-}}
+}  // namespace net
+}  // namespace dvl

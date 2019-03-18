@@ -2631,34 +2631,44 @@ void __fastcall objects_set_door_piece(int x, int y)
 
 void __fastcall ObjSetMini(int x, int y, int v)
 {
-	unsigned short *v3; // esi
-	unsigned short v4;  // ax
-	int v5;             // eax
-	int pn;             // ST1C_4
-	int v7;             // ST18_4
-	int v8;             // ST14_4
-	int v9;             // ST10_4
-	int v10;            // esi
-	int v11;            // edi
+	int xx, yy;
+	long v1, v2, v3, v4;
 
-	v3 = (unsigned short *)((char *)pMegaTiles + 8 * ((unsigned short)v - 1));
-	v4 = *v3;
-	++v3;
-	v5 = v4 + 1;
-	pn = v5;
-	_LOWORD(v5) = *v3;
-	++v3;
-	v7 = ++v5;
-	_LOWORD(v5) = *v3;
-	v8 = ++v5;
-	_LOWORD(v5) = v3[1];
-	v9 = v5 + 1;
-	v10 = 2 * x + 16;
-	v11 = 2 * y + 16;
-	ObjSetMicro(v10, v11, pn);
-	ObjSetMicro(v10 + 1, v11++, v7);
-	ObjSetMicro(v10, v11, v8);
-	ObjSetMicro(v10 + 1, v11, v9);
+#if (_MSC_VER >= 800) && (_MSC_VER <= 1200)
+	__asm {
+		mov		esi, pMegaTiles
+		xor		eax, eax
+		mov		ax, word ptr v
+		dec		eax
+		shl		eax, 3
+		add		esi, eax
+		xor		eax, eax
+		lodsw
+		inc		eax
+		mov		v1, eax
+		lodsw
+		inc		eax
+		mov		v2, eax
+		lodsw
+		inc		eax
+		mov		v3, eax
+		lodsw
+		inc		eax
+		mov		v4, eax
+	}
+#else
+	v1 = *((WORD *)&pMegaTiles[((WORD)v-1)*8])+1;
+	v2 = *((WORD *)&pMegaTiles[((WORD)v-1)*8]+1)+1;
+	v3 = *((WORD *)&pMegaTiles[((WORD)v-1)*8]+2)+1;
+	v4 = *((WORD *)&pMegaTiles[((WORD)v-1)*8]+3)+1;
+#endif
+
+	xx = 2 * x + 16;
+	yy = 2 * y + 16;
+	ObjSetMicro(xx, yy, v1);
+	ObjSetMicro(xx + 1, yy, v2);
+	ObjSetMicro(xx, yy + 1, v3);
+	ObjSetMicro(xx + 1, yy + 1, v4);
 }
 
 void __fastcall ObjL1Special(int x1, int y1, int x2, int y2)

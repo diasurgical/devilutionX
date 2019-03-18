@@ -1,9 +1,13 @@
-#include "pch.h"
 #ifndef _WIN32
 #include <sys/statvfs.h>
 #endif
 
 #include <SDL.h>
+
+#include "devilution.h"
+#include "stubs.h"
+#include "dx.h"
+#include "DiabloUI/diabloui.h"
 
 namespace dvl {
 
@@ -188,6 +192,7 @@ DWORD GetCurrentDirectory(DWORD nBufferLength, LPTSTR lpBuffer)
 	if (!base_path) {
 		base_path = SDL_strdup("./");
 	}
+	eprintf("BasePath: %s\n", base_path);
 
 	strncpy(lpBuffer, base_path, nBufferLength);
 	SDL_free(base_path);
@@ -201,10 +206,7 @@ DWORD GetCurrentDirectory(DWORD nBufferLength, LPTSTR lpBuffer)
 
 DWORD GetLogicalDriveStringsA(DWORD nBufferLength, LPSTR lpBuffer)
 {
-	DUMMY();
-	sprintf(lpBuffer, "/");
-
-	return 3;
+	return 0;
 }
 
 UINT GetDriveTypeA(LPCSTR lpRootPathName)

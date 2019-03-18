@@ -1,5 +1,3 @@
-cmake_minimum_required(VERSION 3.13)
-
 SET(CROSS_PREFIX "/usr" CACHE STRING "crosstool-NG prefix")
 
 SET(CMAKE_SYSTEM_NAME Windows)

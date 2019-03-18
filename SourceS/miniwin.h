@@ -30,6 +30,7 @@
 #include "miniwin/ui.h"
 #include "miniwin/thread.h"
 #include "miniwin/rand.h"
+#include "storm_full.h"
 
 #ifdef DEVILUTION_ENGINE
 #include "miniwin/misc_macro.h"

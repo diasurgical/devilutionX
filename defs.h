@@ -83,6 +83,8 @@
 #define PAL16_RED		224
 #define PAL16_GRAY		240
 
+#define SCREENXY(x, y)	((x) + 64 + (((y) + 160) * 768))
+
 #ifndef INVALID_FILE_ATTRIBUTES
 #define INVALID_FILE_ATTRIBUTES ((DWORD)-1)
 #endif

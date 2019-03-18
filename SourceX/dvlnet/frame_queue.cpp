@@ -1,8 +1,11 @@
 #include "dvlnet/frame_queue.h"
 
+#include <cstring>
+
 #include "dvlnet/packet.h"
 
-namespace dvl { namespace net {
+namespace dvl {
+namespace net {
 
 size_t frame_queue::size()
 {
@@ -45,7 +48,7 @@ bool frame_queue::packet_ready()
 		if(size() < sizeof(framesize_t))
 			return false;
 		auto szbuf = read(sizeof(framesize_t));
-		nextsize = *(reinterpret_cast<framesize_t*>(&szbuf[0]));
+		std::memcpy(&nextsize, &szbuf[0], sizeof(nextsize));
 		if(!nextsize)
 			throw frame_queue_exception();
 	}
@@ -75,4 +78,5 @@ buffer_t frame_queue::make_frame(buffer_t packetbuf)
 	return std::move(ret);
 }
 
-}}
+}  // namespace net
+}  // namespace dvl

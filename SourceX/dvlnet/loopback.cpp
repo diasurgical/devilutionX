@@ -1,6 +1,8 @@
 #include "dvlnet/loopback.h"
+#include "stubs.h"
 
-namespace dvl { namespace net {
+namespace dvl {
+namespace net {
 
 int loopback::create(std::string addrstr, std::string passwd)
 {
@@ -103,4 +105,5 @@ bool loopback::SNetGetTurnsInTransit(int *turns)
 	return true;
 }
 
-}}
+}  // namespace net
+}  // namespace dvl

@@ -12,26 +12,30 @@
 #include "dvlnet/base.h"
 #include "dvlnet/tcp_server.h"
 
-namespace dvl { namespace net {
-	class tcp_client : public base {
-	public:
-		int create(std::string addrstr, std::string passwd);
-		int join(std::string addrstr, std::string passwd);
+namespace dvl {
+namespace net {
 
-		constexpr static unsigned short default_port = 6112;
+class tcp_client : public base {
+public:
+	int create(std::string addrstr, std::string passwd);
+	int join(std::string addrstr, std::string passwd);
 
-		virtual void poll();
-		virtual void send(packet& pkt);
-	private:
-		frame_queue recv_queue;
-		buffer_t recv_buffer = buffer_t(frame_queue::max_frame_size);
+	constexpr static unsigned short default_port = 6112;
 
-		asio::io_context ioc;
-		asio::ip::tcp::socket sock = asio::ip::tcp::socket(ioc);
-		std::unique_ptr<tcp_server> local_server; // must be declared *after* ioc
+	virtual void poll();
+	virtual void send(packet& pkt);
+private:
+	frame_queue recv_queue;
+	buffer_t recv_buffer = buffer_t(frame_queue::max_frame_size);
 
-		void handle_recv(const asio::error_code& error, size_t bytes_read);
-		void start_recv();
-		void handle_send(const asio::error_code& error, size_t bytes_sent);
-	};
-}}
+	asio::io_context ioc;
+	asio::ip::tcp::socket sock = asio::ip::tcp::socket(ioc);
+	std::unique_ptr<tcp_server> local_server; // must be declared *after* ioc
+
+	void handle_recv(const asio::error_code& error, size_t bytes_read);
+	void start_recv();
+	void handle_send(const asio::error_code& error, size_t bytes_sent);
+};
+
+}  // namespace net
+}  // namespace dvl

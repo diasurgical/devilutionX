@@ -50,7 +50,7 @@ x2loop:
 #else // _MSC_VER && _M_IX86
 {
 	int row, col;
-	char *pix = &gpBuffer->row[TRANS_RECT_Y + TRANS_RECT_HEIGHT - 1].pixels[TRANS_RECT_X];
+	BYTE *pix = &gpBuffer[SCREENXY(TRANS_RECT_X, TRANS_RECT_Y + TRANS_RECT_HEIGHT - 1)];
 	for (row = TRANS_RECT_HEIGHT >> 1; row != 0; row--) {
 		for (col = TRANS_RECT_WIDTH >> 1; col != 0; col--) {
 			*pix++ = 0;

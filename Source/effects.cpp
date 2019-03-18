@@ -1158,6 +1158,7 @@ void __cdecl sound_update()
 		sfx_stop();
 	}
 }
+
 // 415DBA: could not find valid save-restore pair for ebp
 
 void __cdecl effects_cleanup_sfx()

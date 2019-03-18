@@ -24,7 +24,7 @@ int dPiece[MAXDUNX][MAXDUNY];
 char dTransVal[MAXDUNX][MAXDUNY];
 int setloadflag_2; // weak
 int tile_defs[2048];
-void *pMegaTiles;
+BYTE *pMegaTiles;
 void *pLevelPieces;
 int gnDifficulty; // idb
 char block_lvid[2049];

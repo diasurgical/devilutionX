@@ -579,35 +579,36 @@ void __cdecl S_StartSmith()
 
 void __fastcall S_ScrollSBuy(int idx)
 {
-	int v1;   // esi
-	int v2;   // edi
-	char *v3; // esi
-	char *v4; // eax
-	int iclr; // [esp+Ch] [ebp-4h]
+	int y;
+	char clr;
 
-	v1 = idx;
-	v2 = 5;
 	ClearSText(5, 21);
-	v3 = &smithitem[v1]._iMagical;
 	stextup = 5;
-	do {
-		if (*((_DWORD *)v3 - 13) != -1) {
-			_LOBYTE(iclr) = COL_WHITE;
-			if (*v3)
-				_LOBYTE(iclr) = COL_BLUE;
-			if (!*((_DWORD *)v3 + 74))
-				_LOBYTE(iclr) = COL_RED;
-			v4 = v3 + 65;
-			if (!*v3)
-				v4 = v3 + 1;
-			AddSText(20, v2, 0, v4, iclr, 1);
-			AddSTextVal(v2, *((_DWORD *)v3 + 35));
-			PrintStoreItem((ItemStruct *)(v3 - 60), v2 + 1, iclr);
-			stextdown = v2;
-			v3 += 368;
+
+	for (y = 5; y < 20; y += 4) {
+		if (smithitem[idx]._itype != -1) {
+			clr = COL_WHITE;
+			if (smithitem[idx]._iMagical) {
+				clr = COL_BLUE;
+			}
+
+			if (!smithitem[idx]._iStatFlag) {
+				clr = COL_RED;
+			}
+
+			if (smithitem[idx]._iMagical) {
+				AddSText(20, y, 0, smithitem[idx]._iIName, clr, 1);
+			} else {
+				AddSText(20, y, 0, smithitem[idx]._iName, clr, 1);
+			}
+
+			AddSTextVal(y, smithitem[idx]._iIvalue);
+			PrintStoreItem(&smithitem[idx], y + 1, clr);
+			stextdown = y;
+			idx++;
 		}
-		v2 += 4;
-	} while (v2 < 20);
+	}
+
 	if (!stext[stextsel]._ssel && stextsel != 22)
 		stextsel = stextdown;
 }

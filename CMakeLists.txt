@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.12)
 
 include(CMake/out_of_tree.cmake)
 
@@ -6,31 +6,38 @@ project(devilutionX
   VERSION 0.0.1
   LANGUAGES C CXX)
 
+list(APPEND CMAKE_MODULE_PATH "${devilutionX_SOURCE_DIR}/CMake")
+
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
 option(ASAN "Enable address sanitizer" ON)
 option(DEBUG "Enable debug mode in engine" ON)
-option(COTIRE "Enable cotire" OFF)
 option(DIST "Dynamically link only glibc and SDL2" OFF)
 option(FASTER "Enable FASTER in engine" ON)
 option(BINARY_RELEASE "Enable options for binary release" OFF)
+option(NIGHTLY_BUILD "Enable options for nightly build" OFF)
 
 if(BINARY_RELEASE)
   set(CMAKE_BUILD_TYPE "Release")
   set(ASAN OFF)
   set(DEBUG OFF)
-  set(COTIRE OFF)
   set(DIST ON)
   set(FASTER OFF)
+endif()
+
+if(NIGHTLY_BUILD)
+  set(CMAKE_BUILD_TYPE "Debug")
+  set(ASAN OFF)
+  set(DEBUG ON)
+  set(DIST ON)
+  set(FASTER ON)
 endif()
 
 if(DIST)
   set(sodium_USE_STATIC_LIBS ON)
 endif()
-
-list(APPEND CMAKE_MODULE_PATH "${devilutionX_SOURCE_DIR}/CMake")
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -41,10 +48,6 @@ set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 if(NOT CMAKE_SIZEOF_VOID_P EQUAL 4)
   message(WARNING "sizeof(void*) == ${CMAKE_SIZEOF_VOID_P}.")
   message(WARNING [[Not 32-bit, highly experimental!]])
-endif()
-
-if(COTIRE)
-  include(CMake/cotire.cmake)
 endif()
 
 find_package(Threads REQUIRED)
@@ -150,19 +153,20 @@ add_library(devilution OBJECT
   Source/track.cpp
   Source/trigs.cpp
   Source/wave.cpp)
-target_include_directories(devilution PRIVATE SourceS)
 
 add_executable(devilutionx
   SourceX/dx.cpp
   SourceX/miniwin/misc.cpp
   SourceX/miniwin/misc_io.cpp
   SourceX/miniwin/misc_msg.cpp
+  SourceX/miniwin/misc_dx.cpp
   SourceX/miniwin/rand.cpp
   SourceX/miniwin/thread.cpp
-  SourceX/miniwin_dsound.cpp
+  SourceX/miniwin/dsound.cpp
   SourceX/sound.cpp
-  SourceX/storm.cpp
-  SourceX/storm_net.cpp
+  SourceX/storm/storm.cpp
+  SourceX/storm/storm_net.cpp
+  SourceX/storm/storm_dx.cpp
   SourceX/dvlnet/abstract_net.cpp
   SourceX/dvlnet/loopback.cpp
   SourceX/dvlnet/packet.cpp
@@ -182,16 +186,20 @@ add_executable(devilutionx
   SourceX/DiabloUI/title.cpp
   SourceX/main.cpp)
 
-target_include_directories(devilutionx PRIVATE SourceS SourceX 3rdParty/asio/include .)
+target_include_directories(devilution PUBLIC Source SourceS)
+target_include_directories(devilutionx PRIVATE
+  SourceX
+  3rdParty/asio/include
+  3rdParty/Radon/Radon/include
+  3rdParty/libsmacker)
 
-target_link_libraries(devilution PRIVATE Threads::Threads)
+target_link_libraries(devilution PUBLIC Threads::Threads)
 target_link_libraries(devilutionx PRIVATE
   devilution
   PKWare
   StormLib
   smacker
   Radon
-  Threads::Threads
   SDL2::SDL2main
   SDL2::SDL2_ttf
   SDL2::SDL2_mixer
@@ -203,10 +211,8 @@ target_compile_definitions(devilution PUBLIC
   "$<$<BOOL:${DEBUG}>:_DEBUG>"
   # Skip fades and other fluff
   "$<$<BOOL:${FASTER}>:FASTER>")
+target_compile_definitions(devilutionx PRIVATE ASIO_STANDALONE)
 
-target_compile_definitions(devilutionx PUBLIC ASIO_STANDALONE)
-
-# Enable ASAN in Debug mode
 if(ASAN)
   target_compile_options(devilution PUBLIC -fsanitize=address -fsanitize-recover=address)
   target_link_libraries(devilution PUBLIC -fsanitize=address -fsanitize-recover=address)
@@ -217,15 +223,14 @@ if(DIST)
 endif()
 
 if(WIN32)
-  cmake_minimum_required(VERSION 3.13)
   target_link_libraries(devilutionx PRIVATE wsock32 ws2_32 wininet)
   target_compile_options(devilution PUBLIC $<$<CONFIG:Debug>:-gstabs>)
 endif()
 
+target_compile_options(devilution PUBLIC -Wno-unknown-pragmas)
 # Note: In Debug mode, GCC generates spurious memory references that upset Valgrind,
 # these options fix that.
 target_compile_options(devilution PUBLIC $<$<CONFIG:Debug>:-fno-omit-frame-pointer>)
-
 # Ignore serious warnings due to "quality" of decompiled code
 # Currently, disable ignore all warnings (-w), to be removed later
 target_compile_options(devilution PRIVATE -fpermissive -Wno-write-strings -Wno-multichar -w)
@@ -235,7 +240,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   target_compile_options(devilution PRIVATE -fno-aggressive-loop-optimizations)
 endif()
 # Warnings for devilutionX
-target_compile_options(devilution PUBLIC -Wno-unknown-pragmas)
 target_compile_options(devilutionx PRIVATE -Wall -Wextra -Wno-multichar -Wno-unused-parameter)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -247,12 +251,4 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   target_compile_options(devilution PRIVATE -fms-extensions -fms-compatibility -fms-compatibility-version=19.00)
 
   set_target_properties(devilutionx PROPERTIES LINK_FLAGS "-liconv")
-endif()
-
-if(COTIRE)
-  set_target_properties(devilutionx PROPERTIES COTIRE_ADD_UNITY_BUILD FALSE)
-  set_target_properties(devilutionx PROPERTIES
-    COTIRE_PREFIX_HEADER_INCLUDE_PATH "${devilutionX_SOURCE_DIR}"
-    COTIRE_PREFIX_HEADER_IGNORE_PATH "${devilutionX_SOURCE_DIR}/SourceX")
-  cotire(devilutionx)
 endif()

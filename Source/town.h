@@ -2,8 +2,8 @@
 #ifndef __TOWN_H__
 #define __TOWN_H__
 
-void __fastcall town_clear_upper_buf(unsigned char *a1);
-void __fastcall town_clear_low_buf(unsigned char *y_related);
+void __fastcall town_clear_upper_buf(BYTE *pBuff);
+void __fastcall town_clear_low_buf(BYTE *pBuff);
 void __fastcall town_draw_clipped_e_flag(BYTE *buffer, int x, int y, int sx, int sy);
 void __fastcall town_draw_clipped_town(BYTE *buffer, int x, int y, int sx, int sy, int some_flag);
 void __fastcall town_draw_lower(int x, int y, int sx, int sy, int a5, int some_flag);

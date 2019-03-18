@@ -202,77 +202,87 @@ void __cdecl DRLG_L1Floor()
 
 void __cdecl DRLG_L1Pass3()
 {
-	int v0;             // eax
-	int *v1;            // edx
-	int *v2;            // eax
-	signed int v3;      // ecx
-	signed int v4;      // ebx
-	int *v5;            // ecx
-	unsigned char *v6;  // edx
-	unsigned short *v7; // esi
-	unsigned short v8;  // ax
-	int v9;             // eax
-	int v10;            // ST24_4
-	int v11;            // ST20_4
-	int v12;            // ST1C_4
-	signed int v13;     // [esp+Ch] [ebp-1Ch]
-	int *v14;           // [esp+10h] [ebp-18h]
-	int v15;            // [esp+14h] [ebp-14h]
-	int v16;            // [esp+18h] [ebp-10h]
-	int v17;            // [esp+1Ch] [ebp-Ch]
-	int v18;            // [esp+20h] [ebp-8h]
+	int i, j, xx, yy;
+	long v1, v2, v3, v4, lv;
 
-	v0 = *((unsigned short *)pMegaTiles + 84) + 1;
-	v18 = *((unsigned short *)pMegaTiles + 84) + 1;
-	_LOWORD(v0) = *((_WORD *)pMegaTiles + 85);
-	v17 = ++v0;
-	_LOWORD(v0) = *((_WORD *)pMegaTiles + 86);
-	v16 = ++v0;
-	_LOWORD(v0) = *((_WORD *)pMegaTiles + 87);
-	v15 = v0 + 1;
-	v1 = dPiece[1];
-	do {
-		v2 = v1;
-		v3 = 56;
-		do {
-			*(v2 - 112) = v18;
-			*v2 = v17;
-			*(v2 - 111) = v16;
-			v2[1] = v15;
-			v2 += 224;
-			--v3;
-		} while (v3);
-		v1 += 2;
-	} while ((INT_PTR)v1 < (INT_PTR)dPiece[2]);
-	v4 = 0;
-	v14 = &dPiece[17][16]; /* check */
-	do {
-		v5 = v14;
-		v6 = (unsigned char *)dungeon + v4;
-		v13 = 40;
-		do {
-			v7 = (unsigned short *)((char *)pMegaTiles + 8 * (*v6 - 1));
-			v8 = *v7;
-			++v7;
-			v9 = v8 + 1;
-			v10 = v9;
-			_LOWORD(v9) = *v7;
-			++v7;
-			v11 = ++v9;
-			_LOWORD(v9) = *v7;
-			v12 = ++v9;
-			_LOWORD(v9) = v7[1];
-			v6 += 40;
-			*(v5 - 112) = v10;
-			*v5 = v11;
-			*(v5 - 111) = v12;
-			v5[1] = v9 + 1;
-			v5 += 224;
-			--v13;
-		} while (v13);
-		v14 += 2;
-		++v4;
-	} while (v4 < 40);
+	lv = 22-1;
+
+#if (_MSC_VER >= 800) && (_MSC_VER <= 1200)
+	__asm {
+		mov		esi, pMegaTiles
+		mov		eax, lv
+		shl		eax, 3
+		add		esi, eax
+		xor		eax, eax
+		lodsw
+		inc		eax
+		mov		v1, eax
+		lodsw
+		inc		eax
+		mov		v2, eax
+		lodsw
+		inc		eax
+		mov		v3, eax
+		lodsw
+		inc		eax
+		mov		v4, eax
+	}
+#else
+	v1 = *((WORD *)&pMegaTiles[lv*8])+1;
+	v2 = *((WORD *)&pMegaTiles[lv*8]+1)+1;
+	v3 = *((WORD *)&pMegaTiles[lv*8]+2)+1;
+	v4 = *((WORD *)&pMegaTiles[lv*8]+3)+1;
+#endif
+
+	for(j = 0; j < MAXDUNY; j += 2) {
+		for(i = 0; i < MAXDUNX; i += 2) {
+			dPiece[i][j] = v1;
+			dPiece[i+1][j] = v2;
+			dPiece[i][j+1] = v3;
+			dPiece[i+1][j+1] = v4;
+		}
+	}
+
+	yy = 16;
+	for(j = 0; j < DMAXY; j++) {
+		xx = 16;
+		for(i = 0; i < DMAXX; i++) {
+			lv = (unsigned char)dungeon[i][j]-1;
+			/// ASSERT: assert(lv >= 0);
+#if (_MSC_VER >= 800) && (_MSC_VER <= 1200)
+			__asm {
+				mov		esi, pMegaTiles
+				mov		eax, lv
+				shl		eax, 3
+				add		esi, eax
+				xor		eax, eax
+				lodsw
+				inc		eax
+				mov		v1, eax
+				lodsw
+				inc		eax
+				mov		v2, eax
+				lodsw
+				inc		eax
+				mov		v3, eax
+				lodsw
+				inc		eax
+				mov		v4, eax
+			}
+#else
+			v1 = *((WORD *)&pMegaTiles[lv*8])+1;
+			v2 = *((WORD *)&pMegaTiles[lv*8]+1)+1;
+			v3 = *((WORD *)&pMegaTiles[lv*8]+2)+1;
+			v4 = *((WORD *)&pMegaTiles[lv*8]+3)+1;
+#endif
+			dPiece[xx][yy] = v1;
+			dPiece[xx+1][yy] = v2;
+			dPiece[xx][yy+1] = v3;
+			dPiece[xx+1][yy+1] = v4;
+			xx += 2;
+		}
+		yy += 2;
+	}
 }
 
 void __cdecl DRLG_InitL1Vals()

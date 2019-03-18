@@ -4,11 +4,11 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-Screen *sgpBackBuf;
+BYTE *sgpBackBuf;
 LPDIRECTDRAW lpDDInterface;
 IDirectDrawPalette *lpDDPalette; // idb
 int sgdwLockCount;
-Screen *gpBuffer;
+BYTE *gpBuffer;
 IDirectDrawSurface *lpDDSBackBuf;
 IDirectDrawSurface *lpDDSPrimary;
 #ifdef _DEBUG
@@ -130,7 +130,7 @@ void __cdecl dx_create_back_buffer()
 #else
 			lpDDSPrimary->lpVtbl->Unlock(lpDDSPrimary, NULL);
 #endif
-			sgpBackBuf = (Screen *)DiabloAllocPtr(sizeof(Screen));
+			sgpBackBuf = (BYTE *)DiabloAllocPtr(656 * 768);
 			return;
 		}
 		if (error_code != DDERR_CANTLOCKSURFACE)
@@ -240,7 +240,7 @@ void __cdecl lock_buf_priv()
 		DDErrMsg(error_code, 235, "C:\\Src\\Diablo\\Source\\dx.cpp");
 
 	gpBufEnd += (int)ddsd.lpSurface;
-	gpBuffer = (Screen *)ddsd.lpSurface;
+	gpBuffer = (BYTE *)ddsd.lpSurface;
 	sgdwLockCount++;
 }
 
@@ -282,7 +282,7 @@ void __cdecl unlock_buf_priv()
 
 void __cdecl dx_cleanup()
 {
-	Screen *v0; // ecx
+	BYTE *v0; // ecx
 
 	if (ghMainWnd)
 		ShowWindow(ghMainWnd, SW_HIDE);

@@ -121,7 +121,6 @@ void __fastcall CelDrawDatOnly(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, 
 
 void __fastcall CelDecodeOnly(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 {
-	BYTE *tmp;
 	DWORD *pFrameTable;
 
 	/// ASSERT: assert(gpBuffer);
@@ -131,11 +130,10 @@ void __fastcall CelDecodeOnly(int sx, int sy, BYTE *pCelBuff, int nCel, int nWid
 	if(!pCelBuff)
 		return;
 
-	tmp = (BYTE *)gpBuffer;
 	pFrameTable = (DWORD *)pCelBuff;
 
 	CelDrawDatOnly(
-		&tmp[sx + screen_y_times_768[sy]],
+		&gpBuffer[sx + screen_y_times_768[sy]],
 		&pCelBuff[pFrameTable[nCel]],
 		pFrameTable[nCel + 1] - pFrameTable[nCel],
 		nWidth);
@@ -164,7 +162,7 @@ void __fastcall CelDecDatOnly(BYTE *pBuff, BYTE *pCelBuff, int nCel, int nWidth)
 void __fastcall CelDrawHdrOnly(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int always_0, int dir)
 {
 	int v1, v2, nDataSize;
-	BYTE *pRLEBytes, *tmp;
+	BYTE *pRLEBytes;
 	DWORD *pFrameTable;
 
 	/// ASSERT: assert(gpBuffer);
@@ -192,9 +190,8 @@ void __fastcall CelDrawHdrOnly(int sx, int sy, BYTE *pCelBuff, int nCel, int nWi
 	else
 		nDataSize -= v1;
 
-	tmp = (BYTE *)gpBuffer;
 	CelDrawDatOnly(
-		&tmp[sx + screen_y_times_768[sy - 16 * always_0]],
+		&gpBuffer[sx + screen_y_times_768[sy - 16 * always_0]],
 		&pRLEBytes[v1],
 		nDataSize,
 		nWidth);
@@ -577,7 +574,7 @@ L_ODD:
 void __fastcall CelDecodeLightOnly(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	int nDataSize;
-	BYTE *pDecodeTo, *pRLEBytes, *tmp;
+	BYTE *pDecodeTo, *pRLEBytes;
 	DWORD *pFrameTable;
 
 	/// ASSERT: assert(gpBuffer);
@@ -587,12 +584,11 @@ void __fastcall CelDecodeLightOnly(int sx, int sy, BYTE *pCelBuff, int nCel, int
 	if(!pCelBuff)
 		return;
 
-	tmp = (BYTE *)gpBuffer;
 	pFrameTable = (DWORD *)pCelBuff;
 
 	nDataSize = pFrameTable[nCel + 1] - pFrameTable[nCel];
 	pRLEBytes = &pCelBuff[pFrameTable[nCel]];
-	pDecodeTo = &tmp[sx + screen_y_times_768[sy]];
+	pDecodeTo = &gpBuffer[sx + screen_y_times_768[sy]];
 
 	if(light_table_index)
 		CelDecDatLightOnly(pDecodeTo, pRLEBytes, nDataSize, nWidth);
@@ -601,163 +597,193 @@ void __fastcall CelDecodeLightOnly(int sx, int sy, BYTE *pCelBuff, int nCel, int
 }
 // 69BEF8: using guessed type int light_table_index;
 
-void __fastcall CelDecodeHdrLightOnly(int screen_x, int screen_y, char *pCelBuff, int frame, int frame_width, int always_0, int direction)
+void __fastcall CelDecodeHdrLightOnly(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int always_0, int dir)
 {
-	int v7;        // esi
-	char *v8;      // ecx
-	int v9;        // edi
-	char *v10;     // edx
-	int v11;       // ebx
-	int v12;       // ebx
-	char *v13;     // edx
-	char *v14;     // ecx
-	int v15;       // [esp+Ch] [ebp-4h]
-	char *cel_buf; // [esp+18h] [ebp+8h]
+	int hdr, nDataSize, v1, v2;
+	BYTE *pRLEBytes, *pDecodeTo, *v9;
+	DWORD *pFrameTable;
 
-	v7 = screen_y;
-	v15 = screen_x;
-	if (gpBuffer) {
-		v8 = pCelBuff;
-		if (pCelBuff) {
-			v9 = *(_DWORD *)&pCelBuff[4 * frame];
-			v10 = &pCelBuff[v9];
-			v11 = *(unsigned short *)&pCelBuff[v9 + always_0];
-			cel_buf = (char *)*(unsigned short *)&pCelBuff[v9 + always_0];
-			if (v11) {
-				if (direction != 8 && *(_WORD *)&v10[direction])
-					v12 = *(unsigned short *)&v10[direction] - (_DWORD)cel_buf;
-				else
-					v12 = *(_DWORD *)&v8[4 * frame + 4] - v9 - (_DWORD)cel_buf;
-				v13 = &v10[(_DWORD)cel_buf];
-				v14 = (char *)gpBuffer + screen_y_times_768[v7 - 16 * always_0] + v15;
-				if (light_table_index)
-					CelDecDatLightOnly((BYTE *)v14, (BYTE *)v13, v12, frame_width);
-				else
-					CelDrawDatOnly((BYTE *)v14, (BYTE *)v13, v12, frame_width);
-			}
-		}
-	}
+	/// ASSERT: assert(gpBuffer);
+	if(!gpBuffer)
+		return;
+	/// ASSERT: assert(pCelBuff != NULL);
+	if(!pCelBuff)
+		return;
+
+	pFrameTable = (DWORD *)&pCelBuff[4 * nCel];
+	v9 = &pCelBuff[pFrameTable[0]];
+	hdr = *(WORD *)&v9[always_0];
+	if(!hdr)
+		return;
+
+	v1 = pFrameTable[1] - pFrameTable[0];
+	if(dir == 8)
+		v2 = 0;
+	else
+		v2 = *(WORD *)&v9[dir];
+	if(v2)
+		nDataSize = v2 - hdr;
+	else
+		nDataSize = v1 - hdr;
+
+	pRLEBytes = &v9[hdr];
+	pDecodeTo = &gpBuffer[sx + screen_y_times_768[sy - 16 * always_0]];
+
+	if(light_table_index)
+		CelDecDatLightOnly(pDecodeTo, pRLEBytes, nDataSize, nWidth);
+	else
+		CelDrawDatOnly(pDecodeTo, pRLEBytes, nDataSize, nWidth);
 }
 // 69BEF8: using guessed type int light_table_index;
 
-void __fastcall CelDecodeHdrLightTrans(char *pBuff, char *pCelBuff, int frame, int frame_width, int always_0, int direction)
+void __fastcall CelDecodeHdrLightTrans(BYTE *pBuff, BYTE *pCelBuff, int nCel, int nWidth, int always_0, int dir)
 {
-	char *v6;  // eax
-	int v7;    // esi
-	char *v8;  // edx
-	int v9;    // ebx
-	int v10;   // eax
-	int v11;   // eax
-	char *v12; // edx
+	int hdr, nDataSize, v1, v2;
+	BYTE *pRLEBytes, *v9;
+	DWORD *pFrameTable;
 
-	v6 = pCelBuff;
-	if (pCelBuff) {
-		if (pBuff) {
-			v7 = *(_DWORD *)&pCelBuff[4 * frame];
-			v8 = &pCelBuff[v7];
-			v9 = *(unsigned short *)&v6[v7 + always_0];
-			if (*(_WORD *)&v6[v7 + always_0]) {
-				v10 = *(_DWORD *)&v6[4 * frame + 4] - v7;
-				if (direction != 8 && *(_WORD *)&v8[direction])
-					v11 = *(unsigned short *)&v8[direction] - v9;
-				else
-					v11 = v10 - v9;
-				v12 = &v8[v9];
-				if (cel_transparency_active) {
-					CelDecDatLightTrans((BYTE *)pBuff, (BYTE *)v12, v11, frame_width);
-				} else if (light_table_index) {
-					CelDecDatLightOnly((BYTE *)pBuff, (BYTE *)v12, v11, frame_width);
-				} else {
-					CelDrawDatOnly((BYTE *)pBuff, (BYTE *)v12, v11, frame_width);
-				}
-			}
-		}
-	}
+	/// ASSERT: assert(pCelBuff != NULL);
+	if(!pCelBuff)
+		return;
+	/// ASSERT: assert(pBuff != NULL);
+	if(!pBuff)
+		return;
+
+	pFrameTable = (DWORD *)&pCelBuff[4 * nCel];
+	v9 = &pCelBuff[pFrameTable[0]];
+	hdr = *(WORD *)&v9[always_0];
+	if(!hdr)
+		return;
+
+	v1 = pFrameTable[1] - pFrameTable[0];
+	if(dir == 8)
+		v2 = 0;
+	else
+		v2 = *(WORD *)&v9[dir];
+	if(v2)
+		nDataSize = v2 - hdr;
+	else
+		nDataSize = v1 - hdr;
+
+	pRLEBytes = &v9[hdr];
+
+	if(cel_transparency_active)
+		CelDecDatLightTrans(pBuff, pRLEBytes, nDataSize, nWidth);
+	else if(light_table_index)
+		CelDecDatLightOnly(pBuff, pRLEBytes, nDataSize, nWidth);
+	else
+		CelDrawDatOnly(pBuff, pRLEBytes, nDataSize, nWidth);
 }
 // 69BEF8: using guessed type int light_table_index;
 // 69CF94: using guessed type int cel_transparency_active;
 
-void __fastcall CelDrawHdrLightRed(int screen_x, int screen_y, char *pCelBuff, int frame, int frame_width, int always_0, int direction, char always_1)
+void __fastcall CelDrawHdrLightRed(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int always_0, int dir, char light)
 {
-	char *v8;       // esi
-	int v9;         // ebx
-	int v10;        // eax
-	char *v11;      // edi
-	int v12;        // ecx
-	int v13;        // esi
-	int v14;        // eax
-	int v15;        // eax
-	_BYTE *v16;     // esi
-	char *v17;      // edi
-	int v18;        // edx
-	int v19;        // eax
-	int v20;        // ecx
-	int v21;        // [esp+Ch] [ebp-4h]
-	char *v22;      // [esp+Ch] [ebp-4h]
-	char *cel_buf;  // [esp+18h] [ebp+8h]
-	char *cel_bufa; // [esp+18h] [ebp+8h]
-	int framea;     // [esp+1Ch] [ebp+Ch]
-	int always_0a;  // [esp+24h] [ebp+14h]
-	int directiona; // [esp+28h] [ebp+18h]
+	int w, hdr, idx, nDataSize, v1;
+	BYTE *src, *dst, *tbl, *pRLEBytes;
+	DWORD *pFrameTable;
 
-	v21 = screen_x;
-	if (gpBuffer) {
-		v8 = pCelBuff;
-		if (pCelBuff) {
-			v9 = *(_DWORD *)&pCelBuff[4 * frame];
-			v10 = always_0;
-			v11 = &pCelBuff[v9];
-			v12 = *(unsigned short *)&pCelBuff[v9 + always_0];
-			cel_buf = (char *)*(unsigned short *)&pCelBuff[v9 + always_0];
-			if (v12) {
-				v13 = *(_DWORD *)&v8[4 * frame + 4] - v9;
-				if (direction != 8 && *(_WORD *)&v11[direction])
-					always_0a = *(unsigned short *)&v11[direction] - (_DWORD)cel_buf;
-				else
-					always_0a = v13 - (_DWORD)cel_buf;
-				directiona = (int)&v11[(_DWORD)cel_buf];
-				cel_bufa = (char *)gpBuffer + screen_y_times_768[screen_y - 16 * v10] + v21;
-				v14 = -(light4flag != 0);
-				_LOWORD(v14) = v14 & 0xF400;
-				v15 = v14 + 4096;
-				framea = v15;
-				if (always_1 == 2) {
-					v15 += 256;
-					framea = v15;
+	/// ASSERT: assert(gpBuffer);
+	if(!gpBuffer)
+		return;
+	/// ASSERT: assert(pCelBuff != NULL);
+	if(!pCelBuff)
+		return;
+
+	pFrameTable = (DWORD *)&pCelBuff[4 * nCel];
+	pRLEBytes = &pCelBuff[pFrameTable[0]];
+	hdr = *(WORD *)&pRLEBytes[always_0];
+	if(!hdr)
+		return;
+
+	if(dir == 8)
+		v1 = 0;
+	else
+		v1 = *(WORD *)&pRLEBytes[dir];
+	if(v1)
+		nDataSize = v1 - hdr;
+	else
+		nDataSize = pFrameTable[1] - pFrameTable[0] - hdr;
+
+	src = &pRLEBytes[hdr];
+	dst = &gpBuffer[sx + screen_y_times_768[sy - 16 * always_0]];
+
+	idx = light4flag ? 1024 : 4096;
+	if(light == 2)
+		idx += 256;
+	if(light >= 4)
+		idx += (light - 1) << 8;
+
+	tbl = (BYTE *)&pLightTbl[idx];
+
+#if (_MSC_VER >= 800) && (_MSC_VER <= 1200)
+	__asm {
+		mov		esi, src
+		mov		edi, dst
+		mov		eax, 768
+		add		eax, nWidth
+		mov		w, eax /* use C for w? w = 768 + nWidth */
+		mov		ebx, nDataSize
+		add		ebx, esi
+	label1:
+		mov		edx, nWidth
+	label2:
+		xor		eax, eax
+		mov		al, [esi]
+		inc		esi
+		test	al, al
+		js		label4
+		push	ebx
+		mov		ebx, tbl
+		sub		edx, eax
+		mov		ecx, eax
+	label3:
+		mov		al, [esi]
+		inc		esi
+		mov		al, [ebx+eax]
+		mov		[edi], al
+		dec		ecx
+		lea		edi, [edi+1]
+		jnz		label3
+		pop		ebx
+		test	edx, edx
+		jz		label5
+		jmp		label2
+	label4:
+		neg		al
+		add		edi, eax
+		sub		edx, eax
+		jnz		label2
+	label5:
+		sub		edi, w
+		cmp		ebx, esi
+		jnz		label1
+	}
+#else
+	BYTE width;
+	BYTE *end;
+
+	end = &src[nDataSize];
+
+	for(; src != end; dst -= 768 + nWidth) {
+		for(w = nWidth; w;) {
+			width = *src++;
+			if(!(width & 0x80)) {
+				w -= width;
+				while(width) {
+					*dst = tbl[*src];
+					src++;
+					dst++;
+					width--;
 				}
-				if (always_1 >= 4)
-					framea = v15 + (always_1 << 8) - 256;
-				v22 = &pLightTbl[framea];
-				v16 = (_BYTE *)directiona;
-				v17 = cel_bufa;
-				do {
-					v18 = frame_width;
-					do {
-						while (1) {
-							v19 = (unsigned char)*v16++;
-							if ((v19 & 0x80u) == 0)
-								break;
-							_LOBYTE(v19) = -(char)v19;
-							v17 += v19;
-							v18 -= v19;
-							if (!v18)
-								goto LABEL_20;
-						}
-						v18 -= v19;
-						v20 = v19;
-						do {
-							_LOBYTE(v19) = *v16++;
-							*v17 = v22[v19];
-							--v20;
-							++v17;
-						} while (v20);
-					} while (v18);
-				LABEL_20:
-					v17 += -frame_width - 768;
-				} while ((_BYTE *)(directiona + always_0a) != v16);
+			} else {
+				width = -(char)width;
+				dst += width;
+				w -= width;
 			}
 		}
 	}
+#endif
 }
 // 525728: using guessed type int light4flag;
 
@@ -878,7 +904,7 @@ void __fastcall Cel2DecDatOnly(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, 
 void __fastcall Cel2DrawHdrOnly(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int always_0, int dir)
 {
 	int v1, v2, nDataSize;
-	BYTE *pRLEBytes, *tmp;
+	BYTE *pRLEBytes;
 	DWORD *pFrameTable;
 
 	/// ASSERT: assert(gpBuffer);
@@ -906,9 +932,8 @@ void __fastcall Cel2DrawHdrOnly(int sx, int sy, BYTE *pCelBuff, int nCel, int nW
 	else
 		nDataSize -= v1;
 
-	tmp = (BYTE *)gpBuffer;
 	Cel2DecDatOnly(
-		&tmp[sx + screen_y_times_768[sy - 16 * always_0]],
+		&gpBuffer[sx + screen_y_times_768[sy - 16 * always_0]],
 		&pRLEBytes[v1],
 		nDataSize,
 		nWidth);
@@ -1318,388 +1343,632 @@ L_ODD:
 // 69BEF8: using guessed type int light_table_index;
 // 69CF0C: using guessed type int gpBufEnd;
 
-void __fastcall Cel2DecodeHdrLight(int screen_x, int screen_y, char *pCelBuff, int frame, int frame_width, int a6, int direction)
+void __fastcall Cel2DecodeHdrLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int always_0, int dir)
 {
-	int v7;        // esi
-	char *v8;      // eax
-	int v9;        // edi
-	char *v10;     // edx
-	int v11;       // ebx
-	int v12;       // eax
-	int v13;       // edi
-	int v14;       // eax
-	char *v15;     // edx
-	char *v16;     // ecx
-	char *cel_buf; // [esp+18h] [ebp+8h]
+	int hdr, nDataSize, v1;
+	BYTE *pRLEBytes, *pDecodeTo, *v9;
+	DWORD *pFrameTable;
 
-	v7 = screen_y;
-	if (gpBuffer) {
-		v8 = pCelBuff;
-		if (pCelBuff) {
-			v9 = *(_DWORD *)&pCelBuff[4 * frame];
-			v10 = &pCelBuff[v9];
-			v11 = *(unsigned short *)&pCelBuff[v9 + a6];
-			cel_buf = (char *)*(unsigned short *)&pCelBuff[v9 + a6];
-			if (v11) {
-				v12 = *(_DWORD *)&v8[4 * frame + 4] - v9;
-				v13 = *(unsigned short *)&v10[direction];
-				if (direction == 8)
-					v13 = 0;
-				if (v13)
-					v14 = v13 - (_DWORD)cel_buf;
-				else
-					v14 = v12 - (_DWORD)cel_buf;
-				v15 = &v10[(_DWORD)cel_buf];
-				v16 = (char *)gpBuffer + screen_y_times_768[v7 - 16 * a6] + screen_x;
-				if (light_table_index)
-					Cel2DecDatLightOnly((BYTE *)v16, (BYTE *)v15, v14, frame_width);
-				else
-					Cel2DecDatOnly((BYTE *)v16, (BYTE *)v15, v14, frame_width);
-			}
-		}
-	}
+	/// ASSERT: assert(gpBuffer);
+	if(!gpBuffer)
+		return;
+	/// ASSERT: assert(pCelBuff != NULL);
+	if(!pCelBuff)
+		return;
+
+	pFrameTable = (DWORD *)&pCelBuff[4 * nCel];
+	v9 = &pCelBuff[pFrameTable[0]];
+	hdr = *(WORD *)&v9[always_0];
+	if(!hdr)
+		return;
+
+	v1 = *(WORD *)&v9[dir];
+	if(dir == 8)
+		v1 = 0;
+	if(v1)
+		nDataSize = v1 - hdr;
+	else
+		nDataSize = pFrameTable[1] - pFrameTable[0] - hdr;
+
+	pRLEBytes = &v9[hdr];
+	pDecodeTo = &gpBuffer[sx + screen_y_times_768[sy - 16 * always_0]];
+
+	if(light_table_index)
+		Cel2DecDatLightOnly(pDecodeTo, pRLEBytes, nDataSize, nWidth);
+	else
+		Cel2DecDatOnly(pDecodeTo, pRLEBytes, nDataSize, nWidth);
 }
 // 69BEF8: using guessed type int light_table_index;
 
-void __fastcall Cel2DecodeLightTrans(char *dst_buf, char *pCelBuff, int frame, int frame_width, int a5, int direction)
+void __fastcall Cel2DecodeLightTrans(BYTE *pBuff, BYTE *pCelBuff, int nCel, int nWidth, int always_0, int dir)
 {
-	char *v6;  // eax
-	int v7;    // esi
-	char *v8;  // edx
-	int v9;    // ebx
-	int v10;   // eax
-	int v11;   // esi
-	int v12;   // eax
-	char *v13; // edx
+	int hdr, nDataSize, v1, v2;
+	BYTE *pRLEBytes, *v9;
+	DWORD *pFrameTable;
 
-	v6 = pCelBuff;
-	if (pCelBuff) {
-		v7 = *(_DWORD *)&pCelBuff[4 * frame];
-		v8 = &pCelBuff[v7];
-		v9 = *(unsigned short *)&v6[v7 + a5];
-		if (*(_WORD *)&v6[v7 + a5]) {
-			v10 = *(_DWORD *)&v6[4 * frame + 4] - v7;
-			v11 = *(unsigned short *)&v8[direction];
-			if (direction == 8)
-				v11 = 0;
-			if (v11)
-				v12 = v11 - v9;
-			else
-				v12 = v10 - v9;
-			v13 = &v8[v9];
-			if (cel_transparency_active) {
-				Cel2DecDatLightTrans((BYTE *)dst_buf, (BYTE *)v13, v12, frame_width);
-			} else if (light_table_index) {
-				Cel2DecDatLightOnly((BYTE *)dst_buf, (BYTE *)v13, v12, frame_width);
-			} else {
-				Cel2DecDatOnly((BYTE *)dst_buf, (BYTE *)v13, v12, frame_width);
-			}
-		}
-	}
+	/// ASSERT: assert(pCelBuff != NULL);
+	if(!pCelBuff)
+		return;
+
+	pFrameTable = (DWORD *)&pCelBuff[4 * nCel];
+	v9 = &pCelBuff[pFrameTable[0]];
+	hdr = *(WORD *)&v9[always_0];
+	if(!hdr)
+		return;
+
+	v1 = pFrameTable[1] - pFrameTable[0];
+	v2 = *(WORD *)&v9[dir];
+	if(dir == 8)
+		v2 = 0;
+	if(v2)
+		nDataSize = v2 - hdr;
+	else
+		nDataSize = v1 - hdr;
+
+	pRLEBytes = &v9[hdr];
+
+	if(cel_transparency_active)
+		Cel2DecDatLightTrans(pBuff, pRLEBytes, nDataSize, nWidth);
+	else if(light_table_index)
+		Cel2DecDatLightOnly(pBuff, pRLEBytes, nDataSize, nWidth);
+	else
+		Cel2DecDatOnly(pBuff, pRLEBytes, nDataSize, nWidth);
 }
 // 69BEF8: using guessed type int light_table_index;
 // 69CF94: using guessed type int cel_transparency_active;
 
-void __fastcall Cel2DrawHdrLightRed(int screen_x, int screen_y, char *pCelBuff, int frame, int frame_width, int always_0, int direction, char always_1)
+void __fastcall Cel2DrawHdrLightRed(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int always_0, int dir, char light)
 {
-	char *v8;        // esi
-	int v9;          // ebx
-	char *v10;       // edi
-	int v11;         // ecx
-	int v12;         // esi
-	int v13;         // eax
-	int v14;         // eax
-	_BYTE *v15;      // esi
-	_BYTE *v16;      // edi
-	int v17;         // ecx
-	int v18;         // edx
-	int v19;         // ecx
-	int v20;         // eax
-	_BYTE *v21;      // [esp-4h] [ebp-14h]
-	int v22;         // [esp+Ch] [ebp-4h]
-	char *cel_buf;   // [esp+18h] [ebp+8h]
-	char *cel_bufa;  // [esp+18h] [ebp+8h]
-	int framea;      // [esp+1Ch] [ebp+Ch]
-	char *always_0a; // [esp+24h] [ebp+14h]
-	int directiona;  // [esp+28h] [ebp+18h]
+	int w, hdr, idx, nDataSize, v1;
+	BYTE *src, *dst, *tbl, *pRLEBytes;
+	DWORD *pFrameTable;
 
-	v22 = screen_x;
-	if (gpBuffer) {
-		v8 = pCelBuff;
-		if (pCelBuff) {
-			v9 = *(_DWORD *)&pCelBuff[4 * frame];
-			v10 = &pCelBuff[v9];
-			v11 = *(unsigned short *)&pCelBuff[v9 + always_0];
-			cel_buf = (char *)*(unsigned short *)&pCelBuff[v9 + always_0];
-			if (v11) {
-				v12 = *(_DWORD *)&v8[4 * frame + 4] - v9;
-				if (direction != 8 && *(_WORD *)&v10[direction])
-					framea = *(unsigned short *)&v10[direction] - (_DWORD)cel_buf;
-				else
-					framea = v12 - (_DWORD)cel_buf;
-				directiona = (int)&v10[(_DWORD)cel_buf];
-				always_0a = (char *)gpBuffer + screen_y_times_768[screen_y - 16 * always_0] + v22;
-				v13 = -(light4flag != 0);
-				_LOWORD(v13) = v13 & 0xF400;
-				v14 = v13 + 4096;
-				if (always_1 == 2)
-					v14 += 256;
-				if (always_1 >= 4)
-					v14 = v14 + (always_1 << 8) - 256;
-				cel_bufa = &pLightTbl[v14];
-				v15 = (_BYTE *)directiona;
-				v16 = (unsigned char *)always_0a;
-				v17 = directiona + framea;
-				do {
-					v21 = (_BYTE *)v17;
-					v18 = frame_width;
-					v19 = 0;
-					do {
-						while (1) {
-							v20 = (unsigned char)*v15++;
-							if ((v20 & 0x80u) == 0)
-								break;
-							_LOBYTE(v20) = -(char)v20;
-							v16 += v20;
-							v18 -= v20;
-							if (!v18)
-								goto LABEL_21;
-						}
-						v18 -= v20;
-						if (v16 < gpBufEnd) {
-							do {
-								_LOBYTE(v19) = *v15++;
-								*v16 = cel_bufa[v19];
-								--v20;
-								++v16;
-							} while (v20);
-						} else {
-							v15 += v20;
-							v16 += v20;
-						}
-					} while (v18);
-				LABEL_21:
-					v17 = (int)v21;
-					v16 += -frame_width - 768;
-				} while (v21 != v15);
+	/// ASSERT: assert(gpBuffer);
+	if(!gpBuffer)
+		return;
+	/// ASSERT: assert(pCelBuff != NULL);
+	if(!pCelBuff)
+		return;
+
+	pFrameTable = (DWORD *)&pCelBuff[4 * nCel];
+	pRLEBytes = &pCelBuff[pFrameTable[0]];
+	hdr = *(WORD *)&pRLEBytes[always_0];
+	if(!hdr)
+		return;
+
+	if(dir == 8)
+		v1 = 0;
+	else
+		v1 = *(WORD *)&pRLEBytes[dir];
+	if(v1)
+		nDataSize = v1 - hdr;
+	else
+		nDataSize = pFrameTable[1] - pFrameTable[0] - hdr;
+
+	src = &pRLEBytes[hdr];
+	dst = &gpBuffer[sx + screen_y_times_768[sy - 16 * always_0]];
+
+	idx = light4flag ? 1024 : 4096;
+	if(light == 2)
+		idx += 256;
+	if(light >= 4)
+		idx += (light - 1) << 8;
+
+	tbl = (BYTE *)&pLightTbl[idx];
+
+#if (_MSC_VER >= 800) && (_MSC_VER <= 1200)
+	__asm {
+		mov		eax, nWidth
+		add		eax, 768
+		mov		w, eax /* use C for w? w = 768 + nWidth */
+		mov		esi, src
+		mov		edi, dst
+		mov		ecx, nDataSize
+		add		ecx, esi
+	label1:
+		push	ecx
+		mov		edx, nWidth
+		xor		ecx, ecx
+	label2:
+		xor		eax, eax
+		mov		al, [esi]
+		inc		esi
+		test	al, al
+		js		label5
+		mov		ebx, tbl
+		sub		edx, eax
+		cmp		edi, gpBufEnd
+		jb		label3
+		add		esi, eax
+		add		edi, eax
+		jmp		label4
+	label3:
+		mov		cl, [esi]
+		inc		esi
+		mov		cl, [ebx+ecx]
+		mov		[edi], cl
+		dec		eax
+		lea		edi, [edi+1]
+		jnz		label3
+	label4:
+		test	edx, edx
+		jz		label6
+		jmp		label2
+	label5:
+		neg		al
+		add		edi, eax
+		sub		edx, eax
+		jnz		label2
+	label6:
+		pop		ecx
+		sub		edi, w
+		cmp		ecx, esi
+		jnz		label1
+	}
+#else
+	BYTE width;
+	BYTE *end;
+
+	end = &src[nDataSize];
+
+	for(; src != end; dst -= 768 + nWidth) {
+		for(w = nWidth; w;) {
+			width = *src++;
+			if(!(width & 0x80)) {
+				w -= width;
+				if(dst < gpBufEnd) {
+					while(width) {
+						*dst = tbl[*src];
+						src++;
+						dst++;
+						width--;
+					}
+				} else {
+					src += width;
+					dst += width;
+				}
+			} else {
+				width = -(char)width;
+				dst += width;
+				w -= width;
 			}
 		}
 	}
+#endif
 }
 // 525728: using guessed type int light4flag;
 // 69CF0C: using guessed type int gpBufEnd;
 
-void __fastcall CelDecodeRect(char *pBuff, int always_0, int dst_height, int dst_width, char *pCelBuff, int frame, int frame_width)
+void __fastcall CelDecodeRect(BYTE *pBuff, int always_0, int hgt, int wdt, BYTE *pCelBuff, int nCel, int nWidth)
 {
-	char *v7;         // ebx
-	char *v8;         // esi
-	char *v9;         // edi
-	UINT_PTR v10;     // ebx
-	int v11;          // edx
-	unsigned int v12; // eax
-	unsigned int v13; // ecx
-	char v14;         // cf
-	unsigned int v15; // ecx
-	int dst_widtha;   // [esp+14h] [ebp+Ch]
+	BYTE *src, *dst, *end;
 
-	if (pCelBuff && pBuff) {
-		v7 = &pCelBuff[4 * frame];
-		v8 = &pCelBuff[*(_DWORD *)v7];
-		v9 = &pBuff[dst_width * dst_height + always_0];
-		dst_widtha = frame_width + dst_width;
-		v10 = (UINT_PTR)&v8[*((_DWORD *)v7 + 1) - *(_DWORD *)v7];
-		do {
-			v11 = frame_width;
-			do {
-				while (1) {
-					v12 = (unsigned char)*v8++;
-					if ((v12 & 0x80u) == 0)
-						break;
-					_LOBYTE(v12) = -(char)v12;
-					v9 += v12;
-					v11 -= v12;
-					if (!v11)
-						goto LABEL_14;
-				}
-				v11 -= v12;
-				v13 = v12 >> 1;
-				if (v12 & 1) {
-					*v9++ = *v8++;
-					if (!v13)
-						continue;
-				}
-				v14 = v13 & 1;
-				v15 = v12 >> 2;
-				if (v14) {
-					*(_WORD *)v9 = *(_WORD *)v8;
-					v8 += 2;
-					v9 += 2;
-					if (!v15)
-						continue;
-				}
-				qmemcpy(v9, v8, 4 * v15);
-				v8 += 4 * v15;
-				v9 += 4 * v15;
-			} while (v11);
-		LABEL_14:
-			v9 -= dst_widtha;
-		} while ((char *)v10 != v8);
+	/// ASSERT: assert(pCelBuff != NULL);
+	if(!pCelBuff)
+		return;
+	/// ASSERT: assert(pBuff != NULL);
+	if(!pBuff)
+		return;
+
+#if (_MSC_VER >= 800) && (_MSC_VER <= 1200)
+	__asm {
+		mov		ebx, pCelBuff
+		mov		eax, nCel
+		shl		eax, 2
+		add		ebx, eax
+		mov		eax, [ebx+4]
+		sub		eax, [ebx]
+		mov		end, eax
+		mov		eax, pCelBuff
+		add		eax, [ebx]
+		mov		src, eax
 	}
-}
 
-void __fastcall CelDecodeClr(BYTE colour, int screen_x, int screen_y, char *pCelBuff, int frame, int frame_width, int a7, int direction)
-{
-	char *v8;  // ebx
-	int v9;    // eax
-	char *v10; // esi
-	char *v11; // edi
-	int v12;   // edx
-	int v13;   // eax
-	int v14;   // ecx
-	char v15;  // al
-	int v16;   // [esp+Ch] [ebp-10h]
-	char *v17; // [esp+10h] [ebp-Ch]
-	int v18;   // [esp+14h] [ebp-8h]
-	char v19;  // [esp+18h] [ebp-4h]
+	dst = &pBuff[hgt * wdt + always_0];
 
-	v19 = colour;
-	if (pCelBuff) {
-		if (gpBuffer) {
-			v8 = &pCelBuff[4 * frame];
-			v17 = &pCelBuff[*(_DWORD *)v8];
-			v16 = *(unsigned short *)&v17[a7];
-			if (*(_WORD *)&v17[a7]) {
-				if (direction == 8)
-					v9 = 0;
-				else
-					v9 = *(unsigned short *)&v17[direction];
-				if (v9)
-					v18 = v9 - v16;
-				else
-					v18 = *((_DWORD *)v8 + 1) - *(_DWORD *)v8 - v16;
-				v10 = &v17[v16];
-				v11 = (char *)gpBuffer + screen_y_times_768[screen_y - 16 * a7] + screen_x;
-				do {
-					v12 = frame_width;
-					do {
-						while (1) {
-							v13 = (unsigned char)*v10++;
-							if ((v13 & 0x80u) == 0)
-								break;
-							_LOBYTE(v13) = -(char)v13;
-							v11 += v13;
-							v12 -= v13;
-							if (!v12)
-								goto LABEL_20;
-						}
-						v12 -= v13;
-						v14 = v13;
-						do {
-							v15 = *v10++;
-							if (v15) {
-								*(v11 - 768) = v19;
-								*(v11 - 1) = v19;
-								v11[1] = v19;
-								v11[768] = v19;
-							}
-							++v11;
-							--v14;
-						} while (v14);
-					} while (v12);
-				LABEL_20:
-					v11 += -frame_width - 768;
-				} while (&v17[v16 + v18] != v10);
+	__asm {
+		mov		esi, src
+		mov		edi, dst
+		mov		eax, wdt
+		add		eax, nWidth
+		mov		wdt, eax
+		mov		ebx, end
+		add		ebx, esi
+	label1:
+		mov		edx, nWidth
+	label2:
+		xor		eax, eax
+		lodsb
+		or		al, al
+		js		label6
+		sub		edx, eax
+		mov		ecx, eax
+		shr		ecx, 1
+		jnb		label3
+		movsb
+		jecxz	label5
+	label3:
+		shr		ecx, 1
+		jnb		label4
+		movsw
+		jecxz	label5
+	label4:
+		rep movsd
+	label5:
+		or		edx, edx
+		jz		label7
+		jmp		label2
+	label6:
+		neg		al
+		add		edi, eax
+		sub		edx, eax
+		jnz		label2
+	label7:
+		sub		edi, wdt
+		cmp		ebx, esi
+		jnz		label1
+	}
+#else
+	int i;
+	BYTE width;
+	DWORD *pFrameTable;
+
+	pFrameTable = (DWORD *)&pCelBuff[4 * nCel];
+	src = &pCelBuff[pFrameTable[0]];
+	end = &src[pFrameTable[1] - pFrameTable[0]];
+	dst = &pBuff[hgt * wdt + always_0];
+
+	for(; src != end; dst -= wdt + nWidth) {
+		for(i = nWidth; i;) {
+			width = *src++;
+			if(!(width & 0x80)) {
+				i -= width;
+				if(width & 1) {
+					dst[0] = src[0];
+					src++;
+					dst++;
+				}
+				width >>= 1;
+				if(width & 1) {
+					dst[0] = src[0];
+					dst[1] = src[1];
+					src += 2;
+					dst += 2;
+				}
+				width >>= 1;
+				while(width) {
+					dst[0] = src[0];
+					dst[1] = src[1];
+					dst[2] = src[2];
+					dst[3] = src[3];
+					src += 4;
+					dst += 4;
+					width--;
+				}
+			} else {
+				width = -(char)width;
+				dst += width;
+				i -= width;
 			}
 		}
 	}
+#endif
 }
 
-void __fastcall CelDrawHdrClrHL(char colour, int screen_x, int screen_y, char *pCelBuff, int frame, int frame_width, int a7, int direction)
+void __fastcall CelDecodeClr(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int always_0, int dir)
 {
-	char *v8;  // ebx
-	int v9;    // eax
-	char *v10; // esi
-	char *v11; // edi
-	int v12;   // edx
-	int v13;   // eax
-	int v14;   // ecx
-	char v15;  // al
-	int v16;   // ecx
-	char v17;  // al
-	int v18;   // [esp+Ch] [ebp-10h]
-	char *v19; // [esp+10h] [ebp-Ch]
-	int v20;   // [esp+14h] [ebp-8h]
-	char v21;  // [esp+18h] [ebp-4h]
+	int w, hdr, nDataSize, v1;
+	BYTE *src, *dst;
 
-	v21 = colour;
-	if (pCelBuff) {
-		if (gpBuffer) {
-			v8 = &pCelBuff[4 * frame];
-			v19 = &pCelBuff[*(_DWORD *)v8];
-			v18 = *(unsigned short *)&v19[a7];
-			if (*(_WORD *)&v19[a7]) {
-				if (direction == 8)
-					v9 = 0;
-				else
-					v9 = *(unsigned short *)&v19[direction];
-				if (v9)
-					v20 = v9 - v18;
-				else
-					v20 = *((_DWORD *)v8 + 1) - *(_DWORD *)v8 - v18;
-				v10 = &v19[v18];
-				v11 = (char *)gpBuffer + screen_y_times_768[screen_y - 16 * a7] + screen_x;
-				do {
-					v12 = frame_width;
-					do {
-						while (1) {
-							v13 = (unsigned char)*v10++;
-							if ((v13 & 0x80u) == 0)
-								break;
-							_LOBYTE(v13) = -(char)v13;
-							v11 += v13;
-							v12 -= v13;
-							if (!v12)
-								goto LABEL_28;
-						}
-						v12 -= v13;
-						if (v11 < (char *)gpBufEnd) {
-							if (v11 >= (char *)gpBufEnd - 768) {
-								v16 = v13;
-								do {
-									v17 = *v10++;
-									if (v17) {
-										*(v11 - 768) = v21;
-										*(v11 - 1) = v21;
-										v11[1] = v21;
-									}
-									++v11;
-									--v16;
-								} while (v16);
-							} else {
-								v14 = v13;
-								do {
-									v15 = *v10++;
-									if (v15) {
-										*(v11 - 768) = v21;
-										*(v11 - 1) = v21;
-										v11[1] = v21;
-										v11[768] = v21;
-									}
-									++v11;
-									--v14;
-								} while (v14);
-							}
-						} else {
-							v10 += v13;
-							v11 += v13;
-						}
-					} while (v12);
-				LABEL_28:
-					v11 += -frame_width - 768;
-				} while (&v19[v18 + v20] != v10);
+	/// ASSERT: assert(pCelBuff != NULL);
+	if(!pCelBuff)
+		return;
+	/// ASSERT: assert(gpBuffer);
+	if(!gpBuffer)
+		return;
+
+#if (_MSC_VER >= 800) && (_MSC_VER <= 1200)
+	__asm {
+		mov		ebx, pCelBuff
+		mov		eax, nCel
+		shl		eax, 2
+		add		ebx, eax
+		mov		eax, [ebx+4]
+		sub		eax, [ebx]
+		mov		nDataSize, eax
+		mov		edx, pCelBuff
+		add		edx, [ebx]
+		mov		src, edx
+		add		edx, always_0
+		xor		eax, eax
+		mov		ax, [edx]
+		mov		hdr, eax
+		mov		edx, src
+		add		edx, dir
+		mov		ax, [edx]
+		mov		v1, eax
+	}
+
+	if(!hdr)
+		return;
+
+	if(dir == 8)
+		v1 = 0;
+	if(v1)
+		nDataSize = v1 - hdr;
+	else
+		nDataSize -= hdr;
+
+	src += hdr;
+	dst = &gpBuffer[sx + screen_y_times_768[sy - 16 * always_0]];
+
+	__asm {
+		mov		esi, src
+		mov		edi, dst
+		mov		eax, 768
+		add		eax, nWidth
+		mov		w, eax
+		mov		ebx, nDataSize
+		add		ebx, esi
+	label1:
+		mov		edx, nWidth
+	label2:
+		xor		eax, eax
+		lodsb
+		or		al, al
+		js		label5
+		sub		edx, eax
+		mov		ecx, eax
+		mov		ah, col
+	label3:
+		lodsb
+		or		al, al
+		jz		label4
+		mov		[edi-768], ah
+		mov		[edi-1], ah
+		mov		[edi+1], ah
+		mov		[edi+768], ah
+	label4:
+		inc		edi
+		loop	label3
+		or		edx, edx
+		jz		label6
+		jmp		label2
+	label5:
+		neg		al
+		add		edi, eax
+		sub		edx, eax
+		jnz		label2
+	label6:
+		sub		edi, w
+		cmp		ebx, esi
+		jnz		label1
+	}
+#else
+	BYTE width;
+	BYTE *end, *pRLEBytes;
+	DWORD *pFrameTable;
+
+	pFrameTable = (DWORD *)&pCelBuff[4 * nCel];
+	pRLEBytes = &pCelBuff[pFrameTable[0]];
+	hdr = *(WORD *)&pRLEBytes[always_0];
+	if(!hdr)
+		return;
+
+	v1 = *(WORD *)&pRLEBytes[dir];
+	if(dir == 8)
+		v1 = 0;
+	if(v1)
+		nDataSize = v1 - hdr;
+	else
+		nDataSize = pFrameTable[1] - pFrameTable[0] - hdr;
+
+	src = &pRLEBytes[hdr];
+	end = &src[nDataSize];
+	dst = &gpBuffer[sx + screen_y_times_768[sy - 16 * always_0]];
+
+	for(; src != end; dst -= 768 + nWidth) {
+		for(w = nWidth; w;) {
+			width = *src++;
+			if(!(width & 0x80)) {
+				w -= width;
+				while(width) {
+					if(*src++) {
+						dst[-768] = col;
+						dst[-1] = col;
+						dst[1] = col;
+						dst[768] = col;
+					}
+					dst++;
+					width--;
+				}
+			} else {
+				width = -(char)width;
+				dst += width;
+				w -= width;
 			}
 		}
 	}
+#endif
+}
+
+void __fastcall CelDrawHdrClrHL(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int always_0, int dir)
+{
+	int w, hdr, nDataSize, v1;
+	BYTE *src, *dst;
+
+	/// ASSERT: assert(pCelBuff != NULL);
+	if(!pCelBuff)
+		return;
+	/// ASSERT: assert(gpBuffer);
+	if(!gpBuffer)
+		return;
+
+#if (_MSC_VER >= 800) && (_MSC_VER <= 1200)
+	__asm {
+		mov		ebx, pCelBuff
+		mov		eax, nCel
+		shl		eax, 2
+		add		ebx, eax
+		mov		eax, [ebx+4]
+		sub		eax, [ebx]
+		mov		nDataSize, eax
+		mov		edx, pCelBuff
+		add		edx, [ebx]
+		mov		src, edx
+		add		edx, always_0
+		xor		eax, eax
+		mov		ax, [edx]
+		mov		hdr, eax
+		mov		edx, src
+		add		edx, dir
+		mov		ax, [edx]
+		mov		v1, eax
+	}
+
+	if(!hdr)
+		return;
+
+	if(dir == 8)
+		v1 = 0;
+	if(v1)
+		nDataSize = v1 - hdr;
+	else
+		nDataSize -= hdr;
+
+	src += hdr;
+	dst = &gpBuffer[sx + screen_y_times_768[sy - 16 * always_0]];
+
+	__asm {
+		mov		esi, src
+		mov		edi, dst
+		mov		eax, 768
+		add		eax, nWidth
+		mov		w, eax
+		mov		ebx, nDataSize
+		add		ebx, esi
+	label1:
+		mov		edx, nWidth
+	label2:
+		xor		eax, eax
+		lodsb
+		or		al, al
+		js		label10
+		sub		edx, eax
+		mov		ecx, gpBufEnd
+		cmp		edi, ecx
+		jb		label3
+		add		esi, eax
+		add		edi, eax
+		jmp		label9
+	label3:
+		sub		ecx, 768
+		cmp		edi, ecx
+		jnb		label6
+		mov		ecx, eax
+		mov		ah, col
+	label4:
+		lodsb
+		or		al, al
+		jz		label5
+		mov		[edi-768], ah
+		mov		[edi-1], ah
+		mov		[edi+1], ah
+		mov		[edi+768], ah
+	label5:
+		inc		edi
+		loop	label4
+		jmp		label9
+	label6:
+		mov		ecx, eax
+		mov		ah, col
+	label7:
+		lodsb
+		or		al, al
+		jz		label8
+		mov		[edi-768], ah
+		mov		[edi-1], ah
+		mov		[edi+1], ah
+	label8:
+		inc		edi
+		loop	label7
+	label9:
+		or		edx, edx
+		jz		label11
+		jmp		label2
+	label10:
+		neg		al
+		add		edi, eax
+		sub		edx, eax
+		jnz		label2
+	label11:
+		sub		edi, w
+		cmp		ebx, esi
+		jnz		label1
+	}
+#else
+	BYTE width;
+	BYTE *end, *pRLEBytes;
+	DWORD *pFrameTable;
+
+	pFrameTable = (DWORD *)&pCelBuff[4 * nCel];
+	pRLEBytes = &pCelBuff[pFrameTable[0]];
+	hdr = *(WORD *)&pRLEBytes[always_0];
+	if(!hdr)
+		return;
+
+	v1 = *(WORD *)&pRLEBytes[dir];
+	if(dir == 8)
+		v1 = 0;
+	if(v1)
+		nDataSize = v1 - hdr;
+	else
+		nDataSize = pFrameTable[1] - pFrameTable[0] - hdr;
+
+	src = &pRLEBytes[hdr];
+	end = &src[nDataSize];
+	dst = &gpBuffer[sx + screen_y_times_768[sy - 16 * always_0]];
+
+	for(; src != end; dst -= 768 + nWidth) {
+		for(w = nWidth; w;) {
+			width = *src++;
+			if(!(width & 0x80)) {
+				w -= width;
+				if(dst < gpBufEnd) {
+					if(dst >= gpBufEnd - 768) {
+						while(width) {
+							if(*src++) {
+								dst[-768] = col;
+								dst[-1] = col;
+								dst[1] = col;
+							}
+							dst++;
+							width--;
+						}
+					} else {
+						while(width) {
+							if(*src++) {
+								dst[-768] = col;
+								dst[-1] = col;
+								dst[1] = col;
+								dst[768] = col;
+							}
+							dst++;
+							width--;
+						}
+					}
+				} else {
+					src += width;
+					dst += width;
+				}
+			} else {
+				width = -(char)width;
+				dst += width;
+				w -= width;
+			}
+		}
+	}
+#endif
 }
 // 69CF0C: using guessed type int gpBufEnd;
 
@@ -2177,7 +2446,7 @@ void __fastcall Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel)
 void __fastcall Cl2DecodeFrm1(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int always_0, int dir)
 {
 	int hdr, nDataSize;
-	BYTE *pRLEBytes, *tmp;
+	BYTE *pRLEBytes;
 	DWORD *pFrameTable;
 
 	/// ASSERT: assert(gpBuffer != NULL);
@@ -2205,9 +2474,8 @@ void __fastcall Cl2DecodeFrm1(int sx, int sy, BYTE *pCelBuff, int nCel, int nWid
 	if(!nDataSize)
 		nDataSize = pFrameTable[nCel + 1] - pFrameTable[nCel];
 
-	tmp = (BYTE *)gpBuffer;
 	Cl2DecDatFrm1(
-		&tmp[sx + screen_y_times_768[sy - 16 * always_0]],
+		&gpBuffer[sx + screen_y_times_768[sy - 16 * always_0]],
 		&pRLEBytes[hdr],
 		nDataSize - hdr,
 		nWidth);
@@ -2357,7 +2625,7 @@ void __fastcall Cl2DecDatFrm1(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, i
 void __fastcall Cl2DecodeFrm2(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int always_0, int dir)
 {
 	int hdr, nDataSize;
-	BYTE *pRLEBytes, *tmp;
+	BYTE *pRLEBytes;
 	DWORD *pFrameTable;
 
 	/// ASSERT: assert(gpBuffer != NULL);
@@ -2385,9 +2653,8 @@ void __fastcall Cl2DecodeFrm2(char col, int sx, int sy, BYTE *pCelBuff, int nCel
 	if(!nDataSize)
 		nDataSize = pFrameTable[nCel + 1] - pFrameTable[nCel];
 
-	tmp = (BYTE *)gpBuffer;
 	Cl2DecDatFrm2(
-		&tmp[sx + screen_y_times_768[sy - 16 * always_0]],
+		&gpBuffer[sx + screen_y_times_768[sy - 16 * always_0]],
 		&pRLEBytes[hdr],
 		nDataSize - hdr,
 		nWidth,
@@ -2559,7 +2826,7 @@ void __fastcall Cl2DecDatFrm2(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, i
 void __fastcall Cl2DecodeFrm3(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int always_0, int dir, char light)
 {
 	int hdr, idx, nDataSize;
-	BYTE *pRLEBytes, *tmp;
+	BYTE *pRLEBytes;
 	DWORD *pFrameTable;
 
 	/// ASSERT: assert(gpBuffer != NULL);
@@ -2593,9 +2860,8 @@ void __fastcall Cl2DecodeFrm3(int sx, int sy, BYTE *pCelBuff, int nCel, int nWid
 	if(light >= 4)
 		idx += (light - 1) << 8;
 
-	tmp = (BYTE *)gpBuffer;
 	Cl2DecDatLightTbl1(
-		&tmp[sx + screen_y_times_768[sy - 16 * always_0]],
+		&gpBuffer[sx + screen_y_times_768[sy - 16 * always_0]],
 		&pRLEBytes[hdr],
 		nDataSize - hdr,
 		nWidth,
@@ -2757,7 +3023,7 @@ void __fastcall Cl2DecDatLightTbl1(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSi
 void __fastcall Cl2DecodeLightTbl(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int always_0, int dir)
 {
 	int hdr, nDataSize;
-	BYTE *pRLEBytes, *pDecodeTo, *tmp;
+	BYTE *pRLEBytes, *pDecodeTo;
 	DWORD *pFrameTable;
 
 	/// ASSERT: assert(gpBuffer != NULL);
@@ -2785,8 +3051,7 @@ void __fastcall Cl2DecodeLightTbl(int sx, int sy, BYTE *pCelBuff, int nCel, int 
 	if(!nDataSize)
 		nDataSize = pFrameTable[nCel + 1] - pFrameTable[nCel];
 
-	tmp = (BYTE *)gpBuffer;
-	pDecodeTo = &tmp[sx + screen_y_times_768[sy - 16 * always_0]];
+	pDecodeTo = &gpBuffer[sx + screen_y_times_768[sy - 16 * always_0]];
 
 	if(light_table_index)
 		Cl2DecDatLightTbl1(pDecodeTo, &pRLEBytes[hdr], nDataSize - hdr, nWidth, (BYTE *)&pLightTbl[light_table_index * 256]);
@@ -2798,7 +3063,7 @@ void __fastcall Cl2DecodeLightTbl(int sx, int sy, BYTE *pCelBuff, int nCel, int 
 void __fastcall Cl2DecodeFrm4(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int always_0, int dir)
 {
 	int hdr, nDataSize;
-	BYTE *pRLEBytes, *tmp;
+	BYTE *pRLEBytes;
 	DWORD *pFrameTable;
 
 	/// ASSERT: assert(gpBuffer != NULL);
@@ -2826,9 +3091,8 @@ void __fastcall Cl2DecodeFrm4(int sx, int sy, BYTE *pCelBuff, int nCel, int nWid
 	if(!nDataSize)
 		nDataSize = pFrameTable[nCel + 1] - pFrameTable[nCel];
 
-	tmp = (BYTE *)gpBuffer;
 	Cl2DecDatFrm4(
-		&tmp[sx + screen_y_times_768[sy - 16 * always_0]],
+		&gpBuffer[sx + screen_y_times_768[sy - 16 * always_0]],
 		&pRLEBytes[hdr],
 		nDataSize - hdr,
 		nWidth);
@@ -2992,7 +3256,7 @@ void __fastcall Cl2DecDatFrm4(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, i
 void __fastcall Cl2DecodeClrHL(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int always_0, int dir)
 {
 	int hdr, nDataSize;
-	BYTE *pRLEBytes, *tmp;
+	BYTE *pRLEBytes;
 	DWORD *pFrameTable;
 
 	/// ASSERT: assert(gpBuffer != NULL);
@@ -3020,10 +3284,9 @@ void __fastcall Cl2DecodeClrHL(char col, int sx, int sy, BYTE *pCelBuff, int nCe
 	if(!nDataSize)
 		nDataSize = pFrameTable[nCel + 1] - pFrameTable[nCel];
 
-	tmp = (BYTE *)gpBuffer;
 	gpBufEnd -= 768;
 	Cl2DecDatClrHL(
-		&tmp[sx + screen_y_times_768[sy - 16 * always_0]],
+		&gpBuffer[sx + screen_y_times_768[sy - 16 * always_0]],
 		&pRLEBytes[hdr],
 		nDataSize - hdr,
 		nWidth,
@@ -3209,7 +3472,7 @@ void __fastcall Cl2DecDatClrHL(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, 
 void __fastcall Cl2DecodeFrm5(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int always_0, int dir, char light)
 {
 	int hdr, idx, nDataSize;
-	BYTE *pRLEBytes, *tmp;
+	BYTE *pRLEBytes;
 	DWORD *pFrameTable;
 
 	/// ASSERT: assert(gpBuffer != NULL);
@@ -3243,9 +3506,8 @@ void __fastcall Cl2DecodeFrm5(int sx, int sy, BYTE *pCelBuff, int nCel, int nWid
 	if(light >= 4)
 		idx += (light - 1) << 8;
 
-	tmp = (BYTE *)gpBuffer;
 	Cl2DecDatLightTbl2(
-		&tmp[sx + screen_y_times_768[sy - 16 * always_0]],
+		&gpBuffer[sx + screen_y_times_768[sy - 16 * always_0]],
 		&pRLEBytes[hdr],
 		nDataSize - hdr,
 		nWidth,
@@ -3421,7 +3683,7 @@ void __fastcall Cl2DecDatLightTbl2(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSi
 void __fastcall Cl2DecodeFrm6(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int always_0, int dir)
 {
 	int hdr, nDataSize;
-	BYTE *pRLEBytes, *pDecodeTo, *tmp;
+	BYTE *pRLEBytes, *pDecodeTo;
 	DWORD *pFrameTable;
 
 	/// ASSERT: assert(gpBuffer != NULL);
@@ -3449,8 +3711,7 @@ void __fastcall Cl2DecodeFrm6(int sx, int sy, BYTE *pCelBuff, int nCel, int nWid
 	if(!nDataSize)
 		nDataSize = pFrameTable[nCel + 1] - pFrameTable[nCel];
 
-	tmp = (BYTE *)gpBuffer;
-	pDecodeTo = &tmp[sx + screen_y_times_768[sy - 16 * always_0]];
+	pDecodeTo = &gpBuffer[sx + screen_y_times_768[sy - 16 * always_0]];
 
 	if(light_table_index)
 		Cl2DecDatLightTbl2(pDecodeTo, &pRLEBytes[hdr], nDataSize - hdr, nWidth, (BYTE *)&pLightTbl[light_table_index * 256]);

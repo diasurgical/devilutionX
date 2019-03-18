@@ -7,7 +7,8 @@
 #include <sodium.h>
 #include <SDL.h>
 
-namespace dvl { namespace net {
+namespace dvl {
+namespace net {
 
 int tcp_client::create(std::string addrstr, std::string passwd)
 {
@@ -102,4 +103,5 @@ void tcp_client::send(packet& pkt)
 	                            std::placeholders::_1, std::placeholders::_2));
 }
 
-}}
+}  // namespace net
+}  // namespace dvl

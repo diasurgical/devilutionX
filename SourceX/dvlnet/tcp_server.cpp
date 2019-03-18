@@ -5,7 +5,8 @@
 
 #include "dvlnet/base.h"
 
-namespace dvl { namespace net {
+namespace dvl {
+namespace net {
 
 tcp_server::tcp_server(asio::io_context& ioc, std::string bindaddr,
                        unsigned short port, std::string pw) :
@@ -208,4 +209,5 @@ void tcp_server::drop_connection(scc con)
 	con->socket.close();
 }
 
-}}
+}  // namespace net
+}  // namespace dvl

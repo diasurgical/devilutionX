@@ -1,8 +1,10 @@
 #include "dvlnet/base.h"
 
 #include <algorithm>
+#include <cstring>
 
-namespace dvl { namespace net {
+namespace dvl {
+namespace net {
 
 void base::setup_gameinfo(buffer_t info)
 {
@@ -170,7 +172,8 @@ bool base::SNetSendTurn(char* data, unsigned int size)
 {
 	if (size != sizeof(turn_t))
 		ABORT();
-	turn_t turn = *reinterpret_cast<turn_t*>(data);
+	turn_t turn;
+	std::memcpy(&turn, data, sizeof(turn));
 	auto pkt = pktfty->make_packet<PT_TURN>(plr_self, PLR_BROADCAST, turn);
 	send(*pkt);
 	turn_queue[plr_self].push_back(pkt->turn());
@@ -253,4 +256,5 @@ bool base::SNetGetTurnsInTransit(int *turns)
 	return true;
 }
 
-}}
+}  // namespace net
+}  // namespace dvl

@@ -3767,8 +3767,8 @@ void __fastcall DrawULine(int y)
 	char *v2;      // edi
 	signed int v3; // edx
 
-	v1 = &gpBuffer->row[25].pixels[26];
-	v2 = &gpBuffer->row_unused_1[0].pixels[screen_y_times_768[SStringY[y] + 198] + 26];
+	v1 = (char *)&gpBuffer[SCREENXY(26, 25)];
+	v2 = (char *)&gpBuffer[screen_y_times_768[SStringY[y] + 198] + 26 + 64];
 	v3 = 3;
 	do {
 		qmemcpy(v2, v1, 0x10A); /* find real fix */
@@ -4129,15 +4129,18 @@ void __fastcall UseItem(int p, int Mid, int spl)
 	}
 }
 
-BOOLEAN __fastcall StoreStatOk(ItemStruct *h)
+BOOL __fastcall StoreStatOk(ItemStruct *h)
 {
-	BOOLEAN sf; // al
+	BOOL sf;
 
-	sf = 1;
-	if (plr[myplr]._pStrength < h->_iMinStr
-	    || plr[myplr]._pMagic < h->_iMinMag
-	    || plr[myplr]._pDexterity < h->_iMinDex)
-		sf = 0;
+	sf = TRUE;
+	if (plr[myplr]._pStrength < h->_iMinStr)
+		sf = FALSE;
+	if (plr[myplr]._pMagic < h->_iMinMag)
+		sf = FALSE;
+	if (plr[myplr]._pDexterity < h->_iMinDex)
+		sf = FALSE;
+
 	return sf;
 }
 

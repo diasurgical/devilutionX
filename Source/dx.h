@@ -4,7 +4,7 @@
 
 extern IDirectDraw *lpDDInterface;
 extern IDirectDrawPalette *lpDDPalette; // idb
-extern Screen *gpBuffer;
+extern BYTE *gpBuffer;
 extern IDirectDrawSurface *lpDDSBackBuf;
 extern IDirectDrawSurface *lpDDSPrimary;
 extern char gbBackBuf;    // weak

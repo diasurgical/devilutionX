@@ -12,6 +12,12 @@
 		abort();                                                                  \
 	} while (0)
 
+#define UNIMPLEMENTED_UNLESS(x) \
+	do { \
+		if(!(x)) \
+			UNIMPLEMENTED(); \
+	} while (0)
+
 #define ABORT()                                                           \
 	do {                                                                  \
 		eprintf("ABORT: %s @ %s:%d\n", __FUNCTION__, __FILE__, __LINE__); \

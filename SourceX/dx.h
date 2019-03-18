@@ -15,4 +15,4 @@ void sdl_present_surface();
 
 void sdl_update_entire_surface();
 
-}
+}  // namespace dvl

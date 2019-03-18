@@ -1,4 +1,9 @@
-#include "pch.h"
+#include <deque>
+#include <SDL.h>
+
+#include "devilution.h"
+#include "stubs.h"
+
 /** @file
  * *
  * Windows message handling and keyboard event conversion for SDL.

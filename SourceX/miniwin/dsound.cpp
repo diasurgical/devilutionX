@@ -1,4 +1,9 @@
-#include "pch.h"
+#include "miniwin/dsound.h"
+
+#include <SDL.h>
+
+#include "devilution.h"
+#include "stubs.h"
 
 namespace dvl {
 

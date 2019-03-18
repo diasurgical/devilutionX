@@ -1,5 +1,8 @@
+#include <memory>
+
+#include "devilution.h"
+#include "stubs.h"
 #include "dvlnet/abstract_net.h"
-#include "pch.h"
 
 namespace dvl {
 

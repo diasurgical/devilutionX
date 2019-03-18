@@ -96,59 +96,121 @@ void __cdecl DrawQTextBack()
 #include "asm_trans_rect.inc"
 }
 
-void __fastcall PrintQTextChr(int screen_x, int screen_y, char *cel_buf, int frame)
+void __fastcall PrintQTextChr(int sx, int sy, BYTE *pCelBuff, int nCel)
 {
-	char *v4;         // ebx
-	char *v5;         // esi
-	char *v6;         // edi
-	int v7;           // ebx
-	signed int v8;    // edx
-	unsigned int v9;  // eax
-	unsigned int v10; // ecx
-	char v11;         // cf
-	unsigned int v12; // ecx
-	char *v13;        // [esp+14h] [ebp-8h]
-	char *v14;        // [esp+18h] [ebp-4h]
+	BYTE *dst, *pStart, *pEnd, *end;
 
-	v13 = (char *)gpBuffer + screen_y_times_768[209];
-	v14 = (char *)gpBuffer + screen_y_times_768[469];
-	v4 = &cel_buf[4 * frame];
-	v5 = &cel_buf[*(_DWORD *)v4];
-	v6 = (char *)gpBuffer + screen_y_times_768[screen_y] + screen_x;
-	v7 = (int)&v5[*((_DWORD *)v4 + 1) - *(_DWORD *)v4];
-	do {
-		v8 = 22;
-		do {
-			while (1) {
-				v9 = (unsigned char)*v5++;
-				if ((v9 & 0x80u) == 0)
-					break;
-				_LOBYTE(v9) = -(char)v9;
-				v6 += v9;
-				v8 -= v9;
-				if (!v8)
-					goto LABEL_15;
-			}
-			v8 -= v9;
-			if (v6 < v13 || v6 > v14) {
-				v5 += v9;
-				v6 += v9;
-			} else {
-				v10 = v9 >> 1;
-				if (!(v9 & 1) || (*v6 = *v5, ++v5, ++v6, v10)) {
-					v11 = v10 & 1;
-					v12 = v9 >> 2;
-					if (!v11 || (*(_WORD *)v6 = *(_WORD *)v5, v5 += 2, v6 += 2, v12)) {
-						qmemcpy(v6, v5, 4 * v12);
-						v5 += 4 * v12;
-						v6 += 4 * v12;
+	/// ASSERT: assert(gpBuffer);
+
+	dst = &gpBuffer[sx + screen_y_times_768[sy]];
+	pStart = &gpBuffer[screen_y_times_768[209]];
+	pEnd = &gpBuffer[screen_y_times_768[469]];
+
+#if (_MSC_VER >= 800) && (_MSC_VER <= 1200)
+	__asm {
+		mov		ebx, pCelBuff
+		mov		eax, nCel
+		shl		eax, 2
+		add		ebx, eax
+		mov		eax, [ebx+4]
+		sub		eax, [ebx]
+		mov		end, eax
+		mov		esi, pCelBuff
+		add		esi, [ebx]
+		mov		edi, dst
+		mov		ebx, end
+		add		ebx, esi
+	label1:
+		mov		edx, 22
+	label2:
+		xor		eax, eax
+		lodsb
+		or		al, al
+		js		label7
+		sub		edx, eax
+		cmp		edi, pStart
+		jb		label5
+		cmp		edi, pEnd
+		ja		label5
+		mov		ecx, eax
+		shr		ecx, 1
+		jnb		label3
+		movsb
+		jecxz	label6
+	label3:
+		shr		ecx, 1
+		jnb		label4
+		movsw
+		jecxz	label6
+	label4:
+		rep movsd
+		jmp		label6
+	label5:
+		add		esi, eax
+		add		edi, eax
+	label6:
+		or		edx, edx
+		jz		label8
+		jmp		label2
+	label7:
+		neg		al
+		add		edi, eax
+		sub		edx, eax
+		jnz		label2
+	label8:
+		sub		edi, 768 + 22
+		cmp		ebx, esi
+		jnz		label1
+	}
+#else
+	int i;
+	BYTE width;
+	BYTE *src;
+	DWORD *pFrameTable;
+
+	pFrameTable = (DWORD *)&pCelBuff[4 * nCel];
+	src = &pCelBuff[pFrameTable[0]];
+	end = &src[pFrameTable[1] - pFrameTable[0]];
+
+	for(; src != end; dst -= 768 + 22) {
+		for(i = 22; i;) {
+			width = *src++;
+			if(!(width & 0x80)) {
+				i -= width;
+				if(dst >= pStart && dst <= pEnd) {
+					if(width & 1) {
+						dst[0] = src[0];
+						src++;
+						dst++;
 					}
+					width >>= 1;
+					if(width & 1) {
+						dst[0] = src[0];
+						dst[1] = src[1];
+						src += 2;
+						dst += 2;
+					}
+					width >>= 1;
+					for(; width; width--) {
+						dst[0] = src[0];
+						dst[1] = src[1];
+						dst[2] = src[2];
+						dst[3] = src[3];
+						src += 4;
+						dst += 4;
+					}
+				} else {
+					src += width;
+					dst += width;
 				}
+			} else {
+				width = -(char)width;
+				dst += width;
+				i -= width;
 			}
-		} while (v8);
-	LABEL_15:
-		v6 -= 790;
-	} while ((char *)v7 != v5);
+		}
+	}
+#endif
 }
 
 void __cdecl DrawQText()
@@ -213,7 +275,7 @@ void __cdecl DrawQText()
 				if (*v0 == 10)
 					++v0;
 				if (v10)
-					PrintQTextChr(screen_x, screen_y, (char *)pMedTextCels, v10);
+					PrintQTextChr(screen_x, screen_y, (BYTE *)pMedTextCels, v10);
 				++v9;
 				screen_x += mfontkern[v10] + 2;
 				v8 = *v9;

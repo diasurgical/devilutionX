@@ -1,8 +1,12 @@
-#include "pch.h"
+#include "dx.h"
+
+#include "devilution.h"
+#include "stubs.h"
+#include "DiabloUI/diabloui.h"
 
 namespace dvl {
 
-Screen *gpBuffer;
+BYTE *gpBuffer;
 
 IDirectDraw *lpDDInterface;
 IDirectDrawSurface *lpDDSPrimary;
@@ -366,7 +370,7 @@ void dx_init(HWND hWnd)
 	}
 
 	const int pitch = 64 + SCREEN_WIDTH + 64;
-	gpBuffer = (Screen *)malloc(sizeof(Screen));
+	gpBuffer = (BYTE *)malloc(656 * 768);
 	gpBufEnd += (uintptr_t)gpBuffer;
 
 	pal_surface = SDL_CreateRGBSurfaceFrom(gpBuffer, pitch, 160 + SCREEN_HEIGHT + 16, 8, pitch, 0, 0, 0, 0);
@@ -444,77 +448,4 @@ void dx_reinit()
 	UNIMPLEMENTED();
 }
 
-//
-// Storm functions
-//
-
-BOOL SDrawUpdatePalette(unsigned int firstentry, unsigned int numentries, PALETTEENTRY *pPalEntries, int a4)
-{
-	assert(firstentry == 0);
-	assert(numentries == 256);
-
-	SDL_Color colors[256];
-	for (unsigned int i = firstentry; i < numentries; i++) {
-		SDL_Color *c = &colors[i];
-		PALETTEENTRY *p = &pPalEntries[i];
-		c->r = p->peRed;
-		c->g = p->peGreen;
-		c->b = p->peBlue;
-		c->a = SDL_ALPHA_OPAQUE;
-	}
-
-	assert(palette);
-	if (SDL_SetPaletteColors(palette, colors, firstentry, numentries) != 0) {
-		SDL_Log("SDL_SetPaletteColors: %s\n", SDL_GetError());
-		return false;
-	}
-
-	if (pal_surface) {
-		sdl_update_entire_surface();
-		sdl_present_surface();
-	}
-
-	return true;
-}
-
-//
-// Windows API functions
-//
-
-WINBOOL SetCursorPos(int X, int Y)
-{
-	assert(renderer);
-	assert(window);
-
-	SDL_Rect view;
-	SDL_RenderGetViewport(renderer, &view);
-	X += view.x;
-	Y += view.y;
-
-	float scaleX;
-	SDL_RenderGetScale(renderer, &scaleX, NULL);
-	X *= scaleX;
-	Y *= scaleX;
-
-	SDL_WarpMouseInWindow(window, X, Y);
-	return true;
-}
-
-int ShowCursor(WINBOOL bShow)
-{
-	SDL_ShowCursor(bShow ? SDL_ENABLE : SDL_DISABLE);
-
-	return bShow;
-}
-
-WINBOOL TextOutA(HDC hdc, int x, int y, LPCSTR lpString, int c)
-{
-	DUMMY_ONCE();
-
-	assert(window);
-	SDL_SetWindowTitle(window, lpString);
-
-	return true;
-}
-
-}
+}  // namespace dvl

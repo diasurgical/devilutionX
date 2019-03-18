@@ -1,4 +1,7 @@
-#include "pch.h"
+#include <string>
+#include <SDL.h>
+
+#include "devilution.h"
 
 extern "C" const char *__asan_default_options()
 {

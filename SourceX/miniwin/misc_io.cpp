@@ -1,153 +1,143 @@
-#include "pch.h"
+#include <cstdio>
+#include <set>
+#include <string>
+#include <iterator>
+#include <vector>
+#include <algorithm>
+#include <fstream>
+#include <memory>
 
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <unistd.h>
+#include "devilution.h"
+#include "stubs.h"
 
 namespace dvl {
 
-extern "C" void TranslateFileName(char *dst, int dstLen, const char *src)
-{
-	for (int i = 0; i < dstLen; i++) {
-		char c = *src++;
-		dst[i] = c == '\\' ? '/' : c;
-		if (!c) {
-			break;
-		}
-	}
-}
+struct memfile {
+	std::string path;
+	std::vector<char> buf;
+	std::size_t pos = 0;
+};
 
-static std::set<HANDLE> files;
+static std::set<memfile*> files;
 
 HANDLE CreateFileA(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode,
-    LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition,
-    DWORD dwFlagsAndAttributes, HANDLE hTemplateFile)
+                   LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition,
+                   DWORD dwFlagsAndAttributes, HANDLE hTemplateFile)
 {
-	char name[260];
+	char name[DVL_MAX_PATH];
 	TranslateFileName(name, sizeof(name), lpFileName);
-
 	DUMMY_PRINT("file: %s (%s)", lpFileName, name);
-
-	assert(dwDesiredAccess == DVL_GENERIC_READ | DVL_GENERIC_WRITE);
-
-	int flags = O_RDWR;
-	mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH;
+	UNIMPLEMENTED_UNLESS(dwDesiredAccess == (DVL_GENERIC_READ | DVL_GENERIC_WRITE));
+	memfile* file = new memfile;
+	file->path = name;
 	if (dwCreationDisposition == DVL_OPEN_EXISTING) {
-		// Nothing
+		// read contents of existing file into buffer
+		std::ifstream filestream(file->path, std::ios::binary);
+		if(!filestream.fail()) {
+			file->buf.insert(file->buf.begin(),
+			                 std::istreambuf_iterator<char>(filestream),
+			                 std::istreambuf_iterator<char>());
+		}
 	} else if (dwCreationDisposition == DVL_CREATE_ALWAYS) {
-		flags |= O_CREAT | O_TRUNC;
+		// start with empty file
 	} else {
 		UNIMPLEMENTED();
 	}
-#ifdef _WIN32
-	//replace this later by something portable
-	HANDLE fd = (HANDLE)open(name, flags | _O_BINARY, mode);
-#else
-	HANDLE fd = (HANDLE)open(name, flags, mode);
-#endif
-
-	files.insert(fd);
-	return fd;
+	files.insert(file);
+	return file;
 }
 
 WINBOOL ReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead, LPDWORD lpNumberOfBytesRead,
-    LPOVERLAPPED lpOverlapped)
+                 LPOVERLAPPED lpOverlapped)
 {
-	DUMMY_ONCE();
-
-	assert(!lpOverlapped);
-	int len = read((intptr_t)hFile, lpBuffer, nNumberOfBytesToRead);
-	assert(len != -1);
+	memfile* file = static_cast<memfile*>(hFile);
+	UNIMPLEMENTED_UNLESS(!lpOverlapped);
+	size_t len = std::min<size_t>(file->buf.size() - file->pos, nNumberOfBytesToRead);
+	std::copy(file->buf.begin() + file->pos, file->buf.begin() + file->pos + len, static_cast<char*>(lpBuffer));
+	file->pos += len;
 	*lpNumberOfBytesRead = len;
 	return true;
 }
 
 DWORD GetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh)
 {
-	DUMMY_ONCE();
-
-	assert(!lpFileSizeHigh);
-	struct stat s;
-	int ret = fstat((intptr_t)hFile, &s);
-	assert(ret == 0);
-	return s.st_size;
+	memfile* file = static_cast<memfile*>(hFile);
+	return file->buf.size();
 }
 
-WINBOOL WriteFile(HANDLE hFile, LPCVOID lpBuffer, DWORD nNumberOfBytesToWrite, LPDWORD lpNumberOfBytesWritten,
-    LPOVERLAPPED lpOverlapped)
+WINBOOL WriteFile(HANDLE hFile, LPCVOID lpBuffer, DWORD nNumberOfBytesToWrite,
+                  LPDWORD lpNumberOfBytesWritten, LPOVERLAPPED lpOverlapped)
 {
-	DUMMY_ONCE();
-
-	assert(!lpOverlapped);
-	ssize_t len = write((intptr_t)hFile, lpBuffer, nNumberOfBytesToWrite);
-	if (len == -1) {
-		*lpNumberOfBytesWritten = 0;
-		return false;
-	}
-	*lpNumberOfBytesWritten = (DWORD)len;
+	memfile* file = static_cast<memfile*>(hFile);
+	UNIMPLEMENTED_UNLESS(!lpOverlapped);
+	if(!nNumberOfBytesToWrite)
+		return true;
+	if(file->buf.size() < file->pos + nNumberOfBytesToWrite)
+		file->buf.resize(file->pos + nNumberOfBytesToWrite);
+	std::copy(static_cast<const char*>(lpBuffer),
+	          static_cast<const char*>(lpBuffer) + nNumberOfBytesToWrite,
+	          file->buf.begin() + file->pos);
+	file->pos += nNumberOfBytesToWrite;
+	*lpNumberOfBytesWritten = nNumberOfBytesToWrite;
 	return true;
 }
 
 DWORD SetFilePointer(HANDLE hFile, LONG lDistanceToMove, PLONG lpDistanceToMoveHigh, DWORD dwMoveMethod)
 {
-	DUMMY_ONCE();
-
-	assert(!lpDistanceToMoveHigh);
-	int whence;
+	memfile* file = static_cast<memfile*>(hFile);
+	UNIMPLEMENTED_UNLESS(!lpDistanceToMoveHigh);
 	if (dwMoveMethod == DVL_FILE_BEGIN) {
-		whence = SEEK_SET;
+		file->pos = lDistanceToMove;
 	} else if (dwMoveMethod == DVL_FILE_CURRENT) {
-		whence = SEEK_CUR;
+		file->pos += lDistanceToMove;
+		if(file->buf.size() < file->pos + 1)
+			file->buf.resize(file->pos + 1);
 	} else {
 		UNIMPLEMENTED();
 	}
-	off_t ret = lseek((intptr_t)hFile, lDistanceToMove, whence);
-	return (DWORD)ret;
+	return file->pos;
 }
 
 WINBOOL SetEndOfFile(HANDLE hFile)
 {
-	DUMMY_ONCE();
-
-	off_t cur = lseek((intptr_t)hFile, 0, SEEK_CUR);
-	assert(cur != -1);
-	int res = ftruncate((intptr_t)hFile, cur);
-	assert(res == 0);
+	memfile* file = static_cast<memfile*>(hFile);
+	file->buf.erase(file->buf.begin() + file->pos, file->buf.end());
 	return true;
 }
 
 DWORD GetFileAttributesA(LPCSTR lpFileName)
 {
-	char name[260];
+	char name[DVL_MAX_PATH];
 	TranslateFileName(name, sizeof(name), lpFileName);
-
-	DUMMY_PRINT("file: %s (%s)", lpFileName, name);
-
-	struct stat s;
-	int res = stat(name, &s);
-
-	if (res == -1) {
+	std::ifstream filestream(name, std::ios::binary);
+	if (filestream.fail()) {
 		SetLastError(DVL_ERROR_FILE_NOT_FOUND);
 		return (DWORD)-1;
 	}
-
 	return 0x80;
 }
 
 WINBOOL SetFileAttributesA(LPCSTR lpFileName, DWORD dwFileAttributes)
 {
-	DUMMY_PRINT("file: %s", lpFileName);
 	return true;
 }
 
 WINBOOL CloseHandle(HANDLE hObject)
 {
-	if (files.find(hObject) != files.end()) {
-		int ret = close((intptr_t)hObject);
-		assert(ret == 0);
-		files.erase(hObject);
-	}
+	memfile* file = static_cast<memfile*>(hObject);
+	if (files.find(file) == files.end())
+		return true;
+	std::unique_ptr<memfile> ufile(file);  // ensure that delete file is
+	                                       // called on returning
+	std::ofstream filestream(file->path + ".tmp", std::ios::binary);
+	if (filestream.fail())
+		return false;
+	filestream.write(file->buf.data(), file->buf.size());
+	if(filestream.fail())
+		return false;
+	if(std::rename((file->path + ".tmp").c_str(), file->path.c_str()))
+		return false;
 	return true;
 }
 
-}
+}  // namespace dvl

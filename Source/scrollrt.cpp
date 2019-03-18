@@ -873,8 +873,8 @@ void __fastcall scrollrt_draw_clipped_dungeon(char *a1, int sx, int sy, int a4, 
 				if (v18 >= 1 && *(_DWORD *)v17 <= 0x32u && v18 <= *(_DWORD *)v17) {
 					v19 = a4 - v16->_iAnimWidth2;
 					if (v49 - 1 == pcursitem)
-						CelDrawHdrClrHL(ICOL_BLUE, v19, a5, v17, v16->_iAnimFrame, v16->_iAnimWidth, 0, 8);
-					Cel2DecodeHdrLight(v19, a5, (char *)v16->_iAnimData, v16->_iAnimFrame, v16->_iAnimWidth, 0, 8);
+						CelDrawHdrClrHL(ICOL_BLUE, v19, a5, (BYTE *)v17, v16->_iAnimFrame, v16->_iAnimWidth, 0, 8);
+					Cel2DecodeHdrLight(v19, a5, v16->_iAnimData, v16->_iAnimFrame, v16->_iAnimWidth, 0, 8);
 				}
 			}
 		}
@@ -987,11 +987,11 @@ void __fastcall scrollrt_draw_clipped_dungeon(char *a1, int sx, int sy, int a4, 
 					if (v38 >= 1 && *(_DWORD *)v37 <= 0x32u && v38 <= *(_DWORD *)v37) {
 						v39 = a4 - v36->_iAnimWidth2;
 						if (v49 - 1 == pcursitem)
-							CelDrawHdrClrHL(ICOL_BLUE, v39, a5, v37, v36->_iAnimFrame, v36->_iAnimWidth, 0, 8);
+							CelDrawHdrClrHL(ICOL_BLUE, v39, a5, (BYTE *)v37, v36->_iAnimFrame, v36->_iAnimWidth, 0, 8);
 						Cel2DecodeHdrLight(
 						    v39,
 						    a5,
-						    (char *)v36->_iAnimData,
+						    v36->_iAnimData,
 						    v36->_iAnimFrame,
 						    v36->_iAnimWidth,
 						    0,
@@ -1003,7 +1003,7 @@ void __fastcall scrollrt_draw_clipped_dungeon(char *a1, int sx, int sy, int a4, 
 	}
 	if (v46) {
 		cel_transparency_active = (unsigned char)TransList[v44];
-		Cel2DecodeLightTrans(dst_buf, (char *)level_special_cel, v46, 64, 0, 8);
+		Cel2DecodeLightTrans((BYTE *)dst_buf, (BYTE *)level_special_cel, v46, 64, 0, 8);
 	}
 }
 // 4B8CC0: using guessed type char pcursitem;
@@ -1111,9 +1111,9 @@ void __fastcall DrawClippedObject(int x, int y, int ox, int oy, BOOL pre, int a6
 	}
 
 	if(bv == pcursobj)
-		CelDrawHdrClrHL(194, sx, sy, (char *)object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth, a6, dir);
+		CelDrawHdrClrHL(194, sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth, a6, dir);
 	if(object[bv]._oLight)
-		Cel2DecodeHdrLight(sx, sy, (char *)object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth, a6, dir);
+		Cel2DecodeHdrLight(sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth, a6, dir);
 	else
 		Cel2DrawHdrOnly(sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth, a6, dir);
 }
@@ -1473,8 +1473,8 @@ void __fastcall scrollrt_draw_clipped_dungeon_2(char *buffer, int x, int y, int 
 				if (v21 >= 1 && *(_DWORD *)v20 <= 0x32u && v21 <= *(_DWORD *)v20) {
 					v22 = v13 - v19->_iAnimWidth2;
 					if (v52 - 1 == pcursitem)
-						CelDrawHdrClrHL(ICOL_BLUE, v22, sy, v20, v19->_iAnimFrame, v19->_iAnimWidth, a5, 8);
-					Cel2DecodeHdrLight(v22, sy, (char *)v19->_iAnimData, v19->_iAnimFrame, v19->_iAnimWidth, a5, 8);
+						CelDrawHdrClrHL(ICOL_BLUE, v22, sy, (BYTE *)v20, v19->_iAnimFrame, v19->_iAnimWidth, a5, 8);
+					Cel2DecodeHdrLight(v22, sy, v19->_iAnimData, v19->_iAnimFrame, v19->_iAnimWidth, a5, 8);
 				}
 			}
 		}
@@ -1589,11 +1589,11 @@ void __fastcall scrollrt_draw_clipped_dungeon_2(char *buffer, int x, int y, int 
 					if (v41 >= 1 && *(_DWORD *)v40 <= 0x32u && v41 <= *(_DWORD *)v40) {
 						v42 = v13 - v39->_iAnimWidth2;
 						if (v52 - 1 == pcursitem)
-							CelDrawHdrClrHL(ICOL_BLUE, v42, sy, v40, v41, v39->_iAnimWidth, a5, 8);
+							CelDrawHdrClrHL(ICOL_BLUE, v42, sy, (BYTE *)v40, v41, v39->_iAnimWidth, a5, 8);
 						Cel2DecodeHdrLight(
 						    v42,
 						    sy,
-						    (char *)v39->_iAnimData,
+						    v39->_iAnimData,
 						    v39->_iAnimFrame,
 						    v39->_iAnimWidth,
 						    a5,
@@ -1605,7 +1605,7 @@ void __fastcall scrollrt_draw_clipped_dungeon_2(char *buffer, int x, int y, int 
 	}
 	if (v49) {
 		cel_transparency_active = (unsigned char)TransList[v47];
-		Cel2DecodeLightTrans(dst_buf, (char *)level_special_cel, v49, 64, a5, 8);
+		Cel2DecodeLightTrans((BYTE *)dst_buf, (BYTE *)level_special_cel, v49, 64, a5, 8);
 	}
 }
 // 4B8CC0: using guessed type char pcursitem;
@@ -2013,8 +2013,8 @@ void __fastcall scrollrt_draw_dungeon(char *buffer, int x, int y, int a4, int a5
 				if (v20 >= 1 && *(_DWORD *)v19 <= 0x32u && v20 <= *(_DWORD *)v19) {
 					v21 = sx - v18->_iAnimWidth2;
 					if (v51 - 1 == pcursitem)
-						CelDecodeClr(ICOL_BLUE, v21, sy, v19, v18->_iAnimFrame, v18->_iAnimWidth, 0, a5);
-					CelDecodeHdrLightOnly(v21, sy, (char *)v18->_iAnimData, v18->_iAnimFrame, v18->_iAnimWidth, 0, a5);
+						CelDecodeClr(ICOL_BLUE, v21, sy, (BYTE *)v19, v18->_iAnimFrame, v18->_iAnimWidth, 0, a5);
+					CelDecodeHdrLightOnly(v21, sy, v18->_iAnimData, v18->_iAnimFrame, v18->_iAnimWidth, 0, a5);
 				}
 			}
 		}
@@ -2127,11 +2127,11 @@ void __fastcall scrollrt_draw_dungeon(char *buffer, int x, int y, int a4, int a5
 					if (v40 >= 1 && *(_DWORD *)v39 <= 0x32u && v40 <= *(_DWORD *)v39) {
 						v41 = sx - v38->_iAnimWidth2;
 						if (v51 - 1 == pcursitem)
-							CelDecodeClr(ICOL_BLUE, v41, sy, v39, v38->_iAnimFrame, v38->_iAnimWidth, 0, a5);
+							CelDecodeClr(ICOL_BLUE, v41, sy, (BYTE *)v39, v38->_iAnimFrame, v38->_iAnimWidth, 0, a5);
 						CelDecodeHdrLightOnly(
 						    v41,
 						    sy,
-						    (char *)v38->_iAnimData,
+						    v38->_iAnimData,
 						    v38->_iAnimFrame,
 						    v38->_iAnimWidth,
 						    0,
@@ -2143,7 +2143,7 @@ void __fastcall scrollrt_draw_dungeon(char *buffer, int x, int y, int a4, int a5
 	}
 	if (v48) {
 		cel_transparency_active = (unsigned char)TransList[v46];
-		CelDecodeHdrLightTrans(dst_buf, (char *)level_special_cel, v48, 64, 0, a5);
+		CelDecodeHdrLightTrans((BYTE *)dst_buf, (BYTE *)level_special_cel, v48, 64, 0, a5);
 	}
 }
 // 4B8CC0: using guessed type char pcursitem;
@@ -2251,9 +2251,9 @@ void __fastcall DrawObject(int x, int y, int ox, int oy, BOOL pre, int a6, int d
 	}
 
 	if(bv == pcursobj)
-		CelDecodeClr(194, sx, sy, (char *)object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth, a6, dir);
+		CelDecodeClr(194, sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth, a6, dir);
 	if(object[bv]._oLight) {
-		CelDecodeHdrLightOnly(sx, sy, (char *)object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth, a6, dir);
+		CelDecodeHdrLightOnly(sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth, a6, dir);
 	} else {
 		/// ASSERT: assert(object[bv]._oAnimData);
 		if(object[bv]._oAnimData) // BUGFIX: _oAnimData was already checked, this is redundant
@@ -2465,7 +2465,7 @@ void __fastcall DrawZoom(int x, int y)
 LABEL_24:
 	v11 = (_WORD *)((char *)gpBuffer + a6b);
 	v12 = (char *)gpBuffer + a5a;
-	v13 = &gpBuffer->row_unused_1[1].col_unused_1[a6b];
+	v13 = (char *)&gpBuffer[a6b + 768];
 	v14 = 176;
 	do {
 		v15 = v19;
@@ -2501,7 +2501,7 @@ void __cdecl ClearScreenBuffer()
 	j_lock_buf_priv(3);
 
 	for (i = 0; i < 480; i++)
-		memset(gpBuffer->row[i].pixels, 0, 640);
+		memset(&gpBuffer[SCREENXY(0, i)], 0, 640);
 
 	j_unlock_buf_priv(3);
 }
@@ -2629,7 +2629,7 @@ void __cdecl scrollrt_draw_cursor_back_buffer()
 	if (sgdwCursWdt) {
 		v1 = sgdwCursY;
 		v2 = sgSaveBack;
-		v3 = &gpBuffer->row[sgdwCursY].pixels[sgdwCursX];
+		v3 = (char *)&gpBuffer[SCREENXY(sgdwCursX, sgdwCursY)];
 		v4 = sgdwCursHgt;
 		if (sgdwCursHgt) {
 			v5 = sgdwCursHgt;
@@ -2701,7 +2701,7 @@ void __cdecl scrollrt_draw_cursor_item()
 				v14 = sgSaveBack;
 				v6 = 1 - v3 + v5;
 				sgdwCursHgt = v6;
-				v7 = &gpBuffer->row[v3].pixels[v2 & 0xFFFFFFFC];
+				v7 = (char *)&gpBuffer[SCREENXY(v2 & 0xFFFFFFFC, v3)];
 				if (v6) {
 					v8 = v6;
 					do {
@@ -2725,10 +2725,10 @@ void __cdecl scrollrt_draw_cursor_item()
 					if (!plr[myplr].HoldItem._iStatFlag)
 						colour = ICOL_RED;
 					v12 = v9 + 64;
-					CelDrawHdrClrHL(colour, v12, v1 + v10 + 159, (char *)pCursCels, pcurs, v0, 0, 8);
+					CelDrawHdrClrHL(colour, v12, v1 + v10 + 159, (BYTE *)pCursCels, pcurs, v0, 0, 8);
 					v13 = cursH + v10 + 159;
 					if (colour == ICOL_RED)
-						Cel2DrawHdrLightRed(v12, v13, (char *)pCursCels, pcurs, cursW, 0, 8, 1);
+						Cel2DrawHdrLightRed(v12, v13, (BYTE *)pCursCels, pcurs, cursW, 0, 8, 1);
 					else
 						Cel2DrawHdrOnly(v12, v13, (BYTE *)pCursCels, pcurs, cursW, 0, 8);
 				}

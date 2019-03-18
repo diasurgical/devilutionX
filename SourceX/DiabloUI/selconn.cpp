@@ -1,5 +1,7 @@
-#include "pch.h"
 #include "selconn.h"
+
+#include "devilution.h"
+#include "DiabloUI/diabloui.h"
 
 namespace dvl {
 

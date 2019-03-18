@@ -72,7 +72,7 @@ BOOL __cdecl Connect_LoadGFXAndStuff()
 // 100295C0: using guessed type int heroport_frames;
 
 // ref: 0x10003009
-BOOL __stdcall UiArtCallback(int game_type, unsigned int art_code, PALETTEENTRY *pPalette, void *pBuffer, DWORD dwBuffersize, DWORD *pdwWidth, DWORD *pdwHeight, DWORD *pdwBpp)
+BOOL __stdcall UiArtCallback(int game_type, unsigned int art_code, PALETTEENTRY *pPalette, BYTE *pBuffer, DWORD dwBuffersize, DWORD *pdwWidth, DWORD *pdwHeight, DWORD *pdwBpp)
 {
 	BOOL result;           // eax
 	char pszFileName[260]; // [esp+8h] [ebp-104h]

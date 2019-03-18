@@ -70,7 +70,7 @@ char *__stdcall BNetGW_10002E0B(char *a1, unsigned int a2);
 
 void __cdecl Connect_FreeConnectData();
 BOOL __cdecl Connect_LoadGFXAndStuff();
-BOOL __stdcall UiArtCallback(int game_type, unsigned int art_code, PALETTEENTRY *pPalette, void *pBuffer, DWORD dwBuffersize, DWORD *pdwWidth, DWORD *pdwHeight, DWORD *pdwBpp);
+BOOL __stdcall UiArtCallback(int game_type, unsigned int art_code, PALETTEENTRY *pPalette, BYTE *pBuffer, DWORD dwBuffersize, DWORD *pdwWidth, DWORD *pdwHeight, DWORD *pdwBpp);
 void __cdecl j_Connect_cpp_init();
 void __cdecl Connect_cpp_init();
 BOOL __stdcall UiGetDataCallback(int game_type, int data_code, void *a3, int a4, int a5);

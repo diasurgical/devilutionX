@@ -3,7 +3,7 @@
 #define __SOUND_H__
 
 extern IDirectSoundBuffer *DSBs[8];
-extern char gbSndInited;
+extern BOOLEAN gbSndInited;
 extern HMODULE hDsound_dll;
 
 void __fastcall snd_update(BOOL bStopAll);

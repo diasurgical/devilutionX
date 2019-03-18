@@ -1,6 +1,9 @@
 #include "dvlnet/udp_p2p.h"
 
-namespace dvl { namespace net {
+#include <SDL.h>
+
+namespace dvl {
+namespace net {
 
 const udp_p2p::endpoint udp_p2p::none;
 
@@ -49,7 +52,7 @@ int udp_p2p::join(std::string addrstr, std::string passwd)
 	sock.connect(themaster);
 	master = themaster;
 	{ // hack: try to join for 5 seconds
-		randombytes_buf(reinterpret_cast<unsigned char *>(&cookie_self),
+		randombytes_buf(reinterpret_cast<unsigned char*>(&cookie_self),
 		                sizeof(cookie_t));
 		auto pkt = pktfty->make_packet<PT_JOIN_REQUEST>(PLR_BROADCAST,
 		                                                PLR_MASTER, cookie_self,
@@ -167,4 +170,5 @@ void udp_p2p::recv_decrypted(packet& pkt, endpoint sender)
 	recv_local(pkt);
 }
 
-}}
+}  // namespace net
+}  // namespace dvl

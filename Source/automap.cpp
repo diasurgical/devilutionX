@@ -177,7 +177,7 @@ void __cdecl DrawAutomap()
 		return;
 	}
 
-	gpBufEnd = (unsigned char *)&gpBuffer->row[352];
+	gpBufEnd = (unsigned char *)&gpBuffer[(352 + 160) * 768];
 
 	MapX = (ViewX - 16) >> 1;
 	while (MapX + AutoMapXOfs < 0)

@@ -1,6 +1,7 @@
 #include "dvlnet/packet.h"
 
-namespace dvl { namespace net {
+namespace dvl {
+namespace net {
 
 static constexpr bool disable_encryption = false;
 
@@ -174,4 +175,5 @@ packet_factory::packet_factory(std::string pw)
 		ABORT();
 }
 
-}}
+}  // namespace net
+}  // namespace dvl

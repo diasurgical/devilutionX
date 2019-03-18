@@ -1,12 +1,28 @@
-#include "../3rdParty/Radon/Radon/include/Radon.hpp"
-#include "../3rdParty/libsmacker/smacker.h"
-#include "pch.h"
-
 #include <unistd.h>
+#include <SDL.h>
+#include <SDL_mixer.h>
+#include <Radon.hpp>
+#include <smacker.h>
+
+#include "devilution.h"
+#include "stubs.h"
+#include "DiabloUI/diabloui.h"
+#include "dx.h"
 
 namespace dvl {
 
-extern "C" DWORD nLastError = 0;
+DWORD nLastError = 0;
+
+void TranslateFileName(char *dst, int dstLen, const char *src)
+{
+	for (int i = 0; i < dstLen; i++) {
+		char c = *src++;
+		dst[i] = c == '\\' ? '/' : c;
+		if (!c) {
+			break;
+		}
+	}
+}
 
 std::string getIniPath()
 {
@@ -42,6 +58,9 @@ BOOL SFileDdaBeginEx(HANDLE hFile, DWORD flags, DWORD mask, unsigned __int32 lDi
 	SFileChunk = Mix_LoadWAV_RW(rw, 1);
 	free(SFXbuffer);
 
+	Mix_Volume(0, MIX_MAX_VOLUME - MIX_MAX_VOLUME * volume / VOLUME_MIN);
+	int panned = 255 - 255 * abs(pan) / 10000;
+	Mix_SetPanning(0, pan <= 0 ? 255 : panned, pan >= 0 ? 255 : panned);
 	Mix_PlayChannel(0, SFileChunk, 0);
 
 	return true;
@@ -206,7 +225,7 @@ BOOL SBmpLoadImage(const char *pszFileName, PALETTEENTRY *pPalette, BYTE *pBuffe
 				byte = *dataPtr;
 				if (byte < 0xC0) {
 					*pBuffer = byte;
-					*pBuffer++;
+					pBuffer++;
 					x++;
 					continue;
 				}
@@ -214,7 +233,7 @@ BOOL SBmpLoadImage(const char *pszFileName, PALETTEENTRY *pPalette, BYTE *pBuffe
 
 				for (int i = 0; i < (byte & 0x3F); i++) {
 					*pBuffer = *dataPtr;
-					*pBuffer++;
+					pBuffer++;
 					x++;
 				}
 			}
