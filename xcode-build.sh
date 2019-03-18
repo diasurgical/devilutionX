@@ -47,6 +47,7 @@ function build_libpng {
     sudo cp  -v -f -a libpng-1.6.36/build/Release/libpng16.16.36.0.dylib /usr/local/lib/libpng16.16.dylib
     sudo rm /usr/local/lib/libpng.dylib
     sudo ln -s /usr/local/lib/libpng16.16.dylib /usr/local/lib/libpng.dylib
+    cp  -v -f -a libpng-1.6.36/build/Release/libpng16.16.36.0.dylib ./frameworks/libpng16.16.dylib
 }
 
 function build_freetype {

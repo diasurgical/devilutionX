@@ -20,6 +20,7 @@
 		2E51C3FD096247BDB522FA63 /* error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 413186B26DE644E197D49314 /* error.cpp */; };
 		3AA9769F36DA404CB3DB029B /* portal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2017B5200DF14FD7B6959133 /* portal.cpp */; };
 		3D80977966AE4264938D37A3 /* town.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DAAD0527F1EA496A8B669415 /* town.cpp */; };
+		433449A42240500B003AB4F2 /* libpng16.16.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 433449A222404FFA003AB4F2 /* libpng16.16.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		43398749223E5D3A001F8420 /* SDL2_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43398741223E5CB0001F8420 /* SDL2_mixer.framework */; };
 		4339874A223E5D3A001F8420 /* SDL2_mixer.framework in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 43398741223E5CB0001F8420 /* SDL2_mixer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4339874B223E5D3A001F8420 /* SDL2_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4339873F223E5CAB001F8420 /* SDL2_ttf.framework */; };
@@ -122,8 +123,6 @@
 		BB88EC00498744F7914A1484 /* stores.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3D28A84812B34E10AE50E192 /* stores.cpp */; };
 		BFF16F60B46F4B8984D3007C /* quests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0348AAD50CEF4915900FD581 /* quests.cpp */; };
 		C43B4AA5223F0DD900CE0DD9 /* libclang_rt.asan_osx_dynamic.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = C43B4AA3223F0DCA00CE0DD9 /* libclang_rt.asan_osx_dynamic.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		C43B4AA7223F21D600CE0DD9 /* libpng16.16.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C43B4AA6223F21D500CE0DD9 /* libpng16.16.dylib */; };
-		C43B4AA8223F21DF00CE0DD9 /* libpng16.16.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = C43B4AA6223F21D500CE0DD9 /* libpng16.16.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		C648EEFB6E17468AB8C3943E /* fault.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9C2AEA532E6F4FF8B66083C9 /* fault.cpp */; };
 		C794AF87232B4745B3C48397 /* Key.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0B8A000CA684B9FAF88F313 /* Key.cpp */; };
 		CCB1A17083824600A7FC6DBF /* doom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7119751C6B7A4F40BB3B87B0 /* doom.cpp */; };
@@ -194,7 +193,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C43B4AA8223F21DF00CE0DD9 /* libpng16.16.dylib in Embed Libraries */,
+				433449A42240500B003AB4F2 /* libpng16.16.dylib in Embed Libraries */,
 				C43B4AA5223F0DD900CE0DD9 /* libclang_rt.asan_osx_dynamic.dylib in Embed Libraries */,
 				4339874E223E5D3A001F8420 /* SDL2.framework in Embed Libraries */,
 				4339874C223E5D3A001F8420 /* SDL2_ttf.framework in Embed Libraries */,
@@ -231,6 +230,7 @@
 		3ECD637555514971BCD3E90E /* libdevilution.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libdevilution.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		4040598A1C254715A8C8673C /* msg.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = msg.cpp; path = Source/msg.cpp; sourceTree = SOURCE_ROOT; };
 		413186B26DE644E197D49314 /* error.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = error.cpp; path = Source/error.cpp; sourceTree = SOURCE_ROOT; };
+		433449A222404FFA003AB4F2 /* libpng16.16.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpng16.16.dylib; path = libs/frameworks/libpng16.16.dylib; sourceTree = "<group>"; };
 		4339873D223E5C1A001F8420 /* SDL2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = SDL2.framework; path = libs/frameworks/SDL2.framework; sourceTree = SOURCE_ROOT; };
 		4339873F223E5CAB001F8420 /* SDL2_ttf.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = SDL2_ttf.framework; path = libs/frameworks/SDL2_ttf.framework; sourceTree = "<group>"; };
 		43398741223E5CB0001F8420 /* SDL2_mixer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = SDL2_mixer.framework; path = libs/frameworks/SDL2_mixer.framework; sourceTree = "<group>"; };
@@ -316,7 +316,6 @@
 		BF78F60283044A13A4CE1D1B /* items.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = items.cpp; path = Source/items.cpp; sourceTree = SOURCE_ROOT; };
 		C0B8A000CA684B9FAF88F313 /* Key.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Key.cpp; path = 3rdParty/Radon/Radon/source/Key.cpp; sourceTree = SOURCE_ROOT; };
 		C43B4AA3223F0DCA00CE0DD9 /* libclang_rt.asan_osx_dynamic.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libclang_rt.asan_osx_dynamic.dylib; path = 3rdParty/darwin/libclang_rt.asan_osx_dynamic.dylib; sourceTree = "<group>"; };
-		C43B4AA6223F21D500CE0DD9 /* libpng16.16.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpng16.16.dylib; path = ../../../../../usr/local/lib/libpng16.16.dylib; sourceTree = "<group>"; };
 		C713AED00778486B94CD282B /* objects.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = objects.cpp; path = Source/objects.cpp; sourceTree = SOURCE_ROOT; };
 		C78DC63816DF4F1C867578C7 /* setmaps.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = setmaps.cpp; path = Source/setmaps.cpp; sourceTree = SOURCE_ROOT; };
 		CA4B6FC7C063411F9460CD20 /* codec.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = codec.cpp; path = Source/codec.cpp; sourceTree = SOURCE_ROOT; };
@@ -347,7 +346,6 @@
 				43398752223E5E0E001F8420 /* SDL2.framework in Frameworks */,
 				4339874B223E5D3A001F8420 /* SDL2_ttf.framework in Frameworks */,
 				43398749223E5D3A001F8420 /* SDL2_mixer.framework in Frameworks */,
-				C43B4AA7223F21D600CE0DD9 /* libpng16.16.dylib in Frameworks */,
 				436280B72236354100C911AD /* Cocoa.framework in Frameworks */,
 				436280B52236352000C911AD /* AudioUnit.framework in Frameworks */,
 				436280B32236351000C911AD /* CoreAudio.framework in Frameworks */,
@@ -405,7 +403,7 @@
 			isa = PBXGroup;
 			children = (
 				C43B4AA3223F0DCA00CE0DD9 /* libclang_rt.asan_osx_dynamic.dylib */,
-				C43B4AA6223F21D500CE0DD9 /* libpng16.16.dylib */,
+				433449A222404FFA003AB4F2 /* libpng16.16.dylib */,
 				43398741223E5CB0001F8420 /* SDL2_mixer.framework */,
 				4339873F223E5CAB001F8420 /* SDL2_ttf.framework */,
 				4339873D223E5C1A001F8420 /* SDL2.framework */,
