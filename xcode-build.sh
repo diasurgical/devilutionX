@@ -3,22 +3,22 @@
 function get_libs {
     echo "============= Getting Libs ============="
 
-    curl -O https://www.libsdl.org/release/SDL2-2.0.9.zip
-    curl -O https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-2.0.4.zip
-    curl -O https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-2.0.15.zip
+    curl -O https://www.libsdl.org/release/SDL2-2.0.9.tar.gz
+    curl -O https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-2.0.4.tar.gz
+    curl -O https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-2.0.15.tar.gz
     curl -SLO https://download.savannah.gnu.org/releases/freetype/freetype-2.9.1.tar.gz
-    curl -SLO https://github.com/glennrp/libpng/archive/v1.6.36.zip
-    curl -SLO https://github.com/jedisct1/libsodium/archive/1.0.17.zip
+    curl -SLO https://github.com/glennrp/libpng/archive/v1.6.36.tar.gz
+    curl -SLO https://github.com/jedisct1/libsodium/archive/1.0.17.tar.gz
 }
 
 function decompress_libs {
     echo "============= Unzip Libs ============="
-    unzip SDL2-2.0.9.zip
-    unzip SDL2_mixer-2.0.4.zip
-    unzip SDL2_ttf-2.0.15.zip
-    unzip v1.6.36.zip
+    tar -zxvf SDL2-2.0.9.tar.gz
+    tar -zxvf SDL2_mixer-2.0.4.tar.gz
+    tar -zxvf SDL2_ttf-2.0.15.tar.gz
+    tar -zxvf v1.6.36.tar.gz
     tar -zxvf freetype-2.9.1.tar.gz
-    unzip 1.0.17.zip
+    tar -zxvf 1.0.17.tar.gz
 }
 
 function build_sdl2 {
