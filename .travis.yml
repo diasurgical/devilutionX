@@ -5,8 +5,13 @@ os:
 
 osx_image: xcode9.4
 
+matrix:
+    include:
+    - env: ARCH=--build-all-x86
+    - env: ARCH=--build-all-x64
+
 script:
-    - bash ./xcode-build.sh --get-libs --build-libs --build-project --package
+    - bash ./xcode-build.sh $ARCH
 
 deploy:
   provider: releases

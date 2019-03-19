@@ -109,6 +109,29 @@ function set_working_dir() {
     fi
 }
 
+function build_all_x86 (){
+    set_working_dir
+    get_libs
+    decompress_libs
+    build_sdl2
+    build_sdl2_mixer
+    build_libpng
+    build_freetype
+    build_sdl2_ttf
+    build_libsodium
+    build_devilutionx || { echo "** Build Project > `--build-project` command failed"; exit 1; }
+    create_dmg
+}
+
+function build_all_x64 (){
+    brew install sdl2 sdl2_mixer sdl2_ttf libsodium
+    brew upgrade cmake
+    mkdir build
+    cd build
+    cmake ..
+    make -j$(sysctl -n hw.physicalcpu)
+}
+
 function main {
     for args in "$@"
     do
@@ -132,6 +155,12 @@ function main {
             ;;
            "--package")
                 create_dmg
+            ;;
+            "--build-all-x64")
+                build_all_x64
+            ;;
+            "--build-all-x86")
+                build_all_x86
             ;;
             *)
                 echo Unknown command
