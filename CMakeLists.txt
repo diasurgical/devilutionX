@@ -240,7 +240,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   target_compile_options(devilution PRIVATE -fno-aggressive-loop-optimizations)
 endif()
 # Warnings for devilutionX
-target_compile_options(devilutionx PRIVATE -Wall -Wextra -Wno-multichar -Wno-unused-parameter)
+target_compile_options(devilutionx PRIVATE -Wall -Wextra -Wno-write-strings -Wno-multichar -Wno-unused-parameter)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   # Style issues

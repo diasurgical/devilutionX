@@ -68,7 +68,7 @@ typedef struct UI_Item {
 	int flags;
 	int value;
 	char *caption;
-	void *context;
+	const void *context;
 } UI_Item;
 
 extern TTF_Font *font;

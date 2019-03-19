@@ -1,4 +1,3 @@
-#include <unistd.h>
 #include <SDL.h>
 #include <SDL_mixer.h>
 #include <Radon.hpp>
@@ -13,6 +12,19 @@ namespace dvl {
 
 DWORD nLastError = 0;
 
+static std::string getIniPath()
+{
+	char path[DVL_MAX_PATH];
+	int len = GetModuleFileNameA(ghInst, path, DVL_MAX_PATH);
+	path[len - 1] = '/';
+	strcat(path, "diablo.ini");
+
+	return path;
+}
+
+static radon::File ini(getIniPath());
+static Mix_Chunk *SFileChunk;
+
 void TranslateFileName(char *dst, int dstLen, const char *src)
 {
 	for (int i = 0; i < dstLen; i++) {
@@ -24,18 +36,6 @@ void TranslateFileName(char *dst, int dstLen, const char *src)
 	}
 }
 
-std::string getIniPath()
-{
-	char path[280];
-	int len = GetModuleFileNameA(ghInst, path, 260);
-	path[len - 1] = '/';
-	strcat(path, "diablo.ini");
-
-	return path;
-}
-
-radon::File ini(getIniPath());
-
 // BOOL SFileCloseArchive(HANDLE hArchive)
 // {
 // 	UNIMPLEMENTED();
@@ -46,7 +46,6 @@ radon::File ini(getIniPath());
 // 	UNIMPLEMENTED();
 // }
 
-Mix_Chunk *SFileChunk;
 BOOL SFileDdaBeginEx(HANDLE hFile, DWORD flags, DWORD mask, unsigned __int32 lDistanceToMove,
     signed __int32 volume, signed int pan, int a7)
 {
@@ -545,7 +544,7 @@ BOOL SVidPlayContinue(void)
 
 	double now = SDL_GetTicks() * 1000;
 	if (now < SVidFrameEnd) {
-		usleep(SVidFrameEnd - now); // wait with next frame if the system is to fast
+		SDL_Delay((SVidFrameEnd - now)/1000); // wait with next frame if the system is to fast
 	}
 
 	return SVidLoadNextFrame();

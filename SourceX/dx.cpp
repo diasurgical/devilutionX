@@ -384,7 +384,7 @@ void dx_init(HWND hWnd)
 		return;
 	}
 
-	MainWndProc(NULL, DVL_WM_ACTIVATEAPP, true, NULL);
+	MainWndProc(NULL, DVL_WM_ACTIVATEAPP, true, 0);
 
 	lpDDInterface = &stub_draw;
 	lpDDSPrimary = &stub_surface;

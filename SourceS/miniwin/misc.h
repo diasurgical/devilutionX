@@ -199,7 +199,7 @@ struct DVL_finddata_t {
 	time_t time_access; /* -1 for FAT file systems */
 	time_t time_write;
 	_fsize_t size;
-	char name[260];
+	char name[DVL_MAX_PATH];
 };
 
 typedef WORD ATOM;
