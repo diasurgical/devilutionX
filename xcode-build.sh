@@ -13,6 +13,7 @@ function get_libs {
 
 function decompress_libs {
     echo "============= Unzip Libs ============="
+
     tar -zxvf SDL2-2.0.9.tar.gz
     tar -zxvf SDL2_mixer-2.0.4.tar.gz
     tar -zxvf SDL2_ttf-2.0.15.tar.gz
@@ -124,10 +125,10 @@ function main {
                 build_libpng
                 build_freetype
                 build_sdl2_ttf
-                build_libsodium
+                build_libsodium 
             ;;
            "--build-project")
-                build_devilutionx
+                build_devilutionx || { echo "** Build Project > `--build-project` command failed"; exit 1; }
             ;;
            "--package")
                 create_dmg
