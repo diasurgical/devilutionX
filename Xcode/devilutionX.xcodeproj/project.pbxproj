@@ -335,7 +335,6 @@
 		B1B2D29A5A284CD29205745F /* implode.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = implode.cpp; path = 3rdParty/PKWare/implode.cpp; sourceTree = SOURCE_ROOT; };
 		B229DB87369B4D76B0A60580 /* Named.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Named.cpp; path = 3rdParty/Radon/Radon/source/Named.cpp; sourceTree = SOURCE_ROOT; };
 		C0B8A000CA684B9FAF88F313 /* Key.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Key.cpp; path = 3rdParty/Radon/Radon/source/Key.cpp; sourceTree = SOURCE_ROOT; };
-		C43B4AA3223F0DCA00CE0DD9 /* libclang_rt.asan_osx_dynamic.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libclang_rt.asan_osx_dynamic.dylib; path = 3rdParty/darwin/libclang_rt.asan_osx_dynamic.dylib; sourceTree = "<group>"; };
 		DCC453E263C842279A5E02E7 /* libsmacker.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libsmacker.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F249E02C422E4EC2B812E004 /* libStormLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libStormLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -404,7 +403,6 @@
 		43BF58ED2235E0E1001F9748 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C43B4AA3223F0DCA00CE0DD9 /* libclang_rt.asan_osx_dynamic.dylib */,
 				433449A222404FFA003AB4F2 /* libpng16.16.dylib */,
 				43398741223E5CB0001F8420 /* SDL2_mixer.framework */,
 				4339873F223E5CAB001F8420 /* SDL2_ttf.framework */,
@@ -1125,6 +1123,7 @@
 				OTHER_CPLUSPLUSFLAGS = (
 					"-Wall",
 					"-Wextra",
+					"-Wno-write-strings",
 					"-Wno-multichar",
 					"-Wno-unused-parameter",
 					"-Wno-parentheses",
@@ -1249,6 +1248,7 @@
 					"-Wall",
 					"-Wextra",
 					"-Wno-multichar",
+					"-Wno-write-strings",
 					"-Wno-unused-parameter",
 					"-Wno-parentheses",
 					"-Wno-logical-op-parentheses",
