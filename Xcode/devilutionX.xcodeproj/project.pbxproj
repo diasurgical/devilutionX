@@ -135,7 +135,6 @@
 		73E86BC9E2714148AD560C46 /* smacker.c in Sources */ = {isa = PBXBuildFile; fileRef = 622A8C6A02D94FFC996C2CAE /* smacker.c */; };
 		8305C713732C4CECA36F37E9 /* explode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D7FE30F050049FB933D2788 /* explode.cpp */; };
 		8FA4E9B3FA7D4B6AAB10EF73 /* implode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B1B2D29A5A284CD29205745F /* implode.cpp */; };
-		C43B4AA5223F0DD900CE0DD9 /* libclang_rt.asan_osx_dynamic.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = C43B4AA3223F0DCA00CE0DD9 /* libclang_rt.asan_osx_dynamic.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		C794AF87232B4745B3C48397 /* Key.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0B8A000CA684B9FAF88F313 /* Key.cpp */; };
 		E3C499D08A284F95BDB46B42 /* smk_hufftree.c in Sources */ = {isa = PBXBuildFile; fileRef = 500C9F6E13FE44BFAEFCB81B /* smk_hufftree.c */; };
 		EF709BC9D0B245338D17E9D7 /* Section.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F074DDFE42C4B46A93CC4A9 /* Section.cpp */; };
@@ -196,7 +195,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				433449A42240500B003AB4F2 /* libpng16.16.dylib in Embed Libraries */,
-				C43B4AA5223F0DD900CE0DD9 /* libclang_rt.asan_osx_dynamic.dylib in Embed Libraries */,
 				4339874E223E5D3A001F8420 /* SDL2.framework in Embed Libraries */,
 				4339874C223E5D3A001F8420 /* SDL2_ttf.framework in Embed Libraries */,
 				4339874A223E5D3A001F8420 /* SDL2_mixer.framework in Embed Libraries */,
@@ -1133,8 +1131,6 @@
 					"-Wno-logical-op-parentheses",
 					"-Wno-bitwise-op-parentheses",
 					"-Wno-ignored-attributes",
-					"'-fsanitize=address'",
-					"'-fsanitize-recover=address'",
 					"-fno-omit-frame-pointer",
 					"-Wno-unknown-pragmas",
 					"'-std=c++14'",
@@ -1144,8 +1140,6 @@
 					"-Wl,-search_paths_first",
 					"-Wl,-headerpad_max_install_names",
 					/usr/local/lib/libsodium.a,
-					"-fsanitize-recover=address",
-					"-fsanitize=address",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = deviution.devilutionX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1260,8 +1254,6 @@
 					"-Wno-logical-op-parentheses",
 					"-Wno-bitwise-op-parentheses",
 					"-Wno-ignored-attributes",
-					"'-fsanitize=address'",
-					"'-fsanitize-recover=address'",
 					"-Wno-unknown-pragmas",
 					"'-std=c++14'",
 				);
@@ -1270,8 +1262,6 @@
 					"-Wl,-search_paths_first",
 					"-Wl,-headerpad_max_install_names",
 					/usr/local/lib/libsodium.a,
-					"-fsanitize-recover=address",
-					"-fsanitize=address",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = deviution.devilutionX;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1317,8 +1307,6 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CPLUSPLUSFLAGS = (
-					"'-fsanitize=address'",
-					"'-fsanitize-recover=address'",
 					"-fno-omit-frame-pointer",
 					"-fpermissive",
 					"-Wno-write-strings",
@@ -1463,8 +1451,6 @@
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-DNDEBUG",
-					"'-fsanitize=address'",
-					"'-fsanitize-recover=address'",
 					"-fpermissive",
 					"-Wno-write-strings",
 					"-Wno-multichar",
