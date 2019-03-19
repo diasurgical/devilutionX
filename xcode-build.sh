@@ -124,10 +124,10 @@ function main {
                 build_libpng
                 build_freetype
                 build_sdl2_ttf
-                build_libsodium
+                build_libsodium 
             ;;
            "--build-project")
-                build_devilutionx
+                build_devilutionx || { echo "** Build Project > `--build-project` command failed"; exit 1; }
             ;;
            "--package")
                 create_dmg
