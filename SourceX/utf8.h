@@ -1,13 +1,13 @@
+#pragma once
+
+#include <cstdint>
+#include <string>
+#include <utility>
+
 /* Branchless UTF-8 decoder
  *
  * This is free and unencumbered software released into the public domain.
  */
-#ifndef UTF8_H
-#define UTF8_H
-
-#include <stdint.h>
-#include <string>
-#include <utility>
 
 /* Decode the next character, C, from BUF, reporting errors in E.
  *
@@ -84,5 +84,3 @@ inline std::string utf8_to_latin1(const char* in)
 	}
 	return std::move(ret);
 }
-
-#endif

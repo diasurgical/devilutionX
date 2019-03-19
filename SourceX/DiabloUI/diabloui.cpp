@@ -543,7 +543,7 @@ int GetStrWidth(char *str, int size)
 {
 	int strWidth = 0;
 
-	for (int i = 0; i < strlen((char *)str); i++) {
+	for (size_t i = 0; i < strlen((char *)str); i++) {
 		BYTE w = FontTables[size][*(BYTE *)&str[i] + 2];
 		if (w)
 			strWidth += w;
@@ -633,7 +633,7 @@ void DrawArtStr(UI_Item *item)
 	if (item->flags & UIS_VCENTER)
 		sy += (item->rect.h - ArtFonts[size][color].height) / 2;
 
-	for (int i = 0; i < strlen((char *)item->caption); i++) {
+	for (size_t i = 0; i < strlen((char *)item->caption); i++) {
 		if (item->caption[i] == '\n') {
 			sx = x;
 			sy += ArtFonts[size][color].height;

@@ -519,7 +519,8 @@ void credts_Render()
 				x += 40;
 			}
 
-			if (text_surface = TTF_RenderUTF8_Solid(font, the_long_credits[creditLine + i] + offset, color)) {
+			text_surface = TTF_RenderUTF8_Solid(font, the_long_credits[creditLine + i] + offset, color);
+			if (text_surface) {
 				SDL_Rect src_rect = { 0, -y, SCREEN_WIDTH, 251 };
 				SDL_Rect dsc_rect = { 64 + x, 160 + 114, SCREEN_WIDTH, SCREEN_HEIGHT };
 				SDL_BlitSurface(text_surface, &src_rect, pal_surface, &dsc_rect);
