@@ -358,7 +358,10 @@ void dx_init(HWND hWnd)
 		return;
 	}
 
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
+	char scaleQuality[2] = "2";
+	DvlStringSetting("scale quality", scaleQuality, 2);
+
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, scaleQuality);
 	if (SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT) != 0) {
 		SDL_Log("SDL_RenderSetLogicalSize: %s\n", SDL_GetError());
 		return;

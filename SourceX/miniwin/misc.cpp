@@ -282,10 +282,15 @@ HWND CreateWindowExA(
 	}
 	atexit(SDL_Quit);
 
-	int flags = SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_INPUT_GRABBED;
-	if (!fullscreen) {
-		flags = SDL_WINDOW_RESIZABLE;
+	DvlIntSetting("fullscreen", &fullscreen);
+	int flags = fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_RESIZABLE;
+
+	int grabInput = 1;
+	DvlIntSetting("grab input", &grabInput);
+	if (grabInput) {
+		flags |= SDL_WINDOW_INPUT_GRABBED;
 	}
+
 	window = SDL_CreateWindow(lpWindowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, nWidth, nHeight, flags);
 	atexit(FakeWMDestroy);
 
