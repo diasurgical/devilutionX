@@ -78,6 +78,10 @@ static DWORD StringToInt(const char * szString)
 #define stat64 stat
 #endif
 
+#ifndef ftruncate64
+#define ftruncate64 ftruncate
+#endif
+
 //-----------------------------------------------------------------------------
 // Dummy init function
 
