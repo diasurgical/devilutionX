@@ -70,6 +70,10 @@ static DWORD StringToInt(const char * szString)
 #define lseek64 lseek
 #endif
 
+#ifndef fstat64
+#define fstat64 fstat
+#endif
+
 //-----------------------------------------------------------------------------
 // Dummy init function
 
