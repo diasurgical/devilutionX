@@ -3,5 +3,4 @@ freebsd_instance:
 
 task:
   install_script: pkg install -y cmake gcc8 libsodium pkgconf sdl2_mixer sdl2_ttf
-  script: cmake -DCMAKE_C_COMPILER=/usr/local/bin/gcc8 -DCMAKE_CXX_COMPILER=/usr/local/bin/g++8 -DASAN=OFF ..
-  script: make
+  script: cmake -DCMAKE_C_COMPILER=/usr/local/bin/gcc8 -DCMAKE_CXX_COMPILER=/usr/local/bin/g++8 -DASAN=OFF .. && make
