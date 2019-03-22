@@ -62,6 +62,10 @@ static DWORD StringToInt(const char * szString)
     return dwValue;
 }
 
+#ifndef O_LARGEFILE
+#define O_LARGEFILE 0
+#endif
+
 //-----------------------------------------------------------------------------
 // Dummy init function
 
