@@ -66,6 +66,10 @@ static DWORD StringToInt(const char * szString)
 #define O_LARGEFILE 0
 #endif
 
+#ifndef HAVE_LSEEK64
+#define lseek64 lseek
+#endif
+
 //-----------------------------------------------------------------------------
 // Dummy init function
 
