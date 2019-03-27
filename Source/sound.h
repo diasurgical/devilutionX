@@ -34,6 +34,6 @@ int __fastcall sound_get_or_set_sound_volume(int volume);
 extern BYTE gbMusicOn;
 extern BYTE gbSoundOn;
 extern BYTE gbDupSounds;
-extern char unk_volume[4][2];
+extern signed char unk_volume[4][2];
 
 #endif /* __SOUND_H__ */

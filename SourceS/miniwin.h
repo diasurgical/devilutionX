@@ -15,7 +15,12 @@
 #include <time.h>
 // For _rotr()
 #ifdef DEVILUTION_ENGINE
-#include <x86intrin.h>
+// Some platforms do not have a hardware _rotr()
+#	ifdef __x86__
+#		include <x86intrin.h>
+#	else
+#		define _rotr(a,b)	((a >> b) ^ (a << (32-b)))
+#	endif
 #endif
 
 #ifndef _WIN32

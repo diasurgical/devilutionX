@@ -29,7 +29,7 @@ char *sgszMusicTracks[NUM_MUSIC] = {
 	"Music\\DLvlD.wav",
 	"Music\\Dintro.wav"
 };
-char unk_volume[4][2] = {
+signed char unk_volume[4][2] = {
 	{ 15, -16 },
 	{ 15, -16 },
 	{ 30, -31 },

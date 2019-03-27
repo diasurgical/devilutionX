@@ -82,6 +82,11 @@ BOOLEAN __fastcall mpqapi_reg_load_modification_time(char *dst, int size)
 	return 1;
 }
 
+// For _rotl() on non-x86, like PowerPC
+#ifndef __x86__
+#	define _rotl(a,b)	((a << b) ^ (a >> (32-b)))
+#endif
+
 void __fastcall mpqapi_xor_buf(char *pbData)
 {
 	signed int v1; // eax
