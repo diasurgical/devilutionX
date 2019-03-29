@@ -24,6 +24,10 @@ Please keep in mind that this is still being worked on and is missing parts of U
 ```
 sudo apt-get install cmake g++-multilib libsdl2-dev:i386 libsdl2-mixer-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev libsodium-dev:i386
 ```
+### Installing dependencies on Fedora
+```
+sudo dnf install cmake glibc-devel.i686 SDL2-devel.i686 SDL2_ttf-devel.i686 SDL2_mixer-devel.i686 libsodium-devel.i686 libasan.i686
+```
 ### Compiling
 ```
 mkdir build
