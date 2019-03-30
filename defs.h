@@ -176,7 +176,7 @@ __inline void *qmemcpy(void *dst, const void *src, size_t cnt)
 // Typedef for the function pointer
 typedef void (*_PVFV)(void);
 
-#if defined(_MSC_VER) && !defined(__APPLE__)
+#if defined(_MSC_VER) && !(defined(__APPLE__)|| defined(__FreeBSD__))
 // Define our segment names
 #define SEGMENT_C_INIT ".CRT$XCU"
 

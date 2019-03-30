@@ -3,7 +3,7 @@
 #include <ctype.h>
 #include <math.h>
 // work around https://reviews.llvm.org/D51265
-#ifdef __APPLE__
+#if defined(__APPLE__) || defined(__FreeBSD__)
 #include "macos_stdarg.h"
 #else
 #include <stdarg.h>
