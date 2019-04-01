@@ -5,6 +5,7 @@ Status | Platform
 ---:| ---
 [![CircleCI](https://circleci.com/gh/diasurgical/devilutionX.svg?style=svg)](https://circleci.com/gh/diasurgical/devilutionX) | Linux 32bit & 64bit, Windows 32bit
 [![Build Status](https://travis-ci.org/diasurgical/devilutionX.svg?branch=master)](https://travis-ci.org/diasurgical/devilutionX) | macOS 32bit & 64bit
+[![Build status](https://ci.appveyor.com/api/projects/status/1a0jus2372qvksht?svg=true)](https://ci.appveyor.com/project/AJenbo/devilutionx) | Windows MSVC
 
 ![Discord Channel](https://avatars3.githubusercontent.com/u/1965106?s=16&v=4) [Discord Chat Channel](https://discord.gg/aQBQdDe)
 
@@ -76,6 +77,17 @@ cd build
 cmake -DASAN=OFF -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake ..
 make -j$(nproc)
 ```
+</details>
+<details><summary>Windows via Visual Studio</summary>
+
+### Installing dependencies
+Make sure to install the `C++ CMake tools for Windows` component for Visual Studio.
+
+Download and place the 32bit MSVC Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/), [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/) and [Libsodium](https://github.com/jedisct1/libsodium/releases) in `%USERPROFILE%\AppData\Local\Microsoft\WindowsApps\`.
+
+Go to `File -> Open -> CMake`, select `CMakeLists` from the project root.
+### Compiling
+Next select `Build devilution.exe` from the `Build` menu.
 </details>
 
 ## Building for the native platform
