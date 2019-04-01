@@ -5,6 +5,10 @@
 #include "dx.h"
 #include "DiabloUI/diabloui.h"
 #include <string>
+#ifdef _MSC_VER
+#define strcasecmp _stricmp
+#endif
+
 
 namespace dvl {
 

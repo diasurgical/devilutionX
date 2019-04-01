@@ -425,6 +425,7 @@ void __cdecl DrawSpellList()
 	v0 = myplr;
 	v1 = RSPLTYPE_SKILL;
 	v24 = 0;
+	nCel = 0;
 	do {
 		switch (v1) {
 		case RSPLTYPE_SKILL:

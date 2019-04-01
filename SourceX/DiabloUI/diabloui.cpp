@@ -179,11 +179,11 @@ void UiFocus(int itemIndex, bool wrap = false)
 			itemIndex = SelectedItemMin;
 			return;
 		} else if (itemIndex > SelectedItemMax) {
-			itemIndex = SelectedItemMax ?: SelectedItemMin;
+			itemIndex = SelectedItemMax ? SelectedItemMax : SelectedItemMin;
 			return;
 		}
 	} else if (itemIndex < SelectedItemMin) {
-		itemIndex = SelectedItemMax ?: SelectedItemMin;
+		itemIndex = SelectedItemMax ? SelectedItemMax : SelectedItemMin;
 	} else if (itemIndex > SelectedItemMax) {
 		itemIndex = SelectedItemMin;
 	}
@@ -520,7 +520,7 @@ void DrawArt(int screenX, int screenY, Art *art, int nFrame, int drawW)
 {
 	BYTE *src = (BYTE *)art->data + (art->width * art->height * nFrame);
 	BYTE *dst = &gpBuffer[screenX + 64 + (screenY + 160) * 768];
-	drawW = drawW ?: art->width;
+	drawW = drawW ? drawW : art->width;
 
 	for (int i = 0; i < art->height && i + screenY < SCREEN_HEIGHT; i++, src += art->width, dst += ROW_PITCH) {
 		for (int j = 0; j < art->width && j + screenX < SCREEN_WIDTH; j++) {
@@ -639,7 +639,7 @@ void DrawArtStr(UI_Item *item)
 			sy += ArtFonts[size][color].height;
 			continue;
 		}
-		BYTE w = FontTables[size][*(BYTE *)&item->caption[i] + 2] ?: FontTables[size][0];
+		BYTE w = FontTables[size][*(BYTE *)&item->caption[i] + 2] ? FontTables[size][*(BYTE *)&item->caption[i] + 2] : FontTables[size][0];
 		DrawArt(sx, sy, &ArtFonts[size][color], *(BYTE *)&item->caption[i], w);
 		sx += w;
 	}

@@ -268,6 +268,7 @@ void __cdecl CheckCursMove()
 	if (my >= MAXDUNY)
 		my = MAXDUNY - 1;
 
+	some_bool = 0;
 	if (posy_31 >= posx_63 >> 1) {
 		if (!v9)
 			some_bool = 0;

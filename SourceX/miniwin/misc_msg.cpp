@@ -98,7 +98,7 @@ static WPARAM keystate_for_mouse(WPARAM ret)
 
 static WINBOOL false_avail()
 {
-	DUMMY_PRINT("return false although event avaliable");
+	DUMMY_PRINT("return false although event avaliable", 1);
 	return false;
 }
 

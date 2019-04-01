@@ -411,6 +411,7 @@ HRESULT sound_DirectSoundCreate(LPGUID lpGuid, LPDIRECTSOUND *ppDS, LPUNKNOWN pU
 		}
 	}
 
+	DirectSoundCreate = NULL;
 	if (DirectSoundCreate == NULL) {
 	}
 	*ppDS = new DirectSound();

@@ -323,7 +323,7 @@ void setIniValue(const char *sectionName, const char *keyName, char *value, int 
 		section = ini.getSection(sectionName);
 	}
 
-	std::string stringValue(value, len ?: strlen(value));
+	std::string stringValue(value, len ? len : strlen(value));
 
 	radon::Key *key = section->getKey(keyName);
 	if (!key) {

@@ -232,20 +232,19 @@ if(WIN32)
   target_compile_options(devilution PUBLIC $<$<CONFIG:Debug>:-gstabs>)
 endif()
 
-target_compile_options(devilution PUBLIC -Wno-unknown-pragmas)
 # Note: In Debug mode, GCC generates spurious memory references that upset Valgrind,
 # these options fix that.
 target_compile_options(devilution PUBLIC $<$<CONFIG:Debug>:-fno-omit-frame-pointer>)
 # Ignore serious warnings due to "quality" of decompiled code
 # Currently, disable ignore all warnings (-w), to be removed later
-target_compile_options(devilution PRIVATE -fpermissive -Wno-write-strings -Wno-multichar -w)
+target_compile_options(devilution PRIVATE -fpermissive -w)
 # Disable optimizations that can break non-standards-conforming code
 target_compile_options(devilution PRIVATE -fno-strict-aliasing)
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   target_compile_options(devilution PRIVATE -fno-aggressive-loop-optimizations)
 endif()
 # Warnings for devilutionX
-target_compile_options(devilutionx PRIVATE -Wall -Wextra -Wno-write-strings -Wno-multichar -Wno-unused-parameter)
+target_compile_options(devilutionx PRIVATE -Wall)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   # Style issues

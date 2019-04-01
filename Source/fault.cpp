@@ -244,12 +244,14 @@ char *__fastcall exception_get_error_type(DWORD dwMessageId, LPSTR lpString1, DW
 
 void __fastcall exception_set_filter()
 {
-	lpTopLevelExceptionFilter = SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER)TopLevelExceptionFilter);
+	//lpTopLevelExceptionFilter = SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER)TopLevelExceptionFilter);
+	lpTopLevelExceptionFilter = TopLevelExceptionFilter;
 }
 
 LPTOP_LEVEL_EXCEPTION_FILTER __cdecl exception_set_filter_ptr()
 {
-	return SetUnhandledExceptionFilter(lpTopLevelExceptionFilter);
+	//return SetUnhandledExceptionFilter(lpTopLevelExceptionFilter);
+	return lpTopLevelExceptionFilter;
 }
 
 LPTOP_LEVEL_EXCEPTION_FILTER __cdecl exception_get_filter()

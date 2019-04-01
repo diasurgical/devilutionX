@@ -15,7 +15,11 @@
 #define LOWORD(l) ((WORD)(((DWORD_PTR)(l)) & 0xffff))
 #define HIWORD(l) ((WORD)((((DWORD_PTR)(l)) >> 16) & 0xffff))
 
+#ifdef _MSC_VER
+#define InterlockedIncrement(x) (x)
+#else
 #define InterlockedIncrement(x) __sync_add_and_fetch(x, 1)
+#endif
 
 #define INFINITE DVL_INFINITE;
 
