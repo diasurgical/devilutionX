@@ -12,7 +12,7 @@ configuration:
 platform: x86
 
 before_build:
-    - cmake -G "Visual Studio 15 2017 x86" .
+    - cmake -G "Visual Studio 15 2017" .
 
 build:
   project: $(APPVEYOR_BUILD_FOLDER)\$(APPVEYOR_PROJECT_NAME).sln
