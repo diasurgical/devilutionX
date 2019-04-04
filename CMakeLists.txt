@@ -243,8 +243,6 @@ target_compile_options(devilution PRIVATE -fno-strict-aliasing)
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   target_compile_options(devilution PRIVATE -fno-aggressive-loop-optimizations)
 endif()
-# Warnings for devilutionX
-target_compile_options(devilutionx PRIVATE -Wall)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   # Style issues
