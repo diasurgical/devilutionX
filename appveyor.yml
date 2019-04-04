@@ -5,10 +5,6 @@ pull_requests:
 
 image: Visual Studio 2017
 
-configuration:
-  - Release
-  - Debug
-
 platform: x86
 
 install:
