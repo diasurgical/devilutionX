@@ -2,7 +2,7 @@ version: 1.0.{build}
 
 pull_requests:
   do_not_increment_build_number: true
-
+clone_depth: 1
 image: Visual Studio 2017
 
 install:
@@ -14,3 +14,6 @@ before_build:
 build:
   project: $(APPVEYOR_BUILD_FOLDER)\$(APPVEYOR_PROJECT_NAME).sln
   verbosity: minimal
+artifacts:
+  - path: $(CONFIGURATION)\Debug\devilutionx.exe
+    name: devilutionx.exe
