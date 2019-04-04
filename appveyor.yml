@@ -12,14 +12,14 @@ configuration:
 platform: x86
 
 install:
-  - curl -LO https://www.libsdl.org/release/SDL2-devel-2.0.9-VC.zip
-  - curl -LO https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-devel-2.0.4-VC.zip
-  - curl -LO https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-devel-2.0.15-VC.zip
-  - curl -LO https://github.com/jedisct1/libsodium/releases/download/1.0.17/libsodium-1.0.17-msvc.zip
-  - 7z x SDL2-devel-2.0.9-VC.zip
-  - 7z x SDL2_mixer-devel-2.0.4-VC.zip
-  - 7z x SDL2_ttf-devel-2.0.15-VC.zip
-  - 7z x libsodium-1.0.17-msvc.zip
+  - cd C:\Tools\vcpkg
+  - git pull
+  - .\bootstrap-vcpkg.bat
+  - cd %APPVEYOR_BUILD_FOLDER%
+	- vcpkg install sdl2:x86-windows
+	- vcpkg install sdl2-mixer:x86-windows
+	- vcpkg install sdl2-ttf:x86-windows
+	- vcpkg install libsodium:x86-windows
 
 before_build:
     - cmake -G "Visual Studio 15 2017" .
