@@ -15,5 +15,5 @@ build:
   project: $(APPVEYOR_BUILD_FOLDER)\$(APPVEYOR_PROJECT_NAME).sln
   verbosity: minimal
 artifacts:
-  - path: $(CONFIGURATION)\Debug\devilutionx.exe
+  - path: Debug\devilutionx.exe
     name: devilutionx.exe
