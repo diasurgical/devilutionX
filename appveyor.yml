@@ -12,17 +12,15 @@ configuration:
 platform: x86
 
 install:
-  - cd C:\Tools\vcpkg
-  - git pull
-  - .\bootstrap-vcpkg.bat
-  - cd %APPVEYOR_BUILD_FOLDER%
   - vcpkg install sdl2:x86-windows
   - vcpkg install sdl2-mixer:x86-windows
   - vcpkg install sdl2-ttf:x86-windows
   - vcpkg install libsodium:x86-windows
+  - cd c:\tools\vcpkg
+  - vcpkg integrate install
 
 before_build:
-    - cmake -G "Visual Studio 15 2017" .
+    - cmake -G "Visual Studio 15 2017" -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake .
 
 build:
   project: $(APPVEYOR_BUILD_FOLDER)\$(APPVEYOR_PROJECT_NAME).sln
