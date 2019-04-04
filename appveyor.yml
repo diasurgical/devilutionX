@@ -5,16 +5,11 @@ pull_requests:
 
 image: Visual Studio 2017
 
-platform: x86
-
 install:
-  - vcpkg install sdl2:x86-windows
-  - vcpkg install sdl2-mixer:x86-windows
-  - vcpkg install sdl2-ttf:x86-windows
-  - vcpkg install libsodium:x86-windows
+  - vcpkg install sdl2:x86-windows sdl2-mixer:x86-windows sdl2-ttf:x86-windows libsodium:x86-windows
 
 before_build:
-    - cmake -G "Visual Studio 15 2017" -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake .
+  - cmake -G "Visual Studio 15 2017" -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake .
 
 build:
   project: $(APPVEYOR_BUILD_FOLDER)\$(APPVEYOR_PROJECT_NAME).sln
