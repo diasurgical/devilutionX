@@ -246,6 +246,11 @@ if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   # Warnings for devilutionX
   target_compile_options(devilutionx PRIVATE -Wall -Wextra -Wno-write-strings -Wno-multichar -Wno-unused-parameter)
 endif()
+
+if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+  target_compile_options(devilution PRIVATE "/W0")
+endif()
+
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   target_compile_options(devilution PRIVATE -fno-aggressive-loop-optimizations)
 endif()
