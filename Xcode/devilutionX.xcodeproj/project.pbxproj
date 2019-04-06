@@ -1317,6 +1317,7 @@
 					"-fms-extensions",
 					"-fms-compatibility",
 					"'-fms-compatibility-version=19.00'",
+					"-Wno-narrowing",
 					"'-std=c++14'",
 				);
 				OTHER_LIBTOOLFLAGS = " ";
@@ -1460,6 +1461,7 @@
 					"-fms-extensions",
 					"-fms-compatibility",
 					"'-fms-compatibility-version=19.00'",
+					"-Wno-narrowing",
 					"'-std=c++14'",
 				);
 				OTHER_LIBTOOLFLAGS = " ";

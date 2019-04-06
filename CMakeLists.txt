@@ -232,6 +232,10 @@ if(WIN32)
   target_compile_options(devilution PUBLIC $<$<CONFIG:Debug>:-gstabs>)
 endif()
 
+if (APPLE)
+  set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wno-narrowing")
+endif()
+
 target_compile_options(devilution PUBLIC -Wno-unknown-pragmas)
 # Note: In Debug mode, GCC generates spurious memory references that upset Valgrind,
 # these options fix that.
