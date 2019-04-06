@@ -7,19 +7,19 @@ typedef struct STACK_FRAME {
 	void *pCallRet;
 } STACK_FRAME;
 
-//int dword_52B9F4;
-extern LPTOP_LEVEL_EXCEPTION_FILTER lpTopLevelExceptionFilter; // idb
+extern int fault_unused;
+extern LPTOP_LEVEL_EXCEPTION_FILTER lpTopLevelExceptionFilter;
 
-void __cdecl exception_install_filter();
-void __cdecl j_exception_init_filter();
-void __cdecl exception_init_filter(void);
+void __cdecl fault_init_filter();
+void __cdecl fault_cleanup_filter_atexit();
+LPTOP_LEVEL_EXCEPTION_FILTER __cdecl fault_cleanup_filter();
 LONG __stdcall TopLevelExceptionFilter(PEXCEPTION_POINTERS ExceptionInfo);
-void __fastcall exception_hex_format(BYTE *ptr, unsigned int numBytes);
-void __fastcall exception_unknown_module(LPCVOID lpAddress, LPSTR lpModuleName, int iMaxLength, int *sectionNum, int *sectionOffset);
-void __fastcall exception_call_stack(void *instr, STACK_FRAME *stackAddr);
-char *__fastcall exception_get_error_type(DWORD dwMessageId, LPSTR lpString1, DWORD nSize);
-void __fastcall exception_set_filter();
-LPTOP_LEVEL_EXCEPTION_FILTER __cdecl exception_set_filter_ptr();
-LPTOP_LEVEL_EXCEPTION_FILTER __cdecl exception_get_filter();
+void __fastcall fault_hex_format(BYTE *ptr, unsigned int numBytes);
+void __fastcall fault_unknown_module(LPCVOID lpAddress, LPSTR lpModuleName, int iMaxLength, int *sectionNum, int *sectionOffset);
+void __fastcall fault_call_stack(void *instr, STACK_FRAME *stackAddr);
+char *__fastcall fault_get_error_type(DWORD dwMessageId, LPSTR lpString1, DWORD nSize);
+void * __fastcall fault_set_filter(void *unused);
+LPTOP_LEVEL_EXCEPTION_FILTER __fastcall fault_reset_filter(void *unused);
+LPTOP_LEVEL_EXCEPTION_FILTER __cdecl fault_get_filter();
 
 #endif /* __FAULT_H__ */

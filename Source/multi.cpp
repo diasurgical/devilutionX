@@ -98,7 +98,7 @@ void __fastcall NetRecvPlrData(TPkt *pkt)
 void __fastcall NetSendHiPri(BYTE *pbMsg, BYTE bLen)
 {
 	unsigned char *v5; // eax
-	TSyncHeader *v6;   // eax
+	BYTE *v6;          // eax
 	int v7;            // eax
 	int v8;            // eax
 	TPkt pkt;          // [esp+Ch] [ebp-204h]
@@ -113,7 +113,7 @@ void __fastcall NetSendHiPri(BYTE *pbMsg, BYTE bLen)
 		NetRecvPlrData(&pkt);
 		size = gdwNormalMsgSize - 19;
 		v5 = multi_recv_packet(&sgHiPriBuf, pkt.body, &size);
-		v6 = (TSyncHeader *)multi_recv_packet(&sgLoPriBuf, v5, &size);
+		v6 = multi_recv_packet(&sgLoPriBuf, v5, &size);
 		v7 = sync_all_monsters(v6, size);
 		v8 = gdwNormalMsgSize - v7;
 		pkt.hdr.wLen = v8;
@@ -631,7 +631,7 @@ char __fastcall multi_event_handler(int a1)
 		v4 = (int)v2(event_types[v3], multi_handle_events);
 		if (!v4 && v1) {
 			v5 = TraceLastError();
-			TermMsg("SNetRegisterEventHandler:\n%s", v5);
+			app_fatal("SNetRegisterEventHandler:\n%s", v5);
 		}
 		++v3;
 	} while (v3 < 3);
@@ -747,7 +747,7 @@ int __fastcall NetInit(int bSinglePlayer, int *pfExitProgram)
 		buffer_init(&sgHiPriBuf);
 		buffer_init(&sgLoPriBuf);
 		dword_678628 = 0;
-		sync_clear_pkt();
+		sync_init();
 		nthread_start(sgbPlayerTurnBitTbl[myplr]);
 		dthread_start();
 		MI_Dummy(0); /* v5 */
@@ -875,7 +875,7 @@ BOOL __fastcall multi_init_single(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA
 
 	unused = 0;
 	if (!SNetCreateGame("local", "local", "local", 0, (char *)&sgGameInitInfo.dwSeed, 8, 1, "local", "local", &unused)) {
-		TermMsg("SNetCreateGame1:\n%s", TraceLastError());
+		app_fatal("SNetCreateGame1:\n%s", TraceLastError());
 	}
 
 	myplr = 0;

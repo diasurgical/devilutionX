@@ -47,7 +47,7 @@ int __stdcall mainmenu_select_hero_dialog(
 		        &dlgresult,
 		        gszHero,
 		        &gnDifficulty))
-			TermMsg("Unable to display SelHeroSing");
+			app_fatal("Unable to display SelHeroSing");
 
 
 		if (dlgresult == LOAD_GAME)
@@ -63,7 +63,7 @@ int __stdcall mainmenu_select_hero_dialog(
 	               &dlgresult,
 	               &hero_is_created,
 	               gszHero)) {
-		TermMsg("Can't load multiplayer dialog");
+		app_fatal("Can't load multiplayer dialog");
 	}
 	if (dlgresult == EXIT_MENU) {
 		SErrSetLastError(1223);
@@ -94,7 +94,7 @@ void __cdecl mainmenu_loop()
 	do {
 		menu = 0;
 		if (!UiMainMenuDialog("Diablo v1.09", &menu, effects_play_sound, 30))
-			TermMsg("Unable to display mainmenu");
+			app_fatal("Unable to display mainmenu");
 
 		switch (menu) {
 		case MAINMENU_SINGLE_PLAYER:

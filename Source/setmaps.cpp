@@ -77,7 +77,7 @@ int __fastcall ObjIndex(int x, int y)
 		if (object[oi]._ox == x && object[oi]._oy == y)
 			return oi;
 	}
-	TermMsg("ObjIndex: Active object not found at (%d,%d)", x, y);
+	app_fatal("ObjIndex: Active object not found at (%d,%d)", x, y);
 	return -1;
 }
 
@@ -124,7 +124,7 @@ void __fastcall DRLG_SetMapTrans(char *sFileName)
 
 	for (j = 0; j < y; j++) {
 		for (i = 0; i < x; i++) {
-			dung_map[16 + i][16 + j] = *d;
+			dTransVal[16 + i][16 + j] = *d;
 			d += 2;
 		}
 	}

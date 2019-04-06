@@ -171,26 +171,26 @@ void __fastcall PrintQTextChr(int sx, int sy, BYTE *pCelBuff, int nCel)
 	src = &pCelBuff[pFrameTable[0]];
 	end = &src[pFrameTable[1] - pFrameTable[0]];
 
-	for(; src != end; dst -= 768 + 22) {
-		for(i = 22; i;) {
+	for (; src != end; dst -= 768 + 22) {
+		for (i = 22; i;) {
 			width = *src++;
-			if(!(width & 0x80)) {
+			if (!(width & 0x80)) {
 				i -= width;
-				if(dst >= pStart && dst <= pEnd) {
-					if(width & 1) {
+				if (dst >= pStart && dst <= pEnd) {
+					if (width & 1) {
 						dst[0] = src[0];
 						src++;
 						dst++;
 					}
 					width >>= 1;
-					if(width & 1) {
+					if (width & 1) {
 						dst[0] = src[0];
 						dst[1] = src[1];
 						src += 2;
 						dst += 2;
 					}
 					width >>= 1;
-					for(; width; width--) {
+					for (; width; width--) {
 						dst[0] = src[0];
 						dst[1] = src[1];
 						dst[2] = src[2];

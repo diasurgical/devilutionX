@@ -157,13 +157,13 @@ void __fastcall InvDrawSlotBack(int X, int Y, int W, int H)
 	int wdt, hgt;
 	BYTE pix;
 
-	for(hgt = H; hgt; hgt--, dst -= 768 + W) {
-		for(wdt = W; wdt; wdt--) {
+	for (hgt = H; hgt; hgt--, dst -= 768 + W) {
+		for (wdt = W; wdt; wdt--) {
 			pix = *dst;
-			if(pix >= PAL16_BLUE) {
-				if(pix <= PAL16_BLUE + 15)
+			if (pix >= PAL16_BLUE) {
+				if (pix <= PAL16_BLUE + 15)
 					pix -= PAL16_BLUE - PAL16_BEIGE;
-				else if(pix >= PAL16_GRAY)
+				else if (pix >= PAL16_GRAY)
 					pix -= PAL16_GRAY - PAL16_BEIGE;
 			}
 			*dst++ = pix;

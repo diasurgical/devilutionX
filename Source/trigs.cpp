@@ -171,7 +171,7 @@ void __cdecl InitL1Triggers()
 				*_tx = i;
 				*_ty = j;
 				*_tmsg = WM_DIABPREVLVL;
-				_tx += sizeof(int*);
+				_tx += sizeof(int *);
 				_ty += sizeof(int *);
 				_tmsg += sizeof(int *);
 			}
@@ -433,71 +433,53 @@ void __cdecl InitVPTriggers()
 	trigs[0]._tmsg = WM_DIABRTNLVL;
 }
 
-unsigned char __cdecl ForceTownTrig()
+BOOL __cdecl ForceTownTrig()
 {
-	int v0;        // edx
-	int *v1;       // esi
-	int v2;        // edx
-	int *v3;       // esi
-	signed int v4; // esi
-	signed int v5; // edx
+	int i, j, k, l;
 
-	v0 = TownDownList[0];
-	if (TownDownList[0] != -1) {
-		v1 = TownDownList;
-		while (dPiece[cursmx][cursmy] != v0) {
-			++v1;
-			v0 = *v1;
-			if (*v1 == -1)
-				goto LABEL_5;
+	for (i = 0; TownDownList[i] != -1; i++) {
+		if (dPiece[cursmx][cursmy] == TownDownList[i]) {
+			strcpy(infostr, "Down to dungeon");
+			cursmx = 25;
+			cursmy = 29;
+			return TRUE;
 		}
-		strcpy(infostr, "Down to dungeon");
-		cursmx = 25;
-		cursmy = 29;
-		return 1;
 	}
-LABEL_5:
+
 	if (trigflag[0]) {
-		v2 = TownWarp1List[0];
-		if (TownWarp1List[0] != -1) {
-			v3 = TownWarp1List;
-			while (dPiece[cursmx][cursmy] != v2) {
-				++v3;
-				v2 = *v3;
-				if (*v3 == -1)
-					goto LABEL_13;
+		for (j = 0; TownWarp1List[j] != -1; j++) {
+			if (dPiece[cursmx][cursmy] == TownWarp1List[j]) {
+				strcpy(infostr, "Down to catacombs");
+				cursmx = 49;
+				cursmy = 21;
+				return TRUE;
 			}
-			strcpy(infostr, "Down to catacombs");
-			cursmx = 49;
-			cursmy = 21;
-			return 1;
 		}
 	}
-LABEL_13:
+
 	if (trigflag[1]) {
-		v4 = 1199;
-		while (dPiece[cursmx][cursmy] != v4) {
-			if (++v4 > 1220)
-				goto LABEL_17;
+		for (k = 1199; k <= 1220; k++) {
+			if (dPiece[cursmx][cursmy] == k) {
+				strcpy(infostr, "Down to caves");
+				cursmx = 17;
+				cursmy = 69;
+				return TRUE;
+			}
 		}
-		strcpy(infostr, "Down to caves");
-		cursmx = 17;
-		cursmy = 69;
-		return 1;
 	}
-LABEL_17:
+
 	if (trigflag[2]) {
-		v5 = 1240;
-		while (dPiece[cursmx][cursmy] != v5) {
-			if (++v5 > 1255)
-				return 0;
+		for (l = 1240; l <= 1254; l++) {
+			if (dPiece[cursmx][cursmy] == l) {
+				strcpy(infostr, "Down to hell");
+				cursmx = 41;
+				cursmy = 80;
+				return TRUE;
+			}
 		}
-		strcpy(infostr, "Down to hell");
-		cursmx = 41;
-		cursmy = 80;
-		return 1;
 	}
-	return 0;
+
+	return FALSE;
 }
 
 unsigned char __cdecl ForceL1Trig()
@@ -1150,7 +1132,7 @@ void __cdecl CheckTriggers()
 			TWarpFrom = currlevel;
 			StartNewLvl(myplr, v4, 0);
 		} else {
-			TermMsg("Unknown trigger msg");
+			app_fatal("Unknown trigger msg");
 		}
 		goto LABEL_34;
 	}

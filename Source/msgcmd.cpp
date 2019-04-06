@@ -15,8 +15,8 @@ __attribute__((constructor))
 static void
 msgcmd_c_init(void)
 {
-	exception_install_filter();
-	j_exception_init_filter();
+	fault_init_filter();
+	fault_cleanup_filter_atexit();
 }
 
 SEG_ALLOCATE(SEGMENT_C_INIT)

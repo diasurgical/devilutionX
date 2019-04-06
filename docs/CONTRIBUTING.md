@@ -5,7 +5,7 @@ Devilution.
 
 ## Code style guide
 
-The code style guide is evolving with the project and can be found [here](https://github.com/diasurgical/devilution/wiki/Code-style-guide).
+[The code style guide](https://github.com/diasurgical/devilution/wiki/Code-Style) is evolving with the project.
 
 ## Useful Repos
 

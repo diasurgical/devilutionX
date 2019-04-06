@@ -175,7 +175,7 @@ void __fastcall FillMemFile(MEMFILE *pMemFile)
 	pMemFile->bytes_to_read = to_read;
 }
 
-int __fastcall SeekMemFile(MEMFILE *pMemFile, LONG lDist, DWORD dwMethod)
+int __fastcall SeekMemFile(MEMFILE *pMemFile, ULONG lDist, DWORD dwMethod)
 {
 	if (lDist < pMemFile->bytes_to_read) {
 		pMemFile->bytes_to_read -= lDist;

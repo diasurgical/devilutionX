@@ -119,7 +119,7 @@ void __fastcall codec_encode(void *pbSrcDst, int size, int size_64, char *pszPas
 	v4 = (char *)pbSrcDst;
 	v12 = size;
 	if (size_64 != codec_get_encoded_len(size))
-		TermMsg("Invalid encode parameters");
+		app_fatal("Invalid encode parameters");
 	codec_init_key(1, pszPassword);
 	v5 = 0;
 	if (v12) {

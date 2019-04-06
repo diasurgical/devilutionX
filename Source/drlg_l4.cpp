@@ -733,7 +733,7 @@ void __fastcall DRLG_L4(int entry)
 		v16 = -1;
 		do {
 			v17 = -1;
-			v18 = &dungeon[0][v16 + 1];
+			v18 = (char *)&dungeon[0][v16 + 1];
 			do {
 				if (*v18 == 98)
 					Make_SetPC(v17, v16, 5, 5);
@@ -775,7 +775,7 @@ void __cdecl DRLG_L4Shadows()
 
 	v0 = 1;
 	do {
-		v1 = &dungeon[1][v0];
+		v1 = (char *)&dungeon[1][v0];
 		v2 = 39;
 		do {
 			v3 = *v1;
@@ -834,7 +834,7 @@ void __cdecl L4makeDmt()
 	int v6;        // ebx
 
 	v0 = 1;
-	v1 = dungeon;
+	v1 = (char (*)[40])dungeon;
 	do {
 		v2 = v1;
 		v3 = &L4dungeon[1][v0 + 1];
@@ -977,7 +977,7 @@ int __fastcall L4HWallOk(int i, int j)
 	v8 = 1;
 	if (dungeon[0][v2 + j] == 6) {
 		v3 = 8 * (5 * i + 5);
-		v4 = &dungeon[i + 1][j];
+		v4 = (char *)&dungeon[i + 1][j];
 		do {
 			if (dflags[0][v3 + j])
 				break;
@@ -1029,7 +1029,7 @@ int __fastcall L4VWallOk(int i, int j)
 		do {
 			if (dflags[v2][j + result])
 				break;
-			v4 = &dungeon[v2][j];
+			v4 = (char *)&dungeon[v2][j];
 			if (v4[result - 40] != 6)
 				break;
 			if (dungeon[v2 + 1][result + j] != 6)
@@ -1086,7 +1086,7 @@ void __fastcall L4HorizWall(int i, int j, int dx)
 		dungeon[0][v5] = 14;
 	v6 = dx;
 	if (dx > 1) {
-		v7 = &dungeon[1][v5];
+		v7 = (char *)&dungeon[1][v5];
 		v8 = dx - 1;
 		do {
 			*v7 = 2;
@@ -1094,7 +1094,7 @@ void __fastcall L4HorizWall(int i, int j, int dx)
 			--v8;
 		} while (v8);
 	}
-	v9 = &dungeon[v3 + dx][v4];
+	v9 = (char *)&dungeon[v3 + dx][v4];
 	if (*v9 == 15)
 		*v9 = 14;
 	if (*v9 == 10)
@@ -1110,7 +1110,7 @@ void __fastcall L4HorizWall(int i, int j, int dx)
 	dungeon[0][v10] = 57;
 	if (v11)
 		dungeon[0][v10 - 1] = 58;
-	v12 = &dungeon[0][v10 + 39];
+	v12 = (char *)&dungeon[0][v10 + 39];
 	if (*v12 == 6)
 		*v12 = 59;
 }
@@ -1170,857 +1170,348 @@ void __fastcall L4VertWall(int i, int j, int dy)
 
 void __cdecl L4tileFix()
 {
-	signed int v0;   // edx
-	char *v1;        // eax
-	signed int v2;   // esi
-	char v3;         // cl
-	signed int v4;   // edx
-	char *v5;        // eax
-	signed int v6;   // esi
-	char v7;         // cl
-	signed int v8;   // ecx
-	int v9;          // eax
-	int v10;         // eax
-	char *v11;       // esi
-	char v12;        // bl
-	char *v13;       // edx
-	char *v14;       // edx
-	char *v15;       // edx
-	char *v16;       // edx
-	char *v17;       // edx
-	char *v18;       // edx
-	char *v19;       // edx
-	char *v20;       // edx
-	char *v21;       // edx
-	char *v22;       // edx
-	char *v23;       // edx
-	char *v24;       // edx
-	char *v25;       // edx
-	char *v26;       // edx
-	char *v27;       // edx
-	char *v28;       // edx
-	char *v29;       // edx
-	char *v30;       // edx
-	char *v31;       // edx
-	char *v32;       // edx
-	char *v33;       // edx
-	char *v34;       // edx
-	char *v35;       // edx
-	char *v36;       // edx
-	char *v37;       // edx
-	char *v38;       // edx
-	char *v39;       // edx
-	char *v40;       // edx
-	char *v41;       // edx
-	char *v42;       // edx
-	char *v43;       // edx
-	char *v44;       // edx
-	char *v45;       // edx
-	char *v46;       // edx
-	char *v47;       // edx
-	char *v48;       // edx
-	char *v49;       // edx
-	char *v50;       // edx
-	char *v51;       // edx
-	char *v52;       // edx
-	char *v53;       // edx
-	char *v54;       // edx
-	char *v55;       // edx
-	char *v56;       // edx
-	char *v57;       // edx
-	char *v58;       // edx
-	char *v59;       // edx
-	char *v60;       // edx
-	char *v61;       // edx
-	char *v62;       // edx
-	char *v63;       // edx
-	char *v64;       // edx
-	char *v65;       // edx
-	char *v66;       // edx
-	char *v67;       // edx
-	char *v68;       // edx
-	char *v69;       // edx
-	char *v70;       // edx
-	char *v71;       // edx
-	char *v72;       // edx
-	char *v73;       // edx
-	char *v74;       // edx
-	char *v75;       // edx
-	char *v76;       // edx
-	char *v77;       // edx
-	char *v78;       // edx
-	char *v79;       // edx
-	char *v80;       // edx
-	char *v81;       // edx
-	char *v82;       // edx
-	char *v83;       // edx
-	char *v84;       // edx
-	char *v85;       // edx
-	char *v86;       // edx
-	char *v87;       // edx
-	char *v88;       // edx
-	char *v89;       // edx
-	char *v90;       // edx
-	char *v91;       // edx
-	char *v92;       // edx
-	char *v93;       // edx
-	char *v94;       // edx
-	char *v95;       // edx
-	signed int v96;  // ecx
-	signed int v97;  // edi
-	signed int v98;  // eax
-	char *v99;       // esi
-	char v100;       // bl
-	char *v101;      // edx
-	char *v102;      // edx
-	char *v103;      // edx
-	char *v104;      // edx
-	char *v105;      // edx
-	char *v106;      // edx
-	char *v107;      // edx
-	char *v108;      // edx
-	char *v109;      // edx
-	char *v110;      // edx
-	char *v111;      // edx
-	char *v112;      // edx
-	char *v113;      // edx
-	char *v114;      // edx
-	char *v115;      // edx
-	char *v116;      // edx
-	char *v117;      // edx
-	char *v118;      // edx
-	char *v119;      // edx
-	char *v120;      // edx
-	char *v121;      // edx
-	char *v122;      // edx
-	char *v123;      // edx
-	char *v124;      // edx
-	char *v125;      // edx
-	char *v126;      // edx
-	char *v127;      // edx
-	char *v128;      // edx
-	char *v129;      // edx
-	char *v130;      // edx
-	signed int v131; // edx
-	char *v132;      // eax
-	signed int v133; // esi
-	char v134;       // cl
-	signed int v135; // edx
-	char *v136;      // eax
-	signed int v137; // esi
-	char v138;       // cl
-	signed int v139; // [esp+8h] [ebp-4h]
+	int i, j;
 
-	v0 = 0;
-	do {
-		v1 = &dungeon[1][v0];
-		v2 = 40;
-		do {
-			v3 = *(v1 - 40);
-			if (v3 == 2) {
-				if (*v1 == 6)
-					*v1 = 5;
-				if (*v1 == 1)
-					*v1 = 13;
-			}
-			if (v3 == 1 && *(v1 - 39) == 2)
-				*(v1 - 39) = 14;
-			v1 += 40;
-			--v2;
-		} while (v2);
-		++v0;
-	} while (v0 < 40);
-	v4 = 0;
-	do {
-		v5 = &dungeon[1][v4];
-		v6 = 40;
-		do {
-			v7 = *(v5 - 40);
-			if (v7 == 2) {
-				if (*v5 == 6)
-					*v5 = 2;
-				if (*v5 == 9)
-					*v5 = 11;
-			}
-			if (v7 == 9 && *v5 == 6)
-				*v5 = 12;
-			if (v7 == 14 && *v5 == 1)
-				*v5 = 13;
-			if (v7 == 6) {
-				if (*v5 == 14)
-					*v5 = 15;
-				if (*(v5 - 39) == 13)
-					*(v5 - 39) = 16;
-			}
-			if (v7 == 1 && *(v5 - 39) == 9)
-				*(v5 - 39) = 10;
-			if (v7 == 6 && *(v5 - 41) == 1)
-				*(v5 - 41) = 1;
-			v5 += 40;
-			--v6;
-		} while (v6);
-		++v4;
-	} while (v4 < 40);
-	v8 = 0;
-	do {
-		v9 = 0;
-		v139 = 0;
-		do {
-			v10 = v9;
-			v11 = &dungeon[v10][v8];
-			v12 = *v11;
-			if (*v11 == 13) {
-				v13 = &dungeon[v10][v8 + 1];
-				if (*v13 == 30)
-					*v13 = 27;
-			}
-			if (v12 == 27) {
-				v14 = &dungeon[v10 + 1][v8];
-				if (*v14 == 30)
-					*v14 = 19;
-			}
-			if (v12 == 1) {
-				v15 = &dungeon[v10][v8 + 1];
-				if (*v15 == 30)
-					*v15 = 27;
-			}
-			if (v12 == 27) {
-				v16 = &dungeon[v10 + 1][v8];
-				if (*v16 == 1)
-					*v16 = 16;
-			}
-			if (v12 == 19) {
-				v17 = &dungeon[v10 + 1][v8];
-				if (*v17 == 27)
-					*v17 = 26;
-			}
-			if (v12 == 27) {
-				v18 = &dungeon[v10 + 1][v8];
-				if (*v18 == 30)
-					*v18 = 19;
-			}
-			if (v12 == 2) {
-				v19 = &dungeon[v10 + 1][v8];
-				if (*v19 == 15)
-					*v19 = 14;
-			}
-			if (v12 == 14) {
-				v20 = &dungeon[v10 + 1][v8];
-				if (*v20 == 15)
-					*v20 = 14;
-			}
-			if (v12 == 22) {
-				v21 = &dungeon[v10 + 1][v8];
-				if (*v21 == 1)
-					*v21 = 16;
-			}
-			if (v12 == 27) {
-				v22 = &dungeon[v10 + 1][v8];
-				if (*v22 == 1)
-					*v22 = 16;
-			}
-			if (v12 == 6) {
-				v23 = &dungeon[v10 + 1][v8];
-				if (*v23 == 27) {
-					if (dungeon[v10 + 1][v8 + 1])
-						*v23 = 22;
-				}
-			}
-			if (v12 == 22) {
-				v24 = &dungeon[v10 + 1][v8];
-				if (*v24 == 30)
-					*v24 = 19;
-			}
-			if (v12 == 21) {
-				v25 = &dungeon[v10 + 1][v8];
-				if (*v25 == 1 && dungeon[v10][v8 + 39] == 1)
-					*v25 = 13;
-			}
-			if (v12 == 14) {
-				v26 = &dungeon[v10 + 1][v8];
-				if (*v26 == 30 && dungeon[v10][v8 + 1] == 6)
-					*v26 = 28;
-			}
-			if (v12 == 16) {
-				if (dungeon[v10 + 1][v8] == 6) {
-					v27 = &dungeon[v10][v8 + 1];
-					if (*v27 == 30)
-						*v27 = 27;
-				}
-				v28 = &dungeon[v10][v8 + 1];
-				if (*v28 == 30 && dungeon[v10 + 1][v8 + 1] == 30)
-					*v28 = 27;
-			}
-			if (v12 == 6) {
-				v29 = &dungeon[v10 + 1][v8];
-				if (*v29 == 30 && dungeon[v10][v8 + 39] == 6)
-					*v29 = 21;
-			}
-			if (v12 == 2) {
-				v30 = &dungeon[v10 + 1][v8];
-				if (*v30 == 27 && dungeon[v10 + 1][v8 + 1] == 9)
-					*v30 = 29;
-			}
-			if (v12 == 9) {
-				v31 = &dungeon[v10 + 1][v8];
-				if (*v31 == 15)
-					*v31 = 14;
-			}
-			if (v12 == 15) {
-				v32 = &dungeon[v10 + 1][v8];
-				if (*v32 == 27 && dungeon[v10 + 1][v8 + 1] == 2)
-					*v32 = 29;
-			}
-			if (v12 == 19) {
-				v33 = &dungeon[v10 + 1][v8];
-				if (*v33 == 18)
-					*v33 = 24;
-			}
-			if (v12 == 9) {
-				v34 = &dungeon[v10 + 1][v8];
-				if (*v34 == 15)
-					*v34 = 14;
-			}
-			if (v12 == 19) {
-				v35 = &dungeon[v10 + 1][v8];
-				if (*v35 == 19 && dungeon[v10][v8 + 39] == 30)
-					*v35 = 24;
-			}
-			if (v12 == 24 && *(v11 - 1) == 30 && *(v11 - 2) == 6)
-				*(v11 - 1) = 21;
-			if (v12 == 2) {
-				v36 = &dungeon[v10 + 1][v8];
-				if (*v36 == 30)
-					*v36 = 28;
-			}
-			if (v12 == 15) {
-				v37 = &dungeon[v10 + 1][v8];
-				if (*v37 == 30)
-					*v37 = 28;
-			}
-			if (v12 == 28) {
-				v38 = &dungeon[v10][v8 + 1];
-				if (*v38 == 30)
-					*v38 = 18;
-				v39 = &dungeon[v10][v8 + 1];
-				if (*v39 == 2)
-					*v39 = 15;
-			}
-			if (v12 == 19) {
-				if (dungeon[v10 + 2][v8] == 2 && dungeon[v10][v8 + 39] == 18 && dungeon[v10 + 1][v8 + 1] == 1)
-					dungeon[v10 + 1][v8] = 17;
-				if (dungeon[v10 + 2][v8] == 2 && dungeon[v10][v8 + 39] == 22 && dungeon[v10 + 1][v8 + 1] == 1)
-					dungeon[v10 + 1][v8] = 17;
-				if (dungeon[v10 + 2][v8] == 2 && dungeon[v10][v8 + 39] == 18 && dungeon[v10 + 1][v8 + 1] == 13)
-					dungeon[v10 + 1][v8] = 17;
-			}
-			if (v12 == 21) {
-				if (dungeon[v10 + 2][v8] == 2 && dungeon[v10][v8 + 39] == 18 && dungeon[v10 + 1][v8 + 1] == 1)
-					dungeon[v10 + 1][v8] = 17;
-				if (dungeon[v10 + 1][v8 + 1] == 1 && dungeon[v10][v8 + 39] == 22 && dungeon[v10 + 2][v8] == 3)
-					dungeon[v10 + 1][v8] = 17;
-			}
-			if (v12 == 15) {
-				v40 = &dungeon[v10 + 1][v8];
-				if (*v40 == 28 && dungeon[v10 + 2][v8] == 30 && dungeon[v10][v8 + 39] == 6)
-					*v40 = 23;
-			}
-			if (v12 == 14) {
-				v41 = &dungeon[v10 + 1][v8];
-				if (*v41 == 28 && dungeon[v10 + 2][v8] == 1)
-					*v41 = 23;
-			}
-			if (v12 == 15) {
-				v42 = &dungeon[v10 + 1][v8];
-				if (*v42 == 27 && dungeon[v10 + 1][v8 + 1] == 30)
-					*v42 = 29;
-			}
-			if (v12 == 28) {
-				v43 = &dungeon[v10][v8 + 1];
-				if (*v43 == 9)
-					*v43 = 15;
-			}
-			if (v12 == 21 && dungeon[v10][v8 + 39] == 21)
-				dungeon[v10 + 1][v8] = 24;
-			if (v12 == 2) {
-				v44 = &dungeon[v10 + 1][v8];
-				if (*v44 == 27 && dungeon[v10 + 1][v8 + 1] == 30)
-					*v44 = 29;
-				v45 = &dungeon[v10 + 1][v8];
-				if (*v45 == 18)
-					*v45 = 25;
-			}
-			if (v12 == 21) {
-				v46 = &dungeon[v10 + 1][v8];
-				if (*v46 == 9 && dungeon[v10 + 2][v8] == 2)
-					*v46 = 11;
-			}
-			if (v12 == 19) {
-				v47 = &dungeon[v10 + 1][v8];
-				if (*v47 == 10)
-					*v47 = 17;
-			}
-			if (v12 == 15) {
-				v48 = &dungeon[v10][v8 + 1];
-				if (*v48 == 3)
-					*v48 = 4;
-			}
-			if (v12 == 22) {
-				v49 = &dungeon[v10][v8 + 1];
-				if (*v49 == 9)
-					*v49 = 15;
-			}
-			if (v12 == 18) {
-				v50 = &dungeon[v10][v8 + 1];
-				if (*v50 == 30)
-					*v50 = 18;
-			}
-			if (v12 == 24 && *(v11 - 40) == 30)
-				*(v11 - 40) = 19;
-			if (v12 == 21) {
-				v51 = &dungeon[v10][v8 + 1];
-				if (*v51 == 2)
-					*v51 = 15;
-				v52 = &dungeon[v10][v8 + 1];
-				if (*v52 == 9)
-					*v52 = 10;
-			}
-			if (v12 == 22) {
-				v53 = &dungeon[v10][v8 + 1];
-				if (*v53 == 30)
-					*v53 = 18;
-			}
-			if (v12 == 21) {
-				v54 = &dungeon[v10][v8 + 1];
-				if (*v54 == 30)
-					*v54 = 18;
-			}
-			if (v12 == 16) {
-				v55 = &dungeon[v10][v8 + 1];
-				if (*v55 == 2)
-					*v55 = 15;
-			}
-			if (v12 == 13) {
-				v56 = &dungeon[v10][v8 + 1];
-				if (*v56 == 2)
-					*v56 = 15;
-			}
-			if (v12 == 22) {
-				v57 = &dungeon[v10][v8 + 1];
-				if (*v57 == 2)
-					*v57 = 15;
-			}
-			if (v12 == 21) {
-				v58 = &dungeon[v10 + 1][v8];
-				if (*v58 == 18 && dungeon[v10 + 2][v8] == 30)
-					*v58 = 24;
-				v59 = &dungeon[v10 + 1][v8];
-				if (*v59 == 9 && dungeon[v10 + 1][v8 + 1] == 1)
-					*v59 = 16;
-			}
-			if (v12 == 2) {
-				v60 = &dungeon[v10 + 1][v8];
-				if (*v60 == 27 && dungeon[v10 + 1][v8 + 1] == 2)
-					*v60 = 29;
-			}
-			if (v12 == 23) {
-				v61 = &dungeon[v10][v8 + 1];
-				if (*v61 == 2)
-					*v61 = 15;
-				v62 = &dungeon[v10][v8 + 1];
-				if (*v62 == 9)
-					*v62 = 15;
-			}
-			if (v12 == 25) {
-				v63 = &dungeon[v10][v8 + 1];
-				if (*v63 == 2)
-					*v63 = 15;
-			}
-			if (v12 == 22) {
-				v64 = &dungeon[v10 + 1][v8];
-				if (*v64 == 9)
-					*v64 = 11;
-			}
-			if (v12 == 23) {
-				v65 = &dungeon[v10 + 1][v8];
-				if (*v65 == 9)
-					*v65 = 11;
-			}
-			if (v12 == 15) {
-				v66 = &dungeon[v10 + 1][v8];
-				if (*v66 == 1)
-					*v66 = 16;
-			}
-			if (v12 == 11) {
-				v67 = &dungeon[v10 + 1][v8];
-				if (*v67 == 15)
-					*v67 = 14;
-			}
-			if (v12 == 23) {
-				v68 = &dungeon[v10 + 1][v8];
-				if (*v68 == 1)
-					*v68 = 16;
-			}
-			if (v12 == 21) {
-				v69 = &dungeon[v10 + 1][v8];
-				if (*v69 == 27)
-					*v69 = 26;
-				v70 = &dungeon[v10 + 1][v8];
-				if (*v70 == 18)
-					*v70 = 24;
-			}
-			if (v12 == 26) {
-				v71 = &dungeon[v10 + 1][v8];
-				if (*v71 == 1)
-					*v71 = 16;
-			}
-			if (v12 == 29) {
-				v72 = &dungeon[v10 + 1][v8];
-				if (*v72 == 1)
-					*v72 = 16;
-				v73 = &dungeon[v10][v8 + 1];
-				if (*v73 == 2)
-					*v73 = 15;
-			}
-			if (v12 == 1 && *(v11 - 1) == 15)
-				*(v11 - 1) = 10;
-			if (v12 == 18) {
-				v74 = &dungeon[v10][v8 + 1];
-				if (*v74 == 2)
-					*v74 = 15;
-			}
-			if (v12 == 23) {
-				v75 = &dungeon[v10][v8 + 1];
-				if (*v75 == 30)
-					*v75 = 18;
-			}
-			if (v12 == 18) {
-				v76 = &dungeon[v10][v8 + 1];
-				if (*v76 == 9)
-					*v76 = 10;
-			}
-			if (v12 == 14) {
-				v77 = &dungeon[v10 + 1][v8];
-				if (*v77 == 30 && dungeon[v10 + 1][v8 + 1] == 30)
-					*v77 = 23;
-			}
-			if (v12 == 2) {
-				v78 = &dungeon[v10 + 1][v8];
-				if (*v78 == 28 && dungeon[v10][v8 + 39] == 6)
-					*v78 = 23;
-			}
-			if (v12 == 23) {
-				v79 = &dungeon[v10 + 1][v8];
-				if (*v79 == 18 && *(v11 - 1) == 6)
-					*v79 = 24;
-			}
-			if (v12 == 14) {
-				v80 = &dungeon[v10 + 1][v8];
-				if (*v80 == 23 && dungeon[v10 + 2][v8] == 30)
-					*v80 = 28;
-				v81 = &dungeon[v10 + 1][v8];
-				if (*v81 == 28 && dungeon[v10 + 2][v8] == 30 && dungeon[v10][v8 + 39] == 6)
-					*v81 = 23;
-			}
-			if (v12 == 23) {
-				v82 = &dungeon[v10 + 1][v8];
-				if (*v82 == 30)
-					*v82 = 19;
-			}
-			if (v12 == 29) {
-				v83 = &dungeon[v10 + 1][v8];
-				if (*v83 == 30)
-					*v83 = 19;
-				v84 = &dungeon[v10][v8 + 1];
-				if (*v84 == 30)
-					*v84 = 18;
-			}
-			if (v12 == 19) {
-				v85 = &dungeon[v10 + 1][v8];
-				if (*v85 == 30)
-					*v85 = 19;
-			}
-			if (v12 == 21) {
-				v86 = &dungeon[v10 + 1][v8];
-				if (*v86 == 30)
-					*v86 = 19;
-			}
-			if (v12 == 26) {
-				v87 = &dungeon[v10 + 1][v8];
-				if (*v87 == 30)
-					*v87 = 19;
-			}
-			if (v12 == 16) {
-				v88 = &dungeon[v10][v8 + 1];
-				if (*v88 == 30)
-					*v88 = 18;
-			}
-			if (v12 == 13) {
-				v89 = &dungeon[v10][v8 + 1];
-				if (*v89 == 9)
-					*v89 = 10;
-			}
-			if (v12 == 25) {
-				v90 = &dungeon[v10][v8 + 1];
-				if (*v90 == 30)
-					*v90 = 18;
-			}
-			if (v12 == 18) {
-				v91 = &dungeon[v10][v8 + 1];
-				if (*v91 == 2)
-					*v91 = 15;
-			}
-			if (v12 == 11) {
-				v92 = &dungeon[v10 + 1][v8];
-				if (*v92 == 3)
-					*v92 = 5;
-			}
-			if (v12 == 19) {
-				v93 = &dungeon[v10 + 1][v8];
-				if (*v93 == 9)
-					*v93 = 11;
-				v94 = &dungeon[v10 + 1][v8];
-				if (*v94 == 1)
-					*v94 = 13;
-				v95 = &dungeon[v10 + 1][v8];
-				if (*v95 == 13 && dungeon[v10][v8 + 39] == 6)
-					*v95 = 16;
-			}
-			v9 = v139++ + 1;
-		} while (v139 < 40);
-		++v8;
-	} while (v8 < 40);
-	v96 = 0;
-	do {
-		v97 = 0;
-		do {
-			v98 = v97;
-			v99 = &dungeon[v97][v96];
-			v100 = *v99;
-			if (*v99 == 21) {
-				v101 = &dungeon[v98][v96 + 1];
-				if (*v101 == 24 && dungeon[v98][v96 + 2] == 1)
-					*v101 = 17;
-			}
-			if (v100 == 15
-			    && dungeon[v98 + 1][v96 + 1] == 9
-			    && dungeon[v98][v96 + 39] == 1
-			    && dungeon[v98 + 2][v96] == 16) {
-				dungeon[v98 + 1][v96] = 29;
-			}
-			if (v100 == 2 && *(v99 - 40) == 6)
-				*(v99 - 40) = 8;
-			if (v100 == 1 && *(v99 - 1) == 6)
-				*(v99 - 1) = 7;
-			if (v100 == 6) {
-				v102 = &dungeon[v98 + 1][v96];
-				if (*v102 == 15 && dungeon[v98 + 1][v96 + 1] == 4)
-					*v102 = 10;
-			}
-			if (v100 == 1) {
-				v103 = &dungeon[v98][v96 + 1];
-				if (*v103 == 3)
-					*v103 = 4;
-				v104 = &dungeon[v98][v96 + 1];
-				if (*v104 == 6)
-					*v104 = 4;
-			}
-			if (v100 == 9) {
-				v105 = &dungeon[v98][v96 + 1];
-				if (*v105 == 3)
-					*v105 = 4;
-			}
-			if (v100 == 10) {
-				v106 = &dungeon[v98][v96 + 1];
-				if (*v106 == 3)
-					*v106 = 4;
-			}
-			if (v100 == 13) {
-				v107 = &dungeon[v98][v96 + 1];
-				if (*v107 == 3)
-					*v107 = 4;
-			}
-			if (v100 == 1) {
-				v108 = &dungeon[v98][v96 + 1];
-				if (*v108 == 5)
-					*v108 = 12;
-				v109 = &dungeon[v98][v96 + 1];
-				if (*v109 == 16)
-					*v109 = 13;
-			}
-			if (v100 == 6) {
-				v110 = &dungeon[v98][v96 + 1];
-				if (*v110 == 13)
-					*v110 = 16;
-			}
-			if (v100 == 25) {
-				v111 = &dungeon[v98][v96 + 1];
-				if (*v111 == 9)
-					*v111 = 10;
-			}
-			if (v100 == 13) {
-				v112 = &dungeon[v98][v96 + 1];
-				if (*v112 == 5)
-					*v112 = 12;
-			}
-			if (v100 == 28 && *(v99 - 1) == 6) {
-				v113 = &dungeon[v98 + 1][v96];
-				if (*v113 == 1)
-					*v113 = 23;
-			}
-			if (v100 == 19) {
-				v114 = &dungeon[v98 + 1][v96];
-				if (*v114 == 10)
-					*v114 = 17;
-			}
-			if (v100 == 21) {
-				v115 = &dungeon[v98 + 1][v96];
-				if (*v115 == 9)
-					*v115 = 11;
-			}
-			if (v100 == 11) {
-				v116 = &dungeon[v98 + 1][v96];
-				if (*v116 == 3)
-					*v116 = 5;
-			}
-			if (v100 == 10) {
-				v117 = &dungeon[v98 + 1][v96];
-				if (*v117 == 4)
-					*v117 = 12;
-			}
-			if (v100 == 14) {
-				v118 = &dungeon[v98 + 1][v96];
-				if (*v118 == 4)
-					*v118 = 12;
-			}
-			if (v100 == 27) {
-				v119 = &dungeon[v98 + 1][v96];
-				if (*v119 == 9)
-					*v119 = 11;
-			}
-			if (v100 == 15) {
-				v120 = &dungeon[v98 + 1][v96];
-				if (*v120 == 4)
-					*v120 = 12;
-			}
-			if (v100 == 21) {
-				v121 = &dungeon[v98 + 1][v96];
-				if (*v121 == 1)
-					*v121 = 16;
-			}
-			if (v100 == 11) {
-				v122 = &dungeon[v98 + 1][v96];
-				if (*v122 == 4)
-					*v122 = 12;
-			}
-			if (v100 == 2) {
-				v123 = &dungeon[v98 + 1][v96];
-				if (*v123 == 3)
-					*v123 = 5;
-			}
-			if (v100 == 9) {
-				v124 = &dungeon[v98 + 1][v96];
-				if (*v124 == 3)
-					*v124 = 5;
-			}
-			if (v100 == 14) {
-				v125 = &dungeon[v98 + 1][v96];
-				if (*v125 == 3)
-					*v125 = 5;
-			}
-			if (v100 == 15) {
-				v126 = &dungeon[v98 + 1][v96];
-				if (*v126 == 3)
-					*v126 = 5;
-			}
-			if (v100 == 2) {
-				v127 = &dungeon[v98 + 1][v96];
-				if (*v127 == 5 && dungeon[v98][v96 + 39] == 16)
-					*v127 = 12;
-				v128 = &dungeon[v98 + 1][v96];
-				if (*v128 == 4)
-					*v128 = 12;
-			}
-			if (v100 == 9) {
-				v129 = &dungeon[v98 + 1][v96];
-				if (*v129 == 4)
-					*v129 = 12;
-			}
-			if (v100 == 1 && *(v99 - 1) == 8)
-				*(v99 - 1) = 9;
-			if (v100 == 28) {
-				v130 = &dungeon[v98 + 1][v96];
-				if (*v130 == 23 && dungeon[v98 + 1][v96 + 1] == 3)
-					*v130 = 16;
-			}
-			++v97;
-		} while (v97 < 40);
-		++v96;
-	} while (v96 < 40);
-	v131 = 0;
-	do {
-		v132 = &dungeon[0][v131 + 1];
-		v133 = 40;
-		do {
-			v134 = *(v132 - 1);
-			if (v134 == 21 && v132[39] == 10)
-				v132[39] = 17;
-			if (v134 == 17 && v132[39] == 4)
-				v132[39] = 12;
-			if (v134 == 10 && v132[39] == 4)
-				v132[39] = 12;
-			if (v134 == 17 && *v132 == 5)
-				*v132 = 12;
-			if (v134 == 29 && *v132 == 9)
-				*v132 = 10;
-			if (v134 == 13 && *v132 == 5)
-				*v132 = 12;
-			if (v134 == 9 && *v132 == 16)
-				*v132 = 13;
-			if (v134 == 10 && *v132 == 16)
-				*v132 = 13;
-			if (v134 == 16 && *v132 == 3)
-				*v132 = 4;
-			if (v134 == 11 && *v132 == 5)
-				*v132 = 12;
-			if (v134 == 10 && v132[39] == 3 && v132[38] == 16)
-				v132[39] = 12;
-			if (v134 == 16 && *v132 == 5)
-				*v132 = 12;
-			if (v134 == 1 && *v132 == 6)
-				*v132 = 4;
-			if (v134 == 21 && v132[39] == 13 && *v132 == 10)
-				v132[40] = 12;
-			if (v134 == 15 && v132[39] == 10)
-				v132[39] = 17;
-			if (v134 == 22 && *v132 == 11)
-				*v132 = 17;
-			if (v134 == 15 && v132[39] == 28 && v132[79] == 16)
-				v132[39] = 23;
-			if (v134 == 28 && v132[39] == 23 && v132[40] == 1 && v132[79] == 6)
-				v132[39] = 16;
-			v132 += 40;
-			--v133;
-		} while (v133);
-		++v131;
-	} while (v131 < 40);
-	v135 = 0;
-	do {
-		v136 = (char *)dungeon + v135;
-		v137 = 40;
-		do {
-			v138 = *v136;
-			if (*v136 == 15 && v136[40] == 28 && v136[80] == 16)
-				v136[40] = 23;
-			if (v138 == 21 && v136[39] == 21 && v136[41] == 13 && v136[80] == 2)
-				v136[40] = 17;
-			if (v138 == 19 && v136[40] == 15 && v136[41] == 12)
-				v136[40] = 17;
-			v136 += 40;
-			--v137;
-		} while (v137);
-		++v135;
-	} while (v135 < 40);
+	for (j = 0; j < DMAXY; j++) {
+		for (i = 0; i < DMAXX; i++) {
+			if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 6)
+				dungeon[i + 1][j] = 5;
+			if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 1)
+				dungeon[i + 1][j] = 13;
+			if (dungeon[i][j] == 1 && dungeon[i][j + 1] == 2)
+				dungeon[i][j + 1] = 14;
+		}
+	}
+	for (j = 0; j < DMAXY; j++) {
+		for (i = 0; i < DMAXX; i++) {
+			if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 6)
+				dungeon[i + 1][j] = 2;
+			if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 9)
+				dungeon[i + 1][j] = 11;
+			if (dungeon[i][j] == 9 && dungeon[i + 1][j] == 6)
+				dungeon[i + 1][j] = 12;
+			if (dungeon[i][j] == 14 && dungeon[i + 1][j] == 1)
+				dungeon[i + 1][j] = 13;
+			if (dungeon[i][j] == 6 && dungeon[i + 1][j] == 14)
+				dungeon[i + 1][j] = 15;
+			if (dungeon[i][j] == 6 && dungeon[i][j + 1] == 13)
+				dungeon[i][j + 1] = 16;
+			if (dungeon[i][j] == 1 && dungeon[i][j + 1] == 9)
+				dungeon[i][j + 1] = 10;
+			if (dungeon[i][j] == 6 && dungeon[i][j - 1] == 1)
+				dungeon[i][j - 1] = 1;
+		}
+	}
+	for (j = 0; j < DMAXY; j++) {
+		for (i = 0; i < DMAXX; i++) {
+			if (dungeon[i][j] == 13 && dungeon[i][j + 1] == 30)
+				dungeon[i][j + 1] = 27;
+			if (dungeon[i][j] == 27 && dungeon[i + 1][j] == 30)
+				dungeon[i + 1][j] = 19;
+			if (dungeon[i][j] == 1 && dungeon[i][j + 1] == 30)
+				dungeon[i][j + 1] = 27;
+			if (dungeon[i][j] == 27 && dungeon[i + 1][j] == 1)
+				dungeon[i + 1][j] = 16;
+			if (dungeon[i][j] == 19 && dungeon[i + 1][j] == 27)
+				dungeon[i + 1][j] = 26;
+			if (dungeon[i][j] == 27 && dungeon[i + 1][j] == 30)
+				dungeon[i + 1][j] = 19;
+			if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 15)
+				dungeon[i + 1][j] = 14;
+			if (dungeon[i][j] == 14 && dungeon[i + 1][j] == 15)
+				dungeon[i + 1][j] = 14;
+			if (dungeon[i][j] == 22 && dungeon[i + 1][j] == 1)
+				dungeon[i + 1][j] = 16;
+			if (dungeon[i][j] == 27 && dungeon[i + 1][j] == 1)
+				dungeon[i + 1][j] = 16;
+			if (dungeon[i][j] == 6 && dungeon[i + 1][j] == 27 && dungeon[i + 1][j + 1] != 0) /* check */
+				dungeon[i + 1][j] = 22;
+			if (dungeon[i][j] == 22 && dungeon[i + 1][j] == 30)
+				dungeon[i + 1][j] = 19;
+			if (dungeon[i][j] == 21 && dungeon[i + 1][j] == 1 && dungeon[i + 1][j - 1] == 1)
+				dungeon[i + 1][j] = 13;
+			if (dungeon[i][j] == 14 && dungeon[i + 1][j] == 30 && dungeon[i][j + 1] == 6)
+				dungeon[i + 1][j] = 28;
+			if (dungeon[i][j] == 16 && dungeon[i + 1][j] == 6 && dungeon[i][j + 1] == 30)
+				dungeon[i][j + 1] = 27;
+			if (dungeon[i][j] == 16 && dungeon[i][j + 1] == 30 && dungeon[i + 1][j + 1] == 30)
+				dungeon[i][j + 1] = 27;
+			if (dungeon[i][j] == 6 && dungeon[i + 1][j] == 30 && dungeon[i + 1][j - 1] == 6)
+				dungeon[i + 1][j] = 21;
+			if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 27 && dungeon[i + 1][j + 1] == 9)
+				dungeon[i + 1][j] = 29;
+			if (dungeon[i][j] == 9 && dungeon[i + 1][j] == 15)
+				dungeon[i + 1][j] = 14;
+			if (dungeon[i][j] == 15 && dungeon[i + 1][j] == 27 && dungeon[i + 1][j + 1] == 2)
+				dungeon[i + 1][j] = 29;
+			if (dungeon[i][j] == 19 && dungeon[i + 1][j] == 18)
+				dungeon[i + 1][j] = 24;
+			if (dungeon[i][j] == 9 && dungeon[i + 1][j] == 15)
+				dungeon[i + 1][j] = 14;
+			if (dungeon[i][j] == 19 && dungeon[i + 1][j] == 19 && dungeon[i + 1][j - 1] == 30)
+				dungeon[i + 1][j] = 24;
+			if (dungeon[i][j] == 24 && dungeon[i][j - 1] == 30 && dungeon[i][j - 2] == 6)
+				dungeon[i][j - 1] = 21;
+			if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 30)
+				dungeon[i + 1][j] = 28;
+			if (dungeon[i][j] == 15 && dungeon[i + 1][j] == 30)
+				dungeon[i + 1][j] = 28;
+			if (dungeon[i][j] == 28 && dungeon[i][j + 1] == 30)
+				dungeon[i][j + 1] = 18;
+			if (dungeon[i][j] == 28 && dungeon[i][j + 1] == 2)
+				dungeon[i][j + 1] = 15;
+			if (dungeon[i][j] == 19 && dungeon[i + 2][j] == 2 && dungeon[i + 1][j - 1] == 18 && dungeon[i + 1][j + 1] == 1)
+				dungeon[i + 1][j] = 17;
+			if (dungeon[i][j] == 19 && dungeon[i + 2][j] == 2 && dungeon[i + 1][j - 1] == 22 && dungeon[i + 1][j + 1] == 1)
+				dungeon[i + 1][j] = 17;
+			if (dungeon[i][j] == 19 && dungeon[i + 2][j] == 2 && dungeon[i + 1][j - 1] == 18 && dungeon[i + 1][j + 1] == 13)
+				dungeon[i + 1][j] = 17;
+			if (dungeon[i][j] == 21 && dungeon[i + 2][j] == 2 && dungeon[i + 1][j - 1] == 18 && dungeon[i + 1][j + 1] == 1)
+				dungeon[i + 1][j] = 17;
+			if (dungeon[i][j] == 21 && dungeon[i + 1][j + 1] == 1 && dungeon[i + 1][j - 1] == 22 && dungeon[i + 2][j] == 3)
+				dungeon[i + 1][j] = 17;
+			if (dungeon[i][j] == 15 && dungeon[i + 1][j] == 28 && dungeon[i + 2][j] == 30 && dungeon[i + 1][j - 1] == 6)
+				dungeon[i + 1][j] = 23;
+			if (dungeon[i][j] == 14 && dungeon[i + 1][j] == 28 && dungeon[i + 2][j] == 1)
+				dungeon[i + 1][j] = 23;
+			if (dungeon[i][j] == 15 && dungeon[i + 1][j] == 27 && dungeon[i + 1][j + 1] == 30)
+				dungeon[i + 1][j] = 29;
+			if (dungeon[i][j] == 28 && dungeon[i][j + 1] == 9)
+				dungeon[i][j + 1] = 15;
+			if (dungeon[i][j] == 21 && dungeon[i + 1][j - 1] == 21)
+				dungeon[i + 1][j] = 24;
+			if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 27 && dungeon[i + 1][j + 1] == 30)
+				dungeon[i + 1][j] = 29;
+			if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 18)
+				dungeon[i + 1][j] = 25;
+			if (dungeon[i][j] == 21 && dungeon[i + 1][j] == 9 && dungeon[i + 2][j] == 2)
+				dungeon[i + 1][j] = 11;
+			if (dungeon[i][j] == 19 && dungeon[i + 1][j] == 10)
+				dungeon[i + 1][j] = 17;
+			if (dungeon[i][j] == 15 && dungeon[i][j + 1] == 3)
+				dungeon[i][j + 1] = 4;
+			if (dungeon[i][j] == 22 && dungeon[i][j + 1] == 9)
+				dungeon[i][j + 1] = 15;
+			if (dungeon[i][j] == 18 && dungeon[i][j + 1] == 30)
+				dungeon[i][j + 1] = 18;
+			if (dungeon[i][j] == 24 && dungeon[i - 1][j] == 30)
+				dungeon[i - 1][j] = 19;
+			if (dungeon[i][j] == 21 && dungeon[i][j + 1] == 2)
+				dungeon[i][j + 1] = 15;
+			if (dungeon[i][j] == 21 && dungeon[i][j + 1] == 9)
+				dungeon[i][j + 1] = 10;
+			if (dungeon[i][j] == 22 && dungeon[i][j + 1] == 30)
+				dungeon[i][j + 1] = 18;
+			if (dungeon[i][j] == 21 && dungeon[i][j + 1] == 30)
+				dungeon[i][j + 1] = 18;
+			if (dungeon[i][j] == 16 && dungeon[i][j + 1] == 2)
+				dungeon[i][j + 1] = 15;
+			if (dungeon[i][j] == 13 && dungeon[i][j + 1] == 2)
+				dungeon[i][j + 1] = 15;
+			if (dungeon[i][j] == 22 && dungeon[i][j + 1] == 2)
+				dungeon[i][j + 1] = 15;
+			if (dungeon[i][j] == 21 && dungeon[i + 1][j] == 18 && dungeon[i + 2][j] == 30)
+				dungeon[i + 1][j] = 24;
+			if (dungeon[i][j] == 21 && dungeon[i + 1][j] == 9 && dungeon[i + 1][j + 1] == 1)
+				dungeon[i + 1][j] = 16;
+			if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 27 && dungeon[i + 1][j + 1] == 2)
+				dungeon[i + 1][j] = 29;
+			if (dungeon[i][j] == 23 && dungeon[i][j + 1] == 2)
+				dungeon[i][j + 1] = 15;
+			if (dungeon[i][j] == 23 && dungeon[i][j + 1] == 9)
+				dungeon[i][j + 1] = 15;
+			if (dungeon[i][j] == 25 && dungeon[i][j + 1] == 2)
+				dungeon[i][j + 1] = 15;
+			if (dungeon[i][j] == 22 && dungeon[i + 1][j] == 9)
+				dungeon[i + 1][j] = 11;
+			if (dungeon[i][j] == 23 && dungeon[i + 1][j] == 9)
+				dungeon[i + 1][j] = 11;
+			if (dungeon[i][j] == 15 && dungeon[i + 1][j] == 1)
+				dungeon[i + 1][j] = 16;
+			if (dungeon[i][j] == 11 && dungeon[i + 1][j] == 15)
+				dungeon[i + 1][j] = 14;
+			if (dungeon[i][j] == 23 && dungeon[i + 1][j] == 1)
+				dungeon[i + 1][j] = 16;
+			if (dungeon[i][j] == 21 && dungeon[i + 1][j] == 27)
+				dungeon[i + 1][j] = 26;
+			if (dungeon[i][j] == 21 && dungeon[i + 1][j] == 18)
+				dungeon[i + 1][j] = 24;
+			if (dungeon[i][j] == 26 && dungeon[i + 1][j] == 1)
+				dungeon[i + 1][j] = 16;
+			if (dungeon[i][j] == 29 && dungeon[i + 1][j] == 1)
+				dungeon[i + 1][j] = 16;
+			if (dungeon[i][j] == 29 && dungeon[i][j + 1] == 2)
+				dungeon[i][j + 1] = 15;
+			if (dungeon[i][j] == 1 && dungeon[i][j - 1] == 15)
+				dungeon[i][j - 1] = 10;
+			if (dungeon[i][j] == 18 && dungeon[i][j + 1] == 2)
+				dungeon[i][j + 1] = 15;
+			if (dungeon[i][j] == 23 && dungeon[i][j + 1] == 30)
+				dungeon[i][j + 1] = 18;
+			if (dungeon[i][j] == 18 && dungeon[i][j + 1] == 9)
+				dungeon[i][j + 1] = 10;
+			if (dungeon[i][j] == 14 && dungeon[i + 1][j] == 30 && dungeon[i + 1][j + 1] == 30)
+				dungeon[i + 1][j] = 23;
+			if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 28 && dungeon[i + 1][j - 1] == 6)
+				dungeon[i + 1][j] = 23;
+			if (dungeon[i][j] == 23 && dungeon[i + 1][j] == 18 && dungeon[i][j - 1] == 6)
+				dungeon[i + 1][j] = 24;
+			if (dungeon[i][j] == 14 && dungeon[i + 1][j] == 23 && dungeon[i + 2][j] == 30)
+				dungeon[i + 1][j] = 28;
+			if (dungeon[i][j] == 14 && dungeon[i + 1][j] == 28 && dungeon[i + 2][j] == 30 && dungeon[i + 1][j - 1] == 6)
+				dungeon[i + 1][j] = 23;
+			if (dungeon[i][j] == 23 && dungeon[i + 1][j] == 30)
+				dungeon[i + 1][j] = 19;
+			if (dungeon[i][j] == 29 && dungeon[i + 1][j] == 30)
+				dungeon[i + 1][j] = 19;
+			if (dungeon[i][j] == 29 && dungeon[i][j + 1] == 30)
+				dungeon[i][j + 1] = 18;
+			if (dungeon[i][j] == 19 && dungeon[i + 1][j] == 30)
+				dungeon[i + 1][j] = 19;
+			if (dungeon[i][j] == 21 && dungeon[i + 1][j] == 30)
+				dungeon[i + 1][j] = 19;
+			if (dungeon[i][j] == 26 && dungeon[i + 1][j] == 30)
+				dungeon[i + 1][j] = 19;
+			if (dungeon[i][j] == 16 && dungeon[i][j + 1] == 30)
+				dungeon[i][j + 1] = 18;
+			if (dungeon[i][j] == 13 && dungeon[i][j + 1] == 9)
+				dungeon[i][j + 1] = 10;
+			if (dungeon[i][j] == 25 && dungeon[i][j + 1] == 30)
+				dungeon[i][j + 1] = 18;
+			if (dungeon[i][j] == 18 && dungeon[i][j + 1] == 2)
+				dungeon[i][j + 1] = 15;
+			if (dungeon[i][j] == 11 && dungeon[i + 1][j] == 3)
+				dungeon[i + 1][j] = 5;
+			if (dungeon[i][j] == 19 && dungeon[i + 1][j] == 9)
+				dungeon[i + 1][j] = 11;
+			if (dungeon[i][j] == 19 && dungeon[i + 1][j] == 1)
+				dungeon[i + 1][j] = 13;
+			if (dungeon[i][j] == 19 && dungeon[i + 1][j] == 13 && dungeon[i + 1][j - 1] == 6)
+				dungeon[i + 1][j] = 16;
+		}
+	}
+	for (j = 0; j < DMAXY; j++) {
+		for (i = 0; i < DMAXX; i++) {
+			if (dungeon[i][j] == 21 && dungeon[i][j + 1] == 24 && dungeon[i][j + 2] == 1)
+				dungeon[i][j + 1] = 17;
+			if (dungeon[i][j] == 15 && dungeon[i + 1][j + 1] == 9 && dungeon[i + 1][j - 1] == 1 && dungeon[i + 2][j] == 16)
+				dungeon[i + 1][j] = 29;
+			if (dungeon[i][j] == 2 && dungeon[i - 1][j] == 6)
+				dungeon[i - 1][j] = 8;
+			if (dungeon[i][j] == 1 && dungeon[i][j - 1] == 6)
+				dungeon[i][j - 1] = 7;
+			if (dungeon[i][j] == 6 && dungeon[i + 1][j] == 15 && dungeon[i + 1][j + 1] == 4)
+				dungeon[i + 1][j] = 10;
+			if (dungeon[i][j] == 1 && dungeon[i][j + 1] == 3)
+				dungeon[i][j + 1] = 4;
+			if (dungeon[i][j] == 1 && dungeon[i][j + 1] == 6)
+				dungeon[i][j + 1] = 4;
+			if (dungeon[i][j] == 9 && dungeon[i][j + 1] == 3)
+				dungeon[i][j + 1] = 4;
+			if (dungeon[i][j] == 10 && dungeon[i][j + 1] == 3)
+				dungeon[i][j + 1] = 4;
+			if (dungeon[i][j] == 13 && dungeon[i][j + 1] == 3)
+				dungeon[i][j + 1] = 4;
+			if (dungeon[i][j] == 1 && dungeon[i][j + 1] == 5)
+				dungeon[i][j + 1] = 12;
+			if (dungeon[i][j] == 1 && dungeon[i][j + 1] == 16)
+				dungeon[i][j + 1] = 13;
+			if (dungeon[i][j] == 6 && dungeon[i][j + 1] == 13)
+				dungeon[i][j + 1] = 16;
+			if (dungeon[i][j] == 25 && dungeon[i][j + 1] == 9)
+				dungeon[i][j + 1] = 10;
+			if (dungeon[i][j] == 13 && dungeon[i][j + 1] == 5)
+				dungeon[i][j + 1] = 12;
+			if (dungeon[i][j] == 28 && dungeon[i][j - 1] == 6 && dungeon[i + 1][j] == 1)
+				dungeon[i + 1][j] = 23;
+			if (dungeon[i][j] == 19 && dungeon[i + 1][j] == 10)
+				dungeon[i + 1][j] = 17;
+			if (dungeon[i][j] == 21 && dungeon[i + 1][j] == 9)
+				dungeon[i + 1][j] = 11;
+			if (dungeon[i][j] == 11 && dungeon[i + 1][j] == 3)
+				dungeon[i + 1][j] = 5;
+			if (dungeon[i][j] == 10 && dungeon[i + 1][j] == 4)
+				dungeon[i + 1][j] = 12;
+			if (dungeon[i][j] == 14 && dungeon[i + 1][j] == 4)
+				dungeon[i + 1][j] = 12;
+			if (dungeon[i][j] == 27 && dungeon[i + 1][j] == 9)
+				dungeon[i + 1][j] = 11;
+			if (dungeon[i][j] == 15 && dungeon[i + 1][j] == 4)
+				dungeon[i + 1][j] = 12;
+			if (dungeon[i][j] == 21 && dungeon[i + 1][j] == 1)
+				dungeon[i + 1][j] = 16;
+			if (dungeon[i][j] == 11 && dungeon[i + 1][j] == 4)
+				dungeon[i + 1][j] = 12;
+			if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 3)
+				dungeon[i + 1][j] = 5;
+			if (dungeon[i][j] == 9 && dungeon[i + 1][j] == 3)
+				dungeon[i + 1][j] = 5;
+			if (dungeon[i][j] == 14 && dungeon[i + 1][j] == 3)
+				dungeon[i + 1][j] = 5;
+			if (dungeon[i][j] == 15 && dungeon[i + 1][j] == 3)
+				dungeon[i + 1][j] = 5;
+			if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 5 && dungeon[i + 1][j - 1] == 16)
+				dungeon[i + 1][j] = 12;
+			if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 4)
+				dungeon[i + 1][j] = 12;
+			if (dungeon[i][j] == 9 && dungeon[i + 1][j] == 4)
+				dungeon[i + 1][j] = 12;
+			if (dungeon[i][j] == 1 && dungeon[i][j - 1] == 8)
+				dungeon[i][j - 1] = 9;
+			if (dungeon[i][j] == 28 && dungeon[i + 1][j] == 23 && dungeon[i + 1][j + 1] == 3)
+				dungeon[i + 1][j] = 16;
+		}
+	}
+	for (j = 0; j < DMAXY; j++) {
+		for (i = 0; i < DMAXX; i++) {
+			if (dungeon[i][j] == 21 && dungeon[i + 1][j] == 10)
+				dungeon[i + 1][j] = 17;
+			if (dungeon[i][j] == 17 && dungeon[i + 1][j] == 4)
+				dungeon[i + 1][j] = 12;
+			if (dungeon[i][j] == 10 && dungeon[i + 1][j] == 4)
+				dungeon[i + 1][j] = 12;
+			if (dungeon[i][j] == 17 && dungeon[i][j + 1] == 5)
+				dungeon[i][j + 1] = 12;
+			if (dungeon[i][j] == 29 && dungeon[i][j + 1] == 9)
+				dungeon[i][j + 1] = 10;
+			if (dungeon[i][j] == 13 && dungeon[i][j + 1] == 5)
+				dungeon[i][j + 1] = 12;
+			if (dungeon[i][j] == 9 && dungeon[i][j + 1] == 16)
+				dungeon[i][j + 1] = 13;
+			if (dungeon[i][j] == 10 && dungeon[i][j + 1] == 16)
+				dungeon[i][j + 1] = 13;
+			if (dungeon[i][j] == 16 && dungeon[i][j + 1] == 3)
+				dungeon[i][j + 1] = 4;
+			if (dungeon[i][j] == 11 && dungeon[i][j + 1] == 5)
+				dungeon[i][j + 1] = 12;
+			if (dungeon[i][j] == 10 && dungeon[i + 1][j] == 3 && dungeon[i + 1][j - 1] == 16)
+				dungeon[i + 1][j] = 12;
+			if (dungeon[i][j] == 16 && dungeon[i][j + 1] == 5)
+				dungeon[i][j + 1] = 12;
+			if (dungeon[i][j] == 1 && dungeon[i][j + 1] == 6)
+				dungeon[i][j + 1] = 4;
+			if (dungeon[i][j] == 21 && dungeon[i + 1][j] == 13 && dungeon[i][j + 1] == 10)
+				dungeon[i + 1][j + 1] = 12;
+			if (dungeon[i][j] == 15 && dungeon[i + 1][j] == 10)
+				dungeon[i + 1][j] = 17;
+			if (dungeon[i][j] == 22 && dungeon[i][j + 1] == 11)
+				dungeon[i][j + 1] = 17;
+			if (dungeon[i][j] == 15 && dungeon[i + 1][j] == 28 && dungeon[i + 2][j] == 16)
+				dungeon[i + 1][j] = 23;
+			if (dungeon[i][j] == 28 && dungeon[i + 1][j] == 23 && dungeon[i + 1][j + 1] == 1 && dungeon[i + 2][j] == 6)
+				dungeon[i + 1][j] = 16;
+		}
+	}
+	for (j = 0; j < DMAXY; j++) {
+		for (i = 0; i < DMAXX; i++) {
+			if (dungeon[i][j] == 15 && dungeon[i + 1][j] == 28 && dungeon[i + 2][j] == 16)
+				dungeon[i + 1][j] = 23;
+			if (dungeon[i][j] == 21 && dungeon[i + 1][j - 1] == 21 && dungeon[i + 1][j + 1] == 13 && dungeon[i + 2][j] == 2)
+				dungeon[i + 1][j] = 17;
+			if (dungeon[i][j] == 19 && dungeon[i + 1][j] == 15 && dungeon[i + 1][j + 1] == 12)
+				dungeon[i + 1][j] = 17;
+		}
+	}
 }
 
 void __cdecl DRLG_L4Subs()
@@ -2659,7 +2150,7 @@ void __cdecl DRLG_L4FloodTVal()
 	do {
 		i = 0;
 		x = 16;
-		v2 = &dung_map[16][v0];
+		v2 = &dTransVal[16][v0];
 		v3 = (unsigned char *)dungeon + v1;
 		do {
 			if (*v3 == 6 && !*v2) {
@@ -2707,7 +2198,7 @@ void __fastcall DRLG_L4FTVR(int i, int j, int x, int y, int d)
 	v9 = 112 * x + y;
 	ja = v7;
 	v21 = v8;
-	if (!dung_map[0][v9]) {
+	if (!dTransVal[0][v9]) {
 		v19 = x;
 		ia = v8 - 1;
 		v10 = x - 2;
@@ -2716,10 +2207,10 @@ void __fastcall DRLG_L4FTVR(int i, int j, int x, int y, int d)
 		v12 = v6 - 2;
 		for (k = 40 * v8; dungeon[0][v11 + ja] == 6; v11 = k) {
 			v13 = TransVal;
-			dung_map[0][v9] = TransVal;
-			dung_map[1][v9] = v13;
-			dung_map[0][v9 + 1] = v13;
-			dung_map[1][v9 + 1] = v13;
+			dTransVal[0][v9] = TransVal;
+			dTransVal[1][v9] = v13;
+			dTransVal[0][v9 + 1] = v13;
+			dTransVal[1][v9 + 1] = v13;
 			DRLG_L4FTVR(ia + 2, ja, v10 + 4, v6, 1);
 			DRLG_L4FTVR(ia, ja, v10, v6, 2);
 			DRLG_L4FTVR(v21, ya + 2, x, v12 + 4, 3);
@@ -2739,7 +2230,7 @@ void __fastcall DRLG_L4FTVR(int i, int j, int x, int y, int d)
 			++v21;
 			++ia;
 			v9 = v19 * 112 + v6;
-			if (dung_map[v19][v6])
+			if (dTransVal[v19][v6])
 				break;
 		}
 		v5 = x;
@@ -2747,32 +2238,32 @@ void __fastcall DRLG_L4FTVR(int i, int j, int x, int y, int d)
 	v14 = TransVal;
 	if (d == 1) {
 		v15 = v6 + 112 * v5;
-		dung_map[0][v15] = TransVal;
-		dung_map[0][v15 + 1] = v14;
+		dTransVal[0][v15] = TransVal;
+		dTransVal[0][v15 + 1] = v14;
 	}
 	if (d == 2) {
 		v16 = v6 + 112 * v5;
-		dung_map[1][v16] = v14;
-		dung_map[1][v16 + 1] = v14;
+		dTransVal[1][v16] = v14;
+		dTransVal[1][v16 + 1] = v14;
 	}
 	if (d == 3) {
 		v17 = v6 + 112 * v5;
-		dung_map[0][v17] = v14;
-		dung_map[1][v17] = v14;
+		dTransVal[0][v17] = v14;
+		dTransVal[1][v17] = v14;
 	}
 	if (d == 4) {
 		v18 = v6 + 112 * v5;
-		dung_map[0][v18 + 1] = v14;
-		dung_map[1][v18 + 1] = v14;
+		dTransVal[0][v18 + 1] = v14;
+		dTransVal[1][v18 + 1] = v14;
 	}
 	if (d == 5)
-		dung_map[v5 + 1][v6 + 1] = v14;
+		dTransVal[v5 + 1][v6 + 1] = v14;
 	if (d == 6)
-		dung_map[v5][v6 + 1] = v14;
+		dTransVal[v5][v6 + 1] = v14;
 	if (d == 7)
-		dung_map[v5 + 1][v6] = v14;
+		dTransVal[v5 + 1][v6] = v14;
 	if (d == 8)
-		dung_map[v5][v6] = v14;
+		dTransVal[v5][v6] = v14;
 }
 // 5A5590: using guessed type char TransVal;
 
@@ -2786,7 +2277,7 @@ void __cdecl DRLG_L4TransFix()
 	char *v5;      // [esp+10h] [ebp-4h]
 
 	v0 = 0;
-	v5 = &dung_map[16][16];
+	v5 = &dTransVal[16][16];
 	do {
 		v1 = v5;
 		v2 = (char *)dungeon + v0;
@@ -2840,7 +2331,7 @@ void __cdecl DRLG_L4Corners()
 
 	v0 = 1;
 	do {
-		v1 = &dungeon[1][v0];
+		v1 = (char *)&dungeon[1][v0];
 		v2 = 38;
 		do {
 			v3 = *v1;
@@ -2861,7 +2352,7 @@ void __cdecl DRLG_L4Pass3()
 	int i, j, xx, yy;
 	long v1, v2, v3, v4, lv;
 
-	lv = 30-1;
+	lv = 30 - 1;
 
 #if (_MSC_VER >= 800) && (_MSC_VER <= 1200)
 	__asm {
@@ -2884,28 +2375,29 @@ void __cdecl DRLG_L4Pass3()
 		mov		v4, eax
 	}
 #else
-	v1 = *((WORD *)&pMegaTiles[lv*8])+1;
-	v2 = *((WORD *)&pMegaTiles[lv*8]+1)+1;
-	v3 = *((WORD *)&pMegaTiles[lv*8]+2)+1;
-	v4 = *((WORD *)&pMegaTiles[lv*8]+3)+1;
+	v1 = *((WORD *)&pMegaTiles[lv * 8]) + 1;
+	v2 = *((WORD *)&pMegaTiles[lv * 8] + 1) + 1;
+	v3 = *((WORD *)&pMegaTiles[lv * 8] + 2) + 1;
+	v4 = *((WORD *)&pMegaTiles[lv * 8] + 3) + 1;
 #endif
 
-	for(j = 0; j < MAXDUNY; j += 2) {
-		for(i = 0; i < MAXDUNX; i += 2) {
+	for (j = 0; j < MAXDUNY; j += 2)
+	{
+		for (i = 0; i < MAXDUNX; i += 2) {
 			dPiece[i][j] = v1;
-			dPiece[i+1][j] = v2;
-			dPiece[i][j+1] = v3;
-			dPiece[i+1][j+1] = v4;
+			dPiece[i + 1][j] = v2;
+			dPiece[i][j + 1] = v3;
+			dPiece[i + 1][j + 1] = v4;
 		}
 	}
 
 	yy = 16;
-	for(j = 0; j < DMAXY; j++) {
+	for (j = 0; j < DMAXY; j++) {
 		xx = 16;
-		for(i = 0; i < DMAXX; i++) {
-			lv = (unsigned char)dungeon[i][j]-1;
+		for (i = 0; i < DMAXX; i++) {
+			lv = (unsigned char)dungeon[i][j] - 1;
 #if (_MSC_VER >= 800) && (_MSC_VER <= 1200)
-			if(lv >= 0) {
+			if (lv >= 0) {
 				__asm {
 					mov		esi, pMegaTiles
 					mov		eax, lv
@@ -2932,11 +2424,11 @@ void __cdecl DRLG_L4Pass3()
 				v4 = 0;
 			}
 #else
-			if(lv >= 0) {
-				v1 = *((WORD *)&pMegaTiles[lv*8])+1;
-				v2 = *((WORD *)&pMegaTiles[lv*8]+1)+1;
-				v3 = *((WORD *)&pMegaTiles[lv*8]+2)+1;
-				v4 = *((WORD *)&pMegaTiles[lv*8]+3)+1;
+			if (lv >= 0) {
+				v1 = *((WORD *)&pMegaTiles[lv * 8]) + 1;
+				v2 = *((WORD *)&pMegaTiles[lv * 8] + 1) + 1;
+				v3 = *((WORD *)&pMegaTiles[lv * 8] + 2) + 1;
+				v4 = *((WORD *)&pMegaTiles[lv * 8] + 3) + 1;
 			} else {
 				v1 = 0;
 				v2 = 0;
@@ -2945,9 +2437,9 @@ void __cdecl DRLG_L4Pass3()
 			}
 #endif
 			dPiece[xx][yy] = v1;
-			dPiece[xx+1][yy] = v2;
-			dPiece[xx][yy+1] = v3;
-			dPiece[xx+1][yy+1] = v4;
+			dPiece[xx + 1][yy] = v2;
+			dPiece[xx][yy + 1] = v3;
+			dPiece[xx + 1][yy + 1] = v4;
 			xx += 2;
 		}
 		yy += 2;

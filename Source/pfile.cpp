@@ -22,7 +22,7 @@ void __cdecl pfile_init_save_directory()
 	}
 
 	if (!len)
-		TermMsg("Unable to initialize save directory");
+		app_fatal("Unable to initialize save directory");
 	else
 		pfile_check_available_space(Buffer);
 }
@@ -127,7 +127,7 @@ void __fastcall pfile_get_save_path(char *pszBuf, DWORD dwBufSize, unsigned int 
 		*s = '\0';
 
 	if (!plen)
-		TermMsg("Unable to get save directory");
+		app_fatal("Unable to get save directory");
 
 	sprintf(path, fmt, save_num);
 	strcat(pszBuf, path);
@@ -305,7 +305,7 @@ char *__fastcall GetSaveDirectory(char *dst, int dst_size, unsigned int save_num
 	}
 
 	if (!dirLen)
-		TermMsg("Unable to get save directory");
+		app_fatal("Unable to get save directory");
 
 	sprintf(FileName, savename, save_num);
 	strcat(dst, FileName);
@@ -490,9 +490,9 @@ void __cdecl pfile_read_player_from_save()
 	save_num = pfile_get_save_num_from_name(gszHero);
 	archive = pfile_open_save_archive(NULL, save_num);
 	if (archive == NULL)
-		TermMsg("Unable to open archive");
+		app_fatal("Unable to open archive");
 	if (!pfile_read_hero(archive, &pkplr))
-		TermMsg("Unable to load character");
+		app_fatal("Unable to load character");
 
 	UnPackPlayer(&pkplr, myplr, FALSE);
 	gbValidSaveFile = pfile_archive_contains_game(archive, save_num);
@@ -517,7 +517,7 @@ void __fastcall GetPermLevelNames(char *szPerm)
 	save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
 	GetTempLevelNames(szPerm);
 	if (!pfile_open_archive(FALSE, save_num))
-		TermMsg("Unable to read to save file archive");
+		app_fatal("Unable to read to save file archive");
 
 	has_file = mpqapi_has_file(szPerm);
 	pfile_flush(TRUE, save_num);
@@ -541,7 +541,7 @@ void __cdecl pfile_remove_temp_files()
 	if (gbMaxPlayers <= 1) {
 		unsigned int save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
 		if (!pfile_open_archive(FALSE, save_num))
-			TermMsg("Unable to write to save file archive");
+			app_fatal("Unable to write to save file archive");
 		mpqapi_remove_hash_entries(GetTempSaveNames);
 		pfile_flush(TRUE, save_num);
 	}
@@ -572,7 +572,7 @@ void __cdecl pfile_rename_temp_to_perm()
 
 	save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
 	if (!pfile_open_archive(FALSE, save_num))
-		TermMsg("Unable to write to save file archive");
+		app_fatal("Unable to write to save file archive");
 
 	i = 0;
 	while (GetTempSaveNames(i, TempName)) {
@@ -619,7 +619,7 @@ void __fastcall pfile_write_save_file(const char *pszName, BYTE *pbData, DWORD d
 		codec_encode(pbData, dwLen, qwLen, password);
 	}
 	if (!pfile_open_archive(FALSE, save_num))
-		TermMsg("Unable to write so save file archive");
+		app_fatal("Unable to write so save file archive");
 	mpqapi_write_file(FileName, pbData, qwLen);
 	pfile_flush(TRUE, save_num);
 }
@@ -641,18 +641,18 @@ BYTE *__fastcall pfile_read(const char *pszName, DWORD *pdwLen)
 	save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
 	archive = pfile_open_save_archive(NULL, save_num);
 	if (archive == NULL)
-		TermMsg("Unable to open save file archive");
+		app_fatal("Unable to open save file archive");
 
 	if (!SFileOpenFileEx(archive, FileName, 0, &save))
-		TermMsg("Unable to open save file");
+		app_fatal("Unable to open save file");
 
 	*pdwLen = SFileGetFileSize(save, NULL);
 	if (*pdwLen == 0)
-		TermMsg("Invalid save file");
+		app_fatal("Invalid save file");
 
 	buf = (BYTE *)DiabloAllocPtr(*pdwLen);
 	if (!SFileReadFile(save, buf, *pdwLen, &nread, NULL))
-		TermMsg("Unable to read save file");
+		app_fatal("Unable to read save file");
 	SFileCloseFile(save);
 	pfile_SFileCloseArchive(archive);
 
@@ -670,14 +670,14 @@ BYTE *__fastcall pfile_read(const char *pszName, DWORD *pdwLen)
 			if (gbMaxPlayers > 1) {
 				GetComputerName(password, &nSize);
 				if (SFileSetFilePointer(save, 0, NULL, 0))
-					TermMsg("Unable to read save file");
+					app_fatal("Unable to read save file");
 
 				if (!SFileReadFile(save, buf, *pdwLen, &nread, NULL))
-					TermMsg("Unable to read save file");
+					app_fatal("Unable to read save file");
 				*pdwLen = codec_decode(buf, *pdwLen, password);
 			}
 			if (*pdwLen == 0)
-				TermMsg("Invalid save file");
+				app_fatal("Invalid save file");
 		}
 	}
 	return buf;

@@ -221,7 +221,7 @@ void __cdecl lock_buf_priv()
 
 	if (lpDDSBackBuf == NULL) {
 		Sleep(20000);
-		TermMsg("lock_buf_priv");
+		app_fatal("lock_buf_priv");
 		sgdwLockCount++;
 		return;
 	}
@@ -248,7 +248,7 @@ void __fastcall j_unlock_buf_priv(BYTE idx)
 {
 #ifdef _DEBUG
 	if (!locktbl[idx])
-		TermMsg("Draw lock underflow: 0x%x", idx);
+		app_fatal("Draw lock underflow: 0x%x", idx);
 	--locktbl[idx];
 #endif
 	unlock_buf_priv();
@@ -259,9 +259,9 @@ void __cdecl unlock_buf_priv()
 	HRESULT error_code;
 
 	if (sgdwLockCount == 0)
-		TermMsg("draw main unlock error");
+		app_fatal("draw main unlock error");
 	if (!gpBuffer)
-		TermMsg("draw consistency error");
+		app_fatal("draw consistency error");
 
 	sgdwLockCount--;
 	if (sgdwLockCount == 0) {

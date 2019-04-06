@@ -236,7 +236,7 @@ TSnd *sound_file_load(char *path)
 
 	wave_file = LoadWaveFile(file, &pSnd->fmt, &pSnd->chunk);
 	if (!wave_file)
-		TermMsg("Invalid sound format on file %s", pSnd->sound_path);
+		app_fatal("Invalid sound format on file %s", pSnd->sound_path);
 
 	sound_CreateSoundBuffer(pSnd);
 

@@ -28,8 +28,8 @@ int __cdecl DRLG_L3GetFloorArea();
 void __cdecl DRLG_L3MakeMegas();
 void __cdecl DRLG_L3River();
 void __cdecl DRLG_L3Pool();
-int __fastcall DRLG_L3SpawnEdge(int x, int y, int *totarea);
-int __fastcall DRLG_L3Spawn(int x, int y, int *totarea);
+BOOL __fastcall DRLG_L3SpawnEdge(int x, int y, int *totarea);
+BOOL __fastcall DRLG_L3Spawn(int x, int y, int *totarea);
 void __cdecl DRLG_L3PoolFix();
 int __fastcall DRLG_L3PlaceMiniSet(const unsigned char *miniset, int tmin, int tmax, int cx, int cy, BOOLEAN setview, int ldir);
 void __fastcall DRLG_L3PlaceRndSet(const unsigned char *miniset, int rndper);
@@ -80,8 +80,5 @@ extern const unsigned char L3XTRA3[4];
 extern const unsigned char L3XTRA4[4];
 extern const unsigned char L3XTRA5[4];
 extern const unsigned char L3ANVIL[244];
-extern const unsigned char L3SpawnTbl1[15]; /* local spawntable? */
-extern const unsigned char L3SpawnTbl2[15]; /* local spawntable? */
-extern const unsigned char L3PoolSub[15];   /* local poolsub? */
 
 #endif /* __DRLG_L3_H__ */

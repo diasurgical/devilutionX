@@ -115,8 +115,6 @@ BOOL __stdcall UiArtCallback(int game_type, unsigned int art_code, PALETTEENTRY 
 			case 0x8000000E:
 				SStrPack(pszFileName, "tos.pcx", 0x104u);
 				return SBmpLoadImage(pszFileName, pPalette, pBuffer, dwBuffersize, pdwWidth, pdwHeight, pdwBpp);
-			default:
-				break;
 			}
 		} else {
 			if (art_code == 0x80000004) {

@@ -5,5 +5,4 @@
 
 Code issues (incorrect code that still works)
 - Critical sections should be constructors using `CCritSect`
-- Some code uses macros such as `__ROL2__`
 - Some functions/structures have incorrect signing (signed/unsigned BYTE)

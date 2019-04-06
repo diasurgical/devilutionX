@@ -128,20 +128,21 @@ void __cdecl GetPortalLevel()
 	if (currlevel) {
 		setlevel = 0;
 		currlevel = 0;
-		leveltype = 0;
 		plr[myplr].plrlevel = 0;
+		leveltype = 0;
 	} else {
 		if (portal[portalindex].setlvl) {
 			setlevel = 1;
 			setlvlnum = portal[portalindex].level;
+			currlevel = portal[portalindex].level;
+			plr[myplr].plrlevel = setlvlnum;
+			leveltype = portal[portalindex].ltype;
 		} else {
 			setlevel = 0;
+			currlevel = portal[portalindex].level;
+			plr[myplr].plrlevel = currlevel;
+			leveltype = portal[portalindex].ltype;
 		}
-
-		currlevel = portal[portalindex].level;
-		leveltype = portal[portalindex].ltype;
-		plr[myplr].plrlevel = portal[portalindex].level;
-
 		if (portalindex == myplr) {
 			NetSendCmd(TRUE, CMD_DEACTIVATEPORTAL);
 			DeactivatePortal(portalindex);

@@ -7,7 +7,7 @@ DEVILUTION_BEGIN_NAMESPACE
 int sgdwMpqOffset; // idb
 char mpq_buf[4096];
 _HASHENTRY *sgpHashTbl;
-BOOLEAN save_archive_modified; // weak
+BOOL save_archive_modified; // weak
 _BLOCKENTRY *sgpBlockTbl;
 BOOLEAN save_archive_open; // weak
 
@@ -57,29 +57,30 @@ void __fastcall mpqapi_store_creation_time(const char *pszArchive, int dwChar)
 }
 // 679660: using guessed type char gbMaxPlayers;
 
-BOOLEAN __fastcall mpqapi_reg_load_modification_time(char *dst, int size)
+BOOL __fastcall mpqapi_reg_load_modification_time(char *dst, int size)
 {
-	unsigned int v2; // esi
-	char *v3;        // edi
-	unsigned int v6; // esi
-	char *v7;        // ecx
-	int nbytes_read; // [esp+8h] [ebp-4h]
+	unsigned int iSize;
+	char *pszDst;
+	char *pbData;
+	int nbytes_read;
 
-	v2 = size;
-	v3 = dst;
+	iSize = size;
+	pszDst = dst;
 	memset(dst, 0, size);
-	if (!SRegLoadData("Diablo", "Video Player ", 0, (unsigned char *)v3, v2, (LPDWORD)&nbytes_read) || nbytes_read != v2)
-		return 0;
-	if (v2 >= 8) {
-		v6 = v2 >> 3;
-		do {
-			v7 = v3;
-			v3 += 8;
-			mpqapi_xor_buf(v7);
-			--v6;
-		} while (v6);
+	if (!SRegLoadData("Diablo", "Video Player ", 0, (unsigned char *)pszDst, iSize, (LPDWORD)&nbytes_read)) {
+		return FALSE;
 	}
-	return 1;
+
+	if (nbytes_read != size)
+		return FALSE;
+
+	for (; iSize >= 8; iSize -= 8) {
+		pbData = pszDst;
+		pszDst += 8;
+		mpqapi_xor_buf(pbData);
+	}
+
+	return TRUE;
 }
 
 void __fastcall mpqapi_xor_buf(char *pbData)
@@ -181,7 +182,7 @@ LABEL_2:
 	}
 	v8 = v3 + v2 == sgdwMpqOffset;
 	if (v3 + v2 > sgdwMpqOffset) {
-		TermMsg("MPQ free list error");
+		app_fatal("MPQ free list error");
 		v8 = v3 + v2 == sgdwMpqOffset;
 	}
 	if (v8) {
@@ -206,7 +207,7 @@ _BLOCKENTRY *__fastcall mpqapi_new_block(int *block_index)
 		++v2;
 		++result;
 		if (v2 >= 0x800) {
-			TermMsg("Out of free block entries");
+			app_fatal("Out of free block entries");
 			return 0;
 		}
 	}
@@ -217,16 +218,7 @@ _BLOCKENTRY *__fastcall mpqapi_new_block(int *block_index)
 
 int __fastcall mpqapi_get_hash_index_of_path(const char *pszName) // FetchHandle
 {
-	const char *v1; // esi
-	int v2;         // ST00_4
-	int v3;         // edi
-	short v4;       // ax
-
-	v1 = pszName;
-	v2 = Hash(pszName, 2); // MPQ_HASH_NAME_B
-	v3 = Hash(v1, 1);      // MPQ_HASH_NAME_A
-	v4 = Hash(v1, 0);      // MPQ_HASH_TABLE_INDEX
-	return mpqapi_get_hash_index(v4, v3, v2, 0);
+	return mpqapi_get_hash_index(Hash(pszName, 0), Hash(pszName, 1), Hash(pszName, 2), 0);
 }
 
 int __fastcall mpqapi_get_hash_index(short index, int hash_a, int hash_b, int locale)
@@ -259,36 +251,28 @@ int __fastcall mpqapi_get_hash_index(short index, int hash_a, int hash_b, int lo
 
 void __fastcall mpqapi_remove_hash_entries(BOOL(__stdcall *fnGetName)(DWORD, char *))
 {
-	BOOL(__stdcall * v1)
-	(DWORD, char *); // edi
-	DWORD v2;        // esi
-	BOOL i;          // eax
-	DWORD v4;        // eax
-	char v5[260];    // [esp+8h] [ebp-104h]
+	DWORD dwIndex;
+	BOOL i;
+	char pszFileName[260];
 
-	v1 = fnGetName;
-	v2 = 1;
-	for (i = fnGetName(0, v5); i; i = v1(v4, v5)) {
-		mpqapi_remove_hash_entry(v5);
-		v4 = v2++;
+	dwIndex = 1;
+	for (i = fnGetName(0, pszFileName); i; i = fnGetName(dwIndex++, pszFileName)) {
+		mpqapi_remove_hash_entry(pszFileName);
 	}
 }
 
 BOOL __fastcall mpqapi_write_file(const char *pszName, const BYTE *pbData, DWORD dwLen)
 {
-	const BYTE *v3;  // edi
-	const char *v4;  // esi
-	_BLOCKENTRY *v5; // eax
+	_BLOCKENTRY *blockEntry;
 
-	v3 = pbData;
-	v4 = pszName;
-	save_archive_modified = 1;
+	save_archive_modified = TRUE;
 	mpqapi_remove_hash_entry(pszName);
-	v5 = mpqapi_add_file(v4, 0, 0);
-	if (mpqapi_write_file_contents(v4, v3, dwLen, v5))
-		return 1;
-	mpqapi_remove_hash_entry(v4);
-	return 0;
+	blockEntry = mpqapi_add_file(pszName, 0, 0);
+	if (!mpqapi_write_file_contents(pszName, pbData, dwLen, blockEntry)) {
+		mpqapi_remove_hash_entry(pszName);
+		return FALSE;
+	}
+	return TRUE;
 }
 // 65AB0C: using guessed type int save_archive_modified;
 
@@ -310,7 +294,7 @@ _BLOCKENTRY *__fastcall mpqapi_add_file(const char *pszName, _BLOCKENTRY *pBlk, 
 	v5 = Hash(v3, 1);
 	v11 = Hash(v3, 2);
 	if (mpqapi_get_hash_index(v4, v5, v11, 0) != -1)
-		TermMsg("Hash collision between \"%s\" and existing file\n", v3);
+		app_fatal("Hash collision between \"%s\" and existing file\n", v3);
 	v6 = 2048;
 	v7 = v4 & 0x7FF;
 	while (1) {
@@ -325,7 +309,7 @@ _BLOCKENTRY *__fastcall mpqapi_add_file(const char *pszName, _BLOCKENTRY *pBlk, 
 		}
 	}
 	if (v6 < 0)
-		TermMsg("Out of hash space");
+		app_fatal("Out of hash space");
 	if (!v12)
 		v12 = mpqapi_new_block(&block_index);
 	v9 = v7;
@@ -336,7 +320,7 @@ _BLOCKENTRY *__fastcall mpqapi_add_file(const char *pszName, _BLOCKENTRY *pBlk, 
 	return v12;
 }
 
-BOOLEAN __fastcall mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, int dwLen, _BLOCKENTRY *pBlk)
+BOOL __fastcall mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, int dwLen, _BLOCKENTRY *pBlk)
 {
 	const char *v4;              // esi
 	const char *v5;              // eax
@@ -468,21 +452,18 @@ int __fastcall mpqapi_find_free_block(int size, int *block_size)
 
 void __fastcall mpqapi_rename(char *pszOld, char *pszNew)
 {
-	char *v2;        // esi
-	int v3;          // eax
-	_HASHENTRY *v4;  // eax
-	int v5;          // ST00_4
-	_BLOCKENTRY *v6; // edx
+	int index, block;
+	_HASHENTRY *hashEntry;
+	_BLOCKENTRY *blockEntry;
 
-	v2 = pszNew;
-	v3 = mpqapi_get_hash_index_of_path(pszOld);
-	if (v3 != -1) {
-		v4 = &sgpHashTbl[v3];
-		v5 = v4->block;
-		v6 = &sgpBlockTbl[v5];
-		v4->block = -2;
-		mpqapi_add_file(v2, v6, v5);
-		save_archive_modified = 1;
+	index = mpqapi_get_hash_index_of_path(pszOld);
+	if (index != -1) {
+		hashEntry = &sgpHashTbl[index];
+		block = hashEntry->block;
+		blockEntry = &sgpBlockTbl[block];
+		hashEntry->block = -2;
+		mpqapi_add_file(pszNew, blockEntry, block);
+		save_archive_modified = TRUE;
 	}
 }
 // 65AB0C: using guessed type int save_archive_modified;
@@ -597,30 +578,28 @@ BOOLEAN __fastcall mpqapi_parse_archive_header(_FILEHEADER *pHdr, int *pdwNextFi
 
 void __fastcall mpqapi_close_archive(const char *pszArchive, BOOL bFree, int dwChar) // CloseMPQ
 {
-	const char *v3;  // esi
-	_BLOCKENTRY *v4; // ecx
-	_HASHENTRY *v5;  // ecx
+	_BLOCKENTRY *blockEntry;
+	_HASHENTRY *hashEntry;
 
-	v3 = pszArchive;
 	if (bFree) {
-		v4 = sgpBlockTbl;
-		sgpBlockTbl = 0;
-		mem_free_dbg(v4);
-		v5 = sgpHashTbl;
-		sgpHashTbl = 0;
-		mem_free_dbg(v5);
+		blockEntry = sgpBlockTbl;
+		sgpBlockTbl = NULL;
+		mem_free_dbg(blockEntry);
+		hashEntry = sgpHashTbl;
+		sgpHashTbl = NULL;
+		mem_free_dbg(hashEntry);
 	}
-	if (sghArchive != (HANDLE)-1) {
+	if (sghArchive != INVALID_HANDLE_VALUE) {
 		CloseHandle(sghArchive);
-		sghArchive = (HANDLE)-1;
+		sghArchive = INVALID_HANDLE_VALUE;
 	}
 	if (save_archive_modified) {
-		save_archive_modified = 0;
-		mpqapi_store_modified_time(v3, dwChar);
+		save_archive_modified = FALSE;
+		mpqapi_store_modified_time(pszArchive, dwChar);
 	}
 	if (save_archive_open) {
-		save_archive_open = 0;
-		mpqapi_store_creation_time(v3, dwChar);
+		save_archive_open = FALSE;
+		mpqapi_store_creation_time(pszArchive, dwChar);
 	}
 }
 // 65AB0C: using guessed type int save_archive_modified;

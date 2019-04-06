@@ -72,9 +72,6 @@ const unsigned char L3ANVIL[244] = {
 	32, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0
 };
-const unsigned char L3SpawnTbl1[15] = { 0u, 10u, 67u, 5u, 44u, 6u, 9u, 0u, 0u, 28u, 131u, 6u, 9u, 10u, 5u };     /* local spawntable? */
-const unsigned char L3SpawnTbl2[15] = { 0u, 10u, 3u, 5u, 12u, 6u, 9u, 0u, 0u, 12u, 3u, 6u, 9u, 10u, 5u };        /* local spawntable? */
-const unsigned char L3PoolSub[15] = { 0u, 35u, 26u, 36u, 25u, 29u, 34u, 7u, 33u, 28u, 27u, 37u, 32u, 31u, 30u }; /* local poolsub? */
 
 void __cdecl AddFenceDoors()
 {
@@ -87,7 +84,7 @@ void __cdecl AddFenceDoors()
 
 	v0 = 0;
 	do {
-		v1 = &dungeon[-1][v0 + 39];
+		v1 = (char *)&dungeon[-1][v0 + 39];
 		v2 = 40;
 		do {
 			if (v1[1] == 7) {
@@ -127,7 +124,7 @@ void __cdecl FenceDoorFix()
 
 	v0 = 0;
 	do {
-		v1 = &dungeon[-1][v0 + 39];
+		v1 = (char *)&dungeon[-1][v0 + 39];
 		v2 = 40;
 		do {
 			v3 = v1[1];
@@ -274,7 +271,7 @@ void __cdecl FixL3Warp()
 	v0 = 0;
 	while (2) {
 		v1 = 0;
-		v2 = &dungeon[1][v0 + 1];
+		v2 = (char *)&dungeon[1][v0 + 1];
 		do {
 			v3 = *(v2 - 41);
 			if (v3 == 125 && *(v2 - 1) == 125 && *(v2 - 40) == 125 && *v2 == 125) {
@@ -639,7 +636,7 @@ int __fastcall DRLG_L3FillRoom(int x1, int y1, int x2, int y2)
 	if (v5 <= y2) {
 		do {
 			if (v4 <= v6) {
-				v9 = &dungeon[v4][v8];
+				v9 = (char *)&dungeon[v4][v8];
 				v10 = v6 - v4 + 1;
 				do {
 					v7 += (unsigned char)*v9;
@@ -661,7 +658,7 @@ LABEL_12:
 		v8 = v4 + 1;
 		do {
 			if (v8 < v6) {
-				v12 = &dungeon[v8][v11];
+				v12 = (char *)&dungeon[v8][v11];
 				v13 = v6 - v8;
 				do {
 					*v12 = 1;
@@ -681,7 +678,7 @@ LABEL_12:
 	}
 	if (v4 <= v6) {
 		v16 = y2;
-		v17 = &dungeon[v4][y2];
+		v17 = (char *)&dungeon[v4][y2];
 		v18 = v6 - v4 + 1;
 		y2a = v21 - y2;
 		do {
@@ -799,7 +796,7 @@ void __fastcall DRLG_L3FloorArea(int x1, int y1, int x2, int y2)
 
 	for (i = y1; i <= y2; ++i) {
 		if (x1 <= x2) {
-			v5 = &dungeon[x1][i];
+			v5 = (char *)&dungeon[x1][i];
 			v6 = x2 - x1 + 1;
 			do {
 				*v5 = 1;
@@ -820,7 +817,7 @@ void __cdecl DRLG_L3FillDiags()
 
 	v0 = 0;
 	do {
-		v1 = &dungeon[1][v0 + 1];
+		v1 = (char *)&dungeon[1][v0 + 1];
 		v2 = 39;
 		do {
 			v3 = (unsigned char)*v1;
@@ -855,7 +852,7 @@ void __cdecl DRLG_L3FillSingles()
 
 	v0 = 1;
 	do {
-		v1 = &dungeon[0][v0 + 39];
+		v1 = (char *)&dungeon[0][v0 + 39];
 		v2 = 38;
 		do {
 			if (!v1[1]
@@ -911,10 +908,10 @@ void __cdecl DRLG_L3FillStraights()
 		v1 = (char *)v27;
 		v2 = 0;
 		v29 = 0;
-		v3 = &dungeon[0][v27 + 1];
+		v3 = (char *)&dungeon[0][v27 + 1];
 		v4 = 40 * v0;
 		v25 = 0;
-		v22 = &dungeon[0][v27 + 1];
+		v22 = (char *)&dungeon[0][v27 + 1];
 		do {
 			if (*(v3 - 1) || *v3 != 1) {
 				if (v2 > 3) {
@@ -953,17 +950,17 @@ void __cdecl DRLG_L3FillStraights()
 		v7 = (char *)v28;
 		v8 = 0;
 		v30 = 0;
-		v9 = &dungeon[0][v28 + 1];
+		v9 = (char *)&dungeon[0][v28 + 1];
 		v26 = 0;
 		v10 = 40 * v0;
-		v23 = &dungeon[0][v28 + 1];
+		v23 = (char *)&dungeon[0][v28 + 1];
 		do {
 			if (*(v9 - 1) != 1 || *v9) {
 				if (v8 > 3) {
 					if (random(0, 2)) {
 						if (v0 < v30) {
 							v11 = v30 - v0;
-							v24 = &dungeon[0][v10 + 1 + v28];
+							v24 = (char *)&dungeon[0][v10 + 1 + v28];
 							do {
 								v12 = random(0, 2);
 								v7 = v24;
@@ -1043,7 +1040,7 @@ void __cdecl DRLG_L3Edges()
 	char *v0; // eax
 
 	memset(dungeon[39], 0, sizeof(char[40]));
-	v0 = &dungeon[0][39];
+	v0 = (char *)&dungeon[0][39];
 	do {
 		*v0 = 0;
 		v0 += 40;
@@ -1077,7 +1074,7 @@ void __cdecl DRLG_L3MakeMegas()
 
 	v0 = 0;
 	do {
-		v1 = &dungeon[0][v0 + 1];
+		v1 = (char *)&dungeon[0][v0 + 1];
 		v2 = 39;
 		do {
 			v3 = (unsigned char)v1[40];
@@ -1099,7 +1096,7 @@ void __cdecl DRLG_L3MakeMegas()
 		} while (v2);
 		dungeon[39][v0++] = 8;
 	} while (v0 < 39);
-	v5 = &dungeon[0][39];
+	v5 = (char *)&dungeon[0][39];
 	do {
 		*v5 = 8;
 		v5 += 40;
@@ -1358,7 +1355,7 @@ void __cdecl DRLG_L3River()
 				v13 = v40;
 				goto LABEL_94;
 			}
-			v11 = &dungeon[v1][v2];
+			v11 = (char *)&dungeon[v1][v2];
 			if (*(v11 - 1) == 10 && *(v11 - 2) == 8) {
 				v12 = v5;
 				river[1][v12] = v2 - 1;
@@ -1496,180 +1493,159 @@ void __cdecl DRLG_L3River()
 
 void __cdecl DRLG_L3Pool()
 {
-	int v0;            // ebx
-	_BYTE *v1;         // ecx
-	int v2;            // esi
-	int v3;            // ecx
-	signed int v4;     // eax
-	signed int v5;     // eax
-	signed int v6;     // eax
-	int v7;            // eax
-	int v8;            // edi
-	int v9;            // ecx
-	int v10;           // eax
-	int v11;           // esi
-	char *v12;         // edx
-	unsigned char v13; // al
-	unsigned char v14; // al
-	signed int v15;    // [esp+Ch] [ebp-18h]
-	char *v16;         // [esp+10h] [ebp-14h]
-	signed int v17;    // [esp+14h] [ebp-10h]
-	int v18;           // [esp+18h] [ebp-Ch]
-	int totarea;       // [esp+1Ch] [ebp-8h]
-	int x;             // [esp+20h] [ebp-4h]
+	int i, j, dunx, duny, totarea, poolchance;
+	BOOL found;
+	unsigned char k;
+	static unsigned char poolsub[15] = { 0, 35, 26, 36, 25, 29, 34, 7, 33, 28, 27, 37, 32, 31, 30 };
 
-	v0 = 0;
-	v18 = 0;
-	do {
-		x = 0;
-		v1 = (unsigned char *)dungeon + v0;
-		v16 = (char *)dungeon + v0;
-		do {
-			if (*v1 == 8) {
-				*v1 = -120;
-				v2 = x - 1;
-				totarea = 1;
-				v3 = x - 1 + 2;
-				v4 = v3 >= 40 ? 1 : DRLG_L3SpawnEdge(v3, v0, &totarea);
-				v5 = v2 <= 0 || v4 ? 1 : DRLG_L3SpawnEdge(v2, v0, &totarea);
-				v6 = v0 + 1 >= 40 || v5 ? 1 : DRLG_L3SpawnEdge(x, v0 + 1, &totarea);
-				v17 = v0 - 1 <= 0 || v6 ? 1 : DRLG_L3SpawnEdge(x, v0 - 1, &totarea);
-				v7 = random(0, 100);
-				v8 = totarea;
-				v15 = v7;
-				v9 = v0 - totarea;
-				if (v0 - totarea < totarea + v0) {
-					totarea = x - totarea;
-					v10 = v8 + x;
-					do {
-						v11 = totarea;
-						if (totarea < v10) {
-							v12 = &dungeon[totarea][v9];
-							do {
-								if (*v12 < 0 && v9 >= 0 && v9 < 40 && v11 >= 0 && v11 < 40) {
-									v13 = *v12 & 0x7F;
-									*v12 = v13;
-									if (v8 > 4) {
-										if (v15 < 25 && !v17) {
-											v14 = L3PoolSub[v13];
-											if (v14) {
-												if (v14 <= 0x25u)
-													*v12 = v14;
-											}
-											lavapool = 1;
-										}
-										v0 = v18;
-									}
-								}
-								++v11;
-								v10 = v8 + x;
-								v12 += 40;
-							} while (v11 < v8 + x);
+	for(duny = 0; duny < 40; duny++) {
+		for(dunx = 0; dunx < 40; dunx++) {
+			if(dungeon[dunx][duny] != 8) {
+				continue;
+			}
+			dungeon[dunx][duny] |= 0x80;
+			totarea = 1;
+			if(dunx + 1 < 40) {
+				found = DRLG_L3SpawnEdge(dunx + 1, duny, &totarea);
+			} else {
+				found = TRUE;
+			}
+			if(dunx - 1 > 0 && !found) {
+				found = DRLG_L3SpawnEdge(dunx - 1, duny, &totarea);
+			} else {
+				found = TRUE;
+			}
+			if(duny + 1 < 40 && !found) {
+				found = DRLG_L3SpawnEdge(dunx, duny + 1, &totarea);
+			} else {
+				found = TRUE;
+			}
+			if(duny - 1 > 0 && !found) {
+				found = DRLG_L3SpawnEdge(dunx, duny - 1, &totarea);
+			} else {
+				found = TRUE;
+			}
+			poolchance = random(0, 100);
+			for(j = duny - totarea; j < duny + totarea; j++) {
+				for(i = dunx - totarea; i < dunx + totarea; i++) {
+					if(dungeon[i][j] & 0x80 && j >= 0 && j < 40 && i >= 0 && i < 40) {
+						dungeon[i][j] &= ~0x80;
+						if(totarea > 4 && poolchance < 25 && !found) {
+							k = poolsub[dungeon[i][j]];
+							if(k != 0 && k <= 37) {
+								dungeon[i][j] = k;
+							}
+							lavapool = 1;
 						}
-						++v9;
-					} while (v9 < v8 + v0);
+					}
 				}
 			}
-			++x;
-			v1 = (unsigned char *)v16 + 40;
-			v16 += 40;
-		} while (x < 40);
-		v18 = ++v0;
-	} while (v0 < 40);
+		}
+	}
 }
 // 528378: using guessed type char lavapool;
 
-int __fastcall DRLG_L3SpawnEdge(int x, int y, int *totarea)
+BOOL __fastcall DRLG_L3SpawnEdge(int x, int y, int *totarea)
 {
-	int *v3;       // ebp
-	int v4;        // edi
-	int v5;        // esi
-	char *v6;      // ecx
-	int *v7;       // eax
-	int v8;        // eax
-	int *totareaa; // [esp+14h] [ebp+4h]
+	unsigned char i;
+	static unsigned char spawntable[15] = { 0, 10, 3, 5, 12, 6, 9, 0, 0, 12, 3, 6, 9, 10, 5 };
 
-	v3 = totarea;
-	v4 = y;
-	v5 = x;
-	if (*totarea <= 40 && x >= 0 && y >= 0 && x < 40 && y < 40) {
-		v6 = &dungeon[x][y];
-		_LOBYTE(v7) = *v6;
-		if (*v6 < 0)
-			return 0;
-		if ((unsigned char)v7 <= 0xFu) {
-			*v6 = (unsigned char)v7 | 0x80;
-			++*totarea;
-			if ((_BYTE)v7 == 8) {
-				if (DRLG_L3SpawnEdge(v5 + 1, y, totarea) == 1
-				    || DRLG_L3SpawnEdge(v5 - 1, v4, totarea) == 1
-				    || DRLG_L3SpawnEdge(v5, v4 + 1, totarea) == 1) {
-					return 1;
-				}
-				v8 = DRLG_L3SpawnEdge(v5, v4 - 1, totarea);
-			LABEL_24:
-				if (v8 == 1)
-					return 1;
-				return 0;
-			}
-			v7 = (int *)(unsigned char)v7;
-			totareaa = v7;
-			if (L3SpawnTbl2[(unsigned char)v7] & 8) {
-				if (DRLG_L3Spawn(v5, y - 1, v3) == 1)
-					return 1;
-				v7 = totareaa;
-			}
-			if (L3SpawnTbl2[(_DWORD)v7] & 4) {
-				if (DRLG_L3Spawn(v5, v4 + 1, v3) == 1)
-					return 1;
-				v7 = totareaa;
-			}
-			if (!(L3SpawnTbl2[(_DWORD)v7] & 2))
-				goto LABEL_18;
-			if (DRLG_L3Spawn(v5 + 1, v4, v3) != 1) {
-				v7 = totareaa;
-			LABEL_18:
-				if (L3SpawnTbl2[(_DWORD)v7] & 1) {
-					v8 = DRLG_L3Spawn(v5 - 1, v4, v3);
-					goto LABEL_24;
-				}
-				return 0;
-			}
-			return 1;
+	if(*totarea > 40) {
+		return TRUE;
+	}
+	if(x < 0 || y < 0 || x >= 40 || y >= 40) {
+		return TRUE;
+	}
+	if(dungeon[x][y] & 0x80) {
+		return FALSE;
+	}
+	if(dungeon[x][y] > 15) {
+		return TRUE;
+	}
+
+	i = dungeon[x][y];
+	dungeon[x][y] |= 0x80;
+	*totarea += 1;
+
+	if(i != 8) {
+		if(spawntable[i] & 8 && DRLG_L3Spawn(x, y - 1, totarea) == TRUE) {
+			return TRUE;
+		}
+		if(spawntable[i] & 4 && DRLG_L3Spawn(x, y + 1, totarea) == TRUE) {
+			return TRUE;
+		}
+		if(spawntable[i] & 2 && DRLG_L3Spawn(x + 1, y, totarea) == TRUE) {
+			return TRUE;
+		}
+		if(spawntable[i] & 1 && DRLG_L3Spawn(x - 1, y, totarea) == TRUE) {
+			return TRUE;
+		}
+	} else {
+		if(DRLG_L3SpawnEdge(x + 1, y, totarea) == TRUE) {
+			return TRUE;
+		}
+		if(DRLG_L3SpawnEdge(x - 1, y, totarea) == TRUE) {
+			return TRUE;
+		}
+		if(DRLG_L3SpawnEdge(x, y + 1, totarea) == TRUE) {
+			return TRUE;
+		}
+		if(DRLG_L3SpawnEdge(x, y - 1, totarea) == TRUE) {
+			return TRUE;
 		}
 	}
-	return 1;
+
+	return FALSE;
 }
 
-int __fastcall DRLG_L3Spawn(int x, int y, int *totarea)
+BOOL __fastcall DRLG_L3Spawn(int x, int y, int *totarea)
 {
-	int v3;           // edi
-	int v4;           // esi
-	char *v5;         // eax
-	unsigned char v6; // cl
-	int v7;           // ebx
-	int result;       // eax
+	unsigned char i;
+	static unsigned char spawntable[15] = { 0, 10, 67, 5, 44, 6, 9, 0, 0, 28, 131, 6, 9, 10, 5 };
 
-	v3 = y;
-	v4 = x;
-	result = 1;
-	if (*totarea <= 40 && x >= 0 && y >= 0 && x < 40 && y < 40) {
-		v5 = &dungeon[x][y];
-		v6 = *v5;
-		if (*v5 < 0
-		    || v6 <= 0xFu
-		        && ((v7 = v6, *v5 = v6 | 0x80, ++*totarea, !(L3SpawnTbl1[v6] & 8)) || DRLG_L3Spawn(v4, y - 1, totarea) != 1)
-		        && (!(L3SpawnTbl1[v7] & 4) || DRLG_L3Spawn(v4, v3 + 1, totarea) != 1)
-		        && (!(L3SpawnTbl1[v7] & 2) || DRLG_L3Spawn(v4 + 1, v3, totarea) != 1)
-		        && (!(L3SpawnTbl1[v7] & 1) || DRLG_L3Spawn(v4 - 1, v3, totarea) != 1)
-		        && ((L3SpawnTbl1[v7] & 0x80u) == 0 || DRLG_L3SpawnEdge(v4, v3 - 1, totarea) != 1)
-		        && (!(L3SpawnTbl1[v7] & 0x40) || DRLG_L3SpawnEdge(v4, v3 + 1, totarea) != 1)
-		        && (!(L3SpawnTbl1[v7] & 0x20) || DRLG_L3SpawnEdge(v4 + 1, v3, totarea) != 1)
-		        && (!(L3SpawnTbl1[v7] & 0x10) || DRLG_L3SpawnEdge(v4 - 1, v3, totarea) != 1)) {
-			result = 0;
-		}
+	if(*totarea > 40) {
+		return TRUE;
 	}
-	return result;
+	if(x < 0 || y < 0 || x >= 40 || y >= 40) {
+		return TRUE;
+	}
+	if(dungeon[x][y] & 0x80) {
+		return FALSE;
+	}
+	if(dungeon[x][y] > 15) {
+		return TRUE;
+	}
+
+	i = dungeon[x][y];
+	dungeon[x][y] |= 0x80;
+	*totarea += 1;
+
+	if(spawntable[i] & 8 && DRLG_L3Spawn(x, y - 1, totarea) == TRUE) {
+		return TRUE;
+	}
+	if(spawntable[i] & 4 && DRLG_L3Spawn(x, y + 1, totarea) == TRUE) {
+		return TRUE;
+	}
+	if(spawntable[i] & 2 && DRLG_L3Spawn(x + 1, y, totarea) == TRUE) {
+		return TRUE;
+	}
+	if(spawntable[i] & 1 && DRLG_L3Spawn(x - 1, y, totarea) == TRUE) {
+		return TRUE;
+	}
+	if(spawntable[i] & 0x80 && DRLG_L3SpawnEdge(x, y - 1, totarea) == TRUE) {
+		return TRUE;
+	}
+	if(spawntable[i] & 0x40 && DRLG_L3SpawnEdge(x, y + 1, totarea) == TRUE) {
+		return TRUE;
+	}
+	if(spawntable[i] & 0x20 && DRLG_L3SpawnEdge(x + 1, y, totarea) == TRUE) {
+		return TRUE;
+	}
+	if(spawntable[i] & 0x10 && DRLG_L3SpawnEdge(x - 1, y, totarea) == TRUE) {
+		return TRUE;
+	}
+
+	return FALSE;
 }
 
 void __cdecl DRLG_L3PoolFix()
@@ -1689,7 +1665,7 @@ void __cdecl DRLG_L3PoolFix()
 
 	v0 = 0;
 	do {
-		v1 = &dungeon[-1][v0];
+		v1 = (char *)&dungeon[-1][v0];
 		v11 = 40;
 		do {
 			v2 = v1 + 40;
@@ -1823,7 +1799,7 @@ int __fastcall DRLG_L3PlaceMiniSet(const unsigned char *miniset, int tmin, int t
 				do {
 					v19 = v28;
 					if (v28 > 0) {
-						v20 = &dungeon[v11][v17 + tmax];
+						v20 = (char *)&dungeon[v11][v17 + tmax];
 						do {
 							v21 = v23[v18];
 							if (v21)
@@ -1893,7 +1869,7 @@ void __fastcall DRLG_L3PlaceRndSet(const unsigned char *miniset, int rndper)
 	v24 = 0;
 	if (40 - v3 > 0) {
 		v22 = 40 - *v2;
-		v21 = dungeon[-1];
+		v21 = (char *)dungeon[-1];
 		while (v22 <= 0) {
 		LABEL_44:
 			v4 = v24++ + 1;
@@ -2160,7 +2136,7 @@ void __cdecl DRLG_L3Wood()
 					goto LABEL_112;
 				do {
 					if (v26 != v40) {
-						v27 = &dungeon[v45][v26];
+						v27 = (char *)&dungeon[v45][v26];
 						if (*v27 == 7)
 							*v27 = random(0, 2) != 0 ? -121 : -119;
 						if (*v27 == 10)
@@ -2190,7 +2166,7 @@ void __cdecl DRLG_L3Wood()
 				while (WoodHorizR(v30, ya))
 					v30 = ++v32;
 				v33 = v32 - 1;
-				v34 = &dungeon[v31][ya];
+				v34 = (char *)&dungeon[v31][ya];
 				v35 = 1;
 				if (*v34 == 7)
 					v35 = 0;
@@ -2251,7 +2227,7 @@ BOOLEAN __fastcall WoodVertU(int i, int y)
 	v3 = dungeon[i + 1][y];
 	result = 0;
 	if ((unsigned char)v3 > 0x98u || (unsigned char)v3 < 0x82u) {
-		v4 = &dungeon[v2][y];
+		v4 = (char *)&dungeon[v2][y];
 		v5 = *(v4 - 40);
 		if (v5 > 0x98u || v5 < 0x82u) {
 			v6 = *v4;
@@ -2275,7 +2251,7 @@ BOOLEAN __fastcall WoodVertD(int i, int y)
 	v3 = dungeon[i + 1][y];
 	result = 0;
 	if ((unsigned char)v3 > 0x98u || (unsigned char)v3 < 0x82u) {
-		v4 = &dungeon[v2][y];
+		v4 = (char *)&dungeon[v2][y];
 		v5 = *(v4 - 40);
 		if (v5 > 0x98u || v5 < 0x82u) {
 			v6 = *v4;
@@ -2299,7 +2275,7 @@ BOOLEAN __fastcall WoodHorizL(int x, int j)
 	v3 = dungeon[x][j + 1];
 	result = 0;
 	if ((unsigned char)v3 > 0x98u || (unsigned char)v3 < 0x82u) {
-		v4 = &dungeon[v2][j];
+		v4 = (char *)&dungeon[v2][j];
 		v5 = *(v4 - 1);
 		if (v5 > 0x98u || v5 < 0x82u) {
 			v6 = *v4;
@@ -2323,7 +2299,7 @@ BOOLEAN __fastcall WoodHorizR(int x, int j)
 	v3 = dungeon[x][j + 1];
 	result = 0;
 	if ((unsigned char)v3 > 0x98u || (unsigned char)v3 < 0x82u) {
-		v4 = &dungeon[v2][j];
+		v4 = (char *)&dungeon[v2][j];
 		v5 = *(v4 - 1);
 		if (v5 > 0x98u || v5 < 0x82u) {
 			v6 = *v4;
@@ -2339,7 +2315,7 @@ void __cdecl DRLG_L3Pass3()
 	int i, j, xx, yy;
 	long v1, v2, v3, v4, lv;
 
-	lv = 8-1;
+	lv = 8 - 1;
 
 #if (_MSC_VER >= 800) && (_MSC_VER <= 1200)
 	__asm {
@@ -2362,28 +2338,29 @@ void __cdecl DRLG_L3Pass3()
 		mov		v4, eax
 	}
 #else
-	v1 = *((WORD *)&pMegaTiles[lv*8])+1;
-	v2 = *((WORD *)&pMegaTiles[lv*8]+1)+1;
-	v3 = *((WORD *)&pMegaTiles[lv*8]+2)+1;
-	v4 = *((WORD *)&pMegaTiles[lv*8]+3)+1;
+	v1 = *((WORD *)&pMegaTiles[lv * 8]) + 1;
+	v2 = *((WORD *)&pMegaTiles[lv * 8] + 1) + 1;
+	v3 = *((WORD *)&pMegaTiles[lv * 8] + 2) + 1;
+	v4 = *((WORD *)&pMegaTiles[lv * 8] + 3) + 1;
 #endif
 
-	for(j = 0; j < MAXDUNY; j += 2) {
-		for(i = 0; i < MAXDUNX; i += 2) {
+	for (j = 0; j < MAXDUNY; j += 2)
+	{
+		for (i = 0; i < MAXDUNX; i += 2) {
 			dPiece[i][j] = v1;
-			dPiece[i+1][j] = v2;
-			dPiece[i][j+1] = v3;
-			dPiece[i+1][j+1] = v4;
+			dPiece[i + 1][j] = v2;
+			dPiece[i][j + 1] = v3;
+			dPiece[i + 1][j + 1] = v4;
 		}
 	}
 
 	yy = 16;
-	for(j = 0; j < DMAXY; j++) {
+	for (j = 0; j < DMAXY; j++) {
 		xx = 16;
-		for(i = 0; i < DMAXX; i++) {
-			lv = (unsigned char)dungeon[i][j]-1;
+		for (i = 0; i < DMAXX; i++) {
+			lv = (unsigned char)dungeon[i][j] - 1;
 #if (_MSC_VER >= 800) && (_MSC_VER <= 1200)
-			if(lv >= 0) {
+			if (lv >= 0) {
 				__asm {
 					mov		esi, pMegaTiles
 					mov		eax, lv
@@ -2410,11 +2387,11 @@ void __cdecl DRLG_L3Pass3()
 				v4 = 0;
 			}
 #else
-			if(lv >= 0) {
-				v1 = *((WORD *)&pMegaTiles[lv*8])+1;
-				v2 = *((WORD *)&pMegaTiles[lv*8]+1)+1;
-				v3 = *((WORD *)&pMegaTiles[lv*8]+2)+1;
-				v4 = *((WORD *)&pMegaTiles[lv*8]+3)+1;
+			if (lv >= 0) {
+				v1 = *((WORD *)&pMegaTiles[lv * 8]) + 1;
+				v2 = *((WORD *)&pMegaTiles[lv * 8] + 1) + 1;
+				v3 = *((WORD *)&pMegaTiles[lv * 8] + 2) + 1;
+				v4 = *((WORD *)&pMegaTiles[lv * 8] + 3) + 1;
 			} else {
 				v1 = 0;
 				v2 = 0;
@@ -2423,9 +2400,9 @@ void __cdecl DRLG_L3Pass3()
 			}
 #endif
 			dPiece[xx][yy] = v1;
-			dPiece[xx+1][yy] = v2;
-			dPiece[xx][yy+1] = v3;
-			dPiece[xx+1][yy+1] = v4;
+			dPiece[xx + 1][yy] = v2;
+			dPiece[xx][yy + 1] = v3;
+			dPiece[xx + 1][yy + 1] = v4;
 			xx += 2;
 		}
 		yy += 2;

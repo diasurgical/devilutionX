@@ -21,7 +21,7 @@ void __fastcall LoadGame(BOOL firstflag)
 	tbuff = LoadBuff;
 
 	if (ILoad() != 'RETL')
-		TermMsg("Invalid save file");
+		app_fatal("Invalid save file");
 
 	setlevel = OLoad();
 	setlvlnum = WLoad();
@@ -84,10 +84,10 @@ void __fastcall LoadGame(BOOL firstflag)
 
 		numlights = WLoad();
 
-		for (i = 0; i < 32; i++)
+		for (i = 0; i < MAXLIGHTS; i++)
 			lightactive[i] = BLoad();
 		for (i = 0; i < numlights; i++)
-			LoadLighting((unsigned char)lightactive[i]);
+			LoadLighting(lightactive[i]);
 
 		visionid = WLoad();
 		numvision = WLoad();
@@ -107,7 +107,7 @@ void __fastcall LoadGame(BOOL firstflag)
 
 	for (j = 0; j < MAXDUNY; j++) {
 		for (i = 0; i < MAXDUNX; i++)
-			dTransVal[i][j] = BLoad();
+			dLight[i][j] = BLoad();
 	}
 	for (j = 0; j < MAXDUNY; j++) {
 		for (i = 0; i < MAXDUNX; i++)
@@ -137,11 +137,11 @@ void __fastcall LoadGame(BOOL firstflag)
 		}
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++)
-				dTransVal[i][j] = BLoad();
+				dLight[i][j] = BLoad();
 		}
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++)
-				dTransVal2[i][j] = BLoad();
+				dPreLight[i][j] = BLoad();
 		}
 		for (j = 0; j < DMAXY; j++) {
 			for (i = 0; i < DMAXX; i++)
@@ -334,10 +334,10 @@ void __cdecl SaveGame()
 
 		WSave(numlights);
 
-		for (i = 0; i < 32; i++)
+		for (i = 0; i < MAXLIGHTS; i++)
 			BSave(lightactive[i]);
 		for (i = 0; i < numlights; i++)
-			SaveLighting((unsigned char)lightactive[i]);
+			SaveLighting(lightactive[i]);
 
 		WSave(visionid);
 		WSave(numvision);
@@ -357,7 +357,7 @@ void __cdecl SaveGame()
 
 	for (j = 0; j < MAXDUNY; j++) {
 		for (i = 0; i < MAXDUNX; i++)
-			BSave(dTransVal[i][j]);
+			BSave(dLight[i][j]);
 	}
 	for (j = 0; j < MAXDUNY; j++) {
 		for (i = 0; i < MAXDUNX; i++)
@@ -387,11 +387,11 @@ void __cdecl SaveGame()
 		}
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++)
-				BSave(dTransVal[i][j]);
+				BSave(dLight[i][j]);
 		}
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++)
-				BSave(dTransVal2[i][j]);
+				BSave(dPreLight[i][j]);
 		}
 		for (j = 0; j < DMAXY; j++) {
 			for (i = 0; i < DMAXX; i++)
@@ -580,11 +580,11 @@ void __cdecl SaveLevel()
 		}
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++)
-				BSave(dTransVal[i][j]);
+				BSave(dLight[i][j]);
 		}
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++)
-				BSave(dTransVal2[i][j]);
+				BSave(dPreLight[i][j]);
 		}
 		for (j = 0; j < DMAXY; j++) {
 			for (i = 0; i < DMAXX; i++)
@@ -673,11 +673,11 @@ void __cdecl LoadLevel()
 		}
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++)
-				dTransVal[i][j] = BLoad();
+				dLight[i][j] = BLoad();
 		}
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++)
-				dTransVal2[i][j] = BLoad();
+				dPreLight[i][j] = BLoad();
 		}
 		for (j = 0; j < DMAXY; j++) {
 			for (i = 0; i < DMAXX; i++)

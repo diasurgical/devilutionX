@@ -48,148 +48,369 @@ char *__fastcall GetErrorStr(DWORD error_code)
 	return sz_error_buf;
 }
 
-#define CASE_ERROR(v, errName) \
-	case (DWORD)errName:              \
-		v = #errName;          \
-		break;
-
-void __fastcall TraceErrorDD(DWORD error_code, char *error_buf, int error_buf_len)
+void __fastcall TraceErrorDD(HRESULT hError, char *pszBuffer, DWORD dwMaxChars)
 {
-	const char *v3; // eax
-	char v4[20];    // [esp+0h] [ebp-14h]
+	const char *szError;
 
-	switch (error_code) {
-		CASE_ERROR(v3, DDERR_CANTPAGEUNLOCK);
-		CASE_ERROR(v3, DDERR_NOTPAGELOCKED);
-		CASE_ERROR(v3, DD_OK);
-		CASE_ERROR(v3, DDERR_CANTPAGELOCK);
-		CASE_ERROR(v3, DDERR_BLTFASTCANTCLIP);
-		CASE_ERROR(v3, DDERR_NOBLTHW);
-		CASE_ERROR(v3, DDERR_NODDROPSHW);
-		CASE_ERROR(v3, DDERR_OVERLAYNOTVISIBLE);
-		CASE_ERROR(v3, DDERR_NOOVERLAYDEST);
-		CASE_ERROR(v3, DDERR_INVALIDPOSITION);
-		CASE_ERROR(v3, DDERR_NOTAOVERLAYSURFACE);
-		CASE_ERROR(v3, DDERR_EXCLUSIVEMODEALREADYSET);
-		CASE_ERROR(v3, DDERR_NOTFLIPPABLE);
-		CASE_ERROR(v3, DDERR_CANTDUPLICATE);
-		CASE_ERROR(v3, DDERR_NOTLOCKED);
-		CASE_ERROR(v3, DDERR_CANTCREATEDC);
-		CASE_ERROR(v3, DDERR_NODC);
-		CASE_ERROR(v3, DDERR_WRONGMODE);
-		CASE_ERROR(v3, DDERR_IMPLICITLYCREATED);
-		CASE_ERROR(v3, DDERR_NOTPALETTIZED);
-		CASE_ERROR(v3, DDERR_NOMIPMAPHW);
-		CASE_ERROR(v3, DDERR_INVALIDSURFACETYPE);
-		CASE_ERROR(v3, DDERR_DCALREADYCREATED);
-		CASE_ERROR(v3, DDERR_NOPALETTEHW);
-		CASE_ERROR(v3, DDERR_DIRECTDRAWALREADYCREATED);
-		CASE_ERROR(v3, DDERR_NODIRECTDRAWHW);
-		CASE_ERROR(v3, DDERR_PRIMARYSURFACEALREADYEXISTS);
-		CASE_ERROR(v3, DDERR_NOEMULATION);
-		CASE_ERROR(v3, DDERR_REGIONTOOSMALL);
-		CASE_ERROR(v3, DDERR_CLIPPERISUSINGHWND);
-		CASE_ERROR(v3, DDERR_NOCLIPPERATTACHED);
-		CASE_ERROR(v3, DDERR_NOHWND);
-		CASE_ERROR(v3, DDERR_HWNDSUBCLASSED);
-		CASE_ERROR(v3, DDERR_HWNDALREADYSET);
-		CASE_ERROR(v3, DDERR_NOPALETTEATTACHED);
-		CASE_ERROR(v3, DDERR_INVALIDDIRECTDRAWGUID);
-		CASE_ERROR(v3, DDERR_UNSUPPORTEDFORMAT);
-		CASE_ERROR(v3, DDERR_UNSUPPORTEDMASK);
-		CASE_ERROR(v3, DDERR_VERTICALBLANKINPROGRESS);
-		CASE_ERROR(v3, DDERR_WASSTILLDRAWING);
-		CASE_ERROR(v3, DDERR_XALIGN);
-		CASE_ERROR(v3, DDERR_TOOBIGWIDTH);
-		CASE_ERROR(v3, DDERR_CANTLOCKSURFACE);
-		CASE_ERROR(v3, DDERR_SURFACEISOBSCURED);
-		CASE_ERROR(v3, DDERR_SURFACELOST);
-		CASE_ERROR(v3, DDERR_SURFACENOTATTACHED);
-		CASE_ERROR(v3, DDERR_TOOBIGHEIGHT);
-		CASE_ERROR(v3, DDERR_TOOBIGSIZE);
-		CASE_ERROR(v3, DDERR_SURFACEBUSY);
-		CASE_ERROR(v3, DDERR_OVERLAYCOLORKEYONLYONEACTIVE);
-		CASE_ERROR(v3, DDERR_PALETTEBUSY);
-		CASE_ERROR(v3, DDERR_COLORKEYNOTSET);
-		CASE_ERROR(v3, DDERR_SURFACEALREADYATTACHED);
-		CASE_ERROR(v3, DDERR_SURFACEALREADYDEPENDENT);
-		CASE_ERROR(v3, DDERR_OVERLAYCANTCLIP);
-		CASE_ERROR(v3, DDERR_NOVSYNCHW);
-		CASE_ERROR(v3, DDERR_NOZBUFFERHW);
-		CASE_ERROR(v3, DDERR_NOZOVERLAYHW);
-		CASE_ERROR(v3, DDERR_OUTOFCAPS);
-		CASE_ERROR(v3, DDERR_OUTOFVIDEOMEMORY);
-		CASE_ERROR(v3, DDERR_NOTEXTUREHW);
-		CASE_ERROR(v3, DDERR_NOROTATIONHW);
-		CASE_ERROR(v3, DDERR_NOSTRETCHHW);
-		CASE_ERROR(v3, DDERR_NOT4BITCOLOR);
-		CASE_ERROR(v3, DDERR_NOT4BITCOLORINDEX);
-		CASE_ERROR(v3, DDERR_NOT8BITCOLOR);
-		CASE_ERROR(v3, DDERR_NORASTEROPHW);
-		CASE_ERROR(v3, DDERR_NOEXCLUSIVEMODE);
-		CASE_ERROR(v3, DDERR_NOFLIPHW);
-		CASE_ERROR(v3, DDERR_NOGDI);
-		CASE_ERROR(v3, DDERR_NOMIRRORHW);
-		CASE_ERROR(v3, DDERR_NOTFOUND);
-		CASE_ERROR(v3, DDERR_NOOVERLAYHW);
-		CASE_ERROR(v3, DDERR_NOCOLORKEYHW);
-		CASE_ERROR(v3, DDERR_NOALPHAHW);
-		CASE_ERROR(v3, DDERR_NOCLIPLIST);
-		CASE_ERROR(v3, DDERR_NOCOLORCONVHW);
-		CASE_ERROR(v3, DDERR_NOCOOPERATIVELEVELSET);
-		CASE_ERROR(v3, DDERR_NOCOLORKEY);
-		CASE_ERROR(v3, DDERR_NO3D);
-		CASE_ERROR(v3, DDERR_INVALIDMODE);
-		CASE_ERROR(v3, DDERR_INVALIDOBJECT);
-		CASE_ERROR(v3, DDERR_INVALIDPIXELFORMAT);
-		CASE_ERROR(v3, DDERR_INVALIDRECT);
-		CASE_ERROR(v3, DDERR_LOCKEDSURFACES);
-		CASE_ERROR(v3, DDERR_INVALIDCLIPLIST);
-		CASE_ERROR(v3, DDERR_CURRENTLYNOTAVAIL);
-		CASE_ERROR(v3, DDERR_EXCEPTION);
-		CASE_ERROR(v3, DDERR_HEIGHTALIGN);
-		CASE_ERROR(v3, DDERR_INCOMPATIBLEPRIMARY);
-		CASE_ERROR(v3, DDERR_INVALIDCAPS);
-		CASE_ERROR(v3, DDERR_CANNOTDETACHSURFACE);
-		CASE_ERROR(v3, DDERR_UNSUPPORTED);
-		CASE_ERROR(v3, DDERR_GENERIC);
-		CASE_ERROR(v3, DDERR_OUTOFMEMORY);
-		CASE_ERROR(v3, DDERR_INVALIDPARAMS);
-		CASE_ERROR(v3, DDERR_ALREADYINITIALIZED);
-		CASE_ERROR(v3, DDERR_CANNOTATTACHSURFACE);
-	default:
-		strcpy(v4, "DDERR unknown 0x%x");
-		sprintf(error_buf, v4, error_code);
+	switch (hError) {
+	case DDERR_CANTPAGEUNLOCK:
+		szError = "DDERR_CANTPAGEUNLOCK";
+		break;
+	case DDERR_NOTPAGELOCKED:
+		szError = "DDERR_NOTPAGELOCKED";
+		break;
+	case DD_OK:
+		szError = "DD_OK";
+		break;
+	case DDERR_CANTPAGELOCK:
+		szError = "DDERR_CANTPAGELOCK";
+		break;
+	case DDERR_BLTFASTCANTCLIP:
+		szError = "DDERR_BLTFASTCANTCLIP";
+		break;
+	case DDERR_NOBLTHW:
+		szError = "DDERR_NOBLTHW";
+		break;
+	case DDERR_NODDROPSHW:
+		szError = "DDERR_NODDROPSHW";
+		break;
+	case DDERR_OVERLAYNOTVISIBLE:
+		szError = "DDERR_OVERLAYNOTVISIBLE";
+		break;
+	case DDERR_NOOVERLAYDEST:
+		szError = "DDERR_NOOVERLAYDEST";
+		break;
+	case DDERR_INVALIDPOSITION:
+		szError = "DDERR_INVALIDPOSITION";
+		break;
+	case DDERR_NOTAOVERLAYSURFACE:
+		szError = "DDERR_NOTAOVERLAYSURFACE";
+		break;
+	case DDERR_EXCLUSIVEMODEALREADYSET:
+		szError = "DDERR_EXCLUSIVEMODEALREADYSET";
+		break;
+	case DDERR_NOTFLIPPABLE:
+		szError = "DDERR_NOTFLIPPABLE";
+		break;
+	case DDERR_CANTDUPLICATE:
+		szError = "DDERR_CANTDUPLICATE";
+		break;
+	case DDERR_NOTLOCKED:
+		szError = "DDERR_NOTLOCKED";
+		break;
+	case DDERR_CANTCREATEDC:
+		szError = "DDERR_CANTCREATEDC";
+		break;
+	case DDERR_NODC:
+		szError = "DDERR_NODC";
+		break;
+	case DDERR_WRONGMODE:
+		szError = "DDERR_WRONGMODE";
+		break;
+	case DDERR_IMPLICITLYCREATED:
+		szError = "DDERR_IMPLICITLYCREATED";
+		break;
+	case DDERR_NOTPALETTIZED:
+		szError = "DDERR_NOTPALETTIZED";
+		break;
+	case DDERR_NOMIPMAPHW:
+		szError = "DDERR_NOMIPMAPHW";
+		break;
+	case DDERR_INVALIDSURFACETYPE:
+		szError = "DDERR_INVALIDSURFACETYPE";
+		break;
+	case DDERR_DCALREADYCREATED:
+		szError = "DDERR_DCALREADYCREATED";
+		break;
+	case DDERR_NOPALETTEHW:
+		szError = "DDERR_NOPALETTEHW";
+		break;
+	case DDERR_DIRECTDRAWALREADYCREATED:
+		szError = "DDERR_DIRECTDRAWALREADYCREATED";
+		break;
+	case DDERR_NODIRECTDRAWHW:
+		szError = "DDERR_NODIRECTDRAWHW";
+		break;
+	case DDERR_PRIMARYSURFACEALREADYEXISTS:
+		szError = "DDERR_PRIMARYSURFACEALREADYEXISTS";
+		break;
+	case DDERR_NOEMULATION:
+		szError = "DDERR_NOEMULATION";
+		break;
+	case DDERR_REGIONTOOSMALL:
+		szError = "DDERR_REGIONTOOSMALL";
+		break;
+	case DDERR_CLIPPERISUSINGHWND:
+		szError = "DDERR_CLIPPERISUSINGHWND";
+		break;
+	case DDERR_NOCLIPPERATTACHED:
+		szError = "DDERR_NOCLIPPERATTACHED";
+		break;
+	case DDERR_NOHWND:
+		szError = "DDERR_NOHWND";
+		break;
+	case DDERR_HWNDSUBCLASSED:
+		szError = "DDERR_HWNDSUBCLASSED";
+		break;
+	case DDERR_HWNDALREADYSET:
+		szError = "DDERR_HWNDALREADYSET";
+		break;
+	case DDERR_NOPALETTEATTACHED:
+		szError = "DDERR_NOPALETTEATTACHED";
+		break;
+	case DDERR_INVALIDDIRECTDRAWGUID:
+		szError = "DDERR_INVALIDDIRECTDRAWGUID";
+		break;
+	case DDERR_UNSUPPORTEDFORMAT:
+		szError = "DDERR_UNSUPPORTEDFORMAT";
+		break;
+	case DDERR_UNSUPPORTEDMASK:
+		szError = "DDERR_UNSUPPORTEDMASK";
+		break;
+	case DDERR_VERTICALBLANKINPROGRESS:
+		szError = "DDERR_VERTICALBLANKINPROGRESS";
+		break;
+	case DDERR_WASSTILLDRAWING:
+		szError = "DDERR_WASSTILLDRAWING";
+		break;
+	case DDERR_XALIGN:
+		szError = "DDERR_XALIGN";
+		break;
+	case DDERR_TOOBIGWIDTH:
+		szError = "DDERR_TOOBIGWIDTH";
+		break;
+	case DDERR_CANTLOCKSURFACE:
+		szError = "DDERR_CANTLOCKSURFACE";
+		break;
+	case DDERR_SURFACEISOBSCURED:
+		szError = "DDERR_SURFACEISOBSCURED";
+		break;
+	case DDERR_SURFACELOST:
+		szError = "DDERR_SURFACELOST";
+		break;
+	case DDERR_SURFACENOTATTACHED:
+		szError = "DDERR_SURFACENOTATTACHED";
+		break;
+	case DDERR_TOOBIGHEIGHT:
+		szError = "DDERR_TOOBIGHEIGHT";
+		break;
+	case DDERR_TOOBIGSIZE:
+		szError = "DDERR_TOOBIGSIZE";
+		break;
+	case DDERR_SURFACEBUSY:
+		szError = "DDERR_SURFACEBUSY";
+		break;
+	case DDERR_OVERLAYCOLORKEYONLYONEACTIVE:
+		szError = "DDERR_OVERLAYCOLORKEYONLYONEACTIVE";
+		break;
+	case DDERR_PALETTEBUSY:
+		szError = "DDERR_PALETTEBUSY";
+		break;
+	case DDERR_COLORKEYNOTSET:
+		szError = "DDERR_COLORKEYNOTSET";
+		break;
+	case DDERR_SURFACEALREADYATTACHED:
+		szError = "DDERR_SURFACEALREADYATTACHED";
+		break;
+	case DDERR_SURFACEALREADYDEPENDENT:
+		szError = "DDERR_SURFACEALREADYDEPENDENT";
+		break;
+	case DDERR_OVERLAYCANTCLIP:
+		szError = "DDERR_OVERLAYCANTCLIP";
+		break;
+	case DDERR_NOVSYNCHW:
+		szError = "DDERR_NOVSYNCHW";
+		break;
+	case DDERR_NOZBUFFERHW:
+		szError = "DDERR_NOZBUFFERHW";
+		break;
+	case DDERR_NOZOVERLAYHW:
+		szError = "DDERR_NOZOVERLAYHW";
+		break;
+	case DDERR_OUTOFCAPS:
+		szError = "DDERR_OUTOFCAPS";
+		break;
+	case DDERR_OUTOFVIDEOMEMORY:
+		szError = "DDERR_OUTOFVIDEOMEMORY";
+		break;
+	case DDERR_NOTEXTUREHW:
+		szError = "DDERR_NOTEXTUREHW";
+		break;
+	case DDERR_NOROTATIONHW:
+		szError = "DDERR_NOROTATIONHW";
+		break;
+	case DDERR_NOSTRETCHHW:
+		szError = "DDERR_NOSTRETCHHW";
+		break;
+	case DDERR_NOT4BITCOLOR:
+		szError = "DDERR_NOT4BITCOLOR";
+		break;
+	case DDERR_NOT4BITCOLORINDEX:
+		szError = "DDERR_NOT4BITCOLORINDEX";
+		break;
+	case DDERR_NOT8BITCOLOR:
+		szError = "DDERR_NOT8BITCOLOR";
+		break;
+	case DDERR_NORASTEROPHW:
+		szError = "DDERR_NORASTEROPHW";
+		break;
+	case DDERR_NOEXCLUSIVEMODE:
+		szError = "DDERR_NOEXCLUSIVEMODE";
+		break;
+	case DDERR_NOFLIPHW:
+		szError = "DDERR_NOFLIPHW";
+		break;
+	case DDERR_NOGDI:
+		szError = "DDERR_NOGDI";
+		break;
+	case DDERR_NOMIRRORHW:
+		szError = "DDERR_NOMIRRORHW";
+		break;
+	case DDERR_NOTFOUND:
+		szError = "DDERR_NOTFOUND";
+		break;
+	case DDERR_NOOVERLAYHW:
+		szError = "DDERR_NOOVERLAYHW";
+		break;
+	case DDERR_NOCOLORKEYHW:
+		szError = "DDERR_NOCOLORKEYHW";
+		break;
+	case DDERR_NOALPHAHW:
+		szError = "DDERR_NOALPHAHW";
+		break;
+	case DDERR_NOCLIPLIST:
+		szError = "DDERR_NOCLIPLIST";
+		break;
+	case DDERR_NOCOLORCONVHW:
+		szError = "DDERR_NOCOLORCONVHW";
+		break;
+	case DDERR_NOCOOPERATIVELEVELSET:
+		szError = "DDERR_NOCOOPERATIVELEVELSET";
+		break;
+	case DDERR_NOCOLORKEY:
+		szError = "DDERR_NOCOLORKEY";
+		break;
+	case DDERR_NO3D:
+		szError = "DDERR_NO3D";
+		break;
+	case DDERR_INVALIDMODE:
+		szError = "DDERR_INVALIDMODE";
+		break;
+	case DDERR_INVALIDOBJECT:
+		szError = "DDERR_INVALIDOBJECT";
+		break;
+	case DDERR_INVALIDPIXELFORMAT:
+		szError = "DDERR_INVALIDPIXELFORMAT";
+		break;
+	case DDERR_INVALIDRECT:
+		szError = "DDERR_INVALIDRECT";
+		break;
+	case DDERR_LOCKEDSURFACES:
+		szError = "DDERR_LOCKEDSURFACES";
+		break;
+	case DDERR_INVALIDCLIPLIST:
+		szError = "DDERR_INVALIDCLIPLIST";
+		break;
+	case DDERR_CURRENTLYNOTAVAIL:
+		szError = "DDERR_CURRENTLYNOTAVAIL";
+		break;
+	case DDERR_EXCEPTION:
+		szError = "DDERR_EXCEPTION";
+		break;
+	case DDERR_HEIGHTALIGN:
+		szError = "DDERR_HEIGHTALIGN";
+		break;
+	case DDERR_INCOMPATIBLEPRIMARY:
+		szError = "DDERR_INCOMPATIBLEPRIMARY";
+		break;
+	case DDERR_INVALIDCAPS:
+		szError = "DDERR_INVALIDCAPS";
+		break;
+	case DDERR_CANNOTDETACHSURFACE:
+		szError = "DDERR_CANNOTDETACHSURFACE";
+		break;
+	case DDERR_UNSUPPORTED:
+		szError = "DDERR_UNSUPPORTED";
+		break;
+	case DDERR_GENERIC:
+		szError = "DDERR_GENERIC";
+		break;
+	case DDERR_OUTOFMEMORY:
+		szError = "DDERR_OUTOFMEMORY";
+		break;
+	case DDERR_INVALIDPARAMS:
+		szError = "DDERR_INVALIDPARAMS";
+		break;
+	case DDERR_ALREADYINITIALIZED:
+		szError = "DDERR_ALREADYINITIALIZED";
+		break;
+	case DDERR_CANNOTATTACHSURFACE:
+		szError = "DDERR_CANNOTATTACHSURFACE";
+		break;
+	default: {
+		const char szUnknown[] = "DDERR unknown 0x%x";
+		/// ASSERT: assert(dwMaxChars >= sizeof(szUnknown) + 10);
+		sprintf(pszBuffer, szUnknown, hError);
 		return;
 	}
-	strncpy(error_buf, v3, error_buf_len);
+	}
+
+	strncpy(pszBuffer, szError, dwMaxChars);
 }
 
-void __fastcall TraceErrorDS(DWORD error_code, char *error_buf, int error_buf_len)
+void __fastcall TraceErrorDS(HRESULT hError, char *pszBuffer, DWORD dwMaxChars)
 {
-	const char *v3; // eax
-	char v4[20];    // [esp+0h] [ebp-14h]
+	const char *szError;
 
-	switch (error_code) {
-		CASE_ERROR(v3, DSERR_PRIOLEVELNEEDED);
-		CASE_ERROR(v3, DSERR_BADFORMAT);
-		CASE_ERROR(v3, DSERR_NODRIVER);
-		CASE_ERROR(v3, DSERR_ALREADYINITIALIZED);
-		CASE_ERROR(v3, DSERR_BUFFERLOST);
-		CASE_ERROR(v3, DS_OK);
-		CASE_ERROR(v3, DSERR_INVALIDCALL);
-		CASE_ERROR(v3, E_NOINTERFACE);
-		CASE_ERROR(v3, DSERR_NOAGGREGATION);
-		CASE_ERROR(v3, DSERR_OUTOFMEMORY);
-		CASE_ERROR(v3, DSERR_INVALIDPARAM);
-		CASE_ERROR(v3, DSERR_ALLOCATED);
-		CASE_ERROR(v3, DSERR_CONTROLUNAVAIL);
-	default:
-		strcpy(v4, "DSERR unknown 0x%x");
-		sprintf(error_buf, v4, error_code);
+	switch (hError) {
+	case DSERR_PRIOLEVELNEEDED:
+		szError = "DSERR_PRIOLEVELNEEDED";
+		break;
+	case DSERR_BADFORMAT:
+		szError = "DSERR_BADFORMAT";
+		break;
+	case DSERR_NODRIVER:
+		szError = "DSERR_NODRIVER";
+		break;
+	case DSERR_ALREADYINITIALIZED:
+		szError = "DSERR_ALREADYINITIALIZED";
+		break;
+	case DSERR_BUFFERLOST:
+		szError = "DSERR_BUFFERLOST";
+		break;
+	case DS_OK:
+		szError = "DS_OK";
+		break;
+	case DSERR_INVALIDCALL:
+		szError = "DSERR_INVALIDCALL";
+		break;
+	case E_NOINTERFACE:
+		szError = "E_NOINTERFACE";
+		break;
+	case DSERR_NOAGGREGATION:
+		szError = "DSERR_NOAGGREGATION";
+		break;
+	case DSERR_OUTOFMEMORY:
+		szError = "DSERR_OUTOFMEMORY";
+		break;
+	case DSERR_INVALIDPARAM:
+		szError = "DSERR_INVALIDPARAM";
+		break;
+	case DSERR_ALLOCATED:
+		szError = "DSERR_ALLOCATED";
+		break;
+	case DSERR_CONTROLUNAVAIL:
+		szError = "DSERR_CONTROLUNAVAIL";
+		break;
+	default: {
+		const char szUnknown[] = "DSERR unknown 0x%x";
+		/// ASSERT: assert(dwMaxChars >= sizeof(szUnknown) + 10);
+		sprintf(pszBuffer, szUnknown, hError);
 		return;
 	}
-	strncpy(error_buf, v3, error_buf_len);
+	}
+
+	strncpy(pszBuffer, szError, dwMaxChars);
 }
 
 char *__cdecl TraceLastError()
@@ -197,7 +418,7 @@ char *__cdecl TraceLastError()
 	return GetErrorStr(GetLastError());
 }
 
-void TermMsg(char *pszFmt, ...)
+void app_fatal(const char *pszFmt, ...)
 {
 	va_list va;
 
@@ -213,7 +434,7 @@ void TermMsg(char *pszFmt, ...)
 	exit(1);
 }
 
-void __fastcall MsgBox(char *pszFmt, va_list va)
+void __fastcall MsgBox(const char *pszFmt, va_list va)
 {
 	char Text[256]; // [esp+0h] [ebp-100h]
 
@@ -253,13 +474,20 @@ void DrawDlg(char *pszFmt, ...)
 	SDrawMessageBox(text, "Diablo", MB_TASKMODAL | MB_ICONEXCLAMATION);
 }
 
+#ifdef _DEBUG
+void __fastcall assert_fail(int nLineNo, const char *pszFile, const char *pszFail)
+{
+	app_fatal("assertion failed (%d:%s)\n%s", nLineNo, pszFile, pszFail);
+}
+#endif
+
 void __fastcall DDErrMsg(DWORD error_code, int log_line_nr, char *log_file_path)
 {
 	char *msg;
 
 	if (error_code) {
 		msg = GetErrorStr(error_code);
-		TermMsg("Direct draw error (%s:%d)\n%s", log_file_path, log_line_nr, msg);
+		app_fatal("Direct draw error (%s:%d)\n%s", log_file_path, log_line_nr, msg);
 	}
 }
 
@@ -269,7 +497,7 @@ void __fastcall DSErrMsg(DWORD error_code, int log_line_nr, char *log_file_path)
 
 	if (error_code) {
 		msg = GetErrorStr(error_code);
-		TermMsg("Direct sound error (%s:%d)\n%s", log_file_path, log_line_nr, msg);
+		app_fatal("Direct sound error (%s:%d)\n%s", log_file_path, log_line_nr, msg);
 	}
 }
 
@@ -289,7 +517,7 @@ void __fastcall center_window(HWND hDlg)
 	ReleaseDC(hDlg, hdc);
 
 	if (!SetWindowPos(hDlg, HWND_TOP, (screenW - w) / 2, (screenH - h) / 2, 0, 0, SWP_NOZORDER | SWP_NOSIZE)) {
-		TermMsg("center_window: %s", TraceLastError());
+		app_fatal("center_window: %s", TraceLastError());
 	}
 }
 
@@ -306,9 +534,9 @@ void __fastcall ErrDlg(int template_id, DWORD error_code, char *log_file_path, i
 
 	wsprintf((LPSTR)dwInitParam, "%s\nat: %s line %d", GetErrorStr(error_code), log_file_path, log_line_nr);
 	if (DialogBoxParam(ghInst, MAKEINTRESOURCE(template_id), ghMainWnd, (DLGPROC)FuncDlg, (LPARAM)dwInitParam) == -1)
-		TermMsg("ErrDlg: %d", template_id);
+		app_fatal("ErrDlg: %d", template_id);
 
-	TermMsg(NULL);
+	app_fatal(NULL);
 }
 
 BOOL __stdcall FuncDlg(HWND hDlg, UINT uMsg, WPARAM wParam, char *text)
@@ -360,9 +588,9 @@ void __fastcall FileErrDlg(const char *error)
 		error = "";
 
 	if (DialogBoxParam(ghInst, MAKEINTRESOURCE(IDD_DIALOG3), ghMainWnd, (DLGPROC)FuncDlg, (LPARAM)error) == -1)
-		TermMsg("FileErrDlg");
+		app_fatal("FileErrDlg");
 
-	TermMsg(NULL);
+	app_fatal(NULL);
 }
 
 void __fastcall DiskFreeDlg(char *error)
@@ -370,9 +598,9 @@ void __fastcall DiskFreeDlg(char *error)
 	FreeDlg();
 
 	if (DialogBoxParam(ghInst, MAKEINTRESOURCE(IDD_DIALOG7), ghMainWnd, (DLGPROC)FuncDlg, (LPARAM)error) == -1)
-		TermMsg("DiskFreeDlg");
+		app_fatal("DiskFreeDlg");
 
-	TermMsg(NULL);
+	app_fatal(NULL);
 }
 
 BOOL __cdecl InsertCDDlg()
@@ -383,7 +611,7 @@ BOOL __cdecl InsertCDDlg()
 
 	nResult = DialogBoxParam(ghInst, MAKEINTRESOURCE(IDD_DIALOG9), ghMainWnd, (DLGPROC)FuncDlg, (LPARAM) "");
 	if (nResult == -1)
-		TermMsg("InsertCDDlg");
+		app_fatal("InsertCDDlg");
 
 	ShowCursor(FALSE);
 
@@ -395,9 +623,9 @@ void __fastcall DirErrorDlg(char *error)
 	FreeDlg();
 
 	if (DialogBoxParam(ghInst, MAKEINTRESOURCE(IDD_DIALOG11), ghMainWnd, (DLGPROC)FuncDlg, (LPARAM)error) == -1)
-		TermMsg("DirErrorDlg");
+		app_fatal("DirErrorDlg");
 
-	TermMsg(NULL);
+	app_fatal(NULL);
 }
 
 DEVILUTION_END_NAMESPACE

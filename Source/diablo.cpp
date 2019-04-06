@@ -68,25 +68,13 @@ char *spszMsgKeyTbl[4] = { "F9", "F10", "F11", "F12" }; // weak
 
 void __cdecl FreeGameMem()
 {
-	void *p;
-
 	music_stop();
 
-	p = pDungeonCels; /* todo: macro */
-	pDungeonCels = NULL;
-	mem_free_dbg(p);
-	p = pMegaTiles;
-	pMegaTiles = NULL;
-	mem_free_dbg(p);
-	p = pLevelPieces;
-	pLevelPieces = NULL;
-	mem_free_dbg(p);
-	p = level_special_cel;
-	level_special_cel = NULL;
-	mem_free_dbg(p);
-	p = pSpeedCels;
-	pSpeedCels = NULL;
-	mem_free_dbg(p);
+	MemFreeDbg(pDungeonCels);
+	MemFreeDbg(pMegaTiles);
+	MemFreeDbg(pLevelPieces);
+	MemFreeDbg(level_special_cel);
+	MemFreeDbg(pSpeedCels);
 
 	FreeMissiles();
 	FreeMonsters();
@@ -278,7 +266,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	ShowCursor(FALSE);
 	srand(GetTickCount());
 	InitHash();
-	exception_get_filter();
+	fault_get_filter();
 
 	bNoEvent = diablo_get_not_running();
 	if (!diablo_find_window("DIABLO") && bNoEvent) {
@@ -430,8 +418,6 @@ void __fastcall diablo_parse_flags(char *args)
 				break;
 			case 'x':
 				fullscreen = FALSE;
-				break;
-			default:
 				break;
 			}
 #else
@@ -1027,7 +1013,7 @@ void __fastcall diablo_hotkey_msg(int dwMsg)
 	v1 = dwMsg;
 	if (gbMaxPlayers != 1) {
 		if (!GetModuleFileName(ghInst, Filename, 0x104u))
-			TermMsg("Can't get program name");
+			app_fatal("Can't get program name");
 		v2 = strrchr(Filename, '\\');
 		if (v2)
 			*v2 = 0;
@@ -1561,8 +1547,6 @@ void __fastcall PressChar(int vkey)
 					StoresCheat();
 				return;
 #endif
-			default:
-				return;
 			}
 		}
 	}
@@ -1610,7 +1594,7 @@ void __cdecl LoadLvlGFX()
 		level_special_cel = LoadFileInMem("Levels\\L2Data\\L2S.CEL", 0);
 		break;
 	default:
-		TermMsg("LoadLvlGFX");
+		app_fatal("LoadLvlGFX");
 		return;
 	}
 }
@@ -1661,7 +1645,7 @@ void __fastcall CreateLevel(int lvldir)
 		hnd = 4;
 		break;
 	default:
-		TermMsg("CreateLevel");
+		app_fatal("CreateLevel");
 		return;
 	}
 

@@ -30,9 +30,9 @@ void __cdecl CheckDungeonClear()
 	for (j = 0; j < MAXDUNY; j++) {
 		for (i = 0; i < MAXDUNX; i++) {
 			if (dMonster[i][j])
-				TermMsg("Monsters not cleared");
+				app_fatal("Monsters not cleared");
 			if (dPlayer[i][j])
-				TermMsg("Players not cleared");
+				app_fatal("Players not cleared");
 
 			dMonsDbg[currlevel][i][j] = dFlags[i][j] & DFLAG_VISIBLE;
 			dFlagDbg[currlevel][i][j] = dFlags[i][j] & DFLAG_POPULATED;

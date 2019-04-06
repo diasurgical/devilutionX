@@ -45,7 +45,7 @@ void __cdecl log_cleanup_mutex(void)
 
 void __cdecl log_flush(BOOLEAN force_close)
 {
-	HANDLE v1;                   // eax
+	HANDLE v1;                  // eax
 	DWORD NumberOfBytesWritten; // [esp+8h] [ebp-4h]
 
 	EnterCriticalSection(&sgMemCrit);
@@ -72,7 +72,7 @@ void __cdecl log_flush(BOOLEAN force_close)
 HANDLE __cdecl log_create()
 {
 	char *v0;                   // eax
-	HANDLE v1;                   // ebx
+	HANDLE v1;                  // ebx
 	HANDLE v2;                  // eax
 	char *v3;                   // edx
 	char Filename[260];         // [esp+Ch] [ebp-15Ch]

@@ -1187,7 +1187,7 @@ void __cdecl stream_update()
 	} else if (plr[myplr]._pClass == PC_SORCERER) {
 		mask = SFX_SORCEROR;
 	} else {
-		TermMsg("effects:1");
+		app_fatal("effects:1");
 	}
 
 	priv_sound_init(mask);

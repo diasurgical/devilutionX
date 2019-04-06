@@ -16,7 +16,7 @@ void __cdecl InitSKingTriggers();
 void __cdecl InitSChambTriggers();
 void __cdecl InitPWaterTriggers();
 void __cdecl InitVPTriggers();
-unsigned char __cdecl ForceTownTrig();
+BOOL __cdecl ForceTownTrig();
 unsigned char __cdecl ForceL1Trig();
 unsigned char __cdecl ForceL2Trig();
 unsigned char __cdecl ForceL3Trig();

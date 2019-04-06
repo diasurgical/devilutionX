@@ -25,15 +25,15 @@ void __fastcall scrollrt_draw_lower(int x, int y, int sx, int sy, int a5, int so
 void __fastcall scrollrt_draw_clipped_dungeon(char *a1, int sx, int sy, int a4, int a5, int a6);
 void __fastcall DrawClippedMonster(int x, int y, int mx, int my, int m, int a6, int a7);
 void __fastcall DrawClippedObject(int x, int y, int ox, int oy, BOOL pre, int a6, int dir);
-void __fastcall scrollrt_draw_clipped_e_flag(char *buffer, int x, int y, int a4, int a5);
+void __fastcall scrollrt_draw_clipped_e_flag(BYTE *pBuff, int x, int y, int a4, int a5);
 void __fastcall scrollrt_draw_lower_2(int x, int y, int sx, int sy, int a5, int a6, int some_flag);
 void __fastcall scrollrt_draw_clipped_dungeon_2(char *buffer, int x, int y, int a4, int a5, int sx, int sy, int me_flag);
-void __fastcall scrollrt_draw_clipped_e_flag_2(char *buffer, int x, int y, int a4, signed int a5, int sx, int sy);
+void __fastcall scrollrt_draw_clipped_e_flag_2(BYTE *pBuff, int x, int y, int a4, signed int a5, int sx, int sy);
 void __fastcall scrollrt_draw_upper(int x, int y, int sx, int sy, int a5, int a6, int some_flag);
-void __fastcall scrollrt_draw_dungeon(char *buffer, int x, int y, int a4, int a5, int sx, int sy, int me_flag);
+void __fastcall scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int a4, int a5, int dx, int dy, int me_flag);
 void __fastcall DrawMonster(int x, int y, int mx, int my, int m, int a6, int a7);
 void __fastcall DrawObject(int x, int y, int ox, int oy, BOOL pre, int a6, int dir);
-void __fastcall scrollrt_draw_e_flag(char *buffer, int x, int y, int a4, int a5, int sx, int sy);
+void __fastcall scrollrt_draw_e_flag(BYTE *pBuff, int x, int y, int a4, int a5, int sx, int sy);
 void __fastcall DrawZoom(int x, int y);
 void __cdecl ClearScreenBuffer();
 #ifdef _DEBUG
@@ -47,7 +47,7 @@ void __fastcall DrawMain(int dwHgt, int draw_desc, int draw_hp, int draw_mana, i
 #ifdef _DEBUG
 void __cdecl DrawFPS();
 #endif
-void __fastcall DoBlitScreen(int dwX, int dwY, int dwWdt, int dwHgt);
+void __fastcall DoBlitScreen(DWORD dwX, DWORD dwY, DWORD dwWdt, DWORD dwHgt);
 void __cdecl DrawAndBlit();
 
 /* rdata */

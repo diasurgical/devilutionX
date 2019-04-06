@@ -23,7 +23,7 @@ int __fastcall msg_comp_level(BYTE *buffer, BYTE *end);
 void __cdecl delta_init();
 void __fastcall delta_kill_monster(int mi, BYTE x, BYTE y, BYTE bLevel);
 void __fastcall delta_monster_hp(int mi, int hp, BYTE bLevel);
-void __fastcall delta_sync_monster(TCmdLocParam1 *packet, BYTE level);
+void __fastcall delta_sync_monster(const TSyncMonster *pSync, BYTE bLevel);
 void __fastcall delta_sync_golem(TCmdGolem *pG, int pnum, BYTE bLevel);
 void __fastcall delta_leave_sync(BYTE bLevel);
 BOOL __fastcall delta_portal_inited(int i);

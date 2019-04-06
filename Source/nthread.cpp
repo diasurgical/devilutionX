@@ -61,7 +61,7 @@ void __fastcall nthread_terminate_game(const char *pszFcn)
 		if (sErr == STORM_ERROR_GAME_TERMINATED || sErr == STORM_ERROR_NOT_IN_GAME) {
 			gbGameDestroyed = 1;
 		} else {
-			TermMsg("%s:\n%s", pszFcn, TraceLastError());
+			app_fatal("%s:\n%s", pszFcn, TraceLastError());
 		}
 	}
 }
@@ -168,7 +168,7 @@ void __fastcall nthread_start(BOOL set_turn_upper_bit)
 	caps.size = 36;
 	if (!SNetGetProviderCaps(&caps)) {
 		err = TraceLastError();
-		TermMsg("SNetGetProviderCaps:\n%s", err);
+		app_fatal("SNetGetProviderCaps:\n%s", err);
 	}
 	gdwTurnsInTransit = caps.defaultturnsintransit;
 	if (!caps.defaultturnsintransit)
@@ -202,7 +202,7 @@ void __fastcall nthread_start(BOOL set_turn_upper_bit)
 		sghThread = (HANDLE)_beginthreadex(NULL, 0, nthread_handler, NULL, 0, &glpNThreadId);
 		if (sghThread == (HANDLE)-1) {
 			err2 = TraceLastError();
-			TermMsg("nthread2:\n%s", err2);
+			app_fatal("nthread2:\n%s", err2);
 		}
 		SetThreadPriority(sghThread, THREAD_PRIORITY_HIGHEST);
 	}
@@ -259,7 +259,7 @@ void __cdecl nthread_cleanup()
 		if (!sgbThreadIsRunning)
 			LeaveCriticalSection(&sgMemCrit);
 		if (WaitForSingleObject(sghThread, 0xFFFFFFFF) == -1) {
-			TermMsg("nthread3:\n(%s)", TraceLastError());
+			app_fatal("nthread3:\n(%s)", TraceLastError());
 		}
 		CloseHandle(sghThread);
 		sghThread = (HANDLE)-1;

@@ -26,7 +26,7 @@ extern BOOL pinfoflag;
 extern int talkbtndown[3];
 extern int pSpell; // weak
 extern BYTE *pManaBuff;
-extern int infoclr; // weak
+extern char infoclr; // weak
 extern void *pGBoxBuff;
 extern void *pSBkBtnCel;
 extern char tempstr[256];

@@ -5,7 +5,7 @@
 void __fastcall PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield);
 void __fastcall PackItem(PkItemStruct *id, ItemStruct *is);
 void __fastcall VerifyGoldSeeds(PlayerStruct *pPlayer);
-void __fastcall UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOLEAN killok);
+void __fastcall UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL killok);
 void __fastcall UnPackItem(PkItemStruct *is, ItemStruct *id);
 
 /* rdata */

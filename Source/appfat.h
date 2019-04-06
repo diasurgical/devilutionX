@@ -7,13 +7,16 @@ extern int terminating;       // weak
 extern int cleanup_thread_id; // weak
 
 char *__fastcall GetErrorStr(DWORD error_code);
-void __fastcall TraceErrorDD(DWORD error_code, char *error_buf, int error_buf_len);
-void __fastcall TraceErrorDS(DWORD error_code, char *error_buf, int error_buf_len);
+void __fastcall TraceErrorDD(HRESULT hError, char *pszBuffer, DWORD dwMaxChars);
+void __fastcall TraceErrorDS(HRESULT hError, char *pszBuffer, DWORD dwMaxChars);
 char *__cdecl TraceLastError();
-void TermMsg(char *pszFmt, ...);
-void __fastcall MsgBox(char *pszFmt, va_list va);
+void app_fatal(const char *pszFmt, ...);
+void __fastcall MsgBox(const char *pszFmt, va_list va);
 void __cdecl FreeDlg();
 void DrawDlg(char *pszFmt, ...);
+#ifdef _DEBUG
+void __fastcall assert_fail(int nLineNo, const char *pszFile, const char *pszFail);
+#endif
 void __fastcall DDErrMsg(DWORD error_code, int log_line_nr, char *log_file_path);
 void __fastcall DSErrMsg(DWORD error_code, int log_line_nr, char *log_file_path);
 void __fastcall center_window(HWND hDlg);

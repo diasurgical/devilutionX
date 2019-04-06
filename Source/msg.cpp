@@ -349,19 +349,24 @@ void __fastcall delta_monster_hp(int mi, int hp, BYTE bLevel)
 }
 // 679660: using guessed type char gbMaxPlayers;
 
-void __fastcall delta_sync_monster(TCmdLocParam1 *packet, BYTE level)
+void __fastcall delta_sync_monster(const TSyncMonster *pSync, BYTE bLevel)
 {
 	DMonsterStr *pD;
 
-	if (gbMaxPlayers != 1) {
-		sgbDeltaChanged = TRUE;
-		pD = &sgLevels[level].monster[(BYTE)packet->bCmd];
-		if (pD->_mhitpoints) {
-			pD->_mx = packet->x;
-			pD->_my = packet->y;
-			pD->_mactive = -1;
-			pD->_menemy = packet->wParam1;
-		}
+	if (gbMaxPlayers == 1) {
+		return;
+	}
+
+	/// ASSERT: assert(pSync != NULL);
+	/// ASSERT: assert(bLevel < NUMLEVELS);
+	sgbDeltaChanged = TRUE;
+
+	pD = &sgLevels[bLevel].monster[pSync->_mndx];
+	if (pD->_mhitpoints != 0) {
+		pD->_mx = pSync->_mx;
+		pD->_my = pSync->_my;
+		pD->_mactive = -1;
+		pD->_menemy = pSync->_menemy;
 	}
 }
 // 679660: using guessed type char gbMaxPlayers;
@@ -1221,7 +1226,7 @@ void __fastcall DeltaImportData(BYTE cmd, DWORD recv_offset)
 		src = DeltaImportObject(src, sgLevels[i].object);
 		DeltaImportMonster(src, sgLevels[i].monster);
 	} else {
-		TermMsg("msg:1");
+		app_fatal("msg:1");
 	}
 
 	sgbDeltaChunks++;
@@ -1306,7 +1311,7 @@ void __fastcall DeltaImportJunk(BYTE *src)
 
 int __fastcall On_SYNCDATA(void *packet, int pnum)
 {
-	return SyncData(pnum, (TSyncHeader *)packet);
+	return sync_update(pnum, (const BYTE *)packet);
 }
 
 int __fastcall On_WALKXY(TCmdLoc *pCmd, int pnum)
@@ -1488,7 +1493,7 @@ BOOL __fastcall delta_get_item(TCmdGItem *pI, BYTE bLevel)
 					sgbDeltaChanged = 1;
 					return TRUE;
 				} else {
-					TermMsg("delta:1");
+					app_fatal("delta:1");
 				}
 				return result;
 			}
@@ -1631,7 +1636,7 @@ void __fastcall delta_put_item(TCmdPItem *pI, int x, int y, BYTE bLevel)
 			    && pD->dwSeed == pI->dwSeed) {
 				if (pD->bCmd == CMD_ACK_PLRINFO)
 					return;
-				TermMsg("Trying to drop a floor item?");
+				app_fatal("Trying to drop a floor item?");
 			}
 		}
 

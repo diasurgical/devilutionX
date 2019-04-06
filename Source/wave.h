@@ -14,7 +14,7 @@ void __fastcall FreeMemFile(MEMFILE *pMemFile);
 BOOL __fastcall ReadWaveFile(MEMFILE *pMemFile, WAVEFORMATEX *pwfx, CKINFO *chunk);
 BOOL __fastcall ReadMemFile(MEMFILE *pMemFile, void *lpBuf, size_t length);
 void __fastcall FillMemFile(MEMFILE *pMemFile);
-int __fastcall SeekMemFile(MEMFILE *pMemFile, LONG lDist, DWORD dwMethod);
+int __fastcall SeekMemFile(MEMFILE *pMemFile, ULONG lDist, DWORD dwMethod);
 BOOL __fastcall ReadWaveSection(MEMFILE *pMemFile, DWORD id, CKINFO *chunk);
 BYTE *__fastcall LoadWaveFile(HANDLE hsFile, WAVEFORMATEX *pwfx, CKINFO *chunk);
 

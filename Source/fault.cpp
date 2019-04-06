@@ -4,34 +4,36 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-LPTOP_LEVEL_EXCEPTION_FILTER lpTopLevelExceptionFilter; // idb
+LPTOP_LEVEL_EXCEPTION_FILTER lpTopLevelExceptionFilter;
+
+int fault_unused;
 
 #ifndef _MSC_VER
 __attribute__((constructor))
 #endif
 static void
-exception_c_init(void)
+fault_c_init(void)
 {
-	exception_install_filter();
-	j_exception_init_filter();
+	fault_init_filter();
+	fault_cleanup_filter_atexit();
 }
 
 SEG_ALLOCATE(SEGMENT_C_INIT)
-_PVFV exception_c_init_funcs[] = { &exception_c_init };
+_PVFV exception_c_init_funcs[] = { &fault_c_init };
 
-void __cdecl exception_install_filter()
+void __cdecl fault_init_filter()
 {
-	exception_set_filter();
+	fault_set_filter(&fault_unused);
 }
 
-void __cdecl j_exception_init_filter()
+void __cdecl fault_cleanup_filter_atexit()
 {
-	atexit(exception_init_filter);
+	atexit((void (*)(void))fault_cleanup_filter);
 }
 
-void __cdecl exception_init_filter(void)
+LPTOP_LEVEL_EXCEPTION_FILTER __cdecl fault_cleanup_filter()
 {
-	exception_set_filter_ptr();
+	return fault_reset_filter(&fault_unused);
 }
 
 LONG __stdcall TopLevelExceptionFilter(PEXCEPTION_POINTERS ExceptionInfo)
@@ -45,10 +47,10 @@ LONG __stdcall TopLevelExceptionFilter(PEXCEPTION_POINTERS ExceptionInfo)
 
 	log_dump_computer_info();
 	xcpt = ExceptionInfo->ExceptionRecord;
-	pszExceptionName = exception_get_error_type(ExceptionInfo->ExceptionRecord->ExceptionCode, szExceptionNameBuf, sizeof(szExceptionNameBuf));
+	pszExceptionName = fault_get_error_type(ExceptionInfo->ExceptionRecord->ExceptionCode, szExceptionNameBuf, sizeof(szExceptionNameBuf));
 	log_printf("Exception code: %08X %s\r\n", xcpt->ExceptionCode, pszExceptionName);
 
-	exception_unknown_module(xcpt->ExceptionAddress, szModuleName, MAX_PATH, &sectionNumber, &sectionOffset);
+	fault_unknown_module(xcpt->ExceptionAddress, szModuleName, MAX_PATH, &sectionNumber, &sectionOffset);
 	log_printf("Fault address:\t%08X %02X:%08X %s\r\n", xcpt->ExceptionAddress, sectionNumber, sectionOffset, szModuleName);
 
 	ctx = ExceptionInfo->ContextRecord;
@@ -67,13 +69,13 @@ LONG __stdcall TopLevelExceptionFilter(PEXCEPTION_POINTERS ExceptionInfo)
 	log_printf("DS:%04X ES:%04X FS:%04X GS:%04X\r\n", ctx->SegDs, ctx->SegEs, ctx->SegFs, ctx->SegGs);
 
 	log_printf("Flags:%08X\r\n", ctx->EFlags);
-	exception_call_stack((void *)ctx->Eip, (STACK_FRAME *)ctx->Ebp);
+	fault_call_stack((void *)ctx->Eip, (STACK_FRAME *)ctx->Ebp);
 
 	log_printf("Stack bytes:\r\n");
-	exception_hex_format((BYTE *)ctx->Esp, 768);
+	fault_hex_format((BYTE *)ctx->Esp, 768);
 
 	log_printf("Code bytes:\r\n");
-	exception_hex_format((BYTE *)ctx->Eip, 16);
+	fault_hex_format((BYTE *)ctx->Eip, 16);
 
 	log_printf("\r\n");
 	log_flush(1);
@@ -83,7 +85,7 @@ LONG __stdcall TopLevelExceptionFilter(PEXCEPTION_POINTERS ExceptionInfo)
 	return EXCEPTION_CONTINUE_SEARCH;
 }
 
-void __fastcall exception_hex_format(BYTE *ptr, unsigned int numBytes)
+void __fastcall fault_hex_format(BYTE *ptr, unsigned int numBytes)
 {
 	DWORD i, bytesRead;
 	const char *fmt;
@@ -124,7 +126,7 @@ void __fastcall exception_hex_format(BYTE *ptr, unsigned int numBytes)
 	log_printf("\r\n");
 }
 
-void __fastcall exception_unknown_module(LPCVOID lpAddress, LPSTR lpModuleName, int iMaxLength, int *sectionNum, int *sectionOffset)
+void __fastcall fault_unknown_module(LPCVOID lpAddress, LPSTR lpModuleName, int iMaxLength, int *sectionNum, int *sectionOffset)
 {
 	MEMORY_BASIC_INFORMATION memInfo;
 	PIMAGE_DOS_HEADER dosHeader;
@@ -175,7 +177,7 @@ void __fastcall exception_unknown_module(LPCVOID lpAddress, LPSTR lpModuleName, 
 	}
 }
 
-void __fastcall exception_call_stack(void *instr, STACK_FRAME *stackFrame)
+void __fastcall fault_call_stack(void *instr, STACK_FRAME *stackFrame)
 {
 	STACK_FRAME *oldStackFrame;
 	char szModuleName[MAX_PATH];
@@ -183,7 +185,7 @@ void __fastcall exception_call_stack(void *instr, STACK_FRAME *stackFrame)
 
 	log_printf("Call stack:\r\nAddress  Frame    Logical addr  Module\r\n");
 	do {
-		exception_unknown_module(instr, szModuleName, MAX_PATH, &sectionNumber, &sectionOffset);
+		fault_unknown_module(instr, szModuleName, MAX_PATH, &sectionNumber, &sectionOffset);
 		log_printf("%08X %08X %04X:%08X %s\r\n", instr, stackFrame, sectionNumber, sectionOffset, szModuleName);
 
 		if (IsBadWritePtr(stackFrame, 8))
@@ -200,61 +202,101 @@ void __fastcall exception_call_stack(void *instr, STACK_FRAME *stackFrame)
 	log_printf("\r\n");
 }
 
-#define CASE_EXCEPTION(v, errName) \
-	case EXCEPTION_##errName:      \
-		v = #errName;              \
-		break;
-char *__fastcall exception_get_error_type(DWORD dwMessageId, LPSTR lpString1, DWORD nSize)
+char *__fastcall fault_get_error_type(DWORD dwMessageId, LPSTR lpString1, DWORD nSize)
 {
-	const char *v4; // eax
-	HMODULE ntdll;
+	const char *s;
 
 	switch (dwMessageId) {
-		CASE_EXCEPTION(v4, STACK_OVERFLOW);
-		CASE_EXCEPTION(v4, FLT_DIVIDE_BY_ZERO);
-		CASE_EXCEPTION(v4, FLT_INEXACT_RESULT);
-		CASE_EXCEPTION(v4, FLT_INVALID_OPERATION);
-		CASE_EXCEPTION(v4, FLT_OVERFLOW);
-		CASE_EXCEPTION(v4, FLT_STACK_CHECK);
-		CASE_EXCEPTION(v4, FLT_UNDERFLOW);
-		CASE_EXCEPTION(v4, INT_DIVIDE_BY_ZERO);
-		CASE_EXCEPTION(v4, INT_OVERFLOW);
-		CASE_EXCEPTION(v4, PRIV_INSTRUCTION);
-		CASE_EXCEPTION(v4, FLT_DENORMAL_OPERAND);
-		CASE_EXCEPTION(v4, INVALID_HANDLE);
-		CASE_EXCEPTION(v4, ILLEGAL_INSTRUCTION);
-		CASE_EXCEPTION(v4, NONCONTINUABLE_EXCEPTION);
-		CASE_EXCEPTION(v4, INVALID_DISPOSITION);
-		CASE_EXCEPTION(v4, ARRAY_BOUNDS_EXCEEDED);
-		CASE_EXCEPTION(v4, IN_PAGE_ERROR);
-		CASE_EXCEPTION(v4, GUARD_PAGE);
-		CASE_EXCEPTION(v4, DATATYPE_MISALIGNMENT);
-		CASE_EXCEPTION(v4, BREAKPOINT);
-		CASE_EXCEPTION(v4, SINGLE_STEP);
-		CASE_EXCEPTION(v4, ACCESS_VIOLATION);
+	case EXCEPTION_STACK_OVERFLOW:
+		s = "STACK_OVERFLOW";
+		break;
+	case EXCEPTION_FLT_DIVIDE_BY_ZERO:
+		s = "FLT_DIVIDE_BY_ZERO";
+		break;
+	case EXCEPTION_FLT_INEXACT_RESULT:
+		s = "FLT_INEXACT_RESULT";
+		break;
+	case EXCEPTION_FLT_INVALID_OPERATION:
+		s = "FLT_INVALID_OPERATION";
+		break;
+	case EXCEPTION_FLT_OVERFLOW:
+		s = "FLT_OVERFLOW";
+		break;
+	case EXCEPTION_FLT_STACK_CHECK:
+		s = "FLT_STACK_CHECK";
+		break;
+	case EXCEPTION_FLT_UNDERFLOW:
+		s = "FLT_UNDERFLOW";
+		break;
+	case EXCEPTION_INT_DIVIDE_BY_ZERO:
+		s = "INT_DIVIDE_BY_ZERO";
+		break;
+	case EXCEPTION_INT_OVERFLOW:
+		s = "INT_OVERFLOW";
+		break;
+	case EXCEPTION_PRIV_INSTRUCTION:
+		s = "PRIV_INSTRUCTION";
+		break;
+	case EXCEPTION_FLT_DENORMAL_OPERAND:
+		s = "FLT_DENORMAL_OPERAND";
+		break;
+	case EXCEPTION_INVALID_HANDLE:
+		s = "INVALID_HANDLE";
+		break;
+	case EXCEPTION_ILLEGAL_INSTRUCTION:
+		s = "ILLEGAL_INSTRUCTION";
+		break;
+	case EXCEPTION_NONCONTINUABLE_EXCEPTION:
+		s = "NONCONTINUABLE_EXCEPTION";
+		break;
+	case EXCEPTION_INVALID_DISPOSITION:
+		s = "INVALID_DISPOSITION";
+		break;
+	case EXCEPTION_ARRAY_BOUNDS_EXCEEDED:
+		s = "ARRAY_BOUNDS_EXCEEDED";
+		break;
+	case EXCEPTION_IN_PAGE_ERROR:
+		s = "IN_PAGE_ERROR";
+		break;
+	case EXCEPTION_GUARD_PAGE:
+		s = "GUARD_PAGE";
+		break;
+	case EXCEPTION_DATATYPE_MISALIGNMENT:
+		s = "DATATYPE_MISALIGNMENT";
+		break;
+	case EXCEPTION_BREAKPOINT:
+		s = "BREAKPOINT";
+		break;
+	case EXCEPTION_SINGLE_STEP:
+		s = "SINGLE_STEP";
+		break;
+	case EXCEPTION_ACCESS_VIOLATION:
+		s = "ACCESS_VIOLATION";
+		break;
 	default:
-		ntdll = GetModuleHandle("NTDLL.DLL");
-		if (!FormatMessage(FORMAT_MESSAGE_FROM_HMODULE | FORMAT_MESSAGE_IGNORE_INSERTS, (LPCVOID)ntdll, dwMessageId, 0, lpString1, nSize, NULL)) {
-			v4 = "*unknown*";
+		if (FormatMessage(FORMAT_MESSAGE_FROM_HMODULE | FORMAT_MESSAGE_IGNORE_INSERTS, (LPCVOID)GetModuleHandle("NTDLL.DLL"), dwMessageId, 0, lpString1, nSize, NULL)) {
+			return lpString1;
 		}
+		s = "*unknown*";
+		break;
 	}
-	lstrcpyn(lpString1, v4, nSize);
+	lstrcpyn(lpString1, s, nSize);
 	return lpString1;
 }
 
-void __fastcall exception_set_filter()
+void *__fastcall fault_set_filter(void *unused)
 {
-	//lpTopLevelExceptionFilter = SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER)TopLevelExceptionFilter);
-	lpTopLevelExceptionFilter = TopLevelExceptionFilter;
+	lpTopLevelExceptionFilter = SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER)TopLevelExceptionFilter);
+	return unused;
 }
 
-LPTOP_LEVEL_EXCEPTION_FILTER __cdecl exception_set_filter_ptr()
+LPTOP_LEVEL_EXCEPTION_FILTER __fastcall fault_reset_filter(void *unused)
 {
 	//return SetUnhandledExceptionFilter(lpTopLevelExceptionFilter);
 	return lpTopLevelExceptionFilter;
 }
 
-LPTOP_LEVEL_EXCEPTION_FILTER __cdecl exception_get_filter()
+LPTOP_LEVEL_EXCEPTION_FILTER __cdecl fault_get_filter()
 {
 	return lpTopLevelExceptionFilter;
 }

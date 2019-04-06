@@ -71,18 +71,17 @@ void __fastcall DrawProgress(int screen_x, int screen_y, int progress_id)
 
 void __fastcall ShowProgress(unsigned int uMsg)
 {
-	WNDPROC saveProc; // edi
-	BOOL v3;          // cl
-	int v4;           // eax
-	int v5;           // edx
-	signed int v7;    // [esp-4h] [ebp-10h]
+	WNDPROC saveProc;
 
-	gbSomebodyWonGameKludge = 0;
-	plrmsg_delay(1);
+	gbSomebodyWonGameKludge = FALSE;
+	plrmsg_delay(TRUE);
+
+	/// ASSERT: assert(ghMainWnd);
 	saveProc = SetWindowProc(DisableInputWndProc);
+
 	interface_msg_pump();
 	ClearScreenBuffer();
-	scrollrt_draw_game_screen(1);
+	scrollrt_draw_game_screen(TRUE);
 	InitCutscene(uMsg);
 	BlackPalette();
 	DrawCutscene();
@@ -90,133 +89,156 @@ void __fastcall ShowProgress(unsigned int uMsg)
 	IncProgress();
 	stream_update();
 	IncProgress();
+
 	switch (uMsg) {
-	case WM_DIABNEXTLVL:
+	case WM_DIABLOADGAME:
 		IncProgress();
-		if (gbMaxPlayers == 1)
-			SaveLevel();
-		else
-			DeltaSaveLevel();
-		FreeGameMem();
-		v4 = ++currlevel;
-		goto LABEL_38;
-	case WM_DIABPREVLVL:
+		LoadGame(TRUE);
 		IncProgress();
-		if (gbMaxPlayers == 1)
-			SaveLevel();
-		else
-			DeltaSaveLevel();
-		IncProgress();
-		FreeGameMem();
-		leveltype = gnLevelTypeTbl[--currlevel];
-		IncProgress();
-		v5 = 1;
-		goto LABEL_33;
-	case WM_DIABRTNLVL:
-		if (gbMaxPlayers == 1)
-			SaveLevel();
-		else
-			DeltaSaveLevel();
-		setlevel = 0;
-		FreeGameMem();
-		IncProgress();
-		GetReturnLvlPos();
-		v7 = 3;
-		goto LABEL_32;
-	case WM_DIABSETLVL:
-		SetReturnLvlPos();
-		if (gbMaxPlayers == 1)
-			SaveLevel();
-		else
-			DeltaSaveLevel();
-		setlevel = 1;
-		leveltype = setlvltype;
-		FreeGameMem();
-		IncProgress();
-		v7 = 2;
-		goto LABEL_32;
-	case WM_DIABWARPLVL:
-		IncProgress();
-		if (gbMaxPlayers == 1)
-			SaveLevel();
-		else
-			DeltaSaveLevel();
-		FreeGameMem();
-		GetPortalLevel();
-		IncProgress();
-		v7 = 5;
-		goto LABEL_32;
-	case WM_DIABTOWNWARP:
-		IncProgress();
-		if (gbMaxPlayers == 1)
-			SaveLevel();
-		else
-			DeltaSaveLevel();
-		FreeGameMem();
-		currlevel = plr[myplr].plrlevel;
-		leveltype = gnLevelTypeTbl[currlevel];
-		IncProgress();
-		v7 = 6;
-		goto LABEL_32;
-	case WM_DIABTWARPUP:
-		IncProgress();
-		if (gbMaxPlayers == 1)
-			SaveLevel();
-		else
-			DeltaSaveLevel();
-		FreeGameMem();
-		currlevel = plr[myplr].plrlevel;
-		leveltype = gnLevelTypeTbl[currlevel];
-		IncProgress();
-		v7 = 7;
-	LABEL_32:
-		v5 = v7;
-	LABEL_33:
-		v3 = FALSE;
-		goto LABEL_40;
-	case WM_DIABRETOWN:
-		IncProgress();
-		if (gbMaxPlayers == 1)
-			SaveLevel();
-		else
-			DeltaSaveLevel();
-		FreeGameMem();
-		currlevel = plr[myplr].plrlevel;
-		v4 = currlevel;
-	LABEL_38:
-		leveltype = gnLevelTypeTbl[v4];
-		IncProgress();
-		v3 = FALSE;
-		goto LABEL_39;
+		break;
 	case WM_DIABNEWGAME:
 		IncProgress();
 		FreeGameMem();
 		IncProgress();
 		pfile_remove_temp_files();
-		v3 = TRUE;
-	LABEL_39:
-		v5 = 0;
-	LABEL_40:
-		LoadGameLevel(v3, v5);
-		goto LABEL_41;
-	case WM_DIABLOADGAME:
-		IncProgress();
-		LoadGame(TRUE);
-	LABEL_41:
+		LoadGameLevel(TRUE, 0);
 		IncProgress();
 		break;
-	default:
+	case WM_DIABNEXTLVL:
+		IncProgress();
+		if (gbMaxPlayers == 1) {
+			SaveLevel();
+		} else {
+			DeltaSaveLevel();
+		}
+		FreeGameMem();
+		currlevel++;
+		leveltype = gnLevelTypeTbl[currlevel];
+		/// ASSERT: assert(plr[myplr].plrlevel == currlevel);
+		IncProgress();
+		LoadGameLevel(FALSE, 0);
+		IncProgress();
+		break;
+	case WM_DIABPREVLVL:
+		IncProgress();
+		if (gbMaxPlayers == 1) {
+			SaveLevel();
+		} else {
+			DeltaSaveLevel();
+		}
+		IncProgress();
+		FreeGameMem();
+		currlevel--;
+		leveltype = gnLevelTypeTbl[currlevel];
+		/// ASSERT: assert(plr[myplr].plrlevel == currlevel);
+		IncProgress();
+		LoadGameLevel(FALSE, 1);
+		IncProgress();
+		break;
+	case WM_DIABSETLVL:
+		SetReturnLvlPos();
+		if (gbMaxPlayers == 1) {
+			SaveLevel();
+		} else {
+			DeltaSaveLevel();
+		}
+		setlevel = TRUE;
+		leveltype = setlvltype;
+		FreeGameMem();
+		IncProgress();
+		LoadGameLevel(FALSE, 2);
+		IncProgress();
+		break;
+	case WM_DIABRTNLVL:
+		if (gbMaxPlayers == 1) {
+			SaveLevel();
+		} else {
+			DeltaSaveLevel();
+		}
+		setlevel = FALSE;
+		FreeGameMem();
+		IncProgress();
+		GetReturnLvlPos();
+		LoadGameLevel(FALSE, 3);
+		IncProgress();
+		break;
+	case WM_DIABWARPLVL:
+		IncProgress();
+		if (gbMaxPlayers == 1) {
+			SaveLevel();
+		} else {
+			DeltaSaveLevel();
+		}
+		FreeGameMem();
+		GetPortalLevel();
+		IncProgress();
+		LoadGameLevel(FALSE, 5);
+		IncProgress();
+		break;
+	case WM_DIABTOWNWARP:
+		IncProgress();
+		if (gbMaxPlayers == 1) {
+			SaveLevel();
+		} else {
+			DeltaSaveLevel();
+		}
+		FreeGameMem();
+		currlevel = plr[myplr].plrlevel;
+		leveltype = gnLevelTypeTbl[currlevel];
+		/// ASSERT: assert(plr[myplr].plrlevel == currlevel);
+		IncProgress();
+		LoadGameLevel(FALSE, 6);
+		IncProgress();
+		break;
+	case WM_DIABTWARPUP:
+		IncProgress();
+		if (gbMaxPlayers == 1) {
+			SaveLevel();
+		} else {
+			DeltaSaveLevel();
+		}
+		FreeGameMem();
+		currlevel = plr[myplr].plrlevel;
+		leveltype = gnLevelTypeTbl[currlevel];
+		/// ASSERT: assert(plr[myplr].plrlevel == currlevel);
+		IncProgress();
+		LoadGameLevel(FALSE, 7);
+		IncProgress();
+		break;
+	case WM_DIABRETOWN:
+		IncProgress();
+		if (gbMaxPlayers == 1) {
+			SaveLevel();
+		} else {
+			DeltaSaveLevel();
+		}
+		FreeGameMem();
+		currlevel = plr[myplr].plrlevel;
+		leveltype = gnLevelTypeTbl[currlevel];
+		/// ASSERT: assert(plr[myplr].plrlevel == currlevel);
+		IncProgress();
+		LoadGameLevel(FALSE, 0);
+		IncProgress();
 		break;
 	}
+
+	/// ASSERT: assert(ghMainWnd);
+
 	PaletteFadeOut(8);
 	FreeInterface();
-	SetWindowProc(saveProc);
+
+	saveProc = SetWindowProc(saveProc);
+	/// ASSERT: assert(saveProc == DisableInputWndProc);
+
 	NetSendCmdLocParam1(TRUE, CMD_PLAYER_JOINLEVEL, plr[myplr].WorldX, plr[myplr].WorldY, plr[myplr].plrlevel);
-	plrmsg_delay(0);
+	plrmsg_delay(FALSE);
 	ResetPal();
-	if (gbSomebodyWonGameKludge && plr[myplr].plrlevel == 16)
+
+	if (gbSomebodyWonGameKludge && plr[myplr].plrlevel == 16) {
 		PrepDoEnding();
-	gbSomebodyWonGameKludge = 0;
+	}
+
+	gbSomebodyWonGameKludge = FALSE;
 }
 // 5CF31C: using guessed type char setlvltype;
 // 5CF31D: using guessed type char setlevel;
@@ -354,7 +376,7 @@ void __fastcall InitCutscene(unsigned int uMsg)
 		v6 = "Gendata\\Cutstart.pal";
 		goto LABEL_30;
 	default:
-		TermMsg("Unknown progress mode");
+		app_fatal("Unknown progress mode");
 		goto LABEL_33;
 	}
 }
