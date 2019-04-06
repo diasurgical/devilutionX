@@ -50,6 +50,23 @@ Install the build tools using [Homebrew](https://brew.sh/):
 ```
 brew install automake autoconf libtool
 ```
+
+Also, verify that you don't have FreeType and HarfBuzz installed from Homebrew, which will cause build errors for SDL2_ttf:
+
+```
+brew info freetype
+brew info harfbuzz
+```
+
+If you do have those installed, you'll have to temporarily uninstall them:
+
+```
+brew uninstall --ignore-dependencies freetype
+brew uninstall --ignore-dependencies harfbuzz
+```
+
+You can install FreeType and HarfBuzz from Homebrew again after devilutionX builds successfully.
+
 Get SDL2, SDL2_mixer, SDL2_ttf and Libsodium:
 ```
 ./xcode-build.sh --get-libs
