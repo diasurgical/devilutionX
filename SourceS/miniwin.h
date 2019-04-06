@@ -14,7 +14,7 @@
 #include <string.h>
 #include <time.h>
 // For _rotr()
-#if not defined(_MSC_VER) && defined(DEVILUTION_ENGINE)
+#if !defined(_MSC_VER) && defined(DEVILUTION_ENGINE)
 #include <x86intrin.h>
 #endif
 
