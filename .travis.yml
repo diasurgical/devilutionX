@@ -11,7 +11,7 @@ matrix:
     - env: ARCH=--build-all-x64
 
 script:
-    - bash ./xcode-build.sh $ARCH
+    - bash ./macos-build.sh $ARCH
 
 deploy:
   provider: releases

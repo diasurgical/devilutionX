@@ -66,7 +66,7 @@ You can install FreeType and HarfBuzz from Homebrew again after devilutionX buil
 
 Now you can run the build:
 ```
-./xcode-build.sh --build-all-x86
+./macos-build.sh --build-all-x86
 ```
 </details>
 <details><summary>Windows via MinGW</summary>
@@ -119,7 +119,7 @@ make -j$(nproc)
 Make sure you have [Homebrew](https://brew.sh/) installed, then run:
 
 ```
-./xcode-build.sh --build-all-x64
+./macos-build.sh --build-all-x64
 ```
 </details>
 
