@@ -116,16 +116,10 @@ make -j$(nproc)
 </details>
 <details><summary>macOS</summary>
 
-Install the dependencies using [Homebrew](https://brew.sh/):
+Make sure you have [Homebrew](https://brew.sh/) installed, then run:
+
 ```
-brew bundle
-```
-### Compiling
-```
-mkdir build
-cd build
-cmake ..
-make -j$(sysctl -n hw.physicalcpu)
+./xcode-build.sh --build-all-x64
 ```
 </details>
 
