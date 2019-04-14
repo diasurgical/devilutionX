@@ -110,6 +110,7 @@ function set_working_dir() {
 }
 
 function build_all_x86 (){
+    brew bundle --file=Brewfile-32bit.rb
     set_working_dir
     get_libs
     decompress_libs
@@ -124,7 +125,7 @@ function build_all_x86 (){
 }
 
 function build_all_x64 (){
-    brew install sdl2 sdl2_mixer sdl2_ttf libsodium
+    brew bundle
     mkdir build
     cd build
     cmake ..

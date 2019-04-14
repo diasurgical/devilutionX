@@ -46,12 +46,9 @@ Note: Be sure that your to select the command line Xcode if you have more then o
 ```
 $ sudo xcode-select --switch /Applications/Xcode.app
 ```
-Install the build tools using [Homebrew](https://brew.sh/):
-```
-brew install automake autoconf libtool
-```
 
-Also, verify that you don't have FreeType and HarfBuzz installed from Homebrew, which will cause build errors for SDL2_ttf:
+Verify that you don't have FreeType and HarfBuzz installed from
+[Homebrew](https://brew.sh/), which will cause build errors for SDL2_ttf:
 
 ```
 brew info freetype
@@ -67,15 +64,9 @@ brew uninstall --ignore-dependencies harfbuzz
 
 You can install FreeType and HarfBuzz from Homebrew again after devilutionX builds successfully.
 
-Get SDL2, SDL2_mixer, SDL2_ttf and Libsodium:
+Now you can run the build:
 ```
-./xcode-build.sh --get-libs
-```
-### Compiling
-```
-./xcode-build.sh --build-libs
-./xcode-build.sh --build-project
-./xcode-build.sh --package
+./xcode-build.sh --build-all-x86
 ```
 </details>
 <details><summary>Windows via MinGW</summary>
@@ -127,7 +118,7 @@ make -j$(nproc)
 
 Install the dependencies using [Homebrew](https://brew.sh/):
 ```
-brew install cmake sdl2_mixer sdl2_ttf libsodium pkg-config
+brew bundle
 ```
 ### Compiling
 ```
