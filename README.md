@@ -64,7 +64,7 @@ brew uninstall --ignore-dependencies harfbuzz
 
 You can install FreeType and HarfBuzz from Homebrew again after devilutionX builds successfully.
 
-Now you can run the build:
+Now you can run the build script:
 ```
 ./macos-build.sh --build-all-x86
 ```
