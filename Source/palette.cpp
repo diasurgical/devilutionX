@@ -1,6 +1,7 @@
 //HEADER_GOES_HERE
 
 #include "../types.h"
+#include "../SourceX/dx.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -224,6 +225,10 @@ void __fastcall SetFadeLevel(int fadeval)
 		lpDDInterface->lpVtbl->WaitForVerticalBlank(lpDDInterface, DDWAITVB_BLOCKBEGIN, NULL);
 #endif
 		palette_update();
+        	if (pal_surface) {   //Workaround because of cursor flickering in caves. See also SourceX/storm_dx.cpp in function SDrawUpdatePalette()
+            		sdl_update_entire_surface();
+            		sdl_present_surface();
+        	}
 	}
 }
 
