@@ -27,10 +27,10 @@ BOOL SDrawUpdatePalette(unsigned int firstentry, unsigned int numentries, PALETT
 		return false;
 	}
 
-	if (pal_surface) {
+	/*if (pal_surface) {       //Workaround because of cursor flickering in caves. Had to be inserted in palette.cpp in function SetFadeLevel()
 		sdl_update_entire_surface();
 		sdl_present_surface();
-	}
+	}*/
 
 	return true;
 }
