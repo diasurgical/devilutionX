@@ -5,8 +5,6 @@ Version:	0.3.1
 Release:	1%{?dist}
 Summary:	Diablo I engine for modern operating systems
 
-
-#Group:		
 License:	Unlicensed
 URL:		https://github.com/diasurgical/devilutionX
 Source0:	https://github.com/diasurgical/devilutionX/archive/%{version}.tar.gz
@@ -25,7 +23,6 @@ Note, Devilution requires an original copy of diabdat.mpq. None of the Diablo 1 
 
 
 %build
-#%{__rm} makefile
 cmake -DBINARY_RELEASE=ON -DDEBUG=OFF
 make %{?_smp_mflags}
 
