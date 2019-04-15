@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=devilutionX
+GenericName=DevilutionX
+Comment=Play Diablo I on Linux
+Exec=/var/games/devilutionx/devilutionx
+Icon=devilutionx
+Terminal=false
+Type=Application
+X-DCOP-ServiceType=Multi
+X-KDE-StartupNotify=true
+Categories=Qt;Game;RolePlaying;
