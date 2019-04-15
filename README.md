@@ -119,7 +119,11 @@ make -j$(nproc)
 Make sure you have [Homebrew](https://brew.sh/) installed, then run:
 
 ```
-./macos-build.sh --build-all-x64
+brew bundle
+mkdir build
+cd build
+cmake ..
+make -j$(sysctl -n hw.physicalcpu)
 ```
 </details>
 
