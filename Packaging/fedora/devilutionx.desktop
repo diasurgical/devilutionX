@@ -2,8 +2,8 @@
 Name=devilutionX
 GenericName=DevilutionX
 Comment=Play Diablo I on Linux
-Exec=/var/games/devilutionx/devilutionx
-Icon=devilutionx
+Exec=devilutionx
+Icon=/usr/share/pixmaps/devilutionx.ico
 Terminal=false
 Type=Application
 X-DCOP-ServiceType=Multi
