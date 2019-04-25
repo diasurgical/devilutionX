@@ -39,16 +39,12 @@
 		43B6C7CC224068AB007313EA /* credits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C7A92240688C007313EA /* credits.cpp */; };
 		43B6C7CD224068AB007313EA /* diabloui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C79122406889007313EA /* diabloui.cpp */; };
 		43B6C7CE224068AB007313EA /* dialogs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C7AA2240688D007313EA /* dialogs.cpp */; };
-		43B6C7CF224068AB007313EA /* dsound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C7982240688A007313EA /* dsound.cpp */; };
 		43B6C7D0224068AB007313EA /* dx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C7A02240688B007313EA /* dx.cpp */; };
 		43B6C7D1224068AB007313EA /* frame_queue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C79A2240688A007313EA /* frame_queue.cpp */; };
 		43B6C7D2224068AB007313EA /* loopback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C7A62240688C007313EA /* loopback.cpp */; };
 		43B6C7D3224068AB007313EA /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C79722406889007313EA /* main.cpp */; };
 		43B6C7D4224068AB007313EA /* mainmenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C79222406889007313EA /* mainmenu.cpp */; };
 		43B6C7D5224068AB007313EA /* misc_dx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C78F22406888007313EA /* misc_dx.cpp */; };
-		43B6C7D6224068AB007313EA /* misc_io.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C7A32240688B007313EA /* misc_io.cpp */; };
-		43B6C7D7224068AB007313EA /* misc_msg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C79B2240688A007313EA /* misc_msg.cpp */; };
-		43B6C7D8224068AB007313EA /* misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C79C2240688A007313EA /* misc.cpp */; };
 		43B6C7D9224068AB007313EA /* packet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C79522406889007313EA /* packet.cpp */; };
 		43B6C7DA224068AB007313EA /* progress.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C79322406889007313EA /* progress.cpp */; };
 		43B6C7DB224068AB007313EA /* rand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C7A22240688B007313EA /* rand.cpp */; };
@@ -61,7 +57,6 @@
 		43B6C7E2224068AB007313EA /* storm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C7AB2240688D007313EA /* storm.cpp */; };
 		43B6C7E3224068AB007313EA /* tcp_client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C7A12240688B007313EA /* tcp_client.cpp */; };
 		43B6C7E4224068AB007313EA /* tcp_server.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C7A52240688C007313EA /* tcp_server.cpp */; };
-		43B6C7E5224068AB007313EA /* thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C79E2240688A007313EA /* thread.cpp */; };
 		43B6C7E6224068AB007313EA /* title.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C79F2240688B007313EA /* title.cpp */; };
 		43B6C7E7224068AB007313EA /* udp_p2p.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C78E22406888007313EA /* udp_p2p.cpp */; };
 		43B6C82A224068CF007313EA /* appfat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C72B2240686D007313EA /* appfat.cpp */; };
@@ -131,6 +126,12 @@
 		43B6C86A224068CF007313EA /* trigs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C74522406874007313EA /* trigs.cpp */; };
 		43B6C86B224068CF007313EA /* wave.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C73A22406872007313EA /* wave.cpp */; };
 		43BA39B122375D8A009041FF /* AppIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 43BA39AF22375925009041FF /* AppIcon.xcassets */; };
+		43DA133C2271574900E21D4A /* thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43DA13322271574600E21D4A /* thread.cpp */; };
+		43DA133E2271574900E21D4A /* misc_io.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43DA13342271574700E21D4A /* misc_io.cpp */; };
+		43DA133F2271574900E21D4A /* dsound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43DA13352271574700E21D4A /* dsound.cpp */; };
+		43DA13402271574900E21D4A /* ddraw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43DA13382271574800E21D4A /* ddraw.cpp */; };
+		43DA13412271574900E21D4A /* misc_msg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43DA13392271574800E21D4A /* misc_msg.cpp */; };
+		43DA13422271574900E21D4A /* misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43DA133A2271574800E21D4A /* misc.cpp */; };
 		652BBCD55FBE46CC941FD64C /* smk_bitstream.c in Sources */ = {isa = PBXBuildFile; fileRef = 670494A24D7F4CFFACCD3BFB /* smk_bitstream.c */; };
 		73E86BC9E2714148AD560C46 /* smacker.c in Sources */ = {isa = PBXBuildFile; fileRef = 622A8C6A02D94FFC996C2CAE /* smacker.c */; };
 		8305C713732C4CECA36F37E9 /* explode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D7FE30F050049FB933D2788 /* explode.cpp */; };
@@ -302,18 +303,13 @@
 		43B6C79522406889007313EA /* packet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = packet.cpp; path = SourceX/dvlnet/packet.cpp; sourceTree = "<group>"; };
 		43B6C79622406889007313EA /* storm_net.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = storm_net.cpp; path = SourceX/storm/storm_net.cpp; sourceTree = "<group>"; };
 		43B6C79722406889007313EA /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = SourceX/main.cpp; sourceTree = "<group>"; };
-		43B6C7982240688A007313EA /* dsound.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dsound.cpp; path = SourceX/miniwin/dsound.cpp; sourceTree = "<group>"; };
 		43B6C7992240688A007313EA /* abstract_net.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = abstract_net.cpp; path = SourceX/dvlnet/abstract_net.cpp; sourceTree = "<group>"; };
 		43B6C79A2240688A007313EA /* frame_queue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = frame_queue.cpp; path = SourceX/dvlnet/frame_queue.cpp; sourceTree = "<group>"; };
-		43B6C79B2240688A007313EA /* misc_msg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = misc_msg.cpp; path = SourceX/miniwin/misc_msg.cpp; sourceTree = "<group>"; };
-		43B6C79C2240688A007313EA /* misc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = misc.cpp; path = SourceX/miniwin/misc.cpp; sourceTree = "<group>"; };
 		43B6C79D2240688A007313EA /* sound.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sound.cpp; path = SourceX/sound.cpp; sourceTree = "<group>"; };
-		43B6C79E2240688A007313EA /* thread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = thread.cpp; path = SourceX/miniwin/thread.cpp; sourceTree = "<group>"; };
 		43B6C79F2240688B007313EA /* title.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = title.cpp; path = SourceX/DiabloUI/title.cpp; sourceTree = "<group>"; };
 		43B6C7A02240688B007313EA /* dx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dx.cpp; path = SourceX/dx.cpp; sourceTree = "<group>"; };
 		43B6C7A12240688B007313EA /* tcp_client.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tcp_client.cpp; path = SourceX/dvlnet/tcp_client.cpp; sourceTree = "<group>"; };
 		43B6C7A22240688B007313EA /* rand.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = rand.cpp; path = SourceX/miniwin/rand.cpp; sourceTree = "<group>"; };
-		43B6C7A32240688B007313EA /* misc_io.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = misc_io.cpp; path = SourceX/miniwin/misc_io.cpp; sourceTree = "<group>"; };
 		43B6C7A42240688B007313EA /* selgame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = selgame.cpp; path = SourceX/DiabloUI/selgame.cpp; sourceTree = "<group>"; };
 		43B6C7A52240688C007313EA /* tcp_server.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tcp_server.cpp; path = SourceX/dvlnet/tcp_server.cpp; sourceTree = "<group>"; };
 		43B6C7A62240688C007313EA /* loopback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = loopback.cpp; path = SourceX/dvlnet/loopback.cpp; sourceTree = "<group>"; };
@@ -324,6 +320,12 @@
 		43B6C7AB2240688D007313EA /* storm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = storm.cpp; path = SourceX/storm/storm.cpp; sourceTree = "<group>"; };
 		43BA39AF22375925009041FF /* AppIcon.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = AppIcon.xcassets; path = Xcode/AppIcon.xcassets; sourceTree = SOURCE_ROOT; };
 		43BF58B52235DEB8001F9748 /* devilutionX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = devilutionX.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		43DA13322271574600E21D4A /* thread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = thread.cpp; path = SourceX/miniwin/thread.cpp; sourceTree = "<group>"; };
+		43DA13342271574700E21D4A /* misc_io.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = misc_io.cpp; path = SourceX/miniwin/misc_io.cpp; sourceTree = "<group>"; };
+		43DA13352271574700E21D4A /* dsound.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dsound.cpp; path = SourceX/miniwin/dsound.cpp; sourceTree = "<group>"; };
+		43DA13382271574800E21D4A /* ddraw.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ddraw.cpp; path = SourceX/miniwin/ddraw.cpp; sourceTree = "<group>"; };
+		43DA13392271574800E21D4A /* misc_msg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = misc_msg.cpp; path = SourceX/miniwin/misc_msg.cpp; sourceTree = "<group>"; };
+		43DA133A2271574800E21D4A /* misc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = misc.cpp; path = SourceX/miniwin/misc.cpp; sourceTree = "<group>"; };
 		500C9F6E13FE44BFAEFCB81B /* smk_hufftree.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = smk_hufftree.c; path = 3rdParty/libsmacker/smk_hufftree.c; sourceTree = SOURCE_ROOT; };
 		622A8C6A02D94FFC996C2CAE /* smacker.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = smacker.c; path = 3rdParty/libsmacker/smacker.c; sourceTree = SOURCE_ROOT; };
 		646292CBB776434AA4CA1C94 /* libPKWare.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libPKWare.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -561,18 +563,16 @@
 				43B6C7992240688A007313EA /* abstract_net.cpp */,
 				43B6C79022406888007313EA /* base.cpp */,
 				43B6C7A92240688C007313EA /* credits.cpp */,
+				43DA13382271574800E21D4A /* ddraw.cpp */,
 				43B6C79122406889007313EA /* diabloui.cpp */,
 				43B6C7AA2240688D007313EA /* dialogs.cpp */,
-				43B6C7982240688A007313EA /* dsound.cpp */,
+				43DA13352271574700E21D4A /* dsound.cpp */,
 				43B6C7A02240688B007313EA /* dx.cpp */,
 				43B6C79A2240688A007313EA /* frame_queue.cpp */,
 				43B6C7A62240688C007313EA /* loopback.cpp */,
 				43B6C79722406889007313EA /* main.cpp */,
 				43B6C79222406889007313EA /* mainmenu.cpp */,
 				43B6C78F22406888007313EA /* misc_dx.cpp */,
-				43B6C7A32240688B007313EA /* misc_io.cpp */,
-				43B6C79B2240688A007313EA /* misc_msg.cpp */,
-				43B6C79C2240688A007313EA /* misc.cpp */,
 				43B6C79522406889007313EA /* packet.cpp */,
 				43B6C79322406889007313EA /* progress.cpp */,
 				43B6C7A22240688B007313EA /* rand.cpp */,
@@ -585,7 +585,6 @@
 				43B6C7AB2240688D007313EA /* storm.cpp */,
 				43B6C7A12240688B007313EA /* tcp_client.cpp */,
 				43B6C7A52240688C007313EA /* tcp_server.cpp */,
-				43B6C79E2240688A007313EA /* thread.cpp */,
 				43B6C79F2240688B007313EA /* title.cpp */,
 				43B6C78E22406888007313EA /* udp_p2p.cpp */,
 			);
@@ -842,20 +841,21 @@
 			files = (
 				43B6C7CA224068AB007313EA /* abstract_net.cpp in Sources */,
 				43B6C7CB224068AB007313EA /* base.cpp in Sources */,
+				43DA133E2271574900E21D4A /* misc_io.cpp in Sources */,
 				43B6C7CC224068AB007313EA /* credits.cpp in Sources */,
 				43B6C7CD224068AB007313EA /* diabloui.cpp in Sources */,
 				43B6C7CE224068AB007313EA /* dialogs.cpp in Sources */,
-				43B6C7CF224068AB007313EA /* dsound.cpp in Sources */,
+				43DA13402271574900E21D4A /* ddraw.cpp in Sources */,
 				43B6C7D0224068AB007313EA /* dx.cpp in Sources */,
 				43B6C7D1224068AB007313EA /* frame_queue.cpp in Sources */,
 				43B6C7D2224068AB007313EA /* loopback.cpp in Sources */,
 				43B6C7D3224068AB007313EA /* main.cpp in Sources */,
 				43B6C7D4224068AB007313EA /* mainmenu.cpp in Sources */,
 				43B6C7D5224068AB007313EA /* misc_dx.cpp in Sources */,
-				43B6C7D6224068AB007313EA /* misc_io.cpp in Sources */,
-				43B6C7D7224068AB007313EA /* misc_msg.cpp in Sources */,
-				43B6C7D8224068AB007313EA /* misc.cpp in Sources */,
+				43DA13422271574900E21D4A /* misc.cpp in Sources */,
 				43B6C7D9224068AB007313EA /* packet.cpp in Sources */,
+				43DA13412271574900E21D4A /* misc_msg.cpp in Sources */,
+				43DA133F2271574900E21D4A /* dsound.cpp in Sources */,
 				43B6C7DA224068AB007313EA /* progress.cpp in Sources */,
 				43B6C7DB224068AB007313EA /* rand.cpp in Sources */,
 				43B6C7DC224068AB007313EA /* selconn.cpp in Sources */,
@@ -864,10 +864,10 @@
 				43B6C7DF224068AB007313EA /* sound.cpp in Sources */,
 				43B6C7E0224068AB007313EA /* storm_dx.cpp in Sources */,
 				43B6C7E1224068AB007313EA /* storm_net.cpp in Sources */,
+				43DA133C2271574900E21D4A /* thread.cpp in Sources */,
 				43B6C7E2224068AB007313EA /* storm.cpp in Sources */,
 				43B6C7E3224068AB007313EA /* tcp_client.cpp in Sources */,
 				43B6C7E4224068AB007313EA /* tcp_server.cpp in Sources */,
-				43B6C7E5224068AB007313EA /* thread.cpp in Sources */,
 				43B6C7E6224068AB007313EA /* title.cpp in Sources */,
 				43B6C7E7224068AB007313EA /* udp_p2p.cpp in Sources */,
 			);
