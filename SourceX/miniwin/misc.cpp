@@ -7,6 +7,7 @@
 #include <string>
 #ifdef _MSC_VER
 #define strcasecmp _stricmp
+#define strncasecmp _strnicmp
 #endif
 
 namespace dvl {
