@@ -1,3 +1,7 @@
+#include <new>      // for placement new
+#include <stddef.h> // for offsetof
+#include <typeinfo> // for typeid
+
 #include "diablo.h"
 #include "list.h"
 

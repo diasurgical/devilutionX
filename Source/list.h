@@ -2,10 +2,6 @@
  * based on https://github.com/webcoyote/coho/blob/master/Base/List.h
  */
 
-#include <new>      // for placement new
-#include <stddef.h> // for offsetof
-#include <typeinfo> // for typeid
-
 #include "../3rdParty/Storm/Source/storm.h"
 
 DEVILUTION_BEGIN_NAMESPACE
