@@ -414,7 +414,7 @@ void InitThemes()
 		return;
 
 	if (leveltype == DTYPE_CATHEDRAL) {
-		for (i = 0; i < sizeof(ThemeGoodIn); i++)
+		for (i = 0; i < sizeof(ThemeGoodIn)/sizeof(*ThemeGoodIn); i++)
 			ThemeGoodIn[i] = 0;
 
 		for (i = 0; i < 256 && numthemes < MAXTHEMES; i++) {
