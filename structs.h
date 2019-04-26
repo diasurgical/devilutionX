@@ -172,7 +172,7 @@ typedef struct ItemStruct {
 typedef struct PlayerStruct {
 	int _pmode;
 	char walkpath[25];
-	unsigned char plractive;
+	BOOLEAN plractive;
 	int destAction;
 	int destParam1;
 	int destParam2;
@@ -1116,6 +1116,10 @@ typedef struct THEME_LOC {
 	int width;
 	int height;
 } THEME_LOC;
+
+typedef struct MICROS {
+	WORD mt[16];
+} MICROS;
 
 //////////////////////////////////////////////////
 // drlg

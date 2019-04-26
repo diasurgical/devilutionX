@@ -248,93 +248,69 @@ void InitDungeon()
 
 void L2LockoutFix()
 {
-	signed int v0;   // ecx
-	char *v1;        // eax
-	signed int v2;   // edx
-	signed int v3;   // ecx
-	signed int v4;   // edi
-	signed int v5;   // eax
-	char *v6;        // esi
-	signed int v7;   // edx
-	char v8;         // al
-	unsigned int v9; // ecx
-	signed int v10;  // eax
-	char v11;        // dl
-	signed int v12;  // esi
-	char v13;        // bl
-	char *v14;       // edx
+	int i, j;
+	BOOL doorok;
 
-	v0 = 0;
-	do {
-		v1 = (char *)dungeon + v0;
-		v2 = 40;
-		do {
-			if (*v1 == 4 && *(v1 - 40) != 3)
-				*v1 = 1;
-			if (*v1 == 5 && *(v1 - 1) != 3)
-				*v1 = 2;
-			v1 += 40;
-			--v2;
-		} while (v2);
-		++v0;
-	} while (v0 < 40);
-	v3 = 1;
-	do {
-		v4 = 1;
-		do {
-			v5 = v4;
-			if (dflags[v4][v3] >= 0) {
-				v6 = (char *)&dungeon[v5][v3];
-				if ((*v6 == 2 || *v6 == 5) && *(v6 - 1) == 3 && dungeon[v5][v3 + 1] == 3) {
-					v7 = 0;
-					while (1) {
-						v8 = *v6;
-						if (*v6 != 2 && v8 != 5)
-							break;
-						if (*(v6 - 1) != 3 || v6[1] != 3)
-							break;
-						if (v8 == 5)
-							v7 = 1;
-						++v4;
-						v6 += 40;
+	for(j = 0; j < DMAXY; j++) {
+		for(i = 0; i < DMAXX; i++) {
+			if(dungeon[i][j] == 4 && dungeon[i - 1][j] != 3) {
+				dungeon[i][j] = 1;
+			}
+			if(dungeon[i][j] == 5 && dungeon[i][j - 1] != 3) {
+				dungeon[i][j] = 2;
+			}
+		}
+	}
+	for(j = 1; j < DMAXY - 1; j++) {
+		for(i = 1; i < DMAXX - 1; i++) {
+			if(dflags[i][j] & 0x80) {
+				continue;
+			}
+			if((dungeon[i][j] == 2 || dungeon[i][j] == 5) && dungeon[i][j - 1] == 3 && dungeon[i][j + 1] == 3) {
+				doorok = FALSE;
+				while(1) {
+					if(dungeon[i][j] != 2 && dungeon[i][j] != 5) {
+						break;
 					}
-					if (!v7 && dflags[v4 - 1][v3] >= 0) // dflags[-1][]
-						dungeon[v4 - 1][v3] = 5;        // dungeon[-1][]
+					if(dungeon[i][j - 1] != 3 || dungeon[i][j + 1] != 3) {
+						break;
+					}
+					if(dungeon[i][j] == 5) {
+						doorok = TRUE;
+					}
+					i++;
+				}
+				if(!doorok && !(dflags[i - 1][j] & 0x80)) {
+					dungeon[i - 1][j] = 5;
 				}
 			}
-			++v4;
-		} while (v4 < 39);
-		++v3;
-	} while (v3 < 39);
-	v9 = 1;
-	do {
-		v10 = 1;
-		do {
-			if (dflags[v9][v10] >= 0) {
-				v11 = dungeon[v9][v10];
-				if ((v11 == 1 || v11 == 4)
-				    && dungeon[v9 - 1][v10] == 3 // dungeon[-1][]
-				    && dungeon[v9 + 1][v10] == 3) {
-					v12 = 0;
-					while (1) {
-						v13 = dungeon[v9][v10];
-						if (v13 != 1 && v13 != 4)
-							break;
-						v14 = (char *)&dungeon[v9 + 1][v10];
-						if (*(v14 - 80) != 3 || *v14 != 3)
-							break;
-						if (v13 == 4)
-							v12 = 1;
-						++v10;
+		}
+	}
+	for(j = 1; j < DMAXX - 1; j++) { /* check: might be flipped */
+		for(i = 1; i < DMAXY - 1; i++) {
+			if(dflags[j][i] & 0x80) {
+				continue;
+			}
+			if((dungeon[j][i] == 1 || dungeon[j][i] == 4) && dungeon[j - 1][i] == 3 && dungeon[j + 1][i] == 3) {
+				doorok = FALSE;
+				while(1) {
+					if(dungeon[j][i] != 1 && dungeon[j][i] != 4) {
+						break;
 					}
-					if (!v12 && dflags[v9][v10 - 1] >= 0) // dflags[][-1]
-						dungeon[v9][v10 - 1] = 4;         // dungeon[][-1]
+					if(dungeon[j - 1][i] != 3 || dungeon[j + 1][i] != 3) {
+						break;
+					}
+					if(dungeon[j][i] == 4) {
+						doorok = TRUE;
+					}
+					i++;
+				}
+				if(!doorok && !(dflags[j][i - 1] & 0x80)) {
+					dungeon[j][i - 1] = 4;
 				}
 			}
-			++v10;
-		} while (v10 < 39);
-		++v9;
-	} while (v9 < 39);
+		}
+	}
 }
 
 void L2DoorFix()
@@ -1197,198 +1173,131 @@ BOOL CreateDungeon()
 	return TRUE;
 }
 
-void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir, int ForceHW, int nH, int nW)
+void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir, BOOL ForceHW, int nH, int nW)
 {
-	int v9;        // esi
-	int v10;       // ebx
-	int v11;       // edx
-	int v12;       // eax
-	int v13;       // edx
-	int v14;       // edx
-	int v15;       // edi
-	int v17;       // esi
-	int v18;       // ebx
-	int v19;       // edx
-	int v20;       // ecx
-	int v21;       // eax
-	int v23;       // eax
-	int v24;       // eax
-	int v26;       // eax
-	int *v27;      // ecx
-	int v28;       // eax
-	int v29;       // eax
-	int *v30;      // ecx
-	int v31;       // eax
-	int nX1a;      // [esp+Ch] [ebp-30h]
-	int v33;       // [esp+10h] [ebp-2Ch]
-	int v34;       // [esp+14h] [ebp-28h]
-	int v35;       // [esp+18h] [ebp-24h]
-	int v36;       // [esp+1Ch] [ebp-20h]
-	int v37;       // [esp+20h] [ebp-1Ch]
-	int nY1a;      // [esp+24h] [ebp-18h]
-	int v39;       // [esp+28h] [ebp-14h]
-	int v40;       // [esp+2Ch] [ebp-10h]
-	int v41;       // [esp+30h] [ebp-Ch]
-	int v42;       // [esp+34h] [ebp-8h]
-	int v43;       // [esp+38h] [ebp-4h]
-	int *ForceHWa; // [esp+54h] [ebp+18h]
-	int *ForceHWb; // [esp+54h] [ebp+18h]
+	int nAw, nAh, nRw, nRh, nRx1, nRy1, nRx2, nRy2, nHw, nHh, nHx1, nHy1, nHx2, nHy2, nRid;
 
-	v39 = nY1;
-	v37 = nX1;
-	if (nRoomCnt < 80) {
-		v40 = nX2 - 2;
-		nY1a = nY1 + 2;
-		while (1) {
-			v9 = nX2 - v37;
-			v10 = nY2 - v39;
-			if (nX2 - v37 < Area_Min || v10 < Area_Min)
-				return;
-			if (v9 > Room_Max)
-				break;
-			nX1 = Room_Min;
-			if (v9 > Room_Min) {
-				v11 = v9 - Room_Min;
-				goto LABEL_7;
-			}
-			v41 = nX2 - v37;
-		LABEL_11:
-			v13 = Room_Max;
-			if (v10 <= Room_Max) {
-				if (v10 <= nX1) {
-					v36 = nY2 - v39;
-					goto LABEL_16;
-				}
-				v13 = nY2 - v39;
-			}
-			v14 = v13 - nX1;
-			v36 = Room_Min + random(0, v14);
-		LABEL_16:
-			if (ForceHW == 1) {
-				v41 = nW;
-				v36 = nH;
-			}
-			v15 = v37 + random(0, v9);
-			v17 = v39 + random(0, v10);
-			v18 = v15 + v41;
-			v43 = v17 + v36;
-			if (v15 + v41 > nX2) {
-				v18 = nX2;
-				v15 = nX2 - v41;
-			}
-			if (v17 + v36 > nY2) {
-				v43 = nY2;
-				v17 = nY2 - v36;
-			}
-			if (v15 >= 38)
-				v15 = 38;
-			if (v17 >= 38)
-				v17 = 38;
-			if (v15 <= 1)
-				v15 = 1;
-			if (v17 <= 1)
-				v17 = 1;
-			if (v18 >= 38)
-				v18 = 38;
-			if (v43 >= 38)
-				v43 = 38;
-			if (v18 <= 1)
-				v18 = 1;
-			if (v43 <= 1)
-				v43 = 1;
-			DefineRoom(v15, v17, v18, v43, ForceHW);
-			if (ForceHW == 1) {
-				nSx2 = v18;
-				nSx1 = v15 + 2;
-				nSy1 = v17 + 2;
-				nSy2 = v43;
-			}
-			v19 = nRoomCnt;
-			v20 = nRDest;
-			v42 = nRoomCnt;
-			RoomList[nRoomCnt].nRoomDest = nRDest;
-			if (nRDest) {
-				if (nHDir == 1) {
-					v21 = random(0, v18 - v15 - 2);
-					nX1a = v21 + v15 + 1;
-					v33 = v17;
-					v23 = random(0, RoomList[nRDest].nRoomx2 - RoomList[nRDest].nRoomx1 - 2);
-					v20 = 20 * nRDest;
-					v34 = v23 + RoomList[nRDest].nRoomx1 + 1;
-					v35 = RoomList[nRDest].nRoomy2;
-				}
-				if (nHDir == 3) {
-					v24 = random(0, v18 - v15 - 2);
-					nX1a = v24 + v15 + 1;
-					v33 = v43;
-					v26 = random(0, RoomList[nRDest].nRoomx2 - RoomList[nRDest].nRoomx1 - 2);
-					v20 = 20 * nRDest;
-					v34 = v26 + RoomList[nRDest].nRoomx1 + 1;
-					v35 = RoomList[nRDest].nRoomy1;
-				}
-				if (nHDir == 2) {
-					nX1a = v18;
-					v33 = random(0, v43 - v17 - 2) + v17 + 1;
-					v34 = RoomList[nRDest].nRoomx1;
-					v27 = &RoomList[nRDest].nRoomy1;
-					ForceHWa = v27;
-					v28 = RoomList[nRDest].nRoomy2 - *v27;
-					v29 = random(0, v28 - 2);
-					v20 = *ForceHWa;
-					v35 = v29 + *ForceHWa + 1;
-				}
-				if (nHDir == 4) {
-					nX1a = v15;
-					v33 = random(0, v43 - v17 - 2) + v17 + 1;
-					v34 = RoomList[nRDest].nRoomx2;
-					v30 = &RoomList[nRDest].nRoomy1;
-					ForceHWb = v30;
-					v31 = RoomList[nRDest].nRoomy2 - *v30;
-					v35 = random(0, v31 - 2) + *ForceHWb + 1;
-				}
-				AddHall(nX1a, v33, v34, v35, nHDir);
-				v19 = v42;
-			}
-			if (v36 <= v41) {
-				CreateRoom(v37 + 2, nY1a, v18 - 2, v17 - 2, v19, 3, 0, 0, 0);
-				CreateRoom(v15 + 2, v43 + 2, v40, nY2 - 2, v42, 1, 0, 0, 0);
-				CreateRoom(v37 + 2, v17 + 2, v15 - 2, nY2 - 2, v42, 2, 0, 0, 0);
-				nHDir = 4;
-				nW = 0;
-				nH = 0;
-				ForceHW = 0;
-				nRDest = v42;
-				nY2 = v43 - 2;
-				nX2 -= 2;
-				v40 -= 2;
-				v39 += 2;
-				nY1a += 2;
-				v37 = v18 + 2;
-			} else {
-				CreateRoom(v37 + 2, nY1a, v15 - 2, v43 - 2, v19, 2, 0, 0, 0);
-				CreateRoom(v18 + 2, v17 + 2, v40, nY2 - 2, v42, 4, 0, 0, 0);
-				CreateRoom(v37 + 2, v43 + 2, v18 - 2, nY2 - 2, v42, 1, 0, 0, 0);
-				nW = 0;
-				nH = 0;
-				ForceHW = 0;
-				nRDest = v42;
-				nHDir = 3;
-				nX2 -= 2;
-				v40 -= 2;
-				v39 += 2;
-				nY1a += 2;
-				nY2 = v17 - 2;
-				v37 = v15 + 2;
-			}
-			if (nRoomCnt >= 80)
-				return;
+	if(nRoomCnt >= 80) {
+		return;
+	}
+
+	nAw = nX2 - nX1;
+	nAh = nY2 - nY1;
+	if(nAw < Area_Min || nAh < Area_Min) {
+		return;
+	}
+
+	if(nAw > Room_Max) {
+		nRw = random(0, Room_Max - Room_Min) + Room_Min;
+	} else if(nAw > Room_Min) {
+		nRw = random(0, nAw - Room_Min) + Room_Min;
+	} else {
+		nRw = nAw;
+	}
+	if(nAh > Room_Max) {
+		nRh = random(0, Room_Max - Room_Min) + Room_Min;
+	} else if(nAh > Room_Min) {
+		nRh = random(0, nAh - Room_Min) + Room_Min;
+	} else {
+		nRh = nAh;
+	}
+
+	if(ForceHW == TRUE) {
+		nRw = nW;
+		nRh = nH;
+	}
+
+	nRx1 = random(0, nX2 - nX1) + nX1;
+	nRy1 = random(0, nY2 - nY1) + nY1;
+	nRx2 = nRw + nRx1;
+	nRy2 = nRh + nRy1;
+	if(nRx2 > nX2) {
+		nRx2 = nX2;
+		nRx1 = nX2 - nRw;
+	}
+	if(nRy2 > nY2) {
+		nRy2 = nY2;
+		nRy1 = nY2 - nRh;
+	}
+
+	if(nRx1 >= 38) {
+		nRx1 = 38;
+	}
+	if(nRy1 >= 38) {
+		nRy1 = 38;
+	}
+	if(nRx1 <= 1) {
+		nRx1 = 1;
+	}
+	if(nRy1 <= 1) {
+		nRy1 = 1;
+	}
+	if(nRx2 >= 38) {
+		nRx2 = 38;
+	}
+	if(nRy2 >= 38) {
+		nRy2 = 38;
+	}
+	if(nRx2 <= 1) {
+		nRx2 = 1;
+	}
+	if(nRy2 <= 1) {
+		nRy2 = 1;
+	}
+	DefineRoom(nRx1, nRy1, nRx2, nRy2, ForceHW);
+
+	if(ForceHW == TRUE) {
+		nSx1 = nRx1 + 2;
+		nSy1 = nRy1 + 2;
+		nSx2 = nRx2;
+		nSy2 = nRy2;
+	}
+
+	nRid = nRoomCnt;
+	RoomList[nRid].nRoomDest = nRDest;
+
+	if(nRDest != 0) {
+		if(nHDir == 1) {
+			nHx1 = random(0, nRx2 - nRx1 - 2) + nRx1 + 1;
+			nHy1 = nRy1;
+			nHw = RoomList[nRDest].nRoomx2 - RoomList[nRDest].nRoomx1 - 2;
+			nHx2 = random(0, nHw) + RoomList[nRDest].nRoomx1 + 1;
+			nHy2 = RoomList[nRDest].nRoomy2;
 		}
-		v11 = Room_Max - Room_Min;
-	LABEL_7:
-		v12 = random(0, v11);
-		nX1 = Room_Min;
-		v41 = Room_Min + v12;
-		goto LABEL_11;
+		if(nHDir == 3) {
+			nHx1 = random(0, nRx2 - nRx1 - 2) + nRx1 + 1;
+			nHy1 = nRy2;
+			nHw = RoomList[nRDest].nRoomx2 - RoomList[nRDest].nRoomx1 - 2;
+			nHx2 = random(0, nHw) + RoomList[nRDest].nRoomx1 + 1;
+			nHy2 = RoomList[nRDest].nRoomy1;
+		}
+		if(nHDir == 2) {
+			nHx1 = nRx2;
+			nHy1 = random(0, nRy2 - nRy1 - 2) + nRy1 + 1;
+			nHx2 = RoomList[nRDest].nRoomx1;
+			nHh = RoomList[nRDest].nRoomy2 - RoomList[nRDest].nRoomy1 - 2;
+			nHy2 = random(0, nHh) + RoomList[nRDest].nRoomy1 + 1;
+		}
+		if(nHDir == 4) {
+			nHx1 = nRx1;
+			nHy1 = random(0, nRy2 - nRy1 - 2) + nRy1 + 1;
+			nHx2 = RoomList[nRDest].nRoomx2;
+			nHh = RoomList[nRDest].nRoomy2 - RoomList[nRDest].nRoomy1 - 2;
+			nHy2 = random(0, nHh) + RoomList[nRDest].nRoomy1 + 1;
+		}
+		AddHall(nHx1, nHy1, nHx2, nHy2, nHDir);
+	}
+
+	if(nRh > nRw) {
+		CreateRoom(nX1 + 2, nY1 + 2, nRx1 - 2, nRy2 - 2, nRid, 2, 0, 0, 0);
+		CreateRoom(nRx2 + 2, nRy1 + 2, nX2 - 2, nY2 - 2, nRid, 4, 0, 0, 0);
+		CreateRoom(nX1 + 2, nRy2 + 2, nRx2 - 2, nY2 - 2, nRid, 1, 0, 0, 0);
+		CreateRoom(nRx1 + 2, nY1 + 2, nX2 - 2, nRy1 - 2, nRid, 3, 0, 0, 0);
+	} else {
+		CreateRoom(nX1 + 2, nY1 + 2, nRx2 - 2, nRy1 - 2, nRid, 3, 0, 0, 0);
+		CreateRoom(nRx1 + 2, nRy2 + 2, nX2 - 2, nY2 - 2, nRid, 1, 0, 0, 0);
+		CreateRoom(nX1 + 2, nRy1 + 2, nRx1 - 2, nY2 - 2, nRid, 2, 0, 0, 0);
+		CreateRoom(nRx2 + 2, nY1 + 2, nX2 - 2, nRy2 - 2, nRid, 4, 0, 0, 0);
 	}
 }
 // 484858: using guessed type int Area_Min;
@@ -1478,204 +1387,153 @@ void GetHall(int *nX1, int *nY1, int *nX2, int *nY2, int *nHd)
 
 void ConnectHall(int nX1, int nY1, int nX2, int nY2, int nHd)
 {
-	int v5;        // edi
-	signed int v6; // esi
-	int v7;        // eax
-	int v9;        // edi
-	int v10;       // ebx
-	int v11;       // ecx
-	char v12;      // al
-	int v13;       // eax
-	int v14;       // ecx
-	char *v15;     // ebx
-	int v16;       // ecx
-	int v17;       // edx
-	int v18;       // ecx
-	int v19;       // edx
-	int v20;       // eax
-	//int v21; // ST04_4
-	int v23;        // ebx
-	int v24;        // ebx
-	BOOLEAN v25;    // zf
-	signed int v26; // [esp-4h] [ebp-34h]
-	signed int v27; // [esp-4h] [ebp-34h]
-	signed int v28; // [esp-4h] [ebp-34h]
-	signed int v29; // [esp-4h] [ebp-34h]
-	int v30;        // [esp+Ch] [ebp-24h]
-	int v31;        // [esp+10h] [ebp-20h]
-	int v32;        // [esp+14h] [ebp-1Ch]
-	signed int v33; // [esp+18h] [ebp-18h]
-	signed int v34; // [esp+1Ch] [ebp-14h]
-	signed int v35; // [esp+20h] [ebp-10h]
-	int v36;        // [esp+24h] [ebp-Ch]
-	char *v37;      // [esp+28h] [ebp-8h]
-	signed int nY;  // [esp+2Ch] [ebp-4h]
-	int nX2a;       // [esp+38h] [ebp+8h]
-	int nY2a;       // [esp+3Ch] [ebp+Ch]
-	int nHda;       // [esp+40h] [ebp+10h]
+	int nCurrd, nDx, nDy, nRp, nOrigX1, nOrigY1, fMinusFlag, fPlusFlag;
+	BOOL fDoneflag, fInroom;
 
-	v34 = 0;
-	v5 = nY1;
-	v6 = nX1;
-	nY = nY1;
-	v7 = random(0, 100);
-	v33 = v7;
-	v32 = random(0, 100);
-	v31 = v6;
-	v30 = v5;
-	CreateDoorType(v6, v5);
+	fDoneflag = FALSE;
+	fMinusFlag = random(0, 100);
+	fPlusFlag = random(0, 100);
+	nOrigX1 = nX1;
+	nOrigY1 = nY1;
+	CreateDoorType(nX1, nY1);
 	CreateDoorType(nX2, nY2);
-	abs(nX2 - v6);
-	abs(nY2 - v5);
-	v9 = nHd;
-	v10 = nX2 - Dir_Xadd[nHd];
-	v11 = nY2 - Dir_Yadd[nHd];
-	nHda = 0;
-	nY2a = v11;
-	nX2a = v10;
-	predungeon[v10][v11] = 44;
-	v37 = (char *)&predungeon[v6][nY];
-	do {
-		if (v6 >= 38 && v9 == 2)
-			v9 = 4;
-		if (nY >= 38 && v9 == 3)
-			v9 = 1;
-		if (v6 <= 1 && v9 == 4)
-			v9 = 2;
-		if (nY <= 1 && v9 == 1)
-			v9 = 3;
-		v12 = *v37;
-		if (*v37 == 67 && (v9 == 1 || v9 == 4))
-			v9 = 2;
-		if (v12 == 66 && (v9 == 1 || v9 == 2))
-			v9 = 3;
-		if (v12 == 69 && (v9 == 4 || v9 == 3))
-			v9 = 1;
-		if (v12 == 65 && (v9 == 2 || v9 == 3))
-			v9 = 4;
-		v13 = Dir_Xadd[v9];
-		v14 = Dir_Yadd[v9];
-		nY += v14;
-		v6 += v13;
-		v15 = (char *)&predungeon[v6][nY];
-		v37 = v15;
-		if (*v15 == 32) {
-			if (nHda) {
-				CreateDoorType(v6 - v13, nY - v14);
+	nDx = abs(nX2 - nX1); /* unused */
+	nDy = abs(nY2 - nY1); /* unused */
+	nCurrd = nHd;
+	nX2 -= Dir_Xadd[nCurrd];
+	nY2 -= Dir_Yadd[nCurrd];
+	predungeon[nX2][nY2] = 44;
+	fInroom = FALSE;
+
+	while(!fDoneflag) {
+		if(nX1 >= 38 && nCurrd == 2) {
+			nCurrd = 4;
+		}
+		if(nY1 >= 38 && nCurrd == 3) {
+			nCurrd = 1;
+		}
+		if(nX1 <= 1 && nCurrd == 4) {
+			nCurrd = 2;
+		}
+		if(nY1 <= 1 && nCurrd == 1) {
+			nCurrd = 3;
+		}
+		if(predungeon[nX1][nY1] == 67 && (nCurrd == 1 || nCurrd == 4)) {
+			nCurrd = 2;
+		}
+		if(predungeon[nX1][nY1] == 66 && (nCurrd == 1 || nCurrd == 2)) {
+			nCurrd = 3;
+		}
+		if(predungeon[nX1][nY1] == 69 && (nCurrd == 4 || nCurrd == 3)) {
+			nCurrd = 1;
+		}
+		if(predungeon[nX1][nY1] == 65 && (nCurrd == 2 || nCurrd == 3)) {
+			nCurrd = 4;
+		}
+		nX1 += Dir_Xadd[nCurrd];
+		nY1 += Dir_Yadd[nCurrd];
+		if(predungeon[nX1][nY1] == 32) {
+			if(fInroom) {
+				CreateDoorType(nX1 - Dir_Xadd[nCurrd], nY1 - Dir_Yadd[nCurrd]);
 			} else {
-				if (v33 < 50) {
-					if (v9 == 1 || v9 == 3) {
-						v17 = nY;
-						v16 = v6 - 1;
+				if(fMinusFlag < 50) {
+					if(nCurrd != 1 && nCurrd != 3) {
+						PlaceHallExt(nX1, nY1 - 1);
 					} else {
-						v16 = v6;
-						v17 = nY - 1;
+						PlaceHallExt(nX1 - 1, nY1);
 					}
-					PlaceHallExt(v16, v17);
 				}
-				if (v32 < 50) {
-					if (v9 == 1 || v9 == 3) {
-						v19 = nY;
-						v18 = v6 + 1;
+				if(fPlusFlag < 50) {
+					if(nCurrd != 1 && nCurrd != 3) {
+						PlaceHallExt(nX1, nY1 + 1);
 					} else {
-						v18 = v6;
-						v19 = nY + 1;
+						PlaceHallExt(nX1 + 1, nY1);
 					}
-					PlaceHallExt(v18, v19);
 				}
 			}
-			nHda = 0;
-			*v15 = 44;
+			predungeon[nX1][nY1] = 44;
+			fInroom = FALSE;
 		} else {
-			if (!nHda && *v15 == 35)
-				CreateDoorType(v6, nY);
-			if (*v15 != 44)
-				nHda = 1;
+			if(!fInroom && predungeon[nX1][nY1] == 35) {
+				CreateDoorType(nX1, nY1);
+			}
+			if(predungeon[nX1][nY1] != 44) {
+				fInroom = TRUE;
+			}
 		}
-		v36 = abs(nX2a - v6);
-		v20 = abs(nY2a - nY);
-		//v22 = v21;
-		v35 = v20;
-		if (v36 <= v20) {
-			v24 = 5 * v20;
-			if (5 * v20 > 80)
-				v24 = 80;
-			if (random(0, 100) < v24) {
-				if (nY2a <= nY || nY >= 40) {
-					v9 = 1;
-					goto LABEL_67;
+		nDx = abs(nX2 - nX1);
+		nDy = abs(nY2 - nY1);
+		if(nDx > nDy) {
+			nRp = 2 * nDx;
+			if(nRp > 30) {
+				nRp = 30;
+			}
+			if(random(0, 100) < nRp) {
+				if(nX2 <= nX1 || nX1 >= 40) {
+					nCurrd = 4;
+				} else {
+					nCurrd = 2;
 				}
-				v26 = 3;
-				goto LABEL_58;
 			}
 		} else {
-			v23 = 2 * v36;
-			if (2 * v36 > 30)
-				v23 = 30;
-			if (random(0, 100) < v23) {
-				if (nX2a <= v6 || v6 >= 40)
-					v26 = 4;
-				else
-					v26 = 2;
-			LABEL_58:
-				v9 = v26;
-				goto LABEL_67;
+			nRp = 5 * nDy;
+			if(nRp > 80) {
+				nRp = 80;
+			}
+			if(random(0, 100) < nRp) {
+				if(nY2 <= nY1 || nY1 >= 40) {
+					nCurrd = 1;
+				} else {
+					nCurrd = 3;
+				}
 			}
 		}
-	LABEL_67:
-		if (v35 < 10 && v6 == nX2a && (v9 == 2 || v9 == 4)) {
-			if (nY2a <= nY || nY >= 40)
-				v9 = 1;
-			else
-				v9 = 3;
-		}
-		if (v36 < 10 && nY == nY2a && (v9 == 1 || v9 == 3)) {
-			if (nX2a <= v6 || v6 >= 40)
-				v27 = 4;
-			else
-				v27 = 2;
-			v9 = v27;
-		}
-		if (v35 == 1) {
-			v25 = v36 == 1;
-			if (v36 <= 1)
-				goto LABEL_94;
-			if (v9 == 1 || v9 == 3) {
-				if (nX2a <= v6 || v6 >= 40)
-					v28 = 4;
-				else
-					v28 = 2;
-				v9 = v28;
+		if(nDy < 10 && nX1 == nX2 && (nCurrd == 2 || nCurrd == 4)) {
+			if(nY2 <= nY1 || nY1 >= 40) {
+				nCurrd = 1;
+			} else {
+				nCurrd = 3;
 			}
 		}
-		v25 = v36 == 1;
-	LABEL_94:
-		if (v25) {
-			if (v35 <= 1 || v9 != 2 && v9 != 4)
-				goto LABEL_109;
-			if (nY2a > nY && v6 < 40)
-				goto LABEL_100;
-			v9 = 1;
-		}
-		if (!v36 && *v37 != 32 && (v9 == 2 || v9 == 4)) {
-			if (nX2a <= v31 || v6 >= 40) {
-				v9 = 1;
-				goto LABEL_109;
+		if(nDx < 10 && nY1 == nY2 && (nCurrd == 1 || nCurrd == 3)) {
+			if(nX2 <= nX1 || nX1 >= 40) {
+				nCurrd = 4;
+			} else {
+				nCurrd = 2;
 			}
-		LABEL_100:
-			v9 = 3;
 		}
-	LABEL_109:
-		if (!v35 && *v37 != 32 && (v9 == 1 || v9 == 3)) {
-			if (nY2a <= v30 || nY >= 40)
-				v29 = 4;
-			else
-				v29 = 2;
-			v9 = v29;
+		if(nDy == 1 && nDx > 1 && (nCurrd == 1 || nCurrd == 3)) {
+			if(nX2 <= nX1 || nX1 >= 40) {
+				nCurrd = 4;
+			} else {
+				nCurrd = 2;
+			}
 		}
-		if (v6 == nX2a && nY == nY2a)
-			v34 = 1;
-	} while (!v34);
+		if(nDx == 1 && nDy > 1 && (nCurrd == 2 || nCurrd == 4)) {
+			if(nY2 <= nY1 || nX1 >= 40) {
+				nCurrd = 1;
+			} else {
+				nCurrd = 3;
+			}
+		}
+		if(nDx == 0 && predungeon[nX1][nY1] != 32 && (nCurrd == 2 || nCurrd == 4)) {
+			if(nX2 <= nOrigX1 || nX1 >= 40) {
+				nCurrd = 1;
+			} else {
+				nCurrd = 3;
+			}
+		}
+		if(nDy == 0 && predungeon[nX1][nY1] != 32 && (nCurrd == 1 || nCurrd == 3)) {
+			if(nY2 <= nOrigY1 || nY1 >= 40) {
+				nCurrd = 4;
+			} else {
+				nCurrd = 2;
+			}
+		}
+		if(nX1 == nX2 && nY1 == nY2) {
+			fDoneflag = TRUE;
+		}
+	}
 }
 
 void CreateDoorType(int nX, int nY)

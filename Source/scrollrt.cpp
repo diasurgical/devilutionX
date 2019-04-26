@@ -553,11 +553,11 @@ void scrollrt_draw_lower(int x, int y, int sx, int sy, int chunks, int eflag)
 {
 	int i, j;
 	BYTE *dst;
-	WORD *pMap;
+	MICROS *pMap;
 
 	/// ASSERT: assert(gpBuffer);
 
-	pMap = dpiece_defs_map_1[IsometricCoord(x, y)];
+	pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
 
 	if (eflag) {
 		if ((DWORD)y < MAXDUNY && (DWORD)x < MAXDUNX) {
@@ -567,33 +567,33 @@ void scrollrt_draw_lower(int x, int y, int sx, int sy, int chunks, int eflag)
 				dst = &gpBuffer[sx + 32 + PitchTbl[sy]];
 				cel_transparency_active = (unsigned char)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
 				arch_draw_type = 2;
-				level_cel_block = pMap[1];
+				level_cel_block = pMap->mt[1];
 				if (level_cel_block != 0) {
 					drawLowerScreen(dst);
 				}
 				arch_draw_type = 0;
 				dst -= 768 * 32;
-				level_cel_block = pMap[3];
+				level_cel_block = pMap->mt[3];
 				if (level_cel_block != 0) {
 					drawLowerScreen(dst);
 				}
 				dst -= 768 * 32;
-				level_cel_block = pMap[5];
+				level_cel_block = pMap->mt[5];
 				if (level_cel_block != 0) {
 					drawLowerScreen(dst);
 				}
 				dst -= 768 * 32;
-				level_cel_block = pMap[7];
+				level_cel_block = pMap->mt[7];
 				if (level_cel_block != 0) {
 					drawLowerScreen(dst);
 				}
 				dst -= 768 * 32;
-				level_cel_block = pMap[9];
+				level_cel_block = pMap->mt[9];
 				if (level_cel_block != 0) {
 					drawLowerScreen(dst);
 				}
 				dst -= 768 * 32;
-				level_cel_block = pMap[11];
+				level_cel_block = pMap->mt[11];
 				if (level_cel_block != 0 && leveltype == DTYPE_HELL) {
 					drawLowerScreen(dst);
 				}
@@ -605,7 +605,7 @@ void scrollrt_draw_lower(int x, int y, int sx, int sy, int chunks, int eflag)
 		x++;
 		y--;
 		sx += 64;
-		pMap += 16;
+		pMap++;
 		chunks--;
 	}
 
@@ -624,23 +624,23 @@ void scrollrt_draw_lower(int x, int y, int sx, int sy, int chunks, int eflag)
 				dst = &gpBuffer[sx + PitchTbl[sy]];
 				cel_transparency_active = (unsigned char)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
 				arch_draw_type = 1;
-				level_cel_block = pMap[0];
+				level_cel_block = pMap->mt[0];
 				if (level_cel_block != 0) {
 					drawLowerScreen(dst);
 				}
 				arch_draw_type = 2;
-				level_cel_block = pMap[1];
+				level_cel_block = pMap->mt[1];
 				if (level_cel_block != 0) {
 					drawLowerScreen(dst + 32);
 				}
 				arch_draw_type = 0;
 				for (i = 2; i < MicroTileLen; i += 2) {
 					dst -= 768 * 32;
-					level_cel_block = pMap[i];
+					level_cel_block = pMap->mt[i];
 					if (level_cel_block != 0) {
 						drawLowerScreen(dst);
 					}
-					level_cel_block = pMap[i + 1];
+					level_cel_block = pMap->mt[i + 1];
 					if (level_cel_block != 0) {
 						drawLowerScreen(dst + 32);
 					}
@@ -651,7 +651,7 @@ void scrollrt_draw_lower(int x, int y, int sx, int sy, int chunks, int eflag)
 		x++;
 		y--;
 		sx += 64;
-		pMap += 16;
+		pMap++;
 	}
 
 	if (eflag && (DWORD)y < MAXDUNY && (DWORD)x < MAXDUNX) {
@@ -663,33 +663,33 @@ void scrollrt_draw_lower(int x, int y, int sx, int sy, int chunks, int eflag)
 			dst = &gpBuffer[sx + PitchTbl[sy]];
 			cel_transparency_active = (unsigned char)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
 			arch_draw_type = 1;
-			level_cel_block = pMap[0];
+			level_cel_block = pMap->mt[0];
 			if (level_cel_block != 0) {
 				drawLowerScreen(dst);
 			}
 			arch_draw_type = 0;
 			dst -= 768 * 32;
-			level_cel_block = pMap[2];
+			level_cel_block = pMap->mt[2];
 			if (level_cel_block != 0) {
 				drawLowerScreen(dst);
 			}
 			dst -= 768 * 32;
-			level_cel_block = pMap[4];
+			level_cel_block = pMap->mt[4];
 			if (level_cel_block != 0) {
 				drawLowerScreen(dst);
 			}
 			dst -= 768 * 32;
-			level_cel_block = pMap[6];
+			level_cel_block = pMap->mt[6];
 			if (level_cel_block != 0) {
 				drawLowerScreen(dst);
 			}
 			dst -= 768 * 32;
-			level_cel_block = pMap[8];
+			level_cel_block = pMap->mt[8];
 			if (level_cel_block != 0) {
 				drawLowerScreen(dst);
 			}
 			dst -= 768 * 32;
-			level_cel_block = pMap[10];
+			level_cel_block = pMap->mt[10];
 			if (level_cel_block != 0 && leveltype == DTYPE_HELL) {
 				drawLowerScreen(dst);
 			}
@@ -1036,7 +1036,7 @@ void scrollrt_draw_clipped_e_flag(BYTE *pBuff, int x, int y, int a4, int a5)
 {
 	int i, lti_old, cta_old, lpi_old;
 	BYTE *dst;
-	WORD *pMap;
+	MICROS *pMap;
 
 	lti_old = light_table_index;
 	cta_old = cel_transparency_active;
@@ -1045,16 +1045,16 @@ void scrollrt_draw_clipped_e_flag(BYTE *pBuff, int x, int y, int a4, int a5)
 	level_piece_id = dPiece[x][y];
 	light_table_index = dLight[x][y];
 	cel_transparency_active = (unsigned char)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
-	pMap = dpiece_defs_map_1[IsometricCoord(x, y)];
+	pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
 
 	dst = pBuff;
 	arch_draw_type = 1;
-	level_cel_block = pMap[0];
+	level_cel_block = pMap->mt[0];
 	if (level_cel_block != 0) {
 		drawLowerScreen(dst);
 	}
 	arch_draw_type = 2;
-	level_cel_block = pMap[1];
+	level_cel_block = pMap->mt[1];
 	if (level_cel_block != 0) {
 		drawLowerScreen(dst + 32);
 	}
@@ -1063,11 +1063,11 @@ void scrollrt_draw_clipped_e_flag(BYTE *pBuff, int x, int y, int a4, int a5)
 	arch_draw_type = 0;
 	for (i = 2; i < MicroTileLen; i += 2) {
 		dst -= 768 * 32;
-		level_cel_block = pMap[i];
+		level_cel_block = pMap->mt[i];
 		if (level_cel_block != 0) {
 			drawLowerScreen(dst);
 		}
-		level_cel_block = pMap[i + 1];
+		level_cel_block = pMap->mt[i + 1];
 		if (level_cel_block != 0) {
 			drawLowerScreen(dst + 32);
 		}
@@ -1089,11 +1089,11 @@ void scrollrt_draw_lower_2(int x, int y, int sx, int sy, int chunks, int skipChu
 {
 	int i, j, CelSkip;
 	BYTE *dst;
-	WORD *pMap;
+	MICROS *pMap;
 
 	/// ASSERT: assert(gpBuffer);
 
-	pMap = dpiece_defs_map_1[IsometricCoord(x, y)];
+	pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
 	CelSkip = 2 * skipChunks + 2;
 
 	if (eflag) {
@@ -1105,7 +1105,7 @@ void scrollrt_draw_lower_2(int x, int y, int sx, int sy, int chunks, int skipChu
 				cel_transparency_active = (unsigned char)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
 				for (i = 0; i < (MicroTileLen >> 1) - 1; i++) {
 					if (skipChunks <= i) {
-						level_cel_block = pMap[2 * i + 3];
+						level_cel_block = pMap->mt[2 * i + 3];
 						if (level_cel_block != 0) {
 							drawLowerScreen(dst);
 						}
@@ -1121,7 +1121,7 @@ void scrollrt_draw_lower_2(int x, int y, int sx, int sy, int chunks, int skipChu
 		y--;
 		sx += 64;
 		chunks--;
-		pMap += 16;
+		pMap++;
 	}
 
 	j = chunks;
@@ -1139,11 +1139,11 @@ void scrollrt_draw_lower_2(int x, int y, int sx, int sy, int chunks, int skipChu
 				i = 0;
 				while (i < (MicroTileLen >> 1) - 1) {
 					if (skipChunks <= i) {
-						level_cel_block = pMap[2 * i + 2];
+						level_cel_block = pMap->mt[2 * i + 2];
 						if (level_cel_block != 0) {
 							drawLowerScreen(dst);
 						}
-						level_cel_block = pMap[2 * i + 3];
+						level_cel_block = pMap->mt[2 * i + 3];
 						if (level_cel_block != 0) {
 							drawLowerScreen(dst + 32);
 						}
@@ -1159,7 +1159,7 @@ void scrollrt_draw_lower_2(int x, int y, int sx, int sy, int chunks, int skipChu
 		x++;
 		y--;
 		sx += 64;
-		pMap += 16;
+		pMap++;
 	}
 
 	if (eflag && (DWORD)y < MAXDUNY && (DWORD)x < MAXDUNX) {
@@ -1170,7 +1170,7 @@ void scrollrt_draw_lower_2(int x, int y, int sx, int sy, int chunks, int skipChu
 			cel_transparency_active = (unsigned char)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
 			for (i = 0; i < (MicroTileLen >> 1) - 1; i++) {
 				if (skipChunks <= i) {
-					level_cel_block = pMap[2 * i + 2];
+					level_cel_block = pMap->mt[2 * i + 2];
 					if (level_cel_block != 0) {
 						drawLowerScreen(dst);
 					}
@@ -1436,7 +1436,7 @@ void scrollrt_draw_clipped_e_flag_2(BYTE *pBuff, int x, int y, int skipChunks, s
 {
 	int lti_old, cta_old, lpi_old;
 	BYTE *dst;
-	WORD *pMap;
+	MICROS *pMap;
 
 	lti_old = light_table_index;
 	cta_old = cel_transparency_active;
@@ -1446,45 +1446,45 @@ void scrollrt_draw_clipped_e_flag_2(BYTE *pBuff, int x, int y, int skipChunks, s
 	light_table_index = dLight[x][y];
 	dst = &pBuff[768 * 32 * skipChunks];
 	cel_transparency_active = (unsigned char)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
-	pMap = dpiece_defs_map_1[IsometricCoord(x, y)];
+	pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
 
 	switch (skipChunks) {
 	case 0:
-		level_cel_block = pMap[2];
+		level_cel_block = pMap->mt[2];
 		if (level_cel_block != 0) {
 			drawLowerScreen(dst);
 		}
-		level_cel_block = pMap[3];
+		level_cel_block = pMap->mt[3];
 		if (level_cel_block != 0) {
 			drawLowerScreen(dst + 32);
 		}
 	case 1:
 		dst -= 768 * 32;
-		level_cel_block = pMap[4];
+		level_cel_block = pMap->mt[4];
 		if (level_cel_block != 0) {
 			drawLowerScreen(dst);
 		}
-		level_cel_block = pMap[5];
+		level_cel_block = pMap->mt[5];
 		if (level_cel_block != 0) {
 			drawLowerScreen(dst + 32);
 		}
 	case 2:
 		dst -= 768 * 32;
-		level_cel_block = pMap[6];
+		level_cel_block = pMap->mt[6];
 		if (level_cel_block != 0) {
 			drawLowerScreen(dst);
 		}
-		level_cel_block = pMap[7];
+		level_cel_block = pMap->mt[7];
 		if (level_cel_block != 0) {
 			drawLowerScreen(dst + 32);
 		}
 	case 3:
 		dst -= 768 * 32;
-		level_cel_block = pMap[8];
+		level_cel_block = pMap->mt[8];
 		if (level_cel_block != 0) {
 			drawLowerScreen(dst);
 		}
-		level_cel_block = pMap[9];
+		level_cel_block = pMap->mt[9];
 		if (level_cel_block != 0) {
 			drawLowerScreen(dst + 32);
 		}
@@ -1508,11 +1508,11 @@ void scrollrt_draw_upper(int x, int y, int sx, int sy, int chunks, int capChunks
 {
 	int i, j, CelCap;
 	BYTE *dst;
-	WORD *pMap;
+	MICROS *pMap;
 
 	/// ASSERT: assert(gpBuffer);
 
-	pMap = dpiece_defs_map_1[IsometricCoord(x, y)];
+	pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
 	CelCap = 2 * capChunks + 2;
 	if (CelCap > 8) {
 		CelCap = 8;
@@ -1526,7 +1526,7 @@ void scrollrt_draw_upper(int x, int y, int sx, int sy, int chunks, int capChunks
 				dst = &gpBuffer[sx + 32 + PitchTbl[sy]];
 				cel_transparency_active = (unsigned char)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
 				if (capChunks >= 0) {
-					level_cel_block = pMap[1];
+					level_cel_block = pMap->mt[1];
 					if (level_cel_block != 0) {
 						arch_draw_type = 2;
 						drawUpperScreen(dst);
@@ -1535,21 +1535,21 @@ void scrollrt_draw_upper(int x, int y, int sx, int sy, int chunks, int capChunks
 				}
 				dst -= 768 * 32;
 				if (capChunks >= 1) {
-					level_cel_block = pMap[3];
+					level_cel_block = pMap->mt[3];
 					if (level_cel_block != 0) {
 						drawUpperScreen(dst);
 					}
 				}
 				dst -= 768 * 32;
 				if (capChunks >= 2) {
-					level_cel_block = pMap[5];
+					level_cel_block = pMap->mt[5];
 					if (level_cel_block != 0) {
 						drawUpperScreen(dst);
 					}
 				}
 				dst -= 768 * 32;
 				if (capChunks >= 3) {
-					level_cel_block = pMap[7];
+					level_cel_block = pMap->mt[7];
 					if (level_cel_block != 0) {
 						drawUpperScreen(dst);
 					}
@@ -1563,7 +1563,7 @@ void scrollrt_draw_upper(int x, int y, int sx, int sy, int chunks, int capChunks
 		y--;
 		sx += 64;
 		chunks--;
-		pMap += 16;
+		pMap++;
 	}
 
 	for (j = 0; j < chunks; j++) {
@@ -1574,12 +1574,12 @@ void scrollrt_draw_upper(int x, int y, int sx, int sy, int chunks, int capChunks
 				dst = &gpBuffer[sx + PitchTbl[sy]];
 				cel_transparency_active = (unsigned char)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
 				arch_draw_type = 1;
-				level_cel_block = pMap[0];
+				level_cel_block = pMap->mt[0];
 				if (level_cel_block != 0) {
 					drawUpperScreen(dst);
 				}
 				arch_draw_type = 2;
-				level_cel_block = pMap[1];
+				level_cel_block = pMap->mt[1];
 				if (level_cel_block != 0) {
 					drawUpperScreen(dst + 32);
 				}
@@ -1587,11 +1587,11 @@ void scrollrt_draw_upper(int x, int y, int sx, int sy, int chunks, int capChunks
 				for (i = 1; i < (MicroTileLen >> 1) - 1; i++) {
 					dst -= 768 * 32;
 					if (capChunks >= i) {
-						level_cel_block = pMap[2 * i];
+						level_cel_block = pMap->mt[2 * i];
 						if (level_cel_block != 0) {
 							drawUpperScreen(dst);
 						}
-						level_cel_block = pMap[2 * i + 1];
+						level_cel_block = pMap->mt[2 * i + 1];
 						if (level_cel_block != 0) {
 							drawUpperScreen(dst + 32);
 						}
@@ -1605,7 +1605,7 @@ void scrollrt_draw_upper(int x, int y, int sx, int sy, int chunks, int capChunks
 		x++;
 		y--;
 		sx += 64;
-		pMap += 16;
+		pMap++;
 	}
 
 	if (eflag && y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX) {
@@ -1616,7 +1616,7 @@ void scrollrt_draw_upper(int x, int y, int sx, int sy, int chunks, int capChunks
 			cel_transparency_active = (unsigned char)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
 			arch_draw_type = 1;
 			if (capChunks >= 0) {
-				level_cel_block = pMap[0];
+				level_cel_block = pMap->mt[0];
 				if (level_cel_block != 0) {
 					drawUpperScreen(dst);
 				}
@@ -1624,21 +1624,21 @@ void scrollrt_draw_upper(int x, int y, int sx, int sy, int chunks, int capChunks
 			arch_draw_type = 0;
 			dst -= 768 * 32;
 			if (capChunks >= 1) {
-				level_cel_block = pMap[2];
+				level_cel_block = pMap->mt[2];
 				if (level_cel_block != 0) {
 					drawUpperScreen(dst);
 				}
 			}
 			dst -= 768 * 32;
 			if (capChunks >= 2) {
-				level_cel_block = pMap[4];
+				level_cel_block = pMap->mt[4];
 				if (level_cel_block != 0) {
 					drawUpperScreen(dst);
 				}
 			}
 			dst -= 768 * 32;
 			if (capChunks >= 3) {
-				level_cel_block = pMap[6];
+				level_cel_block = pMap->mt[6];
 				if (level_cel_block != 0) {
 					drawUpperScreen(dst);
 				}
@@ -1974,7 +1974,7 @@ void scrollrt_draw_e_flag(BYTE *pBuff, int x, int y, int capChunks, int CelCap, 
 {
 	int i, lti_old, cta_old, lpi_old;
 	BYTE *dst;
-	WORD *pMap;
+	MICROS *pMap;
 
 	lti_old = light_table_index;
 	cta_old = cel_transparency_active;
@@ -1984,15 +1984,15 @@ void scrollrt_draw_e_flag(BYTE *pBuff, int x, int y, int capChunks, int CelCap, 
 	light_table_index = dLight[x][y];
 	dst = pBuff;
 	cel_transparency_active = (unsigned char)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
-	pMap = dpiece_defs_map_1[IsometricCoord(x, y)];
+	pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
 
 	arch_draw_type = 1;
-	level_cel_block = pMap[0];
+	level_cel_block = pMap->mt[0];
 	if (level_cel_block != 0) {
 		drawUpperScreen(dst);
 	}
 	arch_draw_type = 2;
-	level_cel_block = pMap[1];
+	level_cel_block = pMap->mt[1];
 	if (level_cel_block != 0) {
 		drawUpperScreen(dst + 32);
 	}
@@ -2001,11 +2001,11 @@ void scrollrt_draw_e_flag(BYTE *pBuff, int x, int y, int capChunks, int CelCap, 
 	for (i = 1; i < (MicroTileLen >> 1) - 1; i++) {
 		dst -= 768 * 32;
 		if (capChunks >= i) {
-			level_cel_block = pMap[2 * i];
+			level_cel_block = pMap->mt[2 * i];
 			if (level_cel_block != 0) {
 				drawUpperScreen(dst);
 			}
-			level_cel_block = pMap[2 * i + 1];
+			level_cel_block = pMap->mt[2 * i + 1];
 			if (level_cel_block != 0) {
 				drawUpperScreen(dst + 32);
 			}

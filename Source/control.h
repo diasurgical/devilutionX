@@ -114,7 +114,7 @@ void control_release_talk_btn();
 void control_reset_talk_msg();
 void control_type_message();
 void control_reset_talk();
-int control_talk_last_key(int a1);
+BOOL control_talk_last_key(int vkey);
 int control_presskeys(int a1);
 void control_press_enter();
 void control_up_down(char a1);

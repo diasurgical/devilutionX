@@ -2249,7 +2249,7 @@ int On_PLAYER_JOINLEVEL(TCmdLocParam1 *pCmd, int pnum)
 	else {
 		plr[pnum]._pLvlChanging = 0;
 		if (plr[pnum]._pName[0] && !plr[pnum].plractive) {
-			plr[pnum].plractive = 1;
+			plr[pnum].plractive = TRUE;
 			gbActivePlayers++;
 			EventPlrMsg("Player '%s' (level %d) just joined the game", plr[pnum]._pName, plr[pnum]._pLevel);
 		}

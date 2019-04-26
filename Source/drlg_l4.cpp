@@ -1937,27 +1937,19 @@ void DRLG_L4TransFix()
 
 void DRLG_L4Corners()
 {
-	signed int v0; // edx
-	char *v1;      // ecx
-	signed int v2; // esi
-	char v3;       // al
+	int i, j;
 
-	v0 = 1;
-	do {
-		v1 = (char *)&dungeon[1][v0];
-		v2 = 38;
-		do {
-			v3 = *v1;
-			if ((unsigned char)*v1 >= 0x12u
-			    && (unsigned char)v3 <= 0x1Eu
-			    && ((unsigned char)v1[40] < 0x12u || (unsigned char)v1[1] < 0x12u)) {
-				*v1 = v3 + 98;
+	for(j = 1; j < DMAXY - 1; j++) {
+		for(i = 1; i < DMAXX - 1; i++) {
+			if(dungeon[i][j] >= 18 && dungeon[i][j] <= 30) {
+				if(dungeon[i + 1][j] < 18) {
+					dungeon[i][j] += 98;
+				} else if(dungeon[i][j + 1] < 18) {
+					dungeon[i][j] += 98;
+				}
 			}
-			v1 += 40;
-			--v2;
-		} while (v2);
-		++v0;
-	} while (v0 < 39);
+		}
+	}
 }
 
 void DRLG_L4Pass3()

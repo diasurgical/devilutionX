@@ -5,7 +5,7 @@ DEVILUTION_BEGIN_NAMESPACE
 char lavapool;  // weak
 int abyssx;     // weak
 int lockoutcnt; // weak
-char lockout[40][40];
+BOOLEAN lockout[40][40];
 
 const unsigned char L3ConvTbl[16] = { 8, 11, 3, 10, 1, 9, 12, 12, 6, 13, 4, 13, 2, 14, 5, 7 };
 const unsigned char L3UP[20] = { 3, 3, 8, 8, 0, 10, 10, 0, 7, 7, 0, 51, 50, 0, 48, 49, 0, 0, 0, 0 };
@@ -73,187 +73,135 @@ const unsigned char L3ANVIL[244] = {
 
 void AddFenceDoors()
 {
-	signed int v0;    // esi
-	char *v1;         // eax
-	signed int v2;    // ebx
-	unsigned char v3; // cl
-	char v4;          // cl
-	char v5;          // cl
+	int i, j;
 
-	v0 = 0;
-	do {
-		v1 = (char *)&dungeon[-1][v0 + 39];
-		v2 = 40;
-		do {
-			if (v1[1] == 7) {
-				v3 = *(v1 - 39);
-				if (v3 > 0x98u
-				    || v3 < 0x82u
-				    || (v4 = v1[41], (unsigned char)v4 > 0x98u)
-				    || (unsigned char)v4 < 0x82u) {
-					if ((unsigned char)*v1 <= 0x98u && (unsigned char)*v1 >= 0x82u) {
-						v5 = v1[2];
-						if ((unsigned char)v5 <= 0x98u && (unsigned char)v5 >= 0x82u)
-							v1[1] = -109;
-					}
-				} else {
-					v1[1] = -110;
+	for(j = 0; j < DMAXY; j++) {
+		for(i = 0; i < DMAXX; i++) {
+			if(dungeon[i][j] == 7) {
+				if(dungeon[i - 1][j] <= 152 && dungeon[i - 1][j] >= 130
+				&& dungeon[i + 1][j] <= 152 && dungeon[i + 1][j] >= 130) {
+					dungeon[i][j] = 146;
+					continue;
 				}
 			}
-			v1 += 40;
-			--v2;
-		} while (v2);
-		++v0;
-	} while (v0 < 40);
+			if(dungeon[i][j] == 7) {
+				if(dungeon[i][j - 1] <= 152 && dungeon[i][j - 1] >= 130
+				&& dungeon[i][j + 1] <= 152 && dungeon[i][j + 1] >= 130) {
+					dungeon[i][j] = 147;
+					continue;
+				}
+			}
+		}
+	}
 }
 
 void FenceDoorFix()
 {
-	signed int v0;    // edi
-	char *v1;         // eax
-	signed int v2;    // esi
-	char v3;          // bl
-	char v4;          // cl
-	unsigned char v5; // cl
-	char v6;          // dl
-	char v7;          // cl
-	char v8;          // cl
-	char v9;          // dl
+	int i, j;
 
-	v0 = 0;
-	do {
-		v1 = (char *)&dungeon[-1][v0 + 39];
-		v2 = 40;
-		do {
-			v3 = v1[1];
-			if (v3 == -110
-			        && ((v4 = v1[41], (unsigned char)v4 > 0x98u)
-			               || (unsigned char)v4 < 0x82u
-			               || (v5 = *(v1 - 39), v5 > 0x98u)
-			               || v5 < 0x82u
-			               || (v6 = v1[41], v6 != -126)
-			                   && v5 != -126
-			                   && v6 != -124
-			                   && v5 != -124
-			                   && v6 != -123
-			                   && v5 != -123
-			                   && v6 != -122
-			                   && v5 != -122
-			                   && v6 != -120
-			                   && v5 != -120
-			                   && v6 != -118
-			                   && v5 != -118
-			                   && v6 != -116
-			                   && v5 != -116)
-			    || v3 == -109
-			        && ((v7 = v1[2], (unsigned char)v7 > 0x98u)
-			               || (unsigned char)v7 < 0x82u
-			               || (v8 = *v1, (unsigned char)*v1 > 0x98u)
-			               || (unsigned char)v8 < 0x82u
-			               || (v9 = v1[2], v9 != -125)
-			                   && v8 != -125
-			                   && v9 != -124
-			                   && v8 != -124
-			                   && v9 != -123
-			                   && v8 != -123
-			                   && v9 != -121
-			                   && v8 != -121
-			                   && v9 != -119
-			                   && v8 != -119
-			                   && v9 != -118
-			                   && v8 != -118
-			                   && v9 != -117
-			                   && v8 != -117)) {
-				v1[1] = 7;
+	for(j = 0; j < DMAXY; j++) {
+		for(i = 0; i < DMAXX; i++) {
+			if(dungeon[i][j] == 146) {
+				if(dungeon[i + 1][j] > 152 || dungeon[i + 1][j] < 130
+				|| dungeon[i - 1][j] > 152 || dungeon[i - 1][j] < 130) {
+					dungeon[i][j] = 7;
+					continue;
+				}
 			}
-			v1 += 40;
-			--v2;
-		} while (v2);
-		++v0;
-	} while (v0 < 40);
-}
-
-int DRLG_L3Anvil()
-{
-	int v0;            // esi
-	signed int v1;     // edi
-	signed int v2;     // ebx
-	signed int v3;     // eax
-	int v4;            // ecx
-	unsigned char v5;  // dl
-	signed int v7;     // ebx
-	int v8;            // edi
-	int v9;            // ecx
-	signed int v10;    // eax
-	unsigned char v11; // dl
-	signed int v12;    // [esp+Ch] [ebp-Ch]
-	signed int v13;    // [esp+Ch] [ebp-Ch]
-	signed int v14;    // [esp+10h] [ebp-8h]
-	int v15;           // [esp+14h] [ebp-4h]
-
-	v0 = random(0, 29);
-	v1 = 0;
-	v15 = random(0, 29);
-	v12 = 0;
-	while (1) {
-		if (v12 >= 200)
-			return 1;
-		++v12;
-		v14 = 1;
-		v2 = 2;
-		do {
-			if (v14 != 1)
-				break;
-			v3 = 0;
-			v4 = v15 + v1 + 40 * v0;
-			do {
-				if (v14 != 1)
-					break;
-				v5 = L3ANVIL[v2];
-				if (v5 && dungeon[0][v4] != v5)
-					v14 = 0;
-				if (dflags[0][v4])
-					v14 = 0;
-				++v2;
-				++v3;
-				v4 += 40;
-			} while (v3 < 11);
-			++v1;
-		} while (v1 < 11);
-		v1 = 0;
-		if (v14)
-			break;
-		if (++v0 == 29) {
-			v0 = 0;
-			if (++v15 == 29)
-				v15 = 0;
+			if(dungeon[i][j] == 146) {
+				if(dungeon[i + 1][j] != 130 && dungeon[i - 1][j] != 130
+				&& dungeon[i + 1][j] != 132 && dungeon[i - 1][j] != 132
+				&& dungeon[i + 1][j] != 133 && dungeon[i - 1][j] != 133
+				&& dungeon[i + 1][j] != 134 && dungeon[i - 1][j] != 134
+				&& dungeon[i + 1][j] != 136 && dungeon[i - 1][j] != 136
+				&& dungeon[i + 1][j] != 138 && dungeon[i - 1][j] != 138
+				&& dungeon[i + 1][j] != 140 && dungeon[i - 1][j] != 140) {
+					dungeon[i][j] = 7;
+					continue;
+				}
+			}
+			if(dungeon[i][j] == 147) {
+				if(dungeon[i][j + 1] > 152 || dungeon[i][j + 1] < 130
+				|| dungeon[i][j - 1] > 152 || dungeon[i][j - 1] < 130) {
+					dungeon[i][j] = 7;
+					continue;
+				}
+			}
+			if(dungeon[i][j] == 147) {
+				if(dungeon[i][j + 1] != 131 && dungeon[i][j - 1] != 131
+				&& dungeon[i][j + 1] != 132 && dungeon[i][j - 1] != 132
+				&& dungeon[i][j + 1] != 133 && dungeon[i][j - 1] != 133
+				&& dungeon[i][j + 1] != 135 && dungeon[i][j - 1] != 135
+				&& dungeon[i][j + 1] != 137 && dungeon[i][j - 1] != 137
+				&& dungeon[i][j + 1] != 138 && dungeon[i][j - 1] != 138
+				&& dungeon[i][j + 1] != 139 && dungeon[i][j - 1] != 139) {
+					dungeon[i][j] = 7;
+					continue;
+				}
+			}
 		}
 	}
-	if (v12 >= 200)
-		return 1;
-	v13 = 11;
-	v7 = 123;
-	v8 = v15 + 40 * v0;
-	do {
-		v9 = v8;
-		v10 = 11;
-		do {
-			v11 = L3ANVIL[v7];
-			if (v11)
-				dungeon[0][v9] = v11;
-			dflags[0][v9] |= DFLAG_EXPLORED;
-			++v7;
-			v9 += 40;
-			--v10;
-		} while (v10);
-		++v8;
-		--v13;
-	} while (v13);
-	setpc_y = v15;
-	setpc_w = 11;
-	setpc_h = 11;
-	setpc_x = v0;
-	return 0;
+}
+
+BOOL DRLG_L3Anvil()
+{
+	int sx, sy, sw, sh, xx, yy, ii, trys;
+	BOOL found;
+
+	sx = random(0, 29);
+	sy = random(0, 29);
+	sw = 11;
+	sh = 11;
+
+	found = FALSE;
+	trys = 0;
+	while(!found && trys < 200) {
+		trys++;
+		found = TRUE;
+		ii = 2;
+		for(yy = 0; yy < sh && found == TRUE; yy++) {
+			for(xx = 0; xx < sw && found == TRUE; xx++) {
+				if(L3ANVIL[ii] != 0 && dungeon[xx + sx][yy + sy] != L3ANVIL[ii]) {
+					found = FALSE;
+				}
+				if(dflags[xx + sx][yy + sy] != 0) {
+					found = FALSE;
+				}
+				ii++;
+			}
+		}
+		if(!found) {
+			sx++;
+			if(sx == 29) {
+				sx = 0;
+				sy++;
+				if(sy == 29) {
+					sy = 0;
+				}
+			}
+		}
+	}
+	if(trys >= 200) {
+		return TRUE;
+	}
+
+	ii = 123;
+	for(yy = 0; yy < sh; yy++) {
+		for(xx = 0; xx < sw; xx++) {
+			if(L3ANVIL[ii] != 0) {
+				dungeon[xx + sx][yy + sy] = L3ANVIL[ii];
+			}
+			dflags[xx + sx][yy + sy] |= 0x80;
+			ii++;
+		}
+	}
+
+	setpc_x = sx;
+	setpc_y = sy;
+	setpc_w = sw;
+	setpc_h = sh;
+
+	return FALSE;
 }
 // 5CF330: using guessed type int setpc_h;
 // 5CF334: using guessed type int setpc_w;
@@ -307,61 +255,41 @@ void FixL3HallofHeroes()
 
 void DRLG_L3LockRec(int x, int y)
 {
-	int v2;   // esi
-	int v3;   // edi
-	char *v4; // eax
-	char *v5; // ebp
-
-	v2 = x;
-	v3 = y;
-	v4 = &lockout[x][y];
-	if (*v4) {
-		v5 = &lockout[x][y];
-		do {
-			*v4 = 0;
-			++lockoutcnt;
-			DRLG_L3LockRec(v2, v3 - 1);
-			DRLG_L3LockRec(v2, v3 + 1);
-			DRLG_L3LockRec(v2 - 1, v3);
-			v5 += 40;
-			++v2;
-			v4 = v5;
-		} while (*v5);
+	if(!lockout[x][y]) {
+		return;
 	}
+
+	lockout[x][y] = FALSE;
+	lockoutcnt++;
+	DRLG_L3LockRec(x, y - 1);
+	DRLG_L3LockRec(x, y + 1);
+	DRLG_L3LockRec(x - 1, y);
+	DRLG_L3LockRec(x + 1, y);
 }
 // 528380: using guessed type int lockoutcnt;
 
 BOOL DRLG_L3Lockout()
 {
-	int v0;        // esi
-	signed int v1; // edx
-	signed int v2; // ecx
-	signed int v3; // eax
-	int x;         // [esp+4h] [ebp-8h]
-	int y;         // [esp+8h] [ebp-4h]
+	int i, j, t, fx, fy;
 
-	v0 = 0;
-	v1 = 0;
-	do {
-		v2 = 0;
-		v3 = v1;
-		do {
-			if (dungeon[0][v3]) {
-				lockout[0][v3] = 1;
-				x = v2;
-				y = v1;
-				++v0;
+	t = 0;
+	for(j = 0; j < DMAXY; j++) {
+		for(i = 0; i < DMAXX; i++) {
+			if(dungeon[i][j] != 0) {
+				lockout[i][j] = TRUE;
+				fx = i;
+				fy = j;
+				t++;
 			} else {
-				lockout[0][v3] = 0;
+				lockout[i][j] = FALSE;
 			}
-			++v2;
-			v3 += 40;
-		} while (v2 < 40);
-		++v1;
-	} while (v1 < 40);
+		}
+	}
+
 	lockoutcnt = 0;
-	DRLG_L3LockRec(x, y);
-	return v0 == lockoutcnt;
+	DRLG_L3LockRec(fx, fy);
+
+	return t == lockoutcnt;
 }
 // 528380: using guessed type int lockoutcnt;
 
@@ -676,19 +604,11 @@ void DRLG_L3CreateBlock(int x, int y, int obs, int dir)
 
 void DRLG_L3FloorArea(int x1, int y1, int x2, int y2)
 {
-	int i;    // esi
-	char *v5; // edx
-	int v6;   // eax
+	int i, j;
 
-	for (i = y1; i <= y2; ++i) {
-		if (x1 <= x2) {
-			v5 = (char *)&dungeon[x1][i];
-			v6 = x2 - x1 + 1;
-			do {
-				*v5 = 1;
-				v5 += 40;
-				--v6;
-			} while (v6);
+	for(j = y1; j <= y2; j++) {
+		for(i = x1; i <= x2; i++) {
+			dungeon[i][j] = 1;
 		}
 	}
 }
@@ -1269,53 +1189,24 @@ BOOL DRLG_L3Spawn(int x, int y, int *totarea)
 
 void DRLG_L3PoolFix()
 {
-	signed int v0;    // esi
-	char *v1;         // eax
-	char *v2;         // edi
-	unsigned char v3; // cl
-	char v4;          // cl
-	char v5;          // cl
-	char v6;          // cl
-	char v7;          // cl
-	char v8;          // cl
-	char v9;          // al
-	BOOLEAN v10;      // zf
-	signed int v11;   // [esp+10h] [ebp-4h]
+	int dunx, duny;
 
-	v0 = 0;
-	do {
-		v1 = (char *)&dungeon[-1][v0];
-		v11 = 40;
-		do {
-			v2 = v1 + 40;
-			if (v1[40] == 8) {
-				v3 = *(v1 - 1);
-				if (v3 >= 0x19u && v3 <= 0x29u && (unsigned char)*v1 >= 0x19u && (unsigned char)*v1 <= 0x29u) {
-					v4 = v1[1];
-					if ((unsigned char)v4 >= 0x19u && (unsigned char)v4 <= 0x29u) {
-						v5 = v1[39];
-						if ((unsigned char)v5 >= 0x19u && (unsigned char)v5 <= 0x29u) {
-							v6 = v1[41];
-							if ((unsigned char)v6 >= 0x19u && (unsigned char)v6 <= 0x29u) {
-								v7 = v1[79];
-								if ((unsigned char)v7 >= 0x19u && (unsigned char)v7 <= 0x29u) {
-									v8 = v1[80];
-									if ((unsigned char)v8 >= 0x19u && (unsigned char)v8 <= 0x29u) {
-										v9 = v1[81];
-										if ((unsigned char)v9 >= 0x19u && (unsigned char)v9 <= 0x29u)
-											*v2 = 33;
-									}
-								}
-							}
-						}
-					}
+	for(duny = 0; duny < DMAXY; duny++) {
+		for(dunx = 0; dunx < DMAXX; dunx++) {
+			if(dungeon[dunx][duny] == 8) {
+				if(dungeon[dunx - 1][duny - 1] >= 25 && dungeon[dunx - 1][duny - 1] <= 41
+				&& dungeon[dunx - 1][duny] >= 25 && dungeon[dunx - 1][duny] <= 41
+				&& dungeon[dunx - 1][duny + 1] >= 25 && dungeon[dunx - 1][duny + 1] <= 41
+				&& dungeon[dunx][duny - 1] >= 25 && dungeon[dunx][duny - 1] <= 41
+				&& dungeon[dunx][duny + 1] >= 25 && dungeon[dunx][duny + 1] <= 41
+				&& dungeon[dunx + 1][duny - 1] >= 25 && dungeon[dunx + 1][duny - 1] <= 41
+				&& dungeon[dunx + 1][duny] >= 25 && dungeon[dunx + 1][duny] <= 41
+				&& dungeon[dunx + 1][duny + 1] >= 25 && dungeon[dunx + 1][duny + 1] <= 41) {
+					dungeon[dunx][duny] = 33;
 				}
 			}
-			v10 = v11-- == 1;
-			v1 = v2;
-		} while (!v10);
-		++v0;
-	} while (v0 < 40);
+		}
+	}
 }
 
 BOOL DRLG_L3PlaceMiniSet(const unsigned char *miniset, int tmin, int tmax, int cx, int cy, BOOL setview, int ldir)

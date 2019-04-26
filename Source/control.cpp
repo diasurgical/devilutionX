@@ -2882,23 +2882,26 @@ void control_reset_talk()
 // 4B8960: using guessed type int talkflag;
 // 52571C: using guessed type int drawpanflag;
 
-int control_talk_last_key(int a1)
+BOOL control_talk_last_key(int vkey)
 {
-	char v1;       // bl
-	signed int v3; // eax
+	int result;
 
-	v1 = a1;
-	if (gbMaxPlayers == 1 || !talkflag || (unsigned int)a1 < VK_SPACE)
-		return 0;
-	v3 = strlen(sgszTalkMsg);
-	if (v3 < 78) {
-		sgszTalkMsg[v3 + 1] = 0;
-		sgszTalkMsg[v3] = v1;
+	if (gbMaxPlayers == 1)
+		return FALSE;
+
+	if (!talkflag)
+		return FALSE;
+
+	if ((DWORD)vkey < VK_SPACE)
+		return FALSE;
+
+	result = strlen(sgszTalkMsg);
+	if (result < 78) {
+		sgszTalkMsg[result] = vkey;
+		sgszTalkMsg[result + 1] = '\0';
 	}
-	return 1;
+	return TRUE;
 }
-// 4B8960: using guessed type int talkflag;
-// 679660: using guessed type char gbMaxPlayers;
 
 int control_presskeys(int a1)
 {

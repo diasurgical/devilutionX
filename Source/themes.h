@@ -4,7 +4,7 @@
 
 extern int numthemes; // idb
 extern BOOL armorFlag;
-extern WORD ThemeGoodIn[4];
+extern BOOL ThemeGoodIn[4];
 extern BOOL weaponFlag;
 extern BOOL treasureFlag;
 extern BOOL mFountainFlag;

@@ -5,11 +5,11 @@
 extern char lavapool;  // weak
 extern int abyssx;     // weak
 extern int lockoutcnt; // weak
-extern char lockout[40][40];
+extern BOOLEAN lockout[40][40];
 
 void AddFenceDoors();
 void FenceDoorFix();
-int DRLG_L3Anvil();
+BOOL DRLG_L3Anvil();
 void FixL3Warp();
 void FixL3HallofHeroes();
 void DRLG_L3LockRec(int x, int y);

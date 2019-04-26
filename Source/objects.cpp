@@ -1915,23 +1915,22 @@ void Obj_StopAnim(int i)
 
 void Obj_Door(int i)
 {
-	int dy; // edx
-	int dx; // eax
+	int dx, dy;
 
-	if (object[i]._oVar4) {
+	if (!object[i]._oVar4) {
+		object[i]._oMissFlag = FALSE;
+		object[i]._oSelFlag = 3;
+	} else {
 		dy = object[i]._oy;
 		dx = object[i]._ox;
 		object[i]._oSelFlag = 2;
 		object[i]._oMissFlag = TRUE;
-		object[i]._oVar4 = ((dItem[dx][dy] == 0
-		                        && dDead[dx][dy] == 0
-		                        && dPlayer[dx][dy] == 0
-		                        && dMonster[dx][dy] == 0)
-		                       == 0)
-		    + 1;
-	} else {
-		object[i]._oMissFlag = FALSE;
-		object[i]._oSelFlag = 3;
+		object[i]._oVar4 = (((dItem[dx][dy] == 0 ? 1 : 0)
+					& (dDead[dx][dy] == 0 ? 1 : 0)
+					& (dPlayer[dx][dy] == 0 ? 1 : 0)
+					& (dMonster[dx][dy] == 0 ? 1 : 0))
+				== 0)
+			+ 1;
 	}
 }
 
@@ -2175,40 +2174,54 @@ void ProcessObjects()
 
 void ObjSetMicro(int dx, int dy, int pn)
 {
-	WORD *defs, *v;
+	WORD *v;
+	MICROS *defs;
 	int i;
 
 	dPiece[dx][dy] = pn;
 	pn--;
-	defs = dpiece_defs_map_1[IsometricCoord(dx, dy)];
+	defs = &dpiece_defs_map_1[IsometricCoord(dx, dy)];
 	if (leveltype != DTYPE_HELL) {
 		v = (WORD *)pLevelPieces + 10 * pn;
 		for (i = 0; i < 10; i++) {
-			defs[i] = v[(i & 1) - (i & 0xE) + 8];
+			defs->mt[i] = v[(i & 1) - (i & 0xE) + 8];
 		}
 	} else {
 		v = (WORD *)pLevelPieces + 16 * pn;
 		for (i = 0; i < 16; i++) {
-			defs[i] = v[(i & 1) - (i & 0xE) + 14];
+			defs->mt[i] = v[(i & 1) - (i & 0xE) + 14];
 		}
 	}
 }
 
 void objects_set_door_piece(int x, int y)
 {
-	int v2;   // edi
-	int v3;   // ST10_4
-	int v4;   // ST18_4
-	short v5; // ST14_2
-	short v6; // ST0C_2
+	int pn;
+	long v1, v2;
 
-	v2 = y;
-	v3 = x;
-	v4 = dPiece[x][y] - 1;
-	v5 = *((_WORD *)pLevelPieces + 10 * (unsigned short)v4 + 8);
-	v6 = *((_WORD *)pLevelPieces + 10 * (unsigned short)v4 + 9);
-	dpiece_defs_map_1[0][16 * IsometricCoord(x, y)] = v5;
-	dpiece_defs_map_1[0][16 * IsometricCoord(v3, v2) + 1] = v6;
+	pn = dPiece[x][y] - 1;
+
+#ifdef USE_ASM
+	__asm {
+	mov		esi, pLevelPieces
+	xor		eax, eax
+	mov		ax, word ptr pn
+	mov		ebx, 20
+	mul		ebx
+	add		esi, eax
+	add		esi, 16
+	xor		eax, eax
+	lodsw
+	mov		word ptr v1, ax
+	lodsw
+	mov		word ptr v2, ax
+	}
+#else
+	v1 = *((WORD *)pLevelPieces + 10 * pn + 8);
+	v2 = *((WORD *)pLevelPieces + 10 * pn + 9);
+#endif
+	dpiece_defs_map_1[IsometricCoord(x, y)].mt[0] = v1;
+	dpiece_defs_map_1[IsometricCoord(x, y)].mt[1] = v2;
 }
 
 void ObjSetMini(int x, int y, int v)
@@ -4035,31 +4048,32 @@ void OperateWeaponRack(int pnum, int i, BOOL sendmsg)
 		return;
 	SetRndSeed(object[i]._oRndSeed);
 
-	switch (random(0, 4)) {
-	case ITYPE_BOW - 1:
-		weaponType = ITYPE_BOW;
+	switch (random(0, 4) + 1) {
+	case ITYPE_SWORD:
+		weaponType = ITYPE_SWORD;
 		break;
-	case ITYPE_AXE - 1:
+	case ITYPE_AXE:
 		weaponType = ITYPE_AXE;
 		break;
-	case ITYPE_MACE - 1:
-		weaponType = ITYPE_MACE;
+	case ITYPE_BOW:
+		weaponType = ITYPE_BOW;
 		break;
-	case ITYPE_SWORD - 1:
-		weaponType = ITYPE_SWORD;
+	case ITYPE_MACE:
+		weaponType = ITYPE_MACE;
 		break;
 	}
 
 	object[i]._oAnimFrame++;
 	object[i]._oSelFlag = 0;
-	if (!deltaload) {
-		if (leveltype > 1)
-			CreateTypeItem(object[i]._ox, object[i]._oy, 1, weaponType, 0, sendmsg, 0);
-		else
-			CreateTypeItem(object[i]._ox, object[i]._oy, 0, weaponType, 0, sendmsg, 0);
-		if (pnum == myplr)
-			NetSendCmdParam1(FALSE, CMD_OPERATEOBJ, i);
-	}
+	if (deltaload)
+		return;
+
+	if (leveltype > 1)
+		CreateTypeItem(object[i]._ox, object[i]._oy, 1, weaponType, 0, sendmsg, 0);
+	else
+		CreateTypeItem(object[i]._ox, object[i]._oy, 0, weaponType, 0, sendmsg, 0);
+	if (pnum == myplr)
+		NetSendCmdParam1(FALSE, CMD_OPERATEOBJ, i);
 }
 // 676190: using guessed type int deltaload;
 
@@ -4505,13 +4519,13 @@ void SyncL1Doors(int i)
 {
 	int x, y;
 
-	if (object[i]._oVar4 != 0) {
+	if (object[i]._oVar4 == 0) {
 		object[i]._oMissFlag = FALSE;
 		return;
 	}
 
-	y = object[i]._oy;
 	x = object[i]._ox;
+	y = object[i]._oy;
 	object[i]._oMissFlag = TRUE;
 	object[i]._oSelFlag = 2;
 	if (object[i]._otype == OBJ_L1LDOOR) {

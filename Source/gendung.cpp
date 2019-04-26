@@ -13,7 +13,7 @@ BYTE *pSpeedCels;
 int nlevel_frames; // weak
 char pdungeon[40][40];
 char dDead[MAXDUNX][MAXDUNY];
-WORD dpiece_defs_map_1[MAXDUNX * MAXDUNY][16];
+MICROS dpiece_defs_map_1[MAXDUNX * MAXDUNY];
 char dPreLight[MAXDUNX][MAXDUNY];
 char TransVal; // weak
 int MicroTileLen;
@@ -67,7 +67,7 @@ int setpc_y;     // idb
 char dMissile[MAXDUNX][MAXDUNY];
 int dminx; // weak
 int dminy; // weak
-WORD dpiece_defs_map_2[MAXDUNX][MAXDUNY][16];
+MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
 
 void FillSolidBlockTbls()
 {
@@ -128,8 +128,8 @@ void MakeSpeedCels()
 	int total_frames, blocks, total_size, frameidx, lfs_adder, blk_cnt, currtile, nDataSize;
 	WORD m;
 	BOOL blood_flag;
-	WORD *pMap;
 	DWORD *pFrameTable;
+	MICROS *pMap;
 #ifndef USE_ASM
 	int k, l;
 	BYTE width, pix;
@@ -150,10 +150,10 @@ void MakeSpeedCels()
 	for (y = 0; y < MAXDUNY; y++) {
 		for (x = 0; x < MAXDUNX; x++) {
 			for (i = 0; i < blocks; i++) {
-				pMap = dpiece_defs_map_2[x][y];
-				if (pMap[i]) {
-					level_frame_count[pMap[i] & 0xFFF]++;
-					level_frame_types[pMap[i] & 0xFFF] = pMap[i] & 0x7000;
+				pMap = &dpiece_defs_map_2[x][y];
+				if (pMap->mt[i]) {
+					level_frame_count[pMap->mt[i] & 0xFFF]++;
+					level_frame_types[pMap->mt[i] & 0xFFF] = pMap->mt[i] & 0x7000;
 				}
 			}
 		}
@@ -428,12 +428,12 @@ void MakeSpeedCels()
 	for (y = 0; y < MAXDUNY; y++) {
 		for (x = 0; x < MAXDUNX; x++) {
 			if (dPiece[x][y]) {
-				pMap = dpiece_defs_map_2[x][y];
+				pMap = &dpiece_defs_map_2[x][y];
 				for (i = 0; i < blocks; i++) {
-					if (pMap[i]) {
+					if (pMap->mt[i]) {
 						for (m = 0; m < total_frames; m++) {
-							if ((pMap[i] & 0xFFF) == tile_defs[m]) {
-								pMap[i] = m + level_frame_types[m] + 0x8000;
+							if ((pMap->mt[i] & 0xFFF) == tile_defs[m]) {
+								pMap->mt[i] = m + level_frame_types[m] + 0x8000;
 								m = total_frames;
 							}
 						}
@@ -494,13 +494,11 @@ int IsometricCoord(int x, int y)
 
 void SetSpeedCels()
 {
-	int i, x, y;
+	int x, y;
 
 	for (x = 0; x < MAXDUNX; x++) {
 		for (y = 0; y < MAXDUNY; y++) {
-			for (i = 0; i < 16; i++) {
-				dpiece_defs_map_1[IsometricCoord(x, y)][i] = dpiece_defs_map_2[x][y][i];
-			}
+			dpiece_defs_map_1[IsometricCoord(x, y)] = dpiece_defs_map_2[x][y];
 		}
 	}
 }
@@ -508,7 +506,8 @@ void SetSpeedCels()
 void SetDungeonMicros()
 {
 	int i, x, y, lv, blocks;
-	WORD *pMap, *pPiece;
+	WORD *pPiece;
+	MICROS *pMap;
 
 	if (leveltype != DTYPE_HELL) {
 		MicroTileLen = 10;
@@ -521,7 +520,7 @@ void SetDungeonMicros()
 	for (y = 0; y < MAXDUNY; y++) {
 		for (x = 0; x < MAXDUNX; x++) {
 			lv = dPiece[x][y];
-			pMap = dpiece_defs_map_2[x][y];
+			pMap = &dpiece_defs_map_2[x][y];
 			if (lv) {
 				lv--;
 				if (leveltype != DTYPE_HELL)
@@ -529,10 +528,10 @@ void SetDungeonMicros()
 				else
 					pPiece = (WORD *)&pLevelPieces[32 * lv];
 				for (i = 0; i < blocks; i++)
-					pMap[i] = pPiece[(i & 1) + blocks - 2 - (i & 0xE)];
+					pMap->mt[i] = pPiece[(i & 1) + blocks - 2 - (i & 0xE)];
 			} else {
 				for (i = 0; i < blocks; i++)
-					pMap[i] = 0;
+					pMap->mt[i] = 0;
 			}
 		}
 	}

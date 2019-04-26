@@ -13,7 +13,7 @@ extern BYTE *pSpeedCels;
 extern int nlevel_frames; // weak
 extern char pdungeon[40][40];
 extern char dDead[MAXDUNX][MAXDUNY];
-extern WORD dpiece_defs_map_1[MAXDUNX * MAXDUNY][16];
+extern MICROS dpiece_defs_map_1[MAXDUNX * MAXDUNY];
 extern char dPreLight[MAXDUNX][MAXDUNY];
 extern char TransVal; // weak
 extern int MicroTileLen;
@@ -67,7 +67,7 @@ extern int setpc_y;     // idb
 extern char dMissile[MAXDUNX][MAXDUNY];
 extern int dminx; // weak
 extern int dminy; // weak
-extern WORD dpiece_defs_map_2[MAXDUNX][MAXDUNY][16];
+extern MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
 
 void FillSolidBlockTbls();
 void MakeSpeedCels();

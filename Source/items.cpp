@@ -1179,61 +1179,30 @@ BOOL ItemMinStats(PlayerStruct *p, ItemStruct *x)
 
 void CalcPlrBookVals(int p)
 {
-	int v1;            // esi
-	int v2;            // ebx
-	int *v3;           // edi
-	int v5;            // esi
-	int *v6;           // edi
-	int v7;            // eax
-	unsigned char v8;  // cl
-	unsigned char v9;  // cl
-	int v10;           // eax
-	int v12;           // [esp+Ch] [ebp-Ch]
-	int v13;           // [esp+10h] [ebp-8h]
-	unsigned char v14; // [esp+17h] [ebp-1h]
+	int i, slvl;
 
-	v1 = p;
 	if (!currlevel) {
-		v2 = 1;
-		if (witchitem[1]._itype != -1) {
-			v3 = &witchitem[1]._iStatFlag;
-			do {
-				WitchBookLevel(v2);
-				*v3 = StoreStatOk((ItemStruct *)(v3 - 89));
-				v3 += 92;
-				++v2;
-			} while (*(v3 - 87) != -1);
+		for (i = 1; witchitem[i]._itype != ITYPE_NONE; i++) {
+			WitchBookLevel(i);
+			witchitem[i]._iStatFlag = StoreStatOk(&witchitem[i]);
 		}
 	}
-	v5 = v1;
-	v12 = 0;
-	if (plr[v5]._pNumInv > 0) {
-		v6 = &plr[v5].InvList[0]._iSpell;
-		do {
-			if (!*(v6 - 54) && *(v6 - 1) == 24) {
-				v7 = *v6;
-				v8 = spelldata[*v6].sMinInt;
-				*((_BYTE *)v6 + 129) = v8;
-				v13 = plr[0]._pSplLvl[v7 + v5 * 21720];
-				if (plr[0]._pSplLvl[v7 + v5 * 21720]) {
-					do {
-						v9 = 20 * v8 / 100 + v8;
-						--v13;
-						v14 = v9;
-						v10 = v9 + 20 * v9 / 100;
-						v8 = -1;
-						if (v10 <= 255)
-							v8 = v14;
-						else
-							v13 = 0;
-					} while (v13);
-					*((_BYTE *)v6 + 129) = v8;
+
+	for (i = 0; i < plr[p]._pNumInv; i++) {
+		if (plr[p].InvList[i]._itype == ITYPE_NONE && plr[p].InvList[i]._iMiscId == IMISC_BOOK) {
+			plr[p].InvList[i]._iMinMag = spelldata[plr[p].InvList[i]._iSpell].sMinInt;
+			slvl = plr[p]._pSplLvl[plr[p].InvList[i]._iSpell];
+
+			while (slvl) {
+				plr[p].InvList[i]._iMinMag += 20 * plr[p].InvList[i]._iMinMag / 100;
+				slvl--;
+				if (plr[p].InvList[i]._iMinMag + 20 * plr[p].InvList[i]._iMinMag / 100 > 255) {
+					plr[p].InvList[i]._iMinMag = 255;
+					slvl = 0;
 				}
-				v6[33] = ItemMinStats(&plr[v5], (ItemStruct *)(v6 - 56));
 			}
-			++v12;
-			v6 += 92;
-		} while (v12 < plr[v5]._pNumInv);
+			plr[p].InvList[i]._iStatFlag = ItemMinStats(&plr[p], &plr[p].InvList[i]);
+		}
 	}
 }
 
@@ -1585,58 +1554,40 @@ void CalcItemValue(int i)
 
 void GetBookSpell(int i, int lvl)
 {
-	int v2;          // edi
-	int v3;          // esi
-	int v4;          // eax
-	int v5;          // edx
-	signed int v6;   // ecx
-	int v7;          // esi
-	const char **v8; // ebx
-	int v9;          // eax
-	char v10;        // al
-	int v11;         // [esp+8h] [ebp-4h]
+	int rv, s, bs;
 
-	v2 = lvl;
-	v3 = i;
 	if (!lvl)
-		v2 = lvl + 1;
-	v4 = random(14, MAX_SPELLS) + 1;
-LABEL_13:
-	v6 = 1;
-	while (v4 > 0) {
-		v5 = spelldata[v6].sBookLvl;
-		if (v5 != -1 && v2 >= v5) {
-			--v4;
-			v11 = v6;
+		lvl = 1;
+	rv = random(14, MAX_SPELLS) + 1;
+	s = 1;
+	while (rv > 0) {
+		if (spelldata[s].sBookLvl != -1 && lvl >= spelldata[s].sBookLvl) {
+			rv--;
+			bs = s;
 		}
-		++v6;
+		s++;
 		if (gbMaxPlayers == 1) {
-			if (v6 == SPL_RESURRECT)
-				v6 = SPL_TELEKINESIS;
-			if (v6 == SPL_HEALOTHER)
-				v6 = SPL_FLARE;
+			if (s == SPL_RESURRECT)
+				s = SPL_TELEKINESIS;
+			if (s == SPL_HEALOTHER)
+				s = SPL_FLARE;
 		}
-		if (v6 == MAX_SPELLS)
-			goto LABEL_13;
+		if (s == MAX_SPELLS)
+			s = 1;
 	}
-	v7 = v3;
-	v8 = (const char **)&spelldata[v11].sNameText;
-	strcat(item[v7]._iName, *v8);
-	strcat(item[v7]._iIName, *v8);
-	item[v7]._iSpell = v11;
-	item[v7]._iMinMag = spelldata[v11].sMinInt;
-	v9 = spelldata[v11].sBookCost;
-	item[v7]._ivalue += v9;
-	item[v7]._iIvalue += v9;
-	v10 = spelldata[v11].sType;
-	if (v10 == STYPE_FIRE)
-		item[v7]._iCurs = ICURS_BOOK_RED;
-	if (v10 == STYPE_LIGHTNING)
-		item[v7]._iCurs = ICURS_BOOK_BLUE;
-	if (v10 == STYPE_MAGIC)
-		item[v7]._iCurs = ICURS_BOOK_GREY;
+	strcat(item[i]._iName, spelldata[bs].sNameText);
+	strcat(item[i]._iIName, spelldata[bs].sNameText);
+	item[i]._iSpell = bs;
+	item[i]._iMinMag = spelldata[bs].sMinInt;
+	item[i]._ivalue += spelldata[bs].sBookCost;
+	item[i]._iIvalue += spelldata[bs].sBookCost;
+	if (spelldata[bs].sType == STYPE_FIRE)
+		item[i]._iCurs = ICURS_BOOK_RED;
+	if (spelldata[bs].sType == STYPE_LIGHTNING)
+		item[i]._iCurs = ICURS_BOOK_BLUE;
+	if (spelldata[bs].sType == STYPE_MAGIC)
+		item[i]._iCurs = ICURS_BOOK_GREY;
 }
-// 679660: using guessed type char gbMaxPlayers;
 
 void GetStaffPower(int i, int lvl, int bs, unsigned char onlygood)
 {
@@ -4580,15 +4531,19 @@ void RecreateWitchItem(int ii, int idx, int lvl, int iseed)
 
 void RecreateHealerItem(int ii, int idx, int lvl, int iseed)
 {
-	if (idx != IDI_HEAL && idx != IDI_FULLHEAL && idx != IDI_RESURRECT) {
+	if (idx == IDI_HEAL || idx == IDI_FULLHEAL || idx == IDI_RESURRECT) {
+		GetItemAttrs(ii, idx, lvl);
+	} else {
 		SetRndSeed(iseed);
 		idx = RndHealerItem(lvl) - 1;
+		GetItemAttrs(ii, idx, lvl);
 	}
-	GetItemAttrs(ii, idx, lvl);
+
 	item[ii]._iCreateInfo = lvl | 0x4000;
-	item[ii]._iSeed = iseed;
+	item[ii]._iSeed       = iseed;
 	item[ii]._iIdentified = TRUE;
 }
+
 
 void RecreateTownItem(int ii, int idx, unsigned short icreateinfo, int iseed, int ivalue)
 {
@@ -4609,21 +4564,28 @@ void RecalcStoreStats()
 	int i;
 
 	for (i = 0; i < 20; i++) {
-		if (smithitem[i]._itype != -1)
+		if (smithitem[i]._itype != ITYPE_NONE) {
 			smithitem[i]._iStatFlag = StoreStatOk(&smithitem[i]);
-		if (witchitem[i]._itype != -1)
-			witchitem[i]._iStatFlag = StoreStatOk(&witchitem[i]);
-		if (healitem[i]._itype != -1)
-			healitem[i]._iStatFlag = StoreStatOk(&healitem[i]);
+		}
 	}
-
 	for (i = 0; i < 6; i++) {
-		if (premiumitem[i]._itype != -1)
+		if (premiumitem[i]._itype != ITYPE_NONE) {
 			premiumitem[i]._iStatFlag = StoreStatOk(&premiumitem[i]);
+		}
 	}
-
+	for (i = 0; i < 20; i++) {
+		if (witchitem[i]._itype != ITYPE_NONE) {
+			witchitem[i]._iStatFlag = StoreStatOk(&witchitem[i]);
+		}
+	}
+	for (i = 0; i < 20; i++) {
+		if (healitem[i]._itype != ITYPE_NONE) {
+			healitem[i]._iStatFlag = StoreStatOk(&healitem[i]);
+		}
+	}
 	boyitem._iStatFlag = StoreStatOk(&boyitem);
 }
+
 // 6A6BB8: using guessed type int stextscrl;
 // 6AA700: using guessed type int stextdown;
 

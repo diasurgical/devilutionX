@@ -464,33 +464,34 @@ void S_StartSmith()
 
 void S_ScrollSBuy(int idx)
 {
-	int y;
-	char clr;
+	int l, ls;
+	char iclr;
 
+	ls = idx;
 	ClearSText(5, 21);
 	stextup = 5;
 
-	for (y = 5; y < 20; y += 4) {
-		if (smithitem[idx]._itype != -1) {
-			clr = COL_WHITE;
-			if (smithitem[idx]._iMagical) {
-				clr = COL_BLUE;
+	for (l = 5; l < 20; l += 4) {
+		if (smithitem[ls]._itype != ITYPE_NONE) {
+			iclr = COL_WHITE;
+			if (smithitem[ls]._iMagical) {
+				iclr = COL_BLUE;
 			}
 
-			if (!smithitem[idx]._iStatFlag) {
-				clr = COL_RED;
+			if (!smithitem[ls]._iStatFlag) {
+				iclr = COL_RED;
 			}
 
-			if (smithitem[idx]._iMagical) {
-				AddSText(20, y, 0, smithitem[idx]._iIName, clr, 1);
+			if (smithitem[ls]._iMagical) {
+				AddSText(20, l, 0, smithitem[ls]._iIName, iclr, 1);
 			} else {
-				AddSText(20, y, 0, smithitem[idx]._iName, clr, 1);
+				AddSText(20, l, 0, smithitem[ls]._iName, iclr, 1);
 			}
 
-			AddSTextVal(y, smithitem[idx]._iIvalue);
-			PrintStoreItem(&smithitem[idx], y + 1, clr);
-			stextdown = y;
-			idx++;
+			AddSTextVal(l, smithitem[ls]._iIvalue);
+			PrintStoreItem(&smithitem[ls], l + 1, iclr);
+			stextdown = l;
+			ls++;
 		}
 	}
 
@@ -699,29 +700,35 @@ BOOL SmithSellOk(int i)
 
 void S_ScrollSSell(int idx)
 {
-	char clr;
-	int y;
+	int l;
+	char iclr;
 
 	ClearSText(5, 21);
 	stextup = 5;
-	for (y = 5; y < 20; y += 4) {
+
+	for (l = 5; l < 20; l += 4) {
 		if (idx >= storenumh)
 			break;
-		if (storehold[idx]._itype != -1) {
-			clr = 0;
-			if (storehold[idx]._iMagical)
-				clr = 1;
-			if (!storehold[idx]._iStatFlag)
-				clr = 2;
-			if (storehold[idx]._iMagical && storehold[idx]._iIdentified) {
-				AddSText(20, y, 0, storehold[idx]._iIName, clr, 1);
-				AddSTextVal(y, storehold[idx]._iIvalue);
-			} else {
-				AddSText(20, y, 0, storehold[idx]._iName, clr, 1);
-				AddSTextVal(y, storehold[idx]._ivalue);
+		if (storehold[idx]._itype != ITYPE_NONE) {
+			iclr = COL_WHITE;
+			if (storehold[idx]._iMagical) {
+				iclr = COL_BLUE;
 			}
-			PrintStoreItem(&storehold[idx], y + 1, clr);
-			stextdown = y;
+
+			if (!storehold[idx]._iStatFlag) {
+				iclr = COL_RED;
+			}
+
+			if (storehold[idx]._iMagical && storehold[idx]._iIdentified) {
+				AddSText(20, l, 0, storehold[idx]._iIName, iclr, 1);
+				AddSTextVal(l, storehold[idx]._iIvalue);
+			} else {
+				AddSText(20, l, 0, storehold[idx]._iName, iclr, 1);
+				AddSTextVal(l, storehold[idx]._ivalue);
+			}
+
+			PrintStoreItem(&storehold[idx], l + 1, iclr);
+			stextdown = l;
 		}
 		idx++;
 	}
@@ -902,41 +909,40 @@ void S_StartWitch()
 
 void S_ScrollWBuy(int idx)
 {
-	int v1;   // esi
-	int v2;   // edi
-	char *v3; // esi
-	char *v4; // eax
-	int iclr; // [esp+Ch] [ebp-4h]
+	int l, ls;
+	char iclr;
 
-	v1 = idx;
-	v2 = 5;
+	ls = idx;
 	ClearSText(5, 21);
-	v3 = &witchitem[v1]._iMagical;
 	stextup = 5;
-	do {
-		if (*((_DWORD *)v3 - 13) != -1) {
-			_LOBYTE(iclr) = 0;
-			if (*v3)
-				_LOBYTE(iclr) = 1;
-			if (!*((_DWORD *)v3 + 74))
-				_LOBYTE(iclr) = 2;
-			v4 = v3 + 65;
-			if (!*v3)
-				v4 = v3 + 1;
-			AddSText(20, v2, 0, v4, iclr, 1);
-			AddSTextVal(v2, *((_DWORD *)v3 + 35));
-			PrintStoreItem((ItemStruct *)(v3 - 60), v2 + 1, iclr);
-			stextdown = v2;
-			v3 += 368;
+
+	for (l = 5; l < 20; l += 4) {
+		if (witchitem[ls]._itype != ITYPE_NONE) {
+			iclr = COL_WHITE;
+			if (witchitem[ls]._iMagical) {
+				iclr = COL_BLUE;
+			}
+
+			if (!witchitem[ls]._iStatFlag) {
+				iclr = COL_RED;
+			}
+
+			if (witchitem[ls]._iMagical) {
+				AddSText(20, l, 0, witchitem[ls]._iIName, iclr, 1);
+			} else {
+				AddSText(20, l, 0, witchitem[ls]._iName, iclr, 1);
+			}
+
+			AddSTextVal(l, witchitem[ls]._iIvalue);
+			PrintStoreItem(&witchitem[ls], l + 1, iclr);
+			stextdown = l;
+			ls++;
 		}
-		v2 += 4;
-	} while (v2 < 20);
+	}
+
 	if (!stext[stextsel]._ssel && stextsel != 22)
 		stextsel = stextdown;
 }
-// 69F108: using guessed type int stextup;
-// 6A8A28: using guessed type int stextsel;
-// 6AA700: using guessed type int stextdown;
 
 void S_StartWBuy()
 {
@@ -1289,20 +1295,22 @@ void S_StartHealer()
 
 void S_ScrollHBuy(int idx)
 {
-	int i;
+	int l;
 	char iclr;
 
 	ClearSText(5, 21);
 	stextup = 5;
-	for (i = 5; i < 20; i += 4) {
-		if (healitem[idx]._itype != -1) {
+	for (l = 5; l < 20; l += 4) {
+		if (healitem[idx]._itype != ITYPE_NONE) {
 			iclr = COL_WHITE;
-			if (!healitem[idx]._iStatFlag)
+			if (!healitem[idx]._iStatFlag) {
 				iclr = COL_RED;
-			AddSText(20, i, 0, healitem[idx]._iName, iclr, 1);
-			AddSTextVal(i, healitem[idx]._iIvalue);
-			PrintStoreItem(&healitem[idx], i + 1, iclr);
-			stextdown = i;
+			}
+
+			AddSText(20, l, 0, healitem[idx]._iName, iclr, 1);
+			AddSTextVal(l, healitem[idx]._iIvalue);
+			PrintStoreItem(&healitem[idx], l + 1, iclr);
+			stextdown = l;
 			idx++;
 		}
 	}
