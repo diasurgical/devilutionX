@@ -40,6 +40,10 @@ if(WIN32)
   set(DIST ON)
 endif()
 
+if(HAIKU)
+  set(ASAN OFF)
+endif()
+
 if(DIST)
   set(sodium_USE_STATIC_LIBS ON)
 endif()
