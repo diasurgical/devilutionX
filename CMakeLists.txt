@@ -238,6 +238,10 @@ if(WIN32)
   target_compile_options(devilution PUBLIC $<$<CONFIG:Debug>:-gstabs>)
 endif()
 
+if(HAIKU)
+  target_link_libraries(devilutionx PRIVATE network)
+endif()
+
 if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   # Note: In Debug mode, GCC generates spurious memory references that upset Valgrind,
   # these options fix that.
