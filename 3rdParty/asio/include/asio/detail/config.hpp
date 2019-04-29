@@ -1003,7 +1003,8 @@
    || defined(__FreeBSD__) \
    || defined(__NetBSD__) \
    || defined(__OpenBSD__) \
-   || defined(__linux__)
+   || defined(__linux__) \
+   || defined(__HAIKU__) \
 #   define ASIO_HAS_UNISTD_H 1
 #  endif
 # endif // !defined(ASIO_HAS_BOOST_CONFIG)
