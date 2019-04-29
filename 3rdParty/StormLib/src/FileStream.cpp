@@ -23,6 +23,14 @@
 #pragma warning(disable: 4800)                  // 'BOOL' : forcing value to bool 'true' or 'false' (performance warning)
 #endif
 
+#ifdef __HAIKU__
+#define stat64 stat
+#define fstat64 fstat
+#define ftruncate64 ftruncate
+#define off64_t off_t
+#define lseek64 lseek
+#endif
+
 //-----------------------------------------------------------------------------
 // Local defines
 
