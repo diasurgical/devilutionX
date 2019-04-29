@@ -1004,7 +1004,7 @@
    || defined(__NetBSD__) \
    || defined(__OpenBSD__) \
    || defined(__linux__) \
-   || defined(__HAIKU__) \
+   || defined(__HAIKU__)
 #   define ASIO_HAS_UNISTD_H 1
 #  endif
 # endif // !defined(ASIO_HAS_BOOST_CONFIG)
@@ -1216,7 +1216,8 @@
 #  if defined(ASIO_HAS_BOOST_CONFIG) && defined(BOOST_HAS_THREADS)
 #   define ASIO_HAS_THREADS 1
 #  elif defined(__GNUC__) && !defined(__MINGW32__) \
-     && !defined(linux) && !defined(__linux) && !defined(__linux__)
+     && !defined(linux) && !defined(__linux) && !defined(__linux__) \
+     && !defined(__HAIKU__)
 #   define ASIO_HAS_THREADS 1
 #  elif defined(_MT) || defined(__MT__)
 #   define ASIO_HAS_THREADS 1
