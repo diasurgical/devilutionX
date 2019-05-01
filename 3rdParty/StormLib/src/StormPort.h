@@ -102,6 +102,31 @@
 
 #endif
 
+#if !defined(PLATFORM_DEFINED) && defined(__HAIKU__)
+
+  #include <sys/types.h>
+  #include <sys/stat.h>
+  #include <sys/mman.h>
+  #include <fcntl.h>
+  #include <unistd.h>
+  #include <stdint.h>
+  #include <stdlib.h>
+  #include <stdio.h>
+  #include <stdarg.h>
+  #include <string.h>
+  #include <ctype.h>
+  #include <assert.h>
+  #include <errno.h>
+
+  #ifndef __BIG_ENDIAN__
+    #define PLATFORM_LITTLE_ENDIAN
+  #endif
+
+  #define PLATFORM_HAIKU
+  #define PLATFORM_DEFINED                  // The platform is known now
+
+#endif
+
 //-----------------------------------------------------------------------------
 // Assumption: we are not on Windows nor Macintosh, so this must be linux *grin*
 
@@ -199,7 +224,7 @@
 #endif // !PLATFORM_WINDOWS
 
 // 64-bit calls are supplied by "normal" calls on Mac
-#if defined(PLATFORM_MAC)
+#if defined(PLATFORM_MAC) || defined(PLATFORM_HAIKU)
   #define stat64  stat
   #define fstat64 fstat
   #define lseek64 lseek
@@ -209,7 +234,7 @@
 #endif
 
 // Platform-specific error codes for UNIX-based platforms
-#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX)
+#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU)
   #define ERROR_SUCCESS                  0
   #define ERROR_FILE_NOT_FOUND           ENOENT
   #define ERROR_ACCESS_DENIED            EPERM
