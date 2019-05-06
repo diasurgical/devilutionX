@@ -325,7 +325,7 @@ HWND CreateWindowExA(
 	atexit(SDL_Quit);
 
 	DvlIntSetting("fullscreen", &fullscreen);
-	int flags = fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_RESIZABLE;
+	int flags = fullscreen ? SDL_WINDOW_FULLSCREEN : SDL_WINDOW_RESIZABLE;
 
 	int grabInput = 1;
 	DvlIntSetting("grab input", &grabInput);
