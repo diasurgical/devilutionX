@@ -146,9 +146,9 @@ void run_game_loop(unsigned int uMsg)
 
 	while(gbRunGame) {
 		diablo_color_cyc_logic();
-		if(PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE)) {
+		if(PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE, 0)) {
 			SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_ABOVE_NORMAL);
-			while(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+			while(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE, 0)) {
 				if(msg.message == WM_QUIT) {
 					gbRunGameResult = FALSE;
 					gbRunGame = FALSE;
