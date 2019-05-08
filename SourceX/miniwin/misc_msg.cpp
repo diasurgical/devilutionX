@@ -102,8 +102,15 @@ static WINBOOL false_avail()
 	return false;
 }
 
-WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg)
+WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg, int main_menu)
 {
+    static int old_x, old_y, first_run = 1;
+    int diff_x, diff_y;
+    static int x, y;
+	//SDL_ShowCursor(SDL_ENABLE); // for checking desktop cursor position
+	
+    if(main_menu == 1 && first_run == 0) first_run = 1;
+	
 	if (wMsgFilterMin != 0)
 		UNIMPLEMENTED();
 	if (wMsgFilterMax != 0)
@@ -150,19 +157,63 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		lpMsg->lParam = e.key.keysym.mod << 16;
 	} break;
 	case SDL_MOUSEMOTION:
+			
+		if(first_run && !main_menu)
+		{
+                        first_run = 0;
+			old_x = x = e.motion.x;
+			old_y = y = e.motion.y;
+		}
+
+		diff_x = e.motion.x - old_x;
+		diff_y = e.motion.y - old_y;
+		
+		old_x = e.motion.x;
+		old_y = e.motion.y;
+		
+		x += diff_x;
+		y += diff_y;
+		
+		if(x < 0) x = 0;
+		if(x > 640-1) x = 640-1;
+		if(y < 0) y = 0;
+		if(y > 480-1) y = 480-1;
+			
 		lpMsg->message = DVL_WM_MOUSEMOVE;
-		lpMsg->lParam = (e.motion.y << 16) | (e.motion.x & 0xFFFF);
+		lpMsg->lParam = ((y & 0xFFFF) << 16) | (x & 0xFFFF);
 		lpMsg->wParam = keystate_for_mouse(0);
 		break;
 	case SDL_MOUSEBUTTONDOWN: {
 		int button = e.button.button;
+		
+		if(first_run && !main_menu)
+		{
+			first_run = 0;
+			old_x = x = e.button.x;
+			old_y = y = e.button.y;
+		}
+
+		diff_x = e.button.x - old_x;
+		diff_y = e.button.y - old_y;
+		
+		old_x = e.button.x;
+		old_y = e.button.y;
+		
+		x += diff_x;
+		y += diff_y;
+		
+		if(x < 0) x = 0;
+		if(x > 640-1) x = 640-1;
+		if(y < 0) y = 0;
+		if(y > 480-1) y = 480-1;
+		
 		if (button == SDL_BUTTON_LEFT) {
 			lpMsg->message = DVL_WM_LBUTTONDOWN;
-			lpMsg->lParam = (e.button.y << 16) | (e.button.x & 0xFFFF);
+			lpMsg->lParam = ((y & 0xFFFF) << 16) | (x & 0xFFFF);
 			lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
 		} else if (button == SDL_BUTTON_RIGHT) {
 			lpMsg->message = DVL_WM_RBUTTONDOWN;
-			lpMsg->lParam = (e.button.y << 16) | (e.button.x & 0xFFFF);
+			lpMsg->lParam = ((y & 0xFFFF) << 16) | (x & 0xFFFF);
 			lpMsg->wParam = keystate_for_mouse(DVL_MK_RBUTTON);
 		} else {
 			return false_avail();
@@ -170,13 +221,35 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	} break;
 	case SDL_MOUSEBUTTONUP: {
 		int button = e.button.button;
+		
+		if(first_run && !main_menu)
+		{
+			first_run = 0;
+			old_x = x = e.button.x;
+			old_y = y = e.button.y;
+		}
+
+		diff_x = e.button.x - old_x;
+		diff_y = e.button.y - old_y;
+		
+		old_x = e.button.x;
+		old_y = e.button.y;
+		
+		x += diff_x;
+		y += diff_y;
+		
+		if(x < 0) x = 0;
+		if(x > 640-1) x = 640-1;
+		if(y < 0) y = 0;
+		if(y > 480-1) y = 480-1;
+		
 		if (button == SDL_BUTTON_LEFT) {
 			lpMsg->message = DVL_WM_LBUTTONUP;
-			lpMsg->lParam = (e.button.y << 16) | (e.button.x & 0xFFFF);
+			lpMsg->lParam = ((y & 0xFFFF) << 16) | (x & 0xFFFF);
 			lpMsg->wParam = keystate_for_mouse(0);
 		} else if (button == SDL_BUTTON_RIGHT) {
 			lpMsg->message = DVL_WM_RBUTTONUP;
-			lpMsg->lParam = (e.button.y << 16) | (e.button.x & 0xFFFF);
+			lpMsg->lParam = ((y & 0xFFFF) << 16) | (x & 0xFFFF);
 			lpMsg->wParam = keystate_for_mouse(0);
 		} else {
 			return false_avail();
