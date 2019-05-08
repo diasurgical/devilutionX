@@ -802,15 +802,17 @@ void DrawMouse()
 {
 	SDL_GetMouseState(&MouseX, &MouseY);
 
-	float scaleX;
-	SDL_RenderGetScale(renderer, &scaleX, NULL);
-	MouseX /= scaleX;
-	MouseY /= scaleX;
+	if (renderer) {
+		float scaleX;
+		SDL_RenderGetScale(renderer, &scaleX, NULL);
+		MouseX /= scaleX;
+		MouseY /= scaleX;
 
-	SDL_Rect view;
-	SDL_RenderGetViewport(renderer, &view);
-	MouseX -= view.x;
-	MouseY -= view.y;
+		SDL_Rect view;
+		SDL_RenderGetViewport(renderer, &view);
+		MouseX -= view.x;
+		MouseY -= view.y;
+	}
 
 	DrawArt(MouseX, MouseY, &ArtCursor);
 }

@@ -324,8 +324,21 @@ HWND CreateWindowExA(
 	}
 	atexit(SDL_Quit);
 
+	int upscale = 1;
+	DvlIntSetting("upscale", &upscale);
 	DvlIntSetting("fullscreen", &fullscreen);
-	int flags = fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_RESIZABLE;
+
+	int flags = 0;
+	if (upscale) {
+		flags |= fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_RESIZABLE;
+
+		char scaleQuality[2] = "2";
+		DvlStringSetting("scaling quality", scaleQuality, 2);
+		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, scaleQuality);
+	} else if (fullscreen) {
+		printf("fullscreen\n");
+		flags |= SDL_WINDOW_FULLSCREEN;
+	}
 
 	int grabInput = 1;
 	DvlIntSetting("grab input", &grabInput);
@@ -336,22 +349,20 @@ HWND CreateWindowExA(
 	window = SDL_CreateWindow(lpWindowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, nWidth, nHeight, flags);
 	atexit(FakeWMDestroy);
 
-	char scaleQuality[2] = "2";
-	DvlStringSetting("scaling quality", scaleQuality, 2);
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, scaleQuality);
+	if (upscale) {
+		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+		if (renderer == NULL) {
+			SDL_Log("SDL_CreateRenderer: %s\n", SDL_GetError());
+		}
 
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
-	if (renderer == NULL) {
-		SDL_Log("SDL_CreateRenderer: %s\n", SDL_GetError());
-	}
+		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, nWidth, nHeight);
+		if (texture == NULL) {
+			SDL_Log("SDL_CreateTexture: %s\n", SDL_GetError());
+		}
 
-	texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, nWidth, nHeight);
-	if (texture == NULL) {
-		SDL_Log("SDL_CreateTexture: %s\n", SDL_GetError());
-	}
-
-	if (SDL_RenderSetLogicalSize(renderer, nWidth, nHeight) != 0) {
-		SDL_Log("SDL_RenderSetLogicalSize: %s\n", SDL_GetError());
+		if (SDL_RenderSetLogicalSize(renderer, nWidth, nHeight) != 0) {
+			SDL_Log("SDL_RenderSetLogicalSize: %s\n", SDL_GetError());
+		}
 	}
 
 	return window;

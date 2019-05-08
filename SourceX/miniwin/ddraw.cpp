@@ -55,11 +55,17 @@ HRESULT StubDraw::CreateSurface(LPDDSURFACEDESC lpDDSurfaceDesc, LPDIRECTDRAWSUR
 	DUMMY();
 
 	if (!lpDDSurfaceDesc->dwWidth) {
-		SDL_GetRendererOutputSize(renderer, (int *)&lpDDSurfaceDesc->dwWidth, (int *)&lpDDSurfaceDesc->dwHeight);
+		// TODO Get value from render/window
 		lpDDSurfaceDesc->ddpfPixelFormat.dwFlags = SDL_PIXELFORMAT_RGBA8888;
 		lpDDSurfaceDesc->ddpfPixelFormat.dwRGBBitCount = 32;
 
-		surface = SDL_CreateRGBSurfaceWithFormat(0, lpDDSurfaceDesc->dwWidth, lpDDSurfaceDesc->dwHeight, lpDDSurfaceDesc->ddpfPixelFormat.dwRGBBitCount, lpDDSurfaceDesc->ddpfPixelFormat.dwFlags);
+		if (renderer) {
+			SDL_GetRendererOutputSize(renderer, (int *)&lpDDSurfaceDesc->dwWidth, (int *)&lpDDSurfaceDesc->dwHeight);
+			surface = SDL_CreateRGBSurfaceWithFormat(0, lpDDSurfaceDesc->dwWidth, lpDDSurfaceDesc->dwHeight, lpDDSurfaceDesc->ddpfPixelFormat.dwRGBBitCount, lpDDSurfaceDesc->ddpfPixelFormat.dwFlags);
+		} else {
+			SDL_GetWindowSize(window, (int *)&lpDDSurfaceDesc->dwWidth, (int *)&lpDDSurfaceDesc->dwHeight);
+			surface = SDL_GetWindowSurface(window);
+		}
 		if (surface == NULL) {
 			SDL_Log("SDL_CreateRGBSurface: %s\n", SDL_GetError());
 			return (HRESULT)0x80000002L; //DDERR_OUTOFMEMORY
@@ -198,18 +204,23 @@ HRESULT StubSurface::Unlock(LPVOID lpSurfaceData)
 {
 	DUMMY_ONCE();
 	assert(!SDL_MUSTLOCK(surface));
-	if (SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch) != 0) { //pitch is 2560
-		SDL_Log("SDL_UpdateTexture: %s\n", SDL_GetError());
-	}
 
-	// Clear the entire screen to our selected color.
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-	SDL_RenderClear(renderer);
+	if (renderer) {
+		if (SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch) != 0) { //pitch is 2560
+			SDL_Log("SDL_UpdateTexture: %s\n", SDL_GetError());
+		}
 
-	if (SDL_RenderCopy(renderer, texture, NULL, NULL) != 0) {
-		SDL_Log("SDL_RenderCopy: %s\n", SDL_GetError());
+		// Clear buffer to avoid artifacts in case the window was resized
+		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // TODO only do this if window was resized
+		SDL_RenderClear(renderer);
+
+		if (SDL_RenderCopy(renderer, texture, NULL, NULL) != 0) {
+			SDL_Log("SDL_RenderCopy: %s\n", SDL_GetError());
+		}
+		SDL_RenderPresent(renderer);
+	} else {
+		SDL_UpdateWindowSurface(window);
 	}
-	SDL_RenderPresent(renderer);
 
 	return DVL_S_OK;
 }
