@@ -29,7 +29,7 @@ void play_movie(char *pszMovie, BOOL user_can_close)
 		while (video_stream) {
 			if (!gbActive || user_can_close && !movie_playing)
 				break;
-			while (PeekMessage(&Msg, NULL, 0, 0, PM_REMOVE)) {
+			while (PeekMessage(&Msg, NULL, 0, 0, PM_REMOVE, 1)) {
 				if (Msg.message != WM_QUIT) {
 					TranslateMessage(&Msg);
 					DispatchMessage(&Msg);
