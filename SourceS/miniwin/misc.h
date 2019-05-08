@@ -260,7 +260,7 @@ WINBOOL WINAPI ReleaseCapture();
 
 SHORT WINAPI GetAsyncKeyState(int vKey);
 
-WINBOOL WINAPI PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg);
+WINBOOL WINAPI PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg, int main_menu);
 
 WINBOOL WINAPI TranslateMessage(const MSG *lpMsg);
 LRESULT WINAPI DispatchMessageA(const MSG *lpMsg);
