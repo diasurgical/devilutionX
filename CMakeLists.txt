@@ -269,6 +269,9 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   target_compile_options(devilution PRIVATE -fno-aggressive-loop-optimizations)
 endif()
 
+target_compile_options(devilution PRIVATE -fsigned-char)
+target_compile_options(devilutionx PRIVATE -fsigned-char)
+
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   # Style issues
   target_compile_options(devilutionx PRIVATE -Wno-parentheses -Wno-logical-op-parentheses -Wno-bitwise-op-parentheses)
