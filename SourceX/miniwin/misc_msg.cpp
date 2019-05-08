@@ -104,12 +104,12 @@ static WINBOOL false_avail()
 
 WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg, int main_menu)
 {
-    static int old_x, old_y, first_run = 1;
-    int diff_x, diff_y;
-    static int x, y;
+	static int old_x, old_y, first_run = 1;
+	int diff_x, diff_y;
+	static int x, y;
 	//SDL_ShowCursor(SDL_ENABLE); // for checking desktop cursor position
 	
-    if(main_menu == 1 && first_run == 0) first_run = 1;
+	if(main_menu == 1 && first_run == 0) first_run = 1;
 	
 	if (wMsgFilterMin != 0)
 		UNIMPLEMENTED();
