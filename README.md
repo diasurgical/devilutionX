@@ -23,7 +23,7 @@ Please keep in mind that this is still being worked on and is missing parts of U
 
 ### Installing dependencies on Debian and Ubuntu
 ```
-sudo apt-get install cmake g++-multilib libsdl2-dev:i386 libsdl2-mixer-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev libsodium-dev:i386
+sudo apt-get install cmake g++-multilib libsdl2-mixer-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev libsodium-dev:i386
 ```
 ### Installing dependencies on Fedora
 ```
@@ -104,7 +104,11 @@ Select `Build devilution.exe` from the `Build` menu.
 
 ### Installing dependencies on Debian and Ubuntu
 ```
-sudo apt-get install cmake g++ libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev libsodium-dev
+sudo apt-get install cmake g++ libsdl2-mixer-dev libsdl2-ttf-dev libsodium-dev
+```
+### Installing dependencies on Fedora
+```
+sudo dnf install cmake glibc-devel SDL2-devel SDL2_ttf-devel SDL2_mixer-devel libsodium-devel libasan
 ```
 ### Compiling
 ```
@@ -124,6 +128,21 @@ mkdir build
 cd build
 cmake ..
 make -j$(sysctl -n hw.physicalcpu)
+```
+</details>
+<details><summary>FreeBSD</summary>
+*Note: At the moment this only appears to work from a 32bit system.*
+
+### Installing dependencies
+```
+pkg install cmake gcc8 sdl2_mixer sdl2_ttf libsodium
+```
+### Compiling
+```
+mkdir build
+cd build
+cmake -DCMAKE_C_COMPILER=/usr/local/bin/gcc8 -DCMAKE_CXX_COMPILER=/usr/local/bin/g++8 ..
+make -j$(sysctl -n hw.ncpu)
 ```
 </details>
 
