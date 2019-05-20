@@ -1,8 +1,8 @@
 %define debug_package %{nil}
 
 Name:		devilutionx
-Version:	0.3.1
-Release:	2%{?dist}
+Version:	0.4.0
+Release:	1%{?dist}
 Summary:	Diablo I engine for modern operating systems
 
 License:	Unlicensed
@@ -29,12 +29,12 @@ make %{?_smp_mflags}
 make INSTALL_ROOT=%{buildroot}
 mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_datadir}/pixmaps
-install -m 755 devilutionx %{buildroot}%{_bindir}%{name}
+install -m 755 devilutionx %{buildroot}%{_bindir}/%{name}
 install -p -D -m644 Diablo.ico %{buildroot}%{_datadir}/pixmaps/%{name}.ico
 desktop-file-install --remove-category="Qt" --dir=%{buildroot}%{_datadir}/applications %{SOURCE1} 
 
 %files
-%{_bindir}%{name}
+%{_bindir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/pixmaps/%{name}.ico
 
