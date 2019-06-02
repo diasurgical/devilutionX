@@ -524,7 +524,7 @@ BOOL UiCreatePlayerDescription(_uiheroinfo *info, DWORD mode, char *desc)
 void DrawArt(int screenX, int screenY, Art *art, int nFrame, int drawW)
 {
 	BYTE *src = (BYTE *)art->data + (art->width * art->height * nFrame);
-	BYTE *dst = &gpBuffer[screenX + 64 + (screenY + 160) * BUFFER_WIDTH];
+	BYTE *dst = &gpBuffer[screenX + 64 + (screenY + SCREEN_Y) * BUFFER_WIDTH];
 	drawW = drawW ? drawW : art->width;
 
 	for (int i = 0; i < art->height && i + screenY < SCREEN_HEIGHT; i++, src += art->width, dst += BUFFER_WIDTH) {
@@ -696,7 +696,7 @@ void UiFadeIn(int steps)
 void UiRenderItemDebug(UI_Item item)
 {
 	item.rect.x += 64; // pal_surface is shifted?
-	item.rect.y += 160;
+	item.rect.y += SCREEN_Y;
 	if (SDL_FillRect(pal_surface, &item.rect, random(0, 255)) <= -1) {
 		SDL_Log(SDL_GetError());
 	}
