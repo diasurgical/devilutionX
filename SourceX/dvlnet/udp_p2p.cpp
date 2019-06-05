@@ -65,7 +65,7 @@ int udp_p2p::join(std::string addrstr, std::string passwd)
 			SDL_Delay(1000);
 		}
 	}
-	return (plr_self == PLR_BROADCAST ? 4 : plr_self);
+	return (plr_self == PLR_BROADCAST ? MAX_PLRS : plr_self);
 }
 
 void udp_p2p::poll()

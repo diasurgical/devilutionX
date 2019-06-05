@@ -57,15 +57,15 @@ void selconn_Esc()
 
 void selconn_Focus(int value)
 {
-	int players = 4;
+	int players = MAX_PLRS;
 	switch (value) {
 	case 0:
 		sprintf(selconn_Description, "All computers must be connected to a TCP-compatible network.");
-		players = 4;
+		players = MAX_PLRS;
 		break;
 	case 1:
 		sprintf(selconn_Description, "All computers must be connected to a UDP-compatible network.");
-		players = 4;
+		players = MAX_PLRS;
 		break;
 	case 2:
 		sprintf(selconn_Description, "Play by yourself with no network exposure.");
