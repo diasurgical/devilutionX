@@ -2399,9 +2399,9 @@ void control_remove_gold(int pnum, int gold_index)
 
 void control_set_gold_curs(int pnum)
 {
-	if (plr[pnum].HoldItem._ivalue >= 2500)
+	if (plr[pnum].HoldItem._ivalue >= GOLD_MEDIUM_LIMIT)
 		plr[pnum].HoldItem._iCurs = ICURS_GOLD_LARGE;
-	else if (plr[pnum].HoldItem._ivalue <= 1000)
+	else if (plr[pnum].HoldItem._ivalue <= GOLD_SMALL_LIMIT)
 		plr[pnum].HoldItem._iCurs = ICURS_GOLD_SMALL;
 	else
 		plr[pnum].HoldItem._iCurs = ICURS_GOLD_MEDIUM;

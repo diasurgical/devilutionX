@@ -591,11 +591,11 @@ BOOL GoldAutoPlace(int pnum)
 	done = FALSE;
 	for (i = 0; i < plr[pnum]._pNumInv && !done; i++) {
 		if (plr[pnum].InvList[i]._itype == ITYPE_GOLD) {
-			if (plr[pnum].HoldItem._ivalue + plr[pnum].InvList[i]._ivalue <= 5000) {
+			if (plr[pnum].HoldItem._ivalue + plr[pnum].InvList[i]._ivalue <= GOLD_MAX_LIMIT) {
 				plr[pnum].InvList[i]._ivalue = plr[pnum].HoldItem._ivalue + plr[pnum].InvList[i]._ivalue;
-				if (plr[pnum].InvList[i]._ivalue >= 2500)
+				if (plr[pnum].InvList[i]._ivalue >= GOLD_MEDIUM_LIMIT)
 					plr[pnum].InvList[i]._iCurs = ICURS_GOLD_LARGE;
-				else if (plr[pnum].InvList[i]._ivalue <= 1000)
+				else if (plr[pnum].InvList[i]._ivalue <= GOLD_SMALL_LIMIT)
 					plr[pnum].InvList[i]._iCurs = ICURS_GOLD_SMALL;
 				else
 					plr[pnum].InvList[i]._iCurs = ICURS_GOLD_MEDIUM;
@@ -608,12 +608,12 @@ BOOL GoldAutoPlace(int pnum)
 		return done;
 
 	for (i = 0; i < plr[pnum]._pNumInv && !done; i++) {
-		if (plr[pnum].InvList[i]._itype == ITYPE_GOLD && plr[pnum].InvList[i]._ivalue < 5000) {
-			if (plr[pnum].HoldItem._ivalue + plr[pnum].InvList[i]._ivalue <= 5000) {
+		if (plr[pnum].InvList[i]._itype == ITYPE_GOLD && plr[pnum].InvList[i]._ivalue < GOLD_MAX_LIMIT) {
+			if (plr[pnum].HoldItem._ivalue + plr[pnum].InvList[i]._ivalue <= GOLD_MAX_LIMIT) {
 				plr[pnum].InvList[i]._ivalue = plr[pnum].HoldItem._ivalue + plr[pnum].InvList[i]._ivalue;
-				if (plr[pnum].InvList[i]._ivalue >= 2500)
+				if (plr[pnum].InvList[i]._ivalue >= GOLD_MEDIUM_LIMIT)
 					plr[pnum].InvList[i]._iCurs = ICURS_GOLD_LARGE;
-				else if (plr[pnum].InvList[i]._ivalue <= 1000)
+				else if (plr[pnum].InvList[i]._ivalue <= GOLD_SMALL_LIMIT)
 					plr[pnum].InvList[i]._iCurs = ICURS_GOLD_SMALL;
 				else
 					plr[pnum].InvList[i]._iCurs = ICURS_GOLD_MEDIUM;
@@ -633,9 +633,9 @@ BOOL GoldAutoPlace(int pnum)
 			plr[pnum].InvList[ii] = plr[pnum].HoldItem;
 			plr[pnum]._pNumInv = plr[pnum]._pNumInv + 1;
 			plr[pnum].InvGrid[xx + yy] = plr[pnum]._pNumInv;
-			if (plr[pnum].HoldItem._ivalue >= 2500)
+			if (plr[pnum].HoldItem._ivalue >= GOLD_MEDIUM_LIMIT)
 				plr[pnum].InvList[ii]._iCurs = ICURS_GOLD_LARGE;
-			else if (plr[pnum].HoldItem._ivalue <= 1000)
+			else if (plr[pnum].HoldItem._ivalue <= GOLD_SMALL_LIMIT)
 				plr[pnum].InvList[ii]._iCurs = ICURS_GOLD_SMALL;
 			else
 				plr[pnum].InvList[ii]._iCurs = ICURS_GOLD_MEDIUM;
@@ -957,25 +957,25 @@ void CheckInvPaste(int pnum, int mx, int my)
 				il--;
 				gt = plr[pnum].InvList[il]._ivalue;
 				ig = plr[pnum].HoldItem._ivalue + gt;
-				if (ig <= 5000) {
+				if (ig <= GOLD_MAX_LIMIT) {
 					plr[pnum].InvList[il]._ivalue = ig;
 					plr[pnum]._pGold += plr[pnum].HoldItem._ivalue;
-					if (ig >= 2500)
+					if (ig >= GOLD_MEDIUM_LIMIT)
 						plr[pnum].InvList[il]._iCurs = ICURS_GOLD_LARGE;
-					else if (ig <= 1000)
+					else if (ig <= GOLD_SMALL_LIMIT)
 						plr[pnum].InvList[il]._iCurs = ICURS_GOLD_SMALL;
 					else
 						plr[pnum].InvList[il]._iCurs = ICURS_GOLD_MEDIUM;
 				} else {
-					ig = 5000 - gt;
+					ig = GOLD_MAX_LIMIT - gt;
 					plr[pnum]._pGold += ig;
 					plr[pnum].HoldItem._ivalue -= ig;
-					plr[pnum].InvList[il]._ivalue = 5000;
+					plr[pnum].InvList[il]._ivalue = GOLD_MAX_LIMIT;
 					plr[pnum].InvList[il]._iCurs = ICURS_GOLD_LARGE;
 					// BUGFIX: incorrect values here are leftover from beta
-					if (plr[pnum].HoldItem._ivalue >= 2500)
+					if (plr[pnum].HoldItem._ivalue >= GOLD_MEDIUM_LIMIT)
 						cn = 18;
-					else if (plr[pnum].HoldItem._ivalue <= 1000)
+					else if (plr[pnum].HoldItem._ivalue <= GOLD_SMALL_LIMIT)
 						cn = 16;
 					else
 						cn = 17;
@@ -986,10 +986,10 @@ void CheckInvPaste(int pnum, int mx, int my)
 				plr[pnum]._pNumInv++;
 				plr[pnum].InvGrid[yy + xx] = plr[pnum]._pNumInv;
 				plr[pnum]._pGold += plr[pnum].HoldItem._ivalue;
-				if (plr[pnum].HoldItem._ivalue <= 5000) {
-					if (plr[pnum].HoldItem._ivalue >= 2500)
+				if (plr[pnum].HoldItem._ivalue <= GOLD_MAX_LIMIT) {
+					if (plr[pnum].HoldItem._ivalue >= GOLD_MEDIUM_LIMIT)
 						plr[pnum].InvList[il]._iCurs = ICURS_GOLD_LARGE;
-					else if (plr[pnum].HoldItem._ivalue <= 1000)
+					else if (plr[pnum].HoldItem._ivalue <= GOLD_SMALL_LIMIT)
 						plr[pnum].InvList[il]._iCurs = ICURS_GOLD_SMALL;
 					else
 						plr[pnum].InvList[il]._iCurs = ICURS_GOLD_MEDIUM;
@@ -1039,26 +1039,26 @@ void CheckInvPaste(int pnum, int mx, int my)
 			if (plr[pnum].SpdList[ii]._itype != ITYPE_NONE) {
 				if (plr[pnum].SpdList[ii]._itype == ITYPE_GOLD) {
 					i = plr[pnum].HoldItem._ivalue + plr[pnum].SpdList[ii]._ivalue;
-					if (i <= 5000) {
+					if (i <= GOLD_MAX_LIMIT) {
 						plr[pnum].SpdList[ii]._ivalue += plr[pnum].HoldItem._ivalue;
 						plr[pnum]._pGold += plr[pnum].HoldItem._ivalue;
-						if (i >= 2500)
+						if (i >= GOLD_MEDIUM_LIMIT)
 							plr[pnum].SpdList[ii]._iCurs = ICURS_GOLD_LARGE;
-						else if (i <= 1000)
+						else if (i <= GOLD_SMALL_LIMIT)
 							plr[pnum].SpdList[ii]._iCurs = ICURS_GOLD_SMALL;
 						else
 							plr[pnum].SpdList[ii]._iCurs = ICURS_GOLD_MEDIUM;
 					} else {
-						i = 5000 - plr[pnum].SpdList[ii]._ivalue;
+						i = GOLD_MAX_LIMIT - plr[pnum].SpdList[ii]._ivalue;
 						plr[pnum]._pGold += i;
 						plr[pnum].HoldItem._ivalue -= i;
-						plr[pnum].SpdList[ii]._ivalue = 5000;
+						plr[pnum].SpdList[ii]._ivalue = GOLD_MAX_LIMIT;
 						plr[pnum].SpdList[ii]._iCurs = ICURS_GOLD_LARGE;
 
 						// BUGFIX: incorrect values here are leftover from beta
-						if (plr[pnum].HoldItem._ivalue >= 2500)
+						if (plr[pnum].HoldItem._ivalue >= GOLD_MEDIUM_LIMIT)
 							cn = 18;
-						else if (plr[pnum].HoldItem._ivalue <= 1000)
+						else if (plr[pnum].HoldItem._ivalue <= GOLD_SMALL_LIMIT)
 							cn = 16;
 						else
 							cn = 17;

@@ -842,9 +842,9 @@ void SetPlrHandSeed(ItemStruct *h, int iseed)
 
 void SetPlrHandGoldCurs(ItemStruct *h)
 {
-	if (h->_ivalue >= 2500)
+	if (h->_ivalue >= GOLD_MEDIUM_LIMIT)
 		h->_iCurs = ICURS_GOLD_LARGE;
-	else if (h->_ivalue <= 1000)
+	else if (h->_ivalue <= GOLD_SMALL_LIMIT)
 		h->_iCurs = ICURS_GOLD_SMALL;
 	else
 		h->_iCurs = ICURS_GOLD_MEDIUM;
@@ -934,7 +934,7 @@ void CreatePlrItems(int p)
 		plr[p].InvGrid[30] = plr[p]._pNumInv;
 #ifdef _DEBUG
 	} else {
-		plr[p].HoldItem._ivalue = 5000;
+		plr[p].HoldItem._ivalue = GOLD_MAX_LIMIT;
 		plr[p].HoldItem._iCurs = ICURS_GOLD_LARGE;
 		plr[p]._pGold = plr[p].HoldItem._ivalue * 40;
 		for (i = 0; i < 40; i++) {
@@ -1308,15 +1308,15 @@ void GetItemAttrs(int i, int idata, int lvl)
 
 		if (leveltype == DTYPE_HELL)
 			rndv += rndv >> 3;
-		if (rndv > 5000)
-			rndv = 5000;
+		if (rndv > GOLD_MAX_LIMIT)
+			rndv = GOLD_MAX_LIMIT;
 
 		item[i]._ivalue = rndv;
 
-		if (rndv >= 2500)
+		if (rndv >= GOLD_MEDIUM_LIMIT)
 			item[i]._iCurs = ICURS_GOLD_LARGE;
 		else
-			item[i]._iCurs = (rndv > 1000) + 4;
+			item[i]._iCurs = (rndv > GOLD_SMALL_LIMIT) + 4;
 	}
 }
 
@@ -2229,9 +2229,9 @@ void RecreateItem(int ii, int idx, unsigned short ic, int iseed, int ivalue)
 		item[ii]._iSeed = iseed;
 		item[ii]._iCreateInfo = ic;
 		item[ii]._ivalue = ivalue;
-		if (ivalue >= 2500)
+		if (ivalue >= GOLD_MEDIUM_LIMIT)
 			item[ii]._iCurs = ICURS_GOLD_LARGE;
-		else if (ivalue <= 1000)
+		else if (ivalue <= GOLD_SMALL_LIMIT)
 			item[ii]._iCurs = ICURS_GOLD_SMALL;
 		else
 			item[ii]._iCurs = ICURS_GOLD_MEDIUM;

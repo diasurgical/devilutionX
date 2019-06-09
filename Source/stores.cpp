@@ -1784,9 +1784,9 @@ void S_SmithEnter()
 
 void SetGoldCurs(int pnum, int i)
 {
-	if (plr[pnum].InvList[i]._ivalue >= 2500)
+	if (plr[pnum].InvList[i]._ivalue >= GOLD_MEDIUM_LIMIT)
 		plr[pnum].InvList[i]._iCurs = ICURS_GOLD_LARGE;
-	else if (plr[pnum].InvList[i]._ivalue <= 1000)
+	else if (plr[pnum].InvList[i]._ivalue <= GOLD_SMALL_LIMIT)
 		plr[pnum].InvList[i]._iCurs = ICURS_GOLD_SMALL;
 	else
 		plr[pnum].InvList[i]._iCurs = ICURS_GOLD_MEDIUM;
@@ -1794,9 +1794,9 @@ void SetGoldCurs(int pnum, int i)
 
 void SetSpdbarGoldCurs(int pnum, int i)
 {
-	if (plr[pnum].SpdList[i]._ivalue >= 2500)
+	if (plr[pnum].SpdList[i]._ivalue >= GOLD_MEDIUM_LIMIT)
 		plr[pnum].SpdList[i]._iCurs = ICURS_GOLD_LARGE;
-	else if (plr[pnum].SpdList[i]._ivalue <= 1000)
+	else if (plr[pnum].SpdList[i]._ivalue <= GOLD_SMALL_LIMIT)
 		plr[pnum].SpdList[i]._iCurs = ICURS_GOLD_SMALL;
 	else
 		plr[pnum].SpdList[i]._iCurs = ICURS_GOLD_MEDIUM;
@@ -1808,7 +1808,7 @@ void TakePlrsMoney(int cost)
 
 	plr[myplr]._pGold = CalculateGold(myplr) - cost;
 	for (i = 0; i < MAXBELTITEMS && cost > 0; i++) {
-		if (plr[myplr].SpdList[i]._itype == ITYPE_GOLD && plr[myplr].SpdList[i]._ivalue != 5000) {
+		if (plr[myplr].SpdList[i]._itype == ITYPE_GOLD && plr[myplr].SpdList[i]._ivalue != GOLD_MAX_LIMIT) {
 			if (cost < plr[myplr].SpdList[i]._ivalue) {
 				plr[myplr].SpdList[i]._ivalue -= cost;
 				SetSpdbarGoldCurs(myplr, i);
@@ -1838,7 +1838,7 @@ void TakePlrsMoney(int cost)
 	drawpanflag = 255;
 	if (cost > 0) {
 		for (i = 0; i < plr[myplr]._pNumInv && cost > 0; i++) {
-			if (plr[myplr].InvList[i]._itype == ITYPE_GOLD && plr[myplr].InvList[i]._ivalue != 5000) {
+			if (plr[myplr].InvList[i]._itype == ITYPE_GOLD && plr[myplr].InvList[i]._ivalue != GOLD_MAX_LIMIT) {
 				if (cost < plr[myplr].InvList[i]._ivalue) {
 					plr[myplr].InvList[i]._ivalue -= cost;
 					SetGoldCurs(myplr, i);
@@ -1986,8 +1986,8 @@ BOOL StoreGoldFit(int idx)
 	int i, sz, cost, numsqrs;
 
 	cost = storehold[idx]._iIvalue;
-	sz = cost / 5000;
-	if (cost % 5000)
+	sz = cost / GOLD_MAX_LIMIT;
+	if (cost % GOLD_MAX_LIMIT)
 		sz++;
 
 	SetCursor_(storehold[idx]._iCurs + CURSOR_FIRSTITEM);
@@ -2003,16 +2003,16 @@ BOOL StoreGoldFit(int idx)
 	}
 
 	for (i = 0; i < plr[myplr]._pNumInv; i++) {
-		if (plr[myplr].InvList[i]._itype == ITYPE_GOLD && plr[myplr].InvList[i]._ivalue != 5000) {
-			if (cost + plr[myplr].InvList[i]._ivalue <= 5000)
+		if (plr[myplr].InvList[i]._itype == ITYPE_GOLD && plr[myplr].InvList[i]._ivalue != GOLD_MAX_LIMIT) {
+			if (cost + plr[myplr].InvList[i]._ivalue <= GOLD_MAX_LIMIT)
 				cost = 0;
 			else
-				cost -= 5000 - plr[myplr].InvList[i]._ivalue;
+				cost -= GOLD_MAX_LIMIT - plr[myplr].InvList[i]._ivalue;
 		}
 	}
 
-	sz = cost / 5000;
-	if (cost % 5000)
+	sz = cost / GOLD_MAX_LIMIT;
+	if (cost % GOLD_MAX_LIMIT)
 		sz++;
 
 	return numsqrs >= sz;
@@ -2061,22 +2061,22 @@ void StoreSellItem()
 	}
 	plr[myplr]._pGold += cost;
 	for (i = 0; i < plr[myplr]._pNumInv && cost > 0; i++) {
-		if (plr[myplr].InvList[i]._itype == ITYPE_GOLD && plr[myplr].InvList[i]._ivalue != 5000) {
-			if (cost + plr[myplr].InvList[i]._ivalue <= 5000) {
+		if (plr[myplr].InvList[i]._itype == ITYPE_GOLD && plr[myplr].InvList[i]._ivalue != GOLD_MAX_LIMIT) {
+			if (cost + plr[myplr].InvList[i]._ivalue <= GOLD_MAX_LIMIT) {
 				plr[myplr].InvList[i]._ivalue += cost;
 				SetGoldCurs(myplr, i);
 				cost = 0;
 			} else {
-				cost -= 5000 - plr[myplr].InvList[i]._ivalue;
-				plr[myplr].InvList[i]._ivalue = 5000;
+				cost -= GOLD_MAX_LIMIT - plr[myplr].InvList[i]._ivalue;
+				plr[myplr].InvList[i]._ivalue = GOLD_MAX_LIMIT;
 				SetGoldCurs(myplr, i);
 			}
 		}
 	}
 	if (cost > 0) {
-		while (cost > 5000) {
-			PlaceStoreGold(5000);
-			cost -= 5000;
+		while (cost > GOLD_MAX_LIMIT) {
+			PlaceStoreGold(GOLD_MAX_LIMIT);
+			cost -= GOLD_MAX_LIMIT;
 		}
 		PlaceStoreGold(cost);
 	}

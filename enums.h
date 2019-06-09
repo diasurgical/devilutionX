@@ -2878,3 +2878,9 @@ typedef enum action_id {
 	ACTION_SPELLPLR    = 25,
 	ACTION_SPELLWALL   = 26,
 } action_id;
+
+enum gold_quantity {
+  GOLD_SMALL_LIMIT = 1000,
+	GOLD_MEDIUM_LIMIT = 2500,
+	GOLD_MAX_LIMIT = 5000, 
+};
