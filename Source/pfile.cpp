@@ -131,7 +131,6 @@ void pfile_get_save_path(char *pszBuf, DWORD dwBufSize, DWORD save_num)
 
 	sprintf(path, fmt, save_num);
 	strcat(pszBuf, path);
-	_strlwr(pszBuf);
 }
 
 void pfile_flush(BOOL is_single_player, DWORD save_num)
@@ -309,7 +308,7 @@ char *GetSaveDirectory(char *dst, int dst_size, DWORD save_num)
 
 	sprintf(FileName, savename, save_num);
 	strcat(dst, FileName);
-	return _strlwr(dst);
+	return dst;
 }
 
 BOOL pfile_read_hero(HANDLE archive, PkPlayerStruct *pPack)
