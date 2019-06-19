@@ -28,8 +28,13 @@ void SetCursorPos(int X, int Y)
 	mouseWarpingX = X;
 	mouseWarpingY = Y;
 	mouseWarping = true;
+#ifndef SWITCH
 	LogicalToOutput(&X, &Y);
 	SDL_WarpMouseInWindow(window, X, Y);
+#else
+	MouseX = X;
+	MouseY = Y;
+#endif
 }
 
 // Moves the mouse to the first attribute "+" button.

@@ -352,9 +352,11 @@ void UiInitialize()
 	LoadUiGFX();
 	LoadArtFonts();
 	if (ArtCursor.surface != nullptr) {
+#ifndef SWITCH
 		if (SDL_ShowCursor(SDL_DISABLE) <= -1) {
 			ErrSdl();
 		}
+#endif
 	}
 }
 

@@ -293,9 +293,11 @@ void DialogLoop(UiItem *items, std::size_t num_items, UiItem *render_behind, std
 void UiOkDialog(const char *text, const char *caption, bool error, UiItem *render_behind, std::size_t render_behind_size)
 {
 	if (!gbActive) {
+#ifndef SWITCH
 		if (SDL_ShowCursor(SDL_ENABLE) <= -1) {
 			SDL_Log(SDL_GetError());
 		}
+#endif
 		if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, text, caption, NULL) <= -1) {
 			SDL_Log(SDL_GetError());
 			SDL_Log(text);
