@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef SWITCH
+#define DSBSTATUS_PLAYING 0x00000001
+#endif
+
 #define CS_HREDRAW 0x0001
 #define CS_VREDRAW 0x0002
 
