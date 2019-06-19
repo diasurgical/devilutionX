@@ -4,6 +4,7 @@ DEVILUTION_BEGIN_NAMESPACE
 
 BOOL SystemSupported()
 {
+#ifndef SWITCH
 	OSVERSIONINFO VersionInformation;
 	BOOL ret = FALSE;
 
@@ -15,10 +16,14 @@ BOOL SystemSupported()
 		ret = TRUE;
 	}
 	return ret;
+#else
+	return TRUE;
+#endif
 }
 
 BOOL RestrictedTest()
 {
+#ifndef SWITCH
 	FILE *f;
 	char Buffer[MAX_PATH];
 	BOOL ret = FALSE;
@@ -34,10 +39,14 @@ BOOL RestrictedTest()
 		}
 	}
 	return ret;
+#else
+	return TRUE;
+#endif
 }
 
 BOOL ReadOnlyTest()
 {
+#ifndef SWITCH
 	char *c;
 	FILE *f;
 	char Filename[MAX_PATH];
@@ -57,6 +66,9 @@ BOOL ReadOnlyTest()
 		}
 	}
 	return ret;
+#else
+	return FALSE;
+#endif
 }
 
 DEVILUTION_END_NAMESPACE

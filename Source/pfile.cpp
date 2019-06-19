@@ -15,6 +15,7 @@ void pfile_init_save_directory()
 	DWORD len;
 	char Buffer[MAX_PATH];
 
+#ifndef SWITCH
 	len = GetWindowsDirectory(Buffer, sizeof(Buffer));
 	if (len) {
 		pfile_check_available_space(Buffer);
@@ -25,10 +26,12 @@ void pfile_init_save_directory()
 		app_fatal("Unable to initialize save directory");
 	else
 		pfile_check_available_space(Buffer);
+#endif
 }
 
 void pfile_check_available_space(char *pszDir)
 {
+#ifndef SWITCH
 	char *s;
 	BOOL hasSpace;
 	DWORD TotalNumberOfClusters;
@@ -53,6 +56,7 @@ void pfile_check_available_space(char *pszDir)
 
 	if (!hasSpace)
 		DiskFreeDlg(pszDir);
+#endif
 }
 
 void pfile_write_hero()
@@ -117,9 +121,15 @@ void pfile_get_save_path(char *pszBuf, DWORD dwBufSize, DWORD save_num)
 	char path[MAX_PATH];
 	const char *fmt = "\\multi_%d.sv";
 
+#ifndef SWITCH
 	if (gbMaxPlayers <= 1)
 		fmt = "\\single_%d.sv";
+#else
+	if (gbMaxPlayers <= 1)
+		fmt = "single_%d.sv";
+#endif
 
+#ifndef SWITCH
 	// BUGFIX: ignores dwBufSize and uses MAX_PATH instead
 	plen = GetModuleFileName(ghInst, pszBuf, MAX_PATH);
 	s = strrchr(pszBuf, '\\');
@@ -129,6 +139,7 @@ void pfile_get_save_path(char *pszBuf, DWORD dwBufSize, DWORD save_num)
 	if (!plen)
 		app_fatal("Unable to get save directory");
 
+#endif
 	sprintf(path, fmt, save_num);
 	strcat(pszBuf, path);
 }
@@ -290,6 +301,7 @@ char *GetSaveDirectory(char *dst, int dst_size, DWORD save_num)
 	char FileName[MAX_PATH];
 	const char *savename;
 
+#ifndef SWITCH
 	// BUGFIX: ignores dst_size and uses MAX_PATH instead
 	if (gbMaxPlayers > 1) {
 		savename = "\\dlinfo_%d.drv";
@@ -309,6 +321,10 @@ char *GetSaveDirectory(char *dst, int dst_size, DWORD save_num)
 	sprintf(FileName, savename, save_num);
 	strcat(dst, FileName);
 	return dst;
+#else
+	return "";
+#endif
+
 }
 
 BOOL pfile_read_hero(HANDLE archive, PkPlayerStruct *pPack)
