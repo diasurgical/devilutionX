@@ -132,16 +132,22 @@ WINBOOL CloseHandle(HANDLE hObject)
 	                                       // called on returning
 	files.erase(file);
 	try {
+#ifndef SWITCH
 		std::ofstream filestream(file->path + ".tmp", std::ios::binary | std::ios::trunc);
+#else
+		std::ofstream filestream(file->path, std::ios::binary | std::ios::trunc);
+#endif
 		if (filestream.fail())
 			throw std::runtime_error("ofstream");
 		filestream.write(file->buf.data(), file->buf.size());
 		if (filestream.fail())
 			throw std::runtime_error("ofstream::write");
 		filestream.close();
+#ifndef SWITCH
 		std::remove(file->path.c_str());
 		if (std::rename((file->path + ".tmp").c_str(), file->path.c_str()))
 			throw std::runtime_error("rename");
+#endif
 		return true;
 	} catch (std::runtime_error e) {
 		// log

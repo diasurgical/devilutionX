@@ -258,6 +258,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 #endif
 	ghInst = hInst;
 
+#ifndef SWITCH
 	if (RestrictedTest())
 		ErrOkDlg(IDD_DIALOG10, 0, "C:\\Src\\Diablo\\Source\\DIABLO.CPP", 877);
 	if (ReadOnlyTest()) {
@@ -267,12 +268,15 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	}
 
 	ShowCursor(FALSE);
+#endif
 	srand(GetTickCount());
 	InitHash();
 	fault_get_filter();
 
+#ifndef SWITCH
 	bNoEvent = diablo_get_not_running();
 	if (!diablo_find_window("DIABLO") && bNoEvent) {
+#endif
 #ifdef _DEBUG
 		SFileEnableDirectAccess(TRUE);
 #endif
@@ -309,11 +313,13 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		UiDestroy();
 		SaveGamma();
 
+#ifndef SWITCH
 		if (ghMainWnd) {
 			Sleep(300);
 			DestroyWindow(ghMainWnd);
 		}
 	}
+#endif
 
 	return FALSE;
 }
@@ -490,6 +496,7 @@ void diablo_init_screen()
 
 BOOL diablo_find_window(LPCSTR lpClassName)
 {
+#ifndef SWITCH
 	HWND result; // eax
 	HWND v2;     // esi
 	HWND v3;     // eax
@@ -508,11 +515,13 @@ BOOL diablo_find_window(LPCSTR lpClassName)
 		v4 = v2;
 	SetForegroundWindow(v2);
 	SetFocus(v4);
+#endif
 	return 1;
 }
 
 void diablo_reload_process(HINSTANCE hInstance)
 {
+#ifndef SWITCH
 	DWORD dwSize, dwProcessId;
 	BOOL bNoExist;
 	char *s;
@@ -593,6 +602,7 @@ void diablo_reload_process(HINSTANCE hInstance)
 		CloseHandle(hMap);
 		ExitProcess(0);
 	}
+#endif
 }
 
 BOOL PressEscKey()
