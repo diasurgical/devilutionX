@@ -137,7 +137,11 @@ WINBOOL CloseHandle(HANDLE hObject)
 	std::unique_ptr<memfile> ufile(file); // ensure that delete file is
 	                                      // called on returning
 	files.erase(file);
+#ifndef SWITCH
 	std::ofstream filestream(file->path + ".tmp", std::ios::binary | std::ios::trunc);
+#else
+	std::ofstream filestream(file->path, std::ios::binary | std::ios::trunc);
+#endif
 	if (filestream.fail()) {
 		ShowOutOfDiskError();
 		return false;
@@ -148,11 +152,13 @@ WINBOOL CloseHandle(HANDLE hObject)
 		return false;
 	}
 	filestream.close();
+#ifndef SWITCH
 	std::remove(file->path.c_str());
 	if (std::rename((file->path + ".tmp").c_str(), file->path.c_str())) {
 		ShowOutOfDiskError();
 		return false;
 	}
+#endif
 	return true;
 }
 
