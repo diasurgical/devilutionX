@@ -4,7 +4,7 @@
 #include "controls/controller_motion.h"
 #include "stubs.h"
 
-#ifdef SWITCH
+#ifdef __SWITCH__
 #define JOY_BUTTON_DPAD_LEFT 16
 #define JOY_BUTTON_DPAD_UP 17
 #define JOY_BUTTON_DPAD_RIGHT 18
