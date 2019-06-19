@@ -170,6 +170,8 @@ HWND CreateWindowExA(
 
 	atexit(SDL_Quit);
 
+	SDL_JoystickOpen(0);
+
 	int upscale = 1;
 	DvlIntSetting("upscale", &upscale);
 	DvlIntSetting("fullscreen", (int *)&fullscreen);
@@ -204,7 +206,11 @@ HWND CreateWindowExA(
 		flags |= SDL_WINDOW_INPUT_GRABBED;
 	}
 
+#ifndef SWITCH
 	window = SDL_CreateWindow(lpWindowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, nWidth, nHeight, flags);
+#else
+	window = SDL_CreateWindow(lpWindowName, 0, 0, 1920, 1080, 0);
+#endif
 #endif
 	if (window == NULL) {
 		SDL_Log(SDL_GetError());
@@ -215,7 +221,11 @@ HWND CreateWindowExA(
 #ifdef USE_SDL1
 		SDL_Log("upscaling not supported with USE_SDL1");
 #else
+#ifndef SWITCH
 		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+#else
+		renderer = SDL_CreateRenderer(window, 0, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+#endif
 		if (renderer == NULL) {
 			SDL_Log(SDL_GetError());
 		}
@@ -329,6 +339,7 @@ void lstrcpynA(LPSTR lpString1, LPCSTR lpString2, int iMaxLength)
 
 int MessageBoxA(HWND hWnd, const char *Text, const char *Title, UINT Flags)
 {
+#ifndef SWITCH
 	Uint32 SDLFlags = 0;
 	if (Flags & DVL_MB_ICONHAND) {
 		SDLFlags |= SDL_MESSAGEBOX_ERROR;
@@ -341,6 +352,7 @@ int MessageBoxA(HWND hWnd, const char *Text, const char *Title, UINT Flags)
 		return -1;
 	}
 
+#endif
 	return 0;
 }
 
