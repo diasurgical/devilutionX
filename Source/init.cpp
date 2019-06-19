@@ -86,6 +86,7 @@ void init_create_window(int nCmdShow)
 	int nWidth, nHeight;
 	HWND hWnd;
 
+#ifndef SWITCH
 	pfile_init_save_directory();
 
 	if (GetSystemMetrics(SM_CXSCREEN) < SCREEN_WIDTH)
@@ -96,6 +97,10 @@ void init_create_window(int nCmdShow)
 		nHeight = SCREEN_HEIGHT;
 	else
 		nHeight = GetSystemMetrics(SM_CYSCREEN);
+#else
+	nWidth = 640;
+	nHeight = 480;
+#endif
 	hWnd = CreateWindowEx(0, "DIABLO", "DIABLO", WS_POPUP, 0, 0, nWidth, nHeight, NULL, NULL, ghInst, NULL);
 	if (!hWnd)
 		app_fatal("Unable to create main window");

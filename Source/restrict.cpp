@@ -4,6 +4,7 @@ DEVILUTION_BEGIN_NAMESPACE
 
 BOOL ReadOnlyTest()
 {
+#ifndef SWITCH
 	char *c;
 	FILE *f;
 	char Filename[MAX_PATH];
@@ -23,6 +24,9 @@ BOOL ReadOnlyTest()
 		}
 	}
 	return ret;
+#else
+	return FALSE;
+#endif
 }
 
 DEVILUTION_END_NAMESPACE

@@ -1,3 +1,6 @@
+#ifdef SWITCH
+	#include <switch.h>
+#endif
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
@@ -439,6 +442,10 @@ void __cdecl app_fatal(const char *pszFmt, ...)
 {
 	va_list va;
 
+#ifdef SWITCH
+	svcOutputDebugString("fatal", 20);
+#endif
+
 	va_start(va, pszFmt);
 	FreeDlg();
 
@@ -456,13 +463,18 @@ void MsgBox(const char *pszFmt, va_list va)
 	char Text[256];
 
 	wvsprintf(Text, pszFmt, va);
+#ifdef SWITCH
+	svcOutputDebugString(Text, 256);
+#else
 	if (ghMainWnd)
 		SetWindowPos(ghMainWnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE);
 	MessageBox(ghMainWnd, Text, "ERROR", MB_TASKMODAL | MB_ICONHAND);
+#endif
 }
 
 void FreeDlg()
 {
+#ifndef SWITCH
 	if (terminating && cleanup_thread_id != GetCurrentThreadId())
 		Sleep(20000);
 
@@ -478,10 +490,12 @@ void FreeDlg()
 
 	SNetDestroy();
 	ShowCursor(TRUE);
+#endif
 }
 
 void __cdecl DrawDlg(char *pszFmt, ...)
 {
+#ifndef SWITCH
 	char text[256];
 	va_list arglist;
 
@@ -489,6 +503,7 @@ void __cdecl DrawDlg(char *pszFmt, ...)
 	wvsprintf(text, pszFmt, arglist);
 	va_end(arglist);
 	SDrawMessageBox(text, "Diablo", MB_TASKMODAL | MB_ICONEXCLAMATION);
+#endif
 }
 
 #ifdef _DEBUG

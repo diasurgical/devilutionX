@@ -245,7 +245,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		DirErrorDlg(szFileName);
 	}
 
+#ifndef SWITCH
 	ShowCursor(FALSE);
+#endif
 	srand(GetTickCount());
 	InitHash();
 
@@ -291,11 +293,13 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		UiDestroy();
 		SaveGamma();
 
+#ifndef SWITCH
 		if (ghMainWnd) {
 			Sleep(300);
 			DestroyWindow(ghMainWnd);
 		}
 	}
+#endif
 
 	return FALSE;
 }
