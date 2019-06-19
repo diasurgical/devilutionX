@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef SWITCH
+#define DSBSTATUS_PLAYING 0x00000001
+#endif
+
 #define SW_HIDE DVL_SW_HIDE
 #define SW_SHOWNORMAL DVL_SW_SHOWNORMAL
 
