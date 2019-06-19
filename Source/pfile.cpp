@@ -141,7 +141,11 @@ void pfile_get_save_path(char *pszBuf, DWORD dwBufSize, DWORD save_num)
 
 #endif
 	sprintf(path, fmt, save_num);
+#ifndef SWITCH
 	strcat(pszBuf, path);
+#else
+	strcpy(pszBuf, path);
+#endif
 }
 
 void pfile_flush(BOOL is_single_player, DWORD save_num)
