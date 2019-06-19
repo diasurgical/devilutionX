@@ -241,6 +241,9 @@ void selhero_ClassSelector_Select(int value)
 		strcpy(title, "New Multi Player Hero");
 	}
 	memset(selhero_heroInfo.name, '\0', sizeof(selhero_heroInfo.name));
+#ifdef SWITCH
+	strcpy(heroInfo.name, "Switcher");
+#endif
 	UiInitList(0, 0, NULL, selhero_Name_Select, selhero_Name_Esc, ENTERNAME_DIALOG, size(ENTERNAME_DIALOG));
 }
 

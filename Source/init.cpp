@@ -3,7 +3,9 @@
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 #include <SDL.h>
+#ifndef SWITCH
 #include <config.h>
+#endif
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -95,7 +97,11 @@ HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int dwPri
 
 	for (int i = 0; i < 2; i++) {
 		snprintf(mpq_path, MAX_PATH, "%s%s", Buffer[i], mpq_name);
+#ifndef SWITCH
 		if (SFileOpenArchive(mpq_path, dwPriority, MPQ_FLAG_READ_ONLY, &archive)) {
+#else
+		if (SFileOpenArchive(mpq_path, dwPriority, 0, &archive)) {
+#endif
 			SFileSetBasePath(Buffer[i]);
 			return archive;
 
@@ -107,8 +113,10 @@ HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int dwPri
 
 void init_get_file_info()
 {
+#ifndef SWITCH
 	snprintf(gszProductName, MAX_PATH, "%s v%s", PROJECT_NAME, PROJECT_VERSION);
 	snprintf(gszVersionNumber, MAX_PATH, "version %s", PROJECT_VERSION);
+#endif
 }
 
 LRESULT __stdcall MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)

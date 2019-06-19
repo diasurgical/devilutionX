@@ -180,6 +180,28 @@ bool UiFocusNavigation(SDL_Event *event)
 {
 	if (event->type == SDL_QUIT)
 		exit(0);
+	if (event->type == SDL_JOYBUTTONDOWN) {
+		if (event->jbutton.which == 0) {
+			if (event->jbutton.button == 0) {
+				UiFocusNavigationSelect();
+				return true;
+			}
+		}
+
+		if (event->jbutton.which == 0) {
+			if (event->jbutton.button == 13){
+				UiFocus(SelectedItem - 1, UiItemsWraps);
+				return true;
+			}
+		}
+
+		if (event->jbutton.which == 0) {
+			if (event->jbutton.button == 15){
+				UiFocus(SelectedItem + 1, UiItemsWraps);
+				return true;
+			}
+		}
+	}
 
 	switch (event->type) {
 	case SDL_KEYUP:
@@ -354,9 +376,11 @@ void UiInitialize()
 	LoadUiGFX();
 	LoadArtFonts();
 	if (ArtCursor.surface != nullptr) {
+#ifndef SWITCH
 		if (SDL_ShowCursor(SDL_DISABLE) <= -1) {
 			ErrSdl();
 		}
+#endif
 	}
 }
 

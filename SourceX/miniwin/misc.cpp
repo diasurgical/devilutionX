@@ -128,6 +128,8 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 	SDL_EnableUNICODE(1);
 #endif
 
+	SDL_JoystickOpen(0);
+
 	int upscale = 1;
 	DvlIntSetting("upscale", &upscale);
 	DvlIntSetting("fullscreen", (int *)&fullscreen);
@@ -161,7 +163,11 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 		flags |= SDL_WINDOW_INPUT_GRABBED;
 	}
 
+#ifndef SWITCH
 	window = SDL_CreateWindow(lpWindowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, nWidth, nHeight, flags);
+#else
+	window = SDL_CreateWindow(lpWindowName, 0, 0, 1920, 1080, 0);
+#endif
 #endif
 	if (window == NULL) {
 		ErrSdl();
@@ -171,7 +177,11 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 #ifdef USE_SDL1
 		SDL_Log("upscaling not supported with USE_SDL1");
 #else
+#ifndef SWITCH
 		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+#else
+		renderer = SDL_CreateRenderer(window, 0, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+#endif
 		if (renderer == NULL) {
 			ErrSdl();
 		}
