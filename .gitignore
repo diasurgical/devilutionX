@@ -425,3 +425,6 @@ DerivedData/
 
 # Don't accidently commit the diabdat.mpq
 *.mpq
+
+### Nintendo Switch ###
+exefs/main
