@@ -108,6 +108,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	static signed short lstick_x;
 	static signed short rstick_y;
 	static signed short lstick_y;
+	static short lastmouseX, lastmouseY;
 
 	if (wMsgFilterMin != 0)
 		UNIMPLEMENTED();
@@ -143,13 +144,27 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	switch (e.type) {
 	case SDL_JOYAXISMOTION:
 
-		if (e.jaxis.axis == 2) rstick_x += (e.jaxis.value / 32767.0f);
-		if (e.jaxis.axis == 3) rstick_y -= (e.jaxis.value / 32767.0f);
+		if (e.jaxis.axis == 0)
+		{
+			if 	(e.jaxis.value < -8000 )
+				rstick_x +=3;
+			else
+				rstick_x -=3;
+		}
+		if (e.jaxis.axis == 1)
+		{
+			if 	(e.jaxis.value < -8000 )
+				rstick_y +=3;
+			else
+				rstick_y -=3;
+		}
 
 		lpMsg->message = DVL_WM_MOUSEMOVE;
 		lpMsg->lParam = (rstick_y << 16) | (rstick_x & 0xFFFF);
 		lpMsg->wParam = keystate_for_mouse(0);
 
+		lastmouseX = rstick_x;
+		lastmouseY = rstick_y;
 		break;
 	case SDL_JOYBUTTONUP:
 		break;
