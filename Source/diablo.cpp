@@ -1,3 +1,6 @@
+#ifdef SWITCH
+	#include <switch.h>
+#endif
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
@@ -299,6 +302,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 			DestroyWindow(ghMainWnd);
 		}
 	}
+#else
+	svcOutputDebugString("ending",20);
 #endif
 
 	return FALSE;
