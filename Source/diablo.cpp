@@ -1,3 +1,6 @@
+#ifdef SWITCH
+	#include <switch.h>
+#endif
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
@@ -269,6 +272,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 #ifndef SWITCH
 	bNoEvent = diablo_get_not_running();
 	if (!diablo_find_window("DIABLO") && bNoEvent) {
+#else
+		svcOutputDebugString("starting",20);
 #endif
 #ifdef _DEBUG
 		SFileEnableDirectAccess(TRUE);
@@ -312,6 +317,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 			DestroyWindow(ghMainWnd);
 		}
 	}
+#else
+	svcOutputDebugString("ending",20);
 #endif
 
 	return FALSE;
