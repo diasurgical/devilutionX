@@ -29,6 +29,10 @@ bool UiItemsWraps;
 char *UiTextInput;
 int UiTextInputLen;
 
+int MousePositionX;
+int MousePositionY;
+float MouseSensitivity;
+
 int fadeValue = 0;
 int SelectedItem = 0;
 
@@ -160,6 +164,9 @@ void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(i
 			UiTextInputLen = items[i].value;
 		}
 	}
+
+	MouseSensitivity = 0.65;
+	DvlFloatSetting("mouse_sensitivity", &MouseSensitivity);
 }
 
 void UiPlayMoveSound()
@@ -208,10 +215,40 @@ void selhero_CatToName(char *in_buf, char *out_buf, int cnt)
 	strncat(out_buf, output.c_str(), cnt - strlen(out_buf));
 }
 
+void UiUpdateMousePosition(SDL_Event *event)
+{
+	float scale;
+	if (renderer) {
+		SDL_RenderGetScale(renderer, &scale, NULL);
+	} else {
+		scale = 1;
+	}
+	if (SDL_GetRelativeMouseMode()) {
+		scale *= MouseSensitivity;
+		MousePositionX += event->motion.xrel * scale;
+		MousePositionY += event->motion.yrel * scale;
+		if (MousePositionX < 0)
+			MousePositionX = 0;
+		if (MousePositionX > SCREEN_WIDTH)
+			MousePositionX = SCREEN_WIDTH;
+		if (MousePositionY < 0)
+			MousePositionY = 0;
+		if (MousePositionY > SCREEN_HEIGHT)
+			MousePositionY = SCREEN_HEIGHT;
+	} else {
+		MousePositionX = event->motion.x;
+		MousePositionY = event->motion.y;
+	}
+}
+
 bool UiFocusNavigation(SDL_Event *event)
 {
 	if (event->type == SDL_QUIT)
 		exit(0);
+
+	if (event->type == SDL_MOUSEMOTION) {
+		UiUpdateMousePosition(event);
+	}
 
 	if (event->type == SDL_KEYDOWN) {
 		switch (event->key.keysym.sym) {
@@ -305,12 +342,6 @@ void UiFocusNavigationEsc()
 	}
 	if (gfnListEsc)
 		gfnListEsc();
-}
-
-bool IsInsideRect(const SDL_Event *event, const SDL_Rect *rect)
-{
-	const SDL_Point point = { event->button.x, event->button.y };
-	return SDL_PointInRect(&point, rect);
 }
 
 void LoadArt(char *pszFile, Art *art, int frames, PALETTEENTRY *pPalette)
@@ -523,9 +554,13 @@ BOOL UiCreatePlayerDescription(_uiheroinfo *info, DWORD mode, char *desc)
 
 void DrawArt(int screenX, int screenY, Art *art, int nFrame, int drawW)
 {
-	BYTE *src = (BYTE *)art->data + (art->width * art->height * nFrame);
-	BYTE *dst = &gpBuffer[screenX + 64 + (screenY + SCREEN_Y) * BUFFER_WIDTH];
 	drawW = drawW ? drawW : art->width;
+	if (screenX < -SCREEN_X) {
+		return;
+	}
+
+	BYTE *src = (BYTE *)art->data + (art->width * art->height * nFrame);
+	BYTE *dst = &gpBuffer[screenX + SCREEN_X + (screenY + SCREEN_Y) * BUFFER_WIDTH];
 
 	for (int i = 0; i < art->height && i + screenY < SCREEN_HEIGHT; i++, src += art->width, dst += BUFFER_WIDTH) {
 		for (int j = 0; j < art->width && j + screenX < SCREEN_WIDTH; j++) {
@@ -734,7 +769,7 @@ void UiRender()
 	}
 	UiRenderItems(gUiItems, gUiItemCnt);
 	DrawLogo();
-	DrawMouse();
+	DrawArt(MousePositionX, MousePositionY, &ArtCursor);
 	UiFadeIn();
 }
 
@@ -774,7 +809,8 @@ bool UiItemMouseEvents(SDL_Event *event, UI_Item *items, int size)
 	}
 
 	for (int i = 0; i < size; i++) {
-		if (!IsInsideRect(event, &items[i].rect)) {
+		const SDL_Point point = { MousePositionX, MousePositionY };
+		if (!SDL_PointInRect(&point, &items[i].rect)) {
 			continue;
 		}
 
@@ -809,25 +845,6 @@ void DrawLogo(int t, int size)
 	DrawArt(GetCenterOffset(ArtLogos[size].width), t, &ArtLogos[size], GetAnimationFrame(15));
 }
 
-void DrawMouse()
-{
-	SDL_GetMouseState(&MouseX, &MouseY);
-
-	if (renderer) {
-		float scaleX;
-		SDL_RenderGetScale(renderer, &scaleX, NULL);
-		MouseX /= scaleX;
-		MouseY /= scaleX;
-
-		SDL_Rect view;
-		SDL_RenderGetViewport(renderer, &view);
-		MouseX -= view.x;
-		MouseY -= view.y;
-	}
-
-	DrawArt(MouseX, MouseY, &ArtCursor);
-}
-
 /**
  * @brief Get int from ini, if not found the provided value will be added to the ini instead
  */
@@ -839,12 +856,28 @@ void DvlIntSetting(const char *valuename, int *value)
 }
 
 /**
+ * @brief Get float from ini, if not found the provided value will be added to the ini instead
+ */
+void DvlFloatSetting(const char *valuename, float *value)
+{
+	char buffer[16];
+
+	if (!SRegLoadString("devilutionx", valuename, 0, buffer, sizeof(buffer))) {
+		sprintf(buffer, "%.10f", *value);
+		SRegSaveString("devilutionx", valuename, 0, buffer);
+		return;
+	}
+
+	*value = atof(buffer);
+}
+
+/**
  * @brief Get string from ini, if not found the provided value will be added to the ini instead
  */
-void DvlStringSetting(const char *valuename, char *string, int len)
+void DvlStringSetting(const char *valuename, char *value, int len)
 {
-	if (!SRegLoadString("devilutionx", valuename, 0, string, len)) {
-		SRegSaveString("devilutionx", valuename, 0, string);
+	if (!SRegLoadString("devilutionx", valuename, 0, value, len)) {
+		SRegSaveString("devilutionx", valuename, 0, value);
 	}
 }
 

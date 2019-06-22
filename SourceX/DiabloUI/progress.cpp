@@ -86,7 +86,7 @@ BOOL UiProgressDialog(HWND window, char *msg, int enable, int (*fnfunc)(), int r
 	while (!endMenu && progress < 100) {
 		progress = fnfunc();
 		progress_Render(progress);
-		DrawMouse();
+		DrawArt(MousePositionX, MousePositionY, &ArtCursor);
 		SetFadeLevel(256);
 
 		while (SDL_PollEvent(&event)) {

@@ -1,8 +1,11 @@
-#include <deque>
 #include <SDL.h>
+#include <deque>
 
 #include "devilution.h"
+#include "miniwin/ddraw.h"
 #include "stubs.h"
+
+#include "DiabloUI/diabloui.h"
 
 /** @file
  * *
@@ -150,20 +153,31 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		lpMsg->lParam = e.key.keysym.mod << 16;
 	} break;
 	case SDL_MOUSEMOTION:
+		UiUpdateMousePosition(&e);
+
 		lpMsg->message = DVL_WM_MOUSEMOVE;
-		lpMsg->lParam = (e.motion.y << 16) | (e.motion.x & 0xFFFF);
+		if (MousePositionX > 0)
+			lpMsg->lParam |= MousePositionX & 0xFFFF;
+		if (MousePositionY > 0)
+			lpMsg->lParam |= MousePositionY << 16;
 		lpMsg->wParam = keystate_for_mouse(0);
 		break;
 	case SDL_MOUSEBUTTONDOWN: {
 		int button = e.button.button;
 		if (button == SDL_BUTTON_LEFT) {
 			lpMsg->message = DVL_WM_LBUTTONDOWN;
-			lpMsg->lParam = (e.button.y << 16) | (e.button.x & 0xFFFF);
-			lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
+			if (MousePositionX > 0)
+				lpMsg->lParam |= MousePositionX & 0xFFFF;
+			if (MousePositionY > 0)
+				lpMsg->lParam |= MousePositionY << 16;
+				lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
 		} else if (button == SDL_BUTTON_RIGHT) {
 			lpMsg->message = DVL_WM_RBUTTONDOWN;
-			lpMsg->lParam = (e.button.y << 16) | (e.button.x & 0xFFFF);
-			lpMsg->wParam = keystate_for_mouse(DVL_MK_RBUTTON);
+			if (MousePositionX > 0)
+				lpMsg->lParam |= MousePositionX & 0xFFFF;
+			if (MousePositionY > 0)
+				lpMsg->lParam |= MousePositionY << 16;
+				lpMsg->wParam = keystate_for_mouse(DVL_MK_RBUTTON);
 		} else {
 			return false_avail();
 		}
@@ -172,12 +186,18 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		int button = e.button.button;
 		if (button == SDL_BUTTON_LEFT) {
 			lpMsg->message = DVL_WM_LBUTTONUP;
-			lpMsg->lParam = (e.button.y << 16) | (e.button.x & 0xFFFF);
+			if (MousePositionX > 0)
+				lpMsg->lParam |= MousePositionX & 0xFFFF;
+			if (MousePositionY > 0)
+				lpMsg->lParam |= MousePositionY << 16;
 			lpMsg->wParam = keystate_for_mouse(0);
 		} else if (button == SDL_BUTTON_RIGHT) {
 			lpMsg->message = DVL_WM_RBUTTONUP;
-			lpMsg->lParam = (e.button.y << 16) | (e.button.x & 0xFFFF);
-			lpMsg->wParam = keystate_for_mouse(0);
+			if (MousePositionX > 0)
+				lpMsg->lParam |= MousePositionX & 0xFFFF;
+			if (MousePositionY > 0)
+				lpMsg->lParam |= MousePositionY << 16;
+				lpMsg->wParam = keystate_for_mouse(0);
 		} else {
 			return false_avail();
 		}

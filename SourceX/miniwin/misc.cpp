@@ -347,6 +347,9 @@ HWND CreateWindowExA(
 	DvlIntSetting("grab input", &grabInput);
 	if (grabInput) {
 		flags |= SDL_WINDOW_INPUT_GRABBED;
+		if (SDL_SetRelativeMouseMode(SDL_TRUE) <= -1) {
+			SDL_Log(SDL_GetError());
+		}
 	}
 
 	window = SDL_CreateWindow(lpWindowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, nWidth, nHeight, flags);

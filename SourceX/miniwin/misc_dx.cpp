@@ -15,10 +15,10 @@ WINBOOL SetCursorPos(int X, int Y)
 		X += view.x;
 		Y += view.y;
 
-		float scaleX;
-		SDL_RenderGetScale(renderer, &scaleX, NULL);
-		X *= scaleX;
-		Y *= scaleX;
+		float scale;
+		SDL_RenderGetScale(renderer, &scale, NULL);
+		X *= scale;
+		Y *= scale;
 	}
 
 	SDL_WarpMouseInWindow(window, X, Y);
