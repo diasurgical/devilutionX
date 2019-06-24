@@ -11,6 +11,16 @@
 
 namespace dvl {
 
+bool conInv = false;
+float leftStickX;
+float leftStickY;
+float rightStickX;
+float rightStickY;
+float leftTrigger;
+float rightTrigger;
+float deadzoneX;
+float deadzoneY;
+
 static std::deque<MSG> message_queue;
 
 static int translate_sdl_key(SDL_Keysym key)

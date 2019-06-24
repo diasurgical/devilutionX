@@ -161,6 +161,13 @@ RECT32 attribute_inc_rects[4] = {
 	{ 137, 223, 41, 22 }
 };
 
+int attribute_inc_rects2[4][4] = {
+	{ 137, 138, 41, 22 },
+	{ 137, 166, 41, 22 },
+	{ 137, 195, 41, 22 },
+	{ 137, 223, 41, 22 }
+};
+
 int SpellPages[6][7] = {
 	{ SPL_NULL, SPL_FIREBOLT, SPL_CBOLT, SPL_HBOLT, SPL_HEAL, SPL_HEALOTHER, SPL_FLAME },
 	{ SPL_RESURRECT, SPL_FIREWALL, SPL_TELEKINESIS, SPL_LIGHTNING, SPL_TOWN, SPL_FLASH, SPL_STONE },
