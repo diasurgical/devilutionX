@@ -11,6 +11,19 @@
 
 namespace dvl {
 
+bool conInv = false;
+float leftStickX;
+float leftStickY;
+float rightStickX;
+float rightStickY;
+float leftTrigger;
+float rightTrigger;
+float deadzoneX;
+float deadzoneY;
+int doAttack 	= 0;
+int doInv 	= 0;
+int doChar 	= 0;
+
 static std::deque<MSG> message_queue;
 
 static int translate_sdl_key(SDL_Keysym key)
@@ -232,67 +245,74 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 
 	switch (e.type) {
 	case SDL_JOYAXISMOTION:
-
-		if (e.jaxis.axis == 0)
-		{
-			if 	(e.jaxis.value < -8000 )
-				rstick_x +=3;
-			else
-				rstick_x -=3;
-		}
-		if (e.jaxis.axis == 1)
-		{
-			if 	(e.jaxis.value < -8000 )
-				rstick_y +=3;
-			else
-				rstick_y -=3;
-		}
-
-		lpMsg->message = DVL_WM_MOUSEMOVE;
-		lpMsg->lParam = (rstick_y << 16) | (rstick_x & 0xFFFF);
-		lpMsg->wParam = keystate_for_mouse(0);
-
-		lastmouseX = rstick_x;
-		lastmouseY = rstick_y;
+		PollSwitchStick();
+		lpMsg->message = e.type == SDL_KEYUP;
+		lpMsg->lParam = 0;
 		break;
 	case SDL_JOYBUTTONUP:
+		switch(e.jbutton.button)
+		{
+			case 9:
+					lpMsg->message = DVL_WM_LBUTTONUP;
+					lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+					lpMsg->wParam = keystate_for_mouse(0);
+					break;
+		}
 		break;
 	case SDL_JOYBUTTONDOWN:
-	{
-		if (e.jbutton.which == 0) {
-			// A
-			if (e.jbutton.button == 0) {
-
-				int key = DVL_VK_RETURN;
-				lpMsg->message = e.type == SDL_JOYBUTTONDOWN ? DVL_WM_KEYDOWN : DVL_WM_KEYUP;
-				lpMsg->wParam = (DWORD)key;
-				lpMsg->lParam = SDLK_RETURN << 16;
-			}
-			if (e.jbutton.button == 1)
-			{
+		switch(e.jbutton.button)
+		{
+			case  0:	// A
+				break;
+			case  1:	// B
+				doAttack = 1;
+				break;
+			case  2:	// X
+				break;
+			case  3:	// Y
+				doUse = 1;
+				PressKey(VK_RETURN);
+				break;
+			case  6:	// L
+				PressChar('h');
+				break;
+			case  7:	// R
 				PressChar('c');
-			}
+				break;
+			case  8:	// ZL
+				useBeltPotion(false);
+				break;
+			case  9:	// ZR
+				break;
+			case 10:
+				break;
+			case 11:
+				PressKey(VK_ESCAPE);
+				break;
+			case 16:
+				PressKey(VK_LEFT);
+				break;
+			case 17:
+				PressKey(VK_UP);
+				break;
+			case 18:
+				PressKey(VK_RIGHT);
+				break;
+			case 19:
+				PressKey(VK_DOWN);
+				break;
 		}
-	}
-	break;
+		break;
 	case SDL_QUIT:
 		lpMsg->message = DVL_WM_QUIT;
 		break;
-	case SDL_KEYDOWN:
-	case SDL_KEYUP: {
-		int key = translate_sdl_key(e.key.keysym);
-		if (key == -1)
-			return false_avail();
-		lpMsg->message = e.type == SDL_KEYDOWN ? DVL_WM_KEYDOWN : DVL_WM_KEYUP;
-		lpMsg->wParam = (DWORD)key;
-		// HACK: Encode modifier in lParam for TranslateMessage later
-		lpMsg->lParam = e.key.keysym.mod << 16;
-	} break;
+	case SDL_FINGERMOTION:
 	case SDL_MOUSEMOTION:
 		lpMsg->message = DVL_WM_MOUSEMOVE;
 		lpMsg->lParam = (e.motion.y << 16) | (e.motion.x & 0xFFFF);
 		lpMsg->wParam = keystate_for_mouse(0);
 		break;
+	case SDL_FINGERDOWN:
 	case SDL_MOUSEBUTTONDOWN: {
 		int button = e.button.button;
 		if (button == SDL_BUTTON_LEFT) {
@@ -307,6 +327,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 			return false_avail();
 		}
 	} break;
+	case SDL_FINGERUP:
 	case SDL_MOUSEBUTTONUP: {
 		int button = e.button.button;
 		if (button == SDL_BUTTON_LEFT) {

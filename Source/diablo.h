@@ -83,6 +83,7 @@
 #include "trigs.h"
 #include "wave.h"
 #include "render.h" // linked last, likely .s/.asm
+#include "plrctrls.h"
 //#ifdef __cplusplus
 //}
 //#endif

@@ -3223,7 +3223,11 @@ void CheckNewPath(int pnum)
 				i = plr[pnum].destParam1;
 				x = abs(plr[pnum].WorldX - item[i]._ix);
 				y = abs(plr[pnum].WorldY - item[i]._iy);
+#ifndef SWITCH
 				if (x <= 1 && y <= 1 && pcurs == 1 && !item[i]._iRequest) {
+#else
+				if (x <= 1 && y <= 1 && /*pcurs == 1 &&*/ !item[i]._iRequest) { // JAKE: ignore standard cursor
+#endif
 					NetSendCmdGItem(TRUE, CMD_REQUESTGITEM, myplr, myplr, i);
 					item[i]._iRequest = TRUE;
 				}
@@ -3234,7 +3238,11 @@ void CheckNewPath(int pnum)
 				i = plr[pnum].destParam1;
 				x = abs(plr[pnum].WorldX - item[i]._ix);
 				y = abs(plr[pnum].WorldY - item[i]._iy);
+#ifndef SWITCH
 				if (x <= 1 && y <= 1 && pcurs == 1) {
+#else
+				if (x <= 1 && y <= 1 /*&& pcurs == 1*/) { // JAKE: ignore standard cursor
+#endif
 					NetSendCmdGItem(TRUE, CMD_REQUESTAGITEM, myplr, myplr, i);
 				}
 			}
@@ -3684,9 +3692,15 @@ void CheckPlrSpell()
 		return;
 	}
 
+#ifndef SWITCH
 	if (pcurs != CURSOR_HAND
 	    || MouseY >= PANEL_TOP
 	    || (chrflag && MouseX < 320 || invflag && MouseX > 320)
+#else
+	if (pcurs > CURSOR_HAND
+	    || MouseY >= 352
+	    || (chrflag && MouseX < 320 || invflag && MouseX > 320) // JAKE: Let players without cursors cast too
+#endif
 	        && rspell != SPL_HEAL
 	        && rspell != SPL_IDENTIFY
 	        && rspell != SPL_REPAIR

@@ -31,5 +31,6 @@
 ### Credits
 
 - Initial Switch Port by [MVG](https://github.com/lantus) in 2019
+- Controller code by [Jacob Fliss](https://github.com/erfg12)
 
 And a special thanks to all the support and people who work on Devilution to make it possible! <3

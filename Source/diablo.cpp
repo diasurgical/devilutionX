@@ -1,3 +1,6 @@
+#ifdef SWITCH
+	#include <switch.h>
+#endif
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
@@ -644,7 +647,11 @@ BOOL LeftMouseDown(int wParam)
 						CheckSBook();
 					} else if (pcurs >= CURSOR_FIRSTITEM) {
 						if (TryInvPut()) {
+#ifndef SWITCH
 							NetSendCmdPItem(TRUE, CMD_PUTITEM, cursmx, cursmy);
+#else
+							NetSendCmdPItem(TRUE, CMD_PUTITEM, MouseX, MouseY);
+#endif
 							SetCursor_(CURSOR_HAND);
 						}
 					} else {
@@ -674,17 +681,35 @@ BOOL LeftMouseCmd(BOOL bShift)
 	/// ASSERT: assert(MouseY < 352); // PANEL_TOP
 
 	if (leveltype == DTYPE_TOWN) {
+#ifndef SWITCH
 		if (pcursitem != -1 && pcurs == CURSOR_HAND)
 			NetSendCmdLocParam1(TRUE, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, cursmx, cursmy, pcursitem);
+#else
+		if (pcursitem != -1 && pcurs <= CURSOR_HAND) // JAKE: allow no cursor as well
+			NetSendCmdLocParam1(TRUE, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, cursmx, cursmy, pcursitem);
+#endif
 		if (pcursmonst != -1)
 			NetSendCmdLocParam1(TRUE, CMD_TALKXY, cursmx, cursmy, pcursmonst);
 		if (pcursitem == -1 && pcursmonst == -1 && pcursplr == -1)
 			return TRUE;
 	} else {
 		bNear = abs(plr[myplr].WorldX - cursmx) < 2 && abs(plr[myplr].WorldY - cursmy) < 2;
+#ifndef SWITCH
 		if (pcursitem != -1 && pcurs == CURSOR_HAND && !bShift) {
+#else
+	        char debug[256];
+		sprintf(debug, " bNear = %d, pcurs = %d, object[pcursobj]._oBreak = %d, pcursitem = %d",bNear,pcurs, object[pcursobj]._oBreak, pcursitem);
+		svcOutputDebugString(debug,256);
+		if (pcursitem != -1 && pcurs <= CURSOR_HAND && !bShift) { // JAKE: allow no cursor as well
+			cursmx = 320;
+			cursmy = 240;
+#endif
 			NetSendCmdLocParam1(pcurs, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, cursmx, cursmy, pcursitem);
 		} else if (pcursobj != -1 && (!bShift || bNear && object[pcursobj]._oBreak == 1)) {
+#ifdef SWITCH
+			cursmx = 320;
+			cursmy = 240;
+#endif
 			NetSendCmdLocParam1(TRUE, pcurs == CURSOR_DISARM ? CMD_DISARMXY : CMD_OPOBJXY, cursmx, cursmy, pcursobj);
 		} else if (plr[myplr]._pwtype == WT_RANGED) {
 			if (bShift) {
@@ -1423,7 +1448,9 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 		glSeedTbl[currlevel] = setseed;
 
 	music_stop();
+#ifndef SWITCH
 	SetCursor_(CURSOR_HAND);
+#endif
 	SetRndSeed(glSeedTbl[currlevel]);
 	IncProgress();
 	MakeLightTable();
@@ -1696,6 +1723,19 @@ void game_logic()
 	CheckQuests();
 	drawpanflag |= 1;
 	pfile_update(FALSE);
+
+	// JAKE: PLRCTRLS
+	// check for monsters first, then towners or objs.
+	if (pcurs <= 0) { // cursor should be missing
+		if (!checkMonstersNearby(false)) {
+			pcursmonst = -1;
+			checkTownersNearby(false);
+			checkItemsNearby(false);
+		} else {
+			pcursitem = -1;
+		}
+	}
+	keyboardExpension();
 }
 
 void timeout_cursor(BOOL bTimeout)
