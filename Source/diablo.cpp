@@ -1749,6 +1749,19 @@ void game_logic()
 	CheckQuests();
 	drawpanflag |= 1;
 	pfile_update(FALSE);
+
+	// JAKE: PLRCTRLS
+	// check for monsters first, then towners or objs.
+	if (pcurs <= 0) { // cursor should be missing
+		if (!checkMonstersNearby(false)) {
+			pcursmonst = -1;
+			checkTownersNearby(false);
+			checkItemsNearby(false);
+		} else {
+			pcursitem = -1;
+		}
+	}
+	keyboardExpension();
 }
 
 void timeout_cursor(BOOL bTimeout)
