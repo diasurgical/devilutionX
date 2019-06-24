@@ -67,7 +67,7 @@ SMACKEROBJ 		= obj/smk_bitstream.o obj/smk_hufftree.o obj/smacker.o
 RADONOBJ		= obj/File.o obj/Key.o obj/Named.o obj/Section.o
 STORMLIBOBJ 	= obj/FileStream.o obj/SBaseCommon.o obj/SBaseFileTable.o obj/SBaseSubTypes.o obj/SCompression.o obj/SFileExtractFile.o obj/SFileFindFile.o obj/SFileGetFileInfo.o obj/SFileOpenArchive.o obj/SFileOpenFileEx.o obj/SFileReadFile.o
 PKWAREOBJ		= obj/explode.o obj/implode.o
-DEVILUTIONOBJ 	= obj/appfat.o obj/automap.o obj/capture.o obj/codec.o obj/control.o obj/cursor.o obj/dead.o obj/debug.o obj/diablo.o obj/doom.o obj/drlg_l1.o obj/drlg_l2.o obj/drlg_l3.o obj/drlg_l4.o obj/dthread.o obj/effects.o obj/encrypt.o obj/engine.o obj/error.o obj/gamemenu.o obj/gendung.o obj/gmenu.o obj/help.o obj/init.o obj/interfac.o obj/inv.o obj/itemdat.o obj/items.o obj/lighting.o obj/loadsave.o obj/mmainmenu.o obj/minitext.o obj/misdat.o obj/missiles.o obj/monstdat.o obj/monster.o obj/movie.o obj/mpqapi.o obj/msg.o obj/multi.o obj/nthread.o obj/objdat.o obj/objects.o obj/pack.o obj/palette.o obj/path.o obj/pfile.o obj/player.o obj/plrmsg.o obj/portal.o obj/spelldat.o obj/quests.o obj/render.o obj/restrict.o obj/scrollrt.o obj/setmaps.o obj/sha.o obj/spells.o obj/stores.o obj/sync.o obj/textdat.o obj/themes.o obj/tmsg.o obj/town.o obj/towners.o obj/track.o obj/trigs.o obj/wave.o
+DEVILUTIONOBJ 	= obj/appfat.o obj/automap.o obj/capture.o obj/codec.o obj/control.o obj/cursor.o obj/dead.o obj/debug.o obj/diablo.o obj/doom.o obj/drlg_l1.o obj/drlg_l2.o obj/drlg_l3.o obj/drlg_l4.o obj/dthread.o obj/effects.o obj/encrypt.o obj/engine.o obj/error.o obj/gamemenu.o obj/gendung.o obj/gmenu.o obj/help.o obj/init.o obj/interfac.o obj/inv.o obj/itemdat.o obj/items.o obj/lighting.o obj/loadsave.o obj/mmainmenu.o obj/minitext.o obj/misdat.o obj/missiles.o obj/monstdat.o obj/monster.o obj/movie.o obj/mpqapi.o obj/msg.o obj/multi.o obj/nthread.o obj/objdat.o obj/objects.o obj/pack.o obj/palette.o obj/path.o obj/pfile.o obj/player.o obj/plrctrls.o obj/plrmsg.o obj/portal.o obj/spelldat.o obj/quests.o obj/render.o obj/restrict.o obj/scrollrt.o obj/setmaps.o obj/sha.o obj/spells.o obj/stores.o obj/sync.o obj/textdat.o obj/themes.o obj/tmsg.o obj/town.o obj/towners.o obj/track.o obj/trigs.o obj/wave.o
 MAINOBJ			= obj/dx.o obj/misc.o obj/misc_io.o obj/misc_msg.o obj/misc_dx.o obj/rand.o obj/thread.o obj/dsound.o obj/sound.o obj/storm.o obj/storm_net.o obj/storm_dx.o obj/abstract_net.o obj/loopback.o obj/packet.o obj/base.o obj/frame_queue.o obj/credits.o obj/diabloui.o obj/dialogs.o obj/mainmenu.o obj/progress.o obj/selconn.o obj/selgame.o obj/selhero.o obj/selyesno.o obj/title.o obj/main.o
 
 LIBS      	= -specs=$(DEVKITPRO)/libnx/switch.specs -g -march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIE -L$(DEVKITPRO)/libnx/lib -L$(DEVKITPRO)/portlibs/switch/lib -lSDL2_mixer -lSDL2_ttf -lfreetype -lvorbisfile -lvorbis -logg -lmodplug -lmikmod -lmpg123 -lSDL2 -lEGL -lglapi -ldrm_nouveau -lpng -lbz2 -lz -lnx
@@ -244,6 +244,8 @@ obj/player.o: $(GLOBALDEPS)  Source/player.cpp
 	$(CPP) -c  Source/player.cpp -o obj/player.o $(CXXFLAGS)
 obj/plrmsg.o: $(GLOBALDEPS)  Source/plrmsg.cpp
 	$(CPP) -c  Source/plrmsg.cpp -o obj/plrmsg.o $(CXXFLAGS)
+obj/plrctrls.o: $(GLOBALDEPS) Source/plrctrls.cpp
+	$(CPP) -c Source/plrctrls.cpp -o obj/plrctrls.o $(CXXFLAGS)
 obj/portal.o: $(GLOBALDEPS)  Source/portal.cpp
 	$(CPP) -c  Source/portal.cpp -o obj/portal.o $(CXXFLAGS)
 obj/spelldat.o: $(GLOBALDEPS)  Source/spelldat.cpp
