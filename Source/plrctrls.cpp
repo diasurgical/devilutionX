@@ -430,6 +430,7 @@ void hotSpellMove(int key)
 		SetCursorPos(x, y);
 }
 // walk in the direction specified
+ 
 void walkInDir(int dir)
 {
 	if (invflag || spselflag || chrflag) // don't walk if inventory, speedbook or char info windows are open

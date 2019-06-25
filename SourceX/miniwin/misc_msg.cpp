@@ -152,49 +152,8 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	lpMsg->wParam = 0;
 
 	switch (e.type) {
-	case SDL_JOYAXISMOTION:
-
-		if (e.jaxis.axis == 0)
-		{
-			if 	(e.jaxis.value < -8000 )
-				rstick_x +=3;
-			else
-				rstick_x -=3;
-		}
-		if (e.jaxis.axis == 1)
-		{
-			if 	(e.jaxis.value < -8000 )
-				rstick_y +=3;
-			else
-				rstick_y -=3;
-		}
-
-		lpMsg->message = DVL_WM_MOUSEMOVE;
-		lpMsg->lParam = (rstick_y << 16) | (rstick_x & 0xFFFF);
-		lpMsg->wParam = keystate_for_mouse(0);
-
-		lastmouseX = rstick_x;
-		lastmouseY = rstick_y;
-		break;
-	case SDL_JOYBUTTONUP:
-		break;
 	case SDL_JOYBUTTONDOWN:
-	{
-		if (e.jbutton.which == 0) {
-			// A
-			if (e.jbutton.button == 0) {
-
-				int key = DVL_VK_RETURN;
-				lpMsg->message = e.type == SDL_JOYBUTTONDOWN ? DVL_WM_KEYDOWN : DVL_WM_KEYUP;
-				lpMsg->wParam = (DWORD)key;
-				lpMsg->lParam = SDLK_RETURN << 16;
-			}
-			if (e.jbutton.button == 1)
-			{
-				PressChar('c');
-			}
-		}
-	}
+			 LeftMouseCmd(MK_LBUTTON);
 	break;
 	case SDL_QUIT:
 		lpMsg->message = DVL_WM_QUIT;
