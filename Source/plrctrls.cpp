@@ -11,6 +11,9 @@ extern float leftTrigger;
 extern float rightTrigger;
 extern float deadzoneX;
 extern float deadzoneY;
+extern int doAttack;
+extern int doInv;
+extern int doChar;
 
 #define INV_TOP 240;
 #define INV_LEFT 350;
@@ -430,6 +433,7 @@ void hotSpellMove(int key)
 		SetCursorPos(x, y);
 }
 // walk in the direction specified
+ 
 void walkInDir(int dir)
 {
 	if (invflag || spselflag || chrflag) // don't walk if inventory, speedbook or char info windows are open
@@ -473,7 +477,7 @@ void keyboardExpension()
 		return;
 	if (GetAsyncKeyState(VK_SHIFT) & 0x8000)
 		return;
-	if (GetAsyncKeyState(VK_SPACE) & 0x8000) { // similar to X button on PS1 ccontroller. Talk to towners, click on inv items, attack.
+	if (GetAsyncKeyState(VK_SPACE) & 0x8000 || doAttack) { // similar to X button on PS1 ccontroller. Talk to towners, click on inv items, attack.
 		if (invflag) {                         // inventory is open
 			if (ticks - clickinvtimer >= 300) {
 				clickinvtimer = ticks;
@@ -510,7 +514,9 @@ void keyboardExpension()
 				}
 			}
 		}
-	} else if (GetAsyncKeyState(VK_RETURN) & 0x8000) { // similar to [] button on PS1 controller. Open chests, doors, pickup items
+	 doAttack = 0;
+
+	} else if (GetAsyncKeyState(VK_RETURN) & 0x8000 || doAttack) { // similar to [] button on PS1 controller. Open chests, doors, pickup items
 		if (!invflag) {
 			HideCursor();
 			if (ticks - opentimer > 300) {
