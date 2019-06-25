@@ -20,6 +20,9 @@ float leftTrigger;
 float rightTrigger;
 float deadzoneX;
 float deadzoneY;
+int doAttack 	= 0;
+int doInv 	= 0;
+int doChar 	= 0;
 
 static std::deque<MSG> message_queue;
 
@@ -152,13 +155,54 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	lpMsg->wParam = 0;
 
 	switch (e.type) {
+	case SDL_JOYBUTTONUP:
+		doAttack = 0;
+		break;
 	case SDL_JOYBUTTONDOWN:
-			 LeftMouseCmd(MK_LBUTTON);
-	break;
+		switch(e.jbutton.button)
+		{
+			case  0:	// A
+				PressChar('i');
+				break;
+			case  1:	// B
+				doAttack = 1;
+				break;
+			case  2:	// X
+				PressChar('x');
+				break;
+			case  3:	// Y
+				PressChar(VK_RETURN);
+				break;
+			case  6:	// L
+				PressChar('h');
+				break;
+			case  7:	// R
+				PressChar('c');
+				break;
+			case  8:	// ZL
+				useBeltPotion(false);
+				break;
+			case  9:	// ZR
+				useBeltPotion(true);
+				break;
+			case 16:
+				PressKey(VK_LEFT);
+				break;
+			case 17:
+				PressKey(VK_UP);
+				break;
+			case 18:
+				PressKey(VK_RIGHT);
+				break;
+			case 19:
+				PressKey(VK_DOWN);
+				break;
+		}
+		break;
 	case SDL_QUIT:
 		lpMsg->message = DVL_WM_QUIT;
 		break;
-	case SDL_KEYDOWN:
+	/*case SDL_KEYDOWN:
 	case SDL_KEYUP: {
 		int key = translate_sdl_key(e.key.keysym);
 		if (key == -1)
@@ -167,7 +211,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		lpMsg->wParam = (DWORD)key;
 		// HACK: Encode modifier in lParam for TranslateMessage later
 		lpMsg->lParam = e.key.keysym.mod << 16;
-	} break;
+	} break;*/
 	case SDL_MOUSEMOTION:
 		lpMsg->message = DVL_WM_MOUSEMOVE;
 		lpMsg->lParam = (e.motion.y << 16) | (e.motion.x & 0xFFFF);
