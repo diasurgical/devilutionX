@@ -869,6 +869,9 @@ BOOL LeftMouseCmd(BOOL bShift)
 #ifndef SWITCH
 		if (pcursitem != -1 && pcurs == CURSOR_HAND)
 			NetSendCmdLocParam1(TRUE, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, cursmx, cursmy, pcursitem);
+#else
+		if (pcursitem != -1 && pcurs <= CURSOR_HAND) // JAKE: allow no cursor as well
+			NetSendCmdLocParam1(TRUE, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, cursmx, cursmy, pcursitem);
 #endif
 		if (pcursmonst != -1)
 			NetSendCmdLocParam1(TRUE, CMD_TALKXY, cursmx, cursmy, pcursmonst);
@@ -1654,7 +1657,9 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 		glSeedTbl[currlevel] = setseed;
 
 	music_stop();
+#ifndef SWITCH
 	SetCursor_(CURSOR_HAND);
+#endif
 	SetRndSeed(glSeedTbl[currlevel]);
 	IncProgress();
 	MakeLightTable();

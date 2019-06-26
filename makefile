@@ -11,7 +11,7 @@ include $(DEVKITPRO)/libnx/switch_rules
 APP_TITLE 	:= diablo-nx
 APP_AUTHOR 	:= MVG
 APP_VERSION := 1.0.0
-ICON 		:= Icon.jpg
+ICON 		:= Xcode/AppIcon.xcassets/AppIcon.appiconset/1024.png
 BUILD		:= build
 DATA		:= data
 INCLUDES	:= include

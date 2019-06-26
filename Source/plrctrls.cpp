@@ -1,3 +1,4 @@
+#include <switch.h>
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
@@ -64,7 +65,8 @@ void checkItemsNearby(bool interact)
 			if (dItem[item[i]._ix][item[i]._iy] <= 0)
 				continue;
 			if (interact) {
-				//sprintf(tempstr, "FOUND NEARBY ITEM AT X:%i Y:%i SEL:%i", item[i]._ix, item[i]._iy, item[i]._iSelFlag);
+				sprintf(tempstr, "FOUND NEARBY ITEM AT X:%i Y:%i SEL:%i", item[i]._ix, item[i]._iy, item[i]._iSelFlag);
+				svcOutputDebugString(tempstr,100);
 				//NetSendCmdString(1 << myplr, tempstr);
 				SetCursorPos(item[i]._ix, item[i]._iy);
 				LeftMouseCmd(false);
@@ -133,6 +135,9 @@ bool checkMonstersNearby(bool attack)
 		return false;
 	}
 	if (attack) {
+
+		svcOutputDebugString("attacking?",30);
+
 		if (ticks - attacktick > 100) { // prevent accidental double attacks
 			attacktick = ticks;
 			LeftMouseCmd(false);
@@ -433,7 +438,7 @@ void hotSpellMove(int key)
 		SetCursorPos(x, y);
 }
 // walk in the direction specified
- 
+
 void walkInDir(int dir)
 {
 	if (invflag || spselflag || chrflag) // don't walk if inventory, speedbook or char info windows are open
@@ -514,7 +519,9 @@ void keyboardExpension()
 				}
 			}
 		}
-	} else if (GetAsyncKeyState(VK_RETURN) & 0x8000) { // similar to [] button on PS1 controller. Open chests, doors, pickup items
+	 doAttack = 0;
+
+	} else if (GetAsyncKeyState(VK_RETURN) & 0x8000 || doAttack) { // similar to [] button on PS1 controller. Open chests, doors, pickup items
 		if (!invflag) {
 			HideCursor();
 			if (ticks - opentimer > 300) {
