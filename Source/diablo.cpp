@@ -862,6 +862,9 @@ BOOL LeftMouseCmd(BOOL bShift)
 #ifndef SWITCH
 		if (pcursitem != -1 && pcurs == CURSOR_HAND && !bShift) {
 #else
+	        char debug[256];
+		sprintf(debug, " bNear = %d, pcurs = %d, object[pcursobj]._oBreak = %d, pcursitem = %d",bNear,pcurs, object[pcursobj]._oBreak, pcursitem);
+		svcOutputDebugString(debug,256);
 		if (pcursitem != -1 && pcurs <= CURSOR_HAND && !bShift) { // JAKE: allow no cursor as well
 #endif
 			NetSendCmdLocParam1(pcurs, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, cursmx, cursmy, pcursitem);

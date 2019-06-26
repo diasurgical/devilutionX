@@ -134,6 +134,11 @@ void gamemenu_load_game(BOOL bActivate)
 
 void gamemenu_save_game(BOOL bActivate)
 {
+#ifdef SWITCH
+	if (pcurs <= CURSOR_HAND) {
+		SetCursor_(CURSOR_HAND);
+
+#endif
 	if (pcurs != CURSOR_HAND) {
 		return;
 	}
@@ -155,6 +160,9 @@ void gamemenu_save_game(BOOL bActivate)
 	SetCursor_(CURSOR_HAND);
 	interface_msg_pump();
 	SetWindowProc(saveProc);
+#ifdef SWITCH
+	}
+#endif
 }
 
 void gamemenu_restart_town(BOOL bActivate)
