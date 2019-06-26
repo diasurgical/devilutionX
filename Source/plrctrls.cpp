@@ -13,7 +13,7 @@ extern float rightTrigger;
 extern float deadzoneX;
 extern float deadzoneY;
 extern int doAttack;
-extern int doInv;
+extern int doUse;
 extern int doChar;
 
 #define INV_TOP 240;
@@ -519,9 +519,7 @@ void keyboardExpension()
 				}
 			}
 		}
-	 doAttack = 0;
-
-	} else if (GetAsyncKeyState(VK_RETURN) & 0x8000 || doAttack) { // similar to [] button on PS1 controller. Open chests, doors, pickup items
+	} else if (GetAsyncKeyState(VK_RETURN) & 0x8000 || doUse) { // similar to [] button on PS1 controller. Open chests, doors, pickup items
 		if (!invflag) {
 			HideCursor();
 			if (ticks - opentimer > 300) {
