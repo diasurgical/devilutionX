@@ -176,7 +176,7 @@ DWORD WaitForSingleObject(HANDLE hHandle, DWORD dwMilliseconds)
 	// return value different from WinAPI
 	if (threads.find((uintptr_t)hHandle) != threads.end())
 		return wait_for_sdl_thread(hHandle, dwMilliseconds);
-	if (events.find((uintptr_t)hHandle) != threads.end())
+	if (events.find((uintptr_t)hHandle) != events.end())
 		return wait_for_sdl_cond(hHandle, dwMilliseconds);
 	UNIMPLEMENTED();
 }
