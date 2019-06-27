@@ -250,20 +250,22 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		lpMsg->lParam = 0;
 		break;
 	case SDL_JOYBUTTONUP:
-		doAttack = 0;
-		doUse = 0;
+		//doAttack = 0;
+		//doUse = 0;
 		break;
 	case SDL_JOYBUTTONDOWN:
 		switch(e.jbutton.button)
 		{
 			case  0:	// A
-				PressChar('i');
+				doAttack = 1;
+				doUse = 1;
 				break;
 			case  1:	// B
 				doAttack = 1;
+				doUse = 1;
 				break;
 			case  2:	// X
-				PressChar('x');
+				PressChar('i');
 				break;
 			case  3:	// Y
 				doUse = 1;

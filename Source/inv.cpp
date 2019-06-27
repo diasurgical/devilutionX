@@ -2065,10 +2065,15 @@ BOOL UseInvItem(int pnum, int cii)
 
 	if (plr[pnum]._pInvincible && !plr[pnum]._pHitPoints && pnum == myplr)
 		return TRUE;
+#ifndef SWITCH
 	if (pcurs != 1)
 		return TRUE;
 	if (stextflag)
 		return TRUE;
+#else
+	if (pcurs != 1 && !stextflag)
+	{
+#endif
 	if (cii <= 5)
 		return FALSE;
 
@@ -2158,6 +2163,9 @@ BOOL UseInvItem(int pnum, int cii)
 	} else if (plr[pnum].InvList[c]._iMiscId != IMISC_MAPOFDOOM) {
 		RemoveInvItem(pnum, c);
 	}
+#ifdef SWITCH
+	}
+#endif
 
 	return TRUE;
 }
