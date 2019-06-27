@@ -136,7 +136,7 @@ BOOL RndLocOk(int xp, int yp)
 		return FALSE;
 	if (nSolidTable[dPiece[xp][yp]])
 		return FALSE;
-	if (leveltype != 1 || dPiece[xp][yp] <= 126 || dPiece[xp][yp] >= 144)
+	if (leveltype != DTYPE_CATHEDRAL || dPiece[xp][yp] <= 126 || dPiece[xp][yp] >= 144)
 		return TRUE;
 	return FALSE;
 }
@@ -831,7 +831,7 @@ void InitObjects()
 		InitRndLocObj(5, 10, 5);
 		InitRndLocObj(3, 6, 6);
 		InitRndLocObj(1, 5, 7);
-		if (leveltype != 4)
+		if (leveltype != DTYPE_HELL)
 			AddObjTraps();
 		if (leveltype > 1u)
 			AddChestTraps();

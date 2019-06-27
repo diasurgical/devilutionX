@@ -146,7 +146,7 @@ BOOL TFit_SkelRoom(int t)
 {
 	int i;
 
-	if (leveltype != 1 && leveltype != 2) {
+	if (leveltype != DTYPE_CATHEDRAL && leveltype != DTYPE_CATACOMBS) {
 		return FALSE;
 	}
 
@@ -425,7 +425,7 @@ void InitThemes()
 			}
 		}
 	}
-	if (leveltype == 2 || leveltype == 3 || leveltype == 4) {
+	if (leveltype == DTYPE_CATACOMBS || leveltype == DTYPE_CAVES || leveltype == DTYPE_HELL) {
 		for (i = 0; i < themeCount; i++)
 			themes[i].ttype = THEME_NONE;
 		if (QuestStatus(QTYPE_ZHAR)) {

@@ -126,7 +126,7 @@ void GetPortalLevel()
 		setlevel = 0;
 		currlevel = 0;
 		plr[myplr].plrlevel = 0;
-		leveltype = 0;
+		leveltype = DTYPE_TOWN;
 	} else {
 		if (portal[portalindex].setlvl) {
 			setlevel = 1;
