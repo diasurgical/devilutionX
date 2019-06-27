@@ -866,9 +866,15 @@ BOOL LeftMouseCmd(BOOL bShift)
 		sprintf(debug, " bNear = %d, pcurs = %d, object[pcursobj]._oBreak = %d, pcursitem = %d",bNear,pcurs, object[pcursobj]._oBreak, pcursitem);
 		svcOutputDebugString(debug,256);
 		if (pcursitem != -1 && pcurs <= CURSOR_HAND && !bShift) { // JAKE: allow no cursor as well
+			cursmx = 320;
+			cursmy = 240;
 #endif
 			NetSendCmdLocParam1(pcurs, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, cursmx, cursmy, pcursitem);
 		} else if (pcursobj != -1 && (!bShift || bNear && object[pcursobj]._oBreak == 1)) {
+#ifdef SWITCH
+			cursmx = 320;
+			cursmy = 240;
+#endif
 			NetSendCmdLocParam1(TRUE, pcurs == CURSOR_DISARM ? CMD_DISARMXY : CMD_OPOBJXY, cursmx, cursmy, pcursobj);
 		} else if (plr[myplr]._pwtype == WT_RANGED) {
 			if (bShift) {
