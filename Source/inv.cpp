@@ -2095,8 +2095,13 @@ BOOL UseInvItem(int pnum, int cii)
 	if (plr[pnum]._pInvincible && !plr[pnum]._pHitPoints && pnum == myplr)
 		return TRUE;
 
+#ifndef SWITCH
 	if (pcurs != 1 || stextflag)
 		return TRUE;
+#else
+	if (pcurs != 1 && !stextflag)
+	{
+#endif
 
 	if (cii <= 5)
 		return FALSE;
@@ -2180,6 +2185,9 @@ BOOL UseInvItem(int pnum, int cii)
 		}
 		break;
 	}
+#ifdef SWITCH
+	}
+#endif
 
 	return TRUE;
 }
