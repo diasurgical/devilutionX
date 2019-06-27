@@ -545,25 +545,25 @@ void SetReturnLvlPos()
 	case SL_SKELKING:
 		ReturnLvlX = quests[QTYPE_KING]._qtx + 1;
 		ReturnLvlY = quests[QTYPE_KING]._qty;
-		ReturnLvlT = 1;
+		ReturnLvlT = DTYPE_CATHEDRAL;
 		ReturnLvl = quests[QTYPE_KING]._qlevel;
 		break;
 	case SL_BONECHAMB:
 		ReturnLvlX = quests[QTYPE_BONE]._qtx + 1;
 		ReturnLvlY = quests[QTYPE_BONE]._qty;
-		ReturnLvlT = 2;
+		ReturnLvlT = DTYPE_CATACOMBS;
 		ReturnLvl = quests[QTYPE_BONE]._qlevel;
 		break;
 	case SL_POISONWATER:
 		ReturnLvlX = quests[QTYPE_PW]._qtx;
 		ReturnLvlY = quests[QTYPE_PW]._qty + 1;
-		ReturnLvlT = 1;
+		ReturnLvlT = DTYPE_CATHEDRAL;
 		ReturnLvl = quests[QTYPE_PW]._qlevel;
 		break;
 	case SL_VILEBETRAYER:
 		ReturnLvlX = quests[QTYPE_VB]._qtx + 1;
 		ReturnLvlY = quests[QTYPE_VB]._qty - 1;
-		ReturnLvlT = 4;
+		ReturnLvlT = DTYPE_HELL;
 		ReturnLvl = quests[QTYPE_VB]._qlevel;
 		break;
 	}
