@@ -1,0 +1,2362 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0B01272BA5564C4D86DDD73B /* cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7BE8E351295E45D48AAB963A /* cursor.cpp */; };
+		10D62D84BAE14CE380D299D3 /* SFileGetFileInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2D2AD304316E474098B49708 /* SFileGetFileInfo.cpp */; };
+		13DA41EF0630487088EB9758 /* Section.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7994196BCD704A8285E842FE /* Section.cpp */; };
+		19128C609C194786990E1D08 /* palette.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DD69BB0F7A30454484A3CDA2 /* palette.cpp */; };
+		1A0FDDF5AD9E4055B91DCBCA /* spells.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A6DDB5DF88264723867DA5C8 /* spells.cpp */; };
+		1C69F04BDE8A4E31937C5E2D /* pack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6AC43BF142714BC9A820B846 /* pack.cpp */; };
+		229ACA29435A48BD973AB99A /* movie.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B10AE0780A554BB28121B67C /* movie.cpp */; };
+		22DF23F12900438A9A79B43D /* sync.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9429C3C795274560B7EC0B45 /* sync.cpp */; };
+		25032C59CB384CCF9662792D /* missiles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07BD66488DB549C0BAAABAE0 /* missiles.cpp */; };
+		27A16D03657E4285B8436B64 /* SCompression.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A1166B209FE94438B38CBBE0 /* SCompression.cpp */; };
+		2B488F9320954EE38B087BA6 /* objects.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 26844FD59AE54AD792599740 /* objects.cpp */; };
+		2F3892BAC3004FC7BFE29335 /* plrmsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33B919BA990F4AA6867183F7 /* plrmsg.cpp */; };
+		328473368BA7489893A6FDFE /* gamemenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AE267FCF99294D54A8531061 /* gamemenu.cpp */; };
+		3470CB8BDA8D4EDCAAAB44DB /* SFileFindFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA64F5EE590D4F93A8F62FBF /* SFileFindFile.cpp */; };
+		39E8F1A86D5F4B50875AEC87 /* capture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A5B95B76E6A4F0C99E50442 /* capture.cpp */; };
+		3CD39E36734C4F9EB7840D2B /* msg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 14B936D61B6E44A5A617BFB1 /* msg.cpp */; };
+		3DDBC07AE5D34575B392C98D /* Key.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB481FBFF23A47FD925631E6 /* Key.cpp */; };
+		3F3AB8D3CAA14374BCB5D84C /* themes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 515AECF40B104947A5DA27DE /* themes.cpp */; };
+		47C57628A4744B03B01BEE98 /* town.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 86C00ABB0BC943C7B6D34557 /* town.cpp */; };
+		485FA6F2A2764A629DF04AB4 /* error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7B257D3F80E2438884DEA9F8 /* error.cpp */; };
+		4B50510B38694E438A84C012 /* help.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F7285759B0F94368BD23E14A /* help.cpp */; };
+		4D1A9ECC39AA457198D07386 /* itemdat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FCBF3CAB8CF14CA8A1E0ED8B /* itemdat.cpp */; };
+		4F099374A9D747F3876DFF9C /* doom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C25ADA37E96D43439DD67B77 /* doom.cpp */; };
+		502083FB8B254E27B30F3C45 /* items.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F280B9B2D0B43C9A15C9B8F /* items.cpp */; };
+		51E970E420E644A49B6AB383 /* drlg_l1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F89CC4D8BA94E9A9C77C8ED /* drlg_l1.cpp */; };
+		528EF7CCBC344DFEBEFCB806 /* lighting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 81CC5FF9A2C04B848BD9C4E2 /* lighting.cpp */; };
+		58618D336FF74F3394EEB9E5 /* inv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8F7DA655CBB94EC28F9AEA48 /* inv.cpp */; };
+		5884A25DD97E4C03BFD4322C /* init.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F02FD639F3C948E4A482BFA9 /* init.cpp */; };
+		5BCED8CF48104C4C886050AF /* mainmenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 234AB08693A64D9EB680EEAB /* mainmenu.cpp */; };
+		5E75CBC6C79A45DAA79EAB1A /* control.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9071838230EC489286337DE1 /* control.cpp */; };
+		5F12CEBFA3B3410B86F86154 /* smk_bitstream.c in Sources */ = {isa = PBXBuildFile; fileRef = A2A60DACC0F848A0AD9A9FE5 /* smk_bitstream.c */; };
+		606EC65AA1CD4F65AB77B0C1 /* setmaps.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07E51443B2E94D7D9F0EA813 /* setmaps.cpp */; };
+		624FA906C84740079B9ECD21 /* drlg_l3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85EAFDA8BDFF4343B91CB316 /* drlg_l3.cpp */; };
+		64170493ED41468CA11B9D35 /* FileStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B27439475EE410D8EFCAD0E /* FileStream.cpp */; };
+		64E7E9CD2CA24D0A99726639 /* implode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0921A2A198C34FCE8CDB39A0 /* implode.cpp */; };
+		6A318C664A3F40079CE1BAD4 /* codec.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 47930305D44B48AFA3D7264F /* codec.cpp */; };
+		6CABFF2595DC411894F71594 /* gendung.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 39C69D1B6B2849F288D33ECC /* gendung.cpp */; };
+		6D8E943F36A74EDA9F81C38D /* multi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9F5633AC5C3C4745B042958C /* multi.cpp */; };
+		6FC5279C3F664EAB9E2BC4C9 /* fault.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 79DF5B8396DB427E84097A9C /* fault.cpp */; };
+		7490B2A0AFD0440EBAC0C7E1 /* interfac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9D6A6D4EB16846D8B0B24A0F /* interfac.cpp */; };
+		7666545097794DA59F0B8FCF /* drlg_l2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0F23432219D4C96B5DA293C /* drlg_l2.cpp */; };
+		76E92C50CA0044D1BD674E0F /* drlg_l4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6113871EEC594D41A4035F56 /* drlg_l4.cpp */; };
+		78FF3F7E725142DFA53CFA18 /* debug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B054F90301D7428AABC4A717 /* debug.cpp */; };
+		7935FE57249C4BAFB417CCB9 /* track.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 70FD6A04AFA14672B9A7EA73 /* track.cpp */; };
+		7ABF663C471F43249FB9F7AC /* smacker.c in Sources */ = {isa = PBXBuildFile; fileRef = 190EA16FFEC44F5DBA6E4DF8 /* smacker.c */; };
+		86DC676D3C364754993DDE1F /* tmsg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C326465DF7364DC7B01B20E3 /* tmsg.cpp */; };
+		877DC923FD56446AA996945A /* SFileOpenArchive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 500595CA03CE442CA1550750 /* SFileOpenArchive.cpp */; };
+		88760B7982A5496DB4E08846 /* SFileExtractFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F148A8250C4046D392B03B3D /* SFileExtractFile.cpp */; };
+		8935B647660844E784AEB6CB /* SBaseFileTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B68121E8452B4CA893C67B20 /* SBaseFileTable.cpp */; };
+		8D3CE2BD9DBC407086EB53FB /* misdat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 82EEE6A1CE804332BE4A0E62 /* misdat.cpp */; };
+		8E320FA9127E416CB8BF300B /* gmenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 77D1108C71624E7DA394330E /* gmenu.cpp */; };
+		8F7D00D743684560BB565C4B /* textdat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AD5BB016735E4C5C8AEB62E7 /* textdat.cpp */; };
+		904E3D56A27346A1AA3438A7 /* smk_hufftree.c in Sources */ = {isa = PBXBuildFile; fileRef = D953A11B8B75484494AA1576 /* smk_hufftree.c */; };
+		9382B1A531094A9F9C6F75F0 /* path.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8C79E3303F5F4517942AF6B5 /* path.cpp */; };
+		941818198D4A4E2991347377 /* spelldat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9E50C221509D4A6AAB43FAA4 /* spelldat.cpp */; };
+		94BE4E8B924E4A03BBA1D2C3 /* player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7AF28497CE0A427DA54296FE /* player.cpp */; };
+		95406B19C7FE4E15B7F03B76 /* encrypt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BB2DE80B0444CD79756780F /* encrypt.cpp */; };
+		972BBC7E5C8E4AADB3334D19 /* render.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 69C5DF531F3E49B28DDDC23B /* render.cpp */; };
+		9853E9F4CB64448885B77142 /* portal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 627E1E355C73441DAC7EDD3E /* portal.cpp */; };
+		9B81D6A70EE1480A9745B9AF /* pfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C2D6E88C7D94FA2A678C074 /* pfile.cpp */; };
+		A88EBF4A82EA4D81930A397A /* monster.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A65CA0D1672640308B89FDBC /* monster.cpp */; };
+		ABCCAE0431D24F139492BBEF /* minitext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D453307175A74B67829F81B6 /* minitext.cpp */; };
+		B40FB0168BFA49CDBF93CF36 /* effects.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB383523975444B39A8C1ACF /* effects.cpp */; };
+		B9B74746230C41B085DEE3D3 /* restrict.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1765A483E8C04DA9A26CA4C9 /* restrict.cpp */; };
+		BFE6EB5B56364229BE98528A /* SBaseSubTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C96E5D2B9D0243D3A091D662 /* SBaseSubTypes.cpp */; };
+		C02C1F49A0AF42B9A5D0E37C /* File.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3587F653612F494AB0992613 /* File.cpp */; };
+		C0BE8604DC3C4A949EB68544 /* loadsave.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E3E01BC88F2D4D61806E19B2 /* loadsave.cpp */; };
+		C6B71EBE888A48B59E31E241 /* msgcmd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5EF2CC5CDA474289AC183889 /* msgcmd.cpp */; };
+		C7B3CCB4A0B14E78AF56FE24 /* logging.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 70FBE77F891F47EAAD6B7BCE /* logging.cpp */; };
+		C817BAD224004CDD9E3D89C7 /* appfat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3BB9C8F2CFD3496E8D4A51C5 /* appfat.cpp */; };
+		C95CA138E9F74C60B0D8362A /* quests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F928C727570C4691AF221C7B /* quests.cpp */; };
+		CAAF451BA778449AAAB667C8 /* wave.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 01A06EAA915F4FDABDCDB765 /* wave.cpp */; };
+		CC27C8EBA1FB4F09B05FC77C /* dead.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32170A9601F74E808329B567 /* dead.cpp */; };
+		CE2DB24822C7D8AB0053589E /* libSDL2_mixer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CEDCFDB022C7D7C1006A4224 /* libSDL2_mixer.a */; };
+		CE2DB24922C7D8AB0053589E /* libSDL2_ttf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CEDCFDBB22C7D7F2006A4224 /* libSDL2_ttf.a */; };
+		CE2DB26B22C7D9FB0053589E /* libSDL2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CE2DB26622C7D9B40053589E /* libSDL2.a */; };
+		CE2DB26C22C7DD8F0053589E /* libdevilution.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D555C5AEEE784D4A8496D59C /* libdevilution.a */; };
+		CE2DB26D22C7DD8F0053589E /* libPKWare.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 38230443585844E38700EACF /* libPKWare.a */; };
+		CE2DB26E22C7DD8F0053589E /* libRadon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 03F8A9BEA2F54315A2F7CEF8 /* libRadon.a */; };
+		CE2DB26F22C7DD8F0053589E /* libsmacker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A56FDAEA85344F4790653B53 /* libsmacker.a */; };
+		CE2DB27022C7DD8F0053589E /* libStormLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27E32C71ED9645FA8DC8EC77 /* libStormLib.a */; };
+		CE2DB28422C7E4040053589E /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE2DB28322C7E4040053589E /* AVFoundation.framework */; };
+		CE2DB28522C7E4340053589E /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE2DB28122C7E18A0053589E /* GameController.framework */; };
+		CE2DB28622C7E4760053589E /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE2DB27722C7E1530053589E /* AudioToolbox.framework */; };
+		CE2DB28722C7E4910053589E /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE2DB27522C7E1490053589E /* CoreMotion.framework */; };
+		CE87417B12614559BDB13F1E /* towners.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9133F997060644F785B2ECAB /* towners.cpp */; };
+		CE8AF0AD22C81ADF001CC4F9 /* diabdat.mpq in Resources */ = {isa = PBXBuildFile; fileRef = CE8AF0A222C81ADF001CC4F9 /* diabdat.mpq */; };
+		CEDA267A22C7C058005B63C3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDA267922C7C058005B63C3 /* AppDelegate.m */; };
+		CEDA268022C7C058005B63C3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEDA267E22C7C058005B63C3 /* Main.storyboard */; };
+		CEDA268522C7C059005B63C3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEDA268322C7C059005B63C3 /* LaunchScreen.storyboard */; };
+		CEDA269022C7C296005B63C3 /* credits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F56B11506C9146BEADA9E8EA /* credits.cpp */; };
+		CEDA269122C7C296005B63C3 /* diabloui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC92486E6AE24C008E2A44A0 /* diabloui.cpp */; };
+		CEDA269222C7C296005B63C3 /* dialogs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C5107D328019431AA323E44E /* dialogs.cpp */; };
+		CEDA269322C7C296005B63C3 /* mainmenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 816237343D1B4210A83892E3 /* mainmenu.cpp */; };
+		CEDA269422C7C296005B63C3 /* progress.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1B290945387D4F638D3BDBC4 /* progress.cpp */; };
+		CEDA269522C7C296005B63C3 /* selconn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C41CB5CE0ECD4E4BA5B16DC7 /* selconn.cpp */; };
+		CEDA269622C7C296005B63C3 /* selgame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC8E8BC8BE047E1A665EF23 /* selgame.cpp */; };
+		CEDA269722C7C296005B63C3 /* selhero.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C8A9EB6BE4344F6C91BDE4C0 /* selhero.cpp */; };
+		CEDA269822C7C296005B63C3 /* title.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E724927913CE4D8E88612584 /* title.cpp */; };
+		CEDA269922C7C296005B63C3 /* abstract_net.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 88A1CCAE8D1F4F3798D58166 /* abstract_net.cpp */; };
+		CEDA269A22C7C296005B63C3 /* base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 23A8F4854DBD4651B1630CA2 /* base.cpp */; };
+		CEDA269B22C7C296005B63C3 /* frame_queue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89250183066A4FB496239362 /* frame_queue.cpp */; };
+		CEDA269C22C7C296005B63C3 /* loopback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B1BFF8FF96654B68B82A5914 /* loopback.cpp */; };
+		CEDA269D22C7C296005B63C3 /* packet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BDB99E8CC927416B81369966 /* packet.cpp */; };
+		CEDA26A122C7C296005B63C3 /* dx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8B6A1A0ACBFA4F0380CB9B4B /* dx.cpp */; };
+		CEDA26A222C7C296005B63C3 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AF12B8D8BDA948508E061CC8 /* main.cpp */; };
+		CEDA26A322C7C296005B63C3 /* ddraw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACFF9776FF714B629D25F881 /* ddraw.cpp */; };
+		CEDA26A422C7C296005B63C3 /* dsound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D3EFB3FE70E644FE920D807A /* dsound.cpp */; };
+		CEDA26A522C7C296005B63C3 /* misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 071EC175A6C94EE39CE0D35E /* misc.cpp */; };
+		CEDA26A622C7C296005B63C3 /* misc_dx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89EA512BD8C24958A503F0BD /* misc_dx.cpp */; };
+		CEDA26A722C7C296005B63C3 /* misc_io.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BC59E97D99FF4C8689217E9F /* misc_io.cpp */; };
+		CEDA26A822C7C296005B63C3 /* misc_msg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA854F63358844E8BFFCD63A /* misc_msg.cpp */; };
+		CEDA26A922C7C296005B63C3 /* rand.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 837CED1686584F91AD4B1C11 /* rand.cpp */; };
+		CEDA26AA22C7C296005B63C3 /* thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D5D2BB2C7AC4172830AA55D /* thread.cpp */; };
+		CEDA26AB22C7C296005B63C3 /* sound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 01C2C23D6F254412A14B94DE /* sound.cpp */; };
+		CEDA26AC22C7C296005B63C3 /* storm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8F85E3A6CD45457AA49D574B /* storm.cpp */; };
+		CEDA26AD22C7C296005B63C3 /* storm_dx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F899644A233644CA85F6E9AF /* storm_dx.cpp */; };
+		CEDA26AE22C7C296005B63C3 /* storm_net.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 84D1B7F37A8C492C84AB86CC /* storm_net.cpp */; };
+		CF0B9F3E959240359BCFBCE6 /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5DCC6F20684476BC504BA6 /* engine.cpp */; };
+		D13EE41C17634900A9440F27 /* SFileOpenFileEx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CDAB9D8A1C949C89CB6D213 /* SFileOpenFileEx.cpp */; };
+		D1782B0F48C24A80B5348159 /* sha.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 134C4130D88640C386D7251B /* sha.cpp */; };
+		D22CA4F748AA42AA8DE74EFB /* diablo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EFFF816D3CB143E1A6C58AFE /* diablo.cpp */; };
+		D277B43FD21C4C0782B6CCA0 /* SBaseCommon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 58803C49A43E41CAB84B8448 /* SBaseCommon.cpp */; };
+		D4BA2370B9DE442A8E7B7354 /* nthread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9728969C380B4E73AE51C595 /* nthread.cpp */; };
+		D80708EA73DA410C9881CCE9 /* monstdat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BDCCCEA6F6DB4CA48A798EE3 /* monstdat.cpp */; };
+		DAD0E2B8EA8C4C82BFCDC6FD /* stores.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FD700C9E75514460B3C77540 /* stores.cpp */; };
+		DEA1F3810AA54E81B05145B3 /* Named.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EBE29B9C176447EB916909A2 /* Named.cpp */; };
+		E521E9A804F1474BBDD28764 /* objdat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 63566ED7C5AE4A3E9124EB7A /* objdat.cpp */; };
+		E8FD1030FE644A91A01FBC98 /* automap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30849DCC74AB44A38B86C7A4 /* automap.cpp */; };
+		E9D00DF2AE9E4B35972C3BB0 /* scrollrt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EA3F9155D52E40A19542C565 /* scrollrt.cpp */; };
+		F24AEEB142D04733BD79949E /* SFileReadFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1EFA29638210438CAA7C9465 /* SFileReadFile.cpp */; };
+		F27C1A481C1346108E4EED8A /* explode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3F0E52B0F145428AA7CCDFD1 /* explode.cpp */; };
+		FD22E87D17C64A98ABE65DC3 /* trigs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 886307E03CAB4CDA8C97E92D /* trigs.cpp */; };
+		FD494E36F8B2488AAFE046EB /* dthread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B590DF2D0CAD426ABBB05CBB /* dthread.cpp */; };
+		FEB8A74C2F8E4DE0872E9E39 /* mpqapi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5F100F408234FCD9E90E7A0 /* mpqapi.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		CE2DB24B22C7D8B80053589E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEDCFDB322C7D7F2006A4224 /* SDL_ttf.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = BE48FD6807AFA17000BB41DA;
+			remoteInfo = "libSDL_ttf-iOS";
+		};
+		CE2DB24D22C7D8B80053589E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEDCFDA822C7D7C1006A4224 /* SDL_mixer.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = BE1FA90707AF96B2004B6283;
+			remoteInfo = "libSDL_mixer-iOS";
+		};
+		CE2DB26522C7D9B40053589E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE2DB25D22C7D9B30053589E /* SDL.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FD6526630DE8FCCB002AD96B;
+			remoteInfo = "libSDL-iOS";
+		};
+		CE2DB26722C7D9B40053589E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE2DB25D22C7D9B30053589E /* SDL.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FAB598141BB5C1B100BE72C5;
+			remoteInfo = "libSDL-tvOS";
+		};
+		CE2DB26922C7D9ED0053589E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE2DB25D22C7D9B30053589E /* SDL.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = FD6526620DE8FCCB002AD96B;
+			remoteInfo = "libSDL-iOS";
+		};
+		CEDA26AF22C7C2B4005B63C3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 741F27F6E6DD4B85AEE528E0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8E78F161479F4ECFAF8D9DA4;
+			remoteInfo = PKWare;
+		};
+		CEDA26B122C7C2B4005B63C3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 741F27F6E6DD4B85AEE528E0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 36CAD7D44E49483087E571C4;
+			remoteInfo = Radon;
+		};
+		CEDA26B322C7C2B4005B63C3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 741F27F6E6DD4B85AEE528E0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B5D0FF483F97488E96FFBB08;
+			remoteInfo = StormLib;
+		};
+		CEDA26B722C7C2B4005B63C3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 741F27F6E6DD4B85AEE528E0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 006C76D83D1F4152831B23EA;
+			remoteInfo = devilution;
+		};
+		CEDA26B922C7C2B4005B63C3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 741F27F6E6DD4B85AEE528E0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4413486DC7B54A45897A04F0;
+			remoteInfo = smacker;
+		};
+		CEDCFDAF22C7D7C1006A4224 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEDCFDA822C7D7C1006A4224 /* SDL_mixer.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BE1FA95407AF96B2004B6283;
+			remoteInfo = "libSDL_mixer-iOS";
+		};
+		CEDCFDB122C7D7C1006A4224 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEDCFDA822C7D7C1006A4224 /* SDL_mixer.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = AA5314F11FE0FE2E0025C9BE;
+			remoteInfo = "libSDL_mixer-tvOS";
+		};
+		CEDCFDBA22C7D7F2006A4224 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEDCFDB322C7D7F2006A4224 /* SDL_ttf.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BE48FD6E07AFA17000BB41DA;
+			remoteInfo = "libSDL_ttf-iOS";
+		};
+		CEDCFDBC22C7D7F2006A4224 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEDCFDB322C7D7F2006A4224 /* SDL_ttf.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = AA53152E1FE1016F0025C9BE;
+			remoteInfo = "libSDL_ttf-tvOS";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		01A06EAA915F4FDABDCDB765 /* wave.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = wave.cpp; path = Source/wave.cpp; sourceTree = SOURCE_ROOT; };
+		01C2C23D6F254412A14B94DE /* sound.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = sound.cpp; path = SourceX/sound.cpp; sourceTree = SOURCE_ROOT; };
+		03F8A9BEA2F54315A2F7CEF8 /* libRadon.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRadon.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		071EC175A6C94EE39CE0D35E /* misc.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = misc.cpp; path = SourceX/miniwin/misc.cpp; sourceTree = SOURCE_ROOT; };
+		07BD66488DB549C0BAAABAE0 /* missiles.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = missiles.cpp; path = Source/missiles.cpp; sourceTree = SOURCE_ROOT; };
+		07E51443B2E94D7D9F0EA813 /* setmaps.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = setmaps.cpp; path = Source/setmaps.cpp; sourceTree = SOURCE_ROOT; };
+		0921A2A198C34FCE8CDB39A0 /* implode.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = implode.cpp; path = 3rdParty/PKWare/implode.cpp; sourceTree = SOURCE_ROOT; };
+		134C4130D88640C386D7251B /* sha.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = sha.cpp; path = Source/sha.cpp; sourceTree = SOURCE_ROOT; };
+		149A4FC66849488CBE44E6DF /* udp_p2p.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = udp_p2p.cpp; path = SourceX/dvlnet/udp_p2p.cpp; sourceTree = SOURCE_ROOT; };
+		14B936D61B6E44A5A617BFB1 /* msg.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = msg.cpp; path = Source/msg.cpp; sourceTree = SOURCE_ROOT; };
+		1765A483E8C04DA9A26CA4C9 /* restrict.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = restrict.cpp; path = Source/restrict.cpp; sourceTree = SOURCE_ROOT; };
+		190EA16FFEC44F5DBA6E4DF8 /* smacker.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = smacker.c; path = 3rdParty/libsmacker/smacker.c; sourceTree = SOURCE_ROOT; };
+		1B290945387D4F638D3BDBC4 /* progress.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = progress.cpp; path = SourceX/DiabloUI/progress.cpp; sourceTree = SOURCE_ROOT; };
+		1C8CA21CBD2D41F1984EA636 /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		1CC8E8BC8BE047E1A665EF23 /* selgame.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = selgame.cpp; path = SourceX/DiabloUI/selgame.cpp; sourceTree = SOURCE_ROOT; };
+		1EFA29638210438CAA7C9465 /* SFileReadFile.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SFileReadFile.cpp; path = 3rdParty/StormLib/src/SFileReadFile.cpp; sourceTree = SOURCE_ROOT; };
+		22494255185A4A96AAA8D18F /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		234AB08693A64D9EB680EEAB /* mainmenu.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = mainmenu.cpp; path = Source/mainmenu.cpp; sourceTree = SOURCE_ROOT; };
+		23A8F4854DBD4651B1630CA2 /* base.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = base.cpp; path = SourceX/dvlnet/base.cpp; sourceTree = SOURCE_ROOT; };
+		26844FD59AE54AD792599740 /* objects.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = objects.cpp; path = Source/objects.cpp; sourceTree = SOURCE_ROOT; };
+		27E32C71ED9645FA8DC8EC77 /* libStormLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libStormLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A5B95B76E6A4F0C99E50442 /* capture.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = capture.cpp; path = Source/capture.cpp; sourceTree = SOURCE_ROOT; };
+		2BB2DE80B0444CD79756780F /* encrypt.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = encrypt.cpp; path = Source/encrypt.cpp; sourceTree = SOURCE_ROOT; };
+		2D2AD304316E474098B49708 /* SFileGetFileInfo.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SFileGetFileInfo.cpp; path = 3rdParty/StormLib/src/SFileGetFileInfo.cpp; sourceTree = SOURCE_ROOT; };
+		30849DCC74AB44A38B86C7A4 /* automap.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = automap.cpp; path = Source/automap.cpp; sourceTree = SOURCE_ROOT; };
+		32170A9601F74E808329B567 /* dead.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = dead.cpp; path = Source/dead.cpp; sourceTree = SOURCE_ROOT; };
+		33B919BA990F4AA6867183F7 /* plrmsg.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = plrmsg.cpp; path = Source/plrmsg.cpp; sourceTree = SOURCE_ROOT; };
+		3587F653612F494AB0992613 /* File.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = File.cpp; path = 3rdParty/Radon/Radon/source/File.cpp; sourceTree = SOURCE_ROOT; };
+		38230443585844E38700EACF /* libPKWare.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libPKWare.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		39C69D1B6B2849F288D33ECC /* gendung.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = gendung.cpp; path = Source/gendung.cpp; sourceTree = SOURCE_ROOT; };
+		3BB9C8F2CFD3496E8D4A51C5 /* appfat.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = appfat.cpp; path = Source/appfat.cpp; sourceTree = SOURCE_ROOT; };
+		3CDAB9D8A1C949C89CB6D213 /* SFileOpenFileEx.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SFileOpenFileEx.cpp; path = 3rdParty/StormLib/src/SFileOpenFileEx.cpp; sourceTree = SOURCE_ROOT; };
+		3F0E52B0F145428AA7CCDFD1 /* explode.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = explode.cpp; path = 3rdParty/PKWare/explode.cpp; sourceTree = SOURCE_ROOT; };
+		3F280B9B2D0B43C9A15C9B8F /* items.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = items.cpp; path = Source/items.cpp; sourceTree = SOURCE_ROOT; };
+		3F89CC4D8BA94E9A9C77C8ED /* drlg_l1.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = drlg_l1.cpp; path = Source/drlg_l1.cpp; sourceTree = SOURCE_ROOT; };
+		47930305D44B48AFA3D7264F /* codec.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = codec.cpp; path = Source/codec.cpp; sourceTree = SOURCE_ROOT; };
+		500595CA03CE442CA1550750 /* SFileOpenArchive.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SFileOpenArchive.cpp; path = 3rdParty/StormLib/src/SFileOpenArchive.cpp; sourceTree = SOURCE_ROOT; };
+		515AECF40B104947A5DA27DE /* themes.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = themes.cpp; path = Source/themes.cpp; sourceTree = SOURCE_ROOT; };
+		55D226DBD75F4D959C54E377 /* tcp_client.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = tcp_client.cpp; path = SourceX/dvlnet/tcp_client.cpp; sourceTree = SOURCE_ROOT; };
+		58803C49A43E41CAB84B8448 /* SBaseCommon.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SBaseCommon.cpp; path = 3rdParty/StormLib/src/SBaseCommon.cpp; sourceTree = SOURCE_ROOT; };
+		5C2D6E88C7D94FA2A678C074 /* pfile.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = pfile.cpp; path = Source/pfile.cpp; sourceTree = SOURCE_ROOT; };
+		5D5D2BB2C7AC4172830AA55D /* thread.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = thread.cpp; path = SourceX/miniwin/thread.cpp; sourceTree = SOURCE_ROOT; };
+		5EF2CC5CDA474289AC183889 /* msgcmd.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = msgcmd.cpp; path = Source/msgcmd.cpp; sourceTree = SOURCE_ROOT; };
+		6113871EEC594D41A4035F56 /* drlg_l4.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = drlg_l4.cpp; path = Source/drlg_l4.cpp; sourceTree = SOURCE_ROOT; };
+		627E1E355C73441DAC7EDD3E /* portal.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = portal.cpp; path = Source/portal.cpp; sourceTree = SOURCE_ROOT; };
+		63566ED7C5AE4A3E9124EB7A /* objdat.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = objdat.cpp; path = Source/objdat.cpp; sourceTree = SOURCE_ROOT; };
+		69C5DF531F3E49B28DDDC23B /* render.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = render.cpp; path = Source/render.cpp; sourceTree = SOURCE_ROOT; };
+		6AC43BF142714BC9A820B846 /* pack.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = pack.cpp; path = Source/pack.cpp; sourceTree = SOURCE_ROOT; };
+		70FBE77F891F47EAAD6B7BCE /* logging.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = logging.cpp; path = Source/logging.cpp; sourceTree = SOURCE_ROOT; };
+		70FD6A04AFA14672B9A7EA73 /* track.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = track.cpp; path = Source/track.cpp; sourceTree = SOURCE_ROOT; };
+		77D1108C71624E7DA394330E /* gmenu.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = gmenu.cpp; path = Source/gmenu.cpp; sourceTree = SOURCE_ROOT; };
+		7994196BCD704A8285E842FE /* Section.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Section.cpp; path = 3rdParty/Radon/Radon/source/Section.cpp; sourceTree = SOURCE_ROOT; };
+		79DF5B8396DB427E84097A9C /* fault.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = fault.cpp; path = Source/fault.cpp; sourceTree = SOURCE_ROOT; };
+		7AF28497CE0A427DA54296FE /* player.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = player.cpp; path = Source/player.cpp; sourceTree = SOURCE_ROOT; };
+		7B257D3F80E2438884DEA9F8 /* error.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = error.cpp; path = Source/error.cpp; sourceTree = SOURCE_ROOT; };
+		7BE8E351295E45D48AAB963A /* cursor.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = cursor.cpp; path = Source/cursor.cpp; sourceTree = SOURCE_ROOT; };
+		7BF97DCBDD5F4BB193AEB438 /* tcp_server.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = tcp_server.cpp; path = SourceX/dvlnet/tcp_server.cpp; sourceTree = SOURCE_ROOT; };
+		816237343D1B4210A83892E3 /* mainmenu.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = mainmenu.cpp; path = SourceX/DiabloUI/mainmenu.cpp; sourceTree = SOURCE_ROOT; };
+		81CC5FF9A2C04B848BD9C4E2 /* lighting.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = lighting.cpp; path = Source/lighting.cpp; sourceTree = SOURCE_ROOT; };
+		82EEE6A1CE804332BE4A0E62 /* misdat.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = misdat.cpp; path = Source/misdat.cpp; sourceTree = SOURCE_ROOT; };
+		837CED1686584F91AD4B1C11 /* rand.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = rand.cpp; path = SourceX/miniwin/rand.cpp; sourceTree = SOURCE_ROOT; };
+		84D1B7F37A8C492C84AB86CC /* storm_net.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = storm_net.cpp; path = SourceX/storm/storm_net.cpp; sourceTree = SOURCE_ROOT; };
+		85EAFDA8BDFF4343B91CB316 /* drlg_l3.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = drlg_l3.cpp; path = Source/drlg_l3.cpp; sourceTree = SOURCE_ROOT; };
+		86C00ABB0BC943C7B6D34557 /* town.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = town.cpp; path = Source/town.cpp; sourceTree = SOURCE_ROOT; };
+		886307E03CAB4CDA8C97E92D /* trigs.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = trigs.cpp; path = Source/trigs.cpp; sourceTree = SOURCE_ROOT; };
+		88A1CCAE8D1F4F3798D58166 /* abstract_net.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = abstract_net.cpp; path = SourceX/dvlnet/abstract_net.cpp; sourceTree = SOURCE_ROOT; };
+		89250183066A4FB496239362 /* frame_queue.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = frame_queue.cpp; path = SourceX/dvlnet/frame_queue.cpp; sourceTree = SOURCE_ROOT; };
+		89EA512BD8C24958A503F0BD /* misc_dx.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = misc_dx.cpp; path = SourceX/miniwin/misc_dx.cpp; sourceTree = SOURCE_ROOT; };
+		8B27439475EE410D8EFCAD0E /* FileStream.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = FileStream.cpp; path = 3rdParty/StormLib/src/FileStream.cpp; sourceTree = SOURCE_ROOT; };
+		8B6A1A0ACBFA4F0380CB9B4B /* dx.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = dx.cpp; path = SourceX/dx.cpp; sourceTree = SOURCE_ROOT; };
+		8C79E3303F5F4517942AF6B5 /* path.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = path.cpp; path = Source/path.cpp; sourceTree = SOURCE_ROOT; };
+		8F7DA655CBB94EC28F9AEA48 /* inv.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = inv.cpp; path = Source/inv.cpp; sourceTree = SOURCE_ROOT; };
+		8F85E3A6CD45457AA49D574B /* storm.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = storm.cpp; path = SourceX/storm/storm.cpp; sourceTree = SOURCE_ROOT; };
+		9071838230EC489286337DE1 /* control.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = control.cpp; path = Source/control.cpp; sourceTree = SOURCE_ROOT; };
+		9133F997060644F785B2ECAB /* towners.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = towners.cpp; path = Source/towners.cpp; sourceTree = SOURCE_ROOT; };
+		9429C3C795274560B7EC0B45 /* sync.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = sync.cpp; path = Source/sync.cpp; sourceTree = SOURCE_ROOT; };
+		9728969C380B4E73AE51C595 /* nthread.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = nthread.cpp; path = Source/nthread.cpp; sourceTree = SOURCE_ROOT; };
+		9D6A6D4EB16846D8B0B24A0F /* interfac.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = interfac.cpp; path = Source/interfac.cpp; sourceTree = SOURCE_ROOT; };
+		9E50C221509D4A6AAB43FAA4 /* spelldat.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = spelldat.cpp; path = Source/spelldat.cpp; sourceTree = SOURCE_ROOT; };
+		9F5633AC5C3C4745B042958C /* multi.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = multi.cpp; path = Source/multi.cpp; sourceTree = SOURCE_ROOT; };
+		A1166B209FE94438B38CBBE0 /* SCompression.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SCompression.cpp; path = 3rdParty/StormLib/src/SCompression.cpp; sourceTree = SOURCE_ROOT; };
+		A2A60DACC0F848A0AD9A9FE5 /* smk_bitstream.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = smk_bitstream.c; path = 3rdParty/libsmacker/smk_bitstream.c; sourceTree = SOURCE_ROOT; };
+		A559997A55394E66942D5574 /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		A56FDAEA85344F4790653B53 /* libsmacker.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libsmacker.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		A65CA0D1672640308B89FDBC /* monster.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = monster.cpp; path = Source/monster.cpp; sourceTree = SOURCE_ROOT; };
+		A6DDB5DF88264723867DA5C8 /* spells.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = spells.cpp; path = Source/spells.cpp; sourceTree = SOURCE_ROOT; };
+		AA854F63358844E8BFFCD63A /* misc_msg.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = misc_msg.cpp; path = SourceX/miniwin/misc_msg.cpp; sourceTree = SOURCE_ROOT; };
+		ACFF9776FF714B629D25F881 /* ddraw.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = ddraw.cpp; path = SourceX/miniwin/ddraw.cpp; sourceTree = SOURCE_ROOT; };
+		AD5BB016735E4C5C8AEB62E7 /* textdat.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = textdat.cpp; path = Source/textdat.cpp; sourceTree = SOURCE_ROOT; };
+		AE267FCF99294D54A8531061 /* gamemenu.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = gamemenu.cpp; path = Source/gamemenu.cpp; sourceTree = SOURCE_ROOT; };
+		AF12B8D8BDA948508E061CC8 /* main.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = main.cpp; path = SourceX/main.cpp; sourceTree = SOURCE_ROOT; };
+		B054F90301D7428AABC4A717 /* debug.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = debug.cpp; path = Source/debug.cpp; sourceTree = SOURCE_ROOT; };
+		B10AE0780A554BB28121B67C /* movie.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = movie.cpp; path = Source/movie.cpp; sourceTree = SOURCE_ROOT; };
+		B1BFF8FF96654B68B82A5914 /* loopback.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = loopback.cpp; path = SourceX/dvlnet/loopback.cpp; sourceTree = SOURCE_ROOT; };
+		B590DF2D0CAD426ABBB05CBB /* dthread.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = dthread.cpp; path = Source/dthread.cpp; sourceTree = SOURCE_ROOT; };
+		B68121E8452B4CA893C67B20 /* SBaseFileTable.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SBaseFileTable.cpp; path = 3rdParty/StormLib/src/SBaseFileTable.cpp; sourceTree = SOURCE_ROOT; };
+		B973ABA2B9D6462085B9311B /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		BC59E97D99FF4C8689217E9F /* misc_io.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = misc_io.cpp; path = SourceX/miniwin/misc_io.cpp; sourceTree = SOURCE_ROOT; };
+		BD1CD138BB884EC9B816C4EE /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		BDB99E8CC927416B81369966 /* packet.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = packet.cpp; path = SourceX/dvlnet/packet.cpp; sourceTree = SOURCE_ROOT; };
+		BDCCCEA6F6DB4CA48A798EE3 /* monstdat.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = monstdat.cpp; path = Source/monstdat.cpp; sourceTree = SOURCE_ROOT; };
+		C0F23432219D4C96B5DA293C /* drlg_l2.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = drlg_l2.cpp; path = Source/drlg_l2.cpp; sourceTree = SOURCE_ROOT; };
+		C25ADA37E96D43439DD67B77 /* doom.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = doom.cpp; path = Source/doom.cpp; sourceTree = SOURCE_ROOT; };
+		C326465DF7364DC7B01B20E3 /* tmsg.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = tmsg.cpp; path = Source/tmsg.cpp; sourceTree = SOURCE_ROOT; };
+		C41CB5CE0ECD4E4BA5B16DC7 /* selconn.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = selconn.cpp; path = SourceX/DiabloUI/selconn.cpp; sourceTree = SOURCE_ROOT; };
+		C5107D328019431AA323E44E /* dialogs.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = dialogs.cpp; path = SourceX/DiabloUI/dialogs.cpp; sourceTree = SOURCE_ROOT; };
+		C8A9EB6BE4344F6C91BDE4C0 /* selhero.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = selhero.cpp; path = SourceX/DiabloUI/selhero.cpp; sourceTree = SOURCE_ROOT; };
+		C96E5D2B9D0243D3A091D662 /* SBaseSubTypes.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SBaseSubTypes.cpp; path = 3rdParty/StormLib/src/SBaseSubTypes.cpp; sourceTree = SOURCE_ROOT; };
+		CC92486E6AE24C008E2A44A0 /* diabloui.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = diabloui.cpp; path = SourceX/DiabloUI/diabloui.cpp; sourceTree = SOURCE_ROOT; };
+		CE2DB25D22C7D9B30053589E /* SDL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDL.xcodeproj; path = "SDL/Xcode-iOS/SDL/SDL.xcodeproj"; sourceTree = "<group>"; };
+		CE2DB27122C7E0AB0053589E /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/CoreAudio.framework; sourceTree = DEVELOPER_DIR; };
+		CE2DB27322C7E13D0053589E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
+		CE2DB27522C7E1490053589E /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/CoreMotion.framework; sourceTree = DEVELOPER_DIR; };
+		CE2DB27722C7E1530053589E /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
+		CE2DB27922C7E1610053589E /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
+		CE2DB27B22C7E16D0053589E /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = DEVELOPER_DIR; };
+		CE2DB27D22C7E1770053589E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		CE2DB27F22C7E1810053589E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		CE2DB28122C7E18A0053589E /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/GameController.framework; sourceTree = DEVELOPER_DIR; };
+		CE2DB28322C7E4040053589E /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = DEVELOPER_DIR; };
+		CE5DCC6F20684476BC504BA6 /* engine.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = engine.cpp; path = Source/engine.cpp; sourceTree = SOURCE_ROOT; };
+		CE8AF0A222C81ADF001CC4F9 /* diabdat.mpq */ = {isa = PBXFileReference; lastKnownFileType = file; name = diabdat.mpq; path = "Xcode-iOS/devilutionx/diabdat.mpq"; sourceTree = "<group>"; };
+		CEDA267622C7C058005B63C3 /* devilutionX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = devilutionX.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CEDA267822C7C058005B63C3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		CEDA267922C7C058005B63C3 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		CEDA267F22C7C058005B63C3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		CEDA268422C7C059005B63C3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		CEDA268622C7C059005B63C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CEDCFDA822C7D7C1006A4224 /* SDL_mixer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDL_mixer.xcodeproj; path = "SDL2_mixer/Xcode-iOS/SDL_mixer.xcodeproj"; sourceTree = "<group>"; };
+		CEDCFDB322C7D7F2006A4224 /* SDL_ttf.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SDL_ttf.xcodeproj; path = "SDL2_ttf/Xcode-iOS/SDL_ttf.xcodeproj"; sourceTree = "<group>"; };
+		D3EFB3FE70E644FE920D807A /* dsound.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = dsound.cpp; path = SourceX/miniwin/dsound.cpp; sourceTree = SOURCE_ROOT; };
+		D453307175A74B67829F81B6 /* minitext.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = minitext.cpp; path = Source/minitext.cpp; sourceTree = SOURCE_ROOT; };
+		D555C5AEEE784D4A8496D59C /* libdevilution.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libdevilution.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D953A11B8B75484494AA1576 /* smk_hufftree.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = smk_hufftree.c; path = 3rdParty/libsmacker/smk_hufftree.c; sourceTree = SOURCE_ROOT; };
+		DD69BB0F7A30454484A3CDA2 /* palette.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = palette.cpp; path = Source/palette.cpp; sourceTree = SOURCE_ROOT; };
+		E3E01BC88F2D4D61806E19B2 /* loadsave.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = loadsave.cpp; path = Source/loadsave.cpp; sourceTree = SOURCE_ROOT; };
+		E5F100F408234FCD9E90E7A0 /* mpqapi.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = mpqapi.cpp; path = Source/mpqapi.cpp; sourceTree = SOURCE_ROOT; };
+		E724927913CE4D8E88612584 /* title.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = title.cpp; path = SourceX/DiabloUI/title.cpp; sourceTree = SOURCE_ROOT; };
+		EA3F9155D52E40A19542C565 /* scrollrt.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = scrollrt.cpp; path = Source/scrollrt.cpp; sourceTree = SOURCE_ROOT; };
+		EBE29B9C176447EB916909A2 /* Named.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Named.cpp; path = 3rdParty/Radon/Radon/source/Named.cpp; sourceTree = SOURCE_ROOT; };
+		EFFF816D3CB143E1A6C58AFE /* diablo.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = diablo.cpp; path = Source/diablo.cpp; sourceTree = SOURCE_ROOT; };
+		F02FD639F3C948E4A482BFA9 /* init.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = init.cpp; path = Source/init.cpp; sourceTree = SOURCE_ROOT; };
+		F148A8250C4046D392B03B3D /* SFileExtractFile.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SFileExtractFile.cpp; path = 3rdParty/StormLib/src/SFileExtractFile.cpp; sourceTree = SOURCE_ROOT; };
+		F56B11506C9146BEADA9E8EA /* credits.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = credits.cpp; path = SourceX/DiabloUI/credits.cpp; sourceTree = SOURCE_ROOT; };
+		F7285759B0F94368BD23E14A /* help.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = help.cpp; path = Source/help.cpp; sourceTree = SOURCE_ROOT; };
+		F899644A233644CA85F6E9AF /* storm_dx.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = storm_dx.cpp; path = SourceX/storm/storm_dx.cpp; sourceTree = SOURCE_ROOT; };
+		F928C727570C4691AF221C7B /* quests.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = quests.cpp; path = Source/quests.cpp; sourceTree = SOURCE_ROOT; };
+		FA64F5EE590D4F93A8F62FBF /* SFileFindFile.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SFileFindFile.cpp; path = 3rdParty/StormLib/src/SFileFindFile.cpp; sourceTree = SOURCE_ROOT; };
+		FB383523975444B39A8C1ACF /* effects.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = effects.cpp; path = Source/effects.cpp; sourceTree = SOURCE_ROOT; };
+		FB481FBFF23A47FD925631E6 /* Key.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Key.cpp; path = 3rdParty/Radon/Radon/source/Key.cpp; sourceTree = SOURCE_ROOT; };
+		FCBF3CAB8CF14CA8A1E0ED8B /* itemdat.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = itemdat.cpp; path = Source/itemdat.cpp; sourceTree = SOURCE_ROOT; };
+		FD700C9E75514460B3C77540 /* stores.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = stores.cpp; path = Source/stores.cpp; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CEDA267322C7C058005B63C3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE2DB28722C7E4910053589E /* CoreMotion.framework in Frameworks */,
+				CE2DB28622C7E4760053589E /* AudioToolbox.framework in Frameworks */,
+				CE2DB28522C7E4340053589E /* GameController.framework in Frameworks */,
+				CE2DB28422C7E4040053589E /* AVFoundation.framework in Frameworks */,
+				CE2DB26C22C7DD8F0053589E /* libdevilution.a in Frameworks */,
+				CE2DB26D22C7DD8F0053589E /* libPKWare.a in Frameworks */,
+				CE2DB26E22C7DD8F0053589E /* libRadon.a in Frameworks */,
+				CE2DB26F22C7DD8F0053589E /* libsmacker.a in Frameworks */,
+				CE2DB27022C7DD8F0053589E /* libStormLib.a in Frameworks */,
+				CE2DB26B22C7D9FB0053589E /* libSDL2.a in Frameworks */,
+				CE2DB24822C7D8AB0053589E /* libSDL2_mixer.a in Frameworks */,
+				CE2DB24922C7D8AB0053589E /* libSDL2_ttf.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1AF62A932FAB4246A18F386F /* PKWare */ = {
+			isa = PBXGroup;
+			children = (
+				5E00293D19B346E3864BE217 /* Source Files */,
+				BD1CD138BB884EC9B816C4EE /* CMakeLists.txt */,
+			);
+			name = PKWare;
+			sourceTree = "<group>";
+		};
+		1F1D629A780440D3A5125242 = {
+			isa = PBXGroup;
+			children = (
+				CE8AF0A222C81ADF001CC4F9 /* diabdat.mpq */,
+				780A32EB066D4CB3BE2C6F27 /* devilution */,
+				9B523BBC58FF4C578C486DA2 /* StormLib */,
+				1AF62A932FAB4246A18F386F /* PKWare */,
+				A09A904F6BA64D148F5F0703 /* Radon */,
+				6005190B9ABC4EE0896F6016 /* smacker */,
+				CEDA267722C7C058005B63C3 /* devilutionx */,
+				D7649F576E364119A4C52A16 /* Products */,
+				CEDCFDA022C7D27D006A4224 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		22FC7CA53C1B42E7A28E39DD /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				F56B11506C9146BEADA9E8EA /* credits.cpp */,
+				CC92486E6AE24C008E2A44A0 /* diabloui.cpp */,
+				C5107D328019431AA323E44E /* dialogs.cpp */,
+				816237343D1B4210A83892E3 /* mainmenu.cpp */,
+				1B290945387D4F638D3BDBC4 /* progress.cpp */,
+				C41CB5CE0ECD4E4BA5B16DC7 /* selconn.cpp */,
+				1CC8E8BC8BE047E1A665EF23 /* selgame.cpp */,
+				C8A9EB6BE4344F6C91BDE4C0 /* selhero.cpp */,
+				E724927913CE4D8E88612584 /* title.cpp */,
+				88A1CCAE8D1F4F3798D58166 /* abstract_net.cpp */,
+				23A8F4854DBD4651B1630CA2 /* base.cpp */,
+				89250183066A4FB496239362 /* frame_queue.cpp */,
+				B1BFF8FF96654B68B82A5914 /* loopback.cpp */,
+				BDB99E8CC927416B81369966 /* packet.cpp */,
+				55D226DBD75F4D959C54E377 /* tcp_client.cpp */,
+				7BF97DCBDD5F4BB193AEB438 /* tcp_server.cpp */,
+				149A4FC66849488CBE44E6DF /* udp_p2p.cpp */,
+				8B6A1A0ACBFA4F0380CB9B4B /* dx.cpp */,
+				AF12B8D8BDA948508E061CC8 /* main.cpp */,
+				ACFF9776FF714B629D25F881 /* ddraw.cpp */,
+				D3EFB3FE70E644FE920D807A /* dsound.cpp */,
+				071EC175A6C94EE39CE0D35E /* misc.cpp */,
+				89EA512BD8C24958A503F0BD /* misc_dx.cpp */,
+				BC59E97D99FF4C8689217E9F /* misc_io.cpp */,
+				AA854F63358844E8BFFCD63A /* misc_msg.cpp */,
+				837CED1686584F91AD4B1C11 /* rand.cpp */,
+				5D5D2BB2C7AC4172830AA55D /* thread.cpp */,
+				01C2C23D6F254412A14B94DE /* sound.cpp */,
+				8F85E3A6CD45457AA49D574B /* storm.cpp */,
+				F899644A233644CA85F6E9AF /* storm_dx.cpp */,
+				84D1B7F37A8C492C84AB86CC /* storm_net.cpp */,
+			);
+			name = "Source Files";
+			path = ../..;
+			sourceTree = "<group>";
+		};
+		4C06866A12A149258E0DCC51 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				3587F653612F494AB0992613 /* File.cpp */,
+				FB481FBFF23A47FD925631E6 /* Key.cpp */,
+				EBE29B9C176447EB916909A2 /* Named.cpp */,
+				7994196BCD704A8285E842FE /* Section.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		55736FFEA43249F1B6F79EE8 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				190EA16FFEC44F5DBA6E4DF8 /* smacker.c */,
+				A2A60DACC0F848A0AD9A9FE5 /* smk_bitstream.c */,
+				D953A11B8B75484494AA1576 /* smk_hufftree.c */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5E00293D19B346E3864BE217 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				3F0E52B0F145428AA7CCDFD1 /* explode.cpp */,
+				0921A2A198C34FCE8CDB39A0 /* implode.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		6005190B9ABC4EE0896F6016 /* smacker */ = {
+			isa = PBXGroup;
+			children = (
+				55736FFEA43249F1B6F79EE8 /* Source Files */,
+				A559997A55394E66942D5574 /* CMakeLists.txt */,
+			);
+			name = smacker;
+			sourceTree = "<group>";
+		};
+		652F01A5445C4EE1BD53E1EE /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				3BB9C8F2CFD3496E8D4A51C5 /* appfat.cpp */,
+				30849DCC74AB44A38B86C7A4 /* automap.cpp */,
+				2A5B95B76E6A4F0C99E50442 /* capture.cpp */,
+				47930305D44B48AFA3D7264F /* codec.cpp */,
+				9071838230EC489286337DE1 /* control.cpp */,
+				7BE8E351295E45D48AAB963A /* cursor.cpp */,
+				32170A9601F74E808329B567 /* dead.cpp */,
+				B054F90301D7428AABC4A717 /* debug.cpp */,
+				EFFF816D3CB143E1A6C58AFE /* diablo.cpp */,
+				C25ADA37E96D43439DD67B77 /* doom.cpp */,
+				3F89CC4D8BA94E9A9C77C8ED /* drlg_l1.cpp */,
+				C0F23432219D4C96B5DA293C /* drlg_l2.cpp */,
+				85EAFDA8BDFF4343B91CB316 /* drlg_l3.cpp */,
+				6113871EEC594D41A4035F56 /* drlg_l4.cpp */,
+				B590DF2D0CAD426ABBB05CBB /* dthread.cpp */,
+				FB383523975444B39A8C1ACF /* effects.cpp */,
+				2BB2DE80B0444CD79756780F /* encrypt.cpp */,
+				CE5DCC6F20684476BC504BA6 /* engine.cpp */,
+				7B257D3F80E2438884DEA9F8 /* error.cpp */,
+				79DF5B8396DB427E84097A9C /* fault.cpp */,
+				AE267FCF99294D54A8531061 /* gamemenu.cpp */,
+				39C69D1B6B2849F288D33ECC /* gendung.cpp */,
+				77D1108C71624E7DA394330E /* gmenu.cpp */,
+				F7285759B0F94368BD23E14A /* help.cpp */,
+				F02FD639F3C948E4A482BFA9 /* init.cpp */,
+				9D6A6D4EB16846D8B0B24A0F /* interfac.cpp */,
+				8F7DA655CBB94EC28F9AEA48 /* inv.cpp */,
+				FCBF3CAB8CF14CA8A1E0ED8B /* itemdat.cpp */,
+				3F280B9B2D0B43C9A15C9B8F /* items.cpp */,
+				81CC5FF9A2C04B848BD9C4E2 /* lighting.cpp */,
+				E3E01BC88F2D4D61806E19B2 /* loadsave.cpp */,
+				70FBE77F891F47EAAD6B7BCE /* logging.cpp */,
+				234AB08693A64D9EB680EEAB /* mainmenu.cpp */,
+				D453307175A74B67829F81B6 /* minitext.cpp */,
+				82EEE6A1CE804332BE4A0E62 /* misdat.cpp */,
+				07BD66488DB549C0BAAABAE0 /* missiles.cpp */,
+				BDCCCEA6F6DB4CA48A798EE3 /* monstdat.cpp */,
+				A65CA0D1672640308B89FDBC /* monster.cpp */,
+				B10AE0780A554BB28121B67C /* movie.cpp */,
+				E5F100F408234FCD9E90E7A0 /* mpqapi.cpp */,
+				14B936D61B6E44A5A617BFB1 /* msg.cpp */,
+				5EF2CC5CDA474289AC183889 /* msgcmd.cpp */,
+				9F5633AC5C3C4745B042958C /* multi.cpp */,
+				9728969C380B4E73AE51C595 /* nthread.cpp */,
+				63566ED7C5AE4A3E9124EB7A /* objdat.cpp */,
+				26844FD59AE54AD792599740 /* objects.cpp */,
+				6AC43BF142714BC9A820B846 /* pack.cpp */,
+				DD69BB0F7A30454484A3CDA2 /* palette.cpp */,
+				8C79E3303F5F4517942AF6B5 /* path.cpp */,
+				5C2D6E88C7D94FA2A678C074 /* pfile.cpp */,
+				7AF28497CE0A427DA54296FE /* player.cpp */,
+				33B919BA990F4AA6867183F7 /* plrmsg.cpp */,
+				627E1E355C73441DAC7EDD3E /* portal.cpp */,
+				F928C727570C4691AF221C7B /* quests.cpp */,
+				69C5DF531F3E49B28DDDC23B /* render.cpp */,
+				1765A483E8C04DA9A26CA4C9 /* restrict.cpp */,
+				EA3F9155D52E40A19542C565 /* scrollrt.cpp */,
+				07E51443B2E94D7D9F0EA813 /* setmaps.cpp */,
+				134C4130D88640C386D7251B /* sha.cpp */,
+				9E50C221509D4A6AAB43FAA4 /* spelldat.cpp */,
+				A6DDB5DF88264723867DA5C8 /* spells.cpp */,
+				FD700C9E75514460B3C77540 /* stores.cpp */,
+				9429C3C795274560B7EC0B45 /* sync.cpp */,
+				AD5BB016735E4C5C8AEB62E7 /* textdat.cpp */,
+				515AECF40B104947A5DA27DE /* themes.cpp */,
+				C326465DF7364DC7B01B20E3 /* tmsg.cpp */,
+				86C00ABB0BC943C7B6D34557 /* town.cpp */,
+				9133F997060644F785B2ECAB /* towners.cpp */,
+				70FD6A04AFA14672B9A7EA73 /* track.cpp */,
+				886307E03CAB4CDA8C97E92D /* trigs.cpp */,
+				01A06EAA915F4FDABDCDB765 /* wave.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		780A32EB066D4CB3BE2C6F27 /* devilution */ = {
+			isa = PBXGroup;
+			children = (
+				652F01A5445C4EE1BD53E1EE /* Source Files */,
+				B973ABA2B9D6462085B9311B /* CMakeLists.txt */,
+			);
+			name = devilution;
+			sourceTree = "<group>";
+		};
+		9B523BBC58FF4C578C486DA2 /* StormLib */ = {
+			isa = PBXGroup;
+			children = (
+				CE94D43C32C8438597268D34 /* Source Files */,
+				22494255185A4A96AAA8D18F /* CMakeLists.txt */,
+			);
+			name = StormLib;
+			sourceTree = "<group>";
+		};
+		A09A904F6BA64D148F5F0703 /* Radon */ = {
+			isa = PBXGroup;
+			children = (
+				4C06866A12A149258E0DCC51 /* Source Files */,
+				1C8CA21CBD2D41F1984EA636 /* CMakeLists.txt */,
+			);
+			name = Radon;
+			sourceTree = "<group>";
+		};
+		CE2DB25E22C7D9B30053589E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CE2DB26622C7D9B40053589E /* libSDL2.a */,
+				CE2DB26822C7D9B40053589E /* libSDL2.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CE94D43C32C8438597268D34 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				8B27439475EE410D8EFCAD0E /* FileStream.cpp */,
+				58803C49A43E41CAB84B8448 /* SBaseCommon.cpp */,
+				B68121E8452B4CA893C67B20 /* SBaseFileTable.cpp */,
+				C96E5D2B9D0243D3A091D662 /* SBaseSubTypes.cpp */,
+				A1166B209FE94438B38CBBE0 /* SCompression.cpp */,
+				F148A8250C4046D392B03B3D /* SFileExtractFile.cpp */,
+				FA64F5EE590D4F93A8F62FBF /* SFileFindFile.cpp */,
+				2D2AD304316E474098B49708 /* SFileGetFileInfo.cpp */,
+				500595CA03CE442CA1550750 /* SFileOpenArchive.cpp */,
+				3CDAB9D8A1C949C89CB6D213 /* SFileOpenFileEx.cpp */,
+				1EFA29638210438CAA7C9465 /* SFileReadFile.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		CEDA267722C7C058005B63C3 /* devilutionx */ = {
+			isa = PBXGroup;
+			children = (
+				22FC7CA53C1B42E7A28E39DD /* Source Files */,
+				CEDA267822C7C058005B63C3 /* AppDelegate.h */,
+				CEDA267922C7C058005B63C3 /* AppDelegate.m */,
+				CEDA267E22C7C058005B63C3 /* Main.storyboard */,
+				CEDA268322C7C059005B63C3 /* LaunchScreen.storyboard */,
+				CEDA268622C7C059005B63C3 /* Info.plist */,
+			);
+			name = devilutionx;
+			path = "Xcode-iOS/devilutionx";
+			sourceTree = "<group>";
+		};
+		CEDCFDA022C7D27D006A4224 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CE2DB28322C7E4040053589E /* AVFoundation.framework */,
+				CE2DB28122C7E18A0053589E /* GameController.framework */,
+				CE2DB27F22C7E1810053589E /* Foundation.framework */,
+				CE2DB27D22C7E1770053589E /* UIKit.framework */,
+				CE2DB27B22C7E16D0053589E /* OpenGLES.framework */,
+				CE2DB27922C7E1610053589E /* QuartzCore.framework */,
+				CE2DB27722C7E1530053589E /* AudioToolbox.framework */,
+				CE2DB27522C7E1490053589E /* CoreMotion.framework */,
+				CE2DB27322C7E13D0053589E /* CoreGraphics.framework */,
+				CE2DB27122C7E0AB0053589E /* CoreAudio.framework */,
+				CE2DB25D22C7D9B30053589E /* SDL.xcodeproj */,
+				CEDCFDB322C7D7F2006A4224 /* SDL_ttf.xcodeproj */,
+				CEDCFDA822C7D7C1006A4224 /* SDL_mixer.xcodeproj */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CEDCFDA922C7D7C1006A4224 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CEDCFDB022C7D7C1006A4224 /* libSDL2_mixer.a */,
+				CEDCFDB222C7D7C1006A4224 /* libSDL2_mixer.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CEDCFDB422C7D7F2006A4224 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CEDCFDBB22C7D7F2006A4224 /* libSDL2_ttf.a */,
+				CEDCFDBD22C7D7F2006A4224 /* libSDL2_ttf.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D7649F576E364119A4C52A16 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				38230443585844E38700EACF /* libPKWare.a */,
+				03F8A9BEA2F54315A2F7CEF8 /* libRadon.a */,
+				27E32C71ED9645FA8DC8EC77 /* libStormLib.a */,
+				D555C5AEEE784D4A8496D59C /* libdevilution.a */,
+				A56FDAEA85344F4790653B53 /* libsmacker.a */,
+				CEDA267622C7C058005B63C3 /* devilutionX.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		006C76D83D1F4152831B23EA /* devilution */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 60E44E9FE47D4D62957E328B /* Build configuration list for PBXNativeTarget "devilution" */;
+			buildPhases = (
+				01AFA68B3C0941969F26C12F /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = devilution;
+			productName = devilution;
+			productReference = D555C5AEEE784D4A8496D59C /* libdevilution.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		36CAD7D44E49483087E571C4 /* Radon */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 89FEC84AAA2740618934BF6B /* Build configuration list for PBXNativeTarget "Radon" */;
+			buildPhases = (
+				D47D278C7BE04E958DCA3A94 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Radon;
+			productName = Radon;
+			productReference = 03F8A9BEA2F54315A2F7CEF8 /* libRadon.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		4413486DC7B54A45897A04F0 /* smacker */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 918587F824D742B79EBDD857 /* Build configuration list for PBXNativeTarget "smacker" */;
+			buildPhases = (
+				9208C745682E46AEACA59600 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = smacker;
+			productName = smacker;
+			productReference = A56FDAEA85344F4790653B53 /* libsmacker.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		8E78F161479F4ECFAF8D9DA4 /* PKWare */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4F433228676B4DD3B5B6CEAA /* Build configuration list for PBXNativeTarget "PKWare" */;
+			buildPhases = (
+				05A782CE11464811825467C7 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PKWare;
+			productName = PKWare;
+			productReference = 38230443585844E38700EACF /* libPKWare.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		B5D0FF483F97488E96FFBB08 /* StormLib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5C1F4121FAF046A7A9835285 /* Build configuration list for PBXNativeTarget "StormLib" */;
+			buildPhases = (
+				5892C4C442734A9DBFCF5FD4 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = StormLib;
+			productName = StormLib;
+			productReference = 27E32C71ED9645FA8DC8EC77 /* libStormLib.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		CEDA267522C7C058005B63C3 /* devilutionX */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CEDA268D22C7C059005B63C3 /* Build configuration list for PBXNativeTarget "devilutionX" */;
+			buildPhases = (
+				CEDA267222C7C058005B63C3 /* Sources */,
+				CEDA267322C7C058005B63C3 /* Frameworks */,
+				CEDA267422C7C058005B63C3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CE2DB26A22C7D9ED0053589E /* PBXTargetDependency */,
+				CE2DB24C22C7D8B80053589E /* PBXTargetDependency */,
+				CE2DB24E22C7D8B80053589E /* PBXTargetDependency */,
+				CEDA26B022C7C2B4005B63C3 /* PBXTargetDependency */,
+				CEDA26B222C7C2B4005B63C3 /* PBXTargetDependency */,
+				CEDA26B422C7C2B4005B63C3 /* PBXTargetDependency */,
+				CEDA26B822C7C2B4005B63C3 /* PBXTargetDependency */,
+				CEDA26BA22C7C2B4005B63C3 /* PBXTargetDependency */,
+			);
+			name = devilutionX;
+			productName = "devilution-ios";
+			productReference = CEDA267622C7C058005B63C3 /* devilutionX.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		741F27F6E6DD4B85AEE528E0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1020;
+				TargetAttributes = {
+					CEDA267522C7C058005B63C3 = {
+						CreatedOnToolsVersion = 10.2.1;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 2B509972EAEB4690836E08AD /* Build configuration list for PBXProject "devilutionX" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1F1D629A780440D3A5125242;
+			projectDirPath = ../;
+			projectReferences = (
+				{
+					ProductGroup = CE2DB25E22C7D9B30053589E /* Products */;
+					ProjectRef = CE2DB25D22C7D9B30053589E /* SDL.xcodeproj */;
+				},
+				{
+					ProductGroup = CEDCFDA922C7D7C1006A4224 /* Products */;
+					ProjectRef = CEDCFDA822C7D7C1006A4224 /* SDL_mixer.xcodeproj */;
+				},
+				{
+					ProductGroup = CEDCFDB422C7D7F2006A4224 /* Products */;
+					ProjectRef = CEDCFDB322C7D7F2006A4224 /* SDL_ttf.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				8E78F161479F4ECFAF8D9DA4 /* PKWare */,
+				36CAD7D44E49483087E571C4 /* Radon */,
+				B5D0FF483F97488E96FFBB08 /* StormLib */,
+				006C76D83D1F4152831B23EA /* devilution */,
+				4413486DC7B54A45897A04F0 /* smacker */,
+				CEDA267522C7C058005B63C3 /* devilutionX */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		CE2DB26622C7D9B40053589E /* libSDL2.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSDL2.a;
+			remoteRef = CE2DB26522C7D9B40053589E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		CE2DB26822C7D9B40053589E /* libSDL2.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSDL2.a;
+			remoteRef = CE2DB26722C7D9B40053589E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		CEDCFDB022C7D7C1006A4224 /* libSDL2_mixer.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSDL2_mixer.a;
+			remoteRef = CEDCFDAF22C7D7C1006A4224 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		CEDCFDB222C7D7C1006A4224 /* libSDL2_mixer.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSDL2_mixer.a;
+			remoteRef = CEDCFDB122C7D7C1006A4224 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		CEDCFDBB22C7D7F2006A4224 /* libSDL2_ttf.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSDL2_ttf.a;
+			remoteRef = CEDCFDBA22C7D7F2006A4224 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		CEDCFDBD22C7D7F2006A4224 /* libSDL2_ttf.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSDL2_ttf.a;
+			remoteRef = CEDCFDBC22C7D7F2006A4224 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CEDA267422C7C058005B63C3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE8AF0AD22C81ADF001CC4F9 /* diabdat.mpq in Resources */,
+				CEDA268522C7C059005B63C3 /* LaunchScreen.storyboard in Resources */,
+				CEDA268022C7C058005B63C3 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		01AFA68B3C0941969F26C12F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C817BAD224004CDD9E3D89C7 /* appfat.cpp in Sources */,
+				E8FD1030FE644A91A01FBC98 /* automap.cpp in Sources */,
+				39E8F1A86D5F4B50875AEC87 /* capture.cpp in Sources */,
+				6A318C664A3F40079CE1BAD4 /* codec.cpp in Sources */,
+				5E75CBC6C79A45DAA79EAB1A /* control.cpp in Sources */,
+				0B01272BA5564C4D86DDD73B /* cursor.cpp in Sources */,
+				CC27C8EBA1FB4F09B05FC77C /* dead.cpp in Sources */,
+				78FF3F7E725142DFA53CFA18 /* debug.cpp in Sources */,
+				D22CA4F748AA42AA8DE74EFB /* diablo.cpp in Sources */,
+				4F099374A9D747F3876DFF9C /* doom.cpp in Sources */,
+				51E970E420E644A49B6AB383 /* drlg_l1.cpp in Sources */,
+				7666545097794DA59F0B8FCF /* drlg_l2.cpp in Sources */,
+				624FA906C84740079B9ECD21 /* drlg_l3.cpp in Sources */,
+				76E92C50CA0044D1BD674E0F /* drlg_l4.cpp in Sources */,
+				FD494E36F8B2488AAFE046EB /* dthread.cpp in Sources */,
+				B40FB0168BFA49CDBF93CF36 /* effects.cpp in Sources */,
+				95406B19C7FE4E15B7F03B76 /* encrypt.cpp in Sources */,
+				CF0B9F3E959240359BCFBCE6 /* engine.cpp in Sources */,
+				485FA6F2A2764A629DF04AB4 /* error.cpp in Sources */,
+				6FC5279C3F664EAB9E2BC4C9 /* fault.cpp in Sources */,
+				328473368BA7489893A6FDFE /* gamemenu.cpp in Sources */,
+				6CABFF2595DC411894F71594 /* gendung.cpp in Sources */,
+				8E320FA9127E416CB8BF300B /* gmenu.cpp in Sources */,
+				4B50510B38694E438A84C012 /* help.cpp in Sources */,
+				5884A25DD97E4C03BFD4322C /* init.cpp in Sources */,
+				7490B2A0AFD0440EBAC0C7E1 /* interfac.cpp in Sources */,
+				58618D336FF74F3394EEB9E5 /* inv.cpp in Sources */,
+				4D1A9ECC39AA457198D07386 /* itemdat.cpp in Sources */,
+				502083FB8B254E27B30F3C45 /* items.cpp in Sources */,
+				528EF7CCBC344DFEBEFCB806 /* lighting.cpp in Sources */,
+				C0BE8604DC3C4A949EB68544 /* loadsave.cpp in Sources */,
+				C7B3CCB4A0B14E78AF56FE24 /* logging.cpp in Sources */,
+				5BCED8CF48104C4C886050AF /* mainmenu.cpp in Sources */,
+				ABCCAE0431D24F139492BBEF /* minitext.cpp in Sources */,
+				8D3CE2BD9DBC407086EB53FB /* misdat.cpp in Sources */,
+				25032C59CB384CCF9662792D /* missiles.cpp in Sources */,
+				D80708EA73DA410C9881CCE9 /* monstdat.cpp in Sources */,
+				A88EBF4A82EA4D81930A397A /* monster.cpp in Sources */,
+				229ACA29435A48BD973AB99A /* movie.cpp in Sources */,
+				FEB8A74C2F8E4DE0872E9E39 /* mpqapi.cpp in Sources */,
+				3CD39E36734C4F9EB7840D2B /* msg.cpp in Sources */,
+				C6B71EBE888A48B59E31E241 /* msgcmd.cpp in Sources */,
+				6D8E943F36A74EDA9F81C38D /* multi.cpp in Sources */,
+				D4BA2370B9DE442A8E7B7354 /* nthread.cpp in Sources */,
+				E521E9A804F1474BBDD28764 /* objdat.cpp in Sources */,
+				2B488F9320954EE38B087BA6 /* objects.cpp in Sources */,
+				1C69F04BDE8A4E31937C5E2D /* pack.cpp in Sources */,
+				19128C609C194786990E1D08 /* palette.cpp in Sources */,
+				9382B1A531094A9F9C6F75F0 /* path.cpp in Sources */,
+				9B81D6A70EE1480A9745B9AF /* pfile.cpp in Sources */,
+				94BE4E8B924E4A03BBA1D2C3 /* player.cpp in Sources */,
+				2F3892BAC3004FC7BFE29335 /* plrmsg.cpp in Sources */,
+				9853E9F4CB64448885B77142 /* portal.cpp in Sources */,
+				C95CA138E9F74C60B0D8362A /* quests.cpp in Sources */,
+				972BBC7E5C8E4AADB3334D19 /* render.cpp in Sources */,
+				B9B74746230C41B085DEE3D3 /* restrict.cpp in Sources */,
+				E9D00DF2AE9E4B35972C3BB0 /* scrollrt.cpp in Sources */,
+				606EC65AA1CD4F65AB77B0C1 /* setmaps.cpp in Sources */,
+				D1782B0F48C24A80B5348159 /* sha.cpp in Sources */,
+				941818198D4A4E2991347377 /* spelldat.cpp in Sources */,
+				1A0FDDF5AD9E4055B91DCBCA /* spells.cpp in Sources */,
+				DAD0E2B8EA8C4C82BFCDC6FD /* stores.cpp in Sources */,
+				22DF23F12900438A9A79B43D /* sync.cpp in Sources */,
+				8F7D00D743684560BB565C4B /* textdat.cpp in Sources */,
+				3F3AB8D3CAA14374BCB5D84C /* themes.cpp in Sources */,
+				86DC676D3C364754993DDE1F /* tmsg.cpp in Sources */,
+				47C57628A4744B03B01BEE98 /* town.cpp in Sources */,
+				CE87417B12614559BDB13F1E /* towners.cpp in Sources */,
+				7935FE57249C4BAFB417CCB9 /* track.cpp in Sources */,
+				FD22E87D17C64A98ABE65DC3 /* trigs.cpp in Sources */,
+				CAAF451BA778449AAAB667C8 /* wave.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05A782CE11464811825467C7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F27C1A481C1346108E4EED8A /* explode.cpp in Sources */,
+				64E7E9CD2CA24D0A99726639 /* implode.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5892C4C442734A9DBFCF5FD4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				64170493ED41468CA11B9D35 /* FileStream.cpp in Sources */,
+				D277B43FD21C4C0782B6CCA0 /* SBaseCommon.cpp in Sources */,
+				8935B647660844E784AEB6CB /* SBaseFileTable.cpp in Sources */,
+				BFE6EB5B56364229BE98528A /* SBaseSubTypes.cpp in Sources */,
+				27A16D03657E4285B8436B64 /* SCompression.cpp in Sources */,
+				88760B7982A5496DB4E08846 /* SFileExtractFile.cpp in Sources */,
+				3470CB8BDA8D4EDCAAAB44DB /* SFileFindFile.cpp in Sources */,
+				10D62D84BAE14CE380D299D3 /* SFileGetFileInfo.cpp in Sources */,
+				877DC923FD56446AA996945A /* SFileOpenArchive.cpp in Sources */,
+				D13EE41C17634900A9440F27 /* SFileOpenFileEx.cpp in Sources */,
+				F24AEEB142D04733BD79949E /* SFileReadFile.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9208C745682E46AEACA59600 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7ABF663C471F43249FB9F7AC /* smacker.c in Sources */,
+				5F12CEBFA3B3410B86F86154 /* smk_bitstream.c in Sources */,
+				904E3D56A27346A1AA3438A7 /* smk_hufftree.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CEDA267222C7C058005B63C3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CEDA269022C7C296005B63C3 /* credits.cpp in Sources */,
+				CEDA269122C7C296005B63C3 /* diabloui.cpp in Sources */,
+				CEDA269222C7C296005B63C3 /* dialogs.cpp in Sources */,
+				CEDA269322C7C296005B63C3 /* mainmenu.cpp in Sources */,
+				CEDA269422C7C296005B63C3 /* progress.cpp in Sources */,
+				CEDA269522C7C296005B63C3 /* selconn.cpp in Sources */,
+				CEDA269622C7C296005B63C3 /* selgame.cpp in Sources */,
+				CEDA269722C7C296005B63C3 /* selhero.cpp in Sources */,
+				CEDA269822C7C296005B63C3 /* title.cpp in Sources */,
+				CEDA269922C7C296005B63C3 /* abstract_net.cpp in Sources */,
+				CEDA269A22C7C296005B63C3 /* base.cpp in Sources */,
+				CEDA269B22C7C296005B63C3 /* frame_queue.cpp in Sources */,
+				CEDA269C22C7C296005B63C3 /* loopback.cpp in Sources */,
+				CEDA269D22C7C296005B63C3 /* packet.cpp in Sources */,
+				CEDA26A122C7C296005B63C3 /* dx.cpp in Sources */,
+				CEDA26A222C7C296005B63C3 /* main.cpp in Sources */,
+				CEDA26A322C7C296005B63C3 /* ddraw.cpp in Sources */,
+				CEDA26A422C7C296005B63C3 /* dsound.cpp in Sources */,
+				CEDA26A522C7C296005B63C3 /* misc.cpp in Sources */,
+				CEDA26A622C7C296005B63C3 /* misc_dx.cpp in Sources */,
+				CEDA26A722C7C296005B63C3 /* misc_io.cpp in Sources */,
+				CEDA26A822C7C296005B63C3 /* misc_msg.cpp in Sources */,
+				CEDA26A922C7C296005B63C3 /* rand.cpp in Sources */,
+				CEDA26AA22C7C296005B63C3 /* thread.cpp in Sources */,
+				CEDA26AB22C7C296005B63C3 /* sound.cpp in Sources */,
+				CEDA26AC22C7C296005B63C3 /* storm.cpp in Sources */,
+				CEDA26AD22C7C296005B63C3 /* storm_dx.cpp in Sources */,
+				CEDA26AE22C7C296005B63C3 /* storm_net.cpp in Sources */,
+				CEDA267A22C7C058005B63C3 /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D47D278C7BE04E958DCA3A94 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C02C1F49A0AF42B9A5D0E37C /* File.cpp in Sources */,
+				3DDBC07AE5D34575B392C98D /* Key.cpp in Sources */,
+				DEA1F3810AA54E81B05145B3 /* Named.cpp in Sources */,
+				13DA41EF0630487088EB9758 /* Section.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CE2DB24C22C7D8B80053589E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "libSDL_ttf-iOS";
+			targetProxy = CE2DB24B22C7D8B80053589E /* PBXContainerItemProxy */;
+		};
+		CE2DB24E22C7D8B80053589E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "libSDL_mixer-iOS";
+			targetProxy = CE2DB24D22C7D8B80053589E /* PBXContainerItemProxy */;
+		};
+		CE2DB26A22C7D9ED0053589E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "libSDL-iOS";
+			targetProxy = CE2DB26922C7D9ED0053589E /* PBXContainerItemProxy */;
+		};
+		CEDA26B022C7C2B4005B63C3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8E78F161479F4ECFAF8D9DA4 /* PKWare */;
+			targetProxy = CEDA26AF22C7C2B4005B63C3 /* PBXContainerItemProxy */;
+		};
+		CEDA26B222C7C2B4005B63C3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 36CAD7D44E49483087E571C4 /* Radon */;
+			targetProxy = CEDA26B122C7C2B4005B63C3 /* PBXContainerItemProxy */;
+		};
+		CEDA26B422C7C2B4005B63C3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B5D0FF483F97488E96FFBB08 /* StormLib */;
+			targetProxy = CEDA26B322C7C2B4005B63C3 /* PBXContainerItemProxy */;
+		};
+		CEDA26B822C7C2B4005B63C3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 006C76D83D1F4152831B23EA /* devilution */;
+			targetProxy = CEDA26B722C7C2B4005B63C3 /* PBXContainerItemProxy */;
+		};
+		CEDA26BA22C7C2B4005B63C3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4413486DC7B54A45897A04F0 /* smacker */;
+			targetProxy = CEDA26B922C7C2B4005B63C3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		CEDA267E22C7C058005B63C3 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CEDA267F22C7C058005B63C3 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		CEDA268322C7C059005B63C3 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CEDA268422C7C059005B63C3 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		03A07CB996354BC9B2CD40A6 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = (
+					"-Wno-narrowing",
+					"-DNDEBUG",
+					"'-std=c++14'",
+				);
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = PKWare;
+				SECTORDER_FLAGS = "";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = MinSizeRel;
+		};
+		048870C698A54FF4AFE8416F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
+				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS/build";
+			};
+			name = Release;
+		};
+		11F8A8B9E2B44280A494AE34 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CFLAGS = "    -DNDEBUG  ";
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = smacker;
+				SECTORDER_FLAGS = "";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Release;
+		};
+		3689FE5CCEF1499799E403E7 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					DEVILUTION_ENGINE,
+					DEVILUTION_STUB,
+					_DEBUG,
+					FASTER,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/Users/cobiro/devilutionX/Source,
+					/Users/cobiro/devilutionX/SourceS,
+				);
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = (
+					"-Wno-narrowing",
+					"-DNDEBUG",
+					"'-fsanitize=address'",
+					"'-fsanitize-recover=address'",
+					"-Wno-unknown-pragmas",
+					"-fpermissive",
+					"-Wno-write-strings",
+					"-Wno-multichar",
+					"-w",
+					"-fno-strict-aliasing",
+					"-fsigned-char",
+					"-fms-extensions",
+					"-fms-compatibility",
+					"'-fms-compatibility-version=19.00'",
+					"'-std=c++14'",
+				);
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = devilution;
+				SECTORDER_FLAGS = "";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = RelWithDebInfo;
+		};
+		374BC6C5E0F345CBAD85AE67 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
+				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS/build";
+			};
+			name = RelWithDebInfo;
+		};
+		402BA9B8529F492297D70C72 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = (
+					"-Wno-narrowing",
+					"-DNDEBUG",
+					"'-std=c++14'",
+				);
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = PKWare;
+				SECTORDER_FLAGS = "";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Release;
+		};
+		41C9E31B3EF44B739BE89124 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = (
+					"-Wno-narrowing",
+					"-DNDEBUG",
+					"'-std=c++14'",
+				);
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = StormLib;
+				SECTORDER_FLAGS = "";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Release;
+		};
+		58E650A67A4C47B7B4FB76E5 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = (
+					"-Wno-narrowing",
+					"-DNDEBUG",
+					"'-std=c++14'",
+				);
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = StormLib;
+				SECTORDER_FLAGS = "";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = RelWithDebInfo;
+		};
+		5B2D27C5BA0B42FD9109A988 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
+				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS/build";
+			};
+			name = Debug;
+		};
+		65C3A862C0404FF1A6F8543B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = (
+					"-Wno-narrowing",
+					"-DNDEBUG",
+					"'-std=c++14'",
+				);
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = Radon;
+				SECTORDER_FLAGS = "";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				USE_HEADERMAP = NO;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Release;
+		};
+		6D286F34617F486C89213393 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = (
+					"-Wno-narrowing",
+					"'-std=c++14'",
+				);
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = Radon;
+				SECTORDER_FLAGS = "";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				USE_HEADERMAP = NO;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Debug;
+		};
+		73B42775D37D438585D38B03 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
+				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS/build";
+			};
+			name = MinSizeRel;
+		};
+		870841CC6B964BFEB6A62382 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CFLAGS = "       -DNDEBUG  ";
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = smacker;
+				SECTORDER_FLAGS = "";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = RelWithDebInfo;
+		};
+		9CE979C03FF74A3DB4A9FD0F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					DEVILUTION_ENGINE,
+					DEVILUTION_STUB,
+					_DEBUG,
+					FASTER,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/Users/cobiro/devilutionX/Source,
+					/Users/cobiro/devilutionX/SourceS,
+				);
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = (
+					"-Wno-narrowing",
+					"-DNDEBUG",
+					"'-fsanitize=address'",
+					"'-fsanitize-recover=address'",
+					"-Wno-unknown-pragmas",
+					"-fpermissive",
+					"-Wno-write-strings",
+					"-Wno-multichar",
+					"-w",
+					"-fno-strict-aliasing",
+					"-fsigned-char",
+					"-fms-extensions",
+					"-fms-compatibility",
+					"'-fms-compatibility-version=19.00'",
+					"'-std=c++14'",
+				);
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = devilution;
+				SECTORDER_FLAGS = "";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Release;
+		};
+		A146331AD87E4544A2294356 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = (
+					"-Wno-narrowing",
+					"-DNDEBUG",
+					"'-std=c++14'",
+				);
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = PKWare;
+				SECTORDER_FLAGS = "";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = RelWithDebInfo;
+		};
+		A21E4B5E1DFA439A917B6B55 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = (
+					"-Wno-narrowing",
+					"'-std=c++14'",
+				);
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = PKWare;
+				SECTORDER_FLAGS = "";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Debug;
+		};
+		AC9829C61F9B4AE5A0AEF86D /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					DEVILUTION_ENGINE,
+					DEVILUTION_STUB,
+					_DEBUG,
+					FASTER,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/Users/cobiro/devilutionX/Source,
+					/Users/cobiro/devilutionX/SourceS,
+				);
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = (
+					"-Wno-narrowing",
+					"-DNDEBUG",
+					"'-fsanitize=address'",
+					"'-fsanitize-recover=address'",
+					"-Wno-unknown-pragmas",
+					"-fpermissive",
+					"-Wno-write-strings",
+					"-Wno-multichar",
+					"-w",
+					"-fno-strict-aliasing",
+					"-fsigned-char",
+					"-fms-extensions",
+					"-fms-compatibility",
+					"'-fms-compatibility-version=19.00'",
+					"'-std=c++14'",
+				);
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = devilution;
+				SECTORDER_FLAGS = "";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = MinSizeRel;
+		};
+		B47E062217474F38B0EFCE9C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CFLAGS = "    ";
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = smacker;
+				SECTORDER_FLAGS = "";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Debug;
+		};
+		CEDA268922C7C059005B63C3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					DEVILUTION_STUB,
+					_DEBUG,
+					FASTER,
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					/Users/cobiro/devilutionX/SourceX,
+					/Users/cobiro/devilutionX/3rdParty/Radon/Radon/include,
+					/Users/cobiro/devilutionX/3rdParty/libsmacker,
+					/Users/cobiro/devilutionX/Source,
+					/Users/cobiro/devilutionX/SourceS,
+				);
+				INFOPLIST_FILE = "Xcode-iOS/devilutionx/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks /Users/cobiro/devilutionX/Xcode-iOS/Debug-iphonesimulator";
+				LIBRARY_SEARCH_PATHS = "/Users/cobiro/devilutionX/Xcode-iOS/Debug-iphonesimulator";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = (
+					"-Wl,-search_paths_first",
+					"-Wl,-headerpad_max_install_names",
+					"-fsanitize=address",
+					"-fsanitize-recover=address",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = diasurgical.devilutionx;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/include/SDL2 /usr/local/Cellar/libsodium/1.0.18/include";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CEDA268A22C7C059005B63C3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					DEVILUTION_STUB,
+					_DEBUG,
+					FASTER,
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					/Users/cobiro/devilutionX/SourceX,
+					/Users/cobiro/devilutionX/3rdParty/Radon/Radon/include,
+					/Users/cobiro/devilutionX/3rdParty/libsmacker,
+					/Users/cobiro/devilutionX/Source,
+					/Users/cobiro/devilutionX/SourceS,
+				);
+				INFOPLIST_FILE = "Xcode-iOS/devilutionx/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks /Users/cobiro/devilutionX/Xcode-iOS/Debug-iphonesimulator";
+				LIBRARY_SEARCH_PATHS = "/Users/cobiro/devilutionX/Xcode-iOS/Debug-iphonesimulator";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = (
+					"-Wl,-search_paths_first",
+					"-Wl,-headerpad_max_install_names",
+					"-fsanitize=address",
+					"-fsanitize-recover=address",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = diasurgical.devilutionx;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/include/SDL2 /usr/local/Cellar/libsodium/1.0.18/include";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		CEDA268B22C7C059005B63C3 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					DEVILUTION_STUB,
+					_DEBUG,
+					FASTER,
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					/Users/cobiro/devilutionX/SourceX,
+					/Users/cobiro/devilutionX/3rdParty/Radon/Radon/include,
+					/Users/cobiro/devilutionX/3rdParty/libsmacker,
+					/Users/cobiro/devilutionX/Source,
+					/Users/cobiro/devilutionX/SourceS,
+				);
+				INFOPLIST_FILE = "Xcode-iOS/devilutionx/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks /Users/cobiro/devilutionX/Xcode-iOS/Debug-iphonesimulator";
+				LIBRARY_SEARCH_PATHS = "/Users/cobiro/devilutionX/Xcode-iOS/Debug-iphonesimulator";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = (
+					"-Wl,-search_paths_first",
+					"-Wl,-headerpad_max_install_names",
+					"-fsanitize=address",
+					"-fsanitize-recover=address",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = diasurgical.devilutionx;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/include/SDL2 /usr/local/Cellar/libsodium/1.0.18/include";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = MinSizeRel;
+		};
+		CEDA268C22C7C059005B63C3 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					DEVILUTION_STUB,
+					_DEBUG,
+					FASTER,
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					/Users/cobiro/devilutionX/SourceX,
+					/Users/cobiro/devilutionX/3rdParty/Radon/Radon/include,
+					/Users/cobiro/devilutionX/3rdParty/libsmacker,
+					/Users/cobiro/devilutionX/Source,
+					/Users/cobiro/devilutionX/SourceS,
+				);
+				INFOPLIST_FILE = "Xcode-iOS/devilutionx/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks /Users/cobiro/devilutionX/Xcode-iOS/Debug-iphonesimulator";
+				LIBRARY_SEARCH_PATHS = "/Users/cobiro/devilutionX/Xcode-iOS/Debug-iphonesimulator";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				OTHER_LDFLAGS = (
+					"-Wl,-search_paths_first",
+					"-Wl,-headerpad_max_install_names",
+					"-fsanitize=address",
+					"-fsanitize-recover=address",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = diasurgical.devilutionx;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/include/SDL2 /usr/local/Cellar/libsodium/1.0.18/include";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = RelWithDebInfo;
+		};
+		D59FD22CA8DF45A588020B38 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					DEVILUTION_ENGINE,
+					DEVILUTION_STUB,
+					_DEBUG,
+					FASTER,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/Users/cobiro/devilutionX/Source,
+					/Users/cobiro/devilutionX/SourceS,
+				);
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = (
+					"-Wno-narrowing",
+					"'-fsanitize=address'",
+					"'-fsanitize-recover=address'",
+					"-fno-omit-frame-pointer",
+					"-Wno-unknown-pragmas",
+					"-fpermissive",
+					"-Wno-write-strings",
+					"-Wno-multichar",
+					"-w",
+					"-fno-strict-aliasing",
+					"-fsigned-char",
+					"-fms-extensions",
+					"-fms-compatibility",
+					"'-fms-compatibility-version=19.00'",
+					"'-std=c++14'",
+				);
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = devilution;
+				SECTORDER_FLAGS = "";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Debug;
+		};
+		D9B2D3A57AEB4CF691C9A3E5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = (
+					"-Wno-narrowing",
+					"'-std=c++14'",
+				);
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = StormLib;
+				SECTORDER_FLAGS = "";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Debug;
+		};
+		E8810F64C40C497BBFFA9B45 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CFLAGS = "    -DNDEBUG  ";
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = smacker;
+				SECTORDER_FLAGS = "";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = MinSizeRel;
+		};
+		EFDEC327C8534B7883FC7915 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = (
+					"-Wno-narrowing",
+					"-DNDEBUG",
+					"'-std=c++14'",
+				);
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = Radon;
+				SECTORDER_FLAGS = "";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				USE_HEADERMAP = NO;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = RelWithDebInfo;
+		};
+		FAFC439445794C4E9D33E737 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = (
+					"-Wno-narrowing",
+					"-DNDEBUG",
+					"'-std=c++14'",
+				);
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = StormLib;
+				SECTORDER_FLAGS = "";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = MinSizeRel;
+		};
+		FD432BC57E9E442381C381FE /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CPLUSPLUSFLAGS = (
+					"-Wno-narrowing",
+					"-DNDEBUG",
+					"'-std=c++14'",
+				);
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = Radon;
+				SECTORDER_FLAGS = "";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				USE_HEADERMAP = NO;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = MinSizeRel;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2B509972EAEB4690836E08AD /* Build configuration list for PBXProject "devilutionX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5B2D27C5BA0B42FD9109A988 /* Debug */,
+				048870C698A54FF4AFE8416F /* Release */,
+				73B42775D37D438585D38B03 /* MinSizeRel */,
+				374BC6C5E0F345CBAD85AE67 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		4F433228676B4DD3B5B6CEAA /* Build configuration list for PBXNativeTarget "PKWare" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A21E4B5E1DFA439A917B6B55 /* Debug */,
+				402BA9B8529F492297D70C72 /* Release */,
+				03A07CB996354BC9B2CD40A6 /* MinSizeRel */,
+				A146331AD87E4544A2294356 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		5C1F4121FAF046A7A9835285 /* Build configuration list for PBXNativeTarget "StormLib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D9B2D3A57AEB4CF691C9A3E5 /* Debug */,
+				41C9E31B3EF44B739BE89124 /* Release */,
+				FAFC439445794C4E9D33E737 /* MinSizeRel */,
+				58E650A67A4C47B7B4FB76E5 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		60E44E9FE47D4D62957E328B /* Build configuration list for PBXNativeTarget "devilution" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D59FD22CA8DF45A588020B38 /* Debug */,
+				9CE979C03FF74A3DB4A9FD0F /* Release */,
+				AC9829C61F9B4AE5A0AEF86D /* MinSizeRel */,
+				3689FE5CCEF1499799E403E7 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		89FEC84AAA2740618934BF6B /* Build configuration list for PBXNativeTarget "Radon" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6D286F34617F486C89213393 /* Debug */,
+				65C3A862C0404FF1A6F8543B /* Release */,
+				FD432BC57E9E442381C381FE /* MinSizeRel */,
+				EFDEC327C8534B7883FC7915 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		918587F824D742B79EBDD857 /* Build configuration list for PBXNativeTarget "smacker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B47E062217474F38B0EFCE9C /* Debug */,
+				11F8A8B9E2B44280A494AE34 /* Release */,
+				E8810F64C40C497BBFFA9B45 /* MinSizeRel */,
+				870841CC6B964BFEB6A62382 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		CEDA268D22C7C059005B63C3 /* Build configuration list for PBXNativeTarget "devilutionX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CEDA268922C7C059005B63C3 /* Debug */,
+				CEDA268A22C7C059005B63C3 /* Release */,
+				CEDA268B22C7C059005B63C3 /* MinSizeRel */,
+				CEDA268C22C7C059005B63C3 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 741F27F6E6DD4B85AEE528E0 /* Project object */;
+}
