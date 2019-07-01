@@ -252,6 +252,11 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	case SDL_JOYBUTTONUP:
 		switch(e.jbutton.button)
 		{
+			case 8:
+					lpMsg->message = DVL_WM_RBUTTONUP;
+					lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+					lpMsg->wParam = keystate_for_mouse(0);
+					break;
 			case 9:
 					lpMsg->message = DVL_WM_LBUTTONUP;
 					lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
@@ -280,7 +285,9 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 				PressChar('c');
 				break;
 			case  8:	// ZL
-				useBeltPotion(false);
+				lpMsg->message = DVL_WM_RBUTTONDOWN;
+				lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+				lpMsg->wParam = keystate_for_mouse(DVL_MK_RBUTTON);
 				break;
 			case  9:	// ZR
 				break;
