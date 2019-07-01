@@ -244,7 +244,11 @@ void init_archives()
 #ifdef COPYPROT
 	while (1) {
 #endif
+#ifndef SWITCH
 		diabdat_mpq = init_test_access(diabdat_mpq_path, "\\diabdat.mpq", "DiabloCD", 1000, FS_CD);
+#else
+		diabdat_mpq = init_test_access(diabdat_mpq_path, "diabdat.mpq", "DiabloCD", 1000, FS_CD);
+#endif
 #ifdef COPYPROT
 		if (diabdat_mpq)
 			break;
@@ -256,7 +260,11 @@ void init_archives()
 	if (!WOpenFile("ui_art\\title.pcx", &fh, TRUE))
 		FileErrDlg("Main program archive: diabdat.mpq");
 	WCloseFile(fh);
+#ifndef SWITCH
 	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "\\patch_rt.mpq", "DiabloInstall", 2000, FS_PC);
+#else
+	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "patch_rt.mpq", "DiabloInstall", 2000, FS_PC);
+#endif
 }
 
 HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags, int fs)
