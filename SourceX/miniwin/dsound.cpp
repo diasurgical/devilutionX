@@ -69,7 +69,7 @@ HRESULT DirectSoundBuffer::Play(DWORD dwReserved1, DWORD dwPriority, DWORD dwFla
 {
 	int channel = Mix_PlayChannel(-1, chunk, 0);
 	if (channel == -1) {
-		SDL_Log("To few channels, skipping sound\n");
+		SDL_Log("Too few channels, skipping sound\n");
 		return DVL_DS_OK;
 	}
 
