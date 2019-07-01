@@ -252,17 +252,23 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	case SDL_JOYBUTTONUP:
 		//doAttack = 0;
 		//doUse = 0;
+		switch(e.jbutton.button)
+		{
+			case 9:
+					lpMsg->message = DVL_WM_LBUTTONUP;
+					lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+					lpMsg->wParam = keystate_for_mouse(0);
+					break;
+		}
 		break;
 	case SDL_JOYBUTTONDOWN:
 		switch(e.jbutton.button)
 		{
 			case  0:	// A
 				doAttack = 1;
-				doUse = 1;
 				break;
 			case  1:	// B
 				doAttack = 1;
-				doUse = 1;
 				break;
 			case  2:	// X
 				PressChar('i');
@@ -281,7 +287,16 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 				useBeltPotion(false);
 				break;
 			case  9:	// ZR
-				useBeltPotion(true);
+				//if (invflag || spselflag || chrflag)
+				//{
+					lpMsg->message = DVL_WM_LBUTTONDOWN;
+					lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+					lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
+				//}
+				//else
+				//{
+				//	useBeltPotion(true);
+				//}
 				break;
 			case 10:
 				break;
@@ -305,21 +320,13 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	case SDL_QUIT:
 		lpMsg->message = DVL_WM_QUIT;
 		break;
-	/*case SDL_KEYDOWN:
-	case SDL_KEYUP: {
-		int key = translate_sdl_key(e.key.keysym);
-		if (key == -1)
-			return false_avail();
-		lpMsg->message = e.type == SDL_KEYDOWN ? DVL_WM_KEYDOWN : DVL_WM_KEYUP;
-		lpMsg->wParam = (DWORD)key;
-		// HACK: Encode modifier in lParam for TranslateMessage later
-		lpMsg->lParam = e.key.keysym.mod << 16;
-	} break;*/
+	case SDL_FINGERMOTION:
 	case SDL_MOUSEMOTION:
 		lpMsg->message = DVL_WM_MOUSEMOVE;
 		lpMsg->lParam = (e.motion.y << 16) | (e.motion.x & 0xFFFF);
 		lpMsg->wParam = keystate_for_mouse(0);
 		break;
+	case SDL_FINGERDOWN:
 	case SDL_MOUSEBUTTONDOWN: {
 		int button = e.button.button;
 		if (button == SDL_BUTTON_LEFT) {
@@ -334,6 +341,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 			return false_avail();
 		}
 	} break;
+	case SDL_FINGERUP:
 	case SDL_MOUSEBUTTONUP: {
 		int button = e.button.button;
 		if (button == SDL_BUTTON_LEFT) {
