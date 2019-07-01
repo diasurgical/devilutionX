@@ -537,21 +537,21 @@ void keyboardExpension()
 		walkInDir(WALK_SW);
 	} else if (GetAsyncKeyState(VK_LEFT) & 0x8000 && GetAsyncKeyState(VK_UP) & 0x8000 || GetAsyncKeyState(0x57) & 0x8000 && GetAsyncKeyState(0x41) & 0x8000 || leftStickY >= 0.20 && leftStickX <= -0.20) {
 		walkInDir(WALK_NW);
-	} else if (GetAsyncKeyState(VK_UP) & 0x8000 || GetAsyncKeyState(0x57) & 0x8000 || leftStickY >= 1) {
+	} else if (GetAsyncKeyState(VK_UP) & 0x8000 || GetAsyncKeyState(0x57) & 0x8000 || leftStickY >= 0.8) {
 		invMove(VK_UP);
 		hotSpellMove(VK_UP);
 		attrIncBtnSnap(VK_UP);
 		walkInDir(WALK_N);
-	} else if (GetAsyncKeyState(VK_RIGHT) & 0x8000 || GetAsyncKeyState(0x44) & 0x8000 || leftStickX >= 1) {
+	} else if (GetAsyncKeyState(VK_RIGHT) & 0x8000 || GetAsyncKeyState(0x44) & 0x8000 || leftStickX >= 0.8) {
 		invMove(VK_RIGHT);
 		hotSpellMove(VK_RIGHT);
 		walkInDir(WALK_E);
-	} else if (GetAsyncKeyState(VK_DOWN) & 0x8000 || GetAsyncKeyState(0x53) & 0x8000 || leftStickY <= -1) {
+	} else if (GetAsyncKeyState(VK_DOWN) & 0x8000 || GetAsyncKeyState(0x53) & 0x8000 || leftStickY <= -0.8) {
 		invMove(VK_DOWN);
 		hotSpellMove(VK_DOWN);
 		attrIncBtnSnap(VK_DOWN);
 		walkInDir(WALK_S);
-	} else if (GetAsyncKeyState(VK_LEFT) & 0x8000 || GetAsyncKeyState(0x41) & 0x8000 || leftStickX <= -1) {
+	} else if (GetAsyncKeyState(VK_LEFT) & 0x8000 || GetAsyncKeyState(0x41) & 0x8000 || leftStickX <= -0.8) {
 		invMove(VK_LEFT);
 		hotSpellMove(VK_LEFT);
 		walkInDir(WALK_W);
