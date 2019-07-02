@@ -12,3 +12,4 @@ build/
 /local.properties
 
 /SDL2/
+/SDL2_ttf/
