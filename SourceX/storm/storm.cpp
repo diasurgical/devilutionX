@@ -453,7 +453,11 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 
 	SVidLoop = flags & 0x40000;
 	bool enableVideo = !(flags & 0x100000);
+#ifdef SWITCH
+	bool enableAudio = 0;
+#else
 	bool enableAudio = !(flags & 0x1000000);
+#endif
 	//0x8 // Non-interlaced
 	//0x200, 0x800 // Upscale video
 	//0x80000 // Center horizontally
