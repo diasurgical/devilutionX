@@ -74,7 +74,7 @@ HRESULT DirectSoundBuffer::Play(DWORD dwReserved1, DWORD dwPriority, DWORD dwFla
 	}
 
 	Mix_Volume(channel, volume);
-	Mix_SetPanning(channel, pan <= 0 ? 255 : abs(pan), pan >= 0 ? 255 : pan);
+	Mix_SetPanning(channel, pan > 0 ? pan : 255, pan < 0 ? abs(pan) : 255);
 
 	return DVL_DS_OK;
 };
