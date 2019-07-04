@@ -97,10 +97,12 @@ void tcp_client::handle_send(const asio::error_code& error, size_t bytes_sent)
 
 void tcp_client::send(packet& pkt)
 {
-	auto frame = frame_queue::make_frame(pkt.data());
-	asio::async_write(sock, asio::buffer(frame),
-	                  std::bind(&tcp_client::handle_send, this,
-	                            std::placeholders::_1, std::placeholders::_2));
+	auto frame = std::make_shared<buffer_t>(frame_queue::make_frame(pkt.data()));
+	auto buf = asio::buffer(*frame);
+	asio::async_write(sock, buf, [this, frame = std::move(frame)]
+	(const asio::error_code &error, size_t bytes_sent) {
+		handle_send(error, bytes_sent);
+	});
 }
 
 }  // namespace net
