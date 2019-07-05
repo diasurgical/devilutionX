@@ -11,18 +11,8 @@
 
 namespace dvl {
 
-bool conInv = false;
 float leftStickX;
 float leftStickY;
-float rightStickX;
-float rightStickY;
-float leftTrigger;
-float rightTrigger;
-float deadzoneX;
-float deadzoneY;
-int doAttack 	= 0;
-int doInv 	= 0;
-int doChar 	= 0;
 
 static std::deque<MSG> message_queue;
 
@@ -268,14 +258,19 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		switch(e.jbutton.button)
 		{
 			case  0:	// A
+				PressChar('i');
 				break;
 			case  1:	// B
-				doAttack = 1;
+				if (inmainmenu) {
+					PressKey(VK_RETURN);
+				} else {
+					PressKey(VK_SPACE);
+				}
 				break;
 			case  2:	// X
+				PressChar('x');
 				break;
 			case  3:	// Y
-				doUse = 1;
 				PressKey(VK_RETURN);
 				break;
 			case  6:	// L
@@ -285,11 +280,10 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 				PressChar('c');
 				break;
 			case  8:	// ZL
-				lpMsg->message = DVL_WM_RBUTTONDOWN;
-				lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
-				lpMsg->wParam = keystate_for_mouse(DVL_MK_RBUTTON);
+				useBeltPotion(false); // use health potion
 				break;
 			case  9:	// ZR
+				useBeltPotion(true); // use mana potion
 				break;
 			case 10:
 				break;
