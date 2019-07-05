@@ -5,15 +5,6 @@ DEVILUTION_BEGIN_NAMESPACE
 
 extern float leftStickX;
 extern float leftStickY;
-extern float rightStickX;
-extern float rightStickY;
-extern float leftTrigger;
-extern float rightTrigger;
-extern float deadzoneX;
-extern float deadzoneY;
-extern int doAttack;
-extern int doUse;
-extern int doChar;
 
 #define INV_TOP 240;
 #define INV_LEFT 350;
@@ -476,7 +467,7 @@ void keyboardExpension()
 		return;
 	if (GetAsyncKeyState(VK_SHIFT) & 0x8000)
 		return;
-	if (GetAsyncKeyState(VK_SPACE) & 0x8000 || doAttack) { // similar to X button on PS1 ccontroller. Talk to towners, click on inv items, attack.
+	if (GetAsyncKeyState(VK_SPACE) & 0x8000) { // similar to X button on PS1 ccontroller. Talk to towners, click on inv items, attack.
 		if (invflag) {                         // inventory is open
 			if (ticks - clickinvtimer >= 300) {
 				clickinvtimer = ticks;
@@ -513,7 +504,7 @@ void keyboardExpension()
 				}
 			}
 		}
-	} else if (GetAsyncKeyState(VK_RETURN) & 0x8000 || doUse) { // similar to [] button on PS1 controller. Open chests, doors, pickup items
+	} else if (GetAsyncKeyState(VK_RETURN) & 0x8000) { // similar to [] button on PS1 controller. Open chests, doors, pickup items
 		if (!invflag) {
 			HideCursor();
 			if (ticks - opentimer > 300) {
