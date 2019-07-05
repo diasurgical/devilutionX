@@ -270,7 +270,12 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		switch(e.jbutton.button)
 		{
 			case  0:	// A
-				useBeltPotion(false);
+				//useBeltPotion(false);
+				if (inmainmenu) {
+					PressKey(VK_RETURN);
+				} else {
+					PressKey(VK_SPACE);
+				}
 				break;
 			case  1:	// B
 				doAttack = 1;
@@ -279,7 +284,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 				PressChar('i');
 				break;
 			case  3:	// Y
-				doUse = 1;
+				//doUse = 1;
 				PressKey(VK_RETURN);
 				break;
 			case  6:	// L
