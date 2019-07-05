@@ -270,21 +270,19 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		switch(e.jbutton.button)
 		{
 			case  0:	// A
-				//useBeltPotion(false);
+				PressChar('i');
+				break;
+			case  1:	// B
 				if (inmainmenu) {
 					PressKey(VK_RETURN);
 				} else {
 					PressKey(VK_SPACE);
 				}
 				break;
-			case  1:	// B
-				doAttack = 1;
-				break;
 			case  2:	// X
-				PressChar('i');
+				PressChar('x');
 				break;
 			case  3:	// Y
-				//doUse = 1;
 				PressKey(VK_RETURN);
 				break;
 			case  6:	// L
@@ -294,20 +292,21 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 				PressChar('c');
 				break;
 			case  8:	// ZL
-				lpMsg->message = DVL_WM_RBUTTONDOWN;
-				lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
-				lpMsg->wParam = keystate_for_mouse(DVL_MK_RBUTTON);
+				//lpMsg->message = DVL_WM_RBUTTONDOWN;
+				//lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+				//lpMsg->wParam = keystate_for_mouse(DVL_MK_RBUTTON);
+				useBeltPotion(false); // use health potion
 				break;
 			case  9:	// ZR
 				//if (invflag || spselflag || chrflag)
 				//{
-					lpMsg->message = DVL_WM_LBUTTONDOWN;
-					lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
-					lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
+				//	lpMsg->message = DVL_WM_LBUTTONDOWN;
+				//	lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+				//	lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
 				//}
 				//else
 				//{
-				//	useBeltPotion(true);
+				useBeltPotion(true); // use mana potion
 				//}
 				break;
 			case 10:
