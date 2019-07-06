@@ -208,10 +208,10 @@ void invMove(int key)
 {
 	if (!invflag)
 		return;
-	if (ticks - invmove < 80) {
+	/*if (ticks - invmove < 80) {
 		return;
-	}
-	invmove = ticks;
+	}*/
+	//invmove = ticks;
 	int x = MouseX;
 	int y = MouseY;
 
@@ -373,10 +373,10 @@ void hotSpellMove(int key)
 	if (pcurs > 0)
 		HideCursor();
 
-	if (ticks - invmove < 80) {
-		return;
-	}
-	invmove = ticks;
+	//if (ticks - invmove < 80) {
+	//	return;
+	//}
+	//invmove = ticks;
 
 	for (int r = 0; r < speedspellcount; r++) { // speedbook cells are 56x56
 		// our 3 rows by y axis
@@ -441,10 +441,10 @@ void walkInDir(int dir)
 	if (invflag || spselflag || chrflag) // don't walk if inventory, speedbook or char info windows are open
 		return;
 	ticks = GetTickCount();
-	if (ticks - invmove < 370) {
-		return;
-	}
-	invmove = ticks;
+	//if (ticks - invmove < 370) {
+	//	return;
+	//}
+	//invmove = ticks;
 	ClrPlrPath(myplr);                   // clear nodes
 	plr[myplr].destAction = ACTION_NONE; // stop attacking, etc.
 	HideCursor();
@@ -473,28 +473,28 @@ void keyboardExpension()
 	static DWORD opentimer;
 	static DWORD clickinvtimer;
 	static DWORD statuptimer;
-	ticks = GetTickCount();
+	//ticks = GetTickCount();
 
-	if (stextflag || questlog || helpflag || talkflag || qtextflag)
-		return;
-	if (GetAsyncKeyState(VK_SHIFT) & 0x8000)
-		return;
+	//if (stextflag || questlog || helpflag || talkflag || qtextflag)
+	//	return;
+	//if (GetAsyncKeyState(VK_SHIFT) & 0x8000)
+	//	return;
 	if (GetAsyncKeyState(VK_SPACE) & 0x8000 || doAttack) { // similar to X button on PS1 ccontroller. Talk to towners, click on inv items, attack.
 		if (invflag) {                         // inventory is open
-			if (ticks - clickinvtimer >= 300) {
-				clickinvtimer = ticks;
+			//if (ticks - clickinvtimer >= 300) {
+				//clickinvtimer = ticks;
 				if (pcurs == CURSOR_IDENTIFY)
 					CheckIdentify(myplr, pcursinvitem);
 				else if (pcurs == CURSOR_REPAIR)
 					DoRepair(myplr, pcursinvitem);
 				else
 					CheckInvItem();
-			}
+			//}
 		} else if (spselflag) {
 			SetSpell();
 		} else if (chrflag) {
-			if (ticks - statuptimer >= 400) {
-				statuptimer = ticks;
+			//if (ticks - statuptimer >= 400) {
+				//statuptimer = ticks;
 				for (int i = 0; i < 4; i++) {
 					if (MouseX >= attribute_inc_rects2[i][0]
 					    && MouseX <= attribute_inc_rects2[i][0] + attribute_inc_rects2[i][2]
@@ -505,15 +505,15 @@ void keyboardExpension()
 						ReleaseChrBtns();
 					}
 				}
-			}
+			//}
 		} else {
 			HideCursor();
-			talktick = GetTickCount(); // this is shared with STextESC, do NOT duplicate or use anywhere else
+			//talktick = GetTickCount(); // this is shared with STextESC, do NOT duplicate or use anywhere else
 			if (!checkMonstersNearby(true)) {
-				if (talktick - talkwait > 1500) { // prevent re-entering talk after finished
-					talkwait = talktick;
+				//if (talktick - talkwait > 1500) { // prevent re-entering talk after finished
+				//	talkwait = talktick;
 					checkTownersNearby(true);
-				}
+				//}
 			}
 		}
 	doAttack = 0;
@@ -522,38 +522,38 @@ void keyboardExpension()
 
 		if (!invflag) {
 			HideCursor();
-			if (ticks - opentimer > 1500) {
-				opentimer = ticks;
+			//if (ticks - opentimer > 1500) {
+			//	opentimer = ticks;
 				checkItemsNearby(true);
-			}
+			//}
 		}
 
 		doUse = 0;
 	} else if (GetAsyncKeyState(0x58) & 0x8000) { // x key, similar to /\ button on PS1 controller. Cast spell or use skill.
 
-	} else if (GetAsyncKeyState(VK_RIGHT) & 0x8000 && GetAsyncKeyState(VK_DOWN) & 0x8000 || GetAsyncKeyState(0x44) & 0x8000 && GetAsyncKeyState(0x53) & 0x8000 || leftStickY <= -0.20 && leftStickX >= 0.20) {
+	} else if (GetAsyncKeyState(VK_RIGHT) & 0x8000 && GetAsyncKeyState(VK_DOWN) & 0x8000 || GetAsyncKeyState(0x44) & 0x8000 && GetAsyncKeyState(0x53) & 0x8000 || leftStickY <= -0.40 && leftStickX >= 0.40) {
 		walkInDir(WALK_SE);
-	} else if (GetAsyncKeyState(VK_RIGHT) & 0x8000 && GetAsyncKeyState(VK_UP) & 0x8000 || GetAsyncKeyState(0x57) & 0x8000 && GetAsyncKeyState(0x44) & 0x8000 || leftStickY >= 0.20 && leftStickX >= 0.20) {
+	} else if (GetAsyncKeyState(VK_RIGHT) & 0x8000 && GetAsyncKeyState(VK_UP) & 0x8000 || GetAsyncKeyState(0x57) & 0x8000 && GetAsyncKeyState(0x44) & 0x8000 || leftStickY >= 0.40 && leftStickX >= 0.40) {
 		walkInDir(WALK_NE);
-	} else if (GetAsyncKeyState(VK_LEFT) & 0x8000 && GetAsyncKeyState(VK_DOWN) & 0x8000 || GetAsyncKeyState(0x41) & 0x8000 && GetAsyncKeyState(0x53) & 0x8000 || leftStickY <= -0.20 && leftStickX <= -0.20) {
+	} else if (GetAsyncKeyState(VK_LEFT) & 0x8000 && GetAsyncKeyState(VK_DOWN) & 0x8000 || GetAsyncKeyState(0x41) & 0x8000 && GetAsyncKeyState(0x53) & 0x8000 || leftStickY <= -0.40 && leftStickX <= -0.40) {
 		walkInDir(WALK_SW);
-	} else if (GetAsyncKeyState(VK_LEFT) & 0x8000 && GetAsyncKeyState(VK_UP) & 0x8000 || GetAsyncKeyState(0x57) & 0x8000 && GetAsyncKeyState(0x41) & 0x8000 || leftStickY >= 0.20 && leftStickX <= -0.20) {
+	} else if (GetAsyncKeyState(VK_LEFT) & 0x8000 && GetAsyncKeyState(VK_UP) & 0x8000 || GetAsyncKeyState(0x57) & 0x8000 && GetAsyncKeyState(0x41) & 0x8000 || leftStickY >= 0.40 && leftStickX <= -0.40) {
 		walkInDir(WALK_NW);
-	} else if (GetAsyncKeyState(VK_UP) & 0x8000 || GetAsyncKeyState(0x57) & 0x8000 || leftStickY >= 0.8) {
+	} else if (GetAsyncKeyState(VK_UP) & 0x8000 || GetAsyncKeyState(0x57) & 0x8000 || leftStickY >= 0.6) {
 		invMove(VK_UP);
 		hotSpellMove(VK_UP);
 		attrIncBtnSnap(VK_UP);
 		walkInDir(WALK_N);
-	} else if (GetAsyncKeyState(VK_RIGHT) & 0x8000 || GetAsyncKeyState(0x44) & 0x8000 || leftStickX >= 0.8) {
+	} else if (GetAsyncKeyState(VK_RIGHT) & 0x8000 || GetAsyncKeyState(0x44) & 0x8000 || leftStickX >= 0.6) {
 		invMove(VK_RIGHT);
 		hotSpellMove(VK_RIGHT);
 		walkInDir(WALK_E);
-	} else if (GetAsyncKeyState(VK_DOWN) & 0x8000 || GetAsyncKeyState(0x53) & 0x8000 || leftStickY <= -0.8) {
+	} else if (GetAsyncKeyState(VK_DOWN) & 0x8000 || GetAsyncKeyState(0x53) & 0x8000 || leftStickY <= -0.6) {
 		invMove(VK_DOWN);
 		hotSpellMove(VK_DOWN);
 		attrIncBtnSnap(VK_DOWN);
 		walkInDir(WALK_S);
-	} else if (GetAsyncKeyState(VK_LEFT) & 0x8000 || GetAsyncKeyState(0x41) & 0x8000 || leftStickX <= -0.8) {
+	} else if (GetAsyncKeyState(VK_LEFT) & 0x8000 || GetAsyncKeyState(0x41) & 0x8000 || leftStickX <= -0.6) {
 		invMove(VK_LEFT);
 		hotSpellMove(VK_LEFT);
 		walkInDir(WALK_W);

@@ -138,10 +138,12 @@ void gamemenu_save_game(BOOL bActivate)
 	if (pcurs <= CURSOR_HAND) {
 		SetCursor_(CURSOR_HAND);
 
-#endif
+#else
+	// JAKE: Also let people save if cursor disappears
 	if (pcurs != CURSOR_HAND) {
 		return;
 	}
+#endif
 
 	if (plr[myplr]._pmode == PM_DEATH || deathflag) {
 		gamemenu_off();
