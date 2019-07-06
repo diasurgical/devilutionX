@@ -141,10 +141,7 @@ void HideCursor()
 	if (pcurs >= CURSOR_FIRSTITEM) // if we don't drop the item on cursor, it will be destroyed
 		DropItemBeforeTrig();
 	SetCursorPos(320, 180);
-	//FreeCursor(); // glitches potion belt
-	//DestroyCursor(LoadCursor(0, IDC_ARROW)); // doesnt work
-	//pcurs = CURSOR_NONE; // makes potions unusable
-	SetCursor_(CURSOR_NONE); // works?
+	SetCursor_(CURSOR_NONE);
 	newCurHidden = true;
 }
 
@@ -194,8 +191,6 @@ void attrIncBtnSnap(int key)
 // small inventory squares are 29x29 (roughly)
 void invMove(int key)
 {
-	if (!invflag)
-		return;
 	int x = MouseX;
 	int y = MouseY;
 
@@ -213,7 +208,7 @@ void invMove(int key)
 		slot = SLOTXY_BELT_LAST;
 
 	// when item is on cursor, this is the real cursor XY
-	if (key == VK_LEFT) {
+	if (key == WALK_W) {
 		if (slot >= SLOTXY_HAND_RIGHT_FIRST && slot <= SLOTXY_HAND_RIGHT_LAST) {
 			x = InvRect[SLOTXY_CHEST_FIRST].X + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_CHEST_FIRST].Y - (INV_SLOT_SIZE_PX / 2);
@@ -241,7 +236,7 @@ void invMove(int key)
 				y = InvRect[slot].Y - (INV_SLOT_SIZE_PX / 2);
 			}
 		}
-	} else if (key == VK_RIGHT) {
+	} else if (key == WALK_E) {
 		if (slot == SLOTXY_RING_LEFT) {
 			x = InvRect[SLOTXY_RING_RIGHT].X + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_RING_RIGHT].Y - (INV_SLOT_SIZE_PX / 2);
@@ -267,7 +262,7 @@ void invMove(int key)
 				y = InvRect[slot].Y - (INV_SLOT_SIZE_PX / 2);
 			}
 		}
-	} else if (key == VK_UP) {
+	} else if (key == WALK_N) {
 		if (slot > 24 && slot <= 27) { // first 3 general slots
 			x = InvRect[SLOTXY_RING_LEFT].X + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_RING_LEFT].Y - (INV_SLOT_SIZE_PX / 2);
@@ -301,7 +296,7 @@ void invMove(int key)
 			x = InvRect[slot].X + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[slot].Y - (INV_SLOT_SIZE_PX / 2);
 		}
-	} else if (key == VK_DOWN) {
+	} else if (key == WALK_S) {
 		if (slot >= SLOTXY_HEAD_FIRST && slot <= SLOTXY_HEAD_LAST) {
 			x = InvRect[SLOTXY_CHEST_FIRST].X + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_CHEST_FIRST].Y - (INV_SLOT_SIZE_PX / 2);
@@ -357,6 +352,10 @@ void hotSpellMove(int key)
 	if (pcurs > 0)
 		HideCursor();
 
+	if (ticks - invmove < 80) {
+		return;
+	}
+	invmove = ticks;
 
 	for (int r = 0; r < speedspellcount; r++) { // speedbook cells are 56x56
 		// our 3 rows by y axis
@@ -421,6 +420,10 @@ void walkInDir(int dir)
 	if (invflag || spselflag || chrflag) // don't walk if inventory, speedbook or char info windows are open
 		return;
 	ticks = GetTickCount();
+	if (ticks - invmove < 370) {
+		return;
+	}
+	invmove = ticks;
 	ClrPlrPath(myplr);                   // clear nodes
 	plr[myplr].destAction = ACTION_NONE; // stop attacking, etc.
 	HideCursor();
@@ -444,23 +447,80 @@ void useBeltPotion(bool mana)
 		}
 	}
 }
-void keyboardExpension()
+
+void charMovement() {
+	if (stextflag || questlog || helpflag || talkflag || qtextflag)
+		return;
+
+	if (!invflag && !spselflag && !chrflag) {
+		if (GetAsyncKeyState(VK_RIGHT) & 0x8000 && GetAsyncKeyState(VK_DOWN) & 0x8000 || GetAsyncKeyState(0x44) & 0x8000 && GetAsyncKeyState(0x53) & 0x8000 || leftStickY <= -0.5 && leftStickX >= 0.5) {
+			walkInDir(WALK_SE);
+		} else if (GetAsyncKeyState(VK_RIGHT) & 0x8000 && GetAsyncKeyState(VK_UP) & 0x8000 || GetAsyncKeyState(0x57) & 0x8000 && GetAsyncKeyState(0x44) & 0x8000 || leftStickY >= 0.5 && leftStickX >= 0.5) {
+			walkInDir(WALK_NE);
+		} else if (GetAsyncKeyState(VK_LEFT) & 0x8000 && GetAsyncKeyState(VK_DOWN) & 0x8000 || GetAsyncKeyState(0x41) & 0x8000 && GetAsyncKeyState(0x53) & 0x8000 || leftStickY <= -0.5 && leftStickX <= -0.5) {
+			walkInDir(WALK_SW);
+		} else if (GetAsyncKeyState(VK_LEFT) & 0x8000 && GetAsyncKeyState(VK_UP) & 0x8000 || GetAsyncKeyState(0x57) & 0x8000 && GetAsyncKeyState(0x41) & 0x8000 || leftStickY >= 0.40 && leftStickX <= -0.5) {
+			walkInDir(WALK_NW);
+		}
+	}
+
+	if (GetAsyncKeyState(VK_UP) & 0x8000 || GetAsyncKeyState(0x57) & 0x8000 || leftStickY >= 0.5) {
+		invMove(WALK_N);
+		hotSpellMove(VK_UP);
+		attrIncBtnSnap(VK_UP);
+		walkInDir(WALK_N);
+	} else if (GetAsyncKeyState(VK_RIGHT) & 0x8000 || GetAsyncKeyState(0x44) & 0x8000 || leftStickX >= 0.5) {
+		invMove(WALK_E);
+		hotSpellMove(VK_RIGHT);
+		walkInDir(WALK_E);
+	} else if (GetAsyncKeyState(VK_DOWN) & 0x8000 || GetAsyncKeyState(0x53) & 0x8000 || leftStickY <= -0.5) {
+		invMove(WALK_S);
+		hotSpellMove(VK_DOWN);
+		attrIncBtnSnap(VK_DOWN);
+		walkInDir(WALK_S);
+	} else if (GetAsyncKeyState(VK_LEFT) & 0x8000 || GetAsyncKeyState(0x41) & 0x8000 || leftStickX <= -0.5) {
+		invMove(WALK_W);
+		hotSpellMove(VK_LEFT);
+		walkInDir(WALK_W);
+	}
+
+	if (GetAsyncKeyState(MK_LBUTTON) & 0x8000) {
+		if (newCurHidden) { // show cursor first, before clicking
+			SetCursor_(CURSOR_HAND);
+			newCurHidden = false;
+		} else if (spselflag) {
+			SetSpell();
+		} else {
+			LeftMouseCmd(false);
+		}
+	}
+}
+
+void keyboardExpansion(int vikey)
 {
 	static DWORD opentimer;
 	static DWORD clickinvtimer;
 	static DWORD statuptimer;
+	ticks = GetTickCount();
 
-	if (GetAsyncKeyState(VK_SPACE) & 0x8000) { // similar to X button on PS1 ccontroller. Talk to towners, click on inv items, attack.
+	if (stextflag || questlog || helpflag || talkflag || qtextflag)
+		return;
+	if (vikey == VK_SPACE) { // similar to X button on PS1 ccontroller. Talk to towners, click on inv items, attack.
 		if (invflag) {                         // inventory is open
+			if (ticks - clickinvtimer >= 300) {
+				clickinvtimer = ticks;
 				if (pcurs == CURSOR_IDENTIFY)
 					CheckIdentify(myplr, pcursinvitem);
 				else if (pcurs == CURSOR_REPAIR)
 					DoRepair(myplr, pcursinvitem);
 				else
 					CheckInvItem();
+			}
 		} else if (spselflag) {
 			SetSpell();
 		} else if (chrflag) {
+			if (ticks - statuptimer >= 400) {
+				statuptimer = ticks;
 				for (int i = 0; i < 4; i++) {
 					if (MouseX >= attribute_inc_rects2[i][0]
 					    && MouseX <= attribute_inc_rects2[i][0] + attribute_inc_rects2[i][2]
@@ -471,45 +531,26 @@ void keyboardExpension()
 						ReleaseChrBtns();
 					}
 				}
+			}
 		} else {
 			HideCursor();
+			talktick = GetTickCount(); // this is shared with STextESC, do NOT duplicate or use anywhere else
 			if (!checkMonstersNearby(true)) {
+				if (talktick - talkwait > 1500) { // prevent re-entering talk after finished
+					talkwait = talktick;
 					checkTownersNearby(true);
+				}
 			}
 		}
-	} else if (GetAsyncKeyState(VK_RETURN) & 0x8000) { // similar to [] button on PS1 controller. Open chests, doors, pickup items
+	} else if (vikey == VK_RETURN) { // similar to [] button on PS1 controller. Open chests, doors, pickup items
 		if (!invflag) {
 			HideCursor();
+			if (ticks - opentimer > 500) {
+				opentimer = ticks;
 				checkItemsNearby(true);
+			}
 		}
-	} else if (GetAsyncKeyState(0x58) & 0x8000) { // x key, similar to /\ button on PS1 controller. Cast spell or use skill.
 
-	} else if (GetAsyncKeyState(VK_RIGHT) & 0x8000 && GetAsyncKeyState(VK_DOWN) & 0x8000 || GetAsyncKeyState(0x44) & 0x8000 && GetAsyncKeyState(0x53) & 0x8000 || leftStickY <= -0.40 && leftStickX >= 0.40) {
-		walkInDir(WALK_SE);
-	} else if (GetAsyncKeyState(VK_RIGHT) & 0x8000 && GetAsyncKeyState(VK_UP) & 0x8000 || GetAsyncKeyState(0x57) & 0x8000 && GetAsyncKeyState(0x44) & 0x8000 || leftStickY >= 0.40 && leftStickX >= 0.40) {
-		walkInDir(WALK_NE);
-	} else if (GetAsyncKeyState(VK_LEFT) & 0x8000 && GetAsyncKeyState(VK_DOWN) & 0x8000 || GetAsyncKeyState(0x41) & 0x8000 && GetAsyncKeyState(0x53) & 0x8000 || leftStickY <= -0.40 && leftStickX <= -0.40) {
-		walkInDir(WALK_SW);
-	} else if (GetAsyncKeyState(VK_LEFT) & 0x8000 && GetAsyncKeyState(VK_UP) & 0x8000 || GetAsyncKeyState(0x57) & 0x8000 && GetAsyncKeyState(0x41) & 0x8000 || leftStickY >= 0.40 && leftStickX <= -0.40) {
-		walkInDir(WALK_NW);
-	} else if (GetAsyncKeyState(VK_UP) & 0x8000 || GetAsyncKeyState(0x57) & 0x8000 || leftStickY >= 0.6) {
-		invMove(VK_UP);
-		hotSpellMove(VK_UP);
-		attrIncBtnSnap(VK_UP);
-		walkInDir(WALK_N);
-	} else if (GetAsyncKeyState(VK_RIGHT) & 0x8000 || GetAsyncKeyState(0x44) & 0x8000 || leftStickX >= 0.6) {
-		invMove(VK_RIGHT);
-		hotSpellMove(VK_RIGHT);
-		walkInDir(WALK_E);
-	} else if (GetAsyncKeyState(VK_DOWN) & 0x8000 || GetAsyncKeyState(0x53) & 0x8000 || leftStickY <= -0.6) {
-		invMove(VK_DOWN);
-		hotSpellMove(VK_DOWN);
-		attrIncBtnSnap(VK_DOWN);
-		walkInDir(WALK_S);
-	} else if (GetAsyncKeyState(VK_LEFT) & 0x8000 || GetAsyncKeyState(0x41) & 0x8000 || leftStickX <= -0.6) {
-		invMove(VK_LEFT);
-		hotSpellMove(VK_LEFT);
-		walkInDir(WALK_W);
 	}
 }
 
