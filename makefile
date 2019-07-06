@@ -76,7 +76,7 @@ CXXINCS   	= -I$(DEVKITPRO)/portlibs/switch/include/SDL2 -I"Source" -I"SourceS" 
 BIN       	= release/diablo-nx.elf
 BUILD	  	= build
 BINDIR	  	= release
-DEFINES   	= -DSWITCH -DPLATFORM_NX -DSDL2 -DDEVILUTION_STUB -DDEVILUTION_ENGINE -DASIO_STANDALONE -DASIO_HEADER_ONLY 
+DEFINES   	= -DSWITCH -DPLATFORM_NX -DSDL2 -DDEVILUTION_STUB -DDEVILUTION_ENGINE -DASIO_STANDALONE -DASIO_HEADER_ONLY
 CXXFLAGS  	= $(CXXINCS) $(DEFINES) -march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIE -fsigned-char -Wall -Wextra -Wno-write-strings -fpermissive -Wno-write-strings -Wno-multichar -w -O2
 CFLAGS    	= $(INCS) $(DEFINES)    -march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIE -fsigned-char -Wall -Wextra -Wno-write-strings -fpermissive -Wno-write-strings -Wno-multichar -w -O2
 GPROF     	= gprof.exe
