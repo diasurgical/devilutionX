@@ -169,8 +169,10 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 			case  1:	// B
 				if (inmainmenu) {
 					PressKey(VK_RETURN);
+					keyboardExpansion(VK_RETURN);
 				} else {
 					PressKey(VK_SPACE);
+					keyboardExpansion(VK_SPACE);
 				}
 				break;
 			case  2:	// X
@@ -178,6 +180,12 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 				break;
 			case  3:	// Y
 				PressKey(VK_RETURN);
+				keyboardExpansion(VK_RETURN);
+				break;
+			case  5:	// right joystick click
+				lpMsg->message = DVL_WM_LBUTTONDOWN;
+				lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+				lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
 				break;
 			case  6:	// L
 				PressChar('h');
@@ -186,22 +194,10 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 				PressChar('c');
 				break;
 			case  8:	// ZL
-				//lpMsg->message = DVL_WM_RBUTTONDOWN;
-				//lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
-				//lpMsg->wParam = keystate_for_mouse(DVL_MK_RBUTTON);
-				useBeltPotion(false); // use health potion
+				useBeltPotion(false); // health potion
 				break;
 			case  9:	// ZR
-				//if (invflag || spselflag || chrflag)
-				//{
-				//	lpMsg->message = DVL_WM_LBUTTONDOWN;
-				//	lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
-				//	lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
-				//}
-				//else
-				//{
-				useBeltPotion(true); // use mana potion
-				//}
+				useBeltPotion(true); // mana potion
 				break;
 			case 10:	// plus
 				PressKey(VK_ESCAPE);
@@ -209,16 +205,28 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 			case 11:	// minus
 				PressKey(VK_TAB);
 				break;
-			case 16:
+			case 12:	// L_DPAD
 				PressKey(VK_LEFT);
 				break;
-			case 17:
+			case 13:	// U_DPAD
 				PressKey(VK_UP);
 				break;
-			case 18:
+			case 14:	// R_DPAD
 				PressKey(VK_RIGHT);
 				break;
-			case 19:
+			case 15:	// D_DPAD
+				PressKey(VK_DOWN);
+				break;
+			case 16:	// L_JSTICK
+				PressKey(VK_LEFT);
+				break;
+			case 17:	// U_JSTICK
+				PressKey(VK_UP);
+				break;
+			case 18:	// R_JSTICK
+				PressKey(VK_RIGHT);
+				break;
+			case 19:	// D_JSTICK
 				PressKey(VK_DOWN);
 				break;
 		}
