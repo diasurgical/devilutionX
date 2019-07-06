@@ -61,8 +61,11 @@ static int translate_sdl_key(SDL_Keysym key)
 	case SDLK_QUOTE:
 		return DVL_VK_OEM_7;
 	case SDLK_MINUS:
+	case SDLK_KP_MINUS:
 		return DVL_VK_OEM_MINUS;
 	case SDLK_PLUS:
+	case SDLK_EQUALS:
+	case SDLK_KP_PLUS:
 		return DVL_VK_OEM_PLUS;
 	case SDLK_PERIOD:
 		return DVL_VK_OEM_PERIOD;
