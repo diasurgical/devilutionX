@@ -1041,6 +1041,15 @@ void PressKey(int vkey)
 	} else if (vkey == VK_TAB) {
 		DoAutoMap();
 	} else if (vkey == VK_SPACE) {
+#ifdef SWITCH
+		if (stextflag) {
+			STextEnter();
+		} else if (questlog) {
+			QuestlogEnter();
+		} else {
+			control_type_message();
+		}
+#else
 		if (!chrflag && invflag && MouseX < 480 && MouseY < PANEL_TOP) {
 			SetCursorPos(MouseX + 160, MouseY);
 		}
@@ -1061,6 +1070,7 @@ void PressKey(int vkey)
 		msgdelay = 0;
 		gamemenu_off();
 		doom_close();
+#endif
 	}
 }
 
@@ -1114,6 +1124,14 @@ void PressChar(int vkey)
 		if (!stextflag) {
 			sbookflag = FALSE;
 			invflag = invflag == 0;
+#ifdef SWITCH
+			// JAKE: Show cursor if inventory window open, set cursor to inv slot 1
+			if (newCurHidden) {
+				SetCursor_(CURSOR_HAND);
+				newCurHidden = false;
+			}
+			SetCursorPos((InvRect[25].X + (INV_SLOT_SIZE_PX / 2)), (InvRect[25].Y - (INV_SLOT_SIZE_PX / 2))); // inv cells are 29x29
+#else
 			if (!invflag || chrflag) {
 				if (MouseX < 480 && MouseY < PANEL_TOP) {
 					SetCursorPos(MouseX + 160, MouseY);
@@ -1123,6 +1141,7 @@ void PressChar(int vkey)
 					SetCursorPos(MouseX - 160, MouseY);
 				}
 			}
+#endif
 		}
 		return;
 	case 'C':
@@ -1131,9 +1150,21 @@ void PressChar(int vkey)
 			questlog = FALSE;
 			chrflag = !chrflag;
 			if (!chrflag || invflag) {
+#ifdef SWITCH
+				if (!chrbtnactive && plr[myplr]._pStatPts) {
+					if (newCurHidden) {
+						SetCursor_(CURSOR_HAND);
+						newCurHidden = false;
+					}
+					int x = attribute_inc_rects2[0][0] + (attribute_inc_rects2[0][2] / 2);
+					int y = attribute_inc_rects2[0][1] + (attribute_inc_rects2[0][3] / 2);
+					SetCursorPos(x, y);
+				}
+#else
 				if (MouseX > 160 && MouseY < PANEL_TOP) {
 					SetCursorPos(MouseX - 160, MouseY);
 				}
+#endif
 			} else {
 				if (MouseX < 480 && MouseY < PANEL_TOP) {
 					SetCursorPos(MouseX + 160, MouseY);
@@ -1156,8 +1187,13 @@ void PressChar(int vkey)
 	case 'z':
 		zoomflag = !zoomflag;
 		return;
+#ifdef SWITCH
+	case 'H': // JAKE: Changed, used to be 'S' and 's'
+	case 'h':
+#else
 	case 'S':
 	case 's':
+#endif
 		if (!stextflag) {
 			invflag = 0;
 			if (!spselflag) {
@@ -1168,6 +1204,17 @@ void PressChar(int vkey)
 			track_repeat_walk(0);
 		}
 		return;
+#ifdef SWITCH
+	case 'x':
+	case 'X':
+		// JAKE: Spacebar used to go back, now Z goes back.
+		if (pcurs >= CURSOR_FIRSTITEM && invflag)
+			DropItemBeforeTrig();
+		if (!invflag && !talkflag)
+			RightMouseDown();
+		PressEscKey();
+		return;
+#endif
 	case 'B':
 	case 'b':
 		if (!stextflag) {

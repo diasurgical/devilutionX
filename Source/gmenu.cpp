@@ -243,7 +243,15 @@ BOOL gmenu_presskeys(int vkey)
 		gmenu_call_proc(0, 0);
 		break;
 	case VK_SPACE:
+#ifdef SWITCH
+		if ((sgpCurrItem->dwFlags & 0x80000000) != 0) {
+			PlaySFX(IS_TITLEMOV);
+			((void(__fastcall *)(signed int))sgpCurrItem->fnMenu)(1);
+		}
+		break;
+#else
 		return FALSE;
+#endif
 	case VK_LEFT:
 		gmenu_left_right(FALSE);
 		break;
