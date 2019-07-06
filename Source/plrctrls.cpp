@@ -441,8 +441,9 @@ void walkInDir(int dir)
 	if (invflag || spselflag || chrflag) // don't walk if inventory, speedbook or char info windows are open
 		return;
 	ticks = GetTickCount();
-	if (ticks - count < 240) {
-		Sleep(20);
+	if (ticks - invmove < 370) {
+		return;
+	}
 	invmove = ticks;
 	ClrPlrPath(myplr);                   // clear nodes
 	plr[myplr].destAction = ACTION_NONE; // stop attacking, etc.
