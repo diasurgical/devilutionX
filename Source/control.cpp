@@ -1231,6 +1231,10 @@ void DoSpeedBook()
 	yo = 495;
 	X = 600;
 	Y = 307;
+#ifdef SWITCH
+	int ssx = 600;
+	int ssy = 307;
+#endif
 	if (plr[myplr]._pRSpell != -1) {
 		for (i = 0; i < 4; i++) {
 			switch (i) {
@@ -1254,6 +1258,14 @@ void DoSpeedBook()
 						X = xo - 36;
 						Y = yo - 188;
 					}
+#ifdef SWITCH
+					// JAKE: here's speedspell images. Store them into our array
+					ssx = xo - 36;
+					ssy = yo - 188;
+					speedspellscoords[speedspellcount].x = ssx;
+					speedspellscoords[speedspellcount].y = ssy;
+					speedspellcount++;
+#endif
 					xo -= 56;
 					if (xo == 20) {
 						xo = 636;
@@ -2606,6 +2618,9 @@ BOOL control_presskeys(int vkey)
 			ret = FALSE;
 		} else {
 			if (vkey == VK_SPACE) {
+#ifdef SWITCH
+				control_press_enter();
+#endif
 			} else if (vkey == VK_ESCAPE) {
 				control_reset_talk();
 			} else if (vkey == VK_RETURN) {
