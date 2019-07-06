@@ -850,8 +850,10 @@ void DoSpeedBook()
 #ifdef SWITCH
 	int ssx = 600;
 	int ssy = 307;
+#else
+    // JAKE: This prevents scrolls and skills from showing up on my snap cell list
+    if (plr[myplr]._pRSpell != SPL_INVALID) {
 #endif
-	if (plr[myplr]._pRSpell != SPL_INVALID) {
 		for (i = 0; i < 4; i++) {
 			switch (i) {
 			case RSPLTYPE_SKILL:
@@ -897,7 +899,9 @@ void DoSpeedBook()
 				yo -= 56;
 			}
 		}
+#ifndef SWITCH
 	}
+#endif
 
 	SetCursorPos(X, Y);
 }

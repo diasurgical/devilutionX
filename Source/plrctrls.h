@@ -3,7 +3,8 @@
 
 void checkTownersNearby(bool interact);
 void checkItemsNearby(bool interact);
-void keyboardExpension();
+void keyboardExpansion(int vikey);
+void charMovement();
 bool checkMonstersNearby(bool attack);
 extern bool newCurHidden;
 void invMove(int key);

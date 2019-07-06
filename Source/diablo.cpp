@@ -1832,7 +1832,7 @@ void game_logic()
 			pcursitem = -1;
 		}
 	}
-	keyboardExpension();
+	charMovement();
 }
 
 void timeout_cursor(BOOL bTimeout)
