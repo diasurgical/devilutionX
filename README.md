@@ -155,7 +155,7 @@ Use `-DCROSS_PREFIX=/path/to/prefix` if the `i686-w64-mingw32` directory is not 
 
 # Multiplayer
  - TCP/IP only requires the host to expose port 6112
- - UPD/IP requires that all players expose port 6112
+ - UDP/IP requires that all players expose port 6112
 
 All games are encrypted and password protected.
 
