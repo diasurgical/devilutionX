@@ -4,7 +4,9 @@
 #include <memory>
 #include <array>
 #include <cstring>
+#ifndef SWITCH
 #include <sodium.h>
+#endif
 
 #include "dvlnet/abstract_net.h"
 #include "stubs.h"
