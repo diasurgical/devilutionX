@@ -3221,7 +3221,11 @@ void UseItem(int p, int Mid, int spl)
 		}
 		break;
 	case IMISC_SCROLL:
+#ifndef SWITCH
 		if (spelldata[spl].sTargeted) {
+#else
+		if (spelldata[spl].sTargeted && pcurs >= CURSOR_HAND) { // JAKE: Only let them chose a portal spot if they're not using a controller
+#endif
 			plr[p]._pTSpell = spl;
 			plr[p]._pTSplType = RSPLTYPE_INVALID;
 			if (p == myplr)

@@ -250,6 +250,8 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 					PressKey(VK_RETURN);
 					keyboardExpansion(VK_RETURN);
 				} else {
+					if (stextflag)
+						talkwait = GetTickCount(); // JAKE: Wait before we re-initiate talking
 					PressKey(VK_SPACE);
 					keyboardExpansion(VK_SPACE);
 				}
@@ -262,9 +264,15 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 				keyboardExpansion(VK_RETURN);
 				break;
 			case  5:	// right joystick click
-				lpMsg->message = DVL_WM_LBUTTONDOWN;
-				lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
-				lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
+				if (newCurHidden) { // show cursor first, before clicking
+					SetCursor_(CURSOR_HAND);
+					newCurHidden = false;
+				}
+				if (spselflag) {
+					SetSpell();
+				} else {
+					LeftMouseCmd(false);
+				}
 				break;
 			case  6:	// L
 				PressChar('h');
@@ -286,15 +294,19 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 				break;
 			case 12:	// L_DPAD
 				PressKey(VK_LEFT);
+				movements(VK_LEFT);
 				break;
 			case 13:	// U_DPAD
 				PressKey(VK_UP);
+				movements(VK_UP);
 				break;
 			case 14:	// R_DPAD
 				PressKey(VK_RIGHT);
+				movements(VK_RIGHT);
 				break;
 			case 15:	// D_DPAD
 				PressKey(VK_DOWN);
+				movements(VK_DOWN);
 				break;
 			case 16:	// L_JSTICK
 				PressKey(VK_LEFT);

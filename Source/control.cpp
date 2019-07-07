@@ -897,6 +897,10 @@ void DoSpeedBook()
 #endif
 
 	SetCursorPos(X, Y);
+#ifdef SWITCH
+	MouseX = X;
+	MouseY = Y;
+#endif
 }
 
 void DoPanBtn()
