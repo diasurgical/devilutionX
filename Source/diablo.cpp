@@ -832,7 +832,11 @@ void RightMouseDown()
 			    || (!sbookflag || MouseX <= 320)
 			        && !TryIconCurs()
 			        && (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem))) {
+#ifndef SWITCH
 				if (pcurs == 1) {
+#else
+				if (pcurs <= 1) { // JAKE: Allow people without cursor to cast spells too
+#endif
 					if (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem))
 						CheckPlrSpell();
 				} else if (pcurs > 1 && pcurs < 12) {
@@ -1019,6 +1023,9 @@ void PressKey(int vkey)
 		} else if (helpflag) {
 			HelpScrollUp();
 		} else if (automapflag) {
+#ifdef SWITCH
+			if (GetAsyncKeyState(VK_SHIFT) & 0x8000) // JAKE: [1] no move when u move
+#endif
 			AutomapUp();
 		}
 	} else if (vkey == VK_DOWN) {
@@ -1029,6 +1036,9 @@ void PressKey(int vkey)
 		} else if (helpflag) {
 			HelpScrollDown();
 		} else if (automapflag) {
+#ifdef SWITCH
+			if (GetAsyncKeyState(VK_SHIFT) & 0x8000) // JAKE: [2] no move when u move
+#endif
 			AutomapDown();
 		}
 	} else if (vkey == VK_PRIOR) {
@@ -1041,10 +1051,16 @@ void PressKey(int vkey)
 		}
 	} else if (vkey == VK_LEFT) {
 		if (automapflag && !talkflag) {
+#ifdef SWITCH
+			if (GetAsyncKeyState(VK_SHIFT) & 0x8000) // JAKE: [3] no move when u move
+#endif
 			AutomapLeft();
 		}
 	} else if (vkey == VK_RIGHT) {
 		if (automapflag && !talkflag) {
+#ifdef SWITCH
+			if (GetAsyncKeyState(VK_SHIFT) & 0x8000) // JAKE: [4] no move when u move
+#endif
 			AutomapRight();
 		}
 	} else if (vkey == VK_TAB) {
@@ -1140,6 +1156,8 @@ void PressChar(int vkey)
 				newCurHidden = false;
 			}
 			SetCursorPos((InvRect[25].X + (INV_SLOT_SIZE_PX / 2)), (InvRect[25].Y - (INV_SLOT_SIZE_PX / 2))); // inv cells are 29x29
+			MouseX = (InvRect[25].X + (INV_SLOT_SIZE_PX / 2));
+			MouseY = (InvRect[25].Y - (INV_SLOT_SIZE_PX / 2));
 #else
 			if (!invflag || chrflag) {
 				if (MouseX < 480 && MouseY < PANEL_TOP) {
@@ -1158,16 +1176,20 @@ void PressChar(int vkey)
 		if (!stextflag) {
 			questlog = FALSE;
 			chrflag = !chrflag;
+#ifdef SWITCH
+			if (newCurHidden) {
+				SetCursor_(CURSOR_HAND);
+				newCurHidden = false;
+			}
+#endif
 			if (!chrflag || invflag) {
 #ifdef SWITCH
 				if (!chrbtnactive && plr[myplr]._pStatPts) {
-					if (newCurHidden) {
-						SetCursor_(CURSOR_HAND);
-						newCurHidden = false;
-					}
 					int x = attribute_inc_rects2[0][0] + (attribute_inc_rects2[0][2] / 2);
 					int y = attribute_inc_rects2[0][1] + (attribute_inc_rects2[0][3] / 2);
 					SetCursorPos(x, y);
+					MouseX = x;
+					MouseY = y;
 				}
 #else
 				if (MouseX > 160 && MouseY < PANEL_TOP) {
@@ -1177,6 +1199,10 @@ void PressChar(int vkey)
 			} else {
 				if (MouseX < 480 && MouseY < PANEL_TOP) {
 					SetCursorPos(MouseX + 160, MouseY);
+#ifdef SWITCH
+					MouseX = MouseX + 160;
+					MouseY = MouseY;
+#endif
 				}
 			}
 		}
