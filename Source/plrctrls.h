@@ -5,6 +5,7 @@ void checkTownersNearby(bool interact);
 void checkItemsNearby(bool interact);
 void keyboardExpansion(int vikey);
 void charMovement();
+void movements(int key);
 bool checkMonstersNearby(bool attack);
 extern bool newCurHidden;
 void invMove(int key);
