@@ -505,8 +505,8 @@ void credts_Render()
 	lastYbase = ybase;
 
 	if (font != NULL) {
-		SDL_Color color = palette->colors[224];
-		SDL_Surface *text_surface;
+		SDL_Color color = palette->colors[224], black_color = {0, 0, 0};
+		SDL_Surface *text_surface, *shadow_surface;
 		for (int i = 0; i < lineCount; i++) {
 			if (creditLine + i < 0) {
 				continue;
@@ -521,13 +521,23 @@ void credts_Render()
 			}
 
 			text_surface = TTF_RenderUTF8_Solid(font, the_long_credits[creditLine + i] + offset, color);
-			if (text_surface) {
+			shadow_surface = TTF_RenderUTF8_Solid(font, the_long_credits[creditLine + i] + offset, black_color);
+			if (text_surface && shadow_surface) {
 				SDL_Rect src_rect = { 0, -y, SCREEN_WIDTH, 251 };
+
+				// draw text shadow.
+				SDL_Rect dsc_rect2 = { 64 + x + 2, SCREEN_Y + 114 + 2, SCREEN_WIDTH, SCREEN_HEIGHT };
+				if (SDL_BlitSurface(shadow_surface, &src_rect, pal_surface, &dsc_rect2) <= -1) {
+					SDL_Log(SDL_GetError());
+				}
+
+				// draw text.
 				SDL_Rect dsc_rect = { 64 + x, SCREEN_Y + 114, SCREEN_WIDTH, SCREEN_HEIGHT };
 				if (SDL_BlitSurface(text_surface, &src_rect, pal_surface, &dsc_rect) <= -1) {
 					SDL_Log(SDL_GetError());
 				}
 				SDL_FreeSurface(text_surface);
+				SDL_FreeSurface(shadow_surface);
 			}
 		}
 	}
