@@ -182,6 +182,7 @@ add_library(devilution STATIC
   Source/path.cpp
   Source/pfile.cpp
   Source/player.cpp
+  Source/plrctrls.cpp
   Source/plrmsg.cpp
   Source/portal.cpp
   Source/spelldat.cpp
