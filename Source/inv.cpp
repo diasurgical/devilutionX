@@ -1054,6 +1054,8 @@ void CheckInvPaste(int pnum, int mx, int my)
 #else
 			// JAKE: [2] Keep item in the same slot, don't jump it up
 			SetCursorPos(MouseX + 10, MouseY + 10);
+			MouseX = MouseX + 10;
+			MouseY = MouseY + 10;
 #endif
 		SetCursor_(cn);
 	}
@@ -1242,6 +1244,8 @@ void CheckInvCut(int pnum, int mx, int my)
 			// JAKE: [1] Keep item in the same slot, don't jump it up
 			if (pcurs > 1) {
 				SetCursorPos(mx - 10, MouseY - 10);
+				MouseX = mx - 10;
+				MouseY = MouseY - 10;
 			}
 #endif
 		}
