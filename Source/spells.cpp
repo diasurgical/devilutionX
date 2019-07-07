@@ -93,7 +93,11 @@ BOOL CheckSpell(int id, int sn, char st, BOOL manaonly)
 #endif
 
 	result = TRUE;
+#ifndef SWITCH
 	if (!manaonly && pcurs != 1) {
+#else
+	if (!manaonly && pcurs > 1) { // JAKE: Let people without a cursor cast spell
+#endif
 		result = FALSE;
 	} else {
 		if (st != RSPLTYPE_SKILL) {
