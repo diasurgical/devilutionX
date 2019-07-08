@@ -373,7 +373,7 @@ void LoadPlayer(int i)
 	CopyInt(tbuff, &pPlayer->_pNFrames);
 	CopyInt(tbuff, &pPlayer->_pNWidth);
 
-	tbuff += sizeof(__uint32_t) * 8
+	tbuff += sizeof(__uint32_t) * 8;
 
 	CopyInt(tbuff, &pPlayer->_pWFrames);
 	CopyInt(tbuff, &pPlayer->_pWWidth);

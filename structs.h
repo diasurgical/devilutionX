@@ -979,7 +979,7 @@ typedef struct TBuffer {
 //////////////////////////////////////////////////
 // quests
 //////////////////////////////////////////////////
-
+#pragma pack(push, 4)
 typedef struct QuestStruct {
 	unsigned char _qlevel;
 	unsigned char _qtype;
@@ -994,6 +994,7 @@ typedef struct QuestStruct {
 	unsigned char _qvar2;
 	int _qlog;
 } QuestStruct;
+#pragma pack(pop)
 
 typedef struct QuestData {
 	unsigned char _qdlvl;
@@ -1204,6 +1205,7 @@ typedef struct LightListStruct {
 	int _yoff;
 	int _lflags;
 } LightListStruct;
+#pragma pack(pop)
 
 //////////////////////////////////////////////////
 // dead
@@ -1216,7 +1218,6 @@ typedef struct DeadStruct {
 	int _deadWidth2;
 	char _deadtrans;
 } DeadStruct;
-#pragma pack(pop)
 
 //////////////////////////////////////////////////
 // diabloui
