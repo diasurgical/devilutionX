@@ -6,6 +6,13 @@
 # macOS
 .DS_Store
 
+# qt-creator
+devilutionx.config
+devilutionx.creator
+devilutionx.files
+devilutionx.includes
+
+
 # CodeLite
 .CodeLite
 *.project

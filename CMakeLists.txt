@@ -65,9 +65,9 @@ if(NOT CMAKE_SIZEOF_VOID_P EQUAL 4)
 endif()
 
 find_package(Threads REQUIRED)
-find_package(SDL2 CONFIG QUIET)
-if (NOT SDL2_FOUND)
-	find_package(SDL2 REQUIRED)
+find_package(SDL CONFIG QUIET)
+if (NOT SDL_FOUND)
+	find_package(SDL REQUIRED)
 endif()
 find_package(SDL2_ttf REQUIRED)
 find_package(SDL2_mixer REQUIRED)
@@ -223,9 +223,10 @@ target_link_libraries(devilutionx PRIVATE
   StormLib
   smacker
   Radon
-  SDL2::SDL2main
-  SDL2::SDL2_ttf
-  SDL2::SDL2_mixer
+  `sdl-config --libs`
+  #SDL2::SDL2main
+  #SDL2::SDL2_ttf
+  #SDL2::SDL2_mixer
   sodium)
 
 target_compile_definitions(devilution PRIVATE DEVILUTION_ENGINE)

@@ -1,8 +1,14 @@
 #include "devilution.h"
-#include <SDL.h>
+#include <SDL/SDL.h>
+#include <SDL/SDL_video.h>
 
 namespace dvl {
 
+struct SDL_Window
+{
+  SDL_Surface *image;
+  int pause;
+};
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
 extern SDL_Texture *texture;

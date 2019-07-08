@@ -1,5 +1,5 @@
 #include <deque>
-#include <SDL.h>
+#include <SDL/SDL.h>
 
 #include "devilution.h"
 #include "stubs.h"
