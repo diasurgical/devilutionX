@@ -9,12 +9,15 @@ char BLoad();
 int WLoad();
 int ILoad();
 BOOL OLoad();
+void CopyItems(const int n, ItemStruct *pItem);
+void CopyItem(ItemStruct *pItem);
+
 void LoadPlayer(int i);
 void LoadMonster(int i);
 void LoadMissile(int i);
 void LoadObject(int i);
-void LoadItem(int i);
-void LoadPremium(int i);
+void LoadItem(int t);
+void LoadPremium(int t);
 void LoadQuest(int i);
 void LoadLighting(int i);
 void LoadVision(int i);

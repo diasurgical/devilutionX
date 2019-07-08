@@ -1,3 +1,5 @@
+#pragma once
+
 //////////////////////////////////////////////////
 // control
 //////////////////////////////////////////////////
@@ -90,6 +92,7 @@ typedef struct ItemGetRecordStruct {
 	unsigned int dwTimestamp;
 } ItemGetRecordStruct;
 
+#pragma pack(push, 4)
 typedef struct ItemStruct {
 	int _iSeed;
 	WORD _iCreateInfo;
@@ -164,15 +167,17 @@ typedef struct ItemStruct {
 	int IDidx;
 	int offs016C; // _oldlight or _iInvalid
 } ItemStruct;
+#pragma pack(pop)
 
 //////////////////////////////////////////////////
 // player
 //////////////////////////////////////////////////
 
-typedef struct PlayerStruct {
+#pragma pack(push, 4)
+typedef struct PlayerStruct  {
 	int _pmode;
 	char walkpath[25];
-	BOOLEAN plractive;
+	uint8_t plractive;
 	int destAction;
 	int destParam1;
 	int destParam2;
@@ -349,6 +354,7 @@ typedef struct PlayerStruct {
 	unsigned char *_pBData;
 	void *pReserved;
 } PlayerStruct;
+#pragma pack(pop)
 
 //////////////////////////////////////////////////
 // textdat
@@ -398,6 +404,7 @@ typedef struct ChainStruct {
 	int _mirange;
 } ChainStruct;
 
+#pragma pack(push, 4)
 typedef struct MissileStruct {
 	int _mitype;
 	int _mix;
@@ -444,6 +451,7 @@ typedef struct MissileStruct {
 	int _miVar7;
 	int _miVar8;
 } MissileStruct;
+#pragma pack(pop)
 
 //////////////////////////////////////////////////
 // effects/sound
@@ -537,6 +545,7 @@ typedef struct CMonster {
 	BYTE *trans_file;
 } CMonster;
 
+#pragma pack(push, 4)
 typedef struct MonsterStruct { // note: missing field _mAFNum
 	int _mMTidx;
 	int _mmode; /* MON_MODE */
@@ -613,6 +622,7 @@ typedef struct MonsterStruct { // note: missing field _mAFNum
 	CMonster *MType;
 	MonsterData *MData;
 } MonsterStruct;
+#pragma pack(pop)
 
 typedef struct UniqMonstStruct {
 	char mtype;
@@ -655,6 +665,7 @@ typedef struct ObjDataStruct {
 	BOOL oTrapFlag;
 } ObjDataStruct;
 
+#pragma pack(push, 4)
 typedef struct ObjectStruct {
 	int _otype;
 	int _ox;
@@ -687,11 +698,13 @@ typedef struct ObjectStruct {
 	int _oVar7;
 	int _oVar8;
 } ObjectStruct;
+#pragma pack(pop)
 
 //////////////////////////////////////////////////
 // portal
 //////////////////////////////////////////////////
 
+#pragma pack(push, 4)
 typedef struct PortalStruct {
 	BOOL open;
 	int x;
@@ -700,6 +713,7 @@ typedef struct PortalStruct {
 	int ltype;
 	BOOL setlvl;
 } PortalStruct;
+#pragma pack(pop)
 
 //////////////////////////////////////////////////
 // msg
@@ -1174,6 +1188,7 @@ typedef struct InvXY {
 // lighting
 //////////////////////////////////////////////////
 
+#pragma pack(push, 4)
 typedef struct LightListStruct {
 	int _lx;
 	int _ly;
@@ -1201,6 +1216,7 @@ typedef struct DeadStruct {
 	int _deadWidth2;
 	char _deadtrans;
 } DeadStruct;
+#pragma pack(pop)
 
 //////////////////////////////////////////////////
 // diabloui
