@@ -369,38 +369,38 @@ void LoadPlayer(int i)
 	tbuff += 2;
 	CopyInt(tbuff, &pPlayer->_pGFXLoad);
 
-	tbuff += sizeof(__uint32_t) * 8;
+	tbuff += sizeof(DWORD) * 8;
 	CopyInt(tbuff, &pPlayer->_pNFrames);
 	CopyInt(tbuff, &pPlayer->_pNWidth);
 
-	tbuff += sizeof(__uint32_t) * 8;
+	tbuff += sizeof(DWORD) * 8;
 
 	CopyInt(tbuff, &pPlayer->_pWFrames);
 	CopyInt(tbuff, &pPlayer->_pWWidth);
 
-	tbuff += sizeof(__uint32_t) * 8;
+	tbuff += sizeof(DWORD) * 8;
 
 	CopyInt(tbuff, &pPlayer->_pAFrames);
 	CopyInt(tbuff, &pPlayer->_pAWidth);
 	CopyInt(tbuff, &pPlayer->_pAFNum);
 
-	tbuff += sizeof(__uint32_t) * 24;
+	tbuff += sizeof(DWORD) * 24;
 
 	CopyInt(tbuff, &pPlayer->_pSFrames);
 	CopyInt(tbuff, &pPlayer->_pSWidth);
 	CopyInt(tbuff, &pPlayer->_pSFNum);
 
-	tbuff += sizeof(__uint32_t) * 8;
+	tbuff += sizeof(DWORD) * 8;
 
 	CopyInt(tbuff, &pPlayer->_pHFrames);
 	CopyInt(tbuff, &pPlayer->_pHWidth);
 
-	tbuff += sizeof(__uint32_t) * 8;
+	tbuff += sizeof(DWORD) * 8;
 
 	CopyInt(tbuff, &pPlayer->_pDFrames);
 	CopyInt(tbuff, &pPlayer->_pDWidth);
 
-	tbuff += sizeof(__uint32_t) * 8;
+	tbuff += sizeof(DWORD) * 8;
 
 	CopyInt(tbuff, &pPlayer->_pBFrames);
 	CopyInt(tbuff, &pPlayer->_pBWidth);
@@ -572,38 +572,38 @@ void SavePlayer(int i)
 	tbuff += 2;
 	CopyInt(&pPlayer->_pGFXLoad, tbuff);
 
-	tbuff += sizeof(__uint32_t) * 8; // Skip 8 pointers
+	tbuff += sizeof(DWORD) * 8; // Skip 8 pointers
 	CopyInt(&pPlayer->_pNFrames, tbuff);
 	CopyInt(&pPlayer->_pNWidth, tbuff);
 
-	tbuff += sizeof(__uint32_t) * 8; // Skip 8 pointers
+	tbuff += sizeof(DWORD) * 8; // Skip 8 pointers
 
 	CopyInt(&pPlayer->_pWFrames, tbuff);
 	CopyInt(&pPlayer->_pWWidth, tbuff);
 
-	tbuff += sizeof(__uint32_t) * 8; // Skip 8 pointers
+	tbuff += sizeof(DWORD) * 8; // Skip 8 pointers
 
 	CopyInt(&pPlayer->_pAFrames, tbuff);
 	CopyInt(&pPlayer->_pAWidth, tbuff);
 	CopyInt(&pPlayer->_pAFNum, tbuff);
 
-	tbuff += sizeof(__uint32_t) * 24; // Skip 24 pointers
+	tbuff += sizeof(DWORD) * 24; // Skip 24 pointers
 
 	CopyInt(&pPlayer->_pSFrames, tbuff);
 	CopyInt(&pPlayer->_pSWidth, tbuff);
 	CopyInt(&pPlayer->_pSFNum, tbuff);
 
-	tbuff += sizeof(__uint32_t) * 8; // Skip 8 pointers
+	tbuff += sizeof(DWORD) * 8; // Skip 8 pointers
 
 	CopyInt(&pPlayer->_pHFrames, tbuff);
 	CopyInt(&pPlayer->_pHWidth, tbuff);
 
-	tbuff += sizeof(__uint32_t) * 8; // Skip 8 pointers
+	tbuff += sizeof(DWORD) * 8; // Skip 8 pointers
 
 	CopyInt(&pPlayer->_pDFrames, tbuff);
 	CopyInt(&pPlayer->_pDWidth, tbuff);
 
-	tbuff += sizeof(__uint32_t) * 8; // Skip 8 pointers
+	tbuff += sizeof(DWORD) * 8; // Skip 8 pointers
 
 	CopyInt(&pPlayer->_pBFrames, tbuff);
 	CopyInt(&pPlayer->_pBWidth, tbuff);
