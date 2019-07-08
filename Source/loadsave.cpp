@@ -207,43 +207,43 @@ BOOL OLoad()
 		return FALSE;
 }
 
-void CopyInt(const void *src, void * dst)
+void CopyInt(const void *src, void *dst)
 {
 	memcpy(dst, src, 4);
 	tbuff += 4;
 }
 
-void CopyShort(const void *src, void * dst)
+void CopyShort(const void *src, void *dst)
 {
 	memcpy(dst, src, 2);
 	tbuff += 2;
 }
 
-void CopyShorts(const void *src, const int n, void * dst)
+void CopyShorts(const void *src, const int n, void *dst)
 {
 	memcpy(dst, src, 2 * n);
 	tbuff += 2 * n;
 }
 
-void CopyInts(const void *src, const int n, void * dst)
+void CopyInts(const void *src, const int n, void *dst)
 {
 	memcpy(dst, src, 4 * n);
 	tbuff += 4 * n;
 }
 
-void CopyBytes(const void *src, const int n, void * dst)
+void CopyBytes(const void *src, const int n, void *dst)
 {
 	memcpy(dst, src, n);
 	tbuff += n;
 }
 
-void CopyChar(const void *src, void * dst)
+void CopyChar(const void *src, void *dst)
 {
 	memcpy(dst, src, 1);
 	tbuff += 1;
 }
 
-void CopyInt64(const void *src, void * dst)
+void CopyInt64(const void *src, void *dst)
 {
 	memcpy(dst, src, 8);
 	tbuff += 8;
@@ -312,7 +312,7 @@ void LoadPlayer(int i)
 	CopyInt64(tbuff, &pPlayer->_pAblSpells);
 	CopyInt64(tbuff, &pPlayer->_pScrlSpells);
 	CopyChar(tbuff, &pPlayer->_pSpellFlags);
- 	tbuff += 3;
+	tbuff += 3;
 	CopyInts(tbuff, 4, &pPlayer->_pSplHotKey);
 	CopyBytes(tbuff, 4, &pPlayer->_pSplTHotKey);
 	CopyInt(tbuff, &pPlayer->_pwtype);
@@ -448,7 +448,6 @@ void LoadPlayer(int i)
 	CopyInts(tbuff, 7, &pPlayer->dwReserved);
 
 	// Omit 10 pointers
-	
 }
 
 void SavePlayer(int i)
@@ -500,7 +499,7 @@ void SavePlayer(int i)
 	CopyChar(&pPlayer->_pSplType, tbuff);
 	CopyChar(&pPlayer->_pSplFrom, tbuff);
 	tbuff += 2;
-	
+
 	CopyInt(&pPlayer->_pTSpell, tbuff);
 	CopyChar(&pPlayer->_pTSplType, tbuff);
 	tbuff += 3;
@@ -516,7 +515,7 @@ void SavePlayer(int i)
 	CopyInt64(&pPlayer->_pAblSpells, tbuff);
 	CopyInt64(&pPlayer->_pScrlSpells, tbuff);
 	CopyChar(&pPlayer->_pSpellFlags, tbuff);
- 	tbuff += 3;
+	tbuff += 3;
 	CopyInts(&pPlayer->_pSplHotKey, 4, tbuff);
 	CopyBytes(&pPlayer->_pSplTHotKey, 4, tbuff);
 	CopyInt(&pPlayer->_pwtype, tbuff);
@@ -652,7 +651,6 @@ void SavePlayer(int i)
 	CopyInts(&pPlayer->dwReserved, 7, tbuff);
 
 	// Omit 10 pointers
-	
 }
 
 void LoadMonster(int i)
@@ -732,17 +730,17 @@ void LoadMonster(int i)
 	CopyChar(tbuff, &pMonster->mLevel);
 	CopyShort(tbuff, &pMonster->mExp);
 	tbuff += 1;
-	
+
 	CopyChar(tbuff, &pMonster->mHit);
 	CopyChar(tbuff, &pMonster->mMinDamage);
 	CopyChar(tbuff, &pMonster->mMaxDamage);
 	CopyChar(tbuff, &pMonster->mHit2);
-	
+
 	CopyChar(tbuff, &pMonster->mMinDamage2);
 	CopyChar(tbuff, &pMonster->mMaxDamage2);
 	CopyChar(tbuff, &pMonster->mArmorClass);
 	CopyChar(tbuff, &pMonster->falign_CB);
-	
+
 	CopyShort(tbuff, &pMonster->mMagicRes);
 	tbuff += 2;
 
@@ -752,7 +750,7 @@ void LoadMonster(int i)
 	CopyChar(tbuff, &pMonster->leaderflag);
 	CopyChar(tbuff, &pMonster->packsize);
 	CopyChar(tbuff, &pMonster->mlid);
-	
+
 	SyncMonsterAnim(i);
 }
 
@@ -776,7 +774,7 @@ void LoadMissile(int i)
 	CopyInt(tbuff, &pMissile->_miDelFlag);
 	CopyChar(tbuff, &pMissile->_miAnimType);
 	tbuff += 3;
-	
+
 	CopyInt(tbuff, &pMissile->_miAnimFlags);
 	tbuff += 4;
 	CopyInt(tbuff, &pMissile->_miAnimDelay);
@@ -831,7 +829,7 @@ void LoadObject(int i)
 	CopyInt(tbuff, &pObject->_oSolidFlag);
 	CopyInt(tbuff, &pObject->_oMissFlag);
 
-	CopyChar(tbuff, &pObject->_oSelFlag); 
+	CopyChar(tbuff, &pObject->_oSelFlag);
 	tbuff += 3;
 
 	CopyInt(tbuff, &pObject->_oPreFlag);
@@ -935,8 +933,7 @@ void CopyItem(ItemStruct *pItem)
 
 void CopyItems(const int n, ItemStruct *pItem)
 {
-	for (int i = 0; i < n; i++)
-	{
+	for (int i = 0; i < n; i++) {
 		CopyItem(&pItem[i]);
 	}
 }
@@ -1021,8 +1018,7 @@ void SaveItem(ItemStruct *pItem)
 
 void SaveItems(ItemStruct *pItem, const int n)
 {
-	for (int i = 0; i < n; i++)
-	{
+	for (int i = 0; i < n; i++) {
 		SaveItem(&pItem[i]);
 	}
 }
@@ -1310,17 +1306,17 @@ void SaveMonster(int i)
 	CopyChar(&pMonster->mLevel, tbuff);
 	CopyShort(&pMonster->mExp, tbuff);
 	tbuff += 1;
-	
+
 	CopyChar(&pMonster->mHit, tbuff);
 	CopyChar(&pMonster->mMinDamage, tbuff);
 	CopyChar(&pMonster->mMaxDamage, tbuff);
 	CopyChar(&pMonster->mHit2, tbuff);
-	
+
 	CopyChar(&pMonster->mMinDamage2, tbuff);
 	CopyChar(&pMonster->mMaxDamage2, tbuff);
 	CopyChar(&pMonster->mArmorClass, tbuff);
 	CopyChar(&pMonster->falign_CB, tbuff);
-	
+
 	CopyShort(&pMonster->mMagicRes, tbuff);
 	tbuff += 2;
 
@@ -1352,7 +1348,7 @@ void SaveMissile(int i)
 	CopyInt(&pMissile->_miDelFlag, tbuff);
 	CopyChar(&pMissile->_miAnimType, tbuff);
 	tbuff += 3;
-	
+
 	CopyInt(&pMissile->_miAnimFlags, tbuff);
 	tbuff += 4;
 	CopyInt(&pMissile->_miAnimDelay, tbuff);
@@ -1407,7 +1403,7 @@ void SaveObject(int i)
 	CopyInt(&pObject->_oSolidFlag, tbuff);
 	CopyInt(&pObject->_oMissFlag, tbuff);
 
-	CopyChar(&pObject->_oSelFlag, tbuff); 
+	CopyChar(&pObject->_oSelFlag, tbuff);
 	tbuff += 3;
 
 	CopyInt(&pObject->_oPreFlag, tbuff);

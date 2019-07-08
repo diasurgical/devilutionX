@@ -174,7 +174,7 @@ typedef struct ItemStruct {
 //////////////////////////////////////////////////
 
 #pragma pack(push, 4)
-typedef struct PlayerStruct  {
+typedef struct PlayerStruct {
 	int _pmode;
 	char walkpath[25];
 	uint8_t plractive;
@@ -376,8 +376,8 @@ typedef struct TextDataStruct {
 
 typedef struct MissileData {
 	unsigned char mName;
-	void(* mAddProc)(int, int, int, int, int, int, char, int, int);
-	void(* mProc)(int);
+	void (*mAddProc)(int, int, int, int, int, int, char, int, int);
+	void (*mProc)(int);
 	BOOL mDraw;
 	unsigned char mType;
 	unsigned char mResist;
@@ -1017,7 +1017,7 @@ typedef struct QuestData {
 typedef struct TMenuItem {
 	DWORD dwFlags;
 	char *pszStr;
-	void(* fnMenu)(BOOL); /* fix, should have one arg */
+	void (*fnMenu)(BOOL); /* fix, should have one arg */
 } TMenuItem;
 
 // TPDEF PTR FCN VOID TMenuUpdateFcn
@@ -1331,21 +1331,21 @@ typedef struct _SNETUIDATA {
 	int size;
 	int uiflags;
 	HWND parentwindow;
-	void(* artcallback)();
-	void(* authcallback)();
-	void(* createcallback)();
-	void(* drawdesccallback)();
-	void(* selectedcallback)();
-	void(* messageboxcallback)();
-	void(* soundcallback)();
-	void(* statuscallback)();
-	void(* getdatacallback)();
-	void(* categorycallback)();
-	void(* categorylistcallback)();
-	void(* newaccountcallback)();
-	void(* profilecallback)();
+	void (*artcallback)();
+	void (*authcallback)();
+	void (*createcallback)();
+	void (*drawdesccallback)();
+	void (*selectedcallback)();
+	void (*messageboxcallback)();
+	void (*soundcallback)();
+	void (*statuscallback)();
+	void (*getdatacallback)();
+	void (*categorycallback)();
+	void (*categorylistcallback)();
+	void (*newaccountcallback)();
+	void (*profilecallback)();
 	int profilefields;
-	void(* profilebitmapcallback)();
+	void (*profilebitmapcallback)();
 	int(__stdcall *selectnamecallback)(
 	    const struct _SNETPROGRAMDATA *,
 	    const struct _SNETPLAYERDATA *,
@@ -1355,8 +1355,8 @@ typedef struct _SNETUIDATA {
 	    char *, DWORD,  /* character name will be copied here */
 	    char *, DWORD,  /* character "description" will be copied here (used to advertise games) */
 	    BOOL *          /* new character? - unsure about this */
-	    );
-	void(* changenamecallback)();
+	);
+	void (*changenamecallback)();
 } _SNETUIDATA;
 
 typedef struct _SNETVERSIONDATA {
