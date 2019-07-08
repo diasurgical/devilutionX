@@ -174,13 +174,11 @@ void LoadGame(BOOL firstflag)
 	gbProcessPlayers = TRUE;
 }
 
-// Load a byte-size char from the buffer
 char BLoad()
 {
 	return *tbuff++;
 }
 
-// Redundant?
 int WLoad()
 {
 	int rv = *tbuff++ << 24;
@@ -191,7 +189,6 @@ int WLoad()
 	return rv;
 }
 
-// Load a 32 bit integer from the buffer
 int ILoad()
 {
 	int rv = *tbuff++ << 24;
@@ -210,18 +207,11 @@ BOOL OLoad()
 		return FALSE;
 }
 
-// Consume an int from tbuff with memcpy - copies directly, doesn't change byte order
 void CopyInt(const void *src, void * dst)
 {
 	memcpy(dst, src, 4);
 	tbuff += 4;
 }
-
-/*void CopyInt(BYTE **src, unsigned int & dst)
-{
-	memcpy(&dst, src, 4);
-	tbuff += 4;
-}*/
 
 void CopyShort(const void *src, void * dst)
 {
@@ -235,7 +225,6 @@ void CopyShorts(const void *src, const int n, void * dst)
 	tbuff += 2 * n;
 }
 
-// Copy an int array of size n
 void CopyInts(const void *src, const int n, void * dst)
 {
 	memcpy(dst, src, 4 * n);
@@ -250,19 +239,18 @@ void CopyBytes(const void *src, const int n, void * dst)
 
 void CopyChar(const void *src, void * dst)
 {
-	memcpy(&dst, src, 1);
+	memcpy(dst, src, 1);
 	tbuff += 1;
 }
 
 void CopyInt64(const void *src, void * dst)
 {
-	memcpy(&dst, src, 8);
+	memcpy(dst, src, 8);
 	tbuff += 8;
 }
 
 void LoadPlayer(int i)
 {
-	// Copy from tbuff to structures
 	PlayerStruct *pPlayer = &plr[i];
 
 	CopyInt(tbuff, &pPlayer->_pmode);
@@ -308,9 +296,10 @@ void LoadPlayer(int i)
 	CopyInt(tbuff, &pPlayer->_pSpell);
 	CopyChar(tbuff, &pPlayer->_pSplType);
 	CopyChar(tbuff, &pPlayer->_pSplFrom);
+	tbuff += 2;
 	CopyInt(tbuff, &pPlayer->_pTSpell);
 	CopyChar(tbuff, &pPlayer->_pTSplType);
-	tbuff += 5;
+	tbuff += 3;
 	CopyInt(tbuff, &pPlayer->_pRSpell);
 	CopyChar(tbuff, &pPlayer->_pRSplType);
 	tbuff += 3;
@@ -376,42 +365,42 @@ void LoadPlayer(int i)
 	CopyInt(tbuff, &pPlayer->_pVar7);
 	CopyInt(tbuff, &pPlayer->_pVar8);
 	CopyBytes(tbuff, NUMLEVELS, &pPlayer->_pLvlVisited);
-	CopyBytes(tbuff, NUMLEVELS, &pPlayer->_pSLvlVisited); // only 10 used
+	CopyBytes(tbuff, NUMLEVELS, &pPlayer->_pSLvlVisited);
 	tbuff += 2;
 	CopyInt(tbuff, &pPlayer->_pGFXLoad);
 
-	tbuff += sizeof(__uint32_t) * 8; // Skip 8 pointers
+	tbuff += sizeof(__uint32_t) * 8;
 	CopyInt(tbuff, &pPlayer->_pNFrames);
 	CopyInt(tbuff, &pPlayer->_pNWidth);
 
-	tbuff += sizeof(__uint32_t) * 8; // Skip 8 pointers
+	tbuff += sizeof(__uint32_t) * 8
 
 	CopyInt(tbuff, &pPlayer->_pWFrames);
 	CopyInt(tbuff, &pPlayer->_pWWidth);
 
-	tbuff += sizeof(__uint32_t) * 8; // Skip 8 pointers
+	tbuff += sizeof(__uint32_t) * 8;
 
 	CopyInt(tbuff, &pPlayer->_pAFrames);
 	CopyInt(tbuff, &pPlayer->_pAWidth);
 	CopyInt(tbuff, &pPlayer->_pAFNum);
 
-	tbuff += sizeof(__uint32_t) * 24; // Skip 24 pointers
+	tbuff += sizeof(__uint32_t) * 24;
 
 	CopyInt(tbuff, &pPlayer->_pSFrames);
 	CopyInt(tbuff, &pPlayer->_pSWidth);
 	CopyInt(tbuff, &pPlayer->_pSFNum);
 
-	tbuff += sizeof(__uint32_t) * 8; // Skip 8 pointers
+	tbuff += sizeof(__uint32_t) * 8;
 
 	CopyInt(tbuff, &pPlayer->_pHFrames);
 	CopyInt(tbuff, &pPlayer->_pHWidth);
 
-	tbuff += sizeof(__uint32_t) * 8; // Skip 8 pointers
+	tbuff += sizeof(__uint32_t) * 8;
 
 	CopyInt(tbuff, &pPlayer->_pDFrames);
 	CopyInt(tbuff, &pPlayer->_pDWidth);
 
-	tbuff += sizeof(__uint32_t) * 8; // Skip 8 pointers
+	tbuff += sizeof(__uint32_t) * 8;
 
 	CopyInt(tbuff, &pPlayer->_pBFrames);
 	CopyInt(tbuff, &pPlayer->_pBWidth);
@@ -462,21 +451,13 @@ void LoadPlayer(int i)
 	
 }
 
-/*void SavePlayer(int i)
-{
-	memcpy(tbuff, &plr[i], sizeof(*plr) - (10 * sizeof(void *)));
-	tbuff += sizeof(*plr) - (10 * sizeof(void *)); // omit last 10 pointers
-}*/
-
-
 void SavePlayer(int i)
 {
-	// Copy from tbuff to structures
 	PlayerStruct *pPlayer = &plr[i];
 
-	CopyInt(pPlayer->_pmode, tbuff);
+	CopyInt(&pPlayer->_pmode, tbuff);
 
-	CopyBytes(pPlayer->walkpath, 25, tbuff);
+	CopyBytes(&pPlayer->walkpath, 25, tbuff);
 	CopyBytes(&pPlayer->plractive, 1, tbuff);
 	tbuff += 2;
 
@@ -515,11 +496,14 @@ void SavePlayer(int i)
 	CopyInt(&pPlayer->_pvid, tbuff);
 
 	CopyInt(&pPlayer->_pSpell, tbuff);
+
 	CopyChar(&pPlayer->_pSplType, tbuff);
 	CopyChar(&pPlayer->_pSplFrom, tbuff);
+	tbuff += 2;
+	
 	CopyInt(&pPlayer->_pTSpell, tbuff);
 	CopyChar(&pPlayer->_pTSplType, tbuff);
-	tbuff += 5;
+	tbuff += 3;
 	CopyInt(&pPlayer->_pRSpell, tbuff);
 	CopyChar(&pPlayer->_pRSplType, tbuff);
 	tbuff += 3;
@@ -664,7 +648,7 @@ void SavePlayer(int i)
 
 	CopyShorts(&pPlayer->wReserved, 8, tbuff);
 
-	CopyInt(tbuff, pPlayer->pDiabloKillLevel);
+	CopyInt(&pPlayer->pDiabloKillLevel, tbuff);
 	CopyInts(&pPlayer->dwReserved, 7, tbuff);
 
 	// Omit 10 pointers
@@ -884,8 +868,8 @@ void CopyItem(ItemStruct *pItem)
 	CopyInt(tbuff, &pItem->_iAnimLen);
 	CopyInt(tbuff, &pItem->_iAnimFrame);
 	CopyInt(tbuff, &pItem->_iAnimWidth);
-	CopyInt(tbuff, &pItem->_iAnimWidth2); // width 2?
-	CopyInt(tbuff, &pItem->_isin);        // set when item is flagged for deletion, deprecated in 1.02
+	CopyInt(tbuff, &pItem->_iAnimWidth2);
+	CopyInt(tbuff, &pItem->_isin);
 	CopyChar(tbuff, &pItem->_iSelFlag);
 	tbuff += 3;
 	CopyInt(tbuff, &pItem->_iPostDraw);
@@ -1045,8 +1029,7 @@ void SaveItems(ItemStruct *pItem, const int n)
 
 void LoadPremium(int i)
 {
-	memcpy(&premiumitem[i], tbuff, sizeof(*premiumitem));
-	tbuff += sizeof(*premiumitem);
+	CopyItem(&item[i]);
 }
 
 void LoadQuest(int i)
@@ -1152,7 +1135,7 @@ void SaveGame()
 	for (i = 0; i < MAXITEMS; i++)
 		BSave(itemavail[i]);
 	for (i = 0; i < numitems; i++)
-		SaveItem(itemactive[i]);
+		SaveItem(&item[itemactive[i]]);
 	for (i = 0; i < 128; i++)
 		OSave(UniqueItemFlag[i]);
 
@@ -1252,32 +1235,199 @@ void OSave(BOOL v)
 
 void SaveMonster(int i)
 {
-	memcpy(tbuff, &monster[i], sizeof(*monster) - (3 * sizeof(void *)));
-	tbuff += sizeof(*monster) - (3 * sizeof(void *)); // omit last 3 pointers
+	MonsterStruct *pMonster = &monster[i];
+
+	CopyInt(&pMonster->_mMTidx, tbuff);
+	CopyInt(&pMonster->_mmode, tbuff);
+
+	CopyChar(&pMonster->_mgoal, tbuff);
+	tbuff += 3;
+
+	CopyInt(&pMonster->_mgoalvar1, tbuff);
+	CopyInt(&pMonster->_mgoalvar2, tbuff);
+	CopyInt(&pMonster->_mgoalvar3, tbuff);
+	CopyInt(&pMonster->field_18, tbuff);
+
+	CopyChar(&pMonster->_pathcount, tbuff);
+	tbuff += 3;
+
+	CopyInt(&pMonster->_mx, tbuff);
+	CopyInt(&pMonster->_my, tbuff);
+	CopyInt(&pMonster->_mfutx, tbuff);
+	CopyInt(&pMonster->_mfuty, tbuff);
+	CopyInt(&pMonster->_moldx, tbuff);
+	CopyInt(&pMonster->_moldy, tbuff);
+	CopyInt(&pMonster->_mxoff, tbuff);
+	CopyInt(&pMonster->_myoff, tbuff);
+	CopyInt(&pMonster->_mxvel, tbuff);
+	CopyInt(&pMonster->_myvel, tbuff);
+	CopyInt(&pMonster->_mdir, tbuff);
+	CopyInt(&pMonster->_menemy, tbuff);
+
+	CopyChar(&pMonster->_menemyx, tbuff);
+	CopyChar(&pMonster->_menemyy, tbuff);
+	CopyShort(&pMonster->falign_52, tbuff);
+
+	tbuff += 4; // Skip pointer
+	CopyInt(&pMonster->_mAnimDelay, tbuff);
+	CopyInt(&pMonster->_mAnimCnt, tbuff);
+	CopyInt(&pMonster->_mAnimLen, tbuff);
+	CopyInt(&pMonster->_mAnimFrame, tbuff);
+	CopyInt(&pMonster->_meflag, tbuff);
+	CopyInt(&pMonster->_mDelFlag, tbuff);
+	CopyInt(&pMonster->_mVar1, tbuff);
+	CopyInt(&pMonster->_mVar2, tbuff);
+	CopyInt(&pMonster->_mVar3, tbuff);
+	CopyInt(&pMonster->_mVar4, tbuff);
+	CopyInt(&pMonster->_mVar5, tbuff);
+	CopyInt(&pMonster->_mVar6, tbuff);
+	CopyInt(&pMonster->_mVar7, tbuff);
+	CopyInt(&pMonster->_mVar8, tbuff);
+	CopyInt(&pMonster->_mmaxhp, tbuff);
+	CopyInt(&pMonster->_mhitpoints, tbuff);
+
+	CopyChar(&pMonster->_mAi, tbuff);
+	CopyChar(&pMonster->_mint, tbuff);
+	CopyShort(&pMonster->falign_9A, tbuff);
+
+	CopyInt(&pMonster->_mFlags, tbuff);
+
+	CopyChar(&pMonster->_msquelch, tbuff);
+	tbuff += 3;
+
+	CopyInt(&pMonster->falign_A4, tbuff);
+	CopyInt(&pMonster->_lastx, tbuff);
+	CopyInt(&pMonster->_lasty, tbuff);
+	CopyInt(&pMonster->_mRndSeed, tbuff);
+	CopyInt(&pMonster->_mAISeed, tbuff);
+	CopyInt(&pMonster->falign_B8, tbuff);
+
+	CopyChar(&pMonster->_uniqtype, tbuff);
+	CopyChar(&pMonster->_uniqtrans, tbuff);
+	CopyChar(&pMonster->_udeadval, tbuff);
+	CopyChar(&pMonster->mWhoHit, tbuff);
+
+	CopyChar(&pMonster->mLevel, tbuff);
+	CopyShort(&pMonster->mExp, tbuff);
+	tbuff += 1;
+	
+	CopyChar(&pMonster->mHit, tbuff);
+	CopyChar(&pMonster->mMinDamage, tbuff);
+	CopyChar(&pMonster->mMaxDamage, tbuff);
+	CopyChar(&pMonster->mHit2, tbuff);
+	
+	CopyChar(&pMonster->mMinDamage2, tbuff);
+	CopyChar(&pMonster->mMaxDamage2, tbuff);
+	CopyChar(&pMonster->mArmorClass, tbuff);
+	CopyChar(&pMonster->falign_CB, tbuff);
+	
+	CopyShort(&pMonster->mMagicRes, tbuff);
+	tbuff += 2;
+
+	CopyInt(&pMonster->mtalkmsg, tbuff);
+
+	CopyChar(&pMonster->leader, tbuff);
+	CopyChar(&pMonster->leaderflag, tbuff);
+	CopyChar(&pMonster->packsize, tbuff);
+	CopyChar(&pMonster->mlid, tbuff);
 }
 
 void SaveMissile(int i)
 {
-	memcpy(tbuff, &missile[i], sizeof(*missile));
-	tbuff += sizeof(*missile);
+	MissileStruct *pMissile = &missile[i];
+
+	CopyInt(&pMissile->_mitype, tbuff);
+	CopyInt(&pMissile->_mix, tbuff);
+	CopyInt(&pMissile->_miy, tbuff);
+	CopyInt(&pMissile->_mixoff, tbuff);
+	CopyInt(&pMissile->_miyoff, tbuff);
+	CopyInt(&pMissile->_mixvel, tbuff);
+	CopyInt(&pMissile->_miyvel, tbuff);
+	CopyInt(&pMissile->_misx, tbuff);
+	CopyInt(&pMissile->_misy, tbuff);
+	CopyInt(&pMissile->_mitxoff, tbuff);
+	CopyInt(&pMissile->_mityoff, tbuff);
+	CopyInt(&pMissile->_mimfnum, tbuff);
+	CopyInt(&pMissile->_mispllvl, tbuff);
+	CopyInt(&pMissile->_miDelFlag, tbuff);
+	CopyChar(&pMissile->_miAnimType, tbuff);
+	tbuff += 3;
+	
+	CopyInt(&pMissile->_miAnimFlags, tbuff);
+	tbuff += 4;
+	CopyInt(&pMissile->_miAnimDelay, tbuff);
+	CopyInt(&pMissile->_miAnimLen, tbuff);
+	CopyInt(&pMissile->_miAnimWidth, tbuff);
+	CopyInt(&pMissile->_miAnimWidth2, tbuff);
+	CopyInt(&pMissile->_miAnimCnt, tbuff);
+	CopyInt(&pMissile->_miAnimAdd, tbuff);
+	CopyInt(&pMissile->_miAnimFrame, tbuff);
+	CopyInt(&pMissile->_miDrawFlag, tbuff);
+	CopyInt(&pMissile->_miLightFlag, tbuff);
+	CopyInt(&pMissile->_miPreFlag, tbuff);
+	CopyInt(&pMissile->_miUniqTrans, tbuff);
+	CopyInt(&pMissile->_mirange, tbuff);
+	CopyInt(&pMissile->_misource, tbuff);
+	CopyInt(&pMissile->_micaster, tbuff);
+	CopyInt(&pMissile->_midam, tbuff);
+	CopyInt(&pMissile->_miHitFlag, tbuff);
+	CopyInt(&pMissile->_midist, tbuff);
+	CopyInt(&pMissile->_mlid, tbuff);
+	CopyInt(&pMissile->_mirnd, tbuff);
+	CopyInt(&pMissile->_miVar1, tbuff);
+	CopyInt(&pMissile->_miVar2, tbuff);
+	CopyInt(&pMissile->_miVar3, tbuff);
+	CopyInt(&pMissile->_miVar4, tbuff);
+	CopyInt(&pMissile->_miVar5, tbuff);
+	CopyInt(&pMissile->_miVar6, tbuff);
+	CopyInt(&pMissile->_miVar7, tbuff);
+	CopyInt(&pMissile->_miVar8, tbuff);
 }
 
 void SaveObject(int i)
 {
-	memcpy(tbuff, &object[i], sizeof(*object));
-	tbuff += sizeof(*object);
-}
+	ObjectStruct *pObject = &object[i];
+	CopyInt(tbuff, &pObject->_otype);
+	CopyInt(&pObject->_ox, tbuff);
+	CopyInt(&pObject->_oy, tbuff);
+	CopyInt(&pObject->_oLight, tbuff);
+	CopyInt(&pObject->_oAnimFlag, tbuff);
+	tbuff += 4;
+	CopyInt(&pObject->_oAnimDelay, tbuff);
+	CopyInt(&pObject->_oAnimCnt, tbuff);
+	CopyInt(&pObject->_oAnimLen, tbuff);
+	CopyInt(&pObject->_oAnimFrame, tbuff);
+	CopyInt(&pObject->_oAnimWidth, tbuff);
+	CopyInt(&pObject->_oAnimWidth2, tbuff);
+	CopyInt(&pObject->_oDelFlag, tbuff);
 
-void SaveItem(int i)
-{
-	memcpy(tbuff, &item[i], sizeof(*item));
-	tbuff += sizeof(*item);
+	CopyChar(&pObject->_oBreak, tbuff);
+	tbuff += 3;
+
+	CopyInt(&pObject->_oSolidFlag, tbuff);
+	CopyInt(&pObject->_oMissFlag, tbuff);
+
+	CopyChar(&pObject->_oSelFlag, tbuff); 
+	tbuff += 3;
+
+	CopyInt(&pObject->_oPreFlag, tbuff);
+	CopyInt(&pObject->_oTrapFlag, tbuff);
+	CopyInt(&pObject->_oDoorFlag, tbuff);
+	CopyInt(&pObject->_olid, tbuff);
+	CopyInt(&pObject->_oRndSeed, tbuff);
+	CopyInt(&pObject->_oVar1, tbuff);
+	CopyInt(&pObject->_oVar2, tbuff);
+	CopyInt(&pObject->_oVar3, tbuff);
+	CopyInt(&pObject->_oVar4, tbuff);
+	CopyInt(&pObject->_oVar5, tbuff);
+	CopyInt(&pObject->_oVar6, tbuff);
+	CopyInt(&pObject->_oVar7, tbuff);
+	CopyInt(&pObject->_oVar8, tbuff);
 }
 
 void SavePremium(int i)
 {
-	memcpy(tbuff, &premiumitem[i], sizeof(*premiumitem));
-	tbuff += sizeof(*premiumitem);
+	SaveItem(&item[i]);
 }
 
 void SaveQuest(int i)
@@ -1352,7 +1502,7 @@ void SaveLevel()
 	for (i = 0; i < MAXITEMS; i++)
 		BSave(itemavail[i]);
 	for (i = 0; i < numitems; i++)
-		SaveItem(itemactive[i]);
+		SaveItem(&item[itemactive[i]]);
 
 	for (j = 0; j < MAXDUNY; j++) {
 		for (i = 0; i < MAXDUNX; i++)
