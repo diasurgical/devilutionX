@@ -1,14 +1,11 @@
 #include "devilution.h"
 #include <SDL/SDL.h>
 #include <SDL/SDL_video.h>
+#include "../SourceS/miniwin/misc.h"
+#include "sdl1_wrapper.h"
 
 namespace dvl {
 
-struct SDL_Window
-{
-  SDL_Surface *image;
-  int pause;
-};
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
 extern SDL_Texture *texture;

@@ -2,11 +2,15 @@
 #include "miniwin/ddraw.h"
 #include "stubs.h"
 #include <SDL/SDL.h>
+#include "../SourceS/miniwin/misc.h"
+
 
 namespace dvl {
 
+
 WINBOOL SetCursorPos(int X, int Y)
 {
+
 	assert(window);
 
 	if (renderer) {

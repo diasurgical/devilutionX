@@ -11,6 +11,8 @@ devilutionx.config
 devilutionx.creator
 devilutionx.files
 devilutionx.includes
+.cproject
+.settings/
 
 
 # CodeLite
