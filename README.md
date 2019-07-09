@@ -69,9 +69,9 @@ PKWare, Radon, StormLib, devilution, libSDL-iOS, libSDL_ttf-iOS, libSDL_mixer-iO
 
 Now here's where it gets messy: The SDL library needs to be modified to pass the path of the diabdat.mpq path to the SDL run loop
 
-    Replace the postFinishLaunch function at 339 of SDL.xcodeproject/Library Source/video/uikit/SDL_uiappkitdelegate.m with the contents of ```SDL_uikitappdelegate.delta.m```
+**Replace the postFinishLaunch function at 339 of SDL.xcodeproject/Library Source/video/uikit/SDL_uiappkitdelegate.m with the contents of ```SDL_uikitappdelegate.delta.m```**
     
-This isn't present in the github repo as the SDL2 is pulled fresh from the libSDL2 source.
+This isn't present in the github repo as the SDL2 project & source is pulled fresh from the libSDL2 source control.
 
 6. Once modified, build and deploy to a mobile device.
 
@@ -83,7 +83,12 @@ This isn't present in the github repo as the SDL2 is pulled fresh from the libSD
 
 Tested on an iPad Pro 3. Working with full sound and save support. Works with the Pencil as well.
 
+Lots of work to do: 
 
+* how to get all dependencies to build automatically
+* a better way to deploy the SDL_uiappkitdelegate patch
+* find out why the code at https://github.com/diasurgical/devilutionX/blob/master/Source/diablo.cpp#L321-L466 breaks when arguments are passed. 
+* Deeper integration with UIKit, hiDPI patches, etc.
 
 
 ## Additional information from the fork 
