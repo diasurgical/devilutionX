@@ -262,8 +262,17 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 				PressChar('x');
 				break;
 			case  3:	// Y
-				PressKey(VK_RETURN);
-				keyboardExpansion(VK_RETURN);
+				if (invflag) {
+					lpMsg->message = DVL_WM_RBUTTONDOWN;
+					lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+					lpMsg->wParam = keystate_for_mouse(DVL_MK_RBUTTON);
+				} else {
+					PressKey(VK_RETURN);
+					keyboardExpansion(VK_RETURN);
+				}
+				break;
+			case  4:	// left joystick click
+				PressChar('q');
 				break;
 			case  5:	// right joystick click
 				if (newCurHidden) { // show cursor first, before clicking
