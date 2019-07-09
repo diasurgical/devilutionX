@@ -128,104 +128,84 @@ struct SDL_WindowShaper {
 
 // todo functions:
 // ==============
-//extern SDL_Window *dummy;
-//int SDL_WarpMouseInWindow(*dummy);
-//int SDL_RenderGetViewport(*dummy );
-//int SDL_RenderGetScale(*dummy );
-//int SDL_Log(*dummy);
-//int SDL_SetWindowTitle(*dummy);
-void SDL_RenderGetViewport(SDL_Renderer* renderer,
-                           SDL_Rect*     rect);
-void SDL_RenderGetScale(SDL_Renderer* renderer,
-                        float*        scaleX,
-                        float*        scaleY);
-void SDL_WarpMouseInWindow(SDL_Window* window,
-                           int         x,
-                           int         y);
+
+void SDL_RenderGetViewport(SDL_Renderer* renderer, SDL_Rect* rect);
+
+void SDL_RenderGetScale(SDL_Renderer* renderer, float* scaleX, float* scaleY);
+
+void SDL_WarpMouseInWindow(SDL_Window* window, int x, int y);
+
 void SDL_Log(const char* fmt);
-void SDL_SetWindowTitle(SDL_Window* window,
-                        const char* title);
-char* SDL_GetPrefPath(const char* org,
-                      const char* app);
+
+void SDL_SetWindowTitle(SDL_Window* window, const char* title);
+
+char* SDL_GetPrefPath(const char* org, const char* app);
+
 const Uint8* SDL_GetKeyboardState(int* numkeys);
 
 typedef int (SDLCALL * SDL_ThreadFunction) (void *data);
 
-SDL_Thread* SDL_CreateThread(SDL_ThreadFunction fn,
-                             const char*        name,
-                             void*              data);
+SDL_Thread* SDL_CreateThread(SDL_ThreadFunction fn, const char* name, void* data);
 
 char* SDL_GetBasePath(void);
+
 void SDL_EnableScreenSaver(void);
+
 void SDL_DisableScreenSaver(void);
+
 int SDL_SetWindowInputFocus(SDL_Window* window);
+
 SDL_bool SDL_SetHint(const char* name, const char* value);
+
 void SDL_ShowWindow(SDL_Window* window);
+
 int SDL_GetCurrentDisplayMode(int displayIndex, SDL_DisplayMode* mode);
-void SDL_GetWindowPosition(SDL_Window* window,
-                           int*        x,
-                           int*        y);
-int SDL_ShowSimpleMessageBox(Uint32      flags,
-                             const char* title,
-                             const char* message,
-                             SDL_Window* window);
+
+void SDL_GetWindowPosition(SDL_Window* window,  int* x, int* y);
+
+int SDL_ShowSimpleMessageBox(Uint32      flags, const char* title, const char* message, SDL_Window* window);
+
 SDL_bool SDL_IsScreenSaverEnabled(void);
+
 void SDL_HideWindow(SDL_Window* window);
-SDL_Window* SDL_CreateWindow(const char* title,
-                             int         x,
-                             int         y,
-                             int         w,
-                             int         h,
-                             Uint32      flags);
+
+SDL_Window* SDL_CreateWindow(const char* title, int x, int y, int w, int h, Uint32 flags);
+
 void SDL_FreePalette(SDL_Palette* palette);
+
 void SDL_DestroyTexture(SDL_Texture* texture);
+
 void SDL_DestroyRenderer(SDL_Renderer* renderer);
+
 void SDL_DestroyWindow(SDL_Window* window);
+
 SDL_Palette* SDL_AllocPalette(int ncolors);
-int SDL_GetRendererOutputSize(SDL_Renderer* renderer,
-                              int*          w,
-                              int*          h);
-SDL_Surface* SDL_CreateRGBSurfaceWithFormat(Uint32 flags,
-                                            int    width,
-                                            int    height,
-                                            int    depth,
-                                            Uint32 format);
-void SDL_GetWindowSize(SDL_Window* window,
-                       int*        w,
-                       int*        h);
+
+int SDL_GetRendererOutputSize(SDL_Renderer* renderer, int* w, int* h);
+
+SDL_Surface* SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth, Uint32 format);
+
+void SDL_GetWindowSize(SDL_Window* window, int* w, int* h);
+
 SDL_Surface* SDL_GetWindowSurface(SDL_Window* window);
 
+int SDL_SetSurfacePalette(SDL_Surface* surface, SDL_Palette* palette);
 
-int SDL_SetSurfacePalette(SDL_Surface* surface,
-                          SDL_Palette* palette);
-int SDL_UpdateTexture(SDL_Texture*    texture,
-                      const SDL_Rect* rect,
-                      const void*     pixels,
-                      int             pitch);
+int SDL_UpdateTexture(SDL_Texture* texture, const SDL_Rect* rect, const void* pixels, int pitch);
 
 int SDL_RenderClear(SDL_Renderer* renderer);
 
-int SDL_RenderCopy(SDL_Renderer*   renderer,
-                   SDL_Texture*    texture,
-                   const SDL_Rect* srcrect,
-                   const SDL_Rect* dstrect);
+int SDL_RenderCopy(SDL_Renderer*   renderer, SDL_Texture* texture, const SDL_Rect* srcrect, const SDL_Rect* dstrect);
 
 void SDL_RenderPresent(SDL_Renderer* renderer);
+
 int SDL_UpdateWindowSurface(SDL_Window* window);
 
-SDL_Renderer* SDL_CreateRenderer(SDL_Window* window,
-                                 int         index,
-                                 Uint32      flags);
+SDL_Renderer* SDL_CreateRenderer(SDL_Window* window, int index, Uint32 flags);
 
-SDL_Texture* SDL_CreateTexture(SDL_Renderer* renderer,
-                               Uint32        format,
-                               int           access,
-                               int           w,
-                               int           h);
+SDL_Texture* SDL_CreateTexture(SDL_Renderer* renderer, Uint32 format, int access, int w, int h);
 
-int SDL_RenderSetLogicalSize(SDL_Renderer* renderer,
-                             int           w,
-                             int           h);
+int SDL_RenderSetLogicalSize(SDL_Renderer* renderer, int w, int h);
 
 
 
