@@ -9,6 +9,49 @@ Status | Platform
 
 ![Discord Channel](https://avatars3.githubusercontent.com/u/1965106?s=16&v=4) [Discord Chat Channel](https://discord.gg/aQBQdDe)
 
+
+# iOS build setup
+
+### Instructions from git
+
+Grab the iOS-arm64 branch from the github repo.
+
+```bash
+git clone git@github.com:richstoner/devilutionX.git --branch iOS-arm64
+```
+
+Grab the build dependencies (SDL2, SDL2_ttf, SDL2_mixer)
+
+```bash
+cd ./devliutionX/Xcode-iOS
+./fetch-dependencies.sh
+```
+
+### If you want to build and run in a simulator (iphone, ipad, etc)
+
+1. Checkout this tag
+
+```bash
+git checkout ios_simulator
+```
+
+2. Copy the ```diabdat.mpq``` into the ```devilutionX/Xcode-iOS/devilutionX``` folder. 
+
+3. Open ```devilutionX/Xcode-iOS/devilutionX.xcodeproj``` 
+
+4. Build all of the individual library targets (TODO: update the project to do this automatically)
+
+    PKWare, Radon, StormLib, devilution, libSDL-iOS, libSDL_ttf-iOS, libSDL_mixer-iOS
+
+5. Build and run devilutionX target
+
+
+
+
+## Additional information from the fork 
+
+---
+
 # How To Play:
  - Copy diabdat.mpq from your CD, or GoG install folder, to the DevilutionX game directory ; Make sure it is all lowercase.
  - [Download DevilutionX](https://github.com/diasurgical/devilutionX/releases), or build from source
@@ -22,7 +65,7 @@ Please keep in mind that this is still being worked on and is missing parts of U
 <details><summary>Linux</summary>
 
 ### Installing dependencies on Debian and Ubuntu
-```
+
 sudo apt-get install cmake g++-multilib libsdl2-mixer-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev libsodium-dev:i386
 ```
 ### Installing dependencies on Fedora

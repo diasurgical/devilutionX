@@ -1185,7 +1185,7 @@
 				PRODUCT_NAME = PKWare;
 				SECTORDER_FLAGS = "";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1199,9 +1199,10 @@
 		048870C698A54FF4AFE8416F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
-				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS/build";
+				SDKROOT = iphoneos;
+				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS/build";
 			};
 			name = Release;
 		};
@@ -1224,7 +1225,7 @@
 				PRODUCT_NAME = smacker;
 				SECTORDER_FLAGS = "";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1253,8 +1254,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					/Users/cobiro/devilutionX/Source,
-					/Users/cobiro/devilutionX/SourceS,
+					"${SOURCE_ROOT}/Source",
+					"${SOURCE_ROOT}/SourceS",
 				);
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
@@ -1280,7 +1281,7 @@
 				PRODUCT_NAME = devilution;
 				SECTORDER_FLAGS = "";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1294,9 +1295,10 @@
 		374BC6C5E0F345CBAD85AE67 /* RelWithDebInfo */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
-				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS/build";
+				SDKROOT = iphoneos;
+				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS/build";
 			};
 			name = RelWithDebInfo;
 		};
@@ -1323,7 +1325,7 @@
 				PRODUCT_NAME = PKWare;
 				SECTORDER_FLAGS = "";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1357,7 +1359,7 @@
 				PRODUCT_NAME = StormLib;
 				SECTORDER_FLAGS = "";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1391,7 +1393,7 @@
 				PRODUCT_NAME = StormLib;
 				SECTORDER_FLAGS = "";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1405,9 +1407,10 @@
 		5B2D27C5BA0B42FD9109A988 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
-				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS/build";
+				SDKROOT = iphoneos;
+				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS/build";
 			};
 			name = Debug;
 		};
@@ -1434,7 +1437,7 @@
 				PRODUCT_NAME = Radon;
 				SECTORDER_FLAGS = "";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS";
 				USE_HEADERMAP = NO;
 				VALID_ARCHS = x86_64;
 				WARNING_CFLAGS = (
@@ -1468,7 +1471,7 @@
 				PRODUCT_NAME = Radon;
 				SECTORDER_FLAGS = "";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS";
 				USE_HEADERMAP = NO;
 				VALID_ARCHS = x86_64;
 				WARNING_CFLAGS = (
@@ -1483,9 +1486,10 @@
 		73B42775D37D438585D38B03 /* MinSizeRel */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk;
-				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS/build";
+				SDKROOT = iphoneos;
+				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS/build";
 			};
 			name = MinSizeRel;
 		};
@@ -1508,7 +1512,7 @@
 				PRODUCT_NAME = smacker;
 				SECTORDER_FLAGS = "";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1537,8 +1541,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					/Users/cobiro/devilutionX/Source,
-					/Users/cobiro/devilutionX/SourceS,
+					"${SOURCE_ROOT}/Source",
+					"${SOURCE_ROOT}/SourceS",
 				);
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
@@ -1564,7 +1568,7 @@
 				PRODUCT_NAME = devilution;
 				SECTORDER_FLAGS = "";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1598,7 +1602,7 @@
 				PRODUCT_NAME = PKWare;
 				SECTORDER_FLAGS = "";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1631,7 +1635,7 @@
 				PRODUCT_NAME = PKWare;
 				SECTORDER_FLAGS = "";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1660,8 +1664,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					/Users/cobiro/devilutionX/Source,
-					/Users/cobiro/devilutionX/SourceS,
+					"${SOURCE_ROOT}/Source",
+					"${SOURCE_ROOT}/SourceS",
 				);
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
@@ -1687,7 +1691,7 @@
 				PRODUCT_NAME = devilution;
 				SECTORDER_FLAGS = "";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1717,7 +1721,7 @@
 				PRODUCT_NAME = smacker;
 				SECTORDER_FLAGS = "";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -1784,16 +1788,19 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					/Users/cobiro/devilutionX/SourceX,
-					/Users/cobiro/devilutionX/3rdParty/Radon/Radon/include,
-					/Users/cobiro/devilutionX/3rdParty/libsmacker,
-					/Users/cobiro/devilutionX/Source,
-					/Users/cobiro/devilutionX/SourceS,
+					"${SOURCE_ROOT}/SourceX",
+					"${SOURCE_ROOT}/3rdParty/Radon/Radon/include",
+					"${SOURCE_ROOT}/3rdParty/libsmacker",
+					"${SOURCE_ROOT}/Source",
+					"${SOURCE_ROOT}/SourceS",
+					"${SOURCE_ROOT}/SDL/include",
+					"${SOURCE_ROOT}/SDL2_ttf",
+					"${SOURCE_ROOT}/SDL2_mixer",
 				);
 				INFOPLIST_FILE = "Xcode-iOS/devilutionx/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks /Users/cobiro/devilutionX/Xcode-iOS/Debug-iphonesimulator";
-				LIBRARY_SEARCH_PATHS = "/Users/cobiro/devilutionX/Xcode-iOS/Debug-iphonesimulator";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "${SOURCE_ROOT}/Xcode-iOS/Debug-iphonesimulator";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = (
@@ -1805,7 +1812,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = diasurgical.devilutionx;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/include/SDL2 /usr/local/Cellar/libsodium/1.0.18/include";
+				SYSTEM_HEADER_SEARCH_PATHS = /usr/local/Cellar/libsodium/1.0.18/include;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1864,16 +1871,19 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					/Users/cobiro/devilutionX/SourceX,
-					/Users/cobiro/devilutionX/3rdParty/Radon/Radon/include,
-					/Users/cobiro/devilutionX/3rdParty/libsmacker,
-					/Users/cobiro/devilutionX/Source,
-					/Users/cobiro/devilutionX/SourceS,
+					"${SOURCE_ROOT}/SourceX",
+					"${SOURCE_ROOT}/3rdParty/Radon/Radon/include",
+					"${SOURCE_ROOT}/3rdParty/libsmacker",
+					"${SOURCE_ROOT}/Source",
+					"${SOURCE_ROOT}/SourceS",
+					"${SOURCE_ROOT}/SDL/include",
+					"${SOURCE_ROOT}/SDL2_ttf",
+					"${SOURCE_ROOT}/SDL2_mixer",
 				);
 				INFOPLIST_FILE = "Xcode-iOS/devilutionx/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks /Users/cobiro/devilutionX/Xcode-iOS/Debug-iphonesimulator";
-				LIBRARY_SEARCH_PATHS = "/Users/cobiro/devilutionX/Xcode-iOS/Debug-iphonesimulator";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "${SOURCE_ROOT}/Xcode-iOS/Debug-iphonesimulator";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = (
@@ -1885,7 +1895,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = diasurgical.devilutionx;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/include/SDL2 /usr/local/Cellar/libsodium/1.0.18/include";
+				SYSTEM_HEADER_SEARCH_PATHS = /usr/local/Cellar/libsodium/1.0.18/include;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1945,16 +1955,19 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					/Users/cobiro/devilutionX/SourceX,
-					/Users/cobiro/devilutionX/3rdParty/Radon/Radon/include,
-					/Users/cobiro/devilutionX/3rdParty/libsmacker,
-					/Users/cobiro/devilutionX/Source,
-					/Users/cobiro/devilutionX/SourceS,
+					"${SOURCE_ROOT}/SourceX",
+					"${SOURCE_ROOT}/3rdParty/Radon/Radon/include",
+					"${SOURCE_ROOT}/3rdParty/libsmacker",
+					"${SOURCE_ROOT}/Source",
+					"${SOURCE_ROOT}/SourceS",
+					"${SOURCE_ROOT}/SDL/include",
+					"${SOURCE_ROOT}/SDL2_ttf",
+					"${SOURCE_ROOT}/SDL2_mixer",
 				);
 				INFOPLIST_FILE = "Xcode-iOS/devilutionx/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks /Users/cobiro/devilutionX/Xcode-iOS/Debug-iphonesimulator";
-				LIBRARY_SEARCH_PATHS = "/Users/cobiro/devilutionX/Xcode-iOS/Debug-iphonesimulator";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "${SOURCE_ROOT}/Xcode-iOS/Debug-iphonesimulator";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = (
@@ -1966,7 +1979,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = diasurgical.devilutionx;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/include/SDL2 /usr/local/Cellar/libsodium/1.0.18/include";
+				SYSTEM_HEADER_SEARCH_PATHS = /usr/local/Cellar/libsodium/1.0.18/include;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2026,16 +2039,19 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					/Users/cobiro/devilutionX/SourceX,
-					/Users/cobiro/devilutionX/3rdParty/Radon/Radon/include,
-					/Users/cobiro/devilutionX/3rdParty/libsmacker,
-					/Users/cobiro/devilutionX/Source,
-					/Users/cobiro/devilutionX/SourceS,
+					"${SOURCE_ROOT}/SourceX",
+					"${SOURCE_ROOT}/3rdParty/Radon/Radon/include",
+					"${SOURCE_ROOT}/3rdParty/libsmacker",
+					"${SOURCE_ROOT}/Source",
+					"${SOURCE_ROOT}/SourceS",
+					"${SOURCE_ROOT}/SDL/include",
+					"${SOURCE_ROOT}/SDL2_ttf",
+					"${SOURCE_ROOT}/SDL2_mixer",
 				);
 				INFOPLIST_FILE = "Xcode-iOS/devilutionx/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks /Users/cobiro/devilutionX/Xcode-iOS/Debug-iphonesimulator";
-				LIBRARY_SEARCH_PATHS = "/Users/cobiro/devilutionX/Xcode-iOS/Debug-iphonesimulator";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "${SOURCE_ROOT}/Xcode-iOS/Debug-iphonesimulator";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = (
@@ -2047,7 +2063,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = diasurgical.devilutionx;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SYSTEM_HEADER_SEARCH_PATHS = "/usr/local/include/SDL2 /usr/local/Cellar/libsodium/1.0.18/include";
+				SYSTEM_HEADER_SEARCH_PATHS = /usr/local/Cellar/libsodium/1.0.18/include;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2071,8 +2087,8 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				HEADER_SEARCH_PATHS = (
-					/Users/cobiro/devilutionX/Source,
-					/Users/cobiro/devilutionX/SourceS,
+					"${SOURCE_ROOT}/Source",
+					"${SOURCE_ROOT}/SourceS",
 				);
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
@@ -2098,7 +2114,7 @@
 				PRODUCT_NAME = devilution;
 				SECTORDER_FLAGS = "";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -2131,7 +2147,7 @@
 				PRODUCT_NAME = StormLib;
 				SECTORDER_FLAGS = "";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -2161,7 +2177,7 @@
 				PRODUCT_NAME = smacker;
 				SECTORDER_FLAGS = "";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -2195,7 +2211,7 @@
 				PRODUCT_NAME = Radon;
 				SECTORDER_FLAGS = "";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS";
 				USE_HEADERMAP = NO;
 				VALID_ARCHS = x86_64;
 				WARNING_CFLAGS = (
@@ -2230,7 +2246,7 @@
 				PRODUCT_NAME = StormLib;
 				SECTORDER_FLAGS = "";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS";
 				USE_HEADERMAP = NO;
 				WARNING_CFLAGS = (
 					"-Wmost",
@@ -2264,7 +2280,7 @@
 				PRODUCT_NAME = Radon;
 				SECTORDER_FLAGS = "";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				SYMROOT = "/Users/cobiro/devilutionX/Xcode-iOS";
+				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS";
 				USE_HEADERMAP = NO;
 				VALID_ARCHS = x86_64;
 				WARNING_CFLAGS = (
