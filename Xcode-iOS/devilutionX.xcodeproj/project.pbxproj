@@ -93,7 +93,6 @@
 		CE2DB28622C7E4760053589E /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE2DB27722C7E1530053589E /* AudioToolbox.framework */; };
 		CE2DB28722C7E4910053589E /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE2DB27522C7E1490053589E /* CoreMotion.framework */; };
 		CE87417B12614559BDB13F1E /* towners.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9133F997060644F785B2ECAB /* towners.cpp */; };
-		CE8AF0AD22C81ADF001CC4F9 /* diabdat.mpq in Resources */ = {isa = PBXBuildFile; fileRef = CE8AF0A222C81ADF001CC4F9 /* diabdat.mpq */; };
 		CEDA267A22C7C058005B63C3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CEDA267922C7C058005B63C3 /* AppDelegate.m */; };
 		CEDA268022C7C058005B63C3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEDA267E22C7C058005B63C3 /* Main.storyboard */; };
 		CEDA268522C7C059005B63C3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEDA268322C7C059005B63C3 /* LaunchScreen.storyboard */; };
@@ -367,7 +366,6 @@
 		CE2DB28122C7E18A0053589E /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/GameController.framework; sourceTree = DEVELOPER_DIR; };
 		CE2DB28322C7E4040053589E /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = DEVELOPER_DIR; };
 		CE5DCC6F20684476BC504BA6 /* engine.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = engine.cpp; path = Source/engine.cpp; sourceTree = SOURCE_ROOT; };
-		CE8AF0A222C81ADF001CC4F9 /* diabdat.mpq */ = {isa = PBXFileReference; lastKnownFileType = file; name = diabdat.mpq; path = "Xcode-iOS/devilutionx/diabdat.mpq"; sourceTree = "<group>"; };
 		CEDA267622C7C058005B63C3 /* devilutionX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = devilutionX.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEDA267822C7C058005B63C3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		CEDA267922C7C058005B63C3 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -435,7 +433,6 @@
 		1F1D629A780440D3A5125242 = {
 			isa = PBXGroup;
 			children = (
-				CE8AF0A222C81ADF001CC4F9 /* diabdat.mpq */,
 				780A32EB066D4CB3BE2C6F27 /* devilution */,
 				9B523BBC58FF4C578C486DA2 /* StormLib */,
 				1AF62A932FAB4246A18F386F /* PKWare */,
@@ -836,6 +833,7 @@
 				TargetAttributes = {
 					CEDA267522C7C058005B63C3 = {
 						CreatedOnToolsVersion = 10.2.1;
+						DevelopmentTeam = EH6UZ23Q2R;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -926,7 +924,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE8AF0AD22C81ADF001CC4F9 /* diabdat.mpq in Resources */,
 				CEDA268522C7C059005B63C3 /* LaunchScreen.storyboard in Resources */,
 				CEDA268022C7C058005B63C3 /* Main.storyboard in Resources */,
 			);
@@ -1175,6 +1172,7 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-Wno-narrowing",
 					"-DNDEBUG",
@@ -1219,6 +1217,7 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "    -DNDEBUG  ";
 				OTHER_LIBTOOLFLAGS = " ";
 				OTHER_REZFLAGS = "";
@@ -1259,6 +1258,7 @@
 				);
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-Wno-narrowing",
 					"-DNDEBUG",
@@ -1315,6 +1315,7 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-Wno-narrowing",
 					"-DNDEBUG",
@@ -1349,6 +1350,7 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-Wno-narrowing",
 					"-DNDEBUG",
@@ -1383,6 +1385,7 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-Wno-narrowing",
 					"-DNDEBUG",
@@ -1427,6 +1430,7 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-Wno-narrowing",
 					"-DNDEBUG",
@@ -1435,11 +1439,12 @@
 				OTHER_LIBTOOLFLAGS = " ";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = Radon;
+				SDKROOT = iphoneos;
 				SECTORDER_FLAGS = "";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS";
 				USE_HEADERMAP = NO;
-				VALID_ARCHS = x86_64;
+				VALID_ARCHS = "arm7s arm7 arm64e arm64";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -1462,6 +1467,7 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-Wno-narrowing",
 					"'-std=c++14'",
@@ -1469,11 +1475,12 @@
 				OTHER_LIBTOOLFLAGS = " ";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = Radon;
+				SDKROOT = iphoneos;
 				SECTORDER_FLAGS = "";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS";
 				USE_HEADERMAP = NO;
-				VALID_ARCHS = x86_64;
+				VALID_ARCHS = "arm7s arm7 arm64e arm64";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -1506,6 +1513,7 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "       -DNDEBUG  ";
 				OTHER_LIBTOOLFLAGS = " ";
 				OTHER_REZFLAGS = "";
@@ -1546,6 +1554,7 @@
 				);
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-Wno-narrowing",
 					"-DNDEBUG",
@@ -1592,6 +1601,7 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-Wno-narrowing",
 					"-DNDEBUG",
@@ -1626,6 +1636,7 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-Wno-narrowing",
 					"'-std=c++14'",
@@ -1669,6 +1680,7 @@
 				);
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-Wno-narrowing",
 					"-DNDEBUG",
@@ -1715,6 +1727,7 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "    ";
 				OTHER_LIBTOOLFLAGS = " ";
 				OTHER_REZFLAGS = "";
@@ -1769,6 +1782,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = EH6UZ23Q2R;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1800,7 +1814,10 @@
 				INFOPLIST_FILE = "Xcode-iOS/devilutionx/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "${SOURCE_ROOT}/Xcode-iOS/Debug-iphonesimulator";
+				LIBRARY_SEARCH_PATHS = (
+					"${SOURCE_ROOT}/Xcode-iOS/Debug-iphonesimulator",
+					"${SOURCE_ROOT}/Xcode-iOS/Debug-iphoneos",
+				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = (
@@ -1854,6 +1871,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = EH6UZ23Q2R;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1883,7 +1901,10 @@
 				INFOPLIST_FILE = "Xcode-iOS/devilutionx/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "${SOURCE_ROOT}/Xcode-iOS/Debug-iphonesimulator";
+				LIBRARY_SEARCH_PATHS = (
+					"${SOURCE_ROOT}/Xcode-iOS/Debug-iphonesimulator",
+					"${SOURCE_ROOT}/Xcode-iOS/Debug-iphoneos",
+				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = (
@@ -1938,6 +1959,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = EH6UZ23Q2R;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1967,7 +1989,10 @@
 				INFOPLIST_FILE = "Xcode-iOS/devilutionx/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "${SOURCE_ROOT}/Xcode-iOS/Debug-iphonesimulator";
+				LIBRARY_SEARCH_PATHS = (
+					"${SOURCE_ROOT}/Xcode-iOS/Debug-iphonesimulator",
+					"${SOURCE_ROOT}/Xcode-iOS/Debug-iphoneos",
+				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = (
@@ -2022,6 +2047,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = EH6UZ23Q2R;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -2051,7 +2077,10 @@
 				INFOPLIST_FILE = "Xcode-iOS/devilutionx/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "${SOURCE_ROOT}/Xcode-iOS/Debug-iphonesimulator";
+				LIBRARY_SEARCH_PATHS = (
+					"${SOURCE_ROOT}/Xcode-iOS/Debug-iphonesimulator",
+					"${SOURCE_ROOT}/Xcode-iOS/Debug-iphoneos",
+				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_LDFLAGS = (
@@ -2092,6 +2121,7 @@
 				);
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-Wno-narrowing",
 					"'-fsanitize=address'",
@@ -2138,6 +2168,7 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-Wno-narrowing",
 					"'-std=c++14'",
@@ -2171,6 +2202,7 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "    -DNDEBUG  ";
 				OTHER_LIBTOOLFLAGS = " ";
 				OTHER_REZFLAGS = "";
@@ -2201,6 +2233,7 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-Wno-narrowing",
 					"-DNDEBUG",
@@ -2209,11 +2242,12 @@
 				OTHER_LIBTOOLFLAGS = " ";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = Radon;
+				SDKROOT = iphoneos;
 				SECTORDER_FLAGS = "";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS";
 				USE_HEADERMAP = NO;
-				VALID_ARCHS = x86_64;
+				VALID_ARCHS = "arm7s arm7 arm64e arm64";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",
@@ -2236,6 +2270,7 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-Wno-narrowing",
 					"-DNDEBUG",
@@ -2270,6 +2305,7 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INSTALL_PATH = "";
 				LIBRARY_STYLE = STATIC;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CPLUSPLUSFLAGS = (
 					"-Wno-narrowing",
 					"-DNDEBUG",
@@ -2278,11 +2314,12 @@
 				OTHER_LIBTOOLFLAGS = " ";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = Radon;
+				SDKROOT = iphoneos;
 				SECTORDER_FLAGS = "";
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SYMROOT = "${SOURCE_ROOT}/Xcode-iOS";
 				USE_HEADERMAP = NO;
-				VALID_ARCHS = x86_64;
+				VALID_ARCHS = "arm7s arm7 arm64e arm64";
 				WARNING_CFLAGS = (
 					"-Wmost",
 					"-Wno-four-char-constants",

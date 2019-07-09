@@ -10,7 +10,7 @@ Status | Platform
 ![Discord Channel](https://avatars3.githubusercontent.com/u/1965106?s=16&v=4) [Discord Chat Channel](https://discord.gg/aQBQdDe)
 
 
-# iOS build setup
+# iOS build setup - working as of 20190708
 
 ### Instructions from git
 
@@ -39,12 +39,33 @@ git checkout ios_simulator
 
 3. Open ```devilutionX/Xcode-iOS/devilutionX.xcodeproj``` 
 
-4. Build all of the individual library targets (TODO: update the project to do this automatically)
+4. Build all of the individual library targets (TODO: update the project to do this automatically) for a simulator
 
     PKWare, Radon, StormLib, devilution, libSDL-iOS, libSDL_ttf-iOS, libSDL_mixer-iOS
 
-5. Build and run devilutionX target
+5. Build and run devilutionX target for a simulator
 
+
+### If you want to build and run on device (iphone, ipad, etc)
+
+
+1. Checkout this tag 
+
+**This is one commit past the simulator code, they're not interchangable due to the path handling. TODO: Fix this.**
+
+```bash
+git checkout ios_device
+```
+ 
+2. Open ```devilutionX/Xcode-iOS/devilutionX.xcodeproj```
+
+3. In the devilution project, set up Team info in order to sign and deploy the app
+
+4. Build all of the individual library targets (TODO: update the project to do this automatically) for Generic iOS devices
+
+PKWare, Radon, StormLib, devilution, libSDL-iOS, libSDL_ttf-iOS, libSDL_mixer-iOS
+
+5. Build the devilutionX target for Generic iOS devices
 
 
 
