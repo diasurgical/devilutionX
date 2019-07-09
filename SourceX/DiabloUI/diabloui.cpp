@@ -249,7 +249,8 @@ bool UiFocusNavigation(SDL_Event *event)
 				if (SDL_GetModState() & KMOD_CTRL) {
 					char *clipboard = SDL_GetClipboardText();
 					if (clipboard == NULL) {
-						SDL_Log(SDL_GetError());
+						//klaus
+						//SDL_Log(SDL_GetError());
 					}
 					selhero_CatToName(clipboard, UiTextInput, UiTextInputLen);
 				}
@@ -263,10 +264,14 @@ bool UiFocusNavigation(SDL_Event *event)
 				return true;
 			}
 			break;
+
+			/*
 		case SDL_TEXTINPUT:
 			selhero_CatToName(event->text.text, UiTextInput, UiTextInputLen);
 			return true;
+			*/
 		}
+
 	}
 
 	if (gUiItems && gUiItemCnt && UiItemMouseEvents(event, gUiItems, gUiItemCnt))
@@ -786,10 +791,15 @@ bool UiItemMouseEvents(SDL_Event *event, UI_Item *items, int size)
 			if (items[i].caption != NULL && *items[i].caption != '\0') {
 				if (gfnListFocus != NULL && SelectedItem != items[i].value) {
 					UiFocus(items[i].value);
-				} else if (gfnListFocus == NULL || event->button.clicks >= 2) {
+
+				}
+				//klaus
+				/*
+				else if (gfnListFocus == NULL || event->button.clicks >= 2) {
 					SelectedItem = items[i].value;
 					UiFocusNavigationSelect();
 				}
+				*/
 			}
 
 			return true;

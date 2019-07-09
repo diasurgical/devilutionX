@@ -65,13 +65,17 @@ if(NOT CMAKE_SIZEOF_VOID_P EQUAL 4)
 endif()
 
 find_package(Threads REQUIRED)
-find_package(SDL CONFIG QUIET)
+# find_package(SDL CONFIG QUIET)
+find_package(SDL REQUIRED)
 if (NOT SDL_FOUND)
 	find_package(SDL REQUIRED)
 endif()
-find_package(SDL2_ttf REQUIRED)
-find_package(SDL2_mixer REQUIRED)
-find_package(sodium REQUIRED)
+find_package(SDL_ttf REQUIRED)
+find_package(SDL_mixer REQUIRED)
+#find_package(sodium REQUIRED)
+
+link_directories( /home/klaus/Sources/devilutionX/ )
+set(PROJECT_LINK_LIBS libSDL.so)
 
 add_library(smacker STATIC
   3rdParty/libsmacker/smk_bitstream.c
@@ -209,12 +213,15 @@ add_executable(devilutionx
   SourceX/DiabloUI/title.cpp
   SourceX/main.cpp)
 
-target_include_directories(devilution PUBLIC Source SourceS)
+target_include_directories(devilution PUBLIC Source SourceS )
+
 target_include_directories(devilutionx PRIVATE
   SourceX
   3rdParty/asio/include
   3rdParty/Radon/Radon/include
-  3rdParty/libsmacker)
+  3rdParty/libsmacker
+  ${SDL_INCLUDE_DIRS})
+
 
 target_link_libraries(devilution PUBLIC Threads::Threads)
 target_link_libraries(devilutionx PRIVATE
@@ -223,11 +230,17 @@ target_link_libraries(devilutionx PRIVATE
   StormLib
   smacker
   Radon
-  `sdl-config --libs`
-  #SDL2::SDL2main
-  #SDL2::SDL2_ttf
-  #SDL2::SDL2_mixer
-  sodium)
+  ${SDL_LIBRARY}
+  )
+  # ${PROJECT_SOURCE_DIR}/libSDLmain.a)
+  # /usr/lib/x86_64-linux-gnu/libSDLmain.a
+  # ${SDL_LIBRARY}
+  # `sdl-config --libs`
+  # ${`sdl-config --libs`}
+  # SDL2::SDL2main
+  # SDL2::SDL2_ttf
+  # SDL2::SDL2_mixer
+  # sodium)
 
 target_compile_definitions(devilution PRIVATE DEVILUTION_ENGINE)
 target_compile_definitions(devilution PUBLIC
