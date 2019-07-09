@@ -1,6 +1,8 @@
 #include <SDL/SDL.h>
 // #include <SDL/SDL_shape.h>
-
+#ifdef __cplusplus
+//extern "C" {
+#endif
 /*
  klaus
  make sdl1_wrapper.h & .cpp
@@ -304,6 +306,7 @@ enum
         SDL_DEFINE_PIXELFOURCC('O', 'E', 'S', ' ')
 };
 
+typedef struct SDL_Window SDL_Window;
 
 //typedef enum
 //{
@@ -375,9 +378,7 @@ typedef struct SDL_WindowShapeMode {
 
 // todo functions:
 // ==============
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 	
 void SDL_RenderGetViewport(SDL_Renderer* renderer, SDL_Rect* rect);
 void SDL_RenderGetScale(SDL_Renderer* renderer, float* scaleX, float* scaleY);
@@ -448,7 +449,7 @@ char* SDL_GetClipboardText(void);
 SDL_bool SDL_PointInRect(const SDL_Point* p, const SDL_Rect*  r);
 
 #ifdef __cplusplus
-}
+//}
 #endif
 
 

@@ -40,7 +40,7 @@ uintptr_t DVL_beginthreadex(void *_Security, unsigned _StackSize, unsigned (*_St
 	func_translate *ft = new func_translate;
 	ft->func = _StartAddress;
 	ft->arg = _ArgList;
-	SDL_Thread *ret = SDL_CreateThread(thread_translate, NULL, ft);
+	SDL_Thread *ret = SDL_CreateThread(thread_translate, NULL);
 	if (ret == NULL) {
 		//klaus
 		//SDL_Log(SDL_GetError());
