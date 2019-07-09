@@ -1826,7 +1826,7 @@
 					"-fsanitize=address",
 					"-fsanitize-recover=address",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = diasurgical.devilutionx;
+				PRODUCT_BUNDLE_IDENTIFIER = diasurgical.devilutionx.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SYSTEM_HEADER_SEARCH_PATHS = /usr/local/Cellar/libsodium/1.0.18/include;
@@ -1913,7 +1913,7 @@
 					"-fsanitize=address",
 					"-fsanitize-recover=address",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = diasurgical.devilutionx;
+				PRODUCT_BUNDLE_IDENTIFIER = diasurgical.devilutionx.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SYSTEM_HEADER_SEARCH_PATHS = /usr/local/Cellar/libsodium/1.0.18/include;
@@ -2001,7 +2001,7 @@
 					"-fsanitize=address",
 					"-fsanitize-recover=address",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = diasurgical.devilutionx;
+				PRODUCT_BUNDLE_IDENTIFIER = diasurgical.devilutionx.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SYSTEM_HEADER_SEARCH_PATHS = /usr/local/Cellar/libsodium/1.0.18/include;
@@ -2089,7 +2089,7 @@
 					"-fsanitize=address",
 					"-fsanitize-recover=address",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = diasurgical.devilutionx;
+				PRODUCT_BUNDLE_IDENTIFIER = diasurgical.devilutionx.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SYSTEM_HEADER_SEARCH_PATHS = /usr/local/Cellar/libsodium/1.0.18/include;

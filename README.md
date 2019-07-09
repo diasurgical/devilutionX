@@ -67,6 +67,23 @@ PKWare, Radon, StormLib, devilution, libSDL-iOS, libSDL_ttf-iOS, libSDL_mixer-iO
 
 5. Build the devilutionX target for Generic iOS devices
 
+Now here's where it gets messy: The SDL library needs to be modified to pass the path of the diabdat.mpq path to the SDL run loop
+
+    Replace the postFinishLaunch function at 339 of SDL.xcodeproject/Library Source/video/uikit/SDL_uiappkitdelegate.m with the contents of ```SDL_uikitappdelegate.delta.m```
+    
+This isn't present in the github repo as the SDL2 is pulled fresh from the libSDL2 source.
+
+6. Once modified, build and deploy to a mobile device.
+
+7. The app will start, but throw an error dialog stating that the diabdat.mpq is not present. Great!
+
+8. Open itunes, select the device, select 'File Sharing', locate the devilutionX app in the app list and select it. Drag and drop the ```diabdat.mpq``` here.
+
+9. Rebuild or restart the app. This should get you a running iOS build on device. 
+
+Tested on an iPad Pro 3. Working with full sound and save support. Works with the Pencil as well.
+
+
 
 
 ## Additional information from the fork 
