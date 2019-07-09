@@ -72,12 +72,9 @@ typedef Uint32 SDL_AudioDeviceID;
 typedef enum
 {
     SDL_RENDERER_SOFTWARE = 0x00000001,         /**< The renderer is a software fallback */
-    SDL_RENDERER_ACCELERATED = 0x00000002,      /**< The renderer uses hardware
-                                                     acceleration */
-    SDL_RENDERER_PRESENTVSYNC = 0x00000004,     /**< Present is synchronized
-                                                     with the refresh rate */
-    SDL_RENDERER_TARGETTEXTURE = 0x00000008     /**< The renderer supports
-                                                     rendering to texture */
+    SDL_RENDERER_ACCELERATED = 0x00000002,      /**< The renderer uses hardware acceleration */
+    SDL_RENDERER_PRESENTVSYNC = 0x00000004,     /**< Present is synchronized with the refresh rate */
+    SDL_RENDERER_TARGETTEXTURE = 0x00000008     /**< The renderer supports rendering to texture */
 } SDL_RendererFlags;
 
 typedef enum
@@ -375,62 +372,6 @@ typedef struct SDL_WindowShapeMode {
     SDL_WindowShapeParams parameters;
 } SDL_WindowShapeMode;
 
-struct SDL_Window {
-    const void *magic;
-    Uint32 id;
-    char *title;
-    SDL_Surface *icon;
-    int x, y;
-    int w, h;
-    int min_w, min_h;
-    int max_w, max_h;
-    Uint32 flags;
-    Uint32 last_fullscreen_flags;
-
-    /* Stored position and size for windowed mode */
-    SDL_Rect windowed;
-
-    SDL_DisplayMode fullscreen_mode;
-
-    float brightness;
-    Uint16 *gamma;
-    Uint16 *saved_gamma;        /* (just offset into gamma) */
-
-    SDL_Surface *surface;
-    SDL_bool surface_valid;
-
-    SDL_bool is_hiding;
-    SDL_bool is_destroying;
-
-    SDL_WindowShaper *shaper;
-
-    SDL_HitTest hit_test;
-    void *hit_test_data;
-
-    SDL_WindowUserData *data;
-
-    void *driverdata;
-
-    SDL_Window *prev;
-    SDL_Window *next;
-};
-
-struct SDL_WindowShaper {
-    /* The window associated with the shaper */
-    SDL_Window *window;
-
-    /* The user's specified coordinates for the window, for once we give it a shape. */
-    Uint32 userx,usery;
-
-    /* The parameters for shape calculation. */
-    SDL_WindowShapeMode mode;
-
-    /* Has this window been assigned a shape? */
-    SDL_bool hasshape;
-
-    void *driverdata;
-};
-
 
 // todo functions:
 // ==============
@@ -439,95 +380,50 @@ extern "C" {
 #endif
 	
 void SDL_RenderGetViewport(SDL_Renderer* renderer, SDL_Rect* rect);
-
 void SDL_RenderGetScale(SDL_Renderer* renderer, float* scaleX, float* scaleY);
-
 void SDL_WarpMouseInWindow(SDL_Window* window, int x, int y);
-
 void SDL_Log(const char* fmt);
-
 void SDL_SetWindowTitle(SDL_Window* window, const char* title);
-
 char* SDL_GetPrefPath(const char* org, const char* app);
-
 const Uint8* SDL_GetKeyboardState(int* numkeys);
-
 typedef int (SDLCALL * SDL_ThreadFunction) (void *data);
-
 SDL_Thread* SDL_CreateThread(SDL_ThreadFunction fn, const char* name, void* data);
-
 char* SDL_GetBasePath(void);
-
 void SDL_EnableScreenSaver(void);
-
 void SDL_DisableScreenSaver(void);
-
 int SDL_SetWindowInputFocus(SDL_Window* window);
-
 SDL_bool SDL_SetHint(const char* name, const char* value);
-
 void SDL_ShowWindow(SDL_Window* window);
-
 int SDL_GetCurrentDisplayMode(int displayIndex, SDL_DisplayMode* mode);
-
 void SDL_GetWindowPosition(SDL_Window* window,  int* x, int* y);
-
 int SDL_ShowSimpleMessageBox(Uint32      flags, const char* title, const char* message, SDL_Window* window);
-
 SDL_bool SDL_IsScreenSaverEnabled(void);
-
 void SDL_HideWindow(SDL_Window* window);
-
 SDL_Window* SDL_CreateWindow(const char* title, int x, int y, int w, int h, Uint32 flags);
-
 void SDL_FreePalette(SDL_Palette* palette);
-
 void SDL_DestroyTexture(SDL_Texture* texture);
-
 void SDL_DestroyRenderer(SDL_Renderer* renderer);
-
 void SDL_DestroyWindow(SDL_Window* window);
-
 SDL_Palette* SDL_AllocPalette(int ncolors);
-
 int SDL_GetRendererOutputSize(SDL_Renderer* renderer, int* w, int* h);
-
 SDL_Surface* SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth, Uint32 format);
-
 void SDL_GetWindowSize(SDL_Window* window, int* w, int* h);
-
 SDL_Surface* SDL_GetWindowSurface(SDL_Window* window);
-
 int SDL_SetSurfacePalette(SDL_Surface* surface, SDL_Palette* palette);
-
 int SDL_UpdateTexture(SDL_Texture* texture, const SDL_Rect* rect, const void* pixels, int pitch);
-
 int SDL_RenderClear(SDL_Renderer* renderer);
-
 int SDL_RenderCopy(SDL_Renderer*   renderer, SDL_Texture* texture, const SDL_Rect* srcrect, const SDL_Rect* dstrect);
-
 void SDL_RenderPresent(SDL_Renderer* renderer);
-
 int SDL_UpdateWindowSurface(SDL_Window* window);
-
 SDL_Renderer* SDL_CreateRenderer(SDL_Window* window, int index, Uint32 flags);
-
 SDL_Texture* SDL_CreateTexture(SDL_Renderer* renderer, Uint32 format, int access, int w, int h);
-
 int SDL_RenderSetLogicalSize(SDL_Renderer* renderer, int w, int h);
-
 int SDL_SetRenderDrawColor(SDL_Renderer* renderer,  Uint8 r, Uint8 g, Uint8 b, Uint8 a);
-
 Uint32 SDL_GetWindowPixelFormat(SDL_Window* window);
-
 SDL_Surface* SDL_ConvertSurfaceFormat(SDL_Surface* src, Uint32 pixel_format, Uint32 flags);
-
 int SDL_BlitScaled(SDL_Surface* src, const SDL_Rect* srcrect, SDL_Surface* dst, SDL_Rect* dstrect);
-
 void SDL_ClearQueuedAudio(SDL_AudioDeviceID dev);
-
 void SDL_PauseAudioDevice(SDL_AudioDeviceID dev, int pause_on);
-
 
 SDL_AudioDeviceID SDL_OpenAudioDevice(const char* device, int iscapture,
 									  const SDL_AudioSpec* desired,
@@ -535,7 +431,6 @@ SDL_AudioDeviceID SDL_OpenAudioDevice(const char* device, int iscapture,
                                       int                  allowed_changes);
 
 int SDL_SetPaletteColors(SDL_Palette* palette, const SDL_Color* colors, int firstcolor, int ncolors);
-
 void SDL_CloseAudioDevice(SDL_AudioDeviceID dev);
 
 SDL_Surface* SDL_CreateRGBSurfaceWithFormatFrom(void*  pixels,
@@ -546,15 +441,10 @@ SDL_Surface* SDL_CreateRGBSurfaceWithFormatFrom(void*  pixels,
                                                 Uint32 format);
 
 void SDL_SetWindowPosition(SDL_Window* window, int x, int y);
-
 void SDL_StopTextInput(void);
-
 void SDL_StartTextInput(void);
-
 SDL_bool SDL_IsTextInputActive(void);
-
 char* SDL_GetClipboardText(void);
-
 SDL_bool SDL_PointInRect(const SDL_Point* p, const SDL_Rect*  r);
 
 #ifdef __cplusplus
