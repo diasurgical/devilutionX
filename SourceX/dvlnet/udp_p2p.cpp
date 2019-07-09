@@ -1,6 +1,6 @@
 #include "dvlnet/udp_p2p.h"
 
-#include <SDL.h>
+#include <SDL/SDL.h>
 
 namespace dvl {
 namespace net {

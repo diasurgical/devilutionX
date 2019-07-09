@@ -56,6 +56,13 @@
 
 #define SDL_zero(x) SDL_memset(&(x), 0, sizeof((x)))
 
+#define SDL_TEXTINPUTEVENT_TEXT_SIZE (32)
+
+
+
+//#define SDL_Renderer SDL_Surface
+#define SDL_Texture SDL_Surface
+
 //klaus
 // #define SDL_QueueAudio SDL_QueueAudio_REAL
 #define SDL_QueueAudio 0
@@ -300,6 +307,33 @@ enum
         SDL_DEFINE_PIXELFOURCC('O', 'E', 'S', ' ')
 };
 
+
+//typedef enum
+//{
+//
+//} SDL_EventType;
+
+typedef struct SDL_Point
+{
+    int x;
+    int y;
+} SDL_Point;
+
+//typedef struct SDL_MouseButtonEvent
+//{
+//    Uint32 type;        /**< ::SDL_MOUSEBUTTONDOWN or ::SDL_MOUSEBUTTONUP */
+//    Uint32 timestamp;   /**< In milliseconds, populated using SDL_GetTicks() */
+//    Uint32 windowID;    /**< The window with mouse focus, if any */
+//    Uint32 which;       /**< The mouse instance id, or SDL_TOUCH_MOUSEID */
+//    Uint8 button;       /**< The mouse button index */
+//    Uint8 state;        /**< ::SDL_PRESSED or ::SDL_RELEASED */
+//    Uint8 clicks;       /**< 1 for single-click, 2 for double-click, etc. */
+//    Uint8 padding1;
+//    Sint32 x;           /**< X coordinate, relative to window */
+//    Sint32 y;           /**< Y coordinate, relative to window */
+//} SDL_MouseButtonEvent;
+
+
 // todo structs:
 // ============
 
@@ -309,7 +343,7 @@ struct SDL_DisplayMode {int h; int w;};
 struct SDL_HitTest {};
 struct SDL_WindowUserData {};
 struct SDL_Renderer {};
-struct SDL_Texture {};
+// struct SDL_Texture {};
 
 
 // done:
@@ -507,6 +541,21 @@ SDL_Surface* SDL_CreateRGBSurfaceWithFormatFrom(void*  pixels,
                                                 int    depth,
                                                 int    pitch,
                                                 Uint32 format);
+
+void SDL_SetWindowPosition(SDL_Window* window, int x, int y);
+
+void SDL_StopTextInput(void);
+
+void SDL_StartTextInput(void);
+
+SDL_bool SDL_IsTextInputActive(void);
+
+char* SDL_GetClipboardText(void);
+
+SDL_bool SDL_PointInRect(const SDL_Point* p, const SDL_Rect*  r);
+
+
+
 
 
 

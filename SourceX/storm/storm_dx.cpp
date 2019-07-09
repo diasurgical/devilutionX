@@ -32,12 +32,14 @@ BOOL SDrawUpdatePalette(unsigned int firstentry, unsigned int numentries, PALETT
 		c->r = p->peRed;
 		c->g = p->peGreen;
 		c->b = p->peBlue;
-		c->a = SDL_ALPHA_OPAQUE;
+		c->unused = SDL_ALPHA_OPAQUE;
 	}
 
 	assert(palette);
 	if (SDL_SetPaletteColors(palette, colors, firstentry, numentries) <= -1) {
-		SDL_Log(SDL_GetError());
+
+		//klaus
+		//SDL_Log(SDL_GetError());
 		return false;
 	}
 

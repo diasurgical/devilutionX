@@ -563,7 +563,7 @@ BOOL SVidPlayContinue(void)
 			colors[i].r = palette_data[i * 3 + 0];
 			colors[i].g = palette_data[i * 3 + 1];
 			colors[i].b = palette_data[i * 3 + 2];
-			colors[i].a = SDL_ALPHA_OPAQUE;
+			colors[i].unused = SDL_ALPHA_OPAQUE;
 
 			orig_palette[i].peFlags = 0;
 			orig_palette[i].peRed = palette_data[i * 3 + 0];
@@ -582,10 +582,13 @@ BOOL SVidPlayContinue(void)
 		return SVidLoadNextFrame(); // Skip video and audio if the system is to slow
 	}
 
+	//klaus
+	/*
 	if (deviceId && SDL_QueueAudio(deviceId, smk_get_audio(SVidSMK, 0), smk_get_audio_size(SVidSMK, 0)) <= -1) {
 		SDL_Log(SDL_GetError());
 		return false;
 	}
+	*/
 
 	if (SDL_GetTicks() * 1000 >= SVidFrameEnd) {
 		return SVidLoadNextFrame(); // Skip video if the system is to slow
@@ -593,7 +596,8 @@ BOOL SVidPlayContinue(void)
 
 	if (renderer) {
 		if (SDL_BlitSurface(SVidSurface, NULL, surface, NULL) <= -1) {
-			SDL_Log(SDL_GetError());
+			//klaus
+			//SDL_Log(SDL_GetError());
 			return false;
 		}
 	} else {
@@ -612,7 +616,8 @@ BOOL SVidPlayContinue(void)
 		Uint32 format = SDL_GetWindowPixelFormat(window);
 		SDL_Surface *tmp = SDL_ConvertSurfaceFormat(SVidSurface, format, 0);
 		if (SDL_BlitScaled(tmp, NULL, surface, &pal_surface_offset) <= -1) {
-			SDL_Log(SDL_GetError());
+			//klaus
+			//SDL_Log(SDL_GetError());
 			return false;
 		}
 		SDL_FreeSurface(tmp);
@@ -656,10 +661,12 @@ BOOL SVidPlayEnd(HANDLE video)
 		SDL_DestroyTexture(texture);
 		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
 		if (texture == NULL) {
-			SDL_Log(SDL_GetError());
+			//klaus
+			//SDL_Log(SDL_GetError());
 		}
 		if (renderer && SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT) <= -1) {
-			SDL_Log(SDL_GetError());
+			//klaus
+			//SDL_Log(SDL_GetError());
 		}
 	}
 

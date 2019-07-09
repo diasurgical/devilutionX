@@ -184,20 +184,20 @@ add_executable(devilutionx
   SourceX/miniwin/misc_dx.cpp
   SourceX/miniwin/rand.cpp
   SourceX/miniwin/thread.cpp
-  SourceX/miniwin/dsound.cpp
+#  SourceX/miniwin/dsound.cpp
   SourceX/miniwin/ddraw.cpp
-  SourceX/sound.cpp
+#  SourceX/sound.cpp
   SourceX/storm/storm.cpp
   SourceX/storm/storm_net.cpp
   SourceX/storm/storm_dx.cpp
-  SourceX/dvlnet/abstract_net.cpp
-  SourceX/dvlnet/loopback.cpp
-  SourceX/dvlnet/packet.cpp
-  SourceX/dvlnet/base.cpp
-  SourceX/dvlnet/frame_queue.cpp
-  SourceX/dvlnet/tcp_client.cpp
-  SourceX/dvlnet/tcp_server.cpp
-  SourceX/dvlnet/udp_p2p.cpp
+#   SourceX/dvlnet/abstract_net.cpp
+#   SourceX/dvlnet/loopback.cpp
+#   SourceX/dvlnet/packet.cpp
+#   SourceX/dvlnet/base.cpp
+#   SourceX/dvlnet/frame_queue.cpp
+#   SourceX/dvlnet/tcp_client.cpp
+#   SourceX/dvlnet/tcp_server.cpp
+#   SourceX/dvlnet/udp_p2p.cpp
   SourceX/DiabloUI/credits.cpp
   SourceX/DiabloUI/diabloui.cpp
   SourceX/DiabloUI/dialogs.cpp
