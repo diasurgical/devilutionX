@@ -1,7 +1,7 @@
 #include "devilution.h"
 #include "stubs.h"
-#include <SDL.h>
-#include <SDL_mixer.h>
+#include <SDL/SDL.h>
+#include <SDL/SDL_mixer.h>
 
 namespace dvl {
 
@@ -489,9 +489,12 @@ void music_start(int nTrack)
 
 			musicRw = SDL_RWFromConstMem(musicBuffer, bytestoread);
 			if (musicRw == NULL) {
-				SDL_Log(SDL_GetError());
+				//klaus
+				//SDL_Log(SDL_GetError());
 			}
-			music = Mix_LoadMUS_RW(musicRw, 1);
+			//klaus
+			//music = Mix_LoadMUS_RW(musicRw, 1);
+			music = Mix_LoadMUS_RW(musicRw);
 			Mix_VolumeMusic(MIX_MAX_VOLUME - MIX_MAX_VOLUME * sglMusicVolume / VOLUME_MIN);
 			Mix_PlayMusic(music, -1);
 

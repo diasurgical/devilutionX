@@ -1,4 +1,4 @@
-#include <SDL.h>
+#include <SDL/SDL.h>
 
 #include "devilution.h"
 #include "miniwin/ddraw.h"

@@ -2,10 +2,11 @@
 #include "miniwin/ddraw.h"
 #include "stubs.h"
 #include <Radon.hpp>
-#include <SDL.h>
-#include <SDL_endian.h>
-#include <SDL_mixer.h>
+#include <SDL/SDL.h>
+#include <SDL/SDL_endian.h>
+#include <SDL/SDL_mixer.h>
 #include <smacker.h>
+#include "../SourceS/miniwin/misc.h"
 
 #include "DiabloUI/diabloui.h"
 
