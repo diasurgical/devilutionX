@@ -212,7 +212,7 @@ static int translate_sdl_key(SDL_Keysym key)
 	//case SDLK_HELP:
 	//	return DVL_VK_FOO;
 	case SDLK_MENU:
-		return DVL_VK_RMENU;
+		return DVL_VK_MENU;
 	//case SDLK_SELECT:
 	//	return DVL_VK_FOO;
 	//case SDLK_STOP:
