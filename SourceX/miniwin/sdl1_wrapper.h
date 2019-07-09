@@ -434,7 +434,10 @@ struct SDL_WindowShaper {
 
 // todo functions:
 // ==============
-
+#ifdef __cplusplus
+extern "C" {
+#endif
+	
 void SDL_RenderGetViewport(SDL_Renderer* renderer, SDL_Rect* rect);
 
 void SDL_RenderGetScale(SDL_Renderer* renderer, float* scaleX, float* scaleY);
@@ -554,7 +557,9 @@ char* SDL_GetClipboardText(void);
 
 SDL_bool SDL_PointInRect(const SDL_Point* p, const SDL_Rect*  r);
 
-
+#ifdef __cplusplus
+}
+#endif
 
 
 
