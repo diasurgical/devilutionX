@@ -1,5 +1,47 @@
 #include <SDL/SDL.h>
 
+
+/*
+ klaus
+ make sdl1_wrapper.h & .cpp
+ redefine sdl2 datatypes with sdl1 structs,
+ redefine sdl2 functions in sdl1
+ and link the include to everywhere needed.
+
+
+ needed datatypes:
+ ----------------
+ SDL_Window
+ SDL_Renderer
+ SDL_Texture
+ SDL_WindowUserData
+ SDL_WindowShaper
+ SDL_DisplayMode
+ SDL_HitTest
+
+
+ needed functions:
+ -----------------
+ SDL_WarpMouseInWindow(window, X, Y);
+ SDL_RenderGetViewport(*renderer, SDL_Rect );
+ SDL_RenderGetScale(*renderer, float, NULL );
+ SDL_Log(SDL_GetError());
+ SDL_SetWindowTitle(window, const *char);
+ */
+
+
+// todo structs:
+// ============
+struct SDL_DisplayMode {};
+struct SDL_WindowShaper {};
+struct SDL_HitTest {};
+struct SDL_WindowUserData {};
+struct SDL_Renderer {};
+struct SDL_Texture {};
+
+
+// done:
+// =====
 struct SDL_Window
 {
     const void *magic;
@@ -40,24 +82,18 @@ struct SDL_Window
     SDL_Window *prev;
     SDL_Window *next;
 };
-struct SDL_Renderer {};
-struct SDL_Texture {};
 
 
-extern SDL_Window *window;
-extern SDL_Renderer *renderer;
-extern SDL_Texture *texture;
 
-/*
- * klaus
- * make sdl1_wrapper.h & .cpp
- * make structs for sdl2 datatypes and
- * redefine functions
- * and link the include to everywhere needed
- */
-int SDL_WarpMouseInWindow(*window);
-int SDL_RenderGetViewport(*renderer );
-int SDL_RenderGetScale(*renderer );
-int SDL_Log(*renderer);
-int SDL_SetWindowTitle(*renderer);
+// todo functions:
+// ==============
+extern SDL_Window *dummy;
+int SDL_WarpMouseInWindow(*dummy);
+int SDL_RenderGetViewport(*dummy );
+int SDL_RenderGetScale(*dummy );
+int SDL_Log(*dummy);
+int SDL_SetWindowTitle(*dummy);
+
+
+
 
