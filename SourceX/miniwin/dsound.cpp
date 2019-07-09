@@ -1,7 +1,10 @@
 #include "devilution.h"
 #include "miniwin/dsound.h"
 #include "stubs.h"
-#include <SDL.h>
+#include <SDL/SDL.h>
+#include "../SourceS/miniwin/misc.h"
+#include "sdl1_wrapper.h"
+
 
 namespace dvl {
 

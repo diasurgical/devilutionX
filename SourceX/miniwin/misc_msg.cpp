@@ -3,6 +3,8 @@
 
 #include "devilution.h"
 #include "stubs.h"
+#include "sdl1_wrapper.h"
+#include "../SourceS/miniwin/misc.h"
 
 /** @file
  * *
@@ -13,6 +15,7 @@ namespace dvl {
 
 static std::deque<MSG> message_queue;
 
+/* klaus
 static int translate_sdl_key(SDL_Keysym key)
 {
 	int sym = key.sym;
@@ -86,12 +89,14 @@ static int translate_sdl_key(SDL_Keysym key)
 		return -1;
 	}
 }
+*/
 
 static WPARAM keystate_for_mouse(WPARAM ret)
 {
 	const Uint8 *keystate = SDL_GetKeyboardState(NULL);
-	ret |= keystate[SDL_SCANCODE_LSHIFT] ? DVL_MK_SHIFT : 0;
-	ret |= keystate[SDL_SCANCODE_RSHIFT] ? DVL_MK_SHIFT : 0;
+	//klaus
+	//ret |= keystate[SDL_SCANCODE_LSHIFT] ? DVL_MK_SHIFT : 0;
+	//ret |= keystate[SDL_SCANCODE_RSHIFT] ? DVL_MK_SHIFT : 0;
 	// XXX: other DVL_MK_* codes not implemented
 	return ret;
 }
@@ -141,7 +146,9 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		break;
 	case SDL_KEYDOWN:
 	case SDL_KEYUP: {
-		int key = translate_sdl_key(e.key.keysym);
+		//klaus
+		//int key = translate_sdl_key(e.key.keysym);
+		int key = 0;
 		if (key == -1)
 			return false_avail();
 		lpMsg->message = e.type == SDL_KEYDOWN ? DVL_WM_KEYDOWN : DVL_WM_KEYUP;
@@ -182,6 +189,9 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 			return false_avail();
 		}
 	} break;
+
+	/*
+	 klaus
 	case SDL_TEXTINPUT:
 	case SDL_WINDOWEVENT:
 		if (e.window.event == SDL_WINDOWEVENT_CLOSE) {
@@ -190,6 +200,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 			return false_avail();
 		}
 		break;
+	*/
 	default:
 		DUMMY_PRINT("unknown SDL message 0x%X", e.type);
 		return false_avail();

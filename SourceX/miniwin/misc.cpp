@@ -3,7 +3,9 @@
 #include "stubs.h"
 #include <SDL/SDL.h>
 #include <string>
-
+#include "../SourceS/miniwin/misc.h"
+#include "../SourceS/miniwin/com.h"
+//#include "sdl1_wrapper.h"
 #include "DiabloUI/diabloui.h"
 
 #ifdef _MSC_VER
@@ -200,7 +202,8 @@ DWORD GetCurrentDirectory(DWORD nBufferLength, LPTSTR lpBuffer)
 {
 	char *base_path = SDL_GetBasePath();
 	if (base_path == NULL) {
-		SDL_Log(SDL_GetError());
+		//klaus
+		//SDL_Log(SDL_GetError());
 		base_path = SDL_strdup("./");
 	}
 	eprintf("BasePath: %s\n", base_path);
@@ -291,7 +294,8 @@ WINBOOL SetForegroundWindow(HWND hWnd)
 HWND SetFocus(HWND hWnd)
 {
 	if (SDL_SetWindowInputFocus(window) <= -1) {
-		SDL_Log(SDL_GetError());
+		//klaus
+		//SDL_Log(SDL_GetError());
 	}
 	MainWndProc(NULL, DVL_WM_ACTIVATEAPP, true, 0); // SDL_WINDOWEVENT_FOCUS_GAINED
 	return NULL;
@@ -323,7 +327,8 @@ HWND CreateWindowExA(
     LPVOID lpParam)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) <= -1) {
-		SDL_Log(SDL_GetError());
+		//klaus
+		//SDL_Log(SDL_GetError());
 		return NULL;
 	}
 	atexit(SDL_Quit);
@@ -349,25 +354,30 @@ HWND CreateWindowExA(
 		flags |= SDL_WINDOW_INPUT_GRABBED;
 	}
 
+
 	window = SDL_CreateWindow(lpWindowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, nWidth, nHeight, flags);
 	if (window == NULL) {
-		SDL_Log(SDL_GetError());
+		//klaus
+		//SDL_Log(SDL_GetError());
 	}
 	atexit(FakeWMDestroy);
 
 	if (upscale) {
 		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
 		if (renderer == NULL) {
-			SDL_Log(SDL_GetError());
+			//klaus
+			//SDL_Log(SDL_GetError());
 		}
 
 		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, nWidth, nHeight);
 		if (texture == NULL) {
-			SDL_Log(SDL_GetError());
+			//klaus
+			//SDL_Log(SDL_GetError());
 		}
 
 		if (SDL_RenderSetLogicalSize(renderer, nWidth, nHeight) <= -1) {
-			SDL_Log(SDL_GetError());
+			//klaus
+			//SDL_Log(SDL_GetError());
 		}
 	}
 

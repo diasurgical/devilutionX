@@ -5,6 +5,7 @@
 #include "../SourceS/miniwin/misc.h"
 
 
+
 namespace dvl {
 
 
@@ -32,7 +33,8 @@ WINBOOL SetCursorPos(int X, int Y)
 int ShowCursor(WINBOOL bShow)
 {
 	if (SDL_ShowCursor(bShow ? SDL_ENABLE : SDL_DISABLE) <= -1) {
-		SDL_Log(SDL_GetError());
+		//klaus
+		//SDL_Log(SDL_GetError());
 	}
 
 	return bShow;

@@ -1,8 +1,8 @@
 #include "devilution.h"
 #include "miniwin/ddraw.h"
 #include "stubs.h"
-#include <SDL.h>
-
+#include <SDL/SDL.h>
+#include "../SourceS/miniwin/misc.h"
 #include "DiabloUI/diabloui.h"
 
 namespace dvl {
