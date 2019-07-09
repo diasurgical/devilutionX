@@ -15,68 +15,414 @@ static std::deque<MSG> message_queue;
 
 static int translate_sdl_key(SDL_Keysym key)
 {
+	// ref: https://wiki.libsdl.org/SDL_Keycode
+	// ref: https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
 	int sym = key.sym;
 	switch (sym) {
-	case SDLK_ESCAPE:
-		return DVL_VK_ESCAPE;
-	case SDLK_RETURN:
-	case SDLK_KP_ENTER:
-		return DVL_VK_RETURN;
-	case SDLK_TAB:
-		return DVL_VK_TAB;
-	case SDLK_SPACE:
-		return DVL_VK_SPACE;
 	case SDLK_BACKSPACE:
 		return DVL_VK_BACK;
-
-	case SDLK_DOWN:
-		return DVL_VK_DOWN;
-	case SDLK_LEFT:
-		return DVL_VK_LEFT;
-	case SDLK_RIGHT:
-		return DVL_VK_RIGHT;
-	case SDLK_UP:
-		return DVL_VK_UP;
-
-	case SDLK_PAGEUP:
-		return DVL_VK_PRIOR;
-	case SDLK_PAGEDOWN:
-		return DVL_VK_NEXT;
-
-	case SDLK_PAUSE:
-		return DVL_VK_PAUSE;
-
+	case SDLK_TAB:
+		return DVL_VK_TAB;
+	case SDLK_RETURN:
+		return DVL_VK_RETURN;
+	case SDLK_ESCAPE:
+		return DVL_VK_ESCAPE;
+	case SDLK_SPACE:
+		return DVL_VK_SPACE;
+	//case SDLK_EXCLAIM:
+	//	return DVL_VK_FOO;
+	//case SDLK_QUOTEDBL:
+	//	return DVL_VK_FOO;
+	//case SDLK_HASH:
+	//	return DVL_VK_FOO;
+	//case SDLK_DOLLAR:
+	//	return DVL_VK_FOO;
+	//case SDLK_PERCENT:
+	//	return DVL_VK_FOO;
+	//case SDLK_AMPERSAND:
+	//	return DVL_VK_FOO;
+	case SDLK_QUOTE:
+		return DVL_VK_OEM_7;
+	//case SDLK_LEFTPAREN:
+	//	return DVL_VK_FOO;
+	//case SDLK_RIGHTPAREN:
+	//	return DVL_VK_FOO;
+	//case SDLK_ASTERISK:
+	//	return DVL_VK_FOO;
+	//case SDLK_PLUS:
+	//	return DVL_VK_FOO;
+	case SDLK_COMMA:
+		return DVL_VK_OEM_COMMA;
+	case SDLK_MINUS:
+		return DVL_VK_OEM_MINUS;
+	case SDLK_PERIOD:
+		return DVL_VK_OEM_PERIOD;
+	case SDLK_SLASH:
+		return DVL_VK_OEM_2;
+	//case SDLK_COLON:
+	//	return DVL_VK_FOO;
 	case SDLK_SEMICOLON:
 		return DVL_VK_OEM_1;
-	case SDLK_QUESTION:
-		return DVL_VK_OEM_2;
-	case SDLK_BACKQUOTE:
-		return DVL_VK_OEM_3;
+	//case SDLK_LESS:
+	//	return DVL_VK_FOO;
+	case SDLK_EQUALS:
+		return DVL_VK_OEM_PLUS;
+	//case SDLK_GREATER:
+	//	return DVL_VK_FOO;
+	//case SDLK_QUESTION:
+	//	return DVL_VK_FOO;
+	//case SDLK_AT:
+	//	return DVL_VK_FOO;
 	case SDLK_LEFTBRACKET:
 		return DVL_VK_OEM_4;
 	case SDLK_BACKSLASH:
 		return DVL_VK_OEM_5;
 	case SDLK_RIGHTBRACKET:
 		return DVL_VK_OEM_6;
-	case SDLK_QUOTE:
-		return DVL_VK_OEM_7;
-	case SDLK_MINUS:
-	case SDLK_KP_MINUS:
-		return DVL_VK_OEM_MINUS;
-	case SDLK_PLUS:
-	case SDLK_EQUALS:
-	case SDLK_KP_PLUS:
-		return DVL_VK_OEM_PLUS;
-	case SDLK_PERIOD:
-		return DVL_VK_OEM_PERIOD;
-	case SDLK_COMMA:
-		return DVL_VK_OEM_COMMA;
-	case SDLK_LSHIFT:
-	case SDLK_RSHIFT:
-		return DVL_VK_SHIFT;
+	//case SDLK_CARET:
+	//	return DVL_VK_FOO;
+	//case SDLK_UNDERSCORE:
+	//	return DVL_VK_FOO;
+	case SDLK_BACKQUOTE:
+		return DVL_VK_OEM_3;
+	case SDLK_DELETE:
+		return DVL_VK_DELETE;
+	case SDLK_CAPSLOCK:
+		return DVL_VK_CAPITAL;
+	case SDLK_F1:
+		return DVL_VK_F1;
+	case SDLK_F2:
+		return DVL_VK_F2;
+	case SDLK_F3:
+		return DVL_VK_F3;
+	case SDLK_F4:
+		return DVL_VK_F4;
+	case SDLK_F5:
+		return DVL_VK_F5;
+	case SDLK_F6:
+		return DVL_VK_F6;
+	case SDLK_F7:
+		return DVL_VK_F7;
+	case SDLK_F8:
+		return DVL_VK_F8;
+	case SDLK_F9:
+		return DVL_VK_F9;
+	case SDLK_F10:
+		return DVL_VK_F10;
+	case SDLK_F11:
+		return DVL_VK_F11;
+	case SDLK_F12:
+		return DVL_VK_F12;
 	case SDLK_PRINTSCREEN:
 		return DVL_VK_SNAPSHOT;
-
+	case SDLK_SCROLLLOCK:
+		return DVL_VK_SCROLL;
+	case SDLK_PAUSE:
+		return DVL_VK_PAUSE;
+	case SDLK_INSERT:
+		return DVL_VK_INSERT;
+	case SDLK_HOME:
+		return DVL_VK_HOME;
+	case SDLK_PAGEUP:
+		return DVL_VK_PRIOR;
+	case SDLK_END:
+		return DVL_VK_END;
+	case SDLK_PAGEDOWN:
+		return DVL_VK_NEXT;
+	case SDLK_RIGHT:
+		return DVL_VK_RIGHT;
+	case SDLK_LEFT:
+		return DVL_VK_LEFT;
+	case SDLK_DOWN:
+		return DVL_VK_DOWN;
+	case SDLK_UP:
+		return DVL_VK_UP;
+	case SDLK_NUMLOCKCLEAR:
+		return DVL_VK_NUMLOCK;
+	case SDLK_KP_DIVIDE:
+		return DVL_VK_DIVIDE;
+	case SDLK_KP_MULTIPLY:
+		return DVL_VK_MULTIPLY;
+	case SDLK_KP_MINUS:
+		// Returning DVL_VK_OEM_MINUS to play nice with Devilution automap zoom.
+		//
+		// For a distinct keypad key-code, DVL_VK_SUBTRACT should be returned.
+		return DVL_VK_OEM_MINUS;
+	case SDLK_KP_PLUS:
+		// Returning DVL_VK_OEM_PLUS to play nice with Devilution automap zoom.
+		//
+		// For a distinct keypad key-code, DVL_VK_ADD should be returned.
+		return DVL_VK_OEM_PLUS;
+	case SDLK_KP_ENTER:
+		return DVL_VK_RETURN;
+	case SDLK_KP_1:
+		return DVL_VK_NUMPAD1;
+	case SDLK_KP_2:
+		return DVL_VK_NUMPAD2;
+	case SDLK_KP_3:
+		return DVL_VK_NUMPAD3;
+	case SDLK_KP_4:
+		return DVL_VK_NUMPAD4;
+	case SDLK_KP_5:
+		return DVL_VK_NUMPAD5;
+	case SDLK_KP_6:
+		return DVL_VK_NUMPAD6;
+	case SDLK_KP_7:
+		return DVL_VK_NUMPAD7;
+	case SDLK_KP_8:
+		return DVL_VK_NUMPAD8;
+	case SDLK_KP_9:
+		return DVL_VK_NUMPAD9;
+	case SDLK_KP_0:
+		return DVL_VK_NUMPAD0;
+	case SDLK_KP_PERIOD:
+		return DVL_VK_DECIMAL;
+	//case SDLK_APPLICATION:
+	//	return DVL_VK_FOO;
+	//case SDLK_POWER:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_EQUALS:
+	//	return DVL_VK_FOO;
+	//case SDLK_F13:
+	//	return DVL_VK_FOO;
+	//case SDLK_F14:
+	//	return DVL_VK_FOO;
+	//case SDLK_F15:
+	//	return DVL_VK_FOO;
+	//case SDLK_F16:
+	//	return DVL_VK_FOO;
+	//case SDLK_F17:
+	//	return DVL_VK_FOO;
+	//case SDLK_F18:
+	//	return DVL_VK_FOO;
+	//case SDLK_F19:
+	//	return DVL_VK_FOO;
+	//case SDLK_F20:
+	//	return DVL_VK_FOO;
+	//case SDLK_F21:
+	//	return DVL_VK_FOO;
+	//case SDLK_F22:
+	//	return DVL_VK_FOO;
+	//case SDLK_F23:
+	//	return DVL_VK_FOO;
+	//case SDLK_F24:
+	//	return DVL_VK_FOO;
+	//case SDLK_EXECUTE:
+	//	return DVL_VK_FOO;
+	//case SDLK_HELP:
+	//	return DVL_VK_FOO;
+	case SDLK_MENU:
+		return DVL_VK_RMENU;
+	//case SDLK_SELECT:
+	//	return DVL_VK_FOO;
+	//case SDLK_STOP:
+	//	return DVL_VK_FOO;
+	//case SDLK_AGAIN:
+	//	return DVL_VK_FOO;
+	//case SDLK_UNDO:
+	//	return DVL_VK_FOO;
+	//case SDLK_CUT:
+	//	return DVL_VK_FOO;
+	//case SDLK_COPY:
+	//	return DVL_VK_FOO;
+	//case SDLK_PASTE:
+	//	return DVL_VK_FOO;
+	//case SDLK_FIND:
+	//	return DVL_VK_FOO;
+	//case SDLK_MUTE:
+	//	return DVL_VK_FOO;
+	//case SDLK_VOLUMEUP:
+	//	return DVL_VK_FOO;
+	//case SDLK_VOLUMEDOWN:
+	//	return DVL_VK_FOO;
+	case SDLK_KP_COMMA:
+		return DVL_VK_OEM_COMMA;
+	//case SDLK_KP_EQUALSAS400:
+	//	return DVL_VK_FOO;
+	//case SDLK_ALTERASE:
+	//	return DVL_VK_FOO;
+	//case SDLK_SYSREQ:
+	//	return DVL_VK_FOO;
+	//case SDLK_CANCEL:
+	//	return DVL_VK_FOO;
+	//case SDLK_CLEAR:
+	//	return DVL_VK_FOO;
+	//case SDLK_PRIOR:
+	//	return DVL_VK_FOO;
+	//case SDLK_RETURN2:
+	//	return DVL_VK_FOO;
+	//case SDLK_SEPARATOR:
+	//	return DVL_VK_FOO;
+	//case SDLK_OUT:
+	//	return DVL_VK_FOO;
+	//case SDLK_OPER:
+	//	return DVL_VK_FOO;
+	//case SDLK_CLEARAGAIN:
+	//	return DVL_VK_FOO;
+	//case SDLK_CRSEL:
+	//	return DVL_VK_FOO;
+	//case SDLK_EXSEL:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_00:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_000:
+	//	return DVL_VK_FOO;
+	//case SDLK_THOUSANDSSEPARATOR:
+	//	return DVL_VK_FOO;
+	//case SDLK_DECIMALSEPARATOR:
+	//	return DVL_VK_FOO;
+	//case SDLK_CURRENCYUNIT:
+	//	return DVL_VK_FOO;
+	//case SDLK_CURRENCYSUBUNIT:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_LEFTPAREN:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_RIGHTPAREN:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_LEFTBRACE:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_RIGHTBRACE:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_TAB:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_BACKSPACE:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_A:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_B:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_C:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_D:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_E:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_F:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_XOR:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_POWER:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_PERCENT:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_LESS:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_GREATER:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_AMPERSAND:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_DBLAMPERSAND:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_VERTICALBAR:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_DBLVERTICALBAR:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_COLON:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_HASH:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_SPACE:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_AT:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_EXCLAM:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_MEMSTORE:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_MEMRECALL:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_MEMCLEAR:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_MEMADD:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_MEMSUBTRACT:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_MEMMULTIPLY:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_MEMDIVIDE:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_PLUSMINUS:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_CLEAR:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_CLEARENTRY:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_BINARY:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_OCTAL:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_DECIMAL:
+	//	return DVL_VK_FOO;
+	//case SDLK_KP_HEXADECIMAL:
+	//	return DVL_VK_FOO;
+	case SDLK_LCTRL:
+		return DVL_VK_LCONTROL;
+	case SDLK_LSHIFT:
+		return DVL_VK_LSHIFT;
+	case SDLK_LALT:
+		return DVL_VK_LMENU;
+	case SDLK_LGUI:
+		return DVL_VK_LWIN;
+	case SDLK_RCTRL:
+		return DVL_VK_RCONTROL;
+	case SDLK_RSHIFT:
+		return DVL_VK_RSHIFT;
+	case SDLK_RALT:
+		return DVL_VK_RMENU;
+	case SDLK_RGUI:
+		return DVL_VK_RWIN;
+	//case SDLK_MODE:
+	//	return DVL_VK_FOO;
+	//case SDLK_AUDIONEXT:
+	//	return DVL_VK_FOO;
+	//case SDLK_AUDIOPREV:
+	//	return DVL_VK_FOO;
+	//case SDLK_AUDIOSTOP:
+	//	return DVL_VK_FOO;
+	//case SDLK_AUDIOPLAY:
+	//	return DVL_VK_FOO;
+	//case SDLK_AUDIOMUTE:
+	//	return DVL_VK_FOO;
+	//case SDLK_MEDIASELECT:
+	//	return DVL_VK_FOO;
+	//case SDLK_WWW:
+	//	return DVL_VK_FOO;
+	//case SDLK_MAIL:
+	//	return DVL_VK_FOO;
+	//case SDLK_CALCULATOR:
+	//	return DVL_VK_FOO;
+	//case SDLK_COMPUTER:
+	//	return DVL_VK_FOO;
+	//case SDLK_AC_SEARCH:
+	//	return DVL_VK_FOO;
+	//case SDLK_AC_HOME:
+	//	return DVL_VK_FOO;
+	//case SDLK_AC_BACK:
+	//	return DVL_VK_FOO;
+	//case SDLK_AC_FORWARD:
+	//	return DVL_VK_FOO;
+	//case SDLK_AC_STOP:
+	//	return DVL_VK_FOO;
+	//case SDLK_AC_REFRESH:
+	//	return DVL_VK_FOO;
+	//case SDLK_AC_BOOKMARKS:
+	//	return DVL_VK_FOO;
+	//case SDLK_BRIGHTNESSDOWN:
+	//	return DVL_VK_FOO;
+	//case SDLK_BRIGHTNESSUP:
+	//	return DVL_VK_FOO;
+	//case SDLK_DISPLAYSWITCH:
+	//	return DVL_VK_FOO;
+	//case SDLK_KBDILLUMTOGGLE:
+	//	return DVL_VK_FOO;
+	//case SDLK_KBDILLUMDOWN:
+	//	return DVL_VK_FOO;
+	//case SDLK_KBDILLUMUP:
+	//	return DVL_VK_FOO;
+	//case SDLK_EJECT:
+	//	return DVL_VK_FOO;
+	//case SDLK_SLEEP:
+	//	return DVL_VK_FOO;
 	default:
 		if (sym >= SDLK_a && sym <= SDLK_z) {
 			return 'A' + (sym - SDLK_a);
