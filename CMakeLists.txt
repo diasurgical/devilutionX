@@ -64,9 +64,13 @@ if(NOT CMAKE_SIZEOF_VOID_P EQUAL 4)
   message(WARNING [[Not 32-bit, highly experimental!]])
 endif()
 
+# marlon
+target_link_libraries(${TARGET_NAME} ${SDL_LIBRARY})
+
 find_package(Threads REQUIRED)
-# find_package(SDL CONFIG QUIET)
-find_package(SDL REQUIRED)
+
+# marlon
+find_package(SDL 1.2 REQUIRED)
 if (NOT SDL_FOUND)
 	find_package(SDL REQUIRED)
 endif()
@@ -224,6 +228,10 @@ target_include_directories(devilutionx PRIVATE
 
 
 target_link_libraries(devilution PUBLIC Threads::Threads)
+
+# marlon
+target_link_libraries(${TARGET_NAME} ${SDL_LIBRARY} -ldebug)
+
 target_link_libraries(devilutionx PRIVATE
   devilution
   PKWare
