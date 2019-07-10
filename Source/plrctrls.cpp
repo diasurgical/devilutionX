@@ -571,16 +571,21 @@ void keyboardExpansion(int vikey)
 		} else if (chrflag) {
 			if (ticks - statuptimer >= 400) {
 				statuptimer = ticks;
-				for (int i = 0; i < 4; i++) {
-					if (MouseX >= attribute_inc_rects2[i][0]
-					    && MouseX <= attribute_inc_rects2[i][0] + attribute_inc_rects2[i][2]
-					    && MouseY >= attribute_inc_rects2[i][1]
-					    && MouseY <= attribute_inc_rects2[i][3] + attribute_inc_rects2[i][1]) {
-						chrbtn[i] = 1;
-						chrbtnactive = TRUE;
-						ReleaseChrBtns();
+				if (!chrbtnactive && plr[myplr]._pStatPts) {
+					CheckChrBtns();
+					for (int i = 0; i < 4; i++) {
+						if (MouseX >= attribute_inc_rects2[i][0]
+							&& MouseX <= attribute_inc_rects2[i][0] + attribute_inc_rects2[i][2]
+							&& MouseY >= attribute_inc_rects2[i][1]
+							&& MouseY <= attribute_inc_rects2[i][3] + attribute_inc_rects2[i][1]) {
+							chrbtn[i] = 1;
+							chrbtnactive = TRUE;
+							ReleaseChrBtns();
+						}
 					}
 				}
+				if (plr[myplr]._pStatPts == 0)
+					HideCursor();
 			}
 		} else {
 			HideCursor();
