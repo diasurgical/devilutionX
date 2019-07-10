@@ -1174,18 +1174,21 @@ void PressChar(int vkey)
 			}
 #endif
 			if (!chrflag || invflag) {
+				if (MouseX > 160 && MouseY < PANEL_TOP) {
+					SetCursorPos(MouseX - 160, MouseY);
 #ifdef SWITCH
+					MouseX = MouseX - 160;
+					MouseY = MouseY;
+#endif
+				}
+#ifdef SWITCH
+			} else {
 				if (!chrbtnactive && plr[myplr]._pStatPts) {
 					int x = attribute_inc_rects2[0][0] + (attribute_inc_rects2[0][2] / 2);
 					int y = attribute_inc_rects2[0][1] + (attribute_inc_rects2[0][3] / 2);
 					SetCursorPos(x, y);
 					MouseX = x;
 					MouseY = y;
-				}
-#else
-				if (MouseX > 160 && MouseY < PANEL_TOP) {
-					SetCursorPos(MouseX - 160, MouseY);
-				}
 #endif
 			} else {
 				if (MouseX < 480 && MouseY < PANEL_TOP) {
@@ -1193,6 +1196,7 @@ void PressChar(int vkey)
 #ifdef SWITCH
 					MouseX = MouseX + 160;
 					MouseY = MouseY;
+				}
 #endif
 				}
 			}
