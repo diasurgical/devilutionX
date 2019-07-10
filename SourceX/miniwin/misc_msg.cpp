@@ -373,6 +373,20 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		}
 		#endif
 		break;
+	case SDL_JOYBUTTONUP:
+		#ifdef SWITCH
+		switch(e.jbutton.button)
+		{
+			case  3:	// Y
+				if (invflag) {
+					lpMsg->message = DVL_WM_RBUTTONUP;
+					lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+					lpMsg->wParam = keystate_for_mouse(0);
+				}
+				break;
+		}
+		#endif
+		break;
 	case SDL_QUIT:
 		lpMsg->message = DVL_WM_QUIT;
 		break;
