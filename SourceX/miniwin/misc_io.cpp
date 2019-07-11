@@ -125,29 +125,46 @@ WINBOOL SetFileAttributesA(LPCSTR lpFileName, DWORD dwFileAttributes)
 
 WINBOOL CloseHandle(HANDLE hObject)
 {
+	//Todo(Amiga): Fix the error handling
 	memfile* file = static_cast<memfile*>(hObject);
 	if (files.find(file) == files.end())
 		return true;
 	std::unique_ptr<memfile> ufile(file);  // ensure that delete file is
 	                                       // called on returning
 	files.erase(file);
+#ifndef __AMIGA__
 	try {
+#endif
 		std::ofstream filestream(file->path + ".tmp", std::ios::binary | std::ios::trunc);
 		if (filestream.fail())
+		{
+			#ifndef __AMIGA__
 			throw std::runtime_error("ofstream");
+			#endif
+		}
 		filestream.write(file->buf.data(), file->buf.size());
 		if (filestream.fail())
+		{
+			#ifndef __AMIGA__
 			throw std::runtime_error("ofstream::write");
+			#endif
+		}
 		filestream.close();
 		std::remove(file->path.c_str());
 		if (std::rename((file->path + ".tmp").c_str(), file->path.c_str()))
+		{
+			#ifndef __AMIGA__
 			throw std::runtime_error("rename");
+			#endif
+		}
 		return true;
+#ifndef __AMIGA__
 	} catch (std::runtime_error e) {
 		// log
 		DialogBoxParam(ghInst, DVL_MAKEINTRESOURCE(IDD_DIALOG7), ghMainWnd, (DLGPROC)FuncDlg, (LPARAM)file->path.c_str());
 		return false;
 	}
+#endif
 }
 
 }  // namespace dvl
