@@ -146,17 +146,16 @@ bool SDL_SetHint(const char* name,
 {
 	return 0;
 }
-///
-char* SDL_GetPrefPath(const char* org,
-                      const char* app)
-					  {
-						  char buffer [100];
-						  sprintf(buffer,"envarc:%s/%s",org,app);
-						  
-						  return buffer;
-					  }
-					  
-	
+
+/*
+char* SDL_GetPrefPath(const char* org, const char* app)
+{
+	char buffer [100];
+	sprintf(buffer,"envarc:%s/%s",org,app);
+	return buffer;
+}
+*/
+
 void SDL_Log(const char *message, ...) {
 
 	printf("%s\n", message);
@@ -355,7 +354,7 @@ SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth,
 #ifdef __cplusplus
 extern "C" {
 #endif
-	
+
 char* SDL_GetPrefPath(const char* org, const char* app) { return org; }
 
 #ifdef __cplusplus
