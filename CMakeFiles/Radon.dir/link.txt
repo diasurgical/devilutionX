@@ -1,2 +1,0 @@
-/usr/bin/ar.exe qc libRadon.a  CMakeFiles/Radon.dir/3rdParty/Radon/Radon/source/File.cpp.o CMakeFiles/Radon.dir/3rdParty/Radon/Radon/source/Key.cpp.o CMakeFiles/Radon.dir/3rdParty/Radon/Radon/source/Named.cpp.o CMakeFiles/Radon.dir/3rdParty/Radon/Radon/source/Section.cpp.o
-/usr/bin/ranlib.exe libRadon.a
