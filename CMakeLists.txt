@@ -64,21 +64,12 @@ if(NOT CMAKE_SIZEOF_VOID_P EQUAL 4)
   message(WARNING [[Not 32-bit, highly experimental!]])
 endif()
 
-# marlon
-target_link_libraries(${TARGET_NAME} ${SDL_LIBRARY})
-
 find_package(Threads REQUIRED)
-
-# marlon
 find_package(SDL 1.2 REQUIRED)
-if (NOT SDL_FOUND)
-	find_package(SDL REQUIRED)
-endif()
 find_package(SDL_ttf REQUIRED)
 find_package(SDL_mixer REQUIRED)
 #find_package(sodium REQUIRED)
 
-link_directories( /home/klaus/Sources/devilutionX/ )
 set(PROJECT_LINK_LIBS libSDL.so)
 
 add_library(smacker STATIC
@@ -194,7 +185,7 @@ add_executable(devilutionx
   SourceX/miniwin/thread.cpp
 #  SourceX/miniwin/dsound.cpp
   SourceX/miniwin/ddraw.cpp
-# arczi  
+# arczi
   SourceX/miniwin/sdl1_wrapper.cpp
 #  SourceX/sound.cpp
   SourceX/storm/storm.cpp
@@ -226,13 +217,15 @@ target_include_directories(devilutionx PRIVATE
   3rdParty/asio/include
   3rdParty/Radon/Radon/include
   3rdParty/libsmacker
-  ${SDL_INCLUDE_DIRS})
+  ${SDL_INCLUDE_DIRS}
+  ${SDL_TTF_INCLUDE_DIRS}/..
+  ${SDL_MIXER_INCLUDE_DIRS}/..
+)
+
+message("Include dir " ${SDL_TTF_INCLUDE_DIRS})
 
 
 target_link_libraries(devilution PUBLIC Threads::Threads)
-
-# marlon
-target_link_libraries(${TARGET_NAME} ${SDL_LIBRARY} -ldebug)
 
 target_link_libraries(devilutionx PRIVATE
   devilution
@@ -241,6 +234,8 @@ target_link_libraries(devilutionx PRIVATE
   smacker
   Radon
   ${SDL_LIBRARY}
+  ${SDL_TTF_LIBRARY}
+  ${SDL_MIXER_LIBRARY}
   )
   # ${PROJECT_SOURCE_DIR}/libSDLmain.a)
   # /usr/lib/x86_64-linux-gnu/libSDLmain.a
@@ -305,6 +300,7 @@ endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   target_compile_options(devilution PRIVATE -fno-aggressive-loop-optimizations)
+  add_definitions(-D_GNU_SOURCE)
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")

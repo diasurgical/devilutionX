@@ -94,15 +94,19 @@ static bool BaseFile_Create(TFileStream * pStream)
 #if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU)
     {
         intptr_t handle;
-        
-        handle = open(pStream->szFileName, O_RDWR | O_CREAT | O_TRUNC | O_LARGEFILE, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+
+        handle = open(pStream->szFileName, O_RDWR | O_CREAT | O_TRUNC |
+	#ifndef __AMIGA__
+	O_LARGEFILE,
+	#endif
+	 S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
         if(handle == -1)
         {
             nLastError = errno;
             pStream->Base.File.hFile = INVALID_HANDLE_VALUE; // BUGFIX (devilutionX)
             return false;
         }
-        
+
         pStream->Base.File.hFile = (HANDLE)handle;
     }
 #endif
@@ -143,12 +147,21 @@ static bool BaseFile_Open(TFileStream * pStream, const TCHAR * szFileName, DWORD
 
 #if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU)
     {
+	#ifdef __AMIGA__
+	#define stat64 stat
+	struct stat fileinfo;
+	#else
         struct stat64 fileinfo;
+	#endif
         int oflag = (dwStreamFlags & STREAM_FLAG_READ_ONLY) ? O_RDONLY : O_RDWR;
         intptr_t handle;
 
         // Open the file
-        handle = open(szFileName, oflag | O_LARGEFILE);
+        handle = open(szFileName, oflag
+	#ifndef __AMIGA__
+	 | O_LARGEFILE
+	#endif
+	);
         if(handle == -1)
         {
             nLastError = errno;
@@ -233,7 +246,7 @@ static bool BaseFile_Read(
                 nLastError = errno;
                 return false;
             }
-            
+
             dwBytesRead = (DWORD)(size_t)bytes_read;
         }
     }
