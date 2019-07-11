@@ -64,13 +64,18 @@ if(NOT CMAKE_SIZEOF_VOID_P EQUAL 4)
   message(WARNING [[Not 32-bit, highly experimental!]])
 endif()
 
-find_package(PNG REQUIRED)
+
 find_package(Threads REQUIRED)
 find_package(Freetype REQUIRED)
 find_package(SDL 1.2 REQUIRED)
 find_package(SDL_ttf REQUIRED)
 find_package(SDL_mixer REQUIRED)
-find_package(LibMad REQUIRED)
+
+if(AMIGA)
+  find_package(PNG REQUIRED)
+  find_package(LibMad REQUIRED)
+endif()
+
 #find_package(sodium REQUIRED)
 
 set(PROJECT_LINK_LIBS libSDL.so)
@@ -249,8 +254,11 @@ target_link_libraries(devilutionx PRIVATE
   ${PNG_LIBRARIES}
   ${LIBMAD_LIBRARIES}
   ${SDL_LIBRARY}
-  -ldebug
   )
+
+if(AMIGA)
+  target_link_libraries(devilutionx PRIVATE -ldebug)
+endif()
   # ${PROJECT_SOURCE_DIR}/libSDLmain.a)
   # /usr/lib/x86_64-linux-gnu/libSDLmain.a
   # ${SDL_LIBRARY}
