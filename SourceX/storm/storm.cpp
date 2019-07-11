@@ -453,11 +453,7 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 
 	SVidLoop = flags & 0x40000;
 	bool enableVideo = !(flags & 0x100000);
-#ifdef SWITCH
-	bool enableAudio = 0;
-#else
 	bool enableAudio = !(flags & 0x1000000);
-#endif
 	//0x8 // Non-interlaced
 	//0x200, 0x800 // Upscale video
 	//0x80000 // Center horizontally
@@ -480,6 +476,9 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 	unsigned long rate[7];
 	smk_info_audio(SVidSMK, NULL, channels, depth, rate);
 	if (enableAudio && depth[0] != 0) {
+#ifdef SWITCH
+		Mix_CloseAudio();
+#endif
 		smk_enable_audio(SVidSMK, 0, enableAudio);
 		SDL_AudioSpec audioFormat;
 		SDL_zero(audioFormat);
@@ -490,6 +489,11 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 		deviceId = SDL_OpenAudioDevice(NULL, 0, &audioFormat, NULL, 0);
 		if (deviceId == 0) {
 			SDL_Log(SDL_GetError());
+#ifdef SWITCH
+			Mix_OpenAudio(22050, AUDIO_S16LSB, 2, 1024);
+			Mix_AllocateChannels(25);
+			Mix_ReserveChannels(1);
+#endif
 			return false;
 		} else {
 			SDL_PauseAudioDevice(deviceId, 0); /* start audio playing. */
@@ -638,6 +642,11 @@ BOOL SVidPlayEnd(HANDLE video)
 	if (deviceId) {
 		SDL_ClearQueuedAudio(deviceId);
 		SDL_CloseAudioDevice(deviceId);
+#ifdef SWITCH
+		Mix_OpenAudio(22050, AUDIO_S16LSB, 2, 1024);
+		Mix_AllocateChannels(25);
+		Mix_ReserveChannels(1);
+#endif
 		deviceId = 0;
 	}
 
