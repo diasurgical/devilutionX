@@ -1124,24 +1124,24 @@ void InitControlPan()
 	memset(pManaBuff, 0, 88 * 88);
 	pLifeBuff = DiabloAllocPtr(88 * 88);
 	memset(pLifeBuff, 0, 88 * 88);
-	pPanelText = LoadFileInMem("CtrlPan\\SmalText.CEL", 0);
-	pChrPanel = LoadFileInMem("Data\\Char.CEL", 0);
-	pSpellCels = LoadFileInMem("CtrlPan\\SpelIcon.CEL", 0);
+	pPanelText = LoadFileInMem("CtrlPan\\SmalText.CEL", NULL);
+	pChrPanel = LoadFileInMem("Data\\Char.CEL", NULL);
+	pSpellCels = LoadFileInMem("CtrlPan\\SpelIcon.CEL", NULL);
 	SetSpellTrans(RSPLTYPE_SKILL);
-	pStatusPanel = LoadFileInMem("CtrlPan\\Panel8.CEL", 0);
+	pStatusPanel = LoadFileInMem("CtrlPan\\Panel8.CEL", NULL);
 	CelDecodeRect(pBtmBuff, 0, 143, 640, pStatusPanel, 1, 640);
 	MemFreeDbg(pStatusPanel);
-	pStatusPanel = LoadFileInMem("CtrlPan\\P8Bulbs.CEL", 0);
+	pStatusPanel = LoadFileInMem("CtrlPan\\P8Bulbs.CEL", NULL);
 	CelDecodeRect(pLifeBuff, 0, 87, 88, pStatusPanel, 1, 88);
 	CelDecodeRect(pManaBuff, 0, 87, 88, pStatusPanel, 2, 88);
 	MemFreeDbg(pStatusPanel);
 	talkflag = 0;
 	if (gbMaxPlayers != 1) {
-		pTalkPanel = LoadFileInMem("CtrlPan\\TalkPanl.CEL", 0);
+		pTalkPanel = LoadFileInMem("CtrlPan\\TalkPanl.CEL", NULL);
 		CelDecodeRect(pBtmBuff, 0, 287, 640, pTalkPanel, 1, 640);
 		MemFreeDbg(pTalkPanel);
-		pMultiBtns = LoadFileInMem("CtrlPan\\P8But2.CEL", 0);
-		pTalkBtns = LoadFileInMem("CtrlPan\\TalkButt.CEL", 0);
+		pMultiBtns = LoadFileInMem("CtrlPan\\P8But2.CEL", NULL);
+		pTalkBtns = LoadFileInMem("CtrlPan\\TalkButt.CEL", NULL);
 		sgbPlrTalkTbl = 0;
 		sgszTalkMsg[0] = 0;
 		for (i = 0; i < MAX_PLRS; i++)
@@ -1151,7 +1151,7 @@ void InitControlPan()
 	}
 	panelflag = 0;
 	lvlbtndown = 0;
-	pPanelButtons = LoadFileInMem("CtrlPan\\Panel8bu.CEL", 0);
+	pPanelButtons = LoadFileInMem("CtrlPan\\Panel8bu.CEL", NULL);
 	for (i = 0; i < sizeof(panbtn) / sizeof(panbtn[0]); i++)
 		panbtn[i] = 0;
 	panbtndown = 0;
@@ -1159,20 +1159,20 @@ void InitControlPan()
 		numpanbtns = 6;
 	else
 		numpanbtns = 8;
-	pChrButtons = LoadFileInMem("Data\\CharBut.CEL", 0);
+	pChrButtons = LoadFileInMem("Data\\CharBut.CEL", NULL);
 	for (i = 0; i < sizeof(chrbtn) / sizeof(chrbtn[0]); i++)
 		chrbtn[i] = 0;
 	chrbtnactive = FALSE;
-	pDurIcons = LoadFileInMem("Items\\DurIcons.CEL", 0);
+	pDurIcons = LoadFileInMem("Items\\DurIcons.CEL", NULL);
 	strcpy(infostr, "");
 	ClearPanel();
 	drawhpflag = TRUE;
 	drawmanaflag = TRUE;
 	chrflag = 0;
 	spselflag = 0;
-	pSpellBkCel = LoadFileInMem("Data\\SpellBk.CEL", 0);
-	pSBkBtnCel = LoadFileInMem("Data\\SpellBkB.CEL", 0);
-	pSBkIconCels = LoadFileInMem("Data\\SpellI2.CEL", 0);
+	pSpellBkCel = LoadFileInMem("Data\\SpellBk.CEL", NULL);
+	pSBkBtnCel = LoadFileInMem("Data\\SpellBkB.CEL", NULL);
+	pSBkIconCels = LoadFileInMem("Data\\SpellI2.CEL", NULL);
 	sbooktab = 0;
 	sbookflag = 0;
 	if (plr[myplr]._pClass == PC_WARRIOR) {
@@ -1182,8 +1182,8 @@ void InitControlPan()
 	} else if (plr[myplr]._pClass == PC_SORCERER) {
 		SpellPages[0][0] = SPL_RECHARGE;
 	}
-	pQLogCel = LoadFileInMem("Data\\Quest.CEL", 0);
-	pGBoxBuff = LoadFileInMem("CtrlPan\\Golddrop.cel", 0);
+	pQLogCel = LoadFileInMem("Data\\Quest.CEL", NULL);
+	pGBoxBuff = LoadFileInMem("CtrlPan\\Golddrop.cel", NULL);
 	dropGoldFlag = FALSE;
 	dropGoldValue = 0;
 	initialDropGoldValue = 0;
@@ -2044,38 +2044,38 @@ void DrawDurIcon()
 	}
 }
 
-int DrawDurIcon4Item(ItemStruct *item, int x, int frame)
+int DrawDurIcon4Item(ItemStruct *pItem, int x, int c)
 {
-	if (item->_itype == ITYPE_NONE)
+	if (pItem->_itype == ITYPE_NONE)
 		return x;
-	if (item->_iDurability > 5)
+	if (pItem->_iDurability > 5)
 		return x;
-	if (frame == 0) {
-		if (item->_iClass == ICLASS_WEAPON) {
-			switch (item->_itype) {
+	if (c == 0) {
+		if (pItem->_iClass == ICLASS_WEAPON) {
+			switch (pItem->_itype) {
 			case ITYPE_SWORD:
-				frame = 2;
+				c = 2;
 				break;
 			case ITYPE_AXE:
-				frame = 6;
+				c = 6;
 				break;
 			case ITYPE_BOW:
-				frame = 7;
+				c = 7;
 				break;
 			case ITYPE_MACE:
-				frame = 5;
+				c = 5;
 				break;
 			case ITYPE_STAFF:
-				frame = 8;
+				c = 8;
 				break;
 			}
 		} else {
-			frame = 1;
+			c = 1;
 		}
 	}
-	if (item->_iDurability > 2)
-		frame += 8;
-	CelDecodeOnly(x, 495, pDurIcons, frame, 32);
+	if (pItem->_iDurability > 2)
+		c += 8;
+	CelDecodeOnly(x, 495, pDurIcons, c, 32);
 	return x - 40;
 }
 

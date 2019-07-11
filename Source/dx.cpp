@@ -5,7 +5,7 @@ DEVILUTION_BEGIN_NAMESPACE
 
 BYTE *sgpBackBuf;
 LPDIRECTDRAW lpDDInterface;
-IDirectDrawPalette *lpDDPalette; // idb
+IDirectDrawPalette *lpDDPalette;
 int sgdwLockCount;
 BYTE *gpBuffer;
 IDirectDrawSurface *lpDDSBackBuf;
@@ -16,9 +16,9 @@ int locktbl[256];
 #ifdef __cplusplus
 static CCritSect sgMemCrit;
 #endif
-char gbBackBuf;    // weak
-char gbEmulate;    // weak
-HMODULE ghDiabMod; // idb
+char gbBackBuf;
+char gbEmulate;
+HMODULE ghDiabMod;
 
 void dx_init(HWND hWnd)
 {
@@ -35,11 +35,11 @@ void dx_init(HWND hWnd)
 	ShowWindow(hWnd, SW_SHOWNORMAL);
 
 	lpGUID = NULL;
-	if(gbEmulate) {
+	if (gbEmulate) {
 		lpGUID = (GUID *)DDCREATE_EMULATIONONLY;
 	}
 	hDDVal = dx_DirectDrawCreate(lpGUID, &lpDDInterface, NULL);
-	if(hDDVal != DD_OK) {
+	if (hDDVal != DD_OK) {
 		ErrDlg(IDD_DIALOG1, hDDVal, "C:\\Src\\Diablo\\Source\\dx.cpp", 149);
 	}
 
@@ -54,15 +54,15 @@ void dx_init(HWND hWnd)
 #ifndef _DEBUG
 	fullscreen = TRUE;
 #endif
-	if(!fullscreen) {
+	if (!fullscreen) {
 #ifdef __cplusplus
 		hDDVal = lpDDInterface->SetCooperativeLevel(hWnd, DDSCL_NORMAL | DDSCL_ALLOWREBOOT);
 #else
 		hDDVal = lpDDInterface->lpVtbl->SetCooperativeLevel(lpDDInterface, hWnd, DDSCL_NORMAL | DDSCL_ALLOWREBOOT);
 #endif
-		if(hDDVal == DDERR_EXCLUSIVEMODEALREADYSET) {
+		if (hDDVal == DDERR_EXCLUSIVEMODEALREADYSET) {
 			TriggerBreak();
-		} else if(hDDVal != DD_OK) {
+		} else if (hDDVal != DD_OK) {
 			ErrDlg(IDD_DIALOG1, hDDVal, "C:\\Diablo\\Direct\\dx.cpp", 155);
 		}
 		SetWindowPos(hWnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE);
@@ -72,9 +72,9 @@ void dx_init(HWND hWnd)
 #else
 		hDDVal = lpDDInterface->lpVtbl->SetCooperativeLevel(lpDDInterface, hWnd, DDSCL_EXCLUSIVE | DDSCL_ALLOWREBOOT | DDSCL_FULLSCREEN);
 #endif
-		if(hDDVal == DDERR_EXCLUSIVEMODEALREADYSET) {
+		if (hDDVal == DDERR_EXCLUSIVEMODEALREADYSET) {
 			TriggerBreak();
-		} else if(hDDVal != DD_OK) {
+		} else if (hDDVal != DD_OK) {
 			ErrDlg(IDD_DIALOG1, hDDVal, "C:\\Src\\Diablo\\Source\\dx.cpp", 170);
 		}
 #ifdef __cplusplus
@@ -82,7 +82,7 @@ void dx_init(HWND hWnd)
 #else
 		hDDVal = lpDDInterface->lpVtbl->SetDisplayMode(lpDDInterface, SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP);
 #endif
-		if(hDDVal != DD_OK) {
+		if (hDDVal != DD_OK) {
 			winw = GetSystemMetrics(SM_CXSCREEN);
 			winh = GetSystemMetrics(SM_CYSCREEN);
 #ifdef __cplusplus
@@ -91,7 +91,7 @@ void dx_init(HWND hWnd)
 			hDDVal = lpDDInterface->lpVtbl->SetDisplayMode(lpDDInterface, winw, winh, SCREEN_BPP);
 #endif
 		}
-		if(hDDVal != DD_OK) {
+		if (hDDVal != DD_OK) {
 			ErrDlg(IDD_DIALOG1, hDDVal, "C:\\Src\\Diablo\\Source\\dx.cpp", 183);
 		}
 	}
@@ -103,7 +103,6 @@ void dx_init(HWND hWnd)
 	bSuccess = SDrawManualInitialize(hWnd, lpDDInterface, lpDDSPrimary, NULL, NULL, lpDDSBackBuf, lpDDPalette, NULL);
 	/// ASSERT: assert(bSuccess);
 }
-// 52A549: using guessed type char gbEmulate;
 
 void dx_create_back_buffer()
 {
@@ -162,7 +161,6 @@ void dx_create_back_buffer()
 	if (error_code != DD_OK)
 		ErrDlg(IDD_DIALOG1, error_code, "C:\\Src\\Diablo\\Source\\dx.cpp", 96);
 }
-// 52A548: using guessed type char gbBackBuf;
 
 void dx_create_primary_surface()
 {

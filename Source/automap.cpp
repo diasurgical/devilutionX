@@ -8,7 +8,7 @@ static int MapX;
 static int MapY;
 BOOL automapflag;
 char AmShiftTab[32]; // [31]?
-unsigned char automapview[DMAXX][DMAXY];
+BOOLEAN automapview[DMAXX][DMAXY];
 int AutoMapScale;
 int AutoMapXOfs;
 int AutoMapYOfs;
@@ -72,19 +72,19 @@ void InitAutomap()
 
 	switch (leveltype) {
 	case DTYPE_CATHEDRAL:
-		pAFile = LoadFileInMem("Levels\\L1Data\\L1.AMP", (int *)&dwTiles);
+		pAFile = LoadFileInMem("Levels\\L1Data\\L1.AMP", &dwTiles);
 		dwTiles >>= 1;
 		break;
 	case DTYPE_CATACOMBS:
-		pAFile = LoadFileInMem("Levels\\L2Data\\L2.AMP", (int *)&dwTiles);
+		pAFile = LoadFileInMem("Levels\\L2Data\\L2.AMP", &dwTiles);
 		dwTiles >>= 1;
 		break;
 	case DTYPE_CAVES:
-		pAFile = LoadFileInMem("Levels\\L3Data\\L3.AMP", (int *)&dwTiles);
+		pAFile = LoadFileInMem("Levels\\L3Data\\L3.AMP", &dwTiles);
 		dwTiles >>= 1;
 		break;
 	case DTYPE_HELL:
-		pAFile = LoadFileInMem("Levels\\L4Data\\L4.AMP", (int *)&dwTiles);
+		pAFile = LoadFileInMem("Levels\\L4Data\\L4.AMP", &dwTiles);
 		dwTiles >>= 1;
 		break;
 	default:

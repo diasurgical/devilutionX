@@ -5,11 +5,11 @@
 extern int missileactive[MAXMISSILES];
 extern int missileavail[MAXMISSILES];
 extern MissileStruct missile[MAXMISSILES];
-extern int nummissiles; // idb
+extern int nummissiles;
 extern int ManashieldFlag;
 extern ChainStruct chain[MAXMISSILES];
-extern int MissilePreFlag; // weak
-extern int numchains;      // weak
+extern int MissilePreFlag;
+extern int numchains;
 
 void GetDamageAmt(int i, int *mind, int *maxd);
 BOOL CheckBlock(int fx, int fy, int tx, int ty);

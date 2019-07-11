@@ -15,7 +15,7 @@ BYTE *option_cel;
 BYTE *sgpLogo;
 int sgCurrentMenuIdx;
 
-const unsigned char lfontframe[127] = {
+const BYTE lfontframe[127] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -30,7 +30,7 @@ const unsigned char lfontframe[127] = {
 	14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
 	24, 25, 26, 20, 0, 21, 0
 };
-const unsigned char lfontkern[56] = {
+const BYTE lfontkern[56] = {
 	18, 33, 21, 26, 28, 19, 19, 26, 25, 11,
 	12, 25, 19, 34, 28, 32, 20, 32, 28, 20,
 	28, 36, 35, 46, 33, 33, 24, 11, 23, 22,
@@ -79,11 +79,11 @@ void gmenu_init_menu()
 	dword_63447C = 0;
 	sgCurrentMenuIdx = 0;
 	mouseNavigation = FALSE;
-	sgpLogo = LoadFileInMem("Data\\Diabsmal.CEL", 0);
-	BigTGold_cel = LoadFileInMem("Data\\BigTGold.CEL", 0);
-	PentSpin_cel = LoadFileInMem("Data\\PentSpin.CEL", 0);
-	option_cel = LoadFileInMem("Data\\option.CEL", 0);
-	optbar_cel = LoadFileInMem("Data\\optbar.CEL", 0);
+	sgpLogo = LoadFileInMem("Data\\Diabsmal.CEL", NULL);
+	BigTGold_cel = LoadFileInMem("Data\\BigTGold.CEL", NULL);
+	PentSpin_cel = LoadFileInMem("Data\\PentSpin.CEL", NULL);
+	option_cel = LoadFileInMem("Data\\option.CEL", NULL);
+	optbar_cel = LoadFileInMem("Data\\optbar.CEL", NULL);
 }
 
 BOOL gmenu_exception()
