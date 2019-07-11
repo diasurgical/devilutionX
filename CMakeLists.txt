@@ -283,6 +283,7 @@ set(BIN_TARGET devilutionx)
 
 if(SWITCH)
   list(APPEND devilutionx_SRCS
+    SourceX/platform/switch/keyboard.cpp
     SourceX/platform/switch/docking.cpp)
   set(BIN_TARGET devilutionx.elf)
 endif()
