@@ -5,7 +5,7 @@ DEVILUTION_BEGIN_NAMESPACE
 BOOLEAN lavapool;
 int abyssx;
 int lockoutcnt;
-BOOLEAN lockout[40][40];
+BOOLEAN lockout[DMAXX][DMAXY];
 
 const BYTE L3ConvTbl[16] = { 8, 11, 3, 10, 1, 9, 12, 12, 6, 13, 4, 13, 2, 14, 5, 7 };
 const BYTE L3UP[20] = { 3, 3, 8, 8, 0, 10, 10, 0, 7, 7, 0, 51, 50, 0, 48, 49, 0, 0, 0, 0 };
@@ -289,7 +289,7 @@ BOOL DRLG_L3Lockout()
 	return t == lockoutcnt;
 }
 
-void CreateL3Dungeon(int rseed, int entry)
+void CreateL3Dungeon(DWORD rseed, int entry)
 {
 	int i, j;
 
@@ -791,6 +791,7 @@ void DRLG_L3River()
 	rivercnt = 0;
 	bail = FALSE;
 	trys = 0;
+	/// BUGFIX: pdir is uninitialized, add code `pdir = -1;`
 
 	while (trys < 200 && rivercnt < 4) {
 		bail = FALSE;
@@ -1058,6 +1059,8 @@ void DRLG_L3Pool()
 			poolchance = random(0, 100);
 			for (j = duny - totarea; j < duny + totarea; j++) {
 				for (i = dunx - totarea; i < dunx + totarea; i++) {
+					// BUGFIX: In the following swap the order to first do the
+					// index checks and only then access dungeon[i][j]
 					if (dungeon[i][j] & 0x80 && j >= 0 && j < 40 && i >= 0 && i < 40) {
 						dungeon[i][j] &= ~0x80;
 						if (totarea > 4 && poolchance < 25 && !found) {
@@ -1181,8 +1184,8 @@ void DRLG_L3PoolFix()
 {
 	int dunx, duny;
 
-	for (duny = 0; duny < DMAXY; duny++) {
-		for (dunx = 0; dunx < DMAXX; dunx++) {
+	for (duny = 0; duny < DMAXY; duny++) { // BUGFIX: Change '0' to '1' and 'DMAXY' to 'DMAXY - 1'
+		for (dunx = 0; dunx < DMAXX; dunx++) { // BUGFIX: Change '0' to '1' and 'DMAXX' to 'DMAXX - 1'
 			if (dungeon[dunx][duny] == 8) {
 				if (dungeon[dunx - 1][duny - 1] >= 25 && dungeon[dunx - 1][duny - 1] <= 41
 				    && dungeon[dunx - 1][duny] >= 25 && dungeon[dunx - 1][duny] <= 41
@@ -1305,6 +1308,7 @@ void DRLG_L3PlaceRndSet(const BYTE *miniset, int rndper)
 			}
 			kk = sw * sh + 2;
 			if (miniset[kk] >= 84 && miniset[kk] <= 100 && found == TRUE) {
+				// BUGFIX: accesses to dungeon can go out of bounds
 				if (dungeon[sx - 1][sy] >= 84 && dungeon[sx - 1][sy] <= 100) {
 					found = FALSE;
 				}
@@ -1337,8 +1341,8 @@ void DRLG_L3Wood()
 	int i, j, x, y, xx, yy, rt, rp, x1, y1, x2, y2;
 	BOOL skip;
 
-	for (j = 0; j < DMAXY - 1; j++) {
-		for (i = 0; i < DMAXX - 1; i++) {
+	for (j = 0; j < DMAXY - 1; j++) { // BUGFIX: Change '0' to '1'
+		for (i = 0; i < DMAXX - 1; i++) { // BUGFIX: Change '0' to '1'
 			if (dungeon[i][j] == 10 && random(0, 2) != 0) {
 				x = i;
 				while (dungeon[x][j] == 10) {
@@ -1407,8 +1411,8 @@ void DRLG_L3Wood()
 		}
 	}
 
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
+	for (j = 0; j < DMAXY; j++) { // BUGFIX: Change '0' to '1'
+		for (i = 0; i < DMAXX; i++) { // BUGFIX: Change '0' to '1'
 			if (dungeon[i][j] != 7 || random(0, 1) != 0 || !SkipThemeRoom(i, j)) {
 				continue;
 			}
@@ -1730,7 +1734,7 @@ void LoadL3Dungeon(char *sFileName, int vx, int vy)
 	dmaxx = 96;
 	dmaxy = 96;
 	DRLG_InitTrans();
-	pLevelMap = LoadFileInMem(sFileName, 0);
+	pLevelMap = LoadFileInMem(sFileName, NULL);
 
 	lm = pLevelMap;
 	rw = *lm;
@@ -1788,7 +1792,7 @@ void LoadPreL3Dungeon(char *sFileName, int vx, int vy)
 
 	InitL3Dungeon();
 	DRLG_InitTrans();
-	pLevelMap = LoadFileInMem(sFileName, 0);
+	pLevelMap = LoadFileInMem(sFileName, NULL);
 
 	lm = pLevelMap;
 	rw = *lm;

@@ -145,13 +145,6 @@ void SDL_RenderPresent(SDL_Renderer* renderer)
 	SDL_Flip(renderer);
 }
 
-bool SDL_SetHint(const char* name,
-                     const char* value)
-{
-	return 0;
-}
- 
-	
 void SDL_Log(const char *message, ...) {
 
 	printf("%s\n", message);

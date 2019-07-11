@@ -97,7 +97,7 @@ void DrawLevelUpIcon();
 void CheckChrBtns();
 void ReleaseChrBtns();
 void DrawDurIcon();
-int DrawDurIcon4Item(ItemStruct *item, int x, int frame);
+int DrawDurIcon4Item(ItemStruct *pItem, int x, int c);
 void RedBack();
 char GetSBookTrans(int ii, BOOL townok);
 void DrawSpellBook();

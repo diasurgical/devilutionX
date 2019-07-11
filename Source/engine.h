@@ -5,11 +5,11 @@
 //offset 0
 //pCelBuff->pFrameTable[0]
 
-extern char gbPixelCol;  // automap pixel color 8-bit (palette entry)
-extern int gbRotateMap; // bool flip - if y < x
-extern int orgseed;      // weak
-extern int SeedCount;    // weak
-extern int gbNotInView; // bool valid - if x/y are in bounds
+extern char gbPixelCol; // automap pixel color 8-bit (palette entry)
+extern BOOL gbRotateMap; // flip - if y < x
+extern int orgseed;
+extern int SeedCount;
+extern BOOL gbNotInView; // valid - if x/y are in bounds
 
 void CelDrawDatOnly(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth);
 void CelDecodeOnly(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
@@ -41,9 +41,9 @@ void SetRndSeed(int s);
 int GetRndSeed();
 int random(BYTE idx, int v);
 void engine_debug_trap(BOOL show_cursor);
-unsigned char *DiabloAllocPtr(int dwBytes);
+BYTE *DiabloAllocPtr(DWORD dwBytes);
 void mem_free_dbg(void *p);
-BYTE *LoadFileInMem(char *pszName, int *pdwFileLen);
+BYTE *LoadFileInMem(char *pszName, DWORD *pdwFileLen);
 DWORD LoadFileWithMem(const char *pszName, void *p);
 void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel);
 void Cl2DecodeFrm1(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int CelSkip, int CelCap);
@@ -64,7 +64,6 @@ void PlayInGameMovie(char *pszMovie);
 
 /* rdata */
 
-extern const int engine_inf;      // weak
 extern const int rand_increment;  // unused
 extern const int rand_multiplier; // unused
 

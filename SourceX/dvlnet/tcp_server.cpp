@@ -135,11 +135,13 @@ void tcp_server::send_packet(packet& pkt)
 
 void tcp_server::start_send(scc con, packet& pkt)
 {
-	auto frame = frame_queue::make_frame(pkt.data());
-	asio::async_write(con->socket, asio::buffer(frame),
-	                  std::bind(&tcp_server::handle_send, this, con,
-	                            std::placeholders::_1, std::placeholders::_2));
-
+	auto frame = std::make_shared<buffer_t>(frame_queue::make_frame(pkt.data()));
+	auto buf = asio::buffer(*frame);
+	asio::async_write(con->socket, buf,
+		[this, con, frame = std::move(frame)]
+		(const asio::error_code &ec, size_t bytes_sent) {
+		handle_send(con, ec, bytes_sent);
+	});
 }
 
 void tcp_server::handle_send(scc con, const asio::error_code& ec,

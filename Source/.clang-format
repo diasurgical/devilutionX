@@ -6,4 +6,5 @@
 	PointerAlignment: Right,
 	TabWidth: 4,
 	UseTab: ForIndentation,
+	SortIncludes: false,
 }

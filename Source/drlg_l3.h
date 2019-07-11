@@ -5,7 +5,7 @@
 extern BOOLEAN lavapool;
 extern int abyssx;
 extern int lockoutcnt;
-extern BOOLEAN lockout[40][40];
+extern BOOLEAN lockout[DMAXX][DMAXY];
 
 void AddFenceDoors();
 void FenceDoorFix();
@@ -14,7 +14,7 @@ void FixL3Warp();
 void FixL3HallofHeroes();
 void DRLG_L3LockRec(int x, int y);
 BOOL DRLG_L3Lockout();
-void CreateL3Dungeon( int rseed, int entry);
+void CreateL3Dungeon(DWORD rseed, int entry);
 void DRLG_L3(int entry);
 void InitL3Dungeon();
 BOOL DRLG_L3FillRoom(int x1, int y1, int x2, int y2);

@@ -159,7 +159,7 @@ BOOL pfile_create_player_description(char *dst, DWORD len)
 	return TRUE;
 }
 
-BOOL pfile_create_save_file(const char *name_1, const char *name_2)
+BOOL pfile_rename_hero(const char *name_1, const char *name_2)
 {
 	int i;
 	DWORD save_num;
@@ -567,26 +567,31 @@ BOOL __stdcall GetTempSaveNames(DWORD dwIndex, char *szTemp)
 
 void pfile_rename_temp_to_perm()
 {
-	DWORD save_num, i;
-	char TempName[MAX_PATH];
-	char PermName[MAX_PATH];
+	DWORD dwChar, dwIndex;
+	BOOL bResult;
+	char szTemp[MAX_PATH];
+	char szPerm[MAX_PATH];
 
-	save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
-	if (!pfile_open_archive(FALSE, save_num))
+	dwChar = pfile_get_save_num_from_name(plr[myplr]._pName);
+	/// ASSERT: assert(dwChar < MAX_CHARACTERS);
+	/// ASSERT: assert(gbMaxPlayers == 1);
+	if (!pfile_open_archive(FALSE, dwChar))
 		app_fatal("Unable to write to save file archive");
 
-	i = 0;
-	while (GetTempSaveNames(i, TempName)) {
-		GetPermSaveNames(i, PermName);
-		i++;
-		if (mpqapi_has_file(TempName)) {
-			if (mpqapi_has_file(PermName))
-				mpqapi_remove_hash_entry(PermName);
-			mpqapi_rename(TempName, PermName);
+	dwIndex = 0;
+	while (GetTempSaveNames(dwIndex, szTemp)) {
+		bResult = GetPermSaveNames(dwIndex, szPerm);
+		/// ASSERT: assert(bResult);
+		dwIndex++;
+		if (mpqapi_has_file(szTemp)) {
+			if (mpqapi_has_file(szPerm))
+				mpqapi_remove_hash_entry(szPerm);
+			mpqapi_rename(szTemp, szPerm);
 		}
 	}
-	GetPermSaveNames(i, PermName);
-	pfile_flush(TRUE, save_num);
+	/// ASSERT: assert(! GetPermSaveNames(dwIndex,szPerm));
+	GetPermSaveNames(dwIndex, szPerm);
+	pfile_flush(TRUE, dwChar);
 }
 
 BOOL __stdcall GetPermSaveNames(DWORD dwIndex, char *szPerm)
