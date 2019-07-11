@@ -194,6 +194,8 @@ add_executable(devilutionx
   SourceX/miniwin/thread.cpp
 #  SourceX/miniwin/dsound.cpp
   SourceX/miniwin/ddraw.cpp
+# arczi  
+  SourceX/miniwin/sdl1_wrapper.cpp
 #  SourceX/sound.cpp
   SourceX/storm/storm.cpp
   SourceX/storm/storm_net.cpp
