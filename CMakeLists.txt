@@ -217,12 +217,19 @@ target_include_directories(devilutionx PRIVATE
   3rdParty/asio/include
   3rdParty/Radon/Radon/include
   3rdParty/libsmacker
+  ${SDL_INCLUDE_DIR}
   ${SDL_INCLUDE_DIRS}
+  ${SDL_TTF_INCLUDE_DIRS}
+  ${SDL_MIXER_INCLUDE_DIRS}
+  ${SDL_INCLUDE_DIRS}/..
+  ${SDL_INCLUDE_DIR}/..
   ${SDL_TTF_INCLUDE_DIRS}/..
   ${SDL_MIXER_INCLUDE_DIRS}/..
 )
 
-message("Include dir " ${SDL_TTF_INCLUDE_DIRS})
+message("SDL include dir: " ${SDL_INCLUDE_DIR})
+message("SDL_mixer include dir: " ${SDL_MIXER_INCLUDE_DIRS})
+message("SDL_ttf include dir: " ${SDL_TTF_INCLUDE_DIRS})
 
 
 target_link_libraries(devilution PUBLIC Threads::Threads)
