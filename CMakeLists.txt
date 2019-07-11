@@ -64,10 +64,13 @@ if(NOT CMAKE_SIZEOF_VOID_P EQUAL 4)
   message(WARNING [[Not 32-bit, highly experimental!]])
 endif()
 
+find_package(PNG REQUIRED)
 find_package(Threads REQUIRED)
+find_package(Freetype REQUIRED)
 find_package(SDL 1.2 REQUIRED)
 find_package(SDL_ttf REQUIRED)
 find_package(SDL_mixer REQUIRED)
+#find_package(MAD REQUIRED)
 #find_package(sodium REQUIRED)
 
 set(PROJECT_LINK_LIBS libSDL.so)
@@ -183,11 +186,10 @@ add_executable(devilutionx
   SourceX/miniwin/misc_dx.cpp
   SourceX/miniwin/rand.cpp
   SourceX/miniwin/thread.cpp
-#  SourceX/miniwin/dsound.cpp
+  SourceX/miniwin/dsound.cpp
   SourceX/miniwin/ddraw.cpp
-# arczi
   SourceX/miniwin/sdl1_wrapper.cpp
-#  SourceX/sound.cpp
+  SourceX/sound.cpp
   SourceX/storm/storm.cpp
   SourceX/storm/storm_net.cpp
   SourceX/storm/storm_dx.cpp
@@ -241,8 +243,12 @@ target_link_libraries(devilutionx PRIVATE
   smacker
   Radon
   ${SDL_LIBRARY}
+  -ldebug
   ${SDL_TTF_LIBRARY}
   ${SDL_MIXER_LIBRARY}
+  ${SDL_MIXER_LIBRARIES}
+  ${FREETYPE_LIBRARIES}
+  ${PNG_LIBRARIES}
   )
   # ${PROJECT_SOURCE_DIR}/libSDLmain.a)
   # /usr/lib/x86_64-linux-gnu/libSDLmain.a
