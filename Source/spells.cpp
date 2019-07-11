@@ -81,7 +81,7 @@ void UseMana(int id, int sn)
 	}
 }
 
-BOOL CheckSpell(int id, int sn, BYTE st, BOOL manaonly)
+BOOL CheckSpell(int id, int sn, char st, BOOL manaonly)
 {
 	BOOL result;
 

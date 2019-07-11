@@ -3,8 +3,8 @@
 #define __MPQAPI_H__
 
 extern char mpq_buf[4096];
-extern BOOL save_archive_modified; // weak
-extern BOOLEAN save_archive_open;     // weak
+extern BOOL save_archive_modified;
+extern BOOLEAN save_archive_open;
 
 BOOL mpqapi_set_hidden(const char *pszArchive, BOOL hidden);
 void mpqapi_store_creation_time(const char *pszArchive, DWORD dwChar);

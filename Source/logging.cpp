@@ -6,10 +6,10 @@ DEVILUTION_BEGIN_NAMESPACE
 #ifdef __cplusplus
 static CCritSect sgMemCrit;
 #endif
-CHAR FileName[MAX_PATH]; // idb
+CHAR FileName[MAX_PATH];
 char log_buffer[388];
-LPCVOID lpAddress;           // idb
-DWORD nNumberOfBytesToWrite; // idb
+LPCVOID lpAddress;
+DWORD nNumberOfBytesToWrite;
 
 /* data */
 
@@ -95,7 +95,6 @@ HANDLE log_create()
 	log_not_created = FALSE;
 	return fh;
 }
-// 4947D4: using guessed type int log_not_created;
 
 void log_get_version(VS_FIXEDFILEINFO *file_info)
 {
@@ -157,10 +156,10 @@ void __cdecl log_printf(const char *pszFmt, ...)
 
 void log_dump_computer_info()
 {
-	char Buffer[64];            // [esp+0h] [ebp-88h]
-	VS_FIXEDFILEINFO file_info; // [esp+40h] [ebp-48h]
-	SYSTEMTIME SystemTime;      // [esp+74h] [ebp-14h]
-	DWORD pcbBuffer;            // [esp+84h] [ebp-4h]
+	char Buffer[64];
+	VS_FIXEDFILEINFO file_info;
+	SYSTEMTIME SystemTime;
+	DWORD pcbBuffer;
 
 	GetLocalTime(&SystemTime);
 	pcbBuffer = 64;

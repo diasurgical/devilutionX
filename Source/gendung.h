@@ -10,27 +10,27 @@ extern int dMonster[MAXDUNX][MAXDUNY];
 extern BYTE dungeon[DMAXX][DMAXY];
 extern char dObject[MAXDUNX][MAXDUNY];
 extern BYTE *pSpeedCels;
-extern int nlevel_frames; // weak
+extern int nlevel_frames;
 extern char pdungeon[DMAXX][DMAXY];
 extern char dDead[MAXDUNX][MAXDUNY];
 extern MICROS dpiece_defs_map_1[MAXDUNX * MAXDUNY];
 extern char dPreLight[MAXDUNX][MAXDUNY];
-extern char TransVal; // weak
+extern char TransVal;
 extern int MicroTileLen;
 extern char dflags[DMAXX][DMAXY];
 extern int dPiece[MAXDUNX][MAXDUNY];
 extern char dLight[MAXDUNX][MAXDUNY];
-extern int setloadflag_2; // weak
+extern int setloadflag_2;
 extern int tile_defs[MAXTILES];
 extern BYTE *pMegaTiles;
 extern BYTE *pLevelPieces;
-extern int gnDifficulty; // idb
+extern int gnDifficulty;
 extern char block_lvid[2049];
 //char byte_5B78EB;
 extern char dTransVal[MAXDUNX][MAXDUNY];
 extern BOOLEAN nTrapTable[2049];
 extern BYTE leveltype;
-extern unsigned char currlevel; // idb
+extern BYTE currlevel;
 extern char TransList[256];
 extern BOOLEAN nSolidTable[2049];
 extern int level_frame_count[MAXTILES];
@@ -39,10 +39,10 @@ extern BYTE *pDungeonCels;
 extern int SpeedFrameTbl[128][16];
 extern THEME_LOC themeLoc[MAXTHEMES];
 extern char dPlayer[MAXDUNX][MAXDUNY];
-extern int dword_5C2FF8;   // weak
-extern int dword_5C2FFC;   // weak
-extern int scr_pix_width;  // weak
-extern int scr_pix_height; // weak
+extern int dword_5C2FF8;
+extern int dword_5C2FFC;
+extern int scr_pix_width;
+extern int scr_pix_height;
 extern char dArch[MAXDUNX][MAXDUNY];
 extern char nBlockTable[2049];
 extern BYTE *pSpecialCels;
@@ -52,21 +52,21 @@ extern BYTE setlvlnum;
 extern int level_frame_sizes[MAXTILES];
 extern char nMissileTable[2049];
 extern char *pSetPiece_2;
-extern char setlvltype; // weak
+extern char setlvltype;
 extern BOOLEAN setlevel;
-extern int LvlViewY;    // weak
-extern int LvlViewX;    // weak
-extern int dmaxx;       // weak
-extern int dmaxy;       // weak
-extern int setpc_h;     // weak
-extern int setpc_w;     // weak
-extern int setpc_x;     // idb
-extern int ViewX;       // idb
-extern int ViewY;       // idb
-extern int setpc_y;     // idb
+extern int LvlViewY;
+extern int LvlViewX;
+extern int dmaxx;
+extern int dmaxy;
+extern int setpc_h;
+extern int setpc_w;
+extern int setpc_x;
+extern int ViewX;
+extern int ViewY;
+extern int setpc_y;
 extern char dMissile[MAXDUNX][MAXDUNY];
-extern int dminx; // weak
-extern int dminy; // weak
+extern int dminx;
+extern int dminy;
 extern MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
 
 void FillSolidBlockTbls();
@@ -80,8 +80,8 @@ void DRLG_InitTrans();
 void DRLG_MRectTrans(int x1, int y1, int x2, int y2);
 void DRLG_RectTrans(int x1, int y1, int x2, int y2);
 void DRLG_CopyTrans(int sx, int sy, int dx, int dy);
-void DRLG_ListTrans(int num, unsigned char *List);
-void DRLG_AreaTrans(int num, unsigned char *List);
+void DRLG_ListTrans(int num, BYTE *List);
+void DRLG_AreaTrans(int num, BYTE *List);
 void DRLG_InitSetPC();
 void DRLG_SetPC();
 void Make_SetPC(int x, int y, int w, int h);

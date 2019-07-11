@@ -4,7 +4,7 @@
 #include <SDL/SDL.h>
 // #include <SDL/SDL_shape.h>
 #ifdef __cplusplus
-//extern "C" {
+extern "C" {
 #endif
 /*
  klaus
@@ -65,7 +65,7 @@
 
 
 
-//#define SDL_Renderer SDL_Surface
+#define SDL_Renderer SDL_Surface
 #define SDL_Texture SDL_Surface
 
 //klaus
@@ -345,7 +345,7 @@ struct SDL_DisplayMode {int h; int w;};
 
 struct SDL_HitTest {};
 struct SDL_WindowUserData {};
-struct SDL_Renderer {};
+//struct SDL_Renderer {};
 // struct SDL_Texture {};
 
 
@@ -391,7 +391,7 @@ void SDL_SetWindowTitle(SDL_Window* window, const char* title);
 char* SDL_GetPrefPath(const char* org, const char* app);
 const Uint8* SDL_GetKeyboardState(int* numkeys);
 typedef int (SDLCALL * SDL_ThreadFunction) (void *data);
-SDL_Thread* SDL_CreateThread(SDL_ThreadFunction fn, const char* name, void* data);
+//SDL_Thread* SDL_CreateThread(SDL_ThreadFunction fn, const char* name, void* data);
 char* SDL_GetBasePath(void);
 void SDL_EnableScreenSaver(void);
 void SDL_DisableScreenSaver(void);
@@ -452,7 +452,7 @@ char* SDL_GetClipboardText(void);
 SDL_bool SDL_PointInRect(const SDL_Point* p, const SDL_Rect*  r);
 
 #ifdef __cplusplus
-//}
+}
 #endif
 
 #endif //  __SDL1_WRAPPER_H

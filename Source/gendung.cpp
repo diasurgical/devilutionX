@@ -10,7 +10,7 @@ int dMonster[MAXDUNX][MAXDUNY];
 BYTE dungeon[DMAXX][DMAXY];
 char dObject[MAXDUNX][MAXDUNY];
 BYTE *pSpeedCels;
-int nlevel_frames; // weak
+int nlevel_frames;
 char pdungeon[DMAXX][DMAXY];
 char dDead[MAXDUNX][MAXDUNY];
 MICROS dpiece_defs_map_1[MAXDUNX * MAXDUNY];
@@ -20,17 +20,17 @@ int MicroTileLen;
 char dflags[DMAXX][DMAXY];
 int dPiece[MAXDUNX][MAXDUNY];
 char dLight[MAXDUNX][MAXDUNY];
-int setloadflag_2; // weak
+int setloadflag_2;
 int tile_defs[MAXTILES];
 BYTE *pMegaTiles;
 BYTE *pLevelPieces;
-int gnDifficulty; // idb
+int gnDifficulty;
 char block_lvid[2049];
 //char byte_5B78EB;
 char dTransVal[MAXDUNX][MAXDUNY];
 BOOLEAN nTrapTable[2049];
 BYTE leveltype;
-unsigned char currlevel; // idb
+BYTE currlevel;
 char TransList[256];
 BOOLEAN nSolidTable[2049];
 int level_frame_count[MAXTILES];
@@ -39,10 +39,10 @@ BYTE *pDungeonCels;
 int SpeedFrameTbl[128][16];
 THEME_LOC themeLoc[MAXTHEMES];
 char dPlayer[MAXDUNX][MAXDUNY];
-int dword_5C2FF8;   // weak
-int dword_5C2FFC;   // weak
-int scr_pix_width;  // weak
-int scr_pix_height; // weak
+int dword_5C2FF8;
+int dword_5C2FFC;
+int scr_pix_width;
+int scr_pix_height;
 char dArch[MAXDUNX][MAXDUNY];
 char nBlockTable[2049];
 BYTE *pSpecialCels;
@@ -52,28 +52,28 @@ BYTE setlvlnum;
 int level_frame_sizes[MAXTILES];
 char nMissileTable[2049];
 char *pSetPiece_2;
-char setlvltype; // weak
+char setlvltype;
 BOOLEAN setlevel;
-int LvlViewY; // weak
-int LvlViewX; // weak
-int dmaxx;    // weak
-int dmaxy;    // weak
-int setpc_h;  // weak
-int setpc_w;  // weak
-int setpc_x;  // idb
-int ViewX;    // idb
-int ViewY;    // idb
-int setpc_y;  // idb
+int LvlViewY;
+int LvlViewX;
+int dmaxx;
+int dmaxy;
+int setpc_h;
+int setpc_w;
+int setpc_x;
+int ViewX;
+int ViewY;
+int setpc_y;
 char dMissile[MAXDUNX][MAXDUNY];
-int dminx; // weak
-int dminy; // weak
+int dminx;
+int dminy;
 MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
 
 void FillSolidBlockTbls()
 {
-	unsigned char bv;
-	unsigned int dwTiles;
-	unsigned char *pSBFile, *pTmp;
+	BYTE bv;
+	DWORD dwTiles;
+	BYTE *pSBFile, *pTmp;
 	int i;
 
 	memset(nBlockTable, 0, sizeof(nBlockTable));
@@ -84,19 +84,19 @@ void FillSolidBlockTbls()
 
 	switch (leveltype) {
 	case DTYPE_TOWN:
-		pSBFile = LoadFileInMem("Levels\\TownData\\Town.SOL", (int *)&dwTiles);
+		pSBFile = LoadFileInMem("Levels\\TownData\\Town.SOL", &dwTiles);
 		break;
 	case DTYPE_CATHEDRAL:
-		pSBFile = LoadFileInMem("Levels\\L1Data\\L1.SOL", (int *)&dwTiles);
+		pSBFile = LoadFileInMem("Levels\\L1Data\\L1.SOL", &dwTiles);
 		break;
 	case DTYPE_CATACOMBS:
-		pSBFile = LoadFileInMem("Levels\\L2Data\\L2.SOL", (int *)&dwTiles);
+		pSBFile = LoadFileInMem("Levels\\L2Data\\L2.SOL", &dwTiles);
 		break;
 	case DTYPE_CAVES:
-		pSBFile = LoadFileInMem("Levels\\L3Data\\L3.SOL", (int *)&dwTiles);
+		pSBFile = LoadFileInMem("Levels\\L3Data\\L3.SOL", &dwTiles);
 		break;
 	case DTYPE_HELL:
-		pSBFile = LoadFileInMem("Levels\\L4Data\\L4.SOL", (int *)&dwTiles);
+		pSBFile = LoadFileInMem("Levels\\L4Data\\L4.SOL", &dwTiles);
 		break;
 	default:
 		app_fatal("FillSolidBlockTbls");
@@ -447,8 +447,6 @@ void MakeSpeedCels()
 		}
 	}
 }
-// 525728: using guessed type int light4flag;
-// 53CD4C: using guessed type int nlevel_frames;
 
 void SortTiles(int frames)
 {
@@ -555,11 +553,6 @@ void SetDungeonMicros()
 		dword_5C2FFC = 7;
 	}
 }
-// 52569C: using guessed type int zoomflag;
-// 5C2FF8: using guessed type int dword_5C2FF8;
-// 5C2FFC: using guessed type int dword_5C2FFC;
-// 5C3000: using guessed type int scr_pix_width;
-// 5C3004: using guessed type int scr_pix_height;
 
 void DRLG_InitTrans()
 {
@@ -567,7 +560,6 @@ void DRLG_InitTrans()
 	memset(TransList, 0, sizeof(TransList));
 	TransVal = 1;
 }
-// 5A5590: using guessed type char TransVal;
 
 void DRLG_MRectTrans(int x1, int y1, int x2, int y2)
 {
@@ -586,7 +578,6 @@ void DRLG_MRectTrans(int x1, int y1, int x2, int y2)
 
 	TransVal++;
 }
-// 5A5590: using guessed type char TransVal;
 
 void DRLG_RectTrans(int x1, int y1, int x2, int y2)
 {
@@ -599,17 +590,16 @@ void DRLG_RectTrans(int x1, int y1, int x2, int y2)
 	}
 	TransVal++;
 }
-// 5A5590: using guessed type char TransVal;
 
 void DRLG_CopyTrans(int sx, int sy, int dx, int dy)
 {
 	dTransVal[dx][dy] = dTransVal[sx][sy];
 }
 
-void DRLG_ListTrans(int num, unsigned char *List)
+void DRLG_ListTrans(int num, BYTE *List)
 {
 	int i;
-	unsigned char x1, x2, y1, y2;
+	BYTE x1, x2, y1, y2;
 
 	for (i = 0; i < num; i++) {
 		x1 = *List++;
@@ -620,10 +610,10 @@ void DRLG_ListTrans(int num, unsigned char *List)
 	}
 }
 
-void DRLG_AreaTrans(int num, unsigned char *List)
+void DRLG_AreaTrans(int num, BYTE *List)
 {
 	int i;
-	unsigned char x1, x2, y1, y2;
+	BYTE x1, x2, y1, y2;
 
 	for (i = 0; i < num; i++) {
 		x1 = *List++;
@@ -635,7 +625,6 @@ void DRLG_AreaTrans(int num, unsigned char *List)
 	}
 	++TransVal;
 }
-// 5A5590: using guessed type char TransVal;
 
 void DRLG_InitSetPC()
 {
@@ -644,8 +633,6 @@ void DRLG_InitSetPC()
 	setpc_w = 0;
 	setpc_h = 0;
 }
-// 5CF330: using guessed type int setpc_h;
-// 5CF334: using guessed type int setpc_w;
 
 void DRLG_SetPC()
 {
@@ -662,8 +649,6 @@ void DRLG_SetPC()
 		}
 	}
 }
-// 5CF330: using guessed type int setpc_h;
-// 5CF334: using guessed type int setpc_w;
 
 void Make_SetPC(int x, int y, int w, int h)
 {
@@ -694,6 +679,7 @@ BOOL DRLG_WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, in
 	xCount = 0;
 	yCount = 0;
 
+	// BUGFIX: change '&&' to '||'
 	if (x > DMAXX - maxSize && y > DMAXY - maxSize) {
 		return FALSE;
 	}
@@ -764,8 +750,6 @@ BOOL DRLG_WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, in
 	*height = ySmallest - 2;
 	return TRUE;
 }
-// 41965B: using guessed type int var_6C[20];
-// 41965B: using guessed type int var_BC[20];
 
 void DRLG_CreateThemeRoom(int themeIndex)
 {
@@ -971,7 +955,5 @@ void InitLevels()
 		setlevel = 0;
 	}
 }
-// 52572C: using guessed type int leveldebug;
-// 5CF31D: using guessed type char setlevel;
 
 DEVILUTION_END_NAMESPACE

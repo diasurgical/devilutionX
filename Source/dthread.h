@@ -12,6 +12,5 @@ unsigned int __stdcall dthread_handler(void *unused);
 void dthread_cleanup();
 
 /* data */
-extern int dthread_inf; // weak
 
 #endif /* __DTHREAD_H__ */

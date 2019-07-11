@@ -90,7 +90,7 @@ extern int gnLevelTypeTbl[NUMLEVELS];
 extern int MouseY;             // idb
 extern int MouseX;             // idb
 extern BOOL gbGameLoopStartup; // idb
-extern int glSeedTbl[NUMLEVELS];
+extern DWORD glSeedTbl[NUMLEVELS];
 extern BOOL gbRunGame;
 extern int glMid3Seed[NUMLEVELS];
 extern BOOL gbRunGameResult;
@@ -150,8 +150,6 @@ void timeout_cursor(BOOL bTimeout);
 void diablo_color_cyc_logic();
 
 /* data */
-
-extern int diablo_inf; // weak
 
 /* rdata */
 
