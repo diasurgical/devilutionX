@@ -214,10 +214,8 @@
   #endif
 
   // Typedefs for ANSI C
-  #ifndef PLATFORM_AMIGA
   typedef unsigned char  BYTE;
   typedef int            LONG;
-  #endif
   typedef unsigned short USHORT;
   typedef unsigned int   DWORD;
   typedef unsigned long  DWORD_PTR;

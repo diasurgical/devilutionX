@@ -1,3 +1,4 @@
+#include <cwchar>
 #include <algorithm>
 #include <memory>
 #include <vector>
