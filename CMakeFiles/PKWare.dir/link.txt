@@ -1,0 +1,2 @@
+/usr/bin/ar.exe qc libPKWare.a  CMakeFiles/PKWare.dir/3rdParty/PKWare/explode.cpp.o CMakeFiles/PKWare.dir/3rdParty/PKWare/implode.cpp.o
+/usr/bin/ranlib.exe libPKWare.a
