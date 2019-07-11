@@ -1,5 +1,6 @@
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include "sdl1_wrapper.h"
+#include <SDL_video.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -157,7 +158,7 @@ SDL_AllocPalette(int ncolors)
 
     /* Input validation */
     if (ncolors < 1) {
-      SDL_InvalidParamError("ncolors");
+      //SDL_InvalidParamError("ncolors");
       return NULL;
     }
 
@@ -173,8 +174,8 @@ SDL_AllocPalette(int ncolors)
         return NULL;
     }
     palette->ncolors = ncolors;
-    palette->version = 1;
-    palette->refcount = 1;
+    //palette->version = 1;
+    //palette->refcount = 1;
 
     SDL_memset(palette->colors, 0xFF, ncolors * sizeof(*palette->colors));
 
@@ -185,11 +186,13 @@ int
 SDL_SetPixelFormatPalette(SDL_PixelFormat * format, SDL_Palette *palette)
 {
     if (!format) {
-        return SDL_SetError("SDL_SetPixelFormatPalette() passed NULL format");
+        SDL_SetError("SDL_SetPixelFormatPalette() passed NULL format");
+        return 0;
     }
 
     if (palette && palette->ncolors > (1 << format->BitsPerPixel)) {
-        return SDL_SetError("SDL_SetPixelFormatPalette() passed a palette that doesn't match the format");
+        SDL_SetError("SDL_SetPixelFormatPalette() passed a palette that doesn't match the format");
+        return 0;
     }
 
     if (format->palette == palette) {
@@ -201,11 +204,11 @@ SDL_SetPixelFormatPalette(SDL_PixelFormat * format, SDL_Palette *palette)
     }
 
     format->palette = palette;
-
+/*
     if (format->palette) {
         ++format->palette->refcount;
     }
-
+*/
     return 0;
 }
 
@@ -228,11 +231,12 @@ SDL_SetPaletteColors(SDL_Palette * palette, const SDL_Color * colors,
         SDL_memcpy(palette->colors + firstcolor, colors,
                    ncolors * sizeof(*colors));
     }
+    /*
     ++palette->version;
     if (!palette->version) {
         palette->version = 1;
     }
-
+*/
     return status;
 }
 
@@ -240,12 +244,14 @@ void
 SDL_FreePalette(SDL_Palette * palette)
 {
     if (!palette) {
-        SDL_InvalidParamError("palette");
+        SDL_SetError("palette error");
         return;
     }
+    /*
     if (--palette->refcount > 0) {
         return;
     }
+    */
     SDL_free(palette->colors);
     SDL_free(palette);
 }
@@ -267,27 +273,27 @@ SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth,
 
     /* Allocate the surface */
     surface = (SDL_Surface *) SDL_calloc(1, sizeof(*surface));
-    if (surface == NULL) {
+    if (surface == nullptr) {
         SDL_OutOfMemory();
-        return NULL;
+        return nullptr;
     }
 
-    surface->format = SDL_AllocFormat(format);
+    surface->format = (SDL_PixelFormat*)format; //SDL_AllocFormat(format);
     if (!surface->format) {
         SDL_FreeSurface(surface);
-        return NULL;
+        return nullptr;
     }
     surface->w = width;
     surface->h = height;
-    surface->pitch = SDL_CalculatePitch(format, width);
-    SDL_SetClipRect(surface, NULL);
+    //surface->pitch = SDL_CalculatePitch(format, width);
+    SDL_SetClipRect(surface, nullptr);
 
-    if (SDL_ISPIXELFORMAT_INDEXED(surface->format->format)) {
+    //if (SDL_ISPIXELFORMAT_INDEXED(surface->format)) {
         SDL_Palette *palette =
             SDL_AllocPalette((1 << surface->format->BitsPerPixel));
         if (!palette) {
             SDL_FreeSurface(surface);
-            return NULL;
+            return nullptr;
         }
         if (palette->ncolors == 2) {
             /* Create a black and white bitmap palette */
@@ -300,7 +306,7 @@ SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth,
         }
         SDL_SetSurfacePalette(surface, palette);
         SDL_FreePalette(palette);
-    }
+    //}
 
     /* Get the pixels */
     if (surface->w && surface->h) {
@@ -323,13 +329,13 @@ SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth,
         SDL_memset(surface->pixels, 0, surface->h * surface->pitch);
     }
 
-    /* Allocate an empty mapping */
+    /* Allocate an empty mapping
     surface->map = SDL_AllocBlitMap();
     if (!surface->map) {
         SDL_FreeSurface(surface);
         return NULL;
     }
-
+    */
     /* By default surface with an alpha mask are set up for blending */
     if (surface->format->Amask) {
         //SDL_SetSurfaceBlendMode(surface, SDL_BLENDMODE_BLEND);  //arczi
@@ -340,7 +346,7 @@ SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth,
     return surface;
 }
 	
-char* SDL_GetPrefPath(const char* org, const char* app) { return org; }
+char* SDL_GetPrefPath(const char* org, const char* app) { return (char*)org; }
 
 #ifdef __cplusplus
 }

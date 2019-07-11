@@ -12,7 +12,7 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
-option(ASAN "Enable address sanitizer" ON)
+option(ASAN "Enable address sanitizer" OFF)
 option(DEBUG "Enable debug mode in engine" ON)
 option(DIST "Dynamically link only glibc and SDL2" OFF)
 option(FASTER "Enable FASTER in engine" ON)
