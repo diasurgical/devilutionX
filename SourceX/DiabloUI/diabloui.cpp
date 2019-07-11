@@ -384,8 +384,10 @@ void InitFont()
 		return;
 	}
 
+#ifndef __AMIGA__
 	TTF_SetFontKerning(font, false);
 	TTF_SetFontHinting(font, TTF_HINTING_MONO);
+#endif
 }
 
 void UiInitialize()
