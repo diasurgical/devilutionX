@@ -792,11 +792,11 @@ static void DRLG_L3Pool()
 				found = TRUE;
 			}
 			poolchance = random_(0, 100);
-			for (j = duny - totarea; j < duny + totarea; j++) {
-				for (i = dunx - totarea; i < dunx + totarea; i++) {
+			for (j = (duny - totarea > 0 ? duny - totarea : 0); j < (duny + totarea < DMAXY ? duny + totarea : DMAXY); j++) {
+				for (i = (dunx - totarea > 0 ? dunx - totarea : 0); i < (dunx + totarea < DMAXY ? dunx + totarea : DMAXY); i++) {
 					// BUGFIX: In the following swap the order to first do the
-					// index checks and only then access dungeon[i][j]
-					if (dungeon[i][j] & 0x80 && j >= 0 && j < DMAXY && i >= 0 && i < DMAXX) {
+					// index checks and only then access dungeon[i][j] (fixed)
+					if (dungeon[i][j] & 0x80) {
 						dungeon[i][j] &= ~0x80;
 						if (totarea > 4 && poolchance < 25 && !found) {
 							k = poolsub[dungeon[i][j]];
@@ -816,8 +816,8 @@ static void DRLG_L3PoolFix()
 {
 	int dunx, duny;
 
-	for (duny = 0; duny < DMAXY; duny++) {     // BUGFIX: Change '0' to '1' and 'DMAXY' to 'DMAXY - 1'
-		for (dunx = 0; dunx < DMAXX; dunx++) { // BUGFIX: Change '0' to '1' and 'DMAXX' to 'DMAXX - 1'
+	for (duny = 1; duny < DMAXY - 1; duny++) {     // BUGFIX: Change '0' to '1' and 'DMAXY' to 'DMAXY - 1' (fixed)
+		for (dunx = 1; dunx < DMAXX - 1; dunx++) { // BUGFIX: Change '0' to '1' and 'DMAXX' to 'DMAXX - 1' (fixed)
 			if (dungeon[dunx][duny] == 8) {
 				if (dungeon[dunx - 1][duny - 1] >= 25 && dungeon[dunx - 1][duny - 1] <= 41
 				    && dungeon[dunx - 1][duny] >= 25 && dungeon[dunx - 1][duny] <= 41
@@ -940,18 +940,18 @@ static void DRLG_L3PlaceRndSet(const BYTE *miniset, int rndper)
 			}
 			kk = sw * sh + 2;
 			if (miniset[kk] >= 84 && miniset[kk] <= 100 && found == TRUE) {
-				// BUGFIX: accesses to dungeon can go out of bounds
+				// BUGFIX: accesses to dungeon can go out of bounds (fixed)
 				// BUGFIX: Comparisons vs 100 should use same tile as comparisons vs 84.
-				if (dungeon[sx - 1][sy] >= 84 && dungeon[sx - 1][sy] <= 100) {
+				if (sx - 1 >= 0 && dungeon[sx - 1][sy] >= 84 && dungeon[sx - 1][sy] <= 100) {
 					found = FALSE;
 				}
-				if (dungeon[sx + 1][sy] >= 84 && dungeon[sx - 1][sy] <= 100) {
+				if (sx + 1 < 40 && sx - 1 >= 0 && dungeon[sx + 1][sy] >= 84 && dungeon[sx - 1][sy] <= 100) {
 					found = FALSE;
 				}
-				if (dungeon[sx][sy + 1] >= 84 && dungeon[sx - 1][sy] <= 100) {
+				if (sy + 1 < 40 && sx - 1 >= 0 && dungeon[sx][sy + 1] >= 84 && dungeon[sx - 1][sy] <= 100) {
 					found = FALSE;
 				}
-				if (dungeon[sx][sy - 1] >= 84 && dungeon[sx - 1][sy] <= 100) {
+				if (sy - 1 >= 0 && sx - 1 >= 0 && dungeon[sx][sy - 1] >= 84 && dungeon[sx - 1][sy] <= 100) {
 					found = FALSE;
 				}
 			}
@@ -1142,8 +1142,8 @@ static void DRLG_L3Wood()
 	int i, j, x, y, xx, yy, rt, rp, x1, y1, x2, y2;
 	BOOL skip;
 
-	for (j = 0; j < DMAXY - 1; j++) {     // BUGFIX: Change '0' to '1'
-		for (i = 0; i < DMAXX - 1; i++) { // BUGFIX: Change '0' to '1'
+	for (j = 1; j < DMAXY - 1; j++) {     // BUGFIX: Change '0' to '1' (fixed)
+		for (i = 1; i < DMAXX - 1; i++) { // BUGFIX: Change '0' to '1' (fixed)
 			if (dungeon[i][j] == 10 && random_(0, 2) != 0) {
 				x = i;
 				while (dungeon[x][j] == 10) {
@@ -1212,8 +1212,8 @@ static void DRLG_L3Wood()
 		}
 	}
 
-	for (j = 0; j < DMAXY; j++) {     // BUGFIX: Change '0' to '1'
-		for (i = 0; i < DMAXX; i++) { // BUGFIX: Change '0' to '1'
+	for (j = 1; j < DMAXY; j++) {     // BUGFIX: Change '0' to '1' (fixed)
+		for (i = 1; i < DMAXX; i++) { // BUGFIX: Change '0' to '1' (fixed)
 			if (dungeon[i][j] == 7 && random_(0, 1) == 0 && SkipThemeRoom(i, j)) {
 				rt = random_(0, 2);
 				if (rt == 0) {
