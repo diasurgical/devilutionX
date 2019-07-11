@@ -1,3 +1,6 @@
+#ifndef __SDL1_WRAPPER_H
+#define __SDL1_WRAPPER_H
+
 #include <SDL/SDL.h>
 // #include <SDL/SDL_shape.h>
 #ifdef __cplusplus
@@ -451,6 +454,8 @@ SDL_bool SDL_PointInRect(const SDL_Point* p, const SDL_Rect*  r);
 #ifdef __cplusplus
 //}
 #endif
+
+#endif //  __SDL1_WRAPPER_H
 
 
 
