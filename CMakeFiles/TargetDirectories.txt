@@ -1,0 +1,8 @@
+/e/src/devilutionx/CMakeFiles/rebuild_cache.dir
+/e/src/devilutionx/CMakeFiles/edit_cache.dir
+/e/src/devilutionx/CMakeFiles/smacker.dir
+/e/src/devilutionx/CMakeFiles/devilution.dir
+/e/src/devilutionx/CMakeFiles/Radon.dir
+/e/src/devilutionx/CMakeFiles/StormLib.dir
+/e/src/devilutionx/CMakeFiles/PKWare.dir
+/e/src/devilutionx/CMakeFiles/devilutionx.dir
