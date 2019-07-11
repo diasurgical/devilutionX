@@ -93,7 +93,7 @@ int SNetInitializeProvider(unsigned long provider, struct _SNETPROGRAMDATA *clie
     struct _SNETPLAYERDATA *user_info, struct _SNETUIDATA *ui_info,
     struct _SNETVERSIONDATA *fileinfo)
 {
-	dvlnet_inst = net::abstract_net::make_net(provider);
+	//dvlnet_inst = net::abstract_net::make_net(provider);
 	return ui_info->selectnamecallback(client_info, user_info, ui_info, fileinfo, provider, NULL, 0, NULL, 0, NULL);
 }
 
