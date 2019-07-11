@@ -65,7 +65,7 @@ extern "C" {
 
 
 
-//#define SDL_Renderer SDL_Surface
+#define SDL_Renderer SDL_Surface
 #define SDL_Texture SDL_Surface
 
 //klaus
@@ -345,7 +345,7 @@ struct SDL_DisplayMode {int h; int w;};
 
 struct SDL_HitTest {};
 struct SDL_WindowUserData {};
-struct SDL_Renderer {};
+//struct SDL_Renderer {};
 // struct SDL_Texture {};
 
 
