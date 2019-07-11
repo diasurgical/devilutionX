@@ -145,9 +145,9 @@ void SDL_RenderPresent(SDL_Renderer* renderer)
 	SDL_Flip(renderer);
 }
 
-void SDL_Log(const char *message, ...) {
+void SDL_Log(const char *fmt, ...) {
 
-	printf("%s\n", message);
+	printf("%s\n", fmt);
 }
 
 SDL_Palette *
