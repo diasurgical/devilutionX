@@ -171,6 +171,31 @@ cmake -DCMAKE_C_COMPILER=/usr/local/bin/gcc8 -DCMAKE_CXX_COMPILER=/usr/local/bin
 make -j$(sysctl -n hw.ncpu)
 ```
 </details>
+<details><summary>Haiku</summary>
+
+### Installing dependencies on 32 bit Haiku
+```
+pkgman install cmake_x86 devel:libsdl2_x86 devel:libsdl2_mixer_x86 devel:libsdl2_ttf_x86 devel:libsodium_x86
+```
+### Installing dependencies on 64 bit Haiku
+```
+pkgman install cmake devel:libsdl2 devel:libsdl2_mixer devel:libsdl2_ttf devel:libsodium
+```
+### Compiling on 32 bit Haiku
+```
+mkdir build
+cd build
+cmake -DCMAKE_C_COMPILER=gcc-x86 -DCMAKE_CXX_COMPILER=g++-x86 -DBINARY_RELEASE=ON ..
+make -j$(nproc)
+```
+### Compiling on 64 bit Haiku
+```
+mkdir build
+cd build
+cmake ..
+make -j$(nproc)
+```
+</details>
 
 ## CMake arguments
 ### General

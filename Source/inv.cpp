@@ -88,7 +88,7 @@ const InvXY InvRect[73] = {
 
 /* data */
 
-int AP2x2Tbl[10] = { 8, 28, 6, 26, 4, 24, 2, 22, 0, 20 }; // weak
+int AP2x2Tbl[10] = { 8, 28, 6, 26, 4, 24, 2, 22, 0, 20 };
 
 void FreeInvGFX()
 {
@@ -98,11 +98,11 @@ void FreeInvGFX()
 void InitInv()
 {
 	if (plr[myplr]._pClass == PC_WARRIOR) {
-		pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", 0);
+		pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", NULL);
 	} else if (plr[myplr]._pClass == PC_ROGUE) {
-		pInvCels = LoadFileInMem("Data\\Inv\\Inv_rog.CEL", 0);
+		pInvCels = LoadFileInMem("Data\\Inv\\Inv_rog.CEL", NULL);
 	} else if (plr[myplr]._pClass == PC_SORCERER) {
-		pInvCels = LoadFileInMem("Data\\Inv\\Inv_Sor.CEL", 0);
+		pInvCels = LoadFileInMem("Data\\Inv\\Inv_Sor.CEL", NULL);
 	}
 
 	invflag = 0;
@@ -409,10 +409,6 @@ void DrawInv()
 		}
 	}
 }
-// 4B8CB8: using guessed type char pcursinvitem;
-// 69BEF8: using guessed type int light_table_index;
-// 69CF94: using guessed type int cel_transparency_active;
-// 41B8C4: using guessed type int var_A0[40];
 
 void DrawInvBelt()
 {
@@ -457,8 +453,6 @@ void DrawInvBelt()
 		}
 	}
 }
-// 4B8960: using guessed type int talkflag;
-// 4B8CB8: using guessed type char pcursinvitem;
 
 BOOL AutoPlace(int pnum, int ii, int sx, int sy, BOOL saveflag)
 {
@@ -647,7 +641,7 @@ BOOL GoldAutoPlace(int pnum)
 	return done;
 }
 
-int WeaponAutoPlace(int pnum)
+BOOL WeaponAutoPlace(int pnum)
 {
 	if (plr[pnum].HoldItem._iLoc != ILOC_TWOHAND) {
 		if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_NONE && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON)
@@ -1466,7 +1460,6 @@ void CheckQuestItem(int pnum)
 		}
 	}
 }
-// 52A554: using guessed type int sfxdelay;
 
 void InvGetItem(int pnum, int ii)
 {
@@ -1499,7 +1492,6 @@ void InvGetItem(int pnum, int ii)
 		SetCursor_(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 	}
 }
-// 4B8CC0: using guessed type char pcursitem;
 
 void AutoGetItem(int pnum, int ii)
 {
@@ -1630,9 +1622,8 @@ void AutoGetItem(int pnum, int ii)
 		plr[pnum].HoldItem._itype = ITYPE_NONE;
 	}
 }
-// 48E9A8: using guessed type int AP2x2Tbl[10];
 
-int FindGetItem(int indx, WORD ci, int iseed)
+int FindGetItem(int idx, WORD ci, int iseed)
 {
 	int i, ii;
 
@@ -1642,7 +1633,7 @@ int FindGetItem(int indx, WORD ci, int iseed)
 
 	while (1) {
 		ii = itemactive[i];
-		if (item[ii].IDidx == indx && item[ii]._iSeed == iseed && item[ii]._iCreateInfo == ci)
+		if (item[ii].IDidx == idx && item[ii]._iSeed == iseed && item[ii]._iCreateInfo == ci)
 			break;
 
 		i++;
@@ -1827,7 +1818,7 @@ int InvPutItem(int pnum, int x, int y)
 	return ii;
 }
 
-int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, unsigned int ibuff)
+int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff)
 {
 	BOOL done;
 	int d, ii;
@@ -1993,7 +1984,6 @@ char CheckInvHLight()
 
 	return rv;
 }
-// 4B883C: using guessed type int infoclr;
 
 void RemoveScroll(int pnum)
 {
@@ -2083,8 +2073,6 @@ void StartGoldDrop()
 	if (talkflag)
 		control_reset_talk();
 }
-// 4B8960: using guessed type int talkflag;
-// 4B8CB8: using guessed type char pcursinvitem;
 
 BOOL UseInvItem(int pnum, int cii)
 {
@@ -2183,9 +2171,6 @@ BOOL UseInvItem(int pnum, int cii)
 
 	return TRUE;
 }
-// 4B8960: using guessed type int talkflag;
-// 52A554: using guessed type int sfxdelay;
-// 6AA705: using guessed type char stextflag;
 
 void DoTelekinesis()
 {
@@ -2197,8 +2182,6 @@ void DoTelekinesis()
 		NetSendCmdParam1(TRUE, CMD_KNOCKBACK, pcursmonst);
 	SetCursor_(CURSOR_HAND);
 }
-// 4B8CC0: using guessed type char pcursitem;
-// 4B8CC1: using guessed type char pcursobj;
 
 int CalculateGold(int pnum)
 {
@@ -2218,7 +2201,6 @@ int CalculateGold(int pnum)
 
 	return gold;
 }
-// 52571C: using guessed type int drawpanflag;
 
 BOOL DropItemBeforeTrig()
 {

@@ -3,7 +3,7 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 LightListStruct VisionList[MAXVISION];
-unsigned char lightactive[MAXLIGHTS];
+BYTE lightactive[MAXLIGHTS];
 LightListStruct LightList[MAXLIGHTS];
 int numlights;
 BYTE lightradius[16][128];
@@ -402,7 +402,7 @@ char *pCrawlTable[19] = /* figure out what this is for */
 	    CrawlTable + 2187,
 	    CrawlTable + 2460
     };
-unsigned char vCrawlTable[23][30] = {
+BYTE vCrawlTable[23][30] = {
 	{ 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 0, 9, 0, 10, 0, 11, 0, 12, 0, 13, 0, 14, 0, 15, 0 },
 	{ 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 1, 9, 1, 10, 1, 11, 1, 12, 1, 13, 1, 14, 1, 15, 1 },
 	{ 1, 0, 2, 0, 3, 0, 4, 1, 5, 1, 6, 1, 7, 1, 8, 1, 9, 1, 10, 1, 11, 1, 12, 2, 13, 2, 14, 2, 15, 2 },
@@ -427,7 +427,7 @@ unsigned char vCrawlTable[23][30] = {
 	{ 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 1, 8, 1, 9, 1, 10, 1, 11, 1, 12, 1, 13, 1, 14, 1, 15 },
 	{ 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 0, 9, 0, 10, 0, 11, 0, 12, 0, 13, 0, 14, 0, 15 }
 };
-unsigned char byte_49463C[18][18] = /* unused */
+BYTE byte_49463C[18][18] = /* unused */
     {
 	    { 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 },
 	    { 0, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 },
@@ -449,7 +449,7 @@ unsigned char byte_49463C[18][18] = /* unused */
 	    { 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2 }
     };
 
-unsigned char RadiusAdj[23] = { 0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 4, 3, 2, 2, 2, 1, 1, 1, 0, 0, 0, 0 };
+BYTE RadiusAdj[23] = { 0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 4, 3, 2, 2, 2, 1, 1, 1, 0, 0, 0, 0 };
 
 void RotateRadius(int *x, int *y, int *dx, int *dy, int *lx, int *ly, int *bx, int *by)
 {
@@ -725,7 +725,7 @@ void DoVision(int nXPos, int nYPos, int nRadius, BOOL doautomap, BOOL visible)
 					break;
 				}
 				if (nCrawlX >= 0 && nCrawlX <= MAXDUNX && nCrawlY >= 0 && nCrawlY <= MAXDUNY) {
-					nBlockerFlag = (unsigned char)nBlockTable[dPiece[nCrawlX][nCrawlY]];
+					nBlockerFlag = (BYTE)nBlockTable[dPiece[nCrawlX][nCrawlY]];
 					if (!nBlockTable[dPiece[x1adj + nCrawlX][y1adj + nCrawlY]]
 					    || !nBlockTable[dPiece[x2adj + nCrawlX][y2adj + nCrawlY]]) {
 						if (doautomap) {
@@ -878,13 +878,13 @@ void MakeLightTable()
 		tbl += 224;
 	}
 
-	trn = LoadFileInMem("PlrGFX\\Infra.TRN", 0);
+	trn = LoadFileInMem("PlrGFX\\Infra.TRN", NULL);
 	for (i = 0; i < 256; i++) {
 		*tbl++ = trn[i];
 	}
 	mem_free_dbg(trn);
 
-	trn = LoadFileInMem("PlrGFX\\Stone.TRN", 0);
+	trn = LoadFileInMem("PlrGFX\\Stone.TRN", NULL);
 	for (i = 0; i < 256; i++) {
 		*tbl++ = trn[i];
 	}
@@ -1099,7 +1099,7 @@ void ChangeLight(int i, int x, int y, int r)
 void ProcessLightList()
 {
 	int i, j;
-	unsigned char temp;
+	BYTE temp;
 
 	if (lightflag) {
 		return;

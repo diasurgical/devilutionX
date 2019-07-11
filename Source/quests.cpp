@@ -2,19 +2,19 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-int qtopline; // idb
+int qtopline;
 BOOL questlog;
 BYTE *pQLogCel;
 QuestStruct quests[MAXQUESTS];
-int qline; // weak
+int qline;
 int qlist[MAXQUESTS];
-int numqlines;  // weak
-int WaterDone;  // idb
-int ReturnLvlY; // idb
-int ReturnLvlX; // idb
-int ReturnLvlT; // idb
-int ALLQUESTS;  // idb
-int ReturnLvl;  // idb
+int numqlines;
+int WaterDone;
+int ReturnLvlY;
+int ReturnLvlX;
+int ReturnLvlT;
+int ALLQUESTS;
+int ReturnLvl;
 
 QuestData questlist[MAXQUESTS] = {
 	// clang-format off
@@ -130,65 +130,65 @@ void CheckQuests()
 {
 	int i, rportx, rporty;
 
-	if(QuestStatus(QTYPE_VB) && gbMaxPlayers != 1 && quests[QTYPE_VB]._qvar1 == 2) {
+	if (QuestStatus(QTYPE_VB) && gbMaxPlayers != 1 && quests[QTYPE_VB]._qvar1 == 2) {
 		AddObject(OBJ_ALTBOY, 2 * setpc_x + 20, 2 * setpc_y + 22);
 		quests[QTYPE_VB]._qvar1 = 3;
 		NetSendCmdQuest(TRUE, QTYPE_VB);
 	}
 
-	if(gbMaxPlayers != 1) {
+	if (gbMaxPlayers != 1) {
 		return;
 	}
 
-	if(currlevel == quests[QTYPE_VB]._qlevel
-	&& !setlevel
-	&& quests[QTYPE_VB]._qvar1 >= 2
-	&& (quests[QTYPE_VB]._qactive == 2 || quests[QTYPE_VB]._qactive == 3)
-	&& (quests[QTYPE_VB]._qvar2 == 0 || quests[QTYPE_VB]._qvar2 == 2)) {
+	if (currlevel == quests[QTYPE_VB]._qlevel
+	    && !setlevel
+	    && quests[QTYPE_VB]._qvar1 >= 2
+	    && (quests[QTYPE_VB]._qactive == 2 || quests[QTYPE_VB]._qactive == 3)
+	    && (quests[QTYPE_VB]._qvar2 == 0 || quests[QTYPE_VB]._qvar2 == 2)) {
 		quests[QTYPE_VB]._qtx = 2 * quests[QTYPE_VB]._qtx + 16;
 		quests[QTYPE_VB]._qty = 2 * quests[QTYPE_VB]._qty + 16;
 		rportx = quests[QTYPE_VB]._qtx;
 		rporty = quests[QTYPE_VB]._qty;
 		AddMissile(rportx, rporty, rportx, rporty, 0, MIS_RPORTAL, 0, myplr, 0, 0);
 		quests[QTYPE_VB]._qvar2 = 1;
-		if(quests[QTYPE_VB]._qactive == 2) {
+		if (quests[QTYPE_VB]._qactive == 2) {
 			quests[QTYPE_VB]._qvar1 = 3;
 		}
 	}
 
-	if(quests[QTYPE_VB]._qactive == 3
-	&& setlevel
-	&& setlvlnum == SL_VILEBETRAYER
-	&& quests[QTYPE_VB]._qvar2 == 4) {
+	if (quests[QTYPE_VB]._qactive == 3
+	    && setlevel
+	    && setlvlnum == SL_VILEBETRAYER
+	    && quests[QTYPE_VB]._qvar2 == 4) {
 		rportx = 35;
 		rporty = 32;
 		AddMissile(rportx, rporty, rportx, rporty, 0, MIS_RPORTAL, 0, myplr, 0, 0);
 		quests[QTYPE_VB]._qvar2 = 3;
 	}
 
-	if(setlevel) {
-		if(setlvlnum == quests[QTYPE_PW]._qslvl
-		&& quests[QTYPE_PW]._qactive != 1
-		&& leveltype == quests[QTYPE_PW]._qlvltype
-		&& nummonsters == 4
-		&& quests[QTYPE_PW]._qactive != 3) {
+	if (setlevel) {
+		if (setlvlnum == quests[QTYPE_PW]._qslvl
+		    && quests[QTYPE_PW]._qactive != 1
+		    && leveltype == quests[QTYPE_PW]._qlvltype
+		    && nummonsters == 4
+		    && quests[QTYPE_PW]._qactive != 3) {
 			quests[QTYPE_PW]._qactive = 3;
 			PlaySfxLoc(IS_QUESTDN, plr[myplr].WorldX, plr[myplr].WorldY);
 			LoadPalette("Levels\\L3Data\\L3pwater.pal");
 			WaterDone = 32;
 		}
-		if(WaterDone > 0) {
+		if (WaterDone > 0) {
 			palette_update_quest_palette(WaterDone);
 			WaterDone--;
 		}
-	} else if(plr[myplr]._pmode == PM_STAND) {
-		for(i = 0; i < MAXQUESTS; i++) {
-			if(currlevel == quests[i]._qlevel
-			&& quests[i]._qslvl != 0
-			&& quests[i]._qactive != 0
-			&& plr[myplr].WorldX == quests[i]._qtx
-			&& plr[myplr].WorldY == quests[i]._qty) {
-				if(quests[i]._qlvltype != 255) {
+	} else if (plr[myplr]._pmode == PM_STAND) {
+		for (i = 0; i < MAXQUESTS; i++) {
+			if (currlevel == quests[i]._qlevel
+			    && quests[i]._qslvl != 0
+			    && quests[i]._qactive != 0
+			    && plr[myplr].WorldX == quests[i]._qtx
+			    && plr[myplr].WorldY == quests[i]._qty) {
+				if (quests[i]._qlvltype != 255) {
 					setlvltype = quests[i]._qlvltype;
 				}
 				StartNewLvl(myplr, WM_DIABSETLVL, quests[i]._qslvl);
@@ -196,11 +196,6 @@ void CheckQuests()
 		}
 	}
 }
-// 5BB1ED: using guessed type char leveltype;
-// 5CF31C: using guessed type char setlvltype;
-// 5CF31D: using guessed type char setlevel;
-// 679660: using guessed type char gbMaxPlayers;
-// 69BE90: using guessed type int qline;
 
 BOOL ForceQuests()
 {
@@ -685,11 +680,6 @@ void ResyncQuests()
 		quests[QTYPE_VB]._qvar2 = 2;
 	}
 }
-// 5A5590: using guessed type char TransVal;
-// 5BB1ED: using guessed type char leveltype;
-// 5CF31D: using guessed type char setlevel;
-// 5CF330: using guessed type int setpc_h;
-// 5CF334: using guessed type int setpc_w;
 
 void PrintQLString(int x, int y, BOOL cjustflag, char *str, int col)
 {
@@ -720,7 +710,7 @@ void PrintQLString(int x, int y, BOOL cjustflag, char *str, int col)
 		off += fontkern[c] + 1;
 	}
 	if (qline == y) {
-		 CelDecodeOnly(cjustflag ? x + k + 100 : 340 - x, s + 205, pCelBuff, ALLQUESTS, 12);
+		CelDecodeOnly(cjustflag ? x + k + 100 : 340 - x, s + 205, pCelBuff, ALLQUESTS, 12);
 	}
 }
 

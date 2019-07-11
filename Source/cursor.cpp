@@ -2,24 +2,24 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-int cursH;      // weak
-int icursH28;   // idb
-int cursW;      // idb
-int pcursmonst; // idb
-int icursW28;   // idb
+int cursH;
+int icursH28;
+int cursW;
+int pcursmonst;
+int icursW28;
 void *pCursCels;
-int icursH; // weak
+int icursH;
 
 // inv_item value
-char pcursinvitem; // weak
-int icursW;        // weak
-char pcursitem;    // weak
-char pcursobj;     // weak
-char pcursplr;     // weak
+char pcursinvitem;
+int icursW;
+char pcursitem;
+char pcursobj;
+char pcursplr;
 int cursmx;
 int cursmy;
-int pcurstemp; // weak
-int pcurs;     // idb
+int pcurstemp;
+int pcurs;
 
 /* rdata */
 const int InvItemWidth[180] = {
@@ -71,7 +71,7 @@ const int InvItemHeight[180] = {
 void InitCursor()
 {
 	/// ASSERT: assert(! pCursCels);
-	pCursCels = LoadFileInMem("Data\\Inv\\Objcurs.CEL", 0);
+	pCursCels = LoadFileInMem("Data\\Inv\\Objcurs.CEL", NULL);
 	ClearCursor();
 }
 

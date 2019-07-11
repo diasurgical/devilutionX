@@ -13,7 +13,7 @@ BOOL pfile_open_archive(BOOL a1, DWORD save_num);
 void pfile_get_save_path(char *pszBuf, DWORD dwBufSize, DWORD save_num);
 void pfile_flush(BOOL is_single_player, DWORD save_num);
 BOOL pfile_create_player_description(char *dst, DWORD len);
-BOOL pfile_create_save_file(const char *name_1, const char *name_2);
+BOOL pfile_rename_hero(const char *name_1, const char *name_2);
 void pfile_flush_W();
 void game_2_ui_player(const PlayerStruct *p, _uiheroinfo *heroinfo, BOOL bHasSaveFile);
 unsigned char game_2_ui_class(const PlayerStruct *p);

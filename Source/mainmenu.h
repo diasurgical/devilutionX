@@ -5,7 +5,7 @@
 extern char gszHero[16];
 
 void mainmenu_refresh_music();
-void __stdcall mainmenu_create_hero(int arg1, int arg2, int arg3, int arg4, char *name_1, char *name_2);
+void __stdcall mainmenu_change_name(int arg1, int arg2, int arg3, int arg4, char *name_1, char *name_2);
 int __stdcall mainmenu_select_hero_dialog(
     const _SNETPROGRAMDATA *client_info,
     const _SNETPLAYERDATA *user_info,
@@ -22,8 +22,6 @@ BOOL mainmenu_multi_player();
 void mainmenu_play_intro();
 
 /* rdata */
-
-extern const int mainmenu_inf; // weak
 
 /* data */
 

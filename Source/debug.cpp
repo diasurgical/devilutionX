@@ -17,7 +17,7 @@ char dFlagDbg[NUMLEVELS][MAXDUNX][MAXDUNY];
 void LoadDebugGFX()
 {
 	if (visiondebug)
-		pSquareCel = LoadFileInMem("Data\\Square.CEL", 0);
+		pSquareCel = LoadFileInMem("Data\\Square.CEL", NULL);
 }
 
 void FreeDebugGFX()

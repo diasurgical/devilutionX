@@ -18,7 +18,7 @@ void fault_hex_format(BYTE *ptr, unsigned int numBytes);
 void fault_unknown_module(LPCVOID lpAddress, LPSTR lpModuleName, int iMaxLength, int *sectionNum, int *sectionOffset);
 void fault_call_stack(void *instr, STACK_FRAME *stackAddr);
 char *fault_get_error_type(DWORD dwMessageId, LPSTR lpString1, DWORD nSize);
-void * fault_set_filter(void *unused);
+void *fault_set_filter(void *unused);
 LPTOP_LEVEL_EXCEPTION_FILTER fault_reset_filter(void *unused);
 LPTOP_LEVEL_EXCEPTION_FILTER fault_get_filter();
 

@@ -106,8 +106,8 @@ void DRLG_SetMapTrans(char *sFileName)
 {
 	int x, y;
 	int i, j;
-	UCHAR *pLevelMap;
-	UCHAR *d;
+	BYTE *pLevelMap;
+	BYTE *d;
 	DWORD dwOffset;
 
 	pLevelMap = LoadFileInMem(sFileName, NULL);
