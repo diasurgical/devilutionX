@@ -358,20 +358,20 @@ SDL_AllocPalette(int ncolors)
 
     /* Input validation */
     if (ncolors < 1) {
-      //SDL_InvalidParamError("ncolors");
-      return NULL;
+      printf("ncolors");
+      return nullptr;
     }
 
     palette = (SDL_Palette *) SDL_malloc(sizeof(*palette));
     if (!palette) {
         SDL_OutOfMemory();
-        return NULL;
+        return nullptr;
     }
     palette->colors =
         (SDL_Color *) SDL_malloc(ncolors * sizeof(*palette->colors));
     if (!palette->colors) {
         SDL_free(palette);
-        return NULL;
+        return nullptr;
     }
     palette->ncolors = ncolors;
     //palette->version = 1;
@@ -485,8 +485,8 @@ SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth,
     surface->h = height;
     //surface->pitch = SDL_CalculatePitch(format, width);
     SDL_SetClipRect(surface, nullptr);
-
-    //if (SDL_ISPIXELFORMAT_INDEXED(surface->format)) {
+    /*
+    if (SDL_ISPIXELFORMAT_INDEXED(surface->format)) {
         SDL_Palette *palette =
             SDL_AllocPalette((1 << surface->format->BitsPerPixel));
         if (!palette) {
@@ -494,7 +494,7 @@ SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth,
             return nullptr;
         }
         if (palette->ncolors == 2) {
-            /* Create a black and white bitmap palette */
+            /* Create a black and white bitmap palette *
             palette->colors[0].r = 0xFF;
             palette->colors[0].g = 0xFF;
             palette->colors[0].b = 0xFF;
@@ -504,8 +504,8 @@ SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth,
         }
         SDL_SetSurfacePalette(surface, palette);
         SDL_FreePalette(palette);
-    //}
-
+    }
+    */
     /* Get the pixels */
     if (surface->w && surface->h) {
         /* Assumptions checked in surface_size_assumptions assert above */
@@ -514,14 +514,14 @@ SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth,
             /* Overflow... */
             SDL_FreeSurface(surface);
             SDL_OutOfMemory();
-            return NULL;
+            return nullptr;
         }
 
         surface->pixels = SDL_malloc((size_t)size);
         if (!surface->pixels) {
             SDL_FreeSurface(surface);
             SDL_OutOfMemory();
-            return NULL;
+            return nullptr;
         }
         /* This is important for bitmaps */
         SDL_memset(surface->pixels, 0, surface->h * surface->pitch);
