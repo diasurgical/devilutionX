@@ -131,10 +131,13 @@ int SDL_RenderSetLogicalSize(SDL_Renderer* renderer, int w, int h)
 
 SDL_Window* SDL_CreateWindow(const char* title, int x, int y, int w, int h, Uint32 flags)
 {
-	SDL_Window* window;
+	auto* window = new SDL_Window;
 
-	window->surface = SDL_SetVideoMode(w, h, 16,  (SDL_SWSURFACE | SDL_FULLSCREEN) );
-
+#ifdef __AMIGA__
+	window->surface = SDL_SetVideoMode(w, h, 16, SDL_SWSURFACE | SDL_FULLSCREEN);
+#else
+    window->surface = SDL_SetVideoMode(w, h, 16, SDL_HWSURFACE);
+#endif
 	return window;
 }
 
