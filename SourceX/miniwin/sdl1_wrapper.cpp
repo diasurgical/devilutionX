@@ -1,6 +1,10 @@
 #include <SDL/SDL.h>
 #include "sdl1_wrapper.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct SDL_Window {
     const void *magic;
     Uint32 id;
@@ -146,16 +150,7 @@ bool SDL_SetHint(const char* name,
 {
 	return 0;
 }
-///
-char* SDL_GetPrefPath(const char* org,
-                      const char* app)
-					  {
-						  char buffer [100];
-						  sprintf(buffer,"envarc:%s/%s",org,app);
-						  
-						  return buffer;
-					  }
-					  
+ 
 	
 void SDL_Log(const char *message, ...) {
 
@@ -351,10 +346,6 @@ SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth,
     surface->refcount = 1;
     return surface;
 }
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 	
 char* SDL_GetPrefPath(const char* org, const char* app) { return org; }
 
