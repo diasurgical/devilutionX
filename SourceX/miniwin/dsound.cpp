@@ -1,7 +1,7 @@
 #include "devilution.h"
 #include "miniwin/dsound.h"
 #include "stubs.h"
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include "../SourceS/miniwin/misc.h"
 #include "sdl1_wrapper.h"
 

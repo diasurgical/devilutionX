@@ -1,11 +1,11 @@
 #include "devilution.h"
 #include "miniwin/ddraw.h"
 #include "stubs.h"
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include <string>
 #include "../SourceS/miniwin/misc.h"
 #include "../SourceS/miniwin/com.h"
-//#include "sdl1_wrapper.h"
+#include "sdl1_wrapper.h"
 #include "DiabloUI/diabloui.h"
 
 #ifdef _MSC_VER

@@ -62,12 +62,27 @@ struct SDL_WindowShaper {
     void *driverdata;
 };
 
+void SDL_RenderGetScale(SDL_Renderer* renderer, float* scaleX, float* scaleY)
+{
+	return;
+}
+
+void SDL_GetWindowSize(SDL_Window* window, int* w, int* h)
+{
+	return;
+}
+
+int SDL_RenderSetLogicalSize(SDL_Renderer* renderer, int w, int h)
+{
+	return 1;
+}
+
 SDL_Window* SDL_CreateWindow(const char* title, int x, int y, int w, int h, Uint32 flags)
 {
 	SDL_Window* window;
 
 	window->surface = SDL_SetVideoMode(w, h, 16,  (SDL_SWSURFACE | SDL_FULLSCREEN) );
-		
+
 	return window;
 }
 
@@ -109,13 +124,17 @@ SDL_Texture* SDL_CreateTextureFromSurface(SDL_Renderer* renderer,
                                           SDL_Surface*  surface)
 {
 	if( renderer != NULL )
-    {
-        //Create an optimized image
-        renderer = SDL_DisplayFormat( surface );
-        		
+	{
+		//Create an optimized image
+		renderer = SDL_DisplayFormat( surface );
 		return renderer;
-    }
-}											  
+	}
+}
+
+int SDL_SetWindowInputFocus(SDL_Window* window)
+{
+	return 0;
+}
 
 void SDL_DestroyTexture(SDL_Texture* texture)
 {

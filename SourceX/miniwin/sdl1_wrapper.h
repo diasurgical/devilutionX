@@ -1,7 +1,7 @@
 #ifndef __SDL1_WRAPPER_H
 #define __SDL1_WRAPPER_H
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 // #include <SDL/SDL_shape.h>
 #ifdef __cplusplus
 extern "C" {
@@ -384,7 +384,7 @@ typedef struct SDL_WindowShapeMode {
 // todo functions:
 // ==============
 
-	
+
 void SDL_RenderGetViewport(SDL_Renderer* renderer, SDL_Rect* rect);
 void SDL_RenderGetScale(SDL_Renderer* renderer, float* scaleX, float* scaleY);
 void SDL_WarpMouseInWindow(SDL_Window* window, int x, int y);
