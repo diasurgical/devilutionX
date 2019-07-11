@@ -70,7 +70,7 @@ find_package(Freetype REQUIRED)
 find_package(SDL 1.2 REQUIRED)
 find_package(SDL_ttf REQUIRED)
 find_package(SDL_mixer REQUIRED)
-#find_package(MAD REQUIRED)
+find_package(LibMad REQUIRED)
 #find_package(sodium REQUIRED)
 
 set(PROJECT_LINK_LIBS libSDL.so)
@@ -242,13 +242,14 @@ target_link_libraries(devilutionx PRIVATE
   StormLib
   smacker
   Radon
-  ${SDL_LIBRARY}
-  -ldebug
   ${SDL_TTF_LIBRARY}
   ${SDL_MIXER_LIBRARY}
   ${SDL_MIXER_LIBRARIES}
   ${FREETYPE_LIBRARIES}
   ${PNG_LIBRARIES}
+  ${LIBMAD_LIBRARIES}
+  ${SDL_LIBRARY}
+  -ldebug
   )
   # ${PROJECT_SOURCE_DIR}/libSDLmain.a)
   # /usr/lib/x86_64-linux-gnu/libSDLmain.a
