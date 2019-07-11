@@ -163,9 +163,11 @@
   #endif
 
   // Typedefs for ANSI C
+  #ifndef __AMIGA__
   typedef unsigned char  BYTE;
-  typedef unsigned short USHORT;
   typedef int            LONG;
+  #endif
+  typedef unsigned short USHORT;
   typedef unsigned int   DWORD;
   typedef unsigned long  DWORD_PTR;
   typedef long           LONG_PTR;
