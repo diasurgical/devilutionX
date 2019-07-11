@@ -108,6 +108,18 @@ if(HAIKU)
   set(UBSAN OFF)
 endif()
 
+if(AMIGA)
+  set(ASAN OFF)
+  set(UBSAN OFF)
+  set(NONET ON)
+  set(USE_SDL1 ON)
+  find_package(Freetype REQUIRED)
+  find_package(ZLIB REQUIRED)
+  # Enable exception suport as they are used in dvlnet code
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexceptions")
+  set(SDL1_VIDEO_MODE_BPP 8)
+endif()
+
 if(DIST)
   set(sodium_USE_STATIC_LIBS ON)
 endif()
@@ -427,13 +439,15 @@ endforeach(def_name)
 foreach(target devilution ${BIN_TARGET})
   if(USE_SDL1)
     target_link_libraries(${target} PRIVATE
-      ${SDL_LIBRARY} ${SDL_TTF_LIBRARY} ${SDL_MIXER_LIBRARY})
+      ${SDL_TTF_LIBRARY}
+      ${SDL_MIXER_LIBRARY}
+      ${SDL_LIBRARY})
     target_compile_definitions(${target} PRIVATE USE_SDL1)
   else()
     target_link_libraries(${target} PRIVATE
-      SDL2::SDL2main
       SDL2::SDL2_ttf
-      SDL2::SDL2_mixer)
+      SDL2::SDL2_mixer
+      SDL2::SDL2main)
   endif()
 
   if(ASAN)
@@ -449,6 +463,15 @@ foreach(target devilution ${BIN_TARGET})
   if(SWITCH)
     target_link_libraries(${target} PRIVATE switch::libnx
       -lfreetype -lvorbisfile -lvorbis -logg -lmodplug -lmpg123 -lSDL2 -lopusfile -lopus -lEGL -lglapi -ldrm_nouveau -lpng -lbz2 -lz -lnx)
+  endif()
+
+  if(AMIGA)
+    target_link_libraries(${target} PRIVATE
+      ${FREETYPE_LIBRARY}
+      ${ZLIB_LIBRARY})
+    if(NOT WARPOS)
+      target_link_libraries(${target} PRIVATE -ldebug)
+    endif()
   endif()
 
   target_compile_definitions(${target} PRIVATE ${def_list})
