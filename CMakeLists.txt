@@ -12,7 +12,7 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
-option(ASAN "Enable address sanitizer" ON)
+option(ASAN "Enable address sanitizer" OFF)
 option(DEBUG "Enable debug mode in engine" ON)
 option(DIST "Dynamically link only glibc and SDL2" OFF)
 option(FASTER "Enable FASTER in engine" ON)
@@ -64,10 +64,18 @@ if(NOT CMAKE_SIZEOF_VOID_P EQUAL 4)
   message(WARNING [[Not 32-bit, highly experimental!]])
 endif()
 
+
 find_package(Threads REQUIRED)
+find_package(Freetype REQUIRED)
 find_package(SDL 1.2 REQUIRED)
 find_package(SDL_ttf REQUIRED)
 find_package(SDL_mixer REQUIRED)
+
+if(AMIGA)
+  find_package(PNG REQUIRED)
+  find_package(LibMad REQUIRED)
+endif()
+
 #find_package(sodium REQUIRED)
 
 set(PROJECT_LINK_LIBS libSDL.so)
@@ -183,11 +191,10 @@ add_executable(devilutionx
   SourceX/miniwin/misc_dx.cpp
   SourceX/miniwin/rand.cpp
   SourceX/miniwin/thread.cpp
-#  SourceX/miniwin/dsound.cpp
+  SourceX/miniwin/dsound.cpp
   SourceX/miniwin/ddraw.cpp
-# arczi
   SourceX/miniwin/sdl1_wrapper.cpp
-#  SourceX/sound.cpp
+  SourceX/sound.cpp
   SourceX/storm/storm.cpp
   SourceX/storm/storm_net.cpp
   SourceX/storm/storm_dx.cpp
@@ -240,10 +247,18 @@ target_link_libraries(devilutionx PRIVATE
   StormLib
   smacker
   Radon
-  ${SDL_LIBRARY}
   ${SDL_TTF_LIBRARY}
   ${SDL_MIXER_LIBRARY}
+  ${SDL_MIXER_LIBRARIES}
+  ${FREETYPE_LIBRARIES}
+  ${PNG_LIBRARIES}
+  ${LIBMAD_LIBRARIES}
+  ${SDL_LIBRARY}
   )
+
+if(AMIGA)
+  target_link_libraries(devilutionx PRIVATE -ldebug)
+endif()
   # ${PROJECT_SOURCE_DIR}/libSDLmain.a)
   # /usr/lib/x86_64-linux-gnu/libSDLmain.a
   # ${SDL_LIBRARY}

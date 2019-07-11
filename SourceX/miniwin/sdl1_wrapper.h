@@ -1,11 +1,12 @@
 #ifndef __SDL1_WRAPPER_H
 #define __SDL1_WRAPPER_H
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 // #include <SDL/SDL_shape.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 /*
  klaus
  make sdl1_wrapper.h & .cpp
@@ -33,7 +34,8 @@ extern "C" {
  SDL_Log(SDL_GetError());
  SDL_SetWindowTitle(window, const *char);
  */
-
+#define SDL_MAX_SINT32  ((Sint32)0x7FFFFFFF)    /* 2147483647 */
+#define SDL_MIN_SINT32  ((Sint32)(~0x7FFFFFFF)) /* -2147483648 */
 #define SDL_INIT_HAPTIC         0x00001000u
 
 #define SDL_RENDER_SCALE_QUALITY  0
@@ -382,11 +384,11 @@ typedef struct SDL_WindowShapeMode {
 // todo functions:
 // ==============
 
-	
+
 void SDL_RenderGetViewport(SDL_Renderer* renderer, SDL_Rect* rect);
 void SDL_RenderGetScale(SDL_Renderer* renderer, float* scaleX, float* scaleY);
 void SDL_WarpMouseInWindow(SDL_Window* window, int x, int y);
-void SDL_Log(const char* fmt);
+void SDL_Log(const char* fmt, ...);
 void SDL_SetWindowTitle(SDL_Window* window, const char* title);
 char* SDL_GetPrefPath(const char* org, const char* app);
 const Uint8* SDL_GetKeyboardState(int* numkeys);

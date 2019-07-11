@@ -1,7 +1,7 @@
 #include "devilution.h"
 #include "miniwin/ddraw.h"
 #include "stubs.h"
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include "../SourceS/miniwin/misc.h"
 
 

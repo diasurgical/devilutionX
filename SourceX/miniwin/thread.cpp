@@ -1,6 +1,6 @@
 #include "devilution.h"
 #include "stubs.h"
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include <set>
 #include "sdl1_wrapper.h"
 #include "../SourceS/miniwin/misc.h"
