@@ -9,6 +9,11 @@ char BLoad();
 int WLoad();
 int ILoad();
 BOOL OLoad();
+void CopyItems(const int n, ItemStruct *pItem);
+void CopyItem(ItemStruct *pItem);
+void SaveItem(ItemStruct *pItem);
+void SaveItems(ItemStruct *pItem, const int n);
+
 void LoadPlayer(int i);
 void LoadMonster(int i);
 void LoadMissile(int i);
