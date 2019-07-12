@@ -1300,7 +1300,7 @@ void SaveMissile(int i)
 void SaveObject(int i)
 {
 	ObjectStruct *pObject = &object[i];
-	CopyInt(tbuff, &pObject->_otype);
+	CopyInt(&pObject->_otype, tbuff);
 	CopyInt(&pObject->_ox, tbuff);
 	CopyInt(&pObject->_oy, tbuff);
 	CopyInt(&pObject->_oLight, tbuff);
