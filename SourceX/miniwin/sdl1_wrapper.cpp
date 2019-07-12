@@ -131,10 +131,13 @@ int SDL_RenderSetLogicalSize(SDL_Renderer* renderer, int w, int h)
 
 SDL_Window* SDL_CreateWindow(const char* title, int x, int y, int w, int h, Uint32 flags)
 {
-	SDL_Window* window;
+	auto* window = new SDL_Window;
 
-	window->surface = SDL_SetVideoMode(w, h, 16,  (SDL_SWSURFACE | SDL_FULLSCREEN) );
-
+#ifdef __AMIGA__
+	window->surface = SDL_SetVideoMode(w, h, 16, SDL_SWSURFACE | SDL_FULLSCREEN);
+#else
+    window->surface = SDL_SetVideoMode(w, h, 16, SDL_HWSURFACE);
+#endif
 	return window;
 }
 
@@ -355,20 +358,20 @@ SDL_AllocPalette(int ncolors)
 
     /* Input validation */
     if (ncolors < 1) {
-      //SDL_InvalidParamError("ncolors");
-      return NULL;
+      printf("ncolors");
+      return nullptr;
     }
 
     palette = (SDL_Palette *) SDL_malloc(sizeof(*palette));
     if (!palette) {
         SDL_OutOfMemory();
-        return NULL;
+        return nullptr;
     }
     palette->colors =
         (SDL_Color *) SDL_malloc(ncolors * sizeof(*palette->colors));
     if (!palette->colors) {
         SDL_free(palette);
-        return NULL;
+        return nullptr;
     }
     palette->ncolors = ncolors;
     //palette->version = 1;
@@ -461,84 +464,21 @@ SDL_Surface *
 SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth,
                                Uint32 format)
 {
-    SDL_Surface *surface;
+    Uint32 rmask, gmask, bmask, amask;
 
-    /* The flags are no longer used, make the compiler happy */
-    (void)flags;
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+    rmask = 0xff000000;
+    gmask = 0x00ff0000;
+    bmask = 0x0000ff00;
+    amask = 0x000000ff;
+#else
+    rmask = 0x000000ff;
+    gmask = 0x0000ff00;
+    bmask = 0x00ff0000;
+    amask = 0xff000000;
+#endif
 
-    /* Allocate the surface */
-    surface = (SDL_Surface *) SDL_calloc(1, sizeof(*surface));
-    if (surface == nullptr) {
-        SDL_OutOfMemory();
-        return nullptr;
-    }
-
-    surface->format = (SDL_PixelFormat*)format; //SDL_AllocFormat(format);
-    if (!surface->format) {
-        SDL_FreeSurface(surface);
-        return nullptr;
-    }
-    surface->w = width;
-    surface->h = height;
-    //surface->pitch = SDL_CalculatePitch(format, width);
-    SDL_SetClipRect(surface, nullptr);
-
-    //if (SDL_ISPIXELFORMAT_INDEXED(surface->format)) {
-        SDL_Palette *palette =
-            SDL_AllocPalette((1 << surface->format->BitsPerPixel));
-        if (!palette) {
-            SDL_FreeSurface(surface);
-            return nullptr;
-        }
-        if (palette->ncolors == 2) {
-            /* Create a black and white bitmap palette */
-            palette->colors[0].r = 0xFF;
-            palette->colors[0].g = 0xFF;
-            palette->colors[0].b = 0xFF;
-            palette->colors[1].r = 0x00;
-            palette->colors[1].g = 0x00;
-            palette->colors[1].b = 0x00;
-        }
-        SDL_SetSurfacePalette(surface, palette);
-        SDL_FreePalette(palette);
-    //}
-
-    /* Get the pixels */
-    if (surface->w && surface->h) {
-        /* Assumptions checked in surface_size_assumptions assert above */
-        Sint64 size = ((Sint64)surface->h * surface->pitch);
-        if (size < 0 || size > SDL_MAX_SINT32) {
-            /* Overflow... */
-            SDL_FreeSurface(surface);
-            SDL_OutOfMemory();
-            return NULL;
-        }
-
-        surface->pixels = SDL_malloc((size_t)size);
-        if (!surface->pixels) {
-            SDL_FreeSurface(surface);
-            SDL_OutOfMemory();
-            return NULL;
-        }
-        /* This is important for bitmaps */
-        SDL_memset(surface->pixels, 0, surface->h * surface->pitch);
-    }
-
-    /* Allocate an empty mapping
-    surface->map = SDL_AllocBlitMap();
-    if (!surface->map) {
-        SDL_FreeSurface(surface);
-        return NULL;
-    }
-    */
-    /* By default surface with an alpha mask are set up for blending */
-    if (surface->format->Amask) {
-        //SDL_SetSurfaceBlendMode(surface, SDL_BLENDMODE_BLEND);  //arczi
-    }
-
-    /* The surface is ready to go */
-    surface->refcount = 1;
-    return surface;
+    return SDL_CreateRGBSurface(flags, width, height, depth, rmask, gmask, bmask, amask);
 }
 	
 char* SDL_GetPrefPath(const char* org, const char* app) { return (char*)org; }

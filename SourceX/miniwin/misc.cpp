@@ -122,7 +122,7 @@ UINT GetWindowsDirectoryA(LPSTR lpBuffer, UINT uSize)
 {
 	char *name = SDL_GetPrefPath("diasurgical", "devilution");
 	strncpy(lpBuffer, name, uSize);
-	SDL_free(name);
+	//SDL_free(name);
 
 	DWORD len = strlen(lpBuffer);
 
@@ -148,7 +148,7 @@ DWORD GetModuleFileNameA(HMODULE hModule, LPSTR lpFilename, DWORD nSize)
 {
 	char *name = SDL_GetPrefPath("diasurgical", "devilution");
 	strncpy(lpFilename, name, nSize);
-	SDL_free(name);
+	//SDL_free(name);
 
 	DWORD len = strlen(lpFilename);
 
@@ -520,7 +520,7 @@ HWND GetForegroundWindow()
 
 LPTOP_LEVEL_EXCEPTION_FILTER SetUnhandledExceptionFilter(LPTOP_LEVEL_EXCEPTION_FILTER lpTopLevelExceptionFilter)
 {
-	DUMMY();
+//	DUMMY();
 	return lpTopLevelExceptionFilter;
 }
 
