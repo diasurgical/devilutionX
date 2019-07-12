@@ -247,8 +247,54 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	}
 
 	lpMsg->hwnd = hWnd;
+	lpMsg->message = 0;
 	lpMsg->lParam = 0;
 	lpMsg->wParam = 0;
+
+#ifdef SWITCH
+	if (movie_playing) {
+		// allow plus button or mouse click to skip movie, no other input
+		switch (e.type) {
+			case SDL_JOYBUTTONDOWN:
+				switch(e.jbutton.button)
+				{
+					case 10:	// plus
+					case  5:	// right joystick click
+						lpMsg->message = DVL_WM_LBUTTONDOWN;
+						lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+						lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
+						break;
+				}
+				break;
+			case SDL_JOYBUTTONUP:
+				switch(e.jbutton.button)
+				{
+					case  10:	// plus
+					case   5:	// right joystick click
+						lpMsg->message = DVL_WM_LBUTTONUP;
+						lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+						lpMsg->wParam = keystate_for_mouse(0);
+						break;
+				}
+				break;
+			case SDL_MOUSEBUTTONDOWN:
+				if (e.button.button == SDL_BUTTON_LEFT) {
+					lpMsg->message = DVL_WM_LBUTTONDOWN;
+					lpMsg->lParam = (e.button.y << 16) | (e.button.x & 0xFFFF);
+					lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
+				}
+				break;
+			case SDL_MOUSEBUTTONUP:
+				if (e.button.button == SDL_BUTTON_LEFT) {
+					lpMsg->message = DVL_WM_LBUTTONUP;
+					lpMsg->lParam = (e.button.y << 16) | (e.button.x & 0xFFFF);
+					lpMsg->wParam = keystate_for_mouse(0);
+				}
+				break;
+		}
+		return true;
+	}
+#endif
 
 	switch (e.type) {
 	case SDL_JOYAXISMOTION:
@@ -272,8 +318,6 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		rightStickX = rightStickXUnscaled;
 		rightStickY = rightStickYUnscaled;
 		ScaleJoystickAxes(&rightStickX, &rightStickY, rightDeadzone);
-		lpMsg->message = e.type == SDL_KEYUP;
-		lpMsg->lParam = 0;
 		break;
 	case SDL_JOYBUTTONDOWN:
 		// switch controller
