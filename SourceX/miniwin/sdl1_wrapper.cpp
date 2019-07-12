@@ -464,27 +464,41 @@ SDL_Surface *
 SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth,
                                Uint32 format)
 {
-    SDL_Surface *surface;
+    Uint32 rmask, gmask, bmask, amask;
 
-    /* The flags are no longer used, make the compiler happy */
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+    rmask = 0xff000000;
+    gmask = 0x00ff0000;
+    bmask = 0x0000ff00;
+    amask = 0x000000ff;
+#else
+    rmask = 0x000000ff;
+    gmask = 0x0000ff00;
+    bmask = 0x00ff0000;
+    amask = 0xff000000;
+#endif
+
+    SDL_Surface *surface = SDL_CreateRGBSurface(flags, width, height, depth, rmask, gmask, bmask, amask);
+
+    /* The flags are no longer used, make the compiler happy *
     (void)flags;
 
-    /* Allocate the surface */
+    /* Allocate the surface *
     surface = (SDL_Surface *) SDL_calloc(1, sizeof(*surface));
     if (surface == nullptr) {
         SDL_OutOfMemory();
         return nullptr;
     }
 
-    surface->format = (SDL_PixelFormat*)format; //SDL_AllocFormat(format);
+    surface->format = SDL_AllocFormat(format);
     if (!surface->format) {
         SDL_FreeSurface(surface);
         return nullptr;
-    }
-    surface->w = width;
-    surface->h = height;
+    }*/
+    //surface->w = width;
+    //surface->h = height;
     //surface->pitch = SDL_CalculatePitch(format, width);
-    SDL_SetClipRect(surface, nullptr);
+    //SDL_SetClipRect(surface, nullptr);
     /*
     if (SDL_ISPIXELFORMAT_INDEXED(surface->format)) {
         SDL_Palette *palette =
@@ -506,12 +520,12 @@ SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth,
         SDL_FreePalette(palette);
     }
     */
-    /* Get the pixels */
+    /* Get the pixels *
     if (surface->w && surface->h) {
-        /* Assumptions checked in surface_size_assumptions assert above */
+        /* Assumptions checked in surface_size_assumptions assert above *
         Sint64 size = ((Sint64)surface->h * surface->pitch);
         if (size < 0 || size > SDL_MAX_SINT32) {
-            /* Overflow... */
+            /* Overflow... *
             SDL_FreeSurface(surface);
             SDL_OutOfMemory();
             return nullptr;
@@ -523,7 +537,7 @@ SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth,
             SDL_OutOfMemory();
             return nullptr;
         }
-        /* This is important for bitmaps */
+        /* This is important for bitmaps *
         SDL_memset(surface->pixels, 0, surface->h * surface->pitch);
     }
 
@@ -535,12 +549,12 @@ SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth,
     }
     */
     /* By default surface with an alpha mask are set up for blending */
-    if (surface->format->Amask) {
+    //if (surface->format->Amask) {
         //SDL_SetSurfaceBlendMode(surface, SDL_BLENDMODE_BLEND);  //arczi
-    }
+    //}
 
     /* The surface is ready to go */
-    surface->refcount = 1;
+    //surface->refcount = 1;
     return surface;
 }
 	
