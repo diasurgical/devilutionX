@@ -164,6 +164,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	}
 
 	lpMsg->hwnd = hWnd;
+	lpMsg->message = 0;
 	lpMsg->lParam = 0;
 	lpMsg->wParam = 0;
 
