@@ -362,7 +362,6 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		{
 			case  0:	// A
 				lpMsg->message = DVL_WM_KEYUP;
-				lpMsg->lParam = 0;
 				lpMsg->wParam = 'H';
 				break;
 			case  1:	// B
