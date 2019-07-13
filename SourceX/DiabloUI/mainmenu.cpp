@@ -28,7 +28,9 @@ void UiMainMenuSelect(int value)
 
 void mainmenu_Esc()
 {
+#ifndef SWITCH
 	UiMainMenuSelect(MAINMENU_EXIT_DIABLO);
+#endif
 }
 
 void mainmenu_restart_repintro()
