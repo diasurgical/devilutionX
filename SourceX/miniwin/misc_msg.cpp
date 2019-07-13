@@ -327,27 +327,32 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		rightStickY = rightStickYUnscaled;
 		ScaleJoystickAxes(&rightStickX, &rightStickY, rightDeadzone);
 		break;
+
+#ifdef SWITCH
+// switch controller button mappings
 	case SDL_JOYBUTTONDOWN:
-		// switch controller
-		#ifdef SWITCH
 		switch(e.jbutton.button)
 		{
 			case  0:	// A
-				PressChar('h');
+				lpMsg->message = DVL_WM_KEYDOWN;
+				lpMsg->wParam = 'H';
 				break;
 			case  1:	// B
 				if (inmainmenu) {
-					PressKey(VK_RETURN);
+					lpMsg->message = DVL_WM_KEYDOWN;
+					lpMsg->wParam = DVL_VK_RETURN;
 					keyboardExpansion(VK_RETURN);
 				} else {
 					if (stextflag)
 						talkwait = GetTickCount(); // JAKE: Wait before we re-initiate talking
-					PressKey(VK_SPACE);
+					lpMsg->message = DVL_WM_KEYDOWN;
+					lpMsg->wParam = DVL_VK_SPACE;
 					keyboardExpansion(VK_SPACE);
 				}
 				break;
 			case  2:	// X
-				PressChar('x');
+				lpMsg->message = DVL_WM_KEYDOWN;
+				lpMsg->wParam = 'X';
 				break;
 			case  3:	// Y
 				if (invflag) {
@@ -355,12 +360,14 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 					lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
 					lpMsg->wParam = keystate_for_mouse(DVL_MK_RBUTTON);
 				} else {
-					PressKey(VK_RETURN);
+					lpMsg->message = DVL_WM_KEYDOWN;
+					lpMsg->wParam = DVL_VK_RETURN;
 					keyboardExpansion(VK_RETURN);
 				}
 				break;
 			case  4:	// left joystick click
-				PressChar('q');
+				lpMsg->message = DVL_WM_KEYDOWN;
+				lpMsg->wParam = 'Q';
 				break;
 			case  5:	// right joystick click
 				if (newCurHidden) { // show cursor first, before clicking
@@ -374,10 +381,12 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 				}
 				break;
 			case  6:	// L
-				PressChar('c');
+				lpMsg->message = DVL_WM_KEYDOWN;
+				lpMsg->wParam = 'C';
 				break;
 			case  7:	// R
-				PressChar('i');
+				lpMsg->message = DVL_WM_KEYDOWN;
+				lpMsg->wParam = 'I';
 				break;
 			case  8:	// ZL
 				useBeltPotion(false); // use health potion
@@ -386,41 +395,143 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 				useBeltPotion(true); // use mana potion
 				break;
 			case 10:	// plus
-				PressKey(VK_ESCAPE);
+				lpMsg->message = DVL_WM_KEYDOWN;
+				lpMsg->wParam = DVL_VK_ESCAPE;
 				break;
 			case 11:	// minus
-				PressKey(VK_TAB);
+				lpMsg->message = DVL_WM_KEYDOWN;
+				lpMsg->wParam = DVL_VK_TAB;
 				break;
 			case 12:	// L_DPAD
-				PressKey(VK_LEFT);
+				lpMsg->message = DVL_WM_KEYDOWN;
+				lpMsg->wParam = DVL_VK_LEFT;
 				movements(VK_LEFT);
 				break;
 			case 13:	// U_DPAD
-				PressKey(VK_UP);
+				lpMsg->message = DVL_WM_KEYDOWN;
+				lpMsg->wParam = DVL_VK_UP;
 				movements(VK_UP);
 				break;
 			case 14:	// R_DPAD
-				PressKey(VK_RIGHT);
+				lpMsg->message = DVL_WM_KEYDOWN;
+				lpMsg->wParam = DVL_VK_RIGHT;
 				movements(VK_RIGHT);
 				break;
 			case 15:	// D_DPAD
-				PressKey(VK_DOWN);
+				lpMsg->message = DVL_WM_KEYDOWN;
+				lpMsg->wParam = DVL_VK_DOWN;
 				movements(VK_DOWN);
 				break;
 			case 16:	// L_JSTICK
-				PressKey(VK_LEFT);
+				lpMsg->message = DVL_WM_KEYDOWN;
+				lpMsg->wParam = DVL_VK_LEFT;
 				break;
 			case 17:	// U_JSTICK
-				PressKey(VK_UP);
+				lpMsg->message = DVL_WM_KEYDOWN;
+				lpMsg->wParam = DVL_VK_UP;
 				break;
 			case 18:	// R_JSTICK
-				PressKey(VK_RIGHT);
+				lpMsg->message = DVL_WM_KEYDOWN;
+				lpMsg->wParam = DVL_VK_RIGHT;
 				break;
 			case 19:	// D_JSTICK
-				PressKey(VK_DOWN);
+				lpMsg->message = DVL_WM_KEYDOWN;
+				lpMsg->wParam = DVL_VK_DOWN;
 				break;
 		}
-		#else // xbox controller (untested)
+		break;
+	case SDL_JOYBUTTONUP:
+		switch(e.jbutton.button)
+		{
+			case  0:	// A
+				lpMsg->message = DVL_WM_KEYUP;
+				lpMsg->wParam = 'H';
+				break;
+			case  1:	// B
+				if (inmainmenu) {
+					lpMsg->message = DVL_WM_KEYUP;
+					lpMsg->wParam = DVL_VK_RETURN;
+				} else {
+					lpMsg->message = DVL_WM_KEYUP;
+					lpMsg->wParam = DVL_VK_SPACE;
+				}
+				break;
+			case  2:	// X
+				lpMsg->message = DVL_WM_KEYUP;
+				lpMsg->wParam = 'X';
+				break;
+			case  3:	// Y
+				if (invflag) {
+					lpMsg->message = DVL_WM_RBUTTONUP;
+					lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+					lpMsg->wParam = keystate_for_mouse(0);
+				} else {
+					lpMsg->message = DVL_WM_KEYUP;
+					lpMsg->wParam = DVL_VK_RETURN;
+				}
+				break;
+			case  4:	// left joystick click
+				lpMsg->message = DVL_WM_KEYUP;
+				lpMsg->wParam = 'Q';
+				break;
+			case  5:	// right joystick click
+				lpMsg->message = DVL_WM_LBUTTONUP;
+				lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+				lpMsg->wParam = keystate_for_mouse(0);
+				break;
+			case  6:	// L
+				lpMsg->message = DVL_WM_KEYUP;
+				lpMsg->wParam = 'C';
+				break;
+			case  7:	// R
+				lpMsg->message = DVL_WM_KEYUP;
+				lpMsg->wParam = 'I';
+				break;
+			case 10:	// plus
+				lpMsg->message = DVL_WM_KEYUP;
+				lpMsg->wParam = DVL_VK_ESCAPE;
+				break;
+			case 11:	// minus
+				lpMsg->message = DVL_WM_KEYUP;
+				lpMsg->wParam = DVL_VK_TAB;
+				break;
+			case 12:	// L_DPAD
+				lpMsg->message = DVL_WM_KEYUP;
+				lpMsg->wParam = DVL_VK_LEFT;
+				break;
+			case 13:	// U_DPAD
+				lpMsg->message = DVL_WM_KEYUP;
+				lpMsg->wParam = DVL_VK_UP;
+				break;
+			case 14:	// R_DPAD
+				lpMsg->message = DVL_WM_KEYUP;
+				lpMsg->wParam = DVL_VK_RIGHT;
+				break;
+			case 15:	// D_DPAD
+				lpMsg->message = DVL_WM_KEYUP;
+				lpMsg->wParam = DVL_VK_DOWN;
+				break;
+			case 16:	// L_JSTICK
+				lpMsg->message = DVL_WM_KEYUP;
+				lpMsg->wParam = DVL_VK_LEFT;
+				break;
+			case 17:	// U_JSTICK
+				lpMsg->message = DVL_WM_KEYUP;
+				lpMsg->wParam = DVL_VK_UP;
+				break;
+			case 18:	// R_JSTICK
+				lpMsg->message = DVL_WM_KEYUP;
+				lpMsg->wParam = DVL_VK_RIGHT;
+				break;
+			case 19:	// D_JSTICK
+				lpMsg->message = DVL_WM_KEYUP;
+				lpMsg->wParam = DVL_VK_DOWN;
+				break;
+		}
+		break;
+#else
+// xbox controller (untested)
+	case SDL_JOYBUTTONDOWN:
 		switch(e.jbutton.button)
 		{
 			case  0:	// A
@@ -459,22 +570,8 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 			case  8:	// Left Stick
 				break;
 		}
-		#endif
 		break;
-	case SDL_JOYBUTTONUP:
-		#ifdef SWITCH
-		switch(e.jbutton.button)
-		{
-			case  3:	// Y
-				if (invflag) {
-					lpMsg->message = DVL_WM_RBUTTONUP;
-					lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
-					lpMsg->wParam = keystate_for_mouse(0);
-				}
-				break;
-		}
-		#endif
-		break;
+#endif
 	case SDL_QUIT:
 		lpMsg->message = DVL_WM_QUIT;
 		break;
@@ -489,6 +586,10 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		lpMsg->lParam = e.key.keysym.mod << 16;
 	} break;
 	case SDL_MOUSEMOTION:
+		if (pcurs == CURSOR_NONE) {
+			SetCursor_(CURSOR_HAND);
+			newCurHidden = false;
+		}
 		lpMsg->message = DVL_WM_MOUSEMOVE;
 		lpMsg->lParam = (e.motion.y << 16) | (e.motion.x & 0xFFFF);
 		lpMsg->wParam = keystate_for_mouse(0);
