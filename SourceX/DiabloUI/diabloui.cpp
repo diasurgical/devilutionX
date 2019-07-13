@@ -190,8 +190,25 @@ bool UiFocusNavigation(SDL_Event *event)
 		exit(0);
 	if (event->type == SDL_JOYBUTTONDOWN) {
 		if (event->jbutton.which == 0) {
-			if (event->jbutton.button == 0) {
+#ifdef SWITCH
+			if (event->jbutton.button == 1)
+#else
+			if (event->jbutton.button == 0)
+#endif
+			{
 				UiFocusNavigationSelect();
+				return true;
+			}
+		}
+
+		if (event->jbutton.which == 0) {
+#ifdef SWITCH
+			if (event->jbutton.button == 0)
+#else
+			if (event->jbutton.button == 1)
+#endif
+			{
+				UiFocusNavigationEsc();
 				return true;
 			}
 		}
