@@ -2,6 +2,8 @@ ifeq ($(strip $(DEVKITPRO)),)
 $(error "Please set DEVKITPRO in your environment. export DEVKITPRO=<path to>/devkitpro")
 endif
 
+contents := $(shell mkdir -p obj ; mkdir -p release ; mkdir -p RomFS)
+
 TOPDIR ?= $(CURDIR)
  
 export BUILD_EXEFS_SRC := build/exefs
