@@ -1,11 +1,18 @@
-#include "switch_touch.h"
+#ifndef USE_SDL1
+#include "touch.h"
 #include <math.h>
 
 template<typename T> inline T CLIP(T v, T amin, T amax)
 	{ if (v < amin) return amin; else if (v > amax) return amax; else return v; }
 
+#ifdef SWITCH
 #define DISPLAY_WIDTH 1280
 #define DISPLAY_HEIGHT 720
+#else
+// TODO: How to find display size for each platform programmatically?
+#define DISPLAY_WIDTH 1920
+#define DISPLAY_HEIGHT 1080
+#endif
 #define GAME_WIDTH 640
 #define GAME_HEIGHT 480
 #define TOUCH_PORT_MAX_NUM 1
@@ -60,7 +67,7 @@ static void init_touch(void)
 		}
 		multi_finger_dragging[port] = DRAG_NONE;
 	}
-	
+
 	for (int port = 0; port < TOUCH_PORT_MAX_NUM; port++) {
 		for (int i = 0; i < 2; i++) {
 			simulated_click_start_time[port][i] = 0;
@@ -68,7 +75,7 @@ static void init_touch(void)
 	}
 }
 
-void switch_handle_touch(SDL_Event *event, int current_mouse_x, int current_mouse_y)
+void handle_touch(SDL_Event *event, int current_mouse_x, int current_mouse_y)
 {
 	mouse_x = current_mouse_x;
 	mouse_y = current_mouse_y;
@@ -124,7 +131,7 @@ static void preprocess_finger_down(SDL_Event *event)
 
 	int x = mouse_x;
 	int y = mouse_y;
-	
+
 	if (direct_touch) {
 		convert_touch_xy_to_game_xy(event->tfinger.x, event->tfinger.y, &x, &y);
 	}
@@ -351,7 +358,7 @@ static void preprocess_finger_motion(SDL_Event *event)
 	}
 }
 
-void switch_finish_simulated_mouse_clicks(int current_mouse_x, int current_mouse_y)
+void finish_simulated_mouse_clicks(int current_mouse_x, int current_mouse_y)
 {
 	mouse_x = current_mouse_x;
 	mouse_y = current_mouse_y;
@@ -429,3 +436,4 @@ static void convert_touch_xy_to_game_xy(float touch_x, float touch_y, int *game_
 	*game_x = CLIP((int)((disp_touch_x - x) / sx), 0, (int) GAME_WIDTH);
 	*game_y = CLIP((int)((disp_touch_y - y) / sy), 0, (int) GAME_HEIGHT);
 }
+#endif

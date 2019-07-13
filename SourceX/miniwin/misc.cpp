@@ -129,6 +129,7 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 #endif
 
 	SDL_JoystickOpen(0);
+	SDL_GameControllerOpen(0);
 
 	int upscale = 1;
 	DvlIntSetting("upscale", &upscale);
