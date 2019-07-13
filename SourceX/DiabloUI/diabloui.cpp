@@ -229,6 +229,13 @@ bool UiFocusNavigation(SDL_Event *event)
 		}
 
 		if (event->jbutton.which == 0) {
+			if (event->jbutton.button == 1) {
+				UiFocusNavigationEsc();
+				return true;
+			}
+		}
+
+		if (event->jbutton.which == 0) {
 			if (event->jbutton.button == 13){
 				UiFocus(SelectedItem - 1, UiItemsWraps);
 				return true;
