@@ -209,7 +209,8 @@ add_executable(devilutionx
   SourceX/DiabloUI/selhero.cpp
   SourceX/DiabloUI/selyesno.cpp
   SourceX/DiabloUI/title.cpp
-  SourceX/main.cpp)
+  SourceX/main.cpp
+  touch/touch.cpp)
 
 target_include_directories(devilution PUBLIC Source SourceS)
 target_include_directories(devilutionx PRIVATE
