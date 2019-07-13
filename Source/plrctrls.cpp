@@ -39,7 +39,6 @@ int hsr[3] = { 0, 0, 0 }; // hot spell row counts
 DWORD talkwait;
 DWORD talktick;
 DWORD castwait;
-bool inmainmenu = false;
 
 // 0 = not near, >0 = distance related player 1 coordinates
 coords checkNearbyObjs(int x, int y, int diff)

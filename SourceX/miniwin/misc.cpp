@@ -326,6 +326,7 @@ HWND CreateWindowExA(
 	atexit(SDL_Quit);
 
 	SDL_JoystickOpen(0);
+	SDL_GameControllerOpen(0);
 
 	int upscale = 1;
 	DvlIntSetting("upscale", &upscale);

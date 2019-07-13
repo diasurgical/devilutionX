@@ -23,8 +23,6 @@ extern DWORD talkwait;
 extern DWORD talktick;
 extern DWORD castwait;
 
-extern bool inmainmenu;
-
 #define INV_TOP 240;
 #define INV_LEFT 350;
 #define INV_HEIGHT 320;
