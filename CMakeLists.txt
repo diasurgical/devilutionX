@@ -209,6 +209,7 @@ add_executable(devilutionx MACOSX_BUNDLE
   SourceX/DiabloUI/selyesno.cpp
   SourceX/DiabloUI/title.cpp
   SourceX/main.cpp
+  touch/touch.cpp
   ./Packaging/macOS/AppIcon.icns
   ./Packaging/resources/CharisSILB.ttf)
 
