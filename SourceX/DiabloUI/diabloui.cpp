@@ -188,40 +188,19 @@ bool UiFocusNavigation(SDL_Event *event)
 {
 	if (event->type == SDL_QUIT)
 		exit(0);
-	if (event->type == SDL_JOYBUTTONDOWN) {
-		if (event->jbutton.which == 0) {
-#ifdef SWITCH
-			if (event->jbutton.button == 1)
-#else
-			if (event->jbutton.button == 0)
-#endif
-			{
+	if (event->type == SDL_CONTROLLERBUTTONDOWN) {
+		if (event->cbutton.which == 0) {
+			switch (event->cbutton.button) {
+			case SDL_CONTROLLER_BUTTON_A:
 				UiFocusNavigationSelect();
 				return true;
-			}
-		}
-
-		if (event->jbutton.which == 0) {
-#ifdef SWITCH
-			if (event->jbutton.button == 0)
-#else
-			if (event->jbutton.button == 1)
-#endif
-			{
+			case SDL_CONTROLLER_BUTTON_B:
 				UiFocusNavigationEsc();
 				return true;
-			}
-		}
-
-		if (event->jbutton.which == 0) {
-			if (event->jbutton.button == 13){
+			case SDL_CONTROLLER_BUTTON_DPAD_UP:
 				UiFocus(SelectedItem - 1, UiItemsWraps);
 				return true;
-			}
-		}
-
-		if (event->jbutton.which == 0) {
-			if (event->jbutton.button == 15){
+			case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
 				UiFocus(SelectedItem + 1, UiItemsWraps);
 				return true;
 			}

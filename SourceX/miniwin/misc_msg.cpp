@@ -4,10 +4,7 @@
 #include "devilution.h"
 #include "stubs.h"
 #include <math.h>
-
-#ifdef SWITCH
-	#include "../../switch/switch_touch.h"
-#endif
+#include "../../touch/touch.h"
 
 /** @file
  * *
@@ -201,6 +198,41 @@ static int translate_sdl_key(SDL_Keysym key)
 	}
 }
 
+static int translate_controller_button_to_key(uint8_t sdlControllerButton)
+{
+	switch (sdlControllerButton) {
+	case SDL_CONTROLLER_BUTTON_B:
+		return 'H';
+	case SDL_CONTROLLER_BUTTON_A:
+		return DVL_VK_SPACE;
+	case SDL_CONTROLLER_BUTTON_Y:
+		return 'X';
+	case SDL_CONTROLLER_BUTTON_X:
+		return DVL_VK_RETURN;
+	case SDL_CONTROLLER_BUTTON_LEFTSTICK:
+		return 'Q';
+	case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
+		return 'C';
+	case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
+		return 'I';
+	case SDL_CONTROLLER_BUTTON_START:
+		return DVL_VK_ESCAPE;
+	case SDL_CONTROLLER_BUTTON_BACK:
+		return DVL_VK_TAB;
+	case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+		return DVL_VK_LEFT;
+	case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+		return DVL_VK_RIGHT;
+	case SDL_CONTROLLER_BUTTON_DPAD_UP:
+		return DVL_VK_UP;
+	case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+		return DVL_VK_DOWN;
+	default:
+		return 0;
+	}
+}
+
+
 static WPARAM keystate_for_mouse(WPARAM ret)
 {
 	ret |= (SDL_GetModState() & KMOD_SHIFT) ? DVL_MK_SHIFT : 0;
@@ -219,9 +251,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	// update joystick (and touch mouse on Switch) at maximally 60 fps
 	currentTime = SDL_GetTicks();
 	if ((currentTime - lastTime) > 15) {
-#ifdef SWITCH
-		switch_finish_simulated_mouse_clicks(MouseX, MouseY);
-#endif
+		finish_simulated_mouse_clicks(MouseX, MouseY);
 		HandleJoystickAxes();
 		lastTime = currentTime;
 	}
@@ -258,317 +288,152 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	lpMsg->lParam = 0;
 	lpMsg->wParam = 0;
 
-#ifdef SWITCH
-	switch_handle_touch(&e, MouseX, MouseY);
+	handle_touch(&e, MouseX, MouseY);
 	if (movie_playing) {
 		// allow plus button or mouse click to skip movie, no other input
 		switch (e.type) {
-			case SDL_JOYBUTTONDOWN:
-				switch(e.jbutton.button)
-				{
-					case 10:	// plus
-					case  5:	// right joystick click
-						lpMsg->message = DVL_WM_LBUTTONDOWN;
-						lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
-						lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
-						break;
-				}
-				break;
-			case SDL_JOYBUTTONUP:
-				switch(e.jbutton.button)
-				{
-					case  10:	// plus
-					case   5:	// right joystick click
-						lpMsg->message = DVL_WM_LBUTTONUP;
-						lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
-						lpMsg->wParam = keystate_for_mouse(0);
-						break;
-				}
-				break;
-			case SDL_MOUSEBUTTONDOWN:
-				if (e.button.button == SDL_BUTTON_LEFT) {
-					lpMsg->message = DVL_WM_LBUTTONDOWN;
-					lpMsg->lParam = (e.button.y << 16) | (e.button.x & 0xFFFF);
-					lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
-				}
-				break;
-			case SDL_MOUSEBUTTONUP:
-				if (e.button.button == SDL_BUTTON_LEFT) {
-					lpMsg->message = DVL_WM_LBUTTONUP;
-					lpMsg->lParam = (e.button.y << 16) | (e.button.x & 0xFFFF);
+		case SDL_CONTROLLERBUTTONDOWN:
+		case SDL_CONTROLLERBUTTONUP:
+			switch(e.cbutton.button) {
+			case SDL_CONTROLLER_BUTTON_START:
+			case SDL_CONTROLLER_BUTTON_B:
+				lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_LBUTTONUP : DVL_WM_LBUTTONDOWN;
+				lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+				if (lpMsg->message == DVL_WM_LBUTTONUP)
 					lpMsg->wParam = keystate_for_mouse(0);
-				}
+				else
+					lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
 				break;
+			}
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+		case SDL_MOUSEBUTTONUP:
+			if (e.button.button == SDL_BUTTON_LEFT) {
+				lpMsg->message = e.type == SDL_MOUSEBUTTONUP ? DVL_WM_LBUTTONUP : DVL_WM_LBUTTONDOWN;
+				lpMsg->lParam = (e.button.y << 16) | (e.button.x & 0xFFFF);
+				if (lpMsg->message == DVL_WM_LBUTTONUP)
+					lpMsg->wParam = keystate_for_mouse(0);
+				else
+					lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
+			}
+			break;
 		}
 		return true;
 	}
-#endif
-
 	switch (e.type) {
-	case SDL_JOYAXISMOTION:
-		switch (e.jaxis.axis) {
-			case 0:
-				leftStickXUnscaled = e.jaxis.value;
-				break;
-			case 1:
-				leftStickYUnscaled = -e.jaxis.value;
-				break;
-			case 2:
-				rightStickXUnscaled = e.jaxis.value;
-				break;
-			case 3:
-				rightStickYUnscaled = -e.jaxis.value;
-				break;
+	case SDL_CONTROLLERAXISMOTION:
+		switch (e.caxis.axis) {
+		case SDL_CONTROLLER_AXIS_LEFTX:
+			leftStickXUnscaled = e.caxis.value;
+			break;
+		case SDL_CONTROLLER_AXIS_LEFTY:
+			leftStickYUnscaled = -e.caxis.value;
+			break;
+		case SDL_CONTROLLER_AXIS_RIGHTX:
+			rightStickXUnscaled = e.caxis.value;
+			break;
+		case SDL_CONTROLLER_AXIS_RIGHTY:
+			rightStickYUnscaled = -e.caxis.value;
+			break;
+		case SDL_CONTROLLER_AXIS_TRIGGERLEFT: // ZL on Switch
+			if (e.caxis.value)
+				useBeltPotion(false); // health potion
+			break;
+		case SDL_CONTROLLER_AXIS_TRIGGERRIGHT: // ZR on Switch
+			if (e.caxis.value)
+				useBeltPotion(true); // mana potion
+			break;
 		}
 		leftStickX = leftStickXUnscaled;
 		leftStickY = leftStickYUnscaled;
-		ScaleJoystickAxes(&leftStickX, &leftStickY, leftDeadzone);
 		rightStickX = rightStickXUnscaled;
 		rightStickY = rightStickYUnscaled;
+		ScaleJoystickAxes(&leftStickX, &leftStickY, leftDeadzone);
 		ScaleJoystickAxes(&rightStickX, &rightStickY, rightDeadzone);
 		break;
-
-#ifdef SWITCH
-// switch controller button mappings
-	case SDL_JOYBUTTONDOWN:
-		switch(e.jbutton.button)
-		{
-			case  0:	// A
-				lpMsg->message = DVL_WM_KEYDOWN;
-				lpMsg->wParam = 'H';
-				break;
-			case  1:	// B
-				if (inmainmenu) {
-					lpMsg->message = DVL_WM_KEYDOWN;
-					lpMsg->wParam = DVL_VK_RETURN;
-					keyboardExpansion(VK_RETURN);
-				} else {
-					if (stextflag)
-						talkwait = GetTickCount(); // JAKE: Wait before we re-initiate talking
-					lpMsg->message = DVL_WM_KEYDOWN;
-					lpMsg->wParam = DVL_VK_SPACE;
-					keyboardExpansion(VK_SPACE);
-				}
-				break;
-			case  2:	// X
-				lpMsg->message = DVL_WM_KEYDOWN;
-				lpMsg->wParam = 'X';
-				break;
-			case  3:	// Y
-				if (invflag) {
-					lpMsg->message = DVL_WM_RBUTTONDOWN;
-					lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+	case SDL_CONTROLLERBUTTONDOWN:
+	case SDL_CONTROLLERBUTTONUP:
+		switch(e.cbutton.button) {
+		case SDL_CONTROLLER_BUTTON_B:	// A on Switch
+		case SDL_CONTROLLER_BUTTON_Y:	// X on Switch
+		case SDL_CONTROLLER_BUTTON_LEFTSTICK:
+		case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
+		case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
+		case SDL_CONTROLLER_BUTTON_START:
+		case SDL_CONTROLLER_BUTTON_BACK:
+			lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
+			lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.cbutton.button);
+			break;
+		case SDL_CONTROLLER_BUTTON_DPAD_UP:
+		case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+		case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+		case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+			lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
+			lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.cbutton.button);
+			if (lpMsg->message == DVL_WM_KEYDOWN) {
+				movements(lpMsg->wParam);
+			}
+			break;
+		case SDL_CONTROLLER_BUTTON_A:	// B on Switch
+			lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
+			lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.cbutton.button);
+			if (lpMsg->message == DVL_WM_KEYDOWN) {
+				if (stextflag)
+					talkwait = GetTickCount(); // JAKE: Wait before we re-initiate talking
+				keyboardExpansion(lpMsg->wParam);
+			}
+			break;
+		case SDL_CONTROLLER_BUTTON_X:	// Y on Switch
+			if (invflag) {
+				lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_RBUTTONUP : DVL_WM_RBUTTONDOWN;
+				lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+				if (lpMsg->message == DVL_WM_RBUTTONDOWN) {
 					lpMsg->wParam = keystate_for_mouse(DVL_MK_RBUTTON);
 				} else {
-					lpMsg->message = DVL_WM_KEYDOWN;
-					lpMsg->wParam = DVL_VK_RETURN;
-					keyboardExpansion(VK_RETURN);
+					lpMsg->wParam = keystate_for_mouse(0);
 				}
-				break;
-			case  4:	// left joystick click
-				lpMsg->message = DVL_WM_KEYDOWN;
-				lpMsg->wParam = 'Q';
-				break;
-			case  5:	// right joystick click
+			} else {
+				lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
+				lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.cbutton.button);
+				if (lpMsg->message == DVL_WM_KEYDOWN)
+					keyboardExpansion(lpMsg->wParam);
+			}
+			break;
+		case SDL_CONTROLLER_BUTTON_RIGHTSTICK:
+			lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_LBUTTONUP : DVL_WM_LBUTTONDOWN;
+			lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+			if (lpMsg->message == DVL_WM_LBUTTONDOWN) {
 				if (newCurHidden) { // show cursor first, before clicking
 					SetCursor_(CURSOR_HAND);
 					newCurHidden = false;
 				}
-				if (spselflag) {
-					SetSpell();
-				} else {
-					LeftMouseCmd(false);
-				}
-				break;
-			case  6:	// L
-				lpMsg->message = DVL_WM_KEYDOWN;
-				lpMsg->wParam = 'C';
-				break;
-			case  7:	// R
-				lpMsg->message = DVL_WM_KEYDOWN;
-				lpMsg->wParam = 'I';
-				break;
-			case  8:	// ZL
-				useBeltPotion(false); // use health potion
-				break;
-			case  9:	// ZR
-				useBeltPotion(true); // use mana potion
-				break;
-			case 10:	// plus
-				lpMsg->message = DVL_WM_KEYDOWN;
-				lpMsg->wParam = DVL_VK_ESCAPE;
-				break;
-			case 11:	// minus
-				lpMsg->message = DVL_WM_KEYDOWN;
-				lpMsg->wParam = DVL_VK_TAB;
-				break;
-			case 12:	// L_DPAD
-				lpMsg->message = DVL_WM_KEYDOWN;
-				lpMsg->wParam = DVL_VK_LEFT;
-				movements(VK_LEFT);
-				break;
-			case 13:	// U_DPAD
-				lpMsg->message = DVL_WM_KEYDOWN;
-				lpMsg->wParam = DVL_VK_UP;
-				movements(VK_UP);
-				break;
-			case 14:	// R_DPAD
-				lpMsg->message = DVL_WM_KEYDOWN;
-				lpMsg->wParam = DVL_VK_RIGHT;
-				movements(VK_RIGHT);
-				break;
-			case 15:	// D_DPAD
-				lpMsg->message = DVL_WM_KEYDOWN;
-				lpMsg->wParam = DVL_VK_DOWN;
-				movements(VK_DOWN);
-				break;
-			case 16:	// L_JSTICK
-				lpMsg->message = DVL_WM_KEYDOWN;
-				lpMsg->wParam = DVL_VK_LEFT;
-				break;
-			case 17:	// U_JSTICK
-				lpMsg->message = DVL_WM_KEYDOWN;
-				lpMsg->wParam = DVL_VK_UP;
-				break;
-			case 18:	// R_JSTICK
-				lpMsg->message = DVL_WM_KEYDOWN;
-				lpMsg->wParam = DVL_VK_RIGHT;
-				break;
-			case 19:	// D_JSTICK
-				lpMsg->message = DVL_WM_KEYDOWN;
-				lpMsg->wParam = DVL_VK_DOWN;
-				break;
-		}
-		break;
-	case SDL_JOYBUTTONUP:
-		switch(e.jbutton.button)
-		{
-			case  0:	// A
-				lpMsg->message = DVL_WM_KEYUP;
-				lpMsg->wParam = 'H';
-				break;
-			case  1:	// B
-				if (inmainmenu) {
-					lpMsg->message = DVL_WM_KEYUP;
-					lpMsg->wParam = DVL_VK_RETURN;
-				} else {
-					lpMsg->message = DVL_WM_KEYUP;
-					lpMsg->wParam = DVL_VK_SPACE;
-				}
-				break;
-			case  2:	// X
-				lpMsg->message = DVL_WM_KEYUP;
-				lpMsg->wParam = 'X';
-				break;
-			case  3:	// Y
-				if (invflag) {
-					lpMsg->message = DVL_WM_RBUTTONUP;
-					lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
-					lpMsg->wParam = keystate_for_mouse(0);
-				} else {
-					lpMsg->message = DVL_WM_KEYUP;
-					lpMsg->wParam = DVL_VK_RETURN;
-				}
-				break;
-			case  4:	// left joystick click
-				lpMsg->message = DVL_WM_KEYUP;
-				lpMsg->wParam = 'Q';
-				break;
-			case  5:	// right joystick click
-				lpMsg->message = DVL_WM_LBUTTONUP;
-				lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+				lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
+			} else {
 				lpMsg->wParam = keystate_for_mouse(0);
-				break;
-			case  6:	// L
-				lpMsg->message = DVL_WM_KEYUP;
-				lpMsg->wParam = 'C';
-				break;
-			case  7:	// R
-				lpMsg->message = DVL_WM_KEYUP;
-				lpMsg->wParam = 'I';
-				break;
-			case 10:	// plus
-				lpMsg->message = DVL_WM_KEYUP;
-				lpMsg->wParam = DVL_VK_ESCAPE;
-				break;
-			case 11:	// minus
-				lpMsg->message = DVL_WM_KEYUP;
-				lpMsg->wParam = DVL_VK_TAB;
-				break;
-			case 12:	// L_DPAD
-				lpMsg->message = DVL_WM_KEYUP;
-				lpMsg->wParam = DVL_VK_LEFT;
-				break;
-			case 13:	// U_DPAD
-				lpMsg->message = DVL_WM_KEYUP;
-				lpMsg->wParam = DVL_VK_UP;
-				break;
-			case 14:	// R_DPAD
-				lpMsg->message = DVL_WM_KEYUP;
-				lpMsg->wParam = DVL_VK_RIGHT;
-				break;
-			case 15:	// D_DPAD
-				lpMsg->message = DVL_WM_KEYUP;
-				lpMsg->wParam = DVL_VK_DOWN;
-				break;
-			case 16:	// L_JSTICK
-				lpMsg->message = DVL_WM_KEYUP;
-				lpMsg->wParam = DVL_VK_LEFT;
-				break;
-			case 17:	// U_JSTICK
-				lpMsg->message = DVL_WM_KEYUP;
-				lpMsg->wParam = DVL_VK_UP;
-				break;
-			case 18:	// R_JSTICK
-				lpMsg->message = DVL_WM_KEYUP;
-				lpMsg->wParam = DVL_VK_RIGHT;
-				break;
-			case 19:	// D_JSTICK
-				lpMsg->message = DVL_WM_KEYUP;
-				lpMsg->wParam = DVL_VK_DOWN;
-				break;
+			}
+			break;
 		}
 		break;
-#else
-// xbox controller (untested)
+#ifdef SWITCH
+	// additional digital buttons that only exist on Switch:
 	case SDL_JOYBUTTONDOWN:
-		switch(e.jbutton.button)
-		{
-			case  0:	// A
-				if (inmainmenu) {
-					PressKey(VK_RETURN);
-					keyboardExpansion(VK_RETURN);
-				} else {
-					if (stextflag)
-						talkwait = GetTickCount(); // JAKE: Wait before we re-initiate talking
-					PressKey(VK_SPACE);
-					keyboardExpansion(VK_SPACE);
-				}
-				break;
-			case  1:	// B
-				PressChar('i');
-				break;
-			case  2:	// X
-				PressKey(VK_RETURN);
-				keyboardExpansion(VK_RETURN);
-				break;
-			case  3:	// Y
-				PressChar('x');
-				break;
-			case  4:	// Left Shoulder
-				PressChar('h');
-				break;
-			case  5:	// Right Shoulder
-				PressChar('c');
-				break;
-			case  6:	// Back
-				PressKey(VK_TAB);
-				break;
-			case  7:	// Start
-				PressKey(VK_ESCAPE);
-				break;
-			case  8:	// Left Stick
-				break;
+	case SDL_JOYBUTTONUP:
+		lpMsg->message = e.type == SDL_JOYBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
+		switch(e.jbutton.button) {
+		case 16:	// L_JSTICK
+			lpMsg->wParam = DVL_VK_LEFT;
+			break;
+		case 17:	// U_JSTICK
+			lpMsg->wParam = DVL_VK_UP;
+			break;
+		case 18:	// R_JSTICK
+			lpMsg->wParam = DVL_VK_RIGHT;
+			break;
+		case 19:	// D_JSTICK
+			lpMsg->wParam = DVL_VK_DOWN;
+			break;
+		default:
+			lpMsg->message = 0;
 		}
 		break;
 #endif
