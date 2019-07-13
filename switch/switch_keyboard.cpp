@@ -52,9 +52,6 @@ void switch_start_text_input(char *guide_text, char *initial_text, int multiline
 {
     char text[65] = {'\0'};
     switch_keyboard_get(guide_text, initial_text, 64, multiline, text);
-    if (text == nullptr) {
-        return;
-    }
     for (int i = 0; i < 600; i++) {
         switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_BACKSPACE, SDLK_BACKSPACE);
         switch_create_and_push_sdlkey_event(SDL_KEYUP, SDL_SCANCODE_BACKSPACE, SDLK_BACKSPACE);
@@ -62,6 +59,10 @@ void switch_start_text_input(char *guide_text, char *initial_text, int multiline
     for (int i = 0; i < 600; i++) {
         switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_DELETE, SDLK_DELETE);
         switch_create_and_push_sdlkey_event(SDL_KEYUP, SDL_SCANCODE_DELETE, SDLK_DELETE);
+    }
+    if (text[0] == '\0') {
+        strncpy(text, initial_text, 63);
+        text[64] = {'\0'};
     }
     const uint8_t *utf8_text = (uint8_t*) text;
     for (int i = 0; i < 599 && utf8_text[i];) {
