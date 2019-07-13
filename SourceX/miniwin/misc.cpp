@@ -342,13 +342,14 @@ HWND CreateWindowExA(
 	}
 	atexit(SDL_Quit);
 #else
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) <= -1) {
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER) <= -1) {
 		SDL_Log(SDL_GetError());
 		return NULL;
 	}
 #endif
 
 	SDL_JoystickOpen(0);
+	SDL_GameControllerOpen(0);
 
 	int upscale = 1;
 	DvlIntSetting("upscale", &upscale);
