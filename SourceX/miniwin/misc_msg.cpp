@@ -331,7 +331,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		switch(e.jbutton.button)
 		{
 			case  0:	// A
-				PressChar('i');
+				PressChar('h');
 				break;
 			case  1:	// B
 				if (inmainmenu) {
@@ -372,10 +372,10 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 				}
 				break;
 			case  6:	// L
-				PressChar('h');
+				PressChar('c');
 				break;
 			case  7:	// R
-				PressChar('c');
+				PressChar('i');
 				break;
 			case  8:	// ZL
 				useBeltPotion(false); // health potion
