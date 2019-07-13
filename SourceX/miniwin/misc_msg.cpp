@@ -5,6 +5,10 @@
 #include "stubs.h"
 #include <math.h>
 
+#ifdef SWITCH
+	#include "../../switch/switch_touch.h"
+#endif
+
 /** @file
  * *
  * Windows message handling and keyboard event conversion for SDL.
@@ -212,9 +216,12 @@ static WINBOOL false_avail()
 
 WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg)
 {
-	// update joystick mouse at maximally 60 fps
+	// update joystick (and touch mouse on Switch) at maximally 60 fps
 	currentTime = SDL_GetTicks();
 	if ((currentTime - lastTime) > 15) {
+#ifdef SWITCH
+		switch_finish_simulated_mouse_clicks(MouseX, MouseY);
+#endif
 		HandleJoystickAxes();
 		lastTime = currentTime;
 	}
@@ -252,6 +259,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	lpMsg->wParam = 0;
 
 #ifdef SWITCH
+	switch_handle_touch(&e, MouseX, MouseY);
 	if (movie_playing) {
 		// allow plus button or mouse click to skip movie, no other input
 		switch (e.type) {
@@ -480,13 +488,11 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		// HACK: Encode modifier in lParam for TranslateMessage later
 		lpMsg->lParam = e.key.keysym.mod << 16;
 	} break;
-	case SDL_FINGERMOTION:
 	case SDL_MOUSEMOTION:
 		lpMsg->message = DVL_WM_MOUSEMOVE;
 		lpMsg->lParam = (e.motion.y << 16) | (e.motion.x & 0xFFFF);
 		lpMsg->wParam = keystate_for_mouse(0);
 		break;
-	case SDL_FINGERDOWN:
 	case SDL_MOUSEBUTTONDOWN: {
 		int button = e.button.button;
 		if (button == SDL_BUTTON_LEFT) {
@@ -501,7 +507,6 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 			return false_avail();
 		}
 	} break;
-	case SDL_FINGERUP:
 	case SDL_MOUSEBUTTONUP: {
 		int button = e.button.button;
 		if (button == SDL_BUTTON_LEFT) {
