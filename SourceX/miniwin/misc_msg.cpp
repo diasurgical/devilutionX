@@ -470,6 +470,16 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	case SDL_QUIT:
 		lpMsg->message = DVL_WM_QUIT;
 		break;
+	case SDL_KEYDOWN:
+	case SDL_KEYUP: {
+		int key = translate_sdl_key(e.key.keysym);
+		if (key == -1)
+			return false_avail();
+		lpMsg->message = e.type == SDL_KEYDOWN ? DVL_WM_KEYDOWN : DVL_WM_KEYUP;
+		lpMsg->wParam = (DWORD)key;
+		// HACK: Encode modifier in lParam for TranslateMessage later
+		lpMsg->lParam = e.key.keysym.mod << 16;
+	} break;
 	case SDL_FINGERMOTION:
 	case SDL_MOUSEMOTION:
 		lpMsg->message = DVL_WM_MOUSEMOVE;
