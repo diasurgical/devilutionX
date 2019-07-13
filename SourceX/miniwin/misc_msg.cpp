@@ -235,8 +235,6 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		rightStickX = rightStickXUnscaled;
 		rightStickY = rightStickYUnscaled;
 		ScaleJoystickAxes(&rightStickX, &rightStickY, rightDeadzone);
-		lpMsg->message = e.type == SDL_KEYUP;
-		lpMsg->lParam = 0;
 		break;
 	case SDL_JOYBUTTONDOWN:
 		// switch controller
