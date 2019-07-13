@@ -737,7 +737,7 @@ void CopyItems(const int n, ItemStruct *pItem)
 
 void LoadPremium(int i)
 {
-	CopyItem(&item[i]);
+	CopyItem(&premiumitem[i]);
 }
 
 void LoadQuest(int i)
@@ -1425,7 +1425,7 @@ void SaveItems(ItemStruct *pItem, const int n)
 
 void SavePremium(int i)
 {
-	SaveItem(&item[i]);
+	SaveItem(&premiumitem[i]);
 }
 
 void SaveQuest(int i)
