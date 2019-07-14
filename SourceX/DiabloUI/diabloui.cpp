@@ -3,6 +3,7 @@
 #include "stubs.h"
 #include "utf8.h"
 #include <string>
+#include <SDL/SDL_ttf.h>
 
 #include "DiabloUI/diabloui.h"
 
@@ -250,7 +251,7 @@ bool UiFocusNavigation(SDL_Event *event)
 					char *clipboard = SDL_GetClipboardText();
 					if (clipboard == NULL) {
 						//klaus
-						//SDL_Log(SDL_GetError());
+						SDL_Log(SDL_GetError());
 					}
 					selhero_CatToName(clipboard, UiTextInput, UiTextInputLen);
 				}

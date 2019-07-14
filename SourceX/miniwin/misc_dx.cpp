@@ -34,7 +34,7 @@ int ShowCursor(WINBOOL bShow)
 {
 	if (SDL_ShowCursor(bShow ? SDL_ENABLE : SDL_DISABLE) <= -1) {
 		//klaus
-		//SDL_Log(SDL_GetError());
+		SDL_Log(SDL_GetError());
 	}
 
 	return bShow;
