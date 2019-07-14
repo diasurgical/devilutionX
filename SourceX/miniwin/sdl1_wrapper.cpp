@@ -90,7 +90,7 @@ SDL_bool SDL_SetHint(const char* name, const char* value)
 
 int SDL_ShowSimpleMessageBox(Uint32 flags, const char* title, const char* message, SDL_Window* window)
 {
-    printf("AAAAAA = %s\n", SDL_ShowSimpleMessageBox);
+    printf("AAAAAA = %s\n", message);
     return 1;
 }
 
@@ -290,7 +290,7 @@ SDL_Surface* SDL_ConvertSurfaceFormat(SDL_Surface* src, Uint32 pixel_format, Uin
 
 SDL_bool SDL_IsTextInputActive(void)
 {
-    return (SDL_bool)1;
+    return (SDL_bool)0;
 }
 
 int SDL_GetCurrentDisplayMode(int displayIndex, SDL_DisplayMode* mode)
