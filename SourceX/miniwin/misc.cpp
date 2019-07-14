@@ -210,9 +210,9 @@ DWORD GetCurrentDirectory(DWORD nBufferLength, LPTSTR lpBuffer)
 	if (base_path == NULL) {
 		//klaus_OK
 		SDL_Log(SDL_GetError());
-		base_path = SDL_strdup("./");
+		base_path = SDL_strdup("data/");
 	}
-	base_path = SDL_strdup("./");
+	base_path = SDL_strdup("data/");
 	eprintf("BasePath: %s\n", base_path);
 
 	strncpy(lpBuffer, base_path, nBufferLength);

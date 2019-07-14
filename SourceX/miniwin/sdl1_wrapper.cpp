@@ -148,7 +148,7 @@ void SDL_DestroyWindow(SDL_Window* window)
 
 SDL_Surface* SDL_GetWindowSurface(SDL_Window* window)
 {
-	if (window)		
+	if (window)
 		return window->surface;
 	else
 		return NULL;
@@ -218,7 +218,7 @@ void SDL_PauseAudioDevice(SDL_AudioDeviceID dev, int pause_on)
 
 Uint32 SDL_GetWindowPixelFormat(SDL_Window* window)
 {
-    return SDL_PIXELFORMAT_RGB565;
+    return SDL_PIXELFORMAT_RGB888;
 }
 
 SDL_bool SDL_IsScreenSaverEnabled(void)
@@ -279,15 +279,12 @@ int SDL_GetRendererOutputSize(SDL_Renderer* renderer, int* w, int* h)
 
 void SDL_WarpMouseInWindow(SDL_Window* window, int x, int y)
 {
-    SDL_WarpMouse(x, y);
+	SDL_WarpMouse(x, y);
 }
 
 SDL_Surface* SDL_ConvertSurfaceFormat(SDL_Surface* src, Uint32 pixel_format, Uint32 flags)
 {
-  //  return SDL_ConvertSurface(src, (SDL_PixelFormat*)pixel_format, flags);
-	
-		return SDL_DisplayFormat( src );
-	
+	return SDL_DisplayFormat( src );
 }
 
 SDL_bool SDL_IsTextInputActive(void)
@@ -307,7 +304,20 @@ int SDL_UpdateTexture(SDL_Texture* texture, const SDL_Rect* rect, const void* pi
 
 SDL_Texture* SDL_CreateTexture(SDL_Renderer* renderer, Uint32 format, int access, int w, int h)
 {
-    return SDL_CreateRGBSurface(renderer->flags, w, h, 16, renderer->format->Rmask, renderer->format->Gmask, renderer->format->Bmask, renderer->format->Amask);
+    Uint32 rmask, gmask, bmask, amask;
+
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+    rmask = 0xff000000;
+    gmask = 0x00ff0000;
+    bmask = 0x0000ff00;
+    amask = 0x000000ff;
+#else
+    rmask = 0x000000ff;
+    gmask = 0x0000ff00;
+    bmask = 0x00ff0000;
+    amask = 0xff000000;
+#endif
+    return SDL_CreateRGBSurface(renderer->flags, w, h, 16, rmask, gmask, bmask, amask);
 }
 
 int SDL_SetWindowInputFocus(SDL_Window* window)
