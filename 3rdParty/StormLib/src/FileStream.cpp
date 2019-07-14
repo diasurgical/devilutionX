@@ -518,6 +518,7 @@ static bool BaseMap_Open(TFileStream * pStream, const TCHAR * szFileName, DWORD 
         // Get the file size
         if(fstat64(handle, &fileinfo) != -1)
         {
+/*
             pStream->Base.Map.pbFile = (LPBYTE)mmap(NULL, (size_t)fileinfo.st_size, PROT_READ, MAP_PRIVATE, handle, 0);
             if(pStream->Base.Map.pbFile != NULL)
             {
@@ -529,6 +530,7 @@ static bool BaseMap_Open(TFileStream * pStream, const TCHAR * szFileName, DWORD 
                 pStream->Base.Map.FilePos = 0;
                 bResult = true;
             }
+*/
         }
         close(handle);
     }
@@ -575,7 +577,7 @@ static void BaseMap_Close(TFileStream * pStream)
         UnmapViewOfFile(pStream->Base.Map.pbFile);
 #endif
 
-#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU)
+#if (defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU)) && !defined(__AMIGA__)
     if(pStream->Base.Map.pbFile != NULL)
         munmap(pStream->Base.Map.pbFile, (size_t )pStream->Base.Map.FileSize);
 #endif
