@@ -343,7 +343,8 @@ void SDL_RenderPresent(SDL_Renderer* renderer)
 
 void SDL_Log(const char *fmt, ...) {
 
-	printf("%s\n", fmt);
+	 printf("Error \"%s\" in %s() from %s, line %d\n", fmt, 
+        __FUNCTION__, __FILE__, __LINE__);
 }
 
 int SDL_SetSurfacePalette(SDL_Surface* surface, SDL_Palette* palette)
