@@ -597,7 +597,7 @@ BOOL SVidPlayContinue(void)
 	if (renderer) {
 		if (SDL_BlitSurface(SVidSurface, NULL, surface, NULL) <= -1) {
 			//klaus
-			SDL_Log(SDL_GetError());
+			//SDL_Log(SDL_GetError());
 			return false;
 		}
 	} else {
@@ -617,7 +617,7 @@ BOOL SVidPlayContinue(void)
 		SDL_Surface *tmp = SDL_ConvertSurfaceFormat(SVidSurface, format, 0);
 		if (SDL_BlitScaled(tmp, NULL, surface, &pal_surface_offset) <= -1) {
 			//klaus
-			SDL_Log(SDL_GetError());
+			//SDL_Log(SDL_GetError());
 			return false;
 		}
 		SDL_FreeSurface(tmp);
@@ -662,11 +662,11 @@ BOOL SVidPlayEnd(HANDLE video)
 		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
 		if (texture == NULL) {
 			//klaus
-			SDL_Log(SDL_GetError());
+			//SDL_Log(SDL_GetError());
 		}
 		if (renderer && SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT) <= -1) {
 			//klaus
-			SDL_Log(SDL_GetError());
+			//SDL_Log(SDL_GetError());
 		}
 	}
 
