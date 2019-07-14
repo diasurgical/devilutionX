@@ -434,3 +434,13 @@ DerivedData/
 cmake-*
 CMakeFiles/*
 CMakeCache.txt
+
+
+##mine
+
+*.mpq
+*.a
+*.cmake
+Makefile
+devilutionx
+.gitignore
