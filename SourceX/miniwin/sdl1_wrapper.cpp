@@ -284,7 +284,10 @@ void SDL_WarpMouseInWindow(SDL_Window* window, int x, int y)
 
 SDL_Surface* SDL_ConvertSurfaceFormat(SDL_Surface* src, Uint32 pixel_format, Uint32 flags)
 {
-    return SDL_ConvertSurface(src, (SDL_PixelFormat*)pixel_format, flags);
+  //  return SDL_ConvertSurface(src, (SDL_PixelFormat*)pixel_format, flags);
+	
+		return SDL_DisplayFormat( src );
+	
 }
 
 SDL_bool SDL_IsTextInputActive(void)
