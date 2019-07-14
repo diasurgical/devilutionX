@@ -347,10 +347,28 @@ typedef struct SDL_Point
 // ============
 
 // sdl_displaymode struct is not finished
-struct SDL_DisplayMode {int h; int w;};
+struct SDL_DisplayMode {
+    int h; 
+    int w; 
+    int refresh_rate;
+    Uint32 format;
+    void* driverdata;
+};
 
-struct SDL_HitTest {};
-struct SDL_WindowUserData {};
+typedef struct SDL_WindowUserData
+{
+    char *name;
+    void *data;
+    struct SDL_WindowUserData *next;
+} SDL_WindowUserData;
+
+struct SDL_HitTest {
+    SDL_Window*      win;
+    const SDL_Point* area;
+    void*            data;
+
+};
+//struct SDL_WindowUserData {};
 //struct SDL_Renderer {};
 // struct SDL_Texture {};
 
