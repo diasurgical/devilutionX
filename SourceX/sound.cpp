@@ -2,7 +2,6 @@
 #include "stubs.h"
 #include <SDL.h>
 #include <SDL_mixer.h>
-#include "miniwin/sdl1_wrapper.h"
 
 namespace dvl {
 
