@@ -156,7 +156,9 @@ SDL_Surface* SDL_GetWindowSurface(SDL_Window* window)
 
 int SDL_UpdateWindowSurface(SDL_Window* window)
 {
-	SDL_Flip(window->surface);
+	
+	return SDL_Flip(window->surface);
+
 }
 
 SDL_Renderer* SDL_CreateRenderer(SDL_Window* window,
@@ -172,7 +174,7 @@ int SDL_SetRenderDrawColor(SDL_Renderer* renderer,
                            Uint8         b,
                            Uint8         a)
 {
-	SDL_FillRect( renderer, NULL, SDL_MapRGBA( renderer->format, r, g, b, a) );
+	return SDL_FillRect( renderer, NULL, SDL_MapRGBA( renderer->format, r, g, b, a) );
 }
 
 SDL_Texture* SDL_CreateTextureFromSurface(SDL_Renderer* renderer,
@@ -333,7 +335,7 @@ int SDL_RenderCopy(SDL_Renderer*   renderer,
                    const SDL_Rect* dstrect)
 {
    //Blit the surface
-    SDL_BlitSurface( texture, NULL, renderer, NULL );
+    return SDL_BlitSurface( texture, NULL, renderer, NULL );
 }
 
 void SDL_RenderPresent(SDL_Renderer* renderer)
@@ -343,7 +345,8 @@ void SDL_RenderPresent(SDL_Renderer* renderer)
 
 void SDL_Log(const char *fmt, ...) {
 
-	printf("%s\n", fmt);
+	 printf("Error \"%s\" in %s() from %s, line %d\n", fmt, 
+        __FUNCTION__, __FILE__, __LINE__);
 }
 
 int SDL_SetSurfacePalette(SDL_Surface* surface, SDL_Palette* palette)
