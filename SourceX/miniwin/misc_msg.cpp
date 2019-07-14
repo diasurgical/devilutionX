@@ -113,6 +113,41 @@ static int translate_sdl_key(SDL_Keysym key)
 	}
 }
 
+static int translate_controller_button_to_key(uint8_t sdlControllerButton)
+{
+	switch (sdlControllerButton) {
+	case SDL_CONTROLLER_BUTTON_B:
+		return 'H';
+	case SDL_CONTROLLER_BUTTON_A:
+		return DVL_VK_SPACE;
+	case SDL_CONTROLLER_BUTTON_Y:
+		return 'X';
+	case SDL_CONTROLLER_BUTTON_X:
+		return DVL_VK_RETURN;
+	case SDL_CONTROLLER_BUTTON_LEFTSTICK:
+		return 'Q';
+	case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
+		return 'C';
+	case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
+		return 'I';
+	case SDL_CONTROLLER_BUTTON_START:
+		return DVL_VK_ESCAPE;
+	case SDL_CONTROLLER_BUTTON_BACK:
+		return DVL_VK_TAB;
+	case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+		return DVL_VK_LEFT;
+	case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+		return DVL_VK_RIGHT;
+	case SDL_CONTROLLER_BUTTON_DPAD_UP:
+		return DVL_VK_UP;
+	case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+		return DVL_VK_DOWN;
+	default:
+		return 0;
+	}
+}
+
+
 static WPARAM keystate_for_mouse(WPARAM ret)
 {
 	const Uint8 *keystate = SDL_GetKeyboardState(NULL);
@@ -175,37 +210,28 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		// allow plus button or mouse click to skip movie, no other input
 		switch (e.type) {
 		case SDL_CONTROLLERBUTTONDOWN:
-			switch(e.cbutton.button) {
-			case SDL_CONTROLLER_BUTTON_START:
-			case SDL_CONTROLLER_BUTTON_RIGHTSTICK:
-				lpMsg->message = DVL_WM_LBUTTONDOWN;
-				lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
-				lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
-				break;
-			}
-			break;
 		case SDL_CONTROLLERBUTTONUP:
 			switch(e.cbutton.button) {
-			case  SDL_CONTROLLER_BUTTON_START:
-			case  SDL_CONTROLLER_BUTTON_RIGHTSTICK:
-				lpMsg->message = DVL_WM_LBUTTONUP;
+			case SDL_CONTROLLER_BUTTON_START:
+			case SDL_CONTROLLER_BUTTON_B:
+				lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_LBUTTONUP : DVL_WM_LBUTTONDOWN;
 				lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
-				lpMsg->wParam = keystate_for_mouse(0);
+				if (lpMsg->message == DVL_WM_LBUTTONUP)
+					lpMsg->wParam = keystate_for_mouse(0);
+				else
+					lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
 				break;
 			}
 			break;
 		case SDL_MOUSEBUTTONDOWN:
-			if (e.button.button == SDL_BUTTON_LEFT) {
-				lpMsg->message = DVL_WM_LBUTTONDOWN;
-				lpMsg->lParam = (e.button.y << 16) | (e.button.x & 0xFFFF);
-				lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
-			}
-			break;
 		case SDL_MOUSEBUTTONUP:
 			if (e.button.button == SDL_BUTTON_LEFT) {
-				lpMsg->message = DVL_WM_LBUTTONUP;
+				lpMsg->message = e.type == SDL_MOUSEBUTTONUP ? DVL_WM_LBUTTONUP : DVL_WM_LBUTTONDOWN;
 				lpMsg->lParam = (e.button.y << 16) | (e.button.x & 0xFFFF);
-				lpMsg->wParam = keystate_for_mouse(0);
+				if (lpMsg->message == DVL_WM_LBUTTONUP)
+					lpMsg->wParam = keystate_for_mouse(0);
+				else
+					lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
 			}
 			break;
 		}
@@ -237,208 +263,104 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		}
 		leftStickX = leftStickXUnscaled;
 		leftStickY = leftStickYUnscaled;
-		ScaleJoystickAxes(&leftStickX, &leftStickY, leftDeadzone);
 		rightStickX = rightStickXUnscaled;
 		rightStickY = rightStickYUnscaled;
+		ScaleJoystickAxes(&leftStickX, &leftStickY, leftDeadzone);
 		ScaleJoystickAxes(&rightStickX, &rightStickY, rightDeadzone);
 		break;
 	case SDL_CONTROLLERBUTTONDOWN:
-		switch(e.cbutton.button) {
-		case SDL_CONTROLLER_BUTTON_B:	// A on Switch
-			lpMsg->message = DVL_WM_KEYDOWN;
-			lpMsg->wParam = 'H';
-			break;
-		case SDL_CONTROLLER_BUTTON_A:	// B on Switch
-			if (inmainmenu) {
-				lpMsg->message = DVL_WM_KEYDOWN;
-				lpMsg->wParam = DVL_VK_RETURN;
-				keyboardExpansion(VK_RETURN);
-			} else {
-				if (stextflag)
-					talkwait = GetTickCount(); // JAKE: Wait before we re-initiate talking
-				lpMsg->message = DVL_WM_KEYDOWN;
-				lpMsg->wParam = DVL_VK_SPACE;
-				keyboardExpansion(VK_SPACE);
-			}
-			break;
-		case SDL_CONTROLLER_BUTTON_Y:	// X on Switch
-			lpMsg->message = DVL_WM_KEYDOWN;
-			lpMsg->wParam = 'X';
-			break;
-		case SDL_CONTROLLER_BUTTON_X:	// Y on Switch
-			if (invflag) {
-				lpMsg->message = DVL_WM_RBUTTONDOWN;
-				lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
-				lpMsg->wParam = keystate_for_mouse(DVL_MK_RBUTTON);
-			} else {
-				lpMsg->message = DVL_WM_KEYDOWN;
-				lpMsg->wParam = DVL_VK_RETURN;
-				keyboardExpansion(VK_RETURN);
-			}
-			break;
-		case SDL_CONTROLLER_BUTTON_LEFTSTICK:
-			lpMsg->message = DVL_WM_KEYDOWN;
-			lpMsg->wParam = 'Q';
-			break;
-		case SDL_CONTROLLER_BUTTON_RIGHTSTICK:
-			if (newCurHidden) { // show cursor first, before clicking
-				SetCursor_(CURSOR_HAND);
-				newCurHidden = false;
-			}
-			lpMsg->message = DVL_WM_LBUTTONDOWN;
-			lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
-			lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
-			break;
-		case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
-			lpMsg->message = DVL_WM_KEYDOWN;
-			lpMsg->wParam = 'C';
-			break;
-		case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
-			lpMsg->message = DVL_WM_KEYDOWN;
-			lpMsg->wParam = 'I';
-			break;
-		case SDL_CONTROLLER_BUTTON_START:
-			lpMsg->message = DVL_WM_KEYDOWN;
-			lpMsg->wParam = DVL_VK_ESCAPE;
-			break;
-		case SDL_CONTROLLER_BUTTON_BACK:
-			lpMsg->message = DVL_WM_KEYDOWN;
-			lpMsg->wParam = DVL_VK_TAB;
-			break;
-		case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
-			lpMsg->message = DVL_WM_KEYDOWN;
-			lpMsg->wParam = DVL_VK_LEFT;
-			movements(VK_LEFT);
-			break;
-		case SDL_CONTROLLER_BUTTON_DPAD_UP:
-			lpMsg->message = DVL_WM_KEYDOWN;
-			lpMsg->wParam = DVL_VK_UP;
-			movements(VK_UP);
-			break;
-		case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
-			lpMsg->message = DVL_WM_KEYDOWN;
-			lpMsg->wParam = DVL_VK_RIGHT;
-			movements(VK_RIGHT);
-			break;
-		case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
-			lpMsg->message = DVL_WM_KEYDOWN;
-			lpMsg->wParam = DVL_VK_DOWN;
-			movements(VK_DOWN);
-			break;
-		}
-		break;
 	case SDL_CONTROLLERBUTTONUP:
 		switch(e.cbutton.button) {
-		case SDL_CONTROLLER_BUTTON_B:	// A on Switch
-			lpMsg->message = DVL_WM_KEYUP;
-			lpMsg->wParam = 'H';
+		case SDL_CONTROLLER_BUTTON_Y:	// X on Switch
+		case SDL_CONTROLLER_BUTTON_LEFTSTICK:
+		case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
+		case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
+		case SDL_CONTROLLER_BUTTON_START:
+		case SDL_CONTROLLER_BUTTON_BACK:
+			lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
+			lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.cbutton.button);
 			break;
-		case SDL_CONTROLLER_BUTTON_A:	// B on Switch
-			if (inmainmenu) {
-				lpMsg->message = DVL_WM_KEYUP;
-				lpMsg->wParam = DVL_VK_RETURN;
-			} else {
-				lpMsg->message = DVL_WM_KEYUP;
-				lpMsg->wParam = DVL_VK_SPACE;
+		case SDL_CONTROLLER_BUTTON_DPAD_UP:
+		case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+		case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+		case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+			lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
+			lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.cbutton.button);
+			if (lpMsg->message == DVL_WM_KEYDOWN) {
+				movements(lpMsg->wParam);
 			}
 			break;
-		case SDL_CONTROLLER_BUTTON_Y:	// X on Switch
-			lpMsg->message = DVL_WM_KEYUP;
-			lpMsg->wParam = 'X';
+		case SDL_CONTROLLER_BUTTON_B:	// A on Switch
+			lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
+			if (inmainmenu)
+				lpMsg->wParam = DVL_VK_ESCAPE;
+			else
+				lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.cbutton.button);
+			break;
+		case SDL_CONTROLLER_BUTTON_A:	// B on Switch
+			lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
+			if (inmainmenu) {
+				lpMsg->wParam = DVL_VK_RETURN;
+			} else {
+				lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.cbutton.button);
+				if (lpMsg->message == DVL_WM_KEYDOWN) {
+					if (stextflag)
+						talkwait = GetTickCount(); // JAKE: Wait before we re-initiate talking
+					keyboardExpansion(lpMsg->wParam);
+				}
+			}
 			break;
 		case SDL_CONTROLLER_BUTTON_X:	// Y on Switch
 			if (invflag) {
-				lpMsg->message = DVL_WM_RBUTTONUP;
+				lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_RBUTTONUP : DVL_WM_RBUTTONDOWN;
 				lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
-				lpMsg->wParam = keystate_for_mouse(0);
+				if (lpMsg->message == DVL_WM_RBUTTONDOWN) {
+					lpMsg->wParam = keystate_for_mouse(DVL_MK_RBUTTON);
+				} else {
+					lpMsg->wParam = keystate_for_mouse(0);
+				}
 			} else {
-				lpMsg->message = DVL_WM_KEYUP;
-				lpMsg->wParam = DVL_VK_RETURN;
+				lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
+				lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.cbutton.button);
+				if (lpMsg->message == DVL_WM_KEYDOWN)
+					keyboardExpansion(lpMsg->wParam);
 			}
 			break;
-		case SDL_CONTROLLER_BUTTON_LEFTSTICK:
-			lpMsg->message = DVL_WM_KEYUP;
-			lpMsg->wParam = 'Q';
-			break;
 		case SDL_CONTROLLER_BUTTON_RIGHTSTICK:
-			lpMsg->message = DVL_WM_LBUTTONUP;
+			lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_LBUTTONUP : DVL_WM_LBUTTONDOWN;
 			lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
-			lpMsg->wParam = keystate_for_mouse(0);
-			break;
-		case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
-			lpMsg->message = DVL_WM_KEYUP;
-			lpMsg->wParam = 'C';
-			break;
-		case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
-			lpMsg->message = DVL_WM_KEYUP;
-			lpMsg->wParam = 'I';
-			break;
-		case SDL_CONTROLLER_BUTTON_START:
-			lpMsg->message = DVL_WM_KEYUP;
-			lpMsg->wParam = DVL_VK_ESCAPE;
-			break;
-		case SDL_CONTROLLER_BUTTON_BACK:
-			lpMsg->message = DVL_WM_KEYUP;
-			lpMsg->wParam = DVL_VK_TAB;
-			break;
-		case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
-			lpMsg->message = DVL_WM_KEYUP;
-			lpMsg->wParam = DVL_VK_LEFT;
-			break;
-		case SDL_CONTROLLER_BUTTON_DPAD_UP:
-			lpMsg->message = DVL_WM_KEYUP;
-			lpMsg->wParam = DVL_VK_UP;
-			break;
-		case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
-			lpMsg->message = DVL_WM_KEYUP;
-			lpMsg->wParam = DVL_VK_RIGHT;
-			break;
-		case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
-			lpMsg->message = DVL_WM_KEYUP;
-			lpMsg->wParam = DVL_VK_DOWN;
+			if (lpMsg->message == DVL_WM_LBUTTONDOWN) {
+				if (newCurHidden) { // show cursor first, before clicking
+					SetCursor_(CURSOR_HAND);
+					newCurHidden = false;
+				}
+				lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
+			} else {
+				lpMsg->wParam = keystate_for_mouse(0);
+			}
 			break;
 		}
 		break;
 #ifdef SWITCH
 	// additional digital buttons that only exist on Switch:
 	case SDL_JOYBUTTONDOWN:
-		switch(e.jbutton.button) {
-		case 16:	// L_JSTICK
-			lpMsg->message = DVL_WM_KEYDOWN;
-			lpMsg->wParam = DVL_VK_LEFT;
-			break;
-		case 17:	// U_JSTICK
-			lpMsg->message = DVL_WM_KEYDOWN;
-			lpMsg->wParam = DVL_VK_UP;
-			break;
-		case 18:	// R_JSTICK
-			lpMsg->message = DVL_WM_KEYDOWN;
-			lpMsg->wParam = DVL_VK_RIGHT;
-			break;
-		case 19:	// D_JSTICK
-			lpMsg->message = DVL_WM_KEYDOWN;
-			lpMsg->wParam = DVL_VK_DOWN;
-			break;
-		}
-		break;
 	case SDL_JOYBUTTONUP:
+		lpMsg->message = e.type == SDL_JOYBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
 		switch(e.jbutton.button) {
 		case 16:	// L_JSTICK
-			lpMsg->message = DVL_WM_KEYUP;
 			lpMsg->wParam = DVL_VK_LEFT;
 			break;
 		case 17:	// U_JSTICK
-			lpMsg->message = DVL_WM_KEYUP;
 			lpMsg->wParam = DVL_VK_UP;
 			break;
 		case 18:	// R_JSTICK
-			lpMsg->message = DVL_WM_KEYUP;
 			lpMsg->wParam = DVL_VK_RIGHT;
 			break;
 		case 19:	// D_JSTICK
-			lpMsg->message = DVL_WM_KEYUP;
 			lpMsg->wParam = DVL_VK_DOWN;
 			break;
+		default:
+			lpMsg->message = 0;
 		}
 		break;
 #endif
