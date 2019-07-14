@@ -157,12 +157,8 @@ SDL_Surface* SDL_GetWindowSurface(SDL_Window* window)
 int SDL_UpdateWindowSurface(SDL_Window* window)
 {
 	
-	if (window)		{
-		SDL_Flip(window->surface);
-		return 1;
-	}
-	else
-		return 0;
+	return SDL_Flip(window->surface);
+
 }
 
 SDL_Renderer* SDL_CreateRenderer(SDL_Window* window,
@@ -178,7 +174,7 @@ int SDL_SetRenderDrawColor(SDL_Renderer* renderer,
                            Uint8         b,
                            Uint8         a)
 {
-	SDL_FillRect( renderer, NULL, SDL_MapRGBA( renderer->format, r, g, b, a) );
+	return SDL_FillRect( renderer, NULL, SDL_MapRGBA( renderer->format, r, g, b, a) );
 }
 
 SDL_Texture* SDL_CreateTextureFromSurface(SDL_Renderer* renderer,
@@ -339,7 +335,7 @@ int SDL_RenderCopy(SDL_Renderer*   renderer,
                    const SDL_Rect* dstrect)
 {
    //Blit the surface
-    SDL_BlitSurface( texture, NULL, renderer, NULL );
+    return SDL_BlitSurface( texture, NULL, renderer, NULL );
 }
 
 void SDL_RenderPresent(SDL_Renderer* renderer)
