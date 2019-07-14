@@ -43,7 +43,7 @@ uintptr_t DVL_beginthreadex(void *_Security, unsigned _StackSize, unsigned (*_St
 	SDL_Thread *ret = SDL_CreateThread(thread_translate, NULL);
 	if (ret == NULL) {
 		//klaus
-		//SDL_Log(SDL_GetError());
+		SDL_Log(SDL_GetError());
 	}
 	*_ThrdAddr = SDL_GetThreadID(ret);
 	threads.insert((uintptr_t)ret);
@@ -74,7 +74,7 @@ void InitializeCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
 	SDL_mutex *m = SDL_CreateMutex();
 	if (m == NULL) {
 		//klaus
-		//SDL_Log(SDL_GetError());
+		SDL_Log(SDL_GetError());
 	}
 	*lpCriticalSection = m;
 }
