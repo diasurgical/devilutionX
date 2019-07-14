@@ -156,7 +156,13 @@ SDL_Surface* SDL_GetWindowSurface(SDL_Window* window)
 
 int SDL_UpdateWindowSurface(SDL_Window* window)
 {
-	SDL_Flip(window->surface);
+	
+	if (window)		{
+		SDL_Flip(window->surface);
+		return 1;
+	}
+	else
+		return 0;
 }
 
 SDL_Renderer* SDL_CreateRenderer(SDL_Window* window,
