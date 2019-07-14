@@ -213,7 +213,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		case SDL_CONTROLLERBUTTONUP:
 			switch(e.cbutton.button) {
 			case SDL_CONTROLLER_BUTTON_START:
-			case SDL_CONTROLLER_BUTTON_B:
+			case SDL_CONTROLLER_BUTTON_A: // B on Switch
 				lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_LBUTTONUP : DVL_WM_LBUTTONDOWN;
 				lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
 				if (lpMsg->message == DVL_WM_LBUTTONUP)
