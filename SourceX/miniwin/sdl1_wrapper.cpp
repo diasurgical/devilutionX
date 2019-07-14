@@ -90,7 +90,7 @@ SDL_bool SDL_SetHint(const char* name, const char* value)
 
 int SDL_ShowSimpleMessageBox(Uint32 flags, const char* title, const char* message, SDL_Window* window)
 {
-    printf("AAAAAA = %s", message);
+    printf("AAAAAA = %s\n", SDL_ShowSimpleMessageBox);
     return 1;
 }
 
