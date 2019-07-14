@@ -105,7 +105,7 @@ int DialogBoxParam(HINSTANCE hInstance, LPCSTR msgId, HWND hWndParent, DLGPROC l
 	snprintf(text, 1024, errorMessages[(intptr_t)msgId], dwInitParam);
 
 	if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, errorTitle[(intptr_t)msgId], text, window) <= -1) {
-		//SDL_Log(SDL_GetError());
+		SDL_Log(SDL_GetError());
 		return -1;
 	}
 
@@ -251,7 +251,7 @@ bool UiFocusNavigation(SDL_Event *event)
 					char *clipboard = SDL_GetClipboardText();
 					if (clipboard == NULL) {
 						//klaus
-						//SDL_Log(SDL_GetError());
+						SDL_Log(SDL_GetError());
 					}
 					selhero_CatToName(clipboard, UiTextInput, UiTextInputLen);
 				}
@@ -706,7 +706,7 @@ void UiRenderItemDebug(UI_Item item)
 	item.rect.x += 64; // pal_surface is shifted?
 	item.rect.y += SCREEN_Y;
 	if (SDL_FillRect(pal_surface, &item.rect, random(0, 255)) <= -1) {
-		//SDL_Log(SDL_GetError());
+		SDL_Log(SDL_GetError());
 	}
 }
 

@@ -343,7 +343,7 @@ void SDL_RenderPresent(SDL_Renderer* renderer)
 	SDL_Flip(renderer);
 }
 
-void //SDL_Log(const char *fmt, ...) {
+void SDL_Log(const char *fmt, ...) {
 
 	 printf("Error \"%s\" in %s() from %s, line %d\n", fmt, 
         __FUNCTION__, __FILE__, __LINE__);
