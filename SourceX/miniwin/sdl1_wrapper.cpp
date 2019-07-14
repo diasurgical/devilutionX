@@ -90,6 +90,7 @@ SDL_bool SDL_SetHint(const char* name, const char* value)
 
 int SDL_ShowSimpleMessageBox(Uint32      flags, const char* title, const char* message, SDL_Window* window)
 {
+	printf("%s", message);
     return 1;
 }
 
@@ -181,7 +182,7 @@ SDL_Texture* SDL_CreateTextureFromSurface(SDL_Renderer* renderer,
 	if( renderer != nullptr )
 	{
 		//Create an optimized image
-		renderer = SDL_DisplayFormat( surface );
+		renderer = SDL_DisplayFormatAlpha( surface );
 		return renderer;
 	}
 }
@@ -218,7 +219,7 @@ void SDL_PauseAudioDevice(SDL_AudioDeviceID dev, int pause_on)
 
 Uint32 SDL_GetWindowPixelFormat(SDL_Window* window)
 {
-    return SDL_PIXELFORMAT_RGB888;
+    return SDL_PIXELFORMAT_RGBA8888;
 }
 
 SDL_bool SDL_IsScreenSaverEnabled(void)
@@ -284,12 +285,12 @@ void SDL_WarpMouseInWindow(SDL_Window* window, int x, int y)
 
 SDL_Surface* SDL_ConvertSurfaceFormat(SDL_Surface* src, Uint32 pixel_format, Uint32 flags)
 {
-	return SDL_DisplayFormat( src );
+	return SDL_DisplayFormatAlpha( src );
 }
 
 SDL_bool SDL_IsTextInputActive(void)
 {
-    return (SDL_bool)0;
+    return (SDL_bool)1;
 }
 
 int SDL_GetCurrentDisplayMode(int displayIndex, SDL_DisplayMode* mode)
