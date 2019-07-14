@@ -39,7 +39,7 @@ BOOL SDrawUpdatePalette(unsigned int firstentry, unsigned int numentries, PALETT
 	if (SDL_SetPaletteColors(palette, colors, firstentry, numentries) <= -1) {
 
 		//klaus
-		SDL_Log(SDL_GetError());
+		//SDL_Log(SDL_GetError());
 		return false;
 	}
 

@@ -490,7 +490,7 @@ void music_start(int nTrack)
 			musicRw = SDL_RWFromConstMem(musicBuffer, bytestoread);
 			if (musicRw == NULL) {
 				//klaus
-				SDL_Log(SDL_GetError());
+				//SDL_Log(SDL_GetError());
 			}
 			//klaus
 			//music = Mix_LoadMUS_RW(musicRw, 1);
