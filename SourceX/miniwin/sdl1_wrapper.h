@@ -402,6 +402,32 @@ typedef struct SDL_WindowShapeMode {
     SDL_WindowShapeParams parameters;
 } SDL_WindowShapeMode;
 
+typedef enum
+{
+    SDL_ORIENTATION_UNKNOWN,            /**< The display orientation can't be determined */
+    SDL_ORIENTATION_LANDSCAPE,          /**< The display is in landscape mode, with the right side up, relative to portrait mode */
+    SDL_ORIENTATION_LANDSCAPE_FLIPPED,  /**< The display is in landscape mode, with the left side up, relative to portrait mode */
+    SDL_ORIENTATION_PORTRAIT,           /**< The display is in portrait mode */
+    SDL_ORIENTATION_PORTRAIT_FLIPPED    /**< The display is in portrait mode, upside down */
+} SDL_DisplayOrientation;
+
+struct SDL_VideoDisplay
+{
+    char *name;
+    int max_display_modes;
+    int num_display_modes;
+    SDL_DisplayMode *display_modes;
+    SDL_DisplayMode desktop_mode;
+    SDL_DisplayMode current_mode;
+    SDL_DisplayOrientation orientation;
+
+    SDL_Window *fullscreen_window;
+
+    SDL_VideoDevice *device;
+
+    void *driverdata;
+};
+
 
 // todo functions:
 // ==============
