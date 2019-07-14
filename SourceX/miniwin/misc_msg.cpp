@@ -288,7 +288,8 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 			lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
 			lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.cbutton.button);
 			if (lpMsg->message == DVL_WM_KEYDOWN) {
-				movements(lpMsg->wParam);
+				if (!stextflag) // prevent walking while in dialog mode
+					movements(lpMsg->wParam);
 			}
 			break;
 		case SDL_CONTROLLER_BUTTON_A:	// B on Switch
