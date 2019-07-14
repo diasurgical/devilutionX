@@ -1,10 +1,9 @@
 #include <deque>
 #include <SDL.h>
+#include "sdl1_wrapper.h"
 
 #include "devilution.h"
 #include "stubs.h"
-#include "sdl1_wrapper.h"
-#include "../SourceS/miniwin/misc.h"
 
 /** @file
  * *
@@ -15,8 +14,7 @@ namespace dvl {
 
 static std::deque<MSG> message_queue;
 
-/* klaus
-static int translate_sdl_key(SDL_Keysym key)
+static int translate_sdl_key(SDL_keysym key)
 {
 	// ref: https://wiki.libsdl.org/SDL_Keycode
 	// ref: https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
@@ -78,26 +76,26 @@ static int translate_sdl_key(SDL_Keysym key)
 		return DVL_VK_F9;
 	case SDLK_F10:
 		return DVL_VK_F10;
-	case SDLK_F11:
-		return DVL_VK_F11;
-	case SDLK_F12:
-		return DVL_VK_F12;
-	case SDLK_PRINTSCREEN:
-		return DVL_VK_SNAPSHOT;
-	case SDLK_SCROLLLOCK:
-		return DVL_VK_SCROLL;
+	//case SDLK_F11:
+	//	return DVL_VK_F11;
+	//case SDLK_F12:
+	//	return DVL_VK_F12;
+	//case SDLK_PRINTSCREEN:
+	//	return DVL_VK_SNAPSHOT;
+	//case SDLK_SCROLLLOCK:
+		//return DVL_VK_SCROLL;
 	case SDLK_PAUSE:
 		return DVL_VK_PAUSE;
 	case SDLK_INSERT:
 		return DVL_VK_INSERT;
 	case SDLK_HOME:
 		return DVL_VK_HOME;
-	case SDLK_PAGEUP:
-		return DVL_VK_PRIOR;
+	//case SDLK_PAGEUP:
+	//	return DVL_VK_PRIOR;
 	case SDLK_END:
 		return DVL_VK_END;
-	case SDLK_PAGEDOWN:
-		return DVL_VK_NEXT;
+	//case SDLK_PAGEDOWN:
+	//	return DVL_VK_NEXT;
 	case SDLK_RIGHT:
 		return DVL_VK_RIGHT;
 	case SDLK_LEFT:
@@ -106,8 +104,8 @@ static int translate_sdl_key(SDL_Keysym key)
 		return DVL_VK_DOWN;
 	case SDLK_UP:
 		return DVL_VK_UP;
-	case SDLK_NUMLOCKCLEAR:
-		return DVL_VK_NUMLOCK;
+	//case SDLK_NUMLOCKCLEAR:
+	//	return DVL_VK_NUMLOCK;
 	case SDLK_KP_DIVIDE:
 		return DVL_VK_DIVIDE;
 	case SDLK_KP_MULTIPLY:
@@ -124,48 +122,48 @@ static int translate_sdl_key(SDL_Keysym key)
 		return DVL_VK_OEM_PLUS;
 	case SDLK_KP_ENTER:
 		return DVL_VK_RETURN;
-	case SDLK_KP_1:
+	case SDLK_KP1:
 		return DVL_VK_NUMPAD1;
-	case SDLK_KP_2:
+	case SDLK_KP2:
 		return DVL_VK_NUMPAD2;
-	case SDLK_KP_3:
+	case SDLK_KP3:
 		return DVL_VK_NUMPAD3;
-	case SDLK_KP_4:
+	case SDLK_KP4:
 		return DVL_VK_NUMPAD4;
-	case SDLK_KP_5:
+	case SDLK_KP5:
 		return DVL_VK_NUMPAD5;
-	case SDLK_KP_6:
+	case SDLK_KP6:
 		return DVL_VK_NUMPAD6;
-	case SDLK_KP_7:
+	case SDLK_KP7:
 		return DVL_VK_NUMPAD7;
-	case SDLK_KP_8:
+	case SDLK_KP8:
 		return DVL_VK_NUMPAD8;
-	case SDLK_KP_9:
+	case SDLK_KP9:
 		return DVL_VK_NUMPAD9;
-	case SDLK_KP_0:
+	case SDLK_KP0:
 		return DVL_VK_NUMPAD0;
 	case SDLK_KP_PERIOD:
 		return DVL_VK_DECIMAL;
 	case SDLK_MENU:
 		return DVL_VK_MENU;
-	case SDLK_KP_COMMA:
-		return DVL_VK_OEM_COMMA;
+	//case SDLK_KP_COMMA:
+	//	return DVL_VK_OEM_COMMA;
 	case SDLK_LCTRL:
 		return DVL_VK_LCONTROL;
 	case SDLK_LSHIFT:
 		return DVL_VK_LSHIFT;
 	case SDLK_LALT:
 		return DVL_VK_LMENU;
-	case SDLK_LGUI:
-		return DVL_VK_LWIN;
+	//case SDLK_LGUI:
+	//	return DVL_VK_LWIN;
 	case SDLK_RCTRL:
 		return DVL_VK_RCONTROL;
 	case SDLK_RSHIFT:
 		return DVL_VK_RSHIFT;
 	case SDLK_RALT:
 		return DVL_VK_RMENU;
-	case SDLK_RGUI:
-		return DVL_VK_RWIN;
+	//case SDLK_RGUI:
+	//	return DVL_VK_RWIN;
 	default:
 		if (sym >= SDLK_a && sym <= SDLK_z) {
 			return 'A' + (sym - SDLK_a);
@@ -174,18 +172,16 @@ static int translate_sdl_key(SDL_Keysym key)
 		} else if (sym >= SDLK_F1 && sym <= SDLK_F12) {
 			return DVL_VK_F1 + (sym - SDLK_F1);
 		}
-		DUMMY_PRINT("unknown key: name=%s sym=0x%X scan=%d mod=0x%X", SDL_GetKeyName(sym), sym, key.scancode, key.mod);
+		DUMMY_PRINT("unknown key: name=%s sym=0x%X scan=%d mod=0x%X", SDL_GetKeyName(key.sym), sym, key.scancode, key.mod);
 		return -1;
 	}
 }
-*/
 
 static WPARAM keystate_for_mouse(WPARAM ret)
 {
 	const Uint8 *keystate = SDL_GetKeyboardState(NULL);
-	//klaus_BAD
-	// ret |= keystate[SDL_SCANCODE_LSHIFT] ? DVL_MK_SHIFT : 0;
-	// ret |= keystate[SDL_SCANCODE_RSHIFT] ? DVL_MK_SHIFT : 0;
+	ret |= keystate[SDL_SCANCODE_LSHIFT] ? DVL_MK_SHIFT : 0;
+	ret |= keystate[SDL_SCANCODE_RSHIFT] ? DVL_MK_SHIFT : 0;
 	// XXX: other DVL_MK_* codes not implemented
 	return ret;
 }
@@ -235,9 +231,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		break;
 	case SDL_KEYDOWN:
 	case SDL_KEYUP: {
-		//klaus
-		//int key = translate_sdl_key(e.key.keysym);
-		int key = 0;
+		int key = translate_sdl_key(e.key.keysym);
 		if (key == -1)
 			return false_avail();
 		lpMsg->message = e.type == SDL_KEYDOWN ? DVL_WM_KEYDOWN : DVL_WM_KEYUP;
@@ -278,18 +272,14 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 			return false_avail();
 		}
 	} break;
-
-	/*
-	 klaus
-	case SDL_TEXTINPUT:
+	/*case SDL_TEXTINPUT:
 	case SDL_WINDOWEVENT:
 		if (e.window.event == SDL_WINDOWEVENT_CLOSE) {
 			lpMsg->message = DVL_WM_QUERYENDSESSION;
 		} else {
 			return false_avail();
 		}
-		break;
-	*/
+		break;*/
 	default:
 		DUMMY_PRINT("unknown SDL message 0x%X", e.type);
 		return false_avail();

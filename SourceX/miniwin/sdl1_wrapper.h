@@ -2,7 +2,7 @@
 #define __SDL1_WRAPPER_H
 
 #include <SDL.h>
-// #include <SDL/SDL_shape.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -328,6 +328,8 @@ typedef struct SDL_Point
     int y;
 } SDL_Point;
 
+
+/*
 //typedef struct SDL_MouseButtonEvent
 //{
 //    Uint32 type;        /**< ::SDL_MOUSEBUTTONDOWN or ::SDL_MOUSEBUTTONUP */
