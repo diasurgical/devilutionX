@@ -271,6 +271,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	case SDL_CONTROLLERBUTTONDOWN:
 	case SDL_CONTROLLERBUTTONUP:
 		switch(e.cbutton.button) {
+		case SDL_CONTROLLER_BUTTON_B:	// A on Switch
 		case SDL_CONTROLLER_BUTTON_Y:	// X on Switch
 		case SDL_CONTROLLER_BUTTON_LEFTSTICK:
 		case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
@@ -290,24 +291,13 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 				movements(lpMsg->wParam);
 			}
 			break;
-		case SDL_CONTROLLER_BUTTON_B:	// A on Switch
-			lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
-			if (inmainmenu)
-				lpMsg->wParam = DVL_VK_ESCAPE;
-			else
-				lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.cbutton.button);
-			break;
 		case SDL_CONTROLLER_BUTTON_A:	// B on Switch
 			lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
-			if (inmainmenu) {
-				lpMsg->wParam = DVL_VK_RETURN;
-			} else {
-				lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.cbutton.button);
-				if (lpMsg->message == DVL_WM_KEYDOWN) {
-					if (stextflag)
-						talkwait = GetTickCount(); // JAKE: Wait before we re-initiate talking
-					keyboardExpansion(lpMsg->wParam);
-				}
+			lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.cbutton.button);
+			if (lpMsg->message == DVL_WM_KEYDOWN) {
+				if (stextflag)
+					talkwait = GetTickCount(); // JAKE: Wait before we re-initiate talking
+				keyboardExpansion(lpMsg->wParam);
 			}
 			break;
 		case SDL_CONTROLLER_BUTTON_X:	// Y on Switch
