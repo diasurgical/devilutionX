@@ -254,7 +254,7 @@ void SDL_ShowWindow(SDL_Window* window)
 
 const Uint8* SDL_GetKeyboardState(int* numkeys)
 {
-
+		return SDL_GetKeyState(numkeys);
 }
 
 void SDL_StopTextInput(void)
