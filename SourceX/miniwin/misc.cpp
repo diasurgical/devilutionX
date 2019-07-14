@@ -227,7 +227,14 @@ UINT GetDriveTypeA(LPCSTR lpRootPathName)
 
 WINBOOL DeleteFileA(LPCSTR lpFileName)
 {
-	UNIMPLEMENTED();
+	FILE *f = fopen(lpFileName, "r+");
+
+	if (f) {
+		fclose(f);
+		remove(lpFileName);
+		f = NULL;
+	}
+
 	return true;
 }
 
@@ -800,5 +807,4 @@ void __debugbreak()
 {
 	DUMMY();
 }
-
 }

@@ -23,6 +23,7 @@ void (*gfnSoundFunction)(char *file);
 void (*gfnListFocus)(int value);
 void (*gfnListSelect)(int value);
 void (*gfnListEsc)();
+void (*gfnListConfirm)(int value);
 UI_Item *gUiItems;
 int gUiItemCnt;
 bool UiItemsWraps;
@@ -138,7 +139,7 @@ void UiDestroy()
 	font = NULL;
 }
 
-void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), UI_Item *items, int itemCnt, bool itemsWraps)
+void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), UI_Item *items, int itemCnt, bool itemsWraps, void (*fnConfirm)(int value))
 {
 	SelectedItem = min;
 	SelectedItemMin = min;
@@ -146,6 +147,7 @@ void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(i
 	gfnListFocus = fnFocus;
 	gfnListSelect = fnSelect;
 	gfnListEsc = fnEsc;
+	gfnListConfirm = fnConfirm;
 	gUiItems = items;
 	gUiItemCnt = itemCnt;
 	UiItemsWraps = itemsWraps;
@@ -305,6 +307,12 @@ void UiFocusNavigationEsc()
 	}
 	if (gfnListEsc)
 		gfnListEsc();
+}
+
+void UiFocusNavigationConfirm()
+{
+	if (gfnListConfirm)
+		gfnListConfirm(SelectedItem);
 }
 
 bool IsInsideRect(const SDL_Event *event, const SDL_Rect *rect)
