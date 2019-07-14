@@ -156,7 +156,7 @@ SDL_Surface* SDL_GetWindowSurface(SDL_Window* window)
 
 int SDL_UpdateWindowSurface(SDL_Window* window)
 {
-	SDL_Flip(window->surface);
+	return SDL_Flip(window->surface);
 }
 
 SDL_Renderer* SDL_CreateRenderer(SDL_Window* window,
@@ -333,7 +333,7 @@ int SDL_RenderCopy(SDL_Renderer*   renderer,
                    const SDL_Rect* dstrect)
 {
    //Blit the surface
-    SDL_BlitSurface( texture, NULL, renderer, NULL );
+    return SDL_BlitSurface( texture, NULL, renderer, NULL );
 }
 
 void SDL_RenderPresent(SDL_Renderer* renderer)
