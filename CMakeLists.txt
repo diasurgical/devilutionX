@@ -49,6 +49,10 @@ if(HAIKU)
   set(ASAN OFF)
 endif()
 
+if(ANDROID)
+  set(ASAN OFF)
+endif()
+
 if(DIST)
   set(sodium_USE_STATIC_LIBS ON)
 endif()
@@ -65,13 +69,32 @@ if(NOT CMAKE_SIZEOF_VOID_P EQUAL 4)
 endif()
 
 find_package(Threads REQUIRED)
-find_package(SDL2 CONFIG QUIET)
-if (NOT SDL2_FOUND)
-	find_package(SDL2 REQUIRED)
+if (NOT ANDROID)
+  find_package(SDL2 CONFIG QUIET)
+  if (NOT SDL2_FOUND)
+    find_package(SDL2 REQUIRED)
+  endif()
+  find_package(SDL2_ttf REQUIRED)
+  find_package(SDL2_mixer REQUIRED)
+  find_package(sodium REQUIRED)
 endif()
-find_package(SDL2_ttf REQUIRED)
-find_package(SDL2_mixer REQUIRED)
-find_package(sodium REQUIRED)
+
+if (ANDROID)
+add_library(devilutionAndroid STATIC
+  3rdParty/Android/SDL_android_main.c)
+
+target_include_directories(devilutionAndroid PUBLIC
+  ${CMAKE_CURRENT_SOURCE_DIR}/../app/libs/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/../SDL2/include
+
+  # SDL_internal.h is located in src required by SDL_android_main.c bridge
+  ${CMAKE_CURRENT_SOURCE_DIR}/../SDL2/src
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/../SDL2_image/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/../SDL2_gfx/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/../SDL2_mixer/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/../SDL2_ttf/include)
+endif()
 
 add_library(smacker STATIC
   3rdParty/libsmacker/smk_bitstream.c
@@ -176,7 +199,7 @@ add_library(devilution STATIC
   Source/trigs.cpp
   Source/wave.cpp)
 
-add_executable(devilutionx
+SET(devilutionx_SRCS
   SourceX/dx.cpp
   SourceX/miniwin/misc.cpp
   SourceX/miniwin/misc_io.cpp
@@ -209,6 +232,36 @@ add_executable(devilutionx
   SourceX/DiabloUI/title.cpp
   SourceX/main.cpp)
 
+if (NOT ANDROID)
+add_executable(devilutionx
+  ${devilutionx_SRCS})
+else()
+add_library(devilutionx SHARED
+  ${devilutionx_SRCS})
+endif()
+
+if (ANDROID)
+	target_include_directories(devilutionx PUBLIC
+		SourceX
+		${CMAKE_CURRENT_SOURCE_DIR}/../app/libs/include
+		${CMAKE_CURRENT_SOURCE_DIR}/../SDL2/include
+
+		# SDL_internal.h is located in src required by SDL_android_main.c bridge
+		${CMAKE_CURRENT_SOURCE_DIR}/../SDL2/src
+
+		${CMAKE_CURRENT_SOURCE_DIR}/../SDL2_image/include
+		${CMAKE_CURRENT_SOURCE_DIR}/../SDL2_gfx/include
+		${CMAKE_CURRENT_SOURCE_DIR}/../SDL2_mixer/include
+		${CMAKE_CURRENT_SOURCE_DIR}/../SDL2_ttf/include
+		)
+
+	add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../SDL2/ ${CMAKE_CURRENT_SOURCE_DIR}/../SDL2)
+	add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../SDL2_image/ ${CMAKE_CURRENT_SOURCE_DIR}/../SDL2_image)
+	add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../SDL2_gfx/ ${CMAKE_CURRENT_SOURCE_DIR}/../SDL2_gfx)
+	add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../SDL2_mixer/ ${CMAKE_CURRENT_SOURCE_DIR}/../SDL2_mixer)
+	add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../SDL2_ttf/ ${CMAKE_CURRENT_SOURCE_DIR}/../SDL2_ttf)
+endif()
+
 target_include_directories(devilution PUBLIC Source SourceS)
 target_include_directories(devilutionx PRIVATE
   SourceX
@@ -222,11 +275,22 @@ target_link_libraries(devilutionx PRIVATE
   PKWare
   StormLib
   smacker
-  Radon
+  Radon)
+
+if (NOT ANDROID)
+target_link_libraries(devilutionx PRIVATE
   SDL2::SDL2main
   SDL2::SDL2_ttf
   SDL2::SDL2_mixer
   sodium)
+else()
+	target_link_libraries(devilutionx PRIVATE
+	devilutionAndroid
+	SDL2
+	SDL2_ttf
+	SDL2_mixer
+	${CMAKE_CURRENT_SOURCE_DIR}/../app/libs/jni/${ANDROID_ARCH_NAME}/libsodiumjni.so)
+endif()
 
 target_compile_definitions(devilution PRIVATE DEVILUTION_ENGINE)
 target_compile_definitions(devilution PUBLIC
@@ -292,4 +356,8 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   target_compile_options(devilution PRIVATE -fms-extensions -fms-compatibility -fms-compatibility-version=19.00)
 	# Silence appfat.cpp warnings
   set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wno-narrowing")
+endif()
+
+if (ANDROID)
+	set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wno-format-security")
 endif()
