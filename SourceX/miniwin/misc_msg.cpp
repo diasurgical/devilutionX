@@ -183,9 +183,9 @@ static int translate_sdl_key(SDL_Keysym key)
 static WPARAM keystate_for_mouse(WPARAM ret)
 {
 	const Uint8 *keystate = SDL_GetKeyboardState(NULL);
-	//klaus
-	//ret |= keystate[SDL_SCANCODE_LSHIFT] ? DVL_MK_SHIFT : 0;
-	//ret |= keystate[SDL_SCANCODE_RSHIFT] ? DVL_MK_SHIFT : 0;
+	//klaus_BAD
+	// ret |= keystate[SDL_SCANCODE_LSHIFT] ? DVL_MK_SHIFT : 0;
+	// ret |= keystate[SDL_SCANCODE_RSHIFT] ? DVL_MK_SHIFT : 0;
 	// XXX: other DVL_MK_* codes not implemented
 	return ret;
 }

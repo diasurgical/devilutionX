@@ -74,6 +74,10 @@ extern "C" {
 // #define SDL_QueueAudio SDL_QueueAudio_REAL
 #define SDL_QueueAudio 0
 
+#define SDL_SCANCODE_RSHIFT        161 /* VirtualKey.RightShift -- */
+#define SDL_SCANCODE_LSHIFT        160 /* VirtualKey.LeftShift -- */
+
+
 typedef Uint32 SDL_AudioDeviceID;
 
 typedef enum
