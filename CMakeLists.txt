@@ -238,8 +238,11 @@ message("SDL include dir: " ${SDL_INCLUDE_DIR})
 message("SDL_mixer include dir: " ${SDL_MIXER_INCLUDE_DIRS})
 message("SDL_ttf include dir: " ${SDL_TTF_INCLUDE_DIRS})
 
-
 target_link_libraries(devilution PUBLIC Threads::Threads)
+
+if(AMIGA)
+  target_link_libraries(devilution PUBLIC -latomic)
+endif()
 
 target_link_libraries(devilutionx PRIVATE
   devilution
@@ -257,7 +260,7 @@ target_link_libraries(devilutionx PRIVATE
   )
 
 if(AMIGA)
-  target_link_libraries(devilutionx PRIVATE -ldebug)
+  target_link_libraries(devilutionx PRIVATE -ldebug -latomic)
 endif()
   # ${PROJECT_SOURCE_DIR}/libSDLmain.a)
   # /usr/lib/x86_64-linux-gnu/libSDLmain.a

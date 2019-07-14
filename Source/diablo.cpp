@@ -565,10 +565,12 @@ void diablo_reload_process(HINSTANCE hInstance)
 		CloseHandle(hMap);
 		ExitProcess(0);
 	}
-
+	/*
 	if (InterlockedIncrement(plMap) == 0) {
 		plMap[1] = GetCurrentProcessId();
-	} else {
+	} else
+	*/
+	{
 		hPrev = GetForegroundWindow();
 		hWnd = hPrev;
 		while (1) {
