@@ -65,12 +65,12 @@ void progress_Render(BYTE progress)
 	if (msgSurface) {
 		SDL_Rect dsc_rect = { 64 + x + 50, SCREEN_Y + y + 8, SCREEN_WIDTH, SCREEN_HEIGHT };
 		if (SDL_BlitSurface(msgSurface, NULL, pal_surface, &dsc_rect) <= -1) {
-			SDL_Log(SDL_GetError());
+			//SDL_Log(SDL_GetError());
 		}
 		dsc_rect.x = 64 + GetCenterOffset(textWidth) - 1;
 		dsc_rect.y = SCREEN_Y + y + 99 + 4;
 		if (SDL_BlitSurface(cancleSurface, NULL, pal_surface, &dsc_rect) <= -1) {
-			SDL_Log(SDL_GetError());
+			//SDL_Log(SDL_GetError());
 		}
 	}
 }

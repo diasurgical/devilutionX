@@ -203,7 +203,7 @@ DWORD GetCurrentDirectory(DWORD nBufferLength, LPTSTR lpBuffer)
 	char *base_path = SDL_GetBasePath();
 	if (base_path == NULL) {
 		//klaus
-		SDL_Log(SDL_GetError());
+		//SDL_Log(SDL_GetError());
 		base_path = SDL_strdup("./");
 	}
 	eprintf("BasePath: %s\n", base_path);
@@ -295,7 +295,7 @@ HWND SetFocus(HWND hWnd)
 {
 	if (SDL_SetWindowInputFocus(window) <= -1) {
 		//klaus
-		SDL_Log(SDL_GetError());
+		//SDL_Log(SDL_GetError());
 	}
 	MainWndProc(NULL, DVL_WM_ACTIVATEAPP, true, 0); // SDL_WINDOWEVENT_FOCUS_GAINED
 	return NULL;
@@ -328,7 +328,7 @@ HWND CreateWindowExA(
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) <= -1) {
 		//klaus
-		SDL_Log(SDL_GetError());
+		//SDL_Log(SDL_GetError());
 		return NULL;
 	}
 	atexit(SDL_Quit);
@@ -358,7 +358,7 @@ HWND CreateWindowExA(
 	window = SDL_CreateWindow(lpWindowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, nWidth, nHeight, flags);
 	if (window == NULL) {
 		//klaus
-		SDL_Log(SDL_GetError());
+		//SDL_Log(SDL_GetError());
 	}
 	atexit(FakeWMDestroy);
 
@@ -366,18 +366,18 @@ HWND CreateWindowExA(
 		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
 		if (renderer == NULL) {
 			//klaus
-			SDL_Log(SDL_GetError());
+			//SDL_Log(SDL_GetError());
 		}
 
 		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, nWidth, nHeight);
 		if (texture == NULL) {
 			//klaus
-			SDL_Log(SDL_GetError());
+			//SDL_Log(SDL_GetError());
 		}
 
 		if (SDL_RenderSetLogicalSize(renderer, nWidth, nHeight) <= -1) {
 			//klaus
-			SDL_Log(SDL_GetError());
+			//SDL_Log(SDL_GetError());
 		}
 	}
 
@@ -608,7 +608,7 @@ int GetDeviceCaps(HDC hdc, int index)
 	SDL_DisplayMode current;
 
 	if (SDL_GetCurrentDisplayMode(0, &current) <= -1) {
-		SDL_Log(SDL_GetError());
+		//SDL_Log(SDL_GetError());
 		return 0;
 	}
 
@@ -733,7 +733,7 @@ int MessageBoxA(HWND hWnd, const char *Text, const char *Title, UINT Flags)
 	}
 
 	if (SDL_ShowSimpleMessageBox(SDLFlags, Title, Text, window) <= -1) {
-		SDL_Log(SDL_GetError());
+		//SDL_Log(SDL_GetError());
 		return -1;
 	}
 

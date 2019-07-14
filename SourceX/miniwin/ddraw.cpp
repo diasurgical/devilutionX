@@ -43,7 +43,7 @@ HRESULT StubDraw::CreatePalette(DWORD dwFlags, LPPALETTEENTRY lpColorTable, LPDI
 
 	palette = SDL_AllocPalette(256);
 	if (palette == NULL) {
-		SDL_Log(SDL_GetError());
+		//SDL_Log(SDL_GetError());
 		return (HRESULT)0x80000002L; //DDERR_OUTOFMEMORY
 	}
 
@@ -62,7 +62,7 @@ HRESULT StubDraw::CreateSurface(LPDDSURFACEDESC lpDDSurfaceDesc, LPDIRECTDRAWSUR
 
 		if (renderer) {
 			if (SDL_GetRendererOutputSize(renderer, (int *)&lpDDSurfaceDesc->dwWidth, (int *)&lpDDSurfaceDesc->dwHeight) <= -1) {
-				SDL_Log(SDL_GetError());
+				//SDL_Log(SDL_GetError());
 			}
 			surface = SDL_CreateRGBSurfaceWithFormat(0, lpDDSurfaceDesc->dwWidth, lpDDSurfaceDesc->dwHeight, lpDDSurfaceDesc->ddpfPixelFormat.dwRGBBitCount, lpDDSurfaceDesc->ddpfPixelFormat.dwFlags);
 		} else {
@@ -70,7 +70,7 @@ HRESULT StubDraw::CreateSurface(LPDDSURFACEDESC lpDDSurfaceDesc, LPDIRECTDRAWSUR
 			surface = SDL_GetWindowSurface(window);
 		}
 		if (surface == nullptr) {
-			SDL_Log(SDL_GetError());
+			//SDL_Log(SDL_GetError());
 			return (HRESULT)0x80000002L; //DDERR_OUTOFMEMORY
 		}
 		lpDDSurfaceDesc->lpSurface = (BYTE *)surface->pixels;
@@ -80,7 +80,7 @@ HRESULT StubDraw::CreateSurface(LPDDSURFACEDESC lpDDSurfaceDesc, LPDIRECTDRAWSUR
 
 	pal_surface = SDL_CreateRGBSurfaceWithFormat(0, lpDDSurfaceDesc->dwWidth, lpDDSurfaceDesc->dwHeight, lpDDSurfaceDesc->ddpfPixelFormat.dwRGBBitCount, lpDDSurfaceDesc->ddpfPixelFormat.dwFlags);
 	if (pal_surface == nullptr) {
-		SDL_Log(SDL_GetError());
+		//SDL_Log(SDL_GetError());
 		return (HRESULT)0x80000002L; //DDERR_OUTOFMEMORY
 	}
 	lpDDSurfaceDesc->lpSurface = (BYTE *)surface->pixels;
@@ -89,7 +89,7 @@ HRESULT StubDraw::CreateSurface(LPDDSURFACEDESC lpDDSurfaceDesc, LPDIRECTDRAWSUR
 	gpBuffer = (BYTE *)pal_surface->pixels; // Hack should happen in dx.cpp, but gives error
 
 	if (SDL_SetSurfacePalette(pal_surface, palette) <= -1) {
-		SDL_Log(SDL_GetError());
+		//SDL_Log(SDL_GetError());
 		return 1; //MAKE_HRESULT(130);//DVL_MAKE_HRESULT(130);
 	}
 
@@ -146,7 +146,7 @@ HRESULT StubSurface::BltFast(DWORD dwX, DWORD dwY, LPDIRECTDRAWSURFACE lpDDSrcSu
 
 	// Convert from 8-bit to 32-bit
 	if (SDL_BlitSurface(pal_surface, &src_rect, surface, &dst_rect) <= -1) {
-		SDL_Log(SDL_GetError());
+		//SDL_Log(SDL_GetError());
 		return DVL_E_FAIL;
 	}
 
@@ -216,25 +216,25 @@ HRESULT StubSurface::Unlock(LPVOID lpSurfaceData)
 
 	if (renderer) {
 		if (SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch) <= -1) { //pitch is 2560
-			SDL_Log(SDL_GetError());
+			//SDL_Log(SDL_GetError());
 		}
 
 		// Clear buffer to avoid artifacts in case the window was resized
 		if (SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255) <= -1) { // TODO only do this if window was resized
-			SDL_Log(SDL_GetError());
+			//SDL_Log(SDL_GetError());
 		}
 
 		if (SDL_RenderClear(renderer) <= -1) {
-			SDL_Log(SDL_GetError());
+			//SDL_Log(SDL_GetError());
 		}
 
 		if (SDL_RenderCopy(renderer, texture, NULL, NULL) <= -1) {
-			SDL_Log(SDL_GetError());
+			//SDL_Log(SDL_GetError());
 		}
 		SDL_RenderPresent(renderer);
 	} else {
 		if (SDL_UpdateWindowSurface(window) <= -1) {
-			SDL_Log(SDL_GetError());
+			//SDL_Log(SDL_GetError());
 		}
 	}
 
