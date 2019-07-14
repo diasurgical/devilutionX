@@ -122,8 +122,10 @@ UINT GetWindowsDirectoryA(LPSTR lpBuffer, UINT uSize)
 {
 	char *name = SDL_GetPrefPath("diasurgical", "devilution");
 	strncpy(lpBuffer, name, uSize);
-	//SDL_free(name);
-
+	if(name!=nullptr){
+		//eprintf("SDL_free(name) =: %s\n", name);
+		//SDL_free(name);
+	}
 	DWORD len = strlen(lpBuffer);
 
 	lpBuffer[len - 1] = '\0';
@@ -148,8 +150,12 @@ DWORD GetModuleFileNameA(HMODULE hModule, LPSTR lpFilename, DWORD nSize)
 {
 	char *name = SDL_GetPrefPath("diasurgical", "devilution");
 	strncpy(lpFilename, name, nSize);
-	//SDL_free(name);
-
+	if(name!=nullptr)
+	{
+		//eprintf("SDL_free(name) =: %s\n", name);
+		//SDL_free(name);		
+	}
+	
 	DWORD len = strlen(lpFilename);
 
 	lpFilename[len - 1] = '\\';
@@ -202,10 +208,11 @@ DWORD GetCurrentDirectory(DWORD nBufferLength, LPTSTR lpBuffer)
 {
 	char *base_path = SDL_GetBasePath();
 	if (base_path == NULL) {
-		//klaus
-		//SDL_Log(SDL_GetError());
+		//klaus_OK
+		SDL_Log(SDL_GetError());
 		base_path = SDL_strdup("./");
 	}
+	base_path = SDL_strdup("./");
 	eprintf("BasePath: %s\n", base_path);
 
 	strncpy(lpBuffer, base_path, nBufferLength);
@@ -294,8 +301,8 @@ WINBOOL SetForegroundWindow(HWND hWnd)
 HWND SetFocus(HWND hWnd)
 {
 	if (SDL_SetWindowInputFocus(window) <= -1) {
-		//klaus
-		//SDL_Log(SDL_GetError());
+		//klaus_OK
+		SDL_Log(SDL_GetError());
 	}
 	MainWndProc(NULL, DVL_WM_ACTIVATEAPP, true, 0); // SDL_WINDOWEVENT_FOCUS_GAINED
 	return NULL;
@@ -327,8 +334,8 @@ HWND CreateWindowExA(
     LPVOID lpParam)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) <= -1) {
-		//klaus
-		//SDL_Log(SDL_GetError());
+		//klaus_OK
+		SDL_Log(SDL_GetError());
 		return NULL;
 	}
 	atexit(SDL_Quit);
@@ -357,27 +364,27 @@ HWND CreateWindowExA(
 
 	window = SDL_CreateWindow(lpWindowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, nWidth, nHeight, flags);
 	if (window == NULL) {
-		//klaus
-		//SDL_Log(SDL_GetError());
+		//klaus_OK
+		SDL_Log(SDL_GetError());
 	}
 	atexit(FakeWMDestroy);
 
 	if (upscale) {
 		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
 		if (renderer == NULL) {
-			//klaus
-			//SDL_Log(SDL_GetError());
+			//klaus_OK
+			SDL_Log(SDL_GetError());
 		}
 
 		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, nWidth, nHeight);
 		if (texture == NULL) {
-			//klaus
-			//SDL_Log(SDL_GetError());
+			//klaus_OK
+			SDL_Log(SDL_GetError());
 		}
 
 		if (SDL_RenderSetLogicalSize(renderer, nWidth, nHeight) <= -1) {
-			//klaus
-			//SDL_Log(SDL_GetError());
+			//klaus_OK
+			SDL_Log(SDL_GetError());
 		}
 	}
 

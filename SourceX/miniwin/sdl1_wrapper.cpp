@@ -156,7 +156,7 @@ SDL_Surface* SDL_GetWindowSurface(SDL_Window* window)
 
 int SDL_UpdateWindowSurface(SDL_Window* window)
 {
-	SDL_Flip(window->surface);
+	return SDL_Flip(window->surface);
 }
 
 SDL_Renderer* SDL_CreateRenderer(SDL_Window* window,
@@ -333,7 +333,7 @@ int SDL_RenderCopy(SDL_Renderer*   renderer,
                    const SDL_Rect* dstrect)
 {
    //Blit the surface
-    SDL_BlitSurface( texture, NULL, renderer, NULL );
+    return SDL_BlitSurface( texture, NULL, renderer, NULL );
 }
 
 void SDL_RenderPresent(SDL_Renderer* renderer)
@@ -480,14 +480,30 @@ SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth,
 
     return SDL_CreateRGBSurface(flags, width, height, depth, rmask, gmask, bmask, amask);
 }
-	
+
 char* SDL_GetPrefPath(const char* org, const char* app) { return (char*)org; }
+// char* SDL_GetPrefPath(const char* org, const char* app) { 
+
+//     int len = SDL_strlen(org) + SDL_strlen(app) + 8;
+//     char* retval = (char *) SDL_malloc(len);
+	
+//     if (!retval) {
+//         SDL_OutOfMemory();
+//         return NULL;
+//     }
+
+//     if (*org) {
+//         SDL_snprintf(retval, len, "/home/%s/%s/",  org, app);
+//     } else {
+//         SDL_snprintf(retval, len, "/home/%s/", app);
+//     }
+	
+// 	return retval;
+// }
 
 char* SDL_GetBasePath(void) {
-    char buffer [100];
-    sprintf(buffer,"envarc:devilution/");
 
-    return buffer;
+    return "";
 }
 
 char* SDL_GetClipboardText(void)

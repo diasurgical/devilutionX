@@ -2,7 +2,7 @@
 #define __SDL1_WRAPPER_H
 
 #include <SDL.h>
-// #include <SDL/SDL_shape.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -73,6 +73,10 @@ extern "C" {
 //klaus
 // #define SDL_QueueAudio SDL_QueueAudio_REAL
 #define SDL_QueueAudio 0
+
+#define SDL_SCANCODE_RSHIFT        161 /* VirtualKey.RightShift -- */
+#define SDL_SCANCODE_LSHIFT        160 /* VirtualKey.LeftShift -- */
+
 
 typedef Uint32 SDL_AudioDeviceID;
 
@@ -324,6 +328,8 @@ typedef struct SDL_Point
     int y;
 } SDL_Point;
 
+
+/*
 //typedef struct SDL_MouseButtonEvent
 //{
 //    Uint32 type;        /**< ::SDL_MOUSEBUTTONDOWN or ::SDL_MOUSEBUTTONUP */
@@ -343,10 +349,28 @@ typedef struct SDL_Point
 // ============
 
 // sdl_displaymode struct is not finished
-struct SDL_DisplayMode {int h; int w;};
+struct SDL_DisplayMode {
+    int h; 
+    int w; 
+    int refresh_rate;
+    Uint32 format;
+    void* driverdata;
+};
 
-struct SDL_HitTest {};
-struct SDL_WindowUserData {};
+typedef struct SDL_WindowUserData
+{
+    char *name;
+    void *data;
+    struct SDL_WindowUserData *next;
+} SDL_WindowUserData;
+
+struct SDL_HitTest {
+    SDL_Window*      win;
+    const SDL_Point* area;
+    void*            data;
+
+};
+//struct SDL_WindowUserData {};
 //struct SDL_Renderer {};
 // struct SDL_Texture {};
 
@@ -379,6 +403,32 @@ typedef struct SDL_WindowShapeMode {
     /** \brief Window-shape parameters. */
     SDL_WindowShapeParams parameters;
 } SDL_WindowShapeMode;
+
+typedef enum
+{
+    SDL_ORIENTATION_UNKNOWN,            /**< The display orientation can't be determined */
+    SDL_ORIENTATION_LANDSCAPE,          /**< The display is in landscape mode, with the right side up, relative to portrait mode */
+    SDL_ORIENTATION_LANDSCAPE_FLIPPED,  /**< The display is in landscape mode, with the left side up, relative to portrait mode */
+    SDL_ORIENTATION_PORTRAIT,           /**< The display is in portrait mode */
+    SDL_ORIENTATION_PORTRAIT_FLIPPED    /**< The display is in portrait mode, upside down */
+} SDL_DisplayOrientation;
+
+struct SDL_VideoDisplay
+{
+    char *name;
+    int max_display_modes;
+    int num_display_modes;
+    SDL_DisplayMode *display_modes;
+    SDL_DisplayMode desktop_mode;
+    SDL_DisplayMode current_mode;
+    SDL_DisplayOrientation orientation;
+
+    SDL_Window *fullscreen_window;
+
+    SDL_VideoDevice *device;
+
+    void *driverdata;
+};
 
 
 // todo functions:

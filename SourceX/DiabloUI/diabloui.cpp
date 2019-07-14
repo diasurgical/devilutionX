@@ -249,8 +249,8 @@ bool UiFocusNavigation(SDL_Event *event)
 				if (SDL_GetModState() & KMOD_CTRL) {
 					char *clipboard = SDL_GetClipboardText();
 					if (clipboard == NULL) {
-						//klaus
-						//SDL_Log(SDL_GetError());
+						//klaus_OK
+						SDL_Log(SDL_GetError());
 					}
 					selhero_CatToName(clipboard, UiTextInput, UiTextInputLen);
 				}
@@ -741,7 +741,7 @@ void UiRender()
 	}
 	UiRenderItems(gUiItems, gUiItemCnt);
 	DrawLogo();
-	DrawMouse();
+	//DrawMouse();
 	UiFadeIn();
 }
 
@@ -795,7 +795,7 @@ bool UiItemMouseEvents(SDL_Event *event, UI_Item *items, int size)
 					UiFocus(items[i].value);
 
 				}
-				//klaus
+				//klaus_BAD
 				/*
 				else if (gfnListFocus == NULL || event->button.clicks >= 2) {
 					SelectedItem = items[i].value;

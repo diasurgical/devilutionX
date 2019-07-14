@@ -489,7 +489,7 @@ void music_start(int nTrack)
 
 			musicRw = SDL_RWFromConstMem(musicBuffer, bytestoread);
 			if (musicRw == NULL) {
-				//klaus
+				//klaus_BAD
 				//SDL_Log(SDL_GetError());
 			}
 			//klaus
