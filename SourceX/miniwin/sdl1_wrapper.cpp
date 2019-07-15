@@ -137,7 +137,7 @@ SDL_Window* SDL_CreateWindow(const char* title, int x, int y, int w, int h, Uint
 #ifdef __AMIGA__
 	window->surface = SDL_SetVideoMode(w, h, 16, SDL_SWSURFACE | SDL_FULLSCREEN);
 #else
-    window->surface = SDL_SetVideoMode(w, h, 16, SDL_HWSURFACE);
+    window->surface = SDL_SetVideoMode(w, h, 32, flags);
 #endif
 	return window;
 }
@@ -155,23 +155,17 @@ SDL_Surface* SDL_GetWindowSurface(SDL_Window* window)
 		return NULL;
 }
 
-int SDL_UpdateWindowSurface(SDL_Window* window)
+int SDL_UpdateWindowSurface(SDL_Window* window) // only used when upscaling is disabled
 {
 	return SDL_Flip(window->surface);
 }
 
-SDL_Renderer* SDL_CreateRenderer(SDL_Window* window,
-                                 int         index,
-                                 Uint32      flags)
+SDL_Renderer* SDL_CreateRenderer(SDL_Window* window, int index, Uint32 flags) // only used when upscaling is enabled
 {
 	return window->surface;
 }
 
-int SDL_SetRenderDrawColor(SDL_Renderer* renderer,
-                           Uint8         r,
-                           Uint8         g,
-                           Uint8         b,
-                           Uint8         a)
+int SDL_SetRenderDrawColor(SDL_Renderer* renderer, Uint8 r, Uint8 g, Uint8 b, Uint8 a) // only used when upscaling is enabled
 {
 	SDL_FillRect( renderer, NULL, SDL_MapRGBA( renderer->format, r, g, b, a) );
 }
@@ -219,7 +213,7 @@ void SDL_PauseAudioDevice(SDL_AudioDeviceID dev, int pause_on)
 
 Uint32 SDL_GetWindowPixelFormat(SDL_Window* window)
 {
-    return SDL_PIXELFORMAT_RGBA8888;
+    return SDL_PIXELFORMAT_RGBA8888; // Only used for video playback
 }
 
 SDL_bool SDL_IsScreenSaverEnabled(void)
@@ -285,7 +279,7 @@ void SDL_WarpMouseInWindow(SDL_Window* window, int x, int y)
 
 SDL_Surface* SDL_ConvertSurfaceFormat(SDL_Surface* src, Uint32 pixel_format, Uint32 flags)
 {
-	return SDL_DisplayFormatAlpha( src );
+	return SDL_DisplayFormatAlpha( src ); // Only used for video playback
 }
 
 SDL_bool SDL_IsTextInputActive(void)
@@ -426,8 +420,7 @@ SDL_SetPixelFormatPalette(SDL_PixelFormat * format, SDL_Palette *palette)
     return 0;
 }
 
-int
-SDL_SetPaletteColors(SDL_Palette * palette, const SDL_Color * colors,
+int SDL_SetPaletteColors(SDL_Palette * palette, const SDL_Color * colors,
                      int firstcolor, int ncolors)
 {
     int status = 0;
