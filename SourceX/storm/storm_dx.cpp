@@ -33,16 +33,19 @@ BOOL SDrawUpdatePalette(unsigned int firstentry, unsigned int numentries, PALETT
 		c->g = p->peGreen;
 		c->b = p->peBlue;
 		c->unused = SDL_ALPHA_OPAQUE;
+//for (int i = 0; i < palette->ncolors;i++)
+//                printf("%i: r(%i), g(%i), b(%i)", i, c->r, c->g, c->b);
 	}
 
 	assert(palette);
+	SDL_SetPalette(pal_surface, SDL_LOGPAL|SDL_PHYSPAL, colors, 0, 256);
 	if (SDL_SetPaletteColors(palette, colors, firstentry, numentries) <= -1) {
 
 		//klaus_OK
 		SDL_Log(SDL_GetError());
 		return false;
 	}
-
+//	printf("Palette set!\n");
 	return true;
 }
 

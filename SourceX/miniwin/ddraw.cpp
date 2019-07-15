@@ -78,7 +78,7 @@ HRESULT StubDraw::CreateSurface(LPDDSURFACEDESC lpDDSurfaceDesc, LPDIRECTDRAWSUR
 		return DVL_DS_OK;
 	}
 
-	pal_surface = SDL_CreateRGBSurfaceWithFormat(0, lpDDSurfaceDesc->dwWidth, lpDDSurfaceDesc->dwHeight, lpDDSurfaceDesc->ddpfPixelFormat.dwRGBBitCount, lpDDSurfaceDesc->ddpfPixelFormat.dwFlags);
+	pal_surface = SDL_CreateRGBSurfaceWithFormat(0, lpDDSurfaceDesc->dwWidth, lpDDSurfaceDesc->dwHeight, /*lpDDSurfaceDesc->ddpfPixelFormat.dwRGBBitCount*/8, lpDDSurfaceDesc->ddpfPixelFormat.dwFlags);
 	if (pal_surface == nullptr) {
 		SDL_Log(SDL_GetError());
 		return (HRESULT)0x80000002L; //DDERR_OUTOFMEMORY
