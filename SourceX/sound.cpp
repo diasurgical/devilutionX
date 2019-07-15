@@ -2,6 +2,7 @@
 #include "stubs.h"
 #include <SDL.h>
 #include <SDL_mixer.h>
+#include "miniwin/sdl1_wrapper.h"
 
 namespace dvl {
 
@@ -237,9 +238,13 @@ TSnd *sound_file_load(char *path)
 	pSnd->start_tc = GetTickCount() - 81;
 
 	wave_file = LoadWaveFile(file, &pSnd->fmt, &pSnd->chunk);
-//	if (!wave_file)
-//		app_fatal("Invalid sound format on file %s", pSnd->sound_path);
-
+	if (!wave_file)
+	{
+		DUMMY();
+		printf("Invalid sound format on file %s\n", pSnd->sound_path);
+		//Todo(Amiga): Fix loading of sound files
+		//app_fatal("Invalid sound format on file %s", pSnd->sound_path);
+	}
 	sound_CreateSoundBuffer(pSnd);
 
 #ifdef __cplusplus
@@ -494,12 +499,13 @@ void music_start(int nTrack)
 
 			musicRw = SDL_RWFromConstMem(musicBuffer, bytestoread);
 			if (musicRw == NULL) {
-				//klaus_BAD
-				//SDL_Log(SDL_GetError());
+				SDL_Log(SDL_GetError());
 			}
-			//klaus
-			//music = Mix_LoadMUS_RW(musicRw, 1);
+#ifndef __AMIGA__
+			music = Mix_LoadMUS_RW(musicRw, 1);
+#else
 			music = Mix_LoadMUS_RW(musicRw);
+#endif
 			Mix_VolumeMusic(MIX_MAX_VOLUME - MIX_MAX_VOLUME * sglMusicVolume / VOLUME_MIN);
 			Mix_PlayMusic(music, -1);
 

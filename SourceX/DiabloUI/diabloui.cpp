@@ -249,7 +249,6 @@ bool UiFocusNavigation(SDL_Event *event)
 				if (SDL_GetModState() & KMOD_CTRL) {
 					char *clipboard = SDL_GetClipboardText();
 					if (clipboard == NULL) {
-						//klaus_OK
 						SDL_Log(SDL_GetError());
 					}
 					selhero_CatToName(clipboard, UiTextInput, UiTextInputLen);
@@ -264,12 +263,12 @@ bool UiFocusNavigation(SDL_Event *event)
 				return true;
 			}
 			break;
-
-			/*
+/*
+Todo(Amiga): Fix this
 		case SDL_TEXTINPUT:
 			selhero_CatToName(event->text.text, UiTextInput, UiTextInputLen);
 			return true;
-			*/
+*/
 		}
 
 	}
@@ -741,7 +740,7 @@ void UiRender()
 	}
 	UiRenderItems(gUiItems, gUiItemCnt);
 	DrawLogo();
-	//DrawMouse();
+	DrawMouse();
 	UiFadeIn();
 }
 

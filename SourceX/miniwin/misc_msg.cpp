@@ -272,14 +272,17 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 			return false_avail();
 		}
 	} break;
-	/*case SDL_TEXTINPUT:
+/*
+Todo(Amiga): Fix this
+	case SDL_TEXTINPUT:
 	case SDL_WINDOWEVENT:
 		if (e.window.event == SDL_WINDOWEVENT_CLOSE) {
 			lpMsg->message = DVL_WM_QUERYENDSESSION;
 		} else {
 			return false_avail();
 		}
-		break;*/
+		break;
+*/
 	default:
 		DUMMY_PRINT("unknown SDL message 0x%X", e.type);
 		return false_avail();
