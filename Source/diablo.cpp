@@ -258,8 +258,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 #endif
 	ghInst = hInst;
 
+#ifndef __ANDROID__
 	if (RestrictedTest())
 		ErrOkDlg(IDD_DIALOG10, 0, "C:\\Src\\Diablo\\Source\\DIABLO.CPP", 877);
+#endif
 	if (ReadOnlyTest()) {
 		if (!GetModuleFileName(ghInst, szFileName, sizeof(szFileName)))
 			szFileName[0] = '\0';
