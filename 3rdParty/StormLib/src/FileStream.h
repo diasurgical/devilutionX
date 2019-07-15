@@ -14,13 +14,6 @@
 //-----------------------------------------------------------------------------
 // Function prototypes
 
-#ifdef __AMIGA__
-#define off64_t off_t
-#define fstat64 fstat
-#define lseek64 lseek
-#define ftruncate64 ftruncate
-#endif
-
 typedef void (*STREAM_INIT)(
     struct TFileStream * pStream        // Pointer to an unopened stream
 );
