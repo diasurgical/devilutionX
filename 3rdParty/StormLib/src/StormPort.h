@@ -183,7 +183,7 @@
   #endif
 
   // Typedefs for ANSI C
-  #ifndef __AMIGA__
+  #ifndef PLATFORM_AMIGA
   typedef unsigned char  BYTE;
   typedef int            LONG;
   #endif
