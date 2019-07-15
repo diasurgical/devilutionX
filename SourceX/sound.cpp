@@ -501,7 +501,7 @@ void music_start(int nTrack)
 			if (musicRw == NULL) {
 				SDL_Log(SDL_GetError());
 			}
-#ifndef __AMIGA__
+#if SDL_VERSION_ATLEAST(2, 0, 0)
 			music = Mix_LoadMUS_RW(musicRw, 1);
 #else
 			music = Mix_LoadMUS_RW(musicRw);
