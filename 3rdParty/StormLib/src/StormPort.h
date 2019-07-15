@@ -166,7 +166,10 @@
   #include <assert.h>
   #include <errno.h>
 
-  #define PLATFORM_LITTLE_ENDIAN
+  #ifndef __BIG_ENDIAN__
+    #define PLATFORM_LITTLE_ENDIAN
+  #endif
+
   #define PLATFORM_LINUX
   #define PLATFORM_DEFINED
 
