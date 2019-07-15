@@ -137,7 +137,7 @@ SDL_Window* SDL_CreateWindow(const char* title, int x, int y, int w, int h, Uint
 	auto* window = new SDL_Window;
 
 #ifdef __AMIGA__
-	window->surface = SDL_SetVideoMode(w, h, 16, SDL_SWSURFACE | SDL_FULLSCREEN);
+	window->surface = SDL_SetVideoMode(w, h, 16, SDL_SWSURFACE);
 #else
     window->surface = SDL_SetVideoMode(w, h, 16, SDL_SWSURFACE);
 #endif

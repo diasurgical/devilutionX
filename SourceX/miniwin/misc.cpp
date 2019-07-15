@@ -333,7 +333,7 @@ HWND CreateWindowExA(
     HINSTANCE hInstance,
     LPVOID lpParam)
 {
-	if (SDL_Init(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) <= -1) {
+	if (SDL_Init(SDL_INIT_EVERYTHING /*& ~SDL_INIT_HAPTIC*/) <= -1) {
 		//klaus_OK
 		SDL_Log(SDL_GetError());
 		return NULL;

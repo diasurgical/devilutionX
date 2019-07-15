@@ -237,8 +237,8 @@ TSnd *sound_file_load(char *path)
 	pSnd->start_tc = GetTickCount() - 81;
 
 	wave_file = LoadWaveFile(file, &pSnd->fmt, &pSnd->chunk);
-	if (!wave_file)
-		app_fatal("Invalid sound format on file %s", pSnd->sound_path);
+//	if (!wave_file)
+//		app_fatal("Invalid sound format on file %s", pSnd->sound_path);
 
 	sound_CreateSoundBuffer(pSnd);
 
@@ -417,7 +417,12 @@ HRESULT sound_DirectSoundCreate(LPGUID lpGuid, LPDIRECTSOUND *ppDS, LPUNKNOWN pU
 	if (DirectSoundCreate == NULL) {
 	}
 	*ppDS = new DirectSound();
-	int result = Mix_OpenAudio(22050, AUDIO_S16LSB, 2, 1024);
+
+	int result = Mix_OpenAudio(22050, /*AUDIO_S16SYS*/AUDIO_S16LSB, 2, 1024);
+	if(result==-1) {
+		printf("Mix_OpenAudio: %s\n", Mix_GetError());
+		exit(2);
+	}
 	Mix_AllocateChannels(25);
 	Mix_ReserveChannels(1); // reserve one channel for naration (SFileDda*)
 	return result;
