@@ -79,23 +79,6 @@ if (NOT ANDROID)
   find_package(sodium REQUIRED)
 endif()
 
-if (ANDROID)
-add_library(devilutionAndroid STATIC
-  3rdParty/Android/SDL_android_main.c)
-
-target_include_directories(devilutionAndroid PUBLIC
-  ${CMAKE_CURRENT_SOURCE_DIR}/../app/libs/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/../SDL2/include
-
-  # SDL_internal.h is located in src required by SDL_android_main.c bridge
-  ${CMAKE_CURRENT_SOURCE_DIR}/../SDL2/src
-
-  ${CMAKE_CURRENT_SOURCE_DIR}/../SDL2_image/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/../SDL2_gfx/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/../SDL2_mixer/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/../SDL2_ttf/include)
-endif()
-
 add_library(smacker STATIC
   3rdParty/libsmacker/smk_bitstream.c
   3rdParty/libsmacker/smk_hufftree.c
@@ -285,7 +268,6 @@ target_link_libraries(devilutionx PRIVATE
   sodium)
 else()
 	target_link_libraries(devilutionx PRIVATE
-	devilutionAndroid
 	SDL2
 	SDL2_ttf
 	SDL2_mixer
