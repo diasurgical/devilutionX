@@ -277,8 +277,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		SFileEnableDirectAccess(TRUE);
 #endif
 		diablo_init_screen();
-		diablo_parse_flags(lpCmdLine);
-		init_create_window(nCmdShow);
+//        diablo_parse_flags(lpCmdLine);
+		init_create_window(nCmdShow, lpCmdLine);
 		sound_init();
 		UiInitialize();
 

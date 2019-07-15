@@ -139,7 +139,7 @@ void init_disable_screensaver(BOOLEAN disable)
 	}
 }
 
-void init_create_window(int nCmdShow)
+void init_create_window(int nCmdShow, LPSTR mpqPath)
 {
 	int nWidth, nHeight;
 	HWND hWnd;
@@ -177,7 +177,7 @@ void init_create_window(int nCmdShow)
 	dx_init(hWnd);
 	BlackPalette();
 	snd_init(hWnd);
-	init_archives();
+	init_archives(mpqPath);
 	init_disable_screensaver(1);
 }
 
@@ -223,93 +223,89 @@ void init_await_mom_parent_exit()
 	} while (GetTickCount() - tick <= 4000 && init_find_mom_parent());
 }
 
-void init_archives()
+void init_archives(LPSTR mpqPath)
 {
-	HANDLE fh;
+    
+    HANDLE fh;
 #ifdef COPYPROT
-	int result;
+    int result;
 #endif
-	memset(&fileinfo, 0, sizeof(fileinfo));
-	fileinfo.size = sizeof(fileinfo);
-	fileinfo.versionstring = gszVersionNumber;
-	fileinfo.executablefile = diablo_exe_path;
-	fileinfo.originalarchivefile = diabdat_mpq_path;
-	fileinfo.patcharchivefile = patch_rt_mpq_path;
-	init_get_file_info();
+    memset(&fileinfo, 0, sizeof(fileinfo));
+    fileinfo.size = sizeof(fileinfo);
+    fileinfo.versionstring = gszVersionNumber;
+    fileinfo.executablefile = diablo_exe_path;
+    fileinfo.originalarchivefile = diabdat_mpq_path;
+    fileinfo.patcharchivefile = patch_rt_mpq_path;
+    init_get_file_info();
 #ifdef COPYPROT
-	while (1) {
+    while (1) {
 #endif
-		diabdat_mpq = init_test_access(diabdat_mpq_path, "\\diabdat.mpq", "DiabloCD", 1000, FS_CD);
+        
+        // we don't do anything with the second argument
+        diabdat_mpq = init_test_access(mpqPath, "diabdat.mpq", "DiabloCD", 1000, FS_CD);
+        
 #ifdef COPYPROT
-		if (diabdat_mpq)
-			break;
-		UiCopyProtError(&result);
-		if (result == COPYPROT_CANCEL)
-			FileErrDlg("diabdat.mpq");
-	}
+        if (diabdat_mpq)
+            break;
+        UiCopyProtError(&result);
+        if (result == COPYPROT_CANCEL)
+            FileErrDlg("diabdat.mpq");
+    }
 #endif
-	if (!WOpenFile("ui_art\\title.pcx", &fh, TRUE))
-		FileErrDlg("Main program archive: diabdat.mpq");
-	WCloseFile(fh);
-	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "\\patch_rt.mpq", "DiabloInstall", 2000, FS_PC);
+    if (!WOpenFile("ui_art\\title.pcx", &fh, TRUE))
+        FileErrDlg("Main program archive: diabdat.mpq");
+    
+    WCloseFile(fh);
+    
+    patch_rt_mpq = init_test_access(patch_rt_mpq_path, "\\patch_rt.mpq", "DiabloInstall", 2000, FS_PC);
 }
 
 HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags, int fs)
 {
-	char *last_slash_pos;
-	char Filename[MAX_PATH];
-	char Buffer[MAX_PATH];
-	char archive_path[MAX_PATH];
-	HANDLE archive;
-
-	if (!GetCurrentDirectory(sizeof(Buffer), Buffer))
-		app_fatal("Can't get program path");
-	init_strip_trailing_slash(Buffer);
-	if (!SFileSetBasePath(Buffer))
-		app_fatal("SFileSetBasePath");
-	if (!GetModuleFileName(ghInst, Filename, sizeof(Filename)))
-		app_fatal("Can't get program name");
-	last_slash_pos = strrchr(Filename, '\\');
-	if (last_slash_pos)
-		*last_slash_pos = '\0';
-	init_strip_trailing_slash(Filename);
-	strcpy(mpq_path, Buffer);
-	strcat(mpq_path, mpq_name);
+    char *last_slash_pos;
+    char Filename[MAX_PATH];
+    char Buffer[MAX_PATH];
+    char archive_path[MAX_PATH];
+    HANDLE archive;
+    
+    printf("Final archive path: %s", mpq_path);
+    
 #ifdef COPYPROT
-	if (SFileOpenArchive(mpq_path, flags, fs, &archive))
+    if (SFileOpenArchive(mpq_path, flags, fs, &archive))
 #else
-	if (SFileOpenArchive(mpq_path, flags, FS_PC, &archive))
+        if (SFileOpenArchive(mpq_path, flags, FS_PC, &archive))
 #endif
-		return archive;
-	if (strcmp(Filename, Buffer)) {
-		strcpy(mpq_path, Filename);
-		strcat(mpq_path, mpq_name);
+            return archive;
+    
+    if (strcmp(Filename, Buffer)) {
+        strcpy(mpq_path, Filename);
+        strcat(mpq_path, mpq_name);
 #ifdef COPYPROT
-		if (SFileOpenArchive(mpq_path, flags, fs, &archive))
+        if (SFileOpenArchive(mpq_path, flags, fs, &archive))
 #else
-		if (SFileOpenArchive(mpq_path, flags, FS_PC, &archive))
+            if (SFileOpenArchive(mpq_path, flags, FS_PC, &archive))
 #endif
-			return archive;
-	}
-	archive_path[0] = '\0';
-	if (reg_loc) {
-		if (SRegLoadString("Archives", reg_loc, 0, archive_path, sizeof(archive_path))) {
-			init_strip_trailing_slash(archive_path);
-			strcpy(mpq_path, archive_path);
-			strcat(mpq_path, mpq_name);
+                return archive;
+    }
+    archive_path[0] = '\0';
+    if (reg_loc) {
+        if (SRegLoadString("Archives", reg_loc, 0, archive_path, sizeof(archive_path))) {
+            init_strip_trailing_slash(archive_path);
+            strcpy(mpq_path, archive_path);
+            strcat(mpq_path, mpq_name);
 #ifdef COPYPROT
-			if (SFileOpenArchive(mpq_path, flags, fs, &archive))
+            if (SFileOpenArchive(mpq_path, flags, fs, &archive))
 #else
-			if (SFileOpenArchive(mpq_path, flags, FS_PC, &archive))
+                if (SFileOpenArchive(mpq_path, flags, FS_PC, &archive))
 #endif
-				return archive;
-		}
-	}
-	if (fs != FS_PC && init_read_test_file(archive_path, mpq_name, flags, &archive)) {
-		strcpy(mpq_path, archive_path);
-		return archive;
-	}
-	return NULL;
+                    return archive;
+        }
+    }
+    if (fs != FS_PC && init_read_test_file(archive_path, mpq_name, flags, &archive)) {
+        strcpy(mpq_path, archive_path);
+        return archive;
+    }
+    return NULL;
 }
 
 char *init_strip_trailing_slash(char *path)

@@ -9,6 +9,92 @@ Status | Platform
 
 ![Discord Channel](https://avatars3.githubusercontent.com/u/1965106?s=16&v=4) [Discord Chat Channel](https://discord.gg/aQBQdDe)
 
+
+# iOS build setup - working as of 20190708
+
+### Instructions from git
+
+Grab the iOS-arm64 branch from the github repo.
+
+```bash
+git clone git@github.com:richstoner/devilutionX.git --branch iOS-arm64
+```
+
+Grab the build dependencies (SDL2, SDL2_ttf, SDL2_mixer)
+
+```bash
+cd ./devliutionX/Xcode-iOS
+./fetch-dependencies.sh
+```
+
+### If you want to build and run in a simulator (iphone, ipad, etc)
+
+1. Checkout this tag
+
+```bash
+git checkout ios_simulator
+```
+
+2. Copy the ```diabdat.mpq``` into the ```devilutionX/Xcode-iOS/devilutionX``` folder. 
+
+3. Open ```devilutionX/Xcode-iOS/devilutionX.xcodeproj``` 
+
+4. Build all of the individual library targets (TODO: update the project to do this automatically) for a simulator
+
+    PKWare, Radon, StormLib, devilution, libSDL-iOS, libSDL_ttf-iOS, libSDL_mixer-iOS
+
+5. Build and run devilutionX target for a simulator
+
+
+### If you want to build and run on device (iphone, ipad, etc)
+
+
+1. Checkout this tag 
+
+**This is one commit past the simulator code, they're not interchangable due to the path handling. TODO: Fix this.**
+
+```bash
+git checkout ios_device
+```
+ 
+2. Open ```devilutionX/Xcode-iOS/devilutionX.xcodeproj```
+
+3. In the devilution project, set up Team info in order to sign and deploy the app
+
+4. Build all of the individual library targets (TODO: update the project to do this automatically) for Generic iOS devices
+
+PKWare, Radon, StormLib, devilution, libSDL-iOS, libSDL_ttf-iOS, libSDL_mixer-iOS
+
+5. Build the devilutionX target for Generic iOS devices
+
+Now here's where it gets messy: The SDL library needs to be modified to pass the path of the diabdat.mpq path to the SDL run loop
+
+**Replace the postFinishLaunch function at 339 of SDL.xcodeproject/Library Source/video/uikit/SDL_uiappkitdelegate.m with the contents of ```SDL_uikitappdelegate.delta.m```**
+    
+This isn't present in the github repo as the SDL2 project & source is pulled fresh from the libSDL2 source control.
+
+6. Once modified, build and deploy to a mobile device.
+
+7. The app will start, but throw an error dialog stating that the diabdat.mpq is not present. Great!
+
+8. Open itunes, select the device, select 'File Sharing', locate the devilutionX app in the app list and select it. Drag and drop the ```diabdat.mpq``` here.
+
+9. Rebuild or restart the app. This should get you a running iOS build on device. 
+
+Tested on an iPad Pro 3. Working with full sound and save support. Works with the Pencil as well.
+
+Lots of work to do: 
+
+* how to get all dependencies to build automatically
+* a better way to deploy the SDL_uiappkitdelegate patch
+* find out why the code at https://github.com/diasurgical/devilutionX/blob/master/Source/diablo.cpp#L321-L466 breaks when arguments are passed. 
+* Deeper integration with UIKit, hiDPI patches, etc.
+
+
+## Additional information from the fork 
+
+---
+
 # How To Play:
  - Copy diabdat.mpq from your CD, or GoG install folder, to the DevilutionX game directory ; Make sure it is all lowercase.
  - [Download DevilutionX](https://github.com/diasurgical/devilutionX/releases), or build from source
@@ -22,7 +108,7 @@ Please keep in mind that this is still being worked on and is missing parts of U
 <details><summary>Linux</summary>
 
 ### Installing dependencies on Debian and Ubuntu
-```
+
 sudo apt-get install cmake g++-multilib libsdl2-mixer-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev libsodium-dev:i386
 ```
 ### Installing dependencies on Fedora
