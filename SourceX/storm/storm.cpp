@@ -18,7 +18,7 @@ bool directFileAccess = false;
 static std::string getIniPath()
 {
 #ifdef __ANDROID__
-        return "/storage/emulated/0/Android/data/org.kkszysiu.devilutionx/diablo.ini";
+        return "/sdcard/Android/data/org.diasurgical.devilutionx/diablo.ini";
 #else
 	char path[DVL_MAX_PATH];
 	int len = GetModuleFileNameA(ghInst, path, DVL_MAX_PATH);
