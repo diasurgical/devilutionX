@@ -5,7 +5,7 @@
 #include <system_error>
 #include <stdexcept>
 #include <sodium.h>
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 namespace dvl {
 namespace net {

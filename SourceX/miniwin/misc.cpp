@@ -208,7 +208,6 @@ DWORD GetCurrentDirectory(DWORD nBufferLength, LPTSTR lpBuffer)
 {
 	char *base_path = SDL_GetBasePath();
 	if (base_path == NULL) {
-		//klaus_OK
 		SDL_Log(SDL_GetError());
 		base_path = SDL_strdup("data/");
 	}
@@ -301,7 +300,6 @@ WINBOOL SetForegroundWindow(HWND hWnd)
 HWND SetFocus(HWND hWnd)
 {
 	if (SDL_SetWindowInputFocus(window) <= -1) {
-		//klaus_OK
 		SDL_Log(SDL_GetError());
 	}
 	MainWndProc(NULL, DVL_WM_ACTIVATEAPP, true, 0); // SDL_WINDOWEVENT_FOCUS_GAINED
@@ -334,7 +332,6 @@ HWND CreateWindowExA(
     LPVOID lpParam)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) <= -1) {
-		//klaus_OK
 		SDL_Log(SDL_GetError());
 		return NULL;
 	}
@@ -364,7 +361,6 @@ HWND CreateWindowExA(
 
 	window = SDL_CreateWindow(lpWindowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, nWidth, nHeight, flags);
 	if (window == NULL) {
-		//klaus_OK
 		SDL_Log(SDL_GetError());
 	}
 	atexit(FakeWMDestroy);
@@ -372,18 +368,15 @@ HWND CreateWindowExA(
 	if (upscale) {
 		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
 		if (renderer == NULL) {
-			//klaus_OK
 			SDL_Log(SDL_GetError());
 		}
 
 		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, nWidth, nHeight);
 		if (texture == NULL) {
-			//klaus_OK
 			SDL_Log(SDL_GetError());
 		}
 
 		if (SDL_RenderSetLogicalSize(renderer, nWidth, nHeight) <= -1) {
-			//klaus_OK
 			SDL_Log(SDL_GetError());
 		}
 	}
@@ -527,7 +520,7 @@ HWND GetForegroundWindow()
 
 LPTOP_LEVEL_EXCEPTION_FILTER SetUnhandledExceptionFilter(LPTOP_LEVEL_EXCEPTION_FILTER lpTopLevelExceptionFilter)
 {
-//	DUMMY();
+	DUMMY();
 	return lpTopLevelExceptionFilter;
 }
 

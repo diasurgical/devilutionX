@@ -33,7 +33,6 @@ WINBOOL SetCursorPos(int X, int Y)
 int ShowCursor(WINBOOL bShow)
 {
 	if (SDL_ShowCursor(bShow ? SDL_ENABLE : SDL_DISABLE) <= -1) {
-		//klaus_OK
 		SDL_Log(SDL_GetError());
 	}
 

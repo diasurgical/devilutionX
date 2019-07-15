@@ -525,8 +525,8 @@ void LoadMonster(int i)
 	CopyChar(tbuff, &pMonster->mWhoHit);
 
 	CopyChar(tbuff, &pMonster->mLevel);
-	CopyShort(tbuff, &pMonster->mExp);
 	tbuff += 1;
+	CopyShort(tbuff, &pMonster->mExp);
 
 	CopyChar(tbuff, &pMonster->mHit);
 	CopyChar(tbuff, &pMonster->mMinDamage);
@@ -1221,8 +1221,8 @@ void SaveMonster(int i)
 	CopyChar(&pMonster->mWhoHit, tbuff);
 
 	CopyChar(&pMonster->mLevel, tbuff);
-	CopyShort(&pMonster->mExp, tbuff);
 	tbuff += 1;
+	CopyShort(&pMonster->mExp, tbuff);
 
 	CopyChar(&pMonster->mHit, tbuff);
 	CopyChar(&pMonster->mMinDamage, tbuff);

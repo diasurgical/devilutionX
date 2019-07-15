@@ -58,7 +58,7 @@ BOOL SFileDdaBeginEx(HANDLE hFile, DWORD flags, DWORD mask, unsigned __int32 lDi
 
 	SDL_RWops *rw = SDL_RWFromConstMem(SFXbuffer, bytestoread);
 	if (rw == NULL) {
-		//SDL_Log(SDL_GetError());
+		SDL_Log(SDL_GetError());
 	}
 	SFileChunk = Mix_LoadWAV_RW(rw, 1);
 	free(SFXbuffer);
@@ -572,8 +572,10 @@ BOOL SVidPlayContinue(void)
 		}
 		memcpy(logical_palette, orig_palette, 1024);
 
+		SDL_SetPalette(SVidSurface, SDL_LOGPAL|SDL_PHYSPAL, colors, 0, 256);
+
 		if (SDL_SetPaletteColors(SVidPalette, colors, 0, 256) <= -1) {
-			//SDL_Log(SDL_GetError());
+			SDL_Log(SDL_GetError());
 			return false;
 		}
 	}
@@ -585,7 +587,7 @@ BOOL SVidPlayContinue(void)
 	//klaus
 	/*
 	if (deviceId && SDL_QueueAudio(deviceId, smk_get_audio(SVidSMK, 0), smk_get_audio_size(SVidSMK, 0)) <= -1) {
-		//SDL_Log(SDL_GetError());
+		SDL_Log(SDL_GetError());
 		return false;
 	}
 	*/
@@ -596,7 +598,6 @@ BOOL SVidPlayContinue(void)
 
 	if (renderer) {
 		if (SDL_BlitSurface(SVidSurface, NULL, surface, NULL) <= -1) {
-			//klaus_OK
 			SDL_Log(SDL_GetError());
 			return false;
 		}
@@ -616,7 +617,6 @@ BOOL SVidPlayContinue(void)
 		Uint32 format = SDL_GetWindowPixelFormat(window);
 		SDL_Surface *tmp = SDL_ConvertSurfaceFormat(SVidSurface, format, 0);
 		if (SDL_BlitScaled(tmp, NULL, surface, &pal_surface_offset) <= -1) {
-			//klaus_OK
 			SDL_Log(SDL_GetError());
 			return false;
 		}
@@ -661,11 +661,9 @@ BOOL SVidPlayEnd(HANDLE video)
 		SDL_DestroyTexture(texture);
 		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
 		if (texture == NULL) {
-			//klaus_OK
 			SDL_Log(SDL_GetError());
 		}
 		if (renderer && SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT) <= -1) {
-			//klaus_OK
 			SDL_Log(SDL_GetError());
 		}
 	}

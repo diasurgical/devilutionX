@@ -2,6 +2,7 @@
 #include "stubs.h"
 #include <SDL.h>
 #include <SDL_mixer.h>
+#include "miniwin/sdl1_wrapper.h"
 
 namespace dvl {
 
@@ -238,8 +239,12 @@ TSnd *sound_file_load(char *path)
 
 	wave_file = LoadWaveFile(file, &pSnd->fmt, &pSnd->chunk);
 	if (!wave_file)
-		app_fatal("Invalid sound format on file %s", pSnd->sound_path);
-
+	{
+		DUMMY();
+		printf("Invalid sound format on file %s\n", pSnd->sound_path);
+		//Todo(Amiga): Fix loading of sound files
+		//app_fatal("Invalid sound format on file %s", pSnd->sound_path);
+	}
 	sound_CreateSoundBuffer(pSnd);
 
 #ifdef __cplusplus
@@ -417,7 +422,12 @@ HRESULT sound_DirectSoundCreate(LPGUID lpGuid, LPDIRECTSOUND *ppDS, LPUNKNOWN pU
 	if (DirectSoundCreate == NULL) {
 	}
 	*ppDS = new DirectSound();
-	int result = Mix_OpenAudio(22050, AUDIO_S16LSB, 2, 1024);
+
+	int result = Mix_OpenAudio(22050, /*AUDIO_S16SYS*/AUDIO_S16LSB, 2, 1024);
+	if(result==-1) {
+		printf("Mix_OpenAudio: %s\n", Mix_GetError());
+		exit(2);
+	}
 	Mix_AllocateChannels(25);
 	Mix_ReserveChannels(1); // reserve one channel for naration (SFileDda*)
 	return result;
@@ -489,12 +499,13 @@ void music_start(int nTrack)
 
 			musicRw = SDL_RWFromConstMem(musicBuffer, bytestoread);
 			if (musicRw == NULL) {
-				//klaus_BAD
-				//SDL_Log(SDL_GetError());
+				SDL_Log(SDL_GetError());
 			}
-			//klaus
-			//music = Mix_LoadMUS_RW(musicRw, 1);
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+			music = Mix_LoadMUS_RW(musicRw, 1);
+#else
 			music = Mix_LoadMUS_RW(musicRw);
+#endif
 			Mix_VolumeMusic(MIX_MAX_VOLUME - MIX_MAX_VOLUME * sglMusicVolume / VOLUME_MIN);
 			Mix_PlayMusic(music, -1);
 
