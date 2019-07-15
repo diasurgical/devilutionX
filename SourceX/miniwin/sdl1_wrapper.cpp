@@ -7,6 +7,8 @@
 extern "C" {
 #endif
 
+static SDL_bool isTextInputActive = (SDL_bool)false;
+
 struct SDL_Window {
     const void *magic;
     Uint32 id;
@@ -137,7 +139,7 @@ SDL_Window* SDL_CreateWindow(const char* title, int x, int y, int w, int h, Uint
 #ifdef __AMIGA__
 	window->surface = SDL_SetVideoMode(w, h, 16, SDL_SWSURFACE | SDL_FULLSCREEN);
 #else
-    window->surface = SDL_SetVideoMode(w, h, 32, flags);
+    window->surface = SDL_SetVideoMode(w, h, 16, SDL_HWSURFACE);
 #endif
 	return window;
 }
@@ -176,7 +178,7 @@ SDL_Texture* SDL_CreateTextureFromSurface(SDL_Renderer* renderer,
 	if( renderer != nullptr )
 	{
 		//Create an optimized image
-		renderer = SDL_DisplayFormatAlpha( surface );
+		renderer = SDL_DisplayFormat( surface );
 		return renderer;
 	}
 }
@@ -213,7 +215,7 @@ void SDL_PauseAudioDevice(SDL_AudioDeviceID dev, int pause_on)
 
 Uint32 SDL_GetWindowPixelFormat(SDL_Window* window)
 {
-    return SDL_PIXELFORMAT_RGBA8888; // Only used for video playback
+    return 0;//window->surface->format;//SDL_PIXELFORMAT_RGBA8888;
 }
 
 SDL_bool SDL_IsScreenSaverEnabled(void)
@@ -254,12 +256,12 @@ const Uint8* SDL_GetKeyboardState(int* numkeys)
 
 void SDL_StopTextInput(void)
 {
-
+	isTextInputActive = (SDL_bool)false;
 }
 
 void SDL_StartTextInput(void)
 {
-
+	isTextInputActive = (SDL_bool)true;
 }
 
 void SDL_HideWindow(SDL_Window* window)
@@ -279,12 +281,12 @@ void SDL_WarpMouseInWindow(SDL_Window* window, int x, int y)
 
 SDL_Surface* SDL_ConvertSurfaceFormat(SDL_Surface* src, Uint32 pixel_format, Uint32 flags)
 {
-	return SDL_DisplayFormatAlpha( src ); // Only used for video playback
+	return SDL_DisplayFormat( src );
 }
 
 SDL_bool SDL_IsTextInputActive(void)
 {
-    return (SDL_bool)0;
+    return isTextInputActive;
 }
 
 int SDL_GetCurrentDisplayMode(int displayIndex, SDL_DisplayMode* mode)
@@ -294,7 +296,7 @@ int SDL_GetCurrentDisplayMode(int displayIndex, SDL_DisplayMode* mode)
 
 int SDL_UpdateTexture(SDL_Texture* texture, const SDL_Rect* rect, const void* pixels, int pitch)
 {
-    return 0;
+    return SDL_Flip(texture);
 }
 
 SDL_Texture* SDL_CreateTexture(SDL_Renderer* renderer, Uint32 format, int access, int w, int h)
@@ -346,7 +348,7 @@ int SDL_RenderCopy(SDL_Renderer*   renderer,
 
 void SDL_RenderPresent(SDL_Renderer* renderer)
 {
-	SDL_Flip(renderer);
+	//SDL_Flip(renderer);
 }
 
 void SDL_Log(const char *fmt, ...) {
@@ -356,11 +358,15 @@ void SDL_Log(const char *fmt, ...) {
 
 int SDL_SetSurfacePalette(SDL_Surface* surface, SDL_Palette* palette)
 {
-    return SDL_SetPalette(surface, surface->flags, palette->colors, 0, palette->ncolors);
+//    printf("Surface palette set!");
+
+//	for (int i = 0; i < palette->ncolors;i++)
+//		printf("%i: r(%i), g(%i), b(%i)", i, palette->colors[i].r, palette->colors[i].g, palette->colors[i].b);
+
+    return SDL_SetPalette(surface, 0/*SDL_LOGPAL|SDL_PHYSPAL*/, palette->colors, 0, palette->ncolors);
 }
 
-SDL_Palette *
-SDL_AllocPalette(int ncolors)
+SDL_Palette * SDL_AllocPalette(int ncolors)
 {
     SDL_Palette *palette;
 
@@ -375,8 +381,9 @@ SDL_AllocPalette(int ncolors)
         SDL_OutOfMemory();
         return nullptr;
     }
-    palette->colors =
-        (SDL_Color *) SDL_malloc(ncolors * sizeof(*palette->colors));
+
+    palette->colors = (SDL_Color *) SDL_malloc(ncolors * sizeof(*palette->colors));
+
     if (!palette->colors) {
         SDL_free(palette);
         return nullptr;
@@ -388,36 +395,6 @@ SDL_AllocPalette(int ncolors)
     SDL_memset(palette->colors, 0xFF, ncolors * sizeof(*palette->colors));
 
     return palette;
-}
-
-int
-SDL_SetPixelFormatPalette(SDL_PixelFormat * format, SDL_Palette *palette)
-{
-    if (!format) {
-        SDL_SetError("SDL_SetPixelFormatPalette() passed NULL format");
-        return 0;
-    }
-
-    if (palette && palette->ncolors > (1 << format->BitsPerPixel)) {
-        SDL_SetError("SDL_SetPixelFormatPalette() passed a palette that doesn't match the format");
-        return 0;
-    }
-
-    if (format->palette == palette) {
-        return 0;
-    }
-
-    if (format->palette) {
-        SDL_FreePalette(format->palette);
-    }
-
-    format->palette = palette;
-/*
-    if (format->palette) {
-        ++format->palette->refcount;
-    }
-*/
-    return 0;
 }
 
 int SDL_SetPaletteColors(SDL_Palette * palette, const SDL_Color * colors,
@@ -438,6 +415,7 @@ int SDL_SetPaletteColors(SDL_Palette * palette, const SDL_Color * colors,
         SDL_memcpy(palette->colors + firstcolor, colors,
                    ncolors * sizeof(*colors));
     }
+
     /*
     ++palette->version;
     if (!palette->version) {
@@ -471,6 +449,7 @@ SDL_Surface *
 SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth,
                                Uint32 format)
 {
+    SDL_Surface * surface;
     Uint32 rmask, gmask, bmask, amask;
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
@@ -484,8 +463,12 @@ SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth,
     bmask = 0x00ff0000;
     amask = 0xff000000;
 #endif
-
-    return SDL_CreateRGBSurface(flags, width, height, depth, rmask, gmask, bmask, amask);
+    if (depth == 8) {
+	surface = SDL_CreateRGBSurface(flags, width, height, depth, 0, 0, 0, 0);
+    }
+    else
+	surface = SDL_CreateRGBSurface(flags, width, height, depth, rmask, gmask, bmask, amask);
+    return surface;
 }
 
 char* SDL_GetPrefPath(const char* org, const char* app) { return (char*)org; }
