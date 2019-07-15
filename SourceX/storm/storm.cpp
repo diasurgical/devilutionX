@@ -14,14 +14,19 @@ namespace dvl {
 DWORD nLastError = 0;
 bool directFileAccess = false;
 
+
 static std::string getIniPath()
 {
+#ifdef __ANDROID__
+        return "/storage/emulated/0/Android/data/org.kkszysiu.devilutionx/diablo.ini";
+#else
 	char path[DVL_MAX_PATH];
 	int len = GetModuleFileNameA(ghInst, path, DVL_MAX_PATH);
 	path[len - 1] = '/';
 	strcat(path, "diablo.ini");
 
 	return path;
+#endif
 }
 
 static radon::File ini(getIniPath());
