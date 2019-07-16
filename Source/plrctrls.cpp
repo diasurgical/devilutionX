@@ -30,7 +30,6 @@ int inv_left = INV_LEFT;
 int inv_height = INV_HEIGHT;
 static DWORD attacktick;
 static DWORD invmove;
-DWORD ticks;
 int slot = SLOTXY_INV_FIRST;
 int spbslot = 0;
 coords speedspellscoords[50];
@@ -131,6 +130,7 @@ bool checkMonstersNearby(bool attack)
 		return false;
 	}
 	if (attack) {
+		DWORD ticks = GetTickCount();
 		if (ticks - attacktick > 100) { // prevent accidental double attacks
 			attacktick = ticks;
 			LeftMouseCmd(false);
@@ -163,6 +163,7 @@ void attrIncBtnSnap(int key)
 	if (chrbtnactive && !plr[myplr]._pStatPts)
 		return;
 
+	DWORD ticks = GetTickCount();
 	if (ticks - invmove < 80) {
 		return;
 	}
@@ -205,6 +206,8 @@ void invMove(int key)
 {
 	if (!invflag)
 		return;
+
+	DWORD ticks = GetTickCount();
 	if (ticks - invmove < 80) {
 		return;
 	}
@@ -377,6 +380,7 @@ void hotSpellMove(int key)
 	if (pcurs > 0)
 		HideCursor();
 
+	DWORD ticks = GetTickCount();
 	if (ticks - invmove < 80) {
 		return;
 	}
@@ -447,7 +451,7 @@ void walkInDir(int dir)
 {
 	if (invflag || spselflag || chrflag || questlog) // don't walk if inventory, speedbook or char info windows are open
 		return;
-	ticks = GetTickCount();
+	DWORD ticks = GetTickCount();
 	if (ticks - invmove < 370) {
 		return;
 	}
@@ -460,6 +464,7 @@ void walkInDir(int dir)
 static DWORD menuopenslow;
 void useBeltPotion(bool mana)
 {
+	DWORD ticks = GetTickCount();
 	int invNum = 0;
 	if (ticks - menuopenslow < 300) {
 		return;
@@ -541,7 +546,7 @@ void keyboardExpansion(int vikey)
 	static DWORD opentimer;
 	static DWORD clickinvtimer;
 	static DWORD statuptimer;
-	ticks = GetTickCount();
+	DWORD ticks = GetTickCount();
 
 	if (stextflag > 0 || questlog || helpflag || talkflag || qtextflag)
 		return;
