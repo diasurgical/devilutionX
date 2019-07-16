@@ -58,6 +58,14 @@ jobs:
       - run: cd build && cmake -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake ..
       - run: cd build && cmake --build . -j $(nproc)
       - store_artifacts: {path: ./build/devilutionx.exe, destination: devilutionx_x86.exe}
+  switch:
+    docker:
+      - image: devkitpro/devkita64:latest
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: make -j$(nproc)
+      - store_artifacts: {path: ./release/devilutionx.nro, destination: devilutionx.nro}
 
 workflows:
   version: 2
@@ -67,3 +75,4 @@ workflows:
       - linux_x86
       - windows_x86
       - linux_x86_64_sdl1
+      - switch
