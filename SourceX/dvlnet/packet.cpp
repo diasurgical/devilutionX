@@ -3,7 +3,11 @@
 namespace dvl {
 namespace net {
 
+#ifndef SWITCH
 static constexpr bool disable_encryption = false;
+#else
+static constexpr bool disable_encryption = true;
+#endif
 
 const buffer_t &packet::data()
 {
@@ -103,6 +107,7 @@ void packet_in::decrypt()
 	if (have_decrypted)
 		return;
 	if (!disable_encryption) {
+#ifndef SWITCH
 		if (encrypted_buffer.size() < crypto_secretbox_NONCEBYTES
 				+ crypto_secretbox_MACBYTES
 				+ sizeof(packet_type) + 2 * sizeof(plr_t))
@@ -119,6 +124,7 @@ void packet_in::decrypt()
 				encrypted_buffer.data(),
 				key.data()))
 			throw packet_exception();
+#endif
 	} else {
 		if (encrypted_buffer.size() < sizeof(packet_type) + 2 * sizeof(plr_t))
 			throw packet_exception();
@@ -139,6 +145,7 @@ void packet_out::encrypt()
 
 	process_data();
 
+#ifndef SWITCH
 	if (!disable_encryption) {
 		auto len_cleartext = encrypted_buffer.size();
 		encrypted_buffer.insert(encrypted_buffer.begin(),
@@ -155,11 +162,13 @@ void packet_out::encrypt()
 				key.data()))
 			ABORT();
 	}
+#endif
 	have_encrypted = true;
 }
 
 packet_factory::packet_factory(std::string pw)
 {
+#ifndef SWITCH
 	if (sodium_init() < 0)
 		ABORT();
 	pw.resize(std::min<std::size_t>(pw.size(), crypto_pwhash_argon2id_PASSWD_MAX));
@@ -173,6 +182,7 @@ packet_factory::packet_factory(std::string pw)
 			crypto_pwhash_argon2id_MEMLIMIT_INTERACTIVE,
 			crypto_pwhash_ALG_ARGON2ID13))
 		ABORT();
+#endif
 }
 
 } // namespace net
