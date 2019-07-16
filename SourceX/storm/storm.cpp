@@ -576,6 +576,8 @@ void SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 			ErrSdl();
 		}
 	}
+#elif SDL1_VIDEO_MODE_BPP == 8
+	SDL_SetVideoMode(SVidWidth, SVidHeight, SDL1_VIDEO_MODE_BPP, GetOutputSurface()->flags);
 #endif
 	memcpy(SVidPreviousPalette, orig_palette, 1024);
 
@@ -694,6 +696,9 @@ BOOL SVidPlayContinue(void)
 		SDL_Surface *tmp = SDL_ConvertSurface(SVidSurface, window->format, 0);
 		// NOTE: Consider resolution switching instead if video doesn't play
 		// fast enough.
+#if SDL1_VIDEO_MODE_BPP == 8
+		pal_surface_offset = { 0, 0, SVidWidth, SVidHeight };
+#endif
 #else
 		Uint32 format = SDL_GetWindowPixelFormat(window);
 		SDL_Surface *tmp = SDL_ConvertSurfaceFormat(SVidSurface, format, 0);
@@ -747,6 +752,10 @@ void SVidPlayEnd(HANDLE video)
 
 	SFileCloseFile(video);
 	video = NULL;
+
+#if SDL1_VIDEO_MODE_BPP == 8
+	SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SDL1_VIDEO_MODE_BPP, GetOutputSurface()->flags);
+#endif
 
 	memcpy(orig_palette, SVidPreviousPalette, 1024);
 #ifndef USE_SDL1

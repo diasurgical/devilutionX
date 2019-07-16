@@ -42,7 +42,11 @@ inline int SDLC_SetColorKey(SDL_Surface *surface, Uint32 key)
 inline int SDLC_SetSurfaceColors(SDL_Surface *surface, SDL_Color *colors, int firstcolor, int ncolors)
 {
 #ifdef USE_SDL1
-	return SDL_SetPalette(surface, SDL_LOGPAL, colors, firstcolor, ncolors) - 1;
+	int flags = SDL_LOGPAL;
+#if SDL1_VIDEO_MODE_BPP == 8
+	flags |= SDL_PHYSPAL;
+#endif
+	return SDL_SetPalette(surface, flags, colors, firstcolor, ncolors) - 1;
 #else
 	return SDL_SetPaletteColors(surface->format->palette, colors, firstcolor, ncolors);
 #endif
