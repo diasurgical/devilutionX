@@ -10,7 +10,6 @@ extern float leftStickY;
 bool newCurHidden = false;
 static DWORD attacktick;
 static DWORD invmove;
-DWORD ticks;
 int slot = SLOTXY_INV_FIRST;
 int spbslot = 0;
 coords speedspellscoords[50];
@@ -19,7 +18,6 @@ int hsr[3] = { 0, 0, 0 }; // hot spell row counts
 DWORD talkwait;
 DWORD talktick;
 DWORD castwait;
-bool inmainmenu = false;
 
 // 0 = not near, >0 = distance related player 1 coordinates
 coords checkNearbyObjs(int x, int y, int diff)
@@ -112,6 +110,7 @@ bool checkMonstersNearby(bool attack)
 		return false;
 	}
 	if (attack) {
+		DWORD ticks = GetTickCount();
 		if (ticks - attacktick > 100) { // prevent accidental double attacks
 			attacktick = ticks;
 			LeftMouseCmd(false);
@@ -144,6 +143,7 @@ void attrIncBtnSnap(int key)
 	if (chrbtnactive && !plr[myplr]._pStatPts)
 		return;
 
+	DWORD ticks = GetTickCount();
 	if (ticks - invmove < 80) {
 		return;
 	}
@@ -186,6 +186,8 @@ void invMove(int key)
 {
 	if (!invflag)
 		return;
+
+	DWORD ticks = GetTickCount();
 	if (ticks - invmove < 80) {
 		return;
 	}
@@ -358,6 +360,7 @@ void hotSpellMove(int key)
 	if (pcurs > 0)
 		HideCursor();
 
+	DWORD ticks = GetTickCount();
 	if (ticks - invmove < 80) {
 		return;
 	}
@@ -426,9 +429,9 @@ void hotSpellMove(int key)
 
 void walkInDir(int dir)
 {
-	if (invflag || spselflag || chrflag) // don't walk if inventory, speedbook or char info windows are open
+	if (invflag || spselflag || chrflag || questlog) // don't walk if inventory, speedbook or char info windows are open
 		return;
-	ticks = GetTickCount();
+	DWORD ticks = GetTickCount();
 	if (ticks - invmove < 370) {
 		return;
 	}
@@ -441,6 +444,7 @@ void walkInDir(int dir)
 static DWORD menuopenslow;
 void useBeltPotion(bool mana)
 {
+	DWORD ticks = GetTickCount();
 	int invNum = 0;
 	if (ticks - menuopenslow < 300) {
 		return;
@@ -522,7 +526,7 @@ void keyboardExpansion(int vikey)
 	static DWORD opentimer;
 	static DWORD clickinvtimer;
 	static DWORD statuptimer;
-	ticks = GetTickCount();
+	DWORD ticks = GetTickCount();
 
 	if (stextflag > 0 || questlog || helpflag || talkflag || qtextflag)
 		return;
@@ -542,16 +546,21 @@ void keyboardExpansion(int vikey)
 		} else if (chrflag) {
 			if (ticks - statuptimer >= 400) {
 				statuptimer = ticks;
-				for (int i = 0; i < 4; i++) {
-					if (MouseX >= attribute_inc_rects2[i][0]
-					    && MouseX <= attribute_inc_rects2[i][0] + attribute_inc_rects2[i][2]
-					    && MouseY >= attribute_inc_rects2[i][1]
-					    && MouseY <= attribute_inc_rects2[i][3] + attribute_inc_rects2[i][1]) {
-						chrbtn[i] = 1;
-						chrbtnactive = TRUE;
-						ReleaseChrBtns();
+				if (!chrbtnactive && plr[myplr]._pStatPts) {
+					CheckChrBtns();
+					for (int i = 0; i < 4; i++) {
+						if (MouseX >= attribute_inc_rects2[i][0]
+							&& MouseX <= attribute_inc_rects2[i][0] + attribute_inc_rects2[i][2]
+							&& MouseY >= attribute_inc_rects2[i][1]
+							&& MouseY <= attribute_inc_rects2[i][3] + attribute_inc_rects2[i][1]) {
+							chrbtn[i] = 1;
+							chrbtnactive = TRUE;
+							ReleaseChrBtns();
+						}
 					}
 				}
+				if (plr[myplr]._pStatPts == 0)
+					HideCursor();
 			}
 		} else {
 			HideCursor();
