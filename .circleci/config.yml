@@ -50,6 +50,14 @@ jobs:
       - run: cd build && cmake -DASAN=OFF -DBINARY_RELEASE=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake ..
       - run: cd build && make -j$(nproc)
       - store_artifacts: {path: ./build/devilutionx.exe, destination: devilutionx_x86.exe}
+  switch:
+    docker:
+      - image: devkitpro/devkita64:latest
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: make -j$(nproc)
+      - store_artifacts: {path: ./release/diablo-nx.nro, destination: diablo-nx.nro}
 
 workflows:
   version: 2
@@ -58,3 +66,4 @@ workflows:
       - linux_x86_64
       - linux_x86
       - windows_x86
+      - switch
