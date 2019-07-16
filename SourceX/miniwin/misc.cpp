@@ -227,12 +227,17 @@ UINT GetDriveTypeA(LPCSTR lpRootPathName)
 
 WINBOOL DeleteFileA(LPCSTR lpFileName)
 {
-	FILE *f = fopen(lpFileName, "r+");
+	char name[DVL_MAX_PATH];
+	TranslateFileName(name, sizeof(name), lpFileName);
 
+	FILE *f = fopen(name, "r+"); 
 	if (f) {
 		fclose(f);
-		remove(lpFileName);
+		remove(name);
 		f = NULL;
+		eprintf("Removed file: %s\n", name);
+	} else {
+		eprintf("Failed to remove file: %s\n", name);
 	}
 
 	return true;
