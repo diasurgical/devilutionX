@@ -317,6 +317,15 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 					lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
 			}
 			break;
+		case SDL_KEYDOWN:
+		case SDL_KEYUP:
+			lpMsg->message = e.type == SDL_KEYUP ? DVL_WM_LBUTTONUP : DVL_WM_LBUTTONDOWN;
+			lpMsg->lParam = (MouseY << 16) | (MouseX  & 0xFFFF);
+			if (lpMsg->message == DVL_WM_LBUTTONUP)
+				lpMsg->wParam = keystate_for_mouse(0);
+			else
+				lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
+			break;
 		}
 		return true;
 	}
