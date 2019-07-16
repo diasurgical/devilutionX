@@ -52,7 +52,7 @@ UI_Item SELLIST_DIALOG[] = {
 	{ { 265, 360, 320, 26 }, UI_LIST, UIS_CENTER | UIS_MED | UIS_GOLD, 4, listItems[4] },
 	{ { 265, 386, 320, 26 }, UI_LIST, UIS_CENTER | UIS_MED | UIS_GOLD, 5, listItems[5] },
 	{ { 239, 429, 120, 35 }, UI_BUTTON, UIS_CENTER | UIS_BIG | UIS_GOLD, 0, "OK", (void *)UiFocusNavigationSelect },
-	{ { 364, 429, 120, 35 }, UI_BUTTON, UIS_CENTER | UIS_BIG | UIS_DISABLED, 0, "Delete", (void *)UiFocusNavigationConfirm },
+	{ { 364, 429, 120, 35 }, UI_BUTTON, UIS_CENTER | UIS_BIG | UIS_DISABLED, 0, "Delete", (void *)UiFocusNavigationYesNo },
 	{ { 489, 429, 120, 35 }, UI_BUTTON, UIS_CENTER | UIS_BIG | UIS_GOLD, 0, "Cancel", (void *)UiFocusNavigationEsc },
 };
 
@@ -99,7 +99,7 @@ void selhero_SetStats()
 
 void selhero_List_Init()
 {
-	UiInitList(0, selhero_SaveCount, selhero_List_Focus, selhero_List_Select, selhero_List_Esc, SELLIST_DIALOG, size(SELLIST_DIALOG), false, selhero_List_DeleteConfirm);
+	UiInitList(0, selhero_SaveCount, selhero_List_Focus, selhero_List_Select, selhero_List_Esc, SELLIST_DIALOG, size(SELLIST_DIALOG), false, selhero_List_DeleteYesNo);
 	int i;
 	for (i = 0; i < selhero_SaveCount && i < 6; i++) {
 		sprintf(listItems[i], selhero_heros[i].name);
@@ -134,7 +134,7 @@ void selhero_List_Focus(int value)
 	selhero_deleteEnabled = false;
 }
 
-void selhero_List_DeleteConfirm(int value)
+void selhero_List_DeleteYesNo(int value)
 {
 	selhero_navigateYesNo = selhero_deleteEnabled;
 }
