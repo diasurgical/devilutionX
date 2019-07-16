@@ -243,6 +243,7 @@ bool UiFocusNavigation(SDL_Event *event)
 		}
 	}
 
+	
 	if (SDL_IsTextInputActive()) {
 		switch (event->type) {
 		case SDL_KEYDOWN:
@@ -785,7 +786,11 @@ bool UiItemMouseEvents(SDL_Event *event, UI_Item *items, int size)
 	if (event->type != SDL_MOUSEBUTTONDOWN || event->button.button != SDL_BUTTON_LEFT) {
 		return false;
 	}
-
+	
+/*SDL_PumpEvents();
+if(SDL_GetMouseState(NULL, NULL)&SDL_BUTTON(1))
+  printf("Mouse Button 1(left) is pressed.\n");
+*/
 	for (int i = 0; i < size; i++) {
 		if (!IsInsideRect(event, &items[i].rect)) {
 			continue;
@@ -802,12 +807,12 @@ bool UiItemMouseEvents(SDL_Event *event, UI_Item *items, int size)
 
 				}
 				//klaus_BAD
-				/*
-				else if (gfnListFocus == NULL || event->button.clicks >= 2) {
+				
+				else if (gfnListFocus == NULL || event->button.button == SDL_BUTTON_LEFT/*event->button.clicks >= 2*/) {
 					SelectedItem = items[i].value;
 					UiFocusNavigationSelect();
 				}
-				*/
+				
 			}
 
 			return true;
