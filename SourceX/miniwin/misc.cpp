@@ -335,18 +335,12 @@ HWND CreateWindowExA(
     HINSTANCE hInstance,
     LPVOID lpParam)
 {
-#ifndef SWITCH
+
 	if (SDL_Init(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) <= -1) {
 		SDL_Log(SDL_GetError());
 		return NULL;
 	}
 	atexit(SDL_Quit);
-#else
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER) <= -1) {
-		SDL_Log(SDL_GetError());
-		return NULL;
-	}
-#endif
 
 	SDL_JoystickOpen(0);
 	SDL_GameControllerOpen(0);
