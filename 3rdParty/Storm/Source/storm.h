@@ -8,10 +8,12 @@
 #include <winuser.h>
 #include <winsock.h>
 #include <ddraw.h>
+#include <limits>
 
 #else
 
 #include "miniwin/pushdecl.inc"
+#include <limits>
 namespace dvl {
 
 #endif
@@ -60,6 +62,8 @@ typedef struct _WSIZE
 } WSIZE, *PWSIZE;
 
 #ifdef __cplusplus
+static float infinity = std::numeric_limits<float>::infinity();
+
 struct CCritSect {
 	CRITICAL_SECTION m_critsect;
 
@@ -824,13 +828,13 @@ BOOL STORMAPI Ordinal393(char *pszString, int, int);
  *  Returns a pointer to the allocated memory. This pointer does NOT include
  *  the additional storm header.
  */
-void*
-STORMAPI
-SMemAlloc(
-    unsigned int amount,
-    char  *logfilename,
-    int   logline,
-    char  defaultValue);
+void *
+    STORMAPI
+    SMemAlloc(
+        unsigned int amount,
+        char *logfilename,
+        int logline,
+        int defaultValue);
 
 #define SMAlloc(amount) SMemAlloc((amount), __FILE__, __LINE__)
 

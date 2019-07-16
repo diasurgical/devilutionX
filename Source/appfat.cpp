@@ -38,14 +38,14 @@ void TriggerBreak()
 #ifdef _DEBUG
 LONG __stdcall BreakFilter(PEXCEPTION_POINTERS pExc)
 {
-	if(pExc->ExceptionRecord == NULL) {
+	if (pExc->ExceptionRecord == NULL) {
 		return 0;
 	}
-	if(pExc->ExceptionRecord->ExceptionCode != EXCEPTION_BREAKPOINT) {
+	if (pExc->ExceptionRecord->ExceptionCode != EXCEPTION_BREAKPOINT) {
 		return 0;
 	}
 
-	if(((BYTE *)pExc->ContextRecord->Eip)[0] == 0xCC) { // int 3
+	if (((BYTE *)pExc->ContextRecord->Eip)[0] == 0xCC) { // int 3
 		pExc->ContextRecord->Eip++;
 	}
 

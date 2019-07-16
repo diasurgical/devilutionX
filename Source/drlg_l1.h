@@ -3,7 +3,7 @@
 #define __DRLG_L1_H__
 
 extern char L5dungeon[80][80];
-extern BYTE L5dflags[40][40];
+extern BYTE L5dflags[DMAXX][DMAXY];
 extern BOOL setloadflag;
 extern int HR1;
 extern int HR2;
@@ -19,7 +19,7 @@ void DRLG_L1Floor();
 void DRLG_L1Pass3();
 void DRLG_InitL1Vals();
 void LoadPreL1Dungeon(char *sFileName, int vx, int vy);
-void CreateL5Dungeon(int rseed, int entry);
+void CreateL5Dungeon(DWORD rseed, int entry);
 void DRLG_LoadL1SP();
 void DRLG_FreeL1SP();
 void DRLG_L5(int entry);

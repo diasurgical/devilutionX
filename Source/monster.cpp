@@ -62,7 +62,7 @@ int rnd10[4] = { 10, 15, 20, 30 };
 int rnd20[4] = { 20, 30, 40, 50 };
 int rnd60[4] = { 60, 70, 80, 90 };
 
-void(*AiProc[])(int i) = {
+void (*AiProc[])(int i) = {
 	&MAI_Zombie,
 	&MAI_Fat,
 	&MAI_SkelSd,
@@ -555,7 +555,7 @@ void PlaceMonster(int i, int mtype, int x, int y)
 	InitMonster(i, rd, mtype, x, y);
 }
 
-void PlaceUniqueMonst(int uniqindex, int miniontype, int packsize)
+void PlaceUniqueMonst(int uniqindex, int miniontype, int unpackfilesize)
 {
 	int xp, yp, x, y, i;
 	int uniqtype;
@@ -749,7 +749,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int packsize)
 	nummonsters++;
 
 	if (Uniq->mUnqAttr & 1) {
-		PlaceGroup(miniontype, packsize, Uniq->mUnqAttr, nummonsters - 1);
+		PlaceGroup(miniontype, unpackfilesize, Uniq->mUnqAttr, nummonsters - 1);
 	}
 
 	if (Monst->_mAi != AI_GARG) {
@@ -783,27 +783,27 @@ void PlaceQuestMonsters()
 		}
 
 		if (QuestStatus(QTYPE_BOL)) {
-			setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN", 0);
+			setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN", NULL);
 			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
 			mem_free_dbg(setp);
 		}
 		if (QuestStatus(QTYPE_BLOOD)) {
-			setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN", 0);
+			setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN", NULL);
 			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
 			mem_free_dbg(setp);
 		}
 		if (QuestStatus(QTYPE_BLIND)) {
-			setp = LoadFileInMem("Levels\\L2Data\\Blind2.DUN", 0);
+			setp = LoadFileInMem("Levels\\L2Data\\Blind2.DUN", NULL);
 			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
 			mem_free_dbg(setp);
 		}
 		if (QuestStatus(QTYPE_ANVIL)) {
-			setp = LoadFileInMem("Levels\\L3Data\\Anvil.DUN", 0);
+			setp = LoadFileInMem("Levels\\L3Data\\Anvil.DUN", NULL);
 			SetMapMonsters(setp, 2 * setpc_x + 2, 2 * setpc_y + 2);
 			mem_free_dbg(setp);
 		}
 		if (QuestStatus(QTYPE_WARLRD)) {
-			setp = LoadFileInMem("Levels\\L4Data\\Warlord.DUN", 0);
+			setp = LoadFileInMem("Levels\\L4Data\\Warlord.DUN", NULL);
 			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
 			mem_free_dbg(setp);
 			AddMonsterType(UniqMonst[UMT_WARLORD].mtype, 1);
@@ -821,7 +821,7 @@ void PlaceQuestMonsters()
 			PlaceUniqueMonst(UMT_LAZURUS, 0, 0);
 			PlaceUniqueMonst(UMT_RED_VEX, 0, 0);
 			PlaceUniqueMonst(UMT_BLACKJADE, 0, 0);
-			setp = LoadFileInMem("Levels\\L4Data\\Vile1.DUN", 0);
+			setp = LoadFileInMem("Levels\\L4Data\\Vile1.DUN", NULL);
 			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
 			mem_free_dbg(setp);
 		}
@@ -914,16 +914,16 @@ void LoadDiabMonsts()
 {
 	BYTE *lpSetPiece;
 
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab1.DUN", 0);
+	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab1.DUN", NULL);
 	SetMapMonsters(lpSetPiece, 2 * diabquad1x, 2 * diabquad1y);
 	mem_free_dbg(lpSetPiece);
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab2a.DUN", 0);
+	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab2a.DUN", NULL);
 	SetMapMonsters(lpSetPiece, 2 * diabquad2x, 2 * diabquad2y);
 	mem_free_dbg(lpSetPiece);
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab3a.DUN", 0);
+	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab3a.DUN", NULL);
 	SetMapMonsters(lpSetPiece, 2 * diabquad3x, 2 * diabquad3y);
 	mem_free_dbg(lpSetPiece);
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab4a.DUN", 0);
+	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab4a.DUN", NULL);
 	SetMapMonsters(lpSetPiece, 2 * diabquad4x, 2 * diabquad4y);
 	mem_free_dbg(lpSetPiece);
 }
@@ -1047,7 +1047,7 @@ void SetMapMonsters(unsigned char *pMap, int startx, int starty)
 		PlaceUniqueMonst(UMT_RED_VEX, 0, 0);
 		PlaceUniqueMonst(UMT_BLACKJADE, 0, 0);
 	}
-	lm = (WORD*)pMap;
+	lm = (WORD *)pMap;
 	rw = *lm;
 	lm++;
 	rh = *lm;
@@ -1169,7 +1169,7 @@ void M_Enemy(int i)
 			continue;
 		if (!(Monst->_mFlags & MFLAG_GOLEM)
 		    && ((abs(monster[mi]._mx - Monst->_mx) >= 2 || abs(monster[mi]._my - Monst->_my) >= 2) && !M_Ranged(i)
-		           || (!(Monst->_mFlags & MFLAG_GOLEM) && !(monster[mi]._mFlags & MFLAG_GOLEM)))) {
+		        || (!(Monst->_mFlags & MFLAG_GOLEM) && !(monster[mi]._mFlags & MFLAG_GOLEM)))) {
 			continue;
 		}
 		sameroom = dTransVal[Monst->_mx][Monst->_my] == dTransVal[monster[mi]._mx][monster[mi]._my];
@@ -1566,17 +1566,17 @@ void M_DiabloDeath(int i, BOOL sendmsg)
 	AddLight(Monst->_mx, Monst->_my, 8);
 	DoVision(Monst->_mx, Monst->_my, 8, FALSE, TRUE);
 	if (abs(ViewX - Monst->_mx) > abs(ViewY - Monst->_my))
-		dist = abs (ViewX - Monst->_mx);
+		dist = abs(ViewX - Monst->_mx);
 	else
-		dist = abs (ViewY - Monst->_my);
+		dist = abs(ViewY - Monst->_my);
 	if (dist > 20)
 		dist = 20;
 	j = ViewX << 16;
 	k = ViewY << 16;
 	Monst->_mVar3 = j;
 	Monst->_mVar4 = k;
-	Monst->_mVar5 = (int) ((j - (Monst->_mx << 16)) / (double)dist);
-	Monst->_mVar6 = (int) ((k - (Monst->_my << 16)) / (double)dist);
+	Monst->_mVar5 = (int)((j - (Monst->_mx << 16)) / (double)dist);
+	Monst->_mVar6 = (int)((k - (Monst->_my << 16)) / (double)dist);
 }
 
 void M2MStartHit(int mid, int i, int dam)
@@ -2810,7 +2810,7 @@ BOOL M_CallWalk(int i, int md)
 BOOL M_PathWalk(int i)
 {
 	char path[25];
-	BOOL(* Check)
+	BOOL(*Check)
 	(int, int, int);
 
 	if ((DWORD)i >= MAXMONSTERS)
@@ -3634,11 +3634,11 @@ void MAI_Scav(int i)
 								continue;
 							done = dDead[Monst->_mx + x][Monst->_my + y] != 0
 							    && LineClearF(
-							           CheckNoSolid,
-							           Monst->_mx,
-							           Monst->_my,
-							           Monst->_mx + x,
-							           Monst->_my + y);
+							        CheckNoSolid,
+							        Monst->_mx,
+							        Monst->_my,
+							        Monst->_mx + x,
+							        Monst->_my + y);
 						}
 					}
 					x--;
@@ -3651,11 +3651,11 @@ void MAI_Scav(int i)
 								continue;
 							done = dDead[Monst->_mx + x][Monst->_my + y] != 0
 							    && LineClearF(
-							           CheckNoSolid,
-							           Monst->_mx,
-							           Monst->_my,
-							           Monst->_mx + x,
-							           Monst->_my + y);
+							        CheckNoSolid,
+							        Monst->_mx,
+							        Monst->_my,
+							        Monst->_mx + x,
+							        Monst->_my + y);
 						}
 					}
 					x++;
@@ -4082,8 +4082,8 @@ void MAI_Rhino(int i)
 					v = random(134, 100);
 					if (v >= 2 * Monst->_mint + 33
 					    && (Monst->_mVar1 != MM_WALK && Monst->_mVar1 != MM_WALK2 && Monst->_mVar1 != MM_WALK3
-					           || Monst->_mVar2
-					           || v >= 2 * Monst->_mint + 83)) {
+					        || Monst->_mVar2
+					        || v >= 2 * Monst->_mint + 83)) {
 						M_StartDelay(i, random(135, 10) + 10);
 					} else {
 						M_CallWalk(i, md);
@@ -4166,8 +4166,8 @@ void MAI_Counselor(int i)
 			}
 		}
 		if (Monst->_mmode == MM_STAND) {
-				M_StartDelay(i, random(125, 10) + 5);
-			}
+			M_StartDelay(i, random(125, 10) + 5);
+		}
 	}
 }
 
@@ -4502,16 +4502,16 @@ void ProcessMonsters()
 	DeleteMonsterList();
 
 	/// ASSERT: assert((DWORD)nummonsters <= MAXMONSTERS);
-	for(i = 0; i < nummonsters; i++) {
+	for (i = 0; i < nummonsters; i++) {
 		mi = monstactive[i];
 		Monst = &monster[mi];
 		raflag = FALSE;
-		if(gbMaxPlayers > 1) {
+		if (gbMaxPlayers > 1) {
 			SetRndSeed(Monst->_mAISeed);
 			Monst->_mAISeed = GetRndSeed();
 		}
-		if(!(monster[mi]._mFlags & MFLAG_NOHEAL) && Monst->_mhitpoints < Monst->_mmaxhp && Monst->_mhitpoints >> 6 > 0) {
-			if(Monst->mLevel <= 1) {
+		if (!(monster[mi]._mFlags & MFLAG_NOHEAL) && Monst->_mhitpoints < Monst->_mmaxhp && Monst->_mhitpoints >> 6 > 0) {
+			if (Monst->mLevel <= 1) {
 				Monst->_mhitpoints += Monst->mLevel;
 			} else {
 				Monst->_mhitpoints += Monst->mLevel >> 1;
@@ -4519,12 +4519,12 @@ void ProcessMonsters()
 		}
 		mx = Monst->_mx;
 		my = Monst->_my;
-		if(dFlags[mx][my] & BFLAG_VISIBLE && Monst->_msquelch == 0 && Monst->MType->mtype == MT_CLEAVER) {
+		if (dFlags[mx][my] & BFLAG_VISIBLE && Monst->_msquelch == 0 && Monst->MType->mtype == MT_CLEAVER) {
 			PlaySFX(USFX_CLEAVER);
 		}
-		if(Monst->_mFlags & MFLAG_TARGETS_MONSTER) {
+		if (Monst->_mFlags & MFLAG_TARGETS_MONSTER) {
 			_menemy = Monst->_menemy;
-			if((DWORD)_menemy >= MAXMONSTERS) {
+			if ((DWORD)_menemy >= MAXMONSTERS) {
 				app_fatal("Illegal enemy monster %d for monster \"%s\"", _menemy, Monst->mName);
 			}
 			Monst->_lastx = monster[Monst->_menemy]._mfutx;
@@ -4533,26 +4533,26 @@ void ProcessMonsters()
 			Monst->_menemyy = Monst->_lasty;
 		} else {
 			_menemy = Monst->_menemy;
-			if((DWORD)_menemy >= MAX_PLRS) {
+			if ((DWORD)_menemy >= MAX_PLRS) {
 				app_fatal("Illegal enemy player %d for monster \"%s\"", _menemy, Monst->mName);
 			}
 			Monst->_menemyx = plr[Monst->_menemy]._px;
 			Monst->_menemyy = plr[Monst->_menemy]._py;
-			if(dFlags[mx][my] & BFLAG_VISIBLE) {
+			if (dFlags[mx][my] & BFLAG_VISIBLE) {
 				Monst->_msquelch = 255;
 				Monst->_lastx = plr[Monst->_menemy]._px;
 				Monst->_lasty = plr[Monst->_menemy]._py;
-			} else if(Monst->_msquelch != 0 && Monst->_mAi != MT_DIABLO) { /// BUGFIX: change '_mAi' to 'MType->mtype'
+			} else if (Monst->_msquelch != 0 && Monst->_mAi != MT_DIABLO) { /// BUGFIX: change '_mAi' to 'MType->mtype'
 				Monst->_msquelch--;
 			}
 		}
 		do {
-			if(!(Monst->_mFlags & MFLAG_SEARCH)) {
+			if (!(Monst->_mFlags & MFLAG_SEARCH)) {
 				AiProc[Monst->_mAi](mi);
-			} else if(!MAI_Path(mi)) {
+			} else if (!MAI_Path(mi)) {
 				AiProc[Monst->_mAi](mi);
 			}
-			switch(Monst->_mmode) {
+			switch (Monst->_mmode) {
 			case MM_STAND:
 				raflag = M_DoStand(mi);
 				break;
@@ -4608,22 +4608,22 @@ void ProcessMonsters()
 				raflag = M_DoTalk(mi);
 				break;
 			}
-			if(raflag) {
+			if (raflag) {
 				GroupUnity(mi);
 			}
-		} while(raflag);
-		if(Monst->_mmode != MM_STONE) {
+		} while (raflag);
+		if (Monst->_mmode != MM_STONE) {
 			Monst->_mAnimCnt++;
-			if(!(Monst->_mFlags & MFLAG_ALLOW_SPECIAL) && Monst->_mAnimCnt >= Monst->_mAnimDelay) {
+			if (!(Monst->_mFlags & MFLAG_ALLOW_SPECIAL) && Monst->_mAnimCnt >= Monst->_mAnimDelay) {
 				Monst->_mAnimCnt = 0;
-				if(Monst->_mFlags & MFLAG_LOCK_ANIMATION) {
+				if (Monst->_mFlags & MFLAG_LOCK_ANIMATION) {
 					Monst->_mAnimFrame--;
-					if(Monst->_mAnimFrame == 0) {
+					if (Monst->_mAnimFrame == 0) {
 						Monst->_mAnimFrame = Monst->_mAnimLen;
 					}
 				} else {
 					Monst->_mAnimFrame++;
-					if(Monst->_mAnimFrame > Monst->_mAnimLen) {
+					if (Monst->_mAnimFrame > Monst->_mAnimLen) {
 						Monst->_mAnimFrame = 1;
 					}
 				}
@@ -4672,12 +4672,12 @@ BOOL DirOK(int i, int mdir)
 			return FALSE;
 	}
 	if (mdir == DIR_N) {
-			if (SolidLoc(fx + 1, fy) || SolidLoc(fx, fy + 1))
-				return FALSE;
-		}
+		if (SolidLoc(fx + 1, fy) || SolidLoc(fx, fy + 1))
+			return FALSE;
+	}
 	if (mdir == DIR_S)
-			if (SolidLoc(fx - 1, fy) || SolidLoc(fx, fy - 1))
-				return FALSE;
+		if (SolidLoc(fx - 1, fy) || SolidLoc(fx, fy - 1))
+			return FALSE;
 	if (monster[i].leaderflag == 1) {
 		if (abs(fx - monster[monster[i].leader]._mfutx) >= 4
 		    || abs(fy - monster[monster[i].leader]._mfuty) >= 4) {
@@ -4693,12 +4693,14 @@ BOOL DirOK(int i, int mdir)
 			if (y < 0 || y >= MAXDUNY || x < 0 || x >= MAXDUNX)
 				continue;
 			mi = dMonster[x][y];
-			if (mi < 0) mi = -mi;
-			if (mi != 0) mi--;
+			if (mi < 0)
+				mi = -mi;
+			if (mi != 0)
+				mi--;
 			if (monster[mi].leaderflag == 1
-				&& monster[mi].leader == i
-				&& monster[mi]._mfutx == x
-				&& monster[mi]._mfuty == y) {
+			    && monster[mi].leader == i
+			    && monster[mi]._mfutx == x
+			    && monster[mi]._mfuty == y) {
 				mcount++;
 			}
 		}
@@ -4716,7 +4718,7 @@ BOOL CheckNoSolid(int x, int y)
 	return nSolidTable[dPiece[x][y]] == 0;
 }
 
-BOOL LineClearF(BOOL(*Clear)(int, int), int x1, int y1, int x2, int y2)
+BOOL LineClearF(BOOL (*Clear)(int, int), int x1, int y1, int x2, int y2)
 {
 	int xorg, yorg;
 	int dx, dy;
@@ -4803,7 +4805,7 @@ BOOL LineClear(int x1, int y1, int x2, int y2)
 	return LineClearF(PosOkMissile, x1, y1, x2, y2);
 }
 
-BOOL LineClearF1(BOOL(*Clear)(int, int, int), int monst, int x1, int y1, int x2, int y2)
+BOOL LineClearF1(BOOL (*Clear)(int, int, int), int monst, int x1, int y1, int x2, int y2)
 {
 	int xorg, yorg;
 	int dx, dy;
@@ -5029,7 +5031,7 @@ void PrintMonstHistory(int mt)
 		if (!res) {
 			strcpy(tempstr, "No magic resistance");
 			AddPanelString(tempstr, TRUE);
-		} else{
+		} else {
 			if (res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING)) {
 				strcpy(tempstr, "Resists : ");
 				if (res & RESIST_MAGIC)
@@ -5176,7 +5178,7 @@ BOOL PosOkMonst(int i, int x, int y)
 	if (ret && dMissile[x][y] && i >= 0) {
 		mi = dMissile[x][y];
 		if (mi > 0) {
-			if (missile[mi - 1]._mitype == MIS_FIREWALL) { // BUGFIX: 'mi' should be 'mi - 1' (corrected)
+			if (missile[mi - 1]._mitype == MIS_FIREWALL) { // BUGFIX: Change 'mi' to 'mi - 1' (done)
 				fire = TRUE;
 			} else {
 				for (j = 0; j < nummissiles; j++) {
@@ -5208,7 +5210,7 @@ BOOL PosOkMonst2(int i, int x, int y)
 	if (ret && dMissile[x][y] && i >= 0) {
 		mi = dMissile[x][y];
 		if (mi > 0) {
-			if (missile[mi - 1]._mitype == MIS_FIREWALL) { // BUGFIX: 'mi' should be 'mi - 1' (corrected)
+			if (missile[mi - 1]._mitype == MIS_FIREWALL) { // BUGFIX: Change 'mi' to 'mi - 1' (done)
 				fire = TRUE;
 			} else {
 				for (j = 0; j < nummissiles; j++) {
@@ -5233,34 +5235,34 @@ BOOL PosOkMonst3(int i, int x, int y)
 	ret = TRUE;
 	isdoor = FALSE;
 
-	if(ret && dObject[x][y] != 0) {
+	if (ret && dObject[x][y] != 0) {
 		oi = dObject[x][y] > 0 ? dObject[x][y] - 1 : -(dObject[x][y] + 1);
 		objtype = object[oi]._otype;
 		isdoor = objtype == OBJ_L1LDOOR || objtype == OBJ_L1RDOOR
-			  || objtype == OBJ_L2LDOOR || objtype == OBJ_L2RDOOR
-			  || objtype == OBJ_L3LDOOR || objtype == OBJ_L3RDOOR;
-		if(object[oi]._oSolidFlag && !isdoor) {
+		    || objtype == OBJ_L2LDOOR || objtype == OBJ_L2RDOOR
+		    || objtype == OBJ_L3LDOOR || objtype == OBJ_L3RDOOR;
+		if (object[oi]._oSolidFlag && !isdoor) {
 			ret = FALSE;
 		}
 	}
-	if(ret) {
+	if (ret) {
 		ret = (!SolidLoc(x, y) || isdoor) && dPlayer[x][y] == 0 && dMonster[x][y] == 0;
 	}
-	if(ret && dMissile[x][y] != 0 && i >= 0) {
+	if (ret && dMissile[x][y] != 0 && i >= 0) {
 		mi = dMissile[x][y];
-		if(mi > 0) {
-			if(missile[mi]._mitype == MIS_FIREWALL) {
+		if (mi > 0) {
+			if (missile[mi]._mitype == MIS_FIREWALL) { // BUGFIX: Change 'mi' to 'mi - 1'
 				fire = TRUE;
 			} else {
-				for(j = 0; j < nummissiles; j++) {
+				for (j = 0; j < nummissiles; j++) {
 					mi = missileactive[j];
-					if(missile[mi]._mitype == MIS_FIREWALL) {
+					if (missile[mi]._mitype == MIS_FIREWALL) {
 						fire = TRUE;
 					}
 				}
 			}
 		}
-		if(fire && (!(monster[i].mMagicRes & IMUNE_FIRE) || monster[i].MType->mtype == MT_DIABLO)) {
+		if (fire && (!(monster[i].mMagicRes & IMUNE_FIRE) || monster[i].MType->mtype == MT_DIABLO)) {
 			ret = FALSE;
 		}
 	}

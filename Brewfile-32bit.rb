@@ -1,3 +1,4 @@
 brew "automake"
-brew "autoconf" 
+brew "autoconf"
 brew "libtool"
+brew "cmake"

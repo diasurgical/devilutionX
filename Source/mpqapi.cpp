@@ -8,7 +8,7 @@ char mpq_buf[4096];
 _HASHENTRY *sgpHashTbl;
 BOOL save_archive_modified;
 _BLOCKENTRY *sgpBlockTbl;
-BOOLEAN save_archive_open; // weak
+BOOLEAN save_archive_open;
 
 //note: 32872 = 32768 + 104 (sizeof(_FILEHEADER))
 
@@ -122,7 +122,7 @@ BOOLEAN mpqapi_reg_store_modification_time(char *pbData, DWORD dwLen)
 		} while (i);
 	}
 
-	return SRegSaveData("Diablo", "Video Player ", 0, (unsigned char *)pbData, dwLen);
+	return SRegSaveData("Diablo", "Video Player ", 0, (BYTE *)pbData, dwLen);
 }
 
 void mpqapi_remove_hash_entry(const char *pszName)
@@ -439,7 +439,7 @@ BOOL OpenMPQ(const char *pszArchive, BOOL hidden, DWORD dwChar)
 	save_archive_open = FALSE;
 	sghArchive = CreateFile(pszArchive, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, dwFlagsAndAttributes, NULL);
 	if (sghArchive == INVALID_HANDLE_VALUE) {
-		sghArchive = CreateFile(pszArchive, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, dwFlagsAndAttributes  | (hidden ? FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_HIDDEN : 0), NULL);
+		sghArchive = CreateFile(pszArchive, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, dwFlagsAndAttributes | (hidden ? FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_HIDDEN : 0), NULL);
 		if (sghArchive == INVALID_HANDLE_VALUE)
 			return FALSE;
 		save_archive_open = TRUE;

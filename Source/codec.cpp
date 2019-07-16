@@ -2,8 +2,7 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-struct CodecSignature
-{
+struct CodecSignature {
 	DWORD checksum;
 	BYTE error;
 	BYTE last_chunk_size;
@@ -96,7 +95,7 @@ DWORD codec_get_encoded_len(DWORD dwSrcBytes)
 	return dwSrcBytes + 8;
 }
 
-void codec_encode(BYTE* pbSrcDst, DWORD size, int size_64, char *pszPassword)
+void codec_encode(BYTE *pbSrcDst, DWORD size, int size_64, char *pszPassword)
 {
 	char buf[128];
 	char tmp[SHA1HashSize];
@@ -128,7 +127,7 @@ void codec_encode(BYTE* pbSrcDst, DWORD size, int size_64, char *pszPassword)
 	}
 	memset(buf, 0, sizeof(buf));
 	SHA1Result(0, tmp);
-	sig = (CodecSignature*) pbSrcDst;
+	sig = (CodecSignature *)pbSrcDst;
 	sig->error = 0;
 	sig->unused = 0;
 	sig->checksum = *(DWORD *)tmp;

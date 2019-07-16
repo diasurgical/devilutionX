@@ -134,7 +134,7 @@ BOOL STORMAPI SGdiSetPitch(int pitch) rBool;
 
 BOOL STORMAPI Ordinal393(char *string, int, int) rBool;
 
-void* STORMAPI SMemAlloc(size_t amount, char *logfilename, int logline, char defaultValue) rPVoid;
+void *STORMAPI SMemAlloc(size_t amount, char *logfilename, int logline, int defaultValue) rPVoid;
 
 BOOL STORMAPI SMemFree(void *location, char *logfilename, int logline, char defaultValue) rBool;
 

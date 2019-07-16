@@ -10,7 +10,7 @@ int dMonster[MAXDUNX][MAXDUNY];
 BYTE dungeon[DMAXX][DMAXY];
 char dObject[MAXDUNX][MAXDUNY];
 BYTE *pSpeedCels;
-int nlevel_frames; // weak
+int nlevel_frames;
 char pdungeon[DMAXX][DMAXY];
 char dDead[MAXDUNX][MAXDUNY];
 MICROS dpiece_defs_map_1[MAXDUNX * MAXDUNY];
@@ -20,17 +20,17 @@ int MicroTileLen;
 char dflags[DMAXX][DMAXY];
 int dPiece[MAXDUNX][MAXDUNY];
 char dLight[MAXDUNX][MAXDUNY];
-int setloadflag_2; // weak
+int setloadflag_2;
 int tile_defs[MAXTILES];
 BYTE *pMegaTiles;
 BYTE *pLevelPieces;
-int gnDifficulty; // idb
+int gnDifficulty;
 char block_lvid[2049];
 //char byte_5B78EB;
 char dTransVal[MAXDUNX][MAXDUNY];
 BOOLEAN nTrapTable[2049];
 BYTE leveltype;
-unsigned char currlevel; // idb
+BYTE currlevel;
 char TransList[256];
 BOOLEAN nSolidTable[2049];
 int level_frame_count[MAXTILES];
@@ -39,10 +39,10 @@ BYTE *pDungeonCels;
 int SpeedFrameTbl[128][16];
 THEME_LOC themeLoc[MAXTHEMES];
 char dPlayer[MAXDUNX][MAXDUNY];
-int dword_5C2FF8;   // weak
-int dword_5C2FFC;   // weak
-int scr_pix_width;  // weak
-int scr_pix_height; // weak
+int dword_5C2FF8;
+int dword_5C2FFC;
+int scr_pix_width;
+int scr_pix_height;
 char dArch[MAXDUNX][MAXDUNY];
 char nBlockTable[2049];
 BYTE *pSpecialCels;
@@ -52,28 +52,28 @@ BYTE setlvlnum;
 int level_frame_sizes[MAXTILES];
 char nMissileTable[2049];
 char *pSetPiece_2;
-char setlvltype; // weak
+char setlvltype;
 BOOLEAN setlevel;
-int LvlViewY;    // weak
-int LvlViewX;    // weak
-int dmaxx;       // weak
-int dmaxy;       // weak
-int setpc_h;     // weak
-int setpc_w;     // weak
-int setpc_x;     // idb
-int ViewX;       // idb
-int ViewY;       // idb
-int setpc_y;     // idb
+int LvlViewY;
+int LvlViewX;
+int dmaxx;
+int dmaxy;
+int setpc_h;
+int setpc_w;
+int setpc_x;
+int ViewX;
+int ViewY;
+int setpc_y;
 char dMissile[MAXDUNX][MAXDUNY];
-int dminx; // weak
-int dminy; // weak
+int dminx;
+int dminy;
 MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
 
 void FillSolidBlockTbls()
 {
-	unsigned char bv;
-	unsigned int dwTiles;
-	unsigned char *pSBFile, *pTmp;
+	BYTE bv;
+	DWORD dwTiles;
+	BYTE *pSBFile, *pTmp;
 	int i;
 
 	memset(nBlockTable, 0, sizeof(nBlockTable));
@@ -84,19 +84,19 @@ void FillSolidBlockTbls()
 
 	switch (leveltype) {
 	case DTYPE_TOWN:
-		pSBFile = LoadFileInMem("Levels\\TownData\\Town.SOL", (int *)&dwTiles);
+		pSBFile = LoadFileInMem("Levels\\TownData\\Town.SOL", &dwTiles);
 		break;
 	case DTYPE_CATHEDRAL:
-		pSBFile = LoadFileInMem("Levels\\L1Data\\L1.SOL", (int *)&dwTiles);
+		pSBFile = LoadFileInMem("Levels\\L1Data\\L1.SOL", &dwTiles);
 		break;
 	case DTYPE_CATACOMBS:
-		pSBFile = LoadFileInMem("Levels\\L2Data\\L2.SOL", (int *)&dwTiles);
+		pSBFile = LoadFileInMem("Levels\\L2Data\\L2.SOL", &dwTiles);
 		break;
 	case DTYPE_CAVES:
-		pSBFile = LoadFileInMem("Levels\\L3Data\\L3.SOL", (int *)&dwTiles);
+		pSBFile = LoadFileInMem("Levels\\L3Data\\L3.SOL", &dwTiles);
 		break;
 	case DTYPE_HELL:
-		pSBFile = LoadFileInMem("Levels\\L4Data\\L4.SOL", (int *)&dwTiles);
+		pSBFile = LoadFileInMem("Levels\\L4Data\\L4.SOL", &dwTiles);
 		break;
 	default:
 		app_fatal("FillSolidBlockTbls");
@@ -124,14 +124,14 @@ void FillSolidBlockTbls()
 
 void MakeSpeedCels()
 {
-	int i, j, k, x, y, mt, t, z;
+	int i, j, x, y, mt, t, z;
 	int total_frames, blocks, total_size, frameidx, blk_cnt, nDataSize;
 	WORD m;
 	BOOL blood_flag;
 	DWORD *pFrameTable;
 	MICROS *pMap;
 #ifndef USE_ASM
-	int l;
+	int l, k;
 	BYTE width, pix;
 	BYTE *src, *dst, *tbl;
 #endif
@@ -447,8 +447,6 @@ void MakeSpeedCels()
 		}
 	}
 }
-// 525728: using guessed type int light4flag;
-// 53CD4C: using guessed type int nlevel_frames;
 
 void SortTiles(int frames)
 {
@@ -555,11 +553,6 @@ void SetDungeonMicros()
 		dword_5C2FFC = 7;
 	}
 }
-// 52569C: using guessed type int zoomflag;
-// 5C2FF8: using guessed type int dword_5C2FF8;
-// 5C2FFC: using guessed type int dword_5C2FFC;
-// 5C3000: using guessed type int scr_pix_width;
-// 5C3004: using guessed type int scr_pix_height;
 
 void DRLG_InitTrans()
 {
@@ -567,7 +560,6 @@ void DRLG_InitTrans()
 	memset(TransList, 0, sizeof(TransList));
 	TransVal = 1;
 }
-// 5A5590: using guessed type char TransVal;
 
 void DRLG_MRectTrans(int x1, int y1, int x2, int y2)
 {
@@ -578,15 +570,14 @@ void DRLG_MRectTrans(int x1, int y1, int x2, int y2)
 	x2 = 2 * x2 + 16;
 	y2 = 2 * y2 + 16;
 
-	for(j = y1; j <= y2; j++) {
-		for(i = x1; i <= x2; i++) {
+	for (j = y1; j <= y2; j++) {
+		for (i = x1; i <= x2; i++) {
 			dTransVal[i][j] = TransVal;
 		}
 	}
 
 	TransVal++;
 }
-// 5A5590: using guessed type char TransVal;
 
 void DRLG_RectTrans(int x1, int y1, int x2, int y2)
 {
@@ -599,17 +590,16 @@ void DRLG_RectTrans(int x1, int y1, int x2, int y2)
 	}
 	TransVal++;
 }
-// 5A5590: using guessed type char TransVal;
 
 void DRLG_CopyTrans(int sx, int sy, int dx, int dy)
 {
 	dTransVal[dx][dy] = dTransVal[sx][sy];
 }
 
-void DRLG_ListTrans(int num, unsigned char *List)
+void DRLG_ListTrans(int num, BYTE *List)
 {
 	int i;
-	unsigned char x1, x2, y1, y2;
+	BYTE x1, x2, y1, y2;
 
 	for (i = 0; i < num; i++) {
 		x1 = *List++;
@@ -620,10 +610,10 @@ void DRLG_ListTrans(int num, unsigned char *List)
 	}
 }
 
-void DRLG_AreaTrans(int num, unsigned char *List)
+void DRLG_AreaTrans(int num, BYTE *List)
 {
 	int i;
-	unsigned char x1, x2, y1, y2;
+	BYTE x1, x2, y1, y2;
 
 	for (i = 0; i < num; i++) {
 		x1 = *List++;
@@ -635,7 +625,6 @@ void DRLG_AreaTrans(int num, unsigned char *List)
 	}
 	++TransVal;
 }
-// 5A5590: using guessed type char TransVal;
 
 void DRLG_InitSetPC()
 {
@@ -644,8 +633,6 @@ void DRLG_InitSetPC()
 	setpc_w = 0;
 	setpc_h = 0;
 }
-// 5CF330: using guessed type int setpc_h;
-// 5CF334: using guessed type int setpc_w;
 
 void DRLG_SetPC()
 {
@@ -662,8 +649,6 @@ void DRLG_SetPC()
 		}
 	}
 }
-// 5CF330: using guessed type int setpc_h;
-// 5CF334: using guessed type int setpc_w;
 
 void Make_SetPC(int x, int y, int w, int h)
 {
@@ -694,6 +679,7 @@ BOOL DRLG_WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, in
 	xCount = 0;
 	yCount = 0;
 
+	// BUGFIX: change '&&' to '||'
 	if (x > DMAXX - maxSize && y > DMAXY - maxSize) {
 		return FALSE;
 	}
@@ -764,67 +750,65 @@ BOOL DRLG_WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, in
 	*height = ySmallest - 2;
 	return TRUE;
 }
-// 41965B: using guessed type int var_6C[20];
-// 41965B: using guessed type int var_BC[20];
 
 void DRLG_CreateThemeRoom(int themeIndex)
 {
 	int xx, yy;
 
-	for(yy = themeLoc[themeIndex].y; yy < themeLoc[themeIndex].y + themeLoc[themeIndex].height; yy++) {
-		for(xx = themeLoc[themeIndex].x; xx < themeLoc[themeIndex].x + themeLoc[themeIndex].width; xx++) {
-			if(leveltype == DTYPE_CATACOMBS) {
-				if(yy == themeLoc[themeIndex].y
-				&& xx >= themeLoc[themeIndex].x
-				&& xx <= themeLoc[themeIndex].x + themeLoc[themeIndex].width
-				|| yy == themeLoc[themeIndex].y + themeLoc[themeIndex].height - 1
-				&& xx >= themeLoc[themeIndex].x
-				&& xx <= themeLoc[themeIndex].x + themeLoc[themeIndex].width) {
+	for (yy = themeLoc[themeIndex].y; yy < themeLoc[themeIndex].y + themeLoc[themeIndex].height; yy++) {
+		for (xx = themeLoc[themeIndex].x; xx < themeLoc[themeIndex].x + themeLoc[themeIndex].width; xx++) {
+			if (leveltype == DTYPE_CATACOMBS) {
+				if (yy == themeLoc[themeIndex].y
+				        && xx >= themeLoc[themeIndex].x
+				        && xx <= themeLoc[themeIndex].x + themeLoc[themeIndex].width
+				    || yy == themeLoc[themeIndex].y + themeLoc[themeIndex].height - 1
+				        && xx >= themeLoc[themeIndex].x
+				        && xx <= themeLoc[themeIndex].x + themeLoc[themeIndex].width) {
 					dungeon[xx][yy] = 2;
-				} else if(xx == themeLoc[themeIndex].x
-				&& yy >= themeLoc[themeIndex].y
-				&& yy <= themeLoc[themeIndex].y + themeLoc[themeIndex].height
-				|| xx == themeLoc[themeIndex].x + themeLoc[themeIndex].width - 1
-				&& yy >= themeLoc[themeIndex].y
-				&& yy <= themeLoc[themeIndex].y + themeLoc[themeIndex].height) {
+				} else if (xx == themeLoc[themeIndex].x
+				        && yy >= themeLoc[themeIndex].y
+				        && yy <= themeLoc[themeIndex].y + themeLoc[themeIndex].height
+				    || xx == themeLoc[themeIndex].x + themeLoc[themeIndex].width - 1
+				        && yy >= themeLoc[themeIndex].y
+				        && yy <= themeLoc[themeIndex].y + themeLoc[themeIndex].height) {
 					dungeon[xx][yy] = 1;
 				} else {
 					dungeon[xx][yy] = 3;
 				}
 			}
-			if(leveltype == DTYPE_CAVES) {
-				if(yy == themeLoc[themeIndex].y
-				&& xx >= themeLoc[themeIndex].x
-				&& xx <= themeLoc[themeIndex].x + themeLoc[themeIndex].width
-				|| yy == themeLoc[themeIndex].y + themeLoc[themeIndex].height - 1
-				&& xx >= themeLoc[themeIndex].x
-				&& xx <= themeLoc[themeIndex].x + themeLoc[themeIndex].width) {
+			if (leveltype == DTYPE_CAVES) {
+				if (yy == themeLoc[themeIndex].y
+				        && xx >= themeLoc[themeIndex].x
+				        && xx <= themeLoc[themeIndex].x + themeLoc[themeIndex].width
+				    || yy == themeLoc[themeIndex].y + themeLoc[themeIndex].height - 1
+				        && xx >= themeLoc[themeIndex].x
+				        && xx <= themeLoc[themeIndex].x + themeLoc[themeIndex].width) {
 					dungeon[xx][yy] = 134;
-				} else if(xx == themeLoc[themeIndex].x
-				&& yy >= themeLoc[themeIndex].y
-				&& yy <= themeLoc[themeIndex].y + themeLoc[themeIndex].height
-				|| xx == themeLoc[themeIndex].x + themeLoc[themeIndex].width - 1
-				&& yy >= themeLoc[themeIndex].y
-				&& yy <= themeLoc[themeIndex].y + themeLoc[themeIndex].height) {
+				} else if (xx == themeLoc[themeIndex].x
+				        && yy >= themeLoc[themeIndex].y
+				        && yy <= themeLoc[themeIndex].y + themeLoc[themeIndex].height
+				    || xx == themeLoc[themeIndex].x + themeLoc[themeIndex].width - 1
+				        && yy >= themeLoc[themeIndex].y
+				        && yy <= themeLoc[themeIndex].y + themeLoc[themeIndex].height) {
 					dungeon[xx][yy] = 137;
 				} else {
 					dungeon[xx][yy] = 7;
 				}
 			}
-			if(leveltype == DTYPE_HELL) {
-				if(yy == themeLoc[themeIndex].y
-				&& xx >= themeLoc[themeIndex].x
-				&& xx <= themeLoc[themeIndex].x + themeLoc[themeIndex].width
-				|| yy == themeLoc[themeIndex].y + themeLoc[themeIndex].height - 1
-				&& xx >= themeLoc[themeIndex].x
-				&& xx <= themeLoc[themeIndex].x + themeLoc[themeIndex].width) {
+			if (leveltype == DTYPE_HELL) {
+				if (yy == themeLoc[themeIndex].y
+				        && xx >= themeLoc[themeIndex].x
+				        && xx <= themeLoc[themeIndex].x + themeLoc[themeIndex].width
+				    || yy == themeLoc[themeIndex].y + themeLoc[themeIndex].height - 1
+				        && xx >= themeLoc[themeIndex].x
+				        && xx <= themeLoc[themeIndex].x + themeLoc[themeIndex].width) {
 					dungeon[xx][yy] = 2;
-				} else if(xx == themeLoc[themeIndex].x
-				&& yy >= themeLoc[themeIndex].y
-				&& yy <= themeLoc[themeIndex].y + themeLoc[themeIndex].height
-				|| xx == themeLoc[themeIndex].x + themeLoc[themeIndex].width - 1
-				&& yy >= themeLoc[themeIndex].y
-				&& yy <= themeLoc[themeIndex].y + themeLoc[themeIndex].height) {
+				} else if (xx == themeLoc[themeIndex].x
+				        && yy >= themeLoc[themeIndex].y
+				        && yy <= themeLoc[themeIndex].y + themeLoc[themeIndex].height
+				    || xx == themeLoc[themeIndex].x + themeLoc[themeIndex].width - 1
+				        && yy >= themeLoc[themeIndex].y
+				        && yy <= themeLoc[themeIndex].y + themeLoc[themeIndex].height) {
 					dungeon[xx][yy] = 1;
 				} else {
 					dungeon[xx][yy] = 6;
@@ -833,27 +817,27 @@ void DRLG_CreateThemeRoom(int themeIndex)
 		}
 	}
 
-	if(leveltype == DTYPE_CATACOMBS) {
+	if (leveltype == DTYPE_CATACOMBS) {
 		dungeon[themeLoc[themeIndex].x][themeLoc[themeIndex].y] = 8;
 		dungeon[themeLoc[themeIndex].x + themeLoc[themeIndex].width - 1][themeLoc[themeIndex].y] = 7;
 		dungeon[themeLoc[themeIndex].x][themeLoc[themeIndex].y + themeLoc[themeIndex].height - 1] = 9;
 		dungeon[themeLoc[themeIndex].x + themeLoc[themeIndex].width - 1][themeLoc[themeIndex].y + themeLoc[themeIndex].height - 1] = 6;
 	}
-	if(leveltype == DTYPE_CAVES) {
+	if (leveltype == DTYPE_CAVES) {
 		dungeon[themeLoc[themeIndex].x][themeLoc[themeIndex].y] = 150;
 		dungeon[themeLoc[themeIndex].x + themeLoc[themeIndex].width - 1][themeLoc[themeIndex].y] = 151;
 		dungeon[themeLoc[themeIndex].x][themeLoc[themeIndex].y + themeLoc[themeIndex].height - 1] = 152;
 		dungeon[themeLoc[themeIndex].x + themeLoc[themeIndex].width - 1][themeLoc[themeIndex].y + themeLoc[themeIndex].height - 1] = 138;
 	}
-	if(leveltype == DTYPE_HELL) {
+	if (leveltype == DTYPE_HELL) {
 		dungeon[themeLoc[themeIndex].x][themeLoc[themeIndex].y] = 9;
 		dungeon[themeLoc[themeIndex].x + themeLoc[themeIndex].width - 1][themeLoc[themeIndex].y] = 16;
 		dungeon[themeLoc[themeIndex].x][themeLoc[themeIndex].y + themeLoc[themeIndex].height - 1] = 15;
 		dungeon[themeLoc[themeIndex].x + themeLoc[themeIndex].width - 1][themeLoc[themeIndex].y + themeLoc[themeIndex].height - 1] = 12;
 	}
 
-	if(leveltype == DTYPE_CATACOMBS) {
-		switch(random(0, 2)) {
+	if (leveltype == DTYPE_CATACOMBS) {
+		switch (random(0, 2)) {
 		case 0:
 			dungeon[themeLoc[themeIndex].x + themeLoc[themeIndex].width - 1][themeLoc[themeIndex].y + themeLoc[themeIndex].height / 2] = 4;
 			break;
@@ -862,8 +846,8 @@ void DRLG_CreateThemeRoom(int themeIndex)
 			break;
 		}
 	}
-	if(leveltype == DTYPE_CAVES) {
-		switch(random(0, 2)) {
+	if (leveltype == DTYPE_CAVES) {
+		switch (random(0, 2)) {
 		case 0:
 			dungeon[themeLoc[themeIndex].x + themeLoc[themeIndex].width - 1][themeLoc[themeIndex].y + themeLoc[themeIndex].height / 2] = 147;
 			break;
@@ -872,8 +856,8 @@ void DRLG_CreateThemeRoom(int themeIndex)
 			break;
 		}
 	}
-	if(leveltype == DTYPE_HELL) {
-		switch(random(0, 2)) {
+	if (leveltype == DTYPE_HELL) {
+		switch (random(0, 2)) {
 		case 0:
 			dungeon[themeLoc[themeIndex].x + themeLoc[themeIndex].width - 1][themeLoc[themeIndex].y + themeLoc[themeIndex].height / 2 - 1] = 53;
 			dungeon[themeLoc[themeIndex].x + themeLoc[themeIndex].width - 1][themeLoc[themeIndex].y + themeLoc[themeIndex].height / 2] = 6;
@@ -936,9 +920,9 @@ void DRLG_HoldThemeRooms()
 {
 	int i, x, y, xx, yy;
 
-	for(i = 0; i < themeCount; i++) {
-		for(y = themeLoc[i].y; y < themeLoc[i].y + themeLoc[i].height - 1; y++) {
-			for(x = themeLoc[i].x; x < themeLoc[i].x + themeLoc[i].width - 1; x++) {
+	for (i = 0; i < themeCount; i++) {
+		for (y = themeLoc[i].y; y < themeLoc[i].y + themeLoc[i].height - 1; y++) {
+			for (x = themeLoc[i].x; x < themeLoc[i].x + themeLoc[i].width - 1; x++) {
 				xx = 2 * x + 16;
 				yy = 2 * y + 16;
 				dFlags[xx][yy] |= BFLAG_POPULATED;
@@ -967,11 +951,9 @@ void InitLevels()
 {
 	if (!leveldebug) {
 		currlevel = 0;
-		leveltype = 0;
+		leveltype = DTYPE_TOWN;
 		setlevel = 0;
 	}
 }
-// 52572C: using guessed type int leveldebug;
-// 5CF31D: using guessed type char setlevel;
 
 DEVILUTION_END_NAMESPACE

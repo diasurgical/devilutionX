@@ -36,7 +36,7 @@ void dx_init(HWND hWnd)
 	ShowWindow(hWnd, 1);
 
 	lpGUID = NULL;
-	if (!gbEmulate) {
+	if(gbEmulate) {
 		lpGUID = NULL;
 	}
 	hDDVal = dx_DirectDrawCreate(lpGUID, &lpDDInterface, NULL);
@@ -91,9 +91,9 @@ void dx_init(HWND hWnd)
 #else
 			hDDVal = lpDDInterface->lpVtbl->SetDisplayMode(lpDDInterface, winw, winh, SCREEN_BPP);
 #endif
-			if (hDDVal != DVL_S_OK) {
-				ErrDlg(IDD_DIALOG1, hDDVal, "C:\\Src\\Diablo\\Source\\dx.cpp", 183);
-			}
+		}
+		if (hDDVal != DVL_S_OK) {
+			ErrDlg(IDD_DIALOG1, hDDVal, "C:\\Src\\Diablo\\Source\\dx.cpp", 183);
 		}
 	}
 

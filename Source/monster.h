@@ -24,7 +24,7 @@ void InitMonster(int i, int rd, int mtype, int x, int y);
 void ClrAllMonsters();
 BOOL MonstPlace(int xp, int yp);
 void PlaceMonster(int i, int mtype, int x, int y);
-void PlaceUniqueMonst(int uniqindex, int miniontype, int packsize);
+void PlaceUniqueMonst(int uniqindex, int miniontype, int unpackfilesize);
 void PlaceQuestMonsters();
 void PlaceGroup(int mtype, int num, int leaderf, int leader);
 void LoadDiabMonsts();

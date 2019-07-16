@@ -146,7 +146,7 @@ BOOL TFit_SkelRoom(int t)
 {
 	int i;
 
-	if (leveltype != 1 && leveltype != 2) {
+	if (leveltype != DTYPE_CATHEDRAL && leveltype != DTYPE_CATACOMBS) {
 		return FALSE;
 	}
 
@@ -425,7 +425,7 @@ void InitThemes()
 			}
 		}
 	}
-	if (leveltype == 2 || leveltype == 3 || leveltype == 4) {
+	if (leveltype == DTYPE_CATACOMBS || leveltype == DTYPE_CAVES || leveltype == DTYPE_HELL) {
 		for (i = 0; i < themeCount; i++)
 			themes[i].ttype = THEME_NONE;
 		if (QuestStatus(QTYPE_ZHAR)) {
@@ -602,7 +602,7 @@ void Theme_SkelRoom(int t)
 
 	AddObject(OBJ_SKFIRE, xp, yp);
 
-	if(random(0, monstrnd[leveltype - 1]) != 0) {
+	if (random(0, monstrnd[leveltype - 1]) != 0) {
 		i = PreSpawnSkeleton();
 		SpawnSkeleton(i, xp - 1, yp - 1);
 	} else {
@@ -612,25 +612,25 @@ void Theme_SkelRoom(int t)
 	i = PreSpawnSkeleton();
 	SpawnSkeleton(i, xp, yp - 1);
 
-	if(random(0, monstrnd[leveltype - 1]) != 0) {
+	if (random(0, monstrnd[leveltype - 1]) != 0) {
 		i = PreSpawnSkeleton();
 		SpawnSkeleton(i, xp + 1, yp - 1);
 	} else {
 		AddObject(OBJ_BANNERR, xp + 1, yp - 1);
 	}
-	if(random(0, monstrnd[leveltype - 1]) != 0) {
+	if (random(0, monstrnd[leveltype - 1]) != 0) {
 		i = PreSpawnSkeleton();
 		SpawnSkeleton(i, xp - 1, yp);
 	} else {
 		AddObject(OBJ_BANNERM, xp - 1, yp);
 	}
-	if(random(0, monstrnd[leveltype - 1]) != 0) {
+	if (random(0, monstrnd[leveltype - 1]) != 0) {
 		i = PreSpawnSkeleton();
 		SpawnSkeleton(i, xp + 1, yp);
 	} else {
 		AddObject(OBJ_BANNERM, xp + 1, yp);
 	}
-	if(random(0, monstrnd[leveltype - 1]) != 0) {
+	if (random(0, monstrnd[leveltype - 1]) != 0) {
 		i = PreSpawnSkeleton();
 		SpawnSkeleton(i, xp - 1, yp + 1);
 	} else {
@@ -640,17 +640,17 @@ void Theme_SkelRoom(int t)
 	i = PreSpawnSkeleton();
 	SpawnSkeleton(i, xp, yp + 1);
 
-	if(random(0, monstrnd[leveltype - 1]) != 0) {
+	if (random(0, monstrnd[leveltype - 1]) != 0) {
 		i = PreSpawnSkeleton();
 		SpawnSkeleton(i, xp + 1, yp + 1);
 	} else {
 		AddObject(OBJ_BANNERL, xp + 1, yp + 1);
 	}
 
-	if(dObject[xp][yp - 3] == 0) {
+	if (dObject[xp][yp - 3] == 0) {
 		AddObject(OBJ_SKELBOOK, xp, yp - 2);
 	}
-	if(dObject[xp][yp + 3] == 0) {
+	if (dObject[xp][yp + 3] == 0) {
 		AddObject(OBJ_SKELBOOK, xp, yp + 2);
 	}
 }
@@ -704,7 +704,7 @@ void Theme_Library(int t)
 
 	TFit_Shrine(t);
 
-	if(themeVar1 == 1) {
+	if (themeVar1 == 1) {
 		AddObject(OBJ_BOOKCANDLE, themex - 1, themey);
 		AddObject(OBJ_BOOKCASER, themex, themey);
 		AddObject(OBJ_BOOKCANDLE, themex + 1, themey);
@@ -714,11 +714,11 @@ void Theme_Library(int t)
 		AddObject(OBJ_BOOKCANDLE, themex, themey + 1);
 	}
 
-	for(yp = 1; yp < MAXDUNY - 1; yp++) {
-		for(xp = 1; xp < MAXDUNX - 1; xp++) {
-			if(CheckThemeObj3(xp, yp, t, -1) && dMonster[xp][yp] == 0 && random(0, librnd[leveltype - 1]) == 0) {
+	for (yp = 1; yp < MAXDUNY - 1; yp++) {
+		for (xp = 1; xp < MAXDUNX - 1; xp++) {
+			if (CheckThemeObj3(xp, yp, t, -1) && dMonster[xp][yp] == 0 && random(0, librnd[leveltype - 1]) == 0) {
 				AddObject(OBJ_BOOKSTAND, xp, yp);
-				if(random(0, 2 * librnd[leveltype - 1]) != 0) {
+				if (random(0, 2 * librnd[leveltype - 1]) != 0) {
 					oi = dObject[xp][yp] - 1;
 					object[oi]._oSelFlag = 0;
 					object[oi]._oAnimFrame += 2;
@@ -727,9 +727,9 @@ void Theme_Library(int t)
 		}
 	}
 
-	if(!QuestStatus(QTYPE_ZHAR)) {
+	if (!QuestStatus(QTYPE_ZHAR)) {
 		PlaceThemeMonsts(t, monstrnd[leveltype]); /// BUGFIX: `leveltype - 1`
-	} else if(t != zharlib) {
+	} else if (t != zharlib) {
 		PlaceThemeMonsts(t, monstrnd[leveltype]); /// BUGFIX: `leveltype - 1`
 	}
 }

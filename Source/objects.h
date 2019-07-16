@@ -54,7 +54,7 @@ void AddL3Door(int i, int x, int y, int ot);
 void AddSarc(int i);
 void AddFlameTrap(int i);
 void AddFlameLvr(int i);
-void AddTrap(int i, int t);
+void AddTrap(int i, int ot);
 void AddObjLight(int i, int r);
 void AddBarrel(int i, int t);
 void AddShrine(int i);

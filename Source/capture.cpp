@@ -70,9 +70,9 @@ BOOL CapturePal(HANDLE hFile, PALETTEENTRY *palette)
 
 	pcx_palette[0] = 12;
 	for (i = 0; i < 256; i++) {
-		pcx_palette[1 + 3*i + 0] = palette[i].peRed;
-		pcx_palette[1 + 3*i + 1] = palette[i].peGreen;
-		pcx_palette[1 + 3*i + 2] = palette[i].peBlue;
+		pcx_palette[1 + 3 * i + 0] = palette[i].peRed;
+		pcx_palette[1 + 3 * i + 1] = palette[i].peGreen;
+		pcx_palette[1 + 3 * i + 2] = palette[i].peBlue;
 	}
 
 	return WriteFile(hFile, pcx_palette, 769, &NumberOfBytesWritten, 0) && NumberOfBytesWritten == 769;

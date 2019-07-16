@@ -2,19 +2,19 @@
 #ifndef __QUESTS_H__
 #define __QUESTS_H__
 
-extern int qtopline; // idb
+extern int qtopline;
 extern BOOL questlog;
 extern BYTE *pQLogCel;
 extern QuestStruct quests[MAXQUESTS];
-extern int qline; // weak
+extern int qline;
 extern int qlist[MAXQUESTS];
-extern int numqlines;  // weak
-extern int WaterDone;  // idb
-extern int ReturnLvlY; // idb
-extern int ReturnLvlX; // idb
-extern int ReturnLvlT; // idb
-extern int ALLQUESTS;  // idb
-extern int ReturnLvl;  // idb
+extern int numqlines;
+extern int WaterDone;
+extern int ReturnLvlY;
+extern int ReturnLvlX;
+extern int ReturnLvlT;
+extern int ALLQUESTS;
+extern int ReturnLvl;
 
 void InitQuests();
 void CheckQuests();

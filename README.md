@@ -91,11 +91,37 @@ make -j$(nproc)
 ### Installing dependencies
 Make sure to install the `C++ CMake tools for Windows` component for Visual Studio.
 
-Download and place the 32bit MSVC Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/), [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/) and [Libsodium](https://github.com/jedisct1/libsodium/releases) in `%USERPROFILE%\AppData\Local\Microsoft\WindowsApps\`.
+* **Using vcpkg (recommended)**
+1. Install vcpkg following the instructions from https://github.com/microsoft/vcpkg#quick-start.
 
-Go to `File -> Open -> CMake`, select `CMakeLists` from the project root.
+	Don't forget to perform _user-wide integration_ step for additional convenience.
+2. Install required dependencies by executing the following command (via cmd or powershell):
+
+	`vcpkg install sdl2:x86-windows sdl2-mixer:x86-windows sdl2-ttf:x86-windows libsodium:x86-windows`
+
+	_Note: this command installs libraries compiled for x86 but it's not hard to do the same for x64 libraries if you need it_
+
+* **Manually**
+1. Download and place the 32bit MSVC Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/), [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/) and [Libsodium](https://github.com/jedisct1/libsodium/releases) in `%USERPROFILE%\AppData\Local\Microsoft\WindowsApps\`.
+2. If dependencies are not found or you wish to place them in other location - configure required path variables in _"Manage Configurations..."_ dialog inside Visual Studio or in _cmake-gui_.
+
 ### Compiling
-Select `Build devilution.exe` from the `Build` menu.
+
+* **Through Open->CMake in Visual Studio**
+1. Go to `File -> Open -> CMake`, select `CMakeLists.txt` from the project root.
+2. Select `Build devilution.exe` from the `Build` menu.
+
+	_Note: By default Visual Studio only creates configuration x64-Debug, to add the new configuration (e.g. x86-Debug) please click "Manage Configurations..." in combo box on the top and then on button wih green plus to add a new configuration_
+
+* **Through cmake-gui**
+
+1. Input the path to devilutionx source directory at `Where is the source code:` field.
+2. Input the path where the binaries would be placed at `Where to build the binaries:` field. If you want to place them inside source directory it's preferable to do so inside directory called `build` to avoid the binaries being added to the source tree.
+3. It's recommended to input `Win32` in `Optional Platform for Generator`, otherwise it will default to x64 build.
+4. In case you're using `vcpkg` select `Specify toolchain file for cross-compiling` and select the file `scripts/buildsystems/vcpkg.cmake` from `vcpkg` directory otherwise just go with `Use default native compilers`.
+5. In case you need to select any paths to dependencies manually do this right in cmake-gui window.
+6. Press `Generate` and open produced `.sln` file using Visual Studio.
+7. Use build/debug etc. commands inside Visual Studio Solution like with any normal Visual Studio project.
 </details>
 
 ## Building for the native platform
@@ -145,6 +171,31 @@ cmake -DCMAKE_C_COMPILER=/usr/local/bin/gcc8 -DCMAKE_CXX_COMPILER=/usr/local/bin
 make -j$(sysctl -n hw.ncpu)
 ```
 </details>
+<details><summary>Haiku</summary>
+
+### Installing dependencies on 32 bit Haiku
+```
+pkgman install cmake_x86 devel:libsdl2_x86 devel:libsdl2_mixer_x86 devel:libsdl2_ttf_x86 devel:libsodium_x86
+```
+### Installing dependencies on 64 bit Haiku
+```
+pkgman install cmake devel:libsdl2 devel:libsdl2_mixer devel:libsdl2_ttf devel:libsodium
+```
+### Compiling on 32 bit Haiku
+```
+mkdir build
+cd build
+cmake -DCMAKE_C_COMPILER=gcc-x86 -DCMAKE_CXX_COMPILER=g++-x86 -DBINARY_RELEASE=ON ..
+make -j$(nproc)
+```
+### Compiling on 64 bit Haiku
+```
+mkdir build
+cd build
+cmake ..
+make -j$(nproc)
+```
+</details>
 
 ## CMake arguments
 ### General
@@ -155,7 +206,7 @@ Use `-DCROSS_PREFIX=/path/to/prefix` if the `i686-w64-mingw32` directory is not 
 
 # Multiplayer
  - TCP/IP only requires the host to expose port 6112
- - UPD/IP requires that all players expose port 6112
+ - UDP/IP requires that all players expose port 6112
 
 All games are encrypted and password protected.
 
