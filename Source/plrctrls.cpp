@@ -1,6 +1,3 @@
-#ifdef SWITCH
-	#include <switch.h>
-#endif
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
@@ -77,8 +74,6 @@ void checkItemsNearby(bool interact)
 	}
 	if (newCurHidden)
 		pcursitem = -1;
-	//sprintf(tempstr, "SCANNING FOR OBJECTS");
-	//NetSendCmdString(1 << myplr, tempstr);
 	for (int i = 0; i < MAXOBJECTS; i++) {
 		if (checkNearbyObjs(object[i]._ox, object[i]._oy, 1).x != -1 && object[i]._oSelFlag > 0 && object[i]._otype > -1 && currlevel) { // make sure we're in the dungeon to scan for objs
 			pcursobj = i;
