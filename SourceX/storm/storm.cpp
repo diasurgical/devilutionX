@@ -485,7 +485,7 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 
 		deviceId = SDL_OpenAudioDevice(NULL, 0, &audioFormat, NULL, 0);
 		if (deviceId == 0) {
-			//SDL_Log(SDL_GetError());
+			SDL_log(SDL_GetError());
 			return false;
 		} else {
 			SDL_PauseAudioDevice(deviceId, 0); /* start audio playing. */
@@ -505,10 +505,10 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 		SDL_DestroyTexture(texture);
 		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, SVidWidth, SVidHeight);
 		if (texture == NULL) {
-			//SDL_Log(SDL_GetError());
+			SDL_log(SDL_GetError());
 		}
 		if (SDL_RenderSetLogicalSize(renderer, SVidWidth, SVidHeight) <= -1) {
-			//SDL_Log(SDL_GetError());
+			SDL_log(SDL_GetError());
 		}
 	}
 
