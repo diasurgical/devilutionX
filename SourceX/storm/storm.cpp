@@ -500,6 +500,7 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 	smk_first(SVidSMK); // Decode first frame
 
 	smk_info_video(SVidSMK, &SVidWidth, &SVidHeight, NULL);
+
 	if (renderer) {
 		SDL_DestroyTexture(texture);
 		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, SVidWidth, SVidHeight);
@@ -510,7 +511,12 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 			//SDL_Log(SDL_GetError());
 		}
 	}
+
 	memcpy(SVidPreviousPalette, orig_palette, 1024);
+
+#ifdef __AMIGA__
+	surface = SDL_SetVideoMode(SVidWidth, SVidHeight, D_BPP, SDL_SWSURFACE | SDL_FULLSCREEN);
+#endif
 
 	// Copy frame to buffer
 	SVidSurface = SDL_CreateRGBSurfaceWithFormatFrom(
@@ -521,15 +527,15 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 	    SVidWidth,
 	    SDL_PIXELFORMAT_INDEX8);
 	if (SVidSurface == NULL) {
-		//SDL_Log(SDL_GetError());
+		SDL_Log(SDL_GetError());
 	}
 
 	SVidPalette = SDL_AllocPalette(256);
 	if (SVidPalette == NULL) {
-		//SDL_Log(SDL_GetError());
+		SDL_Log(SDL_GetError());
 	}
 	if (SDL_SetSurfacePalette(SVidSurface, SVidPalette) <= -1) {
-		//SDL_Log(SDL_GetError());
+		SDL_Log(SDL_GetError());
 		return false;
 	}
 
@@ -572,7 +578,9 @@ BOOL SVidPlayContinue(void)
 		}
 		memcpy(logical_palette, orig_palette, 1024);
 
+		//Todo(SDL1.2): Fix SDL_SetPaletteColors wrapper
 		SDL_SetPalette(SVidSurface, SDL_LOGPAL|SDL_PHYSPAL, colors, 0, 256);
+		SDL_SetColors(surface, colors, 0, 256);
 
 		if (SDL_SetPaletteColors(SVidPalette, colors, 0, 256) <= -1) {
 			SDL_Log(SDL_GetError());
@@ -601,7 +609,9 @@ BOOL SVidPlayContinue(void)
 			SDL_Log(SDL_GetError());
 			return false;
 		}
+
 	} else {
+#ifndef __AMIGA__
 		int factor;
 		int wFactor = SCREEN_WIDTH / SVidWidth;
 		int hFactor = SCREEN_HEIGHT / SVidHeight;
@@ -616,11 +626,20 @@ BOOL SVidPlayContinue(void)
 		SDL_Rect pal_surface_offset = { (SCREEN_WIDTH - scaledW) / 2, (SCREEN_HEIGHT - scaledH) / 2, scaledW, scaledH };
 		Uint32 format = SDL_GetWindowPixelFormat(window);
 		SDL_Surface *tmp = SDL_ConvertSurfaceFormat(SVidSurface, format, 0);
+
 		if (SDL_BlitScaled(tmp, NULL, surface, &pal_surface_offset) <= -1) {
 			SDL_Log(SDL_GetError());
 			return false;
 		}
+#else
+		SDL_Surface *tmp = SDL_ConvertSurfaceFormat(SVidSurface, 0, 0);
+		if (SDL_BlitSurface(tmp, NULL, surface, NULL) <= -1) {
+			SDL_Log(SDL_GetError());
+			return false;
+		}
+#endif
 		SDL_FreeSurface(tmp);
+
 	}
 
 	bufferUpdated = true;
@@ -655,6 +674,10 @@ BOOL SVidPlayEnd(HANDLE video)
 
 	SFileCloseFile(video);
 	video = NULL;
+
+#ifdef __AMIGA__
+	surface = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, D_BPP, SDL_SWSURFACE | SDL_FULLSCREEN);
+#endif
 
 	memcpy(orig_palette, SVidPreviousPalette, 1024);
 	if (renderer) {

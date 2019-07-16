@@ -136,11 +136,8 @@ SDL_Window* SDL_CreateWindow(const char* title, int x, int y, int w, int h, Uint
 {
 	auto* window = new SDL_Window;
 
-#ifdef __AMIGA__
-	window->surface = SDL_SetVideoMode(w, h, 16, SDL_SWSURFACE);
-#else
-    window->surface = SDL_SetVideoMode(w, h, 16, SDL_HWSURFACE);
-#endif
+	window->surface = SDL_SetVideoMode(w, h, D_BPP, SDL_SWSURFACE | SDL_FULLSCREEN);
+
 	return window;
 }
 
@@ -314,7 +311,7 @@ SDL_Texture* SDL_CreateTexture(SDL_Renderer* renderer, Uint32 format, int access
     bmask = 0x00ff0000;
     amask = 0xff000000;
 #endif
-    return SDL_CreateRGBSurface(renderer->flags, w, h, 16, rmask, gmask, bmask, amask);
+    return SDL_CreateRGBSurface(renderer->flags, w, h, D_BPP, rmask, gmask, bmask, amask);
 }
 
 int SDL_SetWindowInputFocus(SDL_Window* window)
