@@ -5,6 +5,7 @@
 #include <SDL.h>
 #include <SDL_endian.h>
 #include <SDL_mixer.h>
+#include "miniwin/sdl1_wrapper.h"
 #include <smacker.h>
 #include "../SourceS/miniwin/misc.h"
 
@@ -485,7 +486,7 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 
 		deviceId = SDL_OpenAudioDevice(NULL, 0, &audioFormat, NULL, 0);
 		if (deviceId == 0) {
-			SDL_log(SDL_GetError());
+			SDL_Log(SDL_GetError());
 			return false;
 		} else {
 			SDL_PauseAudioDevice(deviceId, 0); /* start audio playing. */
@@ -505,10 +506,10 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 		SDL_DestroyTexture(texture);
 		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, SVidWidth, SVidHeight);
 		if (texture == NULL) {
-			SDL_log(SDL_GetError());
+			SDL_Log(SDL_GetError());
 		}
 		if (SDL_RenderSetLogicalSize(renderer, SVidWidth, SVidHeight) <= -1) {
-			SDL_log(SDL_GetError());
+			SDL_Log(SDL_GetError());
 		}
 	}
 
@@ -579,7 +580,7 @@ BOOL SVidPlayContinue(void)
 		memcpy(logical_palette, orig_palette, 1024);
 
 		//Todo(SDL1.2): Fix SDL_SetPaletteColors wrapper
-		SDL_SetPalette(SVidSurface, SDL_LOGPAL|SDL_PHYSPAL, colors, 0, 256);
+		SDL_SetPalette(SVidSurface, SDL_LogPAL|SDL_PHYSPAL, colors, 0, 256);
 		SDL_SetColors(surface, colors, 0, 256);
 
 		if (SDL_SetPaletteColors(SVidPalette, colors, 0, 256) <= -1) {
