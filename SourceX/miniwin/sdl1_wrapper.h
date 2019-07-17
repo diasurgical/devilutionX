@@ -4,8 +4,10 @@
 #include <SDL.h>
 
 #ifdef __AMIGA__
+#define D_SDL_MODES (SDL_SWSURFACE | SDL_FULLSCREEN)
 #define D_BPP 8
 #else
+#define D_SDL_MODES (SDL_SWSURFACE)
 #define D_BPP 16
 #endif
 
