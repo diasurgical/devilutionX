@@ -1,7 +1,7 @@
 #include "selyesno.h"
 
-#include "diablo.h"
-#include "diabloui.h"
+#include "DiabloUI/diabloui.h"
+#include "devilution.h"
 
 namespace dvl {
 
@@ -49,7 +49,7 @@ BOOL UiSelHeroDelYesNoDialog(
 	LoadBackgroundArt("ui_art\\black.pcx");
 
 	if (isMultiplayer) {
-		sprintf(selyesno_title, "Delete Multiplayer Hero");
+		sprintf(selyesno_title, "Delete Multi Player Hero");
 	} else {
 		sprintf(selyesno_title, "Delete Single Player Hero");
 	}

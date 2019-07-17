@@ -311,6 +311,7 @@ void UiFocusNavigationEsc()
 
 void UiFocusNavigationYesNo()
 {
+	UiPlaySelectSound();
 	if (gfnListYesNo)
 		gfnListYesNo(SelectedItem);
 }
@@ -855,5 +856,4 @@ void DvlStringSetting(const char *valuename, char *string, int len)
 		SRegSaveString("devilutionx", valuename, 0, string);
 	}
 }
-
 }

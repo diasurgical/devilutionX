@@ -1,7 +1,6 @@
 #pragma once
 
-#include "diablo.h"
-#include "diabloui.h"
+#include "devilution.h"
 
 namespace dvl {
 BOOL UiSelHeroDelYesNoDialog(BOOL (*fnremove)(_uiheroinfo *), _uiheroinfo *selectHero, bool isMultiplayer);
