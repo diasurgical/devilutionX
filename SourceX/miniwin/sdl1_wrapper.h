@@ -3,6 +3,12 @@
 
 #include <SDL.h>
 
+#ifdef __AMIGA__
+#define D_BPP 8
+#else
+#define D_BPP 16
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
