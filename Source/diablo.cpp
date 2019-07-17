@@ -93,7 +93,7 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
 	do {
 		fExitProgram = FALSE;
 		gbLoadGame = FALSE;
-
+		
 		if (!NetInit(bSinglePlayer, &fExitProgram)) {
 			gbRunGameResult = !fExitProgram;
 			break;
@@ -127,27 +127,40 @@ void run_game_loop(unsigned int uMsg)
 	BOOL bLoop;
 	WNDPROC saveProc;
 	MSG msg;
+	
+	//printf("run_game_loop 0\n");
+
 
 	nthread_ignore_mutex(TRUE);
 	start_game(uMsg);
+	//printf("run_game_loop 01\n");
 	/// ASSERT: assert(ghMainWnd);
 	saveProc = SetWindowProc(GM_Game);
+	//printf("run_game_loop 02\n");
 	control_update_life_mana();
+	//printf("run_game_loop 03\n");
 	msg_process_net_packets();
+	//printf("run_game_loop 04\n");
 	gbRunGame = TRUE;
 	gbProcessPlayers = TRUE;
 	gbRunGameResult = TRUE;
 	drawpanflag = 255;
 	DrawAndBlit();
+	//printf("run_game_loop 05\n");
 	PaletteFadeIn(8);
 	drawpanflag = 255;
 	gbGameLoopStartup = TRUE;
 	nthread_ignore_mutex(FALSE);
-
+	
+	//printf("run_game_loop 1\n");
+	
 	while (gbRunGame) {
+			//printf("run_game_loop 2\n");
 		diablo_color_cyc_logic();
+			//printf("run_game_loop 3\n");
 		if (PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE)) {
-			SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_ABOVE_NORMAL);
+				//printf("run_game_loop 4\n");
+			//SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_ABOVE_NORMAL);
 			while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 				if (msg.message == WM_QUIT) {
 					gbRunGameResult = FALSE;
@@ -157,8 +170,11 @@ void run_game_loop(unsigned int uMsg)
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
 			}
+				//printf("run_game_loop 5\n");
 			bLoop = gbRunGame && nthread_has_500ms_passed(FALSE);
+				//printf("run_game_loop 6\n");
 			SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_NORMAL);
+				//printf("run_game_loop 7\n");
 			if (!bLoop) {
 				continue;
 			}
@@ -168,17 +184,20 @@ void run_game_loop(unsigned int uMsg)
 #endif
 			continue;
 		}
-		multi_process_network_packets();
+			//printf("run_game_loop 8\n");
+		//multi_process_network_packets(); //arczi
 		game_loop(gbGameLoopStartup);
-		msgcmd_send_chat();
+			//printf("run_game_loop 9\n");
+		//msgcmd_send_chat();  //arczi
 		gbGameLoopStartup = FALSE;
 		DrawAndBlit();
+			//printf("run_game_loop 10\n");
 	}
 
 	if (gbMaxPlayers > 1) {
 		pfile_write_hero();
 	}
-
+	//printf("run_game_loop 11\n");
 	pfile_flush_W();
 	PaletteFadeOut(8);
 	SetCursor_(0);
@@ -202,13 +221,19 @@ void start_game(unsigned int uMsg)
 {
 	zoomflag = 1;
 	cineflag = FALSE;
+	//printf("start_game 01\n");
 	InitCursor();
+	//printf("start_game 02\n");
 	InitLightTable();
+	//printf("start_game 03\n");
 	LoadDebugGFX();
+	//printf("start_game 04\n");
 	/// ASSERT: assert(ghMainWnd);
 	music_stop();
 	ShowProgress(uMsg);
+	//printf("start_game 05\n");
 	gmenu_init_menu();
+	//printf("start_game 06\n");
 	InitLevelCursor();
 	sgnTimeoutCurs = 0;
 	sgbMouseDown = 0;
@@ -1043,6 +1068,8 @@ void PressKey(int vkey)
 	if (gmenu_presskeys(vkey) || control_presskeys(vkey)) {
 		return;
 	}
+	
+printf("pressed key  %d\n", vkey);	
 
 	if (deathflag) {
 		if (sgnTimeoutCurs != 0) {
@@ -1846,15 +1873,18 @@ void game_loop(BOOL bStartup)
 	int i;
 
 	i = bStartup ? 60 : 3;
-
+//printf("game_loop 0\n");
 	while (i--) {
 		if (!multi_handle_delta()) {
 			timeout_cursor(TRUE);
+			//printf("run_game_loop 2\n");
 			break;
 		} else {
 			timeout_cursor(FALSE);
+			//printf("run_game_loop 3\n");
 			game_logic();
 		}
+//printf("game_loop 4\n");	
 		if (!gbRunGame || gbMaxPlayers == 1 || !nthread_has_500ms_passed(TRUE))
 			break;
 	}

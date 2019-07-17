@@ -2585,10 +2585,11 @@ void DrawAndBlit()
 {
 	int hgt;
 	BOOL ddsdesc, ctrlPan;
-
+//printf("DrawAndBlit 0\n");
 	if (!gbRunGame) {
 		return;
 	}
+//printf("DrawAndBlit 1\n");
 
 	if (drawpanflag == 255) {
 		drawhpflag = TRUE;
@@ -2605,37 +2606,38 @@ void DrawAndBlit()
 	} else {
 		return;
 	}
-
+//printf("DrawAndBlit 2\n");
 	drawpanflag = 0;
 
 	lock_buf(0);
+	 //printf("DrawAndBlit 3\n");
 	if (leveltype != DTYPE_TOWN) {
 		DrawView(ViewX, ViewY);
 	} else {
-		T_DrawView(ViewX, ViewY);
+		T_DrawView(ViewX, ViewY); //printf("DrawAndBlit 4\n");
 	}
 	if (ctrlPan) {
 		ClearCtrlPan();
-	}
+	} 
 	if (drawhpflag) {
 		UpdateLifeFlask();
-	}
+	} 
 	if (drawmanaflag) {
 		UpdateManaFlask();
-	}
+	} //printf("DrawAndBlit 5\n");
 	if (drawbtnflag) {
 		DrawCtrlPan();
-	}
+	} //printf("DrawAndBlit 6\n");
 	if (drawsbarflag) {
 		DrawInvBelt();
-	}
+	} //printf("DrawAndBlit 7\n");
 	if (talkflag) {
 		DrawTalkPan();
 		hgt = 480;
-	}
+	} //printf("DrawAndBlit 8\n");
 	scrollrt_draw_cursor_item();
 	unlock_buf(0);
-
+//printf("DrawAndBlit 9\n");
 	DrawMain(hgt, ddsdesc, drawhpflag, drawmanaflag, drawsbarflag, drawbtnflag);
 
 	lock_buf(0);
