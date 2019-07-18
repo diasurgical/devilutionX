@@ -126,22 +126,22 @@ node('master') {
 	parallel (
 		'Build AmigaOS3.x version': {
 			node {			
-				buildStep('m68k-amigaos')
+				buildStep('68k')
 			}
 		},
 		'Build AmigaOS4.x version': {
 			node {			
-				buildStep('ppc-amigaos')
+				buildStep('os4')
 			}
 		},
 		'Build MorphOS version': {
 			node {			
-				buildStep('ppc-morphos')
+				buildStep('mos')
 			}
 		},
 		'Build WarpOS version': {
 			node {
-				buildStep('ppc-warpos')
+				buildStep('wos')
 			}
 		}
 	)
