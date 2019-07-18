@@ -65,7 +65,7 @@ def buildStep(ext, hostFlags = '', sysRoot = true) {
 				sh "mkdir -p ${env.WORKSPACE}/publishing/deploy/devilutionx/${ext}/"
 			}
 
-			sh "cd ${env.WORKSPACE}/build-${ext} && cmake .."
+			sh "cd ${env.WORKSPACE}/build-${ext} && cmake -DCMAKE_TOOLCHAIN_FILE=/opt/toolchains/cmake$ext .."
 			
 			sh "cd ${env.WORKSPACE}/build-${ext} && cmake --build . --config Release -- -j8"
 
