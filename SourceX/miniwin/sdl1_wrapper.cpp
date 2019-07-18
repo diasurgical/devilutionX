@@ -136,7 +136,7 @@ SDL_Window* SDL_CreateWindow(const char* title, int x, int y, int w, int h, Uint
 {
 	auto* window = new SDL_Window;
 
-	window->surface = SDL_SetVideoMode(w, h, D_BPP, SDL_SWSURFACE | SDL_FULLSCREEN);
+	window->surface = SDL_SetVideoMode(w, h, D_BPP, SDL_SWSURFACE /*| SDL_FULLSCREEN*/);
 
 	return window;
 }

@@ -1,5 +1,5 @@
 #include "devilution.h"
-#include <SDL.h>
+#include <SDL/SDL.h>
 #include <SDL_video.h>
 #include "../SourceS/miniwin/misc.h"
 #include "sdl1_wrapper.h"

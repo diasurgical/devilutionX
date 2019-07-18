@@ -67,51 +67,36 @@ void DrawProgress(int screen_x, int screen_y, int progress_id)
 void ShowProgress(unsigned int uMsg)
 {
 	WNDPROC saveProc;
-	printf("ShowProgress 1\n");
+
 	gbSomebodyWonGameKludge = FALSE;
 	plrmsg_delay(TRUE);
-	printf("ShowProgress 2\n");
+
 	/// ASSERT: assert(ghMainWnd);
 	saveProc = SetWindowProc(DisableInputWndProc);
-	printf("ShowProgress 3\n");
+
 	interface_msg_pump();
-		printf("ShowProgress 4\n");
 	ClearScreenBuffer();
-		printf("ShowProgress 5\n");
 	scrollrt_draw_game_screen(TRUE);
-		printf("ShowProgress 6\n");
 	InitCutscene(uMsg);
-		printf("ShowProgress 7\n");
 	BlackPalette();
-		printf("ShowProgress 8\n");
 	DrawCutscene();
-		printf("ShowProgress 9\n");
 	PaletteFadeIn(8);
-		printf("ShowProgress 10\n");
 	IncProgress();
-		printf("ShowProgress 11\n");
 	stream_update();
-		printf("ShowProgress 12\n");
 	IncProgress();
-	printf("ShowProgress 13\n");
-	printf("ShowProgress uMsg=%d\n",uMsg);
-	//uMsg = WM_DIABNEWGAME; //todo
+
 	switch (uMsg) {
-		
 	case WM_DIABLOADGAME:
 		IncProgress();
 		LoadGame(TRUE);
 		IncProgress();
 		break;
 	case WM_DIABNEWGAME:
-	printf("ShowProgress 14\n");
 		IncProgress();
 		FreeGameMem();
 		IncProgress();
 		pfile_remove_temp_files();
-		printf("ShowProgress 15\n");
 		LoadGameLevel(TRUE, 0);
-		printf("ShowProgress 16\n");
 		IncProgress();
 		break;
 	case WM_DIABNEXTLVL:
@@ -233,17 +218,17 @@ void ShowProgress(unsigned int uMsg)
 	}
 
 	/// ASSERT: assert(ghMainWnd);
-printf("ShowProgress 17\n");
+
 	PaletteFadeOut(8);
 	FreeInterface();
-printf("ShowProgress 18\n");
+
 	saveProc = SetWindowProc(saveProc);
 	/// ASSERT: assert(saveProc == DisableInputWndProc);
-printf("ShowProgress 19\n");
+
 	NetSendCmdLocParam1(TRUE, CMD_PLAYER_JOINLEVEL, plr[myplr].WorldX, plr[myplr].WorldY, plr[myplr].plrlevel);
 	plrmsg_delay(FALSE);
 	ResetPal();
-printf("ShowProgress 20\n");
+
 	if (gbSomebodyWonGameKludge && plr[myplr].plrlevel == 16) {
 		PrepDoEnding();
 	}

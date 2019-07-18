@@ -76,7 +76,7 @@ if(AMIGA)
   find_package(LibMad REQUIRED)
 endif()
 
-#find_package(sodium REQUIRED)
+find_package(sodium REQUIRED)
 
 set(PROJECT_LINK_LIBS libSDL.so)
 
@@ -198,14 +198,14 @@ add_executable(devilutionx
   SourceX/storm/storm.cpp
   SourceX/storm/storm_net.cpp
   SourceX/storm/storm_dx.cpp
-#   SourceX/dvlnet/abstract_net.cpp
-#   SourceX/dvlnet/loopback.cpp
-#   SourceX/dvlnet/packet.cpp
-#   SourceX/dvlnet/base.cpp
-#   SourceX/dvlnet/frame_queue.cpp
-#   SourceX/dvlnet/tcp_client.cpp
-#   SourceX/dvlnet/tcp_server.cpp
-#   SourceX/dvlnet/udp_p2p.cpp
+   SourceX/dvlnet/abstract_net.cpp
+   SourceX/dvlnet/loopback.cpp
+   SourceX/dvlnet/packet.cpp
+   SourceX/dvlnet/base.cpp
+   SourceX/dvlnet/frame_queue.cpp
+   SourceX/dvlnet/tcp_client.cpp
+   SourceX/dvlnet/tcp_server.cpp
+   SourceX/dvlnet/udp_p2p.cpp
   SourceX/DiabloUI/credits.cpp
   SourceX/DiabloUI/diabloui.cpp
   SourceX/DiabloUI/dialogs.cpp
@@ -257,6 +257,7 @@ target_link_libraries(devilutionx PRIVATE
   ${PNG_LIBRARIES}
   ${LIBMAD_LIBRARIES}
   ${SDL_LIBRARY}
+  sodium
   )
 
 if(AMIGA)

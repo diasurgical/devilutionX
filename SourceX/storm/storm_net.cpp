@@ -19,7 +19,7 @@ BOOL SNetReceiveMessage(int *senderplayerid, char **data, int *databytes)
 
 BOOL SNetSendMessage(int playerID, void *data, unsigned int databytes)
 {
-	return true;//dvlnet_inst->SNetSendMessage(playerID, data, databytes); //arczi
+	return dvlnet_inst->SNetSendMessage(playerID, data, databytes);
 }
 
 BOOL SNetReceiveTurns(int a1, int arraysize, char **arraydata, unsigned int *arraydatabytes,
@@ -29,38 +29,26 @@ BOOL SNetReceiveTurns(int a1, int arraysize, char **arraydata, unsigned int *arr
 		UNIMPLEMENTED();
 	if (arraysize != MAX_PLRS)
 		UNIMPLEMENTED();
-	//if (!dvlnet_inst->SNetReceiveTurns(arraydata, arraydatabytes, arrayplayerstatus)) {
-	//	SErrSetLastError(STORM_ERROR_NO_MESSAGES_WAITING);
-		//return false;
-	//} //arczi
+	if (!dvlnet_inst->SNetReceiveTurns(arraydata, arraydatabytes, arrayplayerstatus)) {
+		SErrSetLastError(STORM_ERROR_NO_MESSAGES_WAITING);
+		return false;
+	}
 	return true;
 }
 
 BOOL SNetSendTurn(char *data, unsigned int databytes)
 {
-	return true;//dvlnet_inst->SNetSendTurn(data, databytes); //arczi
+	return dvlnet_inst->SNetSendTurn(data, databytes);
 }
 
 int SNetGetProviderCaps(struct _SNETCAPS *caps)
 {
-	//return dvlnet_inst->SNetGetProviderCaps(caps); //arczi
-	
-	caps->size = 0;                  // engine writes only ?!?
-	caps->flags = 0;                 // unused
-	caps->maxmessagesize = 512;      // capped to 512; underflow if < 24
-	caps->maxqueuesize = 0;          // unused
-	caps->maxplayers = MAX_PLRS;     // capped to 4
-	caps->bytessec = 1000000;        // ?
-	caps->latencyms = 0;             // unused
-	caps->defaultturnssec = 10;      // ?
-	caps->defaultturnsintransit = 1; // maximum acceptable number
-	                                 // of turns in queue?
-	return 1;
+	return dvlnet_inst->SNetGetProviderCaps(caps);
 }
 
 BOOL SNetUnregisterEventHandler(int evtype, SEVTHANDLER func)
 {
-	return true;//dvlnet_inst->SNetUnregisterEventHandler(*(event_type *)&evtype, func); //arczi
+	return dvlnet_inst->SNetUnregisterEventHandler(*(event_type *)&evtype, func);
 }
 
 BOOL SNetRegisterEventHandler(int evtype, SEVTHANDLER func)
@@ -87,7 +75,7 @@ BOOL SNetGetGameInfo(int type, void *dst, unsigned int length, unsigned int *byt
 
 BOOL SNetLeaveGame(int type)
 {
-	return true;//dvlnet_inst->SNetLeaveGame(type); //arczi
+	return dvlnet_inst->SNetLeaveGame(type);
 }
 
 BOOL SNetSendServerChatCommand(const char *command)
@@ -105,7 +93,7 @@ int SNetInitializeProvider(unsigned long provider, struct _SNETPROGRAMDATA *clie
     struct _SNETPLAYERDATA *user_info, struct _SNETUIDATA *ui_info,
     struct _SNETVERSIONDATA *fileinfo)
 {
-	//dvlnet_inst = net::abstract_net::make_net(provider);
+	dvlnet_inst = net::abstract_net::make_net(provider);
 	return ui_info->selectnamecallback(client_info, user_info, ui_info, fileinfo, provider, NULL, 0, NULL, 0, NULL);
 }
 
@@ -116,7 +104,7 @@ BOOL SNetCreateGame(const char *pszGameName, const char *pszGamePassword, const 
     DWORD dwGameType, char *GameTemplateData, int GameTemplateSize, int playerCount,
     char *creatorName, char *a11, int *playerID)
 {
-	/*if (GameTemplateSize != 8)
+	if (GameTemplateSize != 8)
 		ABORT();
 	net::buffer_t game_init_info(GameTemplateData, GameTemplateData + GameTemplateSize);
 	dvlnet_inst->setup_gameinfo(std::move(game_init_info));
@@ -125,8 +113,6 @@ BOOL SNetCreateGame(const char *pszGameName, const char *pszGamePassword, const 
 	SRegLoadString("dvlnet", "bindaddr", 0, addrstr, 128);
 	*playerID = dvlnet_inst->create(addrstr, pszGamePassword);
 	return *playerID != -1;
-	*/
-	return true;
 }
 
 BOOL SNetJoinGame(int id, char *pszGameName, char *pszGamePassword, char *playerName, char *userStats, int *playerID)
@@ -145,8 +131,7 @@ BOOL SNetGetOwnerTurnsWaiting(DWORD *turns)
 
 BOOL SNetGetTurnsInTransit(int *turns)
 {
-	*turns = 0; //arczi
-	return true;//dvlnet_inst->SNetGetTurnsInTransit(turns);
+	return dvlnet_inst->SNetGetTurnsInTransit(turns);
 }
 
 /**
