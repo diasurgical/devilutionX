@@ -2,11 +2,11 @@
 #ifndef __MINITEXT_H__
 #define __MINITEXT_H__
 
-extern int qtexty; // weak
+extern int qtexty;
 extern char *qtextptr;
-extern int qtextSpd;    // weak
-extern char qtextflag;  // weak
-extern int scrolltexty; // weak
+extern int qtextSpd;
+extern char qtextflag;
+extern int scrolltexty;
 extern void *pMedTextCels;
 extern void *pTextBoxCels;
 

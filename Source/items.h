@@ -9,7 +9,7 @@ extern ItemStruct curruitem;
 extern ItemGetRecordStruct itemrecord[MAXITEMS];
 extern ItemStruct item[MAXITEMS + 1];
 extern BOOL itemhold[3][3];
-extern unsigned char *itemanims[35];
+extern BYTE *itemanims[35];
 extern BOOL UniqueItemFlag[128];
 extern int numitems;
 extern int gnNumGetRecords;
@@ -20,7 +20,7 @@ void AddInitItems();
 void InitItems();
 void CalcPlrItemVals(int p, BOOL Loadgfx);
 void CalcPlrScrolls(int p);
-void CalcPlrStaff(int pnum);
+void CalcPlrStaff(int p);
 void CalcSelfItems(int pnum);
 void CalcPlrItemMin(int pnum);
 BOOL ItemMinStats(PlayerStruct *p, ItemStruct *x);
@@ -62,8 +62,8 @@ void CreateRndItem(int x, int y, BOOL onlygood, BOOL sendmsg, int delta);
 void SetupAllUseful(int ii, int iseed, int lvl);
 void CreateRndUseful(int pnum, int x, int y, BOOL sendmsg);
 void CreateTypeItem(int x, int y, BOOL onlygood, int itype, int imisc, BOOL sendmsg, int delta);
-void RecreateItem(int ii, int idx, unsigned short ic, int iseed, int ivalue);
-void RecreateEar(int ii, unsigned short ic, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff);
+void RecreateItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue);
+void RecreateEar(int ii, WORD ic, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff);
 void SpawnQuestItem(int itemid, int x, int y, int randarea, int selflag);
 void SpawnRock();
 void RespawnItem(int i, BOOL FlipFlag);
@@ -110,12 +110,12 @@ int RndHealerItem(int lvl);
 void SortHealer();
 void SpawnHealer(int lvl);
 void SpawnStoreGold();
-void RecreateSmithItem(int ii, int idx, int plvl, int iseed);
-void RecreatePremiumItem(int ii, int idx, int lvl, int iseed);
+void RecreateSmithItem(int ii, int idx, int lvl, int iseed);
+void RecreatePremiumItem(int ii, int idx, int plvl, int iseed);
 void RecreateBoyItem(int ii, int idx, int lvl, int iseed);
 void RecreateWitchItem(int ii, int idx, int lvl, int iseed);
 void RecreateHealerItem(int ii, int idx, int lvl, int iseed);
-void RecreateTownItem(int ii, int idx, unsigned short icreateinfo, int iseed, int ivalue);
+void RecreateTownItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue);
 void RecalcStoreStats();
 int ItemNoFlippy();
 void CreateSpellBook(int x, int y, int ispell, BOOL sendmsg, int delta);
@@ -128,12 +128,12 @@ void PutItemRecord(int nSeed, WORD wCI, int nIndex);
 
 /* data */
 
-extern unsigned char ItemCAnimTbl[169];
+extern BYTE ItemCAnimTbl[169];
 extern char *ItemDropStrs[35];
-extern unsigned char ItemAnimLs[35];
+extern BYTE ItemAnimLs[35];
 extern int ItemDropSnds[35];
 extern int ItemInvSnds[35];
-extern int idoppely; // weak
+extern int idoppely;
 extern int premiumlvladd[6];
 
 #endif /* __ITEMS_H__ */

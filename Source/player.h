@@ -2,29 +2,29 @@
 #ifndef __PLAYER_H__
 #define __PLAYER_H__
 
-extern int plr_lframe_size; // idb
-extern int plr_wframe_size; // idb
-extern UCHAR plr_gfx_flag;
-extern int plr_aframe_size; // idb
+extern int plr_lframe_size;
+extern int plr_wframe_size;
+extern BYTE plr_gfx_flag;
+extern int plr_aframe_size;
 extern int myplr;
 extern PlayerStruct plr[MAX_PLRS];
-extern int plr_fframe_size; // idb
-extern int plr_qframe_size; // idb
-extern BOOL deathflag;      // idb
-extern int plr_hframe_size; // idb
-extern int plr_bframe_size; // idb
-extern UCHAR plr_gfx_bflag;
-extern int plr_sframe_size; // idb
-extern int deathdelay;      // weak
-extern int plr_dframe_size; // idb
+extern int plr_fframe_size;
+extern int plr_qframe_size;
+extern BOOL deathflag;
+extern int plr_hframe_size;
+extern int plr_bframe_size;
+extern BYTE plr_gfx_bflag;
+extern int plr_sframe_size;
+extern int deathdelay;
+extern int plr_dframe_size;
 
-void SetPlayerGPtrs(UCHAR *pData, UCHAR **pAnim); /* unsigned char *+** */
+void SetPlayerGPtrs(BYTE *pData, BYTE **pAnim);
 void LoadPlrGFX(int pnum, player_graphic gfxflag);
 void InitPlayerGFX(int pnum);
 void InitPlrGFXMem(int pnum);
 DWORD GetPlrGFXSize(char *szCel);
 void FreePlayerGFX(int pnum);
-void NewPlrAnim(int pnum, unsigned char *Peq, int numFrames, int Delay, int width);
+void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width);
 void ClearPlrPVars(int pnum);
 void SetPlrAnims(int pnum);
 void ClearPlrRVars(PlayerStruct *p);
@@ -41,7 +41,7 @@ BOOL PlrDirOK(int pnum, int dir);
 void PlrClrTrans(int x, int y);
 void PlrDoTrans(int x, int y);
 void SetPlayerOld(int pnum);
-void FixPlayerLocation(int pnum, int dir);
+void FixPlayerLocation(int pnum, int bDir);
 void StartStand(int pnum, int dir);
 void StartWalkStand(int pnum);
 void PM_ChangeLightOff(int pnum);
@@ -85,27 +85,27 @@ BOOL PM_DoGotHit(int pnum);
 void ArmorDur(int pnum);
 BOOL PM_DoDeath(int pnum);
 void CheckNewPath(int pnum);
-BOOL PlrDeathModeOK(int pnum);
+BOOL PlrDeathModeOK(int p);
 void ValidatePlayer();
 void ProcessPlayers();
 void CheckCheatStats(int pnum);
 void ClrPlrPath(int pnum);
-BOOL PosOkPlayer(int pnum, int px, int py);
+BOOL PosOkPlayer(int pnum, int x, int y);
 void MakePlrPath(int pnum, int xx, int yy, BOOL endspace);
 void CheckPlrSpell();
 void SyncPlrAnim(int pnum);
 void SyncInitPlrPos(int pnum);
 void SyncInitPlr(int pnum);
-void CheckStats(int pnum);
-void ModifyPlrStr(int pnum, int l);
-void ModifyPlrMag(int pnum, int l);
-void ModifyPlrDex(int pnum, int l);
-void ModifyPlrVit(int pnum, int l);
-void SetPlayerHitPoints(int pnum, int newhp);
-void SetPlrStr(int pnum, int v);
-void SetPlrMag(int pnum, int v);
-void SetPlrDex(int pnum, int v);
-void SetPlrVit(int pnum, int v);
+void CheckStats(int p);
+void ModifyPlrStr(int p, int l);
+void ModifyPlrMag(int p, int l);
+void ModifyPlrDex(int p, int l);
+void ModifyPlrVit(int p, int l);
+void SetPlayerHitPoints(int pnum, int val);
+void SetPlrStr(int p, int v);
+void SetPlrMag(int p, int v);
+void SetPlrDex(int p, int v);
+void SetPlrVit(int p, int v);
 void InitDungMsgs(int pnum);
 void PlayDungMsgs();
 
@@ -132,6 +132,6 @@ extern char *ClassStrTblOld[3];
 extern int MaxStats[3][4];
 extern int ExpLvlsTbl[MAXCHARLEVEL];
 extern char *ClassStrTbl[3];
-extern unsigned char fix[9];
+extern BYTE fix[9];
 
 #endif /* __PLAYER_H__ */

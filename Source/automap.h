@@ -5,7 +5,7 @@
 extern WORD automaptype[512];
 extern BOOL automapflag;
 extern char AmShiftTab[32];
-extern unsigned char automapview[DMAXX][DMAXY];
+extern BOOLEAN automapview[DMAXX][DMAXY];
 extern int AutoMapScale;
 extern int AutoMapXOfs;
 extern int AutoMapYOfs;

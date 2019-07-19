@@ -171,8 +171,8 @@ template <class T>
 class TLink {
 public:
 	TLink()
-		: m_prevLink(NULL)
-		, m_nextNode(NULL)
+	    : m_prevLink(NULL)
+	    , m_nextNode(NULL)
 	{
 	}
 	~TLink()
