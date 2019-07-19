@@ -516,7 +516,7 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 	memcpy(SVidPreviousPalette, orig_palette, 1024);
 
 #ifdef __AMIGA__
-	surface = SDL_SetVideoMode(SVidWidth, SVidHeight, D_BPP, SDL_SWSURFACE | SDL_FULLSCREEN);
+	surface = SDL_SetVideoMode(SVidWidth, SVidHeight, D_BPP, D_SDL_MODES);
 #endif
 
 	// Copy frame to buffer
@@ -677,7 +677,7 @@ BOOL SVidPlayEnd(HANDLE video)
 	video = NULL;
 
 #ifdef __AMIGA__
-	surface = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, D_BPP, SDL_SWSURFACE | SDL_FULLSCREEN);
+	surface = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, D_BPP, D_SDL_MODES);
 #endif
 
 	memcpy(orig_palette, SVidPreviousPalette, 1024);

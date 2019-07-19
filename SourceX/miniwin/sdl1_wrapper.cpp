@@ -136,7 +136,11 @@ SDL_Window* SDL_CreateWindow(const char* title, int x, int y, int w, int h, Uint
 {
 	auto* window = new SDL_Window;
 
+<<<<<<< HEAD
 	window->surface = SDL_SetVideoMode(w, h, D_BPP, SDL_SWSURFACE /*| SDL_FULLSCREEN*/);
+=======
+	window->surface = SDL_SetVideoMode(w, h, D_BPP, D_SDL_MODES);
+>>>>>>> b3af59665187145a08965dc89b8b134722a6b01f
 
 	return window;
 }
