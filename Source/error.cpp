@@ -93,13 +93,13 @@ void DrawDiabloMsg()
 	CelDecodeOnly(591, 366, (BYTE *)pSTextSlidCels, 3, 12);
 
 	sx = 173;
-	for(i = 0; i < 35; i++) {
+	for (i = 0; i < 35; i++) {
 		CelDecodeOnly(sx, 318, (BYTE *)pSTextSlidCels, 5, 12);
 		CelDecodeOnly(sx, 366, (BYTE *)pSTextSlidCels, 7, 12);
 		sx += 12;
 	}
 	sy = 330;
-	for(i = 0; i < 3; i++) {
+	for (i = 0; i < 3; i++) {
 		CelDecodeOnly(165, sy, (BYTE *)pSTextSlidCels, 6, 12);
 		CelDecodeOnly(591, sy, (BYTE *)pSTextSlidCels, 8, 12);
 		sy += 12;
@@ -118,29 +118,29 @@ void DrawDiabloMsg()
 	len = strlen(tempstr);
 	width = 0;
 
-	for(i = 0; i < len; i++) {
+	for (i = 0; i < len; i++) {
 		width += fontkern[fontframe[gbFontTransTbl[(BYTE)tempstr[i]]]] + 1;
 	}
 
-	if(width < 442) {
+	if (width < 442) {
 		off += (442 - width) >> 1;
 	}
 
-	for(i = 0; i < len; i++) {
+	for (i = 0; i < len; i++) {
 		c = fontframe[gbFontTransTbl[(BYTE)tempstr[i]]];
-		if(c != '\0') {
+		if (c != '\0') {
 			CPrintString(off, c, COL_GOLD);
 		}
 		off += fontkern[c] + 1;
 	}
 
-	if(msgdelay > 0) {
+	if (msgdelay > 0) {
 		msgdelay--;
 	}
-	if(msgdelay == 0) {
+	if (msgdelay == 0) {
 		msgcnt--;
 		msgdelay = 70;
-		if(msgcnt == 0) {
+		if (msgcnt == 0) {
 			msgflag = 0;
 		} else {
 			msgflag = msgtable[msgcnt];

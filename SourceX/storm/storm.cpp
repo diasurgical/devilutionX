@@ -317,8 +317,7 @@ HWND SDrawGetFrameWindow(HWND *sdraw_framewindow)
 //{
 //	UNIMPLEMENTED();
 //}
-
-void *SMemAlloc(unsigned int amount, char *logfilename, int logline, char defaultValue)
+void *SMemAlloc(unsigned int amount, char *logfilename, int logline, int defaultValue)
 {
 	// fprintf(stderr, "%s: %d (%s:%d)\n", __FUNCTION__, amount, logfilename, logline);
 	assert(amount != -1u);

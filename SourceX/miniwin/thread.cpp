@@ -145,24 +145,25 @@ BOOL ResetEvent(HANDLE hEvent)
 	return 1;
 }
 
-static DWORD wait_for_sdl_cond(HANDLE hHandle, DWORD dwMilliseconds)
+static int wait_for_sdl_cond(HANDLE hHandle, DWORD dwMilliseconds)
 {
 	struct event_emul *e = (struct event_emul *)hHandle;
 	if (SDL_LockMutex(e->mutex) <= -1) {
 		SDL_Log(SDL_GetError());
 	}
-	DWORD ret;
+	int ret;
 	if (dwMilliseconds == DVL_INFINITE)
 		ret = SDL_CondWait(e->cond, e->mutex);
 	else
 		ret = SDL_CondWaitTimeout(e->cond, e->mutex, dwMilliseconds);
 	if (ret <= -1 || SDL_CondSignal(e->cond) <= -1 || SDL_UnlockMutex(e->mutex) <= -1) {
 		SDL_Log(SDL_GetError());
+		return -1;
 	}
 	return ret;
 }
 
-static DWORD wait_for_sdl_thread(HANDLE hHandle, DWORD dwMilliseconds)
+static int wait_for_sdl_thread(HANDLE hHandle, DWORD dwMilliseconds)
 {
 	if (dwMilliseconds != DVL_INFINITE)
 		UNIMPLEMENTED();
@@ -171,12 +172,12 @@ static DWORD wait_for_sdl_thread(HANDLE hHandle, DWORD dwMilliseconds)
 	return 0;
 }
 
-DWORD WaitForSingleObject(HANDLE hHandle, DWORD dwMilliseconds)
+int WaitForSingleObject(HANDLE hHandle, DWORD dwMilliseconds)
 {
 	// return value different from WinAPI
 	if (threads.find((uintptr_t)hHandle) != threads.end())
 		return wait_for_sdl_thread(hHandle, dwMilliseconds);
-	if (events.find((uintptr_t)hHandle) != threads.end())
+	if (events.find((uintptr_t)hHandle) != events.end())
 		return wait_for_sdl_cond(hHandle, dwMilliseconds);
 	UNIMPLEMENTED();
 }

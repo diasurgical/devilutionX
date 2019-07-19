@@ -17,7 +17,7 @@ char dFlagDbg[NUMLEVELS][MAXDUNX][MAXDUNY];
 void LoadDebugGFX()
 {
 	if (visiondebug)
-		pSquareCel = LoadFileInMem("Data\\Square.CEL", 0);
+		pSquareCel = LoadFileInMem("Data\\Square.CEL", NULL);
 }
 
 void FreeDebugGFX()
@@ -30,20 +30,20 @@ void init_seed_desync()
 {
 	int i;
 
-	for(i = 0; i < 4096; i++) {
+	for (i = 0; i < 4096; i++) {
 		seed_table[i] = -1;
 	}
 
 	seed_index = 0;
 
-	for(i = 0; i < NUMLEVELS; i++) {
+	for (i = 0; i < NUMLEVELS; i++) {
 		level_seeds[i] = 0;
 	}
 }
 
 void seed_desync_index_get()
 {
-	if(currlevel == 0) {
+	if (currlevel == 0) {
 		return;
 	}
 
@@ -53,7 +53,7 @@ void seed_desync_index_get()
 
 void seed_desync_index_set()
 {
-	if(currlevel == 0) {
+	if (currlevel == 0) {
 		return;
 	}
 
@@ -63,13 +63,13 @@ void seed_desync_index_set()
 
 void seed_desync_check(int seed)
 {
-	if(!update_seed_check || seed_index == 4096 || currlevel == 0) {
+	if (!update_seed_check || seed_index == 4096 || currlevel == 0) {
 		return;
 	}
 
-	if(seed_table[seed_index] == -1) {
+	if (seed_table[seed_index] == -1) {
 		seed_table[seed_index] = seed;
-	} else if(seed != seed_table[seed_index]) {
+	} else if (seed != seed_table[seed_index]) {
 		app_fatal("Seeds desynced");
 	}
 

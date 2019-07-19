@@ -139,7 +139,7 @@ void UiDestroy()
 	mem_free_dbg(ArtHero.data);
 	ArtHero.data = NULL;
 
-	mem_free_dbg(font);
+	TTF_CloseFont(font);
 	font = NULL;
 }
 

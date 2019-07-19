@@ -20,13 +20,13 @@ void mainmenu_refresh_music()
 	} while (!menu_music_track_id || menu_music_track_id == 1);
 }
 
-void __stdcall mainmenu_create_hero(int arg1, int arg2, int arg3, int arg4, char *name_1, char *name_2)
+void __stdcall mainmenu_change_name(int arg1, int arg2, int arg3, int arg4, char *name_1, char *name_2)
 {
 #ifdef SWITCH
 	strcpy(name_2,"Switcher");
 #endif
 	if (UiValidPlayerName(name_2))
-		pfile_create_save_file(name_1, name_2);
+		pfile_rename_hero(name_1, name_2);
 }
 
 int __stdcall mainmenu_select_hero_dialog(
@@ -51,7 +51,6 @@ int __stdcall mainmenu_select_hero_dialog(
 		        gszHero,
 		        &gnDifficulty))
 			app_fatal("Unable to display SelHeroSing");
-
 
 		if (dlgresult == LOAD_GAME)
 			gbLoadGame = TRUE;

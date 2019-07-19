@@ -33,7 +33,6 @@ LRESULT __stdcall WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 WNDPROC SetWindowProc(WNDPROC NewProc);
 
 /* rdata */
-extern const int init_inf; // weak
 
 /* data */
 

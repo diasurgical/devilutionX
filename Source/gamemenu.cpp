@@ -5,33 +5,33 @@ DEVILUTION_BEGIN_NAMESPACE
 TMenuItem sgSingleMenu[6] = {
 	// clang-format off
 	//   dwFlags, pszStr,        fnMenu
-	{ 0x80000000, "Save Game",   &gamemenu_save_game },
-	{ 0x80000000, "Options",     &gamemenu_options   },
-	{ 0x80000000, "New Game",    &gamemenu_new_game  },
-	{ 0x80000000, "Load Game",   &gamemenu_load_game },
-	{ 0x80000000, "Quit Diablo", &gamemenu_quit_game },
-	{ 0x80000000, NULL, NULL }
+	{ GMENU_ENABLED, "Save Game",   &gamemenu_save_game },
+	{ GMENU_ENABLED, "Options",     &gamemenu_options   },
+	{ GMENU_ENABLED, "New Game",    &gamemenu_new_game  },
+	{ GMENU_ENABLED, "Load Game",   &gamemenu_load_game },
+	{ GMENU_ENABLED, "Quit Diablo", &gamemenu_quit_game },
+	{ GMENU_ENABLED, NULL, NULL }
 	// clang-format on
 };
 TMenuItem sgMultiMenu[5] = {
 	// clang-format off
 	//   dwFlags, pszStr,            fnMenu
-	{ 0x80000000, "Options",         &gamemenu_options      },
-	{ 0x80000000, "New Game",        &gamemenu_new_game     },
-	{ 0x80000000, "Restart In Town", &gamemenu_restart_town },
-	{ 0x80000000, "Quit Diablo",     &gamemenu_quit_game    },
-	{ 0x80000000, NULL,              NULL                   }
+	{ GMENU_ENABLED, "Options",         &gamemenu_options      },
+	{ GMENU_ENABLED, "New Game",        &gamemenu_new_game     },
+	{ GMENU_ENABLED, "Restart In Town", &gamemenu_restart_town },
+	{ GMENU_ENABLED, "Quit Diablo",     &gamemenu_quit_game    },
+	{ GMENU_ENABLED, NULL,              NULL                   }
 	// clang-format on
 };
 TMenuItem sgOptionMenu[6] = {
 	// clang-format off
-	//   dwFlags, pszStr,          fnMenu
-	{ 0xC0000000, NULL,            &gamemenu_music_volume  },
-	{ 0xC0000000, NULL,            &gamemenu_sound_volume  },
-	{ 0xC0000000, "Gamma",         &gamemenu_gamma         },
-	{ 0x80000000, NULL,            &gamemenu_color_cycling },
-	{ 0x80000000, "Previous Menu", &j_gamemenu_previous    },
-	{ 0x80000000, NULL,            NULL                    }
+	//                     dwFlags, pszStr,          fnMenu
+	{ GMENU_ENABLED | GMENU_SLIDER, NULL,            &gamemenu_music_volume  },
+	{ GMENU_ENABLED | GMENU_SLIDER, NULL,            &gamemenu_sound_volume  },
+	{ GMENU_ENABLED | GMENU_SLIDER, "Gamma",         &gamemenu_gamma         },
+	{ GMENU_ENABLED               , NULL,            &gamemenu_color_cycling },
+	{ GMENU_ENABLED               , "Previous Menu", &j_gamemenu_previous    },
+	{ GMENU_ENABLED               , NULL,            NULL                    }
 	// clang-format on
 };
 char *music_toggle_names[] = { "Music", "Music Disabled" };
@@ -191,14 +191,14 @@ void gamemenu_get_music()
 void gamemenu_sound_music_toggle(char **names, TMenuItem *menu_item, int volume)
 {
 	if (gbSndInited) {
-		menu_item->dwFlags |= 0xC0000000;
+		menu_item->dwFlags |= GMENU_ENABLED | GMENU_SLIDER;
 		menu_item->pszStr = *names;
 		gmenu_slider_steps(menu_item, 17);
 		gmenu_slider_set(menu_item, VOLUME_MIN, VOLUME_MAX, volume);
 		return;
 	}
 
-	menu_item->dwFlags &= 0x3FFFFFFF;
+	menu_item->dwFlags &= ~(GMENU_ENABLED | GMENU_SLIDER);
 	menu_item->pszStr = names[1];
 }
 

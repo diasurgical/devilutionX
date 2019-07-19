@@ -335,7 +335,7 @@ HWND CreateWindowExA(
     HINSTANCE hInstance,
     LPVOID lpParam)
 {
-	if (SDL_Init(SDL_INIT_EVERYTHING) <= -1) {
+	if (SDL_Init(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) <= -1) {
 		SDL_Log(SDL_GetError());
 		return NULL;
 	}

@@ -2,22 +2,22 @@
 #ifndef __CURSOR_H__
 #define __CURSOR_H__
 
-extern int cursH;      // weak
-extern int icursH28;   // idb
-extern int cursW;      // idb
-extern int pcursmonst; // idb
-extern int icursW28;   // idb
+extern int cursH;
+extern int icursH28;
+extern int cursW;
+extern int pcursmonst;
+extern int icursW28;
 extern void *pCursCels;
-extern int icursH;        // weak
-extern char pcursinvitem; // weak
-extern int icursW;        // weak
-extern char pcursitem;    // weak
-extern char pcursobj;     // weak
-extern char pcursplr;     // weak
+extern int icursH;
+extern char pcursinvitem;
+extern int icursW;
+extern char pcursitem;
+extern char pcursobj;
+extern char pcursplr;
 extern int cursmx;
 extern int cursmy;
-extern int pcurstemp; // weak
-extern int pcurs;        // idb
+extern int pcurstemp;
+extern int pcurs;
 
 void InitCursor();
 void FreeCursor();
