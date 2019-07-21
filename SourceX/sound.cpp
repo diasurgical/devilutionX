@@ -316,6 +316,7 @@ void sound_file_cleanup(TSnd *sound_file)
 
 void snd_init(HWND hWnd)
 {
+
 	sound_load_volume("Sound Volume", &sglSoundVolume);
 	gbSoundOn = sglSoundVolume > VOLUME_MIN;
 
@@ -423,7 +424,7 @@ HRESULT sound_DirectSoundCreate(LPGUID lpGuid, LPDIRECTSOUND *ppDS, LPUNKNOWN pU
 	}
 	*ppDS = new DirectSound();
 
-	int result = Mix_OpenAudio(22050, /*AUDIO_S16SYS*/AUDIO_S16LSB, 2, 1024);
+	int result = Mix_OpenAudio(22050, AUDIO_S16LSB, 2, 1024);
 	if(result==-1) {
 		printf("Mix_OpenAudio: %s\n", Mix_GetError());
 		exit(2);
