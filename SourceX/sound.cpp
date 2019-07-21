@@ -239,12 +239,8 @@ TSnd *sound_file_load(char *path)
 
 	wave_file = LoadWaveFile(file, &pSnd->fmt, &pSnd->chunk);
 	if (!wave_file)
-	{
-		DUMMY();
-		printf("Invalid sound format on file %s\n", pSnd->sound_path);
-		//Todo(Amiga): Fix loading of sound files
-		//app_fatal("Invalid sound format on file %s", pSnd->sound_path);
-	}
+		app_fatal("Invalid sound format on file %s", pSnd->sound_path);
+
 	sound_CreateSoundBuffer(pSnd);
 
 #ifdef __cplusplus
@@ -316,7 +312,6 @@ void sound_file_cleanup(TSnd *sound_file)
 
 void snd_init(HWND hWnd)
 {
-
 	sound_load_volume("Sound Volume", &sglSoundVolume);
 	gbSoundOn = sglSoundVolume > VOLUME_MIN;
 
@@ -423,11 +418,9 @@ HRESULT sound_DirectSoundCreate(LPGUID lpGuid, LPDIRECTSOUND *ppDS, LPUNKNOWN pU
 	if (DirectSoundCreate == NULL) {
 	}
 	*ppDS = new DirectSound();
-
 	int result = Mix_OpenAudio(22050, AUDIO_S16LSB, 2, 1024);
-	if(result==-1) {
-		printf("Mix_OpenAudio: %s\n", Mix_GetError());
-		exit(2);
+	if (result < 0) {
+		SDL_Log(Mix_GetError());
 	}
 	Mix_AllocateChannels(25);
 	Mix_ReserveChannels(1); // reserve one channel for naration (SFileDda*)

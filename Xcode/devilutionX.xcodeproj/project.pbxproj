@@ -137,6 +137,7 @@
 		652BBCD55FBE46CC941FD64C /* smk_bitstream.c in Sources */ = {isa = PBXBuildFile; fileRef = 670494A24D7F4CFFACCD3BFB /* smk_bitstream.c */; };
 		73E86BC9E2714148AD560C46 /* smacker.c in Sources */ = {isa = PBXBuildFile; fileRef = 622A8C6A02D94FFC996C2CAE /* smacker.c */; };
 		769D23B7F293054B68BEE3D8 /* misdat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D7AC290594F8E8AFC64A9BD6 /* misdat.cpp */; };
+		805FB64722DD7E4A00BDC35B /* selyesno.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 805FB64622DD7E4A00BDC35B /* selyesno.cpp */; };
 		8305C713732C4CECA36F37E9 /* explode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D7FE30F050049FB933D2788 /* explode.cpp */; };
 		83FC98A9D008E3B0FC44D7BC /* objdat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9544864FEB328522685D5D6E /* objdat.cpp */; };
 		8FA4E9B3FA7D4B6AAB10EF73 /* implode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B1B2D29A5A284CD29205745F /* implode.cpp */; };
@@ -338,16 +339,17 @@
 		6D7FE30F050049FB933D2788 /* explode.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = explode.cpp; path = 3rdParty/PKWare/explode.cpp; sourceTree = SOURCE_ROOT; };
 		6F074DDFE42C4B46A93CC4A9 /* Section.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Section.cpp; path = 3rdParty/Radon/Radon/source/Section.cpp; sourceTree = SOURCE_ROOT; };
 		722EB8D86DBF49368AAFEE3C /* File.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = File.cpp; path = 3rdParty/Radon/Radon/source/File.cpp; sourceTree = SOURCE_ROOT; };
+		805FB64622DD7E4A00BDC35B /* selyesno.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = selyesno.cpp; path = SourceX/DiabloUI/selyesno.cpp; sourceTree = "<group>"; };
 		92E1DAF5C7BA48E5A1E39C04 /* libRadon.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRadon.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		9544864FEB328522685D5D6E /* objdat.cpp */ = {isa = PBXFileReference; includeInIndex = 1; name = objdat.cpp; path = Source/objdat.cpp; sourceTree = "<group>"; };
-		A8C902DAE79069232EF316BF /* itemdat.cpp */ = {isa = PBXFileReference; includeInIndex = 1; name = itemdat.cpp; path = Source/itemdat.cpp; sourceTree = "<group>"; };
+		9544864FEB328522685D5D6E /* objdat.cpp */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.cpp; name = objdat.cpp; path = Source/objdat.cpp; sourceTree = "<group>"; };
+		A8C902DAE79069232EF316BF /* itemdat.cpp */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.cpp; name = itemdat.cpp; path = Source/itemdat.cpp; sourceTree = "<group>"; };
 		B1B2D29A5A284CD29205745F /* implode.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = implode.cpp; path = 3rdParty/PKWare/implode.cpp; sourceTree = SOURCE_ROOT; };
 		B229DB87369B4D76B0A60580 /* Named.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Named.cpp; path = 3rdParty/Radon/Radon/source/Named.cpp; sourceTree = SOURCE_ROOT; };
-		BF5EF1B0CBE63E676700D98F /* spelldat.cpp */ = {isa = PBXFileReference; includeInIndex = 1; name = spelldat.cpp; path = Source/spelldat.cpp; sourceTree = "<group>"; };
+		BF5EF1B0CBE63E676700D98F /* spelldat.cpp */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.cpp; name = spelldat.cpp; path = Source/spelldat.cpp; sourceTree = "<group>"; };
 		C0B8A000CA684B9FAF88F313 /* Key.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = Key.cpp; path = 3rdParty/Radon/Radon/source/Key.cpp; sourceTree = SOURCE_ROOT; };
-		D7AC290594F8E8AFC64A9BD6 /* misdat.cpp */ = {isa = PBXFileReference; includeInIndex = 1; name = misdat.cpp; path = Source/misdat.cpp; sourceTree = "<group>"; };
+		D7AC290594F8E8AFC64A9BD6 /* misdat.cpp */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.cpp; name = misdat.cpp; path = Source/misdat.cpp; sourceTree = "<group>"; };
 		DCC453E263C842279A5E02E7 /* libsmacker.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libsmacker.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		DE0A12E19BA25264D89498BD /* monstdat.cpp */ = {isa = PBXFileReference; includeInIndex = 1; name = monstdat.cpp; path = Source/monstdat.cpp; sourceTree = "<group>"; };
+		DE0A12E19BA25264D89498BD /* monstdat.cpp */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.cpp; name = monstdat.cpp; path = Source/monstdat.cpp; sourceTree = "<group>"; };
 		F249E02C422E4EC2B812E004 /* libStormLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libStormLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -875,6 +877,7 @@
 				43B6C7D5224068AB007313EA /* misc_dx.cpp in Sources */,
 				43DA13422271574900E21D4A /* misc.cpp in Sources */,
 				43B6C7D9224068AB007313EA /* packet.cpp in Sources */,
+				805FB64722DD7E4A00BDC35B /* selyesno.cpp in Sources */,
 				43DA13412271574900E21D4A /* misc_msg.cpp in Sources */,
 				43DA133F2271574900E21D4A /* dsound.cpp in Sources */,
 				43B6C7DA224068AB007313EA /* progress.cpp in Sources */,
