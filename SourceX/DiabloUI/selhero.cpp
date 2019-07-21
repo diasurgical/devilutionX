@@ -140,9 +140,11 @@ void selhero_List_Focus(int value)
 	selhero_deleteEnabled = false;
 }
 
-void selhero_List_DeleteYesNo(int value)
+bool selhero_List_DeleteYesNo()
 {
 	selhero_navigateYesNo = selhero_deleteEnabled;
+
+	return selhero_navigateYesNo;
 }
 
 void selhero_List_Select(int value)

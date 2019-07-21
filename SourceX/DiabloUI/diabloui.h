@@ -111,7 +111,7 @@ void SetMenu(int MenuId);
 void UiFocusNavigationSelect();
 void UiFocusNavigationEsc();
 void UiFocusNavigationYesNo();
-void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), UI_Item *items, int size, bool wraps = false, void (*fnYesNo)(int value) = NULL);
+void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), UI_Item *items, int size, bool wraps = false, bool (*fnYesNo)() = NULL);
 void UiRender();
 void UiRenderItems(UI_Item *items, int size);
 void WordWrap(UI_Item *item);
