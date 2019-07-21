@@ -127,10 +127,30 @@
 
 #endif
 
+#if !defined(PLATFORM_DEFINED) && defined(__AMIGA__)
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdarg.h>
+#include <string.h>
+#include <ctype.h>
+#include <assert.h>
+#include <errno.h>
+
+#define PLATFORM_AMIGA
+#define PLATFORM_DEFINED
+
+#endif
+
 //-----------------------------------------------------------------------------
 // Assumption: we are not on Windows nor Macintosh, so this must be linux *grin*
 
-#if !defined(PLATFORM_DEFINED) && !defined(__AMIGA__)
+#if !defined(PLATFORM_DEFINED)
 
   #include <sys/types.h>
   #include <sys/stat.h>
@@ -146,32 +166,14 @@
   #include <assert.h>
   #include <errno.h>
 
-  #define PLATFORM_LITTLE_ENDIAN
+  #ifndef __BIG_ENDIAN__
+    #define PLATFORM_LITTLE_ENDIAN
+  #endif
+
   #define PLATFORM_LINUX
   #define PLATFORM_DEFINED
 
 #endif
-
-#if !defined(PLATFORM_DEFINED) && defined(__AMIGA__)
-
-  #include <sys/types.h>
-  #include <sys/stat.h>
-  #include <fcntl.h>
-  #include <unistd.h>
-  #include <stdint.h>
-  #include <stdlib.h>
-  #include <stdio.h>
-  #include <stdarg.h>
-  #include <string.h>
-  #include <ctype.h>
-  #include <assert.h>
-  #include <errno.h>
-
-  #define PLATFORM_AMIGA
-  #define PLATFORM_DEFINED
-
-#endif
-
 
 //-----------------------------------------------------------------------------
 // Definition of Windows-specific types for non-Windows platforms
@@ -184,7 +186,7 @@
   #endif
 
   // Typedefs for ANSI C
-  #ifndef __AMIGA__
+  #ifndef PLATFORM_AMIGA
   typedef unsigned char  BYTE;
   typedef int            LONG;
   #endif
