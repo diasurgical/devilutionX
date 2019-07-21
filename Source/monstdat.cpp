@@ -254,3 +254,5 @@ UniqMonstStruct UniqMonst[98] = {
 	{  -1,          NULL,                       NULL,       0,      0, 0,           0,          0,          0, 0                                                            ,        0,        0,        0, 0              }
 	// clang-format on
 };
+
+DEVILUTION_END_NAMESPACE

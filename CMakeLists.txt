@@ -78,8 +78,6 @@ endif()
 
 find_package(sodium REQUIRED)
 
-set(PROJECT_LINK_LIBS libSDL.so)
-
 add_library(smacker STATIC
   3rdParty/libsmacker/smk_bitstream.c
   3rdParty/libsmacker/smk_hufftree.c
@@ -198,14 +196,14 @@ add_executable(devilutionx
   SourceX/storm/storm.cpp
   SourceX/storm/storm_net.cpp
   SourceX/storm/storm_dx.cpp
-   SourceX/dvlnet/abstract_net.cpp
-   SourceX/dvlnet/loopback.cpp
-   SourceX/dvlnet/packet.cpp
-   SourceX/dvlnet/base.cpp
-   SourceX/dvlnet/frame_queue.cpp
-   SourceX/dvlnet/tcp_client.cpp
-   SourceX/dvlnet/tcp_server.cpp
-   SourceX/dvlnet/udp_p2p.cpp
+  SourceX/dvlnet/abstract_net.cpp
+  SourceX/dvlnet/loopback.cpp
+  SourceX/dvlnet/packet.cpp
+  SourceX/dvlnet/base.cpp
+  SourceX/dvlnet/frame_queue.cpp
+  SourceX/dvlnet/tcp_client.cpp
+  SourceX/dvlnet/tcp_server.cpp
+  SourceX/dvlnet/udp_p2p.cpp
   SourceX/DiabloUI/credits.cpp
   SourceX/DiabloUI/diabloui.cpp
   SourceX/DiabloUI/dialogs.cpp
@@ -214,11 +212,11 @@ add_executable(devilutionx
   SourceX/DiabloUI/selconn.cpp
   SourceX/DiabloUI/selgame.cpp
   SourceX/DiabloUI/selhero.cpp
+  SourceX/DiabloUI/selyesno.cpp
   SourceX/DiabloUI/title.cpp
   SourceX/main.cpp)
 
-target_include_directories(devilution PUBLIC Source SourceS )
-
+target_include_directories(devilution PUBLIC Source SourceS)
 target_include_directories(devilutionx PRIVATE
   SourceX
   3rdParty/asio/include

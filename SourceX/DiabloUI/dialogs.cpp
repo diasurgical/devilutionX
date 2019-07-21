@@ -28,12 +28,6 @@ UI_Item SELOK_DIALOG[] = {
 	{ { 230, 390, 180, 35 }, UI_LIST, UIS_CENTER, 0, "OK" },
 };
 
-UI_Item SELYESNO_DIALOG[] = {
-	{ { 120, 210, 400, 168 } }, // Question text
-	{ { 230, 390, 180, 35 }, UI_LIST, UIS_CENTER, 0, "Yes" },
-	{ { 230, 426, 180, 35 }, UI_LIST, UIS_CENTER, 0, "No" },
-};
-
 UI_Item SPAWNERR_DIALOG[] = {
 	{ { 140, 199, 400, 177 }, UI_TEXT, 0, 0, "The Rogue and Sorcerer are only available in the full retail version of Diablo. For ordering information call (800) 953-SNOW." },
 	{ { 230, 407, 180, 43 }, UI_BUTTON, 0, 0, "OK" },
