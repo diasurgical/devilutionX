@@ -59,14 +59,6 @@ BOOL UiSelHeroDelYesNoDialog(
 
 	UiInitList(0, 1, NULL, selyesno_Select, selyesno_Esc, SELYESNO_DIALOG, size(SELYESNO_DIALOG), false, NULL);
 
-	// forcing the default selection to be "No",
-	// remove this code to be consistent with
-	// the retail v 1.09 game
-	SDL_Event sdlevent = {};
-	sdlevent.type = SDL_KEYDOWN;
-	sdlevent.key.keysym.sym = SDLK_DOWN;
-	SDL_PushEvent(&sdlevent);
-
 	selyesno_endMenu = false;
 	while (!selyesno_endMenu) {
 		UiRenderItems(SELYESNO_DIALOG, size(SELYESNO_DIALOG));
