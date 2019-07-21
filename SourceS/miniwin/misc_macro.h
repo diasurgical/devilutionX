@@ -23,11 +23,19 @@
 
 #define INFINITE DVL_INFINITE
 
+#ifndef __BIG_ENDIAN__
 #define MAKEFOURCC(x, y, z, w)             \
 	(((uint32_t)((uint8_t)x))              \
 	    | (((uint32_t)((uint8_t)y)) << 8)  \
 	    | (((uint32_t)((uint8_t)z)) << 16) \
 	    | (((uint32_t)((uint8_t)w)) << 24))
+#else
+#define MAKEFOURCC(w, z, y, x)             \
+	(((uint32_t)((uint8_t)x))              \
+	    | (((uint32_t)((uint8_t)y)) << 8)  \
+	    | (((uint32_t)((uint8_t)z)) << 16) \
+	    | (((uint32_t)((uint8_t)w)) << 24))
+#endif
 
 #define WINUSERAPI
 
