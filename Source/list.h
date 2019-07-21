@@ -58,7 +58,7 @@ private:
 	TList(const TList &);
 	TList &operator=(const TList &);
 
-	static __inline void SDelete(T *node)
+	static inline void SDelete(T *node)
 	{
 		SMemFree(node, (char *)OBJECT_NAME(T), SLOG_OBJECT, 0);
 	}
@@ -95,14 +95,14 @@ void TList<T>::DeleteAll()
 
 //=============================================================================
 template <class T>
-__inline T *TList<T>::Head()
+inline T *TList<T>::Head()
 {
 	return m_link.Next();
 }
 
 //=============================================================================
 template <class T>
-__inline TLink<T> *TList<T>::GetLinkFromNode(T *node) const
+inline TLink<T> *TList<T>::GetLinkFromNode(T *node) const
 {
 	//    assert(m_offset != (size_t) -1);
 	//    return (TLink<T> *) ((size_t) node + m_offset);
@@ -154,7 +154,7 @@ void TList<T>::UnlinkAll()
 {
 	for (;;) {
 		T *node = m_link.Next();
-		if ((intptr_t)node <= 0)
+		if ((int)node <= 0)
 			break;
 		node->m_Link.Unlink();
 	}
@@ -188,17 +188,17 @@ public:
 
 	T *Next()
 	{
-		if ((intptr_t)m_nextNode <= 0)
+		if ((ptrdiff_t)m_nextNode <= 0)
 			return NULL;
 		return m_nextNode;
 	}
 
 	TLink<T> *NextLink(size_t offset = -1)
 	{
-		if ((intptr_t)m_nextNode <= 0)
+		if ((ptrdiff_t)m_nextNode <= 0)
 			return (TLink<T> *)~((size_t)m_nextNode);
 
-		if ((intptr_t)offset < 0) {
+		if ((int)offset < 0) {
 			// Calculate the offset from a node pointer to a link structure
 			offset = (size_t)this - (size_t)m_prevLink->m_nextNode;
 		}
@@ -217,7 +217,7 @@ public:
 		nextLink->m_prevLink = this;
 	}
 
-	__inline void InsertAfter(T *node, TLink<T> *prevLink, const size_t &offset)
+	inline void InsertAfter(T *node, TLink<T> *prevLink, const size_t &offset)
 	{
 		m_prevLink = prevLink;
 		m_nextNode = prevLink->m_nextNode;

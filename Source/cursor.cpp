@@ -192,8 +192,8 @@ void CheckCursMove()
 			sx = 0;
 		}
 	}
-	if (sy > VIEWPORT_HEIGHT - 1 && track_isscrolling()) {
-		sy = VIEWPORT_HEIGHT - 1;
+	if (sy > PANEL_TOP - 1 && track_isscrolling()) {
+		sy = PANEL_TOP - 1;
 	}
 	if (!zoomflag) {
 		sx >>= 1;
@@ -211,14 +211,14 @@ void CheckCursMove()
 	if (sx < 0) {
 		sx = 0;
 	}
-	if (sx >= 640) {
-		sx = 640;
+	if (sx >= SCREEN_WIDTH) {
+		sx = SCREEN_WIDTH;
 	}
 	if (sy < 0) {
 		sy = 0;
 	}
-	if (sy >= 480) {
-		sy = 480;
+	if (sy >= SCREEN_HEIGHT) {
+		sy = SCREEN_HEIGHT;
 	}
 
 	tx = sx >> 6;
@@ -273,7 +273,7 @@ void CheckCursMove()
 		cursmy = my;
 		return;
 	}
-	if (MouseY > VIEWPORT_HEIGHT) {
+	if (MouseY > PANEL_TOP) {
 		CheckPanelInfo();
 		return;
 	}

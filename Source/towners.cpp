@@ -747,10 +747,7 @@ void TalkToTowner(int p, int t)
 				}
 			}
 			if (plr[p]._pLvlVisited[9] && quests[QTYPE_ANVIL]._qactive != 0) {
-				if ((quests[QTYPE_ANVIL]._qactive == 1 || quests[QTYPE_ANVIL]._qactive == 2) && quests[QTYPE_ANVIL]._qvar2 == 0) {
-					if (towner[t]._tMsgSaid) {
-						goto SKIPANVIL; /* TODO: fix */
-					}
+				if ((quests[QTYPE_ANVIL]._qactive == 1 || quests[QTYPE_ANVIL]._qactive == 2) && quests[QTYPE_ANVIL]._qvar2 == 0 && !towner[t]._tMsgSaid) {
 					if (quests[QTYPE_INFRA]._qvar2 == 2 || quests[QTYPE_INFRA]._qactive == 2 && quests[QTYPE_INFRA]._qvar2 == 1) {
 						quests[QTYPE_ANVIL]._qvar2 = 1;
 						quests[QTYPE_ANVIL]._qlog = TRUE;
@@ -764,20 +761,21 @@ void TalkToTowner(int p, int t)
 						towner[t]._tMsgSaid = TRUE;
 					}
 				}
-				if (quests[QTYPE_ANVIL]._qvar2 == 1 && PlrHasItem(p, IDI_ANVIL, &i) != NULL && !towner[t]._tMsgSaid) {
-					quests[QTYPE_ANVIL]._qactive = 3;
-					quests[QTYPE_ANVIL]._qvar2 = 2;
-					quests[QTYPE_ANVIL]._qvar1 = 2;
-					RemoveInvItem(p, i);
-					CreateItem(UITEM_GRISWOLD, towner[t]._tx, towner[t]._ty + 1);
-					towner[t]._tbtcnt = 150;
-					towner[t]._tVar1 = p;
-					InitQTextMsg(QUEST_ANVIL7);
-					towner[t]._tMsgSaid = TRUE;
+				if (quests[QTYPE_ANVIL]._qvar2 == 1 && PlrHasItem(p, IDI_ANVIL, &i) != NULL) {
+					if (!towner[t]._tMsgSaid) {
+						quests[QTYPE_ANVIL]._qactive = 3;
+						quests[QTYPE_ANVIL]._qvar2 = 2;
+						quests[QTYPE_ANVIL]._qvar1 = 2;
+						RemoveInvItem(p, i);
+						CreateItem(UITEM_GRISWOLD, towner[t]._tx, towner[t]._ty + 1);
+						towner[t]._tbtcnt = 150;
+						towner[t]._tVar1 = p;
+						InitQTextMsg(QUEST_ANVIL7);
+						towner[t]._tMsgSaid = TRUE;
+					}
 				}
 			}
 		}
-	SKIPANVIL:
 		if (!qtextflag) {
 			TownerTalk(QUEST_GRISWOLD1, t);
 			if (storeflag) {

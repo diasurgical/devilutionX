@@ -671,6 +671,7 @@ extern void DrawArtWithMask(int SX, int SY, int SW, int SH, int nFrame, BYTE bMa
 extern BOOL __cdecl LoadArtWithPal(char *pszFile, void **pBuffer, int frames, DWORD *data);
 
 constexpr auto DVL_WM_ACTIVATEAPP = 0x001C;
+constexpr auto DVL_WM_SYSKEYUP = 0x0105;
 const auto DVL_HFILE_ERROR = (HFILE)-1;
 constexpr auto DVL_DRIVE_CDROM = 5;
 constexpr auto DVL_WM_DESTROY = 0x0002;

@@ -1242,7 +1242,7 @@ void AddArrow(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, i
 	}
 	if (!mienemy) {
 		av = 32;
-		if (plr[id]._pIFlags & 4) {
+		if (plr[id]._pIFlags & ISPL_RNDARROWVEL) {
 			av = random(64, 32) + 16;
 		}
 		if (plr[id]._pClass == PC_ROGUE)
@@ -1301,7 +1301,7 @@ void AddRndTeleport(int mi, int sx, int sy, int dx, int dy, int midir, char mien
 
 	missile[mi]._miVar1 = 0;
 	missile[mi]._mirange = 2;
-	if (setlevel == 0 || setlvlnum != SL_VILEBETRAYER) {
+	if (!setlevel || setlvlnum != SL_VILEBETRAYER) {
 		missile[mi]._mix = sx + r1;
 		missile[mi]._miy = sy + r2;
 		if (!mienemy)
@@ -2285,12 +2285,16 @@ void AddFlamec(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, 
 
 void AddCbolt(int mi, int sx, int sy, int dx, int dy, int midir, char micaster, int id, int dam)
 {
+	/// ASSERT: assert((DWORD)mi < MAXMISSILES);
+
 	if (micaster == 0) {
-		if (id != -1)
+		if (id == myplr) {
 			missile[mi]._mirnd = random(63, 15) + 1;
-		else
+			missile[mi]._midam = random(68, plr[id]._pMagic >> 2) + 1;
+		} else {
 			missile[mi]._mirnd = random(63, 15) + 1;
-		missile[mi]._midam = random(68, plr[id]._pMagic >> 2) + 1;
+			missile[mi]._midam = random(68, plr[id]._pMagic >> 2) + 1;
+		}
 	} else {
 		missile[mi]._mirnd = random(63, 15) + 1;
 		missile[mi]._midam = 15;

@@ -224,10 +224,10 @@ typedef struct PlayerStruct {
 	int _pSplHotKey[4];
 	char _pSplTHotKey[4];
 	int _pwtype;
-	unsigned char _pBlockFlag;
-	unsigned char _pInvincible;
+	BOOLEAN _pBlockFlag;
+	BOOLEAN _pInvincible;
 	char _pLightRad;
-	unsigned char _pLvlChanging;
+	BOOLEAN _pLvlChanging;
 	char _pName[PLR_NAME_LEN];
 	// plr_class enum value.
 	// TODO: this could very well be `enum plr_class _pClass`
@@ -267,7 +267,7 @@ typedef struct PlayerStruct {
 	char _pFireResist;
 	char _pLghtResist;
 	int _pGold;
-	int _pInfraFlag;
+	BOOL _pInfraFlag;
 	int _pVar1;
 	int _pVar2;
 	int _pVar3;
@@ -276,8 +276,8 @@ typedef struct PlayerStruct {
 	int _pVar6;
 	int _pVar7;
 	int _pVar8;
-	unsigned char _pLvlVisited[NUMLEVELS];
-	unsigned char _pSLvlVisited[NUMLEVELS]; // only 10 used
+	BOOLEAN _pLvlVisited[NUMLEVELS];
+	BOOLEAN _pSLvlVisited[NUMLEVELS]; // only 10 used
 	int _pGFXLoad;
 	unsigned char *_pNAnim[8];
 	int _pNFrames;

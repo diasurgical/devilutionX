@@ -34,11 +34,14 @@ char PlrGFXAnimLens[3][11] = {
 	{ 8, 18, 8, 4, 20, 16, 7, 20, 8, 10, 12 },
 	{ 8, 16, 8, 6, 20, 12, 8, 20, 8, 12, 8 }
 };
-int PWVel[4][3] = {
+int PWVel[3][3] = {
 	{ 2048, 1024, 512 },
 	{ 2048, 1024, 512 },
-	{ 2048, 1024, 512 },
-	{ 8, 8, 8 }
+	{ 2048, 1024, 512 }
+};
+// Total number of frames in walk animation.
+int AnimLenFromClass[3] = {
+	8, 8, 8
 };
 int StrengthTbl[3] = { 30, 20, 15 };
 int MagicTbl[3] = { 10, 15, 35 };
@@ -596,7 +599,7 @@ void CreatePlayer(int pnum, char c)
 	plr[pnum]._pFireResist = 0;
 	plr[pnum]._pLghtResist = 0;
 	plr[pnum]._pLightRad = 10;
-	plr[pnum]._pInfraFlag = 0;
+	plr[pnum]._pInfraFlag = FALSE;
 
 	if (c == PC_WARRIOR) {
 		plr[pnum]._pAblSpells = (__int64)1 << (SPL_REPAIR - 1);
@@ -637,14 +640,14 @@ void CreatePlayer(int pnum, char c)
 	}
 
 	for (i = 0; i < NUMLEVELS; i++) {
-		plr[pnum]._pLvlVisited[i] = 0;
+		plr[pnum]._pLvlVisited[i] = FALSE;
 	}
 
 	for (i = 0; i < 10; i++) {
-		plr[pnum]._pSLvlVisited[i] = 0;
+		plr[pnum]._pSLvlVisited[i] = FALSE;
 	}
 
-	plr[pnum]._pLvlChanging = 0;
+	plr[pnum]._pLvlChanging = FALSE;
 	plr[pnum].pTownWarps = 0;
 	plr[pnum].pLvlLoad = 0;
 	plr[pnum].pBattleNet = 0;
@@ -877,7 +880,7 @@ void InitPlayer(int pnum, BOOL FirstTime)
 		if (pnum == myplr) {
 			plr[pnum]._plid = AddLight(plr[pnum].WorldX, plr[pnum].WorldY, plr[pnum]._pLightRad);
 		} else {
-			plr[pnum]._plid = WALK_NONE;
+			plr[pnum]._plid = -1;
 		}
 		plr[pnum]._pvid = AddVision(plr[pnum].WorldX, plr[pnum].WorldY, plr[pnum]._pLightRad, pnum == myplr);
 	}
@@ -1970,12 +1973,12 @@ void InitLevelChange(int pnum)
 	if (pnum == myplr) {
 		dPlayer[plr[myplr].WorldX][plr[myplr].WorldY] = myplr + 1;
 	} else {
-		plr[pnum]._pLvlVisited[plr[pnum].plrlevel] = 1;
+		plr[pnum]._pLvlVisited[plr[pnum].plrlevel] = TRUE;
 	}
 
 	ClrPlrPath(pnum);
 	plr[pnum].destAction = ACTION_NONE;
-	plr[pnum]._pLvlChanging = 1;
+	plr[pnum]._pLvlChanging = TRUE;
 
 	if (pnum == myplr) {
 		plr[pnum].pLvlLoad = 10;
@@ -2073,7 +2076,7 @@ BOOL PM_DoStand(int pnum)
 
 BOOL PM_DoWalk(int pnum)
 {
-	int vel;
+	int anim_len;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PM_DoWalk: illegal player %d", pnum);
@@ -2085,12 +2088,12 @@ BOOL PM_DoWalk(int pnum)
 		PlaySfxLoc(PS_WALK1, plr[pnum].WorldX, plr[pnum].WorldY);
 	}
 
-	vel = 8;
+	anim_len = 8;
 	if (currlevel != 0) {
-		vel = PWVel[3][plr[pnum]._pClass];
+		anim_len = AnimLenFromClass[plr[pnum]._pClass];
 	}
 
-	if (plr[pnum]._pVar8 == vel) {
+	if (plr[pnum]._pVar8 == anim_len) {
 		dPlayer[plr[pnum].WorldX][plr[pnum].WorldY] = 0;
 		plr[pnum].WorldX += plr[pnum]._pVar1;
 		plr[pnum].WorldY += plr[pnum]._pVar2;
@@ -2126,7 +2129,7 @@ BOOL PM_DoWalk(int pnum)
 
 BOOL PM_DoWalk2(int pnum)
 {
-	int vel;
+	int anim_len;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PM_DoWalk2: illegal player %d", pnum);
@@ -2138,12 +2141,12 @@ BOOL PM_DoWalk2(int pnum)
 		PlaySfxLoc(PS_WALK1, plr[pnum].WorldX, plr[pnum].WorldY);
 	}
 
-	vel = 8;
+	anim_len = 8;
 	if (currlevel != 0) {
-		vel = PWVel[3][plr[pnum]._pClass];
+		anim_len = AnimLenFromClass[plr[pnum]._pClass];
 	}
 
-	if (plr[pnum]._pVar8 == vel) {
+	if (plr[pnum]._pVar8 == anim_len) {
 		dPlayer[plr[pnum]._pVar1][plr[pnum]._pVar2] = 0;
 		if (leveltype != DTYPE_TOWN) {
 			ChangeLightXY(plr[pnum]._plid, plr[pnum].WorldX, plr[pnum].WorldY);
@@ -2176,7 +2179,7 @@ BOOL PM_DoWalk2(int pnum)
 
 BOOL PM_DoWalk3(int pnum)
 {
-	int vel;
+	int anim_len;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PM_DoWalk3: illegal player %d", pnum);
@@ -2188,12 +2191,12 @@ BOOL PM_DoWalk3(int pnum)
 		PlaySfxLoc(PS_WALK1, plr[pnum].WorldX, plr[pnum].WorldY);
 	}
 
-	vel = 8;
+	anim_len = 8;
 	if (currlevel != 0) {
-		vel = PWVel[3][plr[pnum]._pClass];
+		anim_len = AnimLenFromClass[plr[pnum]._pClass];
 	}
 
-	if (plr[pnum]._pVar8 == vel) {
+	if (plr[pnum]._pVar8 == anim_len) {
 		dPlayer[plr[pnum].WorldX][plr[pnum].WorldY] = 0;
 		dFlags[plr[pnum]._pVar4][plr[pnum]._pVar5] &= ~BFLAG_PLAYERLR;
 		plr[pnum].WorldX = plr[pnum]._pVar1;
@@ -3632,7 +3635,7 @@ void CheckPlrSpell()
 	}
 
 	if (pcurs != CURSOR_HAND
-	    || MouseY >= VIEWPORT_HEIGHT
+	    || MouseY >= PANEL_TOP
 	    || (chrflag && MouseX < 320 || invflag && MouseX > 320)
 	        && rspell != SPL_HEAL
 	        && rspell != SPL_IDENTIFY

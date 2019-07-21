@@ -2464,7 +2464,7 @@ void OperateBook(int pnum, int i)
 	}
 	object[i]._oAnimFrame++;
 	object[i]._oSelFlag = 0;
-	if (setlevel == 0)
+	if (!setlevel)
 		return;
 
 	if (setlvlnum == SL_BONECHAMB) {
@@ -2487,7 +2487,7 @@ void OperateBook(int pnum, int i)
 		    0,
 		    0);
 	}
-	if (setlevel != 0 && setlvlnum == SL_VILEBETRAYER) {
+	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
 		ObjChangeMapResync(
 		    object[i]._oVar1,
 		    object[i]._oVar2,
@@ -3394,15 +3394,15 @@ void OperateShrine(int pnum, int i, int sType)
 			return;
 		for (j = 0; j < 7; j++) {
 			if (plr[pnum].InvBody[j]._iMagical && !plr[pnum].InvBody[j]._iIdentified)
-				plr[pnum].InvBody[j]._iIdentified = 1;
+				plr[pnum].InvBody[j]._iIdentified = TRUE;
 		}
 		for (j = 0; j < plr[pnum]._pNumInv; j++) {
 			if (plr[pnum].InvList[j]._iMagical && !plr[pnum].InvList[j]._iIdentified)
-				plr[pnum].InvList[j]._iIdentified = 1;
+				plr[pnum].InvList[j]._iIdentified = TRUE;
 		}
 		for (j = 0; j < 8; j++) {
 			if (plr[pnum].SpdList[j]._iMagical && !plr[pnum].SpdList[j]._iIdentified)
-				plr[pnum].SpdList[j]._iIdentified = 1; // belt items can't be magical?
+				plr[pnum].SpdList[j]._iIdentified = TRUE; // belt items can't be magical?
 		}
 		InitDiabloMsg(EMSG_SHRINE_GLIMMERING);
 		break;

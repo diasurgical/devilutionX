@@ -542,15 +542,15 @@ void SetDungeonMicros()
 	SetSpeedCels();
 
 	if (zoomflag) {
-		scr_pix_width = 640;
+		scr_pix_width = SCREEN_WIDTH;
 		scr_pix_height = VIEWPORT_HEIGHT;
-		dword_5C2FF8 = 10;
-		dword_5C2FFC = 11;
+		dword_5C2FF8 = SCREEN_WIDTH / 64;
+		dword_5C2FFC = VIEWPORT_HEIGHT / 32;
 	} else {
-		scr_pix_width = 384;
-		scr_pix_height = 224;
-		dword_5C2FF8 = 6;
-		dword_5C2FFC = 7;
+		scr_pix_width = ZOOM_WIDTH;
+		scr_pix_height = ZOOM_HEIGHT;
+		dword_5C2FF8 = ZOOM_WIDTH / 64;
+		dword_5C2FFC = ZOOM_HEIGHT / 32;
 	}
 }
 
@@ -952,7 +952,7 @@ void InitLevels()
 	if (!leveldebug) {
 		currlevel = 0;
 		leveltype = DTYPE_TOWN;
-		setlevel = 0;
+		setlevel = FALSE;
 	}
 }
 

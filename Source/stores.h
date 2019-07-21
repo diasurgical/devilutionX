@@ -28,7 +28,7 @@ extern int stextvhold;
 extern int stextsel;
 extern char stextscrldbtn;
 extern int gossipend;
-extern BYTE *pCelBuff;
+extern BYTE *pSPentSpn2Cels;
 extern int stextsval;
 extern int boylevel;
 extern ItemStruct smithitem[20];

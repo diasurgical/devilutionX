@@ -1543,10 +1543,10 @@ void SaveLevel()
 	pfile_write_save_file(szName, SaveBuff, tbuff - SaveBuff, dwLen);
 	mem_free_dbg(SaveBuff);
 
-	if (setlevel == 0)
-		plr[myplr]._pLvlVisited[currlevel] = 1;
+	if (!setlevel)
+		plr[myplr]._pLvlVisited[currlevel] = TRUE;
 	else
-		plr[myplr]._pSLvlVisited[setlvlnum] = 1;
+		plr[myplr]._pSLvlVisited[setlvlnum] = TRUE;
 }
 
 void LoadLevel()

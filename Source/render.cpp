@@ -155,11 +155,11 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 					if (dst < gpBufEnd)
 						break;
 					asm_trans_light_square_1_3(8, tbl, &dst, &src);
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					if (dst < gpBufEnd)
 						break;
 					asm_trans_light_square_0_2(8, tbl, &dst, &src);
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--i;
 				} while (i);
 				break;
@@ -190,7 +190,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 					} while (yy_32);
 				LABEL_67:
 					WorldBoolFlag = ((BYTE)WorldBoolFlag + 1) & 1;
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--xx_32;
 				} while (xx_32);
 				break;
@@ -206,7 +206,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 					} else {
 						asm_trans_light_cel_1_3(32 - xx_32, tbl, &dst, &src);
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					xx_32 -= 2;
 					if (xx_32 < 0) {
 						yy_32 = 2;
@@ -221,7 +221,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 							} else {
 								asm_trans_light_cel_1_3(32 - yy_32, tbl, &dst, &src);
 							}
-							dst -= 800;
+							dst -= (SCREEN_WIDTH + 160);
 							yy_32 += 2;
 						} while (yy_32 != 32);
 						return;
@@ -239,7 +239,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 						asm_trans_light_cel_1_3(32 - xx_32, tbl, &dst, &src);
 					}
 					src += (unsigned char)src & 2;
-					dst = &dst[xx_32 - 800];
+					dst = &dst[xx_32 - (SCREEN_WIDTH + 160)];
 					xx_32 -= 2;
 					if (xx_32 < 0) {
 						yy_32 = 2;
@@ -253,7 +253,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 								asm_trans_light_cel_1_3(32 - yy_32, tbl, &dst, &src);
 							}
 							src += (unsigned char)src & 2;
-							dst = &dst[yy_32 - 800];
+							dst = &dst[yy_32 - (SCREEN_WIDTH + 160)];
 							yy_32 += 2;
 						} while (yy_32 != 32);
 						return;
@@ -272,7 +272,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 					} else {
 						asm_trans_light_cel_1_3(32 - xx_32, tbl, &dst, &src);
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					xx_32 -= 2;
 					if (xx_32 < 0) {
 						i = 8;
@@ -280,11 +280,11 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 							if (dst < gpBufEnd)
 								break;
 							asm_trans_light_square_1_3(8, tbl, &dst, &src);
-							dst -= 800;
+							dst -= (SCREEN_WIDTH + 160);
 							if (dst < gpBufEnd)
 								break;
 							asm_trans_light_square_0_2(8, tbl, &dst, &src);
-							dst -= 800;
+							dst -= (SCREEN_WIDTH + 160);
 							--i;
 						} while (i);
 						return;
@@ -302,7 +302,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 						asm_trans_light_cel_1_3(32 - xx_32, tbl, &dst, &src);
 					}
 					src += (unsigned char)src & 2;
-					dst = &dst[xx_32 - 800];
+					dst = &dst[xx_32 - (SCREEN_WIDTH + 160)];
 					xx_32 -= 2;
 					if (xx_32 < 0) {
 						i = 8;
@@ -310,11 +310,11 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 							if (dst < gpBufEnd)
 								break;
 							asm_trans_light_square_1_3(8, tbl, &dst, &src);
-							dst -= 800;
+							dst -= (SCREEN_WIDTH + 160);
 							if (dst < gpBufEnd)
 								break;
 							asm_trans_light_square_0_2(8, tbl, &dst, &src);
-							dst -= 800;
+							dst -= (SCREEN_WIDTH + 160);
 							--i;
 						} while (i);
 						return;
@@ -343,7 +343,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 					dst += 4;
 					--j;
 				} while (j);
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				if (dst < gpBufEnd)
 					break;
 				j = 8;
@@ -354,7 +354,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 					dst += 4;
 					--j;
 				} while (j);
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				--i;
 			} while (i);
 			break;
@@ -374,7 +374,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 					if (!xx_32) {
 					LABEL_271:
 						WorldBoolFlag = ((BYTE)WorldBoolFlag + 1) & 1;
-						dst -= 800;
+						dst -= (SCREEN_WIDTH + 160);
 						if (!--yy_32)
 							return;
 						goto LABEL_251;
@@ -478,7 +478,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 						} while (n_draw_shift);
 					}
 				}
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				xx_32 -= 2;
 				if (xx_32 < 0) {
 					yy_32 = 2;
@@ -521,7 +521,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 								} while (n_draw_shift);
 							}
 						}
-						dst -= 800;
+						dst -= (SCREEN_WIDTH + 160);
 						yy_32 += 2;
 					} while (yy_32 != 32);
 					return;
@@ -559,7 +559,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 						dst += 2;
 					}
 				}
-				dst = &dst[xx_32 - 800];
+				dst = &dst[xx_32 - (SCREEN_WIDTH + 160)];
 				xx_32 -= 2;
 				if (xx_32 < 0) {
 					yy_32 = 2;
@@ -595,7 +595,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 								dst += 2;
 							}
 						}
-						dst = &dst[yy_32 - 800];
+						dst = &dst[yy_32 - (SCREEN_WIDTH + 160)];
 						yy_32 += 2;
 					} while (yy_32 != 32);
 					return;
@@ -642,7 +642,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 						} while (n_draw_shift);
 					}
 				}
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				xx_32 -= 2;
 				if (xx_32 < 0) {
 					i = 8;
@@ -657,7 +657,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 							dst += 4;
 							--j;
 						} while (j);
-						dst -= 800;
+						dst -= (SCREEN_WIDTH + 160);
 						if (dst < gpBufEnd)
 							break;
 						j = 8;
@@ -668,7 +668,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 							dst += 4;
 							--j;
 						} while (j);
-						dst -= 800;
+						dst -= (SCREEN_WIDTH + 160);
 						--i;
 					} while (i);
 					return;
@@ -706,7 +706,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 						dst += 2;
 					}
 				}
-				dst = &dst[xx_32 - 800];
+				dst = &dst[xx_32 - (SCREEN_WIDTH + 160)];
 				xx_32 -= 2;
 				if (xx_32 < 0) {
 					i = 8;
@@ -721,7 +721,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 							dst += 4;
 							--j;
 						} while (j);
-						dst -= 800;
+						dst -= (SCREEN_WIDTH + 160);
 						if (dst < gpBufEnd)
 							break;
 						j = 8;
@@ -732,7 +732,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 							dst += 4;
 							--j;
 						} while (j);
-						dst -= 800;
+						dst -= (SCREEN_WIDTH + 160);
 						--i;
 					} while (i);
 					return;
@@ -760,7 +760,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 				dst += 4;
 				--j;
 			} while (j);
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			if (dst < gpBufEnd)
 				break;
 			j = 8;
@@ -770,7 +770,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 				dst += 4;
 				--j;
 			} while (j);
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			--i;
 		} while (i);
 		break;
@@ -843,7 +843,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 			} while (yy_32);
 		LABEL_391:
 			WorldBoolFlag = ((BYTE)WorldBoolFlag + 1) & 1;
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			if (!--xx_32)
 				return;
 		}
@@ -884,7 +884,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 					} while (n_draw_shift);
 				}
 			}
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			if (!xx_32)
 				break;
 		}
@@ -924,7 +924,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 					} while (n_draw_shift);
 				}
 			}
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			yy_32 += 2;
 		} while (yy_32 != 32);
 		break;
@@ -964,7 +964,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 					} while (n_draw_shift);
 				}
 			}
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			if (!xx_32)
 				break;
 			dst += xx_32;
@@ -1004,7 +1004,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 					} while (n_draw_shift);
 				}
 			}
-			dst = &dst[yy_32 - 800];
+			dst = &dst[yy_32 - (SCREEN_WIDTH + 160)];
 			yy_32 += 2;
 		} while (yy_32 != 32);
 		break;
@@ -1045,7 +1045,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 					} while (n_draw_shift);
 				}
 			}
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			if (!xx_32)
 				break;
 		}
@@ -1060,7 +1060,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 				dst += 4;
 				--j;
 			} while (j);
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			if (dst < gpBufEnd)
 				break;
 			j = 8;
@@ -1070,7 +1070,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 				dst += 4;
 				--j;
 			} while (j);
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			--i;
 		} while (i);
 		break;
@@ -1110,7 +1110,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 					} while (n_draw_shift);
 				}
 			}
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			if (!xx_32)
 				break;
 			dst += xx_32;
@@ -1126,7 +1126,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 				dst += 4;
 				--j;
 			} while (j);
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			if (dst < gpBufEnd)
 				break;
 			j = 8;
@@ -1136,7 +1136,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 				dst += 4;
 				--j;
 			} while (j);
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			--i;
 		} while (i);
 		break;
@@ -1183,7 +1183,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 					++dst;
 					--i;
 				} while (i);
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				--gpDrawMask;
 				--xx_32;
 			} while (xx_32);
@@ -1222,7 +1222,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 					gdwCurrentMask = left_shift;
 				} while (yy_32);
 			LABEL_129:
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				--gpDrawMask;
 				--xx_32;
 			} while (xx_32);
@@ -1245,7 +1245,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 						--n_draw_shift;
 					} while (n_draw_shift);
 				}
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				xx_32 -= 2;
 				if (xx_32 < 0) {
 					yy_32 = 2;
@@ -1267,7 +1267,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 								--n_draw_shift;
 							} while (n_draw_shift);
 						}
-						dst -= 800;
+						dst -= (SCREEN_WIDTH + 160);
 						yy_32 += 2;
 					} while (yy_32 != 32);
 					return;
@@ -1287,7 +1287,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 					src += 4;
 					dst += 2;
 				}
-				dst = &dst[xx_32 - 800];
+				dst = &dst[xx_32 - (SCREEN_WIDTH + 160)];
 				xx_32 -= 2;
 				if (xx_32 < 0) {
 					yy_32 = 2;
@@ -1304,7 +1304,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 							src += 4;
 							dst += 2;
 						}
-						dst = &dst[yy_32 - 800];
+						dst = &dst[yy_32 - (SCREEN_WIDTH + 160)];
 						yy_32 += 2;
 					} while (yy_32 != 32);
 					return;
@@ -1329,7 +1329,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 						--n_draw_shift;
 					} while (n_draw_shift);
 				}
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				xx_32 -= 2;
 				if (xx_32 < 0) {
 					gpDrawMask -= 16;
@@ -1347,7 +1347,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 							++dst;
 							--i;
 						} while (i);
-						dst -= 800;
+						dst -= (SCREEN_WIDTH + 160);
 						--gpDrawMask;
 						--yy_32;
 					} while (yy_32);
@@ -1368,7 +1368,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 					src += 4;
 					dst += 2;
 				}
-				dst = &dst[xx_32 - 800];
+				dst = &dst[xx_32 - (SCREEN_WIDTH + 160)];
 				xx_32 -= 2;
 				if (xx_32 < 0) {
 					gpDrawMask -= 16;
@@ -1387,7 +1387,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 							--i;
 						} while (i);
 						src += (unsigned char)src & 2;
-						dst -= 800;
+						dst -= (SCREEN_WIDTH + 160);
 						--gpDrawMask;
 						--yy_32;
 					} while (yy_32);
@@ -1410,7 +1410,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 					if (dst < gpBufEnd)
 						break;
 					asm_trans_light_mask(32, tbl, &dst, &src, *gpDrawMask);
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--gpDrawMask;
 					--xx_32;
 				} while (xx_32);
@@ -1439,7 +1439,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 						gdwCurrentMask = asm_trans_light_mask(width, tbl, &dst, &src, gdwCurrentMask);
 					} while (yy_32);
 				LABEL_50:
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--gpDrawMask;
 					--xx_32;
 				} while (xx_32);
@@ -1450,7 +1450,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 					dst += xx_32;
 					src += (32 - (BYTE)xx_32) & 2;
 					asm_cel_light_edge(32 - xx_32, tbl, &dst, &src);
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					xx_32 -= 2;
 					if (xx_32 < 0) {
 						yy_32 = 2;
@@ -1460,7 +1460,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 							dst += yy_32;
 							src += (32 - (BYTE)yy_32) & 2;
 							asm_cel_light_edge(32 - yy_32, tbl, &dst, &src);
-							dst -= 800;
+							dst -= (SCREEN_WIDTH + 160);
 							yy_32 += 2;
 						} while (yy_32 != 32);
 						return;
@@ -1472,7 +1472,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 				while (dst >= gpBufEnd) {
 					asm_cel_light_edge(32 - xx_32, tbl, &dst, &src);
 					src += (unsigned char)src & 2;
-					dst = &dst[xx_32 - 800];
+					dst = &dst[xx_32 - (SCREEN_WIDTH + 160)];
 					xx_32 -= 2;
 					if (xx_32 < 0) {
 						yy_32 = 2;
@@ -1481,7 +1481,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 								break;
 							asm_cel_light_edge(32 - yy_32, tbl, &dst, &src);
 							src += (unsigned char)src & 2;
-							dst = &dst[yy_32 - 800];
+							dst = &dst[yy_32 - (SCREEN_WIDTH + 160)];
 							yy_32 += 2;
 						} while (yy_32 != 32);
 						return;
@@ -1494,7 +1494,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 					dst += xx_32;
 					src += (32 - (BYTE)xx_32) & 2;
 					asm_cel_light_edge(32 - xx_32, tbl, &dst, &src);
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					xx_32 -= 2;
 					if (xx_32 < 0) {
 						gpDrawMask -= 16;
@@ -1504,7 +1504,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 								break;
 							src += (unsigned char)src & 2;
 							asm_trans_light_mask(32, tbl, &dst, &src, *gpDrawMask);
-							dst -= 800;
+							dst -= (SCREEN_WIDTH + 160);
 							--gpDrawMask;
 							--yy_32;
 						} while (yy_32);
@@ -1517,7 +1517,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 				while (dst >= gpBufEnd) {
 					asm_cel_light_edge(32 - xx_32, tbl, &dst, &src);
 					src += (unsigned char)src & 2;
-					dst = &dst[xx_32 - 800];
+					dst = &dst[xx_32 - (SCREEN_WIDTH + 160)];
 					xx_32 -= 2;
 					if (xx_32 < 0) {
 						gpDrawMask -= 16;
@@ -1527,7 +1527,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 								break;
 							asm_trans_light_mask(32, tbl, &dst, &src, *gpDrawMask);
 							src += (unsigned char)src & 2;
-							dst -= 800;
+							dst -= (SCREEN_WIDTH + 160);
 							--gpDrawMask;
 							--yy_32;
 						} while (yy_32);
@@ -1563,7 +1563,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 				++dst;
 				--i;
 			} while (i);
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			--gpDrawMask;
 			--xx_32;
 		} while (xx_32);
@@ -1602,7 +1602,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 				gdwCurrentMask = left_shift;
 			} while (yy_32);
 		LABEL_208:
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			--gpDrawMask;
 			--xx_32;
 		} while (xx_32);
@@ -1623,7 +1623,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 					--n_draw_shift;
 				} while (n_draw_shift);
 			}
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			if (!xx_32) {
 				yy_32 = 2;
 				do {
@@ -1642,7 +1642,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 							--n_draw_shift;
 						} while (n_draw_shift);
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					yy_32 += 2;
 				} while (yy_32 != 32);
 				return;
@@ -1665,7 +1665,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 					--n_draw_shift;
 				} while (n_draw_shift);
 			}
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			if (!xx_32) {
 				yy_32 = 2;
 				do {
@@ -1683,7 +1683,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 							--n_draw_shift;
 						} while (n_draw_shift);
 					}
-					dst = &dst[yy_32 - 800];
+					dst = &dst[yy_32 - (SCREEN_WIDTH + 160)];
 					yy_32 += 2;
 				} while (yy_32 != 32);
 				return;
@@ -1708,7 +1708,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 					--n_draw_shift;
 				} while (n_draw_shift);
 			}
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			if (!xx_32) {
 				gpDrawMask -= 16;
 				yy_32 = 16;
@@ -1724,7 +1724,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 						++dst;
 						--i;
 					} while (i);
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--gpDrawMask;
 					--yy_32;
 				} while (yy_32);
@@ -1748,7 +1748,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 					--n_draw_shift;
 				} while (n_draw_shift);
 			}
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			if (!xx_32) {
 				gpDrawMask -= 16;
 				yy_32 = 16;
@@ -1764,7 +1764,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
 						++dst;
 						--i;
 					} while (i);
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--gpDrawMask;
 					--yy_32;
 				} while (yy_32);
@@ -1831,7 +1831,7 @@ void drawUpperScreen(BYTE *pBuff)
 					dst += 4;
 					--j;
 				} while (j);
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				--i;
 			} while (i);
 			break;
@@ -1875,7 +1875,7 @@ void drawUpperScreen(BYTE *pBuff)
 					} while (n_draw_shift);
 				} while (yy_32);
 			LABEL_133:
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				--xx_32;
 			} while (xx_32);
 			break;
@@ -1897,7 +1897,7 @@ void drawUpperScreen(BYTE *pBuff)
 						--n_draw_shift;
 					} while (n_draw_shift);
 				}
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				xx_32 -= 2;
 				if (xx_32 < 0) {
 					yy_32 = 2;
@@ -1919,7 +1919,7 @@ void drawUpperScreen(BYTE *pBuff)
 								--n_draw_shift;
 							} while (n_draw_shift);
 						}
-						dst -= 800;
+						dst -= (SCREEN_WIDTH + 160);
 						yy_32 += 2;
 					} while (yy_32 != 32);
 					return;
@@ -1939,7 +1939,7 @@ void drawUpperScreen(BYTE *pBuff)
 					src += 4;
 					dst += 2;
 				}
-				dst = &dst[xx_32 - 800];
+				dst = &dst[xx_32 - (SCREEN_WIDTH + 160)];
 				xx_32 -= 2;
 				if (xx_32 < 0) {
 					yy_32 = 2;
@@ -1956,7 +1956,7 @@ void drawUpperScreen(BYTE *pBuff)
 							src += 4;
 							dst += 2;
 						}
-						dst = &dst[yy_32 - 800];
+						dst = &dst[yy_32 - (SCREEN_WIDTH + 160)];
 						yy_32 += 2;
 					} while (yy_32 != 32);
 					return;
@@ -1981,7 +1981,7 @@ void drawUpperScreen(BYTE *pBuff)
 						--n_draw_shift;
 					} while (n_draw_shift);
 				}
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				xx_32 -= 2;
 				if (xx_32 < 0) {
 					i = 16;
@@ -1995,7 +1995,7 @@ void drawUpperScreen(BYTE *pBuff)
 							dst += 4;
 							--j;
 						} while (j);
-						dst -= 800;
+						dst -= (SCREEN_WIDTH + 160);
 						--i;
 					} while (i);
 					return;
@@ -2015,7 +2015,7 @@ void drawUpperScreen(BYTE *pBuff)
 					src += 4;
 					dst += 2;
 				}
-				dst = &dst[xx_32 - 800];
+				dst = &dst[xx_32 - (SCREEN_WIDTH + 160)];
 				xx_32 -= 2;
 				if (xx_32 < 0) {
 					i = 16;
@@ -2029,7 +2029,7 @@ void drawUpperScreen(BYTE *pBuff)
 							dst += 4;
 							--j;
 						} while (j);
-						dst -= 800;
+						dst -= (SCREEN_WIDTH + 160);
 						--i;
 					} while (i);
 					return;
@@ -2051,7 +2051,7 @@ void drawUpperScreen(BYTE *pBuff)
 					if (dst < gpBufEnd)
 						break;
 					asm_cel_light_square(8, tbl, &dst, &src);
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--xx_32;
 				} while (xx_32);
 				break;
@@ -2076,7 +2076,7 @@ void drawUpperScreen(BYTE *pBuff)
 						asm_cel_light_edge(width, tbl, &dst, &src);
 					} while (yy_32);
 				LABEL_58:
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--xx_32;
 				} while (xx_32);
 				break;
@@ -2086,7 +2086,7 @@ void drawUpperScreen(BYTE *pBuff)
 					dst += xx_32;
 					src += (32 - (BYTE)xx_32) & 2;
 					asm_cel_light_edge(32 - xx_32, tbl, &dst, &src);
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					xx_32 -= 2;
 					if (xx_32 < 0) {
 						yy_32 = 2;
@@ -2096,7 +2096,7 @@ void drawUpperScreen(BYTE *pBuff)
 							dst += yy_32;
 							src += (32 - (BYTE)yy_32) & 2;
 							asm_cel_light_edge(32 - yy_32, tbl, &dst, &src);
-							dst -= 800;
+							dst -= (SCREEN_WIDTH + 160);
 							yy_32 += 2;
 						} while (yy_32 != 32);
 						return;
@@ -2108,7 +2108,7 @@ void drawUpperScreen(BYTE *pBuff)
 				while (dst >= gpBufEnd) {
 					asm_cel_light_edge(32 - xx_32, tbl, &dst, &src);
 					src += (unsigned char)src & 2;
-					dst = &dst[xx_32 - 800];
+					dst = &dst[xx_32 - (SCREEN_WIDTH + 160)];
 					xx_32 -= 2;
 					if (xx_32 < 0) {
 						yy_32 = 2;
@@ -2117,7 +2117,7 @@ void drawUpperScreen(BYTE *pBuff)
 								break;
 							asm_cel_light_edge(32 - yy_32, tbl, &dst, &src);
 							src += (unsigned char)src & 2;
-							dst = &dst[yy_32 - 800];
+							dst = &dst[yy_32 - (SCREEN_WIDTH + 160)];
 							yy_32 += 2;
 						} while (yy_32 != 32);
 						return;
@@ -2130,7 +2130,7 @@ void drawUpperScreen(BYTE *pBuff)
 					dst += xx_32;
 					src += (32 - (BYTE)xx_32) & 2;
 					asm_cel_light_edge(32 - xx_32, tbl, &dst, &src);
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					xx_32 -= 2;
 					if (xx_32 < 0) {
 						yy_32 = 16;
@@ -2138,7 +2138,7 @@ void drawUpperScreen(BYTE *pBuff)
 							if (dst < gpBufEnd)
 								break;
 							asm_cel_light_square(8, tbl, &dst, &src);
-							dst -= 800;
+							dst -= (SCREEN_WIDTH + 160);
 							--yy_32;
 						} while (yy_32);
 						return;
@@ -2150,7 +2150,7 @@ void drawUpperScreen(BYTE *pBuff)
 				while (dst >= gpBufEnd) {
 					asm_cel_light_edge(32 - xx_32, tbl, &dst, &src);
 					src += (unsigned char)src & 2;
-					dst = &dst[xx_32 - 800];
+					dst = &dst[xx_32 - (SCREEN_WIDTH + 160)];
 					xx_32 -= 2;
 					if (xx_32 < 0) {
 						yy_32 = 16;
@@ -2158,7 +2158,7 @@ void drawUpperScreen(BYTE *pBuff)
 							if (dst < gpBufEnd)
 								break;
 							asm_cel_light_square(8, tbl, &dst, &src);
-							dst -= 800;
+							dst -= (SCREEN_WIDTH + 160);
 							--yy_32;
 						} while (yy_32);
 						return;
@@ -2190,7 +2190,7 @@ void drawUpperScreen(BYTE *pBuff)
 				dst += 4;
 				--j;
 			} while (j);
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			--i;
 		} while (i);
 		break;
@@ -2233,7 +2233,7 @@ void drawUpperScreen(BYTE *pBuff)
 				} while (n_draw_shift);
 			} while (yy_32);
 		LABEL_205:
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			--xx_32;
 		} while (xx_32);
 		break;
@@ -2253,7 +2253,7 @@ void drawUpperScreen(BYTE *pBuff)
 					--n_draw_shift;
 				} while (n_draw_shift);
 			}
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			if (!xx_32) {
 				yy_32 = 2;
 				do {
@@ -2272,7 +2272,7 @@ void drawUpperScreen(BYTE *pBuff)
 							--n_draw_shift;
 						} while (n_draw_shift);
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					yy_32 += 2;
 				} while (yy_32 != 32);
 				return;
@@ -2295,7 +2295,7 @@ void drawUpperScreen(BYTE *pBuff)
 					--n_draw_shift;
 				} while (n_draw_shift);
 			}
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			if (!xx_32) {
 				yy_32 = 2;
 				do {
@@ -2313,7 +2313,7 @@ void drawUpperScreen(BYTE *pBuff)
 							--n_draw_shift;
 						} while (n_draw_shift);
 					}
-					dst = &dst[yy_32 - 800];
+					dst = &dst[yy_32 - (SCREEN_WIDTH + 160)];
 					yy_32 += 2;
 				} while (yy_32 != 32);
 				return;
@@ -2338,7 +2338,7 @@ void drawUpperScreen(BYTE *pBuff)
 					--n_draw_shift;
 				} while (n_draw_shift);
 			}
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			if (!xx_32) {
 				i = 16;
 				do {
@@ -2350,7 +2350,7 @@ void drawUpperScreen(BYTE *pBuff)
 						dst += 4;
 						--j;
 					} while (j);
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--i;
 				} while (i);
 				return;
@@ -2373,7 +2373,7 @@ void drawUpperScreen(BYTE *pBuff)
 					--n_draw_shift;
 				} while (n_draw_shift);
 			}
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			if (!xx_32) {
 				i = 16;
 				do {
@@ -2385,7 +2385,7 @@ void drawUpperScreen(BYTE *pBuff)
 						dst += 4;
 						--j;
 					} while (j);
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--i;
 				} while (i);
 				return;
@@ -2447,7 +2447,7 @@ void drawTopArchesLowerScreen(BYTE *pBuff)
 					src += 32;
 					dst += 32;
 				}
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				if (dst < gpBufEnd) {
 					j = 8;
 					do {
@@ -2460,7 +2460,7 @@ void drawTopArchesLowerScreen(BYTE *pBuff)
 					src += 32;
 					dst += 32;
 				}
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				--i;
 			} while (i);
 			break;
@@ -2480,7 +2480,7 @@ void drawTopArchesLowerScreen(BYTE *pBuff)
 					if (!yy_32) {
 					LABEL_433:
 						WorldBoolFlag = ((BYTE)WorldBoolFlag + 1) & 1;
-						dst -= 800;
+						dst -= (SCREEN_WIDTH + 160);
 						if (!--xx_32)
 							return;
 						goto LABEL_412;
@@ -2583,7 +2583,7 @@ void drawTopArchesLowerScreen(BYTE *pBuff)
 					src = &src[-xx_32 + 32];
 					dst += 32;
 				}
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				if (!xx_32)
 					break;
 			}
@@ -2626,7 +2626,7 @@ void drawTopArchesLowerScreen(BYTE *pBuff)
 					src = &src[-yy_32 + 32];
 					dst += 32;
 				}
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				yy_32 += 2;
 			} while (yy_32 != 32);
 			break;
@@ -2669,7 +2669,7 @@ void drawTopArchesLowerScreen(BYTE *pBuff)
 					src = &src[-xx_32 + 32];
 					dst = &dst[-xx_32 + 32];
 				}
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				if (!xx_32)
 					break;
 				dst += xx_32;
@@ -2712,7 +2712,7 @@ void drawTopArchesLowerScreen(BYTE *pBuff)
 					src = &src[-yy_32 + 32];
 					dst = &dst[-yy_32 + 32];
 				}
-				dst = &dst[yy_32 - 800];
+				dst = &dst[yy_32 - (SCREEN_WIDTH + 160)];
 				yy_32 += 2;
 			} while (yy_32 != 32);
 			break;
@@ -2756,7 +2756,7 @@ void drawTopArchesLowerScreen(BYTE *pBuff)
 					src = &src[-xx_32 + 32];
 					dst += 32;
 				}
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				if (!xx_32)
 					break;
 			}
@@ -2774,7 +2774,7 @@ void drawTopArchesLowerScreen(BYTE *pBuff)
 					src += 32;
 					dst += 32;
 				}
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				if (dst < gpBufEnd) {
 					j = 8;
 					do {
@@ -2787,7 +2787,7 @@ void drawTopArchesLowerScreen(BYTE *pBuff)
 					src += 32;
 					dst += 32;
 				}
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				--i;
 			} while (i);
 			break;
@@ -2830,7 +2830,7 @@ void drawTopArchesLowerScreen(BYTE *pBuff)
 					src = &src[-xx_32 + 32];
 					dst = &dst[-xx_32 + 32];
 				}
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				if (!xx_32)
 					break;
 				dst += xx_32;
@@ -2849,7 +2849,7 @@ void drawTopArchesLowerScreen(BYTE *pBuff)
 					src += 32;
 					dst += 32;
 				}
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				if (dst < gpBufEnd) {
 					j = 8;
 					do {
@@ -2862,7 +2862,7 @@ void drawTopArchesLowerScreen(BYTE *pBuff)
 					src += 32;
 					dst += 32;
 				}
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				--i;
 			} while (i);
 			break;
@@ -2883,14 +2883,14 @@ void drawTopArchesLowerScreen(BYTE *pBuff)
 					src += 32;
 					dst += 32;
 				}
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				if (dst < gpBufEnd) {
 					asm_trans_light_square_0_2(8, tbl, &dst, &src);
 				} else {
 					src += 32;
 					dst += 32;
 				}
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				--i;
 			} while (i);
 			break;
@@ -2924,7 +2924,7 @@ void drawTopArchesLowerScreen(BYTE *pBuff)
 				} while (yy_32);
 			LABEL_69:
 				WorldBoolFlag = ((BYTE)WorldBoolFlag + 1) & 1;
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				--xx_32;
 			} while (xx_32);
 			break;
@@ -2958,7 +2958,7 @@ void drawTopArchesLowerScreen(BYTE *pBuff)
 						} else {
 							asm_trans_light_cel_1_3(32 - yy_32, tbl, &dst, &src);
 						}
-						dst -= 800;
+						dst -= (SCREEN_WIDTH + 160);
 						yy_32 += 2;
 					} while (yy_32 != 32);
 					return;
@@ -2979,7 +2979,7 @@ void drawTopArchesLowerScreen(BYTE *pBuff)
 				} else {
 					asm_trans_light_cel_1_3(32 - xx_32, tbl, &dst, &src);
 				}
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				xx_32 -= 2;
 			} while (xx_32 >= 0);
 			goto LABEL_98;
@@ -3012,7 +3012,7 @@ void drawTopArchesLowerScreen(BYTE *pBuff)
 							asm_trans_light_cel_1_3(32 - yy_32, tbl, &dst, &src);
 						}
 						src += (unsigned char)src & 2;
-						dst = &dst[yy_32 - 800];
+						dst = &dst[yy_32 - (SCREEN_WIDTH + 160)];
 						yy_32 += 2;
 					} while (yy_32 != 32);
 					return;
@@ -3032,7 +3032,7 @@ void drawTopArchesLowerScreen(BYTE *pBuff)
 					asm_trans_light_cel_1_3(32 - xx_32, tbl, &dst, &src);
 				}
 				src += (unsigned char)src & 2;
-				dst = &dst[xx_32 - 800];
+				dst = &dst[xx_32 - (SCREEN_WIDTH + 160)];
 				xx_32 -= 2;
 			} while (xx_32 >= 0);
 			goto LABEL_154;
@@ -3053,14 +3053,14 @@ void drawTopArchesLowerScreen(BYTE *pBuff)
 							src += 32;
 							dst += 32;
 						}
-						dst -= 800;
+						dst -= (SCREEN_WIDTH + 160);
 						if (dst < gpBufEnd) {
 							asm_trans_light_square_0_2(8, tbl, &dst, &src);
 						} else {
 							src += 32;
 							dst += 32;
 						}
-						dst -= 800;
+						dst -= (SCREEN_WIDTH + 160);
 						--i;
 					} while (i);
 					return;
@@ -3081,7 +3081,7 @@ void drawTopArchesLowerScreen(BYTE *pBuff)
 				} else {
 					asm_trans_light_cel_1_3(32 - xx_32, tbl, &dst, &src);
 				}
-				dst -= 800;
+				dst -= (SCREEN_WIDTH + 160);
 				xx_32 -= 2;
 			} while (xx_32 >= 0);
 			goto LABEL_210;
@@ -3102,14 +3102,14 @@ void drawTopArchesLowerScreen(BYTE *pBuff)
 							src += 32;
 							dst += 32;
 						}
-						dst -= 800;
+						dst -= (SCREEN_WIDTH + 160);
 						if (dst < gpBufEnd) {
 							asm_trans_light_square_0_2(8, tbl, &dst, &src);
 						} else {
 							src += 32;
 							dst += 32;
 						}
-						dst -= 800;
+						dst -= (SCREEN_WIDTH + 160);
 						--i;
 					} while (i);
 					return;
@@ -3129,7 +3129,7 @@ void drawTopArchesLowerScreen(BYTE *pBuff)
 					asm_trans_light_cel_1_3(32 - xx_32, tbl, &dst, &src);
 				}
 				src += (unsigned char)src & 2;
-				dst = &dst[xx_32 - 800];
+				dst = &dst[xx_32 - (SCREEN_WIDTH + 160)];
 				xx_32 -= 2;
 			} while (xx_32 >= 0);
 			goto LABEL_249;
@@ -3156,7 +3156,7 @@ LABEL_11:
 				src += 32;
 				dst += 32;
 			}
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			if (dst < gpBufEnd) {
 				j = 8;
 				do {
@@ -3170,7 +3170,7 @@ LABEL_11:
 				src += 32;
 				dst += 32;
 			}
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			--i;
 		} while (i);
 		break;
@@ -3250,7 +3250,7 @@ LABEL_11:
 			} while (yy_32);
 		LABEL_293:
 			WorldBoolFlag = ((BYTE)WorldBoolFlag + 1) & 1;
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			if (!--xx_32)
 				return;
 		}
@@ -3313,7 +3313,7 @@ LABEL_11:
 							} while (n_draw_shift);
 						}
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					yy_32 += 2;
 				} while (yy_32 != 32);
 				return;
@@ -3362,7 +3362,7 @@ LABEL_11:
 					} while (n_draw_shift);
 				}
 			}
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			xx_32 -= 2;
 		} while (xx_32 >= 0);
 		goto LABEL_308;
@@ -3408,7 +3408,7 @@ LABEL_11:
 						dst += 2;
 					}
 				}
-				dst = &dst[xx_32 - 800];
+				dst = &dst[xx_32 - (SCREEN_WIDTH + 160)];
 				xx_32 -= 2;
 			} while (xx_32 >= 0);
 			goto LABEL_336;
@@ -3456,7 +3456,7 @@ LABEL_11:
 					dst += 2;
 				}
 			}
-			dst = &dst[yy_32 - 800];
+			dst = &dst[yy_32 - (SCREEN_WIDTH + 160)];
 			yy_32 += 2;
 		} while (yy_32 != 32);
 		break;
@@ -3484,7 +3484,7 @@ LABEL_11:
 						src += 32;
 						dst += 32;
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					if (dst < gpBufEnd) {
 						j = 8;
 						do {
@@ -3498,7 +3498,7 @@ LABEL_11:
 						src += 32;
 						dst += 32;
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--i;
 				} while (i);
 				return;
@@ -3547,7 +3547,7 @@ LABEL_11:
 					} while (n_draw_shift);
 				}
 			}
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			xx_32 -= 2;
 		} while (xx_32 >= 0);
 		goto LABEL_364;
@@ -3575,7 +3575,7 @@ LABEL_11:
 						src += 32;
 						dst += 32;
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					if (dst < gpBufEnd) {
 						j = 8;
 						do {
@@ -3589,7 +3589,7 @@ LABEL_11:
 						src += 32;
 						dst += 32;
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--i;
 				} while (i);
 				return;
@@ -3629,7 +3629,7 @@ LABEL_11:
 					dst += 2;
 				}
 			}
-			dst = &dst[xx_32 - 800];
+			dst = &dst[xx_32 - (SCREEN_WIDTH + 160)];
 			xx_32 -= 2;
 		} while (xx_32 >= 0);
 		goto LABEL_389;
@@ -3680,7 +3680,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 						src += 32;
 						dst += 32;
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--gpDrawMask;
 					--yy_32;
 				} while (yy_32);
@@ -3722,7 +3722,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 						yy_32 -= width;
 					} while (yy_32);
 				LABEL_252:
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--gpDrawMask;
 					--xx_32;
 				} while (xx_32);
@@ -3747,7 +3747,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 						src = &src[32 - i];
 						dst += 32;
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					if (!i)
 						break;
 				}
@@ -3771,7 +3771,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 						src = &src[32 - i];
 						dst += 32;
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					i += 2;
 				} while (i != 32);
 				break;
@@ -3794,7 +3794,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 						src = &src[32 - i];
 						dst = &dst[32 - i];
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					if (!i)
 						break;
 					dst += i;
@@ -3818,7 +3818,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 						src = &src[32 - i];
 						dst = &dst[32 - i];
 					}
-					dst = &dst[i - 800];
+					dst = &dst[i - (SCREEN_WIDTH + 160)];
 					i += 2;
 				} while (i != 32);
 				break;
@@ -3842,7 +3842,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 						src = &src[32 - i];
 						dst += 32;
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					if (!i)
 						break;
 				}
@@ -3863,7 +3863,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 						src += 32;
 						dst += 32;
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--gpDrawMask;
 					--yy_32;
 				} while (yy_32);
@@ -3887,7 +3887,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 						src = &src[32 - i];
 						dst = &dst[32 - i];
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					if (!i)
 						break;
 					dst += i;
@@ -3909,7 +3909,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 						src += 32;
 						dst += 32;
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--gpDrawMask;
 					--yy_32;
 				} while (yy_32);
@@ -3931,7 +3931,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 						src += 32;
 						dst += 32;
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--gpDrawMask;
 					--yy_32;
 				} while (yy_32);
@@ -3963,7 +3963,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 						yy_32 -= width;
 					} while (yy_32);
 				LABEL_52:
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--gpDrawMask;
 					--xx_32;
 				} while (xx_32);
@@ -3991,7 +3991,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 							src += (32 - (BYTE)yy_32) & 2;
 							asm_cel_light_edge(32 - yy_32, tbl, &dst, &src);
 							yy_32 += 2;
-							dst -= 800;
+							dst -= (SCREEN_WIDTH + 160);
 						} while (yy_32 != 32);
 						return;
 					}
@@ -4004,7 +4004,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 					dst += xx_32;
 					src += (32 - (BYTE)xx_32) & 2;
 					asm_cel_light_edge(32 - xx_32, tbl, &dst, &src);
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					xx_32 -= 2;
 				} while (xx_32 >= 0);
 				goto LABEL_62;
@@ -4030,7 +4030,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 							asm_cel_light_edge(32 - yy_32, tbl, &dst, &src);
 							/// BUGFIX: uncomment this line
 							// src += (unsigned char)src & 2;
-							dst = &dst[yy_32 - 800];
+							dst = &dst[yy_32 - (SCREEN_WIDTH + 160)];
 							yy_32 += 2;
 						} while (yy_32 != 32);
 						return;
@@ -4043,7 +4043,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 				do {
 					asm_cel_light_edge(32 - xx_32, tbl, &dst, &src);
 					src += (unsigned char)src & 2;
-					dst = &dst[xx_32 - 800];
+					dst = &dst[xx_32 - (SCREEN_WIDTH + 160)];
 					xx_32 -= 2;
 				} while (xx_32 >= 0);
 				goto LABEL_80;
@@ -4064,7 +4064,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 								src += 32;
 								dst += 32;
 							}
-							dst -= 800;
+							dst -= (SCREEN_WIDTH + 160);
 							--gpDrawMask;
 							--yy_32;
 						} while (yy_32);
@@ -4079,7 +4079,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 					dst += xx_32;
 					src += (32 - (BYTE)xx_32) & 2;
 					asm_cel_light_edge(32 - xx_32, tbl, &dst, &src);
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					xx_32 -= 2;
 				} while (xx_32 >= 0);
 				goto LABEL_98;
@@ -4101,7 +4101,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 								src += 32;
 								dst += 32;
 							}
-							dst -= 800;
+							dst -= (SCREEN_WIDTH + 160);
 							--gpDrawMask;
 							--yy_32;
 						} while (yy_32);
@@ -4115,7 +4115,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 				do {
 					asm_cel_light_edge(32 - xx_32, tbl, &dst, &src);
 					src += (unsigned char)src & 2;
-					dst = &dst[xx_32 - 800];
+					dst = &dst[xx_32 - (SCREEN_WIDTH + 160)];
 					xx_32 -= 2;
 				} while (xx_32 >= 0);
 				goto LABEL_117;
@@ -4151,7 +4151,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 				src += 32;
 				dst += 32;
 			}
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			--gpDrawMask;
 			--yy_32;
 		} while (yy_32);
@@ -4193,7 +4193,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 				yy_32 -= width;
 			} while (yy_32);
 		LABEL_152:
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			--gpDrawMask;
 			--xx_32;
 		} while (xx_32);
@@ -4232,7 +4232,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 							--n_draw_shift;
 						} while (n_draw_shift);
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					yy_32 += 2;
 				} while (yy_32 != 32);
 				return;
@@ -4258,7 +4258,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 					--n_draw_shift;
 				} while (n_draw_shift);
 			}
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			xx_32 -= 2;
 		} while (xx_32 >= 0);
 		goto LABEL_162;
@@ -4284,7 +4284,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 					src += 4;
 					dst += 2;
 				}
-				dst = &dst[xx_32 - 800];
+				dst = &dst[xx_32 - (SCREEN_WIDTH + 160)];
 				xx_32 -= 2;
 			} while (xx_32 >= 0);
 			goto LABEL_180;
@@ -4313,7 +4313,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 				src += 4;
 				dst += 2;
 			}
-			dst = &dst[yy_32 - 800];
+			dst = &dst[yy_32 - (SCREEN_WIDTH + 160)];
 			yy_32 += 2;
 		} while (yy_32 != 32);
 		break;
@@ -4343,7 +4343,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 						src += 32;
 						dst += 32;
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--gpDrawMask;
 					--yy_32;
 				} while (yy_32);
@@ -4370,7 +4370,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 					--n_draw_shift;
 				} while (n_draw_shift);
 			}
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			xx_32 -= 2;
 		} while (xx_32 >= 0);
 		goto LABEL_198;
@@ -4401,7 +4401,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 						src += 32;
 						dst += 32;
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--gpDrawMask;
 					--yy_32;
 				} while (yy_32);
@@ -4423,7 +4423,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
 				src += 4;
 				dst += 2;
 			}
-			dst = &dst[xx_32 - 800];
+			dst = &dst[xx_32 - (SCREEN_WIDTH + 160)];
 			xx_32 -= 2;
 		} while (xx_32 >= 0);
 		goto LABEL_217;
@@ -4488,7 +4488,7 @@ void drawLowerScreen(BYTE *pBuff)
 						src += 32;
 						dst += 32;
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--i;
 				} while (i);
 				break;
@@ -4535,7 +4535,7 @@ void drawLowerScreen(BYTE *pBuff)
 						}
 					} while (yy_32);
 				LABEL_232:
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--xx_32;
 				} while (xx_32);
 				break;
@@ -4559,7 +4559,7 @@ void drawLowerScreen(BYTE *pBuff)
 						src = &src[32 - i];
 						dst += 32;
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					if (!i)
 						break;
 				}
@@ -4583,7 +4583,7 @@ void drawLowerScreen(BYTE *pBuff)
 						src = &src[32 - i];
 						dst += 32;
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					i += 2;
 				} while (i != 32);
 				break;
@@ -4606,7 +4606,7 @@ void drawLowerScreen(BYTE *pBuff)
 						src = &src[32 - i];
 						dst = &dst[32 - i];
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					if (!i)
 						break;
 					dst += i;
@@ -4630,7 +4630,7 @@ void drawLowerScreen(BYTE *pBuff)
 						src = &src[32 - i];
 						dst = &dst[32 - i];
 					}
-					dst = &dst[i - 800];
+					dst = &dst[i - (SCREEN_WIDTH + 160)];
 					i += 2;
 				} while (i != 32);
 				break;
@@ -4654,7 +4654,7 @@ void drawLowerScreen(BYTE *pBuff)
 						src = &src[32 - i];
 						dst += 32;
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					if (!i)
 						break;
 				}
@@ -4671,7 +4671,7 @@ void drawLowerScreen(BYTE *pBuff)
 						src += 32;
 						dst += 32;
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--i;
 				} while (i);
 				break;
@@ -4694,7 +4694,7 @@ void drawLowerScreen(BYTE *pBuff)
 						src = &src[32 - i];
 						dst = &dst[32 - i];
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					if (!i)
 						break;
 					dst += i;
@@ -4712,7 +4712,7 @@ void drawLowerScreen(BYTE *pBuff)
 						src += 32;
 						dst += 32;
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--i;
 				} while (i);
 				break;
@@ -4733,7 +4733,7 @@ void drawLowerScreen(BYTE *pBuff)
 						src += 32;
 						dst += 32;
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--xx_32;
 				} while (xx_32);
 				break;
@@ -4757,7 +4757,7 @@ void drawLowerScreen(BYTE *pBuff)
 							yy_32 -= width;
 						}
 					} while (yy_32);
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--xx_32;
 				} while (xx_32);
 				break;
@@ -4784,7 +4784,7 @@ void drawLowerScreen(BYTE *pBuff)
 							src += (32 - (BYTE)yy_32) & 2;
 							asm_cel_light_edge(32 - yy_32, tbl, &dst, &src);
 							yy_32 += 2;
-							dst -= 800;
+							dst -= (SCREEN_WIDTH + 160);
 						} while (yy_32 != 32);
 						return;
 					}
@@ -4797,7 +4797,7 @@ void drawLowerScreen(BYTE *pBuff)
 					dst += xx_32;
 					src += (32 - (BYTE)xx_32) & 2;
 					asm_cel_light_edge(32 - xx_32, tbl, &dst, &src);
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					xx_32 -= 2;
 				} while (xx_32 >= 0);
 				goto LABEL_68;
@@ -4822,7 +4822,7 @@ void drawLowerScreen(BYTE *pBuff)
 						do {
 							asm_cel_light_edge(32 - yy_32, tbl, &dst, &src);
 							src += (unsigned char)src & 2;
-							dst = &dst[yy_32 - 800];
+							dst = &dst[yy_32 - (SCREEN_WIDTH + 160)];
 							yy_32 += 2;
 						} while (yy_32 != 32);
 						return;
@@ -4835,7 +4835,7 @@ void drawLowerScreen(BYTE *pBuff)
 				do {
 					asm_cel_light_edge(32 - xx_32, tbl, &dst, &src);
 					src += (unsigned char)src & 2;
-					dst = &dst[xx_32 - 800];
+					dst = &dst[xx_32 - (SCREEN_WIDTH + 160)];
 					xx_32 -= 2;
 				} while (xx_32 >= 0);
 				goto LABEL_83;
@@ -4855,7 +4855,7 @@ void drawLowerScreen(BYTE *pBuff)
 								src += 32;
 								dst += 32;
 							}
-							dst -= 800;
+							dst -= (SCREEN_WIDTH + 160);
 							--i;
 						} while (i);
 						return;
@@ -4869,7 +4869,7 @@ void drawLowerScreen(BYTE *pBuff)
 					dst += xx_32;
 					src += (32 - (BYTE)xx_32) & 2;
 					asm_cel_light_edge(32 - xx_32, tbl, &dst, &src);
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					xx_32 -= 2;
 				} while (xx_32 >= 0);
 				goto LABEL_100;
@@ -4889,7 +4889,7 @@ void drawLowerScreen(BYTE *pBuff)
 								src += 32;
 								dst += 32;
 							}
-							dst -= 800;
+							dst -= (SCREEN_WIDTH + 160);
 							--j;
 						} while (j);
 						return;
@@ -4902,7 +4902,7 @@ void drawLowerScreen(BYTE *pBuff)
 				do {
 					asm_cel_light_edge(32 - xx_32, tbl, &dst, &src);
 					src += (unsigned char)src & 2;
-					dst = &dst[xx_32 - 800];
+					dst = &dst[xx_32 - (SCREEN_WIDTH + 160)];
 					xx_32 -= 2;
 				} while (xx_32 >= 0);
 				goto LABEL_116;
@@ -4935,7 +4935,7 @@ void drawLowerScreen(BYTE *pBuff)
 				src += 32;
 				dst += 32;
 			}
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			--i;
 		} while (i);
 		break;
@@ -4984,7 +4984,7 @@ void drawLowerScreen(BYTE *pBuff)
 				}
 			} while (yy_32);
 		LABEL_143:
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			--xx_32;
 		} while (xx_32);
 		break;
@@ -5023,7 +5023,7 @@ void drawLowerScreen(BYTE *pBuff)
 						} while (n_draw_shift);
 					}
 					yy_32 += 2;
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 				} while (yy_32 < 32);
 				return;
 			}
@@ -5048,7 +5048,7 @@ void drawLowerScreen(BYTE *pBuff)
 					--n_draw_shift;
 				} while (n_draw_shift);
 			}
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			xx_32 -= 2;
 		} while (xx_32 >= 0);
 		goto LABEL_153;
@@ -5074,7 +5074,7 @@ void drawLowerScreen(BYTE *pBuff)
 					src += 4;
 					dst += 2;
 				}
-				dst = &dst[xx_32 - 800];
+				dst = &dst[xx_32 - (SCREEN_WIDTH + 160)];
 				xx_32 -= 2;
 			} while (xx_32 >= 0);
 			goto LABEL_171;
@@ -5105,7 +5105,7 @@ void drawLowerScreen(BYTE *pBuff)
 			}
 			dst += yy_32;
 			yy_32 += 2;
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 		} while (yy_32 < 32);
 		break;
 	case 12: // lower (solid), without lighting
@@ -5130,7 +5130,7 @@ void drawLowerScreen(BYTE *pBuff)
 						src += 32;
 						dst += 32;
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--i;
 				} while (i);
 				return;
@@ -5156,7 +5156,7 @@ void drawLowerScreen(BYTE *pBuff)
 					--n_draw_shift;
 				} while (n_draw_shift);
 			}
-			dst -= 800;
+			dst -= (SCREEN_WIDTH + 160);
 			xx_32 -= 2;
 		} while (xx_32 >= 0);
 		goto LABEL_189;
@@ -5182,7 +5182,7 @@ void drawLowerScreen(BYTE *pBuff)
 						src += 32;
 						dst += 32;
 					}
-					dst -= 800;
+					dst -= (SCREEN_WIDTH + 160);
 					--i;
 				} while (i);
 				return;
@@ -5203,7 +5203,7 @@ void drawLowerScreen(BYTE *pBuff)
 				src += 4;
 				dst += 2;
 			}
-			dst = &dst[xx_32 - 800];
+			dst = &dst[xx_32 - (SCREEN_WIDTH + 160)];
 			xx_32 -= 2;
 		} while (xx_32 >= 0);
 		goto LABEL_205;

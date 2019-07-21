@@ -20,9 +20,9 @@ void CaptureScreen()
 		RedPalette(palette);
 
 		lock_buf(2);
-		success = CaptureHdr(hObject, 640, 480);
+		success = CaptureHdr(hObject, SCREEN_WIDTH, SCREEN_HEIGHT);
 		if (success) {
-			success = CapturePix(hObject, 640, 480, BUFFER_WIDTH, &gpBuffer[SCREENXY(0, 0)]);
+			success = CapturePix(hObject, SCREEN_WIDTH, SCREEN_HEIGHT, BUFFER_WIDTH, &gpBuffer[SCREENXY(0, 0)]);
 			if (success) {
 				success = CapturePal(hObject, palette);
 			}

@@ -38,11 +38,11 @@ void DrawCutscene()
 	DWORD i;
 
 	lock_buf(1);
-	CelDecodeOnly(64, 639, (BYTE *)sgpBackCel, 1, 640);
+	CelDecodeOnly(SCREEN_X, 480 + SCREEN_Y - 1, (BYTE *)sgpBackCel, 1, 640);
 
 	for (i = 0; i < sgdwProgress; i++) {
 		DrawProgress(
-		    progress_bar_screen_pos[progress_id][0] + i + 64,
+		    progress_bar_screen_pos[progress_id][0] + i + SCREEN_X,
 		    progress_bar_screen_pos[progress_id][1] + SCREEN_Y,
 		    progress_id);
 	}

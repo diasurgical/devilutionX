@@ -299,9 +299,7 @@ WINBOOL SetForegroundWindow(HWND hWnd)
  */
 HWND SetFocus(HWND hWnd)
 {
-	if (SDL_SetWindowInputFocus(window) <= -1) {
-		SDL_Log(SDL_GetError());
-	}
+	SDL_RaiseWindow(window);
 	MainWndProc(NULL, DVL_WM_ACTIVATEAPP, true, 0); // SDL_WINDOWEVENT_FOCUS_GAINED
 	return NULL;
 }

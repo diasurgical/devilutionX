@@ -28,7 +28,7 @@ int stextvhold;
 int stextsel;
 char stextscrldbtn;
 int gossipend;
-BYTE *pCelBuff;
+BYTE *pSPentSpn2Cels;
 int stextsval;
 int boylevel;
 ItemStruct smithitem[20];
@@ -79,7 +79,7 @@ void InitStores()
 	int i;
 
 	pSTextBoxCels = LoadFileInMem("Data\\TextBox2.CEL", NULL);
-	pCelBuff = LoadFileInMem("Data\\PentSpn2.CEL", NULL);
+	pSPentSpn2Cels = LoadFileInMem("Data\\PentSpn2.CEL", NULL);
 	pSTextSlidCels = LoadFileInMem("Data\\TextSlid.CEL", NULL);
 	ClearSText(0, 24);
 	stextflag = STORE_NONE;
@@ -126,7 +126,7 @@ void SetupTownStores()
 void FreeStoreMem()
 {
 	MemFreeDbg(pSTextBoxCels);
-	MemFreeDbg(pCelBuff);
+	MemFreeDbg(pSPentSpn2Cels);
 	MemFreeDbg(pSTextSlidCels);
 }
 
@@ -169,7 +169,7 @@ void PrintSString(int x, int y, BOOL cjustflag, char *str, char col, int val)
 		off += k;
 	}
 	if (stextsel == y) {
-		CelDecodeOnly(cjustflag ? xx + x + k - 20 : xx + x - 20, s + 205, pCelBuff, InStoreFlag, 12);
+		CelDecodeOnly(cjustflag ? xx + x + k - 20 : xx + x - 20, s + 205, pSPentSpn2Cels, InStoreFlag, 12);
 	}
 	for (i = 0; i < len; i++) {
 		c = fontframe[gbFontTransTbl[(BYTE)str[i]]];
@@ -191,7 +191,7 @@ void PrintSString(int x, int y, BOOL cjustflag, char *str, char col, int val)
 		}
 	}
 	if (stextsel == y) {
-		CelDecodeOnly(cjustflag ? xx + x + k + 4 : 660 - x, s + 205, pCelBuff, InStoreFlag, 12);
+		CelDecodeOnly(cjustflag ? xx + x + k + 4 : 660 - x, s + 205, pSPentSpn2Cels, InStoreFlag, 12);
 	}
 }
 

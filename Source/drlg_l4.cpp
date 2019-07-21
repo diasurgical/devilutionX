@@ -326,7 +326,7 @@ void DRLG_L4SetSPRoom(int rx1, int ry1)
 		for (i = 0; i < rw; i++) {
 			if (*sp != 0) {
 				dungeon[i + rx1][j + ry1] = *sp;
-				dflags[i + rx1][j + ry1] |= 0x80;
+				dflags[i + rx1][j + ry1] |= DLRG_PROTECTED;
 			} else {
 				dungeon[i + rx1][j + ry1] = 6;
 			}
@@ -344,9 +344,9 @@ void L4SaveQuads()
 		x = 0;
 		for (i = 0; i < 14; i++) {
 			dflags[i + l4holdx][j + l4holdy] = 1;
-			dflags[39 - x - l4holdx][j + l4holdy] = 1;
-			dflags[i + l4holdx][39 - y - l4holdy] = 1;
-			dflags[39 - x - l4holdx][39 - y - l4holdy] = 1;
+			dflags[DMAXX - 1 - x - l4holdx][j + l4holdy] = 1;
+			dflags[i + l4holdx][DMAXY - 1 - y - l4holdy] = 1;
+			dflags[DMAXX - 1 - x - l4holdx][DMAXY - 1 - y - l4holdy] = 1;
 			x++;
 		}
 		y++;
@@ -366,7 +366,7 @@ void DRLG_L4SetRoom(BYTE *pSetPiece, int rx1, int ry1)
 		for (i = 0; i < rw; i++) {
 			if (*sp != 0) {
 				dungeon[i + rx1][j + ry1] = *sp;
-				dflags[i + rx1][j + ry1] |= 0x80;
+				dflags[i + rx1][j + ry1] |= DLRG_PROTECTED;
 			} else {
 				dungeon[i + rx1][j + ry1] = 6;
 			}
@@ -462,8 +462,8 @@ void DRLG_L4GeneralFix()
 {
 	int i, j;
 
-	for (j = 0; j < 39; j++) {
-		for (i = 0; i < 39; i++) {
+	for (j = 0; j < DMAXY - 1; j++) {
+		for (i = 0; i < DMAXX - 1; i++) {
 			if ((dungeon[i][j] == 24 || dungeon[i][j] == 122) && dungeon[i + 1][j] == 2 && dungeon[i][j + 1] == 5) {
 				dungeon[i][j] = 17;
 			}
@@ -649,8 +649,8 @@ void DRLG_L4Shadows()
 	int x, y;
 	BOOL okflag;
 
-	for (y = 1; y < 40; y++) {
-		for (x = 1; x < 40; x++) {
+	for (y = 1; y < DMAXY; y++) {
+		for (x = 1; x < DMAXY; x++) {
 			okflag = FALSE;
 			if (dungeon[x][y] == 3) {
 				okflag = TRUE;
@@ -684,8 +684,8 @@ void InitL4Dungeon()
 	memset(dung, 0, sizeof(dung));
 	memset(L4dungeon, 0, sizeof(L4dungeon));
 
-	for (j = 0; j < 40; j++) {
-		for (i = 0; i < 40; i++) {
+	for (j = 0; j < DMAXY; j++) {
+		for (i = 0; i < DMAXX; i++) {
 			dungeon[i][j] = 30;
 			dflags[i][j] = 0;
 		}
@@ -711,8 +711,8 @@ void L4AddWall()
 {
 	int i, j, x, y;
 
-	for (j = 0; j < 40; j++) {
-		for (i = 0; i < 40; i++) {
+	for (j = 0; j < DMAXY; j++) {
+		for (i = 0; i < DMAXX; i++) {
 			if (dflags[i][j] != 0) {
 				continue;
 			}
@@ -1357,8 +1357,8 @@ void DRLG_L4Subs()
 	int x, y, i, rv;
 	BYTE c;
 
-	for (y = 0; y < 40; y++) {
-		for (x = 0; x < 40; x++) {
+	for (y = 0; y < DMAXY; y++) {
+		for (x = 0; x < DMAXX; x++) {
 			if (random(0, 3) == 0) {
 				c = L4BTYPES[dungeon[x][y]];
 				if (c != 0 && dflags[x][y] == 0) {
@@ -1378,8 +1378,8 @@ void DRLG_L4Subs()
 			}
 		}
 	}
-	for (y = 0; y < 40; y++) {
-		for (x = 0; x < 40; x++) {
+	for (y = 0; y < DMAXY; y++) {
+		for (x = 0; x < DMAXX; x++) {
 			if (random(0, 10) == 0) {
 				if (L4BTYPES[dungeon[x][y]] == 6 && dflags[x][y] == 0) {
 					dungeon[x][y] = random(0, 3) + 95;
@@ -1695,8 +1695,8 @@ BOOL DRLG_L4PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy
 	}
 
 	for (i = 0; i < numt; i++) {
-		sx = random(0, 40 - sw);
-		sy = random(0, 40 - sh);
+		sx = random(0, DMAXX - sw);
+		sy = random(0, DMAXY - sh);
 		found = FALSE;
 		for (bailcnt = 0; !found && bailcnt < 200; bailcnt++) {
 			found = TRUE;
@@ -1704,13 +1704,13 @@ BOOL DRLG_L4PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy
 				found = FALSE;
 			}
 			if (cx != -1 && sx >= cx - sw && sx <= cx + 12) {
-				sx = random(0, 40 - sw);
-				sy = random(0, 40 - sh);
+				sx = random(0, DMAXX - sw);
+				sy = random(0, DMAXY - sh);
 				found = FALSE;
 			}
 			if (cy != -1 && sy >= cy - sh && sy <= cy + 12) {
-				sx = random(0, 40 - sw);
-				sy = random(0, 40 - sh);
+				sx = random(0, DMAXX - sw);
+				sy = random(0, DMAXY - sh);
 				found = FALSE;
 			}
 			ii = 2;
@@ -1727,10 +1727,10 @@ BOOL DRLG_L4PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy
 			}
 			if (!found) {
 				sx++;
-				if (sx == 40 - sw) {
+				if (sx == DMAXX - sw) {
 					sx = 0;
 					sy++;
-					if (sy == 40 - sh) {
+					if (sy == DMAXY - sh) {
 						sy = 0;
 					}
 				}

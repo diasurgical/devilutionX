@@ -2021,7 +2021,7 @@ void ENG_set_pixel(int sx, int sy, BYTE col)
 
 	/// ASSERT: assert(gpBuffer);
 
-	if (sy < 0 || sy >= 640 || sx < 64 || sx >= 704)
+	if (sy < 0 || sy >= SCREEN_HEIGHT + SCREEN_Y || sx < SCREEN_X || sx >= SCREEN_WIDTH + SCREEN_X)
 		return;
 
 	dst = &gpBuffer[sx + PitchTbl[sy]];
@@ -2048,11 +2048,11 @@ void engine_draw_pixel(int sx, int sy)
 	/// ASSERT: assert(gpBuffer);
 
 	if (gbRotateMap) {
-		if (gbNotInView && (sx < 0 || sx >= 640 || sy < 64 || sy >= 704))
+		if (gbNotInView && (sx < 0 || sx >= SCREEN_HEIGHT + SCREEN_Y || sy < SCREEN_X || sy >= SCREEN_WIDTH + SCREEN_X))
 			return;
 		dst = &gpBuffer[sy + PitchTbl[sx]];
 	} else {
-		if (gbNotInView && (sy < 0 || sy >= 640 || sx < 64 || sx >= 704))
+		if (gbNotInView && (sy < 0 || sy >= SCREEN_HEIGHT + SCREEN_Y || sx < SCREEN_X || sx >= SCREEN_WIDTH + SCREEN_X))
 			return;
 		dst = &gpBuffer[sx + PitchTbl[sy]];
 	}
@@ -2101,16 +2101,16 @@ void DrawLine(int x0, int y0, int x1, int y1, BYTE col)
 	gbPixelCol = col;
 
 	gbNotInView = FALSE;
-	if (x0 < 0 + 64 || x0 >= 640 + 64) {
+	if (x0 < 0 + SCREEN_X || x0 >= SCREEN_WIDTH + SCREEN_X) {
 		gbNotInView = TRUE;
 	}
-	if (x1 < 0 + 64 || x1 >= 640 + 64) {
+	if (x1 < 0 + SCREEN_X || x1 >= SCREEN_WIDTH + SCREEN_X) {
 		gbNotInView = TRUE;
 	}
-	if (y0 < 0 + SCREEN_Y || y0 >= VIEWPORT_HEIGHT + SCREEN_Y) {
+	if (y0 < 0 + SCREEN_Y || y0 >= PANEL_Y) {
 		gbNotInView = TRUE;
 	}
-	if (y1 < 0 + SCREEN_Y || y1 >= VIEWPORT_HEIGHT + SCREEN_Y) {
+	if (y1 < 0 + SCREEN_Y || y1 >= PANEL_Y) {
 		gbNotInView = TRUE;
 	}
 

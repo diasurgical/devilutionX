@@ -654,7 +654,7 @@ void CheckTrigForce()
 {
 	trigflag = FALSE;
 
-	if (MouseY > VIEWPORT_HEIGHT - 1) {
+	if (MouseY > PANEL_TOP - 1) {
 		return;
 	}
 
@@ -697,7 +697,6 @@ void CheckTrigForce()
 		ClearPanel();
 	}
 }
-// 5CF31D: using guessed type char setlevel;
 
 void CheckTriggers()
 {

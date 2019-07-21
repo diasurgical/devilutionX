@@ -48,7 +48,7 @@ void __stdcall multi_handle_events(_SNETEVENT *pEvt);
 BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram);
 void buffer_init(TBuffer *pBuf);
 void multi_send_pinfo(int pnum, char cmd);
-int InitNewSeed(int newseed);
+int InitLevelType(int l);
 void SetupLocalCoords();
 BOOL multi_init_single(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info, _SNETUIDATA *ui_info);
 BOOL multi_init_multi(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info, _SNETUIDATA *ui_info, int *pfExitProgram);

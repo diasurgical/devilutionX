@@ -699,7 +699,7 @@ void PrintQLString(int x, int y, BOOL cjustflag, char *str, int col)
 		off += k;
 	}
 	if (qline == y) {
-		CelDecodeOnly(cjustflag ? x + k + 76 : x + 76, s + 205, pCelBuff, ALLQUESTS, 12);
+		CelDecodeOnly(cjustflag ? x + k + 76 : x + 76, s + 205, pSPentSpn2Cels, ALLQUESTS, 12);
 	}
 	for (i = 0; i < len; i++) {
 		c = fontframe[gbFontTransTbl[(BYTE)str[i]]];
@@ -710,7 +710,7 @@ void PrintQLString(int x, int y, BOOL cjustflag, char *str, int col)
 		off += fontkern[c] + 1;
 	}
 	if (qline == y) {
-		CelDecodeOnly(cjustflag ? x + k + 100 : 340 - x, s + 205, pCelBuff, ALLQUESTS, 12);
+		CelDecodeOnly(cjustflag ? x + k + 100 : 340 - x, s + 205, pSPentSpn2Cels, ALLQUESTS, 12);
 	}
 }
 

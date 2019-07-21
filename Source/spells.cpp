@@ -169,7 +169,7 @@ void DoResurrect(int pnum, int rid)
 
 		ClrPlrPath(rid);
 		plr[rid].destAction = ACTION_NONE;
-		plr[rid]._pInvincible = 0;
+		plr[rid]._pInvincible = FALSE;
 		PlacePlayer(rid);
 
 		hp = 640;
