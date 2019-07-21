@@ -9,7 +9,7 @@ extern int nummonsters;
 extern MonsterStruct monster[MAXMONSTERS];
 extern int totalmonsters;
 extern CMonster Monsters[16];
-// int END_Monsters_17; // weak
+// int END_Monsters_17;
 extern int monstimgtot;
 extern int uniquetrans;
 extern int nummtypes;
@@ -30,7 +30,7 @@ void PlaceGroup(int mtype, int num, int leaderf, int leader);
 void LoadDiabMonsts();
 void InitMonsters();
 void PlaceUniques();
-void SetMapMonsters(unsigned char *pMap, int startx, int starty);
+void SetMapMonsters(BYTE *pMap, int startx, int starty);
 void DeleteMonster(int i);
 int AddMonster(int x, int y, int dir, int mtype, BOOL InMap);
 void NewMonsterAnim(int i, AnimStruct *anim, int md);
@@ -163,7 +163,7 @@ void decode_enemy(int m, int enemy);
 /* rdata */
 
 extern const char plr2monst[9];
-extern const unsigned char counsmiss[4];
+extern const BYTE counsmiss[4];
 
 /* data */
 

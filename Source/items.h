@@ -3,7 +3,7 @@
 #define __ITEMS_H__
 
 extern int itemactive[MAXITEMS];
-extern int uitemflag;
+extern BOOL uitemflag;
 extern int itemavail[MAXITEMS];
 extern ItemStruct curruitem;
 extern ItemGetRecordStruct itemrecord[MAXITEMS];

@@ -2,7 +2,7 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-static unsigned char plr_msg_slot;
+static BYTE plr_msg_slot;
 _plrmsg plr_msgs[PMSG_COUNT];
 
 const char text_color_from_player_num[MAX_PLRS + 1] = { COL_WHITE, COL_WHITE, COL_WHITE, COL_WHITE, COL_GOLD };
@@ -83,9 +83,9 @@ void InitPlrMsg()
 void DrawPlrMsg()
 {
 	int i;
-	int x = 74;
-	int y = 230;
-	int width = 620;
+	DWORD x = 74;
+	DWORD y = 230;
+	DWORD width = 620;
 	_plrmsg *pMsg;
 
 	if (chrflag || questlog) {
@@ -105,20 +105,20 @@ void DrawPlrMsg()
 	}
 }
 
-void PrintPlrMsg(unsigned int x, unsigned int y, unsigned int width, const char *str, unsigned char col)
+void PrintPlrMsg(DWORD x, DWORD y, DWORD width, const char *str, BYTE col)
 {
 	int line = 0;
 
 	while (*str) {
-		unsigned char c;
+		BYTE c;
 		int screen = PitchTbl[y] + x;
 		const char *sstr = str;
-		unsigned int len = 0;
+		DWORD len = 0;
 		const char *endstr = sstr;
 
 		while (1) {
 			if (*sstr) {
-				c = gbFontTransTbl[(unsigned char)*sstr++];
+				c = gbFontTransTbl[(BYTE)*sstr++];
 				c = fontframe[c];
 				len += fontkern[c] + 1;
 				if (!c) // allow wordwrap on blank glyph
@@ -132,7 +132,7 @@ void PrintPlrMsg(unsigned int x, unsigned int y, unsigned int width, const char 
 		}
 
 		while (str < endstr) {
-			c = gbFontTransTbl[(unsigned char)*str++];
+			c = gbFontTransTbl[(BYTE)*str++];
 			c = fontframe[c];
 			if (c)
 				CPrintString(screen, c, col);

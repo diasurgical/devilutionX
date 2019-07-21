@@ -130,7 +130,7 @@ void init_disable_screensaver(BOOLEAN disable)
 		}
 		Data[1] = 0;
 		Data[0] = enabled ? '1' : '0';
-		RegSetValueEx(phkResult, "ScreenSaveActive", 0, REG_SZ, (const BYTE *)Data, 2u);
+		RegSetValueEx(phkResult, "ScreenSaveActive", 0, REG_SZ, (const BYTE *)Data, 2);
 		RegCloseKey(phkResult);
 	}
 }

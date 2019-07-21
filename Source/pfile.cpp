@@ -97,7 +97,7 @@ void pfile_encode_hero(const PkPlayerStruct *pPack)
 	mem_free_dbg(packed);
 }
 
-BOOL pfile_open_archive(BOOL a1, DWORD save_num)
+BOOL pfile_open_archive(BOOL update, DWORD save_num)
 {
 	char FileName[MAX_PATH];
 
@@ -105,7 +105,7 @@ BOOL pfile_open_archive(BOOL a1, DWORD save_num)
 	if (OpenMPQ(FileName, FALSE, save_num))
 		return TRUE;
 
-	if (a1 && gbMaxPlayers > 1)
+	if (update && gbMaxPlayers > 1)
 		mpqapi_store_default_time(save_num);
 	return FALSE;
 }
@@ -209,13 +209,13 @@ void game_2_ui_player(const PlayerStruct *p, _uiheroinfo *heroinfo, BOOL bHasSav
 	heroinfo->vitality = p->_pVitality;
 	heroinfo->gold = p->_pGold;
 	heroinfo->hassaved = bHasSaveFile;
-	heroinfo->herorank = (unsigned char)p->pDiabloKillLevel;
+	heroinfo->herorank = p->pDiabloKillLevel;
 	heroinfo->spawned = 0;
 }
 
-unsigned char game_2_ui_class(const PlayerStruct *p)
+BYTE game_2_ui_class(const PlayerStruct *p)
 {
-	unsigned char uiclass;
+	BYTE uiclass;
 	if (p->_pClass == PC_WARRIOR)
 		uiclass = UI_WARRIOR;
 	else if (p->_pClass == PC_ROGUE)

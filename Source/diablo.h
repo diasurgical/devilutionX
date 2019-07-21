@@ -87,32 +87,32 @@ extern HWND ghMainWnd;
 extern int glMid1Seed[NUMLEVELS];
 extern int glMid2Seed[NUMLEVELS];
 extern int gnLevelTypeTbl[NUMLEVELS];
-extern int MouseY;             // idb
-extern int MouseX;             // idb
-extern BOOL gbGameLoopStartup; // idb
+extern int MouseY;
+extern int MouseX;
+extern BOOL gbGameLoopStartup;
 extern DWORD glSeedTbl[NUMLEVELS];
 extern BOOL gbRunGame;
 extern int glMid3Seed[NUMLEVELS];
 extern BOOL gbRunGameResult;
-extern int zoomflag; // weak
+extern int zoomflag;
 extern BOOL gbProcessPlayers;
 extern int glEndSeed[NUMLEVELS];
 extern BOOL gbLoadGame;
-extern HINSTANCE ghInst; // idb
+extern HINSTANCE ghInst;
 extern int DebugMonsters[10];
-extern char cineflag;   // weak
-extern int drawpanflag; // weak
-extern int visiondebug; // weak
-extern int scrollflag;  /* unused */
+extern BOOLEAN cineflag;
+extern int drawpanflag;
+extern BOOL visiondebug;
+extern BOOL scrollflag; /* unused */
 extern BOOL light4flag;
-extern int leveldebug;        // weak
-extern int monstdebug;        // weak
-extern int trigdebug;         /* unused */
-extern int setseed;           // weak
-extern int debugmonsttypes;   // weak
-extern int PauseMode;         // weak
-extern char sgbMouseDown;     // weak
-extern int color_cycle_timer; // weak
+extern BOOL leveldebug;
+extern BOOL monstdebug;
+extern BOOL trigdebug; /* unused */
+extern int setseed;
+extern int debugmonsttypes;
+extern int PauseMode;
+extern char sgbMouseDown;
+extern int color_cycle_timer;
 
 void FreeGameMem();
 BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer);
@@ -173,8 +173,8 @@ extern int framerate;
 extern int framestart;
 #endif
 extern BOOL FriendlyMode;
-extern char *spszMsgTbl[4];    // weak
-extern char *spszMsgKeyTbl[4]; // weak
+extern char *spszMsgTbl[4];
+extern char *spszMsgKeyTbl[4];
 
 #ifdef DEVILUTION_STUB
 #include "miniwin/popdecl.inc"

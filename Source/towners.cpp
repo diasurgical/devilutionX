@@ -2,12 +2,12 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-int storeflag; // weak
+BOOL storeflag;
 int sgnCowMsg;
-int numtowners; // idb
+int numtowners;
 DWORD sgdwCowClicks;
-int bannerflag;  // weak // unused 0x6AAC28
-int boyloadflag; // weak
+BOOL bannerflag; // unused 0x6AAC28
+BOOL boyloadflag;
 BYTE *pCowCels;
 TownerStruct towner[16];
 
@@ -212,7 +212,7 @@ void InitBarOwner()
 {
 	int i;
 
-	bannerflag = 0; // unused
+	bannerflag = FALSE; // unused
 	InitTownerInfo(numtowners, 96, 1, TOWN_TAVERN, 55, 62, 3, 10);
 	InitQstSnds(numtowners);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\TwnF\\TwnFN.CEL", NULL);
@@ -224,7 +224,6 @@ void InitBarOwner()
 	strcpy(towner[numtowners]._tName, "Ogden the Tavern owner");
 	numtowners++;
 }
-// 6AAC28: using guessed type int bannerflag;
 
 void InitTownDead()
 {
@@ -278,7 +277,7 @@ void InitBoy()
 {
 	int i;
 
-	boyloadflag = 1;
+	boyloadflag = TRUE;
 	InitTownerInfo(numtowners, 96, 1, TOWN_PEGBOY, 11, 53, -1, 10);
 	InitQstSnds(numtowners);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\TownBoy\\PegKid1.CEL", NULL);
@@ -290,7 +289,6 @@ void InitBoy()
 	strcpy(towner[numtowners]._tName, "Wirt the Peg-legged boy");
 	numtowners++;
 }
-// 6AAC2C: using guessed type int boyloadflag;
 
 void InitHealer()
 {
@@ -373,12 +371,11 @@ void InitCows()
 		numtowners++;
 	}
 }
-// 6AAC2C: using guessed type int boyloadflag;
 
 void InitTowners()
 {
 	numtowners = 0;
-	boyloadflag = 0;
+	boyloadflag = FALSE;
 	InitSmith();
 	InitHealer();
 	if (quests[QTYPE_BUTCH]._qactive && quests[QTYPE_BUTCH]._qactive != 3)
@@ -391,7 +388,6 @@ void InitTowners()
 	InitBoy();
 	InitCows();
 }
-// 6AAC2C: using guessed type int boyloadflag;
 
 void FreeTownerGFX()
 {
@@ -425,7 +421,6 @@ void TownCtrlMsg(int i)
 		}
 	}
 }
-// 646D00: using guessed type char qtextflag;
 
 void TownBlackSmith()
 {
@@ -592,10 +587,9 @@ void TownerTalk(int first, int t)
 {
 	sgdwCowClicks = 0;
 	sgnCowMsg = 0;
-	storeflag = 1;
+	storeflag = TRUE;
 	InitQTextMsg(first);
 }
-// 6AAC18: using guessed type int storeflag;
 
 void TalkToTowner(int p, int t)
 {
@@ -940,9 +934,6 @@ void TalkToTowner(int p, int t)
 		CowSFX(p);
 	}
 }
-// 646D00: using guessed type char qtextflag;
-// 679660: using guessed type char gbMaxPlayers;
-// 6AAC18: using guessed type int storeflag;
 
 void CowSFX(int pnum)
 {

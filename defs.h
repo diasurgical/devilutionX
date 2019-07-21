@@ -5,8 +5,8 @@
 
 #define LIGHTSIZE				6912 // 27 * 256
 
-#define GMENU_SLIDER			(DWORD)1 << 30
-#define GMENU_ENABLED			(DWORD)1 << 31
+#define GMENU_SLIDER			0x40000000
+#define GMENU_ENABLED			0x80000000
 
 // must be unsigned to generate unsigned comparisons with pnum
 #define MAX_PLRS				4
@@ -150,15 +150,6 @@
 #ifndef INVALID_FILE_ATTRIBUTES
 #define INVALID_FILE_ATTRIBUTES ((DWORD)-1)
 #endif
-
-/////////////////////////////////////////////////////////////////////////
-/* temporary stuff from the decompiler */
-/* remove all the garbage below in the future */
-/////////////////////////////////////////////////////////////////////////
-#ifndef IDA_GARBAGE
-#define IDA_GARBAGE
-#define _LOBYTE(x)  (*((BYTE*)&(x)))
-#endif /* IDA_GARBAGE */
 
 // Typedef for the function pointer
 typedef void (*_PVFV)(void);

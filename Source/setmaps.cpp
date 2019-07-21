@@ -3,17 +3,17 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 // BUGFIX: constant data should be const
-unsigned char SkelKingTrans1[8] = {
+BYTE SkelKingTrans1[8] = {
 	19, 47, 26, 55,
 	26, 49, 30, 53
 };
 
-unsigned char SkelKingTrans2[8] = {
+BYTE SkelKingTrans2[8] = {
 	33, 19, 47, 29,
 	37, 29, 43, 39
 };
 
-unsigned char SkelKingTrans3[20] = {
+BYTE SkelKingTrans3[20] = {
 	27, 53, 35, 61,
 	27, 35, 34, 42,
 	45, 35, 53, 43,
@@ -21,7 +21,7 @@ unsigned char SkelKingTrans3[20] = {
 	31, 39, 49, 57
 };
 
-unsigned char SkelKingTrans4[28] = {
+BYTE SkelKingTrans4[28] = {
 	49, 45, 58, 51,
 	57, 31, 62, 37,
 	63, 31, 69, 40,
@@ -31,7 +31,7 @@ unsigned char SkelKingTrans4[28] = {
 	79, 43, 89, 53
 };
 
-unsigned char SkelChamTrans1[20] = {
+BYTE SkelChamTrans1[20] = {
 	43, 19, 50, 26,
 	51, 19, 59, 26,
 	35, 27, 42, 34,
@@ -39,12 +39,12 @@ unsigned char SkelChamTrans1[20] = {
 	50, 27, 59, 34
 };
 
-unsigned char SkelChamTrans2[8] = {
+BYTE SkelChamTrans2[8] = {
 	19, 31, 34, 47,
 	34, 35, 42, 42
 };
 
-unsigned char SkelChamTrans3[36] = {
+BYTE SkelChamTrans3[36] = {
 	43, 35, 50, 42,
 	51, 35, 62, 42,
 	63, 31, 66, 46,

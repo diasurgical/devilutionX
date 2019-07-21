@@ -3,8 +3,8 @@
 #define __APPFAT_H__
 
 extern char sz_error_buf[256];
-extern int terminating;       // weak
-extern int cleanup_thread_id; // weak
+extern int terminating;
+extern int cleanup_thread_id;
 
 void TriggerBreak();
 #ifdef _DEBUG

@@ -225,11 +225,11 @@ int gmenu_get_lfont(TMenuItem *pItem)
 	return i - 2;
 }
 
-BOOL gmenu_presskeys(int a1)
+BOOL gmenu_presskeys(int vkey)
 {
 	if (!sgpCurrentMenu)
 		return 0;
-	switch (a1) {
+	switch (vkey) {
 	case VK_RETURN:
 		if ((sgpCurrItem->dwFlags & GMENU_ENABLED) != 0) {
 			PlaySFX(IS_TITLEMOV);

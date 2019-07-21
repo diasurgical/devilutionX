@@ -4,16 +4,16 @@
 
 extern BYTE *pDurIcons;
 extern BYTE *pChrButtons;
-extern BOOL drawhpflag; // idb
+extern BOOL drawhpflag;
 extern BOOL dropGoldFlag;
 extern int panbtn[8];
 extern int chrbtn[4];
 extern BYTE *pMultiBtns;
 extern BYTE *pPanelButtons;
 extern BYTE *pChrPanel;
-extern int lvlbtndown;    // weak
-extern int dropGoldValue; // idb
-extern BOOL drawmanaflag; // idb
+extern BOOL lvlbtndown;
+extern int dropGoldValue;
+extern BOOL drawmanaflag;
 extern BOOL chrbtnactive;
 extern BYTE *pPanelText;
 extern int nGoldFrame;
@@ -21,37 +21,37 @@ extern BYTE *pLifeBuff;
 extern BYTE *pBtmBuff;
 extern BYTE *pTalkBtns;
 extern int pstrjust[4];
-extern int pnumlines; // idb
+extern int pnumlines;
 extern BOOL pinfoflag;
 extern BOOL talkbtndown[3];
-extern int pSpell; // weak
+extern int pSpell;
 extern BYTE *pManaBuff;
-extern char infoclr; // weak
+extern char infoclr;
 extern BYTE *pGBoxBuff;
 extern BYTE *pSBkBtnCel;
 extern char tempstr[256];
 extern BOOLEAN whisper[MAX_PLRS];
-extern int sbooktab;             // weak
-extern int pSplType;             // weak
-extern int frame;                // idb
-extern int initialDropGoldIndex; // idb
-extern int talkflag;             // weak
+extern int sbooktab;
+extern int pSplType;
+extern int frame;
+extern int initialDropGoldIndex;
+extern BOOL talkflag;
 extern BYTE *pSBkIconCels;
-extern int sbookflag; // weak
-extern int chrflag;
+extern BOOL sbookflag;
+extern BOOL chrflag;
 extern BOOL drawbtnflag;
 extern BYTE *pSpellBkCel;
 extern char infostr[MAX_PATH];
-extern int numpanbtns; // weak
+extern int numpanbtns;
 extern BYTE *pStatusPanel;
 extern char panelstr[256];
-extern int panelflag; // weak
-extern unsigned char SplTransTbl[256];
-extern int initialDropGoldValue; // idb
+extern BOOL panelflag;
+extern BYTE SplTransTbl[256];
+extern int initialDropGoldValue;
 extern BYTE *pSpellCels;
 extern BOOL panbtndown;
 extern BYTE *pTalkPanel;
-extern int spselflag; // weak
+extern int spselflag;
 
 void DrawSpellCel(int xp, int yp, BYTE *Trans, int nCel, int w);
 void SetSpellTrans(char t);
@@ -109,7 +109,7 @@ void control_drop_gold(char vkey);
 void control_remove_gold(int pnum, int gold_index);
 void control_set_gold_curs(int pnum);
 void DrawTalkPan();
-char *control_print_talk_msg(char *msg, int x, int y, int *a4, int just);
+char *control_print_talk_msg(char *msg, int x, int y, int *nOffset, int just);
 BOOL control_check_talk_btn();
 void control_release_talk_btn();
 void control_reset_talk_msg();
@@ -121,10 +121,10 @@ void control_press_enter();
 void control_up_down(int v);
 
 /* rdata */
-extern const unsigned char fontframe[128];
-extern const unsigned char fontkern[68];
+extern const BYTE fontframe[128];
+extern const BYTE fontkern[68];
 extern const int lineoffset[25];
-extern const unsigned char gbFontTransTbl[256];
+extern const BYTE gbFontTransTbl[256];
 
 /* data */
 

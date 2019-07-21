@@ -7,7 +7,7 @@ int icursH28;
 int cursW;
 int pcursmonst;
 int icursW28;
-void *pCursCels;
+BYTE *pCursCels;
 int icursH;
 
 // inv_item value
@@ -261,8 +261,8 @@ void CheckCursMove()
 	}
 	pcursinvitem = -1;
 	pcursplr = -1;
-	uitemflag = 0;
-	panelflag = 0;
+	uitemflag = FALSE;
+	panelflag = FALSE;
 	trigflag = FALSE;
 
 	if (plr[myplr]._pInvincible) {

@@ -1216,26 +1216,26 @@ typedef struct DeadStruct {
 
 typedef struct _gamedata {
 	int dwSeed;
-	unsigned char bDiff;
+	BYTE bDiff;
 } _gamedata;
 
 typedef struct _uidefaultstats {
-	unsigned short strength;
-	unsigned short magic;
-	unsigned short dexterity;
-	unsigned short vitality;
+	WORD strength;
+	WORD magic;
+	WORD dexterity;
+	WORD vitality;
 } _uidefaultstats;
 
 typedef struct _uiheroinfo {
 	struct _uiheroinfo *next;
 	char name[16];
-	unsigned short level;
-	unsigned char heroclass;
-	unsigned char herorank;
-	unsigned short strength;
-	unsigned short magic;
-	unsigned short dexterity;
-	unsigned short vitality;
+	WORD level;
+	BYTE heroclass;
+	BYTE herorank;
+	WORD strength;
+	WORD magic;
+	WORD dexterity;
+	WORD vitality;
 	int gold;
 	int hassaved;
 	int spawned;

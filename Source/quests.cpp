@@ -664,18 +664,18 @@ void ResyncQuests()
 		SpawnQuestItem(IDI_GLDNELIX, 0, 0, 5, 1);
 	}
 	if (setlevel && setlvlnum == 5) {
-		if (quests[QTYPE_VB]._qvar1 >= 4u)
+		if (quests[QTYPE_VB]._qvar1 >= 4)
 			ObjChangeMapResync(1, 11, 20, 18);
-		if (quests[QTYPE_VB]._qvar1 >= 6u)
+		if (quests[QTYPE_VB]._qvar1 >= 6)
 			ObjChangeMapResync(1, 18, 20, 24);
-		if (quests[QTYPE_VB]._qvar1 >= 7u)
+		if (quests[QTYPE_VB]._qvar1 >= 7)
 			InitVPTriggers();
 		for (i = 0; i < nobjects; i++)
 			SyncObjectAnim(objectactive[i]);
 	}
 	if (currlevel == quests[QTYPE_VB]._qlevel
 	    && !setlevel
-	    && (quests[QTYPE_VB]._qvar2 == 1 || quests[QTYPE_VB]._qvar2 >= 3u)
+	    && (quests[QTYPE_VB]._qvar2 == 1 || quests[QTYPE_VB]._qvar2 >= 3)
 	    && (quests[QTYPE_VB]._qactive == 2 || quests[QTYPE_VB]._qactive == 3)) {
 		quests[QTYPE_VB]._qvar2 = 2;
 	}
@@ -718,14 +718,14 @@ void DrawQuestLog()
 {
 	int y, i;
 
-	PrintQLString(0, 2, 1u, "Quest Log", 3);
+	PrintQLString(0, 2, TRUE, "Quest Log", 3);
 	CelDecodeOnly(64, 511, pQLogCel, 1, 320);
 	y = qtopline;
 	for (i = 0; i < numqlines; i++) {
-		PrintQLString(0, y, 1, questlist[qlist[i]]._qlstr, 0);
+		PrintQLString(0, y, TRUE, questlist[qlist[i]]._qlstr, 0);
 		y += 2;
 	}
-	PrintQLString(0, 22, 1, "Close Quest Log", 0);
+	PrintQLString(0, 22, TRUE, "Close Quest Log", 0);
 	ALLQUESTS = (ALLQUESTS & 7) + 1;
 }
 

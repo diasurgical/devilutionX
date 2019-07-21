@@ -2,11 +2,11 @@
 #ifndef __HELP_H__
 #define __HELP_H__
 
-extern int help_select_line; // weak
-extern int dword_634494;     // weak
+extern int help_select_line;
+extern int dword_634494;
 extern int helpflag;
 extern int displayinghelp[22];
-extern int HelpTop; // weak
+extern int HelpTop;
 
 void InitHelp();
 void DrawHelp();

@@ -6,7 +6,7 @@ extern BOOL townwarps[3];
 extern BOOL trigflag;
 extern int numtrigs;
 extern TriggerStruct trigs[MAXTRIGGERS];
-extern int TWarpFrom; // weak
+extern int TWarpFrom;
 
 void InitNoTriggers();
 void InitTownTriggers();

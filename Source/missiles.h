@@ -6,9 +6,9 @@ extern int missileactive[MAXMISSILES];
 extern int missileavail[MAXMISSILES];
 extern MissileStruct missile[MAXMISSILES];
 extern int nummissiles;
-extern int ManashieldFlag;
+extern BOOL ManashieldFlag;
 extern ChainStruct chain[MAXMISSILES];
-extern int MissilePreFlag;
+extern BOOL MissilePreFlag;
 extern int numchains;
 
 void GetDamageAmt(int i, int *mind, int *maxd);

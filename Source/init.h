@@ -3,7 +3,7 @@
 #define __INIT_H__
 
 extern _SNETVERSIONDATA fileinfo;
-extern int gbActive; // weak
+extern int gbActive;
 extern char diablo_exe_path[MAX_PATH];
 extern HANDLE unused_mpq;
 extern char patch_rt_mpq_path[MAX_PATH];
@@ -11,7 +11,7 @@ extern WNDPROC CurrentProc;
 extern HANDLE diabdat_mpq;
 extern char diabdat_mpq_path[MAX_PATH];
 extern HANDLE patch_rt_mpq;
-extern BOOL killed_mom_parent; // weak
+extern BOOL killed_mom_parent;
 extern BOOLEAN screensaver_enabled_prev;
 
 void init_cleanup(BOOL show_cursor);

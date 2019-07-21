@@ -5,13 +5,13 @@ DEVILUTION_BEGIN_NAMESPACE
 int qtexty;
 char *qtextptr;
 int qtextSpd;
-char qtextflag;
+BOOLEAN qtextflag;
 int scrolltexty;
 int sgLastScroll;
-void *pMedTextCels;
-void *pTextBoxCels;
+BYTE *pMedTextCels;
+BYTE *pTextBoxCels;
 
-const unsigned char mfontframe[127] = {
+const BYTE mfontframe[127] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -26,7 +26,7 @@ const unsigned char mfontframe[127] = {
 	14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
 	24, 25, 26, 48, 0, 49, 0
 };
-const unsigned char mfontkern[56] = {
+const BYTE mfontkern[56] = {
 	5, 15, 10, 13, 14, 10, 9, 13, 11, 5,
 	5, 11, 10, 16, 13, 16, 10, 15, 12, 10,
 	14, 17, 17, 22, 17, 16, 11, 5, 11, 11,
@@ -68,7 +68,7 @@ void InitQTextMsg(int m)
 
 void DrawQTextBack()
 {
-	CelDecodeOnly(88, 487, (BYTE *)pTextBoxCels, 1, 591);
+	CelDecodeOnly(88, 487, pTextBoxCels, 1, 591);
 
 #define TRANS_RECT_X 27
 #define TRANS_RECT_Y 28
@@ -243,7 +243,7 @@ void DrawQText()
 				p++;
 			}
 			if (c != 0) {
-				PrintQTextChr(tx, ty, (BYTE *)pMedTextCels, c);
+				PrintQTextChr(tx, ty, pMedTextCels, c);
 			}
 			tx += mfontkern[c] + 2;
 		}
@@ -275,7 +275,7 @@ void DrawQText()
 			qtexty += 38;
 			qtextptr = pnl;
 			if (*pnl == '|') {
-				qtextflag = 0;
+				qtextflag = FALSE;
 			}
 			break;
 		}

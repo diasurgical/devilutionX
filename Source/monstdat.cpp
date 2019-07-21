@@ -136,7 +136,7 @@ char MonstConvTbl[128] = {
 	0, 0, 0, 0, 0, 0, 80, 111
 };
 
-unsigned char MonstAvailTbl[112] = {
+BYTE MonstAvailTbl[112] = {
 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 	1, 1, 1, 1, 1, 1, 1, 1, 0, 2,
@@ -254,5 +254,3 @@ UniqMonstStruct UniqMonst[98] = {
 	{  -1,          NULL,                       NULL,       0,      0, 0,           0,          0,          0, 0                                                            ,        0,        0,        0, 0              }
 	// clang-format on
 };
-
-DEVILUTION_END_NAMESPACE

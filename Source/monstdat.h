@@ -4,7 +4,7 @@
 
 extern MonsterData monsterdata[112];
 extern char MonstConvTbl[128];
-extern unsigned char MonstAvailTbl[112];
+extern BYTE MonstAvailTbl[112];
 extern UniqMonstStruct UniqMonst[98];
 
 #endif /* __MONSTDAT_H__ */

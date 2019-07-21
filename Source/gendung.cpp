@@ -4,14 +4,14 @@ DEVILUTION_BEGIN_NAMESPACE
 
 WORD level_frame_types[MAXTILES];
 int themeCount;
-char nTransTable[2049];
+BOOLEAN nTransTable[2049];
 //int dword_52D204;
 int dMonster[MAXDUNX][MAXDUNY];
 BYTE dungeon[DMAXX][DMAXY];
 char dObject[MAXDUNX][MAXDUNY];
 BYTE *pSpeedCels;
 int nlevel_frames;
-char pdungeon[DMAXX][DMAXY];
+BYTE pdungeon[DMAXX][DMAXY];
 char dDead[MAXDUNX][MAXDUNY];
 MICROS dpiece_defs_map_1[MAXDUNX * MAXDUNY];
 char dPreLight[MAXDUNX][MAXDUNY];
@@ -31,7 +31,7 @@ char dTransVal[MAXDUNX][MAXDUNY];
 BOOLEAN nTrapTable[2049];
 BYTE leveltype;
 BYTE currlevel;
-char TransList[256];
+BOOLEAN TransList[256];
 BOOLEAN nSolidTable[2049];
 int level_frame_count[MAXTILES];
 ScrollStruct ScrollInfo;
@@ -44,13 +44,13 @@ int dword_5C2FFC;
 int scr_pix_width;
 int scr_pix_height;
 char dArch[MAXDUNX][MAXDUNY];
-char nBlockTable[2049];
+BOOLEAN nBlockTable[2049];
 BYTE *pSpecialCels;
 char dFlags[MAXDUNX][MAXDUNY];
 char dItem[MAXDUNX][MAXDUNY];
 BYTE setlvlnum;
 int level_frame_sizes[MAXTILES];
-char nMissileTable[2049];
+BOOLEAN nMissileTable[2049];
 char *pSetPiece_2;
 char setlvltype;
 BOOLEAN setlevel;
@@ -109,11 +109,11 @@ void FillSolidBlockTbls()
 		if (bv & 1)
 			nSolidTable[i] = 1;
 		if (bv & 2)
-			nBlockTable[i] = 1;
+			nBlockTable[i] = TRUE;
 		if (bv & 4)
-			nMissileTable[i] = 1;
+			nMissileTable[i] = TRUE;
 		if (bv & 8)
-			nTransTable[i] = 1;
+			nTransTable[i] = TRUE;
 		if (bv & 0x80)
 			nTrapTable[i] = 1;
 		block_lvid[i] = (bv & 0x70) >> 4; /* beta: (bv >> 4) & 7 */

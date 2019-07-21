@@ -10,7 +10,7 @@ int seed_index;
 int level_seeds[NUMLEVELS];
 int seed_table[4096];
 
-void *pSquareCel;
+BYTE *pSquareCel;
 char dMonsDbg[NUMLEVELS][MAXDUNX][MAXDUNY];
 char dFlagDbg[NUMLEVELS][MAXDUNX][MAXDUNY];
 

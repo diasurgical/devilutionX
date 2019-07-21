@@ -7,7 +7,7 @@ extern int icursH28;
 extern int cursW;
 extern int pcursmonst;
 extern int icursW28;
-extern void *pCursCels;
+extern BYTE *pCursCels;
 extern int icursH;
 extern char pcursinvitem;
 extern int icursW;

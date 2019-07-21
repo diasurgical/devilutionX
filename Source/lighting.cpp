@@ -665,7 +665,8 @@ void DoUnVision(int nXPos, int nYPos, int nRadius)
 
 void DoVision(int nXPos, int nYPos, int nRadius, BOOL doautomap, BOOL visible)
 {
-	int nCrawlX, nCrawlY, nLineLen, nBlockerFlag, nTrans;
+	BOOL nBlockerFlag;
+	int nCrawlX, nCrawlY, nLineLen, nTrans;
 	int j, k, v, x1adj, x2adj, y1adj, y2adj;
 
 	if (nXPos >= 0 && nXPos <= MAXDUNX && nYPos >= 0 && nYPos <= MAXDUNY) {
@@ -725,7 +726,7 @@ void DoVision(int nXPos, int nYPos, int nRadius, BOOL doautomap, BOOL visible)
 					break;
 				}
 				if (nCrawlX >= 0 && nCrawlX <= MAXDUNX && nCrawlY >= 0 && nCrawlY <= MAXDUNY) {
-					nBlockerFlag = (BYTE)nBlockTable[dPiece[nCrawlX][nCrawlY]];
+					nBlockerFlag = nBlockTable[dPiece[nCrawlX][nCrawlY]];
 					if (!nBlockTable[dPiece[x1adj + nCrawlX][y1adj + nCrawlY]]
 					    || !nBlockTable[dPiece[x2adj + nCrawlX][y2adj + nCrawlY]]) {
 						if (doautomap) {
@@ -741,7 +742,7 @@ void DoVision(int nXPos, int nYPos, int nRadius, BOOL doautomap, BOOL visible)
 						if (!nBlockerFlag) {
 							nTrans = dTransVal[nCrawlX][nCrawlY];
 							if (nTrans != 0) {
-								TransList[nTrans] = 1;
+								TransList[nTrans] = TRUE;
 							}
 						}
 					}
@@ -1152,7 +1153,7 @@ void InitVision()
 	visionid = 1;
 
 	for (i = 0; i < TransVal; i++) {
-		TransList[i] = 0;
+		TransList[i] = FALSE;
 	}
 }
 
@@ -1225,7 +1226,7 @@ void ProcessVisionList()
 			}
 		}
 		for (i = 0; i < TransVal; i++) {
-			TransList[i] = 0;
+			TransList[i] = FALSE;
 		}
 		for (i = 0; i < numvision; i++) {
 			if (!VisionList[i]._ldel) {

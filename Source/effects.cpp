@@ -8,7 +8,7 @@ int sfxdnum;
 HANDLE sfx_stream;
 TSFX *sfx_data_cur;
 
-const char monster_action_sounds[] = { 'a', 'h', 'd', 's' }; // idb
+const char monster_action_sounds[] = { 'a', 'h', 'd', 's' };
 
 /* data */
 

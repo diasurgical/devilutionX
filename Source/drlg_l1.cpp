@@ -2,7 +2,7 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-char L5dungeon[80][80];
+BYTE L5dungeon[80][80];
 BYTE L5dflags[DMAXX][DMAXY];
 BOOL setloadflag;
 int HR1;
@@ -108,7 +108,7 @@ const BYTE LAMPS[] = { 2, 2, 13, 0, 13, 13, 129, 0, 130, 128 };
 const BYTE PWATERIN[] = { 6, 6, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 0, 0, 0, 0, 0, 0, 0, 202, 200, 200, 84, 0, 0, 199, 203, 203, 83, 0, 0, 85, 206, 80, 81, 0, 0, 0, 134, 135, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 /* data */
-BYTE L5ConvTbl[16] = { 22u, 13u, 1u, 13u, 2u, 13u, 13u, 13u, 4u, 13u, 1u, 13u, 2u, 13u, 16u, 13u };
+BYTE L5ConvTbl[16] = { 22, 13, 1, 13, 2, 13, 13, 13, 4, 13, 1, 13, 2, 13, 16, 13 };
 
 void DRLG_Init_Globals()
 {
@@ -1035,10 +1035,10 @@ void L5makeDmt()
 
 	for (j = 0, dmty = 1; dmty <= 77; j++, dmty += 2) {
 		for (i = 0, dmtx = 1; dmtx <= 77; i++, dmtx += 2) {
-			int val = (unsigned char)L5dungeon[dmtx + 1][dmty + 1]; /* todo: unsigned */
-			val = 2 * val + (unsigned char)L5dungeon[dmtx][dmty + 1];
-			val = 2 * val + (unsigned char)L5dungeon[dmtx + 1][dmty];
-			val = 2 * val + (unsigned char)L5dungeon[dmtx][dmty];
+			int val = L5dungeon[dmtx + 1][dmty + 1];
+			val = 2 * val + L5dungeon[dmtx][dmty + 1];
+			val = 2 * val + L5dungeon[dmtx + 1][dmty];
+			val = 2 * val + L5dungeon[dmtx][dmty];
 			dungeon[i][j] = L5ConvTbl[val];
 		}
 	}

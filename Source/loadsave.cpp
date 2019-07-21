@@ -779,10 +779,10 @@ void SaveGame()
 	tbuff = SaveBuff;
 
 	ISave('RETL');
-	OSave((unsigned char)setlevel);
+	OSave(setlevel);
 	WSave(setlvlnum);
 	WSave(currlevel);
-	WSave((unsigned char)leveltype);
+	WSave(leveltype);
 	WSave(ViewX);
 	WSave(ViewY);
 	OSave(invflag);
@@ -1462,7 +1462,7 @@ void SaveLevel()
 	int i, j;
 	char szName[MAX_PATH];
 	int dwLen;
-	unsigned char *SaveBuff;
+	BYTE *SaveBuff;
 
 	if (!currlevel)
 		glSeedTbl[0] = GetRndSeed();

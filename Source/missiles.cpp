@@ -6,9 +6,9 @@ int missileactive[MAXMISSILES];
 int missileavail[MAXMISSILES];
 MissileStruct missile[MAXMISSILES];
 int nummissiles;
-int ManashieldFlag;
+BOOL ManashieldFlag;
 ChainStruct chain[MAXMISSILES];
-int MissilePreFlag;
+BOOL MissilePreFlag;
 int numchains;
 
 int XDirAdd[8] = { 1, 0, -1, -1, -1, 0, 1, 1 };
@@ -392,7 +392,7 @@ void PutMissile(int i)
 		else
 			dMissile[x][y] = -1;
 		if (missile[i]._miPreFlag)
-			MissilePreFlag = 1;
+			MissilePreFlag = TRUE;
 	}
 }
 
@@ -1573,7 +1573,7 @@ void AddTown(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, in
 				tx = dx + CrawlTable[k - 1];
 				ty = dy + CrawlTable[k];
 				if (tx > 0 && tx < MAXDUNX && ty > 0 && ty < MAXDUNY) {
-					if (!(dObject[tx][ty] | dPlayer[tx][ty] | dMissile[tx][ty] | nSolidTable[dPiece[tx][ty]] | (BYTE)nMissileTable[dPiece[tx][ty]])) {
+					if (!(dObject[tx][ty] | dPlayer[tx][ty] | dMissile[tx][ty] | nSolidTable[dPiece[tx][ty]] | nMissileTable[dPiece[tx][ty]])) {
 						if (!CheckIfTrig(tx, ty)) {
 							missile[mi]._miDelFlag = FALSE;
 							missile[mi]._mix = tx;
@@ -1705,7 +1705,7 @@ void AddGuardian(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy
 			pn = dPiece[tx][ty];
 			if (tx > 0 && tx < MAXDUNX && ty > 0 && ty < MAXDUNY) {
 				if (LineClear(sx, sy, tx, ty)) {
-					if (!(dMonster[tx][ty] | dObject[tx][ty] | dMissile[tx][ty] | nSolidTable[pn] | (BYTE)nMissileTable[pn])) {
+					if (!(dMonster[tx][ty] | dObject[tx][ty] | dMissile[tx][ty] | nSolidTable[pn] | nMissileTable[pn])) {
 						missile[mi]._miDelFlag = FALSE;
 						missile[mi]._mix = tx;
 						missile[mi]._miy = ty;
@@ -2095,7 +2095,7 @@ void AddIdentify(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy
 	UseMana(id, SPL_IDENTIFY);
 	if (id == myplr) {
 		if (sbookflag)
-			sbookflag = 0;
+			sbookflag = FALSE;
 		if (!invflag)
 			invflag = 1;
 		SetCursor_(CURSOR_IDENTIFY);
@@ -2191,7 +2191,7 @@ void AddRepair(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, 
 	UseMana(id, SPL_REPAIR);
 	if (id == myplr) {
 		if (sbookflag)
-			sbookflag = 0;
+			sbookflag = FALSE;
 		if (!invflag)
 			invflag = 1;
 		SetCursor_(CURSOR_REPAIR);
@@ -2204,7 +2204,7 @@ void AddRecharge(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy
 	UseMana(id, SPL_RECHARGE);
 	if (id == myplr) {
 		if (sbookflag)
-			sbookflag = 0;
+			sbookflag = FALSE;
 		if (!invflag)
 			invflag = 1;
 		SetCursor_(CURSOR_RECHARGE);
@@ -2541,7 +2541,7 @@ void MI_Golem(int i)
 
 void MI_SetManashield(int i)
 {
-	ManashieldFlag = 1;
+	ManashieldFlag = TRUE;
 }
 
 void MI_LArrow(int i)
@@ -2932,13 +2932,13 @@ void MI_Lightctrl(int i)
 	/// ASSERT: assert((DWORD)pn <= MAXTILES);
 
 	if (missile[i]._misource == -1) {
-		if ((mx != missile[i]._misx || my != missile[i]._misy) && nMissileTable[pn] != 0) {
+		if ((mx != missile[i]._misx || my != missile[i]._misy) && nMissileTable[pn]) {
 			missile[i]._mirange = 0;
 		}
-	} else if (nMissileTable[pn] != 0) {
+	} else if (nMissileTable[pn]) {
 		missile[i]._mirange = 0;
 	}
-	if (nMissileTable[pn] == 0) {
+	if (!nMissileTable[pn]) {
 		if ((mx != missile[i]._miVar1 || my != missile[i]._miVar2) && mx > 0 && my > 0 && mx < MAXDUNX && my < MAXDUNY) {
 			if (missile[i]._misource != -1) {
 				if (missile[i]._micaster == 1
@@ -3667,7 +3667,7 @@ void MI_Wave(int i)
 	nya = sy + YDirAdd[sd];
 	pn = dPiece[nxa][nya];
 	/// ASSERT: assert((DWORD)pn <= MAXTILES);
-	if (nMissileTable[pn] == 0) {
+	if (!nMissileTable[pn]) {
 		AddMissile(nxa, nya, nxa + XDirAdd[sd], nya + YDirAdd[sd], plr[id]._pdir, MIS_FIREMOVE, 0, id, 0, missile[i]._mispllvl);
 		nxa += XDirAdd[dira];
 		nya += YDirAdd[dira];
@@ -4041,8 +4041,8 @@ void ProcessMissiles()
 		}
 	}
 
-	MissilePreFlag = 0;
-	ManashieldFlag = 0;
+	MissilePreFlag = FALSE;
+	ManashieldFlag = FALSE;
 
 	for (i = 0; i < nummissiles; i++) {
 		mi = missileactive[i];
