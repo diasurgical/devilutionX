@@ -2609,6 +2609,7 @@ void DrawAndBlit()
 	drawpanflag = 0;
 
 	lock_buf(0);
+
 	if (leveltype != DTYPE_TOWN) {
 		DrawView(ViewX, ViewY);
 	} else {
@@ -2616,10 +2617,10 @@ void DrawAndBlit()
 	}
 	if (ctrlPan) {
 		ClearCtrlPan();
-	}
+	} 
 	if (drawhpflag) {
 		UpdateLifeFlask();
-	}
+	} 
 	if (drawmanaflag) {
 		UpdateManaFlask();
 	}

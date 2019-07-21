@@ -5,7 +5,9 @@
 #include <SDL.h>
 #include <SDL_endian.h>
 #include <SDL_mixer.h>
+#include "miniwin/sdl1_wrapper.h"
 #include <smacker.h>
+#include "../SourceS/miniwin/misc.h"
 
 #include "DiabloUI/diabloui.h"
 
@@ -499,6 +501,7 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 	smk_first(SVidSMK); // Decode first frame
 
 	smk_info_video(SVidSMK, &SVidWidth, &SVidHeight, NULL);
+
 	if (renderer) {
 		SDL_DestroyTexture(texture);
 		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, SVidWidth, SVidHeight);
@@ -509,7 +512,12 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 			SDL_Log(SDL_GetError());
 		}
 	}
+
 	memcpy(SVidPreviousPalette, orig_palette, 1024);
+
+#ifdef __AMIGA__
+	surface = SDL_SetVideoMode(SVidWidth, SVidHeight, D_BPP, D_SDL_MODES);
+#endif
 
 	// Copy frame to buffer
 	SVidSurface = SDL_CreateRGBSurfaceWithFormatFrom(
@@ -562,7 +570,7 @@ BOOL SVidPlayContinue(void)
 			colors[i].r = palette_data[i * 3 + 0];
 			colors[i].g = palette_data[i * 3 + 1];
 			colors[i].b = palette_data[i * 3 + 2];
-			colors[i].a = SDL_ALPHA_OPAQUE;
+			colors[i].unused = SDL_ALPHA_OPAQUE;
 
 			orig_palette[i].peFlags = 0;
 			orig_palette[i].peRed = palette_data[i * 3 + 0];
@@ -570,6 +578,10 @@ BOOL SVidPlayContinue(void)
 			orig_palette[i].peBlue = palette_data[i * 3 + 2];
 		}
 		memcpy(logical_palette, orig_palette, 1024);
+
+		//Todo(SDL1.2): Fix SDL_SetPaletteColors wrapper
+		SDL_SetPalette(SVidSurface, SDL_LOGPAL|SDL_PHYSPAL, colors, 0, 256);
+		SDL_SetColors(surface, colors, 0, 256);
 
 		if (SDL_SetPaletteColors(SVidPalette, colors, 0, 256) <= -1) {
 			SDL_Log(SDL_GetError());
@@ -581,10 +593,13 @@ BOOL SVidPlayContinue(void)
 		return SVidLoadNextFrame(); // Skip video and audio if the system is to slow
 	}
 
+	//klaus
+	/*
 	if (deviceId && SDL_QueueAudio(deviceId, smk_get_audio(SVidSMK, 0), smk_get_audio_size(SVidSMK, 0)) <= -1) {
 		SDL_Log(SDL_GetError());
 		return false;
 	}
+	*/
 
 	if (SDL_GetTicks() * 1000 >= SVidFrameEnd) {
 		return SVidLoadNextFrame(); // Skip video if the system is to slow
@@ -595,7 +610,9 @@ BOOL SVidPlayContinue(void)
 			SDL_Log(SDL_GetError());
 			return false;
 		}
+
 	} else {
+#ifndef __AMIGA__
 		int factor;
 		int wFactor = SCREEN_WIDTH / SVidWidth;
 		int hFactor = SCREEN_HEIGHT / SVidHeight;
@@ -610,11 +627,20 @@ BOOL SVidPlayContinue(void)
 		SDL_Rect pal_surface_offset = { (SCREEN_WIDTH - scaledW) / 2, (SCREEN_HEIGHT - scaledH) / 2, scaledW, scaledH };
 		Uint32 format = SDL_GetWindowPixelFormat(window);
 		SDL_Surface *tmp = SDL_ConvertSurfaceFormat(SVidSurface, format, 0);
+
 		if (SDL_BlitScaled(tmp, NULL, surface, &pal_surface_offset) <= -1) {
 			SDL_Log(SDL_GetError());
 			return false;
 		}
+#else
+		SDL_Surface *tmp = SDL_ConvertSurfaceFormat(SVidSurface, 0, 0);
+		if (SDL_BlitSurface(tmp, NULL, surface, NULL) <= -1) {
+			SDL_Log(SDL_GetError());
+			return false;
+		}
+#endif
 		SDL_FreeSurface(tmp);
+
 	}
 
 	bufferUpdated = true;
@@ -649,6 +675,10 @@ BOOL SVidPlayEnd(HANDLE video)
 
 	SFileCloseFile(video);
 	video = NULL;
+
+#ifdef __AMIGA__
+	surface = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, D_BPP, D_SDL_MODES);
+#endif
 
 	memcpy(orig_palette, SVidPreviousPalette, 1024);
 	if (renderer) {

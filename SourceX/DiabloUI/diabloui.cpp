@@ -212,9 +212,11 @@ bool UiFocusNavigation(SDL_Event *event)
 {
 	if (event->type == SDL_QUIT)
 		exit(0);
-
+	
+	SDLKey sym = event->key.keysym.sym;
+	
 	if (event->type == SDL_KEYDOWN) {
-		switch (event->key.keysym.sym) {
+		switch (sym) {	
 		case SDLK_UP:
 			UiFocus(SelectedItem - 1, UiItemsWraps);
 			return true;
@@ -240,11 +242,16 @@ bool UiFocusNavigation(SDL_Event *event)
 			return true;
 		}
 	}
-
+	
+	if (event->type == SDL_MOUSEBUTTONDOWN) {
+		UiFocusNavigationSelect();
+		return true;
+	}
+	
 	if (SDL_IsTextInputActive()) {
 		switch (event->type) {
 		case SDL_KEYDOWN:
-			switch (event->key.keysym.sym) {
+			switch (sym) {
 			case SDLK_v:
 				if (SDL_GetModState() & KMOD_CTRL) {
 					char *clipboard = SDL_GetClipboardText();
@@ -262,11 +269,20 @@ bool UiFocusNavigation(SDL_Event *event)
 				}
 				return true;
 			}
-			break;
+		break;
+		case SDL_KEYUP:
+			if (sym >= SDLK_a && sym <= SDLK_z)
+				selhero_CatToName(SDL_GetKeyName(sym), UiTextInput, UiTextInputLen);
+			return true;
+		break;
+/*
+Todo(Amiga): Fix this
 		case SDL_TEXTINPUT:
 			selhero_CatToName(event->text.text, UiTextInput, UiTextInputLen);
 			return true;
+*/
 		}
+
 	}
 
 	if (gUiItems && gUiItemCnt && UiItemMouseEvents(event, gUiItems, gUiItemCnt))
@@ -379,8 +395,10 @@ void InitFont()
 		return;
 	}
 
+#ifndef __AMIGA__
 	TTF_SetFontKerning(font, false);
 	TTF_SetFontHinting(font, TTF_HINTING_MONO);
+#endif
 }
 
 void UiInitialize()
@@ -772,7 +790,11 @@ bool UiItemMouseEvents(SDL_Event *event, UI_Item *items, int size)
 	if (event->type != SDL_MOUSEBUTTONDOWN || event->button.button != SDL_BUTTON_LEFT) {
 		return false;
 	}
-
+	
+/*SDL_PumpEvents();
+if(SDL_GetMouseState(NULL, NULL)&SDL_BUTTON(1))
+  printf("Mouse Button 1(left) is pressed.\n");
+*/
 	for (int i = 0; i < size; i++) {
 		if (!IsInsideRect(event, &items[i].rect)) {
 			continue;
@@ -786,10 +808,15 @@ bool UiItemMouseEvents(SDL_Event *event, UI_Item *items, int size)
 			if (items[i].caption != NULL && *items[i].caption != '\0') {
 				if (gfnListFocus != NULL && SelectedItem != items[i].value) {
 					UiFocus(items[i].value);
-				} else if (gfnListFocus == NULL || event->button.clicks >= 2) {
+
+				}
+				//klaus_BAD
+				
+				else if (gfnListFocus == NULL || event->button.button == SDL_BUTTON_LEFT/*event->button.clicks >= 2*/) {
 					SelectedItem = items[i].value;
 					UiFocusNavigationSelect();
 				}
+				
 			}
 
 			return true;

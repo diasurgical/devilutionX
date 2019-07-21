@@ -12,7 +12,7 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
-option(ASAN "Enable address sanitizer" ON)
+option(ASAN "Enable address sanitizer" OFF)
 option(DEBUG "Enable debug mode in engine" ON)
 option(DIST "Dynamically link only glibc and SDL2" OFF)
 option(FASTER "Enable FASTER in engine" ON)
@@ -64,14 +64,21 @@ if(NOT CMAKE_SIZEOF_VOID_P EQUAL 4)
   message(WARNING [[Not 32-bit, highly experimental!]])
 endif()
 
+
 find_package(Threads REQUIRED)
-find_package(SDL2 CONFIG QUIET)
-if (NOT SDL2_FOUND)
-	find_package(SDL2 REQUIRED)
+find_package(Freetype REQUIRED)
+find_package(SDL 1.2 REQUIRED)
+find_package(SDL_ttf REQUIRED)
+find_package(SDL_mixer REQUIRED)
+
+if(AMIGA)
+  find_package(PNG REQUIRED)
+  find_package(LibMad REQUIRED)
 endif()
-find_package(SDL2_ttf REQUIRED)
-find_package(SDL2_mixer REQUIRED)
+
 find_package(sodium REQUIRED)
+
+set(PROJECT_LINK_LIBS libSDL.so)
 
 add_library(smacker STATIC
   3rdParty/libsmacker/smk_bitstream.c
@@ -186,18 +193,19 @@ add_executable(devilutionx
   SourceX/miniwin/thread.cpp
   SourceX/miniwin/dsound.cpp
   SourceX/miniwin/ddraw.cpp
+  SourceX/miniwin/sdl1_wrapper.cpp
   SourceX/sound.cpp
   SourceX/storm/storm.cpp
   SourceX/storm/storm_net.cpp
   SourceX/storm/storm_dx.cpp
-  SourceX/dvlnet/abstract_net.cpp
-  SourceX/dvlnet/loopback.cpp
-  SourceX/dvlnet/packet.cpp
-  SourceX/dvlnet/base.cpp
-  SourceX/dvlnet/frame_queue.cpp
-  SourceX/dvlnet/tcp_client.cpp
-  SourceX/dvlnet/tcp_server.cpp
-  SourceX/dvlnet/udp_p2p.cpp
+   SourceX/dvlnet/abstract_net.cpp
+   SourceX/dvlnet/loopback.cpp
+   SourceX/dvlnet/packet.cpp
+   SourceX/dvlnet/base.cpp
+   SourceX/dvlnet/frame_queue.cpp
+   SourceX/dvlnet/tcp_client.cpp
+   SourceX/dvlnet/tcp_server.cpp
+   SourceX/dvlnet/udp_p2p.cpp
   SourceX/DiabloUI/credits.cpp
   SourceX/DiabloUI/diabloui.cpp
   SourceX/DiabloUI/dialogs.cpp
@@ -209,24 +217,61 @@ add_executable(devilutionx
   SourceX/DiabloUI/title.cpp
   SourceX/main.cpp)
 
-target_include_directories(devilution PUBLIC Source SourceS)
+target_include_directories(devilution PUBLIC Source SourceS )
+
 target_include_directories(devilutionx PRIVATE
   SourceX
   3rdParty/asio/include
   3rdParty/Radon/Radon/include
-  3rdParty/libsmacker)
+  3rdParty/libsmacker
+  ${SDL_INCLUDE_DIR}
+  ${SDL_INCLUDE_DIRS}
+  ${SDL_TTF_INCLUDE_DIRS}
+  ${SDL_MIXER_INCLUDE_DIRS}
+  ${SDL_INCLUDE_DIRS}/..
+  ${SDL_INCLUDE_DIR}/..
+  ${SDL_TTF_INCLUDE_DIRS}/..
+  ${SDL_MIXER_INCLUDE_DIRS}/..
+)
+
+message("SDL include dir: " ${SDL_INCLUDE_DIR})
+message("SDL_mixer include dir: " ${SDL_MIXER_INCLUDE_DIRS})
+message("SDL_ttf include dir: " ${SDL_TTF_INCLUDE_DIRS})
 
 target_link_libraries(devilution PUBLIC Threads::Threads)
+
+if(AMIGA)
+  target_link_libraries(devilution PUBLIC -latomic)
+endif()
+
 target_link_libraries(devilutionx PRIVATE
   devilution
   PKWare
   StormLib
   smacker
   Radon
-  SDL2::SDL2main
-  SDL2::SDL2_ttf
-  SDL2::SDL2_mixer
-  sodium)
+  ${SDL_TTF_LIBRARY}
+  ${SDL_MIXER_LIBRARY}
+  ${SDL_MIXER_LIBRARIES}
+  ${FREETYPE_LIBRARIES}
+  ${PNG_LIBRARIES}
+  ${LIBMAD_LIBRARIES}
+  ${SDL_LIBRARY}
+  sodium
+  )
+
+if(AMIGA)
+  target_link_libraries(devilutionx PRIVATE -ldebug -latomic)
+endif()
+  # ${PROJECT_SOURCE_DIR}/libSDLmain.a)
+  # /usr/lib/x86_64-linux-gnu/libSDLmain.a
+  # ${SDL_LIBRARY}
+  # `sdl-config --libs`
+  # ${`sdl-config --libs`}
+  # SDL2::SDL2main
+  # SDL2::SDL2_ttf
+  # SDL2::SDL2_mixer
+  # sodium)
 
 target_compile_definitions(devilution PRIVATE DEVILUTION_ENGINE)
 target_compile_definitions(devilution PUBLIC
@@ -281,6 +326,7 @@ endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   target_compile_options(devilution PRIVATE -fno-aggressive-loop-optimizations)
+  add_definitions(-D_GNU_SOURCE -D_FILE_OFFSET_BITS=64)
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")

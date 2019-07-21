@@ -3,7 +3,9 @@
 #include "stubs.h"
 #include <SDL.h>
 #include <string>
-
+#include "../SourceS/miniwin/misc.h"
+#include "../SourceS/miniwin/com.h"
+#include "sdl1_wrapper.h"
 #include "DiabloUI/diabloui.h"
 
 #ifdef _MSC_VER
@@ -120,8 +122,10 @@ UINT GetWindowsDirectoryA(LPSTR lpBuffer, UINT uSize)
 {
 	char *name = SDL_GetPrefPath("diasurgical", "devilution");
 	strncpy(lpBuffer, name, uSize);
-	SDL_free(name);
-
+	if(name!=nullptr){
+		//eprintf("SDL_free(name) =: %s\n", name);
+		//SDL_free(name);
+	}
 	DWORD len = strlen(lpBuffer);
 
 	lpBuffer[len - 1] = '\0';
@@ -146,7 +150,11 @@ DWORD GetModuleFileNameA(HMODULE hModule, LPSTR lpFilename, DWORD nSize)
 {
 	char *name = SDL_GetPrefPath("diasurgical", "devilution");
 	strncpy(lpFilename, name, nSize);
-	SDL_free(name);
+	if(name!=nullptr)
+	{
+		//eprintf("SDL_free(name) =: %s\n", name);
+		//SDL_free(name);
+	}
 
 	DWORD len = strlen(lpFilename);
 
@@ -201,8 +209,9 @@ DWORD GetCurrentDirectory(DWORD nBufferLength, LPTSTR lpBuffer)
 	char *base_path = SDL_GetBasePath();
 	if (base_path == NULL) {
 		SDL_Log(SDL_GetError());
-		base_path = SDL_strdup("./");
+		base_path = SDL_strdup("data/");
 	}
+	base_path = SDL_strdup("data/");
 	eprintf("BasePath: %s\n", base_path);
 
 	strncpy(lpBuffer, base_path, nBufferLength);
@@ -328,7 +337,7 @@ HWND CreateWindowExA(
 	}
 	atexit(SDL_Quit);
 
-	int upscale = 1;
+	int upscale = 0; //disable arczi
 	DvlIntSetting("upscale", &upscale);
 	DvlIntSetting("fullscreen", &fullscreen);
 
@@ -348,6 +357,7 @@ HWND CreateWindowExA(
 	if (grabInput) {
 		flags |= SDL_WINDOW_INPUT_GRABBED;
 	}
+
 
 	window = SDL_CreateWindow(lpWindowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, nWidth, nHeight, flags);
 	if (window == NULL) {

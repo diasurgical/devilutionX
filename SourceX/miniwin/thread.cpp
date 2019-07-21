@@ -2,6 +2,8 @@
 #include "stubs.h"
 #include <SDL.h>
 #include <set>
+#include "sdl1_wrapper.h"
+#include "../SourceS/miniwin/misc.h"
 
 namespace dvl {
 
@@ -38,8 +40,9 @@ uintptr_t DVL_beginthreadex(void *_Security, unsigned _StackSize, unsigned (*_St
 	func_translate *ft = new func_translate;
 	ft->func = _StartAddress;
 	ft->arg = _ArgList;
-	SDL_Thread *ret = SDL_CreateThread(thread_translate, NULL, ft);
+	SDL_Thread *ret = SDL_CreateThread(thread_translate, NULL);
 	if (ret == NULL) {
+		//klaus_OK
 		SDL_Log(SDL_GetError());
 	}
 	*_ThrdAddr = SDL_GetThreadID(ret);
@@ -70,6 +73,7 @@ void InitializeCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
 {
 	SDL_mutex *m = SDL_CreateMutex();
 	if (m == NULL) {
+		//klaus_OK
 		SDL_Log(SDL_GetError());
 	}
 	*lpCriticalSection = m;

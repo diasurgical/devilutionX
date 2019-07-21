@@ -6,6 +6,15 @@
 # macOS
 .DS_Store
 
+# qt-creator
+devilutionx.config
+devilutionx.creator
+devilutionx.files
+devilutionx.includes
+.cproject
+.settings/
+
+
 # CodeLite
 .CodeLite
 *.project
@@ -422,3 +431,20 @@ DerivedData/
 /libs
 
 # End of https://www.gitignore.io/api/xcode
+cmake-*
+CMakeFiles/*
+CMakeCache.txt
+
+
+##mine
+
+*.mpq
+*.a
+*.cmake
+Makefile
+devilutionx
+.gitignore
+Source/diablo.cpp.debug
+Source/interfac.cpp.debug
+SourceX/DiabloUI/credits.cpp.debug
+SourceX/storm/storm_net.cpp.debug
