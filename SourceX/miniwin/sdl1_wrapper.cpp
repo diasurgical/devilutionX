@@ -132,6 +132,10 @@ int SDL_RenderSetLogicalSize(SDL_Renderer* renderer, int w, int h)
 	return 1;
 }
 
+void SDL_RaiseWindow(SDL_Window * window)
+{
+}
+
 SDL_Window* SDL_CreateWindow(const char* title, int x, int y, int w, int h, Uint32 flags)
 {
 	auto* window = new SDL_Window;

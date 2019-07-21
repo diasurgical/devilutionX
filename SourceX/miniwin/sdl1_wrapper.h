@@ -455,6 +455,7 @@ typedef int (SDLCALL * SDL_ThreadFunction) (void *data);
 char* SDL_GetBasePath(void);
 void SDL_EnableScreenSaver(void);
 void SDL_DisableScreenSaver(void);
+void SDL_RaiseWindow(SDL_Window* window);
 int SDL_SetWindowInputFocus(SDL_Window* window);
 SDL_bool SDL_SetHint(const char* name, const char* value);
 void SDL_ShowWindow(SDL_Window* window);
