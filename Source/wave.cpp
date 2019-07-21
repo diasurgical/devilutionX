@@ -1,5 +1,6 @@
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
+#include "../3rdParty/StormLib/src/StormPort.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -127,12 +128,12 @@ BOOL ReadWaveFile(MEMFILE *pMemFile, WAVEFORMATEX *pwfx, CKINFO *chunk)
 		return FALSE;
 
 	pwfx->cbSize = 0;
-	pwfx->wFormatTag = wf.wf.wFormatTag;
-	pwfx->nChannels = wf.wf.nChannels;
-	pwfx->nSamplesPerSec = wf.wf.nSamplesPerSec;
-	pwfx->nAvgBytesPerSec = wf.wf.nAvgBytesPerSec;
-	pwfx->nBlockAlign = wf.wf.nBlockAlign;
-	pwfx->wBitsPerSample = wf.wBitsPerSample;
+	pwfx->wFormatTag = BSWAP_INT16_UNSIGNED(wf.wf.wFormatTag);
+	pwfx->nChannels = BSWAP_INT16_UNSIGNED(wf.wf.nChannels);
+	pwfx->nSamplesPerSec = BSWAP_INT32_UNSIGNED(wf.wf.nSamplesPerSec);
+	pwfx->nAvgBytesPerSec = BSWAP_INT32_UNSIGNED(wf.wf.nAvgBytesPerSec);
+	pwfx->nBlockAlign = BSWAP_INT16_UNSIGNED(wf.wf.nBlockAlign);
+	pwfx->wBitsPerSample = BSWAP_INT16_UNSIGNED(wf.wBitsPerSample);
 	if (chunk == NULL)
 		return TRUE;
 	return ReadWaveSection(pMemFile, MAKEFOURCC('d', 'a', 't', 'a'), chunk);
@@ -196,7 +197,7 @@ BOOL ReadWaveSection(MEMFILE *pMemFile, DWORD id, CKINFO *chunk)
 			return FALSE;
 	}
 
-	chunk->dwSize = hdr[1];
+	chunk->dwSize = BSWAP_INT32_UNSIGNED(hdr[1]);
 	chunk->dwOffset = SeekMemFile(pMemFile, 0, FILE_CURRENT);
 	return chunk->dwOffset != (DWORD)-1;
 }
