@@ -4,8 +4,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-### June 16, 2019
-- All functions except one are now binary identical to Diablo 1.09b
+## [0.10.0](https://github.com/diasurgical/devilution/compare/0.9.6...0.10.0)
+### June 22, 2019
+- [All functions are now binary identical](https://github.com/diasurgical/devilution/milestone/3) to the 1.09b version
+- Fix buying from Wirt
+- Replace many magic numbers with constants
+- Fix a handful of minor issues
+- Add toggle fullscreen with alt+enter in debug builds
+
+### June 21, 2019
+- All functions are now [binary identical](https://github.com/diasurgical/devilution/milestone/3) to Diablo 1.09b
+
+### June 1, 2019
+- MVG posts [a video about the project](https://www.youtube.com/watch?v=5tADL_fmsHQ) and releases a Nintendo Switch port
+
+## DevilutionX 0.4.0
+### May 20, 2019
+- Fixed flickering mouse in caves
+- 32bit ARM build (Raspberry Pi)
+- 32bit FreeBSD build
+- 32bit Haiku support (see HaikuDepot)
+- Included font for rendering credits and progress screen
+- Upscaling quality can be adjusted or fully disabled in diablo.ini
+- Windowed mode can be set in diablo.ini
+- Mouse capture can be set in diablo.ini
+- Direct file access implemented (mods won't need to pack their files in an MPQ)
+- Music and speech memory leaks fixed
 
 ## [0.9.6](https://github.com/diasurgical/devilution/compare/0.9.0...0.9.6)
 ### May 19, 2019
@@ -32,11 +56,45 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### April 9, 2019
 - The last of the compiler flags are figured out
 
+### March 22, 2019
+- Devilution appears on [Phoronix](https://www.phoronix.com/scan.php?page=news_item&px=DeviluitionX-Open-Diablo)
+
+## DevilutionX 0.3.0
+### March 20, 2019
+- Fix dialog volume
+- 32bit macOS build
+- Fix crash in town during multiplayer
+- Screenshot implemented
+
 ## [0.6.0](https://github.com/diasurgical/devilution/compare/v0.5.0...0.6.0)
 ### March 19, 2019
 - [60% of functions are now binary identical](https://github.com/diasurgical/devilution/milestone/3) to the 1.09b version
 - Added a guide for people wanting to join in [Cleaning the code](https://github.com/diasurgical/devilution/wiki/Cleaning-Code)
 - File size is now only 968 bytes (0.13%) larger than the original Diablo 1.09b.
+
+## DevilutionX 0.2.0
+### March 17, 2019
+- Fully implemented audio (all issues from 0.1.0 fixed)
+- Fully implemented multiplayer
+- Windows 32bit build
+- Gameplay is fully featured and plays like the original
+- Memory leaks fixed
+- Most known crashes have been fixed
+
+### March 7, 2019
+- [GOG re-release Diablo](https://www.gog.com/news/release_diablo)
+
+## DevilutionX 0.1.0
+### February 27, 2019
+- Linux 32bit build
+- Basic audio
+- Video playback
+- Basic menus
+- Graphics
+- Gameplay
+- Basic multiplayer over TCP/UDP
+- Persistent settings
+- Encrypted network connection with password protection
 
 ## [0.5.0](https://github.com/diasurgical/devilution/compare/0.4...v0.5.0)
 ### January 14, 2019
@@ -103,6 +161,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Icon added
 - Fix Zhar quest, monster squelching and golems
 - Use consts for various values
+
+### June 20, 2018
+- The [media](https://www.pcgamer.com/a-coder-spent-1200-hours-reverse-engineering-diablos-source-code/) catches wind and [several](https://bloody-disgusting.com/video-games/3505673/fan-completes-reverse-engineering-source-code-diablo/) [articles](https://kotaku.com/coder-spends-1-200-hours-piecing-together-diablos-sourc-1827001247) [appear](https://www.diabloii.net/blog/comments/reverse-engineered-diablo-source-code-released)
+
+### June 18, 2018
+- Devilution gets posted on [Y Combinator](https://news.ycombinator.com/item?id=17338886)
 
 ## 0.1.0
 ### June 6, 2018
