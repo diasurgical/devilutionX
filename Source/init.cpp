@@ -141,7 +141,6 @@ void init_create_window(int nCmdShow)
 	HWND hWnd;
 	WNDCLASSEXA wcex;
 
-#ifndef SWITCH
 	init_kill_mom_parent();
 	pfile_init_save_directory();
 	memset(&wcex, 0, sizeof(wcex));
@@ -165,10 +164,6 @@ void init_create_window(int nCmdShow)
 		nHeight = SCREEN_HEIGHT;
 	else
 		nHeight = GetSystemMetrics(SM_CYSCREEN);
-#else
-	nWidth = 640;
-	nHeight = 480;
-#endif
 	hWnd = CreateWindowEx(0, "DIABLO", "DIABLO", WS_POPUP, 0, 0, nWidth, nHeight, NULL, NULL, ghInst, NULL);
 	if (!hWnd)
 		app_fatal("Unable to create main window");
