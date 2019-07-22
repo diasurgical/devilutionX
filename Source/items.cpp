@@ -305,7 +305,7 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 
 	int iflgs = 0; // item_special_effect flags
 
-	int sadd = 0; // added stregth
+	int sadd = 0; // added strength
 	int madd = 0; // added magic
 	int dadd = 0; // added dexterity
 	int vadd = 0; // added vitality

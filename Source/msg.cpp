@@ -111,7 +111,7 @@ void msg_free_packets()
 
 int msg_wait_for_turns()
 {
-	int recieved;
+	int received;
 	DWORD turns;
 
 	if (!sgbDeltaChunks) {
@@ -125,7 +125,7 @@ int msg_wait_for_turns()
 	multi_process_network_packets();
 	nthread_send_and_recv_turn(0, 0);
 	if (nthread_has_500ms_passed(0))
-		nthread_recv_turns(&recieved);
+		nthread_recv_turns(&received);
 
 	if (gbGameDestroyed)
 		return 100;

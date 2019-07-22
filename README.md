@@ -111,7 +111,7 @@ Make sure to install the `C++ CMake tools for Windows` component for Visual Stud
 1. Go to `File -> Open -> CMake`, select `CMakeLists.txt` from the project root.
 2. Select `Build devilution.exe` from the `Build` menu.
 
-	_Note: By default Visual Studio only creates configuration x64-Debug, to add the new configuration (e.g. x86-Debug) please click "Manage Configurations..." in combo box on the top and then on button wih green plus to add a new configuration_
+	_Note: By default Visual Studio only creates configuration x64-Debug, to add the new configuration (e.g. x86-Debug) please click "Manage Configurations..." in combo box on the top and then on button with green plus to add a new configuration_
 
 * **Through cmake-gui**
 

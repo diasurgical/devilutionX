@@ -303,7 +303,7 @@ void multi_net_ping()
 
 int multi_handle_delta()
 {
-	int i, recieved;
+	int i, received;
 
 	if (gbGameDestroyed) {
 		gbRunGame = FALSE;
@@ -318,13 +318,13 @@ int multi_handle_delta()
 	}
 
 	sgbSentThisCycle = nthread_send_and_recv_turn(sgbSentThisCycle, 1);
-	if (!nthread_recv_turns(&recieved)) {
+	if (!nthread_recv_turns(&received)) {
 		multi_begin_timeout();
 		return FALSE;
 	}
 
 	sgbTimeout = FALSE;
-	if (recieved) {
+	if (received) {
 		if (!gbShouldValidatePackage) {
 			NetSendHiPri(0, 0);
 			gbShouldValidatePackage = FALSE;
