@@ -56,7 +56,7 @@
 
 ### Credits
 
-- Initial Switch Port by MVG in 2019
+- Initial Switch Port by [MVG](https://github.com/lantus) in 2019
 - Control improvements and bug fixes by [rsn8887](https://github.com/rsn8887) in 2019
 - Controller code by [Jacob Fliss](https://github.com/erfg12)
 - AJenbo for upstreaming Switch code and many code fixes
