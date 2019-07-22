@@ -128,8 +128,12 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 	SDL_EnableUNICODE(1);
 #endif
 
-	SDL_JoystickOpen(0);
-	SDL_GameControllerOpen(0);
+	if (SDL_JoystickOpen(0) == NULL) {
+		SDL_Log(SDL_GetError());
+	}
+	if (SDL_GameControllerOpen(0) == NULL) {
+		SDL_Log(SDL_GetError());
+	}
 
 	int upscale = 1;
 	DvlIntSetting("upscale", &upscale);
