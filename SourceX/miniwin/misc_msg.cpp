@@ -5,6 +5,9 @@
 #include "stubs.h"
 #include <math.h>
 #include "../../touch/touch.h"
+#ifdef SWITCH
+	#include <switch.h>
+#endif
 
 /** @file
  * *
@@ -24,12 +27,18 @@ static int leftStickXUnscaled = 0; // raw axis values reported by SDL_JOYAXISMOT
 static int leftStickYUnscaled = 0;
 static int rightStickXUnscaled = 0;
 static int rightStickYUnscaled = 0;
-static int hiresDX = 0;   // keep track of X/Y sub-pixel per frame mouse motion
+static int hiresDX = 0; // keep track of X/Y sub-pixel per frame mouse motion
 static int hiresDY = 0;
 static int64_t currentTime = 0; // used to update joystick mouse once per frame
 static int64_t lastTime = 0;
 static void ScaleJoystickAxes(float *x, float *y, float deadzone);
 static void HandleJoystickAxes();
+#ifdef SWITCH
+static BOOL currently_docked = -1; // keep track of docked or handheld mode
+static void HandleDocking();
+extern SDL_Window *window;
+extern SDL_Renderer *renderer;
+#endif
 
 static std::deque<MSG> message_queue;
 
@@ -248,11 +257,14 @@ static WINBOOL false_avail()
 
 WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg)
 {
-	// update joystick (and touch mouse on Switch) at maximally 60 fps
+	// update joystick, touch mouse (and docking the Switch) at maximally 60 fps
 	currentTime = SDL_GetTicks();
 	if ((currentTime - lastTime) > 15) {
 		finish_simulated_mouse_clicks(MouseX, MouseY);
 		HandleJoystickAxes();
+#ifdef SWITCH
+		HandleDocking();
+#endif
 		lastTime = currentTime;
 	}
 
@@ -713,4 +725,43 @@ static void HandleJoystickAxes()
 		}
 	}
 }
+
+#ifdef SWITCH
+// Do a manual window resize when docking/undocking the Switch
+static void HandleDocking()
+{
+	int docked;
+	switch (appletGetOperationMode()) {
+		case AppletOperationMode_Handheld:
+			docked = 0;
+			break;
+		case AppletOperationMode_Docked:
+			docked = 1;
+			break;
+		default:
+			docked = 0;
+	}
+
+	int display_width;
+	int display_height;
+	if ((currently_docked == -1) || (docked && !currently_docked) || (!docked && currently_docked)) {
+		// docked mode has changed, update window size
+		if (docked) {
+			display_width = 1920;
+			display_height = 1080;
+			currently_docked = 1;
+		} else {
+			display_width = 1280;
+			display_height = 720;
+			currently_docked = 0;
+		}
+		// remove leftover-garbage on screen
+		for (int i = 0; i < 3; i++) {
+			SDL_RenderClear(renderer);
+			SDL_RenderPresent(renderer);
+		}
+		SDL_SetWindowSize(window, display_width, display_height);
+	}
+}
+#endif
 }
