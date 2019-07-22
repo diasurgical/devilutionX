@@ -13,7 +13,7 @@ BOOLEAN sgbSaveSoundOn;
 MonsterStruct monster[MAXMONSTERS];
 int totalmonsters;
 CMonster Monsters[16];
-// int END_Monsters_17; // weak
+// int END_Monsters_17;
 int monstimgtot;
 int uniquetrans;
 int nummtypes;
@@ -555,7 +555,7 @@ void PlaceMonster(int i, int mtype, int x, int y)
 	InitMonster(i, rd, mtype, x, y);
 }
 
-void PlaceUniqueMonst(int uniqindex, int miniontype, int packsize)
+void PlaceUniqueMonst(int uniqindex, int miniontype, int unpackfilesize)
 {
 	int xp, yp, x, y, i;
 	int uniqtype;
@@ -749,7 +749,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int packsize)
 	nummonsters++;
 
 	if (Uniq->mUnqAttr & 1) {
-		PlaceGroup(miniontype, packsize, Uniq->mUnqAttr, nummonsters - 1);
+		PlaceGroup(miniontype, unpackfilesize, Uniq->mUnqAttr, nummonsters - 1);
 	}
 
 	if (Monst->_mAi != AI_GARG) {
@@ -783,27 +783,27 @@ void PlaceQuestMonsters()
 		}
 
 		if (QuestStatus(QTYPE_BOL)) {
-			setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN", 0);
+			setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN", NULL);
 			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
 			mem_free_dbg(setp);
 		}
 		if (QuestStatus(QTYPE_BLOOD)) {
-			setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN", 0);
+			setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN", NULL);
 			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
 			mem_free_dbg(setp);
 		}
 		if (QuestStatus(QTYPE_BLIND)) {
-			setp = LoadFileInMem("Levels\\L2Data\\Blind2.DUN", 0);
+			setp = LoadFileInMem("Levels\\L2Data\\Blind2.DUN", NULL);
 			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
 			mem_free_dbg(setp);
 		}
 		if (QuestStatus(QTYPE_ANVIL)) {
-			setp = LoadFileInMem("Levels\\L3Data\\Anvil.DUN", 0);
+			setp = LoadFileInMem("Levels\\L3Data\\Anvil.DUN", NULL);
 			SetMapMonsters(setp, 2 * setpc_x + 2, 2 * setpc_y + 2);
 			mem_free_dbg(setp);
 		}
 		if (QuestStatus(QTYPE_WARLRD)) {
-			setp = LoadFileInMem("Levels\\L4Data\\Warlord.DUN", 0);
+			setp = LoadFileInMem("Levels\\L4Data\\Warlord.DUN", NULL);
 			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
 			mem_free_dbg(setp);
 			AddMonsterType(UniqMonst[UMT_WARLORD].mtype, 1);
@@ -821,7 +821,7 @@ void PlaceQuestMonsters()
 			PlaceUniqueMonst(UMT_LAZURUS, 0, 0);
 			PlaceUniqueMonst(UMT_RED_VEX, 0, 0);
 			PlaceUniqueMonst(UMT_BLACKJADE, 0, 0);
-			setp = LoadFileInMem("Levels\\L4Data\\Vile1.DUN", 0);
+			setp = LoadFileInMem("Levels\\L4Data\\Vile1.DUN", NULL);
 			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
 			mem_free_dbg(setp);
 		}
@@ -914,16 +914,16 @@ void LoadDiabMonsts()
 {
 	BYTE *lpSetPiece;
 
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab1.DUN", 0);
+	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab1.DUN", NULL);
 	SetMapMonsters(lpSetPiece, 2 * diabquad1x, 2 * diabquad1y);
 	mem_free_dbg(lpSetPiece);
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab2a.DUN", 0);
+	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab2a.DUN", NULL);
 	SetMapMonsters(lpSetPiece, 2 * diabquad2x, 2 * diabquad2y);
 	mem_free_dbg(lpSetPiece);
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab3a.DUN", 0);
+	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab3a.DUN", NULL);
 	SetMapMonsters(lpSetPiece, 2 * diabquad3x, 2 * diabquad3y);
 	mem_free_dbg(lpSetPiece);
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab4a.DUN", 0);
+	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab4a.DUN", NULL);
 	SetMapMonsters(lpSetPiece, 2 * diabquad4x, 2 * diabquad4y);
 	mem_free_dbg(lpSetPiece);
 }
@@ -998,9 +998,8 @@ void InitMonsters()
 
 void PlaceUniques()
 {
-	int u;
+	int u, mt;
 	BOOL done;
-	int mt;
 
 	for (u = 0; UniqMonst[u].mtype != -1; u++) {
 		if (UniqMonst[u].mlevel != currlevel)
@@ -1027,7 +1026,7 @@ void PlaceUniques()
 	}
 }
 
-void SetMapMonsters(unsigned char *pMap, int startx, int starty)
+void SetMapMonsters(BYTE *pMap, int startx, int starty)
 {
 	WORD rw, rh;
 	WORD *lm;
@@ -2146,7 +2145,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 	StartPlrHit(pnum, dam, 0);
 	if (monster[i]._mFlags & MFLAG_KNOCKBACK) {
 		if (plr[pnum]._pmode != PM_GOTHIT)
-			StartPlrHit(pnum, 0, 1u);
+			StartPlrHit(pnum, 0, TRUE);
 		newx = plr[pnum].WorldX + offset_x[monster[i]._mdir];
 		newy = plr[pnum].WorldY + offset_y[monster[i]._mdir];
 		if (PosOkPlayer(pnum, newx, newy)) {
@@ -3577,17 +3576,17 @@ void MAI_Ranged(int i, int missile_type, BOOL special)
 
 void MAI_GoatBow(int i)
 {
-	MAI_Ranged(i, MIS_ARROW, 0);
+	MAI_Ranged(i, MIS_ARROW, FALSE);
 }
 
 void MAI_Succ(int i)
 {
-	MAI_Ranged(i, MIS_FLARE, 0);
+	MAI_Ranged(i, MIS_FLARE, FALSE);
 }
 
 void MAI_AcidUniq(int i)
 {
-	MAI_Ranged(i, MIS_ACID, 1u);
+	MAI_Ranged(i, MIS_ACID, TRUE);
 }
 
 void MAI_Scav(int i)
@@ -3784,22 +3783,22 @@ void MAI_RoundRanged(int i, int missile_type, BOOL checkdoors, int dam, int less
 
 void MAI_Magma(int i)
 {
-	MAI_RoundRanged(i, MIS_MAGMABALL, 1u, 4, 0);
+	MAI_RoundRanged(i, MIS_MAGMABALL, TRUE, 4, 0);
 }
 
 void MAI_Storm(int i)
 {
-	MAI_RoundRanged(i, MIS_LIGHTCTRL2, 1u, 4, 0);
+	MAI_RoundRanged(i, MIS_LIGHTCTRL2, TRUE, 4, 0);
 }
 
 void MAI_Acid(int i)
 {
-	MAI_RoundRanged(i, MIS_ACID, 0, 4, 1);
+	MAI_RoundRanged(i, MIS_ACID, FALSE, 4, 1);
 }
 
 void MAI_Diablo(int i)
 {
-	MAI_RoundRanged(i, MIS_DIABAPOCA, 0, 40, 0);
+	MAI_RoundRanged(i, MIS_DIABAPOCA, FALSE, 40, 0);
 }
 
 void MAI_RR2(int i, int mistype, int dam)
@@ -5178,7 +5177,7 @@ BOOL PosOkMonst(int i, int x, int y)
 	if (ret && dMissile[x][y] && i >= 0) {
 		mi = dMissile[x][y];
 		if (mi > 0) {
-			if (missile[mi - 1]._mitype == MIS_FIREWALL) { // BUGFIX: 'mi' should be 'mi - 1' (corrected)
+			if (missile[mi - 1]._mitype == MIS_FIREWALL) { // BUGFIX: Change 'mi' to 'mi - 1' (done)
 				fire = TRUE;
 			} else {
 				for (j = 0; j < nummissiles; j++) {
@@ -5210,7 +5209,7 @@ BOOL PosOkMonst2(int i, int x, int y)
 	if (ret && dMissile[x][y] && i >= 0) {
 		mi = dMissile[x][y];
 		if (mi > 0) {
-			if (missile[mi - 1]._mitype == MIS_FIREWALL) { // BUGFIX: 'mi' should be 'mi - 1' (corrected)
+			if (missile[mi - 1]._mitype == MIS_FIREWALL) { // BUGFIX: Change 'mi' to 'mi - 1' (done)
 				fire = TRUE;
 			} else {
 				for (j = 0; j < nummissiles; j++) {
@@ -5251,7 +5250,7 @@ BOOL PosOkMonst3(int i, int x, int y)
 	if (ret && dMissile[x][y] != 0 && i >= 0) {
 		mi = dMissile[x][y];
 		if (mi > 0) {
-			if (missile[mi]._mitype == MIS_FIREWALL) {
+			if (missile[mi]._mitype == MIS_FIREWALL) { // BUGFIX: Change 'mi' to 'mi - 1'
 				fire = TRUE;
 			} else {
 				for (j = 0; j < nummissiles; j++) {

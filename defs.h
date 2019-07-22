@@ -5,8 +5,8 @@
 
 #define LIGHTSIZE				6912 // 27 * 256
 
-#define GMENU_SLIDER			(DWORD)1 << 30
-#define GMENU_ENABLED			(DWORD)1 << 31
+#define GMENU_SLIDER			0x40000000
+#define GMENU_ENABLED			0x80000000
 
 // must be unsigned to generate unsigned comparisons with pnum
 #define MAX_PLRS				4
@@ -94,6 +94,9 @@
 #define SCREEN_WIDTH	640
 #define SCREEN_HEIGHT	480
 
+#define ZOOM_WIDTH		384
+#define ZOOM_HEIGHT		224
+
 // If defined, use 32-bit colors instead of 8-bit [Default -> Undefined]
 //#define RGBMODE
 
@@ -115,7 +118,16 @@
 #define BUFFER_HEIGHT	(BORDER_TOP + SCREEN_HEIGHT + BORDER_BOTTOM)
 #define TILE_SIZE		32
 
-#define VIEWPORT_HEIGHT	352
+#define PANEL_WIDTH     640
+#define PANEL_HEIGHT    128
+#define PANEL_TOP		(SCREEN_HEIGHT - PANEL_HEIGHT)
+#define PANEL_Y			(PANEL_TOP + SCREEN_Y)
+
+#if SCREEN_WIDTH == PANEL_WIDTH
+#define VIEWPORT_HEIGHT	(SCREEN_HEIGHT - PANEL_HEIGHT)
+#else
+#define VIEWPORT_HEIGHT	SCREEN_HEIGHT
+#endif
 
 #define SCREENXY(x, y)	((x) + SCREEN_X + ((y) + SCREEN_Y) * BUFFER_WIDTH)
 
@@ -138,15 +150,6 @@
 #ifndef INVALID_FILE_ATTRIBUTES
 #define INVALID_FILE_ATTRIBUTES ((DWORD)-1)
 #endif
-
-/////////////////////////////////////////////////////////////////////////
-/* temporary stuff from the decompiler */
-/* remove all the garbage below in the future */
-/////////////////////////////////////////////////////////////////////////
-#ifndef IDA_GARBAGE
-#define IDA_GARBAGE
-#define _LOBYTE(x)  (*((BYTE*)&(x)))
-#endif /* IDA_GARBAGE */
 
 // Typedef for the function pointer
 typedef void (*_PVFV)(void);

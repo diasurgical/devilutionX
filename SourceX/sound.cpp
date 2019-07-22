@@ -418,6 +418,9 @@ HRESULT sound_DirectSoundCreate(LPGUID lpGuid, LPDIRECTSOUND *ppDS, LPUNKNOWN pU
 	}
 	*ppDS = new DirectSound();
 	int result = Mix_OpenAudio(22050, AUDIO_S16LSB, 2, 1024);
+	if (result < 0) {
+		SDL_Log(Mix_GetError());
+	}
 	Mix_AllocateChannels(25);
 	Mix_ReserveChannels(1); // reserve one channel for naration (SFileDda*)
 	return result;

@@ -8,7 +8,7 @@ int sfxdnum;
 HANDLE sfx_stream;
 TSFX *sfx_data_cur;
 
-const char monster_action_sounds[] = { 'a', 'h', 'd', 's' }; // idb
+const char monster_action_sounds[] = { 'a', 'h', 'd', 's' };
 
 /* data */
 
@@ -1180,7 +1180,7 @@ void effects_cleanup_sfx()
 
 void stream_update()
 {
-	UCHAR mask = 0;
+	BYTE mask = 0;
 	if (gbMaxPlayers > 1) {
 		mask = SFX_WARRIOR | SFX_ROGUE | SFX_SORCEROR;
 	} else if (plr[myplr]._pClass == PC_WARRIOR) {
@@ -1196,9 +1196,9 @@ void stream_update()
 	priv_sound_init(mask);
 }
 
-void priv_sound_init(UCHAR bLoadMask)
+void priv_sound_init(BYTE bLoadMask)
 {
-	UCHAR pc, bFlags;
+	BYTE pc, bFlags;
 	DWORD i;
 
 	if (!gbSndInited) {

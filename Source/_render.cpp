@@ -2303,7 +2303,7 @@ __declspec(naked) void drawTopArchesUpperScreen(BYTE *pBuff)
 	}
 }
 
-__declspec(naked) void drawBottomArchesUpperScreen(BYTE *pBuff, unsigned int *pMask)
+__declspec(naked) void drawBottomArchesUpperScreen(BYTE *pBuff, DWORD *pMask)
 {
 	__asm {
 		push	ebx
@@ -7350,7 +7350,7 @@ __declspec(naked) void drawTopArchesLowerScreen(BYTE *pBuff)
 	}
 }
 
-__declspec(naked) void drawBottomArchesLowerScreen(BYTE *pBuff, unsigned int *pMask)
+__declspec(naked) void drawBottomArchesLowerScreen(BYTE *pBuff, DWORD *pMask)
 {
 	__asm {
 		push	ebx

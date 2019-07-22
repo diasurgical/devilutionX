@@ -31,9 +31,9 @@ int sound_get_or_set_sound_volume(int volume);
 
 /* data */
 
-extern BYTE gbMusicOn;
-extern BYTE gbSoundOn;
-extern BYTE gbDupSounds;
+extern BOOLEAN gbMusicOn;
+extern BOOLEAN gbSoundOn;
+extern BOOLEAN gbDupSounds;
 extern char unk_volume[4][2];
 
 #endif /* __SOUND_H__ */

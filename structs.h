@@ -224,10 +224,10 @@ typedef struct PlayerStruct {
 	int _pSplHotKey[4];
 	char _pSplTHotKey[4];
 	int _pwtype;
-	unsigned char _pBlockFlag;
-	unsigned char _pInvincible;
+	BOOLEAN _pBlockFlag;
+	BOOLEAN _pInvincible;
 	char _pLightRad;
-	unsigned char _pLvlChanging;
+	BOOLEAN _pLvlChanging;
 	char _pName[PLR_NAME_LEN];
 	// plr_class enum value.
 	// TODO: this could very well be `enum plr_class _pClass`
@@ -267,7 +267,7 @@ typedef struct PlayerStruct {
 	char _pFireResist;
 	char _pLghtResist;
 	int _pGold;
-	int _pInfraFlag;
+	BOOL _pInfraFlag;
 	int _pVar1;
 	int _pVar2;
 	int _pVar3;
@@ -276,8 +276,8 @@ typedef struct PlayerStruct {
 	int _pVar6;
 	int _pVar7;
 	int _pVar8;
-	unsigned char _pLvlVisited[NUMLEVELS];
-	unsigned char _pSLvlVisited[NUMLEVELS]; // only 10 used
+	BOOLEAN _pLvlVisited[NUMLEVELS];
+	BOOLEAN _pSLvlVisited[NUMLEVELS]; // only 10 used
 	int _pGFXLoad;
 	unsigned char *_pNAnim[8];
 	int _pNFrames;
@@ -655,6 +655,7 @@ typedef struct ObjDataStruct {
 	BOOL oTrapFlag;
 } ObjDataStruct;
 
+#pragma pack(push, 4)
 typedef struct ObjectStruct {
 	int _otype;
 	int _ox;
@@ -687,11 +688,13 @@ typedef struct ObjectStruct {
 	int _oVar7;
 	int _oVar8;
 } ObjectStruct;
+#pragma pack(pop)
 
 //////////////////////////////////////////////////
 // portal
 //////////////////////////////////////////////////
 
+#pragma pack(push, 4)
 typedef struct PortalStruct {
 	BOOL open;
 	int x;
@@ -700,6 +703,7 @@ typedef struct PortalStruct {
 	int ltype;
 	BOOL setlvl;
 } PortalStruct;
+#pragma pack(pop)
 
 //////////////////////////////////////////////////
 // msg
@@ -966,6 +970,7 @@ typedef struct TBuffer {
 // quests
 //////////////////////////////////////////////////
 
+#pragma pack(push, 4)
 typedef struct QuestStruct {
 	unsigned char _qlevel;
 	unsigned char _qtype;
@@ -980,6 +985,7 @@ typedef struct QuestStruct {
 	unsigned char _qvar2;
 	int _qlog;
 } QuestStruct;
+#pragma pack(pop)
 
 typedef struct QuestData {
 	unsigned char _qdlvl;
@@ -1210,26 +1216,26 @@ typedef struct DeadStruct {
 
 typedef struct _gamedata {
 	int dwSeed;
-	unsigned char bDiff;
+	BYTE bDiff;
 } _gamedata;
 
 typedef struct _uidefaultstats {
-	unsigned short strength;
-	unsigned short magic;
-	unsigned short dexterity;
-	unsigned short vitality;
+	WORD strength;
+	WORD magic;
+	WORD dexterity;
+	WORD vitality;
 } _uidefaultstats;
 
 typedef struct _uiheroinfo {
 	struct _uiheroinfo *next;
 	char name[16];
-	unsigned short level;
-	unsigned char heroclass;
-	unsigned char herorank;
-	unsigned short strength;
-	unsigned short magic;
-	unsigned short dexterity;
-	unsigned short vitality;
+	WORD level;
+	BYTE heroclass;
+	BYTE herorank;
+	WORD strength;
+	WORD magic;
+	WORD dexterity;
+	WORD vitality;
 	int gold;
 	int hassaved;
 	int spawned;

@@ -8,7 +8,7 @@ char mpq_buf[4096];
 _HASHENTRY *sgpHashTbl;
 BOOL save_archive_modified;
 _BLOCKENTRY *sgpBlockTbl;
-BOOLEAN save_archive_open; // weak
+BOOLEAN save_archive_open;
 
 //note: 32872 = 32768 + 104 (sizeof(_FILEHEADER))
 
@@ -122,7 +122,7 @@ BOOLEAN mpqapi_reg_store_modification_time(char *pbData, DWORD dwLen)
 		} while (i);
 	}
 
-	return SRegSaveData("Diablo", "Video Player ", 0, (unsigned char *)pbData, dwLen);
+	return SRegSaveData("Diablo", "Video Player ", 0, (BYTE *)pbData, dwLen);
 }
 
 void mpqapi_remove_hash_entry(const char *pszName)
@@ -397,7 +397,7 @@ int mpqapi_find_free_block(int size, int *block_size)
 	pBlockTbl->sizealloc -= size;
 
 	if (!pBlockTbl->sizealloc)
-		memset(pBlockTbl, 0, 0x10u);
+		memset(pBlockTbl, 0, sizeof(*pBlockTbl));
 
 	return result;
 }

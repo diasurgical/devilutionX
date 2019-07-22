@@ -8,33 +8,33 @@ HWND ghMainWnd;
 int glMid1Seed[NUMLEVELS];
 int glMid2Seed[NUMLEVELS];
 int gnLevelTypeTbl[NUMLEVELS];
-int MouseY;             // idb
-int MouseX;             // idb
-BOOL gbGameLoopStartup; // idb
-int glSeedTbl[NUMLEVELS];
+int MouseY;
+int MouseX;
+BOOL gbGameLoopStartup;
+DWORD glSeedTbl[NUMLEVELS];
 BOOL gbRunGame;
 int glMid3Seed[NUMLEVELS];
 BOOL gbRunGameResult;
-int zoomflag; // weak
+int zoomflag;
 BOOL gbProcessPlayers;
 int glEndSeed[NUMLEVELS];
 BOOL gbLoadGame;
-HINSTANCE ghInst; // idb
+HINSTANCE ghInst;
 int DebugMonsters[10];
-char cineflag;   // weak
-int drawpanflag; // weak
-int visiondebug; // weak
-int scrollflag;  /* unused */
+BOOLEAN cineflag;
+int drawpanflag;
+BOOL visiondebug;
+BOOL scrollflag; /* unused */
 BOOL light4flag;
-int leveldebug;      // weak
-int monstdebug;      // weak
-int trigdebug;       /* unused */
-int setseed;         // weak
-int debugmonsttypes; // weak
-int PauseMode;       // weak
+BOOL leveldebug;
+BOOL monstdebug;
+BOOL trigdebug; /* unused */
+int setseed;
+int debugmonsttypes;
+int PauseMode;
 int sgnTimeoutCurs;
-char sgbMouseDown;     // weak
-int color_cycle_timer; // weak
+char sgbMouseDown;
+int color_cycle_timer;
 
 /* rdata */
 
@@ -63,8 +63,8 @@ char *spszMsgTbl[4] = {
 	"Follow me.",
 	"Here's something for you.",
 	"Now you DIE!"
-};                                                      // weak
-char *spszMsgKeyTbl[4] = { "F9", "F10", "F11", "F12" }; // weak
+};
+char *spszMsgKeyTbl[4] = { "F9", "F10", "F11", "F12" };
 
 void FreeGameMem()
 {
@@ -120,7 +120,6 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
 	SNetDestroy();
 	return gbRunGameResult;
 }
-// 678640: using guessed type char byte_678640;
 
 void run_game_loop(unsigned int uMsg)
 {
@@ -194,9 +193,6 @@ void run_game_loop(unsigned int uMsg)
 		DoEnding();
 	}
 }
-// 525718: using guessed type char cineflag;
-// 52571C: using guessed type int drawpanflag;
-// 679660: using guessed type char gbMaxPlayers;
 
 void start_game(unsigned int uMsg)
 {
@@ -214,9 +210,6 @@ void start_game(unsigned int uMsg)
 	sgbMouseDown = 0;
 	track_repeat_walk(0);
 }
-// 52569C: using guessed type int zoomflag;
-// 525718: using guessed type char cineflag;
-// 525748: using guessed type char sgbMouseDown;
 
 void free_game()
 {
@@ -336,7 +329,7 @@ void diablo_parse_flags(char *args)
 			gbBackBuf = 1;
 			args += strlen("dd_backbuf");
 		} else if (_strnicmp("ds_noduplicates", args, strlen("ds_noduplicates")) == 0) {
-			gbDupSounds = 0;
+			gbDupSounds = FALSE;
 			args += strlen("ds_noduplicates");
 		} else {
 			c = tolower(*args);
@@ -378,8 +371,8 @@ void diablo_parse_flags(char *args)
 			*/
 				break;
 			case 'l':
-				setlevel = 0;
-				leveldebug = 1;
+				setlevel = FALSE;
+				leveldebug = TRUE;
 				while (isspace(*args)) {
 					args++;
 				}
@@ -401,7 +394,7 @@ void diablo_parse_flags(char *args)
 				plr[0].plrlevel = i;
 				break;
 			case 'm':
-				monstdebug = 1;
+				monstdebug = TRUE;
 				while (isspace(*args)) {
 					args++;
 				}
@@ -441,8 +434,8 @@ void diablo_parse_flags(char *args)
 				debug_mode_key_s = 1;
 				break;
 			case 't':
-				leveldebug = 1;
-				setlevel = 1;
+				leveldebug = TRUE;
+				setlevel = TRUE;
 				while (isspace(*args)) {
 					args++;
 				}
@@ -454,7 +447,7 @@ void diablo_parse_flags(char *args)
 				setlvlnum = i;
 				break;
 			case 'v':
-				visiondebug = 1;
+				visiondebug = TRUE;
 				break;
 			case 'w':
 				debug_mode_key_w = 1;
@@ -467,8 +460,6 @@ void diablo_parse_flags(char *args)
 		}
 	}
 }
-// 52A548: using guessed type char gbBackBuf;
-// 52A549: using guessed type char gbEmulate;
 
 void diablo_init_screen()
 {
@@ -636,13 +627,6 @@ BOOL PressEscKey()
 
 	return rv;
 }
-// 4B8960: using guessed type int talkflag;
-// 4B8C98: using guessed type int spselflag;
-// 52575C: using guessed type int doomflag;
-// 52B9F0: using guessed type char msgdelay;
-// 52B9F1: using guessed type char msgflag;
-// 646D00: using guessed type char qtextflag;
-// 6AA705: using guessed type char stextflag;
 
 LRESULT CALLBACK DisableInputWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -686,7 +670,6 @@ LRESULT CALLBACK DisableInputWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 
 	return MainWndProc(hWnd, uMsg, wParam, lParam);
 }
-// 525748: using guessed type char sgbMouseDown;
 
 LRESULT CALLBACK GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -787,9 +770,6 @@ LRESULT CALLBACK GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	return MainWndProc(hWnd, uMsg, wParam, lParam);
 }
-// 52571C: using guessed type int drawpanflag;
-// 525748: using guessed type char sgbMouseDown;
-// 679660: using guessed type char gbMaxPlayers;
 
 BOOL LeftMouseDown(int wParam)
 {
@@ -803,7 +783,7 @@ BOOL LeftMouseDown(int wParam)
 				SetSpell();
 			} else if (stextflag) {
 				CheckStoreBtn();
-			} else if (MouseY < VIEWPORT_HEIGHT) {
+			} else if (MouseY < PANEL_TOP) {
 				if (!gmenu_exception() && !TryIconCurs()) {
 					if (questlog && MouseX > 32 && MouseX < 288 && MouseY > 32 && MouseY < 308) {
 						QuestlogESC();
@@ -846,7 +826,7 @@ BOOL LeftMouseCmd(BOOL bShift)
 {
 	BOOL bNear;
 
-	/// ASSERT: assert(MouseY < VIEWPORT_HEIGHT);
+	/// ASSERT: assert(MouseY < 352); // PANEL_TOP
 
 	if (leveltype == DTYPE_TOWN) {
 		if (pcursitem != -1 && pcurs == CURSOR_HAND)
@@ -946,9 +926,6 @@ BOOL TryIconCurs()
 
 	return FALSE;
 }
-// 4B8CB8: using guessed type char pcursinvitem;
-// 4B8CC1: using guessed type char pcursobj;
-// 4B8CC2: using guessed type char pcursplr;
 
 void LeftMouseUp()
 {
@@ -963,8 +940,6 @@ void LeftMouseUp()
 	if (stextflag)
 		ReleaseStoreBtn();
 }
-// 4B851C: using guessed type int lvlbtndown;
-// 6AA705: using guessed type char stextflag;
 
 void RightMouseDown()
 {
@@ -974,7 +949,7 @@ void RightMouseDown()
 		} else if (!stextflag) {
 			if (spselflag) {
 				SetSpell();
-			} else if (MouseY >= VIEWPORT_HEIGHT
+			} else if (MouseY >= PANEL_TOP
 			    || (!sbookflag || MouseX <= 320)
 			        && !TryIconCurs()
 			        && (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem))) {
@@ -988,12 +963,6 @@ void RightMouseDown()
 		}
 	}
 }
-// 4B8968: using guessed type int sbookflag;
-// 4B8C98: using guessed type int spselflag;
-// 4B8CB8: using guessed type char pcursinvitem;
-// 525740: using guessed type int PauseMode;
-// 52575C: using guessed type int doomflag;
-// 6AA705: using guessed type char stextflag;
 
 BOOL PressSysKey(int wParam)
 {
@@ -1026,9 +995,6 @@ void diablo_hotkey_msg(DWORD dwMsg)
 	GetPrivateProfileString("NetMsg", spszMsgKeyTbl[dwMsg], spszMsgTbl[dwMsg], szMsg, sizeof(szMsg), szFileName);
 	NetSendCmdString(-1, szMsg);
 }
-// 48436C: using guessed type char *spszMsgTbl[4];
-// 48437C: using guessed type char *spszMsgKeyTbl[4];
-// 679660: using guessed type char gbMaxPlayers;
 
 void ReleaseKey(int vkey)
 {
@@ -1102,11 +1068,11 @@ void PressKey(int vkey)
 			track_repeat_walk(0);
 		} else {
 			invflag = 0;
-			chrflag = 0;
-			sbookflag = 0;
+			chrflag = FALSE;
+			sbookflag = FALSE;
 			spselflag = 0;
 			if (qtextflag && leveltype == DTYPE_TOWN) {
-				qtextflag = 0;
+				qtextflag = FALSE;
 				sfx_stop();
 			}
 			questlog = FALSE;
@@ -1212,19 +1178,19 @@ void PressKey(int vkey)
 	} else if (vkey == VK_TAB) {
 		DoAutoMap();
 	} else if (vkey == VK_SPACE) {
-		if (!chrflag && invflag && MouseX < 480 && MouseY < VIEWPORT_HEIGHT) {
+		if (!chrflag && invflag && MouseX < 480 && MouseY < PANEL_TOP) {
 			SetCursorPos(MouseX + 160, MouseY);
 		}
-		if (!invflag && chrflag && MouseX > 160 && MouseY < VIEWPORT_HEIGHT) {
+		if (!invflag && chrflag && MouseX > 160 && MouseY < PANEL_TOP) {
 			SetCursorPos(MouseX - 160, MouseY);
 		}
 		helpflag = 0;
 		invflag = 0;
-		chrflag = 0;
-		sbookflag = 0;
+		chrflag = FALSE;
+		sbookflag = FALSE;
 		spselflag = 0;
 		if (qtextflag && leveltype == DTYPE_TOWN) {
-			qtextflag = 0;
+			qtextflag = FALSE;
 			sfx_stop();
 		}
 		questlog = FALSE;
@@ -1234,17 +1200,10 @@ void PressKey(int vkey)
 		doom_close();
 	}
 }
-// 4B8960: using guessed type int talkflag;
-// 4B8968: using guessed type int sbookflag;
-// 4B8C98: using guessed type int spselflag;
-// 525740: using guessed type int PauseMode;
-// 52B9F0: using guessed type char msgdelay;
-// 646D00: using guessed type char qtextflag;
-// 6AA705: using guessed type char stextflag;
 
 void diablo_pause_game()
 {
-	if ((unsigned char)gbMaxPlayers <= 1u) {
+	if (gbMaxPlayers <= 1) {
 		if (PauseMode) {
 			PauseMode = 0;
 		} else {
@@ -1255,9 +1214,6 @@ void diablo_pause_game()
 		drawpanflag = 255;
 	}
 }
-// 52571C: using guessed type int drawpanflag;
-// 525740: using guessed type int PauseMode;
-// 679660: using guessed type char gbMaxPlayers;
 
 /* NOTE: `return` must be used instead of `break` to be bin exact as C++ */
 void PressChar(int vkey)
@@ -1293,14 +1249,14 @@ void PressChar(int vkey)
 	case 'I':
 	case 'i':
 		if (!stextflag) {
-			sbookflag = 0;
+			sbookflag = FALSE;
 			invflag = invflag == 0;
 			if (!invflag || chrflag) {
-				if (MouseX < 480 && MouseY < VIEWPORT_HEIGHT) {
+				if (MouseX < 480 && MouseY < PANEL_TOP) {
 					SetCursorPos(MouseX + 160, MouseY);
 				}
 			} else {
-				if (MouseX > 160 && MouseY < VIEWPORT_HEIGHT) {
+				if (MouseX > 160 && MouseY < PANEL_TOP) {
 					SetCursorPos(MouseX - 160, MouseY);
 				}
 			}
@@ -1310,13 +1266,13 @@ void PressChar(int vkey)
 	case 'c':
 		if (!stextflag) {
 			questlog = FALSE;
-			chrflag = chrflag == 0;
+			chrflag = !chrflag;
 			if (!chrflag || invflag) {
-				if (MouseX > 160 && MouseY < VIEWPORT_HEIGHT) {
+				if (MouseX > 160 && MouseY < PANEL_TOP) {
 					SetCursorPos(MouseX - 160, MouseY);
 				}
 			} else {
-				if (MouseX < 480 && MouseY < VIEWPORT_HEIGHT) {
+				if (MouseX < 480 && MouseY < PANEL_TOP) {
 					SetCursorPos(MouseX + 160, MouseY);
 				}
 			}
@@ -1325,7 +1281,7 @@ void PressChar(int vkey)
 	case 'Q':
 	case 'q':
 		if (!stextflag) {
-			chrflag = 0;
+			chrflag = FALSE;
 			if (!questlog) {
 				StartQuestlog();
 			} else {
@@ -1353,7 +1309,7 @@ void PressChar(int vkey)
 	case 'b':
 		if (!stextflag) {
 			invflag = 0;
-			sbookflag = sbookflag == 0;
+			sbookflag = !sbookflag;
 		}
 		return;
 	case '+':
@@ -1524,47 +1480,41 @@ void PressChar(int vkey)
 #endif
 	}
 }
-// 4B8968: using guessed type int sbookflag;
-// 4B8C98: using guessed type int spselflag;
-// 52569C: using guessed type int zoomflag;
-// 525740: using guessed type int PauseMode;
-// 52575C: using guessed type int doomflag;
-// 6AA705: using guessed type char stextflag;
 
 void LoadLvlGFX()
 {
 	/// ASSERT: assert(! pDungeonCels);
 
-	switch ((unsigned char)leveltype) {
+	switch (leveltype) {
 	case DTYPE_TOWN:
-		pDungeonCels = LoadFileInMem("Levels\\TownData\\Town.CEL", 0);
-		pMegaTiles = LoadFileInMem("Levels\\TownData\\Town.TIL", 0);
-		pLevelPieces = LoadFileInMem("Levels\\TownData\\Town.MIN", 0);
-		pSpecialCels = LoadFileInMem("Levels\\TownData\\TownS.CEL", 0);
+		pDungeonCels = LoadFileInMem("Levels\\TownData\\Town.CEL", NULL);
+		pMegaTiles = LoadFileInMem("Levels\\TownData\\Town.TIL", NULL);
+		pLevelPieces = LoadFileInMem("Levels\\TownData\\Town.MIN", NULL);
+		pSpecialCels = LoadFileInMem("Levels\\TownData\\TownS.CEL", NULL);
 		break;
 	case DTYPE_CATHEDRAL:
-		pDungeonCels = LoadFileInMem("Levels\\L1Data\\L1.CEL", 0);
-		pMegaTiles = LoadFileInMem("Levels\\L1Data\\L1.TIL", 0);
-		pLevelPieces = LoadFileInMem("Levels\\L1Data\\L1.MIN", 0);
-		pSpecialCels = LoadFileInMem("Levels\\L1Data\\L1S.CEL", 0);
+		pDungeonCels = LoadFileInMem("Levels\\L1Data\\L1.CEL", NULL);
+		pMegaTiles = LoadFileInMem("Levels\\L1Data\\L1.TIL", NULL);
+		pLevelPieces = LoadFileInMem("Levels\\L1Data\\L1.MIN", NULL);
+		pSpecialCels = LoadFileInMem("Levels\\L1Data\\L1S.CEL", NULL);
 		break;
 	case DTYPE_CATACOMBS:
-		pDungeonCels = LoadFileInMem("Levels\\L2Data\\L2.CEL", 0);
-		pMegaTiles = LoadFileInMem("Levels\\L2Data\\L2.TIL", 0);
-		pLevelPieces = LoadFileInMem("Levels\\L2Data\\L2.MIN", 0);
-		pSpecialCels = LoadFileInMem("Levels\\L2Data\\L2S.CEL", 0);
+		pDungeonCels = LoadFileInMem("Levels\\L2Data\\L2.CEL", NULL);
+		pMegaTiles = LoadFileInMem("Levels\\L2Data\\L2.TIL", NULL);
+		pLevelPieces = LoadFileInMem("Levels\\L2Data\\L2.MIN", NULL);
+		pSpecialCels = LoadFileInMem("Levels\\L2Data\\L2S.CEL", NULL);
 		break;
 	case DTYPE_CAVES:
-		pDungeonCels = LoadFileInMem("Levels\\L3Data\\L3.CEL", 0);
-		pMegaTiles = LoadFileInMem("Levels\\L3Data\\L3.TIL", 0);
-		pLevelPieces = LoadFileInMem("Levels\\L3Data\\L3.MIN", 0);
-		pSpecialCels = LoadFileInMem("Levels\\L1Data\\L1S.CEL", 0);
+		pDungeonCels = LoadFileInMem("Levels\\L3Data\\L3.CEL", NULL);
+		pMegaTiles = LoadFileInMem("Levels\\L3Data\\L3.TIL", NULL);
+		pLevelPieces = LoadFileInMem("Levels\\L3Data\\L3.MIN", NULL);
+		pSpecialCels = LoadFileInMem("Levels\\L1Data\\L1S.CEL", NULL);
 		break;
 	case DTYPE_HELL:
-		pDungeonCels = LoadFileInMem("Levels\\L4Data\\L4.CEL", 0);
-		pMegaTiles = LoadFileInMem("Levels\\L4Data\\L4.TIL", 0);
-		pLevelPieces = LoadFileInMem("Levels\\L4Data\\L4.MIN", 0);
-		pSpecialCels = LoadFileInMem("Levels\\L2Data\\L2S.CEL", 0);
+		pDungeonCels = LoadFileInMem("Levels\\L4Data\\L4.CEL", NULL);
+		pMegaTiles = LoadFileInMem("Levels\\L4Data\\L4.TIL", NULL);
+		pLevelPieces = LoadFileInMem("Levels\\L4Data\\L4.MIN", NULL);
+		pSpecialCels = LoadFileInMem("Levels\\L2Data\\L2S.CEL", NULL);
 		break;
 	default:
 		app_fatal("LoadLvlGFX");
@@ -1835,9 +1785,6 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 	if (setlevel && setlvlnum == SL_SKELKING && quests[QTYPE_KING]._qactive == 2)
 		PlaySFX(USFX_SKING1);
 }
-// 525738: using guessed type int setseed;
-// 5CF31D: using guessed type char setlevel;
-// 679660: using guessed type char gbMaxPlayers;
 
 void game_loop(BOOL bStartup)
 {
@@ -1857,7 +1804,6 @@ void game_loop(BOOL bStartup)
 			break;
 	}
 }
-// 679660: using guessed type char gbMaxPlayers;
 
 void game_logic()
 {
@@ -1905,10 +1851,6 @@ void game_logic()
 	drawpanflag |= 1;
 	pfile_update(FALSE);
 }
-// 525718: using guessed type char cineflag;
-// 52571C: using guessed type int drawpanflag;
-// 525740: using guessed type int PauseMode;
-// 679660: using guessed type char gbMaxPlayers;
 
 void timeout_cursor(BOOL bTimeout)
 {
@@ -1930,8 +1872,6 @@ void timeout_cursor(BOOL bTimeout)
 		drawpanflag = 255;
 	}
 }
-// 52571C: using guessed type int drawpanflag;
-// 525748: using guessed type char sgbMouseDown;
 
 void diablo_color_cyc_logic()
 {
@@ -1950,6 +1890,5 @@ void diablo_color_cyc_logic()
 		}
 	}
 }
-// 52574C: using guessed type int color_cycle_timer;
 
 DEVILUTION_END_NAMESPACE

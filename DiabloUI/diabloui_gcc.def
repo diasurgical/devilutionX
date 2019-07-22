@@ -14,6 +14,7 @@ EXPORTS
 	UiCategoryCallback             @6
 	UiCategoryCallback@28          @6  NONAME
 	UiCopyProtError                @7
+	UiCopyProtError@4              @7  NONAME
 	UiCreateGameCallback           @8
 	UiCreateGameCallback@24        @8  NONAME
 	UiCreateGameCriteria           @9

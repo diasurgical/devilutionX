@@ -2,13 +2,13 @@
 #ifndef __MINITEXT_H__
 #define __MINITEXT_H__
 
-extern int qtexty; // weak
+extern int qtexty;
 extern char *qtextptr;
-extern int qtextSpd;    // weak
-extern char qtextflag;  // weak
-extern int scrolltexty; // weak
-extern void *pMedTextCels;
-extern void *pTextBoxCels;
+extern int qtextSpd;
+extern BOOLEAN qtextflag;
+extern int scrolltexty;
+extern BYTE *pMedTextCels;
+extern BYTE *pTextBoxCels;
 
 void FreeQuestText();
 void InitQuestText();
@@ -19,8 +19,8 @@ void DrawQText();
 
 /* rdata */
 
-extern const unsigned char mfontframe[127];
-extern const unsigned char mfontkern[56];
+extern const BYTE mfontframe[127];
+extern const BYTE mfontkern[56];
 
 /* data */
 

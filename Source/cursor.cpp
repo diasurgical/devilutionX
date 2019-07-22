@@ -2,24 +2,24 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-int cursH;      // weak
-int icursH28;   // idb
-int cursW;      // idb
-int pcursmonst; // idb
-int icursW28;   // idb
-void *pCursCels;
-int icursH; // weak
+int cursH;
+int icursH28;
+int cursW;
+int pcursmonst;
+int icursW28;
+BYTE *pCursCels;
+int icursH;
 
 // inv_item value
-char pcursinvitem; // weak
-int icursW;        // weak
-char pcursitem;    // weak
-char pcursobj;     // weak
-char pcursplr;     // weak
+char pcursinvitem;
+int icursW;
+char pcursitem;
+char pcursobj;
+char pcursplr;
 int cursmx;
 int cursmy;
-int pcurstemp; // weak
-int pcurs;     // idb
+int pcurstemp;
+int pcurs;
 
 /* rdata */
 const int InvItemWidth[180] = {
@@ -71,7 +71,7 @@ const int InvItemHeight[180] = {
 void InitCursor()
 {
 	/// ASSERT: assert(! pCursCels);
-	pCursCels = LoadFileInMem("Data\\Inv\\Objcurs.CEL", 0);
+	pCursCels = LoadFileInMem("Data\\Inv\\Objcurs.CEL", NULL);
 	ClearCursor();
 }
 
@@ -192,8 +192,8 @@ void CheckCursMove()
 			sx = 0;
 		}
 	}
-	if (sy > VIEWPORT_HEIGHT - 1 && track_isscrolling()) {
-		sy = VIEWPORT_HEIGHT - 1;
+	if (sy > PANEL_TOP - 1 && track_isscrolling()) {
+		sy = PANEL_TOP - 1;
 	}
 	if (!zoomflag) {
 		sx >>= 1;
@@ -211,14 +211,14 @@ void CheckCursMove()
 	if (sx < 0) {
 		sx = 0;
 	}
-	if (sx >= 640) {
-		sx = 640;
+	if (sx >= SCREEN_WIDTH) {
+		sx = SCREEN_WIDTH;
 	}
 	if (sy < 0) {
 		sy = 0;
 	}
-	if (sy >= 480) {
-		sy = 480;
+	if (sy >= SCREEN_HEIGHT) {
+		sy = SCREEN_HEIGHT;
 	}
 
 	tx = sx >> 6;
@@ -261,8 +261,8 @@ void CheckCursMove()
 	}
 	pcursinvitem = -1;
 	pcursplr = -1;
-	uitemflag = 0;
-	panelflag = 0;
+	uitemflag = FALSE;
+	panelflag = FALSE;
 	trigflag = FALSE;
 
 	if (plr[myplr]._pInvincible) {
@@ -273,7 +273,7 @@ void CheckCursMove()
 		cursmy = my;
 		return;
 	}
-	if (MouseY > VIEWPORT_HEIGHT) {
+	if (MouseY > PANEL_TOP) {
 		CheckPanelInfo();
 		return;
 	}
@@ -446,7 +446,7 @@ void CheckCursMove()
 			cursmx = mx + 1;
 			cursmy = my + 1;
 		}
-		if (!towner[pcursmonst]._tSelFlag) { /// BUGFIX: Add check 'pcursmonst != -1'
+		if (pcursmonst != -1 && !towner[pcursmonst]._tSelFlag) {
 			pcursmonst = -1;
 		}
 	}

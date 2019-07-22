@@ -69,13 +69,12 @@ HRESULT DirectSoundBuffer::Play(DWORD dwReserved1, DWORD dwPriority, DWORD dwFla
 {
 	int channel = Mix_PlayChannel(-1, chunk, 0);
 	if (channel == -1) {
-		SDL_Log("To few channels, skipping sound\n");
+		SDL_Log("Too few channels, skipping sound\n");
 		return DVL_DS_OK;
 	}
 
 	Mix_Volume(channel, volume);
-	int panned = 255 - 255 * abs(pan) / 10000;
-	Mix_SetPanning(channel, pan <= 0 ? 255 : panned, pan >= 0 ? 255 : panned);
+	Mix_SetPanning(channel, pan > 0 ? pan : 255, pan < 0 ? abs(pan) : 255);
 
 	return DVL_DS_OK;
 };
@@ -87,14 +86,15 @@ HRESULT DirectSoundBuffer::SetFormat(LPCWAVEFORMATEX pcfxFormat)
 
 HRESULT DirectSoundBuffer::SetVolume(LONG lVolume)
 {
-	volume = MIX_MAX_VOLUME - MIX_MAX_VOLUME * lVolume / VOLUME_MIN;
+	volume = pow(10, lVolume / 2000.0) * MIX_MAX_VOLUME;
 
 	return DVL_DS_OK;
 };
 
 HRESULT DirectSoundBuffer::SetPan(LONG lPan)
 {
-	pan = lPan;
+	pan = copysign(pow(10, -abs(lPan) / 2000.0) * 255, lPan);
+
 	return DVL_DS_OK;
 };
 

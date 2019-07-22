@@ -23,6 +23,7 @@ void (*gfnSoundFunction)(char *file);
 void (*gfnListFocus)(int value);
 void (*gfnListSelect)(int value);
 void (*gfnListEsc)();
+bool (*gfnListYesNo)();
 UI_Item *gUiItems;
 int gUiItemCnt;
 bool UiItemsWraps;
@@ -138,7 +139,7 @@ void UiDestroy()
 	font = NULL;
 }
 
-void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), UI_Item *items, int itemCnt, bool itemsWraps)
+void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), UI_Item *items, int itemCnt, bool itemsWraps, bool (*fnYesNo)())
 {
 	SelectedItem = min;
 	SelectedItemMin = min;
@@ -146,6 +147,7 @@ void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(i
 	gfnListFocus = fnFocus;
 	gfnListSelect = fnSelect;
 	gfnListEsc = fnEsc;
+	gfnListYesNo = fnYesNo;
 	gUiItems = items;
 	gUiItemCnt = itemCnt;
 	UiItemsWraps = itemsWraps;
@@ -168,7 +170,7 @@ void UiPlayMoveSound()
 		gfnSoundFunction("sfx\\items\\titlemov.wav");
 }
 
-void UiPlaySelectSound() //TODO play this on menu back step
+void UiPlaySelectSound()
 {
 	if (gfnSoundFunction)
 		gfnSoundFunction("sfx\\items\\titlslct.wav");
@@ -238,6 +240,9 @@ bool UiFocusNavigation(SDL_Event *event)
 		case SDLK_SPACE:
 			UiFocusNavigationSelect();
 			return true;
+		case SDLK_DELETE:
+			UiFocusNavigationYesNo();
+			return true;
 		}
 	}
 
@@ -305,6 +310,15 @@ void UiFocusNavigationEsc()
 	}
 	if (gfnListEsc)
 		gfnListEsc();
+}
+
+void UiFocusNavigationYesNo()
+{
+	if (gfnListYesNo == NULL)
+		return;
+
+	if (gfnListYesNo())
+		UiPlaySelectSound();
 }
 
 bool IsInsideRect(const SDL_Event *event, const SDL_Rect *rect)
@@ -847,5 +861,4 @@ void DvlStringSetting(const char *valuename, char *string, int len)
 		SRegSaveString("devilutionx", valuename, 0, string);
 	}
 }
-
 }

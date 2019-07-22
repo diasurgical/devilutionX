@@ -36,7 +36,8 @@ const char pathydir[8] = { -1, 1, -1, 1, 0, -1, 0, 1 };
  */
 char path_directions[9] = { 5, 1, 6, 2, 0, 3, 8, 4, 7 };
 
-/* find the shortest path from (sx,sy) to (dx,dy), using PosOk(PosOkArg,x,y) to
+/**
+ * find the shortest path from (sx,sy) to (dx,dy), using PosOk(PosOkArg,x,y) to
  * check that each step is a valid position. Store the step directions (see
  * path_directions) in path, which must have room for 24 steps
  */
@@ -85,7 +86,9 @@ int FindPath(BOOL (*PosOk)(int, int, int), int PosOkArg, int sx, int sy, int dx,
 	return 0;
 }
 
-/* heuristic, estimated cost from (sx,sy) to (dx,dy) */
+/**
+ * @brief heuristic, estimated cost from (sx,sy) to (dx,dy)
+ */
 int path_get_h_cost(int sx, int sy, int dx, int dy)
 {
 	int delta_x = abs(sx - dx);
@@ -98,7 +101,8 @@ int path_get_h_cost(int sx, int sy, int dx, int dy)
 	return 2 * (min + max);
 }
 
-/* return 2 if pPath is horizontally/vertically aligned with (dx,dy), else 3
+/**
+ * @brief return 2 if pPath is horizontally/vertically aligned with (dx,dy), else 3
  *
  * This approximates that diagonal movement on a square grid should have a cost
  * of sqrt(2). That's approximately 1.5, so they multiply all step costs by 2,
@@ -112,8 +116,8 @@ int path_check_equal(PATHNODE *pPath, int dx, int dy)
 	return 3;
 }
 
-/* get the next node on the A* frontier to explore (estimated to be closest to
- * the goal), mark it as visited, and return it
+/**
+ * @brief get the next node on the A* frontier to explore (estimated to be closest to the goal), mark it as visited, and return it
  */
 PATHNODE *GetNextPath()
 {
@@ -130,13 +134,15 @@ PATHNODE *GetNextPath()
 	return result;
 }
 
-/* check if stepping from pPath to (dx,dy) cuts a corner. If you step from A to
- * B, both Xs need to be clear:
+/**
+ * @brief check if stepping from pPath to (dx,dy) cuts a corner.
+ *
+ * If you step from A to B, both Xs need to be clear:
  *
  *  AX
  *  XB
  *
- *  return true if step is allowed
+ *  @return true if step is allowed
  */
 BOOL path_solid_pieces(PATHNODE *pPath, int dx, int dy)
 {
@@ -158,10 +164,10 @@ BOOL path_solid_pieces(PATHNODE *pPath, int dx, int dy)
 	return rv;
 }
 
-/* perform a single step of A* bread-first search by trying to step in every
- * possible direction from pPath with goal (x,y). Check each step with PosOk
+/**
+ * @brief perform a single step of A* bread-first search by trying to step in every possible direction from pPath with goal (x,y). Check each step with PosOk
  *
- * return 0 if we ran out of preallocated nodes to use, else 1
+ * @return FALSE if we ran out of preallocated nodes to use, else TRUE
  */
 BOOL path_get_path(BOOL (*PosOk)(int, int, int), int PosOkArg, PATHNODE *pPath, int x, int y)
 {
@@ -182,10 +188,10 @@ BOOL path_get_path(BOOL (*PosOk)(int, int, int), int PosOkArg, PATHNODE *pPath, 
 	return TRUE;
 }
 
-/* add a step from pPath to (dx,dy), return 1 if successful, and update the
- * frontier/visited nodes accordingly
+/**
+ * @brief add a step from pPath to (dx,dy), return 1 if successful, and update the frontier/visited nodes accordingly
  *
- * return 1 if step successfully added, 0 if we ran out of nodes to use
+ * @return TRUE if step successfully added, FALSE if we ran out of nodes to use
  */
 BOOL path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy)
 {
@@ -253,7 +259,9 @@ BOOL path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy)
 	return TRUE;
 }
 
-/* return a node for (dx,dy) on the frontier, or NULL if not found */
+/**
+ * @brief return a node for (dx,dy) on the frontier, or NULL if not found
+ */
 PATHNODE *path_get_node1(int dx, int dy)
 {
 	PATHNODE *result = path_2_nodes->NextNode;
@@ -262,7 +270,9 @@ PATHNODE *path_get_node1(int dx, int dy)
 	return result;
 }
 
-/* return a node for (dx,dy) if it was visited, or NULL if not found */
+/**
+ * @brief return a node for (dx,dy) if it was visited, or NULL if not found
+ */
 PATHNODE *path_get_node2(int dx, int dy)
 {
 	PATHNODE *result = pnode_ptr->NextNode;
@@ -271,8 +281,9 @@ PATHNODE *path_get_node2(int dx, int dy)
 	return result;
 }
 
-/* insert pPath into the frontier (keeping the frontier sorted by total
- * distance) */
+/**
+ * @brief insert pPath into the frontier (keeping the frontier sorted by total distance)
+ */
 void path_next_node(PATHNODE *pPath)
 {
 	PATHNODE *next, *current;
@@ -294,7 +305,9 @@ void path_next_node(PATHNODE *pPath)
 	}
 }
 
-/* update all path costs using depth-first search starting at pPath */
+/**
+ * @brief update all path costs using depth-first search starting at pPath
+ */
 void path_set_coords(PATHNODE *pPath)
 {
 	PATHNODE *PathOld;
@@ -321,7 +334,9 @@ void path_set_coords(PATHNODE *pPath)
 	}
 }
 
-/* push pPath onto the pnode_tblptr stack */
+/**
+ * @brief push pPath onto the pnode_tblptr stack
+ */
 void path_push_active_step(PATHNODE *pPath)
 {
 	int stack_index = gdwCurPathStep;
@@ -329,15 +344,18 @@ void path_push_active_step(PATHNODE *pPath)
 	pnode_tblptr[stack_index] = pPath;
 }
 
-/* pop and return a node from the pnode_tblptr stack */
+/**
+ * @brief pop and return a node from the pnode_tblptr stack
+ */
 PATHNODE *path_pop_active_step()
 {
 	gdwCurPathStep--;
 	return pnode_tblptr[gdwCurPathStep];
 }
 
-/* zero one of the preallocated nodes and return a pointer to it, or NULL if
- * none are available */
+/**
+ * @brief zero one of the preallocated nodes and return a pointer to it, or NULL if none are available
+ */
 PATHNODE *path_new_step()
 {
 	PATHNODE *new_node;

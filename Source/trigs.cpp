@@ -6,7 +6,7 @@ BOOL townwarps[3];
 BOOL trigflag;
 int numtrigs;
 TriggerStruct trigs[MAXTRIGGERS];
-int TWarpFrom; // weak
+int TWarpFrom;
 
 int TownDownList[11] = { 716, 715, 719, 720, 721, 723, 724, 725, 726, 727, -1 };
 int TownWarp1List[13] = {
@@ -152,7 +152,6 @@ void InitTownTriggers()
 
 	trigflag = FALSE;
 }
-// 679660: using guessed type char gbMaxPlayers;
 
 void InitL1Triggers()
 {
@@ -654,7 +653,7 @@ void CheckTrigForce()
 {
 	trigflag = FALSE;
 
-	if (MouseY > VIEWPORT_HEIGHT - 1) {
+	if (MouseY > PANEL_TOP - 1) {
 		return;
 	}
 
@@ -697,7 +696,6 @@ void CheckTrigForce()
 		ClearPanel();
 	}
 }
-// 5CF31D: using guessed type char setlevel;
 
 void CheckTriggers()
 {
@@ -779,7 +777,5 @@ void CheckTriggers()
 		}
 	}
 }
-// 679660: using guessed type char gbMaxPlayers;
-// 6ABB30: using guessed type int TWarpFrom;
 
 DEVILUTION_END_NAMESPACE

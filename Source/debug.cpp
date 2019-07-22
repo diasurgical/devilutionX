@@ -10,14 +10,14 @@ int seed_index;
 int level_seeds[NUMLEVELS];
 int seed_table[4096];
 
-void *pSquareCel;
+BYTE *pSquareCel;
 char dMonsDbg[NUMLEVELS][MAXDUNX][MAXDUNY];
 char dFlagDbg[NUMLEVELS][MAXDUNX][MAXDUNY];
 
 void LoadDebugGFX()
 {
 	if (visiondebug)
-		pSquareCel = LoadFileInMem("Data\\Square.CEL", 0);
+		pSquareCel = LoadFileInMem("Data\\Square.CEL", NULL);
 }
 
 void FreeDebugGFX()
@@ -105,7 +105,7 @@ void GiveGoldCheat()
 			SetPlrHandItem(&plr[myplr].InvList[ni], IDI_GOLD);
 			GetPlrHandSeed(&plr[myplr].InvList[ni]);
 			plr[myplr].InvList[ni]._ivalue = GOLD_MAX_LIMIT;
-			plr[myplr].InvList[ni]._iCurs = 6;
+			plr[myplr].InvList[ni]._iCurs = ICURS_GOLD_LARGE;
 			plr[myplr]._pGold += GOLD_MAX_LIMIT;
 			plr[myplr].InvGrid[i] = plr[myplr]._pNumInv;
 		}

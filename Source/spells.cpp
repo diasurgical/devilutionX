@@ -81,7 +81,7 @@ void UseMana(int id, int sn)
 	}
 }
 
-BOOL CheckSpell(int id, int sn, BYTE st, BOOL manaonly)
+BOOL CheckSpell(int id, int sn, char st, BOOL manaonly)
 {
 	BOOL result;
 
@@ -169,7 +169,7 @@ void DoResurrect(int pnum, int rid)
 
 		ClrPlrPath(rid);
 		plr[rid].destAction = ACTION_NONE;
-		plr[rid]._pInvincible = 0;
+		plr[rid]._pInvincible = FALSE;
 		PlacePlayer(rid);
 
 		hp = 640;

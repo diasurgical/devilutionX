@@ -2,11 +2,11 @@
 #ifndef __DOOM_H__
 #define __DOOM_H__
 
-extern int doom_quest_time;  // weak
-extern int doom_stars_drawn; // weak
-extern void *pDoomCel;
-extern int doomflag;       // weak
-extern int DoomQuestState; // idb
+extern int doom_quest_time;
+extern int doom_stars_drawn;
+extern BYTE *pDoomCel;
+extern int doomflag;
+extern int DoomQuestState;
 
 /*
 void doom_reset_state();

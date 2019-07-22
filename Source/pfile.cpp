@@ -97,7 +97,7 @@ void pfile_encode_hero(const PkPlayerStruct *pPack)
 	mem_free_dbg(packed);
 }
 
-BOOL pfile_open_archive(BOOL a1, DWORD save_num)
+BOOL pfile_open_archive(BOOL update, DWORD save_num)
 {
 	char FileName[MAX_PATH];
 
@@ -105,7 +105,7 @@ BOOL pfile_open_archive(BOOL a1, DWORD save_num)
 	if (OpenMPQ(FileName, FALSE, save_num))
 		return TRUE;
 
-	if (a1 && gbMaxPlayers > 1)
+	if (update && gbMaxPlayers > 1)
 		mpqapi_store_default_time(save_num);
 	return FALSE;
 }
@@ -159,7 +159,7 @@ BOOL pfile_create_player_description(char *dst, DWORD len)
 	return TRUE;
 }
 
-BOOL pfile_create_save_file(const char *name_1, const char *name_2)
+BOOL pfile_rename_hero(const char *name_1, const char *name_2)
 {
 	int i;
 	DWORD save_num;
@@ -209,13 +209,13 @@ void game_2_ui_player(const PlayerStruct *p, _uiheroinfo *heroinfo, BOOL bHasSav
 	heroinfo->vitality = p->_pVitality;
 	heroinfo->gold = p->_pGold;
 	heroinfo->hassaved = bHasSaveFile;
-	heroinfo->herorank = (unsigned char)p->pDiabloKillLevel;
+	heroinfo->herorank = p->pDiabloKillLevel;
 	heroinfo->spawned = 0;
 }
 
-unsigned char game_2_ui_class(const PlayerStruct *p)
+BYTE game_2_ui_class(const PlayerStruct *p)
 {
-	unsigned char uiclass;
+	BYTE uiclass;
 	if (p->_pClass == PC_WARRIOR)
 		uiclass = UI_WARRIOR;
 	else if (p->_pClass == PC_ROGUE)
@@ -567,26 +567,31 @@ BOOL __stdcall GetTempSaveNames(DWORD dwIndex, char *szTemp)
 
 void pfile_rename_temp_to_perm()
 {
-	DWORD save_num, i;
-	char TempName[MAX_PATH];
-	char PermName[MAX_PATH];
+	DWORD dwChar, dwIndex;
+	BOOL bResult;
+	char szTemp[MAX_PATH];
+	char szPerm[MAX_PATH];
 
-	save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
-	if (!pfile_open_archive(FALSE, save_num))
+	dwChar = pfile_get_save_num_from_name(plr[myplr]._pName);
+	/// ASSERT: assert(dwChar < MAX_CHARACTERS);
+	/// ASSERT: assert(gbMaxPlayers == 1);
+	if (!pfile_open_archive(FALSE, dwChar))
 		app_fatal("Unable to write to save file archive");
 
-	i = 0;
-	while (GetTempSaveNames(i, TempName)) {
-		GetPermSaveNames(i, PermName);
-		i++;
-		if (mpqapi_has_file(TempName)) {
-			if (mpqapi_has_file(PermName))
-				mpqapi_remove_hash_entry(PermName);
-			mpqapi_rename(TempName, PermName);
+	dwIndex = 0;
+	while (GetTempSaveNames(dwIndex, szTemp)) {
+		bResult = GetPermSaveNames(dwIndex, szPerm);
+		/// ASSERT: assert(bResult);
+		dwIndex++;
+		if (mpqapi_has_file(szTemp)) {
+			if (mpqapi_has_file(szPerm))
+				mpqapi_remove_hash_entry(szPerm);
+			mpqapi_rename(szTemp, szPerm);
 		}
 	}
-	GetPermSaveNames(i, PermName);
-	pfile_flush(TRUE, save_num);
+	/// ASSERT: assert(! GetPermSaveNames(dwIndex,szPerm));
+	GetPermSaveNames(dwIndex, szPerm);
+	pfile_flush(TRUE, dwChar);
 }
 
 BOOL __stdcall GetPermSaveNames(DWORD dwIndex, char *szPerm)

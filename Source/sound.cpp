@@ -14,9 +14,9 @@ LPDIRECTSOUNDBUFFER sglpDSB;
 
 /* data */
 
-BYTE gbMusicOn = TRUE;
-BYTE gbSoundOn = TRUE;
-BYTE gbDupSounds = TRUE;
+BOOLEAN gbMusicOn = TRUE;
+BOOLEAN gbSoundOn = TRUE;
+BOOLEAN gbDupSounds = TRUE;
 int sgnMusicTrack = 6;
 char *sgszMusicTracks[NUM_MUSIC] = {
 	"Music\\DTowne.wav",

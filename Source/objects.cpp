@@ -2,17 +2,17 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-int trapid;  // weak
-int trapdir; // weak
-unsigned char *pObjCels[40];
+int trapid;
+int trapdir;
+BYTE *pObjCels[40];
 char ObjFileList[40];
 int objectactive[MAXOBJECTS];
-int nobjects; // idb
-int leverid;  // idb
+int nobjects;
+int leverid;
 int objectavail[MAXOBJECTS];
 ObjectStruct object[MAXOBJECTS];
 BOOL InitObjFlag;
-int numobjfiles; // weak
+int numobjfiles;
 
 int bxadd[8] = { -1, 0, 1, -1, 1, -1, 0, 1 };
 int byadd[8] = { -1, -1, -1, 0, 0, 1, 1, 1 };
@@ -55,7 +55,7 @@ char shrinemax[NUM_SHRINETYPE] = {
 	16, 16, 16, 16, 16, 16
 };
 // 0 - sp+mp, 1 - sp only, 2 - mp only
-unsigned char shrineavail[NUM_SHRINETYPE] = {
+BYTE shrineavail[NUM_SHRINETYPE] = {
 	0, 0, 1, 1, 0, 0, 0, 0, 1, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 2, 0,
 	0, 0, 0, 0, 0, 2
@@ -108,7 +108,7 @@ void InitObjectGFX()
 		if (fileload[i]) {
 			ObjFileList[numobjfiles] = i;
 			sprintf(filestr, "Objects\\%s.CEL", ObjMasterLoadList[i]);
-			pObjCels[numobjfiles] = LoadFileInMem(filestr, 0);
+			pObjCels[numobjfiles] = LoadFileInMem(filestr, NULL);
 			numobjfiles++;
 		}
 	}
@@ -136,7 +136,7 @@ BOOL RndLocOk(int xp, int yp)
 		return FALSE;
 	if (nSolidTable[dPiece[xp][yp]])
 		return FALSE;
-	if (leveltype != 1 || dPiece[xp][yp] <= 126 || dPiece[xp][yp] >= 144)
+	if (leveltype != DTYPE_CATHEDRAL || dPiece[xp][yp] <= 126 || dPiece[xp][yp] >= 144)
 		return TRUE;
 	return FALSE;
 }
@@ -600,13 +600,13 @@ void AddDiabObjs()
 {
 	BYTE *lpSetPiece;
 
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab1.DUN", 0);
+	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab1.DUN", NULL);
 	LoadMapObjects(lpSetPiece, 2 * diabquad1x, 2 * diabquad1y, diabquad2x, diabquad2y, 11, 12, 1);
 	mem_free_dbg(lpSetPiece);
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab2a.DUN", 0);
+	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab2a.DUN", NULL);
 	LoadMapObjects(lpSetPiece, 2 * diabquad2x, 2 * diabquad2y, diabquad3x, diabquad3y, 11, 11, 2);
 	mem_free_dbg(lpSetPiece);
-	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab3a.DUN", 0);
+	lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab3a.DUN", NULL);
 	LoadMapObjects(lpSetPiece, 2 * diabquad3x, 2 * diabquad3y, diabquad4x, diabquad4y, 9, 9, 3);
 	mem_free_dbg(lpSetPiece);
 }
@@ -786,7 +786,7 @@ void InitObjects()
 				}
 				quests[QTYPE_BLIND]._qmsg = sp_id;
 				AddBookLever(0, 0, MAXDUNX, MAXDUNY, setpc_x, setpc_y, setpc_w + setpc_x + 1, setpc_h + setpc_y + 1, sp_id);
-				mem = LoadFileInMem("Levels\\L2Data\\Blind2.DUN", 0);
+				mem = LoadFileInMem("Levels\\L2Data\\Blind2.DUN", NULL);
 				LoadMapObjs(mem, 2 * setpc_x, 2 * setpc_y);
 				mem_free_dbg(mem);
 			}
@@ -819,7 +819,7 @@ void InitObjects()
 				}
 				quests[QTYPE_WARLRD]._qmsg = sp_id;
 				AddBookLever(0, 0, MAXDUNX, MAXDUNY, setpc_x, setpc_y, setpc_x + setpc_w, setpc_y + setpc_h, sp_id);
-				mem = LoadFileInMem("Levels\\L4Data\\Warlord.DUN", 0);
+				mem = LoadFileInMem("Levels\\L4Data\\Warlord.DUN", NULL);
 				LoadMapObjs(mem, 2 * setpc_x, 2 * setpc_y);
 				mem_free_dbg(mem);
 			}
@@ -831,19 +831,19 @@ void InitObjects()
 		InitRndLocObj(5, 10, 5);
 		InitRndLocObj(3, 6, 6);
 		InitRndLocObj(1, 5, 7);
-		if (leveltype != 4)
+		if (leveltype != DTYPE_HELL)
 			AddObjTraps();
-		if (leveltype > 1u)
+		if (leveltype > 1)
 			AddChestTraps();
 		InitObjFlag = FALSE;
 	}
 }
 
-void SetMapObjects(unsigned char *pMap, int startx, int starty)
+void SetMapObjects(BYTE *pMap, int startx, int starty)
 {
 	int rw, rh;
 	int i, j;
-	unsigned char *lm, *h;
+	BYTE *lm, *h;
 	long mapoff;
 	int fileload[56];
 	char filestr[32];
@@ -884,7 +884,7 @@ void SetMapObjects(unsigned char *pMap, int startx, int starty)
 
 		ObjFileList[numobjfiles] = i;
 		sprintf(filestr, "Objects\\%s.CEL", ObjMasterLoadList[i]);
-		pObjCels[numobjfiles] = LoadFileInMem(filestr, 0);
+		pObjCels[numobjfiles] = LoadFileInMem(filestr, NULL);
 		numobjfiles++;
 	}
 
@@ -1067,7 +1067,7 @@ void AddFlameLvr(int i)
 	object[i]._oVar2 = 49;
 }
 
-void AddTrap(int i, int t)
+void AddTrap(int i, int ot)
 {
 	int mt;
 
@@ -1252,7 +1252,7 @@ void AddStoryBook(int i)
 		object[i]._oVar2 = StoryText[bookframe][1];
 	if (currlevel == 12)
 		object[i]._oVar2 = StoryText[bookframe][2];
-	object[i]._oVar3 = ((unsigned int)currlevel >> 2) + 3 * bookframe - 1;
+	object[i]._oVar3 = (currlevel >> 2) + 3 * bookframe - 1;
 	object[i]._oAnimFrame = 5 - 2 * bookframe;
 	object[i]._oVar4 = object[i]._oAnimFrame + 1;
 }
@@ -2353,7 +2353,7 @@ void ObjChangeMap(int x1, int y1, int x2, int y2)
 
 	for (j = y1; j <= y2; j++) {
 		for (i = x1; i <= x2; i++) {
-			ObjSetMini(i, j, (BYTE)pdungeon[i][j]);
+			ObjSetMini(i, j, pdungeon[i][j]);
 			dungeon[i][j] = pdungeon[i][j];
 		}
 	}
@@ -2373,7 +2373,7 @@ void ObjChangeMapResync(int x1, int y1, int x2, int y2)
 
 	for (j = y1; j <= y2; j++) {
 		for (i = x1; i <= x2; i++) {
-			ObjSetMini(i, j, (unsigned char)pdungeon[i][j]);
+			ObjSetMini(i, j, pdungeon[i][j]);
 			dungeon[i][j] = pdungeon[i][j];
 		}
 	}
@@ -2464,7 +2464,7 @@ void OperateBook(int pnum, int i)
 	}
 	object[i]._oAnimFrame++;
 	object[i]._oSelFlag = 0;
-	if (setlevel == 0)
+	if (!setlevel)
 		return;
 
 	if (setlvlnum == SL_BONECHAMB) {
@@ -2487,7 +2487,7 @@ void OperateBook(int pnum, int i)
 		    0,
 		    0);
 	}
-	if (setlevel != 0 && setlvlnum == SL_VILEBETRAYER) {
+	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
 		ObjChangeMapResync(
 		    object[i]._oVar1,
 		    object[i]._oVar2,
@@ -2582,7 +2582,7 @@ void OperateChest(int pnum, int i, BOOL sendmsg)
 			SetRndSeed(object[i]._oRndSeed);
 			if (setlevel) {
 				for (j = 0; j < object[i]._oVar1; j++) {
-					CreateRndItem(object[i]._ox, object[i]._oy, 1u, sendmsg, 0);
+					CreateRndItem(object[i]._ox, object[i]._oy, TRUE, sendmsg, 0);
 				}
 			} else {
 				for (j = 0; j < object[i]._oVar1; j++) {
@@ -2794,7 +2794,7 @@ void OperatePedistal(int pnum, int i)
 			if (!deltaload)
 				PlaySfxLoc(LS_BLODSTAR, object[i]._ox, object[i]._oy);
 			ObjChangeMap(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
-			mem = LoadFileInMem("Levels\\L2Data\\Blood2.DUN", 0);
+			mem = LoadFileInMem("Levels\\L2Data\\Blood2.DUN", NULL);
 			LoadMapObjs(mem, 2 * setpc_x, 2 * setpc_y);
 			mem_free_dbg(mem);
 			CreateItem(7, 2 * setpc_x + 25, 2 * setpc_y + 19);
@@ -3394,15 +3394,15 @@ void OperateShrine(int pnum, int i, int sType)
 			return;
 		for (j = 0; j < 7; j++) {
 			if (plr[pnum].InvBody[j]._iMagical && !plr[pnum].InvBody[j]._iIdentified)
-				plr[pnum].InvBody[j]._iIdentified = 1;
+				plr[pnum].InvBody[j]._iIdentified = TRUE;
 		}
 		for (j = 0; j < plr[pnum]._pNumInv; j++) {
 			if (plr[pnum].InvList[j]._iMagical && !plr[pnum].InvList[j]._iIdentified)
-				plr[pnum].InvList[j]._iIdentified = 1;
+				plr[pnum].InvList[j]._iIdentified = TRUE;
 		}
 		for (j = 0; j < 8; j++) {
 			if (plr[pnum].SpdList[j]._iMagical && !plr[pnum].SpdList[j]._iIdentified)
-				plr[pnum].SpdList[j]._iIdentified = 1; // belt items can't be magical?
+				plr[pnum].SpdList[j]._iIdentified = TRUE; // belt items can't be magical?
 		}
 		InitDiabloMsg(EMSG_SHRINE_GLIMMERING);
 		break;
@@ -3448,8 +3448,6 @@ void OperateShrine(int pnum, int i, int sType)
 	if (pnum == myplr)
 		NetSendCmdParam2(FALSE, CMD_PLROPOBJ, pnum, i);
 }
-// 52571C: using guessed type int drawpanflag;
-// 676190: using guessed type int deltaload;
 
 void OperateSkelBook(int pnum, int i, BOOL sendmsg)
 {
@@ -4249,7 +4247,7 @@ void SyncPedistal(int i)
 	}
 	if (object[i]._oVar6 == 3) {
 		ObjChangeMapResync(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
-		setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN", 0);
+		setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN", NULL);
 		LoadMapObjs(setp, 2 * setpc_x, 2 * setpc_y);
 		mem_free_dbg(setp);
 	}

@@ -65,7 +65,10 @@ if(NOT CMAKE_SIZEOF_VOID_P EQUAL 4)
 endif()
 
 find_package(Threads REQUIRED)
-find_package(SDL2 REQUIRED)
+find_package(SDL2 CONFIG QUIET)
+if (NOT SDL2_FOUND)
+	find_package(SDL2 REQUIRED)
+endif()
 find_package(SDL2_ttf REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 find_package(sodium REQUIRED)
@@ -203,6 +206,7 @@ add_executable(devilutionx
   SourceX/DiabloUI/selconn.cpp
   SourceX/DiabloUI/selgame.cpp
   SourceX/DiabloUI/selhero.cpp
+  SourceX/DiabloUI/selyesno.cpp
   SourceX/DiabloUI/title.cpp
   SourceX/main.cpp)
 
@@ -238,13 +242,16 @@ if(ASAN)
   target_link_libraries(devilution PUBLIC -fsanitize=address -fsanitize-recover=address)
 endif()
 
-if(DIST)
+if(DIST AND NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   target_link_libraries(devilutionx PUBLIC -static-libgcc -static-libstdc++)
 endif()
 
 if(WIN32)
   target_link_libraries(devilutionx PRIVATE wsock32 ws2_32 wininet)
-  target_compile_options(devilution PUBLIC $<$<CONFIG:Debug>:-gstabs>)
+
+  if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+    target_compile_options(devilution PUBLIC $<$<CONFIG:Debug>:-gstabs>)
+  endif()
 endif()
 
 if(HAIKU)
@@ -264,6 +271,9 @@ if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 
   # Warnings for devilutionX
   target_compile_options(devilutionx PRIVATE -Wall -Wextra -Wno-write-strings -Wno-multichar -Wno-unused-parameter)
+
+  target_compile_options(devilution PRIVATE -fsigned-char)
+  target_compile_options(devilutionx PRIVATE -fsigned-char)
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
@@ -273,9 +283,6 @@ endif()
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   target_compile_options(devilution PRIVATE -fno-aggressive-loop-optimizations)
 endif()
-
-target_compile_options(devilution PRIVATE -fsigned-char)
-target_compile_options(devilutionx PRIVATE -fsigned-char)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   # Style issues

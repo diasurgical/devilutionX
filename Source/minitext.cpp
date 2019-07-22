@@ -2,16 +2,16 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-int qtexty; // weak
+int qtexty;
 char *qtextptr;
-int qtextSpd;     // weak
-char qtextflag;   // weak
-int scrolltexty;  // weak
-int sgLastScroll; // weak
-void *pMedTextCels;
-void *pTextBoxCels;
+int qtextSpd;
+BOOLEAN qtextflag;
+int scrolltexty;
+int sgLastScroll;
+BYTE *pMedTextCels;
+BYTE *pTextBoxCels;
 
-const unsigned char mfontframe[127] = {
+const BYTE mfontframe[127] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -26,7 +26,7 @@ const unsigned char mfontframe[127] = {
 	14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
 	24, 25, 26, 48, 0, 49, 0
 };
-const unsigned char mfontkern[56] = {
+const BYTE mfontkern[56] = {
 	5, 15, 10, 13, 14, 10, 9, 13, 11, 5,
 	5, 11, 10, 16, 13, 16, 10, 15, 12, 10,
 	14, 17, 17, 22, 17, 16, 11, 5, 11, 11,
@@ -47,11 +47,10 @@ void FreeQuestText()
 
 void InitQuestText()
 {
-	pMedTextCels = LoadFileInMem("Data\\MedTextS.CEL", 0);
-	pTextBoxCels = LoadFileInMem("Data\\TextBox.CEL", 0);
+	pMedTextCels = LoadFileInMem("Data\\MedTextS.CEL", NULL);
+	pTextBoxCels = LoadFileInMem("Data\\TextBox.CEL", NULL);
 	qtextflag = FALSE;
 }
-// 646D00: using guessed type char qtextflag;
 
 void InitQTextMsg(int m)
 {
@@ -66,15 +65,10 @@ void InitQTextMsg(int m)
 	}
 	PlaySFX(alltext[m].sfxnr);
 }
-// 646CF4: using guessed type int qtexty;
-// 646CFC: using guessed type int qtextSpd;
-// 646D00: using guessed type char qtextflag;
-// 646D04: using guessed type int scrolltexty;
-// 646D08: using guessed type int sgLastScroll;
 
 void DrawQTextBack()
 {
-	CelDecodeOnly(88, 487, (BYTE *)pTextBoxCels, 1, 591);
+	CelDecodeOnly(88, 487, pTextBoxCels, 1, 591);
 
 #define TRANS_RECT_X 27
 #define TRANS_RECT_Y 28
@@ -249,7 +243,7 @@ void DrawQText()
 				p++;
 			}
 			if (c != 0) {
-				PrintQTextChr(tx, ty, (BYTE *)pMedTextCels, c);
+				PrintQTextChr(tx, ty, pMedTextCels, c);
 			}
 			tx += mfontkern[c] + 2;
 		}
@@ -281,7 +275,7 @@ void DrawQText()
 			qtexty += 38;
 			qtextptr = pnl;
 			if (*pnl == '|') {
-				qtextflag = 0;
+				qtextflag = FALSE;
 			}
 			break;
 		}
@@ -291,11 +285,5 @@ void DrawQText()
 		}
 	}
 }
-// 646CF4: using guessed type int qtexty;
-// 646CFC: using guessed type int qtextSpd;
-// 646D00: using guessed type char qtextflag;
-// 646D04: using guessed type int scrolltexty;
-// 646D08: using guessed type int sgLastScroll;
-// 428202: using guessed type char qstr[128];
 
 DEVILUTION_END_NAMESPACE

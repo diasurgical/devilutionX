@@ -8,7 +8,7 @@ extern BYTE *gpBufEnd;
 extern DWORD level_cel_block;
 extern char arch_draw_type;
 extern DDSURFACEDESC DDS_desc;
-extern int cel_transparency_active; // weak
+extern int cel_transparency_active;
 extern int level_piece_id;
 extern void (*DrawPlrProc)(int, int, int, int, int, BYTE *, int, int, int, int);
 extern int draw_monster_num;
@@ -28,7 +28,7 @@ void DrawClippedObject(int x, int y, int ox, int oy, BOOL pre, int CelSkip, int 
 void scrollrt_draw_clipped_e_flag(BYTE *pBuff, int x, int y, int sx, int sy);
 void scrollrt_draw_lower_2(int x, int y, int sx, int sy, int chunks, int skipChunks, int eflag);
 void scrollrt_draw_clipped_dungeon_2(BYTE *pBuff, int sx, int sy, int skipChunks, int CelSkip, int dx, int dy, int eflag);
-void scrollrt_draw_clipped_e_flag_2(BYTE *pBuff, int x, int y, int skipChunks, signed int CelSkip, int sx, int sy);
+void scrollrt_draw_clipped_e_flag_2(BYTE *pBuff, int x, int y, int skipChunks, int CelSkip, int sx, int sy);
 void scrollrt_draw_upper(int x, int y, int sx, int sy, int chunks, int capChunks, int eflag);
 void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int capChunks, int CelCap, int dx, int dy, int eflag);
 void DrawMonster(int x, int y, int mx, int my, int m, int CelSkip, int CelCap);

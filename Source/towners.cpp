@@ -2,12 +2,12 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-int storeflag; // weak
+BOOL storeflag;
 int sgnCowMsg;
-int numtowners; // idb
+int numtowners;
 DWORD sgdwCowClicks;
-int bannerflag;  // weak // unused 0x6AAC28
-int boyloadflag; // weak
+BOOL bannerflag; // unused 0x6AAC28
+BOOL boyloadflag;
 BYTE *pCowCels;
 TownerStruct towner[16];
 
@@ -151,7 +151,7 @@ void SetTownerGPtrs(BYTE *pData, BYTE **pAnim)
 #endif
 }
 
-void NewTownerAnim(int tnum, unsigned char *pAnim, int numFrames, int Delay)
+void NewTownerAnim(int tnum, BYTE *pAnim, int numFrames, int Delay)
 {
 	towner[tnum]._tAnimCnt = 0;
 	towner[tnum]._tAnimLen = numFrames;
@@ -198,7 +198,7 @@ void InitSmith()
 
 	InitTownerInfo(numtowners, 96, 1, TOWN_SMITH, 62, 63, 0, 10);
 	InitQstSnds(numtowners);
-	towner[numtowners]._tNData = LoadFileInMem("Towners\\Smith\\SmithN.CEL", 0);
+	towner[numtowners]._tNData = LoadFileInMem("Towners\\Smith\\SmithN.CEL", NULL);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
 	}
@@ -212,10 +212,10 @@ void InitBarOwner()
 {
 	int i;
 
-	bannerflag = 0; // unused
+	bannerflag = FALSE; // unused
 	InitTownerInfo(numtowners, 96, 1, TOWN_TAVERN, 55, 62, 3, 10);
 	InitQstSnds(numtowners);
-	towner[numtowners]._tNData = LoadFileInMem("Towners\\TwnF\\TwnFN.CEL", 0);
+	towner[numtowners]._tNData = LoadFileInMem("Towners\\TwnF\\TwnFN.CEL", NULL);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
 	}
@@ -224,7 +224,6 @@ void InitBarOwner()
 	strcpy(towner[numtowners]._tName, "Ogden the Tavern owner");
 	numtowners++;
 }
-// 6AAC28: using guessed type int bannerflag;
 
 void InitTownDead()
 {
@@ -232,7 +231,7 @@ void InitTownDead()
 
 	InitTownerInfo(numtowners, 96, 1, TOWN_DEADGUY, 24, 32, -1, 10);
 	InitQstSnds(numtowners);
-	towner[numtowners]._tNData = LoadFileInMem("Towners\\Butch\\Deadguy.CEL", 0);
+	towner[numtowners]._tNData = LoadFileInMem("Towners\\Butch\\Deadguy.CEL", NULL);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
 	}
@@ -248,7 +247,7 @@ void InitWitch()
 
 	InitTownerInfo(numtowners, 96, 1, TOWN_WITCH, 80, 20, 5, 10);
 	InitQstSnds(numtowners);
-	towner[numtowners]._tNData = LoadFileInMem("Towners\\TownWmn1\\Witch.CEL", 0);
+	towner[numtowners]._tNData = LoadFileInMem("Towners\\TownWmn1\\Witch.CEL", NULL);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
 	}
@@ -264,7 +263,7 @@ void InitBarmaid()
 
 	InitTownerInfo(numtowners, 96, 1, TOWN_BMAID, 43, 66, -1, 10);
 	InitQstSnds(numtowners);
-	towner[numtowners]._tNData = LoadFileInMem("Towners\\TownWmn1\\WmnN.CEL", 0);
+	towner[numtowners]._tNData = LoadFileInMem("Towners\\TownWmn1\\WmnN.CEL", NULL);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
 	}
@@ -278,10 +277,10 @@ void InitBoy()
 {
 	int i;
 
-	boyloadflag = 1;
+	boyloadflag = TRUE;
 	InitTownerInfo(numtowners, 96, 1, TOWN_PEGBOY, 11, 53, -1, 10);
 	InitQstSnds(numtowners);
-	towner[numtowners]._tNData = LoadFileInMem("Towners\\TownBoy\\PegKid1.CEL", 0);
+	towner[numtowners]._tNData = LoadFileInMem("Towners\\TownBoy\\PegKid1.CEL", NULL);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
 	}
@@ -290,7 +289,6 @@ void InitBoy()
 	strcpy(towner[numtowners]._tName, "Wirt the Peg-legged boy");
 	numtowners++;
 }
-// 6AAC2C: using guessed type int boyloadflag;
 
 void InitHealer()
 {
@@ -298,7 +296,7 @@ void InitHealer()
 
 	InitTownerInfo(numtowners, 96, 1, TOWN_HEALER, 55, 79, 1, 10);
 	InitQstSnds(numtowners);
-	towner[numtowners]._tNData = LoadFileInMem("Towners\\Healer\\Healer.CEL", 0);
+	towner[numtowners]._tNData = LoadFileInMem("Towners\\Healer\\Healer.CEL", NULL);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
 	}
@@ -314,7 +312,7 @@ void InitTeller()
 
 	InitTownerInfo(numtowners, 96, 1, TOWN_STORY, 62, 71, 2, 10);
 	InitQstSnds(numtowners);
-	towner[numtowners]._tNData = LoadFileInMem("Towners\\Strytell\\Strytell.CEL", 0);
+	towner[numtowners]._tNData = LoadFileInMem("Towners\\Strytell\\Strytell.CEL", NULL);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
 	}
@@ -330,7 +328,7 @@ void InitDrunk()
 
 	InitTownerInfo(numtowners, 96, 1, TOWN_DRUNK, 71, 84, 4, 10);
 	InitQstSnds(numtowners);
-	towner[numtowners]._tNData = LoadFileInMem("Towners\\Drunk\\TwnDrunk.CEL", 0);
+	towner[numtowners]._tNData = LoadFileInMem("Towners\\Drunk\\TwnDrunk.CEL", NULL);
 	for (i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
 	}
@@ -347,7 +345,7 @@ void InitCows()
 
 	//if ( pCowCels )
 	//	assertion_failed(300, "C:\\Diablo\\Direct\\towners.cpp", "! pCowCels");
-	pCowCels = LoadFileInMem("Towners\\Animals\\Cow.CEL", 0);
+	pCowCels = LoadFileInMem("Towners\\Animals\\Cow.CEL", NULL);
 	for (i = 0; i < 3; i++) {
 		x = TownCowX[i];
 		y = TownCowY[i];
@@ -373,12 +371,11 @@ void InitCows()
 		numtowners++;
 	}
 }
-// 6AAC2C: using guessed type int boyloadflag;
 
 void InitTowners()
 {
 	numtowners = 0;
-	boyloadflag = 0;
+	boyloadflag = FALSE;
 	InitSmith();
 	InitHealer();
 	if (quests[QTYPE_BUTCH]._qactive && quests[QTYPE_BUTCH]._qactive != 3)
@@ -391,7 +388,6 @@ void InitTowners()
 	InitBoy();
 	InitCows();
 }
-// 6AAC2C: using guessed type int boyloadflag;
 
 void FreeTownerGFX()
 {
@@ -425,7 +421,6 @@ void TownCtrlMsg(int i)
 		}
 	}
 }
-// 646D00: using guessed type char qtextflag;
 
 void TownBlackSmith()
 {
@@ -592,10 +587,9 @@ void TownerTalk(int first, int t)
 {
 	sgdwCowClicks = 0;
 	sgnCowMsg = 0;
-	storeflag = 1;
+	storeflag = TRUE;
 	InitQTextMsg(first);
 }
-// 6AAC18: using guessed type int storeflag;
 
 void TalkToTowner(int p, int t)
 {
@@ -747,10 +741,7 @@ void TalkToTowner(int p, int t)
 				}
 			}
 			if (plr[p]._pLvlVisited[9] && quests[QTYPE_ANVIL]._qactive != 0) {
-				if ((quests[QTYPE_ANVIL]._qactive == 1 || quests[QTYPE_ANVIL]._qactive == 2) && quests[QTYPE_ANVIL]._qvar2 == 0) {
-					if (towner[t]._tMsgSaid) {
-						goto SKIPANVIL; /* TODO: fix */
-					}
+				if ((quests[QTYPE_ANVIL]._qactive == 1 || quests[QTYPE_ANVIL]._qactive == 2) && quests[QTYPE_ANVIL]._qvar2 == 0 && !towner[t]._tMsgSaid) {
 					if (quests[QTYPE_INFRA]._qvar2 == 2 || quests[QTYPE_INFRA]._qactive == 2 && quests[QTYPE_INFRA]._qvar2 == 1) {
 						quests[QTYPE_ANVIL]._qvar2 = 1;
 						quests[QTYPE_ANVIL]._qlog = TRUE;
@@ -764,20 +755,21 @@ void TalkToTowner(int p, int t)
 						towner[t]._tMsgSaid = TRUE;
 					}
 				}
-				if (quests[QTYPE_ANVIL]._qvar2 == 1 && PlrHasItem(p, IDI_ANVIL, &i) != NULL && !towner[t]._tMsgSaid) {
-					quests[QTYPE_ANVIL]._qactive = 3;
-					quests[QTYPE_ANVIL]._qvar2 = 2;
-					quests[QTYPE_ANVIL]._qvar1 = 2;
-					RemoveInvItem(p, i);
-					CreateItem(UITEM_GRISWOLD, towner[t]._tx, towner[t]._ty + 1);
-					towner[t]._tbtcnt = 150;
-					towner[t]._tVar1 = p;
-					InitQTextMsg(QUEST_ANVIL7);
-					towner[t]._tMsgSaid = TRUE;
+				if (quests[QTYPE_ANVIL]._qvar2 == 1 && PlrHasItem(p, IDI_ANVIL, &i) != NULL) {
+					if (!towner[t]._tMsgSaid) {
+						quests[QTYPE_ANVIL]._qactive = 3;
+						quests[QTYPE_ANVIL]._qvar2 = 2;
+						quests[QTYPE_ANVIL]._qvar1 = 2;
+						RemoveInvItem(p, i);
+						CreateItem(UITEM_GRISWOLD, towner[t]._tx, towner[t]._ty + 1);
+						towner[t]._tbtcnt = 150;
+						towner[t]._tVar1 = p;
+						InitQTextMsg(QUEST_ANVIL7);
+						towner[t]._tMsgSaid = TRUE;
+					}
 				}
 			}
 		}
-	SKIPANVIL:
 		if (!qtextflag) {
 			TownerTalk(QUEST_GRISWOLD1, t);
 			if (storeflag) {
@@ -942,9 +934,6 @@ void TalkToTowner(int p, int t)
 		CowSFX(p);
 	}
 }
-// 646D00: using guessed type char qtextflag;
-// 679660: using guessed type char gbMaxPlayers;
-// 6AAC18: using guessed type int storeflag;
 
 void CowSFX(int pnum)
 {
