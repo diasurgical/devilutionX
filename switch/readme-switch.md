@@ -59,7 +59,6 @@
 - Initial Switch Port by MVG in 2019
 - Control improvements and bug fixes by [rsn8887](https://github.com/rsn8887) in 2019
 - Controller code by [Jacob Fliss](https://github.com/erfg12)
-- RetroArch team for the Switch mman.h file
 - AJenbo for upstreaming Switch code and many code fixes
 - [sanctuary](https://github.com/sanctuary) - extensively documenting Diablo's game engine
 - [BWAPI Team](https://github.com/bwapi) - providing library API to work with Storm
