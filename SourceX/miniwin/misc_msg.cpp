@@ -11,6 +11,11 @@
 #include "controls/touch.h"
 #include "miniwin/ddraw.h"
 
+#ifdef __SWITCH__
+#include "platform/switch/docking.h"
+#include <switch.h>
+#endif
+
 /** @file
  * *
  * Windows message handling and keyboard event conversion for SDL.
@@ -322,6 +327,10 @@ void BlurInventory()
 
 WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg)
 {
+#ifdef __SWITCH__
+	HandleDocking();
+#endif
+
 	if (wMsgFilterMin != 0)
 		UNIMPLEMENTED();
 	if (wMsgFilterMax != 0)
