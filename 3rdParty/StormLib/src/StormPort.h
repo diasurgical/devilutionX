@@ -147,6 +147,28 @@
 
 #endif
 
+#if !defined(PLATFORM_DEFINED) && defined(SWITCH)
+  #include <sys/types.h>
+  #include <sys/stat.h>
+  #include <fcntl.h>
+  #include <unistd.h>
+  #include <stdint.h>
+  #include <stdlib.h>
+  #include <stdio.h>
+  #include <stdarg.h>
+  #include <string.h>
+  #include <ctype.h>
+  #include <assert.h>
+  #include <errno.h>
+
+  #ifndef __BIG_ENDIAN__
+    #define PLATFORM_LITTLE_ENDIAN
+  #endif
+
+  #define PLATFORM_SWITCH
+  #define PLATFORM_DEFINED
+
+#endif
 //-----------------------------------------------------------------------------
 // Assumption: we are not on Windows nor Macintosh, so this must be linux *grin*
 
@@ -259,7 +281,7 @@
 #endif
 
 // Platform-specific error codes for UNIX-based platforms
-#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU) || defined(PLATFORM_AMIGA)
+#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU) || defined(PLATFORM_AMIGA) || defined(PLATFORM_SWITCH)
   #define ERROR_SUCCESS                  0
   #define ERROR_FILE_NOT_FOUND           ENOENT
   #define ERROR_ACCESS_DENIED            EPERM
