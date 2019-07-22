@@ -10,11 +10,11 @@
 #include "controls/plrctrls.h"
 #include "miniwin/ddraw.h"
 
-#ifdef SWITCH
-	#include "../../switch/switch_touch.h"
-#endif
 #include <math.h>
 #include "../../touch/touch.h"
+#ifdef SWITCH
+	#include <switch.h>
+#endif
 
 /** @file
  * *
@@ -22,6 +22,11 @@
  */
 
 namespace dvl {
+
+#ifdef SWITCH
+static void HandleDocking();
+static BOOL currently_docked = -1; // keep track of docked or handheld mode
+#endif
 
 static std::deque<MSG> message_queue;
 
@@ -364,6 +369,10 @@ void BlurInventory()
 
 WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg)
 {
+#ifdef SWITCH
+	HandleDocking();
+#endif
+
 	if (wMsgFilterMin != 0)
 		UNIMPLEMENTED();
 	if (wMsgFilterMax != 0)
@@ -716,4 +725,42 @@ WINBOOL PostMessageA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 	return true;
 }
 
+#ifdef SWITCH
+// Do a manual window resize when docking/undocking the Switch
+static void HandleDocking()
+{
+	int docked;
+	switch (appletGetOperationMode()) {
+		case AppletOperationMode_Handheld:
+			docked = 0;
+			break;
+		case AppletOperationMode_Docked:
+			docked = 1;
+			break;
+		default:
+			docked = 0;
+	}
+
+	int display_width;
+	int display_height;
+	if ((currently_docked == -1) || (docked && !currently_docked) || (!docked && currently_docked)) {
+		// docked mode has changed, update window size
+		if (docked) {
+			display_width = 1920;
+			display_height = 1080;
+			currently_docked = 1;
+		} else {
+			display_width = 1280;
+			display_height = 720;
+			currently_docked = 0;
+		}
+		// remove leftover-garbage on screen
+		for (int i = 0; i < 3; i++) {
+			SDL_RenderClear(renderer);
+			SDL_RenderPresent(renderer);
+		}
+		SDL_SetWindowSize(window, display_width, display_height);
+	}
+}
+#endif
 } // namespace dvl
