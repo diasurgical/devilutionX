@@ -197,6 +197,9 @@ bool UiFocusNavigation(SDL_Event *event)
 			case SDL_CONTROLLER_BUTTON_B:
 				UiFocusNavigationEsc();
 				return true;
+			case SDL_CONTROLLER_BUTTON_Y:
+				UiFocusNavigationYesNo();
+				return true;
 			case SDL_CONTROLLER_BUTTON_DPAD_UP:
 				UiFocus(SelectedItem - 1, UiItemsWraps);
 				return true;
