@@ -1,5 +1,9 @@
 #include <string>
 #include <SDL.h>
+#ifdef SWITCH
+#include <switch.h>
+static int nxlink_sock = -1; // for stdio on Switch
+#endif
 
 #include "devilution.h"
 
@@ -25,5 +29,20 @@ static std::string build_cmdline(int argc, char **argv)
 int main(int argc, char **argv)
 {
 	auto cmdline = build_cmdline(argc, argv);
+
+#ifdef SWITCH
+	// enable network and stdio on Switch
+	socketInitializeDefault();
+	// enable error messages via nxlink on Switch
+	nxlink_sock = nxlinkStdio();
+#endif
+
 	return dvl::WinMain(NULL, NULL, (char *)cmdline.c_str(), 0);
+
+#ifdef SWITCH
+	// disable network and stdio on Switch
+	if (nxlink_sock != -1)
+		close(nxlink_sock);
+	socketExit();
+#endif
 }
