@@ -66,7 +66,7 @@ DEVILUTION_BEGIN_NAMESPACE
 
 // If defined, use copy protection [Default -> Defined]
 #ifndef _DEBUG
-#define COPYPROT
+//#define COPYPROT
 #endif
 
 // If defined, don't reload for debuggers [Default -> Undefined]
