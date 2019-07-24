@@ -25,12 +25,6 @@ Please keep in mind that this is still being worked on and is missing parts of U
 ```
 sudo apt-get install cmake g++-multilib libsdl2-mixer-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev libsodium-dev:i386
 ```
-You can also build debian package:
-
-```
-ln -s Packaging/debian/ debian
-dpkg-buildpackage
-```
 
 ### Installing dependencies on Fedora
 ```
@@ -139,6 +133,15 @@ Make sure to install the `C++ CMake tools for Windows` component for Visual Stud
 ```
 sudo apt-get install cmake g++ libsdl2-mixer-dev libsdl2-ttf-dev libsodium-dev
 ```
+
+You can also build debian package:
+
+```
+ln -s Packaging/debian/ debian
+dpkg-buildpackage
+```
+
+
 ### Installing dependencies on Fedora
 ```
 sudo dnf install cmake glibc-devel SDL2-devel SDL2_ttf-devel SDL2_mixer-devel libsodium-devel libasan
