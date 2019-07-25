@@ -66,14 +66,18 @@ endif()
 
 
 find_package(Threads REQUIRED)
-find_package(Freetype REQUIRED)
-find_package(SDL 1.2 REQUIRED)
-find_package(SDL_ttf REQUIRED)
-find_package(SDL_mixer REQUIRED)
 
 if(AMIGA)
+  find_package(Freetype REQUIRED)
+  find_package(SDL 1.2 REQUIRED)
+  find_package(SDL_ttf REQUIRED)
+  find_package(SDL_mixer REQUIRED)
   find_package(PNG REQUIRED)
   find_package(LibMad REQUIRED)
+else()
+  find_package(SDL 2 REQUIRED)
+  find_package(SDL2_ttf REQUIRED)
+  find_package(SDL2_mixer REQUIRED)
 endif()
 
 find_package(sodium REQUIRED)
@@ -248,18 +252,25 @@ target_link_libraries(devilutionx PRIVATE
   StormLib
   smacker
   Radon
+  sodium
+  ${SDL_LIBRARY}
+  )
+
+if(AMIGA)
+  target_link_libraries(devilutionx PRIVATE
   ${SDL_TTF_LIBRARY}
   ${SDL_MIXER_LIBRARY}
   ${SDL_MIXER_LIBRARIES}
   ${FREETYPE_LIBRARIES}
   ${PNG_LIBRARIES}
   ${LIBMAD_LIBRARIES}
-  ${SDL_LIBRARY}
-  sodium
-  )
-
-if(AMIGA)
-  target_link_libraries(devilutionx PRIVATE -ldebug -latomic)
+  -ldebug
+  -latomic)
+else()
+  target_link_libraries(devilutionx PRIVATE
+  ${SDL2_TTF_LIBRARY}
+  ${SDL2_MIXER_LIBRARY}
+  ${SDL2_MIXER_LIBRARIES})
 endif()
   # ${PROJECT_SOURCE_DIR}/libSDLmain.a)
   # /usr/lib/x86_64-linux-gnu/libSDLmain.a
