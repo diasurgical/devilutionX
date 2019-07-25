@@ -102,12 +102,12 @@ def build_libpng() {
     sh "cd libpng-1.6.36/build && cmake --build . --config Release --target install -- -j8"
 }
 
-def build_freetype() {
+def build_freetype(SYSROOT) {
     echo "============= Build Freetype ============="
     sh "mkdir -p freetype-2.9.1/build"
 	sh "sudo rm -rfv freetype-2.9.1/build/*"
 		
-    sh "cd freetype-2.9.1/build && cmake .."
+    sh "cd freetype-2.9.1/build && cmake .. -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include -DCMAKE_INSTALL_PREFIX=${SYSROOT}"
     sh "cd freetype-2.9.1/build && cmake --build . --config Release --target install -- -j8"
 }
 
