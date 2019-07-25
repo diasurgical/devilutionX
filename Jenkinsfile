@@ -66,11 +66,10 @@ def decompress_libs() {
 def build_zlib(TARGET, SYSROOT) {
     echo "============= Build ZLIB ============="
 	
-	sh "mkdir -p zlib-1.2.11/build"
-	sh "sudo rm -rfv zlib-1.2.11/build/*"
-		
-    sh "cd zlib-1.2.11/build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT}"
-    sh "cd zlib-1.2.11/build && cmake --build . --config Release --target install -- -j8"
+	sh "CHOST=${TARGET} cd zlib-1.2.11/ && ./configure --prefix=${SYSROOT}"
+	sh "cd zlib-1.2.11/ && make clean"
+	sh "cd zlib-1.2.11/ && make -j8"
+	sh "cd zlib-1.2.11/ && make install"
 }
 
 def build_sdl2(TARGET, SYSROOT) {
@@ -107,9 +106,9 @@ def build_freetype(TARGET, SYSROOT) {
     echo "============= Build Freetype ============="
 
 	sh "cd freetype-2.9.1/ && ./autogen.sh"
-	sh "cd freetype-2.9.1/ && ./configure --host=${TARGET} --enable-freetype-config --prefix=${SYSROOT}"
+	sh "AS=${TARGET}-as cd freetype-2.9.1/ && ./configure --host=${TARGET} --enable-freetype-config --prefix=${SYSROOT}"
 	sh "cd freetype-2.9.1/ && make clean"
-	sh "cd freetype-2.9.1/ && make -j8"
+	sh "AS=${TARGET}-as cd freetype-2.9.1/ && make -j8"
 	sh "cd freetype-2.9.1/ && make install"
 }
 
