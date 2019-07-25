@@ -93,12 +93,12 @@ def build_sdl2_mixer(TARGET) {
 	sh "cd SDL2_mixer-2.0.4/ && make install"
 }
 
-def build_libpng() {
+def build_libpng(SYSROOT) {
     echo "============= Build libpng ============="
     sh "mkdir -p libpng-1.6.36/build"
 	sh "sudo rm -rfv libpng-1.6.36/build/*"
 		
-    sh "cd libpng-1.6.36/build && cmake .."
+    sh "cd libpng-1.6.36/build && cmake .. -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include -DCMAKE_INSTALL_PREFIX=${SYSROOT}"
     sh "cd libpng-1.6.36/build && cmake --build . --config Release --target install -- -j8"
 }
 
@@ -111,12 +111,12 @@ def build_freetype(SYSROOT) {
     sh "cd freetype-2.9.1/build && cmake --build . --config Release --target install -- -j8"
 }
 
-def build_sdl2_ttf() {
+def build_sdl2_ttf(SYSROOT) {
     echo "============= Build SDL2_ttf ============="
     sh "mkdir -p SDL2_ttf-2.0.15/build"
 	sh "sudo rm -rfv SDL2_ttf-2.0.15/build/*"
 		
-    sh "cd SDL2_ttf-2.0.15/build && cmake .."
+    sh "cd SDL2_ttf-2.0.15/build && cmake .. -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include -DCMAKE_INSTALL_PREFIX=${SYSROOT}"
     sh "cd SDL2_ttf-2.0.15/build && cmake --build . --config Release --target install -- -j8"
 }
 
@@ -171,9 +171,9 @@ def buildStep(dockerImage, generator, os, defines) {
 				build_zlib(SYSROOT)
 				build_sdl2(TARGET)
 				build_sdl2_mixer(TARGET)
-				build_libpng()
-				build_freetype()
-				build_sdl2_ttf()
+				build_libpng(SYSROOT)
+				build_freetype(SYSROOT)
+				build_sdl2_ttf(SYSROOT)
 				build_libsodium(TARGET)
 
 				sh "mkdir -p build/"
