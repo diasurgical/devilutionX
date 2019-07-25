@@ -67,7 +67,7 @@ def build_sdl2() {
 	sh "sudo rm -rfv SDL2-2.0.9/build/*"
 
     sh "cd SDL2-2.0.9/build && cmake .."
-    sh "cd SDL2-2.0.9/build && cmake --build . --config Release -- -j8"
+    sh "cd SDL2-2.0.9/build && cmake --build . --config Release --target install -- -j8"
 }
 
 def build_sdl2_mixer() {
@@ -89,7 +89,7 @@ def build_libpng() {
 	sh "sudo rm -rfv libpng-1.6.36/build/*"
 		
     sh "cd libpng-1.6.36/build && cmake .."
-    sh "cd libpng-1.6.36/build && cmake --build . --config Release -- -j8"
+    sh "cd libpng-1.6.36/build && cmake --build . --config Release --target install -- -j8"
 }
 
 def build_freetype() {
@@ -98,7 +98,7 @@ def build_freetype() {
 	sh "sudo rm -rfv freetype-2.9.1/build/*"
 		
     sh "cd freetype-2.9.1/build && cmake .."
-    sh "cd freetype-2.9.1/build && cmake --build . --config Release -- -j8"
+    sh "cd freetype-2.9.1/build && cmake --build . --config Release --target install -- -j8"
 }
 
 def build_sdl2_ttf() {
@@ -107,7 +107,7 @@ def build_sdl2_ttf() {
 	sh "sudo rm -rfv SDL2_ttf-2.0.15/build/*"
 		
     sh "cd SDL2_ttf-2.0.15/build && cmake .."
-    sh "cd SDL2_ttf-2.0.15/build && cmake --build . --config Release -- -j8"
+    sh "cd SDL2_ttf-2.0.15/build && cmake --build . --config Release --target install -- -j8"
 }
 
 def build_libsodium() {
