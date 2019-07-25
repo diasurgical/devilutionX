@@ -38,85 +38,52 @@ def killall_jobs() {
 	echo "Done killing"
 }
 
-def buildStep(ext, hostFlags = '', sysRoot = true) {
-	def fixed_job_name = env.JOB_NAME.replace('%2F','/')
-	def sysRootEnv = ''
+def buildStep(dockerImage, generator, os, defines) {
+	def split_job_name = env.JOB_NAME.split(/\/{1}/)  
+	def fixed_job_name = split_job_name[1].replace('%2F',' ')
+    def fixed_os = os.replace(' ','-')
 	try{
-		stage("Building ${ext}...") {
+		stage("Building on \"${dockerImage}\" with \"${generator}\" for \"${os}\"...") {
 			properties([pipelineTriggers([githubPush()])])
-			if (env.CHANGE_ID) {
-				echo 'Trying to build pull request'
-			}
-			
 			def commondir = env.WORKSPACE + '/../' + fixed_job_name + '/'
 
-			checkout scm
+			docker.image("${dockerImage}").inside("-u 0:0 -e BUILDER_UID=1001 -e BUILDER_GID=1001 -e BUILDER_USER=gserver -e BUILDER_GROUP=gserver") {
 
-			if (!env.CHANGE_ID) {
-				sh "rm -rfv ${env.WORKSPACE}/publishing/deploy/*"
-				sh "mkdir -p ${env.WORKSPACE}/publishing/deploy/devilutionx"
-			}
+				sh "sudo apt update"
+				sh "sudo apt install -y gcc-multilib"
+				
+				checkout scm
 
-			slackSend color: "good", channel: "#jenkins", message: "Starting ${ext} build target..."
+				if (env.CHANGE_ID) {
+					echo 'Trying to build pull request'
+				}
 
-			freshUpRoot(ext)
+				if (!env.CHANGE_ID) {
+					sh "rm -rfv publishing/deploy/*"
+					sh "mkdir -p publishing/deploy/devilutionx"
+				}
 
-			if (!env.CHANGE_ID) {
-				sh "mkdir -p ${env.WORKSPACE}/publishing/deploy/devilutionx/${ext}/"
-			}
+				sh "mkdir -p build/"
+				sh "mkdir -p lib/"
+				sh "sudo rm -rfv build/*"
 
-			sh "cd ${env.WORKSPACE}/build-${ext} && cmake -DCMAKE_TOOLCHAIN_FILE=/opt/toolchains/cmake$ext .."
-			
-			sh "cd ${env.WORKSPACE}/build-${ext} && cmake --build . --config Release -- -j8"
-
-			sh "cd ${env.WORKSPACE}/build-${ext} && mv -fv devilutionx ${env.WORKSPACE}/publishing/deploy/devilutionx/${ext}/"
-			sh "cd ${env.WORKSPACE}/ && cp -fvr devilutionx.info ${env.WORKSPACE}/publishing/deploy/devilutionx/${ext}/"
-
-			if (!env.CHANGE_ID) {
-				sh "cd ${env.WORKSPACE}/publishing/deploy/devilutionx/${ext}/ && lha c ../devilutionx-${ext}.lha *"
-				sh "rm -rfv ${env.WORKSPACE}/publishing/deploy/devilutionx/${ext}/*"
-				sh "echo '${env.BUILD_NUMBER}|${env.BUILD_URL}' > ${env.WORKSPACE}/publishing/deploy/devilutionx/${ext}/BUILD"
-				sh "mv -fv ${env.WORKSPACE}/publishing/deploy/devilutionx/devilutionx-${ext}.lha ${env.WORKSPACE}/publishing/deploy/devilutionx/${ext}/"
-			}
-
-			if (env.TAG_NAME) {
-				sh "echo $TAG_NAME > ${env.WORKSPACE}/publishing/deploy/STABLE"
-				sh "ssh $DEPLOYHOST mkdir -p public_html/downloads/releases/devilutionx/$TAG_NAME"
-				sh "scp -r ${env.WORKSPACE}/publishing/deploy/devilutionx/* $DEPLOYHOST:~/public_html/downloads/releases/devilutionx/$TAG_NAME/"
-				sh "scp ${env.WORKSPACE}/publishing/deploy/STABLE $DEPLOYHOST:~/public_html/downloads/releases/devilutionx/"
-			} else if (env.BRANCH_NAME.equals('master')) {
-				def deploy_url = sh (
-				    script: 'echo "nightly/devilutionx/`date +\'%Y\'`/`date +\'%m\'`/`date +\'%d\'`/"',
-				    returnStdout: true
-				).trim()
-				sh "date +'%Y-%m-%d %H:%M:%S' > ${env.WORKSPACE}/publishing/deploy/BUILDTIME"
-				sh "ssh $DEPLOYHOST mkdir -p public_html/downloads/nightly/devilutionx/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
-				sh "scp -r ${env.WORKSPACE}/publishing/deploy/devilutionx/* $DEPLOYHOST:~/public_html/downloads/nightly/devilutionx/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
-				sh "scp ${env.WORKSPACE}/publishing/deploy/BUILDTIME $DEPLOYHOST:~/public_html/downloads/nightly/devilutionx/"
-
-				slackSend color: "good", channel: "#jenkins", message: "Deploying ${fixed_job_name} #${env.BUILD_NUMBER} Target: ${ext} to web (<https://dl.amigadev.com/${deploy_url}|https://dl.amigadev.com/${deploy_url}>)"
-			} else {
-				slackSend color: "good", channel: "#jenkins", message: "Build ${fixed_job_name} #${env.BUILD_NUMBER} Target: ${ext} successful!"
+				slackSend color: "good", channel: "#jenkins", message: "Starting ${os} build target..."
+				dir("build") {
+					sh "cmake -G\"${generator}\" ${defines} -DVER_EXTRA=\"-${fixed_os}-${fixed_job_name}\" .."
+					sh "cmake --build . --config Release --target package -- -j 8"
+					
+					archiveArtifacts artifacts: '*.zip,*.tar.gz,*.tgz'
+				}
+				
+				slackSend color: "good", channel: "#jenkins", message: "Build ${fixed_job_name} #${env.BUILD_NUMBER} Target: ${os} DockerImage: ${dockerImage} Generator: ${generator} successful!"
 			}
 		}
 	} catch(err) {
-		slackSend color: "danger", channel: "#jenkins", message: "Build Failed: ${fixed_job_name} #${env.BUILD_NUMBER} Target: ${ext} (<${env.BUILD_URL}|Open>)"
+		slackSend color: "danger", channel: "#jenkins", message: "Build Failed: ${fixed_job_name} #${env.BUILD_NUMBER} Target: ${os} DockerImage: ${dockerImage} Generator: ${generator} (<${env.BUILD_URL}|Open>)"
 		currentBuild.result = 'FAILURE'
 		notify('Build failed')
 		throw err
 	}
-}
-
-def freshUpRoot(ext) {
-	def commondir = env.WORKSPACE + '/../' + env.JOB_NAME.replace('%2F','/') + '/'
-	sh "rm -rfv ${env.WORKSPACE}/build-${ext}"
-	
-	sh "mkdir -p ${env.WORKSPACE}/build-${ext}"
-
-}
-
-def postCoreBuild(ext) {
-
 }
 
 node('master') {
@@ -124,25 +91,35 @@ node('master') {
 	def fixed_job_name = env.JOB_NAME.replace('%2F','/')
 	slackSend color: "good", channel: "#jenkins", message: "Build Started: ${fixed_job_name} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
 	parallel (
-		'Build AmigaOS3.x version': {
+		'Win32': {
 			node {			
-				buildStep('68k')
+				buildStep('dockcross/windows-static-x86:latest', 'Unix Makefiles', 'Windows x86', '')
 			}
 		},
-		'Build AmigaOS4.x version': {
+		'Win64': {
 			node {			
-				buildStep('os4')
+				buildStep('dockcross/windows-static-x64:latest', 'Unix Makefiles', 'Windows x86_64', '')
 			}
 		},
-		'Build MorphOS version': {
+		'Linux x86': {
 			node {			
-				buildStep('mos')
+				buildStep('desertbit/crossbuild:linux-x86', 'Unix Makefiles', 'Linux x86', '')
 			}
 		},
-		'Build WarpOS version': {
+		'Linux x86_64': {
+			node {			
+				buildStep('desertbit/crossbuild:linux-x86_64', 'Unix Makefiles', 'Linux x86_64', '')
+			}
+		},
+		'Linux ARMv7': {
 			node {
-				buildStep('wos')
+				buildStep('desertbit/crossbuild:linux-armv7', 'Unix Makefiles', 'Linux RasPi', '')
+			}
+		},
+		'WebASM': {
+			node {			
+				buildStep('dockcross/web-wasm:latest', 'Unix Makefiles', 'Web assembly', '')
 			}
 		}
-	)
+    )
 }
