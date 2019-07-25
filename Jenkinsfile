@@ -63,7 +63,7 @@ def decompress_libs() {
     sh "tar -xvf 1.0.17.tar.gz"
 }
 
-def build_zlib(SYSROOT) {
+def build_zlib(TARGET, SYSROOT) {
     echo "============= Build ZLIB ============="
 	
 	sh "mkdir -p zlib-1.2.11/build"
@@ -73,7 +73,7 @@ def build_zlib(SYSROOT) {
     sh "cd zlib-1.2.11/build && cmake --build . --config Release --target install -- -j8"
 }
 
-def build_sdl2(TARGET) {
+def build_sdl2(TARGET, SYSROOT) {
     echo "============= Build SDL2 ============="
 
 	sh "cd SDL2-2.0.9/ && ./autogen.sh"
@@ -87,13 +87,13 @@ def build_sdl2_mixer(TARGET, SYSROOT) {
     echo "============= Build SDL2_mixer ============="
 
 	sh "cd SDL2_mixer-2.0.4/ && ./autogen.sh"
-	sh "PATH=${SYSROOT}/bin cd SDL2_mixer-2.0.4/ && ./configure --host=${TARGET}"
+	sh "cd SDL2_mixer-2.0.4/ && ./configure --host=${TARGET}"
 	sh "cd SDL2_mixer-2.0.4/ && make clean"
 	sh "cd SDL2_mixer-2.0.4/ && make -j8"
 	sh "cd SDL2_mixer-2.0.4/ && make install"
 }
 
-def build_libpng(SYSROOT) {
+def build_libpng(TARGET, SYSROOT) {
     echo "============= Build libpng ============="
 	
     sh "mkdir -p libpng-1.6.36/build"
@@ -123,7 +123,7 @@ def build_sdl2_ttf(TARGET, SYSROOT) {
 	sh "cd SDL2_ttf-2.0.15/ && make install"
 }
 
-def build_libsodium(TARGET) {
+def build_libsodium(TARGET, SYSROOT) {
     echo "============= Build Libsodium ============="
 	
 	sh "cd libsodium-1.0.17/ && ./autogen.sh"
@@ -171,13 +171,13 @@ def buildStep(dockerImage, generator, os, defines) {
 				
 			    get_libs()
 				decompress_libs()
-				build_zlib(SYSROOT)
-				build_sdl2(TARGET)
+				build_zlib(TARGET, SYSROOT)
+				build_sdl2(TARGET, SYSROOT)
 				build_sdl2_mixer(TARGET, SYSROOT)
-				build_libpng(SYSROOT)
-				build_freetype(SYSROOT)
+				build_libpng(TARGET, SYSROOT)
+				build_freetype(TARGET, SYSROOT)
 				build_sdl2_ttf(TARGET, SYSROOT)
-				build_libsodium(TARGET)
+				build_libsodium(TARGET, SYSROOT)
 
 				sh "mkdir -p build/"
 				sh "mkdir -p lib/"
