@@ -83,11 +83,11 @@ def build_sdl2(TARGET) {
 	sh "cd SDL2-2.0.9/ && make install"
 }
 
-def build_sdl2_mixer(TARGET) {
+def build_sdl2_mixer(TARGET, SYSROOT) {
     echo "============= Build SDL2_mixer ============="
 
 	sh "cd SDL2_mixer-2.0.4/ && ./autogen.sh"
-	sh "cd SDL2_mixer-2.0.4/ && ./configure --host=${TARGET}"
+	sh "PATH=$PATH:${SYSROOT}/bin cd SDL2_mixer-2.0.4/ && ./configure --host=${TARGET}"
 	sh "cd SDL2_mixer-2.0.4/ && make clean"
 	sh "cd SDL2_mixer-2.0.4/ && make -j8"
 	sh "cd SDL2_mixer-2.0.4/ && make install"
@@ -111,13 +111,13 @@ def build_freetype(SYSROOT) {
     sh "cd freetype-2.9.1/build && cmake --build . --config Release --target install -- -j8"
 }
 
-def build_sdl2_ttf(SYSROOT) {
+def build_sdl2_ttf(TARGET, SYSROOT) {
     echo "============= Build SDL2_ttf ============="
-    sh "mkdir -p SDL2_ttf-2.0.15/build"
-	sh "sudo rm -rfv SDL2_ttf-2.0.15/build/*"
-		
-    sh "cd SDL2_ttf-2.0.15/build && cmake .. -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include -DCMAKE_INSTALL_PREFIX=${SYSROOT}"
-    sh "cd SDL2_ttf-2.0.15/build && cmake --build . --config Release --target install -- -j8"
+	sh "cd SDL2_ttf-2.0.15/ && ./autogen.sh"
+	sh "PATH=$PATH:${SYSROOT}/bin cd SDL2_ttf-2.0.15/ && ./configure --host=${TARGET}"
+	sh "cd SDL2_ttf-2.0.15/ && make clean"
+	sh "cd SDL2_ttf-2.0.15/ && make -j8"
+	sh "cd SDL2_ttf-2.0.15/ && make install"
 }
 
 def build_libsodium(TARGET) {
@@ -170,10 +170,10 @@ def buildStep(dockerImage, generator, os, defines) {
 				decompress_libs()
 				build_zlib(SYSROOT)
 				build_sdl2(TARGET)
-				build_sdl2_mixer(TARGET)
+				build_sdl2_mixer(TARGET, SYSROOT)
 				build_libpng(SYSROOT)
 				build_freetype(SYSROOT)
-				build_sdl2_ttf(SYSROOT)
+				build_sdl2_ttf(TARGET, SYSROOT)
 				build_libsodium(TARGET)
 
 				sh "mkdir -p build/"
