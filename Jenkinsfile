@@ -123,7 +123,7 @@ def build_sdl2_ttf(TARGET, SYSROOT) {
     echo "============= Build SDL2_ttf ============="
 	
 	sh "cd SDL2_ttf-2.0.15/ && ./autogen.sh"
-	sh "cd SDL2_ttf-2.0.15/ && FT2_CONFIG=${SYSROOT}/include/freetype2/freetype/config/ ./configure --host=${TARGET} --prefix=${SYSROOT}"
+	sh "cd SDL2_ttf-2.0.15/ && FT2_CONFIG=${SYSROOT}/include/freetype2/freetype/config/ftconfig.h ./configure --host=${TARGET} --prefix=${SYSROOT}"
 	sh "cd SDL2_ttf-2.0.15/ && make clean"
 	sh "cd SDL2_ttf-2.0.15/ && make -j8"
 	sh "cd SDL2_ttf-2.0.15/ && make install"
