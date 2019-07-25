@@ -106,11 +106,17 @@ def build_libpng(TARGET, SYSROOT) {
 def build_freetype(TARGET, SYSROOT) {
     echo "============= Build Freetype ============="
 
-	sh "cd freetype-2.9.1/ && ./autogen.sh"
-	sh "cd freetype-2.9.1/ && AS=${TARGET}-as ./configure --host=${TARGET} --enable-freetype-config --prefix=${SYSROOT}"
-	sh "cd freetype-2.9.1/ && make clean"
-	sh "cd freetype-2.9.1/ && AS=${TARGET}-as make -j8"
-	sh "cd freetype-2.9.1/ && make install"
+	//sh "cd freetype-2.9.1/ && ./autogen.sh"
+	//sh "cd freetype-2.9.1/ && AS=${TARGET}-as ./configure --host=${TARGET} --enable-freetype-config --prefix=${SYSROOT}"
+	//sh "cd freetype-2.9.1/ && make clean"
+	//sh "cd freetype-2.9.1/ && AS=${TARGET}-as make -j8"
+	//sh "cd freetype-2.9.1/ && make install"
+	
+	sh "mkdir -p freetype-2.9.1/build"
+	sh "sudo rm -rfv freetype-2.9.1/build/*"
+		
+    sh "cd freetype-2.9.1/build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT}" // -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include
+    sh "cd freetype-2.9.1/build && cmake --build . --config Release --target install -- -j8"
 }
 
 def build_sdl2_ttf(TARGET, SYSROOT) {
