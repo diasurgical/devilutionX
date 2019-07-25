@@ -221,6 +221,7 @@ add_executable(devilutionx
   SourceX/main.cpp)
 
 target_include_directories(devilution PUBLIC Source SourceS)
+if(AMIGA)
 target_include_directories(devilutionx PRIVATE
   SourceX
   3rdParty/asio/include
@@ -235,6 +236,22 @@ target_include_directories(devilutionx PRIVATE
   ${SDL_TTF_INCLUDE_DIRS}/..
   ${SDL_MIXER_INCLUDE_DIRS}/..
 )
+else()
+target_include_directories(devilutionx PRIVATE
+  SourceX
+  3rdParty/asio/include
+  3rdParty/Radon/Radon/include
+  3rdParty/libsmacker
+  ${SDL2_INCLUDE_DIR}
+  ${SDL2_INCLUDE_DIRS}
+  ${SDL2_TTF_INCLUDE_DIRS}
+  ${SDL2_MIXER_INCLUDE_DIRS}
+  ${SDL2_INCLUDE_DIRS}/..
+  ${SDL2_INCLUDE_DIR}/..
+  ${SDL2_TTF_INCLUDE_DIRS}/..
+  ${SDL2_MIXER_INCLUDE_DIRS}/..
+)
+endif()
 
 message("SDL include dir: " ${SDL_INCLUDE_DIR})
 message("SDL_mixer include dir: " ${SDL_MIXER_INCLUDE_DIRS})
@@ -253,11 +270,11 @@ target_link_libraries(devilutionx PRIVATE
   smacker
   Radon
   sodium
-  ${SDL_LIBRARY}
   )
 
 if(AMIGA)
   target_link_libraries(devilutionx PRIVATE
+  ${SDL_LIBRARY}
   ${SDL_TTF_LIBRARY}
   ${SDL_MIXER_LIBRARY}
   ${SDL_MIXER_LIBRARIES}
@@ -268,6 +285,7 @@ if(AMIGA)
   -latomic)
 else()
   target_link_libraries(devilutionx PRIVATE
+  ${SDL2_LIBRARY}
   ${SDL2_TTF_LIBRARY}
   ${SDL2_MIXER_LIBRARY}
   ${SDL2_MIXER_LIBRARIES})
