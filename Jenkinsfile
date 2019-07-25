@@ -133,7 +133,7 @@ def buildStep(dockerImage, generator, os, defines) {
 			docker.image("${dockerImage}").inside("-u 0:0 -e BUILDER_UID=1001 -e BUILDER_GID=1001 -e BUILDER_USER=gserver -e BUILDER_GROUP=gserver") {
 
 				sh "sudo apt update"
-				sh "sudo apt install -y gcc-multilib"
+				sh "sudo apt install -y gcc-multilib curl automake autoconf libtool"
 				
 				checkout scm
 
