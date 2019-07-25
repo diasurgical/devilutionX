@@ -77,7 +77,7 @@ def build_sdl2(TARGET, SYSROOT) {
     echo "============= Build SDL2 ============="
 
 	sh "cd SDL2-2.0.9/ && ./autogen.sh"
-	sh "cd SDL2-2.0.9/ && ./configure --host=${TARGET} --enable-sdl2-config"
+	sh "cd SDL2-2.0.9/ && ./configure --host=${TARGET} --enable-sdl2-config --prefix=${SYSROOT}"
 	sh "cd SDL2-2.0.9/ && make clean"
 	sh "cd SDL2-2.0.9/ && make -j8"
 	sh "cd SDL2-2.0.9/ && make install"
@@ -87,7 +87,7 @@ def build_sdl2_mixer(TARGET, SYSROOT) {
     echo "============= Build SDL2_mixer ============="
 
 	sh "cd SDL2_mixer-2.0.4/ && ./autogen.sh"
-	sh "cd SDL2_mixer-2.0.4/ && ./configure --host=${TARGET}"
+	sh "cd SDL2_mixer-2.0.4/ && ./configure --host=${TARGET} --prefix=${SYSROOT}"
 	sh "cd SDL2_mixer-2.0.4/ && make clean"
 	sh "cd SDL2_mixer-2.0.4/ && make -j8"
 	sh "cd SDL2_mixer-2.0.4/ && make install"
@@ -107,7 +107,7 @@ def build_freetype(TARGET, SYSROOT) {
     echo "============= Build Freetype ============="
 
 	sh "cd freetype-2.9.1/ && ./autogen.sh"
-	sh "cd freetype-2.9.1/ && ./configure --host=${TARGET} --enable-freetype-config"
+	sh "cd freetype-2.9.1/ && ./configure --host=${TARGET} --enable-freetype-config --prefix=${SYSROOT}"
 	sh "cd freetype-2.9.1/ && make clean"
 	sh "cd freetype-2.9.1/ && make -j8"
 	sh "cd freetype-2.9.1/ && make install"
@@ -117,7 +117,7 @@ def build_sdl2_ttf(TARGET, SYSROOT) {
     echo "============= Build SDL2_ttf ============="
 	
 	sh "cd SDL2_ttf-2.0.15/ && ./autogen.sh"
-	sh "cd SDL2_ttf-2.0.15/ && ./configure --host=${TARGET}"
+	sh "cd SDL2_ttf-2.0.15/ && ./configure --host=${TARGET} --prefix=${SYSROOT}"
 	sh "cd SDL2_ttf-2.0.15/ && make clean"
 	sh "cd SDL2_ttf-2.0.15/ && make -j8"
 	sh "cd SDL2_ttf-2.0.15/ && make install"
@@ -127,7 +127,7 @@ def build_libsodium(TARGET, SYSROOT) {
     echo "============= Build Libsodium ============="
 	
 	sh "cd libsodium-1.0.17/ && ./autogen.sh"
-	sh "cd libsodium-1.0.17/ && ./configure --host=${TARGET}"
+	sh "cd libsodium-1.0.17/ && ./configure --host=${TARGET} --prefix=${SYSROOT}"
 	sh "cd libsodium-1.0.17/ && make clean"
 	sh "cd libsodium-1.0.17/ && make -j8"
 	sh "cd libsodium-1.0.17/ && make install"
