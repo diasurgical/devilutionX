@@ -122,11 +122,17 @@ def build_freetype(TARGET, SYSROOT) {
 def build_sdl2_ttf(TARGET, SYSROOT) {
     echo "============= Build SDL2_ttf ============="
 	
-	sh "cd SDL2_ttf-2.0.15/ && ./autogen.sh"
-	sh "cd SDL2_ttf-2.0.15/ && ./configure --host=${TARGET} --prefix=${SYSROOT}" //FT2_CONFIG=${SYSROOT}/include/freetype2/freetype/config/ftconfig.h 
-	sh "cd SDL2_ttf-2.0.15/ && make clean"
-	sh "cd SDL2_ttf-2.0.15/ && make -j8"
-	sh "cd SDL2_ttf-2.0.15/ && make install"
+	//sh "cd SDL2_ttf-2.0.15/ && ./autogen.sh"
+	//sh "cd SDL2_ttf-2.0.15/ && ./configure --host=${TARGET} --prefix=${SYSROOT}" //FT2_CONFIG=${SYSROOT}/include/freetype2/freetype/config/ftconfig.h 
+	//sh "cd SDL2_ttf-2.0.15/ && make clean"
+	//sh "cd SDL2_ttf-2.0.15/ && make -j8"
+	//sh "cd SDL2_ttf-2.0.15/ && make install"
+	
+	sh "mkdir -p SDL2_ttf-2.0.15/build"
+	sh "sudo rm -rfv SDL2_ttf-2.0.15/build/*"
+		
+    sh "cd SDL2_ttf-2.0.15/build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT}" // -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include
+    sh "cd SDL2_ttf-2.0.15/build && cmake --build . --config Release --target install -- -j8"
 }
 
 def build_libsodium(TARGET, SYSROOT) {
