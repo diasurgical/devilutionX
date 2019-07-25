@@ -72,8 +72,12 @@ def build_sdl2() {
 
 def build_sdl2_mixer() {
     echo "============= Build SDL2_mixer ============="
+	TARGET = sh (
+		script: '$CC -dumpmachine',
+		returnStdout: true
+	).trim()
 	sh "cd SDL2_mixer-2.0.4/ && ./autogen.sh"
-	sh "cd SDL2_mixer-2.0.4/ && ./configure"
+	sh "cd SDL2_mixer-2.0.4/ && ./configure --host=${TARGET}"
 	sh "cd SDL2_mixer-2.0.4/ && make clean"
 	sh "cd SDL2_mixer-2.0.4/ && make -j8"
 	sh "cd SDL2_mixer-2.0.4/ && make install"
@@ -109,7 +113,11 @@ def build_sdl2_ttf() {
 def build_libsodium() {
     echo "============= Build Libsodium ============="
 	sh "cd libsodium-1.0.17/ && ./autogen.sh"
-	sh "cd libsodium-1.0.17/ && ./configure"
+	TARGET = sh (
+		script: '$CC -dumpmachine',
+		returnStdout: true
+	).trim()
+	sh "cd libsodium-1.0.17/ && ./configure --host=${TARGET}"
 	sh "cd libsodium-1.0.17/ && make clean"
 	sh "cd libsodium-1.0.17/ && make -j8"
 	sh "cd libsodium-1.0.17/ && make install"
