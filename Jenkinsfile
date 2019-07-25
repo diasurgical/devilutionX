@@ -77,7 +77,7 @@ def build_sdl2(TARGET) {
     echo "============= Build SDL2 ============="
 
 	sh "cd SDL2-2.0.9/ && ./autogen.sh"
-	sh "cd SDL2-2.0.9/ && ./configure --host=${TARGET}"
+	sh "cd SDL2-2.0.9/ && ./configure --host=${TARGET} --enable-sdl2-config"
 	sh "cd SDL2-2.0.9/ && make clean"
 	sh "cd SDL2-2.0.9/ && make -j8"
 	sh "cd SDL2-2.0.9/ && make install"
@@ -87,7 +87,7 @@ def build_sdl2_mixer(TARGET, SYSROOT) {
     echo "============= Build SDL2_mixer ============="
 
 	sh "cd SDL2_mixer-2.0.4/ && ./autogen.sh"
-	sh "PATH=$PATH:${SYSROOT}/bin cd SDL2_mixer-2.0.4/ && ./configure --host=${TARGET}"
+	sh "PATH=${SYSROOT}/bin cd SDL2_mixer-2.0.4/ && ./configure --host=${TARGET}"
 	sh "cd SDL2_mixer-2.0.4/ && make clean"
 	sh "cd SDL2_mixer-2.0.4/ && make -j8"
 	sh "cd SDL2_mixer-2.0.4/ && make install"
@@ -95,6 +95,7 @@ def build_sdl2_mixer(TARGET, SYSROOT) {
 
 def build_libpng(SYSROOT) {
     echo "============= Build libpng ============="
+	
     sh "mkdir -p libpng-1.6.36/build"
 	sh "sudo rm -rfv libpng-1.6.36/build/*"
 		
@@ -102,19 +103,21 @@ def build_libpng(SYSROOT) {
     sh "cd libpng-1.6.36/build && cmake --build . --config Release --target install -- -j8"
 }
 
-def build_freetype(SYSROOT) {
+def build_freetype(TARGET, SYSROOT) {
     echo "============= Build Freetype ============="
-    sh "mkdir -p freetype-2.9.1/build"
-	sh "sudo rm -rfv freetype-2.9.1/build/*"
-		
-    sh "cd freetype-2.9.1/build && cmake .. -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include -DCMAKE_INSTALL_PREFIX=${SYSROOT}"
-    sh "cd freetype-2.9.1/build && cmake --build . --config Release --target install -- -j8"
+
+	sh "cd freetype-2.9.1/ && ./autogen.sh"
+	sh "cd freetype-2.9.1/ && ./configure --host=${TARGET} --enable-freetype-config"
+	sh "cd freetype-2.9.1/ && make clean"
+	sh "cd freetype-2.9.1/ && make -j8"
+	sh "cd freetype-2.9.1/ && make install"
 }
 
 def build_sdl2_ttf(TARGET, SYSROOT) {
     echo "============= Build SDL2_ttf ============="
+	
 	sh "cd SDL2_ttf-2.0.15/ && ./autogen.sh"
-	sh "PATH=$PATH:${SYSROOT}/bin cd SDL2_ttf-2.0.15/ && ./configure --host=${TARGET}"
+	sh "cd SDL2_ttf-2.0.15/ && ./configure --host=${TARGET}"
 	sh "cd SDL2_ttf-2.0.15/ && make clean"
 	sh "cd SDL2_ttf-2.0.15/ && make -j8"
 	sh "cd SDL2_ttf-2.0.15/ && make install"
@@ -122,8 +125,8 @@ def build_sdl2_ttf(TARGET, SYSROOT) {
 
 def build_libsodium(TARGET) {
     echo "============= Build Libsodium ============="
-	sh "cd libsodium-1.0.17/ && ./autogen.sh"
 	
+	sh "cd libsodium-1.0.17/ && ./autogen.sh"
 	sh "cd libsodium-1.0.17/ && ./configure --host=${TARGET}"
 	sh "cd libsodium-1.0.17/ && make clean"
 	sh "cd libsodium-1.0.17/ && make -j8"
