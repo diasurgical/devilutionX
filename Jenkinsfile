@@ -65,11 +65,14 @@ def decompress_libs() {
 
 def build_zlib() {
     echo "============= Build ZLIB ============="
-	sh "mkdir -p zlib-1.2.11/build"
-	sh "sudo rm -rfv zlib-1.2.11/build/*"
-		
-    sh "cd zlib-1.2.11/build && cmake .."
-    sh "cd zlib-1.2.11/build && cmake --build . --config Release --target install -- -j8"
+	TARGET = sh (
+		script: '$CC -dumpmachine',
+		returnStdout: true
+	).trim()
+	sh "cd zlib-1.2.11/ && ./configure --host=${TARGET}"
+	sh "cd zlib-1.2.11/ && make clean"
+	sh "cd zlib-1.2.11/ && make -j8"
+	sh "cd zlib-1.2.11/ && make install"
 }
 
 def build_sdl2() {
