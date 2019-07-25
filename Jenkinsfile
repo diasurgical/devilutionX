@@ -42,6 +42,7 @@ def killall_jobs() {
 def get_libs() {
     echo "============= Getting Libs ============="
 
+	sh "curl -O https://www.zlib.net/zlib-1.2.11.tar.gz"
     sh "curl -O https://www.libsdl.org/release/SDL2-2.0.9.tar.gz"
     sh "curl -O https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-2.0.4.tar.gz"
     sh "curl -O https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-2.0.15.tar.gz"
@@ -53,6 +54,7 @@ def get_libs() {
 def decompress_libs() {
     echo "============= Unzip Libs ============="
 
+	sh "tar -xvf zlib-1.2.11.tar.gz"
     sh "tar -xvf SDL2-2.0.9.tar.gz"
     sh "tar -xvf SDL2_mixer-2.0.4.tar.gz"
     sh "tar -xvf SDL2_ttf-2.0.15.tar.gz"
@@ -61,13 +63,26 @@ def decompress_libs() {
     sh "tar -xvf 1.0.17.tar.gz"
 }
 
+def build_zlib() {
+    echo "============= Build ZLIB ============="
+	sh "mkdir -p zlib-1.2.11/build"
+	sh "sudo rm -rfv zlib-1.2.11/build/*"
+		
+    sh "cd zlib-1.2.11/build && cmake .."
+    sh "cd zlib-1.2.11/build && cmake --build . --config Release --target install -- -j8"
+}
+
 def build_sdl2() {
     echo "============= Build SDL2 ============="
-	sh "mkdir -p SDL2-2.0.9/build"
-	sh "sudo rm -rfv SDL2-2.0.9/build/*"
-
-    sh "cd SDL2-2.0.9/build && cmake .."
-    sh "cd SDL2-2.0.9/build && cmake --build . --config Release --target install -- -j8"
+	TARGET = sh (
+		script: '$CC -dumpmachine',
+		returnStdout: true
+	).trim()
+	sh "cd SDL2-2.0.9/ && ./autogen.sh"
+	sh "cd SDL2-2.0.9/ && ./configure --host=${TARGET}"
+	sh "cd SDL2-2.0.9/ && make clean"
+	sh "cd SDL2-2.0.9/ && make -j8"
+	sh "cd SDL2-2.0.9/ && make install"
 }
 
 def build_sdl2_mixer() {
@@ -151,6 +166,7 @@ def buildStep(dockerImage, generator, os, defines) {
 				
 			    get_libs()
 				decompress_libs()
+				build_zlib()
 				build_sdl2()
 				build_sdl2_mixer()
 				build_libpng()
