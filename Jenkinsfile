@@ -38,86 +38,80 @@ def killall_jobs() {
 	echo "Done killing"
 }
 
-def SDL_VER = "2.0.9"
-def SDL_MIXER_VER = "2.0.4"
-def SDL_TTF_VER = "2.0.15"
-def PNG_VER = "1.6.36"
-def FREETYPE_VER = "2.9.1"
-def SODIUM_VER = "1.0.17"
 
 def get_libs() {
     echo "============= Getting Libs ============="
 
-    sh "curl -O https://www.libsdl.org/release/SDL2-${SDL_VER}.tar.gz"
-    sh "curl -O https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-${SDL_MIXER_VER}.tar.gz"
-    sh "curl -O https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-${SDL_TTF_VER}.tar.gz"
-    sh "curl -SLO https://download.savannah.gnu.org/releases/freetype/freetype-${FREETYPE_VER}.tar.gz"
-    sh "curl -SLO https://github.com/glennrp/libpng/archive/v${PNG_VER}.tar.gz"
-    sh "curl -SLO https://github.com/jedisct1/libsodium/archive/${SODIUM_VER}.tar.gz"
+    sh "curl -O https://www.libsdl.org/release/SDL2-2.0.9.tar.gz"
+    sh "curl -O https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-2.0.4.tar.gz"
+    sh "curl -O https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-2.0.15.tar.gz"
+    sh "curl -SLO https://download.savannah.gnu.org/releases/freetype/freetype-2.9.1.tar.gz"
+    sh "curl -SLO https://github.com/glennrp/libpng/archive/v1.6.36.tar.gz"
+    sh "curl -SLO https://github.com/jedisct1/libsodium/archive/1.0.17.tar.gz"
 }
 
 def decompress_libs() {
     echo "============= Unzip Libs ============="
 
-    sh "tar -xvf SDL2-${SDL_VER}.tar.gz"
-    sh "tar -xvf SDL2_mixer-${SDL_MIXER_VER}.tar.gz"
-    sh "tar -xvf SDL2_ttf-${SDL_TTF_VER}.tar.gz"
-    sh "tar -xvf v${PNG_VER}.tar.gz"
-    sh "tar -xvf freetype-${FREETYPE_VER}.tar.gz"
-    sh "tar -xvf ${SODIUM_VER}.tar.gz"
+    sh "tar -xvf SDL2-2.0.9.tar.gz"
+    sh "tar -xvf SDL2_mixer-2.0.4.tar.gz"
+    sh "tar -xvf SDL2_ttf-2.0.15.tar.gz"
+    sh "tar -xvf v1.6.36.tar.gz"
+    sh "tar -xvf freetype-1.6.36.tar.gz"
+    sh "tar -xvf 1.0.17.tar.gz"
 }
 
 def build_sdl2() {
     echo "============= Build SDL2 ============="
-	sh "mkdir -p SDL2-${SDL_VER}/build"
-	sh "sudo rm -rfv SDL2-${SDL_VER}/build/*"
+	sh "mkdir -p SDL2-2.0.9/build"
+	sh "sudo rm -rfv SDL2-2.0.9/build/*"
 
-    sh "cd SDL2-${SDL_VER}/build && cmake .."
-    sh "cd SDL2-${SDL_VER}/build && cmake --build . --config Release -- -j8"
+    sh "cd SDL2-2.0.9/build && cmake .."
+    sh "cd SDL2-2.0.9/build && cmake --build . --config Release -- -j8"
 }
 
 def build_sdl2_mixer() {
     echo "============= Build SDL2_mixer ============="
-	sh "mkdir -p SDL2_mixer-${SDL_MIXER_VER}/build"
-	sh "sudo rm -rfv SDL2_mixer-${SDL_MIXER_VER}/build/*"
+	sh "mkdir -p SDL2_mixer-2.0.4/build"
+	sh "sudo rm -rfv SDL2_mixer-2.0.4/build/*"
 		
-    sh "cd SDL2_mixer-${SDL_MIXER_VER}/build && cmake .."
-    sh "cd SDL2_mixer-${SDL_MIXER_VER}/build && cmake --build . --config Release -- -j8"
+    sh "cd SDL2_mixer-2.0.4/build && cmake .."
+    sh "cd SDL2_mixer-2.0.4/build && cmake --build . --config Release -- -j8"
 }
 
 def build_libpng() {
     echo "============= Build libpng ============="
-    sh "mkdir -p libpng-${PNG_VER}/build"
-	sh "sudo rm -rfv libpng-${PNG_VER}/build/*"
+    sh "mkdir -p libpng-1.6.36/build"
+	sh "sudo rm -rfv libpng-1.6.36/build/*"
 		
-    sh "cd libpng-${PNG_VER}/build && cmake .."
-    sh "cd libpng-${PNG_VER}/build && cmake --build . --config Release -- -j8"
+    sh "cd libpng-1.6.36/build && cmake .."
+    sh "cd libpng-1.6.36/build && cmake --build . --config Release -- -j8"
 }
 
 def build_freetype() {
     echo "============= Build Freetype ============="
-    sh "mkdir -p freetype-${FREETYPE_VER}/build"
-	sh "sudo rm -rfv freetype-${FREETYPE_VER}/build/*"
+    sh "mkdir -p freetype-2.9.1/build"
+	sh "sudo rm -rfv freetype-2.9.1/build/*"
 		
-    sh "cd freetype-${FREETYPE_VER}/build && cmake .."
-    sh "cd freetype-${FREETYPE_VER}/build && cmake --build . --config Release -- -j8"
+    sh "cd freetype-2.9.1/build && cmake .."
+    sh "cd freetype-2.9.1/build && cmake --build . --config Release -- -j8"
 }
 
 def build_sdl2_ttf() {
     echo "============= Build SDL2_ttf ============="
-    sh "mkdir -p SDL2_ttf-${SDL_TTF_VER}/build"
-	sh "sudo rm -rfv SDL2_ttf-${SDL_TTF_VER}/build/*"
+    sh "mkdir -p SDL2_ttf-2.0.15/build"
+	sh "sudo rm -rfv SDL2_ttf-2.0.15/build/*"
 		
-    sh "cd SDL2_ttf-${SDL_TTF_VER}/build && cmake .."
-    sh "cd SDL2_ttf-${SDL_TTF_VER}/build && cmake --build . --config Release -- -j8"
+    sh "cd SDL2_ttf-2.0.15/build && cmake .."
+    sh "cd SDL2_ttf-2.0.15/build && cmake --build . --config Release -- -j8"
 }
 
 def build_libsodium() {
     echo "============= Build Libsodium ============="
-	sh "cd libsodium-${SODIUM_VER}/ && ./autogen.sh"
-	sh "cd libsodium-${SODIUM_VER}/ && make clean"
-	sh "cd libsodium-${SODIUM_VER}/ && make -j8"
-	sh "cd libsodium-${SODIUM_VER}/ && make install"
+	sh "cd libsodium-1.0.17/ && ./autogen.sh"
+	sh "cd libsodium-1.0.17/ && make clean"
+	sh "cd libsodium-1.0.17/ && make -j8"
+	sh "cd libsodium-1.0.17/ && make install"
 }
 
 
