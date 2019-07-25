@@ -494,14 +494,14 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 		audioFormat.channels = channels[0];
 
 		Mix_CloseAudio();
-		deviceId = SDL_OpenAudioDevice(NULL, 0, &audioFormat, NULL, 0);
-		if (deviceId == 0) {
-			SDL_Log(SDL_GetError());
+		//deviceId = SDL_OpenAudioDevice(NULL, 0, &audioFormat, NULL, 0);
+		//if (deviceId == 0) {
+		//	SDL_Log(SDL_GetError());
 			SVidRestartMixer();
-			return false;
-		}
+		//	return false;
+		//}
 
-		SDL_PauseAudioDevice(deviceId, 0); /* start audio playing. */
+		//SDL_PauseAudioDevice(deviceId, 0); /* start audio playing. */
 	}
 
 	unsigned long nFrames;

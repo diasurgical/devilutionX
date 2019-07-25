@@ -1,5 +1,6 @@
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
+#include "../3rdParty/StormLib/src/StormPort.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -581,15 +582,15 @@ BOOL WriteMPQHeader()
 	DWORD NumberOfBytesWritten;
 
 	memset(&fhdr, 0, sizeof(fhdr));
-	fhdr.signature = '\x1AQPM';
-	fhdr.headersize = 32;
-	fhdr.filesize = GetFileSize(sghArchive, 0);
-	fhdr.version = 0;
-	fhdr.sectorsizeid = 3;
-	fhdr.hashoffset = 32872;
-	fhdr.blockoffset = 104;
-	fhdr.hashcount = 2048;
-	fhdr.blockcount = 2048;
+	fhdr.signature = BSWAP_INT32_UNSIGNED('\x1AQPM');
+	fhdr.headersize = BSWAP_INT32_UNSIGNED(32);
+	fhdr.filesize = BSWAP_INT32_UNSIGNED(GetFileSize(sghArchive, 0));
+	fhdr.version = BSWAP_INT16_UNSIGNED(0);
+	fhdr.sectorsizeid = BSWAP_INT16_UNSIGNED(3);
+	fhdr.hashoffset = BSWAP_INT32_UNSIGNED(32872);
+	fhdr.blockoffset = BSWAP_INT32_UNSIGNED(104);
+	fhdr.hashcount = BSWAP_INT32_UNSIGNED(2048);
+	fhdr.blockcount = BSWAP_INT32_UNSIGNED(2048);
 
 	if (SetFilePointer(sghArchive, 0, NULL, FILE_BEGIN) == -1)
 		return 0;
