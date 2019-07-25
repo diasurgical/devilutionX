@@ -57,7 +57,7 @@ def decompress_libs() {
     sh "tar -xvf SDL2_mixer-2.0.4.tar.gz"
     sh "tar -xvf SDL2_ttf-2.0.15.tar.gz"
     sh "tar -xvf v1.6.36.tar.gz"
-    sh "tar -xvf freetype-1.6.36.tar.gz"
+    sh "tar -xvf freetype-2.9.1.tar.gz"
     sh "tar -xvf 1.0.17.tar.gz"
 }
 
