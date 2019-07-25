@@ -72,11 +72,10 @@ def build_sdl2() {
 
 def build_sdl2_mixer() {
     echo "============= Build SDL2_mixer ============="
-	sh "mkdir -p SDL2_mixer-2.0.4/build"
-	sh "sudo rm -rfv SDL2_mixer-2.0.4/build/*"
-		
-    sh "cd SDL2_mixer-2.0.4/build && cmake .."
-    sh "cd SDL2_mixer-2.0.4/build && cmake --build . --config Release -- -j8"
+	sh "cd SDL2_mixer-2.0.4/ && ./autogen.sh"
+	sh "cd SDL2_mixer-2.0.4/ && make clean"
+	sh "cd SDL2_mixer-2.0.4/ && make -j8"
+	sh "cd SDL2_mixer-2.0.4/ && make install"
 }
 
 def build_libpng() {
