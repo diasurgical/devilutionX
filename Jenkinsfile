@@ -38,6 +38,89 @@ def killall_jobs() {
 	echo "Done killing"
 }
 
+def SDL_VER = "2.0.9"
+def SDL_MIXER_VER = "2.0.4"
+def SDL_TTF_VER = "2.0.15"
+def PNG_VER = "1.6.36"
+def FREETYPE_VER = "2.9.1"
+def SODIUM_VER = "1.0.17"
+
+def get_libs() {
+    echo "============= Getting Libs ============="
+
+    sh "curl -O https://www.libsdl.org/release/SDL2-${SDL_VER}.tar.gz"
+    sh "curl -O https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-${SDL_MIXER_VER}.tar.gz"
+    sh "curl -O https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-${SDL_TTF_VER}.tar.gz"
+    sh "curl -SLO https://download.savannah.gnu.org/releases/freetype/freetype-${FREETYPE_VER}.tar.gz"
+    sh "curl -SLO https://github.com/glennrp/libpng/archive/v${PNG_VER}.tar.gz"
+    sh "curl -SLO https://github.com/jedisct1/libsodium/archive/${SODIUM_VER}.tar.gz"
+}
+
+def decompress_libs() {
+    echo "============= Unzip Libs ============="
+
+    sh "tar -xvf SDL2-${SDL_VER}.tar.gz"
+    sh "tar -xvf SDL2_mixer-${SDL_MIXER_VER}.tar.gz"
+    sh "tar -xvf SDL2_ttf-${SDL_TTF_VER}.tar.gz"
+    sh "tar -xvf v${PNG_VER}.tar.gz"
+    sh "tar -xvf freetype-${FREETYPE_VER}.tar.gz"
+    sh "tar -xvf ${SODIUM_VER}.tar.gz"
+}
+
+def build_sdl2() {
+    echo "============= Build SDL2 ============="
+	sh "mkdir -p SDL2-${SDL_VER}/build"
+	sh "sudo rm -rfv SDL2-${SDL_VER}/build/*"
+
+    sh "cd SDL2-${SDL_VER}/build && cmake .."
+    sh "cd SDL2-${SDL_VER}/build && cmake --build . --config Release -- -j8"
+}
+
+def build_sdl2_mixer() {
+    echo "============= Build SDL2_mixer ============="
+	sh "mkdir -p SDL2_mixer-${SDL_MIXER_VER}/build"
+	sh "sudo rm -rfv SDL2_mixer-${SDL_MIXER_VER}/build/*"
+		
+    sh "cd SDL2_mixer-${SDL_MIXER_VER}/build && cmake .."
+    sh "cd SDL2_mixer-${SDL_MIXER_VER}/build && cmake --build . --config Release -- -j8"
+}
+
+def build_libpng() {
+    echo "============= Build libpng ============="
+    sh "mkdir -p libpng-${PNG_VER}/build"
+	sh "sudo rm -rfv libpng-${PNG_VER}/build/*"
+		
+    sh "cd libpng-${PNG_VER}/build && cmake .."
+    sh "cd libpng-${PNG_VER}/build && cmake --build . --config Release -- -j8"
+}
+
+def build_freetype() {
+    echo "============= Build Freetype ============="
+    sh "mkdir -p freetype-${FREETYPE_VER}/build"
+	sh "sudo rm -rfv freetype-${FREETYPE_VER}/build/*"
+		
+    sh "cd freetype-${FREETYPE_VER}/build && cmake .."
+    sh "cd freetype-${FREETYPE_VER}/build && cmake --build . --config Release -- -j8"
+}
+
+def build_sdl2_ttf() {
+    echo "============= Build SDL2_ttf ============="
+    sh "mkdir -p SDL2_ttf-${SDL_TTF_VER}/build"
+	sh "sudo rm -rfv SDL2_ttf-${SDL_TTF_VER}/build/*"
+		
+    sh "cd SDL2_ttf-${SDL_TTF_VER}/build && cmake .."
+    sh "cd SDL2_ttf-${SDL_TTF_VER}/build && cmake --build . --config Release -- -j8"
+}
+
+def build_libsodium() {
+    echo "============= Build Libsodium ============="
+	sh "cd libsodium-${SODIUM_VER}/ && ./autogen.sh"
+	sh "cd libsodium-${SODIUM_VER}/ && make clean"
+	sh "cd libsodium-${SODIUM_VER}/ && make -j8"
+	sh "cd libsodium-${SODIUM_VER}/ && make install"
+}
+
+
 def buildStep(dockerImage, generator, os, defines) {
 	def split_job_name = env.JOB_NAME.split(/\/{1}/)  
 	def fixed_job_name = split_job_name[1].replace('%2F',' ')
@@ -62,6 +145,15 @@ def buildStep(dockerImage, generator, os, defines) {
 					sh "rm -rfv publishing/deploy/*"
 					sh "mkdir -p publishing/deploy/devilutionx"
 				}
+				
+			    get_libs()
+				decompress_libs()
+				build_sdl2()
+				build_sdl2_mixer()
+				build_libpng()
+				build_freetype()
+				build_sdl2_ttf()
+				build_libsodium()
 
 				sh "mkdir -p build/"
 				sh "mkdir -p lib/"
