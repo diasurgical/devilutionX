@@ -63,12 +63,8 @@ def decompress_libs() {
     sh "tar -xvf 1.0.17.tar.gz"
 }
 
-def build_zlib() {
+def build_zlib(SYSROOT) {
     echo "============= Build ZLIB ============="
-	SYSROOT = sh (
-		script: '$CC -print-sysroot',
-		returnStdout: true
-	).trim()
 	
 	sh "mkdir -p zlib-1.2.11/build"
 	sh "sudo rm -rfv zlib-1.2.11/build/*"
@@ -77,12 +73,9 @@ def build_zlib() {
     sh "cd zlib-1.2.11/build && cmake --build . --config Release --target install -- -j8"
 }
 
-def build_sdl2() {
+def build_sdl2(TARGET) {
     echo "============= Build SDL2 ============="
-	TARGET = sh (
-		script: '$CC -dumpmachine',
-		returnStdout: true
-	).trim()
+
 	sh "cd SDL2-2.0.9/ && ./autogen.sh"
 	sh "cd SDL2-2.0.9/ && ./configure --host=${TARGET}"
 	sh "cd SDL2-2.0.9/ && make clean"
@@ -90,12 +83,9 @@ def build_sdl2() {
 	sh "cd SDL2-2.0.9/ && make install"
 }
 
-def build_sdl2_mixer() {
+def build_sdl2_mixer(TARGET) {
     echo "============= Build SDL2_mixer ============="
-	TARGET = sh (
-		script: '$CC -dumpmachine',
-		returnStdout: true
-	).trim()
+
 	sh "cd SDL2_mixer-2.0.4/ && ./autogen.sh"
 	sh "cd SDL2_mixer-2.0.4/ && ./configure --host=${TARGET}"
 	sh "cd SDL2_mixer-2.0.4/ && make clean"
@@ -130,13 +120,10 @@ def build_sdl2_ttf() {
     sh "cd SDL2_ttf-2.0.15/build && cmake --build . --config Release --target install -- -j8"
 }
 
-def build_libsodium() {
+def build_libsodium(TARGET) {
     echo "============= Build Libsodium ============="
 	sh "cd libsodium-1.0.17/ && ./autogen.sh"
-	TARGET = sh (
-		script: '$CC -dumpmachine',
-		returnStdout: true
-	).trim()
+	
 	sh "cd libsodium-1.0.17/ && ./configure --host=${TARGET}"
 	sh "cd libsodium-1.0.17/ && make clean"
 	sh "cd libsodium-1.0.17/ && make -j8"
@@ -169,15 +156,25 @@ def buildStep(dockerImage, generator, os, defines) {
 					sh "mkdir -p publishing/deploy/devilutionx"
 				}
 				
+				def TARGET = sh (
+					script: '$CC -dumpmachine',
+					returnStdout: true
+				).trim()
+				
+				def SYSROOT = sh (
+					script: '$CC -print-sysroot',
+					returnStdout: true
+				).trim()
+				
 			    get_libs()
 				decompress_libs()
-				build_zlib()
-				build_sdl2()
-				build_sdl2_mixer()
+				build_zlib(SYSROOT)
+				build_sdl2(TARGET)
+				build_sdl2_mixer(TARGET)
 				build_libpng()
 				build_freetype()
 				build_sdl2_ttf()
-				build_libsodium()
+				build_libsodium(TARGET)
 
 				sh "mkdir -p build/"
 				sh "mkdir -p lib/"
