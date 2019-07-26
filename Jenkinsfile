@@ -51,6 +51,7 @@ def get_libs() {
     sh "curl -SLO https://github.com/jedisct1/libsodium/archive/1.0.17.tar.gz"
     sh "wget https://raw.githubusercontent.com/Kitware/CMake/v3.10.0/Modules/FindFreetype.cmake -O CMake/FindFreetype.cmake"
     sh "wget https://raw.githubusercontent.com/Kitware/CMake/v3.10.0/Modules/SelectLibraryConfigurations.cmake -O CMake/SelectLibraryConfigurations.cmake"
+    sh "wget https://raw.githubusercontent.com/Kitware/CMake/master/Modules/FindZLIB.cmake -O CMake/FindZLIB.cmake"
     //sh "rm -rfv CMake/FindFreetype.cmake"
     //sh "mv -fv FindFreetype.cmake CMake/"
 }
@@ -139,7 +140,7 @@ def build_sdl2_ttf(TARGET, SYSROOT) {
 	sh "sudo rm -rfv SDL2_ttf-2.0.15/build/*"
 
 	sh "export PKG_CONFIG_PATH=${SYSROOT}/share/pkgconfig/:${SYSROOT}/lib/pkgconfig/"
-	sh "echo \"list(APPEND CMAKE_MODULE_PATH ${SOURCE_PATH}/CMake/)\n\" | cat - SDL2_ttf-2.0.15/CMakeLists.txt > temp && mv temp SDL2_ttf-2.0.15/CMakeLists.txt"
+	sh "echo \"set(CMAKE_MODULE_PATH \${CMAKE_MODULE_PATH} \"\${SOURCE_PATH}/CMake/\" CACHE STRING \"Modules for CMake\" FORCE)\n\" | cat - SDL2_ttf-2.0.15/CMakeLists.txt > temp && mv temp SDL2_ttf-2.0.15/CMakeLists.txt"
 	sh "cd SDL2_ttf-2.0.15/build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT}"
 	try {
 		sh "cd SDL2_ttf-2.0.15/ && wget https://raw.githubusercontent.com/SDL-mirror/SDL_ttf/master/SDL2_ttfConfig.cmake -O SDL2_ttfConfig.cmake"
