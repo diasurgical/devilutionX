@@ -5,7 +5,9 @@
 #include <SDL.h>
 #include <SDL_endian.h>
 #include <SDL_mixer.h>
+#if !SDL_VERSION_ATLEAST(2, 0, 0)
 #include "miniwin/sdl1_wrapper.h"
+#endif
 #include <smacker.h>
 #include "../SourceS/miniwin/misc.h"
 

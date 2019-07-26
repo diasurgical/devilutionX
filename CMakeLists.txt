@@ -184,8 +184,8 @@ add_library(devilution STATIC
   Source/track.cpp
   Source/trigs.cpp
   Source/wave.cpp)
-
-add_executable(devilutionx
+set(
+  SOURCES
   SourceX/dx.cpp
   SourceX/miniwin/misc.cpp
   SourceX/miniwin/misc_io.cpp
@@ -195,7 +195,6 @@ add_executable(devilutionx
   SourceX/miniwin/thread.cpp
   SourceX/miniwin/dsound.cpp
   SourceX/miniwin/ddraw.cpp
-  SourceX/miniwin/sdl1_wrapper.cpp
   SourceX/sound.cpp
   SourceX/storm/storm.cpp
   SourceX/storm/storm_net.cpp
@@ -218,7 +217,18 @@ add_executable(devilutionx
   SourceX/DiabloUI/selhero.cpp
   SourceX/DiabloUI/selyesno.cpp
   SourceX/DiabloUI/title.cpp
-  SourceX/main.cpp)
+  SourceX/main.cpp
+)
+
+if(AMIGA)
+  list(
+    APPEND
+    SOURCES
+    SourceX/miniwin/sdl1_wrapper.cpp
+  )
+endif()
+
+add_executable(devilutionx ${SOURCES})
 
 target_include_directories(devilution PUBLIC Source SourceS)
 if(AMIGA)

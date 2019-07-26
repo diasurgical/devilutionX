@@ -5,7 +5,9 @@
 #include <string>
 #include "../SourceS/miniwin/misc.h"
 #include "../SourceS/miniwin/com.h"
+#if !SDL_VERSION_ATLEAST(2, 0, 0)
 #include "sdl1_wrapper.h"
+#endif
 #include "DiabloUI/diabloui.h"
 
 #ifdef _MSC_VER

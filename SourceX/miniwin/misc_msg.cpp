@@ -1,7 +1,8 @@
 #include <deque>
 #include <SDL.h>
+#if !SDL_VERSION_ATLEAST(2, 0, 0)
 #include "sdl1_wrapper.h"
-
+#endif
 #include "devilution.h"
 #include "stubs.h"
 
