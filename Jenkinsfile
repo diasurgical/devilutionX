@@ -50,6 +50,7 @@ def get_libs() {
     sh "curl -SLO https://github.com/glennrp/libpng/archive/v1.6.36.tar.gz"
     sh "curl -SLO https://github.com/jedisct1/libsodium/archive/1.0.17.tar.gz"
     sh "wget https://raw.githubusercontent.com/Kitware/CMake/master/Modules/FindFreetype.cmake"
+    sh "rm -rfv CMake/FindFreetype.cmake"
     //sh "mv -fv FindFreetype.cmake CMake/"
 }
 
