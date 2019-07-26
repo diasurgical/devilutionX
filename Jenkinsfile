@@ -127,26 +127,26 @@ def build_freetype(TARGET, SYSROOT) {
 def build_sdl2_ttf(TARGET, SYSROOT) {
     echo "============= Build SDL2_ttf ============="
 	
-	//sh "cd SDL2_ttf-2.0.15/ && ./autogen.sh"
-	//sh "cd SDL2_ttf-2.0.15/ && ./configure --host=${TARGET} --prefix=${SYSROOT}" //FT2_CONFIG=${SYSROOT}/include/freetype2/freetype/config/ftconfig.h 
-	//sh "cd SDL2_ttf-2.0.15/ && make clean"
-	//sh "cd SDL2_ttf-2.0.15/ && make -j8"
-	//sh "cd SDL2_ttf-2.0.15/ && make install"
-	def SOURCE_PATH = sh (
-		script: 'pwd',
-		returnStdout: true
-	).trim()
-	sh "mkdir -p SDL2_ttf-2.0.15/build"
-	sh "sudo rm -rfv SDL2_ttf-2.0.15/build/*"
+	sh "cd SDL2_ttf-2.0.15/ && ./autogen.sh"
+	sh "cd SDL2_ttf-2.0.15/ && ./configure --host=${TARGET} --prefix=${SYSROOT}" //FT2_CONFIG=${SYSROOT}/include/freetype2/freetype/config/ftconfig.h
+	sh "cd SDL2_ttf-2.0.15/ && make clean"
+	sh "cd SDL2_ttf-2.0.15/ && make -j8"
+	sh "cd SDL2_ttf-2.0.15/ && make install"
+	//def SOURCE_PATH = sh (
+	//	script: 'pwd',
+	//	returnStdout: true
+	//).trim()
+	//sh "mkdir -p SDL2_ttf-2.0.15/build"
+	//sh "sudo rm -rfv SDL2_ttf-2.0.15/build/*"
 
-	sh "echo \"list(APPEND CMAKE_MODULE_PATH \"\${SOURCE_PATH}/CMake/\")\n\" | cat - SDL2_ttf-2.0.15/CMakeLists.txt > temp && mv temp SDL2_ttf-2.0.15/CMakeLists.txt"
-	sh "cd SDL2_ttf-2.0.15/build && PKG_CONFIG_PATH=${SYSROOT}/share/pkgconfig/:${SYSROOT}/lib/pkgconfig/ cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DCMAKE_PREFIX_PATH=${SYSROOT}"
-	try {
-		sh "cd SDL2_ttf-2.0.15/ && wget https://raw.githubusercontent.com/SDL-mirror/SDL_ttf/master/SDL2_ttfConfig.cmake -O SDL2_ttfConfig.cmake"
-		sh "cd SDL2_ttf-2.0.15/build && cmake --build . --config Release --target install -- -j8"
-	} catch (err) {
-		echo err
-	}
+	//sh "echo \"list(APPEND CMAKE_MODULE_PATH \"\${SOURCE_PATH}/CMake/\")\n\" | cat - SDL2_ttf-2.0.15/CMakeLists.txt > temp && mv temp SDL2_ttf-2.0.15/CMakeLists.txt"
+	//sh "cd SDL2_ttf-2.0.15/build && PKG_CONFIG_PATH=${SYSROOT}/share/pkgconfig/:${SYSROOT}/lib/pkgconfig/ cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DCMAKE_PREFIX_PATH=${SYSROOT}"
+	//try {
+	//	sh "cd SDL2_ttf-2.0.15/ && wget https://raw.githubusercontent.com/SDL-mirror/SDL_ttf/master/SDL2_ttfConfig.cmake -O SDL2_ttfConfig.cmake"
+	//	sh "cd SDL2_ttf-2.0.15/build && cmake --build . --config Release --target install -- -j8"
+	//} catch (err) {
+	//	echo err
+	//}
 }
 
 def build_libsodium(TARGET, SYSROOT) {
