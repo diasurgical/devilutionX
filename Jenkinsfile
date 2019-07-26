@@ -49,8 +49,8 @@ def get_libs() {
     sh "curl -SLO https://download.savannah.gnu.org/releases/freetype/freetype-2.10.1.tar.gz"
     sh "curl -SLO https://github.com/glennrp/libpng/archive/v1.6.36.tar.gz"
     sh "curl -SLO https://github.com/jedisct1/libsodium/archive/1.0.17.tar.gz"
-    sh "wget https://raw.githubusercontent.com/Kitware/CMake/master/Modules/FindFreetype.cmake"
-    sh "rm -rfv CMake/FindFreetype.cmake"
+    sh "wget https://raw.githubusercontent.com/Kitware/CMake/v3.10.0/Modules/FindFreetype.cmake -O CMake/FindFreetype.cmake"
+    //sh "rm -rfv CMake/FindFreetype.cmake"
     //sh "mv -fv FindFreetype.cmake CMake/"
 }
 
@@ -136,8 +136,10 @@ def build_sdl2_ttf(TARGET, SYSROOT) {
 	).trim()
 	sh "mkdir -p SDL2_ttf-2.0.15/build"
 	sh "sudo rm -rfv SDL2_ttf-2.0.15/build/*"
-		
-	sh "cd SDL2_ttf-2.0.15/build && PKG_CONFIG_PATH=${SYSROOT}/share/pkgconfig/:${SYSROOT}/lib/pkgconfig/ cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DCMAKE_MODULE_PATH=${SOURCE_PATH}/CMake/" // -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include
+
+	sh "export PKG_CONFIG_PATH=${SYSROOT}/share/pkgconfig/:${SYSROOT}/lib/pkgconfig/"
+
+	sh "cd SDL2_ttf-2.0.15/build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DCMAKE_MODULE_PATH=${SOURCE_PATH}/CMake/"
 	try {
 		sh "cd SDL2_ttf-2.0.15/ && wget https://raw.githubusercontent.com/SDL-mirror/SDL_ttf/master/SDL2_ttfConfig.cmake -O SDL2_ttfConfig.cmake"
 		sh "cd SDL2_ttf-2.0.15/build && cmake --build . --config Release --target install -- -j8"
