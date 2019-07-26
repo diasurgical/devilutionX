@@ -2,6 +2,7 @@
 #include <SDL.h>
 #if !SDL_VERSION_ATLEAST(2, 0, 0)
 #include "sdl1_wrapper.h"
+#define SDL_Keysym SDL_keysym
 #endif
 #include "devilution.h"
 #include "stubs.h"
@@ -15,7 +16,7 @@ namespace dvl {
 
 static std::deque<MSG> message_queue;
 
-static int translate_sdl_key(SDL_keysym key)
+static int translate_sdl_key(SDL_Keysym key)
 {
 	// ref: https://wiki.libsdl.org/SDL_Keycode
 	// ref: https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes

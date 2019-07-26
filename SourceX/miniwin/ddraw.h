@@ -1,5 +1,5 @@
 #include "devilution.h"
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include <SDL_video.h>
 #include "../SourceS/miniwin/misc.h"
 #if !SDL_VERSION_ATLEAST(2, 0, 0)
