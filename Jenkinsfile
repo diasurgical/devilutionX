@@ -134,8 +134,12 @@ def build_sdl2_ttf(TARGET, SYSROOT) {
 	sh "mkdir -p SDL2_ttf-2.0.15/build"
 	sh "sudo rm -rfv SDL2_ttf-2.0.15/build/*"
 		
-    sh "cd SDL2_ttf-2.0.15/build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DCMAKE_MODULE_PATH=${SOURCE_PATH}/CMake/" // -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include
-    sh "cd SDL2_ttf-2.0.15/build && cmake --build . --config Release --target install -- -j8"
+	sh "cd SDL2_ttf-2.0.15/build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DCMAKE_MODULE_PATH=${SOURCE_PATH}/CMake/" // -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include
+	try {
+		sh "cd SDL2_ttf-2.0.15/build && cmake --build . --config Release --target install -- -j8"
+	} catch (err) {
+		echo err
+	}
 }
 
 def build_libsodium(TARGET, SYSROOT) {
