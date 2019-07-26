@@ -251,6 +251,7 @@ target_include_directories(devilutionx PRIVATE
   ${SDL2_TTF_INCLUDE_DIRS}/..
   ${SDL2_MIXER_INCLUDE_DIRS}/..
 )
+  set(SDL_INCLUDE_DIR ${SDL2_INCLUDE_DIR})
 endif()
 
 message("SDL include dir: " ${SDL_INCLUDE_DIR})
