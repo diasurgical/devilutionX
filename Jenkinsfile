@@ -115,7 +115,7 @@ def build_freetype(TARGET, SYSROOT) {
 	sh "mkdir -p freetype-2.10.1/build"
 	sh "sudo rm -rfv freetype-2.10.1/build/*"
 		
-    sh "cd freetype-2.10.1/build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT}" // -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include
+    sh "cd freetype-2.10.1/build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DUNIX=1" // -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include
     sh "cd freetype-2.10.1/build && cmake --build . --config Release --target install -- -j8"
 }
 
@@ -131,7 +131,7 @@ def build_sdl2_ttf(TARGET, SYSROOT) {
 	sh "mkdir -p SDL2_ttf-2.0.15/build"
 	sh "sudo rm -rfv SDL2_ttf-2.0.15/build/*"
 		
-    sh "cd SDL2_ttf-2.0.15/build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT}" // -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include
+    sh "cd SDL2_ttf-2.0.15/build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DCMAKE_MODULE_PATH=../../CMake/" // -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include
     sh "cd SDL2_ttf-2.0.15/build && cmake --build . --config Release --target install -- -j8"
 }
 
