@@ -128,7 +128,7 @@ def build_sdl2_ttf(TARGET, SYSROOT) {
 	echo "============= Build SDL2_ttf ============="
 
 	def ZLIB_FILE = ""
-	if (SYSROOT.contains('emsdk')) {
+	if (SYSROOT.contains('mingw')) {
 		ZLIB_FILE = "zlibstatic"
 	}
 	else {
