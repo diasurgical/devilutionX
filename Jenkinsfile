@@ -127,11 +127,14 @@ def build_sdl2_ttf(TARGET, SYSROOT) {
 	//sh "cd SDL2_ttf-2.0.15/ && make clean"
 	//sh "cd SDL2_ttf-2.0.15/ && make -j8"
 	//sh "cd SDL2_ttf-2.0.15/ && make install"
-	
+	def SOURCE_PATH = sh (
+		script: 'pwd',
+		returnStdout: true
+	).trim()
 	sh "mkdir -p SDL2_ttf-2.0.15/build"
 	sh "sudo rm -rfv SDL2_ttf-2.0.15/build/*"
 		
-    sh "cd SDL2_ttf-2.0.15/build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DCMAKE_MODULE_PATH=../../CMake/" // -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include
+    sh "cd SDL2_ttf-2.0.15/build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DCMAKE_MODULE_PATH=${SOURCE_PATH}/CMake/" // -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include
     sh "cd SDL2_ttf-2.0.15/build && cmake --build . --config Release --target install -- -j8"
 }
 
