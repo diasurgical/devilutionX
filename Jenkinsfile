@@ -138,7 +138,7 @@ def build_sdl2_ttf(TARGET, SYSROOT) {
 	sh "sudo rm -rfv SDL2_ttf-2.0.15/build/*"
 
 	sh "export PKG_CONFIG_PATH=${SYSROOT}/share/pkgconfig/:${SYSROOT}/lib/pkgconfig/"
-	sh "sed -i '1s/^/list(APPEND CMAKE_MODULE_PATH ${SOURCE_PATH}/CMake/)\n/' CMakeLists.txt"
+	sh "echo \"list(APPEND CMAKE_MODULE_PATH ${SOURCE_PATH}/CMake/)\n\" | cat - SDL2_ttf-2.0.15/CMakeLists.txt > temp && mv temp SDL2_ttf-2.0.15/CMakeLists.txt"
 	sh "cd SDL2_ttf-2.0.15/build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT}"
 	try {
 		sh "cd SDL2_ttf-2.0.15/ && wget https://raw.githubusercontent.com/SDL-mirror/SDL_ttf/master/SDL2_ttfConfig.cmake -O SDL2_ttfConfig.cmake"
