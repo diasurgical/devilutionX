@@ -214,9 +214,9 @@ bool UiFocusNavigation(SDL_Event *event)
 {
 	if (event->type == SDL_QUIT)
 		exit(0);
-	
-	SDLKey sym = event->key.keysym.sym;
-	
+
+	SDL_Keycode sym = event->key.keysym.sym;
+
 	if (event->type == SDL_KEYDOWN) {
 		switch (sym) {	
 		case SDLK_UP:

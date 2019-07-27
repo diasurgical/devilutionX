@@ -270,10 +270,6 @@ message("SDL_ttf include dir: " ${SDL_TTF_INCLUDE_DIRS})
 
 target_link_libraries(devilution PUBLIC Threads::Threads)
 
-if(SDL1 OR AMIGA)
-  target_link_libraries(devilution PUBLIC -latomic)
-endif()
-
 target_link_libraries(devilutionx PRIVATE
   devilution
   PKWare

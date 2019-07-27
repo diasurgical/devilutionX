@@ -2,7 +2,6 @@
 #include "miniwin/ddraw.h"
 #include "stubs.h"
 #include <SDL.h>
-#include "../SourceS/miniwin/misc.h"
 #include "DiabloUI/diabloui.h"
 
 namespace dvl {
@@ -69,7 +68,7 @@ HRESULT StubDraw::CreateSurface(LPDDSURFACEDESC lpDDSurfaceDesc, LPDIRECTDRAWSUR
 			SDL_GetWindowSize(window, (int *)&lpDDSurfaceDesc->dwWidth, (int *)&lpDDSurfaceDesc->dwHeight);
 			surface = SDL_GetWindowSurface(window);
 		}
-		if (surface == nullptr) {
+		if (surface == NULL) {
 			SDL_Log(SDL_GetError());
 			return (HRESULT)0x80000002L; //DDERR_OUTOFMEMORY
 		}
@@ -79,7 +78,7 @@ HRESULT StubDraw::CreateSurface(LPDDSURFACEDESC lpDDSurfaceDesc, LPDIRECTDRAWSUR
 	}
 
 	pal_surface = SDL_CreateRGBSurfaceWithFormat(0, lpDDSurfaceDesc->dwWidth, lpDDSurfaceDesc->dwHeight, lpDDSurfaceDesc->ddpfPixelFormat.dwRGBBitCount, lpDDSurfaceDesc->ddpfPixelFormat.dwFlags);
-	if (pal_surface == nullptr) {
+	if (pal_surface == NULL) {
 		SDL_Log(SDL_GetError());
 		return (HRESULT)0x80000002L; //DDERR_OUTOFMEMORY
 	}

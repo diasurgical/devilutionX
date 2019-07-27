@@ -193,7 +193,6 @@ static WPARAM keystate_for_mouse(WPARAM ret)
 	const Uint8 *keystate = SDL_GetKeyboardState(NULL);
 	ret |= keystate[SDL_SCANCODE_LSHIFT] ? DVL_MK_SHIFT : 0;
 	ret |= keystate[SDL_SCANCODE_RSHIFT] ? DVL_MK_SHIFT : 0;
-
 	// XXX: other DVL_MK_* codes not implemented
 	return ret;
 }
@@ -255,17 +254,14 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		lpMsg->message = DVL_WM_MOUSEMOVE;
 		lpMsg->lParam = (e.motion.y << 16) | (e.motion.x & 0xFFFF);
 		lpMsg->wParam = keystate_for_mouse(0);
-		//printf("mouse motion\n");
 		break;
 	case SDL_MOUSEBUTTONDOWN: {
 		int button = e.button.button;
 		if (button == SDL_BUTTON_LEFT) {
-			printf("mouse left\n");
 			lpMsg->message = DVL_WM_LBUTTONDOWN;
 			lpMsg->lParam = (e.button.y << 16) | (e.button.x & 0xFFFF);
 			lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
 		} else if (button == SDL_BUTTON_RIGHT) {
-			printf("mouse right\n");
 			lpMsg->message = DVL_WM_RBUTTONDOWN;
 			lpMsg->lParam = (e.button.y << 16) | (e.button.x & 0xFFFF);
 			lpMsg->wParam = keystate_for_mouse(DVL_MK_RBUTTON);
