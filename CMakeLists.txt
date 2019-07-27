@@ -66,13 +66,13 @@ endif()
 
 
 find_package(Threads REQUIRED)
+find_package(Freetype REQUIRED)
+find_package(PNG REQUIRED)
 
 if(SDL1 OR AMIGA)
-  find_package(Freetype REQUIRED)
   find_package(SDL 1.2 REQUIRED)
   find_package(SDL_ttf REQUIRED)
   find_package(SDL_mixer REQUIRED)
-  find_package(PNG REQUIRED)
   find_package(LibMad REQUIRED)
 else()
   find_package(SDL2 REQUIRED)
