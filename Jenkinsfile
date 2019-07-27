@@ -111,9 +111,8 @@ def build_freetype(TARGET, SYSROOT) {
 
 	dir("freetype-2.10.1") {
 		sh "mkdir -p build"
+		sh "sudo rm -rfv build/*"
 		dir("build") {
-			sh "sudo rm -rfv *"
-
 			sh "cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DUNIX=1" // -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include
 			sh "cmake --build . --config Release --target install -- -j8"
 		}
