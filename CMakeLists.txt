@@ -75,7 +75,7 @@ if(SDL1 OR AMIGA)
   find_package(PNG REQUIRED)
   find_package(LibMad REQUIRED)
 else()
-  find_package(SDL 2 REQUIRED)
+  find_package(SDL2 REQUIRED)
   find_package(SDL2_ttf REQUIRED)
   find_package(SDL2_mixer REQUIRED)
 endif()
@@ -290,8 +290,7 @@ if(SDL1 OR AMIGA)
   ${LIBMAD_LIBRARIES})
 else()
   target_link_libraries(devilutionx PRIVATE
-  ${SDL2_LIBRARY}
-  ${SDL2_LIBRARIES}
+  SDL2::SDL2main
   ${SDL2_ttf_LIBRARY}
   ${SDL2_mixer_LIBRARY}
   ${FREETYPE_LIBRARIES}
