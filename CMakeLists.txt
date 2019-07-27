@@ -295,6 +295,9 @@ else()
   ${SDL2_mixer_LIBRARY}
   ${FREETYPE_LIBRARIES}
   ${PNG_LIBRARIES})
+  if(WIN32)
+    target_link_libraries(devilutionx PRIVATE -lfreetype -lpng -lzstaticlib)
+  endif()
 
   message("SDL library: " ${SDL2_LIBRARY} ${SDL2_LIBRARIES})
   message("SDL_mixer library : " ${SDL2_mixer_LIBRARY} )

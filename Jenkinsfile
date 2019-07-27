@@ -267,11 +267,12 @@ node('master') {
 			node {
 				buildStep('desertbit/crossbuild:linux-armv7', 'Unix Makefiles', 'Linux RasPi', '')
 			}
-		},
+		}
+		/*,
 		'WebASM': {
 			node {			
 				buildStep('dockcross/web-wasm:latest', 'Unix Makefiles', 'Web assembly', '')
 			}
-		}
+		}*/
     )
 }
