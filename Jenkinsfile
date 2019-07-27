@@ -49,7 +49,8 @@ def get_libs() {
 	sh "curl -SLO https://download.savannah.gnu.org/releases/freetype/freetype-2.10.1.tar.gz"
 	sh "curl -SLO https://github.com/glennrp/libpng/archive/v1.6.36.tar.gz"
 	sh "curl -SLO https://github.com/jedisct1/libsodium/archive/1.0.17.tar.gz"
-	sh "wget https://raw.githubusercontent.com/Kitware/CMake/v3.10.0/Modules/FindFreetype.cmake -O CMake/FindFreetype.cmake"
+	//sh "wget https://raw.githubusercontent.com/Kitware/CMake/v3.10.0/Modules/FindFreetype.cmake -O CMake/FindFreetype.cmake"
+	sh "sudo rm -rfv CMake/FindFreetype.cmake"
 	sh "wget https://raw.githubusercontent.com/Kitware/CMake/v3.10.0/Modules/SelectLibraryConfigurations.cmake -O CMake/SelectLibraryConfigurations.cmake"
 	sh "wget https://raw.githubusercontent.com/Kitware/CMake/master/Modules/FindZLIB.cmake -O CMake/FindZLIB.cmake"
 }
