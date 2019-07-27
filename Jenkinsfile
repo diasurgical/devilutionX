@@ -220,7 +220,7 @@ def buildStep(dockerImage, generator, os, defines) {
 						archiveArtifacts artifacts: "devilutionx-${fixed_os}-${fixed_job_name}.exe"
 					} else {
 						sh "mv devilutionx devilutionx-${fixed_os}-${fixed_job_name}"
-						archiveArtifacts artifacts: "devilutionx-${fixed_os}-${fixed_job_name}""
+						archiveArtifacts artifacts: "devilutionx-${fixed_os}-${fixed_job_name}"
 					}
 
 					//sh "cmake --build . --config Release --target package -- -j 8"
