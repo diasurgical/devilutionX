@@ -47,13 +47,20 @@ void mainmenu_Free()
 
 BOOL UiMainMenuDialog(char *name, int *pdwResult, void(*fnSound)(char *file), int a4)
 {
+	BOOL played = false;
 	mainmenu_Load(name, fnSound);
 
 	while (MainMenuResult == 0) {
+		if (dwRepIntro > 0 && GetTickCount() >= dwRepIntro) {
+			played = true;
+			mainmenu_play_intro();
+			break;
+		}
 		UiRender();
 	}
 
-	BlackPalette();
+	if (!played)
+		BlackPalette();
 	mainmenu_Free();
 
 	*pdwResult = MainMenuResult;

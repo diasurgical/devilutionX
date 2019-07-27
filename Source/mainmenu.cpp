@@ -10,6 +10,9 @@ char gszHero[16];
 
 int menu_music_track_id = 5;
 
+int menu_repintro_delay = 30; // seconds
+DWORD dwRepIntro = 0;
+
 void mainmenu_refresh_music()
 {
 	music_start(menu_music_track_id);
@@ -90,6 +93,8 @@ void mainmenu_loop()
 	done = FALSE;
 	mainmenu_refresh_music();
 
+	 mainmenu_restart_repintro();
+
 	do {
 		menu = 0;
 		if (!UiMainMenuDialog("Diablo v1.09", &menu, effects_play_sound, 30))
@@ -116,6 +121,8 @@ void mainmenu_loop()
 			done = TRUE;
 			break;
 		}
+
+		mainmenu_restart_repintro();
 	} while (done == FALSE);
 
 	music_stop();
@@ -154,6 +161,12 @@ void mainmenu_play_intro()
 	music_stop();
 	play_movie("gendata\\diablo1.smk", 1);
 	mainmenu_refresh_music();
+	mainmenu_restart_repintro();
+}
+
+void mainmenu_restart_repintro()
+{
+	dwRepIntro = GetTickCount() + menu_repintro_delay * 1000;
 }
 
 DEVILUTION_END_NAMESPACE
