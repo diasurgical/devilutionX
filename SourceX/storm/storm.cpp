@@ -585,7 +585,11 @@ BOOL SVidPlayContinue(void)
 			colors[i].r = palette_data[i * 3 + 0];
 			colors[i].g = palette_data[i * 3 + 1];
 			colors[i].b = palette_data[i * 3 + 2];
+#if !SDL_VERSION_ATLEAST(2, 0, 0)
 			colors[i].unused = SDL_ALPHA_OPAQUE;
+#else
+			colors[i].a = SDL_ALPHA_OPAQUE;
+#endif
 
 			orig_palette[i].peFlags = 0;
 			orig_palette[i].peRed = palette_data[i * 3 + 0];

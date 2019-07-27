@@ -32,7 +32,11 @@ BOOL SDrawUpdatePalette(unsigned int firstentry, unsigned int numentries, PALETT
 		c->r = p->peRed;
 		c->g = p->peGreen;
 		c->b = p->peBlue;
+#if !SDL_VERSION_ATLEAST(2, 0, 0)
 		c->unused = SDL_ALPHA_OPAQUE;
+#else
+		c->a = SDL_ALPHA_OPAQUE;
+#endif
 	}
 
 	assert(palette);
