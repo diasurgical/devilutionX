@@ -296,7 +296,7 @@ else()
   ${FREETYPE_LIBRARIES}
   ${PNG_LIBRARIES})
   if(WIN32)
-    target_link_libraries(devilutionx PRIVATE -lfreetype -lpng -lzstaticlib)
+    target_link_libraries(devilutionx PRIVATE -lfreetype -lpng -lzlibstatic)
   endif()
 
   message("SDL library: " ${SDL2_LIBRARY} ${SDL2_LIBRARIES})
