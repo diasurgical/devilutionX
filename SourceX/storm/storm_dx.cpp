@@ -36,8 +36,10 @@ BOOL SDrawUpdatePalette(unsigned int firstentry, unsigned int numentries, PALETT
 	}
 
 	assert(palette);
+#if !SDL_VERSION_ATLEAST(2, 0, 0)
 	SDL_SetPalette(pal_surface, SDL_LOGPAL|SDL_PHYSPAL, colors, 0, 256);
 	SDL_SetColors(surface, colors, 0, 256);
+#endif
 
 	if (SDL_SetPaletteColors(palette, colors, firstentry, numentries) <= -1) { // Todo(Amiga): Fix this!
 

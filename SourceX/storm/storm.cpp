@@ -594,10 +594,11 @@ BOOL SVidPlayContinue(void)
 		}
 		memcpy(logical_palette, orig_palette, 1024);
 
+#if !SDL_VERSION_ATLEAST(2, 0, 0)
 		//Todo(SDL1.2): Fix SDL_SetPaletteColors wrapper
 		SDL_SetPalette(SVidSurface, SDL_LOGPAL|SDL_PHYSPAL, colors, 0, 256);
 		SDL_SetColors(surface, colors, 0, 256);
-
+#endif
 		if (SDL_SetPaletteColors(SVidPalette, colors, 0, 256) <= -1) {
 			SDL_Log(SDL_GetError());
 			return false;
