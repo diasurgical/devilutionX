@@ -292,19 +292,14 @@ else()
   target_link_libraries(devilutionx PRIVATE
   ${SDL2_LIBRARY}
   ${SDL2_LIBRARIES}
-  ${SDL2_TTF_LIBRARY}
-  ${SDL2_TTF_LIBRARIES}
-  ${SDL2_MIXER_LIBRARY}
-  ${SDL2_MIXER_LIBRARIES}
-  ${SDL_TTF_LIBRARY}
-  ${SDL_MIXER_LIBRARY}
-  ${SDL_MIXER_LIBRARIES}
+  ${SDL2_ttf_LIBRARY}
+  ${SDL2_mixer_LIBRARY}
   ${FREETYPE_LIBRARIES}
   ${PNG_LIBRARIES})
 
   message("SDL library: " ${SDL2_LIBRARY} ${SDL2_LIBRARIES})
-  message("SDL_mixer library : " ${SDL2_MIXER_LIBRARY} ${SDL2_MIXER_LIBRARIES})
-  message("SDL_ttf library: " ${SDL2_TTF_LIBRARY} ${SDL2_TTF_LIBRARIES})
+  message("SDL_mixer library : " ${SDL2_mixer_LIBRARY} )
+  message("SDL_ttf library: " ${SDL2_ttf_LIBRARY})
 endif()
 
 if(AMIGA)

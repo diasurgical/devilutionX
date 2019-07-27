@@ -99,11 +99,15 @@ def build_sdl2_mixer(TARGET, SYSROOT) {
 def build_libpng(TARGET, SYSROOT) {
 	echo "============= Build libpng ============="
 
-	sh "mkdir -p libpng-1.6.36/build"
-	sh "sudo rm -rfv libpng-1.6.36/build/*"
+	dir("libpng-1.6.36") {
+		sh "mkdir -p build"
+		sh "sudo rm -rfv build/*"
+	}
 
-	sh "cd libpng-1.6.36/build && cmake .. -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include -DCMAKE_INSTALL_PREFIX=${SYSROOT}"
-	sh "cd libpng-1.6.36/build && cmake --build . --config Release --target install -- -j8"
+	dir("libpng-1.6.36/build") {
+		sh "cmake .. -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include -DCMAKE_INSTALL_PREFIX=${SYSROOT}"
+		sh "cmake --build . --config Release --target install -- -j8"
+	}
 }
 
 def build_freetype(TARGET, SYSROOT) {
@@ -112,6 +116,9 @@ def build_freetype(TARGET, SYSROOT) {
 	dir("freetype-2.10.1") {
 		sh "mkdir -p build"
 		sh "sudo rm -rfv build/*"
+	}
+
+	dir("freetype-2.10.1/build") {
 		sh "cd build/ && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DUNIX=1" // -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include
 		sh "cd build/ && cmake --build . --config Release --target install -- -j8"
 	}
