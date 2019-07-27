@@ -52,8 +52,6 @@ def get_libs() {
 	sh "wget https://raw.githubusercontent.com/Kitware/CMake/v3.10.0/Modules/FindFreetype.cmake -O CMake/FindFreetype.cmake"
 	sh "wget https://raw.githubusercontent.com/Kitware/CMake/v3.10.0/Modules/SelectLibraryConfigurations.cmake -O CMake/SelectLibraryConfigurations.cmake"
 	sh "wget https://raw.githubusercontent.com/Kitware/CMake/master/Modules/FindZLIB.cmake -O CMake/FindZLIB.cmake"
-	//sh "rm -rfv CMake/FindFreetype.cmake"
-	//sh "mv -fv FindFreetype.cmake CMake/"
 }
 
 def decompress_libs() {
@@ -111,17 +109,15 @@ def build_libpng(TARGET, SYSROOT) {
 def build_freetype(TARGET, SYSROOT) {
 	echo "============= Build Freetype ============="
 
-	//sh "cd freetype-2.9.1/ && ./autogen.sh"
-	//sh "cd freetype-2.9.1/ && AS=${TARGET}-as ./configure --host=${TARGET} --enable-freetype-config --prefix=${SYSROOT}"
-	//sh "cd freetype-2.9.1/ && make clean"
-	//sh "cd freetype-2.9.1/ && AS=${TARGET}-as make -j8"
-	//sh "cd freetype-2.9.1/ && make install"
+	dir("freetype-2.10.1") {
+		sh "mkdir -p build"
+		dir("build") {
+			sh "sudo rm -rfv *"
 
-	sh "mkdir -p freetype-2.10.1/build"
-	sh "sudo rm -rfv freetype-2.10.1/build/*"
-
-	sh "cd freetype-2.10.1/build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DUNIX=1" // -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include
-	sh "cd freetype-2.10.1/build && cmake --build . --config Release --target install -- -j8"
+			sh "cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DUNIX=1" // -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include
+			sh "cmake --build . --config Release --target install -- -j8"
+		}
+	}
 }
 
 def build_sdl2_ttf(TARGET, SYSROOT) {
@@ -135,37 +131,25 @@ def build_sdl2_ttf(TARGET, SYSROOT) {
 		ZLIB_FILE = "z"
 	}
 
-	sh "cd SDL2_ttf-2.0.15/ && ./autogen.sh"
-	sh "cd SDL2_ttf-2.0.15/ && FT2_CFLAGS=\"-I${SYSROOT}/include/freetype2\" FT2_LIBS=\"-lfreetype -lpng -l${ZLIB_FILE}\" ./configure --disable-shared --enable-static --host=${TARGET} --prefix=${SYSROOT}" //FT2_CONFIG=${SYSROOT}/include/freetype2/freetype/config/ftconfig.h
-	sh "cd SDL2_ttf-2.0.15/ && make clean"
-	sh "cd SDL2_ttf-2.0.15/ && make -j8"
-	sh "cd SDL2_ttf-2.0.15/ && make install"
-
-	//def SOURCE_PATH = sh (
-	//	script: 'pwd',
-	//	returnStdout: true
-	//).trim()
-	//sh "mkdir -p SDL2_ttf-2.0.15/build"
-	//sh "sudo rm -rfv SDL2_ttf-2.0.15/build/*"
-
-	//sh "echo \"list(APPEND CMAKE_MODULE_PATH \"\${SOURCE_PATH}/CMake/\")\n\" | cat - SDL2_ttf-2.0.15/CMakeLists.txt > temp && mv temp SDL2_ttf-2.0.15/CMakeLists.txt"
-	//sh "cd SDL2_ttf-2.0.15/build && PKG_CONFIG_PATH=${SYSROOT}/share/pkgconfig/:${SYSROOT}/lib/pkgconfig/ cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DCMAKE_PREFIX_PATH=${SYSROOT}"
-	//try {
-	//	sh "cd SDL2_ttf-2.0.15/ && wget https://raw.githubusercontent.com/SDL-mirror/SDL_ttf/master/SDL2_ttfConfig.cmake -O SDL2_ttfConfig.cmake"
-	//	sh "cd SDL2_ttf-2.0.15/build && cmake --build . --config Release --target install -- -j8"
-	//} catch (err) {
-	//	echo err
-	//}
+	dir("SDL2_ttf-2.0.15") {
+		sh "./autogen.sh"
+		sh "FT2_CFLAGS=\"-I${SYSROOT}/include/freetype2\" FT2_LIBS=\"-lfreetype -lpng -l${ZLIB_FILE}\" ./configure --disable-shared --enable-static --host=${TARGET} --prefix=${SYSROOT}" //FT2_CONFIG=${SYSROOT}/include/freetype2/freetype/config/ftconfig.h
+		sh "make clean"
+		sh "make -j8"
+		sh "make install"
+	}
 }
 
 def build_libsodium(TARGET, SYSROOT) {
 	echo "============= Build Libsodium ============="
 
-	sh "cd libsodium-1.0.17/ && ./autogen.sh"
-	sh "cd libsodium-1.0.17/ && ./configure --host=${TARGET} --prefix=${SYSROOT}"
-	sh "cd libsodium-1.0.17/ && make clean"
-	sh "cd libsodium-1.0.17/ && make -j8"
-	sh "cd libsodium-1.0.17/ && make install"
+	dir("libsodium-1.0.17") {
+		sh "./autogen.sh"
+		sh "./configure --host=${TARGET} --prefix=${SYSROOT}"
+		sh "make clean"
+		sh "make -j8"
+		sh "make install"
+	}
 }
 
 
@@ -228,7 +212,7 @@ def buildStep(dockerImage, generator, os, defines) {
 				slackSend color: "good", channel: "#jenkins", message: "Starting ${os} build target..."
 				dir("build") {
 					sh "cmake -G\"${generator}\" ${defines} -DVER_EXTRA=\"-${fixed_os}-${fixed_job_name}\" .."
-					sh "cmake --build . --config Release -- -j 8"
+					sh "VERBOSE=1 cmake --build . --config Release -- -j 8"
 
 					if (os.contains('Windows')) {
 						sh "mv devilutionx.exe devilutionx-${fixed_os}-${fixed_job_name}.exe"

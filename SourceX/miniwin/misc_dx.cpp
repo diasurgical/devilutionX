@@ -4,7 +4,7 @@
 #include <SDL.h>
 
 namespace dvl {
-	
+
 WINBOOL SetCursorPos(int X, int Y)
 {
 	assert(window);
