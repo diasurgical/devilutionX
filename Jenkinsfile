@@ -212,15 +212,15 @@ def buildStep(dockerImage, generator, os, defines) {
 
 				slackSend color: "good", channel: "#jenkins", message: "Starting ${os} build target..."
 				dir("build") {
-					sh "cmake -G\"${generator}\" ${defines} -DVER_EXTRA=\"-${fixed_os}-${fixed_job_name}\" .."
+					sh "PKG_CONFIG_PATH=${SYSROOT}/lib/pkgconfig/:${SYSROOT}/share/pkgconfig/ cmake -G\"${generator}\" ${defines} -DVER_EXTRA=\"-${fixed_os}-${fixed_job_name}\" .."
 					sh "VERBOSE=1 cmake --build . --config Release -- -j 8"
 
 					if (os.contains('Windows')) {
 						sh "mv devilutionx.exe devilutionx-${fixed_os}-${fixed_job_name}.exe"
-						archiveArtifacts artifacts: 'devilutionx-${fixed_os}-${fixed_job_name}.exe'
+						archiveArtifacts artifacts: "devilutionx-${fixed_os}-${fixed_job_name}.exe"
 					} else {
 						sh "mv devilutionx devilutionx-${fixed_os}-${fixed_job_name}"
-						archiveArtifacts artifacts: 'devilutionx-${fixed_os}-${fixed_job_name}'
+						archiveArtifacts artifacts: "devilutionx-${fixed_os}-${fixed_job_name}""
 					}
 
 					//sh "cmake --build . --config Release --target package -- -j 8"
