@@ -67,7 +67,7 @@ endif()
 
 find_package(Threads REQUIRED)
 
-if(AMIGA)
+if(SDL1 OR AMIGA)
   find_package(Freetype REQUIRED)
   find_package(SDL 1.2 REQUIRED)
   find_package(SDL_ttf REQUIRED)
@@ -220,7 +220,7 @@ set(
   SourceX/main.cpp
 )
 
-if(AMIGA)
+if(SDL1 OR AMIGA)
   list(
     APPEND
     SOURCES
@@ -231,7 +231,7 @@ endif()
 add_executable(devilutionx ${SOURCES})
 
 target_include_directories(devilution PUBLIC Source SourceS)
-if(AMIGA)
+if(SDL1 OR AMIGA)
 target_include_directories(devilutionx PRIVATE
   SourceX
   3rdParty/asio/include
@@ -270,7 +270,7 @@ message("SDL_ttf include dir: " ${SDL_TTF_INCLUDE_DIRS})
 
 target_link_libraries(devilution PUBLIC Threads::Threads)
 
-if(AMIGA)
+if(SDL1 OR AMIGA)
   target_link_libraries(devilution PUBLIC -latomic)
 endif()
 
@@ -283,7 +283,7 @@ target_link_libraries(devilutionx PRIVATE
   sodium
   )
 
-if(AMIGA)
+if(SDL1 OR AMIGA)
   target_link_libraries(devilutionx PRIVATE
   ${SDL_LIBRARY}
   ${SDL_TTF_LIBRARY}
@@ -291,9 +291,7 @@ if(AMIGA)
   ${SDL_MIXER_LIBRARIES}
   ${FREETYPE_LIBRARIES}
   ${PNG_LIBRARIES}
-  ${LIBMAD_LIBRARIES}
-  -ldebug
-  -latomic)
+  ${LIBMAD_LIBRARIES})
 else()
   target_link_libraries(devilutionx PRIVATE
   ${SDL2_LIBRARY}
@@ -301,6 +299,11 @@ else()
   ${SDL2_MIXER_LIBRARY}
   ${SDL2_MIXER_LIBRARIES})
 endif()
+
+if(AMIGA)
+  target_link_libraries(devilutionx PRIVATE -ldebug -latomic)
+endif()
+
   # ${PROJECT_SOURCE_DIR}/libSDLmain.a)
   # /usr/lib/x86_64-linux-gnu/libSDLmain.a
   # ${SDL_LIBRARY}

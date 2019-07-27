@@ -2,7 +2,6 @@
 #include <SDL.h>
 #if !SDL_VERSION_ATLEAST(2, 0, 0)
 #include "sdl1_wrapper.h"
-#define SDL_Keysym SDL_keysym
 #endif
 #include "devilution.h"
 #include "stubs.h"
@@ -34,8 +33,6 @@ static int translate_sdl_key(SDL_Keysym key)
 		return DVL_VK_SPACE;
 	case SDLK_QUOTE:
 		return DVL_VK_OEM_7;
-	case SDLK_COMMA:
-		return DVL_VK_OEM_COMMA;
 	case SDLK_MINUS:
 		return DVL_VK_OEM_MINUS;
 	case SDLK_PERIOD:
@@ -78,26 +75,32 @@ static int translate_sdl_key(SDL_Keysym key)
 		return DVL_VK_F9;
 	case SDLK_F10:
 		return DVL_VK_F10;
-	//case SDLK_F11:
-	//	return DVL_VK_F11;
-	//case SDLK_F12:
-	//	return DVL_VK_F12;
-	//case SDLK_PRINTSCREEN:
-	//	return DVL_VK_SNAPSHOT;
-	//case SDLK_SCROLLLOCK:
-		//return DVL_VK_SCROLL;
+#ifndef __AMIGA__
+	case SDLK_F11:
+		return DVL_VK_F11;
+	case SDLK_F12:
+		return DVL_VK_F12;
+	case SDLK_PRINTSCREEN:
+		return DVL_VK_SNAPSHOT;
+	case SDLK_SCROLLLOCK:
+		return DVL_VK_SCROLL;
+#endif
 	case SDLK_PAUSE:
 		return DVL_VK_PAUSE;
 	case SDLK_INSERT:
 		return DVL_VK_INSERT;
 	case SDLK_HOME:
 		return DVL_VK_HOME;
-	//case SDLK_PAGEUP:
-	//	return DVL_VK_PRIOR;
+#ifndef __AMIGA__
+	case SDLK_PAGEUP:
+		return DVL_VK_PRIOR;
+#endif
 	case SDLK_END:
 		return DVL_VK_END;
-	//case SDLK_PAGEDOWN:
-	//	return DVL_VK_NEXT;
+#ifndef __AMIGA__
+	case SDLK_PAGEDOWN:
+		return DVL_VK_NEXT;
+#endif
 	case SDLK_RIGHT:
 		return DVL_VK_RIGHT;
 	case SDLK_LEFT:
@@ -106,8 +109,10 @@ static int translate_sdl_key(SDL_Keysym key)
 		return DVL_VK_DOWN;
 	case SDLK_UP:
 		return DVL_VK_UP;
-	//case SDLK_NUMLOCKCLEAR:
-	//	return DVL_VK_NUMLOCK;
+#ifndef __AMIGA__
+	case SDLK_NUMLOCKCLEAR:
+		return DVL_VK_NUMLOCK;
+#endif
 	case SDLK_KP_DIVIDE:
 		return DVL_VK_DIVIDE;
 	case SDLK_KP_MULTIPLY:
@@ -124,48 +129,52 @@ static int translate_sdl_key(SDL_Keysym key)
 		return DVL_VK_OEM_PLUS;
 	case SDLK_KP_ENTER:
 		return DVL_VK_RETURN;
-	case SDLK_KP1:
+	case SDLK_KP_1:
 		return DVL_VK_NUMPAD1;
-	case SDLK_KP2:
+	case SDLK_KP_2:
 		return DVL_VK_NUMPAD2;
-	case SDLK_KP3:
+	case SDLK_KP_3:
 		return DVL_VK_NUMPAD3;
-	case SDLK_KP4:
+	case SDLK_KP_4:
 		return DVL_VK_NUMPAD4;
-	case SDLK_KP5:
+	case SDLK_KP_5:
 		return DVL_VK_NUMPAD5;
-	case SDLK_KP6:
+	case SDLK_KP_6:
 		return DVL_VK_NUMPAD6;
-	case SDLK_KP7:
+	case SDLK_KP_7:
 		return DVL_VK_NUMPAD7;
-	case SDLK_KP8:
+	case SDLK_KP_8:
 		return DVL_VK_NUMPAD8;
-	case SDLK_KP9:
+	case SDLK_KP_9:
 		return DVL_VK_NUMPAD9;
-	case SDLK_KP0:
+	case SDLK_KP_0:
 		return DVL_VK_NUMPAD0;
 	case SDLK_KP_PERIOD:
 		return DVL_VK_DECIMAL;
 	case SDLK_MENU:
 		return DVL_VK_MENU;
-	//case SDLK_KP_COMMA:
-	//	return DVL_VK_OEM_COMMA;
+	case SDLK_KP_COMMA:
+		return DVL_VK_OEM_COMMA;
 	case SDLK_LCTRL:
 		return DVL_VK_LCONTROL;
 	case SDLK_LSHIFT:
 		return DVL_VK_LSHIFT;
 	case SDLK_LALT:
 		return DVL_VK_LMENU;
-	//case SDLK_LGUI:
-	//	return DVL_VK_LWIN;
+#ifndef __AMIGA__
+	case SDLK_LGUI:
+		return DVL_VK_LWIN;
+#endif
 	case SDLK_RCTRL:
 		return DVL_VK_RCONTROL;
 	case SDLK_RSHIFT:
 		return DVL_VK_RSHIFT;
 	case SDLK_RALT:
 		return DVL_VK_RMENU;
-	//case SDLK_RGUI:
-	//	return DVL_VK_RWIN;
+#ifndef __AMIGA__
+	case SDLK_RGUI:
+		return DVL_VK_RWIN;
+#endif
 	default:
 		if (sym >= SDLK_a && sym <= SDLK_z) {
 			return 'A' + (sym - SDLK_a);
