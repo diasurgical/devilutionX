@@ -40,46 +40,46 @@ def killall_jobs() {
 
 
 def get_libs() {
-    echo "============= Getting Libs ============="
+	echo "============= Getting Libs ============="
 
 	sh "curl -O https://www.zlib.net/zlib-1.2.11.tar.gz"
-    sh "curl -O https://www.libsdl.org/release/SDL2-2.0.9.tar.gz"
-    sh "curl -O https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-2.0.4.tar.gz"
-    sh "curl -O https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-2.0.15.tar.gz"
-    sh "curl -SLO https://download.savannah.gnu.org/releases/freetype/freetype-2.10.1.tar.gz"
-    sh "curl -SLO https://github.com/glennrp/libpng/archive/v1.6.36.tar.gz"
-    sh "curl -SLO https://github.com/jedisct1/libsodium/archive/1.0.17.tar.gz"
-    sh "wget https://raw.githubusercontent.com/Kitware/CMake/v3.10.0/Modules/FindFreetype.cmake -O CMake/FindFreetype.cmake"
-    sh "wget https://raw.githubusercontent.com/Kitware/CMake/v3.10.0/Modules/SelectLibraryConfigurations.cmake -O CMake/SelectLibraryConfigurations.cmake"
-    sh "wget https://raw.githubusercontent.com/Kitware/CMake/master/Modules/FindZLIB.cmake -O CMake/FindZLIB.cmake"
-    //sh "rm -rfv CMake/FindFreetype.cmake"
-    //sh "mv -fv FindFreetype.cmake CMake/"
+	sh "curl -O https://www.libsdl.org/release/SDL2-2.0.9.tar.gz"
+	sh "curl -O https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-2.0.4.tar.gz"
+	sh "curl -O https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-2.0.15.tar.gz"
+	sh "curl -SLO https://download.savannah.gnu.org/releases/freetype/freetype-2.10.1.tar.gz"
+	sh "curl -SLO https://github.com/glennrp/libpng/archive/v1.6.36.tar.gz"
+	sh "curl -SLO https://github.com/jedisct1/libsodium/archive/1.0.17.tar.gz"
+	sh "wget https://raw.githubusercontent.com/Kitware/CMake/v3.10.0/Modules/FindFreetype.cmake -O CMake/FindFreetype.cmake"
+	sh "wget https://raw.githubusercontent.com/Kitware/CMake/v3.10.0/Modules/SelectLibraryConfigurations.cmake -O CMake/SelectLibraryConfigurations.cmake"
+	sh "wget https://raw.githubusercontent.com/Kitware/CMake/master/Modules/FindZLIB.cmake -O CMake/FindZLIB.cmake"
+	//sh "rm -rfv CMake/FindFreetype.cmake"
+	//sh "mv -fv FindFreetype.cmake CMake/"
 }
 
 def decompress_libs() {
-    echo "============= Unzip Libs ============="
+	echo "============= Unzip Libs ============="
 
 	sh "tar -xvf zlib-1.2.11.tar.gz"
-    sh "tar -xvf SDL2-2.0.9.tar.gz"
-    sh "tar -xvf SDL2_mixer-2.0.4.tar.gz"
-    sh "tar -xvf SDL2_ttf-2.0.15.tar.gz"
-    sh "tar -xvf v1.6.36.tar.gz"
-    sh "tar -xvf freetype-2.10.1.tar.gz"
-    sh "tar -xvf 1.0.17.tar.gz"
+	sh "tar -xvf SDL2-2.0.9.tar.gz"
+	sh "tar -xvf SDL2_mixer-2.0.4.tar.gz"
+	sh "tar -xvf SDL2_ttf-2.0.15.tar.gz"
+	sh "tar -xvf v1.6.36.tar.gz"
+	sh "tar -xvf freetype-2.10.1.tar.gz"
+	sh "tar -xvf 1.0.17.tar.gz"
 }
 
 def build_zlib(TARGET, SYSROOT) {
 	echo "============= Build ZLIB ============="
-	
+
 	sh "mkdir -p zlib-1.2.11/build"
 	sh "sudo rm -rfv zlib-1.2.11/build/*"
-		
+
 	sh "cd zlib-1.2.11/build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT}"
 	sh "cd zlib-1.2.11/build && cmake --build . --config Release --target install -- -j8"
 }
 
 def build_sdl2(TARGET, SYSROOT) {
-    echo "============= Build SDL2 ============="
+	echo "============= Build SDL2 ============="
 
 	sh "cd SDL2-2.0.9/ && ./autogen.sh"
 	sh "cd SDL2-2.0.9/ && ./configure --host=${TARGET} --enable-sdl2-config --prefix=${SYSROOT}"
@@ -89,7 +89,7 @@ def build_sdl2(TARGET, SYSROOT) {
 }
 
 def build_sdl2_mixer(TARGET, SYSROOT) {
-    echo "============= Build SDL2_mixer ============="
+	echo "============= Build SDL2_mixer ============="
 
 	sh "cd SDL2_mixer-2.0.4/ && ./autogen.sh"
 	sh "cd SDL2_mixer-2.0.4/ && ./configure --host=${TARGET} --prefix=${SYSROOT}"
@@ -99,29 +99,29 @@ def build_sdl2_mixer(TARGET, SYSROOT) {
 }
 
 def build_libpng(TARGET, SYSROOT) {
-    echo "============= Build libpng ============="
-	
-    sh "mkdir -p libpng-1.6.36/build"
+	echo "============= Build libpng ============="
+
+	sh "mkdir -p libpng-1.6.36/build"
 	sh "sudo rm -rfv libpng-1.6.36/build/*"
-		
-    sh "cd libpng-1.6.36/build && cmake .. -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include -DCMAKE_INSTALL_PREFIX=${SYSROOT}"
-    sh "cd libpng-1.6.36/build && cmake --build . --config Release --target install -- -j8"
+
+	sh "cd libpng-1.6.36/build && cmake .. -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include -DCMAKE_INSTALL_PREFIX=${SYSROOT}"
+	sh "cd libpng-1.6.36/build && cmake --build . --config Release --target install -- -j8"
 }
 
 def build_freetype(TARGET, SYSROOT) {
-    echo "============= Build Freetype ============="
+	echo "============= Build Freetype ============="
 
 	//sh "cd freetype-2.9.1/ && ./autogen.sh"
 	//sh "cd freetype-2.9.1/ && AS=${TARGET}-as ./configure --host=${TARGET} --enable-freetype-config --prefix=${SYSROOT}"
 	//sh "cd freetype-2.9.1/ && make clean"
 	//sh "cd freetype-2.9.1/ && AS=${TARGET}-as make -j8"
 	//sh "cd freetype-2.9.1/ && make install"
-	
+
 	sh "mkdir -p freetype-2.10.1/build"
 	sh "sudo rm -rfv freetype-2.10.1/build/*"
-		
-    sh "cd freetype-2.10.1/build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DUNIX=1" // -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include
-    sh "cd freetype-2.10.1/build && cmake --build . --config Release --target install -- -j8"
+
+	sh "cd freetype-2.10.1/build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DUNIX=1" // -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include
+	sh "cd freetype-2.10.1/build && cmake --build . --config Release --target install -- -j8"
 }
 
 def build_sdl2_ttf(TARGET, SYSROOT) {
@@ -159,8 +159,8 @@ def build_sdl2_ttf(TARGET, SYSROOT) {
 }
 
 def build_libsodium(TARGET, SYSROOT) {
-    echo "============= Build Libsodium ============="
-	
+	echo "============= Build Libsodium ============="
+
 	sh "cd libsodium-1.0.17/ && ./autogen.sh"
 	sh "cd libsodium-1.0.17/ && ./configure --host=${TARGET} --prefix=${SYSROOT}"
 	sh "cd libsodium-1.0.17/ && make clean"
@@ -172,7 +172,7 @@ def build_libsodium(TARGET, SYSROOT) {
 def buildStep(dockerImage, generator, os, defines) {
 	def split_job_name = env.JOB_NAME.split(/\/{1}/)  
 	def fixed_job_name = split_job_name[1].replace('%2F',' ')
-    def fixed_os = os.replace(' ','-')
+	def fixed_os = os.replace(' ','-')
 	try{
 		stage("Building on \"${dockerImage}\" with \"${generator}\" for \"${os}\"...") {
 			properties([pipelineTriggers([githubPush()])])
@@ -193,25 +193,25 @@ def buildStep(dockerImage, generator, os, defines) {
 					sh "rm -rfv publishing/deploy/*"
 					sh "mkdir -p publishing/deploy/devilutionx"
 				}
-				
+
 				def TARGET = sh (
 					script: '$CC -dumpmachine',
 					returnStdout: true
 				).trim()
-				
+
 				def SYSROOT
-				
+
 				if (os.contains('Web')) {
 					SYSROOT = "/emsdk_portable/sdk/system"
 				}
-				else {					
+				else {
 					SYSROOT = sh (
 						script: '$CC -print-sysroot',
 						returnStdout: true
 					).trim()
 				}
 				
-			    get_libs()
+				get_libs()
 				decompress_libs()
 				build_zlib(TARGET, SYSROOT)
 				build_sdl2(TARGET, SYSROOT)
@@ -229,9 +229,17 @@ def buildStep(dockerImage, generator, os, defines) {
 				dir("build") {
 					sh "cmake -G\"${generator}\" ${defines} -DVER_EXTRA=\"-${fixed_os}-${fixed_job_name}\" .."
 					sh "cmake --build . --config Release -- -j 8"
-					//sh "cmake --build . --config Release --target package -- -j 8"
 
-					archiveArtifacts artifacts: '*.zip,*.tar.gz,*.tgz'
+					if (os.contains('Windows') {
+						sh "mv devilutionx.exe devilutionx-${fixed_os}-${fixed_job_name}.exe"
+						archiveArtifacts artifacts: 'devilutionx-${fixed_os}-${fixed_job_name}.exe'
+					} else {
+						sh "mv devilutionx devilutionx-${fixed_os}-${fixed_job_name}"
+						archiveArtifacts artifacts: 'devilutionx-${fixed_os}-${fixed_job_name}'
+					}
+
+					//sh "cmake --build . --config Release --target package -- -j 8"
+					//archiveArtifacts artifacts: '*.zip,*.tar.gz,*.tgz'
 				}
 				
 				slackSend color: "good", channel: "#jenkins", message: "Build ${fixed_job_name} #${env.BUILD_NUMBER} Target: ${os} DockerImage: ${dockerImage} Generator: ${generator} successful!"

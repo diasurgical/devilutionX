@@ -273,17 +273,17 @@ bool UiFocusNavigation(SDL_Event *event)
 				return true;
 			}
 		break;
+#if !SDL_VERSION_ATLEAST(2, 0, 0)
 		case SDL_KEYUP:
 			if (event->key.keysym.sym >= SDLK_a && event->key.keysym.sym <= SDLK_z)
 				selhero_CatToName(SDL_GetKeyName(event->key.keysym.sym), UiTextInput, UiTextInputLen);
 			return true;
-		break;
-/*
-Todo(Amiga): Fix this
-		case SDL_TEXTINPUT:
+#else
+// Todo(Amiga): Fix this
+ 		case SDL_TEXTINPUT:
 			selhero_CatToName(event->text.text, UiTextInput, UiTextInputLen);
 			return true;
-*/
+#endif
 		}
 
 	}
