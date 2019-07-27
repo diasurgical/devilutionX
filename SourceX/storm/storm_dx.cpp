@@ -46,11 +46,10 @@ BOOL SDrawUpdatePalette(unsigned int firstentry, unsigned int numentries, PALETT
 #endif
 
 	if (SDL_SetPaletteColors(palette, colors, firstentry, numentries) <= -1) { // Todo(Amiga): Fix this!
-
-		//klaus_OK
 		SDL_Log(SDL_GetError());
 		return false;
 	}
+
 	return true;
 }
 

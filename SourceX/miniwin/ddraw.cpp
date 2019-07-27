@@ -2,6 +2,7 @@
 #include "miniwin/ddraw.h"
 #include "stubs.h"
 #include <SDL.h>
+
 #include "DiabloUI/diabloui.h"
 
 namespace dvl {

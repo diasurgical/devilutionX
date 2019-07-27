@@ -33,6 +33,8 @@ static int translate_sdl_key(SDL_Keysym key)
 		return DVL_VK_SPACE;
 	case SDLK_QUOTE:
 		return DVL_VK_OEM_7;
+	case SDLK_COMMA:
+		return DVL_VK_OEM_COMMA;
 	case SDLK_MINUS:
 		return DVL_VK_OEM_MINUS;
 	case SDLK_PERIOD:
@@ -153,8 +155,10 @@ static int translate_sdl_key(SDL_Keysym key)
 		return DVL_VK_DECIMAL;
 	case SDLK_MENU:
 		return DVL_VK_MENU;
+#if SDL_VERSION_ATLEAST(2, 0, 0)
 	case SDLK_KP_COMMA:
 		return DVL_VK_OEM_COMMA;
+#endif
 	case SDLK_LCTRL:
 		return DVL_VK_LCONTROL;
 	case SDLK_LSHIFT:
