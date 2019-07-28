@@ -3,6 +3,9 @@
 
 namespace dvl {
 
+int mainmenu_repintro_delay; //seconds
+DWORD dwRepIntro;
+
 int MainMenuResult;
 UI_Item MAINMENU_DIALOG[] = {
 	{ { 0, 0, 640, 480 }, UI_IMAGE, 0, 0, NULL, &ArtBackground },
@@ -22,6 +25,11 @@ void UiMainMenuSelect(int value)
 void mainmenu_Esc()
 {
 	UiMainMenuSelect(MAINMENU_EXIT_DIABLO);
+}
+
+void mainmenu_restart_repintro()
+{
+	dwRepIntro = GetTickCount() + mainmenu_repintro_delay * 1000;
 }
 
 void mainmenu_Load(char *name, void(*fnSound)(char *file))
@@ -47,20 +55,20 @@ void mainmenu_Free()
 
 BOOL UiMainMenuDialog(char *name, int *pdwResult, void(*fnSound)(char *file), int a4)
 {
-	BOOL played = false;
+	mainmenu_repintro_delay = a4;
 	mainmenu_Load(name, fnSound);
+	
+	mainmenu_restart_repintro(); // for automatic starts
 
 	while (MainMenuResult == 0) {
-		if (dwRepIntro > 0 && GetTickCount() >= dwRepIntro) {
-			played = true;
+		if (GetTickCount() >= dwRepIntro) {
 			mainmenu_play_intro();
 			break;
 		}
 		UiRender();
 	}
 
-	if (!played)
-		BlackPalette();
+	BlackPalette();
 	mainmenu_Free();
 
 	*pdwResult = MainMenuResult;
