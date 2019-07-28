@@ -215,6 +215,7 @@ bool UiFocusNavigation(SDL_Event *event)
 	if (event->type == SDL_QUIT)
 		exit(0);
 
+	/*
 	switch(event->type) {
 		case SDL_KEYUP:
 		case SDL_MOUSEBUTTONUP:
@@ -232,6 +233,7 @@ bool UiFocusNavigation(SDL_Event *event)
 		case SDL_WINDOWEVENT:
 			mainmenu_restart_repintro();
 	}
+	*/
 
 	if (event->type == SDL_KEYDOWN) {
 		switch (event->key.keysym.sym) {
