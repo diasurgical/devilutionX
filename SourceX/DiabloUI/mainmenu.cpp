@@ -4,7 +4,7 @@
 namespace dvl {
 
 int mainmenu_repintro_delay; //seconds
-DWORD dwRepIntro;
+DWORD dwTicks;
 
 int MainMenuResult;
 UI_Item MAINMENU_DIALOG[] = {
@@ -29,7 +29,7 @@ void mainmenu_Esc()
 
 void mainmenu_restart_repintro()
 {
-	dwRepIntro = GetTickCount() + mainmenu_repintro_delay * 1000;
+	dwTicks = GetTickCount() + mainmenu_repintro_delay * 1000;
 }
 
 void mainmenu_Load(char *name, void(*fnSound)(char *file))
@@ -61,7 +61,7 @@ BOOL UiMainMenuDialog(char *name, int *pdwResult, void(*fnSound)(char *file), in
 	mainmenu_restart_repintro(); // for automatic starts
 
 	while (MainMenuResult == 0) {
-		if (GetTickCount() >= dwRepIntro) {
+		if (GetTickCount() >= dwTicks) {
 			mainmenu_play_intro();
 			break;
 		}
