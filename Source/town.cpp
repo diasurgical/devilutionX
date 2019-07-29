@@ -1,4 +1,5 @@
 #include "diablo.h"
+#include "../3rdParty/StormLib/src/StormPort.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -1282,7 +1283,7 @@ void SetTownMicros()
 				lv--;
 				pPiece = (WORD *)&pLevelPieces[32 * lv];
 				for (i = 0; i < 16; i++) {
-					pMap->mt[i] = pPiece[(i & 1) + 14 - (i & 0xE)];
+					pMap->mt[i] = BSWAP_INT16_UNSIGNED(pPiece[(i & 1) + 14 - (i & 0xE)]);
 				}
 			} else {
 				for (i = 0; i < 16; i++) {
@@ -1354,11 +1355,11 @@ void T_FillSector(BYTE *P3Tiles, BYTE *pSector, int xi, int yi, int w, int h)
 			WORD *Map;
 
 			Map = (WORD *)&pSector[ii];
-			if (*Map) {
-				v1 = *((WORD *)&P3Tiles[(*Map - 1) * 8]) + 1;
-				v2 = *((WORD *)&P3Tiles[(*Map - 1) * 8] + 1) + 1;
-				v3 = *((WORD *)&P3Tiles[(*Map - 1) * 8] + 2) + 1;
-				v4 = *((WORD *)&P3Tiles[(*Map - 1) * 8] + 3) + 1;
+			if (BSWAP_INT16_UNSIGNED(*Map)) {
+				v1 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(*Map - 1) * 8]) + 1);
+				v2 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(*Map - 1) * 8] + 1) + 1);
+				v3 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(*Map - 1) * 8] + 2) + 1);
+				v4 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(*Map - 1) * 8] + 3) + 1);
 			} else {
 				v1 = 0;
 				v2 = 0;
@@ -1410,10 +1411,10 @@ void T_FillTile(BYTE *P3Tiles, int xx, int yy, int t)
 		nop
 	}
 #else
-	v1 = *((WORD *)&P3Tiles[(t - 1) * 8]) + 1;
-	v2 = *((WORD *)&P3Tiles[(t - 1) * 8] + 1) + 1;
-	v3 = *((WORD *)&P3Tiles[(t - 1) * 8] + 2) + 1;
-	v4 = *((WORD *)&P3Tiles[(t - 1) * 8] + 3) + 1;
+	v1 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(t - 1) * 8]) + 1);
+	v2 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(t - 1) * 8] + 1) + 1);
+	v3 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(t - 1) * 8] + 2) + 1);
+	v4 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(t - 1) * 8] + 3) + 1);
 #endif
 
 	dPiece[xx][yy] = v1;

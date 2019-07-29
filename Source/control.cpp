@@ -1,4 +1,5 @@
 #include "diablo.h"
+#include "../3rdParty/StormLib/src/StormPort.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -254,8 +255,8 @@ void DrawSpellCel(int xp, int yp, BYTE *Trans, int nCel, int w)
 	DWORD *pFrameTable;
 
 	pFrameTable = (DWORD *)&Trans[4 * nCel];
-	src = &Trans[pFrameTable[0]];
-	end = &src[pFrameTable[1] - pFrameTable[0]];
+	src = &Trans[BSWAP_INT32_UNSIGNED(pFrameTable[0])];
+	end = &src[BSWAP_INT32_UNSIGNED(pFrameTable[1]) - BSWAP_INT32_UNSIGNED(pFrameTable[0])];
 
 	for (; src != end; dst -= BUFFER_WIDTH + w) {
 		for (i = w; i;) {
@@ -734,8 +735,8 @@ void CPrintString(int nOffset, int nCel, char col)
 	DWORD *pFrameTable;
 
 	pFrameTable = (DWORD *)&pPanelText[4 * nCel];
-	src = &pPanelText[pFrameTable[0]];
-	end = &src[pFrameTable[1] - pFrameTable[0]];
+	src = &pPanelText[BSWAP_INT32_UNSIGNED(pFrameTable[0])];
+	end = &src[BSWAP_INT32_UNSIGNED(pFrameTable[1]) - BSWAP_INT32_UNSIGNED(pFrameTable[0])];
 	dst = &gpBuffer[nOffset];
 
 	switch (col) {

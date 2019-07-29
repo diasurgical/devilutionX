@@ -147,7 +147,7 @@ BOOL pfile_create_player_description(char *dst, DWORD len)
 	_uiheroinfo uihero;
 
 	myplr = 0;
-	pfile_read_player_from_save();
+	//pfile_read_player_from_save();
 	game_2_ui_player(plr, &uihero, gbValidSaveFile);
 	UiSetupPlayerInfo(gszHero, &uihero, GAME_ID);
 
@@ -418,7 +418,7 @@ BOOL __stdcall pfile_ui_save_create(_uiheroinfo *heroinfo)
 	DWORD save_num;
 	char cl;
 	PkPlayerStruct pkplr;
-
+/*
 	save_num = pfile_get_save_num_from_name(heroinfo->name);
 	if (save_num == MAX_CHARACTERS) {
 		for (save_num = 0; save_num < MAX_CHARACTERS; save_num++) {
@@ -433,14 +433,16 @@ BOOL __stdcall pfile_ui_save_create(_uiheroinfo *heroinfo)
 	mpqapi_remove_hash_entries(pfile_get_file_name);
 	strncpy(hero_names[save_num], heroinfo->name, PLR_NAME_LEN);
 	hero_names[save_num][PLR_NAME_LEN - 1] = '\0';
+  */
 	cl = pfile_get_player_class(heroinfo->heroclass);
+
 	CreatePlayer(0, cl);
 	strncpy(plr[0]._pName, heroinfo->name, PLR_NAME_LEN);
 	plr[0]._pName[PLR_NAME_LEN - 1] = '\0';
 	PackPlayer(&pkplr, 0, TRUE);
-	pfile_encode_hero(&pkplr);
+//	pfile_encode_hero(&pkplr);
 	game_2_ui_player(&plr[0], heroinfo, FALSE);
-	pfile_flush(TRUE, save_num);
+//	pfile_flush(TRUE, save_num);
 	return TRUE;
 }
 
