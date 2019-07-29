@@ -20,7 +20,6 @@ BOOL mainmenu_single_player();
 BOOL mainmenu_init_menu(int type);
 BOOL mainmenu_multi_player();
 void mainmenu_play_intro();
-void mainmenu_restart_repintro();
 
 /* rdata */
 

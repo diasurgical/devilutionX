@@ -119,4 +119,6 @@ void WordWrap(UI_Item *item);
 void DvlIntSetting(const char *valuename, int *value);
 void DvlStringSetting(const char *valuename, char *string, int len);
 
+void mainmenu_restart_repintro();
+
 }
