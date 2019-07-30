@@ -215,6 +215,24 @@ bool UiFocusNavigation(SDL_Event *event)
 	if (event->type == SDL_QUIT)
 		exit(0);
 
+	switch(event->type) {
+		case SDL_KEYUP:
+		case SDL_MOUSEBUTTONUP:
+		case SDL_MOUSEMOTION:
+		case SDL_MOUSEWHEEL:
+		case SDL_JOYBUTTONUP:
+		case SDL_JOYAXISMOTION:
+		case SDL_JOYBALLMOTION:
+		case SDL_JOYHATMOTION:
+		case SDL_FINGERUP:
+		case SDL_FINGERMOTION:
+		case SDL_CONTROLLERBUTTONUP:
+		case SDL_CONTROLLERAXISMOTION:
+		case SDL_SYSWMEVENT:
+		case SDL_WINDOWEVENT:
+			mainmenu_restart_repintro();
+	}
+
 	if (event->type == SDL_KEYDOWN) {
 		switch (event->key.keysym.sym) {
 		case SDLK_UP:
