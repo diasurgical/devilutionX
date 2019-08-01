@@ -19,7 +19,7 @@
 #define InterlockedIncrement(x) (x)
 #else
 #ifdef __AMIGA__
-#define InterlockedIncrement(x) __atomic_add_fetch(x, 1)
+#define InterlockedIncrement(x) __atomic_add_fetch(x, 1, __ATOMIC_SEQ_CST)
 #else
 #define InterlockedIncrement(x) __sync_add_and_fetch(x, 1)
 #endif
