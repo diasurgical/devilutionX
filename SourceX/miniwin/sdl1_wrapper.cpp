@@ -472,25 +472,7 @@ SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth,
     return surface;
 }
 
-char* SDL_GetPrefPath(const char* org, const char* app) { return (char*)org; }
-// char* SDL_GetPrefPath(const char* org, const char* app) { 
-
-//     int len = SDL_strlen(org) + SDL_strlen(app) + 8;
-//     char* retval = (char *) SDL_malloc(len);
-	
-//     if (!retval) {
-//         SDL_OutOfMemory();
-//         return NULL;
-//     }
-
-//     if (*org) {
-//         SDL_snprintf(retval, len, "/home/%s/%s/",  org, app);
-//     } else {
-//         SDL_snprintf(retval, len, "/home/%s/", app);
-//     }
-	
-// 	return retval;
-// }
+char* SDL_GetPrefPath(const char* org, const char* app) { return (char*)"data/"; }
 
 char* SDL_GetBasePath(void) {
 
@@ -502,6 +484,17 @@ char* SDL_GetClipboardText(void)
     return "";
 }
 
+#ifdef HAVE__GETTIMEOFDAY
+
+#include <sys/time.h>
+
+int _gettimeofday (struct timeval *__restrict __p,
+			  struct timezone *__restrict __tz)
+			  {
+	return gettimeofday (__p,
+			   __tz);
+			   }
+#endif
 
 #ifdef __cplusplus
 }
