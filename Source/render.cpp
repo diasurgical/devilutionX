@@ -3,6 +3,7 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 #include "_asm.cpp"
+#include <SDL_endian.h>
 
 int WorldBoolFlag = 0;
 DWORD gdwCurrentMask = 0;
@@ -1818,7 +1819,7 @@ void drawUpperScreen(BYTE *pBuff)
 					break;
 				j = 8;
 				do {
-					*(DWORD *)dst = *(DWORD *)src;
+					*(DWORD *)dst = SDL_SwapLE32(*(DWORD *)src);
 					src += 4;
 					dst += 4;
 					--j;
@@ -1877,7 +1878,7 @@ void drawUpperScreen(BYTE *pBuff)
 				dst += xx_32;
 				n_draw_shift = (unsigned int)(32 - xx_32) >> 2;
 				if ((32 - xx_32) & 2) {
-					*(WORD *)dst = *((WORD *)src + 1);
+					*(WORD *)dst = SDL_SwapLE16(*((WORD *)src + 1));
 					src += 4;
 					dst += 2;
 				}
@@ -2003,7 +2004,7 @@ void drawUpperScreen(BYTE *pBuff)
 					dst += 4;
 				}
 				if ((32 - (BYTE)xx_32) & 2) {
-					*(WORD *)dst = *(WORD *)src;
+					*(WORD *)dst = SDL_SwapLE16(*(WORD *)src);
 					src += 4;
 					dst += 2;
 				}

@@ -232,6 +232,9 @@ add_executable(devilutionx ${SOURCES})
 
 target_include_directories(devilution PUBLIC Source SourceS)
 if(SDL1 OR AMIGA)
+  target_include_directories(devilution PRIVATE
+          ${SDL_INCLUDE_DIR}
+          ${SDL_INCLUDE_DIRS})
 target_include_directories(devilutionx PRIVATE
   SourceX
   3rdParty/asio/include
@@ -247,6 +250,9 @@ target_include_directories(devilutionx PRIVATE
   ${SDL_MIXER_INCLUDE_DIRS}/..
 )
 else()
+  target_include_directories(devilution PRIVATE
+          ${SDL2_INCLUDE_DIR}
+          ${SDL2_INCLUDE_DIRS})
 target_include_directories(devilutionx PRIVATE
   SourceX
   3rdParty/asio/include

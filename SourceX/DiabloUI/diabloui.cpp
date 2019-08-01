@@ -219,17 +219,19 @@ bool UiFocusNavigation(SDL_Event *event)
 		case SDL_KEYUP:
 		case SDL_MOUSEBUTTONUP:
 		case SDL_MOUSEMOTION:
-		case SDL_MOUSEWHEEL:
 		case SDL_JOYBUTTONUP:
 		case SDL_JOYAXISMOTION:
 		case SDL_JOYBALLMOTION:
 		case SDL_JOYHATMOTION:
+		case SDL_SYSWMEVENT:
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+		case SDL_MOUSEWHEEL:
 		case SDL_FINGERUP:
 		case SDL_FINGERMOTION:
 		case SDL_CONTROLLERBUTTONUP:
 		case SDL_CONTROLLERAXISMOTION:
-		case SDL_SYSWMEVENT:
 		case SDL_WINDOWEVENT:
+#endif
 			mainmenu_restart_repintro();
 	}
 

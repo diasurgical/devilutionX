@@ -18,7 +18,11 @@
 #ifdef _MSC_VER
 #define InterlockedIncrement(x) (x)
 #else
+#ifdef __AMIGA__
+#define InterlockedIncrement(x) __atomic_add_fetch(x, 1)
+#else
 #define InterlockedIncrement(x) __sync_add_and_fetch(x, 1)
+#endif
 #endif
 
 #define INFINITE DVL_INFINITE

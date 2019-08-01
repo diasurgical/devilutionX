@@ -448,3 +448,5 @@ Source/diablo.cpp.debug
 Source/interfac.cpp.debug
 SourceX/DiabloUI/credits.cpp.debug
 SourceX/storm/storm_net.cpp.debug
+
+build-debug/

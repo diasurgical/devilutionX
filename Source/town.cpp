@@ -1277,13 +1277,13 @@ void SetTownMicros()
 
 	for (y = 0; y < MAXDUNY; y++) {
 		for (x = 0; x < MAXDUNX; x++) {
-			lv = dPiece[x][y];
+			lv = (dPiece[x][y]);
 			pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
 			if (lv != 0) {
 				lv--;
-				pPiece = (WORD *)&pLevelPieces[32 * lv];
+				pPiece = ((WORD *)&pLevelPieces[32 * lv]);
 				for (i = 0; i < 16; i++) {
-					pMap->mt[i] = BSWAP_INT16_UNSIGNED(pPiece[(i & 1) + 14 - (i & 0xE)]);
+					pMap->mt[i] = (pPiece[(i & 1) + 14 - (i & 0xE)]);
 				}
 			} else {
 				for (i = 0; i < 16; i++) {
