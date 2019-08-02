@@ -476,23 +476,21 @@ char* SDL_GetPrefPath(const char* org, const char* app) { return (char*)"data/";
 
 char* SDL_GetBasePath(void) {
 
-    return "";
+    return (char*)"";
 }
 
 char* SDL_GetClipboardText(void)
 {
-    return "";
+    return (char*)"";
 }
 
 #ifdef HAVE__GETTIMEOFDAY
 
-#include <sys/time.h>
+int gettimeofday (struct timeval *__p, void *__tz);
 
-int _gettimeofday (struct timeval *__restrict __p,
-			  struct timezone *__restrict __tz)
+int _gettimeofday (struct timeval *__p, void *__tz)
 			  {
-	return gettimeofday (__p,
-			   __tz);
+	return gettimeofday (__p, __tz);
 			   }
 #endif
 

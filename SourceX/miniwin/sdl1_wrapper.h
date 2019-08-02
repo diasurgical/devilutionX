@@ -94,18 +94,12 @@ extern "C" {
 
 #define SDL_TEXTINPUTEVENT_TEXT_SIZE (32)
 
-
-
 #define SDL_Renderer SDL_Surface
 #define SDL_Texture SDL_Surface
 
 //klaus
 // #define SDL_QueueAudio SDL_QueueAudio_REAL
 #define SDL_QueueAudio 0
-
-#define SDL_SCANCODE_RSHIFT        161 /* VirtualKey.RightShift -- */
-#define SDL_SCANCODE_LSHIFT        160 /* VirtualKey.LeftShift -- */
-
 
 typedef Uint32 SDL_AudioDeviceID;
 
@@ -346,32 +340,11 @@ enum
 
 typedef struct SDL_Window SDL_Window;
 
-//typedef enum
-//{
-//
-//} SDL_EventType;
-
 typedef struct SDL_Point
 {
     int x;
     int y;
 } SDL_Point;
-
-
-/*
-//typedef struct SDL_MouseButtonEvent
-//{
-//    Uint32 type;        /**< ::SDL_MOUSEBUTTONDOWN or ::SDL_MOUSEBUTTONUP */
-//    Uint32 timestamp;   /**< In milliseconds, populated using SDL_GetTicks() */
-//    Uint32 windowID;    /**< The window with mouse focus, if any */
-//    Uint32 which;       /**< The mouse instance id, or SDL_TOUCH_MOUSEID */
-//    Uint8 button;       /**< The mouse button index */
-//    Uint8 state;        /**< ::SDL_PRESSED or ::SDL_RELEASED */
-//    Uint8 clicks;       /**< 1 for single-click, 2 for double-click, etc. */
-//    Uint8 padding1;
-//    Sint32 x;           /**< X coordinate, relative to window */
-//    Sint32 y;           /**< Y coordinate, relative to window */
-//} SDL_MouseButtonEvent;
 
 
 // todo structs:
@@ -399,10 +372,6 @@ struct SDL_HitTest {
     void*            data;
 
 };
-//struct SDL_WindowUserData {};
-//struct SDL_Renderer {};
-// struct SDL_Texture {};
-
 
 // done:
 // =====
