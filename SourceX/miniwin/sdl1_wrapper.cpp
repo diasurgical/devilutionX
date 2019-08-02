@@ -170,7 +170,7 @@ SDL_Renderer* SDL_CreateRenderer(SDL_Window* window, int index, Uint32 flags) //
 
 int SDL_SetRenderDrawColor(SDL_Renderer* renderer, Uint8 r, Uint8 g, Uint8 b, Uint8 a) // only used when upscaling is enabled
 {
-	SDL_FillRect( renderer, NULL, SDL_MapRGBA( renderer->format, r, g, b, a) );
+	return SDL_FillRect( renderer, NULL, SDL_MapRGBA( renderer->format, r, g, b, a) );
 }
 
 SDL_Texture* SDL_CreateTextureFromSurface(SDL_Renderer* renderer,
@@ -182,6 +182,7 @@ SDL_Texture* SDL_CreateTextureFromSurface(SDL_Renderer* renderer,
 		renderer = SDL_DisplayFormat( surface );
 		return renderer;
 	}
+	else return NULL;
 }
 
 SDL_AudioDeviceID SDL_OpenAudioDevice(const char* device, int iscapture,
