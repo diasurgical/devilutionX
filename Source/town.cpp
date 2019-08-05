@@ -3,6 +3,12 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __AMIGA__
+#define OVERFLOW 255 //hack?
+#else
+#define OVERFLOW 0
+#endif
+
 void town_clear_upper_buf(BYTE *pBuff)
 {
 	/// ASSERT: assert(gpBuffer);
@@ -1277,13 +1283,15 @@ void SetTownMicros()
 
 	for (y = 0; y < MAXDUNY; y++) {
 		for (x = 0; x < MAXDUNX; x++) {
-			lv = (dPiece[x][y]);
-			pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
+			lv = dPiece[x][y];
+			//printf("AAA  lv= %d\n", lv); //ok
+			pMap = BSWAP_INT16_UNSIGNED(&dpiece_defs_map_1[IsometricCoord(x, y)]);
 			if (lv != 0) {
 				lv--;
-				pPiece = ((WORD *)&pLevelPieces[32 * lv]);
+				pPiece = BSWAP_INT16_UNSIGNED((WORD *)&pLevelPieces[32 * lv]);
 				for (i = 0; i < 16; i++) {
-					pMap->mt[i] = (pPiece[(i & 1) + 14 - (i & 0xE)]);
+					pMap->mt[i] = BSWAP_INT16_UNSIGNED(pPiece[(i & 1) + 14 - (i & 0xE)]);
+					//printf("AAA pMap->mt[i]= %d\n", pMap->mt[i]); //ok
 				}
 			} else {
 				for (i = 0; i < 16; i++) {
@@ -1355,11 +1363,13 @@ void T_FillSector(BYTE *P3Tiles, BYTE *pSector, int xi, int yi, int w, int h)
 			WORD *Map;
 
 			Map = (WORD *)&pSector[ii];
+
 			if (BSWAP_INT16_UNSIGNED(*Map)) {
-				v1 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(*Map - 1) * 8]) + 1);
-				v2 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(*Map - 1) * 8] + 1) + 1);
-				v3 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(*Map - 1) * 8] + 2) + 1);
-				v4 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(*Map - 1) * 8] + 3) + 1);
+				v1 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(BSWAP_INT16_UNSIGNED(*Map) - 1) * 8]) + 1);
+				v2 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(BSWAP_INT16_UNSIGNED(*Map) - 1) * 8] + 1) + 1);
+				v3 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(BSWAP_INT16_UNSIGNED(*Map) - 1) * 8] + 2) + 1);
+				v4 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(BSWAP_INT16_UNSIGNED(*Map) - 1) * 8] + 3) + 1);
+				//printf("AAAAA v1 = %d\n", v1-255);
 			} else {
 				v1 = 0;
 				v2 = 0;
@@ -1367,10 +1377,10 @@ void T_FillSector(BYTE *P3Tiles, BYTE *pSector, int xi, int yi, int w, int h)
 				v4 = 0;
 			}
 #endif
-			dPiece[xx][yy] = v1;
-			dPiece[xx + 1][yy] = v2;
-			dPiece[xx][yy + 1] = v3;
-			dPiece[xx + 1][yy + 1] = v4;
+			dPiece[xx][yy] = v1 - OVERFLOW;
+			dPiece[xx + 1][yy] = v2 - OVERFLOW;
+			dPiece[xx][yy + 1] = v3 - OVERFLOW;
+			dPiece[xx + 1][yy + 1] = v4 - OVERFLOW;
 			xx += 2;
 			ii += 2;
 		}
@@ -1415,12 +1425,13 @@ void T_FillTile(BYTE *P3Tiles, int xx, int yy, int t)
 	v2 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(t - 1) * 8] + 1) + 1);
 	v3 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(t - 1) * 8] + 2) + 1);
 	v4 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(t - 1) * 8] + 3) + 1);
+	//printf("AAAAA v1 = %d\n", v1-255);
 #endif
 
-	dPiece[xx][yy] = v1;
-	dPiece[xx + 1][yy] = v2;
-	dPiece[xx][yy + 1] = v3;
-	dPiece[xx + 1][yy + 1] = v4;
+	dPiece[xx][yy] = v1 - OVERFLOW;
+	dPiece[xx + 1][yy] = v2 - OVERFLOW;
+	dPiece[xx][yy + 1] = v3 - OVERFLOW;
+	dPiece[xx + 1][yy + 1] = v4 - OVERFLOW;
 }
 
 void T_Pass3()
