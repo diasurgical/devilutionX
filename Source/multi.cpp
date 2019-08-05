@@ -48,7 +48,7 @@ void __cdecl dumphist(const char *pszFmt, ...)
 	va_start(va, pszFmt);
 
 	if (sgpHistFile == NULL) {
-		sgpHistFile = fopen("c:\\dumphist.txt", "wb");
+		sgpHistFile = fopen("dumphist.txt", "wb");
 		if (sgpHistFile == NULL) {
 			return;
 		}
