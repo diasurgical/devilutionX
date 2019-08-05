@@ -1802,7 +1802,7 @@ int InvPutItem(int pnum, int x, int y)
 	}
 
 	CanPut(x, y); //if (!CanPut(x, y)) {
-	//	assertion_failed(1524, "C:\\Diablo\\Direct\\inv.cpp", "CanPut(x,y)");
+	//	assertion_failed(__LINE__, __FILE__, "CanPut(x,y)");
 	//}
 
 	ii = itemavail[0];
