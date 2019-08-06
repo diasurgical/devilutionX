@@ -2372,7 +2372,7 @@ BYTE *DiabloAllocPtr(DWORD dwBytes)
 #endif
 
 	if (buf == NULL) {
-		ErrDlg(IDD_DIALOG2, GetLastError(), __FILE__, __LINE__);
+		ERR_DLG(IDD_DIALOG2, GetLastError());
 	}
 
 	return buf;

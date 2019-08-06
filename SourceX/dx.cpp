@@ -41,7 +41,7 @@ void dx_init(HWND hWnd)
 	}
 	hDDVal = dx_DirectDrawCreate(lpGUID, &lpDDInterface, NULL);
 	if (hDDVal != DVL_S_OK) {
-		ErrDlg(IDD_DIALOG1, hDDVal, __FILE__, __LINE__);
+		ERR_DLG(IDD_DIALOG1, hDDVal);
 	}
 
 #ifdef COLORFIX
@@ -64,7 +64,7 @@ void dx_init(HWND hWnd)
 		if (hDDVal == 1) {
 			TriggerBreak();
 		} else if (hDDVal != DVL_S_OK) {
-			ErrDlg(IDD_DIALOG1, hDDVal, __FILE__, __LINE__);
+			ERR_DLG(IDD_DIALOG1, hDDVal);
 		}
 		SetWindowPos(hWnd, 0, 0, 0, 0, 0, 0 | 0 | 0);
 	} else {
@@ -76,7 +76,7 @@ void dx_init(HWND hWnd)
 		if (hDDVal == 1) {
 			TriggerBreak();
 		} else if (hDDVal != DVL_S_OK) {
-			ErrDlg(IDD_DIALOG1, hDDVal, __FILE__, __LINE__);
+			ERR_DLG(IDD_DIALOG1, hDDVal);
 		}
 #ifdef __cplusplus
 		hDDVal = lpDDInterface->SetDisplayMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP);
@@ -93,7 +93,7 @@ void dx_init(HWND hWnd)
 #endif
 		}
 		if (hDDVal != DVL_S_OK) {
-			ErrDlg(IDD_DIALOG1, hDDVal, __FILE__, __LINE__);
+			ERR_DLG(IDD_DIALOG1, hDDVal);
 		}
 	}
 
@@ -118,7 +118,7 @@ void dx_create_back_buffer()
 	error_code = lpDDSPrimary->lpVtbl->GetCaps(lpDDSPrimary, &caps);
 #endif
 	if (error_code != DVL_S_OK)
-		DDErrMsg(error_code, __LINE__, __FILE__);
+		DD_ERR_MSG(error_code);
 
 	gbBackBuf = 1;
 	if (!gbBackBuf) {
@@ -138,7 +138,7 @@ void dx_create_back_buffer()
 			return;
 		}
 		if (error_code != 2)
-			ErrDlg(IDD_DIALOG1, error_code, __FILE__, __LINE__);
+			ERR_DLG(IDD_DIALOG1, error_code);
 	}
 
 	memset(&ddsd, 0, sizeof(ddsd));
@@ -155,14 +155,14 @@ void dx_create_back_buffer()
 	error_code = lpDDSPrimary->lpVtbl->GetPixelFormat(lpDDSPrimary, &ddsd.ddpfPixelFormat);
 #endif
 	if (error_code != DVL_S_OK)
-		ErrDlg(IDD_DIALOG1, error_code, __FILE__, __LINE__);
+		ERR_DLG(IDD_DIALOG1, error_code);
 #ifdef __cplusplus
 	error_code = lpDDInterface->CreateSurface(&ddsd, &lpDDSBackBuf, NULL);
 #else
 	error_code = lpDDInterface->lpVtbl->CreateSurface(lpDDInterface, &ddsd, &lpDDSBackBuf, NULL);
 #endif
 	if (error_code != DVL_S_OK)
-		ErrDlg(IDD_DIALOG1, error_code, __FILE__, __LINE__);
+		ERR_DLG(IDD_DIALOG1, error_code);
 }
 // 52A548: using guessed type char gbBackBuf;
 
@@ -181,7 +181,7 @@ void dx_create_primary_surface()
 	error_code = lpDDInterface->lpVtbl->CreateSurface(lpDDInterface, &ddsd, &lpDDSPrimary, NULL);
 #endif
 	if (error_code != DVL_S_OK)
-		ErrDlg(IDD_DIALOG1, error_code, __FILE__, __LINE__);
+		ERR_DLG(IDD_DIALOG1, error_code);
 }
 
 HRESULT dx_DirectDrawCreate(LPGUID guid, LPDIRECTDRAW *lplpDD, LPUNKNOWN pUnkOuter)
@@ -189,7 +189,7 @@ HRESULT dx_DirectDrawCreate(LPGUID guid, LPDIRECTDRAW *lplpDD, LPUNKNOWN pUnkOut
 	if (ghDiabMod == NULL) {
 		ghDiabMod = NULL; //ghDiabMod = LoadLibrary("ddraw.dll");
 		if (ghDiabMod == NULL) {
-			// ErrDlg(IDD_DIALOG4, GetLastError(), __FILE__, __LINE__);
+			// ERR_DLG(IDD_DIALOG4, GetLastError());
 		}
 	}
 
@@ -238,7 +238,7 @@ void lock_buf_priv()
 	error_code = lpDDSBackBuf->lpVtbl->Lock(lpDDSBackBuf, NULL, &ddsd, DDLOCK_WAIT, NULL);
 #endif
 	if (error_code != DVL_S_OK)
-		DDErrMsg(error_code, __LINE__, __FILE__);
+		DD_ERR_MSG(error_code);
 
 	gpBufEnd += (uintptr_t)ddsd.lpSurface;
 	gpBuffer = (BYTE *)ddsd.lpSurface;
@@ -275,7 +275,7 @@ void unlock_buf_priv()
 			error_code = lpDDSBackBuf->lpVtbl->Unlock(lpDDSBackBuf, NULL);
 #endif
 			if (error_code != DVL_S_OK)
-				DDErrMsg(error_code, __LINE__, __FILE__);
+				DD_ERR_MSG(error_code);
 		}
 	}
 #ifdef __cplusplus
