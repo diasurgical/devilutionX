@@ -159,9 +159,6 @@
 #define DS_ERR_MSG(errorCode) \
 	DSErrMsg((errorCode), __LINE, __FILE)
 
-#define ASSERT_FAIL(failMsg) \
-	assert_fail(__LINE__, __FILE__, (failMsg))
-
 #ifndef INVALID_FILE_ATTRIBUTES
 #define INVALID_FILE_ATTRIBUTES ((DWORD)-1)
 #endif
