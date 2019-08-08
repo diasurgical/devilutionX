@@ -4,7 +4,9 @@
 #include <memory>
 #include <array>
 #include <cstring>
+#ifndef __AMIGA__
 #include <sodium.h>
+#endif
 
 #include "dvlnet/abstract_net.h"
 #include "stubs.h"
@@ -25,7 +27,9 @@ typedef uint8_t plr_t;
 typedef uint32_t cookie_t;
 typedef int turn_t; // change int to something else in devilution code later
 typedef int leaveinfo_t; // also change later
+#ifndef __AMIGA__
 typedef std::array<unsigned char, crypto_secretbox_KEYBYTES> key_t;
+#endif
 
 static constexpr plr_t PLR_MASTER = 0xFE;
 static constexpr plr_t PLR_BROADCAST = 0xFF;
@@ -136,7 +140,8 @@ inline void packet_in::process_element(buffer_t& x)
 template <class T> void packet_in::process_element(T& x)
 {
 	if (decrypted_buffer.size() < sizeof(T))
-		throw packet_exception();
+		printf("AAAA exception error\n");
+	//throw packet_exception()
 	std::memcpy(&x, decrypted_buffer.data(), sizeof(T));
 	decrypted_buffer.erase(decrypted_buffer.begin(),
 	                        decrypted_buffer.begin() + sizeof(T));

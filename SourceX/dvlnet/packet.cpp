@@ -3,7 +3,11 @@
 namespace dvl {
 namespace net {
 
+#ifndef __AMIGA__
 static constexpr bool disable_encryption = false;
+#else
+static constexpr bool disable_encryption = true;
+#endif
 
 const buffer_t& packet::data()
 {
@@ -38,7 +42,7 @@ const buffer_t& packet::message()
 	if (!have_decrypted)
 		ABORT();
 	if (m_type != PT_MESSAGE)
-		throw packet_exception();
+		printf("AAAA exception error\n"); //throw packet_exception();
 	return m_message;
 }
 
@@ -47,7 +51,7 @@ turn_t packet::turn()
 	if (!have_decrypted)
 		ABORT();
 	if (m_type != PT_TURN)
-		throw packet_exception();
+		printf("AAAA exception error\n"); //throw packet_exception();
 	return m_turn;
 }
 
@@ -56,7 +60,7 @@ cookie_t packet::cookie()
 	if (!have_decrypted)
 		ABORT();
 	if (m_type != PT_JOIN_REQUEST && m_type != PT_JOIN_ACCEPT)
-		throw packet_exception();
+		printf("AAAA exception error\n"); //throw packet_exception();
 	return m_cookie;
 }
 
@@ -66,7 +70,7 @@ plr_t packet::newplr()
 		ABORT();
 	if (m_type != PT_JOIN_ACCEPT && m_type != PT_CONNECT
 	    && m_type != PT_DISCONNECT)
-		throw packet_exception();
+		printf("AAAA exception error\n"); //throw packet_exception();
 	return m_newplr;
 }
 
@@ -75,7 +79,7 @@ const buffer_t& packet::info()
 	if (!have_decrypted)
 		ABORT();
 	if (m_type != PT_JOIN_REQUEST && m_type != PT_JOIN_ACCEPT)
-		throw packet_exception();
+		printf("AAAA exception error\n"); //throw packet_exception();
 	return m_info;
 }
 
@@ -84,7 +88,7 @@ leaveinfo_t packet::leaveinfo()
 	if (!have_decrypted)
 		ABORT();
 	if (m_type != PT_DISCONNECT)
-		throw packet_exception();
+		printf("AAAA exception error\n"); //throw packet_exception();
 	return m_leaveinfo;
 }
 
@@ -103,10 +107,11 @@ void packet_in::decrypt()
 	if (have_decrypted)
 		return;
 	if (!disable_encryption) {
+#ifndef __AMIGA__
 		if (encrypted_buffer.size() < crypto_secretbox_NONCEBYTES
 		    + crypto_secretbox_MACBYTES
 		    + sizeof(packet_type) + 2*sizeof(plr_t))
-			throw packet_exception();
+			printf("AAAA exception error\n"); //throw packet_exception();
 		auto pktlen = (encrypted_buffer.size()
 		               - crypto_secretbox_NONCEBYTES
 		               - crypto_secretbox_MACBYTES);
@@ -118,10 +123,11 @@ void packet_in::decrypt()
 		                               - crypto_secretbox_NONCEBYTES,
 		                               encrypted_buffer.data(),
 		                               key.data()))
-			throw packet_exception();
+			printf("AAAA exception error\n"); //throw packet_exception();
+#endif
 	} else {
 		if (encrypted_buffer.size() < sizeof(packet_type) + 2*sizeof(plr_t))
-			throw packet_exception();
+			printf("AAAA exception error\n"); //throw packet_exception();
 		decrypted_buffer = encrypted_buffer;
 	}
 
@@ -139,6 +145,7 @@ void packet_out::encrypt()
 
 	process_data();
 
+#ifndef __AMIGA__
 	if (!disable_encryption) {
 		auto len_cleartext = encrypted_buffer.size();
 		encrypted_buffer.insert(encrypted_buffer.begin(),
@@ -155,11 +162,13 @@ void packet_out::encrypt()
 		                          key.data()))
 			ABORT();
 	}
+#endif
 	have_encrypted = true;
 }
 
 packet_factory::packet_factory(std::string pw)
 {
+#ifndef __AMIGA__
 	if (sodium_init() < 0)
 		ABORT();
 	pw.resize(std::min<std::size_t>(pw.size(), crypto_pwhash_argon2id_PASSWD_MAX));
@@ -173,6 +182,7 @@ packet_factory::packet_factory(std::string pw)
 	                  crypto_pwhash_argon2id_MEMLIMIT_INTERACTIVE,
 	                  crypto_pwhash_ALG_ARGON2ID13))
 		ABORT();
+#endif
 }
 
 }  // namespace net

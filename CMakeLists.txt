@@ -80,7 +80,7 @@ else()
   find_package(SDL2_mixer REQUIRED)
 endif()
 
-find_package(sodium REQUIRED)
+#find_package(sodium REQUIRED)
 
 add_library(smacker STATIC
   3rdParty/libsmacker/smk_bitstream.c
@@ -204,9 +204,9 @@ set(
   SourceX/dvlnet/packet.cpp
   SourceX/dvlnet/base.cpp
   SourceX/dvlnet/frame_queue.cpp
-  SourceX/dvlnet/tcp_client.cpp
-  SourceX/dvlnet/tcp_server.cpp
-  SourceX/dvlnet/udp_p2p.cpp
+# SourceX/dvlnet/tcp_client.cpp
+# SourceX/dvlnet/tcp_server.cpp
+# SourceX/dvlnet/udp_p2p.cpp
   SourceX/DiabloUI/credits.cpp
   SourceX/DiabloUI/diabloui.cpp
   SourceX/DiabloUI/dialogs.cpp
@@ -330,7 +330,7 @@ target_compile_definitions(devilution PUBLIC
   "$<$<BOOL:${DEBUG}>:_DEBUG>"
   # Skip fades and other fluff
   "$<$<BOOL:${FASTER}>:FASTER>")
-target_compile_definitions(devilutionx PRIVATE ASIO_STANDALONE)
+#target_compile_definitions(devilutionx PRIVATE ASIO_STANDALONE)
 
 if(ASAN)
   target_compile_options(devilution PUBLIC -fsanitize=address -fsanitize-recover=address)
