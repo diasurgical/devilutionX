@@ -2399,7 +2399,7 @@ void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BOOL draw
 			return;
 		}
 		if (hDDVal != DD_OK) {
-			DDErrMsg(hDDVal, 3707, "C:\\Src\\Diablo\\Source\\SCROLLRT.CPP");
+			DD_ERR_MSG(hDDVal);
 		}
 	}
 
@@ -2445,7 +2445,7 @@ void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BOOL draw
 		hDDVal = lpDDSPrimary->lpVtbl->Unlock(lpDDSPrimary, NULL);
 #endif
 		if (hDDVal != DDERR_SURFACELOST && hDDVal != DD_OK) {
-			DDErrMsg(hDDVal, 3779, "C:\\Src\\Diablo\\Source\\SCROLLRT.CPP");
+			DD_ERR_MSG(hDDVal);
 		}
 	}
 
@@ -2529,7 +2529,7 @@ void DoBlitScreen(DWORD dwX, DWORD dwY, DWORD dwWdt, DWORD dwHgt)
 		    && hDDVal != DDERR_WASSTILLDRAWING
 		    && hDDVal != DDERR_SURFACEBUSY
 		    && hDDVal != DD_OK) {
-			DDErrMsg(hDDVal, 3596, "C:\\Src\\Diablo\\Source\\SCROLLRT.CPP");
+			DD_ERR_MSG(hDDVal);
 		}
 	} else {
 		nSrcOff = SCREENXY(dwX, dwY);

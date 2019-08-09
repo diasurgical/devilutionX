@@ -33,7 +33,7 @@ void palette_init()
 	error_code = lpDDInterface->lpVtbl->CreatePalette(lpDDInterface, DDPCAPS_ALLOW256 | DDPCAPS_8BIT, system_palette, &lpDDPalette, NULL);
 #endif
 	if (error_code)
-		ErrDlg(IDD_DIALOG8, error_code, "C:\\Src\\Diablo\\Source\\PALETTE.CPP", 143);
+		ERR_DLG(IDD_DIALOG8, error_code);
 #ifdef __cplusplus
 	error_code = lpDDSPrimary->SetPalette(lpDDPalette);
 #else
@@ -41,7 +41,7 @@ void palette_init()
 #endif
 #ifndef RGBMODE
 	if (error_code)
-		ErrDlg(IDD_DIALOG8, error_code, "C:\\Src\\Diablo\\Source\\PALETTE.CPP", 146);
+		ERR_DLG(IDD_DIALOG8, error_code);
 #endif
 }
 
