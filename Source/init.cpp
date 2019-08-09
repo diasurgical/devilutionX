@@ -233,7 +233,7 @@ void init_archives()
 #ifdef COPYPROT
 	while (1) {
 #endif
-		diabdat_mpq = init_test_access(diabdat_mpq_path, "\\diabdat.mpq", "DiabloCD", MPQ_FLAG_READ_ONLY, FS_CD);
+		diabdat_mpq = init_test_access(diabdat_mpq_path, "\\diabdat.mpq", "DiabloCD", 2000/*MPQ_FLAG_READ_ONLY*/, FS_CD);
 #ifdef COPYPROT
 		if (diabdat_mpq)
 			break;
@@ -272,7 +272,7 @@ HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags
 #ifdef COPYPROT
 	if (SFileOpenArchive(mpq_path, 0, flags, &archive))
 #else
-	if (SFileOpenArchive(mpq_path, 0, flags, &archive))
+	if (SFileOpenArchive(mpq_path, flags, FS_PC, &archive))
 #endif
 		return archive;
 	if (strcmp(Filename, Buffer)) {
@@ -281,7 +281,7 @@ HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags
 #ifdef COPYPROT
 		if (SFileOpenArchive(mpq_path, 0, flags, &archive))
 #else
-		if (SFileOpenArchive(mpq_path, 0, flags, &archive))
+		if (SFileOpenArchive(mpq_path, flags, FS_PC, &archive))
 #endif
 			return archive;
 	}
@@ -294,7 +294,7 @@ HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags
 #ifdef COPYPROT
 			if (SFileOpenArchive(mpq_path, 0, flags, &archive))
 #else
-			if (SFileOpenArchive(mpq_path, 0, flags, &archive))
+			if (SFileOpenArchive(mpq_path, flags, FS_PC, &archive))
 #endif
 				return archive;
 		}
@@ -341,7 +341,7 @@ BOOL init_read_test_file(char *pszPath, char *pszArchive, int flags, HANDLE *phA
 		if (GetDriveType(pszRoot) == DRIVE_CDROM) {
 			strcpy(pszPath, pszRoot);
 			strcat(pszPath, pszArchive);
-			if (SFileOpenArchive(pszPath, 0, flags, phArchive)) {
+			if (SFileOpenArchive(pszPath, flags, 1, phArchive)) {
 				return TRUE;
 			}
 		}
