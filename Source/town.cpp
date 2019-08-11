@@ -749,7 +749,7 @@ void town_draw_e_flag(BYTE *pBuff, int x, int y, int capChunks, int CelCap, int 
 	int i;
 	BYTE *dst;
 	MICROS *pMap;
-
+	printf("**** town_draw_e_flag\n");
 	dst = pBuff;
 	pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
 
@@ -773,60 +773,72 @@ void town_draw_e_flag(BYTE *pBuff, int x, int y, int capChunks, int CelCap, int 
 void town_draw_town_all(BYTE *pBuff, int x, int y, int capChunks, int CelCap, int sx, int sy, int eflag)
 {
 	int mi, px, py;
-	char bv;
-
+	int bv;
+	px = 0;
+	//printf("**** town_draw_town_all\n");
 	if (dItem[x][y] != 0) {
 		bv = dItem[x][y] - 1;
 		px = sx - item[bv]._iAnimWidth2;
+		printf("**** town_draw_town_all bv=%d\n",bv);
 		if (bv == pcursitem) {
 			CelDecodeClr(181, px, sy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth, 0, CelCap);
 		}
-		/// ASSERT: assert(item[bv]._iAnimData);
+		/// ASSERT:assert(item[bv]._iAnimData);
 		CelDrawHdrOnly(px, sy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth, 0, CelCap);
 	}
 	if (dFlags[x][y] & BFLAG_MONSTLR) {
 		mi = -(dMonster[x][y - 1] + 1);
 		px = sx - towner[mi]._tAnimWidth2;
+		printf("**** town_draw_town_all px=%d sx=%d\n",px, sx);
 		if (mi == pcursmonst) {
 			CelDecodeClr(166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, CelCap);
 		}
-		/// ASSERT: assert(towner[mi]._tAnimData);
+		/// ASSERT:assert(towner[mi]._tAnimData);
 		CelDrawHdrOnly(px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, CelCap);
 	}
 	if (dMonster[x][y] > 0) {
 		mi = dMonster[x][y] - 1;
 		px = sx - towner[mi]._tAnimWidth2;
+		printf("**** town_draw_town_all 1.5  px=%d sx=%d\n",px, sx);
 		if (mi == pcursmonst) {
 			CelDecodeClr(166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, CelCap);
 		}
-		/// ASSERT: assert(towner[mi]._tAnimData);
+		/// ASSERT:assert(towner[mi]._tAnimData);
 		CelDrawHdrOnly(px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, CelCap);
 	}
 	if (dFlags[x][y] & BFLAG_PLAYERLR) {
 		bv = -(dPlayer[x][y - 1] + 1);
 		px = sx + plr[bv]._pxoff - plr[bv]._pAnimWidth2;
 		py = sy + plr[bv]._pyoff;
+		printf("**** town_draw_town_all 2  px=%d sx=%d\n",px, sx);
 		if (bv == pcursplr) {
 			Cl2DecodeFrm2(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, CelCap);
 		}
-		/// ASSERT: assert(plr[bv]._pAnimData);
+		/// ASSERT:assert(plr[bv]._pAnimData);
+
 		Cl2DecodeFrm1(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, CelCap);
 		if (eflag && plr[bv]._peflag) {
 			town_draw_e_flag(pBuff - 64, x - 1, y + 1, capChunks, CelCap, sx - 64, sy);
 		}
 	}
 	if (dFlags[x][y] & BFLAG_DEAD_PLAYER) {
+		printf("**** town_draw_town_all 2.5 px=%d sx=%d\n",px, sx);
 		DrawDeadPlayer(x, y, sx, sy, 0, CelCap, 0);
 	}
 	if (dPlayer[x][y] > 0) {
 		bv = dPlayer[x][y] - 1;
 		px = sx + plr[bv]._pxoff - plr[bv]._pAnimWidth2;
 		py = sy + plr[bv]._pyoff;
+		//printf("**** town_draw_town_all  3 px=%d sx=%d bv=%s\n",px, sx, bv);
 		if (bv == pcursplr) {
 			Cl2DecodeFrm2(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, CelCap);
 		}
-		/// ASSERT: assert(plr[bv]._pAnimData);
+		/// ASSERT:
+		//assert(plr[bv]._pAnimData);
+		printf("**** town_draw_town_all plr[bv]._pAnimWidth=%d\n",plr[bv]._pAnimWidth);
+
 		Cl2DecodeFrm1(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, CelCap);
+
 		if (eflag && plr[bv]._peflag) {
 			town_draw_e_flag(pBuff - 64, x - 1, y + 1, capChunks, CelCap, sx - 64, sy);
 		}
@@ -834,8 +846,11 @@ void town_draw_town_all(BYTE *pBuff, int x, int y, int capChunks, int CelCap, in
 	if (dFlags[x][y] & BFLAG_MISSILE) {
 		DrawMissile(x, y, sx, sy, 0, CelCap, 0);
 	}
+
 	if (dArch[x][y] != 0) {
-		town_special_upper(pBuff, dArch[x][y]);
+		//printf("**** town_draw_town_all 4 px=%d sx=%d\n",px, sx);
+		//printf("**** town_draw_town_all 4.0 dArch[x][y] = %d\n",dArch[x][y]);
+		//town_special_upper(pBuff, dArch[x][y]);
 	}
 }
 
@@ -855,12 +870,14 @@ void town_draw_upper(int x, int y, int sx, int sy, int chunks, int capChunks, in
 	if (eflag) {
 		if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX) {
 			level_cel_block = dPiece[x][y];
+
 			if (level_cel_block != 0) {
 				dst = &gpBuffer[sx + 32 + PitchTbl[sy]];
 				pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
 				for (i = 0; i < 7; i++) {
 					if (capChunks >= i) {
 						level_cel_block = pMap->mt[2 * i + 1];
+						//printf("**** town_draw_upper level_cel_block=%d \n",level_cel_block);
 						if (level_cel_block != 0) {
 							drawUpperScreen(dst);
 						}
@@ -1288,7 +1305,7 @@ void SetTownMicros()
 			pMap = BSWAP_INT16_UNSIGNED(&dpiece_defs_map_1[IsometricCoord(x, y)]);
 			if (lv != 0) {
 				lv--;
-				pPiece = BSWAP_INT16_UNSIGNED((WORD *)&pLevelPieces[32 * lv]);
+				pPiece = ((WORD *)&pLevelPieces[32 * lv]);
 				for (i = 0; i < 16; i++) {
 					pMap->mt[i] = BSWAP_INT16_UNSIGNED(pPiece[(i & 1) + 14 - (i & 0xE)]);
 					//printf("AAA pMap->mt[i]= %d\n", pMap->mt[i]); //ok
@@ -1425,7 +1442,7 @@ void T_FillTile(BYTE *P3Tiles, int xx, int yy, int t)
 	v2 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(t - 1) * 8] + 1) + 1);
 	v3 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(t - 1) * 8] + 2) + 1);
 	v4 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(t - 1) * 8] + 3) + 1);
-	//printf("AAAAA v1 = %d\n", v1-255);
+	//printf("AAAAA v1 = %ld\n", v1-255);
 #endif
 
 	dPiece[xx][yy] = v1 - OVERFLOW;
