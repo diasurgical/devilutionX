@@ -4,7 +4,7 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 #ifdef __AMIGA__
-#define OVERFLOW 255 //hack?
+#define OVERFLOW 0 //hack?
 #else
 #define OVERFLOW 0
 #endif
@@ -13,44 +13,6 @@ void town_clear_upper_buf(BYTE *pBuff)
 {
 	/// ASSERT: assert(gpBuffer);
 
-#ifdef USE_ASM
-	__asm {
-		mov		edi, pBuff
-		mov		edx, 30
-		mov		ebx, 1
-		xor		eax, eax
-	label1:
-		cmp		edi, gpBufEnd
-		jb		label4
-		add		edi, edx
-		mov		ecx, ebx
-		rep stosd
-		add		edi, edx
-		sub		edi, BUFFER_WIDTH + 64
-		or		edx, edx
-		jz		label2
-		sub		edx, 2
-		inc		ebx
-		jmp		label1
-	label2:
-		mov		edx, 2
-		mov		ebx, 15
-	label3:
-		cmp		edi, gpBufEnd
-		jb		label4
-		add		edi, edx
-		mov		ecx, ebx
-		rep stosd
-		add		edi, edx
-		sub		edi, BUFFER_WIDTH + 64
-		dec		ebx
-		add		edx, 2
-		cmp		edx, 32
-		jnz		label3
-	label4:
-		nop
-	}
-#else
 	int i, j, k;
 	BYTE *dst;
 
@@ -68,57 +30,13 @@ void town_clear_upper_buf(BYTE *pBuff)
 			*dst++ = 0;
 		dst += i;
 	}
-#endif
+
 }
 
 void town_clear_low_buf(BYTE *pBuff)
 {
 	/// ASSERT: assert(gpBuffer);
 
-#ifdef USE_ASM
-	__asm {
-		mov		edi, pBuff
-		mov		edx, 30
-		mov		ebx, 1
-		xor		eax, eax
-	label1:
-		cmp		edi, gpBufEnd
-		jb		label2
-		add		edi, 64
-		jmp		label3
-	label2:
-		add		edi, edx
-		mov		ecx, ebx
-		rep stosd
-		add		edi, edx
-	label3:
-		sub		edi, BUFFER_WIDTH + 64
-		or		edx, edx
-		jz		label4
-		sub		edx, 2
-		inc		ebx
-		jmp		label1
-	label4:
-		mov		edx, 2
-		mov		ebx, 15
-	label5:
-		cmp		edi, gpBufEnd
-		jb		label6
-		add		edi, 64
-		jmp		label7
-	label6:
-		add		edi, edx
-		mov		ecx, ebx
-		rep stosd
-		add		edi, edx
-	label7:
-		sub		edi, BUFFER_WIDTH + 64
-		dec		ebx
-		add		edx, 2
-		cmp		edx, 32
-		jnz		label5
-	}
-#else
 	int i, j, k;
 	BYTE *dst;
 
@@ -144,231 +62,17 @@ void town_clear_low_buf(BYTE *pBuff)
 			dst += 64;
 		}
 	}
-#endif
+
 }
 
 void town_special_lower(BYTE *pBuff, int nCel)
 {
-#if 0
-	int w;
-	BYTE *end;
 
-#ifdef USE_ASM
-	__asm {
-		mov		ebx, pSpecialCels
-		mov		eax, nCel
-		shl		eax, 2
-		add		ebx, eax
-		mov		eax, [ebx+4]
-		sub		eax, [ebx]
-		mov		end, eax
-		mov		esi, pSpecialCels
-		add		esi, [ebx]
-		mov		edi, pBuff
-		mov		eax, BUFFER_WIDTH + 64
-		mov		w, eax
-		mov		ebx, end
-		add		ebx, esi
-	label1:
-		mov		edx, 64
-	label2:
-		xor		eax, eax
-		lodsb
-		or		al, al
-		js		label7
-		sub		edx, eax
-		cmp		edi, gpBufEnd
-		jb		label3
-		add		esi, eax
-		add		edi, eax
-		jmp		label6
-	label3:
-		mov		ecx, eax
-		shr		ecx, 1
-		jnb		label4
-		movsb
-		jecxz	label6
-	label4:
-		shr		ecx, 1
-		jnb		label5
-		movsw
-		jecxz	label6
-	label5:
-		rep movsd
-	label6:
-		or		edx, edx
-		jz		label8
-		jmp		label2
-	label7:
-		neg		al
-		add		edi, eax
-		sub		edx, eax
-		jnz		label2
-	label8:
-		sub		edi, w
-		cmp		ebx, esi
-		jnz		label1
-	}
-#else
-	BYTE width;
-	BYTE *src, *dst;
-	DWORD *pFrameTable;
-
-	pFrameTable = (DWORD *)pSpecialCels;
-	src = &pSpecialCels[pFrameTable[nCel]];
-	dst = pBuff;
-	end = &src[pFrameTable[nCel + 1] - pFrameTable[nCel]];
-
-	for(; src != end; dst -= BUFFER_WIDTH + 64) {
-		for(w = 64; w;) {
-			width = *src++;
-			if(!(width & 0x80)) {
-				w -= width;
-				if(dst < gpBufEnd) {
-					if(width & 1) {
-						dst[0] = src[0];
-						src++;
-						dst++;
-					}
-					width >>= 1;
-					if(width & 1) {
-						dst[0] = src[0];
-						dst[1] = src[1];
-						src += 2;
-						dst += 2;
-					}
-					width >>= 1;
-					for(; width; width--) {
-						dst[0] = src[0];
-						dst[1] = src[1];
-						dst[2] = src[2];
-						dst[3] = src[3];
-						src += 4;
-						dst += 4;
-					}
-				} else {
-					src += width;
-					dst += width;
-				}
-			} else {
-				width = -(char)width;
-				dst += width;
-				w -= width;
-			}
-		}
-	}
-#endif
-#endif
 }
 
 void town_special_upper(BYTE *pBuff, int nCel)
 {
-#if 0
-	int w;
-	BYTE *end;
 
-#ifdef USE_ASM
-	__asm {
-		mov		ebx, pSpecialCels
-		mov		eax, nCel
-		shl		eax, 2
-		add		ebx, eax
-		mov		eax, [ebx+4]
-		sub		eax, [ebx]
-		mov		end, eax
-		mov		esi, pSpecialCels
-		add		esi, [ebx]
-		mov		edi, pBuff
-		mov		eax, BUFFER_WIDTH + 64
-		mov		w, eax
-		mov		ebx, end
-		add		ebx, esi
-	label1:
-		mov		edx, 64
-	label2:
-		xor		eax, eax
-		lodsb
-		or		al, al
-		js		label6
-		sub		edx, eax
-		cmp		edi, gpBufEnd
-		jb		label8
-		mov		ecx, eax
-		shr		ecx, 1
-		jnb		label3
-		movsb
-		jecxz	label5
-	label3:
-		shr		ecx, 1
-		jnb		label4
-		movsw
-		jecxz	label5
-	label4:
-		rep movsd
-	label5:
-		or		edx, edx
-		jz		label7
-		jmp		label2
-	label6:
-		neg		al
-		add		edi, eax
-		sub		edx, eax
-		jnz		label2
-	label7:
-		sub		edi, w
-		cmp		ebx, esi
-		jnz		label1
-	label8:
-		nop
-	}
-#else
-	BYTE width;
-	BYTE *src, *dst;
-	DWORD *pFrameTable;
-
-	pFrameTable = (DWORD *)pSpecialCels;
-	src = &pSpecialCels[pFrameTable[nCel]];
-	dst = pBuff;
-	end = &src[pFrameTable[nCel + 1] - pFrameTable[nCel]];
-
-	for(; src != end; dst -= BUFFER_WIDTH + 64) {
-		for(w = 64; w;) {
-			width = *src++;
-			if(!(width & 0x80)) {
-				w -= width;
-				if(dst < gpBufEnd) {
-					return;
-				}
-				if(width & 1) {
-					dst[0] = src[0];
-					src++;
-					dst++;
-				}
-				width >>= 1;
-				if(width & 1) {
-					dst[0] = src[0];
-					dst[1] = src[1];
-					src += 2;
-					dst += 2;
-				}
-				width >>= 1;
-				for(; width; width--) {
-					dst[0] = src[0];
-					dst[1] = src[1];
-					dst[2] = src[2];
-					dst[3] = src[3];
-					src += 4;
-					dst += 4;
-				}
-			} else {
-				width = -(char)width;
-				dst += width;
-				w -= width;
-			}
-		}
-	}
-#endif
-#endif
 }
 
 void town_draw_clipped_e_flag(BYTE *pBuff, int x, int y, int sx, int sy)
@@ -749,7 +453,7 @@ void town_draw_e_flag(BYTE *pBuff, int x, int y, int capChunks, int CelCap, int 
 	int i;
 	BYTE *dst;
 	MICROS *pMap;
-	printf("**** town_draw_e_flag\n");
+
 	dst = pBuff;
 	pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
 
@@ -775,11 +479,11 @@ void town_draw_town_all(BYTE *pBuff, int x, int y, int capChunks, int CelCap, in
 	int mi, px, py;
 	int bv;
 	px = 0;
-	//printf("**** town_draw_town_all\n");
+
 	if (dItem[x][y] != 0) {
 		bv = dItem[x][y] - 1;
 		px = sx - item[bv]._iAnimWidth2;
-		printf("**** town_draw_town_all bv=%d\n",bv);
+
 		if (bv == pcursitem) {
 			CelDecodeClr(181, px, sy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth, 0, CelCap);
 		}
@@ -789,7 +493,7 @@ void town_draw_town_all(BYTE *pBuff, int x, int y, int capChunks, int CelCap, in
 	if (dFlags[x][y] & BFLAG_MONSTLR) {
 		mi = -(dMonster[x][y - 1] + 1);
 		px = sx - towner[mi]._tAnimWidth2;
-		printf("**** town_draw_town_all px=%d sx=%d\n",px, sx);
+
 		if (mi == pcursmonst) {
 			CelDecodeClr(166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, CelCap);
 		}
@@ -799,7 +503,6 @@ void town_draw_town_all(BYTE *pBuff, int x, int y, int capChunks, int CelCap, in
 	if (dMonster[x][y] > 0) {
 		mi = dMonster[x][y] - 1;
 		px = sx - towner[mi]._tAnimWidth2;
-		printf("**** town_draw_town_all 1.5  px=%d sx=%d\n",px, sx);
 		if (mi == pcursmonst) {
 			CelDecodeClr(166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, CelCap);
 		}
@@ -810,7 +513,7 @@ void town_draw_town_all(BYTE *pBuff, int x, int y, int capChunks, int CelCap, in
 		bv = -(dPlayer[x][y - 1] + 1);
 		px = sx + plr[bv]._pxoff - plr[bv]._pAnimWidth2;
 		py = sy + plr[bv]._pyoff;
-		printf("**** town_draw_town_all 2  px=%d sx=%d\n",px, sx);
+
 		if (bv == pcursplr) {
 			Cl2DecodeFrm2(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, CelCap);
 		}
@@ -822,20 +525,19 @@ void town_draw_town_all(BYTE *pBuff, int x, int y, int capChunks, int CelCap, in
 		}
 	}
 	if (dFlags[x][y] & BFLAG_DEAD_PLAYER) {
-		printf("**** town_draw_town_all 2.5 px=%d sx=%d\n",px, sx);
+
 		DrawDeadPlayer(x, y, sx, sy, 0, CelCap, 0);
 	}
 	if (dPlayer[x][y] > 0) {
 		bv = dPlayer[x][y] - 1;
 		px = sx + plr[bv]._pxoff - plr[bv]._pAnimWidth2;
 		py = sy + plr[bv]._pyoff;
-		//printf("**** town_draw_town_all  3 px=%d sx=%d bv=%s\n",px, sx, bv);
+
 		if (bv == pcursplr) {
 			Cl2DecodeFrm2(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, CelCap);
 		}
 		/// ASSERT:
 		//assert(plr[bv]._pAnimData);
-		printf("**** town_draw_town_all plr[bv]._pAnimWidth=%d\n",plr[bv]._pAnimWidth);
 
 		Cl2DecodeFrm1(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, CelCap);
 
@@ -848,8 +550,7 @@ void town_draw_town_all(BYTE *pBuff, int x, int y, int capChunks, int CelCap, in
 	}
 
 	if (dArch[x][y] != 0) {
-		//printf("**** town_draw_town_all 4 px=%d sx=%d\n",px, sx);
-		//printf("**** town_draw_town_all 4.0 dArch[x][y] = %d\n",dArch[x][y]);
+
 		//town_special_upper(pBuff, dArch[x][y]);
 	}
 }
@@ -872,12 +573,14 @@ void town_draw_upper(int x, int y, int sx, int sy, int chunks, int capChunks, in
 			level_cel_block = dPiece[x][y];
 
 			if (level_cel_block != 0) {
-				dst = &gpBuffer[sx + 32 + PitchTbl[sy]];
-				pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
+				dst = (&gpBuffer[sx + 32 + PitchTbl[sy]]);
+
+				pMap = (&dpiece_defs_map_1[IsometricCoord(x, y)]);
+
 				for (i = 0; i < 7; i++) {
 					if (capChunks >= i) {
 						level_cel_block = pMap->mt[2 * i + 1];
-						//printf("**** town_draw_upper level_cel_block=%d \n",level_cel_block);
+
 						if (level_cel_block != 0) {
 							drawUpperScreen(dst);
 						}
@@ -900,11 +603,12 @@ void town_draw_upper(int x, int y, int sx, int sy, int chunks, int capChunks, in
 		if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX) {
 			level_cel_block = dPiece[x][y];
 			if (level_cel_block != 0) {
-				dst = &gpBuffer[sx + PitchTbl[sy]];
+				dst = (&gpBuffer[sx + PitchTbl[sy]]);
 				pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
 				for (i = 0; i < 7; i++) {
 					if (capChunks >= i) {
-						level_cel_block = pMap->mt[2 * i];
+						level_cel_block = (pMap->mt[2 * i]);
+
 						if (level_cel_block != 0) {
 							drawUpperScreen(dst);
 						}
@@ -931,11 +635,11 @@ void town_draw_upper(int x, int y, int sx, int sy, int chunks, int capChunks, in
 		if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX) {
 			level_cel_block = dPiece[x][y];
 			if (level_cel_block != 0) {
-				dst = &gpBuffer[sx + PitchTbl[sy]];
+				dst = (&gpBuffer[sx + PitchTbl[sy]]);
 				pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
 				for (i = 0; i < 7; i++) {
 					if (capChunks >= i) {
-						level_cel_block = pMap->mt[2 * i];
+						level_cel_block = (pMap->mt[2 * i]);
 						if (level_cel_block != 0) {
 							drawUpperScreen(dst);
 						}
@@ -1181,39 +885,6 @@ void T_DrawZoom(int x, int y)
 
 	/// ASSERT: assert(gpBuffer);
 
-#ifdef USE_ASM
-	__asm {
-		mov		esi, gpBuffer
-		mov		edx, nDstOff
-		mov		edi, esi
-		mov		ecx, nSrcOff
-		add		edi, edx
-		add		esi, ecx
-		mov		ebx, edi
-		add		ebx, BUFFER_WIDTH
-		mov		edx, 176
-	label1:
-		mov		ecx, wdt
-	label2:
-		mov		al, [esi]
-		inc		esi
-		mov		ah, al
-		mov		[edi], ax
-		mov		[ebx], ax
-		add		edi, 2
-		add		ebx, 2
-		dec		ecx
-		jnz		label2
-		mov		eax, BUFFER_WIDTH
-		add		eax, wdt
-		sub		esi, eax
-		add		eax, eax
-		sub		ebx, eax
-		sub		edi, eax
-		dec		edx
-		jnz		label1
-	}
-#else
 	int hgt;
 	BYTE *src, *dst1, *dst2;
 
@@ -1230,7 +901,7 @@ void T_DrawZoom(int x, int y)
 			src++;
 		}
 	}
-#endif
+
 }
 
 void T_DrawView(int StartX, int StartY)
@@ -1301,14 +972,14 @@ void SetTownMicros()
 	for (y = 0; y < MAXDUNY; y++) {
 		for (x = 0; x < MAXDUNX; x++) {
 			lv = dPiece[x][y];
-			//printf("AAA  lv= %d\n", lv); //ok
-			pMap = BSWAP_INT16_UNSIGNED(&dpiece_defs_map_1[IsometricCoord(x, y)]);
+
+			pMap = (&dpiece_defs_map_1[IsometricCoord(x, y)]);
 			if (lv != 0) {
 				lv--;
 				pPiece = ((WORD *)&pLevelPieces[32 * lv]);
+
 				for (i = 0; i < 16; i++) {
 					pMap->mt[i] = BSWAP_INT16_UNSIGNED(pPiece[(i & 1) + 14 - (i & 0xE)]);
-					//printf("AAA pMap->mt[i]= %d\n", pMap->mt[i]); //ok
 				}
 			} else {
 				for (i = 0; i < 16; i++) {
@@ -1341,63 +1012,32 @@ void T_FillSector(BYTE *P3Tiles, BYTE *pSector, int xi, int yi, int w, int h)
 	for (j = 0; j < h; j++) {
 		xx = xi;
 		for (i = 0; i < w; i++) {
-#ifdef USE_ASM
-			__asm {
-				mov		esi, pSector
-				mov		eax, ii
-				add		esi, eax
-				xor		eax, eax
-				lodsw
-				or		eax, eax
-				jz		label1
-				dec		eax
-				mov		esi, P3Tiles
-				shl		eax, 3
-				add		esi, eax
-				xor		eax, eax
-				lodsw
-				inc		eax
-				mov		v1, eax
-				lodsw
-				inc		eax
-				mov		v2, eax
-				lodsw
-				inc		eax
-				mov		v3, eax
-				lodsw
-				inc		eax
-				mov		v4, eax
-				jmp		label2
-			label1:
-				mov		v1, eax
-				mov		v2, eax
-				mov		v3, eax
-				mov		v4, eax
-			label2:
-				nop
-			}
-#else
-			WORD *Map;
 
-			Map = (WORD *)&pSector[ii];
+			WORD *Map;
+			Map = ((WORD *)&pSector[ii]);
+
+			WORD *Sector;
+			Sector = (WORD *)&P3Tiles[(BSWAP_INT16_UNSIGNED(*Map) - 1) * 8];
+			Sector = BSWAP_INT16_UNSIGNED(*Sector);
 
 			if (BSWAP_INT16_UNSIGNED(*Map)) {
-				v1 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(BSWAP_INT16_UNSIGNED(*Map) - 1) * 8]) + 1);
-				v2 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(BSWAP_INT16_UNSIGNED(*Map) - 1) * 8] + 1) + 1);
-				v3 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(BSWAP_INT16_UNSIGNED(*Map) - 1) * 8] + 2) + 1);
-				v4 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(BSWAP_INT16_UNSIGNED(*Map) - 1) * 8] + 3) + 1);
-				//printf("AAAAA v1 = %d\n", v1-255);
+
+				v1 =  (long)Sector + 1;
+				v2 =  (long)Sector + 1 + 1;
+				v3 =  (long)Sector + 2 + 1;
+				v4 =  (long)Sector + 3 + 1;
+
 			} else {
 				v1 = 0;
 				v2 = 0;
 				v3 = 0;
 				v4 = 0;
 			}
-#endif
-			dPiece[xx][yy] = v1 - OVERFLOW;
-			dPiece[xx + 1][yy] = v2 - OVERFLOW;
-			dPiece[xx][yy + 1] = v3 - OVERFLOW;
-			dPiece[xx + 1][yy + 1] = v4 - OVERFLOW;
+
+			dPiece[xx][yy] = v1;
+			dPiece[xx + 1][yy] = v2;
+			dPiece[xx][yy + 1] = v3;
+			dPiece[xx + 1][yy + 1] = v4;
 			xx += 2;
 			ii += 2;
 		}
@@ -1409,46 +1049,19 @@ void T_FillTile(BYTE *P3Tiles, int xx, int yy, int t)
 {
 	long v1, v2, v3, v4;
 
-#ifdef USE_ASM
-	__asm {
-		mov		eax, t
-		dec		eax
-		mov		esi, P3Tiles
-		shl		eax, 3
-		add		esi, eax
-		xor		eax, eax
-		lodsw
-		inc		eax
-		mov		v1, eax
-		lodsw
-		inc		eax
-		mov		v2, eax
-		lodsw
-		inc		eax
-		mov		v3, eax
-		lodsw
-		inc		eax
-		mov		v4, eax
-		jmp		label1
-		mov		v1, eax
-		mov		v2, eax
-		mov		v3, eax
-		mov		v4, eax
-	label1:
-		nop
-	}
-#else
-	v1 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(t - 1) * 8]) + 1);
-	v2 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(t - 1) * 8] + 1) + 1);
-	v3 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(t - 1) * 8] + 2) + 1);
-	v4 = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(t - 1) * 8] + 3) + 1);
-	//printf("AAAAA v1 = %ld\n", v1-255);
-#endif
+	WORD *Tiles;
+	Tiles = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(t - 1) * 8]));
 
-	dPiece[xx][yy] = v1 - OVERFLOW;
-	dPiece[xx + 1][yy] = v2 - OVERFLOW;
-	dPiece[xx][yy + 1] = v3 - OVERFLOW;
-	dPiece[xx + 1][yy + 1] = v4 - OVERFLOW;
+	v1 = (long)Tiles + 1;
+	v2 = (long)Tiles + 1 + 1;
+	v3 = (long)Tiles + 2 + 1;
+	v4 = (long)Tiles + 3 + 1;
+
+
+	dPiece[xx][yy] = v1;
+	dPiece[xx + 1][yy] = v2;
+	dPiece[xx][yy + 1] = v3;
+	dPiece[xx + 1][yy + 1] = v4;
 }
 
 void T_Pass3()
@@ -1465,21 +1078,23 @@ void T_Pass3()
 		}
 	}
 
-	P3Tiles = LoadFileInMem("Levels\\TownData\\Town.TIL", NULL);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector1s.DUN", NULL);
+	P3Tiles = (LoadFileInMem("Levels\\TownData\\Town.TIL", NULL));
+
+	pSector = (LoadFileInMem("Levels\\TownData\\Sector1s.DUN", NULL));
 	T_FillSector(P3Tiles, pSector, 46, 46, 25, 25);
 	mem_free_dbg(pSector);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector2s.DUN", NULL);
+	pSector = (LoadFileInMem("Levels\\TownData\\Sector2s.DUN", NULL));
 	T_FillSector(P3Tiles, pSector, 46, 0, 25, 23);
 	mem_free_dbg(pSector);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector3s.DUN", NULL);
+	pSector = (LoadFileInMem("Levels\\TownData\\Sector3s.DUN", NULL));
 	T_FillSector(P3Tiles, pSector, 0, 46, 23, 25);
 	mem_free_dbg(pSector);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector4s.DUN", NULL);
+	pSector = (LoadFileInMem("Levels\\TownData\\Sector4s.DUN", NULL));
 	T_FillSector(P3Tiles, pSector, 0, 0, 23, 23);
 	mem_free_dbg(pSector);
 
 	if (gbMaxPlayers == 1) {
+
 		if (!(plr[myplr].pTownWarps & 1)) {
 			T_FillTile(P3Tiles, 48, 20, 320);
 		}
@@ -1488,6 +1103,7 @@ void T_Pass3()
 			T_FillTile(P3Tiles, 16, 70, 331);
 		}
 		if (!(plr[myplr].pTownWarps & 4)) {
+
 			for (x = 36; x < 46; x++) {
 				T_FillTile(P3Tiles, x, 78, random(0, 4) + 1);
 			}

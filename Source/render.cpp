@@ -1,9 +1,9 @@
 #include "diablo.h"
+#include <SDL_endian.h>
 
 DEVILUTION_BEGIN_NAMESPACE
 
 #include "_asm.cpp"
-#include <SDL_endian.h>
 
 int WorldBoolFlag = 0;
 DWORD gdwCurrentMask = 0;
@@ -137,13 +137,13 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 		if (level_cel_block & 0x8000)
 			level_cel_block = *(DWORD *)&gpCelFrame[64 * (level_cel_block & 0xFFF)]
 			    + (WORD)(level_cel_block & 0xF000);
-		src = pDungeonCels + *((DWORD *)pDungeonCels + (level_cel_block & 0xFFF));
+		src = pDungeonCels + SDL_SwapLE32(*((DWORD *)pDungeonCels + (level_cel_block & 0xFFF)));
 		cel_type_16 = ((level_cel_block >> 12) & 7) + 8;
 		goto LABEL_11;
 	}
 	if ((BYTE)light_table_index != lightmax) {
 		if (!(level_cel_block & 0x8000)) {
-			src = pDungeonCels + *((DWORD *)pDungeonCels + (level_cel_block & 0xFFF));
+			src = pDungeonCels + SDL_SwapLE32(*((DWORD *)pDungeonCels + (level_cel_block & 0xFFF)));
 			tbl = &pLightTbl[256 * light_table_index];
 			cel_type_16 = (BYTE)(level_cel_block >> 12);
 			switch (cel_type_16) {
@@ -743,7 +743,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 	if (level_cel_block & 0x8000)
 		level_cel_block = *(DWORD *)&gpCelFrame[64 * (level_cel_block & 0xFFF)]
 		    + (WORD)(level_cel_block & 0xF000);
-	src = pDungeonCels + *((DWORD *)pDungeonCels + (level_cel_block & 0xFFF));
+	src = pDungeonCels + SDL_SwapLE32(*((DWORD *)pDungeonCels + (level_cel_block & 0xFFF)));
 	cel_type_16 = (level_cel_block >> 12) & 7;
 	switch (cel_type_16) {
 	case 0: // upper (top transparent), black
@@ -1160,7 +1160,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, DWORD *pMask)
 		if (level_cel_block & 0x8000)
 			level_cel_block = *(DWORD *)&gpCelFrame[64 * (level_cel_block & 0xFFF)]
 			    + (WORD)(level_cel_block & 0xF000);
-		src = pDungeonCels + *((DWORD *)pDungeonCels + (level_cel_block & 0xFFF));
+		src = pDungeonCels + SDL_SwapLE32(*((DWORD *)pDungeonCels + (level_cel_block & 0xFFF)));
 		cel_type_16 = ((level_cel_block >> 12) & 7) + 8;
 	LABEL_12:
 		switch (cel_type_16) {
@@ -1396,7 +1396,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, DWORD *pMask)
 	}
 	if ((BYTE)light_table_index != lightmax) {
 		if (!(level_cel_block & 0x8000)) {
-			src = pDungeonCels + *((DWORD *)pDungeonCels + (level_cel_block & 0xFFF));
+			src = pDungeonCels + SDL_SwapLE32(*((DWORD *)pDungeonCels + (level_cel_block & 0xFFF)));
 			tbl = &pLightTbl[256 * light_table_index];
 			cel_type_16 = (BYTE)(level_cel_block >> 12);
 			switch (cel_type_16) {
@@ -1542,7 +1542,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, DWORD *pMask)
 	if (level_cel_block & 0x8000)
 		level_cel_block = *(DWORD *)&gpCelFrame[64 * (level_cel_block & 0xFFF)]
 		    + (WORD)(level_cel_block & 0xF000);
-	src = pDungeonCels + *((DWORD *)pDungeonCels + (level_cel_block & 0xFFF));
+	src = pDungeonCels + SDL_SwapLE32(*((DWORD *)pDungeonCels + (level_cel_block & 0xFFF)));
 	cel_type_16 = (level_cel_block >> 12) & 7;
 	switch (cel_type_16) {
 	case 0: // upper (bottom transparent), black
@@ -1808,7 +1808,9 @@ void drawUpperScreen(BYTE *pBuff)
 		if (level_cel_block & 0x8000)
 			level_cel_block = *(DWORD *)&gpCelFrame[64 * (level_cel_block & 0xFFF)]
 			    + (WORD)(level_cel_block & 0xF000);
-		src = pDungeonCels + *((DWORD *)pDungeonCels + (level_cel_block & 0xFFF));
+
+		src = pDungeonCels + SDL_SwapLE32(*((DWORD *)pDungeonCels + (level_cel_block & 0xFFF)));
+
 		cel_type_16 = ((level_cel_block >> 12) & 7) + 8;
 	LABEL_22:
 		switch (cel_type_16) {
@@ -1819,7 +1821,7 @@ void drawUpperScreen(BYTE *pBuff)
 					break;
 				j = 8;
 				do {
-					*(DWORD *)dst = SDL_SwapLE32(*(DWORD *)src);
+					*(DWORD *)dst = *(DWORD *)src;
 					src += 4;
 					dst += 4;
 					--j;
@@ -1878,7 +1880,7 @@ void drawUpperScreen(BYTE *pBuff)
 				dst += xx_32;
 				n_draw_shift = (unsigned int)(32 - xx_32) >> 2;
 				if ((32 - xx_32) & 2) {
-					*(WORD *)dst = SDL_SwapLE16(*((WORD *)src + 1));
+					*(WORD *)dst = *((WORD *)src + 1);
 					src += 4;
 					dst += 2;
 				}
@@ -2004,7 +2006,7 @@ void drawUpperScreen(BYTE *pBuff)
 					dst += 4;
 				}
 				if ((32 - (BYTE)xx_32) & 2) {
-					*(WORD *)dst = SDL_SwapLE16(*(WORD *)src);
+					*(WORD *)dst = *(WORD *)src;
 					src += 4;
 					dst += 2;
 				}
@@ -2034,7 +2036,7 @@ void drawUpperScreen(BYTE *pBuff)
 	}
 	if ((BYTE)light_table_index != lightmax) {
 		if (!(level_cel_block & 0x8000)) {
-			src = pDungeonCels + *((DWORD *)pDungeonCels + (level_cel_block & 0xFFF));
+			src = pDungeonCels + SDL_SwapLE32(*((DWORD *)pDungeonCels + (level_cel_block & 0xFFF)));
 			tbl = &pLightTbl[256 * light_table_index];
 			cel_type_16 = (WORD)level_cel_block >> 12;
 			switch (cel_type_16) {
@@ -2169,7 +2171,7 @@ void drawUpperScreen(BYTE *pBuff)
 	if (level_cel_block & 0x8000)
 		level_cel_block = *(DWORD *)&gpCelFrame[64 * (level_cel_block & 0xFFF)]
 		    + (WORD)(level_cel_block & 0xF000);
-	src = pDungeonCels + *((DWORD *)pDungeonCels + (level_cel_block & 0xFFF));
+	src = pDungeonCels + SDL_SwapLE32(*((DWORD *)pDungeonCels + (level_cel_block & 0xFFF)));
 	cel_type_16 = ((unsigned int)level_cel_block >> 12) & 7;
 	switch (cel_type_16) {
 	case 0: // upper (solid), black
@@ -2411,7 +2413,7 @@ void drawTopArchesLowerScreen(BYTE *pBuff)
 		if (level_cel_block & 0x8000)
 			level_cel_block = *(DWORD *)&gpCelFrame[64 * (level_cel_block & 0xFFF)]
 			    + (WORD)(level_cel_block & 0xF000);
-		src = pDungeonCels + *((DWORD *)pDungeonCels + (level_cel_block & 0xFFF));
+		src = pDungeonCels + SDL_SwapLE32(*((DWORD *)pDungeonCels + (level_cel_block & 0xFFF)));
 		cel_type_16 = ((level_cel_block >> 12) & 7) + 8;
 		goto LABEL_11;
 	}
@@ -2419,7 +2421,7 @@ void drawTopArchesLowerScreen(BYTE *pBuff)
 		if (level_cel_block & 0x8000)
 			level_cel_block = *(DWORD *)&gpCelFrame[64 * (level_cel_block & 0xFFF)]
 			    + (WORD)(level_cel_block & 0xF000);
-		src = pDungeonCels + *((DWORD *)pDungeonCels + (level_cel_block & 0xFFF));
+		src = pDungeonCels + SDL_SwapLE32(*((DWORD *)pDungeonCels + (level_cel_block & 0xFFF)));
 		cel_type_16 = (level_cel_block >> 12) & 7;
 		switch (cel_type_16) {
 		case 0: // lower (top transparent), black
@@ -2860,7 +2862,7 @@ void drawTopArchesLowerScreen(BYTE *pBuff)
 		return;
 	}
 	if (!(level_cel_block & 0x8000)) {
-		src = pDungeonCels + *((DWORD *)pDungeonCels + (level_cel_block & 0xFFF));
+		src = pDungeonCels + SDL_SwapLE32(*((DWORD *)pDungeonCels + (level_cel_block & 0xFFF)));
 		tbl = &pLightTbl[256 * light_table_index];
 		cel_type_16 = (BYTE)(level_cel_block >> 12);
 		switch (cel_type_16) {
@@ -3648,7 +3650,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, DWORD *pMask)
 			if (level_cel_block & 0x8000)
 				level_cel_block = *(DWORD *)&gpCelFrame[64 * (level_cel_block & 0xFFF)]
 				    + (WORD)(level_cel_block & 0xF000);
-			src = pDungeonCels + *((DWORD *)pDungeonCels + (level_cel_block & 0xFFF));
+			src = pDungeonCels + SDL_SwapLE32(*((DWORD *)pDungeonCels + (level_cel_block & 0xFFF)));
 			cel_type_16 = (level_cel_block >> 12) & 7;
 			switch (cel_type_16) {
 			case 0: // lower (bottom transparent), black
@@ -3906,7 +3908,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, DWORD *pMask)
 			return;
 		}
 		if (!(level_cel_block & 0x8000)) {
-			src = pDungeonCels + *((DWORD *)pDungeonCels + (level_cel_block & 0xFFF));
+			src = pDungeonCels + SDL_SwapLE32(*((DWORD *)pDungeonCels + (level_cel_block & 0xFFF)));
 			tbl = &pLightTbl[256 * light_table_index];
 			cel_type_16 = (BYTE)(level_cel_block >> 12);
 			switch (cel_type_16) {
@@ -4117,7 +4119,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, DWORD *pMask)
 		if (level_cel_block & 0x8000)
 			level_cel_block = *(DWORD *)&gpCelFrame[64 * (level_cel_block & 0xFFF)]
 			    + (WORD)(level_cel_block & 0xF000);
-		src = pDungeonCels + *((DWORD *)pDungeonCels + (level_cel_block & 0xFFF));
+		src = pDungeonCels + SDL_SwapLE32(*((DWORD *)pDungeonCels + (level_cel_block & 0xFFF)));
 		cel_type_16 = ((level_cel_block >> 12) & 7) + 8;
 	}
 	switch (cel_type_16) {
@@ -4456,7 +4458,7 @@ void drawLowerScreen(BYTE *pBuff)
 			if (level_cel_block & 0x8000)
 				level_cel_block = *(DWORD *)&gpCelFrame[64 * (level_cel_block & 0xFFF)]
 				    + (WORD)(level_cel_block & 0xF000);
-			src = pDungeonCels + *((DWORD *)pDungeonCels + (level_cel_block & 0xFFF));
+			src = pDungeonCels + SDL_SwapLE32(*((DWORD *)pDungeonCels + (level_cel_block & 0xFFF)));
 			cel_type_16 = (level_cel_block >> 12) & 7;
 			switch (cel_type_16) {
 			case 0: // lower (solid), black
@@ -4705,7 +4707,7 @@ void drawLowerScreen(BYTE *pBuff)
 			return;
 		}
 		if (!(level_cel_block & 0x8000)) {
-			src = pDungeonCels + *((DWORD *)pDungeonCels + (level_cel_block & 0xFFF));
+			src = pDungeonCels + SDL_SwapLE32(*((DWORD *)pDungeonCels + (level_cel_block & 0xFFF)));
 			tbl = &pLightTbl[256 * light_table_index];
 			cel_type_16 = (WORD)level_cel_block >> 12;
 			switch (cel_type_16) {
@@ -4901,7 +4903,7 @@ void drawLowerScreen(BYTE *pBuff)
 		if (level_cel_block & 0x8000)
 			level_cel_block = *(DWORD *)&gpCelFrame[64 * (level_cel_block & 0xFFF)]
 			    + (WORD)(level_cel_block & 0xF000);
-		src = pDungeonCels + *((DWORD *)pDungeonCels + (level_cel_block & 0xFFF));
+		src = pDungeonCels + SDL_SwapLE32(*((DWORD *)pDungeonCels + (level_cel_block & 0xFFF)));
 		cel_type_16 = (((unsigned int)level_cel_block >> 12) & 7) + 8;
 	}
 	switch (cel_type_16) {
