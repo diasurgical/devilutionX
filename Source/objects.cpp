@@ -1,4 +1,5 @@
 #include "diablo.h"
+#include "../3rdParty/StormLib/src/StormPort.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -1853,8 +1854,8 @@ void objects_set_door_piece(int x, int y)
 	v1 = *((WORD *)pLevelPieces + 10 * pn + 8);
 	v2 = *((WORD *)pLevelPieces + 10 * pn + 9);
 #endif
-	dpiece_defs_map_1[IsometricCoord(x, y)].mt[0] = v1;
-	dpiece_defs_map_1[IsometricCoord(x, y)].mt[1] = v2;
+	dpiece_defs_map_1[IsometricCoord(x, y)].mt[0] = BSWAP_INT16_UNSIGNED(v1);
+	dpiece_defs_map_1[IsometricCoord(x, y)].mt[1] = BSWAP_INT16_UNSIGNED(v2);
 }
 
 void ObjSetMini(int x, int y, int v)
@@ -1885,10 +1886,15 @@ void ObjSetMini(int x, int y, int v)
 		mov		v4, eax
 	}
 #else
-	v1 = *((WORD *)&pMegaTiles[((WORD)v - 1) * 8]) + 1;
-	v2 = *((WORD *)&pMegaTiles[((WORD)v - 1) * 8] + 1) + 1;
-	v3 = *((WORD *)&pMegaTiles[((WORD)v - 1) * 8] + 2) + 1;
-	v4 = *((WORD *)&pMegaTiles[((WORD)v - 1) * 8] + 3) + 1;
+
+	WORD *MegaTiles;
+	MegaTiles = (WORD *)&pMegaTiles[((WORD)v - 1) * 8];
+	MegaTiles = BSWAP_INT16_UNSIGNED(*MegaTiles);
+
+	v1 =  (long)MegaTiles + 1;
+	v2 =  (long)MegaTiles + 1 + 1;
+	v3 =  (long)MegaTiles + 2 + 1;
+	v4 =  (long)MegaTiles + 3 + 1;
 #endif
 
 	xx = 2 * x + 16;
