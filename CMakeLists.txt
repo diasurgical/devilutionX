@@ -287,10 +287,10 @@ target_link_libraries(devilutionx PRIVATE
 
 if(SDL1 OR AMIGA)
   target_link_libraries(devilutionx PRIVATE
-  ${SDL_LIBRARY}
   ${SDL_TTF_LIBRARY}
   ${SDL_MIXER_LIBRARY}
   ${SDL_MIXER_LIBRARIES}
+  ${SDL_LIBRARY}
   ${FREETYPE_LIBRARIES}
   ${PNG_LIBRARIES}
   ${LIBMAD_LIBRARIES})
