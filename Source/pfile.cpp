@@ -428,9 +428,9 @@ BOOL __stdcall pfile_ui_save_create(_uiheroinfo *heroinfo)
 		if (save_num == MAX_CHARACTERS)
 			return FALSE;
 	}
-//	if (!pfile_open_archive(FALSE, save_num))
-//		return FALSE;
-//	mpqapi_remove_hash_entries(pfile_get_file_name);
+	if (!pfile_open_archive(FALSE, save_num))
+		return FALSE;
+	mpqapi_remove_hash_entries(pfile_get_file_name);
 	strncpy(hero_names[save_num], heroinfo->name, PLR_NAME_LEN);
 	hero_names[save_num][PLR_NAME_LEN - 1] = '\0';
 
@@ -440,9 +440,9 @@ BOOL __stdcall pfile_ui_save_create(_uiheroinfo *heroinfo)
 	strncpy(plr[0]._pName, heroinfo->name, PLR_NAME_LEN);
 	plr[0]._pName[PLR_NAME_LEN - 1] = '\0';
 	PackPlayer(&pkplr, 0, TRUE);
-	//pfile_encode_hero(&pkplr);
+	pfile_encode_hero(&pkplr);
 	game_2_ui_player(&plr[0], heroinfo, FALSE);
-//	pfile_flush(TRUE, save_num);
+	pfile_flush(TRUE, save_num);
 	return TRUE;
 }
 

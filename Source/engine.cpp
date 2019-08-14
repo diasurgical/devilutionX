@@ -2458,9 +2458,9 @@ void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel)
 	/// ASSERT: assert(ttbl != NULL);
 
 	for (i = 1; i <= nCel; i++) {
-		pFrameTable = (DWORD *)&p[4 * i];
-		dst = BSWAP_INT32_UNSIGNED(&p[pFrameTable[0] + 10]);
-		nDataSize = BSWAP_INT32_UNSIGNED(pFrameTable[1]) - BSWAP_INT32_UNSIGNED(pFrameTable[0] - 10);
+		pFrameTable = BSWAP_INT32_UNSIGNED((DWORD *)&p[4 * i]);
+		dst = &p[pFrameTable[0] + 10];
+		nDataSize = BSWAP_INT32_UNSIGNED(pFrameTable[1]) - (BSWAP_INT32_UNSIGNED(pFrameTable[0]) - 10);
 		while (nDataSize) {
 			width = *dst++;
 			nDataSize--;
@@ -2526,85 +2526,11 @@ void Cl2DecodeFrm1(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int Cel
 	    pRLEBytes + nDataStart,
 	    nDataSize - nDataStart,
 	    nWidth);
+
 }
 
 void Cl2DecDatFrm1(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth)
 {
-#ifdef USE_ASM
-	__asm {
-		push	ebx
-		push	esi
-		push	edi
-		mov		esi, edx /// UNSAFE: use 'mov esi, pRLEBytes'
-		mov		edi, ecx /// UNSAFE: use 'mov edi, pDecodeTo'
-		xor		eax, eax
-		mov		ebx, nWidth
-		mov		ecx, nDataSize
-	label1:
-		mov		al, [esi]
-		inc		esi
-		dec		ecx
-		test	al, al
-		jns		label6
-		neg		al
-		cmp		al, 41h
-		jle		label3
-		sub		al, 41h
-		dec		ecx
-		mov		dl, [esi]
-		inc		esi
-		sub		ebx, eax
-	label2:
-		mov		[edi], dl
-		dec		eax
-		lea		edi, [edi+1]
-		jnz		label2
-		jmp		label5
-	label3:
-		sub		ecx, eax
-		sub		ebx, eax
-	label4:
-		mov		dl, [esi]
-		inc		esi
-		mov		[edi], dl
-		dec		eax
-		lea		edi, [edi+1]
-		jnz		label4
-	label5:
-		test	ebx, ebx
-		jnz		label10
-		mov		ebx, nWidth
-		sub		edi, BUFFER_WIDTH
-		sub		edi, ebx
-		jmp		label10
-	label6:
-		cmp		eax, ebx
-		jle		label7
-		mov		edx, ebx
-		add		edi, ebx
-		sub		eax, ebx
-		jmp		label8
-	label7:
-		mov		edx, eax
-		add		edi, eax
-		xor		eax, eax
-	label8:
-		sub		ebx, edx
-		jnz		label9
-		mov		ebx, nWidth
-		sub		edi, BUFFER_WIDTH
-		sub		edi, ebx
-	label9:
-		test	eax, eax
-		jnz		label6
-	label10:
-		test	ecx, ecx
-		jnz		label1
-		pop		edi
-		pop		esi
-		pop		ebx
-	}
-#else
 	int w;
 	char width;
 	BYTE fill;
@@ -2666,7 +2592,6 @@ void Cl2DecDatFrm1(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth)
 			}
 		}
 	}
-#endif
 }
 
 /**

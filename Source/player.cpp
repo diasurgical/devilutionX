@@ -1,5 +1,6 @@
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
+#include "../3rdParty/StormLib/src/StormPort.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -115,7 +116,7 @@ void SetPlayerGPtrs(BYTE *pData, BYTE **pAnim)
 	int i;
 
 	for (i = 0; i < 8; i++) {
-		pAnim[i] = pData + ((DWORD *)pData)[i];
+		pAnim[i] = pData + BSWAP_INT32_UNSIGNED(((DWORD *)pData)[i]);
 	}
 }
 
