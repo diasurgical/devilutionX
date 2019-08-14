@@ -323,7 +323,7 @@ void drawTopArchesUpperScreen(BYTE *pBuff)
 			return;
 		}
 		src = pSpeedCels
-		    + *(DWORD *)&gpCelFrame[4 * (light_table_index + 16 * (level_cel_block & 0xFFF))];
+		    + SDL_SwapLE32(*(DWORD *)&gpCelFrame[4 * (light_table_index + 16 * (level_cel_block & 0xFFF))]);
 		cel_type_16 = (BYTE)(level_cel_block >> 12);
 	LABEL_11:
 
@@ -1535,7 +1535,7 @@ void drawBottomArchesUpperScreen(BYTE *pBuff, DWORD *pMask)
 			return;
 		}
 		src = pSpeedCels
-		    + *(DWORD *)&gpCelFrame[4 * (light_table_index + 16 * (level_cel_block & 0xFFF))];
+		    + SDL_SwapLE32(*(DWORD *)&gpCelFrame[4 * (light_table_index + 16 * (level_cel_block & 0xFFF))]);
 		cel_type_16 = (BYTE)(level_cel_block >> 12);
 		goto LABEL_12;
 	}
@@ -2164,7 +2164,7 @@ void drawUpperScreen(BYTE *pBuff)
 			return;
 		}
 		src = pSpeedCels
-		    + *(DWORD *)&gpCelFrame[4 * (light_table_index + 16 * (level_cel_block & 0xFFF))];
+		    + SDL_SwapLE32(*(DWORD *)&gpCelFrame[4 * (light_table_index + 16 * (level_cel_block & 0xFFF))]);
 		cel_type_16 = (WORD)level_cel_block >> 12;
 		goto LABEL_22;
 	}
@@ -3128,7 +3128,7 @@ void drawTopArchesLowerScreen(BYTE *pBuff)
 		}
 		return;
 	}
-	src = pSpeedCels + *(DWORD *)&gpCelFrame[4 * (light_table_index + 16 * (level_cel_block & 0xFFF))];
+	src = pSpeedCels + SDL_SwapLE32(*(DWORD *)&gpCelFrame[4 * (light_table_index + 16 * (level_cel_block & 0xFFF))]);
 	cel_type_16 = (BYTE)(level_cel_block >> 12);
 LABEL_11:
 	switch (cel_type_16) {
@@ -4113,7 +4113,7 @@ void drawBottomArchesLowerScreen(BYTE *pBuff, DWORD *pMask)
 			return;
 		}
 		src = pSpeedCels
-		    + *(DWORD *)&gpCelFrame[4 * (light_table_index + 16 * (level_cel_block & 0xFFF))];
+		    + SDL_SwapLE32(*(DWORD *)&gpCelFrame[4 * (light_table_index + 16 * (level_cel_block & 0xFFF))]);
 		cel_type_16 = (BYTE)(level_cel_block >> 12);
 	} else {
 		if (level_cel_block & 0x8000)
@@ -4897,7 +4897,7 @@ void drawLowerScreen(BYTE *pBuff)
 			return;
 		}
 		src = pSpeedCels
-		    + *(DWORD *)&gpCelFrame[4 * (light_table_index + 16 * (level_cel_block & 0xFFF))];
+		    + SDL_SwapLE32(*(DWORD *)&gpCelFrame[4 * (light_table_index + 16 * (level_cel_block & 0xFFF))]);
 		cel_type_16 = (WORD)level_cel_block >> 12;
 	} else {
 		if (level_cel_block & 0x8000)
