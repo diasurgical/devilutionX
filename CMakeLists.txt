@@ -376,8 +376,8 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-  target_compile_options(devilution PRIVATE -fno-aggressive-loop-optimizations)
-  add_definitions(-D_GNU_SOURCE -D_FILE_OFFSET_BITS=64)
+  target_compile_options(devilution PRIVATE -fno-aggressive-loop-optimizations )
+  add_definitions(-D_GNU_SOURCE ) #-D_FILE_OFFSET_BITS=64
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")

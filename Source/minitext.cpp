@@ -1,5 +1,5 @@
 #include "diablo.h"
-
+#include <SDL_endian.h>
 DEVILUTION_BEGIN_NAMESPACE
 
 int qtexty;
@@ -150,8 +150,8 @@ void PrintQTextChr(int sx, int sy, BYTE *pCelBuff, int nCel)
 	DWORD *pFrameTable;
 
 	pFrameTable = (DWORD *)&pCelBuff[4 * nCel];
-	src = &pCelBuff[pFrameTable[0]];
-	end = &src[pFrameTable[1] - pFrameTable[0]];
+	src = &pCelBuff[SDL_SwapLE32(pFrameTable[0])];
+	end = &src[SDL_SwapLE32(pFrameTable[1]) - SDL_SwapLE32(pFrameTable[0])];
 
 	for (; src != end; dst -= BUFFER_WIDTH + 22) {
 		for (i = 22; i;) {
