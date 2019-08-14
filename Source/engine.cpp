@@ -2352,7 +2352,7 @@ void engine_debug_trap(BOOL show_cursor)
 	sgMemCrit.Enter();
 	while(sgpMemBlock != NULL) {
 		pCurr = sgpMemBlock->pNext;
-		SMemFree(sgpMemBlock, "C:\\Diablo\\Direct\\ENGINE.CPP", 1970);
+		SMemFree(sgpMemBlock, __FILE__, __LINE__);
 		sgpMemBlock = pCurr;
 	}
 	sgMemCrit.Leave();
@@ -2366,13 +2366,13 @@ BYTE *DiabloAllocPtr(DWORD dwBytes)
 #ifdef __cplusplus
 	sgMemCrit.Enter();
 #endif
-	buf = (BYTE *)SMemAlloc(dwBytes, "C:\\Src\\Diablo\\Source\\ENGINE.CPP", 2236, 0);
+	buf = (BYTE *)SMemAlloc(dwBytes, __FILE__, __LINE__, 0);
 #ifdef __cplusplus
 	sgMemCrit.Leave();
 #endif
 
 	if (buf == NULL) {
-		ErrDlg(IDD_DIALOG2, GetLastError(), "C:\\Src\\Diablo\\Source\\ENGINE.CPP", 2269);
+		ERR_DLG(IDD_DIALOG2, GetLastError());
 	}
 
 	return buf;
@@ -2384,7 +2384,7 @@ void mem_free_dbg(void *p)
 #ifdef __cplusplus
 		sgMemCrit.Enter();
 #endif
-		SMemFree(p, "C:\\Src\\Diablo\\Source\\ENGINE.CPP", 2317, 0);
+		SMemFree(p, __FILE__, __LINE__, 0);
 #ifdef __cplusplus
 		sgMemCrit.Leave();
 #endif

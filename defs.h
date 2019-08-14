@@ -147,6 +147,18 @@
 #define assert(exp) (void)( (exp) || (assert_fail(__LINE__, __FILE__, #exp), 0) )
 #endif
 
+#define ERR_OK_DLG(templateId, errorCode) \
+	ErrOkDlg((templateId), (errorCode), __FILE__, __LINE__)
+
+#define ERR_DLG(templateId, errorCode) \
+	ErrDlg((templateId), (errorCode), __FILE__, __LINE__)
+
+#define DD_ERR_MSG(errorCode) \
+	DDErrMsg((errorCode), __LINE__, __FILE__)
+
+#define DS_ERR_MSG(errorCode) \
+	DSErrMsg((errorCode), __LINE, __FILE)
+
 #ifndef INVALID_FILE_ATTRIBUTES
 #define INVALID_FILE_ATTRIBUTES ((DWORD)-1)
 #endif

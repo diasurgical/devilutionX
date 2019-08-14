@@ -344,7 +344,7 @@ void InitCows()
 	int x, y, xo, yo;
 
 	//if ( pCowCels )
-	//	assertion_failed(300, "C:\\Diablo\\Direct\\towners.cpp", "! pCowCels");
+		// assertion_failed(__LINE__, __FILE__, "! pCowCels");
 	pCowCels = LoadFileInMem("Towners\\Animals\\Cow.CEL", NULL);
 	for (i = 0; i < 3; i++) {
 		x = TownCowX[i];

@@ -233,7 +233,7 @@ void init_archives()
 #ifdef COPYPROT
 	while (1) {
 #endif
-		diabdat_mpq = init_test_access(diabdat_mpq_path, "\\diabdat.mpq", "DiabloCD", 1000, FS_CD);
+		diabdat_mpq = init_test_access(diabdat_mpq_path, "\\diabdat.mpq", "DiabloCD", MPQ_FLAG_READ_ONLY, FS_CD);
 #ifdef COPYPROT
 		if (diabdat_mpq)
 			break;
@@ -245,7 +245,7 @@ void init_archives()
 	if (!WOpenFile("ui_art\\title.pcx", &fh, TRUE))
 		FileErrDlg("Main program archive: diabdat.mpq");
 	WCloseFile(fh);
-	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "\\patch_rt.mpq", "DiabloInstall", 2000, FS_PC);
+	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "\\patch_rt.mpq", "DiabloInstall", MPQ_FLAG_READ_ONLY, FS_PC);
 }
 
 HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags, int fs)
@@ -270,18 +270,18 @@ HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags
 	strcpy(mpq_path, Buffer);
 	strcat(mpq_path, mpq_name);
 #ifdef COPYPROT
-	if (SFileOpenArchive(mpq_path, flags, fs, &archive))
+	if (SFileOpenArchive(mpq_path, 0, flags, &archive))
 #else
-	if (SFileOpenArchive(mpq_path, flags, FS_PC, &archive))
+	if (SFileOpenArchive(mpq_path, 0, flags, &archive))
 #endif
 		return archive;
 	if (strcmp(Filename, Buffer)) {
 		strcpy(mpq_path, Filename);
 		strcat(mpq_path, mpq_name);
 #ifdef COPYPROT
-		if (SFileOpenArchive(mpq_path, flags, fs, &archive))
+		if (SFileOpenArchive(mpq_path, 0, flags, &archive))
 #else
-		if (SFileOpenArchive(mpq_path, flags, FS_PC, &archive))
+		if (SFileOpenArchive(mpq_path, 0, flags, &archive))
 #endif
 			return archive;
 	}
@@ -292,9 +292,9 @@ HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags
 			strcpy(mpq_path, archive_path);
 			strcat(mpq_path, mpq_name);
 #ifdef COPYPROT
-			if (SFileOpenArchive(mpq_path, flags, fs, &archive))
+			if (SFileOpenArchive(mpq_path, 0, flags, &archive))
 #else
-			if (SFileOpenArchive(mpq_path, flags, FS_PC, &archive))
+			if (SFileOpenArchive(mpq_path, 0, flags, &archive))
 #endif
 				return archive;
 		}
@@ -341,7 +341,7 @@ BOOL init_read_test_file(char *pszPath, char *pszArchive, int flags, HANDLE *phA
 		if (GetDriveType(pszRoot) == DRIVE_CDROM) {
 			strcpy(pszPath, pszRoot);
 			strcat(pszPath, pszArchive);
-			if (SFileOpenArchive(pszPath, flags, 1, phArchive)) {
+			if (SFileOpenArchive(pszPath, 0, flags, phArchive)) {
 				return TRUE;
 			}
 		}
