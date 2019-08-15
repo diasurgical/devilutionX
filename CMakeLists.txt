@@ -329,23 +329,13 @@ if(AMIGA AND NOT WARPOS)
   target_link_libraries(devilutionx PRIVATE -ldebug -latomic)
 endif()
 
-  # ${PROJECT_SOURCE_DIR}/libSDLmain.a)
-  # /usr/lib/x86_64-linux-gnu/libSDLmain.a
-  # ${SDL_LIBRARY}
-  # `sdl-config --libs`
-  # ${`sdl-config --libs`}
-  # SDL2::SDL2main
-  # SDL2::SDL2_ttf
-  # SDL2::SDL2_mixer
-  # sodium)
-
 target_compile_definitions(devilution PRIVATE DEVILUTION_ENGINE)
 target_compile_definitions(devilution PUBLIC
   DEVILUTION_STUB
   "$<$<BOOL:${DEBUG}>:_DEBUG>"
   # Skip fades and other fluff
   "$<$<BOOL:${FASTER}>:FASTER>")
-#target_compile_definitions(devilutionx PRIVATE ASIO_STANDALONE)
+target_compile_definitions(devilutionx PRIVATE ASIO_STANDALONE)
 
 if(ASAN)
   target_compile_options(devilution PUBLIC -fsanitize=address -fsanitize-recover=address)
