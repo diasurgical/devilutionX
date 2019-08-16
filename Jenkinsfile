@@ -194,6 +194,10 @@ def buildStep(dockerImage, generator, os, defines) {
 					).trim()
 				}
 				
+				if (SYSROOT == '') {
+					SYSROOT = "/opt/${TARGET}"
+				}
+				
 				get_libs()
 				decompress_libs()
 				build_zlib(TARGET, SYSROOT)
