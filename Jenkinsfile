@@ -282,7 +282,7 @@ node('master') {
 		},*/
 		'AmigaOS 68k': {
 			node {
-				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68k', '-DSDL1=TRUE -DNONET=TRUE')
+				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68k', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-O3 -ffast-math"')
 			}
 		},
 		'AmigaOS PPC': {
