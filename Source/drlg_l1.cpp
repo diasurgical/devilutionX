@@ -229,12 +229,11 @@ void DRLG_L1Pass3()
 #else
 	WORD *MegaTiles;
 	MegaTiles = (WORD *)&pMegaTiles[lv * 8];
-	MegaTiles = BSWAP_INT16_UNSIGNED(*MegaTiles);
 
-	v1 =  (long)MegaTiles + 1;
-	v2 =  (long)MegaTiles + 1 + 1;
-	v3 =  (long)MegaTiles + 2 + 1;
-	v4 =  (long)MegaTiles + 3 + 1;
+	v1 = BSWAP_INT16_UNSIGNED(*(MegaTiles)) + 1;
+	v2 = BSWAP_INT16_UNSIGNED(*(MegaTiles + 1)) + 1;
+	v3 = BSWAP_INT16_UNSIGNED(*(MegaTiles + 2)) + 1;
+	v4 = BSWAP_INT16_UNSIGNED(*(MegaTiles + 3)) + 1;
 
 #endif
 
@@ -276,12 +275,11 @@ void DRLG_L1Pass3()
 			}
 #else
 			MegaTiles = (WORD *)&pMegaTiles[lv * 8];
-			MegaTiles = BSWAP_INT16_UNSIGNED(*MegaTiles);
 
-			v1 =  (long)MegaTiles + 1;
-			v2 =  (long)MegaTiles + 1 + 1;
-			v3 =  (long)MegaTiles + 2 + 1;
-			v4 =  (long)MegaTiles + 3 + 1;
+			v1 = BSWAP_INT16_UNSIGNED(*(MegaTiles)) + 1;
+			v2 = BSWAP_INT16_UNSIGNED(*(MegaTiles + 1)) + 1;
+			v3 = BSWAP_INT16_UNSIGNED(*(MegaTiles + 2)) + 1;
+			v4 = BSWAP_INT16_UNSIGNED(*(MegaTiles + 3)) + 1;
 #endif
 			dPiece[xx][yy] = v1;
 			dPiece[xx + 1][yy] = v2;
