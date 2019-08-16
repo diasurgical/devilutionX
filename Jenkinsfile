@@ -165,8 +165,8 @@ def buildStep(dockerImage, generator, os, defines) {
 
 			docker.image("${dockerImage}").inside("-u 0:0 -e BUILDER_UID=1001 -e BUILDER_GID=1001 -e BUILDER_USER=gserver -e BUILDER_GROUP=gserver") {
 
-				sh "sudo apt update"
-				sh "sudo apt install -y gcc-multilib curl automake autoconf libtool unzip"
+				sh "apt update"
+				sh "apt install -y gcc-multilib curl automake autoconf libtool unzip"
 				
 				checkout scm
 
@@ -253,7 +253,7 @@ node('master') {
 	def fixed_job_name = env.JOB_NAME.replace('%2F','/')
 	slackSend color: "good", channel: "#jenkins", message: "Build Started: ${fixed_job_name} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
 	parallel (
-		'Win32': {
+		/*'Win32': {
 			node {			
 				buildStep('dockcross/windows-static-x86:latest', 'Unix Makefiles', 'Windows x86', '')
 			}
@@ -267,17 +267,17 @@ node('master') {
 			node {			
 				buildStep('desertbit/crossbuild:linux-x86', 'Unix Makefiles', 'Linux x86', '')
 			}
-		},
+		},*/
 		'Linux x86_64': {
 			node {			
 				buildStep('desertbit/crossbuild:linux-x86_64', 'Unix Makefiles', 'Linux x86_64', '')
 			}
-		},
+		},/*
 		'Linux ARMv7': {
 			node {
 				buildStep('desertbit/crossbuild:linux-armv7', 'Unix Makefiles', 'Linux RasPi', '')
 			}
-		},
+		},*/
 		'AmigaOS 68k': {
 			node {
 				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68k', '-DSDL1=TRUE -DNONET=TRUE')
