@@ -49,8 +49,6 @@ def get_libs() {
 	sh "curl -SLO https://download.savannah.gnu.org/releases/freetype/freetype-2.10.1.tar.gz"
 	sh "curl -SLO https://github.com/glennrp/libpng/archive/v1.6.36.tar.gz"
 	sh "curl -SLO https://github.com/jedisct1/libsodium/archive/1.0.17.tar.gz"
-	//sh "wget https://raw.githubusercontent.com/Kitware/CMake/v3.10.0/Modules/FindFreetype.cmake -O CMake/FindFreetype.cmake"
-	sh "sudo rm -rfv CMake/FindFreetype.cmake"
 	sh "wget https://raw.githubusercontent.com/Kitware/CMake/v3.10.0/Modules/SelectLibraryConfigurations.cmake -O CMake/SelectLibraryConfigurations.cmake"
 	sh "wget https://raw.githubusercontent.com/Kitware/CMake/master/Modules/FindZLIB.cmake -O CMake/FindZLIB.cmake"
 }
@@ -71,7 +69,7 @@ def build_zlib(TARGET, SYSROOT) {
 	echo "============= Build ZLIB ============="
 
 	sh "mkdir -p zlib-1.2.11/build"
-	sh "sudo rm -rfv zlib-1.2.11/build/*"
+	sh "rm -rfv zlib-1.2.11/build/*"
 
 	sh "cd zlib-1.2.11/build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT}"
 	sh "cd zlib-1.2.11/build && cmake --build . --config Release --target install -- -j8"
@@ -102,7 +100,7 @@ def build_libpng(TARGET, SYSROOT) {
 
 	dir("libpng-1.6.36") {
 		sh "mkdir -p build"
-		sh "sudo rm -rfv build/*"
+		sh "rm -rfv build/*"
 
 		sh "cd build && cmake .. -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include -DCMAKE_INSTALL_PREFIX=${SYSROOT}"
 		sh "cd build && cmake --build . --config Release --target install -- -j8"
@@ -114,7 +112,7 @@ def build_freetype(TARGET, SYSROOT) {
 
 	dir("freetype-2.10.1") {
 		sh "mkdir -p build"
-		sh "sudo rm -rfv build/*"
+		sh "rm -rfv build/*"
 
 		sh "cd build/ && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DUNIX=1" // -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include
 		sh "cd build/ && cmake --build . --config Release --target install -- -j8"
