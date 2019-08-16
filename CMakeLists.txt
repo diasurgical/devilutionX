@@ -78,9 +78,9 @@ else()
   find_package(SDL2 REQUIRED)
   find_package(SDL2_ttf REQUIRED)
   find_package(SDL2_mixer REQUIRED)
+  find_package(sodium REQUIRED)
 endif()
 
-#find_package(sodium REQUIRED)
 
 add_library(smacker STATIC
   3rdParty/libsmacker/smk_bitstream.c
@@ -204,9 +204,6 @@ set(
   SourceX/dvlnet/packet.cpp
   SourceX/dvlnet/base.cpp
   SourceX/dvlnet/frame_queue.cpp
-# SourceX/dvlnet/tcp_client.cpp
-# SourceX/dvlnet/tcp_server.cpp
-# SourceX/dvlnet/udp_p2p.cpp
   SourceX/DiabloUI/credits.cpp
   SourceX/DiabloUI/diabloui.cpp
   SourceX/DiabloUI/dialogs.cpp
@@ -225,6 +222,14 @@ if(SDL1 OR AMIGA)
     APPEND
     SOURCES
     SourceX/miniwin/sdl1_wrapper.cpp
+  )
+else()
+  list(
+    APPEND
+    SOURCES
+    SourceX/dvlnet/tcp_client.cpp
+    SourceX/dvlnet/tcp_server.cpp
+    SourceX/dvlnet/udp_p2p.cpp
   )
 endif()
 
@@ -282,25 +287,35 @@ target_link_libraries(devilutionx PRIVATE
   StormLib
   smacker
   Radon
-  sodium
   )
 
 if(SDL1 OR AMIGA)
   target_link_libraries(devilutionx PRIVATE
-  ${SDL_LIBRARY}
   ${SDL_TTF_LIBRARY}
   ${SDL_MIXER_LIBRARY}
   ${SDL_MIXER_LIBRARIES}
+  ${SDL_LIBRARY}
   ${FREETYPE_LIBRARIES}
   ${PNG_LIBRARIES}
   ${LIBMAD_LIBRARIES})
+  if(WARPOS)
+  target_link_libraries(devilutionx PRIVATE
+    -lmikmod
+    -lvorbisfile
+    -lvorbisenc
+    -lvorbis
+    -logg
+    -lFLAC
+    -lbz2)
+  endif()
 else()
   target_link_libraries(devilutionx PRIVATE
   SDL2::SDL2main
   ${SDL2_ttf_LIBRARY}
   ${SDL2_mixer_LIBRARY}
   ${FREETYPE_LIBRARIES}
-  ${PNG_LIBRARIES})
+  ${PNG_LIBRARIES}
+  sodium)
   if(WIN32)
     target_link_libraries(devilutionx PRIVATE -lfreetype -lpng -lzlibstatic)
   endif()
@@ -310,19 +325,9 @@ else()
   message("SDL_ttf library: " ${SDL2_ttf_LIBRARY})
 endif()
 
-if(AMIGA)
+if(AMIGA AND NOT WARPOS)
   target_link_libraries(devilutionx PRIVATE -ldebug -latomic)
 endif()
-
-  # ${PROJECT_SOURCE_DIR}/libSDLmain.a)
-  # /usr/lib/x86_64-linux-gnu/libSDLmain.a
-  # ${SDL_LIBRARY}
-  # `sdl-config --libs`
-  # ${`sdl-config --libs`}
-  # SDL2::SDL2main
-  # SDL2::SDL2_ttf
-  # SDL2::SDL2_mixer
-  # sodium)
 
 target_compile_definitions(devilution PRIVATE DEVILUTION_ENGINE)
 target_compile_definitions(devilution PUBLIC
@@ -330,7 +335,7 @@ target_compile_definitions(devilution PUBLIC
   "$<$<BOOL:${DEBUG}>:_DEBUG>"
   # Skip fades and other fluff
   "$<$<BOOL:${FASTER}>:FASTER>")
-#target_compile_definitions(devilutionx PRIVATE ASIO_STANDALONE)
+target_compile_definitions(devilutionx PRIVATE ASIO_STANDALONE)
 
 if(ASAN)
   target_compile_options(devilution PUBLIC -fsanitize=address -fsanitize-recover=address)

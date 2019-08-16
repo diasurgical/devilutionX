@@ -107,7 +107,7 @@ void packet_in::decrypt()
 	if (have_decrypted)
 		return;
 	if (!disable_encryption) {
-#ifndef __AMIGA__
+#if !defined(__AMIGA__) && !defined(__BIG_ENDIAN__)
 		if (encrypted_buffer.size() < crypto_secretbox_NONCEBYTES
 		    + crypto_secretbox_MACBYTES
 		    + sizeof(packet_type) + 2*sizeof(plr_t))
@@ -145,7 +145,7 @@ void packet_out::encrypt()
 
 	process_data();
 
-#ifndef __AMIGA__
+#if !defined(__AMIGA__) && !defined(__BIG_ENDIAN__)
 	if (!disable_encryption) {
 		auto len_cleartext = encrypted_buffer.size();
 		encrypted_buffer.insert(encrypted_buffer.begin(),
@@ -168,7 +168,7 @@ void packet_out::encrypt()
 
 packet_factory::packet_factory(std::string pw)
 {
-#ifndef __AMIGA__
+#if !defined(__AMIGA__) && !defined(__BIG_ENDIAN__)
 	if (sodium_init() < 0)
 		ABORT();
 	pw.resize(std::min<std::size_t>(pw.size(), crypto_pwhash_argon2id_PASSWD_MAX));
