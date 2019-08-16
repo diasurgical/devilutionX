@@ -199,12 +199,22 @@ def buildStep(dockerImage, generator, os, defines) {
 				get_libs()
 				decompress_libs()
 				build_zlib(TARGET, SYSROOT)
-				build_sdl2(TARGET, SYSROOT)
-				build_sdl2_mixer(TARGET, SYSROOT)
+				
+				if (!defines.contains('SDL1')) {
+					build_sdl2(TARGET, SYSROOT)
+					build_sdl2_mixer(TARGET, SYSROOT)
+				}
+				
 				build_libpng(TARGET, SYSROOT)
 				build_freetype(TARGET, SYSROOT)
-				build_sdl2_ttf(TARGET, SYSROOT)
-				build_libsodium(TARGET, SYSROOT)
+				
+				if (!defines.contains('SDL1')) {
+					build_sdl2_ttf(TARGET, SYSROOT)
+				}
+				
+				if (!defines.contains('NONET')) {
+					build_libsodium(TARGET, SYSROOT)
+				}
 
 				sh "mkdir -p build/"
 				sh "mkdir -p lib/"
@@ -266,6 +276,21 @@ node('master') {
 		'Linux ARMv7': {
 			node {
 				buildStep('desertbit/crossbuild:linux-armv7', 'Unix Makefiles', 'Linux RasPi', '')
+			}
+		},
+		'AmigaOS 68k': {
+			node {
+				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68k', '-DSDL1=TRUE -DNONET=TRUE')
+			}
+		},
+		'AmigaOS PPC': {
+			node {
+				buildStep('amigadev/crosstools:ppc-amigaos', 'Unix Makefiles', 'AmigaOS PPC', '-DSDL1=TRUE -DNONET=TRUE')
+			}
+		},
+		'MorphOS PPC': {
+			node {
+				buildStep('amigadev/crosstools:ppc-morphos', 'Unix Makefiles', 'MorphOS PPC', '-DSDL1=TRUE -DNONET=TRUE')
 			}
 		}
 		/*,
