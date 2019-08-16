@@ -102,7 +102,7 @@ def build_libpng(TARGET, SYSROOT) {
 		sh "mkdir -p build"
 		sh "rm -rfv build/*"
 
-		sh "cd build && cmake .. -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include -DCMAKE_INSTALL_PREFIX=${SYSROOT}"
+		sh "cd build && cmake .. -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DPNG_TESTS=OFF -DPNG_SHARED=OFF"
 		sh "cd build && cmake --build . --config Release --target install -- -j8"
 	}
 }
