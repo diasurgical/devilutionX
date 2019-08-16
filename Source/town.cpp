@@ -3,12 +3,6 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-#ifdef __AMIGA__
-#define OVERFLOW 0 //hack?
-#else
-#define OVERFLOW 0
-#endif
-
 void town_clear_upper_buf(BYTE *pBuff)
 {
 	/// ASSERT: assert(gpBuffer);
@@ -477,8 +471,8 @@ void town_draw_e_flag(BYTE *pBuff, int x, int y, int capChunks, int CelCap, int 
 void town_draw_town_all(BYTE *pBuff, int x, int y, int capChunks, int CelCap, int sx, int sy, int eflag)
 {
 	int mi, px, py;
-	int bv;
-	px = 0;
+	char bv;
+//	px = 0;
 
 	if (dItem[x][y] != 0) {
 		bv = dItem[x][y] - 1;
@@ -551,7 +545,7 @@ void town_draw_town_all(BYTE *pBuff, int x, int y, int capChunks, int CelCap, in
 
 	if (dArch[x][y] != 0) {
 
-		//town_special_upper(pBuff, dArch[x][y]);
+		town_special_upper(pBuff, dArch[x][y]);
 	}
 }
 
@@ -573,9 +567,9 @@ void town_draw_upper(int x, int y, int sx, int sy, int chunks, int capChunks, in
 			level_cel_block = dPiece[x][y];
 
 			if (level_cel_block != 0) {
-				dst = (&gpBuffer[sx + 32 + PitchTbl[sy]]);
+				dst = &gpBuffer[sx + 32 + PitchTbl[sy]];
 
-				pMap = (&dpiece_defs_map_1[IsometricCoord(x, y)]);
+				pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
 
 				for (i = 0; i < 7; i++) {
 					if (capChunks >= i) {
@@ -603,11 +597,11 @@ void town_draw_upper(int x, int y, int sx, int sy, int chunks, int capChunks, in
 		if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX) {
 			level_cel_block = dPiece[x][y];
 			if (level_cel_block != 0) {
-				dst = (&gpBuffer[sx + PitchTbl[sy]]);
+				dst = &gpBuffer[sx + PitchTbl[sy]];
 				pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
 				for (i = 0; i < 7; i++) {
 					if (capChunks >= i) {
-						level_cel_block = (pMap->mt[2 * i]);
+						level_cel_block = pMap->mt[2 * i];
 
 						if (level_cel_block != 0) {
 							drawUpperScreen(dst);
@@ -635,11 +629,11 @@ void town_draw_upper(int x, int y, int sx, int sy, int chunks, int capChunks, in
 		if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX) {
 			level_cel_block = dPiece[x][y];
 			if (level_cel_block != 0) {
-				dst = (&gpBuffer[sx + PitchTbl[sy]]);
+				dst = &gpBuffer[sx + PitchTbl[sy]];
 				pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
 				for (i = 0; i < 7; i++) {
 					if (capChunks >= i) {
-						level_cel_block = (pMap->mt[2 * i]);
+						level_cel_block = pMap->mt[2 * i];
 						if (level_cel_block != 0) {
 							drawUpperScreen(dst);
 						}
@@ -972,12 +966,10 @@ void SetTownMicros()
 	for (y = 0; y < MAXDUNY; y++) {
 		for (x = 0; x < MAXDUNX; x++) {
 			lv = dPiece[x][y];
-
-			pMap = (&dpiece_defs_map_1[IsometricCoord(x, y)]);
+			pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
 			if (lv != 0) {
 				lv--;
-				pPiece = ((WORD *)&pLevelPieces[32 * lv]);
-
+				pPiece = (WORD *)&pLevelPieces[32 * lv];
 				for (i = 0; i < 16; i++) {
 					pMap->mt[i] = BSWAP_INT16_UNSIGNED(pPiece[(i & 1) + 14 - (i & 0xE)]);
 				}
@@ -1016,16 +1008,21 @@ void T_FillSector(BYTE *P3Tiles, BYTE *pSector, int xi, int yi, int w, int h)
 			WORD *Map;
 			Map = ((WORD *)&pSector[ii]);
 
-			WORD *Sector;
-			Sector = (WORD *)&P3Tiles[(BSWAP_INT16_UNSIGNED(*Map) - 1) * 8];
-			Sector = BSWAP_INT16_UNSIGNED(*Sector);
 
-			if (BSWAP_INT16_UNSIGNED(*Map)) {
 
-				v1 =  (long)Sector + 1;
-				v2 =  (long)Sector + 1 + 1;
-				v3 =  (long)Sector + 2 + 1;
-				v4 =  (long)Sector + 3 + 1;
+			int nMap = BSWAP_INT16_UNSIGNED(*Map);
+
+
+			if (nMap) {
+
+			    WORD *Sector;
+
+				Sector = (((WORD *)&P3Tiles[(nMap - 1) * 8]));
+
+				v1 = BSWAP_INT16_UNSIGNED(*(Sector)) + 1;
+				v2 = BSWAP_INT16_UNSIGNED(*(Sector + 1)) + 1;
+				v3 = BSWAP_INT16_UNSIGNED(*(Sector + 2)) + 1;
+				v4 = BSWAP_INT16_UNSIGNED(*(Sector + 3)) + 1;
 
 			} else {
 				v1 = 0;
@@ -1050,13 +1047,12 @@ void T_FillTile(BYTE *P3Tiles, int xx, int yy, int t)
 	long v1, v2, v3, v4;
 
 	WORD *Tiles;
-	Tiles = BSWAP_INT16_UNSIGNED(*((WORD *)&P3Tiles[(t - 1) * 8]));
+	Tiles = ((WORD *)&P3Tiles[(t - 1) * 8]);
 
-	v1 = (long)Tiles + 1;
-	v2 = (long)Tiles + 1 + 1;
-	v3 = (long)Tiles + 2 + 1;
-	v4 = (long)Tiles + 3 + 1;
-
+	v1 = BSWAP_INT16_UNSIGNED(*(Tiles)) + 1;
+	v2 = BSWAP_INT16_UNSIGNED(*(Tiles + 1)) + 1;
+	v3 = BSWAP_INT16_UNSIGNED(*(Tiles + 2)) + 1;
+	v4 = BSWAP_INT16_UNSIGNED(*(Tiles + 3)) + 1;
 
 	dPiece[xx][yy] = v1;
 	dPiece[xx + 1][yy] = v2;
