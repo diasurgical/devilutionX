@@ -220,7 +220,7 @@ def buildStep(dockerImage, generator, os, defines) {
 
 				sh "mkdir -p build/"
 				sh "mkdir -p lib/"
-				sh "sudo rm -rfv build/*"
+				sh "rm -rfv build/*"
 
 				slackSend color: "good", channel: "#jenkins", message: "Starting ${os} build target..."
 				dir("build") {
