@@ -65,17 +65,17 @@ def decompress_libs() {
 	sh "tar -xvf 1.0.17.tar.gz"
 }
 
-def build_zlib(TARGET, SYSROOT) {
+def build_zlib(TARGET, SYSROOT, DEFINES) {
 	echo "============= Build ZLIB ============="
 
 	sh "mkdir -p zlib-1.2.11/build"
 	sh "rm -rfv zlib-1.2.11/build/*"
 
-	sh "cd zlib-1.2.11/build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT}"
+	sh "cd zlib-1.2.11/build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} ${DEFINES}"
 	sh "cd zlib-1.2.11/build && cmake --build . --config Release --target install -- -j8"
 }
 
-def build_sdl2(TARGET, SYSROOT) {
+def build_sdl2(TARGET, SYSROOT, DEFINES) {
 	echo "============= Build SDL2 ============="
 
 	sh "cd SDL2-2.0.9/ && ./autogen.sh"
@@ -85,7 +85,7 @@ def build_sdl2(TARGET, SYSROOT) {
 	sh "cd SDL2-2.0.9/ && make install"
 }
 
-def build_sdl2_mixer(TARGET, SYSROOT) {
+def build_sdl2_mixer(TARGET, SYSROOT, DEFINES) {
 	echo "============= Build SDL2_mixer ============="
 
 	sh "cd SDL2_mixer-2.0.4/ && ./autogen.sh"
@@ -95,31 +95,31 @@ def build_sdl2_mixer(TARGET, SYSROOT) {
 	sh "cd SDL2_mixer-2.0.4/ && make install"
 }
 
-def build_libpng(TARGET, SYSROOT) {
+def build_libpng(TARGET, SYSROOT, DEFINES) {
 	echo "============= Build libpng ============="
 
 	dir("libpng-1.6.36") {
 		sh "mkdir -p build"
 		sh "rm -rfv build/*"
 
-		sh "cd build && cmake .. -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DPNG_TESTS=OFF -DPNG_SHARED=OFF"
+		sh "cd build && cmake .. -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DPNG_TESTS=OFF -DPNG_SHARED=OFF ${DEFINES}"
 		sh "cd build && cmake --build . --config Release --target install -- -j8"
 	}
 }
 
-def build_freetype(TARGET, SYSROOT) {
+def build_freetype(TARGET, SYSROOT, DEFINES) {
 	echo "============= Build Freetype ============="
 
 	dir("freetype-2.10.1") {
 		sh "mkdir -p build"
 		sh "rm -rfv build/*"
 
-		sh "cd build/ && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DUNIX=1" // -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include
+		sh "cd build/ && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DUNIX=1 ${DEFINES}" // -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include
 		sh "cd build/ && cmake --build . --config Release --target install -- -j8"
 	}
 }
 
-def build_sdl2_ttf(TARGET, SYSROOT) {
+def build_sdl2_ttf(TARGET, SYSROOT, DEFINES) {
 	echo "============= Build SDL2_ttf ============="
 
 	def ZLIB_FILE = ""
@@ -139,7 +139,7 @@ def build_sdl2_ttf(TARGET, SYSROOT) {
 	}
 }
 
-def build_libsodium(TARGET, SYSROOT) {
+def build_libsodium(TARGET, SYSROOT, DEFINES) {
 	echo "============= Build Libsodium ============="
 
 	dir("libsodium-1.0.17") {
@@ -152,7 +152,7 @@ def build_libsodium(TARGET, SYSROOT) {
 }
 
 
-def buildStep(dockerImage, generator, os, defines) {
+def buildStep(dockerImage, generator, os, DEFINES) {
 	def split_job_name = env.JOB_NAME.split(/\/{1}/)  
 	def fixed_job_name = split_job_name[1].replace('%2F',' ')
 	def fixed_os = os.replace(' ','-')
@@ -200,22 +200,22 @@ def buildStep(dockerImage, generator, os, defines) {
 				
 				get_libs()
 				decompress_libs()
-				build_zlib(TARGET, SYSROOT)
+				build_zlib(TARGET, SYSROOT, DEFINES)
 				
-				if (!defines.contains('SDL1')) {
+				if (!DEFINES.contains('SDL1')) {
 					build_sdl2(TARGET, SYSROOT)
 					build_sdl2_mixer(TARGET, SYSROOT)
 				}
 				
-				build_libpng(TARGET, SYSROOT)
-				build_freetype(TARGET, SYSROOT)
+				build_libpng(TARGET, SYSROOT, DEFINES)
+				build_freetype(TARGET, SYSROOT, DEFINES)
 				
-				if (!defines.contains('SDL1')) {
-					build_sdl2_ttf(TARGET, SYSROOT)
+				if (!DEFINES.contains('SDL1')) {
+					build_sdl2_ttf(TARGET, SYSROOT, DEFINES)
 				}
 				
-				if (!defines.contains('NONET')) {
-					build_libsodium(TARGET, SYSROOT)
+				if (!DEFINES.contains('NONET')) {
+					build_libsodium(TARGET, SYSROOT, DEFINES)
 				}
 
 				sh "mkdir -p build/"
@@ -224,7 +224,7 @@ def buildStep(dockerImage, generator, os, defines) {
 
 				slackSend color: "good", channel: "#jenkins", message: "Starting ${os} build target..."
 				dir("build") {
-					sh "PKG_CONFIG_PATH=${SYSROOT}/lib/pkgconfig/:${SYSROOT}/share/pkgconfig/ cmake -G\"${generator}\" ${defines} -DVER_EXTRA=\"-${fixed_os}-${fixed_job_name}\" .."
+					sh "PKG_CONFIG_PATH=${SYSROOT}/lib/pkgconfig/:${SYSROOT}/share/pkgconfig/ cmake -G\"${generator}\" ${DEFINES} -DVER_EXTRA=\"-${fixed_os}-${fixed_job_name}\" .."
 					sh "VERBOSE=1 cmake --build . --config Release -- -j 8"
 
 					if (os.contains('Windows')) {
