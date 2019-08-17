@@ -61,8 +61,8 @@ def decompress_libs() {
 
 	sh "tar -xvf zlib-1.2.11.tar.gz"
 	sh "tar -xvf 1.2.15.1.tar.gz"
-	sh "unzip SDL_ttf-SDL-1.2.zip"
-	sh "unzip SDL_mixer-SDL-1.2.zip"
+	sh "unzip -o SDL_ttf-SDL-1.2.zip"
+	sh "unzip -o SDL_mixer-SDL-1.2.zip"
 	sh "tar -xvf SDL2-2.0.9.tar.gz"
 	sh "tar -xvf SDL2_mixer-2.0.4.tar.gz"
 	sh "tar -xvf SDL2_ttf-2.0.15.tar.gz"
