@@ -106,7 +106,7 @@ def build_sdl1_mixer(TARGET, SYSROOT, DEFINES) {
 
 	dir("SDL_mixer-SDL-1.2") {
 		sh "./autogen.sh"
-		sh "SDL_LIBS=-lSDL SDL_CFLAGS=-I${SYSROOT}/include/SDL ./configure --disable-shared --enable-static --host=${TARGET} --prefix=${SYSROOT}"
+		sh "SDL_LIBS='-lSDL -ldebug' SDL_CFLAGS=-I${SYSROOT}/include/SDL ./configure --disable-shared --enable-static --host=${TARGET} --prefix=${SYSROOT}"
 		sh "make clean"
 		sh "make -j8"
 		sh "make install"
@@ -160,7 +160,7 @@ def build_sdl1_ttf(TARGET, SYSROOT, DEFINES) {
 
 	dir("SDL_ttf-SDL-1.2") {
 		sh "./autogen.sh"
-		sh "SDL_LIBS=-lSDL SDL_CFLAGS=-I${SYSROOT}/include/SDL FT2_CFLAGS=\"-I${SYSROOT}/include/freetype2\" FT2_LIBS=\"-lfreetype -lpng -l${ZLIB_FILE}\" ./configure --disable-shared --enable-static --host=${TARGET} --prefix=${SYSROOT}" //FT2_CONFIG=${SYSROOT}/include/freetype2/freetype/config/ftconfig.h
+		sh "SDL_LIBS='-lSDL -ldebug' SDL_CFLAGS=-I${SYSROOT}/include/SDL FT2_CFLAGS=\"-I${SYSROOT}/include/freetype2\" FT2_LIBS=\"-lfreetype -lpng -l${ZLIB_FILE}\" ./configure --disable-shared --enable-static --host=${TARGET} --prefix=${SYSROOT}" //FT2_CONFIG=${SYSROOT}/include/freetype2/freetype/config/ftconfig.h
 		sh "make clean"
 		sh "make -j8"
 		sh "make install"
@@ -337,7 +337,7 @@ node('master') {
 			node {
 				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68k', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-O3 -ffast-math"')
 			}
-		},
+		}/*,
 		'AmigaOS PPC': {
 			node {
 				buildStep('amigadev/crosstools:ppc-amigaos', 'Unix Makefiles', 'AmigaOS PPC', '-DSDL1=TRUE -DNONET=TRUE')
@@ -347,7 +347,7 @@ node('master') {
 			node {
 				buildStep('amigadev/crosstools:ppc-morphos', 'Unix Makefiles', 'MorphOS PPC', '-DSDL1=TRUE -DNONET=TRUE')
 			}
-		}
+		}*/
 		/*,
 		'WebASM': {
 			node {			
