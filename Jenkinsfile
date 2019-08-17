@@ -46,6 +46,8 @@ def get_libs() {
 	sh "curl -O https://www.libsdl.org/release/SDL2-2.0.9.tar.gz"
 	sh "curl -O https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-2.0.4.tar.gz"
 	sh "curl -O https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-2.0.15.tar.gz"
+	sh "curl -SLO https://github.com/SDL-mirror/SDL_ttf/archive/SDL-1.2.zip"
+	sh "curl -SLO https://github.com/SDL-mirror/SDL_mixer/archive/SDL-1.2.zip"
 	sh "curl -SLO https://download.savannah.gnu.org/releases/freetype/freetype-2.10.1.tar.gz"
 	sh "curl -SLO https://github.com/glennrp/libpng/archive/v1.6.36.tar.gz"
 	sh "curl -SLO https://github.com/jedisct1/libsodium/archive/1.0.17.tar.gz"
@@ -59,6 +61,8 @@ def decompress_libs() {
 
 	sh "tar -xvf zlib-1.2.11.tar.gz"
 	sh "tar -xvf 1.2.15.1.tar.gz"
+	sh "unzip SDL_ttf-SDL-1.2.zip"
+	sh "unzip SDL_mixer-SDL-1.2.zip"
 	sh "tar -xvf SDL2-2.0.9.tar.gz"
 	sh "tar -xvf SDL2_mixer-2.0.4.tar.gz"
 	sh "tar -xvf SDL2_ttf-2.0.15.tar.gz"
@@ -88,12 +92,25 @@ def build_sdl1(TARGET, SYSROOT, DEFINES) {
 
 def build_sdl2(TARGET, SYSROOT, DEFINES) {
 	echo "============= Build SDL2 ============="
+	dir("SDL2-2.0.9") {
+		sh "./autogen.sh"
+		sh "./configure --host=${TARGET} --enable-sdl2-config --prefix=${SYSROOT}"
+		sh "make clean"
+		sh "make -j8"
+		sh "make install"
+	}
+}
 
-	sh "cd SDL2-2.0.9/ && ./autogen.sh"
-	sh "cd SDL2-2.0.9/ && ./configure --host=${TARGET} --enable-sdl2-config --prefix=${SYSROOT}"
-	sh "cd SDL2-2.0.9/ && make clean"
-	sh "cd SDL2-2.0.9/ && make -j8"
-	sh "cd SDL2-2.0.9/ && make install"
+def build_sdl1_mixer(TARGET, SYSROOT, DEFINES) {
+	echo "============= Build SDL1.2_mixer ============="
+
+	dir("SDL_mixer-SDL-1.2") {
+		sh "./autogen.sh"
+		sh "./configure --host=${TARGET} --prefix=${SYSROOT}"
+		sh "make clean"
+		sh "make -j8"
+		sh "make install"
+	}
 }
 
 def build_sdl2_mixer(TARGET, SYSROOT, DEFINES) {
@@ -127,6 +144,26 @@ def build_freetype(TARGET, SYSROOT, DEFINES) {
 
 		sh "cd build/ && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DUNIX=1 ${DEFINES}" // -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include
 		sh "cd build/ && cmake --build . --config Release --target install -- -j8"
+	}
+}
+
+def build_sdl1_ttf(TARGET, SYSROOT, DEFINES) {
+	echo "============= Build SDL1.2_ttf ============="
+
+	def ZLIB_FILE = ""
+	if (SYSROOT.contains('mingw')) {
+		ZLIB_FILE = "zlibstatic"
+	}
+	else {
+		ZLIB_FILE = "z"
+	}
+
+	dir("SDL_ttf-SDL-1.2") {
+		sh "./autogen.sh"
+		sh "FT2_CFLAGS=\"-I${SYSROOT}/include/freetype2\" FT2_LIBS=\"-lfreetype -lpng -l${ZLIB_FILE}\" ./configure --disable-shared --enable-static --host=${TARGET} --prefix=${SYSROOT}" //FT2_CONFIG=${SYSROOT}/include/freetype2/freetype/config/ftconfig.h
+		sh "make clean"
+		sh "make -j8"
+		sh "make install"
 	}
 }
 
@@ -218,6 +255,7 @@ def buildStep(dockerImage, generator, os, DEFINES) {
 					build_sdl2_mixer(TARGET, SYSROOT, DEFINES)
 				} else {
 					build_sdl1(TARGET, SYSROOT, DEFINES)
+					build_sdl1_mixer(TARGET, SYSROOT, DEFINES)
 				}
 				
 				build_libpng(TARGET, SYSROOT, DEFINES)
@@ -225,8 +263,10 @@ def buildStep(dockerImage, generator, os, DEFINES) {
 				
 				if (!DEFINES.contains('SDL1')) {
 					build_sdl2_ttf(TARGET, SYSROOT, DEFINES)
+				} else {
+					build_sdl1_ttf(TARGET, SYSROOT, DEFINES)
 				}
-				
+
 				if (!DEFINES.contains('NONET')) {
 					build_libsodium(TARGET, SYSROOT, DEFINES)
 				}
