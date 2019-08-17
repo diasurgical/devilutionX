@@ -49,8 +49,6 @@ def get_libs() {
 	sh "curl -SLO https://download.savannah.gnu.org/releases/freetype/freetype-2.10.1.tar.gz"
 	sh "curl -SLO https://github.com/glennrp/libpng/archive/v1.6.36.tar.gz"
 	sh "curl -SLO https://github.com/jedisct1/libsodium/archive/1.0.17.tar.gz"
-	//sh "wget https://raw.githubusercontent.com/Kitware/CMake/v3.10.0/Modules/FindFreetype.cmake -O CMake/FindFreetype.cmake"
-	sh "sudo rm -rfv CMake/FindFreetype.cmake"
 	sh "wget https://raw.githubusercontent.com/Kitware/CMake/v3.10.0/Modules/SelectLibraryConfigurations.cmake -O CMake/SelectLibraryConfigurations.cmake"
 	sh "wget https://raw.githubusercontent.com/Kitware/CMake/master/Modules/FindZLIB.cmake -O CMake/FindZLIB.cmake"
 }
@@ -67,17 +65,17 @@ def decompress_libs() {
 	sh "tar -xvf 1.0.17.tar.gz"
 }
 
-def build_zlib(TARGET, SYSROOT) {
+def build_zlib(TARGET, SYSROOT, DEFINES) {
 	echo "============= Build ZLIB ============="
 
 	sh "mkdir -p zlib-1.2.11/build"
-	sh "sudo rm -rfv zlib-1.2.11/build/*"
+	sh "rm -rfv zlib-1.2.11/build/*"
 
-	sh "cd zlib-1.2.11/build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT}"
+	sh "cd zlib-1.2.11/build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} ${DEFINES}"
 	sh "cd zlib-1.2.11/build && cmake --build . --config Release --target install -- -j8"
 }
 
-def build_sdl2(TARGET, SYSROOT) {
+def build_sdl2(TARGET, SYSROOT, DEFINES) {
 	echo "============= Build SDL2 ============="
 
 	sh "cd SDL2-2.0.9/ && ./autogen.sh"
@@ -87,7 +85,7 @@ def build_sdl2(TARGET, SYSROOT) {
 	sh "cd SDL2-2.0.9/ && make install"
 }
 
-def build_sdl2_mixer(TARGET, SYSROOT) {
+def build_sdl2_mixer(TARGET, SYSROOT, DEFINES) {
 	echo "============= Build SDL2_mixer ============="
 
 	sh "cd SDL2_mixer-2.0.4/ && ./autogen.sh"
@@ -97,31 +95,31 @@ def build_sdl2_mixer(TARGET, SYSROOT) {
 	sh "cd SDL2_mixer-2.0.4/ && make install"
 }
 
-def build_libpng(TARGET, SYSROOT) {
+def build_libpng(TARGET, SYSROOT, DEFINES) {
 	echo "============= Build libpng ============="
 
 	dir("libpng-1.6.36") {
 		sh "mkdir -p build"
-		sh "sudo rm -rfv build/*"
+		sh "rm -rfv build/*"
 
-		sh "cd build && cmake .. -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include -DCMAKE_INSTALL_PREFIX=${SYSROOT}"
+		sh "cd build && cmake .. -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DPNG_TESTS=OFF -DPNG_SHARED=OFF ${DEFINES}"
 		sh "cd build && cmake --build . --config Release --target install -- -j8"
 	}
 }
 
-def build_freetype(TARGET, SYSROOT) {
+def build_freetype(TARGET, SYSROOT, DEFINES) {
 	echo "============= Build Freetype ============="
 
 	dir("freetype-2.10.1") {
 		sh "mkdir -p build"
-		sh "sudo rm -rfv build/*"
+		sh "rm -rfv build/*"
 
-		sh "cd build/ && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DUNIX=1" // -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include
+		sh "cd build/ && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DUNIX=1 ${DEFINES}" // -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include
 		sh "cd build/ && cmake --build . --config Release --target install -- -j8"
 	}
 }
 
-def build_sdl2_ttf(TARGET, SYSROOT) {
+def build_sdl2_ttf(TARGET, SYSROOT, DEFINES) {
 	echo "============= Build SDL2_ttf ============="
 
 	def ZLIB_FILE = ""
@@ -141,7 +139,7 @@ def build_sdl2_ttf(TARGET, SYSROOT) {
 	}
 }
 
-def build_libsodium(TARGET, SYSROOT) {
+def build_libsodium(TARGET, SYSROOT, DEFINES) {
 	echo "============= Build Libsodium ============="
 
 	dir("libsodium-1.0.17") {
@@ -154,7 +152,7 @@ def build_libsodium(TARGET, SYSROOT) {
 }
 
 
-def buildStep(dockerImage, generator, os, defines) {
+def buildStep(dockerImage, generator, os, DEFINES) {
 	def split_job_name = env.JOB_NAME.split(/\/{1}/)  
 	def fixed_job_name = split_job_name[1].replace('%2F',' ')
 	def fixed_os = os.replace(' ','-')
@@ -165,8 +163,8 @@ def buildStep(dockerImage, generator, os, defines) {
 
 			docker.image("${dockerImage}").inside("-u 0:0 -e BUILDER_UID=1001 -e BUILDER_GID=1001 -e BUILDER_USER=gserver -e BUILDER_GROUP=gserver") {
 
-				sh "sudo apt update"
-				sh "sudo apt install -y gcc-multilib curl automake autoconf libtool unzip"
+				sh "apt update"
+				sh "apt install -y gcc-multilib curl automake autoconf libtool unzip"
 				
 				checkout scm
 
@@ -196,23 +194,37 @@ def buildStep(dockerImage, generator, os, defines) {
 					).trim()
 				}
 				
+				if (SYSROOT == '') {
+					SYSROOT = "/opt/${TARGET}"
+				}
+				
 				get_libs()
 				decompress_libs()
-				build_zlib(TARGET, SYSROOT)
-				build_sdl2(TARGET, SYSROOT)
-				build_sdl2_mixer(TARGET, SYSROOT)
-				build_libpng(TARGET, SYSROOT)
-				build_freetype(TARGET, SYSROOT)
-				build_sdl2_ttf(TARGET, SYSROOT)
-				build_libsodium(TARGET, SYSROOT)
+				build_zlib(TARGET, SYSROOT, DEFINES)
+				
+				if (!DEFINES.contains('SDL1')) {
+					build_sdl2(TARGET, SYSROOT)
+					build_sdl2_mixer(TARGET, SYSROOT)
+				}
+				
+				build_libpng(TARGET, SYSROOT, DEFINES)
+				build_freetype(TARGET, SYSROOT, DEFINES)
+				
+				if (!DEFINES.contains('SDL1')) {
+					build_sdl2_ttf(TARGET, SYSROOT, DEFINES)
+				}
+				
+				if (!DEFINES.contains('NONET')) {
+					build_libsodium(TARGET, SYSROOT, DEFINES)
+				}
 
 				sh "mkdir -p build/"
 				sh "mkdir -p lib/"
-				sh "sudo rm -rfv build/*"
+				sh "rm -rfv build/*"
 
 				slackSend color: "good", channel: "#jenkins", message: "Starting ${os} build target..."
 				dir("build") {
-					sh "PKG_CONFIG_PATH=${SYSROOT}/lib/pkgconfig/:${SYSROOT}/share/pkgconfig/ cmake -G\"${generator}\" ${defines} -DVER_EXTRA=\"-${fixed_os}-${fixed_job_name}\" .."
+					sh "PKG_CONFIG_PATH=${SYSROOT}/lib/pkgconfig/:${SYSROOT}/share/pkgconfig/ cmake -G\"${generator}\" ${DEFINES} -DVER_EXTRA=\"-${fixed_os}-${fixed_job_name}\" .."
 					sh "VERBOSE=1 cmake --build . --config Release -- -j 8"
 
 					if (os.contains('Windows')) {
@@ -243,7 +255,7 @@ node('master') {
 	def fixed_job_name = env.JOB_NAME.replace('%2F','/')
 	slackSend color: "good", channel: "#jenkins", message: "Build Started: ${fixed_job_name} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
 	parallel (
-		'Win32': {
+		/*'Win32': {
 			node {			
 				buildStep('dockcross/windows-static-x86:latest', 'Unix Makefiles', 'Windows x86', '')
 			}
@@ -257,15 +269,30 @@ node('master') {
 			node {			
 				buildStep('desertbit/crossbuild:linux-x86', 'Unix Makefiles', 'Linux x86', '')
 			}
-		},
+		},*/
 		'Linux x86_64': {
 			node {			
 				buildStep('desertbit/crossbuild:linux-x86_64', 'Unix Makefiles', 'Linux x86_64', '')
 			}
-		},
+		},/*
 		'Linux ARMv7': {
 			node {
 				buildStep('desertbit/crossbuild:linux-armv7', 'Unix Makefiles', 'Linux RasPi', '')
+			}
+		},*/
+		'AmigaOS 68k': {
+			node {
+				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68k', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-O3 -ffast-math"')
+			}
+		},
+		'AmigaOS PPC': {
+			node {
+				buildStep('amigadev/crosstools:ppc-amigaos', 'Unix Makefiles', 'AmigaOS PPC', '-DSDL1=TRUE -DNONET=TRUE')
+			}
+		},
+		'MorphOS PPC': {
+			node {
+				buildStep('amigadev/crosstools:ppc-morphos', 'Unix Makefiles', 'MorphOS PPC', '-DSDL1=TRUE -DNONET=TRUE')
 			}
 		}
 		/*,
