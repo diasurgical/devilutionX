@@ -79,8 +79,10 @@ def build_zlib(TARGET, SYSROOT, DEFINES) {
 
 def build_sdl1(TARGET, SYSROOT, DEFINES) {
 	echo "============= Build SDL1.2 ============="
-
-	sh "PREFX=${SYSROOT} cd libSDL12-1.2.15.1/ && make -j8 && make install"
+	dir("libSDL12-1.2.15.1") {
+		sh "PREFX=${SYSROOT} make -j8"
+		sh "PREFX=${SYSROOT} make install"
+	}
 }
 
 def build_sdl2(TARGET, SYSROOT, DEFINES) {
