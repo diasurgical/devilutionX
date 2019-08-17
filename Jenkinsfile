@@ -106,7 +106,7 @@ def build_sdl1_mixer(TARGET, SYSROOT, DEFINES) {
 
 	dir("SDL_mixer-SDL-1.2") {
 		sh "./autogen.sh"
-		sh "SDL_LIBS='-lSDL -ldebug' SDL_CFLAGS=-I${SYSROOT}/include/SDL ./configure --disable-shared --enable-static --host=${TARGET} --prefix=${SYSROOT}"
+		sh "SDL_LIBS='-lSDL -ldebug' SDL_CFLAGS=-I${SYSROOT}/include/SDL ./configure --disable-sdltest --disable-shared --enable-static --host=${TARGET} --prefix=${SYSROOT}"
 		sh "make clean"
 		sh "make -j8"
 		sh "make install"
