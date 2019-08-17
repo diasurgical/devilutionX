@@ -84,6 +84,7 @@ def build_zlib(TARGET, SYSROOT, DEFINES) {
 def build_sdl1(TARGET, SYSROOT, DEFINES) {
 	echo "============= Build SDL1.2 ============="
 	dir("libSDL12-master") {
+		sh "make clean -j8"
 		sh "make PREFX=${SYSROOT} PREF=${SYSROOT} -j8"
 		sh "cp -fvr libSDL.a ${SYSROOT}/lib"
 		sh "cp -fvr include/* ${SYSROOT}/include/"
@@ -250,28 +251,23 @@ def buildStep(dockerImage, generator, os, DEFINES) {
 				get_libs()
 				decompress_libs()
 				build_zlib(TARGET, SYSROOT, DEFINES)
-				
-				if (!DEFINES.contains('SDL1')) {
-					build_sdl2(TARGET, SYSROOT, DEFINES)
-					build_sdl2_mixer(TARGET, SYSROOT, DEFINES)
-				} else {
-					build_sdl1(TARGET, SYSROOT, DEFINES)
-					build_sdl1_mixer(TARGET, SYSROOT, DEFINES)
-				}
-				
 				build_libpng(TARGET, SYSROOT, DEFINES)
 				build_freetype(TARGET, SYSROOT, DEFINES)
-				
-				if (!DEFINES.contains('SDL1')) {
-					build_sdl2_ttf(TARGET, SYSROOT, DEFINES)
-				} else {
-					build_sdl1_ttf(TARGET, SYSROOT, DEFINES)
-				}
 
 				if (!DEFINES.contains('NONET')) {
 					build_libsodium(TARGET, SYSROOT, DEFINES)
 				}
-
+				
+				if (!DEFINES.contains('SDL1')) {
+					build_sdl2(TARGET, SYSROOT, DEFINES)
+					build_sdl2_ttf(TARGET, SYSROOT, DEFINES)
+					build_sdl2_mixer(TARGET, SYSROOT, DEFINES)
+				} else {
+					build_sdl1(TARGET, SYSROOT, DEFINES)
+					build_sdl1_ttf(TARGET, SYSROOT, DEFINES)
+					build_sdl1_mixer(TARGET, SYSROOT, DEFINES)
+				}
+				
 				sh "mkdir -p build/"
 				sh "mkdir -p lib/"
 				sh "rm -rfv build/*"
