@@ -157,7 +157,7 @@ def build_sdl1_ttf(TARGET, SYSROOT, DEFINES) {
 		ZLIB_FILE = "zlibstatic"
 	}
 	else {
-		ZLIB_FILE = "z"
+		ZLIB_FILE = "zlib"
 	}
 
 	dir("SDL_ttf-SDL-1.2") {
