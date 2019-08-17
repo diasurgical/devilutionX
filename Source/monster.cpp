@@ -1,5 +1,6 @@
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
+#include "../3rdParty/StormLib/src/StormPort.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -103,6 +104,7 @@ void InitMonsterTRN(int monst, BOOL special)
 	int i, n, j;
 
 	f = Monsters[monst].trans_file;
+
 	for (i = 0; i < 256; i++) {
 		if (*f == 255) {
 			*f = 0;
@@ -284,13 +286,12 @@ void InitMonsterGFX(int monst)
 			sprintf(strBuff, monsterdata[mtype].GraphicType, animletter[anim]);
 
 			celBuf = LoadFileInMem(strBuff, NULL);
+
 			Monsters[monst].Anims[anim].CMem = celBuf;
 
 			if (Monsters[monst].mtype != MT_GOLEM || (animletter[anim] != 's' && animletter[anim] != 'd')) {
-
-				for (i = 0; i < 8; i++) {
-					Monsters[monst].Anims[anim].Data[i] = &celBuf[((int *)celBuf)[i]];
-				}
+				for (i = 0; i < 8; i++)
+					Monsters[monst].Anims[anim].Data[i] = &celBuf[BSWAP_INT32_UNSIGNED(((int *)celBuf)[i])];
 			} else {
 				for (i = 0; i < 8; i++) {
 					Monsters[monst].Anims[anim].Data[i] = celBuf;
@@ -310,6 +311,7 @@ void InitMonsterGFX(int monst)
 	Monsters[monst].has_special = monsterdata[mtype].has_special;
 	Monsters[monst].mAFNum = monsterdata[mtype].mAFNum;
 	Monsters[monst].MData = &monsterdata[mtype];
+
 
 	if (monsterdata[mtype].has_trans) {
 		Monsters[monst].trans_file = LoadFileInMem(monsterdata[mtype].TransFile, NULL);
