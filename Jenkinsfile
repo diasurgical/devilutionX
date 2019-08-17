@@ -211,10 +211,10 @@ def buildStep(dockerImage, generator, os, DEFINES) {
 				build_zlib(TARGET, SYSROOT, DEFINES)
 				
 				if (!DEFINES.contains('SDL1')) {
-					build_sdl2(TARGET, SYSROOT)
-					build_sdl2_mixer(TARGET, SYSROOT)
+					build_sdl2(TARGET, SYSROOT, DEFINES)
+					build_sdl2_mixer(TARGET, SYSROOT, DEFINES)
 				} else {
-					build_sdl1(TARGET, SYSROOT)
+					build_sdl1(TARGET, SYSROOT, DEFINES)
 				}
 				
 				build_libpng(TARGET, SYSROOT, DEFINES)
