@@ -47,8 +47,10 @@ void __cdecl dumphist(const char *pszFmt, ...)
 
 	va_start(va, pszFmt);
 
-	if (sgpHistFile == NULL) {
-		sgpHistFile = fopen("dumphist.txt", "wb");
+	char dumpHistPath[MAX_PATH] = {};
+	if (sgpHistFile == NULL && GetWindowsDirectory(dumpHistPath, sizeof(dumpHistPath))) {
+		strcat(dumpHistPath, "\\dumphist.txt");
+		sgpHistFile = fopen(dumpHistPath, "wb");
 		if (sgpHistFile == NULL) {
 			return;
 		}
