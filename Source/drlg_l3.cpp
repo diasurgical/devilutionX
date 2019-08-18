@@ -1,3 +1,4 @@
+#ifndef SPAWN
 #include "diablo.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -1022,8 +1023,8 @@ void DRLG_L3River()
 	}
 }
 
-/** 
- * Flood fills dirt and wall tiles looking for 
+/**
+ * Flood fills dirt and wall tiles looking for
  * an area of at most 40 tiles and disconnected from the map edge.
  * If it finds one, converts it to lava tiles and sets lavapool to TRUE.
  */
@@ -1829,3 +1830,4 @@ void LoadPreL3Dungeon(char *sFileName, int vx, int vy)
 }
 
 DEVILUTION_END_NAMESPACE
+#endif

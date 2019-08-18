@@ -132,7 +132,7 @@ extern char SpellITbl[MAX_SPELLS];
 extern int PanBtnPos[8][5];
 extern char *PanBtnHotKey[8];
 extern char *PanBtnStr[8];
-extern RECT32 attribute_inc_rects[4];
+extern RECT32 ChrBtnsRect[4];
 extern int SpellPages[6][7];
 
 #endif /* __CONTROL_H__ */

@@ -174,7 +174,7 @@ extern int framestart;
 #endif
 extern BOOL FriendlyMode;
 extern char *spszMsgTbl[4];
-extern char *spszMsgKeyTbl[4];
+extern char *spszMsgHotKeyTbl[4];
 
 #ifdef DEVILUTION_STUB
 #include "miniwin/popdecl.inc"

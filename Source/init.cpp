@@ -233,7 +233,15 @@ void init_archives()
 #ifdef COPYPROT
 	while (1) {
 #endif
-		diabdat_mpq = init_test_access(diabdat_mpq_path, "\\diabdat.mpq", "DiabloCD", 1000, FS_CD);
+#ifdef SPAWN
+		diabdat_mpq = init_test_access(diabdat_mpq_path, "\\spawn.mpq", "DiabloSpawn", MPQ_FLAG_READ_ONLY, FS_PC);
+#else
+#ifdef COPYPROT
+		diabdat_mpq = init_test_access(diabdat_mpq_path, "\\diabdat.mpq", "DiabloCD", MPQ_FLAG_READ_ONLY, FS_CD);
+#else
+		diabdat_mpq = init_test_access(diabdat_mpq_path, "\\diabdat.mpq", "DiabloCD", MPQ_FLAG_READ_ONLY, FS_PC);
+#endif
+#endif
 #ifdef COPYPROT
 		if (diabdat_mpq)
 			break;
@@ -243,9 +251,17 @@ void init_archives()
 	}
 #endif
 	if (!WOpenFile("ui_art\\title.pcx", &fh, TRUE))
+#ifdef SPAWN
+		FileErrDlg("Main program archive: spawn.mpq");
+#else
 		FileErrDlg("Main program archive: diabdat.mpq");
+#endif
 	WCloseFile(fh);
-	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "\\patch_rt.mpq", "DiabloInstall", 2000, FS_PC);
+#ifdef SPAWN
+	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "\\patch_sh.mpq", "DiabloSpawn", MPQ_FLAG_READ_ONLY, FS_PC);
+#else
+	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "\\patch_rt.mpq", "DiabloInstall", MPQ_FLAG_READ_ONLY, FS_PC);
+#endif
 }
 
 HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags, int fs)
@@ -269,20 +285,12 @@ HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags
 	init_strip_trailing_slash(Filename);
 	strcpy(mpq_path, Buffer);
 	strcat(mpq_path, mpq_name);
-#ifdef COPYPROT
 	if (SFileOpenArchive(mpq_path, flags, fs, &archive))
-#else
-	if (SFileOpenArchive(mpq_path, flags, FS_PC, &archive))
-#endif
 		return archive;
 	if (strcmp(Filename, Buffer)) {
 		strcpy(mpq_path, Filename);
 		strcat(mpq_path, mpq_name);
-#ifdef COPYPROT
 		if (SFileOpenArchive(mpq_path, flags, fs, &archive))
-#else
-		if (SFileOpenArchive(mpq_path, flags, FS_PC, &archive))
-#endif
 			return archive;
 	}
 	archive_path[0] = '\0';
@@ -291,11 +299,7 @@ HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags
 			init_strip_trailing_slash(archive_path);
 			strcpy(mpq_path, archive_path);
 			strcat(mpq_path, mpq_name);
-#ifdef COPYPROT
 			if (SFileOpenArchive(mpq_path, flags, fs, &archive))
-#else
-			if (SFileOpenArchive(mpq_path, flags, FS_PC, &archive))
-#endif
 				return archive;
 		}
 	}
@@ -341,7 +345,7 @@ BOOL init_read_test_file(char *pszPath, char *pszArchive, int flags, HANDLE *phA
 		if (GetDriveType(pszRoot) == DRIVE_CDROM) {
 			strcpy(pszPath, pszRoot);
 			strcat(pszPath, pszArchive);
-			if (SFileOpenArchive(pszPath, flags, 1, phArchive)) {
+			if (SFileOpenArchive(pszPath, 0, flags, phArchive)) {
 				return TRUE;
 			}
 		}
@@ -400,7 +404,7 @@ LRESULT __stdcall MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 		break;
 #ifdef _DEBUG
 	case WM_SYSKEYUP:
-		if(wParam == VK_RETURN) {
+		if (wParam == VK_RETURN) {
 			fullscreen = !fullscreen;
 			dx_reinit();
 			return 0;

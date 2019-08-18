@@ -185,7 +185,11 @@ void GetLevelMTypes()
 
 	int nt; // number of types
 
+#ifdef SPAWN
+	mamask = 1; // monster availability mask
+#else
 	mamask = 3; // monster availability mask
+#endif
 
 	AddMonsterType(MT_GOLEM, 2);
 	if (currlevel == 16) {
@@ -555,6 +559,7 @@ void PlaceMonster(int i, int mtype, int x, int y)
 	InitMonster(i, rd, mtype, x, y);
 }
 
+#ifndef SPAWN
 void PlaceUniqueMonst(int uniqindex, int miniontype, int unpackfilesize)
 {
 	int xp, yp, x, y, i;
@@ -829,6 +834,7 @@ void PlaceQuestMonsters()
 		PlaceUniqueMonst(UMT_SKELKING, 0, 0);
 	}
 }
+#endif
 
 void PlaceGroup(int mtype, int num, int leaderf, int leader)
 {
@@ -910,6 +916,7 @@ void PlaceGroup(int mtype, int num, int leaderf, int leader)
 	}
 }
 
+#ifndef SPAWN
 void LoadDiabMonsts()
 {
 	BYTE *lpSetPiece;
@@ -927,6 +934,7 @@ void LoadDiabMonsts()
 	SetMapMonsters(lpSetPiece, 2 * diabquad4x, 2 * diabquad4y);
 	mem_free_dbg(lpSetPiece);
 }
+#endif
 
 void InitMonsters()
 {
@@ -945,8 +953,10 @@ void InitMonsters()
 		AddMonster(1, 0, 0, 0, FALSE);
 		AddMonster(1, 0, 0, 0, FALSE);
 		AddMonster(1, 0, 0, 0, FALSE);
+#ifndef SPAWN
 		if (!setlevel && currlevel == 16)
 			LoadDiabMonsts();
+#endif
 	}
 	nt = numtrigs;
 	if (currlevel == 15)
@@ -957,9 +967,13 @@ void InitMonsters()
 				DoVision(s + trigs[i]._tx, t + trigs[i]._ty, 15, FALSE, FALSE);
 		}
 	}
+#ifndef SPAWN
 	PlaceQuestMonsters();
+#endif
 	if (!setlevel) {
+#ifndef SPAWN
 		PlaceUniques();
+#endif
 		na = 0;
 		for (s = 16; s < 96; s++)
 			for (t = 16; t < 96; t++)
@@ -996,6 +1010,7 @@ void InitMonsters()
 	}
 }
 
+#ifndef SPAWN
 void PlaceUniques()
 {
 	int u, mt;
@@ -1065,6 +1080,7 @@ void SetMapMonsters(BYTE *pMap, int startx, int starty)
 		}
 	}
 }
+#endif
 
 void DeleteMonster(int i)
 {
@@ -1535,7 +1551,9 @@ void M_DiabloDeath(int i, BOOL sendmsg)
 	int _moldx, _moldy;
 
 	Monst = monster + i;
+#ifndef SPAWN
 	PlaySFX(USFX_DIABLOD);
+#endif
 	quests[QTYPE_MOD]._qactive = 3;
 	if (sendmsg)
 		NetSendCmdQuest(TRUE, QTYPE_MOD);
@@ -2528,6 +2546,7 @@ void DoEnding()
 		Sleep(1000);
 	}
 
+#ifndef SPAWN
 	if (plr[myplr]._pClass == PC_WARRIOR) {
 		play_movie("gendata\\DiabVic2.smk", 0);
 	} else if (plr[myplr]._pClass == PC_SORCERER) {
@@ -2551,6 +2570,7 @@ void DoEnding()
 
 	sound_get_or_set_music_volume(musicVolume);
 	gbMusicOn = bMusicOn;
+#endif
 }
 
 void PrepDoEnding()
@@ -4196,6 +4216,7 @@ void MAI_Garbud(int i)
 	}
 
 	if (dFlags[_mx][_my] & BFLAG_VISIBLE) {
+#ifndef SPAWN
 		if (Monst->mtalkmsg == QUEST_GARBUD4) {
 			if (!effect_is_playing(USFX_GARBUD4) && Monst->_mgoal == MGOAL_TALKING) {
 				Monst->_mgoal = MGOAL_NORMAL;
@@ -4203,6 +4224,7 @@ void MAI_Garbud(int i)
 				Monst->mtalkmsg = 0;
 			}
 		}
+#endif
 	}
 
 	if (Monst->_mgoal == MGOAL_NORMAL || Monst->_mgoal == MGOAL_MOVE)
@@ -4242,6 +4264,7 @@ void MAI_Zhar(int i)
 			abs(_mx);
 		else
 			abs(_my);
+#ifndef SPAWN
 		if (Monst->mtalkmsg == QUEST_ZHAR2) {
 			if (!effect_is_playing(USFX_ZHAR2) && Monst->_mgoal == MGOAL_TALKING) {
 				Monst->_msquelch = UCHAR_MAX;
@@ -4249,6 +4272,7 @@ void MAI_Zhar(int i)
 				Monst->_mgoal = MGOAL_NORMAL;
 			}
 		}
+#endif
 	}
 
 	if (Monst->_mgoal == MGOAL_NORMAL || Monst->_mgoal == MGOAL_RETREAT || Monst->_mgoal == MGOAL_MOVE)
@@ -4288,6 +4312,7 @@ void MAI_SnotSpil(int i)
 	}
 
 	if (dFlags[mx][my] & BFLAG_VISIBLE) {
+#ifndef SPAWN
 		if (Monst->mtalkmsg == QUEST_BANNER12) {
 			if (!effect_is_playing(USFX_SNOT3) && Monst->_mgoal == MGOAL_TALKING) {
 				ObjChangeMap(setpc_x, setpc_y, setpc_x + setpc_w + 1, setpc_y + setpc_h + 1);
@@ -4298,6 +4323,7 @@ void MAI_SnotSpil(int i)
 				Monst->_mgoal = MGOAL_NORMAL;
 			}
 		}
+#endif
 		if (quests[QTYPE_BOL]._qvar1 == 3) {
 			if (Monst->_mgoal == MGOAL_NORMAL || Monst->_mgoal == MGOAL_SHOOT)
 				MAI_Fallen(i);
@@ -4334,6 +4360,7 @@ void MAI_Lazurus(int i)
 				quests[QTYPE_VB]._qvar1 = 5;
 			}
 
+#ifndef SPAWN
 			if (Monst->mtalkmsg == QUEST_VILE13 && !effect_is_playing(USFX_LAZ1) && Monst->_mgoal == MGOAL_TALKING) {
 				ObjChangeMapResync(1, 18, 20, 24);
 				RedoPlayerVision();
@@ -4342,6 +4369,7 @@ void MAI_Lazurus(int i)
 				quests[QTYPE_VB]._qvar1 = 6;
 				Monst->_mgoal = MGOAL_NORMAL;
 			}
+#endif
 		}
 
 		if (gbMaxPlayers != 1 && Monst->mtalkmsg == QUEST_VILE13 && Monst->_mgoal == MGOAL_INQUIRING && quests[QTYPE_VB]._qvar1 <= 3) {
@@ -4410,6 +4438,7 @@ void MAI_Lachdanan(int i)
 	_mx = Monst->_mx;
 	_my = Monst->_my;
 	md = M_GetDir(i);
+#ifndef SPAWN
 	if (Monst->mtalkmsg == QUEST_VEIL9 && !(dFlags[_mx][_my] & BFLAG_VISIBLE) && monster[i]._mgoal == MGOAL_TALKING) {
 		Monst->mtalkmsg = QUEST_VEIL10;
 		monster[i]._mgoal = MGOAL_INQUIRING;
@@ -4424,6 +4453,7 @@ void MAI_Lachdanan(int i)
 			}
 		}
 	}
+#endif
 
 	Monst->_mdir = md;
 
@@ -4450,11 +4480,13 @@ void MAI_Warlord(int i)
 	if (dFlags[mx][my] & BFLAG_VISIBLE) {
 		if (Monst->mtalkmsg == QUEST_WARLRD9 && Monst->_mgoal == MGOAL_INQUIRING)
 			Monst->_mmode = MM_TALK;
+#ifndef SPAWN
 		if (Monst->mtalkmsg == QUEST_WARLRD9 && !effect_is_playing(USFX_WARLRD1) && Monst->_mgoal == MGOAL_TALKING) {
 			Monst->_msquelch = UCHAR_MAX;
 			Monst->mtalkmsg = 0;
 			Monst->_mgoal = MGOAL_NORMAL;
 		}
+#endif
 	}
 
 	if (Monst->_mgoal == MGOAL_NORMAL)
@@ -4518,9 +4550,11 @@ void ProcessMonsters()
 		}
 		mx = Monst->_mx;
 		my = Monst->_my;
+#ifndef SPAWN
 		if (dFlags[mx][my] & BFLAG_VISIBLE && Monst->_msquelch == 0 && Monst->MType->mtype == MT_CLEAVER) {
 			PlaySFX(USFX_CLEAVER);
 		}
+#endif
 		if (Monst->_mFlags & MFLAG_TARGETS_MONSTER) {
 			_menemy = Monst->_menemy;
 			if ((DWORD)_menemy >= MAXMONSTERS) {

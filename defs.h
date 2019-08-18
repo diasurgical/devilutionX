@@ -48,7 +48,6 @@
 #define VOLUME_MAX				0
 
 // todo: enums
-#define NUM_SFX					858
 #define NUMLEVELS				17
 
 // from diablo 2 beta
@@ -146,6 +145,18 @@
 #else
 #define assert(exp) (void)( (exp) || (assert_fail(__LINE__, __FILE__, #exp), 0) )
 #endif
+
+#define ERR_OK_DLG(templateId, errorCode) \
+	ErrOkDlg((templateId), (errorCode), __FILE__, __LINE__)
+
+#define ERR_DLG(templateId, errorCode) \
+	ErrDlg((templateId), (errorCode), __FILE__, __LINE__)
+
+#define DD_ERR_MSG(errorCode) \
+	DDErrMsg((errorCode), __LINE__, __FILE__)
+
+#define DS_ERR_MSG(errorCode) \
+	DSErrMsg((errorCode), __LINE, __FILE)
 
 #ifndef INVALID_FILE_ATTRIBUTES
 #define INVALID_FILE_ATTRIBUTES ((DWORD)-1)

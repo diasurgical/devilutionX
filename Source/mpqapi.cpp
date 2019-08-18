@@ -56,7 +56,11 @@ BOOL mpqapi_reg_load_modification_time(char *dst, int size)
 
 	pszDst = dst;
 	memset(dst, 0, size);
+#ifdef SPAWN
+	if (!SRegLoadData("Diablo", "Audio Playback ", 0, (BYTE *)pszDst, size, &nbytes_read)) {
+#else
 	if (!SRegLoadData("Diablo", "Video Player ", 0, (BYTE *)pszDst, size, &nbytes_read)) {
+#endif
 		return FALSE;
 	}
 
@@ -122,7 +126,11 @@ BOOLEAN mpqapi_reg_store_modification_time(char *pbData, DWORD dwLen)
 		} while (i);
 	}
 
+#ifdef SPAWN
+	return SRegSaveData("Diablo", "Audio Playback ", 0, (BYTE *)pbData, dwLen);
+#else
 	return SRegSaveData("Diablo", "Video Player ", 0, (BYTE *)pbData, dwLen);
+#endif
 }
 
 void mpqapi_remove_hash_entry(const char *pszName)

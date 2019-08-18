@@ -1450,20 +1450,28 @@ void T_Pass3()
 	T_FillSector(P3Tiles, pSector, 0, 0, 23, 23);
 	mem_free_dbg(pSector);
 
+#ifndef SPAWN
 	if (gbMaxPlayers == 1) {
 		if (!(plr[myplr].pTownWarps & 1)) {
+#endif
 			T_FillTile(P3Tiles, 48, 20, 320);
+#ifndef SPAWN
 		}
 		if (!(plr[myplr].pTownWarps & 2)) {
+#endif
 			T_FillTile(P3Tiles, 16, 68, 332);
 			T_FillTile(P3Tiles, 16, 70, 331);
+#ifndef SPAWN
 		}
 		if (!(plr[myplr].pTownWarps & 4)) {
+#endif
 			for (x = 36; x < 46; x++) {
 				T_FillTile(P3Tiles, x, 78, random(0, 4) + 1);
 			}
+#ifndef SPAWN
 		}
 	}
+#endif
 
 	if (quests[13]._qactive != 3 && quests[13]._qactive) {
 		T_FillTile(P3Tiles, 60, 70, 342);

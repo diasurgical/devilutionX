@@ -124,7 +124,7 @@ int msg_wait_for_turns()
 	}
 	multi_process_network_packets();
 	nthread_send_and_recv_turn(0, 0);
-	if (nthread_has_500ms_passed(0))
+	if (nthread_has_500ms_passed(FALSE))
 		nthread_recv_turns(&received);
 
 	if (gbGameDestroyed)

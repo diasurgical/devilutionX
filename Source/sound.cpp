@@ -19,12 +19,18 @@ BOOLEAN gbSoundOn = TRUE;
 BOOLEAN gbDupSounds = TRUE;
 int sgnMusicTrack = 6;
 char *sgszMusicTracks[NUM_MUSIC] = {
+#ifdef SPAWN
+	"Music\\sTowne.wav",
+	"Music\\sLvlA.wav",
+	"Music\\sintro.wav"
+#else
 	"Music\\DTowne.wav",
 	"Music\\DLvlA.wav",
 	"Music\\DLvlB.wav",
 	"Music\\DLvlC.wav",
 	"Music\\DLvlD.wav",
 	"Music\\Dintro.wav"
+#endif
 };
 char unk_volume[4][2] = {
 	{ 15, -16 },
