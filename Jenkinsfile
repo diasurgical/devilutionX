@@ -71,7 +71,7 @@ def decompress_libs() {
 	sh "tar -xvf 1.0.17.tar.gz"
 }
 
-def build_zlib(TARGET, SYSROOT, DEFINES) {
+def build_zlib(TARGET, SYSROOT, DEFINES, FLAGS) {
 	echo "============= Build ZLIB ============="
 	dir("zlib-1.2.11") {
 		sh "mkdir -p build"
@@ -82,7 +82,7 @@ def build_zlib(TARGET, SYSROOT, DEFINES) {
 	}
 }
 
-def build_sdl1(TARGET, SYSROOT, DEFINES) {
+def build_sdl1(TARGET, SYSROOT, DEFINES, FLAGS) {
 	echo "============= Build SDL1.2 ============="
 	dir("libSDL12-master") {
 		sh "make clean -j8"
@@ -92,41 +92,41 @@ def build_sdl1(TARGET, SYSROOT, DEFINES) {
 	}
 }
 
-def build_sdl2(TARGET, SYSROOT, DEFINES) {
+def build_sdl2(TARGET, SYSROOT, DEFINES, FLAGS) {
 	echo "============= Build SDL2 ============="
 	dir("SDL2-2.0.9") {
 		sh "./autogen.sh"
-		sh "./configure --host=${TARGET} --enable-sdl2-config --prefix=${SYSROOT}"
+		sh "CFLAGS=\"${FLAGS}\" CXXFLAGS=\"${FLAGS}\" ./configure --host=${TARGET} --enable-sdl2-config --prefix=${SYSROOT}"
 		sh "make clean"
 		sh "make -j8"
 		sh "make install"
 	}
 }
 
-def build_sdl1_mixer(TARGET, SYSROOT, DEFINES) {
+def build_sdl1_mixer(TARGET, SYSROOT, DEFINES, FLAGS) {
 	echo "============= Build SDL1.2_mixer ============="
 
 	dir("SDL_mixer-SDL-1.2") {
 		sh "./autogen.sh"
-		sh "SDL_LIBS='-lSDL -ldebug' SDL_CFLAGS=\"-I${SYSROOT}/include/SDL -noixemul\" ./configure --disable-sdltest --disable-shared --enable-static --host=${TARGET} --prefix=${SYSROOT}"
+		sh "CFLAGS=\"${FLAGS}\" CXXFLAGS=\"${FLAGS}\" SDL_LIBS='-lSDL -ldebug' SDL_CFLAGS=\"-I${SYSROOT}/include/SDL -noixemul\" ./configure --disable-sdltest --disable-shared --enable-static --host=${TARGET} --prefix=${SYSROOT}"
 		sh "make clean"
 		sh "make -j8"
 		sh "make install"
 	}
 }
 
-def build_sdl2_mixer(TARGET, SYSROOT, DEFINES) {
+def build_sdl2_mixer(TARGET, SYSROOT, DEFINES, FLAGS) {
 	echo "============= Build SDL2_mixer ============="
 	dir("SDL2_mixer-2.0.4") {
 		sh "./autogen.sh"
-		sh "./configure --host=${TARGET} --prefix=${SYSROOT}"
+		sh "CFLAGS=\"${FLAGS}\" CXXFLAGS=\"${FLAGS}\" ./configure --host=${TARGET} --prefix=${SYSROOT}"
 		sh "make clean"
 		sh "make -j8"
 		sh "make install"
 	}
 }
 
-def build_libpng(TARGET, SYSROOT, DEFINES) {
+def build_libpng(TARGET, SYSROOT, DEFINES, FLAGS) {
 	echo "============= Build libpng ============="
 
 	dir("libpng-1.6.36") {
@@ -138,7 +138,7 @@ def build_libpng(TARGET, SYSROOT, DEFINES) {
 	}
 }
 
-def build_freetype(TARGET, SYSROOT, DEFINES) {
+def build_freetype(TARGET, SYSROOT, DEFINES, FLAGS) {
 	echo "============= Build Freetype ============="
 
 	dir("freetype-2.10.1") {
@@ -150,7 +150,7 @@ def build_freetype(TARGET, SYSROOT, DEFINES) {
 	}
 }
 
-def build_sdl1_ttf(TARGET, SYSROOT, DEFINES) {
+def build_sdl1_ttf(TARGET, SYSROOT, DEFINES, FLAGS) {
 	echo "============= Build SDL1.2_ttf ============="
 
 	def ZLIB_FILE = ""
@@ -163,14 +163,14 @@ def build_sdl1_ttf(TARGET, SYSROOT, DEFINES) {
 
 	dir("SDL_ttf-SDL-1.2") {
 		sh "./autogen.sh"
-		sh "SDL_LIBS='-lSDL -ldebug' SDL_CFLAGS=\"-I${SYSROOT}/include/SDL -noixemul\" FT2_CFLAGS=\"-I${SYSROOT}/include/freetype2\" FT2_LIBS=\"-lfreetype -lpng -l${ZLIB_FILE}\" ./configure --disable-shared --enable-static --host=${TARGET} --prefix=${SYSROOT}" //FT2_CONFIG=${SYSROOT}/include/freetype2/freetype/config/ftconfig.h
+		sh "CFLAGS=\"${FLAGS}\" CXXFLAGS=\"${FLAGS}\" SDL_LIBS='-lSDL -ldebug' SDL_CFLAGS=\"-I${SYSROOT}/include/SDL -noixemul\" FT2_CFLAGS=\"-I${SYSROOT}/include/freetype2\" FT2_LIBS=\"-lfreetype -lpng -l${ZLIB_FILE}\" ./configure --disable-shared --enable-static --host=${TARGET} --prefix=${SYSROOT}" //FT2_CONFIG=${SYSROOT}/include/freetype2/freetype/config/ftconfig.h
 		sh "make clean"
 		sh "make -j8"
 		sh "make install"
 	}
 }
 
-def build_sdl2_ttf(TARGET, SYSROOT, DEFINES) {
+def build_sdl2_ttf(TARGET, SYSROOT, DEFINES, FLAGS) {
 	echo "============= Build SDL2_ttf ============="
 
 	def ZLIB_FILE = ""
@@ -183,19 +183,19 @@ def build_sdl2_ttf(TARGET, SYSROOT, DEFINES) {
 
 	dir("SDL2_ttf-2.0.15") {
 		sh "./autogen.sh"
-		sh "FT2_CFLAGS=\"-I${SYSROOT}/include/freetype2\" FT2_LIBS=\"-lfreetype -lpng -l${ZLIB_FILE}\" ./configure --disable-shared --enable-static --host=${TARGET} --prefix=${SYSROOT}" //FT2_CONFIG=${SYSROOT}/include/freetype2/freetype/config/ftconfig.h
+		sh "CFLAGS=\"${FLAGS}\" CXXFLAGS=\"${FLAGS}\" FT2_CFLAGS=\"-I${SYSROOT}/include/freetype2\" FT2_LIBS=\"-lfreetype -lpng -l${ZLIB_FILE}\" ./configure --disable-shared --enable-static --host=${TARGET} --prefix=${SYSROOT}" //FT2_CONFIG=${SYSROOT}/include/freetype2/freetype/config/ftconfig.h
 		sh "make clean"
 		sh "make -j8"
 		sh "make install"
 	}
 }
 
-def build_libsodium(TARGET, SYSROOT, DEFINES) {
+def build_libsodium(TARGET, SYSROOT, DEFINES, FLAGS) {
 	echo "============= Build Libsodium ============="
 
 	dir("libsodium-1.0.17") {
 		sh "./autogen.sh"
-		sh "./configure --host=${TARGET} --prefix=${SYSROOT}"
+		sh "CFLAGS=\"${FLAGS}\" CXXFLAGS=\"${FLAGS}\" ./configure --host=${TARGET} --prefix=${SYSROOT}"
 		sh "make clean"
 		sh "make -j8"
 		sh "make install"
@@ -203,7 +203,7 @@ def build_libsodium(TARGET, SYSROOT, DEFINES) {
 }
 
 
-def buildStep(dockerImage, generator, os, DEFINES) {
+def buildStep(dockerImage, generator, os, DEFINES, FLAGS = '') {
 	def split_job_name = env.JOB_NAME.split(/\/{1}/)  
 	def fixed_job_name = split_job_name[1].replace('%2F',' ')
 	def fixed_os = os.replace(' ','-')
@@ -251,22 +251,22 @@ def buildStep(dockerImage, generator, os, DEFINES) {
 				
 				get_libs()
 				decompress_libs()
-				build_zlib(TARGET, SYSROOT, DEFINES)
-				build_libpng(TARGET, SYSROOT, DEFINES)
-				build_freetype(TARGET, SYSROOT, DEFINES)
+				build_zlib(TARGET, SYSROOT, DEFINES, FLAGS)
+				build_libpng(TARGET, SYSROOT, DEFINES, FLAGS)
+				build_freetype(TARGET, SYSROOT, DEFINES, FLAGS)
 
 				if (!DEFINES.contains('NONET')) {
-					build_libsodium(TARGET, SYSROOT, DEFINES)
+					build_libsodium(TARGET, SYSROOT, DEFINES, FLAGS)
 				}
 				
 				if (!DEFINES.contains('SDL1')) {
-					build_sdl2(TARGET, SYSROOT, DEFINES)
-					build_sdl2_ttf(TARGET, SYSROOT, DEFINES)
-					build_sdl2_mixer(TARGET, SYSROOT, DEFINES)
+					build_sdl2(TARGET, SYSROOT, DEFINES, FLAGS)
+					build_sdl2_ttf(TARGET, SYSROOT, DEFINES, FLAGS)
+					build_sdl2_mixer(TARGET, SYSROOT, DEFINES, FLAGS)
 				} else {
-					build_sdl1(TARGET, SYSROOT, DEFINES)
-					build_sdl1_ttf(TARGET, SYSROOT, DEFINES)
-					build_sdl1_mixer(TARGET, SYSROOT, DEFINES)
+					build_sdl1(TARGET, SYSROOT, DEFINES, FLAGS)
+					build_sdl1_ttf(TARGET, SYSROOT, DEFINES, FLAGS)
+					build_sdl1_mixer(TARGET, SYSROOT, DEFINES, FLAGS)
 				}
 				
 				sh "mkdir -p build/"
@@ -333,17 +333,17 @@ node('master') {
 		},*/
 		'AmigaOS 68040': {
 			node {
-				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68040-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-O3 -ffast-math"')
+				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68040-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-O3 -ffast-math"', '-m68040 -mhard-float -O3 -ffast-math -noixemul')
 			}
 		},
 		'AmigaOS 68060': {
 			node {
-				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68060-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68060 -DM68K_FPU=hard -DM68K_COMMON="-O3 -ffast-math"')
+				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68060-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68060 -DM68K_FPU=hard -DM68K_COMMON="-O3 -ffast-math"', '-m68060 -mhard-float -O3 -ffast-math -noixemul')
 			}
 		},
 		'AmigaOS 68080': {
 			node {
-				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68080-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68080 -DM68K_FPU=hard -DM68K_COMMON="-O3 -ffast-math"')
+				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68080-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68080 -DM68K_FPU=hard -DM68K_COMMON="-O3 -ffast-math"', '-m68080 -mhard-float -O3 -ffast-math -noixemul')
 			}
 		}/*,
 		'AmigaOS PPC': {
