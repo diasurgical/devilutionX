@@ -73,12 +73,13 @@ def decompress_libs() {
 
 def build_zlib(TARGET, SYSROOT, DEFINES) {
 	echo "============= Build ZLIB ============="
+	dir("zlib-1.2.11") {
+		sh "mkdir -p build"
+		sh "rm -rfv build/*"
 
-	sh "mkdir -p zlib-1.2.11/build"
-	sh "rm -rfv zlib-1.2.11/build/*"
-
-	sh "cd zlib-1.2.11/build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} ${DEFINES}"
-	sh "cd zlib-1.2.11/build && cmake --build . --config Release --target install -- -j8"
+		sh "cd build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} ${DEFINES}"
+		sh "cd build && cmake --build . --config Release --target install -- -j8"
+	}
 }
 
 def build_sdl1(TARGET, SYSROOT, DEFINES) {
@@ -330,9 +331,19 @@ node('master') {
 				buildStep('desertbit/crossbuild:linux-armv7', 'Unix Makefiles', 'Linux RasPi', '')
 			}
 		},*/
-		'AmigaOS 68k': {
+		'AmigaOS 68040': {
 			node {
-				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68k', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-O3 -ffast-math"')
+				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68040-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-O3 -ffast-math"')
+			}
+		},
+		'AmigaOS 68060': {
+			node {
+				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68060-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68060 -DM68K_FPU=hard -DM68K_COMMON="-O3 -ffast-math"')
+			}
+		},
+		'AmigaOS 68080': {
+			node {
+				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68080-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68080 -DM68K_FPU=hard -DM68K_COMMON="-O3 -ffast-math"')
 			}
 		}/*,
 		'AmigaOS PPC': {
