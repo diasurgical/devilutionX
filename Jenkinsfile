@@ -333,17 +333,17 @@ node('master') {
 		},*/
 		'AmigaOS 68040': {
 			node {
-				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68040-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-O3 -ffast-math"', '-m68040 -mhard-float -O3 -ffast-math -noixemul')
+				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68040-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-O3"', '-m68040 -mhard-float -O2 -noixemul')
 			}
 		},
 		'AmigaOS 68060': {
 			node {
-				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68060-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68060 -DM68K_FPU=hard -DM68K_COMMON="-O3 -ffast-math"', '-m68060 -mhard-float -O3 -ffast-math -noixemul')
+				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68060-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68060 -DM68K_FPU=hard -DM68K_COMMON="-O3"', '-m68060 -mhard-float -O2 -noixemul')
 			}
 		},
 		'AmigaOS 68080': {
 			node {
-				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68080-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68080 -DM68K_FPU=hard -DM68K_COMMON="-O3 -ffast-math"', '-m68080 -mhard-float -O3 -ffast-math -noixemul')
+				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68080-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68080 -DM68K_FPU=hard -DM68K_COMMON="-O3 -ffast-math"', '-m68080 -mhard-float -O2 -noixemul')
 			}
 		}/*,
 		'AmigaOS PPC': {
