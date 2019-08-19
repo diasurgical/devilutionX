@@ -64,7 +64,7 @@ void PlayInGameMovie(char *pszMovie);
 
 /* rdata */
 
-extern const int rand_increment;  // unused
-extern const int rand_multiplier; // unused
+extern const int RndInc;
+extern const int RndMult;
 
 #endif /* __ENGINE_H__ */

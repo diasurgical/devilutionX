@@ -1,0 +1,29 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+export DH_VERBOSE=1
+export COMPILE_FLAGS="-O0"
+
+#export DH_VERBOSE = 1
+export DEB_BUILD_MAINT_OPTIONS = hardening=-all
+export DEB_CFLAGS_MAINT_APPEND  = -Wno-error
+export DEB_LDFLAGS_MAINT_APPEND = -Wno-error
+
+
+%:
+	dh $@ --buildsystem=cmake
+
+#override_dh_auto_clean:
+#	dh_auto_clean
+#override_dh_auto_configure:
+#	dh_auto_configure -O--buildsystem=cmake -- -DDESTDIR=/usr/games -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_BUILD_TYPE=None -DCMAKE_INSTALL_SYSCONFDIR=/etc -DCMAKE_INSTALL_LOCALSTATEDIR=/var
+
+override_dh_auto_install:
+	mkdir -p debian/devilutionx/usr/share/pixmaps/
+	mkdir -p debian/diablo-data/usr/share/games/diablo/
+	mkdir -p debian/diablo-data/usr/share/fonts/truetype
+	test -f "../diabdat.mpq" && cp ../diabdat.mpq debian/diablo-data/usr/share/games/diablo/ || true
+	test -f "../CharisSILB.ttf" && cp ../CharisSILB.ttf debian/diablo-data/usr/share/fonts/truetype || true
+	cp -f Diablo.ico debian/devilutionx/usr/share/pixmaps/devilutionx.ico
+	dh_auto_install

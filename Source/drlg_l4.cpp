@@ -11,6 +11,7 @@ int diabquad2x;
 int diabquad2y;
 int diabquad4x;
 int diabquad4y;
+#ifndef SPAWN
 BOOL hallok[20];
 int l4holdx;
 int l4holdy;
@@ -1998,3 +1999,4 @@ void DRLG_L4Pass3()
 }
 
 DEVILUTION_END_NAMESPACE
+#endif

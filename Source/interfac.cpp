@@ -7,8 +7,8 @@ void *sgpBackCel;
 int sgdwProgress;
 int progress_id;
 
-const BYTE progress_bar_colours[3] = { 138, 43, 254 };
-const int progress_bar_screen_pos[3][2] = { { 53, 37 }, { 53, 421 }, { 53, 37 } };
+const BYTE BarColor[3] = { 138, 43, 254 };
+const int BarPos[3][2] = { { 53, 37 }, { 53, 421 }, { 53, 37 } };
 
 void interface_msg_pump()
 {
@@ -42,8 +42,8 @@ void DrawCutscene()
 
 	for (i = 0; i < sgdwProgress; i++) {
 		DrawProgress(
-		    progress_bar_screen_pos[progress_id][0] + i + SCREEN_X,
-		    progress_bar_screen_pos[progress_id][1] + SCREEN_Y,
+		    BarPos[progress_id][0] + i + SCREEN_X,
+		    BarPos[progress_id][1] + SCREEN_Y,
 		    progress_id);
 	}
 
@@ -59,7 +59,7 @@ void DrawProgress(int screen_x, int screen_y, int progress_id)
 
 	dst = &gpBuffer[screen_x + PitchTbl[screen_y]];
 	for (i = 0; i < 22; i++) {
-		*dst = progress_bar_colours[progress_id];
+		*dst = BarColor[progress_id];
 		dst += BUFFER_WIDTH;
 	}
 }

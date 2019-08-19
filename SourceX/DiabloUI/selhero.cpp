@@ -171,7 +171,7 @@ void selhero_List_Esc()
 {
 	UiInitList(0, 0, NULL, NULL, NULL, NULL, 0);
 	selhero_endMenu = true;
-	selhero_result = EXIT_MENU;
+	selhero_result = SELHERO_PREVIOUS;
 }
 
 void selhero_ClassSelector_Focus(int value)
@@ -230,11 +230,11 @@ void selhero_Load_Select(int value)
 	UiInitList(0, 0, NULL, NULL, NULL, NULL, 0);
 	selhero_endMenu = true;
 	if (value == 0) {
-		selhero_result = LOAD_GAME;
+		selhero_result = SELHERO_CONTINUE;
 		return;
 	}
 
-	selhero_result = NEW_GAME;
+	selhero_result = 0;
 }
 
 BOOL SelHero_GetHeroInfo(_uiheroinfo *pInfo)

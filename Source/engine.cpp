@@ -19,8 +19,8 @@ static CCritSect sgMemCrit;
 int SeedCount;
 BOOL gbNotInView; // valid - if x/y are in bounds
 
-const int rand_increment = 1;
-const int rand_multiplier = 0x015A4E35;
+const int RndInc = 1;
+const int RndMult = 0x015A4E35;
 
 void CelDrawDatOnly(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth)
 {
@@ -2341,7 +2341,7 @@ void SetRndSeed(int s)
 int GetRndSeed()
 {
 	SeedCount++;
-	sglGameSeed = rand_multiplier * sglGameSeed + rand_increment;
+	sglGameSeed = RndMult * sglGameSeed + RndInc;
 	return abs(sglGameSeed);
 }
 

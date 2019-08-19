@@ -1,0 +1,3 @@
+Packaging/fedora/devilutionx.desktop usr/share/applications/
+obj-x86_64-linux-gnu/devilutionx     usr/share/games/diablo
+Diablo.ico			     usr/share/pixmaps

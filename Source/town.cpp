@@ -477,21 +477,19 @@ void town_draw_town_all(BYTE *pBuff, int x, int y, int capChunks, int CelCap, in
 	if (dItem[x][y] != 0) {
 		bv = dItem[x][y] - 1;
 		px = sx - item[bv]._iAnimWidth2;
-
 		if (bv == pcursitem) {
 			CelDecodeClr(181, px, sy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth, 0, CelCap);
 		}
-		/// ASSERT:assert(item[bv]._iAnimData);
+		/// ASSERT: assert(item[bv]._iAnimData);
 		CelDrawHdrOnly(px, sy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth, 0, CelCap);
 	}
 	if (dFlags[x][y] & BFLAG_MONSTLR) {
 		mi = -(dMonster[x][y - 1] + 1);
 		px = sx - towner[mi]._tAnimWidth2;
-
 		if (mi == pcursmonst) {
 			CelDecodeClr(166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, CelCap);
 		}
-		/// ASSERT:assert(towner[mi]._tAnimData);
+		/// ASSERT: assert(towner[mi]._tAnimData);
 		CelDrawHdrOnly(px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, CelCap);
 	}
 	if (dMonster[x][y] > 0) {
@@ -500,33 +498,29 @@ void town_draw_town_all(BYTE *pBuff, int x, int y, int capChunks, int CelCap, in
 		if (mi == pcursmonst) {
 			CelDecodeClr(166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, CelCap);
 		}
-		/// ASSERT:assert(towner[mi]._tAnimData);
+		/// ASSERT: assert(towner[mi]._tAnimData);
 		CelDrawHdrOnly(px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, CelCap);
 	}
 	if (dFlags[x][y] & BFLAG_PLAYERLR) {
 		bv = -(dPlayer[x][y - 1] + 1);
 		px = sx + plr[bv]._pxoff - plr[bv]._pAnimWidth2;
 		py = sy + plr[bv]._pyoff;
-
 		if (bv == pcursplr) {
 			Cl2DecodeFrm2(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, CelCap);
 		}
-		/// ASSERT:assert(plr[bv]._pAnimData);
-
+		/// ASSERT: assert(plr[bv]._pAnimData);
 		Cl2DecodeFrm1(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, CelCap);
 		if (eflag && plr[bv]._peflag) {
 			town_draw_e_flag(pBuff - 64, x - 1, y + 1, capChunks, CelCap, sx - 64, sy);
 		}
 	}
 	if (dFlags[x][y] & BFLAG_DEAD_PLAYER) {
-
 		DrawDeadPlayer(x, y, sx, sy, 0, CelCap, 0);
 	}
 	if (dPlayer[x][y] > 0) {
 		bv = dPlayer[x][y] - 1;
 		px = sx + plr[bv]._pxoff - plr[bv]._pAnimWidth2;
 		py = sy + plr[bv]._pyoff;
-
 		if (bv == pcursplr) {
 			Cl2DecodeFrm2(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, CelCap);
 		}
@@ -534,7 +528,6 @@ void town_draw_town_all(BYTE *pBuff, int x, int y, int capChunks, int CelCap, in
 		//assert(plr[bv]._pAnimData);
 
 		Cl2DecodeFrm1(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, CelCap);
-
 		if (eflag && plr[bv]._peflag) {
 			town_draw_e_flag(pBuff - 64, x - 1, y + 1, capChunks, CelCap, sx - 64, sy);
 		}
@@ -542,9 +535,7 @@ void town_draw_town_all(BYTE *pBuff, int x, int y, int capChunks, int CelCap, in
 	if (dFlags[x][y] & BFLAG_MISSILE) {
 		DrawMissile(x, y, sx, sy, 0, CelCap, 0);
 	}
-
 	if (dArch[x][y] != 0) {
-
 		town_special_upper(pBuff, dArch[x][y]);
 	}
 }
@@ -565,16 +556,12 @@ void town_draw_upper(int x, int y, int sx, int sy, int chunks, int capChunks, in
 	if (eflag) {
 		if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX) {
 			level_cel_block = dPiece[x][y];
-
 			if (level_cel_block != 0) {
 				dst = &gpBuffer[sx + 32 + PitchTbl[sy]];
-
 				pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
-
 				for (i = 0; i < 7; i++) {
 					if (capChunks >= i) {
 						level_cel_block = pMap->mt[2 * i + 1];
-
 						if (level_cel_block != 0) {
 							drawUpperScreen(dst);
 						}
@@ -602,7 +589,6 @@ void town_draw_upper(int x, int y, int sx, int sy, int chunks, int capChunks, in
 				for (i = 0; i < 7; i++) {
 					if (capChunks >= i) {
 						level_cel_block = pMap->mt[2 * i];
-
 						if (level_cel_block != 0) {
 							drawUpperScreen(dst);
 						}
@@ -1089,22 +1075,28 @@ void T_Pass3()
 	T_FillSector(P3Tiles, pSector, 0, 0, 23, 23);
 	mem_free_dbg(pSector);
 
+#ifndef SPAWN
 	if (gbMaxPlayers == 1) {
-
 		if (!(plr[myplr].pTownWarps & 1)) {
+#endif
 			T_FillTile(P3Tiles, 48, 20, 320);
+#ifndef SPAWN
 		}
 		if (!(plr[myplr].pTownWarps & 2)) {
+#endif
 			T_FillTile(P3Tiles, 16, 68, 332);
 			T_FillTile(P3Tiles, 16, 70, 331);
+#ifndef SPAWN
 		}
 		if (!(plr[myplr].pTownWarps & 4)) {
-
+#endif
 			for (x = 36; x < 46; x++) {
 				T_FillTile(P3Tiles, x, 78, random(0, 4) + 1);
 			}
+#ifndef SPAWN
 		}
 	}
+#endif
 
 	if (quests[13]._qactive != 3 && quests[13]._qactive) {
 		T_FillTile(P3Tiles, 60, 70, 342);

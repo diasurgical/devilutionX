@@ -4,8 +4,13 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef SPAWN
+#define PASSWORD_SINGLE "adslhfb1"
+#define PASSWORD_MULTI "lshbkfg1"
+#else
 #define PASSWORD_SINGLE "xrgyrkj1"
 #define PASSWORD_MULTI "szqnlsk1"
+#endif
 
 static char hero_names[MAX_CHARACTERS][PLR_NAME_LEN];
 BOOL gbValidSaveFile;
@@ -115,10 +120,17 @@ void pfile_get_save_path(char *pszBuf, DWORD dwBufSize, DWORD save_num)
 	DWORD plen;
 	char *s;
 	char path[MAX_PATH];
+#ifdef SPAWN
+	const char *fmt = "\\share_%d.sv";
+
+	if (gbMaxPlayers <= 1)
+		fmt = "\\spawn%d.sv";
+#else
 	const char *fmt = "\\multi_%d.sv";
 
 	if (gbMaxPlayers <= 1)
 		fmt = "\\single_%d.sv";
+#endif
 
 	// BUGFIX: ignores dwBufSize and uses MAX_PATH instead
 	plen = GetModuleFileName(ghInst, pszBuf, MAX_PATH);
@@ -210,7 +222,11 @@ void game_2_ui_player(const PlayerStruct *p, _uiheroinfo *heroinfo, BOOL bHasSav
 	heroinfo->gold = p->_pGold;
 	heroinfo->hassaved = bHasSaveFile;
 	heroinfo->herorank = p->pDiabloKillLevel;
-	heroinfo->spawned = 0;
+#ifdef SPAWN
+	heroinfo->spawned = TRUE;
+#else
+	heroinfo->spawned = FALSE;
+#endif
 }
 
 BYTE game_2_ui_class(const PlayerStruct *p)
@@ -292,11 +308,19 @@ char *GetSaveDirectory(char *dst, int dst_size, DWORD save_num)
 
 	// BUGFIX: ignores dst_size and uses MAX_PATH instead
 	if (gbMaxPlayers > 1) {
+#ifdef SPAWN
+		savename = "\\slinfo_%d.drv";
+#else
 		savename = "\\dlinfo_%d.drv";
+#endif
 		dirLen = GetWindowsDirectory(dst, MAX_PATH);
 	} else {
 		char *s;
+#ifdef SPAWN
+		savename = "\\spawn_%d.sv";
+#else
 		savename = "\\single_%d.sv";
+#endif
 		dirLen = GetModuleFileName(ghInst, dst, MAX_PATH);
 		s = strrchr(dst, '\\');
 		if (s)

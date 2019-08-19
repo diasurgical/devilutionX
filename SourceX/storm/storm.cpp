@@ -200,7 +200,7 @@ BOOL SBmpLoadImage(const char *pszFileName, PALETTEENTRY *pPalette, BYTE *pBuffe
 {
 	HANDLE hFile;
 	size_t size;
-	PCXHeader pcxhdr;
+	PCXHEADER pcxhdr;
 	BYTE paldata[256][3];
 	BYTE *dataPtr, *fileBuffer;
 	BYTE byte;
@@ -244,15 +244,15 @@ BOOL SBmpLoadImage(const char *pszFileName, PALETTEENTRY *pPalette, BYTE *pBuffe
 		return false;
 	}
 
-	int width = SDL_SwapLE16(pcxhdr.xmax) - SDL_SwapLE16(pcxhdr.xmin) + 1;
-	int height = SDL_SwapLE16(pcxhdr.ymax) - SDL_SwapLE16(pcxhdr.ymin) + 1;
+	int width = SDL_SwapLE16(pcxhdr.Xmax) - SDL_SwapLE16(pcxhdr.Xmin) + 1;
+	int height = SDL_SwapLE16(pcxhdr.Ymax) - SDL_SwapLE16(pcxhdr.Ymin) + 1;
 
 	if (pdwWidth)
 		*pdwWidth = width;
 	if (dwHeight)
 		*dwHeight = height;
 	if (pdwBpp)
-		*pdwBpp = SDL_SwapLE16(pcxhdr.bitsPerPixel);
+		*pdwBpp = SDL_SwapLE16(pcxhdr.BitsPerPixel);
 
 	if (!pBuffer) {
 		SFileSetFilePointer(hFile, 0, 0, 2);
@@ -288,7 +288,7 @@ BOOL SBmpLoadImage(const char *pszFileName, PALETTEENTRY *pPalette, BYTE *pBuffe
 		free(fileBuffer);
 	}
 
-	if (pPalette && pcxhdr.bitsPerPixel == 8) {
+	if (pPalette && pcxhdr.BitsPerPixel == 8) {
 		SFileSetFilePointer(hFile, -768, 0, 1);
 		SFileReadFile(hFile, paldata, 768, 0, 0);
 		for (int i = 0; i < 256; i++) {

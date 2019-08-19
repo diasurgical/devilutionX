@@ -99,10 +99,12 @@ void InitInv()
 {
 	if (plr[myplr]._pClass == PC_WARRIOR) {
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", NULL);
+#ifndef SPAWN
 	} else if (plr[myplr]._pClass == PC_ROGUE) {
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv_rog.CEL", NULL);
 	} else if (plr[myplr]._pClass == PC_SORCERER) {
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv_Sor.CEL", NULL);
+#endif
 	}
 
 	invflag = 0;
@@ -799,10 +801,12 @@ void CheckInvPaste(int pnum, int mx, int my)
 		done = FALSE;
 		if (plr[pnum]._pClass == PC_WARRIOR)
 			PlaySFX(PS_WARR13);
+#ifndef SPAWN
 		else if (plr[pnum]._pClass == PC_ROGUE)
 			PlaySFX(PS_ROGUE13);
 		else if (plr[pnum]._pClass == PC_SORCERER)
 			PlaySFX(PS_MAGE13);
+#endif
 	}
 
 	if (!done)
@@ -1396,6 +1400,7 @@ void CheckQuestItem(int pnum)
 	if (plr[pnum].HoldItem.IDidx == IDI_OPTAMULET)
 		quests[QTYPE_BLIND]._qactive = 3;
 	if (plr[pnum].HoldItem.IDidx == IDI_MUSHROOM && quests[QTYPE_BLKM]._qactive == 2 && quests[QTYPE_BLKM]._qvar1 == QS_MUSHSPAWNED) {
+#ifndef SPAWN
 		sfxdelay = 10;
 		if (plr[pnum]._pClass == PC_WARRIOR) { // BUGFIX: Voice for this quest might be wrong in MP
 			sfxdnum = PS_WARR95;
@@ -1404,6 +1409,7 @@ void CheckQuestItem(int pnum)
 		} else if (plr[pnum]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE95;
 		}
+#endif
 		quests[QTYPE_BLKM]._qvar1 = QS_MUSHPICKED;
 	}
 	if (plr[pnum].HoldItem.IDidx == IDI_ANVIL) {
@@ -1411,6 +1417,7 @@ void CheckQuestItem(int pnum)
 			quests[QTYPE_ANVIL]._qactive = 2;
 			quests[QTYPE_ANVIL]._qvar1 = 1;
 		}
+#ifndef SPAWN
 		if (quests[QTYPE_ANVIL]._qlog == 1) {
 			sfxdelay = 10;
 			if (plr[myplr]._pClass == PC_WARRIOR) {
@@ -1421,7 +1428,9 @@ void CheckQuestItem(int pnum)
 				sfxdnum = PS_MAGE89;
 			}
 		}
+#endif
 	}
+#ifndef SPAWN
 	if (plr[pnum].HoldItem.IDidx == IDI_GLDNELIX) {
 		sfxdelay = 30;
 		if (plr[myplr]._pClass == PC_WARRIOR) {
@@ -1432,11 +1441,13 @@ void CheckQuestItem(int pnum)
 			sfxdnum = PS_MAGE88;
 		}
 	}
+#endif
 	if (plr[pnum].HoldItem.IDidx == IDI_ROCK) {
 		if (quests[QTYPE_INFRA]._qactive == 1) {
 			quests[QTYPE_INFRA]._qactive = 2;
 			quests[QTYPE_INFRA]._qvar1 = 1;
 		}
+#ifndef SPAWN
 		if (quests[QTYPE_INFRA]._qlog == 1) {
 			sfxdelay = 10;
 			if (plr[myplr]._pClass == PC_WARRIOR) {
@@ -1447,9 +1458,11 @@ void CheckQuestItem(int pnum)
 				sfxdnum = PS_MAGE87;
 			}
 		}
+#endif
 	}
 	if (plr[pnum].HoldItem.IDidx == IDI_ARMOFVAL) {
 		quests[QTYPE_BLOOD]._qactive = 3;
+#ifndef SPAWN
 		sfxdelay = 20;
 		if (plr[myplr]._pClass == PC_WARRIOR) {
 			sfxdnum = PS_WARR91;
@@ -1458,6 +1471,7 @@ void CheckQuestItem(int pnum)
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE91;
 		}
+#endif
 	}
 }
 
@@ -1610,10 +1624,12 @@ void AutoGetItem(int pnum, int ii)
 		if (pnum == myplr) {
 			if (plr[pnum]._pClass == PC_WARRIOR) {
 				PlaySFX(random(0, 3) + PS_WARR14);
+#ifndef SPAWN
 			} else if (plr[pnum]._pClass == PC_ROGUE) {
 				PlaySFX(random(0, 3) + PS_ROGUE14);
 			} else if (plr[pnum]._pClass == PC_SORCERER) {
 				PlaySFX(random(0, 3) + PS_MAGE14);
+#endif
 			}
 		}
 		plr[pnum].HoldItem = item[ii];
@@ -2082,10 +2098,10 @@ BOOL UseInvItem(int pnum, int cii)
 
 	if (plr[pnum]._pInvincible && !plr[pnum]._pHitPoints && pnum == myplr)
 		return TRUE;
-
-	if (pcurs != 1 || stextflag)
+	if (pcurs != 1)
 		return TRUE;
-
+	if (stextflag)
+		return TRUE;
 	if (cii <= 5)
 		return FALSE;
 
@@ -2104,6 +2120,7 @@ BOOL UseInvItem(int pnum, int cii)
 	switch (Item->IDidx) {
 	case 17:
 		sfxdelay = 10;
+#ifndef SPAWN
 		if (plr[pnum]._pClass == PC_WARRIOR) {
 			sfxdnum = PS_WARR95;
 		} else if (plr[pnum]._pClass == PC_ROGUE) {
@@ -2111,62 +2128,68 @@ BOOL UseInvItem(int pnum, int cii)
 		} else if (plr[pnum]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE95;
 		}
-		break;
+#endif
+		return TRUE;
 	case 19:
 		PlaySFX(IS_IBOOK);
 		sfxdelay = 10;
 		if (plr[pnum]._pClass == PC_WARRIOR) {
 			sfxdnum = PS_WARR29;
+#ifndef SPAWN
 		} else if (plr[pnum]._pClass == PC_ROGUE) {
 			sfxdnum = PS_ROGUE29;
 		} else if (plr[pnum]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE29;
+#endif
 		}
-		break;
-	default:
-		if (!AllItemsList[Item->IDidx].iUsable)
-			return FALSE;
+		return TRUE;
+	}
 
-		if (!Item->_iStatFlag) {
-			if (plr[pnum]._pClass == PC_WARRIOR) {
-				PlaySFX(PS_WARR13);
-			} else if (plr[pnum]._pClass == PC_ROGUE) {
-				PlaySFX(PS_ROGUE13);
-			} else if (plr[pnum]._pClass == PC_SORCERER) {
-				PlaySFX(PS_MAGE13);
-			}
-			return TRUE;
+	if (!AllItemsList[Item->IDidx].iUsable)
+		return FALSE;
+
+	if (!Item->_iStatFlag) {
+		if (plr[pnum]._pClass == PC_WARRIOR) {
+			PlaySFX(PS_WARR13);
+#ifndef SPAWN
+		} else if (plr[pnum]._pClass == PC_ROGUE) {
+			PlaySFX(PS_ROGUE13);
+		} else if (plr[pnum]._pClass == PC_SORCERER) {
+			PlaySFX(PS_MAGE13);
+#endif
 		}
+		return TRUE;
+	}
 
-		if (Item->_iMiscId == IMISC_NONE && Item->_itype == ITYPE_GOLD) {
-			StartGoldDrop();
-			return TRUE;
-		}
+	if (Item->_iMiscId == IMISC_NONE && Item->_itype == ITYPE_GOLD) {
+		StartGoldDrop();
+		return TRUE;
+	}
 
-		if (dropGoldFlag) {
-			dropGoldFlag = FALSE;
-			dropGoldValue = 0;
-		}
+	if (dropGoldFlag) {
+		dropGoldFlag = FALSE;
+		dropGoldValue = 0;
+	}
 
-		if ((Item->_iMiscId == IMISC_SCROLL && currlevel == 0 && !spelldata[Item->_iSpell].sTownSpell)
-		    || (Item->_iMiscId == IMISC_SCROLLT && currlevel == 0 && !spelldata[Item->_iSpell].sTownSpell)) {
-			return TRUE;
-		}
+	if (Item->_iMiscId == IMISC_SCROLL && currlevel == 0 && !spelldata[Item->_iSpell].sTownSpell) {
+		return TRUE;
+	}
 
-		idata = ItemCAnimTbl[Item->_iCurs];
-		if (Item->_iMiscId == IMISC_BOOK)
-			PlaySFX(IS_RBOOK);
-		else if (pnum == myplr)
-			PlaySFX(ItemInvSnds[idata]);
+	if (Item->_iMiscId == IMISC_SCROLLT && currlevel == 0 && !spelldata[Item->_iSpell].sTownSpell) {
+		return TRUE;
+	}
+	idata = ItemCAnimTbl[Item->_iCurs];
+	if (Item->_iMiscId == IMISC_BOOK)
+		PlaySFX(IS_RBOOK);
+	else if (pnum == myplr)
+		PlaySFX(ItemInvSnds[idata]);
 
-		UseItem(pnum, Item->_iMiscId, Item->_iSpell);
+	UseItem(pnum, Item->_iMiscId, Item->_iSpell);
 
-		if (speedlist) {
-			RemoveSpdBarItem(pnum, c);
-		} else if (plr[pnum].InvList[c]._iMiscId != IMISC_MAPOFDOOM) {
-			RemoveInvItem(pnum, c);
-		}
-		break;
+	if (speedlist) {
+		RemoveSpdBarItem(pnum, c);
+	} else if (plr[pnum].InvList[c]._iMiscId != IMISC_MAPOFDOOM) {
+		RemoveInvItem(pnum, c);
 	}
 
 	return TRUE;
