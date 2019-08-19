@@ -111,7 +111,7 @@ Make sure to install the `C++ CMake tools for Windows` component for Visual Stud
 1. Go to `File -> Open -> CMake`, select `CMakeLists.txt` from the project root.
 2. Select `Build devilution.exe` from the `Build` menu.
 
-	_Note: By default Visual Studio only creates configuration x64-Debug, to add the new configuration (e.g. x86-Debug) please click "Manage Configurations..." in combo box on the top and then on button wih green plus to add a new configuration_
+	_Note: By default Visual Studio only creates configuration x64-Debug, to add the new configuration (e.g. x86-Debug) please click "Manage Configurations..." in combo box on the top and then on button with green plus to add a new configuration_
 
 * **Through cmake-gui**
 
@@ -229,9 +229,6 @@ No, you'll need access to the data from the original game. If you don't have an 
 > Cool, so I fired your mod up, but there's no 1080p or new features?
 
 We're working on it.
-> After looking at the code some of it is a disaster
-
-That is the result of decompiled code. Whenever a program is compiled, much of the source is optimized and stripped away, so it's nearly impossible to decompile it back. Have patience. Everything will be cleaned up eventually. :)
 > What about Hellfire?
 
 Hellfire was a bit of a flop on the developer's part. Support may come in the future once the base game is finished.
@@ -248,6 +245,9 @@ Hellfire was a bit of a flop on the developer's part. Support may come in the fu
 - Depression - reason to waste four months of my life doing this ;)
 
 And a special thanks to all the support and people who work on Devilution to make it possible! <3
+
+# Changelog
+[From the beginning until release](docs/CHANGELOG.md)
 
 # Legal
 Devilution is released to the Public Domain. The documentation and function provided by Devilution may only be utilized with assets provided by ownership of Diablo.

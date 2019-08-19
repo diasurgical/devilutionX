@@ -136,6 +136,11 @@ char MonstConvTbl[128] = {
 	0, 0, 0, 0, 0, 0, 80, 111
 };
 
+/**
+ * 0 = Never avalible
+ * 1 = Avalible in retail and shareware
+ * 2 = avalible in retail only
+ */
 BYTE MonstAvailTbl[112] = {
 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1,

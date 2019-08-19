@@ -501,11 +501,11 @@ typedef struct MonsterData {
 	char mAi;
 	int mFlags;
 	unsigned char mInt;
-	unsigned char mHit; // BUGFIX: Some monsters overflow this value on high dificulty
+	unsigned char mHit; // BUGFIX: Some monsters overflow this value on high difficulty
 	unsigned char mAFNum;
 	unsigned char mMinDamage;
 	unsigned char mMaxDamage;
-	unsigned char mHit2; // BUGFIX: Some monsters overflow this value on high dificulty
+	unsigned char mHit2; // BUGFIX: Some monsters overflow this value on high difficulty
 	unsigned char mAFNum2;
 	unsigned char mMinDamage2;
 	unsigned char mMaxDamage2;
@@ -1238,7 +1238,7 @@ typedef struct _uiheroinfo {
 	WORD vitality;
 	int gold;
 	int hassaved;
-	int spawned;
+	BOOL spawned;
 } _uiheroinfo;
 
 // TPDEF PTR FCN UCHAR ENUMHEROPROC
@@ -1558,22 +1558,26 @@ typedef struct _plrmsg {
 // capture
 //////////////////////////////////////////////////
 
-typedef struct PCXHeader {
-	char manufacturer;
-	char version;
-	char encoding;
-	char bitsPerPixel;
-	short xmin, ymin;
-	short xmax, ymax;
-	short horzRes, vertRes;
-	char palette[48];
-	char reserved;
-	char numColorPlanes;
-	short bytesPerScanLine;
-	short paletteType;
-	short horzSize, vertSize;
-	char padding[54];
-} PCXHeader;
+typedef struct _PcxHeader {
+	BYTE Manufacturer;
+	BYTE Version;
+	BYTE Encoding;
+	BYTE BitsPerPixel;
+	WORD Xmin;
+	WORD Ymin;
+	WORD Xmax;
+	WORD Ymax;
+	WORD HDpi;
+	WORD VDpi;
+	BYTE Colormap[48];
+	BYTE Reserved;
+	BYTE NPlanes;
+	WORD BytesPerLine;
+	WORD PaletteInfo;
+	WORD HscreenSize;
+	WORD VscreenSize;
+	BYTE Filler[54];
+} PCXHEADER;
 
 //////////////////////////////////////////////////
 // encrypt

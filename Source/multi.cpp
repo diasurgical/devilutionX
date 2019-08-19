@@ -20,7 +20,7 @@ BYTE gbActivePlayers;
 BOOLEAN gbGameDestroyed;
 BOOLEAN sgbSendDeltaTbl[MAX_PLRS];
 _gamedata sgGameInitInfo;
-char byte_678640;
+BOOLEAN gbGameUninitialized;
 int sglTimeoutStart;
 int sgdwPlayerLeftReasonTbl[MAX_PLRS];
 TBuffer sgLoPriBuf;
@@ -47,8 +47,10 @@ void __cdecl dumphist(const char *pszFmt, ...)
 
 	va_start(va, pszFmt);
 
-	if (sgpHistFile == NULL) {
-		sgpHistFile = fopen("c:\\dumphist.txt", "wb");
+	char dumpHistPath[MAX_PATH] = {};
+	if (sgpHistFile == NULL && GetWindowsDirectory(dumpHistPath, sizeof(dumpHistPath))) {
+		strcat(dumpHistPath, "\\dumphist.txt");
+		sgpHistFile = fopen(dumpHistPath, "wb");
 		if (sgpHistFile == NULL) {
 			return;
 		}
@@ -303,7 +305,7 @@ void multi_net_ping()
 
 int multi_handle_delta()
 {
-	int i, recieved;
+	int i, received;
 
 	if (gbGameDestroyed) {
 		gbRunGame = FALSE;
@@ -318,13 +320,13 @@ int multi_handle_delta()
 	}
 
 	sgbSentThisCycle = nthread_send_and_recv_turn(sgbSentThisCycle, 1);
-	if (!nthread_recv_turns(&recieved)) {
+	if (!nthread_recv_turns(&received)) {
 		multi_begin_timeout();
 		return FALSE;
 	}
 
 	sgbTimeout = FALSE;
-	if (recieved) {
+	if (received) {
 		if (!gbShouldValidatePackage) {
 			NetSendHiPri(0, 0);
 			gbShouldValidatePackage = FALSE;
@@ -533,13 +535,19 @@ void multi_process_tmsgs()
 	}
 }
 
-void multi_send_zero_packet(DWORD pnum, char identifier, void *pbSrc, DWORD dwLen)
+void multi_send_zero_packet(int pnum, BYTE bCmd, BYTE *pbSrc, DWORD dwLen)
 {
-	DWORD len, dwBody;
+	DWORD dwOffset, dwBody, dwMsg;
 	TPkt pkt;
-	int t;
-	len = 0;
-	while (dwLen) {
+	TCmdPlrInfoHdr *p;
+
+	/// ASSERT: assert(pnum != myplr);
+	/// ASSERT: assert(pbSrc);
+	/// ASSERT: assert(dwLen <= 0x0ffff);
+
+	dwOffset = 0;
+
+	while(dwLen != 0) {
 		pkt.hdr.wCheck = 'ip';
 		pkt.hdr.px = 0;
 		pkt.hdr.py = 0;
@@ -550,22 +558,45 @@ void multi_send_zero_packet(DWORD pnum, char identifier, void *pbSrc, DWORD dwLe
 		pkt.hdr.bstr = 0;
 		pkt.hdr.bmag = 0;
 		pkt.hdr.bdex = 0;
-		pkt.body[0] = identifier;
-		*(WORD *)&pkt.body[1] = len;
-		dwBody = gdwLargestMsgSize - 24;
-		if (dwLen < dwBody)
+		p = (TCmdPlrInfoHdr *)pkt.body;
+		p->bCmd = bCmd;
+		p->wOffset = dwOffset;
+		dwBody = gdwLargestMsgSize - sizeof(pkt.hdr) - sizeof(*p);
+		if(dwLen < dwBody) {
 			dwBody = dwLen;
-		*(WORD *)&pkt.body[3] = dwBody;
-		memcpy(&pkt.body[5], pbSrc, *(WORD *)&pkt.body[3]);
-		t = *(WORD *)&pkt.body[3] + 24;
-		pkt.hdr.wLen = t;
-		if (!SNetSendMessage(pnum, &pkt.hdr, t)) {
+		}
+		/// ASSERT: assert(dwBody <= 0x0ffff);
+		p->wBytes = dwBody;
+		memcpy(&pkt.body[sizeof(*p)], pbSrc, p->wBytes);
+		dwMsg = sizeof(pkt.hdr);
+		dwMsg += sizeof(*p);
+		dwMsg += p->wBytes;
+		pkt.hdr.wLen = dwMsg;
+		if(!SNetSendMessage(pnum, &pkt, dwMsg)) {
 			nthread_terminate_game("SNetSendMessage2");
 			return;
 		}
-		pbSrc = (char *)pbSrc + *(WORD *)&pkt.body[3];
-		dwLen -= *(WORD *)&pkt.body[3];
-		len += *(WORD *)&pkt.body[3];
+#if 0
+		if((DWORD)pnum >= MAX_PLRS) {
+			if(myplr != 0) {
+				debug_plr_tbl[0]++;
+			}
+			if(myplr != 1) {
+				debug_plr_tbl[1]++;
+			}
+			if(myplr != 2) {
+				debug_plr_tbl[2]++;
+			}
+			if(myplr != 3) {
+				debug_plr_tbl[3]++;
+			}
+		} else {
+			debug_plr_tbl[pnum]++;
+		}
+#endif
+		pbSrc += p->wBytes;
+		dwLen -= p->wBytes;
+		dwOffset += p->wBytes;
 	}
 }
 
@@ -653,7 +684,11 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		sgGameInitInfo.bDiff = gnDifficulty;
 		memset(&ProgramData, 0, sizeof(ProgramData));
 		ProgramData.size = sizeof(ProgramData);
+#ifdef SPAWN
+		ProgramData.programname = "Diablo Shareware";
+#else
 		ProgramData.programname = "Diablo Retail";
+#endif
 		ProgramData.programdescription = gszVersionNumber;
 		ProgramData.programid = 'DRTL';
 		ProgramData.versionid = 42;
@@ -722,7 +757,7 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		if (sgbPlayerTurnBitTbl[myplr] == 0 || msg_wait_resync())
 			break;
 		NetClose();
-		byte_678640 = 0;
+		gbGameUninitialized = FALSE;
 	}
 	gnDifficulty = sgGameInitInfo.bDiff;
 	SetRndSeed(sgGameInitInfo.dwSeed);
@@ -827,7 +862,7 @@ BOOL multi_init_multi(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info,
 
 	for (first = TRUE;; first = FALSE) {
 		type = 0x00;
-		if (byte_678640) {
+		if (gbGameUninitialized) {
 			if (!UiSelectProvider(0, client_info, user_info, ui_info, &fileinfo, &type)
 			    && (!first || SErrGetLastError() != STORM_ERROR_REQUIRES_UPGRADE || !multi_upgrade(pfExitProgram))) {
 				return FALSE;
@@ -840,7 +875,7 @@ BOOL multi_init_multi(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info,
 		if (UiSelectGame(1, client_info, user_info, ui_info, &fileinfo, &playerId))
 			break;
 
-		byte_678640 = 1;
+		gbGameUninitialized = TRUE;
 	}
 
 	if ((DWORD)playerId >= MAX_PLRS) {

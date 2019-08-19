@@ -3,8 +3,8 @@
 
 namespace dvl {
 
-int mainmenu_repintro_delay; //seconds
-DWORD dwTicks;
+int mainmenu_attract_time_out; //seconds
+DWORD dwAttractTicks;
 
 int MainMenuResult;
 UI_Item MAINMENU_DIALOG[] = {
@@ -29,7 +29,7 @@ void mainmenu_Esc()
 
 void mainmenu_restart_repintro()
 {
-	dwTicks = GetTickCount() + mainmenu_repintro_delay * 1000;
+	dwAttractTicks = GetTickCount() + mainmenu_attract_time_out * 1000;
 }
 
 void mainmenu_Load(char *name, void(*fnSound)(char *file))
@@ -53,19 +53,18 @@ void mainmenu_Free()
 	ArtBackground.data = NULL;
 }
 
-BOOL UiMainMenuDialog(char *name, int *pdwResult, void(*fnSound)(char *file), int a4)
+BOOL UiMainMenuDialog(char *name, int *pdwResult, void(*fnSound)(char *file), int attractTimeOut)
 {
-	mainmenu_repintro_delay = a4;
+	mainmenu_attract_time_out = attractTimeOut;
 	mainmenu_Load(name, fnSound);
 	
 	mainmenu_restart_repintro(); // for automatic starts
 
 	while (MainMenuResult == 0) {
-		if (GetTickCount() >= dwTicks) {
-			mainmenu_play_intro();
-			break;
-		}
 		UiRender();
+		if (GetTickCount() >= dwAttractTicks) {
+			MainMenuResult = MAINMENU_ATTRACT_MODE;
+		}
 	}
 
 	BlackPalette();

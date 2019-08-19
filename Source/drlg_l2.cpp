@@ -1,3 +1,4 @@
+#ifndef SPAWN
 #include "diablo.h"
 #include "../3rdParty/StormLib/src/StormPort.h"
 
@@ -2161,3 +2162,4 @@ void DRLG_InitL2Vals()
 }
 
 DEVILUTION_END_NAMESPACE
+#endif

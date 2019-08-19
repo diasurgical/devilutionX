@@ -48,7 +48,6 @@
 #define VOLUME_MAX				0
 
 // todo: enums
-#define NUM_SFX					858
 #define NUMLEVELS				17
 
 // from diablo 2 beta

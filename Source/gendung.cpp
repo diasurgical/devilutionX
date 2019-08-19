@@ -596,6 +596,7 @@ void DRLG_CopyTrans(int sx, int sy, int dx, int dy)
 	dTransVal[dx][dy] = dTransVal[sx][sy];
 }
 
+#ifndef SPAWN
 void DRLG_ListTrans(int num, BYTE *List)
 {
 	int i;
@@ -621,10 +622,11 @@ void DRLG_AreaTrans(int num, BYTE *List)
 		x2 = *List++;
 		y2 = *List++;
 		DRLG_RectTrans(x1, y1, x2, y2);
-		--TransVal;
+		TransVal--;
 	}
-	++TransVal;
+	TransVal++;
 }
+#endif
 
 void DRLG_InitSetPC()
 {
@@ -650,6 +652,7 @@ void DRLG_SetPC()
 	}
 }
 
+#ifndef SPAWN
 void Make_SetPC(int x, int y, int w, int h)
 {
 	int i, j, dx, dy, dh, dw;
@@ -915,6 +918,7 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, int rnd
 		}
 	}
 }
+#endif
 
 void DRLG_HoldThemeRooms()
 {

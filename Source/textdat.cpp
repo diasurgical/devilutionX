@@ -4,7 +4,10 @@ DEVILUTION_BEGIN_NAMESPACE
 
 /* todo: move text out of struct */
 
-const TextDataStruct alltext[259] = {
+const TextDataStruct alltext[] = {
+#ifdef SPAWN
+	{ "Nice try... ", 0, 5, TSFX_TAVERN36 },
+#else
 	{ " Ahh, the story of our King, is it? The tragic fall of Leoric was a harsh blow to this land. The people always loved the King, and now they live in mortal fear of him. The question that I keep asking myself is how he could have fallen so far from the Light, as Leoric had always been the holiest of men. Only the vilest powers of Hell could so utterly destroy a man from within... |",
 	    1, 5, TSFX_STORY1 },
 	{ "The village needs your help, good master! Some months ago King Leoric's son, Prince Albrecht, was kidnapped. The King went into a rage and scoured the village for his missing child. With each passing day, Leoric seemed to slip deeper into madness. He sought to blame innocent townsfolk for the boy's disappearance and had them brutally executed. Less than half of us survived his insanity...\n \nThe King's Knights and Priests tried to placate him, but he turned against them and sadly, they were forced to kill him. With his dying breath the King called down a terrible curse upon his former followers. He vowed that they would serve him in darkness forever...\n \nThis is where things take an even darker twist than I thought possible! Our former King has risen from his eternal sleep and now commands a legion of undead minions within the Labyrinth. His body was buried in a tomb three levels beneath the Cathedral. Please, good master, put his soul at ease by destroying his now cursed form... |",
@@ -507,6 +510,7 @@ const TextDataStruct alltext[259] = {
 	    1, 3, PS_NAR9 },
 	{ "Thank goodness you've returned!\nMuch has changed since you lived here, my friend. All was peaceful until the dark riders came and destroyed our village. Many were cut down where they stood, and those who took up arms were slain or dragged away to become slaves - or worse. The church at the edge of town has been desecrated and is being used for dark rituals. The screams that echo in the night are inhuman, but some of our townsfolk may yet survive. Follow the path that lies between my tavern and the blacksmith shop to find the church and save who you can. \n \nPerhaps I can tell you more if we speak again. Good luck.|",
 	    1, 5, TSFX_TAVERN0 }
+#endif
 };
 const DWORD gdwAllTextEntries = 259; /* unused */
 

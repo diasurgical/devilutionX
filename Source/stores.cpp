@@ -1365,6 +1365,13 @@ void S_StartTalk()
 	sprintf(tempstr, "Talk to %s", talkname[talker]);
 	AddSText(0, 2, 1, tempstr, COL_GOLD, 0);
 	AddSLine(5);
+#ifdef SPAWN
+	sprintf(tempstr, "Talking to %s", talkname[talker]);
+	AddSText(0, 10, 1, tempstr, COL_WHITE, 0);
+	AddSText(0, 12, 1, "is not available", COL_WHITE, 0);
+	AddSText(0, 14, 1, "in the shareware", COL_WHITE, 0);
+	AddSText(0, 16, 1, "version", COL_WHITE, 0);
+#else
 	sn = 0;
 	for (i = 0; i < 16; i++) {
 		if (quests[i]._qlevel == 2 && ((DWORD *)&Qtalklist[talker])[i] != -1 && quests[i]._qlog)
@@ -1388,6 +1395,7 @@ void S_StartTalk()
 		}
 	}
 	AddSText(0, sn2, 1, "Gossip", COL_BLUE, 1);
+#endif
 	AddSText(0, 22, 1, "Back", COL_WHITE, 1);
 }
 

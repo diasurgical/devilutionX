@@ -53,6 +53,7 @@ EXPORTS
 	UiSelectRegion                 @28
 	UiSetBackgroundBitmap          @29
 	UiSetSpawned                   @30
+	UiSetSpawned@4                 @30 NONAME
 	UiSetupPlayerInfo              @31
 	UiSetupPlayerInfo@12           @31 NONAME
 	UiSoundCallback                @32

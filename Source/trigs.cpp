@@ -87,11 +87,13 @@ int L4PentaList[33] = {
 	-1
 };
 
+#ifndef SPAWN
 void InitNoTriggers()
 {
 	numtrigs = 0;
 	trigflag = 0;
 }
+#endif
 
 void InitTownTriggers()
 {
@@ -103,6 +105,7 @@ void InitTownTriggers()
 
 	numtrigs = 1;
 
+#ifndef SPAWN
 	if (gbMaxPlayers == MAX_PLRS) {
 		for (i = 0; i < sizeof(townwarps) / sizeof(townwarps[0]); i++) {
 			townwarps[i] = TRUE;
@@ -121,9 +124,11 @@ void InitTownTriggers()
 		trigs[3]._tlvl = 13;
 		numtrigs = 4;
 	} else {
+#endif
 		for (i = 0; i < 3; i++) {
 			townwarps[i] = FALSE;
 		}
+#ifndef SPAWN
 		if (plr[myplr].pTownWarps & 1) {
 			trigs[1]._tx = 49;
 			trigs[1]._ty = 21;
@@ -149,6 +154,7 @@ void InitTownTriggers()
 			numtrigs++;
 		}
 	}
+#endif
 
 	trigflag = FALSE;
 }
@@ -177,6 +183,7 @@ void InitL1Triggers()
 	trigflag = 0;
 }
 
+#ifndef SPAWN
 void InitL2Triggers()
 {
 	int i, j;
@@ -321,6 +328,7 @@ void InitVPTriggers()
 	trigs[0]._ty = 32;
 	trigs[0]._tmsg = WM_DIABRTNLVL;
 }
+#endif
 
 BOOL ForceTownTrig()
 {
@@ -713,9 +721,19 @@ void CheckTriggers()
 
 		switch (trigs[i]._tmsg) {
 		case WM_DIABNEXTLVL:
-			if (pcurs >= CURSOR_FIRSTITEM && DropItemBeforeTrig())
-				return;
-			StartNewLvl(myplr, trigs[i]._tmsg, currlevel + 1);
+#ifdef SPAWN
+			if (currlevel >= 2) {
+				NetSendCmdLoc(TRUE, CMD_WALKXY, plr[myplr].WorldX, plr[myplr].WorldY + 1);
+				PlaySFX(PS_WARR18);
+				InitDiabloMsg(EMSG_NOT_IN_SHAREWARE);
+			} else {
+#endif
+				if (pcurs >= CURSOR_FIRSTITEM && DropItemBeforeTrig())
+					return;
+				StartNewLvl(myplr, trigs[i]._tmsg, currlevel + 1);
+#ifdef SPAWN
+			}
+#endif
 			break;
 		case WM_DIABPREVLVL:
 			if (pcurs >= CURSOR_FIRSTITEM && DropItemBeforeTrig())
@@ -753,10 +771,12 @@ void CheckTriggers()
 				if (abort) {
 					if (plr[myplr]._pClass == PC_WARRIOR) {
 						PlaySFX(PS_WARR43);
+#ifndef SPAWN
 					} else if (plr[myplr]._pClass == PC_ROGUE) {
 						PlaySFX(PS_ROGUE43);
 					} else if (plr[myplr]._pClass == PC_SORCERER) {
 						PlaySFX(PS_MAGE43);
+#endif
 					}
 
 					InitDiabloMsg(abortflag);
