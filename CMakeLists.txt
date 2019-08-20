@@ -184,6 +184,7 @@ add_library(devilution STATIC
   Source/wave.cpp)
 
 set(devilutionx_SRCS
+  SourceX/miniwin/androidinput.cpp
   SourceX/dx.cpp
   SourceX/miniwin/misc.cpp
   SourceX/miniwin/misc_io.cpp
@@ -259,7 +260,6 @@ target_link_libraries(devilutionx PRIVATE
   smacker
   Radon)
 
-
 target_compile_definitions(devilution PRIVATE DEVILUTION_ENGINE)
 target_compile_definitions(devilution PUBLIC
   DEVILUTION_STUB
@@ -288,6 +288,7 @@ else()
     SDL2
     SDL2_ttf
     SDL2_mixer
+    SDL2_image
     ${CMAKE_CURRENT_SOURCE_DIR}/android-project/app/libs/jni/${ANDROID_ARCH_NAME}/libsodiumjni.so)
 endif()
 

@@ -15,6 +15,9 @@ HANDLE sgpMusicTrack;
 LPDIRECTSOUNDBUFFER sglpDSB;
 
 Mix_Music *music;
+#ifdef ANDROID
+Mix_Chunk *MusicChunk;
+#endif
 SDL_RWops *musicRw;
 char *musicBuffer;
 
@@ -373,7 +376,11 @@ void sound_store_volume(char *key, int value)
 void music_stop()
 {
 	if (sgpMusicTrack) {
+#ifdef ANDROID
+		Mix_HaltChannel(6);
+#else
 		Mix_HaltMusic();
+#endif
 		SFileCloseFile(sgpMusicTrack);
 		sgpMusicTrack = NULL;
 		Mix_FreeMusic(music);
@@ -398,6 +405,29 @@ void music_start(int nTrack)
 #ifdef _DEBUG
 		SFileEnableDirectAccess(true);
 #endif
+
+#ifdef ANDROID
+		sound_create_primary_buffer(sgpMusicTrack);
+		if (!success) {
+			sgpMusicTrack = NULL;
+		} else {
+			int bytestoread = SFileGetFileSize(sgpMusicTrack, 0);
+			musicBuffer = (char *)DiabloAllocPtr(bytestoread);
+			SFileReadFile(sgpMusicTrack, musicBuffer, bytestoread, NULL, 0);
+
+			musicRw = SDL_RWFromConstMem(musicBuffer, bytestoread);
+			if (musicRw == NULL) {
+				SDL_Log(SDL_GetError());
+			}
+			//music = Mix_LoadMUS_RW(musicRw, 1);
+			MusicChunk = Mix_LoadWAV_RW(musicRw, 1);
+			Mix_VolumeMusic(MIX_MAX_VOLUME - MIX_MAX_VOLUME * sglMusicVolume / VOLUME_MIN);
+
+			Mix_PlayChannel(6, MusicChunk, -1);
+			//Mix_PlayMusic(MusicChunk, -1);
+
+			sgnMusicTrack = nTrack;
+#else
 		sound_create_primary_buffer(sgpMusicTrack);
 		if (!success) {
 			sgpMusicTrack = NULL;
@@ -412,9 +442,10 @@ void music_start(int nTrack)
 			}
 			music = Mix_LoadMUSType_RW(musicRw, MUS_NONE, 1);
 			Mix_VolumeMusic(MIX_MAX_VOLUME - MIX_MAX_VOLUME * sglMusicVolume / VOLUME_MIN);
-			Mix_PlayMusic(music, -1);
+			Mix_PlayMusic(MusicChunk, -1);
 
 			sgnMusicTrack = nTrack;
+#endif
 		}
 	}
 }

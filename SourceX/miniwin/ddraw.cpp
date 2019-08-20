@@ -53,6 +53,7 @@ HRESULT StubDraw::CreatePalette(DWORD dwFlags, LPPALETTEENTRY lpColorTable, LPDI
 HRESULT StubDraw::CreateSurface(LPDDSURFACEDESC lpDDSurfaceDesc, LPDIRECTDRAWSURFACE *lplpDDSurface,
     IUnknown *pUnkOuter)
 {
+	LoadAndroidImages();
 	DUMMY();
 
 	if (!lpDDSurfaceDesc->dwWidth) {
@@ -231,6 +232,11 @@ HRESULT StubSurface::Unlock(LPVOID lpSurfaceData)
 		if (SDL_RenderCopy(renderer, texture, NULL, NULL) <= -1) {
 			SDL_Log(SDL_GetError());
 		}
+
+		#ifdef ANDROID
+		DrawAndroidUI();
+		#endif
+
 		SDL_RenderPresent(renderer);
 	} else {
 		if (SDL_UpdateWindowSurface(window) <= -1) {
