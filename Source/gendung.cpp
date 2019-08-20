@@ -1,4 +1,5 @@
 #include "diablo.h"
+#include "../3rdParty/StormLib/src/StormPort.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -130,11 +131,10 @@ void MakeSpeedCels()
 	BOOL blood_flag;
 	DWORD *pFrameTable;
 	MICROS *pMap;
-#ifndef USE_ASM
 	int l, k;
 	BYTE width, pix;
 	BYTE *src, *dst, *tbl;
-#endif
+
 
 	for (i = 0; i < MAXTILES; i++) {
 		tile_defs[i] = i;
@@ -151,34 +151,23 @@ void MakeSpeedCels()
 		for (x = 0; x < MAXDUNX; x++) {
 			for (i = 0; i < blocks; i++) {
 				pMap = &dpiece_defs_map_2[x][y];
-				mt = pMap->mt[i];
+				mt = BSWAP_INT16_UNSIGNED(pMap->mt[i]);
 				if (mt) {
-					level_frame_count[pMap->mt[i] & 0xFFF]++;
-					level_frame_types[pMap->mt[i] & 0xFFF] = mt & 0x7000;
-				}
+					level_frame_count[(pMap->mt[i] & 0xFFF)]++;
+					level_frame_types[(pMap->mt[i] & 0xFFF)] = BSWAP_INT16_UNSIGNED(mt & 0x7000);
+
+					}
 			}
 		}
 	}
 
-	pFrameTable = (DWORD *)pDungeonCels;
-	nDataSize = pFrameTable[0];
+	pFrameTable = ((DWORD *)pDungeonCels);
+	nDataSize = BSWAP_INT32_UNSIGNED(pFrameTable[0]);
 	nlevel_frames = nDataSize & 0xFFFF;
 
 	for (i = 1; i < nlevel_frames; i++) {
 		z = i;
-#ifdef USE_ASM
-		__asm {
-			mov		ebx, pDungeonCels
-			mov		eax, z
-			shl		eax, 2
-			add		ebx, eax
-			mov		eax, [ebx+4]
-			sub		eax, [ebx]
-			mov		nDataSize, eax
-		}
-#else
-		nDataSize = pFrameTable[i + 1] - pFrameTable[i];
-#endif
+		nDataSize = BSWAP_INT32_UNSIGNED(pFrameTable[i + 1]) - BSWAP_INT32_UNSIGNED(pFrameTable[i]);
 		level_frame_sizes[i] = nDataSize & 0xFFFF;
 	}
 
@@ -192,81 +181,17 @@ void MakeSpeedCels()
 			blood_flag = TRUE;
 			if (level_frame_count[i] != 0) {
 				if (level_frame_types[i] != 0x1000) {
-#ifdef USE_ASM
-					t = level_frame_sizes[i];
-					__asm {
-						mov		ebx, pDungeonCels
-						mov		eax, z
-						shl		eax, 2
-						add		ebx, eax
-						mov		esi, pDungeonCels
-						add		esi, [ebx]
-						xor		ebx, ebx
-						mov		ecx, t
-						jecxz	l1_label3
-					l1_label1:
-						lodsb
-						cmp		al, 0
-						jz		l1_label2
-						cmp		al, 32
-						jnb		l1_label2
-						mov		blood_flag, ebx
-					l1_label2:
-						loop	l1_label1
-					l1_label3:
-						nop
-					}
-#else
-					src = &pDungeonCels[pFrameTable[i]];
+
+					src = &pDungeonCels[BSWAP_INT32_UNSIGNED(pFrameTable[i])];
 					for (j = level_frame_sizes[i]; j; j--) {
 						pix = *src++;
 						if (pix && pix < 32)
 							blood_flag = FALSE;
 					}
-#endif
+
 				} else {
-#ifdef USE_ASM
-					__asm {
-						mov		ebx, pDungeonCels
-						mov		eax, z
-						shl		eax, 2
-						add		ebx, eax
-						mov		esi, pDungeonCels
-						add		esi, [ebx]
-						xor		ebx, ebx
-						mov		ecx, 32
-					l2_label1:
-						push	ecx
-						mov		edx, 32
-					l2_label2:
-						xor		eax, eax
-						lodsb
-						or		al, al
-						js		l2_label5
-						sub		edx, eax
-						mov		ecx, eax
-					l2_label3:
-						lodsb
-						cmp		al, 0
-						jz		l2_label4
-						cmp		al, 32
-						jnb		l2_label4
-						mov		blood_flag, ebx
-					l2_label4:
-						loop	l2_label3
-						or		edx, edx
-						jz		l2_label6
-						jmp		l2_label2
-					l2_label5:
-						neg		al
-						sub		edx, eax
-						jnz		l2_label2
-					l2_label6:
-						pop		ecx
-						loop	l2_label1
-					}
-#else
-					src = &pDungeonCels[pFrameTable[i]];
+
+					src = &pDungeonCels[BSWAP_INT32_UNSIGNED(pFrameTable[i])];
 					for (k = 32; k; k--) {
 						for (l = 32; l;) {
 							width = *src++;
@@ -284,7 +209,6 @@ void MakeSpeedCels()
 							}
 						}
 					}
-#endif
 				}
 				if (!blood_flag)
 					level_frame_count[i] = 0;
@@ -321,92 +245,28 @@ void MakeSpeedCels()
 
 	for (i = 0; i < total_frames; i++) {
 		z = tile_defs[i];
+
 		SpeedFrameTbl[i][0] = z;
 		if (level_frame_types[i] != 0x1000) {
 			t = level_frame_sizes[i];
 			for (j = 1; j < blk_cnt; j++) {
 				SpeedFrameTbl[i][j] = frameidx;
-#ifdef USE_ASM
-				__asm {
-					mov		ebx, pDungeonCels
-					mov		eax, z
-					shl		eax, 2
-					add		ebx, eax
-					mov		esi, pDungeonCels
-					add		esi, [ebx]
-					mov		edi, pSpeedCels
-					add		edi, frameidx
-					mov		ebx, j
-					shl		ebx, 8
-					add		ebx, pLightTbl
-					mov		ecx, t
-					jecxz	l3_label2
-				l3_label1:
-					lodsb
-					xlat
-					stosb
-					loop	l3_label1
-				l3_label2:
-					nop
-				}
-#else
-				src = &pDungeonCels[pFrameTable[z]];
+				src = &pDungeonCels[BSWAP_INT32_UNSIGNED(pFrameTable[z])];
 				dst = &pSpeedCels[frameidx];
 				tbl = &pLightTbl[256 * j];
 				for (k = t; k; k--) {
 					*dst++ = tbl[*src++];
 				}
-#endif
+
 				frameidx += t;
 			}
 		} else {
 			for (j = 1; j < blk_cnt; j++) {
 				SpeedFrameTbl[i][j] = frameidx;
-#ifdef USE_ASM
-				__asm {
-					mov		ebx, pDungeonCels
-					mov		eax, z
-					shl		eax, 2
-					add		ebx, eax
-					mov		esi, pDungeonCels
-					add		esi, [ebx]
-					mov		edi, pSpeedCels
-					add		edi, frameidx
-					mov		ebx, j
-					shl		ebx, 8
-					add		ebx, pLightTbl
-					mov		ecx, 32
-				l4_label1:
-					push	ecx
-					mov		edx, 32
-				l4_label2:
-					xor		eax, eax
-					lodsb
-					stosb
-					or		al, al
-					js		l4_label4
-					sub		edx, eax
-					mov		ecx, eax
-				l4_label3:
-					lodsb
-					xlat
-					stosb
-					loop	l4_label3
-					or		edx, edx
-					jz		l4_label5
-					jmp		l4_label2
-				l4_label4:
-					neg		al
-					sub		edx, eax
-					jnz		l4_label2
-				l4_label5:
-					pop		ecx
-					loop	l4_label1
-				}
-#else
-				src = &pDungeonCels[pFrameTable[z]];
+				src = &pDungeonCels[BSWAP_INT32_UNSIGNED(pFrameTable[z])];
 				dst = &pSpeedCels[frameidx];
 				tbl = &pLightTbl[256 * j];
+
 				for (k = 32; k; k--) {
 					for (l = 32; l;) {
 						width = *src++;
@@ -423,7 +283,7 @@ void MakeSpeedCels()
 						}
 					}
 				}
-#endif
+
 				frameidx += level_frame_sizes[i];
 			}
 		}
@@ -434,10 +294,10 @@ void MakeSpeedCels()
 			if (dPiece[x][y]) {
 				pMap = &dpiece_defs_map_2[x][y];
 				for (i = 0; i < blocks; i++) {
-					if (pMap->mt[i]) {
+					if (BSWAP_INT16_UNSIGNED(pMap->mt[i])) {
 						for (m = 0; m < total_frames; m++) {
-							if ((pMap->mt[i] & 0xFFF) == tile_defs[m]) {
-								pMap->mt[i] = m + level_frame_types[m] + 0x8000;
+							if (BSWAP_INT16_UNSIGNED(pMap->mt[i] & 0xFFF) == tile_defs[m]) {
+								pMap->mt[i] = BSWAP_INT16_UNSIGNED(m + level_frame_types[m] + 0x8000);
 								m = total_frames;
 							}
 						}
@@ -497,6 +357,7 @@ int IsometricCoord(int x, int y)
 void SetSpeedCels()
 {
 	int x, y;
+	MICROS *pMap;
 
 	for (x = 0; x < MAXDUNX; x++) {
 		for (y = 0; y < MAXDUNY; y++) {
@@ -530,7 +391,7 @@ void SetDungeonMicros()
 				else
 					pPiece = (WORD *)&pLevelPieces[32 * lv];
 				for (i = 0; i < blocks; i++)
-					pMap->mt[i] = pPiece[(i & 1) + blocks - 2 - (i & 0xE)];
+					pMap->mt[i] = BSWAP_INT16_UNSIGNED(pPiece[(i & 1) + blocks - 2 - (i & 0xE)]);
 			} else {
 				for (i = 0; i < blocks; i++)
 					pMap->mt[i] = 0;
@@ -596,7 +457,6 @@ void DRLG_CopyTrans(int sx, int sy, int dx, int dy)
 	dTransVal[dx][dy] = dTransVal[sx][sy];
 }
 
-#ifndef SPAWN
 void DRLG_ListTrans(int num, BYTE *List)
 {
 	int i;
@@ -622,11 +482,10 @@ void DRLG_AreaTrans(int num, BYTE *List)
 		x2 = *List++;
 		y2 = *List++;
 		DRLG_RectTrans(x1, y1, x2, y2);
-		TransVal--;
+		--TransVal;
 	}
-	TransVal++;
+	++TransVal;
 }
-#endif
 
 void DRLG_InitSetPC()
 {
@@ -652,7 +511,6 @@ void DRLG_SetPC()
 	}
 }
 
-#ifndef SPAWN
 void Make_SetPC(int x, int y, int w, int h)
 {
 	int i, j, dx, dy, dh, dw;
@@ -918,7 +776,6 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, int rnd
 		}
 	}
 }
-#endif
 
 void DRLG_HoldThemeRooms()
 {
