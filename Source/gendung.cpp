@@ -151,11 +151,10 @@ void MakeSpeedCels()
 		for (x = 0; x < MAXDUNX; x++) {
 			for (i = 0; i < blocks; i++) {
 				pMap = &dpiece_defs_map_2[x][y];
-				mt = BSWAP_INT16_UNSIGNED(pMap->mt[i]);
+				mt = BSWAP_INT32_UNSIGNED(pMap->mt[i]);
 				if (mt) {
-					level_frame_count[(pMap->mt[i] & 0xFFF)]++;
-					level_frame_types[(pMap->mt[i] & 0xFFF)] = BSWAP_INT16_UNSIGNED(mt & 0x7000);
-
+					level_frame_count[BSWAP_INT32_UNSIGNED(pMap->mt[i] & 0xFFF)]++;
+					level_frame_types[BSWAP_INT32_UNSIGNED(pMap->mt[i] & 0xFFF)] = mt & 0x7000;
 					}
 			}
 		}
