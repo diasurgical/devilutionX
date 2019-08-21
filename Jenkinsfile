@@ -212,7 +212,9 @@ def buildStep(dockerImage, generator, os, DEFINES, FLAGS = '') {
 			properties([pipelineTriggers([githubPush()])])
 			def commondir = env.WORKSPACE + '/../' + fixed_job_name + '/'
 
-			docker.image("${dockerImage}").inside("-u 0:0 -e BUILDER_UID=1001 -e BUILDER_GID=1001 -e BUILDER_USER=gserver -e BUILDER_GROUP=gserver") {
+			def dockerImageRef = docker.image("${dockerImage}")
+			dockerImageRef.pull()
+			dockerImageRef.inside("-u 0:0 -e BUILDER_UID=1001 -e BUILDER_GID=1001 -e BUILDER_USER=gserver -e BUILDER_GROUP=gserver") {
 
 				sh "apt update"
 				sh "apt install -y gcc-multilib curl automake autoconf libtool unzip"
