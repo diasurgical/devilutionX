@@ -239,7 +239,7 @@ void init_archives()
 #ifdef COPYPROT
 		diabdat_mpq = init_test_access(diabdat_mpq_path, "\\diabdat.mpq", "DiabloCD", 2000/*MPQ_FLAG_READ_ONLY*/, FS_CD);
 #else
-		diabdat_mpq = init_test_access(diabdat_mpq_path, "\\diabdat.mpq", "DiabloCD", MPQ_FLAG_READ_ONLY, FS_PC);
+		diabdat_mpq = init_test_access(diabdat_mpq_path, "\\diabdat.mpq", "DiabloCD", 2000/*MPQ_FLAG_READ_ONLY*/, FS_PC);
 #endif
 #endif
 #ifdef COPYPROT
@@ -285,12 +285,12 @@ HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags
 	init_strip_trailing_slash(Filename);
 	strcpy(mpq_path, Buffer);
 	strcat(mpq_path, mpq_name);
-	if (SFileOpenArchive(mpq_path, 0, flags, &archive))
+	if (SFileOpenArchive(mpq_path, flags, FS_PC, &archive))
 		return archive;
 	if (strcmp(Filename, Buffer)) {
 		strcpy(mpq_path, Filename);
 		strcat(mpq_path, mpq_name);
-		if (SFileOpenArchive(mpq_path, 0, flags, &archive))
+		if (SFileOpenArchive(mpq_path, flags, FS_PC, &archive))
 			return archive;
 	}
 	archive_path[0] = '\0';
@@ -299,7 +299,7 @@ HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags
 			init_strip_trailing_slash(archive_path);
 			strcpy(mpq_path, archive_path);
 			strcat(mpq_path, mpq_name);
-			if (SFileOpenArchive(mpq_path, 0, flags, &archive))
+			if (SFileOpenArchive(mpq_path, flags, FS_PC, &archive))
 				return archive;
 		}
 	}
