@@ -1729,13 +1729,13 @@ void CalculateDataBlockHash(void * pvDataBlock, DWORD cbDataBlock, LPBYTE md5_ha
 //-----------------------------------------------------------------------------
 // Swapping functions
 
-#if defined(PLATFORM_LITTLE_ENDIAN)
+#if !defined(PLATFORM_LITTLE_ENDIAN)
 //
 // Note that those functions are implemented for Mac operating system,
 // as this is the only supported platform that uses big endian.
 //
 
-#if !defined(PLATFORM_MAC)
+#if defined(PLATFORM_MAC)
 // Swaps a signed 16-bit integer
 int16_t SwapInt16(uint16_t data)
 {
