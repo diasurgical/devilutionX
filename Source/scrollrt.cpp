@@ -68,10 +68,9 @@ void ClearCursor() // CODE_FIX: this was supposed to be in cursor.cpp
 
 void DrawMissile(int x, int y, int sx, int sy, int CelSkip, int CelCap, BOOL pre)
 {
-	int i, mx, my, nCel;
+	int i, mx, my, nCel, frames;
 	MissileStruct *m;
 	BYTE *pCelBuff;
-	DWORD *pFrameTable;
 
 	if (dMissile[x][y] == -1) {
 		for (i = 0; i < nummissiles; i++) {
@@ -86,9 +85,9 @@ void DrawMissile(int x, int y, int sx, int sy, int CelSkip, int CelCap, BOOL pre
 					return;
 				}
 				nCel = m->_miAnimFrame;
-				pFrameTable = (DWORD *)pCelBuff;
-				if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
-					// app_fatal("Draw Missile: frame %d of %d, missile type==%d", nCel, pFrameTable[0], m->_mitype);
+				frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
+				if (nCel < 1 || frames > 50 || nCel > frames) {
+					// app_fatal("Draw Missile: frame %d of %d, missile type==%d", nCel, frames, m->_mitype);
 					return;
 				}
 				mx = sx + m->_mixoff - m->_miAnimWidth2;
@@ -110,9 +109,9 @@ void DrawMissile(int x, int y, int sx, int sy, int CelSkip, int CelCap, BOOL pre
 				return;
 			}
 			nCel = m->_miAnimFrame;
-			pFrameTable = (DWORD *)pCelBuff;
-			if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
-				// app_fatal("Draw Missile 2: frame %d of %d, missile type==%d", nCel, pFrameTable[0], m->_mitype);
+			frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
+			if (nCel < 1 || frames > 50 || nCel > frames) {
+				// app_fatal("Draw Missile 2: frame %d of %d, missile type==%d", nCel, frames, m->_mitype);
 				return;
 			}
 			mx = sx + m->_mixoff - m->_miAnimWidth2;
@@ -129,10 +128,9 @@ void DrawMissile(int x, int y, int sx, int sy, int CelSkip, int CelCap, BOOL pre
 
 void DrawClippedMissile(int x, int y, int sx, int sy, int CelSkip, int CelCap, BOOL pre)
 {
-	int i, mx, my, nCel;
+	int i, mx, my, nCel, frames;
 	MissileStruct *m;
 	BYTE *pCelBuff;
-	DWORD *pFrameTable;
 
 	if (dMissile[x][y] == -1) {
 		for (i = 0; i < nummissiles; i++) {
@@ -147,9 +145,9 @@ void DrawClippedMissile(int x, int y, int sx, int sy, int CelSkip, int CelCap, B
 					return;
 				}
 				nCel = m->_miAnimFrame;
-				pFrameTable = (DWORD *)pCelBuff;
-				if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
-					// app_fatal("Draw Clipped Missile: frame %d of %d, missile type==%d", nCel, pFrameTable[0], m->_mitype);
+				frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
+				if (nCel < 1 || frames > 50 || nCel > frames) {
+					// app_fatal("Draw Clipped Missile: frame %d of %d, missile type==%d", nCel, frames, m->_mitype);
 					return;
 				}
 				mx = sx + m->_mixoff - m->_miAnimWidth2;
@@ -171,9 +169,9 @@ void DrawClippedMissile(int x, int y, int sx, int sy, int CelSkip, int CelCap, B
 				return;
 			}
 			nCel = m->_miAnimFrame;
-			pFrameTable = (DWORD *)pCelBuff;
-			if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
-				// app_fatal("Draw Clipped Missile 2: frame %d of %d, missile type==%d", nCel, pFrameTable[0], m->_mitype);
+			frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
+			if (nCel < 1 || frames > 50 || nCel > frames) {
+				// app_fatal("Draw Clipped Missile 2: frame %d of %d, missile type==%d", nCel, frames, m->_mitype);
 				return;
 			}
 			mx = sx + m->_mixoff - m->_miAnimWidth2;
@@ -190,10 +188,9 @@ void DrawClippedMissile(int x, int y, int sx, int sy, int CelSkip, int CelCap, B
 
 void DrawDeadPlayer(int x, int y, int sx, int sy, int CelSkip, int CelCap, BOOL clipped)
 {
-	int i, px, py, nCel;
+	int i, px, py, nCel, frames;
 	PlayerStruct *p;
 	BYTE *pCelBuff;
-	DWORD *pFrameTable;
 
 	if (clipped)
 		DrawPlrProc = DrawClippedPlayer;
@@ -211,9 +208,9 @@ void DrawDeadPlayer(int x, int y, int sx, int sy, int CelSkip, int CelCap, BOOL 
 				break;
 			}
 			nCel = p->_pAnimFrame;
-			pFrameTable = (DWORD *)pCelBuff;
-			if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
-				// app_fatal("Drawing dead player %d \"%s\": facing %d, frame %d of %d", i, p->_pName, p->_pdir, nCel, pFrameTable[0]);
+			frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
+			if (nCel < 1 || frames > 50 || nCel > frames) {
+				// app_fatal("Drawing dead player %d \"%s\": facing %d, frame %d of %d", i, p->_pName, p->_pdir, nCel, frame);
 				break;
 			}
 			dFlags[x][y] |= BFLAG_DEAD_PLAYER;
@@ -226,16 +223,15 @@ void DrawDeadPlayer(int x, int y, int sx, int sy, int CelSkip, int CelCap, BOOL 
 
 void DrawPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, int nCel, int nWidth, int CelSkip, int CelCap)
 {
-	int l;
-	DWORD *pFrameTable;
+	int l, frames;
 
 	if (dFlags[x][y] & BFLAG_LIT || plr[myplr]._pInfraFlag || !setlevel && !currlevel) {
 		if (!pCelBuff) {
 			// app_fatal("Drawing player %d \"%s\": NULL Cel Buffer", pnum, plr[pnum]._pName);
 			return;
 		}
-		pFrameTable = (DWORD *)pCelBuff;
-		if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
+		frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
+		if (nCel < 1 || frames > 50 || nCel > frames) {
 			/*
 			const char *szMode = "unknown action";
 			if(plr[pnum]._pmode <= PM_QUIT)
@@ -247,7 +243,7 @@ void DrawPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, int nCel
 				szMode,
 				plr[pnum]._pdir,
 				nCel,
-				pFrameTable[0]);
+				frames);
 			*/
 			return;
 		}
@@ -299,16 +295,15 @@ void DrawPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, int nCel
 
 void DrawClippedPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, int nCel, int nWidth, int CelSkip, int CelCap)
 {
-	int l;
-	DWORD *pFrameTable;
+	int l, frames;
 
 	if (dFlags[x][y] & BFLAG_LIT || plr[myplr]._pInfraFlag) {
 		if (!pCelBuff) {
 			// app_fatal("Drawing player %d \"%s\" clipped: NULL Cel Buffer", pnum, plr[pnum]._pName);
 			return;
 		}
-		pFrameTable = (DWORD *)pCelBuff;
-		if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
+		frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
+		if (nCel < 1 || frames > 50 || nCel > frames) {
 			/*
 			const char *szMode = "unknown action";
 			if(plr[pnum]._pmode <= PM_QUIT)
@@ -320,7 +315,7 @@ void DrawClippedPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, i
 				szMode,
 				plr[pnum]._pdir,
 				nCel,
-				pFrameTable[0]);
+				frames);
 			*/
 			return;
 		}
@@ -680,14 +675,13 @@ void scrollrt_draw_lower(int x, int y, int sx, int sy, int chunks, int eflag)
 
 void scrollrt_draw_clipped_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, int eflag)
 {
-	int px, py, nCel, nMon, negMon, p;
+	int px, py, nCel, nMon, negMon, p, frames;
 	char bFlag, bDead, bObj, bItem, bPlr, bArch, bMap, negPlr, dd;
 	DeadStruct *pDeadGuy;
 	ItemStruct *pItem;
 	PlayerStruct *pPlayer;
 	MonsterStruct *pMonster;
 	BYTE *pCelBuff;
-	DWORD *pFrameTable;
 
 	/// ASSERT: assert((DWORD)sx < MAXDUNX);
 	/// ASSERT: assert((DWORD)sy < MAXDUNY);
@@ -718,16 +712,16 @@ void scrollrt_draw_clipped_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, 
 			pCelBuff = pDeadGuy->_deadData[dd];
 			/// ASSERT: assert(pDeadGuy->_deadData[dd] != NULL);
 			if (pCelBuff != NULL) {
-				pFrameTable = (DWORD *)pDeadGuy->_deadData[dd];
+				frames = SDL_SwapLE32(*(DWORD *)pDeadGuy->_deadData[dd]);
 				nCel = pDeadGuy->_deadFrame;
-				if (nCel >= 1 && pFrameTable[0] <= 50 && nCel <= (int)pFrameTable[0]) {
+				if (nCel >= 1 && frames <= 50 && nCel <= frames) {
 					if (pDeadGuy->_deadtrans != 0) {
 						Cl2DecodeFrm5(px, dy, pCelBuff, nCel, pDeadGuy->_deadWidth, 0, 8, pDeadGuy->_deadtrans);
 					} else {
 						Cl2DecodeFrm6(px, dy, pCelBuff, pDeadGuy->_deadFrame, pDeadGuy->_deadWidth, 0, 8);
 					}
 				} else {
-					// app_fatal("Clipped dead sub: frame %d of %d, deadnum==%d", nCel, pFrameTable[0], (bDead & 0x1F) - 1);
+					// app_fatal("Clipped dead sub: frame %d of %d, deadnum==%d", nCel, frames, (bDead & 0x1F) - 1);
 				}
 			}
 		}
@@ -742,9 +736,9 @@ void scrollrt_draw_clipped_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, 
 			if ((BYTE)bItem <= MAXITEMS) {
 				pCelBuff = pItem->_iAnimData;
 				if (pCelBuff != NULL) {
-					pFrameTable = (DWORD *)pCelBuff;
+					frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 					nCel = pItem->_iAnimFrame;
-					if (nCel >= 1 && pFrameTable[0] <= 50 && nCel <= (int)pFrameTable[0]) {
+					if (nCel >= 1 && frames <= 50 && nCel <= frames) {
 						px = dx - pItem->_iAnimWidth2;
 						if (bItem - 1 == pcursitem) {
 							CelDrawHdrClrHL(181, px, dy, pCelBuff, nCel, pItem->_iAnimWidth, 0, 8);
@@ -756,7 +750,7 @@ void scrollrt_draw_clipped_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, 
 							"Draw Clipped \"%s\" Item: frame %d of %d, item type==%d",
 							pItem->_iIName,
 							nCel,
-							pFrameTable[0],
+							frames,
 							pItem->_itype);
 						*/
 					}
@@ -862,9 +856,9 @@ void scrollrt_draw_clipped_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, 
 			if ((BYTE)bItem <= MAXITEMS) {
 				pCelBuff = pItem->_iAnimData;
 				if (pCelBuff != NULL) {
-					pFrameTable = (DWORD *)pCelBuff;
+					frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 					nCel = pItem->_iAnimFrame;
-					if (nCel >= 1 && pFrameTable[0] <= 50 && nCel <= (int)pFrameTable[0]) {
+					if (nCel >= 1 && frames <= 50 && nCel <= frames) {
 						px = dx - pItem->_iAnimWidth2;
 						if (bItem - 1 == pcursitem) {
 							CelDrawHdrClrHL(181, px, dy, pCelBuff, nCel, pItem->_iAnimWidth, 0, 8);
@@ -876,7 +870,7 @@ void scrollrt_draw_clipped_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, 
 							"Draw Clipped \"%s\" Item 2: frame %d of %d, item type==%d",
 							pItem->_iIName,
 							nCel,
-							pFrameTable[0],
+							frames,
 							pItem->_itype);
 						*/
 					}
@@ -894,10 +888,9 @@ void scrollrt_draw_clipped_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, 
 
 void DrawClippedMonster(int x, int y, int mx, int my, int m, int CelSkip, int CelCap)
 {
-	int nCel;
+	int nCel, frames;
 	char trans;
 	BYTE *pCelBuff;
-	DWORD *pFrameTable;
 
 	if ((DWORD)m >= MAXMONSTERS) {
 		// app_fatal("Draw Monster Clipped: tried to draw illegal monster %d", m);
@@ -911,8 +904,8 @@ void DrawClippedMonster(int x, int y, int mx, int my, int m, int CelSkip, int Ce
 	}
 
 	nCel = monster[m]._mAnimFrame;
-	pFrameTable = (DWORD *)pCelBuff;
-	if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
+	frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
+	if (nCel < 1 || frames > 50 || nCel > frames) {
 		/*
 		const char *szMode = "unknown action";
 		if(monster[m]._mmode <= 17)
@@ -923,7 +916,7 @@ void DrawClippedMonster(int x, int y, int mx, int my, int m, int CelSkip, int Ce
 			szMode,
 			monster[m]._mdir,
 			nCel,
-			pFrameTable[0]);
+			frames);
 		*/
 		return;
 	}
@@ -947,10 +940,9 @@ void DrawClippedMonster(int x, int y, int mx, int my, int m, int CelSkip, int Ce
 
 void DrawClippedObject(int x, int y, int ox, int oy, BOOL pre, int CelSkip, int CelCap)
 {
-	int sx, sy, xx, yy, nCel;
+	int sx, sy, xx, yy, nCel, frames;
 	char bv;
 	BYTE *pCelBuff;
-	DWORD *pFrameTable;
 
 	if (dObject[x][y] > 0) {
 		bv = dObject[x][y] - 1;
@@ -981,9 +973,9 @@ void DrawClippedObject(int x, int y, int ox, int oy, BOOL pre, int CelSkip, int 
 	}
 
 	nCel = object[bv]._oAnimFrame;
-	pFrameTable = (DWORD *)pCelBuff;
-	if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
-		// app_fatal("Draw Clipped Object: frame %d of %d, object type==%d", nCel, pFrameTable[0], object[bv]._otype);
+	frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
+	if (nCel < 1 || frames > 50 || nCel > frames) {
+		// app_fatal("Draw Clipped Object: frame %d of %d, object type==%d", nCel, frames, object[bv]._otype);
 		return;
 	}
 
@@ -1146,14 +1138,13 @@ void scrollrt_draw_lower_2(int x, int y, int sx, int sy, int chunks, int skipChu
 
 void scrollrt_draw_clipped_dungeon_2(BYTE *pBuff, int sx, int sy, int skipChunks, int CelSkip, int dx, int dy, int eflag)
 {
-	int px, py, nCel, nMon, negMon, p;
+	int px, py, nCel, nMon, negMon, p, frames;
 	char bFlag, bDead, bObj, bItem, bPlr, bArch, bMap, negPlr, dd;
 	DeadStruct *pDeadGuy;
 	ItemStruct *pItem;
 	PlayerStruct *pPlayer;
 	MonsterStruct *pMonster;
 	BYTE *pCelBuff;
-	DWORD *pFrameTable;
 
 	/// ASSERT: assert((DWORD)sx < MAXDUNX);
 	/// ASSERT: assert((DWORD)sy < MAXDUNY);
@@ -1184,16 +1175,16 @@ void scrollrt_draw_clipped_dungeon_2(BYTE *pBuff, int sx, int sy, int skipChunks
 			pCelBuff = pDeadGuy->_deadData[dd];
 			/// ASSERT: assert(pDeadGuy->_deadData[dd] != NULL);
 			if (pCelBuff != NULL) {
-				pFrameTable = (DWORD *)pDeadGuy->_deadData[dd];
+				frames = SDL_SwapLE32(*(DWORD *)pDeadGuy->_deadData[dd]);
 				nCel = pDeadGuy->_deadFrame;
-				if (nCel >= 1 && pFrameTable[0] <= 50 && nCel <= (int)pFrameTable[0]) {
+				if (nCel >= 1 && frames <= 50 && nCel <= frames) {
 					if (pDeadGuy->_deadtrans != 0) {
 						Cl2DecodeFrm5(px, dy, pCelBuff, nCel, pDeadGuy->_deadWidth, CelSkip, 8, pDeadGuy->_deadtrans);
 					} else {
 						Cl2DecodeFrm6(px, dy, pCelBuff, pDeadGuy->_deadFrame, pDeadGuy->_deadWidth, CelSkip, 8);
 					}
 				} else {
-					// app_fatal("Clipped dead sub2: frame %d of %d, deadnum==%d", nCel, pFrameTable[0], (bDead & 0x1F) - 1);
+					// app_fatal("Clipped dead sub2: frame %d of %d, deadnum==%d", nCel, frames, (bDead & 0x1F) - 1);
 				}
 			}
 		}
@@ -1208,9 +1199,9 @@ void scrollrt_draw_clipped_dungeon_2(BYTE *pBuff, int sx, int sy, int skipChunks
 			if ((BYTE)bItem <= MAXITEMS) {
 				pCelBuff = pItem->_iAnimData;
 				if (pCelBuff != NULL) {
-					pFrameTable = (DWORD *)pCelBuff;
+					frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 					nCel = pItem->_iAnimFrame;
-					if (nCel >= 1 && pFrameTable[0] <= 50 && nCel <= (int)pFrameTable[0]) {
+					if (nCel >= 1 && frames <= 50 && nCel <= (int)frames) {
 						px = dx - pItem->_iAnimWidth2;
 						if (bItem - 1 == pcursitem) {
 							CelDrawHdrClrHL(181, px, dy, pCelBuff, nCel, pItem->_iAnimWidth, CelSkip, 8);
@@ -1222,7 +1213,7 @@ void scrollrt_draw_clipped_dungeon_2(BYTE *pBuff, int sx, int sy, int skipChunks
 							"Draw Clipped \"%s\" Item 3: frame %d of %d, item type==%d",
 							pItem->_iIName,
 							nCel,
-							pFrameTable[0],
+							frames,
 							pItem->_itype);
 						*/
 					}
@@ -1328,9 +1319,9 @@ void scrollrt_draw_clipped_dungeon_2(BYTE *pBuff, int sx, int sy, int skipChunks
 			if ((BYTE)bItem <= MAXITEMS) {
 				pCelBuff = pItem->_iAnimData;
 				if (pCelBuff != NULL) {
-					pFrameTable = (DWORD *)pCelBuff;
+					frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 					nCel = pItem->_iAnimFrame;
-					if (nCel >= 1 && pFrameTable[0] <= 50 && nCel <= (int)pFrameTable[0]) {
+					if (nCel >= 1 && frames <= 50 && nCel <= frames) {
 						px = dx - pItem->_iAnimWidth2;
 						if (bItem - 1 == pcursitem) {
 							CelDrawHdrClrHL(181, px, dy, pCelBuff, nCel, pItem->_iAnimWidth, CelSkip, 8);
@@ -1342,7 +1333,7 @@ void scrollrt_draw_clipped_dungeon_2(BYTE *pBuff, int sx, int sy, int skipChunks
 							"Draw Clipped \"%s\" Item 4: frame %d of %d, item type==%d",
 							pItem->_iIName,
 							nCel,
-							pFrameTable[0],
+							frames,
 							pItem->_itype);
 						*/
 					}
@@ -1576,14 +1567,13 @@ void scrollrt_draw_upper(int x, int y, int sx, int sy, int chunks, int capChunks
 
 void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int capChunks, int CelCap, int dx, int dy, int eflag)
 {
-	int px, py, nCel, nMon, negMon, p, tx, ty;
+	int px, py, nCel, nMon, negMon, p, tx, ty, frames;
 	char bFlag, bDead, bObj, bItem, bPlr, bArch, bMap, negPlr, dd;
 	DeadStruct *pDeadGuy;
 	ItemStruct *pItem;
 	PlayerStruct *pPlayer;
 	MonsterStruct *pMonster;
 	BYTE *pCelBuff;
-	DWORD *pFrameTable;
 
 	/// ASSERT: assert((DWORD)sx < MAXDUNX);
 	/// ASSERT: assert((DWORD)sy < MAXDUNY);
@@ -1618,16 +1608,16 @@ void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int capChunks, int CelCa
 			pCelBuff = pDeadGuy->_deadData[dd];
 			/// ASSERT: assert(pDeadGuy->_deadData[dd] != NULL);
 			if (pCelBuff != NULL) {
-				pFrameTable = (DWORD *)pDeadGuy->_deadData[dd];
+				frames = SDL_SwapLE32(*(DWORD *)pDeadGuy->_deadData[dd]);
 				nCel = pDeadGuy->_deadFrame;
-				if (nCel >= 1 && pFrameTable[0] <= 50 && nCel <= (int)pFrameTable[0]) {
+				if (nCel >= 1 && frames <= 50 && nCel <= frames) {
 					if (pDeadGuy->_deadtrans != 0) {
 						Cl2DecodeFrm3(px, dy, pCelBuff, nCel, pDeadGuy->_deadWidth, 0, CelCap, pDeadGuy->_deadtrans);
 					} else {
 						Cl2DecodeLightTbl(px, dy, pCelBuff, pDeadGuy->_deadFrame, pDeadGuy->_deadWidth, 0, CelCap);
 					}
 				} else {
-					// app_fatal("Unclipped dead: frame %d of %d, deadnum==%d", nCel, pFrameTable[0], (bDead & 0x1F) - 1);
+					// app_fatal("Unclipped dead: frame %d of %d, deadnum==%d", nCel, frames, (bDead & 0x1F) - 1);
 				}
 			}
 		}
@@ -1642,16 +1632,16 @@ void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int capChunks, int CelCa
 			if ((BYTE)bItem <= MAXITEMS) {
 				pCelBuff = pItem->_iAnimData;
 				if (pCelBuff != NULL) {
-					pFrameTable = (DWORD *)pCelBuff;
+					frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 					nCel = pItem->_iAnimFrame;
-					if (nCel >= 1 && pFrameTable[0] <= 50 && nCel <= (int)pFrameTable[0]) {
+					if (nCel >= 1 && frames <= 50 && nCel <= frames) {
 						px = dx - pItem->_iAnimWidth2;
 						if (bItem - 1 == pcursitem) {
 							CelDecodeClr(181, px, dy, pCelBuff, nCel, pItem->_iAnimWidth, 0, CelCap);
 						}
 						CelDecodeHdrLightOnly(px, dy, pItem->_iAnimData, pItem->_iAnimFrame, pItem->_iAnimWidth, 0, CelCap);
 					} else {
-						// app_fatal("Draw \"%s\" Item 1: frame %d of %d, item type==%d", pItem->_iIName, nCel, pFrameTable[0], pItem->_itype);
+						// app_fatal("Draw \"%s\" Item 1: frame %d of %d, item type==%d", pItem->_iIName, nCel, frames, pItem->_itype);
 					}
 				} else {
 					// app_fatal("Draw Item \"%s\" 1: NULL Cel Buffer", pItem->_iIName);
@@ -1755,16 +1745,16 @@ void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int capChunks, int CelCa
 			if ((BYTE)bItem <= MAXITEMS) {
 				pCelBuff = pItem->_iAnimData;
 				if (pCelBuff != NULL) {
-					pFrameTable = (DWORD *)pCelBuff;
+					frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 					nCel = pItem->_iAnimFrame;
-					if (nCel >= 1 && pFrameTable[0] <= 50 && nCel <= (int)pFrameTable[0]) {
+					if (nCel >= 1 && frames <= 50 && nCel <= frames) {
 						px = dx - pItem->_iAnimWidth2;
 						if (bItem - 1 == pcursitem) {
 							CelDecodeClr(181, px, dy, pCelBuff, nCel, pItem->_iAnimWidth, 0, CelCap);
 						}
 						CelDecodeHdrLightOnly(px, dy, pItem->_iAnimData, pItem->_iAnimFrame, pItem->_iAnimWidth, 0, CelCap);
 					} else {
-						// app_fatal("Draw \"%s\" Item 2: frame %d of %d, item type==%d", pItem->_iIName, nCel, pFrameTable[0], pItem->_itype);
+						// app_fatal("Draw \"%s\" Item 2: frame %d of %d, item type==%d", pItem->_iIName, nCel, frames, pItem->_itype);
 					}
 				} else {
 					// app_fatal("Draw Item \"%s\" 2: NULL Cel Buffer", pItem->_iIName);
@@ -1780,10 +1770,9 @@ void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int capChunks, int CelCa
 
 void DrawMonster(int x, int y, int mx, int my, int m, int CelSkip, int CelCap)
 {
-	int nCel;
+	int nCel, frames;
 	char trans;
 	BYTE *pCelBuff;
-	DWORD *pFrameTable;
 
 	if ((DWORD)m >= MAXMONSTERS) {
 		// app_fatal("Draw Monster: tried to draw illegal monster %d", m);
@@ -1797,8 +1786,8 @@ void DrawMonster(int x, int y, int mx, int my, int m, int CelSkip, int CelCap)
 	}
 
 	nCel = monster[m]._mAnimFrame;
-	pFrameTable = (DWORD *)pCelBuff;
-	if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
+	frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
+	if (nCel < 1 || frames > 50 || nCel > frames) {
 		/*
 		const char *szMode = "unknown action";
 		if(monster[m]._mmode <= 17)
@@ -1809,7 +1798,7 @@ void DrawMonster(int x, int y, int mx, int my, int m, int CelSkip, int CelCap)
 			szMode,
 			monster[m]._mdir,
 			nCel,
-			pFrameTable[0]);
+			frames);
 		*/
 		return;
 	}
@@ -1833,10 +1822,9 @@ void DrawMonster(int x, int y, int mx, int my, int m, int CelSkip, int CelCap)
 
 void DrawObject(int x, int y, int ox, int oy, BOOL pre, int CelSkip, int CelCap)
 {
-	int sx, sy, xx, yy, nCel;
+	int sx, sy, xx, yy, nCel, frames;
 	char bv;
 	BYTE *pCelBuff;
-	DWORD *pFrameTable;
 
 	if (dObject[x][y] > 0) {
 		bv = dObject[x][y] - 1;
@@ -1867,9 +1855,9 @@ void DrawObject(int x, int y, int ox, int oy, BOOL pre, int CelSkip, int CelCap)
 	}
 
 	nCel = object[bv]._oAnimFrame;
-	pFrameTable = (DWORD *)pCelBuff;
-	if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
-		// app_fatal("Draw Object: frame %d of %d, object type==%d", nCel, pFrameTable[0], object[bv]._otype);
+	frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
+	if (nCel < 1 || frames > 50 || nCel > (int)frames) {
+		// app_fatal("Draw Object: frame %d of %d, object type==%d", nCel, frames, object[bv]._otype);
 		return;
 	}
 
