@@ -2458,9 +2458,9 @@ void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel)
 	/// ASSERT: assert(ttbl != NULL);
 
 	for (i = 1; i <= nCel; i++) {
-		pFrameTable = BSWAP_INT32_UNSIGNED((DWORD *)&p[4 * i]);
-		dst = &p[pFrameTable[0] + 10];
-		nDataSize = BSWAP_INT32_UNSIGNED(pFrameTable[1]) - (BSWAP_INT32_UNSIGNED(pFrameTable[0]) - 10);
+		pFrameTable = (DWORD *)&p[4 * i];
+		dst = &p[BSWAP_INT32_UNSIGNED(pFrameTable[0]) + 10];
+		nDataSize = BSWAP_INT32_UNSIGNED(pFrameTable[1]) - BSWAP_INT32_UNSIGNED(pFrameTable[0]) - 10;
 		while (nDataSize) {
 			width = *dst++;
 			nDataSize--;

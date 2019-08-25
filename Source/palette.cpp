@@ -16,7 +16,7 @@ BOOLEAN sgbFadedIn = TRUE;
 
 void SaveGamma()
 {
-	SRegSaveValue("Diablo", "Gamma Correction", 0, gamma_correction);
+	SRegSaveValue("Diablo", "Gamma Correction", 50, gamma_correction);
 	SRegSaveValue("Diablo", "Color Cycling", FALSE, color_cycling_enabled);
 }
 
@@ -51,7 +51,7 @@ void LoadGamma()
 	int value;
 
 	value = gamma_correction;
-	if (!SRegLoadValue("Diablo", "Gamma Correction", 0, &value))
+	if (!SRegLoadValue("Diablo", "Gamma Correction", 50, &value))
 		value = 100;
 	gamma_value = value;
 	if (value < 30) {

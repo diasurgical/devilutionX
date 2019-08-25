@@ -4678,6 +4678,7 @@ void FreeMonsters()
 		mtype = Monsters[i].mtype;
 		for (j = 0; j < 6; j++) {
 			if (animletter[j] != 's' || monsterdata[mtype].has_special) {
+				Monsters[i].Anims[j].CMem = BSWAP_INT16_UNSIGNED(Monsters[i].Anims[j].CMem);				
 				MemFreeDbg(Monsters[i].Anims[j].CMem);
 			}
 		}

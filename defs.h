@@ -134,8 +134,12 @@
 {						\
 	void *p__p;			\
 	p__p = p;			\
-	p = NULL;			\
-	mem_free_dbg(p__p);	\
+	p = NULL; \
+	if (!p__p) {\
+		printf("MemFreeDbg: Trying to free 0! at %d in file %s\n", __LINE__, __FILE__); \
+	} \
+	else \
+		mem_free_dbg(p__p);	\
 }
 
 #undef assert

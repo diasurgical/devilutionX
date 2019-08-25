@@ -120,6 +120,7 @@ void FreeObjectGFX()
 	int i;
 
 	for (i = 0; i < numobjfiles; i++) {
+		pObjCels[i] = BSWAP_INT16_UNSIGNED(pObjCels[i]);		
 		MemFreeDbg(pObjCels[i]);
 	}
 	numobjfiles = 0;
@@ -1839,25 +1840,9 @@ void objects_set_door_piece(int x, int y)
 
 	pn = dPiece[x][y] - 1;
 
-#ifdef USE_ASM
-	__asm {
-	mov		esi, pLevelPieces
-	xor		eax, eax
-	mov		ax, word ptr pn
-	mov		ebx, 20
-	mul		ebx
-	add		esi, eax
-	add		esi, 16
-	xor		eax, eax
-	lodsw
-	mov		word ptr v1, ax
-	lodsw
-	mov		word ptr v2, ax
-	}
-#else
 	v1 = *((WORD *)pLevelPieces + 10 * pn + 8);
 	v2 = *((WORD *)pLevelPieces + 10 * pn + 9);
-#endif
+
 	dpiece_defs_map_1[IsometricCoord(x, y)].mt[0] = BSWAP_INT16_UNSIGNED(v1);
 	dpiece_defs_map_1[IsometricCoord(x, y)].mt[1] = BSWAP_INT16_UNSIGNED(v2);
 }
