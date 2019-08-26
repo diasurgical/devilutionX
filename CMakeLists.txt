@@ -236,42 +236,46 @@ add_executable(devilutionx ${SOURCES})
 
 target_include_directories(devilution PUBLIC Source SourceS)
 if(SDL1 OR AMIGA)
-  target_include_directories(devilution PRIVATE
-          ${SDL_INCLUDE_DIR}
-          ${SDL_INCLUDE_DIRS})
-target_include_directories(devilutionx PRIVATE
-  SourceX
-  3rdParty/asio/include
-  3rdParty/Radon/Radon/include
-  3rdParty/libsmacker
-  ${SDL_INCLUDE_DIR}
-  ${SDL_INCLUDE_DIRS}
-  ${SDL_TTF_INCLUDE_DIRS}
-  ${SDL_MIXER_INCLUDE_DIRS}
-  ${SDL_INCLUDE_DIRS}/..
-  ${SDL_INCLUDE_DIR}/..
-  ${SDL_TTF_INCLUDE_DIRS}/..
-  ${SDL_MIXER_INCLUDE_DIRS}/..
-)
+	target_include_directories(StormLib PRIVATE
+		${SDL_INCLUDE_DIR}
+		${SDL_INCLUDE_DIRS})
+	target_include_directories(devilution PRIVATE
+		${SDL_INCLUDE_DIR}
+		${SDL_INCLUDE_DIRS})
+	target_include_directories(devilutionx PRIVATE
+		SourceX
+		3rdParty/asio/include
+		3rdParty/Radon/Radon/include
+		3rdParty/libsmacker
+		${SDL_INCLUDE_DIR}
+		${SDL_INCLUDE_DIRS}
+		${SDL_TTF_INCLUDE_DIRS}
+		${SDL_MIXER_INCLUDE_DIRS}
+		${SDL_INCLUDE_DIRS}/..
+		${SDL_INCLUDE_DIR}/..
+		${SDL_TTF_INCLUDE_DIRS}/..
+		${SDL_MIXER_INCLUDE_DIRS}/..)
 else()
-  target_include_directories(devilution PRIVATE
-          ${SDL2_INCLUDE_DIR}
-          ${SDL2_INCLUDE_DIRS})
-target_include_directories(devilutionx PRIVATE
-  SourceX
-  3rdParty/asio/include
-  3rdParty/Radon/Radon/include
-  3rdParty/libsmacker
-  ${SDL2_INCLUDE_DIR}
-  ${SDL2_INCLUDE_DIRS}
-  ${SDL2_TTF_INCLUDE_DIRS}
-  ${SDL2_MIXER_INCLUDE_DIRS}
-  ${SDL2_INCLUDE_DIRS}/..
-  ${SDL2_INCLUDE_DIR}/..
-  ${SDL2_TTF_INCLUDE_DIRS}/..
-  ${SDL2_MIXER_INCLUDE_DIRS}/..
-)
-  set(SDL_INCLUDE_DIR ${SDL2_INCLUDE_DIR})
+	target_include_directories(StormLib PRIVATE
+		${SDL2_INCLUDE_DIR}
+		${SDL2_INCLUDE_DIRS})
+	target_include_directories(devilution PRIVATE
+		${SDL2_INCLUDE_DIR}
+		${SDL2_INCLUDE_DIRS})
+	target_include_directories(devilutionx PRIVATE
+		SourceX
+		3rdParty/asio/include
+		3rdParty/Radon/Radon/include
+		3rdParty/libsmacker
+		${SDL2_INCLUDE_DIR}
+		${SDL2_INCLUDE_DIRS}
+		${SDL2_TTF_INCLUDE_DIRS}
+		${SDL2_MIXER_INCLUDE_DIRS}
+		${SDL2_INCLUDE_DIRS}/..
+		${SDL2_INCLUDE_DIR}/..
+		${SDL2_TTF_INCLUDE_DIRS}/..
+		${SDL2_MIXER_INCLUDE_DIRS}/..)
+	set(SDL_INCLUDE_DIR ${SDL2_INCLUDE_DIR})
 endif()
 
 message("SDL include dir: " ${SDL_INCLUDE_DIR})
