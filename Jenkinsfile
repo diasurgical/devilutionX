@@ -77,7 +77,7 @@ def build_zlib(TARGET, SYSROOT, DEFINES, FLAGS) {
 		sh "mkdir -p build"
 		sh "rm -rfv build/*"
 
-		sh "cd build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} ${DEFINES}"
+		sh "cd build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT}" // ${DEFINES}"
 		sh "cd build && cmake --build . --config Release --target install -- -j8"
 	}
 }
@@ -335,17 +335,17 @@ node('master') {
 		},*/
 		'AmigaOS 68040': {
 			node {
-				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68040-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-O2 -ffast-math"', '-m68040 -mhard-float -O2')
+				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68040-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-Os -ffast-math"', '-m68040 -mhard-float -Os')
 			}
 		},
 		'AmigaOS 68060': {
 			node {
-				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68060-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68060 -DM68K_FPU=hard -DM68K_COMMON="-O2 -ffast-math"', '-m68060 -mhard-float -O2')
+				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68060-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68060 -DM68K_FPU=hard -DM68K_COMMON="-Os -ffast-math"', '-m68060 -mhard-float -Os')
 			}
 		},
 		'AmigaOS 68080': {
 			node {
-				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68080-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68080 -DM68K_FPU=hard -DM68K_COMMON="-O2 -ffast-math"', '-m68080 -mhard-float -O2')
+				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68080-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68080 -DM68K_FPU=hard -DM68K_COMMON="-Os -ffast-math"', '-m68080 -mhard-float -Os')
 			}
 		}/*,
 		'AmigaOS PPC': {
