@@ -1842,15 +1842,45 @@ void objects_set_door_piece(int x, int y)
 
 	v1 = *((WORD *)pLevelPieces + 10 * pn + 8);
 	v2 = *((WORD *)pLevelPieces + 10 * pn + 9);
+<<<<<<< HEAD
 
 	dpiece_defs_map_1[IsometricCoord(x, y)].mt[0] = BSWAP_INT16_UNSIGNED(v1);
 	dpiece_defs_map_1[IsometricCoord(x, y)].mt[1] = BSWAP_INT16_UNSIGNED(v2);
+=======
+	dpiece_defs_map_1[IsometricCoord(x, y)].mt[0] = v1;
+	dpiece_defs_map_1[IsometricCoord(x, y)].mt[1] = v2;
+>>>>>>> diasurgical-master
 }
 
 void ObjSetMini(int x, int y, int v)
 {
 	int xx, yy;
 	long v1, v2, v3, v4;
+
+<<<<<<< HEAD
+#ifdef USE_ASM
+	__asm {
+		mov		esi, pMegaTiles
+		xor		eax, eax
+		mov		ax, word ptr v
+		dec		eax
+		shl		eax, 3
+		add		esi, eax
+		xor		eax, eax
+		lodsw
+		inc		eax
+		mov		v1, eax
+		lodsw
+		inc		eax
+		mov		v2, eax
+		lodsw
+		inc		eax
+		mov		v3, eax
+		lodsw
+		inc		eax
+		mov		v4, eax
+	}
+#else
 
 	WORD *MegaTiles;
 	MegaTiles = (WORD *)&pMegaTiles[((WORD)v - 1) * 8];
@@ -1860,6 +1890,13 @@ void ObjSetMini(int x, int y, int v)
 	v2 =  (long)MegaTiles + 1 + 1;
 	v3 =  (long)MegaTiles + 2 + 1;
 	v4 =  (long)MegaTiles + 3 + 1;
+#endif
+=======
+	v1 = *((WORD *)&pMegaTiles[((WORD)v - 1) * 8]) + 1;
+	v2 = *((WORD *)&pMegaTiles[((WORD)v - 1) * 8] + 1) + 1;
+	v3 = *((WORD *)&pMegaTiles[((WORD)v - 1) * 8] + 2) + 1;
+	v4 = *((WORD *)&pMegaTiles[((WORD)v - 1) * 8] + 3) + 1;
+>>>>>>> diasurgical-master
 
 	xx = 2 * x + 16;
 	yy = 2 * y + 16;

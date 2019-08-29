@@ -177,11 +177,53 @@ void DrawSpellCel(int xp, int yp, BYTE *pCelBuff, int nCel, int nWidth)
 	BYTE *pRLEBytes;
 	DWORD *pFrameTable;
 
+<<<<<<< HEAD
+	pFrameTable = (DWORD *)&Trans[4 * nCel];
+	src = &Trans[BSWAP_INT32_UNSIGNED(pFrameTable[0])];
+	end = &src[BSWAP_INT32_UNSIGNED(pFrameTable[1]) - BSWAP_INT32_UNSIGNED(pFrameTable[0])];
+
+	for (; src != end; dst -= BUFFER_WIDTH + w) {
+		for (i = w; i;) {
+			width = *src++;
+			if (!(width & 0x80)) {
+				i -= width;
+				// asm_cel_light_edge(width, tbl, dst, src);
+				if (width & 1) {
+					dst[0] = tbl[src[0]];
+					src++;
+					dst++;
+				}
+				width >>= 1;
+				if (width & 1) {
+					dst[0] = tbl[src[0]];
+					dst[1] = tbl[src[1]];
+					src += 2;
+					dst += 2;
+				}
+				width >>= 1;
+				for (; width; width--) {
+					dst[0] = tbl[src[0]];
+					dst[1] = tbl[src[1]];
+					dst[2] = tbl[src[2]];
+					dst[3] = tbl[src[3]];
+					src += 4;
+					dst += 4;
+				}
+			} else {
+				width = -(char)width;
+				dst += width;
+				i -= width;
+			}
+		}
+	}
+#endif
+=======
 	pFrameTable = (DWORD *)pCelBuff;
-	pRLEBytes = &pCelBuff[BSWAP_INT32_UNSIGNED(pFrameTable[nCel])];
-	nDataSize = BSWAP_INT32_UNSIGNED(pFrameTable[nCel + 1]) - BSWAP_INT32_UNSIGNED(pFrameTable[nCel]);
+	pRLEBytes = &pCelBuff[pFrameTable[nCel]];
+	nDataSize = pFrameTable[nCel + 1] - pFrameTable[nCel];
 
 	CelDecDatLightOnly(&gpBuffer[xp + PitchTbl[yp]], pRLEBytes, nDataSize, nWidth, SplTransTbl);
+>>>>>>> diasurgical-master
 }
 
 void SetSpellTrans(char t)
@@ -456,10 +498,14 @@ void CPrintString(int nOffset, int nCel, char col)
 	DWORD *pFrameTable;
 
 	pFrameTable = (DWORD *)&pPanelText[4 * nCel];
+<<<<<<< HEAD
 	src = &pPanelText[BSWAP_INT32_UNSIGNED(pFrameTable[0])];
-	nDataSize = BSWAP_INT32_UNSIGNED(pFrameTable[1]) - BSWAP_INT32_UNSIGNED(pFrameTable[0]);
+	end = &src[BSWAP_INT32_UNSIGNED(pFrameTable[1]) - BSWAP_INT32_UNSIGNED(pFrameTable[0])];
+=======
+	src = &pPanelText[pFrameTable[0]];
+	nDataSize = pFrameTable[1] - pFrameTable[0];
 	end = &src[nDataSize];
-
+>>>>>>> diasurgical-master
 	dst = &gpBuffer[nOffset];
 
 	switch (col) {
@@ -1946,7 +1992,8 @@ void control_set_gold_curs(int pnum)
 }
 
 void DrawTalkPan()
-{	int i, off, talk_btn, color, nCel, x;
+{
+	int i, off, talk_btn, color, nCel, x;
 	char *msg;
 
 	off = 0;

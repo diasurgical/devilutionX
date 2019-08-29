@@ -134,6 +134,10 @@ void MakeSpeedCels()
 	int l, k;
 	BYTE width, pix;
 	BYTE *src, *dst, *tbl;
+<<<<<<< HEAD
+
+=======
+>>>>>>> diasurgical-master
 
 	for (i = 0; i < MAXTILES; i++) {
 		tile_defs[i] = i;
@@ -159,13 +163,17 @@ void MakeSpeedCels()
 		}
 	}
 
-	pFrameTable = (DWORD *)pDungeonCels;
+	pFrameTable = ((DWORD *)pDungeonCels);
 	nDataSize = BSWAP_INT32_UNSIGNED(pFrameTable[0]);
 	nlevel_frames = nDataSize & 0xFFFF;
 
 	for (i = 1; i < nlevel_frames; i++) {
 		z = i;
+<<<<<<< HEAD
 		nDataSize = BSWAP_INT32_UNSIGNED(pFrameTable[i + 1]) - BSWAP_INT32_UNSIGNED(pFrameTable[i]);
+=======
+		nDataSize = pFrameTable[i + 1] - pFrameTable[i];
+>>>>>>> diasurgical-master
 		level_frame_sizes[i] = nDataSize & 0xFFFF;
 	}
 
@@ -179,16 +187,26 @@ void MakeSpeedCels()
 			blood_flag = TRUE;
 			if (level_frame_count[i] != 0) {
 				if (level_frame_types[i] != 0x1000) {
+<<<<<<< HEAD
 
 					src = &pDungeonCels[BSWAP_INT32_UNSIGNED(pFrameTable[i])];
+=======
+					src = &pDungeonCels[pFrameTable[i]];
+>>>>>>> diasurgical-master
 					for (j = level_frame_sizes[i]; j; j--) {
 						pix = *src++;
 						if (pix && pix < 32)
 							blood_flag = FALSE;
 					}
+<<<<<<< HEAD
+
 				} else {
 
 					src = &pDungeonCels[BSWAP_INT32_UNSIGNED(pFrameTable[i])];
+=======
+				} else {
+					src = &pDungeonCels[pFrameTable[i]];
+>>>>>>> diasurgical-master
 					for (k = 32; k; k--) {
 						for (l = 32; l;) {
 							width = *src++;
@@ -242,25 +260,39 @@ void MakeSpeedCels()
 
 	for (i = 0; i < total_frames; i++) {
 		z = tile_defs[i];
+
 		SpeedFrameTbl[i][0] = z;
 		if (level_frame_types[i] != 0x1000) {
 			t = level_frame_sizes[i];
 			for (j = 1; j < blk_cnt; j++) {
 				SpeedFrameTbl[i][j] = frameidx;
+<<<<<<< HEAD
 				src = &pDungeonCels[BSWAP_INT32_UNSIGNED(pFrameTable[z])];
+=======
+				src = &pDungeonCels[pFrameTable[z]];
+>>>>>>> diasurgical-master
 				dst = &pSpeedCels[frameidx];
 				tbl = &pLightTbl[256 * j];
 				for (k = t; k; k--) {
 					*dst++ = tbl[*src++];
 				}
+<<<<<<< HEAD
+
+=======
+>>>>>>> diasurgical-master
 				frameidx += t;
 			}
 		} else {
 			for (j = 1; j < blk_cnt; j++) {
 				SpeedFrameTbl[i][j] = frameidx;
+<<<<<<< HEAD
 				src = &pDungeonCels[BSWAP_INT32_UNSIGNED(pFrameTable[z])];
+=======
+				src = &pDungeonCels[pFrameTable[z]];
+>>>>>>> diasurgical-master
 				dst = &pSpeedCels[frameidx];
 				tbl = &pLightTbl[256 * j];
+
 				for (k = 32; k; k--) {
 					for (l = 32; l;) {
 						width = *src++;
@@ -277,6 +309,10 @@ void MakeSpeedCels()
 						}
 					}
 				}
+<<<<<<< HEAD
+
+=======
+>>>>>>> diasurgical-master
 				frameidx += level_frame_sizes[i];
 			}
 		}

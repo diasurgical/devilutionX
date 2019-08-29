@@ -268,7 +268,6 @@ WINBOOL WINAPI PostMessageA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 
 WINBOOL WINAPI DestroyWindow(HWND hWnd);
 HWND WINAPI GetLastActivePopup(HWND hWnd);
-DWORD GdiSetBatchLimit(DWORD dw);
 HWND WINAPI GetTopWindow(HWND hWnd);
 WINBOOL WINAPI SetForegroundWindow(HWND hWnd);
 HWND WINAPI SetFocus(HWND hWnd);

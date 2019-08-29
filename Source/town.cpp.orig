@@ -24,6 +24,10 @@ void town_clear_upper_buf(BYTE *pBuff)
 			*dst++ = 0;
 		dst += i;
 	}
+<<<<<<< HEAD
+
+=======
+>>>>>>> diasurgical-master
 }
 
 void town_clear_low_buf(BYTE *pBuff)
@@ -55,10 +59,17 @@ void town_clear_low_buf(BYTE *pBuff)
 			dst += 64;
 		}
 	}
+<<<<<<< HEAD
+
+=======
+>>>>>>> diasurgical-master
 }
 
 void town_special_lower(BYTE *pBuff, int nCel)
 {
+<<<<<<< HEAD
+
+=======
 #if 0
 	int nDataSize;
 	BYTE *pRLEBytes;
@@ -69,10 +80,14 @@ void town_special_lower(BYTE *pBuff, int nCel)
 	nDataSize = pFrameTable[nCel + 1] - pFrameTable[nCel];
 	Cel2DecDatOnly(pBuff, pRLEBytes, nDataSize, 64);
 #endif
+>>>>>>> diasurgical-master
 }
 
 void town_special_upper(BYTE *pBuff, int nCel)
 {
+<<<<<<< HEAD
+
+=======
 #if 0
 	int w;
 	BYTE *end;
@@ -122,6 +137,7 @@ void town_special_upper(BYTE *pBuff, int nCel)
 		}
 	}
 #endif
+>>>>>>> diasurgical-master
 }
 
 void town_draw_clipped_e_flag(BYTE *pBuff, int x, int y, int sx, int sy)
@@ -527,6 +543,7 @@ void town_draw_town_all(BYTE *pBuff, int x, int y, int capChunks, int CelCap, in
 {
 	int mi, px, py;
 	char bv;
+//	px = 0;
 
 	if (dItem[x][y] != 0) {
 		bv = dItem[x][y] - 1;
@@ -578,7 +595,9 @@ void town_draw_town_all(BYTE *pBuff, int x, int y, int capChunks, int CelCap, in
 		if (bv == pcursplr) {
 			Cl2DecodeFrm2(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, CelCap);
 		}
-		/// ASSERT: assert(plr[bv]._pAnimData);
+		/// ASSERT:
+		//assert(plr[bv]._pAnimData);
+
 		Cl2DecodeFrm1(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, CelCap);
 		if (eflag && plr[bv]._peflag) {
 			town_draw_e_flag(pBuff - 64, x - 1, y + 1, capChunks, CelCap, sx - 64, sy);
@@ -933,6 +952,10 @@ void T_DrawZoom(int x, int y)
 			src++;
 		}
 	}
+<<<<<<< HEAD
+
+=======
+>>>>>>> diasurgical-master
 }
 
 void T_DrawView(int StartX, int StartY)
@@ -1041,6 +1064,10 @@ void T_FillSector(BYTE *P3Tiles, BYTE *pSector, int xi, int yi, int w, int h)
 	for (j = 0; j < h; j++) {
 		xx = xi;
 		for (i = 0; i < w; i++) {
+<<<<<<< HEAD
+
+=======
+>>>>>>> diasurgical-master
 			WORD *Map;
 			Map = ((WORD *)&pSector[ii]);
 
@@ -1066,6 +1093,10 @@ void T_FillSector(BYTE *P3Tiles, BYTE *pSector, int xi, int yi, int w, int h)
 				v3 = 0;
 				v4 = 0;
 			}
+<<<<<<< HEAD
+
+=======
+>>>>>>> diasurgical-master
 			dPiece[xx][yy] = v1;
 			dPiece[xx + 1][yy] = v2;
 			dPiece[xx][yy + 1] = v3;
@@ -1081,6 +1112,7 @@ void T_FillTile(BYTE *P3Tiles, int xx, int yy, int t)
 {
 	long v1, v2, v3, v4;
 
+<<<<<<< HEAD
 	WORD *Tiles;
 	Tiles = ((WORD *)&P3Tiles[(t - 1) * 8]);
 
@@ -1088,6 +1120,12 @@ void T_FillTile(BYTE *P3Tiles, int xx, int yy, int t)
 	v2 = BSWAP_INT16_UNSIGNED(*(Tiles + 1)) + 1;
 	v3 = BSWAP_INT16_UNSIGNED(*(Tiles + 2)) + 1;
 	v4 = BSWAP_INT16_UNSIGNED(*(Tiles + 3)) + 1;
+=======
+	v1 = *((WORD *)&P3Tiles[(t - 1) * 8]) + 1;
+	v2 = *((WORD *)&P3Tiles[(t - 1) * 8] + 1) + 1;
+	v3 = *((WORD *)&P3Tiles[(t - 1) * 8] + 2) + 1;
+	v4 = *((WORD *)&P3Tiles[(t - 1) * 8] + 3) + 1;
+>>>>>>> diasurgical-master
 
 	dPiece[xx][yy] = v1;
 	dPiece[xx + 1][yy] = v2;
@@ -1109,17 +1147,18 @@ void T_Pass3()
 		}
 	}
 
-	P3Tiles = LoadFileInMem("Levels\\TownData\\Town.TIL", NULL);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector1s.DUN", NULL);
+	P3Tiles = (LoadFileInMem("Levels\\TownData\\Town.TIL", NULL));
+
+	pSector = (LoadFileInMem("Levels\\TownData\\Sector1s.DUN", NULL));
 	T_FillSector(P3Tiles, pSector, 46, 46, 25, 25);
 	mem_free_dbg(pSector);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector2s.DUN", NULL);
+	pSector = (LoadFileInMem("Levels\\TownData\\Sector2s.DUN", NULL));
 	T_FillSector(P3Tiles, pSector, 46, 0, 25, 23);
 	mem_free_dbg(pSector);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector3s.DUN", NULL);
+	pSector = (LoadFileInMem("Levels\\TownData\\Sector3s.DUN", NULL));
 	T_FillSector(P3Tiles, pSector, 0, 46, 23, 25);
 	mem_free_dbg(pSector);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector4s.DUN", NULL);
+	pSector = (LoadFileInMem("Levels\\TownData\\Sector4s.DUN", NULL));
 	T_FillSector(P3Tiles, pSector, 0, 0, 23, 23);
 	mem_free_dbg(pSector);
 
