@@ -2,6 +2,14 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+/*
+address: 0x48E1B8
+
+sgSingleMenu contains the game menu items of the single player menu.
+
+assert name: sgSingleMenu
+alias: single_menu
+*/
 TMenuItem sgSingleMenu[6] = {
 	// clang-format off
 	//   dwFlags, pszStr,        fnMenu
@@ -13,6 +21,14 @@ TMenuItem sgSingleMenu[6] = {
 	{ GMENU_ENABLED, NULL, NULL }
 	// clang-format on
 };
+/*
+address: 0x48E200
+
+sgMultiMenu contains the game menu items of the multi player menu.
+
+assert name: sgMultiMenu
+alias: multi_menu
+*/
 TMenuItem sgMultiMenu[5] = {
 	// clang-format off
 	//   dwFlags, pszStr,            fnMenu
@@ -34,8 +50,24 @@ TMenuItem sgOptionsMenu[6] = {
 	{ GMENU_ENABLED               , NULL,            NULL                    }
 	// clang-format on
 };
+/*
+address: 0x48E288
+
+music_toggle_names specifies the menu names for music enabled and disabled.
+*/
 char *music_toggle_names[] = { "Music", "Music Disabled" };
+/*
+address: 0x48E290
+
+sound_toggle_names specifies the menu names for sound enabled and disabled.
+*/
 char *sound_toggle_names[] = { "Sound", "Sound Disabled" };
+/*
+address: 0x48E298
+
+color_cycling_toggle_names specifies the menu names for colour cycling
+disabled and enabled.
+*/
 char *color_cycling_toggle_names[] = { "Color Cycling Off", "Color Cycling On" };
 
 void gamemenu_previous()
@@ -311,3 +343,4 @@ void gamemenu_color_cycling(BOOL bActivate)
 }
 
 DEVILUTION_END_NAMESPACE
+

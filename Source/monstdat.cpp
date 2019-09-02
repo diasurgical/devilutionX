@@ -2,6 +2,15 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+/*
+address: 0x497E08
+
+monsterdata contains the data related to each monster ID.
+
+PSX ref (SLPS-01416): 0x8010AB9C
+PSX def: struct MonsterData monsterdata[113]
+alias: monster_data
+*/
 MonsterData monsterdata[112] = {
 	// clang-format off
 	// width, mImage, GraphicType,                       has_special, sndfile,                             snd_special, has_trans, TransFile,                         Frames[6],                  Rate[6],              mName,               mMinDLvl, mMaxDLvl, mLevel, mMinHP, mMaxHP, mAi,         mFlags,                                                              mInt, mHit, mAFNum, mMinDamage, mMaxDamage, mHit2, mAFNum2, mMinDamage2, mMaxDamage2, mArmorClass, mMonstClass, mMagicRes                                                    , mMagicRes2                                                   , mTreasure, mSelFlag,  mExp
@@ -120,6 +129,14 @@ MonsterData monsterdata[112] = {
 	// clang-format on
 };
 
+/*
+address: 0x49B608
+
+MonstConvTbl maps from DUN monster ID to monster ID.
+
+PSX ref (SLPS-01416): 0x8010C618
+PSX def: char MonstConvTbl[128]
+*/
 char MonstConvTbl[128] = {
 	0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
 	10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
@@ -141,6 +158,18 @@ char MonstConvTbl[128] = {
  * 1 = Avalible in retail and shareware
  * 2 = avalible in retail only
  */
+/*
+address: 0x49B688
+
+MonstAvailTbl maps from monster ID to monster availability mask.
+
+   0b00: never avalible
+   0b01: avalible in retail and shareware
+   0b10: avalible in retail only
+
+PSX ref (SLPS-01416): 0x8010C698
+PSX def: char MonstAvailTbl[112]
+*/
 BYTE MonstAvailTbl[112] = {
 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -156,6 +185,15 @@ BYTE MonstAvailTbl[112] = {
 	0, 0
 };
 
+/*
+address: 0x49B6F8
+
+UniqMonst contains the data related to each unique monster ID.
+
+PSX ref (SLPS-01416): 0x8010C708
+PSX def: struct UniqMonstStruct UniqMonst[96]
+alias: unique_monster_data
+*/
 UniqMonstStruct UniqMonst[98] = {
 	// clang-format off
 	// mtype,       mName,                   mTrnName, mlevel, mmaxhp, mAi,      mint, mMinDamage, mMaxDamage, mMagicRes,                                                     mUnqAttr, mUnqVar1, mUnqVar2, mtalkmsg
@@ -261,3 +299,4 @@ UniqMonstStruct UniqMonst[98] = {
 };
 
 DEVILUTION_END_NAMESPACE
+

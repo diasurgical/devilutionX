@@ -38,6 +38,16 @@ int color_cycle_timer;
 
 /* rdata */
 
+/*
+address: 0x484364
+
+fullscreen specifies whether to give the game exclusive access to the
+screen, as needed for efficient rendering in fullscreen mode.
+
+PSX ref (SLPS-01416): 0x8011B78C
+PSX def: unsigned char fullscreen
+alias: exclusive
+*/
 BOOL fullscreen = TRUE;
 #ifdef _DEBUG
 int showintrodebug = 1;
@@ -57,13 +67,36 @@ int frameend;
 int framerate;
 int framestart;
 #endif
+/*
+address: 0x484368
+
+FriendlyMode specifies whether players are in non-PvP mode.
+
+PSX ref (SLPS-01416): 0x8011B7A5
+PSX def: unsigned char FriendlyMode
+alias: player_friendly
+*/
 BOOL FriendlyMode = TRUE;
+/*
+address: 0x48436C
+
+spszMsgTbl maps from net_msg_id to hotkey network message.
+
+assert name: spszMsgTbl
+alias: net_msg_texts
+*/
 char *spszMsgTbl[4] = {
 	"I need help! Come Here!",
 	"Follow me.",
 	"Here's something for you.",
 	"Now you DIE!"
 };
+/*
+address: 0x48437C
+
+spszMsgHotKeyTbl maps from net_msg_id to hotkey name.
+alias: net_msg_hotkeys
+*/
 char *spszMsgHotKeyTbl[4] = { "F9", "F10", "F11", "F12" };
 
 void FreeGameMem()
@@ -1905,3 +1938,4 @@ void diablo_color_cyc_logic()
 }
 
 DEVILUTION_END_NAMESPACE
+

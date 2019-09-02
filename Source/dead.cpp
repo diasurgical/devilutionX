@@ -94,3 +94,4 @@ void SetDead()
 }
 
 DEVILUTION_END_NAMESPACE
+

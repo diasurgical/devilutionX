@@ -15,6 +15,12 @@ BYTE *option_cel;
 BYTE *sgpLogo;
 int sgCurrentMenuIdx;
 
+/*
+address: 0x47A48C
+
+lfontframe maps from font index to bigtgold.cel frame number.
+alias: bigtgold_frame_from_font_index
+*/
 const BYTE lfontframe[127] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -30,6 +36,14 @@ const BYTE lfontframe[127] = {
 	14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
 	24, 25, 26, 20, 0, 21, 0
 };
+/*
+address: 0x47A50C
+
+lfontkern maps from bigtgold.cel frame number to character width. Note, the
+character width may be distinct from the frame width, which is 46 for every
+bigtgold.cel frame.
+alias: bigtgold_character_width_from_frame
+*/
 const BYTE lfontkern[56] = {
 	18, 33, 21, 26, 28, 19, 19, 26, 25, 11,
 	12, 25, 19, 34, 28, 32, 20, 32, 28, 20,
@@ -417,3 +431,4 @@ void gmenu_slider_steps(TMenuItem *pItem, int steps)
 }
 
 DEVILUTION_END_NAMESPACE
+

@@ -2,10 +2,48 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+/*
+address 0x69BC98
+
+portal holds the in-game state of portals.
+
+PSX ref (SLPS-01416): 0x800E3BEC
+PSX def: struct PortalStruct portal[4]
+alias: portals
+*/
 PortalStruct portal[MAXPORTAL];
+/*
+address 0x69BCF8
+
+portalindex specifies the current portal number (a portal array index).
+
+PSX ref (SLPS-01416): 0x8011C8D0
+PSX def: int portalindex
+alias: cur_portal_num
+*/
 int portalindex;
 
+/*
+address: 0x4A1ABC
+
+WarpDropX maps from player number to Y-coordinate of the town portal
+position in Tristram.
+
+PSX ref (SLPS-01416): 0x800E3BCC
+PSX def: int WarpDropX[4]
+alias: portal_town_x_from_player_num
+*/
 int WarpDropX[MAXPORTAL] = { 57, 59, 61, 63 };
+/*
+address: 0x4A1ACC
+
+WarpDropY maps from player number to X-coordinate of the town portal
+position in Tristram.
+
+PSX ref (SLPS-01416): 0x800E3BDC
+PSX def: int WarpDropY[4]
+alias: portal_town_y_from_player_num
+*/
 int WarpDropY[MAXPORTAL] = { 40, 40, 40, 40 };
 
 void InitPortals()
@@ -175,3 +213,4 @@ BOOL PosOkPortal(int lvl, int x, int y)
 }
 
 DEVILUTION_END_NAMESPACE
+

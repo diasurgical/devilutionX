@@ -11,6 +11,12 @@ int sgLastScroll;
 BYTE *pMedTextCels;
 BYTE *pTextBoxCels;
 
+/*
+address: 0x47F078
+
+mfontframe maps from font index to medtexts.cel frame number.
+alias: medtexts_frame_from_font_index
+*/
 const BYTE mfontframe[127] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -26,6 +32,14 @@ const BYTE mfontframe[127] = {
 	14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
 	24, 25, 26, 48, 0, 49, 0
 };
+/*
+address: 0x47F0F8
+
+mfontkern maps from medtexts.cel frame number to character width. Note, the
+character width may be distinct from the frame width, which is 22 for every
+medtexts.cel frame.
+alias: medtexts_character_width_from_frame
+*/
 const BYTE mfontkern[56] = {
 	5, 15, 10, 13, 14, 10, 9, 13, 11, 5,
 	5, 11, 10, 16, 13, 16, 10, 15, 12, 10,
@@ -37,6 +51,11 @@ const BYTE mfontkern[56] = {
 
 /* data */
 
+/*
+address: 0x4948F8
+
+qscroll_spd_tbl maps from text speed to Y-offset of text scroll.
+*/
 int qscroll_spd_tbl[9] = { 2, 4, 6, 8, 0, -1, -2, -3, -4 };
 
 void FreeQuestText()
@@ -229,3 +248,4 @@ void DrawQText()
 }
 
 DEVILUTION_END_NAMESPACE
+

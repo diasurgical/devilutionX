@@ -22,6 +22,15 @@ int pcurstemp;
 int pcurs;
 
 /* rdata */
+/*
+address: 0x479658
+
+InvItemWidth maps from objcurs.cel frame number to frame width.
+
+PSX ref (SLPS-01416): 0x8010D518
+PSX def: unsigned char InvItemWidth[180]
+alias: objcurs_frame_width_from_frame
+*/
 const int InvItemWidth[180] = {
 	// Cursors
 	0, 33, 32, 32, 32, 32, 32, 32, 32, 32, 32, 23,
@@ -45,6 +54,15 @@ const int InvItemWidth[180] = {
 	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28
 };
 
+/*
+address: 0x479928
+
+InvItemHeight maps from objcurs.cel frame number to frame height.
+
+PSX ref (SLPS-01416): 0x8010D5CC
+PSX def: unsigned char InvItemHeight[180]
+alias: objcurs_frame_height_from_frame
+*/
 const int InvItemHeight[180] = {
 	// Cursors
 	0, 29, 32, 32, 32, 32, 32, 32, 32, 32, 32, 35,
@@ -598,3 +616,4 @@ void CheckCursMove()
 }
 
 DEVILUTION_END_NAMESPACE
+

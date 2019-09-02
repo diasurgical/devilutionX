@@ -4,7 +4,18 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 char sz_error_buf[256];
+/*
+address: 0x4B7A34
+
+terminating specifies whether the game is terminating after a fatal
+application error.
+*/
 BOOL terminating;
+/*
+address: 0x4B7A38
+
+cleanup_thread_id stores the thread id of the last callee to appfat_cleanup.
+*/
 int cleanup_thread_id;
 
 // delete overloads the delete operator.
@@ -660,3 +671,4 @@ void DirErrorDlg(char *error)
 }
 
 DEVILUTION_END_NAMESPACE
+

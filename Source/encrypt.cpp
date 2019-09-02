@@ -160,3 +160,4 @@ void PkwareDecompress(void *param, int recv_size, int dwMaxBytes)
 }
 
 DEVILUTION_END_NAMESPACE
+

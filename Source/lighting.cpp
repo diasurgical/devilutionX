@@ -38,6 +38,16 @@ BOOL lightflag;
 //    | D9 AE
 //    |  526
 //    +-------> x
+/*
+address: 0x49387C
+
+CrawlTable specifies X- and Y-coordinate deltas from a missile target
+coordinate.
+
+PSX ref (SLPS-01416): 0x800D5554
+PSX def: char CrawlTable[2749]
+alias: missile_coord_delta
+*/
 char CrawlTable[2749] = {
 	1,
 	0, 0,
@@ -404,6 +414,13 @@ char CrawlTable[2749] = {
 
 // pCrawlTable maps from circle radius to the X- and Y-coordinate deltas from
 // the center of a circle.
+/*
+address: 0x49433C
+
+pCrawlTable maps from circle radius to the X- and Y-coordinate deltas from
+the center of a circle.
+alias: delta_from_circle_radius
+*/
 char *pCrawlTable[19] =
     {
 	    CrawlTable,
@@ -426,6 +443,14 @@ char *pCrawlTable[19] =
 	    CrawlTable + 2187,
 	    CrawlTable + 2460
     };
+/*
+address: 0x494388
+
+vCrawlTable specifies the X- Y-coordinate offsets of lighting visions.
+
+PSX ref (SLPS-01416): 0x800D6014
+PSX def: unsigned char vCrawlTable[30][23]
+*/
 BYTE vCrawlTable[23][30] = {
 	{ 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 0, 9, 0, 10, 0, 11, 0, 12, 0, 13, 0, 14, 0, 15, 0 },
 	{ 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 1, 9, 1, 10, 1, 11, 1, 12, 1, 13, 1, 14, 1, 15, 1 },
@@ -473,6 +498,14 @@ BYTE byte_49463C[18][18] = /* unused */
 	    { 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2 }
     };
 
+/*
+address: 0x494780
+
+RadiusAdj maps from vCrawlTable index to lighting vision radius adjustment.
+
+PSX ref (SLPS-01416): 0x800D62C8
+PSX def: unsigned char RadiusAdj[23]
+*/
 BYTE RadiusAdj[23] = { 0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 4, 3, 2, 2, 2, 1, 1, 1, 0, 0, 0, 0 };
 
 void RotateRadius(int *x, int *y, int *dx, int *dy, int *lx, int *ly, int *bx, int *by)
@@ -1306,3 +1339,4 @@ void lighting_color_cycling()
 }
 
 DEVILUTION_END_NAMESPACE
+

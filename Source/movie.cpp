@@ -3,7 +3,17 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+/*
+address: 0x659AF8
+
+movie_playing specifies whether a movie is currently playing.
+*/
 BYTE movie_playing;
+/*
+address: 0x659AFC
+
+loop_movie specifies whether to loop the playback of the movie.
+*/
 BOOL loop_movie;
 
 void play_movie(char *pszMovie, BOOL user_can_close)
@@ -66,3 +76,4 @@ LRESULT __stdcall MovieWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam
 }
 
 DEVILUTION_END_NAMESPACE
+

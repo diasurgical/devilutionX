@@ -62,6 +62,15 @@ int SStringY[24] = {
 	264,
 	276
 };
+/*
+address: 0x4A2DBC
+
+talkname maps from towner IDs to NPC names.
+
+PSX ref (SLPS-01416): 0x800DE404
+PSX def: int talkname[9]
+alias: towner_names
+*/
 char *talkname[9] = {
 	"Griswold",
 	"Pepin",
@@ -2791,3 +2800,4 @@ void ReleaseStoreBtn()
 }
 
 DEVILUTION_END_NAMESPACE
+

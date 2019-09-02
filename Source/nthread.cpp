@@ -235,3 +235,4 @@ BOOL nthread_has_500ms_passed(BOOL unused)
 }
 
 DEVILUTION_END_NAMESPACE
+

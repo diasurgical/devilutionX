@@ -2,6 +2,15 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+/*
+address: 0x49F288
+
+ObjTypeConv maps from dun_object_id to object_id.
+
+PSX ref (SLPS-01416): 0x800D82EC
+PSX def: int ObjTypeConv[113]
+alias: object_id_from_dun_object_id
+*/
 int ObjTypeConv[113] = {
 	0,
 	4,
@@ -118,6 +127,15 @@ int ObjTypeConv[113] = {
 	94
 };
 
+/*
+address: 0x49F450
+
+AllObjects contains the data related to each object ID.
+
+PSX ref (SLPS-01416): 0x800D84B0
+PSX def: struct ObjDataStruct AllObjects[99]
+alias: object_data
+*/
 ObjDataStruct AllObjects[99] = {
 	// clang-format off
 	// oload, ofindex,   ominlvl, omaxlvl, olvltype, otheme,              oquest, oAnimFlag, oAnimDelay, oAnimLen, oAnimWidth, oSolidFlag, oMissFlag, oLightFlag, oBreak, oSelFlag, oTrapFlag
@@ -224,6 +242,15 @@ ObjDataStruct AllObjects[99] = {
 };
 
 // might be const
+/*
+address: 0x4A0554
+
+ObjMasterLoadList maps from object_graphic_id to object CEL name.
+
+PSX ref (SLPS-01416): 0x801169F0
+PSX def: struct OBJ_LOAD_INFO ObjMasterLoadList[56]
+alias: object_cel_name_from_object_graphic_id
+*/
 char *ObjMasterLoadList[56] = {
 	"L1Braz",
 	"L1Doors",
@@ -284,3 +311,4 @@ char *ObjMasterLoadList[56] = {
 };
 
 DEVILUTION_END_NAMESPACE
+

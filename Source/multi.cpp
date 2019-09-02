@@ -25,6 +25,16 @@ int sglTimeoutStart;
 int sgdwPlayerLeftReasonTbl[MAX_PLRS];
 TBuffer sgLoPriBuf;
 DWORD sgdwGameLoops;
+/*
+address: 0x679660
+
+gbMaxPlayers specifies the maximum number of players in a game, where 1
+represents a single player game and 4 represents a multi player game.
+
+PSX ref: 0x8011B9A2
+PSX def: unsigned char gbMaxPlayers
+alias: max_players
+*/
 BYTE gbMaxPlayers;
 BOOLEAN sgbTimeout;
 char szPlayerName[128];
@@ -32,6 +42,12 @@ BYTE gbDeltaSender;
 BOOL sgbNetInited;
 int player_state[MAX_PLRS];
 
+/*
+address: 0x47F158
+
+event_types contains the set of supported event types supported by the
+multiplayer event handler.
+*/
 const int event_types[3] = {
 	EVENT_TYPE_PLAYER_LEAVE_GAME,
 	EVENT_TYPE_PLAYER_CREATE_GAME,
@@ -984,3 +1000,4 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv)
 }
 
 DEVILUTION_END_NAMESPACE
+

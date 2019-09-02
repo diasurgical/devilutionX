@@ -50,3 +50,4 @@ BOOL track_isscrolling()
 }
 
 DEVILUTION_END_NAMESPACE
+

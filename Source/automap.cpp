@@ -3,19 +3,121 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 // BUGFIX: only the first 256 elements are ever read
+/*
+address 0x4B7A40
+
+automaptype maps from tile_id to automap type.
+
+PSX ref (SLPS-01416): 0x8010D7AC
+PSX def: unsigned short automaptype[512]
+TODO: define automap_type enum.
+alias: automap_type_from_tile_id
+*/
 WORD automaptype[512];
+/*
+address 0x4B7E40
+
+TODO: add docs.
+*/
 static int MapX;
+/*
+address 0x4B7E44
+
+TODO: add docs.
+*/
 static int MapY;
+/*
+address: 0x4B7E48
+
+automapflag specifies whether the automap is enabled.
+
+PSX ref (SLPS-01416): 0x8011C37B
+PSX def: unsigned __int8 automapflag
+alias: automap_enabled
+*/
 BOOL automapflag;
+/*
+address 0x4B7E4C
+
+TODO: add docs.
+
+PSX ref (SLPS-01416): 0x80120F68
+PSX def: unsigned char AmShiftTab[8]
+*/
 char AmShiftTab[32]; // [31]?
+/*
+address: 0x4B7E6C
+
+automapview tracks the explored areas of the map.
+
+PSX ref (SLPS-01416): 0x8010D6E4
+PSX def: unsigned char automapview[5][40]
+alias: automap_discovered
+*/
 BOOLEAN automapview[DMAXX][DMAXY];
+/*
+address: 0x4B84AC
+
+AutoMapScale specifies the scale of the automap.
+
+PSX ref (SLPS-01416): 0x8011C368
+PSX def: int AutoMapScale
+alias: automap_zoom_level
+*/
 int AutoMapScale;
+/*
+address 0x4B84B0
+
+TODO: add docs.
+
+PSX ref (SLPS-01416): 0x8011C388
+PSX def: int AutoMapXOfs
+*/
 int AutoMapXOfs;
+/*
+address 0x4B84B4
+
+TODO: add docs.
+
+PSX ref (SLPS-01416): 0x8011C384
+PSX def: int AutoMapYOfs
+*/
 int AutoMapYOfs;
+/*
+address 0x4B84B8
+
+TODO: add docs.
+*/
 int AutoMapPosBits;
+/*
+address 0x4B84BC
+
+TODO: add docs.
+*/
 int AutoMapXPos;
+/*
+address 0x4B84C0
+
+TODO: add docs.
+*/
 int AutoMapYPos;
+/*
+address 0x4B84C4
+
+TODO: add docs.
+
+PSX ref (SLPS-01416): 0x8011C38C
+PSX def: int AMPlayerX
+*/
 int AMPlayerX;
+/*
+address 0x4B84C8
+
+TODO: add docs.
+
+PSX ref (SLPS-01416): 0x8011C390
+PSX def: int AMPlayerY
+*/
 int AMPlayerY;
 
 // color used to draw the player's arrow
@@ -651,3 +753,4 @@ void AutomapZoomReset()
 }
 
 DEVILUTION_END_NAMESPACE
+

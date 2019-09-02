@@ -6,8 +6,18 @@ DEVILUTION_BEGIN_NAMESPACE
 DWORD sgdwMpqOffset;
 char mpq_buf[4096];
 _HASHENTRY *sgpHashTbl;
+/*
+address: 0x65AB0C
+
+save_archive_modified specifies whether the save MPQ archive has been modified.
+*/
 BOOL save_archive_modified;
 _BLOCKENTRY *sgpBlockTbl;
+/*
+address: 0x65AB14
+
+save_archive_open specifies whether the save MPQ archive is open.
+*/
 BOOLEAN save_archive_open;
 
 //note: 32872 = 32768 + 104 (sizeof(_FILEHEADER))
@@ -643,3 +653,4 @@ BOOL mpqapi_can_seek()
 }
 
 DEVILUTION_END_NAMESPACE
+

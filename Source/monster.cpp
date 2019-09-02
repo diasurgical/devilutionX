@@ -6,6 +6,15 @@ DEVILUTION_BEGIN_NAMESPACE
 // Tracks which missile files are already loaded
 int MissileFileFlag;
 
+/*
+address: 0x64CCE8
+
+monstkills tracks the total number of monsters killed per monster_id.
+
+PSX ref: 0x8010A240
+PSX def: short monstkills[190]
+alias: monster_total_kills_from_monster_id
+*/
 int monstkills[MAXMONSTERS];
 int monstactive[MAXMONSTERS];
 int nummonsters;
@@ -18,11 +27,35 @@ int monstimgtot;
 int uniquetrans;
 int nummtypes;
 
+/*
+address: 0x47F134
+
+plr2monst maps from walking path step to facing direction.
+
+PSX def (easy-as-pie): char plr2monst[9] // function parameter in PSX
+alias: dir_from_step
+*/
 const char plr2monst[9] = { 0, 5, 3, 7, 1, 4, 6, 0, 2 };
+/*
+address: 0x47F140
+
+counsmiss maps from monster intelligence factor to missile type.
+
+PSX def (SLPS-01416): unsigned char counsmiss[4]
+alias: missile_type_from_monster_intelligence_factor
+*/
 const BYTE counsmiss[4] = { MIS_FIREBOLT, MIS_CBOLT, MIS_LIGHTCTRL, MIS_FIREBALL };
 
 /* data */
 
+/*
+address: 0x49DD4C
+
+MWVel maps from monster walk animation frame num to monster velocity.
+
+PSX ref (SLPS-01416): 0x801051F4
+PSX def: int MWVel[24][3]
+*/
 int MWVel[24][3] = {
 	{ 256, 512, 1024 },
 	{ 128, 256, 512 },
@@ -49,11 +82,60 @@ int MWVel[24][3] = {
 	{ 11, 22, 44 },
 	{ 10, 21, 42 }
 };
+/*
+address: 0x49DE6C
+
+animletter maps from monster action to monster animation letter.
+
+PSX ref (SLPS-01416): 0x8011C2A0
+PSX def: char animletter[7]
+Note: char[6] is enough, though PSX details as char[7].
+*/
 char animletter[7] = "nwahds";
+/*
+address: 0x49DE74
+
+left maps from direction to a left turn from the direction.
+
+PSX ref (easy-as-pie): 0x8012BC40
+PSX def: char left[8]
+*/
 int left[8] = { 7, 0, 1, 2, 3, 4, 5, 6 };
+/*
+address: 0x49DE94
+
+right maps from direction to a right turn from the direction.
+
+PSX ref (easy-as-pie): 0x8012BC48
+PSX def: char right[8]
+*/
 int right[8] = { 1, 2, 3, 4, 5, 6, 7, 0 };
+/*
+address: 0x49DEB4
+
+opposite maps from direction to the opposite direction.
+
+PSX ref (easy-as-pie): 0x8012BC50
+PSX def: char opposite[8]
+*/
 int opposite[8] = { 4, 5, 6, 7, 0, 1, 2, 3 };
+/*
+address: 0x49DED4
+
+offset_x maps from direction to delta X-offset.
+
+PSX ref (SLPS-01416): 0x8011C2A8
+PSX def: char offset_x[8]
+*/
 int offset_x[8] = { 1, 0, -1, -1, -1, 0, 1, 1 };
+/*
+address: 0x49DEF4
+
+offset_y maps from direction to delta Y-offset.
+
+PSX ref (SLPS-01416): 0x8011C2B0
+PSX def: char offset_y[8]
+*/
 int offset_y[8] = { 1, 1, 1, 0, -1, -1, -1, 0 };
 
 /* unused */
@@ -62,6 +144,14 @@ int rnd10[4] = { 10, 15, 20, 30 };
 int rnd20[4] = { 20, 30, 40, 50 };
 int rnd60[4] = { 60, 70, 80, 90 };
 
+/*
+address: 0x49DEF4
+
+AiProc maps from monster AI ID to monster AI function.
+
+PSX ref (SLPS-01416): 0x80105314
+PSX def: void (*AiProc[32])()
+*/
 void (*AiProc[])(int i) = {
 	&MAI_Zombie,
 	&MAI_Fat,
@@ -5565,3 +5655,4 @@ void decode_enemy(int m, int enemy)
 }
 
 DEVILUTION_END_NAMESPACE
+

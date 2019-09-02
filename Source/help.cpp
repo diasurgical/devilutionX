@@ -573,3 +573,4 @@ void HelpScrollDown()
 }
 
 DEVILUTION_END_NAMESPACE
+

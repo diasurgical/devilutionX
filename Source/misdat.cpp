@@ -2,6 +2,15 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+/*
+address: 0x494948
+
+missiledata contains the data related to each missile ID.
+
+PSX ref (SLPS-01416): 0x800D67F0
+PSX def: struct MissileData missiledata[68]
+alias: missile_data
+*/
 MissileData missiledata[68] = {
 	// clang-format off
 	// mName,             mAddProc,          mProc,             mDraw, mType, mResist,        mFileNum,       miSFX,       mlSFX;
@@ -76,6 +85,15 @@ MissileData missiledata[68] = {
 	// clang-format on
 };
 
+/*
+address: 0x4950B8
+
+misfiledata contains the data related to each missile graphic ID.
+
+PSX ref (SLPS-01416): 0x800D6F60
+PSX def: struct MisFileData misfiledata[47]
+alias: missile_graphic_data
+*/
 MisFileData misfiledata[47] = {
 	// clang-format off
 	// mAnimName, mAnimFAmt, mName, mFlags, mAnimData[16],                                      mAnimDelay[16],                                     mAnimLen[16],                                                       mAnimWidth[16],                                                             mAnimWidth2[16]
@@ -130,3 +148,4 @@ MisFileData misfiledata[47] = {
 };
 
 DEVILUTION_END_NAMESPACE
+

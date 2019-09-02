@@ -97,3 +97,4 @@ void doom_draw()
 }
 
 DEVILUTION_END_NAMESPACE
+

@@ -128,3 +128,4 @@ void SHA1Init(SHA1Context *context)
 }
 
 DEVILUTION_END_NAMESPACE
+

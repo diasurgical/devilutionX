@@ -8,42 +8,1028 @@ int abyssx;
 int lockoutcnt;
 BOOLEAN lockout[DMAXX][DMAXY];
 
+/*
+address: 0x479F84
+
+L3ConvTbl is a lookup table for the 16 possible patterns of a 2x2 area,
+where each cell either contains a SW wall or it doesn't.
+
+PSX ref (SLPS-01416): 0x801486E4
+PSX def: unsigned char L3ConvTbl[16]
+alias: l3_tile_id_pattern_lookup
+*/
 const BYTE L3ConvTbl[16] = { 8, 11, 3, 10, 1, 9, 12, 12, 6, 13, 4, 13, 2, 14, 5, 7 };
+/*
+address: 0x479F94
+
+L3UP is a 3x3 miniset of tile IDs representing a staircase going up.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x801486F4
+PSX def: unsigned char L3UP[20]
+alias: l3_stair_up1
+*/
 const BYTE L3UP[20] = { 3, 3, 8, 8, 0, 10, 10, 0, 7, 7, 0, 51, 50, 0, 48, 49, 0, 0, 0, 0 };
+/*
+address: 0x479FA8
+
+L3DOWN is a 3x3 miniset of tile IDs representing a staircase going down.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x80148708
+PSX def: unsigned char L3DOWN[20]
+alias: l3_stair_down
+*/
 const BYTE L3DOWN[20] = { 3, 3, 8, 9, 7, 8, 9, 7, 0, 0, 0, 0, 47, 0, 0, 46, 0, 0, 0, 0 };
+/*
+address: 0x479FBC
+
+L3HOLDWARP is a 3x3 miniset of tile IDs representing a staircase going up to
+town.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x8014871C
+PSX def: unsigned char L3HOLDWARP[20]
+alias: l3_stair_up2
+*/
 const BYTE L3HOLDWARP[20] = { 3, 3, 8, 8, 0, 10, 10, 0, 7, 7, 0, 125, 125, 0, 125, 125, 0, 0, 0, 0 };
+/*
+address: 0x479FD0
+
+L3TITE1 is a 4x4 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x80148730
+PSX def: unsigned char L3TITE1[34]
+*/
 const BYTE L3TITE1[34] = { 4, 4, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 57, 58, 0, 0, 56, 55, 0, 0, 0, 0, 0 };
+/*
+address: 0x479FF4
+
+L3TITE2 is a 4x4 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x80148754
+PSX def: unsigned char L3TITE2[34]
+*/
 const BYTE L3TITE2[34] = { 4, 4, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 61, 62, 0, 0, 60, 59, 0, 0, 0, 0, 0 };
+/*
+address: 0x47A018
+
+L3TITE3 is a 4x4 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x80148778
+PSX def: unsigned char L3TITE3[34]
+*/
 const BYTE L3TITE3[34] = { 4, 4, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 65, 66, 0, 0, 64, 63, 0, 0, 0, 0, 0 };
+/*
+address: 0x47A03C
+
+L3TITE6 is a 5x4 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (easy-as-pie): 0x80146008
+PSX def: unsigned char L3TITE6[42]
+*/
 const BYTE L3TITE6[42] = { 5, 4, 7, 7, 7, 7, 7, 7, 7, 7, 0, 7, 7, 7, 7, 0, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 77, 78, 0, 0, 0, 76, 74, 75, 0, 0, 0, 0, 0, 0 };
+/*
+address: 0x47A068
+
+L3TITE7 is a 4x5 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x8014879C
+PSX def: unsigned char L3TITE7[42]
+*/
 const BYTE L3TITE7[42] = { 4, 5, 7, 7, 7, 7, 7, 7, 0, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 83, 0, 0, 0, 82, 80, 0, 0, 81, 79, 0, 0, 0, 0, 0 };
+/*
+address: 0x47A094
+
+L3TITE8 is a 3x3 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x801487C8
+PSX def: unsigned char L3TITE8[20]
+*/
 const BYTE L3TITE8[20] = { 3, 3, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 52, 0, 0, 0, 0 };
+/*
+address: 0x47A0A8
+
+L3TITE9 is a 3x3 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x801487DC
+PSX def: unsigned char L3TITE9[20]
+*/
 const BYTE L3TITE9[20] = { 3, 3, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 53, 0, 0, 0, 0 };
+/*
+address: 0x47A0BC
+
+L3TITE10 is a 3x3 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x801487F0
+PSX def: unsigned char L3TITE10[20]
+*/
 const BYTE L3TITE10[20] = { 3, 3, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 54, 0, 0, 0, 0 };
+/*
+address: 0x47A0D0
+
+L3TITE11 is a 3x3 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x80148804
+PSX def: unsigned char L3TITE11[20]
+*/
 const BYTE L3TITE11[20] = { 3, 3, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 67, 0, 0, 0, 0 };
+/*
+address: 0x47A0E4
+
+L3TITE12 is a 2x1 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x8011BEEC
+PSX def: unsigned char L3TITE12[6]
+*/
 const BYTE L3TITE12[6] = { 2, 1, 9, 7, 68, 0 };
+/*
+address: 0x47A0EC
+
+L3TITE13 is a 1x2 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x8011BEF4
+PSX def: unsigned char L3TITE13[6]
+*/
 const BYTE L3TITE13[6] = { 1, 2, 10, 7, 69, 0 };
+/*
+address: 0x47A0F4
+
+L3CREV1 is a 2x1 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x8011BEFC
+PSX def: unsigned char L3CREV1[6]
+*/
 const BYTE L3CREV1[6] = { 2, 1, 8, 7, 84, 85 };
+/*
+address: 0x47A0FC
+
+L3CREV2 is a 2x1 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x8011BF04
+PSX def: unsigned char L3CREV2[6]
+*/
 const BYTE L3CREV2[6] = { 2, 1, 8, 11, 86, 87 };
+/*
+address: 0x47A104
+
+L3CREV3 is a 1x2 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x8011BF0C
+PSX def: unsigned char L3CREV3[6]
+*/
 const BYTE L3CREV3[6] = { 1, 2, 8, 10, 89, 88 };
+/*
+address: 0x47A10C
+
+L3CREV4 is a 2x1 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x8011BF14
+PSX def: unsigned char L3CREV4[6]
+*/
 const BYTE L3CREV4[6] = { 2, 1, 8, 7, 90, 91 };
+/*
+address: 0x47A114
+
+L3CREV5 is a 1x2 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x8011BF1C
+PSX def: unsigned char L3CREV5[6]
+*/
 const BYTE L3CREV5[6] = { 1, 2, 8, 11, 92, 93 };
+/*
+address: 0x47A11C
+
+L3CREV6 is a 1x2 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x8011BF24
+PSX def: unsigned char L3CREV6[6]
+*/
 const BYTE L3CREV6[6] = { 1, 2, 8, 10, 95, 94 };
+/*
+address: 0x47A124
+
+L3CREV7 is a 2x1 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x8011BF2C
+PSX def: unsigned char L3CREV7[6]
+*/
 const BYTE L3CREV7[6] = { 2, 1, 8, 7, 96, 101 };
+/*
+address: 0x47A12C
+
+L3CREV8 is a 1x2 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x8011BF34
+PSX def: unsigned char L3CREV8[6]
+*/
 const BYTE L3CREV8[6] = { 1, 2, 2, 8, 102, 97 };
+/*
+address: 0x47A134
+
+L3CREV9 is a 2x1 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x8011BF3C
+PSX def: unsigned char L3CREV9[6]
+*/
 const BYTE L3CREV9[6] = { 2, 1, 3, 8, 103, 98 };
+/*
+address: 0x47A13C
+
+L3CREV10 is a 2x1 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x8011BF44
+PSX def: unsigned char L3CREV10[6]
+*/
 const BYTE L3CREV10[6] = { 2, 1, 4, 8, 104, 99 };
+/*
+address: 0x47A144
+
+L3CREV11 is a 1x2 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x8011BF4C
+PSX def: unsigned char L3CREV11[6]
+*/
 const BYTE L3CREV11[6] = { 1, 2, 6, 8, 105, 100 };
+/*
+address: 0x47A14C
+
+L3ISLE1 is a 2x3 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x80148818
+PSX def: unsigned char L3ISLE1[14]
+*/
 const BYTE L3ISLE1[14] = { 2, 3, 5, 14, 4, 9, 13, 12, 7, 7, 7, 7, 7, 7 };
+/*
+address: 0x47A15C
+
+L3ISLE2 is a 3x2 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x80148828
+PSX def: unsigned char L3ISLE2[14]
+*/
 const BYTE L3ISLE2[14] = { 3, 2, 5, 2, 14, 13, 10, 12, 7, 7, 7, 7, 7, 7 };
+/*
+address: 0x47A16C
+
+L3ISLE3 is a 2x3 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x80148838
+PSX def: unsigned char L3ISLE3[14]
+*/
 const BYTE L3ISLE3[14] = { 2, 3, 5, 14, 4, 9, 13, 12, 29, 30, 25, 28, 31, 32 };
+/*
+address: 0x47A17C
+
+L3ISLE4 is a 3x2 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x80148848
+PSX def: unsigned char L3ISLE4[14]
+*/
 const BYTE L3ISLE4[14] = { 3, 2, 5, 2, 14, 13, 10, 12, 29, 26, 30, 31, 27, 32 };
+/*
+address: 0x47A18C
+
+L3ISLE5 is a 2x2 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x80148858
+PSX def: unsigned char L3ISLE5[10]
+*/
 const BYTE L3ISLE5[10] = { 2, 2, 5, 14, 13, 12, 7, 7, 7, 7 };
+/*
+address: 0x47A198
+
+L3XTRA1 is a 1x1 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x8011BF54
+PSX def: unsigned char L3XTRA1[4]
+*/
 const BYTE L3XTRA1[4] = { 1, 1, 7, 106 };
+/*
+address: 0x47A19C
+
+L3XTRA2 is a 1x1 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x8011BF58
+PSX def: unsigned char L3XTRA2[4]
+*/
 const BYTE L3XTRA2[4] = { 1, 1, 7, 107 };
+/*
+address: 0x47A1A0
+
+L3XTRA3 is a 1x1 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x8011BF5C
+PSX def: unsigned char L3XTRA3[4]
+*/
 const BYTE L3XTRA3[4] = { 1, 1, 7, 108 };
+/*
+address: 0x47A1A4
+
+L3XTRA4 is a 1x1 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x8011BF60
+PSX def: unsigned char L3XTRA4[4]
+*/
 const BYTE L3XTRA4[4] = { 1, 1, 9, 109 };
+/*
+address: 0x47A1A8
+
+L3XTRA5 is a 1x1 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x8011BF64
+PSX def: unsigned char L3XTRA5[4]
+*/
 const BYTE L3XTRA5[4] = { 1, 1, 10, 110 };
+/*
+address: 0x47A1AC
+
+L3ANVIL is a 11x11 miniset of tile IDs representing a TODO.
+
+ref: graphics/l3/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x80148864
+PSX def: unsigned char L3ANVIL[244]
+*/
 const BYTE L3ANVIL[244] = {
 	11, 11, 7, 7, 7, 7, 7, 7, 7, 7,
 	7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
@@ -1780,3 +2766,4 @@ void LoadPreL3Dungeon(char *sFileName, int vx, int vy)
 
 DEVILUTION_END_NAMESPACE
 #endif
+

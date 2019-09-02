@@ -58,6 +58,12 @@ BOOL panbtndown;
 BYTE *pTalkPanel;
 int spselflag;
 
+/*
+address: 0x479424
+
+fontframe maps from font index to smaltext.cel frame number.
+alias: smaltext_frame_from_font_index
+*/
 const BYTE fontframe[128] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -68,6 +74,17 @@ const BYTE fontframe[128] = {
 	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
 	16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 40, 66, 41, 67, 0
 };
+/*
+address: 0x4794A4
+
+fontkern maps from smaltext.cel frame number to character width. Note, the
+character width may be distinct from the frame width, which is 13 for every
+smaltext.cel frame.
+
+PSX ref (easy-as-pie): 0x80120F6C
+PSX def: unsigned char fontkern[68]
+alias: smaltext_character_width_from_frame
+*/
 const BYTE fontkern[68] = {
 	8, 10, 7, 9, 8, 7, 6, 8, 8, 3,
 	3, 8, 6, 11, 9, 10, 6, 9, 9, 6,
@@ -77,6 +94,34 @@ const BYTE fontkern[68] = {
 	3, 2, 7, 6, 3, 10, 10, 6, 6, 7,
 	4, 4, 9, 6, 6, 12, 3, 7
 };
+/*
+address: 0x4794E8
+
+lineoffset maps from line count and line number pairs to screen offsets
+within the description box. The mapping is as follows:
+
+   * one line
+      * 1st line: 177x430
+   * two lines
+      * 1st line: 177x418
+      * 2nd line: 177x442
+   * three lines
+      * 1st line: 177x412
+      * 2nd line: 177x430
+      * 3rd line: 177x448
+   * four lines
+      * 1st line: 177x408
+      * 2nd line: 177x423
+      * 3rd line: 177x437
+      * 4th line: 177x452
+   * five lines
+      * 1st line: 177x406
+      * 2nd line: 177x418
+      * 3rd line: 177x430
+      * 4th line: 177x442
+      * 5th line: 177x453
+alias: screen_offset_from_nlines_and_line_nr
+*/
 const int lineoffset[25] = {
 	BUFFER_WIDTH * 594 + 241,
 	BUFFER_WIDTH * 32,
@@ -104,6 +149,17 @@ const int lineoffset[25] = {
 	BUFFER_WIDTH * 606 + 241,
 	BUFFER_WIDTH * 617 + 241
 };
+/*
+address: 0x47954C
+
+gbFontTransTbl maps ASCII character code to font index, as used by the
+small, medium and large sized fonts; which corresponds to smaltext.cel,
+medtexts.cel and bigtgold.cel respectively.
+
+PSX ref (ID 3): 0x80116F68
+PSX def: unsigned char gbFontTransTbl[256]
+alias: font_index_from_ascii
+*/
 const BYTE gbFontTransTbl[256] = {
 	// clang-format off
 	'\0', 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
@@ -127,12 +183,31 @@ const BYTE gbFontTransTbl[256] = {
 
 /* data */
 
+/*
+address: 0x483C2C
+
+SpellITbl maps from spell_id to spelicon.cel frame number.
+
+PSX ref (SLPS-01416): 0x800CE324
+PSX def: char SpellITbl[37]
+alias: spelicon_frame_from_spell_id
+*/
 char SpellITbl[MAX_SPELLS] = {
 	1, 1, 2, 3, 4, 5, 6, 7, 8, 9,
 	28, 13, 12, 18, 16, 14, 18, 19, 11, 20,
 	15, 21, 23, 24, 25, 22, 26, 29, 37, 38,
 	39, 42, 41, 40, 10, 36, 30
 };
+/*
+address: 0x483C54
+
+PanBtnPos maps from panel_button_id to the position and dimensions of a
+panel button.
+
+PSX ref (easy-as-pie): 0x800BE180
+PSX def: int PanBtnPos[5][8]
+alias: panel_buttons
+*/
 int PanBtnPos[8][5] = {
 	{ 9, 361, 71, 19, 1 },
 	{ 9, 387, 71, 19, 0 },
@@ -143,7 +218,25 @@ int PanBtnPos[8][5] = {
 	{ 87, 443, 33, 32, 1 },
 	{ 527, 443, 33, 32, 1 }
 };
+/*
+address: 0x483CF4
+
+PanBtnHotKey maps from panel_button_id to hotkey name.
+
+PSX ref (easy-as-pie): 0x800BE220
+PSX def: char *PanBtnHotKey[8]
+alias: button_hotkeys
+*/
 char *PanBtnHotKey[8] = { "'c'", "'q'", "Tab", "Esc", "'i'", "'b'", "Enter", NULL };
+/*
+address: 0x483D14
+
+PanBtnStr maps from panel_button_id to panel button description.
+
+PSX ref (easy-as-pie): 0x800BE240
+PSX def: unsigned long PanBtnStr[8]
+alias: button_descriptions
+*/
 char *PanBtnStr[8] = {
 	"Character Information",
 	"Quests log",
@@ -154,6 +247,13 @@ char *PanBtnStr[8] = {
 	"Send Message",
 	"Player Attack"
 };
+/*
+address: 0x483D34
+
+ChrBtnsRect maps from attribute_id to the rectangle on screen used for
+attribute increment buttons.
+alias: attribute_inc_rects
+*/
 RECT32 ChrBtnsRect[4] = {
 	{ 137, 138, 41, 22 },
 	{ 137, 166, 41, 22 },
@@ -161,6 +261,15 @@ RECT32 ChrBtnsRect[4] = {
 	{ 137, 223, 41, 22 }
 };
 
+/*
+address: 0x483D74
+
+SpellPages maps from spellbook page number and position to spell_id.
+
+PSX ref (SLPS-01416): 0x800CE34C
+PSX def: int SpellPages[5][5]
+alias: spell_id_from_spellbook_pos
+*/
 int SpellPages[6][7] = {
 	{ SPL_NULL, SPL_FIREBOLT, SPL_CBOLT, SPL_HBOLT, SPL_HEAL, SPL_HEALOTHER, SPL_FLAME },
 	{ SPL_RESURRECT, SPL_FIREWALL, SPL_TELEKINESIS, SPL_LIGHTNING, SPL_TOWN, SPL_FLASH, SPL_STONE },
@@ -2212,3 +2321,4 @@ void control_up_down(int v)
 }
 
 DEVILUTION_END_NAMESPACE
+

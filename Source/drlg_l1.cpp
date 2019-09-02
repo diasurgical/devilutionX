@@ -2,17 +2,116 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+/*
+address: 0x525764
+
+L5dungeon represents a tile ID map of twice the size, repeating each tile of
+the original map in blocks of 4.
+
+PSX ref: 0x8013A3B0
+PSX def: unsigned char L5dungeon[80][80]
+alias: l1_tile_bit_map
+*/
 BYTE L5dungeon[80][80];
 BYTE L5dflags[DMAXX][DMAXY];
+/*
+address: 0x5276A4
+
+setloadflag specifies whether a single player quest DUN has been loaded.
+
+PSX ref: 0x8011C0F4
+PSX def: unsigned char setloadflag
+alias: l1_single_player_quest_dun_loaded
+*/
 BOOL setloadflag;
+/*
+address: 0x5276A8
+
+HR1 specifies whether to generate a horizontal room at position 1 in the
+Cathedral.
+
+PSX ref: 0x8011C8D8
+PSX def: unsigned char HR1
+alias: l1_horiz_room1
+*/
 int HR1;
+/*
+address: 0x5276AC
+
+HR2 specifies whether to generate a horizontal room at position 2 in the
+Cathedral.
+
+PSX ref: 0x8011C8D9
+PSX def: unsigned char HR2
+alias: l1_horiz_room2
+*/
 int HR2;
+/*
+address: 0x5276B0
+
+HR3 specifies whether to generate a horizontal room at position 3 in the
+Cathedral.
+
+PSX ref: 0x8011C8DA
+PSX def: unsigned char HR3
+alias: l1_horiz_room3
+*/
 int HR3;
+/*
+address: 0x5276B4
+
+VR1 specifies whether to generate a vertical room at position 1 in the
+Cathedral.
+
+PSX ref: 0x8011C8DB
+PSX def: unsigned char VR1
+alias: l1_vert_room1
+*/
 int VR1;
+/*
+address: 0x5276B8
+
+VR2 specifies whether to generate a vertical room at position 2 in the
+Cathedral.
+
+PSX ref: 0x8011C8DC
+PSX def: unsigned char VR2
+alias: l1_vert_room2
+*/
 int VR2;
+/*
+address: 0x5276BC
+
+VR3 specifies whether to generate a vertical room at position 3 in the
+Cathedral.
+
+PSX ref: 0x8011C8DD
+PSX def: unsigned char VR3
+alias: l1_vert_room3
+*/
 int VR3;
+/*
+address: 0x5276C0
+
+pSetPiece contains the contents of the single player quest DUN file.
+
+PSX ref: 0x8011C0DC
+PSX def: unsigned char* pSetPiece
+alias: l1_single_player_quest_dun
+*/
 BYTE *pSetPiece;
 
+/*
+address: 0x479C24
+
+SPATS contains shadows for 2x2 blocks of base tile IDs in the Cathedral.
+
+ref: graphics/l1/shadow/README.md
+
+PSX ref (SLPS-01416): 0x8013A050
+PSX def: ShadowStruct SPATS[37]
+alias: l1_shadow
+*/
 const ShadowStruct SPATS[37] = {
 	// clang-format off
 	// strig, s1, s2, s3, nv1, nv2, nv3
@@ -55,6 +154,17 @@ const ShadowStruct SPATS[37] = {
 	{      3, 13, 11, 12, 150,   0,   0 }
 	// clang-format on
 };
+/*
+address: 0x479D28
+
+BSTYPES maps tile IDs to their corresponding base tile ID.
+
+ref: graphics/l1/tiles/base.md
+
+PSX ref (SLPS-01416): 0x8013A154
+PSX def: unsigned char BSTYPES[206]
+alias: l1_base
+*/
 const BYTE BSTYPES[206] = {
 	0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
 	10, 11, 12, 13, 14, 15, 16, 17, 0, 0,
@@ -78,6 +188,17 @@ const BYTE BSTYPES[206] = {
 	28, 1, 2, 25, 26, 22, 22, 25, 26, 0,
 	0, 0, 0, 0, 0, 0
 };
+/*
+address: 0x479DF8
+
+L5BTYPES maps tile IDs to their corresponding undecorated tile ID.
+
+ref: graphics/l1/tiles/README.md
+
+PSX ref (SLPS-01416): 0x8013A224
+PSX def: unsigned char L5BTYPES[206]
+alias: l1_plain
+*/
 const BYTE L5BTYPES[206] = {
 	0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
 	10, 11, 12, 13, 14, 15, 16, 17, 0, 0,
@@ -101,13 +222,165 @@ const BYTE L5BTYPES[206] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0
 };
+/*
+address: 0x479EC8
+
+STAIRSUP is a 4x4 miniset of tile IDs representing a staircase going up.
+
+ref: graphics/l1/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x8013A2F4
+PSX def: unsigned char STAIRSUP[34]
+alias: l1_stair_up1
+*/
 const BYTE STAIRSUP[] = { 4, 4, 13, 13, 13, 13, 2, 2, 2, 2, 13, 13, 13, 13, 13, 13, 13, 13, 0, 66, 6, 0, 63, 64, 65, 0, 0, 67, 68, 0, 0, 0, 0, 0 };
+/*
+address: 0x479EEC
+
+L5STAIRSUP is a 4x4 miniset of tile IDs representing a staircase going up.
+
+ref: graphics/l1/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x8013A318
+PSX def: unsigned char L5STAIRSUP[34]
+alias: l1_stair_up2
+*/
 const BYTE L5STAIRSUP[] = { 4, 4, 22, 22, 22, 22, 2, 2, 2, 2, 13, 13, 13, 13, 13, 13, 13, 13, 0, 66, 23, 0, 63, 64, 65, 0, 0, 67, 68, 0, 0, 0, 0, 0 };
+/*
+address: 0x479F10
+
+STAIRSDOWN is a 4x3 miniset of tile IDs representing a staircase going
+down.
+
+ref: graphics/l1/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x8013A33C
+PSX def: unsigned char STAIRSDOWN[26]
+alias: l1_stair_down
+*/
 const BYTE STAIRSDOWN[] = { 4, 3, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 62, 57, 58, 0, 61, 59, 60, 0, 0, 0, 0, 0 };
+/*
+address: 0x479F2C
+
+LAMPS is a 2x2 miniset of tile IDs representing a candlestick.
+
+ref: graphics/l1/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x8013A358
+PSX def: unsigned char LAMPS[10]
+alias: l1_candlestick
+*/
 const BYTE LAMPS[] = { 2, 2, 13, 0, 13, 13, 129, 0, 130, 128 };
+/*
+address: 0x479F38
+
+PWATERIN is a 6x6 miniset of tile IDs representing a staircase
+going down to the Poisoned Water Supply.
+
+ref: graphics/l1/minisets/README.md
+
+Minisets specifies how to arrange tile IDs in order to form set areas of
+dungeons (e.g. staircases). Below follows a pseudo-code description of the
+miniset format.
+
+   // A miniset defines the set area of a dungeon in terms of before and
+   // after areas of tile IDs.
+   type miniset struct {
+      // Width of miniset area.
+      width uint8
+      // Height of miniset area.
+      height uint8
+      // Tile IDs before transformation.
+      before [width][height]uint8
+      // Tile IDs after transformation.
+      after [width][height]uint8
+   }
+
+PSX ref (SLPS-01416): 0x8013A364
+PSX def: unsigned char PWATERIN[74]
+alias: l1_stair_down_poison
+*/
 const BYTE PWATERIN[] = { 6, 6, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 0, 0, 0, 0, 0, 0, 0, 202, 200, 200, 84, 0, 0, 199, 203, 203, 83, 0, 0, 85, 206, 80, 81, 0, 0, 0, 134, 135, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 /* data */
+/*
+address: 0x484778
+
+L5ConvTbl is a lookup table for the 16 possible patterns of a 2x2 area,
+where each cell either contains a SW wall or it doesn't.
+
+PSX ref (SLPS-01416): 0x80139C58
+PSX def: unsigned char L5ConvTbl[16]
+alias: l1_tile_id_pattern_lookup
+*/
 BYTE L5ConvTbl[16] = { 22, 13, 1, 13, 2, 13, 13, 13, 4, 13, 1, 13, 2, 13, 16, 13 };
 
 void DRLG_Init_Globals()
@@ -1696,3 +1969,4 @@ void DRLG_L5CornerFix()
 }
 
 DEVILUTION_END_NAMESPACE
+

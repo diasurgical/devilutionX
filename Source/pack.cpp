@@ -252,3 +252,4 @@ void UnPackItem(PkItemStruct *is, ItemStruct *id)
 }
 
 DEVILUTION_END_NAMESPACE
+

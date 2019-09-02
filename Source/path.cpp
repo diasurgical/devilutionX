@@ -3,6 +3,12 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 // preallocated nodes, search is terminated after 300 nodes are visited
+/*
+address: 0x67E3D8
+
+path_nodes records the nodes of the path constructed by the path finding
+algorithm.
+*/
 PATHNODE path_nodes[MAXPATHNODES];
 // size of the pnode_tblptr stack
 int gdwCurPathStep;
@@ -370,3 +376,4 @@ PATHNODE *path_new_step()
 }
 
 DEVILUTION_END_NAMESPACE
+

@@ -158,3 +158,4 @@ void RedPalette(PALETTEENTRY *pal)
 }
 
 DEVILUTION_END_NAMESPACE
+

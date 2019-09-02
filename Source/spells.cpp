@@ -282,3 +282,4 @@ void DoHealOther(int pnum, int rid)
 }
 
 DEVILUTION_END_NAMESPACE
+

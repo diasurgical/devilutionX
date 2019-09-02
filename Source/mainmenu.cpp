@@ -8,6 +8,11 @@ char gszHero[16];
 
 /* data */
 
+/*
+address: 0x494898
+
+menu_music_track_id specifies the active music track id for the main menu.
+*/
 int menu_music_track_id = 5;
 
 void mainmenu_refresh_music()
@@ -165,3 +170,4 @@ void mainmenu_play_intro()
 #endif
 
 DEVILUTION_END_NAMESPACE
+

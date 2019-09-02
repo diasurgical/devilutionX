@@ -7,7 +7,22 @@ void *sgpBackCel;
 int sgdwProgress;
 int progress_id;
 
+/*
+address: 0x47AE44
+
+BarColor specifies the colour used for the progress bar as an index into the
+palette.
+TODO: add colour enum.
+alias: progress_bar_colours
+*/
 const BYTE BarColor[3] = { 138, 43, 254 };
+/*
+address: 0x47AE48
+
+BarPos specifies the screen position of the top left corner of the progress
+bar.
+alias: progress_bar_screen_pos
+*/
 const int BarPos[3][2] = { { 53, 37 }, { 53, 421 }, { 53, 37 } };
 
 void interface_msg_pump()
@@ -410,3 +425,4 @@ void InitCutscene(unsigned int uMsg)
 }
 
 DEVILUTION_END_NAMESPACE
+

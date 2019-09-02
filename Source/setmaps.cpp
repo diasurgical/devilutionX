@@ -56,6 +56,11 @@ BYTE SkelChamTrans3[36] = {
 	50, 43, 59, 51
 };
 
+/*
+address: 0x4A210C
+
+quest_level_names maps from quest level to quest level names.
+*/
 char *quest_level_names[] = {
 	"",
 	"Skeleton King's Lair",
@@ -194,3 +199,4 @@ void LoadSetMap()
 #endif
 
 DEVILUTION_END_NAMESPACE
+

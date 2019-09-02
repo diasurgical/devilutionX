@@ -3,15 +3,50 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+/*
+address: 0x67D7CC
+
+logical_palette is an in-memory palette to which gamma corrections are
+applied.
+*/
 PALETTEENTRY logical_palette[256];
+/*
+address: 0x67DBD0
+
+system_palette is the active palette of the system.
+*/
 PALETTEENTRY system_palette[256];
+/*
+address: 0x67DFD0
+
+orig_palette is the original palette as loaded from file.
+*/
 PALETTEENTRY orig_palette[256];
 int gdwPalEntries;
 
 /* data */
 
+/*
+address: 0x4A0D08
+
+gamma_correction specifies the gamma correction level.
+*/
 int gamma_correction = 100;
+/*
+address: 0x4A0D0C
+
+color_cycling_enabled specifies whether colour cycling is enabled.
+*/
 BOOL color_cycling_enabled = TRUE;
+/*
+address: 0x4A0D10
+
+sgbFadedIn specifies whether the palette has max brightness.
+
+PSX ref (SLPS-01416): 0x8011BC65
+PSX def: unsigned char sgbFadedIn
+alias: palette_bright
+*/
 BOOLEAN sgbFadedIn = TRUE;
 
 void SaveGamma()
@@ -281,3 +316,4 @@ BOOL palette_set_color_cycling(BOOL enabled)
 }
 
 DEVILUTION_END_NAMESPACE
+

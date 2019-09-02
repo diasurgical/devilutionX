@@ -1647,3 +1647,4 @@ void LoadLevel()
 }
 
 DEVILUTION_END_NAMESPACE
+

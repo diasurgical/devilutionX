@@ -3,6 +3,11 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+/*
+address: 0x69BEF8
+
+light_table_index specifies the current light entry.
+*/
 int light_table_index;
 int PitchTbl[1024];
 DWORD sgdwCursWdtOld;
@@ -10,16 +15,52 @@ DWORD sgdwCursX;
 DWORD sgdwCursY;
 BYTE *gpBufEnd;
 DWORD sgdwCursHgt;
+/*
+address: 0x69CF14
+
+level_cel_block specifies the current MIN block of the level CEL file, as
+used during rendering of the level tiles.
+
+   frameNum  := block&0x0FFF
+   frameType := block&0x7000 >> 12
+*/
 DWORD level_cel_block;
 DWORD sgdwCursXOld;
 DWORD sgdwCursYOld;
+/*
+address: 0x69CF20
+
+arch_draw_type specifies the type of arches to render.
+*/
 char arch_draw_type;
+/*
+address: 0x69CF28
+
+DDS_desc describes the surface being rendered.
+*/
 DDSURFACEDESC DDS_desc;
+/*
+address: 0x69CF94
+
+cel_transparency_active specifies whether transparency is active for the
+current CEL file being decoded.
+*/
 int cel_transparency_active;
+/*
+address: 0x69CF98
+
+level_piece_id specifies the current dungeon piece ID of the level, as used
+during rendering of the level tiles.
+*/
 int level_piece_id;
 DWORD sgdwCursWdt;
 void (*DrawPlrProc)(int, int, int, int, int, BYTE *, int, int, int, int);
 BYTE sgSaveBack[8192];
+/*
+address: 0x69EFA4
+
+draw_monster_num specifies the monster_num to render.
+*/
 int draw_monster_num;
 DWORD sgdwCursHgtOld;
 
@@ -2477,3 +2518,4 @@ void DrawAndBlit()
 }
 
 DEVILUTION_END_NAMESPACE
+

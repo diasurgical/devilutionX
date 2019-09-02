@@ -56,3 +56,4 @@ void *tmsg_cleanup()
 }
 
 DEVILUTION_END_NAMESPACE
+

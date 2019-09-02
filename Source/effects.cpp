@@ -5,13 +5,40 @@ DEVILUTION_BEGIN_NAMESPACE
 
 int sfxdelay;
 int sfxdnum;
+/*
+address: 0x52A55C
+
+sfx_stream is a handle to the current sound effect playing.
+*/
 HANDLE sfx_stream;
+/*
+address: 0x52A560
+
+sfx_data_cur specifies the sound file and the playback state of the current
+sound effect.
+*/
 TSFX *sfx_data_cur;
 
+/*
+address: 0x47A46C
+
+MonstSndChar specifies the characters used in the file name of monster
+action sound files (a=attack, h=hit, d=die, s=special attack).
+alias: monster_action_sounds
+*/
 const char MonstSndChar[] = { 'a', 'h', 'd', 's' };
 
 /* data */
 
+/*
+address: 0x486370
+
+sfx_data contains the data related to each sound effect ID.
+
+PSX ref (SLPS-01416): 0x800D0AC0
+PSX def: TSFX sgSFX[992]
+alias: sfx_data
+*/
 TSFX sgSFX[] = {
 	// clang-format off
 	// bFlags,                   pszName,                       pSnd
@@ -1284,3 +1311,4 @@ void __stdcall effects_play_sound(char *snd_file)
 }
 
 DEVILUTION_END_NAMESPACE
+

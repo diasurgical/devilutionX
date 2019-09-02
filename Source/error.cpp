@@ -7,6 +7,15 @@ char msgdelay;
 char msgflag;
 char msgcnt;
 
+/*
+address: 0x48D7C4
+
+MsgStrings maps from error_id to error message.
+
+PSX ref (SLPS-0141): 0x800D1A40
+PSX def: int MsgStrings[44]
+alias: error_messages
+*/
 char *MsgStrings[44] = {
 	"",
 	"No automap available in town",
@@ -149,3 +158,4 @@ void DrawDiabloMsg()
 }
 
 DEVILUTION_END_NAMESPACE
+

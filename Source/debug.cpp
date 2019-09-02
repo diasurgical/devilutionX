@@ -285,3 +285,4 @@ void NextDebugMonster()
 #endif
 
 DEVILUTION_END_NAMESPACE
+

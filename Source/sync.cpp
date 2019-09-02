@@ -287,3 +287,4 @@ void sync_init()
 }
 
 DEVILUTION_END_NAMESPACE
+

@@ -14,6 +14,12 @@ typedef enum {
 	RT_RTRAPEZOID
 };
 
+/*
+address: 0x4B327D
+
+RightMask specifies the draw masks used to render transparency of the right
+side of tiles.
+*/
 static DWORD RightMask[32] = {
 	0xEAAAAAAA, 0xF5555555,
 	0xFEAAAAAA, 0xFF555555,
@@ -33,6 +39,12 @@ static DWORD RightMask[32] = {
 	0xFFFFFFFF, 0xFFFFFFFF
 };
 
+/*
+address: 0x4B32FD
+
+LeftMask specifies the draw masks used to render transparency of the left
+side of tiles.
+*/
 static DWORD LeftMask[32] = {
 	0xAAAAAAAB, 0x5555555F,
 	0xAAAAAABF, 0x555555FF,
@@ -52,6 +64,11 @@ static DWORD LeftMask[32] = {
 	0xFFFFFFFF, 0xFFFFFFFF
 };
 
+/*
+address: 0x4B337D
+
+WallMask specifies the draw masks used to render transparency of wall tiles.
+*/
 static DWORD WallMask[32] = {
 	0xAAAAAAAA, 0x55555555,
 	0xAAAAAAAA, 0x55555555,
@@ -308,3 +325,4 @@ void world_draw_black_tile(BYTE *pBuff)
 }
 
 DEVILUTION_END_NAMESPACE
+

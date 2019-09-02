@@ -3,21 +3,76 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+/*
+address: 0x69F0C8
+
+DSBs contains the audio channels used for playback of sounds.
+*/
 LPDIRECTSOUNDBUFFER DSBs[8];
 LPDIRECTSOUND sglpDS;
 BOOLEAN gbSndInited;
 int sglMusicVolume;
 int sglSoundVolume;
+/*
+address: 0x69F0F8
+
+hDsound_dll provides a handle to the dynamic library dsound.dll.
+*/
 HMODULE hDsound_dll;
 HANDLE sgpMusicTrack;
 LPDIRECTSOUNDBUFFER sglpDSB;
 
 /* data */
 
+/*
+address: 0x4A22D4
+
+gbMusicOn specifies whether background music is enabled.
+
+PSX ref (easy-as-pie): 0x8012B572
+PSX def: unsigned char gbMusicOn
+alias: music_enabled
+*/
 BOOLEAN gbMusicOn = TRUE;
+/*
+address: 0x4A22D5
+
+gbSoundOn specifies whether sound effects are enabled.
+
+PSX ref (easy-as-pie): 0x8012B573
+PSX def: unsigned char gbSoundOn
+alias: sound_enabled
+*/
 BOOLEAN gbSoundOn = TRUE;
+/*
+address: 0x4A22D6
+
+gbDupSounds specifies that no duplicate audio channel should be used.
+
+PSX ref (SLPS-01416): 0x8011BB9A
+PSX def: unsigned char gbDupSounds
+alias: flag_ds_noduplicates
+*/
 BOOLEAN gbDupSounds = TRUE;
+/*
+address: 0x4A22D8
+
+sgnMusicTrack specifies the active background music track id.
+
+PSX ref (SLPS-01416): 0x8011BBAC
+PSX def: int sgnMusicTrack
+alias: music_track_id
+*/
 int sgnMusicTrack = 6;
+/*
+address: 0x4A22DC
+
+sgszMusicTracks maps from track ID to track name.
+
+PSX ref (SLPS-01416): 0x800E389C
+PSX def: unsigned short sgszMusicTracks[6]
+alias: track_names
+*/
 char *sgszMusicTracks[NUM_MUSIC] = {
 #ifdef SPAWN
 	"Music\\sTowne.wav",
@@ -510,3 +565,4 @@ int sound_get_or_set_sound_volume(int volume)
 }
 
 DEVILUTION_END_NAMESPACE
+

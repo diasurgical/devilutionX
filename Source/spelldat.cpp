@@ -2,6 +2,15 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+/*
+address: 0x4A23C8
+
+spelldata contains the data related to each spell ID.
+
+PSX ref (SLPS-01416): 0x800DDB80
+PSX def: struct SpellData spelldata[37]
+alias: spell_data
+*/
 SpellData spelldata[MAX_SPELLS] = {
 	// clang-format off
 	// sName,    sManaCost, sType,           sNameText,         sSkillText, sBookLvl, sStaffLvl, sTargeted, sTownSpell, sMinInt, sSFX,     sMissiles[3],                      sManaAdj, sMinMana, sStaffMin, sStaffMax, sBookCost, sStaffCost
@@ -46,3 +55,4 @@ SpellData spelldata[MAX_SPELLS] = {
 };
 
 DEVILUTION_END_NAMESPACE
+

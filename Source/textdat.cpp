@@ -4,6 +4,15 @@ DEVILUTION_BEGIN_NAMESPACE
 
 /* todo: move text out of struct */
 
+/*
+address: 0x47F278
+
+alltext contains the data related to each speech ID.
+
+PSX ref (SLPS-01416): 0x80117C20
+PSX def: struct TextDataStruct alltext[269]
+alias: speech_data
+*/
 const TextDataStruct alltext[] = {
 #ifdef SPAWN
 	{ "Nice try... ", 0, 5, TSFX_TAVERN36 },
@@ -515,3 +524,4 @@ const TextDataStruct alltext[] = {
 const DWORD gdwAllTextEntries = 259; /* unused */
 
 DEVILUTION_END_NAMESPACE
+

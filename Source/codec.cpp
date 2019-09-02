@@ -137,3 +137,4 @@ void codec_encode(BYTE *pbSrcDst, DWORD size, int size_64, char *pszPassword)
 
 DEVILUTION_END_NAMESPACE
 
+

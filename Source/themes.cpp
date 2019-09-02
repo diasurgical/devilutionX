@@ -19,8 +19,27 @@ BOOL pFountainFlag;
 BOOL bFountainFlag;
 BOOL bCrossFlag;
 
+/*
+address: 0x4B2584
+
+ThemeGood specifies the set of special theme IDs from which one will be
+selected at random.
+
+PSX ref (SLPS-01416): 0x80102728
+PSX def: int ThemeGood[4]
+alias: special_theme_ids
+*/
 int ThemeGood[4] = { THEME_GOATSHRINE, THEME_SHRINE, THEME_SKELROOM, THEME_LIBRARY };
 
+/*
+address: 0x4B2594
+
+x_delta_5x5 specifies a 5x5 area to fit theme objects.
+
+PSX ref (SLPS-01416): 0x80102738
+PSX def: int trm5x[25]
+alias: x_delta_5x5
+*/
 int trm5x[25] = {
 	-2, -1, 0, 1, 2,
 	-2, -1, 0, 1, 2,
@@ -29,6 +48,15 @@ int trm5x[25] = {
 	-2, -1, 0, 1, 2
 };
 
+/*
+address: 0x4B25F8
+
+y_delta_5x5 specifies a 5x5 area to fit theme objects.
+
+PSX ref (SLPS-01416): 0x8010279C
+PSX def: int trm5y[25]
+alias: y_delta_5x5
+*/
 int trm5y[25] = {
 	-2, -2, -2, -2, -2,
 	-1, -1, -1, -1, -1,
@@ -37,12 +65,30 @@ int trm5y[25] = {
 	2, 2, 2, 2, 2
 };
 
+/*
+address: 0x4B265C
+
+x_delta_3x3 specifies a 3x3 area to fit theme objects.
+
+PSX ref (SLPS-01416): 0x80102800
+PSX def: int trm3x[9]
+alias: x_delta_3x3
+*/
 int trm3x[9] = {
 	-1, 0, 1,
 	-1, 0, 1,
 	-1, 0, 1
 };
 
+/*
+address: 0x4B2680
+
+y_delta_3x3 specifies a 3x3 area to fit theme objects.
+
+PSX ref (SLPS-01416): 0x80102824
+PSX def: int trm3y[9]
+alias: y_delta_3x3
+*/
 int trm3y[9] = {
 	-1, -1, -1,
 	0, 0, 0,
@@ -1036,3 +1082,4 @@ void CreateThemeRooms()
 }
 
 DEVILUTION_END_NAMESPACE
+

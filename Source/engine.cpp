@@ -12,7 +12,27 @@ static CCritSect sgMemCrit;
 int SeedCount;
 BOOL gbNotInView; // valid - if x/y are in bounds
 
+/*
+address: 0x47A478
+
+RndInc specifies the increment used in the Borland C/C++ pseudo- random
+number generator algorithm.
+
+   seed = RndMult*seed + RndInc
+   seed = 0x15A4E35*seed + 1
+alias: rand_increment
+*/
 const int RndInc = 1;
+/*
+address: 0x47A47C
+
+RndMult specifies the multiplier used in the Borland C/C++ pseudo- random
+number generator algorithm.
+
+   seed = RndMult*seed + RndInc
+   seed = 0x15A4E35*seed + 1
+alias: rand_multiplier
+*/
 const int RndMult = 0x015A4E35;
 
 void CelDrawDatOnly(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth)
@@ -2380,3 +2400,4 @@ void PlayInGameMovie(char *pszMovie)
 }
 
 DEVILUTION_END_NAMESPACE
+

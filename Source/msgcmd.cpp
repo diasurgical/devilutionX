@@ -80,3 +80,4 @@ void msgcmd_add_server_cmd(const char *command)
 }
 
 DEVILUTION_END_NAMESPACE
+

@@ -8,7 +8,27 @@ int numtrigs;
 TriggerStruct trigs[MAXTRIGGERS];
 int TWarpFrom;
 
+/*
+address: 0x4B2F78
+
+TownDownList specifies the dungeon piece IDs which constitute stairways
+leading down to the cathedral from town.
+
+PSX ref (SLPS-01416): 0x800E31F8
+PSX def: short TownDownList[11]
+alias: town_stairway_down_to_dungeon_piece_ids
+*/
 int TownDownList[11] = { 716, 715, 719, 720, 721, 723, 724, 725, 726, 727, -1 };
+/*
+address: 0x4B2FA4
+
+TownWarp1List specifies the dungeon piece IDs which constitute stairways
+leading down to the catacombs from town.
+
+PSX ref (SLPS-01416): 0x800E3210
+PSX def: short TownWarp1List[13]
+alias: town_stairway_down_to_catacombs_piece_ids
+*/
 int TownWarp1List[13] = {
 	1171,
 	1172,
@@ -24,11 +44,71 @@ int TownWarp1List[13] = {
 	1185,
 	-1
 };
+/*
+address: 0x4B2FD8
+
+L1UpList specifies the dungeon piece IDs which constitute stairways leading
+up from the cathedral.
+
+PSX ref (SLPS-01416): 0x800E3280
+PSX def: short L1UpList[12]
+alias: cathedral_stairway_up_piece_ids
+*/
 int L1UpList[12] = { 127, 129, 130, 131, 132, 133, 135, 137, 138, 139, 140, -1 };
+/*
+address: 0x4B3008
+
+L1DownList specifies the dungeon piece IDs which constitute stairways
+leading down from the cathedral.
+
+PSX ref (SLPS-01416): 0x800E3298
+PSX def: short L1DownList[10]
+alias: cathedral_stairway_down_piece_ids
+*/
 int L1DownList[10] = { 106, 107, 108, 109, 110, 112, 114, 115, 118, -1 };
+/*
+address: 0x4B3030
+
+L2UpList specifies the dungeon piece IDs which constitute stairways leading
+up from the catacombs.
+
+PSX ref (SLPS-01416): 0x8011BB1C
+PSX def: short L2UpList[3]
+alias: catacombs_stairway_up_piece_ids
+*/
 int L2UpList[3] = { 266, 267, -1 };
+/*
+address: 0x4B303C
+
+L2DownList specifies the dungeon piece IDs which constitute stairways
+leading down from the catacombs.
+
+PSX ref (SLPS-01416): 0x800E32AC
+PSX def: short L2DownList[5]
+alias: catacombs_stairway_down_piece_ids
+*/
 int L2DownList[5] = { 269, 270, 271, 272, -1 };
+/*
+address: 0x4B3050
+
+L2TWarpUpList specifies the dungeon piece IDs which constitute stairways
+leading up to town from the catacombs.
+
+PSX ref (SLPS-01416): 0x8011BB24
+PSX def: short L2TWarpUpList[3]
+alias: catacombs_stairway_up_to_town_piece_ids
+*/
 int L2TWarpUpList[3] = { 558, 559, -1 };
+/*
+address: 0x4B305C
+
+L3UpList specifies the dungeon piece IDs which constitute stairways leading
+up from the caves.
+
+PSX ref (SLPS-01416): 0x800E32B8
+PSX def: short L3UpList[15]
+alias: caves_stairway_up_piece_ids
+*/
 int L3UpList[15] = {
 	170,
 	171,
@@ -46,11 +126,71 @@ int L3UpList[15] = {
 	183,
 	-1
 };
+/*
+address: 0x4B3098
+
+L3DownList specifies the dungeon piece IDs which constitute stairways
+leading down from the caves.
+
+PSX ref (SLPS-01416): 0x800E32D8
+PSX def: short L3DownList[9]
+alias: caves_stairway_down_piece_ids
+*/
 int L3DownList[9] = { 162, 163, 164, 165, 166, 167, 168, 169, -1 };
+/*
+address: 0x4B30BC
+
+L3TWarpUpList specifies the dungeon piece IDs which constitute stairways
+leading up to town from the caves.
+
+PSX ref (SLPS-01416): 0x800E32EC
+PSX def: short L3TWarpUpList[14]
+alias: caves_stairway_up_to_town_piece_ids
+*/
 int L3TWarpUpList[14] = { 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, 560, -1 };
+/*
+address: 0x4B30F4
+
+L4UpList specifies the dungeon piece IDs which constitute stairways leading
+up from hell.
+
+PSX ref (SLPS-01416): 0x8011BB2C
+PSX def: short L4UpList[4]
+alias: hell_stairway_up_piece_ids
+*/
 int L4UpList[4] = { 82, 83, 90, -1 };
+/*
+address: 0x4B3104
+
+L4DownList specifies the dungeon piece IDs which constitute stairways
+leading down from hell.
+
+PSX ref (SLPS-01416): 0x800E3308
+PSX def: short L4DownList[6]
+alias: hell_stairway_down_piece_ids
+*/
 int L4DownList[6] = { 120, 130, 131, 132, 133, -1 };
+/*
+address: 0x4B311C
+
+L4TWarpUpList specifies the dungeon piece IDs which constitute stairways
+leading up to town from hell.
+
+PSX ref (SLPS-01416): 0x8011BB34
+PSX def: short L4TWarpUpList[4]
+alias: hell_stairway_up_to_town_piece_ids
+*/
 int L4TWarpUpList[4] = { 421, 422, 429, -1 };
+/*
+address: 0x4B312C
+
+L4PentaList specifies the dungeon piece IDs which constitute stairways
+leading down to Diablo from hell.
+
+PSX ref (SLPS-01416): 0x800E3314
+PSX def: short L4PentaList[33]
+alias: hell_stairway_down_to_diablo_piece_ids
+*/
 int L4PentaList[33] = {
 	353,
 	354,
@@ -799,3 +939,4 @@ void CheckTriggers()
 }
 
 DEVILUTION_END_NAMESPACE
+

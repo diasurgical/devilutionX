@@ -7,6 +7,11 @@ int trapdir;
 BYTE *pObjCels[40];
 char ObjFileList[40];
 int objectactive[MAXOBJECTS];
+/*
+address: 0x679A34
+
+nobjects specifies the number of active objects.
+*/
 int nobjects;
 int leverid;
 int objectavail[MAXOBJECTS];
@@ -14,8 +19,35 @@ ObjectStruct object[MAXOBJECTS];
 BOOL InitObjFlag;
 int numobjfiles;
 
+/*
+address: 0x4A083C
+
+bxadd specifies the X-coordinate delta between barrels.
+
+PSX ref (SLPS-01416): 0x800D8BA8
+PSX def: int bxadd[8]
+alias: barrel_x_delta
+*/
 int bxadd[8] = { -1, 0, 1, -1, 1, -1, 0, 1 };
+/*
+address: 0x4A085C
+
+byadd specifies the Y-coordinate delta between barrels.
+
+PSX ref (SLPS-01416): 0x800D8BC8
+PSX def: int byadd[8]
+alias: barrel_y_delta
+*/
 int byadd[8] = { -1, -1, -1, 0, 0, 1, 1, 1 };
+/*
+address: 0x4A087C
+
+shrinestrs maps from shrine_id to shrine name.
+
+PSX ref (SLPS-01416): 0x800D8BE8
+PSX def: unsigned short shrinestrs[26]
+alias: shrine_name_from_shrine_id
+*/
 char *shrinestrs[NUM_SHRINETYPE] = {
 	"Mysterious",
 	"Hidden",
@@ -44,22 +76,55 @@ char *shrinestrs[NUM_SHRINETYPE] = {
 	"Glimmering",
 	"Tainted"
 };
+/*
+address: 0x4A08E4
+
+shrinemin specifies the minimum dungeon level on which each shrine will
+appear.
+alias: dlvl_min_from_shrine_id
+*/
 char shrinemin[NUM_SHRINETYPE] = {
 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 	1, 1, 1, 1, 1, 1
 };
+/*
+address: 0x4A0900
+
+shrinemax specifies the maximum dungeon level on which each shrine will
+appear.
+alias: dlvl_max_from_shrine_id
+*/
 char shrinemax[NUM_SHRINETYPE] = {
 	16, 16, 16, 16, 16, 16, 16, 8, 16, 16,
 	16, 16, 16, 16, 16, 16, 16, 16, 16, 16,
 	16, 16, 16, 16, 16, 16
 };
 // 0 - sp+mp, 1 - sp only, 2 - mp only
+/*
+address: 0x4A091C
+
+shrineavail specifies the game type for which each shrine may appear.
+
+PSX ref (SLPS-01416): 0x800D8C1C
+PSX def: char shrineavail[26]
+TODO: define game_type enum
+alias: shrine_game_type_from_shrine_id
+*/
 BYTE shrineavail[NUM_SHRINETYPE] = {
 	0, 0, 1, 1, 0, 0, 0, 0, 1, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 2, 0,
 	0, 0, 0, 0, 0, 2
 };
+/*
+address: 0x4A0938
+
+StoryBookName maps from book_id to book name.
+
+PSX ref (SLPS-01416): 0x800D8C38
+PSX def: unsigned short StoryBookName[9]
+alias: book_name_from_book_id
+*/
 char *StoryBookName[9] = {
 	"The Great Conflict",
 	"The Wages of Sin are War",
@@ -71,6 +136,16 @@ char *StoryBookName[9] = {
 	"Tale of the Three",
 	"The Black King"
 };
+/*
+address: 0x4A095C
+
+StoryText specifies the speech IDs of each dungeon type narrator book, for
+each player class.
+
+PSX ref (SLPS-01416): 0x800E40B0
+PSX def: unsigned short StoryText[3][3]
+alias: narrator_book_from_player_class
+*/
 int StoryText[3][3] = {
 	{ QUEST_BOOK11, QUEST_BOOK12, QUEST_BOOK13 },
 	{ QUEST_BOOK21, QUEST_BOOK22, QUEST_BOOK23 },
@@ -4474,3 +4549,4 @@ void GetObjectStr(int i)
 }
 
 DEVILUTION_END_NAMESPACE
+

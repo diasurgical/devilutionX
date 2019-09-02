@@ -60,3 +60,4 @@ BOOL ReadOnlyTest()
 }
 
 DEVILUTION_END_NAMESPACE
+

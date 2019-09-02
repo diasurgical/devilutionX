@@ -11,7 +11,25 @@ ChainStruct chain[MAXMISSILES];
 BOOL MissilePreFlag;
 int numchains;
 
+/*
+address: 0x497DA4
+
+XDirAdd maps from direction to X-offset.
+
+PSX ref (SLPS-01416): 0x801029D8
+PSX def: int XDirAdd[8]
+alias: x_offset_from_dir
+*/
 int XDirAdd[8] = { 1, 0, -1, -1, -1, 0, 1, 1 };
+/*
+address: 0x497DC4
+
+YDirAdd maps from direction to Y-offset.
+
+PSX ref (SLPS-01416): 0x801029F8
+PSX def: int YDirAdd[8]
+alias: y_offset_from_dir
+*/
 int YDirAdd[8] = { 1, 1, 1, 0, -1, -1, -1, 0 };
 
 void GetDamageAmt(int i, int *mind, int *maxd)
@@ -4116,3 +4134,4 @@ void ClearMissileSpot(int mi)
 }
 
 DEVILUTION_END_NAMESPACE
+

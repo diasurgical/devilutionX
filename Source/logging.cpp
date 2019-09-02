@@ -11,7 +11,17 @@ DWORD nNumberOfBytesToWrite;
 
 /* data */
 
+/*
+address: 0x4947D4
+
+log_not_created specifies whether the log file has not yet been created.
+*/
 BOOL log_not_created = 1;
+/*
+address: 0x4947D8
+
+log_file is a handle to the log file.
+*/
 HANDLE log_file = INVALID_HANDLE_VALUE;
 
 void __cdecl log_flush(BOOL force_close)
@@ -179,3 +189,4 @@ void log_dump_computer_info()
 }
 
 DEVILUTION_END_NAMESPACE
+

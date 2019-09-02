@@ -363,3 +363,4 @@ void dx_reinit()
 }
 
 DEVILUTION_END_NAMESPACE
+

@@ -6,14 +6,55 @@ DEVILUTION_BEGIN_NAMESPACE
 
 _SNETVERSIONDATA fileinfo;
 int gbActive;
+/*
+address: 0x634984
+
+diablo_exe_path specifies the path to diablo.exe.
+*/
 char diablo_exe_path[MAX_PATH];
+/*
+address: 0x634A88
+
+unused_mpq is a handle to an unused MPQ archive.
+*/
 HANDLE unused_mpq;
+/*
+address: 0x634A8C
+
+patch_rt_mpq_path specifies the path to patch_rt.mpq.
+*/
 char patch_rt_mpq_path[MAX_PATH];
 WNDPROC CurrentProc;
+/*
+address: 0x634B94
+
+diabdat_mpq is a handle to the diabdat.mpq archive.
+*/
 HANDLE diabdat_mpq;
+/*
+address: 0x634B98
+
+diabdat_mpq_path specifies the path to diabdat.mpq.
+*/
 char diabdat_mpq_path[MAX_PATH];
+/*
+address: 0x634C9C
+
+patch_rt_mpq is a handle to the patch_rt.mpq archive.
+*/
 HANDLE patch_rt_mpq;
+/*
+address: 0x634CA0
+
+killed_mom_parent specifies whether a process with the "MOM Parent" class has
+been identified and killed.
+*/
 BOOL killed_mom_parent;
+/*
+address: 0x634CA4
+
+screensaver_enabled_prev stores the previous state of the screensaver.
+*/
 BOOLEAN screensaver_enabled_prev;
 
 /* data */
@@ -456,3 +497,4 @@ WNDPROC SetWindowProc(WNDPROC NewProc)
 }
 
 DEVILUTION_END_NAMESPACE
+

@@ -5,6 +5,14 @@ DEVILUTION_BEGIN_NAMESPACE
 int qtopline;
 BOOL questlog;
 BYTE *pQLogCel;
+/*
+address: 0x69BD10
+
+quests contains the quests of the current game.
+
+PSX ref: 0x800DDA40
+PSX def: QuestStruct quests[16];
+*/
 QuestStruct quests[MAXQUESTS];
 int qline;
 int qlist[MAXQUESTS];
@@ -16,6 +24,15 @@ int ReturnLvlT;
 int ALLQUESTS;
 int ReturnLvl;
 
+/*
+address: 0x4A1AE0
+
+questlist contains the data related to each quest_id.
+
+PSX ref (SLPS-01416): 0x800DD908
+PSX def: QuestData questlist[16]
+alias: quest_data
+*/
 QuestData questlist[MAXQUESTS] = {
 	// clang-format off
 	// _qdlvl, _qdmultlvl, _qlvlt,          _qdtype,   _qdrnd, _qslvl, _qflags, _qdmsg,         _qlstr
@@ -37,7 +54,27 @@ QuestData questlist[MAXQUESTS] = {
 	{      15,         15, DTYPE_CATHEDRAL, QTYPE_VB,     100,      5,       1, QUEST_VILE1,    "Archbishop Lazarus"       }
 	// clang-format on
 };
+/*
+address: 0x4A1C20
+
+questxoff specifies a delta in X-coordinates from the quest entrance for
+which the hover text of the cursor will be visible.
+
+PSX ref (easy-as-pie): 0x8012B488
+PSX def: char questxoff[7]
+alias: quest_entrance_cursor_x_delta
+*/
 char questxoff[7] = { 0, -1, 0, -1, -2, -1, -2 };
+/*
+address: 0x4A1C28
+
+questyoff specifies a delta in Y-coordinates from the quest entrance for
+which the hover text of the cursor will be visible.
+
+PSX ref (easy-as-pie): 0x8012B490
+PSX def: char questyoff[7]
+alias: quest_entrance_cursor_y_delta
+*/
 char questyoff[7] = { 0, 0, -1, -1, -1, -2, -2 };
 char *questtrigstr[5] = {
 	"King Leoric's Tomb",
@@ -46,9 +83,53 @@ char *questtrigstr[5] = {
 	"A Dark Passage",
 	"Unholy Altar"
 };
+/*
+address: 0x4A1C44
+
+QuestGroup1 is a quest group containing the three quests the Butcher,
+Ogden's Sign and Gharbad the Weak, which ensures that exactly one of these
+three quests appears in any single player game.
+
+PSX ref (SLPS-01416): 0x800DDA1C
+PSX def: int QuestGroup1[3]
+alias: rand_quest_id_group_1
+*/
 int QuestGroup1[3] = { QTYPE_BUTCH, QTYPE_BOL, QTYPE_GARB };
+/*
+address: 0x4A1C50
+
+QuestGroup2 is a quest group containing the three quests Halls of the Blind,
+the Magic Rock and Valor, which ensures that exactly one of these three
+quests appears in any single player game.
+
+PSX ref (SLPS-01416): 0x800DDA28
+PSX def: int QuestGroup2[3]
+alias: rand_quest_id_group_2
+*/
 int QuestGroup2[3] = { QTYPE_BLIND, QTYPE_INFRA, QTYPE_BLOOD };
+/*
+address: 0x4A1C5C
+
+QuestGroup3 is a quest group containing the three quests Black Mushroom,
+Zhar the Mad and Anvil of Fury, which ensures that exactly one of these
+three quests appears in any single player game.
+
+PSX ref (SLPS-01416): 0x800DDA34
+PSX def: int QuestGroup3[3]
+alias: rand_quest_id_group_3
+*/
 int QuestGroup3[3] = { QTYPE_BLKM, QTYPE_ZHAR, QTYPE_ANVIL };
+/*
+address: 0x4A1C68
+
+QuestGroup4 is a quest group containing the two quests Lachdanan and Warlord
+of Blood, which ensures that exactly one of these two quests appears in any
+single player game.
+
+PSX ref (SLPS-01416): 0x8011BA30
+PSX def: int QuestGroup4[2]
+alias: rand_quest_id_group_4
+*/
 int QuestGroup4[2] = { QTYPE_VEIL, QTYPE_WARLRD };
 
 void InitQuests()
@@ -838,3 +919,4 @@ void SetMultiQuest(int q, int s, int l, int v1)
 }
 
 DEVILUTION_END_NAMESPACE
+

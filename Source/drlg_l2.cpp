@@ -12,126 +12,846 @@ BYTE predungeon[DMAXX][DMAXY];
 ROOMNODE RoomList[81];
 HALLNODE *pHallList;
 
+/*
+address: 0x484858
+
+PSX ref (SLPS-01416): 0x8011BE7C
+PSX def: int Area_Min
+*/
 int Area_Min = 2;
+/*
+address: 0x48485C
+
+PSX ref (SLPS-01416): 0x8011BE80
+PSX def: int Room_Max
+*/
 int Room_Max = 10;
+/*
+address: 0x484860
+
+PSX ref (SLPS-01416): 0x8011BE84
+PSX def: int Room_Min
+*/
 int Room_Min = 4;
+/*
+address: 0x484864
+
+PSX ref (SLPS-01416): 0x80140F04
+PSX def: int Dir_Xadd[5]
+*/
 int Dir_Xadd[5] = { 0, 0, 1, 0, -1 };
+/*
+address: 0x484878
+
+PSX ref (SLPS-01416): 0x80140F18
+PSX def: int Dir_Yadd[5]
+*/
 int Dir_Yadd[5] = { 0, -1, 0, 1, 0 };
+/*
+address: 0x48488C
+
+PSX ref (SLPS-01416): 0x80140F2C
+PSX def: ShadowStruct SPATSL2[2]
+*/
 ShadowStruct SPATSL2[2] = { { 6, 3, 0, 3, 48, 0, 50 }, { 9, 3, 0, 3, 48, 0, 50 } };
 //short word_48489A = 0;
+/*
+address: 0x48489C
+
+PSX ref (SLPS-01416): 0x80140F3C
+PSX def: unsigned char BTYPESL2[161]
+*/
 BYTE BTYPESL2[161] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0, 0, 0, 0, 0, 0, 17, 18, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 2, 2, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+/*
+address: 0x484940
+
+PSX ref (SLPS-01416): 0x80140FE0
+PSX def: unsigned char BSTYPESL2[161]
+*/
 BYTE BSTYPESL2[161] = { 0, 1, 2, 3, 0, 0, 6, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 6, 6, 6, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 2, 2, 2, 0, 0, 0, 1, 1, 1, 1, 6, 2, 2, 2, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 2, 2, 3, 3, 3, 3, 1, 1, 2, 2, 3, 3, 3, 3, 1, 1, 3, 3, 2, 2, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+/*
+address: 0x4849E4
+
+PSX ref (SLPS-01416): 0x80141084
+PSX def: unsigned char VARCH1[18]
+*/
 BYTE VARCH1[] = { 2, 4, 3, 0, 3, 1, 3, 4, 0, 7, 48, 0, 51, 39, 47, 44, 0, 0 };
+/*
+address: 0x4849F8
+
+PSX ref (SLPS-01416): 0x80141098
+PSX def: unsigned char VARCH2[18]
+*/
 BYTE VARCH2[] = { 2, 4, 3, 0, 3, 1, 3, 4, 0, 8, 48, 0, 51, 39, 47, 44, 0, 0 };
+/*
+address: 0x484A0C
+
+PSX ref (SLPS-01416): 0x801410AC
+PSX def: unsigned char VARCH3[18]
+*/
 BYTE VARCH3[] = { 2, 4, 3, 0, 3, 1, 3, 4, 0, 6, 48, 0, 51, 39, 47, 44, 0, 0 };
+/*
+address: 0x484A20
+
+PSX ref (SLPS-01416): 0x801410C0
+PSX def: unsigned char VARCH4[18]
+*/
 BYTE VARCH4[] = { 2, 4, 3, 0, 3, 1, 3, 4, 0, 9, 48, 0, 51, 39, 47, 44, 0, 0 };
+/*
+address: 0x484A34
+
+PSX ref (SLPS-01416): 0x801410D4
+PSX def: unsigned char VARCH5[18]
+*/
 BYTE VARCH5[] = { 2, 4, 3, 0, 3, 1, 3, 4, 0, 14, 48, 0, 51, 39, 47, 44, 0, 0 };
+/*
+address: 0x484A48
+
+PSX ref (SLPS-01416): 0x801410E8
+PSX def: unsigned char VARCH6[18]
+*/
 BYTE VARCH6[] = { 2, 4, 3, 0, 3, 1, 3, 4, 0, 13, 48, 0, 51, 39, 47, 44, 0, 0 };
+/*
+address: 0x484A5C
+
+PSX ref (SLPS-01416): 0x801410FC
+PSX def: unsigned char VARCH7[18]
+*/
 BYTE VARCH7[] = { 2, 4, 3, 0, 3, 1, 3, 4, 0, 16, 48, 0, 51, 39, 47, 44, 0, 0 };
+/*
+address: 0x484A70
+
+PSX ref (SLPS-01416): 0x80141110
+PSX def: unsigned char VARCH8[18]
+*/
 BYTE VARCH8[] = { 2, 4, 3, 0, 3, 1, 3, 4, 0, 15, 48, 0, 51, 39, 47, 44, 0, 0 };
+/*
+address: 0x484A84
+
+PSX ref (SLPS-01416): 0x80141124
+PSX def: unsigned char VARCH9[18]
+*/
 BYTE VARCH9[] = { 2, 4, 3, 0, 3, 8, 3, 4, 0, 7, 48, 0, 51, 42, 47, 44, 0, 0 };
+/*
+address: 0x484A98
+
+PSX ref (SLPS-01416): 0x80141138
+PSX def: unsigned char VARCH10[18]
+*/
 BYTE VARCH10[] = { 2, 4, 3, 0, 3, 8, 3, 4, 0, 8, 48, 0, 51, 42, 47, 44, 0, 0 };
+/*
+address: 0x484AAC
+
+PSX ref (SLPS-01416): 0x8014114C
+PSX def: unsigned char VARCH11[18]
+*/
 BYTE VARCH11[] = { 2, 4, 3, 0, 3, 8, 3, 4, 0, 6, 48, 0, 51, 42, 47, 44, 0, 0 };
+/*
+address: 0x484AC0
+
+PSX ref (SLPS-01416): 0x80141160
+PSX def: unsigned char VARCH12[18]
+*/
 BYTE VARCH12[] = { 2, 4, 3, 0, 3, 8, 3, 4, 0, 9, 48, 0, 51, 42, 47, 44, 0, 0 };
+/*
+address: 0x484AD4
+
+PSX ref (SLPS-01416): 0x80141174
+PSX def: unsigned char VARCH13[18]
+*/
 BYTE VARCH13[] = { 2, 4, 3, 0, 3, 8, 3, 4, 0, 14, 48, 0, 51, 42, 47, 44, 0, 0 };
+/*
+address: 0x484AE8
+
+PSX ref (SLPS-01416): 0x80141188
+PSX def: unsigned char VARCH14[18]
+*/
 BYTE VARCH14[] = { 2, 4, 3, 0, 3, 8, 3, 4, 0, 13, 48, 0, 51, 42, 47, 44, 0, 0 };
+/*
+address: 0x484AFC
+
+PSX ref (SLPS-01416): 0x8014119C
+PSX def: unsigned char VARCH15[18]
+*/
 BYTE VARCH15[] = { 2, 4, 3, 0, 3, 8, 3, 4, 0, 16, 48, 0, 51, 42, 47, 44, 0, 0 };
+/*
+address: 0x484B10
+
+PSX ref (SLPS-01416): 0x801411B0
+PSX def: unsigned char VARCH16[18]
+*/
 BYTE VARCH16[] = { 2, 4, 3, 0, 3, 8, 3, 4, 0, 15, 48, 0, 51, 42, 47, 44, 0, 0 };
+/*
+address: 0x484B24
+
+PSX ref (SLPS-01416): 0x801411C4
+PSX def: unsigned char VARCH17[14]
+*/
 BYTE VARCH17[] = { 2, 3, 2, 7, 3, 4, 0, 7, 141, 39, 47, 44, 0, 0 };
+/*
+address: 0x484B34
+
+PSX ref (SLPS-01416): 0x801411D4
+PSX def: unsigned char VARCH18[14]
+*/
 BYTE VARCH18[] = { 2, 3, 2, 7, 3, 4, 0, 8, 141, 39, 47, 44, 0, 0 };
+/*
+address: 0x484B44
+
+PSX ref (SLPS-01416): 0x801411E4
+PSX def: unsigned char VARCH19[14]
+*/
 BYTE VARCH19[] = { 2, 3, 2, 7, 3, 4, 0, 6, 141, 39, 47, 44, 0, 0 };
+/*
+address: 0x484B54
+
+PSX ref (SLPS-01416): 0x801411F4
+PSX def: unsigned char VARCH20[14]
+*/
 BYTE VARCH20[] = { 2, 3, 2, 7, 3, 4, 0, 9, 141, 39, 47, 44, 0, 0 };
+/*
+address: 0x484B64
+
+PSX ref (SLPS-01416): 0x80141204
+PSX def: unsigned char VARCH21[14]
+*/
 BYTE VARCH21[] = { 2, 3, 2, 7, 3, 4, 0, 14, 141, 39, 47, 44, 0, 0 };
+/*
+address: 0x484B74
+
+PSX ref (SLPS-01416): 0x80141214
+PSX def: unsigned char VARCH22[14]
+*/
 BYTE VARCH22[] = { 2, 3, 2, 7, 3, 4, 0, 13, 141, 39, 47, 44, 0, 0 };
+/*
+address: 0x484B84
+
+PSX ref (SLPS-01416): 0x80141224
+PSX def: unsigned char VARCH23[14]
+*/
 BYTE VARCH23[] = { 2, 3, 2, 7, 3, 4, 0, 16, 141, 39, 47, 44, 0, 0 };
+/*
+address: 0x484B94
+
+PSX ref (SLPS-01416): 0x80141234
+PSX def: unsigned char VARCH24[14]
+*/
 BYTE VARCH24[] = { 2, 3, 2, 7, 3, 4, 0, 15, 141, 39, 47, 44, 0, 0 };
+/*
+address: 0x484BA4
+
+PSX ref (SLPS-01416): 0x80141244
+PSX def: unsigned char VARCH25[18]
+*/
 BYTE VARCH25[] = { 2, 4, 3, 0, 3, 4, 3, 1, 0, 7, 48, 0, 51, 39, 47, 44, 0, 0 };
+/*
+address: 0x484BB8
+
+PSX ref (SLPS-01416): 0x80141258
+PSX def: unsigned char VARCH26[18]
+*/
 BYTE VARCH26[] = { 2, 4, 3, 0, 3, 4, 3, 1, 0, 8, 48, 0, 51, 39, 47, 44, 0, 0 };
+/*
+address: 0x484BCC
+
+PSX ref (SLPS-01416): 0x8014126C
+PSX def: unsigned char VARCH27[18]
+*/
 BYTE VARCH27[] = { 2, 4, 3, 0, 3, 4, 3, 1, 0, 6, 48, 0, 51, 39, 47, 44, 0, 0 };
+/*
+address: 0x484BE0
+
+PSX ref (SLPS-01416): 0x80141280
+PSX def: unsigned char VARCH28[18]
+*/
 BYTE VARCH28[] = { 2, 4, 3, 0, 3, 4, 3, 1, 0, 9, 48, 0, 51, 39, 47, 44, 0, 0 };
+/*
+address: 0x484BF4
+
+PSX ref (SLPS-01416): 0x80141294
+PSX def: unsigned char VARCH29[18]
+*/
 BYTE VARCH29[] = { 2, 4, 3, 0, 3, 4, 3, 1, 0, 14, 48, 0, 51, 39, 47, 44, 0, 0 };
+/*
+address: 0x484C08
+
+PSX ref (SLPS-01416): 0x801412A8
+PSX def: unsigned char VARCH30[18]
+*/
 BYTE VARCH30[] = { 2, 4, 3, 0, 3, 4, 3, 1, 0, 13, 48, 0, 51, 39, 47, 44, 0, 0 };
+/*
+address: 0x484C1C
+
+PSX ref (SLPS-01416): 0x801412BC
+PSX def: unsigned char VARCH31[18]
+*/
 BYTE VARCH31[] = { 2, 4, 3, 0, 3, 4, 3, 1, 0, 16, 48, 0, 51, 39, 47, 44, 0, 0 };
+/*
+address: 0x484C30
+
+PSX ref (SLPS-01416): 0x801412D0
+PSX def: unsigned char VARCH32[18]
+*/
 BYTE VARCH32[] = { 2, 4, 3, 0, 3, 4, 3, 1, 0, 15, 48, 0, 51, 39, 47, 44, 0, 0 };
+/*
+address: 0x484C44
+
+PSX ref (SLPS-01416): 0x801412E4
+PSX def: unsigned char VARCH33[18]
+*/
 BYTE VARCH33[] = { 2, 4, 2, 0, 3, 8, 3, 4, 0, 7, 142, 0, 51, 42, 47, 44, 0, 0 };
+/*
+address: 0x484C58
+
+PSX ref (SLPS-01416): 0x801412F8
+PSX def: unsigned char VARCH34[18]
+*/
 BYTE VARCH34[] = { 2, 4, 2, 0, 3, 8, 3, 4, 0, 8, 142, 0, 51, 42, 47, 44, 0, 0 };
+/*
+address: 0x484C6C
+
+PSX ref (SLPS-01416): 0x8014130C
+PSX def: unsigned char VARCH35[18]
+*/
 BYTE VARCH35[] = { 2, 4, 2, 0, 3, 8, 3, 4, 0, 6, 142, 0, 51, 42, 47, 44, 0, 0 };
+/*
+address: 0x484C80
+
+PSX ref (SLPS-01416): 0x80141320
+PSX def: unsigned char VARCH36[18]
+*/
 BYTE VARCH36[] = { 2, 4, 2, 0, 3, 8, 3, 4, 0, 9, 142, 0, 51, 42, 47, 44, 0, 0 };
+/*
+address: 0x484C94
+
+PSX ref (SLPS-01416): 0x80141334
+PSX def: unsigned char VARCH37[18]
+*/
 BYTE VARCH37[] = { 2, 4, 2, 0, 3, 8, 3, 4, 0, 14, 142, 0, 51, 42, 47, 44, 0, 0 };
+/*
+address: 0x484CA8
+
+PSX ref (SLPS-01416): 0x80141348
+PSX def: unsigned char VARCH38[18]
+*/
 BYTE VARCH38[] = { 2, 4, 2, 0, 3, 8, 3, 4, 0, 13, 142, 0, 51, 42, 47, 44, 0, 0 };
+/*
+address: 0x484CBC
+
+PSX ref (SLPS-01416): 0x8014135C
+PSX def: unsigned char VARCH39[18]
+*/
 BYTE VARCH39[] = { 2, 4, 2, 0, 3, 8, 3, 4, 0, 16, 142, 0, 51, 42, 47, 44, 0, 0 };
+/*
+address: 0x484CD0
+
+PSX ref (SLPS-01416): 0x80141370
+PSX def: unsigned char VARCH40[18]
+*/
 BYTE VARCH40[] = { 2, 4, 2, 0, 3, 8, 3, 4, 0, 15, 142, 0, 51, 42, 47, 44, 0, 0 };
+/*
+address: 0x484CE4
+
+PSX ref (SLPS-01416): 0x80141384
+PSX def: unsigned char HARCH1[14]
+*/
 BYTE HARCH1[] = { 3, 2, 3, 3, 0, 2, 5, 9, 49, 46, 0, 40, 45, 0 };
+/*
+address: 0x484CF4
+
+PSX ref (SLPS-01416): 0x80141394
+PSX def: unsigned char HARCH2[14]
+*/
 BYTE HARCH2[] = { 3, 2, 3, 3, 0, 2, 5, 6, 49, 46, 0, 40, 45, 0 };
+/*
+address: 0x484D04
+
+PSX ref (SLPS-01416): 0x801413A4
+PSX def: unsigned char HARCH3[14]
+*/
 BYTE HARCH3[] = { 3, 2, 3, 3, 0, 2, 5, 8, 49, 46, 0, 40, 45, 0 };
+/*
+address: 0x484D14
+
+PSX ref (SLPS-01416): 0x801413B4
+PSX def: unsigned char HARCH4[14]
+*/
 BYTE HARCH4[] = { 3, 2, 3, 3, 0, 2, 5, 7, 49, 46, 0, 40, 45, 0 };
+/*
+address: 0x484D24
+
+PSX ref (SLPS-01416): 0x801413C4
+PSX def: unsigned char HARCH5[14]
+*/
 BYTE HARCH5[] = { 3, 2, 3, 3, 0, 2, 5, 15, 49, 46, 0, 40, 45, 0 };
+/*
+address: 0x484D34
+
+PSX ref (SLPS-01416): 0x801413D4
+PSX def: unsigned char HARCH6[14]
+*/
 BYTE HARCH6[] = { 3, 2, 3, 3, 0, 2, 5, 16, 49, 46, 0, 40, 45, 0 };
+/*
+address: 0x484D44
+
+PSX ref (SLPS-01416): 0x801413E4
+PSX def: unsigned char HARCH7[14]
+*/
 BYTE HARCH7[] = { 3, 2, 3, 3, 0, 2, 5, 13, 49, 46, 0, 40, 45, 0 };
+/*
+address: 0x484D54
+
+PSX ref (SLPS-01416): 0x801413F4
+PSX def: unsigned char HARCH8[14]
+*/
 BYTE HARCH8[] = { 3, 2, 3, 3, 0, 2, 5, 14, 49, 46, 0, 40, 45, 0 };
+/*
+address: 0x484D64
+
+PSX ref (SLPS-01416): 0x80141404
+PSX def: unsigned char HARCH9[14]
+*/
 BYTE HARCH9[] = { 3, 2, 3, 3, 0, 8, 5, 9, 49, 46, 0, 43, 45, 0 };
+/*
+address: 0x484D74
+
+PSX ref (SLPS-01416): 0x80141414
+PSX def: unsigned char HARCH10[14]
+*/
 BYTE HARCH10[] = { 3, 2, 3, 3, 0, 8, 5, 6, 49, 46, 0, 43, 45, 0 };
+/*
+address: 0x484D84
+
+PSX ref (SLPS-01416): 0x80141424
+PSX def: unsigned char HARCH11[14]
+*/
 BYTE HARCH11[] = { 3, 2, 3, 3, 0, 8, 5, 8, 49, 46, 0, 43, 45, 0 };
+/*
+address: 0x484D94
+
+PSX ref (SLPS-01416): 0x80141434
+PSX def: unsigned char HARCH12[14]
+*/
 BYTE HARCH12[] = { 3, 2, 3, 3, 0, 8, 5, 7, 49, 46, 0, 43, 45, 0 };
+/*
+address: 0x484DA4
+
+PSX ref (SLPS-01416): 0x80141444
+PSX def: unsigned char HARCH13[14]
+*/
 BYTE HARCH13[] = { 3, 2, 3, 3, 0, 8, 5, 15, 49, 46, 0, 43, 45, 0 };
+/*
+address: 0x484DB4
+
+PSX ref (SLPS-01416): 0x80141454
+PSX def: unsigned char HARCH14[14]
+*/
 BYTE HARCH14[] = { 3, 2, 3, 3, 0, 8, 5, 16, 49, 46, 0, 43, 45, 0 };
+/*
+address: 0x484DC4
+
+PSX ref (SLPS-01416): 0x80141464
+PSX def: unsigned char HARCH15[14]
+*/
 BYTE HARCH15[] = { 3, 2, 3, 3, 0, 8, 5, 13, 49, 46, 0, 43, 45, 0 };
+/*
+address: 0x484DD4
+
+PSX ref (SLPS-01416): 0x80141474
+PSX def: unsigned char HARCH16[14]
+*/
 BYTE HARCH16[] = { 3, 2, 3, 3, 0, 8, 5, 14, 49, 46, 0, 43, 45, 0 };
+/*
+address: 0x484DE4
+
+PSX ref (SLPS-01416): 0x80141484
+PSX def: unsigned char HARCH17[14]
+*/
 BYTE HARCH17[] = { 3, 2, 1, 3, 0, 8, 5, 9, 140, 46, 0, 43, 45, 0 };
+/*
+address: 0x484DF4
+
+PSX ref (SLPS-01416): 0x80141494
+PSX def: unsigned char HARCH18[14]
+*/
 BYTE HARCH18[] = { 3, 2, 1, 3, 0, 8, 5, 6, 140, 46, 0, 43, 45, 0 };
+/*
+address: 0x484E04
+
+PSX ref (SLPS-01416): 0x801414A4
+PSX def: unsigned char HARCH19[14]
+*/
 BYTE HARCH19[] = { 3, 2, 1, 3, 0, 8, 5, 8, 140, 46, 0, 43, 45, 0 };
+/*
+address: 0x484E14
+
+PSX ref (SLPS-01416): 0x801414B4
+PSX def: unsigned char HARCH20[14]
+*/
 BYTE HARCH20[] = { 3, 2, 1, 3, 0, 8, 5, 7, 140, 46, 0, 43, 45, 0 };
+/*
+address: 0x484E24
+
+PSX ref (SLPS-01416): 0x801414C4
+PSX def: unsigned char HARCH21[14]
+*/
 BYTE HARCH21[] = { 3, 2, 1, 3, 0, 8, 5, 15, 140, 46, 0, 43, 45, 0 };
+/*
+address: 0x484E34
+
+PSX ref (SLPS-01416): 0x801414D4
+PSX def: unsigned char HARCH22[14]
+*/
 BYTE HARCH22[] = { 3, 2, 1, 3, 0, 8, 5, 16, 140, 46, 0, 43, 45, 0 };
+/*
+address: 0x484E44
+
+PSX ref (SLPS-01416): 0x801414E4
+PSX def: unsigned char HARCH23[14]
+*/
 BYTE HARCH23[] = { 3, 2, 1, 3, 0, 8, 5, 13, 140, 46, 0, 43, 45, 0 };
+/*
+address: 0x484E54
+
+PSX ref (SLPS-01416): 0x801414F4
+PSX def: unsigned char HARCH24[14]
+*/
 BYTE HARCH24[] = { 3, 2, 1, 3, 0, 8, 5, 14, 140, 46, 0, 43, 45, 0 };
+/*
+address: 0x484E64
+
+PSX ref (SLPS-01416): 0x80141504
+PSX def: unsigned char HARCH25[14]
+*/
 BYTE HARCH25[] = { 3, 2, 3, 3, 0, 5, 2, 9, 49, 46, 0, 40, 45, 0 };
+/*
+address: 0x484E74
+
+PSX ref (SLPS-01416): 0x80141514
+PSX def: unsigned char HARCH26[14]
+*/
 BYTE HARCH26[] = { 3, 2, 3, 3, 0, 5, 2, 6, 49, 46, 0, 40, 45, 0 };
+/*
+address: 0x484E84
+
+PSX ref (SLPS-01416): 0x80141524
+PSX def: unsigned char HARCH27[14]
+*/
 BYTE HARCH27[] = { 3, 2, 3, 3, 0, 5, 2, 8, 49, 46, 0, 40, 45, 0 };
+/*
+address: 0x484E94
+
+PSX ref (SLPS-01416): 0x80141534
+PSX def: unsigned char HARCH28[14]
+*/
 BYTE HARCH28[] = { 3, 2, 3, 3, 0, 5, 2, 7, 49, 46, 0, 40, 45, 0 };
+/*
+address: 0x484EA4
+
+PSX ref (SLPS-01416): 0x80141544
+PSX def: unsigned char HARCH29[14]
+*/
 BYTE HARCH29[] = { 3, 2, 3, 3, 0, 5, 2, 15, 49, 46, 0, 40, 45, 0 };
+/*
+address: 0x484EB4
+
+PSX ref (SLPS-01416): 0x80141554
+PSX def: unsigned char HARCH30[14]
+*/
 BYTE HARCH30[] = { 3, 2, 3, 3, 0, 5, 2, 16, 49, 46, 0, 40, 45, 0 };
+/*
+address: 0x484EC4
+
+PSX ref (SLPS-01416): 0x80141564
+PSX def: unsigned char HARCH31[14]
+*/
 BYTE HARCH31[] = { 3, 2, 3, 3, 0, 5, 2, 13, 49, 46, 0, 40, 45, 0 };
+/*
+address: 0x484ED4
+
+PSX ref (SLPS-01416): 0x80141574
+PSX def: unsigned char HARCH32[14]
+*/
 BYTE HARCH32[] = { 3, 2, 3, 3, 0, 5, 2, 14, 49, 46, 0, 40, 45, 0 };
+/*
+address: 0x484EE4
+
+PSX ref (SLPS-01416): 0x80141584
+PSX def: unsigned char HARCH33[14]
+*/
 BYTE HARCH33[] = { 3, 2, 1, 3, 0, 9, 5, 9, 140, 46, 0, 40, 45, 0 };
+/*
+address: 0x484EF4
+
+PSX ref (SLPS-01416): 0x80141594
+PSX def: unsigned char HARCH34[14]
+*/
 BYTE HARCH34[] = { 3, 2, 1, 3, 0, 9, 5, 6, 140, 46, 0, 40, 45, 0 };
+/*
+address: 0x484F04
+
+PSX ref (SLPS-01416): 0x801415A4
+PSX def: unsigned char HARCH35[14]
+*/
 BYTE HARCH35[] = { 3, 2, 1, 3, 0, 9, 5, 8, 140, 46, 0, 40, 45, 0 };
+/*
+address: 0x484F14
+
+PSX ref (SLPS-01416): 0x801415B4
+PSX def: unsigned char HARCH36[14]
+*/
 BYTE HARCH36[] = { 3, 2, 1, 3, 0, 9, 5, 7, 140, 46, 0, 40, 45, 0 };
+/*
+address: 0x484F24
+
+PSX ref (SLPS-01416): 0x801415C4
+PSX def: unsigned char HARCH37[14]
+*/
 BYTE HARCH37[] = { 3, 2, 1, 3, 0, 9, 5, 15, 140, 46, 0, 40, 45, 0 };
+/*
+address: 0x484F34
+
+PSX ref (SLPS-01416): 0x801415D4
+PSX def: unsigned char HARCH38[14]
+*/
 BYTE HARCH38[] = { 3, 2, 1, 3, 0, 9, 5, 16, 140, 46, 0, 40, 45, 0 };
+/*
+address: 0x484F44
+
+PSX ref (SLPS-01416): 0x801415E4
+PSX def: unsigned char HARCH39[14]
+*/
 BYTE HARCH39[] = { 3, 2, 1, 3, 0, 9, 5, 13, 140, 46, 0, 40, 45, 0 };
+/*
+address: 0x484F54
+
+PSX ref (SLPS-01416): 0x801415F4
+PSX def: unsigned char HARCH40[14]
+*/
 BYTE HARCH40[] = { 3, 2, 1, 3, 0, 9, 5, 14, 140, 46, 0, 40, 45, 0 };
+/*
+address: 0x484F64
+
+PSX ref (SLPS-01416): 0x80141604
+PSX def: unsigned char USTAIRS[34]
+*/
 BYTE USTAIRS[] = { 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 72, 77, 0, 0, 76, 0, 0, 0, 0, 0, 0 };
+/*
+address: 0x484F88
+
+PSX ref (SLPS-01416): 0x80141628
+PSX def: unsigned char DSTAIRS[34]
+*/
 BYTE DSTAIRS[] = { 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 48, 71, 0, 0, 50, 78, 0, 0, 0, 0, 0 };
+/*
+address: 0x484FAC
+
+PSX ref (SLPS-01416): 0x8014164C
+PSX def: unsigned char WARPSTAIRS[34]
+*/
 BYTE WARPSTAIRS[] = { 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 158, 160, 0, 0, 159, 0, 0, 0, 0, 0, 0 };
+/*
+address: 0x484FD0
+
+PSX ref (SLPS-01416): 0x80141670
+PSX def: unsigned char CRUSHCOL[20]
+*/
 BYTE CRUSHCOL[] = { 3, 3, 3, 1, 3, 2, 6, 3, 3, 3, 3, 0, 0, 0, 0, 83, 0, 0, 0, 0 };
+/*
+address: 0x484FE4
+
+PSX ref (SLPS-01416): 0x80141684
+PSX def: unsigned char BIG1[10]
+*/
 BYTE BIG1[] = { 2, 2, 3, 3, 3, 3, 113, 0, 112, 0 };
+/*
+address: 0x484FF0
+
+PSX ref (SLPS-01416): 0x80141690
+PSX def: unsigned char BIG2[10]
+*/
 BYTE BIG2[] = { 2, 2, 3, 3, 3, 3, 114, 115, 0, 0 };
+/*
+address: 0x484FFC
+
+PSX ref (SLPS-01416): 0x8011BE88
+PSX def: unsigned char BIG3[6]
+*/
 BYTE BIG3[] = { 1, 2, 1, 1, 117, 116 };
+/*
+address: 0x485004
+
+PSX ref (SLPS-01416): 0x8011BE90
+PSX def: unsigned char BIG4[6]
+*/
 BYTE BIG4[] = { 2, 1, 2, 2, 118, 119 };
+/*
+address: 0x48500C
+
+PSX ref (SLPS-01416): 0x8014169C
+PSX def: unsigned char BIG5[10]
+*/
 BYTE BIG5[] = { 2, 2, 3, 3, 3, 3, 120, 122, 121, 123 };
+/*
+address: 0x485018
+
+PSX ref (SLPS-01416): 0x8011BE98
+PSX def: unsigned char BIG6[6]
+*/
 BYTE BIG6[] = { 1, 2, 1, 1, 125, 124 };
+/*
+address: 0x485020
+
+PSX ref (SLPS-01416): 0x8011BEA0
+PSX def: unsigned char BIG7[6]
+*/
 BYTE BIG7[] = { 2, 1, 2, 2, 126, 127 };
+/*
+address: 0x485028
+
+PSX ref (SLPS-01416): 0x801416A8
+PSX def: unsigned char BIG8[10]
+*/
 BYTE BIG8[] = { 2, 2, 3, 3, 3, 3, 128, 130, 129, 131 };
+/*
+address: 0x485034
+
+PSX ref (SLPS-01416): 0x801416B4
+PSX def: unsigned char BIG9[10]
+*/
 BYTE BIG9[] = { 2, 2, 1, 3, 1, 3, 133, 135, 132, 134 };
+/*
+address: 0x485040
+
+PSX ref (SLPS-01416): 0x801416C0
+PSX def: unsigned char BIG10[10]
+*/
 BYTE BIG10[] = { 2, 2, 2, 2, 3, 3, 136, 137, 3, 3 };
+/*
+address: 0x48504C
+
+PSX ref (SLPS-01416): 0x8011BEA8
+PSX def: unsigned char RUINS1[4]
+*/
 BYTE RUINS1[] = { 1, 1, 1, 80 };
+/*
+address: 0x485050
+
+PSX ref (SLPS-01416): 0x8011BEAC
+PSX def: unsigned char RUINS2[4]
+*/
 BYTE RUINS2[] = { 1, 1, 1, 81 };
+/*
+address: 0x485054
+
+PSX ref (SLPS-01416): 0x8011BEB0
+PSX def: unsigned char RUINS3[4]
+*/
 BYTE RUINS3[] = { 1, 1, 1, 82 };
+/*
+address: 0x485058
+
+PSX ref (SLPS-01416): 0x8011BEB4
+PSX def: unsigned char RUINS4[4]
+*/
 BYTE RUINS4[] = { 1, 1, 2, 84 };
+/*
+address: 0x48505C
+
+PSX ref (SLPS-01416): 0x8011BEB8
+PSX def: unsigned char RUINS5[4]
+*/
 BYTE RUINS5[] = { 1, 1, 2, 85 };
+/*
+address: 0x485060
+
+PSX ref (SLPS-01416): 0x8011BEBC
+PSX def: unsigned char RUINS6[4]
+*/
 BYTE RUINS6[] = { 1, 1, 2, 86 };
+/*
+address: 0x485064
+
+PSX ref (SLPS-01416): 0x8011BEC0
+PSX def: unsigned char RUINS7[4]
+*/
 BYTE RUINS7[] = { 1, 1, 8, 87 };
+/*
+address: 0x485068
+
+PSX ref (SLPS-01416): 0x801416CC
+PSX def: unsigned char PANCREAS1[32]
+*/
 BYTE PANCREAS1[] = { 5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 108, 0, 0, 0, 0, 0, 0, 0 };
+/*
+address: 0x485088
+
+PSX ref (SLPS-01416): 0x801416EC
+PSX def: unsigned char PANCREAS2[32]
+*/
 BYTE PANCREAS2[] = { 5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 110, 0, 0, 0, 0, 0, 0, 0 };
+/*
+address: 0x4850A8
+
+PSX ref (SLPS-01416): 0x8014170C
+PSX def: unsigned char CTRDOOR1[20]
+*/
 BYTE CTRDOOR1[] = { 3, 3, 3, 1, 3, 0, 4, 0, 0, 9, 0, 0, 4, 0, 0, 1, 0, 0, 0, 0 };
+/*
+address: 0x4850BC
+
+PSX ref (SLPS-01416): 0x80141720
+PSX def: unsigned char CTRDOOR2[20]
+*/
 BYTE CTRDOOR2[] = { 3, 3, 3, 1, 3, 0, 4, 0, 0, 8, 0, 0, 4, 0, 0, 1, 0, 0, 0, 0 };
+/*
+address: 0x4850D0
+
+PSX ref (SLPS-01416): 0x80141734
+PSX def: unsigned char CTRDOOR3[20]
+*/
 BYTE CTRDOOR3[] = { 3, 3, 3, 1, 3, 0, 4, 0, 0, 6, 0, 0, 4, 0, 0, 1, 0, 0, 0, 0 };
+/*
+address: 0x4850E4
+
+PSX ref (SLPS-01416): 0x80141748
+PSX def: unsigned char CTRDOOR4[20]
+*/
 BYTE CTRDOOR4[] = { 3, 3, 3, 1, 3, 0, 4, 0, 0, 7, 0, 0, 4, 0, 0, 1, 0, 0, 0, 0 };
+/*
+address: 0x4850F8
+
+PSX ref (SLPS-01416): 0x8014175C
+PSX def: unsigned char CTRDOOR5[20]
+*/
 BYTE CTRDOOR5[] = { 3, 3, 3, 1, 3, 0, 4, 0, 0, 15, 0, 0, 4, 0, 0, 1, 0, 0, 0, 0 };
+/*
+address: 0x48510C
+
+PSX ref (SLPS-01416): 0x80141770
+PSX def: unsigned char CTRDOOR6[20]
+*/
 BYTE CTRDOOR6[] = { 3, 3, 3, 1, 3, 0, 4, 0, 0, 13, 0, 0, 4, 0, 0, 1, 0, 0, 0, 0 };
+/*
+address: 0x485120
+
+PSX ref (SLPS-01416): 0x80141784
+PSX def: unsigned char CTRDOOR7[20]
+*/
 BYTE CTRDOOR7[] = { 3, 3, 3, 1, 3, 0, 4, 0, 0, 16, 0, 0, 4, 0, 0, 1, 0, 0, 0, 0 };
+/*
+address: 0x485134
+
+PSX ref (SLPS-01416): 0x80141798
+PSX def: unsigned char CTRDOOR8[20]
+*/
 BYTE CTRDOOR8[] = { 3, 3, 3, 1, 3, 0, 4, 0, 0, 14, 0, 0, 4, 0, 0, 1, 0, 0, 0, 0 };
+/*
+address: 0x485148
+
+PSX ref (SLPS-01416): 0x801417AC
+PSX def: int Patterns[100][10]
+*/
 int Patterns[100][10] = {
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 3 },
 	{ 0, 0, 0, 0, 2, 0, 0, 0, 0, 3 },
@@ -2113,3 +2833,4 @@ void DRLG_InitL2Vals()
 
 DEVILUTION_END_NAMESPACE
 #endif
+

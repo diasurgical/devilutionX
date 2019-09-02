@@ -7,6 +7,15 @@ BOOL uitemflag;
 int itemavail[MAXITEMS];
 ItemStruct curruitem;
 ItemGetRecordStruct itemrecord[MAXITEMS];
+/*
+address: 0x635A28
+
+PSX ref: 0x800D1D54
+PSX def: ItemStruct item[128]
+
+items contains the items on ground of the current game.
+alias: items
+*/
 ItemStruct item[MAXITEMS + 1];
 BOOL itemhold[3][3];
 BYTE *itemanims[35];
@@ -16,6 +25,15 @@ int gnNumGetRecords;
 
 /* data */
 
+/*
+address: 0x492C38
+
+ItemCAnimTbl maps from item_graphic_id to item_drop_id.
+
+PSX ref (SLPS-01416): 0x800D1BE0
+PSX def: unsigned char ItemCAnimTbl[169]
+alias: item_drop_id_from_item_graphic_id
+*/
 BYTE ItemCAnimTbl[169] = {
 	20, 16, 16, 16, 4, 4, 4, 12, 12, 12,
 	12, 12, 12, 12, 12, 21, 21, 25, 12, 28,
@@ -35,6 +53,12 @@ BYTE ItemCAnimTbl[169] = {
 	14, 17, 17, 17, 0, 34, 1, 0, 3, 17,
 	8, 8, 6, 1, 3, 3, 11, 3, 4
 };
+/*
+address: 0x492CE4
+
+ItemDropNames maps from item_drop_id to the name of the item drop graphics.
+alias: item_drop_name_from_item_drop_id
+*/
 char *ItemDropNames[35] = {
 	"Armor2",
 	"Axe",
@@ -72,6 +96,16 @@ char *ItemDropNames[35] = {
 	"Fanvil",
 	"FLazStaf"
 };
+/*
+address: 0x492D70
+
+ItemAnimLs maps from item_drop_id to the number of frames used by the item
+drop animation.
+
+PSX ref (SLPS-01416): 0x800D1C8C
+PSX def: unsigned char ItemAnimLs[35]
+alias: nitem_drop_frames_from_item_drop_id
+*/
 BYTE ItemAnimLs[35] = {
 	15,
 	13,
@@ -109,6 +143,13 @@ BYTE ItemAnimLs[35] = {
 	13,
 	8
 };
+/*
+address: 0x492D94
+
+ItemDropSnds maps from item_drop_id to the sound effect of dropping the item
+on ground.
+alias: item_drop_sfx_id_from_item_drop_id
+*/
 int ItemDropSnds[35] = {
 	IS_FHARM,
 	IS_FAXE,
@@ -146,6 +187,16 @@ int ItemDropSnds[35] = {
 	IS_FANVL,
 	IS_FSTAF
 };
+/*
+address: 0x492E20
+
+ItemInvSnds maps from item_drop_id to the sound effect of playing the item
+in the inventory.
+
+PSX ref (SLPS-01416): 0x800D1D3C
+PSX def: int ItemInvSnds[35]
+alias: item_place_sfx_id_from_item_drop_id
+*/
 int ItemInvSnds[35] = {
 	IS_IHARM,
 	IS_IAXE,
@@ -183,7 +234,27 @@ int ItemInvSnds[35] = {
 	IS_IANVL,
 	IS_ISTAF
 };
+/*
+address: 0x492EAC
+
+idoppely specifies the current Y-coordinate used for validation of items on
+ground.
+
+PSX ref (SLPS-01416): 0x800D1D3C
+PSX def: int idoppely
+alias: item_y
+*/
 int idoppely = 16;
+/*
+address: 0x492EB0
+
+premiumlvladd maps from Griswold premium item number to a quality level
+delta as added to the base quality level.
+
+PSX ref (SLPS-01416): 0x800D1D3C
+PSX def: int premiumlvladd[6]
+alias: griswold_premium_item_quality_lvl_delta
+*/
 int premiumlvladd[6] = { -1, -1, 0, 0, 1, 2 };
 
 void InitItemGFX()
@@ -4054,3 +4125,4 @@ void PutItemRecord(int nSeed, WORD wCI, int nIndex)
 }
 
 DEVILUTION_END_NAMESPACE
+

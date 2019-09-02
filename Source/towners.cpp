@@ -12,6 +12,19 @@ BYTE *pCowCels;
 TownerStruct towner[16];
 
 #ifndef SPAWN
+/*
+address: 0x4802AC
+
+snSFX maps from active cow sound effect index and player class to sound
+effect ID for interacting with cows in Tristram.
+
+ref: enum cow_active_sfx_id
+ref: enum player_class
+
+PSX ref (SLPS-01416): 0x801112CC
+PSX def: int snSFX[3][3]
+alias: cow_sfx_id_from_class
+*/
 const int snSFX[3][3] = {
 	{ PS_WARR52, PS_ROGUE52, PS_MAGE52 },
 	{ PS_WARR49, PS_ROGUE49, PS_MAGE49 },
@@ -21,6 +34,15 @@ const int snSFX[3][3] = {
 
 /* data */
 
+/*
+address: 0x4B2724
+
+AnimOrder specifies the animation frame sequence of a given NPC.
+
+PSX ref (SLPS-01416): 0x800CF7E4
+PSX def: char AnimOrder[6][148]
+alias: towner_anim_seq
+*/
 char AnimOrder[6][148] = {
 	{ 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
 	    14, 13, 12, 11, 10, 9, 8, 7, 6, 5,
@@ -87,11 +109,69 @@ char AnimOrder[6][148] = {
 	    1, 2, 1, 19, 18, 19, 1, 2, 1, 2,
 	    3, -1 }
 };
+/*
+address: 0x4B2A9C
+
+TownCowX specifies the start X-coordinates of the cows in Tristram.
+
+PSX ref (SLPS-01416): 0x800CFB5C
+PSX def: int TownCowX[3]
+alias: cow_start_x
+*/
 int TownCowX[3] = { 58, 56, 59 };
+/*
+address: 0x4B2AA8
+
+TownCowY specifies the start Y-coordinates of the cows in Tristram.
+
+PSX ref (SLPS-01416): 0x800CFB68
+PSX def: int TownCowY[3]
+alias: cow_start_y
+*/
 int TownCowY[3] = { 16, 14, 20 };
+/*
+address: 0x4B2AB4
+
+TownCowDir specifies the start directions of the cows in Tristram.
+
+PSX ref (SLPS-01416): 0x800CFB74
+PSX def: int TownCowDir[3]
+alias: cow_start_direction
+*/
 int TownCowDir[3] = { 1, 3, 4 };
+/*
+address: 0x4B2AC0
+
+cowoffx maps from direction to X-coordinate delta, which is used when
+placing cows in Tristram. A single cow may require space of up to three
+tiles when being placed on the map.
+
+PSX ref (SLPS-01416): 0x800CFB80
+PSX def: int cowoffx[8]
+alias: cow_x_delta_from_direction
+*/
 int cowoffx[8] = { -1, 0, -1, -1, -1, 0, -1, -1 };
+/*
+address: 0x4B2AE0
+
+cowoffy maps from direction to Y-coordinate delta, which is used when
+placing cows in Tristram. A single cow may require space of up to three
+tiles when being placed on the map.
+
+PSX ref (SLPS-01416): 0x800CFBA0
+PSX def: int cowoffy[8]
+alias: cow_y_delta_from_direction
+*/
 int cowoffy[8] = { -1, -1, -1, 0, -1, -1, -1, 0 };
+/*
+address: 0x4B2B00
+
+Qtalklist contains the data related to quest gossip for each towner ID.
+
+PSX ref (SLPS-01416): 0x800CFBC0
+PSX def: int Qtalklist[11][16]
+alias: gossip_data
+*/
 QuestTalkData Qtalklist[11] = {
 	// clang-format off
 	// _qinfra,      _qblkm,       _qgarb,      _qzhar,      _qveil,      _qmod,       _qbutch,      _qbol,         _qblind,      _qblood,      _qanvil,      _qwarlrd,      _qking,       _qpw,           _qbone,      _qvb
@@ -108,6 +188,15 @@ QuestTalkData Qtalklist[11] = {
 	{ QUEST_KING1,   QUEST_KING1,  QUEST_KING1, QUEST_KING1, QUEST_KING1, QUEST_KING1, QUEST_KING1,  QUEST_KING1,   QUEST_KING1,  QUEST_KING1,  QUEST_KING1,  QUEST_KING1,   QUEST_KING1,  QUEST_KING1,    QUEST_KING1, QUEST_KING1  }
 	// clang-format on
 };
+/*
+address: 0x4B2DC0
+
+CowPlaying specifies the active sound effect ID for interacting with cows.
+
+PSX ref (SLPS-01416): 0x8011B814
+PSX def: unsigned long CowPlaying
+alias: cow_active_sfx_id
+*/
 int CowPlaying = -1;
 
 int GetActiveTowner(int t)
@@ -948,3 +1037,4 @@ void CowSFX(int pnum)
 }
 
 DEVILUTION_END_NAMESPACE
+

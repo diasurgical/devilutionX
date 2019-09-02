@@ -1219,3 +1219,4 @@ void CreateTown(int entry)
 }
 
 DEVILUTION_END_NAMESPACE
+

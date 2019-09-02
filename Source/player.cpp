@@ -19,41 +19,195 @@ int plr_sframe_size;
 int deathdelay;
 int plr_dframe_size;
 
+/*
+address: 0x47F208
+
+ArmourChar maps from armor animation to letter used in graphic files.
+
+PSX ref (SLPS-01416): 0x8011B008
+PSX def: char ArmourChar[4]
+Note: char[3] is enough, though PSX details as char[4].
+alias: player_armors
+*/
 const char ArmourChar[4] = { 'L', 'M', 'H', 0 };
+/*
+address: 0x47F20C
+
+WepChar maps from weapon animation to letter used in graphic files.
+
+PSX ref (SLPS-01416): 0x80110B68
+PSX def: char WepChar[10]
+Note: char[9] is enough, though PSX details as char[10].
+alias: player_weapons
+*/
 const char WepChar[10] = { 'N', 'U', 'S', 'D', 'B', 'A', 'M', 'H', 'T', 0 };
+/*
+address: 0x47F218
+
+CharChar maps from player class to letter used in graphic files.
+
+PSX ref (SLPS-01416): 0x8011B00C
+PSX def: char CharChar[4]
+Note: char[3] is enough, though PSX details as char[4].
+alias: player_classes
+*/
 const char CharChar[4] = { 'W', 'R', 'S', 0 };
 
 /* data */
 
+/*
+address: 0x4A0EF8
+
+plrxoff specifies the X-coordinate delta from the player start location in
+Tristram.
+
+PSX ref (SLPS-01416): 0x800DA348
+PSX def: int plrxoff[9]
+alias: x_delta_from_start_location_tristram
+*/
 int plrxoff[9] = { 0, 2, 0, 2, 1, 0, 1, 2, 1 };
+/*
+address: 0x4A0F1C
+
+plryoff specifies the Y-coordinate delta from the player start location in
+Tristram.
+
+PSX ref (SLPS-01416): 0x800DA36C
+PSX def: int plryoff[9]
+alias: y_delta_from_start_location_tristram
+*/
 int plryoff[9] = { 0, 2, 2, 0, 1, 1, 0, 1, 2 };
+/*
+address: 0x4A0F40
+
+plrxoff2 specifies the X-coordinate delta from a player, used for instanced
+when casting resurrect.
+
+PSX ref (SLPS-01416): 0x800DA390
+PSX def: int plrxoff2[9]
+alias: x_delta_from_player
+*/
 int plrxoff2[9] = { 0, 1, 0, 1, 2, 0, 1, 2, 2 };
+/*
+address: 0x4A0F64
+
+plryoff2 specifies the Y-coordinate delta from a player, used for instanced
+when casting resurrect.
+
+PSX ref (SLPS-01416): 0x800DA3B4
+PSX def: int plryoff2[9]
+alias: y_delta_from_player
+*/
 int plryoff2[9] = { 0, 0, 1, 1, 0, 2, 2, 1, 2 };
+/*
+address: 0x4A0F88
+
+PlrGFXAnimLens specifies the frame of each animation for which an action is
+triggered, for each player class.
+
+PSX ref (SLPS-01416): 0x800DA3D8
+PSX def: char PlrGFXAnimLens[3][11]
+alias: action_frame_from_player_class
+*/
 char PlrGFXAnimLens[3][11] = {
 	{ 10, 16, 8, 2, 20, 20, 6, 20, 8, 9, 14 },
 	{ 8, 18, 8, 4, 20, 16, 7, 20, 8, 10, 12 },
 	{ 8, 16, 8, 6, 20, 12, 8, 20, 8, 12, 8 }
 };
+/*
+address: 0x4A0FAC
+
+PWVel maps from player class to player velocity.
+*/
 int PWVel[3][3] = {
 	{ 2048, 1024, 512 },
 	{ 2048, 1024, 512 },
 	{ 2048, 1024, 512 }
 };
 // Total number of frames in walk animation.
+/*
+address: 0x4A0FAC
+
+AnimLenFromClass maps from player class to total number of frames in player
+walk animation.
+*/
 int AnimLenFromClass[3] = {
 	8, 8, 8
 };
+/*
+address: 0x4A0FDC
+
+StrengthTbl maps from player_class to starting stat in strength.
+
+PSX ref (SLPS-01416): 0x800DA3FC
+PSX def: int StrengthTbl[3]
+alias: start_str_from_player_class
+*/
 int StrengthTbl[3] = { 30, 20, 15 };
+/*
+address: 0x4A0FE8
+
+MagicTbl maps from player_class to starting stat in magic.
+
+PSX ref (SLPS-01416): 0x800DA408
+PSX def: int MagicTbl[3]
+alias: start_mag_from_player_class
+*/
 int MagicTbl[3] = { 10, 15, 35 };
+/*
+address: 0x4A0FF4
+
+DexterityTbl maps from player_class to starting stat in dexterity.
+
+PSX ref (SLPS-01416): 0x800DA414
+PSX def: int DexterityTbl[3]
+alias: start_dex_from_player_class
+*/
 int DexterityTbl[3] = { 20, 30, 15 };
+/*
+address: 0x4A1000
+
+VitalityTbl maps from player_class to starting stat in vitality.
+
+PSX ref (SLPS-01416): 0x800DA420
+PSX def: int VitalityTbl[3]
+alias: start_vit_from_player_class
+*/
 int VitalityTbl[3] = { 25, 20, 20 };
+/*
+address: 0x4A100C
+
+ToBlkTbl specifies the chance to block bonus of each player class.
+
+PSX ref (SLPS-01416): 0x800DA42C
+PSX def: int ToBlkTbl[3]
+alias: start_chance_to_block_bonus_from_player_class
+*/
 int ToBlkTbl[3] = { 30, 20, 10 };
 char *ClassStrTblOld[3] = { "Warrior", "Rogue", "Sorceror" }; // unused
+/*
+address: 0x4A1024
+
+MaxStats maps from player_class to maximum stats.
+
+PSX ref (SLPS-01416): 0x800DA438
+PSX def: int MaxStats[3][4]
+alias: max_stat_from_player_class
+*/
 int MaxStats[3][4] = {
 	{ 250, 50, 60, 100 },
 	{ 55, 70, 250, 80 },
 	{ 45, 250, 85, 80 }
 };
+/*
+address: 0x4A1054
+
+ExpLvlsTbl specifies the experience point limit of each level.
+
+PSX ref (SLPS-01416): 0x800DA468
+PSX def: long ExpLvlsTbl[51]
+alias: exp_limit
+*/
 int ExpLvlsTbl[MAXCHARLEVEL] = {
 	0,
 	2000,
@@ -108,6 +262,13 @@ int ExpLvlsTbl[MAXCHARLEVEL] = {
 	1583495809
 };
 char *ClassStrTbl[3] = { "Warrior", "Rogue", "Sorceror" };
+/*
+address: 0x4A112C
+
+fix is an unused variable of PM_ChangeLightOff to compute light radius.
+
+PSX def: static unsigned char fix[9]; // static local variable of PM_ChangeLightOff in PSX
+*/
 BYTE fix[9] = { 0, 0, 3, 3, 3, 6, 6, 6, 8 }; /* PM_ChangeLightOff local type */
 
 void SetPlayerGPtrs(BYTE *pData, BYTE **pAnim)
@@ -4163,3 +4324,4 @@ void PlayDungMsgs()
 }
 
 DEVILUTION_END_NAMESPACE
+
