@@ -63,7 +63,6 @@ DECLARE_INTERFACE_(IDirectSound, IUnknown)
 	STDMETHOD(CreateSoundBuffer)(THIS_ LPCDSBUFFERDESC pcDSBufferDesc, LPDIRECTSOUNDBUFFER *ppDSBuffer, LPUNKNOWN pUnkOuter) PURE;
 	STDMETHOD(GetCaps)(THIS_ LPDSCAPS pDSCaps) PURE;
 	STDMETHOD(DuplicateSoundBuffer)(THIS_ LPDIRECTSOUNDBUFFER pDSBufferOriginal, LPDIRECTSOUNDBUFFER *ppDSBufferDuplicate) PURE;
-	STDMETHOD(SetCooperativeLevel)(THIS_ HWND hwnd, DWORD dwLevel) PURE;
 	// clang-format on
 };
 
@@ -73,7 +72,6 @@ public:
 	virtual HRESULT CreateSoundBuffer(LPCDSBUFFERDESC pcDSBufferDesc, LPDIRECTSOUNDBUFFER *ppDSBuffer, LPUNKNOWN pUnkOute);
 	virtual HRESULT GetCaps(LPDSCAPS pDSCaps);
 	virtual HRESULT DuplicateSoundBuffer(LPDIRECTSOUNDBUFFER pDSBufferOriginal, LPDIRECTSOUNDBUFFER *ppDSBufferDuplicate);
-	virtual HRESULT SetCooperativeLevel(HWND hwnd, DWORD dwLevel);
 };
 
 const auto DVL__FACDS = 0x878;

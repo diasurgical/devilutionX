@@ -1,4 +1,5 @@
 #include "diablo.h"
+#include "../3rdParty/StormLib/src/StormPort.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -1111,7 +1112,7 @@ void LoadMissileGFX(BYTE mi)
 		sprintf(pszName, "Missiles\\%s.CL2", mfd->mName);
 		file = LoadFileInMem(pszName, NULL);
 		for (i = 0; i < mfd->mAnimFAmt; i++)
-			mfd->mAnimData[i] = &file[((int *)file)[i]];
+			mfd->mAnimData[i] = &file[BSWAP_INT32_UNSIGNED(((int *)file)[i])];
 	} else if (mfd->mAnimFAmt == 1) {
 		sprintf(pszName, "Missiles\\%s.CL2", mfd->mName);
 		if (!mfd->mAnimData[0])

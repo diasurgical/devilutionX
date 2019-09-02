@@ -46,7 +46,6 @@ void init_cleanup(BOOL show_cursor)
 	NetClose();
 	dx_cleanup();
 	engine_debug_trap(show_cursor);
-	StormDestroy();
 
 	if (show_cursor)
 		ShowCursor(TRUE);
@@ -412,12 +411,7 @@ LRESULT __stdcall MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 		break;
 #endif
 	case WM_QUERYNEWPALETTE:
-		SDrawRealizePalette();
 		return 1;
-	case WM_PALETTECHANGED:
-		if ((HWND)wParam != hWnd)
-			SDrawRealizePalette();
-		break;
 	}
 
 	return DefWindowProc(hWnd, Msg, wParam, lParam);

@@ -12,11 +12,7 @@ void CaptureScreen()
 	hObject = CaptureFile(FileName);
 	if (hObject != INVALID_HANDLE_VALUE) {
 		DrawAndBlit();
-#ifdef __cplusplus
 		lpDDPalette->GetEntries(0, 0, 256, palette);
-#else
-		lpDDPalette->lpVtbl->GetEntries(lpDDPalette, 0, 0, 256, palette);
-#endif
 		RedPalette(palette);
 
 		lock_buf(2);
@@ -34,11 +30,7 @@ void CaptureScreen()
 			DeleteFile(FileName);
 
 		Sleep(300);
-#ifdef __cplusplus
 		lpDDPalette->SetEntries(0, 0, 256, palette);
-#else
-		lpDDPalette->lpVtbl->SetEntries(lpDDPalette, 0, 0, 256, palette);
-#endif
 	}
 }
 
@@ -162,11 +154,7 @@ void RedPalette(PALETTEENTRY *pal)
 		red[i].peFlags = 0;
 	}
 
-#ifdef __cplusplus
 	lpDDPalette->SetEntries(0, 0, 256, red);
-#else
-	lpDDPalette->lpVtbl->SetEntries(lpDDPalette, 0, 0, 256, red);
-#endif
 }
 
 DEVILUTION_END_NAMESPACE

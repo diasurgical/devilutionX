@@ -213,24 +213,6 @@ void DrawSLine(int y)
 
 	/// ASSERT: assert(gpBuffer);
 
-#ifdef USE_ASM
-	__asm {
-		mov		esi, gpBuffer
-		mov		edi, esi
-		add		esi, xy
-		add		edi, yy
-		mov		ebx, line
-		mov		edx, 3
-	copyline:
-		mov		ecx, width
-		rep movsd
-		movsw
-		add		esi, ebx
-		add		edi, ebx
-		dec		edx
-		jnz		copyline
-	}
-#else
 	int i;
 	BYTE *src, *dst;
 
@@ -239,7 +221,6 @@ void DrawSLine(int y)
 
 	for (i = 0; i < 3; i++, src += BUFFER_WIDTH, dst += BUFFER_WIDTH)
 		memcpy(dst, src, BUFFER_WIDTH - line);
-#endif
 }
 
 void DrawSArrows(int y1, int y2)

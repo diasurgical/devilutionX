@@ -591,7 +591,7 @@ int GetCenterOffset(int w, int bw)
 		bw = SCREEN_WIDTH;
 	}
 
-	return bw / 2 - w / 2;
+	return (bw - w) / 2;
 }
 
 int GetStrWidth(char *str, int size)
