@@ -1035,6 +1035,7 @@ void T_FillSector(BYTE *P3Tiles, BYTE *pSector, int xi, int yi, int w, int h)
 {
 	int i, j, xx, yy;
 	long v1, v2, v3, v4, ii;
+	int nMap; 
 
 	ii = 4;
 	yy = yi;
@@ -1046,7 +1047,7 @@ void T_FillSector(BYTE *P3Tiles, BYTE *pSector, int xi, int yi, int w, int h)
 
 
 
-			int nMap = BSWAP_INT16_UNSIGNED(*Map);
+			nMap = BSWAP_INT16_UNSIGNED(*Map);
 
 
 			if (nMap) {

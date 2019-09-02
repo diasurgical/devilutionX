@@ -120,7 +120,7 @@ void FreeObjectGFX()
 	int i;
 
 	for (i = 0; i < numobjfiles; i++) {
-		pObjCels[i] = BSWAP_INT16_UNSIGNED(pObjCels[i]);		
+		pObjCels[i] = BSWAP_INT16_UNSIGNED(pObjCels[i]);
 		MemFreeDbg(pObjCels[i]);
 	}
 	numobjfiles = 0;
@@ -1823,12 +1823,12 @@ void ObjSetMicro(int dx, int dy, int pn)
 	if (leveltype != DTYPE_HELL) {
 		v = (WORD *)pLevelPieces + 10 * pn;
 		for (i = 0; i < 10; i++) {
-			defs->mt[i] = v[(i & 1) - (i & 0xE) + 8];
+			defs->mt[i] =  BSWAP_INT16_UNSIGNED(v[(i & 1) - (i & 0xE) + 8]);
 		}
 	} else {
 		v = (WORD *)pLevelPieces + 16 * pn;
 		for (i = 0; i < 16; i++) {
-			defs->mt[i] = v[(i & 1) - (i & 0xE) + 14];
+			defs->mt[i] =  BSWAP_INT16_UNSIGNED(v[(i & 1) - (i & 0xE) + 14]);
 		}
 	}
 }
@@ -1854,12 +1854,11 @@ void ObjSetMini(int x, int y, int v)
 
 	WORD *MegaTiles;
 	MegaTiles = (WORD *)&pMegaTiles[((WORD)v - 1) * 8];
-	MegaTiles = BSWAP_INT16_UNSIGNED(*MegaTiles);
-
-	v1 =  (long)MegaTiles + 1;
-	v2 =  (long)MegaTiles + 1 + 1;
-	v3 =  (long)MegaTiles + 2 + 1;
-	v4 =  (long)MegaTiles + 3 + 1;
+	
+	v1 = BSWAP_INT16_UNSIGNED(*(MegaTiles)) + 1;
+	v2 = BSWAP_INT16_UNSIGNED(*(MegaTiles + 1)) + 1;
+	v3 = BSWAP_INT16_UNSIGNED(*(MegaTiles + 2)) + 1;
+	v4 = BSWAP_INT16_UNSIGNED(*(MegaTiles + 3)) + 1;
 
 	xx = 2 * x + 16;
 	yy = 2 * y + 16;
