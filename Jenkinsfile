@@ -134,7 +134,7 @@ def build_libpng(TARGET, SYSROOT, DEFINES, FLAGS) {
 		sh "mkdir -p build"
 		sh "rm -rfv build/*"
 
-		sh "cd build && cmake .. -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DPNG_TESTS=OFF -DPNG_SHARED=OFF ${DEFINES}"
+		sh "cd build && cmake .. -DCMAKE_INSTALL_LIBDIR=${SYSROOT}/lib -DCMAKE_INSTALL_INCLUDEDIR=${SYSROOT}/include -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DPNG_TESTS=OFF -DPNG_SHARED=OFF ${DEFINES}" 
 		sh "cd build && cmake --build . --config Release --target install -- -j8"
 	}
 }
@@ -336,17 +336,17 @@ node('master') {
 		},*/
 		'AmigaOS 68040': {
 			node {
-				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68040-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-O3 -ffast-math -fbbb=-"', '-m68040 -mhard-float -O3 -fbbb=-')
+				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68040-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68040 -DM68K_FPU=hard', '') // -DM68K_COMMON="-O3 -ffast-math -fbbb=-" -m68040 -mhard-float -O3 -fbbb=-
 			}
 		},
 		'AmigaOS 68060': {
 			node {
-				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68060-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68060 -DM68K_FPU=hard -DM68K_COMMON="-O3 -ffast-math -fbbb=-"', '-m68060 -mhard-float -O3 -fbbb=-')
+				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68060-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68060 -DM68K_FPU=hard', '') // -DM68K_COMMON="-O3 -ffast-math -fbbb=-" -m68060 -mhard-float -O3 -fbbb=-
 			}
 		},
 		'AmigaOS 68080': {
 			node {
-				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68080-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68080 -DM68K_FPU=hard -DM68K_COMMON="-O3 -ffast-math -fbbb=-"', '-m68080 -mhard-float -O3 -fbbb=-')
+				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68080-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68080 -DM68K_FPU=hard', '') // -DM68K_COMMON="-O3 -ffast-math -fbbb=-" -m68080 -mhard-float -O3 -fbbb=-
 			}
 		}/*,
 		'AmigaOS PPC': {
