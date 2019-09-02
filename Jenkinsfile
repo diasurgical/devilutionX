@@ -279,7 +279,7 @@ def buildStep(dockerImage, generator, os, DEFINES, FLAGS = '') {
 				slackSend color: "good", channel: "#jenkins", message: "Starting ${os} build target..."
 				dir("build") {
 					sh "PKG_CONFIG_PATH=${SYSROOT}/lib/pkgconfig/:${SYSROOT}/share/pkgconfig/ cmake -G\"${generator}\" ${DEFINES} -DVER_EXTRA=\"-${fixed_os}-${fixed_job_name}\" .."
-					sh "VERBOSE=1 cmake --build . --config Release -- -j 8"
+					sh "VERBOSE=1 cmake --build . --config Debug -- -j 8"
 
 					if (os.contains('Windows')) {
 						sh "mv devilutionx.exe devilutionx-${fixed_os}-${fixed_job_name}.exe"
