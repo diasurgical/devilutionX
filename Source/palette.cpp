@@ -27,22 +27,12 @@ void palette_init()
 	LoadGamma();
 	memcpy(system_palette, orig_palette, sizeof(orig_palette));
 	LoadSysPal();
-#ifdef __cplusplus
 	error_code = lpDDInterface->CreatePalette(DDPCAPS_ALLOW256 | DDPCAPS_8BIT, system_palette, &lpDDPalette, NULL);
-#else
-	error_code = lpDDInterface->lpVtbl->CreatePalette(lpDDInterface, DDPCAPS_ALLOW256 | DDPCAPS_8BIT, system_palette, &lpDDPalette, NULL);
-#endif
 	if (error_code)
 		ERR_DLG(IDD_DIALOG8, error_code);
-#ifdef __cplusplus
 	error_code = lpDDSPrimary->SetPalette(lpDDPalette);
-#else
-	error_code = lpDDSPrimary->lpVtbl->SetPalette(lpDDSPrimary, lpDDPalette);
-#endif
-#ifndef RGBMODE
 	if (error_code)
 		ERR_DLG(IDD_DIALOG8, error_code);
-#endif
 }
 
 void LoadGamma()
@@ -126,16 +116,6 @@ void LoadRndLvlPal(int l)
 
 void ResetPal()
 {
-	if (!lpDDSPrimary
-#ifdef __cplusplus
-	    || lpDDSPrimary->IsLost() != DDERR_SURFACELOST
-	    || !lpDDSPrimary->Restore()) {
-#else
-	    || lpDDSPrimary->lpVtbl->IsLost(lpDDSPrimary) != DDERR_SURFACELOST
-	    || !lpDDSPrimary->lpVtbl->Restore(lpDDSPrimary)) {
-#endif
-		SDrawRealizePalette();
-	}
 }
 
 void IncreaseGamma()
@@ -219,11 +199,7 @@ void SetFadeLevel(DWORD fadeval)
 			system_palette[i].peBlue = (fadeval * logical_palette[i].peBlue) >> 8;
 		}
 		Sleep(3);
-#ifdef __cplusplus
 		lpDDInterface->WaitForVerticalBlank(DDWAITVB_BLOCKBEGIN, NULL);
-#else
-		lpDDInterface->lpVtbl->WaitForVerticalBlank(lpDDInterface, DDWAITVB_BLOCKBEGIN, NULL);
-#endif
 		palette_update();
 
 		// Workaround for flickering mouse in caves https://github.com/diasurgical/devilutionX/issues/7

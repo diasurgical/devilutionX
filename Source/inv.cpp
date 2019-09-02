@@ -119,38 +119,6 @@ void InvDrawSlotBack(int X, int Y, int W, int H)
 
 	dst = &gpBuffer[X + PitchTbl[Y]];
 
-#ifdef USE_ASM
-	__asm {
-		mov		edi, dst
-		xor		edx, edx
-		xor		ebx, ebx
-		mov		dx, word ptr H
-		mov		bx, word ptr W
-	label1:
-		mov		ecx, ebx
-	label2:
-		mov		al, [edi]
-		cmp		al, PAL16_BLUE
-		jb		label5
-		cmp		al, PAL16_BLUE + 15
-		ja		label3
-		sub		al, PAL16_BLUE - PAL16_BEIGE
-		jmp		label4
-	label3:
-		cmp		al, PAL16_GRAY
-		jb		label5
-		sub		al, PAL16_GRAY - PAL16_BEIGE
-	label4:
-		mov		[edi], al
-	label5:
-		inc		edi
-		loop	label2
-		sub		edi, BUFFER_WIDTH
-		sub		edi, ebx
-		dec		edx
-		jnz		label1
-	}
-#else
 	int wdt, hgt;
 	BYTE pix;
 
@@ -166,7 +134,6 @@ void InvDrawSlotBack(int X, int Y, int W, int H)
 			*dst++ = pix;
 		}
 	}
-#endif
 }
 
 void DrawInv()

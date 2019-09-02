@@ -5,9 +5,7 @@ DEVILUTION_BEGIN_NAMESPACE
 
 BYTE sgbNetUpdateRate;
 DWORD gdwMsgLenTbl[MAX_PLRS];
-#ifdef __cplusplus
 static CCritSect sgMemCrit;
-#endif
 DWORD gdwDeltaBytesSec;
 BOOLEAN nthread_should_run;
 DWORD gdwTurnsInTransit;
@@ -157,9 +155,7 @@ void nthread_start(BOOL set_turn_upper_bit)
 		gdwNormalMsgSize = largestMsgSize;
 	if (gbMaxPlayers > 1) {
 		sgbThreadIsRunning = FALSE;
-#ifdef __cplusplus
 		sgMemCrit.Enter();
-#endif
 		nthread_should_run = TRUE;
 		sghThread = (HANDLE)_beginthreadex(NULL, 0, nthread_handler, NULL, 0, &glpNThreadId);
 		if (sghThread == INVALID_HANDLE_VALUE) {
@@ -177,9 +173,7 @@ unsigned int __stdcall nthread_handler(void *)
 
 	if (nthread_should_run) {
 		while (1) {
-#ifdef __cplusplus
 			sgMemCrit.Enter();
-#endif
 			if (!nthread_should_run)
 				break;
 			nthread_send_and_recv_turn(0, 0);
@@ -187,17 +181,13 @@ unsigned int __stdcall nthread_handler(void *)
 				delta = last_tick - GetTickCount();
 			else
 				delta = 50;
-#ifdef __cplusplus
 			sgMemCrit.Leave();
-#endif
 			if (delta > 0)
 				Sleep(delta);
 			if (!nthread_should_run)
 				return 0;
 		}
-#ifdef __cplusplus
 		sgMemCrit.Leave();
-#endif
 	}
 	return 0;
 }
@@ -209,10 +199,8 @@ void nthread_cleanup()
 	gdwNormalMsgSize = 0;
 	gdwLargestMsgSize = 0;
 	if (sghThread != INVALID_HANDLE_VALUE && glpNThreadId != GetCurrentThreadId()) {
-#ifdef __cplusplus
 		if (!sgbThreadIsRunning)
 			sgMemCrit.Leave();
-#endif
 		if (WaitForSingleObject(sghThread, 0xFFFFFFFF) == -1) {
 			app_fatal("nthread3:\n(%s)", TraceLastError());
 		}
@@ -224,12 +212,10 @@ void nthread_cleanup()
 void nthread_ignore_mutex(BOOL bStart)
 {
 	if (sghThread != INVALID_HANDLE_VALUE) {
-#ifdef __cplusplus
 		if (bStart)
 			sgMemCrit.Leave();
 		else
 			sgMemCrit.Enter();
-#endif
 		sgbThreadIsRunning = bStart;
 	}
 }

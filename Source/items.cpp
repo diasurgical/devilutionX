@@ -2938,28 +2938,6 @@ void DrawULine(int y)
 {
 	/// ASSERT: assert(gpBuffer);
 
-#ifdef USE_ASM
-	int yy;
-
-	yy = PitchTbl[SStringY[y] + 198] + 26 + 64;
-
-	__asm {
-		mov		esi, gpBuffer
-		mov		edi, esi
-		add		esi, SCREENXY(26, 25)
-		add		edi, yy
-		mov		ebx, BUFFER_WIDTH - 266
-		mov		edx, 3
-	copyline:
-		mov		ecx, 266 / 4
-		rep movsd
-		movsw
-		add		esi, ebx
-		add		edi, ebx
-		dec		edx
-		jnz		copyline
-	}
-#else
 	int i;
 	BYTE *src, *dst;
 
@@ -2968,7 +2946,6 @@ void DrawULine(int y)
 
 	for (i = 0; i < 3; i++, src += BUFFER_WIDTH, dst += BUFFER_WIDTH)
 		memcpy(dst, src, 266);
-#endif
 }
 
 void DrawUniqueInfo()

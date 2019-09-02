@@ -1,5 +1,6 @@
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
+#include "../3rdParty/StormLib/src/StormPort.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -89,8 +90,8 @@ void DrawMissile(int x, int y, int sx, int sy, int CelSkip, int CelCap, BOOL pre
 				}
 				nCel = m->_miAnimFrame;
 				pFrameTable = (DWORD *)pCelBuff;
-				if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
-					// app_fatal("Draw Missile: frame %d of %d, missile type==%d", nCel, pFrameTable[0], m->_mitype);
+				if (nCel < 1 || BSWAP_INT32_UNSIGNED(pFrameTable[0]) > 50 || nCel > (int)BSWAP_INT32_UNSIGNED(pFrameTable[0])) {
+					// app_fatal("Draw Missile: frame %d of %d, missile type==%d", nCel, BSWAP_INT32_UNSIGNED(pFrameTable[0]), m->_mitype);
 					return;
 				}
 				mx = sx + m->_mixoff - m->_miAnimWidth2;
@@ -113,8 +114,8 @@ void DrawMissile(int x, int y, int sx, int sy, int CelSkip, int CelCap, BOOL pre
 			}
 			nCel = m->_miAnimFrame;
 			pFrameTable = (DWORD *)pCelBuff;
-			if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
-				// app_fatal("Draw Missile 2: frame %d of %d, missile type==%d", nCel, pFrameTable[0], m->_mitype);
+			if (nCel < 1 || BSWAP_INT32_UNSIGNED(pFrameTable[0]) > 50 || nCel > (int)BSWAP_INT32_UNSIGNED(pFrameTable[0])) {
+				// app_fatal("Draw Missile 2: frame %d of %d, missile type==%d", nCel, BSWAP_INT32_UNSIGNED(pFrameTable[0]), m->_mitype);
 				return;
 			}
 			mx = sx + m->_mixoff - m->_miAnimWidth2;
@@ -150,8 +151,8 @@ void DrawClippedMissile(int x, int y, int sx, int sy, int CelSkip, int CelCap, B
 				}
 				nCel = m->_miAnimFrame;
 				pFrameTable = (DWORD *)pCelBuff;
-				if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
-					// app_fatal("Draw Clipped Missile: frame %d of %d, missile type==%d", nCel, pFrameTable[0], m->_mitype);
+				if (nCel < 1 || BSWAP_INT32_UNSIGNED(pFrameTable[0]) > 50 || nCel > (int)BSWAP_INT32_UNSIGNED(pFrameTable[0])) {
+					// app_fatal("Draw Clipped Missile: frame %d of %d, missile type==%d", nCel, BSWAP_INT32_UNSIGNED(pFrameTable[0]), m->_mitype);
 					return;
 				}
 				mx = sx + m->_mixoff - m->_miAnimWidth2;
@@ -174,8 +175,8 @@ void DrawClippedMissile(int x, int y, int sx, int sy, int CelSkip, int CelCap, B
 			}
 			nCel = m->_miAnimFrame;
 			pFrameTable = (DWORD *)pCelBuff;
-			if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
-				// app_fatal("Draw Clipped Missile 2: frame %d of %d, missile type==%d", nCel, pFrameTable[0], m->_mitype);
+			if (nCel < 1 || BSWAP_INT32_UNSIGNED(pFrameTable[0]) > 50 || nCel > (int)BSWAP_INT32_UNSIGNED(pFrameTable[0])) {
+				// app_fatal("Draw Clipped Missile 2: frame %d of %d, missile type==%d", nCel, BSWAP_INT32_UNSIGNED(pFrameTable[0]), m->_mitype);
 				return;
 			}
 			mx = sx + m->_mixoff - m->_miAnimWidth2;
@@ -214,8 +215,8 @@ void DrawDeadPlayer(int x, int y, int sx, int sy, int CelSkip, int CelCap, BOOL 
 			}
 			nCel = p->_pAnimFrame;
 			pFrameTable = (DWORD *)pCelBuff;
-			if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
-				// app_fatal("Drawing dead player %d \"%s\": facing %d, frame %d of %d", i, p->_pName, p->_pdir, nCel, pFrameTable[0]);
+			if (nCel < 1 || BSWAP_INT32_UNSIGNED(pFrameTable[0]) > 50 || nCel > (int)BSWAP_INT32_UNSIGNED(pFrameTable[0])) {
+				// app_fatal("Drawing dead player %d \"%s\": facing %d, frame %d of %d", i, p->_pName, p->_pdir, nCel, BSWAP_INT32_UNSIGNED(pFrameTable[0]));
 				break;
 			}
 			dFlags[x][y] |= BFLAG_DEAD_PLAYER;
@@ -237,7 +238,7 @@ void DrawPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, int nCel
 			return;
 		}
 		pFrameTable = (DWORD *)pCelBuff;
-		if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
+		if (nCel < 1 || BSWAP_INT32_UNSIGNED(pFrameTable[0]) > 50 || nCel > (int)BSWAP_INT32_UNSIGNED(pFrameTable[0])) {
 			/*
 			const char *szMode = "unknown action";
 			if(plr[pnum]._pmode <= 11)
@@ -249,7 +250,7 @@ void DrawPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, int nCel
 				szMode,
 				plr[pnum]._pdir,
 				nCel,
-				pFrameTable[0]);
+				BSWAP_INT32_UNSIGNED(pFrameTable[0]));
 			*/
 			return;
 		}
@@ -310,7 +311,7 @@ void DrawClippedPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, i
 			return;
 		}
 		pFrameTable = (DWORD *)pCelBuff;
-		if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
+		if (nCel < 1 || BSWAP_INT32_UNSIGNED(pFrameTable[0]) > 50 || nCel > (int)BSWAP_INT32_UNSIGNED(pFrameTable[0])) {
 			/*
 			const char *szMode = "unknown action";
 			if(plr[pnum]._pmode <= 11)
@@ -322,7 +323,7 @@ void DrawClippedPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, i
 				szMode,
 				plr[pnum]._pdir,
 				nCel,
-				pFrameTable[0]);
+				BSWAP_INT32_UNSIGNED(pFrameTable[0]));
 			*/
 			return;
 		}
@@ -722,14 +723,14 @@ void scrollrt_draw_clipped_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, 
 			if (pCelBuff != NULL) {
 				pFrameTable = (DWORD *)pDeadGuy->_deadData[dd];
 				nCel = pDeadGuy->_deadFrame;
-				if (nCel >= 1 && pFrameTable[0] <= 50 && nCel <= (int)pFrameTable[0]) {
+				if (nCel >= 1 && BSWAP_INT32_UNSIGNED(pFrameTable[0]) <= 50 && nCel <= (int)BSWAP_INT32_UNSIGNED(pFrameTable[0])) {
 					if (pDeadGuy->_deadtrans != 0) {
 						Cl2DecodeFrm5(px, dy, pCelBuff, nCel, pDeadGuy->_deadWidth, 0, 8, pDeadGuy->_deadtrans);
 					} else {
 						Cl2DecodeFrm6(px, dy, pCelBuff, pDeadGuy->_deadFrame, pDeadGuy->_deadWidth, 0, 8);
 					}
 				} else {
-					// app_fatal("Clipped dead sub: frame %d of %d, deadnum==%d", nCel, pFrameTable[0], (bDead & 0x1F) - 1);
+					// app_fatal("Clipped dead sub: frame %d of %d, deadnum==%d", nCel, BSWAP_INT32_UNSIGNED(pFrameTable[0]), (bDead & 0x1F) - 1);
 				}
 			}
 		}
@@ -746,7 +747,7 @@ void scrollrt_draw_clipped_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, 
 				if (pCelBuff != NULL) {
 					pFrameTable = (DWORD *)pCelBuff;
 					nCel = pItem->_iAnimFrame;
-					if (nCel >= 1 && pFrameTable[0] <= 50 && nCel <= (int)pFrameTable[0]) {
+					if (nCel >= 1 && BSWAP_INT32_UNSIGNED(pFrameTable[0]) <= 50 && nCel <= (int)BSWAP_INT32_UNSIGNED(pFrameTable[0])) {
 						px = dx - pItem->_iAnimWidth2;
 						if (bItem - 1 == pcursitem) {
 							CelDrawHdrClrHL(181, px, dy, pCelBuff, nCel, pItem->_iAnimWidth, 0, 8);
@@ -758,7 +759,7 @@ void scrollrt_draw_clipped_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, 
 							"Draw Clipped \"%s\" Item: frame %d of %d, item type==%d",
 							pItem->_iIName,
 							nCel,
-							pFrameTable[0],
+							BSWAP_INT32_UNSIGNED(pFrameTable[0]),
 							pItem->_itype);
 						*/
 					}
@@ -866,7 +867,7 @@ void scrollrt_draw_clipped_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, 
 				if (pCelBuff != NULL) {
 					pFrameTable = (DWORD *)pCelBuff;
 					nCel = pItem->_iAnimFrame;
-					if (nCel >= 1 && pFrameTable[0] <= 50 && nCel <= (int)pFrameTable[0]) {
+					if (nCel >= 1 && BSWAP_INT32_UNSIGNED(pFrameTable[0]) <= 50 && nCel <= (int)BSWAP_INT32_UNSIGNED(pFrameTable[0])) {
 						px = dx - pItem->_iAnimWidth2;
 						if (bItem - 1 == pcursitem) {
 							CelDrawHdrClrHL(181, px, dy, pCelBuff, nCel, pItem->_iAnimWidth, 0, 8);
@@ -878,7 +879,7 @@ void scrollrt_draw_clipped_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, 
 							"Draw Clipped \"%s\" Item 2: frame %d of %d, item type==%d",
 							pItem->_iIName,
 							nCel,
-							pFrameTable[0],
+							BSWAP_INT32_UNSIGNED(pFrameTable[0]),
 							pItem->_itype);
 						*/
 					}
@@ -914,7 +915,7 @@ void DrawClippedMonster(int x, int y, int mx, int my, int m, int CelSkip, int Ce
 
 	nCel = monster[m]._mAnimFrame;
 	pFrameTable = (DWORD *)pCelBuff;
-	if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
+	if (nCel < 1 || BSWAP_INT32_UNSIGNED(pFrameTable[0]) > 50 || nCel > (int)BSWAP_INT32_UNSIGNED(pFrameTable[0])) {
 		/*
 		const char *szMode = "unknown action";
 		if(monster[m]._mmode <= 17)
@@ -925,7 +926,7 @@ void DrawClippedMonster(int x, int y, int mx, int my, int m, int CelSkip, int Ce
 			szMode,
 			monster[m]._mdir,
 			nCel,
-			pFrameTable[0]);
+			BSWAP_INT32_UNSIGNED(pFrameTable[0]));
 		*/
 		return;
 	}
@@ -984,8 +985,8 @@ void DrawClippedObject(int x, int y, int ox, int oy, BOOL pre, int CelSkip, int 
 
 	nCel = object[bv]._oAnimFrame;
 	pFrameTable = (DWORD *)pCelBuff;
-	if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
-		// app_fatal("Draw Clipped Object: frame %d of %d, object type==%d", nCel, pFrameTable[0], object[bv]._otype);
+	if (nCel < 1 || BSWAP_INT32_UNSIGNED(pFrameTable[0]) > 50 || nCel > (int)BSWAP_INT32_UNSIGNED(pFrameTable[0])) {
+		// app_fatal("Draw Clipped Object: frame %d of %d, object type==%d", nCel, BSWAP_INT32_UNSIGNED(pFrameTable[0]), object[bv]._otype);
 		return;
 	}
 
@@ -1188,14 +1189,14 @@ void scrollrt_draw_clipped_dungeon_2(BYTE *pBuff, int sx, int sy, int skipChunks
 			if (pCelBuff != NULL) {
 				pFrameTable = (DWORD *)pDeadGuy->_deadData[dd];
 				nCel = pDeadGuy->_deadFrame;
-				if (nCel >= 1 && pFrameTable[0] <= 50 && nCel <= (int)pFrameTable[0]) {
+				if (nCel >= 1 && BSWAP_INT32_UNSIGNED(pFrameTable[0]) <= 50 && nCel <= (int)BSWAP_INT32_UNSIGNED(pFrameTable[0])) {
 					if (pDeadGuy->_deadtrans != 0) {
 						Cl2DecodeFrm5(px, dy, pCelBuff, nCel, pDeadGuy->_deadWidth, CelSkip, 8, pDeadGuy->_deadtrans);
 					} else {
 						Cl2DecodeFrm6(px, dy, pCelBuff, pDeadGuy->_deadFrame, pDeadGuy->_deadWidth, CelSkip, 8);
 					}
 				} else {
-					// app_fatal("Clipped dead sub2: frame %d of %d, deadnum==%d", nCel, pFrameTable[0], (bDead & 0x1F) - 1);
+					// app_fatal("Clipped dead sub2: frame %d of %d, deadnum==%d", nCel, BSWAP_INT32_UNSIGNED(pFrameTable[0]), (bDead & 0x1F) - 1);
 				}
 			}
 		}
@@ -1212,7 +1213,7 @@ void scrollrt_draw_clipped_dungeon_2(BYTE *pBuff, int sx, int sy, int skipChunks
 				if (pCelBuff != NULL) {
 					pFrameTable = (DWORD *)pCelBuff;
 					nCel = pItem->_iAnimFrame;
-					if (nCel >= 1 && pFrameTable[0] <= 50 && nCel <= (int)pFrameTable[0]) {
+					if (nCel >= 1 && BSWAP_INT32_UNSIGNED(pFrameTable[0]) <= 50 && nCel <= (int)BSWAP_INT32_UNSIGNED(pFrameTable[0])) {
 						px = dx - pItem->_iAnimWidth2;
 						if (bItem - 1 == pcursitem) {
 							CelDrawHdrClrHL(181, px, dy, pCelBuff, nCel, pItem->_iAnimWidth, CelSkip, 8);
@@ -1224,7 +1225,7 @@ void scrollrt_draw_clipped_dungeon_2(BYTE *pBuff, int sx, int sy, int skipChunks
 							"Draw Clipped \"%s\" Item 3: frame %d of %d, item type==%d",
 							pItem->_iIName,
 							nCel,
-							pFrameTable[0],
+							BSWAP_INT32_UNSIGNED(pFrameTable[0]),
 							pItem->_itype);
 						*/
 					}
@@ -1332,7 +1333,7 @@ void scrollrt_draw_clipped_dungeon_2(BYTE *pBuff, int sx, int sy, int skipChunks
 				if (pCelBuff != NULL) {
 					pFrameTable = (DWORD *)pCelBuff;
 					nCel = pItem->_iAnimFrame;
-					if (nCel >= 1 && pFrameTable[0] <= 50 && nCel <= (int)pFrameTable[0]) {
+					if (nCel >= 1 && BSWAP_INT32_UNSIGNED(pFrameTable[0]) <= 50 && nCel <= (int)BSWAP_INT32_UNSIGNED(pFrameTable[0])) {
 						px = dx - pItem->_iAnimWidth2;
 						if (bItem - 1 == pcursitem) {
 							CelDrawHdrClrHL(181, px, dy, pCelBuff, nCel, pItem->_iAnimWidth, CelSkip, 8);
@@ -1344,7 +1345,7 @@ void scrollrt_draw_clipped_dungeon_2(BYTE *pBuff, int sx, int sy, int skipChunks
 							"Draw Clipped \"%s\" Item 4: frame %d of %d, item type==%d",
 							pItem->_iIName,
 							nCel,
-							pFrameTable[0],
+							BSWAP_INT32_UNSIGNED(pFrameTable[0]),
 							pItem->_itype);
 						*/
 					}
@@ -1622,14 +1623,14 @@ void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int capChunks, int CelCa
 			if (pCelBuff != NULL) {
 				pFrameTable = (DWORD *)pDeadGuy->_deadData[dd];
 				nCel = pDeadGuy->_deadFrame;
-				if (nCel >= 1 && pFrameTable[0] <= 50 && nCel <= (int)pFrameTable[0]) {
+				if (nCel >= 1 && BSWAP_INT32_UNSIGNED(pFrameTable[0]) <= 50 && nCel <= (int)BSWAP_INT32_UNSIGNED(pFrameTable[0])) {
 					if (pDeadGuy->_deadtrans != 0) {
 						Cl2DecodeFrm3(px, dy, pCelBuff, nCel, pDeadGuy->_deadWidth, 0, CelCap, pDeadGuy->_deadtrans);
 					} else {
 						Cl2DecodeLightTbl(px, dy, pCelBuff, pDeadGuy->_deadFrame, pDeadGuy->_deadWidth, 0, CelCap);
 					}
 				} else {
-					// app_fatal("Unclipped dead: frame %d of %d, deadnum==%d", nCel, pFrameTable[0], (bDead & 0x1F) - 1);
+					// app_fatal("Unclipped dead: frame %d of %d, deadnum==%d", nCel, BSWAP_INT32_UNSIGNED(pFrameTable[0]), (bDead & 0x1F) - 1);
 				}
 			}
 		}
@@ -1646,14 +1647,14 @@ void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int capChunks, int CelCa
 				if (pCelBuff != NULL) {
 					pFrameTable = (DWORD *)pCelBuff;
 					nCel = pItem->_iAnimFrame;
-					if (nCel >= 1 && pFrameTable[0] <= 50 && nCel <= (int)pFrameTable[0]) {
+					if (nCel >= 1 && BSWAP_INT32_UNSIGNED(pFrameTable[0]) <= 50 && nCel <= (int)BSWAP_INT32_UNSIGNED(pFrameTable[0])) {
 						px = dx - pItem->_iAnimWidth2;
 						if (bItem - 1 == pcursitem) {
 							CelDecodeClr(181, px, dy, pCelBuff, nCel, pItem->_iAnimWidth, 0, CelCap);
 						}
 						CelDecodeHdrLightOnly(px, dy, pItem->_iAnimData, pItem->_iAnimFrame, pItem->_iAnimWidth, 0, CelCap);
 					} else {
-						// app_fatal("Draw \"%s\" Item 1: frame %d of %d, item type==%d", pItem->_iIName, nCel, pFrameTable[0], pItem->_itype);
+						// app_fatal("Draw \"%s\" Item 1: frame %d of %d, item type==%d", pItem->_iIName, nCel, BSWAP_INT32_UNSIGNED(pFrameTable[0]), pItem->_itype);
 					}
 				} else {
 					// app_fatal("Draw Item \"%s\" 1: NULL Cel Buffer", pItem->_iIName);
@@ -1759,14 +1760,14 @@ void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int capChunks, int CelCa
 				if (pCelBuff != NULL) {
 					pFrameTable = (DWORD *)pCelBuff;
 					nCel = pItem->_iAnimFrame;
-					if (nCel >= 1 && pFrameTable[0] <= 50 && nCel <= (int)pFrameTable[0]) {
+					if (nCel >= 1 && BSWAP_INT32_UNSIGNED(pFrameTable[0]) <= 50 && nCel <= (int)BSWAP_INT32_UNSIGNED(pFrameTable[0])) {
 						px = dx - pItem->_iAnimWidth2;
 						if (bItem - 1 == pcursitem) {
 							CelDecodeClr(181, px, dy, pCelBuff, nCel, pItem->_iAnimWidth, 0, CelCap);
 						}
 						CelDecodeHdrLightOnly(px, dy, pItem->_iAnimData, pItem->_iAnimFrame, pItem->_iAnimWidth, 0, CelCap);
 					} else {
-						// app_fatal("Draw \"%s\" Item 2: frame %d of %d, item type==%d", pItem->_iIName, nCel, pFrameTable[0], pItem->_itype);
+						// app_fatal("Draw \"%s\" Item 2: frame %d of %d, item type==%d", pItem->_iIName, nCel, BSWAP_INT32_UNSIGNED(pFrameTable[0]), pItem->_itype);
 					}
 				} else {
 					// app_fatal("Draw Item \"%s\" 2: NULL Cel Buffer", pItem->_iIName);
@@ -1800,7 +1801,7 @@ void DrawMonster(int x, int y, int mx, int my, int m, int CelSkip, int CelCap)
 
 	nCel = monster[m]._mAnimFrame;
 	pFrameTable = (DWORD *)pCelBuff;
-	if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
+	if (nCel < 1 || BSWAP_INT32_UNSIGNED(pFrameTable[0]) > 50 || nCel > (int)BSWAP_INT32_UNSIGNED(pFrameTable[0])) {
 		/*
 		const char *szMode = "unknown action";
 		if(monster[m]._mmode <= 17)
@@ -1811,7 +1812,7 @@ void DrawMonster(int x, int y, int mx, int my, int m, int CelSkip, int CelCap)
 			szMode,
 			monster[m]._mdir,
 			nCel,
-			pFrameTable[0]);
+			BSWAP_INT32_UNSIGNED(pFrameTable[0]));
 		*/
 		return;
 	}
@@ -1870,8 +1871,8 @@ void DrawObject(int x, int y, int ox, int oy, BOOL pre, int CelSkip, int CelCap)
 
 	nCel = object[bv]._oAnimFrame;
 	pFrameTable = (DWORD *)pCelBuff;
-	if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
-		// app_fatal("Draw Object: frame %d of %d, object type==%d", nCel, pFrameTable[0], object[bv]._otype);
+	if (nCel < 1 || BSWAP_INT32_UNSIGNED(pFrameTable[0]) > 50 || nCel > (int)BSWAP_INT32_UNSIGNED(pFrameTable[0])) {
+		// app_fatal("Draw Object: frame %d of %d, object type==%d", nCel, BSWAP_INT32_UNSIGNED(pFrameTable[0]), object[bv]._otype);
 		return;
 	}
 
@@ -2040,39 +2041,6 @@ void DrawZoom(int x, int y)
 
 	/// ASSERT: assert(gpBuffer);
 
-#ifdef USE_ASM
-	__asm {
-		mov		esi, gpBuffer
-		mov		edx, nDstOff
-		mov		edi, esi
-		mov		ecx, nSrcOff
-		add		edi, edx
-		add		esi, ecx
-		mov		ebx, edi
-		add		ebx, BUFFER_WIDTH
-		mov		edx, 176
-	label1:
-		mov		ecx, wdt
-	label2:
-		mov		al, [esi]
-		inc		esi
-		mov		ah, al
-		mov		[edi], ax
-		mov		[ebx], ax
-		add		edi, 2
-		add		ebx, 2
-		dec		ecx
-		jnz		label2
-		mov		eax, BUFFER_WIDTH
-		add		eax, wdt
-		sub		esi, eax
-		add		eax, eax
-		sub		ebx, eax
-		sub		edi, eax
-		dec		edx
-		jnz		label1
-	}
-#else
 	int hgt;
 	BYTE *src, *dst1, *dst2;
 
@@ -2089,7 +2057,6 @@ void DrawZoom(int x, int y)
 			src++;
 		}
 	}
-#endif
 }
 
 void ClearScreenBuffer()
@@ -2098,20 +2065,6 @@ void ClearScreenBuffer()
 
 	/// ASSERT: assert(gpBuffer);
 
-#ifdef USE_ASM
-	__asm {
-		mov		edi, gpBuffer
-		add		edi, SCREENXY(0, 0)
-		mov		edx, SCREEN_HEIGHT
-		xor		eax, eax
-	zeroline:
-		mov		ecx, SCREEN_WIDTH / 4
-		rep stosd
-		add		edi, BUFFER_WIDTH - SCREEN_WIDTH
-		dec		edx
-		jnz		zeroline
-	}
-#else
 	int i;
 	BYTE *dst;
 
@@ -2120,7 +2073,6 @@ void ClearScreenBuffer()
 	for (i = 0; i < SCREEN_HEIGHT; i++, dst += BUFFER_WIDTH) {
 		memset(dst, 0, SCREEN_WIDTH);
 	}
-#endif
 
 	unlock_buf(3);
 }
@@ -2348,60 +2300,6 @@ void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BOOL draw
 		return;
 	}
 
-#ifdef __cplusplus
-	if (lpDDSPrimary->IsLost() == DDERR_SURFACELOST) {
-		if (lpDDSPrimary->Restore() != DD_OK) {
-			return;
-		}
-#else
-	if (lpDDSPrimary->lpVtbl->IsLost(lpDDSPrimary) == DDERR_SURFACELOST) {
-		if (lpDDSPrimary->lpVtbl->Restore(lpDDSPrimary) != DD_OK) {
-			return;
-		}
-#endif
-		ResetPal();
-		ysize = SCREEN_HEIGHT;
-	}
-
-	if (lpDDSBackBuf == NULL) {
-		retry = TRUE;
-		dwTicks = GetTickCount();
-		while (1) {
-			DDS_desc.dwSize = sizeof(DDS_desc);
-#ifdef __cplusplus
-			hDDVal = lpDDSPrimary->Lock(NULL, &DDS_desc, DDLOCK_WRITEONLY | DDLOCK_WAIT, NULL);
-#else
-			hDDVal = lpDDSPrimary->lpVtbl->Lock(lpDDSPrimary, NULL, &DDS_desc, DDLOCK_WRITEONLY | DDLOCK_WAIT, NULL);
-#endif
-			if (hDDVal == DD_OK) {
-				break;
-			}
-			if (dwTicks - GetTickCount() > 5000) {
-				break;
-			}
-			Sleep(1);
-			if (hDDVal == DDERR_SURFACELOST) {
-				return;
-			}
-			if (hDDVal != DDERR_WASSTILLDRAWING && hDDVal != DDERR_SURFACEBUSY) {
-				if (!retry || hDDVal != DDERR_GENERIC) {
-					break;
-				}
-				retry = FALSE;
-				dx_reinit();
-				ysize = SCREEN_HEIGHT;
-				dwTicks = GetTickCount();
-			}
-		}
-		if (hDDVal == DDERR_SURFACELOST
-		    || hDDVal == DDERR_WASSTILLDRAWING
-		    || hDDVal == DDERR_SURFACEBUSY) {
-			return;
-		}
-		if (hDDVal != DD_OK) {
-			DD_ERR_MSG(hDDVal);
-		}
-	}
 
 	/// ASSERT: assert(ysize >= 0 && ysize <= 480); // SCREEN_HEIGHT
 
@@ -2438,17 +2336,6 @@ void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BOOL draw
 		}
 	}
 
-	if (lpDDSBackBuf == NULL) {
-#ifdef __cplusplus
-		hDDVal = lpDDSPrimary->Unlock(NULL);
-#else
-		hDDVal = lpDDSPrimary->lpVtbl->Unlock(lpDDSPrimary, NULL);
-#endif
-		if (hDDVal != DDERR_SURFACELOST && hDDVal != DD_OK) {
-			DD_ERR_MSG(hDDVal);
-		}
-	}
-
 #ifdef _DEBUG
 	DrawFPS();
 #endif
@@ -2473,17 +2360,10 @@ void DrawFPS()
 		if (framerate > 99)
 			framerate = 99;
 		wsprintf(String, "%2d", framerate);
-#ifdef __cplusplus
 		if (!lpDDSPrimary->GetDC(&hdc)) {
 			TextOut(hdc, 0, 400, String, strlen(String));
 			lpDDSPrimary->ReleaseDC(hdc);
 		}
-#else
-		if (!lpDDSPrimary->lpVtbl->GetDC(lpDDSPrimary, &hdc)) {
-			TextOut(hdc, 0, 400, String, strlen(String));
-			lpDDSPrimary->lpVtbl->ReleaseDC(lpDDSPrimary, hdc);
-		}
-#endif
 	}
 }
 #endif
@@ -2506,11 +2386,7 @@ void DoBlitScreen(DWORD dwX, DWORD dwY, DWORD dwWdt, DWORD dwHgt)
 		/// ASSERT: assert(! gpBuffer);
 		dwTicks = GetTickCount();
 		while (1) {
-#ifdef __cplusplus
 			hDDVal = lpDDSPrimary->BltFast(dwX, dwY, lpDDSBackBuf, &SrcRect, DDBLTFAST_WAIT);
-#else
-			hDDVal = lpDDSPrimary->lpVtbl->BltFast(lpDDSPrimary, dwX, dwY, lpDDSBackBuf, &SrcRect, DDBLTFAST_WAIT);
-#endif
 			if (hDDVal == DD_OK) {
 				break;
 			}
@@ -2531,57 +2407,6 @@ void DoBlitScreen(DWORD dwX, DWORD dwY, DWORD dwWdt, DWORD dwHgt)
 		    && hDDVal != DD_OK) {
 			DD_ERR_MSG(hDDVal);
 		}
-	} else {
-		nSrcOff = SCREENXY(dwX, dwY);
-		nDstOff = dwX * (SCREEN_BPP / 8) + dwY * DDS_desc.lPitch;
-		nSrcWdt = BUFFER_WIDTH - dwWdt;
-		nDstWdt = DDS_desc.lPitch - dwWdt * (SCREEN_BPP / 8);
-		dwWdt >>= 2;
-
-		lock_buf(6);
-
-		/// ASSERT: assert(gpBuffer);
-
-#if defined(USE_ASM) && !defined(RGBMODE)
-		__asm {
-			mov		esi, gpBuffer
-			mov		edi, DDS_desc.lpSurface
-			add		esi, nSrcOff
-			add		edi, nDstOff
-			mov		eax, nSrcWdt
-			mov		ebx, nDstWdt
-			mov		edx, dwHgt
-		blitline:
-			mov		ecx, dwWdt
-			rep movsd
-			add		esi, eax
-			add		edi, ebx
-			dec		edx
-			jnz		blitline
-		}
-#else
-		int wdt, hgt;
-		BYTE *src, *dst;
-
-		src = &gpBuffer[nSrcOff];
-		dst = (BYTE *)DDS_desc.lpSurface + nDstOff;
-
-		for (hgt = 0; hgt < dwHgt; hgt++, src += nSrcWdt, dst += nDstWdt) {
-			for (wdt = 0; wdt < 4 * dwWdt; wdt++) {
-#ifndef RGBMODE
-				*dst++ = *src++;
-#else
-				PALETTEENTRY pal = system_palette[*src++];
-				dst[0] = pal.peBlue;
-				dst[1] = pal.peGreen;
-				dst[2] = pal.peRed;
-				dst += 4;
-#endif
-			}
-		}
-#endif
-
-		unlock_buf(6);
 	}
 }
 
