@@ -77,7 +77,7 @@ def build_zlib(TARGET, SYSROOT, DEFINES, FLAGS) {
 		sh "mkdir -p build"
 		sh "rm -rfv build/*"
 
-		sh "cd build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT}" // ${DEFINES}"
+		sh "cd build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} ${DEFINES}"
 		sh "cd build && cmake --build . --config Release --target install -- -j8"
 	}
 }
@@ -108,8 +108,7 @@ def build_sdl1_mixer(TARGET, SYSROOT, DEFINES, FLAGS) {
 
 	dir("SDL_mixer-SDL-1.2") {
 		sh "./autogen.sh"
-		// CFLAGS=\"${FLAGS}\" CXXFLAGS=\"${FLAGS}\" 
-		sh "SDL_LIBS='-lSDL -ldebug' SDL_CFLAGS=\"-I${SYSROOT}/include/SDL -noixemul\" ./configure --disable-sdltest --disable-shared --enable-static --host=${TARGET} --prefix=${SYSROOT}"
+		sh "CFLAGS=\"${FLAGS}\" CXXFLAGS=\"${FLAGS}\" SDL_LIBS='-lSDL -ldebug' SDL_CFLAGS=\"-I${SYSROOT}/include/SDL -noixemul\" ./configure --disable-sdltest --disable-shared --enable-static --host=${TARGET} --prefix=${SYSROOT}"
 		sh "make clean"
 		sh "make -j8"
 		sh "make install"
