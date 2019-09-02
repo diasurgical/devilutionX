@@ -287,10 +287,10 @@ void MakeSpeedCels()
 			if (dPiece[x][y]) {
 				pMap = &dpiece_defs_map_2[x][y];
 				for (i = 0; i < blocks; i++) {
-					if (BSWAP_INT16_UNSIGNED(pMap->mt[i])) {
+					if (pMap->mt[i]) {
 						for (m = 0; m < total_frames; m++) {
-							if (BSWAP_INT16_UNSIGNED(pMap->mt[i] & 0xFFF) == tile_defs[m]) {
-								pMap->mt[i] = BSWAP_INT16_UNSIGNED(m + level_frame_types[m] + 0x8000);
+							if ((BSWAP_INT32_UNSIGNED(pMap->mt[i] & 0xFFF)) == tile_defs[m]) {
+								pMap->mt[i] = BSWAP_INT32_UNSIGNED(m + level_frame_types[m] + 0x8000);
 								m = total_frames;
 							}
 						}
