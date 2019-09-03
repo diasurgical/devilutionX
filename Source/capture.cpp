@@ -12,17 +12,13 @@ void CaptureScreen()
 	hObject = CaptureFile(FileName);
 	if (hObject != INVALID_HANDLE_VALUE) {
 		DrawAndBlit();
-#ifdef __cplusplus
 		lpDDPalette->GetEntries(0, 0, 256, palette);
-#else
-		lpDDPalette->lpVtbl->GetEntries(lpDDPalette, 0, 0, 256, palette);
-#endif
 		RedPalette(palette);
 
 		lock_buf(2);
-		success = CaptureHdr(hObject, 640, 480);
+		success = CaptureHdr(hObject, SCREEN_WIDTH, SCREEN_HEIGHT);
 		if (success) {
-			success = CapturePix(hObject, 640, 480, BUFFER_WIDTH, &gpBuffer[SCREENXY(0, 0)]);
+			success = CapturePix(hObject, SCREEN_WIDTH, SCREEN_HEIGHT, BUFFER_WIDTH, &gpBuffer[SCREENXY(0, 0)]);
 			if (success) {
 				success = CapturePal(hObject, palette);
 			}
@@ -34,30 +30,26 @@ void CaptureScreen()
 			DeleteFile(FileName);
 
 		Sleep(300);
-#ifdef __cplusplus
 		lpDDPalette->SetEntries(0, 0, 256, palette);
-#else
-		lpDDPalette->lpVtbl->SetEntries(lpDDPalette, 0, 0, 256, palette);
-#endif
 	}
 }
 
 BOOL CaptureHdr(HANDLE hFile, short width, short height)
 {
 	DWORD lpNumBytes;
-	PCXHeader Buffer;
+	PCXHEADER Buffer;
 
 	memset(&Buffer, 0, sizeof(Buffer));
-	Buffer.manufacturer = 10;
-	Buffer.version = 5;
-	Buffer.encoding = 1;
-	Buffer.bitsPerPixel = 8;
-	Buffer.xmax = width - 1;
-	Buffer.ymax = height - 1;
-	Buffer.horzRes = width;
-	Buffer.vertRes = height;
-	Buffer.numColorPlanes = 1;
-	Buffer.bytesPerScanLine = width;
+	Buffer.Manufacturer = 10;
+	Buffer.Version = 5;
+	Buffer.Encoding = 1;
+	Buffer.BitsPerPixel = 8;
+	Buffer.Xmax = width - 1;
+	Buffer.Ymax = height - 1;
+	Buffer.HDpi = width;
+	Buffer.VDpi = height;
+	Buffer.NPlanes = 1;
+	Buffer.BytesPerLine = width;
 
 	return WriteFile(hFile, &Buffer, sizeof(Buffer), &lpNumBytes, NULL) && lpNumBytes == sizeof(Buffer);
 }
@@ -134,27 +126,17 @@ BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
 
 HANDLE CaptureFile(char *dst_path)
 {
-	BOOLEAN num_used[100];
-	int free_num, hFind;
-	struct _finddata_t finder;
+	int len = GetModuleFileNameA(ghInst, dst_path, MAX_PATH);
 
-	memset(num_used, FALSE, sizeof(num_used));
-	hFind = _findfirst("screen??.PCX", &finder);
-	if (hFind != -1) {
-		do {
-			if (isdigit(finder.name[6]) && isdigit(finder.name[7])) {
-				free_num = 10 * (finder.name[6] - '0');
-				free_num += (finder.name[7] - '0');
-				num_used[free_num] = TRUE;
-			}
-		} while (_findnext(hFind, &finder) == 0);
-	}
+	for (int i = 0; i <= 99; i++) {
+		sprintf(&dst_path[len], "screen%02d.PCX", i);
+		FILE *file = fopen(dst_path, "r");
 
-	for (free_num = 0; free_num < 100; free_num++) {
-		if (!num_used[free_num]) {
-			sprintf(dst_path, "screen%02d.PCX", free_num);
+		if (file == NULL) {
 			return CreateFile(dst_path, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 		}
+
+		fclose(file);
 	}
 
 	return INVALID_HANDLE_VALUE;
@@ -172,11 +154,7 @@ void RedPalette(PALETTEENTRY *pal)
 		red[i].peFlags = 0;
 	}
 
-#ifdef __cplusplus
 	lpDDPalette->SetEntries(0, 0, 256, red);
-#else
-	lpDDPalette->lpVtbl->SetEntries(lpDDPalette, 0, 0, 256, red);
-#endif
 }
 
 DEVILUTION_END_NAMESPACE

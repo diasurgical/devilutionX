@@ -123,19 +123,19 @@ void SetCurrentPortal(int p)
 void GetPortalLevel()
 {
 	if (currlevel) {
-		setlevel = 0;
+		setlevel = FALSE;
 		currlevel = 0;
 		plr[myplr].plrlevel = 0;
 		leveltype = DTYPE_TOWN;
 	} else {
 		if (portal[portalindex].setlvl) {
-			setlevel = 1;
+			setlevel = TRUE;
 			setlvlnum = portal[portalindex].level;
 			currlevel = portal[portalindex].level;
 			plr[myplr].plrlevel = setlvlnum;
 			leveltype = portal[portalindex].ltype;
 		} else {
-			setlevel = 0;
+			setlevel = FALSE;
 			currlevel = portal[portalindex].level;
 			plr[myplr].plrlevel = currlevel;
 			leveltype = portal[portalindex].ltype;

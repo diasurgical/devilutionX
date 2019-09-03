@@ -268,7 +268,6 @@ WINBOOL WINAPI PostMessageA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 
 WINBOOL WINAPI DestroyWindow(HWND hWnd);
 HWND WINAPI GetLastActivePopup(HWND hWnd);
-DWORD GdiSetBatchLimit(DWORD dw);
 HWND WINAPI GetTopWindow(HWND hWnd);
 WINBOOL WINAPI SetForegroundWindow(HWND hWnd);
 HWND WINAPI SetFocus(HWND hWnd);
@@ -587,7 +586,7 @@ typedef struct _CONTEXT {
 
 	//
 	// This section is specified/returned if the
-	// ContextFlags word contians the flag CONTEXT_SEGMENTS.
+	// ContextFlags word contains the flag CONTEXT_SEGMENTS.
 	//
 
 	DWORD SegGs;
@@ -597,7 +596,7 @@ typedef struct _CONTEXT {
 
 	//
 	// This section is specified/returned if the
-	// ContextFlags word contians the flag CONTEXT_INTEGER.
+	// ContextFlags word contains the flag CONTEXT_INTEGER.
 	//
 
 	DWORD Edi;
@@ -609,7 +608,7 @@ typedef struct _CONTEXT {
 
 	//
 	// This section is specified/returned if the
-	// ContextFlags word contians the flag CONTEXT_CONTROL.
+	// ContextFlags word contains the flag CONTEXT_CONTROL.
 	//
 
 	DWORD Ebp;
@@ -671,6 +670,7 @@ extern void DrawArtWithMask(int SX, int SY, int SW, int SH, int nFrame, BYTE bMa
 extern BOOL __cdecl LoadArtWithPal(char *pszFile, void **pBuffer, int frames, DWORD *data);
 
 constexpr auto DVL_WM_ACTIVATEAPP = 0x001C;
+constexpr auto DVL_WM_SYSKEYUP = 0x0105;
 const auto DVL_HFILE_ERROR = (HFILE)-1;
 constexpr auto DVL_DRIVE_CDROM = 5;
 constexpr auto DVL_WM_DESTROY = 0x0002;

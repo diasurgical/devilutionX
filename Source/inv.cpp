@@ -3,7 +3,7 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 BOOL invflag;
-void *pInvCels;
+BYTE *pInvCels;
 BOOL drawsbarflag;
 int sgdwLastTime; // check name
 
@@ -99,10 +99,12 @@ void InitInv()
 {
 	if (plr[myplr]._pClass == PC_WARRIOR) {
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", NULL);
+#ifndef SPAWN
 	} else if (plr[myplr]._pClass == PC_ROGUE) {
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv_rog.CEL", NULL);
 	} else if (plr[myplr]._pClass == PC_SORCERER) {
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv_Sor.CEL", NULL);
+#endif
 	}
 
 	invflag = 0;
@@ -117,38 +119,6 @@ void InvDrawSlotBack(int X, int Y, int W, int H)
 
 	dst = &gpBuffer[X + PitchTbl[Y]];
 
-#ifdef USE_ASM
-	__asm {
-		mov		edi, dst
-		xor		edx, edx
-		xor		ebx, ebx
-		mov		dx, word ptr H
-		mov		bx, word ptr W
-	label1:
-		mov		ecx, ebx
-	label2:
-		mov		al, [edi]
-		cmp		al, PAL16_BLUE
-		jb		label5
-		cmp		al, PAL16_BLUE + 15
-		ja		label3
-		sub		al, PAL16_BLUE - PAL16_BEIGE
-		jmp		label4
-	label3:
-		cmp		al, PAL16_GRAY
-		jb		label5
-		sub		al, PAL16_GRAY - PAL16_BEIGE
-	label4:
-		mov		[edi], al
-	label5:
-		inc		edi
-		loop	label2
-		sub		edi, BUFFER_WIDTH
-		sub		edi, ebx
-		dec		edx
-		jnz		label1
-	}
-#else
 	int wdt, hgt;
 	BYTE pix;
 
@@ -164,7 +134,6 @@ void InvDrawSlotBack(int X, int Y, int W, int H)
 			*dst++ = pix;
 		}
 	}
-#endif
 }
 
 void DrawInv()
@@ -172,7 +141,7 @@ void DrawInv()
 	BOOL invtest[40];
 	int frame, frame_width, colour, screen_x, screen_y, i, j, ii;
 
-	CelDecodeOnly(384, 511, (BYTE *)pInvCels, 1, 320);
+	CelDecodeOnly(384, 511, pInvCels, 1, 320);
 
 	if (plr[myplr].InvBody[INVLOC_HEAD]._itype != ITYPE_NONE) {
 		InvDrawSlotBack(517, 219, 2 * INV_SLOT_SIZE_PX, 2 * INV_SLOT_SIZE_PX);
@@ -188,13 +157,13 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_HEAD]._iStatFlag) {
 				colour = ICOL_RED;
 			}
-			CelDecodeClr(colour, 517, 219, (BYTE *)pCursCels, frame, frame_width, 0, 8);
+			CelDecodeClr(colour, 517, 219, pCursCels, frame, frame_width, 0, 8);
 		}
 
 		if (plr[myplr].InvBody[INVLOC_HEAD]._iStatFlag) {
-			CelDrawHdrOnly(517, 219, (BYTE *)pCursCels, frame, frame_width, 0, 8);
+			CelDrawHdrOnly(517, 219, pCursCels, frame, frame_width, 0, 8);
 		} else {
-			CelDrawHdrLightRed(517, 219, (BYTE *)pCursCels, frame, frame_width, 0, 8, 1);
+			CelDrawHdrLightRed(517, 219, pCursCels, frame, frame_width, 0, 8, 1);
 		}
 	}
 
@@ -212,13 +181,13 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_RING_LEFT]._iStatFlag) {
 				colour = ICOL_RED;
 			}
-			CelDecodeClr(colour, 432, 365, (BYTE *)pCursCels, frame, frame_width, 0, 8);
+			CelDecodeClr(colour, 432, 365, pCursCels, frame, frame_width, 0, 8);
 		}
 
 		if (plr[myplr].InvBody[INVLOC_RING_LEFT]._iStatFlag) {
-			CelDrawHdrOnly(432, 365, (BYTE *)pCursCels, frame, frame_width, 0, 8);
+			CelDrawHdrOnly(432, 365, pCursCels, frame, frame_width, 0, 8);
 		} else {
-			CelDrawHdrLightRed(432, 365, (BYTE *)pCursCels, frame, frame_width, 0, 8, 1);
+			CelDrawHdrLightRed(432, 365, pCursCels, frame, frame_width, 0, 8, 1);
 		}
 	}
 
@@ -236,13 +205,13 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_RING_RIGHT]._iStatFlag) {
 				colour = ICOL_RED;
 			}
-			CelDecodeClr(colour, 633, 365, (BYTE *)pCursCels, frame, frame_width, 0, 8);
+			CelDecodeClr(colour, 633, 365, pCursCels, frame, frame_width, 0, 8);
 		}
 
 		if (plr[myplr].InvBody[INVLOC_RING_RIGHT]._iStatFlag) {
-			CelDrawHdrOnly(633, 365, (BYTE *)pCursCels, frame, frame_width, 0, 8);
+			CelDrawHdrOnly(633, 365, pCursCels, frame, frame_width, 0, 8);
 		} else {
-			CelDrawHdrLightRed(633, 365, (BYTE *)pCursCels, frame, frame_width, 0, 8, 1);
+			CelDrawHdrLightRed(633, 365, pCursCels, frame, frame_width, 0, 8, 1);
 		}
 	}
 
@@ -260,13 +229,13 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_AMULET]._iStatFlag) {
 				colour = ICOL_RED;
 			}
-			CelDecodeClr(colour, 589, 220, (BYTE *)pCursCels, frame, frame_width, 0, 8);
+			CelDecodeClr(colour, 589, 220, pCursCels, frame, frame_width, 0, 8);
 		}
 
 		if (plr[myplr].InvBody[INVLOC_AMULET]._iStatFlag) {
-			CelDrawHdrOnly(589, 220, (BYTE *)pCursCels, frame, frame_width, 0, 8);
+			CelDrawHdrOnly(589, 220, pCursCels, frame, frame_width, 0, 8);
 		} else {
-			CelDrawHdrLightRed(589, 220, (BYTE *)pCursCels, frame, frame_width, 0, 8, 1);
+			CelDrawHdrLightRed(589, 220, pCursCels, frame, frame_width, 0, 8, 1);
 		}
 	}
 
@@ -287,13 +256,13 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
 				colour = ICOL_RED;
 			}
-			CelDecodeClr(colour, screen_x, screen_y, (BYTE *)pCursCels, frame, frame_width, 0, 8);
+			CelDecodeClr(colour, screen_x, screen_y, pCursCels, frame, frame_width, 0, 8);
 		}
 
 		if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
-			CelDrawHdrOnly(screen_x, screen_y, (BYTE *)pCursCels, frame, frame_width, 0, 8);
+			CelDrawHdrOnly(screen_x, screen_y, pCursCels, frame, frame_width, 0, 8);
 		} else {
-			CelDrawHdrLightRed(screen_x, screen_y, (BYTE *)pCursCels, frame, frame_width, 0, 8, 1);
+			CelDrawHdrLightRed(screen_x, screen_y, pCursCels, frame, frame_width, 0, 8, 1);
 		}
 
 		if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND) {
@@ -305,7 +274,7 @@ void DrawInv()
 			    frame_width == INV_SLOT_SIZE_PX
 			        ? &gpBuffer[SCREENXY(581, 160)]
 			        : &gpBuffer[SCREENXY(567, 160)],
-			    (BYTE *)pCursCels, frame, frame_width, 0, 8);
+			    pCursCels, frame, frame_width, 0, 8);
 
 			cel_transparency_active = 0;
 		}
@@ -327,13 +296,13 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
 				colour = ICOL_RED;
 			}
-			CelDecodeClr(colour, screen_x, screen_y, (BYTE *)pCursCels, frame, frame_width, 0, 8);
+			CelDecodeClr(colour, screen_x, screen_y, pCursCels, frame, frame_width, 0, 8);
 		}
 
 		if (plr[myplr].InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
-			CelDrawHdrOnly(screen_x, screen_y, (BYTE *)pCursCels, frame, frame_width, 0, 8);
+			CelDrawHdrOnly(screen_x, screen_y, pCursCels, frame, frame_width, 0, 8);
 		} else {
-			CelDrawHdrLightRed(screen_x, screen_y, (BYTE *)pCursCels, frame, frame_width, 0, 8, 1);
+			CelDrawHdrLightRed(screen_x, screen_y, pCursCels, frame, frame_width, 0, 8, 1);
 		}
 	}
 
@@ -351,13 +320,13 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_CHEST]._iStatFlag) {
 				colour = ICOL_RED;
 			}
-			CelDecodeClr(colour, 517, 320, (BYTE *)pCursCels, frame, frame_width, 0, 8);
+			CelDecodeClr(colour, 517, 320, pCursCels, frame, frame_width, 0, 8);
 		}
 
 		if (plr[myplr].InvBody[INVLOC_CHEST]._iStatFlag) {
-			CelDrawHdrOnly(517, 320, (BYTE *)pCursCels, frame, frame_width, 0, 8);
+			CelDrawHdrOnly(517, 320, pCursCels, frame, frame_width, 0, 8);
 		} else {
-			CelDrawHdrLightRed(517, 320, (BYTE *)pCursCels, frame, frame_width, 0, 8, 1);
+			CelDrawHdrLightRed(517, 320, pCursCels, frame, frame_width, 0, 8, 1);
 		}
 	}
 
@@ -392,19 +361,19 @@ void DrawInv()
 				    colour,
 				    InvRect[j + SLOTXY_INV_FIRST].X + 64,
 				    InvRect[j + SLOTXY_INV_FIRST].Y + 159,
-				    (BYTE *)pCursCels, frame, frame_width, 0, 8);
+				    pCursCels, frame, frame_width, 0, 8);
 			}
 
 			if (plr[myplr].InvList[ii]._iStatFlag) {
 				CelDrawHdrOnly(
 				    InvRect[j + SLOTXY_INV_FIRST].X + 64,
 				    InvRect[j + SLOTXY_INV_FIRST].Y + 159,
-				    (BYTE *)pCursCels, frame, frame_width, 0, 8);
+				    pCursCels, frame, frame_width, 0, 8);
 			} else {
 				CelDrawHdrLightRed(
 				    InvRect[j + SLOTXY_INV_FIRST].X + 64,
 				    InvRect[j + SLOTXY_INV_FIRST].Y + 159,
-				    (BYTE *)pCursCels, frame, frame_width, 0, 8, 1);
+				    pCursCels, frame, frame_width, 0, 8, 1);
 			}
 		}
 	}
@@ -436,13 +405,13 @@ void DrawInvBelt()
 				colour = ICOL_BLUE;
 			if (!plr[myplr].SpdList[i]._iStatFlag)
 				colour = ICOL_RED;
-			CelDecodeClr(colour, InvRect[i + 65].X + 64, InvRect[i + 65].Y + 159, (BYTE *)pCursCels, frame, frame_width, 0, 8);
+			CelDecodeClr(colour, InvRect[i + 65].X + 64, InvRect[i + 65].Y + 159, pCursCels, frame, frame_width, 0, 8);
 		}
 
 		if (plr[myplr].SpdList[i]._iStatFlag)
-			CelDrawHdrOnly(InvRect[i + 65].X + 64, InvRect[i + 65].Y + 159, (BYTE *)pCursCels, frame, frame_width, 0, 8);
+			CelDrawHdrOnly(InvRect[i + 65].X + 64, InvRect[i + 65].Y + 159, pCursCels, frame, frame_width, 0, 8);
 		else
-			CelDrawHdrLightRed(InvRect[i + 65].X + 64, InvRect[i + 65].Y + 159, (BYTE *)pCursCels, frame, frame_width, 0, 8, 1);
+			CelDrawHdrLightRed(InvRect[i + 65].X + 64, InvRect[i + 65].Y + 159, pCursCels, frame, frame_width, 0, 8, 1);
 
 		if (AllItemsList[plr[myplr].SpdList[i].IDidx].iUsable
 		    && plr[myplr].SpdList[i]._iStatFlag
@@ -799,10 +768,12 @@ void CheckInvPaste(int pnum, int mx, int my)
 		done = FALSE;
 		if (plr[pnum]._pClass == PC_WARRIOR)
 			PlaySFX(PS_WARR13);
+#ifndef SPAWN
 		else if (plr[pnum]._pClass == PC_ROGUE)
 			PlaySFX(PS_ROGUE13);
 		else if (plr[pnum]._pClass == PC_SORCERER)
 			PlaySFX(PS_MAGE13);
+#endif
 	}
 
 	if (!done)
@@ -1355,7 +1326,7 @@ void CheckInvItem()
 void CheckInvScrn()
 {
 	if (MouseX > 190 && MouseX < 437
-	    && MouseY > VIEWPORT_HEIGHT && MouseY < 385) {
+	    && MouseY > PANEL_TOP && MouseY < 385) {
 		CheckInvItem();
 	}
 }
@@ -1396,6 +1367,7 @@ void CheckQuestItem(int pnum)
 	if (plr[pnum].HoldItem.IDidx == IDI_OPTAMULET)
 		quests[QTYPE_BLIND]._qactive = 3;
 	if (plr[pnum].HoldItem.IDidx == IDI_MUSHROOM && quests[QTYPE_BLKM]._qactive == 2 && quests[QTYPE_BLKM]._qvar1 == QS_MUSHSPAWNED) {
+#ifndef SPAWN
 		sfxdelay = 10;
 		if (plr[pnum]._pClass == PC_WARRIOR) { // BUGFIX: Voice for this quest might be wrong in MP
 			sfxdnum = PS_WARR95;
@@ -1404,6 +1376,7 @@ void CheckQuestItem(int pnum)
 		} else if (plr[pnum]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE95;
 		}
+#endif
 		quests[QTYPE_BLKM]._qvar1 = QS_MUSHPICKED;
 	}
 	if (plr[pnum].HoldItem.IDidx == IDI_ANVIL) {
@@ -1411,6 +1384,7 @@ void CheckQuestItem(int pnum)
 			quests[QTYPE_ANVIL]._qactive = 2;
 			quests[QTYPE_ANVIL]._qvar1 = 1;
 		}
+#ifndef SPAWN
 		if (quests[QTYPE_ANVIL]._qlog == 1) {
 			sfxdelay = 10;
 			if (plr[myplr]._pClass == PC_WARRIOR) {
@@ -1421,7 +1395,9 @@ void CheckQuestItem(int pnum)
 				sfxdnum = PS_MAGE89;
 			}
 		}
+#endif
 	}
+#ifndef SPAWN
 	if (plr[pnum].HoldItem.IDidx == IDI_GLDNELIX) {
 		sfxdelay = 30;
 		if (plr[myplr]._pClass == PC_WARRIOR) {
@@ -1432,11 +1408,13 @@ void CheckQuestItem(int pnum)
 			sfxdnum = PS_MAGE88;
 		}
 	}
+#endif
 	if (plr[pnum].HoldItem.IDidx == IDI_ROCK) {
 		if (quests[QTYPE_INFRA]._qactive == 1) {
 			quests[QTYPE_INFRA]._qactive = 2;
 			quests[QTYPE_INFRA]._qvar1 = 1;
 		}
+#ifndef SPAWN
 		if (quests[QTYPE_INFRA]._qlog == 1) {
 			sfxdelay = 10;
 			if (plr[myplr]._pClass == PC_WARRIOR) {
@@ -1447,9 +1425,11 @@ void CheckQuestItem(int pnum)
 				sfxdnum = PS_MAGE87;
 			}
 		}
+#endif
 	}
 	if (plr[pnum].HoldItem.IDidx == IDI_ARMOFVAL) {
 		quests[QTYPE_BLOOD]._qactive = 3;
+#ifndef SPAWN
 		sfxdelay = 20;
 		if (plr[myplr]._pClass == PC_WARRIOR) {
 			sfxdnum = PS_WARR91;
@@ -1458,6 +1438,7 @@ void CheckQuestItem(int pnum)
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE91;
 		}
+#endif
 	}
 }
 
@@ -1610,10 +1591,12 @@ void AutoGetItem(int pnum, int ii)
 		if (pnum == myplr) {
 			if (plr[pnum]._pClass == PC_WARRIOR) {
 				PlaySFX(random(0, 3) + PS_WARR14);
+#ifndef SPAWN
 			} else if (plr[pnum]._pClass == PC_ROGUE) {
 				PlaySFX(random(0, 3) + PS_ROGUE14);
 			} else if (plr[pnum]._pClass == PC_SORCERER) {
 				PlaySFX(random(0, 3) + PS_MAGE14);
+#endif
 			}
 		}
 		plr[pnum].HoldItem = item[ii];
@@ -1802,7 +1785,7 @@ int InvPutItem(int pnum, int x, int y)
 	}
 
 	CanPut(x, y); //if (!CanPut(x, y)) {
-	//	assertion_failed(1524, "C:\\Diablo\\Direct\\inv.cpp", "CanPut(x,y)");
+	//	assertion_failed(__LINE__, __FILE__, "CanPut(x,y)");
 	//}
 
 	ii = itemavail[0];
@@ -2082,10 +2065,10 @@ BOOL UseInvItem(int pnum, int cii)
 
 	if (plr[pnum]._pInvincible && !plr[pnum]._pHitPoints && pnum == myplr)
 		return TRUE;
-
-	if (pcurs != 1 || stextflag)
+	if (pcurs != 1)
 		return TRUE;
-
+	if (stextflag)
+		return TRUE;
 	if (cii <= 5)
 		return FALSE;
 
@@ -2104,6 +2087,7 @@ BOOL UseInvItem(int pnum, int cii)
 	switch (Item->IDidx) {
 	case 17:
 		sfxdelay = 10;
+#ifndef SPAWN
 		if (plr[pnum]._pClass == PC_WARRIOR) {
 			sfxdnum = PS_WARR95;
 		} else if (plr[pnum]._pClass == PC_ROGUE) {
@@ -2111,62 +2095,68 @@ BOOL UseInvItem(int pnum, int cii)
 		} else if (plr[pnum]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE95;
 		}
-		break;
+#endif
+		return TRUE;
 	case 19:
 		PlaySFX(IS_IBOOK);
 		sfxdelay = 10;
 		if (plr[pnum]._pClass == PC_WARRIOR) {
 			sfxdnum = PS_WARR29;
+#ifndef SPAWN
 		} else if (plr[pnum]._pClass == PC_ROGUE) {
 			sfxdnum = PS_ROGUE29;
 		} else if (plr[pnum]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE29;
+#endif
 		}
-		break;
-	default:
-		if (!AllItemsList[Item->IDidx].iUsable)
-			return FALSE;
+		return TRUE;
+	}
 
-		if (!Item->_iStatFlag) {
-			if (plr[pnum]._pClass == PC_WARRIOR) {
-				PlaySFX(PS_WARR13);
-			} else if (plr[pnum]._pClass == PC_ROGUE) {
-				PlaySFX(PS_ROGUE13);
-			} else if (plr[pnum]._pClass == PC_SORCERER) {
-				PlaySFX(PS_MAGE13);
-			}
-			return TRUE;
+	if (!AllItemsList[Item->IDidx].iUsable)
+		return FALSE;
+
+	if (!Item->_iStatFlag) {
+		if (plr[pnum]._pClass == PC_WARRIOR) {
+			PlaySFX(PS_WARR13);
+#ifndef SPAWN
+		} else if (plr[pnum]._pClass == PC_ROGUE) {
+			PlaySFX(PS_ROGUE13);
+		} else if (plr[pnum]._pClass == PC_SORCERER) {
+			PlaySFX(PS_MAGE13);
+#endif
 		}
+		return TRUE;
+	}
 
-		if (Item->_iMiscId == IMISC_NONE && Item->_itype == ITYPE_GOLD) {
-			StartGoldDrop();
-			return TRUE;
-		}
+	if (Item->_iMiscId == IMISC_NONE && Item->_itype == ITYPE_GOLD) {
+		StartGoldDrop();
+		return TRUE;
+	}
 
-		if (dropGoldFlag) {
-			dropGoldFlag = FALSE;
-			dropGoldValue = 0;
-		}
+	if (dropGoldFlag) {
+		dropGoldFlag = FALSE;
+		dropGoldValue = 0;
+	}
 
-		if ((Item->_iMiscId == IMISC_SCROLL && currlevel == 0 && !spelldata[Item->_iSpell].sTownSpell)
-		    || (Item->_iMiscId == IMISC_SCROLLT && currlevel == 0 && !spelldata[Item->_iSpell].sTownSpell)) {
-			return TRUE;
-		}
+	if (Item->_iMiscId == IMISC_SCROLL && currlevel == 0 && !spelldata[Item->_iSpell].sTownSpell) {
+		return TRUE;
+	}
 
-		idata = ItemCAnimTbl[Item->_iCurs];
-		if (Item->_iMiscId == IMISC_BOOK)
-			PlaySFX(IS_RBOOK);
-		else if (pnum == myplr)
-			PlaySFX(ItemInvSnds[idata]);
+	if (Item->_iMiscId == IMISC_SCROLLT && currlevel == 0 && !spelldata[Item->_iSpell].sTownSpell) {
+		return TRUE;
+	}
+	idata = ItemCAnimTbl[Item->_iCurs];
+	if (Item->_iMiscId == IMISC_BOOK)
+		PlaySFX(IS_RBOOK);
+	else if (pnum == myplr)
+		PlaySFX(ItemInvSnds[idata]);
 
-		UseItem(pnum, Item->_iMiscId, Item->_iSpell);
+	UseItem(pnum, Item->_iMiscId, Item->_iSpell);
 
-		if (speedlist) {
-			RemoveSpdBarItem(pnum, c);
-		} else if (plr[pnum].InvList[c]._iMiscId != IMISC_MAPOFDOOM) {
-			RemoveInvItem(pnum, c);
-		}
-		break;
+	if (speedlist) {
+		RemoveSpdBarItem(pnum, c);
+	} else if (plr[pnum].InvList[c]._iMiscId != IMISC_MAPOFDOOM) {
+		RemoveInvItem(pnum, c);
 	}
 
 	return TRUE;

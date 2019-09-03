@@ -3,6 +3,9 @@
 
 namespace dvl {
 
+int mainmenu_attract_time_out; //seconds
+DWORD dwAttractTicks;
+
 int MainMenuResult;
 UI_Item MAINMENU_DIALOG[] = {
 	{ { 0, 0, 640, 480 }, UI_IMAGE, 0, 0, NULL, &ArtBackground },
@@ -22,6 +25,11 @@ void UiMainMenuSelect(int value)
 void mainmenu_Esc()
 {
 	UiMainMenuSelect(MAINMENU_EXIT_DIABLO);
+}
+
+void mainmenu_restart_repintro()
+{
+	dwAttractTicks = GetTickCount() + mainmenu_attract_time_out * 1000;
 }
 
 void mainmenu_Load(char *name, void(*fnSound)(char *file))
@@ -45,12 +53,18 @@ void mainmenu_Free()
 	ArtBackground.data = NULL;
 }
 
-BOOL UiMainMenuDialog(char *name, int *pdwResult, void(*fnSound)(char *file), int a4)
+BOOL UiMainMenuDialog(char *name, int *pdwResult, void(*fnSound)(char *file), int attractTimeOut)
 {
+	mainmenu_attract_time_out = attractTimeOut;
 	mainmenu_Load(name, fnSound);
+	
+	mainmenu_restart_repintro(); // for automatic starts
 
 	while (MainMenuResult == 0) {
 		UiRender();
+		if (GetTickCount() >= dwAttractTicks) {
+			MainMenuResult = MAINMENU_ATTRACT_MODE;
+		}
 	}
 
 	BlackPalette();

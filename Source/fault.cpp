@@ -83,7 +83,7 @@ LONG __stdcall TopLevelExceptionFilter(PEXCEPTION_POINTERS ExceptionInfo)
 	return EXCEPTION_CONTINUE_SEARCH;
 }
 
-void fault_hex_format(BYTE *ptr, unsigned int numBytes)
+void fault_hex_format(BYTE *ptr, DWORD numBytes)
 {
 	DWORD i, bytesRead;
 	const char *fmt;

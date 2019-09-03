@@ -16,6 +16,28 @@ int visionid;
 BYTE *pLightTbl;
 BOOL lightflag;
 
+// CrawlTable specifies X- and Y-coordinate deltas from a missile target
+// coordinate.
+//
+// n=4
+//
+//    y
+//    ^
+//    |  1
+//    | 3#4
+//    |  2
+//    +-----> x
+//
+// n=16
+//
+//    y
+//    ^
+//    |  314
+//    | B7 8C
+//    | F # G
+//    | D9 AE
+//    |  526
+//    +-------> x
 char CrawlTable[2749] = {
 	1,
 	0, 0,
@@ -380,7 +402,9 @@ char CrawlTable[2749] = {
 	-18, -1, 18, -1, -18, 0, 18, 0
 };
 
-char *pCrawlTable[19] = /* figure out what this is for */
+// pCrawlTable maps from circle radius to the X- and Y-coordinate deltas from
+// the center of a circle.
+char *pCrawlTable[19] =
     {
 	    CrawlTable,
 	    CrawlTable + 3,
@@ -665,7 +689,8 @@ void DoUnVision(int nXPos, int nYPos, int nRadius)
 
 void DoVision(int nXPos, int nYPos, int nRadius, BOOL doautomap, BOOL visible)
 {
-	int nCrawlX, nCrawlY, nLineLen, nBlockerFlag, nTrans;
+	BOOL nBlockerFlag;
+	int nCrawlX, nCrawlY, nLineLen, nTrans;
 	int j, k, v, x1adj, x2adj, y1adj, y2adj;
 
 	if (nXPos >= 0 && nXPos <= MAXDUNX && nYPos >= 0 && nYPos <= MAXDUNY) {
@@ -725,7 +750,7 @@ void DoVision(int nXPos, int nYPos, int nRadius, BOOL doautomap, BOOL visible)
 					break;
 				}
 				if (nCrawlX >= 0 && nCrawlX <= MAXDUNX && nCrawlY >= 0 && nCrawlY <= MAXDUNY) {
-					nBlockerFlag = (BYTE)nBlockTable[dPiece[nCrawlX][nCrawlY]];
+					nBlockerFlag = nBlockTable[dPiece[nCrawlX][nCrawlY]];
 					if (!nBlockTable[dPiece[x1adj + nCrawlX][y1adj + nCrawlY]]
 					    || !nBlockTable[dPiece[x2adj + nCrawlX][y2adj + nCrawlY]]) {
 						if (doautomap) {
@@ -741,7 +766,7 @@ void DoVision(int nXPos, int nYPos, int nRadius, BOOL doautomap, BOOL visible)
 						if (!nBlockerFlag) {
 							nTrans = dTransVal[nCrawlX][nCrawlY];
 							if (nTrans != 0) {
-								TransList[nTrans] = 1;
+								TransList[nTrans] = TRUE;
 							}
 						}
 					}
@@ -1152,7 +1177,7 @@ void InitVision()
 	visionid = 1;
 
 	for (i = 0; i < TransVal; i++) {
-		TransList[i] = 0;
+		TransList[i] = FALSE;
 	}
 }
 
@@ -1225,7 +1250,7 @@ void ProcessVisionList()
 			}
 		}
 		for (i = 0; i < TransVal; i++) {
-			TransList[i] = 0;
+			TransList[i] = FALSE;
 		}
 		for (i = 0; i < numvision; i++) {
 			if (!VisionList[i]._ldel) {

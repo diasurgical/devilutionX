@@ -17,9 +17,9 @@ extern int SP4x1;
 extern int SP4x2;
 extern int SP4y1;
 extern int SP4y2;
-extern unsigned char L4dungeon[80][80];
-extern unsigned char dung[20][20];
-//int dword_52A4DC; // weak
+extern BYTE L4dungeon[80][80];
+extern BYTE dung[20][20];
+//int dword_52A4DC;
 
 void DRLG_LoadL4SP();
 void DRLG_FreeL4SP();
@@ -58,12 +58,12 @@ void DRLG_L4Corners();
 void DRLG_L4Pass3();
 
 /* rdata */
-extern const unsigned char L4ConvTbl[16];
-extern const unsigned char L4USTAIRS[42];
-extern const unsigned char L4TWARP[42];
-extern const unsigned char L4DSTAIRS[52];
-extern const unsigned char L4PENTA[52];
-extern const unsigned char L4PENTA2[52];
-extern const unsigned char L4BTYPES[140];
+extern const BYTE L4ConvTbl[16];
+extern const BYTE L4USTAIRS[42];
+extern const BYTE L4TWARP[42];
+extern const BYTE L4DSTAIRS[52];
+extern const BYTE L4PENTA[52];
+extern const BYTE L4PENTA2[52];
+extern const BYTE L4BTYPES[140];
 
 #endif /* __DRLG_L4_H__ */

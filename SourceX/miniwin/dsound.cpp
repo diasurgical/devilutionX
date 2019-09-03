@@ -34,11 +34,6 @@ HRESULT DirectSound::DuplicateSoundBuffer(LPDIRECTSOUNDBUFFER pDSBufferOriginal,
 	return DVL_DS_OK;
 };
 
-HRESULT DirectSound::SetCooperativeLevel(HWND hwnd, DWORD dwLevel)
-{
-	return DVL_DS_OK;
-};
-
 ///// DirectSoundBuffer /////
 
 ULONG DirectSoundBuffer::Release()

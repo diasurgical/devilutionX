@@ -30,7 +30,7 @@ void __stdcall effects_play_sound(char *snd_file);
 
 /* rdata */
 
-extern const char monster_action_sounds[];
+extern const char MonstSndChar[];
 
 /* data */
 

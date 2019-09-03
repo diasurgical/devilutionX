@@ -6,44 +6,6 @@ void town_clear_upper_buf(BYTE *pBuff)
 {
 	/// ASSERT: assert(gpBuffer);
 
-#ifdef USE_ASM
-	__asm {
-		mov		edi, pBuff
-		mov		edx, 30
-		mov		ebx, 1
-		xor		eax, eax
-	label1:
-		cmp		edi, gpBufEnd
-		jb		label4
-		add		edi, edx
-		mov		ecx, ebx
-		rep stosd
-		add		edi, edx
-		sub		edi, BUFFER_WIDTH + 64
-		or		edx, edx
-		jz		label2
-		sub		edx, 2
-		inc		ebx
-		jmp		label1
-	label2:
-		mov		edx, 2
-		mov		ebx, 15
-	label3:
-		cmp		edi, gpBufEnd
-		jb		label4
-		add		edi, edx
-		mov		ecx, ebx
-		rep stosd
-		add		edi, edx
-		sub		edi, BUFFER_WIDTH + 64
-		dec		ebx
-		add		edx, 2
-		cmp		edx, 32
-		jnz		label3
-	label4:
-		nop
-	}
-#else
 	int i, j, k;
 	BYTE *dst;
 
@@ -61,57 +23,12 @@ void town_clear_upper_buf(BYTE *pBuff)
 			*dst++ = 0;
 		dst += i;
 	}
-#endif
 }
 
 void town_clear_low_buf(BYTE *pBuff)
 {
 	/// ASSERT: assert(gpBuffer);
 
-#ifdef USE_ASM
-	__asm {
-		mov		edi, pBuff
-		mov		edx, 30
-		mov		ebx, 1
-		xor		eax, eax
-	label1:
-		cmp		edi, gpBufEnd
-		jb		label2
-		add		edi, 64
-		jmp		label3
-	label2:
-		add		edi, edx
-		mov		ecx, ebx
-		rep stosd
-		add		edi, edx
-	label3:
-		sub		edi, BUFFER_WIDTH + 64
-		or		edx, edx
-		jz		label4
-		sub		edx, 2
-		inc		ebx
-		jmp		label1
-	label4:
-		mov		edx, 2
-		mov		ebx, 15
-	label5:
-		cmp		edi, gpBufEnd
-		jb		label6
-		add		edi, 64
-		jmp		label7
-	label6:
-		add		edi, edx
-		mov		ecx, ebx
-		rep stosd
-		add		edi, edx
-	label7:
-		sub		edi, BUFFER_WIDTH + 64
-		dec		ebx
-		add		edx, 2
-		cmp		edx, 32
-		jnz		label5
-	}
-#else
 	int i, j, k;
 	BYTE *dst;
 
@@ -137,120 +54,19 @@ void town_clear_low_buf(BYTE *pBuff)
 			dst += 64;
 		}
 	}
-#endif
 }
 
 void town_special_lower(BYTE *pBuff, int nCel)
 {
 #if 0
-	int w;
-	BYTE *end;
-
-#ifdef USE_ASM
-	__asm {
-		mov		ebx, pSpecialCels
-		mov		eax, nCel
-		shl		eax, 2
-		add		ebx, eax
-		mov		eax, [ebx+4]
-		sub		eax, [ebx]
-		mov		end, eax
-		mov		esi, pSpecialCels
-		add		esi, [ebx]
-		mov		edi, pBuff
-		mov		eax, BUFFER_WIDTH + 64
-		mov		w, eax
-		mov		ebx, end
-		add		ebx, esi
-	label1:
-		mov		edx, 64
-	label2:
-		xor		eax, eax
-		lodsb
-		or		al, al
-		js		label7
-		sub		edx, eax
-		cmp		edi, gpBufEnd
-		jb		label3
-		add		esi, eax
-		add		edi, eax
-		jmp		label6
-	label3:
-		mov		ecx, eax
-		shr		ecx, 1
-		jnb		label4
-		movsb
-		jecxz	label6
-	label4:
-		shr		ecx, 1
-		jnb		label5
-		movsw
-		jecxz	label6
-	label5:
-		rep movsd
-	label6:
-		or		edx, edx
-		jz		label8
-		jmp		label2
-	label7:
-		neg		al
-		add		edi, eax
-		sub		edx, eax
-		jnz		label2
-	label8:
-		sub		edi, w
-		cmp		ebx, esi
-		jnz		label1
-	}
-#else
-	BYTE width;
-	BYTE *src, *dst;
+	int nDataSize;
+	BYTE *pRLEBytes;
 	DWORD *pFrameTable;
 
 	pFrameTable = (DWORD *)pSpecialCels;
-	src = &pSpecialCels[pFrameTable[nCel]];
-	dst = pBuff;
-	end = &src[pFrameTable[nCel + 1] - pFrameTable[nCel]];
-
-	for(; src != end; dst -= BUFFER_WIDTH + 64) {
-		for(w = 64; w;) {
-			width = *src++;
-			if(!(width & 0x80)) {
-				w -= width;
-				if(dst < gpBufEnd) {
-					if(width & 1) {
-						dst[0] = src[0];
-						src++;
-						dst++;
-					}
-					width >>= 1;
-					if(width & 1) {
-						dst[0] = src[0];
-						dst[1] = src[1];
-						src += 2;
-						dst += 2;
-					}
-					width >>= 1;
-					for(; width; width--) {
-						dst[0] = src[0];
-						dst[1] = src[1];
-						dst[2] = src[2];
-						dst[3] = src[3];
-						src += 4;
-						dst += 4;
-					}
-				} else {
-					src += width;
-					dst += width;
-				}
-			} else {
-				width = -(char)width;
-				dst += width;
-				w -= width;
-			}
-		}
-	}
-#endif
+	pRLEBytes = &pSpecialCels[pFrameTable[nCel]];
+	nDataSize = pFrameTable[nCel + 1] - pFrameTable[nCel];
+	Cel2DecDatOnly(pBuff, pRLEBytes, nDataSize, 64);
 #endif
 }
 
@@ -259,62 +75,6 @@ void town_special_upper(BYTE *pBuff, int nCel)
 #if 0
 	int w;
 	BYTE *end;
-
-#ifdef USE_ASM
-	__asm {
-		mov		ebx, pSpecialCels
-		mov		eax, nCel
-		shl		eax, 2
-		add		ebx, eax
-		mov		eax, [ebx+4]
-		sub		eax, [ebx]
-		mov		end, eax
-		mov		esi, pSpecialCels
-		add		esi, [ebx]
-		mov		edi, pBuff
-		mov		eax, BUFFER_WIDTH + 64
-		mov		w, eax
-		mov		ebx, end
-		add		ebx, esi
-	label1:
-		mov		edx, 64
-	label2:
-		xor		eax, eax
-		lodsb
-		or		al, al
-		js		label6
-		sub		edx, eax
-		cmp		edi, gpBufEnd
-		jb		label8
-		mov		ecx, eax
-		shr		ecx, 1
-		jnb		label3
-		movsb
-		jecxz	label5
-	label3:
-		shr		ecx, 1
-		jnb		label4
-		movsw
-		jecxz	label5
-	label4:
-		rep movsd
-	label5:
-		or		edx, edx
-		jz		label7
-		jmp		label2
-	label6:
-		neg		al
-		add		edi, eax
-		sub		edx, eax
-		jnz		label2
-	label7:
-		sub		edi, w
-		cmp		ebx, esi
-		jnz		label1
-	label8:
-		nop
-	}
-#else
 	BYTE width;
 	BYTE *src, *dst;
 	DWORD *pFrameTable;
@@ -360,7 +120,6 @@ void town_special_upper(BYTE *pBuff, int nCel)
 			}
 		}
 	}
-#endif
 #endif
 }
 
@@ -932,10 +691,10 @@ void T_DrawGame(int x, int y)
 {
 	int i, sx, sy, chunks, blocks;
 
-	scr_pix_width = 640;
+	scr_pix_width = SCREEN_WIDTH;
 	scr_pix_height = VIEWPORT_HEIGHT;
-	dword_5C2FF8 = 10;
-	dword_5C2FFC = 11;
+	dword_5C2FF8 = SCREEN_WIDTH / 64;
+	dword_5C2FFC = VIEWPORT_HEIGHT / 32;
 
 	sx = ScrollInfo._sxoff + 64;
 	sy = ScrollInfo._syoff + 175;
@@ -1046,10 +805,10 @@ void T_DrawZoom(int x, int y)
 	int i, sx, sy, chunks, blocks;
 	int wdt, nSrcOff, nDstOff;
 
-	scr_pix_width = 384;
+	scr_pix_width = ZOOM_WIDTH;
 	scr_pix_height = 192;
-	dword_5C2FF8 = 6;
-	dword_5C2FFC = 6;
+	dword_5C2FF8 = ZOOM_WIDTH / 64;
+	dword_5C2FFC = 192 / 32;
 
 	sx = ScrollInfo._sxoff + 64;
 	sy = ScrollInfo._syoff + 143;
@@ -1144,52 +903,19 @@ void T_DrawZoom(int x, int y)
 	if (chrflag || questlog) {
 		nSrcOff = SCREENXY(112, 159);
 		nDstOff = SCREENXY(320, 350);
-		wdt = 160;
+		wdt = (SCREEN_WIDTH - 320) / 2;
 	} else if (invflag || sbookflag) {
 		nSrcOff = SCREENXY(112, 159);
 		nDstOff = SCREENXY(0, 350);
-		wdt = 160;
+		wdt = (SCREEN_WIDTH - 320) / 2;
 	} else {
 		nSrcOff = SCREENXY(32, 159);
 		nDstOff = SCREENXY(0, 350);
-		wdt = 320;
+		wdt = SCREEN_WIDTH / 2;
 	}
 
 	/// ASSERT: assert(gpBuffer);
 
-#ifdef USE_ASM
-	__asm {
-		mov		esi, gpBuffer
-		mov		edx, nDstOff
-		mov		edi, esi
-		mov		ecx, nSrcOff
-		add		edi, edx
-		add		esi, ecx
-		mov		ebx, edi
-		add		ebx, BUFFER_WIDTH
-		mov		edx, 176
-	label1:
-		mov		ecx, wdt
-	label2:
-		mov		al, [esi]
-		inc		esi
-		mov		ah, al
-		mov		[edi], ax
-		mov		[ebx], ax
-		add		edi, 2
-		add		ebx, 2
-		dec		ecx
-		jnz		label2
-		mov		eax, BUFFER_WIDTH
-		add		eax, wdt
-		sub		esi, eax
-		add		eax, eax
-		sub		ebx, eax
-		sub		edi, eax
-		dec		edx
-		jnz		label1
-	}
-#else
 	int hgt;
 	BYTE *src, *dst1, *dst2;
 
@@ -1206,7 +932,6 @@ void T_DrawZoom(int x, int y)
 			src++;
 		}
 	}
-#endif
 }
 
 void T_DrawView(int StartX, int StartY)
@@ -1293,15 +1018,15 @@ void SetTownMicros()
 	}
 
 	if (zoomflag) {
-		scr_pix_width = 640;
+		scr_pix_width = SCREEN_WIDTH;
 		scr_pix_height = VIEWPORT_HEIGHT;
-		dword_5C2FF8 = 10;
-		dword_5C2FFC = 11;
+		dword_5C2FF8 = SCREEN_WIDTH / 64;
+		dword_5C2FFC = VIEWPORT_HEIGHT / 32;
 	} else {
-		scr_pix_width = 384;
-		scr_pix_height = 224;
-		dword_5C2FF8 = 6;
-		dword_5C2FFC = 7;
+		scr_pix_width = ZOOM_WIDTH;
+		scr_pix_height = ZOOM_HEIGHT;
+		dword_5C2FF8 = ZOOM_WIDTH / 64;
+		dword_5C2FFC = ZOOM_HEIGHT / 32;
 	}
 }
 
@@ -1315,42 +1040,6 @@ void T_FillSector(BYTE *P3Tiles, BYTE *pSector, int xi, int yi, int w, int h)
 	for (j = 0; j < h; j++) {
 		xx = xi;
 		for (i = 0; i < w; i++) {
-#ifdef USE_ASM
-			__asm {
-				mov		esi, pSector
-				mov		eax, ii
-				add		esi, eax
-				xor		eax, eax
-				lodsw
-				or		eax, eax
-				jz		label1
-				dec		eax
-				mov		esi, P3Tiles
-				shl		eax, 3
-				add		esi, eax
-				xor		eax, eax
-				lodsw
-				inc		eax
-				mov		v1, eax
-				lodsw
-				inc		eax
-				mov		v2, eax
-				lodsw
-				inc		eax
-				mov		v3, eax
-				lodsw
-				inc		eax
-				mov		v4, eax
-				jmp		label2
-			label1:
-				mov		v1, eax
-				mov		v2, eax
-				mov		v3, eax
-				mov		v4, eax
-			label2:
-				nop
-			}
-#else
 			WORD *Map;
 
 			Map = (WORD *)&pSector[ii];
@@ -1365,7 +1054,6 @@ void T_FillSector(BYTE *P3Tiles, BYTE *pSector, int xi, int yi, int w, int h)
 				v3 = 0;
 				v4 = 0;
 			}
-#endif
 			dPiece[xx][yy] = v1;
 			dPiece[xx + 1][yy] = v2;
 			dPiece[xx][yy + 1] = v3;
@@ -1381,40 +1069,10 @@ void T_FillTile(BYTE *P3Tiles, int xx, int yy, int t)
 {
 	long v1, v2, v3, v4;
 
-#ifdef USE_ASM
-	__asm {
-		mov		eax, t
-		dec		eax
-		mov		esi, P3Tiles
-		shl		eax, 3
-		add		esi, eax
-		xor		eax, eax
-		lodsw
-		inc		eax
-		mov		v1, eax
-		lodsw
-		inc		eax
-		mov		v2, eax
-		lodsw
-		inc		eax
-		mov		v3, eax
-		lodsw
-		inc		eax
-		mov		v4, eax
-		jmp		label1
-		mov		v1, eax
-		mov		v2, eax
-		mov		v3, eax
-		mov		v4, eax
-	label1:
-		nop
-	}
-#else
 	v1 = *((WORD *)&P3Tiles[(t - 1) * 8]) + 1;
 	v2 = *((WORD *)&P3Tiles[(t - 1) * 8] + 1) + 1;
 	v3 = *((WORD *)&P3Tiles[(t - 1) * 8] + 2) + 1;
 	v4 = *((WORD *)&P3Tiles[(t - 1) * 8] + 3) + 1;
-#endif
 
 	dPiece[xx][yy] = v1;
 	dPiece[xx + 1][yy] = v2;
@@ -1450,20 +1108,28 @@ void T_Pass3()
 	T_FillSector(P3Tiles, pSector, 0, 0, 23, 23);
 	mem_free_dbg(pSector);
 
+#ifndef SPAWN
 	if (gbMaxPlayers == 1) {
 		if (!(plr[myplr].pTownWarps & 1)) {
+#endif
 			T_FillTile(P3Tiles, 48, 20, 320);
+#ifndef SPAWN
 		}
 		if (!(plr[myplr].pTownWarps & 2)) {
+#endif
 			T_FillTile(P3Tiles, 16, 68, 332);
 			T_FillTile(P3Tiles, 16, 70, 331);
+#ifndef SPAWN
 		}
 		if (!(plr[myplr].pTownWarps & 4)) {
+#endif
 			for (x = 36; x < 46; x++) {
 				T_FillTile(P3Tiles, x, 78, random(0, 4) + 1);
 			}
+#ifndef SPAWN
 		}
 	}
+#endif
 
 	if (quests[13]._qactive != 3 && quests[13]._qactive) {
 		T_FillTile(P3Tiles, 60, 70, 342);

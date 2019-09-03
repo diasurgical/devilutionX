@@ -10,6 +10,7 @@ int diabquad2x;
 int diabquad2y;
 int diabquad4x;
 int diabquad4y;
+#ifndef SPAWN
 BOOL hallok[20];
 int l4holdx;
 int l4holdy;
@@ -19,258 +20,258 @@ int SP4y1;
 int SP4y2;
 BYTE L4dungeon[80][80];
 BYTE dung[20][20];
-//int dword_52A4DC; // weak
+//int dword_52A4DC;
 
-const BYTE L4ConvTbl[16] = { 30u, 6u, 1u, 6u, 2u, 6u, 6u, 6u, 9u, 6u, 1u, 6u, 2u, 6u, 3u, 6u };
+const BYTE L4ConvTbl[16] = { 30, 6, 1, 6, 2, 6, 6, 6, 9, 6, 1, 6, 2, 6, 3, 6 };
 const BYTE L4USTAIRS[42] = {
-	4u,
-	5u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	0u,
-	0u,
-	0u,
-	0u,
-	36u,
-	38u,
-	35u,
-	0u,
-	37u,
-	34u,
-	33u,
-	32u,
-	0u,
-	0u,
-	31u,
-	0u,
-	0u,
-	0u,
-	0u,
-	0u
+	4,
+	5,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	0,
+	0,
+	0,
+	0,
+	36,
+	38,
+	35,
+	0,
+	37,
+	34,
+	33,
+	32,
+	0,
+	0,
+	31,
+	0,
+	0,
+	0,
+	0,
+	0
 };
 const BYTE L4TWARP[42] = {
-	4u,
-	5u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	0u,
-	0u,
-	0u,
-	0u,
-	134u,
-	136u,
-	133u,
-	0u,
-	135u,
-	132u,
-	131u,
-	130u,
-	0u,
-	0u,
-	129u,
-	0u,
-	0u,
-	0u,
-	0u,
-	0u
+	4,
+	5,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	0,
+	0,
+	0,
+	0,
+	134,
+	136,
+	133,
+	0,
+	135,
+	132,
+	131,
+	130,
+	0,
+	0,
+	129,
+	0,
+	0,
+	0,
+	0,
+	0
 };
 const BYTE L4DSTAIRS[52] = {
-	5u,
-	5u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	0u,
-	0u,
-	0u,
-	0u,
-	0u,
-	0u,
-	0u,
-	45u,
-	41u,
-	0u,
-	0u,
-	44u,
-	43u,
-	40u,
-	0u,
-	0u,
-	46u,
-	42u,
-	39u,
-	0u,
-	0u,
-	0u,
-	0u,
-	0u,
-	0u
+	5,
+	5,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	45,
+	41,
+	0,
+	0,
+	44,
+	43,
+	40,
+	0,
+	0,
+	46,
+	42,
+	39,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0
 };
 const BYTE L4PENTA[52] = {
-	5u,
-	5u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	0u,
-	0u,
-	0u,
-	0u,
-	0u,
-	0u,
-	98u,
-	100u,
-	103u,
-	0u,
-	0u,
-	99u,
-	102u,
-	105u,
-	0u,
-	0u,
-	101u,
-	104u,
-	106u,
-	0u,
-	0u,
-	0u,
-	0u,
-	0u,
-	0u
+	5,
+	5,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	98,
+	100,
+	103,
+	0,
+	0,
+	99,
+	102,
+	105,
+	0,
+	0,
+	101,
+	104,
+	106,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0
 };
 const BYTE L4PENTA2[52] = {
-	5u,
-	5u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	6u,
-	0u,
-	0u,
-	0u,
-	0u,
-	0u,
-	0u,
-	107u,
-	109u,
-	112u,
-	0u,
-	0u,
-	108u,
-	111u,
-	114u,
-	0u,
-	0u,
-	110u,
-	113u,
-	115u,
-	0u,
-	0u,
-	0u,
-	0u,
-	0u,
-	0u
+	5,
+	5,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	6,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	107,
+	109,
+	112,
+	0,
+	0,
+	108,
+	111,
+	114,
+	0,
+	0,
+	110,
+	113,
+	115,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0
 };
 const BYTE L4BTYPES[140] = {
 	0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
@@ -326,7 +327,7 @@ void DRLG_L4SetSPRoom(int rx1, int ry1)
 		for (i = 0; i < rw; i++) {
 			if (*sp != 0) {
 				dungeon[i + rx1][j + ry1] = *sp;
-				dflags[i + rx1][j + ry1] |= 0x80;
+				dflags[i + rx1][j + ry1] |= DLRG_PROTECTED;
 			} else {
 				dungeon[i + rx1][j + ry1] = 6;
 			}
@@ -344,9 +345,9 @@ void L4SaveQuads()
 		x = 0;
 		for (i = 0; i < 14; i++) {
 			dflags[i + l4holdx][j + l4holdy] = 1;
-			dflags[39 - x - l4holdx][j + l4holdy] = 1;
-			dflags[i + l4holdx][39 - y - l4holdy] = 1;
-			dflags[39 - x - l4holdx][39 - y - l4holdy] = 1;
+			dflags[DMAXX - 1 - x - l4holdx][j + l4holdy] = 1;
+			dflags[i + l4holdx][DMAXY - 1 - y - l4holdy] = 1;
+			dflags[DMAXX - 1 - x - l4holdx][DMAXY - 1 - y - l4holdy] = 1;
 			x++;
 		}
 		y++;
@@ -366,7 +367,7 @@ void DRLG_L4SetRoom(BYTE *pSetPiece, int rx1, int ry1)
 		for (i = 0; i < rw; i++) {
 			if (*sp != 0) {
 				dungeon[i + rx1][j + ry1] = *sp;
-				dflags[i + rx1][j + ry1] |= 0x80;
+				dflags[i + rx1][j + ry1] |= DLRG_PROTECTED;
 			} else {
 				dungeon[i + rx1][j + ry1] = 6;
 			}
@@ -462,8 +463,8 @@ void DRLG_L4GeneralFix()
 {
 	int i, j;
 
-	for (j = 0; j < 39; j++) {
-		for (i = 0; i < 39; i++) {
+	for (j = 0; j < DMAXY - 1; j++) {
+		for (i = 0; i < DMAXX - 1; i++) {
 			if ((dungeon[i][j] == 24 || dungeon[i][j] == 122) && dungeon[i + 1][j] == 2 && dungeon[i][j + 1] == 5) {
 				dungeon[i][j] = 17;
 			}
@@ -649,8 +650,8 @@ void DRLG_L4Shadows()
 	int x, y;
 	BOOL okflag;
 
-	for (y = 1; y < 40; y++) {
-		for (x = 1; x < 40; x++) {
+	for (y = 1; y < DMAXY; y++) {
+		for (x = 1; x < DMAXY; x++) {
 			okflag = FALSE;
 			if (dungeon[x][y] == 3) {
 				okflag = TRUE;
@@ -684,8 +685,8 @@ void InitL4Dungeon()
 	memset(dung, 0, sizeof(dung));
 	memset(L4dungeon, 0, sizeof(L4dungeon));
 
-	for (j = 0; j < 40; j++) {
-		for (i = 0; i < 40; i++) {
+	for (j = 0; j < DMAXY; j++) {
+		for (i = 0; i < DMAXX; i++) {
 			dungeon[i][j] = 30;
 			dflags[i][j] = 0;
 		}
@@ -711,8 +712,8 @@ void L4AddWall()
 {
 	int i, j, x, y;
 
-	for (j = 0; j < 40; j++) {
-		for (i = 0; i < 40; i++) {
+	for (j = 0; j < DMAXY; j++) {
+		for (i = 0; i < DMAXX; i++) {
 			if (dflags[i][j] != 0) {
 				continue;
 			}
@@ -1357,8 +1358,8 @@ void DRLG_L4Subs()
 	int x, y, i, rv;
 	BYTE c;
 
-	for (y = 0; y < 40; y++) {
-		for (x = 0; x < 40; x++) {
+	for (y = 0; y < DMAXY; y++) {
+		for (x = 0; x < DMAXX; x++) {
 			if (random(0, 3) == 0) {
 				c = L4BTYPES[dungeon[x][y]];
 				if (c != 0 && dflags[x][y] == 0) {
@@ -1378,8 +1379,8 @@ void DRLG_L4Subs()
 			}
 		}
 	}
-	for (y = 0; y < 40; y++) {
-		for (x = 0; x < 40; x++) {
+	for (y = 0; y < DMAXY; y++) {
+		for (x = 0; x < DMAXX; x++) {
 			if (random(0, 10) == 0) {
 				if (L4BTYPES[dungeon[x][y]] == 6 && dflags[x][y] == 0) {
 					dungeon[x][y] = random(0, 3) + 95;
@@ -1695,8 +1696,8 @@ BOOL DRLG_L4PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy
 	}
 
 	for (i = 0; i < numt; i++) {
-		sx = random(0, 40 - sw);
-		sy = random(0, 40 - sh);
+		sx = random(0, DMAXX - sw);
+		sy = random(0, DMAXY - sh);
 		found = FALSE;
 		for (bailcnt = 0; !found && bailcnt < 200; bailcnt++) {
 			found = TRUE;
@@ -1704,13 +1705,13 @@ BOOL DRLG_L4PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy
 				found = FALSE;
 			}
 			if (cx != -1 && sx >= cx - sw && sx <= cx + 12) {
-				sx = random(0, 40 - sw);
-				sy = random(0, 40 - sh);
+				sx = random(0, DMAXX - sw);
+				sy = random(0, DMAXY - sh);
 				found = FALSE;
 			}
 			if (cy != -1 && sy >= cy - sh && sy <= cy + 12) {
-				sx = random(0, 40 - sw);
-				sy = random(0, 40 - sh);
+				sx = random(0, DMAXX - sw);
+				sy = random(0, DMAXY - sh);
 				found = FALSE;
 			}
 			ii = 2;
@@ -1727,10 +1728,10 @@ BOOL DRLG_L4PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy
 			}
 			if (!found) {
 				sx++;
-				if (sx == 40 - sw) {
+				if (sx == DMAXX - sw) {
 					sx = 0;
 					sy++;
-					if (sy == 40 - sh) {
+					if (sy == DMAXY - sh) {
 						sy = 0;
 					}
 				}
@@ -1899,32 +1900,10 @@ void DRLG_L4Pass3()
 
 	lv = 30 - 1;
 
-#ifdef USE_ASM
-	__asm {
-		mov		esi, pMegaTiles
-		mov		eax, lv
-		shl		eax, 3
-		add		esi, eax
-		xor		eax, eax
-		lodsw
-		inc		eax
-		mov		v1, eax
-		lodsw
-		inc		eax
-		mov		v2, eax
-		lodsw
-		inc		eax
-		mov		v3, eax
-		lodsw
-		inc		eax
-		mov		v4, eax
-	}
-#else
 	v1 = *((WORD *)&pMegaTiles[lv * 8]) + 1;
 	v2 = *((WORD *)&pMegaTiles[lv * 8] + 1) + 1;
 	v3 = *((WORD *)&pMegaTiles[lv * 8] + 2) + 1;
 	v4 = *((WORD *)&pMegaTiles[lv * 8] + 3) + 1;
-#endif
 
 	for (j = 0; j < MAXDUNY; j += 2)
 	{
@@ -1941,34 +1920,6 @@ void DRLG_L4Pass3()
 		xx = 16;
 		for (i = 0; i < DMAXX; i++) {
 			lv = dungeon[i][j] - 1;
-#ifdef USE_ASM
-			if (lv >= 0) {
-				__asm {
-					mov		esi, pMegaTiles
-					mov		eax, lv
-					shl		eax, 3
-					add		esi, eax
-					xor		eax, eax
-					lodsw
-					inc		eax
-					mov		v1, eax
-					lodsw
-					inc		eax
-					mov		v2, eax
-					lodsw
-					inc		eax
-					mov		v3, eax
-					lodsw
-					inc		eax
-					mov		v4, eax
-				}
-			} else {
-				v1 = 0;
-				v2 = 0;
-				v3 = 0;
-				v4 = 0;
-			}
-#else
 			if (lv >= 0) {
 				v1 = *((WORD *)&pMegaTiles[lv * 8]) + 1;
 				v2 = *((WORD *)&pMegaTiles[lv * 8] + 1) + 1;
@@ -1980,7 +1931,6 @@ void DRLG_L4Pass3()
 				v3 = 0;
 				v4 = 0;
 			}
-#endif
 			dPiece[xx][yy] = v1;
 			dPiece[xx + 1][yy] = v2;
 			dPiece[xx][yy + 1] = v3;
@@ -1992,3 +1942,4 @@ void DRLG_L4Pass3()
 }
 
 DEVILUTION_END_NAMESPACE
+#endif

@@ -110,12 +110,15 @@ void LoadMaskedArtFont(char *pszFile, Art *art, int frames, int mask = 250);
 void SetMenu(int MenuId);
 void UiFocusNavigationSelect();
 void UiFocusNavigationEsc();
-void UiInitList(int min, int max, void(*fnFocus)(int value), void(*fnSelect)(int value), void(*fnEsc)(), UI_Item *items, int size, bool wraps = false);
+void UiFocusNavigationYesNo();
+void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), UI_Item *items, int size, bool wraps = false, bool (*fnYesNo)() = NULL);
 void UiRender();
 void UiRenderItems(UI_Item *items, int size);
 void WordWrap(UI_Item *item);
 
 void DvlIntSetting(const char *valuename, int *value);
 void DvlStringSetting(const char *valuename, char *string, int len);
+
+void mainmenu_restart_repintro();
 
 }

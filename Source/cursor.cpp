@@ -7,7 +7,7 @@ int icursH28;
 int cursW;
 int pcursmonst;
 int icursW28;
-void *pCursCels;
+BYTE *pCursCels;
 int icursH;
 
 // inv_item value
@@ -192,8 +192,8 @@ void CheckCursMove()
 			sx = 0;
 		}
 	}
-	if (sy > VIEWPORT_HEIGHT - 1 && track_isscrolling()) {
-		sy = VIEWPORT_HEIGHT - 1;
+	if (sy > PANEL_TOP - 1 && track_isscrolling()) {
+		sy = PANEL_TOP - 1;
 	}
 	if (!zoomflag) {
 		sx >>= 1;
@@ -211,14 +211,14 @@ void CheckCursMove()
 	if (sx < 0) {
 		sx = 0;
 	}
-	if (sx >= 640) {
-		sx = 640;
+	if (sx >= SCREEN_WIDTH) {
+		sx = SCREEN_WIDTH;
 	}
 	if (sy < 0) {
 		sy = 0;
 	}
-	if (sy >= 480) {
-		sy = 480;
+	if (sy >= SCREEN_HEIGHT) {
+		sy = SCREEN_HEIGHT;
 	}
 
 	tx = sx >> 6;
@@ -261,8 +261,8 @@ void CheckCursMove()
 	}
 	pcursinvitem = -1;
 	pcursplr = -1;
-	uitemflag = 0;
-	panelflag = 0;
+	uitemflag = FALSE;
+	panelflag = FALSE;
 	trigflag = FALSE;
 
 	if (plr[myplr]._pInvincible) {
@@ -273,7 +273,7 @@ void CheckCursMove()
 		cursmy = my;
 		return;
 	}
-	if (MouseY > VIEWPORT_HEIGHT) {
+	if (MouseY > PANEL_TOP) {
 		CheckPanelInfo();
 		return;
 	}

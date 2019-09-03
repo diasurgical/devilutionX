@@ -6,20 +6,6 @@
 
 namespace dvl {
 
-BOOL SDrawManualInitialize(
-    HWND hWnd,
-    LPDIRECTDRAW ddInterface,
-    LPDIRECTDRAWSURFACE primarySurface,
-    LPDIRECTDRAWSURFACE surface2,
-    LPDIRECTDRAWSURFACE surface3,
-    LPDIRECTDRAWSURFACE backSurface,
-    LPDIRECTDRAWPALETTE ddPalette,
-    HPALETTE hPalette)
-{
-	DUMMY();
-	return true;
-}
-
 BOOL SDrawUpdatePalette(unsigned int firstentry, unsigned int numentries, PALETTEENTRY *pPalEntries, int a4)
 {
 	assert(firstentry == 0);

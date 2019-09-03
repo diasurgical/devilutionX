@@ -23,6 +23,7 @@ void (*gfnSoundFunction)(char *file);
 void (*gfnListFocus)(int value);
 void (*gfnListSelect)(int value);
 void (*gfnListEsc)();
+bool (*gfnListYesNo)();
 UI_Item *gUiItems;
 int gUiItemCnt;
 bool UiItemsWraps;
@@ -52,7 +53,7 @@ char *errorMessages[] = {
 	"Diablo was unable to find the file \"dsound.dll\", which is a component of Microsoft DirectX.\nPlease run the program \"SETUP.EXE\" on the Diablo CD-ROM and install Microsoft DirectX.\n\nIf you continue to have problems with DirectX, please contact Microsoft's Technical Support at:\n\n    USA telephone: 1-800-426-9400\n    International telephone: 206-882-8080\n    http://www.microsoft.com\n\n\nThe error encountered while trying to initialize DirectX was:\n\n    %s",
 	"Diablo requires at least 10 megabytes of free disk space to run properly.\nThe disk:\n\n%s\n\nhas less than 10 megabytes of free space left.\n\nPlease free some space on your drive and run Diablo again.",
 	"Diablo was unable to switch video modes.\nThis is a common problem for computers with more than one video card.\nTo correct this problem, please set your video resolution to 640 x 480 and try running Diablo again.\n\nFor Windows 95 and Windows NT\n    Select \"Settings - Control Panel\" from the \"Start\" menu\n    Run the \"Display\" control panel applet\n    Select the \"Settings\" tab\n    Set the \"Desktop Area\" to \"640 x 480 pixels\"\n\n\nThe error encountered while trying to switch video modes was:\n\n    %s",
-	"Diablo cannot read a required data file.\nYour diabdat.mpq may not be in the Devilution folder or it's read only.\nPlease ensure that the filename is in all lower case and try again.\n    %s",
+	"Diablo cannot read a required data file.\nYour diabdat.mpq may not be in the Devilution folder.\nPlease ensure that the filename is in all lower case and try again.\n    %s",
 	"In order to install, play or patch Diablo using the Windows 2000 operating system,\nyou will need to log in as either an Administrator or as a Power User.\n\nUsers, also known as Restricted Users, do not have sufficient access to install or play the game properly.\n\nIf you have further questions regarding User Rights in Windows 2000, please refer to your Windows 2000 documentation or contact your system administrator.",
 	"Diablo is being run from:\n\n    %s\n\n\nDiablo or the current user does not seem to have write privilages in this directory. Contact your system administrator.\n\nNote that Windows 2000 Restricted Users can not write to the Windows or Program Files directory hierarchies.",
 };
@@ -138,7 +139,7 @@ void UiDestroy()
 	font = NULL;
 }
 
-void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), UI_Item *items, int itemCnt, bool itemsWraps)
+void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), UI_Item *items, int itemCnt, bool itemsWraps, bool (*fnYesNo)())
 {
 	SelectedItem = min;
 	SelectedItemMin = min;
@@ -146,6 +147,7 @@ void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(i
 	gfnListFocus = fnFocus;
 	gfnListSelect = fnSelect;
 	gfnListEsc = fnEsc;
+	gfnListYesNo = fnYesNo;
 	gUiItems = items;
 	gUiItemCnt = itemCnt;
 	UiItemsWraps = itemsWraps;
@@ -168,7 +170,7 @@ void UiPlayMoveSound()
 		gfnSoundFunction("sfx\\items\\titlemov.wav");
 }
 
-void UiPlaySelectSound() //TODO play this on menu back step
+void UiPlaySelectSound()
 {
 	if (gfnSoundFunction)
 		gfnSoundFunction("sfx\\items\\titlslct.wav");
@@ -213,6 +215,24 @@ bool UiFocusNavigation(SDL_Event *event)
 	if (event->type == SDL_QUIT)
 		exit(0);
 
+	switch(event->type) {
+		case SDL_KEYUP:
+		case SDL_MOUSEBUTTONUP:
+		case SDL_MOUSEMOTION:
+		case SDL_MOUSEWHEEL:
+		case SDL_JOYBUTTONUP:
+		case SDL_JOYAXISMOTION:
+		case SDL_JOYBALLMOTION:
+		case SDL_JOYHATMOTION:
+		case SDL_FINGERUP:
+		case SDL_FINGERMOTION:
+		case SDL_CONTROLLERBUTTONUP:
+		case SDL_CONTROLLERAXISMOTION:
+		case SDL_SYSWMEVENT:
+		case SDL_WINDOWEVENT:
+			mainmenu_restart_repintro();
+	}
+
 	if (event->type == SDL_KEYDOWN) {
 		switch (event->key.keysym.sym) {
 		case SDLK_UP:
@@ -237,6 +257,9 @@ bool UiFocusNavigation(SDL_Event *event)
 		case SDLK_KP_ENTER:
 		case SDLK_SPACE:
 			UiFocusNavigationSelect();
+			return true;
+		case SDLK_DELETE:
+			UiFocusNavigationYesNo();
 			return true;
 		}
 	}
@@ -305,6 +328,15 @@ void UiFocusNavigationEsc()
 	}
 	if (gfnListEsc)
 		gfnListEsc();
+}
+
+void UiFocusNavigationYesNo()
+{
+	if (gfnListYesNo == NULL)
+		return;
+
+	if (gfnListYesNo())
+		UiPlaySelectSound();
 }
 
 bool IsInsideRect(const SDL_Event *event, const SDL_Rect *rect)
@@ -541,7 +573,7 @@ int GetCenterOffset(int w, int bw)
 		bw = SCREEN_WIDTH;
 	}
 
-	return bw / 2 - w / 2;
+	return (bw - w) / 2;
 }
 
 int GetStrWidth(char *str, int size)
@@ -847,5 +879,4 @@ void DvlStringSetting(const char *valuename, char *string, int len)
 		SRegSaveString("devilutionx", valuename, 0, string);
 	}
 }
-
 }

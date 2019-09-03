@@ -117,6 +117,13 @@ void InitQuests()
 	if (questdebug != -1)
 		quests[questdebug]._qactive = 2;
 #endif
+
+#ifdef SPAWN
+	for (z = 0; z < MAXQUESTS; z++) {
+		quests[z]._qactive = 0;
+	}
+#endif
+
 	if (!quests[QTYPE_KING]._qactive)
 		quests[QTYPE_KING]._qvar2 = 2;
 	if (!quests[QTYPE_INFRA]._qactive)
@@ -128,6 +135,7 @@ void InitQuests()
 
 void CheckQuests()
 {
+#ifndef SPAWN
 	int i, rportx, rporty;
 
 	if (QuestStatus(QTYPE_VB) && gbMaxPlayers != 1 && quests[QTYPE_VB]._qvar1 == 2) {
@@ -195,10 +203,12 @@ void CheckQuests()
 			}
 		}
 	}
+#endif
 }
 
 BOOL ForceQuests()
 {
+#ifndef SPAWN
 	int i, j, qx, qy, ql;
 
 	if (gbMaxPlayers != 1) {
@@ -222,6 +232,7 @@ BOOL ForceQuests()
 			}
 		}
 	}
+#endif
 
 	return FALSE;
 }
@@ -241,6 +252,7 @@ BOOL QuestStatus(int i)
 
 void CheckQuestKill(int m, BOOL sendmsg)
 {
+#ifndef SPAWN
 	int i, j;
 
 	if (monster[m].MType->mtype == MT_SKING) {
@@ -341,6 +353,7 @@ void CheckQuestKill(int m, BOOL sendmsg)
 			sfxdnum = PS_MAGE94;
 		}
 	}
+#endif
 }
 
 void DrawButcher()
@@ -576,6 +589,7 @@ void GetReturnLvlPos()
 
 void ResyncMPQuests()
 {
+#ifndef SPAWN
 	if (quests[QTYPE_KING]._qactive == 1
 	    && currlevel >= quests[QTYPE_KING]._qlevel - 1
 	    && currlevel <= quests[QTYPE_KING]._qlevel + 1) {
@@ -594,10 +608,12 @@ void ResyncMPQuests()
 	}
 	if (QuestStatus(QTYPE_VB))
 		AddObject(OBJ_ALTBOY, 2 * setpc_x + 20, 2 * setpc_y + 22);
+#endif
 }
 
 void ResyncQuests()
 {
+#ifndef SPAWN
 	int i, tren, x, y;
 
 	if (setlevel && setlvlnum == quests[QTYPE_PW]._qslvl && quests[QTYPE_PW]._qactive != 1 && leveltype == quests[QTYPE_PW]._qlvltype) {
@@ -664,21 +680,22 @@ void ResyncQuests()
 		SpawnQuestItem(IDI_GLDNELIX, 0, 0, 5, 1);
 	}
 	if (setlevel && setlvlnum == 5) {
-		if (quests[QTYPE_VB]._qvar1 >= 4u)
+		if (quests[QTYPE_VB]._qvar1 >= 4)
 			ObjChangeMapResync(1, 11, 20, 18);
-		if (quests[QTYPE_VB]._qvar1 >= 6u)
+		if (quests[QTYPE_VB]._qvar1 >= 6)
 			ObjChangeMapResync(1, 18, 20, 24);
-		if (quests[QTYPE_VB]._qvar1 >= 7u)
+		if (quests[QTYPE_VB]._qvar1 >= 7)
 			InitVPTriggers();
 		for (i = 0; i < nobjects; i++)
 			SyncObjectAnim(objectactive[i]);
 	}
 	if (currlevel == quests[QTYPE_VB]._qlevel
 	    && !setlevel
-	    && (quests[QTYPE_VB]._qvar2 == 1 || quests[QTYPE_VB]._qvar2 >= 3u)
+	    && (quests[QTYPE_VB]._qvar2 == 1 || quests[QTYPE_VB]._qvar2 >= 3)
 	    && (quests[QTYPE_VB]._qactive == 2 || quests[QTYPE_VB]._qactive == 3)) {
 		quests[QTYPE_VB]._qvar2 = 2;
 	}
+#endif
 }
 
 void PrintQLString(int x, int y, BOOL cjustflag, char *str, int col)
@@ -699,7 +716,7 @@ void PrintQLString(int x, int y, BOOL cjustflag, char *str, int col)
 		off += k;
 	}
 	if (qline == y) {
-		CelDecodeOnly(cjustflag ? x + k + 76 : x + 76, s + 205, pCelBuff, ALLQUESTS, 12);
+		CelDecodeOnly(cjustflag ? x + k + 76 : x + 76, s + 205, pSPentSpn2Cels, ALLQUESTS, 12);
 	}
 	for (i = 0; i < len; i++) {
 		c = fontframe[gbFontTransTbl[(BYTE)str[i]]];
@@ -710,7 +727,7 @@ void PrintQLString(int x, int y, BOOL cjustflag, char *str, int col)
 		off += fontkern[c] + 1;
 	}
 	if (qline == y) {
-		CelDecodeOnly(cjustflag ? x + k + 100 : 340 - x, s + 205, pCelBuff, ALLQUESTS, 12);
+		CelDecodeOnly(cjustflag ? x + k + 100 : 340 - x, s + 205, pSPentSpn2Cels, ALLQUESTS, 12);
 	}
 }
 
@@ -718,14 +735,14 @@ void DrawQuestLog()
 {
 	int y, i;
 
-	PrintQLString(0, 2, 1u, "Quest Log", 3);
+	PrintQLString(0, 2, TRUE, "Quest Log", 3);
 	CelDecodeOnly(64, 511, pQLogCel, 1, 320);
 	y = qtopline;
 	for (i = 0; i < numqlines; i++) {
-		PrintQLString(0, y, 1, questlist[qlist[i]]._qlstr, 0);
+		PrintQLString(0, y, TRUE, questlist[qlist[i]]._qlstr, 0);
 		y += 2;
 	}
-	PrintQLString(0, 22, 1, "Close Quest Log", 0);
+	PrintQLString(0, 22, TRUE, "Close Quest Log", 0);
 	ALLQUESTS = (ALLQUESTS & 7) + 1;
 }
 
@@ -809,6 +826,7 @@ void QuestlogESC()
 
 void SetMultiQuest(int q, int s, int l, int v1)
 {
+#ifndef SPAWN
 	if (quests[q]._qactive != 3) {
 		if (s > quests[q]._qactive)
 			quests[q]._qactive = s;
@@ -816,6 +834,7 @@ void SetMultiQuest(int q, int s, int l, int v1)
 		if (v1 > quests[q]._qvar1)
 			quests[q]._qvar1 = v1;
 	}
+#endif
 }
 
 DEVILUTION_END_NAMESPACE

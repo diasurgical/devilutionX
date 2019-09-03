@@ -40,7 +40,7 @@ void dx_init(HWND hWnd)
 	}
 	hDDVal = dx_DirectDrawCreate(lpGUID, &lpDDInterface, NULL);
 	if (hDDVal != DD_OK) {
-		ErrDlg(IDD_DIALOG1, hDDVal, "C:\\Src\\Diablo\\Source\\dx.cpp", 149);
+		ErrDlg(IDD_DIALOG1, hDDVal, __FILE__, __LINE__);
 	}
 
 #ifdef COLORFIX
@@ -63,7 +63,7 @@ void dx_init(HWND hWnd)
 		if (hDDVal == DDERR_EXCLUSIVEMODEALREADYSET) {
 			TriggerBreak();
 		} else if (hDDVal != DD_OK) {
-			ErrDlg(IDD_DIALOG1, hDDVal, "C:\\Diablo\\Direct\\dx.cpp", 155);
+			ErrDlg(IDD_DIALOG1, hDDVal, __FILE__, __LINE__);
 		}
 		SetWindowPos(hWnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE);
 	} else {
@@ -75,7 +75,7 @@ void dx_init(HWND hWnd)
 		if (hDDVal == DDERR_EXCLUSIVEMODEALREADYSET) {
 			TriggerBreak();
 		} else if (hDDVal != DD_OK) {
-			ErrDlg(IDD_DIALOG1, hDDVal, "C:\\Src\\Diablo\\Source\\dx.cpp", 170);
+			ErrDlg(IDD_DIALOG1, hDDVal, __FILE__, __LINE__);
 		}
 #ifdef __cplusplus
 		hDDVal = lpDDInterface->SetDisplayMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP);
@@ -92,7 +92,7 @@ void dx_init(HWND hWnd)
 #endif
 		}
 		if (hDDVal != DD_OK) {
-			ErrDlg(IDD_DIALOG1, hDDVal, "C:\\Src\\Diablo\\Source\\dx.cpp", 183);
+			ErrDlg(IDD_DIALOG1, hDDVal, __FILE__, __LINE__);
 		}
 	}
 
@@ -135,7 +135,7 @@ void dx_create_back_buffer()
 			return;
 		}
 		if (error_code != DDERR_CANTLOCKSURFACE)
-			ErrDlg(IDD_DIALOG1, error_code, "C:\\Src\\Diablo\\Source\\dx.cpp", 81);
+			ErrDlg(IDD_DIALOG1, error_code, __FILE__, __LINE__);
 	}
 
 	memset(&ddsd, 0, sizeof(ddsd));
@@ -152,14 +152,14 @@ void dx_create_back_buffer()
 	error_code = lpDDSPrimary->lpVtbl->GetPixelFormat(lpDDSPrimary, &ddsd.ddpfPixelFormat);
 #endif
 	if (error_code != DD_OK)
-		ErrDlg(IDD_DIALOG1, error_code, "C:\\Src\\Diablo\\Source\\dx.cpp", 94);
+		ErrDlg(IDD_DIALOG1, error_code, __FILE__, __LINE__);
 #ifdef __cplusplus
 	error_code = lpDDInterface->CreateSurface(&ddsd, &lpDDSBackBuf, NULL);
 #else
 	error_code = lpDDInterface->lpVtbl->CreateSurface(lpDDInterface, &ddsd, &lpDDSBackBuf, NULL);
 #endif
 	if (error_code != DD_OK)
-		ErrDlg(IDD_DIALOG1, error_code, "C:\\Src\\Diablo\\Source\\dx.cpp", 96);
+		ErrDlg(IDD_DIALOG1, error_code, __FILE__, __LINE__);
 }
 
 void dx_create_primary_surface()
@@ -177,7 +177,7 @@ void dx_create_primary_surface()
 	error_code = lpDDInterface->lpVtbl->CreateSurface(lpDDInterface, &ddsd, &lpDDSPrimary, NULL);
 #endif
 	if (error_code != DD_OK)
-		ErrDlg(IDD_DIALOG1, error_code, "C:\\Src\\Diablo\\Source\\dx.cpp", 109);
+		ErrDlg(IDD_DIALOG1, error_code, __FILE__, __LINE__);
 }
 
 HRESULT dx_DirectDrawCreate(LPGUID guid, LPDIRECTDRAW *lplpDD, LPUNKNOWN pUnkOuter)
@@ -188,13 +188,13 @@ HRESULT dx_DirectDrawCreate(LPGUID guid, LPDIRECTDRAW *lplpDD, LPUNKNOWN pUnkOut
 	if (ghDiabMod == NULL) {
 		ghDiabMod = LoadLibrary("ddraw.dll");
 		if (ghDiabMod == NULL) {
-			ErrDlg(IDD_DIALOG4, GetLastError(), "C:\\Src\\Diablo\\Source\\dx.cpp", 122);
+			ErrDlg(IDD_DIALOG4, GetLastError(), __FILE__, __LINE__);
 		}
 	}
 
 	DirectDrawCreate = (HRESULT(WINAPI *)(LPGUID, LPDIRECTDRAW *, LPUNKNOWN))GetProcAddress(ghDiabMod, "DirectDrawCreate");
 	if (DirectDrawCreate == NULL) {
-		ErrDlg(IDD_DIALOG4, GetLastError(), "C:\\Src\\Diablo\\Source\\dx.cpp", 127);
+		ErrDlg(IDD_DIALOG4, GetLastError(), __FILE__, __LINE__);
 	}
 	return DirectDrawCreate(guid, lplpDD, pUnkOuter);
 }

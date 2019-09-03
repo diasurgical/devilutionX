@@ -2,7 +2,7 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-char L5dungeon[80][80];
+BYTE L5dungeon[80][80];
 BYTE L5dflags[DMAXX][DMAXY];
 BOOL setloadflag;
 int HR1;
@@ -108,7 +108,7 @@ const BYTE LAMPS[] = { 2, 2, 13, 0, 13, 13, 129, 0, 130, 128 };
 const BYTE PWATERIN[] = { 6, 6, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 0, 0, 0, 0, 0, 0, 0, 202, 200, 200, 84, 0, 0, 199, 203, 203, 83, 0, 0, 85, 206, 80, 81, 0, 0, 0, 134, 135, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 /* data */
-BYTE L5ConvTbl[16] = { 22u, 13u, 1u, 13u, 2u, 13u, 13u, 13u, 4u, 13u, 1u, 13u, 2u, 13u, 16u, 13u };
+BYTE L5ConvTbl[16] = { 22, 13, 1, 13, 2, 13, 13, 13, 4, 13, 1, 13, 2, 13, 16, 13 };
 
 void DRLG_Init_Globals()
 {
@@ -129,6 +129,7 @@ void DRLG_Init_Globals()
 	memset(dLight, c, sizeof(dLight));
 }
 
+#ifndef SPAWN
 void LoadL1Dungeon(char *sFileName, int vx, int vy)
 {
 	int i, j, rw, rh;
@@ -159,7 +160,7 @@ void LoadL1Dungeon(char *sFileName, int vx, int vy)
 		for (i = 0; i < rw; i++) {
 			if (*lm != 0) {
 				dungeon[i][j] = *lm;
-				L5dflags[i][j] |= 0x80;
+				L5dflags[i][j] |= DLRG_PROTECTED;
 			} else {
 				dungeon[i][j] = 13;
 			}
@@ -177,6 +178,7 @@ void LoadL1Dungeon(char *sFileName, int vx, int vy)
 	SetMapObjects(pLevelMap, 0, 0);
 	mem_free_dbg(pLevelMap);
 }
+#endif
 
 void DRLG_L1Floor()
 {
@@ -204,32 +206,10 @@ void DRLG_L1Pass3()
 
 	lv = 22 - 1;
 
-#ifdef USE_ASM
-	__asm {
-		mov		esi, pMegaTiles
-		mov		eax, lv
-		shl		eax, 3
-		add		esi, eax
-		xor		eax, eax
-		lodsw
-		inc		eax
-		mov		v1, eax
-		lodsw
-		inc		eax
-		mov		v2, eax
-		lodsw
-		inc		eax
-		mov		v3, eax
-		lodsw
-		inc		eax
-		mov		v4, eax
-	}
-#else
 	v1 = *((WORD *)&pMegaTiles[lv * 8]) + 1;
 	v2 = *((WORD *)&pMegaTiles[lv * 8] + 1) + 1;
 	v3 = *((WORD *)&pMegaTiles[lv * 8] + 2) + 1;
 	v4 = *((WORD *)&pMegaTiles[lv * 8] + 3) + 1;
-#endif
 
 	for (j = 0; j < MAXDUNY; j += 2)
 	{
@@ -247,32 +227,10 @@ void DRLG_L1Pass3()
 		for (i = 0; i < DMAXX; i++) {
 			lv = dungeon[i][j] - 1;
 			/// ASSERT: assert(lv >= 0);
-#ifdef USE_ASM
-			__asm {
-				mov		esi, pMegaTiles
-				mov		eax, lv
-				shl		eax, 3
-				add		esi, eax
-				xor		eax, eax
-				lodsw
-				inc		eax
-				mov		v1, eax
-				lodsw
-				inc		eax
-				mov		v2, eax
-				lodsw
-				inc		eax
-				mov		v3, eax
-				lodsw
-				inc		eax
-				mov		v4, eax
-			}
-#else
 			v1 = *((WORD *)&pMegaTiles[lv * 8]) + 1;
 			v2 = *((WORD *)&pMegaTiles[lv * 8] + 1) + 1;
 			v3 = *((WORD *)&pMegaTiles[lv * 8] + 2) + 1;
 			v4 = *((WORD *)&pMegaTiles[lv * 8] + 3) + 1;
-#endif
 			dPiece[xx][yy] = v1;
 			dPiece[xx + 1][yy] = v2;
 			dPiece[xx][yy + 1] = v3;
@@ -325,6 +283,7 @@ void DRLG_InitL1Vals()
 	}
 }
 
+#ifndef SPAWN
 void LoadPreL1Dungeon(char *sFileName, int vx, int vy)
 {
 	int i, j, rw, rh;
@@ -354,7 +313,7 @@ void LoadPreL1Dungeon(char *sFileName, int vx, int vy)
 		for (i = 0; i < rw; i++) {
 			if (*lm != 0) {
 				dungeon[i][j] = *lm;
-				L5dflags[i][j] |= 0x80;
+				L5dflags[i][j] |= DLRG_PROTECTED;
 			} else {
 				dungeon[i][j] = 13;
 			}
@@ -372,6 +331,7 @@ void LoadPreL1Dungeon(char *sFileName, int vx, int vy)
 
 	mem_free_dbg(pLevelMap);
 }
+#endif
 
 void CreateL5Dungeon(DWORD rseed, int entry)
 {
@@ -528,7 +488,7 @@ void DRLG_L5(int entry)
 
 void DRLG_PlaceDoor(int x, int y)
 {
-	if ((L5dflags[x][y] & 0x80) == 0) {
+	if ((L5dflags[x][y] & DLRG_PROTECTED) == 0) {
 		BYTE df = L5dflags[x][y] & 0x7F;
 		BYTE c = dungeon[x][y];
 
@@ -582,7 +542,7 @@ void DRLG_PlaceDoor(int x, int y)
 		}
 	}
 
-	L5dflags[x][y] = 0x80;
+	L5dflags[x][y] = DLRG_PROTECTED;
 }
 
 void DRLG_L1Shadows()
@@ -693,8 +653,8 @@ int DRLG_PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, B
 		numt = random(0, tmax - tmin) + tmin;
 
 	for (i = 0; i < numt; i++) {
-		sx = random(0, 40 - sw);
-		sy = random(0, 40 - sh);
+		sx = random(0, DMAXX - sw);
+		sy = random(0, DMAXY - sh);
 		abort = FALSE;
 		found = 0;
 
@@ -741,9 +701,9 @@ int DRLG_PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, B
 			}
 
 			if (abort == FALSE) {
-				if (++sx == 40 - sw) {
+				if (++sx == DMAXX - sw) {
 					sx = 0;
-					if (++sy == 40 - sh)
+					if (++sy == DMAXY - sh)
 						sy = 0;
 				}
 				if (++found > 4000)
@@ -822,7 +782,7 @@ void L5firstRoom()
 
 	if (random(0, 2) == 0) {
 		ys = 1;
-		ye = 39;
+		ye = DMAXY - 1;
 
 		VR1 = random(0, 2);
 		VR2 = random(0, 2);
@@ -863,7 +823,7 @@ void L5firstRoom()
 		HR1 = 0;
 	} else {
 		xs = 1;
-		xe = 39;
+		xe = DMAXX - 1;
 
 		HR1 = random(0, 2);
 		HR2 = random(0, 2);
@@ -1011,8 +971,8 @@ void L5makeDungeon()
 	int i, j;
 	int i_2, j_2;
 
-	for (j = 0; j < 40; j++) {
-		for (i = 0; i < 40; i++) {
+	for (j = 0; j < DMAXY; j++) {
+		for (i = 0; i < DMAXX; i++) {
 			j_2 = j << 1;
 			i_2 = i << 1;
 			L5dungeon[i_2][j_2] = dungeon[i][j];
@@ -1035,10 +995,10 @@ void L5makeDmt()
 
 	for (j = 0, dmty = 1; dmty <= 77; j++, dmty += 2) {
 		for (i = 0, dmtx = 1; dmtx <= 77; i++, dmtx += 2) {
-			int val = (unsigned char)L5dungeon[dmtx + 1][dmty + 1]; /* todo: unsigned */
-			val = 2 * val + (unsigned char)L5dungeon[dmtx][dmty + 1];
-			val = 2 * val + (unsigned char)L5dungeon[dmtx + 1][dmty];
-			val = 2 * val + (unsigned char)L5dungeon[dmtx][dmty];
+			int val = L5dungeon[dmtx + 1][dmty + 1];
+			val = 2 * val + L5dungeon[dmtx][dmty + 1];
+			val = 2 * val + L5dungeon[dmtx + 1][dmty];
+			val = 2 * val + L5dungeon[dmtx][dmty];
 			dungeon[i][j] = L5ConvTbl[val];
 		}
 	}
@@ -1183,7 +1143,7 @@ void L5HorizWall(int i, int j, char p, int dx)
 		dungeon[i + xx][j] = wt;
 	} else {
 		dungeon[i + xx][j] = 2;
-		L5dflags[i + xx][j] |= 1;
+		L5dflags[i + xx][j] |= DLRG_HDOOR;
 	}
 }
 
@@ -1232,7 +1192,7 @@ void L5VertWall(int i, int j, char p, int dy)
 		dungeon[i][j + yy] = wt;
 	} else {
 		dungeon[i][j + yy] = 1;
-		L5dflags[i][j + yy] |= 2;
+		L5dflags[i][j + yy] |= DLRG_VDOOR;
 	}
 }
 
@@ -1541,7 +1501,7 @@ void DRLG_L5GChamber(int sx, int sy, BOOL topflag, BOOL bottomflag, BOOL leftfla
 	for (j = 1; j < 11; j++) {
 		for (i = 1; i < 11; i++) {
 			dungeon[i + sx][j + sy] = 13;
-			L5dflags[i + sx][j + sy] |= 0x40;
+			L5dflags[i + sx][j + sy] |= DLRG_CHAMBER;
 		}
 	}
 
@@ -1587,7 +1547,7 @@ void DRLG_L5SetRoom(int rx1, int ry1)
 		for (i = 0; i < rw; i++) {
 			if (*sp) {
 				dungeon[rx1 + i][ry1 + j] = *sp;
-				L5dflags[rx1 + i][ry1 + j] |= 0x80;
+				L5dflags[rx1 + i][ry1 + j] |= DLRG_PROTECTED;
 			} else {
 				dungeon[rx1 + i][ry1 + j] = 13;
 			}
@@ -1724,9 +1684,9 @@ void DRLG_L5CornerFix()
 
 	for (j = 1; j < DMAXY - 1; j++) {
 		for (i = 1; i < DMAXX - 1; i++) {
-			if (!(L5dflags[i][j] & 0x80) && dungeon[i][j] == 17 && dungeon[i - 1][j] == 13 && dungeon[i][j - 1] == 1) {
+			if (!(L5dflags[i][j] & DLRG_PROTECTED) && dungeon[i][j] == 17 && dungeon[i - 1][j] == 13 && dungeon[i][j - 1] == 1) {
 				dungeon[i][j] = 16;
-				L5dflags[i][j - 1] &= 0x80;
+				L5dflags[i][j - 1] &= DLRG_PROTECTED;
 			}
 			if (dungeon[i][j] == 202 && dungeon[i + 1][j] == 13 && dungeon[i][j + 1] == 1) {
 				dungeon[i][j] = 8;

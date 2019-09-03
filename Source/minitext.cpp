@@ -5,13 +5,13 @@ DEVILUTION_BEGIN_NAMESPACE
 int qtexty;
 char *qtextptr;
 int qtextSpd;
-char qtextflag;
+BOOLEAN qtextflag;
 int scrolltexty;
 int sgLastScroll;
-void *pMedTextCels;
-void *pTextBoxCels;
+BYTE *pMedTextCels;
+BYTE *pTextBoxCels;
 
-const unsigned char mfontframe[127] = {
+const BYTE mfontframe[127] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -26,7 +26,7 @@ const unsigned char mfontframe[127] = {
 	14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
 	24, 25, 26, 48, 0, 49, 0
 };
-const unsigned char mfontkern[56] = {
+const BYTE mfontkern[56] = {
 	5, 15, 10, 13, 14, 10, 9, 13, 11, 5,
 	5, 11, 10, 16, 13, 16, 10, 15, 12, 10,
 	14, 17, 17, 22, 17, 16, 11, 5, 11, 11,
@@ -68,7 +68,7 @@ void InitQTextMsg(int m)
 
 void DrawQTextBack()
 {
-	CelDecodeOnly(88, 487, (BYTE *)pTextBoxCels, 1, 591);
+	CelDecodeOnly(88, 487, pTextBoxCels, 1, 591);
 
 #define TRANS_RECT_X 27
 #define TRANS_RECT_Y 28
@@ -87,63 +87,6 @@ void PrintQTextChr(int sx, int sy, BYTE *pCelBuff, int nCel)
 	pStart = &gpBuffer[PitchTbl[209]];
 	pEnd = &gpBuffer[PitchTbl[469]];
 
-#ifdef USE_ASM
-	__asm {
-		mov		ebx, pCelBuff
-		mov		eax, nCel
-		shl		eax, 2
-		add		ebx, eax
-		mov		eax, [ebx+4]
-		sub		eax, [ebx]
-		mov		end, eax
-		mov		esi, pCelBuff
-		add		esi, [ebx]
-		mov		edi, dst
-		mov		ebx, end
-		add		ebx, esi
-	label1:
-		mov		edx, 22
-	label2:
-		xor		eax, eax
-		lodsb
-		or		al, al
-		js		label7
-		sub		edx, eax
-		cmp		edi, pStart
-		jb		label5
-		cmp		edi, pEnd
-		ja		label5
-		mov		ecx, eax
-		shr		ecx, 1
-		jnb		label3
-		movsb
-		jecxz	label6
-	label3:
-		shr		ecx, 1
-		jnb		label4
-		movsw
-		jecxz	label6
-	label4:
-		rep movsd
-		jmp		label6
-	label5:
-		add		esi, eax
-		add		edi, eax
-	label6:
-		or		edx, edx
-		jz		label8
-		jmp		label2
-	label7:
-		neg		al
-		add		edi, eax
-		sub		edx, eax
-		jnz		label2
-	label8:
-		sub		edi, BUFFER_WIDTH + 22
-		cmp		ebx, esi
-		jnz		label1
-	}
-#else
 	int i;
 	BYTE width;
 	BYTE *src;
@@ -191,7 +134,6 @@ void PrintQTextChr(int sx, int sy, BYTE *pCelBuff, int nCel)
 			}
 		}
 	}
-#endif
 }
 
 void DrawQText()
@@ -243,7 +185,7 @@ void DrawQText()
 				p++;
 			}
 			if (c != 0) {
-				PrintQTextChr(tx, ty, (BYTE *)pMedTextCels, c);
+				PrintQTextChr(tx, ty, pMedTextCels, c);
 			}
 			tx += mfontkern[c] + 2;
 		}
@@ -275,7 +217,7 @@ void DrawQText()
 			qtexty += 38;
 			qtextptr = pnl;
 			if (*pnl == '|') {
-				qtextflag = 0;
+				qtextflag = FALSE;
 			}
 			break;
 		}

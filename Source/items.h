@@ -3,7 +3,7 @@
 #define __ITEMS_H__
 
 extern int itemactive[MAXITEMS];
-extern int uitemflag;
+extern BOOL uitemflag;
 extern int itemavail[MAXITEMS];
 extern ItemStruct curruitem;
 extern ItemGetRecordStruct itemrecord[MAXITEMS];
@@ -129,7 +129,7 @@ void PutItemRecord(int nSeed, WORD wCI, int nIndex);
 /* data */
 
 extern BYTE ItemCAnimTbl[169];
-extern char *ItemDropStrs[35];
+extern char *ItemDropNames[35];
 extern BYTE ItemAnimLs[35];
 extern int ItemDropSnds[35];
 extern int ItemInvSnds[35];

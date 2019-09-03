@@ -60,12 +60,10 @@ DEVILUTION_BEGIN_NAMESPACE
 #include "enums.h"
 #include "structs.h"
 
-#if (_MSC_VER >= 800) && (_MSC_VER <= 1200)
-#define USE_ASM
-#endif
-
 // If defined, use copy protection [Default -> Defined]
+#if !defined(_DEBUG) && !defined(SPAWN)
 //#define COPYPROT
+#endif
 
 // If defined, don't reload for debuggers [Default -> Undefined]
 // Note that with patch 1.03 the command line was hosed, this is required to pass arguments to the game
@@ -74,9 +72,9 @@ DEVILUTION_BEGIN_NAMESPACE
 #endif
 
 // If defined, don't fry the CPU [Default -> Undefined]
-#ifdef _DEBUG
+//#ifdef _DEBUG
 #define SLEEPFIX
-#endif
+//#endif
 
 // If defined, fix palette glitch in Windows Vista+ [Default -> Undefined]
 //#define COLORFIX

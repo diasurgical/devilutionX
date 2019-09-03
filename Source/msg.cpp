@@ -111,7 +111,7 @@ void msg_free_packets()
 
 int msg_wait_for_turns()
 {
-	int recieved;
+	int received;
 	DWORD turns;
 
 	if (!sgbDeltaChunks) {
@@ -124,8 +124,8 @@ int msg_wait_for_turns()
 	}
 	multi_process_network_packets();
 	nthread_send_and_recv_turn(0, 0);
-	if (nthread_has_500ms_passed(0))
-		nthread_recv_turns(&recieved);
+	if (nthread_has_500ms_passed(FALSE))
+		nthread_recv_turns(&received);
 
 	if (gbGameDestroyed)
 		return 100;
@@ -454,7 +454,7 @@ void DeltaSaveLevel()
 			if (i != myplr)
 				plr[i]._pGFXLoad = 0;
 		}
-		plr[myplr]._pLvlVisited[currlevel] = 1;
+		plr[myplr]._pLvlVisited[currlevel] = TRUE;
 		delta_leave_sync(currlevel);
 	}
 }
@@ -2339,7 +2339,7 @@ DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
 	else {
-		plr[pnum]._pLvlChanging = 0;
+		plr[pnum]._pLvlChanging = FALSE;
 		if (plr[pnum]._pName[0] && !plr[pnum].plractive) {
 			plr[pnum].plractive = TRUE;
 			gbActivePlayers++;
@@ -2578,7 +2578,7 @@ DWORD On_NOVA(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel && pnum != myplr) {
 		ClrPlrPath(pnum);
 		plr[pnum]._pSpell = SPL_NOVA;
-		plr[pnum]._pSplType = 4;
+		plr[pnum]._pSplType = RSPLTYPE_INVALID;
 		plr[pnum]._pSplFrom = 3;
 		plr[pnum].destAction = ACTION_SPELL;
 		plr[pnum].destParam1 = p->x;

@@ -3,9 +3,7 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-#ifdef __cplusplus
 static CCritSect sgMemCrit;
-#endif
 CHAR FileName[MAX_PATH];
 char log_buffer[388];
 LPCVOID lpAddress;
@@ -20,9 +18,7 @@ void __cdecl log_flush(BOOL force_close)
 {
 	DWORD NumberOfBytesWritten;
 
-#ifdef __cplusplus
 	sgMemCrit.Enter();
-#endif
 	if (nNumberOfBytesToWrite) {
 		if (log_file == INVALID_HANDLE_VALUE) {
 			log_file = log_create();
@@ -39,9 +35,7 @@ void __cdecl log_flush(BOOL force_close)
 		CloseHandle(log_file);
 		log_file = INVALID_HANDLE_VALUE;
 	}
-#ifdef __cplusplus
 	sgMemCrit.Leave();
-#endif
 }
 
 HANDLE log_create()
@@ -127,9 +121,7 @@ void __cdecl log_printf(const char *pszFmt, ...)
 	char msg[512];
 	va_list va;
 
-#ifdef __cplusplus
 	sgMemCrit.Enter();
-#endif
 	va_start(va, pszFmt);
 	_vsnprintf(msg, 0x200, pszFmt, va);
 	va_end(va);
@@ -149,9 +141,7 @@ void __cdecl log_printf(const char *pszFmt, ...)
 		memcpy(&pBuffer[nNumberOfBytesToWrite], msg, size);
 		nNumberOfBytesToWrite += size;
 	}
-#ifdef __cplusplus
 	sgMemCrit.Leave();
-#endif
 }
 
 void log_dump_computer_info()

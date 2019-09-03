@@ -3,7 +3,7 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 int itemactive[MAXITEMS];
-int uitemflag;
+BOOL uitemflag;
 int itemavail[MAXITEMS];
 ItemStruct curruitem;
 ItemGetRecordStruct itemrecord[MAXITEMS];
@@ -35,7 +35,7 @@ BYTE ItemCAnimTbl[169] = {
 	14, 17, 17, 17, 0, 34, 1, 0, 3, 17,
 	8, 8, 6, 1, 3, 3, 11, 3, 4
 };
-char *ItemDropStrs[35] = {
+char *ItemDropNames[35] = {
 	"Armor2",
 	"Axe",
 	"FBttle",
@@ -73,41 +73,41 @@ char *ItemDropStrs[35] = {
 	"FLazStaf"
 };
 BYTE ItemAnimLs[35] = {
-	15u,
-	13u,
-	16u,
-	13u,
-	10u,
-	13u,
-	13u,
-	13u,
-	13u,
-	10u,
-	13u,
-	13u,
-	13u,
-	13u,
-	13u,
-	13u,
-	13u,
-	13u,
-	13u,
-	1u,
-	16u,
-	16u,
-	16u,
-	16u,
-	16u,
-	16u,
-	16u,
-	16u,
-	13u,
-	12u,
-	12u,
-	13u,
-	13u,
-	13u,
-	8u
+	15,
+	13,
+	16,
+	13,
+	10,
+	13,
+	13,
+	13,
+	13,
+	10,
+	13,
+	13,
+	13,
+	13,
+	13,
+	13,
+	13,
+	13,
+	13,
+	1,
+	16,
+	16,
+	16,
+	16,
+	16,
+	16,
+	16,
+	16,
+	13,
+	12,
+	12,
+	13,
+	13,
+	13,
+	8
 };
 int ItemDropSnds[35] = {
 	IS_FHARM,
@@ -192,7 +192,7 @@ void InitItemGFX()
 	char arglist[64];
 
 	for (i = 0; i < 35; i++) {
-		sprintf(arglist, "Items\\%s.CEL", ItemDropStrs[i]);
+		sprintf(arglist, "Items\\%s.CEL", ItemDropNames[i]);
 		itemanims[i] = LoadFileInMem(arglist, NULL);
 	}
 	memset(UniqueItemFlag, 0, sizeof(UniqueItemFlag));
@@ -240,10 +240,10 @@ void AddInitItems()
 			GetItemAttrs(i, IDI_HEAL, currlevel);
 		else
 			GetItemAttrs(i, IDI_MANA, currlevel);
-		item[i]._iCreateInfo = currlevel - 32768;
+		item[i]._iCreateInfo = currlevel - 0x8000;
 		SetupItem(i);
 		item[i]._iAnimFrame = item[i]._iAnimLen;
-		item[i]._iAnimFlag = 0;
+		item[i]._iAnimFlag = FALSE;
 		item[i]._iSelFlag = 1;
 		DeltaAddItem(i);
 		numitems++;
@@ -266,7 +266,7 @@ void InitItems()
 		item[i]._isin = 0;
 		item[i]._iSelFlag = 0;
 		item[i]._iIdentified = FALSE;
-		item[i]._iPostDraw = 0;
+		item[i]._iPostDraw = FALSE;
 	}
 
 	for (i = 0; i < MAXITEMS; i++) {
@@ -280,11 +280,11 @@ void InitItems()
 			SpawnRock();
 		if (QuestStatus(QTYPE_ANVIL))
 			SpawnQuestItem(IDI_ANVIL, 2 * setpc_x + 27, 2 * setpc_y + 27, 0, 1);
-		if (currlevel > 0u && currlevel < 0x10u)
+		if (currlevel > 0 && currlevel < 16)
 			AddInitItems();
 	}
 
-	uitemflag = 0;
+	uitemflag = FALSE;
 }
 
 void CalcPlrItemVals(int p, BOOL Loadgfx)
@@ -305,21 +305,21 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 
 	int iflgs = 0; // item_special_effect flags
 
-	int sadd = 0; // added stregth
+	int sadd = 0; // added strength
 	int madd = 0; // added magic
 	int dadd = 0; // added dexterity
 	int vadd = 0; // added vitality
 
 	unsigned __int64 spl = 0; // bitarray for all enabled/active spells
 
-	signed int fr = 0; // fire resistance
-	signed int lr = 0; // lightning resistance
-	signed int mr = 0; // magic resistance
+	int fr = 0; // fire resistance
+	int lr = 0; // lightning resistance
+	int mr = 0; // magic resistance
 
 	int dmod = 0; // bonus damage mod?
-	int ghit = 0; // (reduced) chance to get hit
+	int ghit = 0; // increased damage from enemies
 
-	signed int lrad = 10; // light radius
+	int lrad = 10; // light radius
 
 	int ihp = 0;   // increased HP
 	int imana = 0; // increased mana
@@ -512,12 +512,12 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 	plr[p]._pILMaxDam = lmax;
 
 	if (iflgs & ISPL_INFRAVISION) {
-		plr[p]._pInfraFlag = 1;
+		plr[p]._pInfraFlag = TRUE;
 	} else {
-		plr[p]._pInfraFlag = 0;
+		plr[p]._pInfraFlag = FALSE;
 	}
 
-	plr[p]._pBlockFlag = 0;
+	plr[p]._pBlockFlag = FALSE;
 	plr[p]._pwtype = WT_MELEE;
 
 	g = 0;
@@ -554,20 +554,22 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 	}
 
 	if (plr[p].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SHIELD && plr[p].InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
-		plr[p]._pBlockFlag = 1;
+		plr[p]._pBlockFlag = TRUE;
 		g++;
 	}
 	if (plr[p].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SHIELD && plr[p].InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
-		plr[p]._pBlockFlag = 1;
+		plr[p]._pBlockFlag = TRUE;
 		g++;
 	}
 
+#ifndef SPAWN
 	if (plr[p].InvBody[INVLOC_CHEST]._itype == ITYPE_MARMOR && plr[p].InvBody[INVLOC_CHEST]._iStatFlag) {
 		g += ANIM_ID_MEDIUM_ARMOR;
 	}
 	if (plr[p].InvBody[INVLOC_CHEST]._itype == ITYPE_HARMOR && plr[p].InvBody[INVLOC_CHEST]._iStatFlag) {
 		g += ANIM_ID_HEAVY_ARMOR;
 	}
+#endif
 
 	if (plr[p]._pgfxnum != g && Loadgfx) {
 		plr[p]._pgfxnum = g;
@@ -899,6 +901,7 @@ void CreatePlrItems(int p)
 		SetPlrHandItem(&plr[p].SpdList[1], IDI_HEAL);
 		GetPlrHandSeed(&plr[p].SpdList[1]);
 		break;
+#ifndef SPAWN
 	case PC_ROGUE:
 		SetPlrHandItem(&plr[p].InvBody[INVLOC_HAND_LEFT], IDI_ROGUE);
 		GetPlrHandSeed(&plr[p].InvBody[INVLOC_HAND_LEFT]);
@@ -919,6 +922,7 @@ void CreatePlrItems(int p)
 		SetPlrHandItem(&plr[p].SpdList[1], IDI_MANA);
 		GetPlrHandSeed(&plr[p].SpdList[1]);
 		break;
+#endif
 	}
 
 	SetPlrHandItem(&plr[p].HoldItem, IDI_GOLD);
@@ -1102,9 +1106,13 @@ void GetBookSpell(int i, int lvl)
 {
 	int rv, s, bs;
 
-	if (!lvl)
+	if (lvl == 0)
 		lvl = 1;
 	rv = random(14, MAX_SPELLS) + 1;
+#ifdef SPAWN
+	if (lvl > 5)
+		lvl = 5;
+#endif
 	s = 1;
 	while (rv > 0) {
 		if (spelldata[s].sBookLvl != -1 && lvl >= spelldata[s].sBookLvl) {
@@ -1199,9 +1207,13 @@ void GetStaffSpell(int i, int lvl, BOOL onlygood)
 		GetItemPower(i, lvl >> 1, lvl, 256, onlygood);
 	} else {
 		l = lvl >> 1;
-		if (!l)
+		if (l == 0)
 			l = 1;
 		rv = random(18, MAX_SPELLS) + 1;
+#ifdef SPAWN
+		if (lvl > 10)
+			lvl = 10;
+#endif
 		s = 1;
 		while (rv > 0) {
 			if (spelldata[s].sStaffLvl != -1 && l >= spelldata[s].sStaffLvl) {
@@ -1709,7 +1721,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, int flgs, BOOL onlygood)
 			sufidx = l[random(23, nl)];
 			sprintf(istr, "%s of %s", item[i]._iIName, PL_Suffix[sufidx].PLName);
 			strcpy(item[i]._iIName, istr);
-			item[i]._iMagical = 1;
+			item[i]._iMagical = ITEM_QUALITY_MAGIC;
 			SaveItemPower(
 			    i,
 			    PL_Suffix[sufidx].PLPower,
@@ -2357,7 +2369,7 @@ void SpawnRock()
 		GetItemAttrs(i, IDI_ROCK, currlevel);
 		SetupItem(i);
 		item[i]._iSelFlag = 2;
-		item[i]._iPostDraw = 1;
+		item[i]._iPostDraw = TRUE;
 		item[i]._iAnimFrame = 11;
 		numitems++;
 	}
@@ -2813,21 +2825,21 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		strcpy(tempstr, "damages target's armor");
 		break;
 	case IPL_FASTATTACK:
-		if (x->_iFlags & 0x20000)
+		if (x->_iFlags & ISPL_QUICKATTACK)
 			strcpy(tempstr, "quick attack");
-		if (x->_iFlags & 0x40000)
+		if (x->_iFlags & ISPL_FASTATTACK)
 			strcpy(tempstr, "fast attack");
-		if (x->_iFlags & 0x80000)
+		if (x->_iFlags & ISPL_FASTERATTACK)
 			strcpy(tempstr, "faster attack");
-		if (x->_iFlags & 0x100000)
+		if (x->_iFlags & ISPL_FASTESTATTACK)
 			strcpy(tempstr, "fastest attack");
 		break;
 	case IPL_FASTRECOVER:
-		if (x->_iFlags & 0x200000)
+		if (x->_iFlags & ISPL_FASTRECOVER)
 			strcpy(tempstr, "fast hit recovery");
-		if (x->_iFlags & 0x400000)
+		if (x->_iFlags & ISPL_FASTERRECOVER)
 			strcpy(tempstr, "faster hit recovery");
-		if (x->_iFlags & 0x800000)
+		if (x->_iFlags & ISPL_FASTESTRECOVER)
 			strcpy(tempstr, "fastest hit recovery");
 		break;
 	case IPL_FASTBLOCK:
@@ -2886,7 +2898,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 
 void DrawUTextBack()
 {
-	CelDecodeOnly(88, 487, (BYTE *)pSTextBoxCels, 1, 271);
+	CelDecodeOnly(88, 487, pSTextBoxCels, 1, 271);
 
 #define TRANS_RECT_X 27
 #define TRANS_RECT_Y 28
@@ -2926,28 +2938,6 @@ void DrawULine(int y)
 {
 	/// ASSERT: assert(gpBuffer);
 
-#ifdef USE_ASM
-	int yy;
-
-	yy = PitchTbl[SStringY[y] + 198] + 26 + 64;
-
-	__asm {
-		mov		esi, gpBuffer
-		mov		edi, esi
-		add		esi, SCREENXY(26, 25)
-		add		edi, yy
-		mov		ebx, BUFFER_WIDTH - 266
-		mov		edx, 3
-	copyline:
-		mov		ecx, 266 / 4
-		rep movsd
-		movsw
-		add		esi, ebx
-		add		edi, ebx
-		dec		edx
-		jnz		copyline
-	}
-#else
 	int i;
 	BYTE *src, *dst;
 
@@ -2956,7 +2946,6 @@ void DrawULine(int y)
 
 	for (i = 0; i < 3; i++, src += BUFFER_WIDTH, dst += BUFFER_WIDTH)
 		memcpy(dst, src, 266);
-#endif
 }
 
 void DrawUniqueInfo()
@@ -3056,7 +3045,7 @@ void PrintItemDetails(ItemStruct *x)
 	}
 	if (x->_iMagical == ITEM_QUALITY_UNIQUE) {
 		AddPanelString("unique item", TRUE);
-		uitemflag = 1;
+		uitemflag = TRUE;
 		curruitem = *x;
 	}
 	PrintItemMisc(x);

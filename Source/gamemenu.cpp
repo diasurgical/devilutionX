@@ -23,7 +23,7 @@ TMenuItem sgMultiMenu[5] = {
 	{ GMENU_ENABLED, NULL,              NULL                   }
 	// clang-format on
 };
-TMenuItem sgOptionMenu[6] = {
+TMenuItem sgOptionsMenu[6] = {
 	// clang-format off
 	//                     dwFlags, pszStr,          fnMenu
 	{ GMENU_ENABLED | GMENU_SLIDER, NULL,            &gamemenu_music_volume  },
@@ -168,12 +168,12 @@ void gamemenu_options(BOOL bActivate)
 	gamemenu_get_sound();
 	gamemenu_get_gamma();
 	gamemenu_get_color_cycling();
-	gmenu_call_proc(sgOptionMenu, NULL);
+	gmenu_call_proc(sgOptionsMenu, NULL);
 }
 
 void gamemenu_get_music()
 {
-	gamemenu_sound_music_toggle(music_toggle_names, sgOptionMenu, sound_get_or_set_music_volume(1));
+	gamemenu_sound_music_toggle(music_toggle_names, sgOptionsMenu, sound_get_or_set_music_volume(1));
 }
 
 void gamemenu_sound_music_toggle(char **names, TMenuItem *menu_item, int volume)
@@ -192,18 +192,18 @@ void gamemenu_sound_music_toggle(char **names, TMenuItem *menu_item, int volume)
 
 void gamemenu_get_sound()
 {
-	gamemenu_sound_music_toggle(sound_toggle_names, &sgOptionMenu[1], sound_get_or_set_sound_volume(1));
+	gamemenu_sound_music_toggle(sound_toggle_names, &sgOptionsMenu[1], sound_get_or_set_sound_volume(1));
 }
 
 void gamemenu_get_color_cycling()
 {
-	sgOptionMenu[3].pszStr = color_cycling_toggle_names[palette_get_colour_cycling() & 1];
+	sgOptionsMenu[3].pszStr = color_cycling_toggle_names[palette_get_colour_cycling() & 1];
 }
 
 void gamemenu_get_gamma()
 {
-	gmenu_slider_steps(&sgOptionMenu[2], 15);
-	gmenu_slider_set(&sgOptionMenu[2], 30, 100, UpdateGamma(0));
+	gmenu_slider_steps(&sgOptionsMenu[2], 15);
+	gmenu_slider_set(&sgOptionsMenu[2], 30, 100, UpdateGamma(0));
 }
 
 void gamemenu_music_volume(BOOL bActivate)
@@ -224,7 +224,7 @@ void gamemenu_music_volume(BOOL bActivate)
 		return;
 	}
 
-	volume = gamemenu_slider_music_sound(sgOptionMenu);
+	volume = gamemenu_slider_music_sound(sgOptionsMenu);
 	sound_get_or_set_music_volume(volume);
 
 	if (volume == VOLUME_MIN) {
@@ -266,7 +266,7 @@ void gamemenu_sound_volume(BOOL bActivate)
 			sound_get_or_set_sound_volume(VOLUME_MAX);
 		}
 	} else {
-		volume = gamemenu_slider_music_sound(&sgOptionMenu[1]);
+		volume = gamemenu_slider_music_sound(&sgOptionsMenu[1]);
 		sound_get_or_set_sound_volume(volume);
 		if (volume == VOLUME_MIN) {
 			if (gbSoundOn) {
@@ -299,7 +299,7 @@ void gamemenu_gamma(BOOL bActivate)
 
 int gamemenu_slider_gamma()
 {
-	return gmenu_slider_get(&sgOptionMenu[2], 30, 100);
+	return gmenu_slider_get(&sgOptionsMenu[2], 30, 100);
 }
 
 void gamemenu_color_cycling(BOOL bActivate)
@@ -307,7 +307,7 @@ void gamemenu_color_cycling(BOOL bActivate)
 	BOOL color_cycling;
 
 	color_cycling = palette_set_color_cycling(palette_get_colour_cycling() == 0);
-	sgOptionMenu[3].pszStr = color_cycling_toggle_names[color_cycling & 1];
+	sgOptionsMenu[3].pszStr = color_cycling_toggle_names[color_cycling & 1];
 }
 
 DEVILUTION_END_NAMESPACE

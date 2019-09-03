@@ -224,10 +224,10 @@ typedef struct PlayerStruct {
 	int _pSplHotKey[4];
 	char _pSplTHotKey[4];
 	int _pwtype;
-	unsigned char _pBlockFlag;
-	unsigned char _pInvincible;
+	BOOLEAN _pBlockFlag;
+	BOOLEAN _pInvincible;
 	char _pLightRad;
-	unsigned char _pLvlChanging;
+	BOOLEAN _pLvlChanging;
 	char _pName[PLR_NAME_LEN];
 	// plr_class enum value.
 	// TODO: this could very well be `enum plr_class _pClass`
@@ -267,7 +267,7 @@ typedef struct PlayerStruct {
 	char _pFireResist;
 	char _pLghtResist;
 	int _pGold;
-	int _pInfraFlag;
+	BOOL _pInfraFlag;
 	int _pVar1;
 	int _pVar2;
 	int _pVar3;
@@ -276,8 +276,8 @@ typedef struct PlayerStruct {
 	int _pVar6;
 	int _pVar7;
 	int _pVar8;
-	unsigned char _pLvlVisited[NUMLEVELS];
-	unsigned char _pSLvlVisited[NUMLEVELS]; // only 10 used
+	BOOLEAN _pLvlVisited[NUMLEVELS];
+	BOOLEAN _pSLvlVisited[NUMLEVELS]; // only 10 used
 	int _pGFXLoad;
 	unsigned char *_pNAnim[8];
 	int _pNFrames;
@@ -501,11 +501,11 @@ typedef struct MonsterData {
 	char mAi;
 	int mFlags;
 	unsigned char mInt;
-	unsigned char mHit; // BUGFIX: Some monsters overflow this value on high dificulty
+	unsigned char mHit; // BUGFIX: Some monsters overflow this value on high difficulty
 	unsigned char mAFNum;
 	unsigned char mMinDamage;
 	unsigned char mMaxDamage;
-	unsigned char mHit2; // BUGFIX: Some monsters overflow this value on high dificulty
+	unsigned char mHit2; // BUGFIX: Some monsters overflow this value on high difficulty
 	unsigned char mAFNum2;
 	unsigned char mMinDamage2;
 	unsigned char mMaxDamage2;
@@ -1216,29 +1216,29 @@ typedef struct DeadStruct {
 
 typedef struct _gamedata {
 	int dwSeed;
-	unsigned char bDiff;
+	BYTE bDiff;
 } _gamedata;
 
 typedef struct _uidefaultstats {
-	unsigned short strength;
-	unsigned short magic;
-	unsigned short dexterity;
-	unsigned short vitality;
+	WORD strength;
+	WORD magic;
+	WORD dexterity;
+	WORD vitality;
 } _uidefaultstats;
 
 typedef struct _uiheroinfo {
 	struct _uiheroinfo *next;
 	char name[16];
-	unsigned short level;
-	unsigned char heroclass;
-	unsigned char herorank;
-	unsigned short strength;
-	unsigned short magic;
-	unsigned short dexterity;
-	unsigned short vitality;
+	WORD level;
+	BYTE heroclass;
+	BYTE herorank;
+	WORD strength;
+	WORD magic;
+	WORD dexterity;
+	WORD vitality;
 	int gold;
 	int hassaved;
-	int spawned;
+	BOOL spawned;
 } _uiheroinfo;
 
 // TPDEF PTR FCN UCHAR ENUMHEROPROC
@@ -1558,22 +1558,26 @@ typedef struct _plrmsg {
 // capture
 //////////////////////////////////////////////////
 
-typedef struct PCXHeader {
-	char manufacturer;
-	char version;
-	char encoding;
-	char bitsPerPixel;
-	short xmin, ymin;
-	short xmax, ymax;
-	short horzRes, vertRes;
-	char palette[48];
-	char reserved;
-	char numColorPlanes;
-	short bytesPerScanLine;
-	short paletteType;
-	short horzSize, vertSize;
-	char padding[54];
-} PCXHeader;
+typedef struct _PcxHeader {
+	BYTE Manufacturer;
+	BYTE Version;
+	BYTE Encoding;
+	BYTE BitsPerPixel;
+	WORD Xmin;
+	WORD Ymin;
+	WORD Xmax;
+	WORD Ymax;
+	WORD HDpi;
+	WORD VDpi;
+	BYTE Colormap[48];
+	BYTE Reserved;
+	BYTE NPlanes;
+	WORD BytesPerLine;
+	WORD PaletteInfo;
+	WORD HscreenSize;
+	WORD VscreenSize;
+	BYTE Filler[54];
+} PCXHEADER;
 
 //////////////////////////////////////////////////
 // encrypt

@@ -41,7 +41,7 @@ const BYTE lfontkern[56] = {
 
 void gmenu_draw_pause()
 {
-	if (currlevel)
+	if (currlevel != 0)
 		RedBack();
 	if (!sgpCurrentMenu) {
 		light_table_index = 0;
@@ -152,8 +152,8 @@ void gmenu_draw()
 	if (sgpCurrentMenu) {
 		if (dword_63447C)
 			dword_63447C(sgpCurrentMenu);
-		CelDecodeOnly(236, 262, sgpLogo, 1, 296);
-		y = 320;
+		CelDecodeOnly((SCREEN_WIDTH - 296) / 2 + SCREEN_X, 102 + SCREEN_Y, sgpLogo, 1, 296);
+		y = 160 + SCREEN_Y;
 		i = sgpCurrentMenu;
 		if (sgpCurrentMenu->fnMenu) {
 			while (i->fnMenu) {
@@ -225,11 +225,11 @@ int gmenu_get_lfont(TMenuItem *pItem)
 	return i - 2;
 }
 
-BOOL gmenu_presskeys(int a1)
+BOOL gmenu_presskeys(int vkey)
 {
 	if (!sgpCurrentMenu)
 		return 0;
-	switch (a1) {
+	switch (vkey) {
 	case VK_RETURN:
 		if ((sgpCurrItem->dwFlags & GMENU_ENABLED) != 0) {
 			PlaySFX(IS_TITLEMOV);
@@ -331,7 +331,7 @@ BOOL gmenu_left_mouse(BOOL isDown)
 		if (!sgpCurrentMenu) {
 			return FALSE;
 		}
-		if (MouseY >= VIEWPORT_HEIGHT) {
+		if (MouseY >= PANEL_TOP) {
 			return FALSE;
 		}
 		if (MouseY - 117 >= 0) {
@@ -340,8 +340,8 @@ BOOL gmenu_left_mouse(BOOL isDown)
 				pItem = &sgpCurrentMenu[i];
 				if ((sgpCurrentMenu[i].dwFlags & GMENU_ENABLED) != 0) {
 					w = gmenu_get_lfont(pItem);
-					if (MouseX >= 320 - (w >> 1)) {
-						if (MouseX <= (w >> 1) + 320) {
+					if (MouseX >= SCREEN_WIDTH / 2 - w / 2) {
+						if (MouseX <= SCREEN_WIDTH / 2 + w / 2) {
 							sgpCurrItem = pItem;
 							PlaySFX(IS_TITLEMOV);
 							if (pItem->dwFlags & GMENU_SLIDER) {

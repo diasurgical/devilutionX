@@ -101,11 +101,6 @@ BOOL SFileDdaGetPos(HANDLE hFile, DWORD *current, DWORD *end)
 	return true;
 }
 
-BOOL SFileDdaInitialize(HANDLE directsound)
-{
-	return true;
-}
-
 BOOL SFileDdaSetVolume(HANDLE hFile, signed int bigvolume, signed int volume)
 {
 	Mix_VolumeMusic(MIX_MAX_VOLUME - MIX_MAX_VOLUME * bigvolume / VOLUME_MIN);
@@ -201,7 +196,7 @@ BOOL SBmpLoadImage(const char *pszFileName, PALETTEENTRY *pPalette, BYTE *pBuffe
 {
 	HANDLE hFile;
 	size_t size;
-	PCXHeader pcxhdr;
+	PCXHEADER pcxhdr;
 	BYTE paldata[256][3];
 	BYTE *dataPtr, *fileBuffer;
 	BYTE byte;
@@ -245,15 +240,15 @@ BOOL SBmpLoadImage(const char *pszFileName, PALETTEENTRY *pPalette, BYTE *pBuffe
 		return false;
 	}
 
-	int width = SDL_SwapLE16(pcxhdr.xmax) - SDL_SwapLE16(pcxhdr.xmin) + 1;
-	int height = SDL_SwapLE16(pcxhdr.ymax) - SDL_SwapLE16(pcxhdr.ymin) + 1;
+	int width = SDL_SwapLE16(pcxhdr.Xmax) - SDL_SwapLE16(pcxhdr.Xmin) + 1;
+	int height = SDL_SwapLE16(pcxhdr.Ymax) - SDL_SwapLE16(pcxhdr.Ymin) + 1;
 
 	if (pdwWidth)
 		*pdwWidth = width;
 	if (dwHeight)
 		*dwHeight = height;
 	if (pdwBpp)
-		*pdwBpp = SDL_SwapLE16(pcxhdr.bitsPerPixel);
+		*pdwBpp = SDL_SwapLE16(pcxhdr.BitsPerPixel);
 
 	if (!pBuffer) {
 		SFileSetFilePointer(hFile, 0, 0, 2);
@@ -289,7 +284,7 @@ BOOL SBmpLoadImage(const char *pszFileName, PALETTEENTRY *pPalette, BYTE *pBuffe
 		free(fileBuffer);
 	}
 
-	if (pPalette && pcxhdr.bitsPerPixel == 8) {
+	if (pPalette && pcxhdr.BitsPerPixel == 8) {
 		SFileSetFilePointer(hFile, -768, 0, 1);
 		SFileReadFile(hFile, paldata, 768, 0, 0);
 		for (int i = 0; i < 256; i++) {
@@ -426,18 +421,6 @@ BOOL SRegSaveValue(const char *keyname, const char *valuename, BYTE flags, DWORD
 	return true;
 }
 
-BOOL SVidInitialize(HANDLE video)
-{
-	DUMMY();
-	return true;
-}
-
-BOOL SVidDestroy()
-{
-	DUMMY();
-	return true;
-}
-
 double SVidFrameEnd;
 double SVidFrameLength;
 BYTE SVidLoop;
@@ -448,6 +431,15 @@ SDL_Surface *SVidSurface;
 BYTE *SVidBuffer;
 SDL_AudioDeviceID deviceId;
 unsigned long SVidWidth, SVidHeight;
+
+void SVidRestartMixer()
+{
+	if (Mix_OpenAudio(22050, AUDIO_S16LSB, 2, 1024) < 0) {
+		SDL_Log(Mix_GetError());
+	}
+	Mix_AllocateChannels(25);
+	Mix_ReserveChannels(1);
+}
 
 BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HANDLE *video)
 {
@@ -487,13 +479,15 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 		audioFormat.format = depth[0] == 16 ? AUDIO_S16 : AUDIO_U8;
 		audioFormat.channels = channels[0];
 
+		Mix_CloseAudio();
 		deviceId = SDL_OpenAudioDevice(NULL, 0, &audioFormat, NULL, 0);
 		if (deviceId == 0) {
 			SDL_Log(SDL_GetError());
+			SVidRestartMixer();
 			return false;
-		} else {
-			SDL_PauseAudioDevice(deviceId, 0); /* start audio playing. */
 		}
+
+		SDL_PauseAudioDevice(deviceId, 0); /* start audio playing. */
 	}
 
 	unsigned long nFrames;
@@ -534,6 +528,8 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 	}
 	if (SDL_SetSurfacePalette(SVidSurface, SVidPalette) <= -1) {
 		SDL_Log(SDL_GetError());
+		if (deviceId > 0)
+			SVidRestartMixer();
 		return false;
 	}
 
@@ -639,6 +635,7 @@ BOOL SVidPlayEnd(HANDLE video)
 		SDL_ClearQueuedAudio(deviceId);
 		SDL_CloseAudioDevice(deviceId);
 		deviceId = 0;
+		SVidRestartMixer();
 	}
 
 	if (SVidSMK)
@@ -733,26 +730,10 @@ void SDrawMessageBox(char *Text, char *Title, int Flags)
 	MessageBoxA(NULL, Text, Title, Flags);
 }
 
-void SDrawDestroy(void)
-{
-	DUMMY();
-}
-
-BOOLEAN StormDestroy(void)
-{
-	DUMMY();
-	return true;
-}
-
 BOOL SFileSetBasePath(char *)
 {
 	DUMMY();
 	return true;
-}
-
-void SDrawRealizePalette(void)
-{
-	DUMMY();
 }
 
 BOOL SFileEnableDirectAccess(BOOL enable)

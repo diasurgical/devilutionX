@@ -1,3 +1,4 @@
+#ifndef SPAWN
 #include "diablo.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -191,7 +192,7 @@ BOOL DRLG_L3Anvil()
 			if (L3ANVIL[ii] != 0) {
 				dungeon[xx + sx][yy + sy] = L3ANVIL[ii];
 			}
-			dflags[xx + sx][yy + sy] |= 0x80;
+			dflags[xx + sx][yy + sy] |= DLRG_PROTECTED;
 			ii++;
 		}
 	}
@@ -208,8 +209,8 @@ void FixL3Warp()
 {
 	int i, j;
 
-	for (j = 0; j < 40; j++) {
-		for (i = 0; i < 40; i++) {
+	for (j = 0; j < DMAXY; j++) {
+		for (i = 0; i < DMAXX; i++) {
 			if (dungeon[i][j] == 125 && dungeon[i + 1][j] == 125 && dungeon[i][j + 1] == 125 && dungeon[i + 1][j + 1] == 125) {
 				dungeon[i][j] = 156;
 				dungeon[i + 1][j] = 155;
@@ -228,15 +229,15 @@ void FixL3HallofHeroes()
 {
 	int i, j;
 
-	for (j = 0; j < 40; j++) {
-		for (i = 0; i < 40; i++) {
+	for (j = 0; j < DMAXY; j++) {
+		for (i = 0; i < DMAXX; i++) {
 			if (dungeon[i][j] == 5 && dungeon[i + 1][j + 1] == 7) {
 				dungeon[i][j] = 7;
 			}
 		}
 	}
-	for (j = 0; j < 40; j++) {
-		for (i = 0; i < 40; i++) {
+	for (j = 0; j < DMAXY; j++) {
+		for (i = 0; i < DMAXX; i++) {
 			if (dungeon[i][j] == 5 && dungeon[i + 1][j + 1] == 12 && dungeon[i + 1][j] == 7) {
 				dungeon[i][j] = 7;
 				dungeon[i][j + 1] = 7;
@@ -459,8 +460,8 @@ void InitL3Dungeon()
 
 	memset(dungeon, 0, sizeof(dungeon));
 
-	for (j = 0; j < 40; j++) {
-		for (i = 0; i < 40; i++) {
+	for (j = 0; j < DMAXY; j++) {
+		for (i = 0; i < DMAXX; i++) {
 			dungeon[i][j] = 0;
 			dflags[i][j] = 0;
 		}
@@ -608,8 +609,8 @@ void DRLG_L3FillDiags()
 {
 	int i, j, v;
 
-	for (j = 0; j < 39; j++) {
-		for (i = 0; i < 39; i++) {
+	for (j = 0; j < DMAXY - 1; j++) {
+		for (i = 0; i < DMAXX - 1; i++) {
 			v = dungeon[i + 1][j + 1] + 2 * dungeon[i][j + 1] + 4 * dungeon[i + 1][j] + 8 * dungeon[i][j];
 			if (v == 6) {
 				if (random(0, 2) == 0) {
@@ -633,8 +634,8 @@ void DRLG_L3FillSingles()
 {
 	int i, j;
 
-	for (j = 1; j < 39; j++) {
-		for (i = 1; i < 39; i++) {
+	for (j = 1; j < DMAXY - 1; j++) {
+		for (i = 1; i < DMAXX - 1; i++) {
 			if (dungeon[i][j] == 0
 			    && dungeon[i][j - 1] + dungeon[i - 1][j - 1] + dungeon[i + 1][j - 1] == 3
 			    && dungeon[i + 1][j] + dungeon[i - 1][j] == 2
@@ -649,7 +650,7 @@ void DRLG_L3FillStraights()
 {
 	int i, j, xc, xs, yc, ys, k;
 
-	for (j = 0; j < 39; j++) {
+	for (j = 0; j < DMAXY - 1; j++) {
 		xs = 0;
 		for (i = 0; i < 37; i++) {
 			if (dungeon[i][j] == 0 && dungeon[i][j + 1] == 1) {
@@ -667,7 +668,7 @@ void DRLG_L3FillStraights()
 			}
 		}
 	}
-	for (j = 0; j < 39; j++) {
+	for (j = 0; j < DMAXY - 1; j++) {
 		xs = 0;
 		for (i = 0; i < 37; i++) {
 			if (dungeon[i][j] == 1 && dungeon[i][j + 1] == 0) {
@@ -685,7 +686,7 @@ void DRLG_L3FillStraights()
 			}
 		}
 	}
-	for (i = 0; i < 39; i++) {
+	for (i = 0; i < DMAXX - 1; i++) {
 		ys = 0;
 		for (j = 0; j < 37; j++) {
 			if (dungeon[i][j] == 0 && dungeon[i + 1][j] == 1) {
@@ -703,7 +704,7 @@ void DRLG_L3FillStraights()
 			}
 		}
 	}
-	for (i = 0; i < 39; i++) {
+	for (i = 0; i < DMAXX - 1; i++) {
 		ys = 0;
 		for (j = 0; j < 37; j++) {
 			if (dungeon[i][j] == 1 && dungeon[i + 1][j] == 0) {
@@ -727,11 +728,11 @@ void DRLG_L3Edges()
 {
 	int i, j;
 
-	for (j = 0; j < 40; j++) {
-		dungeon[39][j] = 0;
+	for (j = 0; j < DMAXY; j++) {
+		dungeon[DMAXX - 1][j] = 0;
 	}
-	for (i = 0; i < 40; i++) {
-		dungeon[i][39] = 0;
+	for (i = 0; i < DMAXX; i++) {
+		dungeon[i][DMAXY - 1] = 0;
 	}
 }
 
@@ -741,8 +742,8 @@ int DRLG_L3GetFloorArea()
 
 	gfa = 0;
 
-	for (j = 0; j < 40; j++) {
-		for (i = 0; i < 40; i++) {
+	for (j = 0; j < DMAXY; j++) {
+		for (i = 0; i < DMAXX; i++) {
 			gfa += dungeon[i][j];
 		}
 	}
@@ -754,8 +755,8 @@ void DRLG_L3MakeMegas()
 {
 	int i, j, v;
 
-	for (j = 0; j < 39; j++) {
-		for (i = 0; i < 39; i++) {
+	for (j = 0; j < DMAXY-1; j++) {
+		for (i = 0; i < DMAXX-1; i++) {
 			v = dungeon[i + 1][j + 1] + 2 * dungeon[i][j + 1] + 4 * dungeon[i + 1][j] + 8 * dungeon[i][j];
 			if (v == 6) {
 				if (random(0, 2) == 0) {
@@ -773,10 +774,10 @@ void DRLG_L3MakeMegas()
 			}
 			dungeon[i][j] = L3ConvTbl[v];
 		}
-		dungeon[39][j] = 8;
+		dungeon[DMAXX-1][j] = 8;
 	}
-	for (i = 0; i < 40; i++) {
-		dungeon[i][39] = 8;
+	for (i = 0; i < DMAXX; i++) {
+		dungeon[i][DMAXY-1] = 8;
 	}
 }
 
@@ -801,12 +802,12 @@ void DRLG_L3River()
 			ry = 0;
 			i = 0;
 			while ((dungeon[rx][ry] < 25 || dungeon[rx][ry] > 28) && i < 100) {
-				rx = random(0, 40);
-				ry = random(0, 40);
+				rx = random(0, DMAXX);
+				ry = random(0, DMAXY);
 				i++;
-				while ((dungeon[rx][ry] < 25 || dungeon[rx][ry] > 28) && ry < 40) {
+				while ((dungeon[rx][ry] < 25 || dungeon[rx][ry] > 28) && ry < DMAXY) {
 					rx++;
-					if (rx >= 40) {
+					if (rx >= DMAXX) {
 						rx = 0;
 						ry++;
 					}
@@ -858,10 +859,10 @@ void DRLG_L3River()
 				if (dir == 0 && ry > 0) {
 					ry--;
 				}
-				if (dir == 1 && ry < 40) {
+				if (dir == 1 && ry < DMAXY) {
 					ry++;
 				}
-				if (dir == 2 && rx < 40) {
+				if (dir == 2 && rx < DMAXX) {
 					rx++;
 				}
 				if (dir == 3 && rx > 0) {
@@ -1022,6 +1023,11 @@ void DRLG_L3River()
 	}
 }
 
+/**
+ * Flood fills dirt and wall tiles looking for
+ * an area of at most 40 tiles and disconnected from the map edge.
+ * If it finds one, converts it to lava tiles and sets lavapool to TRUE.
+ */
 void DRLG_L3Pool()
 {
 	int i, j, dunx, duny, totarea, poolchance;
@@ -1029,14 +1035,14 @@ void DRLG_L3Pool()
 	BYTE k;
 	static BYTE poolsub[15] = { 0, 35, 26, 36, 25, 29, 34, 7, 33, 28, 27, 37, 32, 31, 30 };
 
-	for (duny = 0; duny < 40; duny++) {
-		for (dunx = 0; dunx < 40; dunx++) {
+	for (duny = 0; duny < DMAXY; duny++) {
+		for (dunx = 0; dunx < DMAXY; dunx++) {
 			if (dungeon[dunx][duny] != 8) {
 				continue;
 			}
 			dungeon[dunx][duny] |= 0x80;
 			totarea = 1;
-			if (dunx + 1 < 40) {
+			if (dunx + 1 < DMAXX) {
 				found = DRLG_L3SpawnEdge(dunx + 1, duny, &totarea);
 			} else {
 				found = TRUE;
@@ -1046,7 +1052,7 @@ void DRLG_L3Pool()
 			} else {
 				found = TRUE;
 			}
-			if (duny + 1 < 40 && !found) {
+			if (duny + 1 < DMAXY && !found) {
 				found = DRLG_L3SpawnEdge(dunx, duny + 1, &totarea);
 			} else {
 				found = TRUE;
@@ -1061,7 +1067,7 @@ void DRLG_L3Pool()
 				for (i = dunx - totarea; i < dunx + totarea; i++) {
 					// BUGFIX: In the following swap the order to first do the
 					// index checks and only then access dungeon[i][j]
-					if (dungeon[i][j] & 0x80 && j >= 0 && j < 40 && i >= 0 && i < 40) {
+					if (dungeon[i][j] & 0x80 && j >= 0 && j < DMAXY && i >= 0 && i < DMAXX) {
 						dungeon[i][j] &= ~0x80;
 						if (totarea > 4 && poolchance < 25 && !found) {
 							k = poolsub[dungeon[i][j]];
@@ -1080,12 +1086,12 @@ void DRLG_L3Pool()
 BOOL DRLG_L3SpawnEdge(int x, int y, int *totarea)
 {
 	BYTE i;
-	static BYTE spawntable[15] = { 0, 10, 3, 5, 12, 6, 9, 0, 0, 12, 3, 6, 9, 10, 5 };
+	static BYTE spawntable[15] = { 0, 0x0A, 0x03, 0x05, 0x0C, 0x06, 0x09, 0, 0, 0x012, 0x03, 0x06, 0x09, 0x0A, 0x05 };
 
 	if (*totarea > 40) {
 		return TRUE;
 	}
-	if (x < 0 || y < 0 || x >= 40 || y >= 40) {
+	if (x < 0 || y < 0 || x >= DMAXX || y >= DMAXY) {
 		return TRUE;
 	}
 	if (dungeon[x][y] & 0x80) {
@@ -1133,12 +1139,12 @@ BOOL DRLG_L3SpawnEdge(int x, int y, int *totarea)
 BOOL DRLG_L3Spawn(int x, int y, int *totarea)
 {
 	BYTE i;
-	static BYTE spawntable[15] = { 0, 10, 67, 5, 44, 6, 9, 0, 0, 28, 131, 6, 9, 10, 5 };
+	static BYTE spawntable[15] = { 0, 0x0A, 0x43, 0x05, 0x2C, 0x06, 0x09, 0, 0, 0x1C, 0x83, 0x06, 0x09, 0x0A, 0x05 };
 
 	if (*totarea > 40) {
 		return TRUE;
 	}
-	if (x < 0 || y < 0 || x >= 40 || y >= 40) {
+	if (x < 0 || y < 0 || x >= DMAXX || y >= DMAXY) {
 		return TRUE;
 	}
 	if (dungeon[x][y] & 0x80) {
@@ -1217,21 +1223,21 @@ BOOL DRLG_L3PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy
 	}
 
 	for (i = 0; i < numt; i++) {
-		sx = random(0, 40 - sw);
-		sy = random(0, 40 - sh);
+		sx = random(0, DMAXX - sw);
+		sy = random(0, DMAXY - sh);
 		found = FALSE;
 		trys = 0;
 		while (!found && trys < 200) {
 			trys++;
 			found = TRUE;
 			if (cx != -1 && sx >= cx - sw && sx <= cx + 12) {
-				sx = random(0, 40 - sw);
-				sy = random(0, 40 - sh);
+				sx = random(0, DMAXX - sw);
+				sy = random(0, DMAXY - sh);
 				found = FALSE;
 			}
 			if (cy != -1 && sy >= cy - sh && sy <= cy + 12) {
-				sx = random(0, 40 - sw);
-				sy = random(0, 40 - sh);
+				sx = random(0, DMAXX - sw);
+				sy = random(0, DMAXY - sh);
 				found = FALSE;
 			}
 			ii = 2;
@@ -1248,10 +1254,10 @@ BOOL DRLG_L3PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy
 			}
 			if (!found) {
 				sx++;
-				if (sx == 40 - sw) {
+				if (sx == DMAXX - sw) {
 					sx = 0;
 					sy++;
-					if (sy == 40 - sh) {
+					if (sy == DMAXY - sh) {
 						sy = 0;
 					}
 				}
@@ -1291,8 +1297,8 @@ void DRLG_L3PlaceRndSet(const BYTE *miniset, int rndper)
 	sw = miniset[0];
 	sh = miniset[1];
 
-	for (sy = 0; sy < 40 - sh; sy++) {
-		for (sx = 0; sx < 40 - sw; sx++) {
+	for (sy = 0; sy < DMAXX - sh; sy++) {
+		for (sx = 0; sx < DMAXY - sw; sx++) {
 			found = TRUE;
 			ii = 2;
 			for (yy = 0; yy < sh && found == TRUE; yy++) {
@@ -1309,6 +1315,7 @@ void DRLG_L3PlaceRndSet(const BYTE *miniset, int rndper)
 			kk = sw * sh + 2;
 			if (miniset[kk] >= 84 && miniset[kk] <= 100 && found == TRUE) {
 				// BUGFIX: accesses to dungeon can go out of bounds
+				// BUGFIX: Comparisons vs 100 should use same tile as comparisons vs 84.
 				if (dungeon[sx - 1][sy] >= 84 && dungeon[sx - 1][sy] <= 100) {
 					found = FALSE;
 				}
@@ -1631,32 +1638,10 @@ void DRLG_L3Pass3()
 
 	lv = 8 - 1;
 
-#ifdef USE_ASM
-	__asm {
-		mov		esi, pMegaTiles
-		mov		eax, lv
-		shl		eax, 3
-		add		esi, eax
-		xor		eax, eax
-		lodsw
-		inc		eax
-		mov		v1, eax
-		lodsw
-		inc		eax
-		mov		v2, eax
-		lodsw
-		inc		eax
-		mov		v3, eax
-		lodsw
-		inc		eax
-		mov		v4, eax
-	}
-#else
 	v1 = *((WORD *)&pMegaTiles[lv * 8]) + 1;
 	v2 = *((WORD *)&pMegaTiles[lv * 8] + 1) + 1;
 	v3 = *((WORD *)&pMegaTiles[lv * 8] + 2) + 1;
 	v4 = *((WORD *)&pMegaTiles[lv * 8] + 3) + 1;
-#endif
 
 	for (j = 0; j < MAXDUNY; j += 2)
 	{
@@ -1673,34 +1658,6 @@ void DRLG_L3Pass3()
 		xx = 16;
 		for (i = 0; i < DMAXX; i++) {
 			lv = dungeon[i][j] - 1;
-#ifdef USE_ASM
-			if (lv >= 0) {
-				__asm {
-					mov		esi, pMegaTiles
-					mov		eax, lv
-					shl		eax, 3
-					add		esi, eax
-					xor		eax, eax
-					lodsw
-					inc		eax
-					mov		v1, eax
-					lodsw
-					inc		eax
-					mov		v2, eax
-					lodsw
-					inc		eax
-					mov		v3, eax
-					lodsw
-					inc		eax
-					mov		v4, eax
-				}
-			} else {
-				v1 = 0;
-				v2 = 0;
-				v3 = 0;
-				v4 = 0;
-			}
-#else
 			if (lv >= 0) {
 				v1 = *((WORD *)&pMegaTiles[lv * 8]) + 1;
 				v2 = *((WORD *)&pMegaTiles[lv * 8] + 1) + 1;
@@ -1712,7 +1669,6 @@ void DRLG_L3Pass3()
 				v3 = 0;
 				v4 = 0;
 			}
-#endif
 			dPiece[xx][yy] = v1;
 			dPiece[xx + 1][yy] = v2;
 			dPiece[xx][yy + 1] = v3;
@@ -1752,8 +1708,8 @@ void LoadL3Dungeon(char *sFileName, int vx, int vy)
 			lm += 2;
 		}
 	}
-	for (j = 0; j < 40; j++) {
-		for (i = 0; i < 40; i++) {
+	for (j = 0; j < DMAXY; j++) {
+		for (i = 0; i < DMAXX; i++) {
 			if (dungeon[i][j] == 0) {
 				dungeon[i][j] = 8;
 			}
@@ -1810,8 +1766,8 @@ void LoadPreL3Dungeon(char *sFileName, int vx, int vy)
 			lm += 2;
 		}
 	}
-	for (j = 0; j < 40; j++) {
-		for (i = 0; i < 40; i++) {
+	for (j = 0; j < DMAXY; j++) {
+		for (i = 0; i < DMAXX; i++) {
 			if (dungeon[i][j] == 0) {
 				dungeon[i][j] = 8;
 			}
@@ -1823,3 +1779,4 @@ void LoadPreL3Dungeon(char *sFileName, int vx, int vy)
 }
 
 DEVILUTION_END_NAMESPACE
+#endif

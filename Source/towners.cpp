@@ -2,20 +2,22 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-int storeflag; // weak
+BOOL storeflag;
 int sgnCowMsg;
-int numtowners; // idb
+int numtowners;
 DWORD sgdwCowClicks;
-int bannerflag;  // weak // unused 0x6AAC28
-int boyloadflag; // weak
+BOOL bannerflag; // unused 0x6AAC28
+BOOL boyloadflag;
 BYTE *pCowCels;
 TownerStruct towner[16];
 
+#ifndef SPAWN
 const int snSFX[3][3] = {
 	{ PS_WARR52, PS_ROGUE52, PS_MAGE52 },
 	{ PS_WARR49, PS_ROGUE49, PS_MAGE49 },
 	{ PS_WARR50, PS_ROGUE50, PS_MAGE50 }
 };
+#endif
 
 /* data */
 
@@ -123,24 +125,6 @@ int GetActiveTowner(int t)
 void SetTownerGPtrs(BYTE *pData, BYTE **pAnim)
 {
 	int i;
-#ifdef USE_ASM
-	BYTE *src;
-
-	for (i = 0; i < 8; i++) {
-		src = pData;
-		__asm {
-			mov		eax, src
-			mov		ebx, eax
-			mov		edx, i
-			shl		edx, 2
-			add		ebx, edx
-			mov		edx, [ebx]
-			add		eax, edx
-			mov		src, eax
-		}
-		pAnim[i] = src;
-	}
-#else
 	DWORD *pFrameTable;
 
 	pFrameTable = (DWORD *)pData;
@@ -148,7 +132,6 @@ void SetTownerGPtrs(BYTE *pData, BYTE **pAnim)
 	for (i = 0; i < 8; i++) {
 		pAnim[i] = &pData[pFrameTable[i]];
 	}
-#endif
 }
 
 void NewTownerAnim(int tnum, BYTE *pAnim, int numFrames, int Delay)
@@ -212,7 +195,7 @@ void InitBarOwner()
 {
 	int i;
 
-	bannerflag = 0; // unused
+	bannerflag = FALSE; // unused
 	InitTownerInfo(numtowners, 96, 1, TOWN_TAVERN, 55, 62, 3, 10);
 	InitQstSnds(numtowners);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\TwnF\\TwnFN.CEL", NULL);
@@ -224,7 +207,6 @@ void InitBarOwner()
 	strcpy(towner[numtowners]._tName, "Ogden the Tavern owner");
 	numtowners++;
 }
-// 6AAC28: using guessed type int bannerflag;
 
 void InitTownDead()
 {
@@ -278,7 +260,7 @@ void InitBoy()
 {
 	int i;
 
-	boyloadflag = 1;
+	boyloadflag = TRUE;
 	InitTownerInfo(numtowners, 96, 1, TOWN_PEGBOY, 11, 53, -1, 10);
 	InitQstSnds(numtowners);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\TownBoy\\PegKid1.CEL", NULL);
@@ -290,7 +272,6 @@ void InitBoy()
 	strcpy(towner[numtowners]._tName, "Wirt the Peg-legged boy");
 	numtowners++;
 }
-// 6AAC2C: using guessed type int boyloadflag;
 
 void InitHealer()
 {
@@ -346,7 +327,7 @@ void InitCows()
 	int x, y, xo, yo;
 
 	//if ( pCowCels )
-	//	assertion_failed(300, "C:\\Diablo\\Direct\\towners.cpp", "! pCowCels");
+		// assertion_failed(__LINE__, __FILE__, "! pCowCels");
 	pCowCels = LoadFileInMem("Towners\\Animals\\Cow.CEL", NULL);
 	for (i = 0; i < 3; i++) {
 		x = TownCowX[i];
@@ -373,12 +354,11 @@ void InitCows()
 		numtowners++;
 	}
 }
-// 6AAC2C: using guessed type int boyloadflag;
 
 void InitTowners()
 {
 	numtowners = 0;
-	boyloadflag = 0;
+	boyloadflag = FALSE;
 	InitSmith();
 	InitHealer();
 	if (quests[QTYPE_BUTCH]._qactive && quests[QTYPE_BUTCH]._qactive != 3)
@@ -391,7 +371,6 @@ void InitTowners()
 	InitBoy();
 	InitCows();
 }
-// 6AAC2C: using guessed type int boyloadflag;
 
 void FreeTownerGFX()
 {
@@ -425,7 +404,6 @@ void TownCtrlMsg(int i)
 		}
 	}
 }
-// 646D00: using guessed type char qtextflag;
 
 void TownBlackSmith()
 {
@@ -592,10 +570,9 @@ void TownerTalk(int first, int t)
 {
 	sgdwCowClicks = 0;
 	sgnCowMsg = 0;
-	storeflag = 1;
+	storeflag = TRUE;
 	InitQTextMsg(first);
 }
-// 6AAC18: using guessed type int storeflag;
 
 void TalkToTowner(int p, int t)
 {
@@ -694,6 +671,7 @@ void TalkToTowner(int p, int t)
 			towner[t]._tbtcnt = 150;
 			towner[t]._tVar1 = p;
 			quests[QTYPE_BUTCH]._qvar1 = 1;
+#ifndef SPAWN
 			if (plr[p]._pClass == 0 && !effect_is_playing(PS_WARR8)) {
 				PlaySFX(PS_WARR8);
 			} else if (plr[p]._pClass == 1 && !effect_is_playing(PS_ROGUE8)) {
@@ -701,6 +679,7 @@ void TalkToTowner(int p, int t)
 			} else if (plr[p]._pClass == 2 && !effect_is_playing(PS_MAGE8)) {
 				PlaySFX(PS_MAGE8);
 			}
+#endif
 			towner[t]._tMsgSaid = TRUE;
 		} else if (quests[QTYPE_BUTCH]._qactive == 3 && quests[QTYPE_BUTCH]._qvar1 == 1) {
 			quests[QTYPE_BUTCH]._qvar1 = 1;
@@ -747,10 +726,7 @@ void TalkToTowner(int p, int t)
 				}
 			}
 			if (plr[p]._pLvlVisited[9] && quests[QTYPE_ANVIL]._qactive != 0) {
-				if ((quests[QTYPE_ANVIL]._qactive == 1 || quests[QTYPE_ANVIL]._qactive == 2) && quests[QTYPE_ANVIL]._qvar2 == 0) {
-					if (towner[t]._tMsgSaid) {
-						goto SKIPANVIL; /* TODO: fix */
-					}
+				if ((quests[QTYPE_ANVIL]._qactive == 1 || quests[QTYPE_ANVIL]._qactive == 2) && quests[QTYPE_ANVIL]._qvar2 == 0 && !towner[t]._tMsgSaid) {
 					if (quests[QTYPE_INFRA]._qvar2 == 2 || quests[QTYPE_INFRA]._qactive == 2 && quests[QTYPE_INFRA]._qvar2 == 1) {
 						quests[QTYPE_ANVIL]._qvar2 = 1;
 						quests[QTYPE_ANVIL]._qlog = TRUE;
@@ -764,20 +740,21 @@ void TalkToTowner(int p, int t)
 						towner[t]._tMsgSaid = TRUE;
 					}
 				}
-				if (quests[QTYPE_ANVIL]._qvar2 == 1 && PlrHasItem(p, IDI_ANVIL, &i) != NULL && !towner[t]._tMsgSaid) {
-					quests[QTYPE_ANVIL]._qactive = 3;
-					quests[QTYPE_ANVIL]._qvar2 = 2;
-					quests[QTYPE_ANVIL]._qvar1 = 2;
-					RemoveInvItem(p, i);
-					CreateItem(UITEM_GRISWOLD, towner[t]._tx, towner[t]._ty + 1);
-					towner[t]._tbtcnt = 150;
-					towner[t]._tVar1 = p;
-					InitQTextMsg(QUEST_ANVIL7);
-					towner[t]._tMsgSaid = TRUE;
+				if (quests[QTYPE_ANVIL]._qvar2 == 1 && PlrHasItem(p, IDI_ANVIL, &i) != NULL) {
+					if (!towner[t]._tMsgSaid) {
+						quests[QTYPE_ANVIL]._qactive = 3;
+						quests[QTYPE_ANVIL]._qvar2 = 2;
+						quests[QTYPE_ANVIL]._qvar1 = 2;
+						RemoveInvItem(p, i);
+						CreateItem(UITEM_GRISWOLD, towner[t]._tx, towner[t]._ty + 1);
+						towner[t]._tbtcnt = 150;
+						towner[t]._tVar1 = p;
+						InitQTextMsg(QUEST_ANVIL7);
+						towner[t]._tMsgSaid = TRUE;
+					}
 				}
 			}
 		}
-	SKIPANVIL:
 		if (!qtextflag) {
 			TownerTalk(QUEST_GRISWOLD1, t);
 			if (storeflag) {
@@ -942,14 +919,19 @@ void TalkToTowner(int p, int t)
 		CowSFX(p);
 	}
 }
-// 646D00: using guessed type char qtextflag;
-// 679660: using guessed type char gbMaxPlayers;
-// 6AAC18: using guessed type int storeflag;
 
 void CowSFX(int pnum)
 {
 	if (CowPlaying == -1 || !effect_is_playing(CowPlaying)) {
 		sgdwCowClicks++;
+#ifdef SPAWN
+		if (sgdwCowClicks == 4) {
+			sgdwCowClicks = 0;
+			CowPlaying = TSFX_COW2;
+		} else {
+			CowPlaying = TSFX_COW1;
+		}
+#else
 		if (sgdwCowClicks >= 8) {
 			PlaySfxLoc(TSFX_COW1, plr[pnum].WorldX, plr[pnum].WorldY + 5);
 			sgdwCowClicks = 4;
@@ -960,6 +942,7 @@ void CowSFX(int pnum)
 		} else {
 			CowPlaying = sgdwCowClicks == 4 ? TSFX_COW2 : TSFX_COW1;
 		}
+#endif
 		PlaySfxLoc(CowPlaying, plr[pnum].WorldX, plr[pnum].WorldY);
 	}
 }

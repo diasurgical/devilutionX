@@ -227,7 +227,19 @@ UINT GetDriveTypeA(LPCSTR lpRootPathName)
 
 WINBOOL DeleteFileA(LPCSTR lpFileName)
 {
-	UNIMPLEMENTED();
+	char name[DVL_MAX_PATH];
+	TranslateFileName(name, sizeof(name), lpFileName);
+
+	FILE *f = fopen(name, "r+"); 
+	if (f) {
+		fclose(f);
+		remove(name);
+		f = NULL;
+		eprintf("Removed file: %s\n", name);
+	} else {
+		eprintf("Failed to remove file: %s\n", name);
+	}
+
 	return true;
 }
 
@@ -267,12 +279,6 @@ HWND GetLastActivePopup(HWND hWnd)
 	return hWnd;
 }
 
-DWORD GdiSetBatchLimit(DWORD dw)
-{
-	DUMMY();
-	return 1;
-}
-
 HWND GetTopWindow(HWND hWnd)
 {
 	UNIMPLEMENTED();
@@ -290,9 +296,7 @@ WINBOOL SetForegroundWindow(HWND hWnd)
  */
 HWND SetFocus(HWND hWnd)
 {
-	if (SDL_SetWindowInputFocus(window) <= -1) {
-		SDL_Log(SDL_GetError());
-	}
+	SDL_RaiseWindow(window);
 	MainWndProc(NULL, DVL_WM_ACTIVATEAPP, true, 0); // SDL_WINDOWEVENT_FOCUS_GAINED
 	return NULL;
 }
@@ -800,5 +804,4 @@ void __debugbreak()
 {
 	DUMMY();
 }
-
 }
