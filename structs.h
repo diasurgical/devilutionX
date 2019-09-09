@@ -955,11 +955,14 @@ typedef struct DJunk {
 } DJunk;
 #pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct TMegaPkt {
 	struct TMegaPkt *pNext;
 	DWORD dwSpaceLeft;
 	BYTE data[32000];
 } TMegaPkt;
+#pragma pack(pop)
+#define TMEGAPKT_SIZE sizeof(TMegaPkt)
 
 typedef struct TBuffer {
 	DWORD dwNextWriteOffset;
