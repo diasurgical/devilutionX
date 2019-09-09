@@ -77,7 +77,7 @@ def build_zlib(TARGET, SYSROOT, DEFINES, FLAGS) {
 		sh "mkdir -p build"
 		sh "rm -rfv build/*"
 
-		sh "cd build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT}" // ${DEFINES}"
+		sh "cd build && cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} ${DEFINES}"
 		sh "cd build && cmake --build . --config Release --target install -- -j8"
 	}
 }
@@ -108,7 +108,7 @@ def build_sdl1_mixer(TARGET, SYSROOT, DEFINES, FLAGS) {
 
 	dir("SDL_mixer-SDL-1.2") {
 		sh "./autogen.sh"
-		// CFLAGS=\"${FLAGS}\" CXXFLAGS=\"${FLAGS}\" 
+		//CFLAGS=\"${FLAGS}\" CXXFLAGS=\"${FLAGS}\" 
 		sh "SDL_LIBS='-lSDL -ldebug' SDL_CFLAGS=\"-I${SYSROOT}/include/SDL -noixemul\" ./configure --disable-sdltest --disable-shared --enable-static --host=${TARGET} --prefix=${SYSROOT}"
 		sh "make clean"
 		sh "make -j8"
@@ -336,17 +336,17 @@ node('master') {
 		},*/
 		'AmigaOS 68040': {
 			node {
-				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68040-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68040 -DM68K_FPU=hard', '') // -DM68K_COMMON="-O3 -ffast-math -fbbb=-" -m68040 -mhard-float -O3 -fbbb=-
+				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68040-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-s -ffast-math -O3 -fno-exceptions -w -fomit-frame-pointer  -noixemul -DBIG_ENDIAN -DAMIGA -fpermissive -std=c++14 -fbbb=abcdef"', '-m68080 -mhard-float -s -ffast-math -O3 -fno-exceptions -w -fomit-frame-pointer  -noixemul -DBIG_ENDIAN -DAMIGA -fpermissive -std=c++14 -fbbb=abcdef')
 			}
 		},
 		'AmigaOS 68060': {
 			node {
-				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68060-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68060 -DM68K_FPU=hard', '') // -DM68K_COMMON="-O3 -ffast-math -fbbb=-" -m68060 -mhard-float -O3 -fbbb=-
+				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68060-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68060 -DM68K_FPU=hard -DM68K_COMMON="-s -ffast-math -O3 -fno-exceptions -w -fomit-frame-pointer  -noixemul -DBIG_ENDIAN -DAMIGA -fpermissive -std=c++14 -fbbb=abcdef"', '-m68080 -mhard-float -s -ffast-math -O3 -fno-exceptions -w -fomit-frame-pointer  -noixemul -DBIG_ENDIAN -DAMIGA -fpermissive -std=c++14 -fbbb=abcdef')
 			}
 		},
 		'AmigaOS 68080': {
 			node {
-				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68080-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68080 -DM68K_FPU=hard', '') // -DM68K_COMMON="-O3 -ffast-math -fbbb=-" -m68080 -mhard-float -O3 -fbbb=-
+				buildStep('amigadev/crosstools:m68k-amigaos', 'Unix Makefiles', 'AmigaOS 68080-HF', '-DSDL1=TRUE -DNONET=TRUE -DM68K_CPU=68080 -DM68K_FPU=hard -DM68K_COMMON="-s -ffast-math -O3 -fno-exceptions -w -fomit-frame-pointer  -noixemul -DBIG_ENDIAN -DAMIGA -fpermissive -std=c++14 -fbbb=abcdef"', '-m68080 -mhard-float -s -ffast-math -O3 -fno-exceptions -w -fomit-frame-pointer  -noixemul -DBIG_ENDIAN -DAMIGA -fpermissive -std=c++14 -fbbb=abcdef')
 			}
 		}/*,
 		'AmigaOS PPC': {
