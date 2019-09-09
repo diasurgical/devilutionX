@@ -4,6 +4,14 @@
 #include <SDL.h>
 #include <string>
 
+#ifdef WINDOWS
+#include <direct.h>
+#define GetCurrentDir _getcwd
+#else
+#include <unistd.h>
+#define GetCurrentDir getcwd
+#endif
+
 #include "DiabloUI/diabloui.h"
 
 #ifdef _MSC_VER
@@ -198,21 +206,9 @@ BOOL VerQueryValueA(LPCVOID pBlock, LPCSTR lpSubBlock, LPVOID *lplpBuffer, PUINT
 
 DWORD GetCurrentDirectory(DWORD nBufferLength, LPTSTR lpBuffer)
 {
-	char *base_path = SDL_GetBasePath();
-	if (base_path == NULL) {
-		SDL_Log(SDL_GetError());
-		base_path = SDL_strdup("./");
-	}
-	eprintf("BasePath: %s\n", base_path);
-
-	strncpy(lpBuffer, base_path, nBufferLength);
-	SDL_free(base_path);
-
-	DWORD len = strlen(lpBuffer);
-
-	lpBuffer[len - 1] = '\\';
-
-	return len;
+	GetCurrentDir(lpBuffer, nBufferLength);
+	eprintf("CurrentWorkingDirectory: %s\n", lpBuffer);
+	return strlen(lpBuffer);
 }
 
 DWORD GetLogicalDriveStringsA(DWORD nBufferLength, LPSTR lpBuffer)
@@ -230,7 +226,7 @@ WINBOOL DeleteFileA(LPCSTR lpFileName)
 	char name[DVL_MAX_PATH];
 	TranslateFileName(name, sizeof(name), lpFileName);
 
-	FILE *f = fopen(name, "r+"); 
+	FILE *f = fopen(name, "r+");
 	if (f) {
 		fclose(f);
 		remove(name);
