@@ -4,7 +4,7 @@
 #include <SDL.h>
 #include <string>
 
-#ifdef _Windows_
+#ifdef _WIN32
 #include <direct.h>
 #define GetCurrentDir _getcwd
 #else
