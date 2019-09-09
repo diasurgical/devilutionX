@@ -48,7 +48,12 @@ bool frame_queue::packet_ready()
 		if(size() < sizeof(framesize_t))
 			return false;
 		auto szbuf = read(sizeof(framesize_t));
+#ifdef __LP64__
+		std::memcpy(&nextsize, &szbuf[0], sizeof(framesize_t));
+		nextsize >> 32;
+#else
 		std::memcpy(&nextsize, &szbuf[0], sizeof(nextsize));
+#endif
 		if(!nextsize)
 			throw frame_queue_exception();
 	}
