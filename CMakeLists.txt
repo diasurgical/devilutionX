@@ -140,6 +140,12 @@ if(N3DS)
   include(n3ds_defs)
 endif()
 
+if(ANDROID)
+  set(ASAN OFF)
+  set(UBSAN OFF)
+  set(NONET ON)
+endif()
+
 if(PIE)
   set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 endif()
@@ -164,22 +170,24 @@ if(NOT NONET)
   endif()
 endif()
 
-if(USE_SDL1)
-  find_package(SDL REQUIRED)
-  find_package(SDL_ttf REQUIRED)
-  find_package(SDL_mixer REQUIRED)
-  include_directories(${SDL_INCLUDE_DIR})
-else()
-  if(SWITCH)
-    find_package(SDL2_STATIC CONFIG QUIET)
+if (NOT ANDROID)
+  if(USE_SDL1)
+    find_package(SDL REQUIRED)
+    find_package(SDL_ttf REQUIRED)
+    find_package(SDL_mixer REQUIRED)
+    include_directories(${SDL_INCLUDE_DIR})
   else()
-    find_package(SDL2 MODULE QUIET)
+    if(SWITCH)
+      find_package(SDL2_STATIC CONFIG QUIET)
+    else()
+      find_package(SDL2 MODULE QUIET)
+    endif()
+    if (NOT SDL2_FOUND)
+      find_package(SDL2 REQUIRED)
+    endif()
+    find_package(SDL2_ttf REQUIRED)
+    find_package(SDL2_mixer REQUIRED)
   endif()
-  if (NOT SDL2_FOUND)
-    find_package(SDL2 REQUIRED)
-  endif()
-  find_package(SDL2_ttf REQUIRED)
-  find_package(SDL2_mixer REQUIRED)
 endif()
 
 add_library(smacker STATIC
@@ -332,11 +340,7 @@ set(devilutionx_SRCS
   SourceX/DiabloUI/text.cpp
   SourceX/DiabloUI/title.cpp
   SourceX/DiabloUI/ttf_render_wrapped.cpp
-  SourceX/main.cpp
-  SourceX/devilutionx.exe.manifest
-  Packaging/macOS/AppIcon.icns
-  Packaging/resources/CharisSILB.ttf
-  Packaging/windows/devilutionx.rc)
+  SourceX/main.cpp)
 
 if(NOT NONET)
   list(APPEND devilutionx_SRCS
@@ -393,10 +397,27 @@ if(RUN_TESTS)
     SourceT/writehero_test.cpp)
 endif()
 
-add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionx_SRCS})
-
 # Copy the font to the build directory to it works from the build directory
 file(COPY "Packaging/resources/CharisSILB.ttf" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+
+if (NOT ANDROID)
+  add_executable(${BIN_TARGET}
+    WIN32
+    MACOSX_BUNDLE
+    ${devilutionx_SRCS}
+    SourceX/devilutionx.exe.manifest
+    Packaging/windows/devilutionx.rc
+    Packaging/macOS/AppIcon.icns
+    Packaging/resources/CharisSILB.ttf)
+else()
+  add_library(devilutionx SHARED ${devilutionx_SRCS})
+endif()
+
+if (ANDROID)
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2/ ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2)
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_mixer/ ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_mixer)
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_ttf/ ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_ttf)
+endif()
 
 # Use file GENERATE instead of configure_file because configure_file
 # does not support generator expressions.
@@ -541,18 +562,34 @@ foreach(target devilution ${BIN_TARGET} SourceS)
   target_compile_options(${target} PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined>)
   target_link_libraries(${target} PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined>)
 
-  if(USE_SDL1)
-    target_link_libraries(${target} PRIVATE
-      ${SDL_TTF_LIBRARY}
-      ${SDL_MIXER_LIBRARY}
-      ${SDL_LIBRARY})
-    target_compile_definitions(${target} PRIVATE USE_SDL1)
+  if (NOT ANDROID)
+    if(USE_SDL1)
+      target_link_libraries(${target} PRIVATE
+       ${SDL_TTF_LIBRARY}
+        ${SDL_MIXER_LIBRARY}
+        ${SDL_LIBRARY})
+      target_compile_definitions(${target} PRIVATE USE_SDL1)
+    else()
+      target_link_libraries(${target} PRIVATE
+        SDL2::SDL2
+        SDL2::SDL2main
+        SDL2::SDL2_ttf
+        SDL2::SDL2_mixer)
+    endif()
   else()
+    target_include_directories(${target} PUBLIC
+      ${CMAKE_CURRENT_SOURCE_DIR}/android-project/app/libs/include
+      ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2/include
+
+      # SDL_internal.h is located in src required by SDL_android_main.c bridge
+      ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2/src
+
+      ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_mixer
+      ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_ttf)
     target_link_libraries(${target} PRIVATE
-      SDL2::SDL2
-      SDL2::SDL2main
-      SDL2::SDL2_ttf
-      SDL2::SDL2_mixer)
+      SDL2
+      SDL2_ttf
+      SDL2_mixer)
   endif()
 
   if(SWITCH)

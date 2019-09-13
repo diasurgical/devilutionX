@@ -91,6 +91,9 @@ const std::string &GetTtfName()
 
 void SetBasePath(const char *path)
 {
+#ifdef __ANDROID__
+	basePath = new std::string("/sdcard/");
+#endif
 	if (basePath == NULL)
 		basePath = new std::string;
 	*basePath = path;
