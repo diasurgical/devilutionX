@@ -169,7 +169,6 @@ void run_game_loop(unsigned int uMsg)
 		}
 		multi_process_network_packets();
 		game_loop(gbGameLoopStartup);
-		msgcmd_send_chat();
 		gbGameLoopStartup = FALSE;
 		DrawAndBlit();
 	}
@@ -246,15 +245,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	BOOL bNoEvent;
 
 	hInst = hInstance;
-#ifndef DEBUGGER
-	diablo_reload_process(hInstance);
-#endif
 	ghInst = hInst;
 
-#ifndef __ANDROID__
-	if (RestrictedTest())
-		ERR_OK_DLG(IDD_DIALOG10, 0);
-#endif
 	if (ReadOnlyTest()) {
 		if (!GetModuleFileName(ghInst, szFileName, sizeof(szFileName)))
 			szFileName[0] = '\0';
@@ -264,7 +256,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	ShowCursor(FALSE);
 	srand(GetTickCount());
 	InitHash();
-	fault_get_filter();
 
 	bNoEvent = diablo_get_not_running();
 	if (!diablo_find_window("DIABLO") && bNoEvent) {
@@ -507,90 +498,6 @@ BOOL diablo_find_window(LPCSTR lpClassName)
 	SetForegroundWindow(v2);
 	SetFocus(v4);
 	return 1;
-}
-
-void diablo_reload_process(HINSTANCE hInstance)
-{
-	DWORD dwSize, dwProcessId;
-	BOOL bNoExist;
-	char *s;
-	long *plMap;
-	HWND hWnd, hPrev;
-	HANDLE hMap;
-	STARTUPINFO si;
-	SYSTEM_INFO sinf;
-	PROCESS_INFORMATION pi;
-	char szReload[MAX_PATH + 16];
-	char szFileName[MAX_PATH] = "";
-
-	GetModuleFileName(hInstance, szFileName, sizeof(szFileName));
-	wsprintf(szReload, "Reload-%s", szFileName);
-	for (s = szReload; *s != '\0'; s++) {
-		if (*s == '\\') {
-			*s = '/';
-		}
-	}
-
-	GetSystemInfo(&sinf);
-	dwSize = sinf.dwPageSize;
-	if (dwSize < 4096) {
-		dwSize = 4096;
-	}
-
-	hMap = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, SEC_COMMIT | PAGE_READWRITE, 0, dwSize, szReload);
-	bNoExist = GetLastError() != ERROR_ALREADY_EXISTS;
-	if (hMap == NULL) {
-		return;
-	}
-	plMap = (long *)MapViewOfFile(hMap, FILE_MAP_ALL_ACCESS, 0, 0, dwSize);
-	if (plMap == NULL) {
-		return;
-	}
-
-	if (bNoExist) {
-		plMap[0] = -1;
-		plMap[1] = 0;
-		memset(&si, 0, sizeof(si));
-		si.cb = sizeof(si);
-		CreateProcess(szFileName, NULL, NULL, NULL, FALSE, CREATE_NEW_PROCESS_GROUP, NULL, NULL, &si, &pi);
-		WaitForInputIdle(pi.hProcess, INFINITE);
-		CloseHandle(pi.hThread);
-		CloseHandle(pi.hProcess);
-		while (plMap[0] < 0) {
-			Sleep(1000);
-		}
-		UnmapViewOfFile(plMap);
-		CloseHandle(hMap);
-		ExitProcess(0);
-	}
-
-	if (InterlockedIncrement(plMap) == 0) {
-		plMap[1] = GetCurrentProcessId();
-	} else {
-		hPrev = GetForegroundWindow();
-		hWnd = hPrev;
-		while (1) {
-			hPrev = GetWindow(hPrev, GW_HWNDPREV);
-			if (hPrev == NULL) {
-				break;
-			}
-			hWnd = hPrev;
-		}
-		while (1) {
-			GetWindowThreadProcessId(hWnd, &dwProcessId);
-			if (dwProcessId == plMap[1]) {
-				SetForegroundWindow(hWnd);
-				break;
-			}
-			hWnd = GetWindow(hWnd, GW_HWNDNEXT);
-			if (hWnd == NULL) {
-				break;
-			}
-		}
-		UnmapViewOfFile(plMap);
-		CloseHandle(hMap);
-		ExitProcess(0);
-	}
 }
 
 BOOL PressEscKey()

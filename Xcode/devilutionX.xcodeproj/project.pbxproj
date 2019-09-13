@@ -80,7 +80,6 @@
 		43B6C83A224068CF007313EA /* encrypt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C74022406873007313EA /* encrypt.cpp */; };
 		43B6C83B224068CF007313EA /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C73522406870007313EA /* engine.cpp */; };
 		43B6C83C224068CF007313EA /* error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C70A22406866007313EA /* error.cpp */; };
-		43B6C83D224068CF007313EA /* fault.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C7202240686A007313EA /* fault.cpp */; };
 		43B6C83E224068CF007313EA /* gamemenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C72E2240686E007313EA /* gamemenu.cpp */; };
 		43B6C83F224068CF007313EA /* gendung.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C71C22406869007313EA /* gendung.cpp */; };
 		43B6C840224068CF007313EA /* gmenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C70B22406866007313EA /* gmenu.cpp */; };
@@ -91,7 +90,6 @@
 		43B6C845224068CF007313EA /* items.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C71022406867007313EA /* items.cpp */; };
 		43B6C846224068CF007313EA /* lighting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C74722406875007313EA /* lighting.cpp */; };
 		43B6C847224068CF007313EA /* loadsave.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C72F2240686F007313EA /* loadsave.cpp */; };
-		43B6C848224068CF007313EA /* logging.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C7222240686A007313EA /* logging.cpp */; };
 		43B6C849224068CF007313EA /* mainmenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C7302240686F007313EA /* mainmenu.cpp */; };
 		43B6C84A224068CF007313EA /* minitext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C7242240686B007313EA /* minitext.cpp */; };
 		43B6C84B224068CF007313EA /* missiles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C71622406868007313EA /* missiles.cpp */; };
@@ -99,7 +97,6 @@
 		43B6C84D224068CF007313EA /* movie.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C72A2240686D007313EA /* movie.cpp */; };
 		43B6C84E224068CF007313EA /* mpqapi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C72D2240686E007313EA /* mpqapi.cpp */; };
 		43B6C84F224068CF007313EA /* msg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C71722406868007313EA /* msg.cpp */; };
-		43B6C850224068CF007313EA /* msgcmd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C74922406875007313EA /* msgcmd.cpp */; };
 		43B6C851224068CF007313EA /* multi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C71E22406869007313EA /* multi.cpp */; };
 		43B6C852224068CF007313EA /* nthread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C73422406870007313EA /* nthread.cpp */; };
 		43B6C853224068CF007313EA /* objects.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 43B6C72C2240686E007313EA /* objects.cpp */; };
@@ -255,9 +252,7 @@
 		43B6C71D22406869007313EA /* debug.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = debug.cpp; path = Source/debug.cpp; sourceTree = "<group>"; };
 		43B6C71E22406869007313EA /* multi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = multi.cpp; path = Source/multi.cpp; sourceTree = "<group>"; };
 		43B6C71F2240686A007313EA /* control.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = control.cpp; path = Source/control.cpp; sourceTree = "<group>"; };
-		43B6C7202240686A007313EA /* fault.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fault.cpp; path = Source/fault.cpp; sourceTree = "<group>"; };
 		43B6C7212240686A007313EA /* automap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = automap.cpp; path = Source/automap.cpp; sourceTree = "<group>"; };
-		43B6C7222240686A007313EA /* logging.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = logging.cpp; path = Source/logging.cpp; sourceTree = "<group>"; };
 		43B6C7232240686A007313EA /* plrmsg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = plrmsg.cpp; path = Source/plrmsg.cpp; sourceTree = "<group>"; };
 		43B6C7242240686B007313EA /* minitext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = minitext.cpp; path = Source/minitext.cpp; sourceTree = "<group>"; };
 		43B6C7252240686B007313EA /* doom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = doom.cpp; path = Source/doom.cpp; sourceTree = "<group>"; };
@@ -296,7 +291,6 @@
 		43B6C74622406874007313EA /* codec.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = codec.cpp; path = Source/codec.cpp; sourceTree = "<group>"; };
 		43B6C74722406875007313EA /* lighting.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = lighting.cpp; path = Source/lighting.cpp; sourceTree = "<group>"; };
 		43B6C74822406875007313EA /* monster.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = monster.cpp; path = Source/monster.cpp; sourceTree = "<group>"; };
-		43B6C74922406875007313EA /* msgcmd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = msgcmd.cpp; path = Source/msgcmd.cpp; sourceTree = "<group>"; };
 		43B6C74A22406875007313EA /* towners.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = towners.cpp; path = Source/towners.cpp; sourceTree = "<group>"; };
 		43B6C74B22406875007313EA /* scrollrt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = scrollrt.cpp; path = Source/scrollrt.cpp; sourceTree = "<group>"; };
 		43B6C78E22406888007313EA /* udp_p2p.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = udp_p2p.cpp; path = SourceX/dvlnet/udp_p2p.cpp; sourceTree = "<group>"; };
@@ -477,7 +471,6 @@
 				43B6C74022406873007313EA /* encrypt.cpp */,
 				43B6C73522406870007313EA /* engine.cpp */,
 				43B6C70A22406866007313EA /* error.cpp */,
-				43B6C7202240686A007313EA /* fault.cpp */,
 				43B6C72E2240686E007313EA /* gamemenu.cpp */,
 				43B6C71C22406869007313EA /* gendung.cpp */,
 				43B6C70B22406866007313EA /* gmenu.cpp */,
@@ -488,7 +481,6 @@
 				43B6C71022406867007313EA /* items.cpp */,
 				43B6C74722406875007313EA /* lighting.cpp */,
 				43B6C72F2240686F007313EA /* loadsave.cpp */,
-				43B6C7222240686A007313EA /* logging.cpp */,
 				43B6C7302240686F007313EA /* mainmenu.cpp */,
 				43B6C7242240686B007313EA /* minitext.cpp */,
 				43B6C71622406868007313EA /* missiles.cpp */,
@@ -496,7 +488,6 @@
 				43B6C72A2240686D007313EA /* movie.cpp */,
 				43B6C72D2240686E007313EA /* mpqapi.cpp */,
 				43B6C71722406868007313EA /* msg.cpp */,
-				43B6C74922406875007313EA /* msgcmd.cpp */,
 				43B6C71E22406869007313EA /* multi.cpp */,
 				43B6C73422406870007313EA /* nthread.cpp */,
 				43B6C72C2240686E007313EA /* objects.cpp */,
@@ -803,7 +794,6 @@
 				43B6C83A224068CF007313EA /* encrypt.cpp in Sources */,
 				43B6C83B224068CF007313EA /* engine.cpp in Sources */,
 				43B6C83C224068CF007313EA /* error.cpp in Sources */,
-				43B6C83D224068CF007313EA /* fault.cpp in Sources */,
 				43B6C83E224068CF007313EA /* gamemenu.cpp in Sources */,
 				43B6C83F224068CF007313EA /* gendung.cpp in Sources */,
 				43B6C840224068CF007313EA /* gmenu.cpp in Sources */,
@@ -814,7 +804,6 @@
 				43B6C845224068CF007313EA /* items.cpp in Sources */,
 				43B6C846224068CF007313EA /* lighting.cpp in Sources */,
 				43B6C847224068CF007313EA /* loadsave.cpp in Sources */,
-				43B6C848224068CF007313EA /* logging.cpp in Sources */,
 				43B6C849224068CF007313EA /* mainmenu.cpp in Sources */,
 				43B6C84A224068CF007313EA /* minitext.cpp in Sources */,
 				43B6C84B224068CF007313EA /* missiles.cpp in Sources */,
@@ -822,7 +811,6 @@
 				43B6C84D224068CF007313EA /* movie.cpp in Sources */,
 				43B6C84E224068CF007313EA /* mpqapi.cpp in Sources */,
 				43B6C84F224068CF007313EA /* msg.cpp in Sources */,
-				43B6C850224068CF007313EA /* msgcmd.cpp in Sources */,
 				43B6C851224068CF007313EA /* multi.cpp in Sources */,
 				43B6C852224068CF007313EA /* nthread.cpp in Sources */,
 				43B6C853224068CF007313EA /* objects.cpp in Sources */,

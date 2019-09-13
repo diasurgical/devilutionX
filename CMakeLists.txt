@@ -118,7 +118,6 @@ add_library(devilution STATIC
   Source/debug.cpp
   Source/diablo.cpp
   Source/doom.cpp
-# Source/dx.cpp
   Source/drlg_l1.cpp
   Source/drlg_l2.cpp
   Source/drlg_l3.cpp
@@ -128,7 +127,6 @@ add_library(devilution STATIC
   Source/encrypt.cpp
   Source/engine.cpp
   Source/error.cpp
-  Source/fault.cpp
   Source/gamemenu.cpp
   Source/gendung.cpp
   Source/gmenu.cpp
@@ -140,7 +138,6 @@ add_library(devilution STATIC
   Source/items.cpp
   Source/lighting.cpp
   Source/loadsave.cpp
-  Source/logging.cpp
   Source/mainmenu.cpp
   Source/minitext.cpp
   Source/misdat.cpp
@@ -149,7 +146,6 @@ add_library(devilution STATIC
   Source/monster.cpp
   Source/movie.cpp
   Source/mpqapi.cpp
-  Source/msgcmd.cpp
   Source/msg.cpp
   Source/multi.cpp
   Source/nthread.cpp
@@ -169,7 +165,6 @@ add_library(devilution STATIC
   Source/scrollrt.cpp
   Source/setmaps.cpp
   Source/sha.cpp
-# Source/sound.cpp
   Source/spells.cpp
   Source/stores.cpp
   Source/sync.cpp

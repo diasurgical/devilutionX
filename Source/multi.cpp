@@ -612,7 +612,6 @@ void NetClose()
 	tmsg_cleanup();
 	multi_event_handler(FALSE);
 	SNetLeaveGame(3);
-	msgcmd_cmd_cleanup();
 	if (gbMaxPlayers > 1)
 		Sleep(2000);
 }

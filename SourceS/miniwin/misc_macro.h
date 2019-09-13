@@ -15,12 +15,6 @@
 #define LOWORD(l) ((WORD)(((DWORD_PTR)(l)) & 0xffff))
 #define HIWORD(l) ((WORD)((((DWORD_PTR)(l)) >> 16) & 0xffff))
 
-#ifdef _MSC_VER
-#define InterlockedIncrement(x) (x)
-#else
-#define InterlockedIncrement(x) __sync_add_and_fetch(x, 1)
-#endif
-
 #define INFINITE DVL_INFINITE
 
 #ifndef __BIG_ENDIAN__
@@ -59,8 +53,6 @@
 #define GetUserName GetUserNameA
 #define LoadIcon LoadIconA
 #define LoadImage LoadImageA
-#define SHGetPathFromIDList SHGetPathFromIDListA
-#define ShellExecute ShellExecuteA
 #define GetModuleHandle GetModuleHandleA
 
 #define THREAD_BASE_PRIORITY_MAX 2
@@ -122,7 +114,6 @@
 #define SEC_COMMIT 0x8000000
 #define PAGE_READWRITE 0x04
 
-#define FILE_MAP_ALL_ACCESS SECTION_ALL_ACCESS
 #define SECTION_QUERY 0x0001
 #define SECTION_MAP_WRITE 0x0002
 #define SECTION_MAP_READ 0x0004
@@ -134,10 +125,6 @@
 #define SECTION_ALL_ACCESS \
 	(STANDARD_RIGHTS_REQUIRED | SECTION_QUERY | SECTION_MAP_WRITE | SECTION_MAP_READ | SECTION_MAP_EXECUTE | SECTION_EXTEND_SIZE)
 
-#define CREATE_NEW_PROCESS_GROUP 0x200
-
-#define CreateProcess CreateProcessA
-#define CreateFileMapping CreateFileMappingA
 #define GetPrivateProfileString GetPrivateProfileStringA
 #define MessageBox MessageBoxA
 
@@ -157,7 +144,6 @@
 #define GetFileAttributes GetFileAttributesA
 #define SetFileAttributes SetFileAttributesA
 #define FindFirstFile FindFirstFileA
-#define FindNextFile FindNextFileA
 #define CreateFile CreateFileA
 #define GetWindowsDirectory GetWindowsDirectoryA
 #define GetLogicalDriveStrings GetLogicalDriveStringsA
@@ -373,8 +359,3 @@
 #define MB_TASKMODAL DVL_MB_TASKMODAL
 #define MB_ICONHAND DVL_MB_ICONHAND
 #define MB_ICONEXCLAMATION DVL_MB_ICONEXCLAMATION
-
-/*
- * GetWindow() Constants
- */
-#define GW_HWNDPREV         3

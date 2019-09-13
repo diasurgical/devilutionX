@@ -2080,8 +2080,6 @@ void control_reset_talk_msg(char *msg)
 		if (whisper[i])
 			pmask |= 1 << i;
 	}
-
-	if (!msgcmd_add_server_cmd_W(sgszTalkMsg))
 		NetSendCmdString(pmask, sgszTalkMsg);
 }
 

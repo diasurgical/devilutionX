@@ -214,25 +214,6 @@ typedef struct tagPALETTEENTRY {
 	BYTE peFlags;
 } PALETTEENTRY, *PPALETTEENTRY, *LPPALETTEENTRY;
 
-typedef struct _SYSTEM_INFO {
-	union {
-		DWORD dwOemId;
-		struct {
-			WORD wProcessorArchitecture;
-			WORD wReserved;
-		};
-	};
-	DWORD dwPageSize;
-	LPVOID lpMinimumApplicationAddress;
-	LPVOID lpMaximumApplicationAddress;
-	DWORD_PTR dwActiveProcessorMask;
-	DWORD dwNumberOfProcessors;
-	DWORD dwProcessorType;
-	DWORD dwAllocationGranularity;
-	WORD wProcessorLevel;
-	WORD wProcessorRevision;
-} SYSTEM_INFO, *LPSYSTEM_INFO;
-
 typedef void *LPSECURITY_ATTRIBUTES;
 
 typedef struct _LIST_ENTRY {
@@ -271,8 +252,6 @@ HWND WINAPI GetLastActivePopup(HWND hWnd);
 HWND WINAPI GetTopWindow(HWND hWnd);
 WINBOOL WINAPI SetForegroundWindow(HWND hWnd);
 HWND WINAPI SetFocus(HWND hWnd);
-HWND GetDesktopWindow();
-HRESULT SHGetSpecialFolderLocation(HWND hwnd, int csidl, PIDLIST_ABSOLUTE *ppidl);
 HWND CreateWindowExA(
     DWORD dwExStyle,
     LPCSTR lpClassName,
@@ -301,14 +280,9 @@ int __cdecl _findnext(long, struct DVL_finddata_t *);
 
 HICON LoadIconA(HINSTANCE hInstance, LPCSTR lpIconName);
 HANDLE LoadImageA(HINSTANCE hInst, LPCSTR name, UINT type, int cx, int cy, UINT fuLoad);
-BOOL SHGetPathFromIDListA(PCIDLIST_ABSOLUTE pidl, LPSTR pszPath);
-HINSTANCE ShellExecuteA(HWND hwnd, LPCSTR lpOperation, LPCSTR lpFile, LPCSTR lpParameters, LPCSTR lpDirectory, INT nShowCmd);
-int GetClassName(HWND hWnd, LPTSTR lpClassName, int nMaxCount);
 
 typedef LONG(WINAPI *PTOP_LEVEL_EXCEPTION_FILTER)(
     struct _EXCEPTION_POINTERS *ExceptionInfo);
-typedef PTOP_LEVEL_EXCEPTION_FILTER LPTOP_LEVEL_EXCEPTION_FILTER;
-LPTOP_LEVEL_EXCEPTION_FILTER WINAPI SetUnhandledExceptionFilter(LPTOP_LEVEL_EXCEPTION_FILTER lpTopLevelExceptionFilter);
 
 HMODULE GetModuleHandleA(LPCSTR lpModuleName);
 
@@ -318,8 +292,6 @@ HANDLE WINAPI GetCurrentThread();
 DWORD WINAPI GetCurrentThreadId();
 WINBOOL WINAPI SetThreadPriority(HANDLE hThread, int nPriority);
 void WINAPI Sleep(DWORD dwMilliseconds);
-
-void WINAPI GetSystemInfo(LPSYSTEM_INFO lpSystemInfo);
 
 HDC WINAPI GetDC(HWND hWnd);
 int WINAPI ReleaseDC(HWND hWnd, HDC hDC);
@@ -469,39 +441,8 @@ BOOL GetVersionExA(LPOSVERSIONINFOA lpVersionInformation);
 
 void lstrcpynA(LPSTR lpString1, LPCSTR lpString2, int iMaxLength);
 
-typedef struct _PROCESS_INFORMATION {
-	HANDLE hProcess;
-	HANDLE hThread;
-	DWORD dwProcessId;
-	DWORD dwThreadId;
-} PROCESS_INFORMATION, *PPROCESS_INFORMATION, *LPPROCESS_INFORMATION;
-
-typedef struct {
-	DWORD cb;
-} STARTUPINFOA, *LPSTARTUPINFOA;
-typedef STARTUPINFOA STARTUPINFO;
-
-WINBOOL WINAPI CreateProcessA(LPCSTR lpApplicationName, LPSTR lpCommandLine, LPSECURITY_ATTRIBUTES lpProcessAttributes,
-    LPSECURITY_ATTRIBUTES lpThreadAttributes, WINBOOL bInheritHandles, DWORD dwCreationFlags,
-    LPVOID lpEnvironment, LPCSTR lpCurrentDirectory, LPSTARTUPINFOA lpStartupInfo,
-    LPPROCESS_INFORMATION lpProcessInformation);
-
-void WINAPI ExitProcess(UINT uExitCode);
-DWORD WINAPI GetCurrentProcessId();
-
-HANDLE WINAPI CreateFileMappingA(HANDLE hFile, LPSECURITY_ATTRIBUTES lpFileMappingAttributes, DWORD flProtect,
-    DWORD dwMaximumSizeHigh, DWORD dwMaximumSizeLow, LPCSTR lpName);
-LPVOID WINAPI MapViewOfFile(HANDLE hFileMappingObject, DWORD dwDesiredAccess, DWORD dwFileOffsetHigh,
-    DWORD dwFileOffsetLow, SIZE_T dwNumberOfBytesToMap);
-WINBOOL WINAPI UnmapViewOfFile(LPCVOID lpBaseAddress);
-
 LPVOID VirtualAlloc(LPVOID lpAddress, SIZE_T dwSize, DWORD flAllocationType, DWORD flProtect);
 BOOL VirtualFree(LPVOID lpAddress, SIZE_T dwSize, DWORD dwFreeType);
-
-DWORD WINAPI WaitForInputIdle(HANDLE hProcess, DWORD dwMilliseconds);
-HWND WINAPI GetForegroundWindow();
-HWND WINAPI GetWindow(HWND hWnd, UINT uCmd);
-DWORD WINAPI GetWindowThreadProcessId(HWND hWnd, LPDWORD lpdwProcessId);
 
 DWORD WINAPI GetPrivateProfileStringA(LPCSTR lpAppName, LPCSTR lpKeyName, LPCSTR lpDefault, LPSTR lpReturnedString,
     DWORD nSize, LPCSTR lpFileName);
@@ -546,8 +487,6 @@ BOOL VerQueryValueA(LPCVOID pBlock, LPCSTR lpSubBlock, LPVOID *lplpBuffer, PUINT
 WINBOOL WINAPI DeleteFileA(LPCSTR lpFileName);
 WINBOOL WINAPI CopyFileA(LPCSTR lpExistingFileName, LPCSTR lpNewFileName, WINBOOL bFailIfExists);
 HFILE WINAPI OpenFile(LPCSTR lpFileName, LPOFSTRUCT lpReOpenBuff, UINT uStyle);
-
-void __debugbreak();
 
 typedef struct _CONTEXT {
 

@@ -13,7 +13,6 @@ WNDPROC CurrentProc;
 HANDLE diabdat_mpq;
 char diabdat_mpq_path[MAX_PATH];
 HANDLE patch_rt_mpq;
-BOOL killed_mom_parent;
 BOOLEAN screensaver_enabled_prev;
 
 /* data */
@@ -25,7 +24,6 @@ void init_cleanup(BOOL show_cursor)
 {
 	pfile_flush_W();
 	init_disable_screensaver(0);
-	init_run_office_from_start_menu();
 
 	if (diabdat_mpq) {
 		SFileCloseArchive(diabdat_mpq);
@@ -49,63 +47,6 @@ void init_cleanup(BOOL show_cursor)
 
 	if (show_cursor)
 		ShowCursor(TRUE);
-}
-
-void init_run_office_from_start_menu()
-{
-	LPITEMIDLIST idl;
-
-	if (!killed_mom_parent) {
-		return;
-	}
-
-	killed_mom_parent = FALSE;
-	char szPath[256] = ""; /// BUGFIX: size should be at least 'MAX_PATH'
-	idl = NULL;
-
-	if (SHGetSpecialFolderLocation(GetDesktopWindow(), CSIDL_STARTMENU, &idl) == NOERROR) {
-		SHGetPathFromIDList(idl, szPath);
-		init_run_office(szPath);
-	}
-}
-
-void init_run_office(char *dir)
-{
-	HANDLE hSearch;
-	WIN32_FIND_DATA find;
-	char szFirst[MAX_PATH];
-
-	strcpy(szFirst, dir);
-	if (szFirst[0] != '\0' && szFirst[strlen(szFirst) - 1] == '\\') {
-		strcat(szFirst, "*");
-	} else {
-		strcat(szFirst, "\\*");
-	}
-	hSearch = FindFirstFile(szFirst, &find);
-	if (hSearch == INVALID_HANDLE_VALUE) {
-		return;
-	}
-
-	while (1) {
-		if (find.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-			if (strcmp(find.cFileName, ".") != 0 && strcmp(find.cFileName, "..") != 0) {
-				char szNext[MAX_PATH] = "";
-				if (dir[0] != '\0' && dir[strlen(dir) - 1] == '\\') {
-					sprintf(szNext, "%s%s\\", dir, find.cFileName);
-				} else {
-					sprintf(szNext, "%s\\%s\\", dir, find.cFileName);
-				}
-				init_run_office(szNext);
-			}
-		} else if (_strcmpi(find.cFileName, "Microsoft Office Shortcut Bar.lnk") == 0) {
-			ShellExecute(GetDesktopWindow(), "open", find.cFileName, "", dir, SW_SHOWNORMAL);
-		}
-		if (!FindNextFile(hSearch, &find)) {
-			break;
-		}
-	}
-
-	FindClose(hSearch);
 }
 
 void init_disable_screensaver(BOOLEAN disable)
@@ -140,7 +81,6 @@ void init_create_window(int nCmdShow)
 	HWND hWnd;
 	WNDCLASSEXA wcex;
 
-	init_kill_mom_parent();
 	pfile_init_save_directory();
 	memset(&wcex, 0, sizeof(wcex));
 	wcex.cbSize = sizeof(wcex);
@@ -168,52 +108,11 @@ void init_create_window(int nCmdShow)
 		app_fatal("Unable to create main window");
 	ShowWindow(hWnd, SW_SHOWNORMAL); // nCmdShow used only in beta: ShowWindow(hWnd, nCmdShow)
 	UpdateWindow(hWnd);
-	init_await_mom_parent_exit();
 	dx_init(hWnd);
 	BlackPalette();
 	snd_init(hWnd);
 	init_archives();
 	init_disable_screensaver(1);
-}
-
-void init_kill_mom_parent()
-{
-	HWND handle;
-
-	handle = init_find_mom_parent();
-	if (handle) {
-		PostMessage(handle, WM_CLOSE, 0, 0);
-		killed_mom_parent = TRUE;
-	}
-}
-
-HWND init_find_mom_parent()
-{
-	HWND i, handle;
-	char ClassName[256];
-
-	for (i = GetForegroundWindow();; i = GetWindow(handle, GW_HWNDNEXT)) {
-		handle = i;
-		if (!i)
-			break;
-		GetClassName(i, ClassName, 255);
-		if (!_strcmpi(ClassName, "MOM Parent"))
-			break;
-	}
-	return handle;
-}
-
-void init_await_mom_parent_exit()
-{
-	DWORD tick;
-
-	tick = GetTickCount();
-	if (!init_find_mom_parent()) {
-		return;
-	}
-	do {
-		Sleep(250);
-	} while (GetTickCount() - tick <= 4000 && init_find_mom_parent());
 }
 
 void init_archives()

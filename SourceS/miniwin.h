@@ -14,7 +14,8 @@
 #include <string.h>
 #include <time.h>
 // For _rotr()
-#if !defined(_MSC_VER) && defined(DEVILUTION_ENGINE)
+// _rotl and _rotr are predeclared in Clang.
+#if !defined(_MSC_VER) && !defined(__clang__) && defined(DEVILUTION_ENGINE)
 #if defined(__x86_64__) || defined(__i386__)
 #include <x86intrin.h>
 #else

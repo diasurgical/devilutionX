@@ -5,8 +5,6 @@
 
 #define IDC_ARROW (LPCSTR)0x1 // Dummy value
 
-#define CSIDL_STARTMENU 0x000b
-
 #define SW_HIDE DVL_SW_HIDE
 #define SW_SHOWNORMAL DVL_SW_SHOWNORMAL
 
@@ -23,7 +21,6 @@
 
 #define E_FAIL DVL_E_FAIL
 #define S_OK DVL_S_OK
-#define NOERROR DVL_S_OK
 
 #define MAKE_HRESULT DVL_MAKE_HRESULT
 

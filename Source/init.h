@@ -11,17 +11,11 @@ extern WNDPROC CurrentProc;
 extern HANDLE diabdat_mpq;
 extern char diabdat_mpq_path[MAX_PATH];
 extern HANDLE patch_rt_mpq;
-extern BOOL killed_mom_parent;
 extern BOOLEAN screensaver_enabled_prev;
 
 void init_cleanup(BOOL show_cursor);
-void init_run_office_from_start_menu();
-void init_run_office(char *dir);
 void init_disable_screensaver(BOOLEAN disable);
 void init_create_window(int nCmdShow);
-void init_kill_mom_parent();
-HWND init_find_mom_parent();
-void init_await_mom_parent_exit();
 void init_archives();
 HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags, int fs);
 char *init_strip_trailing_slash(char *path);

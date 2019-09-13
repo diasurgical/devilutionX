@@ -146,9 +146,6 @@
 #define assert(exp) (void)( (exp) || (assert_fail(__LINE__, __FILE__, #exp), 0) )
 #endif
 
-#define ERR_OK_DLG(templateId, errorCode) \
-	ErrOkDlg((templateId), (errorCode), __FILE__, __LINE__)
-
 #define ERR_DLG(templateId, errorCode) \
 	ErrDlg((templateId), (errorCode), __FILE__, __LINE__)
 
