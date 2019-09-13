@@ -4,7 +4,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#ifdef __ANDROID__
+#include <android/log.h>
+#define printf(...) __android_log_print(ANDROID_LOG_DEBUG, "DevilutionX", __VA_ARGS__)
+#define eprintf(...) printf(__VA_ARGS__)
+#else
 #define eprintf(...) fprintf(stderr, __VA_ARGS__)
+#endif
 
 #define UNIMPLEMENTED()                                                           \
 	do {                                                                          \
