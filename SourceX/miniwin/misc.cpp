@@ -631,7 +631,7 @@ int MessageBoxA(HWND hWnd, const char *Text, const char *Title, UINT Flags)
 
 void DisableScreenSaver()
 {
-	SDL_DisableScreenSaver;
+	SDL_DisableScreenSaver();
 }
 
 void PostQuitMessage(int nExitCode)

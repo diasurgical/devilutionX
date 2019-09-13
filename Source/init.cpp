@@ -1,6 +1,7 @@
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
+#include <SDL2/SDL.h>
 
 DEVILUTION_BEGIN_NAMESPACE
 

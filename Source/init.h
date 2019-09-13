@@ -11,10 +11,8 @@ extern WNDPROC CurrentProc;
 extern HANDLE diabdat_mpq;
 extern char diabdat_mpq_path[MAX_PATH];
 extern HANDLE patch_rt_mpq;
-extern BOOLEAN screensaver_enabled_prev;
 
 void init_cleanup(BOOL show_cursor);
-void init_disable_screensaver(BOOLEAN disable);
 void init_create_window(int nCmdShow);
 void init_archives();
 HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags, int fs);
