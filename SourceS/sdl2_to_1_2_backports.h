@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <math.h>
 
 #include "../SourceX/stubs.h"
 
@@ -71,6 +72,11 @@ typedef struct SDL_Point {
 inline SDL_bool SDL_PointInRect(const SDL_Point *p, const SDL_Rect *r)
 {
 	return ((p->x >= r->x) && (p->x < (r->x + r->w)) && (p->y >= r->y) && (p->y < (r->y + r->h))) ? SDL_TRUE : SDL_FALSE;
+}
+
+inline void SDL_DisableScreenSaver()
+{
+	DUMMY();
 }
 
 //= Messagebox (simply logged to stderr for now)

@@ -126,13 +126,7 @@
 #define KEY_WRITE 0x20006
 #define REG_SZ 1
 
-#define RegOpenKeyEx RegOpenKeyExA
-#define RegQueryValueEx RegQueryValueExA
-#define RegSetValueEx RegSetValueExA
-#define RegCloseKey RegCloseKeyA
 #define DefWindowProc DefWindowProcA
-#define GetWindowLong GetWindowLongA
-#define SetWindowLong SetWindowLongA
 
 #define GetFileAttributes GetFileAttributesA
 #define SetFileAttributes SetFileAttributesA
