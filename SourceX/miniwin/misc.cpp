@@ -629,48 +629,10 @@ int MessageBoxA(HWND hWnd, const char *Text, const char *Title, UINT Flags)
 	return 0;
 }
 
-LSTATUS RegOpenKeyExA(HKEY hKey, LPCSTR lpSubKey, DWORD ulOptions, REGSAM samDesired, PHKEY phkResult)
+void DisableScreenSaver()
 {
-	return 1;
-};
-
-/**
- * @brief This is only ever used to enable or disable the screen saver in a hackish way
- * For all other settings operation SReg* from Storm is used instead.
- */
-LSTATUS RegQueryValueExA(HKEY hKey, LPCSTR lpValueName, LPDWORD lpReserved, LPDWORD lpType, BYTE *lpData, LPDWORD lpcbData)
-{
-	#ifndef USE_SDL1
-	if (SDL_IsScreenSaverEnabled()) {
-		lpData[0] = '0';
-		lpData[1] = '\0';
-	}
-	#endif
-
-	return 1;
-};
-
-/**
- * @brief This is only ever used to enable or disable the screen saver in a hackish way
- * For all other settings operation SReg* from Storm is used instead.
- */
-LSTATUS RegSetValueExA(HKEY hKey, LPCSTR lpValueName, DWORD Reserved, DWORD dwType, const BYTE *lpData, DWORD cbData)
-{
-	#ifndef USE_SDL1
-	if (lpData[0] == '0') {
-		SDL_DisableScreenSaver();
-	} else {
-		SDL_EnableScreenSaver();
-	}
-	#endif
-
-	return 1;
-};
-
-LSTATUS RegCloseKeyA(HKEY hKey)
-{
-	return 1;
-};
+	SDL_DisableScreenSaver;
+}
 
 void PostQuitMessage(int nExitCode)
 {
@@ -684,18 +646,6 @@ LRESULT DefWindowProcA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 	if (Msg == DVL_WM_QUERYENDSESSION)
 		exit(0);
 
-	return 0;
-}
-
-LONG GetWindowLongA(HWND hWnd, int nIndex)
-{
-	DUMMY();
-	return 0;
-}
-
-LONG SetWindowLongA(HWND hWnd, int nIndex, LONG dwNewLong)
-{
-	DUMMY();
 	return 0;
 }
 }

@@ -449,14 +449,9 @@ DWORD WINAPI GetPrivateProfileStringA(LPCSTR lpAppName, LPCSTR lpKeyName, LPCSTR
 int MessageBoxA(HWND hWnd, const char *Text, const char *Title, UINT Flags);
 typedef LONG LSTATUS, HKEY, REGSAM, PHKEY;
 
-LSTATUS RegOpenKeyExA(HKEY hKey, LPCSTR lpSubKey, DWORD ulOptions, REGSAM samDesired, PHKEY phkResult);
-LSTATUS RegQueryValueExA(HKEY hKey, LPCSTR lpValueName, LPDWORD lpReserved, LPDWORD lpType, BYTE *lpData, LPDWORD lpcbData);
-LSTATUS RegSetValueExA(HKEY hKey, LPCSTR lpValueName, DWORD Reserved, DWORD dwType, const BYTE *lpData, DWORD cbData);
-LSTATUS RegCloseKeyA(HKEY hKey);
+void DisableScreenSaver();
 void PostQuitMessage(int nExitCode);
 LRESULT DefWindowProcA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
-LONG GetWindowLongA(HWND hWnd, int nIndex);
-LONG SetWindowLongA(HWND hWnd, int nIndex, LONG dwNewLong);
 
 WINBOOL WINAPI WriteFile(HANDLE hFile, LPCVOID lpBuffer, DWORD nNumberOfBytesToWrite, LPDWORD lpNumberOfBytesWritten,
     LPOVERLAPPED lpOverlapped);

@@ -13,7 +13,6 @@ WNDPROC CurrentProc;
 HANDLE diabdat_mpq;
 char diabdat_mpq_path[MAX_PATH];
 HANDLE patch_rt_mpq;
-BOOLEAN screensaver_enabled_prev;
 
 /* data */
 
@@ -23,7 +22,6 @@ char gszProductName[MAX_PATH] = "Diablo v1.09";
 void init_cleanup(BOOL show_cursor)
 {
 	pfile_flush_W();
-	init_disable_screensaver(0);
 
 	if (diabdat_mpq) {
 		SFileCloseArchive(diabdat_mpq);
@@ -47,38 +45,6 @@ void init_cleanup(BOOL show_cursor)
 
 	if (show_cursor)
 		ShowCursor(TRUE);
-}
-
-void init_disable_screensaver(BOOLEAN disable)
-{
-	BOOLEAN enabled;
-	char Data[16];
-	DWORD Type, cbData;
-	HKEY phkResult;
-	LRESULT success;
-
-	// BUGFIX: this is probably the worst possible way to do this. Alternatives: ExtEscape() with SETPOWERMANAGEMENT,
-	// SystemParametersInfo() with SPI_SETSCREENSAVEACTIVE/SPI_SETPOWEROFFACTIVE/SPI_SETLOWPOWERACTIVE
-
-	success = RegOpenKeyEx(HKEY_CURRENT_USER, "Control Panel\\Desktop", 0, KEY_READ | KEY_WRITE, (PHKEY)&phkResult);
-	if (success != ERROR_SUCCESS) {
-		return;
-	}
-
-	if (disable) {
-		cbData = 16;
-		success = RegQueryValueEx(phkResult, "ScreenSaveActive", 0, &Type, (LPBYTE)Data, &cbData);
-		if (success == ERROR_SUCCESS)
-			screensaver_enabled_prev = Data[0] != '0';
-		enabled = FALSE;
-	} else {
-		enabled = screensaver_enabled_prev;
-	}
-
-	Data[1] = 0;
-	Data[0] = enabled ? '1' : '0';
-	RegSetValueEx(phkResult, "ScreenSaveActive", 0, REG_SZ, (const BYTE *)Data, 2);
-	RegCloseKey(phkResult);
 }
 
 void init_create_window(int nCmdShow)
@@ -118,7 +84,7 @@ void init_create_window(int nCmdShow)
 	BlackPalette();
 	snd_init(hWnd);
 	init_archives();
-	init_disable_screensaver(1);
+	DisableScreenSaver();
 }
 
 void init_archives()
@@ -330,18 +296,8 @@ LRESULT __stdcall MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 
 void init_activate_window(HWND hWnd, BOOL bActive)
 {
-	LONG dwNewLong;
-
 	gbActive = bActive;
 	UiAppActivate(bActive);
-	dwNewLong = GetWindowLong(hWnd, GWL_STYLE);
-
-	if (gbActive && fullscreen)
-		dwNewLong &= ~WS_SYSMENU;
-	else
-		dwNewLong |= WS_SYSMENU;
-
-	SetWindowLong(hWnd, GWL_STYLE, dwNewLong);
 
 	if (gbActive) {
 		drawpanflag = 255;
