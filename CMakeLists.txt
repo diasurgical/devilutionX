@@ -98,6 +98,12 @@ if(HAIKU)
   set(ASAN OFF)
 endif()
 
+if(ANDROID)
+  set(ASAN OFF)
+  set(UBSAN OFF)
+  set(NONET ON)
+endif()
+
 if(DIST)
   set(sodium_USE_STATIC_LIBS ON)
 endif()
@@ -117,18 +123,20 @@ if(NOT NONET)
   find_package(sodium REQUIRED)
 endif()
 
-if(USE_SDL1)
-  find_package(SDL REQUIRED)
-  find_package(SDL_ttf REQUIRED)
-  find_package(SDL_mixer REQUIRED)
-  include_directories(${SDL_INCLUDE_DIR})
-else()
-  find_package(SDL2 CONFIG QUIET)
-  if (NOT SDL2_FOUND)
-    find_package(SDL2 REQUIRED)
+if (NOT ANDROID)
+  if(USE_SDL1)
+    find_package(SDL REQUIRED)
+    find_package(SDL_ttf REQUIRED)
+    find_package(SDL_mixer REQUIRED)
+    include_directories(${SDL_INCLUDE_DIR})
+  else()
+    find_package(SDL2 CONFIG QUIET)
+    if (NOT SDL2_FOUND)
+      find_package(SDL2 REQUIRED)
+    endif()
+    find_package(SDL2_ttf REQUIRED)
+    find_package(SDL2_mixer REQUIRED)
   endif()
-  find_package(SDL2_ttf REQUIRED)
-  find_package(SDL2_mixer REQUIRED)
 endif()
 
 add_library(smacker STATIC
@@ -277,9 +285,9 @@ set(devilutionx_SRCS
   SourceX/DiabloUI/text.cpp
   SourceX/DiabloUI/title.cpp
   SourceX/DiabloUI/ttf_render_wrapped.cpp
-  SourceX/main.cpp
-  ./Packaging/macOS/AppIcon.icns
-  ./Packaging/resources/CharisSILB.ttf)
+  SourceX/main.cpp)
+
+set(BIN_TARGET devilutionx)
 
 if(NOT NONET)
   list(APPEND devilutionx_SRCS
@@ -287,8 +295,6 @@ if(NOT NONET)
     SourceX/dvlnet/tcp_server.cpp
     SourceX/dvlnet/udp_p2p.cpp)
 endif()
-
-set(BIN_TARGET devilutionx)
 
 if(SWITCH)
   list(APPEND devilutionx_SRCS
@@ -298,8 +304,42 @@ if(SWITCH)
   set(BIN_TARGET devilutionx.elf)
 endif()
 
-add_executable(${BIN_TARGET} MACOSX_BUNDLE ${devilutionx_SRCS})
+if (NOT ANDROID)
+  add_executable(${BIN_TARGET}
+    MACOSX_BUNDLE
+    ${devilutionx_SRCS}
+    ./Packaging/macOS/AppIcon.icns
+    ./Packaging/resources/CharisSILB.ttf)
+else()
+  add_library(devilutionx SHARED ${devilutionx_SRCS})
+endif()
 
+if (ANDROID)
+  target_include_directories(devilution PUBLIC
+    SourceX
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/app/libs/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2/include
+
+    # SDL_internal.h is located in src required by SDL_android_main.c bridge
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2/src
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_mixer
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_ttf)
+  target_include_directories(devilutionx PUBLIC
+    SourceX
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/app/libs/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2/include
+
+    # SDL_internal.h is located in src required by SDL_android_main.c bridge
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2/src
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_mixer
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_ttf)
+
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2/ ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2)
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_mixer/ ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_mixer)
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_ttf/ ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_ttf)
+endif()
 configure_file(SourceS/config.h.in config.h @ONLY)
 target_include_directories(devilution PUBLIC Source SourceS ${CMAKE_CURRENT_BINARY_DIR})
 target_include_directories(${BIN_TARGET} PRIVATE
@@ -397,15 +437,22 @@ foreach(
 endforeach(def_name)
 
 foreach(target devilution ${BIN_TARGET})
-  if(USE_SDL1)
-    target_link_libraries(${target} PRIVATE
-      ${SDL_LIBRARY} ${SDL_TTF_LIBRARY} ${SDL_MIXER_LIBRARY})
-    target_compile_definitions(${target} PRIVATE USE_SDL1)
+  if (NOT ANDROID)
+    if(USE_SDL1)
+      target_link_libraries(${target} PRIVATE
+        ${SDL_LIBRARY} ${SDL_TTF_LIBRARY} ${SDL_MIXER_LIBRARY})
+      target_compile_definitions(${target} PRIVATE USE_SDL1)
+    else()
+      target_link_libraries(${target} PRIVATE
+        SDL2::SDL2main
+        SDL2::SDL2_ttf
+        SDL2::SDL2_mixer)
+    endif()
   else()
-    target_link_libraries(${target} PRIVATE
-      SDL2::SDL2main
-      SDL2::SDL2_ttf
-      SDL2::SDL2_mixer)
+    target_link_libraries(devilutionx PRIVATE
+      SDL2
+      SDL2_ttf
+      SDL2_mixer)
   endif()
 
   if(ASAN)
@@ -448,9 +495,6 @@ if(HAIKU)
 endif()
 
 if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-  # Change __FILE__ to only show the path relative to the project folder
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-builtin-macro-redefined -D'__FILE__=\"$(subst $(realpath ${CMAKE_SOURCE_DIR})/,,$(abspath $<))\"'")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-builtin-macro-redefined -D'__FILE__=\"$(subst $(realpath ${CMAKE_SOURCE_DIR})/,,$(abspath $<))\"'")
 
   if(DEBUG)
     # Note: For Valgrind suppor.

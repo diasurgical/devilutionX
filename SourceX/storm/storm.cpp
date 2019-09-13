@@ -33,6 +33,9 @@ static Mix_Chunk *SFileChunk;
 
 void GetBasePath(char *buffer, size_t size)
 {
+#ifdef __ANDROID__
+	snprintf(buffer, size, "%s", "/sdcard/");
+#else
 	char *path = SDL_GetBasePath();
 	if (path == NULL) {
 		SDL_Log(SDL_GetError());
@@ -42,6 +45,7 @@ void GetBasePath(char *buffer, size_t size)
 
 	snprintf(buffer, size, "%s", path);
 	SDL_free(path);
+#endif
 }
 
 void GetPrefPath(char *buffer, size_t size)

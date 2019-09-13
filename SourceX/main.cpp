@@ -25,7 +25,11 @@ static std::string build_cmdline(int argc, char **argv)
 	return str;
 }
 
+#ifdef __ANDROID__
+int SDL_main(int argc, char **argv)
+#else
 int main(int argc, char **argv)
+#endif
 {
 	auto cmdline = build_cmdline(argc, argv);
 
