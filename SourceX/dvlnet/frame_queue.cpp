@@ -48,7 +48,10 @@ bool frame_queue::packet_ready()
 		if(size() < sizeof(framesize_t))
 			return false;
 		auto szbuf = read(sizeof(framesize_t));
-#ifdef __LP64__
+#if defined(_WIN64) || (defined(__x86_64__) && !defined(__ILP32__)) ||	\
+	defined(__LP64__) || defined(_M_X64) || defined(_M_ARM64) ||	\
+	defined(__aarch64__) || defined(__ppc64__) ||			\
+	defined(__powerpc64__) || defined(_ARCH_PPC64)
 		std::memcpy(&nextsize, &szbuf[0], sizeof(framesize_t));
 		nextsize >> 32;
 #else
