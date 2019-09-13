@@ -7,12 +7,12 @@
 namespace dvl {
 namespace net {
 
-size_t frame_queue::size()
+framesize_t frame_queue::size()
 {
 	return current_size;
 }
 
-buffer_t frame_queue::read(size_t s)
+buffer_t frame_queue::read(framesize_t s)
 {
 	if(current_size < s)
 		throw frame_queue_exception();
@@ -48,12 +48,7 @@ bool frame_queue::packet_ready()
 		if(size() < sizeof(framesize_t))
 			return false;
 		auto szbuf = read(sizeof(framesize_t));
-#ifdef __LP64__
 		std::memcpy(&nextsize, &szbuf[0], sizeof(framesize_t));
-		nextsize >> 32;
-#else
-		std::memcpy(&nextsize, &szbuf[0], sizeof(nextsize));
-#endif
 		if(!nextsize)
 			throw frame_queue_exception();
 	}
@@ -77,7 +72,7 @@ buffer_t frame_queue::make_frame(buffer_t packetbuf)
 	buffer_t ret;
 	if(packetbuf.size() > max_frame_size)
 		ABORT();
-	frame_queue::framesize_t size = packetbuf.size();
+	framesize_t size = packetbuf.size();
 	ret.insert(ret.end(), packet_out::begin(size), packet_out::end(size));
 	ret.insert(ret.end(), packetbuf.begin(), packetbuf.end());
 	return std::move(ret);

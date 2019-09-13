@@ -9,17 +9,18 @@ namespace net {
 
 class frame_queue_exception : public dvlnet_exception {};
 
+typedef uint32_t framesize_t;
+
 class frame_queue {
 public:
-	typedef uint32_t framesize_t;
 	constexpr static framesize_t max_frame_size = 0xFFFF;
 private:
-	size_t current_size = 0;
+	framesize_t current_size = 0;
 	std::deque<buffer_t> buffer_deque;
-	size_t nextsize = 0;
+	framesize_t nextsize = 0;
 
-	size_t size();
-	buffer_t read(size_t s);
+	framesize_t size();
+	buffer_t read(framesize_t s);
 public:
 	bool packet_ready();
 	buffer_t read_packet();
