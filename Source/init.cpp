@@ -79,22 +79,9 @@ void init_create_window(int nCmdShow)
 {
 	int nWidth, nHeight;
 	HWND hWnd;
-	WNDCLASSEXA wcex;
 
 	pfile_init_save_directory();
-	memset(&wcex, 0, sizeof(wcex));
-	wcex.cbSize = sizeof(wcex);
-	wcex.style = CS_HREDRAW | CS_VREDRAW;
-	wcex.lpfnWndProc = WindowProc;
-	wcex.hInstance = ghInst;
-	wcex.hIcon = LoadIcon(ghInst, MAKEINTRESOURCE(IDI_ICON1));
-	wcex.hCursor = LoadCursor(0, IDC_ARROW);
-	wcex.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
-	wcex.lpszMenuName = "DIABLO";
-	wcex.lpszClassName = "DIABLO";
-	wcex.hIconSm = (HICON)LoadImage(ghInst, MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
-	if (!RegisterClassEx(&wcex))
-		app_fatal("Unable to register window class");
+
 	if (GetSystemMetrics(SM_CXSCREEN) < SCREEN_WIDTH)
 		nWidth = SCREEN_WIDTH;
 	else
@@ -335,14 +322,6 @@ void init_activate_window(HWND hWnd, BOOL bActive)
 		drawpanflag = 255;
 		ResetPal();
 	}
-}
-
-LRESULT __stdcall WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
-{
-	if (CurrentProc)
-		return CurrentProc(hWnd, Msg, wParam, lParam);
-
-	return MainWndProc(hWnd, Msg, wParam, lParam);
 }
 
 WNDPROC SetWindowProc(WNDPROC NewProc)

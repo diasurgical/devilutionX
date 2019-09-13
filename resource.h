@@ -2,7 +2,6 @@
 // Microsoft Developer Studio generated include file.
 // Used by Diablo.rc
 //
-#define IDI_ICON1                       101
 #define IDD_DIALOG1                     104 // DX
 #define IDD_DIALOG2                     105 // NOMEMORY
 #define IDD_DIALOG3                     106 // NOFILE

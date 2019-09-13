@@ -34,9 +34,7 @@ typedef DWORD *LPDWORD;
 typedef void *LPVOID;
 typedef void *PVOID;
 typedef const void *LPCVOID;
-typedef void *HBRUSH;
 typedef void *HMENU;
-typedef void *HICON;
 typedef void *LPITEMIDLIST;
 typedef LPITEMIDLIST PIDLIST_ABSOLUTE;
 typedef LPITEMIDLIST PCIDLIST_ABSOLUTE;
@@ -176,21 +174,6 @@ typedef struct _SYSTEMTIME {
 	WORD wMilliseconds;
 } SYSTEMTIME, *PSYSTEMTIME, *LPSYSTEMTIME;
 
-typedef struct tagWNDCLASSEXA {
-	UINT cbSize;
-	UINT style;
-	WNDPROC lpfnWndProc;
-	int cbClsExtra;
-	int cbWndExtra;
-	HINSTANCE hInstance;
-	HICON hIcon;
-	HCURSOR hCursor;
-	HBRUSH hbrBackground;
-	LPCSTR lpszMenuName;
-	LPCSTR lpszClassName;
-	HICON hIconSm;
-} WNDCLASSEXA;
-
 typedef unsigned long _fsize_t; /* Could be 64 bits for Win32 */
 
 struct DVL_finddata_t {
@@ -269,17 +252,12 @@ HWND WINAPI FindWindowA(LPCSTR lpClassName, LPCSTR lpWindowName);
 BOOL InvalidateRect(HWND hWnd, const RECT *lpRect, BOOL bErase);
 BOOL UpdateWindow(HWND hWnd);
 BOOL ShowWindow(HWND hWnd, int nCmdShow);
-WINUSERAPI ATOM WINAPI RegisterClassExA(const WNDCLASSEXA *lpwcx);
 int GetSystemMetrics(int nIndex);
 HGDIOBJ GetStockObject(int i);
-HCURSOR LoadCursorA(HINSTANCE hInstance, LPCSTR lpCursorName);
 BOOL GetUserNameA(LPSTR lpBuffer, LPDWORD pcbBuffer);
 void GetLocalTime(LPSYSTEMTIME lpSystemTime);
 long __cdecl _findfirst(const char *, struct DVL_finddata_t *);
 int __cdecl _findnext(long, struct DVL_finddata_t *);
-
-HICON LoadIconA(HINSTANCE hInstance, LPCSTR lpIconName);
-HANDLE LoadImageA(HINSTANCE hInst, LPCSTR name, UINT type, int cx, int cy, UINT fuLoad);
 
 typedef LONG(WINAPI *PTOP_LEVEL_EXCEPTION_FILTER)(
     struct _EXCEPTION_POINTERS *ExceptionInfo);

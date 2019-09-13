@@ -49,9 +49,7 @@
 #define CreateWindowEx CreateWindowExA
 #define FindWindow FindWindowA
 #define RegisterClassEx RegisterClassExA
-#define LoadCursor LoadCursorA
 #define GetUserName GetUserNameA
-#define LoadIcon LoadIconA
 #define LoadImage LoadImageA
 #define GetModuleHandle GetModuleHandleA
 

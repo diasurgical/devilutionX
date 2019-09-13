@@ -404,12 +404,6 @@ BOOL ShowWindow(HWND hWnd, int nCmdShow)
 	return true;
 }
 
-ATOM RegisterClassExA(const WNDCLASSEXA *lpwcx)
-{
-	DUMMY();
-	return 1;
-}
-
 /**
  * @brief Because we don't change resolution it dosen't make sens to use SDL_GetCurrentDisplayMode
  */
@@ -430,30 +424,6 @@ int GetSystemMetrics(int nIndex)
  */
 HGDIOBJ GetStockObject(int i)
 {
-	return NULL;
-}
-
-/**
- * @brief Used to load window icon
- */
-HICON LoadIconA(HINSTANCE hInstance, LPCSTR lpIconName)
-{
-	DUMMY(); //SDL_SetWindowIcon
-	return NULL;
-}
-
-/**
- * @brief Used to load small window icon
- */
-HANDLE LoadImageA(HINSTANCE hInst, LPCSTR name, UINT type, int cx, int cy, UINT fuLoad)
-{
-	DUMMY();
-	return NULL;
-}
-
-HCURSOR LoadCursorA(HINSTANCE hInstance, LPCSTR lpCursorName)
-{
-	DUMMY(); //SDL_CreateCursor
 	return NULL;
 }
 
