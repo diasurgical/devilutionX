@@ -17,9 +17,11 @@ bool directFileAccess = false;
 static std::string getIniPath()
 {
 	char path[DVL_MAX_PATH];
-	int len = GetModuleFileNameA(ghInst, path, DVL_MAX_PATH);
-	path[len - 1] = '/';
-	strcat(path, "diablo.ini");
+	char *name = SDL_GetPrefPath("diasurgical", "devilution");
+	strncpy(path, name, DVL_MAX_PATH);
+	SDL_free(name);
+
+	strncat(path, "diablo.ini", DVL_MAX_PATH - strlen(path) - 1);
 
 	return path;
 }

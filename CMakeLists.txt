@@ -52,6 +52,10 @@ if(HAIKU)
   set(ASAN OFF)
 endif()
 
+if(ANDROID)
+  set(ASAN OFF)
+endif()
+
 if(DIST)
   set(sodium_USE_STATIC_LIBS ON)
 endif()
@@ -63,20 +67,22 @@ set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 
 find_package(Threads REQUIRED)
-find_package(sodium REQUIRED)
 
-if(USE_SDL1)
-	find_package(SDL REQUIRED)
-	find_package(SDL_ttf REQUIRED)
-	find_package(SDL_mixer REQUIRED)
-	include_directories(${SDL_INCLUDE_DIR})
-else()
-	find_package(SDL2 CONFIG QUIET)
-	if (NOT SDL2_FOUND)
-		find_package(SDL2 REQUIRED)
-	endif()
-	find_package(SDL2_ttf REQUIRED)
-	find_package(SDL2_mixer REQUIRED)
+if (NOT ANDROID)
+  if(USE_SDL1)
+    find_package(SDL REQUIRED)
+    find_package(SDL_ttf REQUIRED)
+    find_package(SDL_mixer REQUIRED)
+    include_directories(${SDL_INCLUDE_DIR})
+  else()
+    find_package(SDL2 CONFIG QUIET)
+    if (NOT SDL2_FOUND)
+      find_package(SDL2 REQUIRED)
+    endif()
+    find_package(SDL2_ttf REQUIRED)
+    find_package(SDL2_mixer REQUIRED)
+  endif()
+  find_package(sodium REQUIRED)
 endif()
 
 add_library(smacker STATIC
@@ -177,7 +183,7 @@ add_library(devilution STATIC
   Source/trigs.cpp
   Source/wave.cpp)
 
-add_executable(devilutionx MACOSX_BUNDLE
+set(devilutionx_SRCS
   SourceX/dx.cpp
   SourceX/miniwin/misc.cpp
   SourceX/miniwin/misc_io.cpp
@@ -209,9 +215,34 @@ add_executable(devilutionx MACOSX_BUNDLE
   SourceX/DiabloUI/selhero.cpp
   SourceX/DiabloUI/selyesno.cpp
   SourceX/DiabloUI/title.cpp
-  SourceX/main.cpp
-  ./Packaging/macOS/AppIcon.icns
-  ./Packaging/resources/CharisSILB.ttf)
+  SourceX/main.cpp)
+
+if (NOT ANDROID)
+  add_executable(devilutionx
+    MACOSX_BUNDLE
+    ${devilutionx_SRCS}
+    ./Packaging/macOS/AppIcon.icns
+    ./Packaging/resources/CharisSILB.ttf)
+else()
+  add_library(devilutionx SHARED ${devilutionx_SRCS})
+endif()
+
+if (ANDROID)
+  target_include_directories(devilutionx PUBLIC
+    SourceX
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/app/libs/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2/include
+
+    # SDL_internal.h is located in src required by SDL_android_main.c bridge
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2/src
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_mixer/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_ttf/include)
+
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2/ ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2)
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_mixer/ ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_mixer)
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_ttf/ ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_ttf)
+endif()
 
 target_include_directories(devilution PUBLIC Source SourceS)
 target_include_directories(devilutionx PRIVATE
@@ -226,8 +257,8 @@ target_link_libraries(devilutionx PRIVATE
   PKWare
   StormLib
   smacker
-  Radon
-  sodium)
+  Radon)
+
 
 target_compile_definitions(devilution PRIVATE DEVILUTION_ENGINE)
 target_compile_definitions(devilution PUBLIC
@@ -237,16 +268,27 @@ target_compile_definitions(devilution PUBLIC
   "$<$<BOOL:${FASTER}>:FASTER>")
 target_compile_definitions(devilutionx PRIVATE ASIO_STANDALONE)
 
-
-if(USE_SDL1)
-  target_link_libraries(devilutionx PRIVATE
-    ${SDL_LIBRARY} ${SDL_TTF_LIBRARY} ${SDL_MIXER_LIBRARY})
-  target_compile_definitions(devilutionx PRIVATE USE_SDL1)
+if (NOT ANDROID)
+  if(USE_SDL1)
+    target_link_libraries(devilutionx PRIVATE
+      ${SDL_LIBRARY}
+      ${SDL_TTF_LIBRARY}
+      ${SDL_MIXER_LIBRARY}
+      sodium)
+    target_compile_definitions(devilutionx PRIVATE USE_SDL1)
+  else()
+    target_link_libraries(devilutionx PRIVATE
+      SDL2::SDL2main
+      SDL2::SDL2_ttf
+      SDL2::SDL2_mixer
+      sodium)
+  endif()
 else()
   target_link_libraries(devilutionx PRIVATE
-    SDL2::SDL2main
-    SDL2::SDL2_ttf
-    SDL2::SDL2_mixer)
+    SDL2
+    SDL2_ttf
+    SDL2_mixer
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/app/libs/jni/${ANDROID_ARCH_NAME}/libsodiumjni.so)
 endif()
 
 if(ASAN)
@@ -303,8 +345,12 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   target_compile_options(devilutionx PRIVATE -Wno-ignored-attributes)
   # Fix: error: cast from pointer to smaller type 'unsigned char' loses information
   target_compile_options(devilution PRIVATE -fms-extensions -fms-compatibility -fms-compatibility-version=19.00)
-	# Silence appfat.cpp warnings
+  # Silence appfat.cpp warnings
   set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wno-narrowing")
+endif()
+
+if (ANDROID)
+  set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wno-format-security")
 endif()
 
 if(APPLE)
