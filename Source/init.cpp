@@ -267,6 +267,7 @@ HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags
 	if (last_slash_pos)
 		*last_slash_pos = '\0';
 	init_strip_trailing_slash(Filename);
+	//strcpy(Buffer, "/data/data/org.libsdl.app/files");
 	strcpy(mpq_path, Buffer);
 	strcat(mpq_path, mpq_name);
 #ifdef COPYPROT

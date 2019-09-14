@@ -113,7 +113,8 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
 			uMsg = WM_DIABLOADGAME;
 
 		run_game_loop(uMsg);
-		NetClose();
+		//TODO Fix for Android
+		//NetClose();
 		pfile_create_player_description(0, 0);
 	} while (gbRunGameResult);
 
@@ -170,7 +171,7 @@ void run_game_loop(unsigned int uMsg)
 		}
 		multi_process_network_packets();
 		game_loop(gbGameLoopStartup);
-		msgcmd_send_chat();
+		//msgcmd_send_chat();
 		gbGameLoopStartup = FALSE;
 		DrawAndBlit();
 	}

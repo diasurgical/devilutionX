@@ -3,7 +3,7 @@
 
 #include "devilution.h"
 
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && !defined(__ANDROID__)
 extern "C" const char *__asan_default_options()
 {
     return "halt_on_error=0";

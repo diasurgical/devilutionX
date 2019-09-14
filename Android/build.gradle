@@ -1,0 +1,81 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        jcenter()
+        google()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.4.2'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        google()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+task createSymlinks doLast {
+    def sdl2Path = getRootDir().parent.toString() + "/libs/SDL2-2.0.9"
+    def sdl2MixerPath = getRootDir().parent.toString() + "/libs/SDL2_mixer-2.0.4"
+    def sdl2ttfPath = getRootDir().parent.toString() + "/libs/SDL2_ttf-2.0.15"
+    def libPngPath = getRootDir().parent.toString() + "/libs/libpng-1.6.36"
+
+    def libSmacker = getRootDir().parent.toString() + "/3rdParty/libsmacker"
+    def libRadon = getRootDir().parent.toString() + "/3rdParty/Radon"
+    def stormLib = getRootDir().parent.toString() + "/3rdParty/StormLib"
+    def pKWare = getRootDir().parent.toString() + "/3rdParty/PKWare"
+
+    def source = getRootDir().parent.toString() + "/Source"
+
+    ant.symlink(resource: sdl2Path, link: "./app/jni/SDL")
+    ant.symlink(resource: sdl2MixerPath, link: "./app/jni/SDLMixer")
+    ant.symlink(resource: sdl2ttfPath, link: "./app/jni/SDLttf")
+    ant.symlink(resource: libPngPath, link: "./app/jni/libpng")
+    ant.symlink(resource: libSmacker, link: "./app/jni/3rdParty/libsmacker")
+    ant.symlink(resource: libRadon, link: "./app/jni/3rdParty/Radon")
+    ant.symlink(resource: stormLib, link: "./app/jni/3rdParty/StormLib")
+    ant.symlink(resource: pKWare, link: "./app/jni/3rdParty/PKWare")
+
+    //ant.symlink(resource: source, link: "./app/jni/Source")
+}
+
+
+[
+        [input_arch: 'arm',     output_arch: 'android-armv6',    ndk_platform: 'android-16' ],
+        [input_arch: 'armv7-a', output_arch: 'android-armv7-a',  ndk_platform: 'android-16' ],
+        [input_arch: 'armv8-a', output_arch: 'android-armv8-a',  ndk_platform: 'android-21'],
+        [input_arch: 'x86',     output_arch: 'android-i686',     ndk_platform: 'android-16' ],
+        [input_arch: 'x86_64',  output_arch: 'android-westmere', ndk_platform: 'android-21'],
+].each { opts ->
+
+    String sodiumPath = getRootDir().parent.toString() + "/libs/libsodium-1.0.17"
+    def taskName = "compileNative_${opts['output_arch']}"
+
+    task(taskName) {
+        inputs.dir  fileTree(dir: sodiumPath+'/src', exclude: [sodiumPath+'/**/.libs', sodiumPath+'/*.la', sodiumPath+'/**/*.lo', sodiumPath+'/**/*.o', sodiumPath+'/**/*.Plo', '**/Makefile', '**/Makefile.in', '**/.deps/*', '**/.libs/*'])
+        outputs.dir(sodiumPath+"/libsodium-${opts['output_arch']}")
+        doFirst {
+            exec {
+                workingDir sodiumPath
+                commandLine './autogen.sh'
+            }
+            exec {
+                workingDir sodiumPath
+                environment 'LIBSODIUM_FULL_BUILD','true'
+                executable "dist-build/android-${opts['input_arch']}.sh"
+                environment 'CONFIG_SITE', '' // This makes ./configure load information about the host and guess this is information valid for the target. However, the target is Android here, the host information does not apply.
+                //environment 'NDK_PLATFORM', opts['ndk_platform'] // The lowest possible value is android-9 here. Certain Android API levels below android-16 do not have posix_memalign. This should not make a difference in practice, as android-9 has MAP_ANONYMOUS and HAVE_MMAP and posix_memalign is only used as fallback in the current libsodium code if MAP_ANONYMOUS or HAVE_MMAP are unavailable.
+            }
+        }
+    }
+}

@@ -148,7 +148,7 @@ static bool BaseFile_Open(TFileStream * pStream, const TCHAR * szFileName, DWORD
         intptr_t handle;
 
         // Open the file
-        handle = open(szFileName, oflag | O_LARGEFILE);
+		handle = open(szFileName, oflag | O_LARGEFILE);
         if(handle == -1)
         {
             nLastError = errno;

@@ -11,7 +11,7 @@
 #define strncasecmp _strnicmp
 #endif
 
-#if !defined(_MSC_VER) && !defined(__x86_64__) && !defined(__i386__)
+#if !defined(_MSC_VER) && !defined(__x86_64__) && !defined(__i386__) && !defined(__ANDROID__)
 unsigned int _rotl(unsigned int value, int shift)
 {
 	if ((shift &= 31) == 0)
@@ -144,9 +144,12 @@ WINBOOL GetDiskFreeSpaceA(LPCSTR lpRootPathName, LPDWORD lpSectorsPerCluster, LP
  */
 DWORD GetModuleFileNameA(HMODULE hModule, LPSTR lpFilename, DWORD nSize)
 {
-	char *name = SDL_GetPrefPath("diasurgical", "devilution");
+	// TODO: Fix SDL getPrefPath for android
+	char *name = "/data/data/diasurgical.devilutionx/files/"; //SDL_GetPrefPath("diasurgical", "devilution");
+	//char *name = SDL_GetPrefPath("diasurgical", "devilution");
+	//char *name = SDL_GetPrefPath("org.libsdl", "app");
 	strncpy(lpFilename, name, nSize);
-	SDL_free(name);
+	//SDL_free(name);
 
 	DWORD len = strlen(lpFilename);
 
@@ -201,7 +204,9 @@ DWORD GetCurrentDirectory(DWORD nBufferLength, LPTSTR lpBuffer)
 	char *base_path = SDL_GetBasePath();
 	if (base_path == NULL) {
 		SDL_Log(SDL_GetError());
-		base_path = SDL_strdup("./");
+		// TODO Fix this for ANDROID
+		//base_path = SDL_strdup("./");
+		base_path = SDL_strdup("/data/data/org.libsdl.app/files/");
 	}
 	eprintf("BasePath: %s\n", base_path);
 
