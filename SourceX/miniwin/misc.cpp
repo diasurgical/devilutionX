@@ -279,18 +279,6 @@ HWND GetLastActivePopup(HWND hWnd)
 	return hWnd;
 }
 
-HWND GetTopWindow(HWND hWnd)
-{
-	UNIMPLEMENTED();
-	return NULL;
-}
-
-WINBOOL SetForegroundWindow(HWND hWnd)
-{
-	UNIMPLEMENTED();
-	return true;
-}
-
 /**
  * @return Always null as it's unused
  */
@@ -298,12 +286,6 @@ HWND SetFocus(HWND hWnd)
 {
 	SDL_RaiseWindow(window);
 	MainWndProc(NULL, DVL_WM_ACTIVATEAPP, true, 0); // SDL_WINDOWEVENT_FOCUS_GAINED
-	return NULL;
-}
-
-HWND FindWindowA(LPCSTR lpClassName, LPCSTR lpWindowName)
-{
-	DUMMY_PRINT("class: %s window: %s", nullstr(lpClassName), nullstr(lpWindowName));
 	return NULL;
 }
 

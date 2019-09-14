@@ -230,19 +230,11 @@ void free_game()
 	FreeGameMem();
 }
 
-BOOL diablo_get_not_running()
-{
-	SetLastError(0);
-	CreateEvent(NULL, FALSE, FALSE, "DiabloEvent");
-	return GetLastError() != ERROR_ALREADY_EXISTS;
-}
-
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	HINSTANCE hInst;
 	int nData;
 	char szFileName[MAX_PATH];
-	BOOL bNoEvent;
 
 	hInst = hInstance;
 	ghInst = hInst;
@@ -257,8 +249,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	srand(GetTickCount());
 	InitHash();
 
-	bNoEvent = diablo_get_not_running();
-	if (!diablo_find_window("DIABLO") && bNoEvent) {
+	{
 #ifdef _DEBUG
 		SFileEnableDirectAccess(TRUE);
 #endif
@@ -475,28 +466,6 @@ void diablo_init_screen()
 		PitchTbl[i] = i * BUFFER_WIDTH;
 
 	ClrDiabloMsg();
-}
-
-BOOL diablo_find_window(LPCSTR lpClassName)
-{
-	HWND hWnd, active;
-
-	hWnd = FindWindow(lpClassName, 0);
-	if (!hWnd)
-		return FALSE;
-
-	active = GetLastActivePopup(hWnd);
-	if (active)
-		hWnd = active;
-
-	active = GetTopWindow(hWnd);
-	if (!active)
-		active = hWnd;
-
-	SetForegroundWindow(hWnd);
-	SetFocus(active);
-
-	return TRUE;
 }
 
 BOOL PressEscKey()

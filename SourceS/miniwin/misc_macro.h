@@ -35,8 +35,6 @@
 
 #define FOURCC_RIFF MAKEFOURCC('R', 'I', 'F', 'F')
 
-#define ERROR_ALREADY_EXISTS 183
-
 #define CreateEvent CreateEventA
 
 #define PM_NOREMOVE DVL_PM_NOREMOVE
@@ -47,7 +45,6 @@
 #define DispatchMessage DispatchMessageA
 #define PostMessage PostMessageA
 #define CreateWindowEx CreateWindowExA
-#define FindWindow FindWindowA
 #define RegisterClassEx RegisterClassExA
 #define LoadCursor LoadCursorA
 #define GetUserName GetUserNameA

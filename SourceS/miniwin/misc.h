@@ -249,8 +249,6 @@ WINBOOL WINAPI PostMessageA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 
 WINBOOL WINAPI DestroyWindow(HWND hWnd);
 HWND WINAPI GetLastActivePopup(HWND hWnd);
-HWND WINAPI GetTopWindow(HWND hWnd);
-WINBOOL WINAPI SetForegroundWindow(HWND hWnd);
 HWND WINAPI SetFocus(HWND hWnd);
 HWND CreateWindowExA(
     DWORD dwExStyle,
@@ -265,7 +263,6 @@ HWND CreateWindowExA(
     HMENU hMenu,
     HINSTANCE hInstance,
     LPVOID lpParam);
-HWND WINAPI FindWindowA(LPCSTR lpClassName, LPCSTR lpWindowName);
 BOOL InvalidateRect(HWND hWnd, const RECT *lpRect, BOOL bErase);
 BOOL UpdateWindow(HWND hWnd);
 BOOL ShowWindow(HWND hWnd, int nCmdShow);
