@@ -208,11 +208,7 @@ DWORD GetCurrentDirectory(DWORD nBufferLength, LPTSTR lpBuffer)
 	strncpy(lpBuffer, base_path, nBufferLength);
 	SDL_free(base_path);
 
-	DWORD len = strlen(lpBuffer);
-
-	lpBuffer[len - 1] = '\\';
-
-	return len;
+	return strlen(lpBuffer);
 }
 
 DWORD GetLogicalDriveStringsA(DWORD nBufferLength, LPSTR lpBuffer)

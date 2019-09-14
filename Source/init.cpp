@@ -134,25 +134,10 @@ void init_archives()
 	fileinfo.originalarchivefile = diabdat_mpq_path;
 	fileinfo.patcharchivefile = patch_rt_mpq_path;
 	init_get_file_info();
-#ifdef COPYPROT
-	while (1) {
-#endif
 #ifdef SPAWN
-		diabdat_mpq = init_test_access(diabdat_mpq_path, "\\spawn.mpq", "DiabloSpawn", MPQ_FLAG_READ_ONLY, FS_PC);
+		diabdat_mpq = init_test_access(diabdat_mpq_path, "spawn.mpq", "DiabloSpawn", MPQ_FLAG_READ_ONLY, FS_PC);
 #else
-#ifdef COPYPROT
-		diabdat_mpq = init_test_access(diabdat_mpq_path, "\\diabdat.mpq", "DiabloCD", MPQ_FLAG_READ_ONLY, FS_CD);
-#else
-		diabdat_mpq = init_test_access(diabdat_mpq_path, "\\diabdat.mpq", "DiabloCD", MPQ_FLAG_READ_ONLY, FS_PC);
-#endif
-#endif
-#ifdef COPYPROT
-		if (diabdat_mpq != NULL)
-			break;
-		UiCopyProtError(&result);
-		if (result == COPYPROT_CANCEL)
-			FileErrDlg("diabdat.mpq");
-	}
+		diabdat_mpq = init_test_access(diabdat_mpq_path, "diabdat.mpq", "DiabloCD", MPQ_FLAG_READ_ONLY, FS_PC);
 #endif
 	if (!WOpenFile("ui_art\\title.pcx", &fh, TRUE))
 #ifdef SPAWN
@@ -162,106 +147,30 @@ void init_archives()
 #endif
 	WCloseFile(fh);
 #ifdef SPAWN
-	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "\\patch_sh.mpq", "DiabloSpawn", MPQ_FLAG_READ_ONLY, FS_PC);
+	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "patch_sh.mpq", "DiabloSpawn", MPQ_FLAG_READ_ONLY, FS_PC);
 #else
-	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "\\patch_rt.mpq", "DiabloInstall", MPQ_FLAG_READ_ONLY, FS_PC);
+	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "patch_rt.mpq", "DiabloInstall", MPQ_FLAG_READ_ONLY, FS_PC);
 #endif
 }
 
 HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags, int fs)
 {
-	char *last_slash_pos;
-	char Filename[MAX_PATH];
-	char Buffer[MAX_PATH];
-	char archive_path[MAX_PATH];
+	char Buffer[2][MAX_PATH];
 	HANDLE archive;
 
-	if (!GetCurrentDirectory(sizeof(Buffer), Buffer))
-		app_fatal("Can't get program path");
-	init_strip_trailing_slash(Buffer);
-	if (!SFileSetBasePath(Buffer))
-		app_fatal("SFileSetBasePath");
-	if (!GetModuleFileName(ghInst, Filename, sizeof(Filename)))
-		app_fatal("Can't get program name");
-	last_slash_pos = strrchr(Filename, '\\');
-	if (last_slash_pos)
-		*last_slash_pos = '\0';
-	init_strip_trailing_slash(Filename);
-	strcpy(mpq_path, Buffer);
-	strcat(mpq_path, mpq_name);
-	if (SFileOpenArchive(mpq_path, 0, flags, &archive))
-		return archive;
-	if (strcmp(Filename, Buffer)) {
-		strcpy(mpq_path, Filename);
+	GetCurrentDirectory(MAX_PATH, Buffer[0]); // Package
+	GetModuleFileName(NULL, Buffer[1], MAX_PATH); // Preferences
+
+	for (int i = 0; i < 2; i++) {
+		strcpy(mpq_path, Buffer[i]);
 		strcat(mpq_path, mpq_name);
-		if (SFileOpenArchive(mpq_path, 0, flags, &archive))
+		if (SFileOpenArchive(mpq_path, 0, flags, &archive)) {
+			SFileSetBasePath(Buffer[i]);
 			return archive;
-	}
-	archive_path[0] = '\0';
-	if (reg_loc) {
-		if (SRegLoadString("Archives", reg_loc, 0, archive_path, sizeof(archive_path))) {
-			init_strip_trailing_slash(archive_path);
-			strcpy(mpq_path, archive_path);
-			strcat(mpq_path, mpq_name);
-			if (SFileOpenArchive(mpq_path, 0, flags, &archive))
-				return archive;
 		}
 	}
-	if (fs != FS_PC && init_read_test_file(archive_path, mpq_name, flags, &archive)) {
-		strcpy(mpq_path, archive_path);
-		return archive;
-	}
+
 	return NULL;
-}
-
-char *init_strip_trailing_slash(char *path)
-{
-	char *result;
-
-	result = strrchr(path, '\\');
-	if (result) {
-		if (!result[1])
-			*result = 0;
-	}
-	return result;
-}
-
-BOOL init_read_test_file(char *pszPath, char *pszArchive, int flags, HANDLE *phArchive)
-{
-	DWORD dwSize;
-	char *pszDrive, *pszRoot;
-	char szDrive[MAX_PATH];
-
-	dwSize = GetLogicalDriveStrings(sizeof(szDrive), szDrive);
-	if (dwSize == 0 || dwSize > sizeof(szDrive)) {
-		return FALSE;
-	}
-
-	while (*pszArchive == '\\') {
-		pszArchive++;
-	}
-
-	pszDrive = szDrive;
-	if (*pszDrive == '\0') {
-		return FALSE;
-	}
-	while (1) {
-		pszRoot = pszDrive;
-		while (*pszDrive++ != '\0')
-			;
-		if (GetDriveType(pszRoot) == DRIVE_CDROM) {
-			strcpy(pszPath, pszRoot);
-			strcat(pszPath, pszArchive);
-			if (SFileOpenArchive(pszPath, 0, flags, phArchive)) {
-				return TRUE;
-			}
-		}
-		if (*pszDrive == '\0') {
-			return FALSE;
-		}
-	}
-
-	return TRUE;
 }
 
 void init_get_file_info()
