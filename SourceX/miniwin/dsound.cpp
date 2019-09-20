@@ -48,7 +48,14 @@ ULONG DirectSoundBuffer::Release()
  */
 HRESULT DirectSoundBuffer::GetStatus(LPDWORD pdwStatus)
 {
-	return DVL_DSERR_INVALIDPARAM;
+	for (int i = 1; i < Mix_AllocateChannels(-1); i++) {
+		if (Mix_GetChunk(i) == chunk && Mix_Playing(i)) {
+			*pdwStatus = DVL_DSBSTATUS_PLAYING;
+			break;
+		}
+	}
+
+	return DVL_DS_OK;
 };
 
 HRESULT DirectSoundBuffer::Lock(DWORD dwOffset, DWORD dwBytes, LPVOID *ppvAudioPtr1, LPDWORD pdwAudioBytes1,
