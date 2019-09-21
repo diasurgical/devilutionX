@@ -16,7 +16,7 @@ int tcp_client::create(std::string addrstr, std::string passwd)
 		auto port = default_port;
 		local_server = std::make_unique<tcp_server>(ioc, addrstr, port, passwd);
 		return join(local_server->localhost_self(), passwd);
-	} catch(std::system_error &) {
+	} catch(std::system_error &e) {
 		return -1;
 	}
 }
