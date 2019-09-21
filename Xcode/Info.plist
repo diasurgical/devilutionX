@@ -26,5 +26,9 @@
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>SDL_FILESYSTEM_BASE_DIR_TYPE</key>
 	<string>parent</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+	<key>NSSupportsAutomaticGraphicsSwitching</key>
+	<true/>
 </dict>
 </plist>
