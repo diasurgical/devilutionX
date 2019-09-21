@@ -82,5 +82,5 @@ inline std::string utf8_to_latin1(const char* in)
 		else
 			ret.push_back('?');
 	}
-	return std::move(ret);
+	return ret;
 }

@@ -33,7 +33,7 @@ buffer_t frame_queue::read(framesize_t s)
 		                           buffer_deque.front().begin()+s);
 		current_size -= s;
 	}
-	return std::move(ret);
+	return ret;
 }
 
 void frame_queue::write(buffer_t buf)
@@ -64,7 +64,7 @@ buffer_t frame_queue::read_packet()
 		throw frame_queue_exception();
 	auto ret = std::move(read(nextsize));
 	nextsize = 0;
-	return std::move(ret);
+	return ret;
 }
 
 buffer_t frame_queue::make_frame(buffer_t packetbuf)
@@ -75,7 +75,7 @@ buffer_t frame_queue::make_frame(buffer_t packetbuf)
 	framesize_t size = packetbuf.size();
 	ret.insert(ret.end(), packet_out::begin(size), packet_out::end(size));
 	ret.insert(ret.end(), packetbuf.begin(), packetbuf.end());
-	return std::move(ret);
+	return ret;
 }
 
 }  // namespace net
