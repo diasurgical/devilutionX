@@ -143,7 +143,7 @@ WINBOOL CloseHandle(HANDLE hObject)
 		if (std::rename((file->path + ".tmp").c_str(), file->path.c_str()))
 			throw std::runtime_error("rename");
 		return true;
-	} catch (std::runtime_error e) {
+	} catch (std::runtime_error &e) {
 		// log
 		DialogBoxParam(ghInst, DVL_MAKEINTRESOURCE(IDD_DIALOG7), ghMainWnd, (DLGPROC)FuncDlg, (LPARAM)file->path.c_str());
 		return false;

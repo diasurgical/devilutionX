@@ -16,7 +16,7 @@ int tcp_client::create(std::string addrstr, std::string passwd)
 		auto port = default_port;
 		local_server = std::make_unique<tcp_server>(ioc, addrstr, port, passwd);
 		return join(local_server->localhost_self(), passwd);
-	} catch(std::system_error) {
+	} catch(std::system_error &) {
 		return -1;
 	}
 }
@@ -32,7 +32,7 @@ int tcp_client::join(std::string addrstr, std::string passwd)
 		sock.connect(asio::ip::tcp::endpoint(ipaddr, default_port));
 		asio::ip::tcp::no_delay option(true);
 		sock.set_option(option);
-	} catch(std::exception e) {
+	} catch(std::exception &e) {
 		return -1;
 	}
 	start_recv();
@@ -46,7 +46,7 @@ int tcp_client::join(std::string addrstr, std::string passwd)
 		for (auto i = 0; i < no_sleep; ++i) {
 			try {
 				poll();
-			} catch (const std::runtime_error e) {
+			} catch (const std::runtime_error &e) {
 				return -1;
 			}
 			if (plr_self != PLR_BROADCAST)

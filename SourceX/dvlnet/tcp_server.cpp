@@ -82,7 +82,7 @@ void tcp_server::handle_recv(scc con, const asio::error_code& ec,
 				con->timeout = timeout_active;
 				handle_recv_packet(*pkt);
 			}
-		} catch (dvlnet_exception e) {
+		} catch (dvlnet_exception &e) {
 			drop_connection(con);
 			return;
 		}

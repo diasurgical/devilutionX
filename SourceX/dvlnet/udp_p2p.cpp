@@ -22,7 +22,7 @@ int udp_p2p::create(std::string addrstr, std::string passwd)
 	while (port <= default_port+try_ports) {
 		try {
 			sock.bind(asio::ip::udp::endpoint(asio::ip::address_v6(), port));
-		} catch (std::exception e) {
+		} catch (std::exception &e) {
 			eprintf("bind: %s,  %s\n", asio::ip::address_v6().to_string(),
 			e.what());
 		}
@@ -31,7 +31,7 @@ int udp_p2p::create(std::string addrstr, std::string passwd)
 	*/
 	try {
 		sock.bind(endpoint(ipaddr, port));
-	} catch (std::exception e) {
+	} catch (std::exception &e) {
 		return -1;
 	}
 	plr_self = 0;
@@ -90,11 +90,11 @@ void udp_p2p::recv()
 				pkt_buf.resize(pkt_len);
 				auto pkt = pktfty->make_packet(pkt_buf);
 				recv_decrypted(*pkt, sender);
-			} catch (packet_exception e) {
+			} catch (packet_exception &e) {
 				// drop packet
 			}
 		}
-	} catch (std::exception e) {
+	} catch (std::exception &e) {
 		return;
 	}
 }
