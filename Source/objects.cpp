@@ -120,7 +120,7 @@ void FreeObjectGFX()
 	int i;
 
 	for (i = 0; i < numobjfiles; i++) {
-		pObjCels[i] = BSWAP_INT16_UNSIGNED(pObjCels[i]);
+		pObjCels[i] = pObjCels[i];
 		MemFreeDbg(pObjCels[i]);
 	}
 	numobjfiles = 0;
