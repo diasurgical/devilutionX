@@ -22,6 +22,7 @@ HMODULE ghDiabMod;
 void dx_init(HWND hWnd)
 {
 	SetFocus(hWnd);
+
 	SDL_ShowWindow(window);
 
 	lpDDInterface = new StubDraw();

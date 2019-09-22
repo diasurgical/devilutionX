@@ -220,17 +220,21 @@ bool UiFocusNavigation(SDL_Event *event)
 	case SDL_KEYUP:
 	case SDL_MOUSEBUTTONUP:
 	case SDL_MOUSEMOTION:
+#ifndef USE_SDL1
 	case SDL_MOUSEWHEEL:
+#endif
 	case SDL_JOYBUTTONUP:
 	case SDL_JOYAXISMOTION:
 	case SDL_JOYBALLMOTION:
 	case SDL_JOYHATMOTION:
+#ifndef USE_SDL1
 	case SDL_FINGERUP:
 	case SDL_FINGERMOTION:
 	case SDL_CONTROLLERBUTTONUP:
 	case SDL_CONTROLLERAXISMOTION:
-	case SDL_SYSWMEVENT:
 	case SDL_WINDOWEVENT:
+#endif
+	case SDL_SYSWMEVENT:
 		mainmenu_restart_repintro();
 	}
 
@@ -267,8 +271,9 @@ bool UiFocusNavigation(SDL_Event *event)
 
 	if (SDL_IsTextInputActive()) {
 		switch (event->type) {
-		case SDL_KEYDOWN:
+		case SDL_KEYDOWN: {
 			switch (event->key.keysym.sym) {
+#ifndef USE_SDL1
 			case SDLK_v:
 				if (SDL_GetModState() & KMOD_CTRL) {
 					char *clipboard = SDL_GetClipboardText();
@@ -278,6 +283,7 @@ bool UiFocusNavigation(SDL_Event *event)
 					selhero_CatToName(clipboard, UiTextInput, UiTextInputLen);
 				}
 				return true;
+#endif
 			case SDLK_BACKSPACE:
 			case SDLK_LEFT:
 				int nameLen = strlen(UiTextInput);
@@ -286,10 +292,24 @@ bool UiFocusNavigation(SDL_Event *event)
 				}
 				return true;
 			}
+#ifdef USE_SDL1
+			if ((event->key.keysym.mod & KMOD_CTRL) == 0) {
+				Uint16 unicode = event->key.keysym.unicode;
+				if (unicode && (unicode & 0xFF80) == 0) {
+					char utf8[SDL_TEXTINPUTEVENT_TEXT_SIZE];
+					utf8[0] = (char) unicode;
+					utf8[1] = '\0';
+					selhero_CatToName(utf8, UiTextInput, UiTextInputLen);
+				}
+			}
+#endif
 			break;
+		}
+#ifndef USE_SDL1
 		case SDL_TEXTINPUT:
 			selhero_CatToName(event->text.text, UiTextInput, UiTextInputLen);
 			return true;
+#endif
 		}
 	}
 
@@ -821,7 +841,11 @@ bool UiItemMouseEvents(SDL_Event *event, UI_Item *items, int size)
 			if (items[i].caption != NULL && *items[i].caption != '\0') {
 				if (gfnListFocus != NULL && SelectedItem != items[i].value) {
 					UiFocus(items[i].value);
+#ifdef USE_SDL1
+				} else if (gfnListFocus == NULL) {
+#else
 				} else if (gfnListFocus == NULL || event->button.clicks >= 2) {
+#endif
 					SelectedItem = items[i].value;
 					UiFocusNavigationSelect();
 				}
@@ -848,6 +872,7 @@ void DrawMouse()
 {
 	SDL_GetMouseState(&MouseX, &MouseY);
 
+#ifndef USE_SDL1
 	if (renderer) {
 		float scaleX;
 		SDL_RenderGetScale(renderer, &scaleX, NULL);
@@ -859,6 +884,7 @@ void DrawMouse()
 		MouseX -= view.x;
 		MouseY -= view.y;
 	}
+#endif
 
 	DrawArt(MouseX, MouseY, &ArtCursor);
 }

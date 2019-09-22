@@ -230,7 +230,7 @@ WINBOOL DeleteFileA(LPCSTR lpFileName)
 	char name[DVL_MAX_PATH];
 	TranslateFileName(name, sizeof(name), lpFileName);
 
-	FILE *f = fopen(name, "r+"); 
+	FILE *f = fopen(name, "r+");
 	if (f) {
 		fclose(f);
 		remove(name);
@@ -330,12 +330,31 @@ HWND CreateWindowExA(
 		SDL_Log(SDL_GetError());
 		return NULL;
 	}
+
+#ifdef USE_SDL1
+	SDL_EnableUNICODE( 1 );
+#endif
+
 	atexit(SDL_Quit);
 
 	int upscale = 1;
 	DvlIntSetting("upscale", &upscale);
 	DvlIntSetting("fullscreen", &fullscreen);
 
+	int grabInput = 1;
+	DvlIntSetting("grab input", &grabInput);
+
+#ifdef USE_SDL1
+	int flags = SDL_SWSURFACE | SDL_DOUBLEBUF | SDL_HWPALETTE;
+	if (fullscreen) {
+		SDL_Log("fullscreen not yet supported with SDL1");
+	}
+	// flags |= fullscreen ? SDL_FULLSCREEN : SDL_RESIZABLE;
+	SDL_WM_SetCaption(lpWindowName, WINDOW_ICON_NAME);
+	SDL_SetVideoMode(nWidth, nHeight, /*bpp=*/0, flags);
+	window = SDL_GetVideoSurface();
+	if (grabInput) SDL_WM_GrabInput(SDL_GRAB_ON);
+#else
 	int flags = 0;
 	if (upscale) {
 		flags |= fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_RESIZABLE;
@@ -347,19 +366,21 @@ HWND CreateWindowExA(
 		flags |= SDL_WINDOW_FULLSCREEN;
 	}
 
-	int grabInput = 1;
-	DvlIntSetting("grab input", &grabInput);
 	if (grabInput) {
 		flags |= SDL_WINDOW_INPUT_GRABBED;
 	}
 
 	window = SDL_CreateWindow(lpWindowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, nWidth, nHeight, flags);
+#endif
 	if (window == NULL) {
 		SDL_Log(SDL_GetError());
 	}
 	atexit(FakeWMDestroy);
 
 	if (upscale) {
+#ifdef USE_SDL1
+		SDL_Log("upscaling not supported with USE_SDL1");
+#else
 		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
 		if (renderer == NULL) {
 			SDL_Log(SDL_GetError());
@@ -373,6 +394,7 @@ HWND CreateWindowExA(
 		if (SDL_RenderSetLogicalSize(renderer, nWidth, nHeight) <= -1) {
 			SDL_Log(SDL_GetError());
 		}
+#endif
 	}
 
 	return window;
@@ -618,10 +640,12 @@ LSTATUS RegOpenKeyExA(HKEY hKey, LPCSTR lpSubKey, DWORD ulOptions, REGSAM samDes
  */
 LSTATUS RegQueryValueExA(HKEY hKey, LPCSTR lpValueName, LPDWORD lpReserved, LPDWORD lpType, BYTE *lpData, LPDWORD lpcbData)
 {
+	#ifndef USE_SDL1
 	if (SDL_IsScreenSaverEnabled()) {
 		lpData[0] = '0';
 		lpData[1] = '\0';
 	}
+	#endif
 
 	return 1;
 };
@@ -632,11 +656,13 @@ LSTATUS RegQueryValueExA(HKEY hKey, LPCSTR lpValueName, LPDWORD lpReserved, LPDW
  */
 LSTATUS RegSetValueExA(HKEY hKey, LPCSTR lpValueName, DWORD Reserved, DWORD dwType, const BYTE *lpData, DWORD cbData)
 {
+	#ifndef USE_SDL1
 	if (lpData[0] == '0') {
 		SDL_DisableScreenSaver();
 	} else {
 		SDL_EnableScreenSaver();
 	}
+	#endif
 
 	return 1;
 };

@@ -152,7 +152,9 @@ The default build type is `Debug`. This can be changed with `-DBINARY_RELEASE=ON
 You can also generate 32bit builds on 64bit platforms by setting `-DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake` (remember to use the `linux32` command if on Linux).
 ### mingw32
 Use `-DCROSS_PREFIX=/path/to/prefix` if the `i686-w64-mingw32` directory is not in `/usr`.
-
+### Use SDL v1 instead of SDL v2.
+Pass `-DUSE_SDL1=ON` to build with SDL v1 instead of v2.
+Note that some features are not yet supported in SDL v1, notably sound, upscaling, and fullscreen.
 
 # Multiplayer
  - TCP/IP only requires the host to expose port 6112

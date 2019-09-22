@@ -424,8 +424,11 @@ PALETTEENTRY SVidPreviousPalette[256];
 SDL_Palette *SVidPalette;
 SDL_Surface *SVidSurface;
 BYTE *SVidBuffer;
-SDL_AudioDeviceID deviceId;
 unsigned long SVidWidth, SVidHeight;
+
+#ifndef USE_SDL1
+SDL_AudioDeviceID deviceId;
+#endif
 
 void SVidRestartMixer()
 {
@@ -462,7 +465,6 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 		return false;
 	}
 
-	deviceId = 0;
 	unsigned char channels[7], depth[7];
 	unsigned long rate[7];
 	smk_info_audio(SVidSMK, NULL, channels, depth, rate);
@@ -475,6 +477,15 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 		audioFormat.channels = channels[0];
 
 		Mix_CloseAudio();
+
+#ifdef USE_SDL1
+	if (SDL_OpenAudio(&audioFormat, NULL) != 0) {
+		SDL_Log(SDL_GetError());
+		SVidRestartMixer();
+		return false;
+	}
+	SDL_PauseAudio(0);
+#else
 		deviceId = SDL_OpenAudioDevice(NULL, 0, &audioFormat, NULL, 0);
 		if (deviceId == 0) {
 			SDL_Log(SDL_GetError());
@@ -483,6 +494,7 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 		}
 
 		SDL_PauseAudioDevice(deviceId, 0); /* start audio playing. */
+#endif
 	}
 
 	unsigned long nFrames;
@@ -493,6 +505,7 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 	smk_first(SVidSMK); // Decode first frame
 
 	smk_info_video(SVidSMK, &SVidWidth, &SVidHeight, NULL);
+#ifndef USE_SDL1
 	if (renderer) {
 		SDL_DestroyTexture(texture);
 		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, SVidWidth, SVidHeight);
@@ -503,6 +516,7 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 			SDL_Log(SDL_GetError());
 		}
 	}
+#endif
 	memcpy(SVidPreviousPalette, orig_palette, 1024);
 
 	// Copy frame to buffer
@@ -521,12 +535,21 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 	if (SVidPalette == NULL) {
 		SDL_Log(SDL_GetError());
 	}
+#ifdef USE_SDL1
+	if (SDL_SetPalette(SVidSurface, SDL_LOGPAL, SVidPalette->colors, 0, SVidPalette->ncolors) != 1) {
+		SDL_Log(SDL_GetError());
+		if (SDL_GetAudioStatus() != SDL_AUDIO_STOPPED)
+			SVidRestartMixer();
+		return false;
+	}
+#else
 	if (SDL_SetSurfacePalette(SVidSurface, SVidPalette) <= -1) {
 		SDL_Log(SDL_GetError());
 		if (deviceId > 0)
 			SVidRestartMixer();
 		return false;
 	}
+#endif
 
 	SVidFrameEnd = SDL_GetTicks() * 1000 + SVidFrameLength;
 
@@ -558,7 +581,9 @@ BOOL SVidPlayContinue(void)
 			colors[i].r = palette_data[i * 3 + 0];
 			colors[i].g = palette_data[i * 3 + 1];
 			colors[i].b = palette_data[i * 3 + 2];
+#ifndef USE_SDL1
 			colors[i].a = SDL_ALPHA_OPAQUE;
+#endif
 
 			orig_palette[i].peFlags = 0;
 			orig_palette[i].peRed = palette_data[i * 3 + 0];
@@ -577,21 +602,28 @@ BOOL SVidPlayContinue(void)
 		return SVidLoadNextFrame(); // Skip video and audio if the system is to slow
 	}
 
+#ifdef USE_SDL1
+	// TODO: Support audio.
+#else
 	if (deviceId && SDL_QueueAudio(deviceId, smk_get_audio(SVidSMK, 0), smk_get_audio_size(SVidSMK, 0)) <= -1) {
 		SDL_Log(SDL_GetError());
 		return false;
 	}
+#endif
 
 	if (SDL_GetTicks() * 1000 >= SVidFrameEnd) {
 		return SVidLoadNextFrame(); // Skip video if the system is to slow
 	}
 
+#ifndef USE_SDL1
 	if (renderer) {
 		if (SDL_BlitSurface(SVidSurface, NULL, surface, NULL) <= -1) {
 			SDL_Log(SDL_GetError());
 			return false;
 		}
-	} else {
+	} else
+#endif
+	{
 		int factor;
 		int wFactor = SCREEN_WIDTH / SVidWidth;
 		int hFactor = SCREEN_HEIGHT / SVidHeight;
@@ -604,12 +636,21 @@ BOOL SVidPlayContinue(void)
 		int scaledH = SVidHeight * factor;
 
 		SDL_Rect pal_surface_offset = { (SCREEN_WIDTH - scaledW) / 2, (SCREEN_HEIGHT - scaledH) / 2, scaledW, scaledH };
+#ifdef USE_SDL1
+		// TODO: Scale before blitting.
+		SDL_Surface *tmp = SDL_ConvertSurface(SVidSurface, window->format, 0);
+		if (SDL_BlitSurface(tmp, NULL, surface, &pal_surface_offset) <= -1) {
+			SDL_Log(SDL_GetError());
+			return false;
+		}
+#else
 		Uint32 format = SDL_GetWindowPixelFormat(window);
 		SDL_Surface *tmp = SDL_ConvertSurfaceFormat(SVidSurface, format, 0);
 		if (SDL_BlitScaled(tmp, NULL, surface, &pal_surface_offset) <= -1) {
 			SDL_Log(SDL_GetError());
 			return false;
 		}
+#endif
 		SDL_FreeSurface(tmp);
 	}
 
@@ -626,12 +667,19 @@ BOOL SVidPlayContinue(void)
 
 BOOL SVidPlayEnd(HANDLE video)
 {
+#ifdef USE_SDL1
+	if (SDL_GetAudioStatus() != SDL_AUDIO_STOPPED) {
+		SDL_CloseAudio();
+		SVidRestartMixer();
+	}
+#else
 	if (deviceId) {
 		SDL_ClearQueuedAudio(deviceId);
 		SDL_CloseAudioDevice(deviceId);
 		deviceId = 0;
 		SVidRestartMixer();
 	}
+#endif
 
 	if (SVidSMK)
 		smk_close(SVidSMK);
@@ -648,6 +696,7 @@ BOOL SVidPlayEnd(HANDLE video)
 	video = NULL;
 
 	memcpy(orig_palette, SVidPreviousPalette, 1024);
+#ifndef USE_SDL1
 	if (renderer) {
 		SDL_DestroyTexture(texture);
 		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -658,6 +707,7 @@ BOOL SVidPlayEnd(HANDLE video)
 			SDL_Log(SDL_GetError());
 		}
 	}
+#endif
 
 	return true;
 }

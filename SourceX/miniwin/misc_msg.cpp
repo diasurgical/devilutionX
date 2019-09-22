@@ -17,7 +17,7 @@ static int translate_sdl_key(SDL_Keysym key)
 {
 	// ref: https://wiki.libsdl.org/SDL_Keycode
 	// ref: https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
-	int sym = key.sym;
+	SDL_Keycode sym = key.sym;
 	switch (sym) {
 	case SDLK_BACKSPACE:
 		return DVL_VK_BACK;
@@ -145,8 +145,10 @@ static int translate_sdl_key(SDL_Keysym key)
 		return DVL_VK_DECIMAL;
 	case SDLK_MENU:
 		return DVL_VK_MENU;
+#ifndef USE_SDL1
 	case SDLK_KP_COMMA:
 		return DVL_VK_OEM_COMMA;
+#endif
 	case SDLK_LCTRL:
 		return DVL_VK_LCONTROL;
 	case SDLK_LSHIFT:
@@ -178,9 +180,7 @@ static int translate_sdl_key(SDL_Keysym key)
 
 static WPARAM keystate_for_mouse(WPARAM ret)
 {
-	const Uint8 *keystate = SDL_GetKeyboardState(NULL);
-	ret |= keystate[SDL_SCANCODE_LSHIFT] ? DVL_MK_SHIFT : 0;
-	ret |= keystate[SDL_SCANCODE_RSHIFT] ? DVL_MK_SHIFT : 0;
+	ret |= (SDL_GetModState() & KMOD_SHIFT) ? DVL_MK_SHIFT : 0;
 	// XXX: other DVL_MK_* codes not implemented
 	return ret;
 }
@@ -271,6 +271,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 			return false_avail();
 		}
 	} break;
+#ifndef USE_SDL1
 	case SDL_TEXTINPUT:
 	case SDL_WINDOWEVENT:
 		if (e.window.event == SDL_WINDOWEVENT_CLOSE) {
@@ -279,6 +280,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 			return false_avail();
 		}
 		break;
+#endif
 	default:
 		DUMMY_PRINT("unknown SDL message 0x%X", e.type);
 		return false_avail();

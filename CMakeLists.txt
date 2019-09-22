@@ -18,6 +18,7 @@ option(DIST "Dynamically link only glibc and SDL2" OFF)
 option(FASTER "Enable FASTER in engine" ON)
 option(BINARY_RELEASE "Enable options for binary release" OFF)
 option(NIGHTLY_BUILD "Enable options for nightly build" OFF)
+option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 
 if(BINARY_RELEASE)
   set(CMAKE_BUILD_TYPE "Release")
@@ -60,13 +61,21 @@ set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 
 find_package(Threads REQUIRED)
-find_package(SDL2 CONFIG QUIET)
-if (NOT SDL2_FOUND)
-	find_package(SDL2 REQUIRED)
-endif()
-find_package(SDL2_ttf REQUIRED)
-find_package(SDL2_mixer REQUIRED)
 find_package(sodium REQUIRED)
+
+if(USE_SDL1)
+	find_package(SDL REQUIRED)
+	find_package(SDL_ttf REQUIRED)
+	find_package(SDL_mixer REQUIRED)
+	include_directories(${SDL_INCLUDE_DIR})
+else()
+	find_package(SDL2 CONFIG QUIET)
+	if (NOT SDL2_FOUND)
+		find_package(SDL2 REQUIRED)
+	endif()
+	find_package(SDL2_ttf REQUIRED)
+	find_package(SDL2_mixer REQUIRED)
+endif()
 
 add_library(smacker STATIC
   3rdParty/libsmacker/smk_bitstream.c
@@ -214,9 +223,6 @@ target_link_libraries(devilutionx PRIVATE
   StormLib
   smacker
   Radon
-  SDL2::SDL2main
-  SDL2::SDL2_ttf
-  SDL2::SDL2_mixer
   sodium)
 
 target_compile_definitions(devilution PRIVATE DEVILUTION_ENGINE)
@@ -226,6 +232,18 @@ target_compile_definitions(devilution PUBLIC
   # Skip fades and other fluff
   "$<$<BOOL:${FASTER}>:FASTER>")
 target_compile_definitions(devilutionx PRIVATE ASIO_STANDALONE)
+
+
+if(USE_SDL1)
+  target_link_libraries(devilutionx PRIVATE
+    ${SDL_LIBRARY} ${SDL_TTF_LIBRARY} ${SDL_MIXER_LIBRARY})
+  target_compile_definitions(devilutionx PRIVATE USE_SDL1)
+else()
+  target_link_libraries(devilutionx PRIVATE
+    SDL2::SDL2main
+    SDL2::SDL2_ttf
+    SDL2::SDL2_mixer)
+endif()
 
 if(ASAN)
   target_compile_options(devilution PUBLIC -fsanitize=address -fsanitize-recover=address)

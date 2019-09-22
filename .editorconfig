@@ -7,5 +7,22 @@ charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 
+# TODO(#262): Normalize all C++ line endings to CRLF.
+[SourceX/miniwin/ddraw.*]
+end_of_line = lf
+
+[SourceX/miniwin/misc_*]
+end_of_line = lf
+
+[SourceX/miniwin/thread.*]
+end_of_line = lf
+
+[SourceX/storm/storm_dx.cpp]
+end_of_line = lf
+
+[*.yml]
+indent_style = space
+end_of_line = lf
+
 [*.sh]
 end_of_line = lf

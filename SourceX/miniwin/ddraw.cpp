@@ -9,10 +9,10 @@ namespace dvl {
 
 SDL_Window *window;
 SDL_Renderer *renderer;
+SDL_Texture *texture;
 
 /** Currently active palette */
 SDL_Palette *palette;
-SDL_Texture *texture;
 
 /** 32-bit in-memory backbuffer surface */
 SDL_Surface *surface;
@@ -60,6 +60,9 @@ HRESULT StubDraw::CreateSurface(LPDDSURFACEDESC lpDDSurfaceDesc, LPDIRECTDRAWSUR
 		lpDDSurfaceDesc->ddpfPixelFormat.dwFlags = SDL_PIXELFORMAT_RGBA8888;
 		lpDDSurfaceDesc->ddpfPixelFormat.dwRGBBitCount = 32;
 
+#ifdef USE_SDL1
+		surface = SDL_GetVideoSurface();
+#else
 		if (renderer) {
 			if (SDL_GetRendererOutputSize(renderer, (int *)&lpDDSurfaceDesc->dwWidth, (int *)&lpDDSurfaceDesc->dwHeight) <= -1) {
 				SDL_Log(SDL_GetError());
@@ -69,6 +72,7 @@ HRESULT StubDraw::CreateSurface(LPDDSURFACEDESC lpDDSurfaceDesc, LPDIRECTDRAWSUR
 			SDL_GetWindowSize(window, (int *)&lpDDSurfaceDesc->dwWidth, (int *)&lpDDSurfaceDesc->dwHeight);
 			surface = SDL_GetWindowSurface(window);
 		}
+#endif
 		if (surface == NULL) {
 			SDL_Log(SDL_GetError());
 			return (HRESULT)0x80000002L; //DDERR_OUTOFMEMORY
@@ -88,10 +92,17 @@ HRESULT StubDraw::CreateSurface(LPDDSURFACEDESC lpDDSurfaceDesc, LPDIRECTDRAWSUR
 
 	gpBuffer = (BYTE *)pal_surface->pixels; // Hack should happen in dx.cpp, but gives error
 
+#ifdef USE_SDL1
+	if (SDL_SetPalette(pal_surface, SDL_LOGPAL, palette->colors, 0, palette->ncolors) != 1) {
+		SDL_Log(SDL_GetError());
+		return 1; //MAKE_HRESULT(130);//DVL_MAKE_HRESULT(130);
+	}
+#else
 	if (SDL_SetSurfacePalette(pal_surface, palette) <= -1) {
 		SDL_Log(SDL_GetError());
 		return 1; //MAKE_HRESULT(130);//DVL_MAKE_HRESULT(130);
 	}
+#endif
 
 	return DVL_DS_OK;
 }
@@ -198,6 +209,11 @@ HRESULT StubSurface::Unlock(LPVOID lpSurfaceData)
 		return DVL_S_OK;
 	}
 
+#ifdef USE_SDL1
+	if (SDL_Flip(surface) <= -1) {
+		SDL_Log(SDL_GetError());
+	}
+#else
 	if (renderer) {
 		if (SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch) <= -1) { //pitch is 2560
 			SDL_Log(SDL_GetError());
@@ -221,6 +237,7 @@ HRESULT StubSurface::Unlock(LPVOID lpSurfaceData)
 			SDL_Log(SDL_GetError());
 		}
 	}
+#endif
 
 	bufferUpdated = false;
 
