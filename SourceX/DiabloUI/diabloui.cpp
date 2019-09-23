@@ -576,14 +576,26 @@ BOOL UiCreatePlayerDescription(_uiheroinfo *info, DWORD mode, char *desc)
 
 void DrawArt(int screenX, int screenY, Art *art, int nFrame, DWORD drawW)
 {
-	BYTE *src = (BYTE *)art->data + (art->width * art->height * nFrame);
-	BYTE *dst = &gpBuffer[screenX + 64 + (screenY + SCREEN_Y) * BUFFER_WIDTH];
+	if (screenY >= SCREEN_WIDTH || screenX >= SCREEN_WIDTH)
+		return;
+
+	BYTE *__restrict src = (BYTE *)art->data + (art->width * art->height * nFrame);
+	BYTE *__restrict dst = &gpBuffer[screenX + 64 + (screenY + SCREEN_Y) * BUFFER_WIDTH];
 	drawW = drawW ? drawW : art->width;
 
-	for (DWORD i = 0; i < art->height && i + screenY < SCREEN_HEIGHT; i++, src += art->width, dst += BUFFER_WIDTH) {
-		for (DWORD j = 0; j < art->width && j + screenX < SCREEN_WIDTH; j++) {
-			if (j < drawW && (!art->masked || src[j] != art->mask))
-				dst[j] = src[j];
+	const DWORD iSize = std::min(art->height, static_cast<DWORD>(SCREEN_HEIGHT - screenY));
+	const DWORD jSize = std::min(art->width, std::min(drawW, static_cast<DWORD>(SCREEN_WIDTH - screenX)));
+
+	if (art->masked) {
+		for (DWORD i = 0; i < iSize; i++, src += art->width, dst += BUFFER_WIDTH) {
+			for (DWORD j = 0; j < jSize; j++) {
+				if (src[j] != art->mask)
+					dst[j] = src[j];
+			}
+		}
+	} else {
+		for (DWORD i = 0; i < iSize; i++, src += art->width, dst += BUFFER_WIDTH) {
+			memcpy(dst, src, jSize * sizeof(dst[0]));
 		}
 	}
 }
