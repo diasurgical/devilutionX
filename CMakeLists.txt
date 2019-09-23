@@ -178,7 +178,7 @@ add_library(devilution STATIC
   Source/trigs.cpp
   Source/wave.cpp)
 
-add_executable(devilutionx MACOSX_BUNDLE
+set(devilutionx_SRCS
   SourceX/dx.cpp
   SourceX/miniwin/misc.cpp
   SourceX/miniwin/misc_io.cpp
@@ -210,10 +210,17 @@ add_executable(devilutionx MACOSX_BUNDLE
   SourceX/DiabloUI/selhero.cpp
   SourceX/DiabloUI/selyesno.cpp
   SourceX/DiabloUI/title.cpp
-  SourceX/main.cpp
-  touch/touch.cpp
-  ./Packaging/macOS/AppIcon.icns
-  ./Packaging/resources/CharisSILB.ttf)
+  SourceX/main.cpp)
+
+if(NOT USE_SDL1)
+  list(APPEND devilutionx_SRCS touch/touch.cpp)
+endif()
+
+if(APPLE)
+  list(APPEND devilutionx_SRCS ./Packaging/macOS/AppIcon.icns ./Packaging/resources/CharisSILB.ttf)
+endif()
+
+add_executable(devilutionx MACOSX_BUNDLE  ${devilutionx_SRCS})
 
 target_include_directories(devilution PUBLIC Source SourceS)
 target_include_directories(devilutionx PRIVATE

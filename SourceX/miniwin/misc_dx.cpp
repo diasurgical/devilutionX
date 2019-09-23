@@ -51,6 +51,7 @@ WINBOOL TextOutA(HDC hdc, int x, int y, LPCSTR lpString, int c)
 #else
 	SDL_SetWindowTitle(window, lpString);
 #endif
+#endif
 
 	return true;
 }

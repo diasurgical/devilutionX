@@ -49,7 +49,6 @@ DEVILUTIONOBJ 	= \
 	obj/encrypt.o \
 	obj/engine.o \
 	obj/error.o \
-	obj/fault.o \
 	obj/gamemenu.o \
 	obj/gendung.o \
 	obj/gmenu.o \
@@ -61,7 +60,6 @@ DEVILUTIONOBJ 	= \
 	obj/items.o \
 	obj/lighting.o \
 	obj/loadsave.o \
-	obj/logging.o \
 	obj/mmainmenu.o \
 	obj/minitext.o \
 	obj/misdat.o \
@@ -70,7 +68,6 @@ DEVILUTIONOBJ 	= \
 	obj/monster.o \
 	obj/movie.o \
 	obj/mpqapi.o \
-	obj/msgcmd.o \
 	obj/msg.o \
 	obj/multi.o \
 	obj/nthread.o \
@@ -240,8 +237,6 @@ obj/engine.o: $(GLOBALDEPS) Source/engine.cpp
 	$(CXX) -c Source/engine.cpp -o obj/engine.o $(CXXFLAGS)
 obj/error.o: $(GLOBALDEPS) Source/error.cpp
 	$(CXX) -c Source/error.cpp -o obj/error.o $(CXXFLAGS)
-obj/fault.o: $(GLOBALDEPS) Source/fault.cpp 
-	$(CXX) -c Source/fault.cpp -o obj/fault.o $(CXXFLAGS)
 obj/gamemenu.o: $(GLOBALDEPS)  Source/gamemenu.cpp
 	$(CXX) -c  Source/gamemenu.cpp -o obj/gamemenu.o $(CXXFLAGS)
 obj/gendung.o: $(GLOBALDEPS)  Source/gendung.cpp
@@ -264,8 +259,6 @@ obj/lighting.o: $(GLOBALDEPS)  Source/lighting.cpp
 	$(CXX) -c  Source/lighting.cpp -o obj/lighting.o $(CXXFLAGS)
 obj/loadsave.o: $(GLOBALDEPS)  Source/loadsave.cpp
 	$(CXX) -c  Source/loadsave.cpp -o obj/loadsave.o $(CXXFLAGS)
-obj/logging.o: $(GLOBALDEPS)  Source/logging.cpp
-	$(CXX) -c  Source/logging.cpp -o obj/logging.o $(CXXFLAGS)
 obj/mmainmenu.o: $(GLOBALDEPS)  Source/mainmenu.cpp
 	$(CXX) -c  Source/mainmenu.cpp -o obj/mmainmenu.o $(CXXFLAGS)
 obj/minitext.o: $(GLOBALDEPS)  Source/minitext.cpp
@@ -282,8 +275,6 @@ obj/movie.o: $(GLOBALDEPS)  Source/movie.cpp
 	$(CXX) -c  Source/movie.cpp -o obj/movie.o $(CXXFLAGS)
 obj/mpqapi.o: $(GLOBALDEPS)  Source/mpqapi.cpp
 	$(CXX) -c  Source/mpqapi.cpp -o obj/mpqapi.o $(CXXFLAGS)
-obj/msgcmd.o: $(GLOBALDEPS)  Source/msgcmd.cpp
-	$(CXX) -c  Source/msgcmd.cpp -o obj/msgcmd.o $(CXXFLAGS)
 obj/msg.o: $(GLOBALDEPS)  Source/msg.cpp
 	$(CXX) -c  Source/msg.cpp -o obj/msg.o $(CXXFLAGS)
 obj/multi.o: $(GLOBALDEPS)  Source/multi.cpp

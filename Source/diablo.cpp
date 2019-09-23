@@ -300,11 +300,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		if (ghMainWnd) {
 			Sleep(300);
 			DestroyWindow(ghMainWnd);
-		}
-	}
-#else
-	svcOutputDebugString("ending",20);
+        }
 #endif
+	}
 
 	return FALSE;
 }

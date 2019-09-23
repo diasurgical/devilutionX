@@ -3,6 +3,7 @@
 #include "stubs.h"
 #include "utf8.h"
 #include <string>
+#include <algorithm>
 
 #include "DiabloUI/diabloui.h"
 

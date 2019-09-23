@@ -4,7 +4,9 @@
 #include "devilution.h"
 #include "stubs.h"
 #include <math.h>
-#include "../../touch/touch.h"
+#ifndef SDL1
+    #include "../../touch/touch.h"
+#endif
 #ifdef SWITCH
 	#include <switch.h>
 #endif
@@ -266,8 +268,10 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	// update joystick, touch mouse (and docking the Switch) at maximally 60 fps
 	currentTime = SDL_GetTicks();
 	if ((currentTime - lastTime) > 15) {
+#ifndef SDL1
 		finish_simulated_mouse_clicks(MouseX, MouseY);
-		HandleJoystickAxes();
+#endif
+        HandleJoystickAxes();
 #ifdef SWITCH
 		HandleDocking();
 #endif
@@ -305,8 +309,9 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	lpMsg->message = 0;
 	lpMsg->lParam = 0;
 	lpMsg->wParam = 0;
-
+#ifndef SDL1
 	handle_touch(&e, MouseX, MouseY);
+#endif
 	if (movie_playing) {
 		// allow plus button or mouse click to skip movie, no other input
 		switch (e.type) {
