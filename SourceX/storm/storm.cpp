@@ -1,4 +1,9 @@
 #include "devilution.h"
+
+#ifdef USE_SDL1
+#include <queue>
+#endif
+
 #include "miniwin/ddraw.h"
 #include "stubs.h"
 #include <Radon.hpp>
@@ -426,8 +431,18 @@ SDL_Surface *SVidSurface;
 BYTE *SVidBuffer;
 unsigned long SVidWidth, SVidHeight;
 
-#ifndef USE_SDL1
+#ifdef USE_SDL1
+static bool HaveAudio()
+{
+	return SDL_GetAudioStatus() != SDL_AUDIO_STOPPED;
+}
+#else
 SDL_AudioDeviceID deviceId;
+
+static bool HaveAudio()
+{
+	return deviceId != 0;
+}
 #endif
 
 void SVidRestartMixer()
@@ -438,6 +453,90 @@ void SVidRestartMixer()
 	Mix_AllocateChannels(25);
 	Mix_ReserveChannels(1);
 }
+
+#ifdef USE_SDL1
+struct AudioQueueItem {
+	unsigned char *data;
+	unsigned long len;
+	const unsigned char *pos;
+};
+
+class AudioQueue {
+public:
+	static void Callback(void *userdata, Uint8 *out, int out_len)
+	{
+		static_cast<AudioQueue *>(userdata)->Dequeue(out, out_len);
+	}
+
+	void Subscribe(SDL_AudioSpec *spec)
+	{
+		spec->userdata = this;
+		spec->callback = AudioQueue::Callback;
+	}
+
+	void Enqueue(const unsigned char *data, unsigned long len)
+	{
+		SDL_LockAudio();
+		EnqueueUnsafe(data, len);
+		SDL_UnlockAudio();
+	}
+
+	void Clear()
+	{
+		while (!queue_.empty())
+			Pop();
+	}
+
+private:
+	void EnqueueUnsafe(const unsigned char *data, unsigned long len)
+	{
+		AudioQueueItem item;
+		item.data = new unsigned char[len];
+		memcpy(item.data, data, len * sizeof(item.data[0]));
+		item.len = len;
+		item.pos = item.data;
+		queue_.push(item);
+	}
+
+	void Dequeue(Uint8 *out, int out_len)
+	{
+		AudioQueueItem *item;
+		while ((item = Next()) != NULL) {
+			if (out_len <= item->len) {
+				SDL_MixAudio(out, item->pos, out_len, SDL_MIX_MAXVOLUME);
+				item->pos += out_len;
+				item->len -= out_len;
+				return;
+			}
+
+			SDL_MixAudio(out, item->pos, item->len, SDL_MIX_MAXVOLUME);
+			out += item->len;
+			out_len -= item->len;
+			Pop();
+		}
+		memset(out, 0, sizeof(out[0]) * out_len);
+	}
+
+	AudioQueueItem *Next()
+	{
+		while (!queue_.empty() && queue_.front().len == 0)
+			Pop();
+		if (queue_.empty())
+			return NULL;
+		return &queue_.front();
+	}
+
+	void Pop()
+	{
+		delete[] queue_.front().data;
+		queue_.pop();
+	}
+
+	std::queue<AudioQueueItem> queue_;
+};
+
+static AudioQueue *sVidAudioQueue = new AudioQueue();
+#endif
 
 BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HANDLE *video)
 {
@@ -479,12 +578,13 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 		Mix_CloseAudio();
 
 #ifdef USE_SDL1
-	if (SDL_OpenAudio(&audioFormat, NULL) != 0) {
-		SDL_Log(SDL_GetError());
-		SVidRestartMixer();
-		return false;
-	}
-	SDL_PauseAudio(0);
+		sVidAudioQueue->Subscribe(&audioFormat);
+		if (SDL_OpenAudio(&audioFormat, NULL) != 0) {
+			SDL_Log(SDL_GetError());
+			SVidRestartMixer();
+			return false;
+		}
+		SDL_PauseAudio(0);
 #else
 		deviceId = SDL_OpenAudioDevice(NULL, 0, &audioFormat, NULL, 0);
 		if (deviceId == 0) {
@@ -537,19 +637,14 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 	}
 #ifdef USE_SDL1
 	if (SDL_SetPalette(SVidSurface, SDL_LOGPAL, SVidPalette->colors, 0, SVidPalette->ncolors) != 1) {
-		SDL_Log(SDL_GetError());
-		if (SDL_GetAudioStatus() != SDL_AUDIO_STOPPED)
-			SVidRestartMixer();
-		return false;
-	}
 #else
 	if (SDL_SetSurfacePalette(SVidSurface, SVidPalette) <= -1) {
+#endif
 		SDL_Log(SDL_GetError());
-		if (deviceId > 0)
+		if (HaveAudio())
 			SVidRestartMixer();
 		return false;
 	}
-#endif
 
 	SVidFrameEnd = SDL_GetTicks() * 1000 + SVidFrameLength;
 
@@ -596,20 +691,29 @@ BOOL SVidPlayContinue(void)
 			SDL_Log(SDL_GetError());
 			return false;
 		}
+
+#ifdef USE_SDL1
+		if (SDL_SetPalette(SVidSurface, SDL_LOGPAL, SVidPalette->colors, 0, SVidPalette->ncolors) != 1) {
+			SDL_Log(SDL_GetError());
+			return false;
+		}
+#endif
 	}
 
 	if (SDL_GetTicks() * 1000 >= SVidFrameEnd) {
 		return SVidLoadNextFrame(); // Skip video and audio if the system is to slow
 	}
 
+	if (HaveAudio()) {
 #ifdef USE_SDL1
-	// TODO: Support audio.
+		sVidAudioQueue->Enqueue(smk_get_audio(SVidSMK, 0), smk_get_audio_size(SVidSMK, 0));
 #else
-	if (deviceId && SDL_QueueAudio(deviceId, smk_get_audio(SVidSMK, 0), smk_get_audio_size(SVidSMK, 0)) <= -1) {
-		SDL_Log(SDL_GetError());
-		return false;
-	}
+		if (SDL_QueueAudio(deviceId, smk_get_audio(SVidSMK, 0), smk_get_audio_size(SVidSMK, 0)) <= -1) {
+			SDL_Log(SDL_GetError());
+			return false;
+		}
 #endif
+	}
 
 	if (SDL_GetTicks() * 1000 >= SVidFrameEnd) {
 		return SVidLoadNextFrame(); // Skip video if the system is to slow
@@ -637,20 +741,17 @@ BOOL SVidPlayContinue(void)
 
 		SDL_Rect pal_surface_offset = { (SCREEN_WIDTH - scaledW) / 2, (SCREEN_HEIGHT - scaledH) / 2, scaledW, scaledH };
 #ifdef USE_SDL1
-		// TODO: Scale before blitting.
 		SDL_Surface *tmp = SDL_ConvertSurface(SVidSurface, window->format, 0);
-		if (SDL_BlitSurface(tmp, NULL, surface, &pal_surface_offset) <= -1) {
-			SDL_Log(SDL_GetError());
-			return false;
-		}
+		// NOTE: Consider resolution switching instead if video doesn't play
+		// fast enough.
 #else
 		Uint32 format = SDL_GetWindowPixelFormat(window);
 		SDL_Surface *tmp = SDL_ConvertSurfaceFormat(SVidSurface, format, 0);
+#endif
 		if (SDL_BlitScaled(tmp, NULL, surface, &pal_surface_offset) <= -1) {
 			SDL_Log(SDL_GetError());
 			return false;
 		}
-#endif
 		SDL_FreeSurface(tmp);
 	}
 
@@ -667,19 +768,17 @@ BOOL SVidPlayContinue(void)
 
 BOOL SVidPlayEnd(HANDLE video)
 {
+	if (HaveAudio()) {
 #ifdef USE_SDL1
-	if (SDL_GetAudioStatus() != SDL_AUDIO_STOPPED) {
 		SDL_CloseAudio();
-		SVidRestartMixer();
-	}
+		sVidAudioQueue->Clear();
 #else
-	if (deviceId) {
 		SDL_ClearQueuedAudio(deviceId);
 		SDL_CloseAudioDevice(deviceId);
 		deviceId = 0;
+#endif
 		SVidRestartMixer();
 	}
-#endif
 
 	if (SVidSMK)
 		smk_close(SVidSMK);
@@ -690,7 +789,10 @@ BOOL SVidPlayEnd(HANDLE video)
 	}
 
 	SDL_FreePalette(SVidPalette);
+	SVidPalette = NULL;
+
 	SDL_FreeSurface(SVidSurface);
+	SVidSurface = NULL;
 
 	SFileCloseFile(video);
 	video = NULL;
@@ -786,5 +888,4 @@ BOOL SFileEnableDirectAccess(BOOL enable)
 	directFileAccess = enable;
 	return true;
 }
-
 }
