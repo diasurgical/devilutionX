@@ -222,8 +222,9 @@ inline int SDL_SetPaletteColors(SDL_Palette *palette, const SDL_Color *colors,
 
 //= Pixel formats
 
-#define SDL_PIXELFORMAT_RGBA8888 1
-#define SDL_PIXELFORMAT_INDEX8 2
+#define SDL_PIXELFORMAT_INDEX8 1
+#define SDL_PIXELFORMAT_RGB888 2
+#define SDL_PIXELFORMAT_RGBA8888 3
 
 inline void SDLBackport_PixelformatToMask(int pixelformat, Uint32 *flags, Uint32 *rmask,
     Uint32 *gmask,
@@ -242,6 +243,19 @@ inline void SDLBackport_PixelformatToMask(int pixelformat, Uint32 *flags, Uint32
 		*bmask = 0x00ff0000;
 		*amask = 0xff000000;
 #endif
+	} else if  (pixelformat == SDL_PIXELFORMAT_RGB888) {
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+		*rmask = 0xff000000;
+		*gmask = 0x00ff0000;
+		*bmask = 0x0000ff00;
+#else
+		*rmask = 0x000000ff;
+		*gmask = 0x0000ff00;
+		*bmask = 0x00ff0000;
+#endif
+		*amask = 0;
+	} else {
+		*rmask = *gmask = *bmask = *amask = 0;
 	}
 }
 
@@ -632,6 +646,9 @@ inline int SDL_GetCurrentDisplayMode(int displayIndex, SDL_DisplayMode *mode)
 	switch (info->vfmt->BitsPerPixel) {
 	case 8:
 		mode->format = SDL_PIXELFORMAT_INDEX8;
+		break;
+	case 24:
+		mode->format = SDL_PIXELFORMAT_RGB888;
 		break;
 	case 32:
 		mode->format = SDL_PIXELFORMAT_RGBA8888;
