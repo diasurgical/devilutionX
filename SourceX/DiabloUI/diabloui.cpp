@@ -224,6 +224,7 @@ bool UiFocusNavigation(SDL_Event *event)
 {
 	if (event->type == SDL_QUIT)
 		exit(0);
+#ifndef USE_SDL1
 	if (event->type == SDL_CONTROLLERBUTTONDOWN) {
 		if (event->cbutton.which == 0) {
 			switch (event->cbutton.button) {
@@ -245,6 +246,7 @@ bool UiFocusNavigation(SDL_Event *event)
 			}
 		}
 	}
+#endif
 
 	switch (event->type) {
 	case SDL_KEYUP:

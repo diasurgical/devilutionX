@@ -1,3 +1,4 @@
+#ifndef USE_SDL1
 #include "touch.h"
 #include <math.h>
 
@@ -66,7 +67,7 @@ static void init_touch(void)
 		}
 		multi_finger_dragging[port] = DRAG_NONE;
 	}
-	
+
 	for (int port = 0; port < TOUCH_PORT_MAX_NUM; port++) {
 		for (int i = 0; i < 2; i++) {
 			simulated_click_start_time[port][i] = 0;
@@ -130,7 +131,7 @@ static void preprocess_finger_down(SDL_Event *event)
 
 	int x = mouse_x;
 	int y = mouse_y;
-	
+
 	if (direct_touch) {
 		convert_touch_xy_to_game_xy(event->tfinger.x, event->tfinger.y, &x, &y);
 	}
@@ -435,3 +436,4 @@ static void convert_touch_xy_to_game_xy(float touch_x, float touch_y, int *game_
 	*game_x = CLIP((int)((disp_touch_x - x) / sx), 0, (int) GAME_WIDTH);
 	*game_y = CLIP((int)((disp_touch_y - y) / sy), 0, (int) GAME_HEIGHT);
 }
+#endif

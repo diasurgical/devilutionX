@@ -4,9 +4,7 @@
 #include "devilution.h"
 #include "stubs.h"
 #include <math.h>
-#ifndef SDL1
-    #include "../../touch/touch.h"
-#endif
+#include "../../touch/touch.h"
 #ifdef SWITCH
 	#include <switch.h>
 #endif
@@ -215,6 +213,7 @@ static int translate_sdl_key(SDL_Keysym key)
 	}
 }
 
+#ifndef USE_SDL1
 static int translate_controller_button_to_key(uint8_t sdlControllerButton)
 {
 	switch (sdlControllerButton) {
@@ -248,6 +247,7 @@ static int translate_controller_button_to_key(uint8_t sdlControllerButton)
 		return 0;
 	}
 }
+#endif
 
 
 static WPARAM keystate_for_mouse(WPARAM ret)
@@ -268,7 +268,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	// update joystick, touch mouse (and docking the Switch) at maximally 60 fps
 	currentTime = SDL_GetTicks();
 	if ((currentTime - lastTime) > 15) {
-#ifndef SDL1
+#ifndef USE_SDL1
 		finish_simulated_mouse_clicks(MouseX, MouseY);
 #endif
         HandleJoystickAxes();
@@ -309,12 +309,13 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	lpMsg->message = 0;
 	lpMsg->lParam = 0;
 	lpMsg->wParam = 0;
-#ifndef SDL1
+#ifndef USE_SDL1
 	handle_touch(&e, MouseX, MouseY);
 #endif
 	if (movie_playing) {
 		// allow plus button or mouse click to skip movie, no other input
 		switch (e.type) {
+#ifndef USE_SDL1
 		case SDL_CONTROLLERBUTTONDOWN:
 		case SDL_CONTROLLERBUTTONUP:
 			switch(e.cbutton.button) {
@@ -329,6 +330,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 				break;
 			}
 			break;
+#endif
 		case SDL_MOUSEBUTTONDOWN:
 		case SDL_MOUSEBUTTONUP:
 			if (e.button.button == SDL_BUTTON_LEFT) {
@@ -353,6 +355,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		return true;
 	}
 	switch (e.type) {
+#ifndef USE_SDL1
 	case SDL_CONTROLLERAXISMOTION:
 		switch (e.caxis.axis) {
 		case SDL_CONTROLLER_AXIS_LEFTX:
@@ -447,6 +450,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 			break;
 		}
 		break;
+#endif
 #ifdef SWITCH
 	// additional digital buttons that only exist on Switch:
 	case SDL_JOYBUTTONDOWN:

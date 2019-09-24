@@ -331,9 +331,11 @@ HWND CreateWindowExA(
 	if (SDL_JoystickOpen(0) == NULL) {
 		SDL_Log(SDL_GetError());
 	}
+#ifndef USE_SDL1
 	if (SDL_GameControllerOpen(0) == NULL) {
 		SDL_Log(SDL_GetError());
 	}
+#endif
 
 	int upscale = 1;
 	DvlIntSetting("upscale", &upscale);

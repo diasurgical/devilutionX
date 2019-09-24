@@ -179,6 +179,7 @@ add_library(devilution STATIC
   Source/wave.cpp)
 
 set(devilutionx_SRCS
+  touch/touch.cpp
   SourceX/dx.cpp
   SourceX/miniwin/misc.cpp
   SourceX/miniwin/misc_io.cpp
@@ -211,10 +212,6 @@ set(devilutionx_SRCS
   SourceX/DiabloUI/selyesno.cpp
   SourceX/DiabloUI/title.cpp
   SourceX/main.cpp)
-
-if(NOT USE_SDL1)
-  list(APPEND devilutionx_SRCS touch/touch.cpp)
-endif()
 
 if(APPLE)
   list(APPEND devilutionx_SRCS ./Packaging/macOS/AppIcon.icns ./Packaging/resources/CharisSILB.ttf)
