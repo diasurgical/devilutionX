@@ -186,7 +186,6 @@ add_executable(devilutionx MACOSX_BUNDLE
   SourceX/miniwin/rand.cpp
   SourceX/miniwin/thread.cpp
   SourceX/miniwin/dsound.cpp
-  SourceX/miniwin/ddraw.cpp
   SourceX/sound.cpp
   SourceX/storm/storm.cpp
   SourceX/storm/storm_net.cpp
@@ -231,7 +230,6 @@ target_link_libraries(devilutionx PRIVATE
 
 target_compile_definitions(devilution PRIVATE DEVILUTION_ENGINE)
 target_compile_definitions(devilution PUBLIC
-  DEVILUTION_STUB
   "$<$<BOOL:${DEBUG}>:_DEBUG>"
   # Skip fades and other fluff
   "$<$<BOOL:${FASTER}>:FASTER>")

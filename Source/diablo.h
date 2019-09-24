@@ -171,10 +171,7 @@ extern BOOL FriendlyMode;
 extern char *spszMsgTbl[4];
 extern char *spszMsgHotKeyTbl[4];
 
-#ifdef DEVILUTION_STUB
 #include "miniwin/popdecl.inc"
-#endif
-
 DEVILUTION_END_NAMESPACE
 
 #endif /* __DIABLO_H__ */

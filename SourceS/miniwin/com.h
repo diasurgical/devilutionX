@@ -2,25 +2,6 @@
 
 namespace dvl {
 
-#define DEVILUTION_MINIWIN_COM
-
-#ifndef DEVILUTION_ENGINE
-#pragma push_macro("DECLARE_INTERFACE_")
-#pragma push_macro("STDMETHOD")
-#pragma push_macro("STDMETHOD_")
-#pragma push_macro("THIS_")
-#pragma push_macro("THIS")
-#pragma push_macro("PURE")
-#pragma push_macro("REFIID")
-#undef DECLARE_INTERFACE_
-#undef STDMETHOD
-#undef STDMETHOD_
-#undef THIS_
-#undef THIS
-#undef PURE
-#undef REFIID
-#endif
-
 //
 // COM
 //
@@ -31,9 +12,6 @@ namespace dvl {
 
 #define STDMETHOD(name) STDMETHOD_(HRESULT, name)
 #define STDMETHOD_(type, name) virtual WINAPI type name
-
-typedef void *DVL_REFIID;
-#define REFIID DVL_REFIID
 
 struct IUnknown {
 	// clang-format off
@@ -46,21 +24,11 @@ template<class T, class U, class V> constexpr HRESULT DVL_MAKE_HRESULT(T&& sev, 
         return (((uint32_t)(sev) << 31) | ((uint32_t)(fac) << 16) | ((uint32_t)(code)));
 }
 
+typedef struct IDirectDrawPalette *LPDIRECTDRAWPALETTE;
+typedef struct IDirectDrawSurface *LPDIRECTDRAWSURFACE;
+typedef struct IDirectDraw *LPDIRECTDRAW;
 
-#include "miniwin/com/ddraw.inc"
 #include "miniwin/com/dsound.inc"
-
-#ifndef DEVILUTION_ENGINE
-#pragma pop_macro("DECLARE_INTERFACE_")
-#pragma pop_macro("STDMETHOD")
-#pragma pop_macro("STDMETHOD_")
-#pragma pop_macro("THIS_")
-#pragma pop_macro("THIS")
-#pragma pop_macro("PURE")
-#pragma pop_macro("REFIID")
-#endif
-
-#undef DEVILUTION_MINIWIN_COM
 
 constexpr HRESULT DVL_E_FAIL = 0x80004005L;
 constexpr HRESULT DVL_S_OK = 0;

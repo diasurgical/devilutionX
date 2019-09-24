@@ -27,10 +27,7 @@ void palette_init()
 	LoadGamma();
 	memcpy(system_palette, orig_palette, sizeof(orig_palette));
 	LoadSysPal();
-	error_code = lpDDInterface->CreatePalette(DDPCAPS_ALLOW256 | DDPCAPS_8BIT, system_palette, &lpDDPalette, NULL);
-	if (error_code)
-		ERR_DLG(IDD_DIALOG8, error_code);
-	error_code = lpDDSPrimary->SetPalette(lpDDPalette);
+	error_code = CreatePalette();
 	if (error_code)
 		ERR_DLG(IDD_DIALOG8, error_code);
 }
@@ -64,8 +61,6 @@ void LoadSysPal()
 		system_palette[i].peFlags = PC_NOCOLLAPSE | PC_RESERVED;
 
 	if (!fullscreen) {
-		hDC = GetDC(NULL);
-
 		gdwPalEntries = GetDeviceCaps(hDC, NUMRESERVED) / 2;
 		GetSystemPaletteEntries(hDC, 0, gdwPalEntries, system_palette);
 		for (i = 0; i < gdwPalEntries; i++)
@@ -77,8 +72,6 @@ void LoadSysPal()
 			for (i = iStartIndex; i < 256; i++)
 				system_palette[i].peFlags = 0;
 		}
-
-		ReleaseDC(NULL, hDC);
 	}
 }
 
@@ -136,7 +129,7 @@ void palette_update()
 	int nentries;
 	int max_entries;
 
-	if (lpDDPalette) {
+	if (1) {
 		nentries = 0;
 		max_entries = 256;
 		if (!fullscreen) {
@@ -194,14 +187,13 @@ void SetFadeLevel(DWORD fadeval)
 	int i;
 	RECT SrcRect;
 
-	if (lpDDInterface) {
+	if (1) {
 		for (i = 0; i < 255; i++) {
 			system_palette[i].peRed = (fadeval * logical_palette[i].peRed) >> 8;
 			system_palette[i].peGreen = (fadeval * logical_palette[i].peGreen) >> 8;
 			system_palette[i].peBlue = (fadeval * logical_palette[i].peBlue) >> 8;
 		}
 		Sleep(3);
-		lpDDInterface->WaitForVerticalBlank(DDWAITVB_BLOCKBEGIN, NULL);
 		palette_update();
 
 		// Workaround for flickering mouse in caves https://github.com/diasurgical/devilutionX/issues/7
@@ -209,8 +201,8 @@ void SetFadeLevel(DWORD fadeval)
 		SrcRect.top = 160;
 		SrcRect.right = BUFFER_WIDTH;
 		SrcRect.bottom = BUFFER_HEIGHT; // menu isn't offset so make sure we copy all of it
-		lpDDSPrimary->BltFast(0, 0, lpDDSBackBuf, &SrcRect, DDBLTFAST_WAIT);
-		lpDDSPrimary->Unlock(NULL);
+		BltFast(0, 0, &SrcRect);
+		RenderPresent();
 	}
 }
 

@@ -31,8 +31,6 @@
 	    | (((uint32_t)((uint8_t)w)) << 24))
 #endif
 
-#define WINUSERAPI
-
 #define FOURCC_RIFF MAKEFOURCC('R', 'I', 'F', 'F')
 
 #define CreateEvent CreateEventA

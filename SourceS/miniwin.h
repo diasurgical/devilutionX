@@ -39,7 +39,5 @@ unsigned int _rotr(unsigned int value, int shift);
 #include "storm_full.h"
 
 #define MAX_PATH DVL_MAX_PATH
-#ifdef DEVILUTION_ENGINE
 #include "miniwin/misc_macro.h"
 #include "miniwin/com_macro.h"
-#endif

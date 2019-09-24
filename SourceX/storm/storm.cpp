@@ -765,7 +765,7 @@ BOOL SVidPlayContinue(void)
 	}
 
 	bufferUpdated = true;
-	lpDDSPrimary->Unlock(NULL);
+	RenderPresent();
 
 	double now = SDL_GetTicks() * 1000;
 	if (now < SVidFrameEnd) {

@@ -263,28 +263,6 @@ WINBOOL ReleaseCapture()
 	return true;
 }
 
-WINBOOL DestroyWindow(HWND hWnd)
-{
-	DUMMY();
-	return true;
-}
-
-HWND GetLastActivePopup(HWND hWnd)
-{
-	UNIMPLEMENTED();
-	return hWnd;
-}
-
-/**
- * @return Always null as it's unused
- */
-HWND SetFocus(HWND hWnd)
-{
-	SDL_RaiseWindow(window);
-	MainWndProc(NULL, DVL_WM_ACTIVATEAPP, true, 0); // SDL_WINDOWEVENT_FOCUS_GAINED
-	return NULL;
-}
-
 void FakeWMDestroy()
 {
 	MainWndProc(NULL, DVL_WM_DESTROY, 0, 0);
@@ -484,18 +462,6 @@ BOOL GetUserNameA(LPSTR lpBuffer, LPDWORD pcbBuffer)
 {
 	UNIMPLEMENTED();
 	return false;
-}
-
-HDC GetDC(HWND hWnd)
-{
-	DUMMY();
-	return NULL;
-}
-
-int ReleaseDC(HWND hWnd, HDC hDC)
-{
-	DUMMY();
-	return 0;
 }
 
 int GetDeviceCaps(HDC hdc, int index)

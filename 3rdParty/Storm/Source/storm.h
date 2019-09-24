@@ -3,20 +3,9 @@
 #ifndef __BLIZZARD_STORM_HEADER
 #define __BLIZZARD_STORM_HEADER
 
-#ifndef DEVILUTION_STUB
-#include <windows.h>
-#include <winuser.h>
-#include <winsock.h>
-#include <ddraw.h>
-#include <limits>
-
-#else
-
 #include "miniwin/pushdecl.inc"
 #include <limits>
 namespace dvl {
-
-#endif
 
 // Note to self: Linker error => forgot a return value in cpp
 
@@ -1354,9 +1343,7 @@ BOOL __stdcall SFileEnableDirectAccess(BOOL enable);
 }
 #endif
 
-#ifdef DEVILUTION_STUB
 }
 #include "miniwin/popdecl.inc"
-#endif
 
 #endif

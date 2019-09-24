@@ -528,10 +528,8 @@ void center_window(HWND hDlg)
 	GetWindowRect(hDlg, &Rect);
 	w = Rect.right - Rect.left;
 	h = Rect.bottom - Rect.top;
-	hdc = GetDC(hDlg);
 	screenW = GetDeviceCaps(hdc, HORZRES);
 	screenH = GetDeviceCaps(hdc, VERTRES);
-	ReleaseDC(hDlg, hdc);
 
 	if (!SetWindowPos(hDlg, HWND_TOP, (screenW - w) / 2, (screenH - h) / 2, 0, 0, SWP_NOZORDER | SWP_NOSIZE)) {
 		app_fatal("center_window: %s", TraceLastError());

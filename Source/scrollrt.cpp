@@ -13,7 +13,6 @@ DWORD level_cel_block;
 DWORD sgdwCursXOld;
 DWORD sgdwCursYOld;
 char arch_draw_type;
-DDSURFACEDESC DDS_desc;
 int cel_transparency_active;
 int level_piece_id;
 DWORD sgdwCursWdt;
@@ -2294,7 +2293,7 @@ void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BOOL draw
 
 	ysize = dwHgt;
 
-	if (!gbActive || lpDDSPrimary == NULL) {
+	if (!gbActive) {
 		return;
 	}
 
@@ -2358,10 +2357,7 @@ void DrawFPS()
 		if (framerate > 99)
 			framerate = 99;
 		wsprintf(String, "%2d", framerate);
-		if (!lpDDSPrimary->GetDC(&hdc)) {
-			TextOut(hdc, 0, 400, String, strlen(String));
-			lpDDSPrimary->ReleaseDC(hdc);
-		}
+		TextOut(hdc, 0, 400, String, strlen(String));
 	}
 }
 #endif
@@ -2376,7 +2372,7 @@ void DoBlitScreen(DWORD dwX, DWORD dwY, DWORD dwWdt, DWORD dwHgt)
 	/// ASSERT: assert(! (dwX & 3));
 	/// ASSERT: assert(! (dwWdt & 3));
 
-	if (lpDDSBackBuf != NULL) {
+	if (1) {
 		SrcRect.left = dwX + SCREEN_X;
 		SrcRect.top = dwY + SCREEN_Y;
 		SrcRect.right = SrcRect.left + dwWdt - 1;
@@ -2384,7 +2380,7 @@ void DoBlitScreen(DWORD dwX, DWORD dwY, DWORD dwWdt, DWORD dwHgt)
 		/// ASSERT: assert(! gpBuffer);
 		dwTicks = GetTickCount();
 		while (1) {
-			hDDVal = lpDDSPrimary->BltFast(dwX, dwY, lpDDSBackBuf, &SrcRect, DDBLTFAST_WAIT);
+			hDDVal = BltFast(dwX, dwY, &SrcRect);
 			if (hDDVal == DD_OK) {
 				break;
 			}

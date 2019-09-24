@@ -121,36 +121,12 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 	pSnd->start_tc = tc;
 }
 
-LPDIRECTSOUNDBUFFER sound_dup_channel(LPDIRECTSOUNDBUFFER DSB)
-{
-	DWORD i;
-
-	if (!gbDupSounds) {
-		return NULL;
-	}
-
-	for (i = 0; i < 8; i++) {
-		if (!DSBs[i]) {
-			if (sglpDS->DuplicateSoundBuffer(DSB, &DSBs[i]) != DVL_DS_OK) {
-				return NULL;
-			}
-
-			return DSBs[i];
-		}
-	}
-
-	return NULL;
-}
-
 BOOL sound_file_reload(TSnd *sound_file, LPDIRECTSOUNDBUFFER DSB)
 {
 	HANDLE file;
 	LPVOID buf1, buf2;
 	DWORD size1, size2;
 	BOOL rv;
-
-	if (DSB->Restore() != DVL_DS_OK)
-		return false;
 
 	rv = false;
 
@@ -295,10 +271,6 @@ void sound_create_primary_buffer(HANDLE music_track)
 		DSCAPS dsbcaps;
 		dsbcaps.dwSize = sizeof(DSCAPS);
 
-		error_code = sglpDS->GetCaps(&dsbcaps);
-		if (error_code != DVL_DS_OK)
-			DSErrMsg(error_code, __LINE__, __FILE__);
-
 		if (!music_track || !LoadWaveFormat(music_track, &format)) {
 			memset(&format, 0, sizeof(WAVEFORMATEX));
 			format.wFormatTag = DVL_WAVE_FORMAT_PCM;
@@ -310,8 +282,6 @@ void sound_create_primary_buffer(HANDLE music_track)
 		format.nChannels = 2;
 		format.nBlockAlign = format.nChannels * format.wBitsPerSample / 8;
 		format.nAvgBytesPerSec = format.nSamplesPerSec * format.nBlockAlign;
-
-		sglpDSB->SetFormat(&format);
 	}
 }
 // 69F100: using guessed type int sglpDSB;

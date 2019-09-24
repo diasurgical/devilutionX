@@ -230,9 +230,6 @@ WINBOOL WINAPI TranslateMessage(const MSG *lpMsg);
 LRESULT WINAPI DispatchMessageA(const MSG *lpMsg);
 WINBOOL WINAPI PostMessageA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 
-WINBOOL WINAPI DestroyWindow(HWND hWnd);
-HWND WINAPI GetLastActivePopup(HWND hWnd);
-HWND WINAPI SetFocus(HWND hWnd);
 HWND CreateWindowExA(
     DWORD dwExStyle,
     LPCSTR lpClassName,
@@ -268,8 +265,6 @@ DWORD WINAPI GetCurrentThreadId();
 WINBOOL WINAPI SetThreadPriority(HANDLE hThread, int nPriority);
 void WINAPI Sleep(DWORD dwMilliseconds);
 
-HDC WINAPI GetDC(HWND hWnd);
-int WINAPI ReleaseDC(HWND hWnd, HDC hDC);
 WINBOOL WINAPI TextOutA(HDC hdc, int x, int y, LPCSTR lpString, int c);
 
 int WINAPI GetDeviceCaps(HDC hdc, int index);
