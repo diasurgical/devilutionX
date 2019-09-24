@@ -55,11 +55,22 @@ typedef enum UiFlags {
 } UiFlags;
 
 typedef struct Art {
-	BYTE *data;
-	DWORD width;
-	DWORD height;
-	bool masked = false;
-	BYTE mask;
+	SDL_Surface *surface = NULL;
+	int frames = 1;
+	int frame_height = 0;
+
+	int w() const {
+		return surface->w;
+	}
+
+	int h() const {
+		return frame_height;
+	}
+
+	void Unload() {
+		SDL_FreeSurface(surface);
+		surface = NULL;
+	}
 } Art;
 
 typedef struct UI_Item {

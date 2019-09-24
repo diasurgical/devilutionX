@@ -71,8 +71,7 @@ UI_Item ENTERPASSWORD_DIALOG[] = {
 
 void selgame_Free()
 {
-	mem_free_dbg(ArtBackground.data);
-	ArtBackground.data = NULL;
+	ArtBackground.Unload();
 }
 
 void selgame_GameSelection_Init()

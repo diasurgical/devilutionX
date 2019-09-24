@@ -32,16 +32,11 @@ void progress_Load(char *msg)
 
 void progress_Free()
 {
-	mem_free_dbg(ArtBackground.data);
-	ArtBackground.data = NULL;
-	mem_free_dbg(ArtPopupSm.data);
-	ArtPopupSm.data = NULL;
-	mem_free_dbg(ArtProgBG.data);
-	ArtProgBG.data = NULL;
-	mem_free_dbg(ProgFil.data);
-	ProgFil.data = NULL;
-	mem_free_dbg(ButImage.data);
-	ButImage.data = NULL;
+	ArtBackground.Unload();
+	ArtPopupSm.Unload();
+	ArtProgBG.Unload();
+	ProgFil.Unload();
+	ButImage.Unload();
 	SDL_FreeSurface(msgSurface);
 	msgSurface = NULL;
 	SDL_FreeSurface(cancleSurface);

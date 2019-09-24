@@ -11,10 +11,8 @@ void title_Load()
 
 void title_Free()
 {
-	mem_free_dbg(ArtBackground.data);
-	ArtBackground.data = NULL;
-	mem_free_dbg(ArtLogos[LOGO_BIG].data);
-	ArtLogos[LOGO_BIG].data = NULL;
+	ArtBackground.Unload();
+	ArtLogos[LOGO_BIG].Unload();
 }
 
 BOOL UiTitleDialog(int a1)

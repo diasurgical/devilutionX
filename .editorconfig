@@ -20,6 +20,12 @@ end_of_line = lf
 [SourceX/storm/storm_dx.cpp]
 end_of_line = lf
 
+[SourceX/DiabloUI/*]
+end_of_line = lf
+
+[SourceX/DiabloUI/diabloui.cpp]
+end_of_line = crlf
+
 [*.yml]
 indent_style = space
 end_of_line = lf

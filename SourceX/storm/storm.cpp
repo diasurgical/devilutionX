@@ -243,6 +243,13 @@ BOOL SBmpLoadImage(const char *pszFileName, PALETTEENTRY *pPalette, BYTE *pBuffe
 	int width = SDL_SwapLE16(pcxhdr.Xmax) - SDL_SwapLE16(pcxhdr.Xmin) + 1;
 	int height = SDL_SwapLE16(pcxhdr.Ymax) - SDL_SwapLE16(pcxhdr.Ymin) + 1;
 
+	// If the given buffer is larger than width * height, assume the extra data
+	// is scanline padding.
+	//
+	// This is useful because in SDL the pitch size is often slightly larger
+	// than image width for efficiency.
+	const int x_skip = dwBuffersize / height - width;
+
 	if (pdwWidth)
 		*pdwWidth = width;
 	if (dwHeight)
@@ -279,6 +286,8 @@ BOOL SBmpLoadImage(const char *pszFileName, PALETTEENTRY *pPalette, BYTE *pBuffe
 					x++;
 				}
 			}
+			// Skip the pitch padding.
+			pBuffer += x_skip;
 		}
 
 		free(fileBuffer);

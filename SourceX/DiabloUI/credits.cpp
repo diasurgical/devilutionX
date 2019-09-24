@@ -479,8 +479,7 @@ void credts_Load()
 
 void credts_Free()
 {
-	mem_free_dbg(ArtBackground.data);
-	ArtBackground.data = NULL;
+	ArtBackground.Unload();
 }
 
 void credts_Render()
@@ -523,16 +522,16 @@ void credts_Render()
 			text_surface = TTF_RenderUTF8_Solid(font, the_long_credits[creditLine + i] + offset, color);
 			shadow_surface = TTF_RenderUTF8_Solid(font, the_long_credits[creditLine + i] + offset, black_color);
 			if (text_surface && shadow_surface) {
-				SDL_Rect src_rect = { 0, -y, SCREEN_WIDTH, 251 };
+				SDL_Rect src_rect = { 0, -y, text_surface->w, 251 };
 
 				// draw text shadow.
-				SDL_Rect dsc_rect2 = { 64 + x + 2, SCREEN_Y + 114 + 2, SCREEN_WIDTH, SCREEN_HEIGHT };
+				SDL_Rect dsc_rect2 = { 64 + x + 2, SCREEN_Y + 114 + 2, src_rect.w, src_rect.h };
 				if (SDL_BlitSurface(shadow_surface, &src_rect, pal_surface, &dsc_rect2) <= -1) {
 					SDL_Log(SDL_GetError());
 				}
 
 				// draw text.
-				SDL_Rect dsc_rect = { 64 + x, SCREEN_Y + 114, SCREEN_WIDTH, SCREEN_HEIGHT };
+				SDL_Rect dsc_rect = { 64 + x, SCREEN_Y + 114, src_rect.w, src_rect.h };
 				if (SDL_BlitSurface(text_surface, &src_rect, pal_surface, &dsc_rect) <= -1) {
 					SDL_Log(SDL_GetError());
 				}
