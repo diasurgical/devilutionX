@@ -7,7 +7,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#include "stubs.h"
+#include "../SourceX/stubs.h"
 
 #define WINDOW_ICON_NAME 0
 
