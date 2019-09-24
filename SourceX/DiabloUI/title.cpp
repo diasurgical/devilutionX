@@ -35,7 +35,9 @@ void UiTitleDialog()
 
 		while (SDL_PollEvent(&event)) {
 			switch (event.type) {
+#ifndef USE_SDL1
 			case SDL_CONTROLLERBUTTONDOWN:
+#endif
 			case SDL_KEYDOWN: /* To match the original uncomment this
 				if (event.key.keysym.sym == SDLK_UP
 				    || event.key.keysym.sym == SDLK_UP
