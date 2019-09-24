@@ -19,6 +19,7 @@ SDL_Surface *surface;
 
 /** 8-bit surface wrapper around #gpBuffer */
 SDL_Surface *pal_surface;
+unsigned int pal_surface_palette_version = 0;
 
 bool bufferUpdated = false;
 
@@ -103,6 +104,7 @@ HRESULT StubDraw::CreateSurface(LPDDSURFACEDESC lpDDSurfaceDesc, LPDIRECTDRAWSUR
 		return 1; //MAKE_HRESULT(130);//DVL_MAKE_HRESULT(130);
 	}
 #endif
+	pal_surface_palette_version = 1;
 
 	return DVL_DS_OK;
 }

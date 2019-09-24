@@ -40,6 +40,7 @@ BOOL SDrawUpdatePalette(unsigned int firstentry, unsigned int numentries, PALETT
 		return false;
 	}
 #endif
+	++pal_surface_palette_version;
 
 	return true;
 }

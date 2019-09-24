@@ -602,18 +602,20 @@ void DrawArt(int screenX, int screenY, Art *art, int nFrame, DWORD drawW)
 	if (screenY >= SCREEN_Y + SCREEN_HEIGHT || screenX >= SCREEN_X + SCREEN_WIDTH)
 		return;
 
-	SDL_Rect src_rect = {0, nFrame * art->h(), art->w(), art->h()};
+	SDL_Rect src_rect = { 0, nFrame * art->h(), art->w(), art->h() };
 	if (drawW && drawW < src_rect.w)
 		src_rect.w = drawW;
-	SDL_Rect dst_rect = {screenX + SCREEN_X, screenY + SCREEN_Y, src_rect.w, src_rect.h};
+	SDL_Rect dst_rect = { screenX + SCREEN_X, screenY + SCREEN_Y, src_rect.w, src_rect.h };
 
-	if (art->surface->format->BitsPerPixel == 8) {
+	if (art->surface->format->BitsPerPixel == 8 && art->palette_version != pal_surface_palette_version) {
 #ifdef USE_SDL1
 		if (SDL_SetPalette(art->surface, SDL_LOGPAL, pal_surface->format->palette->colors, 0, 256) != 1)
+			SDL_Log(SDL_GetError());
 #else
 		if (SDL_SetSurfacePalette(art->surface, pal_surface->format->palette) <= -1)
-#endif
 			SDL_Log(SDL_GetError());
+#endif
+		art->palette_version = pal_surface_palette_version;
 	}
 
 	if (SDL_BlitSurface(art->surface, &src_rect, pal_surface, &dst_rect) <= -1) {
