@@ -1,6 +1,9 @@
-//HEADER_GOES_HERE
 #ifndef __DIABLO_H__
 #define __DIABLO_H__
+
+#ifdef USE_SDL1
+#include "sdl2_to_1_2_backports.h"
+#endif
 
 #include "../types.h"
 

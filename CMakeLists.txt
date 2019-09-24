@@ -238,16 +238,18 @@ target_compile_definitions(devilution PUBLIC
 target_compile_definitions(devilutionx PRIVATE ASIO_STANDALONE)
 
 
-if(USE_SDL1)
-  target_link_libraries(devilutionx PRIVATE
-    ${SDL_LIBRARY} ${SDL_TTF_LIBRARY} ${SDL_MIXER_LIBRARY})
-  target_compile_definitions(devilutionx PRIVATE USE_SDL1)
-else()
-  target_link_libraries(devilutionx PRIVATE
-    SDL2::SDL2main
-    SDL2::SDL2_ttf
-    SDL2::SDL2_mixer)
-endif()
+foreach(target devilution devilutionx)
+  if(USE_SDL1)
+    target_link_libraries(${target} PRIVATE
+      ${SDL_LIBRARY} ${SDL_TTF_LIBRARY} ${SDL_MIXER_LIBRARY})
+    target_compile_definitions(${target} PRIVATE USE_SDL1)
+  else()
+    target_link_libraries(${target} PRIVATE
+      SDL2::SDL2main
+      SDL2::SDL2_ttf
+      SDL2::SDL2_mixer)
+  endif()
+endforeach(target devilution devilutionx)
 
 if(ASAN)
   target_compile_options(devilution PUBLIC -fsanitize=address -fsanitize-recover=address)
