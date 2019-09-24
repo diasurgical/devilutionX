@@ -408,7 +408,7 @@ void LoadMaskedArtFont(char *pszFile, Art *art, int frames, int mask)
 {
 	LoadArt(pszFile, art, frames);
 #ifdef USE_SDL1
-	SDL_SetColorKey(art->surface, SDL_SRCCOLORKEY | SDL_RLEACCEL, mask);
+	SDL_SetColorKey(art->surface, SDL_SRCCOLORKEY, mask);
 #else
 	SDL_SetColorKey(art->surface, SDL_TRUE, mask);
 #endif
