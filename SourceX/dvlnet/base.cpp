@@ -9,12 +9,12 @@ namespace net {
 void base::setup_gameinfo(buffer_t info)
 {
 	game_init_info = std::move(info);
-	pktfty = std::make_unique<packet_factory>();
+	pktfty.reset(new packet_factory());
 }
 
 void base::setup_password(std::string pw)
 {
-	pktfty = std::make_unique<packet_factory>(pw);
+	pktfty.reset(new packet_factory(pw));
 }
 
 void base::run_event_handler(_SNETEVENT& ev)
