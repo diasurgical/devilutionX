@@ -271,19 +271,18 @@ if(HAIKU)
 endif()
 
 if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-  # Note: In Debug mode, GCC generates spurious memory references that upset Valgrind,
-  # these options fix that.
-  target_compile_options(devilution PUBLIC $<$<CONFIG:Debug>:-fno-omit-frame-pointer>)
-  target_compile_options(devilution PUBLIC -Wno-unknown-pragmas)
+  if(DEBUG)
+    # Note: For Valgrind suppor.
+    target_compile_options(devilution PUBLIC -fno-omit-frame-pointer)
+  endif()
   # Ignore serious warnings due to "quality" of decompiled code
   # Currently, disable ignore all warnings (-w), to be removed later
-  target_compile_options(devilution PRIVATE -fpermissive -Wno-write-strings -Wno-multichar -w)
-  # Disable optimizations that can break non-standards-conforming code
-  target_compile_options(devilution PRIVATE -fno-strict-aliasing)
+  target_compile_options(devilution PRIVATE -fpermissive -w)
 
   # Warnings for devilutionX
-  target_compile_options(devilutionx PRIVATE -Wall -Wextra -Wno-write-strings -Wno-multichar -Wno-unused-parameter)
+  target_compile_options(devilutionx PRIVATE -Wall -Wextra -Wno-write-strings -Wno-multichar -Wno-unused-parameter -Wno-missing-field-initializers -Wno-format-security)
 
+  # For ARM and other default unsigned char platforms
   target_compile_options(devilution PRIVATE -fsigned-char)
   target_compile_options(devilutionx PRIVATE -fsigned-char)
 endif()
@@ -292,16 +291,12 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   target_compile_options(devilution PRIVATE "/W0")
 endif()
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-  target_compile_options(devilution PRIVATE -fno-aggressive-loop-optimizations)
-endif()
-
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   # Style issues
   target_compile_options(devilutionx PRIVATE -Wno-parentheses -Wno-logical-op-parentheses -Wno-bitwise-op-parentheses)
   # Silence warnings about __int64 alignment hack not always being applicable
   target_compile_options(devilutionx PRIVATE -Wno-ignored-attributes)
-	# Silence appfat.cpp warnings
+  # Silence appfat.cpp warnings
   set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wno-narrowing")
 endif()
 
