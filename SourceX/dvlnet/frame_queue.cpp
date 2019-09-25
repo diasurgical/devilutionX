@@ -62,7 +62,7 @@ buffer_t frame_queue::read_packet()
 {
 	if(!nextsize || (size() < nextsize))
 		throw frame_queue_exception();
-	auto ret = std::move(read(nextsize));
+	auto ret = read(nextsize);
 	nextsize = 0;
 	return ret;
 }

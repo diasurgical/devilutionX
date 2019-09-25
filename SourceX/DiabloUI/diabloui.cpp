@@ -603,7 +603,7 @@ void DrawArt(int screenX, int screenY, Art *art, int nFrame, DWORD drawW)
 		return;
 
 	SDL_Rect src_rect = { 0, nFrame * art->h(), art->w(), art->h() };
-	if (drawW && drawW < src_rect.w)
+	if (drawW && static_cast<int>(drawW) < src_rect.w)
 		src_rect.w = drawW;
 	SDL_Rect dst_rect = { screenX + SCREEN_X, screenY + SCREEN_Y, src_rect.w, src_rect.h };
 

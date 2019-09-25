@@ -24,8 +24,6 @@ private:
 	typedef asio::ip::udp::endpoint endpoint;
 	static const endpoint none;
 
-	unsigned short udpport_self = 0;
-
 	static constexpr unsigned short default_port = 6112;
 	static constexpr unsigned short try_ports = 512;
 	static constexpr int ACTIVE = 60;
