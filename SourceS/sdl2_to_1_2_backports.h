@@ -82,9 +82,9 @@ inline void SDL_DisableScreenSaver()
 //= Messagebox (simply logged to stderr for now)
 
 typedef enum {
-	SDL_MESSAGEBOX_ERROR       = 0x00000010, /**< error dialog */
-	SDL_MESSAGEBOX_WARNING     = 0x00000020, /**< warning dialog */
-	SDL_MESSAGEBOX_INFORMATION = 0x00000040  /**< informational dialog */
+	SDL_MESSAGEBOX_ERROR = 0x00000010,      /**< error dialog */
+	SDL_MESSAGEBOX_WARNING = 0x00000020,    /**< warning dialog */
+	SDL_MESSAGEBOX_INFORMATION = 0x00000040 /**< informational dialog */
 } SDL_MessageBoxFlags;
 
 inline int SDL_ShowSimpleMessageBox(Uint32 flags,
@@ -215,7 +215,7 @@ inline int SDL_SetPaletteColors(SDL_Palette *palette, const SDL_Color *colors,
 	}
 	if (ncolors > (palette->ncolors - firstcolor)) {
 		ncolors = (palette->ncolors - firstcolor);
-		status  = -1;
+		status = -1;
 	}
 
 	if (colors != (palette->colors + firstcolor)) {
@@ -249,7 +249,7 @@ inline void SDLBackport_PixelformatToMask(int pixelformat, Uint32 *flags, Uint32
 		*bmask = 0x00ff0000;
 		*amask = 0xff000000;
 #endif
-	} else if  (pixelformat == SDL_PIXELFORMAT_RGB888) {
+	} else if (pixelformat == SDL_PIXELFORMAT_RGB888) {
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
 		*rmask = 0xff000000;
 		*gmask = 0x00ff0000;
@@ -384,7 +384,7 @@ SDL_SoftStretch(SDL_Surface *src, const SDL_Rect *srcrect,
 		full_src.y = 0;
 		full_src.w = src->w;
 		full_src.h = src->h;
-		srcrect    = &full_src;
+		srcrect = &full_src;
 	}
 	if (dstrect) {
 		if ((dstrect->x < 0) || (dstrect->y < 0) || ((dstrect->x + dstrect->w) > dst->w) || ((dstrect->y + dstrect->h) > dst->h)) {
@@ -396,7 +396,7 @@ SDL_SoftStretch(SDL_Surface *src, const SDL_Rect *srcrect,
 		full_dst.y = 0;
 		full_dst.w = dst->w;
 		full_dst.h = dst->h;
-		dstrect    = &full_dst;
+		dstrect = &full_dst;
 	}
 
 	/* Lock the destination if it's in hardware */
@@ -422,8 +422,8 @@ SDL_SoftStretch(SDL_Surface *src, const SDL_Rect *srcrect,
 	}
 
 	/* Set up the data... */
-	pos     = 0x10000;
-	inc     = (srcrect->h << 16) / dstrect->h;
+	pos = 0x10000;
+	inc = (srcrect->h << 16) / dstrect->h;
 	src_row = srcrect->y;
 	dst_row = dstrect->y;
 
@@ -664,10 +664,10 @@ inline int SDL_GetCurrentDisplayMode(int displayIndex, SDL_DisplayMode *mode)
 		break;
 	}
 
-	mode->w            = info->current_w;
-	mode->h            = info->current_h;
+	mode->w = info->current_w;
+	mode->h = info->current_h;
 	mode->refresh_rate = 0;
-	mode->driverdata   = NULL;
+	mode->driverdata = NULL;
 
 	return 0;
 }
@@ -680,8 +680,8 @@ readSymLink(const char *path)
 {
 	// From sdl2-2.0.9/src/filesystem/unix/SDL_sysfilesystem.c
 	char *retval = NULL;
-	ssize_t len  = 64;
-	ssize_t rc   = -1;
+	ssize_t len = 64;
+	ssize_t rc = -1;
 
 	while (1) {
 		char *ptr = (char *)SDL_realloc(retval, (size_t)len);
@@ -716,7 +716,7 @@ inline char *SDL_GetBasePath()
 
 #if defined(__FREEBSD__)
 	char fullpath[PATH_MAX];
-	size_t buflen   = sizeof(fullpath);
+	size_t buflen = sizeof(fullpath);
 	const int mib[] = { CTL_KERN, KERN_PROC, KERN_PROC_PATHNAME, -1 };
 	if (sysctl(mib, SDL_arraysize(mib), fullpath, &buflen, NULL, 0) != -1) {
 		retval = SDL_strdup(fullpath);
@@ -817,8 +817,8 @@ inline char *SDL_GetPrefPath(const char *org, const char *app)
 	const char *envr = SDL_getenv("XDG_DATA_HOME");
 	const char *append;
 	char *retval = NULL;
-	char *ptr    = NULL;
-	size_t len   = 0;
+	char *ptr = NULL;
+	size_t len = 0;
 
 	if (!app) {
 		SDL_InvalidParamError("app");

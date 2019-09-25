@@ -249,7 +249,7 @@ typedef LONG(WINAPI *PTOP_LEVEL_EXCEPTION_FILTER)(
 HMODULE GetModuleHandleA(LPCSTR lpModuleName);
 
 uintptr_t __cdecl DVL_beginthreadex(void *_Security, unsigned _StackSize, unsigned(__stdcall *_StartAddress)(void *),
-                                 void *_ArgList, unsigned _InitFlag, unsigned *_ThrdAddr);
+    void *_ArgList, unsigned _InitFlag, unsigned *_ThrdAddr);
 HANDLE WINAPI GetCurrentThread();
 DWORD WINAPI GetCurrentThreadId();
 WINBOOL WINAPI SetThreadPriority(HANDLE hThread, int nPriority);
@@ -619,27 +619,27 @@ constexpr auto DVL_SC_CLOSE = 0xF060;
 // Virtual key codes.
 //
 // ref: https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
-constexpr auto DVL_VK_BACK = 0x08;       // BACKSPACE key
-constexpr auto DVL_VK_TAB = 0x09;        // TAB key
-constexpr auto DVL_VK_RETURN = 0x0D;     // ENTER key
-constexpr auto DVL_VK_SHIFT = 0x10;      // SHIFT key
-constexpr auto DVL_VK_CONTROL = 0x11;    // CONTROL key
-constexpr auto DVL_VK_MENU = 0x12;       // ALT key
-constexpr auto DVL_VK_PAUSE = 0x13;      // PAUSE key
-constexpr auto DVL_VK_CAPITAL = 0x14;    // CAPS LOCK key
-constexpr auto DVL_VK_ESCAPE = 0x1B;     // ESC key
-constexpr auto DVL_VK_SPACE = 0x20;      // SPACEBAR
-constexpr auto DVL_VK_PRIOR = 0x21;      // PAGE UP key
-constexpr auto DVL_VK_NEXT = 0x22;       // PAGE DOWN key
-constexpr auto DVL_VK_END = 0x23;        // END key
-constexpr auto DVL_VK_HOME = 0x24;       // HOME key
-constexpr auto DVL_VK_LEFT = 0x25;       // LEFT ARROW key
-constexpr auto DVL_VK_UP = 0x26;         // UP ARROW key
-constexpr auto DVL_VK_RIGHT = 0x27;      // RIGHT ARROW key
-constexpr auto DVL_VK_DOWN = 0x28;       // DOWN ARROW key
-constexpr auto DVL_VK_SNAPSHOT = 0x2C;   // PRINT SCREEN key
-constexpr auto DVL_VK_INSERT = 0x2D;     // INS key
-constexpr auto DVL_VK_DELETE = 0x2E;     // DEL key
+constexpr auto DVL_VK_BACK = 0x08;     // BACKSPACE key
+constexpr auto DVL_VK_TAB = 0x09;      // TAB key
+constexpr auto DVL_VK_RETURN = 0x0D;   // ENTER key
+constexpr auto DVL_VK_SHIFT = 0x10;    // SHIFT key
+constexpr auto DVL_VK_CONTROL = 0x11;  // CONTROL key
+constexpr auto DVL_VK_MENU = 0x12;     // ALT key
+constexpr auto DVL_VK_PAUSE = 0x13;    // PAUSE key
+constexpr auto DVL_VK_CAPITAL = 0x14;  // CAPS LOCK key
+constexpr auto DVL_VK_ESCAPE = 0x1B;   // ESC key
+constexpr auto DVL_VK_SPACE = 0x20;    // SPACEBAR
+constexpr auto DVL_VK_PRIOR = 0x21;    // PAGE UP key
+constexpr auto DVL_VK_NEXT = 0x22;     // PAGE DOWN key
+constexpr auto DVL_VK_END = 0x23;      // END key
+constexpr auto DVL_VK_HOME = 0x24;     // HOME key
+constexpr auto DVL_VK_LEFT = 0x25;     // LEFT ARROW key
+constexpr auto DVL_VK_UP = 0x26;       // UP ARROW key
+constexpr auto DVL_VK_RIGHT = 0x27;    // RIGHT ARROW key
+constexpr auto DVL_VK_DOWN = 0x28;     // DOWN ARROW key
+constexpr auto DVL_VK_SNAPSHOT = 0x2C; // PRINT SCREEN key
+constexpr auto DVL_VK_INSERT = 0x2D;   // INS key
+constexpr auto DVL_VK_DELETE = 0x2E;   // DEL key
 // DVL_VK_0 through DVL_VK_9 correspond to '0' - '9'
 // DVL_VK_A through DVL_VK_Z correspond to 'A' - 'Z'
 constexpr auto DVL_VK_LWIN = 0x5B;       // Left Windows key (Natural keyboard)
@@ -699,4 +699,4 @@ constexpr auto DVL_MB_TASKMODAL = 0x00002000L;
 constexpr auto DVL_MB_ICONHAND = 0x00000010L;
 constexpr auto DVL_MB_ICONEXCLAMATION = 0x00000030L;
 
-}  // namespace dvl
+} // namespace dvl

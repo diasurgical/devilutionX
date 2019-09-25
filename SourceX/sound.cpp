@@ -20,6 +20,7 @@ char *musicBuffer;
 BOOLEAN gbMusicOn = true;
 BOOLEAN gbSoundOn = true;
 int sgnMusicTrack = 6;
+
 char *sgszMusicTracks[NUM_MUSIC] = {
 	"Music\\DTowne.wav",
 	"Music\\DLvlA.wav",

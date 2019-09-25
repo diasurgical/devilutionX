@@ -272,7 +272,7 @@ HWND CreateWindowExA(
 	}
 
 #ifdef USE_SDL1
-	SDL_EnableUNICODE( 1 );
+	SDL_EnableUNICODE(1);
 #endif
 
 	atexit(SDL_Quit);
@@ -293,7 +293,8 @@ HWND CreateWindowExA(
 	SDL_WM_SetCaption(lpWindowName, WINDOW_ICON_NAME);
 	SDL_SetVideoMode(nWidth, nHeight, /*bpp=*/0, flags);
 	window = SDL_GetVideoSurface();
-	if (grabInput) SDL_WM_GrabInput(SDL_GRAB_ON);
+	if (grabInput)
+		SDL_WM_GrabInput(SDL_GRAB_ON);
 #else
 	int flags = 0;
 	if (upscale) {

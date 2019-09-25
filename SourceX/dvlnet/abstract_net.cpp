@@ -25,5 +25,5 @@ std::unique_ptr<abstract_net> abstract_net::make_net(provider_t provider)
 	}
 }
 
-}  // namespace net
-}  // namespace dvl
+} // namespace net
+} // namespace dvl

@@ -504,7 +504,7 @@ void credts_Render()
 	lastYbase = ybase;
 
 	if (font != NULL) {
-		SDL_Color color = palette->colors[224], black_color = {0, 0, 0, 0};
+		SDL_Color color = palette->colors[224], black_color = { 0, 0, 0, 0 };
 		SDL_Surface *text_surface, *shadow_surface;
 		for (int i = 0; i < lineCount; i++) {
 			if (creditLine + i < 0) {

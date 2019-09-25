@@ -14,7 +14,7 @@ int loopback::join(std::string addrstr, std::string passwd)
 	ABORT();
 }
 
-bool loopback::SNetReceiveMessage(int* sender, char** data, int* size)
+bool loopback::SNetReceiveMessage(int *sender, char **data, int *size)
 {
 	if (message_queue.empty())
 		return false;
@@ -26,29 +26,29 @@ bool loopback::SNetReceiveMessage(int* sender, char** data, int* size)
 	return true;
 }
 
-bool loopback::SNetSendMessage(int dest, void* data, unsigned int size)
+bool loopback::SNetSendMessage(int dest, void *data, unsigned int size)
 {
 	if (dest == plr_single || dest == SNPLAYER_ALL) {
-		auto raw_message = reinterpret_cast<unsigned char*>(data);
+		auto raw_message = reinterpret_cast<unsigned char *>(data);
 		buffer_t message(raw_message, raw_message + size);
 		message_queue.push(message);
 	}
 	return true;
 }
 
-bool loopback::SNetReceiveTurns(char** data, unsigned int* size, DWORD* status)
+bool loopback::SNetReceiveTurns(char **data, unsigned int *size, DWORD *status)
 {
 	// todo: check that this is safe
 	return true;
 }
 
-bool loopback::SNetSendTurn(char* data, unsigned int size)
+bool loopback::SNetSendTurn(char *data, unsigned int size)
 {
 	// todo: check that this is safe
 	return true;
 }
 
-int loopback::SNetGetProviderCaps(struct _SNETCAPS* caps)
+int loopback::SNetGetProviderCaps(struct _SNETCAPS *caps)
 {
 	caps->size = 0;                  // engine writes only ?!?
 	caps->flags = 0;                 // unused
@@ -59,12 +59,12 @@ int loopback::SNetGetProviderCaps(struct _SNETCAPS* caps)
 	caps->latencyms = 0;             // unused
 	caps->defaultturnssec = 10;      // ?
 	caps->defaultturnsintransit = 1; // maximum acceptable number
-	                                 // of turns in queue?
+									 // of turns in queue?
 	return 1;
 }
 
 bool loopback::SNetRegisterEventHandler(event_type evtype,
-                                         SEVTHANDLER func)
+	SEVTHANDLER func)
 {
 	// not called in real singleplayer mode
 	// not needed in pseudo multiplayer mode (?)
@@ -72,7 +72,7 @@ bool loopback::SNetRegisterEventHandler(event_type evtype,
 }
 
 bool loopback::SNetUnregisterEventHandler(event_type evtype,
-                                           SEVTHANDLER func)
+	SEVTHANDLER func)
 {
 	// not called in real singleplayer mode
 	// not needed in pseudo multiplayer mode (?)
@@ -105,5 +105,5 @@ bool loopback::SNetGetTurnsInTransit(int *turns)
 	return true;
 }
 
-}  // namespace net
-}  // namespace dvl
+} // namespace net
+} // namespace dvl

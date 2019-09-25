@@ -20,4 +20,3 @@
 
 #define ERROR_SUCCESS DVL_ERROR_SUCCESS
 #define DS_OK DVL_DS_OK
-

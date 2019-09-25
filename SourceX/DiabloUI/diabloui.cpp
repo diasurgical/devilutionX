@@ -297,7 +297,7 @@ bool UiFocusNavigation(SDL_Event *event)
 				Uint16 unicode = event->key.keysym.unicode;
 				if (unicode && (unicode & 0xFF80) == 0) {
 					char utf8[SDL_TEXTINPUTEVENT_TEXT_SIZE];
-					utf8[0] = (char) unicode;
+					utf8[0] = (char)unicode;
 					utf8[1] = '\0';
 					selhero_CatToName(utf8, UiTextInput, UiTextInputLen);
 				}

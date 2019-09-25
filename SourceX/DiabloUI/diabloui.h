@@ -38,20 +38,20 @@ typedef enum UiTypes {
 } UiTypes;
 
 typedef enum UiFlags {
-	UIS_SMALL    = 1 << 0,
-	UIS_MED      = 1 << 1,
-	UIS_BIG      = 1 << 2,
-	UIS_HUGE     = 1 << 3,
-	UIS_CENTER   = 1 << 4,
-	UIS_RIGHT    = 1 << 5,
-	UIS_VCENTER  = 1 << 6,
-	UIS_SILVER   = 1 << 7,
-	UIS_GOLD     = 1 << 8,
-	UIS_SML1     = 1 << 9,
-	UIS_SML2     = 1 << 10,
-	UIS_LIST     = 1 << 11,
+	UIS_SMALL = 1 << 0,
+	UIS_MED = 1 << 1,
+	UIS_BIG = 1 << 2,
+	UIS_HUGE = 1 << 3,
+	UIS_CENTER = 1 << 4,
+	UIS_RIGHT = 1 << 5,
+	UIS_VCENTER = 1 << 6,
+	UIS_SILVER = 1 << 7,
+	UIS_GOLD = 1 << 8,
+	UIS_SML1 = 1 << 9,
+	UIS_SML2 = 1 << 10,
+	UIS_LIST = 1 << 11,
 	UIS_DISABLED = 1 << 12,
-	UIS_HIDDEN   = 1 << 13,
+	UIS_HIDDEN = 1 << 13,
 } UiFlags;
 
 struct Art {
@@ -60,15 +60,18 @@ struct Art {
 	int frame_height = 0;
 	unsigned int palette_version = 0;
 
-	int w() const {
+	int w() const
+	{
 		return surface->w;
 	}
 
-	int h() const {
+	int h() const
+	{
 		return frame_height;
 	}
 
-	void Unload() {
+	void Unload()
+	{
 		SDL_FreeSurface(surface);
 		surface = NULL;
 	}
@@ -105,7 +108,7 @@ constexpr size_t size(T (&)[N])
 	return N;
 }
 
-extern void(*gfnSoundFunction)(char *file);
+extern void (*gfnSoundFunction)(char *file);
 
 bool IsInsideRect(const SDL_Event *event, const SDL_Rect *rect);
 void UiFadeIn(int steps = 16);
