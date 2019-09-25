@@ -88,16 +88,6 @@ typedef struct pcmwaveformat_tag {
 	WAVEFORMAT wf;
 	WORD wBitsPerSample;
 } PCMWAVEFORMAT, *PPCMWAVEFORMAT, *LPPCMWAVEFORMAT;
-
-typedef struct tWAVEFORMATEX {
-	WORD wFormatTag;
-	WORD nChannels;
-	DWORD nSamplesPerSec;
-	DWORD nAvgBytesPerSec;
-	WORD nBlockAlign;
-	WORD wBitsPerSample;
-	WORD cbSize;
-} WAVEFORMATEX, *LPWAVEFORMATEX, *LPCWAVEFORMATEX;
 #pragma pack(pop)
 
 typedef struct _FILETIME {
@@ -557,7 +547,7 @@ typedef struct _MEMORY_BASIC_INFORMATION {
 // Total fakes
 //
 typedef struct {
-} SOCKADDR, GUID, *LPGUID;
+} SOCKADDR;
 
 BOOL IsBadReadPtr(const void *lp, UINT_PTR ucb);
 BOOL IsBadWritePtr(LPVOID lp, UINT_PTR ucb);

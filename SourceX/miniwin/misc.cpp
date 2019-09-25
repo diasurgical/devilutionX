@@ -279,7 +279,7 @@ HWND CreateWindowExA(
 
 	int upscale = 1;
 	DvlIntSetting("upscale", &upscale);
-	DvlIntSetting("fullscreen", &fullscreen);
+	DvlIntSetting("fullscreen", (int *)&fullscreen);
 
 	int grabInput = 1;
 	DvlIntSetting("grab input", &grabInput);

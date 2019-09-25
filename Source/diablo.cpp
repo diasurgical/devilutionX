@@ -310,13 +310,7 @@ void diablo_parse_flags(char *args)
 		while (isspace(*args)) {
 			args++;
 		}
-		if (_strnicmp("dd_emulate", args, strlen("dd_emulate")) == 0) {
-			gbEmulate = 1;
-			args += strlen("dd_emulate");
-		} else if (_strnicmp("ds_noduplicates", args, strlen("ds_noduplicates")) == 0) {
-			gbDupSounds = FALSE;
-			args += strlen("ds_noduplicates");
-		} else {
+		{
 			c = tolower(*args);
 			args++;
 #ifdef _DEBUG

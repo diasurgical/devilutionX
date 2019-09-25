@@ -28,6 +28,10 @@
 #include "miniwin/rand.h"
 #include "storm_full.h"
 
-#define MAX_PATH DVL_MAX_PATH
+#ifndef MAX_PATH
+	#define MAX_PATH DVL_MAX_PATH
+#endif
+#ifdef DEVILUTION_ENGINE
 #include "miniwin/misc_macro.h"
 #include "miniwin/com_macro.h"
+#endif

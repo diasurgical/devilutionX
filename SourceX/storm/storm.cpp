@@ -58,7 +58,7 @@ BOOL SFileDdaBeginEx(HANDLE hFile, DWORD flags, DWORD mask, unsigned __int32 lDi
 {
 	DWORD bytestoread = SFileGetFileSize(hFile, 0);
 	char *SFXbuffer = (char *)malloc(bytestoread);
-	SFileReadFile(hFile, SFXbuffer, bytestoread, NULL, 0);
+	SFileReadFile(hFile, SFXbuffer, bytestoread, NULL, NULL);
 
 	SDL_RWops *rw = SDL_RWFromConstMem(SFXbuffer, bytestoread);
 	if (rw == NULL) {

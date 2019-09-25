@@ -1,6 +1,7 @@
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "miniwin/ddraw.h"
+#include "miniwin/com_macro.h"
 #include <SDL.h>
 
 namespace dvl {
@@ -11,7 +12,6 @@ BYTE *gpBuffer;
 int locktbl[256];
 #endif
 static CCritSect sgMemCrit;
-char gbEmulate;
 HMODULE ghDiabMod;
 
 SDL_Window *window;
@@ -47,8 +47,7 @@ void dx_create_back_buffer()
 	pal_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);
 	if (pal_surface == NULL) {
 		SDL_Log(SDL_GetError());
-		ERR_DLG(IDD_DIALOG1, 0x80000002L); //DDERR_OUTOFMEMORY
-		return;
+		ERR_DLG(IDD_DIALOG1, DDERR_OUTOFMEMORY);
 	}
 
 	gpBuffer = (BYTE *)pal_surface->pixels;
@@ -59,7 +58,7 @@ void dx_create_back_buffer()
 	if (SDL_SetSurfacePalette(pal_surface, palette) <= -1) {
 #endif
 		SDL_Log(SDL_GetError());
-		ERR_DLG(IDD_DIALOG1, 1); //MAKE_HRESULT(130);//DVL_MAKE_HRESULT(130);
+		ERR_DLG(IDD_DIALOG1, DDERR_INVALIDOBJECT);
 	}
 
 	pal_surface_palette_version = 1;
@@ -83,8 +82,7 @@ void dx_create_primary_surface()
 #endif
 	if (surface == NULL) {
 		SDL_Log(SDL_GetError());
-		ERR_DLG(IDD_DIALOG1, (HRESULT)0x80000002L); //DDERR_OUTOFMEMORY
-		return;
+		ERR_DLG(IDD_DIALOG1, DDERR_OUTOFMEMORY);
 	}
 }
 
@@ -186,7 +184,7 @@ HRESULT CreatePalette()
 	palette = SDL_AllocPalette(256);
 	if (palette == NULL) {
 		SDL_Log(SDL_GetError());
-		return (HRESULT)0x80000002L; //DDERR_OUTOFMEMORY
+		return DDERR_OUTOFMEMORY;
 	}
 
 	return DVL_DS_OK;

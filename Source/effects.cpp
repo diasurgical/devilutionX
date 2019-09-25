@@ -1,5 +1,6 @@
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
+#include <SDL_mixer.h>
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -1147,32 +1148,7 @@ void PlaySfxLoc(int psfx, int x, int y)
 
 void FreeMonsterSnd()
 {
-	int i, j, k;
-
-	snd_update(TRUE);
-	sfx_stop();
-	sound_stop();
-
-	for (i = 0; i < nummtypes; i++) {
-		for (j = 0; j < 4; j++) {
-			for (k = 0; k < 2; k++) {
-				snd_stop_snd(Monsters[i].Snds[j][k]);
-			}
-		}
-	}
-}
-
-void sound_stop()
-{
-	int i;
-	TSFX *snd;
-
-	snd = &sgSFX[0];
-	for (i = 0; i < sizeof(sgSFX) / sizeof(TSFX); i++) {
-		if (snd->pSnd)
-			snd_stop_snd(snd->pSnd);
-		snd++;
-	}
+	Mix_HaltChannel(-1);
 }
 
 void sound_update()
@@ -1181,7 +1157,6 @@ void sound_update()
 		return;
 	}
 
-	snd_update(FALSE);
 	effects_update();
 }
 

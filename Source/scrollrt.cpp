@@ -2388,17 +2388,8 @@ void DoBlitScreen(DWORD dwX, DWORD dwY, DWORD dwWdt, DWORD dwHgt)
 				break;
 			}
 			Sleep(1);
-			if (hDDVal == DDERR_SURFACELOST) {
-				return;
-			}
-			if (hDDVal != DDERR_WASSTILLDRAWING && hDDVal != DDERR_SURFACEBUSY) {
-				break;
-			}
 		}
-		if (hDDVal != DDERR_SURFACELOST
-		    && hDDVal != DDERR_WASSTILLDRAWING
-		    && hDDVal != DDERR_SURFACEBUSY
-		    && hDDVal != DD_OK) {
+		if (hDDVal != DD_OK) {
 			DD_ERR_MSG(hDDVal);
 		}
 	}

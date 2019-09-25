@@ -691,34 +691,6 @@ STORMAPI
 SDrawGetFrameWindow(
     HWND *sdraw_framewindow);
 
-
-/*  SDrawGetObjects @ 347
- *
- *  Retrieves the object information that was initialized using
- *  SDrawManualInitialize or SDrawAutoInitialize.
- *
- *  ddInterface:    The DirectDraw interface.
- *  primarySurface: The primary DirectDraw surface.
- *  surface2:       A second unknown surface.
- *  surface3:       A third unknown surface.
- *  backSurface:    The back DirectDraw surface.
- *  ddPalette:      The DirectDraw palette.
- *  hPalette:       The palette handle.
- *
- *  Returns FALSE if the direct draw interface has not been initialized.
- */
-BOOL
-STORMAPI
-SDrawGetObjects(
-    LPDIRECTDRAW        *ddInterface ,
-    LPDIRECTDRAWSURFACE *primarySurface,
-    LPDIRECTDRAWSURFACE *surface2,
-    LPDIRECTDRAWSURFACE *surface3,
-    LPDIRECTDRAWSURFACE *backSurface ,
-    LPDIRECTDRAWPALETTE *ddPalette,
-    HPALETTE            *hPalette);
-
-
 /*  SDrawGetScreenSize @ 348
  *
  *  Obtains information for the current screen resolution.
@@ -739,38 +711,6 @@ SDrawGetScreenSize(
 
 // undefined
 BOOL STORMAPI SDrawLockSurface(int surfacenumber, RECT *lpDestRect, void **lplpSurface, int *lpPitch, int arg_unused);
-
-
-/*  SDrawManualInitialize @ 351
- *
- *  Sets the DirectDraw variables to be referenced in Storm.
- *
- *  hWnd:           The handle of the DirectDraw window.
- *  ddInterface:    The DirectDraw interface.
- *  primarySurface: The first and primary surface.
- *  surface2:       A second surface. Behaviour not completely known.
- *  surface3:       A third surface. Behaviour not completely known.
- *  backSurface:    The fourth and final surface. The back surface.
- *  ddPalette:      The DirectDraw palette if the application requires it.
- *  hPalette:       The palette handle that belongs to the window.
- *                  If this is NULL and ddPalette is specified, then it
- *                  will be created automatically. A palette can be created
- *                  using the CreatePalette WinAPI function.
- *
- *  Returns FALSE if no variables were specified.
- */
-BOOL
-STORMAPI
-SDrawManualInitialize(
-     HWND hWnd,
-     LPDIRECTDRAW ddInterface,
-     LPDIRECTDRAWSURFACE primarySurface,
-     LPDIRECTDRAWSURFACE surface2,
-     LPDIRECTDRAWSURFACE surface3,
-     LPDIRECTDRAWSURFACE backSurface,
-     LPDIRECTDRAWPALETTE ddPalette,
-     HPALETTE hPalette);
-
 
 /*  SDrawPostClose @ 353
  *

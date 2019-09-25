@@ -5,34 +5,14 @@
 
 namespace dvl {
 
-ULONG DirectSound::Release()
-{
-	Mix_CloseAudio();
-	return 0;
-};
-
-HRESULT DirectSound::CreateSoundBuffer(LPCDSBUFFERDESC pcDSBufferDesc, LPDIRECTSOUNDBUFFER *ppDSBuffer, LPUNKNOWN pUnkOute)
-{
-	if (pcDSBufferDesc->dwFlags != DVL_DSBCAPS_PRIMARYBUFFER) { // Creating primery buffer isn't needed and breaks Music
-		*ppDSBuffer = new DirectSoundBuffer();
-	}
-
-	return DVL_DS_OK;
-};
-
 ///// DirectSoundBuffer /////
 
-ULONG DirectSoundBuffer::Release()
+void DirectSoundBuffer::Release()
 {
 	Mix_FreeChunk(chunk);
-
-	return 0;
 };
 
-/**
- * @brief Only used for handeling duplicates 
- */
-HRESULT DirectSoundBuffer::GetStatus(LPDWORD pdwStatus)
+void DirectSoundBuffer::GetStatus(LPDWORD pdwStatus)
 {
 	for (int i = 1; i < Mix_AllocateChannels(-1); i++) {
 		if (Mix_GetChunk(i) == chunk && Mix_Playing(i)) {
@@ -40,48 +20,22 @@ HRESULT DirectSoundBuffer::GetStatus(LPDWORD pdwStatus)
 			break;
 		}
 	}
-
-	return DVL_DS_OK;
 };
 
-HRESULT DirectSoundBuffer::Lock(DWORD dwOffset, DWORD dwBytes, LPVOID *ppvAudioPtr1, LPDWORD pdwAudioBytes1,
-    LPVOID *ppvAudioPtr2, LPDWORD pdwAudioBytes2, DWORD dwFlags)
-{
-	*pdwAudioBytes1 = dwBytes;
-	*ppvAudioPtr1 = malloc(dwBytes);
-
-	return DVL_DS_OK;
-};
-
-HRESULT DirectSoundBuffer::Play(DWORD dwReserved1, DWORD dwPriority, DWORD dwFlags)
+void DirectSoundBuffer::Play(int lVolume, int lPan)
 {
 	int channel = Mix_PlayChannel(-1, chunk, 0);
 	if (channel == -1) {
 		SDL_Log("Too few channels, skipping sound\n");
-		return DVL_DS_OK;
+		return;
 	}
 
-	Mix_Volume(channel, volume);
+	Mix_Volume(channel, pow(10, lVolume / 2000.0) * MIX_MAX_VOLUME);
+	int pan = copysign(pow(10, -abs(lPan) / 2000.0) * 255, lPan);
 	Mix_SetPanning(channel, pan > 0 ? pan : 255, pan < 0 ? abs(pan) : 255);
-
-	return DVL_DS_OK;
 };
 
-HRESULT DirectSoundBuffer::SetVolume(LONG lVolume)
-{
-	volume = pow(10, lVolume / 2000.0) * MIX_MAX_VOLUME;
-
-	return DVL_DS_OK;
-};
-
-HRESULT DirectSoundBuffer::SetPan(LONG lPan)
-{
-	pan = copysign(pow(10, -abs(lPan) / 2000.0) * 255, lPan);
-
-	return DVL_DS_OK;
-};
-
-HRESULT DirectSoundBuffer::Stop()
+void DirectSoundBuffer::Stop()
 {
 	for (int i = 1; i < Mix_AllocateChannels(-1); i++) {
 		if (Mix_GetChunk(i) != chunk) {
@@ -90,21 +44,21 @@ HRESULT DirectSoundBuffer::Stop()
 
 		Mix_HaltChannel(i);
 	}
-
-	return DVL_DS_OK;
 };
 
-HRESULT DirectSoundBuffer::Unlock(LPVOID pvAudioPtr1, DWORD dwAudioBytes1, LPVOID pvAudioPtr2, DWORD dwAudioBytes2)
+const char *DirectSoundBuffer::SetChunk(BYTE *fileData, DWORD dwBytes)
 {
-	SDL_RWops *rw = SDL_RWFromConstMem(pvAudioPtr1, dwAudioBytes1);
-	if (rw == NULL) {
-		SDL_Log(SDL_GetError());
+	SDL_RWops *buf1 = SDL_RWFromConstMem(fileData, dwBytes);
+	if (buf1 == NULL) {
+		return SDL_GetError();
 	}
 
-	chunk = Mix_LoadWAV_RW(rw, 1);
-	free(pvAudioPtr1);
+	chunk = Mix_LoadWAV_RW(buf1, 1);
+	if (chunk == NULL) {
+		return SDL_GetError();
+	}
 
-	return DVL_DS_OK;
+	return NULL;
 };
 
 } // namespace dvl

@@ -449,14 +449,7 @@ typedef struct MissileStruct {
 // effects/sound
 //////////////////////////////////////////////////
 
-typedef struct CKINFO {
-	DWORD dwSize;
-	DWORD dwOffset;
-} CKINFO;
-
 typedef struct TSnd {
-	WAVEFORMATEX fmt;
-	CKINFO chunk;
 	char *sound_path;
 	LPDIRECTSOUNDBUFFER DSB;
 	int start_tc;
