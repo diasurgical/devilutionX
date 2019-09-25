@@ -88,7 +88,7 @@ void mpqapi_xor_buf(char *pbData)
 	for (i = 0; i < 8; i++) {
 		*pbCurrentData ^= mask;
 		pbCurrentData++;
-		mask = _rotl(mask, 1);
+		mask = (mask << 1) | (mask >> 31);  //  _rotl(mask, 1)
 	}
 }
 
