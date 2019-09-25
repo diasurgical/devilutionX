@@ -4,13 +4,13 @@
 
 namespace dvl {
 
-struct DirectSoundBuffer : public IDirectSoundBuffer {
+struct DirectSoundBuffer final : public IDirectSoundBuffer {
 public:
-        virtual void Release();
-        void GetStatus(LPDWORD pdwStatus);
-        void Play(int lVolume, int lPan);
-        void Stop();
-        const char *SetChunk(BYTE *fileData, DWORD dwBytes);
+        void Release() override;
+        void GetStatus(LPDWORD pdwStatus) override;
+        void Play(int lVolume, int lPan) override;
+        void Stop() override;
+        const char *SetChunk(BYTE *fileData, DWORD dwBytes) override;
     private:
         Mix_Chunk *chunk;
 };

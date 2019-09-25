@@ -247,12 +247,12 @@ foreach(target devilution devilutionx)
       SDL2::SDL2_ttf
       SDL2::SDL2_mixer)
   endif()
-endforeach(target devilution devilutionx)
 
-if(ASAN)
-  target_compile_options(devilution PUBLIC -fsanitize=address -fsanitize-recover=address)
-  target_link_libraries(devilution PUBLIC -fsanitize=address -fsanitize-recover=address)
-endif()
+  if(ASAN)
+    target_compile_options(${target} PUBLIC -fsanitize=address -fsanitize-recover=address)
+    target_link_libraries(${target} PUBLIC -fsanitize=address -fsanitize-recover=address)
+  endif()
+endforeach(target devilution devilutionx)
 
 if(DIST AND NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   target_link_libraries(devilutionx PUBLIC -static-libgcc -static-libstdc++)

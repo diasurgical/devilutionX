@@ -114,6 +114,7 @@ void sound_file_cleanup(TSnd *sound_file)
 		if (sound_file->DSB) {
 			sound_file->DSB->Stop();
 			sound_file->DSB->Release();
+			delete static_cast<DirectSoundBuffer *>(sound_file->DSB);
 			sound_file->DSB = NULL;
 		}
 
