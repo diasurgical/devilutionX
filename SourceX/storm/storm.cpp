@@ -209,18 +209,22 @@ BOOL SBmpLoadImage(const char *pszFileName, PALETTEENTRY *pPalette, BYTE *pBuffe
 		*pdwBpp = 0;
 
 	if (!pszFileName || !*pszFileName) {
+		SDL_Log("SBmpLoadImage: Invalid arguments: pszFileName is NULL or empty");
 		return false;
 	}
 
 	if (pBuffer && !dwBuffersize) {
+		SDL_Log("SBmpLoadImage: Invalid arguments: pBuffer is given but dwBuffersize 0");
 		return false;
 	}
 
 	if (!pPalette && !pBuffer && !pdwWidth && !dwHeight) {
+		SDL_Log("SBmpLoadImage: Invalid arguments: !pPalette && !pBuffer && !pdwWidth && !dwHeight");
 		return false;
 	}
 
 	if (!SFileOpenFile(pszFileName, &hFile)) {
+		SDL_Log("SBmpLoadImage: Failed to open file");
 		return false;
 	}
 
@@ -231,11 +235,13 @@ BOOL SBmpLoadImage(const char *pszFileName, PALETTEENTRY *pPalette, BYTE *pBuffe
 		pszFileName = strchr(pszFileName, 46);
 
 	// omit all types except PCX
-	if (!pszFileName || _strcmpi(pszFileName, ".pcx")) {
+	if (_strcmpi(pszFileName, ".pcx")) {
+		SDL_Log("SBmpLoadImage: Invalid argument, filename does not end with .pcx");
 		return false;
 	}
 
 	if (!SFileReadFile(hFile, &pcxhdr, 128, 0, 0)) {
+		SDL_Log("SBmpLoadImage: Failed to read header from file");
 		SFileCloseFile(hFile);
 		return false;
 	}
