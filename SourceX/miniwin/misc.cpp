@@ -11,22 +11,6 @@
 #define strncasecmp _strnicmp
 #endif
 
-#if !defined(_MSC_VER) && !defined(__x86_64__) && !defined(__i386__)
-unsigned int _rotl(unsigned int value, int shift)
-{
-	if ((shift &= 31) == 0)
-		return value;
-	return (value << shift) | (value >> (32 - shift));
-}
-
-unsigned int _rotr(unsigned int value, int shift)
-{
-	if ((shift &= 31) == 0)
-		return value;
-	return (value >> shift) | (value << (32 - shift));
-}
-#endif
-
 namespace dvl {
 
 DWORD last_error;
