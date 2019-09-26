@@ -7,6 +7,8 @@
 namespace dvl {
 
 static std::unique_ptr<net::abstract_net> dvlnet_inst;
+static char gpszGameName[128] = {};
+static char gpszGamePassword[128] = {};
 
 BOOL SNetReceiveMessage(int *senderplayerid, char **data, int *databytes)
 {
@@ -69,6 +71,19 @@ BOOL SNetDropPlayer(int playerid, DWORD flags)
 
 BOOL SNetGetGameInfo(int type, void *dst, unsigned int length, unsigned int *byteswritten)
 {
+	switch (type) {
+	case GAMEINFO_NAME:
+		strncpy((char *)dst, gpszGameName, length);
+		*byteswritten = strlen(gpszGameName) + 1;
+		break;
+	case GAMEINFO_PASSWORD:
+		strncpy((char *)dst, gpszGamePassword, length);
+		*byteswritten = strlen(gpszGamePassword) + 1;
+		break;
+	default:
+		break;
+	}
+
 	DUMMY();
 	return true;
 }
@@ -111,12 +126,19 @@ BOOL SNetCreateGame(const char *pszGameName, const char *pszGamePassword, const 
 
 	char addrstr[129] = "0.0.0.0";
 	SRegLoadString("dvlnet", "bindaddr", 0, addrstr, 128);
+	strncpy(gpszGameName, addrstr, sizeof(gpszGameName) - 1);
+	if (pszGamePassword)
+		strncpy(gpszGamePassword, pszGamePassword, sizeof(gpszGamePassword) - 1);
 	*playerID = dvlnet_inst->create(addrstr, pszGamePassword);
 	return *playerID != -1;
 }
 
 BOOL SNetJoinGame(int id, char *pszGameName, char *pszGamePassword, char *playerName, char *userStats, int *playerID)
 {
+	if (pszGameName)
+		strncpy(gpszGameName, pszGameName, sizeof(gpszGameName) - 1);
+	if (pszGamePassword)
+		strncpy(gpszGamePassword, pszGamePassword, sizeof(gpszGamePassword) - 1);
 	*playerID = dvlnet_inst->join(pszGameName, pszGamePassword);
 	return *playerID != -1;
 }
