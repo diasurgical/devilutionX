@@ -2,23 +2,25 @@ cmake_minimum_required(VERSION 3.7)
 
 include(CMake/out_of_tree.cmake)
 
-project(devilutionX
-  VERSION 0.0.1
+project(DevilutionX
+  VERSION 0.5.0
   LANGUAGES C CXX)
 
-list(APPEND CMAKE_MODULE_PATH "${devilutionX_SOURCE_DIR}/CMake")
+list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake")
 
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
-option(ASAN "Enable address sanitizer" OFF)
+option(ASAN "Enable address sanitizer" ON)
 option(DEBUG "Enable debug mode in engine" ON)
 option(DIST "Dynamically link only glibc and SDL2" OFF)
 option(FASTER "Enable FASTER in engine" ON)
 option(BINARY_RELEASE "Enable options for binary release" OFF)
 option(NIGHTLY_BUILD "Enable options for nightly build" OFF)
-
+option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
+option(NONET "Disable network" OFF)
+    
 if(BINARY_RELEASE)
   set(CMAKE_BUILD_TYPE "Release")
   set(ASAN OFF)
@@ -49,6 +51,14 @@ if(HAIKU)
   set(ASAN OFF)
 endif()
 
+if(AMIGA)
+  set(ASAN OFF)
+  set(NONET ON)
+  set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -DNONET")
+  set(ASAN "Enable address sanitizer" OFF)
+  set(USE_SDL1 "Use SDL1.2 instead of SDL2" ON)   
+endif()
+
 if(DIST)
   set(sodium_USE_STATIC_LIBS ON)
 endif()
@@ -59,25 +69,28 @@ set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 
-if(NOT CMAKE_SIZEOF_VOID_P EQUAL 4)
-  message(WARNING "sizeof(void*) == ${CMAKE_SIZEOF_VOID_P}.")
-  message(WARNING [[Not 32-bit, highly experimental!]])
-endif()
-
-
 find_package(Threads REQUIRED)
 find_package(Freetype REQUIRED)
 find_package(PNG REQUIRED)
 
-if(SDL1 OR AMIGA)
-  find_package(SDL 1.2 REQUIRED)
-  find_package(SDL_ttf REQUIRED)
-  find_package(SDL_mixer REQUIRED)
+
+if(NONET)
 else()
-  find_package(SDL2 REQUIRED)
-  find_package(SDL2_ttf REQUIRED)
-  find_package(SDL2_mixer REQUIRED)
-  find_package(sodium REQUIRED)
+find_package(sodium REQUIRED)
+endif()
+
+if(USE_SDL1)
+	find_package(SDL REQUIRED)
+	find_package(SDL_ttf REQUIRED)
+	find_package(SDL_mixer REQUIRED)
+	include_directories(${SDL_INCLUDE_DIR})
+else()
+	find_package(SDL2 CONFIG QUIET)
+	if (NOT SDL2_FOUND)
+		find_package(SDL2 REQUIRED)
+	endif()
+	find_package(SDL2_ttf REQUIRED)
+	find_package(SDL2_mixer REQUIRED)
 endif()
 
 
@@ -120,7 +133,6 @@ add_library(devilution STATIC
   Source/debug.cpp
   Source/diablo.cpp
   Source/doom.cpp
-# Source/dx.cpp
   Source/drlg_l1.cpp
   Source/drlg_l2.cpp
   Source/drlg_l3.cpp
@@ -130,7 +142,6 @@ add_library(devilution STATIC
   Source/encrypt.cpp
   Source/engine.cpp
   Source/error.cpp
-  Source/fault.cpp
   Source/gamemenu.cpp
   Source/gendung.cpp
   Source/gmenu.cpp
@@ -142,7 +153,6 @@ add_library(devilution STATIC
   Source/items.cpp
   Source/lighting.cpp
   Source/loadsave.cpp
-  Source/logging.cpp
   Source/mainmenu.cpp
   Source/minitext.cpp
   Source/misdat.cpp
@@ -151,7 +161,6 @@ add_library(devilution STATIC
   Source/monster.cpp
   Source/movie.cpp
   Source/mpqapi.cpp
-  Source/msgcmd.cpp
   Source/msg.cpp
   Source/multi.cpp
   Source/nthread.cpp
@@ -171,7 +180,7 @@ add_library(devilution STATIC
   Source/scrollrt.cpp
   Source/setmaps.cpp
   Source/sha.cpp
-# Source/sound.cpp
+
   Source/spells.cpp
   Source/stores.cpp
   Source/sync.cpp
@@ -183,8 +192,8 @@ add_library(devilution STATIC
   Source/track.cpp
   Source/trigs.cpp
   Source/wave.cpp)
-set(
-  SOURCES
+
+add_executable(devilutionx MACOSX_BUNDLE
   SourceX/dx.cpp
   SourceX/miniwin/misc.cpp
   SourceX/miniwin/misc_io.cpp
@@ -193,7 +202,6 @@ set(
   SourceX/miniwin/rand.cpp
   SourceX/miniwin/thread.cpp
   SourceX/miniwin/dsound.cpp
-  SourceX/miniwin/ddraw.cpp
   SourceX/sound.cpp
   SourceX/storm/storm.cpp
   SourceX/storm/storm_net.cpp
@@ -203,6 +211,7 @@ set(
   SourceX/dvlnet/packet.cpp
   SourceX/dvlnet/base.cpp
   SourceX/dvlnet/frame_queue.cpp
+
   SourceX/DiabloUI/credits.cpp
   SourceX/DiabloUI/diabloui.cpp
   SourceX/DiabloUI/dialogs.cpp
@@ -214,13 +223,16 @@ set(
   SourceX/DiabloUI/selyesno.cpp
   SourceX/DiabloUI/title.cpp
   SourceX/main.cpp
-)
+  ./Packaging/macOS/AppIcon.icns
+  ./Packaging/resources/CharisSILB.ttf)
 
-if(SDL1 OR AMIGA)
+configure_file(SourceS/config.h.in config.h @ONLY)
+target_include_directories(devilution PUBLIC Source SourceS ${CMAKE_CURRENT_BINARY_DIR})
+
+if(NONET)
   list(
     APPEND
     SOURCES
-    SourceX/miniwin/sdl1_wrapper.cpp
   )
 else()
   list(
@@ -232,50 +244,44 @@ else()
   )
 endif()
 
-add_executable(devilutionx ${SOURCES})
-
 target_include_directories(devilution PUBLIC Source SourceS)
-if(SDL1 OR AMIGA)
-	target_include_directories(StormLib PRIVATE
-		${SDL_INCLUDE_DIR}
-		${SDL_INCLUDE_DIRS})
-	target_include_directories(devilution PRIVATE
-		${SDL_INCLUDE_DIR}
-		${SDL_INCLUDE_DIRS})
-	target_include_directories(devilutionx PRIVATE
-		SourceX
-		3rdParty/asio/include
-		3rdParty/Radon/Radon/include
-		3rdParty/libsmacker
-		${SDL_INCLUDE_DIR}
-		${SDL_INCLUDE_DIRS}
-		${SDL_TTF_INCLUDE_DIRS}
-		${SDL_MIXER_INCLUDE_DIRS}
-		${SDL_INCLUDE_DIRS}/..
-		${SDL_INCLUDE_DIR}/..
-		${SDL_TTF_INCLUDE_DIRS}/..
-		${SDL_MIXER_INCLUDE_DIRS}/..)
+if(USE_SDL1)
+  target_include_directories(devilution PRIVATE
+          ${SDL_INCLUDE_DIR}
+          ${SDL_INCLUDE_DIRS})
+target_include_directories(devilutionx PRIVATE
+  SourceX
+  3rdParty/asio/include
+  3rdParty/Radon/Radon/include
+  3rdParty/libsmacker
+  ${SDL_INCLUDE_DIR}
+  ${SDL_INCLUDE_DIRS}
+  ${SDL_TTF_INCLUDE_DIRS}
+  ${SDL_MIXER_INCLUDE_DIRS}
+  ${SDL_INCLUDE_DIRS}/..
+  ${SDL_INCLUDE_DIR}/..
+  ${SDL_TTF_INCLUDE_DIRS}/..
+  ${SDL_MIXER_INCLUDE_DIRS}/..
+)
 else()
-	target_include_directories(StormLib PRIVATE
-		${SDL2_INCLUDE_DIR}
-		${SDL2_INCLUDE_DIRS})
-	target_include_directories(devilution PRIVATE
-		${SDL2_INCLUDE_DIR}
-		${SDL2_INCLUDE_DIRS})
-	target_include_directories(devilutionx PRIVATE
-		SourceX
-		3rdParty/asio/include
-		3rdParty/Radon/Radon/include
-		3rdParty/libsmacker
-		${SDL2_INCLUDE_DIR}
-		${SDL2_INCLUDE_DIRS}
-		${SDL2_TTF_INCLUDE_DIRS}
-		${SDL2_MIXER_INCLUDE_DIRS}
-		${SDL2_INCLUDE_DIRS}/..
-		${SDL2_INCLUDE_DIR}/..
-		${SDL2_TTF_INCLUDE_DIRS}/..
-		${SDL2_MIXER_INCLUDE_DIRS}/..)
-	set(SDL_INCLUDE_DIR ${SDL2_INCLUDE_DIR})
+  target_include_directories(devilution PRIVATE
+          ${SDL2_INCLUDE_DIR}
+          ${SDL2_INCLUDE_DIRS})
+target_include_directories(devilutionx PRIVATE
+  SourceX
+  3rdParty/asio/include
+  3rdParty/Radon/Radon/include
+  3rdParty/libsmacker
+  ${SDL2_INCLUDE_DIR}
+  ${SDL2_INCLUDE_DIRS}
+  ${SDL2_TTF_INCLUDE_DIRS}
+  ${SDL2_MIXER_INCLUDE_DIRS}
+  ${SDL2_INCLUDE_DIRS}/..
+  ${SDL2_INCLUDE_DIR}/..
+  ${SDL2_TTF_INCLUDE_DIRS}/..
+  ${SDL2_MIXER_INCLUDE_DIRS}/..
+)
+  set(SDL_INCLUDE_DIR ${SDL2_INCLUDE_DIR})
 endif()
 
 message("SDL include dir: " ${SDL_INCLUDE_DIR})
@@ -292,7 +298,7 @@ target_link_libraries(devilutionx PRIVATE
   Radon
   )
 
-if(SDL1 OR AMIGA)
+if(USE_SDL1)
   target_link_libraries(devilutionx PRIVATE
   ${SDL_TTF_LIBRARY}
   ${SDL_MIXER_LIBRARY}
@@ -319,9 +325,6 @@ else()
   ${FREETYPE_LIBRARIES}
   ${PNG_LIBRARIES}
   sodium)
-  if(WIN32)
-    target_link_libraries(devilutionx PRIVATE -lfreetype -lpng -lzlibstatic)
-  endif()
 
   message("SDL library: " ${SDL2_LIBRARY} ${SDL2_LIBRARIES})
   message("SDL_mixer library : " ${SDL2_mixer_LIBRARY} )
@@ -329,21 +332,34 @@ else()
 endif()
 
 if(AMIGA AND NOT WARPOS)
-  target_link_libraries(devilutionx PRIVATE -ldebug -latomic)
+  target_link_libraries(devilutionx PRIVATE -ldebug)
 endif()
 
 target_compile_definitions(devilution PRIVATE DEVILUTION_ENGINE)
 target_compile_definitions(devilution PUBLIC
-  DEVILUTION_STUB
   "$<$<BOOL:${DEBUG}>:_DEBUG>"
   # Skip fades and other fluff
   "$<$<BOOL:${FASTER}>:FASTER>")
 target_compile_definitions(devilutionx PRIVATE ASIO_STANDALONE)
 
-if(ASAN)
-  target_compile_options(devilution PUBLIC -fsanitize=address -fsanitize-recover=address)
-  target_link_libraries(devilution PUBLIC -fsanitize=address -fsanitize-recover=address)
-endif()
+
+foreach(target devilution devilutionx)
+  if(USE_SDL1)
+    target_link_libraries(${target} PRIVATE
+      ${SDL_LIBRARY} ${SDL_TTF_LIBRARY} ${SDL_MIXER_LIBRARY})
+    target_compile_definitions(${target} PRIVATE USE_SDL1)
+  else()
+    target_link_libraries(${target} PRIVATE
+      SDL2::SDL2main
+      SDL2::SDL2_ttf
+      SDL2::SDL2_mixer)
+  endif()
+
+  if(ASAN)
+    target_compile_options(${target} PUBLIC -fsanitize=address -fsanitize-recover=address)
+    target_link_libraries(${target} PUBLIC -fsanitize=address -fsanitize-recover=address)
+  endif()
+endforeach(target devilution devilutionx)
 
 if(DIST AND NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   target_link_libraries(devilutionx PUBLIC -static-libgcc -static-libstdc++)
@@ -362,19 +378,18 @@ if(HAIKU)
 endif()
 
 if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-  # Note: In Debug mode, GCC generates spurious memory references that upset Valgrind,
-  # these options fix that.
-  target_compile_options(devilution PUBLIC $<$<CONFIG:Debug>:-fno-omit-frame-pointer>)
-  target_compile_options(devilution PUBLIC -Wno-unknown-pragmas)
+  if(DEBUG)
+    # Note: For Valgrind suppor.
+    target_compile_options(devilution PUBLIC -fno-omit-frame-pointer)
+  endif()
   # Ignore serious warnings due to "quality" of decompiled code
   # Currently, disable ignore all warnings (-w), to be removed later
-  target_compile_options(devilution PRIVATE -fpermissive -Wno-write-strings -Wno-multichar -w)
-  # Disable optimizations that can break non-standards-conforming code
-  target_compile_options(devilution PRIVATE -fno-strict-aliasing)
+  target_compile_options(devilution PRIVATE -fpermissive -w)
 
   # Warnings for devilutionX
-  target_compile_options(devilutionx PRIVATE -Wall -Wextra -Wno-write-strings -Wno-multichar -Wno-unused-parameter)
+  target_compile_options(devilutionx PRIVATE -Wall -Wextra -Wno-write-strings -Wno-multichar -Wno-unused-parameter -Wno-missing-field-initializers -Wno-format-security)
 
+  # For ARM and other default unsigned char platforms
   target_compile_options(devilution PRIVATE -fsigned-char)
   target_compile_options(devilutionx PRIVATE -fsigned-char)
 endif()
@@ -384,17 +399,39 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-  target_compile_options(devilution PRIVATE -fno-aggressive-loop-optimizations )
-  add_definitions(-D_GNU_SOURCE ) #-D_FILE_OFFSET_BITS=64
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+  add_definitions(-D_GNU_SOURCE )
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
   # Style issues
   target_compile_options(devilutionx PRIVATE -Wno-parentheses -Wno-logical-op-parentheses -Wno-bitwise-op-parentheses)
   # Silence warnings about __int64 alignment hack not always being applicable
   target_compile_options(devilutionx PRIVATE -Wno-ignored-attributes)
-  # Fix: error: cast from pointer to smaller type 'unsigned char' loses information
-  target_compile_options(devilution PRIVATE -fms-extensions -fms-compatibility -fms-compatibility-version=19.00)
-	# Silence appfat.cpp warnings
+  # Silence appfat.cpp warnings
   set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wno-narrowing")
+endif()
+
+if(APPLE)
+  set_source_files_properties("./Packaging/macOS/AppIcon.icns" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+  set_source_files_properties("./Packaging/resources/CharisSILB.ttf" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+  set(MACOSX_BUNDLE_GUI_IDENTIFIER com.diasurgical.devilutionx)
+  set(MACOSX_BUNDLE_COPYRIGHT Unlicense)
+  set(MACOSX_BUNDLE_BUNDLE_NAME devilutionx)
+  set(MACOSX_BUNDLE_INFO_STRING ${PROJECT_VERSION})
+  set(MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION})
+  set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION})
+  set(MACOSX_BUNDLE_LONG_VERSION_STRING "Version ${PROJECT_VERSION}")
+  set_target_properties(devilutionx PROPERTIES MACOSX_BUNDLE_ICON_FILE "AppIcon")
+  set_target_properties(devilutionx PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/macOS/Info.plist")
+
+  install (TARGETS devilutionx DESTINATION ./)
+
+  set(MACOSX_BUNDLE_LONG_VERSION_STRING "Version ${PROJECT_VERSION}")
+  set(CPACK_PACKAGE_FILE_NAME "devilutionx")
+  set(CPACK_DMG_DISABLE_APPLICATIONS_SYMLINK "ON")
+  set(CPACK_GENERATOR "DragNDrop")
+
+  include(CPack)
 endif()

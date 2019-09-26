@@ -298,27 +298,27 @@
 // Virtual key codes.
 //
 // ref: https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
-#define VK_BACK DVL_VK_BACK             // BACKSPACE key
-#define VK_TAB DVL_VK_TAB               // TAB key
-#define VK_RETURN DVL_VK_RETURN         // ENTER key
-#define VK_SHIFT DVL_VK_SHIFT           // SHIFT key
-#define VK_CONTROL DVL_VK_CONTROL       // CONTROL key
-#define VK_MENU DVL_VK_MENU             // ALT key
-#define VK_PAUSE DVL_VK_PAUSE           // PAUSE key
-#define VK_CAPITAL DVL_VK_CAPITAL       // CAPS LOCK key
-#define VK_ESCAPE DVL_VK_ESCAPE         // ESC key
-#define VK_SPACE DVL_VK_SPACE           // SPACEBAR
-#define VK_PRIOR DVL_VK_PRIOR           // PAGE UP key
-#define VK_NEXT DVL_VK_NEXT             // PAGE DOWN key
-#define VK_END DVL_VK_END               // END key
-#define VK_HOME DVL_VK_HOME             // HOME key
-#define VK_LEFT DVL_VK_LEFT             // LEFT ARROW key
-#define VK_UP DVL_VK_UP                 // UP ARROW key
-#define VK_RIGHT DVL_VK_RIGHT           // RIGHT ARROW key
-#define VK_DOWN DVL_VK_DOWN             // DOWN ARROW key
-#define VK_SNAPSHOT DVL_VK_SNAPSHOT     // PRINT SCREEN key
-#define VK_INSERT DVL_VK_INSERT         // INS key
-#define VK_DELETE DVL_VK_DELETE         // DEL key
+#define VK_BACK DVL_VK_BACK         // BACKSPACE key
+#define VK_TAB DVL_VK_TAB           // TAB key
+#define VK_RETURN DVL_VK_RETURN     // ENTER key
+#define VK_SHIFT DVL_VK_SHIFT       // SHIFT key
+#define VK_CONTROL DVL_VK_CONTROL   // CONTROL key
+#define VK_MENU DVL_VK_MENU         // ALT key
+#define VK_PAUSE DVL_VK_PAUSE       // PAUSE key
+#define VK_CAPITAL DVL_VK_CAPITAL   // CAPS LOCK key
+#define VK_ESCAPE DVL_VK_ESCAPE     // ESC key
+#define VK_SPACE DVL_VK_SPACE       // SPACEBAR
+#define VK_PRIOR DVL_VK_PRIOR       // PAGE UP key
+#define VK_NEXT DVL_VK_NEXT         // PAGE DOWN key
+#define VK_END DVL_VK_END           // END key
+#define VK_HOME DVL_VK_HOME         // HOME key
+#define VK_LEFT DVL_VK_LEFT         // LEFT ARROW key
+#define VK_UP DVL_VK_UP             // UP ARROW key
+#define VK_RIGHT DVL_VK_RIGHT       // RIGHT ARROW key
+#define VK_DOWN DVL_VK_DOWN         // DOWN ARROW key
+#define VK_SNAPSHOT DVL_VK_SNAPSHOT // PRINT SCREEN key
+#define VK_INSERT DVL_VK_INSERT     // INS key
+#define VK_DELETE DVL_VK_DELETE     // DEL key
 // VK_0 through VK_9 correspond to '0' - '9'
 // VK_A through VK_Z correspond to 'A' - 'Z'
 #define VK_LWIN DVL_VK_LWIN             // Left Windows key (Natural keyboard)

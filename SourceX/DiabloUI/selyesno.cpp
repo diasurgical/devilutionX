@@ -22,8 +22,7 @@ UI_Item SELYESNO_DIALOG[] = {
 
 void selyesno_Free()
 {
-	mem_free_dbg(ArtBackground.data);
-	ArtBackground.data = NULL;
+	ArtBackground.Unload();
 }
 
 void selyesno_Select(int value)

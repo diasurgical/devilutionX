@@ -15,17 +15,17 @@ namespace dvl {
 namespace net {
 
 enum packet_type : uint8_t {
-		PT_MESSAGE = 0x01,
-		PT_TURN = 0x02,
-		PT_JOIN_REQUEST = 0x11,
-		PT_JOIN_ACCEPT = 0x12,
-		PT_CONNECT = 0x13,
-		PT_DISCONNECT = 0x14,
+	PT_MESSAGE = 0x01,
+	PT_TURN = 0x02,
+	PT_JOIN_REQUEST = 0x11,
+	PT_JOIN_ACCEPT = 0x12,
+	PT_CONNECT = 0x13,
+	PT_DISCONNECT = 0x14,
 };
 
 typedef uint8_t plr_t;
 typedef uint32_t cookie_t;
-typedef int turn_t; // change int to something else in devilution code later
+typedef int turn_t;      // change int to something else in devilution code later
 typedef int leaveinfo_t; // also change later
 #ifndef __AMIGA__
 typedef std::array<unsigned char, crypto_secretbox_KEYBYTES> key_t;
@@ -34,7 +34,8 @@ typedef std::array<unsigned char, crypto_secretbox_KEYBYTES> key_t;
 static constexpr plr_t PLR_MASTER = 0xFE;
 static constexpr plr_t PLR_BROADCAST = 0xFF;
 
-class packet_exception : public dvlnet_exception {};
+class packet_exception : public dvlnet_exception {
+};
 
 class packet {
 protected:
@@ -48,29 +49,31 @@ protected:
 	buffer_t m_info;
 	leaveinfo_t m_leaveinfo;
 
-	const key_t& key;
+	const key_t &key;
 	bool have_encrypted = false;
 	bool have_decrypted = false;
 	buffer_t encrypted_buffer;
 	buffer_t decrypted_buffer;
 
 public:
-	packet(const key_t& k) : key(k) {};
+	packet(const key_t &k)
+		: key(k) {};
 
-	const buffer_t& data();
+	const buffer_t &data();
 
 	packet_type type();
 	plr_t src();
 	plr_t dest();
-	const buffer_t& message();
+	const buffer_t &message();
 	turn_t turn();
 	cookie_t cookie();
 	plr_t newplr();
-	const buffer_t& info();
+	const buffer_t &info();
 	leaveinfo_t leaveinfo();
 };
 
-template<class P> class packet_proc : public packet {
+template <class P>
+class packet_proc : public packet {
 public:
 	using packet::packet;
 	void process_data();
@@ -80,8 +83,9 @@ class packet_in : public packet_proc<packet_in> {
 public:
 	using packet_proc<packet_in>::packet_proc;
 	void create(buffer_t buf);
-	void process_element(buffer_t& x);
-	template <class T> void process_element(T& x);
+	void process_element(buffer_t &x);
+	template <class T>
+	void process_element(T &x);
 	void decrypt();
 };
 
@@ -89,19 +93,23 @@ class packet_out : public packet_proc<packet_out> {
 public:
 	using packet_proc<packet_out>::packet_proc;
 
-	template<packet_type t, typename... Args>
+	template <packet_type t, typename... Args>
 	void create(Args... args);
 
-	void process_element(buffer_t& x);
-	template<class T> void process_element(T& x);
-	template<class T> static const unsigned char* begin(const T& x);
-	template<class T> static const unsigned char* end(const T& x);
+	void process_element(buffer_t &x);
+	template <class T>
+	void process_element(T &x);
+	template <class T>
+	static const unsigned char *begin(const T &x);
+	template <class T>
+	static const unsigned char *end(const T &x);
 	void encrypt();
 };
 
-template<class P> void packet_proc<P>::process_data()
+template <class P>
+void packet_proc<P>::process_data()
 {
-	P& self = static_cast<P&>(*this);
+	P &self = static_cast<P &>(*this);
 	self.process_element(m_type);
 	self.process_element(m_src);
 	self.process_element(m_dest);
@@ -131,23 +139,23 @@ template<class P> void packet_proc<P>::process_data()
 	}
 }
 
-inline void packet_in::process_element(buffer_t& x)
+inline void packet_in::process_element(buffer_t &x)
 {
 	x.insert(x.begin(), decrypted_buffer.begin(), decrypted_buffer.end());
 	decrypted_buffer.resize(0);
 }
 
-template <class T> void packet_in::process_element(T& x)
+template <class T>
+void packet_in::process_element(T &x)
 {
 	if (decrypted_buffer.size() < sizeof(T))
-		printf("AAAA exception error\n");
-	//throw packet_exception()
+		throw packet_exception();
 	std::memcpy(&x, decrypted_buffer.data(), sizeof(T));
 	decrypted_buffer.erase(decrypted_buffer.begin(),
-	                        decrypted_buffer.begin() + sizeof(T));
+		decrypted_buffer.begin() + sizeof(T));
 }
 
-template<>
+template <>
 inline void packet_out::create<PT_MESSAGE>(plr_t s, plr_t d, buffer_t m)
 {
 	if (have_encrypted || have_decrypted)
@@ -159,7 +167,7 @@ inline void packet_out::create<PT_MESSAGE>(plr_t s, plr_t d, buffer_t m)
 	m_message = std::move(m);
 }
 
-template<>
+template <>
 inline void packet_out::create<PT_TURN>(plr_t s, plr_t d, turn_t u)
 {
 	if (have_encrypted || have_decrypted)
@@ -171,9 +179,9 @@ inline void packet_out::create<PT_TURN>(plr_t s, plr_t d, turn_t u)
 	m_turn = u;
 }
 
-template<>
+template <>
 inline void packet_out::create<PT_JOIN_REQUEST>(plr_t s, plr_t d,
-                                                cookie_t c, buffer_t i)
+	cookie_t c, buffer_t i)
 {
 	if (have_encrypted || have_decrypted)
 		ABORT();
@@ -185,9 +193,9 @@ inline void packet_out::create<PT_JOIN_REQUEST>(plr_t s, plr_t d,
 	m_info = i;
 }
 
-template<>
+template <>
 inline void packet_out::create<PT_JOIN_ACCEPT>(plr_t s, plr_t d, cookie_t c,
-                                               plr_t n, buffer_t i)
+	plr_t n, buffer_t i)
 {
 	if (have_encrypted || have_decrypted)
 		ABORT();
@@ -200,7 +208,7 @@ inline void packet_out::create<PT_JOIN_ACCEPT>(plr_t s, plr_t d, cookie_t c,
 	m_info = i;
 }
 
-template<>
+template <>
 inline void packet_out::create<PT_CONNECT>(plr_t s, plr_t d, plr_t n)
 {
 	if (have_encrypted || have_decrypted)
@@ -212,9 +220,9 @@ inline void packet_out::create<PT_CONNECT>(plr_t s, plr_t d, plr_t n)
 	m_newplr = n;
 }
 
-template<>
+template <>
 inline void packet_out::create<PT_DISCONNECT>(plr_t s, plr_t d, plr_t n,
-                                              leaveinfo_t l)
+	leaveinfo_t l)
 {
 	if (have_encrypted || have_decrypted)
 		ABORT();
@@ -226,22 +234,25 @@ inline void packet_out::create<PT_DISCONNECT>(plr_t s, plr_t d, plr_t n,
 	m_leaveinfo = l;
 }
 
-inline void packet_out::process_element(buffer_t& x)
+inline void packet_out::process_element(buffer_t &x)
 {
 	encrypted_buffer.insert(encrypted_buffer.end(), x.begin(), x.end());
 }
 
-template <class T> void packet_out::process_element(T& x)
+template <class T>
+void packet_out::process_element(T &x)
 {
 	encrypted_buffer.insert(encrypted_buffer.end(), begin(x), end(x));
 }
 
-template <class T> const unsigned char* packet_out::begin(const T& x)
+template <class T>
+const unsigned char *packet_out::begin(const T &x)
 {
 	return reinterpret_cast<const unsigned char *>(&x);
 }
 
-template <class T> const unsigned char* packet_out::end(const T& x)
+template <class T>
+const unsigned char *packet_out::end(const T &x)
 {
 	return reinterpret_cast<const unsigned char *>(&x) + sizeof(T);
 }
@@ -254,26 +265,26 @@ public:
 
 	packet_factory(std::string pw = "");
 	std::unique_ptr<packet> make_packet(buffer_t buf);
-	template<packet_type t, typename... Args>
+	template <packet_type t, typename... Args>
 	std::unique_ptr<packet> make_packet(Args... args);
 };
 
 inline std::unique_ptr<packet> packet_factory::make_packet(buffer_t buf)
 {
-	auto ret = std::make_unique<packet_in>(key);
+	std::unique_ptr<packet_in> ret(new packet_in(key));
 	ret->create(std::move(buf));
 	ret->decrypt();
-	return ret;
+	return std::unique_ptr<packet>(std::move(ret));
 }
 
-template<packet_type t, typename... Args>
+template <packet_type t, typename... Args>
 std::unique_ptr<packet> packet_factory::make_packet(Args... args)
 {
-	auto ret = std::make_unique<packet_out>(key);
+	std::unique_ptr<packet_out> ret(new packet_out(key));
 	ret->create<t>(args...);
 	ret->encrypt();
-	return ret;
+	return std::unique_ptr<packet>(std::move(ret));
 }
 
-}  // namespace net
-}  // namespace dvl
+} // namespace net
+} // namespace dvl

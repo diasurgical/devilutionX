@@ -1,13 +1,16 @@
 #include "diablo.h"
+
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
+#include <SDL.h>
+#include <config.h>
 
 DEVILUTION_BEGIN_NAMESPACE
 
 _SNETVERSIONDATA fileinfo;
 int gbActive;
 char diablo_exe_path[MAX_PATH];
-HANDLE unused_mpq;
+HANDLE hellfire_mpq;
 char patch_rt_mpq_path[MAX_PATH];
 WNDPROC CurrentProc;
 HANDLE diabdat_mpq;
@@ -35,9 +38,9 @@ void init_cleanup(BOOL show_cursor)
 		SFileCloseArchive(patch_rt_mpq);
 		patch_rt_mpq = NULL;
 	}
-	if (unused_mpq) {
-		SFileCloseArchive(unused_mpq);
-		unused_mpq = NULL;
+	if (hellfire_mpq) {
+		SFileCloseArchive(hellfire_mpq);
+		hellfire_mpq = NULL;
 	}
 
 	UiDestroy();
@@ -173,47 +176,7 @@ void init_create_window(int nCmdShow)
 	BlackPalette();
 	snd_init(hWnd);
 	init_archives();
-	init_disable_screensaver(1);
-}
-
-void init_kill_mom_parent()
-{
-	HWND handle;
-
-	handle = init_find_mom_parent();
-	if (handle) {
-		PostMessage(handle, WM_CLOSE, 0, 0);
-		killed_mom_parent = TRUE;
-	}
-}
-
-HWND init_find_mom_parent()
-{
-	HWND i, handle;
-	char ClassName[256];
-
-	for (i = GetForegroundWindow();; i = GetWindow(handle, GW_HWNDNEXT)) {
-		handle = i;
-		if (!i)
-			break;
-		GetClassName(i, ClassName, 255);
-		if (!_strcmpi(ClassName, "MOM Parent"))
-			break;
-	}
-	return handle;
-}
-
-void init_await_mom_parent_exit()
-{
-	DWORD tick;
-
-	tick = GetTickCount();
-	if (!init_find_mom_parent()) {
-		return;
-	}
-	do {
-		Sleep(250);
-	} while (GetTickCount() - tick <= 4000 && init_find_mom_parent());
+	SDL_DisableScreenSaver();
 }
 
 void init_archives()
@@ -233,21 +196,9 @@ void init_archives()
 	while (1) {
 #endif
 #ifdef SPAWN
-		diabdat_mpq = init_test_access(diabdat_mpq_path, "\\spawn.mpq", "DiabloSpawn", MPQ_FLAG_READ_ONLY, FS_PC);
+		diabdat_mpq = init_test_access(diabdat_mpq_path, "spawn.mpq", "DiabloSpawn", MPQ_FLAG_READ_ONLY, FS_PC);
 #else
-#ifdef COPYPROT
-		diabdat_mpq = init_test_access(diabdat_mpq_path, "\\diabdat.mpq", "DiabloCD", 2000/*MPQ_FLAG_READ_ONLY*/, FS_CD);
-#else
-		diabdat_mpq = init_test_access(diabdat_mpq_path, "\\diabdat.mpq", "DiabloCD", 2000/*MPQ_FLAG_READ_ONLY*/, FS_PC);
-#endif
-#endif
-#ifdef COPYPROT
-		if (diabdat_mpq)
-			break;
-		UiCopyProtError(&result);
-		if (result == COPYPROT_CANCEL)
-			FileErrDlg("diabdat.mpq");
-	}
+		diabdat_mpq = init_test_access(diabdat_mpq_path, "diabdat.mpq", "DiabloCD", 2000, FS_PC);
 #endif
 	if (!WOpenFile("ui_art\\title.pcx", &fh, TRUE))
 #ifdef SPAWN
@@ -257,39 +208,29 @@ void init_archives()
 #endif
 	WCloseFile(fh);
 #ifdef SPAWN
-	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "\\patch_sh.mpq", "DiabloSpawn", MPQ_FLAG_READ_ONLY, FS_PC);
+	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "patch_sh.mpq", "DiabloSpawn", MPQ_FLAG_READ_ONLY, FS_PC);
 #else
-	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "\\patch_rt.mpq", "DiabloInstall", MPQ_FLAG_READ_ONLY, FS_PC);
+	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "patch_rt.mpq", "DiabloInstall", MPQ_FLAG_READ_ONLY, FS_PC);
 #endif
 }
 
 HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags, int fs)
 {
-	char *last_slash_pos;
-	char Filename[MAX_PATH];
-	char Buffer[MAX_PATH];
-	char archive_path[MAX_PATH];
+	char Buffer[2][MAX_PATH];
+	char *sdlPath;
 	HANDLE archive;
 
-	if (!GetCurrentDirectory(sizeof(Buffer), Buffer))
-		app_fatal("Can't get program path");
-	init_strip_trailing_slash(Buffer);
-	if (!SFileSetBasePath(Buffer))
-		app_fatal("SFileSetBasePath");
-	if (!GetModuleFileName(ghInst, Filename, sizeof(Filename)))
-		app_fatal("Can't get program name");
-	last_slash_pos = strrchr(Filename, '\\');
-	if (last_slash_pos)
-		*last_slash_pos = '\0';
-	init_strip_trailing_slash(Filename);
-	strcpy(mpq_path, Buffer);
-	strcat(mpq_path, mpq_name);
-	if (SFileOpenArchive(mpq_path, flags, FS_PC, &archive))
-		return archive;
-	if (strcmp(Filename, Buffer)) {
-		strcpy(mpq_path, Filename);
-		strcat(mpq_path, mpq_name);
-		if (SFileOpenArchive(mpq_path, flags, FS_PC, &archive))
+	GetBasePath(Buffer[0], MAX_PATH);
+	GetPrefPath(Buffer[1], MAX_PATH);
+
+	for (int i = 0; i < 2; i++) {
+		snprintf(mpq_path, MAX_PATH, "%s%s", Buffer[i], mpq_name);
+#ifdef __BIG_ENDIAN__
+		if (SFileOpenArchive(mpq_path, flags, FS_PC, &archive)) {
+#else		
+		if (SFileOpenArchive(mpq_path, 0, flags, &archive)) {
+#endif	
+			SFileSetBasePath(Buffer[i]);
 			return archive;
 	}
 	archive_path[0] = '\0';
@@ -302,10 +243,7 @@ HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags
 				return archive;
 		}
 	}
-	if (fs != FS_PC && init_read_test_file(archive_path, mpq_name, flags, &archive)) {
-		strcpy(mpq_path, archive_path);
-		return archive;
-	}
+
 	return NULL;
 }
 
@@ -355,29 +293,8 @@ BOOL init_read_test_file(char *pszPath, char *pszArchive, int flags, HANDLE *phA
 
 void init_get_file_info()
 {
-	DWORD dwLen;
-	void *pBlock;
-	unsigned int uBytes;
-	DWORD dwHandle;
-	VS_FIXEDFILEINFO *lpBuffer;
-
-	if (GetModuleFileName(ghInst, diablo_exe_path, sizeof(diablo_exe_path))) {
-		dwLen = GetFileVersionInfoSize(diablo_exe_path, &dwHandle);
-		if (dwLen) {
-			pBlock = DiabloAllocPtr(dwLen);
-			if (GetFileVersionInfo(diablo_exe_path, 0, dwLen, pBlock)) {
-				if (VerQueryValue(pBlock, "\\", (LPVOID *)&lpBuffer, &uBytes))
-					sprintf(
-					    gszVersionNumber,
-					    "version %d.%d.%d.%d",
-					    lpBuffer->dwProductVersionMS >> 16,
-					    lpBuffer->dwProductVersionMS & 0xFFFF,
-					    lpBuffer->dwProductVersionLS >> 16,
-					    lpBuffer->dwProductVersionLS & 0xFFFF);
-			}
-			mem_free_dbg(pBlock);
-		}
-	}
+	snprintf(gszProductName, MAX_PATH, "%s v%s", PROJECT_NAME, PROJECT_VERSION);
+	snprintf(gszVersionNumber, MAX_PATH, "version %s", PROJECT_VERSION);
 }
 
 LRESULT __stdcall MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
@@ -403,7 +320,7 @@ LRESULT __stdcall MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 		break;
 #ifdef _DEBUG
 	case WM_SYSKEYUP:
-		if(wParam == VK_RETURN) {
+		if (wParam == VK_RETURN) {
 			fullscreen = !fullscreen;
 			dx_reinit();
 			return 0;

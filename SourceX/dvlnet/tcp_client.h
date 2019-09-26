@@ -23,7 +23,8 @@ public:
 	constexpr static unsigned short default_port = 6112;
 
 	virtual void poll();
-	virtual void send(packet& pkt);
+	virtual void send(packet &pkt);
+
 private:
 	frame_queue recv_queue;
 	buffer_t recv_buffer = buffer_t(frame_queue::max_frame_size);
@@ -32,10 +33,10 @@ private:
 	asio::ip::tcp::socket sock = asio::ip::tcp::socket(ioc);
 	std::unique_ptr<tcp_server> local_server; // must be declared *after* ioc
 
-	void handle_recv(const asio::error_code& error, size_t bytes_read);
+	void handle_recv(const asio::error_code &error, size_t bytes_read);
 	void start_recv();
-	void handle_send(const asio::error_code& error, size_t bytes_sent);
+	void handle_send(const asio::error_code &error, size_t bytes_sent);
 };
 
-}  // namespace net
-}  // namespace dvl
+} // namespace net
+} // namespace dvl
