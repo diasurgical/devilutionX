@@ -232,16 +232,13 @@ void free_game()
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	HINSTANCE hInst;
 	int nData;
 	char szFileName[MAX_PATH];
 
-	hInst = hInstance;
-	ghInst = hInst;
+	ghInst = hInstance;
 
 	if (ReadOnlyTest()) {
-		if (!GetModuleFileName(ghInst, szFileName, sizeof(szFileName)))
-			szFileName[0] = '\0';
+		GetPrefPath(szFileName, sizeof(szFileName));
 		DirErrorDlg(szFileName);
 	}
 
@@ -846,25 +843,18 @@ BOOL PressSysKey(int wParam)
 
 void diablo_hotkey_msg(DWORD dwMsg)
 {
-	char *s;
-	char szFileName[MAX_PATH];
 	char szMsg[MAX_SEND_STR_LEN];
 
 	if (gbMaxPlayers == 1) {
 		return;
 	}
-	if (GetModuleFileName(ghInst, szFileName, sizeof(szFileName)) == 0) {
-		app_fatal("Can't get program name");
-	}
 
-	s = strrchr(szFileName, '\\');
-	if (s != NULL) {
-		*s = '\0';
-	}
-
-	strcat(szFileName, "\\Diablo.ini");
 	/// ASSERT: assert(dwMsg < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]));
-	GetPrivateProfileString("NetMsg", spszMsgHotKeyTbl[dwMsg], spszMsgTbl[dwMsg], szMsg, sizeof(szMsg), szFileName);
+	if (!getIniValue("NetMsg", spszMsgHotKeyTbl[dwMsg], szMsg, MAX_SEND_STR_LEN)) {
+		snprintf(szMsg, MAX_SEND_STR_LEN, "%s", spszMsgTbl[dwMsg]);
+		setIniValue("NetMsg", spszMsgHotKeyTbl[dwMsg], szMsg);
+	}
+
 	NetSendCmdString(-1, szMsg);
 }
 

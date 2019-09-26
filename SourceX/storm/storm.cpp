@@ -21,16 +21,30 @@ bool directFileAccess = false;
 
 static std::string getIniPath()
 {
-	char path[DVL_MAX_PATH];
-	int len = GetModuleFileNameA(ghInst, path, DVL_MAX_PATH);
-	path[len - 1] = '/';
-	strcat(path, "diablo.ini");
+	char path[DVL_MAX_PATH], file_path[DVL_MAX_PATH];
 
-	return path;
+	GetPrefPath(path, DVL_MAX_PATH);
+	snprintf(file_path, DVL_MAX_PATH, "%sdiablo.ini", path);
+
+	return file_path;
 }
 
 static radon::File ini(getIniPath());
 static Mix_Chunk *SFileChunk;
+
+void GetBasePath(char *buffer, size_t size)
+{
+	char *path = SDL_GetBasePath();
+	snprintf(buffer, size, "%s", path);
+	SDL_free(path);
+}
+
+void GetPrefPath(char *buffer, size_t size)
+{
+	char *path = SDL_GetPrefPath("diasurgical", "devilution");
+	snprintf(buffer, size, "%s", path);
+	SDL_free(path);
+}
 
 void TranslateFileName(char *dst, int dstLen, const char *src)
 {
@@ -346,7 +360,7 @@ void *SMemReAlloc(void *location, unsigned int amount, char *logfilename, int lo
 	UNIMPLEMENTED();
 }
 
-bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, int *dataSize = NULL)
+bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, int *dataSize)
 {
 	radon::Section *section = ini.getSection(sectionName);
 	if (!section)
@@ -366,7 +380,7 @@ bool getIniValue(const char *sectionName, const char *keyName, char *string, int
 	return true;
 }
 
-void setIniValue(const char *sectionName, const char *keyName, char *value, int len = 0)
+void setIniValue(const char *sectionName, const char *keyName, char *value, int len)
 {
 	radon::Section *section = ini.getSection(sectionName);
 	if (!section) {

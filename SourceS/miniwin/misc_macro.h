@@ -5,7 +5,6 @@
 
 #define INVALID_HANDLE_VALUE ((HANDLE)-1)
 #define INVALID_HANDLE ((HANDLE)-1)
-#define HFILE_ERROR DVL_HFILE_ERROR
 
 //
 // Intrinsics
@@ -98,7 +97,6 @@
 #define SECTION_ALL_ACCESS \
 	(STANDARD_RIGHTS_REQUIRED | SECTION_QUERY | SECTION_MAP_WRITE | SECTION_MAP_READ | SECTION_MAP_EXECUTE | SECTION_EXTEND_SIZE)
 
-#define GetPrivateProfileString GetPrivateProfileStringA
 #define MessageBox MessageBoxA
 
 #define HKEY_CURRENT_USER 1
@@ -112,14 +110,10 @@
 #define SetFileAttributes SetFileAttributesA
 #define FindFirstFile FindFirstFileA
 #define CreateFile CreateFileA
-#define GetWindowsDirectory GetWindowsDirectoryA
-#define GetLogicalDriveStrings GetLogicalDriveStringsA
 #define GetDriveType GetDriveTypeA
 #define GetDiskFreeSpace GetDiskFreeSpaceA
-#define GetModuleFileName GetModuleFileNameA
 #define GetComputerName GetComputerNameA
 #define DeleteFile DeleteFileA
-#define CopyFile CopyFileA
 
 #define GWL_STYLE (-16)
 
@@ -198,8 +192,6 @@
 #define SWP_NOMOVE 0x0002
 #define SWP_NOSIZE 0x0004
 #define SWP_NOZORDER 0x0001
-
-#define OF_EXIST 1
 
 #define MAKEINTRESOURCE DVL_MAKEINTRESOURCE
 

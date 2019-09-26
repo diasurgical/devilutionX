@@ -825,7 +825,10 @@ SMemReAlloc(
 #define SLOG_FILE         -4
 #define SLOG_EXCEPTION    -5
 
-
+void GetBasePath(char *buffer, size_t size);
+void GetPrefPath(char *buffer, size_t size);
+bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, int *dataSize = NULL);
+void setIniValue(const char *sectionName, const char *keyName, char *value, int len = 0);
 BOOL STORMAPI SRegLoadData(const char *keyname, const char *valuename, int size, LPBYTE lpData, BYTE flags, LPDWORD lpcbData);
 BOOL STORMAPI SRegLoadString(const char *keyname, const char *valuename, BYTE flags, char *buffer, unsigned int buffersize);
 BOOL STORMAPI SRegLoadValue(const char *keyname, const char *valuename, BYTE flags, int *value);

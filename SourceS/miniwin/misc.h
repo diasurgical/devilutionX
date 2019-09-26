@@ -65,7 +65,7 @@ typedef LONG_PTR LRESULT;
 //
 typedef void *HANDLE;
 
-typedef HANDLE HWND, HGDIOBJ, HMODULE, HDC, HRGN, HINSTANCE, HPALETTE, HFILE, HCURSOR;
+typedef HANDLE HWND, HGDIOBJ, HMODULE, HDC, HRGN, HINSTANCE, HPALETTE, HCURSOR;
 
 typedef LONG LCID;
 
@@ -348,15 +348,6 @@ typedef struct _IMAGE_DOS_HEADER {
 	LONG e_lfanew;
 } IMAGE_DOS_HEADER, *PIMAGE_DOS_HEADER;
 
-typedef struct _OFSTRUCT {
-	BYTE cBytes;
-	BYTE fFixedDisk;
-	WORD nErrCode;
-	WORD Reserved1;
-	WORD Reserved2;
-	CHAR szPathName[DVL_OFS_MAXPATHNAME];
-} OFSTRUCT, *LPOFSTRUCT, *POFSTRUCT;
-
 typedef struct _OSVERSIONINFOA {
 	DWORD dwOSVersionInfoSize;
 	DWORD dwMajorVersion;
@@ -388,8 +379,6 @@ void lstrcpynA(LPSTR lpString1, LPCSTR lpString2, int iMaxLength);
 LPVOID VirtualAlloc(LPVOID lpAddress, SIZE_T dwSize, DWORD flAllocationType, DWORD flProtect);
 BOOL VirtualFree(LPVOID lpAddress, SIZE_T dwSize, DWORD dwFreeType);
 
-DWORD WINAPI GetPrivateProfileStringA(LPCSTR lpAppName, LPCSTR lpKeyName, LPCSTR lpDefault, LPSTR lpReturnedString,
-    DWORD nSize, LPCSTR lpFileName);
 int MessageBoxA(HWND hWnd, const char *Text, const char *Title, UINT Flags);
 typedef LONG LSTATUS, HKEY, REGSAM, PHKEY;
 
@@ -411,17 +400,11 @@ HANDLE WINAPI CreateFileA(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShar
 WINBOOL WINAPI ReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead, LPDWORD lpNumberOfBytesRead,
     LPOVERLAPPED lpOverlapped);
 DWORD WINAPI GetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh);
-UINT WINAPI GetWindowsDirectoryA(LPSTR lpBuffer, UINT uSize);
-DWORD GetCurrentDirectory(DWORD nBufferLength, LPTSTR lpBuffer);
-DWORD GetLogicalDriveStringsA(DWORD nBufferLength, LPSTR lpBuffer);
 UINT GetDriveTypeA(LPCSTR lpRootPathName);
 WINBOOL WINAPI GetDiskFreeSpaceA(LPCSTR lpRootPathName, LPDWORD lpSectorsPerCluster, LPDWORD lpBytesPerSector,
     LPDWORD lpNumberOfFreeClusters, LPDWORD lpTotalNumberOfClusters);
-DWORD WINAPI GetModuleFileNameA(HMODULE hModule, LPSTR lpFilename, DWORD nSize);
 WINBOOL WINAPI GetComputerNameA(LPSTR lpBuffer, LPDWORD nSize);
 WINBOOL WINAPI DeleteFileA(LPCSTR lpFileName);
-WINBOOL WINAPI CopyFileA(LPCSTR lpExistingFileName, LPCSTR lpNewFileName, WINBOOL bFailIfExists);
-HFILE WINAPI OpenFile(LPCSTR lpFileName, LPOFSTRUCT lpReOpenBuff, UINT uStyle);
 
 typedef struct _CONTEXT {
 
@@ -545,7 +528,6 @@ extern BOOL __cdecl LoadArtWithPal(char *pszFile, void **pBuffer, int frames, DW
 
 constexpr auto DVL_WM_ACTIVATEAPP = 0x001C;
 constexpr auto DVL_WM_SYSKEYUP = 0x0105;
-const auto DVL_HFILE_ERROR = (HFILE)-1;
 constexpr auto DVL_DRIVE_CDROM = 5;
 constexpr auto DVL_WM_DESTROY = 0x0002;
 constexpr auto DVL_HORZRES = 8;

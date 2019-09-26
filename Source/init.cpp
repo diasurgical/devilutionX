@@ -112,14 +112,14 @@ void init_archives()
 HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags, int fs)
 {
 	char Buffer[2][MAX_PATH];
+	char *sdlPath;
 	HANDLE archive;
 
-	GetCurrentDirectory(MAX_PATH, Buffer[0]); // Package
-	GetModuleFileName(NULL, Buffer[1], MAX_PATH); // Preferences
+	GetBasePath(Buffer[0], MAX_PATH);
+	GetPrefPath(Buffer[1], MAX_PATH);
 
 	for (int i = 0; i < 2; i++) {
-		strcpy(mpq_path, Buffer[i]);
-		strcat(mpq_path, mpq_name);
+		snprintf(mpq_path, MAX_PATH, "%s%s", Buffer[i], mpq_name);
 		if (SFileOpenArchive(mpq_path, 0, flags, &archive)) {
 			SFileSetBasePath(Buffer[i]);
 			return archive;

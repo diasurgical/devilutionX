@@ -1,4 +1,5 @@
 #include "diablo.h"
+#include "../3rdParty/Storm/Source/storm.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -126,10 +127,12 @@ BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
 
 HANDLE CaptureFile(char *dst_path)
 {
-	int len = GetModuleFileNameA(ghInst, dst_path, MAX_PATH);
+	char path[MAX_PATH];
+
+	GetPrefPath(dst_path, MAX_PATH);
 
 	for (int i = 0; i <= 99; i++) {
-		sprintf(&dst_path[len], "screen%02d.PCX", i);
+		snprintf(dst_path, MAX_PATH, "%sscreen%02d.PCX", path, i);
 		FILE *file = fopen(dst_path, "r");
 
 		if (file == NULL) {

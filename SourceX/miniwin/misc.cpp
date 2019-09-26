@@ -97,22 +97,6 @@ WINBOOL FindClose(HANDLE hFindFile)
 	return true;
 }
 
-/**
- * @brief Normally this would get the Windows install, but Diablo uses it to find the old save game folder
- */
-UINT GetWindowsDirectoryA(LPSTR lpBuffer, UINT uSize)
-{
-	char *name = SDL_GetPrefPath("diasurgical", "devilution");
-	strncpy(lpBuffer, name, uSize);
-	SDL_free(name);
-
-	DWORD len = strlen(lpBuffer);
-
-	lpBuffer[len - 1] = '\0';
-
-	return len - 1;
-}
-
 WINBOOL GetDiskFreeSpaceA(LPCSTR lpRootPathName, LPDWORD lpSectorsPerCluster, LPDWORD lpBytesPerSector,
     LPDWORD lpNumberOfFreeClusters, LPDWORD lpTotalNumberOfClusters)
 {
@@ -123,48 +107,12 @@ WINBOOL GetDiskFreeSpaceA(LPCSTR lpRootPathName, LPDWORD lpSectorsPerCluster, LP
 	return true;
 }
 
-/**
- * @brief Used for getting save path, by removing up to and including the last "\"
- */
-DWORD GetModuleFileNameA(HMODULE hModule, LPSTR lpFilename, DWORD nSize)
-{
-	char *name = SDL_GetPrefPath("diasurgical", "devilution");
-	strncpy(lpFilename, name, nSize);
-	SDL_free(name);
-
-	DWORD len = strlen(lpFilename);
-
-	lpFilename[len - 1] = '\\';
-
-	return len;
-}
-
 WINBOOL GetComputerNameA(LPSTR lpBuffer, LPDWORD nSize)
 {
 	DUMMY();
 	strncpy(lpBuffer, "localhost", *nSize);
 	*nSize = strlen(lpBuffer);
 	return true;
-}
-
-DWORD GetCurrentDirectory(DWORD nBufferLength, LPTSTR lpBuffer)
-{
-	char *base_path = SDL_GetBasePath();
-	if (base_path == NULL) {
-		SDL_Log(SDL_GetError());
-		base_path = SDL_strdup("./");
-	}
-	eprintf("BasePath: %s\n", base_path);
-
-	strncpy(lpBuffer, base_path, nBufferLength);
-	SDL_free(base_path);
-
-	return strlen(lpBuffer);
-}
-
-DWORD GetLogicalDriveStringsA(DWORD nBufferLength, LPSTR lpBuffer)
-{
-	return 0;
 }
 
 UINT GetDriveTypeA(LPCSTR lpRootPathName)
@@ -188,18 +136,6 @@ WINBOOL DeleteFileA(LPCSTR lpFileName)
 	}
 
 	return true;
-}
-
-WINBOOL CopyFileA(LPCSTR lpExistingFileName, LPCSTR lpNewFileName, WINBOOL bFailIfExists)
-{
-	UNIMPLEMENTED();
-	return true;
-}
-
-HFILE OpenFile(LPCSTR lpFileName, LPOFSTRUCT lpReOpenBuff, UINT uStyle)
-{
-	DUMMY();
-	return DVL_HFILE_ERROR;
 }
 
 HWND SetCapture(HWND hWnd)
@@ -466,16 +402,6 @@ BOOL GetVersionExA(LPOSVERSIONINFOA lpVersionInformation)
 void lstrcpynA(LPSTR lpString1, LPCSTR lpString2, int iMaxLength)
 {
 	strncpy(lpString1, lpString2, iMaxLength);
-}
-
-DWORD GetPrivateProfileStringA(LPCSTR lpAppName, LPCSTR lpKeyName, LPCSTR lpDefault, LPSTR lpReturnedString,
-    DWORD nSize, LPCSTR lpFileName)
-{
-	if (!SRegLoadString(lpAppName, lpKeyName, 0, lpReturnedString, nSize)) {
-		strncpy(lpReturnedString, lpDefault, nSize);
-		SRegSaveString(lpAppName, lpKeyName, 0, lpReturnedString);
-	}
-	return 0; // dummy return value
 }
 
 int MessageBoxA(HWND hWnd, const char *Text, const char *Title, UINT Flags)
