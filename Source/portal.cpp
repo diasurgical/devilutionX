@@ -20,12 +20,12 @@ void InitPortals()
 
 void SetPortalStats(int i, BOOL o, int x, int y, int lvl, int lvltype)
 {
-	portal[i].setlvl = FALSE;
+	portal[i].open = o;
 	portal[i].x = x;
 	portal[i].y = y;
-	portal[i].open = o;
 	portal[i].level = lvl;
 	portal[i].ltype = lvltype;
+	portal[i].setlvl = FALSE;
 }
 
 void AddWarpMissile(int i, int x, int y)

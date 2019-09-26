@@ -290,7 +290,9 @@ void path_next_node(PATHNODE *pPath)
 	int f;
 
 	next = path_2_nodes;
-	if (path_2_nodes->NextNode) {
+	if (!path_2_nodes->NextNode) {
+		path_2_nodes->NextNode = pPath;
+	} else {
 		current = path_2_nodes;
 		next = path_2_nodes->NextNode;
 		f = pPath->f;
@@ -300,8 +302,6 @@ void path_next_node(PATHNODE *pPath)
 		}
 		pPath->NextNode = next;
 		current->NextNode = pPath;
-	} else {
-		path_2_nodes->NextNode = pPath;
 	}
 }
 

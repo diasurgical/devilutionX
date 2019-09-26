@@ -1355,7 +1355,7 @@ void S_StartTalk()
 #else
 	sn = 0;
 	for (i = 0; i < 16; i++) {
-		if (quests[i]._qlevel == 2 && ((DWORD *)&Qtalklist[talker])[i] != -1 && quests[i]._qlog)
+		if (quests[i]._qactive == 2 && ((DWORD *)&Qtalklist[talker])[i] != -1 && quests[i]._qlog)
 			sn++;
 	}
 
@@ -1370,7 +1370,7 @@ void S_StartTalk()
 	sn2 = sn - 2;
 
 	for (i = 0; i < 16; i++) {
-		if (quests[i]._qlevel == 2 && ((DWORD *)&Qtalklist[talker])[i] != -1 && quests[i]._qlog) {
+		if (quests[i]._qactive == 2 && ((DWORD *)&Qtalklist[talker])[i] != -1 && quests[i]._qlog) {
 			AddSText(0, sn, 1, questlist[i]._qlstr, COL_WHITE, 1);
 			sn += la;
 		}

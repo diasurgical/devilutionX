@@ -1467,9 +1467,9 @@ int random(BYTE idx, int v)
 {
 	if (v <= 0)
 		return 0;
-	if (v >= 0xFFFF)
-		return GetRndSeed() % v;
-	return (GetRndSeed() >> 16) % v;
+	if (v < 0xFFFF)
+		return (GetRndSeed() >> 16) % v;
+	return GetRndSeed() % v;
 }
 
 void engine_debug_trap(BOOL show_cursor)

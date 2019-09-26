@@ -27,7 +27,6 @@ void center_window(HWND hDlg);
 void ErrDlg(int template_id, DWORD error_code, char *log_file_path, int log_line_nr);
 BOOL __stdcall FuncDlg(HWND hDlg, UINT uMsg, WPARAM wParam, char *text);
 void TextDlg(HWND hDlg, char *text);
-void ErrOkDlg(int template_id, DWORD error_code, char *log_file_path, int log_line_nr);
 void FileErrDlg(const char *error);
 void DiskFreeDlg(char *error);
 BOOL InsertCDDlg();

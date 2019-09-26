@@ -7,7 +7,6 @@ extern int PitchTbl[1024];
 extern BYTE *gpBufEnd;
 extern DWORD level_cel_block;
 extern char arch_draw_type;
-extern DDSURFACEDESC DDS_desc;
 extern int cel_transparency_active;
 extern int level_piece_id;
 extern void (*DrawPlrProc)(int, int, int, int, int, BYTE *, int, int, int, int);

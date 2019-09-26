@@ -5,47 +5,12 @@
 
 #define INVALID_HANDLE_VALUE ((HANDLE)-1)
 #define INVALID_HANDLE ((HANDLE)-1)
-#define HFILE_ERROR DVL_HFILE_ERROR
 
 //
 // Intrinsics
 //
-#define LOBYTE(w) ((BYTE)(((DWORD_PTR)(w)) & 0xff))
-#define HIBYTE(w) ((BYTE)((((DWORD_PTR)(w)) >> 8) & 0xff))
 #define LOWORD(l) ((WORD)(((DWORD_PTR)(l)) & 0xffff))
 #define HIWORD(l) ((WORD)((((DWORD_PTR)(l)) >> 16) & 0xffff))
-
-#ifdef _MSC_VER
-#define InterlockedIncrement(x) (x)
-#else
-#ifdef __AMIGA__
-#define InterlockedIncrement(x) __atomic_add_fetch(x, 1, __ATOMIC_SEQ_CST)
-#else
-#define InterlockedIncrement(x) __sync_add_and_fetch(x, 1)
-#endif
-#endif
-
-#define INFINITE DVL_INFINITE
-
-#ifndef __BIG_ENDIAN__
-#define MAKEFOURCC(x, y, z, w)             \
-	(((uint32_t)((uint8_t)x))              \
-	    | (((uint32_t)((uint8_t)y)) << 8)  \
-	    | (((uint32_t)((uint8_t)z)) << 16) \
-	    | (((uint32_t)((uint8_t)w)) << 24))
-#else
-#define MAKEFOURCC(w, z, y, x)             \
-	(((uint32_t)((uint8_t)x))              \
-	    | (((uint32_t)((uint8_t)y)) << 8)  \
-	    | (((uint32_t)((uint8_t)z)) << 16) \
-	    | (((uint32_t)((uint8_t)w)) << 24))
-#endif
-
-#define WINUSERAPI
-
-#define FOURCC_RIFF MAKEFOURCC('R', 'I', 'F', 'F')
-
-#define ERROR_ALREADY_EXISTS 183
 
 #define CreateEvent CreateEventA
 
@@ -57,15 +22,8 @@
 #define DispatchMessage DispatchMessageA
 #define PostMessage PostMessageA
 #define CreateWindowEx CreateWindowExA
-#define FindWindow FindWindowA
 #define RegisterClassEx RegisterClassExA
-#define LoadCursor LoadCursorA
-#define GetUserName GetUserNameA
-#define LoadIcon LoadIconA
 #define LoadImage LoadImageA
-#define SHGetPathFromIDList SHGetPathFromIDListA
-#define ShellExecute ShellExecuteA
-#define GetModuleHandle GetModuleHandleA
 
 #define THREAD_BASE_PRIORITY_MAX 2
 #define THREAD_PRIORITY_NORMAL 0
@@ -126,7 +84,6 @@
 #define SEC_COMMIT 0x8000000
 #define PAGE_READWRITE 0x04
 
-#define FILE_MAP_ALL_ACCESS SECTION_ALL_ACCESS
 #define SECTION_QUERY 0x0001
 #define SECTION_MAP_WRITE 0x0002
 #define SECTION_MAP_READ 0x0004
@@ -138,11 +95,6 @@
 #define SECTION_ALL_ACCESS \
 	(STANDARD_RIGHTS_REQUIRED | SECTION_QUERY | SECTION_MAP_WRITE | SECTION_MAP_READ | SECTION_MAP_EXECUTE | SECTION_EXTEND_SIZE)
 
-#define CREATE_NEW_PROCESS_GROUP 0x200
-
-#define CreateProcess CreateProcessA
-#define CreateFileMapping CreateFileMappingA
-#define GetPrivateProfileString GetPrivateProfileStringA
 #define MessageBox MessageBoxA
 
 #define HKEY_CURRENT_USER 1
@@ -150,30 +102,15 @@
 #define KEY_WRITE 0x20006
 #define REG_SZ 1
 
-#define RegOpenKeyEx RegOpenKeyExA
-#define RegQueryValueEx RegQueryValueExA
-#define RegSetValueEx RegSetValueExA
-#define RegCloseKey RegCloseKeyA
 #define DefWindowProc DefWindowProcA
-#define GetWindowLong GetWindowLongA
-#define SetWindowLong SetWindowLongA
 
 #define GetFileAttributes GetFileAttributesA
 #define SetFileAttributes SetFileAttributesA
 #define FindFirstFile FindFirstFileA
-#define FindNextFile FindNextFileA
 #define CreateFile CreateFileA
-#define GetWindowsDirectory GetWindowsDirectoryA
-#define GetLogicalDriveStrings GetLogicalDriveStringsA
 #define GetDriveType GetDriveTypeA
-#define GetDiskFreeSpace GetDiskFreeSpaceA
-#define GetModuleFileName GetModuleFileNameA
 #define GetComputerName GetComputerNameA
-#define GetFileVersionInfoSize GetFileVersionInfoSizeA
-#define GetFileVersionInfo GetFileVersionInfoA
-#define VerQueryValue VerQueryValueA
 #define DeleteFile DeleteFileA
-#define CopyFile CopyFileA
 
 #define GWL_STYLE (-16)
 
@@ -252,8 +189,6 @@
 #define SWP_NOMOVE 0x0002
 #define SWP_NOSIZE 0x0004
 #define SWP_NOZORDER 0x0001
-
-#define OF_EXIST 1
 
 #define MAKEINTRESOURCE DVL_MAKEINTRESOURCE
 
@@ -377,8 +312,3 @@
 #define MB_TASKMODAL DVL_MB_TASKMODAL
 #define MB_ICONHAND DVL_MB_ICONHAND
 #define MB_ICONEXCLAMATION DVL_MB_ICONEXCLAMATION
-
-/*
- * GetWindow() Constants
- */
-#define GW_HWNDPREV         3

@@ -140,6 +140,8 @@ WINBOOL CloseHandle(HANDLE hObject)
 		{
 			#ifndef __AMIGA__
 			throw std::runtime_error("ofstream");
+			#else
+			printf("runtime_error(\"ofstream\")\n");	
 			#endif
 		}
 		filestream.write(file->buf.data(), file->buf.size());
@@ -147,6 +149,8 @@ WINBOOL CloseHandle(HANDLE hObject)
 		{
 			#ifndef __AMIGA__
 			throw std::runtime_error("ofstream::write");
+			#else
+			printf("runtime_error(\"ofstream\")\n");			
 			#endif
 		}
 		filestream.close();
@@ -155,11 +159,13 @@ WINBOOL CloseHandle(HANDLE hObject)
 		{
 			#ifndef __AMIGA__
 			throw std::runtime_error("rename");
+			#else
+			printf("runtime_error(\"ofstream\")\n");			
 			#endif
 		}
 		return true;
 #ifndef __AMIGA__
-	} catch (std::runtime_error e) {
+	} catch (std::runtime_error &e) {
 		// log
 		DialogBoxParam(ghInst, DVL_MAKEINTRESOURCE(IDD_DIALOG7), ghMainWnd, (DLGPROC)FuncDlg, (LPARAM)file->path.c_str());
 		return false;

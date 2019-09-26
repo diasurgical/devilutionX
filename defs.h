@@ -36,6 +36,7 @@
 #define MDMAXX					40
 #define MDMAXY					40
 #define MAXCHARLEVEL			51
+#define ITEMTYPES				35
 
 // number of inventory grid cells
 #define NUM_INV_GRID_ELEM		40
@@ -131,16 +132,17 @@
 #define SCREENXY(x, y)	((x) + SCREEN_X + ((y) + SCREEN_Y) * BUFFER_WIDTH)
 
 #define MemFreeDbg(p)	\
-{						\
-	void *p__p;			\
-	p__p = p;			\
-	p = NULL; \
-	if (!p__p) {\
-		printf("MemFreeDbg: Trying to free 0! at %d in file %s\n", __LINE__, __FILE__); \
-	} \
-	else \
+{ \
+	if (p) {\
+		void *p__p;			\
+		p__p = p;			\
+		p = NULL; \
 		mem_free_dbg(p__p);	\
+	}\
 }
+	/*else \
+		printf("MemFreeDbg: Trying to free 0! at %d in file %s\n", __LINE__, __FILE__); \*/
+
 
 #undef assert
 
@@ -149,9 +151,6 @@
 #else
 #define assert(exp) (void)( (exp) || (assert_fail(__LINE__, __FILE__, #exp), 0) )
 #endif
-
-#define ERR_OK_DLG(templateId, errorCode) \
-	ErrOkDlg((templateId), (errorCode), __FILE__, __LINE__)
 
 #define ERR_DLG(templateId, errorCode) \
 	ErrDlg((templateId), (errorCode), __FILE__, __LINE__)
@@ -183,7 +182,7 @@ typedef void (*_PVFV)(void);
 #endif
 
 // To apply to certain functions which have local variables aligned by 1 for unknown yet reason
-#ifdef _MSC_VER
+#if (_MSC_VER == 1200)
 #define ALIGN_BY_1 __declspec(align(1))
 #else
 #define ALIGN_BY_1

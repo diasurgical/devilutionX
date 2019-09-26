@@ -17,4 +17,4 @@ void srand(uint32_t seed)
 	rand_state = seed;
 }
 
-}  // namespace dvl
+} // namespace dvl

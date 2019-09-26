@@ -13,6 +13,19 @@ jobs:
       - run: cd build && cmake ..
       - run: cd build && make -j$(nproc)
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64}
+  linux_x86_64_sdl1:
+    docker:
+      - image: debian:stretch-backports
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: apt-get update -y
+      - run: apt-get install -y cmake g++ libsdl-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev
+      - run: apt-get install -y -t stretch-backports libsodium-dev
+      - run: mkdir build
+      - run: cd build && cmake .. -DUSE_SDL1=ON
+      - run: cd build && make -j$(nproc)
+      - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64_sdl1}
   linux_x86:
     docker:
       - image: debian:stretch-backports
@@ -58,3 +71,4 @@ workflows:
       - linux_x86_64
       - linux_x86
       - windows_x86
+      - linux_x86_64_sdl1

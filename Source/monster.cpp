@@ -7,6 +7,7 @@ DEVILUTION_BEGIN_NAMESPACE
 // Tracks which missile files are already loaded
 int MissileFileFlag;
 
+// BUGFIX: replace monstkills[MAXMONSTERS] with monstkills[NUM_MTYPES].
 int monstkills[MAXMONSTERS];
 int monstactive[MAXMONSTERS];
 int nummonsters;
@@ -104,7 +105,6 @@ void InitMonsterTRN(int monst, BOOL special)
 	int i, n, j;
 
 	f = Monsters[monst].trans_file;
-
 	for (i = 0; i < 256; i++) {
 		if (*f == 255) {
 			*f = 0;
@@ -290,12 +290,13 @@ void InitMonsterGFX(int monst)
 			sprintf(strBuff, monsterdata[mtype].GraphicType, animletter[anim]);
 
 			celBuf = LoadFileInMem(strBuff, NULL);
-
 			Monsters[monst].Anims[anim].CMem = celBuf;
 
 			if (Monsters[monst].mtype != MT_GOLEM || (animletter[anim] != 's' && animletter[anim] != 'd')) {
-				for (i = 0; i < 8; i++)
+
+				for (i = 0; i < 8; i++) {
 					Monsters[monst].Anims[anim].Data[i] = &celBuf[BSWAP_INT32_UNSIGNED(((int *)celBuf)[i])];
+				}
 			} else {
 				for (i = 0; i < 8; i++) {
 					Monsters[monst].Anims[anim].Data[i] = celBuf;
@@ -315,7 +316,6 @@ void InitMonsterGFX(int monst)
 	Monsters[monst].has_special = monsterdata[mtype].has_special;
 	Monsters[monst].mAFNum = monsterdata[mtype].mAFNum;
 	Monsters[monst].MData = &monsterdata[mtype];
-
 
 	if (monsterdata[mtype].has_trans) {
 		Monsters[monst].trans_file = LoadFileInMem(monsterdata[mtype].TransFile, NULL);
@@ -401,16 +401,16 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 	monster[i]._mfuty = y;
 	monster[i]._moldx = x;
 	monster[i]._moldy = y;
-	monster[i]._mmode = MM_STAND;
 	monster[i]._mMTidx = mtype;
+	monster[i]._mmode = MM_STAND;
 	monster[i].mName = monst->MData->mName;
 	monster[i].MType = monst;
 	monster[i].MData = monst->MData;
 	monster[i]._mAnimData = monst->Anims[MA_STAND].Data[rd];
 	monster[i]._mAnimDelay = monst->Anims[MA_STAND].Rate;
-	monster[i]._mAnimCnt = random(88, monst->Anims[MA_STAND].Rate - 1);
+	monster[i]._mAnimCnt = random(88, monster[i]._mAnimDelay - 1);
 	monster[i]._mAnimLen = monst->Anims[MA_STAND].Frames;
-	monster[i]._mAnimFrame = random(88, monst->Anims[MA_STAND].Frames - 1) + 1;
+	monster[i]._mAnimFrame = random(88, monster[i]._mAnimLen - 1) + 1;
 
 	if (monst->mtype == MT_DIABLO) {
 		monster[i]._mmaxhp = (random(88, 1) + 1666) << 6;
@@ -432,11 +432,11 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 	monster[i]._mgoalvar1 = 0;
 	monster[i]._mgoalvar2 = 0;
 	monster[i]._mgoalvar3 = 0;
+	monster[i].field_18 = 0;
 	monster[i]._pathcount = 0;
+	monster[i]._mDelFlag = FALSE;
 	monster[i]._uniqtype = 0;
 	monster[i]._msquelch = 0;
-	monster[i].field_18 = 0;
-	monster[i]._mDelFlag = FALSE;
 	monster[i]._mRndSeed = GetRndSeed();
 	monster[i]._mAISeed = GetRndSeed();
 	monster[i].mWhoHit = 0;
@@ -463,28 +463,28 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 	}
 
 	if (gnDifficulty == DIFF_NIGHTMARE) {
-		monster[i].mLevel += 15;
-		monster[i].mHit += 85;
-		monster[i].mHit2 += 85;
 		monster[i]._mmaxhp = 3 * monster[i]._mmaxhp + 64;
 		monster[i]._mhitpoints = monster[i]._mmaxhp;
+		monster[i].mLevel += 15;
 		monster[i].mExp = 2 * (monster[i].mExp + 1000);
+		monster[i].mHit += 85;
 		monster[i].mMinDamage = 2 * (monster[i].mMinDamage + 2);
 		monster[i].mMaxDamage = 2 * (monster[i].mMaxDamage + 2);
+		monster[i].mHit2 += 85;
 		monster[i].mMinDamage2 = 2 * (monster[i].mMinDamage2 + 2);
 		monster[i].mMaxDamage2 = 2 * (monster[i].mMaxDamage2 + 2);
 		monster[i].mArmorClass += 50;
 	}
 
 	if (gnDifficulty == DIFF_HELL) {
-		monster[i].mLevel += 30;
 		monster[i]._mmaxhp = 4 * monster[i]._mmaxhp + 192;
 		monster[i]._mhitpoints = monster[i]._mmaxhp;
-		monster[i].mHit += 120;
-		monster[i].mHit2 += 120;
+		monster[i].mLevel += 30;
 		monster[i].mExp = 4 * (monster[i].mExp + 1000);
+		monster[i].mHit += 120;
 		monster[i].mMinDamage = 4 * monster[i].mMinDamage + 6;
 		monster[i].mMaxDamage = 4 * monster[i].mMaxDamage + 6;
+		monster[i].mHit2 += 120;
 		monster[i].mMinDamage2 = 4 * monster[i].mMinDamage2 + 6;
 		monster[i].mMaxDamage2 = 4 * monster[i].mMaxDamage2 + 6;
 		monster[i].mArmorClass += 80;
@@ -852,22 +852,14 @@ void PlaceGroup(int mtype, int num, int leaderf, int leader)
 			dMonster[monster[nummonsters]._mx][monster[nummonsters]._my] = 0;
 		}
 
-		x1 = 0;
-		y1 = 0;
-		xp = 0;
-		yp = 0;
 		if (leaderf & 1) {
 			int offset = random(92, 8);
-			xp = monster[leader]._mx + offset_x[offset];
-			yp = monster[leader]._my + offset_y[offset];
-			x1 = xp;
-			y1 = yp;
+			x1 = xp = monster[leader]._mx + offset_x[offset];
+			y1 = yp = monster[leader]._my + offset_y[offset];
 		} else {
 			do {
-				xp = random(93, 80) + 16;
-				x1 = xp;
-				yp = random(93, 80) + 16;
-				y1 = yp;
+				x1 = xp = random(93, 80) + 16;
+				y1 = yp = random(93, 80) + 16;
 			} while (!MonstPlace(xp, yp));
 		}
 
@@ -1499,8 +1491,11 @@ void M_GetKnockback(int i)
 		monster[i]._myoff = 0;
 		monster[i]._mx = monster[i]._moldx;
 		monster[i]._my = monster[i]._moldy;
-		monster[i]._mfutx = monster[i]._moldx;
-		monster[i]._mfuty = monster[i]._moldy;
+		monster[i]._mfutx = monster[i]._mx;
+		monster[i]._mfuty = monster[i]._my;
+		// BUGFIX useless assignment
+		monster[i]._moldx = monster[i]._mx;
+		monster[i]._moldy = monster[i]._my;
 		M_CheckEFlag(i);
 		M_ClearSquares(i);
 		dMonster[monster[i]._mx][monster[i]._my] = i + 1;
@@ -4678,7 +4673,6 @@ void FreeMonsters()
 		mtype = Monsters[i].mtype;
 		for (j = 0; j < 6; j++) {
 			if (animletter[j] != 's' || monsterdata[mtype].has_special) {
-				Monsters[i].Anims[j].CMem = Monsters[i].Anims[j].CMem;
 				MemFreeDbg(Monsters[i].Anims[j].CMem);
 			}
 		}

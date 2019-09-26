@@ -1,4 +1,5 @@
 #include "diablo.h"
+#include "../3rdParty/Storm/Source/storm.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -12,7 +13,7 @@ void CaptureScreen()
 	hObject = CaptureFile(FileName);
 	if (hObject != INVALID_HANDLE_VALUE) {
 		DrawAndBlit();
-		lpDDPalette->GetEntries(0, 0, 256, palette);
+		PaletteGetEntries(256, palette);
 		RedPalette(palette);
 
 		lock_buf(2);
@@ -30,7 +31,7 @@ void CaptureScreen()
 			DeleteFile(FileName);
 
 		Sleep(300);
-		lpDDPalette->SetEntries(0, 0, 256, palette);
+		PaletteGetEntries(256, palette);
 	}
 }
 
@@ -126,10 +127,12 @@ BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
 
 HANDLE CaptureFile(char *dst_path)
 {
-	int len = GetModuleFileNameA(ghInst, dst_path, MAX_PATH);
+	char path[MAX_PATH];
+
+	GetPrefPath(dst_path, MAX_PATH);
 
 	for (int i = 0; i <= 99; i++) {
-		sprintf(&dst_path[len], "screen%02d.PCX", i);
+		snprintf(dst_path, MAX_PATH, "%sscreen%02d.PCX", path, i);
 		FILE *file = fopen(dst_path, "r");
 
 		if (file == NULL) {
@@ -154,7 +157,7 @@ void RedPalette(PALETTEENTRY *pal)
 		red[i].peFlags = 0;
 	}
 
-	lpDDPalette->SetEntries(0, 0, 256, red);
+	PaletteGetEntries(256, red);
 }
 
 DEVILUTION_END_NAMESPACE

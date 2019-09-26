@@ -1147,7 +1147,7 @@ void T_Pass3()
 	}
 #endif
 
-	if (quests[13]._qactive != 3 && quests[13]._qactive) {
+	if (quests[QTYPE_PW]._qactive != 3 && quests[QTYPE_PW]._qactive) {
 		T_FillTile(P3Tiles, 60, 70, 342);
 	} else {
 		T_FillTile(P3Tiles, 60, 70, 71);

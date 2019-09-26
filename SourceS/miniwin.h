@@ -13,15 +13,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-// For _rotr()
-#if !defined(_MSC_VER) && defined(DEVILUTION_ENGINE)
-#if defined(__x86_64__) || defined(__i386__)
-#include <x86intrin.h>
-#else
-unsigned int _rotl(unsigned int value, int shift);
-unsigned int _rotr(unsigned int value, int shift);
-#endif
-#endif
 
 #ifndef _WIN32
 #define __int8 char
@@ -37,7 +28,9 @@ unsigned int _rotr(unsigned int value, int shift);
 #include "miniwin/rand.h"
 #include "storm_full.h"
 
+#ifndef MAX_PATH
 #define MAX_PATH DVL_MAX_PATH
+#endif
 #ifdef DEVILUTION_ENGINE
 #include "miniwin/misc_macro.h"
 #include "miniwin/com_macro.h"
