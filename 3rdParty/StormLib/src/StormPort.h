@@ -27,7 +27,7 @@
 #ifndef __STORMPORT_H__
 #define __STORMPORT_H__
 
-#include <SDL_endian.h>
+#include <SDL/SDL_endian.h>
 
 #define STORMAPI
 

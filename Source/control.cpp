@@ -271,7 +271,7 @@ void DrawSpellList()
 	int i, j, x, y, c, s, t, v, lx, ly, trans;
 	unsigned __int64 mask, spl;
 
-	pSpell = -1;
+	pSpell = SPL_INVALID;
 	infostr[0] = '\0';
 	x = 636;
 	y = 495;
@@ -459,7 +459,6 @@ void CPrintString(int nOffset, int nCel, char col)
 	src = &pPanelText[BSWAP_INT32_UNSIGNED(pFrameTable[0])];
 	nDataSize = BSWAP_INT32_UNSIGNED(pFrameTable[1]) - BSWAP_INT32_UNSIGNED(pFrameTable[0]);
 	end = &src[nDataSize];
-
 	dst = &gpBuffer[nOffset];
 
 	switch (col) {
@@ -842,7 +841,7 @@ void DoSpeedBook()
 	yo = 495;
 	X = 600;
 	Y = 307;
-	if (plr[myplr]._pRSpell != -1) {
+	if (plr[myplr]._pRSpell != SPL_INVALID) {
 		for (i = 0; i < 4; i++) {
 			switch (i) {
 			case RSPLTYPE_SKILL:
@@ -975,7 +974,7 @@ void CheckPanelInfo()
 		strcpy(tempstr, "Hotkey : 's'");
 		AddPanelString(tempstr, TRUE);
 		v = plr[myplr]._pRSpell;
-		if (v != -1) {
+		if (v != SPL_INVALID) {
 			switch (plr[myplr]._pRSplType) {
 			case RSPLTYPE_SKILL:
 				sprintf(tempstr, "%s Skill", spelldata[v].sSkillText);
@@ -1946,14 +1945,15 @@ void control_set_gold_curs(int pnum)
 }
 
 void DrawTalkPan()
-{	int i, off, talk_btn, color, nCel, x;
+{
+	int i, off, talk_btn, color, nCel, x;
 	char *msg;
 
-	off = 0;
 	if (!talkflag)
 		return;
 
 	DrawPanelBox(175, sgbPlrTalkTbl + 20, 294, 5, 239, 516);
+	off = 0;
 	for (i = 293; i > 283; off++, i--) {
 		DrawPanelBox((off >> 1) + 175, sgbPlrTalkTbl + off + 25, i, 1, (off >> 1) + 239, off + 521);
 	}
@@ -1972,8 +1972,8 @@ void DrawTalkPan()
 	if (msg)
 		*msg = '\0';
 	CelDecDatOnly(gpBuffer + x, pSPentSpn2Cels, frame, 12);
-	talk_btn = 0;
 	frame = (frame & 7) + 1;
+	talk_btn = 0;
 	for (i = 0; i < 4; i++) {
 		if (i == myplr)
 			continue;
@@ -2081,8 +2081,6 @@ void control_reset_talk_msg(char *msg)
 		if (whisper[i])
 			pmask |= 1 << i;
 	}
-
-	if (!msgcmd_add_server_cmd_W(sgszTalkMsg))
 		NetSendCmdString(pmask, sgszTalkMsg);
 }
 
@@ -2179,7 +2177,7 @@ void control_press_enter()
 		}
 		if (i >= 8) {
 			strcpy(sgszTalkSave[sgbNextTalkSave], sgszTalkMsg);
-			sgbNextTalkSave = sgbNextTalkSave + 1;
+			sgbNextTalkSave++;
 			sgbNextTalkSave &= 7;
 		} else {
 			talk_save = sgbNextTalkSave - 1;
@@ -2199,17 +2197,13 @@ void control_up_down(int v)
 {
 	int i;
 
-	i = 0;
-	while (1) {
+	for (i = 0; i < 8; i++) {
 		sgbTalkSavePos = (v + sgbTalkSavePos) & 7;
-		if (sgszTalkSave[sgbTalkSavePos][0])
-			break;
-		i++;
-		if (i >= 8) {
+		if (sgszTalkSave[sgbTalkSavePos][0]) {
+			strcpy(sgszTalkMsg, sgszTalkSave[sgbTalkSavePos]);
 			return;
 		}
 	}
-	strcpy(sgszTalkMsg, sgszTalkSave[sgbTalkSavePos]);
 }
 
 DEVILUTION_END_NAMESPACE

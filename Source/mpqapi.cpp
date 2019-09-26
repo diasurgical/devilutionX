@@ -89,7 +89,7 @@ void mpqapi_xor_buf(char *pbData)
 	for (i = 0; i < 8; i++) {
 		*pbCurrentData ^= mask;
 		pbCurrentData++;
-		mask = _rotl(mask, 1);
+		mask = (mask << 1) | (mask >> 31);  //  _rotl(mask, 1)
 	}
 }
 
@@ -269,17 +269,12 @@ _BLOCKENTRY *mpqapi_add_file(const char *pszName, _BLOCKENTRY *pBlk, int block_i
 	h3 = Hash(pszName, 2);
 	if (mpqapi_get_hash_index(h1, h2, h3, 0) != -1)
 		app_fatal("Hash collision between \"%s\" and existing file\n", pszName);
-	i = 2048;
 	hIdx = h1 & 0x7FF;
-	while (1) {
-		i--;
+	i = 2048;
+	while (i--) {
 		if (sgpHashTbl[hIdx].block == -1 || sgpHashTbl[hIdx].block == -2)
 			break;
 		hIdx = (hIdx + 1) & 0x7FF;
-		if (!i) {
-			i = -1;
-			break;
-		}
 	}
 	if (i < 0)
 		app_fatal("Out of hash space");

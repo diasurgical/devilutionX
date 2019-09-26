@@ -313,7 +313,6 @@ BOOLEAN gmenu_valid_mouse_pos(int *plOffset)
 
 BOOL gmenu_left_mouse(BOOL isDown)
 {
-	BOOL result;
 	TMenuItem *pItem;
 	DWORD i, w;
 	int dummy;
@@ -321,53 +320,45 @@ BOOL gmenu_left_mouse(BOOL isDown)
 	if (!isDown) {
 		if (mouseNavigation) {
 			mouseNavigation = FALSE;
-			result = TRUE;
+			return TRUE;
 		} else {
-			result = FALSE;
-		}
-
-	} else {
-
-		if (!sgpCurrentMenu) {
 			return FALSE;
-		}
-		if (MouseY >= PANEL_TOP) {
-			return FALSE;
-		}
-		if (MouseY - 117 >= 0) {
-			i = (MouseY - 117) / 45;
-			if (i < sgCurrentMenuIdx) {
-				pItem = &sgpCurrentMenu[i];
-				if ((sgpCurrentMenu[i].dwFlags & GMENU_ENABLED) != 0) {
-					w = gmenu_get_lfont(pItem);
-					if (MouseX >= SCREEN_WIDTH / 2 - w / 2) {
-						if (MouseX <= SCREEN_WIDTH / 2 + w / 2) {
-							sgpCurrItem = pItem;
-							PlaySFX(IS_TITLEMOV);
-							if (pItem->dwFlags & GMENU_SLIDER) {
-								mouseNavigation = gmenu_valid_mouse_pos(&dummy);
-								gmenu_on_mouse_move();
-							} else {
-								sgpCurrItem->fnMenu(TRUE);
-							}
-							result = TRUE;
-						} else {
-							result = TRUE;
-						}
-					} else {
-						result = TRUE;
-					}
-				} else {
-					result = TRUE;
-				}
-			} else {
-				result = TRUE;
-			}
-		} else {
-			result = TRUE;
 		}
 	}
-	return result;
+
+	if (!sgpCurrentMenu) {
+		return FALSE;
+	}
+	if (MouseY >= PANEL_TOP) {
+		return FALSE;
+	}
+	if (MouseY - 117 < 0) {
+		return TRUE;
+	}
+	i = (MouseY - 117) / 45;
+	if (i >= sgCurrentMenuIdx) {
+		return TRUE;
+	}
+	pItem = &sgpCurrentMenu[i];
+	if (!(sgpCurrentMenu[i].dwFlags & GMENU_ENABLED)) {
+		return TRUE;
+	}
+	w = gmenu_get_lfont(pItem);
+	if (MouseX < SCREEN_WIDTH / 2 - w / 2) {
+		return TRUE;
+	}
+	if (MouseX > SCREEN_WIDTH / 2 + w / 2) {
+		return TRUE;
+	}
+	sgpCurrItem = pItem;
+	PlaySFX(IS_TITLEMOV);
+	if (pItem->dwFlags & GMENU_SLIDER) {
+		mouseNavigation = gmenu_valid_mouse_pos(&dummy);
+		gmenu_on_mouse_move();
+	} else {
+		sgpCurrItem->fnMenu(TRUE);
+	}
+	return TRUE;
 }
 
 void gmenu_enable(TMenuItem *pMenuItem, BOOL enable)

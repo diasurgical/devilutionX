@@ -1,5 +1,4 @@
 #include "diablo.h"
-#include "../3rdParty/Storm/Source/storm.h"
 #include "../3rdParty/StormLib/src/StormPort.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -15,7 +14,6 @@ DWORD level_cel_block;
 DWORD sgdwCursXOld;
 DWORD sgdwCursYOld;
 char arch_draw_type;
-DDSURFACEDESC DDS_desc;
 int cel_transparency_active;
 int level_piece_id;
 DWORD sgdwCursWdt;
@@ -241,7 +239,7 @@ void DrawPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, int nCel
 		if (nCel < 1 || BSWAP_INT32_UNSIGNED(pFrameTable[0]) > 50 || nCel > (int)BSWAP_INT32_UNSIGNED(pFrameTable[0])) {
 			/*
 			const char *szMode = "unknown action";
-			if(plr[pnum]._pmode <= 11)
+			if(plr[pnum]._pmode <= PM_QUIT)
 				szMode = szPlrModeAssert[plr[pnum]._pmode];
 			app_fatal(
 				"Drawing player %d \"%s\" %s: facing %d, frame %d of %d",
@@ -314,7 +312,7 @@ void DrawClippedPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, i
 		if (nCel < 1 || BSWAP_INT32_UNSIGNED(pFrameTable[0]) > 50 || nCel > (int)BSWAP_INT32_UNSIGNED(pFrameTable[0])) {
 			/*
 			const char *szMode = "unknown action";
-			if(plr[pnum]._pmode <= 11)
+			if(plr[pnum]._pmode <= PM_QUIT)
 				szMode = szPlrModeAssert[plr[pnum]._pmode];
 			app_fatal(
 				"Drawing player %d \"%s\" %s clipped: facing %d, frame %d of %d",
@@ -790,7 +788,7 @@ void scrollrt_draw_clipped_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, 
 		draw_monster_num = -(negMon + 1);
 		if ((DWORD)draw_monster_num < MAXMONSTERS) {
 			pMonster = &monster[draw_monster_num];
-			if (!(pMonster->_mFlags & 1)) {
+			if (!(pMonster->_mFlags & MFLAG_HIDDEN)) {
 				if (pMonster->MType != NULL) {
 					px = dx + pMonster->_mxoff - pMonster->MType->width2;
 					py = dy + pMonster->_myoff;
@@ -833,7 +831,7 @@ void scrollrt_draw_clipped_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, 
 		draw_monster_num = nMon - 1;
 		if ((DWORD)draw_monster_num < MAXMONSTERS) {
 			pMonster = &monster[draw_monster_num];
-			if (!(pMonster->_mFlags & 1)) {
+			if (!(pMonster->_mFlags & MFLAG_HIDDEN)) {
 				if (pMonster->MType != NULL) {
 					px = dx + pMonster->_mxoff - pMonster->MType->width2;
 					py = dy + pMonster->_myoff;
@@ -1256,7 +1254,7 @@ void scrollrt_draw_clipped_dungeon_2(BYTE *pBuff, int sx, int sy, int skipChunks
 		draw_monster_num = -(negMon + 1);
 		if ((DWORD)draw_monster_num < MAXMONSTERS) {
 			pMonster = &monster[draw_monster_num];
-			if (!(pMonster->_mFlags & 1)) {
+			if (!(pMonster->_mFlags & MFLAG_HIDDEN)) {
 				if (pMonster->MType != NULL) {
 					px = dx + pMonster->_mxoff - pMonster->MType->width2;
 					py = dy + pMonster->_myoff;
@@ -1299,7 +1297,7 @@ void scrollrt_draw_clipped_dungeon_2(BYTE *pBuff, int sx, int sy, int skipChunks
 		draw_monster_num = nMon - 1;
 		if ((DWORD)draw_monster_num < MAXMONSTERS) {
 			pMonster = &monster[draw_monster_num];
-			if (!(pMonster->_mFlags & 1)) {
+			if (!(pMonster->_mFlags & MFLAG_HIDDEN)) {
 				if (pMonster->MType != NULL) {
 					px = dx + pMonster->_mxoff - pMonster->MType->width2;
 					py = dy + pMonster->_myoff;
@@ -1683,7 +1681,7 @@ void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int capChunks, int CelCa
 		draw_monster_num = -(negMon + 1);
 		if ((DWORD)draw_monster_num < MAXMONSTERS) {
 			pMonster = &monster[draw_monster_num];
-			if (!(pMonster->_mFlags & 1)) {
+			if (!(pMonster->_mFlags & MFLAG_HIDDEN)) {
 				if (pMonster->MType != NULL) {
 					px = dx + pMonster->_mxoff - pMonster->MType->width2;
 					py = dy + pMonster->_myoff;
@@ -1726,7 +1724,7 @@ void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int capChunks, int CelCa
 		draw_monster_num = nMon - 1;
 		if ((DWORD)draw_monster_num < MAXMONSTERS) {
 			pMonster = &monster[draw_monster_num];
-			if (!(pMonster->_mFlags & 1)) {
+			if (!(pMonster->_mFlags & MFLAG_HIDDEN)) {
 				if (pMonster->MType != NULL) {
 					px = dx + pMonster->_mxoff - pMonster->MType->width2;
 					py = dy + pMonster->_myoff;
@@ -2296,7 +2294,7 @@ void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BOOL draw
 
 	ysize = dwHgt;
 
-	if (!gbActive || lpDDSPrimary == NULL) {
+	if (!gbActive) {
 		return;
 	}
 
@@ -2360,10 +2358,7 @@ void DrawFPS()
 		if (framerate > 99)
 			framerate = 99;
 		wsprintf(String, "%2d", framerate);
-		if (!lpDDSPrimary->GetDC(&hdc)) {
-			TextOut(hdc, 0, 400, String, strlen(String));
-			lpDDSPrimary->ReleaseDC(hdc);
-		}
+		TextOut(hdc, 0, 400, String, strlen(String));
 	}
 }
 #endif
@@ -2378,7 +2373,7 @@ void DoBlitScreen(DWORD dwX, DWORD dwY, DWORD dwWdt, DWORD dwHgt)
 	/// ASSERT: assert(! (dwX & 3));
 	/// ASSERT: assert(! (dwWdt & 3));
 
-	if (lpDDSBackBuf != NULL) {
+	if (1) {
 		SrcRect.left = dwX + SCREEN_X;
 		SrcRect.top = dwY + SCREEN_Y;
 		SrcRect.right = SrcRect.left + dwWdt - 1;
@@ -2386,7 +2381,7 @@ void DoBlitScreen(DWORD dwX, DWORD dwY, DWORD dwWdt, DWORD dwHgt)
 		/// ASSERT: assert(! gpBuffer);
 		dwTicks = GetTickCount();
 		while (1) {
-			hDDVal = lpDDSPrimary->BltFast(dwX, dwY, lpDDSBackBuf, &SrcRect, DDBLTFAST_WAIT);
+			hDDVal = BltFast(dwX, dwY, &SrcRect);
 			if (hDDVal == DD_OK) {
 				break;
 			}
@@ -2394,17 +2389,8 @@ void DoBlitScreen(DWORD dwX, DWORD dwY, DWORD dwWdt, DWORD dwHgt)
 				break;
 			}
 			Sleep(1);
-			if (hDDVal == DDERR_SURFACELOST) {
-				return;
-			}
-			if (hDDVal != DDERR_WASSTILLDRAWING && hDDVal != DDERR_SURFACEBUSY) {
-				break;
-			}
 		}
-		if (hDDVal != DDERR_SURFACELOST
-		    && hDDVal != DDERR_WASSTILLDRAWING
-		    && hDDVal != DDERR_SURFACEBUSY
-		    && hDDVal != DD_OK) {
+		if (hDDVal != DD_OK) {
 			DD_ERR_MSG(hDDVal);
 		}
 	}

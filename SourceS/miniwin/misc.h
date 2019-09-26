@@ -34,9 +34,7 @@ typedef DWORD *LPDWORD;
 typedef void *LPVOID;
 typedef void *PVOID;
 typedef const void *LPCVOID;
-typedef void *HBRUSH;
 typedef void *HMENU;
-typedef void *HICON;
 typedef void *LPITEMIDLIST;
 typedef LPITEMIDLIST PIDLIST_ABSOLUTE;
 typedef LPITEMIDLIST PCIDLIST_ABSOLUTE;
@@ -67,7 +65,7 @@ typedef LONG_PTR LRESULT;
 //
 typedef void *HANDLE;
 
-typedef HANDLE HWND, HGDIOBJ, HMODULE, HDC, HRGN, HINSTANCE, HPALETTE, HFILE, HCURSOR;
+typedef HANDLE HWND, HGDIOBJ, HMODULE, HDC, HRGN, HINSTANCE, HPALETTE, HCURSOR;
 
 typedef LONG LCID;
 
@@ -90,16 +88,6 @@ typedef struct pcmwaveformat_tag {
 	WAVEFORMAT wf;
 	WORD wBitsPerSample;
 } PCMWAVEFORMAT, *PPCMWAVEFORMAT, *LPPCMWAVEFORMAT;
-
-typedef struct tWAVEFORMATEX {
-	WORD wFormatTag;
-	WORD nChannels;
-	DWORD nSamplesPerSec;
-	DWORD nAvgBytesPerSec;
-	WORD nBlockAlign;
-	WORD wBitsPerSample;
-	WORD cbSize;
-} WAVEFORMATEX, *LPWAVEFORMATEX, *LPCWAVEFORMATEX;
 #pragma pack(pop)
 
 typedef struct _FILETIME {
@@ -125,22 +113,6 @@ typedef struct tagSIZE {
 	LONG cx;
 	LONG cy;
 } SIZE;
-
-typedef struct tagVS_FIXEDFILEINFO {
-	DWORD dwSignature;
-	DWORD dwStrucVersion;
-	DWORD dwFileVersionMS;
-	DWORD dwFileVersionLS;
-	DWORD dwProductVersionMS;
-	DWORD dwProductVersionLS;
-	DWORD dwFileFlagsMask;
-	DWORD dwFileFlags;
-	DWORD dwFileOS;
-	DWORD dwFileType;
-	DWORD dwFileSubtype;
-	DWORD dwFileDateMS;
-	DWORD dwFileDateLS;
-} VS_FIXEDFILEINFO;
 
 typedef struct tagMSG {
 	HWND hwnd;
@@ -176,21 +148,6 @@ typedef struct _SYSTEMTIME {
 	WORD wMilliseconds;
 } SYSTEMTIME, *PSYSTEMTIME, *LPSYSTEMTIME;
 
-typedef struct tagWNDCLASSEXA {
-	UINT cbSize;
-	UINT style;
-	WNDPROC lpfnWndProc;
-	int cbClsExtra;
-	int cbWndExtra;
-	HINSTANCE hInstance;
-	HICON hIcon;
-	HCURSOR hCursor;
-	HBRUSH hbrBackground;
-	LPCSTR lpszMenuName;
-	LPCSTR lpszClassName;
-	HICON hIconSm;
-} WNDCLASSEXA;
-
 typedef unsigned long _fsize_t; /* Could be 64 bits for Win32 */
 
 struct DVL_finddata_t {
@@ -213,25 +170,6 @@ typedef struct tagPALETTEENTRY {
 	BYTE peBlue;
 	BYTE peFlags;
 } PALETTEENTRY, *PPALETTEENTRY, *LPPALETTEENTRY;
-
-typedef struct _SYSTEM_INFO {
-	union {
-		DWORD dwOemId;
-		struct {
-			WORD wProcessorArchitecture;
-			WORD wReserved;
-		};
-	};
-	DWORD dwPageSize;
-	LPVOID lpMinimumApplicationAddress;
-	LPVOID lpMaximumApplicationAddress;
-	DWORD_PTR dwActiveProcessorMask;
-	DWORD dwNumberOfProcessors;
-	DWORD dwProcessorType;
-	DWORD dwAllocationGranularity;
-	WORD wProcessorLevel;
-	WORD wProcessorRevision;
-} SYSTEM_INFO, *LPSYSTEM_INFO;
 
 typedef void *LPSECURITY_ATTRIBUTES;
 
@@ -266,13 +204,6 @@ WINBOOL WINAPI TranslateMessage(const MSG *lpMsg);
 LRESULT WINAPI DispatchMessageA(const MSG *lpMsg);
 WINBOOL WINAPI PostMessageA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 
-WINBOOL WINAPI DestroyWindow(HWND hWnd);
-HWND WINAPI GetLastActivePopup(HWND hWnd);
-HWND WINAPI GetTopWindow(HWND hWnd);
-WINBOOL WINAPI SetForegroundWindow(HWND hWnd);
-HWND WINAPI SetFocus(HWND hWnd);
-HWND GetDesktopWindow();
-HRESULT SHGetSpecialFolderLocation(HWND hwnd, int csidl, PIDLIST_ABSOLUTE *ppidl);
 HWND CreateWindowExA(
     DWORD dwExStyle,
     LPCSTR lpClassName,
@@ -286,43 +217,21 @@ HWND CreateWindowExA(
     HMENU hMenu,
     HINSTANCE hInstance,
     LPVOID lpParam);
-HWND WINAPI FindWindowA(LPCSTR lpClassName, LPCSTR lpWindowName);
 BOOL InvalidateRect(HWND hWnd, const RECT *lpRect, BOOL bErase);
 BOOL UpdateWindow(HWND hWnd);
 BOOL ShowWindow(HWND hWnd, int nCmdShow);
-WINUSERAPI ATOM WINAPI RegisterClassExA(const WNDCLASSEXA *lpwcx);
 int GetSystemMetrics(int nIndex);
-HGDIOBJ GetStockObject(int i);
-HCURSOR LoadCursorA(HINSTANCE hInstance, LPCSTR lpCursorName);
-BOOL GetUserNameA(LPSTR lpBuffer, LPDWORD pcbBuffer);
-void GetLocalTime(LPSYSTEMTIME lpSystemTime);
-long __cdecl _findfirst(const char *, struct DVL_finddata_t *);
-int __cdecl _findnext(long, struct DVL_finddata_t *);
-
-HICON LoadIconA(HINSTANCE hInstance, LPCSTR lpIconName);
-HANDLE LoadImageA(HINSTANCE hInst, LPCSTR name, UINT type, int cx, int cy, UINT fuLoad);
-BOOL SHGetPathFromIDListA(PCIDLIST_ABSOLUTE pidl, LPSTR pszPath);
-HINSTANCE ShellExecuteA(HWND hwnd, LPCSTR lpOperation, LPCSTR lpFile, LPCSTR lpParameters, LPCSTR lpDirectory, INT nShowCmd);
-int GetClassName(HWND hWnd, LPTSTR lpClassName, int nMaxCount);
 
 typedef LONG(WINAPI *PTOP_LEVEL_EXCEPTION_FILTER)(
     struct _EXCEPTION_POINTERS *ExceptionInfo);
-typedef PTOP_LEVEL_EXCEPTION_FILTER LPTOP_LEVEL_EXCEPTION_FILTER;
-LPTOP_LEVEL_EXCEPTION_FILTER WINAPI SetUnhandledExceptionFilter(LPTOP_LEVEL_EXCEPTION_FILTER lpTopLevelExceptionFilter);
-
-HMODULE GetModuleHandleA(LPCSTR lpModuleName);
 
 uintptr_t __cdecl DVL_beginthreadex(void *_Security, unsigned _StackSize, unsigned(__stdcall *_StartAddress)(void *),
-                                 void *_ArgList, unsigned _InitFlag, unsigned *_ThrdAddr);
+    void *_ArgList, unsigned _InitFlag, unsigned *_ThrdAddr);
 HANDLE WINAPI GetCurrentThread();
 DWORD WINAPI GetCurrentThreadId();
 WINBOOL WINAPI SetThreadPriority(HANDLE hThread, int nPriority);
 void WINAPI Sleep(DWORD dwMilliseconds);
 
-void WINAPI GetSystemInfo(LPSYSTEM_INFO lpSystemInfo);
-
-HDC WINAPI GetDC(HWND hWnd);
-int WINAPI ReleaseDC(HWND hWnd, HDC hDC);
 WINBOOL WINAPI TextOutA(HDC hdc, int x, int y, LPCSTR lpString, int c);
 
 int WINAPI GetDeviceCaps(HDC hdc, int index);
@@ -432,15 +341,6 @@ typedef struct _IMAGE_DOS_HEADER {
 	LONG e_lfanew;
 } IMAGE_DOS_HEADER, *PIMAGE_DOS_HEADER;
 
-typedef struct _OFSTRUCT {
-	BYTE cBytes;
-	BYTE fFixedDisk;
-	WORD nErrCode;
-	WORD Reserved1;
-	WORD Reserved2;
-	CHAR szPathName[DVL_OFS_MAXPATHNAME];
-} OFSTRUCT, *LPOFSTRUCT, *POFSTRUCT;
-
 typedef struct _OSVERSIONINFOA {
 	DWORD dwOSVersionInfoSize;
 	DWORD dwMajorVersion;
@@ -469,53 +369,11 @@ BOOL GetVersionExA(LPOSVERSIONINFOA lpVersionInformation);
 
 void lstrcpynA(LPSTR lpString1, LPCSTR lpString2, int iMaxLength);
 
-typedef struct _PROCESS_INFORMATION {
-	HANDLE hProcess;
-	HANDLE hThread;
-	DWORD dwProcessId;
-	DWORD dwThreadId;
-} PROCESS_INFORMATION, *PPROCESS_INFORMATION, *LPPROCESS_INFORMATION;
-
-typedef struct {
-	DWORD cb;
-} STARTUPINFOA, *LPSTARTUPINFOA;
-typedef STARTUPINFOA STARTUPINFO;
-
-WINBOOL WINAPI CreateProcessA(LPCSTR lpApplicationName, LPSTR lpCommandLine, LPSECURITY_ATTRIBUTES lpProcessAttributes,
-    LPSECURITY_ATTRIBUTES lpThreadAttributes, WINBOOL bInheritHandles, DWORD dwCreationFlags,
-    LPVOID lpEnvironment, LPCSTR lpCurrentDirectory, LPSTARTUPINFOA lpStartupInfo,
-    LPPROCESS_INFORMATION lpProcessInformation);
-
-void WINAPI ExitProcess(UINT uExitCode);
-DWORD WINAPI GetCurrentProcessId();
-
-HANDLE WINAPI CreateFileMappingA(HANDLE hFile, LPSECURITY_ATTRIBUTES lpFileMappingAttributes, DWORD flProtect,
-    DWORD dwMaximumSizeHigh, DWORD dwMaximumSizeLow, LPCSTR lpName);
-LPVOID WINAPI MapViewOfFile(HANDLE hFileMappingObject, DWORD dwDesiredAccess, DWORD dwFileOffsetHigh,
-    DWORD dwFileOffsetLow, SIZE_T dwNumberOfBytesToMap);
-WINBOOL WINAPI UnmapViewOfFile(LPCVOID lpBaseAddress);
-
-LPVOID VirtualAlloc(LPVOID lpAddress, SIZE_T dwSize, DWORD flAllocationType, DWORD flProtect);
-BOOL VirtualFree(LPVOID lpAddress, SIZE_T dwSize, DWORD dwFreeType);
-
-DWORD WINAPI WaitForInputIdle(HANDLE hProcess, DWORD dwMilliseconds);
-HWND WINAPI GetForegroundWindow();
-HWND WINAPI GetWindow(HWND hWnd, UINT uCmd);
-DWORD WINAPI GetWindowThreadProcessId(HWND hWnd, LPDWORD lpdwProcessId);
-
-DWORD WINAPI GetPrivateProfileStringA(LPCSTR lpAppName, LPCSTR lpKeyName, LPCSTR lpDefault, LPSTR lpReturnedString,
-    DWORD nSize, LPCSTR lpFileName);
 int MessageBoxA(HWND hWnd, const char *Text, const char *Title, UINT Flags);
 typedef LONG LSTATUS, HKEY, REGSAM, PHKEY;
 
-LSTATUS RegOpenKeyExA(HKEY hKey, LPCSTR lpSubKey, DWORD ulOptions, REGSAM samDesired, PHKEY phkResult);
-LSTATUS RegQueryValueExA(HKEY hKey, LPCSTR lpValueName, LPDWORD lpReserved, LPDWORD lpType, BYTE *lpData, LPDWORD lpcbData);
-LSTATUS RegSetValueExA(HKEY hKey, LPCSTR lpValueName, DWORD Reserved, DWORD dwType, const BYTE *lpData, DWORD cbData);
-LSTATUS RegCloseKeyA(HKEY hKey);
 void PostQuitMessage(int nExitCode);
 LRESULT DefWindowProcA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
-LONG GetWindowLongA(HWND hWnd, int nIndex);
-LONG SetWindowLongA(HWND hWnd, int nIndex, LONG dwNewLong);
 
 WINBOOL WINAPI WriteFile(HANDLE hFile, LPCVOID lpBuffer, DWORD nNumberOfBytesToWrite, LPDWORD lpNumberOfBytesWritten,
     LPOVERLAPPED lpOverlapped);
@@ -532,22 +390,9 @@ HANDLE WINAPI CreateFileA(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShar
 WINBOOL WINAPI ReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead, LPDWORD lpNumberOfBytesRead,
     LPOVERLAPPED lpOverlapped);
 DWORD WINAPI GetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh);
-UINT WINAPI GetWindowsDirectoryA(LPSTR lpBuffer, UINT uSize);
-DWORD GetCurrentDirectory(DWORD nBufferLength, LPTSTR lpBuffer);
-DWORD GetLogicalDriveStringsA(DWORD nBufferLength, LPSTR lpBuffer);
 UINT GetDriveTypeA(LPCSTR lpRootPathName);
-WINBOOL WINAPI GetDiskFreeSpaceA(LPCSTR lpRootPathName, LPDWORD lpSectorsPerCluster, LPDWORD lpBytesPerSector,
-    LPDWORD lpNumberOfFreeClusters, LPDWORD lpTotalNumberOfClusters);
-DWORD WINAPI GetModuleFileNameA(HMODULE hModule, LPSTR lpFilename, DWORD nSize);
 WINBOOL WINAPI GetComputerNameA(LPSTR lpBuffer, LPDWORD nSize);
-DWORD GetFileVersionInfoSizeA(LPCSTR lptstrFilename, LPDWORD lpdwHandle);
-BOOL GetFileVersionInfoA(LPCSTR lptstrFilename, DWORD dwHandle, DWORD dwLen, LPVOID lpData);
-BOOL VerQueryValueA(LPCVOID pBlock, LPCSTR lpSubBlock, LPVOID *lplpBuffer, PUINT puLen);
 WINBOOL WINAPI DeleteFileA(LPCSTR lpFileName);
-WINBOOL WINAPI CopyFileA(LPCSTR lpExistingFileName, LPCSTR lpNewFileName, WINBOOL bFailIfExists);
-HFILE WINAPI OpenFile(LPCSTR lpFileName, LPOFSTRUCT lpReOpenBuff, UINT uStyle);
-
-void __debugbreak();
 
 typedef struct _CONTEXT {
 
@@ -654,11 +499,7 @@ typedef struct _MEMORY_BASIC_INFORMATION {
 // Total fakes
 //
 typedef struct {
-} SOCKADDR, GUID, *LPGUID;
-
-BOOL IsBadReadPtr(const void *lp, UINT_PTR ucb);
-BOOL IsBadWritePtr(LPVOID lp, UINT_PTR ucb);
-SIZE_T VirtualQuery(LPCVOID lpAddress, PMEMORY_BASIC_INFORMATION lpBuffer, SIZE_T dwLength);
+} SOCKADDR;
 
 //
 // MSCVRT emulation
@@ -671,7 +512,6 @@ extern BOOL __cdecl LoadArtWithPal(char *pszFile, void **pBuffer, int frames, DW
 
 constexpr auto DVL_WM_ACTIVATEAPP = 0x001C;
 constexpr auto DVL_WM_SYSKEYUP = 0x0105;
-const auto DVL_HFILE_ERROR = (HFILE)-1;
 constexpr auto DVL_DRIVE_CDROM = 5;
 constexpr auto DVL_WM_DESTROY = 0x0002;
 constexpr auto DVL_HORZRES = 8;
@@ -726,27 +566,27 @@ constexpr auto DVL_SC_CLOSE = 0xF060;
 // Virtual key codes.
 //
 // ref: https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
-constexpr auto DVL_VK_BACK = 0x08;       // BACKSPACE key
-constexpr auto DVL_VK_TAB = 0x09;        // TAB key
-constexpr auto DVL_VK_RETURN = 0x0D;     // ENTER key
-constexpr auto DVL_VK_SHIFT = 0x10;      // SHIFT key
-constexpr auto DVL_VK_CONTROL = 0x11;    // CONTROL key
-constexpr auto DVL_VK_MENU = 0x12;       // ALT key
-constexpr auto DVL_VK_PAUSE = 0x13;      // PAUSE key
-constexpr auto DVL_VK_CAPITAL = 0x14;    // CAPS LOCK key
-constexpr auto DVL_VK_ESCAPE = 0x1B;     // ESC key
-constexpr auto DVL_VK_SPACE = 0x20;      // SPACEBAR
-constexpr auto DVL_VK_PRIOR = 0x21;      // PAGE UP key
-constexpr auto DVL_VK_NEXT = 0x22;       // PAGE DOWN key
-constexpr auto DVL_VK_END = 0x23;        // END key
-constexpr auto DVL_VK_HOME = 0x24;       // HOME key
-constexpr auto DVL_VK_LEFT = 0x25;       // LEFT ARROW key
-constexpr auto DVL_VK_UP = 0x26;         // UP ARROW key
-constexpr auto DVL_VK_RIGHT = 0x27;      // RIGHT ARROW key
-constexpr auto DVL_VK_DOWN = 0x28;       // DOWN ARROW key
-constexpr auto DVL_VK_SNAPSHOT = 0x2C;   // PRINT SCREEN key
-constexpr auto DVL_VK_INSERT = 0x2D;     // INS key
-constexpr auto DVL_VK_DELETE = 0x2E;     // DEL key
+constexpr auto DVL_VK_BACK = 0x08;     // BACKSPACE key
+constexpr auto DVL_VK_TAB = 0x09;      // TAB key
+constexpr auto DVL_VK_RETURN = 0x0D;   // ENTER key
+constexpr auto DVL_VK_SHIFT = 0x10;    // SHIFT key
+constexpr auto DVL_VK_CONTROL = 0x11;  // CONTROL key
+constexpr auto DVL_VK_MENU = 0x12;     // ALT key
+constexpr auto DVL_VK_PAUSE = 0x13;    // PAUSE key
+constexpr auto DVL_VK_CAPITAL = 0x14;  // CAPS LOCK key
+constexpr auto DVL_VK_ESCAPE = 0x1B;   // ESC key
+constexpr auto DVL_VK_SPACE = 0x20;    // SPACEBAR
+constexpr auto DVL_VK_PRIOR = 0x21;    // PAGE UP key
+constexpr auto DVL_VK_NEXT = 0x22;     // PAGE DOWN key
+constexpr auto DVL_VK_END = 0x23;      // END key
+constexpr auto DVL_VK_HOME = 0x24;     // HOME key
+constexpr auto DVL_VK_LEFT = 0x25;     // LEFT ARROW key
+constexpr auto DVL_VK_UP = 0x26;       // UP ARROW key
+constexpr auto DVL_VK_RIGHT = 0x27;    // RIGHT ARROW key
+constexpr auto DVL_VK_DOWN = 0x28;     // DOWN ARROW key
+constexpr auto DVL_VK_SNAPSHOT = 0x2C; // PRINT SCREEN key
+constexpr auto DVL_VK_INSERT = 0x2D;   // INS key
+constexpr auto DVL_VK_DELETE = 0x2E;   // DEL key
 // DVL_VK_0 through DVL_VK_9 correspond to '0' - '9'
 // DVL_VK_A through DVL_VK_Z correspond to 'A' - 'Z'
 constexpr auto DVL_VK_LWIN = 0x5B;       // Left Windows key (Natural keyboard)
@@ -806,4 +646,4 @@ constexpr auto DVL_MB_TASKMODAL = 0x00002000L;
 constexpr auto DVL_MB_ICONHAND = 0x00000010L;
 constexpr auto DVL_MB_ICONEXCLAMATION = 0x00000030L;
 
-}  // namespace dvl
+} // namespace dvl

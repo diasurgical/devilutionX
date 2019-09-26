@@ -47,9 +47,10 @@ void __cdecl dumphist(const char *pszFmt, ...)
 
 	va_start(va, pszFmt);
 
-	char dumpHistPath[MAX_PATH] = {};
-	if (sgpHistFile == NULL && GetWindowsDirectory(dumpHistPath, sizeof(dumpHistPath))) {
-		strcat(dumpHistPath, "\\dumphist.txt");
+	char path[MAX_PATH], dumpHistPath[MAX_PATH];
+	if (sgpHistFile == NULL) {
+		GetPrefPath(path, MAX_PATH);
+		snprintf(dumpHistPath, MAX_PATH, "%sdumphist.txt", path);
 		sgpHistFile = fopen(dumpHistPath, "wb");
 		if (sgpHistFile == NULL) {
 			return;
@@ -353,7 +354,7 @@ void multi_mon_seeds()
 	DWORD l;
 
 	sgdwGameLoops++;
-	l = _rotr(sgdwGameLoops, 8);
+	l = (sgdwGameLoops >> 8) | (sgdwGameLoops << 24);  // _rotr(sgdwGameLoops, 8)
 	for (i = 0; i < 200; i++)
 		monster[i]._mAISeed = l + i;
 }
@@ -612,7 +613,6 @@ void NetClose()
 	tmsg_cleanup();
 	multi_event_handler(FALSE);
 	SNetLeaveGame(3);
-	msgcmd_cmd_cleanup();
 	if (gbMaxPlayers > 1)
 		Sleep(2000);
 }

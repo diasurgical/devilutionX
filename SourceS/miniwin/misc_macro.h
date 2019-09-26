@@ -5,47 +5,12 @@
 
 #define INVALID_HANDLE_VALUE ((HANDLE)-1)
 #define INVALID_HANDLE ((HANDLE)-1)
-#define HFILE_ERROR DVL_HFILE_ERROR
 
 //
 // Intrinsics
 //
-#define LOBYTE(w) ((BYTE)(((DWORD_PTR)(w)) & 0xff))
-#define HIBYTE(w) ((BYTE)((((DWORD_PTR)(w)) >> 8) & 0xff))
 #define LOWORD(l) ((WORD)(((DWORD_PTR)(l)) & 0xffff))
 #define HIWORD(l) ((WORD)((((DWORD_PTR)(l)) >> 16) & 0xffff))
-
-#ifdef _MSC_VER
-#define InterlockedIncrement(x) (x)
-#else
-#ifdef __AMIGA__
-#define InterlockedIncrement(x) __atomic_add_fetch(x, 1, __ATOMIC_SEQ_CST)
-#else
-#define InterlockedIncrement(x) __sync_add_and_fetch(x, 1)
-#endif
-#endif
-
-#define INFINITE DVL_INFINITE
-
-#ifndef __BIG_ENDIAN__
-#define MAKEFOURCC(x, y, z, w)             \
-	(((uint32_t)((uint8_t)x))              \
-	    | (((uint32_t)((uint8_t)y)) << 8)  \
-	    | (((uint32_t)((uint8_t)z)) << 16) \
-	    | (((uint32_t)((uint8_t)w)) << 24))
-#else
-#define MAKEFOURCC(w, z, y, x)             \
-	(((uint32_t)((uint8_t)x))              \
-	    | (((uint32_t)((uint8_t)y)) << 8)  \
-	    | (((uint32_t)((uint8_t)z)) << 16) \
-	    | (((uint32_t)((uint8_t)w)) << 24))
-#endif
-
-#define WINUSERAPI
-
-#define FOURCC_RIFF MAKEFOURCC('R', 'I', 'F', 'F')
-
-#define ERROR_ALREADY_EXISTS 183
 
 #define CreateEvent CreateEventA
 
@@ -57,15 +22,8 @@
 #define DispatchMessage DispatchMessageA
 #define PostMessage PostMessageA
 #define CreateWindowEx CreateWindowExA
-#define FindWindow FindWindowA
 #define RegisterClassEx RegisterClassExA
-#define LoadCursor LoadCursorA
-#define GetUserName GetUserNameA
-#define LoadIcon LoadIconA
 #define LoadImage LoadImageA
-#define SHGetPathFromIDList SHGetPathFromIDListA
-#define ShellExecute ShellExecuteA
-#define GetModuleHandle GetModuleHandleA
 
 #define THREAD_BASE_PRIORITY_MAX 2
 #define THREAD_PRIORITY_NORMAL 0
@@ -126,7 +84,6 @@
 #define SEC_COMMIT 0x8000000
 #define PAGE_READWRITE 0x04
 
-#define FILE_MAP_ALL_ACCESS SECTION_ALL_ACCESS
 #define SECTION_QUERY 0x0001
 #define SECTION_MAP_WRITE 0x0002
 #define SECTION_MAP_READ 0x0004
@@ -138,11 +95,6 @@
 #define SECTION_ALL_ACCESS \
 	(STANDARD_RIGHTS_REQUIRED | SECTION_QUERY | SECTION_MAP_WRITE | SECTION_MAP_READ | SECTION_MAP_EXECUTE | SECTION_EXTEND_SIZE)
 
-#define CREATE_NEW_PROCESS_GROUP 0x200
-
-#define CreateProcess CreateProcessA
-#define CreateFileMapping CreateFileMappingA
-#define GetPrivateProfileString GetPrivateProfileStringA
 #define MessageBox MessageBoxA
 
 #define HKEY_CURRENT_USER 1
@@ -150,30 +102,15 @@
 #define KEY_WRITE 0x20006
 #define REG_SZ 1
 
-#define RegOpenKeyEx RegOpenKeyExA
-#define RegQueryValueEx RegQueryValueExA
-#define RegSetValueEx RegSetValueExA
-#define RegCloseKey RegCloseKeyA
 #define DefWindowProc DefWindowProcA
-#define GetWindowLong GetWindowLongA
-#define SetWindowLong SetWindowLongA
 
 #define GetFileAttributes GetFileAttributesA
 #define SetFileAttributes SetFileAttributesA
 #define FindFirstFile FindFirstFileA
-#define FindNextFile FindNextFileA
 #define CreateFile CreateFileA
-#define GetWindowsDirectory GetWindowsDirectoryA
-#define GetLogicalDriveStrings GetLogicalDriveStringsA
 #define GetDriveType GetDriveTypeA
-#define GetDiskFreeSpace GetDiskFreeSpaceA
-#define GetModuleFileName GetModuleFileNameA
 #define GetComputerName GetComputerNameA
-#define GetFileVersionInfoSize GetFileVersionInfoSizeA
-#define GetFileVersionInfo GetFileVersionInfoA
-#define VerQueryValue VerQueryValueA
 #define DeleteFile DeleteFileA
-#define CopyFile CopyFileA
 
 #define GWL_STYLE (-16)
 
@@ -253,8 +190,6 @@
 #define SWP_NOSIZE 0x0004
 #define SWP_NOZORDER 0x0001
 
-#define OF_EXIST 1
-
 #define MAKEINTRESOURCE DVL_MAKEINTRESOURCE
 
 #define _finddata_t DVL_finddata_t
@@ -298,27 +233,27 @@
 // Virtual key codes.
 //
 // ref: https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
-#define VK_BACK DVL_VK_BACK             // BACKSPACE key
-#define VK_TAB DVL_VK_TAB               // TAB key
-#define VK_RETURN DVL_VK_RETURN         // ENTER key
-#define VK_SHIFT DVL_VK_SHIFT           // SHIFT key
-#define VK_CONTROL DVL_VK_CONTROL       // CONTROL key
-#define VK_MENU DVL_VK_MENU             // ALT key
-#define VK_PAUSE DVL_VK_PAUSE           // PAUSE key
-#define VK_CAPITAL DVL_VK_CAPITAL       // CAPS LOCK key
-#define VK_ESCAPE DVL_VK_ESCAPE         // ESC key
-#define VK_SPACE DVL_VK_SPACE           // SPACEBAR
-#define VK_PRIOR DVL_VK_PRIOR           // PAGE UP key
-#define VK_NEXT DVL_VK_NEXT             // PAGE DOWN key
-#define VK_END DVL_VK_END               // END key
-#define VK_HOME DVL_VK_HOME             // HOME key
-#define VK_LEFT DVL_VK_LEFT             // LEFT ARROW key
-#define VK_UP DVL_VK_UP                 // UP ARROW key
-#define VK_RIGHT DVL_VK_RIGHT           // RIGHT ARROW key
-#define VK_DOWN DVL_VK_DOWN             // DOWN ARROW key
-#define VK_SNAPSHOT DVL_VK_SNAPSHOT     // PRINT SCREEN key
-#define VK_INSERT DVL_VK_INSERT         // INS key
-#define VK_DELETE DVL_VK_DELETE         // DEL key
+#define VK_BACK DVL_VK_BACK         // BACKSPACE key
+#define VK_TAB DVL_VK_TAB           // TAB key
+#define VK_RETURN DVL_VK_RETURN     // ENTER key
+#define VK_SHIFT DVL_VK_SHIFT       // SHIFT key
+#define VK_CONTROL DVL_VK_CONTROL   // CONTROL key
+#define VK_MENU DVL_VK_MENU         // ALT key
+#define VK_PAUSE DVL_VK_PAUSE       // PAUSE key
+#define VK_CAPITAL DVL_VK_CAPITAL   // CAPS LOCK key
+#define VK_ESCAPE DVL_VK_ESCAPE     // ESC key
+#define VK_SPACE DVL_VK_SPACE       // SPACEBAR
+#define VK_PRIOR DVL_VK_PRIOR       // PAGE UP key
+#define VK_NEXT DVL_VK_NEXT         // PAGE DOWN key
+#define VK_END DVL_VK_END           // END key
+#define VK_HOME DVL_VK_HOME         // HOME key
+#define VK_LEFT DVL_VK_LEFT         // LEFT ARROW key
+#define VK_UP DVL_VK_UP             // UP ARROW key
+#define VK_RIGHT DVL_VK_RIGHT       // RIGHT ARROW key
+#define VK_DOWN DVL_VK_DOWN         // DOWN ARROW key
+#define VK_SNAPSHOT DVL_VK_SNAPSHOT // PRINT SCREEN key
+#define VK_INSERT DVL_VK_INSERT     // INS key
+#define VK_DELETE DVL_VK_DELETE     // DEL key
 // VK_0 through VK_9 correspond to '0' - '9'
 // VK_A through VK_Z correspond to 'A' - 'Z'
 #define VK_LWIN DVL_VK_LWIN             // Left Windows key (Natural keyboard)
@@ -377,8 +312,3 @@
 #define MB_TASKMODAL DVL_MB_TASKMODAL
 #define MB_ICONHAND DVL_MB_ICONHAND
 #define MB_ICONEXCLAMATION DVL_MB_ICONEXCLAMATION
-
-/*
- * GetWindow() Constants
- */
-#define GW_HWNDPREV         3

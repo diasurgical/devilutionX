@@ -88,8 +88,7 @@ void selhero_UiFocusNavigationYesNo()
 
 void selhero_Free()
 {
-	mem_free_dbg(ArtBackground.data);
-	ArtBackground.data = NULL;
+	ArtBackground.Unload();
 	memset(listItems, 0, sizeof(listItems));
 }
 

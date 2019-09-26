@@ -1,5 +1,5 @@
 #include "diablo.h"
-#include "../3rdParty/Storm/Source/storm.h"
+
 #include "../3rdParty/StormLib/src/StormPort.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -22,7 +22,12 @@ int plr_dframe_size;
 
 const char ArmourChar[4] = { 'L', 'M', 'H', 0 };
 const char WepChar[10] = { 'N', 'U', 'S', 'D', 'B', 'A', 'M', 'H', 'T', 0 };
-const char CharChar[4] = { 'W', 'R', 'S', 0 };
+const char CharChar[] = {
+	'W',
+	'R',
+	'S',
+	0
+};
 
 /* data */
 
@@ -30,10 +35,10 @@ int plrxoff[9] = { 0, 2, 0, 2, 1, 0, 1, 2, 1 };
 int plryoff[9] = { 0, 2, 2, 0, 1, 1, 0, 1, 2 };
 int plrxoff2[9] = { 0, 1, 0, 1, 2, 0, 1, 2, 2 };
 int plryoff2[9] = { 0, 0, 1, 1, 0, 2, 2, 1, 2 };
-char PlrGFXAnimLens[3][11] = {
+char PlrGFXAnimLens[][11] = {
 	{ 10, 16, 8, 2, 20, 20, 6, 20, 8, 9, 14 },
 	{ 8, 18, 8, 4, 20, 16, 7, 20, 8, 10, 12 },
-	{ 8, 16, 8, 6, 20, 12, 8, 20, 8, 12, 8 }
+	{ 8, 16, 8, 6, 20, 12, 8, 20, 8, 12, 8 },
 };
 int PWVel[3][3] = {
 	{ 2048, 1024, 512 },
@@ -49,7 +54,11 @@ int MagicTbl[3] = { 10, 15, 35 };
 int DexterityTbl[3] = { 20, 30, 15 };
 int VitalityTbl[3] = { 25, 20, 20 };
 int ToBlkTbl[3] = { 30, 20, 10 };
-char *ClassStrTblOld[3] = { "Warrior", "Rogue", "Sorceror" }; // unused
+char *ClassStrTblOld[] = {
+	"Warrior",
+	"Rogue",
+	"Sorceror",
+};
 int MaxStats[3][4] = {
 	{ 250, 50, 60, 100 },
 	{ 55, 70, 250, 80 },
@@ -108,7 +117,11 @@ int ExpLvlsTbl[MAXCHARLEVEL] = {
 	1310707109,
 	1583495809
 };
-char *ClassStrTbl[3] = { "Warrior", "Rogue", "Sorceror" };
+char *ClassStrTbl[] = {
+	"Warrior",
+	"Rogue",
+	"Sorceror",
+};
 BYTE fix[9] = { 0, 0, 3, 3, 3, 6, 6, 6, 8 }; /* PM_ChangeLightOff local type */
 
 void SetPlayerGPtrs(BYTE *pData, BYTE **pAnim)
@@ -319,41 +332,47 @@ void InitPlrGFXMem(int pnum)
 
 DWORD GetPlrGFXSize(char *szCel)
 {
-	char prefix[16];
+	int c;
+	const char *a, *w;
+	DWORD dwSize, dwMaxSize;
+	HANDLE hsFile;
 	char pszName[256];
-	HANDLE file;
-	int c, a, w;
-	DWORD size, result;
+	char Type[16];
 
-	size = 0;
-	result = 0;
-	a = 0;
-	w = 0;
+	dwMaxSize = 0;
 
-	for (c = 0; c < sizeof(ClassStrTbl) / sizeof(ClassStrTbl[0]); c++) {
-		for (a = 0; ArmourChar[a]; a++) {
-			for (w = 0; WepChar[w]; w++) {
-				if (szCel[0] == 'D' && szCel[1] == 'T' && WepChar[w] != 'N') {
+	for (c = 0; c < sizeof(ClassStrTbl) / sizeof(*ClassStrTbl); c++) {
+#ifdef SPAWN
+		if (c != 0)
+			continue;
+#endif
+		for (a = &ArmourChar[0]; *a; a++) {
+#ifdef SPAWN
+			if (a != &ArmourChar[0])
+				break;
+#endif
+			for (w = &WepChar[0]; *w; w++) {
+				if (szCel[0] == 'D' && szCel[1] == 'T' && *w != 'N') {
 					continue;   //Death has no weapon
 				}
-				if (szCel[0] == 'B' && szCel[1] == 'L' && (WepChar[w] != 'U' && WepChar[w] != 'D' && WepChar[w] != 'H')) {
+				if (szCel[0] == 'B' && szCel[1] == 'L' && (*w != 'U' && *w != 'D' && *w != 'H')) {
 					continue;   //No block without weapon
 				}
-				sprintf(prefix, "%c%c%c", CharChar[c], ArmourChar[a], WepChar[w]);
-				sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", ClassStrTbl[c], prefix, prefix, szCel);
-
-				if (WOpenFile(pszName, &file, TRUE)) {
-					size = WGetFileSize(file, 0);
-					WCloseFile(file);
-					if (result <= size) {
-						result = size;
+				sprintf(Type, "%c%c%c", CharChar[c], *a, *w);
+				sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", ClassStrTbl[c], Type, Type, szCel);
+				if (WOpenFile(pszName, &hsFile, TRUE)) {
+					/// ASSERT: assert(hsFile);
+					dwSize = WGetFileSize(hsFile, NULL);
+					WCloseFile(hsFile);
+					if (dwMaxSize <= dwSize) {
+						dwMaxSize = dwSize;
 					}
 				}
 			}
 		}
 	}
 
-	return result;
+	return dwMaxSize;
 }
 
 void FreePlayerGFX(int pnum)
@@ -413,8 +432,6 @@ void SetPlrAnims(int pnum)
 		app_fatal("SetPlrAnims: illegal player %d", pnum);
 	}
 
-	pc = plr[pnum]._pClass;
-
 	plr[pnum]._pNWidth = 96;
 	plr[pnum]._pWWidth = 96;
 	plr[pnum]._pAWidth = 128;
@@ -422,6 +439,8 @@ void SetPlrAnims(int pnum)
 	plr[pnum]._pSWidth = 96;
 	plr[pnum]._pDWidth = 128;
 	plr[pnum]._pBWidth = 96;
+
+	pc = plr[pnum]._pClass;
 
 	if (leveltype == DTYPE_TOWN) {
 		plr[pnum]._pNFrames = PlrGFXAnimLens[pc][7];
@@ -657,7 +676,7 @@ void CreatePlayer(int pnum, char c)
 	plr[pnum]._pLvlChanging = FALSE;
 	plr[pnum].pTownWarps = 0;
 	plr[pnum].pLvlLoad = 0;
-	plr[pnum].pBattleNet = 0;
+	plr[pnum].pBattleNet = FALSE;
 	plr[pnum].pManaShield = FALSE;
 
 	InitDungMsgs(pnum);
@@ -682,7 +701,6 @@ int CalcStatDiff(int pnum)
 
 void NextPlrLevel(int pnum)
 {
-	char l, c;
 	int hp, mana;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
@@ -690,8 +708,6 @@ void NextPlrLevel(int pnum)
 	}
 
 	plr[pnum]._pLevel++;
-	l = plr[pnum]._pLevel;
-
 	plr[pnum]._pMaxLvl++;
 
 	if (CalcStatDiff(pnum) < 5) {
@@ -700,11 +716,9 @@ void NextPlrLevel(int pnum)
 		plr[pnum]._pStatPts += 5;
 	}
 
-	plr[pnum]._pNextExper = ExpLvlsTbl[l];
+	plr[pnum]._pNextExper = ExpLvlsTbl[plr[pnum]._pLevel];
 
-	c = plr[pnum]._pClass;
-
-	hp = c == PC_SORCERER ? 64 : 128;
+	hp = plr[pnum]._pClass == PC_SORCERER ? 64 : 128;
 	if (gbMaxPlayers == 1) {
 		hp++;
 	}
@@ -717,7 +731,11 @@ void NextPlrLevel(int pnum)
 		drawhpflag = TRUE;
 	}
 
-	mana = c != PC_WARRIOR ? 128 : 64;
+	if (plr[pnum]._pClass == PC_WARRIOR)
+		mana = 64;
+	else
+		mana = 128;
+
 	if (gbMaxPlayers == 1) {
 		mana++;
 	}
@@ -799,7 +817,7 @@ void AddPlrExperience(int pnum, int lvl, int exp)
 
 void AddPlrMonstExper(int lvl, int exp, char pmask)
 {
-	int totplrs, i;
+	int totplrs, i, e;
 
 	totplrs = 0;
 	for (i = 0; i < MAX_PLRS; i++) {
@@ -808,8 +826,10 @@ void AddPlrMonstExper(int lvl, int exp, char pmask)
 		}
 	}
 
-	if (totplrs && (1 << myplr) & pmask) {
-		AddPlrExperience(myplr, lvl, exp / totplrs);
+	if (totplrs) {
+		e = exp / totplrs;
+		if (pmask & (1 << myplr))
+			AddPlrExperience(myplr, lvl, e);
 	}
 }
 
@@ -1118,7 +1138,7 @@ void StartWalkStand(int pnum)
 		app_fatal("StartWalkStand: illegal player %d", pnum);
 	}
 
-	plr[pnum]._pmode = 0;
+	plr[pnum]._pmode = PM_STAND;
 	plr[pnum]._px = plr[pnum].WorldX;
 	plr[pnum]._py = plr[pnum].WorldY;
 	plr[pnum]._pxoff = 0;
@@ -1152,7 +1172,6 @@ void PM_ChangeLightOff(int pnum)
 		return;
 
 	l = &LightList[plr[pnum]._plid];
-	ymul = -1;
 	x = 2 * plr[pnum]._pyoff + plr[pnum]._pxoff;
 	y = 2 * plr[pnum]._pyoff - plr[pnum]._pxoff;
 	if (x < 0) {
@@ -1162,6 +1181,7 @@ void PM_ChangeLightOff(int pnum)
 		xmul = 1;
 	}
 	if (y < 0) {
+		ymul = -1;
 		y = -y;
 	} else {
 		ymul = 1;
@@ -1947,28 +1967,31 @@ void SyncPlrKill(int pnum, int earflag)
 
 void RemovePlrMissiles(int pnum)
 {
-	int mi, am;
+	int i, am;
+	int mx, my;
 
 	if (currlevel != 0 && pnum == myplr && (monster[myplr]._mx != 1 || monster[myplr]._my != 0)) {
 		M_StartKill(myplr, myplr);
-		AddDead(monster[myplr]._mx, monster[myplr]._my, monster[myplr].MType->mdeadval, (direction)monster[myplr]._mdir);
-		dMonster[monster[myplr]._mx][monster[myplr]._my] = 0;
+		AddDead(monster[myplr]._mx, monster[myplr]._my, (monster[myplr].MType)->mdeadval, monster[myplr]._mdir);
+		mx = monster[myplr]._mx;
+		my = monster[myplr]._my;
+		dMonster[mx][my] = 0;
 		monster[myplr]._mDelFlag = TRUE;
 		DeleteMonsterList();
 	}
 
-	for (mi = 0; mi < nummissiles; mi++) {
-		am = missileactive[mi];
+	for (i = 0; i < nummissiles; i++) {
+		am = missileactive[i];
 		if (missile[am]._mitype == MIS_STONE && missile[am]._misource == pnum) {
 			monster[missile[am]._miVar2]._mmode = missile[am]._miVar1;
 		}
 		if (missile[am]._mitype == MIS_MANASHIELD && missile[am]._misource == pnum) {
 			ClearMissileSpot(am);
-			DeleteMissile(am, mi);
+			DeleteMissile(am, i);
 		}
 		if (missile[am]._mitype == MIS_ETHEREALIZE && missile[am]._misource == pnum) {
 			ClearMissileSpot(am);
-			DeleteMissile(am, mi);
+			DeleteMissile(am, i);
 		}
 	}
 }
@@ -2051,7 +2074,7 @@ void RestartTownLvl(int pnum)
 	SetPlayerHitPoints(pnum, 64);
 
 	plr[pnum]._pMana = 0;
-	plr[pnum]._pManaBase = plr[pnum]._pMaxManaBase - plr[pnum]._pMaxMana;
+	plr[pnum]._pManaBase = plr[pnum]._pMana - (plr[pnum]._pMaxMana - plr[pnum]._pMaxManaBase);
 
 	CalcPlrInv(pnum, FALSE);
 
@@ -2961,8 +2984,8 @@ BOOL PM_DoDeath(int pnum)
 			}
 		}
 
-		plr[pnum]._pAnimFrame = plr[pnum]._pAnimLen;
 		plr[pnum]._pAnimDelay = 10000;
+		plr[pnum]._pAnimFrame = plr[pnum]._pAnimLen;
 		dFlags[plr[pnum].WorldX][plr[pnum].WorldY] |= BFLAG_DEAD_PLAYER;
 	}
 
@@ -3917,7 +3940,7 @@ void ModifyPlrMag(int p, int l)
 
 	ms = l << 6;
 	if (plr[p]._pClass == PC_SORCERER) {
-		ms *= 2;
+		ms <<= 1;
 	}
 
 	plr[p]._pMaxManaBase += ms;
@@ -3978,7 +4001,7 @@ void ModifyPlrVit(int p, int l)
 
 	ms = l << 6;
 	if (plr[p]._pClass == PC_WARRIOR) {
-		ms *= 2;
+		ms <<= 1;
 	}
 
 	plr[p]._pHPBase += ms;
@@ -4039,7 +4062,7 @@ void SetPlrMag(int p, int v)
 
 	m = v << 6;
 	if (plr[p]._pClass == PC_SORCERER) {
-		m *= 2;
+		m <<= 1;
 	}
 
 	plr[p]._pMaxManaBase = m;
@@ -4079,7 +4102,7 @@ void SetPlrVit(int p, int v)
 
 	hp = v << 6;
 	if (plr[p]._pClass == PC_WARRIOR) {
-		hp *= 2;
+		hp <<= 1;
 	}
 
 	plr[p]._pHPBase = hp;

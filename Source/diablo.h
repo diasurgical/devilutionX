@@ -1,6 +1,9 @@
-//HEADER_GOES_HERE
 #ifndef __DIABLO_H__
 #define __DIABLO_H__
+
+#ifdef USE_SDL1
+#include "sdl2_to_1_2_backports.h"
+#endif
 
 #include "../types.h"
 
@@ -26,7 +29,6 @@
 #include "encrypt.h"
 #include "engine.h"
 #include "error.h"
-#include "fault.h"
 #include "gamemenu.h"
 #include "gendung.h"
 #include "gmenu.h"
@@ -38,7 +40,6 @@
 #include "items.h"
 #include "lighting.h"
 #include "loadsave.h"
-#include "logging.h"
 #include "mainmenu.h"
 #include "minitext.h"
 #include "misdat.h"
@@ -48,7 +49,6 @@
 #include "movie.h"
 #include "mpqapi.h"
 #include "msg.h"
-#include "msgcmd.h"
 #include "multi.h"
 #include "nthread.h"
 #include "objdat.h"
@@ -119,11 +119,9 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer);
 void run_game_loop(unsigned int uMsg);
 void start_game(unsigned int uMsg);
 void free_game();
-BOOL diablo_get_not_running();
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow);
 void diablo_parse_flags(char *args);
 void diablo_init_screen();
-BOOL diablo_find_window(LPCSTR lpClassName);
 void diablo_reload_process(HINSTANCE hInstance);
 BOOL PressEscKey();
 LRESULT CALLBACK DisableInputWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -176,10 +174,7 @@ extern BOOL FriendlyMode;
 extern char *spszMsgTbl[4];
 extern char *spszMsgHotKeyTbl[4];
 
-#ifdef DEVILUTION_STUB
 #include "miniwin/popdecl.inc"
-#endif
-
 DEVILUTION_END_NAMESPACE
 
 #endif /* __DIABLO_H__ */

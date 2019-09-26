@@ -1,26 +1,23 @@
-language: bash
+language: cpp
 
-os:
-  - osx
+os: osx
 
-osx_image: xcode9.4
+osx_image: xcode10.3
 
 addons:
   homebrew:
-    update: true
-
-matrix:
-    include:
-    - env: ARCH=--build-all-x86
-    - env: ARCH=--build-all-x64
+    brewfile: true
 
 script:
-    - bash ./macos-build.sh $ARCH
+  - mkdir build
+  - cd build
+  - cmake ..
+  - make package -j$(sysctl -n hw.physicalcpu)
 
 deploy:
   provider: releases
   api_key: "$GITHUB_TOKEN"
-  file: "build/devilutionX.dmg"
+  file: "build/devilutionx.dmg"
   skip_cleanup: true
   on:
     tags: true
