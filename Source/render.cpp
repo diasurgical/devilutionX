@@ -1,5 +1,5 @@
 #include "diablo.h"
-#include <SDL_endian.h>
+#include "../3rdParty/StormLib/src/StormPort.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -173,7 +173,7 @@ void RenderTile(BYTE *pBuff)
 	dst = pBuff;
 	pFrameTable = (DWORD *)pDungeonCels;
 
-	src = &pDungeonCels[SDL_SwapLE32(pFrameTable[level_cel_block & 0xFFF])];
+	src = &pDungeonCels[BSWAP_INT32_UNSIGNED(pFrameTable[level_cel_block & 0xFFF])];
 	tile = (level_cel_block & 0x7000) >> 12;
 	tbl = &pLightTbl[256 * light_table_index];
 
@@ -182,7 +182,7 @@ void RenderTile(BYTE *pBuff)
 		if (level_cel_block & 0x8000) {
 			level_cel_block = SpeedFrameTbl[level_cel_block & 0xFFF][0] + (level_cel_block & 0xF000);
 		}
-		src = &pDungeonCels[SDL_SwapLE32(pFrameTable[level_cel_block & 0xFFF])];
+		src = &pDungeonCels[BSWAP_INT32_UNSIGNED(pFrameTable[level_cel_block & 0xFFF])];
 		tile = (level_cel_block & 0x7000) >> 12;
 		tbl = NULL;
 	} else if (level_cel_block & 0x8000) {

@@ -150,10 +150,10 @@ BOOL DRLG_L3Anvil()
 	int sx, sy, sw, sh, xx, yy, ii, trys;
 	BOOL found;
 
-	sx = random(0, 29);
-	sy = random(0, 29);
-	sw = 11;
-	sh = 11;
+	sw = L3ANVIL[0];
+	sh = L3ANVIL[1];
+	sx = random(0, DMAXX - sw);
+	sy = random(0, DMAXY - sh);
 
 	found = FALSE;
 	trys = 0;
@@ -174,10 +174,10 @@ BOOL DRLG_L3Anvil()
 		}
 		if (!found) {
 			sx++;
-			if (sx == 29) {
+			if (sx == DMAXX - sw) {
 				sx = 0;
 				sy++;
-				if (sy == 29) {
+				if (sy == DMAXY - sh) {
 					sy = 0;
 				}
 			}
@@ -187,7 +187,7 @@ BOOL DRLG_L3Anvil()
 		return TRUE;
 	}
 
-	ii = 123;
+	ii = sw * sh + 2;
 	for (yy = 0; yy < sh; yy++) {
 		for (xx = 0; xx < sw; xx++) {
 			if (L3ANVIL[ii] != 0) {
@@ -649,7 +649,7 @@ void DRLG_L3FillSingles()
 
 void DRLG_L3FillStraights()
 {
-	int i, j, xc, xs, yc, ys, k;
+	int i, j, xc, xs, yc, ys, k, rv;
 
 	for (j = 0; j < DMAXY - 1; j++) {
 		xs = 0;
@@ -662,7 +662,8 @@ void DRLG_L3FillStraights()
 			} else {
 				if (xs > 3 && random(0, 2) != 0) {
 					for (k = xc; k < i; k++) {
-						dungeon[k][j] = random(0, 2);
+						rv = random(0, 2);
+						dungeon[k][j] = rv;
 					}
 				}
 				xs = 0;
@@ -680,7 +681,8 @@ void DRLG_L3FillStraights()
 			} else {
 				if (xs > 3 && random(0, 2) != 0) {
 					for (k = xc; k < i; k++) {
-						dungeon[k][j + 1] = random(0, 2);
+						rv = random(0, 2);
+						dungeon[k][j + 1] = rv;
 					}
 				}
 				xs = 0;
@@ -698,7 +700,8 @@ void DRLG_L3FillStraights()
 			} else {
 				if (ys > 3 && random(0, 2) != 0) {
 					for (k = yc; k < j; k++) {
-						dungeon[i][k] = random(0, 2);
+						rv = random(0, 2);
+						dungeon[i][k] = rv;
 					}
 				}
 				ys = 0;
@@ -716,7 +719,8 @@ void DRLG_L3FillStraights()
 			} else {
 				if (ys > 3 && random(0, 2) != 0) {
 					for (k = yc; k < j; k++) {
-						dungeon[i + 1][k] = random(0, 2);
+						rv = random(0, 2);
+						dungeon[i + 1][k] = rv;
 					}
 				}
 				ys = 0;
@@ -754,20 +758,22 @@ int DRLG_L3GetFloorArea()
 
 void DRLG_L3MakeMegas()
 {
-	int i, j, v;
+	int i, j, v, rv;
 
-	for (j = 0; j < DMAXY-1; j++) {
-		for (i = 0; i < DMAXX-1; i++) {
+	for (j = 0; j < DMAXY - 1; j++) {
+		for (i = 0; i < DMAXX - 1; i++) {
 			v = dungeon[i + 1][j + 1] + 2 * dungeon[i][j + 1] + 4 * dungeon[i + 1][j] + 8 * dungeon[i][j];
 			if (v == 6) {
-				if (random(0, 2) == 0) {
+				rv = random(0, 2);
+				if (rv == 0) {
 					v = 12;
 				} else {
 					v = 5;
 				}
 			}
 			if (v == 9) {
-				if (random(0, 2) == 0) {
+				rv = random(0, 2);
+				if (rv == 0) {
 					v = 13;
 				} else {
 					v = 14;
@@ -775,10 +781,10 @@ void DRLG_L3MakeMegas()
 			}
 			dungeon[i][j] = L3ConvTbl[v];
 		}
-		dungeon[DMAXX-1][j] = 8;
+		dungeon[DMAXX - 1][j] = 8;
 	}
 	for (i = 0; i < DMAXX; i++) {
-		dungeon[i][DMAXY-1] = 8;
+		dungeon[i][DMAXY - 1] = 8;
 	}
 }
 
@@ -1191,7 +1197,7 @@ void DRLG_L3PoolFix()
 {
 	int dunx, duny;
 
-	for (duny = 0; duny < DMAXY; duny++) { // BUGFIX: Change '0' to '1' and 'DMAXY' to 'DMAXY - 1'
+	for (duny = 0; duny < DMAXY; duny++) {     // BUGFIX: Change '0' to '1' and 'DMAXY' to 'DMAXY - 1'
 		for (dunx = 0; dunx < DMAXX; dunx++) { // BUGFIX: Change '0' to '1' and 'DMAXX' to 'DMAXX - 1'
 			if (dungeon[dunx][duny] == 8) {
 				if (dungeon[dunx - 1][duny - 1] >= 25 && dungeon[dunx - 1][duny - 1] <= 41
@@ -1349,7 +1355,7 @@ void DRLG_L3Wood()
 	int i, j, x, y, xx, yy, rt, rp, x1, y1, x2, y2;
 	BOOL skip;
 
-	for (j = 0; j < DMAXY - 1; j++) { // BUGFIX: Change '0' to '1'
+	for (j = 0; j < DMAXY - 1; j++) {     // BUGFIX: Change '0' to '1'
 		for (i = 0; i < DMAXX - 1; i++) { // BUGFIX: Change '0' to '1'
 			if (dungeon[i][j] == 10 && random(0, 2) != 0) {
 				x = i;
@@ -1419,112 +1425,111 @@ void DRLG_L3Wood()
 		}
 	}
 
-	for (j = 0; j < DMAXY; j++) { // BUGFIX: Change '0' to '1'
+	for (j = 0; j < DMAXY; j++) {     // BUGFIX: Change '0' to '1'
 		for (i = 0; i < DMAXX; i++) { // BUGFIX: Change '0' to '1'
-			if (dungeon[i][j] != 7 || random(0, 1) != 0 || !SkipThemeRoom(i, j)) {
-				continue;
-			}
-			rt = random(0, 2);
-			if (rt == 0) {
-				y1 = j;
-				while (WoodVertU(i, y1)) {
-					y1--;
-				}
-				y1++;
-				y2 = j;
-				while (WoodVertD(i, y2)) {
-					y2++;
-				}
-				y2--;
-				skip = TRUE;
-				if (dungeon[i][y1] == 7) {
-					skip = FALSE;
-				}
-				if (dungeon[i][y2] == 7) {
-					skip = FALSE;
-				}
-				if (y2 - y1 > 1 && skip) {
-					rp = random(0, y2 - y1 - 1) + y1 + 1;
-					for (y = y1; y <= y2; y++) {
-						if (y == rp) {
-							continue;
-						}
-						if (dungeon[i][y] == 7) {
-							if (random(0, 2) != 0) {
-								dungeon[i][y] = 135;
-							} else {
-								dungeon[i][y] = 137;
+			if (dungeon[i][j] == 7 && random(0, 1) == 0 && SkipThemeRoom(i, j)) {
+				rt = random(0, 2);
+				if (rt == 0) {
+					y1 = j;
+					while (WoodVertU(i, y1)) {
+						y1--;
+					}
+					y1++;
+					y2 = j;
+					while (WoodVertD(i, y2)) {
+						y2++;
+					}
+					y2--;
+					skip = TRUE;
+					if (dungeon[i][y1] == 7) {
+						skip = FALSE;
+					}
+					if (dungeon[i][y2] == 7) {
+						skip = FALSE;
+					}
+					if (y2 - y1 > 1 && skip) {
+						rp = random(0, y2 - y1 - 1) + y1 + 1;
+						for (y = y1; y <= y2; y++) {
+							if (y == rp) {
+								continue;
 							}
-						}
-						if (dungeon[i][y] == 10) {
-							dungeon[i][y] = 131;
-						}
-						if (dungeon[i][y] == 126) {
-							dungeon[i][y] = 133;
-						}
-						if (dungeon[i][y] == 129) {
-							dungeon[i][y] = 133;
-						}
-						if (dungeon[i][y] == 2) {
-							dungeon[i][y] = 139;
-						}
-						if (dungeon[i][y] == 134) {
-							dungeon[i][y] = 138;
-						}
-						if (dungeon[i][y] == 136) {
-							dungeon[i][y] = 138;
+							if (dungeon[i][y] == 7) {
+								if (random(0, 2) != 0) {
+									dungeon[i][y] = 135;
+								} else {
+									dungeon[i][y] = 137;
+								}
+							}
+							if (dungeon[i][y] == 10) {
+								dungeon[i][y] = 131;
+							}
+							if (dungeon[i][y] == 126) {
+								dungeon[i][y] = 133;
+							}
+							if (dungeon[i][y] == 129) {
+								dungeon[i][y] = 133;
+							}
+							if (dungeon[i][y] == 2) {
+								dungeon[i][y] = 139;
+							}
+							if (dungeon[i][y] == 134) {
+								dungeon[i][y] = 138;
+							}
+							if (dungeon[i][y] == 136) {
+								dungeon[i][y] = 138;
+							}
 						}
 					}
 				}
-			}
-			if (rt == 1) {
-				x1 = i;
-				while (WoodHorizL(x1, j)) {
-					x1--;
-				}
-				x1++;
-				x2 = i;
-				while (WoodHorizR(x2, j)) {
-					x2++;
-				}
-				x2--;
-				skip = TRUE;
-				if (dungeon[x1][j] == 7) {
-					skip = FALSE;
-				}
-				if (dungeon[x2][j] == 7) {
-					skip = FALSE;
-				}
-				if (x2 - x1 > 1 && skip) {
-					rp = random(0, x2 - x1 - 1) + x1 + 1;
-					for (x = x1; x <= x2; x++) {
-						if (x == rp) {
-							continue;
-						}
-						if (dungeon[x][j] == 7) {
-							if (random(0, 2) != 0) {
-								dungeon[x][j] = 134;
-							} else {
-								dungeon[x][j] = 136;
+				if (rt == 1) {
+					x1 = i;
+					while (WoodHorizL(x1, j)) {
+						x1--;
+					}
+					x1++;
+					x2 = i;
+					while (WoodHorizR(x2, j)) {
+						x2++;
+					}
+					x2--;
+					skip = TRUE;
+					if (dungeon[x1][j] == 7) {
+						skip = FALSE;
+					}
+					if (dungeon[x2][j] == 7) {
+						skip = FALSE;
+					}
+					if (x2 - x1 > 1 && skip) {
+						rp = random(0, x2 - x1 - 1) + x1 + 1;
+						for (x = x1; x <= x2; x++) {
+							if (x == rp) {
+								continue;
 							}
-						}
-						if (dungeon[x][j] == 9) {
-							dungeon[x][j] = 130;
-						}
-						if (dungeon[x][j] == 121) {
-							dungeon[x][j] = 132;
-						}
-						if (dungeon[x][j] == 124) {
-							dungeon[x][j] = 132;
-						}
-						if (dungeon[x][j] == 4) {
-							dungeon[x][j] = 140;
-						}
-						if (dungeon[x][j] == 135) {
-							dungeon[x][j] = 138;
-						}
-						if (dungeon[x][j] == 137) {
-							dungeon[x][j] = 138;
+							if (dungeon[x][j] == 7) {
+								if (random(0, 2) != 0) {
+									dungeon[x][j] = 134;
+								} else {
+									dungeon[x][j] = 136;
+								}
+							}
+							if (dungeon[x][j] == 9) {
+								dungeon[x][j] = 130;
+							}
+							if (dungeon[x][j] == 121) {
+								dungeon[x][j] = 132;
+							}
+							if (dungeon[x][j] == 124) {
+								dungeon[x][j] = 132;
+							}
+							if (dungeon[x][j] == 4) {
+								dungeon[x][j] = 140;
+							}
+							if (dungeon[x][j] == 135) {
+								dungeon[x][j] = 138;
+							}
+							if (dungeon[x][j] == 137) {
+								dungeon[x][j] = 138;
+							}
 						}
 					}
 				}

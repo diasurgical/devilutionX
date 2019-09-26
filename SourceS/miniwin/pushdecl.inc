@@ -6,7 +6,6 @@
 #pragma push_macro("APIENTRY")
 #pragma push_macro("WINAPI")
 #pragma push_macro("WINAPIV")
-#pragma push_macro("WINUSERAPI")
 #endif
 
 #undef __cdecl
@@ -16,7 +15,6 @@
 #undef APIENTRY
 #undef WINAPI
 #undef WINAPIV
-#undef WINUSERAPI
 #define __cdecl
 #define __fastcall
 #define __stdcall
@@ -24,4 +22,3 @@
 #define APIENTRY
 #define WINAPI
 #define WINAPIV
-#define WINUSERAPI

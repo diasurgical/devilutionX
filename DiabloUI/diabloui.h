@@ -2,10 +2,8 @@
 #ifndef __DIABLOUI_H__
 #define __DIABLOUI_H__
 
-#ifdef DEVILUTION_STUB
 #include "miniwin/pushdecl.inc"
 namespace dvl {
-#endif
 
 //#if defined(__GNUC__) || defined(__cplusplus)
 //extern "C" {
@@ -65,9 +63,7 @@ BOOL __stdcall UiBetaDisclaimer(int a1);
 //}
 //#endif
 
-#ifdef DEVILUTION_STUB
 }
 #include "miniwin/popdecl.inc"
-#endif
 
 #endif /* __DIABLOUI_H__ */

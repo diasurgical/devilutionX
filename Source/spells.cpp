@@ -59,6 +59,15 @@ void UseMana(int id, int sn)
 
 	if (id == myplr) {
 		switch (plr[id]._pSplType) {
+		case RSPLTYPE_SKILL:
+		case RSPLTYPE_INVALID:
+			break;
+		case RSPLTYPE_SCROLL:
+			RemoveScroll(id);
+			break;
+		case RSPLTYPE_CHARGES:
+			UseStaffCharge(id);
+			break;
 		case RSPLTYPE_SPELL:
 #ifdef _DEBUG
 			if (!debug_mode_key_inverted_v) {
@@ -70,12 +79,6 @@ void UseMana(int id, int sn)
 #ifdef _DEBUG
 			}
 #endif
-			break;
-		case RSPLTYPE_SCROLL:
-			RemoveScroll(id);
-			break;
-		case RSPLTYPE_CHARGES:
-			UseStaffCharge(id);
 			break;
 		}
 	}
@@ -187,7 +190,7 @@ void DoResurrect(int pnum, int rid)
 		if (plr[rid].plrlevel == currlevel) {
 			StartStand(rid, plr[rid]._pdir);
 		} else {
-			plr[rid]._pmode = 0;
+			plr[rid]._pmode = PM_STAND;
 		}
 	}
 }

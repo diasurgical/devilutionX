@@ -45,8 +45,7 @@ void selconn_Load()
 
 void selconn_Free()
 {
-	mem_free_dbg(ArtBackground.data);
-	ArtBackground.data = NULL;
+	ArtBackground.Unload();
 }
 
 void selconn_Esc()

@@ -9,8 +9,8 @@ char BLoad();
 int WLoad();
 int ILoad();
 BOOL OLoad();
-void CopyItems(const int n, ItemStruct *pItem);
-void CopyItem(ItemStruct *pItem);
+void LoadItems(const int n, ItemStruct *pItem);
+void LoadItemData(ItemStruct *pItem);
 void SaveItem(ItemStruct *pItem);
 void SaveItems(ItemStruct *pItem, const int n);
 

@@ -22,7 +22,7 @@ void progress_Load(char *msg)
 	LoadArt("ui_art\\but_sml.pcx", &ButImage, 15);
 
 	if (font != NULL) {
-		SDL_Color color = { 243, 243, 243 };
+		SDL_Color color = { 243, 243, 243, 0 };
 
 		msgSurface = TTF_RenderUTF8_Solid(font, msg, color);
 		cancleSurface = TTF_RenderUTF8_Solid(font, "Cancel", color);
@@ -32,16 +32,11 @@ void progress_Load(char *msg)
 
 void progress_Free()
 {
-	mem_free_dbg(ArtBackground.data);
-	ArtBackground.data = NULL;
-	mem_free_dbg(ArtPopupSm.data);
-	ArtPopupSm.data = NULL;
-	mem_free_dbg(ArtProgBG.data);
-	ArtProgBG.data = NULL;
-	mem_free_dbg(ProgFil.data);
-	ProgFil.data = NULL;
-	mem_free_dbg(ButImage.data);
-	ButImage.data = NULL;
+	ArtBackground.Unload();
+	ArtPopupSm.Unload();
+	ArtProgBG.Unload();
+	ProgFil.Unload();
+	ButImage.Unload();
 	SDL_FreeSurface(msgSurface);
 	msgSurface = NULL;
 	SDL_FreeSurface(cancleSurface);

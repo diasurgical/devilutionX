@@ -553,26 +553,26 @@ void SetReturnLvlPos()
 	case SL_SKELKING:
 		ReturnLvlX = quests[QTYPE_KING]._qtx + 1;
 		ReturnLvlY = quests[QTYPE_KING]._qty;
-		ReturnLvlT = DTYPE_CATHEDRAL;
 		ReturnLvl = quests[QTYPE_KING]._qlevel;
+		ReturnLvlT = DTYPE_CATHEDRAL;
 		break;
 	case SL_BONECHAMB:
 		ReturnLvlX = quests[QTYPE_BONE]._qtx + 1;
 		ReturnLvlY = quests[QTYPE_BONE]._qty;
-		ReturnLvlT = DTYPE_CATACOMBS;
 		ReturnLvl = quests[QTYPE_BONE]._qlevel;
+		ReturnLvlT = DTYPE_CATACOMBS;
 		break;
 	case SL_POISONWATER:
 		ReturnLvlX = quests[QTYPE_PW]._qtx;
 		ReturnLvlY = quests[QTYPE_PW]._qty + 1;
-		ReturnLvlT = DTYPE_CATHEDRAL;
 		ReturnLvl = quests[QTYPE_PW]._qlevel;
+		ReturnLvlT = DTYPE_CATHEDRAL;
 		break;
 	case SL_VILEBETRAYER:
 		ReturnLvlX = quests[QTYPE_VB]._qtx + 1;
 		ReturnLvlY = quests[QTYPE_VB]._qty - 1;
-		ReturnLvlT = DTYPE_HELL;
 		ReturnLvl = quests[QTYPE_VB]._qlevel;
+		ReturnLvlT = DTYPE_HELL;
 		break;
 	}
 }
@@ -661,17 +661,17 @@ void ResyncQuests()
 		}
 	}
 	if (currlevel == quests[QTYPE_BLKM]._qlevel) {
-		if (quests[QTYPE_BLKM]._qactive == 1) {
-			if (!quests[QTYPE_BLKM]._qvar1) {
-				SpawnQuestItem(IDI_FUNGALTM, 0, 0, 5, 1);
-				quests[QTYPE_BLKM]._qvar1 = QS_TOMESPAWNED;
-			}
-		} else if (quests[QTYPE_BLKM]._qactive == 2) {
-			if (quests[QTYPE_BLKM]._qvar1 >= QS_MUSHGIVEN) {
-				Qtalklist[TOWN_WITCH]._qblkm = -1;
-				Qtalklist[TOWN_HEALER]._qblkm = QUEST_MUSH3;
-			} else if (quests[QTYPE_BLKM]._qvar1 >= QS_BRAINGIVEN) {
-				Qtalklist[TOWN_HEALER]._qblkm = -1;
+		if (quests[QTYPE_BLKM]._qactive == 1 && !quests[QTYPE_BLKM]._qvar1) {
+			SpawnQuestItem(IDI_FUNGALTM, 0, 0, 5, 1);
+			quests[QTYPE_BLKM]._qvar1 = QS_TOMESPAWNED;
+		} else {
+			if (quests[QTYPE_BLKM]._qactive == 2) {
+				if (quests[QTYPE_BLKM]._qvar1 >= QS_MUSHGIVEN) {
+					Qtalklist[TOWN_WITCH]._qblkm = -1;
+					Qtalklist[TOWN_HEALER]._qblkm = QUEST_MUSH3;
+				} else if (quests[QTYPE_BLKM]._qvar1 >= QS_BRAINGIVEN) {
+					Qtalklist[TOWN_HEALER]._qblkm = -1;
+				}
 			}
 		}
 	}
@@ -679,7 +679,7 @@ void ResyncQuests()
 		quests[QTYPE_VEIL]._qvar1 = 1;
 		SpawnQuestItem(IDI_GLDNELIX, 0, 0, 5, 1);
 	}
-	if (setlevel && setlvlnum == 5) {
+	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
 		if (quests[QTYPE_VB]._qvar1 >= 4)
 			ObjChangeMapResync(1, 11, 20, 18);
 		if (quests[QTYPE_VB]._qvar1 >= 6)

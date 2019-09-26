@@ -1,5 +1,6 @@
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
+#include <SDL_mixer.h>
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -897,7 +898,7 @@ TSFX sgSFX[] = {
 	{ SFX_STREAM,                "Sfx\\Monsters\\Wlock01.wav",  NULL },
 	{ SFX_STREAM,                "Sfx\\Monsters\\Zhar01.wav",   NULL },
 	{ SFX_STREAM,                "Sfx\\Monsters\\Zhar02.wav",   NULL },
-	{ SFX_STREAM,                "Sfx\\Monsters\\DiabloD.wav",  NULL }
+	{ SFX_STREAM,                "Sfx\\Monsters\\DiabloD.wav",  NULL },
 #endif
 	// clang-format on
 };
@@ -1147,32 +1148,7 @@ void PlaySfxLoc(int psfx, int x, int y)
 
 void FreeMonsterSnd()
 {
-	int i, j, k;
-
-	snd_update(TRUE);
-	sfx_stop();
-	sound_stop();
-
-	for (i = 0; i < nummtypes; i++) {
-		for (j = 0; j < 4; j++) {
-			for (k = 0; k < 2; k++) {
-				snd_stop_snd(Monsters[i].Snds[j][k]);
-			}
-		}
-	}
-}
-
-void sound_stop()
-{
-	int i;
-	TSFX *snd;
-
-	snd = &sgSFX[0];
-	for (i = 0; i < sizeof(sgSFX) / sizeof(TSFX); i++) {
-		if (snd->pSnd)
-			snd_stop_snd(snd->pSnd);
-		snd++;
-	}
+	Mix_HaltChannel(-1);
 }
 
 void sound_update()
@@ -1181,7 +1157,6 @@ void sound_update()
 		return;
 	}
 
-	snd_update(FALSE);
 	effects_update();
 }
 
@@ -1228,7 +1203,7 @@ void stream_update()
 
 void priv_sound_init(BYTE bLoadMask)
 {
-	BYTE pc, bFlags;
+	BYTE pc;
 	DWORD i;
 
 	if (!gbSndInited) {
@@ -1243,16 +1218,15 @@ void priv_sound_init(BYTE bLoadMask)
 			continue;
 		}
 
-		bFlags = sgSFX[i].bFlags;
-		if (bFlags & SFX_STREAM) {
+		if (sgSFX[i].bFlags & SFX_STREAM) {
 			continue;
 		}
 
-		if (bLoadMask && !(bFlags & bLoadMask)) {
+		if (bLoadMask && !(sgSFX[i].bFlags & bLoadMask)) {
 			continue;
 		}
 
-		if (bFlags & (SFX_ROGUE | SFX_WARRIOR | SFX_SORCEROR) && !(bFlags & pc)) {
+		if (sgSFX[i].bFlags & (SFX_ROGUE | SFX_WARRIOR | SFX_SORCEROR) && !(sgSFX[i].bFlags & pc)) {
 			continue;
 		}
 

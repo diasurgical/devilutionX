@@ -169,7 +169,6 @@ void run_game_loop(unsigned int uMsg)
 		}
 		multi_process_network_packets();
 		game_loop(gbGameLoopStartup);
-		msgcmd_send_chat();
 		gbGameLoopStartup = FALSE;
 		DrawAndBlit();
 	}
@@ -231,41 +230,23 @@ void free_game()
 	FreeGameMem();
 }
 
-BOOL diablo_get_not_running()
-{
-	SetLastError(0);
-	CreateEvent(NULL, FALSE, FALSE, "DiabloEvent");
-	return GetLastError() != ERROR_ALREADY_EXISTS;
-}
-
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	HINSTANCE hInst;
 	int nData;
 	char szFileName[MAX_PATH];
-	BOOL bNoEvent;
 
-	hInst = hInstance;
-#ifndef DEBUGGER
-	diablo_reload_process(hInstance);
-#endif
-	ghInst = hInst;
+	ghInst = hInstance;
 
-	if (RestrictedTest())
-		ERR_OK_DLG(IDD_DIALOG10, 0);
 	if (ReadOnlyTest()) {
-		if (!GetModuleFileName(ghInst, szFileName, sizeof(szFileName)))
-			szFileName[0] = '\0';
+		GetPrefPath(szFileName, sizeof(szFileName));
 		DirErrorDlg(szFileName);
 	}
 
 	ShowCursor(FALSE);
 	srand(GetTickCount());
 	InitHash();
-	fault_get_filter();
 
-	bNoEvent = diablo_get_not_running();
-	if (!diablo_find_window("DIABLO") && bNoEvent) {
+	{
 #ifdef _DEBUG
 		SFileEnableDirectAccess(TRUE);
 #endif
@@ -309,7 +290,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 		if (ghMainWnd) {
 			Sleep(300);
-			DestroyWindow(ghMainWnd);
 		}
 	}
 
@@ -327,16 +307,7 @@ void diablo_parse_flags(char *args)
 		while (isspace(*args)) {
 			args++;
 		}
-		if (_strnicmp("dd_emulate", args, strlen("dd_emulate")) == 0) {
-			gbEmulate = 1;
-			args += strlen("dd_emulate");
-		} else if (_strnicmp("dd_backbuf", args, strlen("dd_backbuf")) == 0) {
-			gbBackBuf = 1;
-			args += strlen("dd_backbuf");
-		} else if (_strnicmp("ds_noduplicates", args, strlen("ds_noduplicates")) == 0) {
-			gbDupSounds = FALSE;
-			args += strlen("ds_noduplicates");
-		} else {
+		{
 			c = tolower(*args);
 			args++;
 #ifdef _DEBUG
@@ -482,113 +453,6 @@ void diablo_init_screen()
 		PitchTbl[i] = i * BUFFER_WIDTH;
 
 	ClrDiabloMsg();
-}
-
-BOOL diablo_find_window(LPCSTR lpClassName)
-{
-	HWND result; // eax
-	HWND v2;     // esi
-	HWND v3;     // eax
-	HWND v4;     // edi
-
-	result = FindWindow(lpClassName, 0);
-	v2 = result;
-	if (!result)
-		return 0;
-
-	v3 = GetLastActivePopup(result);
-	if (v3)
-		v2 = v3;
-	v4 = GetTopWindow(v2);
-	if (!v4)
-		v4 = v2;
-	SetForegroundWindow(v2);
-	SetFocus(v4);
-	return 1;
-}
-
-void diablo_reload_process(HINSTANCE hInstance)
-{
-	DWORD dwSize, dwProcessId;
-	BOOL bNoExist;
-	char *s;
-	long *plMap;
-	HWND hWnd, hPrev;
-	HANDLE hMap;
-	STARTUPINFO si;
-	SYSTEM_INFO sinf;
-	PROCESS_INFORMATION pi;
-	char szReload[MAX_PATH + 16];
-	char szFileName[MAX_PATH] = "";
-
-	GetModuleFileName(hInstance, szFileName, sizeof(szFileName));
-	wsprintf(szReload, "Reload-%s", szFileName);
-	for (s = szReload; *s != '\0'; s++) {
-		if (*s == '\\') {
-			*s = '/';
-		}
-	}
-
-	GetSystemInfo(&sinf);
-	dwSize = sinf.dwPageSize;
-	if (dwSize < 4096) {
-		dwSize = 4096;
-	}
-
-	hMap = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, SEC_COMMIT | PAGE_READWRITE, 0, dwSize, szReload);
-	bNoExist = GetLastError() != ERROR_ALREADY_EXISTS;
-	if (hMap == NULL) {
-		return;
-	}
-	plMap = (long *)MapViewOfFile(hMap, FILE_MAP_ALL_ACCESS, 0, 0, dwSize);
-	if (plMap == NULL) {
-		return;
-	}
-
-	if (bNoExist) {
-		plMap[0] = -1;
-		plMap[1] = 0;
-		memset(&si, 0, sizeof(si));
-		si.cb = sizeof(si);
-		CreateProcess(szFileName, NULL, NULL, NULL, FALSE, CREATE_NEW_PROCESS_GROUP, NULL, NULL, &si, &pi);
-		WaitForInputIdle(pi.hProcess, INFINITE);
-		CloseHandle(pi.hThread);
-		CloseHandle(pi.hProcess);
-		while (plMap[0] < 0) {
-			Sleep(1000);
-		}
-		UnmapViewOfFile(plMap);
-		CloseHandle(hMap);
-		ExitProcess(0);
-	}
-
-	if (InterlockedIncrement(plMap) == 0) {
-		plMap[1] = GetCurrentProcessId();
-	} else {
-		hPrev = GetForegroundWindow();
-		hWnd = hPrev;
-		while (1) {
-			hPrev = GetWindow(hPrev, GW_HWNDPREV);
-			if (hPrev == NULL) {
-				break;
-			}
-			hWnd = hPrev;
-		}
-		while (1) {
-			GetWindowThreadProcessId(hWnd, &dwProcessId);
-			if (dwProcessId == plMap[1]) {
-				SetForegroundWindow(hWnd);
-				break;
-			}
-			hWnd = GetWindow(hWnd, GW_HWNDNEXT);
-			if (hWnd == NULL) {
-				break;
-			}
-		}
-		UnmapViewOfFile(plMap);
-		CloseHandle(hMap);
-		ExitProcess(0);
-	}
 }
 
 BOOL PressEscKey()
@@ -979,25 +843,18 @@ BOOL PressSysKey(int wParam)
 
 void diablo_hotkey_msg(DWORD dwMsg)
 {
-	char *s;
-	char szFileName[MAX_PATH];
 	char szMsg[MAX_SEND_STR_LEN];
 
 	if (gbMaxPlayers == 1) {
 		return;
 	}
-	if (GetModuleFileName(ghInst, szFileName, sizeof(szFileName)) == 0) {
-		app_fatal("Can't get program name");
-	}
 
-	s = strrchr(szFileName, '\\');
-	if (s != NULL) {
-		*s = '\0';
-	}
-
-	strcat(szFileName, "\\Diablo.ini");
 	/// ASSERT: assert(dwMsg < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]));
-	GetPrivateProfileString("NetMsg", spszMsgHotKeyTbl[dwMsg], spszMsgTbl[dwMsg], szMsg, sizeof(szMsg), szFileName);
+	if (!getIniValue("NetMsg", spszMsgHotKeyTbl[dwMsg], szMsg, MAX_SEND_STR_LEN)) {
+		snprintf(szMsg, MAX_SEND_STR_LEN, "%s", spszMsgTbl[dwMsg]);
+		setIniValue("NetMsg", spszMsgHotKeyTbl[dwMsg], szMsg);
+	}
+
 	NetSendCmdString(-1, szMsg);
 }
 

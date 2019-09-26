@@ -519,13 +519,13 @@ void LoadPreL2Dungeon(char *sFileName, int vx, int vy)
 void CreateL2Dungeon(DWORD rseed, int entry)
 {
 	if (gbMaxPlayers == 1) {
-		if (currlevel == 7 && !quests[8]._qactive) {
+		if (currlevel == 7 && !quests[QTYPE_BLIND]._qactive) {
 			currlevel = 6;
 			CreateL2Dungeon(glSeedTbl[6], 4);
 			currlevel = 7;
 		}
 		if (currlevel == 8) {
-			if (!quests[8]._qactive) {
+			if (!quests[QTYPE_BLIND]._qactive) {
 				currlevel = 6;
 				CreateL2Dungeon(glSeedTbl[6], 4);
 				currlevel = 8;

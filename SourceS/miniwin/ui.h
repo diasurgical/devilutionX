@@ -9,4 +9,4 @@ DWORD FormatMessage(DWORD dwFlags, LPCVOID lpSource, DWORD dwMessageId, DWORD dw
 int DialogBoxParam(HINSTANCE hInstance, LPCSTR msgId, HWND hWndParent, DLGPROC lpDialogFunc, LPARAM dwInitParam);
 LPCSTR DVL_MAKEINTRESOURCE(int i);
 
-}  // namespace dvl
+} // namespace dvl

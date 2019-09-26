@@ -120,7 +120,6 @@ void FreeObjectGFX()
 	int i;
 
 	for (i = 0; i < numobjfiles; i++) {
-		pObjCels[i] = pObjCels[i];
 		MemFreeDbg(pObjCels[i]);
 	}
 	numobjfiles = 0;
@@ -853,12 +852,12 @@ void SetMapObjects(BYTE *pMap, int startx, int starty)
 
 	ClrAllObjects();
 	for (i = 0; i < 56; i++)
-		fileload[i] = 0;
+		fileload[i] = FALSE;
 	InitObjFlag = TRUE;
 
 	for (i = 0; AllObjects[i].oload != -1; i++) {
 		if (AllObjects[i].oload == 1 && leveltype == AllObjects[i].olvltype)
-			fileload[AllObjects[i].ofindex] = 1;
+			fileload[AllObjects[i].ofindex] = TRUE;
 	}
 
 	lm = pMap;
@@ -875,7 +874,7 @@ void SetMapObjects(BYTE *pMap, int startx, int starty)
 	for (j = 0; j < rh; j++) {
 		for (i = 0; i < rw; i++) {
 			if (*lm) {
-				fileload[AllObjects[ObjTypeConv[*lm]].ofindex] = 1;
+				fileload[AllObjects[ObjTypeConv[*lm]].ofindex] = TRUE;
 			}
 			lm += 2;
 		}
@@ -2651,17 +2650,17 @@ void OperateSlainHero(int pnum, int i, BOOL sendmsg)
 		object[i]._oSelFlag = 0;
 		if (!deltaload) {
 			if (plr[pnum]._pClass == PC_WARRIOR) {
-				CreateMagicArmor(object[i]._ox, object[i]._oy, 9, ICURS_BREAST_PLATE, 0, 1);
+				CreateMagicArmor(object[i]._ox, object[i]._oy, ITYPE_HARMOR, ICURS_BREAST_PLATE, FALSE, TRUE);
 #ifndef SPAWN
 				PlaySfxLoc(PS_WARR9, plr[myplr].WorldX, plr[myplr].WorldY);
 #endif
 			} else if (plr[pnum]._pClass == PC_ROGUE) {
-				CreateMagicWeapon(object[i]._ox, object[i]._oy, 3, ICURS_LONG_WAR_BOW, 0, 1);
+				CreateMagicWeapon(object[i]._ox, object[i]._oy, ITYPE_BOW, ICURS_LONG_WAR_BOW, FALSE, TRUE);
 #ifndef SPAWN
 				PlaySfxLoc(PS_ROGUE9, plr[myplr].WorldX, plr[myplr].WorldY);
 #endif
 			} else if (plr[pnum]._pClass == PC_SORCERER) {
-				CreateSpellBook(object[i]._ox, object[i]._oy, 3, 0, 1);
+				CreateSpellBook(object[i]._ox, object[i]._oy, SPL_LIGHTNING, FALSE, TRUE);
 #ifndef SPAWN
 				PlaySfxLoc(PS_MAGE9, plr[myplr].WorldX, plr[myplr].WorldY);
 #endif
@@ -4021,13 +4020,13 @@ void BreakCrux(int i)
 	int j, oi;
 	BOOL triggered;
 
-	object[i]._oBreak = -1;
-	object[i]._oSelFlag = 0;
 	object[i]._oAnimFlag = 1;
 	object[i]._oAnimFrame = 1;
 	object[i]._oAnimDelay = 1;
 	object[i]._oSolidFlag = TRUE;
 	object[i]._oMissFlag = TRUE;
+	object[i]._oBreak = -1;
+	object[i]._oSelFlag = 0;
 	triggered = TRUE;
 	for (j = 0; j < nobjects; j++) {
 		oi = objectactive[j];

@@ -20,7 +20,7 @@ typedef struct PLStruct {
 	int PLParam2;
 	char PLMinLvl;
 	int PLIType;
-	int PLGOE;
+	BYTE PLGOE;
 	BOOL PLDouble;
 	BOOL PLOk;
 	int PLMinVal;
@@ -449,14 +449,7 @@ typedef struct MissileStruct {
 // effects/sound
 //////////////////////////////////////////////////
 
-typedef struct CKINFO {
-	DWORD dwSize;
-	DWORD dwOffset;
-} CKINFO;
-
 typedef struct TSnd {
-	WAVEFORMATEX fmt;
-	CKINFO chunk;
 	char *sound_path;
 	LPDIRECTSOUNDBUFFER DSB;
 	int start_tc;
@@ -655,7 +648,6 @@ typedef struct ObjDataStruct {
 	BOOL oTrapFlag;
 } ObjDataStruct;
 
-#pragma pack(push, 4)
 typedef struct ObjectStruct {
 	int _otype;
 	int _ox;
@@ -688,13 +680,11 @@ typedef struct ObjectStruct {
 	int _oVar7;
 	int _oVar8;
 } ObjectStruct;
-#pragma pack(pop)
 
 //////////////////////////////////////////////////
 // portal
 //////////////////////////////////////////////////
 
-#pragma pack(push, 4)
 typedef struct PortalStruct {
 	BOOL open;
 	int x;
@@ -703,7 +693,6 @@ typedef struct PortalStruct {
 	int ltype;
 	BOOL setlvl;
 } PortalStruct;
-#pragma pack(pop)
 
 //////////////////////////////////////////////////
 // msg
@@ -955,11 +944,13 @@ typedef struct DJunk {
 } DJunk;
 #pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct TMegaPkt {
 	struct TMegaPkt *pNext;
 	DWORD dwSpaceLeft;
 	BYTE data[32000];
 } TMegaPkt;
+#pragma pack(pop)
 
 typedef struct TBuffer {
 	DWORD dwNextWriteOffset;
@@ -970,7 +961,6 @@ typedef struct TBuffer {
 // quests
 //////////////////////////////////////////////////
 
-#pragma pack(push, 4)
 typedef struct QuestStruct {
 	unsigned char _qlevel;
 	unsigned char _qtype;
@@ -985,7 +975,6 @@ typedef struct QuestStruct {
 	unsigned char _qvar2;
 	int _qlog;
 } QuestStruct;
-#pragma pack(pop)
 
 typedef struct QuestData {
 	unsigned char _qdlvl;

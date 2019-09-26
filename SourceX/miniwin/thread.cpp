@@ -2,10 +2,6 @@
 #include "stubs.h"
 #include <SDL.h>
 #include <set>
-#if !SDL_VERSION_ATLEAST(2, 0, 0)
-#include "sdl1_wrapper.h"
-#endif
-#include "../SourceS/miniwin/misc.h"
 
 namespace dvl {
 
@@ -42,8 +38,8 @@ uintptr_t DVL_beginthreadex(void *_Security, unsigned _StackSize, unsigned (*_St
 	func_translate *ft = new func_translate;
 	ft->func = _StartAddress;
 	ft->arg = _ArgList;
-#if !SDL_VERSION_ATLEAST(2, 0, 0)
-	SDL_Thread *ret = SDL_CreateThread(thread_translate, NULL);
+#ifdef USE_SDL1
+	SDL_Thread *ret = SDL_CreateThread(thread_translate, ft);
 #else
 	SDL_Thread *ret = SDL_CreateThread(thread_translate, NULL, ft);
 #endif

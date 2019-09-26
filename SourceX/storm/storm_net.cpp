@@ -150,13 +150,4 @@ BOOL SNetPerformUpgrade(DWORD *upgradestatus)
 	UNIMPLEMENTED();
 }
 
-/**
- * @brief not called from engine
- */
-BOOL SNetSetGameMode(DWORD modeFlags, bool makePublic)
-{
-	UNIMPLEMENTED();
-	return true;
-}
-
 }
