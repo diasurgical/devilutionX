@@ -140,9 +140,6 @@
 		mem_free_dbg(p__p);	\
 	}\
 }
-	/*else \
-		printf("MemFreeDbg: Trying to free 0! at %d in file %s\n", __LINE__, __FILE__); \*/
-
 
 #undef assert
 

@@ -91,7 +91,7 @@ void init_archives()
 #ifdef SPAWN
 		diabdat_mpq = init_test_access(diabdat_mpq_path, "spawn.mpq", "DiabloSpawn", MPQ_FLAG_READ_ONLY, FS_PC);
 #else
-		diabdat_mpq = init_test_access(diabdat_mpq_path, "diabdat.mpq", "DiabloCD", MPQ_FLAG_READ_ONLY, FS_PC);
+		diabdat_mpq = init_test_access(diabdat_mpq_path, "diabdat.mpq", "DiabloCD", 2000, FS_PC);
 #endif
 	if (!WOpenFile("ui_art\\title.pcx", &fh, TRUE))
 #ifdef SPAWN
@@ -118,7 +118,7 @@ HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags
 
 	for (int i = 0; i < 2; i++) {
 		snprintf(mpq_path, MAX_PATH, "%s%s", Buffer[i], mpq_name);
-#ifndef __BIG_ENDIAN__
+#ifdef __BIG_ENDIAN__
 		if (SFileOpenArchive(mpq_path, flags, FS_PC, &archive)) {
 #else		
 		if (SFileOpenArchive(mpq_path, 0, flags, &archive)) {

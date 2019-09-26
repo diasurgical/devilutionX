@@ -402,7 +402,7 @@ void pfile_read_player_from_save()
 	if (archive == NULL)
 		app_fatal("Unable to open archive");
 	if (!pfile_read_hero(archive, &pkplr))
-		printf("Unable to load character\n");
+		app_fatal("Unable to load character");
 
 	UnPackPlayer(&pkplr, myplr, FALSE);
 	gbValidSaveFile = pfile_archive_contains_game(archive, save_num);
@@ -556,9 +556,8 @@ BYTE *pfile_read(const char *pszName, DWORD *pdwLen)
 	if (archive == NULL)
 		app_fatal("Unable to open save file archive");
 
-	if (!SFileOpenFileEx(archive, FileName, 0, &save)) {
-		printf("Unable to open save file"); //app_fatal		
-		}
+	if (!SFileOpenFileEx(archive, FileName, 0, &save))
+		app_fatal("Unable to open save file");
 
 	*pdwLen = SFileGetFileSize(save, NULL);
 	if (*pdwLen == 0)

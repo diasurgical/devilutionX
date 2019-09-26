@@ -1775,46 +1775,40 @@ uint64_t SwapUInt64(uint64_t data)
 //! Byte swap unsigned short
 uint16_t SwapUInt16( uint16_t val )
 {
-   // return (val << 8) | (val >> 8 );
+
     return SDL_SwapLE16(val);
 }
 
 //! Byte swap short
 int16_t SwapInt16( int16_t val )
 {
-    //return (val << 8) | ((val >> 8) & 0xFF);
+
     return SDL_SwapLE16(val);
 }
 
 //! Byte swap unsigned int
 uint32_t SwapUInt32( uint32_t val )
 {
-   // val = ((val << 8) & 0xFF00FF00 ) | ((val >> 8) & 0xFF00FF );
-   // return (val << 16) | (val >> 16);
+
     return SDL_SwapLE32(val);
 }
 
 //! Byte swap int
 int32_t SwapInt32( int32_t val )
 {
-    //val = ((val << 8) & 0xFF00FF00) | ((val >> 8) & 0xFF00FF );
-   // return (val << 16) | ((val >> 16) & 0xFFFF);
+
     return SDL_SwapLE32(val);
 }
 
 int64_t SwapInt64( int64_t val )
 {
-  /*  val = ((val << 8) & 0xFF00FF00FF00FF00ULL ) | ((val >> 8) & 0x00FF00FF00FF00FFULL );
-    val = ((val << 16) & 0xFFFF0000FFFF0000ULL ) | ((val >> 16) & 0x0000FFFF0000FFFFULL );
-    return (val << 32) | ((val >> 32) & 0xFFFFFFFFULL);*/
+
     return SDL_SwapLE64(val);
 }
 
 uint64_t SwapUInt64( uint64_t val )
 {
-   /* val = ((val << 8) & 0xFF00FF00FF00FF00ULL ) | ((val >> 8) & 0x00FF00FF00FF00FFULL );
-    val = ((val << 16) & 0xFFFF0000FFFF0000ULL ) | ((val >> 16) & 0x0000FFFF0000FFFFULL );
-    return (val << 32) | (val >> 32);*/
+
     return SDL_SwapLE64(val);
 }
 #endif
