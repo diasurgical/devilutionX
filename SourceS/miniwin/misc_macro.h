@@ -118,9 +118,6 @@
 #define GetDiskFreeSpace GetDiskFreeSpaceA
 #define GetModuleFileName GetModuleFileNameA
 #define GetComputerName GetComputerNameA
-#define GetFileVersionInfoSize GetFileVersionInfoSizeA
-#define GetFileVersionInfo GetFileVersionInfoA
-#define VerQueryValue VerQueryValueA
 #define DeleteFile DeleteFileA
 #define CopyFile CopyFileA
 

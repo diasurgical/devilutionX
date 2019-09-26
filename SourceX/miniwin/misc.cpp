@@ -147,39 +147,6 @@ WINBOOL GetComputerNameA(LPSTR lpBuffer, LPDWORD nSize)
 	return true;
 }
 
-DWORD GetFileVersionInfoSizeA(LPCSTR lptstrFilename, LPDWORD lpdwHandle)
-{
-	DUMMY();
-	*lpdwHandle = 0;
-
-	return 1532;
-}
-
-BOOL GetFileVersionInfoA(LPCSTR lptstrFilename, DWORD dwHandle, DWORD dwLen, LPVOID lpData)
-{
-	DUMMY();
-	*(int *)lpData = 16711836; // TODO use actual version from .rc
-
-	return true;
-}
-
-BOOL VerQueryValueA(LPCVOID pBlock, LPCSTR lpSubBlock, LPVOID *lplpBuffer, PUINT puLen)
-{
-	DUMMY();
-	static VS_FIXEDFILEINFO lpBuffer;
-
-	// Set internal version, TODO use actual version from .rc
-	lpBuffer.dwProductVersionMS = 1;
-	lpBuffer.dwProductVersionMS <<= 16;
-	lpBuffer.dwProductVersionMS |= 0 & 0xFFFF;
-	lpBuffer.dwProductVersionLS = 9;
-	lpBuffer.dwProductVersionLS <<= 16;
-	lpBuffer.dwProductVersionLS |= 2 & 0xFFFF;
-	*lplpBuffer = (LPVOID *)&lpBuffer;
-
-	return true;
-}
-
 DWORD GetCurrentDirectory(DWORD nBufferLength, LPTSTR lpBuffer)
 {
 	char *base_path = SDL_GetBasePath();

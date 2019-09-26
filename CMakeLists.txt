@@ -2,13 +2,11 @@ cmake_minimum_required(VERSION 3.7)
 
 include(CMake/out_of_tree.cmake)
 
-set(PROJECT_VERSION 0.5.0)
-
-project(devilutionX
-  VERSION ${PROJECT_VERSION}
+project(DevilutionX
+  VERSION 0.5.0
   LANGUAGES C CXX)
 
-list(APPEND CMAKE_MODULE_PATH "${devilutionX_SOURCE_DIR}/CMake")
+list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake")
 
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Debug")
@@ -212,7 +210,8 @@ add_executable(devilutionx MACOSX_BUNDLE
   ./Packaging/macOS/AppIcon.icns
   ./Packaging/resources/CharisSILB.ttf)
 
-target_include_directories(devilution PUBLIC Source SourceS)
+configure_file(SourceS/config.h.in config.h @ONLY)
+target_include_directories(devilution PUBLIC Source SourceS ${CMAKE_CURRENT_BINARY_DIR})
 target_include_directories(devilutionx PRIVATE
   SourceX
   3rdParty/asio/include

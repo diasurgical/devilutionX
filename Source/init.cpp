@@ -3,6 +3,7 @@
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 #include <SDL.h>
+#include <config.h>
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -130,29 +131,8 @@ HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags
 
 void init_get_file_info()
 {
-	DWORD dwLen;
-	void *pBlock;
-	unsigned int uBytes;
-	DWORD dwHandle;
-	VS_FIXEDFILEINFO *lpBuffer;
-
-	if (GetModuleFileName(ghInst, diablo_exe_path, sizeof(diablo_exe_path))) {
-		dwLen = GetFileVersionInfoSize(diablo_exe_path, &dwHandle);
-		if (dwLen) {
-			pBlock = DiabloAllocPtr(dwLen);
-			if (GetFileVersionInfo(diablo_exe_path, 0, dwLen, pBlock)) {
-				if (VerQueryValue(pBlock, "\\", (LPVOID *)&lpBuffer, &uBytes))
-					sprintf(
-					    gszVersionNumber,
-					    "version %d.%d.%d.%d",
-					    lpBuffer->dwProductVersionMS >> 16,
-					    lpBuffer->dwProductVersionMS & 0xFFFF,
-					    lpBuffer->dwProductVersionLS >> 16,
-					    lpBuffer->dwProductVersionLS & 0xFFFF);
-			}
-			mem_free_dbg(pBlock);
-		}
-	}
+	snprintf(gszProductName, MAX_PATH, "%s v%s", PROJECT_NAME, PROJECT_VERSION);
+	snprintf(gszVersionNumber, MAX_PATH, "version %s", PROJECT_VERSION);
 }
 
 LRESULT __stdcall MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
