@@ -226,7 +226,7 @@ typedef LONG(WINAPI *PTOP_LEVEL_EXCEPTION_FILTER)(
     struct _EXCEPTION_POINTERS *ExceptionInfo);
 
 uintptr_t __cdecl DVL_beginthreadex(void *_Security, unsigned _StackSize, unsigned(__stdcall *_StartAddress)(void *),
-                                 void *_ArgList, unsigned _InitFlag, unsigned *_ThrdAddr);
+    void *_ArgList, unsigned _InitFlag, unsigned *_ThrdAddr);
 HANDLE WINAPI GetCurrentThread();
 DWORD WINAPI GetCurrentThreadId();
 WINBOOL WINAPI SetThreadPriority(HANDLE hThread, int nPriority);
