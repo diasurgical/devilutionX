@@ -497,11 +497,6 @@ void UiSetupPlayerInfo(char *infostr, _uiheroinfo *pInfo, DWORD type)
 	    pInfo->spawned);
 }
 
-BOOL UiCopyProtError(int *pdwResult)
-{
-	UNIMPLEMENTED();
-}
-
 void UiAppActivate(BOOL bActive)
 {
 	DUMMY();

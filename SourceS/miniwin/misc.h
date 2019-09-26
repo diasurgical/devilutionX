@@ -221,16 +221,9 @@ BOOL InvalidateRect(HWND hWnd, const RECT *lpRect, BOOL bErase);
 BOOL UpdateWindow(HWND hWnd);
 BOOL ShowWindow(HWND hWnd, int nCmdShow);
 int GetSystemMetrics(int nIndex);
-HGDIOBJ GetStockObject(int i);
-BOOL GetUserNameA(LPSTR lpBuffer, LPDWORD pcbBuffer);
-void GetLocalTime(LPSYSTEMTIME lpSystemTime);
-long __cdecl _findfirst(const char *, struct DVL_finddata_t *);
-int __cdecl _findnext(long, struct DVL_finddata_t *);
 
 typedef LONG(WINAPI *PTOP_LEVEL_EXCEPTION_FILTER)(
     struct _EXCEPTION_POINTERS *ExceptionInfo);
-
-HMODULE GetModuleHandleA(LPCSTR lpModuleName);
 
 uintptr_t __cdecl DVL_beginthreadex(void *_Security, unsigned _StackSize, unsigned(__stdcall *_StartAddress)(void *),
     void *_ArgList, unsigned _InitFlag, unsigned *_ThrdAddr);
@@ -376,9 +369,6 @@ BOOL GetVersionExA(LPOSVERSIONINFOA lpVersionInformation);
 
 void lstrcpynA(LPSTR lpString1, LPCSTR lpString2, int iMaxLength);
 
-LPVOID VirtualAlloc(LPVOID lpAddress, SIZE_T dwSize, DWORD flAllocationType, DWORD flProtect);
-BOOL VirtualFree(LPVOID lpAddress, SIZE_T dwSize, DWORD dwFreeType);
-
 int MessageBoxA(HWND hWnd, const char *Text, const char *Title, UINT Flags);
 typedef LONG LSTATUS, HKEY, REGSAM, PHKEY;
 
@@ -401,8 +391,6 @@ WINBOOL WINAPI ReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRea
     LPOVERLAPPED lpOverlapped);
 DWORD WINAPI GetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh);
 UINT GetDriveTypeA(LPCSTR lpRootPathName);
-WINBOOL WINAPI GetDiskFreeSpaceA(LPCSTR lpRootPathName, LPDWORD lpSectorsPerCluster, LPDWORD lpBytesPerSector,
-    LPDWORD lpNumberOfFreeClusters, LPDWORD lpTotalNumberOfClusters);
 WINBOOL WINAPI GetComputerNameA(LPSTR lpBuffer, LPDWORD nSize);
 WINBOOL WINAPI DeleteFileA(LPCSTR lpFileName);
 
@@ -512,10 +500,6 @@ typedef struct _MEMORY_BASIC_INFORMATION {
 //
 typedef struct {
 } SOCKADDR;
-
-BOOL IsBadReadPtr(const void *lp, UINT_PTR ucb);
-BOOL IsBadWritePtr(LPVOID lp, UINT_PTR ucb);
-SIZE_T VirtualQuery(LPCVOID lpAddress, PMEMORY_BASIC_INFORMATION lpBuffer, SIZE_T dwLength);
 
 //
 // MSCVRT emulation

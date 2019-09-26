@@ -97,16 +97,6 @@ WINBOOL FindClose(HANDLE hFindFile)
 	return true;
 }
 
-WINBOOL GetDiskFreeSpaceA(LPCSTR lpRootPathName, LPDWORD lpSectorsPerCluster, LPDWORD lpBytesPerSector,
-    LPDWORD lpNumberOfFreeClusters, LPDWORD lpTotalNumberOfClusters)
-{
-	*lpBytesPerSector = 1;
-	*lpSectorsPerCluster = 1;
-	*lpNumberOfFreeClusters = 10 << 20;
-	*lpTotalNumberOfClusters = 10 << 20;
-	return true;
-}
-
 WINBOOL GetComputerNameA(LPSTR lpBuffer, LPDWORD nSize)
 {
 	DUMMY();
@@ -283,73 +273,6 @@ int GetSystemMetrics(int nIndex)
 	}
 
 	return 0;
-}
-
-/**
- * @brief Used for getting a black brush
- */
-HGDIOBJ GetStockObject(int i)
-{
-	return NULL;
-}
-
-BOOL IsBadReadPtr(const void *lp, UINT_PTR ucb)
-{
-	UNIMPLEMENTED();
-	return true;
-}
-
-BOOL IsBadWritePtr(LPVOID lp, UINT_PTR ucb)
-{
-	UNIMPLEMENTED();
-	return true;
-}
-
-SIZE_T VirtualQuery(LPCVOID lpAddress, PMEMORY_BASIC_INFORMATION lpBuffer, SIZE_T dwLength)
-{
-	UNIMPLEMENTED();
-	return false;
-}
-
-LPVOID VirtualAlloc(LPVOID lpAddress, SIZE_T dwSize, DWORD flAllocationType, DWORD flProtect)
-{
-	UNIMPLEMENTED();
-	return NULL;
-}
-
-BOOL VirtualFree(LPVOID lpAddress, SIZE_T dwSize, DWORD dwFreeType)
-{
-	UNIMPLEMENTED();
-	return false;
-}
-
-void GetLocalTime(LPSYSTEMTIME lpSystemTime)
-{
-	UNIMPLEMENTED();
-}
-
-long _findfirst(const char *pattern, struct DVL_finddata_t *finder)
-{
-	DUMMY();
-	return -1;
-}
-
-int _findnext(long, struct DVL_finddata_t *finder)
-{
-	UNIMPLEMENTED();
-	return -1;
-}
-
-HMODULE GetModuleHandleA(LPCSTR lpModuleName)
-{
-	UNIMPLEMENTED();
-	return NULL;
-}
-
-BOOL GetUserNameA(LPSTR lpBuffer, LPDWORD pcbBuffer)
-{
-	UNIMPLEMENTED();
-	return false;
 }
 
 int GetDeviceCaps(HDC hdc, int index)

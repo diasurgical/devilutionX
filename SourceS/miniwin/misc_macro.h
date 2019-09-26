@@ -23,9 +23,7 @@
 #define PostMessage PostMessageA
 #define CreateWindowEx CreateWindowExA
 #define RegisterClassEx RegisterClassExA
-#define GetUserName GetUserNameA
 #define LoadImage LoadImageA
-#define GetModuleHandle GetModuleHandleA
 
 #define THREAD_BASE_PRIORITY_MAX 2
 #define THREAD_PRIORITY_NORMAL 0
@@ -111,7 +109,6 @@
 #define FindFirstFile FindFirstFileA
 #define CreateFile CreateFileA
 #define GetDriveType GetDriveTypeA
-#define GetDiskFreeSpace GetDiskFreeSpaceA
 #define GetComputerName GetComputerNameA
 #define DeleteFile DeleteFileA
 

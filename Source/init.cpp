@@ -55,8 +55,6 @@ void init_create_window(int nCmdShow)
 	int nWidth, nHeight;
 	HWND hWnd;
 
-	pfile_init_save_directory();
-
 	if (GetSystemMetrics(SM_CXSCREEN) < SCREEN_WIDTH)
 		nWidth = SCREEN_WIDTH;
 	else

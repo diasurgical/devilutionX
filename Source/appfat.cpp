@@ -274,16 +274,6 @@ void FileErrDlg(const char *error)
 	app_fatal(NULL);
 }
 
-void DiskFreeDlg(char *error)
-{
-	FreeDlg();
-
-	if (DialogBoxParam(ghInst, MAKEINTRESOURCE(IDD_DIALOG7), ghMainWnd, (DLGPROC)FuncDlg, (LPARAM)error) == -1)
-		app_fatal("DiskFreeDlg");
-
-	app_fatal(NULL);
-}
-
 BOOL InsertCDDlg()
 {
 	int nResult;

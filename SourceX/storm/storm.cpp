@@ -57,16 +57,6 @@ void TranslateFileName(char *dst, int dstLen, const char *src)
 	}
 }
 
-// BOOL SFileCloseArchive(HANDLE hArchive)
-// {
-// 	UNIMPLEMENTED();
-// }
-
-// BOOL SFileCloseFile(HANDLE hFile)
-// {
-// 	UNIMPLEMENTED();
-// }
-
 BOOL SFileDdaBeginEx(HANDLE hFile, DWORD flags, DWORD mask, unsigned __int32 lDistanceToMove,
     signed __int32 volume, signed int pan, int a7)
 {
@@ -128,17 +118,6 @@ BOOL SFileGetFileArchive(HANDLE hFile, HANDLE *archive)
 	return true;
 }
 
-// LONG SFileGetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh)
-// {
-// 	UNIMPLEMENTED();
-// }
-
-// BOOL SFileOpenArchive(const char *szMpqName, DWORD dwPriority, DWORD dwFlags, HANDLE
-// *phMpq)
-// {
-// 	UNIMPLEMENTED();
-// }
-
 // Converts ASCII characters to lowercase
 // Converts slash (0x2F) / backslash (0x5C) to system file-separator
 unsigned char AsciiToLowerTable_Path[256] = {
@@ -193,18 +172,6 @@ BOOL SFileOpenFile(const char *filename, HANDLE *phFile)
 	}
 	return result;
 }
-
-// BOOL SFileOpenFileEx(HANDLE hMpq, const char *szFileName, DWORD dwSearchScope, HANDLE
-// *phFile)
-// {
-// 	UNIMPLEMENTED();
-// }
-
-// BOOL SFileReadFile(HANDLE hFile, void *buffer, DWORD nNumberOfBytesToRead, DWORD *read,
-// LONG lpDistanceToMoveHigh)
-// {
-// 	UNIMPLEMENTED();
-// }
 
 BOOL SBmpLoadImage(const char *pszFileName, PALETTEENTRY *pPalette, BYTE *pBuffer, DWORD dwBuffersize, DWORD *pdwWidth, DWORD *dwHeight, DWORD *pdwBpp)
 {
@@ -323,23 +290,12 @@ BOOL SBmpLoadImage(const char *pszFileName, PALETTEENTRY *pPalette, BYTE *pBuffe
 	return true;
 }
 
-// int SFileSetFilePointer(HANDLE, int, HANDLE, int)
-// {
-// 	UNIMPLEMENTED();
-// }
-
 HWND SDrawGetFrameWindow(HWND *sdraw_framewindow)
 {
 	DUMMY();
 	return NULL;
 }
 
-// BOOL SDrawManualInitialize(HWND hWnd, LPDIRECTDRAW ddInterface, LPDIRECTDRAWSURFACE
-// primarySurface, LPDIRECTDRAWSURFACE surface2, LPDIRECTDRAWSURFACE surface3, LPDIRECTDRAWSURFACE
-// backSurface, LPDIRECTDRAWPALETTE ddPalette, HPALETTE hPalette)
-//{
-//	UNIMPLEMENTED();
-//}
 void *SMemAlloc(unsigned int amount, char *logfilename, int logline, int defaultValue)
 {
 	// fprintf(stderr, "%s: %d (%s:%d)\n", __FUNCTION__, amount, logfilename, logline);
@@ -353,11 +309,6 @@ BOOL SMemFree(void *location, char *logfilename, int logline, char defaultValue)
 	assert(location);
 	free(location);
 	return true;
-}
-
-void *SMemReAlloc(void *location, unsigned int amount, char *logfilename, int logline, char defaultValue)
-{
-	UNIMPLEMENTED();
 }
 
 bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, int *dataSize)
@@ -837,12 +788,6 @@ BOOL SVidPlayEnd(HANDLE video)
 	return true;
 }
 
-BOOL SErrDisplayError(DWORD dwErrMsg, const char *logfilename, int logline, const char *message,
-    BOOL allowOption, int exitCode)
-{
-	UNIMPLEMENTED();
-}
-
 BOOL SErrGetErrorStr(DWORD dwErrCode, char *buffer, unsigned int bufferchars)
 {
 	DUMMY();
@@ -859,40 +804,10 @@ void SErrSetLastError(DWORD dwErrCode)
 	nLastError = dwErrCode;
 }
 
-void SMemCopy(void *dest, const void *source, unsigned int size)
-{
-	UNIMPLEMENTED();
-}
-
-void SMemFill(void *location, unsigned int length, char fillWith)
-{
-	UNIMPLEMENTED();
-}
-
-void SMemZero(void *location, DWORD length)
-{
-	UNIMPLEMENTED();
-}
-
-int SMemCmp(void *location1, void *location2, DWORD size)
-{
-	UNIMPLEMENTED();
-}
-
 int SStrCopy(char *dest, const char *src, int max_length)
 {
 	strncpy(dest, src, max_length);
 	return strlen(dest);
-}
-
-int SStrCmp(const char *string1, const char *string2, unsigned int size)
-{
-	UNIMPLEMENTED();
-}
-
-int SStrCmpI(const char *string1, const char *string2, unsigned int size)
-{
-	UNIMPLEMENTED();
 }
 
 void SDrawMessageBox(char *Text, char *Title, int Flags)

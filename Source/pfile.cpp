@@ -15,44 +15,6 @@ DEVILUTION_BEGIN_NAMESPACE
 static char hero_names[MAX_CHARACTERS][PLR_NAME_LEN];
 BOOL gbValidSaveFile;
 
-void pfile_init_save_directory()
-{
-	char Buffer[MAX_PATH];
-
-	pfile_check_available_space(Buffer);
-	GetPrefPath(Buffer, MAX_PATH);
-
-	pfile_check_available_space(Buffer);
-}
-
-void pfile_check_available_space(char *pszDir)
-{
-	char *s;
-	BOOL hasSpace;
-	DWORD TotalNumberOfClusters;
-	DWORD NumberOfFreeClusters;
-	DWORD BytesPerSector;
-	DWORD SectorsPerCluster;
-
-	s = pszDir;
-	while (*s) {
-		if (*s++ != '\\')
-			continue;
-		*s = '\0';
-		break;
-	}
-
-	hasSpace = GetDiskFreeSpace(pszDir, &SectorsPerCluster, &BytesPerSector, &NumberOfFreeClusters, &TotalNumberOfClusters);
-	if (hasSpace) {
-		// 10MB is the amount hardcoded in the error dialog
-		if ((__int64)SectorsPerCluster * BytesPerSector * NumberOfFreeClusters < (__int64)(10 << 20))
-			hasSpace = FALSE;
-	}
-
-	if (!hasSpace)
-		DiskFreeDlg(pszDir);
-}
-
 void pfile_write_hero()
 {
 	DWORD save_num;
