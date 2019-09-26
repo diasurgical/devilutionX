@@ -102,7 +102,9 @@ BOOL pfile_create_player_description(char *dst, DWORD len)
 	_uiheroinfo uihero;
 
 	myplr = 0;
+#if !defined(__BIG_ENDIAN__)
 	pfile_read_player_from_save();
+#endif
 	game_2_ui_player(plr, &uihero, gbValidSaveFile);
 	UiSetupPlayerInfo(gszHero, &uihero, GAME_ID);
 
