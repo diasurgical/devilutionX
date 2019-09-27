@@ -57,6 +57,8 @@ if(AMIGA)
   set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -DNONET")
   set(ASAN "Enable address sanitizer" OFF)
   set(USE_SDL1 "Use SDL1.2 instead of SDL2" ON)   
+  find_package(Freetype REQUIRED)
+  find_package(PNG REQUIRED)
 endif()
 
 if(DIST)
@@ -70,13 +72,9 @@ set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 
 find_package(Threads REQUIRED)
-find_package(Freetype REQUIRED)
-find_package(PNG REQUIRED)
 
-
-if(NONET)
-else()
-find_package(sodium REQUIRED)
+if(NOT NONET)
+  find_package(sodium REQUIRED)
 endif()
 
 if(USE_SDL1)
@@ -92,7 +90,6 @@ else()
 	find_package(SDL2_ttf REQUIRED)
 	find_package(SDL2_mixer REQUIRED)
 endif()
-
 
 add_library(smacker STATIC
   3rdParty/libsmacker/smk_bitstream.c
@@ -180,7 +177,6 @@ add_library(devilution STATIC
   Source/scrollrt.cpp
   Source/setmaps.cpp
   Source/sha.cpp
-
   Source/spells.cpp
   Source/stores.cpp
   Source/sync.cpp
@@ -211,7 +207,6 @@ add_executable(devilutionx MACOSX_BUNDLE
   SourceX/dvlnet/packet.cpp
   SourceX/dvlnet/base.cpp
   SourceX/dvlnet/frame_queue.cpp
-
   SourceX/DiabloUI/credits.cpp
   SourceX/DiabloUI/diabloui.cpp
   SourceX/DiabloUI/dialogs.cpp
@@ -229,58 +224,45 @@ add_executable(devilutionx MACOSX_BUNDLE
 configure_file(SourceS/config.h.in config.h @ONLY)
 target_include_directories(devilution PUBLIC Source SourceS ${CMAKE_CURRENT_BINARY_DIR})
 
-if(NONET)
-  list(
-    APPEND
-    SOURCES
-  )
-else()
-  list(
-    APPEND
-    SOURCES
+if(NOT NONET)
+  list(APPEND SOURCES
     SourceX/dvlnet/tcp_client.cpp
     SourceX/dvlnet/tcp_server.cpp
-    SourceX/dvlnet/udp_p2p.cpp
-  )
+    SourceX/dvlnet/udp_p2p.cpp)
 endif()
 
-target_include_directories(devilution PUBLIC Source SourceS)
-if(USE_SDL1)
-  target_include_directories(devilution PRIVATE
-          ${SDL_INCLUDE_DIR}
-          ${SDL_INCLUDE_DIRS})
-target_include_directories(devilutionx PRIVATE
-  SourceX
-  3rdParty/asio/include
-  3rdParty/Radon/Radon/include
-  3rdParty/libsmacker
+target_include_directories(devilution PRIVATE
   ${SDL_INCLUDE_DIR}
-  ${SDL_INCLUDE_DIRS}
-  ${SDL_TTF_INCLUDE_DIRS}
-  ${SDL_MIXER_INCLUDE_DIRS}
-  ${SDL_INCLUDE_DIRS}/..
-  ${SDL_INCLUDE_DIR}/..
-  ${SDL_TTF_INCLUDE_DIRS}/..
-  ${SDL_MIXER_INCLUDE_DIRS}/..
-)
+  ${SDL_INCLUDE_DIRS})
+
+if(USE_SDL1)
+  target_include_directories(devilutionx PRIVATE
+    SourceX
+    3rdParty/asio/include
+    3rdParty/Radon/Radon/include
+    3rdParty/libsmacker
+    ${SDL_INCLUDE_DIR}
+    ${SDL_INCLUDE_DIRS}
+    ${SDL_TTF_INCLUDE_DIRS}
+    ${SDL_MIXER_INCLUDE_DIRS}
+    ${SDL_INCLUDE_DIRS}/..
+    ${SDL_INCLUDE_DIR}/..
+    ${SDL_TTF_INCLUDE_DIRS}/..
+    ${SDL_MIXER_INCLUDE_DIRS}/..)
 else()
-  target_include_directories(devilution PRIVATE
-          ${SDL2_INCLUDE_DIR}
-          ${SDL2_INCLUDE_DIRS})
-target_include_directories(devilutionx PRIVATE
-  SourceX
-  3rdParty/asio/include
-  3rdParty/Radon/Radon/include
-  3rdParty/libsmacker
-  ${SDL2_INCLUDE_DIR}
-  ${SDL2_INCLUDE_DIRS}
-  ${SDL2_TTF_INCLUDE_DIRS}
-  ${SDL2_MIXER_INCLUDE_DIRS}
-  ${SDL2_INCLUDE_DIRS}/..
-  ${SDL2_INCLUDE_DIR}/..
-  ${SDL2_TTF_INCLUDE_DIRS}/..
-  ${SDL2_MIXER_INCLUDE_DIRS}/..
-)
+  target_include_directories(devilutionx PRIVATE
+    SourceX
+    3rdParty/asio/include
+    3rdParty/Radon/Radon/include
+    3rdParty/libsmacker
+    ${SDL2_INCLUDE_DIR}
+    ${SDL2_INCLUDE_DIRS}
+    ${SDL2_TTF_INCLUDE_DIRS}
+    ${SDL2_MIXER_INCLUDE_DIRS}
+    ${SDL2_INCLUDE_DIRS}/..
+    ${SDL2_INCLUDE_DIR}/..
+    ${SDL2_TTF_INCLUDE_DIRS}/..
+    ${SDL2_MIXER_INCLUDE_DIRS}/..)
   set(SDL_INCLUDE_DIR ${SDL2_INCLUDE_DIR})
 endif()
 
@@ -289,42 +271,40 @@ message("SDL_mixer include dir: " ${SDL_MIXER_INCLUDE_DIRS})
 message("SDL_ttf include dir: " ${SDL_TTF_INCLUDE_DIRS})
 
 target_link_libraries(devilution PUBLIC Threads::Threads)
-
 target_link_libraries(devilutionx PRIVATE
   devilution
   PKWare
   StormLib
   smacker
-  Radon
-  )
+  Radon)
 
 if(USE_SDL1)
   target_link_libraries(devilutionx PRIVATE
-  ${SDL_TTF_LIBRARY}
-  ${SDL_MIXER_LIBRARY}
-  ${SDL_MIXER_LIBRARIES}
-  ${SDL_LIBRARY}
-  ${FREETYPE_LIBRARIES}
-  ${PNG_LIBRARIES}
-  ${LIBMAD_LIBRARIES})
+    ${SDL_TTF_LIBRARY}
+    ${SDL_MIXER_LIBRARY}
+    ${SDL_MIXER_LIBRARIES}
+    ${SDL_LIBRARY}
+    ${FREETYPE_LIBRARIES}
+    ${PNG_LIBRARIES}
+    ${LIBMAD_LIBRARIES})
   if(WARPOS)
-  target_link_libraries(devilutionx PRIVATE
-    -lmikmod
-    -lvorbisfile
-    -lvorbisenc
-    -lvorbis
-    -logg
-    -lFLAC
-    -lbz2)
+    target_link_libraries(devilutionx PRIVATE
+      -lmikmod
+      -lvorbisfile
+      -lvorbisenc
+      -lvorbis
+      -logg
+      -lFLAC
+      -lbz2)
   endif()
 else()
   target_link_libraries(devilutionx PRIVATE
-  SDL2::SDL2main
-  ${SDL2_ttf_LIBRARY}
-  ${SDL2_mixer_LIBRARY}
-  ${FREETYPE_LIBRARIES}
-  ${PNG_LIBRARIES}
-  sodium)
+    SDL2::SDL2main
+    ${SDL2_ttf_LIBRARY}
+    ${SDL2_mixer_LIBRARY}
+    ${FREETYPE_LIBRARIES}
+    ${PNG_LIBRARIES}
+    sodium)
 
   message("SDL library: " ${SDL2_LIBRARY} ${SDL2_LIBRARIES})
   message("SDL_mixer library : " ${SDL2_mixer_LIBRARY} )
@@ -400,7 +380,7 @@ endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-  add_definitions(-D_GNU_SOURCE )
+  add_definitions(-D_GNU_SOURCE)
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")

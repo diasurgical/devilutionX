@@ -1035,7 +1035,6 @@ void T_FillSector(BYTE *P3Tiles, BYTE *pSector, int xi, int yi, int w, int h)
 {
 	int i, j, xx, yy;
 	long v1, v2, v3, v4, ii;
-	int nMap; 
 
 	ii = 4;
 	yy = yi;
@@ -1043,19 +1042,10 @@ void T_FillSector(BYTE *P3Tiles, BYTE *pSector, int xi, int yi, int w, int h)
 		xx = xi;
 		for (i = 0; i < w; i++) {
 			WORD *Map;
-			Map = ((WORD *)&pSector[ii]);
-
-
-
-			nMap = BSWAP_INT16_UNSIGNED(*Map);
-
-
+			Map = (WORD *)&pSector[ii];
+			int nMap = BSWAP_INT16_UNSIGNED(*Map);
 			if (nMap) {
-
-			    WORD *Sector;
-
-				Sector = (((WORD *)&P3Tiles[(nMap - 1) * 8]));
-
+			    WORD *Sector = (((WORD *)&P3Tiles[(nMap - 1) * 8]));
 				v1 = BSWAP_INT16_UNSIGNED(*(Sector)) + 1;
 				v2 = BSWAP_INT16_UNSIGNED(*(Sector + 1)) + 1;
 				v3 = BSWAP_INT16_UNSIGNED(*(Sector + 2)) + 1;
@@ -1082,9 +1072,7 @@ void T_FillTile(BYTE *P3Tiles, int xx, int yy, int t)
 {
 	long v1, v2, v3, v4;
 
-	WORD *Tiles;
-	Tiles = ((WORD *)&P3Tiles[(t - 1) * 8]);
-
+	WORD *Tiles = ((WORD *)&P3Tiles[(t - 1) * 8]);
 	v1 = BSWAP_INT16_UNSIGNED(*(Tiles)) + 1;
 	v2 = BSWAP_INT16_UNSIGNED(*(Tiles + 1)) + 1;
 	v3 = BSWAP_INT16_UNSIGNED(*(Tiles + 2)) + 1;
