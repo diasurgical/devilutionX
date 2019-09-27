@@ -39,6 +39,9 @@ BOOL SDrawUpdatePalette(unsigned int firstentry, unsigned int numentries, PALETT
 		SDL_Log(SDL_GetError());
 		return false;
 	}
+
+	SDL_SetColors(surface, palette->colors, 0, palette->ncolors);
+
 #endif
 	++pal_surface_palette_version;
 
