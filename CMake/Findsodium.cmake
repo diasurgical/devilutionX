@@ -47,7 +47,7 @@ endif()
 
 ########################################################################
 # UNIX
-if (UNIX OR AMIGA)
+if (UNIX)
     # import pkg-config
     find_package(PkgConfig QUIET)
     if (PKG_CONFIG_FOUND)

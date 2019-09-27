@@ -87,9 +87,9 @@ void init_archives()
 	fileinfo.patcharchivefile = patch_rt_mpq_path;
 	init_get_file_info();
 #ifdef SPAWN
-		diabdat_mpq = init_test_access(diabdat_mpq_path, "spawn.mpq", "DiabloSpawn", MPQ_FLAG_READ_ONLY, FS_PC);
+		diabdat_mpq = init_test_access(diabdat_mpq_path, "spawn.mpq", "DiabloSpawn", 1000, FS_PC);
 #else
-		diabdat_mpq = init_test_access(diabdat_mpq_path, "diabdat.mpq", "DiabloCD", MPQ_FLAG_READ_ONLY, FS_PC);
+		diabdat_mpq = init_test_access(diabdat_mpq_path, "diabdat.mpq", "DiabloCD", 1000, FS_PC);
 #endif
 	if (!WOpenFile("ui_art\\title.pcx", &fh, TRUE))
 #ifdef SPAWN
@@ -99,9 +99,9 @@ void init_archives()
 #endif
 	WCloseFile(fh);
 #ifdef SPAWN
-	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "patch_sh.mpq", "DiabloSpawn", MPQ_FLAG_READ_ONLY, FS_PC);
+	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "patch_sh.mpq", "DiabloSpawn", 2000, FS_PC);
 #else
-	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "patch_rt.mpq", "DiabloInstall", MPQ_FLAG_READ_ONLY, FS_PC);
+	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "patch_rt.mpq", "DiabloInstall", 2000, FS_PC);
 #endif
 }
 
@@ -116,7 +116,11 @@ HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags
 
 	for (int i = 0; i < 2; i++) {
 		snprintf(mpq_path, MAX_PATH, "%s%s", Buffer[i], mpq_name);
-		if (SFileOpenArchive(mpq_path, 0, FS_PC, &archive)) {
+#ifdef __AMIGA__
+		if (SFileOpenArchive(mpq_path, flags, 0, &archive)) {
+#else
+		if (SFileOpenArchive(mpq_path, flags, MPQ_FLAG_READ_ONLY, &archive)) {
+#endif
 			SFileSetBasePath(Buffer[i]);
 			return archive;
 		}

@@ -425,7 +425,7 @@ static bool HaveAudio()
 
 void SVidRestartMixer()
 {
-	if (Mix_OpenAudio(22050, AUDIO_S16SYS, 2, 1024) < 0) {
+	if (Mix_OpenAudio(22050, AUDIO_S16LSB, 2, 1024) < 0) {
 		SDL_Log(Mix_GetError());
 	}
 	Mix_AllocateChannels(25);
