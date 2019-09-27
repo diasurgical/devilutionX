@@ -1,6 +1,12 @@
 #include "devilution.h"
 #include <SDL.h>
 
+#ifdef __AMIGA__
+#define D_BPP 8
+#else
+#define D_BPP 16
+#endif
+
 namespace dvl {
 
 extern SDL_Window *window;
