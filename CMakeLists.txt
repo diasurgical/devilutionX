@@ -229,7 +229,7 @@ if(NOT NONET)
     SourceX/dvlnet/udp_p2p.cpp)
 endif()
 
-add_executable(devilutionx MACOSX_BUNDLE SOURCES)
+add_executable(devilutionx MACOSX_BUNDLE ${SOURCES})
 
 configure_file(SourceS/config.h.in config.h @ONLY)
 target_include_directories(devilution PUBLIC Source SourceS ${CMAKE_CURRENT_BINARY_DIR})
