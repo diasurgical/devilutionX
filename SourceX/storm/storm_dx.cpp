@@ -40,8 +40,9 @@ BOOL SDrawUpdatePalette(unsigned int firstentry, unsigned int numentries, PALETT
 		return false;
 	}
 
+#if D_BPP == 8
 	SDL_SetColors(surface, palette->colors, 0, palette->ncolors);
-
+#endif
 #endif
 	++pal_surface_palette_version;
 
