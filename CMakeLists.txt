@@ -59,7 +59,6 @@ if(AMIGA)
   set(USE_SDL1 "Use SDL1.2 instead of SDL2" ON)
   find_package(Freetype REQUIRED)
   find_package(PNG REQUIRED)
-  find_package(LibMad REQUIRED)
 endif()
 
 if(DIST)
@@ -285,7 +284,6 @@ if(USE_SDL1)
     ${SDL_LIBRARY}
     ${FREETYPE_LIBRARIES}
     ${PNG_LIBRARIES}
-    ${LIBMAD_LIBRARIES}
     ${sodium_LIBRARY_RELEASE})
   if(WARPOS)
     target_link_libraries(devilutionx PRIVATE
