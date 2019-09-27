@@ -54,8 +54,6 @@ endif()
 if(AMIGA)
   set(ASAN OFF)
   set(NONET ON)
-  set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -DNONET")
-  set(ASAN "Enable address sanitizer" OFF)
   set(USE_SDL1 "Use SDL1.2 instead of SDL2" ON)
   find_package(Freetype REQUIRED)
   find_package(PNG REQUIRED)
@@ -283,8 +281,7 @@ if(USE_SDL1)
     ${SDL_MIXER_LIBRARIES}
     ${SDL_LIBRARY}
     ${FREETYPE_LIBRARIES}
-    ${PNG_LIBRARIES}
-    ${sodium_LIBRARY_RELEASE})
+    ${PNG_LIBRARIES})
   if(WARPOS)
     target_link_libraries(devilutionx PRIVATE
       -lmikmod
@@ -329,7 +326,9 @@ foreach(target devilution devilutionx)
       SDL2::SDL2_mixer)
   endif()
 
-  if(NONET)
+  if(NOT NONET)
+    target_link_libraries(devilutionx PRIVATE ${sodium_LIBRARY_RELEASE})
+  else()
     target_compile_definitions(${target} PRIVATE NONET)
   endif()
 

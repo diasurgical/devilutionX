@@ -1,6 +1,5 @@
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
-#include "../3rdParty/StormLib/src/StormPort.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
