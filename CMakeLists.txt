@@ -59,6 +59,7 @@ if(AMIGA)
   set(USE_SDL1 "Use SDL1.2 instead of SDL2" ON)   
   find_package(Freetype REQUIRED)
   find_package(PNG REQUIRED)
+  find_package(LibMad REQUIRED)
 endif()
 
 if(DIST)
