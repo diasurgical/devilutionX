@@ -5,6 +5,8 @@
 #include "sdl2_to_1_2_backports.h"
 #endif
 
+#include <SDL_endian.h>
+
 #include "../types.h"
 
 //#ifdef __cplusplus

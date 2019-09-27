@@ -234,10 +234,6 @@ add_executable(devilutionx MACOSX_BUNDLE ${SOURCES})
 configure_file(SourceS/config.h.in config.h @ONLY)
 target_include_directories(devilution PUBLIC Source SourceS ${CMAKE_CURRENT_BINARY_DIR})
 
-target_include_directories(devilution PRIVATE
-  ${SDL_INCLUDE_DIR}
-  ${SDL_INCLUDE_DIRS})
-
 if(USE_SDL1)
   target_include_directories(devilutionx PRIVATE
     SourceX
@@ -268,6 +264,10 @@ else()
     ${SDL2_MIXER_INCLUDE_DIRS}/..)
   set(SDL_INCLUDE_DIR ${SDL2_INCLUDE_DIR})
 endif()
+
+target_include_directories(devilution PRIVATE
+  ${SDL_INCLUDE_DIR}
+  ${SDL_INCLUDE_DIRS})
 
 target_link_libraries(devilution PUBLIC Threads::Threads)
 target_link_libraries(devilutionx PRIVATE
@@ -305,10 +305,6 @@ else()
     ${FREETYPE_LIBRARIES}
     ${PNG_LIBRARIES}
     ${sodium_LIBRARY_RELEASE})
-
-  message("SDL library: " ${SDL2_LIBRARY} ${SDL2_LIBRARIES})
-  message("SDL_mixer library : " ${SDL2_mixer_LIBRARY} )
-  message("SDL_ttf library: " ${SDL2_ttf_LIBRARY})
 endif()
 
 if(AMIGA AND NOT WARPOS)
