@@ -1042,6 +1042,7 @@ void T_FillSector(BYTE *P3Tiles, BYTE *pSector, int xi, int yi, int w, int h)
 		xx = xi;
 		for (i = 0; i < w; i++) {
 			WORD *Map;
+
 			Map = (WORD *)&pSector[ii];
 			int nMap = BSWAP_INT16_UNSIGNED(*Map);
 			if (nMap) {

@@ -182,7 +182,7 @@ HWND CreateWindowExA(
 	if (fullscreen) {
 		SDL_Log("fullscreen not yet supported with SDL1");
 	}
-	 flags |= fullscreen ? SDL_FULLSCREEN : SDL_RESIZABLE;
+	flags |= fullscreen ? SDL_FULLSCREEN : SDL_RESIZABLE;
 	SDL_WM_SetCaption(lpWindowName, WINDOW_ICON_NAME);
 	SDL_SetVideoMode(nWidth, nHeight, /*bpp=*/0, flags);
 	window = SDL_GetVideoSurface();
