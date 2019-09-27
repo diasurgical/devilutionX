@@ -116,7 +116,7 @@ HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags
 
 	for (int i = 0; i < 2; i++) {
 		snprintf(mpq_path, MAX_PATH, "%s%s", Buffer[i], mpq_name);
-		if (SFileOpenArchive(mpq_path, 0, MPQ_FLAG_READ_ONLY, &archive)) {
+		if (SFileOpenArchive(mpq_path, 0, FS_PC, &archive)) {
 			SFileSetBasePath(Buffer[i]);
 			return archive;
 		}
