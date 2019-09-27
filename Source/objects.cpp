@@ -1841,7 +1841,6 @@ void objects_set_door_piece(int x, int y)
 
 	v1 = *((WORD *)pLevelPieces + 10 * pn + 8);
 	v2 = *((WORD *)pLevelPieces + 10 * pn + 9);
-
 	dpiece_defs_map_1[IsometricCoord(x, y)].mt[0] = BSWAP_INT16_UNSIGNED(v1);
 	dpiece_defs_map_1[IsometricCoord(x, y)].mt[1] = BSWAP_INT16_UNSIGNED(v2);
 }
@@ -1850,8 +1849,8 @@ void ObjSetMini(int x, int y, int v)
 {
 	int xx, yy;
 	long v1, v2, v3, v4;
-
 	WORD *MegaTiles;
+
 	MegaTiles = (WORD *)&pMegaTiles[((WORD)v - 1) * 8];
 	
 	v1 = BSWAP_INT16_UNSIGNED(*(MegaTiles)) + 1;

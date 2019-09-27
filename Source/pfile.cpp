@@ -339,9 +339,7 @@ BOOL __stdcall pfile_ui_save_create(_uiheroinfo *heroinfo)
 	mpqapi_remove_hash_entries(pfile_get_file_name);
 	strncpy(hero_names[save_num], heroinfo->name, PLR_NAME_LEN);
 	hero_names[save_num][PLR_NAME_LEN - 1] = '\0';
-
 	cl = pfile_get_player_class(heroinfo->heroclass);
-
 	CreatePlayer(0, cl);
 	strncpy(plr[0]._pName, heroinfo->name, PLR_NAME_LEN);
 	plr[0]._pName[PLR_NAME_LEN - 1] = '\0';

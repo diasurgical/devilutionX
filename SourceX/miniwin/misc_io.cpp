@@ -141,7 +141,7 @@ WINBOOL CloseHandle(HANDLE hObject)
 			#ifndef __AMIGA__
 			throw std::runtime_error("ofstream");
 			#else
-			printf("runtime_error(\"ofstream\")\n");	
+			printf("runtime_error(\"ofstream\")\n");
 			#endif
 		}
 		filestream.write(file->buf.data(), file->buf.size());
@@ -150,7 +150,7 @@ WINBOOL CloseHandle(HANDLE hObject)
 			#ifndef __AMIGA__
 			throw std::runtime_error("ofstream::write");
 			#else
-			printf("runtime_error(\"ofstream\")\n");			
+			printf("runtime_error(\"ofstream\")\n");
 			#endif
 		}
 		filestream.close();
@@ -160,7 +160,7 @@ WINBOOL CloseHandle(HANDLE hObject)
 			#ifndef __AMIGA__
 			throw std::runtime_error("rename");
 			#else
-			printf("runtime_error(\"ofstream\")\n");			
+			printf("runtime_error(\"ofstream\")\n");
 			#endif
 		}
 		return true;

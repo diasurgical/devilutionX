@@ -154,7 +154,7 @@ void MakeSpeedCels()
 				if (mt) {
 					level_frame_count[BSWAP_INT32_UNSIGNED(pMap->mt[i] & 0xFFF)]++;
 					level_frame_types[BSWAP_INT32_UNSIGNED(pMap->mt[i] & 0xFFF)] = mt & 0x7000;
-					}
+				}
 			}
 		}
 	}
@@ -179,7 +179,6 @@ void MakeSpeedCels()
 			blood_flag = TRUE;
 			if (level_frame_count[i] != 0) {
 				if (level_frame_types[i] != 0x1000) {
-
 					src = &pDungeonCels[BSWAP_INT32_UNSIGNED(pFrameTable[i])];
 					for (j = level_frame_sizes[i]; j; j--) {
 						pix = *src++;
@@ -187,7 +186,6 @@ void MakeSpeedCels()
 							blood_flag = FALSE;
 					}
 				} else {
-
 					src = &pDungeonCels[BSWAP_INT32_UNSIGNED(pFrameTable[i])];
 					for (k = 32; k; k--) {
 						for (l = 32; l;) {
@@ -350,7 +348,6 @@ int IsometricCoord(int x, int y)
 void SetSpeedCels()
 {
 	int x, y;
-	MICROS *pMap;
 
 	for (x = 0; x < MAXDUNX; x++) {
 		for (y = 0; y < MAXDUNY; y++) {

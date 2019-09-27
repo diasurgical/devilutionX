@@ -738,7 +738,7 @@ void Cel2DecDatLightTrans(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int n
 	dst = pDecodeTo;
 	tbl = &pLightTbl[light_table_index * 256];
 	w = nWidth;
-	shift = (BYTE)dst & 1;
+	shift = (BYTE)(size_t)dst & 1;
 
 	for (; src != &pRLEBytes[nDataSize]; dst -= BUFFER_WIDTH + w, shift = (shift + 1) & 1) {
 		for (i = w; i;) {
@@ -746,7 +746,7 @@ void Cel2DecDatLightTrans(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int n
 			if (!(width & 0x80)) {
 				i -= width;
 				if (dst < gpBufEnd) {
-					if (((BYTE)dst & 1) == shift) {
+					if (((BYTE)(size_t)dst & 1) == shift) {
 						if (!(width & 1)) {
 							goto L_ODD;
 						} else {
