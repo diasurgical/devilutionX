@@ -183,12 +183,6 @@ typedef void (*_PVFV)(void);
 #define ALIGN_BY_1
 #endif
 
-#if (_MSC_VER == 1200)
-#define __FINLINE __forceinline
-#else
-#define __FINLINE
-#endif
-
 #ifndef _BIG_ENDIAN_
 #define SwapLE32
 #else

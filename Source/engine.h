@@ -11,7 +11,15 @@ extern int orgseed;
 extern int SeedCount;
 extern BOOL gbNotInView; // valid - if x/y are in bounds
 
-__FINLINE BYTE *CelGetFrame(BYTE *pCelBuff, int nCel, int *nDataSize);
+#ifdef USE_ASM
+#define __FORCEINLINE __forceinline
+#include "engine.inc"
+#else
+#define __FORCEINLINE
+BYTE *CelGetFrameStart(BYTE *pCelBuff, int nCel);
+int CelGetFrameSize(BYTE *pCelBuff, int nCel);
+BYTE *CelGetFrame(BYTE *pCelBuff, int nCel, int *nDataSize);
+#endif
 
 void CelDrawDatOnly(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth);
 void CelDecodeOnly(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);

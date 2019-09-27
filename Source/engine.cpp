@@ -1560,14 +1560,12 @@ void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel)
 	int i, nDataSize;
 	char width;
 	BYTE *dst;
-	DWORD *pFrameTable;
 
 	/// ASSERT: assert(p != NULL);
 	/// ASSERT: assert(ttbl != NULL);
 
 	for (i = 1; i <= nCel; i++) {
-		pFrameTable = (DWORD *)&p[4 * i];
-		dst = &p[pFrameTable[0] + 10];
+		dst = CelGetFrameStart(p, i) + 10;
 		nDataSize = CelGetFrameSize(p, i) - 10;
 		while (nDataSize) {
 			width = *dst++;
