@@ -285,7 +285,8 @@ if(USE_SDL1)
     ${SDL_LIBRARY}
     ${FREETYPE_LIBRARIES}
     ${PNG_LIBRARIES}
-    ${LIBMAD_LIBRARIES})
+    ${LIBMAD_LIBRARIES}
+    ${sodium_LIBRARY_RELEASE})
   if(WARPOS)
     target_link_libraries(devilutionx PRIVATE
       -lmikmod
@@ -303,7 +304,7 @@ else()
     ${SDL2_mixer_LIBRARY}
     ${FREETYPE_LIBRARIES}
     ${PNG_LIBRARIES}
-    sodium)
+    ${sodium_LIBRARY_RELEASE})
 
   message("SDL library: " ${SDL2_LIBRARY} ${SDL2_LIBRARIES})
   message("SDL_mixer library : " ${SDL2_mixer_LIBRARY} )
