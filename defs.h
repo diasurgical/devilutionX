@@ -132,7 +132,7 @@
 #define SCREENXY(x, y)	((x) + SCREEN_X + ((y) + SCREEN_Y) * BUFFER_WIDTH)
 
 #define MemFreeDbg(p)	\
-{ \
+{						\
 	if (p) {\
 		void *p__p;			\
 		p__p = p;			\
