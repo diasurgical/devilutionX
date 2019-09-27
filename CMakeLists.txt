@@ -20,7 +20,7 @@ option(BINARY_RELEASE "Enable options for binary release" OFF)
 option(NIGHTLY_BUILD "Enable options for nightly build" OFF)
 option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network" OFF)
-    
+
 if(BINARY_RELEASE)
   set(CMAKE_BUILD_TYPE "Release")
   set(ASAN OFF)
@@ -56,7 +56,7 @@ if(AMIGA)
   set(NONET ON)
   set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -DNONET")
   set(ASAN "Enable address sanitizer" OFF)
-  set(USE_SDL1 "Use SDL1.2 instead of SDL2" ON)   
+  set(USE_SDL1 "Use SDL1.2 instead of SDL2" ON)
   find_package(Freetype REQUIRED)
   find_package(PNG REQUIRED)
   find_package(LibMad REQUIRED)
@@ -190,7 +190,7 @@ add_library(devilution STATIC
   Source/trigs.cpp
   Source/wave.cpp)
 
-add_executable(devilutionx MACOSX_BUNDLE
+set(SOURCES
   SourceX/dx.cpp
   SourceX/miniwin/misc.cpp
   SourceX/miniwin/misc_io.cpp
@@ -222,15 +222,17 @@ add_executable(devilutionx MACOSX_BUNDLE
   ./Packaging/macOS/AppIcon.icns
   ./Packaging/resources/CharisSILB.ttf)
 
-configure_file(SourceS/config.h.in config.h @ONLY)
-target_include_directories(devilution PUBLIC Source SourceS ${CMAKE_CURRENT_BINARY_DIR})
-
 if(NOT NONET)
   list(APPEND SOURCES
     SourceX/dvlnet/tcp_client.cpp
     SourceX/dvlnet/tcp_server.cpp
     SourceX/dvlnet/udp_p2p.cpp)
 endif()
+
+add_executable(devilutionx MACOSX_BUNDLE SOURCES)
+
+configure_file(SourceS/config.h.in config.h @ONLY)
+target_include_directories(devilution PUBLIC Source SourceS ${CMAKE_CURRENT_BINARY_DIR})
 
 target_include_directories(devilution PRIVATE
   ${SDL_INCLUDE_DIR}
@@ -266,10 +268,6 @@ else()
     ${SDL2_MIXER_INCLUDE_DIRS}/..)
   set(SDL_INCLUDE_DIR ${SDL2_INCLUDE_DIR})
 endif()
-
-message("SDL include dir: " ${SDL_INCLUDE_DIR})
-message("SDL_mixer include dir: " ${SDL_MIXER_INCLUDE_DIRS})
-message("SDL_ttf include dir: " ${SDL_TTF_INCLUDE_DIRS})
 
 target_link_libraries(devilution PUBLIC Threads::Threads)
 target_link_libraries(devilutionx PRIVATE
@@ -334,6 +332,10 @@ foreach(target devilution devilutionx)
       SDL2::SDL2main
       SDL2::SDL2_ttf
       SDL2::SDL2_mixer)
+  endif()
+
+  if(NONET)
+    target_compile_definitions(${target} PRIVATE NONET)
   endif()
 
   if(ASAN)

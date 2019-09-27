@@ -4,7 +4,7 @@
 #include <memory>
 #include <array>
 #include <cstring>
-#ifndef __AMIGA__
+#ifndef NONET
 #include <sodium.h>
 #endif
 
@@ -27,7 +27,7 @@ typedef uint8_t plr_t;
 typedef uint32_t cookie_t;
 typedef int turn_t;      // change int to something else in devilution code later
 typedef int leaveinfo_t; // also change later
-#ifndef __AMIGA__
+#ifndef NONET
 typedef std::array<unsigned char, crypto_secretbox_KEYBYTES> key_t;
 #endif
 
