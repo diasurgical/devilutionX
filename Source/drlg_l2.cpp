@@ -431,10 +431,10 @@ void DRLG_L2Pass3()
 	WORD *MegaTiles;
 	MegaTiles = (WORD *)&pMegaTiles[lv * 8];
 
-	v1 = BSWAP_INT16_UNSIGNED(*(MegaTiles)) + 1;
-	v2 = BSWAP_INT16_UNSIGNED(*(MegaTiles + 1)) + 1;
-	v3 = BSWAP_INT16_UNSIGNED(*(MegaTiles + 2)) + 1;
-	v4 = BSWAP_INT16_UNSIGNED(*(MegaTiles + 3)) + 1;
+	v1 = SDL_SwapLE16(*(MegaTiles)) + 1;
+	v2 = SDL_SwapLE16(*(MegaTiles + 1)) + 1;
+	v3 = SDL_SwapLE16(*(MegaTiles + 2)) + 1;
+	v4 = SDL_SwapLE16(*(MegaTiles + 3)) + 1;
 
 	for (j = 0; j < MAXDUNY; j += 2)
 	{
@@ -453,10 +453,10 @@ void DRLG_L2Pass3()
 			lv = dungeon[i][j] - 1;
 			MegaTiles = (WORD *)&pMegaTiles[lv * 8];
 
-			v1 = BSWAP_INT16_UNSIGNED(*(MegaTiles)) + 1;
-			v2 = BSWAP_INT16_UNSIGNED(*(MegaTiles + 1)) + 1;
-			v3 = BSWAP_INT16_UNSIGNED(*(MegaTiles + 2)) + 1;
-			v4 = BSWAP_INT16_UNSIGNED(*(MegaTiles + 3)) + 1;
+			v1 = SDL_SwapLE16(*(MegaTiles)) + 1;
+			v2 = SDL_SwapLE16(*(MegaTiles + 1)) + 1;
+			v3 = SDL_SwapLE16(*(MegaTiles + 2)) + 1;
+			v4 = SDL_SwapLE16(*(MegaTiles + 3)) + 1;
 			dPiece[xx][yy] = v1;
 			dPiece[xx + 1][yy] = v2;
 			dPiece[xx][yy + 1] = v3;

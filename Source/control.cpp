@@ -178,8 +178,8 @@ void DrawSpellCel(int xp, int yp, BYTE *pCelBuff, int nCel, int nWidth)
 	DWORD *pFrameTable;
 
 	pFrameTable = (DWORD *)pCelBuff;
-	pRLEBytes = &pCelBuff[BSWAP_INT32_UNSIGNED(pFrameTable[nCel])];
-	nDataSize = BSWAP_INT32_UNSIGNED(pFrameTable[nCel + 1]) - BSWAP_INT32_UNSIGNED(pFrameTable[nCel]);
+	pRLEBytes = &pCelBuff[SDL_SwapLE32(pFrameTable[nCel])];
+	nDataSize = SDL_SwapLE32(pFrameTable[nCel + 1]) - SDL_SwapLE32(pFrameTable[nCel]);
 
 	CelDecDatLightOnly(&gpBuffer[xp + PitchTbl[yp]], pRLEBytes, nDataSize, nWidth, SplTransTbl);
 }
@@ -456,8 +456,8 @@ void CPrintString(int nOffset, int nCel, char col)
 	DWORD *pFrameTable;
 
 	pFrameTable = (DWORD *)&pPanelText[4 * nCel];
-	src = &pPanelText[BSWAP_INT32_UNSIGNED(pFrameTable[0])];
-	nDataSize = BSWAP_INT32_UNSIGNED(pFrameTable[1]) - BSWAP_INT32_UNSIGNED(pFrameTable[0]);
+	src = &pPanelText[SDL_SwapLE32(pFrameTable[0])];
+	nDataSize = SDL_SwapLE32(pFrameTable[1]) - SDL_SwapLE32(pFrameTable[0]);
 	end = &src[nDataSize];
 	dst = &gpBuffer[nOffset];
 

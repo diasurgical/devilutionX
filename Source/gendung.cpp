@@ -150,22 +150,22 @@ void MakeSpeedCels()
 		for (x = 0; x < MAXDUNX; x++) {
 			for (i = 0; i < blocks; i++) {
 				pMap = &dpiece_defs_map_2[x][y];
-				mt = BSWAP_INT32_UNSIGNED(pMap->mt[i]);
+				mt = SDL_SwapLE32(pMap->mt[i]);
 				if (mt) {
-					level_frame_count[BSWAP_INT32_UNSIGNED(pMap->mt[i] & 0xFFF)]++;
-					level_frame_types[BSWAP_INT32_UNSIGNED(pMap->mt[i] & 0xFFF)] = mt & 0x7000;
+					level_frame_count[SDL_SwapLE32(pMap->mt[i] & 0xFFF)]++;
+					level_frame_types[SDL_SwapLE32(pMap->mt[i] & 0xFFF)] = mt & 0x7000;
 				}
 			}
 		}
 	}
 
 	pFrameTable = (DWORD *)pDungeonCels;
-	nDataSize = BSWAP_INT32_UNSIGNED(pFrameTable[0]);
+	nDataSize = SDL_SwapLE32(pFrameTable[0]);
 	nlevel_frames = nDataSize & 0xFFFF;
 
 	for (i = 1; i < nlevel_frames; i++) {
 		z = i;
-		nDataSize = BSWAP_INT32_UNSIGNED(pFrameTable[i + 1]) - BSWAP_INT32_UNSIGNED(pFrameTable[i]);
+		nDataSize = SDL_SwapLE32(pFrameTable[i + 1]) - SDL_SwapLE32(pFrameTable[i]);
 		level_frame_sizes[i] = nDataSize & 0xFFFF;
 	}
 
@@ -179,14 +179,14 @@ void MakeSpeedCels()
 			blood_flag = TRUE;
 			if (level_frame_count[i] != 0) {
 				if (level_frame_types[i] != 0x1000) {
-					src = &pDungeonCels[BSWAP_INT32_UNSIGNED(pFrameTable[i])];
+					src = &pDungeonCels[SDL_SwapLE32(pFrameTable[i])];
 					for (j = level_frame_sizes[i]; j; j--) {
 						pix = *src++;
 						if (pix && pix < 32)
 							blood_flag = FALSE;
 					}
 				} else {
-					src = &pDungeonCels[BSWAP_INT32_UNSIGNED(pFrameTable[i])];
+					src = &pDungeonCels[SDL_SwapLE32(pFrameTable[i])];
 					for (k = 32; k; k--) {
 						for (l = 32; l;) {
 							width = *src++;
@@ -245,7 +245,7 @@ void MakeSpeedCels()
 			t = level_frame_sizes[i];
 			for (j = 1; j < blk_cnt; j++) {
 				SpeedFrameTbl[i][j] = frameidx;
-				src = &pDungeonCels[BSWAP_INT32_UNSIGNED(pFrameTable[z])];
+				src = &pDungeonCels[SDL_SwapLE32(pFrameTable[z])];
 				dst = &pSpeedCels[frameidx];
 				tbl = &pLightTbl[256 * j];
 				for (k = t; k; k--) {
@@ -256,7 +256,7 @@ void MakeSpeedCels()
 		} else {
 			for (j = 1; j < blk_cnt; j++) {
 				SpeedFrameTbl[i][j] = frameidx;
-				src = &pDungeonCels[BSWAP_INT32_UNSIGNED(pFrameTable[z])];
+				src = &pDungeonCels[SDL_SwapLE32(pFrameTable[z])];
 				dst = &pSpeedCels[frameidx];
 				tbl = &pLightTbl[256 * j];
 				for (k = 32; k; k--) {
@@ -285,10 +285,10 @@ void MakeSpeedCels()
 			if (dPiece[x][y]) {
 				pMap = &dpiece_defs_map_2[x][y];
 				for (i = 0; i < blocks; i++) {
-					if (BSWAP_INT16_UNSIGNED(pMap->mt[i])) {
+					if (SDL_SwapLE16(pMap->mt[i])) {
 						for (m = 0; m < total_frames; m++) {
-							if ((BSWAP_INT32_UNSIGNED(pMap->mt[i] & 0xFFF)) == tile_defs[m]) {
-								pMap->mt[i] = BSWAP_INT32_UNSIGNED(m + level_frame_types[m] + 0x8000);
+							if ((SDL_SwapLE32(pMap->mt[i] & 0xFFF)) == tile_defs[m]) {
+								pMap->mt[i] = SDL_SwapLE32(m + level_frame_types[m] + 0x8000);
 								m = total_frames;
 							}
 						}
@@ -381,7 +381,7 @@ void SetDungeonMicros()
 				else
 					pPiece = (WORD *)&pLevelPieces[32 * lv];
 				for (i = 0; i < blocks; i++)
-					pMap->mt[i] = BSWAP_INT16_UNSIGNED(pPiece[(i & 1) + blocks - 2 - (i & 0xE)]);
+					pMap->mt[i] = SDL_SwapLE16(pPiece[(i & 1) + blocks - 2 - (i & 0xE)]);
 			} else {
 				for (i = 0; i < blocks; i++)
 					pMap->mt[i] = 0;

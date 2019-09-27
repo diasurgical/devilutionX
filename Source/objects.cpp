@@ -1822,12 +1822,12 @@ void ObjSetMicro(int dx, int dy, int pn)
 	if (leveltype != DTYPE_HELL) {
 		v = (WORD *)pLevelPieces + 10 * pn;
 		for (i = 0; i < 10; i++) {
-			defs->mt[i] =  BSWAP_INT16_UNSIGNED(v[(i & 1) - (i & 0xE) + 8]);
+			defs->mt[i] =  SDL_SwapLE16(v[(i & 1) - (i & 0xE) + 8]);
 		}
 	} else {
 		v = (WORD *)pLevelPieces + 16 * pn;
 		for (i = 0; i < 16; i++) {
-			defs->mt[i] =  BSWAP_INT16_UNSIGNED(v[(i & 1) - (i & 0xE) + 14]);
+			defs->mt[i] =  SDL_SwapLE16(v[(i & 1) - (i & 0xE) + 14]);
 		}
 	}
 }
@@ -1841,8 +1841,8 @@ void objects_set_door_piece(int x, int y)
 
 	v1 = *((WORD *)pLevelPieces + 10 * pn + 8);
 	v2 = *((WORD *)pLevelPieces + 10 * pn + 9);
-	dpiece_defs_map_1[IsometricCoord(x, y)].mt[0] = BSWAP_INT16_UNSIGNED(v1);
-	dpiece_defs_map_1[IsometricCoord(x, y)].mt[1] = BSWAP_INT16_UNSIGNED(v2);
+	dpiece_defs_map_1[IsometricCoord(x, y)].mt[0] = SDL_SwapLE16(v1);
+	dpiece_defs_map_1[IsometricCoord(x, y)].mt[1] = SDL_SwapLE16(v2);
 }
 
 void ObjSetMini(int x, int y, int v)
@@ -1852,11 +1852,11 @@ void ObjSetMini(int x, int y, int v)
 	WORD *MegaTiles;
 
 	MegaTiles = (WORD *)&pMegaTiles[((WORD)v - 1) * 8];
-	
-	v1 = BSWAP_INT16_UNSIGNED(*(MegaTiles)) + 1;
-	v2 = BSWAP_INT16_UNSIGNED(*(MegaTiles + 1)) + 1;
-	v3 = BSWAP_INT16_UNSIGNED(*(MegaTiles + 2)) + 1;
-	v4 = BSWAP_INT16_UNSIGNED(*(MegaTiles + 3)) + 1;
+
+	v1 = SDL_SwapLE16(*(MegaTiles)) + 1;
+	v2 = SDL_SwapLE16(*(MegaTiles + 1)) + 1;
+	v3 = SDL_SwapLE16(*(MegaTiles + 2)) + 1;
+	v4 = SDL_SwapLE16(*(MegaTiles + 3)) + 1;
 
 	xx = 2 * x + 16;
 	yy = 2 * y + 16;

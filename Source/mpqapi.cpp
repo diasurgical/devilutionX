@@ -585,15 +585,15 @@ BOOL WriteMPQHeader()
 	DWORD NumberOfBytesWritten;
 
 	memset(&fhdr, 0, sizeof(fhdr));
-	fhdr.signature = BSWAP_INT32_UNSIGNED('\x1AQPM');
-	fhdr.headersize = BSWAP_INT32_UNSIGNED(32);
-	fhdr.filesize = BSWAP_INT32_UNSIGNED(GetFileSize(sghArchive, 0));
-	fhdr.version = BSWAP_INT16_UNSIGNED(0);
-	fhdr.sectorsizeid = BSWAP_INT16_UNSIGNED(3);
-	fhdr.hashoffset = BSWAP_INT32_UNSIGNED(32872);
-	fhdr.blockoffset = BSWAP_INT32_UNSIGNED(104);
-	fhdr.hashcount = BSWAP_INT32_UNSIGNED(2048);
-	fhdr.blockcount = BSWAP_INT32_UNSIGNED(2048);
+	fhdr.signature = SDL_SwapLE32('\x1AQPM');
+	fhdr.headersize = SDL_SwapLE32(32);
+	fhdr.filesize = SDL_SwapLE32(GetFileSize(sghArchive, 0));
+	fhdr.version = SDL_SwapLE16(0);
+	fhdr.sectorsizeid = SDL_SwapLE16(3);
+	fhdr.hashoffset = SDL_SwapLE32(32872);
+	fhdr.blockoffset = SDL_SwapLE32(104);
+	fhdr.hashcount = SDL_SwapLE32(2048);
+	fhdr.blockcount = SDL_SwapLE32(2048);
 
 	if (SetFilePointer(sghArchive, 0, NULL, FILE_BEGIN) == -1)
 		return 0;

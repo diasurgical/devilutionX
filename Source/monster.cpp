@@ -295,7 +295,7 @@ void InitMonsterGFX(int monst)
 			if (Monsters[monst].mtype != MT_GOLEM || (animletter[anim] != 's' && animletter[anim] != 'd')) {
 
 				for (i = 0; i < 8; i++) {
-					Monsters[monst].Anims[anim].Data[i] = &celBuf[BSWAP_INT32_UNSIGNED(((int *)celBuf)[i])];
+					Monsters[monst].Anims[anim].Data[i] = &celBuf[SDL_SwapLE32(((int *)celBuf)[i])];
 				}
 			} else {
 				for (i = 0; i < 8; i++) {

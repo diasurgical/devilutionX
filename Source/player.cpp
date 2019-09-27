@@ -128,7 +128,7 @@ void SetPlayerGPtrs(BYTE *pData, BYTE **pAnim)
 	int i;
 
 	for (i = 0; i < 8; i++) {
-		pAnim[i] = pData + BSWAP_INT32_UNSIGNED(((DWORD *)pData)[i]);
+		pAnim[i] = pData + SDL_SwapLE32(((DWORD *)pData)[i]);
 	}
 }
 
