@@ -14,7 +14,6 @@ devilutionx.includes
 .cproject
 .settings/
 
-
 # CodeLite
 .CodeLite
 *.project
@@ -429,25 +428,18 @@ DerivedData/
 **/xcshareddata/WorkspaceSettings.xcsettings
 
 /libs
-
 # End of https://www.gitignore.io/api/xcode
+
+# Don't accidently commit the diabdat.mpq
+*.mpq
+
+# Static libs, generated files and directories
+*.a
+Makefile
+devilutionx
+*.debug
+build-*
 cmake-*
 CMakeFiles/*
 CMakeCache.txt
-
-
-##mine
-
-*.mpq
-*.a
-*.cmake
-Makefile
-devilutionx
-.gitignore
-Source/diablo.cpp.debug
-Source/interfac.cpp.debug
-SourceX/DiabloUI/credits.cpp.debug
-SourceX/storm/storm_net.cpp.debug
-
-build-debug/
 /Amiga68k/
