@@ -1,9 +1,9 @@
-Package: devilutionX
+Package: devilutionx
 Version: 0.0.1
 Architecture: mipsel
 Section: games
 Maintainer: glex.spb@gmail.com
-Description: A port of devilutionX for OpenDingux / RetroFW.
+Description: A port of DevilutionX for OpenDingux / RetroFW.
 Priority: optional
 Homepage: https://github.com/diasurgical/devilutionX
 Depends:

@@ -4,10 +4,10 @@ set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
-readonly IN="${1:-../../build/devilutionX.dge}"
-readonly OUT="${2:-../../build/devilutionX.ipk}"
+readonly IN="${1:-../../build/devilutionx.dge}"
+readonly OUT="${2:-../../build/devilutionx.ipk}"
 
-readonly PKG_TARGET=devilutionX
+readonly PKG_TARGET=devilutionx
 readonly TMP="tmp/${PKG_TARGET}"
 
 pkg_control_get() {
@@ -28,12 +28,12 @@ mkdir -p "${TMP}"
 # data.tar.gz
 mkdir -p "${TMP}/root/${PKG_INSTALL_DIR}" "${TMP}/root/${PKG_LOCAL_DIR}"
 cp "$IN" "${TMP}/root/${PKG_INSTALL_DIR}/${PKG_TARGET}.dge"
-cp ../resources/Diablo_32.png "${TMP}/root/${PKG_INSTALL_DIR}/devilutionX.png"
+cp ../resources/Diablo_32.png "${TMP}/root/${PKG_INSTALL_DIR}/devilutionx.png"
 cp ../resources/CharisSILB.ttf ../resources/LICENSE.CharisSILB.txt "${TMP}/root/${PKG_INSTALL_DIR}"
 cp diablo.ini "${TMP}/root/${PKG_LOCAL_DIR}/diablo.ini"
 mkdir -p "${TMP}/root/$(dirname "$PKG_MENU_LNK_OUT")"
 printf "%s\n" \
-  "title=$(pkg_control_get Package)" \
+  "title=DevilutionX" \
   "description=$(pkg_control_get Description)" \
   "exec=/${PKG_INSTALL_DIR}/${PKG_TARGET}.dge" \
   > "${TMP}/root/${PKG_MENU_LNK_OUT}"

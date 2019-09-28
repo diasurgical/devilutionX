@@ -406,5 +406,5 @@ if(APPLE)
 endif()
 
 if(DINGUX)
-  set_target_properties(devilutionx PROPERTIES OUTPUT_NAME "devilutionX.dge")
+  set_target_properties(devilutionx PROPERTIES OUTPUT_NAME "devilutionx.dge")
 endif()
