@@ -62,6 +62,11 @@ if(HAIKU)
   set(ASAN OFF)
 endif()
 
+if(DINGUX)
+  set(USE_SDL1 ON)
+  set(sodium_USE_STATIC_LIBS ON)
+endif()
+
 if(DIST)
   set(sodium_USE_STATIC_LIBS ON)
 endif()
@@ -78,10 +83,12 @@ if(NOT NONET)
 endif()
 
 if(USE_SDL1)
-  find_package(SDL REQUIRED)
-  find_package(SDL_ttf REQUIRED)
-  find_package(SDL_mixer REQUIRED)
-  include_directories(${SDL_INCLUDE_DIR})
+  if(NOT DINGUX_STATIC)
+    find_package(SDL REQUIRED)
+    find_package(SDL_ttf REQUIRED)
+    find_package(SDL_mixer REQUIRED)
+    include_directories(${SDL_INCLUDE_DIR})
+  endif()
 else()
   find_package(SDL2 CONFIG QUIET)
   if (NOT SDL2_FOUND)
@@ -267,10 +274,38 @@ target_compile_definitions(devilution PUBLIC
 target_compile_definitions(devilutionx PRIVATE ASIO_STANDALONE)
 
 
+# Link a fully static binary.
+# This is useful on e.g. OpenDingux devices which are a zoo of ucLibc, musl, and glibc.
+if (DINGUX_STATIC)
+  # Link SDL1 statically instead of using the CMake-builtin FindSDL.
+  execute_process(
+    COMMAND ${CMAKE_SYSROOT}/usr/bin/sdl-config --cflags
+    OUTPUT_VARIABLE sdl_cflags OUTPUT_STRIP_TRAILING_WHITESPACE)
+  execute_process(
+    COMMAND ${CMAKE_SYSROOT}/usr/bin/sdl-config --libs
+    OUTPUT_VARIABLE sdl_libs OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+  # These must be set after all targets have been defined.
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${sdl_cflags}")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${sdl_cflags}")
+
+  set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+  set(BUILD_SHARED_LIBS OFF)
+endif()
+
 foreach(target devilution devilutionx)
   if(USE_SDL1)
-    target_link_libraries(${target} PRIVATE
-      ${SDL_LIBRARY} ${SDL_TTF_LIBRARY} ${SDL_MIXER_LIBRARY})
+    if(DINGUX_STATIC)
+      # In OpenDingux buildroot, SDL_mixer depends on -lmad -lmodplug -lfreetype -lpng -lz.
+      # SDL_ttf always depends on freetype.
+      target_link_libraries(${target} PRIVATE
+        "-Wl,--start-group -static ${sdl_libs} -lSDLmain \
+        -lSDL_ttf -lfreetype \
+        -lSDL_mixer -lmad -lmodplug -lpng -lz -Wl,--end-group")
+    else()
+      target_link_libraries(${target} PRIVATE
+        ${SDL_LIBRARY} ${SDL_TTF_LIBRARY} ${SDL_MIXER_LIBRARY})
+    endif()
     target_compile_definitions(${target} PRIVATE USE_SDL1)
   else()
     target_link_libraries(${target} PRIVATE
@@ -290,6 +325,10 @@ foreach(target devilution devilutionx)
   if(ASAN)
     target_compile_options(${target} PUBLIC -fsanitize=address -fsanitize-recover=address)
     target_link_libraries(${target} PUBLIC -fsanitize=address -fsanitize-recover=address)
+  endif()
+
+  if(DINGUX)
+    target_compile_definitions(${target} PRIVATE DINGUX)
   endif()
 endforeach(target devilution devilutionx)
 
@@ -364,4 +403,8 @@ if(APPLE)
   set(CPACK_GENERATOR "DragNDrop")
 
   include(CPack)
+endif()
+
+if(DINGUX)
+  set_target_properties(devilutionx PROPERTIES OUTPUT_NAME "devilutionX.dge")
 endif()

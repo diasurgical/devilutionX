@@ -146,6 +146,41 @@ make -j$(nproc)
 ```
 </details>
 
+<details><summary>OpenDingux / RetroFW</summary>
+
+To build DevilutionX for OpenDingux / RetroFW, you first need to build the
+cross-compilation toolchain. This can take about an hour or longer and requires
+~8 GiB of space.
+
+~~~ bash
+# Builds the toolchain in BUILDROOT_DIR=$HOME/rs90-toolchain
+Packaging/OpenDingux/build-toolchain.sh
+~~~
+
+Then, build the executable:
+
+~~~ bash
+mkdir -p build && cd build
+cmake .. -DDINGUX=ON -DDINGUX_STATIC=ON -DCMAKE_TOOLCHAIN_FILE="$HOME/rs90-buildroot/output/host/share/buildroot/toolchainfile.cmake" -DBINARY_RELEASE=ON
+make -j$(nproc)
+~~~
+
+Finally, build the `ipk` package:
+
+~~~ bash
+Packaging/OpenDingux/package.sh
+~~~
+
+By default, this uses the toolchain in `${HOME}/rs90-buildroot/output/host`.
+You can override this by passing
+`-DDINGUX_MIPSEL_BUILDROOT=path-to-your-toolchain` to the `cmake` command.
+
+The default toolchain uses musl libc and we compile everything statically with
+the `-DDINGUX_STATIC=ON`. This is because OpenDingux devices are a zoo of libcs,
+using anything from glibc to ucLibc.
+
+</details>
+
 ## CMake arguments
 ### General
 The default build type is `Debug`. This can be changed with `-DBINARY_RELEASE=ON`. Independently of this, the debug mode of the Diablo engine is always enabled by default. It can be disabled with `-DDEBUG=OFF`. Finally, in debug builds the address sanitizer is enabled by default. This can be disabled with `-DASAN=OFF`.
