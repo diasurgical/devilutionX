@@ -183,8 +183,5 @@ typedef void (*_PVFV)(void);
 #define ALIGN_BY_1
 #endif
 
-#ifndef _BIG_ENDIAN_
-#define SwapLE32
-#else
-#define SwapLE32(value) (value << 24 | (value & 0xFF00) << 8 | (value & 0xFF0000) >> 8 | value >> 24);
-#endif
+#define SwapLE32 SDL_SwapLE32
+#define SwapLE16 SDL_SwapLE16

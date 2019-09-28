@@ -11,15 +11,63 @@ extern int orgseed;
 extern int SeedCount;
 extern BOOL gbNotInView; // valid - if x/y are in bounds
 
-#ifdef USE_ASM
-#define __FORCEINLINE __forceinline
-#include "engine.inc"
-#else
-#define __FORCEINLINE
-BYTE *CelGetFrameStart(BYTE *pCelBuff, int nCel);
-int CelGetFrameSize(BYTE *pCelBuff, int nCel);
-BYTE *CelGetFrame(BYTE *pCelBuff, int nCel, int *nDataSize);
-#endif
+inline BYTE *CelGetFrameStart(BYTE *pCelBuff, int nCel)
+{
+	DWORD *pFrameTable;
+
+	pFrameTable = (DWORD *)pCelBuff;
+
+	return pCelBuff + SwapLE32(pFrameTable[nCel]);
+}
+
+inline int CelGetFrameSize(BYTE *pCelBuff, int nCel)
+{
+	DWORD *pFrameTable;
+
+	pFrameTable = (DWORD *)pCelBuff;
+
+	return SwapLE32(pFrameTable[nCel + 1]) - SwapLE32(pFrameTable[nCel]);
+}
+
+inline BYTE *CelGetFrame(BYTE *pCelBuff, int nCel, int *nDataSize)
+{
+	DWORD *pFrameTable;
+	DWORD nCellStart;
+
+	pFrameTable = (DWORD *)pCelBuff;
+	nCellStart = SwapLE32(pFrameTable[nCel]);
+	*nDataSize = SwapLE32(pFrameTable[nCel + 1]) - nCellStart;
+
+	return pCelBuff + nCellStart;
+}
+
+inline BYTE *CelGetFrameClipped(BYTE *pCelBuff, int nCel, int CelSkip, int CelCap, int *nDataSize)
+{
+	BYTE *pRLEBytes;
+	DWORD *pFrameTable;
+	int nDataStart, nCellStart, nDataCap;
+
+	pFrameTable = (DWORD *)pCelBuff;
+
+	nCellStart = SwapLE32(pFrameTable[nCel]);
+	pRLEBytes = &pCelBuff[nCellStart];
+	nDataStart = SwapLE16(*(WORD *)&pRLEBytes[CelSkip]);
+	if (nDataStart == 0)
+		return NULL;
+
+	*nDataSize = SwapLE32(pFrameTable[nCel + 1]) - nCellStart;
+	if (CelCap == 8)
+		nDataCap = 0;
+	else
+		nDataCap = SwapLE16(*(WORD *)&pRLEBytes[CelCap]);
+
+	if (nDataCap)
+		*nDataSize = nDataCap - nDataStart;
+	else
+		*nDataSize -= nDataStart;
+
+	return pRLEBytes + nDataStart;
+}
 
 void CelDrawDatOnly(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth);
 void CelDecodeOnly(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
