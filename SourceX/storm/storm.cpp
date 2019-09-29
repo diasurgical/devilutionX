@@ -21,12 +21,11 @@ bool directFileAccess = false;
 
 static std::string getIniPath()
 {
-	char path[DVL_MAX_PATH], file_path[DVL_MAX_PATH + 10];
-
+	char path[DVL_MAX_PATH];
 	GetPrefPath(path, DVL_MAX_PATH);
-	snprintf(file_path, DVL_MAX_PATH + 10, "%sdiablo.ini", path);
-
-	return file_path;
+	std::string result = path;
+	result.append("diablo.ini");
+	return result;
 }
 
 static radon::File ini(getIniPath());
