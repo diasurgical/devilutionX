@@ -212,7 +212,7 @@ void music_start(int nTrack)
 			if (musicRw == NULL) {
 				SDL_Log(SDL_GetError());
 			}
-			music = Mix_LoadMUSType_RW(musicRw, MUS_NONE, 1);
+			music = Mix_LoadMUSType_RW(musicRw, MUS_WAV, 1);
 			Mix_VolumeMusic(MIX_MAX_VOLUME - MIX_MAX_VOLUME * sglMusicVolume / VOLUME_MIN);
 			Mix_PlayMusic(music, -1);
 
