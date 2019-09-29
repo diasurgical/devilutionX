@@ -13,3 +13,6 @@ end_of_line = lf
 
 [*.sh]
 end_of_line = lf
+
+[.clang-format]
+end_of_line = lf

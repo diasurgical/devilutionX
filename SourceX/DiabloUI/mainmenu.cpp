@@ -7,14 +7,17 @@ int mainmenu_attract_time_out; //seconds
 DWORD dwAttractTicks;
 
 int MainMenuResult;
-UI_Item MAINMENU_DIALOG[] = {
-	{ { 0, 0, 640, 480 }, UI_IMAGE, 0, 0, NULL, &ArtBackground },
-	{ { 64, 192, 510, 43 }, UI_LIST, UIS_HUGE | UIS_GOLD | UIS_CENTER, MAINMENU_SINGLE_PLAYER, "Single Player" },
-	{ { 64, 235, 510, 43 }, UI_LIST, UIS_HUGE | UIS_GOLD | UIS_CENTER, MAINMENU_MULTIPLAYER, "Multi Player" },
-	{ { 64, 277, 510, 43 }, UI_LIST, UIS_HUGE | UIS_GOLD | UIS_CENTER, MAINMENU_REPLAY_INTRO, "Replay Intro" },
-	{ { 64, 320, 510, 43 }, UI_LIST, UIS_HUGE | UIS_GOLD | UIS_CENTER, MAINMENU_SHOW_CREDITS, "Show Credits" },
-	{ { 64, 363, 510, 43 }, UI_LIST, UIS_HUGE | UIS_GOLD | UIS_CENTER, MAINMENU_EXIT_DIABLO, "Exit Diablo" },
-	{ { 17, 444, 605, 21 }, UI_TEXT, UIS_SMALL },
+UiListItem MAINMENU_DIALOG_ITEMS[] = {
+	{"Single Player", MAINMENU_SINGLE_PLAYER},
+	{"Multi Player", MAINMENU_MULTIPLAYER},
+	{"Replay Intro", MAINMENU_REPLAY_INTRO},
+	{"Show Credits", MAINMENU_SHOW_CREDITS},
+	{"Exit Diablo", MAINMENU_EXIT_DIABLO}
+};
+UiItem MAINMENU_DIALOG[] = {
+	UiImage(&ArtBackground, { 0, 0, 640, 480 }),
+	UiList(MAINMENU_DIALOG_ITEMS, 64, 192, 510, 43, UIS_HUGE | UIS_GOLD | UIS_CENTER),
+	UiText(nullptr, { 17, 444, 605, 21 }, UIS_SMALL)
 };
 
 void UiMainMenuSelect(int value)
@@ -35,7 +38,7 @@ void mainmenu_restart_repintro()
 void mainmenu_Load(char *name, void (*fnSound)(char *file))
 {
 	gfnSoundFunction = fnSound;
-	MAINMENU_DIALOG[6].caption = name;
+	MAINMENU_DIALOG[size(MAINMENU_DIALOG) - 1].text.text = name;
 
 	MainMenuResult = 0;
 

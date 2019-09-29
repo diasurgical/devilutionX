@@ -197,6 +197,7 @@ add_executable(devilutionx MACOSX_BUNDLE
   SourceX/dvlnet/tcp_client.cpp
   SourceX/dvlnet/tcp_server.cpp
   SourceX/dvlnet/udp_p2p.cpp
+  SourceX/DiabloUI/art.cpp
   SourceX/DiabloUI/credits.cpp
   SourceX/DiabloUI/diabloui.cpp
   SourceX/DiabloUI/dialogs.cpp
