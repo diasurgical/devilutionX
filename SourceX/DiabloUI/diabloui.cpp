@@ -266,6 +266,8 @@ bool UiFocusNavigation(SDL_Event *event)
 		case SDLK_DELETE:
 			UiFocusNavigationYesNo();
 			return true;
+		default:
+			break;
 		}
 	}
 
@@ -285,12 +287,15 @@ bool UiFocusNavigation(SDL_Event *event)
 				return true;
 #endif
 			case SDLK_BACKSPACE:
-			case SDLK_LEFT:
+			case SDLK_LEFT: {
 				int nameLen = strlen(UiTextInput);
 				if (nameLen > 0) {
 					UiTextInput[nameLen - 1] = '\0';
 				}
 				return true;
+			}
+			default:
+				break;
 			}
 #ifdef USE_SDL1
 			if ((event->key.keysym.mod & KMOD_CTRL) == 0) {
@@ -310,6 +315,8 @@ bool UiFocusNavigation(SDL_Event *event)
 			selhero_CatToName(event->text.text, UiTextInput, UiTextInputLen);
 			return true;
 #endif
+		default:
+			break;
 		}
 	}
 
