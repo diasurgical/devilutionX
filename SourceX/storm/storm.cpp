@@ -21,10 +21,10 @@ bool directFileAccess = false;
 
 static std::string getIniPath()
 {
-	char path[DVL_MAX_PATH], file_path[DVL_MAX_PATH];
+	char path[DVL_MAX_PATH], file_path[DVL_MAX_PATH + 10];
 
 	GetPrefPath(path, DVL_MAX_PATH);
-	snprintf(file_path, DVL_MAX_PATH, "%sdiablo.ini", path);
+	snprintf(file_path, DVL_MAX_PATH + 10, "%sdiablo.ini", path);
 
 	return file_path;
 }
@@ -487,7 +487,7 @@ private:
 	{
 		AudioQueueItem *item;
 		while ((item = Next()) != NULL) {
-			if (out_len <= item->len) {
+			if (static_cast<unsigned long>(out_len) <= item->len) {
 				SDL_MixAudio(out, item->pos, out_len, SDL_MIX_MAXVOLUME);
 				item->pos += out_len;
 				item->len -= out_len;
@@ -721,10 +721,15 @@ BOOL SVidPlayContinue(void)
 		} else {
 			factor = wFactor;
 		}
-		int scaledW = SVidWidth * factor;
-		int scaledH = SVidHeight * factor;
+		const int scaledW = SVidWidth * factor;
+		const int scaledH = SVidHeight * factor;
 
-		SDL_Rect pal_surface_offset = { (SCREEN_WIDTH - scaledW) / 2, (SCREEN_HEIGHT - scaledH) / 2, scaledW, scaledH };
+		SDL_Rect pal_surface_offset = {
+			static_cast<decltype(SDL_Rect().x)>((SCREEN_WIDTH - scaledW) / 2),
+			static_cast<decltype(SDL_Rect().y)>((SCREEN_HEIGHT - scaledH) / 2),
+			static_cast<decltype(SDL_Rect().w)>(scaledW),
+			static_cast<decltype(SDL_Rect().h)>(scaledH)
+		};
 #ifdef USE_SDL1
 		SDL_Surface *tmp = SDL_ConvertSurface(SVidSurface, window->format, 0);
 		// NOTE: Consider resolution switching instead if video doesn't play
