@@ -3,9 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion = gradle.sdkVersion
     defaultConfig {
-        if (buildAsApplication) {
-            applicationId "org.libsdl.app"
-        }
+        applicationId "org.diasurgical.devilutionx"
         minSdkVersion gradle.minSdkVersion
         targetSdkVersion gradle.targetSdkVersion
     }

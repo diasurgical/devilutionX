@@ -104,6 +104,7 @@ public class HIDDeviceManager {
     private HIDDeviceManager(final Context context) {
         mContext = context;
 
+/*
         // Make sure we have the HIDAPI library loaded with the native functions
         try {
             SDL.loadLibrary("hidapi");
@@ -133,6 +134,7 @@ public class HIDDeviceManager {
 
             return;
         }
+*/
         
         HIDDeviceRegisterCallback();
 
