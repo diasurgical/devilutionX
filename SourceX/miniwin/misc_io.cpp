@@ -127,7 +127,7 @@ WINBOOL CloseHandle(HANDLE hObject)
 {
 	memfile *file = static_cast<memfile *>(hObject);
 	if (files.find(file) == files.end())
-		return true;
+		return CloseEvent(hObject);
 	std::unique_ptr<memfile> ufile(file); // ensure that delete file is
 	                                      // called on returning
 	files.erase(file);

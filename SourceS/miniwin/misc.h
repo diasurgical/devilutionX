@@ -187,6 +187,7 @@ WINBOOL WINAPI CloseHandle(HANDLE hObject);
 
 HANDLE WINAPI CreateEventA(LPSECURITY_ATTRIBUTES lpEventAttributes, WINBOOL bManualReset, WINBOOL bInitialState,
     LPCSTR lpName);
+BOOL CloseEvent(HANDLE event);
 BOOL WINAPI SetEvent(HANDLE hEvent);
 BOOL WINAPI ResetEvent(HANDLE hEvent);
 int WINAPI WaitForSingleObject(HANDLE hHandle, DWORD dwMilliseconds);
