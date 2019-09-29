@@ -289,7 +289,7 @@ BOOL InsertCDDlg()
 	return nResult == 1;
 }
 
-void DirErrorDlg(char *error)
+void DirErrorDlg(const char *error)
 {
 	FreeDlg();
 

@@ -30,6 +30,6 @@ void TextDlg(HWND hDlg, char *text);
 void FileErrDlg(const char *error);
 void DiskFreeDlg(char *error);
 BOOL InsertCDDlg();
-void DirErrorDlg(char *error);
+void DirErrorDlg(const char *error);
 
 #endif /* __APPFAT_H__ */

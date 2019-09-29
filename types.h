@@ -3,6 +3,8 @@
 #ifndef _TYPES_H
 #define _TYPES_H
 
+#include <limits.h>
+
 #include "resource.h"
 
 #define DEVILUTION_BEGIN_NAMESPACE namespace dvl {
@@ -13,7 +15,6 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-#include <limits.h>
 #include "defs.h"
 #include "enums.h"
 #include "structs.h"
@@ -36,5 +37,7 @@ DEVILUTION_BEGIN_NAMESPACE
 
 // If defined, fix palette glitch in Windows Vista+ [Default -> Undefined]
 //#define COLORFIX
+
+DEVILUTION_END_NAMESPACE
 
 #endif

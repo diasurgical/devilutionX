@@ -7,10 +7,10 @@ void CaptureScreen()
 {
 	HANDLE hObject;
 	PALETTEENTRY palette[256];
-	char FileName[MAX_PATH];
+	std::string FileName;
 	BOOL success;
 
-	hObject = CaptureFile(FileName);
+	hObject = CaptureFile(&FileName);
 	if (hObject != INVALID_HANDLE_VALUE) {
 		DrawAndBlit();
 		PaletteGetEntries(256, palette);
@@ -28,7 +28,7 @@ void CaptureScreen()
 		CloseHandle(hObject);
 
 		if (!success)
-			DeleteFile(FileName);
+			DeleteFile(FileName.c_str());
 
 		Sleep(300);
 		PaletteGetEntries(256, palette);
@@ -125,18 +125,19 @@ BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
 	return dst;
 }
 
-HANDLE CaptureFile(char *dst_path)
+HANDLE CaptureFile(std::string *dst_path)
 {
-	char path[MAX_PATH];
+	const std::string &pref_path = GetPrefPath();
 
-	GetPrefPath(dst_path, MAX_PATH);
-
+	std::string path = pref_path + "screen00.PCX";
 	for (int i = 0; i <= 99; i++) {
-		snprintf(dst_path, MAX_PATH, "%sscreen%02d.PCX", path, i);
-		FILE *file = fopen(dst_path, "r");
+		path[path.size() - 6] = '0' + (i / 10);
+		path[path.size() - 5] = '0' + (i % 10);
+		FILE *file = fopen(path.c_str(), "r");
 
 		if (file == NULL) {
-			return CreateFile(dst_path, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+			*dst_path = std::move(path);
+			return CreateFile(dst_path->c_str(), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 		}
 
 		fclose(file);

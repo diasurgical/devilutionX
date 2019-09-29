@@ -112,8 +112,9 @@ UINT GetDriveTypeA(LPCSTR lpRootPathName)
 
 WINBOOL DeleteFileA(LPCSTR lpFileName)
 {
-	char name[DVL_MAX_PATH];
-	TranslateFileName(name, sizeof(name), lpFileName);
+	const std::size_t len = strlen(lpFileName);
+	char *name = new char[len];
+	TranslateFileName(name, len, lpFileName);
 
 	FILE *f = fopen(name, "r+");
 	if (f) {
@@ -124,6 +125,7 @@ WINBOOL DeleteFileA(LPCSTR lpFileName)
 	} else {
 		eprintf("Failed to remove file: %s\n", name);
 	}
+	delete[] name;
 
 	return true;
 }

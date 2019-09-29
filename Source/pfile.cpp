@@ -59,10 +59,8 @@ void pfile_encode_hero(const PkPlayerStruct *pPack)
 
 BOOL pfile_open_archive(BOOL update, DWORD save_num)
 {
-	char FileName[MAX_PATH];
-
-	pfile_get_save_path(FileName, sizeof(FileName), save_num);
-	if (OpenMPQ(FileName, FALSE, save_num))
+	const std::string FileName = pfile_get_save_path(save_num);
+	if (OpenMPQ(FileName.c_str(), FALSE, save_num))
 		return TRUE;
 
 	if (update && gbMaxPlayers > 1)
@@ -70,32 +68,25 @@ BOOL pfile_open_archive(BOOL update, DWORD save_num)
 	return FALSE;
 }
 
-void pfile_get_save_path(char *pszBuf, DWORD dwBufSize, DWORD save_num)
+std::string pfile_get_save_path(DWORD save_num)
 {
-	char path[MAX_PATH];
-
+	std::string result = GetPrefPath();
 #ifdef SPAWN
-	const char *fmt = "%sshare_%d.sv";
-
-	if (gbMaxPlayers <= 1)
-		fmt = "%sspawn%d.sv";
+	result.append(gbMaxPlayers <= 1 ? "share_" : "spawn");
 #else
-	const char *fmt = "%smulti_%d.sv";
-
-	if (gbMaxPlayers <= 1)
-		fmt = "%ssingle_%d.sv";
+	result.append(gbMaxPlayers <= 1 ? "single_" : "multi_");
 #endif
-
-	GetPrefPath(path, MAX_PATH);
-	snprintf(pszBuf, MAX_PATH, fmt, path, save_num);
+	char save_num_str[8];
+	snprintf(save_num_str, sizeof(save_num_str), "%d", save_num);
+	result.append(save_num_str);
+	result.append(".sv");
+	return result;
 }
 
 void pfile_flush(BOOL is_single_player, DWORD save_num)
 {
-	char FileName[MAX_PATH];
-
-	pfile_get_save_path(FileName, sizeof(FileName), save_num);
-	mpqapi_flush_and_close(FileName, is_single_player, save_num);
+	const std::string FileName = pfile_get_save_path(save_num);
+	mpqapi_flush_and_close(FileName.c_str(), is_single_player, save_num);
 }
 
 BOOL pfile_create_player_description(char *dst, DWORD len)
@@ -190,8 +181,6 @@ BYTE game_2_ui_class(const PlayerStruct *p)
 BOOL __stdcall pfile_ui_set_hero_infos(BOOL(__stdcall *ui_add_hero_info)(_uiheroinfo *))
 {
 	DWORD i, save_num;
-	char FileName[MAX_PATH];
-	char NewFileName[MAX_PATH];
 	BOOL showFixedMsg;
 
 	memset(hero_names, 0, sizeof(hero_names));
@@ -264,11 +253,9 @@ BOOL pfile_read_hero(HANDLE archive, PkPlayerStruct *pPack)
  */
 HANDLE pfile_open_save_archive(BOOL *showFixedMsg, DWORD save_num)
 {
-	char SrcStr[MAX_PATH];
 	HANDLE archive;
 
-	pfile_get_save_path(SrcStr, sizeof(SrcStr), save_num);
-	if (SFileOpenArchive(SrcStr, 0x7000, FS_PC, &archive))
+	if (SFileOpenArchive(pfile_get_save_path(save_num).c_str(), 0x7000, FS_PC, &archive))
 		return archive;
 	return NULL;
 }
@@ -376,13 +363,11 @@ BOOL __stdcall pfile_get_file_name(DWORD lvl, char *dst)
 BOOL __stdcall pfile_delete_save(_uiheroinfo *hero_info)
 {
 	DWORD save_num;
-	char FileName[MAX_PATH];
 
 	save_num = pfile_get_save_num_from_name(hero_info->name);
 	if (save_num < MAX_CHARACTERS) {
 		hero_names[save_num][0] = '\0';
-		pfile_get_save_path(FileName, sizeof(FileName), save_num);
-		DeleteFile(FileName);
+		DeleteFile(pfile_get_save_path(save_num).c_str());
 	}
 	return TRUE;
 }
@@ -517,9 +502,7 @@ BOOL __stdcall GetPermSaveNames(DWORD dwIndex, char *szPerm)
 void pfile_write_save_file(const char *pszName, BYTE *pbData, DWORD dwLen, DWORD qwLen)
 {
 	DWORD save_num;
-	char FileName[MAX_PATH];
 
-	pfile_strcpy(FileName, pszName);
 	save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
 	{
 		char password[16] = PASSWORD_SINGLE;
@@ -530,7 +513,7 @@ void pfile_write_save_file(const char *pszName, BYTE *pbData, DWORD dwLen, DWORD
 	}
 	if (!pfile_open_archive(FALSE, save_num))
 		app_fatal("Unable to write so save file archive");
-	mpqapi_write_file(FileName, pbData, qwLen);
+	mpqapi_write_file(pszName, pbData, qwLen);
 	pfile_flush(TRUE, save_num);
 }
 
@@ -542,17 +525,15 @@ void pfile_strcpy(char *dst, const char *src)
 BYTE *pfile_read(const char *pszName, DWORD *pdwLen)
 {
 	DWORD save_num, nread;
-	char FileName[MAX_PATH];
 	HANDLE archive, save;
 	BYTE *buf;
 
-	pfile_strcpy(FileName, pszName);
 	save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
 	archive = pfile_open_save_archive(NULL, save_num);
 	if (archive == NULL)
 		app_fatal("Unable to open save file archive");
 
-	if (!SFileOpenFileEx(archive, FileName, 0, &save))
+	if (!SFileOpenFileEx(archive, pszName, 0, &save))
 		app_fatal("Unable to open save file");
 
 	*pdwLen = SFileGetFileSize(save, NULL);

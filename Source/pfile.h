@@ -10,7 +10,7 @@ void pfile_write_hero();
 DWORD pfile_get_save_num_from_name(const char *name);
 void pfile_encode_hero(const PkPlayerStruct *pPack);
 BOOL pfile_open_archive(BOOL update, DWORD save_num);
-void pfile_get_save_path(char *pszBuf, DWORD dwBufSize, DWORD save_num);
+std::string pfile_get_save_path(DWORD save_num);
 void pfile_flush(BOOL is_single_player, DWORD save_num);
 BOOL pfile_create_player_description(char *dst, DWORD len);
 BOOL pfile_rename_hero(const char *name_1, const char *name_2);

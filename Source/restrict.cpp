@@ -6,15 +6,13 @@ DEVILUTION_BEGIN_NAMESPACE
 BOOL ReadOnlyTest()
 {
 	FILE *f;
-	char path[MAX_PATH], Filename[MAX_PATH];
 
-	GetPrefPath(path, MAX_PATH);
-	snprintf(Filename, DVL_MAX_PATH, "%sDiablo1ReadOnlyTest.foo", path);
+	const std::string Filename = GetPrefPath() + "Diablo1ReadOnlyTest.foo";
 
-	f = fopen(Filename, "wt");
+	f = fopen(Filename.c_str(), "wt");
 	if (f) {
 		fclose(f);
-		remove(Filename);
+		remove(Filename.c_str());
 		return FALSE;
 	}
 

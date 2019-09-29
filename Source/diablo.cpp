@@ -233,13 +233,11 @@ void free_game()
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	int nData;
-	char szFileName[MAX_PATH];
 
 	ghInst = hInstance;
 
 	if (ReadOnlyTest()) {
-		GetPrefPath(szFileName, sizeof(szFileName));
-		DirErrorDlg(szFileName);
+		DirErrorDlg(GetPrefPath().c_str());
 	}
 
 	ShowCursor(FALSE);

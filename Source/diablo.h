@@ -8,6 +8,9 @@
 #endif
 
 #include "../types.h"
+#include "paths.h"
+
+DEVILUTION_BEGIN_NAMESPACE
 
 //#ifdef __cplusplus
 //extern "C" {
@@ -177,6 +180,7 @@ extern char *spszMsgTbl[4];
 extern char *spszMsgHotKeyTbl[4];
 
 #include "miniwin/popdecl.inc"
+
 DEVILUTION_END_NAMESPACE
 
 #endif /* __DIABLO_H__ */

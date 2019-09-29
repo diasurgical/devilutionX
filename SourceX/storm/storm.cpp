@@ -21,40 +21,11 @@ bool directFileAccess = false;
 
 static std::string getIniPath()
 {
-	char path[DVL_MAX_PATH];
-	GetPrefPath(path, DVL_MAX_PATH);
-	std::string result = path;
-	result.append("diablo.ini");
-	return result;
+	return GetPrefPath() + "diablo.ini";
 }
 
 static radon::File ini(getIniPath());
 static Mix_Chunk *SFileChunk;
-
-void GetBasePath(char *buffer, size_t size)
-{
-	char *path = SDL_GetBasePath();
-	if (path == NULL) {
-		SDL_Log(SDL_GetError());
-		buffer[0] = '\0';
-		return;
-	}
-
-	snprintf(buffer, size, "%s", path);
-	SDL_free(path);
-}
-
-void GetPrefPath(char *buffer, size_t size)
-{
-	char *path = SDL_GetPrefPath("diasurgical", "devilution");
-	if (path == NULL) {
-		buffer[0] = '\0';
-		return;
-	}
-
-	snprintf(buffer, size, "%s", path);
-	SDL_free(path);
-}
 
 void TranslateFileName(char *dst, int dstLen, const char *src)
 {
@@ -164,11 +135,13 @@ BOOL SFileOpenFile(const char *filename, HANDLE *phFile)
 	bool result = false;
 
 	if (directFileAccess) {
-		char directPath[DVL_MAX_PATH] = "\0";
-		for (size_t i = 0; i < strlen(filename); i++) {
+		const std::size_t len = strlen(filename) + 1;
+		char *directPath = new char[len];
+		for (std::size_t i = 0; i < len; i++) {
 			directPath[i] = AsciiToLowerTable_Path[static_cast<unsigned char>(filename[i])];
 		}
 		result = SFileOpenFileEx((HANDLE)0, directPath, 0xFFFFFFFF, phFile);
+		delete[] directPath;
 	}
 	if (!result && patch_rt_mpq) {
 		result = SFileOpenFileEx((HANDLE)patch_rt_mpq, filename, 0, phFile);

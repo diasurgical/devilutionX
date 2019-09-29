@@ -153,6 +153,7 @@ add_library(devilution STATIC
   Source/pack.cpp
   Source/palette.cpp
   Source/path.cpp
+  Source/paths.cpp
   Source/pfile.cpp
   Source/player.cpp
   Source/plrmsg.cpp

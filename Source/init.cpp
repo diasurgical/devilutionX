@@ -1,5 +1,8 @@
 #include "diablo.h"
 
+#include <array>
+#include <string>
+
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 #include <SDL.h>
@@ -9,12 +12,12 @@ DEVILUTION_BEGIN_NAMESPACE
 
 _SNETVERSIONDATA fileinfo;
 int gbActive;
-char diablo_exe_path[MAX_PATH];
+static char *diablo_exe_path = nullptr;
 HANDLE hellfire_mpq;
-char patch_rt_mpq_path[MAX_PATH];
+static char *patch_rt_mpq_path = nullptr;
 WNDPROC CurrentProc;
 HANDLE diabdat_mpq;
-char diabdat_mpq_path[MAX_PATH];
+static char *diabdat_mpq_path = nullptr;
 HANDLE patch_rt_mpq;
 
 /* data */
@@ -86,9 +89,9 @@ void init_archives()
 	fileinfo.patcharchivefile = patch_rt_mpq_path;
 	init_get_file_info();
 #ifdef SPAWN
-		diabdat_mpq = init_test_access(diabdat_mpq_path, "spawn.mpq", "DiabloSpawn", 1000, FS_PC);
+		diabdat_mpq = init_test_access(&diabdat_mpq_path, "spawn.mpq", "DiabloSpawn", 1000, FS_PC);
 #else
-		diabdat_mpq = init_test_access(diabdat_mpq_path, "diabdat.mpq", "DiabloCD", 1000, FS_PC);
+		diabdat_mpq = init_test_access(&diabdat_mpq_path, "diabdat.mpq", "DiabloCD", 1000, FS_PC);
 #endif
 	if (!WOpenFile("ui_art\\title.pcx", &fh, TRUE))
 #ifdef SPAWN
@@ -98,25 +101,24 @@ void init_archives()
 #endif
 	WCloseFile(fh);
 #ifdef SPAWN
-	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "patch_sh.mpq", "DiabloSpawn", 2000, FS_PC);
+	patch_rt_mpq = init_test_access(&patch_rt_mpq_path, "patch_sh.mpq", "DiabloSpawn", 2000, FS_PC);
 #else
-	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "patch_rt.mpq", "DiabloInstall", 2000, FS_PC);
+	patch_rt_mpq = init_test_access(&patch_rt_mpq_path, "patch_rt.mpq", "DiabloInstall", 2000, FS_PC);
 #endif
 }
 
-HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags, int fs)
+HANDLE init_test_access(char **mpq_path, char *mpq_name, char *reg_loc, int flags, int fs)
 {
-	char Buffer[2][MAX_PATH];
-	char *sdlPath;
-	HANDLE archive;
+	std::array<std::string, 2> mpqPaths = {
+		GetBasePath() + mpq_name,
+		GetPrefPath() + mpq_name,
+	};
 
-	GetBasePath(Buffer[0], MAX_PATH);
-	GetPrefPath(Buffer[1], MAX_PATH);
-
-	for (int i = 0; i < 2; i++) {
-		snprintf(mpq_path, MAX_PATH, "%s%s", Buffer[i], mpq_name);
-		if (SFileOpenArchive(mpq_path, flags, MPQ_FLAG_READ_ONLY, &archive)) {
-			SFileSetBasePath(Buffer[i]);
+	for (const std::string &path : mpqPaths) {
+		HANDLE archive;
+		if (SFileOpenArchive(path.c_str(), flags, MPQ_FLAG_READ_ONLY, &archive)) {
+			*mpq_path = new char[path.size() + 1];
+			strcpy(*mpq_path, path.c_str());
 			return archive;
 		}
 	}

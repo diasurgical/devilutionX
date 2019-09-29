@@ -47,11 +47,9 @@ void __cdecl dumphist(const char *pszFmt, ...)
 
 	va_start(va, pszFmt);
 
-	char path[MAX_PATH], dumpHistPath[MAX_PATH];
 	if (sgpHistFile == NULL) {
-		GetPrefPath(path, MAX_PATH);
-		snprintf(dumpHistPath, MAX_PATH, "%sdumphist.txt", path);
-		sgpHistFile = fopen(dumpHistPath, "wb");
+		const std::string dumpHistPath = GetPrefPath() + "dumphist.txt";
+		sgpHistFile = fopen(dumpHistPath.c_str(), "wb");
 		if (sgpHistFile == NULL) {
 			return;
 		}
