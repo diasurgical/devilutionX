@@ -11,7 +11,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         if (buildAsApplication) {
-            applicationId "org.libsdl.app"
+            applicationId "org.diasurgical.devilutionx"
         }
         minSdkVersion 21
         targetSdkVersion 28
@@ -46,7 +46,7 @@ android {
             variant.outputs.each { output ->
                 def outputFile = output.outputFile
                 if (outputFile != null && outputFile.name.endsWith(".aar")) {
-                    def fileName = "org.libsdl.app.aar";
+                    def fileName = "org.diasurgical.devilutionx.aar";
                     output.outputFile = new File(outputFile.parent, fileName);
                 }
             }
