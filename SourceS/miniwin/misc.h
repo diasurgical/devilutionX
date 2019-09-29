@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace dvl {
 
 constexpr auto DVL_OFS_MAXPATHNAME = 128;
@@ -392,7 +394,7 @@ WINBOOL WINAPI ReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRea
 DWORD WINAPI GetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh);
 UINT GetDriveTypeA(LPCSTR lpRootPathName);
 WINBOOL WINAPI GetComputerNameA(LPSTR lpBuffer, LPDWORD nSize);
-WINBOOL WINAPI DeleteFileA(LPCSTR lpFileName);
+WINBOOL WINAPI DeleteFileA(std::string filename);
 
 typedef struct _CONTEXT {
 

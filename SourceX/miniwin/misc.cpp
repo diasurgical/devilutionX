@@ -110,22 +110,19 @@ UINT GetDriveTypeA(LPCSTR lpRootPathName)
 	return DVL_DRIVE_CDROM;
 }
 
-WINBOOL DeleteFileA(LPCSTR lpFileName)
+WINBOOL DeleteFileA(std::string filename)
 {
-	const std::size_t len = strlen(lpFileName);
-	char *name = new char[len];
-	TranslateFileName(name, len, lpFileName);
+	TranslateFileName(&filename);
 
-	FILE *f = fopen(name, "r+");
+	FILE *f = fopen(filename.c_str(), "r+");
 	if (f) {
 		fclose(f);
-		remove(name);
+		remove(filename.c_str());
 		f = NULL;
-		eprintf("Removed file: %s\n", name);
+		eprintf("Removed file: %s\n", filename.c_str());
 	} else {
-		eprintf("Failed to remove file: %s\n", name);
+		eprintf("Failed to remove file: %s\n", filename.c_str());
 	}
-	delete[] name;
 
 	return true;
 }

@@ -17,6 +17,8 @@
 #include "StormLib.h"
 #include "StormCommon.h"
 
+#include <string>
+
 #define HEADER_SEARCH_BUFFER_SIZE   0x1000
 
 /*****************************************************************************/
@@ -177,12 +179,12 @@ bool STORMAPI SFileOpenArchive(
     dwStreamFlags |= (dwFlags & MPQ_OPEN_FORCE_MPQ_V1) ? 0 : STREAM_FLAG_USE_BITMAP;
 
 #ifndef FULL
-    char translatedName[260];
-    TranslateFileName(translatedName, sizeof(translatedName), szMpqName);
+    std::string translatedName = szMpqName;
+    TranslateFileName(&translatedName);
 #endif
 
     // Open the MPQ archive file
-    pStream = FileStream_OpenFile(translatedName, dwStreamFlags);
+    pStream = FileStream_OpenFile(translatedName.c_str(), dwStreamFlags);
     if(pStream == NULL)
         return false;
 

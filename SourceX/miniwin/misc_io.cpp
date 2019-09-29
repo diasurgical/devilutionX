@@ -25,12 +25,12 @@ HANDLE CreateFileA(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode,
     LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition,
     DWORD dwFlagsAndAttributes, HANDLE hTemplateFile)
 {
-	char name[DVL_MAX_PATH];
-	TranslateFileName(name, sizeof(name), lpFileName);
-	DUMMY_PRINT("file: %s (%s)", lpFileName, name);
+	std::string name = lpFileName;
+	TranslateFileName(&name);
+	DUMMY_PRINT("file: %s (%s)", lpFileName, name.c_str());
 	UNIMPLEMENTED_UNLESS(!(dwDesiredAccess & ~(DVL_GENERIC_READ | DVL_GENERIC_WRITE)));
 	memfile *file = new memfile;
-	file->path = name;
+	file->path = std::move(name);
 	if (dwCreationDisposition == DVL_OPEN_EXISTING) {
 		// read contents of existing file into buffer
 		std::ifstream filestream(file->path, std::ios::binary);
@@ -108,8 +108,8 @@ WINBOOL SetEndOfFile(HANDLE hFile)
 
 DWORD GetFileAttributesA(LPCSTR lpFileName)
 {
-	char name[DVL_MAX_PATH];
-	TranslateFileName(name, sizeof(name), lpFileName);
+	std::string name = lpFileName;
+	TranslateFileName(&name);
 	std::ifstream filestream(name, std::ios::binary);
 	if (filestream.fail()) {
 		SetLastError(DVL_ERROR_FILE_NOT_FOUND);

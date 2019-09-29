@@ -28,7 +28,7 @@ void CaptureScreen()
 		CloseHandle(hObject);
 
 		if (!success)
-			DeleteFile(FileName.c_str());
+			DeleteFile(FileName);
 
 		Sleep(300);
 		PaletteGetEntries(256, palette);

@@ -367,7 +367,7 @@ BOOL __stdcall pfile_delete_save(_uiheroinfo *hero_info)
 	save_num = pfile_get_save_num_from_name(hero_info->name);
 	if (save_num < MAX_CHARACTERS) {
 		hero_names[save_num][0] = '\0';
-		DeleteFile(pfile_get_save_path(save_num).c_str());
+		DeleteFile(pfile_get_save_path(save_num));
 	}
 	return TRUE;
 }

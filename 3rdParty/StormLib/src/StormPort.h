@@ -27,6 +27,8 @@
 #ifndef __STORMPORT_H__
 #define __STORMPORT_H__
 
+#include <string>
+
 #define STORMAPI
 
 #ifndef __cplusplus
@@ -360,6 +362,6 @@
 //
 
 #define bool int
-extern "C" void TranslateFileName(char* dst, int dstLen, const char* src);
+extern "C" void TranslateFileName(std::string *filename);
 
 #endif // __STORMPORT_H__

@@ -27,15 +27,10 @@ static std::string getIniPath()
 static radon::File ini(getIniPath());
 static Mix_Chunk *SFileChunk;
 
-void TranslateFileName(char *dst, int dstLen, const char *src)
+void TranslateFileName(std::string *filename)
 {
-	for (int i = 0; i < dstLen; i++) {
-		char c = *src++;
-		dst[i] = c == '\\' ? '/' : c;
-		if (!c) {
-			break;
-		}
-	}
+	for (char &c : *filename)
+		c = c == '\\' ? '/' : c;
 }
 
 BOOL SFileDdaBeginEx(HANDLE hFile, DWORD flags, DWORD mask, unsigned __int32 lDistanceToMove,

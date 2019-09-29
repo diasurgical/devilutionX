@@ -1,10 +1,12 @@
 #pragma once
 
+#include <string>
+
 namespace dvl {
 extern "C" {
 
 extern DWORD nLastError;
 
-void TranslateFileName(char *dst, int dstLen, const char *src);
+void TranslateFileName(std::string *filename);
 }
 } // namespace dvl
