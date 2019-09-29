@@ -106,6 +106,9 @@ add_library(PKWare STATIC
   3rdParty/PKWare/explode.cpp
   3rdParty/PKWare/implode.cpp)
 
+add_library(SourceS STATIC
+  SourceS/paths.cpp)
+
 add_library(devilution STATIC
   Source/appfat.cpp
   Source/automap.cpp
@@ -153,7 +156,6 @@ add_library(devilution STATIC
   Source/pack.cpp
   Source/palette.cpp
   Source/path.cpp
-  Source/paths.cpp
   Source/pfile.cpp
   Source/player.cpp
   Source/plrmsg.cpp
@@ -216,13 +218,17 @@ add_executable(devilutionx MACOSX_BUNDLE
 configure_file(SourceS/config.h.in config.h @ONLY)
 target_include_directories(devilution PUBLIC Source SourceS ${CMAKE_CURRENT_BINARY_DIR})
 target_include_directories(devilutionx PRIVATE
+  SourceS
   SourceX
   3rdParty/asio/include
   3rdParty/Radon/Radon/include
   3rdParty/libsmacker)
 
-target_link_libraries(devilution PUBLIC Threads::Threads)
+target_link_libraries(devilution PUBLIC
+  Threads::Threads
+  SourceS)
 target_link_libraries(devilutionx PRIVATE
+  SourceS
   devilution
   PKWare
   StormLib
@@ -238,7 +244,7 @@ target_compile_definitions(devilution PUBLIC
 target_compile_definitions(devilutionx PRIVATE ASIO_STANDALONE)
 
 
-foreach(target devilution devilutionx)
+foreach(target devilution devilutionx SourceS)
   if(USE_SDL1)
     target_link_libraries(${target} PRIVATE
       ${SDL_LIBRARY} ${SDL_TTF_LIBRARY} ${SDL_MIXER_LIBRARY})
