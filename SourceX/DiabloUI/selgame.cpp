@@ -18,21 +18,11 @@ int gbDifficulty;
 static _SNETPROGRAMDATA *m_client_info;
 extern DWORD provider;
 
+constexpr UiImage SELGAME_BACKGROUND = UiImage(&ArtBackground, { 0, 0, 640, 480 });
+constexpr UiButton SELGAME_OK = UiButton("OK", &UiFocusNavigationSelect, { 299, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD);
+constexpr UiButton SELGAME_CANCEL = UiButton("CANCEL", &UiFocusNavigationEsc, { 449, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD);
+
 UiText SELGAME_DESCRIPTION(selgame_Description, { 35, 256, 205, 192 });
-UiListItem SELUDPGAME_DIALOG_ITEMS[] = {
-	{ "Create Game", 0 },
-	{ "Enter IP", 1 },
-};
-UiItem SELUDPGAME_DIALOG[] = {
-	UiImage(&ArtBackground, { 0, 0, 640, 480 }),
-	UiText("Join TCP/UDP Games", { 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG),
-	UiText("Description:", { 35, 211, 205, 192 }, UIS_MED),
-	SELGAME_DESCRIPTION,
-	UiText("Select Action", { 300, 211, 295, 33 }, UIS_CENTER | UIS_BIG),
-	UiList(SELUDPGAME_DIALOG_ITEMS, 305, 255, 285, 26, UIS_CENTER | UIS_MED | UIS_GOLD),
-	UiButton("OK", &UiFocusNavigationSelect, { 299, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD),
-	UiButton("CANCEL", &UiFocusNavigationEsc, { 449, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD)
-};
 
 UiListItem SELDIFF_DIALOG_ITEMS[] = {
 	{ "Normal", DIFF_NORMAL },
@@ -40,36 +30,54 @@ UiListItem SELDIFF_DIALOG_ITEMS[] = {
 	{ "Hell", DIFF_HELL }
 };
 UiItem SELDIFF_DIALOG[] = {
-	UiImage(&ArtBackground, { 0, 0, 640, 480 }),
+	SELGAME_BACKGROUND,
 	UiText("Create Game", { 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG),
 	UiText(selgame_Label, { 34, 211, 205, 33 }, UIS_CENTER | UIS_BIG), // DIFF
 	SELGAME_DESCRIPTION,
 	UiText("Select Difficulty", { 299, 211, 295, 35 }, UIS_CENTER | UIS_BIG),
 	UiList(SELDIFF_DIALOG_ITEMS, 300, 282, 295, 26, UIS_CENTER | UIS_MED | UIS_GOLD),
-	UiButton("OK", &UiFocusNavigationSelect, { 299, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD),
-	UiButton("CANCEL", &UiFocusNavigationEsc, { 449, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD)
+	SELGAME_OK,
+	SELGAME_CANCEL,
+};
+
+constexpr UiText SELUDPGAME_TITLE = UiText("Join TCP/UDP Games", { 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG);
+constexpr UiText SELUDPGAME_DESCRIPTION_LABEL = UiText("Description:", { 35, 211, 205, 192 }, UIS_MED);
+
+UiListItem SELUDPGAME_DIALOG_ITEMS[] = {
+	{ "Create Game", 0 },
+	{ "Enter IP", 1 },
+};
+UiItem SELUDPGAME_DIALOG[] = {
+	SELGAME_BACKGROUND,
+	SELUDPGAME_TITLE,
+	SELUDPGAME_DESCRIPTION_LABEL,
+	SELGAME_DESCRIPTION,
+	UiText("Select Action", { 300, 211, 295, 33 }, UIS_CENTER | UIS_BIG),
+	UiList(SELUDPGAME_DIALOG_ITEMS, 305, 255, 285, 26, UIS_CENTER | UIS_MED | UIS_GOLD),
+	SELGAME_OK,
+	SELGAME_CANCEL,
 };
 
 UiItem ENTERIP_DIALOG[] = {
-	UiImage(&ArtBackground, { 0, 0, 640, 480 }),
-	UiText("Join TCP/UDP Games", { 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG),
-	UiText("Description:", { 35, 211, 205, 33 }, UIS_MED),
+	SELGAME_BACKGROUND,
+	SELUDPGAME_TITLE,
+	SELUDPGAME_DESCRIPTION_LABEL,
 	SELGAME_DESCRIPTION,
 	UiText("Enter IP", { 305, 211, 285, 33 }, UIS_CENTER | UIS_BIG),
 	UiEdit(selgame_Ip, 128, { 305, 314, 285, 33 }, UIS_LIST | UIS_MED | UIS_GOLD),
-	UiButton("OK", &UiFocusNavigationSelect, { 299, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD),
-	UiButton("CANCEL", &UiFocusNavigationEsc, { 449, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD)
+	SELGAME_OK,
+	SELGAME_CANCEL,
 };
 
 UiItem ENTERPASSWORD_DIALOG[] = {
-	UiImage(&ArtBackground, { 0, 0, 640, 480 }),
-	UiText("Join TCP/UDP Games", { 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG),
-	UiText("Description:", { 35, 211, 205, 33 }, UIS_MED),
+	SELGAME_BACKGROUND,
+	SELUDPGAME_TITLE,
+	SELUDPGAME_DESCRIPTION_LABEL,
 	SELGAME_DESCRIPTION,
 	UiText("Enter Password", { 305, 211, 285, 33 }, UIS_CENTER | UIS_BIG),
 	UiEdit(selgame_Password, 15, { 305, 314, 285, 33 }, UIS_LIST | UIS_MED | UIS_GOLD),
-	UiButton("OK", &UiFocusNavigationSelect, { 299, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD),
-	UiButton("CANCEL", &UiFocusNavigationEsc, { 449, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD)
+	SELGAME_OK,
+	SELGAME_CANCEL,
 };
 
 void selgame_Free()
@@ -219,5 +227,4 @@ int UiSelectGame(int a1, _SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_in
 
 	return selgame_enteringGame;
 }
-
 }
