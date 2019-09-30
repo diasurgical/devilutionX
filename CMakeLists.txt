@@ -57,7 +57,6 @@ if(AMIGA)
   set(NONET ON)
   set(USE_SDL1 "Use SDL1.2 instead of SDL2" ON)
   find_package(Freetype REQUIRED)
-  find_package(PNG REQUIRED)
 endif()
 
 if(DIST)
@@ -286,16 +285,9 @@ if(USE_SDL1)
     ${SDL_MIXER_LIBRARIES}
     ${SDL_LIBRARY}
     ${FREETYPE_LIBRARIES}
-    ${PNG_LIBRARIES})
+    zlib)
   if(WARPOS)
-    target_link_libraries(devilutionx PRIVATE
-      -lmikmod
-      -lvorbisfile
-      -lvorbisenc
-      -lvorbis
-      -logg
-      -lFLAC
-      -lbz2)
+    target_link_libraries(devilutionx PRIVATE -lmikmod)
   endif()
 else()
   target_link_libraries(devilutionx PRIVATE
@@ -303,7 +295,7 @@ else()
     ${SDL2_ttf_LIBRARY}
     ${SDL2_mixer_LIBRARY}
     ${FREETYPE_LIBRARIES}
-    ${PNG_LIBRARIES})
+    zlib)
 endif()
 
 if(AMIGA AND NOT WARPOS)
