@@ -1,5 +1,6 @@
 #include "selhero.h"
 
+#include <iostream>
 #include <algorithm>
 
 #include "selyesno.h"
