@@ -1424,7 +1424,6 @@ void Cl2DecodeFrm1(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int Cel
 	    pRLEBytes,
 	    nDataSize,
 	    nWidth);
-
 }
 
 void Cl2DecDatFrm1(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth)

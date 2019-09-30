@@ -7,7 +7,7 @@ set -e
 export TARGET='m68k-amigaos'
 export SYSROOT=/opt/$TARGET
 export FLAGS='-m68040 -mhard-float -s -ffast-math -O3 -w -fomit-frame-pointer  -noixemul -DBIG_ENDIAN -DAMIGA -fpermissive -std=c++14 -fbbb=abcdef'
-export DEFINES='-DUSE_SDL1=ON -DNONET=ON -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-s -ffast-math -O3 -fno-exceptions -w -fomit-frame-pointer  -noixemul -DBIG_ENDIAN -DAMIGA -fpermissive -std=c++14 -fbbb=abcdef"'
+export DEFINES='-DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-s -ffast-math -O3 -fno-exceptions -w -fomit-frame-pointer  -noixemul -DBIG_ENDIAN -DAMIGA -fpermissive -std=c++14 -fbbb=abcdef"'
 
 # ZLIB
 wget https://www.zlib.net/zlib-1.2.11.tar.gz

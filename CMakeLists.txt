@@ -231,41 +231,11 @@ add_executable(devilutionx MACOSX_BUNDLE ${devilutionx_SRCS})
 
 configure_file(SourceS/config.h.in config.h @ONLY)
 target_include_directories(devilution PUBLIC Source SourceS ${CMAKE_CURRENT_BINARY_DIR})
-
-if(USE_SDL1)
-  target_include_directories(devilutionx PRIVATE
-    SourceX
-    3rdParty/asio/include
-    3rdParty/Radon/Radon/include
-    3rdParty/libsmacker
-    ${SDL_INCLUDE_DIR}
-    ${SDL_INCLUDE_DIRS}
-    ${SDL_TTF_INCLUDE_DIRS}
-    ${SDL_MIXER_INCLUDE_DIRS}
-    ${SDL_INCLUDE_DIRS}/..
-    ${SDL_INCLUDE_DIR}/..
-    ${SDL_TTF_INCLUDE_DIRS}/..
-    ${SDL_MIXER_INCLUDE_DIRS}/..)
-else()
-  target_include_directories(devilutionx PRIVATE
-    SourceX
-    3rdParty/asio/include
-    3rdParty/Radon/Radon/include
-    3rdParty/libsmacker
-    ${SDL2_INCLUDE_DIR}
-    ${SDL2_INCLUDE_DIRS}
-    ${SDL2_TTF_INCLUDE_DIRS}
-    ${SDL2_MIXER_INCLUDE_DIRS}
-    ${SDL2_INCLUDE_DIRS}/..
-    ${SDL2_INCLUDE_DIR}/..
-    ${SDL2_TTF_INCLUDE_DIRS}/..
-    ${SDL2_MIXER_INCLUDE_DIRS}/..)
-  set(SDL_INCLUDE_DIR ${SDL2_INCLUDE_DIR})
-endif()
-
-target_include_directories(devilution PRIVATE
-  ${SDL_INCLUDE_DIR}
-  ${SDL_INCLUDE_DIRS})
+target_include_directories(devilutionx PRIVATE
+  SourceX
+  3rdParty/asio/include
+  3rdParty/Radon/Radon/include
+  3rdParty/libsmacker)
 
 target_link_libraries(devilution PUBLIC Threads::Threads)
 target_link_libraries(devilutionx PRIVATE
@@ -279,28 +249,21 @@ if(NOT NONET)
   target_link_libraries(devilutionx PRIVATE sodium)
 endif()
 
-if(USE_SDL1)
-  target_link_libraries(devilutionx PRIVATE
-    ${SDL_TTF_LIBRARY}
-    ${SDL_MIXER_LIBRARY}
-    ${SDL_MIXER_LIBRARIES}
-    ${SDL_LIBRARY}
-    ${FREETYPE_LIBRARIES}
-    zlib)
-  if(WARPOS)
-    target_link_libraries(devilutionx PRIVATE -lmikmod)
+if(AMIGA)
+  if(USE_SDL1)
+    target_link_libraries(devilutionx PRIVATE
+      ${SDL_LIBRARY}
+      ${SDL_TTF_LIBRARY}
+      ${SDL_MIXER_LIBRARY}
+      ${FREETYPE_LIBRARIES})
   endif()
-else()
-  target_link_libraries(devilutionx PRIVATE
-    SDL2::SDL2main
-    ${SDL2_ttf_LIBRARY}
-    ${SDL2_mixer_LIBRARY}
-    ${FREETYPE_LIBRARIES}
-    zlib)
-endif()
-
-if(AMIGA AND NOT WARPOS)
-  target_link_libraries(devilutionx PRIVATE -ldebug)
+  target_link_libraries(devilutionx PRIVATE zlib)
+  if(NOT WARPOS)
+    target_link_libraries(devilutionx PRIVATE -ldebug)
+  endif()
+  if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    add_definitions(-D_GNU_SOURCE)
+  endif()
 endif()
 
 target_compile_definitions(devilution PRIVATE DEVILUTION_ENGINE)
@@ -368,10 +331,6 @@ endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   target_compile_options(devilution PRIVATE "/W0")
-endif()
-
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-  add_definitions(-D_GNU_SOURCE)
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")

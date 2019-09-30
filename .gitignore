@@ -6,14 +6,6 @@
 # macOS
 .DS_Store
 
-# qt-creator
-devilutionx.config
-devilutionx.creator
-devilutionx.files
-devilutionx.includes
-.cproject
-.settings/
-
 # CodeLite
 .CodeLite
 *.project
@@ -428,18 +420,8 @@ DerivedData/
 **/xcshareddata/WorkspaceSettings.xcsettings
 
 /libs
+
 # End of https://www.gitignore.io/api/xcode
 
 # Don't accidently commit the diabdat.mpq
 *.mpq
-
-# Static libs, generated files and directories
-*.a
-Makefile
-devilutionx
-*.debug
-build-*
-cmake-*
-CMakeFiles/*
-CMakeCache.txt
-/Amiga68k/
