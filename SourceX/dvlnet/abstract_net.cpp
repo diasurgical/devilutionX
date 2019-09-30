@@ -17,7 +17,7 @@ abstract_net::~abstract_net()
 std::unique_ptr<abstract_net> abstract_net::make_net(provider_t provider)
 {
 #ifdef NONET
-	return std::make_unique<loopback>();
+	return std::unique_ptr<abstract_net>(new loopback);
 #else
 	if (provider == 'TCPN') {
 		return std::unique_ptr<abstract_net>(new tcp_client);

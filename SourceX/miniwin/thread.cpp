@@ -129,6 +129,18 @@ HANDLE CreateEventA(LPSECURITY_ATTRIBUTES lpEventAttributes, WINBOOL bManualRese
 	return ret;
 }
 
+BOOL CloseEvent(HANDLE hObject)
+{
+	struct event_emul *event = static_cast<struct event_emul *>(hObject);
+	if (events.find((uintptr_t)event) == events.end())
+		return false;
+	SDL_DestroyCond(event->cond);
+	SDL_DestroyMutex(event->mutex);
+	events.erase((uintptr_t)event);
+	free(event);
+	return true;
+}
+
 BOOL SetEvent(HANDLE hEvent)
 {
 	struct event_emul *e = (struct event_emul *)hEvent;

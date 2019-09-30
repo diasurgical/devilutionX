@@ -27,57 +27,68 @@ BOOL(*gfnHeroCreate)
 BOOL(*gfnHeroDelete)
 (_uiheroinfo *);
 
-UI_Item SELHERO_DIALOG[] = {
-	{ { 0, 0, 640, 480 }, UI_IMAGE, 0, 0, NULL, &ArtBackground },
-	{ { 24, 161, 590, 35 }, UI_TEXT, UIS_CENTER | UIS_BIG, 0, title },
-	{ { 30, 211, 180, 76 }, UI_IMAGE, 0, UI_NUM_CLASSES, NULL, &ArtHero },
-	{ { 39, 323, 110, 21 }, UI_TEXT, UIS_RIGHT, 0, "Level:" },
-	{ { 159, 323, 40, 21 }, UI_TEXT, UIS_CENTER, 0, textStats[0] },
-	{ { 39, 358, 110, 21 }, UI_TEXT, UIS_RIGHT, 0, "Strength:" },
-	{ { 159, 358, 40, 21 }, UI_TEXT, UIS_CENTER, 0, textStats[1] },
-	{ { 39, 380, 110, 21 }, UI_TEXT, UIS_RIGHT, 0, "Magic:" },
-	{ { 159, 380, 40, 21 }, UI_TEXT, UIS_CENTER, 0, textStats[2] },
-	{ { 39, 401, 110, 21 }, UI_TEXT, UIS_RIGHT, 0, "Dexterity:" },
-	{ { 159, 401, 40, 21 }, UI_TEXT, UIS_CENTER, 0, textStats[3] },
-	{ { 39, 422, 110, 21 }, UI_TEXT, UIS_RIGHT, 0, "Vitality:" },
-	{ { 159, 422, 40, 21 }, UI_TEXT, UIS_CENTER, 0, textStats[4] },
+UiItem SELHERO_DIALOG[] = {
+	UiImage(&ArtBackground, { 0, 0, 640, 480 }),
+	UiText(title, { 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG),
+	UiImage(&ArtHero, UI_NUM_CLASSES, { 30, 211, 180, 76 }),
+	UiText("Level:", { 39, 323, 110, 21 }, UIS_RIGHT),
+	UiText(textStats[0], { 159, 323, 40, 21 }, UIS_CENTER),
+	UiText("Strength:", { 39, 358, 110, 21 }, UIS_RIGHT),
+	UiText(textStats[1], { 159, 358, 40, 21 }, UIS_CENTER),
+	UiText("Magic:", { 39, 380, 110, 21 }, UIS_RIGHT),
+	UiText(textStats[2], { 159, 380, 40, 21 }, UIS_CENTER),
+	UiText("Dexterity:", { 39, 401, 110, 21 }, UIS_RIGHT),
+	UiText(textStats[3], { 159, 401, 40, 21 }, UIS_CENTER),
+	UiText("Vitality:", { 39, 422, 110, 21 }, UIS_RIGHT),
+	UiText(textStats[4], { 159, 422, 40, 21 }, UIS_CENTER),
+};
+UiImage *SELHERO_DIALOG_HERO_IMG = &SELHERO_DIALOG[2].image;
+
+UiListItem SELLIST_DIALOG_ITEMS[] = {
+	{ listItems[0], 0 },
+	{ listItems[1], 1 },
+	{ listItems[2], 2 },
+	{ listItems[3], 3 },
+	{ listItems[4], 4 },
+	{ listItems[5], 5 },
+};
+UiItem SELLIST_DIALOG[] = {
+	UiText("Select Hero", { 264, 211, 320, 33 }, UIS_CENTER | UIS_BIG),
+	UiList(SELLIST_DIALOG_ITEMS, 265, 256, 320, 26, UIS_CENTER | UIS_MED | UIS_GOLD),
+	UiButton("OK", &UiFocusNavigationSelect, { 239, 429, 120, 35 }, UIS_CENTER | UIS_BIG | UIS_GOLD),
+	UiButton("Delete", &selhero_UiFocusNavigationYesNo, { 364, 429, 120, 35 }, UIS_CENTER | UIS_BIG | UIS_DISABLED),
+	UiButton("Cancel", &UiFocusNavigationEsc, { 489, 429, 120, 35 }, UIS_CENTER | UIS_BIG | UIS_GOLD)
+};
+UiButton *SELLIST_DIALOG_DELETE_BUTTON = &SELLIST_DIALOG[3].button;
+
+UiListItem SELCLAS_DIALOG_ITEMS[] = {
+	{"Warrior", UI_WARRIOR},
+	{"Rogue", UI_ROGUE},
+	{"Sorcerer", UI_SORCERER}
+};
+UiItem SELCLASS_DIALOG[] = {
+	UiText("Choose Class", { 264, 211, 320, 33 }, UIS_CENTER | UIS_BIG),
+	UiList(SELCLAS_DIALOG_ITEMS, 264, 285, 320, 33, UIS_CENTER | UIS_MED | UIS_GOLD),
+	UiButton("OK", &UiFocusNavigationSelect, { 279, 429, 140, 35 },UIS_CENTER | UIS_BIG | UIS_GOLD),
+	UiButton("Cancel", &UiFocusNavigationEsc, { 429, 429, 140, 35 }, UIS_CENTER | UIS_BIG | UIS_GOLD)
 };
 
-UI_Item SELLIST_DIALOG[] = {
-	{ { 264, 211, 320, 33 }, UI_TEXT, UIS_CENTER | UIS_BIG, 0, "Select Hero" },
-	{ { 265, 256, 320, 26 }, UI_LIST, UIS_CENTER | UIS_MED | UIS_GOLD, 0, listItems[0] },
-	{ { 265, 282, 320, 26 }, UI_LIST, UIS_CENTER | UIS_MED | UIS_GOLD, 1, listItems[1] },
-	{ { 265, 308, 320, 26 }, UI_LIST, UIS_CENTER | UIS_MED | UIS_GOLD, 2, listItems[2] },
-	{ { 265, 334, 320, 26 }, UI_LIST, UIS_CENTER | UIS_MED | UIS_GOLD, 3, listItems[3] },
-	{ { 265, 360, 320, 26 }, UI_LIST, UIS_CENTER | UIS_MED | UIS_GOLD, 4, listItems[4] },
-	{ { 265, 386, 320, 26 }, UI_LIST, UIS_CENTER | UIS_MED | UIS_GOLD, 5, listItems[5] },
-	{ { 239, 429, 120, 35 }, UI_BUTTON, UIS_CENTER | UIS_BIG | UIS_GOLD, 0, "OK", (void *)UiFocusNavigationSelect },
-	{ { 364, 429, 120, 35 }, UI_BUTTON, UIS_CENTER | UIS_BIG | UIS_DISABLED, 0, "Delete", (void *)selhero_UiFocusNavigationYesNo },
-	{ { 489, 429, 120, 35 }, UI_BUTTON, UIS_CENTER | UIS_BIG | UIS_GOLD, 0, "Cancel", (void *)UiFocusNavigationEsc },
+UiItem ENTERNAME_DIALOG[] = {
+	UiText("Enter Name", { 264, 211, 320, 33 }, UIS_CENTER | UIS_BIG),
+	UiEdit(selhero_heroInfo.name, 15, { 265, 317, 320, 33 }, UIS_LIST | UIS_MED | UIS_GOLD),
+	UiButton("OK", &UiFocusNavigationSelect, { 279, 429, 140, 35 },UIS_CENTER | UIS_BIG | UIS_GOLD),
+	UiButton("Cancel", &UiFocusNavigationEsc, { 429, 429, 140, 35 }, UIS_CENTER | UIS_BIG | UIS_GOLD)
 };
 
-UI_Item SELCLASS_DIALOG[] = {
-	{ { 264, 211, 320, 33 }, UI_TEXT, UIS_CENTER | UIS_BIG, 0, "Choose Class" },
-	{ { 264, 285, 320, 33 }, UI_LIST, UIS_CENTER | UIS_MED | UIS_GOLD, UI_WARRIOR, "Warrior" },
-	{ { 264, 318, 320, 33 }, UI_LIST, UIS_CENTER | UIS_MED | UIS_GOLD, UI_ROGUE, "Rogue" },
-	{ { 264, 352, 320, 33 }, UI_LIST, UIS_CENTER | UIS_MED | UIS_GOLD, UI_SORCERER, "Sorcerer" },
-	{ { 279, 429, 140, 35 }, UI_BUTTON, UIS_CENTER | UIS_BIG | UIS_GOLD, 0, "OK", (void *)UiFocusNavigationSelect },
-	{ { 429, 429, 140, 35 }, UI_BUTTON, UIS_CENTER | UIS_BIG | UIS_GOLD, 0, "Cancel", (void *)UiFocusNavigationEsc },
+UiListItem SELLOAD_DIALOG_ITEMS[] = {
+	{"Load Game", 0},
+	{"New Game", 1}
 };
-
-UI_Item ENTERNAME_DIALOG[] = {
-	{ { 264, 211, 320, 33 }, UI_TEXT, UIS_CENTER | UIS_BIG, 0, "Enter Name" },
-	{ { 265, 317, 320, 33 }, UI_EDIT, UIS_LIST | UIS_MED | UIS_GOLD, 15, selhero_heroInfo.name },
-	{ { 279, 429, 140, 35 }, UI_BUTTON, UIS_CENTER | UIS_BIG | UIS_GOLD, 0, "OK", (void *)UiFocusNavigationSelect },
-	{ { 429, 429, 140, 35 }, UI_BUTTON, UIS_CENTER | UIS_BIG | UIS_GOLD, 0, "Cancel", (void *)UiFocusNavigationEsc },
-};
-
-UI_Item SELLOAD_DIALOG[] = {
-	{ { 264, 211, 320, 33 }, UI_TEXT, UIS_CENTER | UIS_BIG, 0, "Save File Exists" },
-	{ { 265, 285, 320, 26 }, UI_LIST, UIS_CENTER | UIS_MED | UIS_GOLD, 0, "Load Game" },
-	{ { 265, 318, 320, 26 }, UI_LIST, UIS_CENTER | UIS_MED | UIS_GOLD, 1, "New Game" },
-	{ { 279, 427, 140, 35 }, UI_BUTTON, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD, 0, "OK", (void *)UiFocusNavigationSelect },
-	{ { 429, 427, 140, 35 }, UI_BUTTON, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD, 0, "Cancel", (void *)UiFocusNavigationEsc },
+UiItem SELLOAD_DIALOG[] = {
+	UiText("Save File Exists", { 264, 211, 320, 33 }, UIS_CENTER | UIS_BIG),
+	UiList(SELLOAD_DIALOG_ITEMS, 265, 285, 320, 33, UIS_CENTER | UIS_MED | UIS_GOLD),
+	UiButton("OK", &UiFocusNavigationSelect, { 279, 427, 140, 35 },UIS_CENTER | UIS_VCENTER |UIS_BIG | UIS_GOLD),
+	UiButton("Cancel", &UiFocusNavigationEsc, { 429, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER |UIS_BIG | UIS_GOLD)
 };
 
 void selhero_UiFocusNavigationYesNo()
@@ -94,7 +105,7 @@ void selhero_Free()
 
 void selhero_SetStats()
 {
-	SELHERO_DIALOG[2].value = selhero_heroInfo.heroclass;
+	SELHERO_DIALOG_HERO_IMG->frame = selhero_heroInfo.heroclass;
 	sprintf(textStats[0], "%d", selhero_heroInfo.level);
 	sprintf(textStats[1], "%d", selhero_heroInfo.strength);
 	sprintf(textStats[2], "%d", selhero_heroInfo.magic);
@@ -124,18 +135,18 @@ void selhero_List_Focus(int value)
 	if (selhero_SaveCount && value < selhero_SaveCount) {
 		memcpy(&selhero_heroInfo, &selhero_heros[value], sizeof(selhero_heroInfo));
 		selhero_SetStats();
-		SELLIST_DIALOG[8].flags = baseFlags | UIS_GOLD;
+		SELLIST_DIALOG_DELETE_BUTTON->flags = baseFlags | UIS_GOLD;
 		selhero_deleteEnabled = true;
 		return;
 	}
 
-	SELHERO_DIALOG[2].value = UI_NUM_CLASSES;
+	SELHERO_DIALOG_HERO_IMG->frame = UI_NUM_CLASSES;
 	sprintf(textStats[0], "--");
 	sprintf(textStats[1], "--");
 	sprintf(textStats[2], "--");
 	sprintf(textStats[3], "--");
 	sprintf(textStats[4], "--");
-	SELLIST_DIALOG[8].flags = baseFlags | UIS_DISABLED;
+	SELLIST_DIALOG_DELETE_BUTTON->flags = baseFlags | UIS_DISABLED;
 	selhero_deleteEnabled = false;
 }
 

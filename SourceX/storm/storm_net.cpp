@@ -80,11 +80,8 @@ BOOL SNetGetGameInfo(int type, void *dst, unsigned int length, unsigned int *byt
 		strncpy((char *)dst, gpszGamePassword, length);
 		*byteswritten = strlen(gpszGamePassword) + 1;
 		break;
-	default:
-		break;
 	}
 
-	DUMMY();
 	return true;
 }
 

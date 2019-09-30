@@ -12,13 +12,18 @@ BOOL(*selyesno_gfnRemove)
 char selyesno_confirmationMessage[256];
 char selyesno_title[32];
 
-UI_Item SELYESNO_DIALOG[] = {
-	{ { 0, 0, 640, 480 }, UI_IMAGE, 0, 0, NULL, &ArtBackground },
-	{ { 24, 161, 590, 35 }, UI_TEXT, UIS_CENTER | UIS_BIG, 0, selyesno_title },
-	{ { 120, 236, 280, 168 }, UI_TEXT, UIS_MED, 0, selyesno_confirmationMessage },
-	{ { 230, 390, 180, 35 }, UI_LIST, UIS_CENTER | UIS_BIG | UIS_GOLD, 0, "Yes" },
-	{ { 230, 426, 180, 35 }, UI_LIST, UIS_CENTER | UIS_BIG | UIS_GOLD, 1, "No" },
+UiListItem SELYESNO_DIALOG_ITEMS[] = {
+	{ "Yes", 0 },
+	{ "No", 1 }
 };
+
+UiItem SELYESNO_DIALOG[] = {
+	UiImage(&ArtBackground, { 0, 0, 640, 480 }),
+	UiText(selyesno_title, { 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG),
+	UiText(selyesno_confirmationMessage, { 120, 236, 280, 168 }, UIS_MED),
+	UiList(SELYESNO_DIALOG_ITEMS, 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD)
+};
+UiText *SELYESNO_DIALOG_CONFIRMATION_MESSAGE = &SELYESNO_DIALOG[2].text;
 
 void selyesno_Free()
 {
@@ -54,7 +59,7 @@ BOOL UiSelHeroDelYesNoDialog(
 	}
 
 	sprintf(selyesno_confirmationMessage, "Are you sure you want to delete the character \"%s\"?", selyesno_heroInfo.name);
-	WordWrap(&SELYESNO_DIALOG[2]);
+	WordWrap(SELYESNO_DIALOG_CONFIRMATION_MESSAGE);
 
 	UiInitList(0, 1, NULL, selyesno_Select, selyesno_Esc, SELYESNO_DIALOG, size(SELYESNO_DIALOG), false, NULL);
 

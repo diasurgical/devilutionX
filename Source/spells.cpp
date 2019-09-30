@@ -4,7 +4,6 @@ DEVILUTION_BEGIN_NAMESPACE
 
 int GetManaAmount(int id, int sn)
 {
-	int i;  // "raw" mana cost
 	int ma; // mana amount
 
 	// mana adjust
@@ -28,12 +27,12 @@ int GetManaAmount(int id, int sn)
 	}
 
 	if (spelldata[sn].sManaCost == 255) {
-		i = (BYTE)plr[id]._pMaxManaBase;
+		ma = ((BYTE)plr[id]._pMaxManaBase - adj);
 	} else {
-		i = spelldata[sn].sManaCost;
+		ma = (spelldata[sn].sManaCost - adj);
 	}
 
-	ma = (i - adj) << 6;
+	ma <<= 6;
 
 	if (sn == SPL_HEAL) {
 		ma = (spelldata[SPL_HEAL].sManaCost + 2 * plr[id]._pLevel - adj) << 6;
@@ -140,7 +139,7 @@ void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int caster, int 
 	if (spelldata[spl].sMissiles[0] == MIS_CBOLT) {
 		UseMana(id, SPL_CBOLT);
 
-		for (i = 0; i < (spllvl >> 1) + 3; i++) {
+		for (i = (spllvl >> 1) + 3; i > 0; i--) {
 			AddMissile(sx, sy, dx, dy, dir, MIS_CBOLT, caster, id, 0, spllvl);
 		}
 	}

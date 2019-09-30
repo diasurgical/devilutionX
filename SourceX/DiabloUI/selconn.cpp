@@ -17,24 +17,29 @@ _SNETVERSIONDATA *selconn_FileInfo;
 
 DWORD provider;
 
-UI_Item SELCONNECT_DIALOG[] = {
-	{ { 0, 0, 640, 480 }, UI_IMAGE, 0, 0, NULL, &ArtBackground },
-	{ { 24, 161, 590, 35 }, UI_TEXT, UIS_CENTER | UIS_BIG, 0, "Multi Player Game" },
-	{ { 35, 218, 205, 21 }, UI_TEXT, 0, 0, selconn_MaxPlayers }, // Max players
-	{ { 35, 256, 205, 21 }, UI_TEXT, 0, 0, "Requirements:" },
-	{ { 35, 275, 205, 66 }, UI_TEXT, 0, 0, selconn_Description }, //Description
-	{ { 30, 356, 220, 31 }, UI_TEXT, UIS_CENTER | UIS_MED, 0, "no gateway needed" },
-	{ { 35, 393, 205, 21 }, UI_TEXT, UIS_CENTER, 0, selconn_Gateway }, // Gateway
-	{ { 16, 427, 250, 35 }, UI_BUTTON, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD | UIS_HIDDEN, 0, "Change Gateway" },
-	{ { 300, 211, 295, 33 }, UI_TEXT, UIS_CENTER | UIS_BIG, 0, "Select Connection" },
-	{ { 305, 256, 285, 26 }, UI_LIST, UIS_CENTER | UIS_VCENTER | UIS_GOLD, 0, "Client-Server (TCP)" },
-	{ { 305, 282, 285, 26 }, UI_LIST, UIS_CENTER | UIS_VCENTER | UIS_GOLD, 1, "Peer-to-Peer (UDP)" },
-	{ { 305, 308, 285, 26 }, UI_LIST, UIS_CENTER | UIS_VCENTER | UIS_GOLD, 2, "Loopback" },
-	{ { 305, 334, 285, 26 }, UI_LIST, UIS_CENTER | UIS_VCENTER | UIS_GOLD },
-	{ { 305, 360, 285, 26 }, UI_LIST, UIS_CENTER | UIS_VCENTER | UIS_GOLD },
-	{ { 305, 386, 285, 26 }, UI_LIST, UIS_CENTER | UIS_VCENTER | UIS_GOLD },
-	{ { 299, 427, 140, 35 }, UI_BUTTON, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD, 0, "OK", (void *)UiFocusNavigationSelect },
-	{ { 454, 427, 140, 35 }, UI_BUTTON, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD, 0, "Cancel", (void *)UiFocusNavigationEsc },
+UiText SELCONNECT_DIALOG_DESCRIPTION(selconn_Description, { 35, 275, 205, 66 });
+UiListItem SELCONN_DIALOG_ITEMS[] = {
+#ifndef NONET
+	{ "Client-Server (TCP)", 0 },
+	{ "Peer-to-Peer (UDP)", 1 },
+	{ "Loopback", 2 },
+#else
+	{ "Loopback", 0 },
+#endif
+};
+UiItem SELCONNECT_DIALOG[] = {
+	UiImage(&ArtBackground, { 0, 0, 640, 480 }),
+	UiText("Multi Player Game", { 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG),
+	UiText(selconn_MaxPlayers, { 35, 218, 205, 21 }),
+	UiText("Requirements:", { 35, 256, 205, 21 }),
+	SELCONNECT_DIALOG_DESCRIPTION,
+	UiText("no gateway needed", { 30, 356, 220, 31 }, UIS_CENTER | UIS_MED),
+	UiText(selconn_Gateway, { 35, 393, 205, 21 }, UIS_CENTER),
+	UiText("Select Connection", { 300, 211, 295, 33 }, UIS_CENTER | UIS_BIG),
+	UiButton("Change Gateway", nullptr, { 16, 427, 250, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD | UIS_HIDDEN),
+	UiList(SELCONN_DIALOG_ITEMS, 305, 256, 285, 26, UIS_CENTER | UIS_VCENTER | UIS_GOLD),
+	UiButton("OK", &UiFocusNavigationSelect, { 299, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD),
+	UiButton("Cancel", &UiFocusNavigationEsc, { 454, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD)
 };
 
 void selconn_Load()
@@ -73,11 +78,7 @@ void selconn_Focus(int value)
 	}
 
 	sprintf(selconn_MaxPlayers, "Players Supported: %d", players);
-
-	for (auto &item : SELCONNECT_DIALOG) {
-		if (item.caption != NULL && !(item.flags & (UIS_VCENTER | UIS_CENTER)))
-			WordWrap(&item);
-	}
+	WordWrap(&SELCONNECT_DIALOG_DESCRIPTION);
 }
 
 void selconn_Select(int value)

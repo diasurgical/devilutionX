@@ -19,6 +19,7 @@ class tcp_client : public base {
 public:
 	int create(std::string addrstr, std::string passwd);
 	int join(std::string addrstr, std::string passwd);
+	virtual bool SNetLeaveGame(int type);
 
 	constexpr static unsigned short default_port = 6112;
 

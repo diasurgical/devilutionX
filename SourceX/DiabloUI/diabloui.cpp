@@ -9,7 +9,7 @@
 
 namespace dvl {
 
-TTF_Font *font;
+TTF_Font *font = nullptr;
 int SelectedItemMin = 1;
 int SelectedItemMax = 1;
 BYTE *FontTables[4];
@@ -25,7 +25,7 @@ void (*gfnListFocus)(int value);
 void (*gfnListSelect)(int value);
 void (*gfnListEsc)();
 bool (*gfnListYesNo)();
-UI_Item *gUiItems;
+UiItem *gUiItems;
 int gUiItemCnt;
 bool UiItemsWraps;
 char *UiTextInput;
@@ -140,7 +140,7 @@ void UiDestroy()
 	font = NULL;
 }
 
-void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), UI_Item *items, int itemCnt, bool itemsWraps, bool (*fnYesNo)())
+void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), UiItem *items, int itemCnt, bool itemsWraps, bool (*fnYesNo)())
 {
 	SelectedItem = min;
 	SelectedItemMin = min;
@@ -159,8 +159,8 @@ void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(i
 	for (int i = 0; i < itemCnt; i++) {
 		if (items[i].type == UI_EDIT) {
 			SDL_StartTextInput();
-			UiTextInput = items[i].caption;
-			UiTextInputLen = items[i].value;
+			UiTextInput = items[i].edit.value;
+			UiTextInputLen = items[i].edit.max_length;
 		}
 	}
 }
@@ -266,6 +266,8 @@ bool UiFocusNavigation(SDL_Event *event)
 		case SDLK_DELETE:
 			UiFocusNavigationYesNo();
 			return true;
+		default:
+			break;
 		}
 	}
 
@@ -285,12 +287,15 @@ bool UiFocusNavigation(SDL_Event *event)
 				return true;
 #endif
 			case SDLK_BACKSPACE:
-			case SDLK_LEFT:
+			case SDLK_LEFT: {
 				int nameLen = strlen(UiTextInput);
 				if (nameLen > 0) {
 					UiTextInput[nameLen - 1] = '\0';
 				}
 				return true;
+			}
+			default:
+				break;
 			}
 #ifdef USE_SDL1
 			if ((event->key.keysym.mod & KMOD_CTRL) == 0) {
@@ -310,6 +315,8 @@ bool UiFocusNavigation(SDL_Event *event)
 			selhero_CatToName(event->text.text, UiTextInput, UiTextInputLen);
 			return true;
 #endif
+		default:
+			break;
 		}
 	}
 
@@ -360,48 +367,10 @@ void UiFocusNavigationYesNo()
 		UiPlaySelectSound();
 }
 
-bool IsInsideRect(const SDL_Event *event, const SDL_Rect *rect)
+bool IsInsideRect(const SDL_Event &event, const SDL_Rect &rect)
 {
-	const SDL_Point point = { event->button.x, event->button.y };
-	return SDL_PointInRect(&point, rect);
-}
-
-void LoadArt(char *pszFile, Art *art, int frames, PALETTEENTRY *pPalette)
-{
-	if (art == NULL || art->surface != NULL)
-		return;
-
-	DWORD width, height, bpp;
-	if (!SBmpLoadImage(pszFile, 0, 0, 0, &width, &height, &bpp))
-		return;
-
-	Uint32 format;
-	switch (bpp) {
-	case 8:
-		format = SDL_PIXELFORMAT_INDEX8;
-		break;
-	case 24:
-		format = SDL_PIXELFORMAT_RGB888;
-		break;
-	case 32:
-		format = SDL_PIXELFORMAT_RGBA8888;
-		break;
-	default:
-		format = 0;
-		break;
-	}
-	SDL_Surface *art_surface = SDL_CreateRGBSurfaceWithFormat(SDL_SWSURFACE, width, height, bpp, format);
-
-	if (!SBmpLoadImage(pszFile, pPalette, static_cast<BYTE *>(art_surface->pixels),
-	        art_surface->pitch * art_surface->format->BytesPerPixel * height, 0, 0, 0)) {
-		SDL_Log("Failed to load image");
-		SDL_FreeSurface(art_surface);
-		return;
-	}
-
-	art->surface = art_surface;
-	art->frames = frames;
-	art->frame_height = height / frames;
+	const SDL_Point point = { event.button.x, event.button.y };
+	return SDL_PointInRect(&point, &rect);
 }
 
 void LoadMaskedArtFont(char *pszFile, Art *art, int frames, int mask)
@@ -599,10 +568,19 @@ void DrawArt(int screenX, int screenY, Art *art, int nFrame, DWORD drawW)
 	if (screenY >= SCREEN_Y + SCREEN_HEIGHT || screenX >= SCREEN_X + SCREEN_WIDTH)
 		return;
 
-	SDL_Rect src_rect = { 0, nFrame * art->h(), art->w(), art->h() };
-	if (drawW && drawW < src_rect.w)
+	SDL_Rect src_rect = {
+		0,
+		static_cast<decltype(SDL_Rect().y)>(nFrame * art->h()),
+		static_cast<decltype(SDL_Rect().w)>(art->w()),
+		static_cast<decltype(SDL_Rect().h)>(art->h())
+	};
+	if (drawW && static_cast<int>(drawW) < src_rect.w)
 		src_rect.w = drawW;
-	SDL_Rect dst_rect = { screenX + SCREEN_X, screenY + SCREEN_Y, src_rect.w, src_rect.h };
+	SDL_Rect dst_rect = {
+		static_cast<decltype(SDL_Rect().x)>(screenX + SCREEN_X),
+		static_cast<decltype(SDL_Rect().y)>(screenY + SCREEN_Y),
+		src_rect.w, src_rect.h
+	};
 
 	if (art->surface->format->BitsPerPixel == 8 && art->palette_version != pal_surface_palette_version) {
 #ifdef USE_SDL1
@@ -629,11 +607,11 @@ int GetCenterOffset(int w, int bw)
 	return (bw - w) / 2;
 }
 
-int GetStrWidth(char *str, int size)
+int GetStrWidth(const char *str, int size)
 {
 	int strWidth = 0;
 
-	for (size_t i = 0; i < strlen((char *)str); i++) {
+	for (size_t i = 0, n = strlen(str); i < n; i++) {
 		BYTE w = FontTables[size][*(BYTE *)&str[i] + 2];
 		if (w)
 			strWidth += w;
@@ -644,43 +622,43 @@ int GetStrWidth(char *str, int size)
 	return strWidth;
 }
 
-int TextAlignment(UI_Item *item, TXT_JUST align, _artFontTables size)
+int TextAlignment(const char *text, int rect_w, TXT_JUST align, _artFontTables size)
 {
 	if (align != JustLeft) {
-		int w = GetStrWidth(item->caption, size);
+		int w = GetStrWidth(text, size);
 		if (align == JustCentre) {
-			return GetCenterOffset(w, item->rect.w);
+			return GetCenterOffset(w, rect_w);
 		} else if (align == JustRight) {
-			return item->rect.w - w;
+			return rect_w - w;
 		}
 	}
 
 	return 0;
 }
 
-void WordWrap(UI_Item *item)
+void WordWrap(UiText *item)
 {
 	int lineStart = 0;
-	int len = strlen((char *)item->caption);
+	int len = strlen((char *)item->text);
 	for (int i = 0; i <= len; i++) {
-		if (item->caption[i] == '\n') {
+		if (item->text[i] == '\n') {
 			lineStart = i + 1;
 			continue;
-		} else if (item->caption[i] != ' ' && i != len) {
+		} else if (item->text[i] != ' ' && i != len) {
 			continue;
 		}
 
 		if (i != len)
-			item->caption[i] = '\0';
-		if (GetStrWidth(&item->caption[lineStart], AFT_SMALL) <= item->rect.w) {
+			item->text[i] = '\0';
+		if (GetStrWidth(&item->text[lineStart], AFT_SMALL) <= item->rect.w) {
 			if (i != len)
-				item->caption[i] = ' ';
+				item->text[i] = ' ';
 			continue;
 		}
 
 		int j;
 		for (j = i; j >= lineStart; j--) {
-			if (item->caption[j] == ' ') {
+			if (item->text[j] == ' ') {
 				break; // Scan for previous space
 			}
 		}
@@ -692,49 +670,48 @@ void WordWrap(UI_Item *item)
 		}
 
 		if (i != len)
-			item->caption[i] = ' ';
-		item->caption[j] = '\n';
+			item->text[i] = ' ';
+		item->text[j] = '\n';
 		lineStart = j + 1;
 	}
 };
 
-void DrawArtStr(UI_Item *item)
+void DrawArtStr(const char *text, const SDL_Rect &rect, int flags, bool drawTextCursor = false)
 {
 	_artFontTables size = AFT_SMALL;
-	_artFontColors color = item->flags & UIS_GOLD ? AFC_GOLD : AFC_SILVER;
+	_artFontColors color = flags & UIS_GOLD ? AFC_GOLD : AFC_SILVER;
 	TXT_JUST align = JustLeft;
 
-	if (item->flags & UIS_MED)
+	if (flags & UIS_MED)
 		size = AFT_MED;
-	else if (item->flags & UIS_BIG)
+	else if (flags & UIS_BIG)
 		size = AFT_BIG;
-	else if (item->flags & UIS_HUGE)
+	else if (flags & UIS_HUGE)
 		size = AFT_HUGE;
 
-	if (item->flags & UIS_CENTER)
+	if (flags & UIS_CENTER)
 		align = JustCentre;
-	else if (item->flags & UIS_RIGHT)
+	else if (flags & UIS_RIGHT)
 		align = JustRight;
 
-	int x = item->rect.x + TextAlignment(item, align, size);
+	int x = rect.x + TextAlignment(text, rect.w, align, size);
 
 	int sx = x;
-	int sy = item->rect.y;
-	if (item->flags & UIS_VCENTER)
-		sy += (item->rect.h - ArtFonts[size][color].h()) / 2;
+	int sy = rect.y;
+	if (flags & UIS_VCENTER)
+		sy += (rect.h - ArtFonts[size][color].h()) / 2;
 
-	for (size_t i = 0; i < strlen((char *)item->caption); i++) {
-		if (item->caption[i] == '\n') {
+	for (size_t i = 0, n = strlen(text); i < n; i++) {
+		if (text[i] == '\n') {
 			sx = x;
 			sy += ArtFonts[size][color].h();
 			continue;
 		}
-		BYTE w = FontTables[size][*(BYTE *)&item->caption[i] + 2] ? FontTables[size][*(BYTE *)&item->caption[i] + 2] : FontTables[size][0];
-		DrawArt(sx, sy, &ArtFonts[size][color], *(BYTE *)&item->caption[i], w);
+		BYTE w = FontTables[size][*(BYTE *)&text[i] + 2] ? FontTables[size][*(BYTE *)&text[i] + 2] : FontTables[size][0];
+		DrawArt(sx, sy, &ArtFonts[size][color], *(BYTE *)&text[i], w);
 		sx += w;
 	}
-
-	if (item->type == UI_EDIT && GetAnimationFrame(2, 500)) {
+	if (drawTextCursor && GetAnimationFrame(2, 500)) {
 		DrawArt(sx, sy, &ArtFonts[size][color], '|');
 	}
 }
@@ -778,38 +755,20 @@ void UiFadeIn(int steps)
 	SetFadeLevel(fadeValue);
 }
 
-void UiRenderItemDebug(UI_Item item)
-{
-	item.rect.x += 64; // pal_surface is shifted?
-	item.rect.y += SCREEN_Y;
-	if (SDL_FillRect(pal_surface, &item.rect, random(0, 255)) <= -1) {
-		SDL_Log(SDL_GetError());
-	}
-}
-
-void DrawSelector(UI_Item *item = 0)
+void DrawSelector(const SDL_Rect &rect)
 {
 	int size = FOCUS_SMALL;
-	if (item->rect.h >= 42)
+	if (rect.h >= 42)
 		size = FOCUS_BIG;
-	else if (item->rect.h >= 30)
+	else if (rect.h >= 30)
 		size = FOCUS_MED;
 	Art *art = &ArtFocus[size];
 
 	int frame = GetAnimationFrame(art->frames);
-	int y = item->rect.y + (item->rect.h - art->h()) / 2; // TODO FOCUS_MED appares higher then the box
+	int y = rect.y + (rect.h - art->h()) / 2; // TODO FOCUS_MED appares higher then the box
 
-	DrawArt(item->rect.x, y, art, frame);
-	DrawArt(item->rect.x + item->rect.w - art->w(), y, art, frame);
-}
-
-void DrawEditBox(UI_Item item)
-{
-	DrawSelector(&item);
-	item.rect.x += 43;
-	item.rect.y += 1;
-	item.rect.w -= 86;
-	DrawArtStr(&item);
+	DrawArt(rect.x, y, art, frame);
+	DrawArt(rect.x + rect.w - art->w(), y, art, frame);
 }
 
 void UiRender()
@@ -824,73 +783,120 @@ void UiRender()
 	UiFadeIn();
 }
 
-void UiRenderItems(UI_Item *items, int size)
-{
-	for (int i = 0; i < size; i++) {
-		if (items[i].flags & UIS_HIDDEN)
-			continue;
+namespace {
 
-		switch (items[i].type) {
-		case UI_EDIT:
-			DrawEditBox(items[i]);
-			break;
-		case UI_LIST:
-			if (items[i].caption == NULL)
-				continue;
-			if (SelectedItem == items[i].value)
-				DrawSelector(&items[i]);
-			DrawArtStr(&items[i]);
-			break;
-		case UI_BUTTON:
-		case UI_TEXT:
-			DrawArtStr(&items[i]);
-			break;
-		case UI_IMAGE:
-			DrawArt(items[i].rect.x, items[i].rect.y, (Art *)items[i].context, items[i].value, items[i].rect.w);
-			break;
-		default:
-			UiRenderItemDebug(items[i]);
-			break;
-		}
+void Render(const UiText &ui_text)
+{
+	DrawArtStr(ui_text.text, ui_text.rect, ui_text.flags);
+}
+
+void Render(const UiImage &ui_image)
+{
+	DrawArt(ui_image.rect.x, ui_image.rect.y, ui_image.art, ui_image.frame, ui_image.rect.w);
+}
+
+void Render(const UiButton &ui_button)
+{
+	DrawArtStr(ui_button.text, ui_button.rect, ui_button.flags);
+}
+
+void Render(const UiList &ui_list)
+{
+	for (std::size_t i = 0; i < ui_list.length; ++i) {
+		SDL_Rect rect = ui_list.itemRect(i);
+		const auto &item = ui_list.items[i];
+		if (item.value == SelectedItem)
+			DrawSelector(rect);
+		DrawArtStr(item.text, rect, ui_list.flags);
 	}
 }
 
-bool UiItemMouseEvents(SDL_Event *event, UI_Item *items, int size)
+void Render(const UiEdit &ui_edit)
+{
+	DrawSelector(ui_edit.rect);
+	SDL_Rect rect = ui_edit.rect;
+	rect.x += 43;
+	rect.y += 1;
+	rect.w -= 86;
+	DrawArtStr(ui_edit.value, rect, ui_edit.flags, /*drawTextCursor=*/true);
+}
+
+void RenderItem(const UiItem &item)
+{
+	if (item.flags() & UIS_HIDDEN)
+		return;
+	switch (item.type) {
+	case UI_TEXT:
+		Render(item.text);
+		break;
+	case UI_IMAGE:
+		Render(item.image);
+		break;
+	case UI_BUTTON:
+		Render(item.button);
+		break;
+	case UI_LIST:
+		Render(item.list);
+		break;
+	case UI_EDIT:
+		Render(item.edit);
+		break;
+	}
+}
+
+bool HandleMouseEventButton(const SDL_Event &event, const UiButton &ui_button)
+{
+	ui_button.action();
+	return true;
+}
+
+bool HandleMouseEventList(const SDL_Event &event, const UiList &ui_list)
+{
+	const UiListItem *list_item = ui_list.itemAt(event.button.y);
+	if (gfnListFocus != NULL && SelectedItem != list_item->value) {
+		UiFocus(list_item->value);
+#ifdef USE_SDL1
+	} else if (gfnListFocus == NULL) {
+#else
+	} else if (gfnListFocus == NULL || event.button.clicks >= 2) {
+#endif
+		SelectedItem = list_item->value;
+		UiFocusNavigationSelect();
+	}
+	return true;
+}
+
+bool HandleMouseEvent(const SDL_Event &event, const UiItem &item)
+{
+	if (!IsInsideRect(event, item.rect()))
+		return false;
+	switch (item.type) {
+	case UI_BUTTON:
+		return HandleMouseEventButton(event, item.button);
+	case UI_LIST:
+		return HandleMouseEventList(event, item.list);
+	default:
+		return false;
+	}
+}
+
+} // namespace
+
+void UiRenderItems(UiItem *items, int size)
+{
+	for (int i = 0; i < size; i++)
+		RenderItem(items[i]);
+}
+
+bool UiItemMouseEvents(SDL_Event *event, UiItem *items, int size)
 {
 	if (event->type != SDL_MOUSEBUTTONDOWN || event->button.button != SDL_BUTTON_LEFT) {
 		return false;
 	}
 
 	for (int i = 0; i < size; i++) {
-		if (!IsInsideRect(event, &items[i].rect)) {
-			continue;
-		}
-
-		if (items[i].type != UI_BUTTON && items[i].type != UI_LIST) {
-			continue;
-		}
-
-		if (items[i].type == UI_LIST) {
-			if (items[i].caption != NULL && *items[i].caption != '\0') {
-				if (gfnListFocus != NULL && SelectedItem != items[i].value) {
-					UiFocus(items[i].value);
-#ifdef USE_SDL1
-				} else if (gfnListFocus == NULL) {
-#else
-				} else if (gfnListFocus == NULL || event->button.clicks >= 2) {
-#endif
-					SelectedItem = items[i].value;
-					UiFocusNavigationSelect();
-				}
-			}
-
+		if (HandleMouseEvent(*event, items[i]))
 			return true;
-		}
-
-		if (items[i].context) {
-			((void (*)(int value))items[i].context)(items[i].value);
-		}
-		return true;
 	}
 
 	return false;

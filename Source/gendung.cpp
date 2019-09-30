@@ -159,12 +159,12 @@ void MakeSpeedCels()
 	}
 
 	pFrameTable = (DWORD *)pDungeonCels;
-	nDataSize = SDL_SwapLE32(pFrameTable[0]);
+	nDataSize = SwapLE32(pFrameTable[0]);
 	nlevel_frames = nDataSize & 0xFFFF;
 
 	for (i = 1; i < nlevel_frames; i++) {
 		z = i;
-		nDataSize = SDL_SwapLE32(pFrameTable[i + 1]) - SDL_SwapLE32(pFrameTable[i]);
+		nDataSize = CelGetFrameSize(pDungeonCels, i);
 		level_frame_sizes[i] = nDataSize & 0xFFFF;
 	}
 
@@ -178,14 +178,14 @@ void MakeSpeedCels()
 			blood_flag = TRUE;
 			if (level_frame_count[i] != 0) {
 				if (level_frame_types[i] != 0x1000) {
-					src = &pDungeonCels[SDL_SwapLE32(pFrameTable[i])];
+					src = CelGetFrameStart(pDungeonCels, i);
 					for (j = level_frame_sizes[i]; j; j--) {
 						pix = *src++;
 						if (pix && pix < 32)
 							blood_flag = FALSE;
 					}
 				} else {
-					src = &pDungeonCels[SDL_SwapLE32(pFrameTable[i])];
+					src = CelGetFrameStart(pDungeonCels, i);
 					for (k = 32; k; k--) {
 						for (l = 32; l;) {
 							width = *src++;
@@ -244,7 +244,7 @@ void MakeSpeedCels()
 			t = level_frame_sizes[i];
 			for (j = 1; j < blk_cnt; j++) {
 				SpeedFrameTbl[i][j] = frameidx;
-				src = &pDungeonCels[SDL_SwapLE32(pFrameTable[z])];
+				src = CelGetFrameStart(pDungeonCels, z);
 				dst = &pSpeedCels[frameidx];
 				tbl = &pLightTbl[256 * j];
 				for (k = t; k; k--) {
@@ -255,7 +255,7 @@ void MakeSpeedCels()
 		} else {
 			for (j = 1; j < blk_cnt; j++) {
 				SpeedFrameTbl[i][j] = frameidx;
-				src = &pDungeonCels[SDL_SwapLE32(pFrameTable[z])];
+				src = CelGetFrameStart(pDungeonCels, z);
 				dst = &pSpeedCels[frameidx];
 				tbl = &pLightTbl[256 * j];
 				for (k = 32; k; k--) {

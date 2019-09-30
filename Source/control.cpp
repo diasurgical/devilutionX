@@ -395,9 +395,9 @@ void SetSpell()
 	spselflag = 0;
 	if (pSpell != -1) {
 		ClearPanel();
-		drawpanflag = 255;
 		plr[myplr]._pRSpell = pSpell;
 		plr[myplr]._pRSplType = pSplType;
+		drawpanflag = 255;
 	}
 }
 
@@ -452,11 +452,8 @@ void CPrintString(int nOffset, int nCel, char col)
 	int i, nDataSize;
 	BYTE width, pix;
 	BYTE *src, *dst, *end;
-	DWORD *pFrameTable;
 
-	pFrameTable = (DWORD *)&pPanelText[4 * nCel];
-	src = &pPanelText[SDL_SwapLE32(pFrameTable[0])];
-	nDataSize = SDL_SwapLE32(pFrameTable[1]) - SDL_SwapLE32(pFrameTable[0]);
+	src = CelGetFrame(pPanelText, nCel, &nDataSize);
 	end = &src[nDataSize];
 	dst = &gpBuffer[nOffset];
 

@@ -19,7 +19,7 @@ void dthread_remove_player(int pnum)
 	sgMemCrit.Enter();
 	for (pkt = sgpInfoHead; pkt; pkt = pkt->pNext) {
 		if (pkt->dwSpaceLeft == pnum)
-			pkt->dwSpaceLeft = 4;
+			pkt->dwSpaceLeft = MAX_PLRS;
 	}
 	sgMemCrit.Leave();
 }
@@ -94,7 +94,7 @@ unsigned int __stdcall dthread_handler(void *)
 		sgMemCrit.Leave();
 
 		if (pkt) {
-			if (pkt->dwSpaceLeft != 4)
+			if (pkt->dwSpaceLeft != MAX_PLRS)
 				multi_send_zero_packet(pkt->dwSpaceLeft, pkt->data[0], &pkt->data[8], *(DWORD *)&pkt->data[4]);
 
 			dwMilliseconds = 1000 * *(DWORD *)&pkt->data[4] / gdwDeltaBytesSec;

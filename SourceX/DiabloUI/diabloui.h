@@ -1,7 +1,11 @@
 #pragma once
 
+#include <cstddef>
 #include <SDL.h>
 #include <SDL_ttf.h>
+
+#include "art.h"
+#include "ui_item.h"
 
 namespace dvl {
 
@@ -29,63 +33,6 @@ typedef enum _artFontColors {
 	AFC_GOLD,
 } _artFontColors;
 
-typedef enum UiTypes {
-	UI_TEXT,
-	UI_IMAGE,
-	UI_BUTTON,
-	UI_LIST,
-	UI_EDIT,
-} UiTypes;
-
-typedef enum UiFlags {
-	UIS_SMALL = 1 << 0,
-	UIS_MED = 1 << 1,
-	UIS_BIG = 1 << 2,
-	UIS_HUGE = 1 << 3,
-	UIS_CENTER = 1 << 4,
-	UIS_RIGHT = 1 << 5,
-	UIS_VCENTER = 1 << 6,
-	UIS_SILVER = 1 << 7,
-	UIS_GOLD = 1 << 8,
-	UIS_SML1 = 1 << 9,
-	UIS_SML2 = 1 << 10,
-	UIS_LIST = 1 << 11,
-	UIS_DISABLED = 1 << 12,
-	UIS_HIDDEN = 1 << 13,
-} UiFlags;
-
-struct Art {
-	SDL_Surface *surface = NULL;
-	int frames = 1;
-	int frame_height = 0;
-	unsigned int palette_version = 0;
-
-	int w() const
-	{
-		return surface->w;
-	}
-
-	int h() const
-	{
-		return frame_height;
-	}
-
-	void Unload()
-	{
-		SDL_FreeSurface(surface);
-		surface = NULL;
-	}
-};
-
-typedef struct UI_Item {
-	SDL_Rect rect;
-	UiTypes type;
-	int flags;
-	int value;
-	char *caption;
-	const void *context;
-} UI_Item;
-
 extern TTF_Font *font;
 
 extern BYTE *FontTables[4];
@@ -110,26 +57,25 @@ constexpr size_t size(T (&)[N])
 
 extern void (*gfnSoundFunction)(char *file);
 
-bool IsInsideRect(const SDL_Event *event, const SDL_Rect *rect);
+bool IsInsideRect(const SDL_Event &event, const SDL_Rect &rect);
 void UiFadeIn(int steps = 16);
 bool UiFocusNavigation(SDL_Event *event);
-bool UiItemMouseEvents(SDL_Event *event, UI_Item *items, int size);
+bool UiItemMouseEvents(SDL_Event *event, UiItem *items, int size);
 int GetAnimationFrame(int frames, int fps = 60);
 int GetCenterOffset(int w, int bw = 0);
 void DrawArt(int screenX, int screenY, Art *art, int nFrame = 0, DWORD drawW = 0);
 void DrawLogo(int t = 0, int size = LOGO_MED);
 void DrawMouse();
-void LoadArt(char *pszFile, Art *art, int frames = 1, PALETTEENTRY *pPalette = NULL);
 void LoadBackgroundArt(char *pszFile);
 void LoadMaskedArtFont(char *pszFile, Art *art, int frames, int mask = 250);
 void SetMenu(int MenuId);
 void UiFocusNavigationSelect();
 void UiFocusNavigationEsc();
 void UiFocusNavigationYesNo();
-void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), UI_Item *items, int size, bool wraps = false, bool (*fnYesNo)() = NULL);
+void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), UiItem *items, int size, bool wraps = false, bool (*fnYesNo)() = NULL);
 void UiRender();
-void UiRenderItems(UI_Item *items, int size);
-void WordWrap(UI_Item *item);
+void UiRenderItems(UiItem *items, int size);
+void WordWrap(UiText *item);
 
 void DvlIntSetting(const char *valuename, int *value);
 void DvlStringSetting(const char *valuename, char *string, int len);

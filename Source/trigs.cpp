@@ -592,15 +592,15 @@ BOOL ForceL4Trig()
 
 void Freeupstairs()
 {
-	int i, yy, xx, tx, ty;
+	int i, tx, ty, yy, xx;
 
 	for (i = 0; i < numtrigs; i++) {
 		tx = trigs[i]._tx;
 		ty = trigs[i]._ty;
 
-		for (yy = 0; yy < MAXTRIGGERS; yy++) {
-			for (xx = 0; xx < MAXTRIGGERS; xx++) {
-				dFlags[tx - 2 + xx][ty - 2 + yy] |= BFLAG_POPULATED;
+		for (yy = -2; yy <= 2; yy++) {
+			for (xx = -2; xx <= 2; xx++) {
+				dFlags[tx + xx][ty + yy] |= BFLAG_POPULATED;
 			}
 		}
 	}
