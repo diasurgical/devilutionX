@@ -57,6 +57,7 @@ if(AMIGA)
   set(NONET ON)
   set(USE_SDL1 "Use SDL1.2 instead of SDL2" ON)
   find_package(Freetype REQUIRED)
+  set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -fexceptions")
 endif()
 
 if(DIST)
@@ -370,7 +371,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
   add_definitions(-D_GNU_SOURCE)
 endif()
 
