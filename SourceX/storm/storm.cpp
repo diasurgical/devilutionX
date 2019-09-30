@@ -309,19 +309,15 @@ HWND SDrawGetFrameWindow(HWND *sdraw_framewindow)
 void *SMemAlloc(unsigned int amount, char *logfilename, int logline, int defaultValue)
 {
 	// fprintf(stderr, "%s: %d (%s:%d)\n", __FUNCTION__, amount, logfilename, logline);
-	//assert(amount != -1u);
-	if (amount)
-		return malloc(amount);
-	else
-		printf("%s: %d (%s:%d)\n", __FUNCTION__, amount, logfilename, logline);
+	assert(amount != -1u);
+	return malloc(amount);
 }
 
 BOOL SMemFree(void *location, char *logfilename, int logline, char defaultValue)
 {
 	// fprintf(stderr, "%s: (%s:%d)\n", __FUNCTION__, logfilename, logline);
 	assert(location);
-	if (location)
-		free(location);
+	free(location);
 	return true;
 }
 

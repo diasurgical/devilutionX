@@ -424,10 +424,8 @@ void InitFont()
 		return;
 	}
 
-#ifndef USE_SDL1
 	TTF_SetFontKerning(font, false);
 	TTF_SetFontHinting(font, TTF_HINTING_MONO);
-#endif
 }
 
 void UiInitialize()

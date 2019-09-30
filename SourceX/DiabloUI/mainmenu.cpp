@@ -6,12 +6,6 @@ namespace dvl {
 int mainmenu_attract_time_out; //seconds
 DWORD dwAttractTicks;
 
-#ifdef NONET
-#define REDPOS 43
-#else
-#define REDPOS 0
-#endif
-
 int MainMenuResult;
 UiListItem MAINMENU_DIALOG_ITEMS[] = {
 	{"Single Player", MAINMENU_SINGLE_PLAYER},
