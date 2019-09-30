@@ -72,13 +72,24 @@ jobs:
       - run: cd build && cmake .. -DBINARY_RELEASE=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/switch/devkita64-libnx.cmake
       - run: cd build && cmake --build . -j $(nproc)
       - store_artifacts: {path: ./build/devilutionx.nro, destination: devilutionx.nro}
+  amigaos-m68k:
+    docker:
+      - image: amigadev/crosstools:m68k-amigaos
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: Packaging/amiga/prep.sh
+      - run: cd build && PKG_CONFIG_PATH=/opt/m68k-amigaos/lib/pkgconfig/:/opt/m68k-amigaos/share/pkgconfig/ cmake -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-s -ffast-math -O3 -noixemul -D__BIG_ENDIAN__ -D__AMIGA__ -fpermissive" ..
+      - run: cd build && make -j$(nproc)
+      - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_m68k}
 
 workflows:
   version: 2
   testflow:
     jobs:
       - linux_x86_64
-      - linux_x86
       - windows_x86
+      - linux_x86
       - linux_x86_64_sdl1
       - switch
+      - amigaos-m68k
