@@ -96,10 +96,10 @@ void selgame_GameSelection_Focus(int value)
 {
 	switch (value) {
 	case 0:
-		sprintf(selgame_Description, "Create a new game with a difficulty setting of your choice.");
+		strcpy(selgame_Description, "Create a new game with a difficulty setting of your choice.");
 		break;
 	case 1:
-		sprintf(selgame_Description, "Enter an IP and join a game already in progress at that address.");
+		strcpy(selgame_Description, "Enter an IP and join a game already in progress at that address.");
 		break;
 	}
 	WordWrap(&SELGAME_DESCRIPTION);
@@ -131,16 +131,16 @@ void selgame_Diff_Focus(int value)
 {
 	switch (value) {
 	case DIFF_NORMAL:
-		sprintf(selgame_Label, "Normal");
-		sprintf(selgame_Description, "Normal Difficulty\nThis is where a starting character should begin the quest to defeat Diablo.");
+		strcpy(selgame_Label, "Normal");
+		strcpy(selgame_Description, "Normal Difficulty\nThis is where a starting character should begin the quest to defeat Diablo.");
 		break;
 	case DIFF_NIGHTMARE:
-		sprintf(selgame_Label, "Nightmare");
-		sprintf(selgame_Description, "Nightmare Difficulty\nThe denizens of the Labyrinth have been bolstered and will prove to be a greater challenge. This is recommended for experienced characters only.");
+		strcpy(selgame_Label, "Nightmare");
+		strcpy(selgame_Description, "Nightmare Difficulty\nThe denizens of the Labyrinth have been bolstered and will prove to be a greater challenge. This is recommended for experienced characters only.");
 		break;
 	case DIFF_HELL:
-		sprintf(selgame_Label, "Hell");
-		sprintf(selgame_Description, "Hell Difficulty\nThe most powerful of the underworld's creatures lurk at the gateway into Hell. Only the most experienced characters should venture in this realm.");
+		strcpy(selgame_Label, "Hell");
+		strcpy(selgame_Description, "Hell Difficulty\nThe most powerful of the underworld's creatures lurk at the gateway into Hell. Only the most experienced characters should venture in this realm.");
 		break;
 	}
 	WordWrap(&SELGAME_DESCRIPTION);

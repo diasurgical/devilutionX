@@ -53,9 +53,9 @@ BOOL UiSelHeroDelYesNoDialog(
 	LoadBackgroundArt("ui_art\\black.pcx");
 
 	if (isMultiplayer) {
-		sprintf(selyesno_title, "Delete Multi Player Hero");
+		strcpy(selyesno_title, "Delete Multi Player Hero");
 	} else {
-		sprintf(selyesno_title, "Delete Single Player Hero");
+		strcpy(selyesno_title, "Delete Single Player Hero");
 	}
 
 	sprintf(selyesno_confirmationMessage, "Are you sure you want to delete the character \"%s\"?", selyesno_heroInfo.name);

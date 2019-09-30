@@ -5,8 +5,6 @@ namespace net {
 
 #ifndef NONET
 static constexpr bool disable_encryption = false;
-#else
-static constexpr bool disable_encryption = true;
 #endif
 
 const buffer_t &packet::data()
@@ -106,6 +104,7 @@ void packet_in::decrypt()
 		ABORT();
 	if (have_decrypted)
 		return;
+#ifndef NONET
 	if (!disable_encryption) {
 #ifndef NONET
 		if (encrypted_buffer.size() < crypto_secretbox_NONCEBYTES
@@ -124,8 +123,9 @@ void packet_in::decrypt()
 				encrypted_buffer.data(),
 				key.data()))
 			throw packet_exception();
+	} else
 #endif
-	} else {
+	{
 		if (encrypted_buffer.size() < sizeof(packet_type) + 2 * sizeof(plr_t))
 			throw packet_exception();
 		decrypted_buffer = encrypted_buffer;

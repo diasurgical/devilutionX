@@ -71,7 +71,6 @@ set(CMAKE_THREAD_PREFER_PTHREAD ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 find_package(Threads REQUIRED)
-
 if(NOT NONET)
   find_package(sodium REQUIRED)
 endif()
@@ -188,7 +187,7 @@ add_library(devilution STATIC
   Source/trigs.cpp
   Source/wave.cpp)
 
-set(SOURCES
+set(devilutionx_SRCS
   SourceX/dx.cpp
   SourceX/miniwin/misc.cpp
   SourceX/miniwin/misc_io.cpp
@@ -222,13 +221,13 @@ set(SOURCES
   ./Packaging/resources/CharisSILB.ttf)
 
 if(NOT NONET)
-  list(APPEND SOURCES
+  list(APPEND devilutionx_SRCS
     SourceX/dvlnet/tcp_client.cpp
     SourceX/dvlnet/tcp_server.cpp
     SourceX/dvlnet/udp_p2p.cpp)
 endif()
 
-add_executable(devilutionx MACOSX_BUNDLE ${SOURCES})
+add_executable(devilutionx MACOSX_BUNDLE ${devilutionx_SRCS})
 
 configure_file(SourceS/config.h.in config.h @ONLY)
 target_include_directories(devilution PUBLIC Source SourceS ${CMAKE_CURRENT_BINARY_DIR})
@@ -276,6 +275,10 @@ target_link_libraries(devilutionx PRIVATE
   smacker
   Radon)
 
+if(NOT NONET)
+  target_link_libraries(devilutionx PRIVATE sodium)
+endif()
+
 if(USE_SDL1)
   target_link_libraries(devilutionx PRIVATE
     ${SDL_TTF_LIBRARY}
@@ -300,8 +303,7 @@ else()
     ${SDL2_ttf_LIBRARY}
     ${SDL2_mixer_LIBRARY}
     ${FREETYPE_LIBRARIES}
-    ${PNG_LIBRARIES}
-    ${sodium_LIBRARY_RELEASE})
+    ${PNG_LIBRARIES})
 endif()
 
 if(AMIGA AND NOT WARPOS)
@@ -328,9 +330,7 @@ foreach(target devilution devilutionx)
       SDL2::SDL2_mixer)
   endif()
 
-  if(NOT NONET)
-    target_link_libraries(devilutionx PRIVATE ${sodium_LIBRARY_RELEASE})
-  else()
+  if(NONET)
     target_compile_definitions(${target} PRIVATE NONET)
   endif()
 
