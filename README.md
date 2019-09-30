@@ -150,6 +150,8 @@ make -j$(nproc)
 ### General
 The default build type is `Debug`. This can be changed with `-DBINARY_RELEASE=ON`. Independently of this, the debug mode of the Diablo engine is always enabled by default. It can be disabled with `-DDEBUG=OFF`. Finally, in debug builds the address sanitizer is enabled by default. This can be disabled with `-DASAN=OFF`.
 You can also generate 32bit builds on 64bit platforms by setting `-DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake` (remember to use the `linux32` command if on Linux).
+Network support can be deiabled using `-DNONET`, this also removes the need for the ASIO and Sodium dependencies
+
 ### mingw32
 Use `-DCROSS_PREFIX=/path/to/prefix` if the `i686-w64-mingw32` directory is not in `/usr`.
 ### Use SDL v1 instead of SDL v2.
