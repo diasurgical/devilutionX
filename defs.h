@@ -184,3 +184,6 @@ typedef void (*_PVFV)(void);
 #else
 #define ALIGN_BY_1
 #endif
+
+#define SwapLE32 SDL_SwapLE32
+#define SwapLE16 SDL_SwapLE16

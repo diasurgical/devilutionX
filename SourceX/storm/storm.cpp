@@ -21,12 +21,11 @@ bool directFileAccess = false;
 
 static std::string getIniPath()
 {
-	char path[DVL_MAX_PATH], file_path[DVL_MAX_PATH];
-
+	char path[DVL_MAX_PATH];
 	GetPrefPath(path, DVL_MAX_PATH);
-	snprintf(file_path, DVL_MAX_PATH, "%sdiablo.ini", path);
-
-	return file_path;
+	std::string result = path;
+	result.append("diablo.ini");
+	return result;
 }
 
 static radon::File ini(getIniPath());
@@ -35,6 +34,12 @@ static Mix_Chunk *SFileChunk;
 void GetBasePath(char *buffer, size_t size)
 {
 	char *path = SDL_GetBasePath();
+	if (path == NULL) {
+		SDL_Log(SDL_GetError());
+		buffer[0] = '\0';
+		return;
+	}
+
 	snprintf(buffer, size, "%s", path);
 	SDL_free(path);
 }
@@ -42,6 +47,11 @@ void GetBasePath(char *buffer, size_t size)
 void GetPrefPath(char *buffer, size_t size)
 {
 	char *path = SDL_GetPrefPath("diasurgical", "devilution");
+	if (path == NULL) {
+		buffer[0] = '\0';
+		return;
+	}
+
 	snprintf(buffer, size, "%s", path);
 	SDL_free(path);
 }
@@ -156,7 +166,7 @@ BOOL SFileOpenFile(const char *filename, HANDLE *phFile)
 	if (directFileAccess) {
 		char directPath[DVL_MAX_PATH] = "\0";
 		for (size_t i = 0; i < strlen(filename); i++) {
-			directPath[i] = AsciiToLowerTable_Path[filename[i]];
+			directPath[i] = AsciiToLowerTable_Path[static_cast<unsigned char>(filename[i])];
 		}
 		result = SFileOpenFileEx((HANDLE)0, directPath, 0xFFFFFFFF, phFile);
 	}
@@ -480,7 +490,7 @@ private:
 	{
 		AudioQueueItem *item;
 		while ((item = Next()) != NULL) {
-			if (out_len <= item->len) {
+			if (static_cast<unsigned long>(out_len) <= item->len) {
 				SDL_MixAudio(out, item->pos, out_len, SDL_MIX_MAXVOLUME);
 				item->pos += out_len;
 				item->len -= out_len;
@@ -725,10 +735,15 @@ BOOL SVidPlayContinue(void)
 		} else {
 			factor = wFactor;
 		}
-		int scaledW = SVidWidth * factor;
-		int scaledH = SVidHeight * factor;
+		const int scaledW = SVidWidth * factor;
+		const int scaledH = SVidHeight * factor;
 
-		SDL_Rect pal_surface_offset = { (SCREEN_WIDTH - scaledW) / 2, (SCREEN_HEIGHT - scaledH) / 2, scaledW, scaledH };
+		SDL_Rect pal_surface_offset = {
+			static_cast<decltype(SDL_Rect().x)>((SCREEN_WIDTH - scaledW) / 2),
+			static_cast<decltype(SDL_Rect().y)>((SCREEN_HEIGHT - scaledH) / 2),
+			static_cast<decltype(SDL_Rect().w)>(scaledW),
+			static_cast<decltype(SDL_Rect().h)>(scaledH)
+		};
 #ifdef USE_SDL1
 		SDL_Surface *tmp = SDL_ConvertSurface(SVidSurface, window->format, 0);
 		// NOTE: Consider resolution switching instead if video doesn't play

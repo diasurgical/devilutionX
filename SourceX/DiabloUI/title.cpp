@@ -17,9 +17,9 @@ void title_Free()
 
 BOOL UiTitleDialog(int a1)
 {
-	UI_Item TITLESCREEN_DIALOG[] = {
-		{ { 0, 0, 640, 480 }, UI_IMAGE, 0, 0, NULL, &ArtBackground },
-		{ { 49, 410, 550, 26 }, UI_TEXT, UIS_MED | UIS_CENTER, 0, "Copyright \xA9 1996-2001 Blizzard Entertainment" },
+	UiItem TITLESCREEN_DIALOG[] = {
+		UiImage(&ArtBackground, { 0, 0, 640, 480 }),
+		UiText("Copyright \xA9 1996-2001 Blizzard Entertainment", { 49, 410, 550, 26 }, UIS_MED | UIS_CENTER)
 	};
 
 	title_Load();

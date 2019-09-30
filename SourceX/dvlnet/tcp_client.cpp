@@ -17,6 +17,7 @@ int tcp_client::create(std::string addrstr, std::string passwd)
 		local_server.reset(new tcp_server(ioc, addrstr, port, passwd));
 		return join(local_server->localhost_self(), passwd);
 	} catch (std::system_error &e) {
+		eprintf("%s\n", e.what());
 		return -1;
 	}
 }
@@ -33,6 +34,7 @@ int tcp_client::join(std::string addrstr, std::string passwd)
 		asio::ip::tcp::no_delay option(true);
 		sock.set_option(option);
 	} catch (std::exception &e) {
+		eprintf("%s\n", e.what());
 		return -1;
 	}
 	start_recv();
@@ -97,11 +99,18 @@ void tcp_client::handle_send(const asio::error_code &error, size_t bytes_sent)
 
 void tcp_client::send(packet &pkt)
 {
-	auto frame = std::make_shared<buffer_t>(frame_queue::make_frame(pkt.data()));
+	const auto *frame = new buffer_t(frame_queue::make_frame(pkt.data()));
 	auto buf = asio::buffer(*frame);
-	asio::async_write(sock, buf, [this, frame = std::move(frame)](const asio::error_code &error, size_t bytes_sent) {
+	asio::async_write(sock, buf, [this, frame](const asio::error_code &error, size_t bytes_sent) {
 		handle_send(error, bytes_sent);
+		delete frame;
 	});
+}
+
+bool tcp_client::SNetLeaveGame(int type){
+	if(sock.is_open())
+		sock.close();
+	return true;
 }
 
 } // namespace net

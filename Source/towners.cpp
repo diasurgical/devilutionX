@@ -672,11 +672,11 @@ void TalkToTowner(int p, int t)
 			towner[t]._tVar1 = p;
 			quests[QTYPE_BUTCH]._qvar1 = 1;
 #ifndef SPAWN
-			if (plr[p]._pClass == 0 && !effect_is_playing(PS_WARR8)) {
+			if (plr[p]._pClass == PC_WARRIOR && !effect_is_playing(PS_WARR8)) {
 				PlaySFX(PS_WARR8);
-			} else if (plr[p]._pClass == 1 && !effect_is_playing(PS_ROGUE8)) {
+			} else if (plr[p]._pClass == PC_ROGUE && !effect_is_playing(PS_ROGUE8)) {
 				PlaySFX(PS_ROGUE8);
-			} else if (plr[p]._pClass == 2 && !effect_is_playing(PS_MAGE8)) {
+			} else if (plr[p]._pClass == PC_SORCERER && !effect_is_playing(PS_MAGE8)) {
 				PlaySFX(PS_MAGE8);
 			}
 #endif

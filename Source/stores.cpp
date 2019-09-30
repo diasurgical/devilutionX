@@ -197,16 +197,17 @@ void PrintSString(int x, int y, BOOL cjustflag, char *str, char col, int val)
 
 void DrawSLine(int y)
 {
-	int xy, yy, width, line;
+	int xy, yy, width, line, sy;
 
+	sy = SStringY[y];
 	if (stextsize == 1) {
 		xy = SCREENXY(26, 25);
-		yy = PitchTbl[SStringY[y] + 198] + 26 + 64;
+		yy = PitchTbl[sy + 198] + 26 + 64;
 		width = 586 / 4;
 		line = BUFFER_WIDTH - 586;
 	} else {
 		xy = SCREENXY(346, 25);
-		yy = PitchTbl[SStringY[y] + 198] + 346 + 64;
+		yy = PitchTbl[sy + 198] + 346 + 64;
 		width = 266 / 4;
 		line = BUFFER_WIDTH - 266;
 	}
@@ -309,9 +310,9 @@ void StoreAutoPlace()
 	int i, w, h, idx;
 
 	SetICursor(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
-	done = FALSE;
 	w = icursW28;
 	h = icursH28;
+	done = FALSE;
 	if (w == 1 && h == 1) {
 		idx = plr[myplr].HoldItem.IDidx;
 		if (plr[myplr].HoldItem._iStatFlag && AllItemsList[idx].iUsable) {
@@ -432,6 +433,8 @@ void S_ScrollSBuy(int idx)
 void PrintStoreItem(ItemStruct *x, int l, char iclr)
 {
 	char sstr[128];
+	char str, dex;
+	BYTE mag;
 
 	sstr[0] = '\0';
 	if (x->_iIdentified) {
@@ -471,7 +474,10 @@ void PrintStoreItem(ItemStruct *x, int l, char iclr)
 	}
 	if (!x->_itype)
 		sstr[0] = '\0';
-	if (!(x->_iMinStr + x->_iMinMag + x->_iMinDex)) {
+	str = x->_iMinStr;
+	dex = x->_iMinDex;
+	mag = x->_iMinMag;
+	if (!(str + mag + dex)) {
 		strcat(sstr, "No required attributes");
 	} else {
 		strcpy(tempstr, "Required:");
@@ -483,10 +489,10 @@ void PrintStoreItem(ItemStruct *x, int l, char iclr)
 			sprintf(tempstr, "%s %i Dex", tempstr, x->_iMinDex);
 		strcat(sstr, tempstr);
 	}
-	AddSText(40, l, 0, sstr, iclr, 0);
+	AddSText(40, l++, 0, sstr, iclr, 0);
 	if (x->_iMagical == ITEM_QUALITY_UNIQUE) {
 		if (x->_iIdentified)
-			AddSText(40, l + 1, 0, "Unique Item", iclr, 0);
+			AddSText(40, l, 0, "Unique Item", iclr, 0);
 	}
 }
 

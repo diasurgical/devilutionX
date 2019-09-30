@@ -27,6 +27,7 @@ if(BINARY_RELEASE)
   set(DEBUG OFF)
   set(DIST ON)
   set(FASTER OFF)
+  set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
 endif()
 
 if(NIGHTLY_BUILD)
@@ -63,11 +64,11 @@ if(DIST)
   set(sodium_USE_STATIC_LIBS ON)
 endif()
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
-set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
-set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_THREAD_PREFER_PTHREAD ON)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 find_package(Threads REQUIRED)
 
@@ -205,6 +206,7 @@ set(SOURCES
   SourceX/dvlnet/packet.cpp
   SourceX/dvlnet/base.cpp
   SourceX/dvlnet/frame_queue.cpp
+  SourceX/DiabloUI/art.cpp
   SourceX/DiabloUI/credits.cpp
   SourceX/DiabloUI/diabloui.cpp
   SourceX/DiabloUI/dialogs.cpp
@@ -381,7 +383,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
   # Style issues
   target_compile_options(devilutionx PRIVATE -Wno-parentheses -Wno-logical-op-parentheses -Wno-bitwise-op-parentheses)
   # Silence warnings about __int64 alignment hack not always being applicable

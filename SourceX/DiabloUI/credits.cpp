@@ -513,7 +513,7 @@ void credts_Render()
 
 			int offset = 0;
 			int x = 31;
-			int y = (i * lineHeight) - ybase - lineHeight;
+			const int y = (i * lineHeight) - ybase - lineHeight;
 			if (*the_long_credits[creditLine + i] == '	') {
 				offset = 1;
 				x += 40;
@@ -522,16 +522,29 @@ void credts_Render()
 			text_surface = TTF_RenderUTF8_Solid(font, the_long_credits[creditLine + i] + offset, color);
 			shadow_surface = TTF_RenderUTF8_Solid(font, the_long_credits[creditLine + i] + offset, black_color);
 			if (text_surface && shadow_surface) {
-				SDL_Rect src_rect = { 0, -y, text_surface->w, 251 };
+				SDL_Rect src_rect = {
+					0,
+					static_cast<decltype(SDL_Rect().y)>(-y),
+					static_cast<decltype(SDL_Rect().w)>(text_surface->w),
+					251
+				};
 
 				// draw text shadow.
-				SDL_Rect dsc_rect2 = { 64 + x + 2, SCREEN_Y + 114 + 2, src_rect.w, src_rect.h };
+				SDL_Rect dsc_rect2 = {
+					static_cast<decltype(SDL_Rect().x)>(SCREEN_X + x + 2),
+					SCREEN_Y + 114 + 2,
+					src_rect.w, src_rect.h
+				};
 				if (SDL_BlitSurface(shadow_surface, &src_rect, pal_surface, &dsc_rect2) <= -1) {
 					SDL_Log(SDL_GetError());
 				}
 
 				// draw text.
-				SDL_Rect dsc_rect = { 64 + x, SCREEN_Y + 114, src_rect.w, src_rect.h };
+				SDL_Rect dsc_rect = {
+					static_cast<decltype(SDL_Rect().x)>(SCREEN_X + x),
+					SCREEN_Y + 114,
+					src_rect.w, src_rect.h
+				};
 				if (SDL_BlitSurface(text_surface, &src_rect, pal_surface, &dsc_rect) <= -1) {
 					SDL_Log(SDL_GetError());
 				}

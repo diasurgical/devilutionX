@@ -694,7 +694,7 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		ProgramData.versionid = 42;
 		ProgramData.maxplayers = MAX_PLRS;
 		ProgramData.initdata = &sgGameInitInfo;
-		ProgramData.initdatabytes = 8;
+		ProgramData.initdatabytes = sizeof(sgGameInitInfo);
 		ProgramData.optcategorybits = 15;
 		ProgramData.lcid = 1033; /* LANG_ENGLISH */
 		memset(&plrdata, 0, sizeof(plrdata));

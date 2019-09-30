@@ -73,24 +73,21 @@ void InitAutomap()
 	switch (leveltype) {
 	case DTYPE_CATHEDRAL:
 		pAFile = LoadFileInMem("Levels\\L1Data\\L1.AMP", &dwTiles);
-		dwTiles >>= 1;
 		break;
 	case DTYPE_CATACOMBS:
 		pAFile = LoadFileInMem("Levels\\L2Data\\L2.AMP", &dwTiles);
-		dwTiles >>= 1;
 		break;
 	case DTYPE_CAVES:
 		pAFile = LoadFileInMem("Levels\\L3Data\\L3.AMP", &dwTiles);
-		dwTiles >>= 1;
 		break;
 	case DTYPE_HELL:
 		pAFile = LoadFileInMem("Levels\\L4Data\\L4.AMP", &dwTiles);
-		dwTiles >>= 1;
 		break;
 	default:
 		return;
 	}
 
+	dwTiles >>= 1;
 	pTmp = pAFile;
 
 	for (i = 1; i <= dwTiles; i++) {

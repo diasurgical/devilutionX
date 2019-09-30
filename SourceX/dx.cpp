@@ -192,11 +192,18 @@ HRESULT CreatePalette()
 
 HRESULT BltFast(DWORD dwX, DWORD dwY, LPRECT lpSrcRect)
 {
-	int w = lpSrcRect->right - lpSrcRect->left + 1;
-	int h = lpSrcRect->bottom - lpSrcRect->top + 1;
-
-	SDL_Rect src_rect = { lpSrcRect->left, lpSrcRect->top, w, h };
-	SDL_Rect dst_rect = { (int)dwX, (int)dwY, w, h };
+	auto w = static_cast<decltype(SDL_Rect().w)>(lpSrcRect->right - lpSrcRect->left + 1);
+	auto h = static_cast<decltype(SDL_Rect().h)>(lpSrcRect->bottom - lpSrcRect->top + 1);
+	SDL_Rect src_rect = {
+		static_cast<decltype(SDL_Rect().x)>(lpSrcRect->left),
+		static_cast<decltype(SDL_Rect().y)>(lpSrcRect->top),
+		w, h
+	};
+	SDL_Rect dst_rect = {
+		static_cast<decltype(SDL_Rect().x)>(dwX),
+		static_cast<decltype(SDL_Rect().y)>(dwY),
+		w, h
+	};
 
 	// Convert from 8-bit to 32-bit
 	if (SDL_BlitSurface(pal_surface, &src_rect, surface, &dst_rect) <= -1) {

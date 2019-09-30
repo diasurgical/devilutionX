@@ -285,41 +285,41 @@ BOOL SpecialThemeFit(int i, int t)
 	case THEME_BLOODFOUNTAIN:
 		if (rv) {
 			rv = TFit_Obj5(i);
-			if (rv) {
-				bFountainFlag = FALSE;
-			}
+		}
+		if (rv) {
+			bFountainFlag = FALSE;
 		}
 		break;
 	case THEME_PURIFYINGFOUNTAIN:
 		if (rv) {
 			rv = TFit_Obj5(i);
-			if (rv) {
-				pFountainFlag = FALSE;
-			}
+		}
+		if (rv) {
+			pFountainFlag = FALSE;
 		}
 		break;
 	case THEME_MURKYFOUNTAIN:
 		if (rv) {
 			rv = TFit_Obj5(i);
-			if (rv) {
-				mFountainFlag = FALSE;
-			}
+		}
+		if (rv) {
+			mFountainFlag = FALSE;
 		}
 		break;
 	case THEME_TEARFOUNTAIN:
 		if (rv) {
 			rv = TFit_Obj5(i);
-			if (rv) {
-				tFountainFlag = FALSE;
-			}
+		}
+		if (rv) {
+			tFountainFlag = FALSE;
 		}
 		break;
 	case THEME_CAULDRON:
 		if (rv) {
 			rv = TFit_Obj5(i);
-			if (rv) {
-				cauldronFlag = FALSE;
-			}
+		}
+		if (rv) {
+			cauldronFlag = FALSE;
 		}
 		break;
 	case THEME_GOATSHRINE:
@@ -338,7 +338,7 @@ BOOL SpecialThemeFit(int i, int t)
 		break;
 	case THEME_TREASURE:
 		rv = treasureFlag;
-		if (treasureFlag) {
+		if (rv) {
 			treasureFlag = FALSE;
 		}
 		break;

@@ -603,25 +603,34 @@ SDL_UpperBlitScaled(SDL_Surface *src, SDL_Rect *srcrect,
 	dst_y0 += dst->clip_rect.y;
 	dst_y1 += dst->clip_rect.y;
 
-	final_src.x = (int)SDL_floor(src_x0 + 0.5);
-	final_src.y = (int)SDL_floor(src_y0 + 0.5);
-	final_src.w = (int)SDL_floor(src_x1 + 1 + 0.5) - (int)SDL_floor(src_x0 + 0.5);
-	final_src.h = (int)SDL_floor(src_y1 + 1 + 0.5) - (int)SDL_floor(src_y0 + 0.5);
+	final_src.x = (Sint16)SDL_floor(src_x0 + 0.5);
+	final_src.y = (Sint16)SDL_floor(src_y0 + 0.5);
+	src_w = (int)SDL_floor(src_x1 + 1 + 0.5) - (int)SDL_floor(src_x0 + 0.5);
+	src_h = (int)SDL_floor(src_y1 + 1 + 0.5) - (int)SDL_floor(src_y0 + 0.5);
+	if (src_w < 0)
+		src_w = 0;
+	if (src_h < 0)
+		src_h = 0;
 
-	final_dst.x = (int)SDL_floor(dst_x0 + 0.5);
-	final_dst.y = (int)SDL_floor(dst_y0 + 0.5);
-	final_dst.w = (int)SDL_floor(dst_x1 - dst_x0 + 1.5);
-	final_dst.h = (int)SDL_floor(dst_y1 - dst_y0 + 1.5);
+	final_src.w = static_cast<Uint16>(src_w);
+	final_src.h = static_cast<Uint16>(src_h);
 
-	if (final_dst.w < 0)
-		final_dst.w = 0;
-	if (final_dst.h < 0)
-		final_dst.h = 0;
+	final_dst.x = (Sint16)SDL_floor(dst_x0 + 0.5);
+	final_dst.y = (Sint16)SDL_floor(dst_y0 + 0.5);
+	dst_w = (int)SDL_floor(dst_x1 - dst_x0 + 1.5);
+	dst_h = (int)SDL_floor(dst_y1 - dst_y0 + 1.5);
+	if (dst_w < 0)
+		dst_w = 0;
+	if (dst_h < 0)
+		dst_h = 0;
+
+	final_dst.w = static_cast<Uint16>(dst_w);
+	final_dst.h = static_cast<Uint16>(dst_h);
 
 	if (dstrect)
 		*dstrect = final_dst;
 
-	if (final_dst.w == 0 || final_dst.h == 0 || final_src.w <= 0 || final_src.h <= 0) {
+	if (final_dst.w == 0 || final_dst.h == 0 || final_src.w == 0 || final_src.h == 0) {
 		/* No-op. */
 		return 0;
 	}
@@ -774,7 +783,7 @@ inline char *SDL_GetBasePath()
 			const int rc = (int)SDL_snprintf(path, sizeof(path),
 			    "/proc/%llu/exe",
 			    (unsigned long long)getpid());
-			if ((rc > 0) && (rc < sizeof(path))) {
+			if ((rc > 0) && (static_cast<std::size_t>(rc) < sizeof(path))) {
 				retval = readSymLink(path);
 			}
 		}
