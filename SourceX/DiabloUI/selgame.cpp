@@ -26,7 +26,7 @@ UiListItem SELUDPGAME_DIALOG_ITEMS[] = {
 UiItem SELUDPGAME_DIALOG[] = {
 	UiImage(&ArtBackground, { 0, 0, 640, 480 }),
 	UiText("Join TCP/UDP Games", { 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG),
-	UiText("Description:", { 35, 256, 205, 192 }, UIS_MED),
+	UiText("Description:", { 35, 211, 205, 192 }, UIS_MED),
 	SELGAME_DESCRIPTION,
 	UiText("Select Action", { 300, 211, 295, 33 }, UIS_CENTER | UIS_BIG),
 	UiList(SELUDPGAME_DIALOG_ITEMS, 305, 255, 285, 26, UIS_CENTER | UIS_MED | UIS_GOLD),
