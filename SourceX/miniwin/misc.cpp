@@ -178,10 +178,13 @@ HWND CreateWindowExA(
 	DvlIntSetting("grab input", &grabInput);
 
 #ifdef USE_SDL1
-	int flags = SDL_SWSURFACE /*| SDL_DOUBLEBUF */| SDL_HWPALETTE;
+	int flags = SDL_SWSURFACE | SDL_HWPALETTE;
+#ifndef AMIGA
+	flags |= SDL_DOUBLEBUF;
+#endif
 	if (fullscreen) {
 		SDL_Log("fullscreen not yet supported with SDL1");
-	}
+	}	
 	flags |= fullscreen ? SDL_FULLSCREEN : SDL_RESIZABLE;
 	SDL_WM_SetCaption(lpWindowName, WINDOW_ICON_NAME);
 	SDL_SetVideoMode(nWidth, nHeight, D_BPP, flags);
