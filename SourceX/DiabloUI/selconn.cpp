@@ -60,15 +60,15 @@ void selconn_Focus(int value)
 	int players = MAX_PLRS;
 	switch (value) {
 	case 0:
-		sprintf(selconn_Description, "All computers must be connected to a TCP-compatible network.");
+		strcpy(selconn_Description, "All computers must be connected to a TCP-compatible network.");
 		players = MAX_PLRS;
 		break;
 	case 1:
-		sprintf(selconn_Description, "All computers must be connected to a UDP-compatible network.");
+		strcpy(selconn_Description, "All computers must be connected to a UDP-compatible network.");
 		players = MAX_PLRS;
 		break;
 	case 2:
-		sprintf(selconn_Description, "Play by yourself with no network exposure.");
+		strcpy(selconn_Description, "Play by yourself with no network exposure.");
 		players = 1;
 		break;
 	}

@@ -636,27 +636,28 @@ int TextAlignment(const char *text, int rect_w, TXT_JUST align, _artFontTables s
 
 void WordWrap(UiText *item)
 {
-	int lineStart = 0;
-	int len = strlen((char *)item->text);
-	for (int i = 0; i <= len; i++) {
-		if (item->text[i] == '\n') {
+	char *text = const_cast<char *>(item->text);
+	const std::size_t len = strlen(text);
+	std::size_t lineStart = 0;
+	for (std::size_t i = 0; i <= len; i++) {
+		if (text[i] == '\n') {
 			lineStart = i + 1;
 			continue;
-		} else if (item->text[i] != ' ' && i != len) {
+		} else if (text[i] != ' ' && i != len) {
 			continue;
 		}
 
 		if (i != len)
-			item->text[i] = '\0';
-		if (GetStrWidth(&item->text[lineStart], AFT_SMALL) <= item->rect.w) {
+			text[i] = '\0';
+		if (GetStrWidth(&text[lineStart], AFT_SMALL) <= item->rect.w) {
 			if (i != len)
-				item->text[i] = ' ';
+				text[i] = ' ';
 			continue;
 		}
 
-		int j;
+		std::size_t j;
 		for (j = i; j >= lineStart; j--) {
-			if (item->text[j] == ' ') {
+			if (text[j] == ' ') {
 				break; // Scan for previous space
 			}
 		}
@@ -668,8 +669,8 @@ void WordWrap(UiText *item)
 		}
 
 		if (i != len)
-			item->text[i] = ' ';
-		item->text[j] = '\n';
+			text[i] = ' ';
+		text[j] = '\n';
 		lineStart = j + 1;
 	}
 };

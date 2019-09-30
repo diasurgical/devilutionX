@@ -63,34 +63,34 @@ struct UiImage : public UiItemBase {
 };
 
 struct UiText : public UiItemBase {
-	constexpr UiText(char *text, SDL_Rect rect, int flags = 0)
+	constexpr UiText(const char *text, SDL_Rect rect, int flags = 0)
 	    : UiItemBase(rect, flags)
 	    , text(text)
 	{
 	}
 
-	char *text;
+	const char *text;
 };
 
 struct UiButton : public UiItemBase {
-	constexpr UiButton(char *text, void (*action)(), SDL_Rect rect, int flags = 0)
+	constexpr UiButton(const char *text, void (*action)(), SDL_Rect rect, int flags = 0)
 	    : UiItemBase(rect, flags)
 	    , text(text)
 	    , action(action)
 	{
 	}
 
-	char *text;
+	const char *text;
 	void (*action)();
 };
 
 struct UiListItem {
-	constexpr UiListItem(char *text = "", int value = 0)
+	constexpr UiListItem(const char *text = "", int value = 0)
 	    : text(text)
 	    , value(value)
 	{
 	}
-	char *text;
+	const char *text;
 	int value;
 };
 
