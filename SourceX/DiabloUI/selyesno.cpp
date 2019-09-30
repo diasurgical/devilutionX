@@ -61,7 +61,7 @@ BOOL UiSelHeroDelYesNoDialog(
 	sprintf(selyesno_confirmationMessage, "Are you sure you want to delete the character \"%s\"?", selyesno_heroInfo.name);
 	WordWrap(SELYESNO_DIALOG_CONFIRMATION_MESSAGE);
 
-	UiInitList(0, 1, NULL, selyesno_Select, selyesno_Esc, SELYESNO_DIALOG, size(SELYESNO_DIALOG), false, NULL);
+	UiInitList(0, 1, NULL, selyesno_Select, selyesno_Esc, SELYESNO_DIALOG, size(SELYESNO_DIALOG), true, NULL);
 
 	selyesno_endMenu = false;
 	while (!selyesno_endMenu) {
