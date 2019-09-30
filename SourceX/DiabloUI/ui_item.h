@@ -15,6 +15,7 @@ enum UiType {
 	UI_IMAGE,
 	UI_BUTTON,
 	UI_LIST,
+	UI_SCROLLBAR,
 	UI_EDIT,
 };
 
@@ -41,6 +42,22 @@ struct UiItemBase {
 	    , flags(flags)
 	{
 	}
+
+	bool has_flag(UiFlags flag) const
+	{
+		return flags & flag;
+	}
+
+	void add_flag(UiFlags flag)
+	{
+		flags |= flag;
+	}
+
+	void remove_flag(UiFlags flag)
+	{
+		flags &= ~flag;
+	}
+
 	SDL_Rect rect;
 	int flags;
 };
@@ -134,6 +151,20 @@ struct UiList : public UiItemBase {
 	}
 };
 
+struct UiScrollBar : public UiItemBase {
+	constexpr UiScrollBar(Art *bg, Art *thumb, Art *arrow, SDL_Rect rect, int flags = 0)
+	    : UiItemBase(rect, flags)
+	    , bg(bg)
+	    , thumb(thumb)
+	    , arrow(arrow)
+	{
+	}
+
+	Art *bg;
+	Art *thumb;
+	Art *arrow;
+};
+
 struct UiEdit : public UiItemBase {
 	constexpr UiEdit(char *value, std::size_t max_length, SDL_Rect rect, int flags)
 	    : UiItemBase(rect, flags)
@@ -172,6 +203,12 @@ struct UiItem {
 	{
 	}
 
+	constexpr UiItem(UiScrollBar scrollbar)
+	    : type(UI_SCROLLBAR)
+	    , scrollbar(scrollbar)
+	{
+	}
+
 	constexpr UiItem(UiEdit edit)
 	    : type(UI_EDIT)
 	    , edit(edit)
@@ -184,13 +221,14 @@ struct UiItem {
 		UiImage image;
 		UiButton button;
 		UiList list;
+		UiScrollBar scrollbar;
 		UiEdit edit;
 		UiItemBase common;
 	};
 
-	int flags() const
+	bool has_flag(UiFlags flag) const
 	{
-		return common.flags;
+		return common.has_flag(flag);
 	}
 
 	const SDL_Rect &rect() const

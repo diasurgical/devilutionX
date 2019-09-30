@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include "scrollbar.h"
 #include "selyesno.h"
 #include "DiabloUI/diabloui.h"
 #include "devilution.h"
@@ -53,12 +54,14 @@ UiListItem SELLIST_DIALOG_ITEMS[kMaxViewportItems];
 UiItem SELLIST_DIALOG[] = {
 	UiText("Select Hero", { 264, 211, 320, 33 }, UIS_CENTER | UIS_BIG),
 	UiList(SELLIST_DIALOG_ITEMS, 265, 256, 320, 26, UIS_CENTER | UIS_MED | UIS_GOLD),
+	MakeScrollBar({585, 244, 25, 178}),
 	UiButton("OK", &UiFocusNavigationSelect, { 239, 429, 120, 35 }, UIS_CENTER | UIS_BIG | UIS_GOLD),
 	UiButton("Delete", &selhero_UiFocusNavigationYesNo, { 364, 429, 120, 35 }, UIS_CENTER | UIS_BIG | UIS_DISABLED),
 	UiButton("Cancel", &UiFocusNavigationEsc, { 489, 429, 120, 35 }, UIS_CENTER | UIS_BIG | UIS_GOLD)
 };
 UiList *SELLIST_DIALOG_LIST = &SELLIST_DIALOG[1].list;
-UiButton *SELLIST_DIALOG_DELETE_BUTTON = &SELLIST_DIALOG[3].button;
+UiScrollBar *SELLIST_SCROLLBAR = &SELLIST_DIALOG[2].scrollbar;
+UiButton *SELLIST_DIALOG_DELETE_BUTTON = &SELLIST_DIALOG[4].button;
 
 UiListItem SELCLAS_DIALOG_ITEMS[] = {
 	{ "Warrior", UI_WARRIOR },
@@ -149,9 +152,11 @@ void selhero_List_Init()
 	listOffset = 0;
 	selhero_UpdateViewportItems();
 	UiInitList(0, selhero_SaveCount, selhero_List_Focus, selhero_List_Select, selhero_List_Esc, SELLIST_DIALOG, size(SELLIST_DIALOG), false, selhero_List_DeleteYesNo);
-	strcpy(title, "Single Player Characters");
+	UiInitScrollBar(SELLIST_SCROLLBAR, kMaxViewportItems, &listOffset);
 	if (selhero_isMultiPlayer) {
 		strcpy(title, "Multi Player Characters");
+	} else {
+		strcpy(title, "Single Player Characters");
 	}
 }
 
@@ -292,11 +297,13 @@ BOOL UiSelHeroDialog(
     char *name)
 {
 	do {
+		LoadBackgroundArt("ui_art\\selhero.pcx");
+		LoadScrollBar();
+
 		selhero_result = *dlgresult;
 		gfnHeroStats = fnstats;
 		gfnHeroCreate = fncreate;
 		gfnHeroDelete = fnremove;
-		LoadBackgroundArt("ui_art\\selhero.pcx");
 
 		selhero_navigateYesNo = false;
 
@@ -326,6 +333,7 @@ BOOL UiSelHeroDialog(
 	*dlgresult = selhero_result;
 	strcpy(name, selhero_heroInfo.name);
 
+	UnloadScrollBar();
 	return true;
 }
 

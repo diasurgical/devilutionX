@@ -5,6 +5,7 @@
 #include <string>
 #include <algorithm>
 
+#include "DiabloUI/scrollbar.h"
 #include "DiabloUI/diabloui.h"
 
 namespace dvl {
@@ -12,6 +13,10 @@ namespace dvl {
 TTF_Font *font = nullptr;
 int SelectedItemMin = 1;
 int SelectedItemMax = 1;
+
+std::size_t ListViewportSize = 1;
+const std::size_t *ListOffset = nullptr;
+
 BYTE *FontTables[4];
 Art ArtFonts[4][2];
 Art ArtLogos[3];
@@ -31,10 +36,18 @@ bool UiItemsWraps;
 char *UiTextInput;
 int UiTextInputLen;
 
+
+namespace {
+
 int fadeValue = 0;
 int SelectedItem = 0;
 
-char *errorTitle[] = {
+struct {
+	bool upArrowPressed = false;
+	bool downArrowPressed = false;
+} scrollBarState;
+
+const char *const errorTitle[] = {
 	"SDL Error",
 	"Out of Memory Error",
 	"SDL Error",
@@ -46,7 +59,7 @@ char *errorTitle[] = {
 	"Windows 2000 Restricted User Advisory",
 	"Read-Only Directory Error",
 };
-char *errorMessages[] = {
+const char *const errorMessages[] = {
 	"Diablo was unable to properly initialize SDL.\nPlease try the following solutions to correct the problem:\n\n    Install the most recent SDL provided for your distribution.\n\nIf you continue to have problems with SDL, create an issue on GitHub:\n    https://github.com/diasurgical/devilutionX/issues\n\n\nThe error encountered while trying to initialize was:\n\n    %s",
 	"Diablo has exhausted all the memory on your system.\nMake sure you have at least 512MB of free system memory\n\nThe error encountered was:\n\n    %s",
 	"Diablo was unable to open a required file.\nPlease ensure that the diabdat.mpq is in the same folder as Devilution.\nIf this problem persists, try checking that the md5 of diabdat.mpq is either 011bc6518e6166206231080a4440b373 or 68f049866b44688a7af65ba766bef75a.\n\n\nThe problem occurred while trying to load a file.\n\n    %s",
@@ -58,6 +71,8 @@ char *errorMessages[] = {
 	"In order to install, play or patch Diablo using the Windows 2000 operating system,\nyou will need to log in as either an Administrator or as a Power User.\n\nUsers, also known as Restricted Users, do not have sufficient access to install or play the game properly.\n\nIf you have further questions regarding User Rights in Windows 2000, please refer to your Windows 2000 documentation or contact your system administrator.",
 	"Diablo is being run from:\n\n    %s\n\n\nDiablo or the current user does not seem to have write privilages in this directory. Contact your system administrator.\n\nNote that Windows 2000 Restricted Users can not write to the Windows or Program Files directory hierarchies.",
 };
+
+} // namespace
 
 DWORD FormatMessage(
     DWORD dwFlags,
@@ -145,6 +160,7 @@ void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(i
 	SelectedItem = min;
 	SelectedItemMin = min;
 	SelectedItemMax = max;
+	ListViewportSize = SelectedItemMax - SelectedItemMin + 1;
 	gfnListFocus = fnFocus;
 	gfnListSelect = fnSelect;
 	gfnListEsc = fnEsc;
@@ -162,6 +178,16 @@ void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(i
 			UiTextInput = items[i].edit.value;
 			UiTextInputLen = items[i].edit.max_length;
 		}
+	}
+}
+
+void UiInitScrollBar(UiScrollBar *ui_sb, std::size_t viewport_size, const std::size_t *current_offset) {
+	ListViewportSize = viewport_size;
+	ListOffset = current_offset;
+	if (ListViewportSize >= static_cast<std::size_t>(SelectedItemMax - SelectedItemMin + 1)) {
+		ui_sb->add_flag(UIS_HIDDEN);
+	} else {
+		ui_sb->remove_flag(UIS_HIDDEN);
 	}
 }
 
@@ -202,6 +228,40 @@ void UiFocus(int itemIndex, bool wrap = false)
 
 	if (gfnListFocus)
 		gfnListFocus(itemIndex);
+}
+
+// UiFocusPageUp/Down mimics the slightly weird behaviour of actual Diablo.
+
+void UiFocusPageUp()
+{
+	if (ListOffset == nullptr || *ListOffset == 0) {
+		UiFocus(SelectedItemMin);
+	} else {
+		const std::size_t relpos = (SelectedItem - SelectedItemMin) - *ListOffset;
+		std::size_t prev_page_start = SelectedItem - relpos;
+		if (prev_page_start >= ListViewportSize)
+			prev_page_start -= ListViewportSize;
+		else
+			prev_page_start = 0;
+		UiFocus(prev_page_start);
+		UiFocus(*ListOffset + relpos);
+	}
+}
+
+void UiFocusPageDown()
+{
+	if (ListOffset == nullptr || *ListOffset + ListViewportSize > static_cast<std::size_t>(SelectedItemMax)) {
+		UiFocus(SelectedItemMax);
+	} else {
+		const std::size_t relpos = (SelectedItem - SelectedItemMin) - *ListOffset;
+		std::size_t next_page_end = SelectedItem + (ListViewportSize - relpos - 1);
+		if (next_page_end + ListViewportSize <= static_cast<std::size_t>(SelectedItemMax))
+			next_page_end += ListViewportSize;
+		else
+			next_page_end = SelectedItemMax;
+		UiFocus(next_page_end);
+		UiFocus(*ListOffset + relpos);
+	}
 }
 
 void selhero_CatToName(char *in_buf, char *out_buf, int cnt)
@@ -253,10 +313,10 @@ bool UiFocusNavigation(SDL_Event *event)
 				UiFocus(SelectedItem + 1, UiItemsWraps);
 			return true;
 		case SDLK_PAGEUP:
-			UiFocus(SelectedItemMin);
+			UiFocusPageUp();
 			return true;
 		case SDLK_PAGEDOWN:
-			UiFocus(SelectedItemMax);
+			UiFocusPageDown();
 			return true;
 		case SDLK_RETURN:
 		case SDLK_KP_ENTER:
@@ -320,7 +380,10 @@ bool UiFocusNavigation(SDL_Event *event)
 		}
 	}
 
-	if (gUiItems && gUiItemCnt && UiItemMouseEvents(event, gUiItems, gUiItemCnt))
+	const bool mouse_handled = gUiItems && gUiItemCnt && UiItemMouseEvents(event, gUiItems, gUiItemCnt);
+	if (event->type == SDL_MOUSEBUTTONUP && event->button.button == SDL_BUTTON_LEFT)
+		scrollBarState.downArrowPressed = scrollBarState.upArrowPressed = false;
+	if (mouse_handled)
 		return true;
 
 	if (gfnListEsc && event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_ESCAPE) {
@@ -561,7 +624,7 @@ BOOL UiCreatePlayerDescription(_uiheroinfo *info, DWORD mode, char *desc)
 	return true;
 }
 
-void DrawArt(int screenX, int screenY, Art *art, int nFrame, DWORD drawW)
+void DrawArt(int screenX, int screenY, Art *art, int nFrame, decltype(SDL_Rect().w) srcW, decltype(SDL_Rect().h) srcH)
 {
 	if (screenY >= SCREEN_Y + SCREEN_HEIGHT || screenX >= SCREEN_X + SCREEN_WIDTH)
 		return;
@@ -572,8 +635,10 @@ void DrawArt(int screenX, int screenY, Art *art, int nFrame, DWORD drawW)
 		static_cast<decltype(SDL_Rect().w)>(art->w()),
 		static_cast<decltype(SDL_Rect().h)>(art->h())
 	};
-	if (drawW && static_cast<int>(drawW) < src_rect.w)
-		src_rect.w = drawW;
+	if (srcW && srcW < src_rect.w)
+		src_rect.w = srcW;
+	if (srcH && srcH < src_rect.h)
+		src_rect.h = srcH;
 	SDL_Rect dst_rect = {
 		static_cast<decltype(SDL_Rect().x)>(screenX + SCREEN_X),
 		static_cast<decltype(SDL_Rect().y)>(screenY + SCREEN_Y),
@@ -810,6 +875,38 @@ void Render(const UiList &ui_list)
 	}
 }
 
+void Render(const UiScrollBar &ui_sb) {
+	// Bar background (tiled):
+	{
+		const std::size_t bg_y_end = DownArrowRect(ui_sb).y;
+		std::size_t bg_y = ui_sb.rect.y + ui_sb.arrow->h();
+		while (bg_y < bg_y_end) {
+			std::size_t drawH = std::min(bg_y + ui_sb.bg->h(), bg_y_end) - bg_y;
+			DrawArt(ui_sb.rect.x, bg_y, ui_sb.bg, 0, SCROLLBAR_BG_WIDTH, drawH);
+			bg_y += drawH;
+		}
+	}
+
+	// Arrows:
+	{
+		const SDL_Rect rect = UpArrowRect(ui_sb);
+		const int frame = static_cast<int>(scrollBarState.upArrowPressed ? ScrollBarArrowFrame::UP_ACTIVE : ScrollBarArrowFrame::UP);
+		DrawArt(rect.x, rect.y, ui_sb.arrow, frame, rect.w);
+	}
+	{
+		const SDL_Rect rect = DownArrowRect(ui_sb);
+		const int frame = static_cast<int>(scrollBarState.downArrowPressed ? ScrollBarArrowFrame::DOWN_ACTIVE : ScrollBarArrowFrame::DOWN);
+		DrawArt(rect.x, rect.y, ui_sb.arrow, frame, rect.w);
+	}
+
+	// Thumb:
+	{
+		const SDL_Rect rect = ThumbRect(
+			    ui_sb, SelectedItem - SelectedItemMin, SelectedItemMax - SelectedItemMin + 1);
+		DrawArt(rect.x, rect.y, ui_sb.thumb);
+	}
+}
+
 void Render(const UiEdit &ui_edit)
 {
 	DrawSelector(ui_edit.rect);
@@ -822,7 +919,7 @@ void Render(const UiEdit &ui_edit)
 
 void RenderItem(const UiItem &item)
 {
-	if (item.flags() & UIS_HIDDEN)
+	if (item.has_flag(UIS_HIDDEN))
 		return;
 	switch (item.type) {
 	case UI_TEXT:
@@ -837,6 +934,9 @@ void RenderItem(const UiItem &item)
 	case UI_LIST:
 		Render(item.list);
 		break;
+	case UI_SCROLLBAR:
+		Render(item.scrollbar);
+		break;
 	case UI_EDIT:
 		Render(item.edit);
 		break;
@@ -845,12 +945,16 @@ void RenderItem(const UiItem &item)
 
 bool HandleMouseEventButton(const SDL_Event &event, const UiButton &ui_button)
 {
+	if (event.type != SDL_MOUSEBUTTONDOWN || event.button.button != SDL_BUTTON_LEFT)
+		return false;
 	ui_button.action();
 	return true;
 }
 
 bool HandleMouseEventList(const SDL_Event &event, const UiList &ui_list)
 {
+	if (event.type != SDL_MOUSEBUTTONDOWN || event.button.button != SDL_BUTTON_LEFT)
+		return false;
 	const UiListItem *list_item = ui_list.itemAt(event.button.y);
 	if (gfnListFocus != NULL && SelectedItem != list_item->value) {
 		UiFocus(list_item->value);
@@ -865,15 +969,50 @@ bool HandleMouseEventList(const SDL_Event &event, const UiList &ui_list)
 	return true;
 }
 
+bool HandleMouseEventScrollBar(const SDL_Event &event, const UiScrollBar &ui_sb) {
+	if (event.button.button != SDL_BUTTON_LEFT)
+		return false;
+	if (event.type == SDL_MOUSEBUTTONUP) {
+		if (scrollBarState.upArrowPressed && IsInsideRect(event, UpArrowRect(ui_sb))) {
+			UiFocus(SelectedItem - 1);
+			return true;
+		} else if (scrollBarState.downArrowPressed && IsInsideRect(event, DownArrowRect(ui_sb))) {
+			UiFocus(SelectedItem + 1);
+			return true;
+		}
+	} else if (event.type == SDL_MOUSEBUTTONDOWN) {
+		if (IsInsideRect(event, BarRect(ui_sb))) {
+			// Scroll up or down based on thumb position.
+			const SDL_Rect thumb_rect = ThumbRect(
+			    ui_sb, SelectedItem - SelectedItemMin, SelectedItemMax - SelectedItemMin + 1);
+			if (event.button.y < thumb_rect.y) {
+				UiFocusPageUp();
+			} else if (event.button.y > thumb_rect.y + thumb_rect.h) {
+				UiFocusPageDown();
+			}
+			return true;
+		} else if (IsInsideRect(event, UpArrowRect(ui_sb))) {
+			scrollBarState.upArrowPressed = true;
+			return true;
+		} else if (IsInsideRect(event, DownArrowRect(ui_sb))) {
+			scrollBarState.downArrowPressed = true;
+			return true;
+		}
+	}
+	return false;
+}
+
 bool HandleMouseEvent(const SDL_Event &event, const UiItem &item)
 {
-	if (!IsInsideRect(event, item.rect()))
+	if (item.has_flag(UIS_HIDDEN) || !IsInsideRect(event, item.rect()))
 		return false;
 	switch (item.type) {
 	case UI_BUTTON:
 		return HandleMouseEventButton(event, item.button);
 	case UI_LIST:
 		return HandleMouseEventList(event, item.list);
+	case UI_SCROLLBAR:
+		return HandleMouseEventScrollBar(event, item.scrollbar);
 	default:
 		return false;
 	}
@@ -889,10 +1028,6 @@ void UiRenderItems(UiItem *items, int size)
 
 bool UiItemMouseEvents(SDL_Event *event, UiItem *items, int size)
 {
-	if (event->type != SDL_MOUSEBUTTONDOWN || event->button.button != SDL_BUTTON_LEFT) {
-		return false;
-	}
-
 	for (int i = 0; i < size; i++) {
 		if (HandleMouseEvent(*event, items[i]))
 			return true;

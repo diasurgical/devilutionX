@@ -63,7 +63,7 @@ bool UiFocusNavigation(SDL_Event *event);
 bool UiItemMouseEvents(SDL_Event *event, UiItem *items, int size);
 int GetAnimationFrame(int frames, int fps = 60);
 int GetCenterOffset(int w, int bw = 0);
-void DrawArt(int screenX, int screenY, Art *art, int nFrame = 0, DWORD drawW = 0);
+void DrawArt(int screenX, int screenY, Art *art, int nFrame = 0, decltype(SDL_Rect().w) srcW = 0, decltype(SDL_Rect().h) srcH = 0);
 void DrawLogo(int t = 0, int size = LOGO_MED);
 void DrawMouse();
 void LoadBackgroundArt(char *pszFile);
@@ -73,6 +73,7 @@ void UiFocusNavigationSelect();
 void UiFocusNavigationEsc();
 void UiFocusNavigationYesNo();
 void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), UiItem *items, int size, bool wraps = false, bool (*fnYesNo)() = NULL);
+void UiInitScrollBar(UiScrollBar *ui_sb, std::size_t viewport_size, const std::size_t *current_offset);
 void UiRender();
 void UiRenderItems(UiItem *items, int size);
 void WordWrap(UiText *item);
@@ -81,5 +82,4 @@ void DvlIntSetting(const char *valuename, int *value);
 void DvlStringSetting(const char *valuename, char *string, int len);
 
 void mainmenu_restart_repintro();
-
 }

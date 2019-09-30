@@ -203,6 +203,7 @@ set(devilutionx_SRCS
   SourceX/DiabloUI/dialogs.cpp
   SourceX/DiabloUI/mainmenu.cpp
   SourceX/DiabloUI/progress.cpp
+  SourceX/DiabloUI/scrollbar.cpp
   SourceX/DiabloUI/selconn.cpp
   SourceX/DiabloUI/selgame.cpp
   SourceX/DiabloUI/selhero.cpp
