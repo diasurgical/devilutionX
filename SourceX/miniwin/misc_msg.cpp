@@ -75,7 +75,6 @@ static int translate_sdl_key(SDL_Keysym key)
 		return DVL_VK_F9;
 	case SDLK_F10:
 		return DVL_VK_F10;
-#ifndef __AMIGA__
 	case SDLK_F11:
 		return DVL_VK_F11;
 	case SDLK_F12:
@@ -84,23 +83,18 @@ static int translate_sdl_key(SDL_Keysym key)
 		return DVL_VK_SNAPSHOT;
 	case SDLK_SCROLLLOCK:
 		return DVL_VK_SCROLL;
-#endif
 	case SDLK_PAUSE:
 		return DVL_VK_PAUSE;
 	case SDLK_INSERT:
 		return DVL_VK_INSERT;
 	case SDLK_HOME:
 		return DVL_VK_HOME;
-#ifndef __AMIGA__
 	case SDLK_PAGEUP:
 		return DVL_VK_PRIOR;
-#endif
 	case SDLK_END:
 		return DVL_VK_END;
-#ifndef __AMIGA__
 	case SDLK_PAGEDOWN:
 		return DVL_VK_NEXT;
-#endif
 	case SDLK_RIGHT:
 		return DVL_VK_RIGHT;
 	case SDLK_LEFT:
@@ -109,10 +103,8 @@ static int translate_sdl_key(SDL_Keysym key)
 		return DVL_VK_DOWN;
 	case SDLK_UP:
 		return DVL_VK_UP;
-#ifndef __AMIGA__
 	case SDLK_NUMLOCKCLEAR:
 		return DVL_VK_NUMLOCK;
-#endif
 	case SDLK_KP_DIVIDE:
 		return DVL_VK_DIVIDE;
 	case SDLK_KP_MULTIPLY:
@@ -163,20 +155,16 @@ static int translate_sdl_key(SDL_Keysym key)
 		return DVL_VK_LSHIFT;
 	case SDLK_LALT:
 		return DVL_VK_LMENU;
-#ifndef __AMIGA__
 	case SDLK_LGUI:
 		return DVL_VK_LWIN;
-#endif
 	case SDLK_RCTRL:
 		return DVL_VK_RCONTROL;
 	case SDLK_RSHIFT:
 		return DVL_VK_RSHIFT;
 	case SDLK_RALT:
 		return DVL_VK_RMENU;
-#ifndef __AMIGA__
 	case SDLK_RGUI:
 		return DVL_VK_RWIN;
-#endif
 	default:
 		if (sym >= SDLK_a && sym <= SDLK_z) {
 			return 'A' + (sym - SDLK_a);
