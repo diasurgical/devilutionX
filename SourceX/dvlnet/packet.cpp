@@ -106,7 +106,6 @@ void packet_in::decrypt()
 		return;
 #ifndef NONET
 	if (!disable_encryption) {
-#ifndef NONET
 		if (encrypted_buffer.size() < crypto_secretbox_NONCEBYTES
 				+ crypto_secretbox_MACBYTES
 				+ sizeof(packet_type) + 2 * sizeof(plr_t))

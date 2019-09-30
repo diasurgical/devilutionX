@@ -63,12 +63,24 @@ jobs:
       - run: cd build && cmake -DASAN=OFF -DBINARY_RELEASE=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake ..
       - run: cd build && make -j$(nproc)
       - store_artifacts: {path: ./build/devilutionx.exe, destination: devilutionx_x86.exe}
+  amigaos-m68k:
+    docker:
+      - image: amigadev/crosstools:m68k-amigaos
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: Packaging/amiga/prep.sh
+      - run: mkdir build
+      - run: cd build && PKG_CONFIG_PATH=/opt/m68k-amigaos/lib/pkgconfig/:/opt/m68k-amigaos/share/pkgconfig/ cmake -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-s -ffast-math -O3 -noixemul -fpermissive -DAMIGA -fbbb=abcdef" ..
+      - run: cd build && cmake --build . --config Release -- -j$(nproc)
+      - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_m68k}
 
 workflows:
   version: 2
   testflow:
     jobs:
       - linux_x86_64
-      - linux_x86
       - windows_x86
+      - linux_x86
       - linux_x86_64_sdl1
+      - amigaos-m68k

@@ -57,7 +57,7 @@ if(AMIGA)
   set(NONET ON)
   set(USE_SDL1 "Use SDL1.2 instead of SDL2" ON)
   find_package(Freetype REQUIRED)
-  find_package(PNG REQUIRED)
+  set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -fexceptions")
 endif()
 
 if(DIST)
@@ -286,16 +286,9 @@ if(USE_SDL1)
     ${SDL_MIXER_LIBRARIES}
     ${SDL_LIBRARY}
     ${FREETYPE_LIBRARIES}
-    ${PNG_LIBRARIES})
+    zlib)
   if(WARPOS)
-    target_link_libraries(devilutionx PRIVATE
-      -lmikmod
-      -lvorbisfile
-      -lvorbisenc
-      -lvorbis
-      -logg
-      -lFLAC
-      -lbz2)
+    target_link_libraries(devilutionx PRIVATE -lmikmod)
   endif()
 else()
   target_link_libraries(devilutionx PRIVATE
@@ -303,7 +296,7 @@ else()
     ${SDL2_ttf_LIBRARY}
     ${SDL2_mixer_LIBRARY}
     ${FREETYPE_LIBRARIES}
-    ${PNG_LIBRARIES})
+    zlib)
 endif()
 
 if(AMIGA AND NOT WARPOS)
@@ -378,7 +371,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
   add_definitions(-D_GNU_SOURCE)
 endif()
 
