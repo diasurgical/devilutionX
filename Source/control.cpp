@@ -174,12 +174,8 @@ void DrawSpellCel(int xp, int yp, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	int nDataSize;
 	BYTE *pRLEBytes;
-	DWORD *pFrameTable;
 
-	pFrameTable = (DWORD *)pCelBuff;
-	pRLEBytes = &pCelBuff[SDL_SwapLE32(pFrameTable[nCel])];
-	nDataSize = SDL_SwapLE32(pFrameTable[nCel + 1]) - SDL_SwapLE32(pFrameTable[nCel]);
-
+	pRLEBytes = CelGetFrame(pCelBuff, nCel, &nDataSize);
 	CelDecDatLightOnly(&gpBuffer[xp + PitchTbl[yp]], pRLEBytes, nDataSize, nWidth, SplTransTbl);
 }
 

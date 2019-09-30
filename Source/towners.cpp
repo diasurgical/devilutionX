@@ -130,7 +130,7 @@ void SetTownerGPtrs(BYTE *pData, BYTE **pAnim)
 	pFrameTable = (DWORD *)pData;
 
 	for (i = 0; i < 8; i++) {
-		pAnim[i] = &pData[SDL_SwapLE32(pFrameTable[i])];
+		pAnim[i] = CelGetFrameStart(pData, i);
 	}
 }
 
