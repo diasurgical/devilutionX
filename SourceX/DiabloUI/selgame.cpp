@@ -2,6 +2,7 @@
 
 #include "devilution.h"
 #include "DiabloUI/diabloui.h"
+#include "DiabloUI/text.h"
 
 namespace dvl {
 
@@ -110,7 +111,7 @@ void selgame_GameSelection_Focus(int value)
 		strcpy(selgame_Description, "Enter an IP and join a game already in progress at that address.");
 		break;
 	}
-	WordWrap(&SELGAME_DESCRIPTION);
+	WordWrap(selgame_Description, SELGAME_DESCRIPTION.rect.w);
 }
 
 void selgame_GameSelection_Select(int value)
@@ -151,7 +152,7 @@ void selgame_Diff_Focus(int value)
 		strcpy(selgame_Description, "Hell Difficulty\nThe most powerful of the underworld's creatures lurk at the gateway into Hell. Only the most experienced characters should venture in this realm.");
 		break;
 	}
-	WordWrap(&SELGAME_DESCRIPTION);
+	WordWrap(selgame_Description, SELGAME_DESCRIPTION.rect.w);
 }
 
 void selgame_Diff_Select(int value)

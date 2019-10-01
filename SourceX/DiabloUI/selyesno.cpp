@@ -1,7 +1,8 @@
 #include "selyesno.h"
 
-#include "DiabloUI/diabloui.h"
 #include "devilution.h"
+#include "DiabloUI/diabloui.h"
+#include "DiabloUI/text.h"
 
 namespace dvl {
 
@@ -59,7 +60,7 @@ BOOL UiSelHeroDelYesNoDialog(
 	}
 
 	sprintf(selyesno_confirmationMessage, "Are you sure you want to delete the character \"%s\"?", selyesno_heroInfo.name);
-	WordWrap(SELYESNO_DIALOG_CONFIRMATION_MESSAGE);
+	WordWrap(selyesno_confirmationMessage, SELYESNO_DIALOG_CONFIRMATION_MESSAGE->rect.w);
 
 	UiInitList(0, 1, NULL, selyesno_Select, selyesno_Esc, SELYESNO_DIALOG, size(SELYESNO_DIALOG), true, NULL);
 

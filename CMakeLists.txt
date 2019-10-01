@@ -198,10 +198,12 @@ set(devilutionx_SRCS
   SourceX/dvlnet/packet.cpp
   SourceX/dvlnet/base.cpp
   SourceX/dvlnet/frame_queue.cpp
+  SourceX/DiabloUI/art_draw.cpp
   SourceX/DiabloUI/art.cpp
   SourceX/DiabloUI/credits.cpp
   SourceX/DiabloUI/diabloui.cpp
   SourceX/DiabloUI/dialogs.cpp
+  SourceX/DiabloUI/fonts.cpp
   SourceX/DiabloUI/mainmenu.cpp
   SourceX/DiabloUI/progress.cpp
   SourceX/DiabloUI/scrollbar.cpp
@@ -209,6 +211,8 @@ set(devilutionx_SRCS
   SourceX/DiabloUI/selgame.cpp
   SourceX/DiabloUI/selhero.cpp
   SourceX/DiabloUI/selyesno.cpp
+  SourceX/DiabloUI/text_draw.cpp
+  SourceX/DiabloUI/text.cpp
   SourceX/DiabloUI/title.cpp
   SourceX/main.cpp
   ./Packaging/macOS/AppIcon.icns

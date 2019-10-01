@@ -2,6 +2,9 @@
 #include "miniwin/ddraw.h"
 
 #include "DiabloUI/diabloui.h"
+#include "DiabloUI/art.h"
+#include "DiabloUI/art_draw.h"
+#include "DiabloUI/fonts.h"
 
 #define CREDIT_LINES 13
 
@@ -475,11 +478,13 @@ char *the_long_credits[] = {
 void credts_Load()
 {
 	LoadBackgroundArt("ui_art\\credits.pcx");
+	LoadTtfFont();
 }
 
 void credts_Free()
 {
 	ArtBackground.Unload();
+	UnloadTtfFont();
 }
 
 void credts_Render()

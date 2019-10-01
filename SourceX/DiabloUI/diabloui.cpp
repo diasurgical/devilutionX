@@ -8,17 +8,18 @@
 #include "DiabloUI/scrollbar.h"
 #include "DiabloUI/diabloui.h"
 
+#include "DiabloUI/art_draw.h"
+#include "DiabloUI/text_draw.h"
+#include "DiabloUI/fonts.h"
+
 namespace dvl {
 
-TTF_Font *font = nullptr;
 int SelectedItemMin = 1;
 int SelectedItemMax = 1;
 
 std::size_t ListViewportSize = 1;
 const std::size_t *ListOffset = nullptr;
 
-BYTE *FontTables[4];
-Art ArtFonts[4][2];
 Art ArtLogos[3];
 Art ArtFocus[3];
 Art ArtBackground;
@@ -150,10 +151,7 @@ void UiDestroy()
 {
 	DUMMY();
 	ArtHero.Unload();
-
-	if (font)
-		TTF_CloseFont(font);
-	font = NULL;
+	UnloadTtfFont();
 }
 
 void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), UiItem *items, int itemCnt, bool itemsWraps, bool (*fnYesNo)())
@@ -437,66 +435,20 @@ bool IsInsideRect(const SDL_Event &event, const SDL_Rect &rect)
 	return SDL_PointInRect(&point, &rect);
 }
 
-void LoadMaskedArtFont(char *pszFile, Art *art, int frames, int mask)
-{
-	LoadArt(pszFile, art, frames);
-#ifdef USE_SDL1
-	SDL_SetColorKey(art->surface, SDL_SRCCOLORKEY, mask);
-#else
-	SDL_SetColorKey(art->surface, SDL_TRUE, mask);
-#endif
-}
-
-void LoadArtFont(char *pszFile, int size, int color)
-{
-	LoadMaskedArtFont(pszFile, &ArtFonts[size][color], 256, 32);
-}
-
-void LoadUiGFX()
-{
-	FontTables[AFT_SMALL] = LoadFileInMem("ui_art\\font16.bin", 0);
-	FontTables[AFT_MED] = LoadFileInMem("ui_art\\font24.bin", 0);
-	FontTables[AFT_BIG] = LoadFileInMem("ui_art\\font30.bin", 0);
-	FontTables[AFT_HUGE] = LoadFileInMem("ui_art\\font42.bin", 0);
-	LoadArtFont("ui_art\\font16s.pcx", AFT_SMALL, AFC_SILVER);
-	LoadArtFont("ui_art\\font16g.pcx", AFT_SMALL, AFC_GOLD);
-	LoadArtFont("ui_art\\font24s.pcx", AFT_MED, AFC_SILVER);
-	LoadArtFont("ui_art\\font24g.pcx", AFT_MED, AFC_GOLD);
-	LoadArtFont("ui_art\\font30s.pcx", AFT_BIG, AFC_SILVER);
-	LoadArtFont("ui_art\\font30g.pcx", AFT_BIG, AFC_GOLD);
-	LoadArtFont("ui_art\\font42g.pcx", AFT_HUGE, AFC_GOLD);
-
-	LoadMaskedArtFont("ui_art\\smlogo.pcx", &ArtLogos[LOGO_MED], 15);
-	LoadMaskedArtFont("ui_art\\focus16.pcx", &ArtFocus[FOCUS_SMALL], 8);
-	LoadMaskedArtFont("ui_art\\focus.pcx", &ArtFocus[FOCUS_MED], 8);
-	LoadMaskedArtFont("ui_art\\focus42.pcx", &ArtFocus[FOCUS_BIG], 8);
-	LoadMaskedArtFont("ui_art\\cursor.pcx", &ArtCursor, 1, 0);
+void LoadUiGFX() {
+	LoadMaskedArt("ui_art\\smlogo.pcx", &ArtLogos[LOGO_MED], 15);
+	LoadMaskedArt("ui_art\\focus16.pcx", &ArtFocus[FOCUS_SMALL], 8);
+	LoadMaskedArt("ui_art\\focus.pcx", &ArtFocus[FOCUS_MED], 8);
+	LoadMaskedArt("ui_art\\focus42.pcx", &ArtFocus[FOCUS_BIG], 8);
+	LoadMaskedArt("ui_art\\cursor.pcx", &ArtCursor, 1, 0);
 	LoadArt("ui_art\\heros.pcx", &ArtHero, 4);
-}
-
-void InitFont()
-{
-	if (!TTF_WasInit() && TTF_Init() == -1) {
-		printf("TTF_Init: %s\n", TTF_GetError());
-		exit(1);
-	}
-	atexit(TTF_Quit);
-
-	font = TTF_OpenFont("CharisSILB.ttf", 17);
-	if (font == NULL) {
-		printf("TTF_OpenFont: %s\n", TTF_GetError());
-		return;
-	}
-
-	TTF_SetFontKerning(font, false);
-	TTF_SetFontHinting(font, TTF_HINTING_MONO);
 }
 
 void UiInitialize()
 {
 	LoadUiGFX();
+	LoadArtFonts();
 	ShowCursor(false);
-	InitFont();
 }
 
 int UiProfileGetString()
@@ -625,43 +577,6 @@ BOOL UiCreatePlayerDescription(_uiheroinfo *info, DWORD mode, char *desc)
 	return true;
 }
 
-void DrawArt(int screenX, int screenY, Art *art, int nFrame, decltype(SDL_Rect().w) srcW, decltype(SDL_Rect().h) srcH)
-{
-	if (screenY >= SCREEN_Y + SCREEN_HEIGHT || screenX >= SCREEN_X + SCREEN_WIDTH)
-		return;
-
-	SDL_Rect src_rect = {
-		0,
-		static_cast<decltype(SDL_Rect().y)>(nFrame * art->h()),
-		static_cast<decltype(SDL_Rect().w)>(art->w()),
-		static_cast<decltype(SDL_Rect().h)>(art->h())
-	};
-	if (srcW && srcW < src_rect.w)
-		src_rect.w = srcW;
-	if (srcH && srcH < src_rect.h)
-		src_rect.h = srcH;
-	SDL_Rect dst_rect = {
-		static_cast<decltype(SDL_Rect().x)>(screenX + SCREEN_X),
-		static_cast<decltype(SDL_Rect().y)>(screenY + SCREEN_Y),
-		src_rect.w, src_rect.h
-	};
-
-	if (art->surface->format->BitsPerPixel == 8 && art->palette_version != pal_surface_palette_version) {
-#ifdef USE_SDL1
-		if (SDL_SetPalette(art->surface, SDL_LOGPAL, pal_surface->format->palette->colors, 0, 256) != 1)
-			SDL_Log(SDL_GetError());
-#else
-		if (SDL_SetSurfacePalette(art->surface, pal_surface->format->palette) <= -1)
-			SDL_Log(SDL_GetError());
-#endif
-		art->palette_version = pal_surface_palette_version;
-	}
-
-	if (SDL_BlitSurface(art->surface, &src_rect, pal_surface, &dst_rect) <= -1) {
-		SDL_Log(SDL_GetError());
-	}
-}
-
 int GetCenterOffset(int w, int bw)
 {
 	if (bw == 0) {
@@ -669,116 +584,6 @@ int GetCenterOffset(int w, int bw)
 	}
 
 	return (bw - w) / 2;
-}
-
-int GetStrWidth(const char *str, int size)
-{
-	int strWidth = 0;
-
-	for (size_t i = 0, n = strlen(str); i < n; i++) {
-		BYTE w = FontTables[size][*(BYTE *)&str[i] + 2];
-		if (w)
-			strWidth += w;
-		else
-			strWidth += FontTables[size][0];
-	}
-
-	return strWidth;
-}
-
-int TextAlignment(const char *text, int rect_w, TXT_JUST align, _artFontTables size)
-{
-	if (align != JustLeft) {
-		int w = GetStrWidth(text, size);
-		if (align == JustCentre) {
-			return GetCenterOffset(w, rect_w);
-		} else if (align == JustRight) {
-			return rect_w - w;
-		}
-	}
-
-	return 0;
-}
-
-void WordWrap(UiText *item)
-{
-	char *text = const_cast<char *>(item->text);
-	const std::size_t len = strlen(text);
-	std::size_t lineStart = 0;
-	for (std::size_t i = 0; i <= len; i++) {
-		if (text[i] == '\n') {
-			lineStart = i + 1;
-			continue;
-		} else if (text[i] != ' ' && i != len) {
-			continue;
-		}
-
-		if (i != len)
-			text[i] = '\0';
-		if (GetStrWidth(&text[lineStart], AFT_SMALL) <= item->rect.w) {
-			if (i != len)
-				text[i] = ' ';
-			continue;
-		}
-
-		std::size_t j;
-		for (j = i; j >= lineStart; j--) {
-			if (text[j] == ' ') {
-				break; // Scan for previous space
-			}
-		}
-
-		if (j == lineStart) { // Single word longer then width
-			if (i == len)
-				break;
-			j = i;
-		}
-
-		if (i != len)
-			text[i] = ' ';
-		text[j] = '\n';
-		lineStart = j + 1;
-	}
-};
-
-void DrawArtStr(const char *text, const SDL_Rect &rect, int flags, bool drawTextCursor = false)
-{
-	_artFontTables size = AFT_SMALL;
-	_artFontColors color = flags & UIS_GOLD ? AFC_GOLD : AFC_SILVER;
-	TXT_JUST align = JustLeft;
-
-	if (flags & UIS_MED)
-		size = AFT_MED;
-	else if (flags & UIS_BIG)
-		size = AFT_BIG;
-	else if (flags & UIS_HUGE)
-		size = AFT_HUGE;
-
-	if (flags & UIS_CENTER)
-		align = JustCentre;
-	else if (flags & UIS_RIGHT)
-		align = JustRight;
-
-	int x = rect.x + TextAlignment(text, rect.w, align, size);
-
-	int sx = x;
-	int sy = rect.y;
-	if (flags & UIS_VCENTER)
-		sy += (rect.h - ArtFonts[size][color].h()) / 2;
-
-	for (size_t i = 0, n = strlen(text); i < n; i++) {
-		if (text[i] == '\n') {
-			sx = x;
-			sy += ArtFonts[size][color].h();
-			continue;
-		}
-		BYTE w = FontTables[size][*(BYTE *)&text[i] + 2] ? FontTables[size][*(BYTE *)&text[i] + 2] : FontTables[size][0];
-		DrawArt(sx, sy, &ArtFonts[size][color], *(BYTE *)&text[i], w);
-		sx += w;
-	}
-	if (drawTextCursor && GetAnimationFrame(2, 500)) {
-		DrawArt(sx, sy, &ArtFonts[size][color], '|');
-	}
 }
 
 void LoadPalInMem(PALETTEENTRY *pPal)
@@ -799,13 +604,6 @@ void LoadBackgroundArt(char *pszFile)
 	LoadArt(pszFile, &ArtBackground, 1, pPal);
 	LoadPalInMem(pPal);
 	ApplyGamma(logical_palette, orig_palette, 256);
-}
-
-int GetAnimationFrame(int frames, int fps)
-{
-	int frame = (SDL_GetTicks() / fps) % frames;
-
-	return frame > frames ? 0 : frame;
 }
 
 void UiFadeIn(int steps)
@@ -1039,7 +837,7 @@ bool UiItemMouseEvents(SDL_Event *event, UiItem *items, int size)
 
 void DrawLogo(int t, int size)
 {
-	DrawArt(GetCenterOffset(ArtLogos[size].w()), t, &ArtLogos[size], GetAnimationFrame(15));
+	DrawAnimatedArt(&ArtLogos[size], GetCenterOffset(ArtLogos[size].w()), t);
 }
 
 void DrawMouse()

@@ -6,7 +6,7 @@ namespace dvl {
 void title_Load()
 {
 	LoadBackgroundArt("ui_art\\title.pcx");
-	LoadMaskedArtFont("ui_art\\logo.pcx", &ArtLogos[LOGO_BIG], 15);
+	LoadMaskedArt("ui_art\\logo.pcx", &ArtLogos[LOGO_BIG], 15);
 }
 
 void title_Free()

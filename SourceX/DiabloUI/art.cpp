@@ -2,7 +2,7 @@
 
 namespace dvl {
 
-void LoadArt(char *pszFile, Art *art, int frames, PALETTEENTRY *pPalette)
+void LoadArt(const char *pszFile, Art *art, int frames, PALETTEENTRY *pPalette)
 {
 	if (art == NULL || art->surface != NULL)
 		return;
@@ -38,6 +38,16 @@ void LoadArt(char *pszFile, Art *art, int frames, PALETTEENTRY *pPalette)
 	art->surface = art_surface;
 	art->frames = frames;
 	art->frame_height = height / frames;
+}
+
+void LoadMaskedArt(const char *pszFile, Art *art, int frames, int mask)
+{
+	LoadArt(pszFile, art, frames);
+#ifdef USE_SDL1
+	SDL_SetColorKey(art->surface, SDL_SRCCOLORKEY, mask);
+#else
+	SDL_SetColorKey(art->surface, SDL_TRUE, mask);
+#endif
 }
 
 } // namespace dvl

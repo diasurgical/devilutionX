@@ -2,6 +2,8 @@
 #include "miniwin/ddraw.h"
 
 #include "DiabloUI/diabloui.h"
+#include "DiabloUI/art_draw.h"
+#include "DiabloUI/fonts.h"
 
 namespace dvl {
 
@@ -20,6 +22,7 @@ void progress_Load(char *msg)
 	LoadArt("ui_art\\prog_bg.pcx", &ArtProgBG);
 	LoadArt("ui_art\\prog_fil.pcx", &ProgFil);
 	LoadArt("ui_art\\but_sml.pcx", &ButImage, 15);
+	LoadTtfFont();
 
 	if (font != NULL) {
 		SDL_Color color = { 243, 243, 243, 0 };
@@ -41,6 +44,7 @@ void progress_Free()
 	msgSurface = NULL;
 	SDL_FreeSurface(cancleSurface);
 	cancleSurface = NULL;
+	UnloadTtfFont();
 }
 
 void progress_Render(BYTE progress)

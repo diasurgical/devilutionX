@@ -2,6 +2,7 @@
 
 #include "devilution.h"
 #include "DiabloUI/diabloui.h"
+#include "DiabloUI/text.h"
 
 namespace dvl {
 
@@ -78,7 +79,7 @@ void selconn_Focus(int value)
 	}
 
 	sprintf(selconn_MaxPlayers, "Players Supported: %d", players);
-	WordWrap(&SELCONNECT_DIALOG_DESCRIPTION);
+	WordWrap(selconn_Description, SELCONNECT_DIALOG_DESCRIPTION.rect.w);
 }
 
 void selconn_Select(int value)
