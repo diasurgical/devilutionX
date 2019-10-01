@@ -150,7 +150,7 @@ make -j$(nproc)
 ### General
 The default build type is `Debug`. This can be changed with `-DBINARY_RELEASE=ON`. Independently of this, the debug mode of the Diablo engine is always enabled by default. It can be disabled with `-DDEBUG=OFF`. Finally, in debug builds the address sanitizer is enabled by default. This can be disabled with `-DASAN=OFF`.
 You can also generate 32bit builds on 64bit platforms by setting `-DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake` (remember to use the `linux32` command if on Linux).
-Network support can be deiabled using `-DNONET=ON`, this also removes the need for the ASIO and Sodium dependencies.
+Network support can be disabled using `-DNONET=ON`, this also removes the need for the ASIO and Sodium dependencies.
 You can compile the shareware version with `-DSPAWN=ON` this will allow you to try the game using spawn.mpq from the original shareware which can still be [downloaded](http://ftp.blizzard.com/pub/demos/diablosw.exe) for free.
 
 ### mingw32
