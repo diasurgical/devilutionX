@@ -658,7 +658,7 @@ void Render(const UiImage &ui_image)
 	DrawArt(ui_image.rect.x, ui_image.rect.y, ui_image.art, ui_image.frame, ui_image.rect.w);
 }
 
-void Render(const UiButton &ui_button)
+void Render(const UiArtTextButton &ui_button)
 {
 	DrawArtStr(ui_button.text, ui_button.rect, ui_button.flags);
 }
@@ -727,8 +727,8 @@ void RenderItem(const UiItem &item)
 	case UI_IMAGE:
 		Render(item.image);
 		break;
-	case UI_BUTTON:
-		Render(item.button);
+	case UI_ART_TEXT_BUTTON:
+		Render(item.art_text_button);
 		break;
 	case UI_LIST:
 		Render(item.list);
@@ -742,7 +742,7 @@ void RenderItem(const UiItem &item)
 	}
 }
 
-bool HandleMouseEventButton(const SDL_Event &event, const UiButton &ui_button)
+bool HandleMouseEventArtTextButton(const SDL_Event &event, const UiArtTextButton &ui_button)
 {
 	if (event.type != SDL_MOUSEBUTTONDOWN || event.button.button != SDL_BUTTON_LEFT)
 		return false;
@@ -806,8 +806,8 @@ bool HandleMouseEvent(const SDL_Event &event, const UiItem &item)
 	if (item.has_flag(UIS_HIDDEN) || !IsInsideRect(event, item.rect()))
 		return false;
 	switch (item.type) {
-	case UI_BUTTON:
-		return HandleMouseEventButton(event, item.button);
+	case UI_ART_TEXT_BUTTON:
+		return HandleMouseEventArtTextButton(event, item.art_text_button);
 	case UI_LIST:
 		return HandleMouseEventList(event, item.list);
 	case UI_SCROLLBAR:

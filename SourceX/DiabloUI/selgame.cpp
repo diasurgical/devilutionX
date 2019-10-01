@@ -20,8 +20,8 @@ static _SNETPROGRAMDATA *m_client_info;
 extern DWORD provider;
 
 constexpr UiImage SELGAME_BACKGROUND = UiImage(&ArtBackground, { 0, 0, 640, 480 });
-constexpr UiButton SELGAME_OK = UiButton("OK", &UiFocusNavigationSelect, { 299, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD);
-constexpr UiButton SELGAME_CANCEL = UiButton("CANCEL", &UiFocusNavigationEsc, { 449, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD);
+constexpr UiArtTextButton SELGAME_OK = UiArtTextButton("OK", &UiFocusNavigationSelect, { 299, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD);
+constexpr UiArtTextButton SELGAME_CANCEL = UiArtTextButton("CANCEL", &UiFocusNavigationEsc, { 449, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD);
 
 UiText SELGAME_DESCRIPTION(selgame_Description, { 35, 256, 205, 192 });
 

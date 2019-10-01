@@ -13,7 +13,7 @@ namespace dvl {
 enum UiType {
 	UI_TEXT,
 	UI_IMAGE,
-	UI_BUTTON,
+	UI_ART_TEXT_BUTTON,
 	UI_LIST,
 	UI_SCROLLBAR,
 	UI_EDIT,
@@ -89,8 +89,8 @@ struct UiText : public UiItemBase {
 	const char *text;
 };
 
-struct UiButton : public UiItemBase {
-	constexpr UiButton(const char *text, void (*action)(), SDL_Rect rect, int flags = 0)
+struct UiArtTextButton : public UiItemBase {
+	constexpr UiArtTextButton(const char *text, void (*action)(), SDL_Rect rect, int flags = 0)
 	    : UiItemBase(rect, flags)
 	    , text(text)
 	    , action(action)
@@ -191,9 +191,9 @@ struct UiItem {
 	{
 	}
 
-	constexpr UiItem(UiButton button)
-	    : type(UI_BUTTON)
-	    , button(button)
+	constexpr UiItem(UiArtTextButton art_text_button)
+	    : type(UI_ART_TEXT_BUTTON)
+	    , art_text_button(art_text_button)
 	{
 	}
 
@@ -219,7 +219,7 @@ struct UiItem {
 	union {
 		UiText text;
 		UiImage image;
-		UiButton button;
+		UiArtTextButton art_text_button;
 		UiList list;
 		UiScrollBar scrollbar;
 		UiEdit edit;

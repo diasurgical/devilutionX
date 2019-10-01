@@ -55,13 +55,13 @@ UiItem SELLIST_DIALOG[] = {
 	UiText("Select Hero", { 264, 211, 320, 33 }, UIS_CENTER | UIS_BIG),
 	UiList(SELLIST_DIALOG_ITEMS, 265, 256, 320, 26, UIS_CENTER | UIS_MED | UIS_GOLD),
 	MakeScrollBar({585, 244, 25, 178}),
-	UiButton("OK", &UiFocusNavigationSelect, { 239, 429, 120, 35 }, UIS_CENTER | UIS_BIG | UIS_GOLD),
-	UiButton("Delete", &selhero_UiFocusNavigationYesNo, { 364, 429, 120, 35 }, UIS_CENTER | UIS_BIG | UIS_DISABLED),
-	UiButton("Cancel", &UiFocusNavigationEsc, { 489, 429, 120, 35 }, UIS_CENTER | UIS_BIG | UIS_GOLD)
+	UiArtTextButton("OK", &UiFocusNavigationSelect, { 239, 429, 120, 35 }, UIS_CENTER | UIS_BIG | UIS_GOLD),
+	UiArtTextButton("Delete", &selhero_UiFocusNavigationYesNo, { 364, 429, 120, 35 }, UIS_CENTER | UIS_BIG | UIS_DISABLED),
+	UiArtTextButton("Cancel", &UiFocusNavigationEsc, { 489, 429, 120, 35 }, UIS_CENTER | UIS_BIG | UIS_GOLD)
 };
 UiList *SELLIST_DIALOG_LIST = &SELLIST_DIALOG[1].list;
 UiScrollBar *SELLIST_SCROLLBAR = &SELLIST_DIALOG[2].scrollbar;
-UiButton *SELLIST_DIALOG_DELETE_BUTTON = &SELLIST_DIALOG[4].button;
+UiArtTextButton *SELLIST_DIALOG_DELETE_BUTTON = &SELLIST_DIALOG[4].art_text_button;
 
 UiListItem SELCLAS_DIALOG_ITEMS[] = {
 	{ "Warrior", UI_WARRIOR },
@@ -71,15 +71,15 @@ UiListItem SELCLAS_DIALOG_ITEMS[] = {
 UiItem SELCLASS_DIALOG[] = {
 	UiText("Choose Class", { 264, 211, 320, 33 }, UIS_CENTER | UIS_BIG),
 	UiList(SELCLAS_DIALOG_ITEMS, 264, 285, 320, 33, UIS_CENTER | UIS_MED | UIS_GOLD),
-	UiButton("OK", &UiFocusNavigationSelect, { 279, 429, 140, 35 }, UIS_CENTER | UIS_BIG | UIS_GOLD),
-	UiButton("Cancel", &UiFocusNavigationEsc, { 429, 429, 140, 35 }, UIS_CENTER | UIS_BIG | UIS_GOLD)
+	UiArtTextButton("OK", &UiFocusNavigationSelect, { 279, 429, 140, 35 }, UIS_CENTER | UIS_BIG | UIS_GOLD),
+	UiArtTextButton("Cancel", &UiFocusNavigationEsc, { 429, 429, 140, 35 }, UIS_CENTER | UIS_BIG | UIS_GOLD)
 };
 
 UiItem ENTERNAME_DIALOG[] = {
 	UiText("Enter Name", { 264, 211, 320, 33 }, UIS_CENTER | UIS_BIG),
 	UiEdit(selhero_heroInfo.name, 15, { 265, 317, 320, 33 }, UIS_LIST | UIS_MED | UIS_GOLD),
-	UiButton("OK", &UiFocusNavigationSelect, { 279, 429, 140, 35 }, UIS_CENTER | UIS_BIG | UIS_GOLD),
-	UiButton("Cancel", &UiFocusNavigationEsc, { 429, 429, 140, 35 }, UIS_CENTER | UIS_BIG | UIS_GOLD)
+	UiArtTextButton("OK", &UiFocusNavigationSelect, { 279, 429, 140, 35 }, UIS_CENTER | UIS_BIG | UIS_GOLD),
+	UiArtTextButton("Cancel", &UiFocusNavigationEsc, { 429, 429, 140, 35 }, UIS_CENTER | UIS_BIG | UIS_GOLD)
 };
 
 UiListItem SELLOAD_DIALOG_ITEMS[] = {
@@ -89,8 +89,8 @@ UiListItem SELLOAD_DIALOG_ITEMS[] = {
 UiItem SELLOAD_DIALOG[] = {
 	UiText("Save File Exists", { 264, 211, 320, 33 }, UIS_CENTER | UIS_BIG),
 	UiList(SELLOAD_DIALOG_ITEMS, 265, 285, 320, 33, UIS_CENTER | UIS_MED | UIS_GOLD),
-	UiButton("OK", &UiFocusNavigationSelect, { 279, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD),
-	UiButton("Cancel", &UiFocusNavigationEsc, { 429, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD)
+	UiArtTextButton("OK", &UiFocusNavigationSelect, { 279, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD),
+	UiArtTextButton("Cancel", &UiFocusNavigationEsc, { 429, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD)
 };
 
 } // namespace
