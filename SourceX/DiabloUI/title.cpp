@@ -57,4 +57,9 @@ BOOL UiTitleDialog(int a1)
 	return true;
 }
 
+void UiSetSpawned(BOOL bSpawned)
+{
+	gbSpawned = bSpawned;
+}
+
 }

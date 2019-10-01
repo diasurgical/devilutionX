@@ -14,6 +14,7 @@ endif()
 
 option(ASAN "Enable address sanitizer" ON)
 option(DEBUG "Enable debug mode in engine" ON)
+option(SPAWN "Build the shareware version" OFF)
 option(DIST "Dynamically link only glibc and SDL2" OFF)
 option(FASTER "Enable FASTER in engine" ON)
 option(BINARY_RELEASE "Enable options for binary release" OFF)
@@ -263,6 +264,10 @@ foreach(target devilution devilutionx)
 
   if(NONET)
     target_compile_definitions(${target} PRIVATE NONET)
+  endif()
+
+  if(SPAWN)
+    target_compile_definitions(${target} PRIVATE SPAWN)
   endif()
 
   if(ASAN)

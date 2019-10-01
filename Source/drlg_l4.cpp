@@ -1943,6 +1943,6 @@ void DRLG_L4Pass3()
 		yy += 2;
 	}
 }
+#endif
 
 DEVILUTION_END_NAMESPACE
-#endif

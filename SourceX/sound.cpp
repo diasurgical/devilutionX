@@ -24,9 +24,11 @@ int sgnMusicTrack = 6;
 char *sgszMusicTracks[NUM_MUSIC] = {
 	"Music\\DTowne.wav",
 	"Music\\DLvlA.wav",
+#ifndef SPAWN
 	"Music\\DLvlB.wav",
 	"Music\\DLvlC.wav",
 	"Music\\DLvlD.wav",
+#endif
 	"Music\\Dintro.wav"
 };
 

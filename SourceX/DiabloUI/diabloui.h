@@ -42,6 +42,7 @@ extern Art ArtFocus[3];
 extern Art ArtBackground;
 extern Art ArtCursor;
 extern Art ArtHero;
+extern bool gbSpawned;
 
 typedef enum TXT_JUST {
 	JustLeft = 0,
