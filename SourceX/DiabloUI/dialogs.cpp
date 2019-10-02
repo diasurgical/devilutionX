@@ -44,7 +44,7 @@ constexpr auto DIALOG_ART_L = UiImage(&dialogArt, { 127, 100, 385, 280 });
 
 UiItem OKCANCEL_DIALOG[] = {
 	DIALOG_ART_S,
-	UiText(dialogText, { 198, 211, 240, 80 }, UIS_CENTER),
+	UiText(dialogText, { 200, 211, 240, 80 }, UIS_CENTER),
 	MakeSmlButton("OK", &DialogActionOK, 200, 265),
 	MakeSmlButton("Cancel", &DialogActionCancel, 330, 265),
 };
@@ -57,8 +57,8 @@ UiItem OK_DIALOG[] = {
 
 UiItem OK_DIALOG_WITH_CAPTION[] = {
 	DIALOG_ART_L,
-	UiText(dialogText, SDL_Color { 255, 255, 0, 0 }, { 200, 110, 240, 20 }, UIS_CENTER),
-	UiText(dialogCaption, { 200, 141, 240, 80 }, UIS_CENTER),
+	UiText(dialogText, SDL_Color { 255, 255, 0, 0 }, { 147, 110, 345, 20 }, UIS_CENTER),
+	UiText(dialogCaption, { 147, 141, 345, 190 }, UIS_CENTER),
 	MakeSmlButton("OK", &DialogActionOK, 264, 335),
 };
 

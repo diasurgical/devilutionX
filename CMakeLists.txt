@@ -215,6 +215,7 @@ set(devilutionx_SRCS
   SourceX/DiabloUI/text_draw.cpp
   SourceX/DiabloUI/text.cpp
   SourceX/DiabloUI/title.cpp
+  SourceX/DiabloUI/ttf_render_wrapped.cpp
   SourceX/main.cpp
   ./Packaging/macOS/AppIcon.icns
   ./Packaging/resources/CharisSILB.ttf)

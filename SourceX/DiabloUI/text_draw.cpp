@@ -4,6 +4,7 @@
 #include "DiabloUI/fonts.h"
 #include "DiabloUI/text.h"
 #include "DiabloUI/ui_item.h"
+#include "DiabloUI/ttf_render_wrapped.h"
 
 namespace dvl {
 
@@ -28,8 +29,8 @@ void DrawTTF(const char *text, const SDL_Rect &rect, int flags,
 {
 	if (*render_cache == nullptr) {
 		*render_cache = new TtfSurfaceCache();
-		(*render_cache)->text = TTF_RenderUTF8_Solid(font, text, text_color);
-		(*render_cache)->shadow = TTF_RenderUTF8_Solid(font, text, shadow_color);
+		(*render_cache)->text = RenderUTF8_Solid_Wrapped(font, text, text_color, rect.w);
+		(*render_cache)->shadow = RenderUTF8_Solid_Wrapped(font, text, shadow_color, rect.w);
 	}
 	SDL_Surface *text_surface = (*render_cache)->text;
 	SDL_Surface *shadow_surface = (*render_cache)->shadow;
