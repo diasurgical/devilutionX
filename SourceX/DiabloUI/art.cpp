@@ -7,6 +7,8 @@ void LoadArt(const char *pszFile, Art *art, int frames, PALETTEENTRY *pPalette)
 	if (art == NULL || art->surface != NULL)
 		return;
 
+	art->frames = frames;
+
 	DWORD width, height, bpp;
 	if (!SBmpLoadImage(pszFile, 0, 0, 0, &width, &height, &bpp))
 		return;
@@ -37,7 +39,6 @@ void LoadArt(const char *pszFile, Art *art, int frames, PALETTEENTRY *pPalette)
 	}
 
 	art->surface = art_surface;
-	art->frames = frames;
 	art->frame_height = height / frames;
 }
 

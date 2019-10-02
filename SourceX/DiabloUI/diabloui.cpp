@@ -66,7 +66,7 @@ const char *const errorTitle[] = {
 const char *const errorMessages[] = {
 	"Diablo was unable to properly initialize SDL.\nPlease try the following solutions to correct the problem:\n\n    Install the most recent SDL provided for your distribution.\n\nIf you continue to have problems with SDL, create an issue on GitHub:\n    https://github.com/diasurgical/devilutionX/issues\n\n\nThe error encountered while trying to initialize was:\n\n    %s",
 	"Diablo has exhausted all the memory on your system.\nMake sure you have at least 512MB of free system memory\n\nThe error encountered was:\n\n    %s",
-	"Diablo was unable to open a required file.\nPlease ensure that the diabdat.mpq is in the same folder as Devilution.\nIf this problem persists, try checking that the md5 of diabdat.mpq is either 011bc6518e6166206231080a4440b373 or 68f049866b44688a7af65ba766bef75a.\n\n\nThe problem occurred while trying to load a file.\n\n    %s",
+	"Diablo was unable to open a required file.\nPlease ensure that the diabdat.mpq is in the same folder as Devilution.\nIf this problem persists, try checking that the md5 of diabdat.mpq is either 011bc6518e6166206231080a4440b373 or 68f049866b44688a7af65ba766bef75a.\n\nThe problem occurred while trying to load %s",
 	"Diablo was unable to find the file \"ddraw.dll\", which is a component of Microsoft DirectX.\nPlease run the program \"SETUP.EXE\" on the Diablo CD-ROM and install Microsoft DirectX.\n\nIf you continue to have problems with DirectX, please contact Microsoft's Technical Support at:\n\n    USA telephone: 1-800-426-9400\n    International telephone: 206-882-8080\n    http://www.microsoft.com\n\n\nThe error encountered while trying to initialize DirectX was:\n\n    %s",
 	"Diablo was unable to find the file \"dsound.dll\", which is a component of Microsoft DirectX.\nPlease run the program \"SETUP.EXE\" on the Diablo CD-ROM and install Microsoft DirectX.\n\nIf you continue to have problems with DirectX, please contact Microsoft's Technical Support at:\n\n    USA telephone: 1-800-426-9400\n    International telephone: 206-882-8080\n    http://www.microsoft.com\n\n\nThe error encountered while trying to initialize DirectX was:\n\n    %s",
 	"Diablo requires at least 10 megabytes of free disk space to run properly.\nThe disk:\n\n%s\n\nhas less than 10 megabytes of free space left.\n\nPlease free some space on your drive and run Diablo again.",
@@ -123,12 +123,7 @@ int DialogBoxParam(HINSTANCE hInstance, LPCSTR msgId, HWND hWndParent, DLGPROC l
 {
 	char text[1024];
 	snprintf(text, 1024, errorMessages[(intptr_t)msgId], dwInitParam);
-
-	if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, errorTitle[(intptr_t)msgId], text, window) <= -1) {
-		SDL_Log(SDL_GetError());
-		return -1;
-	}
-
+	UiErrorOkDialog(errorTitle[(intptr_t)msgId], text, nullptr, 0);
 	return 0;
 }
 
@@ -585,16 +580,6 @@ int GetCenterOffset(int w, int bw)
 	return (bw - w) / 2;
 }
 
-void LoadPalInMem(PALETTEENTRY *pPal)
-{
-	for (int i = 0; i < 256; i++) {
-		orig_palette[i].peFlags = 0;
-		orig_palette[i].peRed = pPal[i].peRed;
-		orig_palette[i].peGreen = pPal[i].peGreen;
-		orig_palette[i].peBlue = pPal[i].peBlue;
-	}
-}
-
 void LoadBackgroundArt(char *pszFile)
 {
 	PALETTEENTRY pPal[256];
@@ -837,6 +822,16 @@ bool HandleMouseEvent(const SDL_Event &event, UiItem *item)
 }
 
 } // namespace
+
+void LoadPalInMem(const PALETTEENTRY *pPal)
+{
+	for (int i = 0; i < 256; i++) {
+		orig_palette[i].peFlags = 0;
+		orig_palette[i].peRed = pPal[i].peRed;
+		orig_palette[i].peGreen = pPal[i].peGreen;
+		orig_palette[i].peBlue = pPal[i].peBlue;
+	}
+}
 
 void UiRenderItems(UiItem *items, std::size_t size)
 {

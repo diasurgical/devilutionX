@@ -5,6 +5,7 @@
 #include <string>
 
 #include "DiabloUI/diabloui.h"
+#include "DiabloUI/dialogs.h"
 
 #ifdef _MSC_VER
 #define strcasecmp _stricmp
@@ -329,18 +330,7 @@ void lstrcpynA(LPSTR lpString1, LPCSTR lpString2, int iMaxLength)
 
 int MessageBoxA(HWND hWnd, const char *Text, const char *Title, UINT Flags)
 {
-	Uint32 SDLFlags = 0;
-	if (Flags & DVL_MB_ICONHAND) {
-		SDLFlags |= SDL_MESSAGEBOX_ERROR;
-	} else if (Flags & DVL_MB_ICONEXCLAMATION) {
-		SDLFlags |= SDL_MESSAGEBOX_WARNING;
-	}
-
-	if (SDL_ShowSimpleMessageBox(SDLFlags, Title, Text, window) <= -1) {
-		SDL_Log(SDL_GetError());
-		return -1;
-	}
-
+	UiOkDialog(Title, Text, /*error=*/!!(Flags & (DVL_MB_ICONHAND | DVL_MB_ICONEXCLAMATION)), nullptr, 0);
 	return 0;
 }
 

@@ -40,6 +40,7 @@ void UiFadeIn(int steps = 16);
 bool UiFocusNavigation(SDL_Event *event);
 bool UiItemMouseEvents(SDL_Event *event, UiItem *items, std::size_t size);
 int GetCenterOffset(int w, int bw = 0);
+void LoadPalInMem(const PALETTEENTRY *pPal);
 void DrawLogo(int t = 0, int size = LOGO_MED);
 void DrawMouse();
 void LoadBackgroundArt(char *pszFile);

@@ -13,7 +13,7 @@ char diablo_exe_path[MAX_PATH];
 HANDLE hellfire_mpq;
 char patch_rt_mpq_path[MAX_PATH];
 WNDPROC CurrentProc;
-HANDLE diabdat_mpq;
+HANDLE diabdat_mpq = NULL;
 char diabdat_mpq_path[MAX_PATH];
 HANDLE patch_rt_mpq;
 

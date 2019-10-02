@@ -142,6 +142,11 @@ void MsgBox(const char *pszFmt, va_list va)
 
 void FreeDlg()
 {
+	// Diablo calls this method before calling the dialog, which wouldn't work
+	// for DevilutionX.
+	puts("FreeDlg(): skipping");
+	return;
+
 	if (terminating && cleanup_thread_id != GetCurrentThreadId())
 		Sleep(20000);
 
