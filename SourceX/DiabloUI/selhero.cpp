@@ -309,6 +309,7 @@ BOOL UiSelHeroDialog(
 
 		selhero_SaveCount = 0;
 		fninfo(SelHero_GetHeroInfo);
+		std::reverse(selhero_heros, selhero_heros + selhero_SaveCount);
 
 		if (selhero_SaveCount) {
 			selhero_List_Init();
