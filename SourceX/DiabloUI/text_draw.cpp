@@ -12,6 +12,15 @@ extern SDL_Surface *pal_surface;
 
 namespace {
 
+TextAlignment XAlignmentFromFlags(int flags)
+{
+	if (flags & UIS_CENTER)
+		return TextAlignment::CENTER;
+	if (flags & UIS_RIGHT)
+		return TextAlignment::END;
+	return TextAlignment::BEGIN;
+}
+
 int AlignXOffset(int flags, const SDL_Rect &dest, int w)
 {
 	if (flags & UIS_CENTER)
@@ -29,8 +38,9 @@ void DrawTTF(const char *text, const SDL_Rect &rect, int flags,
 {
 	if (*render_cache == nullptr) {
 		*render_cache = new TtfSurfaceCache();
-		(*render_cache)->text = RenderUTF8_Solid_Wrapped(font, text, text_color, rect.w);
-		(*render_cache)->shadow = RenderUTF8_Solid_Wrapped(font, text, shadow_color, rect.w);
+		const auto x_align = XAlignmentFromFlags(flags);
+		(*render_cache)->text = RenderUTF8_Solid_Wrapped(font, text, text_color, rect.w, x_align);
+		(*render_cache)->shadow = RenderUTF8_Solid_Wrapped(font, text, shadow_color, rect.w, x_align);
 	}
 	SDL_Surface *text_surface = (*render_cache)->text;
 	SDL_Surface *shadow_surface = (*render_cache)->shadow;

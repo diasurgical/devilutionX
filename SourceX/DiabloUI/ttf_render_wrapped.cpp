@@ -19,7 +19,7 @@ SDL_bool CharacterIsDelimiter(char c, const char *delimiters)
 } // namespace
 
 // Based on SDL 2.0.12 TTF_RenderUTF8_Blended_Wrapped
-SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Color fg, Uint32 wrapLength)
+SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Color fg, Uint32 wrapLength, TextAlignment x_align)
 {
 	int width, height;
 	SDL_Surface *textbuf;
@@ -142,6 +142,18 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 		SDL_Surface *tmp = TTF_RenderUTF8_Solid(font, text, fg);
 		dest.w = static_cast<decltype(SDL_Rect().w)>(tmp->w);
 		dest.h = static_cast<decltype(SDL_Rect().h)>(tmp->h);
+
+		switch (x_align) {
+		case TextAlignment::END:
+			dest.x = textbuf->w - tmp->w;
+			break;
+		case TextAlignment::CENTER:
+			dest.x = (textbuf->w - tmp->w) / 2;
+			break;
+		case TextAlignment::BEGIN:
+			dest.x = 0;
+			break;
+		}
 		SDL_BlitSurface(tmp, nullptr, textbuf, &dest);
 		dest.y += tmp->h;
 		SDL_FreeSurface(tmp);
