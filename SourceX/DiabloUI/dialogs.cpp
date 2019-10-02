@@ -1,46 +1,79 @@
+#include "DiabloUI/dialogs.h"
+
 #include "devilution.h"
 #include "DiabloUI/diabloui.h"
+#include "DiabloUI/button.h"
+#include "DiabloUI/fonts.h"
 
 namespace dvl {
 
-Art dialogArt; // "ui_art\\spopup.pcx"
-char dialogMessage[256];
+extern SDL_Surface *pal_surface;
 
-Art progressArt; // "ui_art\\prog_bg.pcx"
+namespace {
+
+Art dialogArt;
+Art progressArt;
+char dialogText[256];
+char dialogCaption[256];
+bool fontWasLoaded;
+bool textInputWasActive;
+
+UiItem *dialogItems;
+std::size_t dialogItemsSize;
+
+enum class State {
+	DEFAULT = 0,
+	OK,
+	CANCEL,
+};
+
+State state;
 
 void DialogActionOK()
 {
+	state = State::OK;
 }
 
 void DialogActionCancel()
 {
+	state = State::CANCEL;
 }
 
+constexpr auto DIALOG_ART_S = UiImage(&dialogArt, { 180, 168, 280, 144 });
+constexpr auto DIALOG_ART_L = UiImage(&dialogArt, { 128, 168, 385, 280 });
+
 UiItem OKCANCEL_DIALOG[] = {
-	UiImage(&dialogArt, { 180, 168, 280, 144 }),
-	UiText(dialogMessage, { 200, 180, 240, 80 }, UIS_CENTER),
-	UiArtTextButton("OK", &DialogActionOK, { 200, 265, 110, 28 }, UIS_SML1),
-	UiArtTextButton("Cancel", &DialogActionCancel, { 330, 265, 110, 28 }, UIS_SML2),
+	DIALOG_ART_S,
+	UiText(dialogText, { 200, 200, 240, 80 }, UIS_CENTER),
+	MakeSmlButton("OK", &DialogActionOK, 200, 265),
+	MakeSmlButton("Cancel", &DialogActionCancel, 330, 265),
 };
 
 UiItem OK_DIALOG[] = {
-	UiImage(&dialogArt, { 180, 168, 280, 144 }),
-	UiText(dialogMessage, { 200, 180, 240, 80 }, UIS_CENTER),
-	UiArtTextButton("OK", &DialogActionOK, { 200, 265, 110, 28 }, UIS_SML1),
+	DIALOG_ART_S,
+	UiText(dialogText, { 200, 200, 240, 80 }, UIS_CENTER),
+	MakeSmlButton("OK", &DialogActionOK, 266, 265),
+};
+
+UiItem OK_DIALOG_WITH_CAPTION[] = {
+	DIALOG_ART_L,
+	UiText(dialogText, { 200, 200, 240, 80 }, UIS_CENTER),
+	UiText(dialogCaption, { 200, 280, 240, 80 }, UIS_CENTER),
+	MakeSmlButton("OK", &DialogActionOK, 266, 401),
 };
 
 UiItem PROGRESS_DIALOG[] = {
-	UiImage(&dialogArt, { 180, 168, 280, 144 }),
-	UiText(dialogMessage, { 180, 177, 280, 43 }, UIS_CENTER),
+	DIALOG_ART_S,
+	UiText(dialogText, { 180, 177, 280, 43 }, UIS_CENTER),
 	UiImage(&progressArt, { 205, 220, 228, 38 }),
-	UiArtTextButton("Cancel", &DialogActionCancel, { 265, 267, 110, 28 }, UIS_SML1),
+	MakeSmlButton("Cancel", &DialogActionCancel, 330, 265),
 };
 
 UiListItem SELOK_DIALOG_ITEMS[] = {
 	{ "OK", 0 }
 };
 UiItem SELOK_DIALOG[] = {
-	UiText(dialogMessage, { 140, 210, 400, 168 }, UIS_CENTER),
+	UiText(dialogText, { 140, 210, 400, 168 }, UIS_CENTER),
 	UiList(SELOK_DIALOG_ITEMS, 230, 390, 180, 35, UIS_CENTER),
 };
 
@@ -49,4 +82,88 @@ UiItem SPAWNERR_DIALOG[] = {
 	UiArtTextButton("OK", &DialogActionOK, { 230, 407, 180, 43 }),
 };
 
+void Init(const char *text, const char *caption, bool error)
+{
+	strcpy(dialogText, text);
+	if (caption == nullptr) {
+		LoadMaskedArt(error ? "ui_art\\srpopup.pcx" : "ui_art\\spopup.pcx", &dialogArt);
+		dialogItems = OK_DIALOG;
+		dialogItemsSize = size(OK_DIALOG);
+	} else {
+		LoadMaskedArt(error ? "ui_art\\lrpopup.pcx" : "ui_art\\lpopup.pcx", &dialogArt);
+		strcpy(dialogCaption, caption);
+		dialogItems = OK_DIALOG_WITH_CAPTION;
+		dialogItemsSize = size(OK_DIALOG_WITH_CAPTION);
+	}
+	LoadSmlButtonArt();
+
+	fontWasLoaded = font != nullptr;
+	if (!fontWasLoaded)
+		LoadTtfFont();
+	textInputWasActive = SDL_IsTextInputActive();
+	SDL_StopTextInput();
 }
+
+void Deinit()
+{
+	dialogArt.Unload();
+	UnloadSmlButtonArt();
+	if (!fontWasLoaded)
+		UnloadTtfFont();
+	if (textInputWasActive)
+		SDL_StartTextInput();
+	for (std::size_t i = 0; i < dialogItemsSize; ++i) {
+		dialogItems[i].FreeCache();
+	}
+}
+
+void DialogLoop(UiItem *items, std::size_t num_items, UiItem *render_behind, std::size_t render_behind_size)
+{
+	SDL_Event event;
+	state = State::DEFAULT;
+	if (render_behind_size == 0)
+		SDL_FillRect(pal_surface, nullptr, 0);
+	do {
+		while (SDL_PollEvent(&event)) {
+			switch (event.type) {
+			case SDL_KEYDOWN:
+				switch (event.key.keysym.sym) {
+				case SDLK_ESCAPE:
+				case SDLK_RETURN:
+				case SDLK_KP_ENTER:
+				case SDLK_SPACE:
+					state = State::OK;
+					break;
+				default:
+					break;
+				}
+				break;
+			case SDL_MOUSEBUTTONDOWN:
+			case SDL_MOUSEBUTTONUP:
+				UiItemMouseEvents(&event, items, num_items);
+				break;
+			case SDL_QUIT:
+				exit(0);
+			}
+		}
+		UiRenderItems(render_behind, render_behind_size);
+		UiRender(items, num_items);
+		UiFadeIn();
+	} while (state == State::DEFAULT);
+}
+
+} // namespace
+
+void UiErrorOkDialog(const char *text, const char *caption, UiItem *render_behind, std::size_t render_behind_size)
+{
+	Init(text, caption, /*error=*/true);
+	DialogLoop(dialogItems, dialogItemsSize, render_behind, render_behind_size);
+	Deinit();
+}
+
+void UiErrorOkDialog(const char *text, UiItem *render_behind, std::size_t render_behind_size)
+{
+	UiErrorOkDialog(text, nullptr, render_behind, render_behind_size);
+}
+
+} // namespace dvl

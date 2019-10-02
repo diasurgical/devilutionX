@@ -1,19 +1,24 @@
 #pragma once
 
 #include <cstdint>
+#include <cstddef>
 #include <string>
 #include <vector>
 
 #include "devilution.h"
-#include "art.h"
 #include "stubs.h"
+
+#include "DiabloUI/art.h"
+#include "DiabloUI/text_draw.h"
 
 namespace dvl {
 
 enum UiType {
 	UI_TEXT,
-	UI_IMAGE,
+	UI_ART_TEXT,
 	UI_ART_TEXT_BUTTON,
+	UI_IMAGE,
+	UI_BUTTON,
 	UI_LIST,
 	UI_SCROLLBAR,
 	UI_EDIT,
@@ -29,11 +34,8 @@ enum UiFlags {
 	UIS_VCENTER = 1 << 6,
 	UIS_SILVER = 1 << 7,
 	UIS_GOLD = 1 << 8,
-	UIS_SML1 = 1 << 9,
-	UIS_SML2 = 1 << 10,
-	UIS_LIST = 1 << 11,
-	UIS_DISABLED = 1 << 12,
-	UIS_HIDDEN = 1 << 13,
+	UIS_DISABLED = 1 << 9,
+	UIS_HIDDEN = 1 << 10,
 };
 
 struct UiItemBase {
@@ -46,6 +48,11 @@ struct UiItemBase {
 	bool has_flag(UiFlags flag) const
 	{
 		return flags & flag;
+	}
+
+	bool has_any_flag(int flags) const
+	{
+		return (this->flags & flags) != 0;
 	}
 
 	void add_flag(UiFlags flag)
@@ -79,8 +86,34 @@ struct UiImage : public UiItemBase {
 	int frame;
 };
 
+// Plain text (TTF).
 struct UiText : public UiItemBase {
 	constexpr UiText(const char *text, SDL_Rect rect, int flags = 0)
+	    : UiItemBase(rect, flags)
+	    , color{ 243, 243, 243, 0 }
+	    , shadow_color{ 0, 0, 0, 0 }
+	    , text(text)
+	    , render_cache(nullptr)
+	{
+	}
+
+	SDL_Color color;
+	SDL_Color shadow_color;
+	const char *text;
+
+	// State:
+	TtfSurfaceCache *render_cache;
+
+	void FreeCache()
+	{
+		delete render_cache;
+		render_cache = nullptr;
+	}
+};
+
+// Text drawn with Diablo sprites.
+struct UiArtText : public UiItemBase {
+	constexpr UiArtText(const char *text, SDL_Rect rect, int flags = 0)
 	    : UiItemBase(rect, flags)
 	    , text(text)
 	{
@@ -89,6 +122,7 @@ struct UiText : public UiItemBase {
 	const char *text;
 };
 
+// Clickable Diablo sprites text.
 struct UiArtTextButton : public UiItemBase {
 	constexpr UiArtTextButton(const char *text, void (*action)(), SDL_Rect rect, int flags = 0)
 	    : UiItemBase(rect, flags)
@@ -99,6 +133,43 @@ struct UiArtTextButton : public UiItemBase {
 
 	const char *text;
 	void (*action)();
+};
+
+// A button (uses Diablo sprites).
+struct UiButton : public UiItemBase {
+	enum FrameKey {
+		DEFAULT = 0,
+		PRESSED,
+		DISABLED
+	};
+	using FrameMap = int[3];
+
+	constexpr UiButton(Art *art, const FrameMap &frame_map, const char *text, void (*action)(), SDL_Rect rect, int flags = 0)
+	    : UiItemBase(rect, flags)
+	    , art(art)
+	    , frame_map{ frame_map[0], frame_map[1], frame_map[2] }
+	    , text(text)
+	    , action(action)
+	    , pressed(false)
+	    , render_cache(nullptr)
+	{
+	}
+
+	Art *art;
+	const FrameMap frame_map;
+
+	const char *text;
+	void (*action)();
+
+	// State
+	bool pressed;
+	TtfSurfaceCache *render_cache;
+
+	void FreeCache()
+	{
+		delete render_cache;
+		render_cache = nullptr;
+	}
 };
 
 struct UiListItem {
@@ -185,15 +256,27 @@ struct UiItem {
 	{
 	}
 
-	constexpr UiItem(UiImage image)
-	    : type(UI_IMAGE)
-	    , image(image)
+	constexpr UiItem(UiArtText text)
+	    : type(UI_ART_TEXT)
+	    , art_text(text)
 	{
 	}
 
 	constexpr UiItem(UiArtTextButton art_text_button)
 	    : type(UI_ART_TEXT_BUTTON)
 	    , art_text_button(art_text_button)
+	{
+	}
+
+	constexpr UiItem(UiImage image)
+	    : type(UI_IMAGE)
+	    , image(image)
+	{
+	}
+
+	constexpr UiItem(UiButton button)
+	    : type(UI_BUTTON)
+	    , button(button)
 	{
 	}
 
@@ -218,8 +301,10 @@ struct UiItem {
 	UiType type;
 	union {
 		UiText text;
+		UiArtText art_text;
 		UiImage image;
 		UiArtTextButton art_text_button;
+		UiButton button;
 		UiList list;
 		UiScrollBar scrollbar;
 		UiEdit edit;
@@ -231,9 +316,28 @@ struct UiItem {
 		return common.has_flag(flag);
 	}
 
+	bool has_any_flag(int flags) const
+	{
+		return common.has_any_flag(flags);
+	}
+
 	const SDL_Rect &rect() const
 	{
 		return common.rect;
+	}
+
+	void FreeCache()
+	{
+		switch (type) {
+		case UI_BUTTON:
+			button.FreeCache();
+			break;
+		case UI_TEXT:
+			text.FreeCache();
+			break;
+		default:
+			break;
+		}
 	}
 };
 

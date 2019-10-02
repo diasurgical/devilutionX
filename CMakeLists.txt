@@ -200,6 +200,7 @@ set(devilutionx_SRCS
   SourceX/dvlnet/frame_queue.cpp
   SourceX/DiabloUI/art_draw.cpp
   SourceX/DiabloUI/art.cpp
+  SourceX/DiabloUI/button.cpp
   SourceX/DiabloUI/credits.cpp
   SourceX/DiabloUI/diabloui.cpp
   SourceX/DiabloUI/dialogs.cpp

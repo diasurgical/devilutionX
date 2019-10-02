@@ -11,6 +11,7 @@
 #include "DiabloUI/art_draw.h"
 #include "DiabloUI/text_draw.h"
 #include "DiabloUI/fonts.h"
+#include "DiabloUI/button.h"
 
 namespace dvl {
 
@@ -379,10 +380,7 @@ bool UiFocusNavigation(SDL_Event *event)
 		}
 	}
 
-	const bool mouse_handled = gUiItems && gUiItemCnt && UiItemMouseEvents(event, gUiItems, gUiItemCnt);
-	if (event->type == SDL_MOUSEBUTTONUP && event->button.button == SDL_BUTTON_LEFT)
-		scrollBarState.downArrowPressed = scrollBarState.upArrowPressed = false;
-	if (mouse_handled)
+	if (UiItemMouseEvents(event, gUiItems, gUiItemCnt))
 		return true;
 
 	if (gfnListEsc && event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_ESCAPE) {
@@ -634,23 +632,37 @@ void DrawSelector(const SDL_Rect &rect)
 	DrawArt(rect.x + rect.w - art->w(), y, art, frame);
 }
 
-void UiRender()
-{
+void UiPollAndRender() {
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
 		UiFocusNavigation(&event);
 	}
-	UiRenderItems(gUiItems, gUiItemCnt);
+	UiRender(gUiItems, gUiItemCnt);
+	UiFadeIn();
+}
+
+void UiRender(UiItem *items, std::size_t size)
+{
+	UiRenderItems(items, size);
 	DrawLogo();
 	DrawMouse();
-	UiFadeIn();
 }
 
 namespace {
 
-void Render(const UiText &ui_text)
+void Render(UiText *ui_text)
 {
-	DrawArtStr(ui_text.text, ui_text.rect, ui_text.flags);
+	DrawTTF(ui_text->text,
+	    ui_text->rect,
+	    ui_text->flags,
+	    ui_text->color,
+	    ui_text->shadow_color,
+	    &ui_text->render_cache);
+}
+
+void Render(const UiArtText &ui_art_text)
+{
+	DrawArtStr(ui_art_text.text, ui_art_text.rect, ui_art_text.flags);
 }
 
 void Render(const UiImage &ui_image)
@@ -716,28 +728,34 @@ void Render(const UiEdit &ui_edit)
 	DrawArtStr(ui_edit.value, rect, ui_edit.flags, /*drawTextCursor=*/true);
 }
 
-void RenderItem(const UiItem &item)
+void RenderItem(UiItem *item)
 {
-	if (item.has_flag(UIS_HIDDEN))
+	if (item->has_flag(UIS_HIDDEN))
 		return;
-	switch (item.type) {
+	switch (item->type) {
 	case UI_TEXT:
-		Render(item.text);
+		Render(&item->text);
+		break;
+	case UI_ART_TEXT:
+		Render(item->art_text);
 		break;
 	case UI_IMAGE:
-		Render(item.image);
+		Render(item->image);
 		break;
 	case UI_ART_TEXT_BUTTON:
-		Render(item.art_text_button);
+		Render(item->art_text_button);
+		break;
+	case UI_BUTTON:
+		RenderButton(&item->button);
 		break;
 	case UI_LIST:
-		Render(item.list);
+		Render(item->list);
 		break;
 	case UI_SCROLLBAR:
-		Render(item.scrollbar);
+		Render(item->scrollbar);
 		break;
 	case UI_EDIT:
-		Render(item.edit);
+		Render(item->edit);
 		break;
 	}
 }
@@ -801,17 +819,19 @@ bool HandleMouseEventScrollBar(const SDL_Event &event, const UiScrollBar &ui_sb)
 	return false;
 }
 
-bool HandleMouseEvent(const SDL_Event &event, const UiItem &item)
+bool HandleMouseEvent(const SDL_Event &event, UiItem *item)
 {
-	if (item.has_flag(UIS_HIDDEN) || !IsInsideRect(event, item.rect()))
+	if (item->has_any_flag(UIS_HIDDEN | UIS_DISABLED) || !IsInsideRect(event, item->rect()))
 		return false;
-	switch (item.type) {
+	switch (item->type) {
 	case UI_ART_TEXT_BUTTON:
-		return HandleMouseEventArtTextButton(event, item.art_text_button);
+		return HandleMouseEventArtTextButton(event, item->art_text_button);
+	case UI_BUTTON:
+		return HandleMouseEventButton(event, &item->button);
 	case UI_LIST:
-		return HandleMouseEventList(event, item.list);
+		return HandleMouseEventList(event, item->list);
 	case UI_SCROLLBAR:
-		return HandleMouseEventScrollBar(event, item.scrollbar);
+		return HandleMouseEventScrollBar(event, item->scrollbar);
 	default:
 		return false;
 	}
@@ -819,20 +839,34 @@ bool HandleMouseEvent(const SDL_Event &event, const UiItem &item)
 
 } // namespace
 
-void UiRenderItems(UiItem *items, int size)
+void UiRenderItems(UiItem *items, std::size_t size)
 {
-	for (int i = 0; i < size; i++)
-		RenderItem(items[i]);
+	for (std::size_t i = 0; i < size; i++)
+		RenderItem(&items[i]);
 }
 
-bool UiItemMouseEvents(SDL_Event *event, UiItem *items, int size)
+bool UiItemMouseEvents(SDL_Event *event, UiItem *items, std::size_t size)
 {
-	for (int i = 0; i < size; i++) {
-		if (HandleMouseEvent(*event, items[i]))
-			return true;
+	if (!items || size == 0) return false;
+
+	bool handled = false;
+	for (std::size_t i = 0; i < size; i++) {
+		if (HandleMouseEvent(*event, &items[i])) {
+			handled = true;
+			break;
+		}
 	}
 
-	return false;
+	if (event->type == SDL_MOUSEBUTTONUP && event->button.button == SDL_BUTTON_LEFT) {
+		scrollBarState.downArrowPressed = scrollBarState.upArrowPressed = false;
+		for (std::size_t i = 0; i < size; ++i) {
+			UiItem &item = items[i];
+			if (item.type == UI_BUTTON)
+				HandleGlobalMouseUpButton(&item.button);
+		}
+	}
+
+	return handled;
 }
 
 void DrawLogo(int t, int size)

@@ -19,7 +19,7 @@ BOOL UiTitleDialog(int a1)
 {
 	UiItem TITLESCREEN_DIALOG[] = {
 		UiImage(&ArtBackground, { 0, 0, 640, 480 }),
-		UiText("Copyright \xA9 1996-2001 Blizzard Entertainment", { 49, 410, 550, 26 }, UIS_MED | UIS_CENTER)
+		UiArtText("Copyright \xA9 1996-2001 Blizzard Entertainment", { 49, 410, 550, 26 }, UIS_MED | UIS_CENTER)
 	};
 
 	title_Load();

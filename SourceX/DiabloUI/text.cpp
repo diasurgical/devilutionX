@@ -2,7 +2,7 @@
 
 namespace dvl {
 
-std::size_t GetStrWidth(const char *str, std::size_t size)
+std::size_t GetArtStrWidth(const char *str, std::size_t size)
 {
 	int strWidth = 0;
 
@@ -17,7 +17,7 @@ std::size_t GetStrWidth(const char *str, std::size_t size)
 	return strWidth;
 }
 
-void WordWrap(char *text, std::size_t width)
+void WordWrapArtStr(char *text, std::size_t width)
 {
 	const std::size_t len = strlen(text);
 	std::size_t lineStart = 0;
@@ -31,7 +31,7 @@ void WordWrap(char *text, std::size_t width)
 
 		if (i != len)
 			text[i] = '\0';
-		if (GetStrWidth(&text[lineStart], AFT_SMALL) <= width) {
+		if (GetArtStrWidth(&text[lineStart], AFT_SMALL) <= width) {
 			if (i != len)
 				text[i] = ' ';
 			continue;
