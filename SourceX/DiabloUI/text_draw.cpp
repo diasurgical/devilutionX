@@ -41,7 +41,8 @@ void DrawTTF(const char *text, const SDL_Rect &rect, int flags,
 	dest_rect.y += static_cast<decltype(SDL_Rect().y)>(SCREEN_Y + y_offset);
 
 	SDL_Rect shadow_rect = dest_rect;
-	shadow_rect.x += 2;
+	++shadow_rect.x;
+	++shadow_rect.y;
 	if (SDL_BlitSurface(shadow_surface, nullptr, pal_surface, &shadow_rect) <= -1)
 		SDL_Log(SDL_GetError());
 	if (SDL_BlitSurface(text_surface, nullptr, pal_surface, &dest_rect) <= -1)

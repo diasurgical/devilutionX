@@ -637,15 +637,10 @@ void UiPollAndRender() {
 	while (SDL_PollEvent(&event)) {
 		UiFocusNavigation(&event);
 	}
-	UiRender(gUiItems, gUiItemCnt);
-	UiFadeIn();
-}
-
-void UiRender(UiItem *items, std::size_t size)
-{
-	UiRenderItems(items, size);
+	UiRenderItems(gUiItems, gUiItemCnt);
 	DrawLogo();
 	DrawMouse();
+	UiFadeIn();
 }
 
 namespace {

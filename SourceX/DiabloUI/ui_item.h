@@ -88,12 +88,17 @@ struct UiImage : public UiItemBase {
 
 // Plain text (TTF).
 struct UiText : public UiItemBase {
-	constexpr UiText(const char *text, SDL_Rect rect, int flags = 0)
+	constexpr UiText(const char *text, SDL_Color color, SDL_Rect rect, int flags = 0)
 	    : UiItemBase(rect, flags)
-	    , color{ 243, 243, 243, 0 }
+	    , color(color)
 	    , shadow_color{ 0, 0, 0, 0 }
 	    , text(text)
 	    , render_cache(nullptr)
+	{
+	}
+
+	constexpr UiText(const char *text, SDL_Rect rect, int flags = 0)
+	    : UiText(text, SDL_Color{ 243, 243, 243, 0 }, rect, flags)
 	{
 	}
 

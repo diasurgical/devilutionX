@@ -12,7 +12,7 @@ inline void UnloadSmlButtonArt()
 	SmlButton.Unload();
 }
 constexpr decltype(SDL_Rect().w) SML_BUTTON_WIDTH = 110;
-constexpr decltype(SDL_Rect().h) SML_BUTTON_HEIGHT = 27;
+constexpr decltype(SDL_Rect().h) SML_BUTTON_HEIGHT = 28;
 
 enum class ButtonFrame {
 	BG_GOLD = 0,

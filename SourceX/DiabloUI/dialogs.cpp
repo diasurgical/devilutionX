@@ -40,26 +40,26 @@ void DialogActionCancel()
 }
 
 constexpr auto DIALOG_ART_S = UiImage(&dialogArt, { 180, 168, 280, 144 });
-constexpr auto DIALOG_ART_L = UiImage(&dialogArt, { 128, 168, 385, 280 });
+constexpr auto DIALOG_ART_L = UiImage(&dialogArt, { 127, 100, 385, 280 });
 
 UiItem OKCANCEL_DIALOG[] = {
 	DIALOG_ART_S,
-	UiText(dialogText, { 200, 200, 240, 80 }, UIS_CENTER),
+	UiText(dialogText, { 198, 211, 240, 80 }, UIS_CENTER),
 	MakeSmlButton("OK", &DialogActionOK, 200, 265),
 	MakeSmlButton("Cancel", &DialogActionCancel, 330, 265),
 };
 
 UiItem OK_DIALOG[] = {
 	DIALOG_ART_S,
-	UiText(dialogText, { 200, 200, 240, 80 }, UIS_CENTER),
-	MakeSmlButton("OK", &DialogActionOK, 266, 265),
+	UiText(dialogText, { 200, 211, 240, 80 }, UIS_CENTER),
+	MakeSmlButton("OK", &DialogActionOK, 265, 265),
 };
 
 UiItem OK_DIALOG_WITH_CAPTION[] = {
 	DIALOG_ART_L,
-	UiText(dialogText, { 200, 200, 240, 80 }, UIS_CENTER),
-	UiText(dialogCaption, { 200, 280, 240, 80 }, UIS_CENTER),
-	MakeSmlButton("OK", &DialogActionOK, 266, 401),
+	UiText(dialogText, SDL_Color { 255, 255, 0, 0 }, { 200, 110, 240, 20 }, UIS_CENTER),
+	UiText(dialogCaption, { 200, 141, 240, 80 }, UIS_CENTER),
+	MakeSmlButton("OK", &DialogActionOK, 264, 335),
 };
 
 UiItem PROGRESS_DIALOG[] = {
@@ -147,7 +147,9 @@ void DialogLoop(UiItem *items, std::size_t num_items, UiItem *render_behind, std
 			}
 		}
 		UiRenderItems(render_behind, render_behind_size);
-		UiRender(items, num_items);
+		DrawLogo();
+		UiRenderItems(items, num_items);
+		DrawMouse();
 		UiFadeIn();
 	} while (state == State::DEFAULT);
 }
