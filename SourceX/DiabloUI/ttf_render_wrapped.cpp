@@ -109,16 +109,16 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 	}
 
 	if (!strLines) {
+		SDL_stack_free(str);
 		return TTF_RenderUTF8_Solid(font, text, fg);
 	}
 
 	/* Create the target surface */
 	textbuf = SDL_CreateRGBSurface(SDL_SWSURFACE, (numLines > 1) ? wrapLength : width, height * numLines + (lineSpace * (numLines - 1)), 8, 0, 0, 0, 0);
 	if (textbuf == nullptr) {
-		if (strLines) {
+		if (strLines)
 			SDL_free(strLines);
-			SDL_stack_free(str);
-		}
+		SDL_stack_free(str);
 		return nullptr;
 	}
 
@@ -141,7 +141,18 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 	SDL_Rect dest = { 0, 0, 0, 0 };
 	for (std::size_t line = 0; line < numLines; line++) {
 		text = strLines[line];
+		if (!text || !*text) {
+			dest.y += lineskip;
+			continue;
+		}
 		SDL_Surface *tmp = TTF_RenderUTF8_Solid(font, text, fg);
+		if (tmp == nullptr) {
+			SDL_Log(TTF_GetError());
+			SDL_FreeSurface(textbuf);
+			SDL_free(strLines);
+			SDL_stack_free(str);
+			return nullptr;
+		}
 		dest.w = static_cast<decltype(SDL_Rect().w)>(tmp->w);
 		dest.h = static_cast<decltype(SDL_Rect().h)>(tmp->h);
 

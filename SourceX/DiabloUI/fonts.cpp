@@ -50,11 +50,13 @@ void UnloadArtFonts()
 }
 
 void LoadTtfFont() {
-	if (!TTF_WasInit() && TTF_Init() == -1) {
-		printf("TTF_Init: %s\n", TTF_GetError());
-		exit(1);
+	if (!TTF_WasInit()) {
+		if (TTF_Init() == -1) {
+			printf("TTF_Init: %s\n", TTF_GetError());
+			exit(1);
+		}
+		atexit(TTF_Quit);
 	}
-	atexit(TTF_Quit);
 
 	font = TTF_OpenFont("CharisSILB.ttf", 17);
 	if (font == NULL) {
@@ -67,7 +69,7 @@ void LoadTtfFont() {
 }
 
 void UnloadTtfFont() {
-	if (font)
+	if (font && TTF_WasInit())
 		TTF_CloseFont(font);
 	font = nullptr;
 }

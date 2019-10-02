@@ -44,6 +44,8 @@ void DrawTTF(const char *text, const SDL_Rect &rect, int flags,
 	}
 	SDL_Surface *text_surface = (*render_cache)->text;
 	SDL_Surface *shadow_surface = (*render_cache)->shadow;
+	if (text_surface == nullptr)
+		return;
 
 	SDL_Rect dest_rect = rect;
 	const int x_offset = AlignXOffset(flags, rect, text_surface->w);

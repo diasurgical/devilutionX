@@ -14,7 +14,7 @@ namespace {
 Art dialogArt;
 Art progressArt;
 char dialogText[256];
-char dialogCaption[256];
+char dialogCaption[1024];
 bool fontWasLoaded;
 bool textInputWasActive;
 
@@ -156,11 +156,16 @@ void DialogLoop(UiItem *items, std::size_t num_items, UiItem *render_behind, std
 
 } // namespace
 
-void UiErrorOkDialog(const char *text, const char *caption, UiItem *render_behind, std::size_t render_behind_size)
+void UiOkDialog(const char *text, const char *caption, bool error, UiItem *render_behind, std::size_t render_behind_size)
 {
-	Init(text, caption, /*error=*/true);
+	Init(text, caption, error);
 	DialogLoop(dialogItems, dialogItemsSize, render_behind, render_behind_size);
 	Deinit();
+}
+
+void UiErrorOkDialog(const char *text, const char *caption, UiItem *render_behind, std::size_t render_behind_size)
+{
+	UiOkDialog(text, caption, /*error=*/true, render_behind, render_behind_size);
 }
 
 void UiErrorOkDialog(const char *text, UiItem *render_behind, std::size_t render_behind_size)

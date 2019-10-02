@@ -12,6 +12,7 @@
 #include "DiabloUI/text_draw.h"
 #include "DiabloUI/fonts.h"
 #include "DiabloUI/button.h"
+#include "DiabloUI/dialogs.h"
 
 namespace dvl {
 
@@ -600,6 +601,9 @@ void LoadBackgroundArt(char *pszFile)
 
 	fadeValue = 0;
 	LoadArt(pszFile, &ArtBackground, 1, pPal);
+	if (ArtBackground.surface == nullptr)
+		return;
+
 	LoadPalInMem(pPal);
 	ApplyGamma(logical_palette, orig_palette, 256);
 }

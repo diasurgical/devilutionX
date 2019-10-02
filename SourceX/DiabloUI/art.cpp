@@ -32,6 +32,7 @@ void LoadArt(const char *pszFile, Art *art, int frames, PALETTEENTRY *pPalette)
 	        art_surface->pitch * art_surface->format->BytesPerPixel * height, 0, 0, 0)) {
 		SDL_Log("Failed to load image");
 		SDL_FreeSurface(art_surface);
+		art->surface = nullptr;
 		return;
 	}
 
@@ -43,11 +44,13 @@ void LoadArt(const char *pszFile, Art *art, int frames, PALETTEENTRY *pPalette)
 void LoadMaskedArt(const char *pszFile, Art *art, int frames, int mask)
 {
 	LoadArt(pszFile, art, frames);
+	if (art->surface != nullptr) {
 #ifdef USE_SDL1
-	SDL_SetColorKey(art->surface, SDL_SRCCOLORKEY, mask);
+		SDL_SetColorKey(art->surface, SDL_SRCCOLORKEY, mask);
 #else
-	SDL_SetColorKey(art->surface, SDL_TRUE, mask);
+		SDL_SetColorKey(art->surface, SDL_TRUE, mask);
 #endif
+	}
 }
 
 } // namespace dvl

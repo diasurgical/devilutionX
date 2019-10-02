@@ -12,7 +12,7 @@ struct Art {
 
 	int w() const
 	{
-		return surface->w;
+		return surface ? surface->w : 0;
 	}
 
 	int h() const

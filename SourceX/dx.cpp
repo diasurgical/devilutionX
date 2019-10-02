@@ -146,7 +146,10 @@ void dx_cleanup()
 	gpBuffer = NULL;
 	sgMemCrit.Leave();
 
+	if (pal_surface == nullptr)
+		return;
 	SDL_FreeSurface(pal_surface);
+	pal_surface = nullptr;
 	SDL_FreePalette(palette);
 	SDL_FreeSurface(surface);
 	SDL_DestroyTexture(texture);
