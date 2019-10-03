@@ -110,11 +110,19 @@ void Init(const char *text, const char *caption, bool error)
 {
 	strcpy(dialogText, text);
 	if (caption == nullptr) {
-		LoadMaskedArt(error ? "ui_art\\srpopup.pcx" : "ui_art\\spopup.pcx", &dialogArt);
+		if (diabdat_mpq != nullptr) {
+			LoadMaskedArt(error ? "ui_art\\srpopup.pcx" : "ui_art\\spopup.pcx", &dialogArt);
+		} else {
+			StubArt(&dialogArt, DIALOG_ART_S.rect.w, DIALOG_ART_S.rect.h, DEFAULT_BG_DIALOG_IDX);
+		}
 		dialogItems = OK_DIALOG;
 		dialogItemsSize = size(OK_DIALOG);
 	} else {
-		LoadMaskedArt(error ? "ui_art\\lrpopup.pcx" : "ui_art\\lpopup.pcx", &dialogArt);
+		if (diabdat_mpq != nullptr) {
+			LoadMaskedArt(error ? "ui_art\\lrpopup.pcx" : "ui_art\\lpopup.pcx", &dialogArt);
+		} else {
+			StubArt(&dialogArt, DIALOG_ART_L.rect.w, DIALOG_ART_L.rect.h, DEFAULT_BG_DIALOG_IDX);
+		}
 		strcpy(dialogCaption, caption);
 		dialogItems = OK_DIALOG_WITH_CAPTION;
 		dialogItemsSize = size(OK_DIALOG_WITH_CAPTION);
@@ -124,8 +132,6 @@ void Init(const char *text, const char *caption, bool error)
 	if (diabdat_mpq == nullptr) {
 		ShowCursor(true);
 		LoadFallbackPalette();
-		const auto dlg_rect = (caption == nullptr ? DIALOG_ART_S.rect : DIALOG_ART_L.rect);
-		StubArt(&dialogArt, dlg_rect.w, dlg_rect.h, DEFAULT_BG_DIALOG_IDX);
 		const auto &btn = dialogItems[dialogItemsSize - 1].button;
 		StubArt(btn.art, btn.rect.w, btn.rect.h, DEFAULT_BG_BUTTON_IDX);
 	}
