@@ -50,7 +50,7 @@ UiItem SELHERO_DIALOG[] = {
 	UiArtText("Vitality:", { 39, 422, 110, 21 }, UIS_RIGHT),
 	UiArtText(textStats[4], { 159, 422, 40, 21 }, UIS_CENTER),
 };
-UiImage *SELHERO_DIALOG_HERO_IMG = &SELHERO_DIALOG[2].image;
+UiImage *SELHERO_DIALOG_HERO_IMG = &SELHERO_DIALOG[3].image;
 
 UiListItem SELLIST_DIALOG_ITEMS[kMaxViewportItems];
 UiItem SELLIST_DIALOG[] = {
