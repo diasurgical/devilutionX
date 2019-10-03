@@ -627,7 +627,6 @@ void UiPollAndRender() {
 		UiFocusNavigation(&event);
 	}
 	UiRenderItems(gUiItems, gUiItemCnt);
-	DrawLogo();
 	DrawMouse();
 	UiFadeIn();
 }
@@ -651,7 +650,16 @@ void Render(const UiArtText &ui_art_text)
 
 void Render(const UiImage &ui_image)
 {
-	DrawArt(ui_image.rect.x, ui_image.rect.y, ui_image.art, ui_image.frame, ui_image.rect.w);
+	int x = ui_image.rect.x;
+	if ((ui_image.flags & UIS_CENTER) && ui_image.art != nullptr) {
+		const int x_offset = GetCenterOffset(ui_image.art->w(), ui_image.rect.w);
+		x += x_offset;
+	}
+	if (ui_image.animated) {
+		DrawAnimatedArt(ui_image.art, x, ui_image.rect.y);
+	} else {
+		DrawArt(x, ui_image.rect.y, ui_image.art, ui_image.frame, ui_image.rect.w);
+	}
 }
 
 void Render(const UiArtTextButton &ui_button)
@@ -861,11 +869,6 @@ bool UiItemMouseEvents(SDL_Event *event, UiItem *items, std::size_t size)
 	}
 
 	return handled;
-}
-
-void DrawLogo(int t, int size)
-{
-	DrawAnimatedArt(&ArtLogos[size], GetCenterOffset(ArtLogos[size].w()), t);
 }
 
 void DrawMouse()

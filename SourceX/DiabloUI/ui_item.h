@@ -70,19 +70,26 @@ struct UiItemBase {
 };
 
 struct UiImage : public UiItemBase {
+	constexpr UiImage(Art *art, bool animated, int frame, SDL_Rect rect, int flags = 0)
+	    : UiItemBase(rect, flags)
+	    , art(art)
+	    , animated(animated)
+	    , frame(frame)
+	{
+	}
+
+	constexpr UiImage(Art *art, int frame, SDL_Rect rect, int flags = 0)
+	    : UiImage(art, /*animated=*/false, frame, rect, flags)
+	{
+	}
+
 	constexpr UiImage(Art *art, SDL_Rect rect, int flags = 0)
 	    : UiImage(art, /*frame=*/0, rect, flags)
 	{
 	}
 
-	constexpr UiImage(Art *art, int frame, SDL_Rect rect, int flags = 0)
-	    : UiItemBase(rect, flags)
-	    , art(art)
-	    , frame(frame)
-	{
-	}
-
 	Art *art;
+	bool animated;
 	int frame;
 };
 

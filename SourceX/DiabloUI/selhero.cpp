@@ -35,7 +35,8 @@ BOOL(*gfnHeroDelete)
 namespace {
 
 UiItem SELHERO_DIALOG[] = {
-	UiImage(&ArtBackground, { 0, 0, 640, 480 }),
+	MAINMENU_BACKGROUND,
+	MAINMENU_LOGO,
 	UiArtText(title, { 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG),
 	UiImage(&ArtHero, UI_NUM_CLASSES, { 30, 211, 180, 76 }),
 	UiArtText("Level:", { 39, 323, 110, 21 }, UIS_RIGHT),

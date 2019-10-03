@@ -180,7 +180,6 @@ void DialogLoop(UiItem *items, std::size_t num_items, UiItem *render_behind, std
 			}
 		}
 		UiRenderItems(render_behind, render_behind_size);
-		DrawLogo();
 		UiRenderItems(items, num_items);
 		DrawMouse();
 		UiFadeIn();

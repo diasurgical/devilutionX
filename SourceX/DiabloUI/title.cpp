@@ -18,7 +18,8 @@ void title_Free()
 BOOL UiTitleDialog(int a1)
 {
 	UiItem TITLESCREEN_DIALOG[] = {
-		UiImage(&ArtBackground, { 0, 0, 640, 480 }),
+		MAINMENU_BACKGROUND,
+		UiImage(&ArtLogos[LOGO_BIG], /*animated=*/true, /*frame=*/0, { 0, 182, 0, 0 }, UIS_CENTER),
 		UiArtText("Copyright \xA9 1996-2001 Blizzard Entertainment", { 49, 410, 550, 26 }, UIS_MED | UIS_CENTER)
 	};
 
@@ -30,7 +31,6 @@ BOOL UiTitleDialog(int a1)
 	SDL_Event event;
 	while (!endMenu && SDL_GetTicks() < timeOut) {
 		UiRenderItems(TITLESCREEN_DIALOG, size(TITLESCREEN_DIALOG));
-		DrawLogo(182, LOGO_BIG);
 		UiFadeIn();
 
 		while (SDL_PollEvent(&event)) {

@@ -29,7 +29,8 @@ UiListItem SELCONN_DIALOG_ITEMS[] = {
 #endif
 };
 UiItem SELCONNECT_DIALOG[] = {
-	UiImage(&ArtBackground, { 0, 0, 640, 480 }),
+	MAINMENU_BACKGROUND,
+	MAINMENU_LOGO,
 	UiArtText("Multi Player Game", { 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG),
 	UiArtText(selconn_MaxPlayers, { 35, 218, 205, 21 }),
 	UiArtText("Requirements:", { 35, 256, 205, 21 }),

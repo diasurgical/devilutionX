@@ -19,7 +19,8 @@ UiListItem SELYESNO_DIALOG_ITEMS[] = {
 };
 
 UiItem SELYESNO_DIALOG[] = {
-	UiImage(&ArtBackground, { 0, 0, 640, 480 }),
+	MAINMENU_BACKGROUND,
+	MAINMENU_LOGO,
 	UiArtText(selyesno_title, { 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG),
 	UiArtText(selyesno_confirmationMessage, { 120, 236, 280, 168 }, UIS_MED),
 	UiList(SELYESNO_DIALOG_ITEMS, 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD)
