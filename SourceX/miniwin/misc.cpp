@@ -179,7 +179,7 @@ HWND CreateWindowExA(
 	DvlIntSetting("grab input", &grabInput);
 
 #ifdef USE_SDL1
-	int flags = SDL_SWSURFACE | SDL_DOUBLEBUF | SDL_HWPALETTE;
+	int flags = SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_HWPALETTE;
 	if (fullscreen) {
 		SDL_Log("fullscreen not yet supported with SDL1");
 	}
