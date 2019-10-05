@@ -1,0 +1,5 @@
+Copy diabdat.mpq from your CD, or GoG install folder to:
+/home/retrofw/games/devilutionx/diabdat.mpq
+
+Game saves and diablo.ini are located at:
+/home/retrofw/.local/share/diasurgical/devilution

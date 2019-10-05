@@ -4,8 +4,8 @@ set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
-readonly IN="${1:-../../build/devilutionx.dge}"
-readonly OUT="${2:-../../build/devilutionx.ipk}"
+readonly OUT="${1:-../../build/devilutionx.ipk}"
+readonly IN="${2:-../../build/devilutionx.dge}"
 
 readonly PKG_TARGET=devilutionx
 readonly TMP="tmp/${PKG_TARGET}"
@@ -29,7 +29,7 @@ mkdir -p "${TMP}"
 mkdir -p "${TMP}/root/${PKG_INSTALL_DIR}" "${TMP}/root/${PKG_LOCAL_DIR}"
 cp "$IN" "${TMP}/root/${PKG_INSTALL_DIR}/${PKG_TARGET}.dge"
 cp ../resources/Diablo_32.png "${TMP}/root/${PKG_INSTALL_DIR}/devilutionx.png"
-cp ../resources/CharisSILB.ttf ../resources/LICENSE.CharisSILB.txt "${TMP}/root/${PKG_INSTALL_DIR}"
+cp devilutionx.man.txt ../resources/CharisSILB.ttf ../resources/LICENSE.CharisSILB.txt "${TMP}/root/${PKG_INSTALL_DIR}"
 cp diablo.ini "${TMP}/root/${PKG_LOCAL_DIR}/diablo.ini"
 mkdir -p "${TMP}/root/$(dirname "$PKG_MENU_LNK_OUT")"
 printf "%s\n" \

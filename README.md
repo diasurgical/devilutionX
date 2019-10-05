@@ -148,36 +148,31 @@ make -j$(nproc)
 
 <details><summary>OpenDingux / RetroFW</summary>
 
-To build DevilutionX for OpenDingux / RetroFW, you first need to build the
-cross-compilation toolchain. This can take about an hour or longer and requires
-~8 GiB of space.
+DevilutionX uses buildroot to build packages for OpenDingux and RetroFW.
+
+The build script does the following:
+
+1. Downloads and configures the buildroot if necessary.
+2. Builds the executable (using CMake).
+3. Packages the executable and all related resources into an `.ipk` package.
+
+The buildroot uses ~4 GiB of disk space and can take almost an hour to build.
+
+### OpenDingux
+
+The OpenDingux build uses the buildroot at `$HOME/buildroot-2018.02.9-opendingux-musl`.
 
 ~~~ bash
-# Builds the toolchain in BUILDROOT_DIR=$HOME/rs90-toolchain
-Packaging/OpenDingux/build-toolchain.sh
+Packaging/OpenDingux/build-opendingux-sdl1.sh
 ~~~
 
-Then, build the executable:
+### RetroFW
+
+The OpenDingux build uses the buildroot at `$HOME/buildroot-2018.02.9-retrofw`.
 
 ~~~ bash
-mkdir -p build && cd build
-cmake .. -DDINGUX=ON -DDINGUX_STATIC=ON -DCMAKE_TOOLCHAIN_FILE="$HOME/rs90-buildroot/output/host/share/buildroot/toolchainfile.cmake" -DBINARY_RELEASE=ON
-make -j$(nproc)
+Packaging/OpenDingux/build-retrofw.sh
 ~~~
-
-Finally, build the `ipk` package:
-
-~~~ bash
-Packaging/OpenDingux/package.sh
-~~~
-
-By default, this uses the toolchain in `${HOME}/rs90-buildroot/output/host`.
-You can override this by passing
-`-DDINGUX_MIPSEL_BUILDROOT=path-to-your-toolchain` to the `cmake` command.
-
-The default toolchain uses musl libc and we compile everything statically with
-the `-DDINGUX_STATIC=ON`. This is because OpenDingux devices are a zoo of libcs,
-using anything from glibc to ucLibc.
 
 </details>
 
