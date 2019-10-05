@@ -360,7 +360,7 @@ DWORD GetPlrGFXSize(char *szCel)
 				sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", ClassStrTbl[c], Type, Type, szCel);
 				if (WOpenFile(pszName, &hsFile, TRUE)) {
 					/// ASSERT: assert(hsFile);
-					dwSize = WGetFileSize(hsFile, NULL);
+					dwSize = WGetFileSize(hsFile, NULL, pszName);
 					WCloseFile(hsFile);
 					if (dwMaxSize <= dwSize) {
 						dwMaxSize = dwSize;

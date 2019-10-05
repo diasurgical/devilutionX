@@ -123,6 +123,12 @@ WINBOOL SetFileAttributesA(LPCSTR lpFileName, DWORD dwFileAttributes)
 	return true;
 }
 
+void ShowOutOfDiskError()
+{
+	char *text = "Failed to save, please free some disk space and try again.";
+	UiErrorOkDialog("Out of Disk Space", text);
+}
+
 WINBOOL CloseHandle(HANDLE hObject)
 {
 	memfile *file = static_cast<memfile *>(hObject);
@@ -131,23 +137,23 @@ WINBOOL CloseHandle(HANDLE hObject)
 	std::unique_ptr<memfile> ufile(file); // ensure that delete file is
 	                                      // called on returning
 	files.erase(file);
-	try {
-		std::ofstream filestream(file->path + ".tmp", std::ios::binary | std::ios::trunc);
-		if (filestream.fail())
-			throw std::runtime_error("ofstream");
-		filestream.write(file->buf.data(), file->buf.size());
-		if (filestream.fail())
-			throw std::runtime_error("ofstream::write");
-		filestream.close();
-		std::remove(file->path.c_str());
-		if (std::rename((file->path + ".tmp").c_str(), file->path.c_str()))
-			throw std::runtime_error("rename");
-		return true;
-	} catch (std::runtime_error &e) {
-		// log
-		DialogBoxParam(ghInst, DVL_MAKEINTRESOURCE(IDD_DIALOG7), ghMainWnd, (DLGPROC)FuncDlg, (LPARAM)file->path.c_str());
+	std::ofstream filestream(file->path + ".tmp", std::ios::binary | std::ios::trunc);
+	if (filestream.fail()) {
+		ShowOutOfDiskError();
 		return false;
 	}
+	filestream.write(file->buf.data(), file->buf.size());
+	if (filestream.fail()) {
+		ShowOutOfDiskError();
+		return false;
+	}
+	filestream.close();
+	std::remove(file->path.c_str());
+	if (std::rename((file->path + ".tmp").c_str(), file->path.c_str())) {
+		ShowOutOfDiskError();
+		return false;
+	}
+	return true;
 }
 
 } // namespace dvl

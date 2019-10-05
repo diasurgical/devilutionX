@@ -19,7 +19,6 @@ int zoomflag;
 BOOL gbProcessPlayers;
 int glEndSeed[NUMLEVELS];
 BOOL gbLoadGame;
-HINSTANCE ghInst;
 int DebugMonsters[10];
 BOOLEAN cineflag;
 int drawpanflag;
@@ -230,70 +229,56 @@ void free_game()
 	FreeGameMem();
 }
 
-int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+void diablo_init(LPSTR lpCmdLine)
 {
-	int nData;
-	char szFileName[MAX_PATH];
+	init_create_window();
 
-	ghInst = hInstance;
+	SFileEnableDirectAccess(TRUE);
+	init_archives();
 
-	if (ReadOnlyTest()) {
-		GetPrefPath(szFileName, sizeof(szFileName));
-		DirErrorDlg(szFileName);
-	}
+	UiInitialize();
+#ifdef SPAWN
+	UiSetSpawned(TRUE);
+#endif
 
-	ShowCursor(FALSE);
+	ReadOnlyTest();
+
 	srand(GetTickCount());
 	InitHash();
 
-	{
+	diablo_init_screen();
+	diablo_parse_flags(lpCmdLine);
+
+	snd_init(NULL);
+	sound_init();
+}
+
+void diablo_splash()
+{
 #ifdef _DEBUG
-		SFileEnableDirectAccess(TRUE);
-#endif
-		diablo_init_screen();
-		diablo_parse_flags(lpCmdLine);
-		init_create_window(nCmdShow);
-		sound_init();
-		UiInitialize();
-#ifdef SPAWN
-		UiSetSpawned(TRUE);
+	if (!showintrodebug)
+		return;
 #endif
 
-#ifdef _DEBUG
-		if (showintrodebug)
-#endif
-			play_movie("gendata\\logo.smk", TRUE);
-
+	play_movie("gendata\\logo.smk", TRUE);
 #ifndef SPAWN
-		{
-			char szValueName[] = "Intro";
-			if (!SRegLoadValue("Diablo", szValueName, 0, &nData))
-				nData = 1;
-			if (nData)
-				play_movie("gendata\\diablo1.smk", TRUE);
-			SRegSaveValue("Diablo", szValueName, 0, 0);
-		}
-#endif
-
-#ifdef _DEBUG
-		if (showintrodebug) {
-#endif
-			UiTitleDialog(7);
-			BlackPalette();
-#ifdef _DEBUG
-		}
-#endif
-
-		mainmenu_loop();
-		UiDestroy();
-		SaveGamma();
-
-		if (ghMainWnd) {
-			Sleep(300);
-		}
+	if (getIniBool("Diablo", "Intro", true)) {
+		play_movie("gendata\\diablo1.smk", TRUE);
+		setIniValue("Diablo", "Intro", "0");
 	}
+#endif
+	UiTitleDialog();
+}
 
-	return FALSE;
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+{
+	diablo_init(lpCmdLine);
+	diablo_splash();
+	mainmenu_loop();
+	UiDestroy();
+	SaveGamma();
+
+	return 0;
 }
 
 void diablo_parse_flags(char *args)

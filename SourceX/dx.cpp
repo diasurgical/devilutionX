@@ -33,8 +33,6 @@ bool bufferUpdated = false;
 void dx_init(HWND hWnd)
 {
 	SDL_RaiseWindow(window);
-	MainWndProc(NULL, DVL_WM_ACTIVATEAPP, true, 0); // TODO trigger on SDL_WINDOWEVENT_FOCUS_GAINED
-
 	SDL_ShowWindow(window);
 
 	dx_create_primary_surface();
@@ -47,7 +45,7 @@ void dx_create_back_buffer()
 	pal_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);
 	if (pal_surface == NULL) {
 		SDL_Log(SDL_GetError());
-		ERR_DLG(IDD_DIALOG1, DDERR_OUTOFMEMORY);
+		UiErrorOkDialog("SDL Error", SDL_GetError());
 	}
 
 	gpBuffer = (BYTE *)pal_surface->pixels;
@@ -58,7 +56,7 @@ void dx_create_back_buffer()
 	if (SDL_SetSurfacePalette(pal_surface, palette) <= -1) {
 #endif
 		SDL_Log(SDL_GetError());
-		ERR_DLG(IDD_DIALOG1, DDERR_INVALIDOBJECT);
+		UiErrorOkDialog("SDL Error", SDL_GetError());
 	}
 
 	pal_surface_palette_version = 1;
@@ -82,7 +80,7 @@ void dx_create_primary_surface()
 #endif
 	if (surface == NULL) {
 		SDL_Log(SDL_GetError());
-		ERR_DLG(IDD_DIALOG1, DDERR_OUTOFMEMORY);
+		UiErrorOkDialog("SDL Error", SDL_GetError());
 	}
 }
 
@@ -119,8 +117,6 @@ void unlock_buf(BYTE idx)
 
 void unlock_buf_priv()
 {
-	HRESULT error_code;
-
 	if (sgdwLockCount == 0)
 		app_fatal("draw main unlock error");
 	if (!gpBuffer)
@@ -130,9 +126,7 @@ void unlock_buf_priv()
 	if (sgdwLockCount == 0) {
 		gpBufEnd -= (uintptr_t)gpBuffer;
 		//gpBuffer = NULL; unable to return to menu
-		error_code = RenderPresent();
-		if (error_code != DVL_S_OK)
-			DD_ERR_MSG(error_code);
+		RenderPresent();
 	}
 	sgMemCrit.Leave();
 }
@@ -140,7 +134,7 @@ void unlock_buf_priv()
 void dx_cleanup()
 {
 	if (ghMainWnd)
-		ShowWindow(ghMainWnd, 0);
+		SDL_HideWindow(window);
 	sgMemCrit.Enter();
 	sgdwLockCount = 0;
 	gpBuffer = NULL;
@@ -182,18 +176,16 @@ void dx_reinit()
 	sgMemCrit.Leave();
 }
 
-HRESULT CreatePalette()
+void CreatePalette()
 {
 	palette = SDL_AllocPalette(256);
 	if (palette == NULL) {
 		SDL_Log(SDL_GetError());
-		return DDERR_OUTOFMEMORY;
+		UiErrorOkDialog("SDL Error", SDL_GetError());
 	}
-
-	return DVL_DS_OK;
 }
 
-HRESULT BltFast(DWORD dwX, DWORD dwY, LPRECT lpSrcRect)
+void BltFast(DWORD dwX, DWORD dwY, LPRECT lpSrcRect)
 {
 	auto w = static_cast<decltype(SDL_Rect().w)>(lpSrcRect->right - lpSrcRect->left + 1);
 	auto h = static_cast<decltype(SDL_Rect().h)>(lpSrcRect->bottom - lpSrcRect->top + 1);
@@ -211,20 +203,19 @@ HRESULT BltFast(DWORD dwX, DWORD dwY, LPRECT lpSrcRect)
 	// Convert from 8-bit to 32-bit
 	if (SDL_BlitSurface(pal_surface, &src_rect, surface, &dst_rect) <= -1) {
 		SDL_Log(SDL_GetError());
-		return DVL_E_FAIL;
+		UiErrorOkDialog("SDL Error", SDL_GetError());
+		return;
 	}
 
 	bufferUpdated = true;
-
-	return DVL_S_OK;
 }
 
-HRESULT RenderPresent()
+void RenderPresent()
 {
 	assert(!SDL_MUSTLOCK(surface));
 
 	if (!bufferUpdated) {
-		return DVL_S_OK;
+		return;
 	}
 
 #ifdef USE_SDL1
@@ -258,8 +249,6 @@ HRESULT RenderPresent()
 #endif
 
 	bufferUpdated = false;
-
-	return DVL_S_OK;
 }
 
 void PaletteGetEntries(DWORD dwNumEntries, LPPALETTEENTRY lpEntries)

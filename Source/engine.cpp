@@ -1274,21 +1274,6 @@ int random(BYTE idx, int v)
 	return GetRndSeed() % v;
 }
 
-void engine_debug_trap(BOOL show_cursor)
-{
-	/*
-	TMemBlock *pCurr;
-
-	sgMemCrit.Enter();
-	while(sgpMemBlock != NULL) {
-		pCurr = sgpMemBlock->pNext;
-		SMemFree(sgpMemBlock, __FILE__, __LINE__);
-		sgpMemBlock = pCurr;
-	}
-	sgMemCrit.Leave();
-*/
-}
-
 BYTE *DiabloAllocPtr(DWORD dwBytes)
 {
 	BYTE *buf;
@@ -1298,7 +1283,9 @@ BYTE *DiabloAllocPtr(DWORD dwBytes)
 	sgMemCrit.Leave();
 
 	if (buf == NULL) {
-		ERR_DLG(IDD_DIALOG2, GetLastError());
+		char *text = "System memory exhausted.\n"
+		"Make sure you have at least 64MB of free system memory before running the game";
+		ERR_DLG("Out of Memory Error", text);
 	}
 
 	return buf;
@@ -1320,7 +1307,7 @@ BYTE *LoadFileInMem(char *pszName, DWORD *pdwFileLen)
 	int fileLen;
 
 	WOpenFile(pszName, &file, FALSE);
-	fileLen = WGetFileSize(file, NULL);
+	fileLen = WGetFileSize(file, NULL, pszName);
 
 	if (pdwFileLen)
 		*pdwFileLen = fileLen;
@@ -1330,7 +1317,7 @@ BYTE *LoadFileInMem(char *pszName, DWORD *pdwFileLen)
 
 	buf = (BYTE *)DiabloAllocPtr(fileLen);
 
-	WReadFile(file, buf, fileLen);
+	WReadFile(file, buf, fileLen, pszName);
 	WCloseFile(file);
 
 	return buf;
@@ -1348,12 +1335,12 @@ DWORD LoadFileWithMem(const char *pszName, void *p)
 
 	WOpenFile(pszName, &hsFile, FALSE);
 
-	dwFileLen = WGetFileSize(hsFile, NULL);
+	dwFileLen = WGetFileSize(hsFile, NULL, pszName);
 	if (dwFileLen == 0) {
 		app_fatal("Zero length SFILE:\n%s", pszName);
 	}
 
-	WReadFile(hsFile, p, dwFileLen);
+	WReadFile(hsFile, p, dwFileLen, pszName);
 	WCloseFile(hsFile);
 
 	return dwFileLen;

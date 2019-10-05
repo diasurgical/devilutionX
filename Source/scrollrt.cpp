@@ -2289,7 +2289,6 @@ void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BOOL draw
 	int ysize;
 	DWORD dwTicks;
 	BOOL retry;
-	HRESULT hDDVal;
 
 	ysize = dwHgt;
 
@@ -2364,35 +2363,17 @@ void DrawFPS()
 
 void DoBlitScreen(DWORD dwX, DWORD dwY, DWORD dwWdt, DWORD dwHgt)
 {
-	int nSrcOff, nDstOff, nSrcWdt, nDstWdt;
-	DWORD dwTicks;
-	HRESULT hDDVal;
 	RECT SrcRect;
 
 	/// ASSERT: assert(! (dwX & 3));
 	/// ASSERT: assert(! (dwWdt & 3));
 
-	if (1) {
-		SrcRect.left = dwX + SCREEN_X;
-		SrcRect.top = dwY + SCREEN_Y;
-		SrcRect.right = SrcRect.left + dwWdt - 1;
-		SrcRect.bottom = SrcRect.top + dwHgt - 1;
-		/// ASSERT: assert(! gpBuffer);
-		dwTicks = GetTickCount();
-		while (1) {
-			hDDVal = BltFast(dwX, dwY, &SrcRect);
-			if (hDDVal == DD_OK) {
-				break;
-			}
-			if (dwTicks - GetTickCount() > 5000) {
-				break;
-			}
-			Sleep(1);
-		}
-		if (hDDVal != DD_OK) {
-			DD_ERR_MSG(hDDVal);
-		}
-	}
+	SrcRect.left = dwX + SCREEN_X;
+	SrcRect.top = dwY + SCREEN_Y;
+	SrcRect.right = SrcRect.left + dwWdt - 1;
+	SrcRect.bottom = SrcRect.top + dwHgt - 1;
+	/// ASSERT: assert(! gpBuffer);
+	BltFast(dwX, dwY, &SrcRect);
 }
 
 void DrawAndBlit()

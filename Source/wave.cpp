@@ -8,70 +8,31 @@ BOOL WCloseFile(HANDLE file)
 	return SFileCloseFile(file);
 }
 
-LONG WGetFileSize(HANDLE hsFile, DWORD *lpFileSizeHigh)
+LONG WGetFileSize(HANDLE hsFile, DWORD *lpFileSizeHigh, const char *FileName)
 {
-	DWORD retry = 0;
 	LONG ret;
 
-	while ((ret = SFileGetFileSize(hsFile, lpFileSizeHigh)) == 0)
-		WGetFileArchive(hsFile, &retry, NULL);
+	if ((ret = SFileGetFileSize(hsFile, lpFileSizeHigh)) == 0)
+		FileErrDlg(FileName);
 
 	return ret;
 }
 
-void WGetFileArchive(HANDLE hsFile, DWORD *retries, const char *FileName)
-{
-	HANDLE archive;
-
-	if (*retries >= 5)
-		FileErrDlg(FileName);
-
-	if (hsFile && SFileGetFileArchive(hsFile, &archive) && archive != diabdat_mpq) {
-		Sleep(20);
-		(*retries)++;
-	} else if (!InsertCDDlg())
-		FileErrDlg(FileName);
-}
-
 BOOL WOpenFile(const char *FileName, HANDLE *phsFile, BOOL mayNotExist)
 {
-	DWORD retry = 0;
+	if (!SFileOpenFile(FileName, phsFile))
+		FileErrDlg(FileName);
 
-	while (1) {
-		if (SFileOpenFile(FileName, phsFile))
-			return TRUE;
-		if (mayNotExist && SErrGetLastError() == ERROR_FILE_NOT_FOUND)
-			break;
-		WGetFileArchive(NULL, &retry, FileName);
-	}
-	return FALSE;
+	return TRUE;
 }
 
-void WReadFile(HANDLE hsFile, LPVOID buf, DWORD to_read)
+void WReadFile(HANDLE hsFile, LPVOID buf, DWORD to_read, const char *FileName)
 {
-	DWORD retry = 0;
-	DWORD readed;
-	int initial_pos = WSetFilePointer(hsFile, 0, NULL, FILE_CURRENT);
+	if (SFileSetFilePointer(hsFile, 0, NULL, FILE_CURRENT) == -1)
+		FileErrDlg(FileName);
 
-	while (!SFileReadFile(hsFile, buf, to_read, &readed, NULL)) {
-		WGetFileArchive(hsFile, &retry, NULL);
-		WSetFilePointer(hsFile, initial_pos, NULL, FILE_BEGIN);
-	}
+	if (!SFileReadFile(hsFile, buf, to_read, NULL, NULL))
+		FileErrDlg(FileName);
 }
-
-int WSetFilePointer(HANDLE file1, int offset, HANDLE file2, int whence)
-{
-	DWORD retry = 0;
-	int result;
-
-	while (1) {
-		result = SFileSetFilePointer(file1, offset, file2, whence);
-		if (result != -1)
-			break;
-		WGetFileArchive(file1, &retry, NULL);
-	}
-	return result;
-}
-
 
 DEVILUTION_END_NAMESPACE

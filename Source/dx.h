@@ -18,9 +18,9 @@ void dx_cleanup();
 void dx_reinit();
 void j_dx_reinit();
 
-HRESULT CreatePalette();
-HRESULT BltFast(DWORD dwX, DWORD dwY, LPRECT lpSrcRect);
-HRESULT RenderPresent();
+void CreatePalette();
+void BltFast(DWORD dwX, DWORD dwY, LPRECT lpSrcRect);
+void RenderPresent();
 void PaletteGetEntries(DWORD dwNumEntries, LPPALETTEENTRY lpEntries);
 void PaletteSetEntries(DWORD dwCount, LPPALETTEENTRY lpEntries);
 

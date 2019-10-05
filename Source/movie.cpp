@@ -16,8 +16,6 @@ void play_movie(char *pszMovie, BOOL user_can_close)
 	}
 
 	saveProc = SetWindowProc(MovieWndProc);
-	InvalidateRect(ghMainWnd, 0, 0);
-	UpdateWindow(ghMainWnd);
 	movie_playing = TRUE;
 	sound_disable_music(TRUE);
 	sfx_stop();

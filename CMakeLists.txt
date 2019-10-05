@@ -199,6 +199,7 @@ set(devilutionx_SRCS
   SourceX/dvlnet/base.cpp
   SourceX/dvlnet/frame_queue.cpp
   SourceX/DiabloUI/art_draw.cpp
+  SourceX/DiabloUI/errorart.cpp
   SourceX/DiabloUI/art.cpp
   SourceX/DiabloUI/button.cpp
   SourceX/DiabloUI/credits.cpp
@@ -300,6 +301,10 @@ if(HAIKU)
 endif()
 
 if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+  # Change __FILE__ to only show the path relative to the project folder
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-builtin-macro-redefined -D'__FILE__=\"$(subst $(realpath ${CMAKE_SOURCE_DIR})/,,$(abspath $<))\"'")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-builtin-macro-redefined -D'__FILE__=\"$(subst $(realpath ${CMAKE_SOURCE_DIR})/,,$(abspath $<))\"'")
+
   if(DEBUG)
     # Note: For Valgrind suppor.
     target_compile_options(devilution PUBLIC -fno-omit-frame-pointer)

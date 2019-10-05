@@ -71,8 +71,6 @@ typedef LONG LCID;
 
 typedef DWORD COLORREF;
 
-typedef LONG HRESULT;
-
 typedef LRESULT(CALLBACK *WNDPROC)(HWND, UINT, WPARAM, LPARAM);
 
 #pragma pack(push, 1)
@@ -193,7 +191,6 @@ BOOL WINAPI ResetEvent(HANDLE hEvent);
 int WINAPI WaitForSingleObject(HANDLE hHandle, DWORD dwMilliseconds);
 
 WINBOOL WINAPI SetCursorPos(int X, int Y);
-int WINAPI ShowCursor(WINBOOL bShow);
 HWND WINAPI SetCapture(HWND hWnd);
 WINBOOL WINAPI ReleaseCapture();
 
@@ -205,23 +202,7 @@ WINBOOL WINAPI TranslateMessage(const MSG *lpMsg);
 LRESULT WINAPI DispatchMessageA(const MSG *lpMsg);
 WINBOOL WINAPI PostMessageA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 
-HWND CreateWindowExA(
-    DWORD dwExStyle,
-    LPCSTR lpClassName,
-    LPCSTR lpWindowName,
-    DWORD dwStyle,
-    int X,
-    int Y,
-    int nWidth,
-    int nHeight,
-    HWND hWndParent,
-    HMENU hMenu,
-    HINSTANCE hInstance,
-    LPVOID lpParam);
-BOOL InvalidateRect(HWND hWnd, const RECT *lpRect, BOOL bErase);
-BOOL UpdateWindow(HWND hWnd);
-BOOL ShowWindow(HWND hWnd, int nCmdShow);
-int GetSystemMetrics(int nIndex);
+bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight);
 
 typedef LONG(WINAPI *PTOP_LEVEL_EXCEPTION_FILTER)(
     struct _EXCEPTION_POINTERS *ExceptionInfo);
@@ -236,7 +217,6 @@ void WINAPI Sleep(DWORD dwMilliseconds);
 WINBOOL WINAPI TextOutA(HDC hdc, int x, int y, LPCSTR lpString, int c);
 
 int WINAPI GetDeviceCaps(HDC hdc, int index);
-BOOL GetWindowRect(HWND hDlg, tagRECT *Rect);
 UINT WINAPI GetSystemPaletteEntries(HDC hdc, UINT iStart, UINT cEntries, LPPALETTEENTRY pPalEntries);
 
 int WINAPIV wsprintfA(LPSTR, LPCSTR, ...);
@@ -278,8 +258,6 @@ typedef struct _IMAGE_FILE_HEADER {
 	WORD SizeOfOptionalHeader;
 	WORD Characteristics;
 } IMAGE_FILE_HEADER, *PIMAGE_FILE_HEADER;
-
-typedef BOOL(CALLBACK *DLGPROC)(HWND, UINT, WPARAM, LPARAM);
 
 typedef struct _IMAGE_OPTIONAL_HEADER {
 	WORD Magic;
@@ -370,10 +348,8 @@ BOOL GetVersionExA(LPOSVERSIONINFOA lpVersionInformation);
 
 void lstrcpynA(LPSTR lpString1, LPCSTR lpString2, int iMaxLength);
 
-int MessageBoxA(HWND hWnd, const char *Text, const char *Title, UINT Flags);
 typedef LONG LSTATUS, HKEY, REGSAM, PHKEY;
 
-void PostQuitMessage(int nExitCode);
 LRESULT DefWindowProcA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 
 WINBOOL WINAPI WriteFile(HANDLE hFile, LPCVOID lpBuffer, DWORD nNumberOfBytesToWrite, LPDWORD lpNumberOfBytesWritten,
@@ -511,12 +487,8 @@ extern void LoadAndPlaySound(char *FilePath, int lVolume, int lPan);
 extern void DrawArtWithMask(int SX, int SY, int SW, int SH, int nFrame, BYTE bMask, void *pBuffer);
 extern BOOL __cdecl LoadArtWithPal(char *pszFile, void **pBuffer, int frames, DWORD *data);
 
-constexpr auto DVL_WM_ACTIVATEAPP = 0x001C;
 constexpr auto DVL_WM_SYSKEYUP = 0x0105;
 constexpr auto DVL_DRIVE_CDROM = 5;
-constexpr auto DVL_WM_DESTROY = 0x0002;
-constexpr auto DVL_HORZRES = 8;
-constexpr auto DVL_VERTRES = 10;
 constexpr auto DVL_VER_PLATFORM_WIN32_NT = 2;
 
 constexpr auto DVL_CREATE_ALWAYS = 2;
@@ -547,8 +519,6 @@ constexpr auto DVL_WM_KEYDOWN = 0x0100;
 constexpr auto DVL_WM_KEYUP = 0x0101;
 constexpr auto DVL_WM_SYSKEYDOWN = 0x0104;
 
-constexpr auto DVL_WM_INITDIALOG = 0x0110;
-constexpr auto DVL_WM_COMMAND = 0x0111;
 constexpr auto DVL_WM_SYSCOMMAND = 0x0112;
 
 constexpr auto DVL_WM_CHAR = 0x0102;
@@ -642,9 +612,5 @@ constexpr auto DVL_VK_OEM_7 = 0xDE;      // For the US standard keyboard, the 's
 constexpr auto DVL_MK_SHIFT = 0x0004;
 constexpr auto DVL_MK_LBUTTON = 0x0001;
 constexpr auto DVL_MK_RBUTTON = 0x0002;
-
-constexpr auto DVL_MB_TASKMODAL = 0x00002000L;
-constexpr auto DVL_MB_ICONHAND = 0x00000010L;
-constexpr auto DVL_MB_ICONEXCLAMATION = 0x00000030L;
 
 } // namespace dvl

@@ -3,7 +3,7 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-BOOL ReadOnlyTest()
+void ReadOnlyTest()
 {
 	FILE *f;
 	char path[MAX_PATH], Filename[MAX_PATH];
@@ -12,13 +12,12 @@ BOOL ReadOnlyTest()
 	snprintf(Filename, DVL_MAX_PATH, "%sDiablo1ReadOnlyTest.foo", path);
 
 	f = fopen(Filename, "wt");
-	if (f) {
-		fclose(f);
-		remove(Filename);
-		return FALSE;
+	if (!f) {
+		DirErrorDlg(path);
 	}
 
-	return TRUE;
+	fclose(f);
+	remove(Filename);;
 }
 
 DEVILUTION_END_NAMESPACE
