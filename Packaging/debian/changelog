@@ -1,5 +1,12 @@
-devilutionx (0.4.0) UNRELEASED; urgency=medium
+devilutionx (0.5.0) UNRELEASED; urgency=medium
 
+  * Ubuntu build
+
+ -- root <root@ubuntu1804.localdomain>  Sat, 05 Oct 2019 12:04:39 +0000
+
+devilutionx (0.4.0) bionic; urgency=medium
+
+  [ Vítězslav Dvořák ]
   * Non-maintainer upload.
 
- -- Vítězslav Dvořák <info@vitexsoftware.cz>  Fri, 28 Jun 2019 22:55:11 +0200
+ -- root <root@ubuntu1804.localdomain>  Sat, 05 Oct 2019 12:03:04 +0000

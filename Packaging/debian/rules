@@ -20,10 +20,12 @@ export DEB_LDFLAGS_MAINT_APPEND = -Wno-error
 #	dh_auto_configure -O--buildsystem=cmake -- -DDESTDIR=/usr/games -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_BUILD_TYPE=None -DCMAKE_INSTALL_SYSCONFDIR=/etc -DCMAKE_INSTALL_LOCALSTATEDIR=/var
 
 override_dh_auto_install:
-	mkdir -p debian/devilutionx/usr/share/pixmaps/
 	mkdir -p debian/diablo-data/usr/share/games/diablo/
-	mkdir -p debian/diablo-data/usr/share/fonts/truetype
 	test -f "../diabdat.mpq" && cp ../diabdat.mpq debian/diablo-data/usr/share/games/diablo/ || true
-	test -f "../CharisSILB.ttf" && cp ../CharisSILB.ttf debian/diablo-data/usr/share/fonts/truetype || true
-	cp -f Diablo.ico debian/devilutionx/usr/share/pixmaps/devilutionx.ico
+	mkdir -p debian/diablo-data/usr/share/icons/hicolor/16x16/apps/
+	mkdir -p debian/diablo-data/usr/share/icons/hicolor/32x32/apps/
+	mkdir -p debian/diablo-data/usr/share/icons/hicolor/48x48/apps/
+	cp Packaging/resources/16.png debian/diablo-data/usr/share/icons/hicolor/16x16/apps/diablo.png 
+	cp Packaging/resources/Diablo_32.png debian/diablo-data/usr/share/icons/hicolor/32x32/apps/diablo.png 
+	cp Packaging/resources/Diablo_48.png debian/diablo-data/usr/share/icons/hicolor/48x48/apps/diablo.png 
 	dh_auto_install
