@@ -1,7 +1,9 @@
 #include "selgame.h"
 
 #include "devilution.h"
+#ifndef SWITCH
 #include "config.h"
+#endif
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/text.h"
 #include "DiabloUI/dialogs.h"
@@ -196,10 +198,12 @@ void selgame_Password_Select(int value)
 			UiInitList(0, 0, NULL, NULL, NULL, NULL, 0);
 			selgame_endMenu = true;
 		} else {
+#ifndef SWITCH
 			UiErrorOkDialog(
 			    "Unable to establish a connection.",
 			    PROJECT_NAME " v" PROJECT_VERSION " game not found or password invalid.",
 			    ENTERPASSWORD_DIALOG, size(ENTERPASSWORD_DIALOG));
+#endif
 			selgame_Password_Init(selgame_selectedGame);
 		}
 		return;
