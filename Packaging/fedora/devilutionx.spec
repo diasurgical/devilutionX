@@ -28,9 +28,15 @@ make %{?_smp_mflags}
 %install
 make INSTALL_ROOT=%{buildroot}
 mkdir -p %{buildroot}%{_bindir}
-mkdir -p %{buildroot}%{_datadir}/pixmaps
+
+mkdir -p %{buildroot}%{_datadir}/icons/hicolor/16x16/apps/
+mkdir -p %{buildroot}%{_datadir}/icons/hicolor/32x32/apps/
+mkdir -p %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/
+install -p -D -m644 Packaging/resources/16.png %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/%{name}.ico
+install -p -D -m644 Packaging/resources/Diablo_48.png %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/%{name}.ico
+install -p -D -m644 Packaging/resources/Diablo_32.png %{buildroot}%{_datadir}/icons/hicolor/32x32/apps/%{name}.ico
+
 install -m 755 devilutionx %{buildroot}%{_bindir}/%{name}
-install -p -D -m644 Diablo.ico %{buildroot}%{_datadir}/pixmaps/%{name}.ico
 desktop-file-install --remove-category="Qt" --dir=%{buildroot}%{_datadir}/applications %{SOURCE1} 
 
 %files

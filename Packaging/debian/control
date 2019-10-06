@@ -21,7 +21,7 @@ Description: Diablo build for modern operating systems
  the best games of the 1990s 
 
 Package: diablo-data
-Architecture: any
+Architecture: all
 Depends:
  ${shlibs:Depends},
  ${misc:Depends},
