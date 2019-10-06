@@ -2,12 +2,6 @@ cmake_minimum_required(VERSION 3.10)
 
 include(CMake/out_of_tree.cmake)
 
-project(DevilutionX
-  VERSION 0.5.0
-  LANGUAGES C CXX)
-
-list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake")
-
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Debug")
 endif()
@@ -41,12 +35,32 @@ if(BINARY_RELEASE)
 endif()
 
 if(NIGHTLY_BUILD)
-  set(CMAKE_BUILD_TYPE "Debug")
+  set(CMAKE_BUILD_TYPE "RelWithDebInfo")
   set(ASAN OFF)
   set(DEBUG ON)
   set(DIST ON)
-  set(FASTER ON)
+  set(FASTER OFF)
 endif()
+
+execute_process(
+  COMMAND git describe --abbrev=0 --tags
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  OUTPUT_VARIABLE GIT_TAG
+  OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+if (NOT CMAKE_BUILD_TYPE MATCHES "Release")
+  execute_process(
+    COMMAND git log -1 --format=-%h
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_COMMIT_HASH
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
+endif()
+
+project(DevilutionX
+  VERSION ${GIT_TAG}
+  LANGUAGES C CXX)
+
+list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake")
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
   set(ASAN OFF)
@@ -295,7 +309,7 @@ foreach(target devilution devilutionx)
   endif()
 endforeach(target devilution devilutionx)
 
-if(DIST AND NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+if(DIST AND CMAKE_CXX_COMPILER_ID MATCHES "GCC")
   target_link_libraries(devilutionx PUBLIC -static-libgcc -static-libstdc++)
 endif()
 
