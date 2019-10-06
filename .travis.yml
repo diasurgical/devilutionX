@@ -4,13 +4,17 @@ os: osx
 
 osx_image: xcode10.3
 
+git:
+  depth: false
+  quiet: true
+
 addons:
   homebrew:
     brewfile: true
 
 script:
   - cd build
-  - cmake .. --DBINARY_RELEASE=ON
+  - cmake --DBINARY_RELEASE=ON ..
   - cmake --build . --target package -j $(sysctl -n hw.physicalcpu)
 
 deploy:
