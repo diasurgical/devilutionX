@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.10)
 
 include(CMake/out_of_tree.cmake)
 
@@ -30,21 +30,13 @@ if(BINARY_RELEASE)
   set(FASTER OFF)
 
   # Use LTO on all compilers where it is supported.
-  if(POLICY CMP0069)
-    # https://cmake.org/cmake/help/v3.9/policy/CMP0069.html
-    cmake_policy(SET CMP0069 NEW)
-    include(CheckIPOSupported)
-    check_ipo_supported(RESULT result)
-    if(result)
-      set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
-      message(STATUS "LTO enabled")
-    else()
-      message(WARNING "LTO not supported by this compiler and/or CMake version")
-    endif()
-  else()
-    # CMake < 3.9, the setting only applies to the Intel compiler on Linux.
-    message(WARNING "LTO only supported for Intel compiler on Linux (CMake version < 3.9)")
+  include(CheckIPOSupported)
+  check_ipo_supported(RESULT result)
+  if(result)
     set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
+    message(STATUS "LTO enabled")
+  else()
+    message(WARNING "LTO not supported by this compiler and/or CMake version")
   endif()
 endif()
 
