@@ -2,7 +2,7 @@
 
 namespace dvl {
 
-extern unsigned char btnData[];
-extern unsigned char popupData[];
+extern const unsigned char btnData[];
+extern const unsigned char popupData[];
 
 } // namespace dvl
