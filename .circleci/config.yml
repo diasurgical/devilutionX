@@ -9,9 +9,8 @@ jobs:
       - run: apt-get update -y
       - run: apt-get install -y cmake g++ libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev
       - run: apt-get install -y -t stretch-backports libsodium-dev
-      - run: mkdir build
-      - run: cd build && cmake ..
-      - run: cd build && make -j$(nproc)
+      - run: cd build && cmake .. -DNIGHTLY_BUILD=ON
+      - run: cd build && cmake --build . -j $(nproc)
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64}
   linux_x86_64_sdl1:
     docker:
@@ -22,9 +21,8 @@ jobs:
       - run: apt-get update -y
       - run: apt-get install -y cmake g++ libsdl-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev
       - run: apt-get install -y -t stretch-backports libsodium-dev
-      - run: mkdir build
-      - run: cd build && cmake .. -DUSE_SDL1=ON
-      - run: cd build && make -j$(nproc)
+      - run: cd build && cmake .. -DNIGHTLY_BUILD=ON -DUSE_SDL1=ON
+      - run: cd build && cmake --build . -j $(nproc)
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64_sdl1}
   linux_x86:
     docker:
@@ -36,9 +34,8 @@ jobs:
       - run: apt-get update -y
       - run: apt-get install -y cmake g++-multilib libsdl2-dev:i386 libsdl2-mixer-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev
       - run: apt-get install -y -t stretch-backports libsodium-dev:i386
-      - run: mkdir build
-      - run: cd build && cmake -DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake ..
-      - run: cd build && make -j$(nproc)
+      - run: cd build && cmake -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake ..
+      - run: cd build && cmake --build . -j $(nproc)
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86}
   windows_x86:
     docker:
@@ -59,9 +56,8 @@ jobs:
       - run: tar -xzf libsodium-1.0.17-mingw.tar.gz --no-same-owner
       - run: cp -r libsodium-win32/* /usr/i686-w64-mingw32
       - run: cp -r SDL2*/i686-w64-mingw32 /usr
-      - run: mkdir build
-      - run: cd build && cmake -DASAN=OFF -DBINARY_RELEASE=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake ..
-      - run: cd build && make -j$(nproc)
+      - run: cd build && cmake -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake ..
+      - run: cd build && cmake --build . -j $(nproc)
       - store_artifacts: {path: ./build/devilutionx.exe, destination: devilutionx_x86.exe}
 
 workflows:

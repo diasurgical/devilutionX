@@ -26,11 +26,11 @@ if(BINARY_RELEASE)
 endif()
 
 if(NIGHTLY_BUILD)
-  set(CMAKE_BUILD_TYPE "Debug")
+  set(CMAKE_BUILD_TYPE "RelWithDebInfo")
   set(ASAN OFF)
   set(DEBUG ON)
   set(DIST ON)
-  set(FASTER ON)
+  set(FASTER OFF)
 endif()
 
 execute_process(
