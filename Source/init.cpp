@@ -50,7 +50,11 @@ void init_cleanup()
 
 void init_create_window()
 {
+#ifdef SWITCH
+	if (!SpawnWindow("DevilutionX", SCREEN_WIDTH, SCREEN_HEIGHT))
+#else
 	if (!SpawnWindow(PROJECT_NAME, SCREEN_WIDTH, SCREEN_HEIGHT))
+#endif
 		app_fatal("Unable to create main window");
 	dx_init(NULL);
 	gbActive = true;

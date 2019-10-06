@@ -129,7 +129,16 @@ MAINOBJ = \
 	obj/selyesno.o \
 	obj/title.o \
 	obj/main.o \
-	obj/touch.o
+	obj/touch.o \
+	obj/art_draw.o \
+	obj/errorart.o \
+	obj/art.o \
+	obj/button.o \
+	obj/fonts.o \
+	obj/scrollbar.o \
+	obj/text_draw.o \
+	obj/text.o \
+	obj/ttf_render_wrapped.o
 
 # touch keyboard on Switch
 MAINOBJ += obj/switch_keyboard.o
@@ -398,4 +407,21 @@ obj/touch.o: $(GLOBALDEPS) touch/touch.cpp
 	$(CXX) -c touch/touch.cpp -o obj/touch.o $(CXXFLAGS)
 obj/switch_keyboard.o: $(GLOBALDEPS) switch/switch_keyboard.cpp
 	$(CXX) -c switch/switch_keyboard.cpp -o obj/switch_keyboard.o $(CXXFLAGS)
-
+obj/art_draw.o: $(GLOBALDEPS) SourceX/DiabloUI/art_draw.cpp
+	$(CXX) -c SourceX/DiabloUI/art_draw.cpp -o obj/art_draw.o $(CXXFLAGS)
+obj/errorart.o: $(GLOBALDEPS) SourceX/DiabloUI/errorart.cpp
+	$(CXX) -c SourceX/DiabloUI/errorart.cpp -o obj/errorart.o $(CXXFLAGS)
+obj/art.o: $(GLOBALDEPS) SourceX/DiabloUI/art.cpp
+	$(CXX) -c SourceX/DiabloUI/art.cpp -o obj/art.o $(CXXFLAGS)
+obj/button.o: $(GLOBALDEPS) SourceX/DiabloUI/button.cpp
+	$(CXX) -c SourceX/DiabloUI/button.cpp -o obj/button.o $(CXXFLAGS)
+obj/fonts.o: $(GLOBALDEPS) SourceX/DiabloUI/fonts.cpp
+	$(CXX) -c SourceX/DiabloUI/fonts.cpp -o obj/fonts.o $(CXXFLAGS)
+obj/scrollbar.o: $(GLOBALDEPS) SourceX/DiabloUI/scrollbar.cpp
+	$(CXX) -c SourceX/DiabloUI/scrollbar.cpp -o obj/scrollbar.o $(CXXFLAGS)
+obj/text_draw.o: $(GLOBALDEPS) SourceX/DiabloUI/text_draw.cpp
+	$(CXX) -c SourceX/DiabloUI/text_draw.cpp -o obj/text_draw.o $(CXXFLAGS)
+obj/text.o: $(GLOBALDEPS) SourceX/DiabloUI/text.cpp
+	$(CXX) -c SourceX/DiabloUI/text.cpp -o obj/text.o $(CXXFLAGS)
+obj/ttf_render_wrapped.o: $(GLOBALDEPS) SourceX/DiabloUI/ttf_render_wrapped.cpp
+	$(CXX) -c SourceX/DiabloUI/ttf_render_wrapped.cpp -o obj/ttf_render_wrapped.o $(CXXFLAGS)
