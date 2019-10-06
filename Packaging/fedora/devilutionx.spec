@@ -1,16 +1,16 @@
 %define debug_package %{nil}
 
 Name:		devilutionx
-Version:	0.4.0
+Version:	0.5.0
 Release:	1%{?dist}
 Summary:	Diablo I engine for modern operating systems
 
 License:	Unlicensed
-URL:		https://github.com/diasurgical/devilutionX
-Source0:	https://github.com/diasurgical/devilutionX/archive/%{version}.tar.gz
+URL:		https://github.com/Vitexus/devilutionX
+Source0:	https://github.com/Vitexus/devilutionX/archive/%{version}.tar.gz
 Source1:	devilutionx.desktop
 
-BuildRequires:	cmake gcc gcc-c++ libstdc++-static glibc desktop-file-utils
+BuildRequires:	cmake3 gcc gcc-c++ libstdc++-static glibc desktop-file-utils
 BuildRequires:  glibc-devel SDL2-devel SDL2_ttf-devel SDL2_mixer-devel libsodium-devel libasan
 Requires:	SDL2_ttf SDL2_mixer libsodium
 
@@ -22,27 +22,35 @@ Note: Devilution requires an original copy of diabdat.mpq. None of the Diablo 1 
 %setup -q -n devilutionX-%{version}
 
 %build
-cmake -DBINARY_RELEASE=ON -DDEBUG=OFF
-make %{?_smp_mflags}
+mkdir -p build
+rm -rf build/*
+cd build
+cmake ..
+cmake3 --build .
+cd ..
 
 %install
+cd build
 make INSTALL_ROOT=%{buildroot}
+cd ..
 mkdir -p %{buildroot}%{_bindir}
 
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/16x16/apps/
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/32x32/apps/
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/
-install -p -D -m644 Packaging/resources/16.png %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/%{name}.ico
-install -p -D -m644 Packaging/resources/Diablo_48.png %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/%{name}.ico
-install -p -D -m644 Packaging/resources/Diablo_32.png %{buildroot}%{_datadir}/icons/hicolor/32x32/apps/%{name}.ico
+install -p -D -m644 Packaging/resources/16.png %{buildroot}%{_datadir}/icons/hicolor/16x16/apps/%{name}.png
+install -p -D -m644 Packaging/resources/Diablo_32.png %{buildroot}%{_datadir}/icons/hicolor/32x32/apps/%{name}.png
+install -p -D -m644 Packaging/resources/Diablo_48.png %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/%{name}.png
 
-install -m 755 devilutionx %{buildroot}%{_bindir}/%{name}
+install -m 755 build/devilutionx %{buildroot}%{_bindir}/%{name}
 desktop-file-install --remove-category="Qt" --dir=%{buildroot}%{_datadir}/applications %{SOURCE1} 
 
 %files
 %{_bindir}/%{name}
 %{_datadir}/applications/%{name}.desktop
-%{_datadir}/pixmaps/%{name}.ico
+%{_datadir}/icons/hicolor/16x16/apps/%{name}.png
+%{_datadir}/icons/hicolor/32x32/apps/%{name}.png
+%{_datadir}/icons/hicolor/48x48/apps/%{name}.png
 
 %post
 # print info
