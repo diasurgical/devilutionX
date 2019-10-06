@@ -48,16 +48,15 @@ cmake --build . -j $(sysctl -n hw.physicalcpu)
 ```
 </details>
 <details><summary>FreeBSD</summary>
-*Note: At the moment this only appears to work from a 32bit system.*
 
 ### Installing dependencies
 ```
-pkg install cmake gcc8 sdl2_mixer sdl2_ttf libsodium
+pkg install cmake sdl2_mixer sdl2_ttf libsodium
 ```
 ### Compiling
 ```
 cd build
-cmake -DCMAKE_C_COMPILER=/usr/local/bin/gcc8 -DCMAKE_CXX_COMPILER=/usr/local/bin/g++8 ..
+cmake ..
 cmake --build . -j $(sysctl -n hw.ncpu)
 ```
 </details>
