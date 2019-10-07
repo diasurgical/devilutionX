@@ -374,6 +374,14 @@ if(APPLE)
 
   install (TARGETS devilutionx DESTINATION ./)
 
+  if(DIST)
+      install(CODE "
+        include(BundleUtilities)
+        fixup_bundle(${CMAKE_BINARY_DIR}/${MACOSX_BUNDLE_BUNDLE_NAME}.app \"\" \"\")
+        "
+        COMPONENT Runtime)
+  endif()
+
   set(MACOSX_BUNDLE_LONG_VERSION_STRING "Version ${PROJECT_VERSION}")
   set(CPACK_PACKAGE_FILE_NAME "devilutionx")
   set(CPACK_DMG_DISABLE_APPLICATIONS_SYMLINK "ON")
