@@ -14,7 +14,7 @@ addons:
 
 script:
   - cd build
-  - cmake --DBINARY_RELEASE=ON ..
+  - cmake -DBINARY_RELEASE=ON ..
   - cmake --build . --target package -j $(sysctl -n hw.physicalcpu)
 
 deploy:
