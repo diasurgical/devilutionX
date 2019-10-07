@@ -279,11 +279,6 @@
   #define ftruncate64 ftruncate
   #define off64_t off_t
   #define O_LARGEFILE 0
-
-  // Work around https://github.com/devkitPro/newlib/issues/15
-  #ifdef SWITCH
-  extern "C" int ftruncate(int, off_t);
-  #endif
 #endif
 
 // Platform-specific error codes for UNIX-based platforms
