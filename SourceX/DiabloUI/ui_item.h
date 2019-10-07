@@ -98,14 +98,14 @@ struct UiText : public UiItemBase {
 	constexpr UiText(const char *text, SDL_Color color, SDL_Rect rect, int flags = 0)
 	    : UiItemBase(rect, flags)
 	    , color(color)
-	    , shadow_color{ 0, 0, 0, 0 }
+	    , shadow_color { 0, 0, 0, 0 }
 	    , text(text)
 	    , render_cache(nullptr)
 	{
 	}
 
 	constexpr UiText(const char *text, SDL_Rect rect, int flags = 0)
-	    : UiText(text, SDL_Color{ 243, 243, 243, 0 }, rect, flags)
+	    : UiText(text, SDL_Color { 243, 243, 243, 0 }, rect, flags)
 	{
 	}
 
@@ -154,12 +154,10 @@ struct UiButton : public UiItemBase {
 		PRESSED,
 		DISABLED
 	};
-	using FrameMap = int[3];
 
-	constexpr UiButton(Art *art, const FrameMap &frame_map, const char *text, void (*action)(), SDL_Rect rect, int flags = 0)
+	constexpr UiButton(Art *art, const char *text, void (*action)(), SDL_Rect rect, int flags = 0)
 	    : UiItemBase(rect, flags)
 	    , art(art)
-	    , frame_map{ frame_map[0], frame_map[1], frame_map[2] }
 	    , text(text)
 	    , action(action)
 	    , pressed(false)
@@ -168,7 +166,6 @@ struct UiButton : public UiItemBase {
 	}
 
 	Art *art;
-	const FrameMap frame_map;
 
 	const char *text;
 	void (*action)();

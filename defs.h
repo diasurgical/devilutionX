@@ -147,33 +147,10 @@
 #define assert(exp) (void)( (exp) || (assert_fail(__LINE__, __FILE__, #exp), 0) )
 #endif
 
-#define ERR_DLG(templateId, errorCode) \
-	ErrDlg((templateId), (errorCode), __FILE__, __LINE__)
-
-#define DD_ERR_MSG(errorCode) \
-	DDErrMsg((errorCode), __LINE__, __FILE__)
-
-#define DS_ERR_MSG(errorCode) \
-	DSErrMsg((errorCode), __LINE, __FILE)
+#define ERR_DLG(title, text) ErrDlg(title, text, __FILE__, __LINE__)
 
 #ifndef INVALID_FILE_ATTRIBUTES
 #define INVALID_FILE_ATTRIBUTES ((DWORD)-1)
-#endif
-
-// Typedef for the function pointer
-typedef void (*_PVFV)(void);
-
-#if defined(_MSC_VER) && !(defined(__APPLE__)|| defined(__FreeBSD__))
-// Define our segment names
-#define SEGMENT_C_INIT ".CRT$XCU"
-
-// Build our various function tables and insert them into the correct segments.
-#pragma data_seg(SEGMENT_C_INIT)
-#pragma data_seg() // Switch back to the default segment
-// Call function pointer arrays and place them in the segments created above
-#define SEG_ALLOCATE(SEGMENT) __declspec(allocate(SEGMENT))
-#else
-#define SEG_ALLOCATE(SEGMENT)
 #endif
 
 // To apply to certain functions which have local variables aligned by 1 for unknown yet reason

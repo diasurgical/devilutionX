@@ -112,7 +112,7 @@ void nthread_set_turn_upper_bit()
 
 void nthread_start(BOOL set_turn_upper_bit)
 {
-	char *err, *err2;
+	const char *err, *err2;
 	DWORD largestMsgSize;
 	_SNETCAPS caps;
 

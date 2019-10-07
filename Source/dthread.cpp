@@ -52,7 +52,7 @@ void dthread_send_delta(int pnum, char cmd, void *pbSrc, int dwLen)
 
 void dthread_start()
 {
-	char *error_buf;
+	const char *error_buf;
 
 	if (gbMaxPlayers == 1) {
 		return;
@@ -75,7 +75,7 @@ void dthread_start()
 
 unsigned int __stdcall dthread_handler(void *)
 {
-	char *error_buf;
+	const char *error_buf;
 	TMegaPkt *pkt;
 	DWORD dwMilliseconds;
 
@@ -113,7 +113,7 @@ unsigned int __stdcall dthread_handler(void *)
 
 void dthread_cleanup()
 {
-	char *error_buf;
+	const char *error_buf;
 	TMegaPkt *tmp;
 
 	if (sghWorkToDoEvent == NULL) {

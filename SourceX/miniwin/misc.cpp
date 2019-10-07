@@ -143,33 +143,22 @@ WINBOOL ReleaseCapture()
 
 void FakeWMDestroy()
 {
-	MainWndProc(NULL, DVL_WM_DESTROY, 0, 0);
+	init_cleanup();
+	PostMessageA(NULL, DVL_WM_QUERYENDSESSION, 0, 0);
 }
 
-HWND CreateWindowExA(
-    DWORD dwExStyle,
-    LPCSTR lpClassName,
-    LPCSTR lpWindowName,
-    DWORD dwStyle,
-    int X,
-    int Y,
-    int nWidth,
-    int nHeight,
-    HWND hWndParent,
-    HMENU hMenu,
-    HINSTANCE hInstance,
-    LPVOID lpParam)
+bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) <= -1) {
 		SDL_Log(SDL_GetError());
-		return NULL;
+		return false;
 	}
+
+	atexit(SDL_Quit);
 
 #ifdef USE_SDL1
 	SDL_EnableUNICODE(1);
 #endif
-
-	atexit(SDL_Quit);
 
 	int upscale = 1;
 	DvlIntSetting("upscale", &upscale);
@@ -232,48 +221,7 @@ HWND CreateWindowExA(
 #endif
 	}
 
-	return window;
-}
-
-BOOL InvalidateRect(HWND hWnd, const RECT *lpRect, BOOL bErase)
-{
-	DUMMY();
-	return true;
-}
-
-/**
- * @brief Appears to be used to clear the FB on init
- */
-BOOL UpdateWindow(HWND hWnd)
-{
-	DUMMY();
-	return true;
-}
-
-BOOL ShowWindow(HWND hWnd, int nCmdShow)
-{
-	if (nCmdShow == DVL_SW_HIDE) {
-		SDL_HideWindow(window);
-	} else if (nCmdShow == DVL_SW_SHOWNORMAL) {
-		SDL_ShowWindow(window);
-	}
-
-	return true;
-}
-
-/**
- * @brief Because we don't change resolution it dosen't make sens to use SDL_GetCurrentDisplayMode
- */
-int GetSystemMetrics(int nIndex)
-{
-	switch (nIndex) {
-	case DVL_SM_CXSCREEN:
-		return SCREEN_WIDTH;
-	case DVL_SM_CYSCREEN:
-		return SCREEN_HEIGHT;
-	}
-
-	return 0;
+	return window != NULL;
 }
 
 int GetDeviceCaps(HDC hdc, int index)
@@ -285,28 +233,7 @@ int GetDeviceCaps(HDC hdc, int index)
 		return 0;
 	}
 
-	if (index == DVL_HORZRES) {
-		return current.w;
-	}
-	if (index == DVL_VERTRES) {
-		return current.h;
-	}
-
 	return 0;
-}
-
-BOOL GetWindowRect(HWND hDlg, tagRECT *Rect)
-{
-	int x, y, w, h;
-	SDL_GetWindowPosition(window, &x, &y);
-	SDL_GetWindowSize(window, &w, &h);
-
-	Rect->right = x;
-	Rect->top = y;
-	Rect->left = w + x;
-	Rect->bottom = h + y;
-
-	return true;
 }
 
 UINT GetSystemPaletteEntries(HDC hdc, UINT iStart, UINT cEntries, LPPALETTEENTRY pPalEntries)
@@ -328,18 +255,6 @@ void lstrcpynA(LPSTR lpString1, LPCSTR lpString2, int iMaxLength)
 	strncpy(lpString1, lpString2, iMaxLength);
 }
 
-int MessageBoxA(HWND hWnd, const char *Text, const char *Title, UINT Flags)
-{
-	UiOkDialog(Title, Text, /*error=*/!!(Flags & (DVL_MB_ICONHAND | DVL_MB_ICONEXCLAMATION)), nullptr, 0);
-	return 0;
-}
-
-void PostQuitMessage(int nExitCode)
-{
-	DUMMY();
-	PostMessageA(NULL, DVL_WM_QUERYENDSESSION, 0, 0);
-}
-
 LRESULT DefWindowProcA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
 	DUMMY_ONCE();
@@ -348,4 +263,4 @@ LRESULT DefWindowProcA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 
 	return 0;
 }
-}
+} // namespace dvl

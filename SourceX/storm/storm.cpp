@@ -321,6 +321,16 @@ BOOL SMemFree(void *location, char *logfilename, int logline, char defaultValue)
 	return true;
 }
 
+bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue)
+{
+	char string[2];
+
+	if (!getIniValue(sectionName, keyName, string, 2))
+		return defaultValue;
+
+	return strtol(string, NULL, 10) != 0;
+}
+
 bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, int *dataSize)
 {
 	radon::Section *section = ini.getSection(sectionName);
@@ -803,12 +813,6 @@ BOOL SVidPlayEnd(HANDLE video)
 	return true;
 }
 
-BOOL SErrGetErrorStr(DWORD dwErrCode, char *buffer, unsigned int bufferchars)
-{
-	DUMMY();
-	return false;
-}
-
 DWORD SErrGetLastError()
 {
 	return nLastError;
@@ -823,11 +827,6 @@ int SStrCopy(char *dest, const char *src, int max_length)
 {
 	strncpy(dest, src, max_length);
 	return strlen(dest);
-}
-
-void SDrawMessageBox(char *Text, char *Title, int Flags)
-{
-	MessageBoxA(NULL, Text, Title, Flags);
 }
 
 BOOL SFileSetBasePath(char *)

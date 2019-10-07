@@ -79,6 +79,23 @@ inline void SDL_DisableScreenSaver()
 	DUMMY();
 }
 
+//= Messagebox (simply logged to stderr for now)
+
+typedef enum {
+	SDL_MESSAGEBOX_ERROR = 0x00000010,      /**< error dialog */
+	SDL_MESSAGEBOX_WARNING = 0x00000020,    /**< warning dialog */
+	SDL_MESSAGEBOX_INFORMATION = 0x00000040 /**< informational dialog */
+} SDL_MessageBoxFlags;
+
+inline int SDL_ShowSimpleMessageBox(Uint32 flags,
+    const char *title,
+    const char *message,
+    SDL_Surface *window)
+{
+	fprintf(stderr, "MSGBOX: %s\n%s\n", title, message);
+	return 0;
+}
+
 //= Window handling
 
 #define SDL_Window SDL_Surface

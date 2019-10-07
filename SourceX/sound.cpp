@@ -200,13 +200,7 @@ void music_start(int nTrack)
 	/// ASSERT: assert((DWORD) nTrack < NUM_MUSIC);
 	music_stop();
 	if (gbMusicOn) {
-#ifdef _DEBUG
-		SFileEnableDirectAccess(false);
-#endif
 		success = SFileOpenFile(sgszMusicTracks[nTrack], &sgpMusicTrack);
-#ifdef _DEBUG
-		SFileEnableDirectAccess(true);
-#endif
 		if (!success) {
 			sgpMusicTrack = NULL;
 		} else {

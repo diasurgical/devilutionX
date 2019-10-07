@@ -15,7 +15,7 @@ void title_Free()
 	ArtLogos[LOGO_BIG].Unload();
 }
 
-BOOL UiTitleDialog(int a1)
+void UiTitleDialog()
 {
 	UiItem TITLESCREEN_DIALOG[] = {
 		MAINMENU_BACKGROUND,
@@ -53,8 +53,6 @@ BOOL UiTitleDialog(int a1)
 	BlackPalette();
 
 	title_Free();
-
-	return true;
 }
 
 void UiSetSpawned(BOOL bSpawned)

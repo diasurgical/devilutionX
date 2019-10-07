@@ -5,6 +5,7 @@
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/button.h"
 #include "DiabloUI/fonts.h"
+#include "DiabloUI/errorart.h"
 
 namespace dvl {
 
@@ -44,13 +45,6 @@ void DialogActionCancel()
 constexpr auto DIALOG_ART_S = UiImage(&dialogArt, { 180, 168, 280, 144 });
 constexpr auto DIALOG_ART_L = UiImage(&dialogArt, { 127, 100, 385, 280 });
 
-UiItem OKCANCEL_DIALOG[] = {
-	DIALOG_ART_S,
-	UiText(dialogText, { 200, 211, 240, 80 }, UIS_CENTER),
-	MakeSmlButton("OK", &DialogActionOK, 200, 265),
-	MakeSmlButton("Cancel", &DialogActionCancel, 330, 265),
-};
-
 UiItem OK_DIALOG[] = {
 	DIALOG_ART_S,
 	UiText(dialogText, { 200, 211, 240, 80 }, UIS_CENTER),
@@ -59,7 +53,7 @@ UiItem OK_DIALOG[] = {
 
 UiItem OK_DIALOG_WITH_CAPTION[] = {
 	DIALOG_ART_L,
-	UiText(dialogText, SDL_Color{ 255, 255, 0, 0 }, { 147, 110, 345, 20 }, UIS_CENTER),
+	UiText(dialogText, SDL_Color { 255, 255, 0, 0 }, { 147, 110, 345, 20 }, UIS_CENTER),
 	UiText(dialogCaption, { 147, 141, 345, 190 }, UIS_CENTER),
 	MakeSmlButton("OK", &DialogActionOK, 264, 335),
 };
@@ -80,61 +74,155 @@ UiItem SELOK_DIALOG[] = {
 };
 
 UiItem SPAWNERR_DIALOG[] = {
-	UiText("The Rogue and Sorcerer are only available in the full retail version of Diablo. For ordering information call (800) 953-SNOW.", { 140, 199, 400, 177 }),
+	UiText("The Rogue and Sorcerer are only available in the full retail version of Diablo. For ordering information visit https://www.gog.com/game/diablo.", { 140, 199, 400, 177 }),
 	UiArtTextButton("OK", &DialogActionOK, { 230, 407, 180, 43 }),
 };
 
-const std::uint_fast8_t DEFAULT_BG_DIALOG_IDX = 4;
-const std::uint_fast8_t DEFAULT_BG_BUTTON_IDX = 5;
+// clang-format off
+#define BLANKCOLOR { 0, 0xFF, 0, 0 }
+// clang-format on
 
 void LoadFallbackPalette()
 {
-	PALETTEENTRY fallback_palette[256] = { 0 };
-	fallback_palette[1] = { 255, 255, 255, 0 };
-	fallback_palette[2] = { 255, 255, 0, 0 };
-	fallback_palette[3] = { 243, 243, 243, 0 };
-	fallback_palette[DEFAULT_BG_DIALOG_IDX] = { 100, 20, 20, 0 };
-	fallback_palette[DEFAULT_BG_BUTTON_IDX] = { 130, 110, 80, 0 };
-	LoadPalInMem(fallback_palette);
-	ApplyGamma(logical_palette, orig_palette, 256);
-}
-
-void StubArt(Art *art, int w, int h, std::uint_fast8_t color_idx)
-{
-	art->surface = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h * art->frames, 8, 0, 0, 0, 0);
-	SDL_FillRect(art->surface, nullptr, color_idx);
-	art->frame_height = h;
+	// clang-format off
+	static const PALETTEENTRY fallback_palette[256] = {
+		{ 0x00, 0x00, 0x00, 0 },
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR,
+		{ 0xff, 0xfd, 0x9f, 0 },
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		{ 0xe8, 0xca, 0xca, 0 },
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		{ 0x05, 0x07, 0x0c, 0 },
+		{ 0xff, 0xe3, 0xa4, 0 },
+		{ 0xee, 0xd1, 0x8c, 0 },
+		{ 0xdd, 0xc4, 0x7e, 0 },
+		{ 0xcc, 0xb7, 0x75, 0 },
+		{ 0xbc, 0xa8, 0x6c, 0 },
+		{ 0xab, 0x9a, 0x63, 0 },
+		{ 0x98, 0x8b, 0x5d, 0 },
+		{ 0x87, 0x7e, 0x54, 0 },
+		{ 0x78, 0x6f, 0x49, 0 },
+		{ 0x69, 0x60, 0x3f, 0 },
+		{ 0x5b, 0x51, 0x34, 0 },
+		{ 0x48, 0x40, 0x27, 0 },
+		{ 0x39, 0x31, 0x1d, 0 },
+		{ 0x31, 0x28, 0x16, 0 },
+		{ 0x1a, 0x14, 0x08, 0 },
+		{ 0x14, 0x0b, 0x00, 0 },
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR,
+		{ 0xff, 0xbd, 0xbd, 0 },
+		{ 0xf4, 0x96, 0x96, 0 },
+		{ 0xe8, 0x7d, 0x7d, 0 },
+		{ 0xe0, 0x6c, 0x6c, 0 },
+		{ 0xd8, 0x5b, 0x5b, 0 },
+		{ 0xcf, 0x49, 0x49, 0 },
+		{ 0xc7, 0x38, 0x38, 0 },
+		{ 0xbf, 0x27, 0x27, 0 },
+		{ 0xa9, 0x22, 0x22, 0 },
+		{ 0x93, 0x1e, 0x1e, 0 },
+		{ 0x7c, 0x19, 0x19, 0 },
+		{ 0x66, 0x15, 0x15, 0 },
+		{ 0x4f, 0x11, 0x11, 0 },
+		{ 0x39, 0x0d, 0x0d, 0 },
+		{ 0x23, 0x09, 0x09, 0 },
+		{ 0x0c, 0x05, 0x05, 0 },
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR,
+		{ 0xf3, 0xf3, 0xf3, 0 },
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR,
+		{ 0xff, 0xff, 0x00, 0 },
+		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
+		BLANKCOLOR,
+	};
+	// clang-format on
+	ApplyGamma(logical_palette, fallback_palette, 256);
 }
 
 void Init(const char *text, const char *caption, bool error)
 {
 	strcpy(dialogText, text);
 	if (caption == nullptr) {
-		if (diabdat_mpq != nullptr) {
-			LoadMaskedArt(error ? "ui_art\\srpopup.pcx" : "ui_art\\spopup.pcx", &dialogArt);
-		} else {
-			StubArt(&dialogArt, DIALOG_ART_S.rect.w, DIALOG_ART_S.rect.h, DEFAULT_BG_DIALOG_IDX);
-		}
+		LoadMaskedArt(error ? "ui_art\\srpopup.pcx" : "ui_art\\spopup.pcx", &dialogArt);
 		dialogItems = OK_DIALOG;
 		dialogItemsSize = size(OK_DIALOG);
 	} else {
-		if (diabdat_mpq != nullptr) {
-			LoadMaskedArt(error ? "ui_art\\lrpopup.pcx" : "ui_art\\lpopup.pcx", &dialogArt);
+		if (error) {
+			LoadArt(&dialogArt, popupData, DIALOG_ART_L.rect.w, DIALOG_ART_L.rect.h);
 		} else {
-			StubArt(&dialogArt, DIALOG_ART_L.rect.w, DIALOG_ART_L.rect.h, DEFAULT_BG_DIALOG_IDX);
+			LoadMaskedArt("ui_art\\lpopup.pcx", &dialogArt);
 		}
 		strcpy(dialogCaption, caption);
 		dialogItems = OK_DIALOG_WITH_CAPTION;
 		dialogItemsSize = size(OK_DIALOG_WITH_CAPTION);
 	}
 	LoadSmlButtonArt();
-
-	if (diabdat_mpq == nullptr) {
-		ShowCursor(true);
-		LoadFallbackPalette();
-		const auto &btn = dialogItems[dialogItemsSize - 1].button;
-		StubArt(btn.art, btn.rect.w, btn.rect.h, DEFAULT_BG_BUTTON_IDX);
-	}
 
 	fontWasLoaded = font != nullptr;
 	if (!fontWasLoaded)
@@ -160,8 +248,12 @@ void DialogLoop(UiItem *items, std::size_t num_items, UiItem *render_behind, std
 {
 	SDL_Event event;
 	state = State::DEFAULT;
-	if (render_behind_size == 0)
-		SDL_FillRect(pal_surface, nullptr, 0);
+	if (render_behind_size == 0) {
+		LoadBackgroundArt("ui_art\\black.pcx");
+		if (ArtBackground.surface == nullptr) {
+			LoadFallbackPalette();
+		}
+	}
 	do {
 		while (SDL_PollEvent(&event)) {
 			switch (event.type) {
@@ -185,7 +277,12 @@ void DialogLoop(UiItem *items, std::size_t num_items, UiItem *render_behind, std
 				exit(0);
 			}
 		}
-		UiRenderItems(render_behind, render_behind_size);
+
+		if (render_behind_size == 0) {
+			SDL_FillRect(pal_surface, nullptr, 0);
+		} else {
+			UiRenderItems(render_behind, render_behind_size);
+		}
 		UiRenderItems(items, num_items);
 		DrawMouse();
 		UiFadeIn();
@@ -196,6 +293,18 @@ void DialogLoop(UiItem *items, std::size_t num_items, UiItem *render_behind, std
 
 void UiOkDialog(const char *text, const char *caption, bool error, UiItem *render_behind, std::size_t render_behind_size)
 {
+	if (!gbActive) {
+		if (SDL_ShowCursor(SDL_ENABLE) <= -1) {
+			SDL_Log(SDL_GetError());
+		}
+		if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, text, caption, NULL) <= -1) {
+			SDL_Log(SDL_GetError());
+			SDL_Log(text);
+			SDL_Log(caption);
+		}
+		return;
+	}
+
 	Init(text, caption, error);
 	DialogLoop(dialogItems, dialogItemsSize, render_behind, render_behind_size);
 	Deinit();
@@ -204,6 +313,11 @@ void UiOkDialog(const char *text, const char *caption, bool error, UiItem *rende
 void UiErrorOkDialog(const char *text, const char *caption, UiItem *render_behind, std::size_t render_behind_size)
 {
 	UiOkDialog(text, caption, /*error=*/true, render_behind, render_behind_size);
+}
+
+void UiErrorOkDialog(const char *text, const char *caption, bool error)
+{
+	UiOkDialog(text, caption, error, nullptr, 0);
 }
 
 void UiErrorOkDialog(const char *text, UiItem *render_behind, std::size_t render_behind_size)

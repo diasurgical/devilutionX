@@ -30,10 +30,9 @@ sudo dnf install cmake glibc-devel SDL2-devel SDL2_ttf-devel SDL2_mixer-devel li
 ```
 ### Compiling
 ```
-mkdir build
 cd build
 cmake ..
-make -j$(nproc)
+cmake --build . -j $(nproc)
 ```
 </details>
 
@@ -43,25 +42,22 @@ Make sure you have [Homebrew](https://brew.sh/) installed, then run:
 
 ```
 brew bundle
-mkdir build
 cd build
 cmake ..
-make -j$(sysctl -n hw.physicalcpu)
+cmake --build . -j $(sysctl -n hw.physicalcpu)
 ```
 </details>
 <details><summary>FreeBSD</summary>
-*Note: At the moment this only appears to work from a 32bit system.*
 
 ### Installing dependencies
 ```
-pkg install cmake gcc8 sdl2_mixer sdl2_ttf libsodium
+pkg install cmake sdl2_mixer sdl2_ttf libsodium
 ```
 ### Compiling
 ```
-mkdir build
 cd build
-cmake -DCMAKE_C_COMPILER=/usr/local/bin/gcc8 -DCMAKE_CXX_COMPILER=/usr/local/bin/g++8 ..
-make -j$(sysctl -n hw.ncpu)
+cmake ..
+cmake --build . -j $(sysctl -n hw.ncpu)
 ```
 </details>
 
@@ -76,10 +72,9 @@ sudo apt-get install cmake gcc-mingw-w64-i686 g++-mingw-w64-i686
 ```
 ### Compiling
 ```
-mkdir build
 cd build
 cmake -DASAN=OFF -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake ..
-make -j$(nproc)
+cmake --build . -j $(nproc)
 ```
 </details>
 <details><summary>Windows via Visual Studio</summary>
@@ -132,17 +127,15 @@ pkgman install cmake devel:libsdl2 devel:libsdl2_mixer devel:libsdl2_ttf devel:l
 ```
 ### Compiling on 32 bit Haiku
 ```
-mkdir build
 cd build
 cmake -DCMAKE_C_COMPILER=gcc-x86 -DCMAKE_CXX_COMPILER=g++-x86 -DBINARY_RELEASE=ON ..
-make -j$(nproc)
+cmake --build . -j $(nproc)
 ```
 ### Compiling on 64 bit Haiku
 ```
-mkdir build
 cd build
 cmake ..
-make -j$(nproc)
+cmake --build . -j $(nproc)
 ```
 </details>
 

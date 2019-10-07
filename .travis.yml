@@ -1,18 +1,21 @@
 language: cpp
 
 os: osx
-  
+
 osx_image: xcode10.3
+
+git:
+  depth: false
+  quiet: true
 
 addons:
   homebrew:
     brewfile: true
 
 script:
-  - mkdir build
   - cd build
-  - cmake ..
-  - make package -j$(sysctl -n hw.physicalcpu)
+  - cmake -DBINARY_RELEASE=ON ..
+  - sudo cmake --build . --target package -j $(sysctl -n hw.physicalcpu)
 
 deploy:
   provider: releases

@@ -16,7 +16,7 @@ void LoadRndLvlPal(int l);
 void ResetPal();
 void IncreaseGamma();
 void palette_update();
-void ApplyGamma(PALETTEENTRY *dst, PALETTEENTRY *src, int n);
+void ApplyGamma(PALETTEENTRY *dst, const PALETTEENTRY *src, int n);
 void DecreaseGamma();
 int UpdateGamma(int gamma);
 void BlackPalette();

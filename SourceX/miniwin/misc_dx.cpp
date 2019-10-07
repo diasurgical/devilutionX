@@ -27,15 +27,6 @@ WINBOOL SetCursorPos(int X, int Y)
 	return true;
 }
 
-int ShowCursor(WINBOOL bShow)
-{
-	if (SDL_ShowCursor(bShow ? SDL_ENABLE : SDL_DISABLE) <= -1) {
-		SDL_Log(SDL_GetError());
-	}
-
-	return bShow;
-}
-
 WINBOOL TextOutA(HDC hdc, int x, int y, LPCSTR lpString, int c)
 {
 	DUMMY_ONCE();

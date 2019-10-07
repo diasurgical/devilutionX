@@ -29,7 +29,7 @@ struct ProfFntStruct {
 };
 
 void __stdcall UiDestroy();
-BOOL __stdcall UiTitleDialog(int a1);
+void UiTitleDialog();
 void __stdcall UiSetSpawned(BOOL bSpawned);
 void __stdcall UiInitialize();
 BOOL __stdcall UiCopyProtError(int *pdwResult);
