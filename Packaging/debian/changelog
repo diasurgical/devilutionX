@@ -1,3 +1,9 @@
+devilutionx (0.5.0.3) UNRELEASED; urgency=medium
+
+  * Hardcoded font path fix
+
+ -- Vítězslav Dvořák <info@vitexsoftware.cz>  Mon, 07 Oct 2019 23:35:11 +0200
+
 devilutionx (0.5.0.2) UNRELEASED; urgency=medium
 
   [ Vítězslav Dvořák ]

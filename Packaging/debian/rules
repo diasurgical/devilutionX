@@ -5,11 +5,11 @@
 export DH_VERBOSE=1
 export COMPILE_FLAGS="-O0"
 
-#export DH_VERBOSE = 1
+export DH_VERBOSE = 1
 export DEB_BUILD_MAINT_OPTIONS = hardening=-all
-export DEB_CFLAGS_MAINT_APPEND  = -Wno-error
+export DEB_CFLAGS_MAINT_APPEND  = -Wno-error 
 export DEB_LDFLAGS_MAINT_APPEND = -Wno-error
-
+export CXXFLAGS=-DLINUX_FONT_PATH
 
 %:
 	dh $@ --buildsystem=cmake

@@ -10,7 +10,7 @@ URL:		https://github.com/Vitexus/devilutionX
 Source0:	https://github.com/Vitexus/devilutionX/archive/%{version}.tar.gz
 Source1:	devilutionx.desktop
 
-BuildRequires:	cmake3 gcc gcc-c++ libstdc++-static glibc desktop-file-utils
+BuildRequires:	cmake gcc gcc-c++ libstdc++-static glibc desktop-file-utils
 BuildRequires:  glibc-devel SDL2-devel SDL2_ttf-devel SDL2_mixer-devel libsodium-devel libasan
 Requires:	SDL2_ttf SDL2_mixer libsodium
 
@@ -25,8 +25,9 @@ Note: Devilution requires an original copy of diabdat.mpq. None of the Diablo 1 
 mkdir -p build
 rm -rf build/*
 cd build
+export CXXFLAGS=-DLINUX_FONT_PATH
 cmake ..
-cmake3 --build .
+cmake --build .
 cd ..
 
 %install
@@ -48,6 +49,7 @@ desktop-file-install --remove-category="Qt" --dir=%{buildroot}%{_datadir}/applic
 %files
 %{_bindir}/%{name}
 %{_datadir}/applications/%{name}.desktop
+%{_datadir}/fonts/truetype/CharisSILB.ttf
 %{_datadir}/icons/hicolor/16x16/apps/%{name}.png
 %{_datadir}/icons/hicolor/32x32/apps/%{name}.png
 %{_datadir}/icons/hicolor/48x48/apps/%{name}.png
