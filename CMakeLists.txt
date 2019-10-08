@@ -309,7 +309,7 @@ foreach(target devilution devilutionx)
   endif()
 endforeach(target devilution devilutionx)
 
-if(DIST AND NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+if(DIST AND CMAKE_CXX_COMPILER_ID MATCHES "GCC")
   target_link_libraries(devilutionx PUBLIC -static-libgcc -static-libstdc++)
 endif()
 
