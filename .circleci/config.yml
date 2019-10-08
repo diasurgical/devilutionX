@@ -37,33 +37,33 @@ jobs:
       - run: cd build && cmake -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake ..
       - run: cd build && cmake --build . -j $(nproc)
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86}
-  windows_x86:
+  windows_x86_64:
     docker:
-      - image: debian:stable
+      - image: debian:experimental
     working_directory: ~/repo
     steps:
       - checkout
       - run: apt-get update -y
-      - run: apt-get install -y cmake gcc-mingw-w64-i686 g++-mingw-w64-i686 wget git
-      - run: wget https://www.libsdl.org/release/SDL2-devel-2.0.9-mingw.tar.gz
-      - run: tar -xzf SDL2-devel-2.0.9-mingw.tar.gz
+      - run: apt-get install -y cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 wget git
+      - run: wget https://www.libsdl.org/release/SDL2-devel-2.0.10-mingw.tar.gz
+      - run: tar -xzf SDL2-devel-2.0.10-mingw.tar.gz
       - run: wget https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-devel-2.0.15-mingw.tar.gz
       - run: tar -xzf SDL2_ttf-devel-2.0.15-mingw.tar.gz
       - run: wget https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-devel-2.0.4-mingw.tar.gz
       - run: tar -xzf SDL2_mixer-devel-2.0.4-mingw.tar.gz
-      - run: wget https://download.libsodium.org/libsodium/releases/libsodium-1.0.17-mingw.tar.gz
-      - run: tar -xzf libsodium-1.0.17-mingw.tar.gz --no-same-owner
-      - run: cp -r libsodium-win32/* /usr/i686-w64-mingw32
-      - run: cp -r SDL2*/i686-w64-mingw32 /usr
+      - run: cp -r SDL2*/x86_64-w64-mingw32/ /usr
+      - run: wget https://download.libsodium.org/libsodium/releases/libsodium-1.0.18-mingw.tar.gz
+      - run: tar -xzf libsodium-1.0.18-mingw.tar.gz --no-same-owner
+      - run: cp -r libsodium-win64/* /usr/x86_64-w64-mingw32/
       - run: cd build && cmake -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake ..
       - run: cd build && cmake --build . -j $(nproc)
-      - store_artifacts: {path: ./build/devilutionx.exe, destination: devilutionx_x86.exe}
+      - store_artifacts: {path: ./build/devilutionx.exe, destination: devilutionx_x86_64.exe}
 
 workflows:
   version: 2
   testflow:
     jobs:
       - linux_x86_64
+      - windows_x86_64
       - linux_x86
-      - windows_x86
       - linux_x86_64_sdl1
