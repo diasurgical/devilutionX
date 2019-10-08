@@ -58,12 +58,7 @@ void LoadTtfFont() {
 		atexit(TTF_Quit);
 	}
 
-
-#ifdef LINUX_FONT_PATH
-	font = TTF_OpenFont("/usr/share/fonts/truetype/CharisSILB.ttf", 17);
-#else                
-	font = TTF_OpenFont("CharisSILB.ttf", 17);
-#endif        
+	font = TTF_OpenFont(TTF_FONT_PATH, 17);
 	if (font == NULL) {
 		printf("TTF_OpenFont: %s\n", TTF_GetError());
 		return;

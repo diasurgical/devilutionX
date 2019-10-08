@@ -25,7 +25,7 @@ Note: Devilution requires an original copy of diabdat.mpq. None of the Diablo 1 
 mkdir -p build
 rm -rf build/*
 cd build
-export CXXFLAGS=-DLINUX_FONT_PATH
+export CXXFLAGS="-DTTF_FONT_PATH=\"/usr/share/fonts/truetype/CharisSILB.ttf\""
 cmake ..
 cmake --build .
 cd ..
