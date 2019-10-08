@@ -273,6 +273,20 @@ void DialogLoop(UiItem *items, std::size_t num_items, UiItem *render_behind, std
 					break;
 				}
 				break;
+#ifndef USE_SDL1
+			case SDL_CONTROLLERBUTTONDOWN:
+				switch (event.cbutton.button) {
+				case SDL_CONTROLLER_BUTTON_A:
+				case SDL_CONTROLLER_BUTTON_B:
+				case SDL_CONTROLLER_BUTTON_START:
+				case SDL_CONTROLLER_BUTTON_BACK:
+					state = State::OK;
+					break;
+				default:
+					break;
+				}
+				break;
+#endif
 			case SDL_MOUSEBUTTONDOWN:
 			case SDL_MOUSEBUTTONUP:
 				UiItemMouseEvents(&event, items, num_items);
