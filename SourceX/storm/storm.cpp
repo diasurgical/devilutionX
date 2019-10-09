@@ -300,12 +300,6 @@ BOOL SBmpLoadImage(const char *pszFileName, PALETTEENTRY *pPalette, BYTE *pBuffe
 	return true;
 }
 
-HWND SDrawGetFrameWindow(HWND *sdraw_framewindow)
-{
-	DUMMY();
-	return NULL;
-}
-
 void *SMemAlloc(unsigned int amount, char *logfilename, int logline, int defaultValue)
 {
 	// fprintf(stderr, "%s: %d (%s:%d)\n", __FUNCTION__, amount, logfilename, logline);

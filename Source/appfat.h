@@ -3,7 +3,7 @@
 #define __APPFAT_H__
 
 extern char sz_error_buf[256];
-extern int terminating;
+extern BOOL terminating;
 extern int cleanup_thread_id;
 
 void TriggerBreak();

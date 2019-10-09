@@ -97,8 +97,6 @@
 #define KEY_WRITE 0x20006
 #define REG_SZ 1
 
-#define DefWindowProc DefWindowProcA
-
 #define GetFileAttributes GetFileAttributesA
 #define SetFileAttributes SetFileAttributesA
 #define FindFirstFile FindFirstFileA
@@ -201,6 +199,7 @@
 #define WM_CREATE DVL_WM_CREATE
 #define WM_PAINT DVL_WM_PAINT
 #define WM_CLOSE DVL_WM_CLOSE
+#define WM_QUERYENDSESSION DVL_WM_QUERYENDSESSION
 #define WM_ERASEBKGND DVL_WM_ERASEBKGND
 #define WM_SYSKEYUP DVL_WM_SYSKEYUP
 #define WM_QUERYNEWPALETTE DVL_WM_QUERYNEWPALETTE

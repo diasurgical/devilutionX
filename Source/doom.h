@@ -5,7 +5,7 @@
 extern int doom_quest_time;
 extern int doom_stars_drawn;
 extern BYTE *pDoomCel;
-extern int doomflag;
+extern BOOL doomflag;
 extern int DoomQuestState;
 
 /*

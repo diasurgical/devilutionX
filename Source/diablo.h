@@ -97,7 +97,7 @@ extern DWORD glSeedTbl[NUMLEVELS];
 extern BOOL gbRunGame;
 extern int glMid3Seed[NUMLEVELS];
 extern BOOL gbRunGameResult;
-extern int zoomflag;
+extern BOOL zoomflag;
 extern BOOL gbProcessPlayers;
 extern int glEndSeed[NUMLEVELS];
 extern BOOL gbLoadGame;

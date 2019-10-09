@@ -1107,10 +1107,10 @@ void AddBarrel(int i, int t)
 
 void AddShrine(int i)
 {
-	int val, j, slist[26];
+	int val, j, slist[NUM_SHRINETYPE];
 
 	object[i]._oPreFlag = TRUE;
-	for (j = 0; j < 26; j++) {
+	for (j = 0; j < NUM_SHRINETYPE; j++) {
 		if (currlevel < shrinemin[j] || currlevel > shrinemax[j]) {
 			slist[j] = 0;
 		} else {
@@ -1127,7 +1127,7 @@ void AddShrine(int i)
 		}
 	}
 	while (1) {
-		val = random(150, 26);
+		val = random(150, NUM_SHRINETYPE);
 		if (slist[val]) {
 			break;
 		}
@@ -1171,8 +1171,8 @@ void AddPurifyingFountain(int i)
 void AddArmorStand(int i)
 {
 	if (!armorFlag) {
-		object[i]._oSelFlag = 0;
 		object[i]._oAnimFlag = 2;
+		object[i]._oSelFlag = 0;
 	}
 
 	object[i]._oRndSeed = GetRndSeed();
@@ -1262,8 +1262,8 @@ void AddStoryBook(int i)
 void AddWeaponRack(int i)
 {
 	if (!weaponFlag) {
-		object[i]._oSelFlag = 0;
 		object[i]._oAnimFlag = 2;
+		object[i]._oSelFlag = 0;
 	}
 	object[i]._oRndSeed = GetRndSeed();
 }
@@ -1534,7 +1534,6 @@ void Obj_Circle(int i)
 			AddMissile(plr[myplr].WorldX, plr[myplr].WorldY, 35, 46, plr[myplr]._pdir, MIS_RNDTELEPORT, 0, myplr, 0, 0);
 			track_repeat_walk(0);
 			sgbMouseDown = 0;
-			ReleaseCapture();
 			ClrPlrPath(myplr);
 			StartStand(myplr, 0);
 		}
@@ -2883,14 +2882,14 @@ void OperateShrine(int pnum, int i, int sType)
 			return;
 		if (pnum != myplr)
 			return;
-		for (j = 0; j < 7; j++) {
+		for (j = 0; j < NUM_INVLOC; j++) {
 			if (plr[pnum].InvBody[j]._itype != ITYPE_NONE)
 				cnt++;
 		}
 		if (cnt > 0) {
-			for (j = 0; j < 7; j++) {
+			for (j = 0; j < NUM_INVLOC; j++) {
 				if (plr[pnum].InvBody[j]._itype != ITYPE_NONE
-				    && plr[pnum].InvBody[j]._iMaxDur != 255
+				    && plr[pnum].InvBody[j]._iMaxDur != DUR_INDESTRUCTIBLE
 				    && plr[pnum].InvBody[j]._iMaxDur != 0) {
 					plr[pnum].InvBody[j]._iDurability += 10;
 					plr[pnum].InvBody[j]._iMaxDur += 10;
@@ -2900,16 +2899,16 @@ void OperateShrine(int pnum, int i, int sType)
 			}
 			while (TRUE) {
 				cnt = 0;
-				for (j = 0; j < 7; j++) {
+				for (j = 0; j < NUM_INVLOC; j++) {
 					if (plr[pnum].InvBody[j]._itype != ITYPE_NONE
-					    && plr[pnum].InvBody[j]._iMaxDur != 255
+					    && plr[pnum].InvBody[j]._iMaxDur != DUR_INDESTRUCTIBLE
 					    && plr[pnum].InvBody[j]._iMaxDur != 0)
 						cnt++;
 				}
 				if (cnt == 0)
 					break;
 				r = random(0, 7);
-				if (plr[pnum].InvBody[r]._itype == -1 || plr[pnum].InvBody[r]._iMaxDur == 255 || plr[pnum].InvBody[r]._iMaxDur == 0)
+				if (plr[pnum].InvBody[r]._itype == -1 || plr[pnum].InvBody[r]._iMaxDur == DUR_INDESTRUCTIBLE || plr[pnum].InvBody[r]._iMaxDur == 0)
 					continue;
 
 				plr[pnum].InvBody[r]._iDurability -= 20;
@@ -3367,7 +3366,7 @@ void OperateShrine(int pnum, int i, int sType)
 			return;
 		if (pnum != myplr)
 			return;
-		for (j = 0; j < 7; j++) {
+		for (j = 0; j < NUM_INVLOC; j++) {
 			if (plr[pnum].InvBody[j]._iMagical && !plr[pnum].InvBody[j]._iIdentified)
 				plr[pnum].InvBody[j]._iIdentified = TRUE;
 		}

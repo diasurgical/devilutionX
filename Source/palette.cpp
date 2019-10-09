@@ -24,7 +24,6 @@ void palette_init()
 {
 	LoadGamma();
 	memcpy(system_palette, orig_palette, sizeof(orig_palette));
-	LoadSysPal();
 	CreatePalette();
 }
 
@@ -46,29 +45,6 @@ void LoadGamma()
 	if (!SRegLoadValue("Diablo", "Color Cycling", 0, &value))
 		value = 1;
 	color_cycling_enabled = value;
-}
-
-void LoadSysPal()
-{
-	HDC hDC;
-	int i, iStartIndex;
-
-	for (i = 0; i < 256; i++)
-		system_palette[i].peFlags = PC_NOCOLLAPSE | PC_RESERVED;
-
-	if (!fullscreen) {
-		gdwPalEntries = GetDeviceCaps(hDC, NUMRESERVED) / 2;
-		GetSystemPaletteEntries(hDC, 0, gdwPalEntries, system_palette);
-		for (i = 0; i < gdwPalEntries; i++)
-			system_palette[i].peFlags = 0;
-
-		iStartIndex = 256 - gdwPalEntries;
-		GetSystemPaletteEntries(hDC, iStartIndex, gdwPalEntries, &system_palette[iStartIndex]);
-		if (iStartIndex < 256) {
-			for (i = iStartIndex; i < 256; i++)
-				system_palette[i].peFlags = 0;
-		}
-	}
 }
 
 void LoadPalette(char *pszFileName)

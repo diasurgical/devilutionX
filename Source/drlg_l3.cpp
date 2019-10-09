@@ -304,8 +304,8 @@ void CreateL3Dungeon(DWORD rseed, int entry)
 	DRLG_L3(entry);
 	DRLG_L3Pass3();
 
-	for (j = 0; j < 112; j++) {
-		for (i = 0; i < 112; i++) {
+	for (j = 0; j < MAXDUNY; j++) {
+		for (i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] >= 56 && dPiece[i][j] <= 147) {
 				DoLighting(i, j, 7, -1);
 			} else if (dPiece[i][j] >= 154 && dPiece[i][j] <= 161) {
@@ -1732,8 +1732,8 @@ void LoadL3Dungeon(char *sFileName, int vx, int vy)
 	SetMapMonsters(pLevelMap, 0, 0);
 	SetMapObjects(pLevelMap, 0, 0);
 
-	for (j = 0; j < 112; j++) {
-		for (i = 0; i < 112; i++) {
+	for (j = 0; j < MAXDUNY; j++) {
+		for (i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] >= 56 && dPiece[i][j] <= 147) {
 				DoLighting(i, j, 7, -1);
 			} else if (dPiece[i][j] >= 154 && dPiece[i][j] <= 161) {

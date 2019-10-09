@@ -466,7 +466,7 @@ void PrintStoreItem(ItemStruct *x, int l, char iclr)
 		sprintf(sstr, "Damage: %i-%i  ", x->_iMinDam, x->_iMaxDam);
 	if (x->_iClass == ICLASS_ARMOR)
 		sprintf(sstr, "Armor: %i  ", x->_iAC);
-	if (x->_iMaxDur != 255 && x->_iMaxDur) {
+	if (x->_iMaxDur != DUR_INDESTRUCTIBLE && x->_iMaxDur) {
 		sprintf(tempstr, "Dur: %i/%i,  ", x->_iDurability, x->_iMaxDur);
 		strcat(sstr, tempstr);
 	} else {
@@ -721,7 +721,7 @@ void S_StartSRepair()
 	stextsize = 1;
 	repairok = FALSE;
 	storenumh = 0;
-	for (i = 0; i < 40; i++)
+	for (i = 0; i < 48; i++)
 		storehold[i]._itype = ITYPE_NONE;
 	if (plr[myplr].InvBody[INVLOC_HEAD]._itype != ITYPE_NONE && plr[myplr].InvBody[INVLOC_HEAD]._iDurability != plr[myplr].InvBody[INVLOC_HEAD]._iMaxDur) {
 		repairok = TRUE;

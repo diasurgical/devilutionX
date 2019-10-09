@@ -306,7 +306,8 @@ void multi_net_ping()
 
 int multi_handle_delta()
 {
-	int i, received;
+	int i;
+	BOOL received;
 
 	if (gbGameDestroyed) {
 		gbRunGame = FALSE;
@@ -701,7 +702,6 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		plrdata.size = sizeof(plrdata);
 		memset(&UiData, 0, sizeof(UiData));
 		UiData.size = sizeof(UiData);
-		UiData.parentwindow = SDrawGetFrameWindow(NULL);
 		UiData.artcallback = (void (*)())UiArtCallback;
 		UiData.createcallback = (void (*)())UiCreateGameCallback;
 		UiData.drawdesccallback = (void (*)())UiDrawDescCallback;
@@ -854,7 +854,7 @@ BOOL multi_init_single(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info
 	return TRUE;
 }
 
-BOOL multi_init_multi(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info, _SNETUIDATA *ui_info, int *pfExitProgram)
+BOOL multi_init_multi(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info, _SNETUIDATA *ui_info, BOOL *pfExitProgram)
 {
 	BOOL first;
 	int playerId;
@@ -893,7 +893,7 @@ BOOL multi_init_multi(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info,
 	}
 }
 
-BOOL multi_upgrade(int *pfExitProgram)
+BOOL multi_upgrade(BOOL *pfExitProgram)
 {
 	BOOL result;
 	int status;

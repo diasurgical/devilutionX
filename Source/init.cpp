@@ -84,7 +84,7 @@ void init_archives()
 #endif
 }
 
-HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags, int fs)
+HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int dwPriority, int fs)
 {
 	char Buffer[2][MAX_PATH];
 	char *sdlPath;
@@ -96,12 +96,13 @@ HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags
 	for (int i = 0; i < 2; i++) {
 		snprintf(mpq_path, MAX_PATH, "%s%s", Buffer[i], mpq_name);
 #ifndef SWITCH
-		if (SFileOpenArchive(mpq_path, flags, MPQ_FLAG_READ_ONLY, &archive)) {
+		if (SFileOpenArchive(mpq_path, dwPriority, MPQ_FLAG_READ_ONLY, &archive)) {
 #else
-		if (SFileOpenArchive(mpq_path, flags, 0, &archive)) {
+		if (SFileOpenArchive(mpq_path, dwPriority, 0, &archive)) {
 #endif
 			SFileSetBasePath(Buffer[i]);
 			return archive;
+
 		}
 	}
 
@@ -137,9 +138,11 @@ LRESULT __stdcall MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 #endif
 	case WM_QUERYNEWPALETTE:
 		return 1;
+	case WM_QUERYENDSESSION:
+		exit(0);
 	}
 
-	return DefWindowProc(hWnd, Msg, wParam, lParam);
+	return 0;
 }
 
 WNDPROC SetWindowProc(WNDPROC NewProc)
