@@ -23,7 +23,7 @@ namespace {
 ATTR_ALLOW_SHIFT_NEGATIVE_BASE
 std::uint32_t asr(std::int32_t value, std::int32_t amount)
 {
-	return !USES_ARITHMETIC_SHR(int) && value < 0 ? ~(~value >> amount) : value >> amount;
+	return !USES_ARITHMETIC_SHR(std::int32_t) && value < 0 ? ~(~value >> amount) : value >> amount;
 }
 
 /*
@@ -83,9 +83,9 @@ void SHA1Input(SHA1Context *context, const char *message_array, int len)
 
 void SHA1ProcessMessageBlock(SHA1Context *context)
 {
-	int i, temp;
-	int W[80];
-	int A, B, C, D, E;
+	DWORD i, temp;
+	DWORD W[80];
+	DWORD A, B, C, D, E;
 
 	DWORD *buf = (DWORD *)context->buffer;
 	for (i = 0; i < 16; i++)
