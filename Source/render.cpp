@@ -126,9 +126,10 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 			for (i = n & 3; i != 0; i--, (*src)++, (*dst)++) {
 				(*dst)[0] = (*src)[0];
 			}
-			for (i = n >> 2; i != 0; i--, (*src) += 4, (*dst) += 4) {
-				((DWORD *)(*dst))[0] = ((DWORD *)(*src))[0];
-			}
+			n = (n >> 2) << 2;
+			memcpy(*dst, *src, n);
+			(*src) += n;
+			(*dst) += n;
 		} else {
 			for (i = 0; i < n; i++, (*src)++, (*dst)++) {
 				(*dst)[0] = tbl[(*src)[0]];
