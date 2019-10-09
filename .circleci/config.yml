@@ -7,11 +7,10 @@ jobs:
     steps:
       - checkout
       - run: apt-get update -y
-      - run: apt-get install -y g++ libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev
+      - run: apt-get install -y g++ libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev git
       - run: apt-get install -y -t stretch-backports cmake libsodium-dev
-      - run: mkdir build
-      - run: cd build && cmake ..
-      - run: cd build && make -j$(nproc)
+      - run: cd build && cmake .. -DNIGHTLY_BUILD=ON
+      - run: cd build && cmake --build . -j $(nproc)
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64}
   linux_x86_64_sdl1:
     docker:
@@ -20,11 +19,10 @@ jobs:
     steps:
       - checkout
       - run: apt-get update -y
-      - run: apt-get install -y g++ libsdl-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev
+      - run: apt-get install -y g++ libsdl-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev git
       - run: apt-get install -y -t stretch-backports cmake libsodium-dev
-      - run: mkdir build
-      - run: cd build && cmake .. -DUSE_SDL1=ON
-      - run: cd build && make -j$(nproc)
+      - run: cd build && cmake .. -DNIGHTLY_BUILD=ON -DUSE_SDL1=ON
+      - run: cd build && cmake --build . -j $(nproc)
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64_sdl1}
   linux_x86:
     docker:
@@ -34,21 +32,19 @@ jobs:
       - checkout
       - run: dpkg --add-architecture i386
       - run: apt-get update -y
-      - run: apt-get install -y g++-multilib libsdl2-dev:i386 libsdl2-mixer-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev
+      - run: apt-get install -y g++-multilib libsdl2-dev:i386 libsdl2-mixer-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev git
       - run: apt-get install -y -t stretch-backports cmake libsodium-dev:i386
-      - run: mkdir build
-      - run: cd build && cmake -DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake ..
-      - run: cd build && make -j$(nproc)
+      - run: cd build && cmake -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake ..
+      - run: cd build && cmake --build . -j $(nproc)
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86}
   windows_x86:
     docker:
-      - image: debian:stretch-backports
+      - image: debian:stable
     working_directory: ~/repo
     steps:
       - checkout
       - run: apt-get update -y
-      - run: apt-get install -y gcc-mingw-w64-i686 g++-mingw-w64-i686 wget
-      - run: apt-get install -y -t stretch-backports cmake
+      - run: apt-get install -y cmake gcc-mingw-w64-i686 g++-mingw-w64-i686 wget git
       - run: wget https://www.libsdl.org/release/SDL2-devel-2.0.9-mingw.tar.gz
       - run: tar -xzf SDL2-devel-2.0.9-mingw.tar.gz
       - run: wget https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-devel-2.0.15-mingw.tar.gz
@@ -59,9 +55,8 @@ jobs:
       - run: tar -xzf libsodium-1.0.17-mingw.tar.gz --no-same-owner
       - run: cp -r libsodium-win32/* /usr/i686-w64-mingw32
       - run: cp -r SDL2*/i686-w64-mingw32 /usr
-      - run: mkdir build
-      - run: cd build && cmake -DASAN=OFF -DBINARY_RELEASE=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake ..
-      - run: cd build && make -j$(nproc)
+      - run: cd build && cmake -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake ..
+      - run: cd build && cmake --build . -j $(nproc)
       - store_artifacts: {path: ./build/devilutionx.exe, destination: devilutionx_x86.exe}
   switch:
     docker:
@@ -74,8 +69,8 @@ jobs:
       # Install cmake files (https://github.com/devkitPro/docker/issues/3)
       - run: dkp-pacman -S --needed --noconfirm --quiet devkitpro-pkgbuild-helpers
       - run: mkdir build
-      - run: cd build && cmake .. -DBINARY_RELEASE=ON -DNONET=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/switch/devkita64-libnx.cmake
-      - run: cd build && make -j$(nproc)
+      - run: cd build && cmake .. -DNIGHTLY_BUILD=ON -DNONET=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/switch/devkita64-libnx.cmake
+      - run: cd build && cmake --build . -j $(nproc)
       - store_artifacts: {path: ./build/devilutionx.nro, destination: devilutionx.nro}
 
 workflows:

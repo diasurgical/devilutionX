@@ -2,17 +2,6 @@ cmake_minimum_required(VERSION 3.10)
 
 include(CMake/out_of_tree.cmake)
 
-project(DevilutionX
-  VERSION 0.5.0
-  LANGUAGES C CXX)
-
-list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake")
-
-if(SWITCH)
-  list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/switch")
-  find_package(LIBNX REQUIRED)
-endif()
-
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Debug")
 endif()
@@ -46,11 +35,36 @@ if(BINARY_RELEASE)
 endif()
 
 if(NIGHTLY_BUILD)
-  set(CMAKE_BUILD_TYPE "Debug")
+  set(CMAKE_BUILD_TYPE "RelWithDebInfo")
   set(ASAN OFF)
   set(DEBUG ON)
   set(DIST ON)
-  set(FASTER ON)
+  set(FASTER OFF)
+endif()
+
+execute_process(
+  COMMAND git describe --abbrev=0 --tags
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  OUTPUT_VARIABLE GIT_TAG
+  OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+if (NOT CMAKE_BUILD_TYPE MATCHES "Release")
+  execute_process(
+    COMMAND git log -1 --format=-%h
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_COMMIT_HASH
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
+endif()
+
+project(DevilutionX
+  VERSION ${GIT_TAG}
+  LANGUAGES C CXX)
+
+list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake")
+
+if(SWITCH)
+  list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/switch")
+  find_package(LIBNX REQUIRED)
 endif()
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
@@ -83,17 +97,17 @@ if(NOT NONET)
 endif()
 
 if(USE_SDL1)
-	find_package(SDL REQUIRED)
-	find_package(SDL_ttf REQUIRED)
-	find_package(SDL_mixer REQUIRED)
-	include_directories(${SDL_INCLUDE_DIR})
+  find_package(SDL REQUIRED)
+  find_package(SDL_ttf REQUIRED)
+  find_package(SDL_mixer REQUIRED)
+  include_directories(${SDL_INCLUDE_DIR})
 else()
-	find_package(SDL2 CONFIG QUIET)
-	if (NOT SDL2_FOUND)
-		find_package(SDL2 REQUIRED)
-	endif()
-	find_package(SDL2_ttf REQUIRED)
-	find_package(SDL2_mixer REQUIRED)
+  find_package(SDL2 CONFIG QUIET)
+  if (NOT SDL2_FOUND)
+    find_package(SDL2 REQUIRED)
+  endif()
+  find_package(SDL2_ttf REQUIRED)
+  find_package(SDL2_mixer REQUIRED)
 endif()
 
 add_library(smacker STATIC
@@ -314,8 +328,8 @@ foreach(target devilution ${BIN_TARGET})
   endif()
 endforeach(target devilution ${BIN_TARGET})
 
-if(DIST AND NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-  target_link_libraries(${BIN_TARGET} PUBLIC -static-libgcc -static-libstdc++)
+if(DIST AND CMAKE_CXX_COMPILER_ID MATCHES "GCC")
+  target_link_libraries(devilutionx PUBLIC -static-libgcc -static-libstdc++)
 endif()
 
 if(WIN32)
@@ -378,6 +392,14 @@ if(APPLE)
   set_target_properties(${BIN_TARGET} PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/macOS/Info.plist")
 
   install (TARGETS ${BIN_TARGET} DESTINATION ./)
+
+  if(DIST)
+      install(CODE "
+        include(BundleUtilities)
+        fixup_bundle(${CMAKE_BINARY_DIR}/${MACOSX_BUNDLE_BUNDLE_NAME}.app \"\" \"\")
+        "
+        COMPONENT Runtime)
+  endif()
 
   set(MACOSX_BUNDLE_LONG_VERSION_STRING "Version ${PROJECT_VERSION}")
   set(CPACK_PACKAGE_FILE_NAME "devilutionx")
