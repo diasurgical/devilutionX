@@ -41,6 +41,7 @@ int codec_decode(BYTE *pbSrcDst, DWORD size, char *pszPassword)
 
 	SHA1Result(0, dst);
 	if (sig->checksum != *(DWORD *)dst) {
+		fprintf(stderr, "codec_decode: error\nchecksum: %x != %x\n", sig->checksum, *(DWORD *)dst);
 		memset(dst, 0, sizeof(dst));
 		goto error;
 	}

@@ -50,9 +50,9 @@ void SHA1Input(SHA1Context *context, const char *message_array, int len)
 
 void SHA1ProcessMessageBlock(SHA1Context *context)
 {
-	int i, temp;
-	int W[80];
-	int A, B, C, D, E;
+	DWORD i, temp;
+	DWORD W[80];
+	DWORD A, B, C, D, E; // Only works with `int`, perhaps it relies on sign-extension???
 
 	DWORD *buf = (DWORD *)context->buffer;
 	for (i = 0; i < 16; i++)
