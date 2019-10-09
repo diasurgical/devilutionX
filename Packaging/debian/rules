@@ -5,11 +5,11 @@
 export DH_VERBOSE=1
 export COMPILE_FLAGS="-O0"
 
-#export DH_VERBOSE = 1
+export DH_VERBOSE = 1
 export DEB_BUILD_MAINT_OPTIONS = hardening=-all
-export DEB_CFLAGS_MAINT_APPEND  = -Wno-error
+export DEB_CFLAGS_MAINT_APPEND  = -Wno-error 
 export DEB_LDFLAGS_MAINT_APPEND = -Wno-error
-
+export CXXFLAGS="-DTTF_FONT_PATH=\"/usr/share/fonts/truetype/CharisSILB.ttf\""
 
 %:
 	dh $@ --buildsystem=cmake
@@ -22,10 +22,10 @@ export DEB_LDFLAGS_MAINT_APPEND = -Wno-error
 override_dh_auto_install:
 	mkdir -p debian/diablo-data/usr/share/games/diablo/
 	test -f "../diabdat.mpq" && cp ../diabdat.mpq debian/diablo-data/usr/share/games/diablo/ || true
-	mkdir -p debian/diablo-data/usr/share/icons/hicolor/16x16/apps/
-	mkdir -p debian/diablo-data/usr/share/icons/hicolor/32x32/apps/
-	mkdir -p debian/diablo-data/usr/share/icons/hicolor/48x48/apps/
-	cp Packaging/resources/16.png debian/diablo-data/usr/share/icons/hicolor/16x16/apps/diablo.png 
-	cp Packaging/resources/Diablo_32.png debian/diablo-data/usr/share/icons/hicolor/32x32/apps/diablo.png 
-	cp Packaging/resources/Diablo_48.png debian/diablo-data/usr/share/icons/hicolor/48x48/apps/diablo.png 
 	dh_auto_install
+	mkdir -p debian/devilutionx/usr/share/icons/hicolor/16x16/apps/
+	mkdir -p debian/devilutionx/usr/share/icons/hicolor/32x32/apps/
+	mkdir -p debian/devilutionx/usr/share/icons/hicolor/48x48/apps/
+	cp Packaging/resources/16.png debian/devilutionx/usr/share/icons/hicolor/16x16/apps/diablo.png 
+	cp Packaging/resources/Diablo_32.png debian/devilutionx/usr/share/icons/hicolor/32x32/apps/diablo.png 
+	cp Packaging/resources/Diablo_48.png debian/devilutionx/usr/share/icons/hicolor/48x48/apps/diablo.png 

@@ -169,7 +169,7 @@ void nthread_start(BOOL set_turn_upper_bit)
 unsigned int __stdcall nthread_handler(void *)
 {
 	int delta;
-	int received;
+	BOOL received;
 
 	if (nthread_should_run) {
 		while (1) {

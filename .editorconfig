@@ -23,3 +23,7 @@ end_of_line = lf
 [CMakeLists.txt]
 indent_style = space
 indent_size = 2
+
+[*.cmake]
+indent_style = space
+indent_size = 2

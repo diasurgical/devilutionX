@@ -51,8 +51,8 @@ void multi_send_pinfo(int pnum, char cmd);
 int InitLevelType(int l);
 void SetupLocalCoords();
 BOOL multi_init_single(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info, _SNETUIDATA *ui_info);
-BOOL multi_init_multi(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info, _SNETUIDATA *ui_info, int *pfExitProgram);
-BOOL multi_upgrade(int *pfExitProgram);
+BOOL multi_init_multi(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info, _SNETUIDATA *ui_info, BOOL *pfExitProgram);
+BOOL multi_upgrade(BOOL *pfExitProgram);
 void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv);
 
 /* rdata */

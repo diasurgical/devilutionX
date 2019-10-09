@@ -1392,7 +1392,7 @@ typedef struct PkPlayerStruct {
 	int pMaxManaBase;
 	char pSplLvl[MAX_SPELLS];
 	unsigned __int64 pMemSpells;
-	PkItemStruct InvBody[7];
+	PkItemStruct InvBody[NUM_INVLOC];
 	PkItemStruct InvList[NUM_INV_GRID_ELEM];
 	char InvGrid[NUM_INV_GRID_ELEM];
 	BYTE _pNumInv;

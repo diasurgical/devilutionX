@@ -129,18 +129,6 @@ WINBOOL DeleteFileA(LPCSTR lpFileName)
 	return true;
 }
 
-HWND SetCapture(HWND hWnd)
-{
-	DUMMY_ONCE();
-	return hWnd;
-}
-
-WINBOOL ReleaseCapture()
-{
-	DUMMY_ONCE();
-	return true;
-}
-
 void FakeWMDestroy()
 {
 	init_cleanup();
@@ -241,24 +229,6 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 	return window != NULL;
 }
 
-int GetDeviceCaps(HDC hdc, int index)
-{
-	SDL_DisplayMode current;
-
-	if (SDL_GetCurrentDisplayMode(0, &current) <= -1) {
-		SDL_Log(SDL_GetError());
-		return 0;
-	}
-
-	return 0;
-}
-
-UINT GetSystemPaletteEntries(HDC hdc, UINT iStart, UINT cEntries, LPPALETTEENTRY pPalEntries)
-{
-	DUMMY();
-	return 0;
-}
-
 BOOL GetVersionExA(LPOSVERSIONINFOA lpVersionInformation)
 {
 	lpVersionInformation->dwMajorVersion = 5;
@@ -270,14 +240,5 @@ BOOL GetVersionExA(LPOSVERSIONINFOA lpVersionInformation)
 void lstrcpynA(LPSTR lpString1, LPCSTR lpString2, int iMaxLength)
 {
 	strncpy(lpString1, lpString2, iMaxLength);
-}
-
-LRESULT DefWindowProcA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
-{
-	DUMMY_ONCE();
-	if (Msg == DVL_WM_QUERYENDSESSION)
-		exit(0);
-
-	return 0;
 }
 } // namespace dvl

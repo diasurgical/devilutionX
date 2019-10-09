@@ -41,7 +41,7 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield)
 	pki = pPack->InvBody;
 	pi = pPlayer->InvBody;
 
-	for (i = 0; i < 7; i++) {
+	for (i = 0; i < NUM_INVLOC; i++) {
 		PackItem(pki, pi);
 		pki++;
 		pi++;
@@ -174,7 +174,7 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL killok)
 	pki = pPack->InvBody;
 	pi = pPlayer->InvBody;
 
-	for (i = 0; i < 7; i++) {
+	for (i = 0; i < NUM_INVLOC; i++) {
 		UnPackItem(pki, pi);
 		pki++;
 		pi++;

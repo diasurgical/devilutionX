@@ -99,7 +99,7 @@ void GiveGoldCheat()
 {
 	int i, ni;
 
-	for (i = 0; i < 40; i++) {
+	for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
 		if (!plr[myplr].InvGrid[i]) {
 			ni = plr[myplr]._pNumInv++;
 			SetPlrHandItem(&plr[myplr].InvList[ni], IDI_GOLD);
@@ -134,7 +134,7 @@ void TakeGoldCheat()
 	int i;
 	char ig;
 
-	for (i = 0; i < 40; i++) {
+	for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
 		ig = plr[myplr].InvGrid[i];
 		if (ig > 0 && plr[myplr].InvList[ig - 1]._itype == ITYPE_GOLD)
 			RemoveInvItem(myplr, ig - 1);

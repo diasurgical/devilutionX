@@ -2079,8 +2079,8 @@ void DRLG_InitL2Vals()
 {
 	int i, j, pc;
 
-	for (j = 0; j < 112; j++) {
-		for (i = 0; i < 112; i++) {
+	for (j = 0; j < MAXDUNY; j++) {
+		for (i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] == 541) {
 				pc = 5;
 			} else if (dPiece[i][j] == 178) {
@@ -2101,8 +2101,8 @@ void DRLG_InitL2Vals()
 			dArch[i][j] = pc;
 		}
 	}
-	for (j = 0; j < 112; j++) {
-		for (i = 0; i < 112; i++) {
+	for (j = 0; j < MAXDUNY; j++) {
+		for (i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] == 132) {
 				dArch[i][j + 1] = 2;
 				dArch[i][j + 2] = 1;

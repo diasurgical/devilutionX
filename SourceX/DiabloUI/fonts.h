@@ -6,6 +6,10 @@
 
 #include "DiabloUI/art.h"
 
+#ifndef TTF_FONT_PATH
+#define TTF_FONT_PATH "CharisSILB.ttf"
+#endif
+
 namespace dvl {
 
 enum _artFontTables {
