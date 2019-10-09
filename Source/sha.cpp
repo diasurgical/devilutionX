@@ -1,6 +1,39 @@
 #include "diablo.h"
 
+#include <cstdint>
+
 DEVILUTION_BEGIN_NAMESPACE
+
+// Diablo's "SHA1" is different from actual SHA1 in that it uses arithmetic
+// right shifts (sign bit extension).
+//
+// Here we check whether the platform does signed-bit extension.
+// If not, we fall back to a portable implementation.
+
+#define USES_ARITHMETIC_SHR(TYPE) (static_cast<TYPE>(-1) >> 1 == static_cast<TYPE>(-1))
+
+#if defined(__clang__) || defined(__GNUC__)
+#define ATTR_ALLOW_SHIFT_NEGATIVE_BASE __attribute__((no_sanitize("shift-base")))
+#else
+#define ATTR_ALLOW_SHIFT_NEGATIVE_BASE
+#endif
+
+namespace {
+
+ATTR_ALLOW_SHIFT_NEGATIVE_BASE
+std::uint32_t asr(std::int32_t value, std::int32_t amount)
+{
+	return !USES_ARITHMETIC_SHR(int) && value < 0 ? ~(~value >> amount) : value >> amount;
+}
+
+/*
+ * Diablo-"SHA1" circular left shift.
+ */
+std::uint32_t SHA1CircularShift(std::uint32_t bits, std::uint32_t word) {
+	return (word << bits) | asr(word, 32 - bits);
+}
+
+} // namespace
 
 SHA1Context sgSHA1[3];
 

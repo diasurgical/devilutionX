@@ -2,11 +2,6 @@
 #ifndef __SHA_H__
 #define __SHA_H__
 
-/*
- *  Define the SHA1 circular left shift macro
- */
-#define SHA1CircularShift(bits, word) \
-	(((word) << (bits)) | ((word) >> (32 - (bits))))
 #define SHA1HashSize 20
 
 //sha
