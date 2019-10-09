@@ -946,7 +946,7 @@ void CreatePlrItems(int p)
 		plr[p].HoldItem._ivalue = GOLD_MAX_LIMIT;
 		plr[p].HoldItem._iCurs = ICURS_GOLD_LARGE;
 		plr[p]._pGold = plr[p].HoldItem._ivalue * 40;
-		for (i = 0; i < 40; i++) {
+		for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
 			GetPlrHandSeed(&plr[p].HoldItem);
 			plr[p].InvList[plr[p]._pNumInv++] = plr[p].HoldItem;
 			plr[p].InvGrid[i] = plr[p]._pNumInv;
@@ -1153,10 +1153,12 @@ void GetStaffPower(int i, int lvl, int bs, BOOL onlygood)
 	int l[256];
 	char istr[128];
 	int nl, j, preidx;
-	BYTE addok;
+	BOOL addok;
+	int tmp;
 
+	tmp = random(15, 10);
 	preidx = -1;
-	if (random(15, 10) == 0 || onlygood) {
+	if (tmp == 0 || onlygood) {
 		nl = 0;
 		for (j = 0; PL_Prefix[j].PLPower != -1; j++) {
 			if (PL_Prefix[j].PLIType & PLT_STAFF && PL_Prefix[j].PLMinLvl <= lvl) {
@@ -1519,8 +1521,8 @@ void SaveItemPower(int i, int power, int param1, int param2, int minval, int max
 		item[i]._iDurability = item[i]._iMaxDur;
 		break;
 	case IPL_INDESTRUCTIBLE:
-		item[i]._iDurability = 255;
-		item[i]._iMaxDur = 255;
+		item[i]._iDurability = DUR_INDESTRUCTIBLE;
+		item[i]._iMaxDur = DUR_INDESTRUCTIBLE;
 		break;
 	case IPL_LIGHT:
 		item[i]._iPLLight += param1;
@@ -1750,7 +1752,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, int flgs, BOOL onlygood)
 		CalcItemValue(i);
 }
 
-void GetItemBonus(int i, int idata, int minlvl, int maxlvl, int onlygood)
+void GetItemBonus(int i, int idata, int minlvl, int maxlvl, BOOL onlygood)
 {
 	if (item[i]._iClass != ICLASS_GOLD) {
 		if (minlvl > 25)
@@ -3027,14 +3029,14 @@ void PrintItemMisc(ItemStruct *x)
 void PrintItemDetails(ItemStruct *x)
 {
 	if (x->_iClass == ICLASS_WEAPON) {
-		if (x->_iMaxDur == 255)
+		if (x->_iMaxDur == DUR_INDESTRUCTIBLE)
 			sprintf(tempstr, "damage: %i-%i  Indestructible", x->_iMinDam, x->_iMaxDam);
 		else
 			sprintf(tempstr, "damage: %i-%i  Dur: %i/%i", x->_iMinDam, x->_iMaxDam, x->_iDurability, x->_iMaxDur);
 		AddPanelString(tempstr, TRUE);
 	}
 	if (x->_iClass == ICLASS_ARMOR) {
-		if (x->_iMaxDur == 255)
+		if (x->_iMaxDur == DUR_INDESTRUCTIBLE)
 			sprintf(tempstr, "armor: %i  Indestructible", x->_iAC);
 		else
 			sprintf(tempstr, "armor: %i  Dur: %i/%i", x->_iAC, x->_iDurability, x->_iMaxDur);
@@ -3075,7 +3077,7 @@ void PrintItemDetails(ItemStruct *x)
 void PrintItemDur(ItemStruct *x)
 {
 	if (x->_iClass == ICLASS_WEAPON) {
-		if (x->_iMaxDur == 255)
+		if (x->_iMaxDur == DUR_INDESTRUCTIBLE)
 			sprintf(tempstr, "damage: %i-%i  Indestructible", x->_iMinDam, x->_iMaxDam);
 		else
 			sprintf(tempstr, "damage: %i-%i  Dur: %i/%i", x->_iMinDam, x->_iMaxDam, x->_iDurability, x->_iMaxDur);
@@ -3088,7 +3090,7 @@ void PrintItemDur(ItemStruct *x)
 			AddPanelString("Not Identified", TRUE);
 	}
 	if (x->_iClass == ICLASS_ARMOR) {
-		if (x->_iMaxDur == 255)
+		if (x->_iMaxDur == DUR_INDESTRUCTIBLE)
 			sprintf(tempstr, "armor: %i  Indestructible", x->_iAC);
 		else
 			sprintf(tempstr, "armor: %i  Dur: %i/%i", x->_iAC, x->_iDurability, x->_iMaxDur);
@@ -3918,7 +3920,7 @@ void CreateSpellBook(int x, int y, int ispell, BOOL sendmsg, BOOL delta)
 	BOOL done;
 
 	done = FALSE;
-	idx = RndTypeItems(0, IMISC_BOOK);
+	idx = RndTypeItems(ITYPE_MISC, IMISC_BOOK);
 	if (numitems < MAXITEMS) {
 		ii = itemavail[0];
 		GetSuperItemSpace(x, y, ii);

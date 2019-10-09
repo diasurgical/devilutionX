@@ -54,7 +54,6 @@ struct {
 
 void UiDestroy()
 {
-	DUMMY();
 	ArtHero.Unload();
 	UnloadTtfFont();
 }
@@ -369,7 +368,6 @@ char connect_plrinfostr[128];
 char connect_categorystr[128];
 void UiSetupPlayerInfo(char *infostr, _uiheroinfo *pInfo, DWORD type)
 {
-	DUMMY();
 	SStrCopy(connect_plrinfostr, infostr, 128);
 	char format[32] = "";
 	strncpy(format, (char *)&type, 4);

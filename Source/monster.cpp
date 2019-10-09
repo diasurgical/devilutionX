@@ -1868,7 +1868,7 @@ void M_ChangeLightOffset(int monst)
 	ChangeLightOff(monster[monst].mlid, _mxoff, _myoff * (ly >> 3));
 }
 
-int M_DoStand(int i)
+BOOL M_DoStand(int i)
 {
 	MonsterStruct *Monst;
 
@@ -4233,8 +4233,8 @@ void MAI_Zhar(int i)
 		return;
 	}
 
-	my = Monst->_my;
 	mx = Monst->_mx;
+	my = Monst->_my;
 	md = M_GetDir(i);
 	if (Monst->mtalkmsg == QUEST_ZHAR1 && !(dFlags[mx][my] & BFLAG_VISIBLE) && Monst->_mgoal == MGOAL_TALKING) {
 		Monst->mtalkmsg = QUEST_ZHAR2;
@@ -4732,7 +4732,7 @@ BOOL PosOkMissile(int x, int y)
 
 BOOL CheckNoSolid(int x, int y)
 {
-	return nSolidTable[dPiece[x][y]] == 0;
+	return nSolidTable[dPiece[x][y]] == FALSE;
 }
 
 BOOL LineClearF(BOOL (*Clear)(int, int), int x1, int y1, int x2, int y2)
@@ -5400,9 +5400,6 @@ int PreSpawnSkeleton()
 
 	j = 0;
 
-	if (nummtypes <= 0)
-		return -1;
-
 	for (i = 0; i < nummtypes; i++) {
 		if (IsSkel(Monsters[i].mtype))
 			j++;
@@ -5523,13 +5520,10 @@ BOOL CheckMonsterHit(int m, BOOL *ret)
 
 int encode_enemy(int m)
 {
-	int enemy;
-
-	enemy = monster[m]._menemy;
 	if (monster[m]._mFlags & MFLAG_TARGETS_MONSTER)
-		enemy += MAX_PLRS;
-
-	return enemy;
+		return monster[m]._menemy + MAX_PLRS;
+	else
+		return monster[m]._menemy;
 }
 
 void decode_enemy(int m, int enemy)

@@ -295,17 +295,17 @@ void DrawAutomapType(int sx, int sy, WORD automap_type)
 		DrawLine(sx, y1, x2, y2, COLOR_DIM);
 		DrawLine(sx, sy, x1, y2, COLOR_DIM);
 		DrawLine(sx, sy, x2, y2, COLOR_DIM);
-		return;
+		break;
 	case 2:
 	case 5:
 		do_vert = TRUE;
 		break;
-	case 4:
-		do_vert = TRUE;
-		do_horz = TRUE;
-		break;
 	case 3:
 	case 6:
+		do_horz = TRUE;
+		break;
+	case 4:
+		do_vert = TRUE;
 		do_horz = TRUE;
 		break;
 	case 8:

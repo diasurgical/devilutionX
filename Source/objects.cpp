@@ -1107,10 +1107,10 @@ void AddBarrel(int i, int t)
 
 void AddShrine(int i)
 {
-	int val, j, slist[26];
+	int val, j, slist[NUM_SHRINETYPE];
 
 	object[i]._oPreFlag = TRUE;
-	for (j = 0; j < 26; j++) {
+	for (j = 0; j < NUM_SHRINETYPE; j++) {
 		if (currlevel < shrinemin[j] || currlevel > shrinemax[j]) {
 			slist[j] = 0;
 		} else {
@@ -1127,7 +1127,7 @@ void AddShrine(int i)
 		}
 	}
 	while (1) {
-		val = random(150, 26);
+		val = random(150, NUM_SHRINETYPE);
 		if (slist[val]) {
 			break;
 		}
@@ -1171,8 +1171,8 @@ void AddPurifyingFountain(int i)
 void AddArmorStand(int i)
 {
 	if (!armorFlag) {
-		object[i]._oSelFlag = 0;
 		object[i]._oAnimFlag = 2;
+		object[i]._oSelFlag = 0;
 	}
 
 	object[i]._oRndSeed = GetRndSeed();
@@ -1262,8 +1262,8 @@ void AddStoryBook(int i)
 void AddWeaponRack(int i)
 {
 	if (!weaponFlag) {
-		object[i]._oSelFlag = 0;
 		object[i]._oAnimFlag = 2;
+		object[i]._oSelFlag = 0;
 	}
 	object[i]._oRndSeed = GetRndSeed();
 }
@@ -1534,7 +1534,6 @@ void Obj_Circle(int i)
 			AddMissile(plr[myplr].WorldX, plr[myplr].WorldY, 35, 46, plr[myplr]._pdir, MIS_RNDTELEPORT, 0, myplr, 0, 0);
 			track_repeat_walk(0);
 			sgbMouseDown = 0;
-			ReleaseCapture();
 			ClrPlrPath(myplr);
 			StartStand(myplr, 0);
 		}
@@ -1821,12 +1820,12 @@ void ObjSetMicro(int dx, int dy, int pn)
 	if (leveltype != DTYPE_HELL) {
 		v = (WORD *)pLevelPieces + 10 * pn;
 		for (i = 0; i < 10; i++) {
-			defs->mt[i] = v[(i & 1) - (i & 0xE) + 8];
+			defs->mt[i] =  SDL_SwapLE16(v[(i & 1) - (i & 0xE) + 8]);
 		}
 	} else {
 		v = (WORD *)pLevelPieces + 16 * pn;
 		for (i = 0; i < 16; i++) {
-			defs->mt[i] = v[(i & 1) - (i & 0xE) + 14];
+			defs->mt[i] =  SDL_SwapLE16(v[(i & 1) - (i & 0xE) + 14]);
 		}
 	}
 }
@@ -1840,19 +1839,21 @@ void objects_set_door_piece(int x, int y)
 
 	v1 = *((WORD *)pLevelPieces + 10 * pn + 8);
 	v2 = *((WORD *)pLevelPieces + 10 * pn + 9);
-	dpiece_defs_map_1[IsometricCoord(x, y)].mt[0] = v1;
-	dpiece_defs_map_1[IsometricCoord(x, y)].mt[1] = v2;
+	dpiece_defs_map_1[IsometricCoord(x, y)].mt[0] = SDL_SwapLE16(v1);
+	dpiece_defs_map_1[IsometricCoord(x, y)].mt[1] = SDL_SwapLE16(v2);
 }
 
 void ObjSetMini(int x, int y, int v)
 {
 	int xx, yy;
 	long v1, v2, v3, v4;
+	WORD *MegaTiles;
 
-	v1 = *((WORD *)&pMegaTiles[((WORD)v - 1) * 8]) + 1;
-	v2 = *((WORD *)&pMegaTiles[((WORD)v - 1) * 8] + 1) + 1;
-	v3 = *((WORD *)&pMegaTiles[((WORD)v - 1) * 8] + 2) + 1;
-	v4 = *((WORD *)&pMegaTiles[((WORD)v - 1) * 8] + 3) + 1;
+	MegaTiles = (WORD *)&pMegaTiles[((WORD)v - 1) * 8];
+	v1 = SDL_SwapLE16(*(MegaTiles + 0)) + 1;
+	v2 = SDL_SwapLE16(*(MegaTiles + 1)) + 1;
+	v3 = SDL_SwapLE16(*(MegaTiles + 2)) + 1;
+	v4 = SDL_SwapLE16(*(MegaTiles + 3)) + 1;
 
 	xx = 2 * x + 16;
 	yy = 2 * y + 16;
@@ -2881,14 +2882,14 @@ void OperateShrine(int pnum, int i, int sType)
 			return;
 		if (pnum != myplr)
 			return;
-		for (j = 0; j < 7; j++) {
+		for (j = 0; j < NUM_INVLOC; j++) {
 			if (plr[pnum].InvBody[j]._itype != ITYPE_NONE)
 				cnt++;
 		}
 		if (cnt > 0) {
-			for (j = 0; j < 7; j++) {
+			for (j = 0; j < NUM_INVLOC; j++) {
 				if (plr[pnum].InvBody[j]._itype != ITYPE_NONE
-				    && plr[pnum].InvBody[j]._iMaxDur != 255
+				    && plr[pnum].InvBody[j]._iMaxDur != DUR_INDESTRUCTIBLE
 				    && plr[pnum].InvBody[j]._iMaxDur != 0) {
 					plr[pnum].InvBody[j]._iDurability += 10;
 					plr[pnum].InvBody[j]._iMaxDur += 10;
@@ -2898,16 +2899,16 @@ void OperateShrine(int pnum, int i, int sType)
 			}
 			while (TRUE) {
 				cnt = 0;
-				for (j = 0; j < 7; j++) {
+				for (j = 0; j < NUM_INVLOC; j++) {
 					if (plr[pnum].InvBody[j]._itype != ITYPE_NONE
-					    && plr[pnum].InvBody[j]._iMaxDur != 255
+					    && plr[pnum].InvBody[j]._iMaxDur != DUR_INDESTRUCTIBLE
 					    && plr[pnum].InvBody[j]._iMaxDur != 0)
 						cnt++;
 				}
 				if (cnt == 0)
 					break;
 				r = random(0, 7);
-				if (plr[pnum].InvBody[r]._itype == -1 || plr[pnum].InvBody[r]._iMaxDur == 255 || plr[pnum].InvBody[r]._iMaxDur == 0)
+				if (plr[pnum].InvBody[r]._itype == -1 || plr[pnum].InvBody[r]._iMaxDur == DUR_INDESTRUCTIBLE || plr[pnum].InvBody[r]._iMaxDur == 0)
 					continue;
 
 				plr[pnum].InvBody[r]._iDurability -= 20;
@@ -3365,7 +3366,7 @@ void OperateShrine(int pnum, int i, int sType)
 			return;
 		if (pnum != myplr)
 			return;
-		for (j = 0; j < 7; j++) {
+		for (j = 0; j < NUM_INVLOC; j++) {
 			if (plr[pnum].InvBody[j]._iMagical && !plr[pnum].InvBody[j]._iIdentified)
 				plr[pnum].InvBody[j]._iIdentified = TRUE;
 		}

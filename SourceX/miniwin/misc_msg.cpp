@@ -272,6 +272,10 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		}
 	} break;
 #ifndef USE_SDL1
+	case SDL_AUDIODEVICEADDED:
+	case SDL_AUDIODEVICEREMOVED:
+	case SDL_TEXTEDITING:
+		return false_avail();
 	case SDL_TEXTINPUT:
 	case SDL_WINDOWEVENT:
 		if (e.window.event == SDL_WINDOWEVENT_CLOSE) {
@@ -351,9 +355,11 @@ WINBOOL TranslateMessage(const MSG *lpMsg)
 				}
 			}
 
+#ifdef _DEBUG
 			if (key >= 32) {
 				DUMMY_PRINT("char: %c", key);
 			}
+#endif
 
 			// XXX: This does not add extended info to lParam
 			PostMessageA(lpMsg->hwnd, DVL_WM_CHAR, key, 0);
@@ -365,8 +371,18 @@ WINBOOL TranslateMessage(const MSG *lpMsg)
 
 SHORT GetAsyncKeyState(int vKey)
 {
-	DUMMY_ONCE();
-	// TODO: Not handled yet.
+#ifndef USE_SDL1
+	const Uint8 *state = SDL_GetKeyboardState(NULL);
+	if (vKey == DVL_VK_SHIFT) {
+		if (state[SDL_SCANCODE_LSHIFT] || state[SDL_SCANCODE_RSHIFT]) {
+			return 0x8000;
+		}
+	}
+	if (vKey == DVL_VK_MENU && state[SDL_SCANCODE_M]) {
+		return 0x8000;
+	}
+#endif
+
 	return 0;
 }
 
@@ -382,8 +398,6 @@ LRESULT DispatchMessageA(const MSG *lpMsg)
 
 WINBOOL PostMessageA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
-	DUMMY();
-
 	assert(hWnd == 0);
 
 	MSG msg;

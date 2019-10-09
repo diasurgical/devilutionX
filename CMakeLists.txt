@@ -2,17 +2,12 @@ cmake_minimum_required(VERSION 3.10)
 
 include(CMake/out_of_tree.cmake)
 
-project(DevilutionX
-  VERSION 0.5.0
-  LANGUAGES C CXX)
-
-list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake")
-
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
 option(ASAN "Enable address sanitizer" ON)
+option(UBSAN "Enable undefined behaviour sanitizer" ON)
 option(DEBUG "Enable debug mode in engine" ON)
 option(SPAWN "Build the shareware version" OFF)
 option(DIST "Dynamically link only glibc and SDL2" OFF)
@@ -25,6 +20,7 @@ option(NONET "Disable network" OFF)
 if(BINARY_RELEASE)
   set(CMAKE_BUILD_TYPE "Release")
   set(ASAN OFF)
+  set(UBSAN OFF)
   set(DEBUG OFF)
   set(DIST ON)
   set(FASTER OFF)
@@ -41,12 +37,33 @@ if(BINARY_RELEASE)
 endif()
 
 if(NIGHTLY_BUILD)
-  set(CMAKE_BUILD_TYPE "Debug")
+  set(CMAKE_BUILD_TYPE "RelWithDebInfo")
   set(ASAN OFF)
+  set(UBSAN OFF)
   set(DEBUG ON)
   set(DIST ON)
-  set(FASTER ON)
+  set(FASTER OFF)
 endif()
+
+execute_process(
+  COMMAND git describe --abbrev=0 --tags
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  OUTPUT_VARIABLE GIT_TAG
+  OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+if (NOT CMAKE_BUILD_TYPE MATCHES "Release")
+  execute_process(
+    COMMAND git log -1 --format=-%h
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_COMMIT_HASH
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
+endif()
+
+project(DevilutionX
+  VERSION ${GIT_TAG}
+  LANGUAGES C CXX)
+
+list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake")
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
   set(ASAN OFF)
@@ -292,12 +309,17 @@ foreach(target devilution devilutionx)
     target_link_libraries(${target} PUBLIC -fsanitize=address -fsanitize-recover=address)
   endif()
 
+  if(UBSAN)
+    target_compile_options(${target} PUBLIC -fsanitize=undefined)
+    target_link_libraries(${target} PUBLIC -fsanitize=undefined)
+  endif()
+
   if(DINGUX)
     target_compile_definitions(${target} PRIVATE DINGUX)
   endif()
 endforeach(target devilution devilutionx)
 
-if(DIST AND NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+if(DIST AND CMAKE_CXX_COMPILER_ID MATCHES "GCC")
   target_link_libraries(devilutionx PUBLIC -static-libgcc -static-libstdc++)
 endif()
 
@@ -307,6 +329,11 @@ if(WIN32)
   if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     target_compile_options(devilution PUBLIC $<$<CONFIG:Debug>:-gstabs>)
   endif()
+endif()
+
+if(NOT WIN32 AND NOT APPLE)
+  # Enable POSIX extensions such as `readlink` and `ftruncate`.
+  add_definitions(-D_POSIX_C_SOURCE=200809L)
 endif()
 
 if(HAIKU)
@@ -361,6 +388,14 @@ if(APPLE)
   set_target_properties(devilutionx PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/macOS/Info.plist")
 
   install (TARGETS devilutionx DESTINATION ./)
+
+  if(DIST)
+      install(CODE "
+        include(BundleUtilities)
+        fixup_bundle(${CMAKE_BINARY_DIR}/${MACOSX_BUNDLE_BUNDLE_NAME}.app \"\" \"\")
+        "
+        COMPONENT Runtime)
+  endif()
 
   set(MACOSX_BUNDLE_LONG_VERSION_STRING "Version ${PROJECT_VERSION}")
   set(CPACK_PACKAGE_FILE_NAME "devilutionx")

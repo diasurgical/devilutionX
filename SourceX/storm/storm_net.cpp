@@ -60,7 +60,6 @@ BOOL SNetRegisterEventHandler(int evtype, SEVTHANDLER func)
 
 BOOL SNetDestroy()
 {
-	DUMMY();
 	return true;
 }
 

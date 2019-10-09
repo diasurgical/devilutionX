@@ -58,7 +58,7 @@ void LoadTtfFont() {
 		atexit(TTF_Quit);
 	}
 
-	font = TTF_OpenFont("CharisSILB.ttf", 17);
+	font = TTF_OpenFont(TTF_FONT_PATH, 17);
 	if (font == NULL) {
 		printf("TTF_OpenFont: %s\n", TTF_GetError());
 		return;

@@ -15,7 +15,7 @@ DWORD glSeedTbl[NUMLEVELS];
 BOOL gbRunGame;
 int glMid3Seed[NUMLEVELS];
 BOOL gbRunGameResult;
-int zoomflag;
+BOOL zoomflag;
 BOOL gbProcessPlayers;
 int glEndSeed[NUMLEVELS];
 BOOL gbLoadGame;
@@ -194,7 +194,7 @@ void run_game_loop(unsigned int uMsg)
 
 void start_game(unsigned int uMsg)
 {
-	zoomflag = 1;
+	zoomflag = TRUE;
 	cineflag = FALSE;
 	InitCursor();
 	InitLightTable();
@@ -211,7 +211,7 @@ void start_game(unsigned int uMsg)
 
 void free_game()
 {
-	int i; // esi
+	int i;
 
 	FreeControlPan();
 	FreeInvGFX();
@@ -414,7 +414,7 @@ void diablo_parse_flags(char *args)
 				debug_mode_key_w = 1;
 				break;
 			case 'x':
-				fullscreen = 0;
+				fullscreen = FALSE;
 				break;
 			}
 #endif
@@ -495,25 +495,21 @@ LRESULT CALLBACK DisableInputWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 	case WM_LBUTTONDOWN:
 		if (sgbMouseDown == 0) {
 			sgbMouseDown = 1;
-			SetCapture(hWnd);
 		}
 		return 0;
 	case WM_LBUTTONUP:
 		if (sgbMouseDown == 1) {
 			sgbMouseDown = 0;
-			ReleaseCapture();
 		}
 		return 0;
 	case WM_RBUTTONDOWN:
 		if (sgbMouseDown == 0) {
 			sgbMouseDown = 2;
-			SetCapture(hWnd);
 		}
 		return 0;
 	case WM_RBUTTONUP:
 		if (sgbMouseDown == 2) {
 			sgbMouseDown = 0;
-			ReleaseCapture();
 		}
 		return 0;
 	case WM_CAPTURECHANGED:
@@ -558,7 +554,6 @@ LRESULT CALLBACK GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		MouseY = HIWORD(lParam);
 		if (sgbMouseDown == 0) {
 			sgbMouseDown = 1;
-			SetCapture(hWnd);
 			track_repeat_walk(LeftMouseDown(wParam));
 		}
 		return 0;
@@ -569,7 +564,6 @@ LRESULT CALLBACK GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			sgbMouseDown = 0;
 			LeftMouseUp();
 			track_repeat_walk(FALSE);
-			ReleaseCapture();
 		}
 		return 0;
 	case WM_RBUTTONDOWN:
@@ -577,7 +571,6 @@ LRESULT CALLBACK GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		MouseY = HIWORD(lParam);
 		if (sgbMouseDown == 0) {
 			sgbMouseDown = 2;
-			SetCapture(hWnd);
 			RightMouseDown();
 		}
 		return 0;
@@ -586,7 +579,6 @@ LRESULT CALLBACK GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		MouseY = HIWORD(lParam);
 		if (sgbMouseDown == 2) {
 			sgbMouseDown = 0;
-			ReleaseCapture();
 		}
 		return 0;
 	case WM_CAPTURECHANGED:
@@ -611,7 +603,6 @@ LRESULT CALLBACK GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		music_stop();
 		track_repeat_walk(FALSE);
 		sgbMouseDown = 0;
-		ReleaseCapture();
 		ShowProgress(uMsg);
 		drawpanflag = 255;
 		DrawAndBlit();
@@ -1138,7 +1129,7 @@ void PressChar(int vkey)
 		return;
 	case 'Z':
 	case 'z':
-		zoomflag = zoomflag == 0;
+		zoomflag = !zoomflag;
 		return;
 	case 'S':
 	case 's':
