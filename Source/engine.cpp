@@ -1261,7 +1261,7 @@ void SetRndSeed(int s)
 int GetRndSeed()
 {
 	SeedCount++;
-	sglGameSeed = RndMult * sglGameSeed + RndInc;
+	sglGameSeed = static_cast<unsigned int>(RndMult) * sglGameSeed + RndInc;
 	return abs(sglGameSeed);
 }
 
