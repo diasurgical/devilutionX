@@ -4,29 +4,19 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-// Diablo's "SHA1" is different from actual SHA1 in that it uses arithmetic
+// NOTE: Diablo's "SHA1" is different from actual SHA1 in that it uses arithmetic
 // right shifts (sign bit extension).
-//
-// Note that:
-// 1. Tere is a C++20 proposal to make right shift always defined
-//    as an arithmetic shift with sign extension:
-//    http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/p0907r1.html
-// 2. Modern C++ compilers (GCC 8+, Clang 7+) compile the portable code
-//    to the same assembly as the implementation defined `value >> bits`:
-//    https://stackoverflow.com/a/53766752
 
 namespace {
-
-std::uint32_t asr(std::int32_t value, std::int32_t amount)
-{
-	return value < 0 ? ~(~value >> amount) : value >> amount;
-}
 
 /*
  * Diablo-"SHA1" circular left shift.
  */
-std::uint32_t SHA1CircularShift(std::uint32_t bits, std::uint32_t word) {
-	return (word << bits) | asr(word, 32 - bits);
+#if defined(__clang__) || defined(__GNUC__)
+__attribute__((no_sanitize("shift-base")))
+#endif
+std::uint32_t SHA1CircularShift(std::uint32_t bits, std::int32_t word) {
+	return (word << bits) | (word >> (32 - bits));
 }
 
 } // namespace
