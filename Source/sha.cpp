@@ -7,23 +7,19 @@ DEVILUTION_BEGIN_NAMESPACE
 // Diablo's "SHA1" is different from actual SHA1 in that it uses arithmetic
 // right shifts (sign bit extension).
 //
-// Here we check whether the platform does signed-bit extension.
-// If not, we fall back to a portable implementation.
-
-#define USES_ARITHMETIC_SHR(TYPE) (static_cast<TYPE>(-1) >> 1 == static_cast<TYPE>(-1))
-
-#if defined(__clang__) || defined(__GNUC__)
-#define ATTR_ALLOW_SHIFT_NEGATIVE_BASE __attribute__((no_sanitize("shift-base")))
-#else
-#define ATTR_ALLOW_SHIFT_NEGATIVE_BASE
-#endif
+// Note that:
+// 1. Tere is a C++20 proposal to make right shift always defined
+//    as an arithmetic shift with sign extension:
+//    http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/p0907r1.html
+// 2. Modern C++ compilers (GCC 8+, Clang 7+) compile the portable code
+//    to the same assembly as the implementation defined `value >> bits`:
+//    https://stackoverflow.com/a/53766752
 
 namespace {
 
-ATTR_ALLOW_SHIFT_NEGATIVE_BASE
 std::uint32_t asr(std::int32_t value, std::int32_t amount)
 {
-	return !USES_ARITHMETIC_SHR(std::int32_t) && value < 0 ? ~(~value >> amount) : value >> amount;
+	return value < 0 ? ~(~value >> amount) : value >> amount;
 }
 
 /*
