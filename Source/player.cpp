@@ -1337,8 +1337,8 @@ void StartWalk2(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int 
 	plr[pnum]._pmode = PM_WALK2;
 	plr[pnum]._pxvel = xvel;
 	plr[pnum]._pyvel = yvel;
-	plr[pnum]._pVar6 = xoff << 8;
-	plr[pnum]._pVar7 = yoff << 8;
+	plr[pnum]._pVar6 = static_cast<unsigned int>(xoff) << 8;
+	plr[pnum]._pVar7 = static_cast<unsigned int>(yoff) << 8;
 	plr[pnum]._pVar3 = EndDir;
 
 	if (!(plr[pnum]._pGFXLoad & PFILE_WALK)) {
@@ -1421,8 +1421,8 @@ void StartWalk3(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int 
 	plr[pnum]._pyvel = yvel;
 	plr[pnum]._pVar1 = px;
 	plr[pnum]._pVar2 = py;
-	plr[pnum]._pVar6 = xoff << 8;
-	plr[pnum]._pVar7 = yoff << 8;
+	plr[pnum]._pVar6 = static_cast<unsigned int>(xoff) << 8;
+	plr[pnum]._pVar7 = static_cast<unsigned int>(yoff) << 8;
 	plr[pnum]._pVar3 = EndDir;
 
 	if (!(plr[pnum]._pGFXLoad & PFILE_WALK)) {
@@ -1765,8 +1765,11 @@ void StartPlayerKill(int pnum, int earflag)
 							ear._iCurs = ICURS_EAR_ROGUE;
 						}
 
-						ear._iCreateInfo = plr[pnum]._pName[0] << 8 | plr[pnum]._pName[1];
-						ear._iSeed = plr[pnum]._pName[2] << 24 | plr[pnum]._pName[3] << 16 | plr[pnum]._pName[4] << 8 | plr[pnum]._pName[5];
+						ear._iCreateInfo = static_cast<unsigned char>(plr[pnum]._pName[0]) << 8 | plr[pnum]._pName[1];
+						ear._iSeed =
+							static_cast<unsigned char>(plr[pnum]._pName[2]) << 24 |
+							static_cast<unsigned char>(plr[pnum]._pName[3]) << 16 |
+							static_cast<unsigned char>(plr[pnum]._pName[4]) << 8 | plr[pnum]._pName[5];
 						ear._ivalue = plr[pnum]._pLevel;
 
 						if (FindGetItem(IDI_EAR, ear._iCreateInfo, ear._iSeed) == -1) {
