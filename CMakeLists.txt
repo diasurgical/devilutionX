@@ -17,6 +17,24 @@ option(NIGHTLY_BUILD "Enable options for nightly build" OFF)
 option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network" OFF)
 
+execute_process(
+  COMMAND git describe --abbrev=0 --tags
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  OUTPUT_VARIABLE GIT_TAG
+  OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+if (NOT CMAKE_BUILD_TYPE MATCHES "Release")
+  execute_process(
+    COMMAND git log -1 --format=-%h
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_COMMIT_HASH
+    OUTPUT_STRIP_TRAILING_WHITESPACE)
+endif()
+
+project(DevilutionX
+  VERSION ${GIT_TAG}
+  LANGUAGES C CXX)
+
 if(BINARY_RELEASE)
   set(CMAKE_BUILD_TYPE "Release")
   set(ASAN OFF)
@@ -44,24 +62,6 @@ if(NIGHTLY_BUILD)
   set(DIST ON)
   set(FASTER OFF)
 endif()
-
-execute_process(
-  COMMAND git describe --abbrev=0 --tags
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  OUTPUT_VARIABLE GIT_TAG
-  OUTPUT_STRIP_TRAILING_WHITESPACE)
-
-if (NOT CMAKE_BUILD_TYPE MATCHES "Release")
-  execute_process(
-    COMMAND git log -1 --format=-%h
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    OUTPUT_VARIABLE GIT_COMMIT_HASH
-    OUTPUT_STRIP_TRAILING_WHITESPACE)
-endif()
-
-project(DevilutionX
-  VERSION ${GIT_TAG}
-  LANGUAGES C CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake")
 
