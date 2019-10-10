@@ -9,6 +9,7 @@ endif()
 option(ASAN "Enable address sanitizer" ON)
 option(UBSAN "Enable undefined behaviour sanitizer" ON)
 option(DEBUG "Enable debug mode in engine" ON)
+option(LTO "Enable link-time optimization (if supported by the toolchain)" OFF)
 option(SPAWN "Build the shareware version" OFF)
 option(DIST "Dynamically link only glibc and SDL2" OFF)
 option(FASTER "Enable FASTER in engine" ON)
@@ -17,23 +18,24 @@ option(NIGHTLY_BUILD "Enable options for nightly build" OFF)
 option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network" OFF)
 
+include(CMake/git.cmake)
+get_git_tag(GIT_TAG)
+if(NOT CMAKE_BUILD_TYPE MATCHES "Release")
+  get_git_commit_hash(GIT_COMMIT_HASH)
+endif()
+
+project(DevilutionX
+  VERSION ${GIT_TAG}
+  LANGUAGES C CXX)
+
 if(BINARY_RELEASE)
   set(CMAKE_BUILD_TYPE "Release")
   set(ASAN OFF)
   set(UBSAN OFF)
   set(DEBUG OFF)
+  set(LTO ON)
   set(DIST ON)
   set(FASTER OFF)
-
-  # Use LTO on all compilers where it is supported.
-  include(CheckIPOSupported)
-  check_ipo_supported(RESULT result)
-  if(result)
-    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
-    message(STATUS "LTO enabled")
-  else()
-    message(WARNING "LTO not supported by this compiler and/or CMake version")
-  endif()
 endif()
 
 if(NIGHTLY_BUILD)
@@ -41,27 +43,22 @@ if(NIGHTLY_BUILD)
   set(ASAN OFF)
   set(UBSAN OFF)
   set(DEBUG ON)
+  set(LTO ON)
   set(DIST ON)
   set(FASTER OFF)
 endif()
 
-execute_process(
-  COMMAND git describe --abbrev=0 --tags
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  OUTPUT_VARIABLE GIT_TAG
-  OUTPUT_STRIP_TRAILING_WHITESPACE)
-
-if (NOT CMAKE_BUILD_TYPE MATCHES "Release")
-  execute_process(
-    COMMAND git log -1 --format=-%h
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    OUTPUT_VARIABLE GIT_COMMIT_HASH
-    OUTPUT_STRIP_TRAILING_WHITESPACE)
+if(LTO)
+  # Use LTO on compilers where it is supported.
+  include(CheckIPOSupported)
+  check_ipo_supported(RESULT result OUTPUT lto_error)
+  if(result)
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
+  else()
+    message(WARNING "LTO not supported by this compiler and/or CMake version:")
+    message(WARNING ${lto_error})
+  endif()
 endif()
-
-project(DevilutionX
-  VERSION ${GIT_TAG}
-  LANGUAGES C CXX)
 
 list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake")
 
