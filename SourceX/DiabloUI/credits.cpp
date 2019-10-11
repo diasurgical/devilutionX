@@ -85,14 +85,14 @@ CachedLine PrepareLine(std::size_t index)
 			SDL_Log(SDL_GetError());
 
 		// Change the text surface color and blit again:
-#ifdef USE_SDL1
-		SDL_SetColorKey(text.get(), SDL_SRCCOLORKEY, 0);
 		SDL_Color text_colors[2] = { mask_color, text_color };
+#ifdef USE_SDL1
 		if (SDL_SetPalette(text.get(), SDL_LOGPAL, text_colors, 0, 2) != 1)
 			SDL_Log(SDL_GetError());
+		SDL_SetColorKey(text.get(), SDL_SRCCOLORKEY, 0);
 #else
-		text->format->palette->colors[0] = mask_color;
-		text->format->palette->colors[1] = text_color;
+		if (SDL_SetPaletteColors(text->format->palette, text_colors, 0, 2) <= -1)
+			SDL_Log(SDL_GetError());
 		SDL_SetColorKey(text.get(), SDL_TRUE, 0);
 #endif
 		if (SDL_BlitSurface(text.get(), nullptr, surface.get(), nullptr) <= -1)
