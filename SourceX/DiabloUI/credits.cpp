@@ -236,7 +236,6 @@ BOOL UiCreditsDialog(int a1)
 				exit(0);
 			}
 		}
-		SDL_Delay(1);
 	} while (!endMenu && !credits_renderer.Finished());
 	BlackPalette();
 
