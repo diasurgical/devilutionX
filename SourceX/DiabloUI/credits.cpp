@@ -16,6 +16,8 @@ namespace dvl {
 namespace {
 
 const SDL_Rect VIEWPORT = { SCREEN_X, SCREEN_Y + 114, SCREEN_WIDTH, 251 };
+constexpr int SHADOW_OFFSET_X = 2;
+constexpr int SHADOW_OFFSET_Y = 2;
 constexpr int LINE_H = 22;
 
 struct SurfaceDeleter {
@@ -25,31 +27,31 @@ struct SurfaceDeleter {
 	}
 };
 
+using SurfacePtr = std::unique_ptr<SDL_Surface, SurfaceDeleter>;
+
 struct CachedLine {
 	CachedLine() = default;
 
-	explicit CachedLine(std::size_t index, SDL_Surface *text, SDL_Surface *shadow)
+	explicit CachedLine(std::size_t index, SurfacePtr surface)
 	    : index(index)
-	    , text(text)
-	    , shadow(shadow)
+	    , surface(std::move(surface))
 	    , palette_version(pal_surface_palette_version)
 	{
 	}
 
 	std::size_t index;
-	std::unique_ptr<SDL_Surface, SurfaceDeleter> text;
-	std::unique_ptr<SDL_Surface, SurfaceDeleter> shadow;
+	SurfacePtr surface;
 	decltype(pal_surface_palette_version) palette_version;
 };
 
-SDL_Surface *RenderText(const char *text, SDL_Color color)
+SurfacePtr RenderText(const char *text, SDL_Color color)
 {
 	if (text[0] == '\0')
 		return nullptr;
 	SDL_Surface *result = TTF_RenderUTF8_Solid(font, text, color);
 	if (result == nullptr)
 		SDL_Log(TTF_GetError());
-	return result;
+	return SurfacePtr(result);
 }
 
 CachedLine PrepareLine(std::size_t index)
@@ -57,7 +59,47 @@ CachedLine PrepareLine(std::size_t index)
 	const char *contents = CREDITS_LINES[index];
 	if (contents[0] == '\t')
 		++contents;
-	return CachedLine(index, RenderText(contents, palette->colors[224]), RenderText(contents, { 0, 0, 0, 0 }));
+
+	const SDL_Color shadow_color = { 0, 0, 0, 0 };
+	auto text = RenderText(contents, shadow_color);
+
+	// Precompose shadow and text:
+	SurfacePtr surface;
+	if (text != nullptr) {
+		// Set up the target surface to have 3 colors: mask, text, and shadow.
+		surface.reset(
+		    SDL_CreateRGBSurfaceWithFormat(0, text->w + SHADOW_OFFSET_X, text->h + SHADOW_OFFSET_Y, 8, SDL_PIXELFORMAT_INDEX8));
+		const SDL_Color &mask_color = palette->colors[50]; // Any color different from both shadow and text
+		const SDL_Color &text_color = palette->colors[224];
+		SDL_Color colors[3] = { mask_color, text_color, shadow_color };
+		SDL_SetPaletteColors(surface->format->palette, colors, 0, 3);
+#ifdef USE_SDL1
+		SDL_SetColorKey(surface.get(), SDL_SRCCOLORKEY, 0);
+#else
+		SDL_SetColorKey(surface.get(), SDL_TRUE, 0);
+#endif
+
+		// Blit the shadow first:
+		SDL_Rect shadow_rect = { SHADOW_OFFSET_X, SHADOW_OFFSET_Y, 0, 0 };
+		if (SDL_BlitSurface(text.get(), nullptr, surface.get(), &shadow_rect) <= -1)
+			SDL_Log(SDL_GetError());
+
+		// Change the text surface color and blit again:
+#ifdef USE_SDL1
+		SDL_SetColorKey(text.get(), SDL_SRCCOLORKEY, 0);
+		SDL_Color text_colors[2] = { mask_color, text_color };
+		if (SDL_SetPalette(text.get(), SDL_LOGPAL, text_colors, 0, 2) != 1)
+			SDL_Log(SDL_GetError());
+#else
+		text->format->palette->colors[0] = mask_color;
+		text->format->palette->colors[1] = text_color;
+		SDL_SetColorKey(text.get(), SDL_TRUE, 0);
+#endif
+		if (SDL_BlitSurface(text.get(), nullptr, surface.get(), nullptr) <= -1)
+			SDL_Log(SDL_GetError());
+	}
+
+	return CachedLine(index, std::move(surface));
 }
 
 /**
@@ -198,7 +240,7 @@ void CreditsRenderer::Render()
 	int dest_y = VIEWPORT.y - (offset_y - lines_begin * LINE_H);
 	for (std::size_t i = 0; i < lines_.size(); ++i, dest_y += LINE_H) {
 		auto &line = lines_[i];
-		if (line.text == nullptr)
+		if (line.surface == nullptr)
 			continue;
 
 		// Still fading in: the cached line was drawn with a different fade level.
@@ -209,8 +251,7 @@ void CreditsRenderer::Render()
 		if (CREDITS_LINES[line.index][0] == '\t')
 			dest_x += 40;
 
-		BlitToViewport(line.shadow.get(), dest_x + 2, dest_y + 2);
-		BlitToViewport(line.text.get(), dest_x, dest_y);
+		BlitToViewport(line.surface.get(), dest_x, dest_y);
 	}
 	SDL_SetClipRect(pal_surface, nullptr);
 }
