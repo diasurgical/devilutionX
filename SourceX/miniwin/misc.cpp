@@ -198,7 +198,7 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 			SDL_Log(SDL_GetError());
 		}
 
-		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, nWidth, nHeight);
+		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, nWidth, nHeight);
 		if (texture == NULL) {
 			SDL_Log(SDL_GetError());
 		}

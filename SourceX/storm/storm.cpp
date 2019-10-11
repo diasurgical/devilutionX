@@ -596,7 +596,7 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 #ifndef USE_SDL1
 	if (renderer) {
 		SDL_DestroyTexture(texture);
-		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, SVidWidth, SVidHeight);
+		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, SVidWidth, SVidHeight);
 		if (texture == NULL) {
 			SDL_Log(SDL_GetError());
 		}
@@ -794,7 +794,7 @@ BOOL SVidPlayEnd(HANDLE video)
 #ifndef USE_SDL1
 	if (renderer) {
 		SDL_DestroyTexture(texture);
-		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
+		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
 		if (texture == NULL) {
 			SDL_Log(SDL_GetError());
 		}

@@ -72,8 +72,10 @@ void dx_create_primary_surface()
 		if (SDL_GetRendererOutputSize(renderer, &width, &height) <= -1) {
 			SDL_Log(SDL_GetError());
 		}
-		// TODO Get format from render/window
-		surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, 32, SDL_PIXELFORMAT_RGBA8888);
+		Uint32 format;
+		if (SDL_QueryTexture(texture, &format, nullptr, nullptr, nullptr) < 0)
+			SDL_Log(SDL_GetError());
+		surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, SDL_BITSPERPIXEL(format), format);
 	} else {
 		surface = SDL_GetWindowSurface(window);
 	}
