@@ -21,11 +21,11 @@ DWORD provider;
 UiArtText SELCONNECT_DIALOG_DESCRIPTION(selconn_Description, { 35, 275, 205, 66 });
 UiListItem SELCONN_DIALOG_ITEMS[] = {
 #ifndef NONET
-	{ "Client-Server (TCP)", 0 },
+	{ "Loopback", 0 },
+	{ "Client-Server (TCP)", 1 },
 #ifdef BUGGY
-	{ "Peer-to-Peer (UDP)", 1 },
+	{ "Peer-to-Peer (UDP)", 2 },
 #endif
-	{ "Loopback", 2 },
 #else
 	{ "Loopback", 0 },
 #endif
@@ -49,7 +49,7 @@ UiItem SELCONNECT_DIALOG[] = {
 void selconn_Load()
 {
 	LoadBackgroundArt("ui_art\\selconn.pcx");
-	UiInitList(0, 2, selconn_Focus, selconn_Select, selconn_Esc, SELCONNECT_DIALOG, size(SELCONNECT_DIALOG));
+	UiInitList(0, size(SELCONN_DIALOG_ITEMS) - 1, selconn_Focus, selconn_Select, selconn_Esc, SELCONNECT_DIALOG, size(SELCONNECT_DIALOG));
 }
 
 void selconn_Free()
@@ -68,16 +68,16 @@ void selconn_Focus(int value)
 	int players = MAX_PLRS;
 	switch (value) {
 	case 0:
+		strcpy(selconn_Description, "Play by yourself with no network exposure.");
+		players = 1;
+		break;
+	case 1:
 		strcpy(selconn_Description, "All computers must be connected to a TCP-compatible network.");
 		players = MAX_PLRS;
 		break;
-	case 1:
+	case 2:
 		strcpy(selconn_Description, "All computers must be connected to a UDP-compatible network.");
 		players = MAX_PLRS;
-		break;
-	case 2:
-		strcpy(selconn_Description, "Play by yourself with no network exposure.");
-		players = 1;
 		break;
 	}
 
@@ -89,13 +89,13 @@ void selconn_Select(int value)
 {
 	switch (value) {
 	case 0:
-		provider = 'TCPN';
+		provider = 'SCBL';
 		break;
 	case 1:
-		provider = 'UDPN';
+		provider = 'TCPN';
 		break;
 	case 2:
-		provider = 'SCBL';
+		provider = 'UDPN';
 		break;
 	}
 
