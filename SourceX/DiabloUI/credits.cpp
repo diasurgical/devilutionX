@@ -199,16 +199,6 @@ private:
 	int prev_offset_y_;
 };
 
-void BlitToViewport(SDL_Surface *surface, int x, int y)
-{
-	SDL_Rect dest_rect = {
-		static_cast<decltype(SDL_Rect().x)>(x), static_cast<decltype(SDL_Rect().y)>(y), 0, 0
-	};
-	if (SDL_BlitSurface(surface, nullptr, pal_surface, &dest_rect) <= -1) {
-		SDL_Log(SDL_GetError());
-	}
-}
-
 void CreditsRenderer::Render()
 {
 	const int offset_y = -(VIEWPORT.y - LINE_H) + (SDL_GetTicks() - ticks_begin_) / 40;
@@ -237,7 +227,7 @@ void CreditsRenderer::Render()
 		lines_.push_back(PrepareLine(lines_.back().index + 1));
 
 	SDL_SetClipRect(pal_surface, &VIEWPORT);
-	int dest_y = VIEWPORT.y - (offset_y - lines_begin * LINE_H);
+	decltype(SDL_Rect().y) dest_y = VIEWPORT.y - (offset_y - lines_begin * LINE_H);
 	for (std::size_t i = 0; i < lines_.size(); ++i, dest_y += LINE_H) {
 		auto &line = lines_[i];
 		if (line.surface == nullptr)
@@ -251,7 +241,9 @@ void CreditsRenderer::Render()
 		if (CREDITS_LINES[line.index][0] == '\t')
 			dest_x += 40;
 
-		BlitToViewport(line.surface.get(), dest_x, dest_y);
+		SDL_Rect dest_rect = { dest_x, dest_y, 0, 0 };
+		if (SDL_BlitSurface(line.surface.get(), nullptr, pal_surface, &dest_rect) <= -1)
+			SDL_Log(SDL_GetError());
 	}
 	SDL_SetClipRect(pal_surface, nullptr);
 }
