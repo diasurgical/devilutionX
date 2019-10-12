@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.10) # CMP0083 NEW
 
 include(CMake/out_of_tree.cmake)
 
@@ -9,6 +9,7 @@ endif()
 option(ASAN "Enable address sanitizer" ON)
 option(UBSAN "Enable undefined behaviour sanitizer" ON)
 option(DEBUG "Enable debug mode in engine" ON)
+option(PIE "Generate position-independent code" OFF)
 option(SPAWN "Build the shareware version" OFF)
 option(DIST "Dynamically link only glibc and SDL2" OFF)
 option(FASTER "Enable FASTER in engine" ON)
@@ -66,6 +67,10 @@ endif()
 list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake")
 
 if(SWITCH)
+  set(ASAN OFF)
+  set(UBSAN OFF)
+  set(PIE ON)
+
   list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/switch")
   find_package(LIBNX REQUIRED)
 endif()
@@ -86,6 +91,10 @@ endif()
 
 if(DIST)
   set(sodium_USE_STATIC_LIBS ON)
+endif()
+
+if(PIE)
+  set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 endif()
 
 set(CMAKE_CXX_STANDARD 11)
