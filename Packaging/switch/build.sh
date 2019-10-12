@@ -31,8 +31,8 @@ package() {
 install_deps() {
 	"$DEVKITPRO/pacman/bin/pacman" -S --needed --noconfirm --quiet \
 		switch-freetype switch-mesa switch-glad switch-glm switch-sdl2 \
-		switch-sdl2_ttf switch-sdl2_mixer switch-libvorbis switch-libmikmod \
-		switch-libsodium switch-dev devkitpro-pkgbuild-helpers
+		switch-sdl2_ttf switch-sdl2_mixer switch-libvorbis switch-libmikmod switch-libsodium  \
+		libnx devkitA64 devkitA64 general-tools switch-tools devkitpro-pkgbuild-helpers
 }
 
 prepare_devkitpro() {
@@ -54,7 +54,6 @@ install_devkitpro_debian() {
 	\curl -L https://github.com/devkitPro/pacman/releases/download/devkitpro-pacman-1.0.1/devkitpro-pacman.deb -o "$dpkg_path"
 	sudo dpkg -i "$dpkg_path"
 	rm "$dpkg_path"
-	"${DEVKITPRO}/pacman/bin/pacman" -Syyu
 	{ set +x; } 2>/dev/null
 }
 
