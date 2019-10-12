@@ -623,11 +623,7 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 	if (SVidPalette == NULL) {
 		SDL_Log(SDL_GetError());
 	}
-#ifdef USE_SDL1
-	if (SDL_SetPalette(SVidSurface, SDL_LOGPAL, SVidPalette->colors, 0, SVidPalette->ncolors) != 1) {
-#else
-	if (SDL_SetSurfacePalette(SVidSurface, SVidPalette) <= -1) {
-#endif
+	if (SDLC_SetSurfaceColors(SVidSurface, SVidPalette) <= -1) {
 		SDL_Log(SDL_GetError());
 		if (HaveAudio())
 			SVidRestartMixer();
@@ -675,17 +671,10 @@ BOOL SVidPlayContinue(void)
 		}
 		memcpy(logical_palette, orig_palette, 1024);
 
-		if (SDL_SetPaletteColors(SVidPalette, colors, 0, 256) <= -1) {
+		if (SDLC_SetSurfaceAndPaletteColors(SVidSurface, SVidPalette, colors, 0, 256) <= -1) {
 			SDL_Log(SDL_GetError());
 			return false;
 		}
-
-#ifdef USE_SDL1
-		if (SDL_SetPalette(SVidSurface, SDL_LOGPAL, SVidPalette->colors, 0, SVidPalette->ncolors) != 1) {
-			SDL_Log(SDL_GetError());
-			return false;
-		}
-#endif
 	}
 
 	if (SDL_GetTicks() * 1000 >= SVidFrameEnd) {

@@ -50,11 +50,7 @@ void dx_create_back_buffer()
 
 	gpBuffer = (BYTE *)pal_surface->pixels;
 
-#ifdef USE_SDL1
-	if (SDL_SetPalette(pal_surface, SDL_LOGPAL, palette->colors, 0, palette->ncolors) != 1) {
-#else
-	if (SDL_SetSurfacePalette(pal_surface, palette) <= -1) {
-#endif
+	if (SDLC_SetSurfaceColors(pal_surface, palette) <= -1) {
 		SDL_Log(SDL_GetError());
 		UiErrorOkDialog("SDL Error", SDL_GetError());
 	}

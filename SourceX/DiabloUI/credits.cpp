@@ -72,12 +72,9 @@ CachedLine PrepareLine(std::size_t index)
 		const SDL_Color &mask_color = palette->colors[50]; // Any color different from both shadow and text
 		const SDL_Color &text_color = palette->colors[224];
 		SDL_Color colors[3] = { mask_color, text_color, shadow_color };
-		SDL_SetPaletteColors(surface->format->palette, colors, 0, 3);
-#ifdef USE_SDL1
-		SDL_SetColorKey(surface.get(), SDL_SRCCOLORKEY, 0);
-#else
-		SDL_SetColorKey(surface.get(), SDL_TRUE, 0);
-#endif
+		if (SDLC_SetSurfaceColors(surface.get(), colors, 0, 3) <= -1)
+			SDL_Log(SDL_GetError());
+		SDLC_SetColorKey(surface.get(), 0);
 
 		// Blit the shadow first:
 		SDL_Rect shadow_rect = { SHADOW_OFFSET_X, SHADOW_OFFSET_Y, 0, 0 };
@@ -86,15 +83,11 @@ CachedLine PrepareLine(std::size_t index)
 
 		// Change the text surface color and blit again:
 		SDL_Color text_colors[2] = { mask_color, text_color };
-#ifdef USE_SDL1
-		if (SDL_SetPalette(text.get(), SDL_LOGPAL, text_colors, 0, 2) != 1)
+
+		if (SDLC_SetSurfaceColors(text.get(), text_colors, 0, 2) <= -1)
 			SDL_Log(SDL_GetError());
-		SDL_SetColorKey(text.get(), SDL_SRCCOLORKEY, 0);
-#else
-		if (SDL_SetPaletteColors(text->format->palette, text_colors, 0, 2) <= -1)
-			SDL_Log(SDL_GetError());
-		SDL_SetColorKey(text.get(), SDL_TRUE, 0);
-#endif
+		SDLC_SetColorKey(text.get(), 0);
+
 		if (SDL_BlitSurface(text.get(), nullptr, surface.get(), nullptr) <= -1)
 			SDL_Log(SDL_GetError());
 	}

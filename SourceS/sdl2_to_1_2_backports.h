@@ -204,28 +204,6 @@ SDL_FreePalette(SDL_Palette *palette)
 	SDL_free(palette);
 }
 
-inline int SDL_SetPaletteColors(SDL_Palette *palette, const SDL_Color *colors,
-    int firstcolor, int ncolors)
-{
-	int status = 0;
-
-	/* Verify the parameters */
-	if (!palette) {
-		return -1;
-	}
-	if (ncolors > (palette->ncolors - firstcolor)) {
-		ncolors = (palette->ncolors - firstcolor);
-		status = -1;
-	}
-
-	if (colors != (palette->colors + firstcolor)) {
-		SDL_memcpy(palette->colors + firstcolor, colors,
-		    ncolors * sizeof(*colors));
-	}
-
-	return status;
-}
-
 //= Pixel formats
 
 #define SDL_PIXELFORMAT_INDEX8 1
