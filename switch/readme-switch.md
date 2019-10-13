@@ -31,25 +31,17 @@
 - Dual finger drag : drag'n'drop (left mouse button is held down)
 - Three finger drag : drag'n'drop (right mouse button is held down)
 
-### Compiling On Linux
+### Compiling
 
-- ```install devkitproA64, libzip, libpng, libjpeg, switch-freetype, switch-mesa, switch-glad, switch-glm, switch-sdl2, switch-sdl2_ttf, switch-sdl2_mixer, switch-libvorbis, switch-libmikmod```
+```
+Packaging/switch/build.sh
+```
 
-- ```make```
+This will install the [Switch devkit](https://switchbrew.org/wiki/Setting_up_Development_Environment) and build a DevilutionX Switch package. If you already have the devkit installed, or are on a non-Debian system, pass the the devkit path to the script like this:
 
-### Compiling On Windows
-
-- Install [devkitpro](https://sourceforge.net/projects/devkitpro/)
-- Open ```Start Button > DevKitPro > MSys2```
-- Type in ```pacman -S switch-freetype switch-mesa switch-glad switch-glm switch-sdl2 switch-sdl2_ttf switch-sdl2_mixer switch-libvorbis switch-libmikmod```
-- Type in ```make```
-
-### Compiling On MacOS
-
-- Install [devkitpro](https://devkitpro.org/wiki/Getting_Started#macOS)
-- Open Terminal
-- Type in ```dkp-pacman -S switch-freetype switch-mesa switch-glad switch-glm switch-sdl2 switch-sdl2_ttf switch-sdl2_mixer switch-libvorbis switch-libmikmod```
-- Type in ```make```
+```
+DEVKITPRO=<path to devkit> Packaging/switch/build.sh
+```
 
 - .nro lives in release. Test with an emulator (RyuJinx) or real hardware.
 

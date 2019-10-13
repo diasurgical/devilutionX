@@ -5,7 +5,7 @@
 #include <SDL.h>
 #include "switch_keyboard.h"
 
-static void switch_keyboard_get(char *guide_text, char *initial_text, int max_len, int multiline, char *buf)
+static void switch_keyboard_get(const char *guide_text, char *initial_text, int max_len, int multiline, char *buf)
 {
     Result rc = 0;
 
@@ -48,7 +48,7 @@ static void switch_create_and_push_sdlkey_event(uint32_t event_type, SDL_Scancod
     SDL_PushEvent(&event);
 }
 
-void switch_start_text_input(char *guide_text, char *initial_text, int multiline)
+void switch_start_text_input(const char *guide_text, char *initial_text, int multiline)
 {
     char text[65] = {'\0'};
     switch_keyboard_get(guide_text, initial_text, 64, multiline, text);
