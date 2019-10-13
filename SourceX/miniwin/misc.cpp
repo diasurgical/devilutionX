@@ -137,15 +137,14 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 
 #ifdef USE_SDL1
 	int flags = SDL_SWSURFACE | SDL_DOUBLEBUF | SDL_HWPALETTE;
-	if (fullscreen) {
-		SDL_Log("fullscreen not yet supported with SDL1");
-	}
-	// flags |= fullscreen ? SDL_FULLSCREEN : SDL_RESIZABLE;
+	if (fullscreen)
+		flags |= SDL_FULLSCREEN;
 	SDL_WM_SetCaption(lpWindowName, WINDOW_ICON_NAME);
 	SDL_SetVideoMode(nWidth, nHeight, /*bpp=*/0, flags);
 	window = SDL_GetVideoSurface();
 	if (grabInput)
 		SDL_WM_GrabInput(SDL_GRAB_ON);
+	atexit(SDL_VideoQuit); // Without this video mode is not restored after fullscreen.
 #else
 	int flags = 0;
 	if (upscale) {
