@@ -14,7 +14,7 @@ extern int draw_monster_num;
 
 void ClearCursor();
 void DrawMissile(int x, int y, int sx, int sy, BOOL pre);
-void DrawDeadPlayer(int x, int y, int sx, int sy, int CelSkip, int capChunks, BOOL clipped);
+void DrawDeadPlayer(int x, int y, int sx, int sy);
 void DrawView(int StartX, int StartY);
 void ClearScreenBuffer();
 #ifdef _DEBUG

@@ -153,49 +153,49 @@ void town_draw_clipped_town(BYTE *pBuff, int sx, int sy, int dx, int dy, int efl
 		bv = dItem[sx][sy] - 1;
 		px = dx - item[bv]._iAnimWidth2;
 		if (bv == pcursitem) {
-			CelBlitOutlineSafe(181, px, dy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth, 0, 8);
+			CelBlitOutlineSafe(181, px, dy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth);
 		}
-		CelClippedDrawSafe(px, dy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth, 0, 8);
+		CelClippedDrawSafe(px, dy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth);
 	}
 	if (dFlags[sx][sy] & BFLAG_MONSTLR) {
 		mi = -(dMonster[sx][sy - 1] + 1);
 		px = dx - towner[mi]._tAnimWidth2;
 		if (mi == pcursmonst) {
-			CelBlitOutlineSafe(166, px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, 8);
+			CelBlitOutlineSafe(166, px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
 		}
-		CelClippedDrawSafe(px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, 8);
+		CelClippedDrawSafe(px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
 	}
 	if (dMonster[sx][sy] > 0) {
 		mi = dMonster[sx][sy] - 1;
 		px = dx - towner[mi]._tAnimWidth2;
 		if (mi == pcursmonst) {
-			CelBlitOutlineSafe(166, px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, 8);
+			CelBlitOutlineSafe(166, px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
 		}
-		CelClippedDrawSafe(px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, 8);
+		CelClippedDrawSafe(px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
 	}
 	if (dFlags[sx][sy] & BFLAG_PLAYERLR) {
 		bv = -(dPlayer[sx][sy - 1] + 1);
 		px = dx + plr[bv]._pxoff - plr[bv]._pAnimWidth2;
 		py = dy + plr[bv]._pyoff;
 		if (bv == pcursplr) {
-			Cl2DrawOutlineSafe(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, 8);
+			Cl2DrawOutlineSafe(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth);
 		}
-		Cl2DrawSafe(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, 8);
+		Cl2DrawSafe(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth);
 		if (eflag && plr[bv]._peflag) {
 			town_draw_clipped_e_flag(pBuff - 64, sx - 1, sy + 1, dx - 64, dy);
 		}
 	}
 	if (dFlags[sx][sy] & BFLAG_DEAD_PLAYER) {
-		DrawDeadPlayer(sx, sy, dx, dy, 0, 8, 1);
+		DrawDeadPlayer(sx, sy, dx, dy);
 	}
 	if (dPlayer[sx][sy] > 0) {
 		bv = dPlayer[sx][sy] - 1;
 		px = dx + plr[bv]._pxoff - plr[bv]._pAnimWidth2;
 		py = dy + plr[bv]._pyoff;
 		if (bv == pcursplr) {
-			Cl2DrawOutlineSafe(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, 8);
+			Cl2DrawOutlineSafe(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth);
 		}
-		Cl2DrawSafe(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, 8);
+		Cl2DrawSafe(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth);
 		if (eflag && plr[bv]._peflag) {
 			town_draw_clipped_e_flag(pBuff - 64, sx - 1, sy + 1, dx - 64, dy);
 		}
@@ -293,7 +293,7 @@ void town_draw_lower(int x, int y, int sx, int sy, int chunks, int eflag)
 	}
 }
 
-void town_draw_clipped_e_flag_2(BYTE *pBuff, int x, int y, int skipChunks, int CelSkip, int sx, int sy)
+void town_draw_clipped_e_flag_2(BYTE *pBuff, int x, int y, int skipChunks, int sx, int sy)
 {
 	int i;
 	BYTE *dst;
@@ -321,12 +321,10 @@ void town_draw_clipped_e_flag_2(BYTE *pBuff, int x, int y, int skipChunks, int C
 		dst -= BUFFER_WIDTH * 32;
 	}
 
-	if (CelSkip < 8) {
-		town_draw_clipped_town_2(pBuff, x, y, skipChunks, CelSkip, sx, sy, 0);
-	}
+	town_draw_clipped_town_2(pBuff, x, y, skipChunks, sx, sy, 0);
 }
 
-void town_draw_clipped_town_2(BYTE *pBuff, int sx, int sy, int skipChunks, int CelSkip, int dx, int dy, int eflag)
+void town_draw_clipped_town_2(BYTE *pBuff, int sx, int sy, int skipChunks, int dx, int dy, int eflag)
 {
 	int mi, px, py;
 	char bv;
@@ -335,70 +333,66 @@ void town_draw_clipped_town_2(BYTE *pBuff, int sx, int sy, int skipChunks, int C
 		bv = dItem[sx][sy] - 1;
 		px = dx - item[bv]._iAnimWidth2;
 		if (bv == pcursitem) {
-			CelBlitOutlineSafe(181, px, dy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth, CelSkip, 8);
+			CelBlitOutlineSafe(181, px, dy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth);
 		}
-		CelClippedDrawSafe(px, dy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth, CelSkip, 8);
+		CelClippedDrawSafe(px, dy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth);
 	}
 	if (dFlags[sx][sy] & BFLAG_MONSTLR) {
 		mi = -(dMonster[sx][sy - 1] + 1);
 		px = dx - towner[mi]._tAnimWidth2;
 		if (mi == pcursmonst) {
-			CelBlitOutlineSafe(166, px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, CelSkip, 8);
+			CelBlitOutlineSafe(166, px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
 		}
-		CelClippedDrawSafe(px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, CelSkip, 8);
+		CelClippedDrawSafe(px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
 	}
 	if (dMonster[sx][sy] > 0) {
 		mi = dMonster[sx][sy] - 1;
 		px = dx - towner[mi]._tAnimWidth2;
 		if (mi == pcursmonst) {
-			CelBlitOutlineSafe(166, px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, CelSkip, 8);
+			CelBlitOutlineSafe(166, px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
 		}
-		CelClippedDrawSafe(px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, CelSkip, 8);
+		CelClippedDrawSafe(px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
 	}
 	if (dFlags[sx][sy] & BFLAG_PLAYERLR) {
 		bv = -(dPlayer[sx][sy - 1] + 1);
 		px = dx + plr[bv]._pxoff - plr[bv]._pAnimWidth2;
 		py = dy + plr[bv]._pyoff;
 		if (bv == pcursplr) {
-			Cl2DrawOutlineSafe(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, CelSkip, 8);
+			Cl2DrawOutlineSafe(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth);
 		}
-		Cl2DrawSafe(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, CelSkip, 8);
+		Cl2DrawSafe(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth);
 		if (eflag && plr[bv]._peflag) {
-			town_draw_clipped_e_flag_2(pBuff - 64, sx - 1, sy + 1, skipChunks, CelSkip, dx - 64, dy);
+			town_draw_clipped_e_flag_2(pBuff - 64, sx - 1, sy + 1, skipChunks, dx - 64, dy);
 		}
 	}
 	if (dFlags[sx][sy] & BFLAG_DEAD_PLAYER) {
-		DrawDeadPlayer(sx, sy, dx, dy, CelSkip, 8, 1);
+		DrawDeadPlayer(sx, sy, dx, dy);
 	}
 	if (dPlayer[sx][sy] > 0) {
 		bv = dPlayer[sx][sy] - 1;
 		px = dx + plr[bv]._pxoff - plr[bv]._pAnimWidth2;
 		py = dy + plr[bv]._pyoff;
 		if (bv == pcursplr) {
-			Cl2DrawOutlineSafe(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, CelSkip, 8);
+			Cl2DrawOutlineSafe(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth);
 		}
-		Cl2DrawSafe(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, CelSkip, 8);
+		Cl2DrawSafe(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth);
 		if (eflag && plr[bv]._peflag) {
-			town_draw_clipped_e_flag_2(pBuff - 64, sx - 1, sy + 1, skipChunks, CelSkip, dx - 64, dy);
+			town_draw_clipped_e_flag_2(pBuff - 64, sx - 1, sy + 1, skipChunks, dx - 64, dy);
 		}
 	}
 	if (dFlags[sx][sy] & BFLAG_MISSILE) {
 		DrawMissile(sx, sy, dx, dy, 0);
 	}
 	if (dArch[sx][sy] != 0) {
-		town_special_lower(&pBuff[PitchTbl[16 * CelSkip]], dArch[sx][sy]);
+		town_special_lower(&pBuff[PitchTbl[0]], dArch[sx][sy]);
 	}
 }
 
 void town_draw_lower_2(int x, int y, int sx, int sy, int chunks, int skipChunks, int eflag)
 {
-	int i, j, CelSkip;
+	int i, j;
 	BYTE *dst;
 	MICROS *pMap;
-
-	/// ASSERT: assert(gpBuffer);
-
-	CelSkip = 2 * skipChunks + 2;
 
 	if (eflag) {
 		if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX) {
@@ -415,9 +409,7 @@ void town_draw_lower_2(int x, int y, int sx, int sy, int chunks, int skipChunks,
 					}
 					dst -= BUFFER_WIDTH * 32;
 				}
-				if (CelSkip < 8) {
-					town_draw_clipped_town_2(&gpBuffer[sx + PitchTbl[sy]], x, y, skipChunks, CelSkip, sx, sy, 0);
-				}
+				town_draw_clipped_town_2(&gpBuffer[sx + PitchTbl[sy]], x, y, skipChunks, sx, sy, 0);
 			} else {
 				town_clear_low_buf(&gpBuffer[sx + PitchTbl[sy]]);
 			}
@@ -448,9 +440,7 @@ void town_draw_lower_2(int x, int y, int sx, int sy, int chunks, int skipChunks,
 					}
 					dst -= BUFFER_WIDTH * 32;
 				}
-				if (CelSkip < 8) {
-					town_draw_clipped_town_2(&gpBuffer[sx + PitchTbl[sy] - BUFFER_WIDTH * 16 * CelSkip], x, y, skipChunks, CelSkip, sx, sy, 1);
-				}
+				town_draw_clipped_town_2(&gpBuffer[sx + PitchTbl[sy]], x, y, skipChunks, sx, sy, 1);
 			} else {
 				town_clear_low_buf(&gpBuffer[sx + PitchTbl[sy]]);
 			}
@@ -477,9 +467,7 @@ void town_draw_lower_2(int x, int y, int sx, int sy, int chunks, int skipChunks,
 					}
 					dst -= BUFFER_WIDTH * 32;
 				}
-				if (CelSkip < 8) {
-					town_draw_clipped_town_2(&gpBuffer[sx + PitchTbl[sy]], x, y, skipChunks, CelSkip, sx, sy, 0);
-				}
+				town_draw_clipped_town_2(&gpBuffer[sx + PitchTbl[sy]], x, y, skipChunks, sx, sy, 0);
 			} else {
 				town_clear_low_buf(&gpBuffer[sx + PitchTbl[sy]]);
 			}
@@ -489,7 +477,7 @@ void town_draw_lower_2(int x, int y, int sx, int sy, int chunks, int skipChunks,
 	}
 }
 
-void town_draw_e_flag(BYTE *pBuff, int x, int y, int capChunks, int CelCap, int sx, int sy)
+void town_draw_e_flag(BYTE *pBuff, int x, int y, int capChunks, int sx, int sy)
 {
 	int i;
 	BYTE *dst;
@@ -512,10 +500,10 @@ void town_draw_e_flag(BYTE *pBuff, int x, int y, int capChunks, int CelCap, int 
 		dst -= BUFFER_WIDTH * 32;
 	}
 
-	town_draw_town_all(pBuff, x, y, capChunks, CelCap, sx, sy, 0);
+	town_draw_town_all(pBuff, x, y, capChunks, sx, sy, 0);
 }
 
-void town_draw_town_all(BYTE *pBuff, int x, int y, int capChunks, int CelCap, int sx, int sy, int eflag)
+void town_draw_town_all(BYTE *pBuff, int x, int y, int capChunks, int sx, int sy, int eflag)
 {
 	int mi, px, py;
 	char bv;
@@ -524,56 +512,56 @@ void town_draw_town_all(BYTE *pBuff, int x, int y, int capChunks, int CelCap, in
 		bv = dItem[x][y] - 1;
 		px = sx - item[bv]._iAnimWidth2;
 		if (bv == pcursitem) {
-			CelBlitOutline(181, px, sy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth, 0, CelCap);
+			CelBlitOutline(181, px, sy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth);
 		}
 		/// ASSERT: assert(item[bv]._iAnimData);
-		CelClippedDraw(px, sy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth, 0, CelCap);
+		CelClippedDraw(px, sy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth);
 	}
 	if (dFlags[x][y] & BFLAG_MONSTLR) {
 		mi = -(dMonster[x][y - 1] + 1);
 		px = sx - towner[mi]._tAnimWidth2;
 		if (mi == pcursmonst) {
-			CelBlitOutline(166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, CelCap);
+			CelBlitOutline(166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
 		}
 		/// ASSERT: assert(towner[mi]._tAnimData);
-		CelClippedDraw(px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, CelCap);
+		CelClippedDraw(px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
 	}
 	if (dMonster[x][y] > 0) {
 		mi = dMonster[x][y] - 1;
 		px = sx - towner[mi]._tAnimWidth2;
 		if (mi == pcursmonst) {
-			CelBlitOutline(166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, CelCap);
+			CelBlitOutline(166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
 		}
 		/// ASSERT: assert(towner[mi]._tAnimData);
-		CelClippedDraw(px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, CelCap);
+		CelClippedDraw(px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
 	}
 	if (dFlags[x][y] & BFLAG_PLAYERLR) {
 		bv = -(dPlayer[x][y - 1] + 1);
 		px = sx + plr[bv]._pxoff - plr[bv]._pAnimWidth2;
 		py = sy + plr[bv]._pyoff;
 		if (bv == pcursplr) {
-			Cl2DrawOutline(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, CelCap);
+			Cl2DrawOutline(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth);
 		}
 		/// ASSERT: assert(plr[bv]._pAnimData);
-		Cl2Draw(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, CelCap);
+		Cl2Draw(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth);
 		if (eflag && plr[bv]._peflag) {
-			town_draw_e_flag(pBuff - 64, x - 1, y + 1, capChunks, CelCap, sx - 64, sy);
+			town_draw_e_flag(pBuff - 64, x - 1, y + 1, capChunks, sx - 64, sy);
 		}
 	}
 	if (dFlags[x][y] & BFLAG_DEAD_PLAYER) {
-		DrawDeadPlayer(x, y, sx, sy, 0, CelCap, 0);
+		DrawDeadPlayer(x, y, sx, sy);
 	}
 	if (dPlayer[x][y] > 0) {
 		bv = dPlayer[x][y] - 1;
 		px = sx + plr[bv]._pxoff - plr[bv]._pAnimWidth2;
 		py = sy + plr[bv]._pyoff;
 		if (bv == pcursplr) {
-			Cl2DrawOutline(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, CelCap);
+			Cl2DrawOutline(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth);
 		}
 		/// ASSERT: assert(plr[bv]._pAnimData);
-		Cl2Draw(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, CelCap);
+		Cl2Draw(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth);
 		if (eflag && plr[bv]._peflag) {
-			town_draw_e_flag(pBuff - 64, x - 1, y + 1, capChunks, CelCap, sx - 64, sy);
+			town_draw_e_flag(pBuff - 64, x - 1, y + 1, capChunks, sx - 64, sy);
 		}
 	}
 	if (dFlags[x][y] & BFLAG_MISSILE) {
@@ -586,16 +574,11 @@ void town_draw_town_all(BYTE *pBuff, int x, int y, int capChunks, int CelCap, in
 
 void town_draw_upper(int x, int y, int sx, int sy, int chunks, int capChunks, int eflag)
 {
-	int i, j, CelCap;
+	int i, j;
 	BYTE *dst;
 	MICROS *pMap;
 
 	/// ASSERT: assert(gpBuffer);
-
-	CelCap = 2 * capChunks + 2;
-	if (CelCap > 8) {
-		CelCap = 8;
-	}
 
 	if (eflag) {
 		if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX) {
@@ -612,7 +595,7 @@ void town_draw_upper(int x, int y, int sx, int sy, int chunks, int capChunks, in
 					}
 					dst -= BUFFER_WIDTH * 32;
 				}
-				town_draw_town_all(&gpBuffer[sx + PitchTbl[sy]], x, y, capChunks, CelCap, sx, sy, 0);
+				town_draw_town_all(&gpBuffer[sx + PitchTbl[sy]], x, y, capChunks, sx, sy, 0);
 			} else {
 				town_clear_upper_buf(&gpBuffer[sx + PitchTbl[sy]]);
 			}
@@ -643,7 +626,7 @@ void town_draw_upper(int x, int y, int sx, int sy, int chunks, int capChunks, in
 					}
 					dst -= BUFFER_WIDTH * 32;
 				}
-				town_draw_town_all(&gpBuffer[sx + PitchTbl[sy]], x, y, capChunks, CelCap, sx, sy, 1);
+				town_draw_town_all(&gpBuffer[sx + PitchTbl[sy]], x, y, capChunks, sx, sy, 1);
 			} else {
 				town_clear_upper_buf(&gpBuffer[sx + PitchTbl[sy]]);
 			}
@@ -670,7 +653,7 @@ void town_draw_upper(int x, int y, int sx, int sy, int chunks, int capChunks, in
 					}
 					dst -= BUFFER_WIDTH * 32;
 				}
-				town_draw_town_all(&gpBuffer[sx + PitchTbl[sy]], x, y, capChunks, CelCap, sx, sy, 0);
+				town_draw_town_all(&gpBuffer[sx + PitchTbl[sy]], x, y, capChunks, sx, sy, 0);
 			} else {
 				town_clear_upper_buf(&gpBuffer[sx + PitchTbl[sy]]);
 			}
