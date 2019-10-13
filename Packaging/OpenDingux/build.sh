@@ -133,7 +133,7 @@ build() {
 	fi
 	cmake .. ${defs[@]} \
 		-DCMAKE_TOOLCHAIN_FILE="$BUILDROOT/output/host/usr/share/buildroot/toolchainfile.cmake"
-	make -j $(nproc)
+	make -j $(getconf _NPROCESSORS_ONLN)
 	cd -
 }
 
