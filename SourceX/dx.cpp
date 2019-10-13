@@ -194,6 +194,14 @@ void BltFast(DWORD dwX, DWORD dwY, LPRECT lpSrcRect)
 		w, h
 	};
 
+	// Get a fresh window surface in case the current one is no longer valid.
+#ifdef USE_SDL1
+	surface = SDL_GetVideoSurface();
+#else
+	if (!renderer)
+		surface = SDL_GetWindowSurface(window);
+#endif
+
 	// Convert from 8-bit to 32-bit
 	if (SDL_BlitSurface(pal_surface, &src_rect, surface, &dst_rect) <= -1) {
 		ErrSdl();
