@@ -7,6 +7,8 @@
 #include "sdl2_to_1_2_backports.h"
 #endif
 
+#include "sdl_compat.h"
+
 #include "../types.h"
 
 //#ifdef __cplusplus

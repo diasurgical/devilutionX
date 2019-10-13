@@ -89,12 +89,6 @@ BOOL SNetLeaveGame(int type)
 	return dvlnet_inst->SNetLeaveGame(type);
 }
 
-BOOL SNetSendServerChatCommand(const char *command)
-{
-	DUMMY();
-	return true;
-}
-
 /**
  * @brief Called by engine for single, called by ui for multi
  * @param provider BNET, IPXN, MODM, SCBL or UDPN

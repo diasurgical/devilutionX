@@ -71,18 +71,7 @@ void CelDrawDatOnly(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth)
 
 void CelDecodeOnly(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 {
-	int nDataSize;
-	BYTE *pRLEBytes;
-
-	/// ASSERT: assert(gpBuffer);
-	if (!gpBuffer)
-		return;
-	/// ASSERT: assert(pCelBuff != NULL);
-	if (!pCelBuff)
-		return;
-
-	pRLEBytes = CelGetFrame(pCelBuff, nCel, &nDataSize);
-	CelDrawDatOnly(&gpBuffer[sx + PitchTbl[sy]], pRLEBytes, nDataSize, nWidth);
+	CelDecDatOnly(&gpBuffer[sx + PitchTbl[sy]], pCelBuff, nCel, nWidth);
 }
 
 void CelDecDatOnly(BYTE *pBuff, BYTE *pCelBuff, int nCel, int nWidth)

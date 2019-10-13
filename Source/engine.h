@@ -50,16 +50,30 @@ inline BYTE *CelGetFrameClipped(BYTE *pCelBuff, int nCel, int CelSkip, int CelCa
 	pFrameTable = (DWORD *)pCelBuff;
 
 	nCellStart = SwapLE32(pFrameTable[nCel]);
+
+	const int nCellEnd = SwapLE32(pFrameTable[nCel + 1]);
+	if (CelSkip + 1 >= nCellEnd)
+		return nullptr;
+
 	pRLEBytes = &pCelBuff[nCellStart];
-	nDataStart = SwapLE16(*(WORD *)&pRLEBytes[CelSkip]);
+
+	const auto read_as_word = [pRLEBytes](int i) -> WORD {
+#ifdef PLATFORM_LITTLE_ENDIAN
+		return (pRLEBytes[i] << 8) | pRLEBytes[i + 1];
+#else
+		return pRLEBytes[i] | (pRLEBytes[i + 1] << 8);
+#endif
+	};
+
+	nDataStart = read_as_word(CelSkip);
 	if (nDataStart == 0)
 		return NULL;
 
-	*nDataSize = SwapLE32(pFrameTable[nCel + 1]) - nCellStart;
+	*nDataSize = nCellEnd - nCellStart;
 	if (CelCap == 8)
 		nDataCap = 0;
 	else
-		nDataCap = SwapLE16(*(WORD *)&pRLEBytes[CelCap]);
+		nDataCap = read_as_word(CelCap);
 
 	if (nDataCap)
 		*nDataSize = nDataCap - nDataStart;

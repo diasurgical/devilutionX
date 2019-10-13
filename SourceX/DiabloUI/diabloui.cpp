@@ -61,6 +61,7 @@ void UiDestroy()
 {
 	ArtHero.Unload();
 	UnloadTtfFont();
+	UnloadArtFonts();
 }
 
 void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), UiItem *items, int itemCnt, bool itemsWraps, bool (*fnYesNo)())
@@ -276,8 +277,9 @@ bool UiFocusNavigation(SDL_Event *event)
 					char *clipboard = SDL_GetClipboardText();
 					if (clipboard == NULL) {
 						SDL_Log(SDL_GetError());
+					} else {
+						selhero_CatToName(clipboard, UiTextInput, UiTextInputLen);
 					}
-					selhero_CatToName(clipboard, UiTextInput, UiTextInputLen);
 				}
 				return true;
 #endif
@@ -385,7 +387,7 @@ void UiInitialize()
 	if (ArtCursor.surface != nullptr) {
 #ifndef SWITCH
 		if (SDL_ShowCursor(SDL_DISABLE) <= -1) {
-			SDL_Log(SDL_GetError());
+			ErrSdl();
 		}
 #endif
 	}

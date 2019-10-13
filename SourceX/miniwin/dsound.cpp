@@ -46,19 +46,19 @@ void DirectSoundBuffer::Stop()
 	}
 };
 
-const char *DirectSoundBuffer::SetChunk(BYTE *fileData, DWORD dwBytes)
+int DirectSoundBuffer::SetChunk(BYTE *fileData, DWORD dwBytes)
 {
 	SDL_RWops *buf1 = SDL_RWFromConstMem(fileData, dwBytes);
 	if (buf1 == NULL) {
-		return SDL_GetError();
+		return -1;
 	}
 
 	chunk = Mix_LoadWAV_RW(buf1, 1);
 	if (chunk == NULL) {
-		return SDL_GetError();
+		return -1;
 	}
 
-	return NULL;
+	return 0;
 };
 
 } // namespace dvl

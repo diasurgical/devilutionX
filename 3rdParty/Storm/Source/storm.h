@@ -456,7 +456,6 @@ SNetSetGameMode(
 #define SNMakeGamePublic() SNetSetGameMode( (DWORD mode, SNetGetGameInfo(GAMEINFO_MODEFLAGS, &mode, 4), mode), true)
 
 BOOL STORMAPI SNetEnumGamesEx(int a1, int a2, int (__fastcall *callback)(DWORD, DWORD, DWORD), int *hintnextcall);
-BOOL STORMAPI SNetSendServerChatCommand(const char *command);
 
 BOOL STORMAPI SNetDisconnectAll(DWORD flags);
 BOOL STORMAPI SNetCreateLadderGame(const char *pszGameName, const char *pszGamePassword, const char *pszGameStatString, DWORD dwGameType, DWORD dwGameLadderType, DWORD dwGameModeFlags, char *GameTemplateData, int GameTemplateSize, int playerCount, char *creatorName, char *a11, int *playerID);
@@ -506,7 +505,6 @@ BOOL STORMAPI SFileDdaInitialize(HANDLE directsound);
 BOOL STORMAPI SFileDdaSetVolume(HANDLE hFile, signed int bigvolume, signed int volume);
 BOOL STORMAPI SFileDestroy();
 
-BOOL STORMAPI SFileGetFileArchive(HANDLE hFile, HANDLE *archive);
 LONG STORMAPI SFileGetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh);
 BOOL STORMAPI SFileOpenArchive(const char *szMpqName, DWORD dwPriority, DWORD dwFlags, HANDLE *phMpq);
 
@@ -728,7 +726,7 @@ SDrawPostClose();
 //BOOL STORMAPI SDrawRealizePalette();
 
 BOOL STORMAPI SDrawUnlockSurface(int surfacenumber, void *lpSurface, int a3, RECT *lpRect);
-BOOL STORMAPI SDrawUpdatePalette(unsigned int firstentry, unsigned int numentries, PALETTEENTRY *pPalEntries, int a4);
+void SDrawUpdatePalette(unsigned int firstentry, unsigned int numentries, PALETTEENTRY *pPalEntries, int a4);
 
 BOOL STORMAPI SEvtDispatch(DWORD dwMessageID, DWORD dwFlags, int type, PS_EVT pEvent);
 
@@ -869,10 +867,10 @@ BOOL STORMAPI STransCreateI(void *pBuffer, int width, int height, int bpp, int a
 BOOL STORMAPI SVidDestroy();
 BOOL STORMAPI SVidGetSize(HANDLE video, int width, int height, int zero);
 BOOL STORMAPI SVidInitialize(HANDLE video);
-BOOL STORMAPI SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HANDLE *video);
+void SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HANDLE *video);
 
 BOOL STORMAPI SVidPlayContinueSingle(HANDLE video, int a2, int a3);
-BOOL STORMAPI SVidPlayEnd(HANDLE video);
+void SVidPlayEnd(HANDLE video);
 
 /* SErrDisplayError @ 461
  *

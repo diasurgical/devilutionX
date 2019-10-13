@@ -10,7 +10,7 @@ public:
 	void GetStatus(LPDWORD pdwStatus) override;
 	void Play(int lVolume, int lPan) override;
 	void Stop() override;
-	const char *SetChunk(BYTE *fileData, DWORD dwBytes) override;
+	int SetChunk(BYTE *fileData, DWORD dwBytes) override;
 
 private:
 	Mix_Chunk *chunk;

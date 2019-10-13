@@ -1433,8 +1433,8 @@ typedef struct PATHNODE {
 //////////////////////////////////////////////////
 
 typedef struct SHA1Context {
-	int state[5];
-	int count[2];
+	DWORD state[5];
+	DWORD count[2];
 	char buffer[64];
 } SHA1Context;
 

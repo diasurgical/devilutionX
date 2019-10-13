@@ -61,28 +61,21 @@ void town_special_lower(BYTE *pBuff, int nCel)
 #if 0
 	int nDataSize;
 	BYTE *pRLEBytes;
-	DWORD *pFrameTable;
 
-	pFrameTable = (DWORD *)pSpecialCels;
-	pRLEBytes = &pSpecialCels[pFrameTable[nCel]];
-	nDataSize = pFrameTable[nCel + 1] - pFrameTable[nCel];
+	pRLEBytes = CelGetFrame(pSpecialCels, nCel, &nDataSize);
 	Cel2DecDatOnly(pBuff, pRLEBytes, nDataSize, 64);
 #endif
 }
 
-void town_special_upper(BYTE *pBuff, int nCel)
+void town_special_upper(BYTE *dst, int nCel)
 {
 #if 0
 	int w;
-	BYTE *end;
+	BYTE *end, *src;
 	BYTE width;
-	BYTE *src, *dst;
-	DWORD *pFrameTable;
 
-	pFrameTable = (DWORD *)pSpecialCels;
-	src = &pSpecialCels[pFrameTable[nCel]];
-	dst = pBuff;
-	end = &src[pFrameTable[nCel + 1] - pFrameTable[nCel]];
+	src = CelGetFrame(pSpecialCels, nCel, &nDataSize);
+	end = &src[nDataSize];
 
 	for(; src != end; dst -= BUFFER_WIDTH + 64) {
 		for(w = 64; w;) {
