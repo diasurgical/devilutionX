@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.10) # CMP0083 NEW
 
 include(CMake/out_of_tree.cmake)
 
@@ -9,6 +9,7 @@ endif()
 option(ASAN "Enable address sanitizer" ON)
 option(UBSAN "Enable undefined behaviour sanitizer" ON)
 option(DEBUG "Enable debug mode in engine" ON)
+option(PIE "Generate position-independent code" OFF)
 option(LTO "Enable link-time optimization (if supported by the toolchain)" OFF)
 option(SPAWN "Build the shareware version" OFF)
 option(DIST "Dynamically link only glibc and SDL2" OFF)
@@ -62,6 +63,15 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake")
 
+if(SWITCH)
+  set(ASAN OFF)
+  set(UBSAN OFF)
+  set(PIE ON)
+
+  list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/switch")
+  find_package(LIBNX REQUIRED)
+endif()
+
 if(${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
   set(ASAN OFF)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DO_LARGEFILE=0 -Dstat64=stat -Dlstat64=lstat -Dlseek64=lseek -Doff64_t=off_t -Dfstat64=fstat -Dftruncate64=ftruncate")
@@ -78,6 +88,10 @@ endif()
 
 if(DIST OR DINGUX)
   set(sodium_USE_STATIC_LIBS ON)
+endif()
+
+if(PIE)
+  set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 endif()
 
 set(CMAKE_CXX_STANDARD 11)
@@ -255,18 +269,25 @@ if(NOT NONET)
     SourceX/dvlnet/udp_p2p.cpp)
 endif()
 
-add_executable(devilutionx MACOSX_BUNDLE ${devilutionx_SRCS})
+set(BIN_TARGET devilutionx)
+
+if(SWITCH)
+  list(APPEND devilutionx_SRCS switch/switch_keyboard.cpp)
+  set(BIN_TARGET devilutionx.elf)
+endif()
+
+add_executable(${BIN_TARGET} MACOSX_BUNDLE ${devilutionx_SRCS})
 
 configure_file(SourceS/config.h.in config.h @ONLY)
 target_include_directories(devilution PUBLIC Source SourceS ${CMAKE_CURRENT_BINARY_DIR})
-target_include_directories(devilutionx PRIVATE
+target_include_directories(${BIN_TARGET} PRIVATE
   SourceX
   3rdParty/asio/include
   3rdParty/Radon/Radon/include
   3rdParty/libsmacker)
 
 target_link_libraries(devilution PUBLIC Threads::Threads)
-target_link_libraries(devilutionx PRIVATE
+target_link_libraries(${BIN_TARGET} PRIVATE
   devilution
   PKWare
   StormLib
@@ -274,7 +295,7 @@ target_link_libraries(devilutionx PRIVATE
   Radon)
 
 if(NOT NONET)
-  target_link_libraries(devilutionx PRIVATE sodium)
+  target_link_libraries(${BIN_TARGET} PRIVATE sodium)
 endif()
 
 target_compile_definitions(devilution PRIVATE DEVILUTION_ENGINE)
@@ -282,10 +303,10 @@ target_compile_definitions(devilution PUBLIC
   "$<$<BOOL:${DEBUG}>:_DEBUG>"
   # Skip fades and other fluff
   "$<$<BOOL:${FASTER}>:FASTER>")
-target_compile_definitions(devilutionx PRIVATE ASIO_STANDALONE)
+target_compile_definitions(${BIN_TARGET} PRIVATE ASIO_STANDALONE)
 
 
-foreach(target devilution devilutionx)
+foreach(target devilution ${BIN_TARGET})
   if(USE_SDL1)
     target_link_libraries(${target} PRIVATE
       ${SDL_LIBRARY} ${SDL_TTF_LIBRARY} ${SDL_MIXER_LIBRARY})
@@ -315,17 +336,24 @@ foreach(target devilution devilutionx)
     target_link_libraries(${target} PUBLIC -fsanitize=undefined)
   endif()
 
+  if(SWITCH)
+    target_compile_definitions(${target} PRIVATE SWITCH)
+    target_link_libraries(${target} PRIVATE switch::libnx
+      # Most of these shouldn't be necessary.
+      -lfreetype -lvorbisfile -lvorbis -logg -lmodplug -lmikmod -lmpg123 -lSDL2 -lopusfile -lopus -lEGL -lglapi -ldrm_nouveau -lpng -lbz2 -lz -lnx)
+  endif()
+
   if(DINGUX)
     target_compile_definitions(${target} PRIVATE DINGUX)
   endif()
-endforeach(target devilution devilutionx)
+endforeach(target devilution ${BIN_TARGET})
 
 if(DIST AND CMAKE_CXX_COMPILER_ID MATCHES "GCC")
   target_link_libraries(devilutionx PUBLIC -static-libgcc -static-libstdc++)
 endif()
 
 if(WIN32)
-  target_link_libraries(devilutionx PRIVATE wsock32 ws2_32 wininet)
+  target_link_libraries(${BIN_TARGET} PRIVATE wsock32 ws2_32 wininet)
 
   if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     target_compile_options(devilution PUBLIC $<$<CONFIG:Debug>:-gstabs>)
@@ -338,7 +366,7 @@ if(NOT WIN32 AND NOT APPLE)
 endif()
 
 if(HAIKU)
-  target_link_libraries(devilutionx PRIVATE network)
+  target_link_libraries(${BIN_TARGET} PRIVATE network)
 endif()
 
 if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
@@ -355,11 +383,11 @@ if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   target_compile_options(devilution PRIVATE -fpermissive -w)
 
   # Warnings for devilutionX
-  target_compile_options(devilutionx PRIVATE -Wall -Wextra -Wno-write-strings -Wno-multichar -Wno-unused-parameter -Wno-missing-field-initializers -Wno-format-security)
+  target_compile_options(${BIN_TARGET} PRIVATE -Wall -Wextra -Wno-write-strings -Wno-multichar -Wno-unused-parameter -Wno-missing-field-initializers -Wno-format-security)
 
   # For ARM and other default unsigned char platforms
   target_compile_options(devilution PRIVATE -fsigned-char)
-  target_compile_options(devilutionx PRIVATE -fsigned-char)
+  target_compile_options(${BIN_TARGET} PRIVATE -fsigned-char)
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
@@ -368,9 +396,9 @@ endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   # Style issues
-  target_compile_options(devilutionx PRIVATE -Wno-parentheses -Wno-logical-op-parentheses -Wno-bitwise-op-parentheses)
+  target_compile_options(${BIN_TARGET} PRIVATE -Wno-parentheses -Wno-logical-op-parentheses -Wno-bitwise-op-parentheses)
   # Silence warnings about __int64 alignment hack not always being applicable
-  target_compile_options(devilutionx PRIVATE -Wno-ignored-attributes)
+  target_compile_options(${BIN_TARGET} PRIVATE -Wno-ignored-attributes)
   # Silence appfat.cpp warnings
   set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wno-narrowing")
 endif()
@@ -385,10 +413,10 @@ if(APPLE)
   set(MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION})
   set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION})
   set(MACOSX_BUNDLE_LONG_VERSION_STRING "Version ${PROJECT_VERSION}")
-  set_target_properties(devilutionx PROPERTIES MACOSX_BUNDLE_ICON_FILE "AppIcon")
-  set_target_properties(devilutionx PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/macOS/Info.plist")
+  set_target_properties(${BIN_TARGET} PROPERTIES MACOSX_BUNDLE_ICON_FILE "AppIcon")
+  set_target_properties(${BIN_TARGET} PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/macOS/Info.plist")
 
-  install (TARGETS devilutionx DESTINATION ./)
+  install (TARGETS ${BIN_TARGET} DESTINATION ./)
 
   if(DIST)
       install(CODE "
@@ -404,6 +432,15 @@ if(APPLE)
   set(CPACK_GENERATOR "DragNDrop")
 
   include(CPack)
+endif()
+
+if(SWITCH)
+  set(APP_TITLE "DevilutionX")
+  set(APP_AUTHOR "Devilution Team")
+  set(APP_ICON "${PROJECT_SOURCE_DIR}/switch/icon.jpg")
+  set(APP_VERSION ${PROJECT_VERSION})
+  include(nx-utils)
+  build_switch_binaries(${BIN_TARGET})
 endif()
 
 if(DINGUX)

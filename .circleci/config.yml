@@ -64,8 +64,14 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run: make -j$(nproc)
-      - store_artifacts: {path: ./release/devilutionx.nro, destination: devilutionx.nro}
+      - run: echo deb http://deb.debian.org/debian stretch-backports main > /etc/apt/sources.list.d/debian-backports.list
+      - run: apt-get update && apt-get install -y -t stretch-backports cmake
+      # Install cmake files (https://github.com/devkitPro/docker/issues/3)
+      - run: dkp-pacman -S --needed --noconfirm --quiet devkitpro-pkgbuild-helpers
+      # NOTE: Doesn't link without LTO ("read-only segment has dynamic relocations").
+      - run: cd build && cmake .. -DBINARY_RELEASE=ON -DNONET=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/switch/devkita64-libnx.cmake
+      - run: cd build && cmake --build . -j $(nproc)
+      - store_artifacts: {path: ./build/devilutionx.nro, destination: devilutionx.nro}
 
 workflows:
   version: 2

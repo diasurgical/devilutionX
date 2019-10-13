@@ -1,9 +1,7 @@
 #include "selgame.h"
 
 #include "devilution.h"
-#ifndef SWITCH
 #include "config.h"
-#endif
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/text.h"
 #include "DiabloUI/dialogs.h"

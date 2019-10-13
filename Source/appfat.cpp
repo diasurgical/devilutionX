@@ -1,8 +1,6 @@
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
-#ifndef SWITCH
-#include <config.h>
-#endif
+#include "config.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -61,11 +59,7 @@ void __cdecl DrawDlg(char *pszFmt, ...)
 	wvsprintf(text, pszFmt, arglist);
 	va_end(arglist);
 
-#ifdef SWITCH
-	UiErrorOkDialog("DevilutionX", text, false);
-#else
 	UiErrorOkDialog(PROJECT_NAME, text, false);
-#endif
 }
 
 #ifdef _DEBUG
