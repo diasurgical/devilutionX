@@ -684,7 +684,7 @@ BOOL SVidPlayContinue(void)
 
 #ifndef USE_SDL1
 	if (renderer) {
-		if (SDL_BlitSurface(SVidSurface, NULL, surface, NULL) <= -1) {
+		if (SDL_BlitSurface(SVidSurface, NULL, GetOutputSurface(), NULL) <= -1) {
 			SDL_Log(SDL_GetError());
 			return false;
 		}
@@ -712,17 +712,11 @@ BOOL SVidPlayContinue(void)
 		SDL_Surface *tmp = SDL_ConvertSurface(SVidSurface, window->format, 0);
 		// NOTE: Consider resolution switching instead if video doesn't play
 		// fast enough.
-
-		// Get a fresh window surface in case the current one is no longer valid.
-		surface = SDL_GetVideoSurface();
 #else
 		Uint32 format = SDL_GetWindowPixelFormat(window);
 		SDL_Surface *tmp = SDL_ConvertSurfaceFormat(SVidSurface, format, 0);
-
-		// Get a fresh window surface in case the current one is no longer valid.
-		surface = SDL_GetWindowSurface(window);
 #endif
-		if (SDL_BlitScaled(tmp, NULL, surface, &pal_surface_offset) <= -1) {
+		if (SDL_BlitScaled(tmp, NULL, GetOutputSurface(), &pal_surface_offset) <= -1) {
 			SDL_Log(SDL_GetError());
 			return false;
 		}

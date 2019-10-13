@@ -22,8 +22,8 @@ SDL_Texture *texture;
 SDL_Palette *palette;
 unsigned int pal_surface_palette_version = 0;
 
-/** 32-bit in-memory backbuffer surface */
-SDL_Surface *surface;
+/** 24-bit renderer texture surface */
+SDL_Surface *renderer_texture_surface = nullptr;
 
 /** 8-bit surface wrapper around #gpBuffer */
 SDL_Surface *pal_surface;
@@ -58,9 +58,7 @@ void dx_create_back_buffer()
 
 void dx_create_primary_surface()
 {
-#ifdef USE_SDL1
-	surface = SDL_GetVideoSurface();
-#else
+#ifndef USE_SDL1
 	if (renderer) {
 		int width, height;
 		if (SDL_GetRendererOutputSize(renderer, &width, &height) <= -1) {
@@ -69,12 +67,10 @@ void dx_create_primary_surface()
 		Uint32 format;
 		if (SDL_QueryTexture(texture, &format, nullptr, nullptr, nullptr) < 0)
 			ErrSdl();
-		surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, SDL_BITSPERPIXEL(format), format);
-	} else {
-		surface = SDL_GetWindowSurface(window);
+		renderer_texture_surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, SDL_BITSPERPIXEL(format), format);
 	}
 #endif
-	if (surface == NULL) {
+	if (GetOutputSurface() == nullptr) {
 		ErrSdl();
 	}
 }
@@ -140,7 +136,7 @@ void dx_cleanup()
 	SDL_FreeSurface(pal_surface);
 	pal_surface = nullptr;
 	SDL_FreePalette(palette);
-	SDL_FreeSurface(surface);
+	SDL_FreeSurface(renderer_texture_surface);
 	SDL_DestroyTexture(texture);
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
@@ -194,16 +190,8 @@ void BltFast(DWORD dwX, DWORD dwY, LPRECT lpSrcRect)
 		w, h
 	};
 
-	// Get a fresh window surface in case the current one is no longer valid.
-#ifdef USE_SDL1
-	surface = SDL_GetVideoSurface();
-#else
-	if (!renderer)
-		surface = SDL_GetWindowSurface(window);
-#endif
-
 	// Convert from 8-bit to 32-bit
-	if (SDL_BlitSurface(pal_surface, &src_rect, surface, &dst_rect) <= -1) {
+	if (SDL_BlitSurface(pal_surface, &src_rect, GetOutputSurface(), &dst_rect) <= -1) {
 		ErrSdl();
 	}
 
@@ -212,6 +200,7 @@ void BltFast(DWORD dwX, DWORD dwY, LPRECT lpSrcRect)
 
 void RenderPresent()
 {
+	SDL_Surface *surface = GetOutputSurface();
 	assert(!SDL_MUSTLOCK(surface));
 
 	if (!bufferUpdated) {

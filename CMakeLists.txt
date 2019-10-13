@@ -205,6 +205,7 @@ add_library(devilution STATIC
 
 set(devilutionx_SRCS
   SourceX/dx.cpp
+  SourceX/miniwin/ddraw.cpp
   SourceX/miniwin/misc.cpp
   SourceX/miniwin/misc_io.cpp
   SourceX/miniwin/misc_msg.cpp
