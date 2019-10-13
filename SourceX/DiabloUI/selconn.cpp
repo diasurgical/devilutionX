@@ -19,17 +19,28 @@ _SNETVERSIONDATA *selconn_FileInfo;
 DWORD provider;
 
 UiArtText SELCONNECT_DIALOG_DESCRIPTION(selconn_Description, { 35, 275, 205, 66 });
+
+// Should be in the same order than SELCONN_DIALOG_ITEM
+enum {
+#ifndef NONET
+	SELCONN_TCP,
+#ifdef BUGGY
+	SELCONN_UDP,
+#endif
+#endif
+	SELCONN_LOOPBACK,
+};
+
 UiListItem SELCONN_DIALOG_ITEMS[] = {
 #ifndef NONET
-	{ "Loopback", 0 },
-	{ "Client-Server (TCP)", 1 },
+	{ "Client-Server (TCP)", SELCONN_TCP},
 #ifdef BUGGY
-	{ "Peer-to-Peer (UDP)", 2 },
+	{ "Peer-to-Peer (UDP)", SELCONN_UDP},
 #endif
-#else
-	{ "Loopback", 0 },
 #endif
+	{ "Loopback", SELCONN_LOOPBACK },
 };
+
 UiItem SELCONNECT_DIALOG[] = {
 	MAINMENU_BACKGROUND,
 	MAINMENU_LOGO,
@@ -67,18 +78,22 @@ void selconn_Focus(int value)
 {
 	int players = MAX_PLRS;
 	switch (value) {
-	case 0:
+	case SELCONN_LOOPBACK:
 		strcpy(selconn_Description, "Play by yourself with no network exposure.");
 		players = 1;
 		break;
-	case 1:
+#ifndef NONET
+	case SELCONN_TCP:
 		strcpy(selconn_Description, "All computers must be connected to a TCP-compatible network.");
 		players = MAX_PLRS;
 		break;
-	case 2:
+#ifdef BUGGY
+	case SELCONN_UDP:
 		strcpy(selconn_Description, "All computers must be connected to a UDP-compatible network.");
 		players = MAX_PLRS;
 		break;
+#endif
+#endif
 	}
 
 	sprintf(selconn_MaxPlayers, "Players Supported: %d", players);
@@ -88,15 +103,19 @@ void selconn_Focus(int value)
 void selconn_Select(int value)
 {
 	switch (value) {
-	case 0:
+	case SELCONN_LOOPBACK:
 		provider = 'SCBL';
 		break;
-	case 1:
+#ifndef NONET
+	case SELCONN_TCP:
 		provider = 'TCPN';
 		break;
-	case 2:
+#ifdef BUGGY
+	case SELCONN_UDP:
 		provider = 'UDPN';
 		break;
+#endif
+#endif
 	}
 
 	selconn_Free();
