@@ -6,7 +6,7 @@
 
 namespace dvl {
 
-BOOL SDrawUpdatePalette(unsigned int firstentry, unsigned int numentries, PALETTEENTRY *pPalEntries, int a4)
+void SDrawUpdatePalette(unsigned int firstentry, unsigned int numentries, PALETTEENTRY *pPalEntries, int a4)
 {
 	assert(firstentry == 0);
 	assert(numentries == 256);
@@ -24,25 +24,10 @@ BOOL SDrawUpdatePalette(unsigned int firstentry, unsigned int numentries, PALETT
 	}
 
 	assert(palette);
-	if (SDL_SetPaletteColors(palette, colors, firstentry, numentries) <= -1) {
-		SDL_Log(SDL_GetError());
-		return false;
+	if (SDLC_SetSurfaceAndPaletteColors(pal_surface, palette, colors, firstentry, numentries) <= -1) {
+		ErrSdl();
 	}
-
-#ifdef USE_SDL1
-	// In SDL2, the `pal_surface` owns the `pallete`, so modifying the palette
-	// directly updates the `pal_surface` palette.
-	//
-	// In SDL1, the `palette` is independent of `pal_surface`, so we need to
-	// explictly update the surface's palette here (SetPalette *copies* the palette).
-	if (SDL_SetPalette(pal_surface, SDL_LOGPAL, palette->colors, 0, palette->ncolors) != 1) {
-		SDL_Log(SDL_GetError());
-		return false;
-	}
-#endif
-	++pal_surface_palette_version;
-
-	return true;
+	pal_surface_palette_version++;
 }
 
 } // namespace dvl

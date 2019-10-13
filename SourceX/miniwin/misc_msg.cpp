@@ -523,8 +523,9 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	case SDL_AUDIODEVICEADDED:
 	case SDL_AUDIODEVICEREMOVED:
 	case SDL_TEXTEDITING:
-		return false_avail();
 	case SDL_TEXTINPUT:
+	case SDL_KEYMAPCHANGED:
+		return false_avail();
 	case SDL_WINDOWEVENT:
 		if (e.window.event == SDL_WINDOWEVENT_CLOSE) {
 			lpMsg->message = DVL_WM_QUERYENDSESSION;

@@ -44,7 +44,7 @@ uintptr_t DVL_beginthreadex(void *_Security, unsigned _StackSize, unsigned (*_St
 	SDL_Thread *ret = SDL_CreateThread(thread_translate, NULL, ft);
 #endif
 	if (ret == NULL) {
-		SDL_Log(SDL_GetError());
+		ErrSdl();
 	}
 	*_ThrdAddr = SDL_GetThreadID(ret);
 	threads.insert((uintptr_t)ret);
@@ -74,7 +74,7 @@ void InitializeCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
 {
 	SDL_mutex *m = SDL_CreateMutex();
 	if (m == NULL) {
-		SDL_Log(SDL_GetError());
+		ErrSdl();
 	}
 	*lpCriticalSection = m;
 }
@@ -82,14 +82,14 @@ void InitializeCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
 void EnterCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
 {
 	if (SDL_LockMutex(*((SDL_mutex **)lpCriticalSection)) <= -1) {
-		SDL_Log(SDL_GetError());
+		ErrSdl();
 	}
 }
 
 void LeaveCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
 {
 	if (SDL_UnlockMutex(*((SDL_mutex **)lpCriticalSection)) <= -1) {
-		SDL_Log(SDL_GetError());
+		ErrSdl();
 	}
 }
 
@@ -119,11 +119,11 @@ HANDLE CreateEventA(LPSECURITY_ATTRIBUTES lpEventAttributes, WINBOOL bManualRese
 	ret = (struct event_emul *)malloc(sizeof(struct event_emul));
 	ret->mutex = SDL_CreateMutex();
 	if (ret->mutex == NULL) {
-		SDL_Log(SDL_GetError());
+		ErrSdl();
 	}
 	ret->cond = SDL_CreateCond();
 	if (ret->cond == NULL) {
-		SDL_Log(SDL_GetError());
+		ErrSdl();
 	}
 	events.insert((uintptr_t)ret);
 	return ret;
@@ -141,31 +141,27 @@ BOOL CloseEvent(HANDLE hObject)
 	return true;
 }
 
-BOOL SetEvent(HANDLE hEvent)
+void SetEvent(HANDLE hEvent)
 {
 	struct event_emul *e = (struct event_emul *)hEvent;
 	if (SDL_LockMutex(e->mutex) <= -1 || SDL_CondSignal(e->cond) <= -1 || SDL_UnlockMutex(e->mutex) <= -1) {
-		SDL_Log(SDL_GetError());
-		return 0;
+		ErrSdl();
 	}
-	return 1;
 }
 
-BOOL ResetEvent(HANDLE hEvent)
+void ResetEvent(HANDLE hEvent)
 {
 	struct event_emul *e = (struct event_emul *)hEvent;
 	if (SDL_LockMutex(e->mutex) <= -1 || SDL_CondWaitTimeout(e->cond, e->mutex, 0) <= -1 || SDL_UnlockMutex(e->mutex) <= -1) {
-		SDL_Log(SDL_GetError());
-		return 0;
+		ErrSdl();
 	}
-	return 1;
 }
 
 static int wait_for_sdl_cond(HANDLE hHandle, DWORD dwMilliseconds)
 {
 	struct event_emul *e = (struct event_emul *)hHandle;
 	if (SDL_LockMutex(e->mutex) <= -1) {
-		SDL_Log(SDL_GetError());
+		ErrSdl();
 	}
 	int ret;
 	if (dwMilliseconds == DVL_INFINITE)

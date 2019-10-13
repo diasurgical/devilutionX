@@ -71,10 +71,6 @@
 #define IMAGE_DOS_SIGNATURE 0x5A4D
 #define VER_PLATFORM_WIN32_NT DVL_VER_PLATFORM_WIN32_NT
 
-#define GetVersionEx GetVersionExA
-
-#define lstrcpyn lstrcpynA
-
 #define MEM_COMMIT 0x1000
 #define MEM_RELEASE 0x8000
 
@@ -101,15 +97,12 @@
 #define SetFileAttributes SetFileAttributesA
 #define FindFirstFile FindFirstFileA
 #define CreateFile CreateFileA
-#define GetDriveType GetDriveTypeA
 #define GetComputerName GetComputerNameA
 #define DeleteFile DeleteFileA
 
 #define GWL_STYLE (-16)
 
 #define WS_SYSMENU 0x00080000L
-
-#define DRIVE_CDROM DVL_DRIVE_CDROM
 
 //
 // Events

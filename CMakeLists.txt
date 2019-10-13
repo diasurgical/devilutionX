@@ -10,6 +10,7 @@ option(ASAN "Enable address sanitizer" ON)
 option(UBSAN "Enable undefined behaviour sanitizer" ON)
 option(DEBUG "Enable debug mode in engine" ON)
 option(PIE "Generate position-independent code" OFF)
+option(LTO "Enable link-time optimization (if supported by the toolchain)" OFF)
 option(SPAWN "Build the shareware version" OFF)
 option(DIST "Dynamically link only glibc and SDL2" OFF)
 option(FASTER "Enable FASTER in engine" ON)
@@ -18,18 +19,10 @@ option(NIGHTLY_BUILD "Enable options for nightly build" OFF)
 option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network" OFF)
 
-execute_process(
-  COMMAND git describe --abbrev=0 --tags
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  OUTPUT_VARIABLE GIT_TAG
-  OUTPUT_STRIP_TRAILING_WHITESPACE)
-
-if (NOT CMAKE_BUILD_TYPE MATCHES "Release")
-  execute_process(
-    COMMAND git log -1 --format=-%h
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    OUTPUT_VARIABLE GIT_COMMIT_HASH
-    OUTPUT_STRIP_TRAILING_WHITESPACE)
+include(CMake/git.cmake)
+get_git_tag(GIT_TAG)
+if(NOT CMAKE_BUILD_TYPE MATCHES "Release")
+  get_git_commit_hash(GIT_COMMIT_HASH)
 endif()
 
 project(DevilutionX
@@ -41,18 +34,9 @@ if(BINARY_RELEASE)
   set(ASAN OFF)
   set(UBSAN OFF)
   set(DEBUG OFF)
+  set(LTO ON)
   set(DIST ON)
   set(FASTER OFF)
-
-  # Use LTO on all compilers where it is supported.
-  include(CheckIPOSupported)
-  check_ipo_supported(RESULT result)
-  if(result)
-    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
-    message(STATUS "LTO enabled")
-  else()
-    message(WARNING "LTO not supported by this compiler and/or CMake version")
-  endif()
 endif()
 
 if(NIGHTLY_BUILD)
@@ -60,8 +44,21 @@ if(NIGHTLY_BUILD)
   set(ASAN OFF)
   set(UBSAN OFF)
   set(DEBUG ON)
+  set(LTO ON)
   set(DIST ON)
   set(FASTER OFF)
+endif()
+
+if(LTO)
+  # Use LTO on compilers where it is supported.
+  include(CheckIPOSupported)
+  check_ipo_supported(RESULT result OUTPUT lto_error)
+  if(result)
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
+  else()
+    message(WARNING "LTO not supported by this compiler and/or CMake version:")
+    message(WARNING ${lto_error})
+  endif()
 endif()
 
 list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake")
@@ -89,7 +86,7 @@ if(HAIKU)
   set(ASAN OFF)
 endif()
 
-if(DIST)
+if(DIST OR DINGUX)
   set(sodium_USE_STATIC_LIBS ON)
 endif()
 
@@ -244,6 +241,7 @@ set(devilutionx_SRCS
   SourceX/DiabloUI/art.cpp
   SourceX/DiabloUI/button.cpp
   SourceX/DiabloUI/credits.cpp
+  SourceX/DiabloUI/credits_lines.cpp
   SourceX/DiabloUI/diabloui.cpp
   SourceX/DiabloUI/dialogs.cpp
   SourceX/DiabloUI/fonts.cpp
@@ -343,6 +341,10 @@ foreach(target devilution ${BIN_TARGET})
       # Most of these shouldn't be necessary.
       -lfreetype -lvorbisfile -lvorbis -logg -lmodplug -lmikmod -lmpg123 -lSDL2 -lopusfile -lopus -lEGL -lglapi -ldrm_nouveau -lpng -lbz2 -lz -lnx)
   endif()
+
+  if(DINGUX)
+    target_compile_definitions(${target} PRIVATE DINGUX)
+  endif()
 endforeach(target devilution ${BIN_TARGET})
 
 if(DIST AND CMAKE_CXX_COMPILER_ID MATCHES "GCC")
@@ -438,4 +440,8 @@ if(SWITCH)
   set(APP_VERSION ${PROJECT_VERSION})
   include(nx-utils)
   build_switch_binaries(${BIN_TARGET})
+endif()
+
+if(DINGUX)
+  set_target_properties(devilutionx PROPERTIES OUTPUT_NAME "devilutionx.dge")
 endif()

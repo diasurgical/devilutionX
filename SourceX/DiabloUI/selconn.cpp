@@ -22,7 +22,9 @@ UiArtText SELCONNECT_DIALOG_DESCRIPTION(selconn_Description, { 35, 275, 205, 66 
 UiListItem SELCONN_DIALOG_ITEMS[] = {
 #ifndef NONET
 	{ "Client-Server (TCP)", 0 },
+#ifdef BUGGY
 	{ "Peer-to-Peer (UDP)", 1 },
+#endif
 	{ "Loopback", 2 },
 #else
 	{ "Loopback", 0 },

@@ -969,22 +969,6 @@ void MakeLightTable()
 }
 
 #ifdef _DEBUG
-void ToggleLighting_2()
-{
-	int i;
-
-	if (lightflag) {
-		memset(dLight, 0, sizeof(dLight));
-	} else {
-		memset(dLight, lightmax, sizeof(dLight));
-		for (i = 0; i < MAX_PLRS; i++) {
-			if (plr[i].plractive && plr[i].plrlevel == currlevel) {
-				DoLighting(plr[i].WorldX, plr[i].WorldY, plr[i]._pLightRad, -1);
-			}
-		}
-	}
-}
-
 void ToggleLighting()
 {
 	int i;

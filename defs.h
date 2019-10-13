@@ -163,3 +163,5 @@
 
 #define SwapLE32 SDL_SwapLE32
 #define SwapLE16 SDL_SwapLE16
+
+#define ErrSdl() ErrDlg("SDL Error", SDL_GetError(), __FILE__, __LINE__)

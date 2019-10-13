@@ -3,7 +3,7 @@
 
 Status | Platform
 ---:| ---
-[![CircleCI](https://circleci.com/gh/diasurgical/devilutionX.svg?style=svg)](https://circleci.com/gh/diasurgical/devilutionX) | Linux 32bit & 64bit, Windows 32bit
+[![CircleCI](https://circleci.com/gh/diasurgical/devilutionX.svg?style=svg)](https://circleci.com/gh/diasurgical/devilutionX) | Linux 32bit & 64bit, Windows 32bit, SDL1
 [![Build Status](https://travis-ci.org/diasurgical/devilutionX.svg?branch=master)](https://travis-ci.org/diasurgical/devilutionX) | macOS 64bit
 [![Build status](https://ci.appveyor.com/api/projects/status/1a0jus2372qvksht?svg=true)](https://ci.appveyor.com/project/AJenbo/devilutionx) | Windows MSVC
 
@@ -137,6 +137,36 @@ cd build
 cmake ..
 cmake --build . -j $(nproc)
 ```
+</details>
+
+<details><summary>OpenDingux / RetroFW</summary>
+
+DevilutionX uses buildroot to build packages for OpenDingux and RetroFW.
+
+The build script does the following:
+
+1. Downloads and configures the buildroot if necessary.
+2. Builds the executable (using CMake).
+3. Packages the executable and all related resources into an `.ipk` package.
+
+The buildroot uses ~4 GiB of disk space and can take almost an hour to build.
+
+### OpenDingux
+
+The OpenDingux build uses the buildroot at `$HOME/buildroot-2018.02.9-opendingux-musl`.
+
+~~~ bash
+Packaging/OpenDingux/build-opendingux-sdl1.sh
+~~~
+
+### RetroFW
+
+The OpenDingux build uses the buildroot at `$HOME/buildroot-2018.02.9-retrofw`.
+
+~~~ bash
+Packaging/OpenDingux/build-retrofw.sh
+~~~
+
 </details>
 
 ## CMake arguments

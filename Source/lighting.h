@@ -25,7 +25,6 @@ void FreeLightTable();
 void InitLightTable();
 void MakeLightTable();
 #ifdef _DEBUG
-void ToggleLighting_2();
 void ToggleLighting();
 #endif
 void InitLightMax();

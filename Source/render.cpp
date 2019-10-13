@@ -163,6 +163,9 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 	}
 }
 
+#if defined(__clang__) || defined(__GNUC__)
+__attribute__((no_sanitize("shift-base")))
+#endif
 void RenderTile(BYTE *pBuff)
 {
 	int i, j;

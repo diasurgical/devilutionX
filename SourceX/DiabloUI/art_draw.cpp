@@ -28,18 +28,13 @@ void DrawArt(int screenX, int screenY, Art *art, int nFrame,
 	};
 
 	if (art->surface->format->BitsPerPixel == 8 && art->palette_version != pal_surface_palette_version) {
-#ifdef USE_SDL1
-		if (SDL_SetPalette(art->surface, SDL_LOGPAL, pal_surface->format->palette->colors, 0, 256) != 1)
-			SDL_Log(SDL_GetError());
-#else
-		if (SDL_SetSurfacePalette(art->surface, pal_surface->format->palette) <= -1)
-			SDL_Log(SDL_GetError());
-#endif
+		if (SDLC_SetSurfaceColors(art->surface, pal_surface->format->palette) <= -1)
+			ErrSdl();
 		art->palette_version = pal_surface_palette_version;
 	}
 
 	if (SDL_BlitSurface(art->surface, &src_rect, pal_surface, &dst_rect) <= -1) {
-		SDL_Log(SDL_GetError());
+		ErrSdl();
 	}
 }
 

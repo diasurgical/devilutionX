@@ -109,7 +109,8 @@ void gmenu_call_proc(TMenuItem *pItem, void (*gmFunc)(TMenuItem *))
 			sgCurrentMenuIdx++;
 		}
 	}
-	sgpCurrItem = &sgpCurrentMenu[sgCurrentMenuIdx - 1];
+	// BUGFIX: OOB access when sgCurrentMenuIdx is 0; should be set to NULL instead. (fixed)
+	sgpCurrItem = sgCurrentMenuIdx > 0 ? &sgpCurrentMenu[sgCurrentMenuIdx - 1] : nullptr;
 	gmenu_up_down(TRUE);
 }
 
@@ -394,7 +395,7 @@ void gmenu_slider_set(TMenuItem *pItem, int min, int max, int value)
 }
 
 /**
- * @brief Get the current value for the slider 
+ * @brief Get the current value for the slider
  */
 int gmenu_slider_get(TMenuItem *pItem, int min, int max)
 {

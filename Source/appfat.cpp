@@ -69,7 +69,7 @@ void assert_fail(int nLineNo, const char *pszFile, const char *pszFail)
 }
 #endif
 
-void ErrDlg(char *title, char *error, char *log_file_path, int log_line_nr)
+void ErrDlg(const char *title, const char *error, char *log_file_path, int log_line_nr)
 {
 	char text[1024];
 

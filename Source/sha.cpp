@@ -1,6 +1,25 @@
 #include "diablo.h"
 
+#include <cstdint>
+
 DEVILUTION_BEGIN_NAMESPACE
+
+// NOTE: Diablo's "SHA1" is different from actual SHA1 in that it uses arithmetic
+// right shifts (sign bit extension).
+
+namespace {
+
+/*
+ * Diablo-"SHA1" circular left shift.
+ */
+#if defined(__clang__) || defined(__GNUC__)
+__attribute__((no_sanitize("shift-base")))
+#endif
+std::uint32_t SHA1CircularShift(std::uint32_t bits, std::int32_t word) {
+	return (word << bits) | (word >> (32 - bits));
+}
+
+} // namespace
 
 SHA1Context sgSHA1[3];
 
@@ -50,9 +69,9 @@ void SHA1Input(SHA1Context *context, const char *message_array, int len)
 
 void SHA1ProcessMessageBlock(SHA1Context *context)
 {
-	int i, temp;
-	int W[80];
-	int A, B, C, D, E;
+	DWORD i, temp;
+	DWORD W[80];
+	DWORD A, B, C, D, E;
 
 	DWORD *buf = (DWORD *)context->buffer;
 	for (i = 0; i < 16; i++)
