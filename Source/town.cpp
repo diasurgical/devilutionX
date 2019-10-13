@@ -201,7 +201,7 @@ void town_draw_clipped_town(BYTE *pBuff, int sx, int sy, int dx, int dy, int efl
 		}
 	}
 	if (dFlags[sx][sy] & BFLAG_MISSILE) {
-		DrawClippedMissile(sx, sy, dx, dy, 0, 8, 0);
+		DrawMissile(sx, sy, dx, dy, 0);
 	}
 	if (dArch[sx][sy] != 0) {
 		town_special_lower(pBuff, dArch[sx][sy]);
@@ -383,7 +383,7 @@ void town_draw_clipped_town_2(BYTE *pBuff, int sx, int sy, int skipChunks, int C
 		}
 	}
 	if (dFlags[sx][sy] & BFLAG_MISSILE) {
-		DrawClippedMissile(sx, sy, dx, dy, CelSkip, 8, 0);
+		DrawMissile(sx, sy, dx, dy, 0);
 	}
 	if (dArch[sx][sy] != 0) {
 		town_special_lower(&pBuff[PitchTbl[16 * CelSkip]], dArch[sx][sy]);
@@ -577,7 +577,7 @@ void town_draw_town_all(BYTE *pBuff, int x, int y, int capChunks, int CelCap, in
 		}
 	}
 	if (dFlags[x][y] & BFLAG_MISSILE) {
-		DrawMissile(x, y, sx, sy, 0, CelCap, 0);
+		DrawMissile(x, y, sx, sy, 0);
 	}
 	if (dArch[x][y] != 0) {
 		town_special_upper(pBuff, dArch[x][y]);

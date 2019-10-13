@@ -164,123 +164,54 @@ static void scrollrt_draw_cursor_item()
 	}
 }
 
-void DrawMissile(int x, int y, int sx, int sy, int CelSkip, int CelCap, BOOL pre)
+void DrawMissilePrivate(MissileStruct *m, int sx, int sy, BOOL pre)
 {
-	int i, mx, my, nCel, frames;
-	MissileStruct *m;
+	int mx, my, nCel, frames;
 	BYTE *pCelBuff;
 
-	if (dMissile[x][y] == -1) {
-		for (i = 0; i < nummissiles; i++) {
-			/// ASSERT: assert(missileactive[i] < MAXMISSILES);
-			if (missileactive[i] >= MAXMISSILES)
-				break;
-			m = &missile[missileactive[i]];
-			if (m->_mix == x && m->_miy == y && m->_miPreFlag == pre && m->_miDrawFlag) {
-				pCelBuff = m->_miAnimData;
-				if (!pCelBuff) {
-					// app_fatal("Draw Missile type %d: NULL Cel Buffer", m->_mitype);
-					return;
-				}
-				nCel = m->_miAnimFrame;
-				frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
-				if (nCel < 1 || frames > 50 || nCel > frames) {
-					// app_fatal("Draw Missile: frame %d of %d, missile type==%d", nCel, frames, m->_mitype);
-					return;
-				}
-				mx = sx + m->_mixoff - m->_miAnimWidth2;
-				my = sy + m->_miyoff;
-				if (m->_miUniqTrans)
-					Cl2DrawLightTbl(mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth, CelSkip, CelCap, m->_miUniqTrans + 3);
-				else if (m->_miLightFlag)
-					Cl2DrawLight(mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth, CelSkip, CelCap);
-				else
-					Cl2Draw(mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth, CelSkip, CelCap);
-			}
-		}
-	} else {
-		m = &missile[dMissile[x][y] - 1];
-		if (m->_miPreFlag == pre && m->_miDrawFlag) {
-			pCelBuff = m->_miAnimData;
-			if (!pCelBuff) {
-				// app_fatal("Draw Missile 2 type %d: NULL Cel Buffer", m->_mitype);
-				return;
-			}
-			nCel = m->_miAnimFrame;
-			frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
-			if (nCel < 1 || frames > 50 || nCel > frames) {
-				// app_fatal("Draw Missile 2: frame %d of %d, missile type==%d", nCel, frames, m->_mitype);
-				return;
-			}
-			mx = sx + m->_mixoff - m->_miAnimWidth2;
-			my = sy + m->_miyoff;
-			if (m->_miUniqTrans)
-				Cl2DrawLightTbl(mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth, CelSkip, CelCap, m->_miUniqTrans + 3);
-			else if (m->_miLightFlag)
-				Cl2DrawLight(mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth, CelSkip, CelCap);
-			else
-				Cl2Draw(mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth, CelSkip, CelCap);
-		}
+	if (m->_miPreFlag != pre || !m->_miDrawFlag)
+		return;
+
+	pCelBuff = m->_miAnimData;
+	if (!pCelBuff) {
+		// app_fatal("Draw Missile 2 type %d: NULL Cel Buffer", m->_mitype);
+		return;
 	}
+	nCel = m->_miAnimFrame;
+	frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
+	if (nCel < 1 || frames > 50 || nCel > frames) {
+		// app_fatal("Draw Missile 2: frame %d of %d, missile type==%d", nCel, frames, m->_mitype);
+		return;
+	}
+	mx = sx + m->_mixoff - m->_miAnimWidth2;
+	my = sy + m->_miyoff;
+	if (m->_miUniqTrans)
+		Cl2DrawLightTbl(mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth, 0, 8, m->_miUniqTrans + 3);
+	else if (m->_miLightFlag)
+		Cl2DrawLight(mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth);
+	else
+		Cl2Draw(mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth);
 }
 
-void DrawClippedMissile(int x, int y, int sx, int sy, int CelSkip, int CelCap, BOOL pre)
+void DrawMissile(int x, int y, int sx, int sy, BOOL pre)
 {
-	int i, mx, my, nCel, frames;
+	int i;
 	MissileStruct *m;
-	BYTE *pCelBuff;
 
-	if (dMissile[x][y] == -1) {
-		for (i = 0; i < nummissiles; i++) {
-			/// ASSERT: assert(missileactive[i] < MAXMISSILES);
-			if (missileactive[i] >= MAXMISSILES)
-				break;
-			m = &missile[missileactive[i]];
-			if (m->_mix == x && m->_miy == y && m->_miPreFlag == pre && m->_miDrawFlag) {
-				pCelBuff = m->_miAnimData;
-				if (!pCelBuff) {
-					// app_fatal("Draw Missile type %d Clipped: NULL Cel Buffer", m->_mitype);
-					return;
-				}
-				nCel = m->_miAnimFrame;
-				frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
-				if (nCel < 1 || frames > 50 || nCel > frames) {
-					// app_fatal("Draw Clipped Missile: frame %d of %d, missile type==%d", nCel, frames, m->_mitype);
-					return;
-				}
-				mx = sx + m->_mixoff - m->_miAnimWidth2;
-				my = sy + m->_miyoff;
-				if (m->_miUniqTrans)
-					Cl2DrawLightTblSafe(mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth, CelSkip, CelCap, m->_miUniqTrans + 3);
-				else if (m->_miLightFlag)
-					Cl2DrawLightSafe(mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth, CelSkip, CelCap);
-				else
-					Cl2DrawSafe(mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth, CelSkip, CelCap);
-			}
-		}
-	} else {
+	if (dMissile[x][y] != -1) {
 		m = &missile[dMissile[x][y] - 1];
-		if (m->_miPreFlag == pre && m->_miDrawFlag) {
-			pCelBuff = m->_miAnimData;
-			if (!pCelBuff) {
-				// app_fatal("Draw Missile 2 type %d Clipped: NULL Cel Buffer", m->_mitype);
-				return;
-			}
-			nCel = m->_miAnimFrame;
-			frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
-			if (nCel < 1 || frames > 50 || nCel > frames) {
-				// app_fatal("Draw Clipped Missile 2: frame %d of %d, missile type==%d", nCel, frames, m->_mitype);
-				return;
-			}
-			mx = sx + m->_mixoff - m->_miAnimWidth2;
-			my = sy + m->_miyoff;
-			if (m->_miUniqTrans)
-				Cl2DrawLightTblSafe(mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth, CelSkip, CelCap, m->_miUniqTrans + 3);
-			else if (m->_miLightFlag)
-				Cl2DrawLightSafe(mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth, CelSkip, CelCap);
-			else
-				Cl2DrawSafe(mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth, CelSkip, CelCap);
-		}
+		DrawMissilePrivate(m, sx, sy, pre);
+		return;
+	}
+
+	for (i = 0; i < nummissiles; i++) {
+		/// ASSERT: assert(missileactive[i] < MAXMISSILES);
+		if (missileactive[i] >= MAXMISSILES)
+			break;
+		m = &missile[missileactive[i]];
+		if (m->_mix != x || m->_miy != y)
+			continue;
+		DrawMissilePrivate(m, sx, sy, pre);
 	}
 }
 
@@ -747,7 +678,7 @@ static void scrollrt_draw_clipped_dungeon(BYTE *pBuff, int sx, int sy, int dx, i
 		CelClippedBlitSafe(pBuff, pSquareCel, 1, 64, 0, 8);
 	}
 	if (MissilePreFlag && bFlag & BFLAG_MISSILE) {
-		DrawClippedMissile(sx, sy, dx, dy, 0, 8, 1);
+		DrawMissile(sx, sy, dx, dy, 1);
 	}
 	if (light_table_index < lightmax) {
 		if (bDead != 0) {
@@ -889,7 +820,7 @@ static void scrollrt_draw_clipped_dungeon(BYTE *pBuff, int sx, int sy, int dx, i
 		}
 	}
 	if (bFlag & BFLAG_MISSILE) {
-		DrawClippedMissile(sx, sy, dx, dy, 0, 8, 0);
+		DrawMissile(sx, sy, dx, dy, 0);
 	}
 	if (bObj != 0 && light_table_index < lightmax) {
 		DrawClippedObject(sx, sy, dx, dy, 0, 0, 8);
@@ -1178,7 +1109,7 @@ static void scrollrt_draw_clipped_dungeon_2(BYTE *pBuff, int sx, int sy, int ski
 		CelClippedBlitSafe(pBuff, pSquareCel, 1, 64, CelSkip, 8);
 	}
 	if (MissilePreFlag && bFlag & BFLAG_MISSILE) {
-		DrawClippedMissile(sx, sy, dx, dy, CelSkip, 8, 1);
+		DrawMissile(sx, sy, dx, dy, 1);
 	}
 	if (light_table_index < lightmax) {
 		if (bDead != 0) {
@@ -1320,7 +1251,7 @@ static void scrollrt_draw_clipped_dungeon_2(BYTE *pBuff, int sx, int sy, int ski
 		}
 	}
 	if (bFlag & BFLAG_MISSILE) {
-		DrawClippedMissile(sx, sy, dx, dy, CelSkip, 8, 0);
+		DrawMissile(sx, sy, dx, dy, 0);
 	}
 	if (bObj != 0 && light_table_index < lightmax) {
 		DrawClippedObject(sx, sy, dx, dy, 0, CelSkip, 8);
@@ -1545,7 +1476,7 @@ static void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int capChunks, in
 	ty = dy - 16;
 
 	if (MissilePreFlag && bFlag & BFLAG_MISSILE) {
-		DrawMissile(sx, sy, dx, dy, 0, CelCap, 1);
+		DrawMissile(sx, sy, dx, dy, 1);
 	}
 
 	if (light_table_index < lightmax) {
@@ -1681,7 +1612,7 @@ static void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int capChunks, in
 		}
 	}
 	if (bFlag & BFLAG_MISSILE) {
-		DrawMissile(sx, sy, dx, dy, 0, CelCap, 0);
+		DrawMissile(sx, sy, dx, dy, 0);
 	}
 	if (bObj != 0 && light_table_index < lightmax) {
 		DrawObject(sx, sy, dx, dy, 0, 0, CelCap);
@@ -2398,22 +2329,22 @@ void DrawAndBlit()
 	} else {
 		T_DrawView(ViewX, ViewY);
 	}
-	if (ctrlPan) {
+	if (ctrlPan || 1) {
 		ClearCtrlPan();
 	}
-	if (drawhpflag) {
+	if (drawhpflag || 1) {
 		UpdateLifeFlask();
 	}
-	if (drawmanaflag) {
+	if (drawmanaflag || 1) {
 		UpdateManaFlask();
 	}
-	if (drawbtnflag) {
+	if (drawbtnflag || 1) {
 		DrawCtrlPan();
 	}
-	if (drawsbarflag) {
+	if (drawsbarflag || 1) {
 		DrawInvBelt();
 	}
-	if (talkflag) {
+	if (talkflag || 1) {
 		DrawTalkPan();
 		hgt = SCREEN_HEIGHT;
 	}
