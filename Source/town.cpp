@@ -14,13 +14,15 @@ void town_clear_buf(BYTE *pBuff)
 	for (i = 30, j = 1; i >= 0; i -= 2, j++, dst -= BUFFER_WIDTH + 64) {
 		dst += i;
 		for (k = 0; k < 4 * j; k++)
-			*dst++ = 0;
+			if (dst < gpBufEnd)
+				*dst++ = 0;
 		dst += i;
 	}
 	for (i = 2, j = 15; i != 32; i += 2, j--, dst -= BUFFER_WIDTH + 64) {
 		dst += i;
 		for (k = 0; k < 4 * j; k++)
-			*dst++ = 0;
+			if (dst < gpBufEnd)
+				*dst++ = 0;
 		dst += i;
 	}
 }
@@ -221,28 +223,30 @@ void T_DrawGame(int x, int y)
 {
 	int i, sx, sy, chunks, blocks;
 
-	scr_pix_width = SCREEN_WIDTH;
-	scr_pix_height = VIEWPORT_HEIGHT;
-
 	sx = ScrollInfo._sxoff + 64;
 	sy = ScrollInfo._syoff + 175;
-	x -= 10;
-	y--;
-	chunks = 10;
-	// Fill screen, keep evaulating untill files can't affect screen
+
+	chunks = ceil(SCREEN_WIDTH / 64);
+	// Fill screen + keep evaulating untill MicroTiles can't affect screen
 	blocks = ceil(VIEWPORT_HEIGHT / 32) + ceil(MicroTileLen / 2);
 
-	if (chrflag || questlog) {
-		x += 2;
-		y -= 2;
-		sx += 288;
-		chunks = 6;
-	}
-	if (invflag || sbookflag) {
-		x += 2;
-		y -= 2;
-		sx -= 32;
-		chunks = 6;
+	// Center screen
+	x -= chunks;
+	y--;
+
+	if (SCREEN_WIDTH == PANEL_WIDTH && SCREEN_HEIGHT == VIEWPORT_HEIGHT + PANEL_HEIGHT) {
+		if (chrflag || questlog) {
+			x += 2;
+			y -= 2;
+			sx += 288;
+			chunks = 6;
+		}
+		if (invflag || sbookflag) {
+			x += 2;
+			y -= 2;
+			sx -= 32;
+			chunks = 6;
+		}
 	}
 
 	switch (ScrollInfo._sdir) {
@@ -312,16 +316,16 @@ void T_DrawZoom(int x, int y)
 	int i, sx, sy, chunks, blocks;
 	int wdt, nSrcOff, nDstOff;
 
-	scr_pix_width = ZOOM_WIDTH;
-	scr_pix_height = 192;
-
 	sx = ScrollInfo._sxoff + 64;
 	sy = ScrollInfo._syoff + 143;
-	x -= 6;
-	y--;
-	chunks = 6;
-	// Fill screen, keep evaulating untill files can't affect screen
+
+	chunks = ceil(SCREEN_WIDTH / 2 / 64) + 1; // TODO why +1?
+	// Fill screen + keep evaulating untill MicroTiles can't affect screen
 	blocks = ceil(VIEWPORT_HEIGHT / 2 / 32) + ceil(MicroTileLen / 2);
+
+	// Center screen
+	x -= chunks;
+	y--;
 
 	switch (ScrollInfo._sdir) {
 	case SDIR_NONE:
@@ -372,7 +376,7 @@ void T_DrawZoom(int x, int y)
 	}
 
 	/// ASSERT: assert(gpBuffer);
-	gpBufEnd = &gpBuffer[PitchTbl[160 + SCREEN_Y]];
+	gpBufEnd = &gpBuffer[PitchTbl[VIEWPORT_HEIGHT + SCREEN_Y]];
 	for (i = 0; i < blocks; i++) {
 		town_draw(x, y, sx, sy, chunks, i, 0);
 		y++;
@@ -384,18 +388,19 @@ void T_DrawZoom(int x, int y)
 		sy += 16;
 	}
 
-	if (chrflag || questlog) {
-		nSrcOff = SCREENXY(112, 159);
-		nDstOff = SCREENXY(320, 350);
-		wdt = (SCREEN_WIDTH - 320) / 2;
-	} else if (invflag || sbookflag) {
-		nSrcOff = SCREENXY(112, 159);
-		nDstOff = SCREENXY(0, 350);
-		wdt = (SCREEN_WIDTH - 320) / 2;
-	} else {
-		nSrcOff = SCREENXY(32, 159);
-		nDstOff = SCREENXY(0, 350);
-		wdt = SCREEN_WIDTH / 2;
+	nSrcOff = SCREENXY(32, 159);
+	nDstOff = SCREENXY(0, 350);
+	wdt = SCREEN_WIDTH / 2;
+	if (SCREEN_WIDTH == PANEL_WIDTH && SCREEN_HEIGHT == VIEWPORT_HEIGHT + PANEL_HEIGHT) {
+		if (chrflag || questlog) {
+			nSrcOff = SCREENXY(112, 159);
+			nDstOff = SCREENXY(320, 350);
+			wdt = (SCREEN_WIDTH - 320) / 2;
+		} else if (invflag || sbookflag) {
+			nSrcOff = SCREENXY(112, 159);
+			nDstOff = SCREENXY(0, 350);
+			wdt = (SCREEN_WIDTH - 320) / 2;
+		}
 	}
 
 	/// ASSERT: assert(gpBuffer);
