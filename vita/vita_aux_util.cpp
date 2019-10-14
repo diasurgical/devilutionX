@@ -5,9 +5,8 @@
 #include <stdio.h>
 #include "vita_aux_util.h"
 
-#include "../common/debugScreen.h"
+#include "common/debugScreen.h"
 extern "C" {
-#include "../common/ime_dialog/ime_dialog.h"
 #include "danzeffSDL/danzeff.h"
 }
 
@@ -20,9 +19,10 @@ extern "C" {
 #define clrscr psvDebugScreenClear
 #endif
 
-int VitaAux::hdebug       = 1;
-int VitaAux::errores      = 0;
-SDLKey VitaAux::latestKey = SDLK_UNKNOWN;
+int VitaAux::hdebug                    = 1;
+int VitaAux::errores                   = 0;
+SDLKey VitaAux::latestKey              = SDLK_UNKNOWN;
+unsigned long VitaAux::allocatedMemory = 0;
 
 void VitaAux::init()
 {
@@ -35,6 +35,11 @@ void VitaAux::init()
 	}
 	VitaAux::initVitaTouch();
 	VitaAux::initVitaButtons();
+	if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) || !(IMG_Init(IMG_INIT_JPG) & IMG_INIT_JPG)) {
+		char sdl_image_error[200];
+		sprintf(sdl_image_error, "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+		VitaAux::dialog(sdl_image_error, "IMG_init error!", true, true, true);
+	}
 }
 
 void VitaAux::ExitAPP(int exitCode)
@@ -90,12 +95,14 @@ bool VitaAux::copy_file(char *file_in, char *file_out)
 	return true;
 }
 
-void VitaAux::showIME(const char *title, char *dest)
+void VitaAux::showIME(const char *title, char *dest, void (*PreRenderigFunction)(), void (*PostRenderigFunction)(), SDL_Surface *renderingSurface)
 {
 	if (!danzeff_load()) {
 		VitaAux::error("Can't load Danzeff!!");
 		sprintf(dest, "Error");
 	} else {
+		SDL_FillRect(renderingSurface, &renderingSurface->clip_rect, SDL_MapRGBA(renderingSurface->format, 0, 0, 0, 200));
+		danzeff_set_screen(renderingSurface);
 		unsigned char name_pos;
 		unsigned int key;
 		int exit_osk;
@@ -132,12 +139,7 @@ void VitaAux::showIME(const char *title, char *dest)
 				}
 				break;
 			}
-
-			VitaAux::debug("Render");
-			danzeff_render();
-			VitaAux::debug("Ok");
-			//SDL_Flip(imgas.screen);
-			//delaya(1);
+			danzeff_render((*PreRenderigFunction), (*PostRenderigFunction));
 		}
 		if (exit_osk == 1) {
 			int pru;
@@ -146,6 +148,7 @@ void VitaAux::showIME(const char *title, char *dest)
 		} else if (exit_osk == 2) {
 			//TODO cancela, go back to old name
 		}
+		SDL_FillRect(renderingSurface, &renderingSurface->clip_rect, SDL_MapRGBA(renderingSurface->format, 0, 0, 0, 0));
 		danzeff_free();
 	}
 
@@ -288,7 +291,6 @@ int VitaAux::error(char *texto)
 		fclose(ar);
 		//sceKernelExitGame();
 	}
-	delay(5);
 	return 0;
 }
 
@@ -303,6 +305,43 @@ int VitaAux::error(const char *texto)
 	}
 	texto_new[i] = '\0';
 	return error(texto_new);
+}
+
+void VitaAux::dialog(const char *text, const char *caption, bool error, bool fatal, bool keypress)
+{
+	char asciiArt[1000];
+	char type[7] = "INFO \0";
+	if (error) {
+		sprintf(type, "ERROR");
+	}
+	if (fatal) {
+		sprintf(type, "FATAL");
+	}
+	sprintf(asciiArt, "\n"
+	                  " ||====================================================================|| \n"
+	                  " ||--------------------------------------------------------------------|| \n"
+	                  " ||                          %s                                     || \n"
+	                  " ||--------------------------------------------------------------------|| \n"
+	                  " ||====================================================================|| \n"
+	                  " ||%*s|| \n"
+	                  " ||====================================================================|| \n"
+	                  " ||%*s|| \n"
+	                  " ||====================================================================|| \n",
+	    type, 68 / 2 + strlen(caption) / 2, caption,
+	    68 / 2 + strlen(text) / 2, text, text);
+	if (error) {
+		VitaAux::error(asciiArt);
+	} else {
+		psvDebugScreenInit();
+		VitaAux::debug(asciiArt);
+	}
+	if (keypress) {
+		delay(1);
+		VitaAux::getch();
+	}
+	if (fatal) {
+		VitaAux::ExitAPP(-1);
+	}
 }
 
 void VitaAux::initVitaTouch()
@@ -385,6 +424,15 @@ SDL_Event VitaAux::getPressedKeyAsSDL_Event()
 		VitaAux::latestKey = SDLK_RIGHT;
 		break;
 	}
+	case SCE_CTRL_CIRCLE: {
+		event.type           = SDL_KEYDOWN;
+		event.key.keysym.sym = SDLK_ESCAPE;
+		if (VitaAux::latestKey == SDLK_UNKNOWN) {
+			SDL_PushEvent(&event);
+		}
+		VitaAux::latestKey = SDLK_ESCAPE;
+		break;
+	}
 	case SCE_CTRL_CROSS: {
 		event.type           = SDL_KEYDOWN;
 		event.key.keysym.sym = SDLK_SPACE;
@@ -461,6 +509,34 @@ SDL_Event VitaAux::getPressedKeyAsSDL_Event()
 		break;
 	}
 	return event;
+}
+
+void VitaAux::printMemInfo(unsigned int amount)
+{
+	SceKernelFreeMemorySizeInfo sizeMem;
+	char memTest[300];
+	if (sceKernelGetFreeMemorySize(&sizeMem) == 0) {
+		sprintf(memTest, "Mem info: size: %i, size cdram: %i, size user: %i\n", sizeMem.size, sizeMem.size_cdram, sizeMem.size_user);
+		if (amount > 0) {
+			sprintf(memTest + strlen(memTest), "Need: %i\n", amount);
+		}
+	} else {
+		sprintf(memTest, "I can't get size mem info\n");
+		if (amount > 0) {
+			sprintf(memTest + strlen(memTest), "But you trying to locate: %i bytes\n", amount);
+		}
+	}
+	sprintf(memTest + strlen(memTest), "Allocated Memory: %lu\n-----", allocatedMemory);
+	VitaAux::debug(memTest);
+}
+
+void VitaAux::updateAllocMem(unsigned int amount, bool minus)
+{
+	if (!minus) {
+		allocatedMemory += amount;
+	} else {
+		allocatedMemory -= amount;
+	}
 }
 
 #endif

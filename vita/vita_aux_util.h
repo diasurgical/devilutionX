@@ -45,7 +45,7 @@ public:
 	static void getch();
 	static bool checkAndCreateFolder();
 	static bool copy_file(char *file_in, char *file_out);
-	static void showIME(const char *title, char *dest);
+	static void showIME(const char *title, char *dest, void (*PreRenderigFunction)(), void (*PostRenderigFunction)(), SDL_Surface *renderingSurface);
 
 	//Modo de //debug, va creando un log.				|
 	static int hdebug; //0 Desactivado, 1 Activado, 3 Error :-s
@@ -53,6 +53,7 @@ public:
 	static int errores;
 
 	static SDLKey latestKey;
+	static unsigned long allocatedMemory;
 
 	static void delay(int);
 	static void delaya(int);
@@ -70,6 +71,9 @@ public:
 	static int error(char *texto);
 	static int error(const char *texto);
 
+	//Beutirfy dialogs
+	static void dialog(const char *caption, const char *text, bool error, bool fatal, bool keypress);
+
 	//Touch
 	static void initVitaTouch();
 	static VITATOUCH getVitaTouch();
@@ -77,5 +81,9 @@ public:
 	//Migrate to SDEvent
 	static void initVitaButtons();
 	static SDL_Event getPressedKeyAsSDL_Event();
+
+	//Utils
+	static void printMemInfo(unsigned int amount = 0);
+	static void updateAllocMem(unsigned int amount, bool minus);
 };
 #endif

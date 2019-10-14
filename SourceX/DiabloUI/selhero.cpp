@@ -56,7 +56,7 @@ UiListItem SELLIST_DIALOG_ITEMS[kMaxViewportItems];
 UiItem SELLIST_DIALOG[] = {
 	UiArtText("Select Hero", { 264, 211, 320, 33 }, UIS_CENTER | UIS_BIG),
 	UiList(SELLIST_DIALOG_ITEMS, 265, 256, 320, 26, UIS_CENTER | UIS_MED | UIS_GOLD),
-	MakeScrollBar({585, 244, 25, 178}),
+	MakeScrollBar({ 585, 244, 25, 178 }),
 	UiArtTextButton("OK", &UiFocusNavigationSelect, { 239, 429, 120, 35 }, UIS_CENTER | UIS_BIG | UIS_GOLD),
 	UiArtTextButton("Delete", &selhero_UiFocusNavigationYesNo, { 364, 429, 120, 35 }, UIS_CENTER | UIS_BIG | UIS_DISABLED),
 	UiArtTextButton("Cancel", &UiFocusNavigationEsc, { 489, 429, 120, 35 }, UIS_CENTER | UIS_BIG | UIS_GOLD)
@@ -80,6 +80,9 @@ UiItem SELCLASS_DIALOG[] = {
 UiItem ENTERNAME_DIALOG[] = {
 	UiArtText("Enter Name", { 264, 211, 320, 33 }, UIS_CENTER | UIS_BIG),
 	UiEdit(selhero_heroInfo.name, 15, { 265, 317, 320, 33 }, UIS_MED | UIS_GOLD),
+#ifdef VITA
+	UiImage(&keyBoardArt, { 265, 125, 150, 150 }),
+#endif
 	UiArtTextButton("OK", &UiFocusNavigationSelect, { 279, 429, 140, 35 }, UIS_CENTER | UIS_BIG | UIS_GOLD),
 	UiArtTextButton("Cancel", &UiFocusNavigationEsc, { 429, 429, 140, 35 }, UIS_CENTER | UIS_BIG | UIS_GOLD)
 };
@@ -294,7 +297,12 @@ BOOL SelHero_GetHeroInfo(_uiheroinfo *pInfo)
 
 	return true;
 }
-
+#ifdef VITA
+void setCustomRenderUiSelHeroDialog()
+{
+	UiRenderItems(SELHERO_DIALOG, size(SELHERO_DIALOG));
+}
+#endif
 BOOL UiSelHeroDialog(
     BOOL (*fninfo)(BOOL (*fninfofunc)(_uiheroinfo *)),
     BOOL (*fncreate)(_uiheroinfo *),
@@ -325,10 +333,16 @@ BOOL UiSelHeroDialog(
 		}
 
 		selhero_endMenu = false;
+#ifdef VITA
+		setCustomRender(&setCustomRenderUiSelHeroDialog);
+#endif
 		while (!selhero_endMenu && !selhero_navigateYesNo) {
 			UiRenderItems(SELHERO_DIALOG, size(SELHERO_DIALOG));
 			UiPollAndRender();
 		}
+#ifdef VITA
+		setCustomRender(NULL);
+#endif
 		BlackPalette();
 		selhero_Free();
 
@@ -370,4 +384,4 @@ BOOL UiSelHeroMultDialog(
 	selhero_isMultiPlayer = true;
 	return UiSelHeroDialog(fninfo, fncreate, fnstats, fnremove, dlgresult, name);
 }
-}
+} // namespace dvl

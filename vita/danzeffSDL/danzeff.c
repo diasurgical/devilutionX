@@ -232,7 +232,7 @@ int moved_y = 0;
 
 //Variable describing where each of the images is
 #define guiStringsSize 12 /* size of guistrings array */
-#define PICS_BASEDIR "ux0:/app/DVLX00001/danzeff/"
+#define PICS_BASEDIR "app0:/danzeff/"
 char *guiStrings[] = {
 	PICS_BASEDIR "keys.png", PICS_BASEDIR "keys_t.png", PICS_BASEDIR "keys_s.png",
 	PICS_BASEDIR "keys_c.png", PICS_BASEDIR "keys_c_t.png", PICS_BASEDIR "keys_s_c.png",
@@ -451,8 +451,11 @@ void danzeff_free()
 }
 
 /* draw the keyboard at the current position */
-void danzeff_render()
+void danzeff_render(void (*PreRenderigFunction)(), void (*PostRenderigFunction)())
 {
+	if ((*PreRenderigFunction) != NULL) {
+		(*PreRenderigFunction)();
+	}
 	printf("Drawing Keyboard at (%i,%i)\n", selected_x, selected_y);
 	dirty = false;
 
@@ -472,6 +475,10 @@ void danzeff_render()
 	    selected_x * 64, selected_y * 64,
 	    //size to render (always the same)
 	    64, 64);
+	//SDL_Flip(danzeff_screen);
+	if ((*PostRenderigFunction) != NULL) {
+		(*PostRenderigFunction)();
+	}
 }
 
 /* move the position the keyboard is currently drawn at */

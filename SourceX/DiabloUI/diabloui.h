@@ -28,6 +28,9 @@ extern Art ArtFocus[3];
 extern Art ArtBackground;
 extern Art ArtCursor;
 extern Art ArtHero;
+#ifdef VITA
+extern Art keyBoardArt;
+#endif
 extern bool gbSpawned;
 
 constexpr auto MAINMENU_BACKGROUND = UiImage(&ArtBackground, { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT });
@@ -56,6 +59,11 @@ void UiFocusNavigationYesNo();
 void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), UiItem *items, int size, bool wraps = false, bool (*fnYesNo)() = NULL);
 void UiInitScrollBar(UiScrollBar *ui_sb, std::size_t viewport_size, const std::size_t *current_offset);
 void UiPollAndRender();
+#ifdef VITA
+void setCustomRender(void (*customRender)(void));
+void preRenderFuntion();
+void postRenderFuntion();
+#endif
 void UiRenderItems(UiItem *items, std::size_t size);
 
 void DvlIntSetting(const char *valuename, int *value);

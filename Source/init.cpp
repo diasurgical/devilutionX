@@ -70,17 +70,29 @@ void init_archives()
 	fileinfo.originalarchivefile = diabdat_mpq_path;
 	fileinfo.patcharchivefile = patch_rt_mpq_path;
 	init_get_file_info();
+	VitaAux::debug("init test access");
 #ifdef SPAWN
 	diabdat_mpq = init_test_access(diabdat_mpq_path, "spawn.mpq", "DiabloSpawn", 1000, FS_PC);
 #else
 	diabdat_mpq = init_test_access(diabdat_mpq_path, "diabdat.mpq", "DiabloCD", 1000, FS_PC);
 #endif
-	if (!SFileOpenFile("ui_art\\title.pcx", &fh))
+	if (!SFileOpenFile("ui_art\\title.pcx", &fh)) {
+#ifndef VITA
 #ifdef SPAWN
 		InsertCDDlg("spawn.mpq");
 #else
 		InsertCDDlg("diabdat.mpq");
 #endif
+#else
+		char path[200];
+		char message[300];
+		GetBasePath(path, 200);
+		sprintf(message, "To play you need the file diabdat.mpg from you original installation of Diablo (GOG copy works)\n"
+		                 "Get it and copy it to: %s path over FTP (with VitaShell for example)",
+		    path);
+		VitaAux::dialog(message, "Data file not found", true, true, true);
+#endif
+	}
 	SFileCloseFile(fh);
 #ifdef SPAWN
 	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "patch_sh.mpq", "DiabloSpawn", 2000, FS_PC);
@@ -103,7 +115,6 @@ HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int dwPri
 		if (SFileOpenArchive(mpq_path, dwPriority, MPQ_FLAG_READ_ONLY, &archive)) {
 			SFileSetBasePath(Buffer[i]);
 			return archive;
-
 		}
 	}
 

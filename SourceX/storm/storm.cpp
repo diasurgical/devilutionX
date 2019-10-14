@@ -316,6 +316,9 @@ void *SMemAlloc(unsigned int amount, char *logfilename, int logline, int default
 {
 	// fprintf(stderr, "%s: %d (%s:%d)\n", __FUNCTION__, amount, logfilename, logline);
 	assert(amount != -1u);
+#ifdef VITA
+	VitaAux::updateAllocMem(amount, false);
+#endif
 	return malloc(amount);
 }
 
@@ -324,6 +327,9 @@ BOOL SMemFree(void *location, char *logfilename, int logline, char defaultValue)
 	// fprintf(stderr, "%s: (%s:%d)\n", __FUNCTION__, logfilename, logline);
 	assert(location);
 	free(location);
+#ifdef VITA
+	VitaAux::updateAllocMem(sizeof(location), false);
+#endif
 	return true;
 }
 

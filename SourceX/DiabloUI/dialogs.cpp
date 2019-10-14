@@ -53,7 +53,7 @@ UiItem OK_DIALOG[] = {
 
 UiItem OK_DIALOG_WITH_CAPTION[] = {
 	DIALOG_ART_L,
-	UiText(dialogText, SDL_Color { 255, 255, 0, 0 }, { 147, 110, 345, 20 }, UIS_CENTER),
+	UiText(dialogText, SDL_Color{ 255, 255, 0, 0 }, { 147, 110, 345, 20 }, UIS_CENTER),
 	UiText(dialogCaption, { 147, 141, 345, 190 }, UIS_CENTER),
 	MakeSmlButton("OK", &DialogActionOK, 264, 335),
 };
@@ -293,6 +293,7 @@ void DialogLoop(UiItem *items, std::size_t num_items, UiItem *render_behind, std
 
 void UiOkDialog(const char *text, const char *caption, bool error, UiItem *render_behind, std::size_t render_behind_size)
 {
+#ifndef VITA
 	if (!gbActive) {
 		if (SDL_ShowCursor(SDL_ENABLE) <= -1) {
 			SDL_Log(SDL_GetError());
@@ -308,6 +309,9 @@ void UiOkDialog(const char *text, const char *caption, bool error, UiItem *rende
 	gbActive = false;
 	Init(text, caption, error);
 	DialogLoop(dialogItems, dialogItemsSize, render_behind, render_behind_size);
+#else
+	VitaAux::dialog(caption, text, error, error, true);
+#endif
 	Deinit();
 	gbActive = true;
 }

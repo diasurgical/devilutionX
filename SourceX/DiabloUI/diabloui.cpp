@@ -30,6 +30,9 @@ Art ArtFocus[3];
 Art ArtBackground;
 Art ArtCursor;
 Art ArtHero;
+#ifdef VITA
+Art keyBoardArt;
+#endif
 bool gbSpawned;
 
 void (*gfnSoundFunction)(char *file);
@@ -58,6 +61,9 @@ struct {
 void UiDestroy()
 {
 	ArtHero.Unload();
+#ifdef VITA
+	keyBoardArt.Unload();
+#endif
 	UnloadTtfFont();
 	UnloadArtFonts();
 }
@@ -179,6 +185,27 @@ void selhero_CatToName(char *in_buf, char *out_buf, int cnt)
 	strncat(out_buf, output.c_str(), cnt - strlen(out_buf));
 }
 
+#ifdef VITA
+void (*setCustomRenderFunc)(void) = NULL;
+void setCustomRender(void (*customRender)(void))
+{
+	setCustomRenderFunc = customRender;
+}
+void preRenderFuntion()
+{
+	if ((*setCustomRenderFunc) != NULL) {
+		(*setCustomRenderFunc)();
+	}
+	UiRenderItems(gUiItems, gUiItemCnt);
+}
+
+void postRenderFuntion()
+{
+	DrawMouse();
+	UiFadeIn();
+}
+#endif
+
 bool UiFocusNavigation(SDL_Event *event)
 {
 	if (event->type == SDL_QUIT)
@@ -255,7 +282,9 @@ bool UiFocusNavigation(SDL_Event *event)
 			case SDLK_RETURN:
 			case SDLK_KP_ENTER:
 			case SDLK_SPACE: {
-				VitaAux::showIME("Hero's name", UiTextInput);
+				void (*preRenderFuntionPt)() = &preRenderFuntion;
+				void (*postRenderFuntionPt)() = &postRenderFuntion;
+				VitaAux::showIME("Hero's name", UiTextInput, (*preRenderFuntionPt), (*postRenderFuntionPt), keyBoardArt.surface);
 				break;
 			}
 #endif
@@ -366,6 +395,11 @@ void LoadUiGFX()
 	LoadMaskedArt("ui_art\\focus42.pcx", &ArtFocus[FOCUS_BIG], 8);
 	LoadMaskedArt("ui_art\\cursor.pcx", &ArtCursor, 1, 0);
 	LoadArt("ui_art\\heros.pcx", &ArtHero, 4);
+#ifdef VITA
+	keyBoardArt.surface = SDL_CreateRGBSurfaceWithFormat(SDL_SWSURFACE, 150, 150, 32, SDL_PIXELFORMAT_RGBA8888);
+	keyBoardArt.frame_height = 150;
+	keyBoardArt.frames = 1;
+#endif
 }
 
 void UiInitialize()

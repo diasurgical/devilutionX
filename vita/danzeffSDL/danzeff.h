@@ -53,7 +53,7 @@ void danzeff_moveTo(const int newX, const int newY);
 /*bool*/ int danzeff_dirty();
 
 //draw the keyboard to the screen
-void danzeff_render();
+void danzeff_render(void (*PreRenderigFunction)(), void (*PostRenderigFunction)());
 
 #ifdef __cplusplus
 }
