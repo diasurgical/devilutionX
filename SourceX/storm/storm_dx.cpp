@@ -1,4 +1,8 @@
+#ifdef VITA
+#include <SDL/SDL.h>
+#else
 #include <SDL.h>
+#endif
 
 #include "devilution.h"
 #include "miniwin/ddraw.h"

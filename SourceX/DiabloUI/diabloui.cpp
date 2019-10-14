@@ -13,6 +13,9 @@
 #include "DiabloUI/fonts.h"
 #include "DiabloUI/button.h"
 #include "DiabloUI/dialogs.h"
+#ifdef VITA
+#include "../../vita/vita_aux_util.h"
+#endif
 
 namespace dvl {
 
@@ -227,7 +230,14 @@ bool UiFocusNavigation(SDL_Event *event)
 		case SDLK_KP_ENTER:
 		case SDLK_SPACE:
 			UiFocusNavigationSelect();
+#ifndef VITA
 			return true;
+#else
+			if (!SDL_IsTextInputActive()) {
+				return true;
+			}
+			break;
+#endif
 		case SDLK_DELETE:
 			UiFocusNavigationYesNo();
 			return true;
@@ -240,6 +250,15 @@ bool UiFocusNavigation(SDL_Event *event)
 		switch (event->type) {
 		case SDL_KEYDOWN: {
 			switch (event->key.keysym.sym) {
+#ifdef VITA
+
+			case SDLK_RETURN:
+			case SDLK_KP_ENTER:
+			case SDLK_SPACE: {
+				VitaAux::showIME("Hero's name", UiTextInput);
+				break;
+			}
+#endif
 #ifndef USE_SDL1
 			case SDLK_v:
 				if (SDL_GetModState() & KMOD_CTRL) {
@@ -532,7 +551,11 @@ void DrawSelector(const SDL_Rect &rect)
 
 void UiPollAndRender()
 {
+#ifdef VITA
+	SDL_Event event = VitaAux::getPressedKeyAsSDL_Event();
+#else
 	SDL_Event event;
+#endif
 	while (SDL_PollEvent(&event)) {
 		UiFocusNavigation(&event);
 	}
@@ -786,7 +809,14 @@ bool UiItemMouseEvents(SDL_Event *event, UiItem *items, std::size_t size)
 
 void DrawMouse()
 {
+#ifndef VITA
 	SDL_GetMouseState(&MouseX, &MouseY);
+#else
+	VITATOUCH position = VitaAux::getVitaTouch();
+	//Adjust zoom
+	MouseX = position.x * SCREEN_WIDTH / 960;
+	MouseY = position.y * SCREEN_HEIGHT / 544;
+#endif
 
 #ifndef USE_SDL1
 	if (renderer) {

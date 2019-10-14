@@ -1,8 +1,13 @@
 #include "devilution.h"
 #include "miniwin/dsound.h"
 #include "stubs.h"
+#ifdef VITA
+#include <SDL/SDL.h>
+#include <SDL/SDL_mixer.h>
+#else
 #include <SDL.h>
 #include <SDL_mixer.h>
+#endif
 
 namespace dvl {
 

@@ -1,6 +1,9 @@
 #include "devilution.h"
+#ifdef VITA
+#include <SDL/SDL.h>
+#else
 #include <SDL.h>
-
+#endif
 namespace dvl {
 
 extern SDL_Window *window;

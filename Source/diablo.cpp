@@ -1,6 +1,9 @@
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
+#ifdef VITA
+#include "../vita/vita_aux_util.h"
+#endif
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -1731,7 +1734,7 @@ void diablo_color_cyc_logic()
 				lighting_color_cycling();
 			} else if (leveltype == DTYPE_CAVES) {
 				//if (fullscreen)
-					palette_update_caves();
+				palette_update_caves();
 			}
 		}
 	}

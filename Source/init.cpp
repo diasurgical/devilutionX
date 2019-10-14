@@ -2,7 +2,12 @@
 
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
+#ifdef VITA
+#include <SDL/SDL.h>
+#include "../vita/vita_aux_util.h"
+#else
 #include <SDL.h>
+#endif
 #include <config.h>
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -66,9 +71,9 @@ void init_archives()
 	fileinfo.patcharchivefile = patch_rt_mpq_path;
 	init_get_file_info();
 #ifdef SPAWN
-		diabdat_mpq = init_test_access(diabdat_mpq_path, "spawn.mpq", "DiabloSpawn", 1000, FS_PC);
+	diabdat_mpq = init_test_access(diabdat_mpq_path, "spawn.mpq", "DiabloSpawn", 1000, FS_PC);
 #else
-		diabdat_mpq = init_test_access(diabdat_mpq_path, "diabdat.mpq", "DiabloCD", 1000, FS_PC);
+	diabdat_mpq = init_test_access(diabdat_mpq_path, "diabdat.mpq", "DiabloCD", 1000, FS_PC);
 #endif
 	if (!SFileOpenFile("ui_art\\title.pcx", &fh))
 #ifdef SPAWN

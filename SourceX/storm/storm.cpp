@@ -7,9 +7,16 @@
 #include "miniwin/ddraw.h"
 #include "stubs.h"
 #include <Radon.hpp>
+
+#ifdef VITA
+#include <SDL/SDL.h>
+#include <SDL/SDL_endian.h>
+#include <SDL/SDL_mixer.h>
+#else
 #include <SDL.h>
 #include <SDL_endian.h>
 #include <SDL_mixer.h>
+#endif
 #include <smacker.h>
 
 #include "DiabloUI/diabloui.h"
@@ -33,6 +40,11 @@ static Mix_Chunk *SFileChunk;
 
 void GetBasePath(char *buffer, size_t size)
 {
+
+#ifdef VITA
+	char path[] = "file:ux0:/data/DVLX00001/data/\0";
+	snprintf(buffer, size, "%s", path);
+#else
 	char *path = SDL_GetBasePath();
 	if (path == NULL) {
 		SDL_Log(SDL_GetError());
@@ -42,18 +54,23 @@ void GetBasePath(char *buffer, size_t size)
 
 	snprintf(buffer, size, "%s", path);
 	SDL_free(path);
+#endif
 }
 
 void GetPrefPath(char *buffer, size_t size)
 {
+#ifdef VITA
+	char path[] = "ux0:/data/DVLX00001/save/\0";
+	snprintf(buffer, size, "%s", path);
+#else
 	char *path = SDL_GetPrefPath("diasurgical", "devilution");
 	if (path == NULL) {
 		buffer[0] = '\0';
 		return;
 	}
-
 	snprintf(buffer, size, "%s", path);
 	SDL_free(path);
+#endif
 }
 
 void TranslateFileName(char *dst, int dstLen, const char *src)
@@ -807,4 +824,4 @@ BOOL SFileEnableDirectAccess(BOOL enable)
 	directFileAccess = enable;
 	return true;
 }
-}
+} // namespace dvl

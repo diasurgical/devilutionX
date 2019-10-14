@@ -2,7 +2,11 @@
 
 #include "devilution.h"
 
+#ifdef VITA
+#include <SDL/SDL_ttf.h>
+#else
 #include <SDL_ttf.h>
+#endif
 
 #include "DiabloUI/art.h"
 

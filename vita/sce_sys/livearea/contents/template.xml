@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<livearea style="psmobile" format-ver="01.00" content-rev="1">
+ 
+	<livearea-background>
+    	<image>bg.png</image>
+	</livearea-background>
+
+	<gate>
+		<startup-image>startup.png</startup-image>
+	</gate>
+
+	<frame id="frame1">
+		<liveitem>
+			<image>logo0.png</image>
+		</liveitem>
+	</frame>
+
+	<frame id="frame2">
+		<liveitem> <lang>en</lang>
+			<text valign="top" align="left" text-align="left" text-valign="top" line-space="1" ellipsis="on">
+				<str size="24" bold="on" shadow="on">PSP DNI 5.6 Vita Edition.</str>
+			</text>
+		</liveitem>
+		<liveitem> <lang>en-gb</lang>
+			<text valign="top" align="left" text-align="left" text-valign="top" line-space="1" ellipsis="on">
+				<str size="24" bold="on" shadow="on">PSP DNI 5.6 Vita Edition.</str>
+			</text>
+		</liveitem>
+		<liveitem> <lang>ja</lang>
+			<text valign="top" align="left" text-align="left" text-valign="top" line-space="1" ellipsis="on">
+				<str size="24" bold="on" shadow="on">liveareaスタイリングの例。</str>
+			</text>
+		</liveitem>
+	</frame>
+
+	<frame id="frame3">
+		<liveitem> <lang>en</lang>
+			<image valign="bottom" origin="frame" align="left" image-align="left" image-valign="bottom" width="200" height="62" x="-209">logo1.png
+			</image>
+			<target>https://blog.jesusanchez.net</target>  
+		</liveitem>
+		<liveitem> <lang>en-gb</lang>
+			<image valign="bottom" origin="frame" align="left" image-align="left" image-valign="bottom" width="200" height="62" x="-209">logo1.png
+			</image>
+			<target>https://blog.jesusanchez.net</target>  
+		</liveitem>
+		<liveitem> <lang>ja</lang>
+			<image valign="bottom" origin="frame" align="left" image-align="left" image-valign="bottom" width="200" height="62" x="-209">logo1.png
+			</image>
+			<target>https://blog.jesusanchez.net</target>  
+		</liveitem>
+	</frame>
+
+	<frame id="frame4">
+		<liveitem> <lang>en</lang>
+			<text align="right" text-align="right" word-wrap="off" ellipsis="on">
+				<str size="18" color="#f3f315" bold="on" shadow="on">Port of the PSP DNI 5.6 to vita.</str>
+			</text>
+		</liveitem>
+		<liveitem> <lang>en-gb</lang>
+			<text align="right" text-align="right" word-wrap="off" ellipsis="on">
+				<str size="18" color="#f3f315" bold="on" shadow="on">>Port of the PSP DNI 5.6 to vita.</str>
+			</text>
+		</liveitem>
+		<liveitem> <lang>ja</lang>
+			<text align="right" text-align="right" word-wrap="off" ellipsis="on">
+				<str size="18" color="#f3f315" bold="on" shadow="on">vitasdkためのサンプル。</str>
+			</text>
+		</liveitem>
+	</frame>
+
+</livearea>

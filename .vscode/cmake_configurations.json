@@ -1,0 +1,24 @@
+{
+	"configurations": [{
+			"name": "Debug",
+			"buildType": "Debug",
+			"toolchain": "${VITASDK}"
+
+		},
+		{
+			"name": "Release",
+			"buildType": "Release",
+			"toolchain": "${VITASDK}"
+		},
+		{
+			"name": "RelWithDebInfo",
+			"buildType": "RelWithDebInfo",
+			"toolchain": "${VITASDK}"
+		},
+		{
+			"name": "MinSizeRel",
+			"buildType": "MinSizeRel",
+			"toolchain": "${VITASDK}"
+		}
+	]
+}

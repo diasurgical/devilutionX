@@ -1,6 +1,23 @@
 cmake_minimum_required(VERSION 3.10)
 
-include(CMake/out_of_tree.cmake)
+option(VITA "Enable VITA compilation" ON)
+
+if (VITA)
+  if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+    if(DEFINED ENV{VITASDK})
+      set(CMAKE_TOOLCHAIN_FILE "$ENV{VITASDK}/share/vita.toolchain.cmake" CACHE PATH "toolchain file")
+    else()
+      message(FATAL_ERROR "Please define VITASDK to point to your SDK path!")
+    endif()
+  endif()
+  # This line adds Vita helper macros, must go after project definition in order
+  # to build Vita specific artifacts (self/vpk).
+  include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
+else()
+  include(CMake/out_of_tree.cmake) 
+endif()
+
+list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake")
 
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Debug")
@@ -17,6 +34,12 @@ option(BINARY_RELEASE "Enable options for binary release" OFF)
 option(NIGHTLY_BUILD "Enable options for nightly build" OFF)
 option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network" OFF)
+
+if (VITA)
+  set(USE_SDL1 ON)
+  set(NONET ON)
+  set(ASAN OFF)
+endif()
 
 include(CMake/git.cmake)
 get_git_tag(GIT_TAG)
@@ -91,18 +114,58 @@ if(NOT NONET)
   find_package(sodium REQUIRED)
 endif()
 
-if(USE_SDL1)
-  find_package(SDL REQUIRED)
-  find_package(SDL_ttf REQUIRED)
-  find_package(SDL_mixer REQUIRED)
-  include_directories(${SDL_INCLUDE_DIR})
+if(VITA)
+  ## Configuration options for this app
+  # Display name (under bubble in LiveArea)
+  set(VITA_APP_NAME "devilutionX")
+  # Unique ID must be exactly 9 characters. Recommended: XXXXYYYYY where X =
+  # unique string of developer and Y = a unique number for this app
+  set(VITA_TITLEID  "DVLX00001")
+  # Optional version string to show in LiveArea's more info screen
+  set(VITA_VERSION  "01.00")
+
+  ## Flags and includes for building
+  # Note that we make sure not to overwrite previous flags
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -g3")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -save-temps -g3")
+  # Optional. You can specify more param.sfo flags this way.
+  set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1")
+
+  # Add any additional include paths here
+  include_directories(
+    ../common
+  )
+  add_compile_definitions(DANZEFF_INPUT_VITA)
+  add_library(danzeff STATIC
+  vita/danzeffSDL/danzeff.c
+  vita/danzeffSDL/font.c
+  vita/danzeffSDL/fontNaga10.c
+  vita/danzeffSDL/pspctrl_emu.c
+  )
+
+  add_library(vita_aux_util STATIC
+  vita/vita_aux_util.cpp
+  ../common/ime_dialog/ime_dialog.c
+  ../common/debugScreen.c
+  )
+  target_link_libraries(vita_aux_util PUBLIC
+  danzeff)
+
 else()
-  find_package(SDL2 CONFIG QUIET)
-  if (NOT SDL2_FOUND)
-    find_package(SDL2 REQUIRED)
+
+  if(USE_SDL1)
+    find_package(SDL REQUIRED)
+    find_package(SDL_ttf REQUIRED)
+    find_package(SDL_mixer REQUIRED)
+    include_directories(${SDL_INCLUDE_DIR})
+  else()
+    find_package(SDL2 CONFIG QUIET)
+    if (NOT SDL2_FOUND)
+      find_package(SDL2 REQUIRED)
+    endif()
+    find_package(SDL2_ttf REQUIRED)
+    find_package(SDL2_mixer REQUIRED)
   endif()
-  find_package(SDL2_ttf REQUIRED)
-  find_package(SDL2_mixer REQUIRED)
 endif()
 
 add_library(smacker STATIC
@@ -271,6 +334,11 @@ target_link_libraries(devilutionx PRIVATE
   smacker
   Radon)
 
+if (VITA)
+  add_compile_definitions(VITA)
+  target_link_libraries(devilution PRIVATE vita_aux_util)
+  target_link_libraries(devilutionx PRIVATE vita_aux_util)
+endif()
 if(NOT NONET)
   target_link_libraries(devilutionx PRIVATE sodium)
 endif()
@@ -284,6 +352,47 @@ target_compile_definitions(devilutionx PRIVATE ASIO_STANDALONE)
 
 
 foreach(target devilution devilutionx)
+  if (VITA)
+    # Add any additional library paths here
+    # ${CMAKE_CURRENT_BINARY_DIR} lets you use any library currently being built
+    link_directories(
+      ${CMAKE_CURRENT_BINARY_DIR}
+    )
+    target_link_libraries(${target} PRIVATE
+      SceLibKernel_stub # this line is only for demonstration. It's not needed as
+                        # the most common stubs are automatically included.
+
+      SceDisplay_stub
+      SDL
+      SDL_image
+      SDL_ttf
+      #SDL_endian
+      SDL_mixer
+      FLAC
+      mikmod
+      mpg123
+      vorbisfile
+      ogg
+      vorbis
+      jpeg
+      png
+      z
+      freetype
+      vita2d
+      SceDisplay_stub
+      SceCtrl_stub
+      SceAudio_stub
+      SceSysmodule_stub
+      SceGxm_stub
+      SceCommonDialog_stub
+      SceTouch_stub
+      SceHid_stub
+      m
+      SceAppUtil_stub
+    )
+    
+    target_compile_definitions(${target} PRIVATE VITA)
+  endif()
   if(USE_SDL1)
     target_link_libraries(${target} PRIVATE
       ${SDL_LIBRARY} ${SDL_TTF_LIBRARY} ${SDL_MIXER_LIBRARY})
@@ -406,4 +515,32 @@ endif()
 
 if(DINGUX)
   set_target_properties(devilutionx PROPERTIES OUTPUT_NAME "devilutionx.dge")
+endif()
+
+if(VITA)
+  ## Create Vita files
+  vita_create_self(devilutionx.self devilutionx)
+  vita_create_vpk(devilutionx.vpk ${VITA_TITLEID} devilutionx.self
+    VERSION ${VITA_VERSION}
+    NAME ${VITA_APP_NAME}
+    FILE vita/sce_sys/icon0.png sce_sys/icon0.png
+    FILE vita/sce_sys/pic0.png sce_sys/pic0.png
+    FILE vita/sce_sys/livearea/contents/bg.png sce_sys/livearea/contents/bg.png
+    FILE vita/sce_sys/livearea/contents/startup.png sce_sys/livearea/contents/startup.png
+    FILE vita/sce_sys/livearea/contents/logo0.png sce_sys/livearea/contents/logo0.png
+    FILE vita/sce_sys/livearea/contents/logo1.png sce_sys/livearea/contents/logo1.png
+    FILE vita/sce_sys/livearea/contents/template.xml sce_sys/livearea/contents/template.xml
+    FILE vita/danzeffSDL/danzeff/keys_c_t.png danzeff/keys_c_t.png
+    FILE vita/danzeffSDL/danzeff/keys_c.png danzeff/keys_c.png
+    FILE vita/danzeffSDL/danzeff/keys_s_c.png danzeff/keys_s_c.png
+    FILE vita/danzeffSDL/danzeff/keys_s.png danzeff/keys_s.png
+    FILE vita/danzeffSDL/danzeff/keys_t.png danzeff/keys_t.png
+    FILE vita/danzeffSDL/danzeff/keys.png danzeff/keys.png
+    FILE vita/danzeffSDL/danzeff/nums_c_t.png danzeff/nums_c_t.png
+    FILE vita/danzeffSDL/danzeff/nums_c.png danzeff/nums_c.png
+    FILE vita/danzeffSDL/danzeff/nums_s_c.png danzeff/nums_s_c.png
+    FILE vita/danzeffSDL/danzeff/nums_s.png danzeff/nums_s.png
+    FILE vita/danzeffSDL/danzeff/nums_t.png danzeff/nums_t.png
+    FILE vita/danzeffSDL/danzeff/nums.png danzeff/nums.png
+  )
 endif()

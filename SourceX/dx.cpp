@@ -2,7 +2,11 @@
 #include "../3rdParty/Storm/Source/storm.h"
 #include "miniwin/ddraw.h"
 #include "miniwin/com_macro.h"
+#ifdef VITA
+#include <SDL/SDL.h>
+#else
 #include <SDL.h>
+#endif
 
 namespace dvl {
 
@@ -201,7 +205,9 @@ void BltFast(DWORD dwX, DWORD dwY, LPRECT lpSrcRect)
 void RenderPresent()
 {
 	SDL_Surface *surface = GetOutputSurface();
+#ifndef VITA
 	assert(!SDL_MUSTLOCK(surface));
+#endif
 
 	if (!bufferUpdated) {
 		return;

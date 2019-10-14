@@ -1,5 +1,9 @@
 #include <deque>
+#ifdef VITA
+#include <SDL/SDL.h>
+#else
 #include <SDL.h>
+#endif
 
 #include "devilution.h"
 #include "stubs.h"
@@ -412,4 +416,4 @@ WINBOOL PostMessageA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 	return true;
 }
 
-}
+} // namespace dvl

@@ -1,6 +1,12 @@
 #pragma once
 
+#ifdef VITA
+#include <SDL/SDL.h>
+#include <vitasdk.h>
+#include "../vita/vita_aux_util.h"
+#else
 #include <SDL.h>
+#endif
 #include <unistd.h>
 #include <errno.h>
 #include <stdio.h>
@@ -16,7 +22,11 @@
 
 #define SDL_zero(x) SDL_memset(&(x), 0, sizeof((x)))
 #define SDL_InvalidParamError(param) SDL_SetError("Parameter '%s' is invalid", (param))
+#ifdef VITA
+#define SDL_Log VitaAux::debug
+#else
 #define SDL_Log puts
+#endif
 #define SDL_floor floor
 
 //== Events handling
@@ -665,6 +675,9 @@ inline int SDL_GetCurrentDisplayMode(int displayIndex, SDL_DisplayMode *mode)
 inline char *
 readSymLink(const char *path)
 {
+#ifdef VITA
+	return NULL;
+#else
 	// From sdl2-2.0.9/src/filesystem/unix/SDL_sysfilesystem.c
 	char *retval = NULL;
 	ssize_t len = 64;
@@ -692,6 +705,7 @@ readSymLink(const char *path)
 
 	SDL_free(retval);
 	return NULL;
+#endif
 }
 #endif
 
@@ -848,12 +862,22 @@ inline char *SDL_GetPrefPath(const char *org, const char *app)
 	for (ptr = retval + 1; *ptr; ptr++) {
 		if (*ptr == '/') {
 			*ptr = '\0';
+#ifndef VITA
 			if (mkdir(retval, 0700) != 0 && errno != EEXIST)
 				goto error;
+#else
+			if (sceIoMkdir(retval, 0700) != 0 && errno != EEXIST) {
+				goto error;
+			}
+#endif
 			*ptr = '/';
 		}
 	}
+#ifndef VITA
 	if (mkdir(retval, 0700) != 0 && errno != EEXIST) {
+#else
+	if (sceIoMkdir(retval, 0700) != 0 && errno != EEXIST) {
+#endif
 	error:
 		SDL_SetError("Couldn't create directory '%s': '%s'", retval, strerror(errno));
 		SDL_free(retval);

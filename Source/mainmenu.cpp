@@ -102,10 +102,12 @@ void mainmenu_loop()
 			if (!mainmenu_single_player())
 				done = TRUE;
 			break;
+#ifndef VITA
 		case MAINMENU_MULTIPLAYER:
 			if (!mainmenu_multi_player())
 				done = TRUE;
 			break;
+#endif
 		case MAINMENU_REPLAY_INTRO:
 		case MAINMENU_ATTRACT_MODE:
 #ifdef SPAWN

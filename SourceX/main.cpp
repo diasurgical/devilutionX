@@ -1,5 +1,11 @@
 #include <string>
+
+#ifdef VITA
+#include <SDL/SDL.h>
+#include "../vita/vita_aux_util.h"
+#else
 #include <SDL.h>
+#endif
 
 #include "devilution.h"
 
@@ -24,6 +30,9 @@ static std::string build_cmdline(int argc, char **argv)
 
 int main(int argc, char **argv)
 {
+#ifdef VITA
+	VitaAux::init();
+#endif
 	auto cmdline = build_cmdline(argc, argv);
 	return dvl::WinMain(NULL, NULL, (char *)cmdline.c_str(), 0);
 }

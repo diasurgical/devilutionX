@@ -1,7 +1,11 @@
 #include "devilution.h"
 #include "miniwin/ddraw.h"
 #include "stubs.h"
+#ifdef VITA
+#include <SDL/SDL.h>
+#else
 #include <SDL.h>
+#endif
 
 namespace dvl {
 

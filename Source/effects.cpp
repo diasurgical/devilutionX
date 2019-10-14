@@ -1,6 +1,10 @@
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
+#ifdef VITA
+#include <SDL/SDL_mixer.h>
+#else
 #include <SDL_mixer.h>
+#endif
 
 DEVILUTION_BEGIN_NAMESPACE
 

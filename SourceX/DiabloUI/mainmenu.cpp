@@ -8,11 +8,13 @@ DWORD dwAttractTicks;
 
 int MainMenuResult;
 UiListItem MAINMENU_DIALOG_ITEMS[] = {
-	{"Single Player", MAINMENU_SINGLE_PLAYER},
-	{"Multi Player", MAINMENU_MULTIPLAYER},
-	{"Replay Intro", MAINMENU_REPLAY_INTRO},
-	{"Show Credits", MAINMENU_SHOW_CREDITS},
-	{"Exit Diablo", MAINMENU_EXIT_DIABLO}
+	{ "Single Player", MAINMENU_SINGLE_PLAYER },
+#ifndef VITA
+	{ "Multi Player", MAINMENU_MULTIPLAYER },
+#endif
+	{ "Replay Intro", MAINMENU_REPLAY_INTRO },
+	{ "Show Credits", MAINMENU_SHOW_CREDITS },
+	{ "Exit Diablo", MAINMENU_EXIT_DIABLO }
 };
 UiItem MAINMENU_DIALOG[] = {
 	MAINMENU_BACKGROUND,
@@ -77,4 +79,4 @@ BOOL UiMainMenuDialog(char *name, int *pdwResult, void (*fnSound)(char *file), i
 	return true;
 }
 
-}
+} // namespace dvl

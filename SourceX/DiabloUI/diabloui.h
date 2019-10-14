@@ -1,8 +1,11 @@
 #pragma once
 
 #include <cstddef>
+#ifdef VITA
+#include <SDL/SDL.h>
+#else
 #include <SDL.h>
-
+#endif
 #include "DiabloUI/art.h"
 #include "DiabloUI/ui_item.h"
 

@@ -1,6 +1,10 @@
 #include "devilution.h"
 #include "stubs.h"
+#ifdef VITA
+#include <SDL/SDL.h>
+#else
 #include <SDL.h>
+#endif
 #include <set>
 
 namespace dvl {
@@ -194,4 +198,4 @@ int WaitForSingleObject(HANDLE hHandle, DWORD dwMilliseconds)
 	UNIMPLEMENTED();
 }
 
-}
+} // namespace dvl

@@ -1,5 +1,9 @@
 // Compatibility wrappers for SDL 1 & 2.
+#ifndef VITA
 #include <SDL.h>
+#else
+#include <SDL/SDL.h>
+#endif
 
 inline int SDLC_SetColorKey(SDL_Surface *surface, Uint32 key)
 {

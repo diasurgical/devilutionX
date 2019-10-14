@@ -1,6 +1,9 @@
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include <config.h>
+#ifdef VITA
+#include "../vita/vita_aux_util.h"
+#endif
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -10,6 +13,10 @@ int cleanup_thread_id;
 
 void __cdecl app_fatal(const char *pszFmt, ...)
 {
+#ifdef VITA
+	VitaAux::error(pszFmt);
+	VitaAux::ExitAPP(1);
+#else
 	va_list va;
 
 	va_start(va, pszFmt);
@@ -23,15 +30,20 @@ void __cdecl app_fatal(const char *pszFmt, ...)
 	dx_cleanup();
 	init_cleanup();
 	exit(1);
+#endif
 }
 
 void MsgBox(const char *pszFmt, va_list va)
 {
+#ifdef VITA
+	VitaAux::debug(pszFmt);
+#else
 	char Text[256];
 
 	wvsprintf(Text, pszFmt, va);
 
 	UiErrorOkDialog("Error", Text);
+#endif
 }
 
 void FreeDlg()
@@ -81,12 +93,13 @@ void ErrDlg(const char *title, const char *error, char *log_file_path, int log_l
 	app_fatal(NULL);
 }
 
-
 void FileErrDlg(const char *error)
 {
 	char text[1024];
 
+#ifndef VITA
 	FreeDlg();
+#endif
 
 	if (!error)
 		error = "";

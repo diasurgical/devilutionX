@@ -1,7 +1,12 @@
 #include "devilution.h"
 #include "miniwin/ddraw.h"
 #include "stubs.h"
+#ifdef VITA
+#include <SDL/SDL.h>
+#include "../../vita/vita_aux_util.h"
+#else
 #include <SDL.h>
+#endif
 #include <string>
 
 #include "DiabloUI/diabloui.h"
@@ -118,9 +123,15 @@ WINBOOL DeleteFileA(LPCSTR lpFileName)
 
 bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 {
+#ifdef VITA
+	if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) <= -1) {
+		SDL_Log(SDL_GetError());
+	}
+#else
 	if (SDL_Init(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) <= -1) {
 		ErrSdl();
 	}
+#endif
 
 	atexit(SDL_Quit);
 

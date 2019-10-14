@@ -1,8 +1,11 @@
 #pragma once
 
 #include "devilution.h"
-
+#ifdef VITA
+#include <SDL/SDL_ttf.h>
+#else
 #include <SDL_ttf.h>
+#endif
 
 namespace dvl {
 
