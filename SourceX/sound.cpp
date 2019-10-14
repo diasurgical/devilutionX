@@ -91,7 +91,7 @@ TSnd *sound_file_load(char *path)
 	BYTE *wave_file;
 	TSnd *pSnd;
 	DWORD dwBytes;
-	int error;
+	//int error;
 
 	WOpenFile(path, &file, false);
 	pSnd = (TSnd *)DiabloAllocPtr(sizeof(TSnd));
@@ -104,12 +104,12 @@ TSnd *sound_file_load(char *path)
 	SFileReadFile(file, wave_file, dwBytes, NULL, NULL);
 
 	pSnd->DSB = new DirectSoundBuffer();
-	error = pSnd->DSB->SetChunk(wave_file, dwBytes);
+	//error = pSnd->DSB->SetChunk(wave_file, dwBytes);
 	WCloseFile(file);
 	mem_free_dbg(wave_file);
-	if (error != 0) {
+	/*if (error != 0) {
 		ErrSdl();
-	}
+	}*/
 
 	return pSnd;
 }
@@ -209,7 +209,7 @@ void music_start(int nTrack)
 
 			musicRw = SDL_RWFromConstMem(musicBuffer, bytestoread);
 			if (musicRw == NULL) {
-				ErrSdl();
+				//ErrSdl();
 			}
 			music = Mix_LoadMUSType_RW(musicRw, MUS_NONE, 1);
 			Mix_VolumeMusic(MIX_MAX_VOLUME - MIX_MAX_VOLUME * sglMusicVolume / VOLUME_MIN);

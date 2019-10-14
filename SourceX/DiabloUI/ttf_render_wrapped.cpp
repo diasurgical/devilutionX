@@ -1,6 +1,9 @@
 #include "DiabloUI/ttf_render_wrapped.h"
 
 #include <cstddef>
+#ifdef VITA
+#include <string.h>
+#endif
 
 namespace dvl {
 
@@ -49,8 +52,11 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 			TTF_SetError("Out of memory");
 			return nullptr;
 		}
-
+#ifndef VITA
 		SDL_strlcpy(str, text, str_len + 1);
+#else
+		strncpy(str, text, str_len + 1);
+#endif
 		tok = str;
 		end = str + str_len;
 		do {
