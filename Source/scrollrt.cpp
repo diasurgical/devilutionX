@@ -947,7 +947,7 @@ static void DrawZoom(int x, int y)
 	}
 
 	/// ASSERT: assert(gpBuffer);
-	gpBufEnd = &gpBuffer[PitchTbl[-17 + SCREEN_Y]];
+	gpBufEnd = &gpBuffer[PitchTbl[(int)ceil(VIEWPORT_HEIGHT / 2) + SCREEN_Y]];
 	for (i = 0; i < blocks; i++) {
 		scrollrt_draw(x, y, sx, sy, chunks, i, 0);
 		y++;
