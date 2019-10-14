@@ -27,12 +27,10 @@ std::string tcp_server::localhost_self()
 			return asio::ip::address_v4::loopback().to_string();
 		} else if (addr.is_v6()) {
 			return asio::ip::address_v6::loopback().to_string();
-		} else {
-			ABORT();
 		}
-	} else {
-		return addr.to_string();
+		ABORT();
 	}
+	return addr.to_string();
 }
 
 tcp_server::scc tcp_server::make_connection()

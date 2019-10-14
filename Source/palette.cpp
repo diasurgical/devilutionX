@@ -22,14 +22,9 @@ void SaveGamma()
 
 void palette_init()
 {
-	DWORD error_code;
-
 	LoadGamma();
 	memcpy(system_palette, orig_palette, sizeof(orig_palette));
-	LoadSysPal();
-	error_code = CreatePalette();
-	if (error_code)
-		ERR_DLG(IDD_DIALOG8, error_code);
+	CreatePalette();
 }
 
 void LoadGamma()
@@ -52,29 +47,6 @@ void LoadGamma()
 	color_cycling_enabled = value;
 }
 
-void LoadSysPal()
-{
-	HDC hDC;
-	int i, iStartIndex;
-
-	for (i = 0; i < 256; i++)
-		system_palette[i].peFlags = PC_NOCOLLAPSE | PC_RESERVED;
-
-	if (!fullscreen) {
-		gdwPalEntries = GetDeviceCaps(hDC, NUMRESERVED) / 2;
-		GetSystemPaletteEntries(hDC, 0, gdwPalEntries, system_palette);
-		for (i = 0; i < gdwPalEntries; i++)
-			system_palette[i].peFlags = 0;
-
-		iStartIndex = 256 - gdwPalEntries;
-		GetSystemPaletteEntries(hDC, iStartIndex, gdwPalEntries, &system_palette[iStartIndex]);
-		if (iStartIndex < 256) {
-			for (i = iStartIndex; i < 256; i++)
-				system_palette[i].peFlags = 0;
-		}
-	}
-}
-
 void LoadPalette(char *pszFileName)
 {
 	int i;
@@ -84,7 +56,7 @@ void LoadPalette(char *pszFileName)
 	/// ASSERT: assert(pszFileName);
 
 	WOpenFile(pszFileName, &pBuf, 0);
-	WReadFile(pBuf, (char *)PalData, sizeof(PalData));
+	WReadFile(pBuf, (char *)PalData, sizeof(PalData), pszFileName);
 	WCloseFile(pBuf);
 
 	for (i = 0; i < 256; i++) {
@@ -140,7 +112,7 @@ void palette_update()
 	}
 }
 
-void ApplyGamma(PALETTEENTRY *dst, PALETTEENTRY *src, int n)
+void ApplyGamma(PALETTEENTRY *dst, const PALETTEENTRY *src, int n)
 {
 	int i;
 	double g;

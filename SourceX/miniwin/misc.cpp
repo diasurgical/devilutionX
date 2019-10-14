@@ -26,14 +26,6 @@ void SetLastError(DWORD dwErrCode)
 	last_error = dwErrCode;
 }
 
-char *_strlwr(char *str)
-{
-	for (char *p = str; *p; ++p) {
-		*p = tolower(*p);
-	}
-	return str;
-}
-
 int wsprintfA(LPSTR dest, LPCSTR format, ...)
 {
 	va_list args;
@@ -106,11 +98,6 @@ WINBOOL GetComputerNameA(LPSTR lpBuffer, LPDWORD nSize)
 	return true;
 }
 
-UINT GetDriveTypeA(LPCSTR lpRootPathName)
-{
-	return DVL_DRIVE_CDROM;
-}
-
 WINBOOL DeleteFileA(LPCSTR lpFileName)
 {
 	char name[DVL_MAX_PATH];
@@ -129,47 +116,17 @@ WINBOOL DeleteFileA(LPCSTR lpFileName)
 	return true;
 }
 
-HWND SetCapture(HWND hWnd)
-{
-	DUMMY_ONCE();
-	return hWnd;
-}
-
-WINBOOL ReleaseCapture()
-{
-	DUMMY_ONCE();
-	return true;
-}
-
-void FakeWMDestroy()
-{
-	MainWndProc(NULL, DVL_WM_DESTROY, 0, 0);
-}
-
-HWND CreateWindowExA(
-    DWORD dwExStyle,
-    LPCSTR lpClassName,
-    LPCSTR lpWindowName,
-    DWORD dwStyle,
-    int X,
-    int Y,
-    int nWidth,
-    int nHeight,
-    HWND hWndParent,
-    HMENU hMenu,
-    HINSTANCE hInstance,
-    LPVOID lpParam)
+bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) <= -1) {
-		SDL_Log(SDL_GetError());
-		return NULL;
+		ErrSdl();
 	}
+
+	atexit(SDL_Quit);
 
 #ifdef USE_SDL1
 	SDL_EnableUNICODE(1);
 #endif
-
-	atexit(SDL_Quit);
 
 	int upscale = 1;
 	DvlIntSetting("upscale", &upscale);
@@ -180,15 +137,14 @@ HWND CreateWindowExA(
 
 #ifdef USE_SDL1
 	int flags = SDL_SWSURFACE | SDL_DOUBLEBUF | SDL_HWPALETTE;
-	if (fullscreen) {
-		SDL_Log("fullscreen not yet supported with SDL1");
-	}
-	// flags |= fullscreen ? SDL_FULLSCREEN : SDL_RESIZABLE;
+	if (fullscreen)
+		flags |= SDL_FULLSCREEN;
 	SDL_WM_SetCaption(lpWindowName, WINDOW_ICON_NAME);
 	SDL_SetVideoMode(nWidth, nHeight, /*bpp=*/0, flags);
 	window = SDL_GetVideoSurface();
 	if (grabInput)
 		SDL_WM_GrabInput(SDL_GRAB_ON);
+	atexit(SDL_VideoQuit); // Without this video mode is not restored after fullscreen.
 #else
 	int flags = 0;
 	if (upscale) {
@@ -208,9 +164,8 @@ HWND CreateWindowExA(
 	window = SDL_CreateWindow(lpWindowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, nWidth, nHeight, flags);
 #endif
 	if (window == NULL) {
-		SDL_Log(SDL_GetError());
+		ErrSdl();
 	}
-	atexit(FakeWMDestroy);
 
 	if (upscale) {
 #ifdef USE_SDL1
@@ -218,134 +173,20 @@ HWND CreateWindowExA(
 #else
 		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
 		if (renderer == NULL) {
-			SDL_Log(SDL_GetError());
+			ErrSdl();
 		}
 
-		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, nWidth, nHeight);
+		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, nWidth, nHeight);
 		if (texture == NULL) {
-			SDL_Log(SDL_GetError());
+			ErrSdl();
 		}
 
 		if (SDL_RenderSetLogicalSize(renderer, nWidth, nHeight) <= -1) {
-			SDL_Log(SDL_GetError());
+			ErrSdl();
 		}
 #endif
 	}
 
-	return window;
+	return window != NULL;
 }
-
-BOOL InvalidateRect(HWND hWnd, const RECT *lpRect, BOOL bErase)
-{
-	DUMMY();
-	return true;
-}
-
-/**
- * @brief Appears to be used to clear the FB on init
- */
-BOOL UpdateWindow(HWND hWnd)
-{
-	DUMMY();
-	return true;
-}
-
-BOOL ShowWindow(HWND hWnd, int nCmdShow)
-{
-	if (nCmdShow == DVL_SW_HIDE) {
-		SDL_HideWindow(window);
-	} else if (nCmdShow == DVL_SW_SHOWNORMAL) {
-		SDL_ShowWindow(window);
-	}
-
-	return true;
-}
-
-/**
- * @brief Because we don't change resolution it dosen't make sens to use SDL_GetCurrentDisplayMode
- */
-int GetSystemMetrics(int nIndex)
-{
-	switch (nIndex) {
-	case DVL_SM_CXSCREEN:
-		return SCREEN_WIDTH;
-	case DVL_SM_CYSCREEN:
-		return SCREEN_HEIGHT;
-	}
-
-	return 0;
-}
-
-int GetDeviceCaps(HDC hdc, int index)
-{
-	SDL_DisplayMode current;
-
-	if (SDL_GetCurrentDisplayMode(0, &current) <= -1) {
-		SDL_Log(SDL_GetError());
-		return 0;
-	}
-
-	if (index == DVL_HORZRES) {
-		return current.w;
-	}
-	if (index == DVL_VERTRES) {
-		return current.h;
-	}
-
-	return 0;
-}
-
-BOOL GetWindowRect(HWND hDlg, tagRECT *Rect)
-{
-	int x, y, w, h;
-	SDL_GetWindowPosition(window, &x, &y);
-	SDL_GetWindowSize(window, &w, &h);
-
-	Rect->right = x;
-	Rect->top = y;
-	Rect->left = w + x;
-	Rect->bottom = h + y;
-
-	return true;
-}
-
-UINT GetSystemPaletteEntries(HDC hdc, UINT iStart, UINT cEntries, LPPALETTEENTRY pPalEntries)
-{
-	DUMMY();
-	return 0;
-}
-
-BOOL GetVersionExA(LPOSVERSIONINFOA lpVersionInformation)
-{
-	lpVersionInformation->dwMajorVersion = 5;
-	lpVersionInformation->dwMinorVersion = 0;
-	lpVersionInformation->dwPlatformId = DVL_VER_PLATFORM_WIN32_NT;
-	return true;
-}
-
-void lstrcpynA(LPSTR lpString1, LPCSTR lpString2, int iMaxLength)
-{
-	strncpy(lpString1, lpString2, iMaxLength);
-}
-
-int MessageBoxA(HWND hWnd, const char *Text, const char *Title, UINT Flags)
-{
-	UiOkDialog(Title, Text, /*error=*/!!(Flags & (DVL_MB_ICONHAND | DVL_MB_ICONEXCLAMATION)), nullptr, 0);
-	return 0;
-}
-
-void PostQuitMessage(int nExitCode)
-{
-	DUMMY();
-	PostMessageA(NULL, DVL_WM_QUERYENDSESSION, 0, 0);
-}
-
-LRESULT DefWindowProcA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
-{
-	DUMMY_ONCE();
-	if (Msg == DVL_WM_QUERYENDSESSION)
-		exit(0);
-
-	return 0;
-}
-}
+} // namespace dvl

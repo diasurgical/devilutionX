@@ -1076,13 +1076,7 @@ void stream_play(TSFX *pSFX, int lVolume, int lPan)
 	if (lVolume >= VOLUME_MIN) {
 		if (lVolume > VOLUME_MAX)
 			lVolume = VOLUME_MAX;
-#ifdef _DEBUG
-		SFileEnableDirectAccess(FALSE);
-#endif
 		success = SFileOpenFile(pSFX->pszName, &sfx_stream);
-#ifdef _DEBUG
-		SFileEnableDirectAccess(TRUE);
-#endif
 		if (!success) {
 			sfx_stream = 0;
 		} else {

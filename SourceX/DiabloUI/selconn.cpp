@@ -22,14 +22,17 @@ UiArtText SELCONNECT_DIALOG_DESCRIPTION(selconn_Description, { 35, 275, 205, 66 
 UiListItem SELCONN_DIALOG_ITEMS[] = {
 #ifndef NONET
 	{ "Client-Server (TCP)", 0 },
+#ifdef BUGGY
 	{ "Peer-to-Peer (UDP)", 1 },
+#endif
 	{ "Loopback", 2 },
 #else
 	{ "Loopback", 0 },
 #endif
 };
 UiItem SELCONNECT_DIALOG[] = {
-	UiImage(&ArtBackground, { 0, 0, 640, 480 }),
+	MAINMENU_BACKGROUND,
+	MAINMENU_LOGO,
 	UiArtText("Multi Player Game", { 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG),
 	UiArtText(selconn_MaxPlayers, { 35, 218, 205, 21 }),
 	UiArtText("Requirements:", { 35, 256, 205, 21 }),

@@ -107,7 +107,7 @@ void FillSolidBlockTbls()
 	for (i = 1; i <= dwTiles; i++) {
 		bv = *pTmp++;
 		if (bv & 1)
-			nSolidTable[i] = 1;
+			nSolidTable[i] = TRUE;
 		if (bv & 2)
 			nBlockTable[i] = TRUE;
 		if (bv & 4)
@@ -115,7 +115,7 @@ void FillSolidBlockTbls()
 		if (bv & 8)
 			nTransTable[i] = TRUE;
 		if (bv & 0x80)
-			nTrapTable[i] = 1;
+			nTrapTable[i] = TRUE;
 		block_lvid[i] = (bv & 0x70) >> 4; /* beta: (bv >> 4) & 7 */
 	}
 
@@ -380,7 +380,7 @@ void SetDungeonMicros()
 				else
 					pPiece = (WORD *)&pLevelPieces[32 * lv];
 				for (i = 0; i < blocks; i++)
-					pMap->mt[i] = pPiece[(i & 1) + blocks - 2 - (i & 0xE)];
+					pMap->mt[i] = SDL_SwapLE16(pPiece[(i & 1) + blocks - 2 - (i & 0xE)]);
 			} else {
 				for (i = 0; i < blocks; i++)
 					pMap->mt[i] = 0;

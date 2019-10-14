@@ -1,19 +1,15 @@
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.10)
 
 include(CMake/out_of_tree.cmake)
-
-project(DevilutionX
-  VERSION 0.5.0
-  LANGUAGES C CXX)
-
-list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake")
 
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
 option(ASAN "Enable address sanitizer" ON)
+option(UBSAN "Enable undefined behaviour sanitizer" ON)
 option(DEBUG "Enable debug mode in engine" ON)
+option(LTO "Enable link-time optimization (if supported by the toolchain)" OFF)
 option(SPAWN "Build the shareware version" OFF)
 option(DIST "Dynamically link only glibc and SDL2" OFF)
 option(FASTER "Enable FASTER in engine" ON)
@@ -22,22 +18,49 @@ option(NIGHTLY_BUILD "Enable options for nightly build" OFF)
 option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network" OFF)
 
+include(CMake/git.cmake)
+get_git_tag(GIT_TAG)
+if(NOT CMAKE_BUILD_TYPE MATCHES "Release")
+  get_git_commit_hash(GIT_COMMIT_HASH)
+endif()
+
+project(DevilutionX
+  VERSION ${GIT_TAG}
+  LANGUAGES C CXX)
+
 if(BINARY_RELEASE)
   set(CMAKE_BUILD_TYPE "Release")
   set(ASAN OFF)
+  set(UBSAN OFF)
   set(DEBUG OFF)
+  set(LTO ON)
   set(DIST ON)
   set(FASTER OFF)
-  set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
 endif()
 
 if(NIGHTLY_BUILD)
-  set(CMAKE_BUILD_TYPE "Debug")
+  set(CMAKE_BUILD_TYPE "RelWithDebInfo")
   set(ASAN OFF)
+  set(UBSAN OFF)
   set(DEBUG ON)
+  set(LTO ON)
   set(DIST ON)
-  set(FASTER ON)
+  set(FASTER OFF)
 endif()
+
+if(LTO)
+  # Use LTO on compilers where it is supported.
+  include(CheckIPOSupported)
+  check_ipo_supported(RESULT result OUTPUT lto_error)
+  if(result)
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
+  else()
+    message(WARNING "LTO not supported by this compiler and/or CMake version:")
+    message(WARNING ${lto_error})
+  endif()
+endif()
+
+list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake")
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
   set(ASAN OFF)
@@ -53,7 +76,7 @@ if(HAIKU)
   set(ASAN OFF)
 endif()
 
-if(DIST)
+if(DIST OR DINGUX)
   set(sodium_USE_STATIC_LIBS ON)
 endif()
 
@@ -69,17 +92,17 @@ if(NOT NONET)
 endif()
 
 if(USE_SDL1)
-	find_package(SDL REQUIRED)
-	find_package(SDL_ttf REQUIRED)
-	find_package(SDL_mixer REQUIRED)
-	include_directories(${SDL_INCLUDE_DIR})
+  find_package(SDL REQUIRED)
+  find_package(SDL_ttf REQUIRED)
+  find_package(SDL_mixer REQUIRED)
+  include_directories(${SDL_INCLUDE_DIR})
 else()
-	find_package(SDL2 CONFIG QUIET)
-	if (NOT SDL2_FOUND)
-		find_package(SDL2 REQUIRED)
-	endif()
-	find_package(SDL2_ttf REQUIRED)
-	find_package(SDL2_mixer REQUIRED)
+  find_package(SDL2 CONFIG QUIET)
+  if (NOT SDL2_FOUND)
+    find_package(SDL2 REQUIRED)
+  endif()
+  find_package(SDL2_ttf REQUIRED)
+  find_package(SDL2_mixer REQUIRED)
 endif()
 
 add_library(smacker STATIC
@@ -182,6 +205,7 @@ add_library(devilution STATIC
 
 set(devilutionx_SRCS
   SourceX/dx.cpp
+  SourceX/miniwin/ddraw.cpp
   SourceX/miniwin/misc.cpp
   SourceX/miniwin/misc_io.cpp
   SourceX/miniwin/misc_msg.cpp
@@ -199,9 +223,11 @@ set(devilutionx_SRCS
   SourceX/dvlnet/base.cpp
   SourceX/dvlnet/frame_queue.cpp
   SourceX/DiabloUI/art_draw.cpp
+  SourceX/DiabloUI/errorart.cpp
   SourceX/DiabloUI/art.cpp
   SourceX/DiabloUI/button.cpp
   SourceX/DiabloUI/credits.cpp
+  SourceX/DiabloUI/credits_lines.cpp
   SourceX/DiabloUI/diabloui.cpp
   SourceX/DiabloUI/dialogs.cpp
   SourceX/DiabloUI/fonts.cpp
@@ -281,9 +307,18 @@ foreach(target devilution devilutionx)
     target_compile_options(${target} PUBLIC -fsanitize=address -fsanitize-recover=address)
     target_link_libraries(${target} PUBLIC -fsanitize=address -fsanitize-recover=address)
   endif()
+
+  if(UBSAN)
+    target_compile_options(${target} PUBLIC -fsanitize=undefined)
+    target_link_libraries(${target} PUBLIC -fsanitize=undefined)
+  endif()
+
+  if(DINGUX)
+    target_compile_definitions(${target} PRIVATE DINGUX)
+  endif()
 endforeach(target devilution devilutionx)
 
-if(DIST AND NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+if(DIST AND CMAKE_CXX_COMPILER_ID MATCHES "GCC")
   target_link_libraries(devilutionx PUBLIC -static-libgcc -static-libstdc++)
 endif()
 
@@ -295,11 +330,20 @@ if(WIN32)
   endif()
 endif()
 
+if(NOT WIN32 AND NOT APPLE)
+  # Enable POSIX extensions such as `readlink` and `ftruncate`.
+  add_definitions(-D_POSIX_C_SOURCE=200809L)
+endif()
+
 if(HAIKU)
   target_link_libraries(devilutionx PRIVATE network)
 endif()
 
 if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+  # Change __FILE__ to only show the path relative to the project folder
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-builtin-macro-redefined -D'__FILE__=\"$(subst $(realpath ${CMAKE_SOURCE_DIR})/,,$(abspath $<))\"'")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-builtin-macro-redefined -D'__FILE__=\"$(subst $(realpath ${CMAKE_SOURCE_DIR})/,,$(abspath $<))\"'")
+
   if(DEBUG)
     # Note: For Valgrind suppor.
     target_compile_options(devilution PUBLIC -fno-omit-frame-pointer)
@@ -344,10 +388,22 @@ if(APPLE)
 
   install (TARGETS devilutionx DESTINATION ./)
 
+  if(DIST)
+      install(CODE "
+        include(BundleUtilities)
+        fixup_bundle(${CMAKE_BINARY_DIR}/${MACOSX_BUNDLE_BUNDLE_NAME}.app \"\" \"\")
+        "
+        COMPONENT Runtime)
+  endif()
+
   set(MACOSX_BUNDLE_LONG_VERSION_STRING "Version ${PROJECT_VERSION}")
   set(CPACK_PACKAGE_FILE_NAME "devilutionx")
   set(CPACK_DMG_DISABLE_APPLICATIONS_SYMLINK "ON")
   set(CPACK_GENERATOR "DragNDrop")
 
   include(CPack)
+endif()
+
+if(DINGUX)
+  set_target_properties(devilutionx PROPERTIES OUTPUT_NAME "devilutionx.dge")
 endif()

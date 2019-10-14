@@ -360,7 +360,7 @@ DWORD GetPlrGFXSize(char *szCel)
 				sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", ClassStrTbl[c], Type, Type, szCel);
 				if (WOpenFile(pszName, &hsFile, TRUE)) {
 					/// ASSERT: assert(hsFile);
-					dwSize = WGetFileSize(hsFile, NULL);
+					dwSize = WGetFileSize(hsFile, NULL, pszName);
 					WCloseFile(hsFile);
 					if (dwMaxSize <= dwSize) {
 						dwMaxSize = dwSize;
@@ -1293,6 +1293,9 @@ void StartWalk(int pnum, int xvel, int yvel, int xadd, int yadd, int EndDir, int
 	}
 }
 
+#if defined(__clang__) || defined(__GNUC__)
+__attribute__((no_sanitize("shift-base")))
+#endif
 void StartWalk2(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int EndDir, int sdir)
 {
 	int px, py;
@@ -1372,6 +1375,9 @@ void StartWalk2(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int 
 	}
 }
 
+#if defined(__clang__) || defined(__GNUC__)
+__attribute__((no_sanitize("shift-base")))
+#endif
 void StartWalk3(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, int EndDir, int sdir)
 {
 	int px, py, x, y;
@@ -1678,6 +1684,9 @@ void RespawnDeadItem(ItemStruct *itm, int x, int y)
 	itm->_itype = ITYPE_NONE;
 }
 
+#if defined(__clang__) || defined(__GNUC__)
+__attribute__((no_sanitize("shift-base")))
+#endif
 void StartPlayerKill(int pnum, int earflag)
 {
 	BOOL diablolevel;
@@ -2019,6 +2028,9 @@ void InitLevelChange(int pnum)
 	}
 }
 
+#if defined(__clang__) || defined(__GNUC__)
+__attribute__((no_sanitize("shift-base")))
+#endif
 void StartNewLvl(int pnum, int fom, int lvl)
 {
 	InitLevelChange(pnum);

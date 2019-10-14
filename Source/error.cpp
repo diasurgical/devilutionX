@@ -87,21 +87,21 @@ void DrawDiabloMsg()
 	int i, len, off, width, sx, sy;
 	BYTE c;
 
-	CelDecodeOnly(165, 318, pSTextSlidCels, 1, 12);
-	CelDecodeOnly(591, 318, pSTextSlidCels, 4, 12);
-	CelDecodeOnly(165, 366, pSTextSlidCels, 2, 12);
-	CelDecodeOnly(591, 366, pSTextSlidCels, 3, 12);
+	CelDraw(165, 318, pSTextSlidCels, 1, 12);
+	CelDraw(591, 318, pSTextSlidCels, 4, 12);
+	CelDraw(165, 366, pSTextSlidCels, 2, 12);
+	CelDraw(591, 366, pSTextSlidCels, 3, 12);
 
 	sx = 173;
 	for (i = 0; i < 35; i++) {
-		CelDecodeOnly(sx, 318, pSTextSlidCels, 5, 12);
-		CelDecodeOnly(sx, 366, pSTextSlidCels, 7, 12);
+		CelDraw(sx, 318, pSTextSlidCels, 5, 12);
+		CelDraw(sx, 366, pSTextSlidCels, 7, 12);
 		sx += 12;
 	}
 	sy = 330;
 	for (i = 0; i < 3; i++) {
-		CelDecodeOnly(165, sy, pSTextSlidCels, 6, 12);
-		CelDecodeOnly(591, sy, pSTextSlidCels, 8, 12);
+		CelDraw(165, sy, pSTextSlidCels, 6, 12);
+		CelDraw(591, sy, pSTextSlidCels, 8, 12);
 		sy += 12;
 	}
 

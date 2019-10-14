@@ -79,6 +79,23 @@ inline void SDL_DisableScreenSaver()
 	DUMMY();
 }
 
+//= Messagebox (simply logged to stderr for now)
+
+typedef enum {
+	SDL_MESSAGEBOX_ERROR = 0x00000010,      /**< error dialog */
+	SDL_MESSAGEBOX_WARNING = 0x00000020,    /**< warning dialog */
+	SDL_MESSAGEBOX_INFORMATION = 0x00000040 /**< informational dialog */
+} SDL_MessageBoxFlags;
+
+inline int SDL_ShowSimpleMessageBox(Uint32 flags,
+    const char *title,
+    const char *message,
+    SDL_Surface *window)
+{
+	fprintf(stderr, "MSGBOX: %s\n%s\n", title, message);
+	return 0;
+}
+
 //= Window handling
 
 #define SDL_Window SDL_Surface
@@ -185,28 +202,6 @@ SDL_FreePalette(SDL_Palette *palette)
 	}
 	SDL_free(palette->colors);
 	SDL_free(palette);
-}
-
-inline int SDL_SetPaletteColors(SDL_Palette *palette, const SDL_Color *colors,
-    int firstcolor, int ncolors)
-{
-	int status = 0;
-
-	/* Verify the parameters */
-	if (!palette) {
-		return -1;
-	}
-	if (ncolors > (palette->ncolors - firstcolor)) {
-		ncolors = (palette->ncolors - firstcolor);
-		status = -1;
-	}
-
-	if (colors != (palette->colors + firstcolor)) {
-		SDL_memcpy(palette->colors + firstcolor, colors,
-		    ncolors * sizeof(*colors));
-	}
-
-	return status;
 }
 
 //= Pixel formats

@@ -1,6 +1,7 @@
 #include "DiabloUI/button.h"
 #include "DiabloUI/art_draw.h"
 #include "DiabloUI/text_draw.h"
+#include "DiabloUI/errorart.h"
 
 namespace dvl {
 
@@ -8,25 +9,24 @@ Art SmlButton;
 
 void LoadSmlButtonArt()
 {
-	LoadArt("ui_art\\but_sml.pcx", &SmlButton, 15);
+	LoadArt(&SmlButton, btnData, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT * 2, 2);
 }
 
 void RenderButton(UiButton *button)
 {
 	int frame;
-	if (button->has_flag(UIS_DISABLED)) {
-		frame = button->frame_map[UiButton::DISABLED];
-	} else if (button->pressed) {
-		frame = button->frame_map[UiButton::PRESSED];
+	if (button->pressed) {
+		frame = UiButton::PRESSED;
 	} else {
-		frame = button->frame_map[UiButton::DEFAULT];
+		frame = UiButton::DEFAULT;
 	}
 	DrawArt(button->rect.x, button->rect.y, button->art, frame, button->rect.w, button->rect.h);
 
 	SDL_Rect text_rect = button->rect;
-	if (!button->pressed) --text_rect.y;
+	if (!button->pressed)
+		--text_rect.y;
 	DrawTTF(button->text, text_rect, UIS_CENTER,
-	    SDL_Color{ 243, 243, 243, 0 }, SDL_Color{ 0, 0, 0, 0 }, &button->render_cache);
+	    SDL_Color { 243, 243, 243, 0 }, SDL_Color { 0, 0, 0, 0 }, &button->render_cache);
 }
 
 bool HandleMouseEventButton(const SDL_Event &event, UiButton *button)

@@ -60,7 +60,6 @@ BOOL SNetRegisterEventHandler(int evtype, SEVTHANDLER func)
 
 BOOL SNetDestroy()
 {
-	DUMMY();
 	return true;
 }
 
@@ -88,12 +87,6 @@ BOOL SNetGetGameInfo(int type, void *dst, unsigned int length, unsigned int *byt
 BOOL SNetLeaveGame(int type)
 {
 	return dvlnet_inst->SNetLeaveGame(type);
-}
-
-BOOL SNetSendServerChatCommand(const char *command)
-{
-	DUMMY();
-	return true;
 }
 
 /**

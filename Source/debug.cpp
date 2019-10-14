@@ -25,58 +25,6 @@ void FreeDebugGFX()
 	MemFreeDbg(pSquareCel);
 }
 
-#ifdef _DEBUG
-void init_seed_desync()
-{
-	int i;
-
-	for (i = 0; i < 4096; i++) {
-		seed_table[i] = -1;
-	}
-
-	seed_index = 0;
-
-	for (i = 0; i < NUMLEVELS; i++) {
-		level_seeds[i] = 0;
-	}
-}
-
-void seed_desync_index_get()
-{
-	if (currlevel == 0) {
-		return;
-	}
-
-	update_seed_check = TRUE;
-	seed_index = level_seeds[currlevel];
-}
-
-void seed_desync_index_set()
-{
-	if (currlevel == 0) {
-		return;
-	}
-
-	update_seed_check = FALSE;
-	level_seeds[currlevel + 1] = seed_index;
-}
-
-void seed_desync_check(int seed)
-{
-	if (!update_seed_check || seed_index == 4096 || currlevel == 0) {
-		return;
-	}
-
-	if (seed_table[seed_index] == -1) {
-		seed_table[seed_index] = seed;
-	} else if (seed != seed_table[seed_index]) {
-		app_fatal("Seeds desynced");
-	}
-
-	seed_index++;
-}
-#endif
-
 void CheckDungeonClear()
 {
 	int i, j;
@@ -99,7 +47,7 @@ void GiveGoldCheat()
 {
 	int i, ni;
 
-	for (i = 0; i < 40; i++) {
+	for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
 		if (!plr[myplr].InvGrid[i]) {
 			ni = plr[myplr]._pNumInv++;
 			SetPlrHandItem(&plr[myplr].InvList[ni], IDI_GOLD);
@@ -134,7 +82,7 @@ void TakeGoldCheat()
 	int i;
 	char ig;
 
-	for (i = 0; i < 40; i++) {
+	for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
 		ig = plr[myplr].InvGrid[i];
 		if (ig > 0 && plr[myplr].InvList[ig - 1]._itype == ITYPE_GOLD)
 			RemoveInvItem(myplr, ig - 1);

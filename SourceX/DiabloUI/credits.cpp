@@ -1,580 +1,256 @@
+#include <algorithm>
+#include <memory>
+#include <vector>
+
 #include "devilution.h"
 #include "miniwin/ddraw.h"
 
 #include "DiabloUI/diabloui.h"
+#include "DiabloUI/credits_lines.h"
 #include "DiabloUI/art.h"
 #include "DiabloUI/art_draw.h"
 #include "DiabloUI/fonts.h"
 
-#define CREDIT_LINES 13
-
 namespace dvl {
 
-int creditLine;
-int ybase;
-int lastYbase;
-int lineCount;
-bool creditEnd;
+namespace {
 
-char *the_long_credits[] = {
-	"Game Design",
-	"	Blizzard North",
-	"",
-	"Senior Designers",
-	"	Erich Schaefer, David Brevik",
-	"",
-	"Additional Design",
-	"	Max Schaefer, Eric Sexton, Kenneth Williams",
-	"",
-	"Lead Programmer",
-	"	David Brevik",
-	"",
-	"Senior Programmers",
-	"	Richard Seis, Doron Gartner,",
-	"	Patrick Wyatt, Mike O'Brien",
-	"",
-	"Programming",
-	"	Peter Brevik, Robin van der Wel, Jon Morin",
-	"",
-	"Special Guest Programmers",
-	"	Collin Murray, Frank Pearce",
-	"",
-	"Battle.net Programming",
-	"	Mike O'Brien, Mike Morhaime, Dan Liebgold",
-	"",
-	"Serial Communications Programming",
-	"	Jeff Strain, Mike O'Brien",
-	"",
-	"Installer Programming",
-	"	Bob Fitch, Patrick Wyatt",
-	"",
-	"Art Directors",
-	"	Erich Schaefer, Samwise Didier",
-	"",
-	"Artwork",
-	"	Michio Okamura, Eric Sexton, Ben Haas, Patrick Tougas,",
-	"	Kelly Johnson, Erich Schaefer, Max Schaefer, Hugh Tom",
-	"	Byrne, Roman Kenney, Samwise Didier, Dave Berggren,",
-	"	Micky Neilson, Eric Flannum, Justin Thavirat, Brian",
-	"	Sousa, Stu Rose, Nick Carpenter, Joeyray Hall",
-	"",
-	"Technical Artwork",
-	"	Christopher Root, Mark Sutherland,",
-	"	Robert Djordjevich, Jeffrey Vaughn",
-	"",
-	"Cinematic Art Directors",
-	"	Duane Stinnett, Matt Samia",
-	"",
-	"3D Cinematic Artwork",
-	"	Duane Stinnett, Matt Samia, Rob McNaughton,",
-	"	Eric Flannum, Dave Pursley, Micky Neilson,",
-	"	Maxx Marshall, Trevor Jacobs, Brian Sousa,",
-	"	Samwise Didier, Ron Smorynski, Ben Haas, Patrick Tougas",
-	"",
-	"Cinematic Technical Artwork",
-	"	Joeyray Hall ",
-	"",
-	"Executive Producer",
-	"	Allen Adham",
-	"",
-	"Producer",
-	"	Bill Roper",
-	"",
-	"Associate Producer",
-	"	James Phinney",
-	"",
-	"Diablo Strike Team",
-	"	Allen Adham, Ron Millar, Mike O'Brien,",
-	"	James Phinney, Bill Roper, Patrick Wyatt",
-	"",
-	"Music",
-	"	Matt Uelmen",
-	"",
-	"Sound Design",
-	"	Matt Uelmen, Glenn Stafford",
-	"",
-	"Cinematic Music & Sound",
-	"	Glenn Stafford, Matt Uelmen",
-	"",
-	"Voice Production, Direction & Casting",
-	"	Mark Schwarz, Glenn Stafford, Bill Roper",
-	"",
-	"Script & Story",
-	"	Erich Schaefer, Eric Sexton,",
-	"	Chris Metzen, Bill Roper",
-	"",
-	"Voice Editing",
-	"	Glenn Stafford",
-	"",
-	"Voices",
-	"	Michael Haley, Glynnis Talken, Michael Gough,",
-	"	Paul Eiding, Lani Minella, Steve Brodie, Bill Roper,",
-	"	Mark Schwarz, Glenn Stafford, Chris Metzen, Max Schaefer",
-	"",
-	"Recording Engineer",
-	"	Robert Koenigsberg",
-	"",
-	"Manual Design & Layout",
-	"	Peter Underwood, Jeffrey Vaughn,",
-	"	Chris Metzen, Bill Roper",
-	"",
-	"Manual Artwork",
-	"	Samwise Didier, Chris Metzen,",
-	"	Roman Kenney, Maxx Marshall",
-	"",
-	"Provisional Director of QA (Lead Tester)",
-	"	Shane Dabiri",
-	"",
-	"QA Assault Team (Testers)",
-	"	Christopher Cross, Mike Givens, Dave Hale,",
-	"	Brian \"Doc\" Love, Hung Nguyen, Dean Shipley,",
-	"	Chris Sigaty, Ian Welke, Jamie Wiggs",
-	"",
-	"QA Special Ops Team (Compatibility Testers)",
-	"	Adam Maxwell, Russell \"Rug\" Miller",
-	"",
-	"QA Artillery Support (Additional Testers) ",
-	"	Rich Alcazar, Mike Jones, Rev. Dan Moore, Matt Morris,",
-	"	Mark Pfeiffer, Harish \"Pepe the Enforcer\" Rao, Chris Millar",
-	"",
-	"QA Counterintelligence",
-	"	Alan Dabiri, Jesse McReynolds, Walter Takata",
-	"",
-	"Order of Network Information Services",
-	"	Robert Bridenbecker, Jason \"Brother Shaggy\" Schmit,",
-	"	Jamie \"Brother Gug\" Steigerwald, Richard Seis ",
-	"",
-	"Customer Support",
-	"	John Schwartz, Vic Larson, Chad Chaudry, Mick Yanko,",
-	"	Brandon Riseling, Kirk Mahony, Tony Hardy, Richard",
-	"	Amtower, Collin Smith, Andrew Edwards, Roger Eberhart",
-	"",
-	"Sales",
-	"	Jorge Rivero, Rob Beatie",
-	"",
-	"Dunsel",
-	"	Alan Dabiri",
-	"",
-	"Mr. Dabiri's Background Vocalists",
-	"	Karin Colenzo, Christina Cade,",
-	"	Kim Farrington, Melissa Edwards",
-	"",
-	"Public Relations",
-	"	Linda Duttenhaver, Susan Wooley",
-	"",
-	"Marketing",
-	"	John Patrick, Steve Huot, Neal Hubbard, Kathy Carter",
-	"",
-	"International Sales",
-	"	Ralph Becker, Chris Yoshimura",
-	"",
-	"U.S. Sales",
-	"	Todd Coyle, Danny Kearns",
-	"",
-	"Manufacturing",
-	"	John Goodman, Tom Bryan",
-	"",
-	"Legal & Business",
-	"	Paula Duffy, Eric Roeder, Paul Sams, Kenneth Williams",
-	"",
-	"Special Thanks To",
-	"	Primenet, Earthlink, AOL, Compuserve, ATI, Matrox, STB, ",
-	"	Creative Labs, Logitech, U.S. Robotics, Gravis, Cyrix",
-	"",
-	"Thanks To",
-	"	Ian Colquhoun, Rod Shean, Brian Fitzgerald, Sharon Schafer, Todd ",
-	"	Schafer, Richard and Sandra Schaefer, Rick Bowles, Greg Bogden, ",
-	"	Cindy Sievert, Brad Mason, Chuck Goldman, Karin Colenzo, Wendy ",
-	"	Brevik, Jennie Brevik, Hanna Carroll, Katie Newell, Karen Weiss, ",
-	"	Kurt Beaver, Stan McDonald, Brian Sexton, Michael Wan, Megan ",
-	"	Williams, Jessica Gensley, Beth Ann Parks, Brian Piltin, Johnathan ",
-	"	Root, Brett Supernaw, Sabeer Bhatia, Mark Rearick, Brad Mason, ",
-	"	Diane Kodama, Bernadette Sexton, Barbara Uhlmann, Patricia",
-	"	McDonald, Kris Kelley, Alissa Vaage, Denise Hernandez, Paula ",
-	"	White, Rachel Marie Hawley, Laura Gaber, Isaac Matarasso,",
-	"	Susan Stafford, Gretchen Witte, Jason Sailor, Eufemia Palomino, ",
-	"	Nathalie Didier, Nicole Welke, Dawn Caddel, Anna-Marcelle ",
-	"	Okamura, Amber Okamura, Megan Okamura Tracey McNaughton, ",
-	"	Trisha Ann Ochoa, Annie Strain, Dr. Gregory T. Street, Ray the Soda ",
-	"	Guy, Sam Raimi, A. Guinness Brewing Co., John Woo, Chow Yun Fat, ",
-	"	Jackie Chan,Proposition 215, Rumiko Takahashi, Bunchy & Mason, ",
-	"	The Friends of Stan, The Zoo Crew, Team Hamro, Brazil 2001, RUSH, ",
-	"	Cornholio, THE BROS., Dar, Emeril Lagasse, Tom Waits, Ice-Cube, ",
-	"	The Strike Team Deflectors, Tony Levin, Big Jim and the Twins, ",
-	"	Jag`rmeister, The Megasphere, Condor, The Allower, The Sunday ",
-	"	Night Group, Gravitar, Steinway Pianos, Round Table Pizza, The Poxy ",
-	"	Boggards, Urban Mystic & Co., Caffeine, Hunter Rose, Marly ",
-	"	mediums in the box, sweet Poteen, Dave Scarpitti, TheByter, Bim ",
-	"	Man, Krissann for color, Patty at Avalon Tattoo, James, Whaleboy, ",
-	"	Dunsel Training Institute, monkeys, Dob Bole, Rootes Group, Porshe, ",
-	"	Bongo, Scarlett, Apollo, The House of Mediocrity, Amelias, The King, ",
-	"	Saag and all the folks at Davidson",
-	"",
-	"In memory of",
-	"	Lawrence and Barbara Williams",
-	"	David A. Hargrave",
-	"	Tony \"Xatre\" Collin",
-	"	Thomas H Sexton",
-	"",
-	"Very Special Thanks to",
-	"	Bob and Jan Davidson",
-	"	Walter Forbes",
-	"",
-	"The Ring of One Thousand",
-	"	Andrew Abernathy, Christopher Abramo, David Adams, David ",
-	"	Adcox, Marko Agterberg, Cory Aiken, Judah Altaras, John ",
-	"	Alvarez, Jose Alvarez, Richard Amable, Alexander Amaral, ",
-	"	Scott Amis, Vincent Amoroso, Mark An, David Andersen, Jason ",
-	"	Andrew Abernathy, Christopher Abramo, David Adams, David ",
-	"	Adcox, Marko Agterberg, Cory Aiken, Judah Altaras, John ",
-	"	Alvarez, Jose Alvarez, Richard Amable, Alexander Amaral, ",
-	"	Scott Amis, Vincent Amoroso, Mark An, David Andersen, Jason ",
-	"	Andersen, Aaron Anderson, George Anderson, Matthew ",
-	"	Anderson, Michael Anderson, Sean Anderson, Robert Andrade, ",
-	"	Cerny Andre, Michael Andreev, Devin Angle, Brian Apple, ",
-	"	Brian Arbuthnot, Billy Arden, Dorian Arnold, Andre Arsenault, ",
-	"	Erik Asplund, Mark Assam, John Athey, Jason Attard, Jeff ",
-	"	Atwood, Ricky Au, Scott Avery, Rand Babcock, Steve Babel, ",
-	"	Raymond Bacalso, Ed Bachta, Steven Back, Scott Baeder, Alex ",
-	"	Baevski, Scott Bailey, Kenneth Baird, Thomas Baker, Todd ",
-	"	Bala, Jan Ball, Greg Baltz, Blake Baltzley, Doug Bambrick, Wes ",
-	"	Bangerter, Paul Barfuss, Chris Barghout, Dave Barnebey, Jon ",
-	"	Barnhart, Terje Barth, Nicole Baskin, Bernard Baylen, Ryan ",
-	"	Bear, Phil Bedard, Todd Belcher, Chip Bell, Erez Ben-Aharon, ",
-	"	Jonathan Bender, Nick Bennett, Ireney Berezniak, Ted Berg, ",
-	"	Gunnar Bergem, Russell Beuker, Ed Bickford, Stephen Biles, ",
-	"	John Billdt, Gerald Binder, John Bird, Hannah Blackerby, Tom ",
-	"	Blackerby, Clayton Blackwell, Thomas Blake, Shawn Blaszak, ",
-	"	Daniel Bliss, Fred Bliss, Jeff Bliss, Jon Blum, Rune Boersjoe, ",
-	"	Andrew Boggs, Dave Boisvenu, Joe Bolt, John Bonds, Jeff ",
-	"	Borenstein, Dorian Borin, Ed Boris, Bartholomew Botta, ",
-	"	Michael Boutin, Michael Boyd, Charles Boyer, Mike ",
-	"	Boyersmith, Michael Boyko, Eric Bradberry, John Brandstetter, ",
-	"	Ryan Breding, Paul Brinkmann, Patrick Briscoe, Scott Brisko, ",
-	"	Jeremy Britton, Adrian Broadhead, Glenn Brouwer, Joe Brown, ",
-	"	Sébastien Brulotte, Darrell Brunsch, William Bryan, Jason ",
-	"	Bucher, Chris Buchinger, Clayton Buckingham, John Buckles, ",
-	"	David Bugay, Ed Bujone, Erik Burgess, Gabriel Burkett, Chris ",
-	"	Burnes, Richard Butler, Jeffrey Bye, Dougall Campbell, Donnie ",
-	"	Cannon, Shane Cantrell, Connor Caple, Daniel Carey, James ",
-	"	Carlton, Michael Carmel, Mike Carpenter, Ronald Carruthers, ",
-	"	Phil Carter, Bryce Cartmill, Eric Cartwright, Anthony Caruso, ",
-	"	Lon Casey, Tim Caster, Aaron Chan, Otto Chan, Gene Chang, ",
-	"	Hsiao-Lung Chang, William Chang, George Chappel, Larry ",
-	"	Charbonneau, Troy Chase, Bruce Chen, Chun Hsien Chen, Sam ",
-	"	Chen, Tzu-Mainn Chen, Mike Cheng, Chris Chiapusio, Damien ",
-	"	Chiesa, Nick Chin, Nim Ching, Jonathan Chinn, Michael Chinn, ",
-	"	Philander Chiu, Thayne Christiansen, Philip Chui, Steve ",
-	"	Cintamani, Richard Ciordia, Colin Clark, Steve Clark, Samuel ",
-	"	Clements, Meredith Clifton, Jeff Cohen, Dale Colton, Dax ",
-	"	Combe, Matt Compton, Jacob Conklin, Richard Conn, Zac ",
-	"	Cook, Tim Coolong, Gregory Coomer, Dennis Cosgrove, Kelly ",
-	"	Couch, Andrew Coulter, Eric Coutinho, David Coutts, James ",
-	"	Craig, John Craig, Kazial Craig, John Crawford, Marcelo ",
-	"	Crespo, Orville Crews, Tim Cristy, Elmer Crosby III, Russell ",
-	"	Cullison, Ryan Cupples, Andrew Dagley, Steve Dallaire, Richard ",
-	"	Dalton, David Dandar, Pro Daulo, Rob Dautermann, Mike ",
-	"	Davies, Kalieb Davis, Marshall Davis, Ronald Davis, Danny De ",
-	"	Bie, Marc De Filippis, Myles Deighton, Kent Dejarnett, Anthony ",
-	"	Delarosa, Neil Dempster, Peter Denitto, Joaquim Dentz, Scott ",
-	"	Dewar, Anish Dhingra, Philip Dhingra, David Diaz, Stewart ",
-	"	Dicks, Brad Dietz, Josh Dietz, Colleen Diggins, Mike Ditchburn, ",
-	"	Eric Dittman, Allen Do, Huy Doan, Matthew Dolman, Antoine ",
-	"	Dongois, Eamonn Donohoe, Bill Dorell, Mark Dorison, Dan ",
-	"	Dorsett, Chris Dorsey, Jim Dosé, Willis Doss, Chin Du, William ",
-	"	Dubis, Timothy Duewell, Brandon Dunn, Andrew Durham, Don ",
-	"	Duvall, Kevin Dvojack, Daniel Eaton, Paul Eberting, Eric ",
-	"	Echelbarger, Lance Eddleman, Ben Eggers, David Eggum, John ",
-	"	Ehde, Brian Eikenberry, Patrick Elven, Peter Engdahl, Philip ",
-	"	Engdahl, Michael Ennis, Darren Eslinger, Eric Ezell, Darren ",
-	"	Falslev, Stephen Feather, Tony Fenn, Ben Ferguson, Mike ",
-	"	Fernandez, Gwendal Feuillet, Guy Fietz, Julian Figueroa, Dale ",
-	"	Fillpot, Stan Finchem, Michael Finley, Nick Fisher, William ",
-	"	Fisher, Mark Fitlin, Dave Flatt, Joel J. Flores, John Folkers, ",
-	"	Steven Forgie, Tom Forsythe, Matthew Foster, Scott Francis, ",
-	"	Jim Frank, Paulo Fraser, Glenn French, Kurt Frerichs, Chris ",
-	"	Frey, Mark Friedman, Charles Friedmann, Dan Friend, Kirk ",
-	"	Fry, Aaron Fu, Erik Gaalema, Brandon Gabbard, Phil Gagner, ",
-	"	Tommy Gannon, David Gappmayer, Chris Garrison, Tony ",
-	"	Garrison, David Gasca, Jeremy Gasser, Michael Geist, Michael ",
-	"	Genereux, Daniel Genovese, Josh Gerwin, Paul Gibson, William ",
-	"	Gilchrist, Gabriel Gils Carbo, Chad Glendenin, Ryan Glinski, ",
-	"	Dean Gobrecht, Andrew Goldfinch, David Goodman, Mark ",
-	"	Goodson, Matt Gordon, Frank Gorgenyi, Sean Gould, Perry ",
-	"	Goutsos, Ed Govednik, Michael Grayson, Chris Green, Justin ",
-	"	Grenier, Jeff Greulich, Don Grey, Rob Griesbeck, Don Griffes, ",
-	"	Kimberly Griffeth, Jay Grizzard, Don Gronlund, Joe Gross, ",
-	"	Troy Growden, Greg Guilford, David Gusovsky, Jeremy ",
-	"	Guthrie, Adam Gutierrez, James Guzicki, Matthew Haas, Matt ",
-	"	Hadley, Ryan Hagelstrom, Bobby Hagen, Ben Hall, Brian Hall, ",
-	"	Kris Hall, Calvin Hamilton, Kris Hamilton, Bo Hammil, Dave ",
-	"	Hans, Rick Hansen, Robert Harlan, Travis Harlan, Seth ",
-	"	Harman, Jeff Harris, Shawn Hartford, Adam Hartsell, Neil ",
-	"	Harvey, Ray Hayes, John Hein, Chris Heinonen, Christer ",
-	"	Helsing, Chris Hempel, Dustin Hempel, Mathieu Henaire, Matt ",
-	"	Henry, Chuck Herb, Michael Herron, Sage Herron, Thomas ",
-	"	Herschbach, Cliff Hicks, Nelson Hicks, Paul Hierling, William ",
-	"	Hiers, Mike Higdon, Tim Hildebrand, Casey Hinkle, Ryan ",
-	"	Hitchings, Wes Hix, Alan Ho, Jenson Ho, Alan Hoffman, Jeff ",
-	"	Hoffman, Eleanor Hoffmann, Steve Hogg, Richard Holler, Brian ",
-	"	Homolya, Wade Hone, Joe Horvath, Jeff Howe, Eric Hudson, ",
-	"	Glen Huey, Chris Hufnagel, Joshua Hughes, Melissa Hughes, ",
-	"	Arief Hujaya, Thomas Hulen, Ryan Hupp, Justin Hurst, Rick ",
-	"	Hutchins, Steve Iams, Mike Iarossi, Bjorn Idren, Johan Idrén, ",
-	"	Micah Imparato, Joe Ingersoll, David Ingram, Greg Ipp, Rodney ",
-	"	Irvin, Darin Isola, Justin Itoh, Mario Ivan, Fredrik Ivarsson, ",
-	"	Dax Jacobson, Michael Jacques, Stevens Jacques, Duane Jahnke, ",
-	"	William Jambrosek, Daniel Janick, Narciso Jaramillo, Neil ",
-	"	Jariwala, Harvie Jarriell, Scott Javadi, Joe Jenkins, Bart ",
-	"	Jennings, Paul Jennings, Julien Jenny, Jason Jensen, Martin ",
-	"	Jeremy, Mark Jeschke, Andy Johnson, James Johnson, Leigh ",
-	"	Johnson, Mark Johnson, Rupert Johnson, Clyde Jones, Michael ",
-	"	Jones, Tim Jordan, Ben Judy, Michael Kaae, Steve Kaczkowski, ",
-	"	Neville Kadwa, Brian Kaisner, Yoshihisa Kameyama, Michael ",
-	"	Kanemura, Daniel Kao, Eric Karabin, Ben Katz, Christopher ",
-	"	Kawamura, Erick Kayser, Craig Keddie, Kevin Kelley, Bryan ",
-	"	Kemp, Michael Kendrigan, Dan Kerber, Timothy Kerber, Tomi ",
-	"	Keski-Heikkilä, Greg Kettering, Nathan Kilber, Howard Kim, ",
-	"	Orrin Kinion, Jon Kirst, David Kitch, John Klingbeil, Neil ",
-	"	Klopfenstein, Kerry Knouse, David Knox, Said Kobeissi, Jeff ",
-	"	Koches, Hades Kong, Jeff Kong, Kevin Konkle, Steve Koon, ",
-	"	David Koontz, Dan Koopmann, Steve Koskela, Kuan Kou, ",
-	"	Cameron Kracke, Jensen Krage, York Kramer, Cedar Kraus, ",
-	"	Jason Kraus, Bobby Krimen, Melissa Krispli, Steven Krispli, ",
-	"	James Kruger, Charles Kubasta, Kimmo Kulonen, Frank ",
-	"	Lackaff, Michael Lacour, Matt Lake, Jason Landry, Hans Erik ",
-	"	Lange, Michael Laramee, Brad Lascelle, Pat Laschinger, Alan ",
-	"	Lau, Sean Laurence, Anthony Lavey, Jr., Gary Le, Huey Le, ",
-	"	Stephane Le Roy Audy, Lim Leandro, Charles Lee, Conroy Lee, ",
-	"	Mike Lee, Shih-Hang Lee, Jonathan Leipert, Jason Lemann, ",
-	"	Ron Lenzi, Mitchell Leon, Stephanie Lesniewski, Brendan ",
-	"	Lewis, Robert Lewis, Sam Liao, Tom Liem, Adam Ligas, Steven ",
-	"	Liggett, Roger Lilley, Benjamin Lim, Jeff Lindholm, Johnson ",
-	"	Linwood, David Litchman, Bruce Lithimane, William Liu, ",
-	"	Wilson Liu, Robert Lobdell, Chris Logan, Razvan Loghin, Jack ",
-	"	Loh, George Loo, Russell Love, Juan Loyola, Ricardo Lozano, ",
-	"	Mike Luban, Tim Luc, Henry Luciano, Dianne Ludwig, Charles ",
-	"	Lueras, Derek Lung, Phong Ly, Scott MacGillivray, Dave Mack, ",
-	"	Alec Mak, Steve Mamayek, Michael Mancini, Daniel Mann, ",
-	"	Michael Mann, Chris Manofsky, Abdullah Marafie, Nicholas ",
-	"	Marcy, Piompino Mariano, Bob Marius, Trey Marshall, Dane ",
-	"	Martin, Gregg Martin, Renard Martin, Rich Martin, Scott ",
-	"	Martin, Thomas Martin, Jon Masters, Christopher Mathews, ",
-	"	Jay Mathis, Marc Matthews, Chris Mazur, Doug McBride, ",
-	"	Mackey McCandlish, Robin McCollum, Steven McCombie, ",
-	"	Andy McConnell, Michael McCourt, Bill McCoy, Doug ",
-	"	McCracken, Michael McDeed, Robert McDonald, Steve ",
-	"	McEachron, Craig McGee, Ryan McKenzie, Michael McKeown, ",
-	"	Daniel McMahon, Colin McMillan, Ian McWilliam, Mark ",
-	"	McWilliams, Khann Mean, Bryan Meason, Kenneth Medley, ",
-	"	Jeff Meek, John Mehr, Christopher Mende, Brian Mendenhall, ",
-	"	Peter Mengel, Michael Mersic, Mike Messom, Don Metcalf, ",
-	"	Gary Metzker, Scott Meyer, Joseph Michaud, Andrew Mielke, ",
-	"	Travis Mikalson, Troy Milburn, Ike Miller, Ronnie Miller, Sean ",
-	"	Miller, Steve Miller, Arthur Min, David Minniti, Brenda ",
-	"	Mirsberger, Bill Misek, David Mitchell, Joseph Mobley, Robert ",
-	"	Mollard, Will Mooar, Curtis Moore, Matthew Moore, Al ",
-	"	Morales, Ryan Moran, Lance Mortensen, Karel Mrazek, Ward ",
-	"	Mullee, William Munoz, Kirk Munro, Craig Murray, Shawn P. ",
-	"	Murray, Travis Murray, Michael Mushrush, Tom Mustaine, ",
-	"	David Myers, Joseph Myett, Morgan Najar, Kenta Nakamura, ",
-	"	Damian Nastri, Joshua Naumann, Nick Navarro, Douglas ",
-	"	Neitzel, Arnold Ng, Anthony Nguyen, Steve Nguyen, Joseph ",
-	"	Nicholas, Charles Nickolaus, Jon Nisbet, Patrick Nomee, David ",
-	"	Norling-Christensen, Bobby Norton, Joseph Nottingham, Frank ",
-	"	O'Connor, Jon Oden, David Oester, Lavern Ogden, Zach ",
-	"	Oglesby, Lucas Oldfield, Toby Olsson, Aaron Ondek, Sean ",
-	"	O'Neill, John Orlando, Samuel Orlando, Donovan Orloski, ",
-	"	David Pai, Nikolas Paldan, David Palek, John Palmieri, Anthony ",
-	"	Palmisano, Sanjay Pandit, Jesse Park, Alex Parker, Jimmy ",
-	"	Pasher, Lukasz Paszek, Andy Patterson, William Pelletier, ",
-	"	Duane Pemberton, Ivan Pemic, Kelly Pendergast, Mike ",
-	"	Penezich, Jon Penk, Willie Penley, Ron Penna, Matthew ",
-	"	Pennington, Kevin Pereira, Ross Perez, Ken Perkins, Brian ",
-	"	Peterik, Kelly Peterson, Chris Phillips, Rod Pickett, Cameron ",
-	"	Pierce, Reuben Pierce, Tim Pilger, Billy Pippin, Brad Plank, ",
-	"	Brian Plant, Craig Platt, David Plunkett, Michael Politi, Albert ",
-	"	Portillo, Brian Powell, David Powell, Franklin Powers Jr., Alan ",
-	"	Precourt, Michael Pronchick, Julian Quintana, Justin Radziej, ",
-	"	Steven Rajewski, Shawn Rawles, Ian Reardon, Marc Reed, Ric ",
-	"	Reichelt, Judd Reiffin, David Reilly, Garry Reisky, Drew ",
-	"	Ressler, Robert Reynolds, Walter Reynolds, Michael Rice, Ian ",
-	"	Richards, James Richards, Raymond Richmond, Dustin Riggs, ",
-	"	Keith Riskey, Brian Ro, Scott Roberts, Jorge Rodriguez, Chad ",
-	"	Rogers, Clint Rogers, Robert Rogers, Steve Rogers, Ethan Roots, ",
-	"	Ron Roque, William Ross, Sebastian Rossi, Jeff Rostis, Ben ",
-	"	Roth, Demar Roth, Rich Rouse, Oleg Rovner, Jonathan Roy, ",
-	"	Drew Rozema, Mike Ruggles, Mathias Russ, James Russell, Jim ",
-	"	Rutledge, James Rutter, Dave Ryder, Chris Salvadras, Anders ",
-	"	Samnerud, Nick Sanders, Jakob Sandgren, Joe Sapinsky, Tyler ",
-	"	Sargent, Jonas Saunders, Mark Savage, Scott Sawyer, Robert ",
-	"	Scanlon, Trevor Schaben, Aaron Schmidt, Chris Schmidt, Greg ",
-	"	Schultz, Nicholas Schumacher, Scott Schumacher, Kevin Scott, ",
-	"	Rastislav Seffer, Robert Seidler, Corey Sellers, Justin Sellers, ",
-	"	Marc Senecal, George Shannon, Ian Sheffield, Anoop Shekar, ",
-	"	Sandeep Shekar, Kevin Shelton, Leon Shephard, Eric Shepperd, ",
-	"	Jeffrey Shneidman, Samuel Shockey, Mark Shoemaker, Mike ",
-	"	Shupe, Sean Sibbet, Brian Sidharta, Jimmy Sieben, Eric ",
-	"	Siemens, William Silva, Jody Simpson, Jatinder Singh, Sonia ",
-	"	Siu, Omar Skarsvaag, Tom Skiba, Carl Skow, David Skuse, ",
-	"	Robert Slifka, Brent Smith, C. Eric Smith, Jared Smith, Jeffrey ",
-	"	Smith, Owen Smith, Shannon Smith, Steven Smith, Edward Smola, ",
-	"	Matthew Sneep, Eric Snow, Brad Sobel, Jean-Pierre Solignac, Rasmus ",
-	"	Sørensen, Andrew Sorg, Poppy Southcott, Ross Specter, Erik Spencer, ",
-	"	Keith Spencer, Chris Springer, Erikson Squier, Dean St. Onge, Stewart ",
-	"	Stanfield, John Stanley, Terrence Staton, Benjamin Stein, James ",
-	"	Steiner, David Steyer, William Stickney, Chris Stiff, James Stofer, ",
-	"	Norm Storch, Patrick Stovall, Brandon Sturgeon, Sean Stutler, Anne ",
-	"	Sukprasert, Jamal Sullivan, Bruce Sully, Jay Sung, Park Sung ",
-	"	Joon, Stein Sunnarvik, Nathan Surginer, Robert Swaringen, Lee ",
-	"	Sweeney, David Szabo, Scott Taft, Christian Takvam, Patrick ",
-	"	Talaska, Tadashi Tamaki, Simon Tan, Mark Taraba, Khon-",
-	"	Whey Tay, John Taylor, Keith Taylor, Donald Temean, Phillip ",
-	"	Tesar, Pete Thao, Brian Thomas, Keith Thomas, Speed Thomas, ",
-	"	Miles Thorpe, Paul Thurrott, Mike Timbol, Nicholas Timmins, ",
-	"	Tom Tobin, Robert Towster, Hien Tran, Timothy Traviss, Toby ",
-	"	Traylor, Tony Treadwell, George Tremoulis, Paul Trinh, Thanh ",
-	"	Trinh, Chris Tristan, Brad Truswell, Jason Tryon, Mike Tu, ",
-	"	Gernel Tuazon, Eric Tuggle, Mike Turnbull, Lyle Ubben, ",
-	"	Amilcar Ubiera, Robert Ulozas, Arie Upton, Mark Van Noy, ",
-	"	Matthew Van Sickler, Jake Vantlin, Tony Vasquez, Brady ",
-	"	Vauclin, Gianpiero Vecchi, Chad Verrall, Chris Vicente, Brett ",
-	"	Vickers, David Vickery, Jonathan Vilante, Simon Vince, Ben ",
-	"	Vinson, David Voelkert, Paul Vogt, Nicholas Voorhies, Robert ",
-	"	Vreeland, Mike Vrooman, Rick Vuong, Brian Wachhaus, Todd ",
-	"	Wachhaus, Caine Wade, Mathew Wadstein, Kenneth Wagenius, ",
-	"	Trevor Wagner, John Wagstaff, Asad Wahid, Richard ",
-	"	Wahlberg, Helio Wakasugui, Richard Walker, Wilkins Walker, ",
-	"	Matthew Wallace, Daniel Walsh, Joel Walters, Andrew Waltz, ",
-	"	Tom Wang, Tony Wang, Jay Ward, Jonathan Ward, John ",
-	"	Warner, Mark Warren, Matt Washer, Mike Watson, Sean ",
-	"	Wattles, Mike Wayne, Christian Wehba, Benjamin Wei, Richard ",
-	"	Weight, Cary Wells, David Wenck, Bill Werring, Leonard ",
-	"	Wesley, Marlon West, Mikael Westerbacka, Brian Wharry, ",
-	"	Chris White, Chris White, Jeremy White, Greg Whitlock, Gary ",
-	"	Widener, Marty Wilfried, Israel Wilkinson, Michael Willams, ",
-	"	Derek Williams, Sean Willson, Nitzan Wilnai, Jim Wilson, ",
-	"	Karsten Wilson, William Wilt, Tim Winn, Brian Winzeler, Matt ",
-	"	Wise, Lee Wissmiller, Brendan Wolfe, Daniel Wolpert, Felix ",
-	"	Wong, Power Wong, Tony Wong, Tim Wood, Timothy Wood, ",
-	"	Jeremy Woods, Michael Woods, Bill Wright, Keith Wright, ",
-	"	Patrick Wu, Gang Xie, Robert Yao, Sun Lim Yap, Stephen Yau, ",
-	"	Erek Yedwabnick, Christopher Yee, Nick Yee, Juan Yip, David ",
-	"	Young, Rob Young, Seth Young, Alex Yu, Terry Zahn, Jia-Ning ",
-	"	Zhang, Eric Zieg, Jordan Zielin, Clint Zimmerman, Matt Zinke ",
-	"",
-	"",
-	"",
-	"",
-	"	No souls were sold in the making of this game.",
-	"",
-	"",
-	" ",
-	" ",
-	" ",
-	NULL
+const SDL_Rect VIEWPORT = { SCREEN_X, SCREEN_Y + 114, SCREEN_WIDTH, 251 };
+constexpr int SHADOW_OFFSET_X = 2;
+constexpr int SHADOW_OFFSET_Y = 2;
+constexpr int LINE_H = 22;
+
+struct SurfaceDeleter {
+	void operator()(SDL_Surface *surface)
+	{
+		SDL_FreeSurface(surface);
+	}
 };
 
-void credts_Load()
+using SurfacePtr = std::unique_ptr<SDL_Surface, SurfaceDeleter>;
+
+struct CachedLine {
+	CachedLine() = default;
+
+	explicit CachedLine(std::size_t index, SurfacePtr surface)
+	    : index(index)
+	    , surface(std::move(surface))
+	    , palette_version(pal_surface_palette_version)
+	{
+	}
+
+	std::size_t index;
+	SurfacePtr surface;
+	decltype(pal_surface_palette_version) palette_version;
+};
+
+SurfacePtr RenderText(const char *text, SDL_Color color)
 {
-	LoadBackgroundArt("ui_art\\credits.pcx");
-	LoadTtfFont();
+	if (text[0] == '\0')
+		return nullptr;
+	SDL_Surface *result = TTF_RenderUTF8_Solid(font, text, color);
+	if (result == nullptr)
+		SDL_Log(TTF_GetError());
+	return SurfacePtr(result);
 }
 
-void credts_Free()
+CachedLine PrepareLine(std::size_t index)
 {
-	ArtBackground.Unload();
-	UnloadTtfFont();
+	const char *contents = CREDITS_LINES[index];
+	if (contents[0] == '\t')
+		++contents;
+
+	const SDL_Color shadow_color = { 0, 0, 0, 0 };
+	auto text = RenderText(contents, shadow_color);
+
+	// Precompose shadow and text:
+	SurfacePtr surface;
+	if (text != nullptr) {
+		// Set up the target surface to have 3 colors: mask, text, and shadow.
+		surface.reset(
+		    SDL_CreateRGBSurfaceWithFormat(0, text->w + SHADOW_OFFSET_X, text->h + SHADOW_OFFSET_Y, 8, SDL_PIXELFORMAT_INDEX8));
+		const SDL_Color &mask_color = { 0, 255, 0, 0 }; // Any color different from both shadow and text
+		const SDL_Color &text_color = palette->colors[224];
+		SDL_Color colors[3] = { mask_color, text_color, shadow_color };
+		if (SDLC_SetSurfaceColors(surface.get(), colors, 0, 3) <= -1)
+			SDL_Log(SDL_GetError());
+		SDLC_SetColorKey(surface.get(), 0);
+
+		// Blit the shadow first:
+		SDL_Rect shadow_rect = { SHADOW_OFFSET_X, SHADOW_OFFSET_Y, 0, 0 };
+		if (SDL_BlitSurface(text.get(), nullptr, surface.get(), &shadow_rect) <= -1)
+			ErrSdl();
+
+		// Change the text surface color and blit again:
+		SDL_Color text_colors[2] = { mask_color, text_color };
+		if (SDLC_SetSurfaceColors(text.get(), text_colors, 0, 2) <= -1)
+			ErrSdl();
+		SDLC_SetColorKey(text.get(), 0);
+
+		if (SDL_BlitSurface(text.get(), nullptr, surface.get(), nullptr) <= -1)
+			ErrSdl();
+	}
+
+	return CachedLine(index, std::move(surface));
 }
 
-void credts_Render()
+/**
+ * Similar to std::deque<CachedLine> but simpler and backed by a single vector.
+ */
+class LinesBuffer {
+public:
+	LinesBuffer(std::size_t capacity)
+	    : start_(0)
+	    , end_(0)
+	    , empty_(true)
+	{
+		data_.reserve(capacity);
+		for (std::size_t i = 0; i < capacity; ++i)
+			data_.push_back(CachedLine());
+	}
+
+	bool empty() const
+	{
+		return empty_;
+	}
+
+	CachedLine &front()
+	{
+		return data_[start_];
+	}
+
+	CachedLine &back()
+	{
+		return data_[end_];
+	}
+
+	CachedLine &operator[](std::size_t i)
+	{
+		return data_[(start_ + i) % data_.size()];
+	}
+
+	std::size_t size() const
+	{
+		if (empty_)
+			return 0;
+		return start_ < end_ ? end_ - start_ : data_.size();
+	}
+
+	void pop_front()
+	{
+		start_ = (start_ + 1) % data_.size();
+		if (start_ == end_)
+			empty_ = true;
+	}
+
+	void push_back(CachedLine &&line)
+	{
+		end_ = (end_ + 1) % data_.size();
+		data_[end_] = std::move(line);
+		empty_ = false;
+	}
+
+private:
+	std::size_t start_;
+	std::size_t end_;
+	bool empty_;
+	std::vector<CachedLine> data_;
+};
+
+class CreditsRenderer {
+
+public:
+	CreditsRenderer()
+	    : lines_(VIEWPORT.h / LINE_H + 1)
+	    , finished_(false)
+	    , prev_offset_y_(0)
+
+	{
+		LoadBackgroundArt("ui_art\\credits.pcx");
+		LoadTtfFont();
+		ticks_begin_ = SDL_GetTicks();
+	}
+
+	~CreditsRenderer()
+	{
+		ArtBackground.Unload();
+		UnloadTtfFont();
+	}
+
+	void Render();
+
+	bool Finished() const
+	{
+		return finished_;
+	}
+
+private:
+	LinesBuffer lines_;
+	bool finished_;
+	decltype(SDL_GetTicks()) ticks_begin_;
+	int prev_offset_y_;
+};
+
+void CreditsRenderer::Render()
 {
+	const int offset_y = -(VIEWPORT.y - LINE_H) + (SDL_GetTicks() - ticks_begin_) / 40;
+	if (offset_y == prev_offset_y_)
+		return;
+	prev_offset_y_ = offset_y;
+
 	DrawArt(0, 0, &ArtBackground);
+	if (font == nullptr)
+		return;
 
-	int lineHeight = 22;
+	const std::size_t lines_begin = std::max(offset_y / LINE_H, 0);
+	const std::size_t lines_end = std::min(lines_begin + (VIEWPORT.h - 1) / LINE_H + 1, CREDITS_LINES_SIZE);
 
-	ybase = GetAnimationFrame(lineHeight, 40);
-
-	if (lastYbase != ybase && ybase == 0) {
-		if (creditEnd) {
-			lineCount--;
-			creditLine++;
-		} else {
-			if (the_long_credits[creditLine + CREDIT_LINES + 1] == NULL) {
-				creditEnd = true;
-			}
-			creditLine++;
-		}
+	if (lines_begin >= lines_end) {
+		if (lines_end == CREDITS_LINES_SIZE)
+			finished_ = true;
+		return;
 	}
-	lastYbase = ybase;
 
-	if (font != NULL) {
-		SDL_Color color = palette->colors[224], black_color = { 0, 0, 0, 0 };
-		SDL_Surface *text_surface, *shadow_surface;
-		for (int i = 0; i < lineCount; i++) {
-			if (creditLine + i < 0) {
-				continue;
-			}
+	while (!lines_.empty() && lines_.front().index != lines_begin)
+		lines_.pop_front();
+	if (lines_.empty())
+		lines_.push_back(PrepareLine(lines_begin));
+	while (lines_.back().index + 1 != lines_end)
+		lines_.push_back(PrepareLine(lines_.back().index + 1));
 
-			int offset = 0;
-			int x = 31;
-			const int y = (i * lineHeight) - ybase - lineHeight;
-			if (*the_long_credits[creditLine + i] == '	') {
-				offset = 1;
-				x += 40;
-			}
+	SDL_SetClipRect(pal_surface, &VIEWPORT);
+	decltype(SDL_Rect().y) dest_y = VIEWPORT.y - (offset_y - lines_begin * LINE_H);
+	for (std::size_t i = 0; i < lines_.size(); ++i, dest_y += LINE_H) {
+		auto &line = lines_[i];
+		if (line.surface == nullptr)
+			continue;
 
-			text_surface = TTF_RenderUTF8_Solid(font, the_long_credits[creditLine + i] + offset, color);
-			shadow_surface = TTF_RenderUTF8_Solid(font, the_long_credits[creditLine + i] + offset, black_color);
-			if (text_surface && shadow_surface) {
-				SDL_Rect src_rect = {
-					0,
-					static_cast<decltype(SDL_Rect().y)>(-y),
-					static_cast<decltype(SDL_Rect().w)>(text_surface->w),
-					251
-				};
+		// Still fading in: the cached line was drawn with a different fade level.
+		if (line.palette_version != pal_surface_palette_version)
+			line = PrepareLine(line.index);
 
-				// draw text shadow.
-				SDL_Rect dsc_rect2 = {
-					static_cast<decltype(SDL_Rect().x)>(SCREEN_X + x + 2),
-					SCREEN_Y + 114 + 2,
-					src_rect.w, src_rect.h
-				};
-				if (SDL_BlitSurface(shadow_surface, &src_rect, pal_surface, &dsc_rect2) <= -1) {
-					SDL_Log(SDL_GetError());
-				}
+		decltype(SDL_Rect().x) dest_x = VIEWPORT.x + 31;
+		if (CREDITS_LINES[line.index][0] == '\t')
+			dest_x += 40;
 
-				// draw text.
-				SDL_Rect dsc_rect = {
-					static_cast<decltype(SDL_Rect().x)>(SCREEN_X + x),
-					SCREEN_Y + 114,
-					src_rect.w, src_rect.h
-				};
-				if (SDL_BlitSurface(text_surface, &src_rect, pal_surface, &dsc_rect) <= -1) {
-					SDL_Log(SDL_GetError());
-				}
-				SDL_FreeSurface(text_surface);
-				SDL_FreeSurface(shadow_surface);
-			}
-		}
+		SDL_Rect dest_rect = { dest_x, dest_y, 0, 0 };
+		if (SDL_BlitSurface(line.surface.get(), nullptr, pal_surface, &dest_rect) <= -1)
+			ErrSdl();
 	}
+	SDL_SetClipRect(pal_surface, nullptr);
 }
+
+} // namespace
 
 BOOL UiCreditsDialog(int a1)
 {
-	credts_Load();
-
-	creditEnd = false;
-	lineCount = CREDIT_LINES;
-	creditLine = -lineCount;
-	lastYbase = 0;
+	CreditsRenderer credits_renderer;
 	bool endMenu = false;
 
 	SDL_Event event;
-	while (!endMenu && lineCount > 0) {
-		credts_Render();
+	do {
+		credits_renderer.Render();
 		UiFadeIn();
-
 		while (SDL_PollEvent(&event)) {
 			switch (event.type) {
 			case SDL_KEYDOWN:
@@ -585,12 +261,10 @@ BOOL UiCreditsDialog(int a1)
 				exit(0);
 			}
 		}
-	}
+	} while (!endMenu && !credits_renderer.Finished());
 	BlackPalette();
-
-	credts_Free();
 
 	return true;
 }
 
-}
+} // namespace dvl

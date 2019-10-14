@@ -40,7 +40,6 @@ bool UiItemsWraps;
 char *UiTextInput;
 int UiTextInputLen;
 
-
 namespace {
 
 int fadeValue = 0;
@@ -51,104 +50,13 @@ struct {
 	bool downArrowPressed = false;
 } scrollBarState;
 
-const char *const errorTitle[] = {
-	"SDL Error",
-	"Out of Memory Error",
-	"SDL Error",
-	"Data File Error",
-	"SDL Error",
-	"Out of Disk Space",
-	"SDL Error",
-	"Data File Error",
-	"Windows 2000 Restricted User Advisory",
-	"Read-Only Directory Error",
-};
-const char *const errorMessages[] = {
-	"Diablo was unable to properly initialize SDL.\nPlease try the following solutions to correct the problem:\n\n    Install the most recent SDL provided for your distribution.\n\nIf you continue to have problems with SDL, create an issue on GitHub:\n    https://github.com/diasurgical/devilutionX/issues\n\n\nThe error encountered while trying to initialize was:\n\n    %s",
-	"Diablo has exhausted all the memory on your system.\nMake sure you have at least 512MB of free system memory\n\nThe error encountered was:\n\n    %s",
-	"Diablo was unable to open a required file.\nPlease ensure that the diabdat.mpq is in the same folder as Devilution.\nIf this problem persists, try checking that the md5 of diabdat.mpq is either 011bc6518e6166206231080a4440b373 or 68f049866b44688a7af65ba766bef75a.\n\nThe problem occurred while trying to load %s",
-	"Diablo was unable to find the file \"ddraw.dll\", which is a component of Microsoft DirectX.\nPlease run the program \"SETUP.EXE\" on the Diablo CD-ROM and install Microsoft DirectX.\n\nIf you continue to have problems with DirectX, please contact Microsoft's Technical Support at:\n\n    USA telephone: 1-800-426-9400\n    International telephone: 206-882-8080\n    http://www.microsoft.com\n\n\nThe error encountered while trying to initialize DirectX was:\n\n    %s",
-	"Diablo was unable to find the file \"dsound.dll\", which is a component of Microsoft DirectX.\nPlease run the program \"SETUP.EXE\" on the Diablo CD-ROM and install Microsoft DirectX.\n\nIf you continue to have problems with DirectX, please contact Microsoft's Technical Support at:\n\n    USA telephone: 1-800-426-9400\n    International telephone: 206-882-8080\n    http://www.microsoft.com\n\n\nThe error encountered while trying to initialize DirectX was:\n\n    %s",
-	"Diablo requires at least 10 megabytes of free disk space to run properly.\nThe disk:\n\n%s\n\nhas less than 10 megabytes of free space left.\n\nPlease free some space on your drive and run Diablo again.",
-	"Diablo was unable to switch video modes.\nThis is a common problem for computers with more than one video card.\nTo correct this problem, please set your video resolution to 640 x 480 and try running Diablo again.\n\nFor Windows 95 and Windows NT\n    Select \"Settings - Control Panel\" from the \"Start\" menu\n    Run the \"Display\" control panel applet\n    Select the \"Settings\" tab\n    Set the \"Desktop Area\" to \"640 x 480 pixels\"\n\n\nThe error encountered while trying to switch video modes was:\n\n    %s",
-	"Diablo cannot read a required data file.\nYour diabdat.mpq may not be in the Devilution folder.\nPlease ensure that the filename is in all lower case and try again.\n    %s",
-	"In order to install, play or patch Diablo using the Windows 2000 operating system,\nyou will need to log in as either an Administrator or as a Power User.\n\nUsers, also known as Restricted Users, do not have sufficient access to install or play the game properly.\n\nIf you have further questions regarding User Rights in Windows 2000, please refer to your Windows 2000 documentation or contact your system administrator.",
-	"Diablo is being run from:\n\n    %s\n\n\nDiablo or the current user does not seem to have write privilages in this directory. Contact your system administrator.\n\nNote that Windows 2000 Restricted Users can not write to the Windows or Program Files directory hierarchies.",
-};
-
 } // namespace
-
-DWORD FormatMessage(
-    DWORD dwFlags,
-    LPCVOID lpSource,
-    DWORD dwMessageId,
-    DWORD dwLanguageId,
-    char *lpBuffer,
-    DWORD nSize,
-    va_list *Arguments)
-{
-	DUMMY();
-	return 0;
-}
-
-LPCSTR DVL_MAKEINTRESOURCE(int i)
-{
-	switch (i) {
-	case IDD_DIALOG1:
-		return (LPCSTR)0;
-	case IDD_DIALOG2:
-		return (LPCSTR)1;
-	case IDD_DIALOG3:
-		return (LPCSTR)2;
-	case IDD_DIALOG4:
-		return (LPCSTR)3;
-	case IDD_DIALOG5:
-		return (LPCSTR)4;
-	case IDD_DIALOG7:
-		return (LPCSTR)5;
-	case IDD_DIALOG8:
-		return (LPCSTR)6;
-	case IDD_DIALOG9:
-		return (LPCSTR)7;
-	case IDD_DIALOG10:
-		return (LPCSTR)8;
-	case IDD_DIALOG11:
-		return (LPCSTR)9;
-	}
-
-	return (LPCSTR)-1;
-}
-
-int DialogBoxParam(HINSTANCE hInstance, LPCSTR msgId, HWND hWndParent, DLGPROC lpDialogFunc, LPARAM dwInitParam)
-{
-	char text[1024];
-	snprintf(text, 1024, errorMessages[(intptr_t)msgId], dwInitParam);
-	UiErrorOkDialog(errorTitle[(intptr_t)msgId], text, nullptr, 0);
-	return 0;
-}
-
-BOOL SetDlgItemText(HWND hDlg, int nIDDlgItem, LPCSTR lpString)
-{
-	return false;
-}
-
-BOOL EndDialog(HWND hDlg, INT_PTR nResult)
-{
-	return false;
-}
-
-BOOL SetWindowPos(HWND hWnd, HWND hWndInsertAfter, int X, int Y, int cx, int cy, UINT uFlags)
-{
-	SDL_SetWindowPosition(window, X, Y);
-
-	return true;
-}
 
 void UiDestroy()
 {
-	DUMMY();
 	ArtHero.Unload();
 	UnloadTtfFont();
+	UnloadArtFonts();
 }
 
 void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), UiItem *items, int itemCnt, bool itemsWraps, bool (*fnYesNo)())
@@ -177,7 +85,8 @@ void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(i
 	}
 }
 
-void UiInitScrollBar(UiScrollBar *ui_sb, std::size_t viewport_size, const std::size_t *current_offset) {
+void UiInitScrollBar(UiScrollBar *ui_sb, std::size_t viewport_size, const std::size_t *current_offset)
+{
 	ListViewportSize = viewport_size;
 	ListOffset = current_offset;
 	if (ListViewportSize >= static_cast<std::size_t>(SelectedItemMax - SelectedItemMin + 1)) {
@@ -337,8 +246,9 @@ bool UiFocusNavigation(SDL_Event *event)
 					char *clipboard = SDL_GetClipboardText();
 					if (clipboard == NULL) {
 						SDL_Log(SDL_GetError());
+					} else {
+						selhero_CatToName(clipboard, UiTextInput, UiTextInputLen);
 					}
-					selhero_CatToName(clipboard, UiTextInput, UiTextInputLen);
 				}
 				return true;
 #endif
@@ -429,7 +339,8 @@ bool IsInsideRect(const SDL_Event &event, const SDL_Rect &rect)
 	return SDL_PointInRect(&point, &rect);
 }
 
-void LoadUiGFX() {
+void LoadUiGFX()
+{
 	LoadMaskedArt("ui_art\\smlogo.pcx", &ArtLogos[LOGO_MED], 15);
 	LoadMaskedArt("ui_art\\focus16.pcx", &ArtFocus[FOCUS_SMALL], 8);
 	LoadMaskedArt("ui_art\\focus.pcx", &ArtFocus[FOCUS_MED], 8);
@@ -442,7 +353,11 @@ void UiInitialize()
 {
 	LoadUiGFX();
 	LoadArtFonts();
-	ShowCursor(false);
+	if (ArtCursor.surface != nullptr) {
+		if (SDL_ShowCursor(SDL_DISABLE) <= -1) {
+			ErrSdl();
+		}
+	}
 }
 
 int UiProfileGetString()
@@ -455,7 +370,6 @@ char connect_plrinfostr[128];
 char connect_categorystr[128];
 void UiSetupPlayerInfo(char *infostr, _uiheroinfo *pInfo, DWORD type)
 {
-	DUMMY();
 	SStrCopy(connect_plrinfostr, infostr, 128);
 	char format[32] = "";
 	strncpy(format, (char *)&type, 4);
@@ -474,11 +388,6 @@ void UiSetupPlayerInfo(char *infostr, _uiheroinfo *pInfo, DWORD type)
 	    pInfo->vitality,
 	    pInfo->gold,
 	    pInfo->spawned);
-}
-
-void UiAppActivate(BOOL bActive)
-{
-	DUMMY();
 }
 
 BOOL UiValidPlayerName(char *name)
@@ -621,13 +530,13 @@ void DrawSelector(const SDL_Rect &rect)
 	DrawArt(rect.x + rect.w - art->w(), y, art, frame);
 }
 
-void UiPollAndRender() {
+void UiPollAndRender()
+{
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
 		UiFocusNavigation(&event);
 	}
 	UiRenderItems(gUiItems, gUiItemCnt);
-	DrawLogo();
 	DrawMouse();
 	UiFadeIn();
 }
@@ -651,7 +560,16 @@ void Render(const UiArtText &ui_art_text)
 
 void Render(const UiImage &ui_image)
 {
-	DrawArt(ui_image.rect.x, ui_image.rect.y, ui_image.art, ui_image.frame, ui_image.rect.w);
+	int x = ui_image.rect.x;
+	if ((ui_image.flags & UIS_CENTER) && ui_image.art != nullptr) {
+		const int x_offset = GetCenterOffset(ui_image.art->w(), ui_image.rect.w);
+		x += x_offset;
+	}
+	if (ui_image.animated) {
+		DrawAnimatedArt(ui_image.art, x, ui_image.rect.y);
+	} else {
+		DrawArt(x, ui_image.rect.y, ui_image.art, ui_image.frame, ui_image.rect.w);
+	}
 }
 
 void Render(const UiArtTextButton &ui_button)
@@ -670,7 +588,8 @@ void Render(const UiList &ui_list)
 	}
 }
 
-void Render(const UiScrollBar &ui_sb) {
+void Render(const UiScrollBar &ui_sb)
+{
 	// Bar background (tiled):
 	{
 		const std::size_t bg_y_end = DownArrowRect(ui_sb).y;
@@ -697,7 +616,7 @@ void Render(const UiScrollBar &ui_sb) {
 	// Thumb:
 	{
 		const SDL_Rect rect = ThumbRect(
-			    ui_sb, SelectedItem - SelectedItemMin, SelectedItemMax - SelectedItemMin + 1);
+		    ui_sb, SelectedItem - SelectedItemMin, SelectedItemMax - SelectedItemMin + 1);
 		DrawArt(rect.x, rect.y, ui_sb.thumb);
 	}
 }
@@ -770,7 +689,8 @@ bool HandleMouseEventList(const SDL_Event &event, const UiList &ui_list)
 	return true;
 }
 
-bool HandleMouseEventScrollBar(const SDL_Event &event, const UiScrollBar &ui_sb) {
+bool HandleMouseEventScrollBar(const SDL_Event &event, const UiScrollBar &ui_sb)
+{
 	if (event.button.button != SDL_BUTTON_LEFT)
 		return false;
 	if (event.type == SDL_MOUSEBUTTONUP) {
@@ -841,7 +761,8 @@ void UiRenderItems(UiItem *items, std::size_t size)
 
 bool UiItemMouseEvents(SDL_Event *event, UiItem *items, std::size_t size)
 {
-	if (!items || size == 0) return false;
+	if (!items || size == 0)
+		return false;
 
 	bool handled = false;
 	for (std::size_t i = 0; i < size; i++) {
@@ -861,11 +782,6 @@ bool UiItemMouseEvents(SDL_Event *event, UiItem *items, std::size_t size)
 	}
 
 	return handled;
-}
-
-void DrawLogo(int t, int size)
-{
-	DrawAnimatedArt(&ArtLogos[size], GetCenterOffset(ArtLogos[size].w()), t);
 }
 
 void DrawMouse()
@@ -908,4 +824,4 @@ void DvlStringSetting(const char *valuename, char *string, int len)
 		SRegSaveString("devilutionx", valuename, 0, string);
 	}
 }
-}
+} // namespace dvl

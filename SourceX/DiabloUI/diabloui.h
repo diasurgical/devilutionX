@@ -27,6 +27,9 @@ extern Art ArtCursor;
 extern Art ArtHero;
 extern bool gbSpawned;
 
+constexpr auto MAINMENU_BACKGROUND = UiImage(&ArtBackground, { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT });
+constexpr auto MAINMENU_LOGO = UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, { 0, 0, 0, 0 }, UIS_CENTER);
+
 template <class T, size_t N>
 constexpr size_t size(T (&)[N])
 {
@@ -41,7 +44,6 @@ bool UiFocusNavigation(SDL_Event *event);
 bool UiItemMouseEvents(SDL_Event *event, UiItem *items, std::size_t size);
 int GetCenterOffset(int w, int bw = 0);
 void LoadPalInMem(const PALETTEENTRY *pPal);
-void DrawLogo(int t = 0, int size = LOGO_MED);
 void DrawMouse();
 void LoadBackgroundArt(char *pszFile);
 void SetMenu(int MenuId);

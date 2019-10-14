@@ -1392,7 +1392,7 @@ typedef struct PkPlayerStruct {
 	int pMaxManaBase;
 	char pSplLvl[MAX_SPELLS];
 	unsigned __int64 pMemSpells;
-	PkItemStruct InvBody[7];
+	PkItemStruct InvBody[NUM_INVLOC];
 	PkItemStruct InvList[NUM_INV_GRID_ELEM];
 	char InvGrid[NUM_INV_GRID_ELEM];
 	BYTE _pNumInv;
@@ -1433,8 +1433,8 @@ typedef struct PATHNODE {
 //////////////////////////////////////////////////
 
 typedef struct SHA1Context {
-	int state[5];
-	int count[2];
+	DWORD state[5];
+	DWORD count[2];
 	char buffer[64];
 } SHA1Context;
 

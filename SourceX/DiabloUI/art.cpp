@@ -45,13 +45,16 @@ void LoadArt(const char *pszFile, Art *art, int frames, PALETTEENTRY *pPalette)
 void LoadMaskedArt(const char *pszFile, Art *art, int frames, int mask)
 {
 	LoadArt(pszFile, art, frames);
-	if (art->surface != nullptr) {
-#ifdef USE_SDL1
-		SDL_SetColorKey(art->surface, SDL_SRCCOLORKEY, mask);
-#else
-		SDL_SetColorKey(art->surface, SDL_TRUE, mask);
-#endif
-	}
+	if (art->surface != nullptr)
+		SDLC_SetColorKey(art->surface, mask);
+}
+
+void LoadArt(Art *art, const BYTE *artData, int w, int h, int frames)
+{
+	art->frames = frames;
+	art->surface = SDL_CreateRGBSurfaceWithFormatFrom(
+		const_cast<BYTE *>(artData), w, h, 8, w, SDL_PIXELFORMAT_INDEX8);
+	art->frame_height = h / frames;
 }
 
 } // namespace dvl

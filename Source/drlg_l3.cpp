@@ -72,389 +72,7 @@ const BYTE L3ANVIL[244] = {
 	0, 0, 0, 0
 };
 
-void AddFenceDoors()
-{
-	int i, j;
-
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
-			if (dungeon[i][j] == 7) {
-				if (dungeon[i - 1][j] <= 152 && dungeon[i - 1][j] >= 130
-				    && dungeon[i + 1][j] <= 152 && dungeon[i + 1][j] >= 130) {
-					dungeon[i][j] = 146;
-					continue;
-				}
-			}
-			if (dungeon[i][j] == 7) {
-				if (dungeon[i][j - 1] <= 152 && dungeon[i][j - 1] >= 130
-				    && dungeon[i][j + 1] <= 152 && dungeon[i][j + 1] >= 130) {
-					dungeon[i][j] = 147;
-					continue;
-				}
-			}
-		}
-	}
-}
-
-void FenceDoorFix()
-{
-	int i, j;
-
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
-			if (dungeon[i][j] == 146) {
-				if (dungeon[i + 1][j] > 152 || dungeon[i + 1][j] < 130
-				    || dungeon[i - 1][j] > 152 || dungeon[i - 1][j] < 130) {
-					dungeon[i][j] = 7;
-					continue;
-				}
-			}
-			if (dungeon[i][j] == 146) {
-				if (dungeon[i + 1][j] != 130 && dungeon[i - 1][j] != 130
-				    && dungeon[i + 1][j] != 132 && dungeon[i - 1][j] != 132
-				    && dungeon[i + 1][j] != 133 && dungeon[i - 1][j] != 133
-				    && dungeon[i + 1][j] != 134 && dungeon[i - 1][j] != 134
-				    && dungeon[i + 1][j] != 136 && dungeon[i - 1][j] != 136
-				    && dungeon[i + 1][j] != 138 && dungeon[i - 1][j] != 138
-				    && dungeon[i + 1][j] != 140 && dungeon[i - 1][j] != 140) {
-					dungeon[i][j] = 7;
-					continue;
-				}
-			}
-			if (dungeon[i][j] == 147) {
-				if (dungeon[i][j + 1] > 152 || dungeon[i][j + 1] < 130
-				    || dungeon[i][j - 1] > 152 || dungeon[i][j - 1] < 130) {
-					dungeon[i][j] = 7;
-					continue;
-				}
-			}
-			if (dungeon[i][j] == 147) {
-				if (dungeon[i][j + 1] != 131 && dungeon[i][j - 1] != 131
-				    && dungeon[i][j + 1] != 132 && dungeon[i][j - 1] != 132
-				    && dungeon[i][j + 1] != 133 && dungeon[i][j - 1] != 133
-				    && dungeon[i][j + 1] != 135 && dungeon[i][j - 1] != 135
-				    && dungeon[i][j + 1] != 137 && dungeon[i][j - 1] != 137
-				    && dungeon[i][j + 1] != 138 && dungeon[i][j - 1] != 138
-				    && dungeon[i][j + 1] != 139 && dungeon[i][j - 1] != 139) {
-					dungeon[i][j] = 7;
-					continue;
-				}
-			}
-		}
-	}
-}
-
-BOOL DRLG_L3Anvil()
-{
-	int sx, sy, sw, sh, xx, yy, ii, trys;
-	BOOL found;
-
-	sw = L3ANVIL[0];
-	sh = L3ANVIL[1];
-	sx = random(0, DMAXX - sw);
-	sy = random(0, DMAXY - sh);
-
-	found = FALSE;
-	trys = 0;
-	while (!found && trys < 200) {
-		trys++;
-		found = TRUE;
-		ii = 2;
-		for (yy = 0; yy < sh && found == TRUE; yy++) {
-			for (xx = 0; xx < sw && found == TRUE; xx++) {
-				if (L3ANVIL[ii] != 0 && dungeon[xx + sx][yy + sy] != L3ANVIL[ii]) {
-					found = FALSE;
-				}
-				if (dflags[xx + sx][yy + sy] != 0) {
-					found = FALSE;
-				}
-				ii++;
-			}
-		}
-		if (!found) {
-			sx++;
-			if (sx == DMAXX - sw) {
-				sx = 0;
-				sy++;
-				if (sy == DMAXY - sh) {
-					sy = 0;
-				}
-			}
-		}
-	}
-	if (trys >= 200) {
-		return TRUE;
-	}
-
-	ii = sw * sh + 2;
-	for (yy = 0; yy < sh; yy++) {
-		for (xx = 0; xx < sw; xx++) {
-			if (L3ANVIL[ii] != 0) {
-				dungeon[xx + sx][yy + sy] = L3ANVIL[ii];
-			}
-			dflags[xx + sx][yy + sy] |= DLRG_PROTECTED;
-			ii++;
-		}
-	}
-
-	setpc_x = sx;
-	setpc_y = sy;
-	setpc_w = sw;
-	setpc_h = sh;
-
-	return FALSE;
-}
-
-void FixL3Warp()
-{
-	int i, j;
-
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
-			if (dungeon[i][j] == 125 && dungeon[i + 1][j] == 125 && dungeon[i][j + 1] == 125 && dungeon[i + 1][j + 1] == 125) {
-				dungeon[i][j] = 156;
-				dungeon[i + 1][j] = 155;
-				dungeon[i][j + 1] = 153;
-				dungeon[i + 1][j + 1] = 154;
-				return;
-			}
-			if (dungeon[i][j] == 5 && dungeon[i + 1][j + 1] == 7) {
-				dungeon[i][j] = 7;
-			}
-		}
-	}
-}
-
-void FixL3HallofHeroes()
-{
-	int i, j;
-
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
-			if (dungeon[i][j] == 5 && dungeon[i + 1][j + 1] == 7) {
-				dungeon[i][j] = 7;
-			}
-		}
-	}
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
-			if (dungeon[i][j] == 5 && dungeon[i + 1][j + 1] == 12 && dungeon[i + 1][j] == 7) {
-				dungeon[i][j] = 7;
-				dungeon[i][j + 1] = 7;
-				dungeon[i + 1][j + 1] = 7;
-			}
-			if (dungeon[i][j] == 5 && dungeon[i + 1][j + 1] == 12 && dungeon[i][j + 1] == 7) {
-				dungeon[i][j] = 7;
-				dungeon[i + 1][j] = 7;
-				dungeon[i + 1][j + 1] = 7;
-			}
-		}
-	}
-}
-
-void DRLG_L3LockRec(int x, int y)
-{
-	if (!lockout[x][y]) {
-		return;
-	}
-
-	lockout[x][y] = FALSE;
-	lockoutcnt++;
-	DRLG_L3LockRec(x, y - 1);
-	DRLG_L3LockRec(x, y + 1);
-	DRLG_L3LockRec(x - 1, y);
-	DRLG_L3LockRec(x + 1, y);
-}
-
-BOOL DRLG_L3Lockout()
-{
-	int i, j, t, fx, fy;
-
-	t = 0;
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
-			if (dungeon[i][j] != 0) {
-				lockout[i][j] = TRUE;
-				fx = i;
-				fy = j;
-				t++;
-			} else {
-				lockout[i][j] = FALSE;
-			}
-		}
-	}
-
-	lockoutcnt = 0;
-	DRLG_L3LockRec(fx, fy);
-
-	return t == lockoutcnt;
-}
-
-void CreateL3Dungeon(DWORD rseed, int entry)
-{
-	int i, j;
-
-	SetRndSeed(rseed);
-	dminx = 16;
-	dminy = 16;
-	dmaxx = 96;
-	dmaxy = 96;
-	DRLG_InitTrans();
-	DRLG_InitSetPC();
-	DRLG_L3(entry);
-	DRLG_L3Pass3();
-
-	for (j = 0; j < 112; j++) {
-		for (i = 0; i < 112; i++) {
-			if (dPiece[i][j] >= 56 && dPiece[i][j] <= 147) {
-				DoLighting(i, j, 7, -1);
-			} else if (dPiece[i][j] >= 154 && dPiece[i][j] <= 161) {
-				DoLighting(i, j, 7, -1);
-			} else if (dPiece[i][j] == 150) {
-				DoLighting(i, j, 7, -1);
-			} else if (dPiece[i][j] == 152) {
-				DoLighting(i, j, 7, -1);
-			}
-		}
-	}
-
-	DRLG_SetPC();
-}
-
-void DRLG_L3(int entry)
-{
-	int x1, y1, x2, y2, i, j;
-	BOOL found, genok;
-
-	lavapool = FALSE;
-
-	do {
-		do {
-			do {
-				InitL3Dungeon();
-				x1 = random(0, 20) + 10;
-				y1 = random(0, 20) + 10;
-				x2 = x1 + 2;
-				y2 = y1 + 2;
-				DRLG_L3FillRoom(x1, y1, x2, y2);
-				DRLG_L3CreateBlock(x1, y1, 2, 0);
-				DRLG_L3CreateBlock(x2, y1, 2, 1);
-				DRLG_L3CreateBlock(x1, y2, 2, 2);
-				DRLG_L3CreateBlock(x1, y1, 2, 3);
-				if (QuestStatus(QTYPE_ANVIL)) {
-					x1 = random(0, 10) + 10;
-					y1 = random(0, 10) + 10;
-					x2 = x1 + 12;
-					y2 = y1 + 12;
-					DRLG_L3FloorArea(x1, y1, x2, y2);
-				}
-				DRLG_L3FillDiags();
-				DRLG_L3FillSingles();
-				DRLG_L3FillStraights();
-				DRLG_L3FillDiags();
-				DRLG_L3Edges();
-				if (DRLG_L3GetFloorArea() >= 600) {
-					found = DRLG_L3Lockout();
-				} else {
-					found = FALSE;
-				}
-			} while (!found);
-			DRLG_L3MakeMegas();
-			if (entry == 0) {
-				genok = DRLG_L3PlaceMiniSet(L3UP, 1, 1, -1, -1, 1, 0);
-				if (!genok) {
-					genok = DRLG_L3PlaceMiniSet(L3DOWN, 1, 1, -1, -1, 0, 1);
-					if (!genok && currlevel == 9) {
-						genok = DRLG_L3PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, 0, 6);
-					}
-				}
-			} else if (entry == 1) {
-				genok = DRLG_L3PlaceMiniSet(L3UP, 1, 1, -1, -1, 0, 0);
-				if (!genok) {
-					genok = DRLG_L3PlaceMiniSet(L3DOWN, 1, 1, -1, -1, 1, 1);
-					ViewX += 2;
-					ViewY -= 2;
-					if (!genok && currlevel == 9) {
-						genok = DRLG_L3PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, 0, 6);
-					}
-				}
-			} else {
-				genok = DRLG_L3PlaceMiniSet(L3UP, 1, 1, -1, -1, 0, 0);
-				if (!genok) {
-					genok = DRLG_L3PlaceMiniSet(L3DOWN, 1, 1, -1, -1, 0, 1);
-					if (!genok && currlevel == 9) {
-						genok = DRLG_L3PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, 1, 6);
-					}
-				}
-			}
-			if (!genok && QuestStatus(QTYPE_ANVIL)) {
-				genok = DRLG_L3Anvil();
-			}
-		} while (genok == TRUE);
-		DRLG_L3Pool();
-	} while (!lavapool);
-
-	DRLG_L3PoolFix();
-	FixL3Warp();
-	DRLG_L3PlaceRndSet(L3ISLE1, 70);
-	DRLG_L3PlaceRndSet(L3ISLE2, 70);
-	DRLG_L3PlaceRndSet(L3ISLE3, 30);
-	DRLG_L3PlaceRndSet(L3ISLE4, 30);
-	DRLG_L3PlaceRndSet(L3ISLE1, 100);
-	DRLG_L3PlaceRndSet(L3ISLE2, 100);
-	DRLG_L3PlaceRndSet(L3ISLE5, 90);
-	FixL3HallofHeroes();
-	DRLG_L3River();
-
-	if (QuestStatus(QTYPE_ANVIL)) {
-		dungeon[setpc_x + 7][setpc_y + 5] = 7;
-		dungeon[setpc_x + 8][setpc_y + 5] = 7;
-		dungeon[setpc_x + 9][setpc_y + 5] = 7;
-		if (dungeon[setpc_x + 10][setpc_y + 5] == 17 || dungeon[setpc_x + 10][setpc_y + 5] == 18) {
-			dungeon[setpc_x + 10][setpc_y + 5] = 45;
-		}
-	}
-
-	DRLG_PlaceThemeRooms(5, 10, 7, 0, 0);
-	DRLG_L3Wood();
-	DRLG_L3PlaceRndSet(L3TITE1, 10);
-	DRLG_L3PlaceRndSet(L3TITE2, 10);
-	DRLG_L3PlaceRndSet(L3TITE3, 10);
-	DRLG_L3PlaceRndSet(L3TITE6, 20);
-	DRLG_L3PlaceRndSet(L3TITE7, 20);
-	DRLG_L3PlaceRndSet(L3TITE8, 20);
-	DRLG_L3PlaceRndSet(L3TITE9, 20);
-	DRLG_L3PlaceRndSet(L3TITE10, 20);
-	DRLG_L3PlaceRndSet(L3TITE11, 30);
-	DRLG_L3PlaceRndSet(L3TITE12, 20);
-	DRLG_L3PlaceRndSet(L3TITE13, 20);
-	DRLG_L3PlaceRndSet(L3CREV1, 30);
-	DRLG_L3PlaceRndSet(L3CREV2, 30);
-	DRLG_L3PlaceRndSet(L3CREV3, 30);
-	DRLG_L3PlaceRndSet(L3CREV4, 30);
-	DRLG_L3PlaceRndSet(L3CREV5, 30);
-	DRLG_L3PlaceRndSet(L3CREV6, 30);
-	DRLG_L3PlaceRndSet(L3CREV7, 30);
-	DRLG_L3PlaceRndSet(L3CREV8, 30);
-	DRLG_L3PlaceRndSet(L3CREV9, 30);
-	DRLG_L3PlaceRndSet(L3CREV10, 30);
-	DRLG_L3PlaceRndSet(L3CREV11, 30);
-	DRLG_L3PlaceRndSet(L3XTRA1, 25);
-	DRLG_L3PlaceRndSet(L3XTRA2, 25);
-	DRLG_L3PlaceRndSet(L3XTRA3, 25);
-	DRLG_L3PlaceRndSet(L3XTRA4, 25);
-	DRLG_L3PlaceRndSet(L3XTRA5, 25);
-
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
-			pdungeon[i][j] = dungeon[i][j];
-		}
-	}
-
-	DRLG_Init_Globals();
-}
-
-void InitL3Dungeon()
+static void InitL3Dungeon()
 {
 	int i, j;
 
@@ -468,7 +86,7 @@ void InitL3Dungeon()
 	}
 }
 
-BOOL DRLG_L3FillRoom(int x1, int y1, int x2, int y2)
+static BOOL DRLG_L3FillRoom(int x1, int y1, int x2, int y2)
 {
 	int i, j, v;
 
@@ -512,7 +130,7 @@ BOOL DRLG_L3FillRoom(int x1, int y1, int x2, int y2)
 	return TRUE;
 }
 
-void DRLG_L3CreateBlock(int x, int y, int obs, int dir)
+static void DRLG_L3CreateBlock(int x, int y, int obs, int dir)
 {
 	int blksizex, blksizey, x1, y1, x2, y2;
 	BOOL contflag;
@@ -594,7 +212,7 @@ void DRLG_L3CreateBlock(int x, int y, int obs, int dir)
 	}
 }
 
-void DRLG_L3FloorArea(int x1, int y1, int x2, int y2)
+static void DRLG_L3FloorArea(int x1, int y1, int x2, int y2)
 {
 	int i, j;
 
@@ -605,7 +223,7 @@ void DRLG_L3FloorArea(int x1, int y1, int x2, int y2)
 	}
 }
 
-void DRLG_L3FillDiags()
+static void DRLG_L3FillDiags()
 {
 	int i, j, v;
 
@@ -630,7 +248,7 @@ void DRLG_L3FillDiags()
 	}
 }
 
-void DRLG_L3FillSingles()
+static void DRLG_L3FillSingles()
 {
 	int i, j;
 
@@ -646,7 +264,7 @@ void DRLG_L3FillSingles()
 	}
 }
 
-void DRLG_L3FillStraights()
+static void DRLG_L3FillStraights()
 {
 	int i, j, xc, xs, yc, ys, k, rv;
 
@@ -728,7 +346,7 @@ void DRLG_L3FillStraights()
 	}
 }
 
-void DRLG_L3Edges()
+static void DRLG_L3Edges()
 {
 	int i, j;
 
@@ -740,7 +358,7 @@ void DRLG_L3Edges()
 	}
 }
 
-int DRLG_L3GetFloorArea()
+static int DRLG_L3GetFloorArea()
 {
 	int i, j, gfa;
 
@@ -755,7 +373,7 @@ int DRLG_L3GetFloorArea()
 	return gfa;
 }
 
-void DRLG_L3MakeMegas()
+static void DRLG_L3MakeMegas()
 {
 	int i, j, v, rv;
 
@@ -787,7 +405,7 @@ void DRLG_L3MakeMegas()
 	}
 }
 
-void DRLG_L3River()
+static void DRLG_L3River()
 {
 	int rx, ry, px, py, dir, pdir, nodir, nodir2, dircheck;
 	int river[3][100];
@@ -1029,12 +647,117 @@ void DRLG_L3River()
 	}
 }
 
+static BOOL DRLG_L3Spawn(int x, int y, int *totarea);
+
+static BOOL DRLG_L3SpawnEdge(int x, int y, int *totarea)
+{
+	BYTE i;
+	static BYTE spawntable[15] = { 0, 0x0A, 0x43, 0x05, 0x2C, 0x06, 0x09, 0, 0, 0x1C, 0x83, 0x06, 0x09, 0x0A, 0x05 };
+
+	if (*totarea > 40) {
+		return TRUE;
+	}
+	if (x < 0 || y < 0 || x >= DMAXX || y >= DMAXY) {
+		return TRUE;
+	}
+	if (dungeon[x][y] & 0x80) {
+		return FALSE;
+	}
+	if (dungeon[x][y] > 15) {
+		return TRUE;
+	}
+
+	i = dungeon[x][y];
+	dungeon[x][y] |= 0x80;
+	*totarea += 1;
+
+	if (spawntable[i] & 8 && DRLG_L3SpawnEdge(x, y - 1, totarea) == TRUE) {
+		return TRUE;
+	}
+	if (spawntable[i] & 4 && DRLG_L3SpawnEdge(x, y + 1, totarea) == TRUE) {
+		return TRUE;
+	}
+	if (spawntable[i] & 2 && DRLG_L3SpawnEdge(x + 1, y, totarea) == TRUE) {
+		return TRUE;
+	}
+	if (spawntable[i] & 1 && DRLG_L3SpawnEdge(x - 1, y, totarea) == TRUE) {
+		return TRUE;
+	}
+	if (spawntable[i] & 0x80 && DRLG_L3Spawn(x, y - 1, totarea) == TRUE) {
+		return TRUE;
+	}
+	if (spawntable[i] & 0x40 && DRLG_L3Spawn(x, y + 1, totarea) == TRUE) {
+		return TRUE;
+	}
+	if (spawntable[i] & 0x20 && DRLG_L3Spawn(x + 1, y, totarea) == TRUE) {
+		return TRUE;
+	}
+	if (spawntable[i] & 0x10 && DRLG_L3Spawn(x - 1, y, totarea) == TRUE) {
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+static BOOL DRLG_L3Spawn(int x, int y, int *totarea)
+{
+	BYTE i;
+	static BYTE spawntable[15] = { 0, 0x0A, 0x03, 0x05, 0x0C, 0x06, 0x09, 0, 0, 0x012, 0x03, 0x06, 0x09, 0x0A, 0x05 };
+
+	if (*totarea > 40) {
+		return TRUE;
+	}
+	if (x < 0 || y < 0 || x >= DMAXX || y >= DMAXY) {
+		return TRUE;
+	}
+	if (dungeon[x][y] & 0x80) {
+		return FALSE;
+	}
+	if (dungeon[x][y] > 15) {
+		return TRUE;
+	}
+
+	i = dungeon[x][y];
+	dungeon[x][y] |= 0x80;
+	*totarea += 1;
+
+	if (i != 8) {
+		if (spawntable[i] & 8 && DRLG_L3SpawnEdge(x, y - 1, totarea) == TRUE) {
+			return TRUE;
+		}
+		if (spawntable[i] & 4 && DRLG_L3SpawnEdge(x, y + 1, totarea) == TRUE) {
+			return TRUE;
+		}
+		if (spawntable[i] & 2 && DRLG_L3SpawnEdge(x + 1, y, totarea) == TRUE) {
+			return TRUE;
+		}
+		if (spawntable[i] & 1 && DRLG_L3SpawnEdge(x - 1, y, totarea) == TRUE) {
+			return TRUE;
+		}
+	} else {
+		if (DRLG_L3Spawn(x + 1, y, totarea) == TRUE) {
+			return TRUE;
+		}
+		if (DRLG_L3Spawn(x - 1, y, totarea) == TRUE) {
+			return TRUE;
+		}
+		if (DRLG_L3Spawn(x, y + 1, totarea) == TRUE) {
+			return TRUE;
+		}
+		if (DRLG_L3Spawn(x, y - 1, totarea) == TRUE) {
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
 /**
  * Flood fills dirt and wall tiles looking for
  * an area of at most 40 tiles and disconnected from the map edge.
  * If it finds one, converts it to lava tiles and sets lavapool to TRUE.
  */
-void DRLG_L3Pool()
+static void DRLG_L3Pool()
 {
 	int i, j, dunx, duny, totarea, poolchance;
 	BOOL found;
@@ -1049,22 +772,22 @@ void DRLG_L3Pool()
 			dungeon[dunx][duny] |= 0x80;
 			totarea = 1;
 			if (dunx + 1 < DMAXX) {
-				found = DRLG_L3SpawnEdge(dunx + 1, duny, &totarea);
+				found = DRLG_L3Spawn(dunx + 1, duny, &totarea);
 			} else {
 				found = TRUE;
 			}
 			if (dunx - 1 > 0 && !found) {
-				found = DRLG_L3SpawnEdge(dunx - 1, duny, &totarea);
+				found = DRLG_L3Spawn(dunx - 1, duny, &totarea);
 			} else {
 				found = TRUE;
 			}
 			if (duny + 1 < DMAXY && !found) {
-				found = DRLG_L3SpawnEdge(dunx, duny + 1, &totarea);
+				found = DRLG_L3Spawn(dunx, duny + 1, &totarea);
 			} else {
 				found = TRUE;
 			}
 			if (duny - 1 > 0 && !found) {
-				found = DRLG_L3SpawnEdge(dunx, duny - 1, &totarea);
+				found = DRLG_L3Spawn(dunx, duny - 1, &totarea);
 			} else {
 				found = TRUE;
 			}
@@ -1089,110 +812,7 @@ void DRLG_L3Pool()
 	}
 }
 
-BOOL DRLG_L3SpawnEdge(int x, int y, int *totarea)
-{
-	BYTE i;
-	static BYTE spawntable[15] = { 0, 0x0A, 0x03, 0x05, 0x0C, 0x06, 0x09, 0, 0, 0x012, 0x03, 0x06, 0x09, 0x0A, 0x05 };
-
-	if (*totarea > 40) {
-		return TRUE;
-	}
-	if (x < 0 || y < 0 || x >= DMAXX || y >= DMAXY) {
-		return TRUE;
-	}
-	if (dungeon[x][y] & 0x80) {
-		return FALSE;
-	}
-	if (dungeon[x][y] > 15) {
-		return TRUE;
-	}
-
-	i = dungeon[x][y];
-	dungeon[x][y] |= 0x80;
-	*totarea += 1;
-
-	if (i != 8) {
-		if (spawntable[i] & 8 && DRLG_L3Spawn(x, y - 1, totarea) == TRUE) {
-			return TRUE;
-		}
-		if (spawntable[i] & 4 && DRLG_L3Spawn(x, y + 1, totarea) == TRUE) {
-			return TRUE;
-		}
-		if (spawntable[i] & 2 && DRLG_L3Spawn(x + 1, y, totarea) == TRUE) {
-			return TRUE;
-		}
-		if (spawntable[i] & 1 && DRLG_L3Spawn(x - 1, y, totarea) == TRUE) {
-			return TRUE;
-		}
-	} else {
-		if (DRLG_L3SpawnEdge(x + 1, y, totarea) == TRUE) {
-			return TRUE;
-		}
-		if (DRLG_L3SpawnEdge(x - 1, y, totarea) == TRUE) {
-			return TRUE;
-		}
-		if (DRLG_L3SpawnEdge(x, y + 1, totarea) == TRUE) {
-			return TRUE;
-		}
-		if (DRLG_L3SpawnEdge(x, y - 1, totarea) == TRUE) {
-			return TRUE;
-		}
-	}
-
-	return FALSE;
-}
-
-BOOL DRLG_L3Spawn(int x, int y, int *totarea)
-{
-	BYTE i;
-	static BYTE spawntable[15] = { 0, 0x0A, 0x43, 0x05, 0x2C, 0x06, 0x09, 0, 0, 0x1C, 0x83, 0x06, 0x09, 0x0A, 0x05 };
-
-	if (*totarea > 40) {
-		return TRUE;
-	}
-	if (x < 0 || y < 0 || x >= DMAXX || y >= DMAXY) {
-		return TRUE;
-	}
-	if (dungeon[x][y] & 0x80) {
-		return FALSE;
-	}
-	if (dungeon[x][y] > 15) {
-		return TRUE;
-	}
-
-	i = dungeon[x][y];
-	dungeon[x][y] |= 0x80;
-	*totarea += 1;
-
-	if (spawntable[i] & 8 && DRLG_L3Spawn(x, y - 1, totarea) == TRUE) {
-		return TRUE;
-	}
-	if (spawntable[i] & 4 && DRLG_L3Spawn(x, y + 1, totarea) == TRUE) {
-		return TRUE;
-	}
-	if (spawntable[i] & 2 && DRLG_L3Spawn(x + 1, y, totarea) == TRUE) {
-		return TRUE;
-	}
-	if (spawntable[i] & 1 && DRLG_L3Spawn(x - 1, y, totarea) == TRUE) {
-		return TRUE;
-	}
-	if (spawntable[i] & 0x80 && DRLG_L3SpawnEdge(x, y - 1, totarea) == TRUE) {
-		return TRUE;
-	}
-	if (spawntable[i] & 0x40 && DRLG_L3SpawnEdge(x, y + 1, totarea) == TRUE) {
-		return TRUE;
-	}
-	if (spawntable[i] & 0x20 && DRLG_L3SpawnEdge(x + 1, y, totarea) == TRUE) {
-		return TRUE;
-	}
-	if (spawntable[i] & 0x10 && DRLG_L3SpawnEdge(x - 1, y, totarea) == TRUE) {
-		return TRUE;
-	}
-
-	return FALSE;
-}
-
-void DRLG_L3PoolFix()
+static void DRLG_L3PoolFix()
 {
 	int dunx, duny;
 
@@ -1214,7 +834,7 @@ void DRLG_L3PoolFix()
 	}
 }
 
-BOOL DRLG_L3PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, BOOL setview, int ldir)
+static BOOL DRLG_L3PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, BOOL setview, int ldir)
 {
 	int sx, sy, sw, sh, xx, yy, i, ii, numt, trys;
 	BOOL found;
@@ -1295,7 +915,7 @@ BOOL DRLG_L3PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy
 	return FALSE;
 }
 
-void DRLG_L3PlaceRndSet(const BYTE *miniset, int rndper)
+static void DRLG_L3PlaceRndSet(const BYTE *miniset, int rndper)
 {
 	int sx, sy, sw, sh, xx, yy, ii, kk;
 	BOOL found;
@@ -1349,7 +969,175 @@ void DRLG_L3PlaceRndSet(const BYTE *miniset, int rndper)
 	}
 }
 
-void DRLG_L3Wood()
+static BOOL WoodVertU(int i, int y)
+{
+	if ((dungeon[i + 1][y] > 152 || dungeon[i + 1][y] < 130)
+	    && (dungeon[i - 1][y] > 152 || dungeon[i - 1][y] < 130)) {
+		if (dungeon[i][y] == 7) {
+			return TRUE;
+		}
+		if (dungeon[i][y] == 10) {
+			return TRUE;
+		}
+		if (dungeon[i][y] == 126) {
+			return TRUE;
+		}
+		if (dungeon[i][y] == 129) {
+			return TRUE;
+		}
+		if (dungeon[i][y] == 134) {
+			return TRUE;
+		}
+		if (dungeon[i][y] == 136) {
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
+static BOOL WoodVertD(int i, int y)
+{
+	if ((dungeon[i + 1][y] > 152 || dungeon[i + 1][y] < 130)
+	    && (dungeon[i - 1][y] > 152 || dungeon[i - 1][y] < 130)) {
+		if (dungeon[i][y] == 7) {
+			return TRUE;
+		}
+		if (dungeon[i][y] == 2) {
+			return TRUE;
+		}
+		if (dungeon[i][y] == 134) {
+			return TRUE;
+		}
+		if (dungeon[i][y] == 136) {
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
+static BOOL WoodHorizL(int x, int j)
+{
+	if ((dungeon[x][j + 1] > 152 || dungeon[x][j + 1] < 130)
+	    && (dungeon[x][j - 1] > 152 || dungeon[x][j - 1] < 130)) {
+		if (dungeon[x][j] == 7) {
+			return TRUE;
+		}
+		if (dungeon[x][j] == 9) {
+			return TRUE;
+		}
+		if (dungeon[x][j] == 121) {
+			return TRUE;
+		}
+		if (dungeon[x][j] == 124) {
+			return TRUE;
+		}
+		if (dungeon[x][j] == 135) {
+			return TRUE;
+		}
+		if (dungeon[x][j] == 137) {
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
+static BOOL WoodHorizR(int x, int j)
+{
+	if ((dungeon[x][j + 1] > 152 || dungeon[x][j + 1] < 130)
+	    && (dungeon[x][j - 1] > 152 || dungeon[x][j - 1] < 130)) {
+		if (dungeon[x][j] == 7) {
+			return TRUE;
+		}
+		if (dungeon[x][j] == 4) {
+			return TRUE;
+		}
+		if (dungeon[x][j] == 135) {
+			return TRUE;
+		}
+		if (dungeon[x][j] == 137) {
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
+void AddFenceDoors()
+{
+	int i, j;
+
+	for (j = 0; j < DMAXY; j++) {
+		for (i = 0; i < DMAXX; i++) {
+			if (dungeon[i][j] == 7) {
+				if (dungeon[i - 1][j] <= 152 && dungeon[i - 1][j] >= 130
+				    && dungeon[i + 1][j] <= 152 && dungeon[i + 1][j] >= 130) {
+					dungeon[i][j] = 146;
+					continue;
+				}
+			}
+			if (dungeon[i][j] == 7) {
+				if (dungeon[i][j - 1] <= 152 && dungeon[i][j - 1] >= 130
+				    && dungeon[i][j + 1] <= 152 && dungeon[i][j + 1] >= 130) {
+					dungeon[i][j] = 147;
+					continue;
+				}
+			}
+		}
+	}
+}
+
+void FenceDoorFix()
+{
+	int i, j;
+
+	for (j = 0; j < DMAXY; j++) {
+		for (i = 0; i < DMAXX; i++) {
+			if (dungeon[i][j] == 146) {
+				if (dungeon[i + 1][j] > 152 || dungeon[i + 1][j] < 130
+				    || dungeon[i - 1][j] > 152 || dungeon[i - 1][j] < 130) {
+					dungeon[i][j] = 7;
+					continue;
+				}
+			}
+			if (dungeon[i][j] == 146) {
+				if (dungeon[i + 1][j] != 130 && dungeon[i - 1][j] != 130
+				    && dungeon[i + 1][j] != 132 && dungeon[i - 1][j] != 132
+				    && dungeon[i + 1][j] != 133 && dungeon[i - 1][j] != 133
+				    && dungeon[i + 1][j] != 134 && dungeon[i - 1][j] != 134
+				    && dungeon[i + 1][j] != 136 && dungeon[i - 1][j] != 136
+				    && dungeon[i + 1][j] != 138 && dungeon[i - 1][j] != 138
+				    && dungeon[i + 1][j] != 140 && dungeon[i - 1][j] != 140) {
+					dungeon[i][j] = 7;
+					continue;
+				}
+			}
+			if (dungeon[i][j] == 147) {
+				if (dungeon[i][j + 1] > 152 || dungeon[i][j + 1] < 130
+				    || dungeon[i][j - 1] > 152 || dungeon[i][j - 1] < 130) {
+					dungeon[i][j] = 7;
+					continue;
+				}
+			}
+			if (dungeon[i][j] == 147) {
+				if (dungeon[i][j + 1] != 131 && dungeon[i][j - 1] != 131
+				    && dungeon[i][j + 1] != 132 && dungeon[i][j - 1] != 132
+				    && dungeon[i][j + 1] != 133 && dungeon[i][j - 1] != 133
+				    && dungeon[i][j + 1] != 135 && dungeon[i][j - 1] != 135
+				    && dungeon[i][j + 1] != 137 && dungeon[i][j - 1] != 137
+				    && dungeon[i][j + 1] != 138 && dungeon[i][j - 1] != 138
+				    && dungeon[i][j + 1] != 139 && dungeon[i][j - 1] != 139) {
+					dungeon[i][j] = 7;
+					continue;
+				}
+			}
+		}
+	}
+}
+
+static void DRLG_L3Wood()
 {
 	int i, j, x, y, xx, yy, rt, rp, x1, y1, x2, y2;
 	BOOL skip;
@@ -1540,113 +1328,298 @@ void DRLG_L3Wood()
 	FenceDoorFix();
 }
 
-BOOL WoodVertU(int i, int y)
+BOOL DRLG_L3Anvil()
 {
-	if ((dungeon[i + 1][y] > 152 || dungeon[i + 1][y] < 130)
-	    && (dungeon[i - 1][y] > 152 || dungeon[i - 1][y] < 130)) {
-		if (dungeon[i][y] == 7) {
-			return TRUE;
+	int sx, sy, sw, sh, xx, yy, ii, trys;
+	BOOL found;
+
+	sw = L3ANVIL[0];
+	sh = L3ANVIL[1];
+	sx = random(0, DMAXX - sw);
+	sy = random(0, DMAXY - sh);
+
+	found = FALSE;
+	trys = 0;
+	while (!found && trys < 200) {
+		trys++;
+		found = TRUE;
+		ii = 2;
+		for (yy = 0; yy < sh && found == TRUE; yy++) {
+			for (xx = 0; xx < sw && found == TRUE; xx++) {
+				if (L3ANVIL[ii] != 0 && dungeon[xx + sx][yy + sy] != L3ANVIL[ii]) {
+					found = FALSE;
+				}
+				if (dflags[xx + sx][yy + sy] != 0) {
+					found = FALSE;
+				}
+				ii++;
+			}
 		}
-		if (dungeon[i][y] == 10) {
-			return TRUE;
-		}
-		if (dungeon[i][y] == 126) {
-			return TRUE;
-		}
-		if (dungeon[i][y] == 129) {
-			return TRUE;
-		}
-		if (dungeon[i][y] == 134) {
-			return TRUE;
-		}
-		if (dungeon[i][y] == 136) {
-			return TRUE;
+		if (!found) {
+			sx++;
+			if (sx == DMAXX - sw) {
+				sx = 0;
+				sy++;
+				if (sy == DMAXY - sh) {
+					sy = 0;
+				}
+			}
 		}
 	}
+	if (trys >= 200) {
+		return TRUE;
+	}
+
+	ii = sw * sh + 2;
+	for (yy = 0; yy < sh; yy++) {
+		for (xx = 0; xx < sw; xx++) {
+			if (L3ANVIL[ii] != 0) {
+				dungeon[xx + sx][yy + sy] = L3ANVIL[ii];
+			}
+			dflags[xx + sx][yy + sy] |= DLRG_PROTECTED;
+			ii++;
+		}
+	}
+
+	setpc_x = sx;
+	setpc_y = sy;
+	setpc_w = sw;
+	setpc_h = sh;
 
 	return FALSE;
 }
 
-BOOL WoodVertD(int i, int y)
+void FixL3Warp()
 {
-	if ((dungeon[i + 1][y] > 152 || dungeon[i + 1][y] < 130)
-	    && (dungeon[i - 1][y] > 152 || dungeon[i - 1][y] < 130)) {
-		if (dungeon[i][y] == 7) {
-			return TRUE;
+	int i, j;
+
+	for (j = 0; j < DMAXY; j++) {
+		for (i = 0; i < DMAXX; i++) {
+			if (dungeon[i][j] == 125 && dungeon[i + 1][j] == 125 && dungeon[i][j + 1] == 125 && dungeon[i + 1][j + 1] == 125) {
+				dungeon[i][j] = 156;
+				dungeon[i + 1][j] = 155;
+				dungeon[i][j + 1] = 153;
+				dungeon[i + 1][j + 1] = 154;
+				return;
+			}
+			if (dungeon[i][j] == 5 && dungeon[i + 1][j + 1] == 7) {
+				dungeon[i][j] = 7;
+			}
 		}
-		if (dungeon[i][y] == 2) {
-			return TRUE;
+	}
+}
+
+void FixL3HallofHeroes()
+{
+	int i, j;
+
+	for (j = 0; j < DMAXY; j++) {
+		for (i = 0; i < DMAXX; i++) {
+			if (dungeon[i][j] == 5 && dungeon[i + 1][j + 1] == 7) {
+				dungeon[i][j] = 7;
+			}
 		}
-		if (dungeon[i][y] == 134) {
-			return TRUE;
+	}
+	for (j = 0; j < DMAXY; j++) {
+		for (i = 0; i < DMAXX; i++) {
+			if (dungeon[i][j] == 5 && dungeon[i + 1][j + 1] == 12 && dungeon[i + 1][j] == 7) {
+				dungeon[i][j] = 7;
+				dungeon[i][j + 1] = 7;
+				dungeon[i + 1][j + 1] = 7;
+			}
+			if (dungeon[i][j] == 5 && dungeon[i + 1][j + 1] == 12 && dungeon[i][j + 1] == 7) {
+				dungeon[i][j] = 7;
+				dungeon[i + 1][j] = 7;
+				dungeon[i + 1][j + 1] = 7;
+			}
 		}
-		if (dungeon[i][y] == 136) {
-			return TRUE;
+	}
+}
+
+void DRLG_L3LockRec(int x, int y)
+{
+	if (!lockout[x][y]) {
+		return;
+	}
+
+	lockout[x][y] = FALSE;
+	lockoutcnt++;
+	DRLG_L3LockRec(x, y - 1);
+	DRLG_L3LockRec(x, y + 1);
+	DRLG_L3LockRec(x - 1, y);
+	DRLG_L3LockRec(x + 1, y);
+}
+
+BOOL DRLG_L3Lockout()
+{
+	int i, j, t, fx, fy;
+
+	t = 0;
+	for (j = 0; j < DMAXY; j++) {
+		for (i = 0; i < DMAXX; i++) {
+			if (dungeon[i][j] != 0) {
+				lockout[i][j] = TRUE;
+				fx = i;
+				fy = j;
+				t++;
+			} else {
+				lockout[i][j] = FALSE;
+			}
 		}
 	}
 
-	return FALSE;
+	lockoutcnt = 0;
+	DRLG_L3LockRec(fx, fy);
+
+	return t == lockoutcnt;
 }
 
-BOOL WoodHorizL(int x, int j)
+static void DRLG_L3(int entry)
 {
-	if ((dungeon[x][j + 1] > 152 || dungeon[x][j + 1] < 130)
-	    && (dungeon[x][j - 1] > 152 || dungeon[x][j - 1] < 130)) {
-		if (dungeon[x][j] == 7) {
-			return TRUE;
-		}
-		if (dungeon[x][j] == 9) {
-			return TRUE;
-		}
-		if (dungeon[x][j] == 121) {
-			return TRUE;
-		}
-		if (dungeon[x][j] == 124) {
-			return TRUE;
-		}
-		if (dungeon[x][j] == 135) {
-			return TRUE;
-		}
-		if (dungeon[x][j] == 137) {
-			return TRUE;
+	int x1, y1, x2, y2, i, j;
+	BOOL found, genok;
+
+	lavapool = FALSE;
+
+	do {
+		do {
+			do {
+				InitL3Dungeon();
+				x1 = random(0, 20) + 10;
+				y1 = random(0, 20) + 10;
+				x2 = x1 + 2;
+				y2 = y1 + 2;
+				DRLG_L3FillRoom(x1, y1, x2, y2);
+				DRLG_L3CreateBlock(x1, y1, 2, 0);
+				DRLG_L3CreateBlock(x2, y1, 2, 1);
+				DRLG_L3CreateBlock(x1, y2, 2, 2);
+				DRLG_L3CreateBlock(x1, y1, 2, 3);
+				if (QuestStatus(QTYPE_ANVIL)) {
+					x1 = random(0, 10) + 10;
+					y1 = random(0, 10) + 10;
+					x2 = x1 + 12;
+					y2 = y1 + 12;
+					DRLG_L3FloorArea(x1, y1, x2, y2);
+				}
+				DRLG_L3FillDiags();
+				DRLG_L3FillSingles();
+				DRLG_L3FillStraights();
+				DRLG_L3FillDiags();
+				DRLG_L3Edges();
+				if (DRLG_L3GetFloorArea() >= 600) {
+					found = DRLG_L3Lockout();
+				} else {
+					found = FALSE;
+				}
+			} while (!found);
+			DRLG_L3MakeMegas();
+			if (entry == 0) {
+				genok = DRLG_L3PlaceMiniSet(L3UP, 1, 1, -1, -1, 1, 0);
+				if (!genok) {
+					genok = DRLG_L3PlaceMiniSet(L3DOWN, 1, 1, -1, -1, 0, 1);
+					if (!genok && currlevel == 9) {
+						genok = DRLG_L3PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, 0, 6);
+					}
+				}
+			} else if (entry == 1) {
+				genok = DRLG_L3PlaceMiniSet(L3UP, 1, 1, -1, -1, 0, 0);
+				if (!genok) {
+					genok = DRLG_L3PlaceMiniSet(L3DOWN, 1, 1, -1, -1, 1, 1);
+					ViewX += 2;
+					ViewY -= 2;
+					if (!genok && currlevel == 9) {
+						genok = DRLG_L3PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, 0, 6);
+					}
+				}
+			} else {
+				genok = DRLG_L3PlaceMiniSet(L3UP, 1, 1, -1, -1, 0, 0);
+				if (!genok) {
+					genok = DRLG_L3PlaceMiniSet(L3DOWN, 1, 1, -1, -1, 0, 1);
+					if (!genok && currlevel == 9) {
+						genok = DRLG_L3PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, 1, 6);
+					}
+				}
+			}
+			if (!genok && QuestStatus(QTYPE_ANVIL)) {
+				genok = DRLG_L3Anvil();
+			}
+		} while (genok == TRUE);
+		DRLG_L3Pool();
+	} while (!lavapool);
+
+	DRLG_L3PoolFix();
+	FixL3Warp();
+	DRLG_L3PlaceRndSet(L3ISLE1, 70);
+	DRLG_L3PlaceRndSet(L3ISLE2, 70);
+	DRLG_L3PlaceRndSet(L3ISLE3, 30);
+	DRLG_L3PlaceRndSet(L3ISLE4, 30);
+	DRLG_L3PlaceRndSet(L3ISLE1, 100);
+	DRLG_L3PlaceRndSet(L3ISLE2, 100);
+	DRLG_L3PlaceRndSet(L3ISLE5, 90);
+	FixL3HallofHeroes();
+	DRLG_L3River();
+
+	if (QuestStatus(QTYPE_ANVIL)) {
+		dungeon[setpc_x + 7][setpc_y + 5] = 7;
+		dungeon[setpc_x + 8][setpc_y + 5] = 7;
+		dungeon[setpc_x + 9][setpc_y + 5] = 7;
+		if (dungeon[setpc_x + 10][setpc_y + 5] == 17 || dungeon[setpc_x + 10][setpc_y + 5] == 18) {
+			dungeon[setpc_x + 10][setpc_y + 5] = 45;
 		}
 	}
 
-	return FALSE;
-}
+	DRLG_PlaceThemeRooms(5, 10, 7, 0, 0);
+	DRLG_L3Wood();
+	DRLG_L3PlaceRndSet(L3TITE1, 10);
+	DRLG_L3PlaceRndSet(L3TITE2, 10);
+	DRLG_L3PlaceRndSet(L3TITE3, 10);
+	DRLG_L3PlaceRndSet(L3TITE6, 20);
+	DRLG_L3PlaceRndSet(L3TITE7, 20);
+	DRLG_L3PlaceRndSet(L3TITE8, 20);
+	DRLG_L3PlaceRndSet(L3TITE9, 20);
+	DRLG_L3PlaceRndSet(L3TITE10, 20);
+	DRLG_L3PlaceRndSet(L3TITE11, 30);
+	DRLG_L3PlaceRndSet(L3TITE12, 20);
+	DRLG_L3PlaceRndSet(L3TITE13, 20);
+	DRLG_L3PlaceRndSet(L3CREV1, 30);
+	DRLG_L3PlaceRndSet(L3CREV2, 30);
+	DRLG_L3PlaceRndSet(L3CREV3, 30);
+	DRLG_L3PlaceRndSet(L3CREV4, 30);
+	DRLG_L3PlaceRndSet(L3CREV5, 30);
+	DRLG_L3PlaceRndSet(L3CREV6, 30);
+	DRLG_L3PlaceRndSet(L3CREV7, 30);
+	DRLG_L3PlaceRndSet(L3CREV8, 30);
+	DRLG_L3PlaceRndSet(L3CREV9, 30);
+	DRLG_L3PlaceRndSet(L3CREV10, 30);
+	DRLG_L3PlaceRndSet(L3CREV11, 30);
+	DRLG_L3PlaceRndSet(L3XTRA1, 25);
+	DRLG_L3PlaceRndSet(L3XTRA2, 25);
+	DRLG_L3PlaceRndSet(L3XTRA3, 25);
+	DRLG_L3PlaceRndSet(L3XTRA4, 25);
+	DRLG_L3PlaceRndSet(L3XTRA5, 25);
 
-BOOL WoodHorizR(int x, int j)
-{
-	if ((dungeon[x][j + 1] > 152 || dungeon[x][j + 1] < 130)
-	    && (dungeon[x][j - 1] > 152 || dungeon[x][j - 1] < 130)) {
-		if (dungeon[x][j] == 7) {
-			return TRUE;
-		}
-		if (dungeon[x][j] == 4) {
-			return TRUE;
-		}
-		if (dungeon[x][j] == 135) {
-			return TRUE;
-		}
-		if (dungeon[x][j] == 137) {
-			return TRUE;
+	for (j = 0; j < DMAXY; j++) {
+		for (i = 0; i < DMAXX; i++) {
+			pdungeon[i][j] = dungeon[i][j];
 		}
 	}
 
-	return FALSE;
+	DRLG_Init_Globals();
 }
 
-void DRLG_L3Pass3()
+static void DRLG_L3Pass3()
 {
 	int i, j, xx, yy;
 	long v1, v2, v3, v4, lv;
+	WORD *MegaTiles;
 
 	lv = 8 - 1;
 
-	v1 = *((WORD *)&pMegaTiles[lv * 8]) + 1;
-	v2 = *((WORD *)&pMegaTiles[lv * 8] + 1) + 1;
-	v3 = *((WORD *)&pMegaTiles[lv * 8] + 2) + 1;
-	v4 = *((WORD *)&pMegaTiles[lv * 8] + 3) + 1;
+	MegaTiles = (WORD *)&pMegaTiles[lv * 8];
+	v1 = SDL_SwapLE16(*(MegaTiles + 0)) + 1;
+	v2 = SDL_SwapLE16(*(MegaTiles + 1)) + 1;
+	v3 = SDL_SwapLE16(*(MegaTiles + 2)) + 1;
+	v4 = SDL_SwapLE16(*(MegaTiles + 3)) + 1;
 
 	for (j = 0; j < MAXDUNY; j += 2)
 	{
@@ -1664,10 +1637,11 @@ void DRLG_L3Pass3()
 		for (i = 0; i < DMAXX; i++) {
 			lv = dungeon[i][j] - 1;
 			if (lv >= 0) {
-				v1 = *((WORD *)&pMegaTiles[lv * 8]) + 1;
-				v2 = *((WORD *)&pMegaTiles[lv * 8] + 1) + 1;
-				v3 = *((WORD *)&pMegaTiles[lv * 8] + 2) + 1;
-				v4 = *((WORD *)&pMegaTiles[lv * 8] + 3) + 1;
+				MegaTiles = (WORD *)&pMegaTiles[lv * 8];
+				v1 = SDL_SwapLE16(*(MegaTiles + 0)) + 1;
+				v2 = SDL_SwapLE16(*(MegaTiles + 1)) + 1;
+				v3 = SDL_SwapLE16(*(MegaTiles + 2)) + 1;
+				v4 = SDL_SwapLE16(*(MegaTiles + 3)) + 1;
 			} else {
 				v1 = 0;
 				v2 = 0;
@@ -1682,6 +1656,37 @@ void DRLG_L3Pass3()
 		}
 		yy += 2;
 	}
+}
+
+void CreateL3Dungeon(DWORD rseed, int entry)
+{
+	int i, j;
+
+	SetRndSeed(rseed);
+	dminx = 16;
+	dminy = 16;
+	dmaxx = 96;
+	dmaxy = 96;
+	DRLG_InitTrans();
+	DRLG_InitSetPC();
+	DRLG_L3(entry);
+	DRLG_L3Pass3();
+
+	for (j = 0; j < MAXDUNY; j++) {
+		for (i = 0; i < MAXDUNX; i++) {
+			if (dPiece[i][j] >= 56 && dPiece[i][j] <= 147) {
+				DoLighting(i, j, 7, -1);
+			} else if (dPiece[i][j] >= 154 && dPiece[i][j] <= 161) {
+				DoLighting(i, j, 7, -1);
+			} else if (dPiece[i][j] == 150) {
+				DoLighting(i, j, 7, -1);
+			} else if (dPiece[i][j] == 152) {
+				DoLighting(i, j, 7, -1);
+			}
+		}
+	}
+
+	DRLG_SetPC();
 }
 
 void LoadL3Dungeon(char *sFileName, int vx, int vy)
@@ -1729,8 +1734,8 @@ void LoadL3Dungeon(char *sFileName, int vx, int vy)
 	SetMapMonsters(pLevelMap, 0, 0);
 	SetMapObjects(pLevelMap, 0, 0);
 
-	for (j = 0; j < 112; j++) {
-		for (i = 0; i < 112; i++) {
+	for (j = 0; j < MAXDUNY; j++) {
+		for (i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] >= 56 && dPiece[i][j] <= 147) {
 				DoLighting(i, j, 7, -1);
 			} else if (dPiece[i][j] >= 154 && dPiece[i][j] <= 161) {

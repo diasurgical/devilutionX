@@ -93,7 +93,7 @@ void doom_draw()
 		}
 	}
 
-	CelDecodeOnly(SCREEN_X, PANEL_Y - 1, pDoomCel, 1, SCREEN_WIDTH);
+	CelDraw(SCREEN_X, PANEL_Y - 1, pDoomCel, 1, SCREEN_WIDTH);
 }
 
 DEVILUTION_END_NAMESPACE

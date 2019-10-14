@@ -3,14 +3,14 @@
 
 Status | Platform
 ---:| ---
-[![CircleCI](https://circleci.com/gh/diasurgical/devilutionX.svg?style=svg)](https://circleci.com/gh/diasurgical/devilutionX) | Linux 32bit & 64bit, Windows 32bit
+[![CircleCI](https://circleci.com/gh/diasurgical/devilutionX.svg?style=svg)](https://circleci.com/gh/diasurgical/devilutionX) | Linux 32bit & 64bit, Windows 32bit, SDL1
 [![Build Status](https://travis-ci.org/diasurgical/devilutionX.svg?branch=master)](https://travis-ci.org/diasurgical/devilutionX) | macOS 64bit
 [![Build status](https://ci.appveyor.com/api/projects/status/1a0jus2372qvksht?svg=true)](https://ci.appveyor.com/project/AJenbo/devilutionx) | Windows MSVC
 
 ![Discord Channel](https://avatars3.githubusercontent.com/u/1965106?s=16&v=4) [Discord Chat Channel](https://discord.gg/aQBQdDe)
 
 # How To Play:
- - Copy diabdat.mpq from your CD, or GoG install folder, to the DevilutionX game directory ; Make sure it is all lowercase.
+ - Copy diabdat.mpq from your CD, or GoG install folder, to the DevilutionX install folder ; Make sure it is all lowercase.
  - [Download DevilutionX](https://github.com/diasurgical/devilutionX/releases), or build from source
  - Install [SDL2](https://www.libsdl.org/download-2.0.php) (including [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/) and [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/))
  - Run `./devilutionx`
@@ -30,10 +30,9 @@ sudo dnf install cmake glibc-devel SDL2-devel SDL2_ttf-devel SDL2_mixer-devel li
 ```
 ### Compiling
 ```
-mkdir build
 cd build
 cmake ..
-make -j$(nproc)
+cmake --build . -j $(nproc)
 ```
 </details>
 
@@ -43,25 +42,22 @@ Make sure you have [Homebrew](https://brew.sh/) installed, then run:
 
 ```
 brew bundle
-mkdir build
 cd build
 cmake ..
-make -j$(sysctl -n hw.physicalcpu)
+cmake --build . -j $(sysctl -n hw.physicalcpu)
 ```
 </details>
 <details><summary>FreeBSD</summary>
-*Note: At the moment this only appears to work from a 32bit system.*
 
 ### Installing dependencies
 ```
-pkg install cmake gcc8 sdl2_mixer sdl2_ttf libsodium
+pkg install cmake sdl2_mixer sdl2_ttf libsodium
 ```
 ### Compiling
 ```
-mkdir build
 cd build
-cmake -DCMAKE_C_COMPILER=/usr/local/bin/gcc8 -DCMAKE_CXX_COMPILER=/usr/local/bin/g++8 ..
-make -j$(sysctl -n hw.ncpu)
+cmake ..
+cmake --build . -j $(sysctl -n hw.ncpu)
 ```
 </details>
 
@@ -76,10 +72,9 @@ sudo apt-get install cmake gcc-mingw-w64-i686 g++-mingw-w64-i686
 ```
 ### Compiling
 ```
-mkdir build
 cd build
 cmake -DASAN=OFF -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake ..
-make -j$(nproc)
+cmake --build . -j $(nproc)
 ```
 </details>
 <details><summary>Windows via Visual Studio</summary>
@@ -132,18 +127,46 @@ pkgman install cmake devel:libsdl2 devel:libsdl2_mixer devel:libsdl2_ttf devel:l
 ```
 ### Compiling on 32 bit Haiku
 ```
-mkdir build
 cd build
 cmake -DCMAKE_C_COMPILER=gcc-x86 -DCMAKE_CXX_COMPILER=g++-x86 -DBINARY_RELEASE=ON ..
-make -j$(nproc)
+cmake --build . -j $(nproc)
 ```
 ### Compiling on 64 bit Haiku
 ```
-mkdir build
 cd build
 cmake ..
-make -j$(nproc)
+cmake --build . -j $(nproc)
 ```
+</details>
+
+<details><summary>OpenDingux / RetroFW</summary>
+
+DevilutionX uses buildroot to build packages for OpenDingux and RetroFW.
+
+The build script does the following:
+
+1. Downloads and configures the buildroot if necessary.
+2. Builds the executable (using CMake).
+3. Packages the executable and all related resources into an `.ipk` package.
+
+The buildroot uses ~4 GiB of disk space and can take almost an hour to build.
+
+### OpenDingux
+
+The OpenDingux build uses the buildroot at `$HOME/buildroot-2018.02.9-opendingux-musl`.
+
+~~~ bash
+Packaging/OpenDingux/build-opendingux-sdl1.sh
+~~~
+
+### RetroFW
+
+The OpenDingux build uses the buildroot at `$HOME/buildroot-2018.02.9-retrofw`.
+
+~~~ bash
+Packaging/OpenDingux/build-retrofw.sh
+~~~
+
 </details>
 
 ## CMake arguments

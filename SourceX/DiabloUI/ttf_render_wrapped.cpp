@@ -130,11 +130,7 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 	palette->colors[1].r = fg.r;
 	palette->colors[1].g = fg.g;
 	palette->colors[1].b = fg.b;
-#ifdef USE_SDL1
-	SDL_SetColorKey(textbuf, SDL_SRCCOLORKEY, 0);
-#else
-	SDL_SetColorKey(textbuf, SDL_TRUE, 0);
-#endif
+	SDLC_SetColorKey(textbuf, 0);
 
 	// Reduced space between lines to roughly match Diablo.
 	const int lineskip = 0.7 * TTF_FontLineSkip(font);

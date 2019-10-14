@@ -7,6 +7,8 @@
 #include "sdl2_to_1_2_backports.h"
 #endif
 
+#include "sdl_compat.h"
+
 #include "../types.h"
 
 //#ifdef __cplusplus
@@ -96,7 +98,7 @@ extern DWORD glSeedTbl[NUMLEVELS];
 extern BOOL gbRunGame;
 extern int glMid3Seed[NUMLEVELS];
 extern BOOL gbRunGameResult;
-extern int zoomflag;
+extern BOOL zoomflag;
 extern BOOL gbProcessPlayers;
 extern int glEndSeed[NUMLEVELS];
 extern BOOL gbLoadGame;

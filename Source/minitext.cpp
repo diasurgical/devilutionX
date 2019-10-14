@@ -68,7 +68,7 @@ void InitQTextMsg(int m)
 
 void DrawQTextBack()
 {
-	CelDecodeOnly(88, 487, pTextBoxCels, 1, 591);
+	CelDraw(88, 487, pTextBoxCels, 1, 591);
 
 #define TRANS_RECT_X 27
 #define TRANS_RECT_Y 28

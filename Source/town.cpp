@@ -61,28 +61,21 @@ void town_special_lower(BYTE *pBuff, int nCel)
 #if 0
 	int nDataSize;
 	BYTE *pRLEBytes;
-	DWORD *pFrameTable;
 
-	pFrameTable = (DWORD *)pSpecialCels;
-	pRLEBytes = &pSpecialCels[pFrameTable[nCel]];
-	nDataSize = pFrameTable[nCel + 1] - pFrameTable[nCel];
-	Cel2DecDatOnly(pBuff, pRLEBytes, nDataSize, 64);
+	pRLEBytes = CelGetFrame(pSpecialCels, nCel, &nDataSize);
+	CelBlitSafe(pBuff, pRLEBytes, nDataSize, 64);
 #endif
 }
 
-void town_special_upper(BYTE *pBuff, int nCel)
+void town_special_upper(BYTE *dst, int nCel)
 {
 #if 0
 	int w;
-	BYTE *end;
+	BYTE *end, *src;
 	BYTE width;
-	BYTE *src, *dst;
-	DWORD *pFrameTable;
 
-	pFrameTable = (DWORD *)pSpecialCels;
-	src = &pSpecialCels[pFrameTable[nCel]];
-	dst = pBuff;
-	end = &src[pFrameTable[nCel + 1] - pFrameTable[nCel]];
+	src = CelGetFrame(pSpecialCels, nCel, &nDataSize);
+	end = &src[nDataSize];
 
 	for(; src != end; dst -= BUFFER_WIDTH + 64) {
 		for(w = 64; w;) {
@@ -160,34 +153,34 @@ void town_draw_clipped_town(BYTE *pBuff, int sx, int sy, int dx, int dy, int efl
 		bv = dItem[sx][sy] - 1;
 		px = dx - item[bv]._iAnimWidth2;
 		if (bv == pcursitem) {
-			CelDrawHdrClrHL(181, px, dy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth, 0, 8);
+			CelBlitOutlineSafe(181, px, dy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth, 0, 8);
 		}
-		Cel2DrawHdrOnly(px, dy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth, 0, 8);
+		CelClippedDrawSafe(px, dy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth, 0, 8);
 	}
 	if (dFlags[sx][sy] & BFLAG_MONSTLR) {
 		mi = -(dMonster[sx][sy - 1] + 1);
 		px = dx - towner[mi]._tAnimWidth2;
 		if (mi == pcursmonst) {
-			CelDrawHdrClrHL(166, px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, 8);
+			CelBlitOutlineSafe(166, px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, 8);
 		}
-		Cel2DrawHdrOnly(px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, 8);
+		CelClippedDrawSafe(px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, 8);
 	}
 	if (dMonster[sx][sy] > 0) {
 		mi = dMonster[sx][sy] - 1;
 		px = dx - towner[mi]._tAnimWidth2;
 		if (mi == pcursmonst) {
-			CelDrawHdrClrHL(166, px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, 8);
+			CelBlitOutlineSafe(166, px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, 8);
 		}
-		Cel2DrawHdrOnly(px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, 8);
+		CelClippedDrawSafe(px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, 8);
 	}
 	if (dFlags[sx][sy] & BFLAG_PLAYERLR) {
 		bv = -(dPlayer[sx][sy - 1] + 1);
 		px = dx + plr[bv]._pxoff - plr[bv]._pAnimWidth2;
 		py = dy + plr[bv]._pyoff;
 		if (bv == pcursplr) {
-			Cl2DecodeClrHL(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, 8);
+			Cl2DrawOutlineSafe(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, 8);
 		}
-		Cl2DecodeFrm4(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, 8);
+		Cl2DrawSafe(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, 8);
 		if (eflag && plr[bv]._peflag) {
 			town_draw_clipped_e_flag(pBuff - 64, sx - 1, sy + 1, dx - 64, dy);
 		}
@@ -200,9 +193,9 @@ void town_draw_clipped_town(BYTE *pBuff, int sx, int sy, int dx, int dy, int efl
 		px = dx + plr[bv]._pxoff - plr[bv]._pAnimWidth2;
 		py = dy + plr[bv]._pyoff;
 		if (bv == pcursplr) {
-			Cl2DecodeClrHL(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, 8);
+			Cl2DrawOutlineSafe(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, 8);
 		}
-		Cl2DecodeFrm4(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, 8);
+		Cl2DrawSafe(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, 8);
 		if (eflag && plr[bv]._peflag) {
 			town_draw_clipped_e_flag(pBuff - 64, sx - 1, sy + 1, dx - 64, dy);
 		}
@@ -342,34 +335,34 @@ void town_draw_clipped_town_2(BYTE *pBuff, int sx, int sy, int skipChunks, int C
 		bv = dItem[sx][sy] - 1;
 		px = dx - item[bv]._iAnimWidth2;
 		if (bv == pcursitem) {
-			CelDrawHdrClrHL(181, px, dy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth, CelSkip, 8);
+			CelBlitOutlineSafe(181, px, dy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth, CelSkip, 8);
 		}
-		Cel2DrawHdrOnly(px, dy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth, CelSkip, 8);
+		CelClippedDrawSafe(px, dy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth, CelSkip, 8);
 	}
 	if (dFlags[sx][sy] & BFLAG_MONSTLR) {
 		mi = -(dMonster[sx][sy - 1] + 1);
 		px = dx - towner[mi]._tAnimWidth2;
 		if (mi == pcursmonst) {
-			CelDrawHdrClrHL(166, px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, CelSkip, 8);
+			CelBlitOutlineSafe(166, px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, CelSkip, 8);
 		}
-		Cel2DrawHdrOnly(px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, CelSkip, 8);
+		CelClippedDrawSafe(px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, CelSkip, 8);
 	}
 	if (dMonster[sx][sy] > 0) {
 		mi = dMonster[sx][sy] - 1;
 		px = dx - towner[mi]._tAnimWidth2;
 		if (mi == pcursmonst) {
-			CelDrawHdrClrHL(166, px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, CelSkip, 8);
+			CelBlitOutlineSafe(166, px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, CelSkip, 8);
 		}
-		Cel2DrawHdrOnly(px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, CelSkip, 8);
+		CelClippedDrawSafe(px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, CelSkip, 8);
 	}
 	if (dFlags[sx][sy] & BFLAG_PLAYERLR) {
 		bv = -(dPlayer[sx][sy - 1] + 1);
 		px = dx + plr[bv]._pxoff - plr[bv]._pAnimWidth2;
 		py = dy + plr[bv]._pyoff;
 		if (bv == pcursplr) {
-			Cl2DecodeClrHL(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, CelSkip, 8);
+			Cl2DrawOutlineSafe(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, CelSkip, 8);
 		}
-		Cl2DecodeFrm4(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, CelSkip, 8);
+		Cl2DrawSafe(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, CelSkip, 8);
 		if (eflag && plr[bv]._peflag) {
 			town_draw_clipped_e_flag_2(pBuff - 64, sx - 1, sy + 1, skipChunks, CelSkip, dx - 64, dy);
 		}
@@ -382,9 +375,9 @@ void town_draw_clipped_town_2(BYTE *pBuff, int sx, int sy, int skipChunks, int C
 		px = dx + plr[bv]._pxoff - plr[bv]._pAnimWidth2;
 		py = dy + plr[bv]._pyoff;
 		if (bv == pcursplr) {
-			Cl2DecodeClrHL(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, CelSkip, 8);
+			Cl2DrawOutlineSafe(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, CelSkip, 8);
 		}
-		Cl2DecodeFrm4(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, CelSkip, 8);
+		Cl2DrawSafe(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, CelSkip, 8);
 		if (eflag && plr[bv]._peflag) {
 			town_draw_clipped_e_flag_2(pBuff - 64, sx - 1, sy + 1, skipChunks, CelSkip, dx - 64, dy);
 		}
@@ -531,38 +524,38 @@ void town_draw_town_all(BYTE *pBuff, int x, int y, int capChunks, int CelCap, in
 		bv = dItem[x][y] - 1;
 		px = sx - item[bv]._iAnimWidth2;
 		if (bv == pcursitem) {
-			CelDecodeClr(181, px, sy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth, 0, CelCap);
+			CelBlitOutline(181, px, sy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth, 0, CelCap);
 		}
 		/// ASSERT: assert(item[bv]._iAnimData);
-		CelDrawHdrOnly(px, sy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth, 0, CelCap);
+		CelClippedDraw(px, sy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth, 0, CelCap);
 	}
 	if (dFlags[x][y] & BFLAG_MONSTLR) {
 		mi = -(dMonster[x][y - 1] + 1);
 		px = sx - towner[mi]._tAnimWidth2;
 		if (mi == pcursmonst) {
-			CelDecodeClr(166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, CelCap);
+			CelBlitOutline(166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, CelCap);
 		}
 		/// ASSERT: assert(towner[mi]._tAnimData);
-		CelDrawHdrOnly(px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, CelCap);
+		CelClippedDraw(px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, CelCap);
 	}
 	if (dMonster[x][y] > 0) {
 		mi = dMonster[x][y] - 1;
 		px = sx - towner[mi]._tAnimWidth2;
 		if (mi == pcursmonst) {
-			CelDecodeClr(166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, CelCap);
+			CelBlitOutline(166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, CelCap);
 		}
 		/// ASSERT: assert(towner[mi]._tAnimData);
-		CelDrawHdrOnly(px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, CelCap);
+		CelClippedDraw(px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth, 0, CelCap);
 	}
 	if (dFlags[x][y] & BFLAG_PLAYERLR) {
 		bv = -(dPlayer[x][y - 1] + 1);
 		px = sx + plr[bv]._pxoff - plr[bv]._pAnimWidth2;
 		py = sy + plr[bv]._pyoff;
 		if (bv == pcursplr) {
-			Cl2DecodeFrm2(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, CelCap);
+			Cl2DrawOutline(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, CelCap);
 		}
 		/// ASSERT: assert(plr[bv]._pAnimData);
-		Cl2DecodeFrm1(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, CelCap);
+		Cl2Draw(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, CelCap);
 		if (eflag && plr[bv]._peflag) {
 			town_draw_e_flag(pBuff - 64, x - 1, y + 1, capChunks, CelCap, sx - 64, sy);
 		}
@@ -575,10 +568,10 @@ void town_draw_town_all(BYTE *pBuff, int x, int y, int capChunks, int CelCap, in
 		px = sx + plr[bv]._pxoff - plr[bv]._pAnimWidth2;
 		py = sy + plr[bv]._pyoff;
 		if (bv == pcursplr) {
-			Cl2DecodeFrm2(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, CelCap);
+			Cl2DrawOutline(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, CelCap);
 		}
 		/// ASSERT: assert(plr[bv]._pAnimData);
-		Cl2DecodeFrm1(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, CelCap);
+		Cl2Draw(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth, 0, CelCap);
 		if (eflag && plr[bv]._peflag) {
 			town_draw_e_flag(pBuff - 64, x - 1, y + 1, capChunks, CelCap, sx - 64, sy);
 		}
@@ -1007,7 +1000,7 @@ void SetTownMicros()
 				lv--;
 				pPiece = (WORD *)&pLevelPieces[32 * lv];
 				for (i = 0; i < 16; i++) {
-					pMap->mt[i] = pPiece[(i & 1) + 14 - (i & 0xE)];
+					pMap->mt[i] = SDL_SwapLE16(pPiece[(i & 1) + 14 - (i & 0xE)]);
 				}
 			} else {
 				for (i = 0; i < 16; i++) {
@@ -1032,8 +1025,9 @@ void SetTownMicros()
 
 void T_FillSector(BYTE *P3Tiles, BYTE *pSector, int xi, int yi, int w, int h)
 {
-	int i, j, xx, yy;
+	int i, j, xx, yy, nMap;
 	long v1, v2, v3, v4, ii;
+	WORD *Sector;
 
 	ii = 4;
 	yy = yi;
@@ -1043,11 +1037,14 @@ void T_FillSector(BYTE *P3Tiles, BYTE *pSector, int xi, int yi, int w, int h)
 			WORD *Map;
 
 			Map = (WORD *)&pSector[ii];
-			if (*Map) {
-				v1 = *((WORD *)&P3Tiles[(*Map - 1) * 8]) + 1;
-				v2 = *((WORD *)&P3Tiles[(*Map - 1) * 8] + 1) + 1;
-				v3 = *((WORD *)&P3Tiles[(*Map - 1) * 8] + 2) + 1;
-				v4 = *((WORD *)&P3Tiles[(*Map - 1) * 8] + 3) + 1;
+			nMap = SDL_SwapLE16(*Map);
+			if (nMap) {
+				Sector = (((WORD *)&P3Tiles[(nMap - 1) * 8]));
+				v1 = SDL_SwapLE16(*(Sector + 0)) + 1;
+				v2 = SDL_SwapLE16(*(Sector + 1)) + 1;
+				v3 = SDL_SwapLE16(*(Sector + 2)) + 1;
+				v4 = SDL_SwapLE16(*(Sector + 3)) + 1;
+
 			} else {
 				v1 = 0;
 				v2 = 0;
@@ -1068,11 +1065,13 @@ void T_FillSector(BYTE *P3Tiles, BYTE *pSector, int xi, int yi, int w, int h)
 void T_FillTile(BYTE *P3Tiles, int xx, int yy, int t)
 {
 	long v1, v2, v3, v4;
+	WORD *Tiles;
 
-	v1 = *((WORD *)&P3Tiles[(t - 1) * 8]) + 1;
-	v2 = *((WORD *)&P3Tiles[(t - 1) * 8] + 1) + 1;
-	v3 = *((WORD *)&P3Tiles[(t - 1) * 8] + 2) + 1;
-	v4 = *((WORD *)&P3Tiles[(t - 1) * 8] + 3) + 1;
+	Tiles = ((WORD *)&P3Tiles[(t - 1) * 8]);
+	v1 = SDL_SwapLE16(*(Tiles + 0)) + 1;
+	v2 = SDL_SwapLE16(*(Tiles + 1)) + 1;
+	v3 = SDL_SwapLE16(*(Tiles + 2)) + 1;
+	v4 = SDL_SwapLE16(*(Tiles + 3)) + 1;
 
 	dPiece[xx][yy] = v1;
 	dPiece[xx + 1][yy] = v2;

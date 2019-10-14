@@ -126,9 +126,10 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 			for (i = n & 3; i != 0; i--, (*src)++, (*dst)++) {
 				(*dst)[0] = (*src)[0];
 			}
-			for (i = n >> 2; i != 0; i--, (*src) += 4, (*dst) += 4) {
-				((DWORD *)(*dst))[0] = ((DWORD *)(*src))[0];
-			}
+			n = (n >> 2) << 2;
+			memcpy(*dst, *src, n);
+			(*src) += n;
+			(*dst) += n;
 		} else {
 			for (i = 0; i < n; i++, (*src)++, (*dst)++) {
 				(*dst)[0] = tbl[(*src)[0]];
@@ -162,6 +163,9 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 	}
 }
 
+#if defined(__clang__) || defined(__GNUC__)
+__attribute__((no_sanitize("shift-base")))
+#endif
 void RenderTile(BYTE *pBuff)
 {
 	int i, j;
@@ -172,7 +176,7 @@ void RenderTile(BYTE *pBuff)
 	dst = pBuff;
 	pFrameTable = (DWORD *)pDungeonCels;
 
-	src = &pDungeonCels[pFrameTable[level_cel_block & 0xFFF]];
+	src = &pDungeonCels[SDL_SwapLE32(pFrameTable[level_cel_block & 0xFFF])];
 	tile = (level_cel_block & 0x7000) >> 12;
 	tbl = &pLightTbl[256 * light_table_index];
 
@@ -181,7 +185,7 @@ void RenderTile(BYTE *pBuff)
 		if (level_cel_block & 0x8000) {
 			level_cel_block = SpeedFrameTbl[level_cel_block & 0xFFF][0] + (level_cel_block & 0xF000);
 		}
-		src = &pDungeonCels[pFrameTable[level_cel_block & 0xFFF]];
+		src = &pDungeonCels[SDL_SwapLE32(pFrameTable[level_cel_block & 0xFFF])];
 		tile = (level_cel_block & 0x7000) >> 12;
 		tbl = NULL;
 	} else if (level_cel_block & 0x8000) {
