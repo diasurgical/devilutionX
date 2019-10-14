@@ -42,13 +42,14 @@ build() {
 	mkdir -p ../../build
 	cd ../../build
 	rm -f CMakeCache.txt
-	cmake .. -DDINGUX=ON -DUSE_SDL1=ON -DBINARY_RELEASE=ON \
+	cmake .. -DDINGUX=ON -DRETROFW=ON -DUSE_SDL1=ON -DBINARY_RELEASE=ON \
 		-DCMAKE_TOOLCHAIN_FILE="$BUILDROOT/output/host/share/buildroot/toolchainfile.cmake"
+	make -j $(nproc)
 	cd -
 }
 
 package() {
-	./package.sh ../../build/devilutionx-retrofw-uclibc-sdl1.ipk
+	./package-ipk.sh ../../build/devilutionx-retrofw.ipk
 }
 
 main

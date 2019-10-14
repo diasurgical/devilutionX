@@ -151,21 +151,33 @@ The build script does the following:
 
 The buildroot uses ~4 GiB of disk space and can take almost an hour to build.
 
-### OpenDingux
+For OpenDingux builds `mksquashfs` needs to be installed.
 
-The OpenDingux build uses the buildroot at `$HOME/buildroot-2018.02.9-opendingux-musl`.
+### RetroFW (RS97, RG300, LDK)
 
-~~~ bash
-Packaging/OpenDingux/build-opendingux-sdl1.sh
-~~~
-
-### RetroFW
-
-The OpenDingux build uses the buildroot at `$HOME/buildroot-2018.02.9-retrofw`.
+The RetroFW build uses the buildroot at `$HOME/buildroot-2018.02.9-retrofw`.
 
 ~~~ bash
 Packaging/OpenDingux/build-retrofw.sh
 ~~~
+
+### OpenDingux (RG350, GCW0)
+
+This OpenDingux build uses the buildroot at `$HOME/buildroot-rg350-devilutionx`.
+
+~~~ bash
+Packaging/OpenDingux/build-rg350.sh
+~~~
+
+
+### Old OpenDingux (RS90)
+
+This OpenDingux build uses the buildroot at `$HOME/buildroot-rs90-devilutionx`.
+
+~~~ bash
+Packaging/OpenDingux/build-rs90.sh
+~~~
+
 
 </details>
 
