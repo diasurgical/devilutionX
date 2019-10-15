@@ -459,9 +459,15 @@ public:
 
 	void Enqueue(const unsigned char *data, unsigned long len)
 	{
+#ifdef USE_SDL1
 		SDL_LockAudio();
 		EnqueueUnsafe(data, len);
 		SDL_UnlockAudio();
+#else
+		SDL_LockAudioDevice(deviceId);
+		EnqueueUnsafe(data, len);
+		SDL_UnlockAudioDevice(deviceId);
+#endif
 	}
 
 	void Clear()
@@ -483,6 +489,7 @@ private:
 
 	void Dequeue(Uint8 *out, int out_len)
 	{
+		SDL_memset(out, 0, sizeof(out[0]) * out_len);
 		AudioQueueItem *item;
 		while ((item = Next()) != NULL) {
 			if (static_cast<unsigned long>(out_len) <= item->len) {
@@ -497,7 +504,6 @@ private:
 			out_len -= item->len;
 			Pop();
 		}
-		memset(out, 0, sizeof(out[0]) * out_len);
 	}
 
 	AudioQueueItem *Next()
