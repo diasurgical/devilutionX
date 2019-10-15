@@ -33,9 +33,9 @@ enum {
 
 UiListItem SELCONN_DIALOG_ITEMS[] = {
 #ifndef NONET
-	{ "Client-Server (TCP)", SELCONN_TCP},
+	{ "Client-Server (TCP)", SELCONN_TCP },
 #ifdef BUGGY
-	{ "Peer-to-Peer (UDP)", SELCONN_UDP},
+	{ "Peer-to-Peer (UDP)", SELCONN_UDP },
 #endif
 #endif
 	{ "Loopback", SELCONN_LOOPBACK },
@@ -148,4 +148,4 @@ int UiSelectProvider(
 	return selconn_ReturnValue;
 }
 
-}
+} // namespace dvl
