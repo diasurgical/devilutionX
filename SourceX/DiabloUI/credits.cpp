@@ -255,6 +255,9 @@ BOOL UiCreditsDialog(int a1)
 			switch (event.type) {
 			case SDL_KEYDOWN:
 			case SDL_MOUSEBUTTONDOWN:
+#ifndef USE_SDL1
+			case SDL_CONTROLLERBUTTONDOWN:
+#endif
 				endMenu = true;
 				break;
 			case SDL_QUIT:
