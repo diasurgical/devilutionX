@@ -704,7 +704,7 @@ void PrintQLString(int x, int y, BOOL cjustflag, char *str, int col)
 	BYTE c;
 
 	s = SStringY[y];
-	off = x + PitchTbl[SStringY[y] + 204] + 96;
+	off = x + BUFFER_WIDTH * (SStringY[y] + 204) + 96;
 	len = strlen(str);
 	k = 0;
 	if (cjustflag) {

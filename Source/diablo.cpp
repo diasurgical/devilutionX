@@ -434,9 +434,6 @@ void diablo_init_screen()
 	ScrollInfo._syoff = 0;
 	ScrollInfo._sdir = SDIR_NONE;
 
-	for (i = 0; i < 1024; i++)
-		PitchTbl[i] = i * BUFFER_WIDTH;
-
 	ClrDiabloMsg();
 }
 

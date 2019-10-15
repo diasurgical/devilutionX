@@ -3,7 +3,6 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 int light_table_index;
-int PitchTbl[1024];
 DWORD sgdwCursWdtOld;
 DWORD sgdwCursX;
 DWORD sgdwCursY;
@@ -143,7 +142,7 @@ static void scrollrt_draw_cursor_item()
 
 	mx++;
 	my++;
-	gpBufEnd = &gpBuffer[PitchTbl[SCREEN_HEIGHT + SCREEN_Y] - cursW - 2];
+	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_HEIGHT + SCREEN_Y) - cursW - 2];
 
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		col = PAL16_YELLOW + 5;
@@ -684,7 +683,7 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int chunks, int capChunk
 			level_piece_id = dPiece[x][y];
 			light_table_index = dLight[x][y];
 			if (level_piece_id != 0) {
-				dst = &gpBuffer[sx + 32 + PitchTbl[sy]];
+				dst = &gpBuffer[sx + 32 + BUFFER_WIDTH * sy];
 				cel_transparency_active = (BYTE)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
 				level_cel_block = pMap->mt[1];
 				if (level_cel_block != 0) {
@@ -717,9 +716,9 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int chunks, int capChunk
 				if (level_cel_block != 0 && leveltype == DTYPE_HELL) {
 					drawUpperScreen(dst);
 				}
-				scrollrt_draw_dungeon(&gpBuffer[sx + PitchTbl[sy]], x, y, sx, sy, 0);
+				scrollrt_draw_dungeon(&gpBuffer[sx + BUFFER_WIDTH * sy], x, y, sx, sy, 0);
 			} else {
-				world_draw_black_tile(&gpBuffer[sx + PitchTbl[sy]]);
+				world_draw_black_tile(&gpBuffer[sx + BUFFER_WIDTH * sy]);
 			}
 		}
 		x++;
@@ -734,7 +733,7 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int chunks, int capChunk
 			level_piece_id = dPiece[x][y];
 			light_table_index = dLight[x][y];
 			if (level_piece_id != 0) {
-				dst = &gpBuffer[sx + PitchTbl[sy]];
+				dst = &gpBuffer[sx + sy * BUFFER_WIDTH];
 				cel_transparency_active = (BYTE)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
 				arch_draw_type = 1;
 				level_cel_block = pMap->mt[0];
@@ -758,9 +757,9 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int chunks, int capChunk
 						drawUpperScreen(dst + 32);
 					}
 				}
-				scrollrt_draw_dungeon(&gpBuffer[sx + PitchTbl[sy]], x, y, sx, sy, 1);
+				scrollrt_draw_dungeon(&gpBuffer[sx + BUFFER_WIDTH * sy], x, y, sx, sy, 1);
 			} else {
-				world_draw_black_tile(&gpBuffer[sx + PitchTbl[sy]]);
+				world_draw_black_tile(&gpBuffer[sx + BUFFER_WIDTH * sy]);
 			}
 		}
 		x++;
@@ -774,7 +773,7 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int chunks, int capChunk
 			level_piece_id = dPiece[x][y];
 			light_table_index = dLight[x][y];
 			if (level_piece_id != 0) {
-				dst = &gpBuffer[sx + PitchTbl[sy]];
+				dst = &gpBuffer[sx + BUFFER_WIDTH * sy];
 				cel_transparency_active = (BYTE)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
 				arch_draw_type = 1;
 				level_cel_block = pMap->mt[0];
@@ -808,9 +807,9 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int chunks, int capChunk
 				if (level_cel_block != 0 && leveltype == DTYPE_HELL) {
 					drawUpperScreen(dst);
 				}
-				scrollrt_draw_dungeon(&gpBuffer[sx + PitchTbl[sy]], x, y, sx, sy, 0);
+				scrollrt_draw_dungeon(&gpBuffer[sx + BUFFER_WIDTH * sy], x, y, sx, sy, 0);
 			} else {
-				world_draw_black_tile(&gpBuffer[sx + PitchTbl[sy]]);
+				world_draw_black_tile(&gpBuffer[sx + BUFFER_WIDTH * sy]);
 			}
 		}
 	}
@@ -840,18 +839,18 @@ static void DrawGame(int x, int y)
 	x -= chunks;
 	y--;
 
-	if (zoomflag && SCREEN_WIDTH == PANEL_WIDTH && SCREEN_HEIGHT == VIEWPORT_HEIGHT + PANEL_HEIGHT) {
+	if (zoomflag && SCREEN_WIDTH <= PANEL_WIDTH && SCREEN_HEIGHT <= VIEWPORT_HEIGHT + PANEL_HEIGHT) {
 		if (chrflag || questlog) {
 			x += 2;
 			y -= 2;
 			sx += 288;
-			chunks = 6;
+			chunks -= 4;
 		}
 		if (invflag || sbookflag) {
 			x += 2;
 			y -= 2;
 			sx -= 32;
-			chunks = 6;
+			chunks -= 4;
 		}
 	}
 
@@ -892,7 +891,7 @@ static void DrawGame(int x, int y)
 	}
 
 	/// ASSERT: assert(gpBuffer);
-	gpBufEnd = &gpBuffer[PitchTbl[VIEWPORT_HEIGHT + SCREEN_Y]];
+	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (VIEWPORT_HEIGHT + SCREEN_Y)];
 	for (i = 0; i < blocks; i++) {
 		scrollrt_draw(x, y, sx, sy, chunks, i, 0);
 		y++;
@@ -903,6 +902,7 @@ static void DrawGame(int x, int y)
 		sx += 32;
 		sy += 16;
 	}
+
 	if (zoomflag)
 		return;
 

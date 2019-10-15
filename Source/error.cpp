@@ -114,7 +114,7 @@ void DrawDiabloMsg()
 #include "asm_trans_rect.inc"
 
 	strcpy(tempstr, MsgStrings[msgflag]);
-	off = 165 + PitchTbl[342];
+	off = 165 + BUFFER_WIDTH * 342;
 	len = strlen(tempstr);
 	width = 0;
 

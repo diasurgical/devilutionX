@@ -176,7 +176,7 @@ void DrawSpellCel(int xp, int yp, BYTE *pCelBuff, int nCel, int nWidth)
 	BYTE *pRLEBytes;
 
 	pRLEBytes = CelGetFrame(pCelBuff, nCel, &nDataSize);
-	CelBlitLight(&gpBuffer[xp + PitchTbl[yp]], pRLEBytes, nDataSize, nWidth, SplTransTbl);
+	CelBlitLight(&gpBuffer[xp + BUFFER_WIDTH * yp], pRLEBytes, nDataSize, nWidth, SplTransTbl);
 }
 
 void SetSpellTrans(char t)
@@ -1255,7 +1255,7 @@ void PrintGameStr(int x, int y, char *str, int color)
 {
 	BYTE c;
 	int off;
-	off = PitchTbl[y + SCREEN_Y] + x + SCREEN_X;
+	off = BUFFER_WIDTH * (y + SCREEN_Y) + x + SCREEN_X;
 	while (*str) {
 		c = gbFontTransTbl[(BYTE)*str++];
 		c = fontframe[c];
@@ -1477,7 +1477,7 @@ void MY_PlrStringXY(int x, int y, int width, char *pszStr, char col, int base)
 	char *tmp;
 	int nOffset, screen_x, line, widthOffset;
 
-	nOffset = x + PitchTbl[y + SCREEN_Y] + SCREEN_X;
+	nOffset = x + BUFFER_WIDTH * (y + SCREEN_Y) + SCREEN_X;
 	widthOffset = width - x + 1;
 	line = 0;
 	screen_x = 0;
@@ -1774,7 +1774,7 @@ void PrintSBookStr(int x, int y, BOOL cjustflag, char *pszStr, char col)
 	char *tmp;
 	int screen_x, line, width;
 
-	width = PitchTbl[y] + x + SCREEN_WIDTH - 320 + 120;;
+	width = BUFFER_WIDTH * y + x + SCREEN_WIDTH - 320 + 120;;
 	line = 0;
 	if (cjustflag) {
 		screen_x = 0;
@@ -2004,7 +2004,7 @@ char *control_print_talk_msg(char *msg, int x, int y, int *nOffset, int color)
 
 	x += 264;
 	width = x;
-	*nOffset = PitchTbl[y + 534] + x;
+	*nOffset = BUFFER_WIDTH * (y + 534) + x;
 	while (*msg) {
 
 		c = fontframe[gbFontTransTbl[(BYTE)*msg]];

@@ -111,7 +111,7 @@ void PrintPlrMsg(DWORD x, DWORD y, DWORD width, const char *str, BYTE col)
 
 	while (*str) {
 		BYTE c;
-		int screen = PitchTbl[y] + x;
+		int screen = BUFFER_WIDTH * y + x;
 		DWORD len = 0;
 		const char *sstr = str;
 		const char *endstr = sstr;
