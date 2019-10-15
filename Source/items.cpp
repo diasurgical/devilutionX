@@ -2924,7 +2924,7 @@ void PrintUString(int x, int y, BOOL cjustflag, char *str, int col)
 	int len, width, off, i, k;
 	BYTE c;
 
-	off = x + BUFFER_WIDTH * (SStringY[y] + 204) + 96;
+	off = x + BUFFER_WIDTH * (y * 12 + 204) + 96;
 	len = strlen(str);
 	k = 0;
 	if (cjustflag) {
@@ -2954,7 +2954,7 @@ void DrawULine(int y)
 	BYTE *src, *dst;
 
 	src = &gpBuffer[SCREENXY(26, 25)];
-	dst = &gpBuffer[BUFFER_WIDTH * (SStringY[y] + 198) + 26 + 64];
+	dst = &gpBuffer[BUFFER_WIDTH * (y * 12 + 198) + 26 + 64];
 
 	for (i = 0; i < 3; i++, src += BUFFER_WIDTH, dst += BUFFER_WIDTH)
 		memcpy(dst, src, 266);

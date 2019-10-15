@@ -703,8 +703,8 @@ void PrintQLString(int x, int y, BOOL cjustflag, char *str, int col)
 	int len, width, off, i, k, s;
 	BYTE c;
 
-	s = SStringY[y];
-	off = x + BUFFER_WIDTH * (SStringY[y] + 204) + 96;
+	s = y * 12;
+	off = x + BUFFER_WIDTH * (y * 12 + 204) + 96;
 	len = strlen(str);
 	k = 0;
 	if (cjustflag) {

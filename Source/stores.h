@@ -134,7 +134,6 @@ void ReleaseStoreBtn();
 
 /* rdata */
 
-extern int SStringY[24];
 extern char *talkname[9];
 
 #endif /* __STORES_H__ */

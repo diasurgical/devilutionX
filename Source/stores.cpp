@@ -36,32 +36,6 @@ int stextdown;
 char stextscrlubtn;
 char stextflag;
 
-int SStringY[24] = {
-	0,
-	12,
-	24,
-	36,
-	48,
-	60,
-	72,
-	84,
-	96,
-	108,
-	120,
-	132,
-	144,
-	156,
-	168,
-	180,
-	192,
-	204,
-	216,
-	228,
-	240,
-	252,
-	264,
-	276
-};
 char *talkname[9] = {
 	"Griswold",
 	"Pepin",
@@ -148,7 +122,7 @@ void PrintSString(int x, int y, BOOL cjustflag, char *str, char col, int val)
 	BYTE c;
 	char valstr[32];
 
-	s = SStringY[y] + stext[y]._syoff;
+	s = y * 12 + stext[y]._syoff;
 	if (stextsize)
 		xx = 96;
 	else
@@ -199,7 +173,7 @@ void DrawSLine(int y)
 {
 	int xy, yy, width, line, sy;
 
-	sy = SStringY[y];
+	sy = y * 12;
 	if (stextsize == 1) {
 		xy = SCREENXY(26, 25);
 		yy = BUFFER_WIDTH * (sy + 198) + 26 + 64;
@@ -228,8 +202,8 @@ void DrawSArrows(int y1, int y2)
 {
 	int yd1, yd2, yd3;
 
-	yd1 = SStringY[y1] + 204;
-	yd2 = SStringY[y2] + 204;
+	yd1 = y1 * 12 + 204;
+	yd2 = y2 * 12 + 204;
 	if (stextscrlubtn != -1)
 		CelDraw(665, yd1, pSTextSlidCels, 12, 12);
 	else
@@ -247,10 +221,10 @@ void DrawSArrows(int y1, int y2)
 	else
 		yd3 = stextsel;
 	if (storenumh > 1)
-		yd3 = 1000 * (stextsval + ((yd3 - stextup) >> 2)) / (storenumh - 1) * (SStringY[y2] - SStringY[y1] - 24) / 1000;
+		yd3 = 1000 * (stextsval + ((yd3 - stextup) >> 2)) / (storenumh - 1) * (y2 * 12 - y1 * 12 - 24) / 1000;
 	else
 		yd3 = 0;
-	CelDraw(665, SStringY[y1 + 1] + 204 + yd3, pSTextSlidCels, 13, 12);
+	CelDraw(665, (y1 + 1) * 12 + 204 + yd3, pSTextSlidCels, 13, 12);
 }
 
 void DrawSTextHelp()
