@@ -819,19 +819,28 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int chunks, int capChunk
 static void DrawGame(int x, int y)
 {
 	int i, sx, sy, chunks, blocks;
+	int wdt, nSrcOff, nDstOff;
 
 	sx = ScrollInfo._sxoff + 64;
-	sy = ScrollInfo._syoff + 175;
+	if (zoomflag) {
+		sy = ScrollInfo._syoff + 175;
 
-	chunks = ceil(SCREEN_WIDTH / 64);
-	// Fill screen + keep evaulating untill MicroTiles can't affect screen
-	blocks = ceil(VIEWPORT_HEIGHT / 32) + ceil(MicroTileLen / 2);
+		chunks = ceil(SCREEN_WIDTH / 64);
+		// Fill screen + keep evaulating untill MicroTiles can't affect screen
+		blocks = ceil(VIEWPORT_HEIGHT / 32) + ceil(MicroTileLen / 2);
+	} else {
+		sy = ScrollInfo._syoff + 143;
+
+		chunks = ceil(SCREEN_WIDTH / 2 / 64) + 1; // TODO why +1?
+		// Fill screen + keep evaulating untill MicroTiles can't affect screen
+		blocks = ceil(VIEWPORT_HEIGHT / 2 / 32) + ceil(MicroTileLen / 2);
+	}
 
 	// Center screen
 	x -= chunks;
 	y--;
 
-	if (SCREEN_WIDTH == PANEL_WIDTH && SCREEN_HEIGHT == VIEWPORT_HEIGHT + PANEL_HEIGHT) {
+	if (zoomflag && SCREEN_WIDTH == PANEL_WIDTH && SCREEN_HEIGHT == VIEWPORT_HEIGHT + PANEL_HEIGHT) {
 		if (chrflag || questlog) {
 			x += 2;
 			y -= 2;
@@ -894,72 +903,8 @@ static void DrawGame(int x, int y)
 		sx += 32;
 		sy += 16;
 	}
-}
-
-static void DrawZoom(int x, int y)
-{
-	int i, sx, sy, chunks, blocks;
-	int wdt, nSrcOff, nDstOff;
-
-	sx = ScrollInfo._sxoff + 64;
-	sy = ScrollInfo._syoff + 143;
-
-	chunks = ceil(SCREEN_WIDTH / 2 / 64) + 1; // TODO why +1?
-	// Fill screen + keep evaulating untill MicroTiles can't affect screen
-	blocks = ceil(VIEWPORT_HEIGHT / 2 / 32) + ceil(MicroTileLen / 2);
-
-	// Center screen
-	x -= chunks;
-	y--;
-
-	switch (ScrollInfo._sdir) {
-	case SDIR_NONE:
-		break;
-	case SDIR_NE:
-		chunks++;
-	case SDIR_N:
-		sy -= 32;
-		x--;
-		y--;
-		blocks++;
-		break;
-	case SDIR_SE:
-		blocks++;
-	case SDIR_E:
-		chunks++;
-		break;
-	case SDIR_S:
-		blocks++;
-		break;
-	case SDIR_SW:
-		blocks++;
-	case SDIR_W:
-		sx -= 64;
-		x--;
-		y++;
-		chunks++;
-		break;
-	case SDIR_NW:
-		sx -= 64;
-		sy -= 32;
-		x -= 2;
-		chunks++;
-		blocks++;
-		break;
-	}
-
-	/// ASSERT: assert(gpBuffer);
-	gpBufEnd = &gpBuffer[PitchTbl[VIEWPORT_HEIGHT + SCREEN_Y]];
-	for (i = 0; i < blocks; i++) {
-		scrollrt_draw(x, y, sx, sy, chunks, i, 0);
-		y++;
-		sx -= 32;
-		sy += 16;
-		scrollrt_draw(x, y, sx, sy, chunks, i, 1);
-		x++;
-		sx += 32;
-		sy += 16;
-	}
+	if (zoomflag)
+		return;
 
 	nSrcOff = SCREENXY(32, 159);
 	nDstOff = SCREENXY(0, 350);
@@ -998,11 +943,7 @@ static void DrawZoom(int x, int y)
 
 void DrawView(int StartX, int StartY)
 {
-	if (zoomflag) {
-		DrawGame(StartX, StartY);
-	} else {
-		DrawZoom(StartX, StartY);
-	}
+	DrawGame(StartX, StartY);
 	if (automapflag) {
 		DrawAutomap();
 	}
