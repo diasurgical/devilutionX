@@ -173,7 +173,7 @@ void CelBlitLight(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth, B
 	}
 }
 
-void CelDrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
+void CelDrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, BYTE *tbl)
 {
 	int nDataSize;
 	BYTE *pDecodeTo, *pRLEBytes;
@@ -188,8 +188,8 @@ void CelDrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 	pRLEBytes = CelGetFrame(pCelBuff, nCel, &nDataSize);
 	pDecodeTo = &gpBuffer[sx + BUFFER_WIDTH * sy];
 
-	if (light_table_index)
-		CelBlitLightSafe(pDecodeTo, pRLEBytes, nDataSize, nWidth);
+	if (light_table_index || tbl)
+		CelBlitLightSafe(pDecodeTo, pRLEBytes, nDataSize, nWidth, tbl);
 	else
 		CelBlitSafe(pDecodeTo, pRLEBytes, nDataSize, nWidth);
 }
@@ -394,10 +394,9 @@ void CelClippedBlit(BYTE *pBuff, BYTE *pCelBuff, int nCel, int nWidth, int CelSk
 /**
  * @brief Same as CelBlitLight but checks for drawing outside the buffer
  */
-void CelBlitLightSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth)
+void CelBlitLightSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE *tbl)
 {
 	int w;
-	BYTE *tbl;
 
 	/// ASSERT: assert(pDecodeTo != NULL);
 	if (!pDecodeTo)
@@ -415,7 +414,8 @@ void CelBlitLightSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidt
 
 	src = pRLEBytes;
 	dst = pDecodeTo;
-	tbl = &pLightTbl[light_table_index * 256];
+	if (tbl == NULL)
+		tbl = &pLightTbl[light_table_index * 256];
 	w = nWidth;
 
 	for (; src != &pRLEBytes[nDataSize]; dst -= BUFFER_WIDTH + w) {

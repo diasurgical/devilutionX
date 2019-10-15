@@ -60,7 +60,7 @@ void DrawSpellList();
 void SetSpell();
 void SetSpeedSpell(int slot);
 void ToggleSpell(int slot);
-void CPrintString(int nOffset, int nCel, char col);
+void CPrintString(int sx, int sy, int nCel, char col);
 void AddPanelString(char *str, BOOL just);
 void ClearPanel();
 void DrawPanelBox(int x, int y, int w, int h, int sx, int sy);
@@ -109,7 +109,7 @@ void control_drop_gold(char vkey);
 void control_remove_gold(int pnum, int gold_index);
 void control_set_gold_curs(int pnum);
 void DrawTalkPan();
-char *control_print_talk_msg(char *msg, int x, int y, int *nOffset, int just);
+char *control_print_talk_msg(char *msg, int *x, int y, int just);
 BOOL control_check_talk_btn();
 void control_release_talk_btn();
 void control_reset_talk_msg();
@@ -123,7 +123,7 @@ void control_up_down(int v);
 /* rdata */
 extern const BYTE fontframe[128];
 extern const BYTE fontkern[68];
-extern const int lineoffset[25];
+extern const int lineOffsets[5][5];
 extern const BYTE gbFontTransTbl[256];
 
 /* data */
