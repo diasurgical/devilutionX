@@ -1,8 +1,12 @@
 #ifndef INCLUDED_KEYBOARDS_DANZEFF_H
 #define INCLUDED_KEYBOARDS_DANZEFF_H
-
+#ifdef USE_SDL1
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
+#else
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#endif
 
 //Pure SDL version of danzeff.
 //Can be compiled on PC, PSP, whatever (if you add an input definition for it).
@@ -54,6 +58,8 @@ void danzeff_moveTo(const int newX, const int newY);
 
 //draw the keyboard to the screen
 void danzeff_render(void (*PreRenderigFunction)(), void (*PostRenderigFunction)());
+void set_danzeff_debug_funtion(int (*customDebugFunction)(const char *));
+void printDebug(const char *string);
 
 #ifdef __cplusplus
 }

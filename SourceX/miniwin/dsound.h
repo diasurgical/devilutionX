@@ -1,7 +1,11 @@
 #include "devilution.h"
 
 #ifdef VITA
+#ifdef USE_SDL1
 #include <SDL/SDL_mixer.h>
+#else
+#include <SDL2/SDL_mixer.h>
+#endif
 #else
 #include <SDL_mixer.h>
 #endif

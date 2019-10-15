@@ -6,9 +6,7 @@
 #include "vita_aux_util.h"
 
 #include "common/debugScreen.h"
-extern "C" {
 #include "danzeffSDL/danzeff.h"
-}
 
 #ifndef printf
 #define printf psvDebugScreenPrintf
@@ -19,17 +17,85 @@ extern "C" {
 #define clrscr psvDebugScreenClear
 #endif
 
-int VitaAux::hdebug                    = 1;
-int VitaAux::errores                   = 0;
-SDLKey VitaAux::latestKey              = SDLK_UNKNOWN;
+int VitaAux::hdebug  = 1;
+int VitaAux::errores = 0;
+#ifdef USE_SDL1
+SDLKey VitaAux::latestKey = SDLK_UNKNOWN;
+#else
+char VitaAux::latestKey = SDLK_UNKNOWN;
+#endif
 unsigned long VitaAux::allocatedMemory = 0;
+
+void VitaAux::testJoystick(SDL_Joystick *joy)
+{
+	psvDebugScreenInit();
+	VitaAux::hdebug = 0;
+	if (joy != NULL) {
+		// Get information about the joystick
+		char debugExit[1000];
+#ifndef USE_SDL1
+		const char *name = SDL_JoystickName(joy);
+#else
+		char name[100];
+		sprintf(name, "Vita Joystick");
+#endif
+		const int num_axes    = SDL_JoystickNumAxes(joy);
+		const int num_buttons = SDL_JoystickNumButtons(joy);
+		const int num_hats    = SDL_JoystickNumHats(joy);
+		int positionx         = 1;
+		int positiony         = 1;
+		psvDebugScreenSetCoordsXY(&positionx, &positiony);
+		sprintf(debugExit, "Now reading from joystick '%s' with:\n"
+		                   "%d axes\n"
+		                   "%d buttons\n"
+		                   "%d hats\n\n",
+		    name,
+		    num_axes,
+		    num_buttons,
+		    num_hats);
+		VitaAux::debug(debugExit);
+
+		int quit = 0;
+
+		// Keep reading the state of the joystick in a loop
+		while (quit == 0) {
+			positionx    = 1;
+			positiony    = 30;
+			debugExit[0] = '\0';
+			psvDebugScreenSetCoordsXY(&positionx, &positiony);
+			if (SDL_QuitRequested()) {
+				quit = 1;
+			}
+
+			for (int i = 0; i < num_axes; i++) {
+				sprintf(debugExit + strlen(debugExit), "Axis %d: %d                    \n", i, SDL_JoystickGetAxis(joy, i));
+			}
+
+			for (int i = 0; i < num_buttons; i++) {
+				sprintf(debugExit + strlen(debugExit), "Button %d: %d\n", i, SDL_JoystickGetButton(joy, i));
+			}
+
+			for (int i = 0; i < num_hats; i++) {
+				sprintf(debugExit + strlen(debugExit), "Hat %d: %d\n", i, SDL_JoystickGetHat(joy, i));
+			}
+
+			sprintf(debugExit + strlen(debugExit), "\n");
+			VitaAux::debug(debugExit);
+
+			SDL_Delay(50);
+		}
+
+		SDL_JoystickClose(joy);
+	} else {
+		VitaAux::debug("Couldn't open the joystick. Quitting now...\n");
+	}
+}
 
 void VitaAux::init()
 {
 
 	psvDebugScreenInit();
-
-	VitaAux::debug("CARGANDO....\n");
+	VitaAux::debug("DevilutionX port by @gokuhs\n Loading...");
 	if (!VitaAux::checkAndCreateFolder()) {
 		sceKernelExitProcess(3);
 	}
@@ -95,14 +161,22 @@ bool VitaAux::copy_file(char *file_in, char *file_out)
 	return true;
 }
 
-void VitaAux::showIME(const char *title, char *dest, void (*PreRenderigFunction)(), void (*PostRenderigFunction)(), SDL_Surface *renderingSurface)
+SDL_Surface *KBRenderingSurface = NULL;
+
+void VitaAux::showIME(const char *title, char *dest, void (*PreRenderigFunction)(), void (*PostRenderigFunction)(), SDL_Surface **renderingSurface)
 {
 	if (!danzeff_load()) {
 		VitaAux::error("Can't load Danzeff!!");
 		sprintf(dest, "Error");
 	} else {
-		SDL_FillRect(renderingSurface, &renderingSurface->clip_rect, SDL_MapRGBA(renderingSurface->format, 0, 0, 0, 200));
-		danzeff_set_screen(renderingSurface);
+		if (*renderingSurface == NULL) {
+			*renderingSurface = KBRenderingSurface;
+		} else {
+			KBRenderingSurface = *renderingSurface;
+		}
+		SDL_FillRect(KBRenderingSurface, &KBRenderingSurface->clip_rect, SDL_MapRGBA(KBRenderingSurface->format, 0, 0, 0, 200));
+		danzeff_set_screen(KBRenderingSurface);
+		set_danzeff_debug_funtion(&VitaAux::debug);
 		unsigned char name_pos;
 		unsigned int key;
 		int exit_osk;
@@ -111,44 +185,55 @@ void VitaAux::showIME(const char *title, char *dest, void (*PreRenderigFunction)
 		name_pos = 0;
 		while (dest[name_pos])
 			name_pos++;
-		while (!exit_osk) {
-			if (SDL_NumJoysticks() >= 1) {
-				paddata = SDL_JoystickOpen(0);
-				SDL_JoystickEventState(SDL_ENABLE);
+		if (SDL_NumJoysticks() >= 1) {
+			paddata = SDL_JoystickOpen(0);
+			//VitaAux::testJoystick(paddata);
+			if (paddata == NULL) {
+				VitaAux::dialog("Joystick can't open", "The joystick is not open property", true, false, true);
 			}
-			key = danzeff_readInput(paddata);
-			switch (key) {
-			case DANZEFF_START:
-				exit_osk = 1;
-				break;
-			case DANZEFF_SELECT:
-				exit_osk = 2;
-				break;
-			case 8: //backspace
-				if (name_pos > 0) {
-					name_pos--;
+			//SDL_JoystickEventState(SDL_ENABLE);
+			while (!exit_osk) {
+				SDL_JoystickUpdate();
+				key = danzeff_readInput(paddata);
+				if (key != 0) {
+					switch (key) {
+					case DANZEFF_START:
+						exit_osk = 1;
+						break;
+					case DANZEFF_SELECT:
+						exit_osk = 2;
+						break;
+					case 8: //backspace
+						if (name_pos > 0) {
+							name_pos--;
+						}
+						dest[name_pos] = 0;
+						break;
+					default:
+						if (key >= 32) {
+							dest[name_pos] = key;
+							if (name_pos < 16)
+								name_pos++; //Posicion Maxima
+							dest[name_pos] = 0;
+						}
+						break;
+					}
 				}
-				dest[name_pos] = 0;
-				break;
-			default:
-				if (key >= 32) {
-					dest[name_pos] = key;
-					if (name_pos < 16)
-						name_pos++; //Posicion Maxima
-					dest[name_pos] = 0;
-				}
-				break;
+				danzeff_render((*PreRenderigFunction), (*PostRenderigFunction));
 			}
-			danzeff_render((*PreRenderigFunction), (*PostRenderigFunction));
+			if (exit_osk == 1) {
+				int pru;
+				pru       = strlen(dest);
+				dest[pru] = '\0';
+			} else if (exit_osk == 2) {
+				//TODO cancela, go back to old name
+			}
+			SDL_JoystickClose(paddata);
+		} else {
+			VitaAux::dialog("Joystick can't open", "Any Joystick found", true, false, true);
 		}
-		if (exit_osk == 1) {
-			int pru;
-			pru       = strlen(dest);
-			dest[pru] = '\0';
-		} else if (exit_osk == 2) {
-			//TODO cancela, go back to old name
-		}
-		SDL_FillRect(renderingSurface, &renderingSurface->clip_rect, SDL_MapRGBA(renderingSurface->format, 0, 0, 0, 0));
+		SDL_FillRect(KBRenderingSurface, &KBRenderingSurface->clip_rect, SDL_MapRGBA(KBRenderingSurface->format, 0, 0, 0, 0));
+		*renderingSurface = NULL;
 		danzeff_free();
 	}
 
@@ -233,7 +318,7 @@ int VitaAux::debug(const char texto)
 
 int VitaAux::debug(char *texto)
 {
-	printf("Debug: \e[42m%s\n\e[m", texto);
+	printf("\e[42m%s\n\e[m", texto);
 
 	if (hdebug == 0)
 		return 0;
@@ -267,7 +352,7 @@ int VitaAux::error(char *texto)
 {
 	psvDebugScreenInit();
 	VitaAux::debug(texto);
-	printf("Error: \e[41m%s\n\e[m", texto);
+	printf("\e[41m%s\n\e[m", texto);
 	FILE *ar;
 	int tam;
 	tam = strlen(texto);

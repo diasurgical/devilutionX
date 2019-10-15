@@ -381,8 +381,9 @@ void ConvertTMPKHeader(void *header);
 //
 // MINIWIN changes
 //
-
+#ifndef __cplusplus
 #define bool int
+#endif
 extern "C" void TranslateFileName(char *dst, int dstLen, const char *src);
 
 #endif // __STORMPORT_H__

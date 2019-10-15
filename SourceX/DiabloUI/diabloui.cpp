@@ -284,7 +284,7 @@ bool UiFocusNavigation(SDL_Event *event)
 			case SDLK_SPACE: {
 				void (*preRenderFuntionPt)() = &preRenderFuntion;
 				void (*postRenderFuntionPt)() = &postRenderFuntion;
-				VitaAux::showIME("Hero's name", UiTextInput, (*preRenderFuntionPt), (*postRenderFuntionPt), keyBoardArt.surface);
+				VitaAux::showIME("Hero's name", UiTextInput, (*preRenderFuntionPt), (*postRenderFuntionPt), &keyBoardArt.surface);
 				break;
 			}
 #endif

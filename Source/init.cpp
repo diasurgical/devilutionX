@@ -3,7 +3,11 @@
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 #ifdef VITA
+#ifdef USE_SDL1
 #include <SDL/SDL.h>
+#else
+#include <SDL2/SDL.h>
+#endif
 #include "../vita/vita_aux_util.h"
 #else
 #include <SDL.h>
@@ -70,7 +74,6 @@ void init_archives()
 	fileinfo.originalarchivefile = diabdat_mpq_path;
 	fileinfo.patcharchivefile = patch_rt_mpq_path;
 	init_get_file_info();
-	VitaAux::debug("init test access");
 #ifdef SPAWN
 	diabdat_mpq = init_test_access(diabdat_mpq_path, "spawn.mpq", "DiabloSpawn", 1000, FS_PC);
 #else

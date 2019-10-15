@@ -2,8 +2,13 @@
 #include "miniwin/dsound.h"
 #include "stubs.h"
 #ifdef VITA
+#ifdef USE_SDL1
 #include <SDL/SDL.h>
 #include <SDL/SDL_mixer.h>
+#else
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
+#endif
 #else
 #include <SDL.h>
 #include <SDL_mixer.h>

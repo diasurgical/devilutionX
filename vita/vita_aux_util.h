@@ -1,7 +1,11 @@
 #ifndef VITAAUXUTIL_H
 #define VITAAUXUTIL_H
 
+#ifdef USE_SDL1
 #include <SDL/SDL_events.h>
+#else
+#include <SDL2/SDL_events.h>
+#endif
 
 #define MAX(X, Y) ((X) > (Y) ? (X) : (Y))
 #define RGB(r, g, b) (0xFF000000 | ((b) << 16) | ((g) << 8) | (r))
@@ -45,14 +49,17 @@ public:
 	static void getch();
 	static bool checkAndCreateFolder();
 	static bool copy_file(char *file_in, char *file_out);
-	static void showIME(const char *title, char *dest, void (*PreRenderigFunction)(), void (*PostRenderigFunction)(), SDL_Surface *renderingSurface);
+	static void showIME(const char *title, char *dest, void (*PreRenderigFunction)(), void (*PostRenderigFunction)(), SDL_Surface **renderingSurface);
 
 	//Modo de //debug, va creando un log.				|
 	static int hdebug; //0 Desactivado, 1 Activado, 3 Error :-s
 	                   //Variable de error;
 	static int errores;
-
+#ifdef USE_SDL1
 	static SDLKey latestKey;
+#else
+	static char latestKey;
+#endif
 	static unsigned long allocatedMemory;
 
 	static void delay(int);
@@ -85,5 +92,6 @@ public:
 	//Utils
 	static void printMemInfo(unsigned int amount = 0);
 	static void updateAllocMem(unsigned int amount, bool minus);
+	static void testJoystick(SDL_Joystick *joy);
 };
 #endif

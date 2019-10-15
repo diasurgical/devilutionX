@@ -3,7 +3,11 @@
 #include "devilution.h"
 
 #ifdef VITA
+#ifdef USE_SDL1
 #include <SDL/SDL_ttf.h>
+#else
+#include <SDL2/SDL_ttf.h>
+#endif
 #else
 #include <SDL_ttf.h>
 #endif

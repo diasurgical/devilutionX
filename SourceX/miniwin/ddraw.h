@@ -1,6 +1,10 @@
 #include "devilution.h"
 #ifdef VITA
+#ifdef USE_SDL1
 #include <SDL/SDL.h>
+#else
+#include <SDL2/SDL.h>
+#endif
 #else
 #include <SDL.h>
 #endif

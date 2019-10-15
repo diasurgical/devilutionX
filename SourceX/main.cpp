@@ -1,8 +1,13 @@
 #include <string>
 
 #ifdef VITA
+#ifdef USE_SDL1
 #include <SDL/SDL.h>
+#else
+#include <SDL2/SDL.h>
+#endif
 #include "../vita/vita_aux_util.h"
+#include <vitasdk.h>
 #else
 #include <SDL.h>
 #endif
@@ -28,11 +33,37 @@ static std::string build_cmdline(int argc, char **argv)
 	return str;
 }
 
-int main(int argc, char **argv)
-{
 #ifdef VITA
-	VitaAux::init();
+extern void IN_Init(void *windowData);
+
+int devilution_main(unsigned int argc, void *argv)
+#else
+int main(int argc, char **argv)
 #endif
-	auto cmdline = build_cmdline(argc, argv);
+{
+	auto cmdline = build_cmdline(argc, (char **)argv);
 	return dvl::WinMain(NULL, NULL, (char *)cmdline.c_str(), 0);
 }
+#ifdef VITA
+int main(int argc, char **argv)
+{
+	// Setting maximum clocks
+	//scePowerSetArmClockFrequency(444);
+	//scePowerSetBusClockFrequency(222);
+	//scePowerSetGpuClockFrequency(222);
+	//scePowerSetGpuXbarClockFrequency(166);
+
+	// Starting input
+	//IN_Init(NULL);
+	VitaAux::init();
+	// We need a bigger stack to run Quake 3, so we create a new thread with a proper stack size
+	SceUID main_thread = sceKernelCreateThread("devilutionX", devilution_main, 0x40, 0x7000000, 0, 0, NULL);
+	if (main_thread >= 0) {
+		sceKernelStartThread(main_thread, 0, NULL);
+		sceKernelWaitThreadEnd(main_thread, NULL, NULL);
+	} else {
+		VitaAux::dialog("Can't create main thread!", "Error creation and launch MainThread", true, true, true);
+	}
+	return 0;
+}
+#endif

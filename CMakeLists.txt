@@ -36,7 +36,7 @@ option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network" OFF)
 
 if (VITA)
-  set(USE_SDL1 ON)
+  #set(USE_SDL1 ON)
   set(NONET ON)
   set(ASAN OFF)
   set(UBSAN OFF)
@@ -130,6 +130,9 @@ if(VITA)
   # Note that we make sure not to overwrite previous flags
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -std=c11 -g -Wl,-q -O2 -w")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -Wl,-q -O2 -w")
+  
+  #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mfpu=neon -mcpu=cortex-a9 -fsigned-char -Wl,-q -O3 -g -ffast-math -fno-short-enums")
+  #set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS} ${CMAKE_C_FLAGS} -std=gnu++11")
   # Optional. You can specify more param.sfo flags this way.
   set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1")
 
@@ -139,19 +142,22 @@ if(VITA)
   )
   add_compile_definitions(DANZEFF_INPUT_VITA)
   add_library(danzeff STATIC
-  vita/danzeffSDL/danzeff.c
-  vita/danzeffSDL/font.c
-  vita/danzeffSDL/fontNaga10.c
-  vita/danzeffSDL/pspctrl_emu.c
+  vita/danzeffSDL/danzeff.cpp
+  #vita/danzeffSDL/font.c
+  #vita/danzeffSDL/fontNaga10.c
+  #vita/danzeffSDL/pspctrl_emu.c
   )
 
   add_library(vita_aux_util STATIC
-  vita/vitasdk_heap.cpp
   vita/vita_aux_util.cpp
   vita/common/debugScreen.c
   )
   target_link_libraries(vita_aux_util PUBLIC
   danzeff)
+  if(USE_SDL1)
+    target_compile_definitions(danzeff PRIVATE USE_SDL1)
+    target_compile_definitions(vita_aux_util PRIVATE USE_SDL1)
+  endif()
 
 else()
 
@@ -318,6 +324,11 @@ if(NOT NONET)
     SourceX/dvlnet/udp_p2p.cpp)
 endif()
 
+if(VITA)
+  list(APPEND devilutionx_SRCS
+    vita/vitasdk_heap.cpp)
+endif()
+
 add_executable(devilutionx MACOSX_BUNDLE ${devilutionx_SRCS})
 
 configure_file(SourceS/config.h.in config.h @ONLY)
@@ -365,11 +376,6 @@ foreach(target devilution devilutionx)
                         # the most common stubs are automatically included.
 
       SceDisplay_stub
-      SDL
-      SDL_image
-      SDL_ttf
-      #SDL_endian
-      SDL_mixer
       FLAC
       mikmod
       mpg123
@@ -389,6 +395,7 @@ foreach(target devilution devilutionx)
       SceCommonDialog_stub
       SceTouch_stub
       SceHid_stub
+      ScePower_stub
       m
       SceAppUtil_stub
     )
@@ -396,14 +403,33 @@ foreach(target devilution devilutionx)
     target_compile_definitions(${target} PRIVATE VITA)
   endif()
   if(USE_SDL1)
-    target_link_libraries(${target} PRIVATE
-      ${SDL_LIBRARY} ${SDL_TTF_LIBRARY} ${SDL_MIXER_LIBRARY})
+    if (VITA)
+      target_link_libraries(${target} PRIVATE
+      SDL
+      SDL_image
+      SDL_ttf
+      #SDL_endian
+      SDL_mixer
+      )
+    else()
+      target_link_libraries(${target} PRIVATE
+        ${SDL_LIBRARY} ${SDL_TTF_LIBRARY} ${SDL_MIXER_LIBRARY})
+    endif()
     target_compile_definitions(${target} PRIVATE USE_SDL1)
   else()
+    if (VITA)
+      target_link_libraries(${target} PRIVATE
+      SDL2
+      SDL2_image
+      SDL2_ttf
+      SDL2_mixer
+      )
+    else()
     target_link_libraries(${target} PRIVATE
       SDL2::SDL2main
       SDL2::SDL2_ttf
       SDL2::SDL2_mixer)
+    endif()
   endif()
 
   if(NONET)
@@ -521,6 +547,10 @@ endif()
 
 if(VITA)
   ## Create Vita files
+
+  # this setting enables larger heap memory sizes on Vita, up to ~330 MB
+  # useful for pre-loading videos into memory
+  set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d ATTRIBUTE2=12")
   vita_create_self(devilutionx.self devilutionx)
   vita_create_vpk(devilutionx.vpk ${VITA_TITLEID} devilutionx.self
     VERSION ${VITA_VERSION}

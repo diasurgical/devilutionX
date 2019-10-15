@@ -1,13 +1,21 @@
 #ifndef __DIABLO_H__
 #define __DIABLO_H__
 #ifdef VITA
+#ifdef USE_SDL1
 #include <SDL/SDL.h>
+#else
+#include <SDL2/SDL.h>
+#endif
 #else
 #include <SDL.h>
 #endif
 
 #ifdef USE_SDL1
 #include "sdl2_to_1_2_backports.h"
+#else
+#ifdef VITA
+#include "../vita/vita_aux_util.h"
+#endif
 #endif
 
 #include "sdl_compat.h"

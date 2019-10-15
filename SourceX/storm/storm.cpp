@@ -9,9 +9,15 @@
 #include <Radon.hpp>
 
 #ifdef VITA
+#ifdef USE_SDL1
 #include <SDL/SDL.h>
 #include <SDL/SDL_endian.h>
 #include <SDL/SDL_mixer.h>
+#else
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_endian.h>
+#include <SDL2/SDL_mixer.h>
+#endif
 #else
 #include <SDL.h>
 #include <SDL_endian.h>
@@ -316,9 +322,6 @@ void *SMemAlloc(unsigned int amount, char *logfilename, int logline, int default
 {
 	// fprintf(stderr, "%s: %d (%s:%d)\n", __FUNCTION__, amount, logfilename, logline);
 	assert(amount != -1u);
-#ifdef VITA
-	VitaAux::updateAllocMem(amount, false);
-#endif
 	return malloc(amount);
 }
 
@@ -327,9 +330,6 @@ BOOL SMemFree(void *location, char *logfilename, int logline, char defaultValue)
 	// fprintf(stderr, "%s: (%s:%d)\n", __FUNCTION__, logfilename, logline);
 	assert(location);
 	free(location);
-#ifdef VITA
-	VitaAux::updateAllocMem(sizeof(location), false);
-#endif
 	return true;
 }
 

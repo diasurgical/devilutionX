@@ -1,8 +1,5 @@
 #include "danzeff.h"
 
-#define false 0
-#define true 1
-
 struct _danzeff_state {
 	//x,y are for an analogue stick
 	int x;
@@ -35,7 +32,6 @@ typedef struct _danzeff_state danzeff_state;
  *  the x,y variables define which square is selected (0-2).
  *  Take a look at the already implemented ones, you should be able to figure it out easily enough :)
  */
-#ifdef DANZEFF_INPUT_VITA
 danzeff_state getStateFromJoystick(SDL_Joystick *joystick)
 {
 	danzeff_state toReturn;
@@ -91,136 +87,12 @@ danzeff_state getStateFromJoystick(SDL_Joystick *joystick)
 
 	return toReturn;
 }
-#endif
-#ifdef DANZEFF_INPUT_PSP
-danzeff_state getStateFromJoystick(SDL_Joystick *joystick)
-{
-	danzeff_state toReturn;
-	toReturn.buttons = 0;
 
-	if (SDL_JoystickGetButton(joystick, 0))
-		toReturn.buttons |= BUT_DUP;
-	if (SDL_JoystickGetButton(joystick, 1))
-		toReturn.buttons |= BUT_DRIGHT;
-	if (SDL_JoystickGetButton(joystick, 2))
-		toReturn.buttons |= BUT_DDOWN;
-	if (SDL_JoystickGetButton(joystick, 3))
-		toReturn.buttons |= BUT_DLEFT;
-
-	//Digital
-	if (SDL_JoystickGetButton(joystick, 6))
-		toReturn.buttons |= BUT_DOWN;
-	if (SDL_JoystickGetButton(joystick, 7))
-		toReturn.buttons |= BUT_LEFT;
-	if (SDL_JoystickGetButton(joystick, 8))
-		toReturn.buttons |= BUT_UP;
-	if (SDL_JoystickGetButton(joystick, 9))
-		toReturn.buttons |= BUT_RIGHT;
-
-	//L R
-	if (SDL_JoystickGetButton(joystick, 4))
-		toReturn.buttons |= BUT_SWITCH;
-	if (SDL_JoystickGetButton(joystick, 5))
-		toReturn.buttons |= BUT_SHIFT;
-
-	//Start Select
-	if (SDL_JoystickGetButton(joystick, 11))
-		toReturn.buttons |= BUT_START;
-	if (SDL_JoystickGetButton(joystick, 10))
-		toReturn.buttons |= BUT_SELECT;
-
-	//Analog
-	toReturn.x = SDL_JoystickGetAxis(joystick, 0);
-	if (toReturn.x < -(32768 * 2 / 3))
-		toReturn.x = 0;
-	else if (toReturn.x > (32768 * 2 / 3))
-		toReturn.x = 2;
-	else
-		toReturn.x = 1;
-
-	toReturn.y = SDL_JoystickGetAxis(joystick, 1);
-	if (toReturn.y < -(32768 * 2 / 3))
-		toReturn.y = 0;
-	else if (toReturn.y > (32768 * 2 / 3))
-		toReturn.y = 2;
-	else
-		toReturn.y = 1;
-
-	return toReturn;
-}
-#endif
-
-#ifdef DANZEFF_INPUT_SMARTJOY_PS2
-danzeff_state getStateFromJoystick(SDL_Joystick *joystick)
-{
-	danzeff_state toReturn;
-	toReturn.buttons = 0;
-
-	//Buttons
-	if (SDL_JoystickGetButton(joystick, 0))
-		toReturn.buttons |= BUT_DUP;
-	if (SDL_JoystickGetButton(joystick, 1))
-		toReturn.buttons |= BUT_DRIGHT;
-	if (SDL_JoystickGetButton(joystick, 2))
-		toReturn.buttons |= BUT_DDOWN;
-	if (SDL_JoystickGetButton(joystick, 3))
-		toReturn.buttons |= BUT_DLEFT;
-
-	//Start/Select
-	if (SDL_JoystickGetButton(joystick, 8))
-		toReturn.buttons |= BUT_START;
-	if (SDL_JoystickGetButton(joystick, 9))
-		toReturn.buttons |= BUT_SELECT;
-
-	//L/R (MERGE THEM)
-	if (SDL_JoystickGetButton(joystick, 4))
-		toReturn.buttons |= BUT_SWITCH;
-	if (SDL_JoystickGetButton(joystick, 6))
-		toReturn.buttons |= BUT_SWITCH;
-	if (SDL_JoystickGetButton(joystick, 5))
-		toReturn.buttons |= BUT_SHIFT;
-	if (SDL_JoystickGetButton(joystick, 7))
-		toReturn.buttons |= BUT_SHIFT;
-
-	//Left digi
-	int L_DIGI_X = SDL_JoystickGetAxis(joystick, 4);
-	if (L_DIGI_X > 0)
-		toReturn.buttons |= BUT_RIGHT;
-	else if (L_DIGI_X < 0)
-		toReturn.buttons |= BUT_LEFT;
-
-	int L_DIGI_Y = SDL_JoystickGetAxis(joystick, 5);
-	if (L_DIGI_Y > 0)
-		toReturn.buttons |= BUT_DOWN;
-	else if (L_DIGI_Y < 0)
-		toReturn.buttons |= BUT_UP;
-
-	//ANALOG
-	toReturn.x = SDL_JoystickGetAxis(joystick, 0);
-	if (toReturn.x < -(32768 * 2 / 3))
-		toReturn.x = 0;
-	else if (toReturn.x > (32768 * 2 / 3))
-		toReturn.x = 2;
-	else
-		toReturn.x = 1;
-
-	toReturn.y = SDL_JoystickGetAxis(joystick, 1);
-	if (toReturn.y < -(32768 * 2 / 3))
-		toReturn.y = 0;
-	else if (toReturn.y > (32768 * 2 / 3))
-		toReturn.y = 2;
-	else
-		toReturn.y = 1;
-
-	return toReturn;
-}
-#endif
-
-/*bool*/ int holding     = false; //user is holding a button
-/*bool*/ int dirty       = true;  //keyboard needs redrawing
-/*bool*/ int shifted     = false; //user is holding shift
-int mode                 = 0;     //charset selected. (0 - letters or 1 - numbers)
-/*bool*/ int initialized = false; //keyboard is initialized
+bool holding     = false; //user is holding a button
+bool dirty       = true;  //keyboard needs redrawing
+bool shifted     = false; //user is holding shift
+int mode         = 0;     //charset selected. (0 - letters or 1 - numbers)
+bool initialized = false; //keyboard is initialized
 
 //Position on the 3-3 grid the user has selected (range 0-2)
 int selected_x = 1;
@@ -289,19 +161,22 @@ unsigned int danzeff_readInput(SDL_Joystick *joystick)
 
 	if (selected_x != state.x || selected_y != state.y) //If they've moved, update dirty
 	{
+
 		dirty      = true;
 		selected_x = state.x;
 		selected_y = state.y;
 	}
 
 	//if they are changing shift then that makes it dirty too
-	if ((!shifted && (state.buttons & BUT_SHIFT)) || (shifted && !(state.buttons & BUT_SHIFT)))
-		dirty = true;
+	if ((!shifted && (state.buttons & BUT_SHIFT)) || (shifted && !(state.buttons & BUT_SHIFT))) {
 
+		dirty = true;
+	}
 	unsigned int pressed = 0; //character they have entered, 0 as that means 'nothing'
 	shifted              = (state.buttons & BUT_SHIFT) ? true : false;
 
 	if (!holding) {
+
 		if (state.buttons & (BUT_DDOWN | BUT_DRIGHT | BUT_DUP | BUT_DLEFT)) //pressing a char select button
 		{
 			int innerChoice = 0;
@@ -318,6 +193,7 @@ unsigned int danzeff_readInput(SDL_Joystick *joystick)
 			pressed = modeChar[mode * 2 + shifted][state.y][state.x][innerChoice];
 		} else if (state.buttons & BUT_SWITCH) //toggle mode
 		{
+
 			dirty = true;
 			mode++;
 			mode %= MODE_COUNT;
@@ -456,7 +332,6 @@ void danzeff_render(void (*PreRenderigFunction)(), void (*PostRenderigFunction)(
 	if ((*PreRenderigFunction) != NULL) {
 		(*PreRenderigFunction)();
 	}
-	printf("Drawing Keyboard at (%i,%i)\n", selected_x, selected_y);
 	dirty = false;
 
 	///Draw the background for the selected keyboard either transparent or opaque
@@ -486,4 +361,18 @@ void danzeff_moveTo(const int newX, const int newY)
 {
 	moved_x = newX;
 	moved_y = newY;
+}
+
+int (*debugFunction)(const char *) = NULL;
+
+void set_danzeff_debug_funtion(int (*customDebugFunction)(const char *))
+{
+	debugFunction = customDebugFunction;
+}
+
+void printDebug(const char *string)
+{
+	if (debugFunction != NULL) {
+		(*debugFunction)(string);
+	}
 }

@@ -1286,9 +1286,6 @@ BYTE *DiabloAllocPtr(DWORD dwBytes)
 	sgMemCrit.Leave();
 
 	if (buf == NULL) {
-#ifdef VITA
-		VitaAux::printMemInfo(dwBytes);
-#endif
 		char *text = "System memory exhausted.\n"
 		             "Make sure you have at least 64MB of free system memory before running the game";
 		ERR_DLG("Out of Memory Error", text);
@@ -1320,13 +1317,6 @@ BYTE *LoadFileInMem(char *pszName, DWORD *pdwFileLen)
 
 	if (!fileLen)
 		app_fatal("Zero length SFILE:\n%s", pszName);
-#ifdef VITA
-	if (fileLen > 254572) {
-		VitaAux::printMemInfo(fileLen);
-		VitaAux::debug(pszName);
-	}
-#endif
-
 	buf = (BYTE *)DiabloAllocPtr(fileLen);
 
 	WReadFile(file, buf, fileLen, pszName);

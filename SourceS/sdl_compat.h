@@ -2,7 +2,11 @@
 #ifndef VITA
 #include <SDL.h>
 #else
+#ifdef USE_SDL1
 #include <SDL/SDL.h>
+#else
+#include <SDL2/SDL.h>
+#endif
 #endif
 
 inline int SDLC_SetColorKey(SDL_Surface *surface, Uint32 key)

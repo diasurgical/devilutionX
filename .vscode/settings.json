@@ -1,5 +1,4 @@
 {
-	"C_Cpp.default.configurationProvider": "go2sh.cmake-integration",
 	"editor.formatOnPaste": true,
 	"editor.formatOnSave": true
 }
