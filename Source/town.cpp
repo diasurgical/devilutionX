@@ -5,7 +5,7 @@ DEVILUTION_BEGIN_NAMESPACE
 void town_clear_buf(BYTE *pBuff)
 {
 	/// ASSERT: assert(gpBuffer);
-
+return; // TODO this will somet times paint random tiles at the bottom of the screen
 	int i, j, k;
 	BYTE *dst;
 
