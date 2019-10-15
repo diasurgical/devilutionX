@@ -118,7 +118,7 @@ void DrawSTextBack()
 void PrintSString(int x, int y, BOOL cjustflag, char *str, char col, int val)
 {
 	int xx, yy;
-	int len, width, off, i, k, s;
+	int len, width, sx, sy, i, k, s;
 	BYTE c;
 	char valstr[32];
 
@@ -127,7 +127,8 @@ void PrintSString(int x, int y, BOOL cjustflag, char *str, char col, int val)
 		xx = 96;
 	else
 		xx = 416;
-	off = xx + x + BUFFER_WIDTH * (s + 204);
+	sx = xx + x;
+	sy = s + 204;
 	len = strlen(str);
 	if (stextsize)
 		yy = 577;
@@ -140,7 +141,7 @@ void PrintSString(int x, int y, BOOL cjustflag, char *str, char col, int val)
 			width += fontkern[fontframe[gbFontTransTbl[(BYTE)str[i]]]] + 1;
 		if (width < yy)
 			k = (yy - width) >> 1;
-		off += k;
+		sx += k;
 	}
 	if (stextsel == y) {
 		CelDraw(cjustflag ? xx + x + k - 20 : xx + x - 20, s + 205, pSPentSpn2Cels, InStoreFlag, 12);
@@ -149,18 +150,18 @@ void PrintSString(int x, int y, BOOL cjustflag, char *str, char col, int val)
 		c = fontframe[gbFontTransTbl[(BYTE)str[i]]];
 		k += fontkern[c] + 1;
 		if (c && k <= yy) {
-			CPrintString(off, c, col);
+			CPrintString(sx, sy, c, col);
 		}
-		off += fontkern[c] + 1;
+		sx += fontkern[c] + 1;
 	}
 	if (!cjustflag && val >= 0) {
 		sprintf(valstr, "%i", val);
-		off = BUFFER_WIDTH * (s + 204) + 656 - x;
+		sx = 656 - x;
 		for (i = strlen(valstr) - 1; i >= 0; i--) {
 			c = fontframe[gbFontTransTbl[(BYTE)valstr[i]]];
-			off -= fontkern[c] + 1;
+			sx -= fontkern[c] + 1;
 			if (c) {
-				CPrintString(off, c, col);
+				CPrintString(sx, sy, c, col);
 			}
 		}
 	}

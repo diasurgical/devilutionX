@@ -307,7 +307,7 @@ void T_DrawGame(int x, int y)
 	}
 
 	/// ASSERT: assert(gpBuffer);
-	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (VIEWPORT_HEIGHT + SCREEN_Y)];
+	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_HEIGHT + SCREEN_Y)];
 	for (i = 0; i < blocks; i++) {
 		town_draw(x, y, sx, sy, chunks, i, 0);
 		y++;

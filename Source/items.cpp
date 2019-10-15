@@ -2921,10 +2921,11 @@ void DrawUTextBack()
 
 void PrintUString(int x, int y, BOOL cjustflag, char *str, int col)
 {
-	int len, width, off, i, k;
+	int len, width, sx, sy, i, k;
 	BYTE c;
 
-	off = x + BUFFER_WIDTH * (y * 12 + 204) + 96;
+	sx = x + 96;
+	sy = y * 12 + 204;
 	len = strlen(str);
 	k = 0;
 	if (cjustflag) {
@@ -2933,16 +2934,16 @@ void PrintUString(int x, int y, BOOL cjustflag, char *str, int col)
 			width += fontkern[fontframe[gbFontTransTbl[(BYTE)str[i]]]] + 1;
 		if (width < 257)
 			k = (257 - width) >> 1;
-		off += k;
+		sx += k;
 	}
 
 	for (i = 0; i < len; i++) {
 		c = fontframe[gbFontTransTbl[(BYTE)str[i]]];
 		k += fontkern[c] + 1;
 		if (c && k <= 257) {
-			CPrintString(off, c, col);
+			CPrintString(sx, sy, c, col);
 		}
-		off += fontkern[c] + 1;
+		sx += fontkern[c] + 1;
 	}
 }
 

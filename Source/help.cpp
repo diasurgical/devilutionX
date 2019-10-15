@@ -535,11 +535,12 @@ void DrawHelp()
 
 void DrawHelpLine(int always_0, int help_line_nr, char *text, char color)
 {
-	int off, width;
+	int sx, sy, width;
 	BYTE c;
 
 	width = 0;
-	off = BUFFER_WIDTH * (help_line_nr * 12 + 204) + always_0 + 96;
+	sx = always_0 + 96;
+	sy = help_line_nr * 12 + 204;
 	while (*text) {
 		c = gbFontTransTbl[(BYTE)*text];
 		text++;
@@ -547,9 +548,9 @@ void DrawHelpLine(int always_0, int help_line_nr, char *text, char color)
 		width += fontkern[c] + 1;
 		if (c) {
 			if (width <= 577)
-				CPrintString(off, c, color);
+				CPrintString(sx, sy, c, color);
 		}
-		off += fontkern[c] + 1;
+		sx += fontkern[c] + 1;
 	}
 }
 

@@ -418,7 +418,7 @@ void DrawInvBelt()
 		    && plr[myplr].SpdList[i]._itype != ITYPE_GOLD) {
 			fi = i + 49;
 			ff = fontframe[gbFontTransTbl[fi]];
-			CPrintString(InvRect[i + 65].X + 64 + BUFFER_WIDTH * (InvRect[i + 65].Y + 159) - fontkern[ff] + 28, ff, 0);
+			CPrintString(InvRect[i + 65].X + SCREEN_X + 28 - fontkern[ff], InvRect[i + 65].Y + SCREEN_Y - 1, ff, 0);
 		}
 	}
 }
