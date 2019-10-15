@@ -78,10 +78,6 @@ void selconn_Focus(int value)
 {
 	int players = MAX_PLRS;
 	switch (value) {
-	case SELCONN_LOOPBACK:
-		strcpy(selconn_Description, "Play by yourself with no network exposure.");
-		players = 1;
-		break;
 #ifndef NONET
 	case SELCONN_TCP:
 		strcpy(selconn_Description, "All computers must be connected to a TCP-compatible network.");
@@ -94,6 +90,10 @@ void selconn_Focus(int value)
 		break;
 #endif
 #endif
+	case SELCONN_LOOPBACK:
+		strcpy(selconn_Description, "Play by yourself with no network exposure.");
+		players = 1;
+		break;
 	}
 
 	sprintf(selconn_MaxPlayers, "Players Supported: %d", players);
@@ -103,9 +103,6 @@ void selconn_Focus(int value)
 void selconn_Select(int value)
 {
 	switch (value) {
-	case SELCONN_LOOPBACK:
-		provider = 'SCBL';
-		break;
 #ifndef NONET
 	case SELCONN_TCP:
 		provider = 'TCPN';
@@ -116,6 +113,9 @@ void selconn_Select(int value)
 		break;
 #endif
 #endif
+	case SELCONN_LOOPBACK:
+		provider = 'SCBL';
+		break;
 	}
 
 	selconn_Free();
