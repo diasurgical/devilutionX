@@ -318,10 +318,6 @@ foreach(target devilution devilutionx)
   endif()
 endforeach(target devilution devilutionx)
 
-if(DIST AND CMAKE_CXX_COMPILER_ID MATCHES "GCC")
-  target_link_libraries(devilutionx PUBLIC -static-libgcc -static-libstdc++)
-endif()
-
 if(WIN32)
   target_link_libraries(devilutionx PRIVATE wsock32 ws2_32 wininet)
 
