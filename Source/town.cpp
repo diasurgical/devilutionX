@@ -146,7 +146,7 @@ void town_draw(int x, int y, int sx, int sy, int chunks, int capChunks, int efla
 		if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX) {
 			level_cel_block = dPiece[x][y];
 			if (level_cel_block != 0) {
-				dst = &gpBuffer[sx + 32 + PitchTbl[sy]];
+				dst = &gpBuffer[sx + 32 + BUFFER_WIDTH * sy];
 				pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
 				for (i = 0; i < 7; i++) {
 					level_cel_block = pMap->mt[2 * i + 1];
@@ -155,12 +155,12 @@ void town_draw(int x, int y, int sx, int sy, int chunks, int capChunks, int efla
 					}
 					dst -= BUFFER_WIDTH * 32;
 				}
-				town_draw_town_all(&gpBuffer[sx + PitchTbl[sy]], x, y, sx, sy, 0);
+				town_draw_town_all(&gpBuffer[sx + BUFFER_WIDTH * sy], x, y, sx, sy, 0);
 			} else {
-				town_clear_buf(&gpBuffer[sx + PitchTbl[sy]]);
+				town_clear_buf(&gpBuffer[sx + BUFFER_WIDTH * sy]);
 			}
 		} else {
-			town_clear_buf(&gpBuffer[sx + PitchTbl[sy]]);
+			town_clear_buf(&gpBuffer[sx + BUFFER_WIDTH * sy]);
 		}
 		x++;
 		y--;
@@ -171,7 +171,7 @@ void town_draw(int x, int y, int sx, int sy, int chunks, int capChunks, int efla
 		if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX) {
 			level_cel_block = dPiece[x][y];
 			if (level_cel_block != 0) {
-				dst = &gpBuffer[sx + PitchTbl[sy]];
+				dst = &gpBuffer[sx + BUFFER_WIDTH * sy];
 				pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
 				for (i = 0; i < MicroTileLen >> 1; i++) {
 					level_cel_block = pMap->mt[2 * i];
@@ -184,12 +184,12 @@ void town_draw(int x, int y, int sx, int sy, int chunks, int capChunks, int efla
 					}
 					dst -= BUFFER_WIDTH * 32;
 				}
-				town_draw_town_all(&gpBuffer[sx + PitchTbl[sy]], x, y, sx, sy, 1);
+				town_draw_town_all(&gpBuffer[sx + BUFFER_WIDTH * sy], x, y, sx, sy, 1);
 			} else {
-				town_clear_buf(&gpBuffer[sx + PitchTbl[sy]]);
+				town_clear_buf(&gpBuffer[sx + BUFFER_WIDTH * sy]);
 			}
 		} else {
-			town_clear_buf(&gpBuffer[sx + PitchTbl[sy]]);
+			town_clear_buf(&gpBuffer[sx + BUFFER_WIDTH * sy]);
 		}
 		x++;
 		y--;
@@ -200,7 +200,7 @@ void town_draw(int x, int y, int sx, int sy, int chunks, int capChunks, int efla
 		if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX) {
 			level_cel_block = dPiece[x][y];
 			if (level_cel_block != 0) {
-				dst = &gpBuffer[sx + PitchTbl[sy]];
+				dst = &gpBuffer[sx + BUFFER_WIDTH * sy];
 				pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
 				for (i = 0; i < 7; i++) {
 					level_cel_block = pMap->mt[2 * i];
@@ -209,12 +209,12 @@ void town_draw(int x, int y, int sx, int sy, int chunks, int capChunks, int efla
 					}
 					dst -= BUFFER_WIDTH * 32;
 				}
-				town_draw_town_all(&gpBuffer[sx + PitchTbl[sy]], x, y, sx, sy, 0);
+				town_draw_town_all(&gpBuffer[sx + BUFFER_WIDTH * sy], x, y, sx, sy, 0);
 			} else {
-				town_clear_buf(&gpBuffer[sx + PitchTbl[sy]]);
+				town_clear_buf(&gpBuffer[sx + BUFFER_WIDTH * sy]);
 			}
 		} else {
-			town_clear_buf(&gpBuffer[sx + PitchTbl[sy]]);
+			town_clear_buf(&gpBuffer[sx + BUFFER_WIDTH * sy]);
 		}
 	}
 }
@@ -307,7 +307,7 @@ void T_DrawGame(int x, int y)
 	}
 
 	/// ASSERT: assert(gpBuffer);
-	gpBufEnd = &gpBuffer[PitchTbl[VIEWPORT_HEIGHT + SCREEN_Y]];
+	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (VIEWPORT_HEIGHT + SCREEN_Y)];
 	for (i = 0; i < blocks; i++) {
 		town_draw(x, y, sx, sy, chunks, i, 0);
 		y++;

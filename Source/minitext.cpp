@@ -83,9 +83,9 @@ void PrintQTextChr(int sx, int sy, BYTE *pCelBuff, int nCel)
 
 	/// ASSERT: assert(gpBuffer);
 
-	dst = &gpBuffer[sx + PitchTbl[sy]];
-	pStart = &gpBuffer[PitchTbl[209]];
-	pEnd = &gpBuffer[PitchTbl[469]];
+	dst = &gpBuffer[sx + BUFFER_WIDTH * sy];
+	pStart = &gpBuffer[BUFFER_WIDTH * 209];
+	pEnd = &gpBuffer[BUFFER_WIDTH * 469];
 
 	int i, nDataSize;
 	BYTE width;

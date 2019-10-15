@@ -203,7 +203,7 @@ void gmenu_clear_buffer(int x, int y, int width, int height)
 {
 	BYTE *i;
 
-	i = gpBuffer + PitchTbl[y] + x;
+	i = gpBuffer + BUFFER_WIDTH * y + x;
 	while (height--) {
 		memset(i, 205, width);
 		i -= BUFFER_WIDTH;

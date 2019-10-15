@@ -539,7 +539,7 @@ void DrawHelpLine(int always_0, int help_line_nr, char *text, char color)
 	BYTE c;
 
 	width = 0;
-	off = PitchTbl[SStringY[help_line_nr] + 204] + always_0 + 96;
+	off = BUFFER_WIDTH * (SStringY[help_line_nr] + 204) + always_0 + 96;
 	while (*text) {
 		c = gbFontTransTbl[(BYTE)*text];
 		text++;
