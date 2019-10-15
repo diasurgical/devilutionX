@@ -446,87 +446,49 @@ void CPrintString(int nOffset, int nCel, char col)
 	/// ASSERT: assert(gpBuffer);
 
 	int i, nDataSize;
-	BYTE width, pix;
-	BYTE *src, *dst, *end;
+	BYTE pix;
+	BYTE *src, *dst;
+	BYTE tbl[256];
 
 	src = CelGetFrame(pPanelText, nCel, &nDataSize);
-	end = &src[nDataSize];
 	dst = &gpBuffer[nOffset];
 
 	switch (col) {
 	case COL_WHITE:
 		CelBlit(dst, src, nDataSize, 13);
-		break;
+		return;
 	case COL_BLUE:
-		for (; src != end; dst -= BUFFER_WIDTH + 13) {
-			for (i = 13; i;) {
-				width = *src++;
-				if (!(width & 0x80)) {
-					i -= width;
-					while (width) {
-						pix = *src++;
-						if (pix > PAL16_GRAY + 13)
-							pix = PAL16_BLUE + 15;
-						else if (pix >= PAL16_GRAY)
-							pix -= PAL16_GRAY - (PAL16_BLUE + 2);
-						*dst++ = pix;
-						width--;
-					}
-				} else {
-					width = -(char)width;
-					dst += width;
-					i -= width;
-				}
-			}
+		for (i = 0; i < 256; i++) {
+			pix = i;
+			if (pix > PAL16_GRAY + 13)
+				pix = PAL16_BLUE + 15;
+			else if (pix >= PAL16_GRAY)
+				pix -= PAL16_GRAY - (PAL16_BLUE + 2);
+			tbl[i] = pix;
 		}
 		break;
 	case COL_RED:
-		for (; src != end; dst -= BUFFER_WIDTH + 13) {
-			for (i = 13; i;) {
-				width = *src++;
-				if (!(width & 0x80)) {
-					i -= width;
-					while (width) {
-						pix = *src++;
-						if (pix >= PAL16_GRAY)
-							pix -= PAL16_GRAY - PAL16_RED;
-						*dst++ = pix;
-						width--;
-					}
-				} else {
-					width = -(char)width;
-					dst += width;
-					i -= width;
-				}
-			}
+		for (i = 0; i < 256; i++) {
+			pix = i;
+			if (pix >= PAL16_GRAY)
+				pix -= PAL16_GRAY - PAL16_RED;
+			tbl[i] = pix;
 		}
 		break;
 	default:
-		for (; src != end; dst -= BUFFER_WIDTH + 13) {
-			for (i = 13; i;) {
-				width = *src++;
-				if (!(width & 0x80)) {
-					i -= width;
-					while (width) {
-						pix = *src++;
-						if (pix >= PAL16_GRAY) {
-							if (pix >= PAL16_GRAY + 14)
-								pix = PAL16_YELLOW + 15;
-							else
-								pix -= PAL16_GRAY - (PAL16_YELLOW + 2);
-						}
-						*dst++ = pix;
-						width--;
-					}
-				} else {
-					width = -(char)width;
-					dst += width;
-					i -= width;
-				}
+		for (i = 0; i < 256; i++) {
+			pix = i;
+			if (pix >= PAL16_GRAY) {
+				if (pix >= PAL16_GRAY + 14)
+					pix = PAL16_YELLOW + 15;
+				else
+					pix -= PAL16_GRAY - (PAL16_YELLOW + 2);
 			}
+			tbl[i] = pix;
 		}
 		break;
 	}
+	CelBlitLight(dst, src, nDataSize, 13, tbl);
 }
 
 void AddPanelString(char *str, BOOL just)
@@ -1226,7 +1188,7 @@ void control_print_info_str(int y, char *str, BOOL center, int lines)
 	int screen_x, line, nOffset;
 
 	line = 0;
-	nOffset = lineoffset[y + 4 * lines + lines] + (SCREEN_WIDTH - PANEL_WIDTH) / 2;
+	nOffset = lineoffset[y + 5 * lines] + (SCREEN_WIDTH - PANEL_WIDTH) / 2;
 	if (center == 1) {
 		screen_x = 0;
 		tmp = str;
