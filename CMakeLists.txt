@@ -146,6 +146,7 @@ if(VITA)
   )
 
   add_library(vita_aux_util STATIC
+  vita/vitasdk_heap.cpp
   vita/vita_aux_util.cpp
   vita/common/debugScreen.c
   )
