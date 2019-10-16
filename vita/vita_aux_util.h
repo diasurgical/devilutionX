@@ -57,8 +57,10 @@ public:
 	static int errores;
 #ifdef USE_SDL1
 	static SDLKey latestKey;
+	static SDLKey latestKeyMouse;
 #else
 	static char latestKey;
+	static char latestKeyMouse;
 #endif
 	static unsigned long allocatedMemory;
 
@@ -87,11 +89,12 @@ public:
 
 	//Migrate to SDEvent
 	static void initVitaButtons();
-	static SDL_Event getPressedKeyAsSDL_Event();
+	static void getPressedKeyAsSDL_Event(bool inMenu);
 
 	//Utils
 	static void printMemInfo(unsigned int amount = 0);
 	static void updateAllocMem(unsigned int amount, bool minus);
 	static void testJoystick(SDL_Joystick *joy);
+	static void testTouch();
 };
 #endif

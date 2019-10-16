@@ -224,6 +224,9 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	}
 
 	SDL_Event e;
+#ifdef VITA
+	VitaAux::getPressedKeyAsSDL_Event(false);
+#endif
 	if (!SDL_PollEvent(&e)) {
 		return false;
 	}

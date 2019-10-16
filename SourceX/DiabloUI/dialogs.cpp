@@ -247,6 +247,9 @@ void Deinit()
 void DialogLoop(UiItem *items, std::size_t num_items, UiItem *render_behind, std::size_t render_behind_size)
 {
 	SDL_Event event;
+#ifdef VITA
+	VitaAux::getPressedKeyAsSDL_Event(true);
+#endif
 	state = State::DEFAULT;
 	if (render_behind_size == 0) {
 		LoadBackgroundArt("ui_art\\black.pcx");

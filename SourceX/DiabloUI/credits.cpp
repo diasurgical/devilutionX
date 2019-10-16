@@ -248,6 +248,9 @@ BOOL UiCreditsDialog(int a1)
 	bool endMenu = false;
 
 	SDL_Event event;
+#ifdef VITA
+	VitaAux::getPressedKeyAsSDL_Event(true);
+#endif
 	do {
 		credits_renderer.Render();
 		UiFadeIn();

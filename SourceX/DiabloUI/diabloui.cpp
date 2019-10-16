@@ -585,10 +585,9 @@ void DrawSelector(const SDL_Rect &rect)
 
 void UiPollAndRender()
 {
-#ifdef VITA
-	SDL_Event event = VitaAux::getPressedKeyAsSDL_Event();
-#else
 	SDL_Event event;
+#ifdef VITA
+	VitaAux::getPressedKeyAsSDL_Event(true);
 #endif
 	while (SDL_PollEvent(&event)) {
 		UiFocusNavigation(&event);
@@ -722,8 +721,11 @@ void RenderItem(UiItem *item)
 
 bool HandleMouseEventArtTextButton(const SDL_Event &event, const UiArtTextButton &ui_button)
 {
-	if (event.type != SDL_MOUSEBUTTONDOWN || event.button.button != SDL_BUTTON_LEFT)
+	if (event.type != SDL_MOUSEBUTTONDOWN || event.button.button != SDL_BUTTON_LEFT) {
+		VitaAux::debug("Mouse false");
 		return false;
+	}
+	VitaAux::debug("Mouse true");
 	ui_button.action();
 	return true;
 }
@@ -839,18 +841,12 @@ bool UiItemMouseEvents(SDL_Event *event, UiItem *items, std::size_t size)
 	}
 
 	return handled;
-}
+} // namespace dvl
 
 void DrawMouse()
 {
 #ifndef VITA
 	SDL_GetMouseState(&MouseX, &MouseY);
-#else
-	VITATOUCH position = VitaAux::getVitaTouch();
-	//Adjust zoom
-	MouseX = position.x * SCREEN_WIDTH / 960;
-	MouseY = position.y * SCREEN_HEIGHT / 544;
-#endif
 
 #ifndef USE_SDL1
 	if (renderer) {
@@ -864,6 +860,11 @@ void DrawMouse()
 		MouseX -= view.x;
 		MouseY -= view.y;
 	}
+#endif
+#else
+	VITATOUCH position = VitaAux::getVitaTouch();
+	MouseX = position.x;
+	MouseY = position.y;
 #endif
 
 	DrawArt(MouseX, MouseY, &ArtCursor);

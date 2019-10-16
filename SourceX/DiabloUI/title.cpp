@@ -29,6 +29,9 @@ void UiTitleDialog()
 	Uint32 timeOut = SDL_GetTicks() + 7000;
 
 	SDL_Event event;
+#ifdef VITA
+	VitaAux::getPressedKeyAsSDL_Event(true);
+#endif
 	while (!endMenu && SDL_GetTicks() < timeOut) {
 		UiRenderItems(TITLESCREEN_DIALOG, size(TITLESCREEN_DIALOG));
 		UiFadeIn();
@@ -60,4 +63,4 @@ void UiSetSpawned(BOOL bSpawned)
 	gbSpawned = bSpawned;
 }
 
-}
+} // namespace dvl

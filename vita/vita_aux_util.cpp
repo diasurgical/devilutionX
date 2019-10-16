@@ -20,9 +20,11 @@
 int VitaAux::hdebug  = 1;
 int VitaAux::errores = 0;
 #ifdef USE_SDL1
-SDLKey VitaAux::latestKey = SDLK_UNKNOWN;
+SDLKey VitaAux::latestKey      = SDLK_UNKNOWN;
+SDLKey VitaAux::latestKeyMouse = SDLK_UNKNOWN;
 #else
-char VitaAux::latestKey = SDLK_UNKNOWN;
+char VitaAux::latestKey      = SDLK_UNKNOWN;
+char VitaAux::latestKeyMouse = SDLK_UNKNOWN;
 #endif
 unsigned long VitaAux::allocatedMemory = 0;
 
@@ -91,9 +93,54 @@ void VitaAux::testJoystick(SDL_Joystick *joy)
 	}
 }
 
+void VitaAux::testTouch()
+{
+	psvDebugScreenInit();
+	VitaAux::hdebug = 0;
+	// Get information about the joystick
+	char debugExit[1000];
+	int positionx = 1;
+	int positiony = 1;
+	VitaAux::debug("swipe to the bottom with 1 finger to stop\n");
+	/* should use SCE_TOUCH_SAMPLING_STATE_START instead of 1 but old SDK have an invalid values */
+	sceTouchSetSamplingState(SCE_TOUCH_PORT_FRONT, SCE_TOUCH_SAMPLING_STATE_START);
+	sceTouchSetSamplingState(SCE_TOUCH_PORT_BACK, SCE_TOUCH_SAMPLING_STATE_START);
+	sceTouchEnableTouchForce(SCE_TOUCH_PORT_FRONT);
+	sceTouchEnableTouchForce(SCE_TOUCH_PORT_BACK);
+
+	SceTouchData touch_old[SCE_TOUCH_PORT_MAX_NUM];
+	SceTouchData touch[SCE_TOUCH_PORT_MAX_NUM];
+
+	while (1) {
+		positionx = 1;
+		positiony = 60;
+		psvDebugScreenSetCoordsXY(&positionx, &positiony);
+		debugExit[0] = '\0';
+		memcpy(touch_old, touch, sizeof(touch_old));
+		sprintf(debugExit + strlen(debugExit), "\e[0;5H");
+		int port, i;
+		/* sample both back and front surfaces */
+		for (port = 0; port < SCE_TOUCH_PORT_MAX_NUM; port++) {
+			sceTouchPeek(port, &touch[port], 1);
+			sprintf(debugExit + strlen(debugExit), "%s", ((const char *[]){ "FRONT", "BACK " })[port]);
+			/* print every touch coordinates on that surface */
+			for (i = 0; i < SCE_TOUCH_MAX_REPORT; i++)
+				sprintf(debugExit + strlen(debugExit), "\e[9%im%4i:%-4i ", (i < touch[port].reportNum) ? 7 : 0,
+				    touch[port].report[i].x, touch[port].report[i].y);
+			sprintf(debugExit + strlen(debugExit), "\n");
+		}
+
+		if ((touch[SCE_TOUCH_PORT_FRONT].reportNum == 1)
+		    && (touch_old[SCE_TOUCH_PORT_FRONT].reportNum == 1)
+		    && (touch[SCE_TOUCH_PORT_FRONT].report[0].y >= 1000)
+		    && (touch_old[SCE_TOUCH_PORT_FRONT].report[0].y < 1000))
+			break;
+		VitaAux::debug(debugExit);
+	}
+}
+
 void VitaAux::init()
 {
-
 	psvDebugScreenInit();
 	VitaAux::debug("DevilutionX port by @gokuhs\n Loading...");
 	if (!VitaAux::checkAndCreateFolder()) {
@@ -446,6 +493,10 @@ VITATOUCH VitaAux::getVitaTouch()
 		returned.x = touch[port].report[0].x;
 		returned.y = touch[port].report[0].y;
 	}
+
+	//Adjust
+	returned.x = (int)(returned.x * 960 / 1919);
+	returned.y = (int)(returned.y * 544 / 1087);
 	return returned;
 }
 
@@ -453,29 +504,16 @@ void VitaAux::initVitaButtons()
 {
 	sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG);
 }
-SDL_Event VitaAux::getPressedKeyAsSDL_Event()
+void VitaAux::getPressedKeyAsSDL_Event(bool inMenu)
 {
 	SDL_Event event;
+	SDL_Event eventMouse;
 	SceCtrlData ctrl;
 	sceCtrlPeekBufferPositive(0, &ctrl, 1);
 	switch (ctrl.buttons) {
-
-		/*
-		SCE_CTRL_SELECT      = 0x00000001,            //!< Select button.
-	SCE_CTRL_L3          = 0x00000002,            //!< L3 button.
-	SCE_CTRL_R3          = 0x00000004,            //!< R3 button.
-	SCE_CTRL_L1          = 0x00000400,            //!< L1 button.
-	SCE_CTRL_R1          = 0x00000800,            //!< R1 button.ç
-	SCE_CTRL_INTERCEPTED = 0x00010000,            //!< Input not available because intercepted by another application
-	SCE_CTRL_PSBUTTON    = SCE_CTRL_INTERCEPTED,  //!< Playstation (Home) button.
-	SCE_CTRL_HEADPHONE   = 0x00080000,            //!< Headphone plugged in.
-	SCE_CTRL_VOLUP       = 0x00100000,            //!< Volume up button.
-	SCE_CTRL_VOLDOWN     = 0x00200000,            //!< Volume down button.
-	SCE_CTRL_POWER       = 0x40000000             //!< Power button.
-	*/
 	case SCE_CTRL_UP: {
 		event.type           = SDL_KEYDOWN;
-		event.key.keysym.sym = SDLK_UP;
+		event.key.keysym.sym = !inMenu ? SDLK_2 : SDLK_UP;
 		if (VitaAux::latestKey == SDLK_UNKNOWN) {
 			SDL_PushEvent(&event);
 		}
@@ -484,7 +522,7 @@ SDL_Event VitaAux::getPressedKeyAsSDL_Event()
 	}
 	case SCE_CTRL_DOWN: {
 		event.type           = SDL_KEYDOWN;
-		event.key.keysym.sym = SDLK_DOWN;
+		event.key.keysym.sym = !inMenu ? SDLK_3 : SDLK_DOWN;
 		if (VitaAux::latestKey == SDLK_UNKNOWN) {
 			SDL_PushEvent(&event);
 		}
@@ -493,7 +531,7 @@ SDL_Event VitaAux::getPressedKeyAsSDL_Event()
 	}
 	case SCE_CTRL_LEFT: {
 		event.type           = SDL_KEYDOWN;
-		event.key.keysym.sym = SDLK_LEFT;
+		event.key.keysym.sym = !inMenu ? SDLK_1 : SDLK_LEFT;
 		if (VitaAux::latestKey == SDLK_UNKNOWN) {
 			SDL_PushEvent(&event);
 		}
@@ -502,7 +540,7 @@ SDL_Event VitaAux::getPressedKeyAsSDL_Event()
 	}
 	case SCE_CTRL_RIGHT: {
 		event.type           = SDL_KEYDOWN;
-		event.key.keysym.sym = SDLK_RIGHT;
+		event.key.keysym.sym = !inMenu ? SDLK_4 : SDLK_RIGHT;
 		if (VitaAux::latestKey == SDLK_UNKNOWN) {
 			SDL_PushEvent(&event);
 		}
@@ -511,7 +549,7 @@ SDL_Event VitaAux::getPressedKeyAsSDL_Event()
 	}
 	case SCE_CTRL_CIRCLE: {
 		event.type           = SDL_KEYDOWN;
-		event.key.keysym.sym = SDLK_ESCAPE;
+		event.key.keysym.sym = !inMenu ? SDLK_8 : SDLK_ESCAPE;
 		if (VitaAux::latestKey == SDLK_UNKNOWN) {
 			SDL_PushEvent(&event);
 		}
@@ -520,7 +558,7 @@ SDL_Event VitaAux::getPressedKeyAsSDL_Event()
 	}
 	case SCE_CTRL_CROSS: {
 		event.type           = SDL_KEYDOWN;
-		event.key.keysym.sym = SDLK_SPACE;
+		event.key.keysym.sym = !inMenu ? SDLK_7 : SDLK_SPACE;
 		if (VitaAux::latestKey == SDLK_UNKNOWN) {
 			SDL_PushEvent(&event);
 		}
@@ -529,7 +567,7 @@ SDL_Event VitaAux::getPressedKeyAsSDL_Event()
 	}
 	case SCE_CTRL_START: {
 		event.type           = SDL_KEYDOWN;
-		event.key.keysym.sym = SDLK_RETURN;
+		event.key.keysym.sym = !inMenu ? SDLK_ESCAPE : SDLK_RETURN;
 		if (VitaAux::latestKey == SDLK_UNKNOWN) {
 			SDL_PushEvent(&event);
 		}
@@ -538,7 +576,7 @@ SDL_Event VitaAux::getPressedKeyAsSDL_Event()
 	}
 	case SCE_CTRL_SELECT: {
 		event.type           = SDL_KEYDOWN;
-		event.key.keysym.sym = SDLK_DELETE;
+		event.key.keysym.sym = !inMenu ? SDLK_TAB : SDLK_DELETE;
 		if (VitaAux::latestKey == SDLK_UNKNOWN) {
 			SDL_PushEvent(&event);
 		}
@@ -547,7 +585,7 @@ SDL_Event VitaAux::getPressedKeyAsSDL_Event()
 	}
 	case SCE_CTRL_SQUARE: {
 		event.type           = SDL_KEYDOWN;
-		event.key.keysym.sym = SDLK_PAGEDOWN;
+		event.key.keysym.sym = !inMenu ? SDLK_5 : SDLK_PAGEDOWN;
 		if (VitaAux::latestKey == SDLK_UNKNOWN) {
 			SDL_PushEvent(&event);
 		}
@@ -556,7 +594,7 @@ SDL_Event VitaAux::getPressedKeyAsSDL_Event()
 	}
 	case SCE_CTRL_TRIANGLE: {
 		event.type           = SDL_KEYDOWN;
-		event.key.keysym.sym = SDLK_PAGEUP;
+		event.key.keysym.sym = !inMenu ? SDLK_6 : SDLK_PAGEUP;
 		if (VitaAux::latestKey == SDLK_UNKNOWN) {
 			SDL_PushEvent(&event);
 		}
@@ -564,27 +602,7 @@ SDL_Event VitaAux::getPressedKeyAsSDL_Event()
 		break;
 	}
 
-	case SCE_CTRL_LTRIGGER: {
-		event.type          = SDL_MOUSEBUTTONDOWN;
-		event.button.button = SDL_BUTTON_LEFT;
-		/*if (VitaAux::latestKey == SDLK_UNKNOWN) {
-			SDL_PushEvent(&event);
-		}
-		VitaAux::latestKey = SDL_BUTTON_LEFT;*/
-		break;
-	}
-
-	case SCE_CTRL_RTRIGGER: {
-		event.type          = SDL_MOUSEBUTTONDOWN;
-		event.button.button = SDL_BUTTON_RIGHT;
-		/*if (VitaAux::latestKey == SDLK_UNKNOWN) {
-			SDL_PushEvent(&event);
-		}
-		VitaAux::latestKey = SDL_BUTTON_LEFT;*/
-		break;
-	}
-
-	default:
+	default: {
 		if (VitaAux::latestKey != SDLK_UNKNOWN) {
 			event.type           = SDL_KEYUP;
 			event.key.keysym.sym = VitaAux::latestKey;
@@ -593,7 +611,41 @@ SDL_Event VitaAux::getPressedKeyAsSDL_Event()
 		VitaAux::latestKey = SDLK_UNKNOWN;
 		break;
 	}
-	return event;
+	}
+	VITATOUCH touch = VitaAux::getVitaTouch();
+	switch (ctrl.buttons) {
+	case SCE_CTRL_LTRIGGER: {
+		eventMouse.button.x      = touch.x;
+		eventMouse.button.y      = touch.y;
+		eventMouse.type          = SDL_MOUSEBUTTONDOWN;
+		eventMouse.button.button = SDL_BUTTON_LEFT;
+		if (VitaAux::latestKeyMouse == SDLK_UNKNOWN) {
+			SDL_PushEvent(&eventMouse);
+		}
+		VitaAux::latestKeyMouse = SDL_BUTTON_LEFT;
+		break;
+	}
+
+	case SCE_CTRL_RTRIGGER: {
+		eventMouse.button.x      = touch.x;
+		eventMouse.button.y      = touch.y;
+		eventMouse.type          = SDL_MOUSEBUTTONDOWN;
+		eventMouse.button.button = SDL_BUTTON_RIGHT;
+		if (VitaAux::latestKeyMouse == SDLK_UNKNOWN) {
+			SDL_PushEvent(&eventMouse);
+		}
+		VitaAux::latestKeyMouse = SDL_BUTTON_LEFT;
+		break;
+	}
+	default:
+		if (VitaAux::latestKeyMouse != SDLK_UNKNOWN) {
+			eventMouse.type          = SDL_MOUSEBUTTONUP;
+			eventMouse.button.button = VitaAux::latestKeyMouse;
+			SDL_PushEvent(&eventMouse);
+		}
+		VitaAux::latestKeyMouse = SDLK_UNKNOWN;
+		break;
+	}
 }
 
 void VitaAux::printMemInfo(unsigned int amount)

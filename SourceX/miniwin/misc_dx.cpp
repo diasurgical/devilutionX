@@ -17,6 +17,8 @@ WINBOOL SetCursorPos(int X, int Y)
 {
 	assert(window);
 
+#ifndef VITA
+
 #ifndef USE_SDL1
 	if (renderer) {
 		SDL_Rect view;
@@ -29,6 +31,7 @@ WINBOOL SetCursorPos(int X, int Y)
 		X *= scaleX;
 		Y *= scaleX;
 	}
+#endif
 #endif
 
 	SDL_WarpMouseInWindow(window, X, Y);
