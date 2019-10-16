@@ -152,11 +152,7 @@ int SpellPages[6][7] = {
 
 void DrawSpellCel(int xp, int yp, BYTE *pCelBuff, int nCel, int nWidth)
 {
-	int nDataSize;
-	BYTE *pRLEBytes;
-
-	pRLEBytes = CelGetFrame(pCelBuff, nCel, &nDataSize);
-	CelBlitLight(&gpBuffer[xp + BUFFER_WIDTH * yp], pRLEBytes, nDataSize, nWidth, SplTransTbl);
+	CelDrawLight(xp, yp, pCelBuff, nCel, nWidth, SplTransTbl);
 }
 
 void SetSpellTrans(char t)

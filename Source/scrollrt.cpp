@@ -491,7 +491,7 @@ static void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, i
 	negMon = dMonster[sx][sy - 1];
 
 	if (visiondebug && bFlag & BFLAG_LIT) {
-		CelClippedBlit(pBuff, pSquareCel, 1, 64);
+		CelClippedDraw(dx, dy, pSquareCel, 1, 64);
 	}
 	tx = dx - 96;
 	ty = dy - 16;
