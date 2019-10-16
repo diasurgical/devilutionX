@@ -136,7 +136,7 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 	DvlIntSetting("grab input", &grabInput);
 
 #ifdef USE_SDL1
-	int flags = SDL_SWSURFACE | SDL_DOUBLEBUF | SDL_HWPALETTE;
+	int flags = SDL_SWSURFACE | SDL_HWPALETTE;
 	if (fullscreen)
 		flags |= SDL_FULLSCREEN;
 	SDL_WM_SetCaption(lpWindowName, WINDOW_ICON_NAME);
