@@ -668,7 +668,7 @@ static void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, i
 	}
 }
 
-static void scrollrt_draw(int x, int y, int sx, int sy, int chunks, int capChunks, int eflag)
+static void scrollrt_draw(int x, int y, int sx, int sy, int chunks, int dPieceRow)
 {
 	int i, j;
 	BYTE *dst;
@@ -676,57 +676,14 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int chunks, int capChunk
 
 	/// ASSERT: assert(gpBuffer);
 
-	pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
-
-	if (eflag) {
-		if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX) {
-			level_piece_id = dPiece[x][y];
-			light_table_index = dLight[x][y];
-			if (level_piece_id != 0) {
-				dst = &gpBuffer[sx + 32 + BUFFER_WIDTH * sy];
-				cel_transparency_active = (BYTE)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
-				level_cel_block = pMap->mt[1];
-				if (level_cel_block != 0) {
-					arch_draw_type = 2;
-					drawUpperScreen(dst);
-					arch_draw_type = 0;
-				}
-				dst -= BUFFER_WIDTH * 32;
-				level_cel_block = pMap->mt[3];
-				if (level_cel_block != 0) {
-					drawUpperScreen(dst);
-				}
-				dst -= BUFFER_WIDTH * 32;
-				level_cel_block = pMap->mt[5];
-				if (level_cel_block != 0) {
-					drawUpperScreen(dst);
-				}
-				dst -= BUFFER_WIDTH * 32;
-				level_cel_block = pMap->mt[7];
-				if (level_cel_block != 0) {
-					drawUpperScreen(dst);
-				}
-				dst -= BUFFER_WIDTH * 32;
-				level_cel_block = pMap->mt[9];
-				if (level_cel_block != 0) {
-					drawUpperScreen(dst);
-				}
-				dst -= BUFFER_WIDTH * 32;
-				level_cel_block = pMap->mt[11];
-				if (level_cel_block != 0 && leveltype == DTYPE_HELL) {
-					drawUpperScreen(dst);
-				}
-				scrollrt_draw_dungeon(&gpBuffer[sx + BUFFER_WIDTH * sy], x, y, sx, sy, 0);
-			} else {
-				world_draw_black_tile(&gpBuffer[sx + BUFFER_WIDTH * sy]);
-			}
-		}
-		x++;
-		y--;
-		sx += 64;
-		chunks--;
-		pMap++;
+	if (dPieceRow & 1) {
+		x--;
+		y++;
+		sx -= 32;
+		chunks++;
 	}
+
+	pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
 
 	for (j = 0; j < chunks; j++) {
 		if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX) {
@@ -766,52 +723,6 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int chunks, int capChunk
 		y--;
 		sx += 64;
 		pMap++;
-	}
-
-	if (eflag) {
-		if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX) {
-			level_piece_id = dPiece[x][y];
-			light_table_index = dLight[x][y];
-			if (level_piece_id != 0) {
-				dst = &gpBuffer[sx + BUFFER_WIDTH * sy];
-				cel_transparency_active = (BYTE)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
-				arch_draw_type = 1;
-				level_cel_block = pMap->mt[0];
-				if (level_cel_block != 0) {
-					drawUpperScreen(dst);
-				}
-				arch_draw_type = 0;
-				dst -= BUFFER_WIDTH * 32;
-				level_cel_block = pMap->mt[2];
-				if (level_cel_block != 0) {
-					drawUpperScreen(dst);
-				}
-				dst -= BUFFER_WIDTH * 32;
-				level_cel_block = pMap->mt[4];
-				if (level_cel_block != 0) {
-					drawUpperScreen(dst);
-				}
-				dst -= BUFFER_WIDTH * 32;
-				level_cel_block = pMap->mt[6];
-				if (level_cel_block != 0) {
-					drawUpperScreen(dst);
-				}
-				// TODO debug thease to see if they are even on screen
-				dst -= BUFFER_WIDTH * 32;
-				level_cel_block = pMap->mt[8];
-				if (level_cel_block != 0) {
-					drawUpperScreen(dst);
-				}
-				dst -= BUFFER_WIDTH * 32;
-				level_cel_block = pMap->mt[10];
-				if (level_cel_block != 0 && leveltype == DTYPE_HELL) {
-					drawUpperScreen(dst);
-				}
-				scrollrt_draw_dungeon(&gpBuffer[sx + BUFFER_WIDTH * sy], x, y, sx, sy, 0);
-			} else {
-				world_draw_black_tile(&gpBuffer[sx + BUFFER_WIDTH * sy]);
-			}
-		}
 	}
 }
 
@@ -892,15 +803,13 @@ static void DrawGame(int x, int y)
 
 	/// ASSERT: assert(gpBuffer);
 	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_HEIGHT + SCREEN_Y)];
-	for (i = 0; i < blocks; i++) {
-		scrollrt_draw(x, y, sx, sy, chunks, i, 0);
-		y++;
-		sx -= 32;
+	for (i = 0; i < blocks << 1; i++) {
+		scrollrt_draw(x, y, sx, sy, chunks, i);
 		sy += 16;
-		scrollrt_draw(x, y, sx, sy, chunks, i, 1);
-		x++;
-		sx += 32;
-		sy += 16;
+		if (i & 1)
+			y++;
+		else
+			x++;
 	}
 
 	if (zoomflag)

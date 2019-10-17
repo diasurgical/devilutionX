@@ -134,7 +134,7 @@ void town_draw_town_all(BYTE *pBuff, int x, int y, int sx, int sy, int eflag)
 	}
 }
 
-void town_draw(int x, int y, int sx, int sy, int chunks, int capChunks, int eflag)
+void town_draw(int x, int y, int sx, int sy, int chunks, int dPieceRow)
 {
 	int i, j;
 	BYTE *dst;
@@ -142,32 +142,14 @@ void town_draw(int x, int y, int sx, int sy, int chunks, int capChunks, int efla
 
 	/// ASSERT: assert(gpBuffer);
 
-	if (eflag) {
-		if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX) {
-			level_cel_block = dPiece[x][y];
-			if (level_cel_block != 0) {
-				dst = &gpBuffer[sx + 32 + BUFFER_WIDTH * sy];
-				pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
-				for (i = 0; i < 7; i++) {
-					level_cel_block = pMap->mt[2 * i + 1];
-					if (level_cel_block != 0) {
-						drawUpperScreen(dst);
-					}
-					dst -= BUFFER_WIDTH * 32;
-				}
-				town_draw_town_all(&gpBuffer[sx + BUFFER_WIDTH * sy], x, y, sx, sy, 0);
-			} else {
-				town_clear_buf(&gpBuffer[sx + BUFFER_WIDTH * sy]);
-			}
-		} else {
-			town_clear_buf(&gpBuffer[sx + BUFFER_WIDTH * sy]);
-		}
-		x++;
-		y--;
-		sx += 64;
+	if (dPieceRow & 1) {
+		x--;
+		y++;
+		sx -= 32;
+		chunks++;
 	}
 
-	for (j = 0; j < chunks - eflag; j++) {
+	for (j = 0; j < chunks; j++) {
 		if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX) {
 			level_cel_block = dPiece[x][y];
 			if (level_cel_block != 0) {
@@ -194,28 +176,6 @@ void town_draw(int x, int y, int sx, int sy, int chunks, int capChunks, int efla
 		x++;
 		y--;
 		sx += 64;
-	}
-
-	if (eflag) {
-		if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX) {
-			level_cel_block = dPiece[x][y];
-			if (level_cel_block != 0) {
-				dst = &gpBuffer[sx + BUFFER_WIDTH * sy];
-				pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
-				for (i = 0; i < 7; i++) {
-					level_cel_block = pMap->mt[2 * i];
-					if (level_cel_block != 0) {
-						drawUpperScreen(dst);
-					}
-					dst -= BUFFER_WIDTH * 32;
-				}
-				town_draw_town_all(&gpBuffer[sx + BUFFER_WIDTH * sy], x, y, sx, sy, 0);
-			} else {
-				town_clear_buf(&gpBuffer[sx + BUFFER_WIDTH * sy]);
-			}
-		} else {
-			town_clear_buf(&gpBuffer[sx + BUFFER_WIDTH * sy]);
-		}
 	}
 }
 
@@ -308,15 +268,13 @@ void T_DrawGame(int x, int y)
 
 	/// ASSERT: assert(gpBuffer);
 	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_HEIGHT + SCREEN_Y)];
-	for (i = 0; i < blocks; i++) {
-		town_draw(x, y, sx, sy, chunks, i, 0);
-		y++;
-		sx -= 32;
+	for (i = 0; i < (blocks << 1); i++) {
+		town_draw(x, y, sx, sy, chunks, i);
 		sy += 16;
-		town_draw(x, y, sx, sy, chunks, i, 1);
-		x++;
-		sx += 32;
-		sy += 16;
+		if (i & 1)
+			y++;
+		else
+			x++;
 	}
 	if (zoomflag)
 		return;

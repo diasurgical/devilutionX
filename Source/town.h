@@ -6,7 +6,7 @@ void town_clear_buf(BYTE *pBuff);
 void town_draw_clipped_e_flag_2(BYTE *pBuff, int x, int y, int skipChunks, int sx, int sy);
 void town_draw_e_flag(BYTE *pBuff, int x, int y, int capChunks, int sx, int sy);
 void town_draw_town_all(BYTE *pBuff, int x, int y, int sx, int sy, int eflag);
-void town_draw(int x, int y, int sx, int sy, int chunks, int capChunks, int eflag);
+void town_draw(int x, int y, int sx, int sy, int chunks, int dPieceRow);
 void T_DrawGame(int x, int y);
 void T_DrawZoom(int x, int y);
 void T_DrawView(int StartX, int StartY);
