@@ -283,8 +283,14 @@ bool UiFocusNavigation(SDL_Event *event)
 		}
 	}
 
-	if (UiItemMouseEvents(event, gUiItems, gUiItemCnt))
-		return true;
+	if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
+		// In SDL2 mouse events already use logical coordinates.
+#ifdef USE_SDL1
+		OutputToLogical(&event->button.x, &event->button.y);
+#endif
+		if (UiItemMouseEvents(event, gUiItems, gUiItemCnt))
+			return true;
+	}
 
 	return false;
 }
@@ -782,21 +788,7 @@ void DrawMouse()
 		return;
 
 	SDL_GetMouseState(&MouseX, &MouseY);
-
-#ifndef USE_SDL1
-	if (renderer) {
-		float scaleX;
-		SDL_RenderGetScale(renderer, &scaleX, NULL);
-		MouseX /= scaleX;
-		MouseY /= scaleX;
-
-		SDL_Rect view;
-		SDL_RenderGetViewport(renderer, &view);
-		MouseX -= view.x;
-		MouseY -= view.y;
-	}
-#endif
-
+	OutputToLogical(&MouseX, &MouseY);
 	DrawArt(MouseX, MouseY, &ArtCursor);
 }
 

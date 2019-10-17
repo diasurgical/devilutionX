@@ -1,3 +1,5 @@
+#pragma once
+
 #include "devilution.h"
 
 #include <SDL_mixer.h>
