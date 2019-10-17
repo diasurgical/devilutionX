@@ -768,24 +768,36 @@ static void DrawGame(int x, int y)
 	switch (ScrollInfo._sdir) {
 	case SDIR_NONE:
 		break;
-	case SDIR_NE:
-		chunks++;
 	case SDIR_N:
 		sy -= 32;
 		x--;
 		y--;
 		blocks++;
 		break;
-	case SDIR_SE:
+	case SDIR_NE:
+		sy -= 32;
+		x--;
+		y--;
+		chunks++;
 		blocks++;
+		break;
 	case SDIR_E:
 		chunks++;
+		break;
+	case SDIR_SE:
+		chunks++;
+		blocks++;
 		break;
 	case SDIR_S:
 		blocks++;
 		break;
 	case SDIR_SW:
+		sx -= 64;
+		x--;
+		y++;
+		chunks++;
 		blocks++;
+		break;
 	case SDIR_W:
 		sx -= 64;
 		x--;
@@ -803,8 +815,12 @@ static void DrawGame(int x, int y)
 
 	/// ASSERT: assert(gpBuffer);
 	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_HEIGHT + SCREEN_Y)];
-	for (i = 0; i < blocks << 1; i++) {
-		scrollrt_draw(x, y, sx, sy, chunks, i);
+	for (i = 0; i < (blocks << 1); i++) {
+		if (leveltype != DTYPE_TOWN) {
+			scrollrt_draw(x, y, sx, sy, chunks, i);
+		} else {
+			town_draw(x, y, sx, sy, chunks, i);
+		}
 		sy += 16;
 		if (i & 1)
 			y++;
@@ -852,10 +868,14 @@ static void DrawGame(int x, int y)
 
 void DrawView(int StartX, int StartY)
 {
+	light_table_index = 0;
+	cel_transparency_active = 0;
 	DrawGame(StartX, StartY);
 	if (automapflag) {
 		DrawAutomap();
 	}
+	if (stextflag && !qtextflag)
+		DrawSText();
 	if (invflag) {
 		DrawInv();
 	} else if (sbookflag) {
@@ -1150,11 +1170,7 @@ void DrawAndBlit()
 	drawpanflag = 0;
 
 	lock_buf(0);
-	if (leveltype != DTYPE_TOWN) {
-		DrawView(ViewX, ViewY);
-	} else {
-		T_DrawView(ViewX, ViewY);
-	}
+	DrawView(ViewX, ViewY);
 	if (ctrlPan || 1) {
 		ClearCtrlPan();
 	}
