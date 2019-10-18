@@ -2917,3 +2917,13 @@ typedef enum dlrg_flag {
 	DLRG_CHAMBER   = 0x40,
 	DLRG_PROTECTED = 0x80,
 } dlrg_flag;
+
+typedef enum conn_type {
+#ifndef NONET
+	SELCONN_TCP,
+#ifdef BUGGY
+	SELCONN_UDP,
+#endif
+#endif
+	SELCONN_LOOPBACK,
+} conn_type;

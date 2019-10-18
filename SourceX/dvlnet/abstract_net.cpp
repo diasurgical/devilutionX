@@ -19,13 +19,16 @@ std::unique_ptr<abstract_net> abstract_net::make_net(provider_t provider)
 #ifdef NONET
 	return std::unique_ptr<abstract_net>(new loopback);
 #else
-	if (provider == 'TCPN') {
+	switch (provider) {
+	case SELCONN_TCP:
 		return std::unique_ptr<abstract_net>(new tcp_client);
-	} else if (provider == 'UDPN') {
+#ifdef BUGGY
+	case SELCONN_UDP:
 		return std::unique_ptr<abstract_net>(new udp_p2p);
-	} else if (provider == 'SCBL' || provider == 0) {
+#endif
+	case SELCONN_LOOPBACK:
 		return std::unique_ptr<abstract_net>(new loopback);
-	} else {
+	default:
 		ABORT();
 	}
 #endif

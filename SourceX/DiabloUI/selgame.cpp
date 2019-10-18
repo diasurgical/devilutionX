@@ -19,7 +19,7 @@ int *gdwPlayerId;
 int gbDifficulty;
 
 static _SNETPROGRAMDATA *m_client_info;
-extern DWORD provider;
+extern int provider;
 
 constexpr UiArtTextButton SELGAME_OK = UiArtTextButton("OK", &UiFocusNavigationSelect, { 299, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD);
 constexpr UiArtTextButton SELGAME_CANCEL = UiArtTextButton("CANCEL", &UiFocusNavigationEsc, { 449, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD);
@@ -96,7 +96,7 @@ void selgame_GameSelection_Init()
 	selgame_enteringGame = false;
 	selgame_selectedGame = 0;
 
-	if (provider == 'SCBL') {
+	if (provider == SELCONN_LOOPBACK) {
 		selgame_enteringGame = true;
 		selgame_GameSelection_Select(0);
 		return;
@@ -164,7 +164,7 @@ void selgame_Diff_Select(int value)
 {
 	gbDifficulty = value;
 
-	if (provider == 'SCBL') {
+	if (provider == SELCONN_LOOPBACK) {
 		selgame_Password_Select(0);
 		return;
 	}
@@ -174,7 +174,7 @@ void selgame_Diff_Select(int value)
 
 void selgame_Diff_Esc()
 {
-	if (provider == 'SCBL') {
+	if (provider == SELCONN_LOOPBACK) {
 		selgame_GameSelection_Esc();
 		return;
 	}

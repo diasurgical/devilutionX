@@ -16,21 +16,11 @@ _SNETPLAYERDATA *selconn_UserInfo;
 _SNETUIDATA *selconn_UiInfo;
 _SNETVERSIONDATA *selconn_FileInfo;
 
-DWORD provider;
+int provider;
 
 UiArtText SELCONNECT_DIALOG_DESCRIPTION(selconn_Description, { 35, 275, 205, 66 });
 
-// Should be in the same order than SELCONN_DIALOG_ITEM
-enum {
-#ifndef NONET
-	SELCONN_TCP,
-#ifdef BUGGY
-	SELCONN_UDP,
-#endif
-#endif
-	SELCONN_LOOPBACK,
-};
-
+// Should be in the same order than conn_type (See enums.h)
 UiListItem SELCONN_DIALOG_ITEMS[] = {
 #ifndef NONET
 	{ "Client-Server (TCP)", SELCONN_TCP },
@@ -102,21 +92,7 @@ void selconn_Focus(int value)
 
 void selconn_Select(int value)
 {
-	switch (value) {
-#ifndef NONET
-	case SELCONN_TCP:
-		provider = 'TCPN';
-		break;
-#ifdef BUGGY
-	case SELCONN_UDP:
-		provider = 'UDPN';
-		break;
-#endif
-#endif
-	case SELCONN_LOOPBACK:
-		provider = 'SCBL';
-		break;
-	}
+	provider = value;
 
 	selconn_Free();
 	selconn_EndMenu = SNetInitializeProvider(provider, selconn_ClientInfo, selconn_UserInfo, selconn_UiInfo, selconn_FileInfo);
