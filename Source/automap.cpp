@@ -172,7 +172,7 @@ void DrawAutomap()
 		return;
 	}
 
-	gpBufEnd = &gpBuffer[(PANEL_Y) * BUFFER_WIDTH];
+	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (VIEWPORT_HEIGHT + SCREEN_Y)];
 
 	MapX = (ViewX - 16) >> 1;
 	while (MapX + AutoMapXOfs < 0)
@@ -243,6 +243,7 @@ void DrawAutomap()
 	}
 	DrawAutomapPlr();
 	DrawAutomapGame();
+	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_HEIGHT + SCREEN_Y)];
 }
 
 void DrawAutomapType(int sx, int sy, WORD automap_type)

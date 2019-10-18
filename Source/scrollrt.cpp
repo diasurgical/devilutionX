@@ -152,7 +152,7 @@ static void scrollrt_draw_cursor_item()
 		if (!plr[myplr].HoldItem._iStatFlag) {
 			col = PAL16_RED + 5;
 		}
-		CelBlitOutlineSafe(col, mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW);
+		CelBlitOutline(col, mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW);
 		if (col != PAL16_RED + 5) {
 			CelClippedDrawSafe(mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW);
 		} else {
@@ -813,7 +813,7 @@ static void DrawGame(int x, int y)
 	}
 
 	/// ASSERT: assert(gpBuffer);
-	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_HEIGHT + SCREEN_Y)];
+	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (VIEWPORT_HEIGHT + SCREEN_Y)];
 	for (i = 0; i < (blocks << 1); i++) {
 		if (leveltype != DTYPE_TOWN) {
 			scrollrt_draw(x, y, sx, sy, chunks, i);
@@ -826,6 +826,7 @@ static void DrawGame(int x, int y)
 		else
 			x++;
 	}
+	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_HEIGHT + SCREEN_Y)];
 
 	if (zoomflag)
 		return;
@@ -1170,22 +1171,22 @@ void DrawAndBlit()
 
 	lock_buf(0);
 	DrawView(ViewX, ViewY);
-	if (ctrlPan || 1) {
+	if (ctrlPan) {
 		ClearCtrlPan();
 	}
-	if (drawhpflag || 1) {
+	if (drawhpflag) {
 		UpdateLifeFlask();
 	}
-	if (drawmanaflag || 1) {
+	if (drawmanaflag) {
 		UpdateManaFlask();
 	}
-	if (drawbtnflag || 1) {
+	if (drawbtnflag) {
 		DrawCtrlPan();
 	}
-	if (drawsbarflag || 1) {
+	if (drawsbarflag) {
 		DrawInvBelt();
 	}
-	if (talkflag || 1) {
+	if (talkflag) {
 		DrawTalkPan();
 		hgt = SCREEN_HEIGHT;
 	}
