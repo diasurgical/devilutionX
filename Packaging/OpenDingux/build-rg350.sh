@@ -21,7 +21,7 @@ prepare_buildroot() {
 	if [[ -d $BUILDROOT ]]; then
 		return
 	fi
-	git clone --depth=1 -b backport-glibc-host-fix https://github.com/glebm/RG350_buildroot.git "$BUILDROOT"
+	git clone --depth=1 https://github.com/tonyjih/RG350_buildroot.git "$BUILDROOT"
 	cp buildroot_rg350_defconfig "$BUILDROOT/configs/rg350_devilutionx_defconfig"
 	cd "$BUILDROOT"
 	make rg350_devilutionx_defconfig
