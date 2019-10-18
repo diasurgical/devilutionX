@@ -967,7 +967,7 @@ void CheckEFlag(int pnum, BOOL flag)
 	x = plr[pnum].WorldX - 1;
 	y = plr[pnum].WorldY + 1;
 	bitflags = 0;
-	pieces = &dpiece_defs_map_1[IsometricCoord(x, y)];
+	pieces = &dpiece_defs_map_2[x][y];
 
 	for (i = 2; i < 10; i++) {
 		bitflags |= pieces->mt[i];
@@ -986,7 +986,7 @@ void CheckEFlag(int pnum, BOOL flag)
 	x = plr[pnum].WorldX;
 	y = plr[pnum].WorldY + 2;
 	bitflags = 0;
-	pieces = &dpiece_defs_map_1[IsometricCoord(x, y)];
+	pieces = &dpiece_defs_map_2[x][y];
 
 	for (i = 2; i < 10; i++) {
 		bitflags |= pieces->mt[i];
@@ -999,7 +999,7 @@ void CheckEFlag(int pnum, BOOL flag)
 	x = plr[pnum].WorldX - 2;
 	y = plr[pnum].WorldY + 1;
 	bitflags = 0;
-	pieces = &dpiece_defs_map_1[IsometricCoord(x, y)];
+	pieces = &dpiece_defs_map_2[x][y];
 
 	for (i = 2; i < 10; i++) {
 		bitflags |= pieces->mt[i];

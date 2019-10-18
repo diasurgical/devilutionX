@@ -46,7 +46,7 @@ void town_draw_e_flag(BYTE *pBuff, int x, int y, int capChunks, int sx, int sy)
 	MICROS *pMap;
 
 	dst = pBuff;
-	pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
+	pMap = &dpiece_defs_map_2[x][y];
 
 	for (i = 0; i < 7; i++) {
 		if (capChunks >= i) {
@@ -154,7 +154,7 @@ void town_draw(int x, int y, int sx, int sy, int chunks, int dPieceRow)
 			level_cel_block = dPiece[x][y];
 			if (level_cel_block != 0) {
 				dst = &gpBuffer[sx + BUFFER_WIDTH * sy];
-				pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
+				pMap = &dpiece_defs_map_2[x][y];
 				for (i = 0; i < MicroTileLen >> 1; i++) {
 					level_cel_block = pMap->mt[2 * i];
 					if (level_cel_block != 0) {
@@ -190,7 +190,7 @@ void SetTownMicros()
 	for (y = 0; y < MAXDUNY; y++) {
 		for (x = 0; x < MAXDUNX; x++) {
 			lv = dPiece[x][y];
-			pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
+			pMap = &dpiece_defs_map_2[x][y];
 			if (lv != 0) {
 				lv--;
 				pPiece = (WORD *)&pLevelPieces[32 * lv];

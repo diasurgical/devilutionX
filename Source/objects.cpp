@@ -1816,7 +1816,7 @@ void ObjSetMicro(int dx, int dy, int pn)
 
 	dPiece[dx][dy] = pn;
 	pn--;
-	defs = &dpiece_defs_map_1[IsometricCoord(dx, dy)];
+	defs = &dpiece_defs_map_2[dx][dy];
 	if (leveltype != DTYPE_HELL) {
 		v = (WORD *)pLevelPieces + 10 * pn;
 		for (i = 0; i < 10; i++) {
@@ -1839,8 +1839,8 @@ void objects_set_door_piece(int x, int y)
 
 	v1 = *((WORD *)pLevelPieces + 10 * pn + 8);
 	v2 = *((WORD *)pLevelPieces + 10 * pn + 9);
-	dpiece_defs_map_1[IsometricCoord(x, y)].mt[0] = SDL_SwapLE16(v1);
-	dpiece_defs_map_1[IsometricCoord(x, y)].mt[1] = SDL_SwapLE16(v2);
+	dpiece_defs_map_2[x][y].mt[0] = SDL_SwapLE16(v1);
+	dpiece_defs_map_2[x][y].mt[1] = SDL_SwapLE16(v2);
 }
 
 void ObjSetMini(int x, int y, int v)

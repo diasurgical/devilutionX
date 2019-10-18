@@ -432,7 +432,7 @@ static void scrollrt_draw_e_flag(BYTE *pBuff, int x, int y, int sx, int sy)
 	light_table_index = dLight[x][y];
 	dst = pBuff;
 	cel_transparency_active = (BYTE)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
-	pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
+	pMap = &dpiece_defs_map_2[x][y];
 
 	arch_draw_type = 1;
 	level_cel_block = pMap->mt[0];
@@ -683,7 +683,6 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int chunks, int dPieceRo
 		chunks++;
 	}
 
-	pMap = &dpiece_defs_map_1[IsometricCoord(x, y)];
 
 	for (j = 0; j < chunks; j++) {
 		if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX) {
@@ -691,6 +690,7 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int chunks, int dPieceRo
 			light_table_index = dLight[x][y];
 			if (level_piece_id != 0) {
 				dst = &gpBuffer[sx + sy * BUFFER_WIDTH];
+				pMap = &dpiece_defs_map_2[x][y];
 				cel_transparency_active = (BYTE)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
 				arch_draw_type = 1;
 				level_cel_block = pMap->mt[0];
@@ -722,7 +722,6 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int chunks, int dPieceRo
 		x++;
 		y--;
 		sx += 64;
-		pMap++;
 	}
 }
 

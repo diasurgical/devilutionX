@@ -13,7 +13,6 @@ BYTE *pSpeedCels;
 int nlevel_frames;
 BYTE pdungeon[DMAXX][DMAXY];
 char dDead[MAXDUNX][MAXDUNY];
-MICROS dpiece_defs_map_1[MAXDUNX * MAXDUNY];
 char dPreLight[MAXDUNX][MAXDUNY];
 char TransVal;
 int MicroTileLen;
@@ -334,27 +333,6 @@ void SwapTile(int f1, int f2)
 	level_frame_sizes[f2] = swap;
 }
 
-int IsometricCoord(int x, int y)
-{
-	if (x < MAXDUNY - y)
-		return (y + y * y + x * (x + 2 * y + 3)) / 2;
-
-	x = MAXDUNX - x - 1;
-	y = MAXDUNY - y - 1;
-	return MAXDUNX * MAXDUNY - ((y + y * y + x * (x + 2 * y + 3)) / 2) - 1;
-}
-
-void SetSpeedCels()
-{
-	int x, y;
-
-	for (x = 0; x < MAXDUNX; x++) {
-		for (y = 0; y < MAXDUNY; y++) {
-			dpiece_defs_map_1[IsometricCoord(x, y)] = dpiece_defs_map_2[x][y];
-		}
-	}
-}
-
 void SetDungeonMicros()
 {
 	int i, x, y, lv, blocks;
@@ -389,7 +367,6 @@ void SetDungeonMicros()
 	}
 
 	MakeSpeedCels();
-	SetSpeedCels();
 
 	if (zoomflag) {
 		scr_pix_width = SCREEN_WIDTH;
