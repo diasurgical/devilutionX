@@ -2,31 +2,6 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-void town_clear_buf(BYTE *pBuff)
-{
-	/// ASSERT: assert(gpBuffer);
-
-	int i, j, k;
-	BYTE *dst;
-
-	dst = pBuff;
-
-	for (i = 30, j = 1; i >= 0; i -= 2, j++, dst -= BUFFER_WIDTH + 64) {
-		dst += i;
-		for (k = 0; k < 4 * j; k++)
-			if (dst < gpBufEnd)
-				*dst++ = 0;
-		dst += i;
-	}
-	for (i = 2, j = 15; i != 32; i += 2, j--, dst -= BUFFER_WIDTH + 64) {
-		dst += i;
-		for (k = 0; k < 4 * j; k++)
-			if (dst < gpBufEnd)
-				*dst++ = 0;
-		dst += i;
-	}
-}
-
 void town_special(BYTE *pBuff, int nCel)
 {
 #if 0
@@ -168,10 +143,10 @@ void town_draw(int x, int y, int sx, int sy, int chunks, int dPieceRow)
 				}
 				town_draw_town_all(&gpBuffer[sx + BUFFER_WIDTH * sy], x, y, sx, sy, 1);
 			} else {
-				town_clear_buf(&gpBuffer[sx + BUFFER_WIDTH * sy]);
+				world_draw_black_tile(&gpBuffer[sx + BUFFER_WIDTH * sy]);
 			}
 		} else {
-			town_clear_buf(&gpBuffer[sx + BUFFER_WIDTH * sy]);
+			world_draw_black_tile(&gpBuffer[sx + BUFFER_WIDTH * sy]);
 		}
 		x++;
 		y--;
