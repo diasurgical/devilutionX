@@ -3,7 +3,6 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 #define NO_OVERDRAW
-#define USE_SPEEDCELS
 
 typedef enum {
 	RT_SQUARE,
@@ -118,11 +117,7 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 			for (i = 0; i < n; i++, (*dst)++) {
 				(*dst)[0] = 0;
 			}
-#ifdef USE_SPEEDCELS
-		} else if (tbl == NULL) {
-#else
 		} else if (light_table_index == 0) {
-#endif
 			for (i = n & 3; i != 0; i--, (*src)++, (*dst)++) {
 				(*dst)[0] = (*src)[0];
 			}
@@ -143,11 +138,7 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 					(*dst)[0] = 0;
 				}
 			}
-#ifdef USE_SPEEDCELS
-		} else if (tbl == NULL) {
-#else
 		} else if (light_table_index == 0) {
-#endif
 			for (i = 0; i < n; i++, (*src)++, (*dst)++, mask <<= 1) {
 				if (mask & 0x80000000) {
 					(*dst)[0] = (*src)[0];
@@ -179,21 +170,6 @@ void RenderTile(BYTE *pBuff)
 	src = &pDungeonCels[SDL_SwapLE32(pFrameTable[level_cel_block & 0xFFF])];
 	tile = (level_cel_block & 0x7000) >> 12;
 	tbl = &pLightTbl[256 * light_table_index];
-
-#ifdef USE_SPEEDCELS
-	if (light_table_index == lightmax || light_table_index == 0) {
-		if (level_cel_block & 0x8000) {
-			level_cel_block = SpeedFrameTbl[level_cel_block & 0xFFF][0] + (level_cel_block & 0xF000);
-		}
-		src = &pDungeonCels[SDL_SwapLE32(pFrameTable[level_cel_block & 0xFFF])];
-		tile = (level_cel_block & 0x7000) >> 12;
-		tbl = NULL;
-	} else if (level_cel_block & 0x8000) {
-		src = &pSpeedCels[SpeedFrameTbl[level_cel_block & 0xFFF][light_table_index]];
-		tile = (level_cel_block & 0x7000) >> 12;
-		tbl = NULL;
-	}
-#endif
 
 	mask = &SolidMask[31];
 

@@ -9,8 +9,6 @@ BOOLEAN nTransTable[2049];
 int dMonster[MAXDUNX][MAXDUNY];
 BYTE dungeon[DMAXX][DMAXY];
 char dObject[MAXDUNX][MAXDUNY];
-BYTE *pSpeedCels;
-int nlevel_frames;
 BYTE pdungeon[DMAXX][DMAXY];
 char dDead[MAXDUNX][MAXDUNY];
 char dPreLight[MAXDUNX][MAXDUNY];
@@ -20,7 +18,6 @@ char dflags[DMAXX][DMAXY];
 int dPiece[MAXDUNX][MAXDUNY];
 char dLight[MAXDUNX][MAXDUNY];
 int setloadflag_2;
-int tile_defs[MAXTILES];
 BYTE *pMegaTiles;
 BYTE *pLevelPieces;
 int gnDifficulty;
@@ -32,10 +29,8 @@ BYTE leveltype;
 BYTE currlevel;
 BOOLEAN TransList[256];
 BOOLEAN nSolidTable[2049];
-int level_frame_count[MAXTILES];
 ScrollStruct ScrollInfo;
 BYTE *pDungeonCels;
-int SpeedFrameTbl[128][16];
 THEME_LOC themeLoc[MAXTHEMES];
 char dPlayer[MAXDUNX][MAXDUNY];
 int dword_5C2FF8;
@@ -48,7 +43,6 @@ BYTE *pSpecialCels;
 char dFlags[MAXDUNX][MAXDUNY];
 char dItem[MAXDUNX][MAXDUNY];
 BYTE setlvlnum;
-int level_frame_sizes[MAXTILES];
 BOOLEAN nMissileTable[2049];
 char *pSetPiece_2;
 char setlvltype;
@@ -121,218 +115,6 @@ void FillSolidBlockTbls()
 	mem_free_dbg(pSBFile);
 }
 
-void MakeSpeedCels()
-{
-	int i, j, x, y, mt, t, z;
-	int total_frames, blocks, total_size, frameidx, blk_cnt, nDataSize;
-	WORD m;
-	BOOL blood_flag;
-	DWORD *pFrameTable;
-	MICROS *pMap;
-	int l, k;
-	BYTE width, pix;
-	BYTE *src, *dst, *tbl;
-
-	for (i = 0; i < MAXTILES; i++) {
-		tile_defs[i] = i;
-		level_frame_count[i] = 0;
-		level_frame_types[i] = 0;
-	}
-
-	if (leveltype != DTYPE_HELL)
-		blocks = 10;
-	else
-		blocks = 12;
-
-	for (y = 0; y < MAXDUNY; y++) {
-		for (x = 0; x < MAXDUNX; x++) {
-			for (i = 0; i < blocks; i++) {
-				pMap = &dpiece_defs_map_2[x][y];
-				mt = pMap->mt[i];
-				if (mt) {
-					level_frame_count[pMap->mt[i] & 0xFFF]++;
-					level_frame_types[pMap->mt[i] & 0xFFF] = mt & 0x7000;
-				}
-			}
-		}
-	}
-
-	pFrameTable = (DWORD *)pDungeonCels;
-	nDataSize = SwapLE32(pFrameTable[0]);
-	nlevel_frames = nDataSize & 0xFFFF;
-
-	for (i = 1; i < nlevel_frames; i++) {
-		z = i;
-		nDataSize = CelGetFrameSize(pDungeonCels, i);
-		level_frame_sizes[i] = nDataSize & 0xFFFF;
-	}
-
-	level_frame_sizes[0] = 0;
-
-	if (leveltype == DTYPE_HELL) {
-		for (i = 0; i < nlevel_frames; i++) {
-			if (i == 0)
-				level_frame_count[0] = 0;
-			z = i;
-			blood_flag = TRUE;
-			if (level_frame_count[i] != 0) {
-				if (level_frame_types[i] != 0x1000) {
-					src = CelGetFrameStart(pDungeonCels, i);
-					for (j = level_frame_sizes[i]; j; j--) {
-						pix = *src++;
-						if (pix && pix < 32)
-							blood_flag = FALSE;
-					}
-				} else {
-					src = CelGetFrameStart(pDungeonCels, i);
-					for (k = 32; k; k--) {
-						for (l = 32; l;) {
-							width = *src++;
-							if (!(width & 0x80)) {
-								l -= width;
-								while (width) {
-									pix = *src++;
-									if (pix && pix < 32)
-										blood_flag = FALSE;
-									width--;
-								}
-							} else {
-								width = -(char)width;
-								l -= width;
-							}
-						}
-					}
-				}
-				if (!blood_flag)
-					level_frame_count[i] = 0;
-			}
-		}
-	}
-
-	SortTiles(MAXTILES - 1);
-	total_size = 0;
-	total_frames = 0;
-
-	if (light4flag) {
-		while (total_size < 0x100000) {
-			total_size += level_frame_sizes[total_frames] << 1;
-			total_frames++;
-		}
-	} else {
-		while (total_size < 0x100000) {
-			total_size += (level_frame_sizes[total_frames] << 4) - (level_frame_sizes[total_frames] << 1);
-			total_frames++;
-		}
-	}
-
-	total_frames--;
-	if (total_frames > 128)
-		total_frames = 128;
-
-	frameidx = 0; /* move into loop ? */
-
-	if (light4flag)
-		blk_cnt = 3;
-	else
-		blk_cnt = 15;
-
-	for (i = 0; i < total_frames; i++) {
-		z = tile_defs[i];
-		SpeedFrameTbl[i][0] = z;
-		if (level_frame_types[i] != 0x1000) {
-			t = level_frame_sizes[i];
-			for (j = 1; j < blk_cnt; j++) {
-				SpeedFrameTbl[i][j] = frameidx;
-				src = CelGetFrameStart(pDungeonCels, z);
-				dst = &pSpeedCels[frameidx];
-				tbl = &pLightTbl[256 * j];
-				for (k = t; k; k--) {
-					*dst++ = tbl[*src++];
-				}
-				frameidx += t;
-			}
-		} else {
-			for (j = 1; j < blk_cnt; j++) {
-				SpeedFrameTbl[i][j] = frameidx;
-				src = CelGetFrameStart(pDungeonCels, z);
-				dst = &pSpeedCels[frameidx];
-				tbl = &pLightTbl[256 * j];
-				for (k = 32; k; k--) {
-					for (l = 32; l;) {
-						width = *src++;
-						*dst++ = width;
-						if (!(width & 0x80)) {
-							l -= width;
-							while (width) {
-								*dst++ = tbl[*src++];
-								width--;
-							}
-						} else {
-							width = -(char)width;
-							l -= width;
-						}
-					}
-				}
-				frameidx += level_frame_sizes[i];
-			}
-		}
-	}
-
-	for (y = 0; y < MAXDUNY; y++) {
-		for (x = 0; x < MAXDUNX; x++) {
-			if (dPiece[x][y]) {
-				pMap = &dpiece_defs_map_2[x][y];
-				for (i = 0; i < blocks; i++) {
-					if (pMap->mt[i]) {
-						for (m = 0; m < total_frames; m++) {
-							if ((pMap->mt[i] & 0xFFF) == tile_defs[m]) {
-								pMap->mt[i] = m + level_frame_types[m] + 0x8000;
-								m = total_frames;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
-void SortTiles(int frames)
-{
-	int i;
-	BOOL doneflag;
-
-	doneflag = FALSE;
-	while (frames > 0 && !doneflag) {
-		doneflag = TRUE;
-		for (i = 0; i < frames; i++) {
-			if (level_frame_count[i] < level_frame_count[i + 1]) {
-				SwapTile(i, i + 1);
-				doneflag = FALSE;
-			}
-		}
-		frames--;
-	}
-}
-
-void SwapTile(int f1, int f2)
-{
-	int swap;
-
-	swap = level_frame_count[f1];
-	level_frame_count[f1] = level_frame_count[f2];
-	level_frame_count[f2] = swap;
-	swap = tile_defs[f1];
-	tile_defs[f1] = tile_defs[f2];
-	tile_defs[f2] = swap;
-	swap = level_frame_types[f1];
-	level_frame_types[f1] = level_frame_types[f2];
-	level_frame_types[f2] = swap;
-	swap = level_frame_sizes[f1];
-	level_frame_sizes[f1] = level_frame_sizes[f2];
-	level_frame_sizes[f2] = swap;
-}
-
 void SetDungeonMicros()
 {
 	int i, x, y, lv, blocks;
@@ -365,8 +147,6 @@ void SetDungeonMicros()
 			}
 		}
 	}
-
-	MakeSpeedCels();
 
 	if (zoomflag) {
 		scr_pix_width = SCREEN_WIDTH;
