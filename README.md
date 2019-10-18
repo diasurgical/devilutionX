@@ -129,14 +129,14 @@ pkgman install cmake devel:libsdl2 devel:libsdl2_mixer devel:libsdl2_ttf devel:l
 ```
 cd build
 setarch x86 #Switch to secondary compiler toolchain (GCC8+)
-cmake -DBINARY_RELEASE=ON ..
+cmake ..
 cmake --build . -j $(nproc)
 ```
 ### Compiling on 64 bit Haiku
 No setarch required, as there is no secondary toolchain on x86_64, and the primary is GCC8+
 ```
 cd build
-cmake -DBINARY_RELEASE=ON ..
+cmake ..
 cmake --build . -j $(nproc)
 ```
 </details>
