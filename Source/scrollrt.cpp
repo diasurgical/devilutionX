@@ -422,7 +422,7 @@ static void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, i
  *
  * @brief Avoid actors sticking threw the walls when walking east
  */
-static void scrollrt_draw_e_flag(BYTE *pBuff, int x, int y, int sx, int sy)
+static void scrollrt_draw_e_flag(int x, int y, int sx, int sy)
 {
 	int i, lti_old, cta_old, lpi_old;
 	BYTE *dst;
@@ -434,10 +434,10 @@ static void scrollrt_draw_e_flag(BYTE *pBuff, int x, int y, int sx, int sy)
 
 	level_piece_id = dPiece[x][y];
 	light_table_index = dLight[x][y];
-	dst = pBuff;
-	cel_transparency_active = (BYTE)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
-	pMap = &dpiece_defs_map_2[x][y];
 
+	dst = &gpBuffer[sx + sy * BUFFER_WIDTH];
+	pMap = &dpiece_defs_map_2[x][y];
+	cel_transparency_active = (BYTE)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
 	for (i = 0; i<MicroTileLen>> 1; i++) {
 		arch_draw_type = i == 0 ? 1 : 0;
 		level_cel_block = pMap->mt[2 * i];
@@ -452,11 +452,31 @@ static void scrollrt_draw_e_flag(BYTE *pBuff, int x, int y, int sx, int sy)
 		dst -= BUFFER_WIDTH * 32;
 	}
 
-	scrollrt_draw_dungeon(pBuff, x, y, sx, sy, 0);
+	scrollrt_draw_dungeon(&gpBuffer[sx + BUFFER_WIDTH * sy], x, y, sx, sy, 0);
 
 	light_table_index = lti_old;
 	cel_transparency_active = cta_old;
 	level_piece_id = lpi_old;
+}
+
+static void DrawItem(int x, int y, int sx, int sy, BOOL pre)
+{
+	char bItem = dItem[x][y];
+	ItemStruct *pItem;
+
+	if (bItem == 0)
+		return;
+
+	pItem = &item[bItem - 1];
+	if (pItem->_iPostDraw == pre)
+		return;
+
+	/// ASSERT: assert((unsigned char)bItem <= MAXITEMS);
+	int px = sx - pItem->_iAnimWidth2;
+	if (bItem - 1 == pcursitem) {
+		CelBlitOutline(181, px, sy, pItem->_iAnimData, pItem->_iAnimFrame, pItem->_iAnimWidth);
+	}
+	CelClippedDrawLight(px, sy, pItem->_iAnimData, pItem->_iAnimFrame, pItem->_iAnimWidth);
 }
 
 static void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, int eflag)
@@ -464,7 +484,6 @@ static void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, i
 	int mi, px, py, nCel, nMon, negMon, p, tx, ty, frames;
 	char bFlag, bDead, bObj, bItem, bPlr, bArch, bMap, negPlr, dd;
 	DeadStruct *pDeadGuy;
-	ItemStruct *pItem;
 	PlayerStruct *pPlayer;
 	MonsterStruct *pMonster;
 	BYTE *pCelBuff;
@@ -474,7 +493,6 @@ static void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, i
 	bFlag = dFlags[sx][sy];
 	bDead = dDead[sx][sy];
 	bObj = dObject[sx][sy];
-	bItem = dItem[sx][sy];
 	bPlr = dPlayer[sx][sy];
 	bArch = dArch[sx][sy];
 	bMap = dTransVal[sx][sy];
@@ -519,20 +537,7 @@ static void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, i
 			DrawObject(sx, sy, dx, dy, 1);
 		}
 	}
-	if (bItem != 0) {
-		pItem = &item[bItem - 1];
-		if (!pItem->_iPostDraw) {
-			/// ASSERT: assert((unsigned char)bItem <= MAXITEMS);
-			pCelBuff = pItem->_iAnimData;
-			nCel = pItem->_iAnimFrame;
-			px = dx - pItem->_iAnimWidth2;
-			if (bItem - 1 == pcursitem) {
-				CelBlitOutline(181, px, dy, pCelBuff, nCel, pItem->_iAnimWidth);
-			}
-			/// ASSERT: assert(item[bv]._iAnimData);
-			CelClippedDrawLight(px, dy, pItem->_iAnimData, pItem->_iAnimFrame, pItem->_iAnimWidth);
-		}
-	}
+	DrawItem(sx, sy, dx, dy, true);
 	if (bFlag & BFLAG_PLAYERLR) {
 		p = -(negPlr + 1);
 		pPlayer = &plr[p];
@@ -541,9 +546,9 @@ static void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, i
 		DrawPlayer(p, sx, sy - 1, px, py, pPlayer->_pAnimData, pPlayer->_pAnimFrame, pPlayer->_pAnimWidth);
 		if (eflag && pPlayer->_peflag != 0) {
 			if (pPlayer->_peflag == 2) {
-				scrollrt_draw_e_flag(pBuff - (BUFFER_WIDTH * 16 + 96), sx - 2, sy + 1, tx, ty);
+				scrollrt_draw_e_flag(sx - 2, sy + 1, tx, ty);
 			}
-			scrollrt_draw_e_flag(pBuff - 64, sx - 1, sy + 1, dx - 64, dy);
+			scrollrt_draw_e_flag(sx - 1, sy + 1, dx - 64, dy);
 		}
 	}
 	if (bFlag & BFLAG_MONSTLR && (bFlag & BFLAG_LIT || plr[myplr]._pInfraFlag) && negMon < 0) {
@@ -560,7 +565,7 @@ static void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, i
 						}
 						DrawMonster(sx, sy, px, py, mi);
 						if (eflag && !pMonster->_meflag) {
-							scrollrt_draw_e_flag(pBuff - 64, sx - 1, sy + 1, dx - 64, dy);
+							scrollrt_draw_e_flag(sx - 1, sy + 1, dx - 64, dy);
 						}
 					} else {
 						// app_fatal("Draw Monster \"%s\": uninitialized monster", pMonster->mName);
@@ -589,9 +594,9 @@ static void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, i
 		DrawPlayer(p, sx, sy, px, py, pPlayer->_pAnimData, pPlayer->_pAnimFrame, pPlayer->_pAnimWidth);
 		if (eflag && pPlayer->_peflag != 0) {
 			if (pPlayer->_peflag == 2) {
-				scrollrt_draw_e_flag(pBuff - (BUFFER_WIDTH * 16 + 96), sx - 2, sy + 1, dx - 96, dy - 16);
+				scrollrt_draw_e_flag(sx - 2, sy + 1, dx - 96, dy - 16);
 			}
-			scrollrt_draw_e_flag(pBuff - 64, sx - 1, sy + 1, dx - 64, dy);
+			scrollrt_draw_e_flag(sx - 1, sy + 1, dx - 64, dy);
 		}
 	}
 	if (nMon > 0 && (bFlag & BFLAG_LIT || plr[myplr]._pInfraFlag)) {
@@ -608,7 +613,7 @@ static void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, i
 						}
 						DrawMonster(sx, sy, px, py, mi);
 						if (eflag && !pMonster->_meflag) {
-							scrollrt_draw_e_flag(pBuff - 64, sx - 1, sy + 1, dx - 64, dy);
+							scrollrt_draw_e_flag(sx - 1, sy + 1, dx - 64, dy);
 						}
 					} else {
 						// app_fatal("Draw Monster \"%s\": uninitialized monster", pMonster->mName);
@@ -632,30 +637,8 @@ static void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, i
 	if (bObj != 0 && light_table_index < lightmax) {
 		DrawObject(sx, sy, dx, dy, 0);
 	}
-	if (bItem != 0) {
-		pItem = &item[bItem - 1];
-		if (pItem->_iPostDraw) {
-			/// ASSERT: assert((unsigned char)bItem <= MAXITEMS);
-			if ((BYTE)bItem <= MAXITEMS) {
-				pCelBuff = pItem->_iAnimData;
-				if (pCelBuff != NULL) {
-					frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
-					nCel = pItem->_iAnimFrame;
-					if (nCel >= 1 && frames <= 50 && nCel <= frames) {
-						px = dx - pItem->_iAnimWidth2;
-						if (bItem - 1 == pcursitem) {
-							CelBlitOutline(181, px, dy, pCelBuff, nCel, pItem->_iAnimWidth);
-						}
-						CelClippedDrawLight(px, dy, pItem->_iAnimData, pItem->_iAnimFrame, pItem->_iAnimWidth);
-					} else {
-						// app_fatal("Draw \"%s\" Item 2: frame %d of %d, item type==%d", pItem->_iIName, nCel, frames, pItem->_itype);
-					}
-				} else {
-					// app_fatal("Draw Item \"%s\" 2: NULL Cel Buffer", pItem->_iIName);
-				}
-			}
-		}
-	}
+	DrawItem(sx, sy, dx, dy, false);
+
 	if (bArch != 0) {
 		cel_transparency_active = TransList[bMap];
 		if (leveltype != DTYPE_TOWN) {
@@ -702,6 +685,7 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int chunks, int dPieceRo
 					}
 					dst -= BUFFER_WIDTH * 32;
 				}
+
 				scrollrt_draw_dungeon(&gpBuffer[sx + BUFFER_WIDTH * sy], x, y, sx, sy, 1);
 			} else {
 				world_draw_black_tile(sx, sy);
