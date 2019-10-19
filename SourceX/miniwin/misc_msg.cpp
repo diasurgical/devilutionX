@@ -201,6 +201,9 @@ static WINBOOL false_avail()
 
 WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg)
 {
+#ifdef VITA
+	VitaAux::getPressedKeyAsSDL_Event(false);
+#endif
 	if (wMsgFilterMin != 0)
 		UNIMPLEMENTED();
 	if (wMsgFilterMax != 0)
@@ -224,9 +227,6 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	}
 
 	SDL_Event e;
-#ifdef VITA
-	VitaAux::getPressedKeyAsSDL_Event(false);
-#endif
 	if (!SDL_PollEvent(&e)) {
 		return false;
 	}

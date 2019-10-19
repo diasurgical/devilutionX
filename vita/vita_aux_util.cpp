@@ -20,12 +20,13 @@
 int VitaAux::hdebug  = 1;
 int VitaAux::errores = 0;
 #ifdef USE_SDL1
-SDLKey VitaAux::latestKey      = SDLK_UNKNOWN;
 SDLKey VitaAux::latestKeyMouse = SDLK_UNKNOWN;
 #else
-char VitaAux::latestKey      = SDLK_UNKNOWN;
 char VitaAux::latestKeyMouse = SDLK_UNKNOWN;
 #endif
+VITAButtons *VitaAux::latestKey    = new VITAButtons();
+VITATOUCH *VitaAux::latestPosition = new VITATOUCH();
+
 unsigned long VitaAux::allocatedMemory = 0;
 
 void VitaAux::testJoystick(SDL_Joystick *joy)
@@ -139,6 +140,114 @@ void VitaAux::testTouch()
 	}
 }
 
+void VitaAux::testControls()
+{
+	psvDebugScreenInit();
+	char debugExit[1000];
+	VITAButtons *pulsedButtons = new VITAButtons();
+	int positionx              = 1;
+	int positiony              = 1;
+	VitaAux::hdebug            = 0;
+	VitaAux::debug("Buttons Keys tester\nPress Select + Start + L + R to stop\n ");
+	SceCtrlData ctrl;
+	do {
+		positionx = 1;
+		positiony = 60;
+		psvDebugScreenSetCoordsXY(&positionx, &positiony);
+		VitaAux::readKeys(pulsedButtons);
+		debugExit[0] = '\0';
+		sprintf(debugExit + strlen(debugExit), "cross : ");
+		if (pulsedButtons->cross != latestKey->cross) {
+			sprintf(debugExit + strlen(debugExit), " %s \n", latestKey->cross == 1 ? "KEYUP" : "KEYDW");
+		} else {
+			sprintf(debugExit + strlen(debugExit), " -            \n");
+		}
+
+		sprintf(debugExit + strlen(debugExit), "circle : ");
+		if (pulsedButtons->circle != latestKey->circle) {
+			sprintf(debugExit + strlen(debugExit), " %s \n", latestKey->circle == 1 ? "KEYUP" : "KEYDW");
+		} else {
+			sprintf(debugExit + strlen(debugExit), " -            \n");
+		}
+
+		sprintf(debugExit + strlen(debugExit), "triangle : ");
+		if (pulsedButtons->triangle != latestKey->triangle) {
+			sprintf(debugExit + strlen(debugExit), " %s \n", latestKey->triangle == 1 ? "KEYUP" : "KEYDW");
+		} else {
+			sprintf(debugExit + strlen(debugExit), " -            \n");
+		}
+
+		sprintf(debugExit + strlen(debugExit), "squeare : ");
+		if (pulsedButtons->square != latestKey->square) {
+			sprintf(debugExit + strlen(debugExit), " %s \n", latestKey->square == 1 ? "KEYUP" : "KEYDW");
+		} else {
+			sprintf(debugExit + strlen(debugExit), " -            \n");
+		}
+
+		sprintf(debugExit + strlen(debugExit), "l tigger : ");
+		if (pulsedButtons->l != latestKey->l) {
+			sprintf(debugExit + strlen(debugExit), " %s \n", latestKey->l == 1 ? "KEYUP" : "KEYDW");
+		} else {
+			sprintf(debugExit + strlen(debugExit), " -            \n");
+		}
+
+		sprintf(debugExit + strlen(debugExit), "r tigger : ");
+		if (pulsedButtons->r != latestKey->r) {
+			sprintf(debugExit + strlen(debugExit), " %s \n", latestKey->r == 1 ? "KEYUP" : "KEYDW");
+		} else {
+			sprintf(debugExit + strlen(debugExit), " -            \n");
+		}
+
+		sprintf(debugExit + strlen(debugExit), "up : ");
+		if (pulsedButtons->up != latestKey->up) {
+			sprintf(debugExit + strlen(debugExit), " %s \n", latestKey->up == 1 ? "KEYUP" : "KEYDW");
+		} else {
+			sprintf(debugExit + strlen(debugExit), " -            \n");
+		}
+
+		sprintf(debugExit + strlen(debugExit), "left : ");
+		if (pulsedButtons->left != latestKey->left) {
+			sprintf(debugExit + strlen(debugExit), " %s \n", latestKey->left == 1 ? "KEYUP" : "KEYDW");
+		} else {
+			sprintf(debugExit + strlen(debugExit), " -            \n");
+		}
+
+		sprintf(debugExit + strlen(debugExit), "down : ");
+		if (pulsedButtons->down != latestKey->down) {
+			sprintf(debugExit + strlen(debugExit), " %s \n", latestKey->down == 1 ? "KEYUP" : "KEYDW");
+		} else {
+			sprintf(debugExit + strlen(debugExit), " -            \n");
+		}
+
+		sprintf(debugExit + strlen(debugExit), "right : ");
+		if (pulsedButtons->right != latestKey->right) {
+			sprintf(debugExit + strlen(debugExit), " %s \n", latestKey->right == 1 ? "KEYUP" : "KEYDW");
+		} else {
+			sprintf(debugExit + strlen(debugExit), " -            \n");
+		}
+
+		sprintf(debugExit + strlen(debugExit), "select : ");
+		if (pulsedButtons->select != latestKey->select) {
+			sprintf(debugExit + strlen(debugExit), " %s \n", latestKey->select == 1 ? "KEYUP" : "KEYDW");
+		} else {
+			sprintf(debugExit + strlen(debugExit), " -            \n");
+		}
+
+		sprintf(debugExit + strlen(debugExit), "start : ");
+		if (pulsedButtons->start != latestKey->start) {
+			sprintf(debugExit + strlen(debugExit), " %s \n", latestKey->start == 1 ? "KEYUP" : "KEYDW");
+		} else {
+			sprintf(debugExit + strlen(debugExit), " -            \n");
+		}
+
+		VITAButtons *aux = latestKey;
+		latestKey        = pulsedButtons;
+		pulsedButtons    = aux;
+		VitaAux::debug(debugExit);
+		delaya(300);
+	} while (pulsedButtons->l != 1 && pulsedButtons->r != 1 && pulsedButtons->select != 1 && pulsedButtons->start != 1);
+}
+
 void VitaAux::init()
 {
 	psvDebugScreenInit();
@@ -148,6 +257,7 @@ void VitaAux::init()
 	}
 	VitaAux::initVitaTouch();
 	VitaAux::initVitaButtons();
+	VitaAux::testTouch();
 	if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) || !(IMG_Init(IMG_INIT_JPG) & IMG_INIT_JPG)) {
 		char sdl_image_error[200];
 		sprintf(sdl_image_error, "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
@@ -295,10 +405,7 @@ void VitaAux::delay(int a)
 
 void VitaAux::delaya(int a)
 {
-	int jhgf;
-	for (jhgf = 0; jhgf < a; jhgf++) {
-		sceDisplayWaitVblankStart();
-	}
+	sceKernelDelayThread(a * 1000);
 }
 
 int VitaAux::debug(unsigned int number)
@@ -365,7 +472,8 @@ int VitaAux::debug(const char texto)
 
 int VitaAux::debug(char *texto)
 {
-	printf("\e[42m%s\n\e[m", texto);
+	//printf("\e[42m%s\n\e[m", texto);
+	printf(texto);
 
 	if (hdebug == 0)
 		return 0;
@@ -506,145 +614,105 @@ void VitaAux::initVitaButtons()
 }
 void VitaAux::getPressedKeyAsSDL_Event(bool inMenu)
 {
-	SDL_Event event;
+	SDL_Event *event;
 	SDL_Event eventMouse;
+	VITAButtons *pulsedButtons = new VITAButtons();
 	SceCtrlData ctrl;
-	sceCtrlPeekBufferPositive(0, &ctrl, 1);
-	switch (ctrl.buttons) {
-	case SCE_CTRL_UP: {
-		event.type           = SDL_KEYDOWN;
-		event.key.keysym.sym = !inMenu ? SDLK_2 : SDLK_UP;
-		if (VitaAux::latestKey == SDLK_UNKNOWN) {
-			SDL_PushEvent(&event);
-		}
-		VitaAux::latestKey = SDLK_UP;
-		break;
+	VitaAux::readKeys(pulsedButtons);
+	if (pulsedButtons->cross != latestKey->cross) {
+		event                 = new SDL_Event();
+		event->type           = latestKey->cross == 1 ? SDL_KEYUP : SDL_KEYDOWN;
+		event->key.keysym.sym = !inMenu ? SDLK_7 : SDLK_SPACE;
+		SDL_PushEvent(event);
 	}
-	case SCE_CTRL_DOWN: {
-		event.type           = SDL_KEYDOWN;
-		event.key.keysym.sym = !inMenu ? SDLK_3 : SDLK_DOWN;
-		if (VitaAux::latestKey == SDLK_UNKNOWN) {
-			SDL_PushEvent(&event);
-		}
-		VitaAux::latestKey = SDLK_DOWN;
-		break;
+	if (pulsedButtons->circle != latestKey->circle) {
+		event                 = new SDL_Event();
+		event->type           = latestKey->circle == 1 ? SDL_KEYUP : SDL_KEYDOWN;
+		event->key.keysym.sym = !inMenu ? SDLK_8 : SDLK_ESCAPE;
+		SDL_PushEvent(event);
 	}
-	case SCE_CTRL_LEFT: {
-		event.type           = SDL_KEYDOWN;
-		event.key.keysym.sym = !inMenu ? SDLK_1 : SDLK_LEFT;
-		if (VitaAux::latestKey == SDLK_UNKNOWN) {
-			SDL_PushEvent(&event);
-		}
-		VitaAux::latestKey = SDLK_LEFT;
-		break;
+	if (pulsedButtons->triangle != latestKey->triangle) {
+		event                 = new SDL_Event();
+		event->type           = latestKey->triangle == 1 ? SDL_KEYUP : SDL_KEYDOWN;
+		event->key.keysym.sym = !inMenu ? SDLK_6 : SDLK_PAGEUP;
+		SDL_PushEvent(event);
 	}
-	case SCE_CTRL_RIGHT: {
-		event.type           = SDL_KEYDOWN;
-		event.key.keysym.sym = !inMenu ? SDLK_4 : SDLK_RIGHT;
-		if (VitaAux::latestKey == SDLK_UNKNOWN) {
-			SDL_PushEvent(&event);
-		}
-		VitaAux::latestKey = SDLK_RIGHT;
-		break;
+	if (pulsedButtons->square != latestKey->square) {
+		event                 = new SDL_Event();
+		event->type           = latestKey->square == 1 ? SDL_KEYUP : SDL_KEYDOWN;
+		event->key.keysym.sym = !inMenu ? SDLK_5 : SDLK_PAGEDOWN;
+		SDL_PushEvent(event);
 	}
-	case SCE_CTRL_CIRCLE: {
-		event.type           = SDL_KEYDOWN;
-		event.key.keysym.sym = !inMenu ? SDLK_8 : SDLK_ESCAPE;
-		if (VitaAux::latestKey == SDLK_UNKNOWN) {
-			SDL_PushEvent(&event);
-		}
-		VitaAux::latestKey = SDLK_ESCAPE;
-		break;
+	if (pulsedButtons->l != latestKey->l) {
+		event                = new SDL_Event();
+		event->button.x      = latestPosition->x;
+		event->button.y      = latestPosition->y;
+		event->button.button = SDL_BUTTON_LEFT;
+		event->type          = latestKey->l == 1 ? SDL_MOUSEBUTTONUP : SDL_MOUSEBUTTONDOWN;
+		SDL_PushEvent(event);
 	}
-	case SCE_CTRL_CROSS: {
-		event.type           = SDL_KEYDOWN;
-		event.key.keysym.sym = !inMenu ? SDLK_7 : SDLK_SPACE;
-		if (VitaAux::latestKey == SDLK_UNKNOWN) {
-			SDL_PushEvent(&event);
-		}
-		VitaAux::latestKey = SDLK_SPACE;
-		break;
+	if (pulsedButtons->r != latestKey->r) {
+		event                = new SDL_Event();
+		event->button.x      = latestPosition->x;
+		event->button.y      = latestPosition->y;
+		event->button.button = SDL_BUTTON_RIGHT;
+		event->type          = latestKey->l == 1 ? SDL_MOUSEBUTTONUP : SDL_MOUSEBUTTONDOWN;
+		SDL_PushEvent(event);
 	}
-	case SCE_CTRL_START: {
-		event.type           = SDL_KEYDOWN;
-		event.key.keysym.sym = !inMenu ? SDLK_ESCAPE : SDLK_RETURN;
-		if (VitaAux::latestKey == SDLK_UNKNOWN) {
-			SDL_PushEvent(&event);
-		}
-		VitaAux::latestKey = SDLK_RETURN;
-		break;
+	if (pulsedButtons->up != latestKey->up) {
+		event                 = new SDL_Event();
+		event->type           = latestKey->up == 1 ? SDL_KEYUP : SDL_KEYDOWN;
+		event->key.keysym.sym = !inMenu ? SDLK_2 : SDLK_UP;
+		SDL_PushEvent(event);
 	}
-	case SCE_CTRL_SELECT: {
-		event.type           = SDL_KEYDOWN;
-		event.key.keysym.sym = !inMenu ? SDLK_TAB : SDLK_DELETE;
-		if (VitaAux::latestKey == SDLK_UNKNOWN) {
-			SDL_PushEvent(&event);
-		}
-		VitaAux::latestKey = SDLK_DELETE;
-		break;
+	if (pulsedButtons->left != latestKey->left) {
+		event                 = new SDL_Event();
+		event->type           = latestKey->left == 1 ? SDL_KEYUP : SDL_KEYDOWN;
+		event->key.keysym.sym = !inMenu ? SDLK_1 : SDLK_LEFT;
+		SDL_PushEvent(event);
 	}
-	case SCE_CTRL_SQUARE: {
-		event.type           = SDL_KEYDOWN;
-		event.key.keysym.sym = !inMenu ? SDLK_5 : SDLK_PAGEDOWN;
-		if (VitaAux::latestKey == SDLK_UNKNOWN) {
-			SDL_PushEvent(&event);
-		}
-		VitaAux::latestKey = SDLK_PAGEDOWN;
-		break;
+	if (pulsedButtons->down != latestKey->down) {
+		event                 = new SDL_Event();
+		event->type           = latestKey->down == 1 ? SDL_KEYUP : SDL_KEYDOWN;
+		event->key.keysym.sym = !inMenu ? SDLK_3 : SDLK_DOWN;
+		SDL_PushEvent(event);
 	}
-	case SCE_CTRL_TRIANGLE: {
-		event.type           = SDL_KEYDOWN;
-		event.key.keysym.sym = !inMenu ? SDLK_6 : SDLK_PAGEUP;
-		if (VitaAux::latestKey == SDLK_UNKNOWN) {
-			SDL_PushEvent(&event);
-		}
-		VitaAux::latestKey = SDLK_PAGEUP;
-		break;
+	if (pulsedButtons->right != latestKey->right) {
+		event                 = new SDL_Event();
+		event->type           = latestKey->right == 1 ? SDL_KEYUP : SDL_KEYDOWN;
+		event->key.keysym.sym = !inMenu ? SDLK_4 : SDLK_RIGHT;
+		SDL_PushEvent(event);
+	}
+	if (pulsedButtons->select != latestKey->select) {
+		event                 = new SDL_Event();
+		event->type           = latestKey->select == 1 ? SDL_KEYUP : SDL_KEYDOWN;
+		event->key.keysym.sym = !inMenu ? SDLK_TAB : SDLK_DELETE;
+		SDL_PushEvent(event);
+	}
+	if (pulsedButtons->start != latestKey->start) {
+		event                 = new SDL_Event();
+		event->type           = latestKey->start == 1 ? SDL_KEYUP : SDL_KEYDOWN;
+		event->key.keysym.sym = !inMenu ? SDLK_ESCAPE : SDLK_RETURN;
+		SDL_PushEvent(event);
 	}
 
-	default: {
-		if (VitaAux::latestKey != SDLK_UNKNOWN) {
-			event.type           = SDL_KEYUP;
-			event.key.keysym.sym = VitaAux::latestKey;
-			SDL_PushEvent(&event);
-		}
-		VitaAux::latestKey = SDLK_UNKNOWN;
-		break;
-	}
-	}
-	VITATOUCH touch = VitaAux::getVitaTouch();
-	switch (ctrl.buttons) {
-	case SCE_CTRL_LTRIGGER: {
-		eventMouse.button.x      = touch.x;
-		eventMouse.button.y      = touch.y;
-		eventMouse.type          = SDL_MOUSEBUTTONDOWN;
-		eventMouse.button.button = SDL_BUTTON_LEFT;
-		if (VitaAux::latestKeyMouse == SDLK_UNKNOWN) {
-			SDL_PushEvent(&eventMouse);
-		}
-		VitaAux::latestKeyMouse = SDL_BUTTON_LEFT;
-		break;
-	}
+	VITAButtons *aux = latestKey;
+	latestKey        = pulsedButtons;
+	pulsedButtons    = aux;
+	VITATOUCH touch  = VitaAux::getVitaTouch();
+	if (touch.x != latestPosition->x || touch.y != latestPosition->y) {
+		event           = new SDL_Event();
+		event->button.x = touch.x;
+		event->button.y = touch.y;
+		event->motion.x = touch.x;
+		event->motion.y = touch.y;
 
-	case SCE_CTRL_RTRIGGER: {
-		eventMouse.button.x      = touch.x;
-		eventMouse.button.y      = touch.y;
-		eventMouse.type          = SDL_MOUSEBUTTONDOWN;
-		eventMouse.button.button = SDL_BUTTON_RIGHT;
-		if (VitaAux::latestKeyMouse == SDLK_UNKNOWN) {
-			SDL_PushEvent(&eventMouse);
-		}
-		VitaAux::latestKeyMouse = SDL_BUTTON_LEFT;
-		break;
-	}
-	default:
-		if (VitaAux::latestKeyMouse != SDLK_UNKNOWN) {
-			eventMouse.type          = SDL_MOUSEBUTTONUP;
-			eventMouse.button.button = VitaAux::latestKeyMouse;
-			SDL_PushEvent(&eventMouse);
-		}
-		VitaAux::latestKeyMouse = SDLK_UNKNOWN;
-		break;
+		/*eventMouse.motion.x = latestPosition->x - touch.x;
+		eventMouse.motion.y = latestPosition->y - touch.y;*/
+		event->type = SDL_MOUSEMOTION;
+		SDL_PushEvent(event);
+		latestPosition->x = touch.x;
+		latestPosition->y = touch.y;
 	}
 }
 
@@ -673,6 +741,67 @@ void VitaAux::updateAllocMem(unsigned int amount, bool minus)
 		allocatedMemory += amount;
 	} else {
 		allocatedMemory -= amount;
+	}
+}
+
+void VitaAux::readKeys(VITAButtons *keys)
+{
+
+	SceCtrlData ctrl;
+	sceCtrlPeekBufferPositive(0, &ctrl, 1);
+	//Reset
+	keys->select   = 0;
+	keys->start    = 0;
+	keys->up       = 0;
+	keys->right    = 0;
+	keys->down     = 0;
+	keys->left     = 0;
+	keys->l        = 0;
+	keys->r        = 0;
+	keys->triangle = 0;
+	keys->circle   = 0;
+	keys->cross    = 0;
+	keys->square   = 0;
+	/*
+	const char *btn_label[] = { "SELECT ", "", "", "START ",
+	"UP ", "RIGHT ", "DOWN ", "LEFT ", "L ", "R ", "", "",
+	"TRIANGLE ", "CIRCLE ", "CROSS ", "SQUARE " };
+	*/
+	if (ctrl.buttons & SCE_CTRL_START) {
+		keys->start = 1;
+	}
+	if (ctrl.buttons & SCE_CTRL_SELECT) {
+		keys->select = 1;
+	}
+	if (ctrl.buttons & SCE_CTRL_UP) {
+		keys->up = 1;
+	}
+	if (ctrl.buttons & SCE_CTRL_RIGHT) {
+		keys->right = 1;
+	}
+	if (ctrl.buttons & SCE_CTRL_DOWN) {
+		keys->down = 1;
+	}
+	if (ctrl.buttons & SCE_CTRL_LEFT) {
+		keys->left = 1;
+	}
+	if (ctrl.buttons & SCE_CTRL_LTRIGGER) {
+		keys->l = 1;
+	}
+	if (ctrl.buttons & SCE_CTRL_RTRIGGER) {
+		keys->r = 1;
+	}
+	if (ctrl.buttons & SCE_CTRL_TRIANGLE) {
+		keys->triangle = 1;
+	}
+	if (ctrl.buttons & SCE_CTRL_CIRCLE) {
+		keys->circle = 1;
+	}
+	if (ctrl.buttons & SCE_CTRL_CROSS) {
+		keys->cross = 1;
+	}
+	if (ctrl.buttons & SCE_CTRL_SQUARE) {
+		keys->square = 1;
 	}
 }
 

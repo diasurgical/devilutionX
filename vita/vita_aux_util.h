@@ -42,6 +42,21 @@ typedef struct tagVITATOUCH {
 	int y;
 } VITATOUCH;
 
+typedef struct VITAButtons {
+	char cross;
+	char circle;
+	char triangle;
+	char square;
+	char l;
+	char r;
+	char up;
+	char left;
+	char down;
+	char right;
+	char select;
+	char start;
+};
+
 class VitaAux {
 public:
 	static void init();
@@ -55,13 +70,13 @@ public:
 	static int hdebug; //0 Desactivado, 1 Activado, 3 Error :-s
 	                   //Variable de error;
 	static int errores;
+	static VITATOUCH *latestPosition;
 #ifdef USE_SDL1
-	static SDLKey latestKey;
 	static SDLKey latestKeyMouse;
 #else
-	static char latestKey;
 	static char latestKeyMouse;
 #endif
+	static VITAButtons *latestKey;
 	static unsigned long allocatedMemory;
 
 	static void delay(int);
@@ -96,5 +111,7 @@ public:
 	static void updateAllocMem(unsigned int amount, bool minus);
 	static void testJoystick(SDL_Joystick *joy);
 	static void testTouch();
+	static void testControls();
+	static void readKeys(VITAButtons *keys);
 };
 #endif
