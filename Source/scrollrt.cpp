@@ -423,20 +423,10 @@ static void DrawObject(int x, int y, int ox, int oy, BOOL pre)
 
 static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy, int eflag);
 
-/**
- * This function it self causes rendering issues since it will render some walls a secound time after all items have been drawn.
- *
- * @brief Avoid actors sticking threw the walls when walking east
- */
-static void scrollrt_draw_e_flag(int x, int y, int sx, int sy)
+static void drawRow(int x, int y, int sx, int sy, int eflag)
 {
-	int i, lti_old, cta_old, lpi_old;
 	BYTE *dst;
 	MICROS *pMap;
-
-	lti_old = light_table_index;
-	cta_old = cel_transparency_active;
-	lpi_old = level_piece_id;
 
 	level_piece_id = dPiece[x][y];
 	light_table_index = dLight[x][y];
@@ -444,7 +434,7 @@ static void scrollrt_draw_e_flag(int x, int y, int sx, int sy)
 	dst = &gpBuffer[sx + sy * BUFFER_WIDTH];
 	pMap = &dpiece_defs_map_2[x][y];
 	cel_transparency_active = (BYTE)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
-	for (i = 0; i<MicroTileLen>> 1; i++) {
+	for (int i = 0; i<MicroTileLen>> 1; i++) {
 		arch_draw_type = i == 0 ? 1 : 0;
 		level_cel_block = pMap->mt[2 * i];
 		if (level_cel_block != 0) {
@@ -458,7 +448,23 @@ static void scrollrt_draw_e_flag(int x, int y, int sx, int sy)
 		dst -= BUFFER_WIDTH * 32;
 	}
 
-	scrollrt_draw_dungeon(x, y, sx, sy, 0);
+	scrollrt_draw_dungeon(x, y, sx, sy, eflag);
+}
+
+/**
+ * This function it self causes rendering issues since it will render some walls a secound time after all items have been drawn.
+ *
+ * @brief Avoid actors sticking threw the walls when walking east
+ */
+static void scrollrt_draw_e_flag(int x, int y, int sx, int sy)
+{
+	int lti_old, cta_old, lpi_old;
+
+	lti_old = light_table_index;
+	cta_old = cel_transparency_active;
+	lpi_old = level_piece_id;
+
+	drawRow(x, y, sx, sy, 0);
 
 	light_table_index = lti_old;
 	cel_transparency_active = cta_old;
@@ -621,10 +627,6 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy, int eflag)
 
 static void scrollrt_draw(int x, int y, int sx, int sy, int chunks, int dPieceRow)
 {
-	int i, j;
-	BYTE *dst;
-	MICROS *pMap;
-
 	/// ASSERT: assert(gpBuffer);
 
 	if (dPieceRow & 1) {
@@ -634,29 +636,11 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int chunks, int dPieceRo
 		chunks++;
 	}
 
-	for (j = 0; j < chunks; j++) {
+	for (int j = 0; j < chunks; j++) {
 		if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX) {
 			level_piece_id = dPiece[x][y];
-			light_table_index = dLight[x][y];
 			if (level_piece_id != 0) {
-				dst = &gpBuffer[sx + sy * BUFFER_WIDTH];
-				pMap = &dpiece_defs_map_2[x][y];
-				cel_transparency_active = (BYTE)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
-				for (i = 0; i<MicroTileLen>> 1; i++) {
-					arch_draw_type = i == 0 ? 1 : 0;
-					level_cel_block = pMap->mt[2 * i];
-					if (level_cel_block != 0) {
-						drawUpperScreen(dst);
-					}
-					arch_draw_type = i == 0 ? 2 : 0;
-					level_cel_block = pMap->mt[2 * i + 1];
-					if (level_cel_block != 0) {
-						drawUpperScreen(dst + 32);
-					}
-					dst -= BUFFER_WIDTH * 32;
-				}
-
-				scrollrt_draw_dungeon(x, y, sx, sy, 1);
+				drawRow(x, y, sx, sy, 1);
 			} else {
 				world_draw_black_tile(sx, sy);
 			}
@@ -808,8 +792,6 @@ static void DrawGame(int x, int y)
 
 void DrawView(int StartX, int StartY)
 {
-	light_table_index = 0;
-	cel_transparency_active = 0;
 	DrawGame(StartX, StartY);
 	if (automapflag) {
 		DrawAutomap();
