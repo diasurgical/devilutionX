@@ -24,7 +24,7 @@ void interface_msg_pump()
 BOOL IncProgress()
 {
 	interface_msg_pump();
-	sgdwProgress += 15;
+	sgdwProgress += 23;
 	if ((DWORD)sgdwProgress > 534)
 		sgdwProgress = 534;
 	if (sgpBackCel)
@@ -87,7 +87,9 @@ void ShowProgress(unsigned int uMsg)
 	switch (uMsg) {
 	case WM_DIABLOADGAME:
 		IncProgress();
+		IncProgress();
 		LoadGame(TRUE);
+		IncProgress();
 		IncProgress();
 		break;
 	case WM_DIABNEWGAME:
@@ -95,6 +97,7 @@ void ShowProgress(unsigned int uMsg)
 		FreeGameMem();
 		IncProgress();
 		pfile_remove_temp_files();
+		IncProgress();
 		LoadGameLevel(TRUE, 0);
 		IncProgress();
 		break;
@@ -105,6 +108,7 @@ void ShowProgress(unsigned int uMsg)
 		} else {
 			DeltaSaveLevel();
 		}
+		IncProgress();
 		FreeGameMem();
 		currlevel++;
 		leveltype = gnLevelTypeTbl[currlevel];
@@ -131,11 +135,13 @@ void ShowProgress(unsigned int uMsg)
 		break;
 	case WM_DIABSETLVL:
 		SetReturnLvlPos();
+		IncProgress();
 		if (gbMaxPlayers == 1) {
 			SaveLevel();
 		} else {
 			DeltaSaveLevel();
 		}
+		IncProgress();
 		setlevel = TRUE;
 		leveltype = setlvltype;
 		FreeGameMem();
@@ -144,11 +150,13 @@ void ShowProgress(unsigned int uMsg)
 		IncProgress();
 		break;
 	case WM_DIABRTNLVL:
+		IncProgress();
 		if (gbMaxPlayers == 1) {
 			SaveLevel();
 		} else {
 			DeltaSaveLevel();
 		}
+		IncProgress();
 		setlevel = FALSE;
 		FreeGameMem();
 		IncProgress();
@@ -163,6 +171,7 @@ void ShowProgress(unsigned int uMsg)
 		} else {
 			DeltaSaveLevel();
 		}
+		IncProgress();
 		FreeGameMem();
 		GetPortalLevel();
 		IncProgress();
@@ -176,6 +185,7 @@ void ShowProgress(unsigned int uMsg)
 		} else {
 			DeltaSaveLevel();
 		}
+		IncProgress();
 		FreeGameMem();
 		currlevel = plr[myplr].plrlevel;
 		leveltype = gnLevelTypeTbl[currlevel];
@@ -191,6 +201,7 @@ void ShowProgress(unsigned int uMsg)
 		} else {
 			DeltaSaveLevel();
 		}
+		IncProgress();
 		FreeGameMem();
 		currlevel = plr[myplr].plrlevel;
 		leveltype = gnLevelTypeTbl[currlevel];
@@ -206,6 +217,7 @@ void ShowProgress(unsigned int uMsg)
 		} else {
 			DeltaSaveLevel();
 		}
+		IncProgress();
 		FreeGameMem();
 		currlevel = plr[myplr].plrlevel;
 		leveltype = gnLevelTypeTbl[currlevel];

@@ -1464,7 +1464,11 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 			InitThemes();
 			LoadAllGFX();
 		} else {
+			IncProgress();
+			IncProgress();
 			InitMissileGFX();
+			IncProgress();
+			IncProgress();
 		}
 
 		IncProgress();
@@ -1502,9 +1506,11 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 				glMid1Seed[currlevel] = GetRndSeed();
 				InitMonsters();
 				glMid2Seed[currlevel] = GetRndSeed();
+				IncProgress();
 				InitObjects();
 				InitItems();
 				CreateThemeRooms();
+				IncProgress();
 				glMid3Seed[currlevel] = GetRndSeed();
 				InitMissiles();
 				InitDead();
@@ -1550,14 +1556,19 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 		LoadSetMap();
 		IncProgress();
 		GetLevelMTypes();
+		IncProgress();
 		InitMonsters();
+		IncProgress();
 		InitMissileGFX();
+		IncProgress();
 		InitDead();
+		IncProgress();
 		FillSolidBlockTbls();
 		IncProgress();
 
 		if (lvldir == 5)
 			GetPortalLvlPos();
+		IncProgress();
 
 		for (i = 0; i < MAX_PLRS; i++) {
 			if (plr[i].plractive && currlevel == plr[i].plrlevel) {
@@ -1566,6 +1577,7 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 					InitPlayer(i, firstflag);
 			}
 		}
+		IncProgress();
 
 		InitMultiView();
 		IncProgress();
@@ -1606,8 +1618,8 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 
 	if (firstflag) {
 		InitControlPan();
-		IncProgress();
 	}
+	IncProgress();
 	if (leveltype != DTYPE_TOWN) {
 		ProcessLightList();
 		ProcessVisionList();
