@@ -74,59 +74,17 @@ void DrawQTextBack()
 
 void PrintQTextChr(int sx, int sy, BYTE *pCelBuff, int nCel)
 {
-	BYTE *dst, *pStart, *pEnd, *end;
+	BYTE *pStart, *pEnd;
 
 	/// ASSERT: assert(gpBuffer);
+	pStart = gpBufStart;
+	gpBufStart = &gpBuffer[BUFFER_WIDTH * (49 + SCREEN_Y)];
+	pEnd = gpBufEnd;
+	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (309 + SCREEN_Y)];
+	CelDraw(sx, sy, pCelBuff, nCel, 22);
 
-	dst = &gpBuffer[sx + BUFFER_WIDTH * sy];
-	pStart = &gpBuffer[BUFFER_WIDTH * 209];
-	pEnd = &gpBuffer[BUFFER_WIDTH * 469];
-
-	int i, nDataSize;
-	BYTE width;
-	BYTE *src;
-
-	src = CelGetFrame(pCelBuff,nCel, &nDataSize);
-	end = &src[nDataSize];
-
-	for (; src != end; dst -= BUFFER_WIDTH + 22) {
-		for (i = 22; i;) {
-			width = *src++;
-			if (!(width & 0x80)) {
-				i -= width;
-				if (dst >= pStart && dst <= pEnd) {
-					if (width & 1) {
-						dst[0] = src[0];
-						src++;
-						dst++;
-					}
-					width >>= 1;
-					if (width & 1) {
-						dst[0] = src[0];
-						dst[1] = src[1];
-						src += 2;
-						dst += 2;
-					}
-					width >>= 1;
-					for (; width; width--) {
-						dst[0] = src[0];
-						dst[1] = src[1];
-						dst[2] = src[2];
-						dst[3] = src[3];
-						src += 4;
-						dst += 4;
-					}
-				} else {
-					src += width;
-					dst += width;
-				}
-			} else {
-				width = -(char)width;
-				dst += width;
-				i -= width;
-			}
-		}
-	}
+	gpBufStart = pStart;
+	gpBufEnd = pEnd;
 }
 
 void DrawQText()
