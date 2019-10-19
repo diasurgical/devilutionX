@@ -109,51 +109,6 @@ void town_draw_town_all(BYTE *pBuff, int x, int y, int sx, int sy, int eflag)
 	}
 }
 
-void town_draw(int x, int y, int sx, int sy, int chunks, int dPieceRow)
-{
-	int i, j;
-	BYTE *dst;
-	MICROS *pMap;
-
-	/// ASSERT: assert(gpBuffer);
-
-	if (dPieceRow & 1) {
-		x--;
-		y++;
-		sx -= 32;
-		chunks++;
-	}
-
-	for (j = 0; j < chunks; j++) {
-		if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX) {
-			level_cel_block = dPiece[x][y];
-			if (level_cel_block != 0) {
-				dst = &gpBuffer[sx + BUFFER_WIDTH * sy];
-				pMap = &dpiece_defs_map_2[x][y];
-				for (i = 0; i < MicroTileLen >> 1; i++) {
-					level_cel_block = pMap->mt[2 * i];
-					if (level_cel_block != 0) {
-						drawUpperScreen(dst);
-					}
-					level_cel_block = pMap->mt[2 * i + 1];
-					if (level_cel_block != 0) {
-						drawUpperScreen(dst + 32);
-					}
-					dst -= BUFFER_WIDTH * 32;
-				}
-				town_draw_town_all(&gpBuffer[sx + BUFFER_WIDTH * sy], x, y, sx, sy, 1);
-			} else {
-				world_draw_black_tile(&gpBuffer[sx + BUFFER_WIDTH * sy]);
-			}
-		} else {
-			world_draw_black_tile(&gpBuffer[sx + BUFFER_WIDTH * sy]);
-		}
-		x++;
-		y--;
-		sx += 64;
-	}
-}
-
 void SetTownMicros()
 {
 	int i, x, y, lv;
@@ -178,14 +133,6 @@ void SetTownMicros()
 				}
 			}
 		}
-	}
-
-	if (zoomflag) {
-		scr_pix_width = SCREEN_WIDTH;
-		scr_pix_height = VIEWPORT_HEIGHT;
-	} else {
-		scr_pix_width = ZOOM_WIDTH;
-		scr_pix_height = ZOOM_HEIGHT;
 	}
 }
 
@@ -313,6 +260,7 @@ void CreateTown(int entry)
 	dminy = 10;
 	dmaxx = 84;
 	dmaxy = 84;
+	DRLG_InitTrans();
 
 	if (entry == 0) {
 		ViewX = 75;

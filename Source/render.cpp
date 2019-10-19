@@ -264,26 +264,27 @@ void RenderTile(BYTE *pBuff)
 	}
 }
 
-void world_draw_black_tile(BYTE *pBuff)
+void world_draw_black_tile(int sx, int sy)
 {
 	int i, j, k;
 	BYTE *dst;
 
-	dst = pBuff;
+	if (sx >= SCREEN_WIDTH - 64 || sy >= SCREEN_HEIGHT - 32)
+		return;
+
+	dst = &gpBuffer[sx + BUFFER_WIDTH * sy];
 
 	for (i = 30, j = 1; i >= 0; i -= 2, j++, dst -= BUFFER_WIDTH + 64) {
 		dst += i;
-		if (dst < gpBufEnd) {
-			for (k = 0; k < 4 * j; k++)
-				*dst++ = 0;
+		for (k = 0; k < 4 * j; k++) {
+			*dst++ = 0;
 		}
 		dst += i;
 	}
 	for (i = 2, j = 15; i != 32; i += 2, j--, dst -= BUFFER_WIDTH + 64) {
 		dst += i;
-		if (dst < gpBufEnd) {
-			for (k = 0; k < 4 * j; k++)
-				*dst++ = 0;
+		for (k = 0; k < 4 * j; k++) {
+			*dst++ = 0;
 		}
 		dst += i;
 	}

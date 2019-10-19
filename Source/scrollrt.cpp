@@ -683,7 +683,6 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int chunks, int dPieceRo
 		chunks++;
 	}
 
-
 	for (j = 0; j < chunks; j++) {
 		if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX) {
 			level_piece_id = dPiece[x][y];
@@ -692,32 +691,29 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int chunks, int dPieceRo
 				dst = &gpBuffer[sx + sy * BUFFER_WIDTH];
 				pMap = &dpiece_defs_map_2[x][y];
 				cel_transparency_active = (BYTE)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
-				arch_draw_type = 1;
-				level_cel_block = pMap->mt[0];
-				if (level_cel_block != 0) {
-					drawUpperScreen(dst);
-				}
-				arch_draw_type = 2;
-				level_cel_block = pMap->mt[1];
-				if (level_cel_block != 0) {
-					drawUpperScreen(dst + 32);
-				}
-				arch_draw_type = 0;
-				for (i = 1; i < (MicroTileLen >> 1) - 1; i++) {
-					dst -= BUFFER_WIDTH * 32;
+				for (i = 0; i<MicroTileLen>> 1; i++) {
+					arch_draw_type = i == 0 ? 1 : 0;
 					level_cel_block = pMap->mt[2 * i];
 					if (level_cel_block != 0) {
 						drawUpperScreen(dst);
 					}
+					arch_draw_type = i == 0 ? 2 : 0;
 					level_cel_block = pMap->mt[2 * i + 1];
 					if (level_cel_block != 0) {
 						drawUpperScreen(dst + 32);
 					}
+					dst -= BUFFER_WIDTH * 32;
 				}
-				scrollrt_draw_dungeon(&gpBuffer[sx + BUFFER_WIDTH * sy], x, y, sx, sy, 1);
+				if (leveltype != DTYPE_TOWN) {
+					scrollrt_draw_dungeon(&gpBuffer[sx + BUFFER_WIDTH * sy], x, y, sx, sy, 1);
+				} else {
+					town_draw_town_all(&gpBuffer[sx + BUFFER_WIDTH * sy], x, y, sx, sy, 1);
+				}
 			} else {
-				world_draw_black_tile(&gpBuffer[sx + BUFFER_WIDTH * sy]);
+				world_draw_black_tile(sx, sy);
 			}
+		} else {
+			world_draw_black_tile(sx, sy);
 		}
 		x++;
 		y--;
@@ -815,11 +811,7 @@ static void DrawGame(int x, int y)
 	/// ASSERT: assert(gpBuffer);
 	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (VIEWPORT_HEIGHT + SCREEN_Y)];
 	for (i = 0; i < (blocks << 1); i++) {
-		if (leveltype != DTYPE_TOWN) {
-			scrollrt_draw(x, y, sx, sy, chunks, i);
-		} else {
-			town_draw(x, y, sx, sy, chunks, i);
-		}
+		scrollrt_draw(x, y, sx, sy, chunks, i);
 		sy += 16;
 		if (i & 1)
 			y++;
