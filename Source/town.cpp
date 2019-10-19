@@ -2,82 +2,6 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-void town_special(BYTE *pBuff, int nCel)
-{
-#if 0
-	CelBlitFrame(pBuff, pSpecialCels, nCel, 64);
-#endif
-}
-
-void town_draw_town_all(BYTE *pBuff, int x, int y, int sx, int sy, int eflag)
-{
-	int mi, px, py;
-	char bv;
-
-	if (dItem[x][y] != 0) {
-		bv = dItem[x][y] - 1;
-		px = sx - item[bv]._iAnimWidth2;
-		if (bv == pcursitem) {
-			CelBlitOutline(181, px, sy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth);
-		}
-		/// ASSERT: assert(item[bv]._iAnimData);
-		CelClippedDraw(px, sy, item[bv]._iAnimData, item[bv]._iAnimFrame, item[bv]._iAnimWidth);
-	}
-	if (dFlags[x][y] & BFLAG_MONSTLR) {
-		mi = -(dMonster[x][y - 1] + 1);
-		px = sx - towner[mi]._tAnimWidth2;
-		if (mi == pcursmonst) {
-			CelBlitOutline(166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
-		}
-		/// ASSERT: assert(towner[mi]._tAnimData);
-		CelClippedDraw(px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
-	}
-	if (dMonster[x][y] > 0) {
-		mi = dMonster[x][y] - 1;
-		px = sx - towner[mi]._tAnimWidth2;
-		if (mi == pcursmonst) {
-			CelBlitOutline(166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
-		}
-		/// ASSERT: assert(towner[mi]._tAnimData);
-		CelClippedDraw(px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
-	}
-	if (dFlags[x][y] & BFLAG_PLAYERLR) {
-		bv = -(dPlayer[x][y - 1] + 1);
-		px = sx + plr[bv]._pxoff - plr[bv]._pAnimWidth2;
-		py = sy + plr[bv]._pyoff;
-		if (bv == pcursplr) {
-			Cl2DrawOutline(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth);
-		}
-		/// ASSERT: assert(plr[bv]._pAnimData);
-		Cl2Draw(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth);
-		if (eflag && plr[bv]._peflag) {
-			scrollrt_draw_e_flag(pBuff - 64, x - 1, y + 1, sx - 64, sy);
-		}
-	}
-	if (dFlags[x][y] & BFLAG_DEAD_PLAYER) {
-		DrawDeadPlayer(x, y, sx, sy);
-	}
-	if (dPlayer[x][y] > 0) {
-		bv = dPlayer[x][y] - 1;
-		px = sx + plr[bv]._pxoff - plr[bv]._pAnimWidth2;
-		py = sy + plr[bv]._pyoff;
-		if (bv == pcursplr) {
-			Cl2DrawOutline(165, px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth);
-		}
-		/// ASSERT: assert(plr[bv]._pAnimData);
-		Cl2Draw(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth);
-		if (eflag && plr[bv]._peflag) {
-			scrollrt_draw_e_flag(pBuff - 64, x - 1, y + 1, sx - 64, sy);
-		}
-	}
-	if (dFlags[x][y] & BFLAG_MISSILE) {
-		DrawMissile(x, y, sx, sy, 0);
-	}
-	if (dArch[x][y] != 0) {
-		town_special(pBuff, dArch[x][y]);
-	}
-}
-
 void SetTownMicros()
 {
 	int i, x, y, lv;
@@ -230,6 +154,7 @@ void CreateTown(int entry)
 	dmaxx = 84;
 	dmaxy = 84;
 	DRLG_InitTrans();
+	DRLG_Init_Globals();
 
 	if (entry == 0) {
 		ViewX = 75;

@@ -17,7 +17,6 @@ int level_piece_id;
 DWORD sgdwCursWdt;
 void (*DrawPlrProc)(int, int, int, int, int, BYTE *, int, int, int, int);
 BYTE sgSaveBack[8192];
-int draw_monster_num;
 DWORD sgdwCursHgtOld;
 
 /* data */
@@ -453,11 +452,7 @@ static void scrollrt_draw_e_flag(BYTE *pBuff, int x, int y, int sx, int sy)
 		dst -= BUFFER_WIDTH * 32;
 	}
 
-	if (leveltype != DTYPE_TOWN) {
-		scrollrt_draw_dungeon(pBuff, x, y, sx, sy, 0);
-	} else {
-		town_draw_town_all(pBuff, x, y, sx, sy, 0);
-	}
+	scrollrt_draw_dungeon(pBuff, x, y, sx, sy, 0);
 
 	light_table_index = lti_old;
 	cel_transparency_active = cta_old;
@@ -466,7 +461,7 @@ static void scrollrt_draw_e_flag(BYTE *pBuff, int x, int y, int sx, int sy)
 
 static void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, int eflag)
 {
-	int px, py, nCel, nMon, negMon, p, tx, ty, frames;
+	int mi, px, py, nCel, nMon, negMon, p, tx, ty, frames;
 	char bFlag, bDead, bObj, bItem, bPlr, bArch, bMap, negPlr, dd;
 	DeadStruct *pDeadGuy;
 	ItemStruct *pItem;
@@ -528,64 +523,59 @@ static void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, i
 		pItem = &item[bItem - 1];
 		if (!pItem->_iPostDraw) {
 			/// ASSERT: assert((unsigned char)bItem <= MAXITEMS);
-			if ((BYTE)bItem <= MAXITEMS) {
-				pCelBuff = pItem->_iAnimData;
-				if (pCelBuff != NULL) {
-					frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
-					nCel = pItem->_iAnimFrame;
-					if (nCel >= 1 && frames <= 50 && nCel <= frames) {
-						px = dx - pItem->_iAnimWidth2;
-						if (bItem - 1 == pcursitem) {
-							CelBlitOutline(181, px, dy, pCelBuff, nCel, pItem->_iAnimWidth);
-						}
-						CelClippedDrawLight(px, dy, pItem->_iAnimData, pItem->_iAnimFrame, pItem->_iAnimWidth);
-					} else {
-						// app_fatal("Draw \"%s\" Item 1: frame %d of %d, item type==%d", pItem->_iIName, nCel, frames, pItem->_itype);
-					}
-				} else {
-					// app_fatal("Draw Item \"%s\" 1: NULL Cel Buffer", pItem->_iIName);
-				}
+			pCelBuff = pItem->_iAnimData;
+			nCel = pItem->_iAnimFrame;
+			px = dx - pItem->_iAnimWidth2;
+			if (bItem - 1 == pcursitem) {
+				CelBlitOutline(181, px, dy, pCelBuff, nCel, pItem->_iAnimWidth);
 			}
+			/// ASSERT: assert(item[bv]._iAnimData);
+			CelClippedDrawLight(px, dy, pItem->_iAnimData, pItem->_iAnimFrame, pItem->_iAnimWidth);
 		}
 	}
 	if (bFlag & BFLAG_PLAYERLR) {
 		p = -(negPlr + 1);
-		if ((DWORD)p < MAX_PLRS) {
-			pPlayer = &plr[p];
-			px = dx + pPlayer->_pxoff - pPlayer->_pAnimWidth2;
-			py = dy + pPlayer->_pyoff;
-			DrawPlayer(p, sx, sy - 1, px, py, pPlayer->_pAnimData, pPlayer->_pAnimFrame, pPlayer->_pAnimWidth);
-			if (eflag && pPlayer->_peflag != 0) {
-				if (pPlayer->_peflag == 2) {
-					scrollrt_draw_e_flag(pBuff - (BUFFER_WIDTH * 16 + 96), sx - 2, sy + 1, tx, ty);
-				}
-				scrollrt_draw_e_flag(pBuff - 64, sx - 1, sy + 1, dx - 64, dy);
+		pPlayer = &plr[p];
+		px = dx + pPlayer->_pxoff - pPlayer->_pAnimWidth2;
+		py = dy + pPlayer->_pyoff;
+		DrawPlayer(p, sx, sy - 1, px, py, pPlayer->_pAnimData, pPlayer->_pAnimFrame, pPlayer->_pAnimWidth);
+		if (eflag && pPlayer->_peflag != 0) {
+			if (pPlayer->_peflag == 2) {
+				scrollrt_draw_e_flag(pBuff - (BUFFER_WIDTH * 16 + 96), sx - 2, sy + 1, tx, ty);
 			}
-		} else {
-			// app_fatal("draw player: tried to draw illegal player %d", p);
+			scrollrt_draw_e_flag(pBuff - 64, sx - 1, sy + 1, dx - 64, dy);
 		}
 	}
 	if (bFlag & BFLAG_MONSTLR && (bFlag & BFLAG_LIT || plr[myplr]._pInfraFlag) && negMon < 0) {
-		draw_monster_num = -(negMon + 1);
-		if ((DWORD)draw_monster_num < MAXMONSTERS) {
-			pMonster = &monster[draw_monster_num];
-			if (!(pMonster->_mFlags & MFLAG_HIDDEN)) {
-				if (pMonster->MType != NULL) {
-					px = dx + pMonster->_mxoff - pMonster->MType->width2;
-					py = dy + pMonster->_myoff;
-					if (draw_monster_num == pcursmonst) {
-						Cl2DrawOutline(233, px, py, pMonster->_mAnimData, pMonster->_mAnimFrame, pMonster->MType->width);
+		mi = -(dMonster[sx][sy - 1] + 1);
+		if (leveltype != DTYPE_TOWN) {
+			if ((DWORD)mi < MAXMONSTERS) {
+				pMonster = &monster[mi];
+				if (!(pMonster->_mFlags & MFLAG_HIDDEN)) {
+					if (pMonster->MType != NULL) {
+						px = dx + pMonster->_mxoff - pMonster->MType->width2;
+						py = dy + pMonster->_myoff;
+						if (mi == pcursmonst) {
+							Cl2DrawOutline(233, px, py, pMonster->_mAnimData, pMonster->_mAnimFrame, pMonster->MType->width);
+						}
+						DrawMonster(sx, sy, px, py, mi);
+						if (eflag && !pMonster->_meflag) {
+							scrollrt_draw_e_flag(pBuff - 64, sx - 1, sy + 1, dx - 64, dy);
+						}
+					} else {
+						// app_fatal("Draw Monster \"%s\": uninitialized monster", pMonster->mName);
 					}
-					DrawMonster(sx, sy, px, py, draw_monster_num);
-					if (eflag && !pMonster->_meflag) {
-						scrollrt_draw_e_flag(pBuff - 64, sx - 1, sy + 1, dx - 64, dy);
-					}
-				} else {
-					// app_fatal("Draw Monster \"%s\": uninitialized monster", pMonster->mName);
 				}
+			} else {
+				// app_fatal("Draw Monster: tried to draw illegal monster %d", mi);
 			}
 		} else {
-			// app_fatal("Draw Monster: tried to draw illegal monster %d", draw_monster_num);
+			px = dx - towner[mi]._tAnimWidth2;
+			if (mi == pcursmonst) {
+				CelBlitOutline(166, px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
+			}
+			/// ASSERT: assert(towner[mi]._tAnimData);
+			CelClippedDraw(px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
 		}
 	}
 	if (bFlag & BFLAG_DEAD_PLAYER) {
@@ -593,42 +583,47 @@ static void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, i
 	}
 	if (bPlr > 0) {
 		p = bPlr - 1;
-		if ((DWORD)p < MAX_PLRS) {
-			pPlayer = &plr[p];
-			px = dx + pPlayer->_pxoff - pPlayer->_pAnimWidth2;
-			py = dy + pPlayer->_pyoff;
-			DrawPlayer(p, sx, sy, px, py, pPlayer->_pAnimData, pPlayer->_pAnimFrame, pPlayer->_pAnimWidth);
-			if (eflag && pPlayer->_peflag != 0) {
-				if (pPlayer->_peflag == 2) {
-					scrollrt_draw_e_flag(pBuff - (BUFFER_WIDTH * 16 + 96), sx - 2, sy + 1, dx - 96, dy - 16);
-				}
-				scrollrt_draw_e_flag(pBuff - 64, sx - 1, sy + 1, dx - 64, dy);
+		pPlayer = &plr[p];
+		px = dx + pPlayer->_pxoff - pPlayer->_pAnimWidth2;
+		py = dy + pPlayer->_pyoff;
+		DrawPlayer(p, sx, sy, px, py, pPlayer->_pAnimData, pPlayer->_pAnimFrame, pPlayer->_pAnimWidth);
+		if (eflag && pPlayer->_peflag != 0) {
+			if (pPlayer->_peflag == 2) {
+				scrollrt_draw_e_flag(pBuff - (BUFFER_WIDTH * 16 + 96), sx - 2, sy + 1, dx - 96, dy - 16);
 			}
-		} else {
-			// app_fatal("draw player: tried to draw illegal player %d", p);
+			scrollrt_draw_e_flag(pBuff - 64, sx - 1, sy + 1, dx - 64, dy);
 		}
 	}
 	if (nMon > 0 && (bFlag & BFLAG_LIT || plr[myplr]._pInfraFlag)) {
-		draw_monster_num = nMon - 1;
-		if ((DWORD)draw_monster_num < MAXMONSTERS) {
-			pMonster = &monster[draw_monster_num];
-			if (!(pMonster->_mFlags & MFLAG_HIDDEN)) {
-				if (pMonster->MType != NULL) {
-					px = dx + pMonster->_mxoff - pMonster->MType->width2;
-					py = dy + pMonster->_myoff;
-					if (draw_monster_num == pcursmonst) {
-						Cl2DrawOutline(233, px, py, pMonster->_mAnimData, pMonster->_mAnimFrame, pMonster->MType->width);
+		mi = nMon - 1;
+		if (leveltype != DTYPE_TOWN) {
+			if ((DWORD)mi < MAXMONSTERS) {
+				pMonster = &monster[mi];
+				if (!(pMonster->_mFlags & MFLAG_HIDDEN)) {
+					if (pMonster->MType != NULL) {
+						px = dx + pMonster->_mxoff - pMonster->MType->width2;
+						py = dy + pMonster->_myoff;
+						if (mi == pcursmonst) {
+							Cl2DrawOutline(233, px, py, pMonster->_mAnimData, pMonster->_mAnimFrame, pMonster->MType->width);
+						}
+						DrawMonster(sx, sy, px, py, mi);
+						if (eflag && !pMonster->_meflag) {
+							scrollrt_draw_e_flag(pBuff - 64, sx - 1, sy + 1, dx - 64, dy);
+						}
+					} else {
+						// app_fatal("Draw Monster \"%s\": uninitialized monster", pMonster->mName);
 					}
-					DrawMonster(sx, sy, px, py, draw_monster_num);
-					if (eflag && !pMonster->_meflag) {
-						scrollrt_draw_e_flag(pBuff - 64, sx - 1, sy + 1, dx - 64, dy);
-					}
-				} else {
-					// app_fatal("Draw Monster \"%s\": uninitialized monster", pMonster->mName);
 				}
+			} else {
+				// app_fatal("Draw Monster: tried to draw illegal monster %d", mi);
 			}
 		} else {
-			// app_fatal("Draw Monster: tried to draw illegal monster %d", draw_monster_num);
+			px = dx - towner[mi]._tAnimWidth2;
+			if (mi == pcursmonst) {
+				CelBlitOutline(166, px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
+			}
+			/// ASSERT: assert(towner[mi]._tAnimData);
+			CelClippedDraw(px, dy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
 		}
 	}
 	if (bFlag & BFLAG_MISSILE) {
@@ -663,7 +658,11 @@ static void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, i
 	}
 	if (bArch != 0) {
 		cel_transparency_active = TransList[bMap];
-		CelClippedBlitLightTrans(pBuff, pSpecialCels, bArch, 64);
+		if (leveltype != DTYPE_TOWN) {
+			CelClippedBlitLightTrans(pBuff, pSpecialCels, bArch, 64);
+		} else {
+			CelBlitFrame(pBuff, pSpecialCels, bArch, 64);
+		}
 	}
 }
 
@@ -703,11 +702,7 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int chunks, int dPieceRo
 					}
 					dst -= BUFFER_WIDTH * 32;
 				}
-				if (leveltype != DTYPE_TOWN) {
-					scrollrt_draw_dungeon(&gpBuffer[sx + BUFFER_WIDTH * sy], x, y, sx, sy, 1);
-				} else {
-					town_draw_town_all(&gpBuffer[sx + BUFFER_WIDTH * sy], x, y, sx, sy, 1);
-				}
+				scrollrt_draw_dungeon(&gpBuffer[sx + BUFFER_WIDTH * sy], x, y, sx, sy, 1);
 			} else {
 				world_draw_black_tile(sx, sy);
 			}
