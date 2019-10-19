@@ -418,6 +418,11 @@ static void DrawObject(int x, int y, int ox, int oy, BOOL pre)
 
 static void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, int eflag);
 
+/**
+ * This function it self causes rendering issues since it will render some walls a secound time after all items have been drawn.
+ *
+ * @brief Avoid actors sticking threw the walls when walking east
+ */
 static void scrollrt_draw_e_flag(BYTE *pBuff, int x, int y, int sx, int sy)
 {
 	int i, lti_old, cta_old, lpi_old;
@@ -434,31 +439,25 @@ static void scrollrt_draw_e_flag(BYTE *pBuff, int x, int y, int sx, int sy)
 	cel_transparency_active = (BYTE)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
 	pMap = &dpiece_defs_map_2[x][y];
 
-	arch_draw_type = 1;
-	level_cel_block = pMap->mt[0];
-	if (level_cel_block != 0) {
-		drawUpperScreen(dst);
-	}
-	arch_draw_type = 2;
-	level_cel_block = pMap->mt[1];
-	if (level_cel_block != 0) {
-		drawUpperScreen(dst + 32);
-	}
-
-	arch_draw_type = 0;
-	for (i = 2; i < MicroTileLen; i += 2) {
+	for (i = 0; i<MicroTileLen>> 1; i++) {
+		arch_draw_type = i == 0 ? 1 : 0;
+		level_cel_block = pMap->mt[2 * i];
+		if (level_cel_block != 0) {
+			drawUpperScreen(dst);
+		}
+		arch_draw_type = i == 0 ? 2 : 0;
+		level_cel_block = pMap->mt[2 * i + 1];
+		if (level_cel_block != 0) {
+			drawUpperScreen(dst + 32);
+		}
 		dst -= BUFFER_WIDTH * 32;
-		level_cel_block = pMap->mt[i];
-		if (level_cel_block != 0) {
-			drawLowerScreen(dst);
-		}
-		level_cel_block = pMap->mt[i + 1];
-		if (level_cel_block != 0) {
-			drawLowerScreen(dst + 32);
-		}
 	}
 
-	scrollrt_draw_dungeon(pBuff, x, y, sx, sy, 0);
+	if (leveltype != DTYPE_TOWN) {
+		scrollrt_draw_dungeon(pBuff, x, y, sx, sy, 0);
+	} else {
+		town_draw_town_all(pBuff, x, y, sx, sy, 0);
+	}
 
 	light_table_index = lti_old;
 	cel_transparency_active = cta_old;

@@ -15,6 +15,7 @@ void ClearCursor();
 void DrawMissile(int x, int y, int sx, int sy, BOOL pre);
 void DrawDeadPlayer(int x, int y, int sx, int sy);
 void DrawView(int StartX, int StartY);
+void scrollrt_draw_e_flag(BYTE *pBuff, int x, int y, int sx, int sy);
 void ClearScreenBuffer();
 #ifdef _DEBUG
 void ScrollView();

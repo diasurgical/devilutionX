@@ -9,37 +9,6 @@ void town_special(BYTE *pBuff, int nCel)
 #endif
 }
 
-/**
- * This function it self causes rendering issues since it will render some walls a secound time after all items have been drawn.
- *
- * @brief Avoid actors sticking threw the walls when walking east
- */
-void town_draw_e_flag(BYTE *pBuff, int x, int y, int capChunks, int sx, int sy)
-{
-	int i;
-	BYTE *dst;
-	MICROS *pMap;
-
-	dst = pBuff;
-	pMap = &dpiece_defs_map_2[x][y];
-
-	for (i = 0; i < 7; i++) {
-		if (capChunks >= i) {
-			level_cel_block = pMap->mt[2 * i];
-			if (level_cel_block != 0) {
-				drawUpperScreen(dst);
-			}
-			level_cel_block = pMap->mt[2 * i + 1];
-			if (level_cel_block != 0) {
-				drawUpperScreen(dst + 32);
-			}
-		}
-		dst -= BUFFER_WIDTH * 32;
-	}
-
-	town_draw_town_all(pBuff, x, y, sx, sy, 0);
-}
-
 void town_draw_town_all(BYTE *pBuff, int x, int y, int sx, int sy, int eflag)
 {
 	int mi, px, py;
@@ -82,7 +51,7 @@ void town_draw_town_all(BYTE *pBuff, int x, int y, int sx, int sy, int eflag)
 		/// ASSERT: assert(plr[bv]._pAnimData);
 		Cl2Draw(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth);
 		if (eflag && plr[bv]._peflag) {
-			town_draw_e_flag(pBuff - 64, x - 1, y + 1, 8, sx - 64, sy);
+			scrollrt_draw_e_flag(pBuff - 64, x - 1, y + 1, sx - 64, sy);
 		}
 	}
 	if (dFlags[x][y] & BFLAG_DEAD_PLAYER) {
@@ -98,7 +67,7 @@ void town_draw_town_all(BYTE *pBuff, int x, int y, int sx, int sy, int eflag)
 		/// ASSERT: assert(plr[bv]._pAnimData);
 		Cl2Draw(px, py, plr[bv]._pAnimData, plr[bv]._pAnimFrame, plr[bv]._pAnimWidth);
 		if (eflag && plr[bv]._peflag) {
-			town_draw_e_flag(pBuff - 64, x - 1, y + 1, 8, sx - 64, sy);
+			scrollrt_draw_e_flag(pBuff - 64, x - 1, y + 1, sx - 64, sy);
 		}
 	}
 	if (dFlags[x][y] & BFLAG_MISSILE) {
