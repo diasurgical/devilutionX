@@ -479,12 +479,28 @@ static void DrawItem(int x, int y, int sx, int sy, BOOL pre)
 	CelClippedDrawLight(px, sy, pItem->_iAnimData, pItem->_iAnimFrame, pItem->_iAnimWidth);
 }
 
+static void DrawPlayerHelper(int x, int y, int oy, int sx, int sy, int eflag)
+{
+	int p = dPlayer[x][y + oy];
+	p = p > 0 ? p - 1 : -(p + 1);
+	PlayerStruct *pPlayer = &plr[p];
+	int px = sx + pPlayer->_pxoff - pPlayer->_pAnimWidth2;
+	int py = sy + pPlayer->_pyoff;
+
+	DrawPlayer(p, x, y + oy, px, py, pPlayer->_pAnimData, pPlayer->_pAnimFrame, pPlayer->_pAnimWidth);
+	if (eflag && pPlayer->_peflag != 0) {
+		if (pPlayer->_peflag == 2) {
+			scrollrt_draw_e_flag(x - 2, y + 1, sx - 96, sy - 16);
+		}
+		scrollrt_draw_e_flag(x - 1, y + 1, sx - 64, sy);
+	}
+}
+
 static void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, int eflag)
 {
-	int mi, px, py, nCel, nMon, negMon, p, tx, ty, frames;
+	int mi, px, py, nCel, nMon, negMon, frames;
 	char bFlag, bDead, bObj, bItem, bPlr, bArch, bMap, negPlr, dd;
 	DeadStruct *pDeadGuy;
-	PlayerStruct *pPlayer;
 	MonsterStruct *pMonster;
 	BYTE *pCelBuff;
 
@@ -498,15 +514,11 @@ static void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, i
 	bMap = dTransVal[sx][sy];
 	nMon = dMonster[sx][sy];
 
-	/// ASSERT: assert((DWORD)(sy-1) < MAXDUNY);
-	negPlr = dPlayer[sx][sy - 1];
 	negMon = dMonster[sx][sy - 1];
 
 	if (visiondebug && bFlag & BFLAG_LIT) {
 		CelClippedDraw(dx, dy, pSquareCel, 1, 64);
 	}
-	tx = dx - 96;
-	ty = dy - 16;
 
 	if (MissilePreFlag && bFlag & BFLAG_MISSILE) {
 		DrawMissile(sx, sy, dx, dy, 1);
@@ -539,17 +551,8 @@ static void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, i
 	}
 	DrawItem(sx, sy, dx, dy, true);
 	if (bFlag & BFLAG_PLAYERLR) {
-		p = -(negPlr + 1);
-		pPlayer = &plr[p];
-		px = dx + pPlayer->_pxoff - pPlayer->_pAnimWidth2;
-		py = dy + pPlayer->_pyoff;
-		DrawPlayer(p, sx, sy - 1, px, py, pPlayer->_pAnimData, pPlayer->_pAnimFrame, pPlayer->_pAnimWidth);
-		if (eflag && pPlayer->_peflag != 0) {
-			if (pPlayer->_peflag == 2) {
-				scrollrt_draw_e_flag(sx - 2, sy + 1, tx, ty);
-			}
-			scrollrt_draw_e_flag(sx - 1, sy + 1, dx - 64, dy);
-		}
+		/// ASSERT: assert((DWORD)(sy-1) < MAXDUNY);
+		DrawPlayerHelper(sx, sy, -1, dx, dy, eflag);
 	}
 	if (bFlag & BFLAG_MONSTLR && (bFlag & BFLAG_LIT || plr[myplr]._pInfraFlag) && negMon < 0) {
 		mi = -(dMonster[sx][sy - 1] + 1);
@@ -587,17 +590,7 @@ static void scrollrt_draw_dungeon(BYTE *pBuff, int sx, int sy, int dx, int dy, i
 		DrawDeadPlayer(sx, sy, dx, dy);
 	}
 	if (bPlr > 0) {
-		p = bPlr - 1;
-		pPlayer = &plr[p];
-		px = dx + pPlayer->_pxoff - pPlayer->_pAnimWidth2;
-		py = dy + pPlayer->_pyoff;
-		DrawPlayer(p, sx, sy, px, py, pPlayer->_pAnimData, pPlayer->_pAnimFrame, pPlayer->_pAnimWidth);
-		if (eflag && pPlayer->_peflag != 0) {
-			if (pPlayer->_peflag == 2) {
-				scrollrt_draw_e_flag(sx - 2, sy + 1, dx - 96, dy - 16);
-			}
-			scrollrt_draw_e_flag(sx - 1, sy + 1, dx - 64, dy);
-		}
+		DrawPlayerHelper(sx, sy, 0, dx, dy, eflag);
 	}
 	if (nMon > 0 && (bFlag & BFLAG_LIT || plr[myplr]._pInfraFlag)) {
 		mi = nMon - 1;
