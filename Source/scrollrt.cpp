@@ -6,6 +6,7 @@ int light_table_index;
 DWORD sgdwCursWdtOld;
 DWORD sgdwCursX;
 DWORD sgdwCursY;
+BYTE *gpBufStart;
 BYTE *gpBufEnd;
 DWORD sgdwCursHgt;
 DWORD level_cel_block;
@@ -658,19 +659,25 @@ static void DrawGame(int x, int y)
 	int i, sx, sy, chunks, blocks;
 	int wdt, nSrcOff, nDstOff;
 
-	sx = ScrollInfo._sxoff + 64;
+	sx = ScrollInfo._sxoff + SCREEN_X;
 	if (zoomflag) {
-		sy = ScrollInfo._syoff + 175;
+		sy = ScrollInfo._syoff + SCREEN_Y + 15;
 
 		chunks = ceil(SCREEN_WIDTH / 64);
 		// Fill screen + keep evaulating untill MicroTiles can't affect screen
 		blocks = ceil(VIEWPORT_HEIGHT / 32) + ceil(MicroTileLen / 2);
+
+		gpBufStart = &gpBuffer[BUFFER_WIDTH * SCREEN_Y];
+		gpBufEnd = &gpBuffer[BUFFER_WIDTH * (VIEWPORT_HEIGHT + SCREEN_Y)];
 	} else {
-		sy = ScrollInfo._syoff + 143;
+		sy = ScrollInfo._syoff + -17 + SCREEN_Y ;
 
 		chunks = ceil(SCREEN_WIDTH / 2 / 64) + 1; // TODO why +1?
 		// Fill screen + keep evaulating untill MicroTiles can't affect screen
 		blocks = ceil(VIEWPORT_HEIGHT / 2 / 32) + ceil(MicroTileLen / 2);
+
+		gpBufStart = &gpBuffer[(-17 + SCREEN_Y) * BUFFER_WIDTH];
+		gpBufEnd = &gpBuffer[(160 + SCREEN_Y) * BUFFER_WIDTH];
 	}
 
 	// Center screen
@@ -741,7 +748,6 @@ static void DrawGame(int x, int y)
 	}
 
 	/// ASSERT: assert(gpBuffer);
-	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (VIEWPORT_HEIGHT + SCREEN_Y)];
 	for (i = 0; i < (blocks << 1); i++) {
 		scrollrt_draw(x, y, sx, sy, chunks, i);
 		sy += 16;
@@ -750,6 +756,7 @@ static void DrawGame(int x, int y)
 		else
 			x++;
 	}
+	gpBufStart = &gpBuffer[BUFFER_WIDTH * SCREEN_Y];
 	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_HEIGHT + SCREEN_Y)];
 
 	if (zoomflag)

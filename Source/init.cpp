@@ -52,6 +52,7 @@ void init_create_window()
 		app_fatal("Unable to create main window");
 	dx_init(NULL);
 	gbActive = true;
+	gpBufStart = &gpBuffer[BUFFER_WIDTH * SCREEN_Y];
 	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_HEIGHT + SCREEN_Y)];
 	SDL_DisableScreenSaver();
 }

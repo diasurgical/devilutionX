@@ -196,7 +196,7 @@ void CelBlitSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth)
 			width = *src++;
 			if (!(width & 0x80)) {
 				i -= width;
-				if (dst < gpBufEnd) {
+				if (dst < gpBufEnd && dst > gpBufStart) {
 					if (width & 1) {
 						dst[0] = src[0];
 						src++;
@@ -290,7 +290,7 @@ void CelBlitLightSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidt
 			width = *src++;
 			if (!(width & 0x80)) {
 				i -= width;
-				if (dst < gpBufEnd) {
+				if (dst < gpBufEnd && dst > gpBufStart) {
 					if (width & 1) {
 						dst[0] = tbl[src[0]];
 						src++;
@@ -359,7 +359,7 @@ void CelBlitLightTransSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int 
 			width = *src++;
 			if (!(width & 0x80)) {
 				i -= width;
-				if (dst < gpBufEnd) {
+				if (dst < gpBufEnd && dst > gpBufStart) {
 					if (((BYTE)(size_t)dst & 1) == shift) {
 						if (!(width & 1)) {
 							goto L_ODD;
@@ -483,7 +483,7 @@ void CelDrawLightRedSafe(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, i
 			width = *pRLEBytes++;
 			if (!(width & 0x80)) {
 				w -= width;
-				if (dst < gpBufEnd) {
+				if (dst < gpBufEnd && dst > gpBufStart) {
 					while (width) {
 						*dst = tbl[*pRLEBytes];
 						pRLEBytes++;
@@ -590,7 +590,7 @@ void CelBlitOutline(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWid
 			width = *src++;
 			if (!(width & 0x80)) {
 				w -= width;
-				if (dst < gpBufEnd) {
+				if (dst < gpBufEnd && dst > gpBufStart) {
 					if (dst >= gpBufEnd - BUFFER_WIDTH) {
 						while (width) {
 							if (*src++) {
@@ -637,7 +637,7 @@ void ENG_set_pixel(int sx, int sy, BYTE col)
 
 	dst = &gpBuffer[sx + BUFFER_WIDTH * sy];
 
-	if (dst < gpBufEnd)
+	if (dst < gpBufEnd && dst > gpBufStart)
 		*dst = col;
 }
 
@@ -657,7 +657,7 @@ void engine_draw_pixel(int sx, int sy)
 		dst = &gpBuffer[sx + BUFFER_WIDTH * sy];
 	}
 
-	if (dst < gpBufEnd)
+	if (dst < gpBufEnd && dst > gpBufStart)
 		*dst = gbPixelCol;
 }
 
@@ -1096,7 +1096,7 @@ void Cl2BlitSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth)
 				width -= 65;
 				nDataSize--;
 				fill = *src++;
-				if (dst < gpBufEnd) {
+				if (dst < gpBufEnd && dst > gpBufStart) {
 					w -= width;
 					while (width) {
 						*dst = fill;
@@ -1111,7 +1111,7 @@ void Cl2BlitSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth)
 				}
 			} else {
 				nDataSize -= width;
-				if (dst < gpBufEnd) {
+				if (dst < gpBufEnd && dst > gpBufStart) {
 					w -= width;
 					while (width) {
 						*dst = *src;
@@ -1198,7 +1198,7 @@ void Cl2BlitOutlineSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWi
 			if (width > 65) {
 				width -= 65;
 				nDataSize--;
-				if (*src++ && dst < gpBufEnd) {
+				if (*src++ && dst < gpBufEnd && dst > gpBufStart) {
 					w -= width;
 					dst[-1] = col;
 					dst[width] = col;
@@ -1216,7 +1216,7 @@ void Cl2BlitOutlineSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWi
 				}
 			} else {
 				nDataSize -= width;
-				if (dst < gpBufEnd) {
+				if (dst < gpBufEnd && dst > gpBufStart) {
 					w -= width;
 					while (width) {
 						if (*src++) {
@@ -1316,7 +1316,7 @@ void Cl2BlitLightSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidt
 				width -= 65;
 				nDataSize--;
 				fill = pTable[*src++];
-				if (dst < gpBufEnd) {
+				if (dst < gpBufEnd && dst > gpBufStart) {
 					w -= width;
 					while (width) {
 						*dst = fill;
@@ -1331,7 +1331,7 @@ void Cl2BlitLightSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidt
 				}
 			} else {
 				nDataSize -= width;
-				if (dst < gpBufEnd) {
+				if (dst < gpBufEnd && dst > gpBufStart) {
 					w -= width;
 					while (width) {
 						*dst = pTable[*src];

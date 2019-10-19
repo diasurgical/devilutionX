@@ -3,6 +3,7 @@
 #define __SCROLLRT_H__
 
 extern int light_table_index;
+extern BYTE *gpBufStart;
 extern BYTE *gpBufEnd;
 extern DWORD level_cel_block;
 extern char arch_draw_type;
