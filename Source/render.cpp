@@ -157,7 +157,8 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 #if defined(__clang__) || defined(__GNUC__)
 __attribute__((no_sanitize("shift-base")))
 #endif
-void RenderTile(BYTE *pBuff)
+void
+RenderTile(BYTE *pBuff)
 {
 	int i, j;
 	char c, v, tile;
@@ -287,6 +288,24 @@ void world_draw_black_tile(int sx, int sy)
 			*dst++ = 0;
 		}
 		dst += i;
+	}
+}
+
+/**
+ * Draws a half-transparent rectangle by blacking out odd pixels on odd lines,
+ * even pixels on even lines.
+ */
+void trans_rect(int sx, int sy, int width, int height)
+{
+	int row, col;
+	BYTE *pix = &gpBuffer[SCREENXY(sx, sy)];
+	for (row = 0; row < height; row++) {
+		for (col = 0; col < width; col++) {
+			if ((row & 1 && col & 1) || (!(row & 1) && !(col & 1)))
+				*pix = 0;
+			pix++;
+		}
+		pix += BUFFER_WIDTH - width;
 	}
 }
 

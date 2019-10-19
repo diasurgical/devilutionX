@@ -69,12 +69,7 @@ void InitQTextMsg(int m)
 void DrawQTextBack()
 {
 	CelDraw(88, 487, pTextBoxCels, 1, 591);
-
-#define TRANS_RECT_X 27
-#define TRANS_RECT_Y 28
-#define TRANS_RECT_WIDTH 585
-#define TRANS_RECT_HEIGHT 297
-#include "asm_trans_rect.inc"
+	trans_rect(27, 28, 585, 297);
 }
 
 void PrintQTextChr(int sx, int sy, BYTE *pCelBuff, int nCel)

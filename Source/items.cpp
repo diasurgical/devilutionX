@@ -2911,12 +2911,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 void DrawUTextBack()
 {
 	CelDraw(88, 487, pSTextBoxCels, 1, 271);
-
-#define TRANS_RECT_X 27
-#define TRANS_RECT_Y 28
-#define TRANS_RECT_WIDTH 265
-#define TRANS_RECT_HEIGHT 297
-#include "asm_trans_rect.inc"
+	trans_rect(27, 28, 265, 297);
 }
 
 void PrintUString(int x, int y, BOOL cjustflag, char *str, int col)

@@ -107,11 +107,7 @@ void DrawDiabloMsg()
 
 	/// ASSERT: assert(gpBuffer);
 
-#define TRANS_RECT_X 104
-#define TRANS_RECT_Y 150
-#define TRANS_RECT_WIDTH 432
-#define TRANS_RECT_HEIGHT 54
-#include "asm_trans_rect.inc"
+	trans_rect(104, 150, 432, 54);
 
 	strcpy(tempstr, MsgStrings[msgflag]);
 	sx = 165;
