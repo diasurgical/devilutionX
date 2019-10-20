@@ -20,7 +20,12 @@ UiItem MAINMENU_DIALOG[] = {
 	MAINMENU_BACKGROUND,
 	MAINMENU_LOGO,
 	UiList(MAINMENU_DIALOG_ITEMS, 64, 192, 510, 43, UIS_HUGE | UIS_GOLD | UIS_CENTER),
+#ifdef VITA
+	UiArtText(nullptr, { 17, 420, 605, 21 }, UIS_SMALL),
 	UiArtText(nullptr, { 17, 444, 605, 21 }, UIS_SMALL)
+#else
+	UiArtText(nullptr, { 17, 444, 605, 21 }, UIS_SMALL)
+#endif
 };
 
 void UiMainMenuSelect(int value)
@@ -41,7 +46,13 @@ void mainmenu_restart_repintro()
 void mainmenu_Load(char *name, void (*fnSound)(char *file))
 {
 	gfnSoundFunction = fnSound;
+#ifdef VITA
+	MAINMENU_DIALOG[size(MAINMENU_DIALOG) - 2].art_text.text = name;
+	MAINMENU_DIALOG[size(MAINMENU_DIALOG) - 1].art_text.text = "PS Vita ported By Gokuhs - https://github.com/gokuhs";
+#else
 	MAINMENU_DIALOG[size(MAINMENU_DIALOG) - 1].art_text.text = name;
+
+#endif
 
 	MainMenuResult = 0;
 

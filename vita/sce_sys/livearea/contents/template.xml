@@ -17,56 +17,28 @@
 	</frame>
 
 	<frame id="frame2">
-		<liveitem> <lang>en</lang>
-			<text valign="top" align="left" text-align="left" text-valign="top" line-space="1" ellipsis="on">
-				<str size="24" bold="on" shadow="on">PSP DNI 5.6 Vita Edition.</str>
-			</text>
-		</liveitem>
-		<liveitem> <lang>en-gb</lang>
-			<text valign="top" align="left" text-align="left" text-valign="top" line-space="1" ellipsis="on">
-				<str size="24" bold="on" shadow="on">PSP DNI 5.6 Vita Edition.</str>
-			</text>
-		</liveitem>
-		<liveitem> <lang>ja</lang>
-			<text valign="top" align="left" text-align="left" text-valign="top" line-space="1" ellipsis="on">
-				<str size="24" bold="on" shadow="on">liveareaスタイリングの例。</str>
+		<liveitem>
+			<text valign="bottom" align="left" text-align="left" text-valign="bottom" line-space="3" ellipsis="on">
+				<str color="#ffffff" size="30" bold="on" shadow="on">devilutionX for PSVita</str>
 			</text>
 		</liveitem>
 	</frame>
 
 	<frame id="frame3">
-		<liveitem> <lang>en</lang>
-			<image valign="bottom" origin="frame" align="left" image-align="left" image-valign="bottom" width="200" height="62" x="-209">logo1.png
-			</image>
-			<target>https://blog.jesusanchez.net</target>  
-		</liveitem>
-		<liveitem> <lang>en-gb</lang>
-			<image valign="bottom" origin="frame" align="left" image-align="left" image-valign="bottom" width="200" height="62" x="-209">logo1.png
-			</image>
-			<target>https://blog.jesusanchez.net</target>  
-		</liveitem>
-		<liveitem> <lang>ja</lang>
-			<image valign="bottom" origin="frame" align="left" image-align="left" image-valign="bottom" width="200" height="62" x="-209">logo1.png
-			</image>
-			<target>https://blog.jesusanchez.net</target>  
+		<liveitem>
+			<text valign="top" align="left" text-align="left" text-valign="top" line-space="2" ellipsis="on">
+				<str size="22" shadow="on">by Gokuhs</str>
+			</text>
+			<target>https://github.com/gokuhs</target>  
 		</liveitem>
 	</frame>
 
 	<frame id="frame4">
-		<liveitem> <lang>en</lang>
-			<text align="right" text-align="right" word-wrap="off" ellipsis="on">
-				<str size="18" color="#f3f315" bold="on" shadow="on">Port of the PSP DNI 5.6 to vita.</str>
+		<liveitem>
+			<text align="left" text-align="left" word-wrap="off" ellipsis="on">
+				<str size="18" color="#ffffff" shadow="on">v0.5.0</str>
 			</text>
-		</liveitem>
-		<liveitem> <lang>en-gb</lang>
-			<text align="right" text-align="right" word-wrap="off" ellipsis="on">
-				<str size="18" color="#f3f315" bold="on" shadow="on">>Port of the PSP DNI 5.6 to vita.</str>
-			</text>
-		</liveitem>
-		<liveitem> <lang>ja</lang>
-			<text align="right" text-align="right" word-wrap="off" ellipsis="on">
-				<str size="18" color="#f3f315" bold="on" shadow="on">vitasdkためのサンプル。</str>
-			</text>
+			<target>https://github.com/gokuhs/devilutionX/releases/latest</target>  
 		</liveitem>
 	</frame>
 

@@ -563,7 +563,6 @@ if(VITA)
     FILE vita/sce_sys/livearea/contents/bg.png sce_sys/livearea/contents/bg.png
     FILE vita/sce_sys/livearea/contents/startup.png sce_sys/livearea/contents/startup.png
     FILE vita/sce_sys/livearea/contents/logo0.png sce_sys/livearea/contents/logo0.png
-    FILE vita/sce_sys/livearea/contents/logo1.png sce_sys/livearea/contents/logo1.png
     FILE vita/sce_sys/livearea/contents/template.xml sce_sys/livearea/contents/template.xml
     FILE vita/danzeffSDL/danzeff/keys_c_t.png danzeff/keys_c_t.png
     FILE vita/danzeffSDL/danzeff/keys_c.png danzeff/keys_c.png
@@ -577,5 +576,11 @@ if(VITA)
     FILE vita/danzeffSDL/danzeff/nums_s.png danzeff/nums_s.png
     FILE vita/danzeffSDL/danzeff/nums_t.png danzeff/nums_t.png
     FILE vita/danzeffSDL/danzeff/nums.png danzeff/nums.png
+    FILE vita/sce_sys/manual/001.png sce_sys/manual/001.png
+    FILE vita/sce_sys/manual/002.png sce_sys/manual/002.png
+    FILE vita/sce_sys/manual/003.png sce_sys/manual/003.png
+    FILE vita/sce_sys/manual/004.png sce_sys/manual/004.png
+    FILE vita/sce_sys/manual/005.png sce_sys/manual/005.png
+    FILE vita/sce_sys/manual/006.png sce_sys/manual/006.png
   )
 endif()
