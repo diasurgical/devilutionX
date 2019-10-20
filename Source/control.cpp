@@ -20,7 +20,6 @@ BOOL drawmanaflag;
 BOOL chrbtnactive;
 char sgszTalkMsg[MAX_SEND_STR_LEN];
 BYTE *pPanelText;
-int nGoldFrame;
 BYTE *pLifeBuff;
 BYTE *pBtmBuff;
 BYTE *pTalkBtns;
@@ -38,7 +37,6 @@ char tempstr[256];
 BOOLEAN whisper[MAX_PLRS];
 int sbooktab;
 int pSplType;
-int frame;
 int initialDropGoldIndex;
 BOOL talkflag;
 BYTE *pSBkIconCels;
@@ -729,7 +727,7 @@ void InitControlPan()
 	dropGoldValue = 0;
 	initialDropGoldValue = 0;
 	initialDropGoldIndex = 0;
-	nGoldFrame = 1;
+	PentSpn2Frame = 1;
 }
 
 void ClearCtrlPan()
@@ -1794,8 +1792,8 @@ void DrawGoldSplit(int amount)
 	} else {
 		screen_x = 450;
 	}
-	CelDraw(screen_x, 140 + SCREEN_Y, pSPentSpn2Cels, nGoldFrame, 12);
-	nGoldFrame = (nGoldFrame & 7) + 1;
+	CelDraw(screen_x, 140 + SCREEN_Y, pSPentSpn2Cels, PentSpn2Frame, 12);
+	PentSpn2Spin();
 }
 
 void control_drop_gold(char vkey)
@@ -1902,8 +1900,8 @@ void DrawTalkPan()
 	}
 	if (msg)
 		*msg = '\0';
-	CelDraw(x, i + 534, pSPentSpn2Cels, frame, 12);
-	frame = (frame & 7) + 1;
+	CelDraw(x, i + 534, pSPentSpn2Cels, PentSpn2Frame, 12);
+	PentSpn2Spin();
 	talk_btn = 0;
 	for (i = 0; i < 4; i++) {
 		if (i == myplr)
@@ -2025,7 +2023,7 @@ void control_type_message()
 
 	talkflag = TRUE;
 	sgszTalkMsg[0] = 0;
-	frame = 1;
+	PentSpn2Frame = 1;
 	for (i = 0; i < 3; i++) {
 		talkbtndown[i] = FALSE;
 	}

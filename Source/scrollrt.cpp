@@ -1080,7 +1080,7 @@ void DrawAndBlit()
 		return;
 	}
 
-	if (drawpanflag == 255) {
+	if (SCREEN_WIDTH > PANEL_WIDTH || SCREEN_HEIGHT > VIEWPORT_HEIGHT + PANEL_HEIGHT || drawpanflag == 255) {
 		drawhpflag = TRUE;
 		drawmanaflag = TRUE;
 		drawbtnflag = TRUE;
@@ -1088,12 +1088,10 @@ void DrawAndBlit()
 		ddsdesc = FALSE;
 		ctrlPan = TRUE;
 		hgt = SCREEN_HEIGHT;
-	} else if (drawpanflag == 1) {
+	} else {
 		ddsdesc = TRUE;
 		ctrlPan = FALSE;
 		hgt = VIEWPORT_HEIGHT;
-	} else {
-		return;
 	}
 
 	drawpanflag = 0;

@@ -160,9 +160,7 @@ void run_game_loop(unsigned int uMsg)
 				continue;
 			}
 		} else if (!nthread_has_500ms_passed(FALSE)) {
-#ifdef SLEEPFIX
-			Sleep(1);
-#endif
+			DrawAndBlit();
 			continue;
 		}
 		multi_process_network_packets();

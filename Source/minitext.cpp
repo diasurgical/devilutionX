@@ -60,7 +60,10 @@ void InitQTextMsg(int m)
 		qtextflag = TRUE;
 		qtexty = 500;
 		sgLastScroll = qscroll_spd_tbl[alltext[m].txtspd - 1]; /* double check offset */
-		scrolltexty = sgLastScroll;
+		if (sgLastScroll <= 0)
+			scrolltexty = 50 / -(sgLastScroll - 1);
+		else
+			scrolltexty = ((sgLastScroll + 1) * 50) / sgLastScroll;
 		qtextSpd = GetTickCount();
 	}
 	PlaySFX(alltext[m].sfxnr);
@@ -150,30 +153,14 @@ void DrawQText()
 		}
 	}
 
-	currTime = GetTickCount();
-	while (1) {
-		if (sgLastScroll <= 0) {
-			qtexty--;
-			qtexty += sgLastScroll;
-		} else {
-			scrolltexty--;
-			if (scrolltexty != 0) {
-				qtexty--;
-			}
-		}
-		if (scrolltexty == 0) {
-			scrolltexty = sgLastScroll;
-		}
+	for (currTime = GetTickCount(); qtextSpd + scrolltexty < currTime; qtextSpd += scrolltexty) {
+		qtexty--;
 		if (qtexty <= 209) {
 			qtexty += 38;
 			qtextptr = pnl;
 			if (*pnl == '|') {
 				qtextflag = FALSE;
 			}
-			break;
-		}
-		qtextSpd += 50;
-		if (currTime - qtextSpd >= 0x7FFFFFFF) {
 			break;
 		}
 	}
