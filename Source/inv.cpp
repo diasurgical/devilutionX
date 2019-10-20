@@ -1323,9 +1323,9 @@ void CheckInvItem()
 	}
 }
 
-/*
-Check for interactions with belt
-*/
+/**
+ * Check for interactions with belt
+ */
 void CheckInvScrn()
 {
 	if (MouseX > 190 + WIDTH_DIFF_2 && MouseX < 437 + WIDTH_DIFF_2
