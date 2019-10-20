@@ -273,7 +273,8 @@ void CheckCursMove()
 		cursmy = my;
 		return;
 	}
-	if (MouseY > PANEL_TOP) {
+	//allows clicking through the sides of the panel (it doesn't cover the whole screen on higher resolutions)
+	if (MouseY > PANEL_TOP && MouseX >= WIDTH_DIFF_2 && MouseX <= SCREEN_WIDTH - WIDTH_DIFF_2) {
 		CheckPanelInfo();
 		return;
 	}

@@ -622,7 +622,8 @@ BOOL LeftMouseDown(int wParam)
 				SetSpell();
 			} else if (stextflag) {
 				CheckStoreBtn();
-			} else if (MouseY < PANEL_TOP) {
+				//allows clicking through the sides of the panel (it doesn't cover the whole screen on higher resolutions)
+			} else if (MouseY < PANEL_TOP || MouseX < WIDTH_DIFF_2 || MouseX > SCREEN_WIDTH - WIDTH_DIFF_2) {
 				if (!gmenu_exception() && !TryIconCurs()) {
 					if (questlog && MouseX > 32 && MouseX < 288 && MouseY > 32 && MouseY < 308) {
 						QuestlogESC();
