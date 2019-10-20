@@ -112,14 +112,14 @@ char SpellITbl[MAX_SPELLS] = {
 	39, 42, 41, 40, 10, 36, 30
 };
 int PanBtnPos[8][5] = {
-	{ 9, 361, 71, 19, 1 },
-	{ 9, 387, 71, 19, 0 },
-	{ 9, 427, 71, 19, 1 },
-	{ 9, 453, 71, 19, 0 },
-	{ 560, 361, 71, 19, 1 },
-	{ 560, 387, 71, 19, 0 },
-	{ 87, 443, 33, 32, 1 },
-	{ 527, 443, 33, 32, 1 }
+	{ 9 + WIDTH_DIFF_2, 361 + HEIGHT_DIFF, 71, 19, 1 },
+	{ 9 + WIDTH_DIFF_2, 387 + HEIGHT_DIFF, 71, 19, 0 },
+	{ 9 + WIDTH_DIFF_2, 427 + HEIGHT_DIFF, 71, 19, 1 },
+	{ 9 + WIDTH_DIFF_2, 453 + HEIGHT_DIFF, 71, 19, 0 },
+	{ 560 + WIDTH_DIFF_2, 361 + HEIGHT_DIFF, 71, 19, 1 },
+	{ 560 + WIDTH_DIFF_2, 387 + HEIGHT_DIFF, 71, 19, 0 },
+	{ 87 + WIDTH_DIFF_2, 443 + HEIGHT_DIFF, 33, 32, 1 },
+	{ 527 + WIDTH_DIFF_2, 443 + HEIGHT_DIFF, 33, 32, 1 }
 };
 char *PanBtnHotKey[8] = { "'c'", "'q'", "Tab", "Esc", "'i'", "'b'", "Enter", NULL };
 char *PanBtnStr[8] = {
@@ -481,7 +481,7 @@ void DrawPanelBox(int x, int y, int w, int h, int sx, int sy)
 	int nSrcOff, nDstOff;
 
 	/// ASSERT: assert(gpBuffer);
-
+	sy += HEIGHT_DIFF;
 	nSrcOff = x + PANEL_WIDTH * y;
 	nDstOff = sx + BUFFER_WIDTH * sy + (SCREEN_WIDTH - PANEL_WIDTH) / 2;
 
@@ -490,6 +490,7 @@ void DrawPanelBox(int x, int y, int w, int h, int sx, int sy)
 
 	src = &pBtmBuff[nSrcOff];
 	dst = &gpBuffer[nDstOff];
+
 
 	for (hgt = h; hgt; hgt--, src += PANEL_WIDTH - w, dst += BUFFER_WIDTH - w) {
 		wdt = w;
