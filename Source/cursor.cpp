@@ -179,6 +179,7 @@ void CheckCursMove()
 	sx = MouseX;
 	sy = MouseY;
 
+	/*
 	if (chrflag || questlog) {
 		if (sx >= 160) {
 			sx -= 160;
@@ -191,7 +192,7 @@ void CheckCursMove()
 		} else {
 			sx = 0;
 		}
-	}
+	}*/
 	if (sy > PANEL_TOP - 1 && track_isscrolling()) {
 		sy = PANEL_TOP - 1;
 	}
@@ -281,11 +282,13 @@ void CheckCursMove()
 	if (doomflag) {
 		return;
 	}
-	if (invflag && MouseX > 320) {
+	//allows clicking below inventory panel
+	if (invflag && MouseX > SCREEN_WIDTH - 320 && MouseY < 352) {
 		pcursinvitem = CheckInvHLight();
 		return;
 	}
-	if (sbookflag && MouseX > 320) {
+	//allows clicking below spellbook panel
+	if (sbookflag && MouseX > SCREEN_WIDTH - 320 && MouseY < 352) {
 		return;
 	}
 	if ((chrflag || questlog) && MouseX < 320) {

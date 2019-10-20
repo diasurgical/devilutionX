@@ -3686,7 +3686,7 @@ void CheckPlrSpell()
 
 	if (pcurs != CURSOR_HAND
 	    || (MouseY >= PANEL_TOP && MouseX >= WIDTH_DIFF_2 && MouseX <= SCREEN_WIDTH-WIDTH_DIFF_2)
-	    || (chrflag && MouseX < 320 || invflag && MouseX > 320)
+	    || ((chrflag && MouseX < 320 && MouseY < 352) || (invflag && MouseX > SCREEN_WIDTH - 320 && MouseY < 352))
 	        && rspell != SPL_HEAL
 	        && rspell != SPL_IDENTIFY
 	        && rspell != SPL_REPAIR

@@ -630,12 +630,12 @@ BOOL LeftMouseDown(int wParam)
 					} else if (qtextflag) {
 						qtextflag = FALSE;
 						sfx_stop();
-					} else if (chrflag && MouseX < 320) {
+					} else if (chrflag && MouseX < 320 && MouseY < 352) {
 						CheckChrBtns();
-					} else if (invflag && MouseX > 320) {
+					} else if (invflag && MouseX > SCREEN_WIDTH - 320 && MouseY < 352) {
 						if (!dropGoldFlag)
 							CheckInvItem();
-					} else if (sbookflag && MouseX > 320) {
+					} else if (sbookflag && MouseX > SCREEN_WIDTH - 320 && MouseY < 352) {
 						CheckSBook();
 					} else if (pcurs >= CURSOR_FIRSTITEM) {
 						if (TryInvPut()) {
