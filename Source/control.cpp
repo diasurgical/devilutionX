@@ -964,7 +964,7 @@ void CheckPanelInfo()
 			}
 		}
 	}
-	if (MouseX > 190 && MouseX < 437 && MouseY > 356 && MouseY < 385)
+	if (MouseX > 190 + WIDTH_DIFF_2 && MouseX + WIDTH_DIFF_2 < 437 && MouseY+HEIGHT_DIFF > 356 && MouseY < 385+HEIGHT_DIFF)
 		pcursinvitem = CheckInvHLight();
 }
 
