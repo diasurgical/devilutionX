@@ -6,10 +6,7 @@ declare -r DIR="$(dirname "${BASH_SOURCE[0]}")"
 cd "$DIR"
 declare -r ABSDIR="$(pwd)"
 
-declare -r BUILDROOT_VER=buildroot-2018.02.9
-BUILDROOT="${BUILDROOT:-$HOME/${BUILDROOT_VER}-opendingux-musl}"
-
-declare -r BUILDROOT_ARCHIVE="$HOME/${BUILDROOT_VER}.tar.gz"
+BUILDROOT="${BUILDROOT:-$HOME/buildroot-rs90-devilutionx}"
 
 set -x
 
@@ -24,16 +21,11 @@ prepare_buildroot() {
 	if [[ -d $BUILDROOT ]]; then
 		return
 	fi
-	if [[ ! -f $BUILDROOT_ARCHIVE ]]; then
-		\curl https://buildroot.org/downloads/${BUILDROOT_VER}.tar.gz -o "$BUILDROOT_ARCHIVE"
-	fi
-
-	tar xf "$BUILDROOT_ARCHIVE" -C "$(dirname "$BUILDROOT_ARCHIVE")"
-	mv "${BUILDROOT_ARCHIVE%.tar.gz}" "$BUILDROOT"
-	cp buildroot_opendingux_musl_defconfig "$BUILDROOT/configs/opendingux_musl_defconfig"
+	git clone --depth=1 -b od-rs90 https://github.com/OpenDingux/buildroot.git "$BUILDROOT"
+	cp buildroot_rs90_defconfig "$BUILDROOT/configs/rs90_devilutionx_defconfig"
 	cd "$BUILDROOT"
 	echo 'LIBSODIUM_CONF_OPTS += --enable-static' >> package/libsodium/libsodium.mk
-	make opendingux_musl_defconfig
+	make rs90_devilutionx_defconfig
 	BR2_JLEVEL=0 make toolchain libsodium libzip sdl sdl_mixer sdl_ttf
 	cd -
 }
@@ -44,11 +36,12 @@ build() {
 	rm -f CMakeCache.txt
 	cmake .. -DDINGUX=ON -DUSE_SDL1=ON -DBINARY_RELEASE=ON \
 		-DCMAKE_TOOLCHAIN_FILE="$BUILDROOT/output/host/share/buildroot/toolchainfile.cmake"
+	make -j $(nproc)
 	cd -
 }
 
 package() {
-	./package.sh ../../build/devilutionx-opendingux-musl-sdl1.ipk
+	./package-opk.sh ../../build/devilutionx-rs90.opk
 }
 
 main

@@ -283,11 +283,13 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		}
 	} break;
 #ifndef USE_SDL1
+#if SDL_VERSION_ATLEAST(2, 0, 4)
 	case SDL_AUDIODEVICEADDED:
 	case SDL_AUDIODEVICEREMOVED:
+	case SDL_KEYMAPCHANGED:
+#endif
 	case SDL_TEXTEDITING:
 	case SDL_TEXTINPUT:
-	case SDL_KEYMAPCHANGED:
 		return false_avail();
 	case SDL_WINDOWEVENT:
 		if (e.window.event == SDL_WINDOWEVENT_CLOSE) {
@@ -384,18 +386,42 @@ WINBOOL TranslateMessage(const MSG *lpMsg)
 SHORT GetAsyncKeyState(int vKey)
 {
 #ifndef USE_SDL1
-	const Uint8 *state = SDL_GetKeyboardState(NULL);
-	if (vKey == DVL_VK_SHIFT) {
-		if (state[SDL_SCANCODE_LSHIFT] || state[SDL_SCANCODE_RSHIFT]) {
-			return 0x8000;
-		}
+	const Uint8 *state = SDL_GetKeyboardState(nullptr);
+	switch (vKey) {
+	case DVL_VK_SHIFT:
+		return state[SDL_SCANCODE_LSHIFT] || state[SDL_SCANCODE_RSHIFT] ? 0x8000 : 0;
+	case DVL_VK_MENU:
+		return state[SDL_SCANCODE_MENU] ? 0x8000 : 0;
+	case DVL_VK_LEFT:
+		return state[SDL_SCANCODE_LEFT] ? 0x8000 : 0;
+	case DVL_VK_UP:
+		return state[SDL_SCANCODE_UP] ? 0x8000 : 0;
+	case DVL_VK_RIGHT:
+		return state[SDL_SCANCODE_RIGHT] ? 0x8000 : 0;
+	case DVL_VK_DOWN:
+		return state[SDL_SCANCODE_DOWN] ? 0x8000 : 0;
+	default:
+		return 0;
 	}
-	if (vKey == DVL_VK_MENU && state[SDL_SCANCODE_M]) {
-		return 0x8000;
+#else
+	const Uint8 *state = SDL_GetKeyState(nullptr);
+	switch (vKey) {
+	case DVL_VK_SHIFT:
+		return state[SDLK_LSHIFT] || state[SDLK_RSHIFT] ? 0x8000 : 0;
+	case DVL_VK_MENU:
+		return state[SDLK_MENU] ? 0x8000 : 0;
+	case DVL_VK_LEFT:
+		return state[SDLK_LEFT] ? 0x8000 : 0;
+	case DVL_VK_UP:
+		return state[SDLK_UP] ? 0x8000 : 0;
+	case DVL_VK_RIGHT:
+		return state[SDLK_RIGHT] ? 0x8000 : 0;
+	case DVL_VK_DOWN:
+		return state[SDLK_DOWN] ? 0x8000 : 0;
+	default:
+		return 0;
 	}
 #endif
-
-	return 0;
 }
 
 LRESULT DispatchMessageA(const MSG *lpMsg)

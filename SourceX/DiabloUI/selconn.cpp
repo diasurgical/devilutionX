@@ -16,20 +16,21 @@ _SNETPLAYERDATA *selconn_UserInfo;
 _SNETUIDATA *selconn_UiInfo;
 _SNETVERSIONDATA *selconn_FileInfo;
 
-DWORD provider;
+int provider;
 
 UiArtText SELCONNECT_DIALOG_DESCRIPTION(selconn_Description, { 35, 275, 205, 66 });
+
+// Should be in the same order than conn_type (See enums.h)
 UiListItem SELCONN_DIALOG_ITEMS[] = {
 #ifndef NONET
-	{ "Client-Server (TCP)", 0 },
+	{ "Client-Server (TCP)", SELCONN_TCP },
 #ifdef BUGGY
-	{ "Peer-to-Peer (UDP)", 1 },
+	{ "Peer-to-Peer (UDP)", SELCONN_UDP },
 #endif
-	{ "Loopback", 2 },
-#else
-	{ "Loopback", 0 },
 #endif
+	{ "Loopback", SELCONN_LOOPBACK },
 };
+
 UiItem SELCONNECT_DIALOG[] = {
 	MAINMENU_BACKGROUND,
 	MAINMENU_LOGO,
@@ -49,7 +50,7 @@ UiItem SELCONNECT_DIALOG[] = {
 void selconn_Load()
 {
 	LoadBackgroundArt("ui_art\\selconn.pcx");
-	UiInitList(0, 2, selconn_Focus, selconn_Select, selconn_Esc, SELCONNECT_DIALOG, size(SELCONNECT_DIALOG));
+	UiInitList(0, size(SELCONN_DIALOG_ITEMS) - 1, selconn_Focus, selconn_Select, selconn_Esc, SELCONNECT_DIALOG, size(SELCONNECT_DIALOG));
 }
 
 void selconn_Free()
@@ -67,15 +68,19 @@ void selconn_Focus(int value)
 {
 	int players = MAX_PLRS;
 	switch (value) {
-	case 0:
+#ifndef NONET
+	case SELCONN_TCP:
 		strcpy(selconn_Description, "All computers must be connected to a TCP-compatible network.");
 		players = MAX_PLRS;
 		break;
-	case 1:
+#ifdef BUGGY
+	case SELCONN_UDP:
 		strcpy(selconn_Description, "All computers must be connected to a UDP-compatible network.");
 		players = MAX_PLRS;
 		break;
-	case 2:
+#endif
+#endif
+	case SELCONN_LOOPBACK:
 		strcpy(selconn_Description, "Play by yourself with no network exposure.");
 		players = 1;
 		break;
@@ -87,17 +92,7 @@ void selconn_Focus(int value)
 
 void selconn_Select(int value)
 {
-	switch (value) {
-	case 0:
-		provider = 'TCPN';
-		break;
-	case 1:
-		provider = 'UDPN';
-		break;
-	case 2:
-		provider = 'SCBL';
-		break;
-	}
+	provider = value;
 
 	selconn_Free();
 	selconn_EndMenu = SNetInitializeProvider(provider, selconn_ClientInfo, selconn_UserInfo, selconn_UiInfo, selconn_FileInfo);
@@ -129,4 +124,4 @@ int UiSelectProvider(
 	return selconn_ReturnValue;
 }
 
-}
+} // namespace dvl

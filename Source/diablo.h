@@ -13,6 +13,8 @@
 #ifdef USE_SDL1
 #include "sdl2_to_1_2_backports.h"
 #else
+#include "sdl2_backports.h"
+#else
 #ifdef VITA
 #include "../vita/vita_aux_util.h"
 #endif
