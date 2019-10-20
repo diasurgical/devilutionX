@@ -587,7 +587,7 @@ void UiPollAndRender()
 {
 	SDL_Event event;
 #ifdef VITA
-	VitaAux::getPressedKeyAsSDL_Event(true);
+	VitaAux::getPressedKeyAsSDL_Event(true, VITAMOUSEMODE_AS_MOUSE);
 #endif
 	while (SDL_PollEvent(&event)) {
 		UiFocusNavigation(&event);
@@ -862,7 +862,7 @@ void DrawMouse()
 	}
 #endif
 #else
-	VITATOUCH position = VitaAux::getVitaTouch();
+	VITATOUCH position = VitaAux::getVitaTouchFrontPannel();
 	MouseX = position.x;
 	MouseY = position.y;
 #endif

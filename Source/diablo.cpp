@@ -276,7 +276,7 @@ void diablo_splash()
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	diablo_init(lpCmdLine);
-	diablo_splash();
+	//diablo_splash(); //TODO: REmove this comment
 	mainmenu_loop();
 	UiDestroy();
 	SaveGamma();

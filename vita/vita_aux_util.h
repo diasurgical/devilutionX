@@ -57,6 +57,17 @@ typedef struct VITAButtons {
 	char start;
 };
 
+typedef enum {
+	FRONT_PANNEL = 0,
+	BACK_PANNEL  = 1,
+	BOTH         = 2
+} VITAPANNEL;
+
+typedef enum {
+	VITAMOUSEMODE_AS_MOUSE    = 0,
+	VITAMOUSEMODE_AS_TOUCHPAD = 1
+} VITAMOUSEMODE;
+
 class VitaAux {
 public:
 	static void init();
@@ -71,6 +82,10 @@ public:
 	                   //Variable de error;
 	static int errores;
 	static VITATOUCH *latestPosition;
+	static VITATOUCH *latestPositionClick;
+	static VITATOUCH *mousePosition;
+	static VITATOUCH *latestTouch;
+	static bool tapTriggered;
 #ifdef USE_SDL1
 	static SDLKey latestKeyMouse;
 #else
@@ -100,11 +115,13 @@ public:
 
 	//Touch
 	static void initVitaTouch();
-	static VITATOUCH getVitaTouch();
+	static VITATOUCH getVitaTouch(VITAPANNEL pannel = BOTH, bool retournLatest = true);
+	static VITATOUCH getVitaTouchBackPannel(bool retournLatest = true);
+	static VITATOUCH getVitaTouchFrontPannel(bool retournLatest = true);
 
 	//Migrate to SDEvent
 	static void initVitaButtons();
-	static void getPressedKeyAsSDL_Event(bool inMenu);
+	static void getPressedKeyAsSDL_Event(bool inMenu, VITAMOUSEMODE mouseMode = VITAMOUSEMODE_AS_MOUSE);
 
 	//Utils
 	static void printMemInfo(unsigned int amount = 0);

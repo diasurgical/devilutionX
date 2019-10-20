@@ -202,7 +202,7 @@ static WINBOOL false_avail()
 WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg)
 {
 #ifdef VITA
-	VitaAux::getPressedKeyAsSDL_Event(false);
+	VitaAux::getPressedKeyAsSDL_Event(false, VITAMOUSEMODE_AS_TOUCHPAD);
 #endif
 	if (wMsgFilterMin != 0)
 		UNIMPLEMENTED();
