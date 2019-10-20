@@ -75,14 +75,14 @@ const InvXY InvRect[73] = {
 	{ 538, 336 }, // inv row 4
 	{ 567, 336 }, // inv row 4
 	{ 596, 336 }, // inv row 4
-	{ 205, 385 }, // belt
-	{ 234, 385 }, // belt
-	{ 263, 385 }, // belt
-	{ 292, 385 }, // belt
-	{ 321, 385 }, // belt
-	{ 350, 385 }, // belt
-	{ 379, 385 }, // belt
-	{ 408, 385 }  // belt
+	{ 205+WIDTH_DIFF_2, 385+HEIGHT_DIFF }, // belt
+	{ 234+WIDTH_DIFF_2, 385+HEIGHT_DIFF }, // belt
+	{ 263+WIDTH_DIFF_2, 385+HEIGHT_DIFF }, // belt
+	{ 292+WIDTH_DIFF_2, 385+HEIGHT_DIFF }, // belt
+	{ 321+WIDTH_DIFF_2, 385+HEIGHT_DIFF }, // belt
+	{ 350+WIDTH_DIFF_2, 385+HEIGHT_DIFF }, // belt
+	{ 379+WIDTH_DIFF_2, 385+HEIGHT_DIFF }, // belt
+	{ 408+WIDTH_DIFF_2, 385+HEIGHT_DIFF }  // belt
 	// clang-format on
 };
 
