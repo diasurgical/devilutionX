@@ -519,11 +519,17 @@ void DrawPanelBox(int x, int y, int w, int h, int sx, int sy)
 	}
 }
 
+/*
+Draws parts of the flasks that are on the panel
+*/
 void SetFlaskHeight(BYTE *pCelBuff, int min, int max, int c, int r)
 {
 	int nSrcOff, nDstOff, w;
 
 	/// ASSERT: assert(gpBuffer);
+
+	c += WIDTH_DIFF_2;
+	r += HEIGHT_DIFF;
 
 	nSrcOff = 88 * min;
 	nDstOff = c + BUFFER_WIDTH * r;
@@ -538,10 +544,15 @@ void SetFlaskHeight(BYTE *pCelBuff, int min, int max, int c, int r)
 		memcpy(dst, src, 88);
 }
 
+/*
+Draws parts of the flasks that are above the panel
+*/
 void DrawFlask(BYTE *pCelBuff, int w, int nSrcOff, BYTE *pBuff, int nDstOff, int h)
 {
 	int wdt, hgt;
 	BYTE *src, *dst;
+
+	nDstOff += BUFFER_WIDTH * HEIGHT_DIFF + WIDTH_DIFF_2;
 
 	src = &pCelBuff[nSrcOff];
 	dst = &pBuff[nDstOff];
