@@ -111,10 +111,10 @@
 #define SCREEN_BPP 32
 #endif
 
-#define BORDER_LEFT 64
-#define BORDER_TOP 160
-#define BORDER_RIGHT 64
-#define BORDER_BOTTOM 16
+#define BORDER_LEFT		64
+#define BORDER_TOP		160
+#define BORDER_RIGHT	64
+#define BORDER_BOTTOM	0
 
 #define SCREEN_X BORDER_LEFT
 #define SCREEN_Y BORDER_TOP

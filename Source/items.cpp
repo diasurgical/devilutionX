@@ -2911,20 +2911,16 @@ void PrintItemPower(char plidx, ItemStruct *x)
 void DrawUTextBack()
 {
 	CelDraw(88, 487, pSTextBoxCels, 1, 271);
-
-#define TRANS_RECT_X 27
-#define TRANS_RECT_Y 28
-#define TRANS_RECT_WIDTH 265
-#define TRANS_RECT_HEIGHT 297
-#include "asm_trans_rect.inc"
+	trans_rect(27, 28, 265, 297);
 }
 
 void PrintUString(int x, int y, BOOL cjustflag, char *str, int col)
 {
-	int len, width, off, i, k;
+	int len, width, sx, sy, i, k;
 	BYTE c;
 
-	off = x + PitchTbl[SStringY[y] + 204] + 96;
+	sx = x + 96;
+	sy = y * 12 + 204;
 	len = strlen(str);
 	k = 0;
 	if (cjustflag) {
@@ -2933,16 +2929,16 @@ void PrintUString(int x, int y, BOOL cjustflag, char *str, int col)
 			width += fontkern[fontframe[gbFontTransTbl[(BYTE)str[i]]]] + 1;
 		if (width < 257)
 			k = (257 - width) >> 1;
-		off += k;
+		sx += k;
 	}
 
 	for (i = 0; i < len; i++) {
 		c = fontframe[gbFontTransTbl[(BYTE)str[i]]];
 		k += fontkern[c] + 1;
 		if (c && k <= 257) {
-			CPrintString(off, c, col);
+			CPrintString(sx, sy, c, col);
 		}
-		off += fontkern[c] + 1;
+		sx += fontkern[c] + 1;
 	}
 }
 
@@ -2954,7 +2950,7 @@ void DrawULine(int y)
 	BYTE *src, *dst;
 
 	src = &gpBuffer[SCREENXY(26, 25)];
-	dst = &gpBuffer[PitchTbl[SStringY[y] + 198] + 26 + 64];
+	dst = &gpBuffer[BUFFER_WIDTH * (y * 12 + 198) + 26 + 64];
 
 	for (i = 0; i < 3; i++, src += BUFFER_WIDTH, dst += BUFFER_WIDTH)
 		memcpy(dst, src, 266);

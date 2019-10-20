@@ -76,7 +76,6 @@ void FreeGameMem()
 	MemFreeDbg(pMegaTiles);
 	MemFreeDbg(pLevelPieces);
 	MemFreeDbg(pSpecialCels);
-	MemFreeDbg(pSpeedCels);
 
 	FreeMissiles();
 	FreeMonsters();
@@ -164,9 +163,7 @@ void run_game_loop(unsigned int uMsg)
 				continue;
 			}
 		} else if (!nthread_has_500ms_passed(FALSE)) {
-#ifdef SLEEPFIX
-			Sleep(1);
-#endif
+			DrawAndBlit();
 			continue;
 		}
 		multi_process_network_packets();
@@ -436,9 +433,6 @@ void diablo_init_screen()
 	ScrollInfo._sxoff = 0;
 	ScrollInfo._syoff = 0;
 	ScrollInfo._sdir = SDIR_NONE;
-
-	for (i = 0; i < 1024; i++)
-		PitchTbl[i] = i * BUFFER_WIDTH;
 
 	ClrDiabloMsg();
 }
@@ -1367,8 +1361,6 @@ void LoadLvlGFX()
 
 void LoadAllGFX()
 {
-	/// ASSERT: assert(! pSpeedCels);
-	pSpeedCels = DiabloAllocPtr(0x100000);
 	IncProgress();
 	IncProgress();
 	InitObjectGFX();
@@ -1473,7 +1465,11 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 			InitThemes();
 			LoadAllGFX();
 		} else {
+			IncProgress();
+			IncProgress();
 			InitMissileGFX();
+			IncProgress();
+			IncProgress();
 		}
 
 		IncProgress();
@@ -1511,9 +1507,11 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 				glMid1Seed[currlevel] = GetRndSeed();
 				InitMonsters();
 				glMid2Seed[currlevel] = GetRndSeed();
+				IncProgress();
 				InitObjects();
 				InitItems();
 				CreateThemeRooms();
+				IncProgress();
 				glMid3Seed[currlevel] = GetRndSeed();
 				InitMissiles();
 				InitDead();
@@ -1556,19 +1554,22 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 			ResyncMPQuests();
 #ifndef SPAWN
 	} else {
-		/// ASSERT: assert(! pSpeedCels);
-		pSpeedCels = DiabloAllocPtr(0x100000);
 		LoadSetMap();
 		IncProgress();
 		GetLevelMTypes();
+		IncProgress();
 		InitMonsters();
+		IncProgress();
 		InitMissileGFX();
+		IncProgress();
 		InitDead();
+		IncProgress();
 		FillSolidBlockTbls();
 		IncProgress();
 
 		if (lvldir == 5)
 			GetPortalLvlPos();
+		IncProgress();
 
 		for (i = 0; i < MAX_PLRS; i++) {
 			if (plr[i].plractive && currlevel == plr[i].plrlevel) {
@@ -1577,6 +1578,7 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 					InitPlayer(i, firstflag);
 			}
 		}
+		IncProgress();
 
 		InitMultiView();
 		IncProgress();
@@ -1617,8 +1619,8 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 
 	if (firstflag) {
 		InitControlPan();
-		IncProgress();
 	}
+	IncProgress();
 	if (leveltype != DTYPE_TOWN) {
 		ProcessLightList();
 		ProcessVisionList();

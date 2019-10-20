@@ -3,19 +3,17 @@
 #define __SCROLLRT_H__
 
 extern int light_table_index;
-extern int PitchTbl[1024];
+extern BYTE *gpBufStart;
 extern BYTE *gpBufEnd;
 extern DWORD level_cel_block;
 extern char arch_draw_type;
 extern int cel_transparency_active;
 extern int level_piece_id;
 extern void (*DrawPlrProc)(int, int, int, int, int, BYTE *, int, int, int, int);
-extern int draw_monster_num;
 
 void ClearCursor();
-void DrawMissile(int x, int y, int sx, int sy, int CelSkip, int capChunks, BOOL pre);
-void DrawClippedMissile(int x, int y, int sx, int sy, int CelSkip, int capChunks, BOOL pre);
-void DrawDeadPlayer(int x, int y, int sx, int sy, int CelSkip, int capChunks, BOOL clipped);
+void DrawMissile(int x, int y, int sx, int sy, BOOL pre);
+void DrawDeadPlayer(int x, int y, int sx, int sy);
 void DrawView(int StartX, int StartY);
 void ClearScreenBuffer();
 #ifdef _DEBUG

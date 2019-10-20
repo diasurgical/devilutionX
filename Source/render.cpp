@@ -3,7 +3,6 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 #define NO_OVERDRAW
-#define USE_SPEEDCELS
 
 typedef enum {
 	RT_SQUARE,
@@ -95,20 +94,10 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 	int i;
 
 #ifdef NO_OVERDRAW
-	if (zoomflag) {
-		if ((*dst) < &gpBuffer[(0 + 160) * BUFFER_WIDTH]
-		    || (*dst) > &gpBuffer[(VIEWPORT_HEIGHT + 160) * BUFFER_WIDTH]) {
-			(*src) += n;
-			(*dst) += n;
-			return;
-		}
-	} else {
-		if ((*dst) < &gpBuffer[(-17 + 160) * BUFFER_WIDTH]
-		    || (*dst) > &gpBuffer[(160 + 160) * BUFFER_WIDTH]) {
-			(*src) += n;
-			(*dst) += n;
-			return;
-		}
+	if (*dst < gpBufStart || *dst > gpBufEnd) {
+		*src += n;
+		*dst += n;
+		return;
 	}
 #endif
 
@@ -118,11 +107,7 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 			for (i = 0; i < n; i++, (*dst)++) {
 				(*dst)[0] = 0;
 			}
-#ifdef USE_SPEEDCELS
-		} else if (tbl == NULL) {
-#else
 		} else if (light_table_index == 0) {
-#endif
 			for (i = n & 3; i != 0; i--, (*src)++, (*dst)++) {
 				(*dst)[0] = (*src)[0];
 			}
@@ -143,11 +128,7 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 					(*dst)[0] = 0;
 				}
 			}
-#ifdef USE_SPEEDCELS
-		} else if (tbl == NULL) {
-#else
 		} else if (light_table_index == 0) {
-#endif
 			for (i = 0; i < n; i++, (*src)++, (*dst)++, mask <<= 1) {
 				if (mask & 0x80000000) {
 					(*dst)[0] = (*src)[0];
@@ -166,7 +147,8 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 #if defined(__clang__) || defined(__GNUC__)
 __attribute__((no_sanitize("shift-base")))
 #endif
-void RenderTile(BYTE *pBuff)
+void
+RenderTile(BYTE *pBuff)
 {
 	int i, j;
 	char c, v, tile;
@@ -179,21 +161,6 @@ void RenderTile(BYTE *pBuff)
 	src = &pDungeonCels[SDL_SwapLE32(pFrameTable[level_cel_block & 0xFFF])];
 	tile = (level_cel_block & 0x7000) >> 12;
 	tbl = &pLightTbl[256 * light_table_index];
-
-#ifdef USE_SPEEDCELS
-	if (light_table_index == lightmax || light_table_index == 0) {
-		if (level_cel_block & 0x8000) {
-			level_cel_block = SpeedFrameTbl[level_cel_block & 0xFFF][0] + (level_cel_block & 0xF000);
-		}
-		src = &pDungeonCels[SDL_SwapLE32(pFrameTable[level_cel_block & 0xFFF])];
-		tile = (level_cel_block & 0x7000) >> 12;
-		tbl = NULL;
-	} else if (level_cel_block & 0x8000) {
-		src = &pSpeedCels[SpeedFrameTbl[level_cel_block & 0xFFF][light_table_index]];
-		tile = (level_cel_block & 0x7000) >> 12;
-		tbl = NULL;
-	}
-#endif
 
 	mask = &SolidMask[31];
 
@@ -288,12 +255,15 @@ void RenderTile(BYTE *pBuff)
 	}
 }
 
-void world_draw_black_tile(BYTE *pBuff)
+void world_draw_black_tile(int sx, int sy)
 {
 	int i, j, k;
 	BYTE *dst;
 
-	dst = pBuff;
+	if (sx >= SCREEN_WIDTH - 64 || sy >= SCREEN_HEIGHT - 32)
+		return;
+
+	dst = &gpBuffer[sx + BUFFER_WIDTH * sy];
 
 	for (i = 30, j = 1; i >= 0; i -= 2, j++, dst -= BUFFER_WIDTH + 64) {
 		dst += i;
@@ -308,6 +278,24 @@ void world_draw_black_tile(BYTE *pBuff)
 			*dst++ = 0;
 		}
 		dst += i;
+	}
+}
+
+/**
+ * Draws a half-transparent rectangle by blacking out odd pixels on odd lines,
+ * even pixels on even lines.
+ */
+void trans_rect(int sx, int sy, int width, int height)
+{
+	int row, col;
+	BYTE *pix = &gpBuffer[SCREENXY(sx, sy)];
+	for (row = 0; row < height; row++) {
+		for (col = 0; col < width; col++) {
+			if ((row & 1 && col & 1) || (!(row & 1) && !(col & 1)))
+				*pix = 0;
+			pix++;
+		}
+		pix += BUFFER_WIDTH - width;
 	}
 }
 

@@ -13,7 +13,6 @@ int WaterDone;
 int ReturnLvlY;
 int ReturnLvlX;
 int ReturnLvlT;
-int ALLQUESTS;
 int ReturnLvl;
 
 QuestData questlist[MAXQUESTS] = {
@@ -70,7 +69,7 @@ void InitQuests()
 
 	initiatedQuests = 0;
 	questlog = FALSE;
-	ALLQUESTS = 1;
+	PentSpn2Frame = 1;
 	WaterDone = 0;
 
 	for (z = 0; z < MAXQUESTS; z++) {
@@ -700,11 +699,11 @@ void ResyncQuests()
 
 void PrintQLString(int x, int y, BOOL cjustflag, char *str, int col)
 {
-	int len, width, off, i, k, s;
+	int len, width, i, k, sx, sy;
 	BYTE c;
 
-	s = SStringY[y];
-	off = x + PitchTbl[SStringY[y] + 204] + 96;
+	sx = x + 96;
+	sy = y * 12 + 204;
 	len = strlen(str);
 	k = 0;
 	if (cjustflag) {
@@ -713,21 +712,21 @@ void PrintQLString(int x, int y, BOOL cjustflag, char *str, int col)
 			width += fontkern[fontframe[gbFontTransTbl[(BYTE)str[i]]]] + 1;
 		if (width < 257)
 			k = (257 - width) >> 1;
-		off += k;
+		sx += k;
 	}
 	if (qline == y) {
-		CelDraw(cjustflag ? x + k + 76 : x + 76, s + 205, pSPentSpn2Cels, ALLQUESTS, 12);
+		CelDraw(cjustflag ? x + k + 76 : x + 76, sy + 1, pSPentSpn2Cels, PentSpn2Frame, 12);
 	}
 	for (i = 0; i < len; i++) {
 		c = fontframe[gbFontTransTbl[(BYTE)str[i]]];
 		k += fontkern[c] + 1;
 		if (c && k <= 257) {
-			CPrintString(off, c, col);
+			CPrintString(sx, sy, c, col);
 		}
-		off += fontkern[c] + 1;
+		sx += fontkern[c] + 1;
 	}
 	if (qline == y) {
-		CelDraw(cjustflag ? x + k + 100 : 340 - x, s + 205, pSPentSpn2Cels, ALLQUESTS, 12);
+		CelDraw(cjustflag ? x + k + 100 : 340 - x, sy + 1, pSPentSpn2Cels, PentSpn2Frame, 12);
 	}
 }
 
@@ -743,7 +742,7 @@ void DrawQuestLog()
 		y += 2;
 	}
 	PrintQLString(0, 22, TRUE, "Close Quest Log", 0);
-	ALLQUESTS = (ALLQUESTS & 7) + 1;
+	PentSpn2Spin();
 }
 
 void StartQuestlog()
@@ -766,7 +765,7 @@ void StartQuestlog()
 	if (numqlines != 0)
 		qline = qtopline;
 	questlog = TRUE;
-	ALLQUESTS = 1;
+	PentSpn2Frame = 1;
 }
 
 void QuestlogUp()

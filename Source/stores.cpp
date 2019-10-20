@@ -14,7 +14,6 @@ int talker;
 STextStruct stext[24];
 char stextsize;
 int stextsmax;
-int InStoreFlag;
 ItemStruct storehold[48];
 int gossipstart;
 ItemStruct witchitem[20];
@@ -29,6 +28,8 @@ int stextsel;
 char stextscrldbtn;
 int gossipend;
 BYTE *pSPentSpn2Cels;
+BYTE PentSpn2Frame;
+DWORD PentSpn2Tick;
 int stextsval;
 int boylevel;
 ItemStruct smithitem[20];
@@ -36,32 +37,6 @@ int stextdown;
 char stextscrlubtn;
 char stextflag;
 
-int SStringY[24] = {
-	0,
-	12,
-	24,
-	36,
-	48,
-	60,
-	72,
-	84,
-	96,
-	108,
-	120,
-	132,
-	144,
-	156,
-	168,
-	180,
-	192,
-	204,
-	216,
-	228,
-	240,
-	252,
-	264,
-	276
-};
 char *talkname[9] = {
 	"Griswold",
 	"Pepin",
@@ -83,7 +58,7 @@ void InitStores()
 	pSTextSlidCels = LoadFileInMem("Data\\TextSlid.CEL", NULL);
 	ClearSText(0, 24);
 	stextflag = STORE_NONE;
-	InStoreFlag = 1;
+	PentSpn2Frame = 1;
 	stextsize = 0;
 	stextscrl = FALSE;
 	numpremium = 0;
@@ -94,6 +69,15 @@ void InitStores()
 
 	boyitem._itype = ITYPE_NONE;
 	boylevel = 0;
+}
+
+void PentSpn2Spin()
+{
+	DWORD ticks = GetTickCount();
+	if (ticks - PentSpn2Tick > 50) {
+		PentSpn2Frame = (PentSpn2Frame & 7) + 1;
+		PentSpn2Tick = ticks;
+	}
 }
 
 void SetupTownStores()
@@ -133,27 +117,23 @@ void FreeStoreMem()
 void DrawSTextBack()
 {
 	CelDraw(408, 487, pSTextBoxCels, 1, 271);
-
-#define TRANS_RECT_X 347
-#define TRANS_RECT_Y 28
-#define TRANS_RECT_WIDTH 265
-#define TRANS_RECT_HEIGHT 297
-#include "asm_trans_rect.inc"
+	trans_rect(347, 28, 265, 297);
 }
 
 void PrintSString(int x, int y, BOOL cjustflag, char *str, char col, int val)
 {
 	int xx, yy;
-	int len, width, off, i, k, s;
+	int len, width, sx, sy, i, k, s;
 	BYTE c;
 	char valstr[32];
 
-	s = SStringY[y] + stext[y]._syoff;
+	s = y * 12 + stext[y]._syoff;
 	if (stextsize)
 		xx = 96;
 	else
 		xx = 416;
-	off = xx + x + PitchTbl[s + 204];
+	sx = xx + x;
+	sy = s + 204;
 	len = strlen(str);
 	if (stextsize)
 		yy = 577;
@@ -166,32 +146,32 @@ void PrintSString(int x, int y, BOOL cjustflag, char *str, char col, int val)
 			width += fontkern[fontframe[gbFontTransTbl[(BYTE)str[i]]]] + 1;
 		if (width < yy)
 			k = (yy - width) >> 1;
-		off += k;
+		sx += k;
 	}
 	if (stextsel == y) {
-		CelDraw(cjustflag ? xx + x + k - 20 : xx + x - 20, s + 205, pSPentSpn2Cels, InStoreFlag, 12);
+		CelDraw(cjustflag ? xx + x + k - 20 : xx + x - 20, s + 205, pSPentSpn2Cels, PentSpn2Frame, 12);
 	}
 	for (i = 0; i < len; i++) {
 		c = fontframe[gbFontTransTbl[(BYTE)str[i]]];
 		k += fontkern[c] + 1;
 		if (c && k <= yy) {
-			CPrintString(off, c, col);
+			CPrintString(sx, sy, c, col);
 		}
-		off += fontkern[c] + 1;
+		sx += fontkern[c] + 1;
 	}
 	if (!cjustflag && val >= 0) {
 		sprintf(valstr, "%i", val);
-		off = PitchTbl[s + 204] + 656 - x;
+		sx = 656 - x;
 		for (i = strlen(valstr) - 1; i >= 0; i--) {
 			c = fontframe[gbFontTransTbl[(BYTE)valstr[i]]];
-			off -= fontkern[c] + 1;
+			sx -= fontkern[c] + 1;
 			if (c) {
-				CPrintString(off, c, col);
+				CPrintString(sx, sy, c, col);
 			}
 		}
 	}
 	if (stextsel == y) {
-		CelDraw(cjustflag ? xx + x + k + 4 : 660 - x, s + 205, pSPentSpn2Cels, InStoreFlag, 12);
+		CelDraw(cjustflag ? xx + x + k + 4 : 660 - x, s + 205, pSPentSpn2Cels, PentSpn2Frame, 12);
 	}
 }
 
@@ -199,15 +179,15 @@ void DrawSLine(int y)
 {
 	int xy, yy, width, line, sy;
 
-	sy = SStringY[y];
+	sy = y * 12;
 	if (stextsize == 1) {
 		xy = SCREENXY(26, 25);
-		yy = PitchTbl[sy + 198] + 26 + 64;
+		yy = BUFFER_WIDTH * (sy + 198) + 26 + 64;
 		width = 586 / 4;
 		line = BUFFER_WIDTH - 586;
 	} else {
 		xy = SCREENXY(346, 25);
-		yy = PitchTbl[sy + 198] + 346 + 64;
+		yy = BUFFER_WIDTH * (sy + 198) + 346 + 64;
 		width = 266 / 4;
 		line = BUFFER_WIDTH - 266;
 	}
@@ -228,8 +208,8 @@ void DrawSArrows(int y1, int y2)
 {
 	int yd1, yd2, yd3;
 
-	yd1 = SStringY[y1] + 204;
-	yd2 = SStringY[y2] + 204;
+	yd1 = y1 * 12 + 204;
+	yd2 = y2 * 12 + 204;
 	if (stextscrlubtn != -1)
 		CelDraw(665, yd1, pSTextSlidCels, 12, 12);
 	else
@@ -247,10 +227,10 @@ void DrawSArrows(int y1, int y2)
 	else
 		yd3 = stextsel;
 	if (storenumh > 1)
-		yd3 = 1000 * (stextsval + ((yd3 - stextup) >> 2)) / (storenumh - 1) * (SStringY[y2] - SStringY[y1] - 24) / 1000;
+		yd3 = 1000 * (stextsval + ((yd3 - stextup) >> 2)) / (storenumh - 1) * (y2 * 12 - y1 * 12 - 24) / 1000;
 	else
 		yd3 = 0;
-	CelDraw(665, SStringY[y1 + 1] + 204 + yd3, pSTextSlidCels, 13, 12);
+	CelDraw(665, (y1 + 1) * 12 + 204 + yd3, pSTextSlidCels, 13, 12);
 }
 
 void DrawSTextHelp()
@@ -1567,7 +1547,7 @@ void DrawSText()
 	if (stextscrl)
 		DrawSArrows(4, 20);
 
-	InStoreFlag = (InStoreFlag & 7) + 1;
+	PentSpn2Spin();
 }
 
 void STextESC()

@@ -84,7 +84,7 @@ void ClrDiabloMsg()
 
 void DrawDiabloMsg()
 {
-	int i, len, off, width, sx, sy;
+	int i, len, width, sx, sy;
 	BYTE c;
 
 	CelDraw(165, 318, pSTextSlidCels, 1, 12);
@@ -107,14 +107,11 @@ void DrawDiabloMsg()
 
 	/// ASSERT: assert(gpBuffer);
 
-#define TRANS_RECT_X 104
-#define TRANS_RECT_Y 150
-#define TRANS_RECT_WIDTH 432
-#define TRANS_RECT_HEIGHT 54
-#include "asm_trans_rect.inc"
+	trans_rect(104, 150, 432, 54);
 
 	strcpy(tempstr, MsgStrings[msgflag]);
-	off = 165 + PitchTbl[342];
+	sx = 165;
+	sy = 342;
 	len = strlen(tempstr);
 	width = 0;
 
@@ -123,15 +120,15 @@ void DrawDiabloMsg()
 	}
 
 	if (width < 442) {
-		off += (442 - width) >> 1;
+		sx += (442 - width) >> 1;
 	}
 
 	for (i = 0; i < len; i++) {
 		c = fontframe[gbFontTransTbl[(BYTE)tempstr[i]]];
 		if (c != '\0') {
-			CPrintString(off, c, COL_GOLD);
+			CPrintString(sx, sy, c, COL_GOLD);
 		}
-		off += fontkern[c] + 1;
+		sx += fontkern[c] + 1;
 	}
 
 	if (msgdelay > 0) {

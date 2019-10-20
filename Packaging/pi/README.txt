@@ -11,7 +11,9 @@ GitHub: https://github.com/diasurgical/devilutionX
  - Run ./devilutionx
 
 # Raspberry Pi performance
+ - This build is compiled for Raspbian Buster
  - For the best experience set upscale=0 in diablo.ini and set the system resolution to 640x480
+ - Alternatly you can enable experimental GL-drivers via raspi-config for upscaling support
 
 # Multiplayer
  - TCP/IP only requires the host to expose port 6112

@@ -20,7 +20,6 @@ BOOL drawmanaflag;
 BOOL chrbtnactive;
 char sgszTalkMsg[MAX_SEND_STR_LEN];
 BYTE *pPanelText;
-int nGoldFrame;
 BYTE *pLifeBuff;
 BYTE *pBtmBuff;
 BYTE *pTalkBtns;
@@ -38,7 +37,6 @@ char tempstr[256];
 BOOLEAN whisper[MAX_PLRS];
 int sbooktab;
 int pSplType;
-int frame;
 int initialDropGoldIndex;
 BOOL talkflag;
 BYTE *pSBkIconCels;
@@ -77,32 +75,12 @@ const BYTE fontkern[68] = {
 	3, 2, 7, 6, 3, 10, 10, 6, 6, 7,
 	4, 4, 9, 6, 6, 12, 3, 7
 };
-const int lineoffset[25] = {
-	BUFFER_WIDTH * 594 + 241,
-	BUFFER_WIDTH * 32,
-	BUFFER_WIDTH * 32,
-	BUFFER_WIDTH * 32,
-	BUFFER_WIDTH * 32 + 180,
-	BUFFER_WIDTH * 582 + 241,
-	BUFFER_WIDTH * 606 + 241,
-	BUFFER_WIDTH * 32,
-	BUFFER_WIDTH * 32,
-	BUFFER_WIDTH * 32,
-	BUFFER_WIDTH * 576 + 241,
-	BUFFER_WIDTH * 594 + 241,
-	BUFFER_WIDTH * 612 + 241,
-	BUFFER_WIDTH * 32,
-	BUFFER_WIDTH * 32,
-	BUFFER_WIDTH * 572 + 241,
-	BUFFER_WIDTH * 587 + 241,
-	BUFFER_WIDTH * 601 + 241,
-	BUFFER_WIDTH * 616 + 241,
-	BUFFER_WIDTH * 32,
-	BUFFER_WIDTH * 570 + 241,
-	BUFFER_WIDTH * 582 + 241,
-	BUFFER_WIDTH * 594 + 241,
-	BUFFER_WIDTH * 606 + 241,
-	BUFFER_WIDTH * 617 + 241
+const int lineOffsets[5][5] = {
+	{ 434 },
+	{ 422, 446 },
+	{ 416, 434, 452 },
+	{ 412, 427, 441, 456 },
+	{ 410, 422, 434, 446, 457 },
 };
 const BYTE gbFontTransTbl[256] = {
 	// clang-format off
@@ -172,11 +150,7 @@ int SpellPages[6][7] = {
 
 void DrawSpellCel(int xp, int yp, BYTE *pCelBuff, int nCel, int nWidth)
 {
-	int nDataSize;
-	BYTE *pRLEBytes;
-
-	pRLEBytes = CelGetFrame(pCelBuff, nCel, &nDataSize);
-	CelBlitLight(&gpBuffer[xp + PitchTbl[yp]], pRLEBytes, nDataSize, nWidth, SplTransTbl);
+	CelDrawLight(xp, yp, pCelBuff, nCel, nWidth, SplTransTbl);
 }
 
 void SetSpellTrans(char t)
@@ -441,92 +415,50 @@ void ToggleSpell(int slot)
 	}
 }
 
-void CPrintString(int nOffset, int nCel, char col)
+void CPrintString(int sx, int sy, int nCel, char col)
 {
 	/// ASSERT: assert(gpBuffer);
 
-	int i, nDataSize;
-	BYTE width, pix;
-	BYTE *src, *dst, *end;
-
-	src = CelGetFrame(pPanelText, nCel, &nDataSize);
-	end = &src[nDataSize];
-	dst = &gpBuffer[nOffset];
+	int i;
+	BYTE pix;
+	BYTE tbl[256];
 
 	switch (col) {
 	case COL_WHITE:
-		CelBlit(dst, src, nDataSize, 13);
-		break;
+		CelDraw(sx, sy, pPanelText, nCel, 13);
+		return;
 	case COL_BLUE:
-		for (; src != end; dst -= BUFFER_WIDTH + 13) {
-			for (i = 13; i;) {
-				width = *src++;
-				if (!(width & 0x80)) {
-					i -= width;
-					while (width) {
-						pix = *src++;
-						if (pix > PAL16_GRAY + 13)
-							pix = PAL16_BLUE + 15;
-						else if (pix >= PAL16_GRAY)
-							pix -= PAL16_GRAY - (PAL16_BLUE + 2);
-						*dst++ = pix;
-						width--;
-					}
-				} else {
-					width = -(char)width;
-					dst += width;
-					i -= width;
-				}
-			}
+		for (i = 0; i < 256; i++) {
+			pix = i;
+			if (pix > PAL16_GRAY + 13)
+				pix = PAL16_BLUE + 15;
+			else if (pix >= PAL16_GRAY)
+				pix -= PAL16_GRAY - (PAL16_BLUE + 2);
+			tbl[i] = pix;
 		}
 		break;
 	case COL_RED:
-		for (; src != end; dst -= BUFFER_WIDTH + 13) {
-			for (i = 13; i;) {
-				width = *src++;
-				if (!(width & 0x80)) {
-					i -= width;
-					while (width) {
-						pix = *src++;
-						if (pix >= PAL16_GRAY)
-							pix -= PAL16_GRAY - PAL16_RED;
-						*dst++ = pix;
-						width--;
-					}
-				} else {
-					width = -(char)width;
-					dst += width;
-					i -= width;
-				}
-			}
+		for (i = 0; i < 256; i++) {
+			pix = i;
+			if (pix >= PAL16_GRAY)
+				pix -= PAL16_GRAY - PAL16_RED;
+			tbl[i] = pix;
 		}
 		break;
 	default:
-		for (; src != end; dst -= BUFFER_WIDTH + 13) {
-			for (i = 13; i;) {
-				width = *src++;
-				if (!(width & 0x80)) {
-					i -= width;
-					while (width) {
-						pix = *src++;
-						if (pix >= PAL16_GRAY) {
-							if (pix >= PAL16_GRAY + 14)
-								pix = PAL16_YELLOW + 15;
-							else
-								pix -= PAL16_GRAY - (PAL16_YELLOW + 2);
-						}
-						*dst++ = pix;
-						width--;
-					}
-				} else {
-					width = -(char)width;
-					dst += width;
-					i -= width;
-				}
+		for (i = 0; i < 256; i++) {
+			pix = i;
+			if (pix >= PAL16_GRAY) {
+				if (pix >= PAL16_GRAY + 14)
+					pix = PAL16_YELLOW + 15;
+				else
+					pix -= PAL16_GRAY - (PAL16_YELLOW + 2);
 			}
+			tbl[i] = pix;
 		}
 		break;
 	}
+	CelDrawLight(sx, sy, pPanelText, nCel, 13, tbl);
 }
 
 void AddPanelString(char *str, BOOL just)
@@ -795,7 +727,7 @@ void InitControlPan()
 	dropGoldValue = 0;
 	initialDropGoldValue = 0;
 	initialDropGoldIndex = 0;
-	nGoldFrame = 1;
+	PentSpn2Frame = 1;
 }
 
 void ClearCtrlPan()
@@ -1223,45 +1155,47 @@ void control_print_info_str(int y, char *str, BOOL center, int lines)
 {
 	BYTE c;
 	char *tmp;
-	int screen_x, line, nOffset;
+	int lineOffset, strWidth, sx, sy;
 
-	line = 0;
-	nOffset = lineoffset[y + 4 * lines + lines] + (SCREEN_WIDTH - PANEL_WIDTH) / 2;
+	lineOffset = 0;
+	sx = 177 + SCREEN_X;
+	sy = lineOffsets[lines][y] + (SCREEN_WIDTH - PANEL_WIDTH) / 2 + SCREEN_Y;
 	if (center == 1) {
-		screen_x = 0;
+		strWidth = 0;
 		tmp = str;
 		while (*tmp) {
 			c = gbFontTransTbl[(BYTE)*tmp++];
-			screen_x += fontkern[fontframe[c]] + 1;
+			strWidth += fontkern[fontframe[c]] + 1;
 		}
-		if (screen_x < 288)
-			line = (288 - screen_x) >> 1;
-		nOffset += line;
+		if (strWidth < 288)
+			lineOffset = (288 - strWidth) >> 1;
+		sx += lineOffset;
 	}
 	while (*str) {
 		c = gbFontTransTbl[(BYTE)*str++];
 		c = fontframe[c];
-		line += fontkern[c] + 2;
+		lineOffset += fontkern[c] + 2;
 		if (c) {
-			if (line < 288) {
-				CPrintString(nOffset, c, infoclr);
+			if (lineOffset < 288) {
+				CPrintString(sx, sy, c, infoclr);
 			}
 		}
-		nOffset += fontkern[c] + 2;
+		sx += fontkern[c] + 2;
 	}
 }
 
 void PrintGameStr(int x, int y, char *str, int color)
 {
 	BYTE c;
-	int off;
-	off = PitchTbl[y + SCREEN_Y] + x + SCREEN_X;
+	int sx, sy;
+	sx = x + SCREEN_X;
+	sy = y + SCREEN_Y;
 	while (*str) {
 		c = gbFontTransTbl[(BYTE)*str++];
 		c = fontframe[c];
 		if (c)
-			CPrintString(off, c, color);
-		off += fontkern[c] + 1;
+			CPrintString(sx, sy, c, color);
+		sx += fontkern[c] + 1;
 	}
 }
 
@@ -1475,9 +1409,10 @@ void MY_PlrStringXY(int x, int y, int width, char *pszStr, char col, int base)
 {
 	BYTE c;
 	char *tmp;
-	int nOffset, screen_x, line, widthOffset;
+	int sx, sy, screen_x, line, widthOffset;
 
-	nOffset = x + PitchTbl[y + SCREEN_Y] + SCREEN_X;
+	sx = x + SCREEN_X;
+	sy = y + SCREEN_Y;
 	widthOffset = width - x + 1;
 	line = 0;
 	screen_x = 0;
@@ -1488,16 +1423,16 @@ void MY_PlrStringXY(int x, int y, int width, char *pszStr, char col, int base)
 	}
 	if (screen_x < widthOffset)
 		line = (widthOffset - screen_x) >> 1;
-	nOffset += line;
+	sx += line;
 	while (*pszStr) {
 		c = gbFontTransTbl[(BYTE)*pszStr++];
 		c = fontframe[c];
 		line += fontkern[c] + base;
 		if (c) {
 			if (line < widthOffset)
-				CPrintString(nOffset, c, col);
+				CPrintString(sx, sy, c, col);
 		}
-		nOffset += fontkern[c] + base;
+		sx += fontkern[c] + base;
 	}
 }
 
@@ -1772,9 +1707,9 @@ void PrintSBookStr(int x, int y, BOOL cjustflag, char *pszStr, char col)
 {
 	BYTE c;
 	char *tmp;
-	int screen_x, line, width;
+	int screen_x, line, sx;
 
-	width = PitchTbl[y] + x + SCREEN_WIDTH - 320 + 120;;
+	sx = x + SCREEN_WIDTH - 320 + 120;
 	line = 0;
 	if (cjustflag) {
 		screen_x = 0;
@@ -1785,7 +1720,7 @@ void PrintSBookStr(int x, int y, BOOL cjustflag, char *pszStr, char col)
 		}
 		if (screen_x < 222)
 			line = (222 - screen_x) >> 1;
-		width += line;
+		sx += line;
 	}
 	while (*pszStr) {
 		c = gbFontTransTbl[(BYTE)*pszStr++];
@@ -1793,9 +1728,9 @@ void PrintSBookStr(int x, int y, BOOL cjustflag, char *pszStr, char col)
 		line += fontkern[c] + 1;
 		if (c) {
 			if (line <= 222)
-				CPrintString(width, c, col);
+				CPrintString(sx, y, c, col);
 		}
-		width += fontkern[c] + 1;
+		sx += fontkern[c] + 1;
 	}
 }
 
@@ -1857,8 +1792,8 @@ void DrawGoldSplit(int amount)
 	} else {
 		screen_x = 450;
 	}
-	CelDraw(screen_x, 140 + SCREEN_Y, pSPentSpn2Cels, nGoldFrame, 12);
-	nGoldFrame = (nGoldFrame & 7) + 1;
+	CelDraw(screen_x, 140 + SCREEN_Y, pSPentSpn2Cels, PentSpn2Frame, 12);
+	PentSpn2Spin();
 }
 
 void control_drop_gold(char vkey)
@@ -1958,14 +1893,15 @@ void DrawTalkPan()
 	DrawPanelBox(170, sgbPlrTalkTbl + 80, 310, 55, 234, 576);
 	msg = sgszTalkMsg;
 	for (i = 0; i < 39; i += 13) {
-		msg = control_print_talk_msg(msg, 0, i, &x, 0);
+		x = 0;
+		msg = control_print_talk_msg(msg, &x, i, 0);
 		if (!msg)
 			break;
 	}
 	if (msg)
 		*msg = '\0';
-	CelBlitFrame(gpBuffer + x, pSPentSpn2Cels, frame, 12);
-	frame = (frame & 7) + 1;
+	CelDraw(x, i + 534, pSPentSpn2Cels, PentSpn2Frame, 12);
+	PentSpn2Spin();
 	talk_btn = 0;
 	for (i = 0; i < 4; i++) {
 		if (i == myplr)
@@ -1990,21 +1926,21 @@ void DrawTalkPan()
 			CelDraw(172 + SCREEN_X, 436 + 18 * talk_btn + SCREEN_Y, pTalkBtns, nCel, 61);
 		}
 		if (plr[i].plractive) {
-			control_print_talk_msg(plr[i]._pName, 46, 60 + talk_btn * 18, &x, color);
+			x = 46;
+			control_print_talk_msg(plr[i]._pName, &x, 60 + talk_btn * 18, color);
 		}
 
 		talk_btn++;
 	}
 }
 
-char *control_print_talk_msg(char *msg, int x, int y, int *nOffset, int color)
+char *control_print_talk_msg(char *msg, int *x, int y, int color)
 {
 	BYTE c;
 	int width;
 
-	x += 264;
-	width = x;
-	*nOffset = PitchTbl[y + 534] + x;
+	*x += 264;
+	width = *x;
 	while (*msg) {
 
 		c = fontframe[gbFontTransTbl[(BYTE)*msg]];
@@ -2013,9 +1949,9 @@ char *control_print_talk_msg(char *msg, int x, int y, int *nOffset, int color)
 			return msg;
 		msg++;
 		if (c) {
-			CPrintString(*nOffset, c, color);
+			CPrintString(*x, y + 534, c, color);
 		}
-		*nOffset += fontkern[c] + 1;
+		*x += fontkern[c] + 1;
 	}
 	return NULL;
 }
@@ -2087,7 +2023,7 @@ void control_type_message()
 
 	talkflag = TRUE;
 	sgszTalkMsg[0] = 0;
-	frame = 1;
+	PentSpn2Frame = 1;
 	for (i = 0; i < 3; i++) {
 		talkbtndown[i] = FALSE;
 	}

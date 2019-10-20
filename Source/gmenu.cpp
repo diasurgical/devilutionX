@@ -165,7 +165,7 @@ void gmenu_draw()
 		}
 
 		ticks = GetTickCount();
-		if ((int)(ticks - PentSpin_tick) > 25) {
+		if ((int)(ticks - PentSpin_tick) > 50) {
 			PentSpin_frame++;
 			if (PentSpin_frame == 9)
 				PentSpin_frame = 1;
@@ -203,7 +203,7 @@ void gmenu_clear_buffer(int x, int y, int width, int height)
 {
 	BYTE *i;
 
-	i = gpBuffer + PitchTbl[y] + x;
+	i = gpBuffer + BUFFER_WIDTH * y + x;
 	while (height--) {
 		memset(i, 205, width);
 		i -= BUFFER_WIDTH;

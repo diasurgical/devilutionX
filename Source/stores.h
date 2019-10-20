@@ -14,7 +14,6 @@ extern int talker;
 extern STextStruct stext[24];
 extern char stextsize;
 extern int stextsmax;
-extern int InStoreFlag;
 extern ItemStruct storehold[48];
 extern int gossipstart;
 extern ItemStruct witchitem[20];
@@ -29,6 +28,7 @@ extern int stextsel;
 extern char stextscrldbtn;
 extern int gossipend;
 extern BYTE *pSPentSpn2Cels;
+extern BYTE PentSpn2Frame;
 extern int stextsval;
 extern int boylevel;
 extern ItemStruct smithitem[20];
@@ -37,6 +37,7 @@ extern char stextscrlubtn;
 extern char stextflag;
 
 void InitStores();
+void PentSpn2Spin();
 void SetupTownStores();
 void FreeStoreMem();
 void DrawSTextBack();
@@ -134,7 +135,6 @@ void ReleaseStoreBtn();
 
 /* rdata */
 
-extern int SStringY[24];
 extern char *talkname[9];
 
 #endif /* __STORES_H__ */
