@@ -789,8 +789,8 @@ void RightMouseDown()
 		} else if (!stextflag) {
 			if (spselflag) {
 				SetSpell();
-			} else if (MouseY >= PANEL_TOP
-			    || (!sbookflag || MouseX <= 320)
+			} else if (MouseY >= 352
+			    || (!sbookflag || (MouseX <= SCREEN_WIDTH - 320))
 			        && !TryIconCurs()
 			        && (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem))) {
 				if (pcurs == 1) {
