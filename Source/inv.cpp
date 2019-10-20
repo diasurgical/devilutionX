@@ -10,71 +10,71 @@ int sgdwLastTime; // check name
 const InvXY InvRect[73] = {
 	// clang-format off
 	//  X,   Y
-	{ 452,  31 }, // helmet
-	{ 480,  31 }, // helmet
-	{ 452,  59 }, // helmet
-	{ 480,  59 }, // helmet
-	{ 365, 205 }, // left ring
-	{ 567, 205 }, // right ring
-	{ 524,  59 }, // amulet
-	{ 337, 104 }, // left hand
-	{ 366, 104 }, // left hand
-	{ 337, 132 }, // left hand
-	{ 366, 132 }, // left hand
-	{ 337, 160 }, // left hand
-	{ 366, 160 }, // left hand
-	{ 567, 104 }, // right hand
-	{ 596, 104 }, // right hand
-	{ 567, 132 }, // right hand
-	{ 596, 132 }, // right hand
-	{ 567, 160 }, // right hand
-	{ 596, 160 }, // right hand
-	{ 452, 104 }, // chest
-	{ 480, 104 }, // chest
-	{ 452, 132 }, // chest
-	{ 480, 132 }, // chest
-	{ 452, 160 }, // chest
-	{ 480, 160 }, // chest
-	{ 337, 250 }, // inv row 1
-	{ 366, 250 }, // inv row 1
-	{ 394, 250 }, // inv row 1
-	{ 423, 250 }, // inv row 1
-	{ 451, 250 }, // inv row 1
-	{ 480, 250 }, // inv row 1
-	{ 509, 250 }, // inv row 1
-	{ 538, 250 }, // inv row 1
-	{ 567, 250 }, // inv row 1
-	{ 596, 250 }, // inv row 1
-	{ 337, 279 }, // inv row 2
-	{ 366, 279 }, // inv row 2
-	{ 394, 279 }, // inv row 2
-	{ 423, 279 }, // inv row 2
-	{ 451, 279 }, // inv row 2
-	{ 480, 279 }, // inv row 2
-	{ 509, 279 }, // inv row 2
-	{ 538, 279 }, // inv row 2
-	{ 567, 279 }, // inv row 2
-	{ 596, 279 }, // inv row 2
-	{ 337, 308 }, // inv row 3
-	{ 366, 308 }, // inv row 3
-	{ 394, 308 }, // inv row 3
-	{ 423, 308 }, // inv row 3
-	{ 451, 308 }, // inv row 3
-	{ 480, 308 }, // inv row 3
-	{ 509, 308 }, // inv row 3
-	{ 538, 308 }, // inv row 3
-	{ 567, 308 }, // inv row 3
-	{ 596, 308 }, // inv row 3
-	{ 337, 336 }, // inv row 4
-	{ 366, 336 }, // inv row 4
-	{ 394, 336 }, // inv row 4
-	{ 423, 336 }, // inv row 4
-	{ 451, 336 }, // inv row 4
-	{ 480, 336 }, // inv row 4
-	{ 509, 336 }, // inv row 4
-	{ 538, 336 }, // inv row 4
-	{ 567, 336 }, // inv row 4
-	{ 596, 336 }, // inv row 4
+	{ 452+WIDTH_DIFF,  31 }, // helmet
+	{ 480+WIDTH_DIFF,  31 }, // helmet
+	{ 452+WIDTH_DIFF,  59 }, // helmet
+	{ 480+WIDTH_DIFF,  59 }, // helmet
+	{ 365+WIDTH_DIFF, 205 }, // left ring
+	{ 567+WIDTH_DIFF, 205 }, // right ring
+	{ 524+WIDTH_DIFF,  59 }, // amulet
+	{ 337+WIDTH_DIFF, 104 }, // left hand
+	{ 366+WIDTH_DIFF, 104 }, // left hand
+	{ 337+WIDTH_DIFF, 132 }, // left hand
+	{ 366+WIDTH_DIFF, 132 }, // left hand
+	{ 337+WIDTH_DIFF, 160 }, // left hand
+	{ 366+WIDTH_DIFF, 160 }, // left hand
+	{ 567+WIDTH_DIFF, 104 }, // right hand
+	{ 596+WIDTH_DIFF, 104 }, // right hand
+	{ 567+WIDTH_DIFF, 132 }, // right hand
+	{ 596+WIDTH_DIFF, 132 }, // right hand
+	{ 567+WIDTH_DIFF, 160 }, // right hand
+	{ 596+WIDTH_DIFF, 160 }, // right hand
+	{ 452+WIDTH_DIFF, 104 }, // chest
+	{ 480+WIDTH_DIFF, 104 }, // chest
+	{ 452+WIDTH_DIFF, 132 }, // chest
+	{ 480+WIDTH_DIFF, 132 }, // chest
+	{ 452+WIDTH_DIFF, 160 }, // chest
+	{ 480+WIDTH_DIFF, 160 }, // chest
+	{ 337+WIDTH_DIFF, 250 }, // inv row 1
+	{ 366+WIDTH_DIFF, 250 }, // inv row 1
+	{ 394+WIDTH_DIFF, 250 }, // inv row 1
+	{ 423+WIDTH_DIFF, 250 }, // inv row 1
+	{ 451+WIDTH_DIFF, 250 }, // inv row 1
+	{ 480+WIDTH_DIFF, 250 }, // inv row 1
+	{ 509+WIDTH_DIFF, 250 }, // inv row 1
+	{ 538+WIDTH_DIFF, 250 }, // inv row 1
+	{ 567+WIDTH_DIFF, 250 }, // inv row 1
+	{ 596+WIDTH_DIFF, 250 }, // inv row 1
+	{ 337+WIDTH_DIFF, 279 }, // inv row 2
+	{ 366+WIDTH_DIFF, 279 }, // inv row 2
+	{ 394+WIDTH_DIFF, 279 }, // inv row 2
+	{ 423+WIDTH_DIFF, 279 }, // inv row 2
+	{ 451+WIDTH_DIFF, 279 }, // inv row 2
+	{ 480+WIDTH_DIFF, 279 }, // inv row 2
+	{ 509+WIDTH_DIFF, 279 }, // inv row 2
+	{ 538+WIDTH_DIFF, 279 }, // inv row 2
+	{ 567+WIDTH_DIFF, 279 }, // inv row 2
+	{ 596+WIDTH_DIFF, 279 }, // inv row 2
+	{ 337+WIDTH_DIFF, 308 }, // inv row 3
+	{ 366+WIDTH_DIFF, 308 }, // inv row 3
+	{ 394+WIDTH_DIFF, 308 }, // inv row 3
+	{ 423+WIDTH_DIFF, 308 }, // inv row 3
+	{ 451+WIDTH_DIFF, 308 }, // inv row 3
+	{ 480+WIDTH_DIFF, 308 }, // inv row 3
+	{ 509+WIDTH_DIFF, 308 }, // inv row 3
+	{ 538+WIDTH_DIFF, 308 }, // inv row 3
+	{ 567+WIDTH_DIFF, 308 }, // inv row 3
+	{ 596+WIDTH_DIFF, 308 }, // inv row 3
+	{ 337+WIDTH_DIFF, 336 }, // inv row 4
+	{ 366+WIDTH_DIFF, 336 }, // inv row 4
+	{ 394+WIDTH_DIFF, 336 }, // inv row 4
+	{ 423+WIDTH_DIFF, 336 }, // inv row 4
+	{ 451+WIDTH_DIFF, 336 }, // inv row 4
+	{ 480+WIDTH_DIFF, 336 }, // inv row 4
+	{ 509+WIDTH_DIFF, 336 }, // inv row 4
+	{ 538+WIDTH_DIFF, 336 }, // inv row 4
+	{ 567+WIDTH_DIFF, 336 }, // inv row 4
+	{ 596+WIDTH_DIFF, 336 }, // inv row 4
 	{ 205+WIDTH_DIFF_2, 385+HEIGHT_DIFF }, // belt
 	{ 234+WIDTH_DIFF_2, 385+HEIGHT_DIFF }, // belt
 	{ 263+WIDTH_DIFF_2, 385+HEIGHT_DIFF }, // belt
