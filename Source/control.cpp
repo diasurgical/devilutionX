@@ -759,11 +759,11 @@ void DrawCtrlPan()
 			CelDraw(PanBtnPos[i][0] + SCREEN_X, PanBtnPos[i][1] + SCREEN_Y + 18, pPanelButtons, i + 1, 71);
 	}
 	if (numpanbtns == 8) {
-		CelDraw(87 + SCREEN_X, 474 + SCREEN_Y, pMultiBtns, panbtn[6] + 1, 33);
+		CelDraw(PanBtnPos[6][0] + SCREEN_X, 474 + SCREEN_Y + HEIGHT_DIFF, pMultiBtns, panbtn[6] + 1, 33);
 		if (FriendlyMode)
-			CelDraw(527 + SCREEN_X, 474 + SCREEN_Y, pMultiBtns, panbtn[7] + 3, 33);
+			CelDraw(PanBtnPos[7][0] + SCREEN_X, 474 + SCREEN_Y + HEIGHT_DIFF, pMultiBtns, panbtn[7] + 3, 33);
 		else
-			CelDraw(527 + SCREEN_X, 474 + SCREEN_Y, pMultiBtns, panbtn[7] + 5, 33);
+			CelDraw(PanBtnPos[7][0] + SCREEN_X, 474 + SCREEN_Y + HEIGHT_DIFF, pMultiBtns, panbtn[7] + 5, 33);
 	}
 }
 
@@ -964,7 +964,7 @@ void CheckPanelInfo()
 			}
 		}
 	}
-	if (MouseX > 190 + WIDTH_DIFF_2 && MouseX + WIDTH_DIFF_2 < 437 && MouseY+HEIGHT_DIFF > 356 && MouseY < 385+HEIGHT_DIFF)
+	if (MouseX > 190 + WIDTH_DIFF_2 && MouseX < 437 + WIDTH_DIFF_2 && MouseY > 356 + HEIGHT_DIFF && MouseY < 385 + HEIGHT_DIFF) // TODO: create belt enums
 		pcursinvitem = CheckInvHLight();
 }
 
@@ -1171,7 +1171,10 @@ void control_print_info_str(int y, char *str, BOOL center, int lines)
 
 	lineOffset = 0;
 	sx = 177 + SCREEN_X;
-	sy = lineOffsets[lines][y] + (SCREEN_WIDTH - PANEL_WIDTH) / 2 + SCREEN_Y;
+	sy = lineOffsets[lines][y] + SCREEN_Y;
+
+	sx += WIDTH_DIFF_2;
+	sy += HEIGHT_DIFF;
 	if (center == 1) {
 		strWidth = 0;
 		tmp = str;
@@ -1912,7 +1915,7 @@ void DrawTalkPan()
 	}
 	if (msg)
 		*msg = '\0';
-	CelDraw(x, i + 534, pSPentSpn2Cels, PentSpn2Frame, 12);
+	CelDraw(x, i + 534 + HEIGHT_DIFF, pSPentSpn2Cels, PentSpn2Frame, 12);
 	PentSpn2Spin();
 	talk_btn = 0;
 	for (i = 0; i < 4; i++) {
@@ -1925,7 +1928,7 @@ void DrawTalkPan()
 					nCel = 4;
 				else
 					nCel = 3;
-				CelDraw(172 + SCREEN_X, 436 + 18 * talk_btn + SCREEN_Y, pTalkBtns, nCel, 61);
+				CelDraw(172 + SCREEN_X + WIDTH_DIFF_2, 436 + 18 * talk_btn + SCREEN_Y + HEIGHT_DIFF, pTalkBtns, nCel, 61);
 			}
 		} else {
 			color = COL_RED;
@@ -1935,7 +1938,7 @@ void DrawTalkPan()
 				nCel = 1;
 			if (talkbtndown[talk_btn])
 				nCel += 4;
-			CelDraw(172 + SCREEN_X, 436 + 18 * talk_btn + SCREEN_Y, pTalkBtns, nCel, 61);
+			CelDraw(172 + SCREEN_X + WIDTH_DIFF_2, 436 + 18 * talk_btn + SCREEN_Y + HEIGHT_DIFF, pTalkBtns, nCel, 61);
 		}
 		if (plr[i].plractive) {
 			x = 46;
@@ -1950,6 +1953,8 @@ char *control_print_talk_msg(char *msg, int *x, int y, int color)
 {
 	BYTE c;
 	int width;
+	*x += WIDTH_DIFF_2;
+	y += HEIGHT_DIFF;
 
 	*x += 264;
 	width = *x;
@@ -1957,7 +1962,7 @@ char *control_print_talk_msg(char *msg, int *x, int y, int color)
 
 		c = fontframe[gbFontTransTbl[(BYTE)*msg]];
 		width += fontkern[c] + 1;
-		if (width > 514)
+		if (width > 514+WIDTH_DIFF_2)
 			return msg;
 		msg++;
 		if (c) {
@@ -1975,20 +1980,20 @@ BOOL control_check_talk_btn()
 	if (!talkflag)
 		return FALSE;
 
-	if (MouseX < 172)
+	if (MouseX < 172 + WIDTH_DIFF_2)
 		return FALSE;
-	if (MouseY < 421)
+	if (MouseY < 421 + HEIGHT_DIFF)
 		return FALSE;
-	if (MouseX > 233)
+	if (MouseX > 233 + WIDTH_DIFF_2)
 		return FALSE;
-	if (MouseY > 475)
+	if (MouseY > 475 + HEIGHT_DIFF)
 		return FALSE;
 
 	for (i = 0; i < sizeof(talkbtndown) / sizeof(talkbtndown[0]); i++) {
 		talkbtndown[i] = FALSE;
 	}
 
-	talkbtndown[(MouseY - 421) / 18] = TRUE;
+	talkbtndown[(MouseY - 421 - HEIGHT_DIFF) / 18] = TRUE;
 
 	return TRUE;
 }
@@ -2000,8 +2005,8 @@ void control_release_talk_btn()
 	if (talkflag) {
 		for (i = 0; i < sizeof(talkbtndown) / sizeof(talkbtndown[0]); i++)
 			talkbtndown[i] = FALSE;
-		if (MouseX >= 172 && MouseY >= 421 && MouseX <= 233 && MouseY <= 475) {
-			off = (MouseY - 421) / 18;
+		if (MouseX >= 172 + WIDTH_DIFF_2 && MouseY >= 421 + HEIGHT_DIFF && MouseX <= 233 + WIDTH_DIFF_2 && MouseY <= 475 + HEIGHT_DIFF) {
+			off = (MouseY - 421 - HEIGHT_DIFF) / 18;
 
 			for (p = 0; p < MAX_PLRS && off != -1; p++) {
 				if (p != myplr)
