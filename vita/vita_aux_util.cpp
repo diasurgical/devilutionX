@@ -257,7 +257,6 @@ void VitaAux::init()
 	}
 	VitaAux::initVitaTouch();
 	VitaAux::initVitaButtons();
-	VitaAux::testTouch();
 	if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) || !(IMG_Init(IMG_INIT_JPG) & IMG_INIT_JPG)) {
 		char sdl_image_error[200];
 		sprintf(sdl_image_error, "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
