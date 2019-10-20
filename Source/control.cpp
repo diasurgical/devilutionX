@@ -230,9 +230,9 @@ void DrawSpell()
 		st = RSPLTYPE_INVALID;
 	SetSpellTrans(st);
 	if (spl != SPL_INVALID)
-		DrawSpellCel(629, 631, pSpellCels, SpellITbl[spl], 56);
+		DrawSpellCel(629 + WIDTH_DIFF_2, 631 + HEIGHT_DIFF, pSpellCels, SpellITbl[spl], 56);
 	else
-		DrawSpellCel(629, 631, pSpellCels, 27, 56);
+		DrawSpellCel(629 + WIDTH_DIFF_2, 631 + HEIGHT_DIFF, pSpellCels, 27, 56);
 }
 
 void DrawSpellList()
@@ -490,7 +490,6 @@ void DrawPanelBox(int x, int y, int w, int h, int sx, int sy)
 
 	src = &pBtmBuff[nSrcOff];
 	dst = &gpBuffer[nDstOff];
-
 
 	for (hgt = h; hgt; hgt--, src += PANEL_WIDTH - w, dst += BUFFER_WIDTH - w) {
 		wdt = w;
@@ -833,7 +832,7 @@ void DoPanBtn()
 			}
 		}
 	}
-	if (!spselflag && MouseX >= 565 && MouseX < 621 && MouseY >= 416 && MouseY < 472) {
+	if (!spselflag && MouseX >= 565 + WIDTH_DIFF_2 && MouseX < 621 + WIDTH_DIFF_2 && MouseY >= 416+HEIGHT_DIFF && MouseY < 472+HEIGHT_DIFF) {
 		DoSpeedBook();
 		gamemenu_off();
 	}
@@ -902,7 +901,7 @@ void CheckPanelInfo()
 			pinfoflag = TRUE;
 		}
 	}
-	if (!spselflag && MouseX >= 565 && MouseX < 621 && MouseY >= 416 && MouseY < 472) {
+	if (!spselflag && MouseX >= 565 + WIDTH_DIFF_2 && MouseX < 621 + WIDTH_DIFF_2 && MouseY >= 416 + HEIGHT_DIFF && MouseY < 472 + HEIGHT_DIFF) {
 		strcpy(infostr, "Select current spell button");
 		infoclr = COL_WHITE;
 		panelflag = TRUE;
