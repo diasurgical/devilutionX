@@ -87,31 +87,31 @@ void DrawDiabloMsg()
 	int i, len, width, sx, sy;
 	BYTE c;
 
-	CelDraw(165, 318, pSTextSlidCels, 1, 12);
-	CelDraw(591, 318, pSTextSlidCels, 4, 12);
-	CelDraw(165, 366, pSTextSlidCels, 2, 12);
-	CelDraw(591, 366, pSTextSlidCels, 3, 12);
+	CelDraw(165 + WIDTH_DIFF_2, 318 + HEIGHT_DIFF_2, pSTextSlidCels, 1, 12);
+	CelDraw(591 + WIDTH_DIFF_2, 318 + HEIGHT_DIFF_2, pSTextSlidCels, 4, 12);
+	CelDraw(165 + WIDTH_DIFF_2, 366 + HEIGHT_DIFF_2, pSTextSlidCels, 2, 12);
+	CelDraw(591 + WIDTH_DIFF_2, 366 + HEIGHT_DIFF_2, pSTextSlidCels, 3, 12);
 
 	sx = 173;
 	for (i = 0; i < 35; i++) {
-		CelDraw(sx, 318, pSTextSlidCels, 5, 12);
-		CelDraw(sx, 366, pSTextSlidCels, 7, 12);
+		CelDraw(sx + WIDTH_DIFF_2, 318 + HEIGHT_DIFF_2, pSTextSlidCels, 5, 12);
+		CelDraw(sx + WIDTH_DIFF_2, 366 + HEIGHT_DIFF_2, pSTextSlidCels, 7, 12);
 		sx += 12;
 	}
 	sy = 330;
 	for (i = 0; i < 3; i++) {
-		CelDraw(165, sy, pSTextSlidCels, 6, 12);
-		CelDraw(591, sy, pSTextSlidCels, 8, 12);
+		CelDraw(165 + WIDTH_DIFF_2, sy + HEIGHT_DIFF_2, pSTextSlidCels, 6, 12);
+		CelDraw(591 + WIDTH_DIFF_2, sy + HEIGHT_DIFF_2, pSTextSlidCels, 8, 12);
 		sy += 12;
 	}
 
 	/// ASSERT: assert(gpBuffer);
 
-	trans_rect(104, 150, 432, 54);
+	trans_rect(104 + WIDTH_DIFF_2, 150 + HEIGHT_DIFF_2, 432, 54);
 
 	strcpy(tempstr, MsgStrings[msgflag]);
-	sx = 165;
-	sy = 342;
+	sx = 165 + WIDTH_DIFF_2;
+	sy = 342 + HEIGHT_DIFF_2;
 	len = strlen(tempstr);
 	width = 0;
 
