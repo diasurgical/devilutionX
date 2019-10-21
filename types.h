@@ -10,7 +10,6 @@
 
 #include "miniwin/pushdecl.inc"
 #include "miniwin.h"
-#include <sstream>
 
 DEVILUTION_BEGIN_NAMESPACE
 

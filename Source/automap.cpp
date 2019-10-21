@@ -564,9 +564,8 @@ void DrawAutomapGame()
 		PrintGameStr(8, nextline, desc, COL_GOLD);
 	}
 	nextline = 65;
-	std::stringstream res;
-	res << SCREEN_WIDTH << "x" << SCREEN_HEIGHT;
-	PrintGameStr(8, nextline, (char *)res.str().c_str(), COL_RED);
+	sprintf(desc, "%ix%i", SCREEN_WIDTH, SCREEN_HEIGHT);
+	PrintGameStr(8, nextline, desc, COL_RED);
 }
 
 void SetAutomapView(int x, int y)
