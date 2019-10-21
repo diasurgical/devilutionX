@@ -498,6 +498,7 @@ constexpr auto DVL_WM_LBUTTONDOWN = 0x0201;
 constexpr auto DVL_WM_LBUTTONUP = 0x0202;
 constexpr auto DVL_WM_RBUTTONDOWN = 0x0204;
 constexpr auto DVL_WM_RBUTTONUP = 0x0205;
+constexpr auto DVL_WM_MOUSEWHEEL = 0x020A;
 
 constexpr auto DVL_WM_KEYFIRST = 0x0100;
 constexpr auto DVL_WM_KEYDOWN = 0x0100;

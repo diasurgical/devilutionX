@@ -3,6 +3,7 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+int globalScrollZoom = 0;
 char gbPixelCol;  // automap pixel color 8-bit (palette entry)
 BOOL gbRotateMap; // flip - if y < x
 int orgseed;
