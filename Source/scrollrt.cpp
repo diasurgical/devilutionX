@@ -677,7 +677,7 @@ static void DrawGame(int x, int y)
 		blocks = ceil(VIEWPORT_HEIGHT / 2 / 32) + ceil(MicroTileLen / 2);
 
 		gpBufStart = &gpBuffer[(-17 + SCREEN_Y) * BUFFER_WIDTH];
-		gpBufEnd = &gpBuffer[(160 + SCREEN_Y + HEIGHT_DIFF) * BUFFER_WIDTH];
+		gpBufEnd = &gpBuffer[(160 + SCREEN_Y) * BUFFER_WIDTH];
 	}
 
 	// Center screen
