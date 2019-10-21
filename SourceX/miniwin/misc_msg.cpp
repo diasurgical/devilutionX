@@ -201,9 +201,6 @@ static WINBOOL false_avail()
 
 WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg)
 {
-#ifdef VITA
-	VitaAux::getPressedKeyAsSDL_Event(false, VITAMOUSEMODE_AS_TOUCHPAD);
-#endif
 	if (wMsgFilterMin != 0)
 		UNIMPLEMENTED();
 	if (wMsgFilterMax != 0)
@@ -227,9 +224,19 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	}
 
 	SDL_Event e;
+#ifdef VITA
+	int result = 0;
+	do {
+		result = SDL_PollEvent(&e);
+	} while (result == 1 && (e.type == 0x700 /*SDL_FINGERDOWN*/ || e.type == 0x701 /*SDL_FINGERUP*/ || e.type == 0x702 /*SDL_FINGERMOTION*/ || e.type == 0x800 /*SDL_DOLLARGESTURE*/ || e.type == 0x801 /*SDL_DOLLARRECORD*/ || e.type == 0x802 /*SDL_MULTIGESTURE*/));
+	if (result == 0) {
+		return false;
+	}
+#else
 	if (!SDL_PollEvent(&e)) {
 		return false;
 	}
+#endif
 
 	lpMsg->hwnd = hWnd;
 	lpMsg->lParam = 0;
@@ -300,7 +307,13 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		break;
 #endif
 	default:
+#ifdef VITA
+		char error[1000];
+		sprintf(error, "unknown SDL message 0x%X", e.type);
+		VitaAux::error(error);
+#else
 		DUMMY_PRINT("unknown SDL message 0x%X", e.type);
+#endif
 		return false_avail();
 	}
 	return true;

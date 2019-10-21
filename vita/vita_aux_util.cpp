@@ -17,9 +17,13 @@
 #define clrscr psvDebugScreenClear
 #endif
 
+/*#define SDL_PushEvent                \
+	VitaAux::debug("eventInserted"); \
+	SDL_PushEvent*/
+
 using namespace std;
 
-SceDateTime *latestTime = NULL;
+Uint32 latestTime = 0;
 
 int VitaAux::hdebug  = 1;
 int VitaAux::errores = 0;
@@ -249,7 +253,7 @@ void VitaAux::testControls()
 
 void VitaAux::init()
 {
-	//psvDebugScreenInit();
+	psvDebugScreenInit();
 	//VitaAux::debug("DevilutionX port by @gokuhs\n Loading...");
 	if (!VitaAux::checkAndCreateFolder()) {
 		sceKernelExitProcess(3);
@@ -589,66 +593,60 @@ void VitaAux::initVitaTouch()
 	sceTouchEnableTouchForce(SCE_TOUCH_PORT_FRONT);
 	sceTouchEnableTouchForce(SCE_TOUCH_PORT_BACK);
 
-	VitaAux::mousePosition->x = 0;
-	VitaAux::mousePosition->y = 0;
-	VitaAux::latestTouch->x   = 0;
-	VitaAux::latestTouch->y   = 0;
+	VitaAux::mousePosition->x_front = 0;
+	VitaAux::mousePosition->y_front = 0;
+	VitaAux::latestTouch->x_front   = 0;
+	VitaAux::latestTouch->y_front   = 0;
+	VitaAux::latestTouch->x_back    = 0;
+	VitaAux::latestTouch->y_back    = 0;
 }
 
-VITATOUCH VitaAux::getVitaTouch(VITAPANNEL pannel, bool retournLatest)
+VITATOUCH VitaAux::getVitaTouch(bool retournLatest)
 {
 	VITATOUCH returned;
 	int port;
 	SceTouchData touch[SCE_TOUCH_PORT_MAX_NUM];
-	returned.x = 0;
-	returned.y = 0;
-	switch (pannel) {
-	case BOTH: {
-		for (port = 0; port < SCE_TOUCH_PORT_MAX_NUM; port++) {
-			if (touch[port].reportNum > 0) {
-				sceTouchPeek(port, &touch[port], 1);
-				returned.x = touch[port].report[0].x;
-				returned.y = touch[port].report[0].y;
-			}
-		}
-		break;
+	returned.x_front = 0;
+	returned.y_front = 0;
+	returned.x_back  = 0;
+	returned.y_back  = 0;
+
+	sceTouchPeek(SCE_TOUCH_PORT_FRONT, &touch[SCE_TOUCH_PORT_FRONT], 1);
+	sceTouchPeek(SCE_TOUCH_PORT_BACK, &touch[SCE_TOUCH_PORT_BACK], 1);
+	if (touch[SCE_TOUCH_PORT_FRONT].reportNum > 0) {
+		returned.x_front = touch[SCE_TOUCH_PORT_FRONT].report[0].x;
+		returned.y_front = touch[SCE_TOUCH_PORT_FRONT].report[0].y;
 	}
-	case FRONT_PANNEL:
-	case BACK_PANNEL: {
-		sceTouchPeek(pannel, &touch[pannel], 1);
-		if (touch[pannel].reportNum > 0) {
-			returned.x = touch[pannel].report[0].x;
-			returned.y = touch[pannel].report[0].y;
-		}
-		break;
-	}
-	default:
-		break;
+	if (touch[SCE_TOUCH_PORT_BACK].reportNum > 0) {
+		returned.x_back = touch[SCE_TOUCH_PORT_BACK].report[0].x;
+		returned.y_back = touch[SCE_TOUCH_PORT_BACK].report[0].y;
 	}
 
 	//Adjust
-	if (returned.x != 0 && returned.y != 0) {
-		returned.x        = (int)(returned.x * 960 / 1919);
-		returned.y        = (int)(returned.y * 544 / 1087);
-		latestPosition->x = returned.x;
-		latestPosition->y = returned.y;
-		return returned;
+	if (returned.x_front != 0 && returned.y_front != 0) {
+		returned.x_front        = (int)(returned.x_front * 960 / 1919);
+		returned.y_front        = (int)(returned.y_front * 544 / 1087);
+		latestPosition->x_front = returned.x_front;
+		latestPosition->y_front = returned.y_front;
+	} else {
+		if (retournLatest == true) {
+			returned.x_front = latestPosition->x_front;
+			returned.y_front = latestPosition->y_front;
+		}
 	}
-	if (retournLatest == true) {
-		return *latestPosition;
+	if (returned.x_back != 0 && returned.y_back != 0) {
+		returned.x_back        = (int)(returned.x_back * 960 / 1919);
+		returned.y_back        = (int)(returned.y_back * 544 / 1087);
+		latestPosition->x_back = returned.x_back;
+		latestPosition->y_back = returned.y_back;
+	} else {
+		if (retournLatest == true) {
+			returned.x_back = latestPosition->x_back;
+			returned.y_back = latestPosition->y_back;
+		}
 	}
 	return returned;
 }
-VITATOUCH VitaAux::getVitaTouchBackPannel(bool retournLatest)
-{
-	return VitaAux::getVitaTouch(BACK_PANNEL, retournLatest);
-}
-
-VITATOUCH VitaAux::getVitaTouchFrontPannel(bool retournLatest)
-{
-	return VitaAux::getVitaTouch(FRONT_PANNEL, retournLatest);
-}
-
 void VitaAux::initVitaButtons()
 {
 	sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG);
@@ -721,129 +719,127 @@ void VitaAux::getPressedKeyAsSDL_Event(bool inMenu, VITAMOUSEMODE mouseMode)
 		SDL_PushEvent(event);
 	}
 
+	VITAButtons *aux = latestKey;
+	latestKey        = pulsedButtons;
+	pulsedButtons    = aux;
+
+	//Touch pads
+
 	if (mouseMode == VITAMOUSEMODE_AS_MOUSE) {
+		VITATOUCH touch = VitaAux::getVitaTouch();
+		if (touch.x_front != latestPosition->x_front || touch.y_front != latestPosition->y_front) {
+			event           = new SDL_Event();
+			event->button.x = touch.x_front;
+			event->button.y = touch.y_front;
+			event->motion.x = touch.x_front;
+			event->motion.y = touch.y_front;
+			event->type     = SDL_MOUSEMOTION;
+			SDL_PushEvent(event);
+		}
+		latestPosition->x_front = touch.x_front;
+		latestPosition->y_front = touch.y_front;
 		//"Mouse" Actions
 		if (pulsedButtons->l != latestKey->l) {
 			event                = new SDL_Event();
-			event->button.x      = latestPosition->x;
-			event->button.y      = latestPosition->y;
+			event->button.x      = latestPosition->x_front;
+			event->button.y      = latestPosition->y_front;
 			event->button.button = SDL_BUTTON_LEFT;
 			event->type          = latestKey->l == 1 ? SDL_MOUSEBUTTONUP : SDL_MOUSEBUTTONDOWN;
 			SDL_PushEvent(event);
 		}
 		if (pulsedButtons->r != latestKey->r) {
 			event                = new SDL_Event();
-			event->button.x      = latestPosition->x;
-			event->button.y      = latestPosition->y;
+			event->button.x      = latestPosition->x_front;
+			event->button.y      = latestPosition->y_front;
 			event->button.button = SDL_BUTTON_RIGHT;
 			event->type          = latestKey->l == 1 ? SDL_MOUSEBUTTONUP : SDL_MOUSEBUTTONDOWN;
 			SDL_PushEvent(event);
 		}
-		if (!inMenu) {
-			VITATOUCH touch = VitaAux::getVitaTouch();
-			if (touch.x != latestPosition->x || touch.y != latestPosition->y) {
-				event           = new SDL_Event();
-				event->button.x = touch.x;
-				event->button.y = touch.y;
-				event->motion.x = touch.x;
-				event->motion.y = touch.y;
-				event->type     = SDL_MOUSEMOTION;
-				SDL_PushEvent(event);
+	} else { //VITAMOUSEMODE_AS_TOUCHPAD
+		VITATOUCH touch = VitaAux::getVitaTouch(false);
+		if ((touch.x_back != 0 || touch.y_back != 0) && (latestTouch->x_back != 0 || latestTouch->y_back != 0) && (latestTouch->x_back != touch.x_back || latestTouch->y_back != touch.x_back)) //Movement touch > 0 and latestTouch != 0
+		{
+			//Movement logic
+			int appendX = latestTouch->x_back - touch.x_back;
+			int appendY = latestTouch->y_back - touch.y_back;
+			mousePosition->x_front -= (int)(appendX * 1.5);
+			mousePosition->y_front -= (int)(appendY * 1.5);
+			if (mousePosition->x_front < 0) {
+				mousePosition->x_front = 0;
 			}
+			if (mousePosition->y_front < 0) {
+				mousePosition->y_front = 0;
+			}
+			if (mousePosition->x_front > SCREEN_WIDTH) {
+				mousePosition->x_front = SCREEN_WIDTH;
+			}
+			if (mousePosition->y_front > SCREEN_HEIGHT) {
+				mousePosition->y_front = SCREEN_HEIGHT;
+			}
+			event           = new SDL_Event();
+			event->button.x = mousePosition->x_front;
+			event->button.y = mousePosition->y_front;
+			event->motion.x = mousePosition->x_front;
+			event->motion.y = mousePosition->y_front;
+			event->type     = SDL_MOUSEMOTION;
+			SDL_PushEvent(event);
 		}
-	} else {
-		if (!inMenu) {
-			VITATOUCH touch = VitaAux::getVitaTouch(BACK_PANNEL, false);
+		latestTouch->x_back = touch.x_back;
+		latestTouch->y_back = touch.y_back;
 
-			if ((touch.x != 0 || touch.y != 0) && (latestTouch->x != 0 || latestTouch->y != 0)) //Movement touch > 0 and latestTouch != 0
-			{
-				//Movement logic
-				int appendX = latestTouch->x - touch.x;
-				int appendY = latestTouch->y - touch.y;
-				mousePosition->x -= appendX;
-				mousePosition->y -= appendY;
-				if (mousePosition->x < 0) {
-					mousePosition->x = 0;
-				}
-				if (mousePosition->y < 0) {
-					mousePosition->y = 0;
-				}
-				if (mousePosition->x > SCREEN_WIDTH) {
-					mousePosition->x = SCREEN_WIDTH;
-				}
-				if (mousePosition->y > SCREEN_HEIGHT) {
-					mousePosition->y = SCREEN_HEIGHT;
-				}
-				event           = new SDL_Event();
-				event->button.x = mousePosition->x;
-				event->button.y = mousePosition->y;
-				event->motion.x = mousePosition->x;
-				event->motion.y = mousePosition->y;
-				event->type     = SDL_MOUSEMOTION;
-				SDL_PushEvent(event);
-			}
-			latestTouch->x = touch.x;
-			latestTouch->y = touch.y;
+		bool clickTrigged = false;
+		if (touch.x_front > 0 && latestPositionClick->x_front == 0) {
+			event                = new SDL_Event();
+			event->button.x      = mousePosition->x_front;
+			event->button.y      = mousePosition->y_front;
+			event->button.button = touch.x_front < 850 ? SDL_BUTTON_LEFT : SDL_BUTTON_RIGHT;
+			event->type          = SDL_MOUSEBUTTONDOWN;
+			SDL_PushEvent(event);
+			latestPositionClick->x_front = touch.x_front;
+			clickTrigged                 = true;
+		} else if (touch.x_front == 0 && latestPositionClick->x_front != 0) {
+			event                = new SDL_Event();
+			event->button.x      = mousePosition->x_front;
+			event->button.y      = mousePosition->y_front;
+			event->button.button = latestPositionClick->x_front < 850 ? SDL_BUTTON_LEFT : SDL_BUTTON_RIGHT;
+			event->type          = SDL_MOUSEBUTTONUP;
+			SDL_PushEvent(event);
+			latestPositionClick->x_front = 0;
+			clickTrigged                 = true;
+		}
 
-			//Tap Action
-			if (touch.x != 0 || touch.y != 0) {
-				if (latestTime == NULL) {
-					latestTime = new SceDateTime();
-					sceRtcGetCurrentClockLocalTime(latestTime);
+		//Tap Action
+		if (!clickTrigged) {
+			if (touch.x_back != 0 || touch.y_back != 0) {
+				if (latestTime == 0) {
+					latestTime = SDL_GetTicks();
 				}
 			} else {
-				if (latestTime != NULL) {
-					SceDateTime time_now;
-					sceRtcGetCurrentClockLocalTime(&time_now);
-					double ms_old = latestTime->microsecond / 1000 + latestTime->second * 1000;
-					double ms_now = time_now.microsecond / 1000 + time_now.second * 1000;
-					if (ms_now - ms_old < 100) {
+				if (latestTime != 0) {
+					Uint32 time_now = SDL_GetTicks();
+					if (time_now - latestTime < 100) {
 						event                = new SDL_Event();
-						event->button.x      = mousePosition->x;
-						event->button.y      = mousePosition->y;
+						event->button.x      = mousePosition->x_front;
+						event->button.y      = mousePosition->y_front;
 						event->button.button = SDL_BUTTON_LEFT;
 						event->type          = SDL_MOUSEBUTTONDOWN;
 						SDL_PushEvent(event);
 						VitaAux::tapTriggered = true;
 					}
-					latestTime = NULL;
+					latestTime = 0;
 				}
 			}
 			if (VitaAux::tapTriggered) {
 				VitaAux::tapTriggered = false;
 				event                 = new SDL_Event();
-				event->button.x       = mousePosition->x;
-				event->button.y       = mousePosition->y;
+				event->button.x       = mousePosition->x_front;
+				event->button.y       = mousePosition->y_front;
 				event->button.button  = SDL_BUTTON_LEFT;
 				event->type           = SDL_MOUSEBUTTONUP;
 				SDL_PushEvent(event);
 			}
 		}
-		if (!tapTriggered) {
-			VITATOUCH touchFront = VitaAux::getVitaTouch(FRONT_PANNEL, false);
-			if (touchFront.x > 0 && latestPositionClick->x == 0) {
-				event                = new SDL_Event();
-				event->button.x      = mousePosition->x;
-				event->button.y      = mousePosition->y;
-				event->button.button = touchFront.x < 850 ? SDL_BUTTON_LEFT : SDL_BUTTON_RIGHT;
-				event->type          = SDL_MOUSEBUTTONDOWN;
-				SDL_PushEvent(event);
-				latestPositionClick->x = touchFront.x;
-			} else if (touchFront.x == 0 && latestPositionClick->x != 0) {
-				event                = new SDL_Event();
-				event->button.x      = mousePosition->x;
-				event->button.y      = mousePosition->y;
-				event->button.button = latestPositionClick->x < 850 ? SDL_BUTTON_LEFT : SDL_BUTTON_RIGHT;
-				event->type          = SDL_MOUSEBUTTONUP;
-				SDL_PushEvent(event);
-				latestPositionClick->x = 0;
-			}
-		}
 	}
-
-	VITAButtons *aux = latestKey;
-	latestKey        = pulsedButtons;
-	pulsedButtons    = aux;
 }
 
 void VitaAux::printMemInfo(unsigned int amount)

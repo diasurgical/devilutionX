@@ -670,7 +670,7 @@ static void DrawGame(int x, int y)
 		gpBufStart = &gpBuffer[BUFFER_WIDTH * SCREEN_Y];
 		gpBufEnd = &gpBuffer[BUFFER_WIDTH * (VIEWPORT_HEIGHT + SCREEN_Y)];
 	} else {
-		sy = ScrollInfo._syoff + -17 + SCREEN_Y ;
+		sy = ScrollInfo._syoff + -17 + SCREEN_Y;
 
 		chunks = ceil(SCREEN_WIDTH / 2 / 64) + 1; // TODO why +1?
 		// Fill screen + keep evaulating untill MicroTiles can't affect screen

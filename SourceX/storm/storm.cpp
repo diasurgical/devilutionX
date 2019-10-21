@@ -702,7 +702,7 @@ BOOL SVidPlayContinue(void)
 			return false;
 		}
 #else
-	sVidAudioQueue->Enqueue(smk_get_audio(SVidSMK, 0), smk_get_audio_size(SVidSMK, 0));
+		sVidAudioQueue->Enqueue(smk_get_audio(SVidSMK, 0), smk_get_audio_size(SVidSMK, 0));
 #endif
 	}
 

@@ -722,10 +722,8 @@ void RenderItem(UiItem *item)
 bool HandleMouseEventArtTextButton(const SDL_Event &event, const UiArtTextButton &ui_button)
 {
 	if (event.type != SDL_MOUSEBUTTONDOWN || event.button.button != SDL_BUTTON_LEFT) {
-		VitaAux::debug("Mouse false");
 		return false;
 	}
-	VitaAux::debug("Mouse true");
 	ui_button.action();
 	return true;
 }
@@ -862,9 +860,9 @@ void DrawMouse()
 	}
 #endif
 #else
-	VITATOUCH position = VitaAux::getVitaTouchFrontPannel();
-	MouseX = position.x;
-	MouseY = position.y;
+	VITATOUCH position = VitaAux::getVitaTouch();
+	MouseX = position.x_front;
+	MouseY = position.y_front;
 #endif
 
 	DrawArt(MouseX, MouseY, &ArtCursor);

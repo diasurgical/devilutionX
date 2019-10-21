@@ -128,7 +128,7 @@ WINBOOL DeleteFileA(LPCSTR lpFileName)
 bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 {
 #ifdef VITA
-	if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) <= -1) {
+	if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO) <= -1) {
 		SDL_Log(SDL_GetError());
 	}
 #else

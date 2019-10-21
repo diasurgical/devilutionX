@@ -38,8 +38,10 @@ typedef struct tagPALETTEENTRY {
 } PALETTEENTRY, *PPALETTEENTRY, *LPPALETTEENTRY;
 
 typedef struct tagVITATOUCH {
-	int x;
-	int y;
+	int x_front;
+	int y_front;
+	int x_back;
+	int y_back;
 } VITATOUCH;
 
 typedef struct VITAButtons {
@@ -56,12 +58,6 @@ typedef struct VITAButtons {
 	char select;
 	char start;
 };
-
-typedef enum {
-	FRONT_PANNEL = 0,
-	BACK_PANNEL  = 1,
-	BOTH         = 2
-} VITAPANNEL;
 
 typedef enum {
 	VITAMOUSEMODE_AS_MOUSE    = 0,
@@ -115,9 +111,7 @@ public:
 
 	//Touch
 	static void initVitaTouch();
-	static VITATOUCH getVitaTouch(VITAPANNEL pannel = BOTH, bool retournLatest = true);
-	static VITATOUCH getVitaTouchBackPannel(bool retournLatest = true);
-	static VITATOUCH getVitaTouchFrontPannel(bool retournLatest = true);
+	static VITATOUCH getVitaTouch(bool retournLatest = true);
 
 	//Migrate to SDEvent
 	static void initVitaButtons();

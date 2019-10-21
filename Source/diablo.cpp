@@ -146,6 +146,9 @@ void run_game_loop(unsigned int uMsg)
 
 	while (gbRunGame) {
 		diablo_color_cyc_logic();
+#ifdef VITA
+		VitaAux::getPressedKeyAsSDL_Event(false, VITAMOUSEMODE_AS_TOUCHPAD);
+#endif
 		if (PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE)) {
 			SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_ABOVE_NORMAL);
 			while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
@@ -273,7 +276,7 @@ void diablo_splash()
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	diablo_init(lpCmdLine);
-	diablo_splash();
+	//diablo_splash();
 	mainmenu_loop();
 	UiDestroy();
 	SaveGamma();
