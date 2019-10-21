@@ -116,8 +116,8 @@ void FreeStoreMem()
 
 void DrawSTextBack()
 {
-	CelDraw(408, 487, pSTextBoxCels, 1, 271);
-	trans_rect(347, 28, 265, 297);
+	CelDraw(408 + WIDTH_DIFF_2, 487 + HEIGHT_DIFF_2, pSTextBoxCels, 1, 271);
+	trans_rect(347 + WIDTH_DIFF_2, 28 + HEIGHT_DIFF_2, 265, 297);
 }
 
 void PrintSString(int x, int y, BOOL cjustflag, char *str, char col, int val)
@@ -149,13 +149,13 @@ void PrintSString(int x, int y, BOOL cjustflag, char *str, char col, int val)
 		sx += k;
 	}
 	if (stextsel == y) {
-		CelDraw(cjustflag ? xx + x + k - 20 : xx + x - 20, s + 205, pSPentSpn2Cels, PentSpn2Frame, 12);
+		CelDraw((cjustflag ? xx + x + k - 20 : xx + x - 20) + +WIDTH_DIFF_2, s + 205 + HEIGHT_DIFF_2, pSPentSpn2Cels, PentSpn2Frame, 12);
 	}
 	for (i = 0; i < len; i++) {
 		c = fontframe[gbFontTransTbl[(BYTE)str[i]]];
 		k += fontkern[c] + 1;
 		if (c && k <= yy) {
-			CPrintString(sx, sy, c, col);
+			CPrintString(sx + WIDTH_DIFF_2, sy + HEIGHT_DIFF_2, c, col);
 		}
 		sx += fontkern[c] + 1;
 	}
@@ -166,12 +166,12 @@ void PrintSString(int x, int y, BOOL cjustflag, char *str, char col, int val)
 			c = fontframe[gbFontTransTbl[(BYTE)valstr[i]]];
 			sx -= fontkern[c] + 1;
 			if (c) {
-				CPrintString(sx, sy, c, col);
+				CPrintString(sx + WIDTH_DIFF_2, sy + HEIGHT_DIFF_2, c, col);
 			}
 		}
 	}
 	if (stextsel == y) {
-		CelDraw(cjustflag ? xx + x + k + 4 : 660 - x, s + 205, pSPentSpn2Cels, PentSpn2Frame, 12);
+		CelDraw((cjustflag ? xx + x + k + 4 : 660 - x) + WIDTH_DIFF_2, s + 205 + HEIGHT_DIFF_2, pSPentSpn2Cels, PentSpn2Frame, 12);
 	}
 }
 
@@ -180,14 +180,15 @@ void DrawSLine(int y)
 	int xy, yy, width, line, sy;
 
 	sy = y * 12;
+	sy += HEIGHT_DIFF_2;
 	if (stextsize == 1) {
-		xy = SCREENXY(26, 25);
-		yy = BUFFER_WIDTH * (sy + 198) + 26 + 64;
+		xy = SCREENXY(26 + WIDTH_DIFF_2, 25 + HEIGHT_DIFF_2);
+		yy = BUFFER_WIDTH * (sy + 198) + 26 + 64 + WIDTH_DIFF_2;
 		width = 586 / 4;
 		line = BUFFER_WIDTH - 586;
 	} else {
-		xy = SCREENXY(346, 25);
-		yy = BUFFER_WIDTH * (sy + 198) + 346 + 64;
+		xy = SCREENXY(346 + WIDTH_DIFF_2, 25 + HEIGHT_DIFF_2);
+		yy = BUFFER_WIDTH * (sy + 198) + 346 + 64 + WIDTH_DIFF_2;
 		width = 266 / 4;
 		line = BUFFER_WIDTH - 266;
 	}
@@ -211,16 +212,16 @@ void DrawSArrows(int y1, int y2)
 	yd1 = y1 * 12 + 204;
 	yd2 = y2 * 12 + 204;
 	if (stextscrlubtn != -1)
-		CelDraw(665, yd1, pSTextSlidCels, 12, 12);
+		CelDraw(665 + WIDTH_DIFF_2, yd1 + HEIGHT_DIFF_2, pSTextSlidCels, 12, 12);
 	else
-		CelDraw(665, yd1, pSTextSlidCels, 10, 12);
+		CelDraw(665 + WIDTH_DIFF_2, yd1 + HEIGHT_DIFF_2, pSTextSlidCels, 10, 12);
 	if (stextscrldbtn != -1)
-		CelDraw(665, yd2, pSTextSlidCels, 11, 12);
+		CelDraw(665 + WIDTH_DIFF_2, yd2 + HEIGHT_DIFF_2, pSTextSlidCels, 11, 12);
 	else
-		CelDraw(665, yd2, pSTextSlidCels, 9, 12);
+		CelDraw(665 + WIDTH_DIFF_2, yd2 + HEIGHT_DIFF_2, pSTextSlidCels, 9, 12);
 	yd1 += 12;
 	for (yd3 = yd1; yd3 < yd2; yd3 += 12) {
-		CelDraw(665, yd3, pSTextSlidCels, 14, 12);
+		CelDraw(665 + WIDTH_DIFF_2, yd3 + HEIGHT_DIFF_2, pSTextSlidCels, 14, 12);
 	}
 	if (stextsel == 22)
 		yd3 = stextlhold;
@@ -230,7 +231,7 @@ void DrawSArrows(int y1, int y2)
 		yd3 = 1000 * (stextsval + ((yd3 - stextup) >> 2)) / (storenumh - 1) * (y2 * 12 - y1 * 12 - 24) / 1000;
 	else
 		yd3 = 0;
-	CelDraw(665, (y1 + 1) * 12 + 204 + yd3, pSTextSlidCels, 13, 12);
+	CelDraw(665 + WIDTH_DIFF_2, (y1 + 1) * 12 + 204 + yd3 + HEIGHT_DIFF_2, pSTextSlidCels, 13, 12);
 }
 
 void DrawSTextHelp()
@@ -2726,16 +2727,16 @@ void CheckStoreBtn()
 		qtextflag = FALSE;
 		if (leveltype == DTYPE_TOWN)
 			sfx_stop();
-	} else if (stextsel != -1 && MouseY >= 32 && MouseY <= 320) {
+	} else if (stextsel != -1 && MouseY >= 32 + HEIGHT_DIFF_2 && MouseY <= 320 + HEIGHT_DIFF_2) {
 		if (!stextsize) {
-			if (MouseX < 344 || MouseX > 616)
+			if (MouseX < 344 + WIDTH_DIFF_2 || MouseX > 616 + WIDTH_DIFF_2)
 				return;
 		} else {
-			if (MouseX < 24 || MouseX > 616)
+			if (MouseX < 24 + WIDTH_DIFF_2 || MouseX > 616 + WIDTH_DIFF_2)
 				return;
 		}
-		y = (MouseY - 32) / 12;
-		if (stextscrl && MouseX > 600) {
+		y = (MouseY - 32 - HEIGHT_DIFF_2) / 12;
+		if (stextscrl && MouseX > 600 + WIDTH_DIFF_2) {
 			if (y == 4) {
 				if (stextscrlubtn <= 0) {
 					STextUp();

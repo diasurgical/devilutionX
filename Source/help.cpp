@@ -539,8 +539,8 @@ void DrawHelpLine(int always_0, int help_line_nr, char *text, char color)
 	BYTE c;
 
 	width = 0;
-	sx = always_0 + 96;
-	sy = help_line_nr * 12 + 204;
+	sx = always_0 + 96 + WIDTH_DIFF_2;
+	sy = help_line_nr * 12 + 204 + HEIGHT_DIFF_2;
 	while (*text) {
 		c = gbFontTransTbl[(BYTE)*text];
 		text++;
