@@ -1012,10 +1012,12 @@ void PressKey(int vkey)
 		DoAutoMap();
 	} else if (vkey == VK_SPACE) {
 		if (!chrflag && invflag && MouseX < 480 && MouseY < PANEL_TOP) {
-			SetCursorPos(MouseX + 160, MouseY);
+			if (SCREEN_WIDTH == PANEL_WIDTH)
+				SetCursorPos(MouseX + 160, MouseY);
 		}
 		if (!invflag && chrflag && MouseX > 160 && MouseY < PANEL_TOP) {
-			SetCursorPos(MouseX - 160, MouseY);
+			if (SCREEN_WIDTH == PANEL_WIDTH)
+				SetCursorPos(MouseX - 160, MouseY);
 		}
 		helpflag = 0;
 		invflag = 0;
@@ -1086,11 +1088,13 @@ void PressChar(int vkey)
 			invflag = invflag == 0;
 			if (!invflag || chrflag) {
 				if (MouseX < 480 && MouseY < PANEL_TOP) {
-					SetCursorPos(MouseX + 160, MouseY);
+					if (SCREEN_WIDTH == PANEL_WIDTH)
+						SetCursorPos(MouseX + 160, MouseY);
 				}
 			} else {
 				if (MouseX > 160 && MouseY < PANEL_TOP) {
-					SetCursorPos(MouseX - 160, MouseY);
+					if (SCREEN_WIDTH == PANEL_WIDTH)
+						SetCursorPos(MouseX - 160, MouseY);
 				}
 			}
 		}
@@ -1102,11 +1106,13 @@ void PressChar(int vkey)
 			chrflag = !chrflag;
 			if (!chrflag || invflag) {
 				if (MouseX > 160 && MouseY < PANEL_TOP) {
-					SetCursorPos(MouseX - 160, MouseY);
+					if (SCREEN_WIDTH == PANEL_WIDTH)
+						SetCursorPos(MouseX - 160, MouseY);
 				}
 			} else {
 				if (MouseX < 480 && MouseY < PANEL_TOP) {
-					SetCursorPos(MouseX + 160, MouseY);
+					if (SCREEN_WIDTH == PANEL_WIDTH)
+						SetCursorPos(MouseX + 160, MouseY);
 				}
 			}
 		}
