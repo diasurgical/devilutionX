@@ -178,21 +178,21 @@ void CheckCursMove()
 
 	sx = MouseX;
 	sy = MouseY;
-
-	/*
-	if (chrflag || questlog) {
-		if (sx >= 160) {
-			sx -= 160;
-		} else {
-			sx = 0;
+	if (SCREEN_WIDTH == PANEL_WIDTH) {
+		if (chrflag || questlog) {
+			if (sx >= 160) {
+				sx -= 160;
+			} else {
+				sx = 0;
+			}
+		} else if (invflag || sbookflag) {
+			if (sx <= 320) {
+				sx += 160;
+			} else {
+				sx = 0;
+			}
 		}
-	} else if (invflag || sbookflag) {
-		if (sx <= 320) {
-			sx += 160;
-		} else {
-			sx = 0;
-		}
-	}*/
+	}
 	if (sy > PANEL_TOP - 1 && track_isscrolling()) {
 		sy = PANEL_TOP - 1;
 	}
