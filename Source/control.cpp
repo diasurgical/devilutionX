@@ -832,7 +832,7 @@ void DoPanBtn()
 			}
 		}
 	}
-	if (!spselflag && MouseX >= 565 + WIDTH_DIFF_2 && MouseX < 621 + WIDTH_DIFF_2 && MouseY >= 416+HEIGHT_DIFF && MouseY < 472+HEIGHT_DIFF) {
+	if (!spselflag && MouseX >= 565 + WIDTH_DIFF_2 && MouseX < 621 + WIDTH_DIFF_2 && MouseY >= 416 + HEIGHT_DIFF && MouseY < 472 + HEIGHT_DIFF) {
 		DoSpeedBook();
 		gamemenu_off();
 	}
@@ -1754,7 +1754,7 @@ void CheckSBook()
 	char st;
 	unsigned __int64 spl;
 
-	if (MouseX >= 331 && MouseX < 368 && MouseY >= 18 && MouseY < 314) {
+	if (MouseX >= 331 + WIDTH_DIFF && MouseX < 368 + WIDTH_DIFF && MouseY >= 18 && MouseY < 314) {
 		spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
 		sn = SpellPages[sbooktab][(MouseY - 18) / 43];
 		if (sn != -1 && spl & (__int64)1 << (sn - 1)) {
@@ -1770,8 +1770,8 @@ void CheckSBook()
 			drawpanflag = 255;
 		}
 	}
-	if (MouseX >= 327 && MouseX < 633 && MouseY >= 320 && MouseY < 349) { /// BUGFIX: change `< 633` to `< 631`
-		sbooktab = (MouseX - 327) / 76;
+	if (MouseX >= 327 + WIDTH_DIFF && MouseX < 633 + WIDTH_DIFF && MouseY >= 320 && MouseY < 349) { /// BUGFIX: change `< 633` to `< 631`
+		sbooktab = (MouseX - 327 - WIDTH_DIFF) / 76;
 	}
 }
 

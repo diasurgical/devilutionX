@@ -1329,7 +1329,7 @@ void CheckInvItem()
 void CheckInvScrn()
 {
 	if (MouseX > 190 + WIDTH_DIFF_2 && MouseX < 437 + WIDTH_DIFF_2
-	    && MouseY > PANEL_TOP && MouseY < 385+HEIGHT_DIFF) { // TODO: check if PANEL_TOP shouldn't be replaced by 356 + HEIGHT_DIFF like in CheckPanelInfo() / create belt position enums
+	    && MouseY > PANEL_TOP && MouseY < 385 + HEIGHT_DIFF) { // TODO: check if PANEL_TOP shouldn't be replaced by 356 + HEIGHT_DIFF like in CheckPanelInfo() / create belt position enums
 		CheckInvItem();
 	}
 }
