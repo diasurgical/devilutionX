@@ -755,9 +755,10 @@ void DrawCtrlPan()
 	for (i = 0; i < 6; i++) {
 		if (panbtn[i])
 			CelDraw(PanBtnPos[i][0] + SCREEN_X, PanBtnPos[i][1] + SCREEN_Y + PanBtnPos[i][3] - 1, pPanelButtons, i + 1, PanBtnPos[i][2]);
-		//else
-			//DrawPanelBox(PanBtnPos[i][0], PanBtnPos[i][1] - 336, PanBtnPos[i][2], PanBtnPos[i][3] + 1, PanBtnPos[i][0] + SCREEN_X, PanBtnPos[i][1] + SCREEN_Y);
-		//disabling this doesn't seem to do anything
+		else
+			if (SCREEN_WIDTH != BASE_WIDTH || SCREEN_HEIGHT != BASE_HEIGHT)
+				//This line makes ASAN crash and doesn't work properly on some resolutions but the panel is always being redrawn on custom resolutions, so we don't need it there
+				DrawPanelBox(PanBtnPos[i][0], PanBtnPos[i][1] - 336, PanBtnPos[i][2], PanBtnPos[i][3] + 1, PanBtnPos[i][0] + SCREEN_X, PanBtnPos[i][1] + SCREEN_Y);
 	}
 	if (numpanbtns == 8) {
 		CelDraw(PanBtnPos[6][0] + SCREEN_X, PanBtnPos[6][1] + SCREEN_Y + PanBtnPos[6][3] - 1, pMultiBtns, panbtn[6] + 1, PanBtnPos[6][2]);
