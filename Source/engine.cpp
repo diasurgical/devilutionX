@@ -197,31 +197,10 @@ void CelBlitSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth)
 			if (!(width & 0x80)) {
 				i -= width;
 				if (dst < gpBufEnd && dst > gpBufStart) {
-					if (width & 1) {
-						dst[0] = src[0];
-						src++;
-						dst++;
-					}
-					width >>= 1;
-					if (width & 1) {
-						dst[0] = src[0];
-						dst[1] = src[1];
-						src += 2;
-						dst += 2;
-					}
-					width >>= 1;
-					for (; width; width--) {
-						dst[0] = src[0];
-						dst[1] = src[1];
-						dst[2] = src[2];
-						dst[3] = src[3];
-						src += 4;
-						dst += 4;
-					}
-				} else {
-					src += width;
-					dst += width;
+					memcpy(dst, src, width);
 				}
+				src += width;
+				dst += width;
 			} else {
 				width = -(char)width;
 				dst += width;
@@ -291,31 +270,10 @@ void CelBlitLightSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidt
 			if (!(width & 0x80)) {
 				i -= width;
 				if (dst < gpBufEnd && dst > gpBufStart) {
-					if (width & 1) {
-						dst[0] = tbl[src[0]];
-						src++;
-						dst++;
-					}
-					width >>= 1;
-					if (width & 1) {
-						dst[0] = tbl[src[0]];
-						dst[1] = tbl[src[1]];
-						src += 2;
-						dst += 2;
-					}
-					width >>= 1;
-					for (; width; width--) {
-						dst[0] = tbl[src[0]];
-						dst[1] = tbl[src[1]];
-						dst[2] = tbl[src[2]];
-						dst[3] = tbl[src[3]];
-						src += 4;
-						dst += 4;
-					}
-				} else {
-					src += width;
-					dst += width;
+					memcpy(dst, src, width);
 				}
+				src += width;
+				dst += width;
 			} else {
 				width = -(char)width;
 				dst += width;
@@ -529,28 +487,9 @@ void CelBlitWidth(BYTE *pBuff, int CelSkip, int hgt, int wdt, BYTE *pCelBuff, in
 			width = *pRLEBytes++;
 			if (!(width & 0x80)) {
 				i -= width;
-				if (width & 1) {
-					dst[0] = pRLEBytes[0];
-					pRLEBytes++;
-					dst++;
-				}
-				width >>= 1;
-				if (width & 1) {
-					dst[0] = pRLEBytes[0];
-					dst[1] = pRLEBytes[1];
-					pRLEBytes += 2;
-					dst += 2;
-				}
-				width >>= 1;
-				while (width) {
-					dst[0] = pRLEBytes[0];
-					dst[1] = pRLEBytes[1];
-					dst[2] = pRLEBytes[2];
-					dst[3] = pRLEBytes[3];
-					pRLEBytes += 4;
-					dst += 4;
-					width--;
-				}
+				memcpy(dst, pRLEBytes, width);
+				dst += width;
+				pRLEBytes += width;
 			} else {
 				width = -(char)width;
 				dst += width;

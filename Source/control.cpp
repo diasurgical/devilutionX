@@ -485,36 +485,14 @@ void DrawPanelBox(int x, int y, int w, int h, int sx, int sy)
 	nSrcOff = x + PANEL_WIDTH * y;
 	nDstOff = sx + BUFFER_WIDTH * sy + (SCREEN_WIDTH - PANEL_WIDTH) / 2;
 
-	int wdt, hgt;
+	int hgt;
 	BYTE *src, *dst;
 
 	src = &pBtmBuff[nSrcOff];
 	dst = &gpBuffer[nDstOff];
 
-	for (hgt = h; hgt; hgt--, src += PANEL_WIDTH - w, dst += BUFFER_WIDTH - w) {
-		wdt = w;
-		if (wdt & 1) {
-			dst[0] = src[0];
-			src++;
-			dst++;
-		}
-		wdt >>= 1;
-		if (wdt & 1) {
-			dst[0] = src[0];
-			dst[1] = src[1];
-			src += 2;
-			dst += 2;
-		}
-		wdt >>= 1;
-		while (wdt) {
-			dst[0] = src[0];
-			dst[1] = src[1];
-			dst[2] = src[2];
-			dst[3] = src[3];
-			src += 4;
-			dst += 4;
-			wdt--;
-		}
+	for (hgt = h; hgt; hgt--, src += PANEL_WIDTH, dst += BUFFER_WIDTH) {
+		memcpy(dst, src, w);
 	}
 }
 
