@@ -162,6 +162,7 @@
   #include <stdio.h>
   #include <stdarg.h>
   #include <string.h>
+  #include <strings.h>
   #include <ctype.h>
   #include <assert.h>
   #include <errno.h>
