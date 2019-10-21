@@ -288,10 +288,6 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		}
 		break;
 #endif
-	case SDL_MOUSEWHEEL:
-		lpMsg->message = DVL_WM_MOUSEWHEEL;
-		lpMsg->wParam = -10;
-		break;
 	default:
 		DUMMY_PRINT("unknown SDL message 0x%X", e.type);
 		return false_avail();

@@ -564,10 +564,8 @@ void DrawAutomapGame()
 		PrintGameStr(8, nextline, desc, COL_GOLD);
 	}
 	nextline = 65;
-	int targetHeight = SCREEN_HEIGHT - SCREEN_HEIGHT * globalScrollZoom / 200;
-	int targetWidth = SCREEN_WIDTH - SCREEN_WIDTH * globalScrollZoom / 200;
 	std::stringstream res;
-	res << targetWidth << "x" << targetHeight;
+	res << SCREEN_WIDTH << "x" << SCREEN_HEIGHT;
 	PrintGameStr(8, nextline, (char *)res.str().c_str(), COL_RED);
 }
 

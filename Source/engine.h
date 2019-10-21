@@ -10,7 +10,6 @@ extern BOOL gbRotateMap; // flip - if y < x
 extern int orgseed;
 extern int SeedCount;
 extern BOOL gbNotInView; // valid - if x/y are in bounds
-extern int globalScrollZoom;
 
 inline BYTE *CelGetFrameStart(BYTE *pCelBuff, int nCel)
 {

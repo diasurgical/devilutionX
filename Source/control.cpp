@@ -112,14 +112,14 @@ char SpellITbl[MAX_SPELLS] = {
 	39, 42, 41, 40, 10, 36, 30
 };
 int PanBtnPos[8][5] = {
-	{ 9 + WIDTH_DIFF_2, 361 + HEIGHT_DIFF, 71, 19, 1 },
-	{ 9 + WIDTH_DIFF_2, 387 + HEIGHT_DIFF, 71, 19, 0 },
-	{ 9 + WIDTH_DIFF_2, 427 + HEIGHT_DIFF, 71, 19, 1 },
-	{ 9 + WIDTH_DIFF_2, 453 + HEIGHT_DIFF, 71, 19, 0 },
-	{ 560 + WIDTH_DIFF_2, 361 + HEIGHT_DIFF, 71, 19, 1 },
-	{ 560 + WIDTH_DIFF_2, 387 + HEIGHT_DIFF, 71, 19, 0 },
-	{ 87 + WIDTH_DIFF_2, 443 + HEIGHT_DIFF, 33, 32, 1 },
-	{ 527 + WIDTH_DIFF_2, 443 + HEIGHT_DIFF, 33, 32, 1 }
+	{ 9 + WIDTH_DIFF_2, 361 + HEIGHT_DIFF, 71, 19, 1 }, // char button
+	{ 9 + WIDTH_DIFF_2, 387 + HEIGHT_DIFF, 71, 19, 0 }, // quests button
+	{ 9 + WIDTH_DIFF_2, 427 + HEIGHT_DIFF, 71, 19, 1 }, // map button
+	{ 9 + WIDTH_DIFF_2, 453 + HEIGHT_DIFF, 71, 19, 0 }, // menu button
+	{ 560 + WIDTH_DIFF_2, 361 + HEIGHT_DIFF, 71, 19, 1 }, //inv button
+	{ 560 + WIDTH_DIFF_2, 387 + HEIGHT_DIFF, 71, 19, 0 }, //spells button
+	{ 87 + WIDTH_DIFF_2, 443 + HEIGHT_DIFF, 33, 32, 1 },  //chat button
+	{ 527 + WIDTH_DIFF_2, 443 + HEIGHT_DIFF, 33, 32, 1 }  //friendly fire button
 };
 char *PanBtnHotKey[8] = { "'c'", "'q'", "Tab", "Esc", "'i'", "'b'", "Enter", NULL };
 char *PanBtnStr[8] = {
@@ -481,9 +481,10 @@ void DrawPanelBox(int x, int y, int w, int h, int sx, int sy)
 	int nSrcOff, nDstOff;
 
 	/// ASSERT: assert(gpBuffer);
+	sx += WIDTH_DIFF_2;
 	sy += HEIGHT_DIFF;
 	nSrcOff = x + PANEL_WIDTH * y;
-	nDstOff = sx + BUFFER_WIDTH * sy + (SCREEN_WIDTH - PANEL_WIDTH) / 2;
+	nDstOff = sx + BUFFER_WIDTH * sy;
 
 	int wdt, hgt;
 	BYTE *src, *dst;
@@ -752,17 +753,18 @@ void DrawCtrlPan()
 	int i;
 
 	for (i = 0; i < 6; i++) {
-		if (!panbtn[i])
-			DrawPanelBox(PanBtnPos[i][0], PanBtnPos[i][1] - 336, 71, 20, PanBtnPos[i][0] + SCREEN_X, PanBtnPos[i][1] + SCREEN_Y);
-		else
-			CelDraw(PanBtnPos[i][0] + SCREEN_X, PanBtnPos[i][1] + SCREEN_Y + 18, pPanelButtons, i + 1, 71);
+		if (panbtn[i])
+			CelDraw(PanBtnPos[i][0] + SCREEN_X, PanBtnPos[i][1] + SCREEN_Y + PanBtnPos[i][3] - 1, pPanelButtons, i + 1, PanBtnPos[i][2]);
+		//else
+			//DrawPanelBox(PanBtnPos[i][0], PanBtnPos[i][1] - 336, PanBtnPos[i][2], PanBtnPos[i][3] + 1, PanBtnPos[i][0] + SCREEN_X, PanBtnPos[i][1] + SCREEN_Y);
+		//disabling this doesn't seem to do anything
 	}
 	if (numpanbtns == 8) {
-		CelDraw(PanBtnPos[6][0] + SCREEN_X, 474 + SCREEN_Y + HEIGHT_DIFF, pMultiBtns, panbtn[6] + 1, 33);
+		CelDraw(PanBtnPos[6][0] + SCREEN_X, PanBtnPos[6][1] + SCREEN_Y + PanBtnPos[6][3] - 1, pMultiBtns, panbtn[6] + 1, PanBtnPos[6][2]);
 		if (FriendlyMode)
-			CelDraw(PanBtnPos[7][0] + SCREEN_X, 474 + SCREEN_Y + HEIGHT_DIFF, pMultiBtns, panbtn[7] + 3, 33);
+			CelDraw(PanBtnPos[7][0] + SCREEN_X, PanBtnPos[7][1] + SCREEN_Y + PanBtnPos[7][3] - 1, pMultiBtns, panbtn[7] + 3, PanBtnPos[7][2]);
 		else
-			CelDraw(PanBtnPos[7][0] + SCREEN_X, 474 + SCREEN_Y + HEIGHT_DIFF, pMultiBtns, panbtn[7] + 5, 33);
+			CelDraw(PanBtnPos[7][0] + SCREEN_X, PanBtnPos[7][1] + SCREEN_Y + PanBtnPos[7][3] - 1, pMultiBtns, panbtn[7] + 5, PanBtnPos[7][2]);
 	}
 }
 

@@ -226,8 +226,7 @@ void CheckCursMove()
 	ty = sy >> 5;
 	px = sx & 0x3F;
 	py = sy & 0x1F;
-	int zoomStuff = SCREEN_WIDTH / 64 - SCREEN_WIDTH * globalScrollZoom / 12800;
-	mx = ViewX + tx + ty - zoomStuff;//-(zoomflag ? SCREEN_WIDTH / 64 : SCREEN_WIDTH / 128);
+	mx = ViewX + tx + ty -(zoomflag ? SCREEN_WIDTH / 64 : SCREEN_WIDTH / 128);
 	my = ViewY + ty - tx;
 
 	flipy = py<px>> 1;

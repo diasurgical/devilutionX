@@ -659,11 +659,6 @@ static void DrawGame(int x, int y)
 	int i, sx, sy, chunks, blocks;
 	int wdt, nSrcOff, nDstOff;
 
-	int targetHeight = SCREEN_HEIGHT - SCREEN_HEIGHT * globalScrollZoom / 200;
-	int targetWidth = SCREEN_WIDTH - SCREEN_WIDTH * globalScrollZoom / 200;
-	int widthDiff = SCREEN_WIDTH - targetWidth;
-	int heightDiff = SCREEN_HEIGHT - targetHeight;
-
 	sx = ScrollInfo._sxoff + SCREEN_X;
 	if (zoomflag) {
 		sy = ScrollInfo._syoff + SCREEN_Y + 15;
@@ -682,7 +677,7 @@ static void DrawGame(int x, int y)
 		blocks = ceil(VIEWPORT_HEIGHT / 2 / 32) + ceil(MicroTileLen / 2);
 
 		gpBufStart = &gpBuffer[(-17 + SCREEN_Y) * BUFFER_WIDTH];
-		gpBufEnd = &gpBuffer[(160 + SCREEN_Y) * BUFFER_WIDTH];
+		gpBufEnd = &gpBuffer[(160 + SCREEN_Y + HEIGHT_DIFF) * BUFFER_WIDTH];
 	}
 
 	// Center screen
@@ -763,27 +758,6 @@ static void DrawGame(int x, int y)
 	}
 	gpBufStart = &gpBuffer[BUFFER_WIDTH * SCREEN_Y];
 	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_HEIGHT + SCREEN_Y)];
-
-	//int yofs2 = heightDiff / 6;
-	//for (int i = SCREEN_HEIGHT - 1; i >= yofs2; --i) {
-	//	for (int j = SCREEN_WIDTH - 1; j >= 0; --j) {
-	//		gpBuffer[BUFFER_WIDTH * i + j] = gpBuffer[BUFFER_WIDTH * (i - yofs2) + j];
-	//	}
-	//}
-	int hd2 = (heightDiff >> 1);
-	int wd2 = (widthDiff >> 1);
-	for (int i = 0; i < SCREEN_HEIGHT/ 2; ++i) {
-		for (int j = 0; j < SCREEN_WIDTH / 2; ++j) {
-			int tmprow = hd2 + i * targetHeight / SCREEN_HEIGHT;
-			int tmprow2 = SCREEN_HEIGHT - 1 - tmprow;
-			int tmpcol = wd2 + j * targetWidth / SCREEN_WIDTH;
-			int tmpcol2 = SCREEN_WIDTH - tmpcol - 1;
-			gpBuffer[BUFFER_WIDTH * i + j] = gpBuffer[BUFFER_WIDTH * tmprow + tmpcol];
-			gpBuffer[BUFFER_WIDTH * i - SCREEN_WIDTH - 1 - j] = gpBuffer[BUFFER_WIDTH * tmprow + tmpcol2];
-			gpBuffer[BUFFER_WIDTH * (SCREEN_HEIGHT-1-i) + j] = gpBuffer[BUFFER_WIDTH * tmprow2 + tmpcol];
-			gpBuffer[BUFFER_WIDTH * (SCREEN_HEIGHT - 1 - i) + SCREEN_WIDTH - 1 - j] = gpBuffer[BUFFER_WIDTH * tmprow2 + tmpcol2];
-		}
-	}
 
 	if (zoomflag)
 		return;

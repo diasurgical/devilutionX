@@ -605,29 +605,6 @@ LRESULT CALLBACK GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		nthread_ignore_mutex(FALSE);
 		gbGameLoopStartup = TRUE;
 		return 0;
-	case WM_MOUSEWHEEL:
-		if (wParam < 0) {
-			if (globalScrollZoom > 0) {
-				int globalScrollZoom2 = globalScrollZoom - 5;
-				int targetHeight = SCREEN_HEIGHT - SCREEN_HEIGHT * globalScrollZoom2 / 200;
-				int targetWidth = SCREEN_WIDTH - SCREEN_WIDTH * globalScrollZoom2 / 200;
-				if (targetHeight < 480 || targetWidth < 640) {
-					return 0;
-				}
-				globalScrollZoom -= 5;
-			}
-		} else {
-			if (globalScrollZoom < 100) {
-				int globalScrollZoom2 = globalScrollZoom + 5;
-				int targetHeight = SCREEN_HEIGHT - SCREEN_HEIGHT * globalScrollZoom2 / 200;
-				int targetWidth = SCREEN_WIDTH - SCREEN_WIDTH * globalScrollZoom2 / 200;
-				if (targetHeight < 480 || targetWidth < 640) {
-					return 0;
-				}
-				globalScrollZoom += 5;
-			}
-		}
-		return 0;
 	}
 
 	return MainWndProc(hWnd, uMsg, wParam, lParam);
