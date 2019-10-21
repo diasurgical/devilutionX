@@ -71,8 +71,8 @@ void InitQTextMsg(int m)
 
 void DrawQTextBack()
 {
-	CelDraw(88, 487, pTextBoxCels, 1, 591);
-	trans_rect(27, 28, 585, 297);
+	CelDraw(88 + WIDTH_DIFF_2, 487 + +HEIGHT_DIFF_2, pTextBoxCels, 1, 591);
+	trans_rect(27 + WIDTH_DIFF_2, 28 + HEIGHT_DIFF_2, 585, 297);
 }
 
 void PrintQTextChr(int sx, int sy, BYTE *pCelBuff, int nCel)
@@ -81,10 +81,10 @@ void PrintQTextChr(int sx, int sy, BYTE *pCelBuff, int nCel)
 
 	/// ASSERT: assert(gpBuffer);
 	pStart = gpBufStart;
-	gpBufStart = &gpBuffer[BUFFER_WIDTH * (49 + SCREEN_Y)];
+	gpBufStart = &gpBuffer[BUFFER_WIDTH * (49 + SCREEN_Y + HEIGHT_DIFF_2)];
 	pEnd = gpBufEnd;
-	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (309 + SCREEN_Y)];
-	CelDraw(sx, sy, pCelBuff, nCel, 22);
+	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (309 + SCREEN_Y + HEIGHT_DIFF_2)];
+	CelDraw(sx + WIDTH_DIFF_2, sy + HEIGHT_DIFF_2, pCelBuff, nCel, 22);
 
 	gpBufStart = pStart;
 	gpBufEnd = pEnd;
