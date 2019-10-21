@@ -171,6 +171,7 @@
 #include <ctype.h>
 #include <assert.h>
 #include <errno.h>
+  #include <strings.h>
 
 #ifndef __BIG_ENDIAN__
 #define PLATFORM_LITTLE_ENDIAN
