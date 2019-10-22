@@ -2287,24 +2287,18 @@ typedef enum _music_id {
 	NUM_MUSIC,
 } _music_id;
 
+typedef enum _mainmenu_selections {
+	MAINMENU_SINGLE_PLAYER = 1,
 #ifndef VITA
-typedef enum _mainmenu_selections {
-	MAINMENU_SINGLE_PLAYER = 1,
-	MAINMENU_MULTIPLAYER   = 2,
-	MAINMENU_REPLAY_INTRO  = 3,
-	MAINMENU_SHOW_CREDITS  = 4,
-	MAINMENU_EXIT_DIABLO   = 5,
-	MAINMENU_ATTRACT_MODE  = 6,
-} _mainmenu_selections;
+	MAINMENU_MULTIPLAYER = 2,
 #else
-typedef enum _mainmenu_selections {
-	MAINMENU_SINGLE_PLAYER = 1,
-	MAINMENU_REPLAY_INTRO  = 2,
-	MAINMENU_SHOW_CREDITS  = 3,
-	MAINMENU_EXIT_DIABLO   = 4,
-	MAINMENU_ATTRACT_MODE  = 5,
-} _mainmenu_selections;
+	MAINMENU_VIEW_MODE = 2,
 #endif
+	MAINMENU_REPLAY_INTRO = 3,
+	MAINMENU_SHOW_CREDITS = 4,
+	MAINMENU_EXIT_DIABLO  = 5,
+	MAINMENU_ATTRACT_MODE = 6,
+} _mainmenu_selections;
 
 typedef enum _selhero_selections {
 	SELHERO_NEW_DUNGEON = 1,

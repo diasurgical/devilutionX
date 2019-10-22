@@ -107,6 +107,10 @@ void mainmenu_loop()
 			if (!mainmenu_multi_player())
 				done = TRUE;
 			break;
+#else
+		case MAINMENU_VIEW_MODE:
+			mainmenu_set_vita_video_mode();
+			break;
 #endif
 		case MAINMENU_REPLAY_INTRO:
 		case MAINMENU_ATTRACT_MODE:
@@ -156,6 +160,58 @@ BOOL mainmenu_multi_player()
 	gbMaxPlayers = MAX_PLRS;
 	return mainmenu_init_menu(SELHERO_CONNECT);
 }
+
+#ifdef VITA
+BOOL mainmenu_set_vita_video_mode()
+{
+	VitaAux::debug("pasa");
+	int scalingMode = 2;
+	DvlVitaIntSetting("scaling mode", &scalingMode, false);
+	scalingMode++;
+	if (scalingMode == 3) {
+		scalingMode = 0;
+	}
+	DvlVitaIntSetting("scaling mode", &scalingMode, true);
+#ifdef USE_SDL1
+
+	SDL_FillRect(GetOutputSurface(), NULL, 0x222222);
+	switch (scalingMode) {
+	case 2:
+		SDL_SetVideoModeScaling(0, 0, 960, 544);
+		break;
+	case 1: {
+		SDL_SetVideoModeScaling(118, 0, 724, 544);
+		break;
+	}
+	default:
+		SDL_SetVideoModeScaling(160, 32, 640, 480);
+		break;
+	}
+
+	SDL_FillRect(GetOutputSurface(), NULL, 0x222222);
+	return true;
+#else
+	switch (scalingMode) {
+	case 2:
+		if (!SDL_RenderSetLogicalSize(renderer, 960, 544) <= -1) {
+			ErrSdl();
+		}
+		break;
+	case 1: {
+		if (!SDL_RenderSetLogicalSize(renderer, 724, 544) <= -1) {
+			ErrSdl();
+		}
+		break;
+	}
+	default:
+		if (!SDL_RenderSetLogicalSize(renderer, 640, 480) <= -1) {
+			ErrSdl();
+		}
+		break;
+	}
+#endif
+}
+#endif
 
 #ifndef SPAWN
 void mainmenu_play_intro()

@@ -25,8 +25,9 @@ using namespace std;
 
 Uint32 latestTime = 0;
 
-int VitaAux::hdebug  = 1;
-int VitaAux::errores = 0;
+int VitaAux::hdebug                  = 1;
+int VitaAux::errores                 = 0;
+bool VitaAux::debugScreenInitialized = false;
 #ifdef USE_SDL1
 SDLKey VitaAux::latestKeyMouse = SDLK_UNKNOWN;
 #else
@@ -42,7 +43,7 @@ unsigned long VitaAux::allocatedMemory  = 0;
 
 void VitaAux::testJoystick(SDL_Joystick *joy)
 {
-	psvDebugScreenInit();
+	VitaAux::checkAndInitpsvDebugScreenInit();
 	VitaAux::hdebug = 0;
 	if (joy != NULL) {
 		// Get information about the joystick
@@ -107,7 +108,7 @@ void VitaAux::testJoystick(SDL_Joystick *joy)
 
 void VitaAux::testTouch()
 {
-	psvDebugScreenInit();
+	VitaAux::checkAndInitpsvDebugScreenInit();
 	VitaAux::hdebug = 0;
 	// Get information about the joystick
 	VitaAux::debug("swipe to the bottom with 1 finger to stop\n");
@@ -145,7 +146,7 @@ void VitaAux::testTouch()
 
 void VitaAux::testControls()
 {
-	psvDebugScreenInit();
+	VitaAux::checkAndInitpsvDebugScreenInit();
 	char debugExit[1000];
 	VITAButtons *pulsedButtons = new VITAButtons();
 	int positionx              = 1;
@@ -253,7 +254,7 @@ void VitaAux::testControls()
 
 void VitaAux::init()
 {
-	psvDebugScreenInit();
+	//VitaAux::checkAndInitpsvDebugScreenInit();
 	//VitaAux::debug("DevilutionX port by @gokuhs\n Loading...");
 	if (!VitaAux::checkAndCreateFolder()) {
 		sceKernelExitProcess(3);
@@ -474,6 +475,7 @@ int VitaAux::debug(const char texto)
 
 int VitaAux::debug(char *texto)
 {
+	VitaAux::checkAndInitpsvDebugScreenInit();
 	//printf("\e[42m%s\n\e[m", texto);
 	printf(texto);
 
@@ -507,7 +509,7 @@ int VitaAux::debug(char *texto)
 
 int VitaAux::error(char *texto)
 {
-	psvDebugScreenInit();
+	VitaAux::checkAndInitpsvDebugScreenInit();
 	VitaAux::debug(texto);
 	printf("\e[41m%s\n\e[m", texto);
 	FILE *ar;
@@ -574,7 +576,7 @@ void VitaAux::dialog(const char *text, const char *caption, bool error, bool fat
 	if (error) {
 		VitaAux::error(asciiArt);
 	} else {
-		psvDebugScreenInit();
+		VitaAux::checkAndInitpsvDebugScreenInit();
 		VitaAux::debug(asciiArt);
 	}
 	if (keypress) {
@@ -931,4 +933,10 @@ void VitaAux::readKeys(VITAButtons *keys)
 	}
 }
 
+void VitaAux::checkAndInitpsvDebugScreenInit()
+{
+	if (!VitaAux::debugScreenInitialized) {
+		psvDebugScreenInit();
+	}
+}
 #endif

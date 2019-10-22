@@ -74,4 +74,15 @@ void DvlIntSetting(const char *valuename, int *value);
 void DvlStringSetting(const char *valuename, char *string, int len);
 
 void mainmenu_restart_repintro();
+
+#ifdef VITA
+/**
+ * @brief Get int from ini, if not found the provided value will be added to the ini instead
+ */
+void DvlVitaIntSetting(const char *valuename, int *value, bool save);
+/**
+ * @brief Get string from ini, if not found the provided value will be added to the ini instead
+ */
+void DvlVitaStringSetting(const char *valuename, char *string, int len, bool save);
+#endif
 } // namespace dvl

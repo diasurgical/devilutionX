@@ -47,17 +47,23 @@ int main(int argc, char **argv)
 #ifdef VITA
 int main(int argc, char **argv)
 {
+
+	// Starting input
+	//IN_Init(NULL);
+	VitaAux::init();
 	// Setting maximum clocks
 	scePowerSetArmClockFrequency(444);
 	scePowerSetBusClockFrequency(222);
 	scePowerSetGpuClockFrequency(222);
 	scePowerSetGpuXbarClockFrequency(166);
-
-	// Starting input
-	//IN_Init(NULL);
-	VitaAux::init();
-	// We need a bigger stack to run Quake 3, so we create a new thread with a proper stack size
-	SceUID main_thread = sceKernelCreateThread("devilutionX", devilution_main, 0x40, 0x7000000, 0, 0, NULL);
+#ifndef USE_SDL1
+	VitaAux::dialog("For now, with SDL2 and fullscreen mode\nthe performace of the game is very poor\n\
+	Please use USE_SDL1 flag on Makefile.list in ON to solve this.\n\n(or better fix my code ;)",
+	    "SDL2 performace problem", false, false, true);
+#endif
+	// We need a bigger stack to run Diablo, so we create a new thread with a proper stack size
+	SceUID main_thread
+	    = sceKernelCreateThread("devilutionX", devilution_main, 0x40, 0x7000000, 0, 0, NULL);
 	if (main_thread >= 0) {
 		sceKernelStartThread(main_thread, 0, NULL);
 		sceKernelWaitThreadEnd(main_thread, NULL, NULL);

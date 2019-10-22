@@ -74,6 +74,9 @@
 #include "path.h"
 #include "pfile.h"
 #include "player.h"
+#ifdef VITA
+#include "../vita/plrctrls.h"
+#endif
 #include "plrmsg.h"
 #include "portal.h"
 #include "quests.h"

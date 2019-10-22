@@ -68,6 +68,15 @@ const int InvItemHeight[180] = {
 	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28
 };
 
+#ifdef VITA
+int attribute_inc_rects2[4][4] = {
+	{ 137, 138, 41, 22 },
+	{ 137, 166, 41, 22 },
+	{ 137, 195, 41, 22 },
+	{ 137, 223, 41, 22 }
+};
+#endif
+
 void InitCursor()
 {
 	/// ASSERT: assert(! pCursCels);

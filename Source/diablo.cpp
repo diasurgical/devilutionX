@@ -276,7 +276,7 @@ void diablo_splash()
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	diablo_init(lpCmdLine);
-	//diablo_splash();
+	diablo_splash();
 	mainmenu_loop();
 	UiDestroy();
 	SaveGamma();
@@ -1108,11 +1108,30 @@ void PressChar(int vkey)
 			if (!chrflag || invflag) {
 				if (MouseX > 160 && MouseY < PANEL_TOP) {
 					SetCursorPos(MouseX - 160, MouseY);
+#ifdef VITA
+					MouseX = MouseX - 160;
+					MouseY = MouseY;
+#endif
 				}
 			} else {
+#ifdef VITA
+				if (!chrbtnactive && plr[myplr]._pStatPts) {
+					int x = attribute_inc_rects2[0][0] + (attribute_inc_rects2[0][2] / 2);
+					int y = attribute_inc_rects2[0][1] + (attribute_inc_rects2[0][3] / 2);
+					SetCursorPos(x, y);
+					MouseX = x;
+					MouseY = y;
+					if (MouseX < 480 && MouseY < PANEL_TOP) {
+						SetCursorPos(MouseX + 160, MouseY);
+						MouseX = MouseX + 160;
+						MouseY = MouseY;
+					}
+				}
+#else
 				if (MouseX < 480 && MouseY < PANEL_TOP) {
 					SetCursorPos(MouseX + 160, MouseY);
 				}
+#endif
 			}
 		}
 		return;
@@ -1704,6 +1723,20 @@ void game_logic()
 	CheckQuests();
 	drawpanflag |= 1;
 	pfile_update(FALSE);
+#ifdef VITA
+	// JAKE: PLRCTRLS
+	// check for monsters first, then towners or objs.
+	if (pcurs <= 0) { // cursor should be missing
+		if (!checkMonstersNearby(false)) {
+			pcursmonst = -1;
+			checkTownersNearby(false);
+			checkItemsNearby(false);
+		} else {
+			pcursitem = -1;
+		}
+	}
+	charMovement();
+#endif
 }
 
 void timeout_cursor(BOOL bTimeout)

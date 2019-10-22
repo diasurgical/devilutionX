@@ -19,6 +19,12 @@ void mainmenu_loop();
 BOOL mainmenu_single_player();
 BOOL mainmenu_init_menu(int type);
 BOOL mainmenu_multi_player();
+#ifdef VITA
+BOOL mainmenu_set_vita_video_mode();
+extern void DvlVitaIntSetting(const char *valuename, int *value, bool save);
+extern SDL_Renderer *renderer;
+extern SDL_Surface *GetOutputSurface();
+#endif
 void mainmenu_play_intro();
 
 /* rdata */

@@ -128,7 +128,7 @@ WINBOOL DeleteFileA(LPCSTR lpFileName)
 bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 {
 #ifdef VITA
-	if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO) <= -1) {
+	if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) <= -1) {
 		SDL_Log(SDL_GetError());
 	}
 #else
@@ -156,6 +156,23 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 		flags |= SDL_FULLSCREEN;
 	SDL_WM_SetCaption(lpWindowName, WINDOW_ICON_NAME);
 	SDL_SetVideoMode(nWidth, nHeight, /*bpp=*/0, flags);
+#ifdef VITA
+	int scalingMode = 2;
+	DvlVitaIntSetting("scaling mode", &scalingMode, false);
+	switch (scalingMode) {
+	case 2:
+		SDL_SetVideoModeScaling(0, 0, 960, 544);
+		break;
+	case 1: {
+		SDL_SetVideoModeScaling(118, 0, 724, 544);
+		break;
+	}
+	default:
+		SDL_SetVideoModeScaling(160, 32, 640, 480);
+		break;
+	}
+	SDL_SetVideoModeBilinear(1);
+#endif
 	window = SDL_GetVideoSurface();
 	if (grabInput)
 		SDL_WM_GrabInput(SDL_GRAB_ON);
@@ -195,10 +212,32 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 		if (texture == NULL) {
 			ErrSdl();
 		}
-
+#ifdef VITA
+		int scalingMode = 2;
+		DvlVitaIntSetting("scaling mode", &scalingMode, false);
+		switch (scalingMode) {
+		case 2:
+			if (!SDL_RenderSetLogicalSize(renderer, 960, 544) <= -1) {
+				ErrSdl();
+			}
+			break;
+		case 1: {
+			if (!SDL_RenderSetLogicalSize(renderer, 724, 544) <= -1) {
+				ErrSdl();
+			}
+			break;
+		}
+		default:
+			if (!SDL_RenderSetLogicalSize(renderer, 640, 480) <= -1) {
+				ErrSdl();
+			}
+			break;
+		}
+#else
 		if (SDL_RenderSetLogicalSize(renderer, nWidth, nHeight) <= -1) {
 			ErrSdl();
 		}
+#endif
 #endif
 	}
 

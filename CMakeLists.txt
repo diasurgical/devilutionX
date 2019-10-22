@@ -33,7 +33,7 @@ option(DIST "Dynamically link only glibc and SDL2" OFF)
 option(FASTER "Enable FASTER in engine" ON)
 option(BINARY_RELEASE "Enable options for binary release" OFF)
 option(NIGHTLY_BUILD "Enable options for nightly build" OFF)
-option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
+option(USE_SDL1 "Use SDL1.2 instead of SDL2" ON)
 option(NONET "Disable network" OFF)
 
 if (VITA)
@@ -253,6 +253,7 @@ add_library(devilution STATIC
   Source/path.cpp
   Source/pfile.cpp
   Source/player.cpp
+  vita/plrctrls.cpp
   Source/plrmsg.cpp
   Source/portal.cpp
   Source/spelldat.cpp

@@ -87,7 +87,11 @@ void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(i
 	SDL_StopTextInput(); // input is enabled by default
 	for (int i = 0; i < itemCnt; i++) {
 		if (items[i].type == UI_EDIT) {
-			SDL_StartTextInput();
+#ifdef VITA
+			void (*preRenderFuntionPt)() = &preRenderFuntion;
+			void (*postRenderFuntionPt)() = &postRenderFuntion;
+			VitaAux::showIME("Enter name", items[i].edit.value, (*preRenderFuntionPt), (*postRenderFuntionPt), &keyBoardArt.surface);
+#endif SDL_StartTextInput();
 			UiTextInput = items[i].edit.value;
 			UiTextInputLen = items[i].edit.max_length;
 		}
@@ -277,17 +281,6 @@ bool UiFocusNavigation(SDL_Event *event)
 		switch (event->type) {
 		case SDL_KEYDOWN: {
 			switch (event->key.keysym.sym) {
-#ifdef VITA
-
-			case SDLK_RETURN:
-			case SDLK_KP_ENTER:
-			case SDLK_SPACE: {
-				void (*preRenderFuntionPt)() = &preRenderFuntion;
-				void (*postRenderFuntionPt)() = &postRenderFuntion;
-				VitaAux::showIME("Hero's name", UiTextInput, (*preRenderFuntionPt), (*postRenderFuntionPt), &keyBoardArt.surface);
-				break;
-			}
-#endif
 #ifndef USE_SDL1
 			case SDLK_v:
 				if (SDL_GetModState() & KMOD_CTRL) {
@@ -887,4 +880,27 @@ void DvlStringSetting(const char *valuename, char *string, int len)
 		SRegSaveString("devilutionx", valuename, 0, string);
 	}
 }
+
+#ifdef VITA
+
+/**
+ * @brief Get int from ini, if not found the provided value will be added to the ini instead
+ */
+void DvlVitaIntSetting(const char *valuename, int *value, bool save)
+{
+	if (save || !SRegLoadValue("vita", valuename, 0, value)) {
+		SRegSaveValue("vita", valuename, 0, *value);
+	}
+}
+
+/**
+ * @brief Get string from ini, if not found the provided value will be added to the ini instead
+ */
+void DvlVitaStringSetting(const char *valuename, char *string, int len, bool save)
+{
+	if (save || !SRegLoadString("vita", valuename, 0, string, len)) {
+		SRegSaveString("vita", valuename, 0, string);
+	}
+}
+#endif
 } // namespace dvl

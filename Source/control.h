@@ -131,6 +131,9 @@ extern int PanBtnPos[8][5];
 extern char *PanBtnHotKey[8];
 extern char *PanBtnStr[8];
 extern RECT32 ChrBtnsRect[4];
+#ifdef VITA
+extern int attribute_inc_rects2[4][4];
+#endif
 extern int SpellPages[6][7];
 
 #endif /* __CONTROL_H__ */

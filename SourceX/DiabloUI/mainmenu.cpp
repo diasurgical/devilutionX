@@ -11,6 +11,8 @@ UiListItem MAINMENU_DIALOG_ITEMS[] = {
 	{ "Single Player", MAINMENU_SINGLE_PLAYER },
 #ifndef VITA
 	{ "Multi Player", MAINMENU_MULTIPLAYER },
+#else
+	{ "Screen Size", MAINMENU_VIEW_MODE },
 #endif
 	{ "Replay Intro", MAINMENU_REPLAY_INTRO },
 	{ "Show Credits", MAINMENU_SHOW_CREDITS },

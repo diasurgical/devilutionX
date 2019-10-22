@@ -18,6 +18,25 @@
  */
 
 namespace dvl {
+#ifdef VITA
+float leftStickX = 0;
+float leftStickY = 0;
+float rightStickX = 0;
+float rightStickY = 0;
+float rightDeadzone = 0.07;
+float leftDeadzone = 0.07;
+
+static int leftStickXUnscaled = 0; // raw axis values reported by SDL_JOYAXISMOTION
+static int leftStickYUnscaled = 0;
+static int rightStickXUnscaled = 0;
+static int rightStickYUnscaled = 0;
+static int hiresDX = 0; // keep track of X/Y sub-pixel per frame mouse motion
+static int hiresDY = 0;
+static int64_t currentTime = 0; // used to update joystick mouse once per frame
+static int64_t lastTime = 0;
+static void ScaleJoystickAxes(float *x, float *y, float deadzone);
+static void HandleJoystickAxes();
+#endif
 
 static std::deque<MSG> message_queue;
 
@@ -186,6 +205,42 @@ static int translate_sdl_key(SDL_Keysym key)
 	}
 }
 
+#ifndef USE_SDL1
+static int translate_controller_button_to_key(uint8_t sdlControllerButton)
+{
+	switch (sdlControllerButton) {
+	case SDL_CONTROLLER_BUTTON_B:
+		return 'H';
+	case SDL_CONTROLLER_BUTTON_A:
+		return DVL_VK_SPACE;
+	case SDL_CONTROLLER_BUTTON_Y:
+		return 'X';
+	case SDL_CONTROLLER_BUTTON_X:
+		return DVL_VK_RETURN;
+	case SDL_CONTROLLER_BUTTON_LEFTSTICK:
+		return 'Q';
+	case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
+		return 'C';
+	case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
+		return 'I';
+	case SDL_CONTROLLER_BUTTON_START:
+		return DVL_VK_ESCAPE;
+	case SDL_CONTROLLER_BUTTON_BACK:
+		return DVL_VK_TAB;
+	case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+		return DVL_VK_LEFT;
+	case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+		return DVL_VK_RIGHT;
+	case SDL_CONTROLLER_BUTTON_DPAD_UP:
+		return DVL_VK_UP;
+	case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+		return DVL_VK_DOWN;
+	default:
+		return 0;
+	}
+}
+#endif
+
 static WPARAM keystate_for_mouse(WPARAM ret)
 {
 	ret |= (SDL_GetModState() & KMOD_SHIFT) ? DVL_MK_SHIFT : 0;
@@ -201,6 +256,13 @@ static WINBOOL false_avail()
 
 WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg)
 {
+#ifdef VITA
+	currentTime = SDL_GetTicks();
+	if ((currentTime - lastTime) > 15) {
+		HandleJoystickAxes();
+		lastTime = currentTime;
+	}
+#endif
 	if (wMsgFilterMin != 0)
 		UNIMPLEMENTED();
 	if (wMsgFilterMax != 0)
@@ -239,10 +301,111 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 #endif
 
 	lpMsg->hwnd = hWnd;
+#ifdef VITA
+	lpMsg->message = 0;
+#endif
 	lpMsg->lParam = 0;
 	lpMsg->wParam = 0;
 
 	switch (e.type) {
+#ifdef VITA
+#ifndef USE_SDL1
+	case SDL_CONTROLLERAXISMOTION:
+		switch (e.caxis.axis) {
+		case SDL_CONTROLLER_AXIS_LEFTX:
+			leftStickXUnscaled = e.caxis.value;
+			break;
+		case SDL_CONTROLLER_AXIS_LEFTY:
+			leftStickYUnscaled = -e.caxis.value;
+			break;
+		case SDL_CONTROLLER_AXIS_RIGHTX:
+			rightStickXUnscaled = e.caxis.value;
+			break;
+		case SDL_CONTROLLER_AXIS_RIGHTY:
+			rightStickYUnscaled = -e.caxis.value;
+			break;
+		case SDL_CONTROLLER_AXIS_TRIGGERLEFT: // ZL on Switch
+			if (e.caxis.value)
+				useBeltPotion(false); // health potion
+			break;
+		case SDL_CONTROLLER_AXIS_TRIGGERRIGHT: // ZR on Switch
+			if (e.caxis.value)
+				useBeltPotion(true); // mana potion
+			break;
+		}
+		leftStickX = leftStickXUnscaled;
+		leftStickY = leftStickYUnscaled;
+		rightStickX = rightStickXUnscaled;
+		rightStickY = rightStickYUnscaled;
+		ScaleJoystickAxes(&leftStickX, &leftStickY, leftDeadzone);
+		ScaleJoystickAxes(&rightStickX, &rightStickY, rightDeadzone);
+		break;
+	case SDL_CONTROLLERBUTTONDOWN:
+	case SDL_CONTROLLERBUTTONUP:
+		switch (e.cbutton.button) {
+		case SDL_CONTROLLER_BUTTON_B: // A on Switch
+		case SDL_CONTROLLER_BUTTON_Y: // X on Switch
+		case SDL_CONTROLLER_BUTTON_LEFTSTICK:
+		case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
+		case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
+		case SDL_CONTROLLER_BUTTON_START:
+		case SDL_CONTROLLER_BUTTON_BACK:
+			lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
+			lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.cbutton.button);
+			break;
+		case SDL_CONTROLLER_BUTTON_DPAD_UP:
+		case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+		case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+		case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+			lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
+			lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.cbutton.button);
+			if (lpMsg->message == DVL_WM_KEYDOWN) {
+				if (!stextflag) // prevent walking while in dialog mode
+					movements(lpMsg->wParam);
+			}
+			break;
+		case SDL_CONTROLLER_BUTTON_A: // B on Switch
+			lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
+			lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.cbutton.button);
+			if (lpMsg->message == DVL_WM_KEYDOWN) {
+				if (stextflag)
+					talkwait = GetTickCount(); // JAKE: Wait before we re-initiate talking
+				keyboardExpansion(lpMsg->wParam);
+			}
+			break;
+		case SDL_CONTROLLER_BUTTON_X: // Y on Switch
+			if (invflag) {
+				lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_RBUTTONUP : DVL_WM_RBUTTONDOWN;
+				lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+				if (lpMsg->message == DVL_WM_RBUTTONDOWN) {
+					lpMsg->wParam = keystate_for_mouse(DVL_MK_RBUTTON);
+				} else {
+					lpMsg->wParam = keystate_for_mouse(0);
+				}
+			} else {
+				lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
+				lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.cbutton.button);
+				if (lpMsg->message == DVL_WM_KEYDOWN)
+					keyboardExpansion(lpMsg->wParam);
+			}
+			break;
+		case SDL_CONTROLLER_BUTTON_RIGHTSTICK:
+			lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_LBUTTONUP : DVL_WM_LBUTTONDOWN;
+			lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+			if (lpMsg->message == DVL_WM_LBUTTONDOWN) {
+				if (newCurHidden) { // show cursor first, before clicking
+					SetCursor_(CURSOR_HAND);
+					newCurHidden = false;
+				}
+				lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
+			} else {
+				lpMsg->wParam = keystate_for_mouse(0);
+			}
+			break;
+		}
+		break;
+#endif
+#endif
 	case SDL_QUIT:
 		lpMsg->message = DVL_WM_QUIT;
 		break;
@@ -461,5 +624,98 @@ WINBOOL PostMessageA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 
 	return true;
 }
+
+#ifdef VITA
+void ScaleJoystickAxes(float *x, float *y, float deadzone)
+{
+	//radial and scaled dead_zone
+	//http://www.third-helix.com/2013/04/12/doing-thumbstick-dead-zones-right.html
+	//input values go from -32767.0...+32767.0, output values are from -1.0 to 1.0;
+
+	if (deadzone == 0) {
+		return;
+	}
+	if (deadzone >= 1.0) {
+		*x = 0;
+		*y = 0;
+		return;
+	}
+
+	const float maximum = 32767.0f;
+	float analog_x = *x;
+	float analog_y = *y;
+	float dead_zone = deadzone * maximum;
+
+	float magnitude = sqrtf(analog_x * analog_x + analog_y * analog_y);
+	if (magnitude >= dead_zone) {
+		// find scaled axis values with magnitudes between zero and maximum
+		float scalingFactor = 1.0 / magnitude * (magnitude - dead_zone) / (maximum - dead_zone);
+		analog_x = (analog_x * scalingFactor);
+		analog_y = (analog_y * scalingFactor);
+
+		// clamp to ensure results will never exceed the max_axis value
+		float clamping_factor = 1.0f;
+		float abs_analog_x = fabs(analog_x);
+		float abs_analog_y = fabs(analog_y);
+		if (abs_analog_x > 1.0 || abs_analog_y > 1.0) {
+			if (abs_analog_x > abs_analog_y) {
+				clamping_factor = 1 / abs_analog_x;
+			} else {
+				clamping_factor = 1 / abs_analog_y;
+			}
+		}
+		*x = (clamping_factor * analog_x);
+		*y = (clamping_factor * analog_y);
+	} else {
+		*x = 0;
+		*y = 0;
+	}
+}
+
+static void HandleJoystickAxes()
+{
+	// deadzone is handled in ScaleJoystickAxes() already
+	if (rightStickX != 0 || rightStickY != 0) {
+		// right joystick
+		if (automapflag) { // move map
+			if (rightStickY < -0.5)
+				AutomapUp();
+			else if (rightStickY > 0.5)
+				AutomapDown();
+			else if (rightStickX < -0.5)
+				AutomapRight();
+			else if (rightStickX > 0.5)
+				AutomapLeft();
+		} else { // move cursor
+			if (pcurs == CURSOR_NONE) {
+				SetCursor_(CURSOR_HAND);
+				newCurHidden = false;
+			}
+
+			const int slowdown = 80; // increase/decrease this to decrease/increase mouse speed
+
+			int x = MouseX;
+			int y = MouseY;
+			hiresDX += rightStickX * 256.0;
+			hiresDY += rightStickY * 256.0;
+
+			x += hiresDX / slowdown;
+			y += -(hiresDY) / slowdown;
+
+			hiresDX %= slowdown; // keep track of dx remainder for sub-pixel per frame mouse motion
+			hiresDY %= slowdown; // keep track of dy remainder for sub-pixel per frame mouse motion
+
+			if (x < 0)
+				x = 0;
+			if (y < 0)
+				y = 0;
+
+			SetCursorPos(x, y);
+			MouseX = x;
+			MouseY = y;
+		}
+	}
+}
+#endif
 
 } // namespace dvl

@@ -89,6 +89,7 @@ public:
 #endif
 	static VITAButtons *latestKey;
 	static unsigned long allocatedMemory;
+	static bool debugScreenInitialized;
 
 	static void delay(int);
 	static void delaya(int);
@@ -124,5 +125,6 @@ public:
 	static void testTouch();
 	static void testControls();
 	static void readKeys(VITAButtons *keys);
+	static void checkAndInitpsvDebugScreenInit();
 };
 #endif
