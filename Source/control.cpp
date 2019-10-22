@@ -1420,7 +1420,7 @@ void DrawChr()
 }
 
 
-void MY_PlrStringXY(int x, int y, int width, char *pszStr, char col, int base)
+void MY_PlrStringXY(int x, int y, int width, char *pszStr, char col, int base, int xoff = 0, int yoff = 0)
 {
 	BYTE c;
 	char *tmp;
@@ -1445,7 +1445,7 @@ void MY_PlrStringXY(int x, int y, int width, char *pszStr, char col, int base)
 		line += fontkern[c] + base;
 		if (c) {
 			if (line < widthOffset)
-				CPrintString(sx, sy, c, col);
+				CPrintString(sx + xoff, sy + yoff, c, col);
 		}
 		sx += fontkern[c] + base;
 	}
@@ -1453,13 +1453,13 @@ void MY_PlrStringXY(int x, int y, int width, char *pszStr, char col, int base)
 
 void CheckLvlBtn()
 {
-	if (!lvlbtndown && MouseX >= 40 && MouseX <= 81 && MouseY >= 313 && MouseY <= 335)
+	if (!lvlbtndown && MouseX >= 40 + WIDTH_DIFF_2 && MouseX <= 81 + WIDTH_DIFF_2 && MouseY >= 313 + HEIGHT_DIFF && MouseY <= 335 + HEIGHT_DIFF)
 		lvlbtndown = TRUE;
 }
 
 void ReleaseLvlBtn()
 {
-	if (MouseX >= 40 && MouseX <= 81 && MouseY >= 313 && MouseY <= 335)
+	if (MouseX >= 40 + WIDTH_DIFF_2 && MouseX <= 81 + WIDTH_DIFF_2 && MouseY >= 313 + HEIGHT_DIFF && MouseY <= 335 + HEIGHT_DIFF)
 		chrflag = TRUE;
 	lvlbtndown = FALSE;
 }
@@ -1470,8 +1470,8 @@ void DrawLevelUpIcon()
 
 	if (!stextflag) {
 		nCel = lvlbtndown ? 3 : 2;
-		ADD_PlrStringXY(0, 303, 120, "Level Up", COL_WHITE);
-		CelDraw(40 + SCREEN_X, 335 + SCREEN_Y, pChrButtons, nCel, 41);
+		ADD_PlrStringXY2(0, 303, 120, "Level Up", COL_WHITE, WIDTH_DIFF_2, HEIGHT_DIFF);
+		CelDraw(40 + SCREEN_X + WIDTH_DIFF_2, 335 + SCREEN_Y + HEIGHT_DIFF, pChrButtons, nCel, 41);
 	}
 }
 
@@ -1556,9 +1556,9 @@ void DrawDurIcon()
 	//no need to hide durability icons, they are being drawn behind the panels anyway
 	if ((!chrflag && !questlog) || (!invflag && !sbookflag) || SCREEN_WIDTH >= BASE_WIDTH) {
 		x1 = 656;
-		if (invflag || sbookflag)
+		if ((invflag || sbookflag) && (SCREEN_WIDTH == BASE_WIDTH && SCREEN_HEIGHT == BASE_HEIGHT))
 			x1 = 336;
-		x1 += WIDTH_DIFF;
+		x1 += WIDTH_DIFF_2;
 		p = &plr[myplr];
 		x2 = DrawDurIcon4Item(&p->InvBody[INVLOC_HEAD], x1, 4);
 		x3 = DrawDurIcon4Item(&p->InvBody[INVLOC_CHEST], x2, 3);
@@ -1598,7 +1598,7 @@ int DrawDurIcon4Item(ItemStruct *pItem, int x, int c)
 	}
 	if (pItem->_iDurability > 2)
 		c += 8;
-	CelDraw(x, 335 + SCREEN_Y, pDurIcons, c, 32);
+	CelDraw(x, 335 + SCREEN_Y + HEIGHT_DIFF, pDurIcons, c, 32);
 	return x - 40;
 }
 
