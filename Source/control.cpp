@@ -1420,7 +1420,7 @@ void DrawChr()
 }
 
 
-void MY_PlrStringXY(int x, int y, int width, char *pszStr, char col, int base, int xoff = 0, int yoff = 0)
+void MY_PlrStringXY(int x, int y, int width, char *pszStr, char col, int base, int xoff, int yoff)
 {
 	BYTE c;
 	char *tmp;
@@ -1470,7 +1470,7 @@ void DrawLevelUpIcon()
 
 	if (!stextflag) {
 		nCel = lvlbtndown ? 3 : 2;
-		ADD_PlrStringXY2(0, 303, 120, "Level Up", COL_WHITE, WIDTH_DIFF_2, HEIGHT_DIFF);
+		MY_PlrStringXY(0, 303, 120, "Level Up", COL_WHITE, 1, WIDTH_DIFF_2, HEIGHT_DIFF);
 		CelDraw(40 + SCREEN_X + WIDTH_DIFF_2, 335 + SCREEN_Y + HEIGHT_DIFF, pChrButtons, nCel, 41);
 	}
 }
