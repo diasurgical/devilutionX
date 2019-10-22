@@ -38,6 +38,7 @@ set -x
 main() {
 	set -x
 	prepare_buildroot
+	make_buildroot
 	build
 	package
 }
@@ -58,6 +59,9 @@ prepare_buildroot() {
 		mv "${BUILDROOT_ARCHIVE%.tar.gz}" "$BUILDROOT"
 	fi
 	cp buildroot_${TARGET}_defconfig "$BUILDROOT/configs/${TARGET}_devilutionx_defconfig"
+}
+
+make_buildroot() {
 	cd "$BUILDROOT"
 	if [[ "$TARGET" != "rg350" ]]; then
 		echo 'LIBSODIUM_CONF_OPTS += --enable-static' >> package/libsodium/libsodium.mk
