@@ -2833,7 +2833,7 @@ void OperateShrine(int pnum, int i, int sType)
 		dropGoldValue = 0;
 	}
 
-	/// ASSERT: assert((DWORD)i < MAXOBJECTS);
+	assert((DWORD)i < MAXOBJECTS);
 
 	if (object[i]._oSelFlag == 0)
 		return;
@@ -3083,7 +3083,7 @@ void OperateShrine(int pnum, int i, int sType)
 	case SHRINE_THAUMATURGIC:
 		for (j = 0; j < nobjects; j++) {
 			v1 = objectactive[j];
-			/// ASSERT: assert((DWORD)v1 < MAXOBJECTS);
+			assert((DWORD)v1 < MAXOBJECTS);
 			if ((object[v1]._otype == OBJ_CHEST1
 			        || object[v1]._otype == OBJ_CHEST2
 			        || object[v1]._otype == OBJ_CHEST3)

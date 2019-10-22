@@ -477,15 +477,15 @@ void pfile_rename_temp_to_perm()
 	char szPerm[MAX_PATH];
 
 	dwChar = pfile_get_save_num_from_name(plr[myplr]._pName);
-	/// ASSERT: assert(dwChar < MAX_CHARACTERS);
-	/// ASSERT: assert(gbMaxPlayers == 1);
+	assert(dwChar < MAX_CHARACTERS);
+	assert(gbMaxPlayers == 1);
 	if (!pfile_open_archive(FALSE, dwChar))
 		app_fatal("Unable to write to save file archive");
 
 	dwIndex = 0;
 	while (GetTempSaveNames(dwIndex, szTemp)) {
 		bResult = GetPermSaveNames(dwIndex, szPerm);
-		/// ASSERT: assert(bResult);
+		assert(bResult);
 		dwIndex++;
 		if (mpqapi_has_file(szTemp)) {
 			if (mpqapi_has_file(szPerm))
@@ -493,8 +493,7 @@ void pfile_rename_temp_to_perm()
 			mpqapi_rename(szTemp, szPerm);
 		}
 	}
-	/// ASSERT: assert(! GetPermSaveNames(dwIndex,szPerm));
-	GetPermSaveNames(dwIndex, szPerm); // BUGFIX: function call has no purpose
+	assert(! GetPermSaveNames(dwIndex,szPerm));
 	pfile_flush(TRUE, dwChar);
 }
 

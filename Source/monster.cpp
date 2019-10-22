@@ -4516,7 +4516,7 @@ void ProcessMonsters()
 
 	DeleteMonsterList();
 
-	/// ASSERT: assert((DWORD)nummonsters <= MAXMONSTERS);
+	assert((DWORD)nummonsters <= MAXMONSTERS);
 	for (i = 0; i < nummonsters; i++) {
 		mi = monstactive[i];
 		Monst = &monster[mi];

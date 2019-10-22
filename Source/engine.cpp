@@ -25,12 +25,8 @@ void CelBlitFrame(BYTE *pBuff, BYTE *pCelBuff, int nCel, int nWidth)
 	int nDataSize;
 	BYTE *pRLEBytes;
 
-	/// ASSERT: assert(pCelBuff != NULL);
-	if (!pCelBuff)
-		return;
-	/// ASSERT: assert(pBuff != NULL);
-	if (!pBuff)
-		return;
+	assert(pCelBuff != NULL);
+	assert(pBuff != NULL);
 
 	pRLEBytes = CelGetFrame(pCelBuff, nCel, &nDataSize);
 	CelBlitSafe(pBuff, pRLEBytes, nDataSize, nWidth);
@@ -41,12 +37,8 @@ void CelClippedDraw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 	BYTE *pRLEBytes;
 	int nDataSize;
 
-	/// ASSERT: assert(gpBuffer);
-	if (!gpBuffer)
-		return;
-	/// ASSERT: assert(pCelBuff != NULL);
-	if (!pCelBuff)
-		return;
+	assert(gpBuffer);
+	assert(pCelBuff != NULL);
 
 	pRLEBytes = CelGetFrameClipped(pCelBuff, nCel, &nDataSize);
 
@@ -62,12 +54,8 @@ void CelDrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, BYTE *tb
 	int nDataSize;
 	BYTE *pDecodeTo, *pRLEBytes;
 
-	/// ASSERT: assert(gpBuffer);
-	if (!gpBuffer)
-		return;
-	/// ASSERT: assert(pCelBuff != NULL);
-	if (!pCelBuff)
-		return;
+	assert(gpBuffer);
+	assert(pCelBuff != NULL);
 
 	pRLEBytes = CelGetFrame(pCelBuff, nCel, &nDataSize);
 	pDecodeTo = &gpBuffer[sx + BUFFER_WIDTH * sy];
@@ -83,15 +71,10 @@ void CelClippedDrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 	int nDataSize;
 	BYTE *pRLEBytes, *pDecodeTo;
 
-	/// ASSERT: assert(gpBuffer);
-	if (!gpBuffer)
-		return;
-	/// ASSERT: assert(pCelBuff != NULL);
-	if (!pCelBuff)
-		return;
+	assert(gpBuffer);
+	assert(pCelBuff != NULL);
 
 	pRLEBytes = CelGetFrameClipped(pCelBuff, nCel, &nDataSize);
-
 	pDecodeTo = &gpBuffer[sx + BUFFER_WIDTH * sy];
 
 	if (light_table_index)
@@ -105,15 +88,10 @@ void CelDrawLightRed(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char 
 	int nDataSize, w, idx;
 	BYTE *pRLEBytes, *dst, *tbl;
 
-	/// ASSERT: assert(gpBuffer);
-	if (!gpBuffer)
-		return;
-	/// ASSERT: assert(pCelBuff != NULL);
-	if (!pCelBuff)
-		return;
+	assert(gpBuffer);
+	assert(pCelBuff != NULL);
 
 	pRLEBytes = CelGetFrameClipped(pCelBuff, nCel, &nDataSize);
-
 	dst = &gpBuffer[sx + BUFFER_WIDTH * sy];
 
 	idx = light4flag ? 1024 : 4096;
@@ -153,21 +131,13 @@ void CelDrawLightRed(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char 
  */
 void CelBlitSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth)
 {
-	int w;
-
-	/// ASSERT: assert(pDecodeTo != NULL);
-	if (!pDecodeTo)
-		return;
-	/// ASSERT: assert(pRLEBytes != NULL);
-	if (!pRLEBytes)
-		return;
-	/// ASSERT: assert(gpBuffer);
-	if (!gpBuffer)
-		return;
-
-	int i;
+	int i, w;
 	BYTE width;
 	BYTE *src, *dst;
+
+	assert(pDecodeTo != NULL);
+	assert(pRLEBytes != NULL);
+	assert(gpBuffer);
 
 	src = pRLEBytes;
 	dst = pDecodeTo;
@@ -197,12 +167,8 @@ void CelClippedDrawSafe(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 	BYTE *pRLEBytes;
 	int nDataSize;
 
-	/// ASSERT: assert(gpBuffer);
-	if (!gpBuffer)
-		return;
-	/// ASSERT: assert(pCelBuff != NULL);
-	if (!pCelBuff)
-		return;
+	assert(gpBuffer);
+	assert(pCelBuff != NULL);
 
 	pRLEBytes = CelGetFrameClipped(pCelBuff, nCel, &nDataSize);
 
@@ -218,21 +184,13 @@ void CelClippedDrawSafe(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
  */
 void CelBlitLightSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE *tbl)
 {
-	int w;
-
-	/// ASSERT: assert(pDecodeTo != NULL);
-	if (!pDecodeTo)
-		return;
-	/// ASSERT: assert(pRLEBytes != NULL);
-	if (!pRLEBytes)
-		return;
-	/// ASSERT: assert(gpBuffer);
-	if (!gpBuffer)
-		return;
-
-	int i;
+	int i, w;
 	BYTE width;
 	BYTE *src, *dst;
+
+	assert(pDecodeTo != NULL);
+	assert(pRLEBytes != NULL);
+	assert(gpBuffer);
 
 	src = pRLEBytes;
 	dst = pDecodeTo;
@@ -289,15 +247,9 @@ void CelBlitLightTransSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int 
 	BOOL shift;
 	BYTE *tbl;
 
-	/// ASSERT: assert(pDecodeTo != NULL);
-	if (!pDecodeTo)
-		return;
-	/// ASSERT: assert(pRLEBytes != NULL);
-	if (!pRLEBytes)
-		return;
-	/// ASSERT: assert(gpBuffer);
-	if (!gpBuffer)
-		return;
+	assert(pDecodeTo != NULL);
+	assert(pRLEBytes != NULL);
+	assert(gpBuffer);
 
 	int i;
 	BYTE width;
@@ -377,9 +329,7 @@ void CelClippedBlitLightTrans(BYTE *pBuff, BYTE *pCelBuff, int nCel, int nWidth)
 	int nDataSize;
 	BYTE *pRLEBytes;
 
-	/// ASSERT: assert(pCelBuff != NULL);
-	if (!pCelBuff)
-		return;
+	assert(pCelBuff != NULL);
 
 	pRLEBytes = CelGetFrameClipped(pCelBuff, nCel, &nDataSize);
 
@@ -396,15 +346,10 @@ void CelDrawLightRedSafe(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, c
 	int nDataSize, w, idx;
 	BYTE *pRLEBytes, *dst, *tbl;
 
-	/// ASSERT: assert(gpBuffer);
-	if (!gpBuffer)
-		return;
-	/// ASSERT: assert(pCelBuff != NULL);
-	if (!pCelBuff)
-		return;
+	assert(gpBuffer);
+	assert(pCelBuff != NULL);
 
 	pRLEBytes = CelGetFrameClipped(pCelBuff, nCel, &nDataSize);
-
 	dst = &gpBuffer[sx + BUFFER_WIDTH * sy];
 
 	idx = light4flag ? 1024 : 4096;
@@ -452,12 +397,8 @@ void CelBlitWidth(BYTE *pBuff, int x, int y, int wdt, BYTE *pCelBuff, int nCel, 
 {
 	BYTE *pRLEBytes, *dst, *end;
 
-	/// ASSERT: assert(pCelBuff != NULL);
-	if (!pCelBuff)
-		return;
-	/// ASSERT: assert(pBuff != NULL);
-	if (!pBuff)
-		return;
+	assert(pCelBuff != NULL);
+	assert(pBuff != NULL);
 
 	int i, nDataSize;
 	BYTE width;
@@ -489,17 +430,10 @@ void CelBlitOutline(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWid
 	BYTE *src, *dst, *end;
 	BYTE width;
 
-	/// ASSERT: assert(pCelBuff != NULL);
-	if (!pCelBuff)
-		return;
-	/// ASSERT: assert(gpBuffer);
-	if (!gpBuffer)
-		return;
+	assert(pCelBuff != NULL);
+	assert(gpBuffer);
 
 	src = CelGetFrameClipped(pCelBuff, nCel, &nDataSize);
-	if (src == NULL)
-		return;
-
 	end = &src[nDataSize];
 	dst = &gpBuffer[sx + BUFFER_WIDTH * sy];
 
@@ -548,7 +482,7 @@ void ENG_set_pixel(int sx, int sy, BYTE col)
 {
 	BYTE *dst;
 
-	/// ASSERT: assert(gpBuffer);
+	assert(gpBuffer);
 
 	if (sy < 0 || sy >= SCREEN_HEIGHT + SCREEN_Y || sx < SCREEN_X || sx >= SCREEN_WIDTH + SCREEN_X)
 		return;
@@ -563,7 +497,7 @@ void engine_draw_pixel(int sx, int sy)
 {
 	BYTE *dst;
 
-	/// ASSERT: assert(gpBuffer);
+	assert(gpBuffer);
 
 	if (gbRotateMap) {
 		if (gbNotInView && (sx < 0 || sx >= SCREEN_HEIGHT + SCREEN_Y || sy < SCREEN_X || sy >= SCREEN_WIDTH + SCREEN_X))
@@ -906,7 +840,7 @@ DWORD LoadFileWithMem(const char *pszName, void *p)
 	DWORD dwFileLen;
 	HANDLE hsFile;
 
-	/// ASSERT: assert(pszName);
+	assert(pszName);
 	if (p == NULL) {
 		app_fatal("LoadFileWithMem(NULL):\n%s", pszName);
 	}
@@ -933,8 +867,8 @@ void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel)
 	char width;
 	BYTE *dst;
 
-	/// ASSERT: assert(p != NULL);
-	/// ASSERT: assert(ttbl != NULL);
+	assert(p != NULL);
+	assert(ttbl != NULL);
 
 	for (i = 1; i <= nCel; i++) {
 		dst = CelGetFrame(p, i, &nDataSize) + 10;
@@ -942,17 +876,17 @@ void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel)
 		while (nDataSize) {
 			width = *dst++;
 			nDataSize--;
-			/// ASSERT: assert(nDataSize >= 0);
+			assert(nDataSize >= 0);
 			if (width < 0) {
 				width = -width;
 				if (width > 65) {
 					nDataSize--;
-					/// ASSERT: assert(nDataSize >= 0);
+					assert(nDataSize >= 0);
 					*dst = ttbl[*dst];
 					dst++;
 				} else {
 					nDataSize -= width;
-					/// ASSERT: assert(nDataSize >= 0);
+					assert(nDataSize >= 0);
 					while (width) {
 						*dst = ttbl[*dst];
 						dst++;
@@ -969,15 +903,9 @@ void Cl2Draw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 	BYTE *pRLEBytes;
 	int nDataSize;
 
-	/// ASSERT: assert(gpBuffer != NULL);
-	if (!gpBuffer)
-		return;
-	/// ASSERT: assert(pCelBuff != NULL);
-	if (!pCelBuff)
-		return;
-	/// ASSERT: assert(nCel > 0);
-	if (nCel <= 0)
-		return;
+	assert(gpBuffer != NULL);
+	assert(pCelBuff != NULL);
+	assert(nCel > 0);
 
 	pRLEBytes = CelGetFrameClipped(pCelBuff, nCel, &nDataSize);
 
@@ -1064,15 +992,9 @@ void Cl2DrawOutline(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWid
 	int nDataSize;
 	BYTE *pRLEBytes;
 
-	/// ASSERT: assert(gpBuffer != NULL);
-	if (!gpBuffer)
-		return;
-	/// ASSERT: assert(pCelBuff != NULL);
-	if (!pCelBuff)
-		return;
-	/// ASSERT: assert(nCel > 0);
-	if (nCel <= 0)
-		return;
+	assert(gpBuffer != NULL);
+	assert(pCelBuff != NULL);
+	assert(nCel > 0);
 
 	pRLEBytes = CelGetFrameClipped(pCelBuff, nCel, &nDataSize);
 
@@ -1167,18 +1089,11 @@ void Cl2DrawLightTbl(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char 
 	int nDataSize, idx;
 	BYTE *pRLEBytes, *pDecodeTo;
 
-	/// ASSERT: assert(gpBuffer != NULL);
-	if (!gpBuffer)
-		return;
-	/// ASSERT: assert(pCelBuff != NULL);
-	if (!pCelBuff)
-		return;
-	/// ASSERT: assert(nCel > 0);
-	if (nCel <= 0)
-		return;
+	assert(gpBuffer != NULL);
+	assert(pCelBuff != NULL);
+	assert(nCel > 0);
 
 	pRLEBytes = CelGetFrameClipped(pCelBuff, nCel, &nDataSize);
-
 	pDecodeTo = &gpBuffer[sx + BUFFER_WIDTH * sy];
 
 	idx = light4flag ? 1024 : 4096;
@@ -1272,18 +1187,11 @@ void Cl2DrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 	int nDataSize;
 	BYTE *pRLEBytes, *pDecodeTo;
 
-	/// ASSERT: assert(gpBuffer != NULL);
-	if (!gpBuffer)
-		return;
-	/// ASSERT: assert(pCelBuff != NULL);
-	if (!pCelBuff)
-		return;
-	/// ASSERT: assert(nCel > 0);
-	if (nCel <= 0)
-		return;
+	assert(gpBuffer != NULL);
+	assert(pCelBuff != NULL);
+	assert(nCel > 0);
 
 	pRLEBytes = CelGetFrameClipped(pCelBuff, nCel, &nDataSize);
-
 	pDecodeTo = &gpBuffer[sx + BUFFER_WIDTH * sy];
 
 	if (light_table_index)

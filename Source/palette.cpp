@@ -53,7 +53,7 @@ void LoadPalette(char *pszFileName)
 	void *pBuf;
 	BYTE PalData[256][3];
 
-	/// ASSERT: assert(pszFileName);
+	assert(pszFileName);
 
 	WOpenFile(pszFileName, &pBuf, 0);
 	WReadFile(pBuf, (char *)PalData, sizeof(PalData), pszFileName);
