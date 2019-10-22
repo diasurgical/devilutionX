@@ -753,12 +753,10 @@ void DrawCtrlPan()
 	int i;
 
 	for (i = 0; i < 6; i++) {
-		if (panbtn[i])
-			CelDraw(PanBtnPos[i][0] + SCREEN_X, PanBtnPos[i][1] + SCREEN_Y + PanBtnPos[i][3] - 1, pPanelButtons, i + 1, PanBtnPos[i][2]);
+		if (!panbtn[i])
+			DrawPanelBox(PanBtnPos[i][0] - WIDTH_DIFF_2, PanBtnPos[i][1] - 336 - HEIGHT_DIFF, PanBtnPos[i][2], PanBtnPos[i][3] + 1, PanBtnPos[i][0] + SCREEN_X - WIDTH_DIFF_2, PanBtnPos[i][1] + SCREEN_Y - HEIGHT_DIFF);
 		else
-			if (SCREEN_WIDTH != BASE_WIDTH || SCREEN_HEIGHT != BASE_HEIGHT)
-				//This line makes ASAN crash and doesn't work properly on some resolutions but the panel is always being redrawn on custom resolutions, so we don't need it there
-				DrawPanelBox(PanBtnPos[i][0], PanBtnPos[i][1] - 336, PanBtnPos[i][2], PanBtnPos[i][3] + 1, PanBtnPos[i][0] + SCREEN_X, PanBtnPos[i][1] + SCREEN_Y);
+			CelDraw(PanBtnPos[i][0] + SCREEN_X, PanBtnPos[i][1] + SCREEN_Y + PanBtnPos[i][3] - 1, pPanelButtons, i + 1, PanBtnPos[i][2]);
 	}
 	if (numpanbtns == 8) {
 		CelDraw(PanBtnPos[6][0] + SCREEN_X, PanBtnPos[6][1] + SCREEN_Y + PanBtnPos[6][3] - 1, pMultiBtns, panbtn[6] + 1, PanBtnPos[6][2]);
@@ -1555,10 +1553,12 @@ void DrawDurIcon()
 	PlayerStruct *p;
 	int x1, x2, x3, x4;
 
-	if (!chrflag && !questlog || !invflag && !sbookflag) {
+	//no need to hide durability icons, they are being drawn behind the panels anyway
+	if ((!chrflag && !questlog) || (!invflag && !sbookflag) || SCREEN_WIDTH >= BASE_WIDTH) {
 		x1 = 656;
 		if (invflag || sbookflag)
 			x1 = 336;
+		x1 += WIDTH_DIFF;
 		p = &plr[myplr];
 		x2 = DrawDurIcon4Item(&p->InvBody[INVLOC_HEAD], x1, 4);
 		x3 = DrawDurIcon4Item(&p->InvBody[INVLOC_CHEST], x2, 3);
