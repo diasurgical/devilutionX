@@ -29,8 +29,6 @@
 #define THREAD_PRIORITY_HIGHEST THREAD_BASE_PRIORITY_MAX
 #define THREAD_PRIORITY_ABOVE_NORMAL (THREAD_PRIORITY_HIGHEST - 1)
 
-#define TextOut TextOutA
-
 #define NUMRESERVED 106
 
 #define _snprintf snprintf

@@ -74,7 +74,7 @@ static void scrollrt_draw_cursor_back_buffer()
 		return;
 	}
 
-	/// ASSERT: assert(gpBuffer);
+	assert(gpBuffer);
 	src = sgSaveBack;
 	dst = &gpBuffer[SCREENXY(sgdwCursX, sgdwCursY)];
 
@@ -94,7 +94,7 @@ static void scrollrt_draw_cursor_item()
 	int i, mx, my, col;
 	BYTE *src, *dst;
 
-	/// ASSERT: assert(! sgdwCursWdt);
+	assert(! sgdwCursWdt);
 
 	if (pcurs <= 0 || cursW == 0 || cursH == 0) {
 		return;
@@ -131,8 +131,8 @@ static void scrollrt_draw_cursor_item()
 	sgdwCursHgt -= sgdwCursY;
 	sgdwCursHgt++;
 
-	/// ASSERT: assert(sgdwCursWdt * sgdwCursHgt < sizeof sgSaveBack);
-	/// ASSERT: assert(gpBuffer);
+	assert(sgdwCursWdt * sgdwCursHgt < sizeof sgSaveBack);
+	assert(gpBuffer);
 	dst = sgSaveBack;
 	src = &gpBuffer[SCREENXY(sgdwCursX, sgdwCursY)];
 
@@ -156,7 +156,7 @@ static void scrollrt_draw_cursor_item()
 		if (col != PAL16_RED + 5) {
 			CelClippedDrawSafe(mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW);
 		} else {
-			CelDrawLightRedSafe(mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW, 0, 8, 1);
+			CelDrawLightRedSafe(mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW, 1);
 		}
 	} else {
 		CelClippedDrawSafe(mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW);
@@ -185,7 +185,7 @@ void DrawMissilePrivate(MissileStruct *m, int sx, int sy, BOOL pre)
 	mx = sx + m->_mixoff - m->_miAnimWidth2;
 	my = sy + m->_miyoff;
 	if (m->_miUniqTrans)
-		Cl2DrawLightTbl(mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth, 0, 8, m->_miUniqTrans + 3);
+		Cl2DrawLightTbl(mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth, m->_miUniqTrans + 3);
 	else if (m->_miLightFlag)
 		Cl2DrawLight(mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth);
 	else
@@ -207,9 +207,7 @@ void DrawMissile(int x, int y, int sx, int sy, BOOL pre)
 	}
 
 	for (i = 0; i < nummissiles; i++) {
-		/// ASSERT: assert(missileactive[i] < MAXMISSILES);
-		if (missileactive[i] >= MAXMISSILES)
-			break;
+		assert(missileactive[i] < MAXMISSILES);
 		m = &missile[missileactive[i]];
 		if (m->_mix != x || m->_miy != y)
 			continue;
@@ -253,7 +251,7 @@ static void DrawMonster(int x, int y, int mx, int my, int m)
 	}
 
 	if (!(dFlags[x][y] & BFLAG_LIT)) {
-		Cl2DrawLightTbl(mx, my, monster[m]._mAnimData, monster[m]._mAnimFrame, monster[m].MType->width, 0, 8, 1);
+		Cl2DrawLightTbl(mx, my, monster[m]._mAnimData, monster[m]._mAnimFrame, monster[m].MType->width, 1);
 	} else {
 		trans = 0;
 		if (monster[m]._uniqtype)
@@ -263,7 +261,7 @@ static void DrawMonster(int x, int y, int mx, int my, int m)
 		if (plr[myplr]._pInfraFlag && light_table_index > 8)
 			trans = 1;
 		if (trans)
-			Cl2DrawLightTbl(mx, my, monster[m]._mAnimData, monster[m]._mAnimFrame, monster[m].MType->width, 0, 8, trans);
+			Cl2DrawLightTbl(mx, my, monster[m]._mAnimData, monster[m]._mAnimFrame, monster[m].MType->width, trans);
 		else
 			Cl2DrawLight(mx, my, monster[m]._mAnimData, monster[m]._mAnimFrame, monster[m].MType->width);
 	}
@@ -307,7 +305,7 @@ static void DrawPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, i
 				    1,
 				    misfiledata[MFILE_MANASHLD].mAnimWidth[0]);
 		} else if (!(dFlags[x][y] & BFLAG_LIT) || plr[myplr]._pInfraFlag && light_table_index > 8) {
-			Cl2DrawLightTbl(px, py, pCelBuff, nCel, nWidth, 0, 8, 1);
+			Cl2DrawLightTbl(px, py, pCelBuff, nCel, nWidth, 1);
 			if (plr[pnum].pManaShield)
 				Cl2DrawLightTbl(
 				    px + plr[pnum]._pAnimWidth2 - misfiledata[MFILE_MANASHLD].mAnimWidth2[0],
@@ -315,8 +313,6 @@ static void DrawPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, i
 				    misfiledata[MFILE_MANASHLD].mAnimData[0],
 				    1,
 				    misfiledata[MFILE_MANASHLD].mAnimWidth[0],
-				    0,
-				    8,
 				    1);
 		} else {
 			l = light_table_index;
@@ -331,9 +327,7 @@ static void DrawPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, i
 				    py,
 				    misfiledata[MFILE_MANASHLD].mAnimData[0],
 				    1,
-				    misfiledata[MFILE_MANASHLD].mAnimWidth[0],
-				    0,
-				    8);
+				    misfiledata[MFILE_MANASHLD].mAnimWidth[0]);
 			light_table_index = l;
 		}
 	}
@@ -394,9 +388,7 @@ static void DrawObject(int x, int y, int ox, int oy, BOOL pre)
 		sy = oy + (yy << 4) + (xx << 4);
 	}
 
-	/// ASSERT: assert((unsigned char)bv < MAXOBJECTS);
-	if ((BYTE)bv >= MAXOBJECTS)
-		return;
+	assert((unsigned char)bv < MAXOBJECTS);
 
 	pCelBuff = object[bv]._oAnimData;
 	if (!pCelBuff) {
@@ -416,9 +408,7 @@ static void DrawObject(int x, int y, int ox, int oy, BOOL pre)
 	if (object[bv]._oLight) {
 		CelClippedDrawLight(sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth);
 	} else {
-		/// ASSERT: assert(object[bv]._oAnimData);
-		if (object[bv]._oAnimData) // BUGFIX: _oAnimData was already checked, this is redundant
-			CelClippedDraw(sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth);
+		CelClippedDraw(sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth);
 	}
 }
 
@@ -484,7 +474,7 @@ static void DrawItem(int x, int y, int sx, int sy, BOOL pre)
 	if (pItem->_iPostDraw == pre)
 		return;
 
-	/// ASSERT: assert((unsigned char)bItem <= MAXITEMS);
+	assert((unsigned char)bItem <= MAXITEMS);
 	int px = sx - pItem->_iAnimWidth2;
 	if (bItem - 1 == pcursitem) {
 		CelBlitOutline(181, px, sy, pItem->_iAnimData, pItem->_iAnimFrame, pItem->_iAnimWidth);
@@ -508,7 +498,7 @@ static void DrawMonsterHelper(int x, int y, int oy, int sx, int sy, int eflag)
 		if (mi == pcursmonst) {
 			CelBlitOutline(166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
 		}
-		/// ASSERT: assert(towner[mi]._tAnimData);
+		assert(towner[mi]._tAnimData);
 		CelClippedDraw(px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
 		return;
 	}
@@ -561,8 +551,8 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy, int eflag)
 	DeadStruct *pDeadGuy;
 	BYTE *pCelBuff;
 
-	/// ASSERT: assert((DWORD)sx < MAXDUNX);
-	/// ASSERT: assert((DWORD)sy < MAXDUNY);
+	assert((DWORD)sx < MAXDUNX);
+	assert((DWORD)sy < MAXDUNY);
 	bFlag = dFlags[sx][sy];
 	bDead = dDead[sx][sy];
 	bArch = dArch[sx][sy];
@@ -583,10 +573,10 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy, int eflag)
 		dd = (bDead >> 5) & 7;
 		px = dx - pDeadGuy->_deadWidth2;
 		pCelBuff = pDeadGuy->_deadData[dd];
-		/// ASSERT: assert(pDeadGuy->_deadData[dd] != NULL);
+		assert(pDeadGuy->_deadData[dd] != NULL);
 		if (pCelBuff != NULL) {
 			if (pDeadGuy->_deadtrans != 0) {
-				Cl2DrawLightTbl(px, dy, pCelBuff, pDeadGuy->_deadFrame, pDeadGuy->_deadWidth, 0, 8, pDeadGuy->_deadtrans);
+				Cl2DrawLightTbl(px, dy, pCelBuff, pDeadGuy->_deadFrame, pDeadGuy->_deadWidth, pDeadGuy->_deadtrans);
 			} else {
 				Cl2DrawLight(px, dy, pCelBuff, pDeadGuy->_deadFrame, pDeadGuy->_deadWidth);
 			}
@@ -595,7 +585,7 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy, int eflag)
 	DrawObject(sx, sy, dx, dy, 1);
 	DrawItem(sx, sy, dx, dy, 1);
 	if (bFlag & BFLAG_PLAYERLR) {
-		/// ASSERT: assert((DWORD)(sy-1) < MAXDUNY);
+		assert((DWORD)(sy-1) < MAXDUNY);
 		DrawPlayerHelper(sx, sy, -1, dx, dy, eflag);
 	}
 	if (bFlag & BFLAG_MONSTLR && negMon < 0) {
@@ -628,7 +618,7 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy, int eflag)
 
 static void scrollrt_draw(int x, int y, int sx, int sy, int chunks, int dPieceRow)
 {
-	/// ASSERT: assert(gpBuffer);
+	assert(gpBuffer);
 
 	if (dPieceRow & 1) {
 		x--;
@@ -747,7 +737,7 @@ static void DrawGame(int x, int y)
 		break;
 	}
 
-	/// ASSERT: assert(gpBuffer);
+	assert(gpBuffer);
 	for (i = 0; i < (blocks << 1); i++) {
 		scrollrt_draw(x, y, sx, sy, chunks, i);
 		sy += 16;
@@ -777,7 +767,7 @@ static void DrawGame(int x, int y)
 		}
 	}
 
-	/// ASSERT: assert(gpBuffer);
+	assert(gpBuffer);
 
 	int hgt;
 	BYTE *src, *dst1, *dst2;
@@ -856,7 +846,7 @@ void ClearScreenBuffer()
 {
 	lock_buf(3);
 
-	/// ASSERT: assert(gpBuffer);
+	assert(gpBuffer);
 
 	int i;
 	BYTE *dst;
@@ -961,7 +951,7 @@ static void DrawFPS()
 	char String[12];
 	HDC hdc;
 
-	if (frameflag && gbActive) {
+	if (frameflag && gbActive && pPanelText) {
 		frameend++;
 		tc = GetTickCount();
 		frames = tc - framestart;
@@ -972,8 +962,8 @@ static void DrawFPS()
 		}
 		if (framerate > 99)
 			framerate = 99;
-		wsprintf(String, "%2d", framerate);
-		TextOut(hdc, 0, 400, String, strlen(String));
+		wsprintf(String, "%2d FPS", framerate);
+		PrintGameStr(8, 65, String, COL_RED);
 	}
 }
 #endif
@@ -982,14 +972,14 @@ static void DoBlitScreen(DWORD dwX, DWORD dwY, DWORD dwWdt, DWORD dwHgt)
 {
 	RECT SrcRect;
 
-	/// ASSERT: assert(! (dwX & 3));
-	/// ASSERT: assert(! (dwWdt & 3));
+	assert(! (dwX & 3));
+	assert(! (dwWdt & 3));
 
 	SrcRect.left = dwX + SCREEN_X;
 	SrcRect.top = dwY + SCREEN_Y;
 	SrcRect.right = SrcRect.left + dwWdt - 1;
 	SrcRect.bottom = SrcRect.top + dwHgt - 1;
-	/// ASSERT: assert(! gpBuffer);
+
 	BltFast(dwX, dwY, &SrcRect);
 }
 
@@ -1005,7 +995,7 @@ static void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BO
 		return;
 	}
 
-	/// ASSERT: assert(ysize >= 0 && ysize <= 480); // SCREEN_HEIGHT
+	assert(ysize >= 0 && ysize <= SCREEN_HEIGHT);
 
 	if (ysize > 0) {
 		DoBlitScreen(0, 0, SCREEN_WIDTH, ysize);
@@ -1039,10 +1029,6 @@ static void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BO
 			DoBlitScreen(sgdwCursX, sgdwCursY, sgdwCursWdt, sgdwCursHgt);
 		}
 	}
-
-#ifdef _DEBUG
-	DrawFPS();
-#endif
 }
 
 void scrollrt_draw_game_screen(BOOL draw_cursor)
@@ -1118,6 +1104,11 @@ void DrawAndBlit()
 		hgt = SCREEN_HEIGHT;
 	}
 	scrollrt_draw_cursor_item();
+
+#ifdef _DEBUG
+	DrawFPS();
+#endif
+
 	unlock_buf(0);
 
 	DrawMain(hgt, ddsdesc, drawhpflag, drawmanaflag, drawsbarflag, drawbtnflag);

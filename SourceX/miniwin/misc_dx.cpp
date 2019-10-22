@@ -38,18 +38,4 @@ WINBOOL SetCursorPos(int X, int Y)
 	return true;
 }
 
-WINBOOL TextOutA(HDC hdc, int x, int y, LPCSTR lpString, int c)
-{
-	DUMMY_ONCE();
-
-	assert(window);
-#ifdef USE_SDL1
-	SDL_WM_SetCaption(lpString, WINDOW_ICON_NAME);
-#else
-	SDL_SetWindowTitle(window, lpString);
-#endif
-
-	return true;
-}
-
 } // namespace dvl

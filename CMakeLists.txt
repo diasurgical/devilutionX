@@ -94,6 +94,7 @@ endif()
 
 if(WIN32)
   set(ASAN OFF)
+  set(UBSAN OFF)
   set(DIST ON)
 endif()
 

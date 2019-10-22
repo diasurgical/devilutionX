@@ -20,15 +20,6 @@ inline BYTE *CelGetFrameStart(BYTE *pCelBuff, int nCel)
 	return pCelBuff + SwapLE32(pFrameTable[nCel]);
 }
 
-inline int CelGetFrameSize(BYTE *pCelBuff, int nCel)
-{
-	DWORD *pFrameTable;
-
-	pFrameTable = (DWORD *)pCelBuff;
-
-	return SwapLE32(pFrameTable[nCel + 1]) - SwapLE32(pFrameTable[nCel]);
-}
-
 inline BYTE *CelGetFrame(BYTE *pCelBuff, int nCel, int *nDataSize)
 {
 	DWORD *pFrameTable;
@@ -41,62 +32,31 @@ inline BYTE *CelGetFrame(BYTE *pCelBuff, int nCel, int *nDataSize)
 	return pCelBuff + nCellStart;
 }
 
-inline BYTE *CelGetFrameClipped(BYTE *pCelBuff, int nCel, int CelSkip, int CelCap, int *nDataSize)
+inline BYTE *CelGetFrameClipped(BYTE *pCelBuff, int nCel, int *nDataSize)
 {
-	BYTE *pRLEBytes;
-	DWORD *pFrameTable;
-	int nDataStart, nCellStart, nDataCap;
+	DWORD nDataStart;
+	BYTE *pRLEBytes = CelGetFrame(pCelBuff, nCel, nDataSize);
 
-	pFrameTable = (DWORD *)pCelBuff;
-
-	nCellStart = SwapLE32(pFrameTable[nCel]);
-
-	const int nCellEnd = SwapLE32(pFrameTable[nCel + 1]);
-	if (CelSkip + 1 >= nCellEnd)
-		return nullptr;
-
-	pRLEBytes = &pCelBuff[nCellStart];
-
-	const auto read_as_word = [pRLEBytes](int i) -> WORD {
-#ifdef PLATFORM_LITTLE_ENDIAN
-		return (pRLEBytes[i] << 8) | pRLEBytes[i + 1];
-#else
-		return pRLEBytes[i] | (pRLEBytes[i + 1] << 8);
-#endif
-	};
-
-	nDataStart = read_as_word(CelSkip);
-	if (nDataStart == 0)
-		return NULL;
-
-	*nDataSize = nCellEnd - nCellStart;
-	if (CelCap == 8)
-		nDataCap = 0;
-	else
-		nDataCap = read_as_word(CelCap);
-
-	if (nDataCap)
-		*nDataSize = nDataCap - nDataStart;
-	else
-		*nDataSize -= nDataStart;
+	nDataStart = SwapLE16(pRLEBytes[1] << 8 | pRLEBytes[0]);
+	*nDataSize -= nDataStart;
 
 	return pRLEBytes + nDataStart;
 }
 
 void CelDraw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
 void CelBlitFrame(BYTE *pBuff, BYTE *pCelBuff, int nCel, int nWidth);
-void CelClippedDraw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int CelSkip = 0, int CelCap = 8);
+void CelClippedDraw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
 void CelDrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, BYTE *tbl = NULL);
-void CelClippedDrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int CelSkip = 0, int CelCap = 8);
-void CelClippedBlitLightTrans(BYTE *pBuff, BYTE *pCelBuff, int nCel, int nWidth, int CelSkip = 0, int CelCap = 8);
-void CelDrawLightRed(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int CelSkip, int CelCap, char light);
+void CelClippedDrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
+void CelClippedBlitLightTrans(BYTE *pBuff, BYTE *pCelBuff, int nCel, int nWidth);
+void CelDrawLightRed(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char light);
 void CelBlitSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth);
-void CelClippedDrawSafe(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int CelSkip = 0, int CelCap = 8);
+void CelClippedDrawSafe(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
 void CelBlitLightSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE *tbl = NULL);
 void CelBlitLightTransSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth);
-void CelDrawLightRedSafe(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int CelSkip, int CelCap, char light);
-void CelBlitWidth(BYTE *pBuff, int always_0, int hgt, int wdt, BYTE *pCelBuff, int nCel, int nWidth);
-void CelBlitOutline(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int CelSkip = 0, int CelCap = 8);
+void CelDrawLightRedSafe(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char light);
+void CelBlitWidth(BYTE *pBuff, int x, int y, int wdt, BYTE *pCelBuff, int nCel, int nWidth);
+void CelBlitOutline(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
 void ENG_set_pixel(int sx, int sy, BYTE col);
 void engine_draw_pixel(int sx, int sy);
 void DrawLine(int x0, int y0, int x1, int y1, BYTE col);
@@ -110,10 +70,10 @@ void mem_free_dbg(void *p);
 BYTE *LoadFileInMem(char *pszName, DWORD *pdwFileLen);
 DWORD LoadFileWithMem(const char *pszName, void *p);
 void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel);
-void Cl2Draw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int CelSkip = 0, int CelCap = 8);
-void Cl2DrawOutline(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int CelSkip = 0, int CelCap = 8);
-void Cl2DrawLightTbl(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int CelSkip, int CelCap, char light);
-void Cl2DrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, int CelSkip = 0, int CelCap = 8);
+void Cl2Draw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
+void Cl2DrawOutline(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
+void Cl2DrawLightTbl(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char light);
+void Cl2DrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
 void Cl2BlitSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth);
 void Cl2BlitOutlineSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth, char col);
 void Cl2BlitLightSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE *pTable);

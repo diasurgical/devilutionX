@@ -18,8 +18,8 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 {
 	int k, sl;
 
-	/// ASSERT: assert((DWORD)myplr < MAX_PLRS);
-	/// ASSERT: assert((DWORD)i < 64);
+	assert((DWORD)myplr < MAX_PLRS);
+	assert((DWORD)i < 64);
 	sl = plr[myplr]._pSplLvl[i] + plr[myplr]._pISplLvlAdd;
 
 	switch (i) {
@@ -2277,7 +2277,7 @@ void AddFlamec(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, 
 
 void AddCbolt(int mi, int sx, int sy, int dx, int dy, int midir, char micaster, int id, int dam)
 {
-	/// ASSERT: assert((DWORD)mi < MAXMISSILES);
+	assert((DWORD)mi < MAXMISSILES);
 
 	if (micaster == 0) {
 		if (id == myplr) {
@@ -2902,7 +2902,7 @@ void MI_Lightctrl(int i)
 {
 	int pn, dam, p, mx, my;
 
-	/// ASSERT: assert((DWORD)i < MAXMISSILES);
+	assert((DWORD)i < MAXMISSILES);
 	missile[i]._mirange--;
 
 	p = missile[i]._misource;
@@ -2922,10 +2922,10 @@ void MI_Lightctrl(int i)
 
 	mx = missile[i]._mix;
 	my = missile[i]._miy;
-	/// ASSERT: assert((DWORD)mx < MAXDUNX);
-	/// ASSERT: assert((DWORD)my < MAXDUNY);
+	assert((DWORD)mx < MAXDUNX);
+	assert((DWORD)my < MAXDUNY);
 	pn = dPiece[mx][my];
-	/// ASSERT: assert((DWORD)pn <= MAXTILES);
+	assert((DWORD)pn <= MAXTILES);
 
 	if (missile[i]._misource == -1) {
 		if ((mx != missile[i]._misx || my != missile[i]._misy) && nMissileTable[pn]) {
@@ -3232,7 +3232,7 @@ void MI_Guardian(int i)
 {
 	int j, k, sx, sy, sx1, sy1, ex;
 
-	/// ASSERT: assert((DWORD)i < MAXMISSILES);
+	assert((DWORD)i < MAXMISSILES);
 
 	sx1 = 0;
 	sy1 = 0;
@@ -3649,7 +3649,7 @@ void MI_Wave(int i)
 
 	f1 = FALSE;
 	f2 = FALSE;
-	/// ASSERT: assert((DWORD)i < MAXMISSILES);
+	assert((DWORD)i < MAXMISSILES);
 
 	id = missile[i]._misource;
 	sx = missile[i]._mix;
@@ -3662,7 +3662,7 @@ void MI_Wave(int i)
 	nxa = sx + XDirAdd[sd];
 	nya = sy + YDirAdd[sd];
 	pn = dPiece[nxa][nya];
-	/// ASSERT: assert((DWORD)pn <= MAXTILES);
+	assert((DWORD)pn <= MAXTILES);
 	if (!nMissileTable[pn]) {
 		AddMissile(nxa, nya, nxa + XDirAdd[sd], nya + YDirAdd[sd], plr[id]._pdir, MIS_FIREMOVE, 0, id, 0, missile[i]._mispllvl);
 		nxa += XDirAdd[dira];
@@ -3671,7 +3671,7 @@ void MI_Wave(int i)
 		nyb = sy + YDirAdd[sd] + YDirAdd[dirb];
 		for (j = 0; j < (missile[i]._mispllvl >> 1) + 2; j++) {
 			pn = dPiece[nxa][nya]; // BUGFIX: dPiece is accessed before check against dungeon size and 0
-			                       /// ASSERT: assert((DWORD)pn <= MAXTILES);
+			assert((DWORD)pn <= MAXTILES);
 			if (nMissileTable[pn] || f1 || nxa <= 0 || nxa >= MAXDUNX || nya <= 0 || nya >= MAXDUNY) {
 				f1 = TRUE;
 			} else {
@@ -3680,7 +3680,7 @@ void MI_Wave(int i)
 				nya += YDirAdd[dira];
 			}
 			pn = dPiece[nxb][nyb]; // BUGFIX: dPiece is accessed before check against dungeon size and 0
-			                       /// ASSERT: assert((DWORD)pn <= MAXTILES);
+			assert((DWORD)pn <= MAXTILES);
 			if (nMissileTable[pn] || f2 || nxb <= 0 || nxb >= MAXDUNX || nyb <= 0 || nyb >= MAXDUNY) {
 				f2 = TRUE;
 			} else {

@@ -201,7 +201,7 @@ void music_start(int nTrack)
 {
 	BOOL success;
 
-	/// ASSERT: assert((DWORD) nTrack < NUM_MUSIC);
+	assert((DWORD) nTrack < NUM_MUSIC);
 	music_stop();
 	if (gbMusicOn) {
 		success = SFileOpenFile(sgszMusicTracks[nTrack], &sgpMusicTrack);

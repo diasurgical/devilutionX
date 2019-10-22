@@ -212,8 +212,6 @@ DWORD WINAPI GetCurrentThreadId();
 WINBOOL WINAPI SetThreadPriority(HANDLE hThread, int nPriority);
 void WINAPI Sleep(DWORD dwMilliseconds);
 
-WINBOOL WINAPI TextOutA(HDC hdc, int x, int y, LPCSTR lpString, int c);
-
 int WINAPIV wsprintfA(LPSTR, LPCSTR, ...);
 int WINAPIV wvsprintfA(LPSTR dest, LPCSTR format, va_list arglist);
 int __cdecl _strcmpi(const char *_Str1, const char *_Str2);
