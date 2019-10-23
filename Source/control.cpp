@@ -113,15 +113,17 @@ char SpellITbl[MAX_SPELLS] = {
 	15, 21, 23, 24, 25, 22, 26, 29, 37, 38,
 	39, 42, 41, 40, 10, 36, 30
 };
+
+int top_offset = SCREEN_HEIGHT - 480;
 int PanBtnPos[8][5] = {
-	{ 9, 361, 71, 19, 1 },
-	{ 9, 387, 71, 19, 0 },
-	{ 9, 427, 71, 19, 1 },
-	{ 9, 453, 71, 19, 0 },
-	{ 560, 361, 71, 19, 1 },
-	{ 560, 387, 71, 19, 0 },
-	{ 87, 443, 33, 32, 1 },
-	{ 527, 443, 33, 32, 1 }
+	{ PANEL_LEFT + 9, top_offset + 361, 71, 19, 1 },
+	{ PANEL_LEFT + 9, top_offset + 387, 71, 19, 0 },
+	{ PANEL_LEFT + 9, top_offset + 427, 71, 19, 1 },
+	{ PANEL_LEFT + 9, top_offset + 453, 71, 19, 0 },
+	{ PANEL_LEFT + 560, top_offset + 361, 71, 19, 1 },
+	{ PANEL_LEFT + 560, top_offset + 387, 71, 19, 0 },
+	{ PANEL_LEFT + 87,  top_offset + 443, 33, 32, 1 },
+	{ PANEL_LEFT + 527, top_offset + 443, 33, 32, 1 }
 };
 char *PanBtnHotKey[8] = { "'c'", "'q'", "Tab", "Esc", "'i'", "'b'", "Enter", NULL };
 char *PanBtnStr[8] = {
@@ -150,6 +152,9 @@ int SpellPages[6][7] = {
 	{ -1, -1, -1, -1, -1, -1, -1 }
 };
 
+/**
+ * Draw a spell cell into the game screen buffer. 'y' coordinate is the bottom.
+ */
 void DrawSpellCel(int xp, int yp, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	int nDataSize;
@@ -216,6 +221,9 @@ void SetSpellTrans(char t)
 	}
 }
 
+/**
+ * Setup the correct spell icon for drawing.
+ */
 void DrawSpell()
 {
 	char spl, st;
@@ -236,9 +244,9 @@ void DrawSpell()
 		st = RSPLTYPE_INVALID;
 	SetSpellTrans(st);
 	if (spl != SPL_INVALID)
-		DrawSpellCel(629, 631, pSpellCels, SpellITbl[spl], 56);
+		DrawSpellCel(PANEL_X + 565, PANEL_Y + 119, pSpellCels, SpellITbl[spl], 56);
 	else
-		DrawSpellCel(629, 631, pSpellCels, 27, 56);
+		DrawSpellCel(PANEL_X + 565, PANEL_Y + 119, pSpellCels, 27, 56);
 }
 
 void DrawSpellList()
@@ -482,6 +490,9 @@ void ClearPanel()
 	pinfoflag = FALSE;
 }
 
+/**
+ * Draw a sub-area of the control panel into the game buffer at specified position. 
+ */
 void DrawPanelBox(int x, int y, int w, int h, int sx, int sy)
 {
 	int nSrcOff, nDstOff;
@@ -489,7 +500,7 @@ void DrawPanelBox(int x, int y, int w, int h, int sx, int sy)
 	/// ASSERT: assert(gpBuffer);
 
 	nSrcOff = x + PANEL_WIDTH * y;
-	nDstOff = sx + BUFFER_WIDTH * sy + (SCREEN_WIDTH - PANEL_WIDTH) / 2;
+	nDstOff = sx + BUFFER_WIDTH * sy;
 
 	int wdt, hgt;
 	BYTE *src, *dst;
@@ -524,6 +535,14 @@ void DrawPanelBox(int x, int y, int w, int h, int sx, int sy)
 	}
 }
 
+/**
+ * Draw a section of the empty flask cel into the game buffer.
+ * @param pCelBuff Buffer of the empty flask cel. But can be any buffer really.
+ * @param min Top of the flask cel section to draw.
+ * @param max Bottom of the flask cel sectiopn to draw.
+ * @param c X coord offset in the game buffer(SCREEN_X must be accounted for).
+ * @param r Y coord offset in the game buffer(SCREEN_Y must be accounted for).
+ */
 void SetFlaskHeight(BYTE *pCelBuff, int min, int max, int c, int r)
 {
 	int nSrcOff, nDstOff, w;
@@ -543,6 +562,15 @@ void SetFlaskHeight(BYTE *pCelBuff, int min, int max, int c, int r)
 		memcpy(dst, src, 88);
 }
 
+/**
+ * Draw a "half" of a flask buffer into the screen buffer.
+ * @param pCelBuff The flask buffer. But any buffer really.
+ * @param w Width of the flask buffer.
+ * @param nSrcOffset Offset of the flask buffer from where the bytes will start to be copied.
+ * @param pBuff Target buffer.
+ * @param nDstOff Offset of the target buffer where the btyes will start to be copied to.
+ * @param h How many lines of the flask buffer that will be drawn. Note there's no limit to h.
+ */
 void DrawFlask(BYTE *pCelBuff, int w, int nSrcOff, BYTE *pBuff, int nDstOff, int h)
 {
 	int wdt, hgt;
@@ -561,6 +589,9 @@ void DrawFlask(BYTE *pCelBuff, int w, int nSrcOff, BYTE *pBuff, int nDstOff, int
 	}
 }
 
+/**
+ * Draw the Life flask cap.
+ */
 void DrawLifeFlask()
 {
 	int filled = (double)plr[myplr]._pHitPoints / (double)plr[myplr]._pMaxHP * 80.0;
@@ -573,11 +604,16 @@ void DrawLifeFlask()
 		filled = 11;
 	filled += 2;
 
-	DrawFlask(pLifeBuff, 88, 277, gpBuffer, BUFFER_WIDTH * 499 + 173, filled);
+	int flask_y = PANEL_Y - 13;
+	int flask_x = PANEL_X + 109;
+	DrawFlask(pLifeBuff, 88, 277, gpBuffer, BUFFER_WIDTH * flask_y + flask_x, filled);
 	if (filled != 13)
-		DrawFlask(pBtmBuff, PANEL_WIDTH, PANEL_WIDTH * filled + 2029, gpBuffer, BUFFER_WIDTH * filled + BUFFER_WIDTH * 499 + 173, 13 - filled);
+		DrawFlask(pBtmBuff, PANEL_WIDTH, PANEL_WIDTH * filled + 2029, gpBuffer, BUFFER_WIDTH * filled + BUFFER_WIDTH * flask_y + flask_x, 13 - filled);
 }
 
+/**
+ * Control the drawing of the area of the life flask within the control panel.
+ */
 void UpdateLifeFlask()
 {
 	int filled = (double)plr[myplr]._pHitPoints / (double)plr[myplr]._pMaxHP * 80.0;
@@ -588,11 +624,14 @@ void UpdateLifeFlask()
 	else if (filled < 0)
 		filled = 0;
 	if (filled != 69)
-		SetFlaskHeight(pLifeBuff, 16, 85 - filled, 96 + SCREEN_X, 352 + SCREEN_Y);
+		SetFlaskHeight(pLifeBuff, 16, 85 - filled, PANEL_X + 96, PANEL_Y);
 	if (filled)
-		DrawPanelBox(96, 85 - filled, 88, filled, 96 + SCREEN_X, 421 + SCREEN_Y - filled);
+		DrawPanelBox(96, 85 - filled, 88, filled, PANEL_X + 96, PANEL_Y + 69 - filled);
 }
 
+/**
+ * Draw the mana flask cap.
+ */
 void DrawManaFlask()
 {
 	int filled = plr[myplr]._pManaPer;
@@ -603,9 +642,11 @@ void DrawManaFlask()
 		filled = 11;
 	filled += 2;
 
-	DrawFlask(pManaBuff, 88, 277, gpBuffer, BUFFER_WIDTH * 499 + 173 + 366, filled);
+	int flask_y = PANEL_Y - 13;
+	int flask_x = PANEL_X + 109;
+	DrawFlask(pManaBuff, 88, 277, gpBuffer, BUFFER_WIDTH * flask_y + flask_x + 366, filled);
 	if (filled != 13)
-		DrawFlask(pBtmBuff, PANEL_WIDTH, PANEL_WIDTH * filled + 2029 + 366, gpBuffer, BUFFER_WIDTH * filled + BUFFER_WIDTH * 499 + 173 + 366, 13 - filled);
+		DrawFlask(pBtmBuff, PANEL_WIDTH, PANEL_WIDTH * filled + 2029 + 366, gpBuffer, BUFFER_WIDTH * filled + BUFFER_WIDTH * flask_y + flask_x + 366, 13 - filled);
 }
 
 void control_update_life_mana()
@@ -625,6 +666,10 @@ void control_update_life_mana()
 	plr[myplr]._pHPPer = (double)plr[myplr]._pHitPoints / (double)plr[myplr]._pMaxHP * 80.0;
 }
 
+/**
+ * Control the drawing of the area of the life flask within the control panel.
+ * Also for some reason draw the current equipped spell.
+ */
 void UpdateManaFlask()
 {
 	int filled;
@@ -645,9 +690,9 @@ void UpdateManaFlask()
 	if (filled > 69)
 		filled = 69;
 	if (filled != 69)
-		SetFlaskHeight(pManaBuff, 16, 85 - filled, 96 + SCREEN_X + 368, 352 + SCREEN_Y);
+		SetFlaskHeight(pManaBuff, 16, 85 - filled, 96 + PANEL_X + 368, PANEL_Y);
 	if (filled)
-		DrawPanelBox(96 + 368, 85 - filled, 88, filled, 96 + SCREEN_X + 368, 421 + SCREEN_Y - filled);
+		DrawPanelBox(96 + 368, 85 - filled, 88, filled, 96 + PANEL_X + 368, PANEL_Y + 69 - filled);
 
 	DrawSpell();
 }
@@ -736,19 +781,26 @@ void InitControlPan()
 	nGoldFrame = 1;
 }
 
+/**
+ * Draw the control panel in its default state.
+ */
 void ClearCtrlPan()
 {
-	DrawPanelBox(0, sgbPlrTalkTbl + 16, PANEL_WIDTH, PANEL_HEIGHT, 64, 512);
+	DrawPanelBox(0, sgbPlrTalkTbl + 16, PANEL_WIDTH, PANEL_HEIGHT, PANEL_X, PANEL_Y);
 	DrawInfoBox();
 }
 
+
+/**
+ * Draws the Control Panel buttons in the current state.
+ */ 
 void DrawCtrlPan()
 {
 	int i;
 
 	for (i = 0; i < 6; i++) {
 		if (!panbtn[i])
-			DrawPanelBox(PanBtnPos[i][0], PanBtnPos[i][1] - 336, 71, 20, PanBtnPos[i][0] + SCREEN_X, PanBtnPos[i][1] + SCREEN_Y);
+			DrawPanelBox(PanBtnPos[i][0] - PANEL_LEFT, PanBtnPos[i][1] - PANEL_TOP + 16, 71, 20, PanBtnPos[i][0] + SCREEN_X, PanBtnPos[i][1] + SCREEN_Y);
 		else
 			CelDraw(PanBtnPos[i][0] + SCREEN_X, PanBtnPos[i][1] + SCREEN_Y + 18, pPanelButtons, i + 1, 71);
 	}
@@ -1074,11 +1126,15 @@ BOOL control_WriteStringToBuffer(BYTE *str)
 	return TRUE;
 }
 
+/**
+ * Sets the string to be drawn in the info box and then draw it.
+ */
 void DrawInfoBox()
 {
 	int nGold;
 
 	DrawPanelBox(177, 62, 288, 60, 241, 558);
+	
 	if (!panelflag && !trigflag && pcursinvitem == -1 && !spselflag) {
 		infostr[0] = '\0';
 		infoclr = COL_WHITE;
