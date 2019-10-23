@@ -103,15 +103,10 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 
 	if (mask == 0xFFFFFFFF) {
 		if (light_table_index == lightmax) {
+			memset(*dst, 0, n);
 			(*src) += n;
-			for (i = 0; i < n; i++, (*dst)++) {
-				(*dst)[0] = 0;
-			}
+			(*dst) += n;
 		} else if (light_table_index == 0) {
-			for (i = n & 3; i != 0; i--, (*src)++, (*dst)++) {
-				(*dst)[0] = (*src)[0];
-			}
-			n = (n >> 2) << 2;
 			memcpy(*dst, *src, n);
 			(*src) += n;
 			(*dst) += n;
@@ -267,17 +262,13 @@ void world_draw_black_tile(int sx, int sy)
 
 	for (i = 30, j = 1; i >= 0; i -= 2, j++, dst -= BUFFER_WIDTH + 64) {
 		dst += i;
-		for (k = 0; k < 4 * j; k++) {
-			*dst++ = 0;
-		}
-		dst += i;
+		memset(dst, 0, 4 * j);
+		dst += 4 * j + i;
 	}
 	for (i = 2, j = 15; i != 32; i += 2, j--, dst -= BUFFER_WIDTH + 64) {
 		dst += i;
-		for (k = 0; k < 4 * j; k++) {
-			*dst++ = 0;
-		}
-		dst += i;
+		memset(dst, 0, 4 * j);
+		dst += 4 * j + i;
 	}
 }
 
