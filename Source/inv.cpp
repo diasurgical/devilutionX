@@ -9,6 +9,8 @@ int sgdwLastTime; // check name
 
 const InvXY InvRect[73] = {
 	// clang-format off
+	// Y is the bottom
+	// Screen coords(SCREEN_X and Y not needed)
 	//  X,   Y
 	{ 452,  31 }, // helmet
 	{ 480,  31 }, // helmet
@@ -75,14 +77,14 @@ const InvXY InvRect[73] = {
 	{ 538, 336 }, // inv row 4
 	{ 567, 336 }, // inv row 4
 	{ 596, 336 }, // inv row 4
-	{ 205, 385 }, // belt
-	{ 234, 385 }, // belt
-	{ 263, 385 }, // belt
-	{ 292, 385 }, // belt
-	{ 321, 385 }, // belt
-	{ 350, 385 }, // belt
-	{ 379, 385 }, // belt
-	{ 408, 385 }  // belt
+	{ PANEL_LEFT + 205, PANEL_TOP + 33 }, // belt
+	{ PANEL_LEFT + 234, PANEL_TOP + 33 }, // belt
+	{ PANEL_LEFT + 263, PANEL_TOP + 33 }, // belt
+	{ PANEL_LEFT + 292, PANEL_TOP + 33 }, // belt
+	{ PANEL_LEFT + 321, PANEL_TOP + 33 }, // belt
+	{ PANEL_LEFT + 350, PANEL_TOP + 33 }, // belt
+	{ PANEL_LEFT + 379, PANEL_TOP + 33 }, // belt
+	{ PANEL_LEFT + 408, PANEL_TOP + 33 }  // belt
 	// clang-format on
 };
 
@@ -111,6 +113,9 @@ void InitInv()
 	drawsbarflag = FALSE;
 }
 
+/**
+ * Does a palette shift in an area of the game buffer.
+ */
 void InvDrawSlotBack(int X, int Y, int W, int H)
 {
 	BYTE *dst;
@@ -136,12 +141,15 @@ void InvDrawSlotBack(int X, int Y, int W, int H)
 	}
 }
 
+/**
+ * Draw the inventory panel along with everything in it, mouse hover effect and all.
+ */
 void DrawInv()
 {
 	BOOL invtest[NUM_INV_GRID_ELEM];
 	int frame, frame_width, colour, screen_x, screen_y, i, j, ii;
 
-	CelDraw(PANEL_RIGHT, 351 + SCREEN_Y, pInvCels, 1, 320);
+	CelDraw(RGT_PANELS_X, 351 + PANELS_Y, pInvCels, 1, PANELS_WIDTH);
 
 	if (plr[myplr].InvBody[INVLOC_HEAD]._itype != ITYPE_NONE) {
 		InvDrawSlotBack(PANEL_RIGHT + 133, 59 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 2 * INV_SLOT_SIZE_PX);
@@ -379,6 +387,9 @@ void DrawInv()
 	}
 }
 
+/**
+ * Draw the belt, its items, hotkeys number and mouse hover effects.
+ */
 void DrawInvBelt()
 {
 	int i, frame, frame_width, colour;
@@ -388,7 +399,7 @@ void DrawInvBelt()
 		return;
 	}
 
-	DrawPanelBox(205, 21, 232, 28, 269, 517);
+	DrawPanelBox(205, 21, 232, 28, PANEL_X + 205, PANEL_Y + 5);
 
 	for (i = 0; i < MAXBELTITEMS; i++) {
 		if (plr[myplr].SpdList[i]._itype == ITYPE_NONE) {
@@ -396,6 +407,7 @@ void DrawInvBelt()
 		}
 
 		InvDrawSlotBack(InvRect[i + 65].X + 64, InvRect[i + 65].Y + 159, 28, 28);
+
 		frame = plr[myplr].SpdList[i]._iCurs + CURSOR_FIRSTITEM;
 		frame_width = InvItemWidth[frame];
 

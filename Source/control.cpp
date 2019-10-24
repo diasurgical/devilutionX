@@ -1133,7 +1133,7 @@ void DrawInfoBox()
 {
 	int nGold;
 
-	DrawPanelBox(177, 62, 288, 60, 241, 558);
+	DrawPanelBox(177, 62, 288, 60, PANEL_X + 177, PANEL_Y + 46);
 	
 	if (!panelflag && !trigflag && pcursinvitem == -1 && !spselflag) {
 		infostr[0] = '\0';

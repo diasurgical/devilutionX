@@ -91,6 +91,8 @@
 #define PAL16_RED		224
 #define PAL16_GRAY		240
 
+// #define SCREEN_WIDTH	640
+// #define SCREEN_HEIGHT	480
 #define SCREEN_WIDTH	1280
 #define SCREEN_HEIGHT	720
 
@@ -124,7 +126,18 @@
 #define PANEL_LEFT		(SCREEN_WIDTH - PANEL_WIDTH)/2
 #define PANEL_Y			(PANEL_TOP  + SCREEN_Y)
 #define PANEL_X			(PANEL_LEFT + SCREEN_X)
+
+// This is NOT the control panel rigth, but the rigth-positioned panels
+// (inventory, spell book) left coordinate
 #define PANEL_RIGHT		(SCREEN_X + SCREEN_WIDTH - 320)
+
+#define PANELS_WIDTH    320
+#define PANELS_HEIGHT	352
+#define RGT_PANELS_LEFT (SCREEN_WIDTH - PANELS_WIDTH)
+#define RGT_PANELS_X    (SCREEN_X + RGT_PANELS_LEFT)
+#define LFT_PANELS_X    (SCREEN_X)
+#define PANELS_TOP      (SCREEN_HEIGHT - PANEL_HEIGHT - PANELS_HEIGHT)/2 
+#define PANELS_Y        (SCREEN_Y + PANELS_TOP)  
 
 #if SCREEN_WIDTH == PANEL_WIDTH
 #define VIEWPORT_HEIGHT	(SCREEN_HEIGHT - PANEL_HEIGHT)
