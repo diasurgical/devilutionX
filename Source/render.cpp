@@ -258,17 +258,14 @@ void world_draw_black_tile(int sx, int sy)
 	if (sx >= SCREEN_WIDTH - 64 || sy >= SCREEN_HEIGHT - 32)
 		return;
 
-	dst = &gpBuffer[sx + BUFFER_WIDTH * sy];
+	dst = &gpBuffer[sx + BUFFER_WIDTH * sy] + 30;
 
-	for (i = 30, j = 1; i >= 0; i -= 2, j++, dst -= BUFFER_WIDTH + 64) {
-		dst += i;
+	for (i = 30, j = 1; i >= 0; i -= 2, j++, dst -= BUFFER_WIDTH + 2) {
 		memset(dst, 0, 4 * j);
-		dst += 4 * j + i;
 	}
-	for (i = 2, j = 15; i != 32; i += 2, j--, dst -= BUFFER_WIDTH + 64) {
-		dst += i;
+	dst += 4;
+	for (i = 2, j = 15; i != 32; i += 2, j--, dst -= BUFFER_WIDTH - 2) {
 		memset(dst, 0, 4 * j);
-		dst += 4 * j + i;
 	}
 }
 
