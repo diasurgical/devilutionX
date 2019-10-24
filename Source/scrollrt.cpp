@@ -443,9 +443,9 @@ static void drawRow(int x, int y, int sx, int sy, int eflag)
 }
 
 /**
- * This function it self causes rendering issues since it will render some walls a secound time after all items have been drawn.
+ * This function causes rendering issues since it will render some walls a second time after all items have been drawn.
  *
- * @brief Avoid actors sticking threw the walls when walking east
+ * @brief Avoid actors sticking through the walls when walking east
  */
 static void scrollrt_draw_e_flag(int x, int y, int sx, int sy)
 {
