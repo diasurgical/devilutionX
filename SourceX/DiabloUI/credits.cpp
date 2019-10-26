@@ -2,6 +2,7 @@
 #include <memory>
 #include <vector>
 
+#include "controls/menu_controls.h"
 #include "devilution.h"
 #include "miniwin/ddraw.h"
 
@@ -259,6 +260,15 @@ BOOL UiCreditsDialog(int a1)
 				break;
 			case SDL_QUIT:
 				exit(0);
+			default:
+				switch (GetMenuAction(event)) {
+				case MenuAction::BACK:
+				case MenuAction::SELECT:
+					endMenu = true;
+					break;
+				default:
+					break;
+				}
 			}
 		}
 	} while (!endMenu && !credits_renderer.Finished());

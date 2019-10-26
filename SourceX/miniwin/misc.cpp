@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <string>
 
+#include "controls/controller.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/dialogs.h"
 
@@ -127,6 +128,8 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 #ifdef USE_SDL1
 	SDL_EnableUNICODE(1);
 #endif
+
+	InitController();
 
 	int upscale = 1;
 	DvlIntSetting("upscale", &upscale);

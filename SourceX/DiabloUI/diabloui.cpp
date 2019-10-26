@@ -5,6 +5,8 @@
 #include <string>
 #include <algorithm>
 
+#include "controls/menu_controls.h"
+
 #include "DiabloUI/scrollbar.h"
 #include "DiabloUI/diabloui.h"
 
@@ -181,6 +183,34 @@ bool UiFocusNavigation(SDL_Event *event)
 	if (event->type == SDL_QUIT)
 		exit(0);
 
+	switch (GetMenuAction(*event)) {
+	case MenuAction::SELECT:
+		UiFocusNavigationSelect();
+		return true;
+	case MenuAction::UP:
+		UiFocus(SelectedItem - 1, UiItemsWraps);
+		return true;
+	case MenuAction::DOWN:
+		UiFocus(SelectedItem + 1, UiItemsWraps);
+		return true;
+	case MenuAction::PAGE_UP:
+		UiFocusPageUp();
+		return true;
+	case MenuAction::PAGE_DOWN:
+		UiFocusPageDown();
+		return true;
+	case MenuAction::DELETE:
+		UiFocusNavigationYesNo();
+		return true;
+	case MenuAction::BACK:
+		if (!gfnListEsc)
+			break;
+		UiFocusNavigationEsc();
+		return true;
+	default:
+		break;
+	}
+
 	switch (event->type) {
 	case SDL_KEYUP:
 	case SDL_MOUSEBUTTONUP:
@@ -201,39 +231,6 @@ bool UiFocusNavigation(SDL_Event *event)
 #endif
 	case SDL_SYSWMEVENT:
 		mainmenu_restart_repintro();
-	}
-
-	if (event->type == SDL_KEYDOWN) {
-		switch (event->key.keysym.sym) {
-		case SDLK_UP:
-			UiFocus(SelectedItem - 1, UiItemsWraps);
-			return true;
-		case SDLK_DOWN:
-			UiFocus(SelectedItem + 1, UiItemsWraps);
-			return true;
-		case SDLK_TAB:
-			if (SDL_GetModState() & KMOD_SHIFT)
-				UiFocus(SelectedItem - 1, UiItemsWraps);
-			else
-				UiFocus(SelectedItem + 1, UiItemsWraps);
-			return true;
-		case SDLK_PAGEUP:
-			UiFocusPageUp();
-			return true;
-		case SDLK_PAGEDOWN:
-			UiFocusPageDown();
-			return true;
-		case SDLK_RETURN:
-		case SDLK_KP_ENTER:
-		case SDLK_SPACE:
-			UiFocusNavigationSelect();
-			return true;
-		case SDLK_DELETE:
-			UiFocusNavigationYesNo();
-			return true;
-		default:
-			break;
-		}
 	}
 
 	if (SDL_IsTextInputActive()) {
@@ -288,11 +285,6 @@ bool UiFocusNavigation(SDL_Event *event)
 
 	if (UiItemMouseEvents(event, gUiItems, gUiItemCnt))
 		return true;
-
-	if (gfnListEsc && event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_ESCAPE) {
-		UiFocusNavigationEsc();
-		return true;
-	}
 
 	return false;
 }

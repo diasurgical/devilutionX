@@ -4,6 +4,7 @@
 
 extern BOOL invflag;
 extern BOOL drawsbarflag;
+extern const InvXY InvRect[73];
 
 void FreeInvGFX();
 void InitInv();

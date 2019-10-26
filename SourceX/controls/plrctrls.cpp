@@ -1,23 +1,36 @@
-#include "diablo.h"
-#include "../3rdParty/Storm/Source/storm.h"
+#include "controls/plrctrls.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+#include <cstdint>
 
-extern float leftStickX;
-extern float leftStickY;
+#include "controls/controller_motion.h"
+#include "controls/game_controls.h"
 
-// JAKE: My functions for movement and interaction via keyboard/controller
-bool newCurHidden = false;
-static DWORD attacktick;
-static DWORD invmove;
-int slot = SLOTXY_INV_FIRST;
-int spbslot = 0;
+// Based on the Nintendo Switch port by @lantus, @erfg12, @rsn8887.
+
+namespace dvl {
+
+bool sgbControllerActive = false;
 coords speedspellscoords[50];
 int speedspellcount = 0;
+
+// Native game menu, controlled by simulating a keyboard.
+bool InGameMenu()
+{
+	return stextflag > 0 || questlog || helpflag || talkflag || qtextflag || sgpCurrentMenu;
+}
+
+namespace {
+
+DWORD invmove = 0;
 int hsr[3] = { 0, 0, 0 }; // hot spell row counts
-DWORD talkwait;
-DWORD talktick;
-DWORD castwait;
+int slot = SLOTXY_INV_FIRST;
+int spbslot = 0;
+
+// Menu controlled by simulating a mouse.
+bool InControlledMenu()
+{
+	return invflag || spselflag || chrflag;
+}
 
 // 0 = not near, >0 = distance related player 1 coordinates
 coords checkNearbyObjs(int x, int y, int diff)
@@ -49,7 +62,7 @@ void checkItemsNearby(bool interact)
 			return; // item nearby, don't find objects
 		}
 	}
-	if (newCurHidden)
+	if (sgbControllerActive)
 		pcursitem = -1;
 	//sprintf(tempstr, "SCANNING FOR OBJECTS");
 	//NetSendCmdString(1 << myplr, tempstr);
@@ -62,12 +75,16 @@ void checkItemsNearby(bool interact)
 			return;
 		}
 	}
-	if (newCurHidden)
+	if (sgbControllerActive)
 		pcursobj = -1;
 }
 
 void checkTownersNearby(bool interact)
 {
+	if (pcursitem != -1)
+		// Items take priority over towners because the player can move
+		// items but not towners.
+		return;
 	for (int i = 0; i < 16; i++) {
 		if (checkNearbyObjs(towner[i]._tx, towner[i]._ty, 2).x != -1) {
 			if (towner[i]._ttype == -1)
@@ -85,7 +102,8 @@ bool checkMonstersNearby(bool attack)
 {
 	int closest = 0;                 // monster ID who is closest
 	coords objDistLast = { 99, 99 }; // previous obj distance
-	for (int i = 0; i < MAXMONSTERS; i++) {
+	// The first MAX_PLRS monsters are reserved for players' golems.
+	for (int i = MAX_PLRS; i < MAXMONSTERS; i++) {
 		int d_monster = dMonster[monster[i]._mx][monster[i]._my];
 		if (monster[i]._mFlags & MFLAG_HIDDEN || monster[i]._mhitpoints <= 0) // monster is hiding or dead, skip
 			continue;
@@ -110,6 +128,7 @@ bool checkMonstersNearby(bool attack)
 		return false;
 	}
 	if (attack) {
+		static DWORD attacktick = 0;
 		DWORD ticks = GetTickCount();
 		if (ticks - attacktick > 100) { // prevent accidental double attacks
 			attacktick = ticks;
@@ -131,8 +150,7 @@ void HideCursor()
 	SetCursorPos(320, 180);
 	MouseX = 320;
 	MouseY = 180;
-	SetCursor_(CURSOR_NONE);
-	newCurHidden = true;
+	sgbControllerActive = true;
 }
 
 void attrIncBtnSnap(int key)
@@ -152,28 +170,27 @@ void attrIncBtnSnap(int key)
 	// first, find our cursor location
 	int slot = 0;
 	for (int i = 0; i < 4; i++) {
-		// 0 = x, 1 = y, 2 = width, 3 = height
-		if (MouseX >= attribute_inc_rects2[i][0]
-		    && MouseX <= attribute_inc_rects2[i][0] + attribute_inc_rects2[i][2]
-		    && MouseY >= attribute_inc_rects2[i][1]
-		    && MouseY <= attribute_inc_rects2[i][3] + attribute_inc_rects2[i][1]) {
+		if (MouseX >= ChrBtnsRect[i].x
+		    && MouseX <= ChrBtnsRect[i].x + ChrBtnsRect[i].w
+		    && MouseY >= ChrBtnsRect[i].y
+		    && MouseY <= ChrBtnsRect[i].h + ChrBtnsRect[i].y) {
 			slot = i;
 			break;
 		}
 	}
 
 	// set future location up or down
-	if (key == VK_UP) {
+	if (key == DVL_VK_UP) {
 		if (slot > 0)
-			slot--;
-	} else if (key == VK_DOWN) {
+			--slot;
+	} else if (key == DVL_VK_DOWN) {
 		if (slot < 3)
-			slot++;
+			++slot;
 	}
 
 	// move cursor to our new location
-	int x = attribute_inc_rects2[slot][0] + (attribute_inc_rects2[slot][2] / 2);
-	int y = attribute_inc_rects2[slot][1] + (attribute_inc_rects2[slot][3] / 2);
+	int x = ChrBtnsRect[slot].x + (ChrBtnsRect[slot].w / 2);
+	int y = ChrBtnsRect[slot].y + (ChrBtnsRect[slot].h / 2);
 	SetCursorPos(x, y);
 	MouseX = x;
 	MouseY = y;
@@ -328,17 +345,14 @@ void invMove(int key)
 
 	if (pcurs > 1) {     // [3] Keep item in the same slot, don't jump it up
 		if (x != MouseX) // without this, the cursor keeps moving -10
-			{
-				SetCursorPos((x - 10), (y - 10));
-				MouseX = x - 10;
-				MouseY = y - 10;
-			}
+		{
+			SetCursorPos(x - 10, y - 10);
+		}
 	} else {
 		SetCursorPos(x, y);
-		MouseX = x;
-		MouseY = y;
 	}
 }
+
 // check if hot spell at X Y exists
 bool HSExists(int x, int y)
 {
@@ -352,12 +366,12 @@ bool HSExists(int x, int y)
 
 void hotSpellMove(int key)
 {
-	int x = 0;
-	int y = 0;
 	if (!spselflag)
 		return;
+	int x = 0;
+	int y = 0;
 
-	if (pcurs > 0)
+	if (!sgbControllerActive)
 		HideCursor();
 
 	DWORD ticks = GetTickCount();
@@ -381,7 +395,7 @@ void hotSpellMove(int key)
 		}
 	}
 
-	if (key == VK_UP) {
+	if (key == DVL_VK_UP) {
 		if (speedspellscoords[spbslot].y == 307 && hsr[1] > 0) { // we're in row 1, check if row 2 has spells
 			if (HSExists(MouseX, 251)) {
 				x = MouseX;
@@ -393,7 +407,7 @@ void hotSpellMove(int key)
 				y = 195;
 			}
 		}
-	} else if (key == VK_DOWN) {
+	} else if (key == DVL_VK_DOWN) {
 		if (speedspellscoords[spbslot].y == 251) { // we're in row 2
 			if (HSExists(MouseX, 307)) {
 				x = MouseX;
@@ -405,13 +419,13 @@ void hotSpellMove(int key)
 				y = 251;
 			}
 		}
-	} else if (key == VK_LEFT) {
+	} else if (key == DVL_VK_LEFT) {
 		if (spbslot >= speedspellcount - 1)
 			return;
 		spbslot++;
 		x = speedspellscoords[spbslot].x;
 		y = speedspellscoords[spbslot].y;
-	} else if (key == VK_RIGHT) {
+	} else if (key == DVL_VK_RIGHT) {
 		if (spbslot <= 0)
 			return;
 		spbslot--;
@@ -425,11 +439,10 @@ void hotSpellMove(int key)
 		MouseY = y;
 	}
 }
-// walk in the direction specified
 
-void walkInDir(int dir)
+void walkInDir(MoveDirection dir)
 {
-	if (invflag || spselflag || chrflag || questlog) // don't walk if inventory, speedbook or char info windows are open
+	if (dir.x == MoveDirectionX::NONE && dir.y == MoveDirectionY::NONE)
 		return;
 	DWORD ticks = GetTickCount();
 	if (ticks - invmove < 370) {
@@ -439,11 +452,155 @@ void walkInDir(int dir)
 	ClrPlrPath(myplr);                   // clear nodes
 	plr[myplr].destAction = ACTION_NONE; // stop attacking, etc.
 	HideCursor();
-	plr[myplr].walkpath[0] = dir;
+	static const _walk_path kMoveToWalkDir[3][3] = {
+		// NONE      UP      DOWN
+		{ WALK_NONE, WALK_N, WALK_S }, // NONE
+		{ WALK_W, WALK_NW, WALK_SW },  // LEFT
+		{ WALK_E, WALK_NE, WALK_SE },  // RIGHT
+	};
+	plr[myplr].walkpath[0] = kMoveToWalkDir[static_cast<std::size_t>(dir.x)][static_cast<std::size_t>(dir.y)];
 }
-static DWORD menuopenslow;
+
+void menuMoveX(MoveDirectionX dir)
+{
+	if (dir == MoveDirectionX::NONE)
+		return;
+	invMove(dir == MoveDirectionX::LEFT ? WALK_W : WALK_E);
+	hotSpellMove(dir == MoveDirectionX::LEFT ? DVL_VK_LEFT : DVL_VK_RIGHT);
+}
+
+void menuMoveY(MoveDirectionY dir)
+{
+	if (dir == MoveDirectionY::NONE)
+		return;
+	invMove(dir == MoveDirectionY::UP ? WALK_N : WALK_S);
+	const auto key = dir == MoveDirectionY::UP ? DVL_VK_UP : DVL_VK_DOWN;
+	hotSpellMove(key);
+	attrIncBtnSnap(key);
+}
+
+void movement()
+{
+	if (InGameMenu())
+		return;
+
+	MoveDirection move_dir = GetMoveDirection();
+	if (InControlledMenu()) {
+		menuMoveX(move_dir.x);
+		menuMoveY(move_dir.y);
+	} else {
+		walkInDir(move_dir);
+	}
+
+	if (GetAsyncKeyState(DVL_MK_LBUTTON) & 0x8000) {
+		if (sgbControllerActive) { // show cursor first, before clicking
+			sgbControllerActive = false;
+		} else if (spselflag) {
+			SetSpell();
+		} else {
+			LeftMouseCmd(false);
+		}
+	}
+}
+
+// Move map or mouse no more than 60 times per second.
+// This is called from both the game loop and the event loop for responsiveness.
+void HandleRightStickMotionAt60Fps()
+{
+	static std::int64_t currentTime = 0;
+	static std::int64_t lastTime = 0;
+	currentTime = SDL_GetTicks();
+
+	if (currentTime - lastTime > 15) {
+		HandleRightStickMotion();
+		lastTime = currentTime;
+	}
+}
+
+struct RightStickAccumulator {
+	void start(int *x, int *y)
+	{
+		hiresDX += rightStickX * kGranularity;
+		hiresDY += rightStickY * kGranularity;
+		*x += hiresDX / slowdown;
+		*y += -hiresDY / slowdown;
+	}
+
+	void finish()
+	{
+		// keep track of remainder for sub-pixel motion
+		hiresDX %= slowdown;
+		hiresDY %= slowdown;
+	}
+
+	static const int kGranularity = (1 << 15) - 1;
+	int slowdown; // < kGranularity
+	int hiresDX;
+	int hiresDY;
+};
+
+} // namespace
+
+void HandleRightStickMotion()
+{
+	// deadzone is handled in ScaleJoystickAxes() already
+	if (rightStickX == 0 && rightStickY == 0)
+		return;
+
+	if (automapflag) { // move map
+		static RightStickAccumulator acc = { /*slowdown=*/(1 << 14) + (1 << 13), 0, 0 };
+		int dx = 0, dy = 0;
+		acc.start(&dx, &dy);
+		if (dy > 1)
+			AutomapUp();
+		else if (dy < -1)
+			AutomapDown();
+		else if (dx < -1)
+			AutomapRight();
+		else if (dx > 1)
+			AutomapLeft();
+		acc.finish();
+	} else { // move cursor
+		if (sgbControllerActive) {
+			sgbControllerActive = false;
+		}
+		static RightStickAccumulator acc = { /*slowdown=*/(1 << 13) + (1 << 12), 0, 0 };
+		int x = MouseX;
+		int y = MouseY;
+		acc.start(&x, &y);
+		if (x < 0)
+			x = 0;
+		if (y < 0)
+			y = 0;
+		SetCursorPos(x, y);
+		acc.finish();
+	}
+}
+
+void plrctrls_game_logic()
+{
+	// check for monsters first, then items, then towners.
+	if (sgbControllerActive) { // cursor should be missing
+		if (!checkMonstersNearby(false)) {
+			pcursmonst = -1;
+			checkItemsNearby(false);
+			checkTownersNearby(false);
+		} else {
+			pcursitem = -1;
+		}
+	}
+	movement();
+	HandleRightStickMotionAt60Fps();
+}
+
+void plrctrls_event_loop()
+{
+	HandleRightStickMotionAt60Fps();
+}
+
 void useBeltPotion(bool mana)
 {
+	static DWORD menuopenslow = 0;
 	DWORD ticks = GetTickCount();
 	int invNum = 0;
 	if (ticks - menuopenslow < 300) {
@@ -451,7 +608,8 @@ void useBeltPotion(bool mana)
 	}
 	menuopenslow = ticks;
 	for (int i = 0; i < MAXBELTITEMS; i++) {
-		if ((AllItemsList[plr[myplr].SpdList[i].IDidx].iMiscId == IMISC_HEAL && mana == false) || (AllItemsList[plr[myplr].SpdList[i].IDidx].iMiscId == IMISC_FULLHEAL && mana == false) || (AllItemsList[plr[myplr].SpdList[i].IDidx].iMiscId == IMISC_MANA && mana == true) || (AllItemsList[plr[myplr].SpdList[i].IDidx].iMiscId == IMISC_FULLMANA && mana == true) || (AllItemsList[plr[myplr].SpdList[i].IDidx].iMiscId == IMISC_REJUV && AllItemsList[plr[myplr].SpdList[i].IDidx].iMiscId == IMISC_FULLREJUV)) {
+		const auto id = AllItemsList[plr[myplr].SpdList[i].IDidx].iMiscId;
+		if ((!mana && (id == IMISC_HEAL || id == IMISC_FULLHEAL)) || (mana && (id == IMISC_MANA || id == IMISC_FULLMANA)) || id == IMISC_REJUV || id == IMISC_FULLREJUV) {
 			if (plr[myplr].SpdList[i]._itype > -1) {
 				invNum = i + INVITEM_BELT_FIRST;
 				UseInvItem(myplr, invNum);
@@ -461,126 +619,68 @@ void useBeltPotion(bool mana)
 	}
 }
 
-void movements(int key) {
-	if (key == VK_UP) {
-		invMove(WALK_N);
-		hotSpellMove(VK_UP);
-		attrIncBtnSnap(VK_UP);
-		walkInDir(WALK_N);
-	} else if (key == VK_RIGHT) {
-		invMove(WALK_E);
-		hotSpellMove(VK_RIGHT);
-		walkInDir(WALK_E);
-	} else if (key == VK_DOWN) {
-		invMove(WALK_S);
-		hotSpellMove(VK_DOWN);
-		attrIncBtnSnap(VK_DOWN);
-		walkInDir(WALK_S);
-	} else if (key == VK_LEFT) {
-		invMove(WALK_W);
-		hotSpellMove(VK_LEFT);
-		walkInDir(WALK_W);
-	}
-}
-
-void charMovement() {
-	if (stextflag > 0 || questlog || helpflag || talkflag || qtextflag)
-		return;
-
-	if (!invflag && !spselflag && !chrflag) {
-		if (GetAsyncKeyState(VK_RIGHT) & 0x8000 && GetAsyncKeyState(VK_DOWN) & 0x8000 || GetAsyncKeyState(0x44) & 0x8000 && GetAsyncKeyState(0x53) & 0x8000 || leftStickY <= -0.5 && leftStickX >= 0.5) {
-			walkInDir(WALK_SE);
-		} else if (GetAsyncKeyState(VK_RIGHT) & 0x8000 && GetAsyncKeyState(VK_UP) & 0x8000 || GetAsyncKeyState(0x57) & 0x8000 && GetAsyncKeyState(0x44) & 0x8000 || leftStickY >= 0.5 && leftStickX >= 0.5) {
-			walkInDir(WALK_NE);
-		} else if (GetAsyncKeyState(VK_LEFT) & 0x8000 && GetAsyncKeyState(VK_DOWN) & 0x8000 || GetAsyncKeyState(0x41) & 0x8000 && GetAsyncKeyState(0x53) & 0x8000 || leftStickY <= -0.5 && leftStickX <= -0.5) {
-			walkInDir(WALK_SW);
-		} else if (GetAsyncKeyState(VK_LEFT) & 0x8000 && GetAsyncKeyState(VK_UP) & 0x8000 || GetAsyncKeyState(0x57) & 0x8000 && GetAsyncKeyState(0x41) & 0x8000 || leftStickY >= 0.40 && leftStickX <= -0.5) {
-			walkInDir(WALK_NW);
-		}
-	}
-
-	if (GetAsyncKeyState(VK_UP) & 0x8000 || GetAsyncKeyState(0x57) & 0x8000 || leftStickY >= 0.5) {
-		movements(VK_UP);
-	} else if (GetAsyncKeyState(VK_RIGHT) & 0x8000 || GetAsyncKeyState(0x44) & 0x8000 || leftStickX >= 0.5) {
-		movements(VK_RIGHT);
-	} else if (GetAsyncKeyState(VK_DOWN) & 0x8000 || GetAsyncKeyState(0x53) & 0x8000 || leftStickY <= -0.5) {
-		movements(VK_DOWN);
-	} else if (GetAsyncKeyState(VK_LEFT) & 0x8000 || GetAsyncKeyState(0x41) & 0x8000 || leftStickX <= -0.5) {
-		movements(VK_LEFT);
-	}
-
-	if (GetAsyncKeyState(MK_LBUTTON) & 0x8000) {
-		if (newCurHidden) { // show cursor first, before clicking
-			SetCursor_(CURSOR_HAND);
-			newCurHidden = false;
-		} else if (spselflag) {
-			SetSpell();
-		} else {
-			LeftMouseCmd(false);
-		}
-	}
-}
-
-void keyboardExpansion(int vikey)
+void performPrimaryAction()
 {
-	static DWORD opentimer;
-	static DWORD clickinvtimer;
-	static DWORD statuptimer;
-	DWORD ticks = GetTickCount();
-
-	if (stextflag > 0 || questlog || helpflag || talkflag || qtextflag)
-		return;
-	if (vikey == VK_SPACE) { // similar to X button on PS1 ccontroller. Talk to towners, click on inv items, attack.
-		if (invflag) { // inventory is open
-			if (ticks - clickinvtimer >= 300) {
-				clickinvtimer = ticks;
-				if (pcurs == CURSOR_IDENTIFY)
-					CheckIdentify(myplr, pcursinvitem);
-				else if (pcurs == CURSOR_REPAIR)
-					DoRepair(myplr, pcursinvitem);
-				else
-					CheckInvItem();
-			}
-		} else if (spselflag) {
-			SetSpell();
-		} else if (chrflag) {
-			if (ticks - statuptimer >= 400) {
-				statuptimer = ticks;
-				if (!chrbtnactive && plr[myplr]._pStatPts) {
-					CheckChrBtns();
-					for (int i = 0; i < 4; i++) {
-						if (MouseX >= attribute_inc_rects2[i][0]
-							&& MouseX <= attribute_inc_rects2[i][0] + attribute_inc_rects2[i][2]
-							&& MouseY >= attribute_inc_rects2[i][1]
-							&& MouseY <= attribute_inc_rects2[i][3] + attribute_inc_rects2[i][1]) {
-							chrbtn[i] = 1;
-							chrbtnactive = TRUE;
-							ReleaseChrBtns();
-						}
+	const DWORD ticks = GetTickCount();
+	if (invflag) { // inventory is open
+		static DWORD clickinvtimer;
+		if (ticks - clickinvtimer >= 300) {
+			clickinvtimer = ticks;
+			if (pcurs == CURSOR_IDENTIFY)
+				CheckIdentify(myplr, pcursinvitem);
+			else if (pcurs == CURSOR_REPAIR)
+				DoRepair(myplr, pcursinvitem);
+			else
+				CheckInvItem();
+		}
+	} else if (spselflag) {
+		SetSpell();
+	} else if (chrflag) {
+		static DWORD statuptimer;
+		if (ticks - statuptimer >= 400) {
+			statuptimer = ticks;
+			if (!chrbtnactive && plr[myplr]._pStatPts) {
+				CheckChrBtns();
+				for (int i = 0; i < 4; i++) {
+					if (MouseX >= ChrBtnsRect[i].x
+					    && MouseX <= ChrBtnsRect[i].x + ChrBtnsRect[i].w
+					    && MouseY >= ChrBtnsRect[i].y
+					    && MouseY <= ChrBtnsRect[i].h + ChrBtnsRect[i].y) {
+						chrbtn[i] = 1;
+						chrbtnactive = true;
+						ReleaseChrBtns();
 					}
 				}
-				if (plr[myplr]._pStatPts == 0)
-					HideCursor();
 			}
-		} else {
-			HideCursor();
-			talktick = GetTickCount(); // this is shared with STextESC, do NOT duplicate or use anywhere else
-			if (!checkMonstersNearby(true)) {
-				if (talktick - talkwait > 600) { // prevent re-entering talk after finished
-					talkwait = talktick;
-					checkTownersNearby(true);
-				}
-			}
+			if (plr[myplr]._pStatPts == 0)
+				HideCursor();
 		}
-	} else if (vikey == VK_RETURN) { // similar to [] button on PS1 controller. Open chests, doors, pickup items
-		if (!invflag) {
-			HideCursor();
-			if (ticks - opentimer > 500) {
-				opentimer = ticks;
-				checkItemsNearby(true);
+	} else {
+		static DWORD talkwait;
+		if (stextflag)
+			talkwait = GetTickCount(); // Wait before we re-initiate talking
+		HideCursor();
+		DWORD talktick = GetTickCount();
+		if (!checkMonstersNearby(true)) {
+			if (talktick - talkwait > 600) { // prevent re-entering talk after finished
+				talkwait = talktick;
+				checkTownersNearby(true);
 			}
 		}
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+void performSecondaryAction()
+{
+	if (invflag)
+		return;
+	static DWORD opentimer = 0;
+	HideCursor();
+	const DWORD ticks = GetTickCount();
+	if (ticks - opentimer > 500) {
+		opentimer = ticks;
+		checkItemsNearby(true);
+	}
+}
+
+} // namespace dvl

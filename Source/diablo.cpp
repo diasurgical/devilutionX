@@ -1675,6 +1675,8 @@ void game_loop(BOOL bStartup)
 	}
 }
 
+extern void plrctrls_game_logic();
+
 void game_logic()
 {
 	if (PauseMode == 2) {
@@ -1720,6 +1722,8 @@ void game_logic()
 	CheckQuests();
 	force_redraw |= 1;
 	pfile_update(FALSE);
+
+	plrctrls_game_logic();
 }
 
 void timeout_cursor(BOOL bTimeout)

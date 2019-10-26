@@ -17,7 +17,6 @@
 
 #define SDL_zero(x) SDL_memset(&(x), 0, sizeof((x)))
 #define SDL_InvalidParamError(param) SDL_SetError("Parameter '%s' is invalid", (param))
-#define SDL_Log puts
 #define SDL_floor floor
 
 //== Events handling
@@ -46,6 +45,17 @@
 
 // For now we only process ASCII input when using SDL1.
 #define SDL_TEXTINPUTEVENT_TEXT_SIZE 2
+
+#define SDL_JoystickNameForIndex SDL_JoystickName
+
+inline void SDL_Log(const char *fmt, ...)
+{
+	va_list ap;
+	va_start(ap, fmt);
+	vprintf(fmt, ap);
+	va_end(ap);
+	puts("");
+}
 
 static SDL_bool SDLBackport_IsTextInputActive = SDL_FALSE;
 

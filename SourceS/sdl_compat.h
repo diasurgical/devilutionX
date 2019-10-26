@@ -1,5 +1,33 @@
 // Compatibility wrappers for SDL 1 & 2.
+#pragma once
 #include <SDL.h>
+
+#ifndef USE_SDL1
+#define SDLC_KEYSTATE_LEFTSHIFT SDL_SCANCODE_LSHIFT
+#define SDLC_KEYSTATE_RIGHTSHIFT SDL_SCANCODE_RSHIFT
+#define SDLC_KEYSTATE_MENU SDL_SCANCODE_MENU
+#define SDLC_KEYSTATE_UP SDL_SCANCODE_UP
+#define SDLC_KEYSTATE_DOWN SDL_SCANCODE_DOWN
+#define SDLC_KEYSTATE_LEFT SDL_SCANCODE_LEFT
+#define SDLC_KEYSTATE_RIGHT SDL_SCANCODE_RIGHT
+#else
+#define SDLC_KEYSTATE_LEFTSHIFT SDLK_LSHIFT
+#define SDLC_KEYSTATE_RIGHTSHIFT SDLK_LSHIFT
+#define SDLC_KEYSTATE_MENU SDLK_MENU
+#define SDLC_KEYSTATE_UP SDLK_UP
+#define SDLC_KEYSTATE_DOWN SDLK_DOWN
+#define SDLC_KEYSTATE_LEFT SDLK_LEFT
+#define SDLC_KEYSTATE_RIGHT SDLK_RIGHT
+#endif
+
+inline const Uint8 *SDLC_GetKeyState()
+{
+#ifndef USE_SDL1
+	return SDL_GetKeyboardState(nullptr);
+#else
+	return SDL_GetKeyState(nullptr);
+#endif
+}
 
 inline int SDLC_SetColorKey(SDL_Surface *surface, Uint32 key)
 {

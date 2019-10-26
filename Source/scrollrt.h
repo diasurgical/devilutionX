@@ -2,6 +2,7 @@
 #ifndef __SCROLLRT_H__
 #define __SCROLLRT_H__
 
+extern bool sgbControllerActive;
 extern int light_table_index;
 extern BYTE *gpBufStart;
 extern BYTE *gpBufEnd;

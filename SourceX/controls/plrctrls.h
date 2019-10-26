@@ -1,29 +1,35 @@
 #pragma once
+// Controller actions implementation
 
-void checkTownersNearby(bool interact);
-void checkItemsNearby(bool interact);
-void keyboardExpansion(int vikey);
-void charMovement();
-void movements(int key);
-bool checkMonstersNearby(bool attack);
-extern bool newCurHidden;
-void invMove(int key);
-void HideCursor();
+#include "devilution.h"
+
+namespace dvl {
+
+// Run on every game logic iteration.
+void plrctrls_game_logic();
+
+// Runs before the start of event loop drain, even if there are no events.
+void plrctrls_event_loop();
+
+// Moves the map if active, the cursor otherwise.
+void HandleRightStickMotion();
+
+// Whether we're in a dialog menu that the game handles natively with keyboard controls.
+bool InGameMenu();
+
 void useBeltPotion(bool mana);
+
+// Talk to towners, click on inv items, attack, etc.
+void performPrimaryAction();
+
+// Open chests, doors, pickup items.
+void performSecondaryAction();
+
 typedef struct coords {
 	int x;
 	int y;
 } coords;
 extern coords speedspellscoords[50];
 extern int speedspellcount;
-extern const InvXY InvRect[73]; // wasn't made public, so I'll add this here from inv.cpp
 
-extern DWORD talkwait;
-extern DWORD talktick;
-extern DWORD castwait;
-
-#define INV_TOP 240;
-#define INV_LEFT 350;
-#define INV_HEIGHT 320;
-#define DISPLAY_HEIGHT 360;
-#define DISPLAY_WIDTH 640;
+} // namespace dvl

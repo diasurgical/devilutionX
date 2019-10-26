@@ -1,5 +1,6 @@
 #include "DiabloUI/dialogs.h"
 
+#include "controls/menu_controls.h"
 #include "devilution.h"
 #include "dx.h"
 #include "DiabloUI/diabloui.h"
@@ -257,24 +258,22 @@ void DialogLoop(UiItem *items, std::size_t num_items, UiItem *render_behind, std
 	do {
 		while (SDL_PollEvent(&event)) {
 			switch (event.type) {
-			case SDL_KEYDOWN:
-				switch (event.key.keysym.sym) {
-				case SDLK_ESCAPE:
-				case SDLK_RETURN:
-				case SDLK_KP_ENTER:
-				case SDLK_SPACE:
-					state = State::OK;
-					break;
-				default:
-					break;
-				}
-				break;
 			case SDL_MOUSEBUTTONDOWN:
 			case SDL_MOUSEBUTTONUP:
 				UiItemMouseEvents(&event, items, num_items);
 				break;
 			case SDL_QUIT:
 				exit(0);
+			default:
+				switch (GetMenuAction(event)) {
+				case MenuAction::BACK:
+				case MenuAction::SELECT:
+					state = State::OK;
+					break;
+				default:
+					break;
+				}
+				break;
 			}
 		}
 

@@ -206,6 +206,14 @@ add_library(devilution STATIC
 
 set(devilutionx_SRCS
   SourceX/dx.cpp
+  SourceX/controls/devices/game_controller.cpp
+  SourceX/controls/devices/joystick.cpp
+  SourceX/controls/devices/kbcontroller.cpp
+  SourceX/controls/controller.cpp
+  SourceX/controls/controller_motion.cpp
+  SourceX/controls/game_controls.cpp
+  SourceX/controls/menu_controls.cpp
+  SourceX/controls/plrctrls.cpp
   SourceX/miniwin/ddraw.cpp
   SourceX/miniwin/misc.cpp
   SourceX/miniwin/misc_io.cpp

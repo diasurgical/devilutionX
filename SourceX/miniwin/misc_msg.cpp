@@ -1,8 +1,12 @@
+#include <cstdint>
 #include <deque>
 #include <SDL.h>
 
 #include "devilution.h"
 #include "stubs.h"
+#include "controls/controller_motion.h"
+#include "controls/game_controls.h"
+#include "controls/plrctrls.h"
 
 /** @file
  * *
@@ -178,18 +182,114 @@ static int translate_sdl_key(SDL_Keysym key)
 	}
 }
 
-static WPARAM keystate_for_mouse(WPARAM ret)
+namespace {
+
+WPARAM keystate_for_mouse(WPARAM ret)
 {
 	ret |= (SDL_GetModState() & KMOD_SHIFT) ? DVL_MK_SHIFT : 0;
 	// XXX: other DVL_MK_* codes not implemented
 	return ret;
 }
 
-static WINBOOL false_avail()
+WINBOOL false_avail()
 {
 	DUMMY_PRINT("return %s although event available", "false");
 	return false;
 }
+
+void SetMouseLMBMessage(const SDL_Event &event, LPMSG lpMsg)
+{
+	switch (event.type) {
+#ifndef USE_SDL1
+	case SDL_CONTROLLERBUTTONDOWN:
+	case SDL_CONTROLLERBUTTONUP:
+		lpMsg->message = event.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_LBUTTONUP : DVL_WM_LBUTTONDOWN;
+		lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+		break;
+#endif
+	case SDL_MOUSEBUTTONDOWN:
+	case SDL_MOUSEBUTTONUP:
+		lpMsg->message = event.type == SDL_MOUSEBUTTONUP ? DVL_WM_LBUTTONUP : DVL_WM_LBUTTONDOWN;
+		lpMsg->lParam = (event.button.y << 16) | (event.button.x & 0xFFFF);
+		break;
+	case SDL_KEYDOWN:
+	case SDL_KEYUP:
+		lpMsg->message = event.type == SDL_KEYUP ? DVL_WM_LBUTTONUP : DVL_WM_LBUTTONDOWN;
+		lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+		break;
+	default:
+		lpMsg->message = event.type == DVL_WM_LBUTTONUP;
+		lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+		break;
+	}
+	if (lpMsg->message == DVL_WM_LBUTTONUP || lpMsg->message == DVL_WM_LBUTTONDOWN)
+		lpMsg->wParam = keystate_for_mouse(lpMsg->message == DVL_WM_LBUTTONUP ? 0 : DVL_MK_LBUTTON);
+}
+
+void ShowCursor()
+{
+	if (sgbControllerActive) {
+		sgbControllerActive = false;
+	}
+}
+
+void HideCursorIfNotNeeded(bool newspselflag = spselflag) {
+	if (!chrflag && !invflag && !newspselflag) {
+		sgbControllerActive = true;
+	}
+}
+
+// Moves the mouse to the first inventory slot.
+bool FocusOnInventory()
+{
+	if (!invflag)
+		return false;
+	ShowCursor();
+	SetCursorPos(InvRect[25].X + (INV_SLOT_SIZE_PX / 2), InvRect[25].Y - (INV_SLOT_SIZE_PX / 2));
+	return true;
+}
+
+// Moves the mouse to the first attribute "+" button.
+bool FocusOnCharInfo()
+{
+	if (!chrflag || plr[myplr]._pStatPts == 0)
+		return false;
+
+	// Find the first incrementable stat.
+	int pc = plr[myplr]._pClass;
+	int stat = -1;
+	for (int i = 4; i >= 0; --i) {
+		switch (i) {
+		case ATTRIB_STR:
+			if (plr[myplr]._pBaseStr >= MaxStats[pc][ATTRIB_STR])
+				continue;
+			break;
+		case ATTRIB_MAG:
+			if (plr[myplr]._pBaseMag >= MaxStats[pc][ATTRIB_MAG])
+				continue;
+			break;
+		case ATTRIB_DEX:
+			if (plr[myplr]._pBaseDex >= MaxStats[pc][ATTRIB_DEX])
+				continue;
+			break;
+		case ATTRIB_VIT:
+			if (plr[myplr]._pBaseVit >= MaxStats[pc][ATTRIB_VIT])
+				continue;
+			break;
+		default:
+			continue;
+		}
+		stat = i;
+	}
+	if (stat == -1)
+		return false;
+	ShowCursor();
+	const auto &rect = ChrBtnsRect[stat];
+	SetCursorPos(rect.x + (rect.w / 2), rect.y + (rect.h / 2));
+	return true;
+}
+
+} // namespace
 
 WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg)
 {
@@ -201,6 +301,8 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		UNIMPLEMENTED();
 
 	if (wRemoveMsg == DVL_PM_NOREMOVE) {
+		plrctrls_event_loop();
+
 		// This does not actually fill out lpMsg, but this is ok
 		// since the engine never uses it in this case
 		return !message_queue.empty() || SDL_PollEvent(NULL);
@@ -221,8 +323,80 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	}
 
 	lpMsg->hwnd = hWnd;
+	lpMsg->message = 0;
 	lpMsg->lParam = 0;
 	lpMsg->wParam = 0;
+
+	if (e.type == SDL_QUIT) {
+		lpMsg->message = DVL_WM_QUIT;
+		return true;
+	}
+
+	if (movie_playing) {
+		if (ShouldSkipMovie(e))
+			SetMouseLMBMessage(e, lpMsg);
+		return true;
+	}
+
+	if (ProcessControllerMotion(e)) {
+		ScaleJoysticks();
+		HandleRightStickMotion();
+		return true;
+	}
+
+	GameAction action;
+	if (GetGameAction(e, &action)) {
+		switch (action.type) {
+		case GameActionType::NONE:
+			break;
+		case GameActionType::USE_HEALTH_POTION:
+			useBeltPotion(/*mana=*/false);
+			break;
+		case GameActionType::USE_MANA_POTION:
+			useBeltPotion(/*mana=*/true);
+			break;
+		case GameActionType::PRIMARY_ACTION:
+			performPrimaryAction();
+			break;
+		case GameActionType::SECONDARY_ACTION:
+			performSecondaryAction();
+			break;
+		case GameActionType::TOGGLE_QUICK_SPELL_MENU:
+			ShowCursor();
+			lpMsg->message = DVL_WM_KEYDOWN;
+			lpMsg->wParam = 'S';
+			// We expect the flag value to change after this.
+			HideCursorIfNotNeeded(!spselflag);
+			return true;
+		case GameActionType::TOGGLE_CHARACTER_INFO:
+			questlog = false;
+			chrflag = !chrflag;
+			if (chrflag)
+				FocusOnCharInfo();
+			else
+				FocusOnInventory();
+			HideCursorIfNotNeeded();
+			break;
+		case GameActionType::TOGGLE_INVENTORY:
+			sbookflag = false;
+			invflag = !invflag;
+			if (invflag)
+				FocusOnInventory();
+			else
+				FocusOnCharInfo();
+			HideCursorIfNotNeeded();
+			break;
+		case GameActionType::SEND_KEY:
+			lpMsg->message = action.send_key.up ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
+			lpMsg->wParam = action.send_key.vk_code;
+			return true;
+		case GameActionType::SEND_MOUSE_LEFT_CLICK:
+			ShowCursor();
+			SetMouseLMBMessage(e, lpMsg);
+			return true;
+		}
+		return true;
+	}
 
 	switch (e.type) {
 	case SDL_QUIT:
@@ -374,43 +548,27 @@ WINBOOL TranslateMessage(const MSG *lpMsg)
 
 SHORT GetAsyncKeyState(int vKey)
 {
-#ifndef USE_SDL1
-	const Uint8 *state = SDL_GetKeyboardState(nullptr);
+	if (vKey == DVL_MK_LBUTTON)
+		return SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT);
+	if (vKey == DVL_MK_RBUTTON)
+		return SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT);
+	const Uint8 *state = SDLC_GetKeyboardState();
 	switch (vKey) {
 	case DVL_VK_SHIFT:
-		return state[SDL_SCANCODE_LSHIFT] || state[SDL_SCANCODE_RSHIFT] ? 0x8000 : 0;
+		return state[SDLC_KEYSTATE_LEFTSHIFT] || state[SDLC_KEYSTATE_RIGHTSHIFT] ? 0x8000 : 0;
 	case DVL_VK_MENU:
-		return state[SDL_SCANCODE_MENU] ? 0x8000 : 0;
+		return state[SDLC_KEYSTATE_MENU] ? 0x8000 : 0;
 	case DVL_VK_LEFT:
-		return state[SDL_SCANCODE_LEFT] ? 0x8000 : 0;
+		return state[SDLC_KEYSTATE_LEFT] ? 0x8000 : 0;
 	case DVL_VK_UP:
-		return state[SDL_SCANCODE_UP] ? 0x8000 : 0;
+		return state[SDLC_KEYSTATE_UP] ? 0x8000 : 0;
 	case DVL_VK_RIGHT:
-		return state[SDL_SCANCODE_RIGHT] ? 0x8000 : 0;
+		return state[SDLC_KEYSTATE_RIGHT] ? 0x8000 : 0;
 	case DVL_VK_DOWN:
-		return state[SDL_SCANCODE_DOWN] ? 0x8000 : 0;
+		return state[SDLC_KEYSTATE_DOWN] ? 0x8000 : 0;
 	default:
 		return 0;
 	}
-#else
-	const Uint8 *state = SDL_GetKeyState(nullptr);
-	switch (vKey) {
-	case DVL_VK_SHIFT:
-		return state[SDLK_LSHIFT] || state[SDLK_RSHIFT] ? 0x8000 : 0;
-	case DVL_VK_MENU:
-		return state[SDLK_MENU] ? 0x8000 : 0;
-	case DVL_VK_LEFT:
-		return state[SDLK_LEFT] ? 0x8000 : 0;
-	case DVL_VK_UP:
-		return state[SDLK_UP] ? 0x8000 : 0;
-	case DVL_VK_RIGHT:
-		return state[SDLK_RIGHT] ? 0x8000 : 0;
-	case DVL_VK_DOWN:
-		return state[SDLK_DOWN] ? 0x8000 : 0;
-	default:
-		return 0;
-	}
-#endif
 }
 
 LRESULT DispatchMessageA(const MSG *lpMsg)
@@ -438,4 +596,4 @@ WINBOOL PostMessageA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 	return true;
 }
 
-}
+} // namespace dvl

@@ -24,6 +24,8 @@ WINBOOL SetCursorPos(int X, int Y)
 #endif
 
 	SDL_WarpMouseInWindow(window, X, Y);
+	MouseX = X;
+	MouseY = Y;
 	return true;
 }
 
