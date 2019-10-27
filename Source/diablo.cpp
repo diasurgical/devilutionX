@@ -147,7 +147,9 @@ void run_game_loop(unsigned int uMsg)
 	while (gbRunGame) {
 		diablo_color_cyc_logic();
 #ifdef VITA
-		VitaAux::getPressedKeyAsSDL_Event(false, VITAMOUSEMODE_AS_TOUCHPAD);
+#ifdef USE_SDL1
+		VitaAux::processTouchEventToSDL();
+#endif
 #endif
 		if (PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE)) {
 			SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_ABOVE_NORMAL);
@@ -798,7 +800,11 @@ void RightMouseDown()
 			    || (!sbookflag || MouseX <= 320)
 			        && !TryIconCurs()
 			        && (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem))) {
+#ifndef VITA
 				if (pcurs == 1) {
+#else
+				if (pcurs <= 1) { // JAKE: Allow people without cursor to cast spells too
+#endif
 					if (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem))
 						CheckPlrSpell();
 				} else if (pcurs > 1 && pcurs < 12) {
@@ -985,7 +991,10 @@ void PressKey(int vkey)
 		} else if (helpflag) {
 			HelpScrollUp();
 		} else if (automapflag) {
-			AutomapUp();
+#ifdef VITA
+			if (GetAsyncKeyState(VK_SHIFT) & 0x8000) // JAKE: [1] no move when u move
+#endif
+				AutomapUp();
 		}
 	} else if (vkey == VK_DOWN) {
 		if (stextflag) {
@@ -995,7 +1004,10 @@ void PressKey(int vkey)
 		} else if (helpflag) {
 			HelpScrollDown();
 		} else if (automapflag) {
-			AutomapDown();
+#ifdef VITA
+			if (GetAsyncKeyState(VK_SHIFT) & 0x8000) // JAKE: [2] no move when u move
+#endif
+				AutomapDown();
 		}
 	} else if (vkey == VK_PRIOR) {
 		if (stextflag) {
@@ -1007,15 +1019,30 @@ void PressKey(int vkey)
 		}
 	} else if (vkey == VK_LEFT) {
 		if (automapflag && !talkflag) {
-			AutomapLeft();
+#ifdef VITA
+			if (GetAsyncKeyState(VK_SHIFT) & 0x8000) // JAKE: [3] no move when u move
+#endif
+				AutomapLeft();
 		}
 	} else if (vkey == VK_RIGHT) {
 		if (automapflag && !talkflag) {
-			AutomapRight();
+#ifdef VITA
+			if (GetAsyncKeyState(VK_SHIFT) & 0x8000) // JAKE: [3] no move when u move
+#endif
+				AutomapRight();
 		}
 	} else if (vkey == VK_TAB) {
 		DoAutoMap();
 	} else if (vkey == VK_SPACE) {
+#ifdef VITA
+		if (stextflag) {
+			STextEnter();
+		} else if (questlog) {
+			QuestlogEnter();
+		} else {
+			control_type_message();
+		}
+#else
 		if (!chrflag && invflag && MouseX < 480 && MouseY < PANEL_TOP) {
 			SetCursorPos(MouseX + 160, MouseY);
 		}
@@ -1036,6 +1063,7 @@ void PressKey(int vkey)
 		msgdelay = 0;
 		gamemenu_off();
 		doom_close();
+#endif
 	}
 }
 
@@ -1089,6 +1117,16 @@ void PressChar(int vkey)
 		if (!stextflag) {
 			sbookflag = FALSE;
 			invflag = invflag == 0;
+#ifdef VITA
+			// JAKE: Show cursor if inventory window open, set cursor to inv slot 1
+			if (newCurHidden) {
+				SetCursor_(CURSOR_HAND);
+				newCurHidden = false;
+			}
+			SetCursorPos((InvRect[25].X + (INV_SLOT_SIZE_PX / 2)), (InvRect[25].Y - (INV_SLOT_SIZE_PX / 2))); // inv cells are 29x29
+			MouseX = (InvRect[25].X + (INV_SLOT_SIZE_PX / 2));
+			MouseY = (InvRect[25].Y - (INV_SLOT_SIZE_PX / 2));
+#else
 			if (!invflag || chrflag) {
 				if (MouseX < 480 && MouseY < PANEL_TOP) {
 					SetCursorPos(MouseX + 160, MouseY);
@@ -1098,6 +1136,7 @@ void PressChar(int vkey)
 					SetCursorPos(MouseX - 160, MouseY);
 				}
 			}
+#endif
 		}
 		return;
 	case 'C':
@@ -1105,6 +1144,12 @@ void PressChar(int vkey)
 		if (!stextflag) {
 			questlog = FALSE;
 			chrflag = !chrflag;
+#ifdef VITA
+			if (newCurHidden) {
+				SetCursor_(CURSOR_HAND);
+				newCurHidden = false;
+			}
+#endif
 			if (!chrflag || invflag) {
 				if (MouseX > 160 && MouseY < PANEL_TOP) {
 					SetCursorPos(MouseX - 160, MouseY);
@@ -1150,8 +1195,13 @@ void PressChar(int vkey)
 	case 'z':
 		zoomflag = !zoomflag;
 		return;
+#ifdef VITA
+	case 'H': // JAKE: Changed, used to be 'S' and 's'
+	case 'h':
+#else
 	case 'S':
 	case 's':
+#endif
 		if (!stextflag) {
 			invflag = 0;
 			if (!spselflag) {
@@ -1162,6 +1212,17 @@ void PressChar(int vkey)
 			track_repeat_walk(0);
 		}
 		return;
+#ifdef VITA
+	case 'x':
+	case 'X':
+		// JAKE: Spacebar used to go back, now Z goes back.
+		if (pcurs >= CURSOR_FIRSTITEM && invflag)
+			DropItemBeforeTrig();
+		if (!invflag && !talkflag)
+			RightMouseDown();
+		PressEscKey();
+		return;
+#endif
 	case 'B':
 	case 'b':
 		if (!stextflag) {
@@ -1443,7 +1504,9 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 		glSeedTbl[currlevel] = setseed;
 
 	music_stop();
+#ifndef VITA
 	SetCursor_(CURSOR_HAND);
+#endif
 	SetRndSeed(glSeedTbl[currlevel]);
 	IncProgress();
 	MakeLightTable();

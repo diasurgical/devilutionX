@@ -86,9 +86,6 @@ BOOL UiProgressDialog(HWND window, char *msg, int enable, int (*fnfunc)(), int r
 	int progress = 0;
 
 	SDL_Event event;
-#ifdef VITA
-	VitaAux::getPressedKeyAsSDL_Event(true);
-#endif
 	while (!endMenu && progress < 100) {
 		progress = fnfunc();
 		progress_Render(progress);
@@ -97,6 +94,9 @@ BOOL UiProgressDialog(HWND window, char *msg, int enable, int (*fnfunc)(), int r
 
 		while (SDL_PollEvent(&event)) {
 			switch (event.type) {
+#ifdef VITA
+			case SDL_JOYBUTTONDOWN:
+#endif
 			case SDL_KEYDOWN:
 				switch (event.key.keysym.sym) {
 				case SDLK_ESCAPE:

@@ -15,9 +15,9 @@ namespace dvl {
 
 WINBOOL SetCursorPos(int X, int Y)
 {
-	assert(window);
 
 #ifndef VITA
+	assert(window);
 
 #ifndef USE_SDL1
 	if (renderer) {
@@ -32,9 +32,9 @@ WINBOOL SetCursorPos(int X, int Y)
 		Y *= scaleX;
 	}
 #endif
-#endif
 
 	SDL_WarpMouseInWindow(window, X, Y);
+#endif
 	return true;
 }
 

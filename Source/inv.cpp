@@ -1049,7 +1049,15 @@ void CheckInvPaste(int pnum, int mx, int my)
 	CalcPlrInv(pnum, TRUE);
 	if (pnum == myplr) {
 		if (cn == 1)
+#ifndef VITA
 			SetCursorPos(MouseX + (cursW >> 1), MouseY + (cursH >> 1));
+
+#else
+			// JAKE: [2] Keep item in the same slot, don't jump it up
+			SetCursorPos(MouseX + 10, MouseY + 10);
+		MouseX = MouseX + 10;
+		MouseY = MouseY + 10;
+#endif
 		SetCursor_(cn);
 	}
 }
@@ -1231,7 +1239,16 @@ void CheckInvCut(int pnum, int mx, int my)
 		if (pnum == myplr) {
 			PlaySFX(IS_IGRAB);
 			SetCursor_(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
+#ifndef VITA
 			SetCursorPos(mx - (cursW >> 1), MouseY - (cursH >> 1));
+#else
+			// JAKE: [1] Keep item in the same slot, don't jump it up
+			if (pcurs > 1) {
+				SetCursorPos(mx - 10, MouseY - 10);
+				MouseX = mx - 10;
+				MouseY = MouseY - 10;
+			}
+#endif
 		}
 	}
 }
@@ -1998,8 +2015,11 @@ void RemoveScroll(int pnum)
 BOOL UseScroll()
 {
 	int i;
-
+#ifndef VITA
 	if (pcurs != CURSOR_HAND)
+#else
+	if (pcurs > CURSOR_HAND)      // JAKE: let no cursor use scrolls too
+#endif
 		return FALSE;
 	if (leveltype == DTYPE_TOWN && !spelldata[plr[myplr]._pRSpell].sTownSpell)
 		return FALSE;
@@ -2068,10 +2088,15 @@ BOOL UseInvItem(int pnum, int cii)
 
 	if (plr[pnum]._pInvincible && !plr[pnum]._pHitPoints && pnum == myplr)
 		return TRUE;
+#ifndef VITA
 	if (pcurs != 1)
 		return TRUE;
 	if (stextflag)
 		return TRUE;
+#else
+	if (pcurs <= 1 && !stextflag) // JAKE: Let people without a cursor use items too
+	{
+#endif
 	if (cii <= 5)
 		return FALSE;
 
@@ -2161,8 +2186,11 @@ BOOL UseInvItem(int pnum, int cii)
 	} else if (plr[pnum].InvList[c]._iMiscId != IMISC_MAPOFDOOM) {
 		RemoveInvItem(pnum, c);
 	}
+#ifdef VITA
+}
+#endif
 
-	return TRUE;
+return TRUE;
 }
 
 void DoTelekinesis()

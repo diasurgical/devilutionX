@@ -214,7 +214,29 @@ bool UiFocusNavigation(SDL_Event *event)
 {
 	if (event->type == SDL_QUIT)
 		exit(0);
-
+#ifdef VITA
+	if (event->type == SDL_JOYBUTTONDOWN) {
+		if (event->button.which == 0) {
+			switch (event->button.button) {
+			case SDL_JOYBUTTON_X:
+				UiFocusNavigationSelect();
+				return true;
+			case SDL_JOYBUTTON_CIRCLE:
+				UiFocusNavigationEsc();
+				return true;
+			case SDL_JOYBUTTON_SQUARE:
+				UiFocusNavigationYesNo();
+				return true;
+			case SDL_JOYBUTTON_UP:
+				UiFocus(SelectedItem - 1, UiItemsWraps);
+				return true;
+			case SDL_JOYBUTTON_DOWN:
+				UiFocus(SelectedItem + 1, UiItemsWraps);
+				return true;
+			}
+		}
+	}
+#endif
 	switch (event->type) {
 	case SDL_KEYUP:
 	case SDL_MOUSEBUTTONUP:
@@ -400,9 +422,11 @@ void UiInitialize()
 	LoadUiGFX();
 	LoadArtFonts();
 	if (ArtCursor.surface != nullptr) {
+#ifndef vita
 		if (SDL_ShowCursor(SDL_DISABLE) <= -1) {
 			ErrSdl();
 		}
+#endif
 	}
 }
 
@@ -579,9 +603,6 @@ void DrawSelector(const SDL_Rect &rect)
 void UiPollAndRender()
 {
 	SDL_Event event;
-#ifdef VITA
-	VitaAux::getPressedKeyAsSDL_Event(true, VITAMOUSEMODE_AS_MOUSE);
-#endif
 	while (SDL_PollEvent(&event)) {
 		UiFocusNavigation(&event);
 	}
@@ -853,9 +874,9 @@ void DrawMouse()
 	}
 #endif
 #else
-	VITATOUCH position = VitaAux::getVitaTouch();
-	MouseX = position.x_front;
-	MouseY = position.y_front;
+#ifdef USE_SDL1
+	VitaAux::processTouchEventToSDL();
+#endif
 #endif
 
 	DrawArt(MouseX, MouseY, &ArtCursor);

@@ -64,6 +64,47 @@ typedef enum {
 	VITAMOUSEMODE_AS_TOUCHPAD = 1
 } VITAMOUSEMODE;
 
+typedef enum {
+	SDL_JOYBUTTON_UP       = 8,
+	SDL_JOYBUTTON_RIGHT    = 9,
+	SDL_JOYBUTTON_DOWN     = 6,
+	SDL_JOYBUTTON_LEFT     = 7,
+	SDL_JOYBUTTON_L        = 4,
+	SDL_JOYBUTTON_R        = 5,
+	SDL_JOYBUTTON_X        = 2,
+	SDL_JOYBUTTON_SQUARE   = 3,
+	SDL_JOYBUTTON_TRIANGLE = 0,
+	SDL_JOYBUTTON_CIRCLE   = 1,
+	SDL_JOYBUTTON_SELECT   = 10,
+	SDL_JOYBUTTON_START    = 11,
+} SDL_BUTTON_VITA;
+
+#ifdef USE_SDL1
+typedef enum {
+	/* Touch events */
+	SDL_FINGERDOWN = 0x700,
+	SDL_FINGERUP,
+	SDL_FINGERMOTION
+} SDL_EventTypeEx;
+
+typedef int64_t SDL_FingerID;
+typedef int64_t SDL_TouchID;
+
+typedef struct SDL_TouchFingerEvent {
+	SDL_TouchID port;
+	Uint32 type;         /**< ::SDL_FINGERMOTION or ::SDL_FINGERDOWN or ::SDL_FINGERUP */
+	Uint32 timestamp;    /**< In milliseconds, populated using SDL_GetTicks() */
+	SDL_TouchID touchId; /**< The touch device id */
+	SDL_FingerID fingerId;
+	float x;        /**< Normalized in the range 0...1 */
+	float y;        /**< Normalized in the range 0...1 */
+	float dx;       /**< Normalized in the range -1...1 */
+	float dy;       /**< Normalized in the range -1...1 */
+	float pressure; /**< Normalized in the range 0...1 */
+} SDL_TouchFingerEvent;
+
+#endif
+
 class VitaAux {
 public:
 	static void init();
@@ -113,9 +154,13 @@ public:
 	//Touch
 	static void initVitaTouch();
 	static VITATOUCH getVitaTouch(bool retournLatest = true);
+#ifdef USE_SDL1
+	static void processTouchEventToSDL();
+#endif
 
 	//Migrate to SDEvent
-	static void initVitaButtons();
+	static void
+	initVitaButtons();
 	static void getPressedKeyAsSDL_Event(bool inMenu, VITAMOUSEMODE mouseMode = VITAMOUSEMODE_AS_MOUSE);
 
 	//Utils

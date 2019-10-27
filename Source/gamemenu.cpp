@@ -109,7 +109,9 @@ void gamemenu_new_game(BOOL bActivate)
 void gamemenu_quit_game(BOOL bActivate)
 {
 	gamemenu_new_game(bActivate);
+#ifndef VITA // JAKE: This will crash the console otherwise, this doesn't seem to fix it though.
 	gbRunGameResult = FALSE;
+#endif
 }
 
 void gamemenu_load_game(BOOL bActivate)
@@ -134,27 +136,37 @@ void gamemenu_load_game(BOOL bActivate)
 
 void gamemenu_save_game(BOOL bActivate)
 {
+#ifdef VITA
+	if (pcurs <= CURSOR_HAND) {
+		SetCursor_(CURSOR_HAND);
+
+#else
+	// JAKE: Also let people save if cursor disappears
 	if (pcurs != CURSOR_HAND) {
 		return;
 	}
+#endif
 
-	if (plr[myplr]._pmode == PM_DEATH || deathflag) {
+		if (plr[myplr]._pmode == PM_DEATH || deathflag) {
+			gamemenu_off();
+			return;
+		}
+
+		WNDPROC saveProc = SetWindowProc(DisableInputWndProc);
+		SetCursor_(CURSOR_NONE);
 		gamemenu_off();
-		return;
+		InitDiabloMsg(EMSG_SAVING);
+		drawpanflag = 255;
+		DrawAndBlit();
+		SaveGame();
+		ClrDiabloMsg();
+		drawpanflag = 255;
+		SetCursor_(CURSOR_HAND);
+		interface_msg_pump();
+		SetWindowProc(saveProc);
+#ifdef VITA
 	}
-
-	WNDPROC saveProc = SetWindowProc(DisableInputWndProc);
-	SetCursor_(CURSOR_NONE);
-	gamemenu_off();
-	InitDiabloMsg(EMSG_SAVING);
-	drawpanflag = 255;
-	DrawAndBlit();
-	SaveGame();
-	ClrDiabloMsg();
-	drawpanflag = 255;
-	SetCursor_(CURSOR_HAND);
-	interface_msg_pump();
-	SetWindowProc(saveProc);
+#endif
 }
 
 void gamemenu_restart_town(BOOL bActivate)

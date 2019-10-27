@@ -29,15 +29,15 @@ void UiTitleDialog()
 	Uint32 timeOut = SDL_GetTicks() + 7000;
 
 	SDL_Event event;
-#ifdef VITA
-	VitaAux::getPressedKeyAsSDL_Event(true);
-#endif
 	while (!endMenu && SDL_GetTicks() < timeOut) {
 		UiRenderItems(TITLESCREEN_DIALOG, size(TITLESCREEN_DIALOG));
 		UiFadeIn();
 
 		while (SDL_PollEvent(&event)) {
 			switch (event.type) {
+#ifdef VITA
+			case SDL_JOYBUTTONDOWN:
+#endif
 			case SDL_KEYDOWN: /* To match the original uncomment this
 				if (event.key.keysym.sym == SDLK_UP
 				    || event.key.keysym.sym == SDLK_UP

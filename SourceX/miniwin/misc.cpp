@@ -142,6 +142,14 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 #ifdef USE_SDL1
 	SDL_EnableUNICODE(1);
 #endif
+	if (SDL_JoystickOpen(0) == NULL) {
+		SDL_Log(SDL_GetError());
+	}
+#ifndef USE_SDL1
+	if (SDL_GameControllerOpen(0) == NULL) {
+		SDL_Log(SDL_GetError());
+	}
+#endif
 
 	int upscale = 1;
 	DvlIntSetting("upscale", &upscale);
@@ -200,9 +208,7 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 	}
 
 	if (upscale) {
-#ifdef USE_SDL1
-		SDL_Log("upscaling not supported with USE_SDL1");
-#else
+#ifndef USE_SDL1
 		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
 		if (renderer == NULL) {
 			ErrSdl();

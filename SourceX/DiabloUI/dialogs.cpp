@@ -272,6 +272,20 @@ void DialogLoop(UiItem *items, std::size_t num_items, UiItem *render_behind, std
 					break;
 				}
 				break;
+#ifdef VITA
+			case SDL_JOYBUTTONDOWN:
+				switch (event.button.button) {
+				case SDL_JOYBUTTON_CIRCLE:
+				case SDL_JOYBUTTON_X:
+				case SDL_JOYBUTTON_START:
+				case SDL_JOYBUTTON_SELECT:
+					state = State::OK;
+					break;
+				default:
+					break;
+				}
+				break;
+#endif
 			case SDL_MOUSEBUTTONDOWN:
 			case SDL_MOUSEBUTTONUP:
 				UiItemMouseEvents(&event, items, num_items);

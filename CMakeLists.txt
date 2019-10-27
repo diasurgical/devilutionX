@@ -50,7 +50,7 @@ if(NOT CMAKE_BUILD_TYPE MATCHES "Release")
 endif()
 
 project(DevilutionX
-  VERSION ${GIT_TAG}
+  VERSION 0.5.0
   LANGUAGES C CXX)
 
 if(BINARY_RELEASE)
@@ -152,6 +152,7 @@ if(VITA)
   add_library(vita_aux_util STATIC
   vita/vita_aux_util.cpp
   vita/common/debugScreen.c
+  vita/touch.cpp
   )
   target_link_libraries(vita_aux_util PUBLIC
   danzeff)

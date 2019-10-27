@@ -649,6 +649,60 @@ VITATOUCH VitaAux::getVitaTouch(bool retournLatest)
 	}
 	return returned;
 }
+#ifdef USE_SDL1
+bool isTouched[2][7] = { { false, false, false, false, false, false }, { false, false, false, false, false, false } };
+void VitaAux::processTouchEventToSDL()
+{
+	SceTouchData touch[SCE_TOUCH_PORT_MAX_NUM];
+	int port, i;
+	/* sample both back and front surfaces */
+	for (port = 0; port < SCE_TOUCH_PORT_MAX_NUM; port++) {
+		sceTouchPeek(port, &touch[port], 1);
+		for (i = 0; i < SCE_TOUCH_MAX_REPORT; i++) {
+			if (i < touch[port].reportNum && (touch[port].report[i].x > 0 || touch[port].report[i].y > 0)) {
+				SDL_Event newEvent;
+				SDL_TouchFingerEvent *touchData = new SDL_TouchFingerEvent();
+				if (!isTouched[port][i]) {
+					touchData->type = SDL_FINGERDOWN;
+				} else {
+					touchData->type = SDL_FINGERMOTION;
+				}
+				newEvent.type        = SDL_USEREVENT;
+				touchData->port      = port;
+				touchData->touchId   = 0;
+				touchData->x         = touch[port].report[i].x;
+				touchData->y         = touch[port].report[i].y;
+				touchData->timestamp = SDL_GetTicks();
+				touchData->fingerId  = i;
+
+				newEvent.user.data1 = touchData;
+				newEvent.user.data2 = 0;
+
+				isTouched[port][i] = true;
+				SDL_PushEvent(&newEvent);
+			} else {
+				if (isTouched[port][i]) {
+					SDL_Event newEvent;
+					SDL_TouchFingerEvent *touchData = new SDL_TouchFingerEvent();
+					newEvent.type                   = SDL_USEREVENT;
+					touchData->type                 = SDL_FINGERUP;
+					touchData->port                 = port;
+					touchData->touchId              = 0;
+					touchData->x                    = touch[port].report[i].x;
+					touchData->y                    = touch[port].report[i].y;
+					touchData->timestamp            = SDL_GetTicks();
+					touchData->fingerId             = i;
+
+					newEvent.user.data1 = touchData;
+					newEvent.user.data2 = 0;
+					isTouched[port][i]  = false;
+					SDL_PushEvent(&newEvent);
+				}
+			}
+		}
+	}
+}
+#endif
 void VitaAux::initVitaButtons()
 {
 	sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG);

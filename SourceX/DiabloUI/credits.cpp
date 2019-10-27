@@ -248,9 +248,6 @@ BOOL UiCreditsDialog(int a1)
 	bool endMenu = false;
 
 	SDL_Event event;
-#ifdef VITA
-	VitaAux::getPressedKeyAsSDL_Event(true);
-#endif
 	do {
 		credits_renderer.Render();
 		UiFadeIn();
@@ -258,6 +255,9 @@ BOOL UiCreditsDialog(int a1)
 			switch (event.type) {
 			case SDL_KEYDOWN:
 			case SDL_MOUSEBUTTONDOWN:
+#ifdef VITA
+			case SDL_JOYBUTTONDOWN:
+#endif
 				endMenu = true;
 				break;
 			case SDL_QUIT:

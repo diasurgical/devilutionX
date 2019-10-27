@@ -1,5 +1,7 @@
 #include <deque>
 #ifdef VITA
+#include <math.h>
+#include "../../vita/touch.h"
 #ifdef USE_SDL1
 #include <SDL/SDL.h>
 #else
@@ -25,6 +27,8 @@ float rightStickX = 0;
 float rightStickY = 0;
 float rightDeadzone = 0.07;
 float leftDeadzone = 0.07;
+
+int scalingMode = 2, scaleX = 3, scaleY = 3;
 
 static int leftStickXUnscaled = 0; // raw axis values reported by SDL_JOYAXISMOTION
 static int leftStickYUnscaled = 0;
@@ -205,41 +209,39 @@ static int translate_sdl_key(SDL_Keysym key)
 	}
 }
 
-#ifndef USE_SDL1
 static int translate_controller_button_to_key(uint8_t sdlControllerButton)
 {
 	switch (sdlControllerButton) {
-	case SDL_CONTROLLER_BUTTON_B:
+	case SDL_JOYBUTTON_CIRCLE:
 		return 'H';
-	case SDL_CONTROLLER_BUTTON_A:
+	case SDL_JOYBUTTON_X:
 		return DVL_VK_SPACE;
-	case SDL_CONTROLLER_BUTTON_Y:
+	case SDL_JOYBUTTON_SQUARE:
 		return 'X';
-	case SDL_CONTROLLER_BUTTON_X:
+	case SDL_JOYBUTTON_TRIANGLE:
 		return DVL_VK_RETURN;
-	case SDL_CONTROLLER_BUTTON_LEFTSTICK:
+	case SDL_JOYBUTTON_L:
 		return 'Q';
-	case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
+	/*case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
 		return 'C';
 	case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
-		return 'I';
-	case SDL_CONTROLLER_BUTTON_START:
+		return 'I';*/
+	case SDL_JOYBUTTON_START:
 		return DVL_VK_ESCAPE;
-	case SDL_CONTROLLER_BUTTON_BACK:
+	case SDL_JOYBUTTON_SELECT:
 		return DVL_VK_TAB;
-	case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+	case SDL_JOYBUTTON_LEFT:
 		return DVL_VK_LEFT;
-	case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+	case SDL_JOYBUTTON_RIGHT:
 		return DVL_VK_RIGHT;
-	case SDL_CONTROLLER_BUTTON_DPAD_UP:
+	case SDL_JOYBUTTON_UP:
 		return DVL_VK_UP;
-	case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+	case SDL_JOYBUTTON_DOWN:
 		return DVL_VK_DOWN;
 	default:
 		return 0;
 	}
 }
-#endif
 
 static WPARAM keystate_for_mouse(WPARAM ret)
 {
@@ -259,6 +261,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 #ifdef VITA
 	currentTime = SDL_GetTicks();
 	if ((currentTime - lastTime) > 15) {
+		finish_simulated_mouse_clicks(MouseX, MouseY);
 		HandleJoystickAxes();
 		lastTime = currentTime;
 	}
@@ -286,19 +289,10 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	}
 
 	SDL_Event e;
-#ifdef VITA
-	int result = 0;
-	do {
-		result = SDL_PollEvent(&e);
-	} while (result == 1 && (e.type == 0x700 /*SDL_FINGERDOWN*/ || e.type == 0x701 /*SDL_FINGERUP*/ || e.type == 0x702 /*SDL_FINGERMOTION*/ || e.type == 0x800 /*SDL_DOLLARGESTURE*/ || e.type == 0x801 /*SDL_DOLLARRECORD*/ || e.type == 0x802 /*SDL_MULTIGESTURE*/));
-	if (result == 0) {
-		return false;
-	}
-#else
+
 	if (!SDL_PollEvent(&e)) {
 		return false;
 	}
-#endif
 
 	lpMsg->hwnd = hWnd;
 #ifdef VITA
@@ -307,10 +301,88 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	lpMsg->lParam = 0;
 	lpMsg->wParam = 0;
 
+#ifdef VITA
+	handle_touch(&e, MouseX, MouseY);
+	int result = 1; //Cleanup events
+	while (result == 1 && (e.type == SDL_USEREVENT || e.type == 0x700 /*SDL_FINGERDOWN*/ || e.type == 0x701 /*SDL_FINGERUP*/ || e.type == 0x702 /*SDL_FINGERMOTION*/ || e.type == 0x800 /*SDL_DOLLARGESTURE*/ || e.type == 0x801 /*SDL_DOLLARRECORD*/ || e.type == 0x802 /*SDL_MULTIGESTURE*/)) {
+		result = SDL_PollEvent(&e);
+	}
+	if (result == 0) {
+		return false;
+	}
+#else
+	if (movie_playing) {
+		// allow plus button or mouse click to skip movie, no other input
+		switch (e.type) {
+		case SDL_JOYBUTTONDOWN:
+		case SDL_JOYBUTTONUP:
+			switch (e.button.button) {
+			case SDL_JOYBUTTON_START:
+			case SDL_JOYBUTTON_X: // B on Switch
+				lpMsg->message = e.type == SDL_JOYBUTTONUP ? DVL_WM_LBUTTONUP : DVL_WM_LBUTTONDOWN;
+				lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+				if (lpMsg->message == DVL_WM_LBUTTONUP)
+					lpMsg->wParam = keystate_for_mouse(0);
+				else
+					lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
+				break;
+			}
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+		case SDL_MOUSEBUTTONUP:
+			if (e.button.button == SDL_BUTTON_LEFT) {
+				lpMsg->message = e.type == SDL_MOUSEBUTTONUP ? DVL_WM_LBUTTONUP : DVL_WM_LBUTTONDOWN;
+				lpMsg->lParam = (e.button.y << 16) | (e.button.x & 0xFFFF);
+				if (lpMsg->message == DVL_WM_LBUTTONUP)
+					lpMsg->wParam = keystate_for_mouse(0);
+				else
+					lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
+			}
+			break;
+		case SDL_KEYDOWN:
+		case SDL_KEYUP:
+			lpMsg->message = e.type == SDL_KEYUP ? DVL_WM_LBUTTONUP : DVL_WM_LBUTTONDOWN;
+			lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+			if (lpMsg->message == DVL_WM_LBUTTONUP)
+				lpMsg->wParam = keystate_for_mouse(0);
+			else
+				lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
+			break;
+		}
+		return true;
+	}
+#endif
+
 	switch (e.type) {
 #ifdef VITA
-#ifndef USE_SDL1
-	case SDL_CONTROLLERAXISMOTION:
+	case SDL_JOYAXISMOTION:
+#ifdef USE_SDL1
+		if (e.jaxis.which == 0) //stick
+		{
+			if (e.jaxis.axis == 0) {
+				leftStickXUnscaled = e.jaxis.value;
+			}
+			if (e.jaxis.axis == 1) {
+				leftStickYUnscaled = -e.jaxis.value;
+			}
+			if (e.jaxis.axis == 2) {
+				rightStickXUnscaled = e.jaxis.value;
+			}
+			if (e.jaxis.axis == 3) {
+				rightStickYUnscaled = -e.jaxis.value;
+			}
+		}
+		/*
+		case SDL_CONTROLLER_AXIS_TRIGGERLEFT: // ZL on Switch
+			if (e.caxis.value)
+				useBeltPotion(false); // health potion
+			break;
+		case SDL_CONTROLLER_AXIS_TRIGGERRIGHT: // ZR on Switch
+			if (e.caxis.value)
+				useBeltPotion(true); // mana potion
+			break;
+			}*/
+#else
 		switch (e.caxis.axis) {
 		case SDL_CONTROLLER_AXIS_LEFTX:
 			leftStickXUnscaled = e.caxis.value;
@@ -333,49 +405,55 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 				useBeltPotion(true); // mana potion
 			break;
 		}
+#endif
 		leftStickX = leftStickXUnscaled;
 		leftStickY = leftStickYUnscaled;
 		rightStickX = rightStickXUnscaled;
 		rightStickY = rightStickYUnscaled;
 		ScaleJoystickAxes(&leftStickX, &leftStickY, leftDeadzone);
 		ScaleJoystickAxes(&rightStickX, &rightStickY, rightDeadzone);
+		DvlVitaIntSetting("scaling mode", &scalingMode, false);
+		if (scalingMode == 2) {
+			scaleX = 7;
+			scaleY = 6;
+		}
+		rightStickX += rightStickX * scaleX;
+		rightStickY += rightStickY * scaleY;
 		break;
-	case SDL_CONTROLLERBUTTONDOWN:
-	case SDL_CONTROLLERBUTTONUP:
-		switch (e.cbutton.button) {
-		case SDL_CONTROLLER_BUTTON_B: // A on Switch
-		case SDL_CONTROLLER_BUTTON_Y: // X on Switch
-		case SDL_CONTROLLER_BUTTON_LEFTSTICK:
-		case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
-		case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
-		case SDL_CONTROLLER_BUTTON_START:
-		case SDL_CONTROLLER_BUTTON_BACK:
-			lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
-			lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.cbutton.button);
+
+	case SDL_JOYBUTTONDOWN:
+	case SDL_JOYBUTTONUP:
+		switch (e.button.button) {
+		case SDL_JOYBUTTON_CIRCLE: // A on Switch
+		case SDL_JOYBUTTON_SQUARE: // X on Switch
+		case SDL_JOYBUTTON_L:
+		case SDL_JOYBUTTON_START:
+			lpMsg->message = e.type == SDL_JOYBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
+			lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.button.button);
 			break;
-		case SDL_CONTROLLER_BUTTON_DPAD_UP:
-		case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
-		case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
-		case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
-			lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
-			lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.cbutton.button);
+		case SDL_JOYBUTTON_UP:
+		case SDL_JOYBUTTON_DOWN:
+		case SDL_JOYBUTTON_LEFT:
+		case SDL_JOYBUTTON_RIGHT:
+			lpMsg->message = e.type == SDL_JOYBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
+			lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.button.button);
 			if (lpMsg->message == DVL_WM_KEYDOWN) {
 				if (!stextflag) // prevent walking while in dialog mode
 					movements(lpMsg->wParam);
 			}
 			break;
-		case SDL_CONTROLLER_BUTTON_A: // B on Switch
-			lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
-			lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.cbutton.button);
+		case SDL_JOYBUTTON_X: // B on Switch
+			lpMsg->message = e.type == SDL_JOYBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
+			lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.button.button);
 			if (lpMsg->message == DVL_WM_KEYDOWN) {
 				if (stextflag)
 					talkwait = GetTickCount(); // JAKE: Wait before we re-initiate talking
 				keyboardExpansion(lpMsg->wParam);
 			}
 			break;
-		case SDL_CONTROLLER_BUTTON_X: // Y on Switch
+		case SDL_JOYBUTTON_TRIANGLE: // Y on Switch
 			if (invflag) {
-				lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_RBUTTONUP : DVL_WM_RBUTTONDOWN;
+				lpMsg->message = e.type == SDL_JOYBUTTONUP ? DVL_WM_RBUTTONUP : DVL_WM_RBUTTONDOWN;
 				lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
 				if (lpMsg->message == DVL_WM_RBUTTONDOWN) {
 					lpMsg->wParam = keystate_for_mouse(DVL_MK_RBUTTON);
@@ -383,14 +461,14 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 					lpMsg->wParam = keystate_for_mouse(0);
 				}
 			} else {
-				lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
-				lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.cbutton.button);
+				lpMsg->message = e.type == SDL_JOYBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
+				lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.button.button);
 				if (lpMsg->message == DVL_WM_KEYDOWN)
 					keyboardExpansion(lpMsg->wParam);
 			}
 			break;
-		case SDL_CONTROLLER_BUTTON_RIGHTSTICK:
-			lpMsg->message = e.type == SDL_CONTROLLERBUTTONUP ? DVL_WM_LBUTTONUP : DVL_WM_LBUTTONDOWN;
+		case SDL_JOYBUTTON_R:
+			lpMsg->message = e.type == SDL_JOYBUTTONUP ? DVL_WM_LBUTTONUP : DVL_WM_LBUTTONDOWN;
 			lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
 			if (lpMsg->message == DVL_WM_LBUTTONDOWN) {
 				if (newCurHidden) { // show cursor first, before clicking
@@ -402,9 +480,29 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 				lpMsg->wParam = keystate_for_mouse(0);
 			}
 			break;
+
+		/*case SDL_JOYBUTTON_LEFT: // L_JSTICK
+			lpMsg->message = e.type == SDL_JOYBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
+
+			lpMsg->wParam = DVL_VK_LEFT;
+			break;
+		case SDL_JOYBUTTON_UP: // U_JSTICK
+			lpMsg->message = e.type == SDL_JOYBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
+			lpMsg->wParam = DVL_VK_UP;
+			break;
+		case SDL_JOYBUTTON_RIGHT: // R_JSTICK
+			lpMsg->message = e.type == SDL_JOYBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
+			lpMsg->wParam = DVL_VK_RIGHT;
+			break;
+		case SDL_JOYBUTTON_DOWN: // D_JSTICK
+			lpMsg->message = e.type == SDL_JOYBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
+			lpMsg->wParam = DVL_VK_DOWN;
+			break;*/
+		default:
+			lpMsg->message = 0;
 		}
 		break;
-#endif
+
 #endif
 	case SDL_QUIT:
 		lpMsg->message = DVL_WM_QUIT;
@@ -420,6 +518,12 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		lpMsg->lParam = e.key.keysym.mod << 16;
 	} break;
 	case SDL_MOUSEMOTION:
+#ifdef VITA
+		if (pcurs == CURSOR_NONE) {
+			SetCursor_(CURSOR_HAND);
+			newCurHidden = false;
+		}
+#endif
 		lpMsg->message = DVL_WM_MOUSEMOVE;
 		lpMsg->lParam = (e.motion.y << 16) | (e.motion.x & 0xFFFF);
 		lpMsg->wParam = keystate_for_mouse(0);
@@ -478,9 +582,9 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		DUMMY_PRINT("unknown SDL message 0x%X", e.type);
 #endif
 		return false_avail();
-	}
+	} // namespace dvl
 	return true;
-}
+} // namespace dvl
 
 WINBOOL TranslateMessage(const MSG *lpMsg)
 {

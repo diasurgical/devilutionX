@@ -115,14 +115,14 @@ char SpellITbl[MAX_SPELLS] = {
 	39, 42, 41, 40, 10, 36, 30
 };
 int PanBtnPos[8][5] = {
-	{ PANEL_LEFT +   9, PANEL_TOP +   9, 71, 19, 1 }, // char button
-	{ PANEL_LEFT +   9, PANEL_TOP +  35, 71, 19, 0 }, // quests button
-	{ PANEL_LEFT +   9, PANEL_TOP +  75, 71, 19, 1 }, // map button
-	{ PANEL_LEFT +   9, PANEL_TOP + 101, 71, 19, 0 }, // menu button
-	{ PANEL_LEFT + 560, PANEL_TOP +   9, 71, 19, 1 }, // inv button
-	{ PANEL_LEFT + 560, PANEL_TOP +  35, 71, 19, 0 }, // spells button
-	{ PANEL_LEFT +  87, PANEL_TOP +  91, 33, 32, 1 }, // chat button
-	{ PANEL_LEFT + 527, PANEL_TOP +  91, 33, 32, 1 }, // friendly fire button
+	{ PANEL_LEFT + 9, PANEL_TOP + 9, 71, 19, 1 },    // char button
+	{ PANEL_LEFT + 9, PANEL_TOP + 35, 71, 19, 0 },   // quests button
+	{ PANEL_LEFT + 9, PANEL_TOP + 75, 71, 19, 1 },   // map button
+	{ PANEL_LEFT + 9, PANEL_TOP + 101, 71, 19, 0 },  // menu button
+	{ PANEL_LEFT + 560, PANEL_TOP + 9, 71, 19, 1 },  // inv button
+	{ PANEL_LEFT + 560, PANEL_TOP + 35, 71, 19, 0 }, // spells button
+	{ PANEL_LEFT + 87, PANEL_TOP + 91, 33, 32, 1 },  // chat button
+	{ PANEL_LEFT + 527, PANEL_TOP + 91, 33, 32, 1 }, // friendly fire button
 };
 char *PanBtnHotKey[8] = { "'c'", "'q'", "Tab", "Esc", "'i'", "'b'", "Enter", NULL };
 char *PanBtnStr[8] = {
@@ -136,6 +136,13 @@ char *PanBtnStr[8] = {
 	"Player Attack"
 };
 RECT32 ChrBtnsRect[4] = {
+	{ 137, 138, 41, 22 },
+	{ 137, 166, 41, 22 },
+	{ 137, 195, 41, 22 },
+	{ 137, 223, 41, 22 }
+};
+
+int attribute_inc_rects2[4][4] = {
 	{ 137, 138, 41, 22 },
 	{ 137, 166, 41, 22 },
 	{ 137, 195, 41, 22 },
@@ -799,47 +806,66 @@ void DoSpeedBook()
 	yo = 495;
 	X = 600;
 	Y = 307;
+#ifdef VITA
+	int ssx = 600;
+	int ssy = 307;
+#else
 	if (plr[myplr]._pRSpell != SPL_INVALID) {
-		for (i = 0; i < 4; i++) {
-			switch (i) {
-			case RSPLTYPE_SKILL:
-				spells = plr[myplr]._pAblSpells;
-				break;
-			case RSPLTYPE_SPELL:
-				spells = plr[myplr]._pMemSpells;
-				break;
-			case RSPLTYPE_SCROLL:
-				spells = plr[myplr]._pScrlSpells;
-				break;
-			case RSPLTYPE_CHARGES:
-				spells = plr[myplr]._pISpells;
-				break;
-			}
-			spell = (__int64)1;
-			for (j = 1; j < MAX_SPELLS; j++) {
-				if (spell & spells) {
-					if (j == plr[myplr]._pRSpell && i == plr[myplr]._pRSplType) {
-						X = xo - 36;
-						Y = yo - 188;
-					}
-					xo -= 56;
-					if (xo == 20) {
-						xo = 636;
-						yo -= 56;
-					}
+#endif
+	for (i = 0; i < 4; i++) {
+		switch (i) {
+		case RSPLTYPE_SKILL:
+			spells = plr[myplr]._pAblSpells;
+			break;
+		case RSPLTYPE_SPELL:
+			spells = plr[myplr]._pMemSpells;
+			break;
+		case RSPLTYPE_SCROLL:
+			spells = plr[myplr]._pScrlSpells;
+			break;
+		case RSPLTYPE_CHARGES:
+			spells = plr[myplr]._pISpells;
+			break;
+		}
+		spell = (__int64)1;
+		for (j = 1; j < MAX_SPELLS; j++) {
+			if (spell & spells) {
+				if (j == plr[myplr]._pRSpell && i == plr[myplr]._pRSplType) {
+					X = xo - 36;
+					Y = yo - 188;
 				}
-				spell <<= (__int64)1;
-			}
-			if (spells && xo != 636)
+#ifdef VITA
+				// JAKE: here's speedspell images. Store them into our array
+				ssx = xo - 36;
+				ssy = yo - 188;
+				speedspellscoords[speedspellcount].x = ssx;
+				speedspellscoords[speedspellcount].y = ssy;
+				speedspellcount++;
+#endif
 				xo -= 56;
-			if (xo == 20) {
-				xo = 636;
-				yo -= 56;
+				if (xo == 20) {
+					xo = 636;
+					yo -= 56;
+				}
 			}
+			spell <<= (__int64)1;
+		}
+		if (spells && xo != 636)
+			xo -= 56;
+		if (xo == 20) {
+			xo = 636;
+			yo -= 56;
 		}
 	}
+#ifndef VITA
+}
+#endif
 
-	SetCursorPos(X, Y);
+SetCursorPos(X, Y);
+#ifdef VITA
+MouseX = X;
+MouseY = Y;
+#endif
 }
 
 /**
@@ -1452,7 +1478,6 @@ void DrawChr()
 	ADD_PlrStringXY(143, 332, 174, chrstr, col);
 }
 
-
 void MY_PlrStringXY(int x, int y, int width, char *pszStr, char col, int base)
 {
 	BYTE c;
@@ -2058,7 +2083,7 @@ void control_reset_talk_msg(char *msg)
 		if (whisper[i])
 			pmask |= 1 << i;
 	}
-		NetSendCmdString(pmask, sgszTalkMsg);
+	NetSendCmdString(pmask, sgszTalkMsg);
 }
 
 void control_type_message()
@@ -2118,6 +2143,9 @@ BOOL control_presskeys(int vkey)
 			ret = FALSE;
 		} else {
 			if (vkey == VK_SPACE) {
+#ifdef VITA
+				control_press_enter();
+#endif
 			} else if (vkey == VK_ESCAPE) {
 				control_reset_talk();
 			} else if (vkey == VK_RETURN) {

@@ -11,9 +11,11 @@ void play_movie(char *pszMovie, BOOL user_can_close)
 	WNDPROC saveProc;
 	HANDLE video_stream;
 
+#ifndef VITA
 	if (!gbActive) {
 		return;
 	}
+#endif
 
 	saveProc = SetWindowProc(MovieWndProc);
 	movie_playing = TRUE;
@@ -27,9 +29,6 @@ void play_movie(char *pszMovie, BOOL user_can_close)
 		while (video_stream) {
 			if (!gbActive || user_can_close && !movie_playing)
 				break;
-#ifdef VITA
-			VitaAux::getPressedKeyAsSDL_Event(false, VITAMOUSEMODE_AS_TOUCHPAD);
-#endif
 			while (PeekMessage(&Msg, NULL, 0, 0, PM_REMOVE)) {
 				if (Msg.message != WM_QUIT) {
 					TranslateMessage(&Msg);
