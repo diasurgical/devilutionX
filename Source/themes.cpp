@@ -102,7 +102,7 @@ BOOL TFit_Obj5(int t)
 
 	xp = 0;
 	yp = 0;
-	r = random(0, 5) + 1;
+	r = random_(0, 5) + 1;
 	rs = r;
 	while (r > 0) {
 		found = FALSE;
@@ -187,7 +187,7 @@ BOOL CheckThemeObj3(int xp, int yp, int t, int f)
 			return FALSE;
 		if (dObject[xp + trm3x[i]][yp + trm3y[i]])
 			return FALSE;
-		if (f != -1 && !random(0, f))
+		if (f != -1 && !random_(0, f))
 			return FALSE;
 	}
 
@@ -415,7 +415,7 @@ void InitThemes()
 		for (i = 0; i < 256 && numthemes < MAXTHEMES; i++) {
 			if (CheckThemeRoom(i)) {
 				themes[numthemes].ttval = i;
-				for (j = ThemeGood[random(0, 4)];; j = random(0, 17)) {
+				for (j = ThemeGood[random_(0, 4)];; j = random_(0, 17)) {
 					if (SpecialThemeFit(numthemes, j)) {
 						break;
 					}
@@ -441,7 +441,7 @@ void InitThemes()
 		for (i = 0; i < themeCount; i++) {
 			if (themes[i].ttype == THEME_NONE) {
 				themes[i].ttval = themeLoc[i].ttval;
-				for (j = ThemeGood[random(0, 4)];; j = random(0, 17)) {
+				for (j = ThemeGood[random_(0, 4)];; j = random_(0, 17)) {
 					if (SpecialThemeFit(i, j)) {
 						break;
 					}
@@ -495,12 +495,12 @@ void PlaceThemeMonsts(int t, int f)
 			numscattypes++;
 		}
 	}
-	mtype = scattertypes[random(0, numscattypes)];
+	mtype = scattertypes[random_(0, numscattypes)];
 	for (yp = 0; yp < MAXDUNY; yp++) {
 		for (xp = 0; xp < MAXDUNX; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && !nSolidTable[dPiece[xp][yp]] && dItem[xp][yp] == 0 && dObject[xp][yp] == 0) {
-				if (random(0, f) == 0) {
-					AddMonster(xp, yp, random(0, 8), mtype, 1);
+				if (random_(0, f) == 0) {
+					AddMonster(xp, yp, random_(0, 8), mtype, 1);
 				}
 			}
 		}
@@ -520,8 +520,8 @@ void Theme_Barrel(int t)
 	for (yp = 0; yp < MAXDUNY; yp++) {
 		for (xp = 0; xp < MAXDUNX; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && !nSolidTable[dPiece[xp][yp]]) {
-				if (random(0, barrnd[leveltype - 1]) == 0) {
-					if (random(0, barrnd[leveltype - 1]) == 0) {
+				if (random_(0, barrnd[leveltype - 1]) == 0) {
+					if (random_(0, barrnd[leveltype - 1]) == 0) {
 						r = OBJ_BARREL;
 					} else {
 						r = OBJ_BARRELEX;
@@ -565,7 +565,7 @@ void Theme_MonstPit(int t)
 	int ixp, iyp;
 	char monstrnd[4] = { 6, 7, 3, 9 };
 
-	r = random(0, 100) + 1;
+	r = random_(0, 100) + 1;
 	ixp = 0;
 	iyp = 0;
 	if (r > 0) {
@@ -607,7 +607,7 @@ void Theme_SkelRoom(int t)
 
 	AddObject(OBJ_SKFIRE, xp, yp);
 
-	if (random(0, monstrnd[leveltype - 1]) != 0) {
+	if (random_(0, monstrnd[leveltype - 1]) != 0) {
 		i = PreSpawnSkeleton();
 		SpawnSkeleton(i, xp - 1, yp - 1);
 	} else {
@@ -617,25 +617,25 @@ void Theme_SkelRoom(int t)
 	i = PreSpawnSkeleton();
 	SpawnSkeleton(i, xp, yp - 1);
 
-	if (random(0, monstrnd[leveltype - 1]) != 0) {
+	if (random_(0, monstrnd[leveltype - 1]) != 0) {
 		i = PreSpawnSkeleton();
 		SpawnSkeleton(i, xp + 1, yp - 1);
 	} else {
 		AddObject(OBJ_BANNERR, xp + 1, yp - 1);
 	}
-	if (random(0, monstrnd[leveltype - 1]) != 0) {
+	if (random_(0, monstrnd[leveltype - 1]) != 0) {
 		i = PreSpawnSkeleton();
 		SpawnSkeleton(i, xp - 1, yp);
 	} else {
 		AddObject(OBJ_BANNERM, xp - 1, yp);
 	}
-	if (random(0, monstrnd[leveltype - 1]) != 0) {
+	if (random_(0, monstrnd[leveltype - 1]) != 0) {
 		i = PreSpawnSkeleton();
 		SpawnSkeleton(i, xp + 1, yp);
 	} else {
 		AddObject(OBJ_BANNERM, xp + 1, yp);
 	}
-	if (random(0, monstrnd[leveltype - 1]) != 0) {
+	if (random_(0, monstrnd[leveltype - 1]) != 0) {
 		i = PreSpawnSkeleton();
 		SpawnSkeleton(i, xp - 1, yp + 1);
 	} else {
@@ -645,7 +645,7 @@ void Theme_SkelRoom(int t)
 	i = PreSpawnSkeleton();
 	SpawnSkeleton(i, xp, yp + 1);
 
-	if (random(0, monstrnd[leveltype - 1]) != 0) {
+	if (random_(0, monstrnd[leveltype - 1]) != 0) {
 		i = PreSpawnSkeleton();
 		SpawnSkeleton(i, xp + 1, yp + 1);
 	} else {
@@ -675,9 +675,9 @@ void Theme_Treasure(int t)
 	for (yp = 0; yp < MAXDUNY; yp++) {
 		for (xp = 0; xp < MAXDUNX; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && !nSolidTable[dPiece[xp][yp]]) {
-				int rv = random(0, treasrnd[leveltype - 1]);
-				// BUGFIX: the `2*` in `2*random(0, treasrnd...) == 0` has no effect, should probably be `random(0, 2*treasrnd...) == 0`
-				if ((2 * random(0, treasrnd[leveltype - 1])) == 0) {
+				int rv = random_(0, treasrnd[leveltype - 1]);
+				// BUGFIX: the `2*` in `2*random_(0, treasrnd...) == 0` has no effect, should probably be `random_(0, 2*treasrnd...) == 0`
+				if ((2 * random_(0, treasrnd[leveltype - 1])) == 0) {
 					CreateTypeItem(xp, yp, FALSE, ITYPE_GOLD, IMISC_NONE, FALSE, TRUE);
 					ItemNoFlippy();
 				}
@@ -721,9 +721,9 @@ void Theme_Library(int t)
 
 	for (yp = 1; yp < MAXDUNY - 1; yp++) {
 		for (xp = 1; xp < MAXDUNX - 1; xp++) {
-			if (CheckThemeObj3(xp, yp, t, -1) && dMonster[xp][yp] == 0 && random(0, librnd[leveltype - 1]) == 0) {
+			if (CheckThemeObj3(xp, yp, t, -1) && dMonster[xp][yp] == 0 && random_(0, librnd[leveltype - 1]) == 0) {
 				AddObject(OBJ_BOOKSTAND, xp, yp);
-				if (random(0, 2 * librnd[leveltype - 1]) != 0) {
+				if (random_(0, 2 * librnd[leveltype - 1]) != 0) {
 					oi = dObject[xp][yp] - 1;
 					object[oi]._oSelFlag = 0;
 					object[oi]._oAnimFrame += 2;
@@ -756,7 +756,7 @@ void Theme_Torture(int t)
 		for (xp = 1; xp < MAXDUNX - 1; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && !nSolidTable[dPiece[xp][yp]]) {
 				if (CheckThemeObj3(xp, yp, t, -1)) {
-					if (random(0, tortrnd[leveltype - 1]) == 0) {
+					if (random_(0, tortrnd[leveltype - 1]) == 0) {
 						AddObject(OBJ_TNUDEM2, xp, yp);
 					}
 				}
@@ -793,7 +793,7 @@ void Theme_Decap(int t)
 		for (xp = 1; xp < MAXDUNX - 1; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && !nSolidTable[dPiece[xp][yp]]) {
 				if (CheckThemeObj3(xp, yp, t, -1)) {
-					if (random(0, decaprnd[leveltype - 1]) == 0) {
+					if (random_(0, decaprnd[leveltype - 1]) == 0) {
 						AddObject(OBJ_DECAP, xp, yp);
 					}
 				}
@@ -834,7 +834,7 @@ void Theme_ArmorStand(int t)
 		for (xp = 0; xp < MAXDUNX; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && !nSolidTable[dPiece[xp][yp]]) {
 				if (CheckThemeObj3(xp, yp, t, -1)) {
-					if (random(0, armorrnd[leveltype - 1]) == 0) {
+					if (random_(0, armorrnd[leveltype - 1]) == 0) {
 						AddObject(OBJ_ARMORSTANDN, xp, yp);
 					}
 				}
@@ -917,7 +917,7 @@ void Theme_BrnCross(int t)
 		for (xp = 0; xp < MAXDUNX; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && !nSolidTable[dPiece[xp][yp]]) {
 				if (CheckThemeObj3(xp, yp, t, -1)) {
-					if (random(0, bcrossrnd[leveltype - 1]) == 0) {
+					if (random_(0, bcrossrnd[leveltype - 1]) == 0) {
 						AddObject(OBJ_TBCROSS, xp, yp);
 					}
 				}
@@ -946,7 +946,7 @@ void Theme_WeaponRack(int t)
 		for (xp = 0; xp < MAXDUNX; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && !nSolidTable[dPiece[xp][yp]]) {
 				if (CheckThemeObj3(xp, yp, t, -1)) {
-					if (random(0, weaponrnd[leveltype - 1]) == 0) {
+					if (random_(0, weaponrnd[leveltype - 1]) == 0) {
 						AddObject(OBJ_WEAPONRACKN, xp, yp);
 					}
 				}

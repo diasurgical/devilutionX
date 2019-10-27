@@ -63,7 +63,7 @@ void AddPanelString(char *str, BOOL just);
 void ClearPanel();
 void DrawPanelBox(int x, int y, int w, int h, int sx, int sy);
 void InitPanelStr();
-void SetFlaskHeight(BYTE *pCelBuff, int min, int max, int c, int r);
+void SetFlaskHeight(BYTE *pCelBuff, int min, int max, int sx, int sy);
 void DrawFlask(BYTE *pCelBuff, int w, int nSrcOff, BYTE *pBuff, int nDstOff, int h);
 void DrawLifeFlask();
 void UpdateLifeFlask();

@@ -103,15 +103,10 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 
 	if (mask == 0xFFFFFFFF) {
 		if (light_table_index == lightmax) {
+			memset(*dst, 0, n);
 			(*src) += n;
-			for (i = 0; i < n; i++, (*dst)++) {
-				(*dst)[0] = 0;
-			}
+			(*dst) += n;
 		} else if (light_table_index == 0) {
-			for (i = n & 3; i != 0; i--, (*src)++, (*dst)++) {
-				(*dst)[0] = (*src)[0];
-			}
-			n = (n >> 2) << 2;
 			memcpy(*dst, *src, n);
 			(*src) += n;
 			(*dst) += n;
@@ -255,6 +250,10 @@ RenderTile(BYTE *pBuff)
 	}
 }
 
+/**
+ * @brief Render a black tile
+ * @param pBuff pointer where to render the tile
+ */
 void world_draw_black_tile(int sx, int sy)
 {
 	int i, j, k;
@@ -263,21 +262,14 @@ void world_draw_black_tile(int sx, int sy)
 	if (sx >= SCREEN_WIDTH - 64 || sy >= SCREEN_HEIGHT - 32)
 		return;
 
-	dst = &gpBuffer[sx + BUFFER_WIDTH * sy];
+	dst = &gpBuffer[sx + BUFFER_WIDTH * sy] + 30;
 
-	for (i = 30, j = 1; i >= 0; i -= 2, j++, dst -= BUFFER_WIDTH + 64) {
-		dst += i;
-		for (k = 0; k < 4 * j; k++) {
-			*dst++ = 0;
-		}
-		dst += i;
+	for (i = 30, j = 1; i >= 0; i -= 2, j++, dst -= BUFFER_WIDTH + 2) {
+		memset(dst, 0, 4 * j);
 	}
-	for (i = 2, j = 15; i != 32; i += 2, j--, dst -= BUFFER_WIDTH + 64) {
-		dst += i;
-		for (k = 0; k < 4 * j; k++) {
-			*dst++ = 0;
-		}
-		dst += i;
+	dst += 4;
+	for (i = 2, j = 15; i != 32; i += 2, j--, dst -= BUFFER_WIDTH - 2) {
+		memset(dst, 0, 4 * j);
 	}
 }
 
