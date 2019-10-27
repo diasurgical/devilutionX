@@ -8,15 +8,10 @@ extern char gbEmulate;
 extern HMODULE ghDiabMod;
 
 void dx_init(HWND hWnd);
-void dx_create_back_buffer();
-void dx_create_primary_surface();
 void lock_buf(BYTE idx);
-void lock_buf_priv();
 void unlock_buf(BYTE idx);
-void unlock_buf_priv();
 void dx_cleanup();
 void dx_reinit();
-void j_dx_reinit();
 
 void CreatePalette();
 void BltFast(DWORD dwX, DWORD dwY, LPRECT lpSrcRect);

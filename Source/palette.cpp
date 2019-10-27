@@ -75,7 +75,7 @@ void LoadRndLvlPal(int l)
 	if (l == DTYPE_TOWN) {
 		LoadPalette("Levels\\TownData\\Town.pal");
 	} else {
-		rv = random(0, 4) + 1;
+		rv = random_(0, 4) + 1;
 		sprintf(szFileName, "Levels\\L%iData\\L%i_%i.PAL", l, l, rv);
 		LoadPalette(szFileName);
 	}

@@ -356,7 +356,7 @@ void multi_mon_seeds()
 
 	sgdwGameLoops++;
 	l = (sgdwGameLoops >> 8) | (sgdwGameLoops << 24);  // _rotr(sgdwGameLoops, 8)
-	for (i = 0; i < 200; i++)
+	for (i = 0; i < MAXMONSTERS; i++)
 		monster[i]._mAISeed = l + i;
 }
 
@@ -549,7 +549,7 @@ void multi_send_zero_packet(int pnum, BYTE bCmd, BYTE *pbSrc, DWORD dwLen)
 
 	dwOffset = 0;
 
-	while(dwLen != 0) {
+	while (dwLen != 0) {
 		pkt.hdr.wCheck = 'ip';
 		pkt.hdr.px = 0;
 		pkt.hdr.py = 0;
@@ -564,7 +564,7 @@ void multi_send_zero_packet(int pnum, BYTE bCmd, BYTE *pbSrc, DWORD dwLen)
 		p->bCmd = bCmd;
 		p->wOffset = dwOffset;
 		dwBody = gdwLargestMsgSize - sizeof(pkt.hdr) - sizeof(*p);
-		if(dwLen < dwBody) {
+		if (dwLen < dwBody) {
 			dwBody = dwLen;
 		}
 		/// ASSERT: assert(dwBody <= 0x0ffff);
@@ -574,7 +574,7 @@ void multi_send_zero_packet(int pnum, BYTE bCmd, BYTE *pbSrc, DWORD dwLen)
 		dwMsg += sizeof(*p);
 		dwMsg += p->wBytes;
 		pkt.hdr.wLen = dwMsg;
-		if(!SNetSendMessage(pnum, &pkt, dwMsg)) {
+		if (!SNetSendMessage(pnum, &pkt, dwMsg)) {
 			nthread_terminate_game("SNetSendMessage2");
 			return;
 		}

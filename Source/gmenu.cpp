@@ -45,7 +45,7 @@ void gmenu_draw_pause()
 		RedBack();
 	if (!sgpCurrentMenu) {
 		light_table_index = 0;
-		gmenu_print_text(316, 336, "Pause");
+		gmenu_print_text(316 + PANEL_LEFT, -16 + PANEL_TOP, "Pause");
 	}
 }
 
@@ -165,7 +165,7 @@ void gmenu_draw()
 		}
 
 		ticks = GetTickCount();
-		if ((int)(ticks - PentSpin_tick) > 50) {
+		if ((int)(ticks - PentSpin_tick) > 50) { // BUGFIX: thould be 50ms (Fixed)
 			PentSpin_frame++;
 			if (PentSpin_frame == 9)
 				PentSpin_frame = 1;
@@ -181,14 +181,14 @@ void gmenu_draw_menu_item(TMenuItem *pItem, int y)
 	w = gmenu_get_lfont(pItem);
 	if (pItem->dwFlags & GMENU_SLIDER) {
 		x = 16 + w / 2 + SCREEN_X;
-		CelDraw(x, t - 8, optbar_cel, 1, 287);
+		CelDraw(x + PANEL_LEFT, t - 8, optbar_cel, 1, 287);
 		step = pItem->dwFlags & 0xFFF;
 		nSteps = (pItem->dwFlags & 0xFFF000) >> 12;
 		if (nSteps < 2)
 			nSteps = 2;
 		pos = step * 256 / nSteps;
-		gmenu_clear_buffer(x + 2, t - 10, pos + 13, 28);
-		CelDraw(x + 2 + pos, y - 12, option_cel, 1, 27);
+		gmenu_clear_buffer(x + 2 + PANEL_LEFT, t - 10, pos + 13, 28);
+		CelDraw(x + 2 + pos + PANEL_LEFT, y - 12, option_cel, 1, 27);
 	}
 	x = SCREEN_WIDTH / 2 - w / 2 + SCREEN_X;
 	light_table_index = (pItem->dwFlags & GMENU_ENABLED) ? 0 : 15;
@@ -301,15 +301,15 @@ BOOL gmenu_on_mouse_move()
 BOOLEAN gmenu_valid_mouse_pos(int *plOffset)
 {
 	*plOffset = 282;
-	if (MouseX < 282) {
+	if (MouseX < 282 + PANEL_LEFT) {
 		*plOffset = 0;
 		return 0;
 	}
-	if (MouseX > 538) {
+	if (MouseX > 538 + PANEL_LEFT) {
 		*plOffset = 256;
 		return 0;
 	}
-	*plOffset = MouseX - 282;
+	*plOffset = MouseX - 282 - PANEL_LEFT;
 	return 1;
 }
 

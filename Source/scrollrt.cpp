@@ -65,6 +65,9 @@ void ClearCursor() // CODE_FIX: this was supposed to be in cursor.cpp
 	sgdwCursWdtOld = 0;
 }
 
+/**
+ * @brief Remove the cursor from the backbuffer
+ */
 static void scrollrt_draw_cursor_back_buffer()
 {
 	int i;
@@ -89,6 +92,9 @@ static void scrollrt_draw_cursor_back_buffer()
 	sgdwCursWdt = 0;
 }
 
+/**
+ * @brief Draw the cursor on the backbuffer
+ */
 static void scrollrt_draw_cursor_item()
 {
 	int i, mx, my, col;
@@ -192,6 +198,14 @@ void DrawMissilePrivate(MissileStruct *m, int sx, int sy, BOOL pre)
 		Cl2Draw(mx, my, m->_miAnimData, m->_miAnimFrame, m->_miAnimWidth);
 }
 
+/**
+ * @brief Render a missile sprite
+ * @param x dPiece coordinate
+ * @param y dPiece coordinate
+ * @param sx Backbuffer coordinate
+ * @param sy Backbuffer coordinate
+ * @param pre Is the sprite in the background
+ */
 void DrawMissile(int x, int y, int sx, int sy, BOOL pre)
 {
 	int i;
@@ -215,6 +229,13 @@ void DrawMissile(int x, int y, int sx, int sy, BOOL pre)
 	}
 }
 
+/**
+ * @brief Render a monster sprite
+ * @param x dPiece coordinate
+ * @param y dPiece coordinate
+ * @param mx Backbuffer coordinate
+ * @param my Backbuffer coordinate
+ */
 static void DrawMonster(int x, int y, int mx, int my, int m)
 {
 	int nCel, frames;
@@ -267,6 +288,17 @@ static void DrawMonster(int x, int y, int mx, int my, int m)
 	}
 }
 
+/**
+ * @brief Render a monster sprite
+ * @param pnum Player id
+ * @param x dPiece coordinate
+ * @param y dPiece coordinate
+ * @param px Backbuffer coordinate
+ * @param py Backbuffer coordinate
+ * @param pCelBuff sprite buffer
+ * @param nCel frame
+ * @param nWidth width
+ */
 static void DrawPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	int l, frames;
@@ -333,6 +365,13 @@ static void DrawPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, i
 	}
 }
 
+/**
+ * @brief Render a monster sprite
+ * @param x dPiece coordinate
+ * @param y dPiece coordinate
+ * @param sx Backbuffer coordinate
+ * @param sy Backbuffer coordinate
+ */
 void DrawDeadPlayer(int x, int y, int sx, int sy)
 {
 	int i, px, py, nCel, frames;
@@ -363,6 +402,14 @@ void DrawDeadPlayer(int x, int y, int sx, int sy)
 	}
 }
 
+/**
+ * @brief Render an object sprite
+ * @param x dPiece coordinate
+ * @param y dPiece coordinate
+ * @param ox Backbuffer coordinate
+ * @param oy Backbuffer coordinate
+ * @param pre Is the sprite in the background
+ */
 static void DrawObject(int x, int y, int ox, int oy, BOOL pre)
 {
 	int sx, sy, xx, yy, nCel, frames;
@@ -443,9 +490,13 @@ static void drawRow(int x, int y, int sx, int sy, int eflag)
 }
 
 /**
- * This function it self causes rendering issues since it will render some walls a secound time after all items have been drawn.
- *
- * @brief Avoid actors sticking threw the walls when walking east
+ * This variant checks for of screen element on the lower screen
+ * This function it self causes rendering issues since it will render on top of objects on the other side of walls
+ * @brief Re render tile to workaround sorting issues with players walking east/west
+ * @param y dPiece coordinate
+ * @param x dPiece coordinate
+ * @param sx Backbuffer coordinate
+ * @param sy Backbuffer coordinate
  */
 static void scrollrt_draw_e_flag(int x, int y, int sx, int sy)
 {
@@ -544,6 +595,14 @@ static void DrawPlayerHelper(int x, int y, int oy, int sx, int sy, int eflag)
 	}
 }
 
+/**
+ * @brief Render object sprites
+ * @param sx dPiece coordinate
+ * @param sy dPiece coordinate
+ * @param dx Backbuffer coordinate
+ * @param dy Backbuffer coordinate
+ * @param eflag Should the sorting workaround be applied
+ */
 static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy, int eflag)
 {
 	int mi, px, py, nCel, nMon, negMon, frames;
@@ -616,11 +675,20 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy, int eflag)
 	}
 }
 
-static void scrollrt_draw(int x, int y, int sx, int sy, int chunks, int dPieceRow)
+/**
+ * @brief Render a row of tile
+ * @param x dPiece coordinate
+ * @param y dPiece coordinate
+ * @param sx Backbuffer coordinate
+ * @param sy Backbuffer coordinate
+ * @param chunks tile width of row
+ * @param row current row being rendered
+ */
+static void scrollrt_draw(int x, int y, int sx, int sy, int chunks, int row)
 {
 	assert(gpBuffer);
 
-	if (dPieceRow & 1) {
+	if (row & 1) {
 		x--;
 		y++;
 		sx -= 32;
@@ -644,6 +712,11 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int chunks, int dPieceRo
 	}
 }
 
+/**
+ * @brief Configure render and process screen rows
+ * @param x Center of view in dPiece coordinate
+ * @param y Center of view in dPiece coordinate
+ */
 static void DrawGame(int x, int y)
 {
 	int i, sx, sy, chunks, blocks;
@@ -787,6 +860,11 @@ static void DrawGame(int x, int y)
 	}
 }
 
+/**
+ * @brief Start rendering of screen, town variation
+ * @param StartX Center of view in dPiece coordinate
+ * @param StartY Center of view in dPiece coordinate
+ */
 void DrawView(int StartX, int StartY)
 {
 	DrawGame(StartX, StartY);
@@ -842,6 +920,9 @@ void DrawView(int StartX, int StartY)
 	DrawManaFlask();
 }
 
+/**
+ * @brief Render the whole screen black
+ */
 void ClearScreenBuffer()
 {
 	lock_buf(3);
@@ -861,6 +942,9 @@ void ClearScreenBuffer()
 }
 
 #ifdef _DEBUG
+/**
+ * @brief Scroll the screen when mouse is close to the edge
+ */
 void ScrollView()
 {
 	BOOL scroll;
@@ -939,12 +1023,18 @@ void ScrollView()
 		ScrollInfo._sdir = SDIR_NONE;
 }
 
+/**
+ * @brief Initialize the FPS meter
+ */
 void EnableFrameCount()
 {
 	frameflag = frameflag == 0;
 	framestart = GetTickCount();
 }
 
+/**
+ * @brief Display the current average FPS over 1 sec
+ */
 static void DrawFPS()
 {
 	DWORD tc, frames;
@@ -968,6 +1058,13 @@ static void DrawFPS()
 }
 #endif
 
+/**
+ * @brief Update part of the screen from the backbuffer
+ * @param dwX Backbuffer coordinate
+ * @param dwY Backbuffer coordinate
+ * @param dwWdt Backbuffer coordinate
+ * @param dwHgt Backbuffer coordinate
+ */
 static void DoBlitScreen(DWORD dwX, DWORD dwY, DWORD dwWdt, DWORD dwHgt)
 {
 	RECT SrcRect;
@@ -983,6 +1080,15 @@ static void DoBlitScreen(DWORD dwX, DWORD dwY, DWORD dwWdt, DWORD dwHgt)
 	BltFast(dwX, dwY, &SrcRect);
 }
 
+/**
+ * @brief Check render pipline and blit indivudal screen parts
+ * @param dwHgt Section of screen to update from top to bottom
+ * @param draw_desc Render info box
+ * @param draw_hp Render halth bar
+ * @param draw_mana Render mana bar
+ * @param draw_sbar Render belt
+ * @param draw_btn Render panel buttons
+ */
 static void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BOOL draw_sbar, BOOL draw_btn)
 {
 	int ysize;
@@ -1057,6 +1163,9 @@ void scrollrt_draw_game_screen(BOOL draw_cursor)
 	}
 }
 
+/**
+ * @brief Render the game
+ */
 void DrawAndBlit()
 {
 	int hgt;
