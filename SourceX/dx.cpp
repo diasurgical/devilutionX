@@ -38,7 +38,17 @@ SDL_Surface *pal_surface;
 
 bool bufferUpdated = false;
 
-static void dx_create_back_buffer()
+void dx_init(HWND hWnd)
+{
+	SDL_RaiseWindow(window);
+	SDL_ShowWindow(window);
+
+	dx_create_primary_surface();
+	palette_init();
+	dx_create_back_buffer();
+}
+
+void dx_create_back_buffer()
 {
 	pal_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);
 	if (pal_surface == NULL) {
@@ -54,7 +64,7 @@ static void dx_create_back_buffer()
 	pal_surface_palette_version = 1;
 }
 
-static void dx_create_primary_surface()
+void dx_create_primary_surface()
 {
 #ifndef USE_SDL1
 	if (renderer) {
@@ -71,16 +81,15 @@ static void dx_create_primary_surface()
 	}
 }
 
-void dx_init(HWND hWnd)
+void lock_buf(BYTE idx)
 {
-	SDL_RaiseWindow(window);
-	SDL_ShowWindow(window);
-
-	dx_create_primary_surface();
-	palette_init();
-	dx_create_back_buffer();
+#ifdef _DEBUG
+	locktbl[idx]++;
+#endif
+	lock_buf_priv();
 }
-static void lock_buf_priv()
+
+void lock_buf_priv()
 {
 	sgMemCrit.Enter();
 	if (sgdwLockCount != 0) {
@@ -93,15 +102,17 @@ static void lock_buf_priv()
 	sgdwLockCount++;
 }
 
-void lock_buf(BYTE idx)
+void unlock_buf(BYTE idx)
 {
 #ifdef _DEBUG
-	locktbl[idx]++;
+	if (!locktbl[idx])
+		app_fatal("Draw lock underflow: 0x%x", idx);
+	locktbl[idx]--;
 #endif
-	lock_buf_priv();
+	unlock_buf_priv();
 }
 
-static void unlock_buf_priv()
+void unlock_buf_priv()
 {
 	if (sgdwLockCount == 0)
 		app_fatal("draw main unlock error");
@@ -115,16 +126,6 @@ static void unlock_buf_priv()
 		RenderPresent();
 	}
 	sgMemCrit.Leave();
-}
-
-void unlock_buf(BYTE idx)
-{
-#ifdef _DEBUG
-	if (!locktbl[idx])
-		app_fatal("Draw lock underflow: 0x%x", idx);
-	locktbl[idx]--;
-#endif
-	unlock_buf_priv();
 }
 
 void dx_cleanup()

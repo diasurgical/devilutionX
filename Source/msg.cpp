@@ -1850,7 +1850,7 @@ DWORD On_OPOBJT(TCmd *pCmd, int pnum)
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
 		plr[pnum].destAction = ACTION_OPERATETK;
-		plr[pnum].destParam1 = p->wParam1;
+		plr[pnum].destParam1 =p->wParam1;
 	}
 
 	return sizeof(*p);

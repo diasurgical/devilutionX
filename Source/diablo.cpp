@@ -637,10 +637,10 @@ BOOL LeftMouseDown(int wParam)
 						sfx_stop();
 					} else if (chrflag && MouseX < 320) {
 						CheckChrBtns();
-					} else if (invflag && MouseX > RIGHT_PANEL) {
+					} else if (invflag && MouseX > 320) {
 						if (!dropGoldFlag)
 							CheckInvItem();
-					} else if (sbookflag && MouseX > RIGHT_PANEL) {
+					} else if (sbookflag && MouseX > 320) {
 						CheckSBook();
 					} else if (pcurs >= CURSOR_FIRSTITEM) {
 						if (TryInvPut()) {
@@ -1190,43 +1190,43 @@ void PressChar(int vkey)
 	case '!':
 	case '1':
 		if (plr[myplr].SpdList[0]._itype != -1 && plr[myplr].SpdList[0]._itype != 11) {
-			UseInvItem(myplr, INVITEM_BELT_FIRST);
+			UseInvItem(myplr, 47);
 		}
 		return;
 	case '@':
 	case '2':
 		if (plr[myplr].SpdList[1]._itype != -1 && plr[myplr].SpdList[1]._itype != 11) {
-			UseInvItem(myplr, INVITEM_BELT_FIRST + 1);
+			UseInvItem(myplr, 48);
 		}
 		return;
 	case '#':
 	case '3':
 		if (plr[myplr].SpdList[2]._itype != -1 && plr[myplr].SpdList[2]._itype != 11) {
-			UseInvItem(myplr, INVITEM_BELT_FIRST + 2);
+			UseInvItem(myplr, 49);
 		}
 		return;
 	case '$':
 	case '4':
 		if (plr[myplr].SpdList[3]._itype != -1 && plr[myplr].SpdList[3]._itype != 11) {
-			UseInvItem(myplr, INVITEM_BELT_FIRST + 3);
+			UseInvItem(myplr, 50);
 		}
 		return;
 	case '%':
 	case '5':
 		if (plr[myplr].SpdList[4]._itype != -1 && plr[myplr].SpdList[4]._itype != 11) {
-			UseInvItem(myplr, INVITEM_BELT_FIRST + 4);
+			UseInvItem(myplr, 51);
 		}
 		return;
 	case '^':
 	case '6':
 		if (plr[myplr].SpdList[5]._itype != -1 && plr[myplr].SpdList[5]._itype != 11) {
-			UseInvItem(myplr, INVITEM_BELT_FIRST + 5);
+			UseInvItem(myplr, 52);
 		}
 		return;
 	case '&':
 	case '7':
 		if (plr[myplr].SpdList[6]._itype != -1 && plr[myplr].SpdList[6]._itype != 11) {
-			UseInvItem(myplr, INVITEM_BELT_FIRST + 6);
+			UseInvItem(myplr, 53);
 		}
 		return;
 	case '*':
@@ -1238,7 +1238,7 @@ void PressChar(int vkey)
 		}
 #endif
 		if (plr[myplr].SpdList[7]._itype != -1 && plr[myplr].SpdList[7]._itype != 11) {
-			UseInvItem(myplr, INVITEM_BELT_FIRST + 7);
+			UseInvItem(myplr, 54);
 		}
 		return;
 #ifdef _DEBUG
@@ -1391,9 +1391,6 @@ void LoadAllGFX()
 	IncProgress();
 }
 
-/**
- * @param lvldir method of entry
- */
 void CreateLevel(int lvldir)
 {
 	switch (leveltype) {

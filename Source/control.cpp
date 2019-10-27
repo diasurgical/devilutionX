@@ -75,15 +75,12 @@ const BYTE fontkern[68] = {
 	3, 2, 7, 6, 3, 10, 10, 6, 6, 7,
 	4, 4, 9, 6, 6, 12, 3, 7
 };
-/**
- * Line height for info box when displaying 1, 2, 3, 4 and 5 lines respectivly
- */
 const int lineOffsets[5][5] = {
-	{ 82 },
-	{ 70, 94 },
-	{ 64, 82, 100 },
-	{ 60, 75, 89, 104 },
-	{ 58, 70, 82, 94, 105 },
+	{ 434 },
+	{ 422, 446 },
+	{ 416, 434, 452 },
+	{ 412, 427, 441, 456 },
+	{ 410, 422, 434, 446, 457 },
 };
 const BYTE gbFontTransTbl[256] = {
 	// clang-format off
@@ -115,14 +112,14 @@ char SpellITbl[MAX_SPELLS] = {
 	39, 42, 41, 40, 10, 36, 30
 };
 int PanBtnPos[8][5] = {
-	{ PANEL_LEFT +   9, PANEL_TOP +   9, 71, 19, 1 }, // char button
-	{ PANEL_LEFT +   9, PANEL_TOP +  35, 71, 19, 0 }, // quests button
-	{ PANEL_LEFT +   9, PANEL_TOP +  75, 71, 19, 1 }, // map button
-	{ PANEL_LEFT +   9, PANEL_TOP + 101, 71, 19, 0 }, // menu button
-	{ PANEL_LEFT + 560, PANEL_TOP +   9, 71, 19, 1 }, // inv button
-	{ PANEL_LEFT + 560, PANEL_TOP +  35, 71, 19, 0 }, // spells button
-	{ PANEL_LEFT +  87, PANEL_TOP +  91, 33, 32, 1 }, // chat button
-	{ PANEL_LEFT + 527, PANEL_TOP +  91, 33, 32, 1 }, // friendly fire button
+	{ 9, 361, 71, 19, 1 },
+	{ 9, 387, 71, 19, 0 },
+	{ 9, 427, 71, 19, 1 },
+	{ 9, 453, 71, 19, 0 },
+	{ 560, 361, 71, 19, 1 },
+	{ 560, 387, 71, 19, 0 },
+	{ 87, 443, 33, 32, 1 },
+	{ 527, 443, 33, 32, 1 }
 };
 char *PanBtnHotKey[8] = { "'c'", "'q'", "Tab", "Esc", "'i'", "'b'", "Enter", NULL };
 char *PanBtnStr[8] = {
@@ -151,17 +148,9 @@ int SpellPages[6][7] = {
 	{ -1, -1, -1, -1, -1, -1, -1 }
 };
 
-/**
- * Draw spell cell onto the back buffer.
- * @param xp Backbuffer coordinate
- * @param yp Backbuffer coordinate
- * @param Trans Pointer to the cel buffer.
- * @param nCel Index of the cel frame to draw. 0 based.
- * @param w Width of the frame.
- */
-void DrawSpellCel(int xp, int yp, BYTE *Trans, int nCel, int w)
+void DrawSpellCel(int xp, int yp, BYTE *pCelBuff, int nCel, int nWidth)
 {
-	CelDrawLight(xp, yp, Trans, nCel, w, SplTransTbl);
+	CelDrawLight(xp, yp, pCelBuff, nCel, nWidth, SplTransTbl);
 }
 
 void SetSpellTrans(char t)
@@ -221,9 +210,6 @@ void SetSpellTrans(char t)
 	}
 }
 
-/**
- * Sets the spell frame to draw and its position then draws it.
- */
 void DrawSpell()
 {
 	char spl, st;
@@ -244,9 +230,9 @@ void DrawSpell()
 		st = RSPLTYPE_INVALID;
 	SetSpellTrans(st);
 	if (spl != SPL_INVALID)
-		DrawSpellCel(PANEL_X + 565, PANEL_Y + 119, pSpellCels, SpellITbl[spl], 56);
+		DrawSpellCel(629, 631, pSpellCels, SpellITbl[spl], 56);
 	else
-		DrawSpellCel(PANEL_X + 565, PANEL_Y + 119, pSpellCels, 27, 56);
+		DrawSpellCel(629, 631, pSpellCels, 27, 56);
 }
 
 void DrawSpellList()
@@ -497,7 +483,7 @@ void DrawPanelBox(int x, int y, int w, int h, int sx, int sy)
 	/// ASSERT: assert(gpBuffer);
 
 	nSrcOff = x + PANEL_WIDTH * y;
-	nDstOff = sx + BUFFER_WIDTH * sy + PANEL_LEFT;
+	nDstOff = sx + BUFFER_WIDTH * sy + (SCREEN_WIDTH - PANEL_WIDTH) / 2;
 
 	int hgt;
 	BYTE *src, *dst;
@@ -510,24 +496,14 @@ void DrawPanelBox(int x, int y, int w, int h, int sx, int sy)
 	}
 }
 
-/**
- * Draws a section of the empty flask cel on top of the panel to create the illusion
- * of the flask getting empty. This function takes a cel and draws a
- * horizontal stripe of height (max-min) onto the back buffer.
- * @param pCelBuff Buffer of the empty flask cel.
- * @param min Top of the flask cel section to draw.
- * @param max Bottom of the flask cel section to draw.
- * @param c X Backbuffer coordinate
- * @param r Y Backbuffer coordinate
- */
-void SetFlaskHeight(BYTE *pCelBuff, int min, int max, int sx, int sy)
+void SetFlaskHeight(BYTE *pCelBuff, int min, int max, int c, int r)
 {
 	int nSrcOff, nDstOff, w;
 
 	/// ASSERT: assert(gpBuffer);
 
 	nSrcOff = 88 * min;
-	nDstOff = sx + BUFFER_WIDTH * sy;
+	nDstOff = c + BUFFER_WIDTH * r;
 	w = max - min;
 
 	BYTE *src, *dst;
@@ -539,17 +515,6 @@ void SetFlaskHeight(BYTE *pCelBuff, int min, int max, int sx, int sy)
 		memcpy(dst, src, 88);
 }
 
-/**
- * Draws the dome of the flask that protrudes above the panel top line.
- * It draws a rectangle of fixed width 59 and height 'h' from the source buffer
- * into the target buffer.
- * @param pCelBuff The flask cel buffer.
- * @param w Width of the cel.
- * @param nSrcOffset Offset of the source buffer from where the bytes will start to be copied from.
- * @param pBuff Target buffer.
- * @param nDstOff Offset of the target buffer where the bytes will start to be copied to.
- * @param h How many lines of the source buffer that will be copied.
- */
 void DrawFlask(BYTE *pCelBuff, int w, int nSrcOff, BYTE *pBuff, int nDstOff, int h)
 {
 	int wdt, hgt;
@@ -568,10 +533,6 @@ void DrawFlask(BYTE *pCelBuff, int w, int nSrcOff, BYTE *pBuff, int nDstOff, int
 	}
 }
 
-/**
- * Draws the top dome of the life flask (that part that protrudes out of the control panel).
- * First it draws the empty flask cel and then draws the filled part on top if needed.
- */
 void DrawLifeFlask()
 {
 	int filled = (double)plr[myplr]._pHitPoints / (double)plr[myplr]._pMaxHP * 80.0;
@@ -589,11 +550,6 @@ void DrawLifeFlask()
 		DrawFlask(pBtmBuff, PANEL_WIDTH, PANEL_WIDTH * filled + 2029, gpBuffer, BUFFER_WIDTH * filled + BUFFER_WIDTH * 499 + 173, 13 - filled);
 }
 
-/**
- * Controls the drawing of the area of the life flask within the control panel.
- * First sets the fill amount then draws the empty flask cel portion then the filled
- * flask portion.
- */
 void UpdateLifeFlask()
 {
 	int filled = (double)plr[myplr]._pHitPoints / (double)plr[myplr]._pMaxHP * 80.0;
@@ -604,9 +560,9 @@ void UpdateLifeFlask()
 	else if (filled < 0)
 		filled = 0;
 	if (filled != 69)
-		SetFlaskHeight(pLifeBuff, 16, 85 - filled, 96 + PANEL_X, PANEL_Y);
+		SetFlaskHeight(pLifeBuff, 16, 85 - filled, 96 + SCREEN_X, 352 + SCREEN_Y);
 	if (filled)
-		DrawPanelBox(96, 85 - filled, 88, filled, 96 + PANEL_X, PANEL_Y + 69 - filled);
+		DrawPanelBox(96, 85 - filled, 88, filled, 96 + SCREEN_X, 421 + SCREEN_Y - filled);
 }
 
 void DrawManaFlask()
@@ -641,10 +597,6 @@ void control_update_life_mana()
 	plr[myplr]._pHPPer = (double)plr[myplr]._pHitPoints / (double)plr[myplr]._pMaxHP * 80.0;
 }
 
-/**
- * Controls the drawing of the area of the life flask within the control panel.
- * Also for some reason draws the current right mouse button spell.
- */
 void UpdateManaFlask()
 {
 	int filled;
@@ -665,9 +617,9 @@ void UpdateManaFlask()
 	if (filled > 69)
 		filled = 69;
 	if (filled != 69)
-		SetFlaskHeight(pManaBuff, 16, 85 - filled, 96 + PANEL_X + 368, PANEL_Y);
+		SetFlaskHeight(pManaBuff, 16, 85 - filled, 96 + SCREEN_X + 368, 352 + SCREEN_Y);
 	if (filled)
-		DrawPanelBox(96 + 368, 85 - filled, 88, filled, 96 + PANEL_X + 368, PANEL_Y + 69 - filled);
+		DrawPanelBox(96 + 368, 85 - filled, 88, filled, 96 + SCREEN_X + 368, 421 + SCREEN_Y - filled);
 
 	DrawSpell();
 }
@@ -758,37 +710,29 @@ void InitControlPan()
 
 void ClearCtrlPan()
 {
-	DrawPanelBox(0, sgbPlrTalkTbl + 16, PANEL_WIDTH, PANEL_HEIGHT, PANEL_X, PANEL_Y);
+	DrawPanelBox(0, sgbPlrTalkTbl + 16, PANEL_WIDTH, PANEL_HEIGHT, 64, 512);
 	DrawInfoBox();
 }
 
-/**
- * Draws the control panel buttons in their current state. If the button is in the default
- * state draw it from the panel cel(extract its sub-rect). Else draw it from the buttons cel.
- */
 void DrawCtrlPan()
 {
 	int i;
 
 	for (i = 0; i < 6; i++) {
 		if (!panbtn[i])
-			DrawPanelBox(PanBtnPos[i][0] - PANEL_LEFT, PanBtnPos[i][1] - (PANEL_TOP - 16), 71, 20, PanBtnPos[i][0] + PANEL_X, PanBtnPos[i][1] + SCREEN_Y);
+			DrawPanelBox(PanBtnPos[i][0], PanBtnPos[i][1] - 336, 71, 20, PanBtnPos[i][0] + SCREEN_X, PanBtnPos[i][1] + SCREEN_Y);
 		else
-			CelDraw(PanBtnPos[i][0] + PANEL_X, PanBtnPos[i][1] + (PANEL_Y - 334), pPanelButtons, i + 1, 71);
+			CelDraw(PanBtnPos[i][0] + SCREEN_X, PanBtnPos[i][1] + SCREEN_Y + 18, pPanelButtons, i + 1, 71);
 	}
 	if (numpanbtns == 8) {
-		CelDraw(87 + PANEL_X, 122 + PANEL_Y, pMultiBtns, panbtn[6] + 1, 33);
+		CelDraw(87 + SCREEN_X, 474 + SCREEN_Y, pMultiBtns, panbtn[6] + 1, 33);
 		if (FriendlyMode)
-			CelDraw(527 + PANEL_X, 122 + PANEL_Y, pMultiBtns, panbtn[7] + 3, 33);
+			CelDraw(527 + SCREEN_X, 474 + SCREEN_Y, pMultiBtns, panbtn[7] + 3, 33);
 		else
-			CelDraw(527 + PANEL_X, 122 + PANEL_Y, pMultiBtns, panbtn[7] + 5, 33);
+			CelDraw(527 + SCREEN_X, 474 + SCREEN_Y, pMultiBtns, panbtn[7] + 5, 33);
 	}
 }
 
-/**
- * Draws the "Speed Book": the rows of known spells for quick-setting a spell that
- * show up when you click the spell slot at the control panel.
- */
 void DoSpeedBook()
 {
 	unsigned __int64 spells, spell;
@@ -842,9 +786,6 @@ void DoSpeedBook()
 	SetCursorPos(X, Y);
 }
 
-/**
- * Checks if the mouse cursor is within any of the panel buttons and flag it if so.
- */
 void DoPanBtn()
 {
 	int i;
@@ -858,7 +799,7 @@ void DoPanBtn()
 			}
 		}
 	}
-	if (!spselflag && MouseX >= 565 + PANEL_LEFT && MouseX < 621 + PANEL_LEFT && MouseY >= 64 + PANEL_TOP && MouseY < 120 + PANEL_TOP) {
+	if (!spselflag && MouseX >= 565 && MouseX < 621 && MouseY >= 416 && MouseY < 472) {
 		DoSpeedBook();
 		gamemenu_off();
 	}
@@ -899,10 +840,6 @@ void DoAutoMap()
 	}
 }
 
-/**
- * Checks the mouse cursor position within the control panel and sets information
- * strings if needed.
- */
 void CheckPanelInfo()
 {
 	int i, c, v, s;
@@ -931,7 +868,7 @@ void CheckPanelInfo()
 			pinfoflag = TRUE;
 		}
 	}
-	if (!spselflag && MouseX >= 565 + PANEL_LEFT && MouseX < 621 + PANEL_LEFT && MouseY >= 64 + PANEL_TOP && MouseY < 120 + PANEL_TOP) {
+	if (!spselflag && MouseX >= 565 && MouseX < 621 && MouseY >= 416 && MouseY < 472) {
 		strcpy(infostr, "Select current spell button");
 		infoclr = COL_WHITE;
 		panelflag = TRUE;
@@ -993,14 +930,10 @@ void CheckPanelInfo()
 			}
 		}
 	}
-	if (MouseX > 190 + PANEL_LEFT && MouseX < 437 + PANEL_LEFT && MouseY > 4 + PANEL_TOP && MouseY < 33 + PANEL_TOP)
+	if (MouseX > 190 && MouseX < 437 && MouseY > 356 && MouseY < 385)
 		pcursinvitem = CheckInvHLight();
 }
 
-/**
- * Check if the mouse is within a control panel button that's flagged.
- * Takes apropiate action if so.
- */
 void CheckBtnUp()
 {
 	int i;
@@ -1113,14 +1046,11 @@ BOOL control_WriteStringToBuffer(BYTE *str)
 	return TRUE;
 }
 
-/**
- * Sets a string to be drawn in the info box and then draws it.
- */
 void DrawInfoBox()
 {
 	int nGold;
 
-	DrawPanelBox(177, 62, 288, 60, PANEL_X + 177, PANEL_Y + 46);
+	DrawPanelBox(177, 62, 288, 60, 241, 558);
 	if (!panelflag && !trigflag && pcursinvitem == -1 && !spselflag) {
 		infostr[0] = '\0';
 		infoclr = COL_WHITE;
@@ -1206,14 +1136,14 @@ void control_print_info_str(int y, char *str, BOOL center, int lines)
 	int lineOffset, strWidth, sx, sy;
 
 	lineOffset = 0;
-	sx = 177 + PANEL_X;
-	sy = lineOffsets[lines][y] + PANEL_Y;
+	sx = 177 + SCREEN_X;
+	sy = lineOffsets[lines][y] + SCREEN_Y;
 	if (center == 1) {
 		strWidth = 0;
 		tmp = str;
 		while (*tmp) {
 			c = gbFontTransTbl[(BYTE)*tmp++];
-			strWidth += fontkern[fontframe[c]] + 2;
+			strWidth += fontkern[fontframe[c]] + 1;
 		}
 		if (strWidth < 288)
 			lineOffset = (288 - strWidth) >> 1;
@@ -1486,13 +1416,13 @@ void MY_PlrStringXY(int x, int y, int width, char *pszStr, char col, int base)
 
 void CheckLvlBtn()
 {
-	if (!lvlbtndown && MouseX >= 40 + PANEL_LEFT && MouseX <= 81 + PANEL_LEFT && MouseY >= -39 + PANEL_TOP && MouseY <= -17 + PANEL_TOP)
+	if (!lvlbtndown && MouseX >= 40 && MouseX <= 81 && MouseY >= 313 && MouseY <= 335)
 		lvlbtndown = TRUE;
 }
 
 void ReleaseLvlBtn()
 {
-	if (MouseX >= 40 + PANEL_LEFT && MouseX <= 81 + PANEL_LEFT && MouseY >= -39 + PANEL_TOP && MouseY <= -17 + PANEL_TOP)
+	if (MouseX >= 40 && MouseX <= 81 && MouseY >= 313 && MouseY <= 335)
 		chrflag = TRUE;
 	lvlbtndown = FALSE;
 }
@@ -1504,7 +1434,7 @@ void DrawLevelUpIcon()
 	if (!stextflag) {
 		nCel = lvlbtndown ? 3 : 2;
 		ADD_PlrStringXY(0, 303, 120, "Level Up", COL_WHITE);
-		CelDraw(40 + PANEL_X, -17 + PANEL_Y, pChrButtons, nCel, 41);
+		CelDraw(40 + SCREEN_X, 335 + SCREEN_Y, pChrButtons, nCel, 41);
 	}
 }
 
@@ -1587,9 +1517,9 @@ void DrawDurIcon()
 	int x1, x2, x3, x4;
 
 	if (!chrflag && !questlog || !invflag && !sbookflag) {
-		x1 = 592 + PANEL_X;
+		x1 = 656;
 		if (invflag || sbookflag)
-			x1 = 272 + PANEL_X;
+			x1 = 336;
 		p = &plr[myplr];
 		x2 = DrawDurIcon4Item(&p->InvBody[INVLOC_HEAD], x1, 4);
 		x3 = DrawDurIcon4Item(&p->InvBody[INVLOC_CHEST], x2, 3);
@@ -1629,7 +1559,7 @@ int DrawDurIcon4Item(ItemStruct *pItem, int x, int c)
 	}
 	if (pItem->_iDurability > 2)
 		c += 8;
-	CelDraw(x, -17 + PANEL_Y, pDurIcons, c, 32);
+	CelDraw(x, 335 + SCREEN_Y, pDurIcons, c, 32);
 	return x - 40;
 }
 
@@ -1698,8 +1628,8 @@ void DrawSpellBook()
 	char st;
 	unsigned __int64 spl;
 
-	CelDraw(RIGHT_PANEL_X, 351 + SCREEN_Y, pSpellBkCel, 1, 320);
-	CelDraw(RIGHT_PANEL_X + 76 * sbooktab + 7, 348 + SCREEN_Y, pSBkBtnCel, sbooktab + 1, 76);
+	CelDraw(PANEL_RIGHT, 351 + SCREEN_Y, pSpellBkCel, 1, 320);
+	CelDraw(PANEL_RIGHT + 76 * sbooktab + 7, 348 + SCREEN_Y, pSBkBtnCel, sbooktab + 1, 76);
 
 	spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
 
@@ -1709,10 +1639,10 @@ void DrawSpellBook()
 		if (sn != -1 && spl & (__int64)1 << (sn - 1)) {
 			st = GetSBookTrans(sn, TRUE);
 			SetSpellTrans(st);
-			DrawSpellCel(RIGHT_PANEL + 75, yp, pSBkIconCels, SpellITbl[sn], 37);
+			DrawSpellCel(SCREEN_WIDTH - 320 + 75, yp, pSBkIconCels, SpellITbl[sn], 37);
 			if (sn == plr[myplr]._pRSpell && st == plr[myplr]._pRSplType) {
 				SetSpellTrans(RSPLTYPE_SKILL);
-				DrawSpellCel(RIGHT_PANEL + 75, yp, pSBkIconCels, 43, 37);
+				DrawSpellCel(SCREEN_WIDTH - 320 + 75, yp, pSBkIconCels, 43, 37);
 			}
 			PrintSBookStr(10, yp - 23, FALSE, spelldata[sn].sNameText, COL_WHITE);
 			switch (GetSBookTrans(sn, FALSE)) {
@@ -1757,7 +1687,7 @@ void PrintSBookStr(int x, int y, BOOL cjustflag, char *pszStr, char col)
 	char *tmp;
 	int screen_x, line, sx;
 
-	sx = x + RIGHT_PANEL + 120;
+	sx = x + SCREEN_WIDTH - 320 + 120;
 	line = 0;
 	if (cjustflag) {
 		screen_x = 0;
@@ -1788,7 +1718,7 @@ void CheckSBook()
 	char st;
 	unsigned __int64 spl;
 
-	if (MouseX >= RIGHT_PANEL + 11 && MouseX < RIGHT_PANEL + 48 && MouseY >= 18 && MouseY < 314) {
+	if (MouseX >= 331 && MouseX < 368 && MouseY >= 18 && MouseY < 314) {
 		spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
 		sn = SpellPages[sbooktab][(MouseY - 18) / 43];
 		if (sn != -1 && spl & (__int64)1 << (sn - 1)) {
@@ -1804,8 +1734,8 @@ void CheckSBook()
 			drawpanflag = 255;
 		}
 	}
-	if (MouseX >= RIGHT_PANEL + 7 && MouseX < RIGHT_PANEL + 313 && MouseY >= 320 && MouseY < 349) { /// BUGFIX: change `< 313` to `< 311`
-		sbooktab = (MouseX - (RIGHT_PANEL + 7)) / 76;
+	if (MouseX >= 327 && MouseX < 633 && MouseY >= 320 && MouseY < 349) { /// BUGFIX: change `< 633` to `< 631`
+		sbooktab = (MouseX - 327) / 76;
 	}
 }
 
@@ -1928,20 +1858,20 @@ void DrawTalkPan()
 	if (!talkflag)
 		return;
 
-	DrawPanelBox(175, sgbPlrTalkTbl + 20, 294, 5, PANEL_X + 175, PANEL_Y + 4);
+	DrawPanelBox(175, sgbPlrTalkTbl + 20, 294, 5, 239, 516);
 	off = 0;
 	for (i = 293; i > 283; off++, i--) {
-		DrawPanelBox((off >> 1) + 175, sgbPlrTalkTbl + off + 25, i, 1, (off >> 1) + PANEL_X + 175, off + PANEL_Y + 9);
+		DrawPanelBox((off >> 1) + 175, sgbPlrTalkTbl + off + 25, i, 1, (off >> 1) + 239, off + 521);
 	}
-	DrawPanelBox(185, sgbPlrTalkTbl + 35, 274, 30, PANEL_X + 185, PANEL_Y + 19);
-	DrawPanelBox(180, sgbPlrTalkTbl + 65, 284, 5, PANEL_X + 180, PANEL_Y + 49);
+	DrawPanelBox(185, sgbPlrTalkTbl + 35, 274, 30, 249, 531);
+	DrawPanelBox(180, sgbPlrTalkTbl + 65, 284, 5, 244, 561);
 	for (i = 0; i < 10; i++) {
-		DrawPanelBox(180, sgbPlrTalkTbl + i + 70, i + 284, 1, PANEL_X + 180, i + PANEL_Y + 54);
+		DrawPanelBox(180, sgbPlrTalkTbl + i + 70, i + 284, 1, 244, i + 566);
 	}
-	DrawPanelBox(170, sgbPlrTalkTbl + 80, 310, 55, PANEL_X + 170, PANEL_Y + 64);
+	DrawPanelBox(170, sgbPlrTalkTbl + 80, 310, 55, 234, 576);
 	msg = sgszTalkMsg;
 	for (i = 0; i < 39; i += 13) {
-		x = 0 + PANEL_LEFT;
+		x = 0;
 		msg = control_print_talk_msg(msg, &x, i, 0);
 		if (!msg)
 			break;
@@ -1961,7 +1891,7 @@ void DrawTalkPan()
 					nCel = 4;
 				else
 					nCel = 3;
-				CelDraw(172 + PANEL_X, 84 + 18 * talk_btn + PANEL_Y, pTalkBtns, nCel, 61);
+				CelDraw(172 + SCREEN_X, 436 + 18 * talk_btn + SCREEN_Y, pTalkBtns, nCel, 61);
 			}
 		} else {
 			color = COL_RED;
@@ -1971,10 +1901,10 @@ void DrawTalkPan()
 				nCel = 1;
 			if (talkbtndown[talk_btn])
 				nCel += 4;
-			CelDraw(172 + PANEL_X, 84 + 18 * talk_btn + PANEL_Y, pTalkBtns, nCel, 61);
+			CelDraw(172 + SCREEN_X, 436 + 18 * talk_btn + SCREEN_Y, pTalkBtns, nCel, 61);
 		}
 		if (plr[i].plractive) {
-			x = 46 + PANEL_LEFT;
+			x = 46;
 			control_print_talk_msg(plr[i]._pName, &x, 60 + talk_btn * 18, color);
 		}
 
@@ -1993,11 +1923,11 @@ char *control_print_talk_msg(char *msg, int *x, int y, int color)
 
 		c = fontframe[gbFontTransTbl[(BYTE)*msg]];
 		width += fontkern[c] + 1;
-		if (width > 514 + PANEL_LEFT)
+		if (width > 514)
 			return msg;
 		msg++;
 		if (c) {
-			CPrintString(*x, y + 22 + PANEL_TOP, c, color);
+			CPrintString(*x, y + 534, c, color);
 		}
 		*x += fontkern[c] + 1;
 	}
@@ -2011,20 +1941,20 @@ BOOL control_check_talk_btn()
 	if (!talkflag)
 		return FALSE;
 
-	if (MouseX < 172 + PANEL_LEFT)
+	if (MouseX < 172)
 		return FALSE;
-	if (MouseY < 69 + PANEL_TOP)
+	if (MouseY < 421)
 		return FALSE;
-	if (MouseX > 233 + PANEL_LEFT)
+	if (MouseX > 233)
 		return FALSE;
-	if (MouseY > 123 + PANEL_TOP)
+	if (MouseY > 475)
 		return FALSE;
 
 	for (i = 0; i < sizeof(talkbtndown) / sizeof(talkbtndown[0]); i++) {
 		talkbtndown[i] = FALSE;
 	}
 
-	talkbtndown[(MouseY - (69 + PANEL_TOP)) / 18] = TRUE;
+	talkbtndown[(MouseY - 421) / 18] = TRUE;
 
 	return TRUE;
 }
@@ -2036,8 +1966,8 @@ void control_release_talk_btn()
 	if (talkflag) {
 		for (i = 0; i < sizeof(talkbtndown) / sizeof(talkbtndown[0]); i++)
 			talkbtndown[i] = FALSE;
-		if (MouseX >= 172 + PANEL_LEFT && MouseY >= 421 + PANEL_LEFT && MouseX <= -119 + PANEL_TOP && MouseY <= 123 + PANEL_TOP) {
-			off = (MouseY - (69 + PANEL_TOP)) / 18;
+		if (MouseX >= 172 && MouseY >= 421 && MouseX <= 233 && MouseY <= 475) {
+			off = (MouseY - 421) / 18;
 
 			for (p = 0; p < MAX_PLRS && off != -1; p++) {
 				if (p != myplr)

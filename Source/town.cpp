@@ -29,15 +29,6 @@ void SetTownMicros()
 	}
 }
 
-/**
- * @brief Load level data into dPiece
- * @param P3Tiles Tile set
- * @param pSector Sector data
- * @param xi upper left destination
- * @param yi upper left destination
- * @param w width of sector
- * @param h height of sector
- */
 void T_FillSector(BYTE *P3Tiles, BYTE *pSector, int xi, int yi, int w, int h)
 {
 	int i, j, xx, yy, nMap;
@@ -77,13 +68,6 @@ void T_FillSector(BYTE *P3Tiles, BYTE *pSector, int xi, int yi, int w, int h)
 	}
 }
 
-/**
- * @brief Load a tile in to dPiece
- * @param P3Tiles Tile set
- * @param xx upper left destination
- * @param yy upper left destination
- * @param t tile id
- */
 void T_FillTile(BYTE *P3Tiles, int xx, int yy, int t)
 {
 	long v1, v2, v3, v4;
@@ -101,9 +85,6 @@ void T_FillTile(BYTE *P3Tiles, int xx, int yy, int t)
 	dPiece[xx + 1][yy + 1] = v4;
 }
 
-/**
- * @brief Initialize all of the levels data
- */
 void T_Pass3()
 {
 	int xx, yy, x;
@@ -148,7 +129,7 @@ void T_Pass3()
 		if (!(plr[myplr].pTownWarps & 4)) {
 #endif
 			for (x = 36; x < 46; x++) {
-				T_FillTile(P3Tiles, x, 78, random_(0, 4) + 1);
+				T_FillTile(P3Tiles, x, 78, random(0, 4) + 1);
 			}
 #ifndef SPAWN
 		}
@@ -164,10 +145,6 @@ void T_Pass3()
 	mem_free_dbg(P3Tiles);
 }
 
-/**
- * @brief Initialize town level
- * @param entry Methode of entry
- */
 void CreateTown(int entry)
 {
 	int x, y;

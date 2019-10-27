@@ -102,15 +102,15 @@ void InitQuests()
 
 	if (gbMaxPlayers == 1) {
 		SetRndSeed(glSeedTbl[15]);
-		if (random_(0, 2))
+		if (random(0, 2))
 			quests[QTYPE_PW]._qactive = 0;
 		else
 			quests[QTYPE_KING]._qactive = 0;
 
-		quests[QuestGroup1[random_(0, sizeof(QuestGroup1) / sizeof(int))]]._qactive = 0;
-		quests[QuestGroup2[random_(0, sizeof(QuestGroup2) / sizeof(int))]]._qactive = 0;
-		quests[QuestGroup3[random_(0, sizeof(QuestGroup3) / sizeof(int))]]._qactive = 0;
-		quests[QuestGroup4[random_(0, sizeof(QuestGroup4) / sizeof(int))]]._qactive = 0;
+		quests[QuestGroup1[random(0, sizeof(QuestGroup1) / sizeof(int))]]._qactive = 0;
+		quests[QuestGroup2[random(0, sizeof(QuestGroup2) / sizeof(int))]]._qactive = 0;
+		quests[QuestGroup3[random(0, sizeof(QuestGroup3) / sizeof(int))]]._qactive = 0;
+		quests[QuestGroup4[random(0, sizeof(QuestGroup4) / sizeof(int))]]._qactive = 0;
 	}
 #ifdef _DEBUG
 	if (questdebug != -1)

@@ -5,7 +5,7 @@
 //offset 0
 //pCelBuff->pFrameTable[0]
 
-extern char gbPixelCol;  // automap pixel color 8-bit (palette entry)
+extern char gbPixelCol; // automap pixel color 8-bit (palette entry)
 extern BOOL gbRotateMap; // flip - if y < x
 extern int orgseed;
 extern int SeedCount;
@@ -37,7 +37,7 @@ inline BYTE *CelGetFrameClipped(BYTE *pCelBuff, int nCel, int *nDataSize)
 	DWORD nDataStart;
 	BYTE *pRLEBytes = CelGetFrame(pCelBuff, nCel, nDataSize);
 
-	nDataStart = pRLEBytes[1] << 8 | pRLEBytes[0];
+	nDataStart = SwapLE16(pRLEBytes[1] << 8 | pRLEBytes[0]);
 	*nDataSize -= nDataStart;
 
 	return pRLEBytes + nDataStart;
@@ -63,7 +63,7 @@ void DrawLine(int x0, int y0, int x1, int y1, BYTE col);
 int GetDirection(int x1, int y1, int x2, int y2);
 void SetRndSeed(int s);
 int GetRndSeed();
-int random_(BYTE idx, int v);
+int random(BYTE idx, int v);
 void engine_debug_trap(BOOL show_cursor);
 BYTE *DiabloAllocPtr(DWORD dwBytes);
 void mem_free_dbg(void *p);

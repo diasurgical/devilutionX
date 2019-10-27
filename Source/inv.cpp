@@ -10,79 +10,79 @@ int sgdwLastTime; // check name
 const InvXY InvRect[73] = {
 	// clang-format off
 	//  X,   Y
-	{ RIGHT_PANEL + 132,  31 }, // helmet
-	{ RIGHT_PANEL + 160,  31 }, // helmet
-	{ RIGHT_PANEL + 132,  59 }, // helmet
-	{ RIGHT_PANEL + 160,  59 }, // helmet
-	{ RIGHT_PANEL + 45,  205 }, // left ring
-	{ RIGHT_PANEL + 247, 205 }, // right ring
-	{ RIGHT_PANEL + 204,  59 }, // amulet
-	{ RIGHT_PANEL + 17,  104 }, // left hand
-	{ RIGHT_PANEL + 46,  104 }, // left hand
-	{ RIGHT_PANEL + 17,  132 }, // left hand
-	{ RIGHT_PANEL + 46,  132 }, // left hand
-	{ RIGHT_PANEL + 17,  160 }, // left hand
-	{ RIGHT_PANEL + 46,  160 }, // left hand
-	{ RIGHT_PANEL + 247, 104 }, // right hand
-	{ RIGHT_PANEL + 276, 104 }, // right hand
-	{ RIGHT_PANEL + 247, 132 }, // right hand
-	{ RIGHT_PANEL + 276, 132 }, // right hand
-	{ RIGHT_PANEL + 247, 160 }, // right hand
-	{ RIGHT_PANEL + 276, 160 }, // right hand
-	{ RIGHT_PANEL + 132, 104 }, // chest
-	{ RIGHT_PANEL + 160, 104 }, // chest
-	{ RIGHT_PANEL + 132, 132 }, // chest
-	{ RIGHT_PANEL + 160, 132 }, // chest
-	{ RIGHT_PANEL + 132, 160 }, // chest
-	{ RIGHT_PANEL + 160, 160 }, // chest
-	{ RIGHT_PANEL + 17,  250 }, // inv row 1
-	{ RIGHT_PANEL + 46,  250 }, // inv row 1
-	{ RIGHT_PANEL + 74,  250 }, // inv row 1
-	{ RIGHT_PANEL + 103, 250 }, // inv row 1
-	{ RIGHT_PANEL + 131, 250 }, // inv row 1
-	{ RIGHT_PANEL + 160, 250 }, // inv row 1
-	{ RIGHT_PANEL + 189, 250 }, // inv row 1
-	{ RIGHT_PANEL + 218, 250 }, // inv row 1
-	{ RIGHT_PANEL + 247, 250 }, // inv row 1
-	{ RIGHT_PANEL + 276, 250 }, // inv row 1
-	{ RIGHT_PANEL + 17,  279 }, // inv row 2
-	{ RIGHT_PANEL + 46,  279 }, // inv row 2
-	{ RIGHT_PANEL + 74,  279 }, // inv row 2
-	{ RIGHT_PANEL + 103, 279 }, // inv row 2
-	{ RIGHT_PANEL + 131, 279 }, // inv row 2
-	{ RIGHT_PANEL + 160, 279 }, // inv row 2
-	{ RIGHT_PANEL + 189, 279 }, // inv row 2
-	{ RIGHT_PANEL + 218, 279 }, // inv row 2
-	{ RIGHT_PANEL + 247, 279 }, // inv row 2
-	{ RIGHT_PANEL + 276, 279 }, // inv row 2
-	{ RIGHT_PANEL + 17,  308 }, // inv row 3
-	{ RIGHT_PANEL + 46,  308 }, // inv row 3
-	{ RIGHT_PANEL + 74,  308 }, // inv row 3
-	{ RIGHT_PANEL + 103, 308 }, // inv row 3
-	{ RIGHT_PANEL + 131, 308 }, // inv row 3
-	{ RIGHT_PANEL + 160, 308 }, // inv row 3
-	{ RIGHT_PANEL + 189, 308 }, // inv row 3
-	{ RIGHT_PANEL + 218, 308 }, // inv row 3
-	{ RIGHT_PANEL + 247, 308 }, // inv row 3
-	{ RIGHT_PANEL + 276, 308 }, // inv row 3
-	{ RIGHT_PANEL + 17,  336 }, // inv row 4
-	{ RIGHT_PANEL + 46,  336 }, // inv row 4
-	{ RIGHT_PANEL + 74,  336 }, // inv row 4
-	{ RIGHT_PANEL + 103, 336 }, // inv row 4
-	{ RIGHT_PANEL + 131, 336 }, // inv row 4
-	{ RIGHT_PANEL + 160, 336 }, // inv row 4
-	{ RIGHT_PANEL + 189, 336 }, // inv row 4
-	{ RIGHT_PANEL + 218, 336 }, // inv row 4
-	{ RIGHT_PANEL + 247, 336 }, // inv row 4
-	{ RIGHT_PANEL + 276, 336 }, // inv row 4
-	{ PANEL_LEFT + 205, PANEL_TOP + 33 }, // belt
-	{ PANEL_LEFT + 234, PANEL_TOP + 33 }, // belt
-	{ PANEL_LEFT + 263, PANEL_TOP + 33 }, // belt
-	{ PANEL_LEFT + 292, PANEL_TOP + 33 }, // belt
-	{ PANEL_LEFT + 321, PANEL_TOP + 33 }, // belt
-	{ PANEL_LEFT + 350, PANEL_TOP + 33 }, // belt
-	{ PANEL_LEFT + 379, PANEL_TOP + 33 }, // belt
-	{ PANEL_LEFT + 408, PANEL_TOP + 33 }  // belt
+	{ 452,  31 }, // helmet
+	{ 480,  31 }, // helmet
+	{ 452,  59 }, // helmet
+	{ 480,  59 }, // helmet
+	{ 365, 205 }, // left ring
+	{ 567, 205 }, // right ring
+	{ 524,  59 }, // amulet
+	{ 337, 104 }, // left hand
+	{ 366, 104 }, // left hand
+	{ 337, 132 }, // left hand
+	{ 366, 132 }, // left hand
+	{ 337, 160 }, // left hand
+	{ 366, 160 }, // left hand
+	{ 567, 104 }, // right hand
+	{ 596, 104 }, // right hand
+	{ 567, 132 }, // right hand
+	{ 596, 132 }, // right hand
+	{ 567, 160 }, // right hand
+	{ 596, 160 }, // right hand
+	{ 452, 104 }, // chest
+	{ 480, 104 }, // chest
+	{ 452, 132 }, // chest
+	{ 480, 132 }, // chest
+	{ 452, 160 }, // chest
+	{ 480, 160 }, // chest
+	{ 337, 250 }, // inv row 1
+	{ 366, 250 }, // inv row 1
+	{ 394, 250 }, // inv row 1
+	{ 423, 250 }, // inv row 1
+	{ 451, 250 }, // inv row 1
+	{ 480, 250 }, // inv row 1
+	{ 509, 250 }, // inv row 1
+	{ 538, 250 }, // inv row 1
+	{ 567, 250 }, // inv row 1
+	{ 596, 250 }, // inv row 1
+	{ 337, 279 }, // inv row 2
+	{ 366, 279 }, // inv row 2
+	{ 394, 279 }, // inv row 2
+	{ 423, 279 }, // inv row 2
+	{ 451, 279 }, // inv row 2
+	{ 480, 279 }, // inv row 2
+	{ 509, 279 }, // inv row 2
+	{ 538, 279 }, // inv row 2
+	{ 567, 279 }, // inv row 2
+	{ 596, 279 }, // inv row 2
+	{ 337, 308 }, // inv row 3
+	{ 366, 308 }, // inv row 3
+	{ 394, 308 }, // inv row 3
+	{ 423, 308 }, // inv row 3
+	{ 451, 308 }, // inv row 3
+	{ 480, 308 }, // inv row 3
+	{ 509, 308 }, // inv row 3
+	{ 538, 308 }, // inv row 3
+	{ 567, 308 }, // inv row 3
+	{ 596, 308 }, // inv row 3
+	{ 337, 336 }, // inv row 4
+	{ 366, 336 }, // inv row 4
+	{ 394, 336 }, // inv row 4
+	{ 423, 336 }, // inv row 4
+	{ 451, 336 }, // inv row 4
+	{ 480, 336 }, // inv row 4
+	{ 509, 336 }, // inv row 4
+	{ 538, 336 }, // inv row 4
+	{ 567, 336 }, // inv row 4
+	{ 596, 336 }, // inv row 4
+	{ 205, 385 }, // belt
+	{ 234, 385 }, // belt
+	{ 263, 385 }, // belt
+	{ 292, 385 }, // belt
+	{ 321, 385 }, // belt
+	{ 350, 385 }, // belt
+	{ 379, 385 }, // belt
+	{ 408, 385 }  // belt
 	// clang-format on
 };
 
@@ -141,10 +141,10 @@ void DrawInv()
 	BOOL invtest[NUM_INV_GRID_ELEM];
 	int frame, frame_width, colour, screen_x, screen_y, i, j, ii;
 
-	CelDraw(RIGHT_PANEL_X, 351 + SCREEN_Y, pInvCels, 1, 320);
+	CelDraw(PANEL_RIGHT, 351 + SCREEN_Y, pInvCels, 1, 320);
 
 	if (plr[myplr].InvBody[INVLOC_HEAD]._itype != ITYPE_NONE) {
-		InvDrawSlotBack(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 2 * INV_SLOT_SIZE_PX);
+		InvDrawSlotBack(PANEL_RIGHT + 133, 59 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 2 * INV_SLOT_SIZE_PX);
 
 		frame = plr[myplr].InvBody[INVLOC_HEAD]._iCurs + CURSOR_FIRSTITEM;
 		frame_width = InvItemWidth[frame];
@@ -157,18 +157,18 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_HEAD]._iStatFlag) {
 				colour = ICOL_RED;
 			}
-			CelBlitOutline(colour, RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width);
+			CelBlitOutline(colour, PANEL_RIGHT + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width);
 		}
 
 		if (plr[myplr].InvBody[INVLOC_HEAD]._iStatFlag) {
-			CelClippedDraw(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width);
+			CelClippedDraw(PANEL_RIGHT + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width);
 		} else {
-			CelDrawLightRed(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+			CelDrawLightRed(PANEL_RIGHT + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width, 1);
 		}
 	}
 
 	if (plr[myplr].InvBody[INVLOC_RING_LEFT]._itype != ITYPE_NONE) {
-		InvDrawSlotBack(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
+		InvDrawSlotBack(PANEL_RIGHT + 48, 205 + SCREEN_Y, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
 
 		frame = plr[myplr].InvBody[INVLOC_RING_LEFT]._iCurs + CURSOR_FIRSTITEM;
 		frame_width = InvItemWidth[frame];
@@ -181,18 +181,18 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_RING_LEFT]._iStatFlag) {
 				colour = ICOL_RED;
 			}
-			CelBlitOutline(colour, RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width);
+			CelBlitOutline(colour, PANEL_RIGHT + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width);
 		}
 
 		if (plr[myplr].InvBody[INVLOC_RING_LEFT]._iStatFlag) {
-			CelClippedDraw(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width);
+			CelClippedDraw(PANEL_RIGHT + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width);
 		} else {
-			CelDrawLightRed(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+			CelDrawLightRed(PANEL_RIGHT + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width, 1);
 		}
 	}
 
 	if (plr[myplr].InvBody[INVLOC_RING_RIGHT]._itype != ITYPE_NONE) {
-		InvDrawSlotBack(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
+		InvDrawSlotBack(PANEL_RIGHT + 249, 205 + SCREEN_Y, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
 
 		frame = plr[myplr].InvBody[INVLOC_RING_RIGHT]._iCurs + CURSOR_FIRSTITEM;
 		frame_width = InvItemWidth[frame];
@@ -205,18 +205,18 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_RING_RIGHT]._iStatFlag) {
 				colour = ICOL_RED;
 			}
-			CelBlitOutline(colour, RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width);
+			CelBlitOutline(colour, PANEL_RIGHT + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width);
 		}
 
 		if (plr[myplr].InvBody[INVLOC_RING_RIGHT]._iStatFlag) {
-			CelClippedDraw(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width);
+			CelClippedDraw(PANEL_RIGHT + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width);
 		} else {
-			CelDrawLightRed(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+			CelDrawLightRed(PANEL_RIGHT + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width, 1);
 		}
 	}
 
 	if (plr[myplr].InvBody[INVLOC_AMULET]._itype != ITYPE_NONE) {
-		InvDrawSlotBack(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
+		InvDrawSlotBack(PANEL_RIGHT + 205, 60 + SCREEN_Y, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
 
 		frame = plr[myplr].InvBody[INVLOC_AMULET]._iCurs + CURSOR_FIRSTITEM;
 		frame_width = InvItemWidth[frame];
@@ -229,23 +229,23 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_AMULET]._iStatFlag) {
 				colour = ICOL_RED;
 			}
-			CelBlitOutline(colour, RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width);
+			CelBlitOutline(colour, PANEL_RIGHT + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width);
 		}
 
 		if (plr[myplr].InvBody[INVLOC_AMULET]._iStatFlag) {
-			CelClippedDraw(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width);
+			CelClippedDraw(PANEL_RIGHT + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width);
 		} else {
-			CelDrawLightRed(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+			CelDrawLightRed(PANEL_RIGHT + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width, 1);
 		}
 	}
 
 	if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_NONE) {
-		InvDrawSlotBack(RIGHT_PANEL_X + 17, 160 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
+		InvDrawSlotBack(PANEL_RIGHT + 17, 160 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
 
 		frame = plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCurs + CURSOR_FIRSTITEM;
 		frame_width = InvItemWidth[frame];
 		// calc item offsets for weapons smaller than 2x3 slots
-		screen_x = frame_width == INV_SLOT_SIZE_PX ? (RIGHT_PANEL_X + 31) : (RIGHT_PANEL_X + 17);
+		screen_x = frame_width == INV_SLOT_SIZE_PX ? (PANEL_RIGHT + 31) : (PANEL_RIGHT + 17);
 		screen_y = InvItemHeight[frame] == (3 * INV_SLOT_SIZE_PX) ? (160 + SCREEN_Y) : (146 + SCREEN_Y);
 
 		if (pcursinvitem == INVITEM_HAND_LEFT) {
@@ -266,26 +266,26 @@ void DrawInv()
 		}
 
 		if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND) {
-			InvDrawSlotBack(RIGHT_PANEL_X + 247, 160 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
+			InvDrawSlotBack(PANEL_RIGHT + 247, 160 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
 			light_table_index = 0;
 			cel_transparency_active = 1;
 
 			CelClippedBlitLightTrans(
 			    frame_width == INV_SLOT_SIZE_PX
-			        ? &gpBuffer[SCREENXY(RIGHT_PANEL_X + 197, SCREEN_Y)]
-			        : &gpBuffer[SCREENXY(RIGHT_PANEL_X + 183, SCREEN_Y)],
+			        ? &gpBuffer[SCREENXY(PANEL_RIGHT + 197, SCREEN_Y)]
+			        : &gpBuffer[SCREENXY(PANEL_RIGHT + 183, SCREEN_Y)],
 			    pCursCels, frame, frame_width);
 
 			cel_transparency_active = 0;
 		}
 	}
 	if (plr[myplr].InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_NONE) {
-		InvDrawSlotBack(RIGHT_PANEL_X + 247, 160 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
+		InvDrawSlotBack(PANEL_RIGHT + 247, 160 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
 
 		frame = plr[myplr].InvBody[INVLOC_HAND_RIGHT]._iCurs + CURSOR_FIRSTITEM;
 		frame_width = InvItemWidth[frame];
 		// calc item offsets for weapons smaller than 2x3 slots
-		screen_x = frame_width == INV_SLOT_SIZE_PX ? (RIGHT_PANEL_X + 261) : (RIGHT_PANEL_X + 249);
+		screen_x = frame_width == INV_SLOT_SIZE_PX ? (PANEL_RIGHT + 261) : (PANEL_RIGHT + 249);
 		screen_y = InvItemHeight[frame] == 3 * INV_SLOT_SIZE_PX ? (160 + SCREEN_Y) : (146 + SCREEN_Y);
 
 		if (pcursinvitem == INVITEM_HAND_RIGHT) {
@@ -307,7 +307,7 @@ void DrawInv()
 	}
 
 	if (plr[myplr].InvBody[INVLOC_CHEST]._itype != ITYPE_NONE) {
-		InvDrawSlotBack(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
+		InvDrawSlotBack(PANEL_RIGHT + 133, 160 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
 
 		frame = plr[myplr].InvBody[INVLOC_CHEST]._iCurs + CURSOR_FIRSTITEM;
 		frame_width = InvItemWidth[frame];
@@ -320,13 +320,13 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_CHEST]._iStatFlag) {
 				colour = ICOL_RED;
 			}
-			CelBlitOutline(colour, RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width);
+			CelBlitOutline(colour, PANEL_RIGHT + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width);
 		}
 
 		if (plr[myplr].InvBody[INVLOC_CHEST]._iStatFlag) {
-			CelClippedDraw(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width);
+			CelClippedDraw(PANEL_RIGHT + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width);
 		} else {
-			CelDrawLightRed(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+			CelDrawLightRed(PANEL_RIGHT + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width, 1);
 		}
 	}
 
@@ -388,37 +388,37 @@ void DrawInvBelt()
 		return;
 	}
 
-	DrawPanelBox(205, 21, 232, 28, PANEL_X + 205, PANEL_Y + 5);
+	DrawPanelBox(205, 21, 232, 28, 269, 517);
 
 	for (i = 0; i < MAXBELTITEMS; i++) {
 		if (plr[myplr].SpdList[i]._itype == ITYPE_NONE) {
 			continue;
 		}
 
-		InvDrawSlotBack(InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X, InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, 28, 28);
+		InvDrawSlotBack(InvRect[i + 65].X + 64, InvRect[i + 65].Y + 159, 28, 28);
 		frame = plr[myplr].SpdList[i]._iCurs + CURSOR_FIRSTITEM;
 		frame_width = InvItemWidth[frame];
 
-		if (pcursinvitem == i + INVITEM_BELT_FIRST) {
+		if (pcursinvitem == i + 47) {
 			colour = ICOL_WHITE;
 			if (plr[myplr].SpdList[i]._iMagical)
 				colour = ICOL_BLUE;
 			if (!plr[myplr].SpdList[i]._iStatFlag)
 				colour = ICOL_RED;
-			CelBlitOutline(colour, InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X, InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, pCursCels, frame, frame_width);
+			CelBlitOutline(colour, InvRect[i + 65].X + 64, InvRect[i + 65].Y + 159, pCursCels, frame, frame_width);
 		}
 
 		if (plr[myplr].SpdList[i]._iStatFlag)
-			CelClippedDraw(InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X, InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, pCursCels, frame, frame_width);
+			CelClippedDraw(InvRect[i + 65].X + 64, InvRect[i + 65].Y + 159, pCursCels, frame, frame_width);
 		else
-			CelDrawLightRed(InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X, InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, pCursCels, frame, frame_width, 1);
+			CelDrawLightRed(InvRect[i + 65].X + 64, InvRect[i + 65].Y + 159, pCursCels, frame, frame_width, 1);
 
 		if (AllItemsList[plr[myplr].SpdList[i].IDidx].iUsable
 		    && plr[myplr].SpdList[i]._iStatFlag
 		    && plr[myplr].SpdList[i]._itype != ITYPE_GOLD) {
 			fi = i + 49;
 			ff = fontframe[gbFontTransTbl[fi]];
-			CPrintString(InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X + 28 - fontkern[ff], InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, ff, 0);
+			CPrintString(InvRect[i + 65].X + SCREEN_X + 28 - fontkern[ff], InvRect[i + 65].Y + SCREEN_Y - 1, ff, 0);
 		}
 	}
 }
@@ -1323,13 +1323,10 @@ void CheckInvItem()
 	}
 }
 
-/**
- * Check for interactions with belt
- */
 void CheckInvScrn()
 {
-	if (MouseX > 190 + PANEL_LEFT && MouseX < 437 + PANEL_LEFT
-	    && MouseY > PANEL_TOP && MouseY < 33 + PANEL_TOP) {
+	if (MouseX > 190 && MouseX < 437
+	    && MouseY > PANEL_TOP && MouseY < 385) {
 		CheckInvItem();
 	}
 }
@@ -1493,7 +1490,7 @@ void AutoGetItem(int pnum, int ii)
 	}
 
 	item[ii]._iCreateInfo &= 0x7FFF;
-	plr[pnum].HoldItem = item[ii]; /// BUGFIX: overwrites cursor item, allowing for belt dupe bug
+	plr[pnum].HoldItem = item[ii];
 	CheckQuestItem(pnum);
 	CheckBookLevel(pnum);
 	CheckItemStats(pnum);
@@ -1593,12 +1590,12 @@ void AutoGetItem(int pnum, int ii)
 	} else {
 		if (pnum == myplr) {
 			if (plr[pnum]._pClass == PC_WARRIOR) {
-				PlaySFX(random_(0, 3) + PS_WARR14);
+				PlaySFX(random(0, 3) + PS_WARR14);
 #ifndef SPAWN
 			} else if (plr[pnum]._pClass == PC_ROGUE) {
-				PlaySFX(random_(0, 3) + PS_ROGUE14);
+				PlaySFX(random(0, 3) + PS_ROGUE14);
 			} else if (plr[pnum]._pClass == PC_SORCERER) {
-				PlaySFX(random_(0, 3) + PS_MAGE14);
+				PlaySFX(random(0, 3) + PS_MAGE14);
 #endif
 			}
 		}
@@ -2050,10 +2047,10 @@ BOOL UseStaff()
 void StartGoldDrop()
 {
 	initialDropGoldIndex = pcursinvitem;
-	if (pcursinvitem <= INVITEM_INV_LAST)
-		initialDropGoldValue = plr[myplr].InvList[pcursinvitem - INVITEM_INV_FIRST]._ivalue;
+	if (pcursinvitem <= 46)
+		initialDropGoldValue = plr[myplr].InvList[pcursinvitem - 7]._ivalue;
 	else
-		initialDropGoldValue = plr[myplr].SpdList[pcursinvitem - INVITEM_BELT_FIRST]._ivalue;
+		initialDropGoldValue = plr[myplr].SpdList[pcursinvitem - 47]._ivalue;
 	dropGoldFlag = TRUE;
 	dropGoldValue = 0;
 	if (talkflag)

@@ -992,7 +992,7 @@ void PlayEffect(int i, int mode)
 		return;
 	}
 
-	sndIdx = random_(164, 2);
+	sndIdx = random(164, 2);
 	if (!gbSndInited || !gbSoundOn || gbBufferMsgs) {
 		return;
 	}
@@ -1130,7 +1130,7 @@ int RndSFX(int psfx)
 #endif
 	else
 		return psfx;
-	return psfx + random_(165, nRand);
+	return psfx + random(165, nRand);
 }
 
 void PlaySfxLoc(int psfx, int x, int y)

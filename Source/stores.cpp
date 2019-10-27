@@ -116,7 +116,7 @@ void FreeStoreMem()
 
 void DrawSTextBack()
 {
-	CelDraw(PANEL_X + 344, 487, pSTextBoxCels, 1, 271);
+	CelDraw(408, 487, pSTextBoxCels, 1, 271);
 	trans_rect(347, 28, 265, 297);
 }
 
@@ -129,9 +129,9 @@ void PrintSString(int x, int y, BOOL cjustflag, char *str, char col, int val)
 
 	s = y * 12 + stext[y]._syoff;
 	if (stextsize)
-		xx = PANEL_X + 32;
+		xx = 96;
 	else
-		xx = PANEL_X + 352;
+		xx = 416;
 	sx = xx + x;
 	sy = s + 204;
 	len = strlen(str);
@@ -211,16 +211,16 @@ void DrawSArrows(int y1, int y2)
 	yd1 = y1 * 12 + 204;
 	yd2 = y2 * 12 + 204;
 	if (stextscrlubtn != -1)
-		CelDraw(PANEL_X + 601, yd1, pSTextSlidCels, 12, 12);
+		CelDraw(665, yd1, pSTextSlidCels, 12, 12);
 	else
-		CelDraw(PANEL_X + 601, yd1, pSTextSlidCels, 10, 12);
+		CelDraw(665, yd1, pSTextSlidCels, 10, 12);
 	if (stextscrldbtn != -1)
-		CelDraw(PANEL_X + 601, yd2, pSTextSlidCels, 11, 12);
+		CelDraw(665, yd2, pSTextSlidCels, 11, 12);
 	else
-		CelDraw(PANEL_X + 601, yd2, pSTextSlidCels, 9, 12);
+		CelDraw(665, yd2, pSTextSlidCels, 9, 12);
 	yd1 += 12;
 	for (yd3 = yd1; yd3 < yd2; yd3 += 12) {
-		CelDraw(PANEL_X + 601, yd3, pSTextSlidCels, 14, 12);
+		CelDraw(665, yd3, pSTextSlidCels, 14, 12);
 	}
 	if (stextsel == 22)
 		yd3 = stextlhold;
@@ -230,7 +230,7 @@ void DrawSArrows(int y1, int y2)
 		yd3 = 1000 * (stextsval + ((yd3 - stextup) >> 2)) / (storenumh - 1) * (y2 * 12 - y1 * 12 - 24) / 1000;
 	else
 		yd3 = 0;
-	CelDraw(PANEL_X + 601, (y1 + 1) * 12 + 204 + yd3, pSTextSlidCels, 13, 12);
+	CelDraw(665, (y1 + 1) * 12 + 204 + yd3, pSTextSlidCels, 13, 12);
 }
 
 void DrawSTextHelp()
@@ -2570,7 +2570,7 @@ void S_TalkEnter()
 
 	if (stextsel == sn - 2) {
 		SetRndSeed(towner[talker]._tSeed);
-		tq = gossipstart + random_(0, gossipend - gossipstart + 1);
+		tq = gossipstart + random(0, gossipend - gossipstart + 1);
 		InitQTextMsg(tq);
 		return;
 	}
@@ -2728,14 +2728,14 @@ void CheckStoreBtn()
 			sfx_stop();
 	} else if (stextsel != -1 && MouseY >= 32 && MouseY <= 320) {
 		if (!stextsize) {
-			if (MouseX < 344 + PANEL_LEFT || MouseX > 616 + PANEL_LEFT)
+			if (MouseX < 344 || MouseX > 616)
 				return;
 		} else {
-			if (MouseX < 24 + PANEL_LEFT || MouseX > 616 + PANEL_LEFT)
+			if (MouseX < 24 || MouseX > 616)
 				return;
 		}
 		y = (MouseY - 32) / 12;
-		if (stextscrl && MouseX > 600 + PANEL_LEFT) {
+		if (stextscrl && MouseX > 600) {
 			if (y == 4) {
 				if (stextscrlubtn <= 0) {
 					STextUp();
