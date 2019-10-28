@@ -20,8 +20,6 @@ DWORD translate_controller_button_to_key(ControllerButton controller_button)
 		return questlog ? DVL_VK_SPACE : DVL_VK_ESCAPE;
 	case ControllerButton::BUTTON_B: // Right button
 		return sgpCurrentMenu || stextflag || questlog ? DVL_VK_RETURN : DVL_VK_SPACE;
-	case ControllerButton::BUTTON_X: // Left button
-		return 'X';
 	case ControllerButton::BUTTON_Y: // Top button
 		return DVL_VK_RETURN;
 	case ControllerButton::BUTTON_LEFTSTICK:
@@ -68,6 +66,12 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 			break; // Map to keyboard key
 		if (!ctrl_event.up)
 			*action = GameAction(GameActionType::SECONDARY_ACTION);
+		return true;
+	case ControllerButton::BUTTON_X: // Left button
+		if (InGameMenu())
+			break; // Map to keyboard key
+		if (!ctrl_event.up)
+			*action = GameAction(GameActionType::CAST_SPELL);
 		return true;
 	case ControllerButton::BUTTON_A: // Bottom button
 		if (InGameMenu())

@@ -361,6 +361,16 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		case GameActionType::SECONDARY_ACTION:
 			performSecondaryAction();
 			break;
+		case GameActionType::CAST_SPELL:
+			if (pcurs >= CURSOR_FIRSTITEM && invflag)
+				// Drop item so that it does not get destroyed.
+				DropItemBeforeTrig();
+			if (!invflag && !talkflag)
+				// Cast the spell.
+				RightMouseDown();
+			// Close active menu if any / stop walking.
+			PressEscKey();
+			break;
 		case GameActionType::TOGGLE_QUICK_SPELL_MENU:
 			ShowCursor();
 			lpMsg->message = DVL_WM_KEYDOWN;

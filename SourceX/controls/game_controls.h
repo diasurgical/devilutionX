@@ -10,6 +10,7 @@ enum class GameActionType {
 	USE_MANA_POTION,
 	PRIMARY_ACTION,   // Talk to towners, click on inv items, attack, etc.
 	SECONDARY_ACTION, // Open chests, doors, pickup items.
+	CAST_SPELL,
 	TOGGLE_INVENTORY,
 	TOGGLE_CHARACTER_INFO,
 	TOGGLE_QUICK_SPELL_MENU,
