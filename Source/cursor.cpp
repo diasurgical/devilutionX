@@ -170,6 +170,10 @@ void CheckRportal()
 	}
 }
 
+// Controller support: Actions to run after updating the cursor state.
+// Defined in SourceX/controls/plctrls.cpp.
+extern void plrctrls_after_check_curs_move();
+
 void CheckCursMove()
 {
 	int i, sx, sy, mx, my, tx, ty, px, py, xx, yy, mi;
@@ -600,6 +604,8 @@ void CheckCursMove()
 	if (pcursmonst != -1 && monster[pcursmonst]._mFlags & MFLAG_GOLEM) {
 		pcursmonst = -1;
 	}
+
+	plrctrls_after_check_curs_move();
 }
 
 DEVILUTION_END_NAMESPACE

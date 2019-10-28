@@ -5,11 +5,13 @@
 
 namespace dvl {
 
-// Run on every game logic iteration.
-void plrctrls_game_logic();
+// Run after every game logic iteration.
+// Handles player and menu movement.
+void plrctrls_after_game_logic();
 
-// Runs before the start of event loop drain, even if there are no events.
-void plrctrls_event_loop();
+// Runs at the end of CheckCursMove()
+// Handles item, object, and monster auto-aim.
+void plrctrls_after_check_curs_move();
 
 // Moves the map if active, the cursor otherwise.
 void HandleRightStickMotion();

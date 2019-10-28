@@ -304,8 +304,6 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		UNIMPLEMENTED();
 
 	if (wRemoveMsg == DVL_PM_NOREMOVE) {
-		plrctrls_event_loop();
-
 		// This does not actually fill out lpMsg, but this is ok
 		// since the engine never uses it in this case
 		return !message_queue.empty() || SDL_PollEvent(NULL);
