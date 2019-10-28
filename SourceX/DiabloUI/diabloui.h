@@ -45,7 +45,7 @@ bool UiItemMouseEvents(SDL_Event *event, UiItem *items, std::size_t size);
 int GetCenterOffset(int w, int bw = 0);
 void LoadPalInMem(const PALETTEENTRY *pPal);
 void DrawMouse();
-void LoadBackgroundArt(char *pszFile);
+void LoadBackgroundArt(const char *pszFile);
 void SetMenu(int MenuId);
 void UiFocusNavigationSelect();
 void UiFocusNavigationEsc();

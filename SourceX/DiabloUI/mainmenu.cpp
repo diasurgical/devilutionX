@@ -43,10 +43,11 @@ void mainmenu_Load(char *name, void (*fnSound)(char *file))
 
 	MainMenuResult = 0;
 
-	char *pszFile = "ui_art\\mainmenu.pcx";
-	if (false) //DiabloUI_GetSpawned()
-		pszFile = "ui_art\\swmmenu.pcx";
-	LoadBackgroundArt(pszFile);
+	if (!gbSpawned) {
+		LoadBackgroundArt("ui_art\\mainmenu.pcx");
+	} else {
+		LoadBackgroundArt("ui_art\\swmmenu.pcx");
+	}
 
 	UiInitList(MAINMENU_SINGLE_PLAYER, MAINMENU_EXIT_DIABLO, NULL, UiMainMenuSelect, mainmenu_Esc, MAINMENU_DIALOG, size(MAINMENU_DIALOG), true);
 }

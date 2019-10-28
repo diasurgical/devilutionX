@@ -8,7 +8,7 @@ Art ArtFonts[4][2];
 
 namespace {
 
-void LoadArtFont(char *pszFile, int size, int color)
+void LoadArtFont(const char *pszFile, int size, int color)
 {
 	LoadMaskedArt(pszFile, &ArtFonts[size][color], 256, 32);
 }
