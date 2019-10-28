@@ -207,6 +207,11 @@ void SetMouseLMBMessage(const SDL_Event &event, LPMSG lpMsg)
 		lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
 		break;
 #endif
+	case SDL_JOYBUTTONDOWN:
+	case SDL_JOYBUTTONUP:
+		lpMsg->message = event.type == SDL_JOYBUTTONUP ? DVL_WM_LBUTTONUP : DVL_WM_LBUTTONDOWN;
+		lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+		break;
 	case SDL_MOUSEBUTTONDOWN:
 	case SDL_MOUSEBUTTONUP:
 		lpMsg->message = event.type == SDL_MOUSEBUTTONUP ? DVL_WM_LBUTTONUP : DVL_WM_LBUTTONDOWN;
@@ -218,9 +223,7 @@ void SetMouseLMBMessage(const SDL_Event &event, LPMSG lpMsg)
 		lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
 		break;
 	default:
-		lpMsg->message = event.type == DVL_WM_LBUTTONUP;
-		lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
-		break;
+		UNIMPLEMENTED();
 	}
 	if (lpMsg->message == DVL_WM_LBUTTONUP || lpMsg->message == DVL_WM_LBUTTONDOWN)
 		lpMsg->wParam = keystate_for_mouse(lpMsg->message == DVL_WM_LBUTTONUP ? 0 : DVL_MK_LBUTTON);
@@ -562,7 +565,7 @@ SHORT GetAsyncKeyState(int vKey)
 		return SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT);
 	if (vKey == DVL_MK_RBUTTON)
 		return SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT);
-	const Uint8 *state = SDLC_GetKeyboardState();
+	const Uint8 *state = SDLC_GetKeyState();
 	switch (vKey) {
 	case DVL_VK_SHIFT:
 		return state[SDLC_KEYSTATE_LEFTSHIFT] || state[SDLC_KEYSTATE_RIGHTSHIFT] ? 0x8000 : 0;

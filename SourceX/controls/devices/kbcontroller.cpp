@@ -32,7 +32,7 @@ namespace {
 bool IsModifierKey()
 {
 #ifdef KBCTRL_MODIFIER_KEY
-	return SDLC_GetKeyboardState(nullptr)[KBCTRL_MODIFIER_KEY];
+	return SDLC_GetKeyState(nullptr)[KBCTRL_MODIFIER_KEY];
 #else
 	return false;
 #endif
