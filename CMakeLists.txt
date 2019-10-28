@@ -265,7 +265,7 @@ target_include_directories(devilutionx PRIVATE
   3rdParty/libsmacker)
 
 target_link_libraries(devilution PUBLIC Threads::Threads)
-target_link_libraries(devilutionx PRIVATE
+target_link_libraries(devilutionx PRIVATE -no-pie
   devilution
   PKWare
   StormLib
