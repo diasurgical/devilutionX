@@ -22,6 +22,10 @@ extern void (*DrawPlrProc)(int, int, int, int, int, BYTE *, int, int, int, int);
 void ClearCursor();
 void DrawMissile(int x, int y, int sx, int sy, BOOL pre);
 void DrawDeadPlayer(int x, int y, int sx, int sy);
+void ShiftGrid(int *x, int *y, int horizontal, int vertical);
+int RowsCoveredByPanel();
+void CalcTileOffset(int *offsetX, int *offsetY);
+void TilesInView(int *columns, int *rows);
 void DrawView(int StartX, int StartY);
 void ClearScreenBuffer();
 #ifdef _DEBUG

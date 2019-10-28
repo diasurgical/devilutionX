@@ -111,9 +111,6 @@
 #define SCREEN_WIDTH	640
 #define SCREEN_HEIGHT	480
 
-#define ZOOM_WIDTH		(SCREEN_WIDTH / 2 + TILE_WIDTH)
-#define ZOOM_HEIGHT		(VIEWPORT_HEIGHT / 2 + TILE_HEIGHT + TILE_HEIGHT / 2)
-
 // If defined, use 32-bit colors instead of 8-bit [Default -> Undefined]
 //#define RGBMODE
 
