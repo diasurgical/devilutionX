@@ -1501,11 +1501,11 @@ static void DRLG_L5TransFix()
 		xx = 16;
 
 		for (i = 0; i < DMAXX; i++) {
-			if (dungeon[i][j] == 23 && dungeon[i][j - 1] == 18) {
+			if (dungeon[i][j] == 23 && j > 0 && dungeon[i][j - 1] == 18) {
 				dTransVal[xx + 1][yy] = dTransVal[xx][yy];
 				dTransVal[xx + 1][yy + 1] = dTransVal[xx][yy];
 			}
-			if (dungeon[i][j] == 24 && dungeon[i + 1][j] == 19) {
+			if (dungeon[i][j] == 24 && i + 1 < DMAXY && dungeon[i + 1][j] == 19) {
 				dTransVal[xx][yy + 1] = dTransVal[xx][yy];
 				dTransVal[xx + 1][yy + 1] = dTransVal[xx][yy];
 			}
