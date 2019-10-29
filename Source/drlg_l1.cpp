@@ -55,6 +55,8 @@ const ShadowStruct SPATS[37] = {
 	{      3, 13, 11, 12, 150,   0,   0 }
 	// clang-format on
 };
+
+// BUGFIX: This array should contain an additional 0 (207 elements).
 const BYTE BSTYPES[206] = {
 	0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
 	10, 11, 12, 13, 14, 15, 16, 17, 0, 0,
@@ -78,6 +80,8 @@ const BYTE BSTYPES[206] = {
 	28, 1, 2, 25, 26, 22, 22, 25, 26, 0,
 	0, 0, 0, 0, 0, 0
 };
+
+// BUGFIX: This array should contain an additional 0 (207 elements).
 const BYTE L5BTYPES[206] = {
 	0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
 	10, 11, 12, 13, 14, 15, 16, 17, 0, 0,
@@ -1147,6 +1151,9 @@ static void L5tileFix()
 {
 	int i, j;
 
+	// BUGFIX: Bounds checks are required in all loop bodies.
+	// See https://github.com/diasurgical/devilutionX/pull/401
+
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
 			if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 22)
@@ -1271,12 +1278,14 @@ static void DRLG_L5Subs()
 							rv--;
 					}
 
+					// BUGFIX: Add `&& y > 0` to the if statement. (fixed)
 					if (i == 89 && y > 0) {
 						if (L5BTYPES[dungeon[x][y - 1]] != 79 || L5dflags[x][y - 1])
 							i = 79;
 						else
 							dungeon[x][y - 1] = 90;
 					}
+					// BUGFIX: Add `&& x + 1 < DMAXX` to the if statement. (fixed)
 					if (i == 91 && x + 1 < DMAXX) {
 						if (L5BTYPES[dungeon[x + 1][y]] != 80 || L5dflags[x + 1][y])
 							i = 80;
@@ -1501,10 +1510,12 @@ static void DRLG_L5TransFix()
 		xx = 16;
 
 		for (i = 0; i < DMAXX; i++) {
+			// BUGFIX: Should check for `j > 0` first.
 			if (dungeon[i][j] == 23 && dungeon[i][j - 1] == 18) {
 				dTransVal[xx + 1][yy] = dTransVal[xx][yy];
 				dTransVal[xx + 1][yy + 1] = dTransVal[xx][yy];
 			}
+			// BUGFIX: Should check for `i + 1 < DMAXY` first.
 			if (dungeon[i][j] == 24 && dungeon[i + 1][j] == 19) {
 				dTransVal[xx][yy + 1] = dTransVal[xx][yy];
 				dTransVal[xx + 1][yy + 1] = dTransVal[xx][yy];

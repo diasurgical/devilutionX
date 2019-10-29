@@ -20,8 +20,11 @@ void CreateL5Dungeon(DWORD rseed, int entry);
 
 /* rdata */
 extern const ShadowStruct SPATS[37];
+
+// BUGFIX: These arrays should contain an additional 0 (207 elements).
 extern const BYTE BSTYPES[206];
 extern const BYTE L5BTYPES[206];
+
 extern const BYTE STAIRSUP[];
 extern const BYTE L5STAIRSUP[];
 extern const BYTE STAIRSDOWN[];
