@@ -29,7 +29,7 @@ char *musicBuffer;
 
 BOOLEAN gbMusicOn = true;
 BOOLEAN gbSoundOn = true;
-int sgnMusicTrack = 6;
+int sgnMusicTrack = NUM_MUSIC;
 
 char *sgszMusicTracks[NUM_MUSIC] = {
 #ifdef SPAWN
@@ -193,7 +193,7 @@ void music_stop()
 		music = NULL;
 		musicRw = NULL;
 		mem_free_dbg(musicBuffer);
-		sgnMusicTrack = 6;
+		sgnMusicTrack = NUM_MUSIC;
 	}
 }
 
@@ -229,7 +229,7 @@ void sound_disable_music(BOOL disable)
 {
 	if (disable) {
 		music_stop();
-	} else if (sgnMusicTrack != 6) {
+	} else if (sgnMusicTrack != NUM_MUSIC) {
 		music_start(sgnMusicTrack);
 	}
 }

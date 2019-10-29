@@ -179,22 +179,27 @@ void CheckCursMove()
 	sx = MouseX;
 	sy = MouseY;
 
-	if (chrflag || questlog) {
-		if (sx >= 160) {
-			sx -= 160;
-		} else {
-			sx = 0;
-		}
-	} else if (invflag || sbookflag) {
-		if (sx <= 320) {
-			sx += 160;
-		} else {
-			sx = 0;
+
+	if (PANELS_COVER) {
+		if (chrflag || questlog) {
+			if (sx >= 160) {
+				sx -= 160;
+			} else {
+				sx = 0;
+			}
+		} else if (invflag || sbookflag) {
+			if (sx <= 320) {
+				sx += 160;
+			} else {
+				sx = 0;
+			}
 		}
 	}
 	if (sy > PANEL_TOP - 1 && track_isscrolling()) {
 		sy = PANEL_TOP - 1;
 	}
+	sx -= (SCREEN_WIDTH % 64) / 2;
+	sy -= (VIEWPORT_HEIGHT % 32) / 2;
 	if (!zoomflag) {
 		sx >>= 1;
 		sy >>= 1;
@@ -221,10 +226,10 @@ void CheckCursMove()
 		sy = SCREEN_HEIGHT;
 	}
 
-	tx = sx >> 6;
-	ty = sy >> 5;
-	px = sx & 0x3F;
-	py = sy & 0x1F;
+	tx = sx >> 6; // sx / 64
+	ty = sy >> 5; // sy / 32
+	px = sx & 0x3F; // sx % 64
+	py = sy & 0x1F; // sx % 32
 	mx = ViewX + tx + ty - (zoomflag ? (SCREEN_WIDTH / 64) : (SCREEN_WIDTH / 2 / 64));
 	my = ViewY + ty - tx;
 
@@ -273,18 +278,18 @@ void CheckCursMove()
 		cursmy = my;
 		return;
 	}
-	if (MouseY > PANEL_TOP) {
+	if (MouseY > PANEL_TOP && MouseX >= PANEL_LEFT && MouseX <= PANEL_LEFT + PANEL_WIDTH) {
 		CheckPanelInfo();
 		return;
 	}
 	if (doomflag) {
 		return;
 	}
-	if (invflag && MouseX > RIGHT_PANEL) {
+	if (invflag && MouseX > RIGHT_PANEL && MouseY <= SPANEL_HEIGHT) {
 		pcursinvitem = CheckInvHLight();
 		return;
 	}
-	if (sbookflag && MouseX > RIGHT_PANEL) {
+	if (sbookflag && MouseX > RIGHT_PANEL && MouseY <= SPANEL_HEIGHT) {
 		return;
 	}
 	if ((chrflag || questlog) && MouseX < RIGHT_PANEL) {

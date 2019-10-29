@@ -18,8 +18,8 @@ void DrawView(int StartX, int StartY);
 void ClearScreenBuffer();
 #ifdef _DEBUG
 void ScrollView();
-void EnableFrameCount();
 #endif
+void EnableFrameCount();
 void scrollrt_draw_game_screen(BOOL draw_cursor);
 void DrawAndBlit();
 

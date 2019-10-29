@@ -2910,8 +2910,8 @@ void PrintItemPower(char plidx, ItemStruct *x)
 
 void DrawUTextBack()
 {
-	CelDraw(88, 487, pSTextBoxCels, 1, 271);
-	trans_rect(27, 28, 265, 297);
+	CelDraw(RIGHT_PANEL_X - 320 + 24, SCREEN_Y + 327, pSTextBoxCels, 1, 271);
+	trans_rect(RIGHT_PANEL - 320 + 27, 28, 265, 297);
 }
 
 void PrintUString(int x, int y, BOOL cjustflag, char *str, int col)
@@ -2949,8 +2949,8 @@ void DrawULine(int y)
 	int i;
 	BYTE *src, *dst;
 
-	src = &gpBuffer[SCREENXY(26, 25)];
-	dst = &gpBuffer[BUFFER_WIDTH * (y * 12 + 198) + 26 + 64];
+	src = &gpBuffer[SCREENXY(26 + RIGHT_PANEL - 320, 25)];
+	dst = &gpBuffer[BUFFER_WIDTH * (y * 12 + 198) + 26 + RIGHT_PANEL_X - 320];
 
 	for (i = 0; i < 3; i++, src += BUFFER_WIDTH, dst += BUFFER_WIDTH)
 		memcpy(dst, src, 266);
@@ -2960,33 +2960,33 @@ void DrawUniqueInfo()
 {
 	int uid, y;
 
-	if (!chrflag && !questlog) {
+	if ((!chrflag && !questlog) || SCREEN_WIDTH >= 320 * 3) {
 		uid = curruitem._iUid;
 		DrawUTextBack();
-		PrintUString(0, 2, 1, UniqueItemList[uid].UIName, 3);
+		PrintUString(0 + RIGHT_PANEL - 320, 2, 1, UniqueItemList[uid].UIName, 3);
 		DrawULine(5);
 		PrintItemPower(UniqueItemList[uid].UIPower1, &curruitem);
 		y = 6 - UniqueItemList[uid].UINumPL + 8;
-		PrintUString(0, y, 1, tempstr, 0);
+		PrintUString(0 + RIGHT_PANEL - 320, y, 1, tempstr, 0);
 		if (UniqueItemList[uid].UINumPL > 1) {
 			PrintItemPower(UniqueItemList[uid].UIPower2, &curruitem);
-			PrintUString(0, y + 2, 1, tempstr, 0);
+			PrintUString(0 + RIGHT_PANEL - 320, y + 2, 1, tempstr, 0);
 		}
 		if (UniqueItemList[uid].UINumPL > 2) {
 			PrintItemPower(UniqueItemList[uid].UIPower3, &curruitem);
-			PrintUString(0, y + 4, 1, tempstr, 0);
+			PrintUString(0 + RIGHT_PANEL - 320, y + 4, 1, tempstr, 0);
 		}
 		if (UniqueItemList[uid].UINumPL > 3) {
 			PrintItemPower(UniqueItemList[uid].UIPower4, &curruitem);
-			PrintUString(0, y + 6, 1, tempstr, 0);
+			PrintUString(0 + RIGHT_PANEL - 320, y + 6, 1, tempstr, 0);
 		}
 		if (UniqueItemList[uid].UINumPL > 4) {
 			PrintItemPower(UniqueItemList[uid].UIPower5, &curruitem);
-			PrintUString(0, y + 8, 1, tempstr, 0);
+			PrintUString(0 + RIGHT_PANEL - 320, y + 8, 1, tempstr, 0);
 		}
 		if (UniqueItemList[uid].UINumPL > 5) {
 			PrintItemPower(UniqueItemList[uid].UIPower6, &curruitem);
-			PrintUString(0, y + 10, 1, tempstr, 0);
+			PrintUString(0 + RIGHT_PANEL - 320, y + 10, 1, tempstr, 0);
 		}
 	}
 }

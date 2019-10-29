@@ -559,7 +559,7 @@ int GetCenterOffset(int w, int bw)
 	return (bw - w) / 2;
 }
 
-void LoadBackgroundArt(char *pszFile)
+void LoadBackgroundArt(const char *pszFile)
 {
 	PALETTEENTRY pPal[256];
 

@@ -117,7 +117,7 @@ void FreeStoreMem()
 void DrawSTextBack()
 {
 	CelDraw(PANEL_X + 344, 487, pSTextBoxCels, 1, 271);
-	trans_rect(347, 28, 265, 297);
+	trans_rect(PANEL_LEFT + 347, 28, 265, 297);
 }
 
 void PrintSString(int x, int y, BOOL cjustflag, char *str, char col, int val)
@@ -161,7 +161,7 @@ void PrintSString(int x, int y, BOOL cjustflag, char *str, char col, int val)
 	}
 	if (!cjustflag && val >= 0) {
 		sprintf(valstr, "%i", val);
-		sx = 656 - x;
+		sx = PANEL_X + 592 - x;
 		for (i = strlen(valstr) - 1; i >= 0; i--) {
 			c = fontframe[gbFontTransTbl[(BYTE)valstr[i]]];
 			sx -= fontkern[c] + 1;
@@ -171,7 +171,7 @@ void PrintSString(int x, int y, BOOL cjustflag, char *str, char col, int val)
 		}
 	}
 	if (stextsel == y) {
-		CelDraw(cjustflag ? xx + x + k + 4 : 660 - x, s + 205, pSPentSpn2Cels, PentSpn2Frame, 12);
+		CelDraw(cjustflag ? (xx + x + k + 4) : (PANEL_X + 596 - x), s + 205, pSPentSpn2Cels, PentSpn2Frame, 12);
 	}
 }
 
@@ -181,13 +181,13 @@ void DrawSLine(int y)
 
 	sy = y * 12;
 	if (stextsize == 1) {
-		xy = SCREENXY(26, 25);
-		yy = BUFFER_WIDTH * (sy + 198) + 26 + 64;
+		xy = SCREENXY(PANEL_LEFT + 26, 25);
+		yy = BUFFER_WIDTH * (sy + 198) + 26 + PANEL_X;
 		width = 586 / 4;
 		line = BUFFER_WIDTH - 586;
 	} else {
-		xy = SCREENXY(346, 25);
-		yy = BUFFER_WIDTH * (sy + 198) + 346 + 64;
+		xy = SCREENXY(PANEL_LEFT + 346, 25);
+		yy = BUFFER_WIDTH * (sy + 198) + 346 + PANEL_X;
 		width = 266 / 4;
 		line = BUFFER_WIDTH - 266;
 	}

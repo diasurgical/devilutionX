@@ -2546,7 +2546,7 @@ void DoEnding()
 	musicVolume = sound_get_or_set_music_volume(1);
 	sound_get_or_set_music_volume(0);
 
-	music_start(2);
+	music_start(TMUSIC_L2);
 	loop_movie = TRUE;
 	play_movie("gendata\\loopdend.smk", 1);
 	loop_movie = FALSE;

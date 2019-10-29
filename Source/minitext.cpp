@@ -75,7 +75,7 @@ void InitQTextMsg(int m)
 void DrawQTextBack()
 {
 	CelDraw(PANEL_X + 24, 487, pTextBoxCels, 1, 591);
-	trans_rect(27, 28, 585, 297);
+	trans_rect(PANEL_LEFT + 27, 28, 585, 297);
 }
 
 void PrintQTextChr(int sx, int sy, BYTE *pCelBuff, int nCel)
@@ -106,7 +106,7 @@ void DrawQText()
 
 	p = qtextptr;
 	pnl = NULL;
-	tx = 112;
+	tx = 48 + PANEL_X;
 	ty = qtexty;
 
 	doneflag = FALSE;
@@ -149,7 +149,7 @@ void DrawQText()
 		if (pnl == NULL) {
 			pnl = p;
 		}
-		tx = 112;
+		tx = 48 + PANEL_X;
 		ty += 38;
 		if (ty > 501) {
 			doneflag = TRUE;

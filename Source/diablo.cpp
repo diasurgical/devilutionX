@@ -54,11 +54,11 @@ int dbgplr;
 int dbgqst;
 int dbgmon;
 int arrowdebug;
+#endif
 int frameflag;
 int frameend;
 int framerate;
 int framestart;
-#endif
 BOOL FriendlyMode = TRUE;
 char *spszMsgTbl[4] = {
 	"I need help! Come Here!",
@@ -122,6 +122,22 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
 	return gbRunGameResult;
 }
 
+static void ProcessInput()
+{
+	if (PauseMode == 2) {
+		return;
+	}
+	if (gbMaxPlayers == 1 && gmenu_exception()) {
+		drawpanflag |= 1;
+		return;
+	}
+
+	if (!gmenu_exception() && sgnTimeoutCurs == 0) {
+		CheckCursMove();
+		track_process();
+	}
+}
+
 void run_game_loop(unsigned int uMsg)
 {
 	BOOL bLoop;
@@ -168,6 +184,7 @@ void run_game_loop(unsigned int uMsg)
 				continue;
 			}
 		} else if (!nthread_has_500ms_passed(FALSE)) {
+			ProcessInput();
 			DrawAndBlit();
 			continue;
 		}
@@ -300,8 +317,8 @@ void diablo_parse_flags(char *args)
 		{
 			c = tolower(*args);
 			args++;
-#ifdef _DEBUG
 			switch (c) {
+#ifdef _DEBUG
 			case '^':
 				debug_mode_key_inverted_v = 1;
 				break;
@@ -317,9 +334,11 @@ void diablo_parse_flags(char *args)
 				showintrodebug = 0;
 				debug_mode_key_d = 1;
 				break;
+#endif
 			case 'f':
 				EnableFrameCount();
 				break;
+#ifdef _DEBUG
 			case 'i':
 				debug_mode_key_i = 1;
 				break;
@@ -421,8 +440,8 @@ void diablo_parse_flags(char *args)
 			case 'x':
 				fullscreen = FALSE;
 				break;
-			}
 #endif
+			}
 		}
 	}
 }
@@ -630,19 +649,19 @@ BOOL LeftMouseDown(int wParam)
 				SetSpell();
 			} else if (stextflag) {
 				CheckStoreBtn();
-			} else if (MouseY < PANEL_TOP) {
+			} else if (MouseY < PANEL_TOP || MouseX < PANEL_LEFT || MouseX > PANEL_LEFT + PANEL_WIDTH) {
 				if (!gmenu_exception() && !TryIconCurs()) {
 					if (questlog && MouseX > 32 && MouseX < 288 && MouseY > 32 && MouseY < 308) {
 						QuestlogESC();
 					} else if (qtextflag) {
 						qtextflag = FALSE;
 						sfx_stop();
-					} else if (chrflag && MouseX < 320) {
+					} else if (chrflag && MouseX < 320 && MouseY < SPANEL_HEIGHT) {
 						CheckChrBtns();
-					} else if (invflag && MouseX > RIGHT_PANEL) {
+					} else if (invflag && MouseX > RIGHT_PANEL && MouseY < SPANEL_HEIGHT) {
 						if (!dropGoldFlag)
 							CheckInvItem();
-					} else if (sbookflag && MouseX > RIGHT_PANEL) {
+					} else if (sbookflag && MouseX > RIGHT_PANEL && MouseY < SPANEL_HEIGHT) {
 						CheckSBook();
 					} else if (pcurs >= CURSOR_FIRSTITEM) {
 						if (TryInvPut()) {
@@ -796,8 +815,8 @@ void RightMouseDown()
 		} else if (!stextflag) {
 			if (spselflag) {
 				SetSpell();
-			} else if (MouseY >= PANEL_TOP
-			    || (!sbookflag || MouseX <= 320)
+			} else if (MouseY >= SPANEL_HEIGHT
+			    || (!sbookflag || MouseX <= RIGHT_PANEL)
 			        && !TryIconCurs()
 			        && (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem))) {
 #ifndef VITA
@@ -1043,10 +1062,10 @@ void PressKey(int vkey)
 			control_type_message();
 		}
 #else
-		if (!chrflag && invflag && MouseX < 480 && MouseY < PANEL_TOP) {
+		if (!chrflag && invflag && MouseX < 480 && MouseY < PANEL_TOP && PANELS_COVER) {
 			SetCursorPos(MouseX + 160, MouseY);
 		}
-		if (!invflag && chrflag && MouseX > 160 && MouseY < PANEL_TOP) {
+		if (!invflag && chrflag && MouseX > 160 && MouseY < PANEL_TOP && PANELS_COVER) {
 			SetCursorPos(MouseX - 160, MouseY);
 		}
 		helpflag = 0;
@@ -1128,11 +1147,11 @@ void PressChar(int vkey)
 			MouseY = (InvRect[25].Y - (INV_SLOT_SIZE_PX / 2));
 #else
 			if (!invflag || chrflag) {
-				if (MouseX < 480 && MouseY < PANEL_TOP) {
+				if (MouseX < 480 && MouseY < PANEL_TOP && PANELS_COVER) {
 					SetCursorPos(MouseX + 160, MouseY);
 				}
 			} else {
-				if (MouseX > 160 && MouseY < PANEL_TOP) {
+				if (MouseX > 160 && MouseY < PANEL_TOP && PANELS_COVER) {
 					SetCursorPos(MouseX - 160, MouseY);
 				}
 			}
@@ -1151,7 +1170,7 @@ void PressChar(int vkey)
 			}
 #endif
 			if (!chrflag || invflag) {
-				if (MouseX > 160 && MouseY < PANEL_TOP) {
+				if (MouseX > 160 && MouseY < PANEL_TOP && PANELS_COVER) {
 					SetCursorPos(MouseX - 160, MouseY);
 #ifdef VITA
 					MouseX = MouseX - 160;
@@ -1173,7 +1192,7 @@ void PressChar(int vkey)
 					}
 				}
 #else
-				if (MouseX < 480 && MouseY < PANEL_TOP) {
+				if (MouseX < 480 && MouseY < PANEL_TOP && PANELS_COVER) {
 					SetCursorPos(MouseX + 160, MouseY);
 				}
 #endif
