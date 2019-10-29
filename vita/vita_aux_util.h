@@ -155,7 +155,7 @@ public:
 	static void initVitaTouch();
 	static VITATOUCH getVitaTouch(bool retournLatest = true);
 #ifdef USE_SDL1
-	static void processTouchEventToSDL();
+	static void processTouchEventToSDL(bool scaleTouchs = false);
 #endif
 
 	//Migrate to SDEvent

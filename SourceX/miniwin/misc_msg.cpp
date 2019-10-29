@@ -302,15 +302,14 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	lpMsg->wParam = 0;
 
 #ifdef VITA
-	handle_touch(&e, MouseX, MouseY);
 	int result = 1; //Cleanup events
-	while (result == 1 && (e.type == SDL_USEREVENT || e.type == 0x700 /*SDL_FINGERDOWN*/ || e.type == 0x701 /*SDL_FINGERUP*/ || e.type == 0x702 /*SDL_FINGERMOTION*/ || e.type == 0x800 /*SDL_DOLLARGESTURE*/ || e.type == 0x801 /*SDL_DOLLARRECORD*/ || e.type == 0x802 /*SDL_MULTIGESTURE*/)) {
+	while (result == 1 && (e.type == 0x800 /*SDL_DOLLARGESTURE*/ || e.type == 0x801 /*SDL_DOLLARRECORD*/ || e.type == 0x802 /*SDL_MULTIGESTURE*/)) {
 		result = SDL_PollEvent(&e);
 	}
 	if (result == 0) {
 		return false;
 	}
-#else
+	handle_touch(&e, MouseX, MouseY);
 	if (movie_playing) {
 		// allow plus button or mouse click to skip movie, no other input
 		switch (e.type) {
@@ -355,6 +354,10 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 
 	switch (e.type) {
 #ifdef VITA
+	case SDL_USEREVENT: {
+		//Unprocessed touch panel event (may be caused by fingers don't move)
+		return true;
+	}
 	case SDL_JOYAXISMOTION:
 #ifdef USE_SDL1
 		if (e.jaxis.which == 0) //stick
@@ -576,7 +579,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	default:
 #ifdef VITA
 		char error[1000];
-		sprintf(error, "unknown SDL message 0x%X", e.type);
+		sprintf(error, "unknown SDL message 0x%X (%i)", e.type, e.type);
 		VitaAux::error(error);
 #else
 		DUMMY_PRINT("unknown SDL message 0x%X", e.type);

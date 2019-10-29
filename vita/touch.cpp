@@ -186,9 +186,6 @@ static void preprocess_finger_down(SDL_Event *event)
 		if (finger[port][i].id != NO_TOUCH) {
 			continue;
 		}
-		char temp[100];
-		sprintf(temp, "a - 4 id: %i", id);
-		//VitaAux::debug(temp);
 		finger[port][i].id = id;
 #ifdef USE_SDL1
 		finger[port][i].time_last_down = touchData->timestamp;
@@ -312,7 +309,6 @@ static void preprocess_finger_motion(SDL_Event *event)
 	SDL_TouchID port                = touchData->port;
 	// id (for multitouch)
 	SDL_FingerID id = touchData->fingerId;
-	//VitaAux::debug("1");
 #else
 	SDL_TouchID port = event->tfinger.touchId;
 	// id (for multitouch)
@@ -326,19 +322,16 @@ static void preprocess_finger_motion(SDL_Event *event)
 			num_fingers_down++;
 		}
 	}
-	//VitaAux::debug("2");
 
 	if (num_fingers_down == 0) {
 		return;
 	}
-	//VitaAux::debug("3");
 
 	if (num_fingers_down >= 1) {
 		int x    = mouse_x;
 		int y    = mouse_y;
 		int xrel = 0;
 		int yrel = 0;
-		//VitaAux::debug("4");
 
 		if (direct_touch) {
 #ifdef USE_SDL1
@@ -364,9 +357,6 @@ static void preprocess_finger_motion(SDL_Event *event)
 		y    = CLIP(y, 0, (int)DISPLAY_HEIGHT);
 		xrel = x - mouse_x;
 		yrel = y - mouse_y;
-		char temp[100];
-		sprintf(temp, "x %i, y %i", x, y);
-		//VitaAux::debug(temp);
 
 		// update the current finger's coordinates so we can track it later
 		for (int i = 0; i < MAX_NUM_FINGERS; i++) {
@@ -374,14 +364,10 @@ static void preprocess_finger_motion(SDL_Event *event)
 				continue;
 			finger[port][i].last_x = x;
 			finger[port][i].last_y = y;
-
-			//VitaAux::debug("5");
 		}
 
 		// If we are starting a multi-finger drag, start holding down the mouse button
 		if (num_fingers_down >= 1 && !multi_finger_dragging[port]) {
-
-			//VitaAux::debug("6");
 			// only start a multi-finger drag if at least two fingers have been down long enough
 			int num_fingers_downlong = 0;
 			for (int i = 0; i < MAX_NUM_FINGERS; i++) {
@@ -427,7 +413,6 @@ static void preprocess_finger_motion(SDL_Event *event)
 				}
 				SDL_Event ev;
 				set_mouse_button_event(&ev, SDL_MOUSEBUTTONDOWN, simulated_button, mouse_down_x, mouse_down_y);
-				//VitaAux::debug("Push event m down");
 				SDL_PushEvent(&ev);
 			}
 		}
@@ -486,7 +471,6 @@ void finish_simulated_mouse_clicks(int current_mouse_x, int current_mouse_y)
 			SDL_Event ev;
 			set_mouse_button_event(&ev, SDL_MOUSEBUTTONUP, simulated_button, mouse_x, mouse_y);
 			SDL_PushEvent(&ev);
-			//VitaAux::debug("Push event m up");
 
 			simulated_click_start_time[port][i] = 0;
 		}
@@ -517,11 +501,12 @@ static void set_mouse_motion_event(SDL_Event *event, int32_t x, int32_t y, int32
 
 static void convert_touch_xy_to_game_xy(float touch_x, float touch_y, int *game_x, int *game_y)
 {
+
 	const int screen_h = GAME_HEIGHT;
 	const int screen_w = GAME_WIDTH;
 	const int disp_w   = DISPLAY_WIDTH;
 	const int disp_h   = DISPLAY_HEIGHT;
-
+	/*
 	int x, y, w, h;
 	float sx, sy;
 
@@ -539,5 +524,8 @@ static void convert_touch_xy_to_game_xy(float touch_x, float touch_y, int *game_
 	float disp_touch_y = (touch_y * (float)disp_h);
 
 	*game_x = CLIP((int)((disp_touch_x - x) / sx), 0, (int)GAME_WIDTH);
-	*game_y = CLIP((int)((disp_touch_y - y) / sy), 0, (int)GAME_HEIGHT);
+	*game_y = CLIP((int)((disp_touch_y - y) / sy), 0, (int)GAME_HEIGHT);*/
+
+	*game_x = touch_x * screen_w / disp_w;
+	*game_y = touch_y * screen_h / disp_h;
 }

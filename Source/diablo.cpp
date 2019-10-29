@@ -148,7 +148,7 @@ void run_game_loop(unsigned int uMsg)
 		diablo_color_cyc_logic();
 #ifdef VITA
 #ifdef USE_SDL1
-		VitaAux::processTouchEventToSDL();
+		VitaAux::processTouchEventToSDL(true);
 #endif
 #endif
 		if (PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE)) {

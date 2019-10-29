@@ -292,7 +292,21 @@ bool VitaAux::checkAndCreateFolder()
 	SceIoStat info;
 	if (sceIoGetstat("ux0:/data/DVLX00001", &info) < 0) {
 		if (sceIoMkdir("ux0:/data/DVLX00001", 0777) != 0) {
-			VitaAux::error("Can't create data folder");
+			VitaAux::dialog("Can't create data folder (may by your game card id full?)", "Can't write in filesystem", true, true, true);
+			return false;
+		}
+	}
+
+	if (sceIoGetstat("ux0:/data/DVLX00001/data", &info) < 0) {
+		if (sceIoMkdir("ux0:/data/DVLX00001/data", 0777) != 0) {
+			VitaAux::dialog("Can't create data folder (may by your game card id full?)", "Can't write in filesystem", true, true, true);
+			return false;
+		}
+	}
+
+	if (sceIoGetstat("ux0:/data/DVLX00001/save", &info) < 0) {
+		if (sceIoMkdir("ux0:/data/DVLX00001/save", 0777) != 0) {
+			VitaAux::dialog("Can't create data folder (may by your game card id full?)", "Can't write in filesystem", true, true, true);
 			return false;
 		}
 	}
@@ -651,7 +665,7 @@ VITATOUCH VitaAux::getVitaTouch(bool retournLatest)
 }
 #ifdef USE_SDL1
 bool isTouched[2][7] = { { false, false, false, false, false, false }, { false, false, false, false, false, false } };
-void VitaAux::processTouchEventToSDL()
+void VitaAux::processTouchEventToSDL(bool scaleTouchs)
 {
 	SceTouchData touch[SCE_TOUCH_PORT_MAX_NUM];
 	int port, i;
@@ -678,6 +692,11 @@ void VitaAux::processTouchEventToSDL()
 				newEvent.user.data1 = touchData;
 				newEvent.user.data2 = 0;
 
+				if (scaleTouchs) {
+					touchData->x = (int)(touchData->x * 960 / 1919);
+					touchData->y = (int)(touchData->y * 544 / 1087);
+				}
+
 				isTouched[port][i] = true;
 				SDL_PushEvent(&newEvent);
 			} else {
@@ -695,7 +714,12 @@ void VitaAux::processTouchEventToSDL()
 
 					newEvent.user.data1 = touchData;
 					newEvent.user.data2 = 0;
-					isTouched[port][i]  = false;
+
+					if (scaleTouchs) {
+						touchData->x = (int)(touchData->x * 960 / 1919);
+						touchData->y = (int)(touchData->y * 544 / 1087);
+					}
+					isTouched[port][i] = false;
 					SDL_PushEvent(&newEvent);
 				}
 			}
