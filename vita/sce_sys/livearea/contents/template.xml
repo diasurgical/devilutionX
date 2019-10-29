@@ -36,7 +36,7 @@
 	<frame id="frame4">
 		<liveitem>
 			<text align="left" text-align="left" word-wrap="off" ellipsis="on">
-				<str size="18" color="#ffffff" shadow="on">v0.5.0</str>
+				<str size="18" color="#ffffff" shadow="on">v0.5.0 - Vita - Beta2</str>
 			</text>
 			<target>https://github.com/gokuhs/devilutionX/releases/latest</target>  
 		</liveitem>
