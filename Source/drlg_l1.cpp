@@ -55,7 +55,9 @@ const ShadowStruct SPATS[37] = {
 	{      3, 13, 11, 12, 150,   0,   0 }
 	// clang-format on
 };
-const BYTE BSTYPES[206] = {
+
+// BUGFIX: This array should contain an additional 0 (207 elements).
+const BYTE BSTYPES[] = {
 	0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
 	10, 11, 12, 13, 14, 15, 16, 17, 0, 0,
 	0, 0, 0, 0, 0, 1, 2, 10, 4, 5,
@@ -76,9 +78,11 @@ const BYTE BSTYPES[206] = {
 	2, 13, 13, 13, 13, 25, 26, 28, 30, 31,
 	41, 43, 40, 41, 42, 43, 25, 41, 43, 28,
 	28, 1, 2, 25, 26, 22, 22, 25, 26, 0,
-	0, 0, 0, 0, 0, 0
+	0, 0, 0, 0, 0, 0, 0
 };
-const BYTE L5BTYPES[206] = {
+
+// BUGFIX: This array should contain an additional 0 (207 elements).
+const BYTE L5BTYPES[] = {
 	0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
 	10, 11, 12, 13, 14, 15, 16, 17, 0, 0,
 	0, 0, 0, 0, 0, 25, 26, 0, 28, 0,
@@ -99,7 +103,7 @@ const BYTE L5BTYPES[206] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0
+	0, 0, 0, 0, 0, 0, 0
 };
 const BYTE STAIRSUP[] = { 4, 4, 13, 13, 13, 13, 2, 2, 2, 2, 13, 13, 13, 13, 13, 13, 13, 13, 0, 66, 6, 0, 63, 64, 65, 0, 0, 67, 68, 0, 0, 0, 0, 0 };
 const BYTE L5STAIRSUP[] = { 4, 4, 22, 22, 22, 22, 2, 2, 2, 2, 13, 13, 13, 13, 13, 13, 13, 13, 0, 66, 23, 0, 63, 64, 65, 0, 0, 67, 68, 0, 0, 0, 0, 0 };
@@ -1147,105 +1151,120 @@ static void L5tileFix()
 {
 	int i, j;
 
+	// BUGFIX: Bounds checks are required in all loop bodies.
+	// See https://github.com/diasurgical/devilutionX/pull/401
+
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
-			if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 22)
-				dungeon[i + 1][j] = 23;
-			if (dungeon[i][j] == 13 && dungeon[i + 1][j] == 22)
-				dungeon[i + 1][j] = 18;
-			if (dungeon[i][j] == 13 && dungeon[i + 1][j] == 2)
-				dungeon[i + 1][j] = 7;
-			if (dungeon[i][j] == 6 && dungeon[i + 1][j] == 22)
-				dungeon[i + 1][j] = 24;
-			if (dungeon[i][j] == 1 && dungeon[i][j + 1] == 22)
-				dungeon[i][j + 1] = 24;
-			if (dungeon[i][j] == 13 && dungeon[i][j + 1] == 1)
-				dungeon[i][j + 1] = 6;
-			if (dungeon[i][j] == 13 && dungeon[i][j + 1] == 22)
-				dungeon[i][j + 1] = 19;
+			if (i + 1 < DMAXX) {
+				if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 22)
+					dungeon[i + 1][j] = 23;
+				if (dungeon[i][j] == 13 && dungeon[i + 1][j] == 22)
+					dungeon[i + 1][j] = 18;
+				if (dungeon[i][j] == 13 && dungeon[i + 1][j] == 2)
+					dungeon[i + 1][j] = 7;
+				if (dungeon[i][j] == 6 && dungeon[i + 1][j] == 22)
+					dungeon[i + 1][j] = 24;
+			}
+			if (j + 1 < DMAXY) {
+				if (dungeon[i][j] == 1 && dungeon[i][j + 1] == 22)
+					dungeon[i][j + 1] = 24;
+				if (dungeon[i][j] == 13 && dungeon[i][j + 1] == 1)
+					dungeon[i][j + 1] = 6;
+				if (dungeon[i][j] == 13 && dungeon[i][j + 1] == 22)
+					dungeon[i][j + 1] = 19;
+			}
 		}
 	}
 
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
-			if (dungeon[i][j] == 13 && dungeon[i + 1][j] == 19)
-				dungeon[i + 1][j] = 21;
-			if (dungeon[i][j] == 13 && dungeon[i + 1][j] == 22)
-				dungeon[i + 1][j] = 20;
-			if (dungeon[i][j] == 7 && dungeon[i + 1][j] == 22)
-				dungeon[i + 1][j] = 23;
-			if (dungeon[i][j] == 13 && dungeon[i + 1][j] == 24)
-				dungeon[i + 1][j] = 21;
-			if (dungeon[i][j] == 19 && dungeon[i + 1][j] == 22)
-				dungeon[i + 1][j] = 20;
-			if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 19)
-				dungeon[i + 1][j] = 21;
-			if (dungeon[i][j] == 19 && dungeon[i + 1][j] == 1)
-				dungeon[i + 1][j] = 6;
-			if (dungeon[i][j] == 7 && dungeon[i + 1][j] == 19)
-				dungeon[i + 1][j] = 21;
-			if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 1)
-				dungeon[i + 1][j] = 6;
-			if (dungeon[i][j] == 3 && dungeon[i + 1][j] == 22)
-				dungeon[i + 1][j] = 24;
-			if (dungeon[i][j] == 21 && dungeon[i + 1][j] == 1)
-				dungeon[i + 1][j] = 6;
-			if (dungeon[i][j] == 7 && dungeon[i + 1][j] == 1)
-				dungeon[i + 1][j] = 6;
-			if (dungeon[i][j] == 7 && dungeon[i + 1][j] == 24)
-				dungeon[i + 1][j] = 21;
-			if (dungeon[i][j] == 4 && dungeon[i + 1][j] == 16)
-				dungeon[i + 1][j] = 17;
-			if (dungeon[i][j] == 7 && dungeon[i + 1][j] == 13)
-				dungeon[i + 1][j] = 17;
-			if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 24)
-				dungeon[i + 1][j] = 21;
-			if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 13)
-				dungeon[i + 1][j] = 17;
-			if (dungeon[i][j] == 23 && dungeon[i - 1][j] == 22)
-				dungeon[i - 1][j] = 19;
-			if (dungeon[i][j] == 19 && dungeon[i - 1][j] == 23)
-				dungeon[i - 1][j] = 21;
-			if (dungeon[i][j] == 6 && dungeon[i - 1][j] == 22)
-				dungeon[i - 1][j] = 24;
-			if (dungeon[i][j] == 6 && dungeon[i - 1][j] == 23)
-				dungeon[i - 1][j] = 21;
-			if (dungeon[i][j] == 1 && dungeon[i][j + 1] == 2)
-				dungeon[i][j + 1] = 7;
-			if (dungeon[i][j] == 6 && dungeon[i][j + 1] == 18)
-				dungeon[i][j + 1] = 21;
-			if (dungeon[i][j] == 18 && dungeon[i][j + 1] == 2)
-				dungeon[i][j + 1] = 7;
-			if (dungeon[i][j] == 6 && dungeon[i][j + 1] == 2)
-				dungeon[i][j + 1] = 7;
-			if (dungeon[i][j] == 21 && dungeon[i][j + 1] == 2)
-				dungeon[i][j + 1] = 7;
-			if (dungeon[i][j] == 6 && dungeon[i][j + 1] == 22)
-				dungeon[i][j + 1] = 24;
-			if (dungeon[i][j] == 6 && dungeon[i][j + 1] == 13)
-				dungeon[i][j + 1] = 16;
-			if (dungeon[i][j] == 1 && dungeon[i][j + 1] == 13)
-				dungeon[i][j + 1] = 16;
-			if (dungeon[i][j] == 13 && dungeon[i][j + 1] == 16)
-				dungeon[i][j + 1] = 17;
-			if (dungeon[i][j] == 6 && dungeon[i][j - 1] == 22)
-				dungeon[i][j - 1] = 7;
-			if (dungeon[i][j] == 6 && dungeon[i][j - 1] == 22)
-				dungeon[i][j - 1] = 24;
-			if (dungeon[i][j] == 7 && dungeon[i][j - 1] == 24)
-				dungeon[i][j - 1] = 21;
-			if (dungeon[i][j] == 18 && dungeon[i][j - 1] == 24)
-				dungeon[i][j - 1] = 21;
+			if (i + 1 < DMAXX) {
+				if (dungeon[i][j] == 13 && dungeon[i + 1][j] == 19)
+					dungeon[i + 1][j] = 21;
+				if (dungeon[i][j] == 13 && dungeon[i + 1][j] == 22)
+					dungeon[i + 1][j] = 20;
+				if (dungeon[i][j] == 7 && dungeon[i + 1][j] == 22)
+					dungeon[i + 1][j] = 23;
+				if (dungeon[i][j] == 13 && dungeon[i + 1][j] == 24)
+					dungeon[i + 1][j] = 21;
+				if (dungeon[i][j] == 19 && dungeon[i + 1][j] == 22)
+					dungeon[i + 1][j] = 20;
+				if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 19)
+					dungeon[i + 1][j] = 21;
+				if (dungeon[i][j] == 19 && dungeon[i + 1][j] == 1)
+					dungeon[i + 1][j] = 6;
+				if (dungeon[i][j] == 7 && dungeon[i + 1][j] == 19)
+					dungeon[i + 1][j] = 21;
+				if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 1)
+					dungeon[i + 1][j] = 6;
+				if (dungeon[i][j] == 3 && dungeon[i + 1][j] == 22)
+					dungeon[i + 1][j] = 24;
+				if (dungeon[i][j] == 21 && dungeon[i + 1][j] == 1)
+					dungeon[i + 1][j] = 6;
+				if (dungeon[i][j] == 7 && dungeon[i + 1][j] == 1)
+					dungeon[i + 1][j] = 6;
+				if (dungeon[i][j] == 7 && dungeon[i + 1][j] == 24)
+					dungeon[i + 1][j] = 21;
+				if (dungeon[i][j] == 4 && dungeon[i + 1][j] == 16)
+					dungeon[i + 1][j] = 17;
+				if (dungeon[i][j] == 7 && dungeon[i + 1][j] == 13)
+					dungeon[i + 1][j] = 17;
+				if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 24)
+					dungeon[i + 1][j] = 21;
+				if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 13)
+					dungeon[i + 1][j] = 17;
+			}
+			if (i > 0) {
+				if (dungeon[i][j] == 23 && dungeon[i - 1][j] == 22)
+					dungeon[i - 1][j] = 19;
+				if (dungeon[i][j] == 19 && dungeon[i - 1][j] == 23)
+					dungeon[i - 1][j] = 21;
+				if (dungeon[i][j] == 6 && dungeon[i - 1][j] == 22)
+					dungeon[i - 1][j] = 24;
+				if (dungeon[i][j] == 6 && dungeon[i - 1][j] == 23)
+					dungeon[i - 1][j] = 21;
+			}
+			if (j + 1 < DMAXY) {
+				if (dungeon[i][j] == 1 && dungeon[i][j + 1] == 2)
+					dungeon[i][j + 1] = 7;
+				if (dungeon[i][j] == 6 && dungeon[i][j + 1] == 18)
+					dungeon[i][j + 1] = 21;
+				if (dungeon[i][j] == 18 && dungeon[i][j + 1] == 2)
+					dungeon[i][j + 1] = 7;
+				if (dungeon[i][j] == 6 && dungeon[i][j + 1] == 2)
+					dungeon[i][j + 1] = 7;
+				if (dungeon[i][j] == 21 && dungeon[i][j + 1] == 2)
+					dungeon[i][j + 1] = 7;
+				if (dungeon[i][j] == 6 && dungeon[i][j + 1] == 22)
+					dungeon[i][j + 1] = 24;
+				if (dungeon[i][j] == 6 && dungeon[i][j + 1] == 13)
+					dungeon[i][j + 1] = 16;
+				if (dungeon[i][j] == 1 && dungeon[i][j + 1] == 13)
+					dungeon[i][j + 1] = 16;
+				if (dungeon[i][j] == 13 && dungeon[i][j + 1] == 16)
+					dungeon[i][j + 1] = 17;
+			}
+			if (j > 0) {
+				if (dungeon[i][j] == 6 && dungeon[i][j - 1] == 22)
+					dungeon[i][j - 1] = 7;
+				if (dungeon[i][j] == 6 && dungeon[i][j - 1] == 22)
+					dungeon[i][j - 1] = 24;
+				if (dungeon[i][j] == 7 && dungeon[i][j - 1] == 24)
+					dungeon[i][j - 1] = 21;
+				if (dungeon[i][j] == 18 && dungeon[i][j - 1] == 24)
+					dungeon[i][j - 1] = 21;
+			}
 		}
 	}
 
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
-			if (dungeon[i][j] == 4 && dungeon[i][j + 1] == 2)
+			if (j + 1 < DMAXY && dungeon[i][j] == 4 && dungeon[i][j + 1] == 2)
 				dungeon[i][j + 1] = 7;
-			if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 19)
+			if (i + 1 < DMAXX && dungeon[i][j] == 2 && dungeon[i + 1][j] == 19)
 				dungeon[i + 1][j] = 21;
-			if (dungeon[i][j] == 18 && dungeon[i][j + 1] == 22)
+			if (j + 1 < DMAXY && dungeon[i][j] == 18 && dungeon[i][j + 1] == 22)
 				dungeon[i][j + 1] = 20;
 		}
 	}
@@ -1271,13 +1290,15 @@ static void DRLG_L5Subs()
 							rv--;
 					}
 
-					if (i == 89) {
+					// BUGFIX: Add `&& y > 0` to the if statement. (fixed)
+					if (i == 89 && y > 0) {
 						if (L5BTYPES[dungeon[x][y - 1]] != 79 || L5dflags[x][y - 1])
 							i = 79;
 						else
 							dungeon[x][y - 1] = 90;
 					}
-					if (i == 91) {
+					// BUGFIX: Add `&& x + 1 < DMAXX` to the if statement. (fixed)
+					if (i == 91 && x + 1 < DMAXX) {
 						if (L5BTYPES[dungeon[x + 1][y]] != 80 || L5dflags[x + 1][y])
 							i = 80;
 						else
@@ -1501,10 +1522,12 @@ static void DRLG_L5TransFix()
 		xx = 16;
 
 		for (i = 0; i < DMAXX; i++) {
+			// BUGFIX: Should check for `j > 0` first. (fixed)
 			if (dungeon[i][j] == 23 && j > 0 && dungeon[i][j - 1] == 18) {
 				dTransVal[xx + 1][yy] = dTransVal[xx][yy];
 				dTransVal[xx + 1][yy + 1] = dTransVal[xx][yy];
 			}
+			// BUGFIX: Should check for `i + 1 < DMAXY` first. (fixed)
 			if (dungeon[i][j] == 24 && i + 1 < DMAXY && dungeon[i + 1][j] == 19) {
 				dTransVal[xx][yy + 1] = dTransVal[xx][yy];
 				dTransVal[xx + 1][yy + 1] = dTransVal[xx][yy];
