@@ -1208,6 +1208,12 @@ void M_CheckEFlag(int i)
 
 	x = monster[i]._mx - 1;
 	y = monster[i]._my + 1;
+
+	if (x < 0 || y >= MAXDUNY) {
+		monster[i]._meflag = FALSE;
+		return;
+	}
+
 	f = 0;
 	m = dpiece_defs_map_2[x][y].mt;
 	if (m >= dpiece_defs_map_2[0][0].mt) {
