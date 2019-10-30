@@ -107,6 +107,7 @@ if(AMIGA)
   find_package(ZLIB REQUIRED)
   # Enable exception suport as they are used in dvlnet code
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexceptions")
+  set(TTF_FONT_PATH \"LiberationSerif-Bold.ttf\")
   set(SDL1_VIDEO_MODE_BPP 8)
 endif()
 
@@ -355,6 +356,7 @@ endforeach(def_name)
 # Defines with value
 foreach(
   def_name
+  TTF_FONT_PATH
   SDL1_VIDEO_MODE_BPP
   SDL1_VIDEO_MODE_FLAGS
   HAS_KBCTRL
