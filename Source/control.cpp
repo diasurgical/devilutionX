@@ -231,6 +231,8 @@ void DrawSpell()
 
 	spl = plr[myplr]._pRSpell;
 	st = plr[myplr]._pRSplType;
+	
+	// BUGFIX: Move the next line into the if statement to avoid OOB (SPL_INVALID is -1) (fixed)
 	if (st == RSPLTYPE_SPELL && spl != SPL_INVALID) {
 		tlvl = plr[myplr]._pISplLvlAdd + plr[myplr]._pSplLvl[spl];
 		if (!CheckSpell(myplr, spl, RSPLTYPE_SPELL, TRUE))

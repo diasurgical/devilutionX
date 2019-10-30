@@ -50,7 +50,11 @@
   #include <assert.h>
   #include <ctype.h>
   #include <stdio.h>
+
+  // Suppress definitions of `min` and `max` macros by <windows.h>:
+  #define NOMINMAX 1
   #include <windows.h>
+
   #include <wininet.h>
   #define PLATFORM_LITTLE_ENDIAN
 

@@ -1208,7 +1208,14 @@ void M_CheckEFlag(int i)
 
 	x = monster[i]._mx - 1;
 	y = monster[i]._my + 1;
+
+	if (x < 0 || y >= MAXDUNY) {
+		monster[i]._meflag = FALSE;
+		return;
+	}
+
 	f = 0;
+	// BUGFIX check (x > 0 && y < MAXDUNY)
 	m = dpiece_defs_map_2[x][y].mt;
 	if (m >= dpiece_defs_map_2[0][0].mt) {
 		for (j = 2; j < 10; j++) {
@@ -5195,7 +5202,7 @@ BOOL PosOkMonst(int i, int x, int y)
 	if (ret && dMissile[x][y] && i >= 0) {
 		mi = dMissile[x][y];
 		if (mi > 0) {
-			if (missile[mi - 1]._mitype == MIS_FIREWALL) { // BUGFIX: Change 'mi' to 'mi - 1' (done)
+			if (missile[mi - 1]._mitype == MIS_FIREWALL) { // BUGFIX: Change 'mi' to 'mi - 1' (fixed)
 				fire = TRUE;
 			} else {
 				for (j = 0; j < nummissiles; j++) {
@@ -5227,7 +5234,7 @@ BOOL PosOkMonst2(int i, int x, int y)
 	if (ret && dMissile[x][y] && i >= 0) {
 		mi = dMissile[x][y];
 		if (mi > 0) {
-			if (missile[mi - 1]._mitype == MIS_FIREWALL) { // BUGFIX: Change 'mi' to 'mi - 1' (done)
+			if (missile[mi - 1]._mitype == MIS_FIREWALL) { // BUGFIX: Change 'mi' to 'mi - 1' (fixed)
 				fire = TRUE;
 			} else {
 				for (j = 0; j < nummissiles; j++) {
@@ -5268,7 +5275,7 @@ BOOL PosOkMonst3(int i, int x, int y)
 	if (ret && dMissile[x][y] != 0 && i >= 0) {
 		mi = dMissile[x][y];
 		if (mi > 0) {
-			if (missile[mi]._mitype == MIS_FIREWALL) { // BUGFIX: Change 'mi' to 'mi - 1'
+			if (missile[mi - 1]._mitype == MIS_FIREWALL) { // BUGFIX: Change 'mi' to 'mi - 1' (fixed)
 				fire = TRUE;
 			} else {
 				for (j = 0; j < nummissiles; j++) {

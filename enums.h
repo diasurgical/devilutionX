@@ -2158,7 +2158,7 @@ typedef enum spell_id {
 	SPL_HEALOTHER   = 0x22,
 	SPL_FLARE       = 0x23,
 	SPL_BONESPIRIT  = 0x24,
-	SPL_INVALID     = 0xFFFFFFFF,
+	SPL_INVALID     = -1,
 } spell_id;
 
 typedef enum _cmd_id {
@@ -2469,7 +2469,7 @@ typedef enum item_misc_id {
 	IMISC_MAPOFDOOM = 0x2A,
 	IMISC_EAR       = 0x2B,
 	IMISC_SPECELIX  = 0x2C,
-	IMISC_INVALID   = 0xFFFFFFFF,
+	IMISC_INVALID   = -1,
 } item_misc_id;
 
 typedef enum item_type {
@@ -2488,7 +2488,7 @@ typedef enum item_type {
 	ITYPE_RING   = 0xC,
 	ITYPE_AMULET = 0xD,
 	ITYPE_0E     = 0xE,
-	ITYPE_NONE   = 0xFFFFFFFF,
+	ITYPE_NONE   = -1,
 } item_type;
 
 typedef enum _item_indexes {
@@ -2557,7 +2557,7 @@ typedef enum quest_id {
 	QTYPE_PW      = 0xD,
 	QTYPE_BONE    = 0xE,
 	QTYPE_VB      = 0xF,
-	QTYPE_INVALID = 0xFFFFFFFF,
+	QTYPE_INVALID = -1,
 } quest_id;
 
 typedef enum quest_mush_state {
