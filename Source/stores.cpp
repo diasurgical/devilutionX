@@ -2557,7 +2557,7 @@ void S_TalkEnter()
 
 	sn = 0;
 	for (i = 0; i < 16; i++) {
-		if (quests[i]._qlevel == 2 && ((DWORD *)&Qtalklist[talker])[i] != -1 && quests[i]._qlog)
+		if (quests[i]._qactive == 2 && ((DWORD *)&Qtalklist[talker])[i] != -1 && quests[i]._qlog)
 			sn++;
 	}
 	if (sn > 6) {
@@ -2576,7 +2576,7 @@ void S_TalkEnter()
 	}
 
 	for (i = 0; i < 16; i++) {
-		if (quests[i]._qlevel == 2 && ((DWORD *)&Qtalklist[talker])[i] != -1 && quests[i]._qlog) {
+		if (quests[i]._qactive == 2 && ((DWORD *)&Qtalklist[talker])[i] != -1 && quests[i]._qlog) {
 			if (sn == stextsel) {
 				InitQTextMsg(((DWORD *)&Qtalklist[talker])[i]);
 			}
