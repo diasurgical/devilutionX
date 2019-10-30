@@ -793,7 +793,7 @@ static void DRLG_L3Pool()
 			}
 			poolchance = random_(0, 100);
 			for (j = (duny - totarea > 0 ? duny - totarea : 0); j < (duny + totarea < DMAXY ? duny + totarea : DMAXY); j++) {
-				for (i = (dunx - totarea > 0 ? dunx - totarea : 0); i < (dunx + totarea < DMAXY ? dunx + totarea : DMAXY); i++) {
+				for (i = (dunx - totarea > 0 ? dunx - totarea : 0); i < (dunx + totarea < DMAXX ? dunx + totarea : DMAXX); i++) {
 					// BUGFIX: In the following swap the order to first do the
 					// index checks and only then access dungeon[i][j] (fixed)
 					if (dungeon[i][j] & 0x80) {
