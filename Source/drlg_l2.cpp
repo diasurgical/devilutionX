@@ -1,4 +1,7 @@
 #ifndef SPAWN
+
+#include <algorithm>
+
 #include "diablo.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -349,9 +352,9 @@ static void DRLG_L2PlaceRndSet(BYTE *miniset, int rndper)
 			}
 			kk = sw * sh + 2;
 			if (found == TRUE) {
-				for (yy = sy - sh; yy < sy + 2 * sh && found == TRUE; yy++) {
-					for (xx = sx - sw; xx < sx + 2 * sw; xx++) {
-						// BUGFIX: yy and xx can go out of bounds
+				for (yy = std::max(sy - sh, 0); yy < std::min(sy + 2 * sh, DMAXY) && found == TRUE; yy++) {
+					for (xx = std::max(sx - sw, 0); xx < std::min(sx + 2 * sw, DMAXX); xx++) {
+						// BUGFIX: yy and xx can go out of bounds (fixed)
 						if (dungeon[xx][yy] == miniset[kk]) {
 							found = FALSE;
 						}
@@ -1411,8 +1414,8 @@ static BOOL CreateDungeon()
 		ConnectHall(nHx1, nHy1, nHx2, nHy2, nHd);
 	}
 
-	for (j = 0; j <= DMAXY; j++) {     /// BUGFIX: change '<=' to '<'
-		for (i = 0; i <= DMAXX; i++) { /// BUGFIX: change '<=' to '<'
+	for (j = 0; j < DMAXY; j++) {     /// BUGFIX: change '<=' to '<' (fixed)
+		for (i = 0; i < DMAXX; i++) { /// BUGFIX: change '<=' to '<' (fixed)
 			if (predungeon[i][j] == 67) {
 				predungeon[i][j] = 35;
 			}

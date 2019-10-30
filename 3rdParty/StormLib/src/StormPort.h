@@ -46,13 +46,17 @@
 #define _CRT_NON_CONFORMING_SWPRINTFS
 #endif
 
-#include <tchar.h>
-#include <assert.h>
-#include <ctype.h>
-#include <stdio.h>
-#include <windows.h>
-#include <wininet.h>
-#define PLATFORM_LITTLE_ENDIAN
+  #include <tchar.h>
+  #include <assert.h>
+  #include <ctype.h>
+  #include <stdio.h>
+
+  // Suppress definitions of `min` and `max` macros by <windows.h>:
+  #define NOMINMAX 1
+  #include <windows.h>
+
+  #include <wininet.h>
+  #define PLATFORM_LITTLE_ENDIAN
 
 #ifdef _WIN64
 #define PLATFORM_64BIT

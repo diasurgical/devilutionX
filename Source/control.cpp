@@ -233,13 +233,15 @@ void SetSpellTrans(char t)
  */
 void DrawSpell()
 {
-	char spl, st;
-	int tlvl;
+	char st;
+	int spl, tlvl;
 
 	spl = plr[myplr]._pRSpell;
 	st = plr[myplr]._pRSplType;
-	tlvl = plr[myplr]._pISplLvlAdd + plr[myplr]._pSplLvl[spl];
+	
+	// BUGFIX: Move the next line into the if statement to avoid OOB (SPL_INVALID is -1) (fixed)
 	if (st == RSPLTYPE_SPELL && spl != SPL_INVALID) {
+		tlvl = plr[myplr]._pISplLvlAdd + plr[myplr]._pSplLvl[spl];
 		if (!CheckSpell(myplr, spl, RSPLTYPE_SPELL, TRUE))
 			st = RSPLTYPE_INVALID;
 		if (tlvl <= 0)
