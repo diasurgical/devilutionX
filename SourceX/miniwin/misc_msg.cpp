@@ -236,8 +236,9 @@ void ShowCursor()
 	}
 }
 
-void HideCursorIfNotNeeded(bool newspselflag = spselflag) {
-	if (!chrflag && !invflag && !newspselflag) {
+void HideCursorIfNotNeeded()
+{
+	if (!chrflag && !invflag) {
 		sgbControllerActive = true;
 	}
 }
@@ -290,6 +291,54 @@ bool FocusOnCharInfo()
 	const auto &rect = ChrBtnsRect[stat];
 	SetCursorPos(rect.x + (rect.w / 2), rect.y + (rect.h / 2));
 	return true;
+}
+
+void StoreSpellCoords()
+{
+	constexpr int START_X = 20;
+	constexpr int END_X = 636;
+	constexpr int END_Y = 495;
+	constexpr int BOX_SIZE = 56;
+	speedspellcount = 0;
+	int xo = END_X, yo = END_Y;
+	for (int i = 0; i < 4; i++) {
+		std::uint64_t spells;
+		switch (i) {
+		case RSPLTYPE_SKILL:
+			spells = plr[myplr]._pAblSpells;
+			break;
+		case RSPLTYPE_SPELL:
+			spells = plr[myplr]._pMemSpells;
+			break;
+		case RSPLTYPE_SCROLL:
+			spells = plr[myplr]._pScrlSpells;
+			break;
+		case RSPLTYPE_CHARGES:
+			spells = plr[myplr]._pISpells;
+			break;
+		default:
+			continue;
+		}
+		std::uint64_t spell = 1;
+		for (int j = 1; j < MAX_SPELLS; j++) {
+			if ((spell & spells)) {
+				speedspellscoords[speedspellcount] = { xo - 36, yo - 188 };
+				++speedspellcount;
+				xo -= BOX_SIZE;
+				if (xo == START_X) {
+					xo = END_X;
+					yo -= BOX_SIZE;
+				}
+			}
+			spell <<= 1;
+		}
+		if (spells && xo != END_X)
+			xo -= BOX_SIZE;
+		if (xo == START_X) {
+			xo = END_X;
+			yo -= BOX_SIZE;
+		}
+	}
 }
 
 } // namespace
@@ -377,7 +426,8 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 			lpMsg->message = DVL_WM_KEYDOWN;
 			lpMsg->wParam = 'S';
 			// We expect the flag value to change after this.
-			HideCursorIfNotNeeded(!spselflag);
+			HideCursorIfNotNeeded();
+			StoreSpellCoords();
 			return true;
 		case GameActionType::TOGGLE_CHARACTER_INFO:
 			questlog = false;
