@@ -79,11 +79,34 @@ ControllerButton JoyButtonToControllerButton(const SDL_Event &event)
 			break;
 		}
 		break;
+	case SDL_JOYHATMOTION:
+#if defined(JOY_HAT_DPAD_UP_HAT) && defined(JOY_HAT_DPAD_UP)
+		if (event.jhat.hat == JOY_HAT_DPAD_UP_HAT && (event.jhat.value & JOY_HAT_DPAD_UP) != 0)
+			return ControllerButton::BUTTON_DPAD_UP;
+#endif
+#if defined(JOY_HAT_DPAD_DOWN_HAT) && defined(JOY_HAT_DPAD_DOWN)
+		if (event.jhat.hat == JOY_HAT_DPAD_DOWN_HAT && (event.jhat.value & JOY_HAT_DPAD_DOWN) != 0)
+			return ControllerButton::BUTTON_DPAD_DOWN;
+#endif
+#if defined(JOY_HAT_DPAD_LEFT_HAT) && defined(JOY_HAT_DPAD_LEFT)
+		if (event.jhat.hat == JOY_HAT_DPAD_LEFT_HAT && (event.jhat.value & JOY_HAT_DPAD_LEFT) != 0)
+			return ControllerButton::BUTTON_DPAD_LEFT;
+#endif
+#if defined(JOY_HAT_DPAD_RIGHT_HAT) && defined(JOY_HAT_DPAD_RIGHT)
+		if (event.jhat.hat == JOY_HAT_DPAD_RIGHT_HAT && (event.jhat.value & JOY_HAT_DPAD_RIGHT) != 0)
+			return ControllerButton::BUTTON_DPAD_RIGHT;
+#endif
+		break;
+	default:
+		break;
 	}
 	return ControllerButton::NONE;
 }
 
-int JoyButtonToControllerButton(ControllerButton button) {
+namespace {
+
+int JoyButtonToControllerButton(ControllerButton button)
+{
 	if (button == ControllerButton::AXIS_TRIGGERLEFT || button == ControllerButton::AXIS_TRIGGERRIGHT)
 		UNIMPLEMENTED();
 	switch (button) {
@@ -148,9 +171,38 @@ int JoyButtonToControllerButton(ControllerButton button) {
 	}
 }
 
-bool IsJoystickButtonPressed(ControllerButton button) {
+bool IsJoystickHatButtonPressed(ControllerButton button)
+{
+	switch (button) {
+#if defined(JOY_HAT_DPAD_UP_HAT) && defined(JOY_HAT_DPAD_UP)
+	case ControllerButton::BUTTON_DPAD_UP:
+		return (SDL_JoystickGetHat(CurrentJoystick(), JOY_HAT_DPAD_UP_HAT) & JOY_HAT_DPAD_UP) != 0;
+#endif
+#if defined(JOY_HAT_DPAD_DOWN_HAT) && defined(JOY_HAT_DPAD_DOWN)
+	case ControllerButton::BUTTON_DPAD_DOWN:
+		return (SDL_JoystickGetHat(CurrentJoystick(), JOY_HAT_DPAD_DOWN_HAT) & JOY_HAT_DPAD_DOWN) != 0;
+#endif
+#if defined(JOY_HAT_DPAD_LEFT_HAT) && defined(JOY_HAT_DPAD_LEFT)
+	case ControllerButton::BUTTON_DPAD_LEFT:
+		return (SDL_JoystickGetHat(CurrentJoystick(), JOY_HAT_DPAD_LEFT_HAT) & JOY_HAT_DPAD_LEFT) != 0;
+#endif
+#if defined(JOY_HAT_DPAD_RIGHT_HAT) && defined(JOY_HAT_DPAD_RIGHT)
+	case ControllerButton::BUTTON_DPAD_RIGHT:
+		return (SDL_JoystickGetHat(CurrentJoystick(), JOY_HAT_DPAD_RIGHT_HAT) & JOY_HAT_DPAD_RIGHT) != 0;
+#endif
+	default:
+		break;
+	}
+}
+
+} // namespace
+
+bool IsJoystickButtonPressed(ControllerButton button)
+{
 	if (CurrentJoystick() == nullptr)
 		return false;
+	if (IsJoystickHatButtonPressed(button))
+		return true;
 	const int joy_button = JoyButtonToControllerButton(button);
 	return joy_button != -1 && SDL_JoystickGetButton(CurrentJoystick(), joy_button);
 }

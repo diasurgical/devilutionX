@@ -318,6 +318,14 @@ foreach(
   JOY_AXIS_LEFTY
   JOY_AXIS_RIGHTX
   JOY_AXIS_RIGHTY
+  JOY_HAT_DPAD_UP_HAT
+  JOY_HAT_DPAD_UP
+  JOY_HAT_DPAD_DOWN_HAT
+  JOY_HAT_DPAD_DOWN
+  JOY_HAT_DPAD_LEFT_HAT
+  JOY_HAT_DPAD_LEFT
+  JOY_HAT_DPAD_RIGHT_HAT
+  JOY_HAT_DPAD_RIGHT
   JOY_BUTTON_DPAD_LEFT
   JOY_BUTTON_DPAD_RIGHT
   JOY_BUTTON_DPAD_UP
@@ -333,7 +341,7 @@ foreach(
   JOY_BUTTON_START
   JOY_BUTTON_BACK
 )
-  if(${def_name})
+  if(DEFINED ${def_name})
     list(APPEND def_list ${def_name}=${${def_name}})
   endif()
 endforeach(def_name)
