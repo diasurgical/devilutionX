@@ -33,8 +33,6 @@ fi
 
 BUILDROOT="${BUILDROOT:-$HOME/buildroot-${TARGET}-devilutionx}"
 
-set -x
-
 main() {
 	set -x
 	prepare_buildroot
@@ -64,7 +62,9 @@ prepare_buildroot() {
 make_buildroot() {
 	cd "$BUILDROOT"
 	if [[ "$TARGET" != "rg350" ]]; then
-		echo 'LIBSODIUM_CONF_OPTS += --enable-static' >> package/libsodium/libsodium.mk
+		if ! grep '--enable-static' package/libsodium/libsodium.mk; then
+			echo 'LIBSODIUM_CONF_OPTS += --enable-static' >> package/libsodium/libsodium.mk
+		fi
 	fi
 	make ${TARGET}_devilutionx_defconfig
 	if [[ "$TARGET" == "rg350" ]]; then
@@ -79,14 +79,33 @@ build() {
 	mkdir -p ../../build
 	cd ../../build
 	rm -f CMakeCache.txt
+
+	local -a defs=(-DDINGUX=ON -DBINARY_RELEASE=ON)
 	if [[ "$TARGET" == "rg350" ]]; then
-		TARGET_DEFINES="-DNONET=ON"
+		defs+=(-DNONET=ON)
 	elif [[ "$TARGET" == "rs90" ]]; then
-		TARGET_DEFINES="-DUSE_SDL1=ON"
+		defs+=(-DUSE_SDL1=ON)
 	else
-		TARGET_DEFINES="-DRETROFW=ON -DUSE_SDL1=ON"
+		defs+=(
+			-DUSE_SDL1=ON
+			-DRETROFW=ON
+			-DHAS_KBCTRL=1
+			-DKBCTRL_BUTTON_DPAD_LEFT=SDLK_LEFT
+			-DKBCTRL_BUTTON_DPAD_RIGHT=SDLK_RIGHT
+			-DKBCTRL_BUTTON_DPAD_UP=SDLK_UP
+			-DKBCTRL_BUTTON_DPAD_DOWN=SDLK_DOWN
+			-DKBCTRL_BUTTON_B=SDLK_LCTRL
+			-DKBCTRL_BUTTON_A=SDLK_LALT
+			-DKBCTRL_BUTTON_Y=SDLK_SPACE
+			-DKBCTRL_BUTTON_X=SDLK_LSHIFT
+			-DKBCTRL_BUTTON_RIGHTSHOULDER=SDLK_BACKSPACE
+			-DKBCTRL_BUTTON_LEFTSHOULDER=SDLK_TAB
+			-DKBCTRL_BUTTON_START=SDLK_RETURN
+			-DKBCTRL_BUTTON_BACK=SDLK_ESCAPE
+			-DKBCTRL_MODIFIER_KEY=SDLK_END
+		)
 	fi
-	cmake .. -DDINGUX=ON -DBINARY_RELEASE=ON ${TARGET_DEFINES} \
+	cmake .. ${defs[@]} \
 		-DCMAKE_TOOLCHAIN_FILE="$BUILDROOT/output/host/usr/share/buildroot/toolchainfile.cmake"
 	make -j $(nproc)
 	cd -

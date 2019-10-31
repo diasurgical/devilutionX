@@ -1,2 +1,4 @@
 #!/usr/bin/env bash
-./build.sh rs90
+
+declare -r DIR="$(dirname "${BASH_SOURCE[0]}")"
+"${DIR}/build.sh" rs90

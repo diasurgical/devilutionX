@@ -292,6 +292,48 @@ target_compile_definitions(devilution PUBLIC
 target_compile_definitions(devilutionx PRIVATE ASIO_STANDALONE)
 
 
+foreach(
+  def_name
+  SPAWN
+  NONET
+  DINGUX
+  RETROFW
+  HAS_KBCTRL
+  KBCTRL_BUTTON_DPAD_LEFT
+  KBCTRL_BUTTON_DPAD_RIGHT
+  KBCTRL_BUTTON_DPAD_UP
+  KBCTRL_BUTTON_DPAD_DOWN
+  KBCTRL_BUTTON_B
+  KBCTRL_BUTTON_A
+  KBCTRL_BUTTON_Y
+  KBCTRL_BUTTON_X
+  KBCTRL_BUTTON_LEFTSTICK
+  KBCTRL_BUTTON_RIGHTSTICK
+  KBCTRL_BUTTON_RIGHTSHOULDER
+  KBCTRL_BUTTON_LEFTSHOULDER
+  KBCTRL_BUTTON_START
+  KBCTRL_BUTTON_BACK
+  KBCTRL_MODIFIER_KEY
+  JOY_BUTTON_DPAD_LEFT
+  JOY_BUTTON_DPAD_RIGHT
+  JOY_BUTTON_DPAD_UP
+  JOY_BUTTON_DPAD_DOWN
+  JOY_BUTTON_B
+  JOY_BUTTON_A
+  JOY_BUTTON_Y
+  JOY_BUTTON_X
+  JOY_BUTTON_LEFTSTICK
+  JOY_BUTTON_RIGHTSTICK
+  JOY_BUTTON_RIGHTSHOULDER
+  JOY_BUTTON_LEFTSHOULDER
+  JOY_BUTTON_START
+  JOY_BUTTON_BACK
+)
+  if(${def_name})
+    list(APPEND def_list ${def_name}=${${def_name}})
+  endif()
+endforeach(def_name)
+
 foreach(target devilution devilutionx)
   if(USE_SDL1)
     target_link_libraries(${target} PRIVATE
@@ -304,14 +346,6 @@ foreach(target devilution devilutionx)
       SDL2::SDL2_mixer)
   endif()
 
-  if(NONET)
-    target_compile_definitions(${target} PRIVATE NONET)
-  endif()
-
-  if(SPAWN)
-    target_compile_definitions(${target} PRIVATE SPAWN)
-  endif()
-
   if(ASAN)
     target_compile_options(${target} PUBLIC -fsanitize=address -fsanitize-recover=address)
     target_link_libraries(${target} PUBLIC -fsanitize=address -fsanitize-recover=address)
@@ -322,13 +356,8 @@ foreach(target devilution devilutionx)
     target_link_libraries(${target} PUBLIC -fsanitize=undefined)
   endif()
 
-  if(DINGUX)
-    target_compile_definitions(${target} PRIVATE DINGUX)
-  endif()
-  if(RETROFW)
-    target_compile_definitions(${target} PRIVATE RETROFW)
-  endif()
-endforeach(target devilution devilutionx)
+  target_compile_definitions(${target} PRIVATE ${def_list})
+endforeach(target)
 
 if(DIST AND CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   target_link_libraries(devilutionx PUBLIC -static-libgcc -static-libstdc++)
