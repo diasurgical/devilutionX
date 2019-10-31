@@ -241,6 +241,9 @@ void selhero_ClassSelector_Select(int value)
 		strcpy(title, "New Multi Player Hero");
 	}
 	memset(selhero_heroInfo.name, '\0', sizeof(selhero_heroInfo.name));
+#ifdef DEFAULT_PLAYER_NAME
+	strcpy(selhero_heroInfo.name, DEFAULT_PLAYER_NAME);
+#endif
 	UiInitList(0, 0, NULL, selhero_Name_Select, selhero_Name_Esc, ENTERNAME_DIALOG, size(ENTERNAME_DIALOG));
 }
 

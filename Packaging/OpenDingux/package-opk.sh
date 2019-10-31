@@ -24,6 +24,7 @@ Icon=Diablo_32
 Categories=games;
 X-OD-Manual=readme.gcw0.txt
 X-OD-NeedsDownscaling=true
+X-OD-NeedsJoystick=true
 EOF
 
 mksquashfs \

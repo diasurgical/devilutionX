@@ -62,7 +62,7 @@ prepare_buildroot() {
 make_buildroot() {
 	cd "$BUILDROOT"
 	if [[ "$TARGET" != "rg350" ]]; then
-		if ! grep '--enable-static' package/libsodium/libsodium.mk; then
+		if ! grep 'enable-static' package/libsodium/libsodium.mk > /dev/null; then
 			echo 'LIBSODIUM_CONF_OPTS += --enable-static' >> package/libsodium/libsodium.mk
 		fi
 	fi
@@ -80,9 +80,36 @@ build() {
 	cd ../../build
 	rm -f CMakeCache.txt
 
-	local -a defs=(-DDINGUX=ON -DBINARY_RELEASE=ON)
+	local -a defs=(-DDINGUX=ON -DBINARY_RELEASE=ON '-DDEFAULT_PLAYER_NAME="Player"')
 	if [[ "$TARGET" == "rg350" ]]; then
-		defs+=(-DNONET=ON)
+		defs+=(
+			-DNONET=ON
+			-DUSE_SDL1=1
+			-DJOY_AXIS_LEFTX=0
+			-DJOY_AXIS_LEFTY=1
+			-DJOY_AXIS_RIGHTX=2
+			-DJOY_AXIS_RIGHTY=3
+			-DJOY_HAT_DPAD_UP_HAT=0
+			-DJOY_HAT_DPAD_UP=1
+			-DJOY_HAT_DPAD_DOWN_HAT=0
+			-DJOY_HAT_DPAD_DOWN=4
+			-DJOY_HAT_DPAD_LEFT_HAT=0
+			-DJOY_HAT_DPAD_LEFT=8
+			-DJOY_HAT_DPAD_RIGHT_HAT=0
+			-DJOY_HAT_DPAD_RIGHT=2
+			-DJOY_BUTTON_A=0
+			-DJOY_BUTTON_B=1
+			-DJOY_BUTTON_Y=2
+			-DJOY_BUTTON_X=3
+			-DJOY_BUTTON_LEFTSTICK=10
+			-DJOY_BUTTON_RIGHTSTICK=11
+			-DJOY_BUTTON_RIGHTSHOULDER=5
+			-DJOY_BUTTON_LEFTSHOULDER=4
+			-DJOY_BUTTON_TRIGGERLEFT=6
+			-DJOY_BUTTON_TRIGGERRIGHT=7
+			-DJOY_BUTTON_START=9
+			-DJOY_BUTTON_BACK=8
+		)
 	elif [[ "$TARGET" == "rs90" ]]; then
 		defs+=(-DUSE_SDL1=ON)
 	else

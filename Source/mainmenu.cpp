@@ -24,6 +24,9 @@ void mainmenu_refresh_music()
 
 void __stdcall mainmenu_change_name(int arg1, int arg2, int arg3, int arg4, char *name_1, char *name_2)
 {
+#ifdef DEFAULT_PLAYER_NAME
+	strcpy(name_2, DEFAULT_PLAYER_NAME);
+#endif
 	if (UiValidPlayerName(name_2))
 		pfile_rename_hero(name_1, name_2);
 }
