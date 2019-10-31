@@ -11,6 +11,8 @@ ControllerButton JoyButtonToControllerButton(const SDL_Event &event);
 
 bool IsJoystickButtonPressed(ControllerButton button);
 
+bool ProcessJoystickAxisMotion(const SDL_Event &event);
+
 SDL_Joystick *CurrentJoystick();
 int CurrentJoystickIndex();
 

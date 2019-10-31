@@ -1,6 +1,7 @@
 #include "controls/controller_motion.h"
 
 #include "controls/devices/game_controller.h"
+#include "controls/devices/joystick.h"
 
 namespace dvl {
 
@@ -85,6 +86,8 @@ bool ProcessControllerMotion(const SDL_Event &event)
 	if (ProcessGameControllerAxisMotion(event))
 		return true;
 #endif
+	if (ProcessJoystickAxisMotion(event))
+		return true;
 	return false;
 }
 

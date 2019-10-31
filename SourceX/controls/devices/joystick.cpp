@@ -1,6 +1,7 @@
 
 #include "controls/devices/joystick.h"
 
+#include "controls/controller_motion.h"
 #include "stubs.h"
 
 #ifdef SWITCH
@@ -152,6 +153,41 @@ bool IsJoystickButtonPressed(ControllerButton button) {
 		return false;
 	const int joy_button = JoyButtonToControllerButton(button);
 	return joy_button != -1 && SDL_JoystickGetButton(CurrentJoystick(), joy_button);
+}
+
+bool ProcessJoystickAxisMotion(const SDL_Event &event)
+{
+	if (event.type != SDL_JOYAXISMOTION)
+		return false;
+	switch (event.jaxis.axis) {
+#ifdef JOY_AXIS_LEFTX
+	case JOY_AXIS_LEFTX:
+		leftStickXUnscaled = event.jaxis.value;
+		leftStickNeedsScaling = true;
+		break;
+#endif
+#ifdef JOY_AXIS_LEFTY
+	case JOY_AXIS_LEFTY:
+		leftStickYUnscaled = -event.jaxis.value;
+		leftStickNeedsScaling = true;
+		break;
+#endif
+#ifdef JOY_AXIS_RIGHTX
+	case JOY_AXIS_RIGHTX:
+		rightStickXUnscaled = event.jaxis.value;
+		rightStickNeedsScaling = true;
+		break;
+#endif
+#ifdef JOY_AXIS_RIGHTY
+	case JOY_AXIS_RIGHTY:
+		rightStickYUnscaled = -event.jaxis.value;
+		rightStickNeedsScaling = true;
+		break;
+#endif
+	default:
+		return false;
+	}
+	return true;
 }
 
 static SDL_Joystick *current_joystick = nullptr;
