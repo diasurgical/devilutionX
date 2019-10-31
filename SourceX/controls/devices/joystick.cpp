@@ -191,7 +191,7 @@ bool IsJoystickHatButtonPressed(ControllerButton button)
 		return (SDL_JoystickGetHat(CurrentJoystick(), JOY_HAT_DPAD_RIGHT_HAT) & JOY_HAT_DPAD_RIGHT) != 0;
 #endif
 	default:
-		break;
+		return false;
 	}
 }
 
