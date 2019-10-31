@@ -291,13 +291,22 @@ target_compile_definitions(devilution PUBLIC
   "$<$<BOOL:${FASTER}>:FASTER>")
 target_compile_definitions(devilutionx PRIVATE ASIO_STANDALONE)
 
-
+# Defines without value
 foreach(
   def_name
   SPAWN
   NONET
   DINGUX
   RETROFW
+)
+if(${def_name})
+  list(APPEND def_list ${def_name})
+endif()
+endforeach(def_name)
+
+# Defines with value
+foreach(
+  def_name
   HAS_KBCTRL
   KBCTRL_BUTTON_DPAD_LEFT
   KBCTRL_BUTTON_DPAD_RIGHT
