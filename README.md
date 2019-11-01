@@ -202,6 +202,31 @@ Note that some features are not yet supported in SDL v1, notably upscaling, and 
 
 All games are encrypted and password protected.
 
+# Controller support
+
+DevilutionX supports gamepad controls.
+
+Default controller mappings (A/B/X/Y as in Nintendo layout, so the rightmost button is attack):
+
+- Left analog / DPad: move hero
+- Right analog: simulate mouse
+- A: attack nearby enemies, talk to towns people and merchants, pickup & place items in the inventory, OK while in main menu
+- B: Select spell, cancel while in main menu
+- X: pickup gold, potions & equipment from ground, open chests and doors that are nearby, use item when in inventory (useful to read books etc.)
+- Y: cast spell, go to previous screen when talking to people and in shops, delete character while in main menu
+- R1: inventory
+- L1: character sheet
+- R2: drink mana potion
+- L2: drink health potion
+- Left analog click: quest log
+- Right analog click: left mouse click
+- Select: automap
+- Start: game Menu, skip intro
+
+For now, they can be re-mapped by changing `SourceX/controls` or by setting the `SDL_GAMECONTROLLERCONFIG` environment
+variable (see
+[SDL_GameControllerDB](https://github.com/gabomdq/SDL_GameControllerDB)).
+
 # Contributing
 [Guidelines](docs/CONTRIBUTING.md)
 

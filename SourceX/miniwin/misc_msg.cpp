@@ -425,7 +425,6 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 			ShowCursor();
 			lpMsg->message = DVL_WM_KEYDOWN;
 			lpMsg->wParam = 'S';
-			// We expect the flag value to change after this.
 			HideCursorIfNotNeeded();
 			StoreSpellCoords();
 			return true;
