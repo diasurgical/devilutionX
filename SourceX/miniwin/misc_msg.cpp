@@ -438,6 +438,9 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 			HideCursorIfNotNeeded();
 			break;
 		case GameActionType::TOGGLE_INVENTORY:
+			if (pcurs >= CURSOR_FIRSTITEM && invflag)
+				// Drop item so that it does not get destroyed.
+				DropItemBeforeTrig();
 			sbookflag = false;
 			invflag = !invflag;
 			if (invflag)
