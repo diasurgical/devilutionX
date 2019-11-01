@@ -15,7 +15,7 @@ enum class GameActionType {
 	TOGGLE_CHARACTER_INFO,
 	TOGGLE_QUICK_SPELL_MENU,
 	SEND_KEY,
-	SEND_MOUSE_LEFT_CLICK
+	SEND_MOUSE_CLICK,
 };
 
 struct GameActionSendKey {
@@ -23,7 +23,12 @@ struct GameActionSendKey {
 	bool up;
 };
 
-struct GameActionSendMouseLeftClick {
+struct GameActionSendMouseClick {
+	enum Button {
+		LEFT = 0,
+		RIGHT,
+	};
+	Button button;
 	bool up;
 };
 
@@ -46,15 +51,15 @@ struct GameAction {
 	{
 	}
 
-	GameAction(GameActionSendMouseLeftClick send_mouse_left_click)
-	    : type(GameActionType::SEND_MOUSE_LEFT_CLICK)
-	    , send_mouse_left_click(send_mouse_left_click)
+	GameAction(GameActionSendMouseClick send_mouse_click)
+	    : type(GameActionType::SEND_MOUSE_CLICK)
+	    , send_mouse_click(send_mouse_click)
 	{
 	}
 
 	union {
 		GameActionSendKey send_key;
-		GameActionSendMouseLeftClick send_mouse_left_click;
+		GameActionSendMouseClick send_mouse_click;
 	};
 };
 

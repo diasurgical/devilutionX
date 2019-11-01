@@ -64,7 +64,9 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 	case ControllerButton::BUTTON_Y: // Top button
 		if (InGameMenu())
 			break; // Map to keyboard key
-		if (!ctrl_event.up)
+		if (invflag)
+			*action = GameActionSendMouseClick { GameActionSendMouseClick::RIGHT, ctrl_event.up };
+		else if (!ctrl_event.up)
 			*action = GameAction(GameActionType::SECONDARY_ACTION);
 		return true;
 	case ControllerButton::BUTTON_X: // Left button
@@ -96,7 +98,7 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 		// The rest is handled in charMovement() on every game_logic() call.
 		return true;
 	case ControllerButton::BUTTON_RIGHTSTICK:
-		*action = GameActionSendMouseLeftClick { ctrl_event.up };
+		*action = GameActionSendMouseClick { GameActionSendMouseClick::LEFT, ctrl_event.up };
 		return true;
 	default:
 		break;

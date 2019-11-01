@@ -450,9 +450,17 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 			lpMsg->message = action.send_key.up ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
 			lpMsg->wParam = action.send_key.vk_code;
 			return true;
-		case GameActionType::SEND_MOUSE_LEFT_CLICK:
+		case GameActionType::SEND_MOUSE_CLICK:
 			ShowCursor();
-			SetMouseLMBMessage(e, lpMsg);
+			switch (action.send_mouse_click.button) {
+			case GameActionSendMouseClick::LEFT:
+				lpMsg->message = action.send_mouse_click.up ? DVL_WM_LBUTTONUP : DVL_WM_LBUTTONDOWN;
+				break;
+			case GameActionSendMouseClick::RIGHT:
+				lpMsg->message = action.send_mouse_click.up ? DVL_WM_RBUTTONUP : DVL_WM_RBUTTONDOWN;
+				break;
+			}
+			lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
 			return true;
 		}
 		return true;
