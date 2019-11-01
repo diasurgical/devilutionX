@@ -113,6 +113,8 @@ ControllerButton KbCtrlToControllerButton(const SDL_Event &event)
 		default:
 			return ControllerButton::NONE;
 		}
+	default:
+		return ControllerButton::NONE;
 	}
 }
 
