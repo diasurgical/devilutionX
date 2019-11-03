@@ -600,19 +600,14 @@ void plrctrls_after_game_logic()
 
 void useBeltPotion(bool mana)
 {
-	static DWORD menuopenslow = 0;
-	DWORD ticks = GetTickCount();
-	int invNum = 0;
-	if (ticks - menuopenslow < 300) {
-		return;
-	}
-	menuopenslow = ticks;
 	for (int i = 0; i < MAXBELTITEMS; i++) {
 		const auto id = AllItemsList[plr[myplr].SpdList[i].IDidx].iMiscId;
-		if ((!mana && (id == IMISC_HEAL || id == IMISC_FULLHEAL)) || (mana && (id == IMISC_MANA || id == IMISC_FULLMANA)) || id == IMISC_REJUV || id == IMISC_FULLREJUV) {
+		const auto spellId = AllItemsList[plr[myplr].SpdList[i].IDidx].iSpell;
+		if ((!mana && (id == IMISC_HEAL || id == IMISC_FULLHEAL || (id == IMISC_SCROLL && spellId == SPL_HEAL)))
+		    || (mana && (id == IMISC_MANA || id == IMISC_FULLMANA))
+		    || id == IMISC_REJUV || id == IMISC_FULLREJUV) {
 			if (plr[myplr].SpdList[i]._itype > -1) {
-				invNum = i + INVITEM_BELT_FIRST;
-				UseInvItem(myplr, invNum);
+				UseInvItem(myplr, INVITEM_BELT_FIRST + i);
 				break;
 			}
 		}

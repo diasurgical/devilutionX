@@ -216,8 +216,8 @@ Default controller mappings (A/B/X/Y as in Nintendo layout, so the rightmost but
 - Y: cast spell, go to previous screen when talking to people and in shops, delete character while in main menu
 - R1: inventory
 - L1: character sheet
-- R2: drink mana potion
-- L2: drink health potion
+- R2: use mana potion from belt
+- L2: use health item from belt
 - Left analog click: quest log
 - Right analog click: left mouse click
 - Select: automap

@@ -8,6 +8,8 @@
 namespace dvl {
 
 static SDL_GameController *current_game_controller = nullptr;
+static bool sgbTriggerLeftDown = false;
+static bool sgbTriggerRightDown = false;
 
 ControllerButton GameControllerToControllerButton(const SDL_Event &event)
 {
@@ -15,11 +17,23 @@ ControllerButton GameControllerToControllerButton(const SDL_Event &event)
 	case SDL_CONTROLLERAXISMOTION:
 		switch (event.caxis.axis) {
 		case SDL_CONTROLLER_AXIS_TRIGGERLEFT:
-			return ControllerButton::AXIS_TRIGGERLEFT;
-			break;
+			if (event.caxis.value < 8192) { // 25% pressed
+				sgbTriggerLeftDown = false;
+			}
+			if (event.caxis.value > 16384 && !sgbTriggerLeftDown) { // 50% pressed
+				sgbTriggerLeftDown = true;
+				return ControllerButton::AXIS_TRIGGERLEFT;
+			}
+			return ControllerButton::NONE;
 		case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
-			return ControllerButton::AXIS_TRIGGERRIGHT;
-			break;
+			if (event.caxis.value < 8192) { // 25% pressed
+				sgbTriggerRightDown = false;
+			}
+			if (event.caxis.value > 16384 && !sgbTriggerRightDown) { // 50% pressed
+				sgbTriggerRightDown = true;
+				return ControllerButton::AXIS_TRIGGERRIGHT;
+			}
+			return ControllerButton::NONE;
 		}
 		break;
 	case SDL_CONTROLLERBUTTONDOWN:
