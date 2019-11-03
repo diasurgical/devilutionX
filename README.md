@@ -61,6 +61,20 @@ cmake --build . -j $(sysctl -n hw.ncpu)
 ```
 </details>
 
+<details><summary>OpenBSD</summary>
+
+### Installing dependencies
+```
+pkg_add cmake sdl2-mixer sdl2-ttf libsodium gmake
+```
+### Compiling
+```
+cd build
+cmake -DCMAKE_MAKE_PROGRAM=gmake ..
+cmake --build . -j $(sysctl -n hw.ncpuonline)
+```
+</details>
+
 <details><summary>Windows via MinGW</summary>
 
 ### Installing dependencies on WSL, Debian and Ubuntu
