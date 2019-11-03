@@ -104,29 +104,30 @@ bool checkMonstersNearby(bool attack)
 	coords objDistLast = { 99, 99 }; // previous obj distance
 	// The first MAX_PLRS monsters are reserved for players' golems.
 	for (int i = MAX_PLRS; i < MAXMONSTERS; i++) {
-		int d_monster = dMonster[monster[i]._mx][monster[i]._my];
-		if (monster[i]._mFlags & MFLAG_HIDDEN || monster[i]._mhitpoints <= 0) // monster is hiding or dead, skip
+		const auto &monst = monster[i];
+		const int mx = monst._mx;
+		const int my = monst._my;
+		if (dMonster[mx][my] == 0 ||
+			(monst._mFlags & MFLAG_HIDDEN) || // hidden
+			monst._mhitpoints <= 0 || // dead
+			!((dFlags[mx][my] & BFLAG_LIT) || plr[myplr]._pInfraFlag)) // invisible
 			continue;
-		if (d_monster && dFlags[monster[i]._mx][monster[i]._my] & BFLAG_LIT) {                                                                          // is monster visible
-			if (monster[i].MData->mSelFlag & 1 || monster[i].MData->mSelFlag & 2 || monster[i].MData->mSelFlag & 3 || monster[i].MData->mSelFlag & 4) { // is monster selectable
-				coords objDist = checkNearbyObjs(monster[i]._mx, monster[i]._my, 6);
-				if (objDist.x > -1 && objDist.x <= objDistLast.x && objDist.y <= objDistLast.y) {
-					closest = i;
-					objDistLast = objDist;
-				}
+		const char mSelFlag = monst.MData->mSelFlag;
+		if (mSelFlag & 1 || mSelFlag & 2 || mSelFlag & 3 || mSelFlag & 4) { // is monster selectable
+			coords objDist = checkNearbyObjs(mx, my, 6);
+			if (objDist.x > -1 && objDist.x <= objDistLast.x && objDist.y <= objDistLast.y) {
+				closest = i;
+				objDistLast = objDist;
 			}
 		}
 	}
-	if (closest > 0) { // did we find a monster
-		pcursmonst = closest;
-		//sprintf(tempstr, "NEARBY MONSTER WITH HP:%i", monster[closest]._mhitpoints);
-		//NetSendCmdString(1 << myplr, tempstr);
-	} else if (closest > 0) { // found monster, but we don't want to attack it
-		return true;
-	} else {
+	if (closest < MAX_PLRS) { // didn't find a monster
 		pcursmonst = -1;
 		return false;
 	}
+	pcursmonst = closest;
+	//sprintf(tempstr, "NEARBY MONSTER WITH HP:%i", monster[closest]._mhitpoints);
+	//NetSendCmdString(1 << myplr, tempstr);
 	if (attack) {
 		static DWORD attacktick = 0;
 		DWORD ticks = GetTickCount();
@@ -134,12 +135,8 @@ bool checkMonstersNearby(bool attack)
 			attacktick = ticks;
 			LeftMouseCmd(false);
 		}
-		return true;
-	} else {
-		return true;
 	}
-	pcursmonst = -1;
-	return false;
+	return true;
 }
 
 // hide the cursor when we start walking via keyboard/controller
@@ -147,9 +144,7 @@ void HideCursor()
 {
 	if (pcurs >= CURSOR_FIRSTITEM) // drop item to allow us to pick up other items
 		DropItemBeforeTrig();
-	SetCursorPos(320, 180);
-	MouseX = 320;
-	MouseY = 180;
+	SetCursorPos(SCREEN_WIDTH / 2, PANEL_TOP / 2);
 	if (pcurs == CURSOR_REPAIR || pcurs == CURSOR_RECHARGE)
 		SetCursor_(CURSOR_HAND);
 	sgbControllerActive = true;
