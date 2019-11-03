@@ -145,11 +145,13 @@ bool checkMonstersNearby(bool attack)
 // hide the cursor when we start walking via keyboard/controller
 void HideCursor()
 {
-	if (pcurs >= CURSOR_FIRSTITEM) // if we don't drop the item on cursor, it will be destroyed
+	if (pcurs >= CURSOR_FIRSTITEM) // drop item to allow us to pick up other items
 		DropItemBeforeTrig();
 	SetCursorPos(320, 180);
 	MouseX = 320;
 	MouseY = 180;
+	if (pcurs == CURSOR_REPAIR || pcurs == CURSOR_RECHARGE)
+		SetCursor_(CURSOR_HAND);
 	sgbControllerActive = true;
 }
 
@@ -625,6 +627,8 @@ void performPrimaryAction()
 				CheckIdentify(myplr, pcursinvitem);
 			else if (pcurs == CURSOR_REPAIR)
 				DoRepair(myplr, pcursinvitem);
+			else if (pcurs == CURSOR_RECHARGE)
+				DoRecharge(myplr, pcursinvitem);
 			else
 				CheckInvItem();
 		}
