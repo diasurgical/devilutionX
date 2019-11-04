@@ -156,11 +156,11 @@ void gamemenu_save_game(BOOL bActivate)
 		SetCursor_(CURSOR_NONE);
 		gamemenu_off();
 		InitDiabloMsg(EMSG_SAVING);
-		drawpanflag = 255;
+		force_redraw = 255;
 		DrawAndBlit();
 		SaveGame();
 		ClrDiabloMsg();
-		drawpanflag = 255;
+		force_redraw = 255;
 		SetCursor_(CURSOR_HAND);
 		interface_msg_pump();
 		SetWindowProc(saveProc);
