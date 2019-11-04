@@ -340,8 +340,7 @@ SDL_Surface *KBRenderingSurface = NULL;
 void VitaAux::showIME(const char *title, char *dest, void (*PreRenderigFunction)(), void (*PostRenderigFunction)(), SDL_Surface **renderingSurface)
 {
 	if (!danzeff_load()) {
-		VitaAux::error("Can't load Danzeff!!");
-		sprintf(dest, "Error");
+		VitaAux::dialog("Can't load Danzeff!!", "I can't load the keyboar, may be your installation is corrupt", true, true, true);
 	} else {
 		if (*renderingSurface == NULL) {
 			*renderingSurface = KBRenderingSurface;
@@ -353,6 +352,8 @@ void VitaAux::showIME(const char *title, char *dest, void (*PreRenderigFunction)
 		set_danzeff_debug_funtion(&VitaAux::debug);
 		unsigned char name_pos;
 		unsigned int key;
+		char dest_back[200];
+		strcpy(dest_back, dest);
 		int exit_osk;
 		exit_osk = 0;
 		SDL_Joystick *paddata;
@@ -361,11 +362,9 @@ void VitaAux::showIME(const char *title, char *dest, void (*PreRenderigFunction)
 			name_pos++;
 		if (SDL_NumJoysticks() >= 1) {
 			paddata = SDL_JoystickOpen(0);
-			//VitaAux::testJoystick(paddata);
 			if (paddata == NULL) {
 				VitaAux::dialog("Joystick can't open", "The joystick is not open property", true, false, true);
 			}
-			//SDL_JoystickEventState(SDL_ENABLE);
 			while (!exit_osk) {
 				SDL_JoystickUpdate();
 				key = danzeff_readInput(paddata);
@@ -400,7 +399,7 @@ void VitaAux::showIME(const char *title, char *dest, void (*PreRenderigFunction)
 				pru       = strlen(dest);
 				dest[pru] = '\0';
 			} else if (exit_osk == 2) {
-				//TODO cancela, go back to old name
+				strcpy(dest, dest_back);
 			}
 			SDL_JoystickClose(paddata);
 		} else {
@@ -410,9 +409,6 @@ void VitaAux::showIME(const char *title, char *dest, void (*PreRenderigFunction)
 		*renderingSurface = NULL;
 		danzeff_free();
 	}
-
-	VitaAux::debug("Ime result: ");
-	VitaAux::debug((char *)dest);
 }
 
 void VitaAux::delay(int a)
@@ -427,7 +423,6 @@ void VitaAux::delaya(int a)
 
 int VitaAux::debug(unsigned int number)
 {
-	//psvDebugScreenPrintf("Error: \e[31m%s\n\e[m", texto);
 	char *texto_new = new char[100];
 	sprintf(texto_new, "%u\0", number);
 	return debug(texto_new);
@@ -435,7 +430,6 @@ int VitaAux::debug(unsigned int number)
 
 int VitaAux::debug(unsigned long number)
 {
-	//psvDebugScreenPrintf("Error: \e[31m%s\n\e[m", texto);
 	char *texto_new = new char[100];
 	sprintf(texto_new, "%lu\0", number);
 	return debug(texto_new);
@@ -443,7 +437,6 @@ int VitaAux::debug(unsigned long number)
 
 int VitaAux::debug(double number)
 {
-	//psvDebugScreenPrintf("Error: \e[31m%s\n\e[m", texto);
 	char *texto_new = new char[100];
 	sprintf(texto_new, "%f\0", number);
 	return debug(texto_new);
@@ -451,7 +444,6 @@ int VitaAux::debug(double number)
 
 int VitaAux::debug(int number)
 {
-	//psvDebugScreenPrintf("Error: \e[31m%s\n\e[m", texto);
 	char *texto_new = new char[100];
 	sprintf(texto_new, "%i\0", number);
 	return debug(texto_new);
@@ -459,7 +451,6 @@ int VitaAux::debug(int number)
 
 int VitaAux::debug(long number)
 {
-	//psvDebugScreenPrintf("Error: \e[31m%s\n\e[m", texto);
 	char *texto_new = new char[100];
 	sprintf(texto_new, "%i\0", number);
 	return debug(texto_new);
@@ -467,7 +458,6 @@ int VitaAux::debug(long number)
 
 int VitaAux::debug(const char *texto)
 {
-	//psvDebugScreenPrintf("Error: \e[31m%s\n\e[m", texto);
 	char *texto_new = new char[100];
 	int i           = 0;
 	while (texto[i] != '\0' && i < 99) {
@@ -480,7 +470,6 @@ int VitaAux::debug(const char *texto)
 
 int VitaAux::debug(const char texto)
 {
-	//psvDebugScreenPrintf("Error: \e[31m%s\n\e[m", texto);
 	char *texto_new = new char[2];
 	texto_new[0]    = texto;
 	texto_new[1]    = '\0';
@@ -490,7 +479,6 @@ int VitaAux::debug(const char texto)
 int VitaAux::debug(char *texto)
 {
 	VitaAux::checkAndInitpsvDebugScreenInit();
-	//printf("\e[42m%s\n\e[m", texto);
 	printf(texto);
 
 	if (hdebug == 0)
@@ -554,7 +542,6 @@ int VitaAux::error(char *texto)
 
 int VitaAux::error(const char *texto)
 {
-	// psvDebugScreenPrintf("Error: \e[31m%s\n\e[m", texto);
 	char *texto_new = new char[100];
 	int i           = 0;
 	while (texto[i] != '\0' && i < 99) {

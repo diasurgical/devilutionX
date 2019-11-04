@@ -872,13 +872,9 @@ void DrawMouse()
 		MouseY -= view.y;
 	}
 #endif
-#else
-#ifdef USE_SDL1
-	VitaAux::processTouchEventToSDL();
-#endif
-#endif
 
 	DrawArt(MouseX, MouseY, &ArtCursor);
+#endif
 }
 
 /**

@@ -164,7 +164,6 @@ BOOL mainmenu_multi_player()
 #ifdef VITA
 BOOL mainmenu_set_vita_video_mode()
 {
-	VitaAux::debug("pasa");
 	int scalingMode = 2;
 	DvlVitaIntSetting("scaling mode", &scalingMode, false);
 	scalingMode++;

@@ -38,35 +38,35 @@ danzeff_state getStateFromJoystick(SDL_Joystick *joystick)
 	danzeff_state toReturn;
 	toReturn.buttons = 0;
 
-	if (SDL_JoystickGetButton(joystick, SDL_JOYBUTTON_UP))
+	if (SDL_JoystickGetButton(joystick, 0))
 		toReturn.buttons |= BUT_DUP;
-	if (SDL_JoystickGetButton(joystick, SDL_JOYBUTTON_RIGHT))
+	if (SDL_JoystickGetButton(joystick, 1))
 		toReturn.buttons |= BUT_DRIGHT;
-	if (SDL_JoystickGetButton(joystick, SDL_JOYBUTTON_DOWN))
+	if (SDL_JoystickGetButton(joystick, 2))
 		toReturn.buttons |= BUT_DDOWN;
-	if (SDL_JoystickGetButton(joystick, SDL_JOYBUTTON_LEFT))
+	if (SDL_JoystickGetButton(joystick, 3))
 		toReturn.buttons |= BUT_DLEFT;
 
 	//Digital
-	if (SDL_JoystickGetButton(joystick, SDL_JOYBUTTON_X))
+	if (SDL_JoystickGetButton(joystick, 6))
 		toReturn.buttons |= BUT_DOWN;
-	if (SDL_JoystickGetButton(joystick, SDL_JOYBUTTON_SQUARE))
+	if (SDL_JoystickGetButton(joystick, 7))
 		toReturn.buttons |= BUT_LEFT;
-	if (SDL_JoystickGetButton(joystick, SDL_JOYBUTTON_TRIANGLE))
+	if (SDL_JoystickGetButton(joystick, 8))
 		toReturn.buttons |= BUT_UP;
-	if (SDL_JoystickGetButton(joystick, SDL_JOYBUTTON_CIRCLE))
+	if (SDL_JoystickGetButton(joystick, 9))
 		toReturn.buttons |= BUT_RIGHT;
 
 	//L R
-	if (SDL_JoystickGetButton(joystick, SDL_JOYBUTTON_L))
+	if (SDL_JoystickGetButton(joystick, 4))
 		toReturn.buttons |= BUT_SWITCH;
-	if (SDL_JoystickGetButton(joystick, SDL_JOYBUTTON_R))
+	if (SDL_JoystickGetButton(joystick, 5))
 		toReturn.buttons |= BUT_SHIFT;
 
 	//Start Select
-	if (SDL_JoystickGetButton(joystick, SDL_JOYBUTTON_START))
+	if (SDL_JoystickGetButton(joystick, 11))
 		toReturn.buttons |= BUT_START;
-	if (SDL_JoystickGetButton(joystick, SDL_JOYBUTTON_SELECT))
+	if (SDL_JoystickGetButton(joystick, 10))
 		toReturn.buttons |= BUT_SELECT;
 
 	//Analog

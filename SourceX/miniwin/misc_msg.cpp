@@ -218,7 +218,7 @@ static bool directionMustBeKeys()
 	/*char temp[200];
 	sprintf(temp, "doomflag: %i, helpflag: %i, qtextflag: %i, stextflag: %i, msgflag: %i, talkflag: %i, dropGoldFlag: %i, spselflag: %i, PauseMode: %i, sgpCurrentMenu: %i", doomflag, helpflag, qtextflag, stextflag, msgflag, talkflag, dropGoldFlag, spselflag, PauseMode, sgpCurrentMenu ? 1 : 0);
 	VitaAux::debug(temp);*/
-	if (doomflag || helpflag || qtextflag || stextflag || msgflag || talkflag || dropGoldFlag || spselflag || PauseMode > 0 || sgpCurrentMenu) {
+	if (doomflag || helpflag || qtextflag || stextflag || msgflag || talkflag || dropGoldFlag || spselflag || PauseMode > 0 || sgpCurrentMenu || invflag) {
 		return true;
 	}
 	return false;
@@ -235,12 +235,6 @@ static int translate_controller_button_to_key(uint8_t sdlControllerButton)
 		return 'X';
 	case SDL_JOYBUTTON_TRIANGLE:
 		return 'I';
-	/*case SDL_JOYBUTTON_L:
-			return 'Q';
-		case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
-			return 'C';
-		case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
-			return 'I';*/
 	case SDL_JOYBUTTON_START:
 		return DVL_VK_ESCAPE;
 	case SDL_JOYBUTTON_SELECT:
@@ -476,6 +470,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		case SDL_JOYBUTTON_CIRCLE: // A on Switch
 		case SDL_JOYBUTTON_SQUARE: // X on Switch
 		case SDL_JOYBUTTON_START:
+		case SDL_JOYBUTTON_SELECT:
 			lpMsg->message = e.type == SDL_JOYBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
 			lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.button.button);
 			break;
@@ -535,24 +530,6 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 				lpMsg->wParam = keystate_for_mouse(0);
 			}
 			break;
-
-		/*case SDL_JOYBUTTON_LEFT: // L_JSTICK
-			lpMsg->message = e.type == SDL_JOYBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
-
-			lpMsg->wParam = DVL_VK_LEFT;
-			break;
-		case SDL_JOYBUTTON_UP: // U_JSTICK
-			lpMsg->message = e.type == SDL_JOYBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
-			lpMsg->wParam = DVL_VK_UP;
-			break;
-		case SDL_JOYBUTTON_RIGHT: // R_JSTICK
-			lpMsg->message = e.type == SDL_JOYBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
-			lpMsg->wParam = DVL_VK_RIGHT;
-			break;
-		case SDL_JOYBUTTON_DOWN: // D_JSTICK
-			lpMsg->message = e.type == SDL_JOYBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
-			lpMsg->wParam = DVL_VK_DOWN;
-			break;*/
 		default:
 			lpMsg->message = 0;
 		}
