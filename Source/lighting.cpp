@@ -503,7 +503,7 @@ void RotateRadius(int *x, int *y, int *dx, int *dy, int *lx, int *ly, int *bx, i
 
 void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 {
-	int x, y, v, xoff, yoff, mult, radius_block;
+	int x, y, v, xoff, yoff, radius_block;
 	int min_x, max_x, min_y, max_y;
 	int dist_x, dist_y, light_x, light_y, block_x, block_y, temp_x, temp_y;
 
@@ -555,10 +555,9 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 		dLight[nXPos][nYPos] = 0;
 	}
 
-	mult = xoff + 8 * yoff;
 	for (y = 0; y < min_y; y++) {
 		for (x = 1; x < max_x; x++) {
-			radius_block = lightblock[0][mult][y][x];
+			radius_block = lightblock[yoff][xoff][y][x];
 			if (radius_block < 128) {
 				temp_x = nXPos + x;
 				temp_y = nYPos + y;
@@ -572,10 +571,9 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 		}
 	}
 	RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &light_x, &light_y, &block_x, &block_y);
-	mult = xoff + 8 * yoff;
 	for (y = 0; y < max_y; y++) {
 		for (x = 1; x < max_x; x++) {
-			radius_block = lightblock[0][mult][y + block_y][x + block_x];
+			radius_block = lightblock[yoff][xoff][y + block_y][x + block_x];
 			if (radius_block < 128) {
 				temp_x = nXPos + y;
 				temp_y = nYPos - x;
@@ -589,10 +587,9 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 		}
 	}
 	RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &light_x, &light_y, &block_x, &block_y);
-	mult = xoff + 8 * yoff;
 	for (y = 0; y < max_y; y++) {
 		for (x = 1; x < min_x; x++) {
-			radius_block = lightblock[0][mult][y + block_y][x + block_x];
+			radius_block = lightblock[yoff][xoff][y + block_y][x + block_x];
 			if (radius_block < 128) {
 				temp_x = nXPos - x;
 				temp_y = nYPos - y;
@@ -606,10 +603,9 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 		}
 	}
 	RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &light_x, &light_y, &block_x, &block_y);
-	mult = xoff + 8 * yoff;
 	for (y = 0; y < min_y; y++) {
 		for (x = 1; x < min_x; x++) {
-			radius_block = lightblock[0][mult][y + block_y][x + block_x];
+			radius_block = lightblock[yoff][xoff][y + block_y][x + block_x];
 			if (radius_block < 128) {
 				temp_x = nXPos - y;
 				temp_y = nYPos + x;
