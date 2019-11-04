@@ -390,7 +390,7 @@ void SetSpell()
 		ClearPanel();
 		plr[myplr]._pRSpell = pSpell;
 		plr[myplr]._pRSplType = pSplType;
-		drawpanflag = 255;
+		force_redraw = 255;
 	}
 }
 
@@ -434,7 +434,7 @@ void ToggleSpell(int slot)
 	if (spells & (__int64)1 << (plr[myplr]._pSplHotKey[slot] - 1)) {
 		plr[myplr]._pRSpell = plr[myplr]._pSplHotKey[slot];
 		plr[myplr]._pRSplType = plr[myplr]._pSplTHotKey[slot];
-		drawpanflag = 255;
+		force_redraw = 255;
 	}
 }
 
@@ -1845,7 +1845,7 @@ void CheckSBook()
 			}
 			plr[myplr]._pRSpell = sn;
 			plr[myplr]._pRSplType = st;
-			drawpanflag = 255;
+			force_redraw = 255;
 		}
 	}
 	if (MouseX >= RIGHT_PANEL + 7 && MouseX < RIGHT_PANEL + 313 && MouseY >= 320 && MouseY < 349) { /// BUGFIX: change `< 313` to `< 311`
@@ -2120,7 +2120,7 @@ void control_type_message()
 		talkbtndown[i] = FALSE;
 	}
 	sgbPlrTalkTbl = PANEL_HEIGHT + 16;
-	drawpanflag = 255;
+	force_redraw = 255;
 	sgbTalkSavePos = sgbNextTalkSave;
 }
 
@@ -2128,7 +2128,7 @@ void control_reset_talk()
 {
 	talkflag = FALSE;
 	sgbPlrTalkTbl = 0;
-	drawpanflag = 255;
+	force_redraw = 255;
 }
 
 BOOL control_talk_last_key(int vkey)

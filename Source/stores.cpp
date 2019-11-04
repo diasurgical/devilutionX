@@ -1810,7 +1810,7 @@ void TakePlrsMoney(int cost)
 			}
 		}
 	}
-	drawpanflag = 255;
+	force_redraw = 255;
 	if (cost > 0) {
 		for (i = 0; i < plr[myplr]._pNumInv && cost > 0; i++) {
 			if (plr[myplr].InvList[i]._itype == ITYPE_GOLD && plr[myplr].InvList[i]._ivalue != GOLD_MAX_LIMIT) {
@@ -2557,7 +2557,7 @@ void S_TalkEnter()
 
 	sn = 0;
 	for (i = 0; i < 16; i++) {
-		if (quests[i]._qlevel == 2 && ((DWORD *)&Qtalklist[talker])[i] != -1 && quests[i]._qlog)
+		if (quests[i]._qactive == 2 && ((DWORD *)&Qtalklist[talker])[i] != -1 && quests[i]._qlog)
 			sn++;
 	}
 	if (sn > 6) {
@@ -2576,7 +2576,7 @@ void S_TalkEnter()
 	}
 
 	for (i = 0; i < 16; i++) {
-		if (quests[i]._qlevel == 2 && ((DWORD *)&Qtalklist[talker])[i] != -1 && quests[i]._qlog) {
+		if (quests[i]._qactive == 2 && ((DWORD *)&Qtalklist[talker])[i] != -1 && quests[i]._qlog) {
 			if (sn == stextsel) {
 				InitQTextMsg(((DWORD *)&Qtalklist[talker])[i]);
 			}

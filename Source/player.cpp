@@ -1897,7 +1897,7 @@ void DropHalfPlayersGold(int pnum)
 			}
 		}
 	}
-	drawpanflag = 255;
+	force_redraw = 255;
 	if (hGold > 0) {
 		for (i = 0; i < plr[pnum]._pNumInv && hGold > 0; i++) {
 			if (plr[pnum].InvList[i]._itype == ITYPE_GOLD && plr[pnum].InvList[i]._ivalue != GOLD_MAX_LIMIT) {
@@ -2867,7 +2867,7 @@ BOOL PM_DoSpell(int pnum)
 				        & (unsigned __int64)1 << (plr[pnum]._pRSpell - 1))) {
 					plr[pnum]._pRSpell = SPL_INVALID;
 					plr[pnum]._pRSplType = RSPLTYPE_INVALID;
-					drawpanflag = 255;
+					force_redraw = 255;
 				}
 			}
 
@@ -2876,7 +2876,7 @@ BOOL PM_DoSpell(int pnum)
 				        & (unsigned __int64)1 << (plr[pnum]._pRSpell - 1))) {
 					plr[pnum]._pRSpell = SPL_INVALID;
 					plr[pnum]._pRSplType = RSPLTYPE_INVALID;
-					drawpanflag = 255;
+					force_redraw = 255;
 				}
 			}
 		}

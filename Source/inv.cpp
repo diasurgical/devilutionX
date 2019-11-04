@@ -902,7 +902,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 		if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_STAFF && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iSpell != 0 && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iCharges > 0) {
 			plr[pnum]._pRSpell = plr[pnum].InvBody[INVLOC_HAND_LEFT]._iSpell;
 			plr[pnum]._pRSplType = RSPLTYPE_CHARGES;
-			drawpanflag = 255;
+			force_redraw = 255;
 		}
 		break;
 	case ILOC_ARMOR:
@@ -1306,7 +1306,7 @@ void RemoveInvItem(int pnum, int iv)
 				plr[pnum]._pRSpell = SPL_INVALID;
 			}
 
-			drawpanflag = 255;
+			force_redraw = 255;
 		}
 	}
 }
@@ -1328,7 +1328,7 @@ void RemoveSpdBarItem(int pnum, int iv)
 			}
 		}
 	}
-	drawpanflag = 255;
+	force_redraw = 255;
 }
 
 void CheckInvItem()
@@ -2212,7 +2212,7 @@ int CalculateGold(int pnum)
 	for (i = 0; i < MAXBELTITEMS; i++) {
 		if (plr[pnum].SpdList[i]._itype == ITYPE_GOLD) {
 			gold += plr[pnum].SpdList[i]._ivalue;
-			drawpanflag = 255;
+			force_redraw = 255;
 		}
 	}
 	for (i = 0; i < plr[pnum]._pNumInv; i++) {

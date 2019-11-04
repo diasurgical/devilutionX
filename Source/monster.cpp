@@ -598,15 +598,15 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int unpackfilesize)
 		}
 	}
 
-	if (uniqindex == 3) {
+	if (uniqindex == UMT_SNOTSPIL) {
 		xp = 2 * setpc_x + 24;
 		yp = 2 * setpc_y + 28;
 	}
-	if (uniqindex == 8) {
+	if (uniqindex == UMT_WARLORD) {
 		xp = 2 * setpc_x + 22;
 		yp = 2 * setpc_y + 23;
 	}
-	if (uniqindex == 2) {
+	if (uniqindex == UMT_ZHAR) {
 		zharflag = TRUE;
 		for (i = 0; i < themeCount; i++) {
 			if (i == zharlib && zharflag == TRUE) {
@@ -617,37 +617,37 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int unpackfilesize)
 		}
 	}
 	if (gbMaxPlayers == 1) {
-		if (uniqindex == 4) {
+		if (uniqindex == UMT_LAZURUS) {
 			xp = 32;
 			yp = 46;
 		}
-		if (uniqindex == 5) {
+		if (uniqindex == UMT_RED_VEX) {
 			xp = 40;
 			yp = 45;
 		}
-		if (uniqindex == 6) {
+		if (uniqindex == UMT_BLACKJADE) {
 			xp = 38;
 			yp = 49;
 		}
-		if (uniqindex == 1) {
+		if (uniqindex == UMT_SKELKING) {
 			xp = 35;
 			yp = 47;
 		}
 	} else {
-		if (uniqindex == 4) {
+		if (uniqindex == UMT_LAZURUS) {
 			xp = 2 * setpc_x + 19;
 			yp = 2 * setpc_y + 22;
 		}
-		if (uniqindex == 5) {
+		if (uniqindex == UMT_RED_VEX) {
 			xp = 2 * setpc_x + 21;
 			yp = 2 * setpc_y + 19;
 		}
-		if (uniqindex == 6) {
+		if (uniqindex == UMT_BLACKJADE) {
 			xp = 2 * setpc_x + 21;
 			yp = 2 * setpc_y + 25;
 		}
 	}
-	if (uniqindex == 9) {
+	if (uniqindex == UMT_BUTCHER) {
 		done = FALSE;
 		for (yp = 0; yp < MAXDUNY && !done; yp++) {
 			for (xp = 0; xp < MAXDUNX && !done; xp++) {

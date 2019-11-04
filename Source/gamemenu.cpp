@@ -100,7 +100,7 @@ void gamemenu_new_game(BOOL bActivate)
 	}
 
 	deathflag = FALSE;
-	drawpanflag = 255;
+	force_redraw = 255;
 	scrollrt_draw_game_screen(TRUE);
 	gbRunGame = FALSE;
 	gamemenu_off();
@@ -120,13 +120,13 @@ void gamemenu_load_game(BOOL bActivate)
 	gamemenu_off();
 	SetCursor_(CURSOR_NONE);
 	InitDiabloMsg(EMSG_LOADING);
-	drawpanflag = 255;
+	force_redraw = 255;
 	DrawAndBlit();
 	LoadGame(FALSE);
 	ClrDiabloMsg();
 	PaletteFadeOut(8);
 	deathflag = FALSE;
-	drawpanflag = 255;
+	force_redraw = 255;
 	DrawAndBlit();
 	PaletteFadeIn(8);
 	SetCursor_(CURSOR_HAND);

@@ -79,7 +79,7 @@ void init_archives()
 #ifdef SPAWN
 	diabdat_mpq = init_test_access(diabdat_mpq_path, "spawn.mpq", "DiabloSpawn", 1000, FS_PC);
 #else
-	diabdat_mpq = init_test_access(diabdat_mpq_path, "diabdat.mpq", "DiabloCD", 1000, FS_PC);
+	diabdat_mpq = init_test_access(diabdat_mpq_path, "diabdat.mpq", "DiabloCD", 1000, FS_CD);
 #endif
 	if (!SFileOpenFile("ui_art\\title.pcx", &fh)) {
 #ifndef VITA
@@ -138,7 +138,7 @@ LRESULT __stdcall MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 	case WM_ERASEBKGND:
 		return 0;
 	case WM_PAINT:
-		drawpanflag = 255;
+		force_redraw = 255;
 		break;
 	case WM_CLOSE:
 		return 0;

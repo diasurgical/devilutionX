@@ -120,7 +120,7 @@ extern BOOL gbLoadGame;
 extern HINSTANCE ghInst;
 extern int DebugMonsters[10];
 extern BOOLEAN cineflag;
-extern int drawpanflag;
+extern int force_redraw;
 extern BOOL visiondebug;
 extern BOOL scrollflag; /* unused */
 extern BOOL light4flag;

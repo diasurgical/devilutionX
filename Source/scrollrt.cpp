@@ -1142,8 +1142,8 @@ void scrollrt_draw_game_screen(BOOL draw_cursor)
 {
 	int hgt;
 
-	if (drawpanflag == 255) {
-		drawpanflag = 0;
+	if (force_redraw == 255) {
+		force_redraw = 0;
 		hgt = SCREEN_HEIGHT;
 	} else {
 		hgt = 0;
@@ -1176,7 +1176,7 @@ void DrawAndBlit()
 		return;
 	}
 
-	if (SCREEN_WIDTH > PANEL_WIDTH || SCREEN_HEIGHT > VIEWPORT_HEIGHT + PANEL_HEIGHT || drawpanflag == 255) {
+	if (SCREEN_WIDTH > PANEL_WIDTH || SCREEN_HEIGHT > VIEWPORT_HEIGHT + PANEL_HEIGHT || force_redraw == 255) {
 		drawhpflag = TRUE;
 		drawmanaflag = TRUE;
 		drawbtnflag = TRUE;
@@ -1190,7 +1190,7 @@ void DrawAndBlit()
 		hgt = VIEWPORT_HEIGHT;
 	}
 
-	drawpanflag = 0;
+	force_redraw = 0;
 
 	lock_buf(0);
 	DrawView(ViewX, ViewY);

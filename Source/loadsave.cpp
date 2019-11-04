@@ -645,7 +645,7 @@ void LoadItemData(ItemStruct *pItem)
 	CopyInt(tbuff, &pItem->_iAnimFrame);
 	CopyInt(tbuff, &pItem->_iAnimWidth);
 	CopyInt(tbuff, &pItem->_iAnimWidth2);
-	CopyInt(tbuff, &pItem->_isin);
+	CopyInt(tbuff, &pItem->_iDelFlag);
 	CopyChar(tbuff, &pItem->_iSelFlag);
 	tbuff += 3; // Alignment
 	CopyInt(tbuff, &pItem->_iPostDraw);
@@ -1363,7 +1363,7 @@ void SaveItem(ItemStruct *pItem)
 	CopyInt(&pItem->_iAnimFrame, tbuff);
 	CopyInt(&pItem->_iAnimWidth, tbuff);
 	CopyInt(&pItem->_iAnimWidth2, tbuff);
-	CopyInt(&pItem->_isin, tbuff);
+	CopyInt(&pItem->_iDelFlag, tbuff);
 	CopyChar(&pItem->_iSelFlag, tbuff);
 	tbuff += 3; // Alignment
 	CopyInt(&pItem->_iPostDraw, tbuff);

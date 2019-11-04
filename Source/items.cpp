@@ -453,7 +453,7 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 	    && !(spl & ((unsigned __int64)1 << (plr[p]._pRSpell - 1)))) {
 		plr[p]._pRSpell = SPL_INVALID;
 		plr[p]._pRSplType = RSPLTYPE_INVALID;
-		drawpanflag = 255;
+		force_redraw = 255;
 	}
 
 	plr[p]._pISplLvlAdd = spllvladd;
@@ -627,7 +627,7 @@ void CalcPlrScrolls(int p)
 		if (!(plr[p]._pScrlSpells & 1 << (plr[p]._pRSpell - 1))) {
 			plr[p]._pRSpell = SPL_INVALID;
 			plr[p]._pRSplType = RSPLTYPE_INVALID;
-			drawpanflag = 255;
+			force_redraw = 255;
 		}
 	}
 }

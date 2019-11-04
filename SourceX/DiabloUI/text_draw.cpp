@@ -32,10 +32,13 @@ int AlignXOffset(int flags, const SDL_Rect &dest, int w)
 
 } // namespace
 
-void DrawTTF(const char *text, const SDL_Rect &rect, int flags,
+void DrawTTF(const char *text, const SDL_Rect &rectIn, int flags,
     const SDL_Color &text_color, const SDL_Color &shadow_color,
     TtfSurfaceCache **render_cache)
 {
+	SDL_Rect rect(rectIn);
+	if(! (flags & UIS_CENTER))
+		rect.x += PANEL_LEFT;
 	if (font == nullptr || text == nullptr || *text == '\0')
 		return;
 	if (*render_cache == nullptr) {
