@@ -91,7 +91,8 @@ void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(i
 			void (*preRenderFuntionPt)() = &preRenderFuntion;
 			void (*postRenderFuntionPt)() = &postRenderFuntion;
 			VitaAux::showIME("Enter name", items[i].edit.value, (*preRenderFuntionPt), (*postRenderFuntionPt), &keyBoardArt.surface);
-#endif SDL_StartTextInput();
+#endif
+			SDL_StartTextInput();
 			UiTextInput = items[i].edit.value;
 			UiTextInputLen = items[i].edit.max_length;
 		}
@@ -422,11 +423,9 @@ void UiInitialize()
 	LoadUiGFX();
 	LoadArtFonts();
 	if (ArtCursor.surface != nullptr) {
-#ifndef vita
 		if (SDL_ShowCursor(SDL_DISABLE) <= -1) {
 			ErrSdl();
 		}
-#endif
 	}
 }
 

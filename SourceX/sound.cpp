@@ -201,7 +201,7 @@ void music_start(int nTrack)
 {
 	BOOL success;
 
-	assert((DWORD) nTrack < NUM_MUSIC);
+	assert((DWORD)nTrack < NUM_MUSIC);
 	music_stop();
 	if (gbMusicOn) {
 		success = SFileOpenFile(sgszMusicTracks[nTrack], &sgpMusicTrack);
@@ -214,7 +214,7 @@ void music_start(int nTrack)
 
 			musicRw = SDL_RWFromConstMem(musicBuffer, bytestoread);
 			if (musicRw == NULL) {
-				//ErrSdl();
+				ErrSdl();
 			}
 			music = Mix_LoadMUSType_RW(musicRw, MUS_NONE, 1);
 			Mix_VolumeMusic(MIX_MAX_VOLUME - MIX_MAX_VOLUME * sglMusicVolume / VOLUME_MIN);

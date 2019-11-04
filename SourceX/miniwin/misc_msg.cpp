@@ -40,6 +40,8 @@ static int64_t currentTime = 0; // used to update joystick mouse once per frame
 static int64_t lastTime = 0;
 static void ScaleJoystickAxes(float *x, float *y, float deadzone);
 static void HandleJoystickAxes();
+
+bool l_triggerPressed = false;
 #endif
 
 static std::deque<MSG> message_queue;
@@ -209,6 +211,19 @@ static int translate_sdl_key(SDL_Keysym key)
 	}
 }
 
+#ifdef VITA
+
+static bool directionMustBeKeys()
+{
+	/*char temp[200];
+	sprintf(temp, "doomflag: %i, helpflag: %i, qtextflag: %i, stextflag: %i, msgflag: %i, talkflag: %i, dropGoldFlag: %i, spselflag: %i, PauseMode: %i, sgpCurrentMenu: %i", doomflag, helpflag, qtextflag, stextflag, msgflag, talkflag, dropGoldFlag, spselflag, PauseMode, sgpCurrentMenu ? 1 : 0);
+	VitaAux::debug(temp);*/
+	if (doomflag || helpflag || qtextflag || stextflag || msgflag || talkflag || dropGoldFlag || spselflag || PauseMode > 0 || sgpCurrentMenu) {
+		return true;
+	}
+	return false;
+}
+
 static int translate_controller_button_to_key(uint8_t sdlControllerButton)
 {
 	switch (sdlControllerButton) {
@@ -219,29 +234,57 @@ static int translate_controller_button_to_key(uint8_t sdlControllerButton)
 	case SDL_JOYBUTTON_SQUARE:
 		return 'X';
 	case SDL_JOYBUTTON_TRIANGLE:
-		return DVL_VK_RETURN;
-	case SDL_JOYBUTTON_L:
-		return 'Q';
-	/*case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
-		return 'C';
-	case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
-		return 'I';*/
+		return 'I';
+	/*case SDL_JOYBUTTON_L:
+			return 'Q';
+		case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
+			return 'C';
+		case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
+			return 'I';*/
 	case SDL_JOYBUTTON_START:
 		return DVL_VK_ESCAPE;
 	case SDL_JOYBUTTON_SELECT:
 		return DVL_VK_TAB;
-	case SDL_JOYBUTTON_LEFT:
-		return DVL_VK_LEFT;
-	case SDL_JOYBUTTON_RIGHT:
-		return DVL_VK_RIGHT;
-	case SDL_JOYBUTTON_UP:
-		return DVL_VK_UP;
-	case SDL_JOYBUTTON_DOWN:
-		return DVL_VK_DOWN;
-	default:
-		return 0;
 	}
+	if (!directionMustBeKeys()) { //Not in menu
+		if (!l_triggerPressed) {
+			switch (sdlControllerButton) {
+			case SDL_JOYBUTTON_LEFT:
+				return '1';
+			case SDL_JOYBUTTON_RIGHT:
+				return '4';
+			case SDL_JOYBUTTON_UP:
+				return '2';
+			case SDL_JOYBUTTON_DOWN:
+				return '3';
+			}
+		} else {
+			switch (sdlControllerButton) {
+			case SDL_JOYBUTTON_LEFT:
+				return '5';
+			case SDL_JOYBUTTON_RIGHT:
+				return '8';
+			case SDL_JOYBUTTON_UP:
+				return '6';
+			case SDL_JOYBUTTON_DOWN:
+				return '7';
+			}
+		}
+	} else {
+		switch (sdlControllerButton) {
+		case SDL_JOYBUTTON_LEFT:
+			return DVL_VK_LEFT;
+		case SDL_JOYBUTTON_RIGHT:
+			return DVL_VK_RIGHT;
+		case SDL_JOYBUTTON_UP:
+			return DVL_VK_UP;
+		case SDL_JOYBUTTON_DOWN:
+			return DVL_VK_DOWN;
+		}
+	}
+	return 0;
 }
+#endif
 
 static WPARAM keystate_for_mouse(WPARAM ret)
 {
@@ -427,9 +470,11 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	case SDL_JOYBUTTONDOWN:
 	case SDL_JOYBUTTONUP:
 		switch (e.button.button) {
+		case SDL_JOYBUTTON_L: {
+			l_triggerPressed = e.type == SDL_JOYBUTTONUP ? false : true;
+		}
 		case SDL_JOYBUTTON_CIRCLE: // A on Switch
 		case SDL_JOYBUTTON_SQUARE: // X on Switch
-		case SDL_JOYBUTTON_L:
 		case SDL_JOYBUTTON_START:
 			lpMsg->message = e.type == SDL_JOYBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
 			lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.button.button);
@@ -438,13 +483,20 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		case SDL_JOYBUTTON_DOWN:
 		case SDL_JOYBUTTON_LEFT:
 		case SDL_JOYBUTTON_RIGHT:
-			lpMsg->message = e.type == SDL_JOYBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
-			lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.button.button);
-			if (lpMsg->message == DVL_WM_KEYDOWN) {
-				if (!stextflag) // prevent walking while in dialog mode
-					movements(lpMsg->wParam);
+			if (directionMustBeKeys()) { // In menu
+				lpMsg->message = e.type == SDL_JOYBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
+				lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.button.button);
+				if (lpMsg->message == DVL_WM_KEYDOWN) {
+					if (!stextflag) // prevent walking while in dialog mode
+						movements(lpMsg->wParam);
+				}
+			} else {
+				lpMsg->message = e.type == SDL_JOYBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
+				lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.button.button);
+				break;
 			}
 			break;
+
 		case SDL_JOYBUTTON_X: // B on Switch
 			lpMsg->message = e.type == SDL_JOYBUTTONUP ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
 			lpMsg->wParam = (DWORD)translate_controller_button_to_key(e.button.button);

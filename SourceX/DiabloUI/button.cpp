@@ -35,11 +35,9 @@ bool HandleMouseEventButton(const SDL_Event &event, UiButton *button)
 		return false;
 	switch (event.type) {
 	case SDL_MOUSEBUTTONUP:
-		VitaAux::debug("Mouse up in button");
 		button->action();
 		return true;
 	case SDL_MOUSEBUTTONDOWN:
-		VitaAux::debug("Mouse down in button");
 		button->pressed = true;
 		return true;
 	default:
