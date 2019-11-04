@@ -513,6 +513,7 @@ constexpr auto DVL_WM_PAINT = 0x000F;
 constexpr auto DVL_WM_CLOSE = 0x0010;
 constexpr auto DVL_WM_QUERYENDSESSION = 0x0011;
 constexpr auto DVL_WM_ERASEBKGND = 0x0014;
+constexpr auto DVL_WM_MOUSEHOVER = 0x02A1;
 constexpr auto DVL_WM_QUERYNEWPALETTE = 0x030F;
 constexpr auto DVL_WM_PALETTECHANGED = 0x0311;
 

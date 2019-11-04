@@ -19,9 +19,14 @@ namespace dvl {
 static std::deque<MSG> message_queue;
 
 bool mouseWarping = false;
+int mouseWarpingX;
+int mouseWarpingY;
 
 void SetCursorPos(int X, int Y)
 {
+	mouseWarpingX = X;
+	mouseWarpingY = Y;
+
 #ifndef USE_SDL1
 	if (renderer) {
 		SDL_Rect view;
@@ -37,7 +42,7 @@ void SetCursorPos(int X, int Y)
 #endif
 
 	mouseWarping = true;
-	SDL_WarpMouseInWindow(nullptr, X, Y);
+	SDL_WarpMouseInWindow(window, X, Y);
 }
 
 // Moves the mouse to the first attribute "+" button.
@@ -293,8 +298,6 @@ void SetMouseLMBMessage(const SDL_Event &event, LPMSG lpMsg)
 // Moves the mouse to the first inventory slot.
 void FocusOnInventory()
 {
-	if (!invflag)
-		return;
 	SetCursorPos(InvRect[25].X + (INV_SLOT_SIZE_PX / 2), InvRect[25].Y - (INV_SLOT_SIZE_PX / 2));
 }
 
@@ -551,6 +554,16 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	case SDL_WINDOWEVENT:
 		if (e.window.event == SDL_WINDOWEVENT_CLOSE) {
 			lpMsg->message = DVL_WM_QUERYENDSESSION;
+		} else if (e.window.event == SDL_WINDOWEVENT_ENTER) {
+			lpMsg->message = DVL_WM_MOUSEHOVER;
+			// Bug in SDL, SDL_WarpMouseInWindow doesn't emit SDL_MOUSEMOTION
+			// and SDL_GetMouseState gives previous location if mouse was
+			// outside window (observed on Ubuntu 19.04)
+			if (mouseWarping) {
+				MouseX = mouseWarpingX;
+				MouseY = mouseWarpingY;
+				mouseWarping = false;
+			}
 		} else {
 			return false_avail();
 		}

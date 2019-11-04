@@ -503,21 +503,21 @@ void plrctrls_after_check_curs_move()
 	// check for monsters first, then items, then towners.
 	if (sgbControllerActive) {
 		// Clear focuse set by cursor
-		if (!invflag) {
-			*infostr = '\0';
-			ClearPanel();
-		}
 		pcursplr = -1;
 		pcursmonst = -1;
 		pcursitem = -1;
 		pcursobj = -1;
+		if (!invflag) {
+			*infostr = '\0';
+			ClearPanel();
 
-		// TODO target players if !FriendlyMode
-		if (leveltype != DTYPE_TOWN)
-			CheckMonstersNearby();
-		else
-			CheckTownersNearby();
-		CheckItemsNearby();
+			// TODO target players if !FriendlyMode
+			if (leveltype != DTYPE_TOWN)
+				CheckMonstersNearby();
+			else
+				CheckTownersNearby();
+			CheckItemsNearby();
+		}
 	}
 }
 

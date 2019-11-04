@@ -1158,7 +1158,7 @@ void DrawInfoBox()
 	} else {
 		if (pcursitem != -1)
 			GetItemStr(pcursitem);
-		if (pcursobj != -1)
+		else if (pcursobj != -1)
 			GetObjectStr(pcursobj);
 		if (pcursmonst != -1) {
 			if (leveltype != DTYPE_TOWN) {
@@ -1171,7 +1171,7 @@ void DrawInfoBox()
 				} else {
 					PrintMonstHistory(monster[pcursmonst].MType->mtype);
 				}
-			} else {
+			} else if (pcursitem == -1) {
 				strcpy(infostr, towner[pcursmonst]._tName);
 			}
 		}
