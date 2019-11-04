@@ -405,7 +405,8 @@ void DrawInvBelt()
 				colour = ICOL_BLUE;
 			if (!plr[myplr].SpdList[i]._iStatFlag)
 				colour = ICOL_RED;
-			CelBlitOutline(colour, InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X, InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, pCursCels, frame, frame_width);
+			if (!sgbControllerActive || invflag)
+				CelBlitOutline(colour, InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X, InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, pCursCels, frame, frame_width);
 		}
 
 		if (plr[myplr].SpdList[i]._iStatFlag)

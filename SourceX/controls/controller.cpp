@@ -11,9 +11,6 @@ ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event)
 	ControllerButtonEvent result{ ControllerButton::NONE, false };
 	switch (event.type) {
 #ifndef USE_SDL1
-	case SDL_CONTROLLERAXISMOTION:
-		result.up = event.caxis.value == 0;
-		break;
 	case SDL_CONTROLLERBUTTONUP:
 #endif
 	case SDL_JOYBUTTONUP:

@@ -102,7 +102,11 @@ static void scrollrt_draw_cursor_item()
 
 	assert(! sgdwCursWdt);
 
-	if (pcurs <= 0 || cursW == 0 || cursH == 0 || (sgbControllerActive && !invflag && !chrflag)) {
+	if (pcurs <= 0 || cursW == 0 || cursH == 0) {
+		return;
+	}
+
+	if (sgbControllerActive && !invflag && (!chrflag || plr[myplr]._pStatPts <= 0)) {
 		return;
 	}
 

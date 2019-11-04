@@ -190,7 +190,7 @@ void SetEvent(HANDLE hEvent);
 void ResetEvent(HANDLE hEvent);
 int WINAPI WaitForSingleObject(HANDLE hHandle, DWORD dwMilliseconds);
 
-WINBOOL WINAPI SetCursorPos(int X, int Y);
+void SetCursorPos(int X, int Y);
 
 SHORT WINAPI GetAsyncKeyState(int vKey);
 

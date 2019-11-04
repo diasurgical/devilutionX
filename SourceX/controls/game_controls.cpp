@@ -117,6 +117,9 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 	if (CurrentGameController() != nullptr && event.type >= SDL_JOYAXISMOTION && event.type <= SDL_JOYBUTTONUP) {
 		return true;
 	}
+	if (event.type == SDL_CONTROLLERAXISMOTION) {
+		return true; // Ignore releasing the trigger buttons
+	}
 #endif
 
 	return false;

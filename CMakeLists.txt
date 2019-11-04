@@ -218,7 +218,6 @@ set(devilutionx_SRCS
   SourceX/miniwin/misc.cpp
   SourceX/miniwin/misc_io.cpp
   SourceX/miniwin/misc_msg.cpp
-  SourceX/miniwin/misc_dx.cpp
   SourceX/miniwin/rand.cpp
   SourceX/miniwin/thread.cpp
   SourceX/miniwin/dsound.cpp

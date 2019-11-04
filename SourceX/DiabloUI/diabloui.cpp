@@ -778,6 +778,9 @@ bool UiItemMouseEvents(SDL_Event *event, UiItem *items, std::size_t size)
 
 void DrawMouse()
 {
+	if (sgbControllerActive)
+		return;
+
 	SDL_GetMouseState(&MouseX, &MouseY);
 
 #ifndef USE_SDL1
