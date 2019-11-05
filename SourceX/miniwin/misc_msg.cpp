@@ -40,6 +40,44 @@ void SetCursorPos(int X, int Y)
 	SDL_WarpMouseInWindow(nullptr, X, Y);
 }
 
+// Moves the mouse to the first attribute "+" button.
+void FocusOnCharInfo()
+{
+	if (!chrflag || plr[myplr]._pStatPts <= 0)
+		return;
+
+	// Find the first incrementable stat.
+	int pc = plr[myplr]._pClass;
+	int stat = -1;
+	for (int i = 4; i >= 0; --i) {
+		switch (i) {
+		case ATTRIB_STR:
+			if (plr[myplr]._pBaseStr >= MaxStats[pc][ATTRIB_STR])
+				continue;
+			break;
+		case ATTRIB_MAG:
+			if (plr[myplr]._pBaseMag >= MaxStats[pc][ATTRIB_MAG])
+				continue;
+			break;
+		case ATTRIB_DEX:
+			if (plr[myplr]._pBaseDex >= MaxStats[pc][ATTRIB_DEX])
+				continue;
+			break;
+		case ATTRIB_VIT:
+			if (plr[myplr]._pBaseVit >= MaxStats[pc][ATTRIB_VIT])
+				continue;
+			break;
+		default:
+			continue;
+		}
+		stat = i;
+	}
+	if (stat == -1)
+		return;
+	const auto &rect = ChrBtnsRect[stat];
+	SetCursorPos(rect.x + (rect.w / 2), rect.y + (rect.h / 2));
+}
+
 static int translate_sdl_key(SDL_Keysym key)
 {
 	// ref: https://wiki.libsdl.org/SDL_Keycode
@@ -260,44 +298,6 @@ void FocusOnInventory()
 	SetCursorPos(InvRect[25].X + (INV_SLOT_SIZE_PX / 2), InvRect[25].Y - (INV_SLOT_SIZE_PX / 2));
 }
 
-// Moves the mouse to the first attribute "+" button.
-void FocusOnCharInfo()
-{
-	if (!chrflag || plr[myplr]._pStatPts == 0)
-		return;
-
-	// Find the first incrementable stat.
-	int pc = plr[myplr]._pClass;
-	int stat = -1;
-	for (int i = 4; i >= 0; --i) {
-		switch (i) {
-		case ATTRIB_STR:
-			if (plr[myplr]._pBaseStr >= MaxStats[pc][ATTRIB_STR])
-				continue;
-			break;
-		case ATTRIB_MAG:
-			if (plr[myplr]._pBaseMag >= MaxStats[pc][ATTRIB_MAG])
-				continue;
-			break;
-		case ATTRIB_DEX:
-			if (plr[myplr]._pBaseDex >= MaxStats[pc][ATTRIB_DEX])
-				continue;
-			break;
-		case ATTRIB_VIT:
-			if (plr[myplr]._pBaseVit >= MaxStats[pc][ATTRIB_VIT])
-				continue;
-			break;
-		default:
-			continue;
-		}
-		stat = i;
-	}
-	if (stat == -1)
-		return;
-	const auto &rect = ChrBtnsRect[stat];
-	SetCursorPos(rect.x + (rect.w / 2), rect.y + (rect.h / 2));
-}
-
 void StoreSpellCoords()
 {
 	constexpr int START_X = 20;
@@ -443,26 +443,29 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		case GameActionType::TOGGLE_QUICK_SPELL_MENU:
 			lpMsg->message = DVL_WM_KEYDOWN;
 			lpMsg->wParam = 'S';
+			chrflag = false;
+			questlog = false;
+			invflag = false;
+			sbookflag = false;
 			StoreSpellCoords();
 			break;
 		case GameActionType::TOGGLE_CHARACTER_INFO:
-			questlog = false;
 			chrflag = !chrflag;
-			if (chrflag)
+			if (chrflag) {
+				questlog = false;
+				spselflag = false;
 				FocusOnCharInfo();
-			else
-				FocusOnInventory();
+			}
 			break;
 		case GameActionType::TOGGLE_INVENTORY:
-			if (pcurs >= CURSOR_FIRSTITEM && invflag)
-				// Drop item so that it does not get destroyed.
-				DropItemBeforeTrig();
-			sbookflag = false;
 			invflag = !invflag;
-			if (invflag)
+			if (invflag) {
+				sbookflag = false;
+				spselflag = false;
 				FocusOnInventory();
-			else
-				FocusOnCharInfo();
+			} else {
+				BlurInventory();
+			}
 			break;
 		case GameActionType::SEND_KEY:
 			lpMsg->message = action.send_key.up ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;

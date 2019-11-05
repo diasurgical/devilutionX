@@ -748,6 +748,9 @@ void NextPlrLevel(int pnum)
 	if (pnum == myplr) {
 		drawmanaflag = TRUE;
 	}
+
+	if (sgbControllerActive)
+		FocusOnCharInfo();
 }
 
 void AddPlrExperience(int pnum, int lvl, int exp)

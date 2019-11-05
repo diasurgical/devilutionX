@@ -191,6 +191,7 @@ void ResetEvent(HANDLE hEvent);
 int WINAPI WaitForSingleObject(HANDLE hHandle, DWORD dwMilliseconds);
 
 void SetCursorPos(int X, int Y);
+void FocusOnCharInfo();
 
 SHORT WINAPI GetAsyncKeyState(int vKey);
 
