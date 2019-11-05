@@ -23,11 +23,11 @@ DWORD translate_controller_button_to_key(ControllerButton controller_button)
 	case ControllerButton::BUTTON_Y: // Top button
 		return DVL_VK_RETURN;
 	case ControllerButton::BUTTON_LEFTSTICK:
-		return 'Q'; // Quest log
+		return DVL_VK_TAB; // Map
 	case ControllerButton::BUTTON_START:
 		return DVL_VK_ESCAPE;
 	case ControllerButton::BUTTON_BACK:
-		return DVL_VK_TAB; // Map
+		return 'Q'; // Quest log
 	case ControllerButton::BUTTON_DPAD_LEFT:
 		return DVL_VK_LEFT;
 	case ControllerButton::BUTTON_DPAD_RIGHT:

@@ -218,9 +218,9 @@ Default controller mappings (A/B/X/Y as in Nintendo layout, so the rightmost but
 - L1: character sheet
 - R2: use mana potion from belt
 - L2: use health item from belt
-- Left analog click: quest log
+- Left analog click: toggle automap
 - Right analog click: left mouse click
-- Select: automap
+- Select: quest log
 - Start: game Menu, skip intro
 
 For now, they can be re-mapped by changing `SourceX/controls` or by setting the `SDL_GAMECONTROLLERCONFIG` environment
