@@ -85,7 +85,7 @@ BOOL control_WriteStringToBuffer(BYTE *str);
 void DrawInfoBox();
 void control_draw_info_str();
 void control_print_info_str(int y, char *str, BOOL center, int lines);
-void PrintGameStr(int x, int y, char *str, int color);
+void PrintGameStr(int x, int y, const char *str, int color);
 void DrawChr();
 #define ADD_PlrStringXY(x, y, width, pszStr, col) MY_PlrStringXY(x, y, width, pszStr, col, 1)
 void MY_PlrStringXY(int x, int y, int width, char *pszStr, char col, int base);
