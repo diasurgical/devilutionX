@@ -18,7 +18,7 @@ SDL_Surface *GetOutputSurface()
 bool OutputRequiresScaling()
 {
 #ifdef USE_SDL1
-	return SCREEN_WIDTH != GetOutputSurface()->w;
+	return SCREEN_WIDTH != GetOutputSurface()->w || SCREEN_HEIGHT != GetOutputSurface()->h;
 #else // SDL2, scaling handled by renderer.
 	return false;
 #endif
