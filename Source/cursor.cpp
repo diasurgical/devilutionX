@@ -209,8 +209,8 @@ void CheckCursMove()
 	sy -= ScrollInfo._syoff;
 
 	if (ScrollInfo._sdir != 0) {
-		sx += ((plr[myplr]._pVar6 + plr[myplr]._pxvel) >> 8) - (plr[myplr]._pVar6 >> 8);
-		sy += ((plr[myplr]._pVar7 + plr[myplr]._pyvel) >> 8) - (plr[myplr]._pVar7 >> 8);
+		sx += ((plr[myplr]._pVar6 + plr[myplr]._pxvel) / 256) - (plr[myplr]._pVar6 / 256);
+		sy += ((plr[myplr]._pVar7 + plr[myplr]._pyvel) / 256) - (plr[myplr]._pVar7 / 256);
 	}
 
 	if (sx < 0) {

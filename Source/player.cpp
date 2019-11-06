@@ -1210,13 +1210,13 @@ void PM_ChangeOffset(int pnum)
 	}
 
 	plr[pnum]._pVar8++;
-	px = plr[pnum]._pVar6 >> 8;
-	py = plr[pnum]._pVar7 >> 8;
+	px = plr[pnum]._pVar6 / 256;
+	py = plr[pnum]._pVar7 / 256;
 
 	plr[pnum]._pVar6 += plr[pnum]._pxvel;
 	plr[pnum]._pVar7 += plr[pnum]._pyvel;
-	plr[pnum]._pxoff = plr[pnum]._pVar6 >> 8;
-	plr[pnum]._pyoff = plr[pnum]._pVar7 >> 8;
+	plr[pnum]._pxoff = plr[pnum]._pVar6 / 256;
+	plr[pnum]._pyoff = plr[pnum]._pVar7 / 256;
 
 	if (pnum == myplr && ScrollInfo._sdir) {
 		ScrollInfo._sxoff += px - plr[pnum]._pxoff;
@@ -1343,8 +1343,8 @@ void StartWalk2(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int 
 	plr[pnum]._pmode = PM_WALK2;
 	plr[pnum]._pxvel = xvel;
 	plr[pnum]._pyvel = yvel;
-	plr[pnum]._pVar6 = xoff << 8;
-	plr[pnum]._pVar7 = yoff << 8;
+	plr[pnum]._pVar6 = xoff * 256;
+	plr[pnum]._pVar7 = yoff * 256;
 	plr[pnum]._pVar3 = EndDir;
 
 	if (!(plr[pnum]._pGFXLoad & PFILE_WALK)) {
@@ -1430,8 +1430,8 @@ void StartWalk3(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int 
 	plr[pnum]._pyvel = yvel;
 	plr[pnum]._pVar1 = px;
 	plr[pnum]._pVar2 = py;
-	plr[pnum]._pVar6 = xoff << 8;
-	plr[pnum]._pVar7 = yoff << 8;
+	plr[pnum]._pVar6 = xoff * 256;
+	plr[pnum]._pVar7 = yoff * 256;
 	plr[pnum]._pVar3 = EndDir;
 
 	if (!(plr[pnum]._pGFXLoad & PFILE_WALK)) {
