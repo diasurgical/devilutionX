@@ -126,6 +126,7 @@ void ApplyGamma(PALETTEENTRY *dst, const PALETTEENTRY *src, int n)
 		dst++;
 		src++;
 	}
+	force_redraw = 255;
 }
 
 void DecreaseGamma()
