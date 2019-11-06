@@ -10,13 +10,17 @@ DEVILUTION_BEGIN_NAMESPACE
 namespace {
 
 /*
- * Diablo-"SHA1" circular left shift.
+ * Diablo-"SHA1" circular left shift, portable version.
  */
-#if defined(__clang__) || defined(__GNUC__)
-__attribute__((no_sanitize("shift-base")))
-#endif
-std::uint32_t SHA1CircularShift(std::uint32_t bits, std::int32_t word) {
-	return (word << bits) | (word >> (32 - bits));
+std::uint32_t SHA1CircularShift(std::uint32_t bits, std::uint32_t word) {
+	assert(bits < 32);
+	assert(bits > 0);
+
+	if(word >> 31) {
+		return (word << bits) | (~((~word) >> (32 - bits)));
+	} else {
+		return (word << bits) | (word >> (32 - bits));
+	}
 }
 
 } // namespace
