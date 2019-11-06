@@ -63,15 +63,15 @@ void LogicalToOutput(T *x, T *y)
 #ifndef USE_SDL1
 	if (!renderer)
 		return;
-	float scaleX;
-	SDL_RenderGetScale(renderer, &scaleX, NULL);
-	*x /= scaleX;
-	*y /= scaleX;
-
 	SDL_Rect view;
 	SDL_RenderGetViewport(renderer, &view);
-	*x -= view.x;
-	*y -= view.y;
+	*x += view.x;
+	*y += view.y;
+
+	float scaleX;
+	SDL_RenderGetScale(renderer, &scaleX, NULL);
+	*x *= scaleX;
+	*y *= scaleX;
 #else
 	if (!OutputRequiresScaling())
 		return;
