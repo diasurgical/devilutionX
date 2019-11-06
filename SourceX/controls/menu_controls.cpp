@@ -10,6 +10,8 @@ MenuAction GetMenuAction(const SDL_Event &event)
 	sgbControllerActive = true;
 	if (!ctrl_event.up) {
 		switch (ctrl_event.button) {
+		case ControllerButton::IGNORE:
+			return MenuAction::NONE;
 		case ControllerButton::BUTTON_B: // Right button
 		case ControllerButton::BUTTON_START:
 			return MenuAction::SELECT;
@@ -34,7 +36,7 @@ MenuAction GetMenuAction(const SDL_Event &event)
 			break;
 		}
 	}
-	if (event.type < SDL_JOYAXISMOTION || event.type >= 0x700)
+	if (ctrl_event.button == ControllerButton::NONE && (event.type < SDL_JOYAXISMOTION || event.type >= 0x700))
 		sgbControllerActive = false;
 
 #if HAS_KBCTRL == 0

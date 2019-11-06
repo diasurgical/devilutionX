@@ -18,9 +18,9 @@ Controls:
 - L1: character
 - R2: drink mana potion
 - L2: drink health potion
-- Left analog click: quest log
+- Left analog click: map
 - Right analog click: left mouse click
-- Select: automap
+- Select: quest log
 - Start: game Menu, skip intro
 
 Source: https://github.com/diasurgical/devilutionX/

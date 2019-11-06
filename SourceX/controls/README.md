@@ -18,3 +18,22 @@ Low-level gamepad handling is abstracted and 3 implementations are provided:
 
    This can be used for testing, or on devices where this is the
    only or the easiest API to use (e.g. RetroFW).
+
+Example keyboard-as-controller build flags:
+
+```bash
+cmake .. -DUSE_SDL1=ON -DHAS_KBCTRL=1 \
+-DKBCTRL_BUTTON_DPAD_LEFT=SDLK_LEFT \
+-DKBCTRL_BUTTON_DPAD_RIGHT=SDLK_RIGHT \
+-DKBCTRL_BUTTON_DPAD_UP=SDLK_UP \
+-DKBCTRL_BUTTON_DPAD_DOWN=SDLK_DOWN \
+-DKBCTRL_BUTTON_X=SDLK_y \
+-DKBCTRL_BUTTON_Y=SDLK_x \
+-DKBCTRL_BUTTON_B=SDLK_a \
+-DKBCTRL_BUTTON_A=SDLK_b \
+-DKBCTRL_BUTTON_RIGHTSHOULDER=SDLK_RIGHTBRACKET \
+-DKBCTRL_BUTTON_LEFTSHOULDER=SDLK_LEFTBRACKET \
+-DKBCTRL_BUTTON_LEFTSTICK=SDLK_TAB \
+-DKBCTRL_BUTTON_START=SDLK_RETURN \
+-DKBCTRL_MODIFIER_KEY=SDLK_LSHIFT
+```

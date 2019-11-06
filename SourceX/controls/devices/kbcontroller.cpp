@@ -1,26 +1,8 @@
 #include "controls/devices/kbcontroller.h"
 
-#if defined(RETROFW)
-#define HAS_KBCTRL 1
-
-#define KBCTRL_BUTTON_DPAD_LEFT SDLK_LEFT
-#define KBCTRL_BUTTON_DPAD_RIGHT SDLK_RIGHT
-#define KBCTRL_BUTTON_DPAD_UP SDLK_UP
-#define KBCTRL_BUTTON_DPAD_DOWN SDLK_DOWN
-
-#define KBCTRL_BUTTON_B SDLK_LCTRL
-#define KBCTRL_BUTTON_A SDLK_LALT
-#define KBCTRL_BUTTON_Y SDLK_SPACE
-#define KBCTRL_BUTTON_X SDLK_LSHIFT
-#define KBCTRL_BUTTON_RIGHTSHOULDER SDLK_BACKSPACE
-#define KBCTRL_BUTTON_LEFTSHOULDER SDLK_TAB
-#define KBCTRL_BUTTON_START SDLK_RETURN
-#define KBCTRL_BUTTON_BACK SDLK_ESCAPE
-#define KBCTRL_MODIFIER_KEY SDLK_END // The suspend key on RG300
-#endif
-
 #if HAS_KBCTRL == 1
 
+#include "controls/controller_motion.h"
 #include "sdl2_to_1_2_backports.h"
 #include "sdl_compat.h"
 #include "stubs.h"
@@ -46,24 +28,28 @@ ControllerButton KbCtrlToControllerButton(const SDL_Event &event)
 	case SDL_KEYDOWN:
 	case SDL_KEYUP:
 		switch (event.key.keysym.sym) {
+#ifdef KBCTRL_MODIFIER_KEY
+		case KBCTRL_MODIFIER_KEY:
+			return ControllerButton::IGNORE;
+#endif
 #ifdef KBCTRL_BUTTON_A
 		case KBCTRL_BUTTON_A:
 			return ControllerButton::BUTTON_A;
 #endif
 #ifdef KBCTRL_BUTTON_B
-		case KBCTRL_BUTTON_B:
+		case KBCTRL_BUTTON_B: // Right button
+			if (IsModifierKey())
+				return ControllerButton::BUTTON_RIGHTSTICK;
 			return ControllerButton::BUTTON_B;
 #endif
 #ifdef KBCTRL_BUTTON_X
-		case KBCTRL_BUTTON_X:
+		case KBCTRL_BUTTON_X: // Left button
 			if (IsModifierKey())
-				return ControllerButton::BUTTON_LEFTSTICK;
+				return ControllerButton::BUTTON_BACK;
 			return ControllerButton::BUTTON_X;
 #endif
 #ifdef KBCTRL_BUTTON_Y
 		case KBCTRL_BUTTON_Y:
-			if (IsModifierKey())
-				return ControllerButton::BUTTON_RIGHTSTICK;
 			return ControllerButton::BUTTON_Y;
 #endif
 #ifdef KBCTRL_BUTTON_LEFTSTICK
@@ -96,18 +82,26 @@ ControllerButton KbCtrlToControllerButton(const SDL_Event &event)
 #endif
 #ifdef KBCTRL_BUTTON_DPAD_UP
 		case KBCTRL_BUTTON_DPAD_UP:
+			if (IsModifierKey())
+				return ControllerButton::IGNORE;
 			return ControllerButton::BUTTON_DPAD_UP;
 #endif
 #ifdef KBCTRL_BUTTON_DPAD_DOWN
 		case KBCTRL_BUTTON_DPAD_DOWN:
+			if (IsModifierKey())
+				return ControllerButton::IGNORE;
 			return ControllerButton::BUTTON_DPAD_DOWN;
 #endif
 #ifdef KBCTRL_BUTTON_DPAD_LEFT
 		case KBCTRL_BUTTON_DPAD_LEFT:
+			if (IsModifierKey())
+				return ControllerButton::IGNORE;
 			return ControllerButton::BUTTON_DPAD_LEFT;
 #endif
 #ifdef KBCTRL_BUTTON_DPAD_RIGHT
 		case KBCTRL_BUTTON_DPAD_RIGHT:
+			if (IsModifierKey())
+				return ControllerButton::IGNORE;
 			return ControllerButton::BUTTON_DPAD_RIGHT;
 #endif
 		default:
@@ -186,9 +180,7 @@ int ControllerButtonToKbCtrlKeyCode(ControllerButton button)
 	}
 }
 
-} // namespace
-
-bool IsKbCtrlButtonPressed(ControllerButton button)
+bool IsButtonPressed(ControllerButton button)
 {
 	int key_code = ControllerButtonToKbCtrlKeyCode(button);
 	if (key_code == -1)
@@ -199,6 +191,45 @@ bool IsKbCtrlButtonPressed(ControllerButton button)
 	return SDL_GetKeyState(nullptr)[key_code];
 #endif
 }
+
+} // namespace
+
+bool IsKbCtrlButtonPressed(ControllerButton button)
+{
+	if (IsModifierKey() && (button == ControllerButton::BUTTON_DPAD_UP || button == ControllerButton::BUTTON_DPAD_DOWN || button == ControllerButton::BUTTON_DPAD_LEFT || button == ControllerButton::BUTTON_DPAD_RIGHT))
+		return false;
+	return IsButtonPressed(button);
+}
+
+bool ProcessKbCtrlAxisMotion(const SDL_Event &event)
+{
+	if (!IsModifierKey()) {
+		rightStickX = 0;
+		rightStickY = 0;
+		return false;
+	}
+	if (event.type != SDL_KEYUP && event.type != SDL_KEYDOWN) 
+		return false;
+	const auto sym = event.key.keysym.sym;
+	if (sym != KBCTRL_BUTTON_DPAD_UP && sym != KBCTRL_BUTTON_DPAD_DOWN && sym != KBCTRL_BUTTON_DPAD_LEFT && sym != KBCTRL_BUTTON_DPAD_RIGHT)
+		return false;
+	if (IsButtonPressed(ControllerButton::BUTTON_DPAD_LEFT)) {
+		rightStickX = -1;
+	} else if (IsButtonPressed(ControllerButton::BUTTON_DPAD_RIGHT)) {
+		rightStickX = 1;
+	} else {
+		rightStickX = 0;
+	}
+	if (IsButtonPressed(ControllerButton::BUTTON_DPAD_UP)) {
+		rightStickY = 1;
+	} else if (IsButtonPressed(ControllerButton::BUTTON_DPAD_DOWN)) {
+		rightStickY = -1;
+	} else {
+		rightStickY = 0;
+	}
+	return true;
+}
+
 
 } // namespace dvl
 #endif

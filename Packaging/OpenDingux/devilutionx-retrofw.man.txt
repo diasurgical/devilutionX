@@ -12,8 +12,10 @@ Controls:
 - Y: cast spell, go to previous screen when talking to people and in shops, delete character while in main menu
 - R1: inventory
 - L1: character
-- Suspend + R1: Drink health potion
-- Suspend + R2: Drink mana potion
-- Suspend + Y: Quest log
-- Select: automap
+- Select + R1: Drink health potion
+- Select + R2: Drink mana potion
+- Select + D-pad: Move map/cursor
+- Select + A: Left click
+- Select + Y: Quest log
+- Suspend: Map
 - Start: game Menu, skip intro
