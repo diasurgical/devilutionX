@@ -366,8 +366,8 @@ void GetMissileVel(int i, int sx, int sy, int dx, int dy, int v)
 	double dxp, dyp, dr;
 
 	if (dx != sx || dy != sy) {
-		dxp = (dx + sy - sx - dy) << 21;
-		dyp = (dy + dx - sx - sy) << 21;
+		dxp = (dx + sy - sx - dy) * (1 << 21);
+		dyp = (dy + dx - sx - sy) * (1 << 21);
 		dr = sqrt(dxp * dxp + dyp * dyp);
 		missile[i]._mixvel = (dxp * (v << 16)) / dr;
 		missile[i]._miyvel = (dyp * (v << 15)) / dr;
@@ -405,24 +405,24 @@ void GetMissilePos(int i)
 	dx = mx + 2 * my;
 	dy = 2 * my - mx;
 	if (dx < 0) {
-		lx = -(-dx >> 3);
-		dx = -(-dx >> 6);
+		lx = -(-dx / 8);
+		dx = -(-dx / 64);
 	} else {
-		lx = dx >> 3;
-		dx = dx >> 6;
+		lx = dx / 8;
+		dx = dx / 64;
 	}
 	if (dy < 0) {
-		ly = -(-dy >> 3);
-		dy = -(-dy >> 6);
+		ly = -(-dy / 8);
+		dy = -(-dy / 64);
 	} else {
-		ly = dy >> 3;
-		dy = dy >> 6;
+		ly = dy / 8;
+		dy = dy / 64;
 	}
 	missile[i]._mix = dx + missile[i]._misx;
 	missile[i]._miy = dy + missile[i]._misy;
-	missile[i]._mixoff = mx + (dy << 5) - (dx << 5);
-	missile[i]._miyoff = my - (dx << 4) - (dy << 4);
-	ChangeLightOff(missile[i]._mlid, lx - (dx << 3), ly - (dy << 3));
+	missile[i]._mixoff = mx + (dy * 32) - (dx * 32);
+	missile[i]._miyoff = my - (dx * 16) - (dy * 16);
+	ChangeLightOff(missile[i]._mlid, lx - (dx * 8), ly - (dy * 8));
 }
 
 void MoveMissilePos(int i)
@@ -694,7 +694,7 @@ BOOL PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, BOOLEA
 		tac = plr[pnum]._pIAC + plr[pnum]._pIBonusAC + plr[pnum]._pDexterity / 5;
 		if (m != -1) {
 			hper = monster[m].mHit
-			    + ((monster[m].mLevel - plr[pnum]._pLevel) << 1)
+			    + ((monster[m].mLevel - plr[pnum]._pLevel) * 2)
 			    + 30
 			    - (dist << 1) - tac;
 		} else {
@@ -764,7 +764,7 @@ BOOL PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, BOOLEA
 				dam = (mind << 6) + random_(75, (maxd - mind + 1) << 6);
 				if (m == -1 && plr[pnum]._pIFlags & ISPL_ABSHALFTRAP)
 					dam >>= 1;
-				dam += (plr[pnum]._pIGetHit << 6);
+				dam += (plr[pnum]._pIGetHit * 64);
 			} else {
 				dam = mind + random_(75, maxd - mind + 1);
 				if (m == -1 && plr[pnum]._pIFlags & ISPL_ABSHALFTRAP)

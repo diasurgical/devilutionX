@@ -192,7 +192,7 @@ RenderTile(BYTE *pBuff)
 	case RT_TRANSPARENT:
 		for (i = 32; i != 0; i--, dst -= BUFFER_WIDTH + 32, mask--) {
 			m = *mask;
-			for (j = 32; j != 0; j -= v, m <<= v) {
+			for (j = 32; j != 0; j -= v, v == 32 ? m = 0 : m <<= v) {
 				v = *src++;
 				if (v >= 0) {
 					RenderLine(&dst, &src, v, tbl, m);

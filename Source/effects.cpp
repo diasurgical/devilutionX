@@ -1008,7 +1008,7 @@ BOOL calc_snd_position(int x, int y, int *plVolume, int *plPan)
 	x -= plr[myplr].WorldX;
 	y -= plr[myplr].WorldY;
 
-	pan = (x - y) << 8;
+	pan = (x - y) * 256;
 	*plPan = pan;
 
 	if (abs(pan) > 6400)
