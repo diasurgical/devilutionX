@@ -300,6 +300,7 @@ foreach(
   NONET
   DINGUX
   RETROFW
+  PREFILL_PLAYER_NAME
 )
 if(${def_name})
   list(APPEND def_list ${def_name})
@@ -310,7 +311,6 @@ endforeach(def_name)
 foreach(
   def_name
   HAS_KBCTRL
-  DEFAULT_PLAYER_NAME
   KBCTRL_BUTTON_DPAD_LEFT
   KBCTRL_BUTTON_DPAD_RIGHT
   KBCTRL_BUTTON_DPAD_UP

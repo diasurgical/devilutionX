@@ -80,7 +80,7 @@ build() {
 	cd ../../build
 	rm -f CMakeCache.txt
 
-	local -a defs=(-DDINGUX=ON -DBINARY_RELEASE=ON '-DDEFAULT_PLAYER_NAME="Player"')
+	local -a defs=(-DDINGUX=ON -DBINARY_RELEASE=ON -DPREFILL_PLAYER_NAME=ON)
 	if [[ "$TARGET" == "rg350" ]]; then
 		defs+=(
 			-DNONET=ON

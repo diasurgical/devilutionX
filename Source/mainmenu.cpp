@@ -1,6 +1,7 @@
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
+#include "../SourceX/DiabloUI/selhero.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -24,8 +25,9 @@ void mainmenu_refresh_music()
 
 void __stdcall mainmenu_change_name(int arg1, int arg2, int arg3, int arg4, char *name_1, char *name_2)
 {
-#ifdef DEFAULT_PLAYER_NAME
-	strcpy(name_2, DEFAULT_PLAYER_NAME);
+#ifdef PREFILL_PLAYER_NAME
+	// TODO: Pass the correct hero_class here.
+	strcpy(name_2, selhero_GenerateName(/*hero_class=*/0));
 #endif
 	if (UiValidPlayerName(name_2))
 		pfile_rename_hero(name_1, name_2);

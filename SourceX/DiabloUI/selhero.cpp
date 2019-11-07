@@ -1,12 +1,14 @@
 #include "selhero.h"
 
 #include <algorithm>
+#include <chrono>
+#include <random>
 
-#include "scrollbar.h"
-#include "selyesno.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/dialogs.h"
 #include "devilution.h"
+#include "scrollbar.h"
+#include "selyesno.h"
 
 namespace dvl {
 
@@ -241,8 +243,8 @@ void selhero_ClassSelector_Select(int value)
 		strcpy(title, "New Multi Player Hero");
 	}
 	memset(selhero_heroInfo.name, '\0', sizeof(selhero_heroInfo.name));
-#ifdef DEFAULT_PLAYER_NAME
-	strcpy(selhero_heroInfo.name, DEFAULT_PLAYER_NAME);
+#ifdef PREFILL_PLAYER_NAME
+	strcpy(selhero_heroInfo.name, selhero_GenerateName(selhero_heroInfo.heroclass));
 #endif
 	UiInitList(0, 0, NULL, selhero_Name_Select, selhero_Name_Esc, ENTERNAME_DIALOG, size(ENTERNAME_DIALOG));
 }
@@ -373,4 +375,53 @@ BOOL UiSelHeroMultDialog(
 	selhero_isMultiPlayer = true;
 	return UiSelHeroDialog(fninfo, fncreate, fnstats, fnremove, dlgresult, name);
 }
+
+const char *selhero_GenerateName(std::uint8_t hero_class)
+{
+	// TODO: Replace these with lore-appropriate names. Currently they're generic
+	// fantasy names.
+	static const char *const kNames[3][10] = {
+		{
+		    "Arth",
+		    "Blulcorth",
+		    "Eadweard",
+		    "Eadwulf",
+		    "Ferthun",
+		    "Gurstudd",
+		    "Nehlem",
+		    "Tulvim",
+		    "Uriel",
+		    "Walmund",
+		},
+		{
+		    "Arleta",
+		    "Beata",
+		    "Emilia",
+		    "Galiana",
+		    "Kaliyah",
+		    "Margret",
+		    "Pascaline",
+		    "Todra",
+		    "Uta",
+		    "Veho",
+		},
+		{
+		    "Ellinon",
+		    "Hinueth",
+		    "Jamerry",
+		    "Juip",
+		    "Knightinster",
+		    "Reyeslon",
+		    "Rodwise",
+		    "Salazadalf",
+		    "Shosdask",
+		    "Ta-rojun",
+		}
+	};
+	const auto seed = std::chrono::system_clock::now().time_since_epoch().count();
+	std::default_random_engine generator(seed);
+	std::uniform_int_distribution<std::size_t> dist(0, sizeof(kNames[0]) / sizeof(kNames[0][0]) - 1);
+	return kNames[hero_class][dist(generator)];
 }
+
+} // namespace dvl
