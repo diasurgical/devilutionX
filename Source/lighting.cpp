@@ -748,10 +748,12 @@ void DoVision(int nXPos, int nYPos, int nRadius, BOOL doautomap, BOOL visible)
 					}
 					break;
 				}
-				if (nCrawlX >= 0 && nCrawlX <= MAXDUNX && nCrawlY >= 0 && nCrawlY <= MAXDUNY) {
+				if (nCrawlX >= 0 && nCrawlX < MAXDUNX && nCrawlY >= 0 && nCrawlY < MAXDUNY) {
 					nBlockerFlag = nBlockTable[dPiece[nCrawlX][nCrawlY]];
-					if (!nBlockTable[dPiece[x1adj + nCrawlX][y1adj + nCrawlY]]
-					    || !nBlockTable[dPiece[x2adj + nCrawlX][y2adj + nCrawlY]]) {
+					if ((x1adj + nCrawlX >= 0 && x1adj + nCrawlX < MAXDUNX && y1adj + nCrawlY >= 0 && y1adj + nCrawlY < MAXDUNY
+						&& !nBlockTable[dPiece[x1adj + nCrawlX][y1adj + nCrawlY]])
+					    || (x2adj + nCrawlX >= 0 && x2adj + nCrawlX < MAXDUNX && y2adj + nCrawlY >= 0 && y2adj + nCrawlY < MAXDUNY
+						&& !nBlockTable[dPiece[x2adj + nCrawlX][y2adj + nCrawlY]])) {
 						if (doautomap) {
 							if (dFlags[nCrawlX][nCrawlY] >= 0) {
 								SetAutomapView(nCrawlX, nCrawlY);
