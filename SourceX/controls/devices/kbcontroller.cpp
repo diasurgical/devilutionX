@@ -28,6 +28,10 @@ ControllerButton KbCtrlToControllerButton(const SDL_Event &event)
 	case SDL_KEYDOWN:
 	case SDL_KEYUP:
 		switch (event.key.keysym.sym) {
+#ifdef KBCTRL_IGNORE_1
+		case KBCTRL_IGNORE_1:
+			return ControllerButton::IGNORE;
+#endif
 #ifdef KBCTRL_MODIFIER_KEY
 		case KBCTRL_MODIFIER_KEY:
 			return ControllerButton::IGNORE;

@@ -130,6 +130,7 @@ build() {
 			-DKBCTRL_BUTTON_START=SDLK_RETURN
 			-DKBCTRL_BUTTON_LEFTSTICK=SDLK_END # Suspend
 			-DKBCTRL_MODIFIER_KEY=SDLK_ESCAPE # Select
+			-DKBCTRL_IGNORE_1=SDLK_3 # Backlight
 		)
 	fi
 	cmake .. ${defs[@]} \
