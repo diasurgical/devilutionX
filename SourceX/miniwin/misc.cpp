@@ -127,8 +127,6 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 		ErrSdl();
 	}
 
-	atexit(SDL_Quit);
-
 #ifdef USE_SDL1
 	SDL_EnableUNICODE(1);
 #endif
