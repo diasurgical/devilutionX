@@ -9,7 +9,6 @@ namespace net {
 void base::setup_gameinfo(buffer_t info)
 {
 	game_init_info = std::move(info);
-	pktfty.reset(new packet_factory());
 }
 
 void base::setup_password(std::string pw)
@@ -48,11 +47,11 @@ void base::handle_accept(packet &pkt)
 void base::clear_msg(plr_t plr)
 {
 	message_queue.erase(std::remove_if(message_queue.begin(),
-							message_queue.end(),
-							[&](message_t &msg) {
-								return msg.sender == plr;
-							}),
-		message_queue.end());
+	                        message_queue.end(),
+	                        [&](message_t &msg) {
+		                        return msg.sender == plr;
+	                        }),
+	    message_queue.end());
 }
 
 void base::recv_local(packet &pkt)
@@ -113,7 +112,7 @@ bool base::SNetReceiveMessage(int *sender, char **data, int *size)
 bool base::SNetSendMessage(int playerID, void *data, unsigned int size)
 {
 	if (playerID != SNPLAYER_ALL && playerID != SNPLAYER_OTHERS
-		&& (playerID < 0 || playerID >= MAX_PLRS))
+	    && (playerID < 0 || playerID >= MAX_PLRS))
 		abort();
 	auto raw_message = reinterpret_cast<unsigned char *>(data);
 	buffer_t message(raw_message, raw_message + size);
@@ -190,7 +189,7 @@ int base::SNetGetProviderCaps(struct _SNETCAPS *caps)
 	caps->latencyms = 0;             // unused
 	caps->defaultturnssec = 10;      // ?
 	caps->defaultturnsintransit = 1; // maximum acceptable number
-									 // of turns in queue?
+	                                 // of turns in queue?
 	return 1;
 }
 
@@ -217,7 +216,7 @@ bool base::SNetRegisterEventHandler(event_type evtype, SEVTHANDLER func)
 bool base::SNetLeaveGame(int type)
 {
 	auto pkt = pktfty->make_packet<PT_DISCONNECT>(plr_self, PLR_BROADCAST,
-		plr_self, type);
+	    plr_self, type);
 	send(*pkt);
 	return true;
 }
@@ -225,9 +224,9 @@ bool base::SNetLeaveGame(int type)
 bool base::SNetDropPlayer(int playerid, DWORD flags)
 {
 	auto pkt = pktfty->make_packet<PT_DISCONNECT>(plr_self,
-		PLR_BROADCAST,
-		(plr_t)playerid,
-		(leaveinfo_t)flags);
+	    PLR_BROADCAST,
+	    (plr_t)playerid,
+	    (leaveinfo_t)flags);
 	send(*pkt);
 	recv_local(*pkt);
 	return true;

@@ -21,8 +21,9 @@ class server_exception : public dvlnet_exception {
 class tcp_server {
 public:
 	tcp_server(asio::io_context &ioc, std::string bindaddr,
-		unsigned short port, std::string pw);
+	    unsigned short port, std::string pw);
 	std::string localhost_self();
+	virtual ~tcp_server();
 
 private:
 	static constexpr int timeout_connect = 30;
@@ -36,8 +37,8 @@ private:
 		asio::steady_timer timer;
 		int timeout;
 		client_connection(asio::io_context &ioc)
-			: socket(ioc)
-			, timer(ioc)
+		    : socket(ioc)
+		    , timer(ioc)
 		{
 		}
 	};

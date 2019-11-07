@@ -40,10 +40,10 @@ int tcp_client::join(std::string addrstr, std::string passwd)
 	start_recv();
 	{
 		randombytes_buf(reinterpret_cast<unsigned char *>(&cookie_self),
-			sizeof(cookie_t));
+		    sizeof(cookie_t));
 		auto pkt = pktfty->make_packet<PT_JOIN_REQUEST>(PLR_BROADCAST,
-			PLR_MASTER, cookie_self,
-			game_init_info);
+		    PLR_MASTER, cookie_self,
+		    game_init_info);
 		send(*pkt);
 		for (auto i = 0; i < no_sleep; ++i) {
 			try {
@@ -88,8 +88,8 @@ void tcp_client::handle_recv(const asio::error_code &error, size_t bytes_read)
 void tcp_client::start_recv()
 {
 	sock.async_receive(asio::buffer(recv_buffer),
-		std::bind(&tcp_client::handle_recv, this,
-			std::placeholders::_1, std::placeholders::_2));
+	    std::bind(&tcp_client::handle_recv, this,
+	        std::placeholders::_1, std::placeholders::_2));
 }
 
 void tcp_client::handle_send(const asio::error_code &error, size_t bytes_sent)
@@ -107,10 +107,16 @@ void tcp_client::send(packet &pkt)
 	});
 }
 
-bool tcp_client::SNetLeaveGame(int type){
-	if(sock.is_open())
-		sock.close();
-	return true;
+bool tcp_client::SNetLeaveGame(int type)
+{
+	auto ret = base::SNetLeaveGame(type);
+	poll();
+	local_server.reset();
+	return ret;
+}
+
+tcp_client::~tcp_client()
+{
 }
 
 } // namespace net
