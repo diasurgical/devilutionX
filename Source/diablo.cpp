@@ -302,8 +302,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	diablo_init(lpCmdLine);
 	diablo_splash();
 	mainmenu_loop();
-	UiDestroy();
-	SaveGamma();
 
 	return 0;
 }
