@@ -1966,7 +1966,7 @@ void DrawTalkPan()
 	}
 	if (msg)
 		*msg = '\0';
-	CelDraw(x, i + 22 + PANEL_TOP + SCREEN_Y, pSPentSpn2Cels, PentSpn2Frame, 12);
+	CelDraw(x, i + 22 + PANEL_Y, pSPentSpn2Cels, PentSpn2Frame, 12);
 	PentSpn2Spin();
 	talk_btn = 0;
 	for (i = 0; i < 4; i++) {
