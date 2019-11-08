@@ -289,13 +289,19 @@ void diablo_splash()
 	UiTitleDialog();
 }
 
+void diablo_terminate()
+{
+	init_cleanup();
+	SaveGamma();
+	SDL_Quit();
+}
+
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+	atexit(diablo_terminate);
 	diablo_init(lpCmdLine);
 	diablo_splash();
 	mainmenu_loop();
-	UiDestroy();
-	SaveGamma();
 
 	return 0;
 }
