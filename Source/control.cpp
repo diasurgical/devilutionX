@@ -2015,7 +2015,7 @@ char *control_print_talk_msg(char *msg, int *x, int y, int color)
 			return msg;
 		msg++;
 		if (c) {
-			CPrintString(*x, y + 22 + PANEL_TOP + SCREEN_Y, c, color);
+			CPrintString(*x, y + 22 + PANEL_Y, c, color);
 		}
 		*x += fontkern[c] + 1;
 	}
