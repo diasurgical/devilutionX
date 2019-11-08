@@ -13,9 +13,11 @@ int gdwPalEntries;
 int gamma_correction = 100;
 BOOL color_cycling_enabled = TRUE;
 BOOLEAN sgbFadedIn = TRUE;
+BOOLEAN is_gamma_valid = FALSE;
 
 void SaveGamma()
 {
+	if( !is_gamma_valid ) return;
 	SRegSaveValue("Diablo", "Gamma Correction", 0, gamma_correction);
 	SRegSaveValue("Diablo", "Color Cycling", FALSE, color_cycling_enabled);
 }
@@ -45,6 +47,7 @@ void LoadGamma()
 	if (!SRegLoadValue("Diablo", "Color Cycling", 0, &value))
 		value = 1;
 	color_cycling_enabled = value;
+	is_gamma_valid = TRUE;
 }
 
 void LoadPalette(char *pszFileName)
