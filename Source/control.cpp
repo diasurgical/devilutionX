@@ -1966,7 +1966,7 @@ void DrawTalkPan()
 	}
 	if (msg)
 		*msg = '\0';
-	CelDraw(x, i + 534, pSPentSpn2Cels, PentSpn2Frame, 12);
+	CelDraw(x, i + 22 + PANEL_TOP + SCREEN_Y, pSPentSpn2Cels, PentSpn2Frame, 12);
 	PentSpn2Spin();
 	talk_btn = 0;
 	for (i = 0; i < 4; i++) {
@@ -2015,7 +2015,7 @@ char *control_print_talk_msg(char *msg, int *x, int y, int color)
 			return msg;
 		msg++;
 		if (c) {
-			CPrintString(*x, y + 22 + PANEL_TOP, c, color);
+			CPrintString(*x, y + 22 + PANEL_TOP + SCREEN_Y, c, color);
 		}
 		*x += fontkern[c] + 1;
 	}
