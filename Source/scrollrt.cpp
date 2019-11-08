@@ -892,7 +892,9 @@ void DrawView(int StartX, int StartY)
 		DrawChr();
 	} else if (questlog) {
 		DrawQuestLog();
-	} else if (plr[myplr]._pStatPts != 0 && !spselflag) {
+	}
+	if (!chrflag && plr[myplr]._pStatPts != 0 && !spselflag
+		&& (!questlog || SCREEN_HEIGHT >= SPANEL_HEIGHT + PANEL_HEIGHT + 49 || SCREEN_WIDTH >= 4 * 320)) {
 		DrawLevelUpIcon();
 	}
 	if (uitemflag) {
