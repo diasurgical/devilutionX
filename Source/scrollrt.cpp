@@ -893,7 +893,7 @@ void DrawView(int StartX, int StartY)
 	} else if (questlog) {
 		DrawQuestLog();
 	}
-#if SCREEN_HEIGHT-PANEL_HEIGHT-SPANEL_HEIGHT >= 74 || PANEL_X > SPANEL_WIDTH
+#if SCREEN_HEIGHT-PANEL_HEIGHT-SPANEL_HEIGHT >= 74 || PANEL_LEFT >= SPANEL_WIDTH
 	if (plr[myplr]._pStatPts != 0 && !spselflag){
 #else
 	else if ( plr[myplr]._pStatPts != 0 && !spselflag){
