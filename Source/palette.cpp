@@ -147,6 +147,7 @@ int UpdateGamma(int gamma)
 		ApplyGamma(system_palette, logical_palette, 256);
 		palette_update();
 	}
+	SaveGamma();
 	return 130 - gamma_correction;
 }
 
