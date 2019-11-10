@@ -32,7 +32,7 @@ sudo dnf install cmake glibc-devel SDL2-devel SDL2_ttf-devel SDL2_mixer-devel li
 ```
 cd build
 cmake ..
-cmake --build . -j $(nproc)
+cmake --build . -- -j $(nproc)
 ```
 </details>
 
