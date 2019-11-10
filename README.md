@@ -103,6 +103,7 @@ Make sure to install the `C++ CMake tools for Windows` component for Visual Stud
 2. Install required dependencies by executing the following command (via cmd or powershell):
 
 	`vcpkg install sdl2:x64-windows sdl2-mixer:x64-windows sdl2-ttf:x64-windows libsodium:x64-windows`
+	_Note: this command installs libraries compiled for x64 but it's not hard to do the same for x86 libraries if you need it_
 
 	`vcpkg install sdl2:x86-windows sdl2-mixer:x86-windows sdl2-ttf:x86-windows libsodium:x86-windows`
 
