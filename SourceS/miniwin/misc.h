@@ -223,22 +223,6 @@ char *__cdecl _itoa(int _Value, char *_Dest, int _Radix);
 // File I/O
 //
 
-typedef struct _WIN32_FIND_DATAA {
-	DWORD dwFileAttributes;
-	FILETIME ftCreationTime;
-	FILETIME ftLastAccessTime;
-	FILETIME ftLastWriteTime;
-	DWORD nFileSizeHigh;
-	DWORD nFileSizeLow;
-	DWORD dwReserved0;
-	DWORD dwReserved1;
-	CHAR cFileName[DVL_MAX_PATH];
-	CHAR cAlternateFileName[14];
-	DWORD dwFileType;
-	DWORD dwCreatorType;
-	WORD wFinderFlags;
-} WIN32_FIND_DATAA, WIN32_FIND_DATA, *LPWIN32_FIND_DATAA;
-
 typedef void *LPOVERLAPPED;
 
 typedef struct _IMAGE_FILE_HEADER {
@@ -344,9 +328,6 @@ DWORD WINAPI SetFilePointer(HANDLE hFile, LONG lDistanceToMove, PLONG lpDistance
 WINBOOL WINAPI SetEndOfFile(HANDLE hFile);
 DWORD WINAPI GetFileAttributesA(LPCSTR lpFileName);
 WINBOOL WINAPI SetFileAttributesA(LPCSTR lpFileName, DWORD dwFileAttributes);
-HANDLE WINAPI FindFirstFileA(LPCSTR lpFileName, LPWIN32_FIND_DATAA lpFindFileData);
-BOOL FindNextFileA(HANDLE hFindFile, LPWIN32_FIND_DATAA lpFindFileData);
-WINBOOL WINAPI FindClose(HANDLE hFindFile);
 HANDLE WINAPI CreateFileA(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode,
     LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition,
     DWORD dwFlagsAndAttributes, HANDLE hTemplateFile);

@@ -83,18 +83,6 @@ void Sleep(DWORD dwMilliseconds)
 	SDL_Delay(dwMilliseconds);
 }
 
-HANDLE FindFirstFileA(LPCSTR lpFileName, LPWIN32_FIND_DATAA lpFindFileData)
-{
-	DUMMY();
-	return (HANDLE)-1;
-}
-
-WINBOOL FindClose(HANDLE hFindFile)
-{
-	UNIMPLEMENTED();
-	return true;
-}
-
 WINBOOL GetComputerNameA(LPSTR lpBuffer, LPDWORD nSize)
 {
 	DUMMY();

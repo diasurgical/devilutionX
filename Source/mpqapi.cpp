@@ -8,7 +8,6 @@ char mpq_buf[4096];
 _HASHENTRY *sgpHashTbl;
 BOOL save_archive_modified;
 _BLOCKENTRY *sgpBlockTbl;
-BOOLEAN save_archive_open;
 
 //note: 32872 = 32768 + 104 (sizeof(_FILEHEADER))
 
@@ -31,108 +30,6 @@ BOOL mpqapi_set_hidden(const char *pszArchive, BOOL hidden)
 		return SetFileAttributes(pszArchive, dwFileAttributesToSet);
 }
 
-void mpqapi_store_creation_time(const char *pszArchive, DWORD dwChar)
-{
-	HANDLE handle;
-	struct _WIN32_FIND_DATAA FindFileData;
-	char dst[160];
-
-	if (gbMaxPlayers != 1) {
-		mpqapi_reg_load_modification_time(dst, 160);
-		handle = FindFirstFile(pszArchive, &FindFileData);
-		if (handle != INVALID_HANDLE_VALUE) {
-			FindClose(handle);
-			*((FILETIME *)(dst) + dwChar * 2) = FindFileData.ftCreationTime;
-			mpqapi_reg_store_modification_time(dst, 160);
-		}
-	}
-}
-
-BOOL mpqapi_reg_load_modification_time(char *dst, int size)
-{
-	char *pszDst;
-	char *pbData;
-	DWORD nbytes_read;
-
-	pszDst = dst;
-	memset(dst, 0, size);
-#ifdef SPAWN
-	if (!SRegLoadData("Diablo", "Audio Playback ", 0, (BYTE *)pszDst, size, &nbytes_read)) {
-#else
-	if (!SRegLoadData("Diablo", "Video Player ", 0, (BYTE *)pszDst, size, &nbytes_read)) {
-#endif
-		return FALSE;
-	}
-
-	if (nbytes_read != size)
-		return FALSE;
-
-	for (; size >= 8u; size -= 8) {
-		pbData = pszDst;
-		pszDst += 8;
-		mpqapi_xor_buf(pbData);
-	}
-
-	return TRUE;
-}
-
-void mpqapi_xor_buf(char *pbData)
-{
-	DWORD mask;
-	char *pbCurrentData;
-	int i;
-
-	mask = 0xF0761AB;
-	pbCurrentData = pbData;
-
-	for (i = 0; i < 8; i++) {
-		*pbCurrentData ^= mask;
-		pbCurrentData++;
-		mask = (mask << 1) | (mask >> 31);  //  _rotl(mask, 1)
-	}
-}
-
-void mpqapi_store_default_time(DWORD dwChar)
-{
-	/*
-	DWORD idx;
-	char dst[160];
-
-	if(gbMaxPlayers == 1) {
-		return;
-	}
-
-	/// ASSERT: assert(dwChar < MAX_CHARACTERS);
-	idx = 16 * dwChar;
-	mpqapi_reg_load_modification_time(dst, sizeof(dst));
-	*(DWORD *)&dst[idx + 4] = 0x78341348; // dwHighDateTime
-	mpqapi_reg_store_modification_time(dst, sizeof(dst));
-*/
-}
-
-BOOLEAN mpqapi_reg_store_modification_time(char *pbData, DWORD dwLen)
-{
-	char *pbCurrentData, *pbDataToXor;
-	DWORD i;
-
-	pbCurrentData = pbData;
-	if (dwLen >= 8) {
-		i = dwLen >> 3;
-		do {
-			pbDataToXor = pbCurrentData;
-			pbCurrentData += 8;
-			mpqapi_xor_buf(pbDataToXor);
-			i--;
-		} while (i);
-	}
-
-#ifdef SPAWN
-	return SRegSaveData("Diablo", "Audio Playback ", 0, (BYTE *)pbData, dwLen);
-#else
-	return SRegSaveData("Diablo", "Video Player ", 0, (BYTE *)pbData, dwLen);
-#endif
-}
-
 void mpqapi_remove_hash_entry(const char *pszName)
 {
 	_HASHENTRY *pHashTbl;
@@ -148,7 +45,7 @@ void mpqapi_remove_hash_entry(const char *pszName)
 		block_size = blockEntry->sizealloc;
 		memset(blockEntry, 0, sizeof(*blockEntry));
 		mpqapi_alloc_block(block_offset, block_size);
-		save_archive_modified = 1;
+		save_archive_modified = TRUE;
 	}
 }
 
@@ -439,13 +336,11 @@ BOOL OpenMPQ(const char *pszArchive, BOOL hidden, DWORD dwChar)
 		return FALSE;
 	}
 	dwFlagsAndAttributes = gbMaxPlayers > 1 ? FILE_FLAG_WRITE_THROUGH : 0;
-	save_archive_open = FALSE;
 	sghArchive = CreateFile(pszArchive, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, dwFlagsAndAttributes, NULL);
 	if (sghArchive == INVALID_HANDLE_VALUE) {
 		sghArchive = CreateFile(pszArchive, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, dwFlagsAndAttributes | (hidden ? FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_HIDDEN : 0), NULL);
 		if (sghArchive == INVALID_HANDLE_VALUE)
 			return FALSE;
-		save_archive_open = TRUE;
 		save_archive_modified = TRUE;
 	}
 	if (sgpBlockTbl == NULL || sgpHashTbl == NULL) {
@@ -515,7 +410,6 @@ BOOL ParseMPQHeader(_FILEHEADER *pHdr, DWORD *pdwNextFileStart)
 		pHdr->version = 0;
 		*pdwNextFileStart = 0x10068;
 		save_archive_modified = TRUE;
-		save_archive_open = 1;
 	}
 
 	return TRUE;
@@ -531,31 +425,7 @@ void CloseMPQ(const char *pszArchive, BOOL bFree, DWORD dwChar)
 		CloseHandle(sghArchive);
 		sghArchive = INVALID_HANDLE_VALUE;
 	}
-	if (save_archive_modified) {
-		save_archive_modified = FALSE;
-		mpqapi_store_modified_time(pszArchive, dwChar);
-	}
-	if (save_archive_open) {
-		save_archive_open = FALSE;
-		mpqapi_store_creation_time(pszArchive, dwChar);
-	}
-}
-
-void mpqapi_store_modified_time(const char *pszArchive, DWORD dwChar)
-{
-	HANDLE handle;
-	struct _WIN32_FIND_DATAA FindFileData;
-	char dst[160];
-
-	if (gbMaxPlayers != 1) {
-		mpqapi_reg_load_modification_time(dst, 160);
-		handle = FindFirstFile(pszArchive, &FindFileData);
-		if (handle != INVALID_HANDLE_VALUE) {
-			FindClose(handle);
-			*((FILETIME *)(dst) + dwChar * 2 + 1) = FindFileData.ftLastWriteTime;
-			mpqapi_reg_store_modification_time(dst, 160);
-		}
-	}
+	save_archive_modified = FALSE;
 }
 
 BOOL mpqapi_flush_and_close(const char *pszArchive, BOOL bFree, DWORD dwChar)

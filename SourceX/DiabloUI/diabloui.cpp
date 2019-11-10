@@ -807,8 +807,8 @@ void DvlIntSetting(const char *valuename, int *value)
  */
 void DvlStringSetting(const char *valuename, char *string, int len)
 {
-	if (!SRegLoadString("devilutionx", valuename, 0, string, len)) {
-		SRegSaveString("devilutionx", valuename, 0, string);
+	if (!getIniValue("devilutionx", valuename, string, len)) {
+		setIniValue("devilutionx", valuename, string);
 	}
 }
 } // namespace dvl

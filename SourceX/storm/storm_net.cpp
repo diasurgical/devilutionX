@@ -115,7 +115,7 @@ BOOL SNetCreateGame(const char *pszGameName, const char *pszGamePassword, const 
 	dvlnet_inst->setup_gameinfo(std::move(game_init_info));
 
 	char addrstr[129] = "0.0.0.0";
-	SRegLoadString("dvlnet", "bindaddr", 0, addrstr, 128);
+	getIniValue("dvlnet", "bindaddr", addrstr, 128);
 	strncpy(gpszGameName, addrstr, sizeof(gpszGameName) - 1);
 	if (pszGamePassword)
 		strncpy(gpszGamePassword, pszGamePassword, sizeof(gpszGamePassword) - 1);

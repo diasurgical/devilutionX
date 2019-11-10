@@ -29,13 +29,13 @@ public:
 	virtual bool SNetReceiveMessage(int *sender, char **data, int *size);
 	virtual bool SNetSendMessage(int dest, void *data, unsigned int size);
 	virtual bool SNetReceiveTurns(char **data, unsigned int *size,
-		DWORD *status);
+	    DWORD *status);
 	virtual bool SNetSendTurn(char *data, unsigned int size);
 	virtual int SNetGetProviderCaps(struct _SNETCAPS *caps);
 	virtual bool SNetRegisterEventHandler(event_type evtype,
-		SEVTHANDLER func);
+	    SEVTHANDLER func);
 	virtual bool SNetUnregisterEventHandler(event_type evtype,
-		SEVTHANDLER func);
+	    SEVTHANDLER func);
 	virtual bool SNetLeaveGame(int type);
 	virtual bool SNetDropPlayer(int playerid, DWORD flags);
 	virtual bool SNetGetOwnerTurnsWaiting(DWORD *turns);
@@ -46,6 +46,8 @@ public:
 
 	void setup_gameinfo(buffer_t info);
 
+	virtual ~base() = default;
+
 protected:
 	std::map<event_type, SEVTHANDLER> registered_handlers;
 	buffer_t game_init_info;
@@ -54,13 +56,13 @@ protected:
 		int sender; // change int to something else in devilution code later
 		buffer_t payload;
 		message_t()
-			: sender(-1)
-			, payload({})
+		    : sender(-1)
+		    , payload({})
 		{
 		}
 		message_t(int s, buffer_t p)
-			: sender(s)
-			, payload(p)
+		    : sender(s)
+		    , payload(p)
 		{
 		}
 	};

@@ -65,8 +65,6 @@ BOOL pfile_open_archive(BOOL update, DWORD save_num)
 	if (OpenMPQ(FileName, FALSE, save_num))
 		return TRUE;
 
-	if (update && gbMaxPlayers > 1)
-		mpqapi_store_default_time(save_num);
 	return FALSE;
 }
 

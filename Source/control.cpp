@@ -231,7 +231,7 @@ void DrawSpell()
 
 	spl = plr[myplr]._pRSpell;
 	st = plr[myplr]._pRSplType;
-	
+
 	// BUGFIX: Move the next line into the if statement to avoid OOB (SPL_INVALID is -1) (fixed)
 	if (st == RSPLTYPE_SPELL && spl != SPL_INVALID) {
 		tlvl = plr[myplr]._pISplLvlAdd + plr[myplr]._pSplLvl[spl];
@@ -258,8 +258,8 @@ void DrawSpellList()
 
 	pSpell = SPL_INVALID;
 	infostr[0] = '\0';
-	x = 636;
-	y = 495;
+	x = PANEL_X + 12 + 56 * 10;
+	y = PANEL_Y - 17;
 	ClearPanel();
 	for (i = 0; i < 4; i++) {
 		switch ((spell_type)i) {
@@ -299,8 +299,8 @@ void DrawSpellList()
 			if (currlevel == 0 && !spelldata[j].sTownSpell)
 				SetSpellTrans(RSPLTYPE_INVALID);
 			DrawSpellCel(x, y, pSpellCels, SpellITbl[j], 56);
-			lx = x - 64;
-			ly = y - 216;
+			lx = x - BORDER_LEFT;
+			ly = y - BORDER_TOP - 56;
 			if (MouseX >= lx && MouseX < lx + 56 && MouseY >= ly && MouseY < ly + 56) {
 				pSpell = j;
 				pSplType = i;
@@ -362,16 +362,16 @@ void DrawSpellList()
 				}
 			}
 			x -= 56;
-			if (x == 20) {
+			if (x == PANEL_X + 12 - 56) {
 				y -= 56;
-				x = 636;
+				x = PANEL_X + 12 + 56 * 10;
 			}
 		}
-		if (mask != 0 && x != 636)
+		if (mask != 0 && x != PANEL_X + 12 + 56 * 10)
 			x -= 56;
-		if (x == 20) {
+		if (x == PANEL_X + 12 - 56) {
 			y -= 56;
-			x = 636;
+			x = PANEL_X + 12 + 56 * 10;
 		}
 	}
 }
@@ -804,10 +804,10 @@ void DoSpeedBook()
 	int xo, yo, X, Y, i, j;
 
 	spselflag = 1;
-	xo = 636;
-	yo = 495;
-	X = 600;
-	Y = 307;
+	xo = PANEL_X + 12 + 56 * 10;
+	yo = PANEL_Y - 17;
+	X = PANEL_LEFT + 12 + 56 * 10 + 56 / 2;
+	Y = PANEL_TOP - 17 - 56 / 2;
 	if (plr[myplr]._pRSpell != SPL_INVALID) {
 		for (i = 0; i < 4; i++) {
 			switch (i) {
@@ -828,21 +828,21 @@ void DoSpeedBook()
 			for (j = 1; j < MAX_SPELLS; j++) {
 				if (spell & spells) {
 					if (j == plr[myplr]._pRSpell && i == plr[myplr]._pRSplType) {
-						X = xo - 36;
-						Y = yo - 188;
+						X = xo - (BORDER_LEFT - 56 / 2);
+						Y = yo - (BORDER_TOP + 56 / 2);
 					}
 					xo -= 56;
-					if (xo == 20) {
-						xo = 636;
+					if (xo == PANEL_X + 12 - 56) {
+						xo = PANEL_X + 12 + 56 * 10;
 						yo -= 56;
 					}
 				}
 				spell <<= (__int64)1;
 			}
-			if (spells && xo != 636)
+			if (spells && xo != PANEL_X + 12 + 56 * 10)
 				xo -= 56;
-			if (xo == 20) {
-				xo = 636;
+			if (xo == PANEL_X + 12 - 56) {
+				xo = PANEL_X + 12 + 56 * 10;
 				yo -= 56;
 			}
 		}
@@ -1966,7 +1966,7 @@ void DrawTalkPan()
 	}
 	if (msg)
 		*msg = '\0';
-	CelDraw(x, i + 534, pSPentSpn2Cels, PentSpn2Frame, 12);
+	CelDraw(x, i + 22 + PANEL_Y, pSPentSpn2Cels, PentSpn2Frame, 12);
 	PentSpn2Spin();
 	talk_btn = 0;
 	for (i = 0; i < 4; i++) {
@@ -2015,7 +2015,7 @@ char *control_print_talk_msg(char *msg, int *x, int y, int color)
 			return msg;
 		msg++;
 		if (c) {
-			CPrintString(*x, y + 22 + PANEL_TOP, c, color);
+			CPrintString(*x, y + 22 + PANEL_Y, c, color);
 		}
 		*x += fontkern[c] + 1;
 	}

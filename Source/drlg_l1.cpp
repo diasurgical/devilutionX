@@ -4,14 +4,14 @@ DEVILUTION_BEGIN_NAMESPACE
 
 BYTE L5dungeon[80][80];
 BYTE L5dflags[DMAXX][DMAXY];
-BOOL setloadflag;
+BOOL L5setloadflag;
 int HR1;
 int HR2;
 int HR3;
 int VR1;
 int VR2;
 int VR3;
-BYTE *pSetPiece;
+BYTE *L5pSetPiece;
 
 const ShadowStruct SPATS[37] = {
 	// clang-format off
@@ -444,24 +444,24 @@ static void DRLG_L1Pass3()
 
 static void DRLG_LoadL1SP()
 {
-	setloadflag = FALSE;
+	L5setloadflag = FALSE;
 	if (QuestStatus(QTYPE_BUTCH)) {
-		pSetPiece = LoadFileInMem("Levels\\L1Data\\rnd6.DUN", NULL);
-		setloadflag = TRUE;
+		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\rnd6.DUN", NULL);
+		L5setloadflag = TRUE;
 	}
 	if (QuestStatus(QTYPE_KING) && gbMaxPlayers == 1) {
-		pSetPiece = LoadFileInMem("Levels\\L1Data\\SKngDO.DUN", NULL);
-		setloadflag = TRUE;
+		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\SKngDO.DUN", NULL);
+		L5setloadflag = TRUE;
 	}
 	if (QuestStatus(QTYPE_BOL)) {
-		pSetPiece = LoadFileInMem("Levels\\L1Data\\Banner2.DUN", NULL);
-		setloadflag = TRUE;
+		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\Banner2.DUN", NULL);
+		L5setloadflag = TRUE;
 	}
 }
 
 static void DRLG_FreeL1SP()
 {
-	MemFreeDbg(pSetPiece);
+	MemFreeDbg(L5pSetPiece);
 }
 
 void DRLG_Init_Globals()
@@ -1316,15 +1316,15 @@ static void DRLG_L5SetRoom(int rx1, int ry1)
 	int rw, rh, i, j;
 	BYTE *sp;
 
-	rw = *pSetPiece;
-	rh = *(pSetPiece + 2);
+	rw = *L5pSetPiece;
+	rh = *(L5pSetPiece + 2);
 
 	setpc_x = rx1;
 	setpc_y = ry1;
 	setpc_w = rw;
 	setpc_h = rh;
 
-	sp = pSetPiece + 4;
+	sp = L5pSetPiece + 4;
 
 	for (j = 0; j < rh; j++) {
 		for (i = 0; i < rw; i++) {
@@ -1388,7 +1388,7 @@ static void L5FillChambers()
 	if (VR1 && !VR2 && VR3)
 		DRLG_L5GHall(18, 12, 18, 28);
 
-	if (setloadflag) {
+	if (L5setloadflag) {
 		if (VR1 || VR2 || VR3) {
 			c = 1;
 			if (!VR1 && VR2 && VR3 && random_(0, 2))

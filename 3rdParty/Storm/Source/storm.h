@@ -828,11 +828,7 @@ void GetPrefPath(char *buffer, size_t size);
 bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue = false);
 bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, int *dataSize = NULL);
 void setIniValue(const char *sectionName, const char *keyName, char *value, int len = 0);
-BOOL STORMAPI SRegLoadData(const char *keyname, const char *valuename, int size, LPBYTE lpData, BYTE flags, LPDWORD lpcbData);
-BOOL STORMAPI SRegLoadString(const char *keyname, const char *valuename, BYTE flags, char *buffer, unsigned int buffersize);
 BOOL STORMAPI SRegLoadValue(const char *keyname, const char *valuename, BYTE flags, int *value);
-BOOL STORMAPI SRegSaveData(const char *keyname, const char *valuename, int size, BYTE *lpData, DWORD cbData);
-BOOL STORMAPI SRegSaveString(const char *keyname, const char *valuename, BYTE flags, char *string);
 BOOL STORMAPI SRegSaveValue(const char *keyname, const char *valuename, BYTE flags, DWORD result);
 
 BOOL STORMAPI SRegDeleteValue(const char *keyname, const char *valuename, BYTE flags);

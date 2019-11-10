@@ -102,12 +102,14 @@ Make sure to install the `C++ CMake tools for Windows` component for Visual Stud
 	Don't forget to perform _user-wide integration_ step for additional convenience.
 2. Install required dependencies by executing the following command (via cmd or powershell):
 
+	`vcpkg install sdl2:x64-windows sdl2-mixer:x64-windows sdl2-ttf:x64-windows libsodium:x64-windows`
+
 	`vcpkg install sdl2:x86-windows sdl2-mixer:x86-windows sdl2-ttf:x86-windows libsodium:x86-windows`
 
 	_Note: this command installs libraries compiled for x86 but it's not hard to do the same for x64 libraries if you need it_
 
 * **Manually**
-1. Download and place the 32bit MSVC Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/), [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/) and [Libsodium](https://github.com/jedisct1/libsodium/releases) in `%USERPROFILE%\AppData\Local\Microsoft\WindowsApps\`.
+1. Download and place the MSVC Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/), [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/) and [Libsodium](https://github.com/jedisct1/libsodium/releases) in `%USERPROFILE%\AppData\Local\Microsoft\WindowsApps\`.
 2. If dependencies are not found or you wish to place them in other location - configure required path variables in _"Manage Configurations..."_ dialog inside Visual Studio or in _cmake-gui_.
 
 ### Compiling
@@ -115,8 +117,6 @@ Make sure to install the `C++ CMake tools for Windows` component for Visual Stud
 * **Through Open->CMake in Visual Studio**
 1. Go to `File -> Open -> CMake`, select `CMakeLists.txt` from the project root.
 2. Select `Build devilution.exe` from the `Build` menu.
-
-	_Note: By default Visual Studio only creates configuration x64-Debug, to add the new configuration (e.g. x86-Debug) please click "Manage Configurations..." in combo box on the top and then on button with green plus to add a new configuration_
 
 * **Through cmake-gui**
 

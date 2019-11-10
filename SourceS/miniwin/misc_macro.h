@@ -93,7 +93,6 @@
 
 #define GetFileAttributes GetFileAttributesA
 #define SetFileAttributes SetFileAttributesA
-#define FindFirstFile FindFirstFileA
 #define CreateFile CreateFileA
 #define GetComputerName GetComputerNameA
 #define DeleteFile DeleteFileA
