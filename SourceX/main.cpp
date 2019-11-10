@@ -22,8 +22,20 @@ static std::string build_cmdline(int argc, char **argv)
 	return str;
 }
 
+void quit(){
+	static bool completed = false;
+	if(completed) return;
+	completed = true;
+	dvl::init_cleanup();
+	dvl::SaveGamma();
+	SDL_Quit();
+}
+
 int main(int argc, char **argv)
 {
+	atexit(quit);
 	auto cmdline = build_cmdline(argc, argv);
-	return dvl::WinMain(NULL, NULL, (char *)cmdline.c_str(), 0);
+	int result = dvl::WinMain(NULL, NULL, (char *)cmdline.c_str(), 0);
+	quit();
+	return result;
 }
