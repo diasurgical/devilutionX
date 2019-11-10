@@ -27,36 +27,91 @@ int hsr[3] = { 0, 0, 0 }; // hot spell row counts
 int slot = SLOTXY_INV_FIRST;
 int spbslot = 0;
 
-// 0 = not near, >0 = distance related player 1 coordinates
-coords CheckNearbyObjs(int x, int y, int diff)
+/**
+ * Number of angles to turn to face the coordinate
+ * @param x Tile coordinates
+ * @param y Tile coordinates
+ * @return -1 == down
+ */
+int GetRoteryDistance(int x, int y)
 {
-	int diff_x = abs(plr[myplr]._px - x);
-	int diff_y = abs(plr[myplr]._py - y);
+	int d, d1, d2;
 
-	if (diff_x <= diff && diff_y <= diff) {
-		coords cm = { diff_x, diff_y };
-		//sprintf(tempstr, "N-DIFF X:%i Y:%i", diff_x, diff_y);
-		//NetSendCmdString(1 << myplr, tempstr);
-		return cm;
-	}
-	return { -1, -1 };
+	if (plr[myplr]._px == x && plr[myplr]._py == y)
+		return -1;
+
+	d1 = plr[myplr]._pdir;
+	d2 = GetDirection(plr[myplr]._px, plr[myplr]._py, x, y);
+
+	d = abs(d1 - d2);
+	if (d > 4)
+		return 4 - (d % 4);
+
+	return d;
 }
 
-void CheckItemsNearby()
+/**
+ * @brief Get walking distance to cordinate
+ * @param x Tile coordinates
+ * @param y Tile coordinates
+ */
+int GetDistance(int x, int y)
 {
-	for (int i = 0; i < MAXITEMS; i++) {
-		if (CheckNearbyObjs(item[i]._ix, item[i]._iy, 1).x != -1 && item[i]._iSelFlag > 0 && item[i]._itype > -1) {
-			if (dItem[item[i]._ix][item[i]._iy] <= 0)
+	char walkpath[25];
+	return FindPath(PosOkPlayer, myplr, plr[myplr]._px, plr[myplr]._py, x, y, walkpath);
+}
+
+/**
+ * @brief Get walking distance to cordinate
+ * @param x Tile coordinates
+ * @param y Tile coordinates
+ */
+int GetDistanceRanged(int x, int y)
+{
+	return path_get_h_cost(plr[myplr]._px, plr[myplr]._py, x, y);
+}
+
+void FindItemOrObject()
+{
+	int mx = plr[myplr]._px;
+	int my = plr[myplr]._py;
+	int rotations = 5;
+
+	for (int xx = -1; xx < 2; xx++) {
+		for (int yy = -1; yy < 2; yy++) {
+			if (dItem[mx + xx][my + yy] <= 0)
 				continue;
+			int i = dItem[mx + xx][my + yy] - 1;
+			if (item[i]._itype == ITYPE_NONE
+			    || item[i]._iSelFlag == 0)
+				continue;
+			int newRotations = GetRoteryDistance(mx + xx, my + yy);
+			if (rotations < newRotations)
+				continue;
+			rotations = newRotations;
 			pcursitem = i;
-			return; // item nearby, don't find objects
+			cursmx = mx + xx;
+			cursmy = my + yy;
 		}
 	}
 
-	for (int i = 0; i < MAXOBJECTS; i++) {
-		if (CheckNearbyObjs(object[i]._ox, object[i]._oy, 1).x != -1 && object[i]._oSelFlag > 0 && object[i]._otype > -1 && currlevel) { // make sure we're in the dungeon to scan for objs
-			pcursobj = i;
-			return;
+	if (currlevel == DTYPE_TOWN || pcursitem != -1)
+		return; // Don't look for objects in town
+
+	for (int xx = -1; xx < 2; xx++) {
+		for (int yy = -1; yy < 2; yy++) {
+			if (dObject[mx + xx][my + yy] == 0)
+				continue;
+			int o = dObject[mx + xx][my + yy] > 0 ? dObject[mx + xx][my + yy] - 1 : -(dObject[mx + xx][my + yy] + 1);
+			if (object[o]._oSelFlag == 0)
+				continue;
+			int newRotations = GetRoteryDistance(mx + xx, my + yy);
+			if (rotations < newRotations)
+				continue;
+			rotations = newRotations;
+			pcursobj = o;
+			cursmx = mx + xx;
+			cursmy = my + yy;
 		}
 	}
 }
@@ -64,36 +119,68 @@ void CheckItemsNearby()
 void CheckTownersNearby()
 {
 	for (int i = 0; i < 16; i++) {
-		if (CheckNearbyObjs(towner[i]._tx, towner[i]._ty, 2).x != -1) {
-			if (towner[i]._ttype == -1)
-				continue;
-			pcursmonst = i;
-			break;
-		}
+		int distance = GetDistance(towner[i]._tx, towner[i]._ty);
+		if (distance == 0 || distance > 6)
+			continue;
+		pcursmonst = i;
 	}
+}
+
+bool HasRangedSpell()
+{
+	int v = plr[myplr]._pRSpell;
+
+	return v != SPL_INVALID
+		&& v != SPL_TOWN
+		&& v != SPL_TELEPORT
+		&& spelldata[v].sTargeted
+		&& !spelldata[v].sTownSpell;
 }
 
 void CheckMonstersNearby()
 {
-	coords objDistLast = { 99, 99 }; // previous obj distance
+	int newRotations, newDdistance;
+	int distance = 2 * (MAXDUNX + MAXDUNY);
+	int rotations = 5;
+
 	// The first MAX_PLRS monsters are reserved for players' golems.
 	for (int i = MAX_PLRS; i < MAXMONSTERS; i++) {
 		const auto &monst = monster[i];
 		const int mx = monst._mx;
 		const int my = monst._my;
-		if (dMonster[mx][my] == 0 || (monst._mFlags & MFLAG_HIDDEN) || // hidden
-		    monst._mhitpoints <= 0 ||                                  // dead
-		    !((dFlags[mx][my] & BFLAG_LIT) || plr[myplr]._pInfraFlag)) // not visable
+		if (dMonster[mx][my] == 0
+		    || monst._mFlags & (MFLAG_HIDDEN | MFLAG_GOLEM) // hidden or golem
+		    || monst._mhitpoints >> 6 <= 0                  // dead
+		    || !(dFlags[mx][my] & BFLAG_LIT)                // not visable
+		    || !(monst.MData->mSelFlag & 7))                // selectable
 			continue;
-		const char mSelFlag = monst.MData->mSelFlag;
-		if (mSelFlag & 1 || mSelFlag & 2 || mSelFlag & 3 || mSelFlag & 4) { // is monster selectable
-			coords objDist = CheckNearbyObjs(mx, my, 6);
-			if (objDist.x > -1 && objDist.x <= objDistLast.x && objDist.y <= objDistLast.y) {
-				pcursmonst = i;
-				objDistLast = objDist;
-			}
+
+		if (plr[myplr]._pwtype == WT_RANGED || HasRangedSpell())
+			newDdistance = GetDistanceRanged(mx, my);
+		else
+			newDdistance = GetDistance(mx, my);
+
+		if (newDdistance == 0 || distance < newDdistance || (pcursmonst != -1 && CanTalkToMonst(i))) {
+			continue;
 		}
+		if (distance == newDdistance) {
+			newRotations = GetRoteryDistance(mx, my);
+			if (rotations < newRotations)
+				continue;
+		}
+		distance = newDdistance;
+		rotations = newRotations;
+		pcursmonst = i;
 	}
+}
+
+void FindActor()
+{
+	if (leveltype != DTYPE_TOWN)
+		CheckMonstersNearby();
+	else
+		CheckTownersNearby();
+	// TODO target players if !FriendlyMode
 }
 
 void Interact()
@@ -510,13 +597,8 @@ void plrctrls_after_check_curs_move()
 		if (!invflag) {
 			*infostr = '\0';
 			ClearPanel();
-
-			// TODO target players if !FriendlyMode
-			if (leveltype != DTYPE_TOWN)
-				CheckMonstersNearby();
-			else
-				CheckTownersNearby();
-			CheckItemsNearby();
+			FindActor();
+			FindItemOrObject();
 		}
 	}
 }
@@ -585,9 +667,9 @@ void PerformSecondaryAction()
 		return;
 
 	if (pcursitem != -1 && pcurs == CURSOR_HAND) {
-		NetSendCmdLocParam1(pcurs, CMD_GOTOAGETITEM, item[pcursitem]._ix, item[pcursitem]._iy, pcursitem);
+		NetSendCmdLocParam1(true, CMD_GOTOAGETITEM, cursmx, cursmy, pcursitem);
 	} else if (pcursobj != -1) {
-		NetSendCmdLocParam1(true, pcurs == CURSOR_DISARM ? CMD_DISARMXY : CMD_OPOBJXY, object[pcursobj]._ox, object[pcursobj]._oy, pcursobj);
+		NetSendCmdLocParam1(true, pcurs == CURSOR_DISARM ? CMD_DISARMXY : CMD_OPOBJXY, cursmx, cursmy, pcursobj);
 	}
 }
 
