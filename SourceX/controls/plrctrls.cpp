@@ -77,6 +77,7 @@ void FindItemOrObject()
 	int my = plr[myplr]._py;
 	int rotations = 5;
 
+	// As the player can not stand on the edge fo the map this is safe from OOB
 	for (int xx = -1; xx < 2; xx++) {
 		for (int yy = -1; yy < 2; yy++) {
 			if (dItem[mx + xx][my + yy] <= 0)
