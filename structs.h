@@ -1305,6 +1305,14 @@ typedef struct _SNETPROGRAMDATA {
 	int lcid;
 } _SNETPROGRAMDATA;
 
+typedef struct _SNETVERSIONDATA {
+	int size;
+	char *versionstring;
+	char *executablefile;
+	char *originalarchivefile;
+	char *patcharchivefile;
+} _SNETVERSIONDATA;
+
 typedef struct _SNETUIDATA {
 	int size;
 	int uiflags;
@@ -1336,14 +1344,6 @@ typedef struct _SNETUIDATA {
 	    );
 	void(* changenamecallback)();
 } _SNETUIDATA;
-
-typedef struct _SNETVERSIONDATA {
-	int size;
-	char *versionstring;
-	char *executablefile;
-	char *originalarchivefile;
-	char *patcharchivefile;
-} _SNETVERSIONDATA;
 
 // TPDEF PTR FCN UCHAR SNETSPIBIND
 // TPDEF PTR FCN UCHAR SNETSPIQUERY
