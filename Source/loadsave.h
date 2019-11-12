@@ -33,7 +33,6 @@ void SavePlayer(int i);
 void SaveMonster(int i);
 void SaveMissile(int i);
 void SaveObject(int i);
-void SaveItem(int i);
 void SavePremium(int i);
 void SaveQuest(int i);
 void SaveLighting(int i);
