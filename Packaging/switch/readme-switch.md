@@ -10,17 +10,17 @@
 
 - Left analog : move hero
 - Right analog : simulate mouse
-- B : attack nearby enemies, talk to towns people and merchants, pickup & drop items in inventory, OK while in main menu
-- Y : pickup gold, potions & equipment from ground, open chests and doors that are nearby, use item when in inventory (useful to read books etc.)
-- X : cast spell, go to previous screen when talking to people and in shops, delete character while in main menu
-- A : Select spell, cancel while in main menu
+- A : attack nearby enemies, talk to towns people and merchants, pickup & drop items in inventory, OK while in main menu
+- X : pickup gold, potions & equipment from ground, open chests and doors that are nearby, use item when in inventory (useful to read books etc.)
+- Y : cast spell, go to previous screen when talking to people and in shops, delete character while in main menu
+- B : Select spell, cancel while in main menu
 - R : inventory
 - L : character
 - ZR : drink mana potion
 - ZL : drink health potion
-- Left analog click : quest log
+- Minus + Y : quest log
 - Right analog click : left mouse click
-- Minus : automap
+- Left analog click : automap
 - Plus : game Menu, skip intro
 
 ### Touch Controls
@@ -30,20 +30,6 @@
 - Single short tap while holding a second finger down : right mouse click
 - Dual finger drag : drag'n'drop (left mouse button is held down)
 - Three finger drag : drag'n'drop (right mouse button is held down)
-
-### Compiling
-
-```
-Packaging/switch/build.sh
-```
-
-This will install the [Switch devkit](https://switchbrew.org/wiki/Setting_up_Development_Environment) and build a DevilutionX Switch package. If you already have the devkit installed, or are on a non-Debian system, pass the the devkit path to the script like this:
-
-```
-DEVKITPRO=<path to devkit> Packaging/switch/build.sh
-```
-
-- .nro lives in release. Test with an emulator (RyuJinx) or real hardware.
 
 ### Credits
 

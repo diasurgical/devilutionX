@@ -230,6 +230,7 @@ set(devilutionx_SRCS
   SourceX/controls/game_controls.cpp
   SourceX/controls/menu_controls.cpp
   SourceX/controls/plrctrls.cpp
+  SourceX/controls/touch.cpp
   SourceX/miniwin/ddraw.cpp
   SourceX/miniwin/misc.cpp
   SourceX/miniwin/misc_io.cpp
@@ -268,7 +269,6 @@ set(devilutionx_SRCS
   SourceX/DiabloUI/title.cpp
   SourceX/DiabloUI/ttf_render_wrapped.cpp
   SourceX/main.cpp
-  touch/touch.cpp
   ./Packaging/macOS/AppIcon.icns
   ./Packaging/resources/CharisSILB.ttf)
 
@@ -282,7 +282,9 @@ endif()
 set(BIN_TARGET devilutionx)
 
 if(SWITCH)
-  list(APPEND devilutionx_SRCS switch/switch_keyboard.cpp)
+  list(APPEND devilutionx_SRCS
+    SourceX/platform/switch/keyboard.cpp
+    SourceX/platform/switch/docking.cpp)
   set(BIN_TARGET devilutionx.elf)
 endif()
 
@@ -402,10 +404,8 @@ foreach(target devilution ${BIN_TARGET})
   endif()
 
   if(SWITCH)
-    target_compile_definitions(${target} PRIVATE SWITCH)
     target_link_libraries(${target} PRIVATE switch::libnx
-      # Most of these shouldn't be necessary.
-      -lfreetype -lvorbisfile -lvorbis -logg -lmodplug -lmikmod -lmpg123 -lSDL2 -lopusfile -lopus -lEGL -lglapi -ldrm_nouveau -lpng -lbz2 -lz -lnx)
+      -lfreetype -lvorbisfile -lvorbis -logg -lmodplug -lmpg123 -lSDL2 -lopusfile -lopus -lEGL -lglapi -ldrm_nouveau -lpng -lbz2 -lz -lnx)
   endif()
 
   target_compile_definitions(${target} PRIVATE ${def_list})
@@ -500,7 +500,7 @@ endif()
 if(SWITCH)
   set(APP_TITLE "DevilutionX")
   set(APP_AUTHOR "Devilution Team")
-  set(APP_ICON "${PROJECT_SOURCE_DIR}/switch/icon.jpg")
+  set(APP_ICON "${PROJECT_SOURCE_DIR}/Packaging/switch/icon.jpg")
   set(APP_VERSION ${PROJECT_VERSION})
   include(nx-utils)
   build_switch_binaries(${BIN_TARGET})

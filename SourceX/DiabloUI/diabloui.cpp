@@ -16,9 +16,9 @@
 #include "DiabloUI/button.h"
 #include "DiabloUI/dialogs.h"
 
-#ifdef SWITCH
+#ifdef __SWITCH__
 // for virtual keyboard on Switch
-#include "../../switch/switch_keyboard.h"
+#include "platform/switch/keyboard.h"
 #endif
 
 namespace dvl {
@@ -85,7 +85,7 @@ void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(i
 	SDL_StopTextInput(); // input is enabled by default
 	for (int i = 0; i < itemCnt; i++) {
 		if (items[i].type == UI_EDIT) {
-#ifdef SWITCH
+#ifdef __SWITCH__
 			switch_start_text_input(items[i - 1].art_text.text, items[i].edit.value, /*multiline=*/0);
 #endif
 			SDL_StartTextInput();
@@ -360,7 +360,7 @@ void UiInitialize()
 	LoadUiGFX();
 	LoadArtFonts();
 	if (ArtCursor.surface != nullptr) {
-#ifndef SWITCH
+#ifndef __SWITCH__
 		if (SDL_ShowCursor(SDL_DISABLE) <= -1) {
 			ErrSdl();
 		}

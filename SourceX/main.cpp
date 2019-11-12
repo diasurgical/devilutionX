@@ -1,6 +1,6 @@
 #include <string>
 #include <SDL.h>
-#ifdef SWITCH
+#ifdef __SWITCH__
 #include <switch.h>
 static int nxlink_sock = -1; // for stdio on Switch
 #endif
@@ -30,19 +30,21 @@ int main(int argc, char **argv)
 {
 	auto cmdline = build_cmdline(argc, argv);
 
-#ifdef SWITCH
+#ifdef __SWITCH__
 	// enable network and stdio on Switch
 	socketInitializeDefault();
 	// enable error messages via nxlink on Switch
 	nxlink_sock = nxlinkStdio();
 #endif
 
-	return dvl::WinMain(NULL, NULL, (char *)cmdline.c_str(), 0);
+	int rv = dvl::WinMain(NULL, NULL, (char *)cmdline.c_str(), 0);
 
-#ifdef SWITCH
+#ifdef __SWITCH__
 	// disable network and stdio on Switch
 	if (nxlink_sock != -1)
 		close(nxlink_sock);
 	socketExit();
 #endif
+
+	return rv;
 }

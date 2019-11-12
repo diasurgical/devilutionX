@@ -1,9 +1,10 @@
 #ifndef USE_SDL1
+#include "miniwin/ddraw.h"
 #include "touch.h"
 #include <math.h>
 
 template <typename T>
-inline T CLIP(T v, T amin, T amax)
+inline T clip(T v, T amin, T amax)
 {
 	if (v < amin)
 		return amin;
@@ -13,16 +14,6 @@ inline T CLIP(T v, T amin, T amax)
 		return v;
 }
 
-#ifdef SWITCH
-#define DISPLAY_WIDTH 1280
-#define DISPLAY_HEIGHT 720
-#else
-// TODO: How to find display size for each platform programmatically?
-#define DISPLAY_WIDTH 1920
-#define DISPLAY_HEIGHT 1080
-#endif
-#define GAME_WIDTH 640
-#define GAME_HEIGHT 480
 #define TOUCH_PORT_MAX_NUM 1
 #define NO_TOUCH -1 // finger id setting if finger is not touching the screen
 
@@ -33,7 +24,6 @@ static void preprocess_finger_up(SDL_Event *event);
 static void preprocess_finger_motion(SDL_Event *event);
 static void set_mouse_button_event(SDL_Event *event, uint32_t type, uint8_t button, int32_t x, int32_t y);
 static void set_mouse_motion_event(SDL_Event *event, int32_t x, int32_t y, int32_t xrel, int32_t yrel);
-static void convert_touch_xy_to_game_xy(float touch_x, float touch_y, int *game_x, int *game_y);
 
 static bool touch_initialized = false;
 static unsigned int simulated_click_start_time[TOUCH_PORT_MAX_NUM][2]; // initiation time of last simulated left or right click (zero if no click)
@@ -125,7 +115,9 @@ static void preprocess_finger_down(SDL_Event *event)
 	int y = mouse_y;
 
 	if (direct_touch) {
-		convert_touch_xy_to_game_xy(event->tfinger.x, event->tfinger.y, &x, &y);
+		x = event->tfinger.x;
+		y = event->tfinger.y;
+		dvl::OutputToLogical(&x, &y);
 	}
 
 	// make sure each finger is not reported down multiple times
@@ -184,8 +176,8 @@ static void preprocess_finger_up(SDL_Event *event)
 
 			// short (<MAX_TAP_TIME ms) tap is interpreted as right/left mouse click depending on # fingers already down
 			// but only if the finger hasn't moved since it was pressed down by more than MAX_TAP_MOTION_DISTANCE pixels
-			float xrel          = ((event->tfinger.x * DISPLAY_WIDTH) - (finger[port][i].last_down_x * DISPLAY_WIDTH));
-			float yrel          = ((event->tfinger.y * DISPLAY_HEIGHT) - (finger[port][i].last_down_y * DISPLAY_HEIGHT));
+			float xrel          = ((event->tfinger.x * dvl::GetOutputSurface()->w) - (finger[port][i].last_down_x * dvl::GetOutputSurface()->w));
+			float yrel          = ((event->tfinger.y * dvl::GetOutputSurface()->h) - (finger[port][i].last_down_y * dvl::GetOutputSurface()->h));
 			float max_r_squared = (float)(MAX_TAP_MOTION_DISTANCE * MAX_TAP_MOTION_DISTANCE);
 			if ((xrel * xrel + yrel * yrel) >= max_r_squared) {
 				continue;
@@ -205,7 +197,9 @@ static void preprocess_finger_up(SDL_Event *event)
 				// need to raise the button later
 				simulated_click_start_time[port][0] = event->tfinger.timestamp;
 				if (direct_touch) {
-					convert_touch_xy_to_game_xy(event->tfinger.x, event->tfinger.y, &x, &y);
+					x = event->tfinger.x;
+					y = event->tfinger.y;
+					dvl::OutputToLogical(&x, &y);
 				}
 			}
 			set_mouse_button_event(event, SDL_MOUSEBUTTONDOWN, simulated_button, x, y);
@@ -249,19 +243,21 @@ static void preprocess_finger_motion(SDL_Event *event)
 		int yrel = 0;
 
 		if (direct_touch) {
-			convert_touch_xy_to_game_xy(event->tfinger.x, event->tfinger.y, &x, &y);
+			x = event->tfinger.x;
+			y = event->tfinger.y;
+			dvl::OutputToLogical(&x, &y);
 		} else {
 			// for relative mode, use the pointer speed setting
 			float speedFactor = 1.0;
 
 			// convert touch events to relative mouse pointer events
 			// Whenever an SDL_event involving the mouse is processed,
-			x = (mouse_x + (event->tfinger.dx * 1.25 * speedFactor * DISPLAY_WIDTH));
-			y = (mouse_y + (event->tfinger.dy * 1.25 * speedFactor * DISPLAY_HEIGHT));
+			x = (mouse_x + (event->tfinger.dx * 1.25 * speedFactor * dvl::GetOutputSurface()->w));
+			y = (mouse_y + (event->tfinger.dy * 1.25 * speedFactor * dvl::GetOutputSurface()->h));
 		}
 
-		x    = CLIP(x, 0, (int)DISPLAY_WIDTH);
-		y    = CLIP(y, 0, (int)DISPLAY_HEIGHT);
+		x    = clip(x, 0, dvl::GetOutputSurface()->w);
+		y    = clip(y, 0, dvl::GetOutputSurface()->h);
 		xrel = x - mouse_x;
 		yrel = y - mouse_y;
 
@@ -420,32 +416,5 @@ static void set_mouse_motion_event(SDL_Event *event, int32_t x, int32_t y, int32
 	event->motion.y    = y;
 	event->motion.xrel = xrel;
 	event->motion.yrel = yrel;
-}
-
-static void convert_touch_xy_to_game_xy(float touch_x, float touch_y, int *game_x, int *game_y)
-{
-	const int screen_h = GAME_HEIGHT;
-	const int screen_w = GAME_WIDTH;
-	const int disp_w   = DISPLAY_WIDTH;
-	const int disp_h   = DISPLAY_HEIGHT;
-
-	int x, y, w, h;
-	float sx, sy;
-
-	h = disp_h;
-	w = h * 16.0 / 9.0;
-
-	x = (disp_w - w) / 2;
-	y = (disp_h - h) / 2;
-
-	sy = (float)h / (float)screen_h;
-	sx = (float)w / (float)screen_w;
-
-	// Find touch coordinates in terms of screen pixels
-	float disp_touch_x = (touch_x * (float)disp_w);
-	float disp_touch_y = (touch_y * (float)disp_h);
-
-	*game_x = CLIP((int)((disp_touch_x - x) / sx), 0, (int)GAME_WIDTH);
-	*game_y = CLIP((int)((disp_touch_y - y) / sy), 0, (int)GAME_HEIGHT);
 }
 #endif

@@ -3,7 +3,7 @@
 
 #include <switch.h>
 #include <SDL.h>
-#include "switch_keyboard.h"
+#include "platform/switch/keyboard.h"
 
 static void switch_keyboard_get(const char *guide_text, char *initial_text, int max_len, int multiline, char *buf)
 {

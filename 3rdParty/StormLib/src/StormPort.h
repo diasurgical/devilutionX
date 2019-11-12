@@ -151,7 +151,7 @@
 
 #endif
 
-#if !defined(PLATFORM_DEFINED) && defined(SWITCH)
+#if !defined(PLATFORM_DEFINED) && defined(__SWITCH__)
   #include <sys/types.h>
   #include <sys/stat.h>
   #include <fcntl.h>
