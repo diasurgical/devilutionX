@@ -78,7 +78,7 @@ void CelClippedDrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 	pDecodeTo = &gpBuffer[sx + BUFFER_WIDTH * sy];
 
 	if (light_table_index)
-		CelBlitLightSafe(pDecodeTo, pRLEBytes, nDataSize, nWidth);
+		CelBlitLightSafe(pDecodeTo, pRLEBytes, nDataSize, nWidth, NULL);
 	else
 		CelBlitSafe(pDecodeTo, pRLEBytes, nDataSize, nWidth);
 }
@@ -336,7 +336,7 @@ void CelClippedBlitLightTrans(BYTE *pBuff, BYTE *pCelBuff, int nCel, int nWidth)
 	if (cel_transparency_active)
 		CelBlitLightTransSafe(pBuff, pRLEBytes, nDataSize, nWidth);
 	else if (light_table_index)
-		CelBlitLightSafe(pBuff, pRLEBytes, nDataSize, nWidth);
+		CelBlitLightSafe(pBuff, pRLEBytes, nDataSize, nWidth, NULL);
 	else
 		CelBlitSafe(pBuff, pRLEBytes, nDataSize, nWidth);
 }
