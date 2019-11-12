@@ -1,4 +1,4 @@
-#include "diablo.h"
+#include "all.h"
 #include "../3rdParty/PKWare/pkware.h"
 
 DEVILUTION_BEGIN_NAMESPACE
