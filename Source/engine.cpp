@@ -15,6 +15,38 @@ BOOL gbNotInView; // valid - if x/y are in bounds
 const int RndInc = 1;
 const int RndMult = 0x015A4E35;
 
+BYTE *CelGetFrameStart(BYTE *pCelBuff, int nCel)
+{
+	DWORD *pFrameTable;
+
+	pFrameTable = (DWORD *)pCelBuff;
+
+	return pCelBuff + SwapLE32(pFrameTable[nCel]);
+}
+
+BYTE *CelGetFrame(BYTE *pCelBuff, int nCel, int *nDataSize)
+{
+	DWORD *pFrameTable;
+	DWORD nCellStart;
+
+	pFrameTable = (DWORD *)pCelBuff;
+	nCellStart = SwapLE32(pFrameTable[nCel]);
+	*nDataSize = SwapLE32(pFrameTable[nCel + 1]) - nCellStart;
+
+	return pCelBuff + nCellStart;
+}
+
+BYTE *CelGetFrameClipped(BYTE *pCelBuff, int nCel, int *nDataSize)
+{
+	DWORD nDataStart;
+	BYTE *pRLEBytes = CelGetFrame(pCelBuff, nCel, nDataSize);
+
+	nDataStart = pRLEBytes[1] << 8 | pRLEBytes[0];
+	*nDataSize -= nDataStart;
+
+	return pRLEBytes + nDataStart;
+}
+
 void CelDraw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	CelBlitFrame(&gpBuffer[sx + BUFFER_WIDTH * sy], pCelBuff, nCel, nWidth);
