@@ -310,6 +310,8 @@ endforeach(def_name)
 # Defines with value
 foreach(
   def_name
+  SDL1_VIDEO_MODE_BPP
+  SDL1_VIDEO_MODE_FLAGS
   HAS_KBCTRL
   KBCTRL_BUTTON_DPAD_LEFT
   KBCTRL_BUTTON_DPAD_RIGHT
