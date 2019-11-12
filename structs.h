@@ -217,9 +217,9 @@ typedef struct PlayerStruct {
 	int _pSBkSpell;
 	char _pSBkSplType;
 	char _pSplLvl[64];
-	unsigned __int64 _pMemSpells;
-	unsigned __int64 _pAblSpells;
-	unsigned __int64 _pScrlSpells;
+	uint64_t _pMemSpells;
+	uint64_t _pAblSpells;
+	uint64_t _pScrlSpells;
 	UCHAR _pSpellFlags;
 	int _pSplHotKey[4];
 	char _pSplTHotKey[4];
@@ -317,7 +317,7 @@ typedef struct PlayerStruct {
 	int _pIBonusToHit;
 	int _pIBonusAC;
 	int _pIBonusDamMod;
-	unsigned __int64 _pISpells;
+	uint64_t _pISpells;
 	int _pIFlags;
 	int _pIGetHit;
 	char _pISplLvlAdd;
@@ -1391,7 +1391,7 @@ typedef struct PkPlayerStruct {
 	int pManaBase;
 	int pMaxManaBase;
 	char pSplLvl[MAX_SPELLS];
-	unsigned __int64 pMemSpells;
+	uint64_t pMemSpells;
 	PkItemStruct InvBody[NUM_INVLOC];
 	PkItemStruct InvList[NUM_INV_GRID_ELEM];
 	char InvGrid[NUM_INV_GRID_ELEM];
