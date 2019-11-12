@@ -191,6 +191,14 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 			ErrSdl();
 		}
 #endif
+	} else {
+#ifdef USE_SDL1
+		refreshDelay = 16; // rougly 60hz
+#else
+		SDL_DisplayMode mode;
+		SDL_GetDisplayMode(0, 0, &mode);
+		refreshDelay = 1000 / mode.refresh_rate;
+#endif
 	}
 
 	return window != NULL;

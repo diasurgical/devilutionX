@@ -6,6 +6,8 @@
 
 namespace dvl {
 
+extern int refreshDelay;
+extern DWORD refreshDelayTc;
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
 extern SDL_Texture *texture;

@@ -14,6 +14,8 @@ int locktbl[256];
 static CCritSect sgMemCrit;
 HMODULE ghDiabMod;
 
+int refreshDelay;
+DWORD refreshDelayTc;
 SDL_Window *window;
 SDL_Renderer *renderer;
 SDL_Texture *texture;
@@ -237,6 +239,12 @@ void RenderPresent()
 		}
 		SDL_RenderPresent(renderer);
 	} else {
+		// no VSync when not using upscaling
+		int tc = GetTickCount();
+		if (refreshDelayTc + refreshDelay > tc)
+			Sleep(tc - refreshDelayTc + refreshDelay);
+		refreshDelayTc = tc;
+
 		if (SDL_UpdateWindowSurface(window) <= -1) {
 			ErrSdl();
 		}
