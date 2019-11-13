@@ -244,7 +244,7 @@ WPARAM keystate_for_mouse(WPARAM ret)
 	return ret;
 }
 
-WINBOOL false_avail(char *name, int value)
+WINBOOL false_avail(const char *name, int value)
 {
 	DUMMY_PRINT("Unhandled SDL event: %s %d", name, value);
 	return true;
@@ -554,13 +554,34 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	case SDL_TEXTINPUT:
 		return false_avail("SDL_TEXTINPUT", e.text.windowID);
 	case SDL_WINDOWEVENT:
-		if (e.window.event == SDL_WINDOWEVENT_CLOSE) {
+		switch (e.window.event) {
+		case SDL_WINDOWEVENT_HIDDEN:
+			// TODO stop rendering to minimize CPU usage (gbActive)
+			break;
+		case SDL_WINDOWEVENT_MINIMIZED:
+			// TODO pause
+			break;
+		case SDL_WINDOWEVENT_FOCUS_GAINED:
+		case SDL_WINDOWEVENT_TAKE_FOCUS:
+		case SDL_WINDOWEVENT_RESIZED:
+		case SDL_WINDOWEVENT_SIZE_CHANGED:
+		case SDL_WINDOWEVENT_MOVED:
+		case SDL_WINDOWEVENT_RESTORED:
+		case SDL_WINDOWEVENT_MAXIMIZED:
+		case SDL_WINDOWEVENT_LEAVE:
+		case SDL_WINDOWEVENT_FOCUS_LOST:
+			break;
+		case SDL_WINDOWEVENT_CLOSE:
 			lpMsg->message = DVL_WM_QUERYENDSESSION;
-		} else if (e.window.event == SDL_WINDOWEVENT_SHOWN) {
+			break;
+		case SDL_WINDOWEVENT_SHOWN:
+			gbActive = true;
 			lpMsg->message = DVL_WM_PAINT;
-		} else if (e.window.event == SDL_WINDOWEVENT_EXPOSED) {
+			break;
+		case SDL_WINDOWEVENT_EXPOSED:
 			lpMsg->message = DVL_WM_PAINT;
-		} else if (e.window.event == SDL_WINDOWEVENT_ENTER) {
+			break;
+		case SDL_WINDOWEVENT_ENTER:
 			lpMsg->message = DVL_WM_MOUSEHOVER;
 			// Bug in SDL, SDL_WarpMouseInWindow doesn't emit SDL_MOUSEMOTION
 			// and SDL_GetMouseState gives previous location if mouse was
@@ -570,9 +591,11 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 				MouseY = mouseWarpingY;
 				mouseWarping = false;
 			}
-		} else {
+			break;
+		default:
 			return false_avail("SDL_WINDOWEVENT", e.window.event);
 		}
+
 		break;
 #endif
 	default:
