@@ -32,20 +32,20 @@ int GetManaAmount(int id, int sn)
 		ma = (spelldata[sn].sManaCost - adj);
 	}
 
-	ma <<= 6;
+	ma *= 64;
 
 	if (sn == SPL_HEAL) {
-		ma = (spelldata[SPL_HEAL].sManaCost + 2 * plr[id]._pLevel - adj) << 6;
+		ma = (spelldata[SPL_HEAL].sManaCost + 2 * plr[id]._pLevel - adj) * 64;
 	}
 	if (sn == SPL_HEALOTHER) {
-		ma = (spelldata[SPL_HEAL].sManaCost + 2 * plr[id]._pLevel - adj) << 6;
+		ma = (spelldata[SPL_HEAL].sManaCost + 2 * plr[id]._pLevel - adj) * 64;
 	}
 
 	if (plr[id]._pClass == PC_ROGUE) {
-		ma -= ma >> 2;
+		ma -= ma / 4;
 	}
 
-	if (spelldata[sn].sMinMana > ma >> 6) {
+	if (spelldata[sn].sMinMana > ma / 64) {
 		ma = spelldata[sn].sMinMana << 6;
 	}
 
