@@ -173,6 +173,10 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 		ErrSdl();
 	}
 
+#ifdef USE_SDL1
+		refreshDelay = 16; // rougly 60hz
+#endif
+
 	if (upscale) {
 #ifdef USE_SDL1
 		SDL_Log("upscaling not supported with USE_SDL1");
@@ -192,9 +196,7 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 		}
 #endif
 	} else {
-#ifdef USE_SDL1
-		refreshDelay = 16; // rougly 60hz
-#else
+#ifndef USE_SDL1
 		SDL_DisplayMode mode;
 		SDL_GetDisplayMode(0, 0, &mode);
 		refreshDelay = 1000 / mode.refresh_rate;

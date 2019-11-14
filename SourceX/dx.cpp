@@ -1,3 +1,6 @@
+#include <array>
+#include <algorithm>
+
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "miniwin/ddraw.h"
@@ -14,8 +17,7 @@ int locktbl[256];
 static CCritSect sgMemCrit;
 HMODULE ghDiabMod;
 
-int refreshDelay;
-DWORD refreshDelayTc;
+std::uint32_t refreshDelay;
 SDL_Window *window;
 SDL_Renderer *renderer;
 SDL_Texture *texture;
@@ -206,6 +208,34 @@ void BltFast(DWORD dwX, DWORD dwY, LPRECT lpSrcRect)
 	bufferUpdated = true;
 }
 
+namespace {
+
+void ApplyFrameDelay()
+{
+	// How long it took to process the last few frames
+	static std::array<std::uint32_t, 6> times;
+	static std::size_t timesIndex;
+
+	const std::uint32_t now = SDL_GetTicks();
+
+	// When the last frame finished
+	static std::uint32_t lastFrameEndAfterDelay = now;
+	static std::uint32_t lastFrameEndBeforeDelay = now;
+
+	if (lastFrameEndBeforeDelay + refreshDelay > now) {
+		const std::uint32_t affordance = *std::max_element(times.begin(), times.end()) + 1;
+		if (refreshDelay > affordance)
+			SDL_Delay(refreshDelay - affordance);
+	}
+
+	times[timesIndex] = now - lastFrameEndAfterDelay;
+	timesIndex = (timesIndex + 1) % times.size();
+	lastFrameEndAfterDelay = SDL_GetTicks();
+	lastFrameEndBeforeDelay = now;
+}
+
+} // namespace
+
 void RenderPresent()
 {
 	SDL_Surface *surface = GetOutputSurface();
@@ -219,6 +249,7 @@ void RenderPresent()
 	if (SDL_Flip(surface) <= -1) {
 		ErrSdl();
 	}
+	ApplyFrameDelay();
 #else
 	if (renderer) {
 		if (SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch) <= -1) { //pitch is 2560
@@ -239,15 +270,10 @@ void RenderPresent()
 		}
 		SDL_RenderPresent(renderer);
 	} else {
-		// no VSync when not using upscaling
-		int tc = GetTickCount();
-		if (refreshDelayTc + refreshDelay > tc)
-			Sleep(tc - refreshDelayTc + refreshDelay);
-		refreshDelayTc = tc;
-
 		if (SDL_UpdateWindowSurface(window) <= -1) {
 			ErrSdl();
 		}
+		ApplyFrameDelay();
 	}
 #endif
 

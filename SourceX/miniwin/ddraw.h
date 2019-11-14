@@ -1,13 +1,14 @@
 #pragma once
 
+#include <cstdint>
+#include <type_traits>
+
 #include "devilution.h"
 #include <SDL.h>
-#include <type_traits>
 
 namespace dvl {
 
-extern int refreshDelay;
-extern DWORD refreshDelayTc;
+extern std::uint32_t refreshDelay;
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
 extern SDL_Texture *texture;
