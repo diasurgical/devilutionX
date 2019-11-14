@@ -104,6 +104,7 @@ ControllerButton JoyButtonToControllerButton(const SDL_Event &event)
 		if (event.jhat.hat == JOY_HAT_DPAD_RIGHT_HAT && (event.jhat.value & JOY_HAT_DPAD_RIGHT) != 0)
 			return ControllerButton::BUTTON_DPAD_RIGHT;
 #endif
+		return ControllerButton::IGNORE;
 		break;
 	default:
 		break;
