@@ -5,7 +5,7 @@
 
 namespace dvl {
 
-static bool currently_docked = -1; // keep track of docked or handheld mode
+static int currently_docked = -1; // keep track of docked or handheld mode
 
 /**
  * @brief Do a manual window resize when docking/undocking the Switch
