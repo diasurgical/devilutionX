@@ -1,7 +1,13 @@
 #ifndef USE_SDL1
 #include "miniwin/ddraw.h"
 #include "touch.h"
+#include "../../defs.h"
 #include <math.h>
+
+static int visible_width;
+static int visible_height;
+static int x_borderwidth;
+static int y_borderwidth;
 
 template <typename T>
 inline T clip(T v, T amin, T amax)
@@ -71,6 +77,13 @@ static void init_touch(void)
 			simulated_click_start_time[port][i] = 0;
 		}
 	}
+
+	SDL_DisplayMode current;
+	SDL_GetCurrentDisplayMode(0, &current);
+	visible_height = current.h;
+	visible_width = (current.h * SCREEN_WIDTH) / SCREEN_HEIGHT;
+	x_borderwidth = (current.w - visible_width) / 2;
+	y_borderwidth = (current.h - visible_height) / 2;
 }
 
 static void preprocess_events(SDL_Event *event)
@@ -115,8 +128,8 @@ static void preprocess_finger_down(SDL_Event *event)
 	int y = mouse_y;
 
 	if (direct_touch) {
-		x = event->tfinger.x;
-		y = event->tfinger.y;
+		x = event->tfinger.x * visible_width + x_borderwidth;
+		y = event->tfinger.y * visible_height + y_borderwidth;
 		dvl::OutputToLogical(&x, &y);
 	}
 
@@ -197,8 +210,8 @@ static void preprocess_finger_up(SDL_Event *event)
 				// need to raise the button later
 				simulated_click_start_time[port][0] = event->tfinger.timestamp;
 				if (direct_touch) {
-					x = event->tfinger.x;
-					y = event->tfinger.y;
+					x = event->tfinger.x * visible_width + x_borderwidth;
+					y = event->tfinger.y * visible_height + y_borderwidth;
 					dvl::OutputToLogical(&x, &y);
 				}
 			}
@@ -243,8 +256,8 @@ static void preprocess_finger_motion(SDL_Event *event)
 		int yrel = 0;
 
 		if (direct_touch) {
-			x = event->tfinger.x;
-			y = event->tfinger.y;
+			x = event->tfinger.x * visible_width + x_borderwidth;
+			y = event->tfinger.y * visible_height + y_borderwidth;
 			dvl::OutputToLogical(&x, &y);
 		} else {
 			// for relative mode, use the pointer speed setting
