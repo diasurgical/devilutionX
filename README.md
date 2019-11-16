@@ -10,7 +10,7 @@ Nightly builds | Platform
 ![Discord Channel](https://avatars3.githubusercontent.com/u/1965106?s=16&v=4) [Discord Chat Channel](https://discord.gg/aQBQdDe)
 
 # How To Play:
- - Copy diabdat.mpq from your CD, or GoG install folder, to the DevilutionX install folder ; Make sure it is all lowercase.
+ - Copy diabdat.mpq from your CD, or GoG install folder, to the DevilutionX install folder; make sure it is all lowercase. On macOS placing the file in `~/Library/Application Support/diasurgical/devilution` directory would also work.
  - [Download DevilutionX](https://github.com/diasurgical/devilutionX/releases), or build from source
  - Install [SDL2](https://www.libsdl.org/download-2.0.php) (including [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/) and [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/))
  - Run `./devilutionx`
