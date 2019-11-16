@@ -111,9 +111,11 @@ WINBOOL DeleteFileA(LPCSTR lpFileName)
 
 bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 {
+#ifndef PLATFORM_CTR
 	if (SDL_Init(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) <= -1) {
 		ErrSdl();
 	}
+#endif
 
 	atexit(SDL_Quit);
 
@@ -173,6 +175,7 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 		ErrSdl();
 	}
 
+#ifndef PLATFORM_CTR
 	if (upscale) {
 #ifdef USE_SDL1
 		SDL_Log("upscaling not supported with USE_SDL1");
@@ -200,7 +203,7 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 		refreshDelay = 1000 / mode.refresh_rate;
 #endif
 	}
-
+#endif
 	return window != NULL;
 }
 } // namespace dvl

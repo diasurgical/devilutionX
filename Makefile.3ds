@@ -1,0 +1,457 @@
+#---------------------------------------------------------------------------------
+.SUFFIXES:
+#---------------------------------------------------------------------------------
+
+#--- Path to DEVKITPRO ---
+ifeq ($(strip $(DEVKITPRO)),)
+$(error "Please set DEVKITPRO in your environment. export DEVKITPRO=<path to>devkitPRO")
+endif
+
+#--- Path to DEVKITARM ---
+ifeq ($(strip $(DEVKITARM)),)
+export DEVKITARM=$(DEVKITPRO)/devkitARM
+endif
+
+#--- Path to PORTLIBS ---
+ifeq ($(strip $(PORTLIBS)),)
+export PORTLIBS=$(DEVKITPRO)/portlibs/3ds
+endif
+
+#--- Path to bannertool ---
+ifeq ($(strip $(TOOLDIR)),)
+export TOOLDIR=$(DEVKITPRO)/tools/bin
+endif
+
+TOPDIR ?= $(CURDIR)
+include $(DEVKITARM)/3ds_rules
+
+ifeq ($(OS),Windows_NT)
+	MAKEROM		=	makerom.exe
+	BANNERTOOL	=	bannertool.exe
+else
+	MAKEROM		=	$(TOOLDIR)/makerom
+	BANNERTOOL	=	$(TOOLDIR)/bannertool
+endif
+
+#---------------------------------------------------------------------------------
+# TARGET is the name of the output
+# BUILD is the directory where object files & intermediate files will be placed
+# SOURCES is a list of directories containing source code
+# DATA is a list of directories containing data files
+# INCLUDES is a list of directories containing header files
+#
+# ROMFS is the directory which contains the RomFS, relative to the Makefile (Optional)
+# APP_TITLE is the name of the app stored in the SMDH file (Optional)
+# APP_DESCRIPTION is the description of the app stored in the SMDH file (Optional)
+# APP_AUTHOR is the author of the app stored in the SMDH file (Optional)
+# APP_LOGO is the filename of the boot animation, .cia only (.bin)(Optional)
+# APP_ICON is the filename of the icon (.png)
+#---------------------------------------------------------------------------------
+
+TARGET				:=	DevilutionX
+BUILD				:=	build
+SOURCES				:=	SourceX/controls SourceX/controls/devices SourceX/miniwin \
+						SourceX/storm SourceX/DiabloUI SourceX/dvlnet SourceX \
+						3rdParty/libsmacker 3rdParty/Radon/Radon/source \
+						3rdParty/StormLib/src 3rdParty/PKWare Source 
+DATA				:=	data
+INCLUDES			:=	Source SourceS SourceS/miniwin SourceX DiabloUI \
+						3rdParty/asio/include 3rdParty/libsmacker 3rdParty/PKWare \
+						3rdParty/Radon/Radon/include 3rdParty/Storm/Source \
+						3rdParty/StormLib/src
+#ROMFS				:=	romfs
+
+SDLCONFIG			:=	arm-none-eabi-pkg-config
+
+#---------------------------------------------------------------------------------
+# options for .cia generation
+#---------------------------------------------------------------------------------
+
+APP_TITLE			:=	$(TARGET)
+APP_DESCRIPTION		:=	DevilutionX
+APP_AUTHOR			:=	Diasurgical
+
+APP_PRODUCT_CODE	:=	CTR-P-DIABLO
+APP_UNIQUE_ID		:=	0x3F395
+APP_VERSION_MAJOR	:=	0
+APP_VERSION_MINOR	:=	0
+APP_VERSION_MICRO	:=	1
+
+RSF					:=	$(TOPDIR)/Packaging/ctr/template.rsf
+
+APP_LOGO			:=	$(TOPDIR)/Packaging/ctr/hb_logo.bin
+APP_ICON			:=	$(TOPDIR)/Packaging/ctr/icon.png
+
+BANNER_IMAGE_FILE	:=	$(TOPDIR)/Packaging/ctr/banner.png
+BANNER_AUDIO_FILE	:=	$(TOPDIR)/Packaging/ctr/audio_silent.wav
+
+ROMFS				:= romfs
+ROMFS_FILES			:= $(TOPDIR)/Packaging/resources/CharisSILB.ttf
+
+#---------------------------------------------------------------------------------
+# options for code generation
+#---------------------------------------------------------------------------------
+ARCH		:=	-march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft
+
+CFLAGS		:=	-fPIE -fsigned-char -Wall -Wextra -Wno-write-strings -fpermissive -Wno-multichar -fsigned-char -static \
+				-mword-relocations -w -g -O2 \
+				-fomit-frame-pointer -ffunction-sections \
+				$(ARCH) -std=gnu11
+
+CFLAGS		+=	$(INCLUDE) -D_3DS -DPLATFORM_CTR -DSDL -DUSE_SDL1=ON \
+				-DDEVILUTION_STUB -DDEVILUTION_ENGINE -DASIO_STANDALONE -DASIO_HEADER_ONLY \
+				-DNONET=ON -DSPAWN=ON
+
+CFLAGS		+=	-DHAS_KBCTRL=1 \
+				-DKBCTRL_BUTTON_DPAD_LEFT=SDLK_LEFT -DKBCTRL_BUTTON_DPAD_RIGHT=SDLK_RIGHT \
+				-DKBCTRL_BUTTON_DPAD_UP=SDLK_UP -DKBCTRL_BUTTON_DPAD_DOWN=SDLK_DOWN \
+				-DKBCTRL_BUTTON_B=SDLK_a -DKBCTRL_BUTTON_A=SDLK_b \
+				-DKBCTRL_BUTTON_Y=SDLK_y -DKBCTRL_BUTTON_X=SDLK_x \
+				-DKBCTRL_BUTTON_RIGHTSHOULDER=SDLK_r -DKBCTRL_BUTTON_LEFTSHOULDER=SDLK_l \
+				-DKBCTRL_BUTTON_START=SDLK_RETURN -DKBCTRL_BUTTON_BACK=SDLK_ESCAPE \
+				-DKBCTRL_MODIFIER_KEY=SDLK_END
+
+CXXFLAGS	:=	$(CFLAGS) -fno-rtti
+# -fno-exceptions -g 
+ASFLAGS		:=	-g $(ARCH)
+LDFLAGS		=	-specs=3dsx.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
+
+LIBS		:=	-lSDL_ttf -lfreetype -lSDL_mixer -lvorbisfile -lvorbis -logg -lmikmod -lmad -lSDL -lpng -lbz2 -lz -lcitro3d -lctru -lm
+
+#---------------------------------------------------------------------------------
+# list of directories containing libraries, this must be the top level containing
+# include and lib
+#---------------------------------------------------------------------------------
+LIBDIRS		:=	$(CTRULIB) $(PORTLIBS)
+
+
+#---------------------------------------------------------------------------------
+# no real need to edit anything past this point unless you need to add additional
+# rules for different file extensions
+#---------------------------------------------------------------------------------
+ifneq ($(BUILD),$(notdir $(CURDIR)))
+#---------------------------------------------------------------------------------
+
+export OUTPUT	:=	$(CURDIR)/$(TARGET)
+export TOPDIR	:=	$(CURDIR)
+
+export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
+			$(foreach dir,$(DATA),$(CURDIR)/$(dir))
+
+export DEPSDIR	:=	$(CURDIR)/$(BUILD)
+
+
+SMACKER_SRC	:= \
+  smk_bitstream.o \
+  smk_hufftree.o \
+  smacker.o
+
+RADON_SRC := \
+  File.o \
+  Key.o \
+  Named.o \
+  Section.o
+
+STORMLIB_SRC := \
+  FileStream.cpp \
+  SBaseCommon.cpp \
+  SBaseFileTable.cpp \
+  SBaseSubTypes.cpp \
+  SCompression.cpp \
+  SFileExtractFile.cpp \
+  SFileFindFile.cpp \
+  SFileGetFileInfo.cpp \
+  SFileOpenArchive.cpp \
+  SFileOpenFileEx.cpp \
+  SFileReadFile.cpp
+
+PKWARE_SRC := \
+  explode.cpp \
+  implode.cpp
+
+DEVILUTION_SRC := \
+  appfat.cpp \
+  automap.cpp \
+  capture.cpp \
+  codec.cpp \
+  control.cpp \
+  cursor.cpp \
+  dead.cpp \
+  debug.cpp \
+  diablo.cpp \
+  doom.cpp \
+  drlg_l1.cpp \
+  drlg_l2.cpp \
+  drlg_l3.cpp \
+  drlg_l4.cpp \
+  dthread.cpp \
+  effects.cpp \
+  encrypt.cpp \
+  engine.cpp \
+  error.cpp \
+  gamemenu.cpp \
+  gendung.cpp \
+  gmenu.cpp \
+  help.cpp \
+  init.cpp \
+  interfac.cpp \
+  inv.cpp \
+  itemdat.cpp \
+  items.cpp \
+  lighting.cpp \
+  loadsave.cpp \
+  mmainmenu.cpp \
+  minitext.cpp \
+  misdat.cpp \
+  missiles.cpp \
+  monstdat.cpp \
+  monster.cpp \
+  movie.cpp \
+  mpqapi.cpp \
+  msg.cpp \
+  multi.cpp \
+  nthread.cpp \
+  objdat.cpp \
+  objects.cpp \
+  pack.cpp \
+  palette.cpp \
+  path.cpp \
+  pfile.cpp \
+  player.cpp \
+  plrmsg.cpp \
+  portal.cpp \
+  spelldat.cpp \
+  quests.cpp \
+  render.cpp \
+  restrict.cpp \
+  scrollrt.cpp \
+  setmaps.cpp \
+  sha.cpp \
+  spells.cpp \
+  stores.cpp \
+  sync.cpp \
+  textdat.cpp \
+  themes.cpp \
+  tmsg.cpp \
+  town.cpp \
+  towners.cpp \
+  track.cpp \
+  trigs.cpp \
+  wave.cpp
+
+#  mainmenu.cpp \
+
+DEVILUTIONX_SRC := \
+  dx.cpp \
+  game_controller.cpp \
+  joystick.cpp \
+  kbcontroller.cpp \
+  controller.cpp \
+  controller_motion.cpp \
+  game_controls.cpp \
+  menu_controls.cpp \
+  plrctrls.cpp \
+  ddraw.cpp \
+  misc.cpp \
+  misc_io.cpp \
+  misc_msg.cpp \
+  rand.cpp \
+  thread.cpp \
+  dsound.cpp \
+  sound.cpp \
+  storm.cpp \
+  storm_net.cpp \
+  storm_dx.cpp \
+  abstract_net.cpp \
+  loopback.cpp \
+  packet.cpp \
+  base.cpp \
+  frame_queue.cpp \
+  art_draw.cpp \
+  errorart.cpp \
+  art.cpp \
+  button.cpp \
+  credits.cpp \
+  credits_lines.cpp \
+  diabloui.cpp \
+  dialogs.cpp \
+  fonts.cpp \
+  mainmenu.cpp \
+  progress.cpp \
+  scrollbar.cpp \
+  selconn.cpp \
+  selgame.cpp \
+  selhero.cpp \
+  selyesno.cpp \
+  text_draw.cpp \
+  text.cpp \
+  title.cpp \
+  ttf_render_wrapped.cpp \
+  main.cpp
+
+
+ifneq ($(NONET),)
+  DEVILUTIONX_SRC += \
+    SourceX/dvlnet/tcp_client.cpp \
+    SourceX/dvlnet/tcp_server.cpp \
+    SourceX/dvlnet/udp_p2p.cpp
+endif
+
+CFILES		:=	$(SMACKER_SRC)
+CPPFILES	:=	$(RADON_SRC) $(STORMLIB_SRC) $(PKWARE_SRC) $(DEVILUTION_SRC) $(DEVILUTIONX_SRC)
+
+#CFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
+#CPPFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
+SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
+PICAFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.v.pica)))
+SHLISTFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.shlist)))
+BINFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
+
+#---------------------------------------------------------------------------------
+# use CXX for linking C++ projects, CC for standard C
+#---------------------------------------------------------------------------------
+ifeq ($(strip $(CPPFILES)),)
+#---------------------------------------------------------------------------------
+	export LD	:=	$(CC)
+#---------------------------------------------------------------------------------
+else
+#---------------------------------------------------------------------------------
+	export LD	:=	$(CXX)
+#---------------------------------------------------------------------------------
+endif
+#---------------------------------------------------------------------------------
+
+export OFILES			:=	$(addsuffix .o,$(BINFILES)) \
+							$(PICAFILES:.v.pica=.shbin.o) $(SHLISTFILES:.shlist=.shbin.o) \
+							$(CFILES:.c=.o) $(CPPFILES:.cpp=.o) $(SFILES:.s=.o)
+
+export INCLUDE			:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
+							$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
+							-I$(CURDIR)/$(BUILD) \
+							-I$(PORTLIBS)/include/SDL
+
+export LIBPATHS			:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
+
+export _3DSXFLAGS		+=	--smdh=$(CURDIR)/$(TARGET).smdh
+
+ifneq ($(ROMFS),)
+	export _3DSXFLAGS	+=	--romfs=$(CURDIR)/$(ROMFS)
+endif
+
+.PHONY: $(BUILD) clean all
+#---------------------------------------------------------------------------------
+all: $(BUILD)
+
+$(BUILD):
+	@[ -d $@ ] || mkdir -p $@
+	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile.3ds
+
+#---------------------------------------------------------------------------------
+clean:
+	@echo clean ...
+	@rm -fr $(BUILD) $(TARGET).3dsx $(OUTPUT).smdh $(TARGET).elf $(TARGET).cia
+
+#---------------------------------------------------------------------------------
+else
+
+DEPENDS						:=	$(OFILES:.o=.d)
+
+ifeq ($(ROMFS),)
+# CFLAGS		+=	$(INCLUDE) -DARM11 -D_3DS -DDATAPATH=\"sdmc:/3ds/OpenBOR/\"
+else
+# CFLAGS		+=	$(INCLUDE) -DARM11 -D_3DS -D_3DS_ROMFS -DDATAPATH=\"romfs:/\"
+endif
+
+export _3DSXFLAGS		+=	--smdh=$(CURDIR)/$(TARGET).smdh
+
+ifneq ($(ROMFS),)
+	export _3DSXFLAGS	+=	--romfs=$(CURDIR)/$(ROMFS)
+endif
+
+BANNER_IMAGE_ARG			:=	-i $(BANNER_IMAGE_FILE)
+BANNER_AUDIO_ARG			:=	-a $(BANNER_AUDIO_FILE)
+
+COMMON_MAKEROM_PARAMS		:= -rsf $(RSF) -target t -exefslogo -elf $(OUTPUT).elf -icon icon.icn \
+-banner banner.bnr -DAPP_TITLE="$(APP_TITLE)" -DAPP_PRODUCT_CODE="$(APP_PRODUCT_CODE)" \
+-DAPP_UNIQUE_ID="$(APP_UNIQUE_ID)" -DAPP_SYSTEM_MODE="80MB" -DAPP_SYSTEM_MODE_EXT="124MB" \
+-major "$(APP_VERSION_MAJOR)" -minor "$(APP_VERSION_MINOR)" -micro "$(APP_VERSION_MICRO)"
+
+ifneq ($(APP_LOGO),)
+	APP_LOGO_ID				=	Homebrew
+	COMMON_MAKEROM_PARAMS	+=	-DAPP_LOGO_ID="$(APP_LOGO_ID)" -logo $(APP_LOGO)
+else
+	APP_LOGO_ID				=	Nintendo
+	COMMON_MAKEROM_PARAMS	+=	-DAPP_LOGO_ID="$(APP_LOGO_ID)"
+endif
+
+ifneq ($(ROMFS),)
+	APP_ROMFS				:=	$(CURDIR)/$(ROMFS)
+	COMMON_MAKEROM_PARAMS	+=	-DAPP_ROMFS="$(APP_ROMFS)" 
+	
+
+
+endif
+
+#---------------------------------------------------------------------------------
+# main targets
+#---------------------------------------------------------------------------------
+.PHONY : all romfs
+
+all					:	$(OUTPUT).cia
+
+$(OUTPUT).3dsx		:	$(OUTPUT).elf
+
+$(OUTPUT).elf		:	$(OFILES)
+
+$(OUTPUT).cia		:	$(OUTPUT).elf banner.bnr icon.icn romfs
+	@$(MAKEROM) -f cia -o $(OUTPUT).cia -DAPP_ENCRYPTED=false $(COMMON_MAKEROM_PARAMS)
+	@echo "built ... $(TARGET).cia"
+
+banner.bnr : $(BANNER_IMAGE_FILE) $(BANNER_AUDIO_FILE)
+	@$(BANNERTOOL) makebanner $(BANNER_IMAGE_ARG) $(BANNER_AUDIO_ARG) -o banner.bnr > /dev/null
+
+icon.icn : $(APP_ICON)
+	@$(BANNERTOOL) makesmdh -s "$(APP_TITLE)" -l "$(APP_TITLE)" -p "$(APP_AUTHOR)" -i $(APP_ICON) -o icon.icn > /dev/null
+
+romfs: $(ROMFS_FILES)
+	@rm -rf $(ROMFS)
+	@mkdir -p $(ROMFS)
+	@cp $(ROMFS_FILES) $(ROMFS)
+
+#---------------------------------------------------------------------------------
+# you need a rule like this for each extension you use as binary data
+#---------------------------------------------------------------------------------
+%.bin.o	:	%.bin
+#---------------------------------------------------------------------------------
+	@echo $(notdir $<)
+	@$(bin2o)
+
+#---------------------------------------------------------------------------------
+# rules for assembling GPU shaders
+#---------------------------------------------------------------------------------
+define shader-as
+	$(eval CURBIN := $(patsubst %.shbin.o,%.shbin,$(notdir $@)))
+	picasso -o $(CURBIN) $1
+	bin2s $(CURBIN) | $(AS) -o $@
+	echo "extern const u8" `(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`"_end[];" > `(echo $(CURBIN) | tr . _)`.h
+	echo "extern const u8" `(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`"[];" >> `(echo $(CURBIN) | tr . _)`.h
+	echo "extern const u32" `(echo $(CURBIN) | sed -e 's/^\([0-9]\)/_\1/' | tr . _)`_size";" >> `(echo $(CURBIN) | tr . _)`.h
+endef
+
+%.shbin.o : %.v.pica %.g.pica
+	@echo $(notdir $^)
+	@$(call shader-as,$^)
+
+%.shbin.o : %.v.pica
+	@echo $(notdir $<)
+	@$(call shader-as,$<)
+
+%.shbin.o : %.shlist
+	@echo $(notdir $<)
+	@$(call shader-as,$(foreach file,$(shell cat $<),$(dir $<)/$(file)))
+
+-include $(DEPENDS)
+
+#---------------------------------------------------------------------------------------
+endif
+#---------------------------------------------------------------------------------------

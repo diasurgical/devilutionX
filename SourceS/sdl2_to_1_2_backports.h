@@ -691,6 +691,7 @@ readSymLink(const char *path)
 		retval = ptr;
 
 		rc = readlink(path, retval, len);
+
 		if (rc == -1) {
 			break; /* not a symlink, i/o error, etc. */
 		} else if (rc < len) {
@@ -751,6 +752,11 @@ inline char *SDL_GetBasePath()
 			return NULL;
 		}
 	}
+#endif
+
+#ifdef PLATFORM_CTR
+	const char *path = "sdmc:/3ds/devilutionx/\0";
+	return path;
 #endif
 
 	/* is a Linux-style /proc filesystem available? */

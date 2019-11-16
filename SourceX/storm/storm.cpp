@@ -25,6 +25,7 @@ static std::string getIniPath()
 	GetPrefPath(path, DVL_MAX_PATH);
 	std::string result = path;
 	result.append("diablo.ini");
+	
 	return result;
 }
 
@@ -33,6 +34,10 @@ static Mix_Chunk *SFileChunk;
 
 void GetBasePath(char *buffer, size_t size)
 {
+#ifdef PLATFORM_CTR
+	char path[] = "file:sdmc:/3ds/devilutionx/\0";
+	snprintf(buffer, size, "%s", path);
+#else
 	char *path = SDL_GetBasePath();
 	if (path == NULL) {
 		SDL_Log(SDL_GetError());
@@ -42,10 +47,15 @@ void GetBasePath(char *buffer, size_t size)
 
 	snprintf(buffer, size, "%s", path);
 	SDL_free(path);
+#endif
 }
 
 void GetPrefPath(char *buffer, size_t size)
 {
+#ifdef PLATFORM_CTR
+	char path[] = "sdmc:/3ds/devilutionx/\0";
+	snprintf(buffer, size, "%s", path);
+#else
 	char *path = SDL_GetPrefPath("diasurgical", "devilution");
 	if (path == NULL) {
 		buffer[0] = '\0';
@@ -54,6 +64,7 @@ void GetPrefPath(char *buffer, size_t size)
 
 	snprintf(buffer, size, "%s", path);
 	SDL_free(path);
+#endif
 }
 
 void TranslateFileName(char *dst, int dstLen, const char *src)
