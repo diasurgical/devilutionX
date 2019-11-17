@@ -292,7 +292,9 @@ void DialogLoop(UiItem *items, std::size_t num_items, UiItem *render_behind, std
 
 void UiOkDialog(const char *text, const char *caption, bool error, UiItem *render_behind, std::size_t render_behind_size)
 {
-	if (!gbActive) {
+	static bool inDialog = false;
+
+	if (!gbActive || inDialog) {
 		if (SDL_ShowCursor(SDL_ENABLE) <= -1) {
 			SDL_Log(SDL_GetError());
 		}
@@ -304,11 +306,11 @@ void UiOkDialog(const char *text, const char *caption, bool error, UiItem *rende
 		return;
 	}
 
-	gbActive = false;
+	inDialog = true;
 	Init(text, caption, error);
 	DialogLoop(dialogItems, dialogItemsSize, render_behind, render_behind_size);
 	Deinit();
-	gbActive = true;
+	inDialog = false;
 }
 
 void UiErrorOkDialog(const char *text, const char *caption, UiItem *render_behind, std::size_t render_behind_size)

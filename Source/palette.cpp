@@ -185,7 +185,7 @@ void PaletteFadeIn(int fr)
 
 	ApplyGamma(logical_palette, orig_palette, 256);
 	DWORD tc = SDL_GetTicks();
-	for (i = 0; i < 256; i = (SDL_GetTicks() - tc) / 1.875) { // 1000ms / 60 * 32
+	for (i = 0; i < 256; i = (SDL_GetTicks() - tc) / 2.083) { // 32 frames @ 60hz
 		SetFadeLevel(i);
 	}
 	SetFadeLevel(256);
@@ -199,7 +199,7 @@ void PaletteFadeOut(int fr)
 
 	if (sgbFadedIn) {
 		DWORD tc = SDL_GetTicks();
-		for (i = 256; i > 0; i = 256 - (SDL_GetTicks() - tc) / 1.875) { // 1000ms / 60 * 32
+		for (i = 256; i > 0; i = 256 - (SDL_GetTicks() - tc) / 2.083) { // 32 frames @ 60hz
 			SetFadeLevel(i);
 		}
 		SetFadeLevel(0);

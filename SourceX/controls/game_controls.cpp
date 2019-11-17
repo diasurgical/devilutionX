@@ -125,22 +125,6 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 	return false;
 }
 
-bool ShouldSkipMovie(const SDL_Event &event)
-{
-	if (GetMenuAction(event) != MenuAction::NONE)
-		return true;
-	switch (event.type) {
-	case SDL_MOUSEBUTTONDOWN:
-	case SDL_MOUSEBUTTONUP:
-		return event.button.button == SDL_BUTTON_LEFT;
-	case SDL_KEYDOWN:
-	case SDL_KEYUP:
-		return true;
-	default:
-		return false;
-	}
-}
-
 MoveDirection GetMoveDirection()
 {
 	const float stickX = leftStickX;

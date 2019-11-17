@@ -15,7 +15,6 @@ static CCritSect sgMemCrit;
 HMODULE ghDiabMod;
 
 int refreshDelay;
-DWORD refreshDelayTc;
 SDL_Window *window;
 SDL_Renderer *renderer;
 SDL_Texture *texture;
@@ -219,6 +218,7 @@ void RenderPresent()
 	if (SDL_Flip(surface) <= -1) {
 		ErrSdl();
 	}
+	SDL_Delay(SDL_GetTicks() % refreshDelay);
 #else
 	if (renderer) {
 		if (SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch) <= -1) { //pitch is 2560
@@ -239,15 +239,11 @@ void RenderPresent()
 		}
 		SDL_RenderPresent(renderer);
 	} else {
-		// no VSync when not using upscaling
-		int tc = GetTickCount();
-		if (refreshDelayTc + refreshDelay > tc)
-			Sleep(tc - refreshDelayTc + refreshDelay);
-		refreshDelayTc = tc;
-
 		if (SDL_UpdateWindowSurface(window) <= -1) {
 			ErrSdl();
 		}
+		// Limit FPS to lower CPU when not waiting for V-Blank
+		SDL_Delay(SDL_GetTicks() % refreshDelay);
 	}
 #endif
 

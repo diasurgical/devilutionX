@@ -479,7 +479,6 @@ constexpr auto DVL_WM_LBUTTONUP = 0x0202;
 constexpr auto DVL_WM_RBUTTONDOWN = 0x0204;
 constexpr auto DVL_WM_RBUTTONUP = 0x0205;
 
-constexpr auto DVL_WM_KEYFIRST = 0x0100;
 constexpr auto DVL_WM_KEYDOWN = 0x0100;
 constexpr auto DVL_WM_KEYUP = 0x0101;
 constexpr auto DVL_WM_SYSKEYDOWN = 0x0104;

@@ -64,7 +64,6 @@ struct GameAction {
 };
 
 bool GetGameAction(const SDL_Event &event, GameAction *action);
-bool ShouldSkipMovie(const SDL_Event &event);
 
 enum class MoveDirectionX {
 	NONE = 0,

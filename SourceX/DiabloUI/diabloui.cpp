@@ -506,7 +506,7 @@ void UiFadeIn()
 	if (fadeValue == 0 && tc == 0)
 		tc = SDL_GetTicks();
 	if (fadeValue < 256) {
-		fadeValue = (SDL_GetTicks() - tc) / 1.875; // 1000ms / 60 * 32
+		fadeValue = (SDL_GetTicks() - tc) / 2.083; // 32 frames @ 60hz
 		if (fadeValue > 256) {
 			fadeValue = 256;
 			tc = 0;
