@@ -2,6 +2,7 @@
 
 #include "controls/devices/game_controller.h"
 #include "controls/devices/joystick.h"
+#include "controls/devices/kbcontroller.h"
 
 namespace dvl {
 
@@ -88,6 +89,10 @@ bool ProcessControllerMotion(const SDL_Event &event)
 #endif
 	if (ProcessJoystickAxisMotion(event))
 		return true;
+#if HAS_KBCTRL == 1
+	if (ProcessKbCtrlAxisMotion(event))
+		return true;
+#endif
 	return false;
 }
 

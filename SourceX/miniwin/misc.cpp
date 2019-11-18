@@ -17,6 +17,15 @@
 #include <unistd.h>
 #endif
 
+#ifdef USE_SDL1
+#ifndef SDL1_VIDEO_MODE_BPP
+#define SDL1_VIDEO_MODE_BPP 0
+#endif
+#ifndef SDL1_VIDEO_MODE_FLAGS
+#define SDL1_VIDEO_MODE_FLAGS SDL_SWSURFACE
+#endif
+#endif
+
 namespace dvl {
 
 DWORD last_error;
@@ -133,19 +142,19 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 	DvlIntSetting("grab input", &grabInput);
 
 #ifdef USE_SDL1
-	int flags = SDL_SWSURFACE | SDL_HWPALETTE;
+	int flags = SDL1_VIDEO_MODE_FLAGS | SDL_HWPALETTE;
 	if (fullscreen)
 		flags |= SDL_FULLSCREEN;
 	SDL_WM_SetCaption(lpWindowName, WINDOW_ICON_NAME);
 #ifndef RETROFW
-	SDL_SetVideoMode(nWidth, nHeight, /*bpp=*/0, flags);
+	SDL_SetVideoMode(nWidth, nHeight, SDL1_VIDEO_MODE_BPP, flags);
 #else // RETROFW
 	// JZ4760 IPU scaler (e.g. on RG-300 v2/3) - automatic high-quality scaling.
 	if (access("/proc/jz/ipu_ratio", F_OK) == 0) {
-		SDL_SetVideoMode(nWidth, nHeight, /*bpp=*/0, flags);
+		SDL_SetVideoMode(nWidth, nHeight, SDL1_VIDEO_MODE_BPP, flags);
 	} else {
 		// Other RetroFW devices have 320x480 screens with non-square pixels.
-		SDL_SetVideoMode(320, 480, /*bpp=*/0, flags);
+		SDL_SetVideoMode(320, 480, SDL1_VIDEO_MODE_BPP, flags);
 	}
 #endif
 	window = SDL_GetVideoSurface();

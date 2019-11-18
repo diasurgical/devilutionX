@@ -611,6 +611,7 @@ void SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 	}
 
 	SVidFrameEnd = SDL_GetTicks() * 1000 + SVidFrameLength;
+	SDL_FillRect(GetOutputSurface(), NULL, 0x000000);
 }
 
 BOOL SVidLoadNextFrame()

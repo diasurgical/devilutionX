@@ -16,30 +16,25 @@ int GetManaAmount(int id, int sn)
 		sl = 0;
 	}
 
-	if (sl > 0) {
-		adj = sl * spelldata[sn].sManaAdj;
-	}
 	if (sn == SPL_FIREBOLT) {
 		adj >>= 1;
-	}
-	if (sn == SPL_RESURRECT && sl > 0) {
+	} else if (sn == SPL_RESURRECT && sl > 0) {
 		adj = sl * (spelldata[SPL_RESURRECT].sManaCost / 8);
+	} else if (sl > 0) {
+		adj = sl * spelldata[sn].sManaAdj;
 	}
 
-	if (spelldata[sn].sManaCost == 255) {
+	if (sn == SPL_HEAL || sn == SPL_HEALOTHER) {
+		ma = (spelldata[SPL_HEAL].sManaCost + 2 * plr[id]._pLevel - adj);
+	} else if (spelldata[sn].sManaCost == 255) {
 		ma = ((BYTE)plr[id]._pMaxManaBase - adj);
 	} else {
 		ma = (spelldata[sn].sManaCost - adj);
 	}
 
+	if (ma < 0)
+		ma = 0;
 	ma <<= 6;
-
-	if (sn == SPL_HEAL) {
-		ma = (spelldata[SPL_HEAL].sManaCost + 2 * plr[id]._pLevel - adj) << 6;
-	}
-	if (sn == SPL_HEALOTHER) {
-		ma = (spelldata[SPL_HEAL].sManaCost + 2 * plr[id]._pLevel - adj) << 6;
-	}
 
 	if (plr[id]._pClass == PC_ROGUE) {
 		ma -= ma >> 2;

@@ -9,13 +9,10 @@ extern int gdwPalEntries;
 
 void SaveGamma();
 void palette_init();
-void LoadGamma();
-void LoadSysPal();
 void LoadPalette(char *pszFileName);
 void LoadRndLvlPal(int l);
 void ResetPal();
 void IncreaseGamma();
-void palette_update();
 void ApplyGamma(PALETTEENTRY *dst, const PALETTEENTRY *src, int n);
 void DecreaseGamma();
 int UpdateGamma(int gamma);

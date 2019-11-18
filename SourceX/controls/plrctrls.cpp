@@ -120,8 +120,10 @@ void FindItemOrObject()
 void CheckTownersNearby()
 {
 	for (int i = 0; i < 16; i++) {
+		if (GetDistanceRanged(towner[i]._tx, towner[i]._ty) > 6)
+			continue;
 		int distance = GetDistance(towner[i]._tx, towner[i]._ty);
-		if (distance == 0 || distance > 6)
+		if (distance == 0 || distance > 2)
 			continue;
 		pcursmonst = i;
 	}
@@ -132,10 +134,10 @@ bool HasRangedSpell()
 	int v = plr[myplr]._pRSpell;
 
 	return v != SPL_INVALID
-		&& v != SPL_TOWN
-		&& v != SPL_TELEPORT
-		&& spelldata[v].sTargeted
-		&& !spelldata[v].sTownSpell;
+	    && v != SPL_TOWN
+	    && v != SPL_TELEPORT
+	    && spelldata[v].sTargeted
+	    && !spelldata[v].sTownSpell;
 }
 
 void CheckMonstersNearby()

@@ -14,20 +14,46 @@ int gamma_correction = 100;
 BOOL color_cycling_enabled = TRUE;
 BOOLEAN sgbFadedIn = TRUE;
 
+static void palette_update()
+{
+	int nentries;
+	int max_entries;
+
+	if (1) {
+		nentries = 0;
+		max_entries = 256;
+		if (!fullscreen) {
+			nentries = gdwPalEntries;
+			max_entries = 2 * (128 - gdwPalEntries);
+		}
+		SDrawUpdatePalette(nentries, max_entries, &system_palette[nentries], 0);
+	}
+}
+
+void ApplyGamma(PALETTEENTRY *dst, const PALETTEENTRY *src, int n)
+{
+	int i;
+	double g;
+
+	g = gamma_correction / 100.0;
+
+	for (i = 0; i < n; i++) {
+		dst->peRed = pow(src->peRed / 256.0, g) * 256.0;
+		dst->peGreen = pow(src->peGreen / 256.0, g) * 256.0;
+		dst->peBlue = pow(src->peBlue / 256.0, g) * 256.0;
+		dst++;
+		src++;
+	}
+	force_redraw = 255;
+}
+
 void SaveGamma()
 {
 	SRegSaveValue("Diablo", "Gamma Correction", 0, gamma_correction);
 	SRegSaveValue("Diablo", "Color Cycling", FALSE, color_cycling_enabled);
 }
 
-void palette_init()
-{
-	LoadGamma();
-	memcpy(system_palette, orig_palette, sizeof(orig_palette));
-	CreatePalette();
-}
-
-void LoadGamma()
+static void LoadGamma()
 {
 	int gamma_value;
 	int value;
@@ -45,6 +71,13 @@ void LoadGamma()
 	if (!SRegLoadValue("Diablo", "Color Cycling", 0, &value))
 		value = 1;
 	color_cycling_enabled = value;
+}
+
+void palette_init()
+{
+	LoadGamma();
+	memcpy(system_palette, orig_palette, sizeof(orig_palette));
+	CreatePalette();
 }
 
 void LoadPalette(char *pszFileName)
@@ -96,39 +129,6 @@ void IncreaseGamma()
 	}
 }
 
-void palette_update()
-{
-	int nentries;
-	int max_entries;
-
-	if (1) {
-		nentries = 0;
-		max_entries = 256;
-		if (!fullscreen) {
-			nentries = gdwPalEntries;
-			max_entries = 2 * (128 - gdwPalEntries);
-		}
-		SDrawUpdatePalette(nentries, max_entries, &system_palette[nentries], 0);
-	}
-}
-
-void ApplyGamma(PALETTEENTRY *dst, const PALETTEENTRY *src, int n)
-{
-	int i;
-	double g;
-
-	g = gamma_correction / 100.0;
-
-	for (i = 0; i < n; i++) {
-		dst->peRed = pow(src->peRed / 256.0, g) * 256.0;
-		dst->peGreen = pow(src->peGreen / 256.0, g) * 256.0;
-		dst->peBlue = pow(src->peBlue / 256.0, g) * 256.0;
-		dst++;
-		src++;
-	}
-	force_redraw = 255;
-}
-
 void DecreaseGamma()
 {
 	if (gamma_correction > 30) {
@@ -149,11 +149,6 @@ int UpdateGamma(int gamma)
 	}
 	SaveGamma();
 	return 130 - gamma_correction;
-}
-
-void BlackPalette()
-{
-	SetFadeLevel(0);
 }
 
 void SetFadeLevel(DWORD fadeval)
@@ -177,6 +172,11 @@ void SetFadeLevel(DWORD fadeval)
 		BltFast(0, 0, &SrcRect);
 		RenderPresent();
 	}
+}
+
+void BlackPalette()
+{
+	SetFadeLevel(0);
 }
 
 void PaletteFadeIn(int fr)

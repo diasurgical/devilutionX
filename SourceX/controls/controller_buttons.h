@@ -9,6 +9,7 @@ namespace dvl {
 // A<->B and X<->Y are reversed on a Nintendo controller.
 enum class ControllerButton {
 	NONE = 0,
+	IGNORE,
 	AXIS_TRIGGERLEFT,  // ZL (aka L2)
 	AXIS_TRIGGERRIGHT, // ZR (aka R2)
 	BUTTON_A,          // Bottom button

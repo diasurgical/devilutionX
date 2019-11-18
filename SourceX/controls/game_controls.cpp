@@ -47,6 +47,8 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 {
 	const ControllerButtonEvent ctrl_event = ToControllerButtonEvent(event);
 	switch (ctrl_event.button) {
+	case ControllerButton::IGNORE:
+		return true;
 	case ControllerButton::AXIS_TRIGGERLEFT: // ZL (aka L2)
 		if (!ctrl_event.up)
 			*action = GameAction(GameActionType::USE_HEALTH_POTION);

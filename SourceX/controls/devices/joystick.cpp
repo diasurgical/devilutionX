@@ -51,6 +51,14 @@ ControllerButton JoyButtonToControllerButton(const SDL_Event &event)
 		case JOY_BUTTON_RIGHTSHOULDER:
 			return ControllerButton::BUTTON_RIGHTSHOULDER;
 #endif
+#ifdef JOY_BUTTON_TRIGGERLEFT
+		case JOY_BUTTON_TRIGGERLEFT:
+			return ControllerButton::AXIS_TRIGGERLEFT;
+#endif
+#ifdef JOY_BUTTON_TRIGGERRIGHT
+		case JOY_BUTTON_TRIGGERRIGHT:
+			return ControllerButton::AXIS_TRIGGERRIGHT;
+#endif
 #ifdef JOY_BUTTON_START
 		case JOY_BUTTON_START:
 			return ControllerButton::BUTTON_START;
@@ -96,6 +104,7 @@ ControllerButton JoyButtonToControllerButton(const SDL_Event &event)
 		if (event.jhat.hat == JOY_HAT_DPAD_RIGHT_HAT && (event.jhat.value & JOY_HAT_DPAD_RIGHT) != 0)
 			return ControllerButton::BUTTON_DPAD_RIGHT;
 #endif
+		return ControllerButton::IGNORE;
 		break;
 	default:
 		break;

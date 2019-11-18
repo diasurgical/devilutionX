@@ -26,7 +26,7 @@ static void PackItem(PkItemStruct *id, ItemStruct *is)
 			id->bMDur = is->_iMaxDur;
 			id->bCh = is->_iCharges;
 			id->bMCh = is->_iMaxCharges;
-			if (!is->IDidx)
+			if (is->IDidx == IDI_GOLD)
 				id->wValue = is->_ivalue;
 		}
 	}
