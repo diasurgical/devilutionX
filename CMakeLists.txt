@@ -118,6 +118,11 @@ if(AMIGA)
   include(amiga_defs)
 endif()
 
+if(N3DS)
+  list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/ctr")
+  include(n3ds_defs)
+endif()
+
 if(DIST)
   set(sodium_USE_STATIC_LIBS ON)
 endif()
@@ -132,7 +137,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_THREAD_PREFER_PTHREAD ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
-find_package(Threads REQUIRED)
+if(NOT N3DS)
+  find_package(Threads REQUIRED)
+endif()
+
 if(NOT NONET)
   find_package(sodium REQUIRED)
 endif()
@@ -324,6 +332,16 @@ if(SWITCH)
   set(BIN_TARGET devilutionx.elf)
 endif()
 
+if(N3DS)
+  list(APPEND devilutionx_SRCS
+    SourceX/platform/ctr/system.cpp
+    SourceX/platform/ctr/keyboard.cpp)
+if(HELLFIRE)
+  set(BIN_TARGET hellfire)
+endif()
+  set(BIN_TARGET ${BIN_TARGET}.elf)
+endif()
+
 if(RUN_TESTS)
   list(APPEND devilutionx_SRCS
     SourceT/appfat_test.cpp
@@ -388,10 +406,15 @@ target_include_directories(${BIN_TARGET} PRIVATE
   3rdParty/Radon/Radon/include
   3rdParty/libsmacker)
 
-target_link_libraries(devilution PUBLIC
+if(N3DS)
+  target_link_libraries(devilution PUBLIC
+  SourceS)
+else()
+  target_link_libraries(devilution PUBLIC
   Threads::Threads
-  SourceS
-)
+  SourceS)
+endif()
+
 target_link_libraries(${BIN_TARGET} PRIVATE
   devilution
   SourceS
@@ -514,6 +537,13 @@ foreach(target devilution ${BIN_TARGET} SourceS)
     endif()
   endif()
 
+  if(N3DS)
+    target_link_libraries(${target} PRIVATE ${TREMOR_LIBRARIES})
+    target_include_directories(${target} PRIVATE ${TREMOR_INCLUDE_DIRS})
+    target_link_libraries(${target} PRIVATE 3ds::ogg 3ds::mikmod 3ds::mad 3ds::freetype 3ds::bzip2 3ds::png)
+    target_link_libraries(${target} PRIVATE 3ds::citro3d 3ds::ctrulib)
+  endif()
+
   target_compile_definitions(${target} PRIVATE ${def_list})
 endforeach(target)
 
@@ -612,6 +642,31 @@ if(SWITCH)
   set(APP_VERSION ${PROJECT_VERSION})
   include(nx-utils)
   build_switch_binaries(${BIN_TARGET})
+endif()
+
+if(N3DS)
+  set(APP_TITLE       "DevilutionX")
+  set(APP_DESCRIPTION "DevilutionX port for 3DS")
+  set(APP_AUTHOR      "Diasurgical Team")
+  set(APP_ICON        "${PROJECT_SOURCE_DIR}/Packaging/ctr/icon.png")
+  set(APP_BANNER      "${PROJECT_SOURCE_DIR}/Packaging/ctr/banner.png")
+  set(APP_AUDIO       "${PROJECT_SOURCE_DIR}/Packaging/ctr/audio_silent.wav")
+  set(APP_RSF         "${PROJECT_SOURCE_DIR}/Packaging/ctr/template.rsf")
+  set(APP_ROMFS       "${CMAKE_BINARY_DIR}/romfs")
+  set(APP_ROMFS_FILES "${PROJECT_SOURCE_DIR}/Packaging/ctr/DiabloLight.ttf")
+  if(HELLFIRE)
+	  set(APP_TITLE       "DevilutionX: Hellfire")
+	  set(APP_ICON        "${PROJECT_SOURCE_DIR}/Packaging/ctr/icon_hellfire.png")
+	  set(APP_BANNER      "${PROJECT_SOURCE_DIR}/Packaging/ctr/banner_hellfire.png")
+	  set(APP_RSF         "${PROJECT_SOURCE_DIR}/Packaging/ctr/template_hellfire.rsf")
+  endif()
+  file(MAKE_DIRECTORY ${APP_ROMFS})
+  file(COPY ${APP_ROMFS_FILES}
+     DESTINATION ${APP_ROMFS})
+  set(APP_VERSION ${PROJECT_VERSION})
+  include(Tools3DS)
+  add_3dsx_target(${BIN_TARGET})
+  add_cia_target(${BIN_TARGET} ${APP_RSF} ${APP_BANNER} ${APP_AUDIO} ${APP_ROMFS})
 endif()
 
 if(CPACK)
