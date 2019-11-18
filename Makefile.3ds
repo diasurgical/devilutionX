@@ -49,7 +49,7 @@ endif
 #---------------------------------------------------------------------------------
 
 TARGET				:=	DevilutionX
-BUILD				:=	build
+BUILD				:=	build_ctr
 SOURCES				:=	SourceX/controls SourceX/controls/devices SourceX/miniwin \
 						SourceX/storm SourceX/DiabloUI SourceX/dvlnet SourceX \
 						3rdParty/libsmacker 3rdParty/Radon/Radon/source \
