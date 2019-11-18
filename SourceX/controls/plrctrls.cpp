@@ -17,7 +17,14 @@ int speedspellcount = 0;
 // Native game menu, controlled by simulating a keyboard.
 bool InGameMenu()
 {
-	return stextflag > 0 || questlog || helpflag || talkflag || qtextflag || sgpCurrentMenu;
+	return stextflag > 0
+	    || questlog
+	    || helpflag
+	    || talkflag
+	    || qtextflag
+	    || gmenu_exception()
+	    || PauseMode == 2
+	    || plr[myplr]._pInvincible;
 }
 
 namespace {
@@ -131,13 +138,13 @@ void CheckTownersNearby()
 
 bool HasRangedSpell()
 {
-	int v = plr[myplr]._pRSpell;
+	int spl = plr[myplr]._pRSpell;
 
-	return v != SPL_INVALID
-	    && v != SPL_TOWN
-	    && v != SPL_TELEPORT
-	    && spelldata[v].sTargeted
-	    && !spelldata[v].sTownSpell;
+	return spl != SPL_INVALID
+	    && spl != SPL_TOWN
+	    && spl != SPL_TELEPORT
+	    && spelldata[spl].sTargeted
+	    && !spelldata[spl].sTownSpell;
 }
 
 void CheckMonstersNearby()
@@ -664,10 +671,76 @@ void PerformPrimaryAction()
 	Interact();
 }
 
+bool SpellHasActorTarget()
+{
+	int spl = plr[myplr]._pRSpell;
+	if (spl == SPL_TOWN || spl == SPL_TELEPORT)
+		return false;
+
+	if (spl == SPL_FIREWALL && pcursmonst != -1) {
+		cursmx = monster[pcursmonst]._mx;
+		cursmy = monster[pcursmonst]._my;
+	}
+
+	return pcursplr != -1 || pcursmonst != -1;
+}
+
+void UpdateSpellTarget()
+{
+	if (SpellHasActorTarget())
+		return;
+
+	pcursplr = -1;
+	pcursmonst = -1;
+
+	static const int kOffsets[8][2] = {
+		{ 1, 1 },   // DIR_S
+		{ 0, 1 },   // DIR_SW
+		{ -1, 1 },  // DIR_W
+		{ -1, 0 },  // DIR_NW
+		{ -1, -1 }, // DIR_N
+		{ 0, -1 },  // DIR_NE
+		{ 1, -1 },  // DIR_E
+		{ 1, 0 },   // DIR_SE
+	};
+	const auto &player = plr[myplr];
+	cursmx = player._px + kOffsets[player._pdir][0];
+	cursmy = player._py + kOffsets[player._pdir][1];
+}
+
+void PerformSpellAction()
+{
+	if (invflag) {
+		int spl = plr[myplr]._pRSpell;
+		if (pcurs >= CURSOR_FIRSTITEM) {
+			DropItemBeforeTrig();
+			return;
+		}
+		if (spl != SPL_IDENTIFY && spl != SPL_REPAIR && spl != SPL_RECHARGE)
+			return;
+	}
+
+	if (spselflag) {
+		SetSpell();
+		return;
+	}
+
+	if (InGameMenu())
+		return;
+	if (TryIconCurs())
+		return;
+
+	UpdateSpellTarget();
+	CheckPlrSpell();
+}
+
 void PerformSecondaryAction()
 {
-	if (invflag)
+	if (invflag) {
+		if (pcursinvitem != -1)
+			UseInvItem(myplr, pcursinvitem);
 		return;
+	}
 
 	if (pcursitem != -1 && pcurs == CURSOR_HAND) {
 		NetSendCmdLocParam1(true, CMD_GOTOAGETITEM, cursmx, cursmy, pcursitem);
