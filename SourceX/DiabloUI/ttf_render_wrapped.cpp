@@ -50,8 +50,7 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 			return nullptr;
 		}
 #ifdef PLATFORM_CTR
-		snprintf(str, str_len + 1, "%s %s", text, textbuf);
-
+		SDL_strlcpy(str, text, str_len + 1);
 #else
 		strlcpy(str, text, str_len + 1);
 #endif
