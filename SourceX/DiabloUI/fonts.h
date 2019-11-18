@@ -6,10 +6,6 @@
 
 #include "DiabloUI/art.h"
 
-#ifdef PLATFORM_CTR
-#define TTF_FONT_PATH "romfs:/CharisSILB.ttf"
-#endif
-
 #ifndef TTF_FONT_PATH
 #define TTF_FONT_PATH "CharisSILB.ttf"
 #endif

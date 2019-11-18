@@ -59,9 +59,6 @@ INCLUDES			:=	Source SourceS SourceS/miniwin SourceX DiabloUI \
 						3rdParty/asio/include 3rdParty/libsmacker 3rdParty/PKWare \
 						3rdParty/Radon/Radon/include 3rdParty/Storm/Source \
 						3rdParty/StormLib/src
-#ROMFS				:=	romfs
-
-SDLCONFIG			:=	arm-none-eabi-pkg-config
 
 #---------------------------------------------------------------------------------
 # options for .cia generation
@@ -124,7 +121,6 @@ LIBS		:=	-lSDL_ttf -lfreetype -lSDL_mixer -lvorbisfile -lvorbis -logg -lmikmod -
 #---------------------------------------------------------------------------------
 LIBDIRS		:=	$(CTRULIB) $(PORTLIBS)
 
-
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional
 # rules for different file extensions
@@ -142,15 +138,15 @@ export DEPSDIR	:=	$(CURDIR)/$(BUILD)
 
 
 SMACKER_SRC	:= \
-  smk_bitstream.o \
-  smk_hufftree.o \
-  smacker.o
+  smk_bitstream.c \
+  smk_hufftree.c \
+  smacker.c
 
 RADON_SRC := \
-  File.o \
-  Key.o \
-  Named.o \
-  Section.o
+  File.cpp \
+  Key.cpp \
+  Named.cpp \
+  Section.cpp
 
 STORMLIB_SRC := \
   FileStream.cpp \
@@ -289,7 +285,6 @@ DEVILUTIONX_SRC := \
   ttf_render_wrapped.cpp \
   main.cpp
 
-
 ifneq ($(NONET),)
   DEVILUTIONX_SRC += \
     SourceX/dvlnet/tcp_client.cpp \
@@ -356,16 +351,14 @@ else
 
 DEPENDS						:=	$(OFILES:.o=.d)
 
-ifeq ($(ROMFS),)
-# CFLAGS		+=	$(INCLUDE) -DARM11 -D_3DS -DDATAPATH=\"sdmc:/3ds/OpenBOR/\"
-else
-# CFLAGS		+=	$(INCLUDE) -DARM11 -D_3DS -D_3DS_ROMFS -DDATAPATH=\"romfs:/\"
+ifneq ($(ROMFS),)
+	CFLAGS				+=	-DTTF_FONT_PATH=\"romfs:/CharisSILB.ttf\"
 endif
 
-export _3DSXFLAGS		+=	--smdh=$(CURDIR)/$(TARGET).smdh
+export _3DSXFLAGS			+=	--smdh=$(CURDIR)/$(TARGET).smdh
 
 ifneq ($(ROMFS),)
-	export _3DSXFLAGS	+=	--romfs=$(CURDIR)/$(ROMFS)
+	export _3DSXFLAGS		+=	--romfs=$(CURDIR)/$(ROMFS)
 endif
 
 BANNER_IMAGE_ARG			:=	-i $(BANNER_IMAGE_FILE)
@@ -387,9 +380,6 @@ endif
 ifneq ($(ROMFS),)
 	APP_ROMFS				:=	$(CURDIR)/$(ROMFS)
 	COMMON_MAKEROM_PARAMS	+=	-DAPP_ROMFS="$(APP_ROMFS)" 
-	
-
-
 endif
 
 #---------------------------------------------------------------------------------

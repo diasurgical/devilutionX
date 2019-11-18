@@ -36,6 +36,7 @@ int main(int argc, char **argv)
 		osSetSpeedupEnable(true);
 	
 	romfsInit();
+	atexit(romfsExit());
 	
 	if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO ) != 0) {
 		printf("Failed to start SDL!\n");
@@ -48,6 +49,5 @@ int main(int argc, char **argv)
 	
 	auto cmdline = build_cmdline(argc, argv);
 	return dvl::WinMain(NULL, NULL, (char *)cmdline.c_str(), 0);
-	
-	romfsExit();
+
 }
