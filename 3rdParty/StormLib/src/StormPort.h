@@ -153,10 +153,7 @@
 
 #if !defined(PLATFORM_DEFINED) && defined(_3DS)
 
-  #include <3ds.h>
-  #include <3ds/types.h>
   #include <sys/stat.h>
-  //#include <sys/mman.h>
   #include <fcntl.h>
   #include <unistd.h>
   #include <stdint.h>
