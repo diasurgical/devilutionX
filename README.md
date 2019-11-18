@@ -192,6 +192,37 @@ The nro-file will be generated in the build folder. Test with an emulator (RyuJi
 [Nintendo Switch manual](docs/manual/platforms/switch.md)
 </details>
 
+<details><summary>Nintendo 3DS</summary>
+
+### Installing dependencies
+
+https://devkitpro.org/wiki/Getting_Started
+
+
+- Install (dkp-)pacman: https://devkitpro.org/wiki/devkitPro_pacman
+
+- Install required packages with (dkp-)pacman:
+```
+sudo (dkp-)pacman -S devkitARM general-tools 3dstools devkitpro-pkgbuild-helpers \
+	libctru citro3d 3ds-sdl 3ds-sdl_ttf 3ds-sdl_mixer \
+	3ds-freetype 3ds-libogg 3ds-libvorbisidec 3ds-mikmod
+```
+- Download or compile [bannertool](https://github.com/Steveice10/bannertool/releases) and [makerom](https://github.com/jakcron/Project_CTR/releases)
+  - Copy binaries to: `/opt/devkitpro/tools/bin/`
+
+### Compiling
+```
+cd build
+cmake .. -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/3ds.cmake
+make -j$(nproc)
+```
+*Note:*  Add `-DHELLFIRE=ON` to build the Hellfire binaries.
+
+The output-files will be generated in the build folder.
+
+[Nintendo 3DS manual](docs/manual/platforms/n3ds.md)
+</details>
+
 <details><summary>Haiku</summary>
 
 ### Installing dependencies on 32 bit Haiku

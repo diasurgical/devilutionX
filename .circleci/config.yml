@@ -112,6 +112,26 @@ jobs:
       - run: PKG_CONFIG_PATH=/opt/m68k-amigaos/lib/pkgconfig/:/opt/m68k-amigaos/share/pkgconfig/ cmake -S. -Bbuild -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-s -ffast-math -O3 -noixemul -D__BIG_ENDIAN__ -D__AMIGA__ -fpermissive" ..
       - run: cd build && make -j$(nproc)
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_m68k}
+  3ds:
+    docker:
+      - image: devkitpro/devkitarm:latest
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: echo deb http://deb.debian.org/debian stretch-backports main > /etc/apt/sources.list.d/debian-backports.list
+      - run: echo deb http://deb.debian.org/debian stretch-backports-sloppy main >> /etc/apt/sources.list.d/debian-backports.list
+      - run: apt-get update && apt-get install -y -t 'stretch-backports*' cmake unzip
+      - run: dkp-pacman -Syu --noconfirm
+      - run: dkp-pacman -S --needed --noconfirm --quiet devkitpro-pkgbuild-helpers
+      - run: wget https://github.com/Steveice10/bannertool/releases/download/1.1.0/bannertool.zip
+      - run: unzip -j "bannertool.zip" "linux-x86_64/bannertool" -d "/opt/devkitpro/tools/bin"
+      - run: wget https://github.com/jakcron/Project_CTR/releases/download/v0.16/makerom_016_ctrtool.zip
+      - run: unzip -j "makerom_016_ctrtool.zip" "Ubuntu/makerom" -d "/opt/devkitpro/tools/bin"
+      - run: sudo chmod +rx /opt/devkitpro/tools/bin/makerom
+      - run: cd build && cmake .. -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/3ds.cmake
+      - run: cd build && cmake --build . -j $(nproc)
+      - store_artifacts: {path: ./build/devilutionx.3dsx, destination: devilutionx.3dsx}
+      - store_artifacts: {path: ./build/devilutionx.cia, destination: devilutionx.cia}
 
 workflows:
   version: 2
@@ -124,4 +144,5 @@ workflows:
       - windows_x64
       - linux_x86_64_sdl1
       - switch
+      - 3ds
       - amigaos-m68k
