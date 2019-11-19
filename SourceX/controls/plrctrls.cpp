@@ -184,13 +184,56 @@ void CheckMonstersNearby()
 	}
 }
 
+void CheckPlayerNearby()
+{
+	int newRotations, newDdistance;
+	int distance = 2 * (MAXDUNX + MAXDUNY);
+	int rotations = 5;
+
+	if (pcursmonst != -1)
+		return;
+
+	int spl = plr[myplr]._pRSpell;
+	if (FriendlyMode && spl != SPL_RESURRECT && spl != SPL_HEALOTHER)
+		return;
+
+	for (int i = 0; i < MAX_PLRS; i++) {
+		if (i == myplr)
+			continue;
+		const int mx = plr[i].WorldX;
+		const int my = plr[i].WorldY;
+		if (dPlayer[mx][my] == 0
+		    || !(dFlags[mx][my] & BFLAG_LIT)
+		    || (plr[i]._pHitPoints == 0 && spl != SPL_RESURRECT))
+			continue;
+
+		if (plr[myplr]._pwtype == WT_RANGED || HasRangedSpell() || spl == SPL_HEALOTHER)
+			newDdistance = GetDistanceRanged(mx, my);
+		else
+			newDdistance = GetDistance(mx, my);
+
+		if (newDdistance == 0 || distance < newDdistance) {
+			continue;
+		}
+		if (distance == newDdistance) {
+			newRotations = GetRoteryDistance(mx, my);
+			if (rotations < newRotations)
+				continue;
+		}
+		distance = newDdistance;
+		rotations = newRotations;
+		pcursplr = i;
+	}
+}
+
 void FindActor()
 {
 	if (leveltype != DTYPE_TOWN)
 		CheckMonstersNearby();
 	else
 		CheckTownersNearby();
-	// TODO target players if !FriendlyMode
+
+	CheckPlayerNearby();
 }
 
 void Interact()
@@ -730,6 +773,21 @@ void PerformSpellAction()
 	if (TryIconCurs())
 		return;
 
+	int spl = plr[myplr]._pRSpell;
+	if ((pcursplr == -1 && (spl == SPL_RESURRECT || spl == SPL_HEALOTHER))
+		|| (pcursobj == -1 && spl == SPL_DISARM)) {
+		if (plr[myplr]._pClass == PC_WARRIOR) {
+			PlaySFX(PS_WARR27);
+#ifndef SPAWN
+		} else if (plr[myplr]._pClass == PC_ROGUE) {
+			PlaySFX(PS_ROGUE27);
+		} else if (plr[myplr]._pClass == PC_SORCERER) {
+			PlaySFX(PS_MAGE27);
+#endif
+		}
+		return;
+	}
+
 	UpdateSpellTarget();
 	CheckPlrSpell();
 }
@@ -745,7 +803,7 @@ void PerformSecondaryAction()
 	if (pcursitem != -1 && pcurs == CURSOR_HAND) {
 		NetSendCmdLocParam1(true, CMD_GOTOAGETITEM, cursmx, cursmy, pcursitem);
 	} else if (pcursobj != -1) {
-		NetSendCmdLocParam1(true, pcurs == CURSOR_DISARM ? CMD_DISARMXY : CMD_OPOBJXY, cursmx, cursmy, pcursobj);
+		NetSendCmdLocParam1(true, CMD_OPOBJXY, cursmx, cursmy, pcursobj);
 	}
 }
 
