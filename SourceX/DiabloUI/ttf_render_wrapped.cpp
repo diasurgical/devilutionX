@@ -49,11 +49,7 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 			TTF_SetError("Out of memory");
 			return nullptr;
 		}
-#ifdef PLATFORM_CTR
 		SDL_strlcpy(str, text, str_len + 1);
-#else
-		strlcpy(str, text, str_len + 1);
-#endif
 		tok = str;
 		end = str + str_len;
 		do {
