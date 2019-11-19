@@ -68,7 +68,7 @@ if(3DS)
   set(UBSAN OFF)
 
   list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/ctr")
-  find_package(LIBCTRU REQUIRED)
+  find_package(CTRULIB REQUIRED)
 endif()
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD OR ${CMAKE_SYSTEM_NAME} STREQUAL OpenBSD)
@@ -319,6 +319,7 @@ foreach(
   NONET
   DINGUX
   RETROFW
+  PREFILL_PLAYER_NAME
 )
 if(${def_name})
   list(APPEND def_list ${def_name})
@@ -505,7 +506,7 @@ if(3DS)
   set(APP_ICON "${PROJECT_SOURCE_DIR}/Packaging/ctr/icon.png")
   set(APP_VERSION ${PROJECT_VERSION})
   include(Tools3DS)
-  build_switch_binaries(${BIN_TARGET})
+  add_3dsx_target(${BIN_TARGET})
 endif()
 
 if(DINGUX)
