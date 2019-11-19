@@ -1276,7 +1276,7 @@ static void L4roomGen(int x, int y, int w, int h, int dir)
 			ch = (random_(0, 5) + 2) & ~1;
 			cy1 = h / 2 + y - ch / 2;
 			cx1 = x - cw;
-			ran = L4checkRoom(cx1 - 1, cy1 - 1, ch + 2, cw + 1); /// BUGFIX: swap args 3 and 4 ("ch+2" and "cw+1")
+			ran = L4checkRoom(cx1 - 1, cy1 - 1, cw + 1, ch + 2); /// BUGFIX: swap args 3 and 4 ("ch+2" and "cw+1") (applied)
 			num++;
 		} while (ran == FALSE && num < 20);
 
