@@ -14,7 +14,7 @@ endmacro()
 msys_to_cmake_path($ENV{DEVKITPRO} DEVKITPRO)
 
 # Default devkitpro cmake
-include(${DEVKITPRO}/3ds.cmake)
+# include(${DEVKITPRO}/3ds.cmake)
 
 # Set root paths:
 set(DEVKITARM ${DEVKITPRO}/devkitARM)
