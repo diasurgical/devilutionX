@@ -85,7 +85,7 @@ BOOL nthread_recv_turns(BOOL *pfSendAsync)
 		last_tick += 50;
 		return TRUE;
 	}
-#ifdef PLATFORM_CTR
+#if defined(__3DS__)
 	return 0;
 #else
 	if (!SNetReceiveTurns(0, MAX_PLRS, (char **)glpMsgTbl, gdwMsgLenTbl, (LPDWORD)player_state)) {

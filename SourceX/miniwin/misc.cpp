@@ -120,7 +120,7 @@ WINBOOL DeleteFileA(LPCSTR lpFileName)
 
 bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 {
-#ifndef PLATFORM_CTR
+#if !defined(__3DS__)
 	if (SDL_Init(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) <= -1) {
 		ErrSdl();
 	}
@@ -185,7 +185,7 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 	}
 
 
-#ifndef PLATFORM_CTR
+#if !defined(__3DS__)
 
 #ifdef USE_SDL1
 	refreshDelay = 16; // rougly 60hz

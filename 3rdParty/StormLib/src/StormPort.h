@@ -151,7 +151,7 @@
 
 #endif
 
-#if !defined(PLATFORM_DEFINED) && defined(_3DS)
+#if !defined(PLATFORM_DEFINED) && defined(__3DS__)
 
   #include <sys/stat.h>
   #include <fcntl.h>

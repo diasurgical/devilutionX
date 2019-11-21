@@ -754,7 +754,7 @@ inline char *SDL_GetBasePath()
 	}
 #endif
 
-#ifdef PLATFORM_CTR
+#if defined(__3DS__)
 	const char *path = "sdmc:/3ds/devilutionx/\0";
 	return path;
 #endif

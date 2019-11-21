@@ -1,7 +1,7 @@
 #include <string>
 #include <SDL.h>
 
-#ifdef PLATFORM_CTR
+#if defined(__3DS__)
 #include <3ds.h>
 #endif
 
@@ -28,7 +28,7 @@ static std::string build_cmdline(int argc, char **argv)
 
 int main(int argc, char **argv)
 {
-#ifdef PLATFORM_CTR
+#if defined(__3DS__)
 	bool isN3DS;
 
 	APT_CheckNew3DS(&isN3DS);
@@ -37,14 +37,6 @@ int main(int argc, char **argv)
 	
 	romfsInit();
 	atexit(romfsExit());
-	
-	if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO ) != 0) {
-		printf("Failed to start SDL!\n");
-		return -1;
-	}
-	SDL_Surface *screen;
-	screen = SDL_SetVideoMode(400, 240, 0, SDL_SWSURFACE | SDL_CONSOLEBOTTOM); //Init console
-	printf("SDL Initialized!\n");
 #endif
 	
 	auto cmdline = build_cmdline(argc, argv);
