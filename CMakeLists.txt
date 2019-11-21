@@ -102,7 +102,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_THREAD_PREFER_PTHREAD ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
+if(NOT 3DS)
 find_package(Threads REQUIRED)
+endif()
+
 if(NOT NONET)
   find_package(sodium REQUIRED)
 endif()
@@ -293,7 +296,10 @@ target_include_directories(${BIN_TARGET} PRIVATE
   3rdParty/Radon/Radon/include
   3rdParty/libsmacker)
 
+if(NOT 3DS)
 target_link_libraries(devilution PUBLIC Threads::Threads)
+endif()
+
 target_link_libraries(${BIN_TARGET} PRIVATE
   devilution
   PKWare
