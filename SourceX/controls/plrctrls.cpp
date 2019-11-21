@@ -1,6 +1,7 @@
 #include "controls/plrctrls.h"
 
 #include <cstdint>
+#include <algorithm>
 
 #include "controls/controller_motion.h"
 #include "controls/game_controls.h"
@@ -58,14 +59,30 @@ int GetRoteryDistance(int x, int y)
 }
 
 /**
- * @brief Get walking distance to cordinate
- * @param x Tile coordinates
- * @param y Tile coordinates
+ * @brief Get the best case walking steps to coordinates
+ * @param dx Tile coordinates
+ * @param dy Tile coordinates
  */
-int GetDistance(int x, int y)
+int GetMinDistance(int dx, int dy)
 {
+	return std::max(abs(plr[myplr]._px - dx), abs(plr[myplr]._py - dy));
+}
+
+/**
+ * @brief Get walking steps to cordinate
+ * @param dx Tile coordinates
+ * @param dy Tile coordinates
+ * @param maxDistance the max number of steps to search
+ * @return number of steps, or 0 if not reachable
+ */
+int GetDistance(int dx, int dy, int maxDistance)
+{
+	if (GetMinDistance(dx, dy) > maxDistance) {
+		return 0;
+	}
+
 	char walkpath[25];
-	return FindPath(PosOkPlayer, myplr, plr[myplr]._px, plr[myplr]._py, x, y, walkpath);
+	return FindPath(PosOkPlayer, myplr, plr[myplr]._px, plr[myplr]._py, dx, dy, walkpath);
 }
 
 /**
@@ -129,10 +146,7 @@ void FindItemOrObject()
 void CheckTownersNearby()
 {
 	for (int i = 0; i < 16; i++) {
-		if (GetDistanceRanged(towner[i]._tx, towner[i]._ty) > 6)
-			continue;
-		int distance = GetDistance(towner[i]._tx, towner[i]._ty);
-		if (distance == 0 || distance > 2)
+		if (GetDistance(towner[i]._tx, towner[i]._ty, 2) == 0)
 			continue;
 		pcursmonst = i;
 	}
@@ -170,7 +184,7 @@ void CheckMonstersNearby()
 		if (plr[myplr]._pwtype == WT_RANGED || HasRangedSpell())
 			newDdistance = GetDistanceRanged(mx, my);
 		else
-			newDdistance = GetDistance(mx, my);
+			newDdistance = GetDistance(mx, my, distance);
 
 		if (newDdistance == 0 || distance < newDdistance || (pcursmonst != -1 && CanTalkToMonst(i))) {
 			continue;
@@ -212,7 +226,7 @@ void CheckPlayerNearby()
 		if (plr[myplr]._pwtype == WT_RANGED || HasRangedSpell() || spl == SPL_HEALOTHER)
 			newDdistance = GetDistanceRanged(mx, my);
 		else
-			newDdistance = GetDistance(mx, my);
+			newDdistance = GetDistance(mx, my, distance);
 
 		if (newDdistance == 0 || distance < newDdistance) {
 			continue;
