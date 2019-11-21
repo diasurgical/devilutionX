@@ -86,13 +86,16 @@ int GetDistance(int dx, int dy, int maxDistance)
 }
 
 /**
- * @brief Get walking distance to cordinate
- * @param x Tile coordinates
- * @param y Tile coordinates
+ * @brief Get distance to cordinate
+ * @param dx Tile coordinates
+ * @param dy Tile coordinates
  */
-int GetDistanceRanged(int x, int y)
+int GetDistanceRanged(int dx, int dy)
 {
-	return path_get_h_cost(plr[myplr]._px, plr[myplr]._py, x, y);
+	int a = abs(plr[myplr]._px - dx);
+	int b = abs(plr[myplr]._py - dy);
+
+	return sqrt(a * a + b * b);
 }
 
 void FindItemOrObject()
