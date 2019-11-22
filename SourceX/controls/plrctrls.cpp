@@ -69,7 +69,7 @@ int GetMinDistance(int dx, int dy)
 }
 
 /**
- * @brief Get walking steps to cordinate
+ * @brief Get walking steps to coordinate
  * @param dx Tile coordinates
  * @param dy Tile coordinates
  * @param maxDistance the max number of steps to search
@@ -86,7 +86,7 @@ int GetDistance(int dx, int dy, int maxDistance)
 }
 
 /**
- * @brief Get distance to cordinate
+ * @brief Get distance to coordinate
  * @param dx Tile coordinates
  * @param dy Tile coordinates
  */
