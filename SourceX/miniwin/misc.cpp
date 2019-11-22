@@ -120,11 +120,9 @@ WINBOOL DeleteFileA(LPCSTR lpFileName)
 
 bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 {
-#if !defined(__3DS__)
 	if (SDL_Init(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) <= -1) {
 		ErrSdl();
 	}
-#endif
 
 	atexit(SDL_Quit);
 

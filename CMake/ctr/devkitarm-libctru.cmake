@@ -43,4 +43,4 @@ set(CMAKE_SIZE_UTIL "${TOOLCHAIN_PREFIX}size${TOOLCHAIN_SUFFIX}" CACHE INTERNAL 
 set(BUILD_SHARED_LIBS OFF CACHE INTERNAL "Shared libs not available")
 
 set(3DS ON)
-add_definitions(-D__3DS__)
+add_definitions(-D__3DS__ -D_3DS)
