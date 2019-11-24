@@ -755,8 +755,8 @@ inline char *SDL_GetBasePath()
 #endif
 
 #if defined(__3DS__)
-	const char *path = "sdmc:/3ds/devilutionx/\0";
-	return path;
+	retval = "sdmc:/3ds/devilutionx/";
+	return retval;
 #endif
 
 	/* is a Linux-style /proc filesystem available? */

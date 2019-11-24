@@ -34,11 +34,11 @@ int main(int argc, char **argv)
 	APT_CheckNew3DS(&isN3DS);
 	if(isN3DS)
 		osSetSpeedupEnable(true);
-	
+
 	romfsInit();
 	atexit(romfsExit());
 #endif
-	
+
 	auto cmdline = build_cmdline(argc, argv);
 	return dvl::WinMain(NULL, NULL, (char *)cmdline.c_str(), 0);
 

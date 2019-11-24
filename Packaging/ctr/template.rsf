@@ -1,21 +1,21 @@
 BasicInfo:
-  Title                   : $(APP_TITLE)
-  ProductCode             : $(APP_PRODUCT_CODE)
-  Logo                    : $(APP_LOGO_ID) # Nintendo / Licensed / Distributed / iQue / iQueForSystem
+  Title                   : DevilutionX
+  ProductCode             : CTR-P-DIABLO
+  Logo                    : Nintendo # Nintendo / Licensed / Distributed / iQue / iQueForSystem
 
-RomFs:
+#RomFs:
   # Specifies the root path of the read only file system to include in the ROM.
-  RootPath                : $(APP_ROMFS)
+#  RootPath                : $(APP_ROMFS)
 
 TitleInfo:
   Category                : Application
-  UniqueId                : $(APP_UNIQUE_ID)
+  UniqueId                : 0x3F395
 
 Option:
   UseOnSD                 : true # true if App is to be installed to SD
   FreeProductCode         : true # Removes limitations on ProductCode
   MediaFootPadding        : false # If true CCI files are created with padding
-  EnableCrypt             : $(APP_ENCRYPTED) # Enables encryption for NCCH and CIA
+  EnableCrypt             : false # Enables encryption for NCCH and CIA
   EnableCompress          : true # Compresses where applicable (currently only exefs:/.code)
   
 AccessControlInfo:
@@ -59,7 +59,7 @@ AccessControlInfo:
 
   # Process Settings
   MemoryType                    : Application # Application/System/Base
-  SystemMode                    : $(APP_SYSTEM_MODE) # 64MB(Default)/96MB/80MB/72MB/32MB
+  SystemMode                    : 96MB # 64MB(Default)/96MB/80MB/72MB/32MB
   IdealProcessor                : 0
   AffinityMask                  : 1
   Priority                      : 16
@@ -76,7 +76,7 @@ AccessControlInfo:
   SpecialMemoryArrange          : true
 
   # New3DS Exclusive Process Settings
-  SystemModeExt                 : $(APP_SYSTEM_MODE_EXT) # Legacy(Default)/124MB/178MB  Legacy:Use Old3DS SystemMode
+  SystemModeExt                 : 124MB # Legacy(Default)/124MB/178MB  Legacy:Use Old3DS SystemMode
   CpuSpeed                      : 804MHz # 256MHz(Default)/804MHz
   EnableL2Cache                 : true # false(default)/true
   CanAccessCore2                : true 

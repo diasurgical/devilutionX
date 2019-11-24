@@ -19,6 +19,7 @@ build() {
 	cd ../../build
 	rm -f CMakeCache.txt
 	DEVKITPRO="$DEVKITPRO" cmake .. -DBINARY_RELEASE=ON -DUSE_SDL1=ON -DNONET=ON \
+		-DSDL1_VIDEO_MODE_FLAGS='SDL_SWSURFACE|SDL_CONSOLEBOTTOM' \
 		-DCMAKE_TOOLCHAIN_FILE=../CMake/ctr/devkitarm-libctru.cmake
 	DEVKITPRO="$DEVKITPRO" make -j "$(nproc)"
 	cd -
