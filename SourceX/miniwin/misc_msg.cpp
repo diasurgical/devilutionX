@@ -8,7 +8,13 @@
 #include "controls/controller_motion.h"
 #include "controls/game_controls.h"
 #include "controls/plrctrls.h"
+#include "controls/touch.h"
 #include "miniwin/ddraw.h"
+
+#ifdef __SWITCH__
+#include "platform/switch/docking.h"
+#include <switch.h>
+#endif
 
 /** @file
  * *
@@ -321,6 +327,10 @@ void BlurInventory()
 
 WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg)
 {
+#ifdef __SWITCH__
+	HandleDocking();
+#endif
+
 	if (wMsgFilterMin != 0)
 		UNIMPLEMENTED();
 	if (wMsgFilterMax != 0)
@@ -357,6 +367,10 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		lpMsg->message = DVL_WM_QUIT;
 		return true;
 	}
+
+#ifndef USE_SDL1
+	handle_touch(&e, MouseX, MouseY);
+#endif
 
 #ifdef USE_SDL1
 	if (e.type == SDL_MOUSEMOTION) {
@@ -405,14 +419,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 			PerformSecondaryAction();
 			break;
 		case GameActionType::CAST_SPELL:
-			if (pcurs >= CURSOR_FIRSTITEM && invflag)
-				// Drop item so that it does not get destroyed.
-				DropItemBeforeTrig();
-			if (!invflag && !talkflag)
-				// Cast the spell.
-				RightMouseDown();
-			// Close active menu if any / stop walking.
-			PressEscKey();
+			PerformSpellAction();
 			break;
 		case GameActionType::TOGGLE_QUICK_SPELL_MENU:
 			lpMsg->message = DVL_WM_KEYDOWN;

@@ -4,7 +4,7 @@ set -euo pipefail
 
 usage() {
 	echo "Usage: build.sh [target]"
-	echo "	target: target architecture. Either rs90, rg350 or retrofw"
+	echo "	target: target architecture. Either rg350 or retrofw"
 }
 
 if [[ $# -ne 1 ]]; then
@@ -13,7 +13,7 @@ if [[ $# -ne 1 ]]; then
 	exit 1
 fi
 
-if [[ "$1" != "rs90" ]] && [[ "$1" != "rg350" ]] && [[ "$1" != "retrofw" ]]; then
+if [[ "$1" != "rg350" ]] && [[ "$1" != "retrofw" ]]; then
 	echo "Error: invalid target"
 	usage
 	exit 1
@@ -47,9 +47,7 @@ prepare_buildroot() {
 	fi
 	if [[ "$TARGET" == "rg350" ]]; then
 		git clone --depth=1 https://github.com/tonyjih/RG350_buildroot.git "$BUILDROOT"
-	elif [[ "$TARGET" == "rs90" ]]; then
-		git clone --depth=1 -b od-rs90 https://github.com/OpenDingux/buildroot.git "$BUILDROOT"
-	else
+	else # retrofw
 		if [[ ! -f $BUILDROOT_ARCHIVE ]]; then
 			\curl https://buildroot.org/downloads/${BUILDROOT_VER}.tar.gz -o "$BUILDROOT_ARCHIVE"
 		fi
@@ -112,9 +110,7 @@ build() {
 			-DJOY_BUTTON_START=9
 			-DJOY_BUTTON_BACK=8
 		)
-	elif [[ "$TARGET" == "rs90" ]]; then
-		defs+=(-DUSE_SDL1=ON)
-	else
+	else # retrofw
 		defs+=(
 			-DUSE_SDL1=ON
 			-DRETROFW=ON
@@ -137,7 +133,7 @@ build() {
 	fi
 	cmake .. ${defs[@]} \
 		-DCMAKE_TOOLCHAIN_FILE="$BUILDROOT/output/host/usr/share/buildroot/toolchainfile.cmake"
-	make -j $(nproc)
+	make -j $(getconf _NPROCESSORS_ONLN)
 	cd -
 }
 

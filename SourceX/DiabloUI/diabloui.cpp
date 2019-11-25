@@ -16,6 +16,11 @@
 #include "DiabloUI/button.h"
 #include "DiabloUI/dialogs.h"
 
+#ifdef __SWITCH__
+// for virtual keyboard on Switch
+#include "platform/switch/keyboard.h"
+#endif
+
 namespace dvl {
 
 int SelectedItemMin = 1;
@@ -80,6 +85,9 @@ void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(i
 	SDL_StopTextInput(); // input is enabled by default
 	for (int i = 0; i < itemCnt; i++) {
 		if (items[i].type == UI_EDIT) {
+#ifdef __SWITCH__
+			switch_start_text_input(items[i - 1].art_text.text, items[i].edit.value, /*multiline=*/0);
+#endif
 			SDL_StartTextInput();
 			UiTextInput = items[i].edit.value;
 			UiTextInputLen = items[i].edit.max_length;
@@ -174,7 +182,6 @@ void UiFocusPageDown()
 void selhero_CatToName(char *in_buf, char *out_buf, int cnt)
 {
 	std::string output = utf8_to_latin1(in_buf);
-	output.resize(SDL_TEXTINPUTEVENT_TEXT_SIZE - 1);
 	strncat(out_buf, output.c_str(), cnt - strlen(out_buf));
 }
 

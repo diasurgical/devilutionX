@@ -4,13 +4,6 @@
 #include "controls/controller_motion.h"
 #include "stubs.h"
 
-#ifdef SWITCH
-#define JOY_BUTTON_DPAD_LEFT 16
-#define JOY_BUTTON_DPAD_UP 17
-#define JOY_BUTTON_DPAD_RIGHT 18
-#define JOY_BUTTON_DPAD_DOWN 19
-#endif
-
 namespace dvl {
 
 ControllerButton JoyButtonToControllerButton(const SDL_Event &event)

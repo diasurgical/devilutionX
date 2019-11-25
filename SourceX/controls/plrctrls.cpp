@@ -1,6 +1,7 @@
 #include "controls/plrctrls.h"
 
 #include <cstdint>
+#include <algorithm>
 
 #include "controls/controller_motion.h"
 #include "controls/game_controls.h"
@@ -17,7 +18,14 @@ int speedspellcount = 0;
 // Native game menu, controlled by simulating a keyboard.
 bool InGameMenu()
 {
-	return stextflag > 0 || questlog || helpflag || talkflag || qtextflag || sgpCurrentMenu;
+	return stextflag > 0
+	    || questlog
+	    || helpflag
+	    || talkflag
+	    || qtextflag
+	    || gmenu_exception()
+	    || PauseMode == 2
+	    || plr[myplr]._pInvincible;
 }
 
 namespace {
@@ -51,24 +59,43 @@ int GetRoteryDistance(int x, int y)
 }
 
 /**
- * @brief Get walking distance to cordinate
- * @param x Tile coordinates
- * @param y Tile coordinates
+ * @brief Get the best case walking steps to coordinates
+ * @param dx Tile coordinates
+ * @param dy Tile coordinates
  */
-int GetDistance(int x, int y)
+int GetMinDistance(int dx, int dy)
 {
-	char walkpath[25];
-	return FindPath(PosOkPlayer, myplr, plr[myplr]._px, plr[myplr]._py, x, y, walkpath);
+	return std::max(abs(plr[myplr]._px - dx), abs(plr[myplr]._py - dy));
 }
 
 /**
- * @brief Get walking distance to cordinate
- * @param x Tile coordinates
- * @param y Tile coordinates
+ * @brief Get walking steps to coordinate
+ * @param dx Tile coordinates
+ * @param dy Tile coordinates
+ * @param maxDistance the max number of steps to search
+ * @return number of steps, or 0 if not reachable
  */
-int GetDistanceRanged(int x, int y)
+int GetDistance(int dx, int dy, int maxDistance)
 {
-	return path_get_h_cost(plr[myplr]._px, plr[myplr]._py, x, y);
+	if (GetMinDistance(dx, dy) > maxDistance) {
+		return 0;
+	}
+
+	char walkpath[25];
+	return FindPath(PosOkPlayer, myplr, plr[myplr]._px, plr[myplr]._py, dx, dy, walkpath);
+}
+
+/**
+ * @brief Get distance to coordinate
+ * @param dx Tile coordinates
+ * @param dy Tile coordinates
+ */
+int GetDistanceRanged(int dx, int dy)
+{
+	int a = abs(plr[myplr]._px - dx);
+	int b = abs(plr[myplr]._py - dy);
+
+	return sqrt(a * a + b * b);
 }
 
 void FindItemOrObject()
@@ -101,6 +128,8 @@ void FindItemOrObject()
 
 	for (int xx = -1; xx < 2; xx++) {
 		for (int yy = -1; yy < 2; yy++) {
+			if (xx == 0 && yy == 0)
+				continue; // Ignore doorway so we don't get stuck behind barrels
 			if (dObject[mx + xx][my + yy] == 0)
 				continue;
 			int o = dObject[mx + xx][my + yy] > 0 ? dObject[mx + xx][my + yy] - 1 : -(dObject[mx + xx][my + yy] + 1);
@@ -120,10 +149,7 @@ void FindItemOrObject()
 void CheckTownersNearby()
 {
 	for (int i = 0; i < 16; i++) {
-		if (GetDistanceRanged(towner[i]._tx, towner[i]._ty) > 6)
-			continue;
-		int distance = GetDistance(towner[i]._tx, towner[i]._ty);
-		if (distance == 0 || distance > 2)
+		if (GetDistance(towner[i]._tx, towner[i]._ty, 2) == 0)
 			continue;
 		pcursmonst = i;
 	}
@@ -131,13 +157,13 @@ void CheckTownersNearby()
 
 bool HasRangedSpell()
 {
-	int v = plr[myplr]._pRSpell;
+	int spl = plr[myplr]._pRSpell;
 
-	return v != SPL_INVALID
-	    && v != SPL_TOWN
-	    && v != SPL_TELEPORT
-	    && spelldata[v].sTargeted
-	    && !spelldata[v].sTownSpell;
+	return spl != SPL_INVALID
+	    && spl != SPL_TOWN
+	    && spl != SPL_TELEPORT
+	    && spelldata[spl].sTargeted
+	    && !spelldata[spl].sTownSpell;
 }
 
 void CheckMonstersNearby()
@@ -161,7 +187,7 @@ void CheckMonstersNearby()
 		if (plr[myplr]._pwtype == WT_RANGED || HasRangedSpell())
 			newDdistance = GetDistanceRanged(mx, my);
 		else
-			newDdistance = GetDistance(mx, my);
+			newDdistance = GetDistance(mx, my, distance);
 
 		if (newDdistance == 0 || distance < newDdistance || (pcursmonst != -1 && CanTalkToMonst(i))) {
 			continue;
@@ -177,13 +203,56 @@ void CheckMonstersNearby()
 	}
 }
 
+void CheckPlayerNearby()
+{
+	int newRotations, newDdistance;
+	int distance = 2 * (MAXDUNX + MAXDUNY);
+	int rotations = 5;
+
+	if (pcursmonst != -1)
+		return;
+
+	int spl = plr[myplr]._pRSpell;
+	if (FriendlyMode && spl != SPL_RESURRECT && spl != SPL_HEALOTHER)
+		return;
+
+	for (int i = 0; i < MAX_PLRS; i++) {
+		if (i == myplr)
+			continue;
+		const int mx = plr[i].WorldX;
+		const int my = plr[i].WorldY;
+		if (dPlayer[mx][my] == 0
+		    || !(dFlags[mx][my] & BFLAG_LIT)
+		    || (plr[i]._pHitPoints == 0 && spl != SPL_RESURRECT))
+			continue;
+
+		if (plr[myplr]._pwtype == WT_RANGED || HasRangedSpell() || spl == SPL_HEALOTHER)
+			newDdistance = GetDistanceRanged(mx, my);
+		else
+			newDdistance = GetDistance(mx, my, distance);
+
+		if (newDdistance == 0 || distance < newDdistance) {
+			continue;
+		}
+		if (distance == newDdistance) {
+			newRotations = GetRoteryDistance(mx, my);
+			if (rotations < newRotations)
+				continue;
+		}
+		distance = newDdistance;
+		rotations = newRotations;
+		pcursplr = i;
+	}
+}
+
 void FindActor()
 {
 	if (leveltype != DTYPE_TOWN)
 		CheckMonstersNearby();
 	else
 		CheckTownersNearby();
-	// TODO target players if !FriendlyMode
+
+	CheckPlayerNearby();
 }
 
 void Interact()
@@ -664,15 +733,96 @@ void PerformPrimaryAction()
 	Interact();
 }
 
+bool SpellHasActorTarget()
+{
+	int spl = plr[myplr]._pRSpell;
+	if (spl == SPL_TOWN || spl == SPL_TELEPORT)
+		return false;
+
+	if (spl == SPL_FIREWALL && pcursmonst != -1) {
+		cursmx = monster[pcursmonst]._mx;
+		cursmy = monster[pcursmonst]._my;
+	}
+
+	return pcursplr != -1 || pcursmonst != -1;
+}
+
+void UpdateSpellTarget()
+{
+	if (SpellHasActorTarget())
+		return;
+
+	pcursplr = -1;
+	pcursmonst = -1;
+
+	static const int kOffsets[8][2] = {
+		{ 1, 1 },   // DIR_S
+		{ 0, 1 },   // DIR_SW
+		{ -1, 1 },  // DIR_W
+		{ -1, 0 },  // DIR_NW
+		{ -1, -1 }, // DIR_N
+		{ 0, -1 },  // DIR_NE
+		{ 1, -1 },  // DIR_E
+		{ 1, 0 },   // DIR_SE
+	};
+	const auto &player = plr[myplr];
+	cursmx = player._px + kOffsets[player._pdir][0];
+	cursmy = player._py + kOffsets[player._pdir][1];
+}
+
+void PerformSpellAction()
+{
+	if (invflag) {
+		int spl = plr[myplr]._pRSpell;
+		if (pcurs >= CURSOR_FIRSTITEM) {
+			DropItemBeforeTrig();
+			return;
+		}
+		if (spl != SPL_IDENTIFY && spl != SPL_REPAIR && spl != SPL_RECHARGE)
+			return;
+	}
+
+	if (spselflag) {
+		SetSpell();
+		return;
+	}
+
+	if (InGameMenu())
+		return;
+	if (TryIconCurs())
+		return;
+
+	int spl = plr[myplr]._pRSpell;
+	if ((pcursplr == -1 && (spl == SPL_RESURRECT || spl == SPL_HEALOTHER))
+		|| (pcursobj == -1 && spl == SPL_DISARM)) {
+		if (plr[myplr]._pClass == PC_WARRIOR) {
+			PlaySFX(PS_WARR27);
+#ifndef SPAWN
+		} else if (plr[myplr]._pClass == PC_ROGUE) {
+			PlaySFX(PS_ROGUE27);
+		} else if (plr[myplr]._pClass == PC_SORCERER) {
+			PlaySFX(PS_MAGE27);
+#endif
+		}
+		return;
+	}
+
+	UpdateSpellTarget();
+	CheckPlrSpell();
+}
+
 void PerformSecondaryAction()
 {
-	if (invflag)
+	if (invflag) {
+		if (pcursinvitem != -1)
+			UseInvItem(myplr, pcursinvitem);
 		return;
+	}
 
 	if (pcursitem != -1 && pcurs == CURSOR_HAND) {
 		NetSendCmdLocParam1(true, CMD_GOTOAGETITEM, cursmx, cursmy, pcursitem);
 	} else if (pcursobj != -1) {
-		NetSendCmdLocParam1(true, pcurs == CURSOR_DISARM ? CMD_DISARMXY : CMD_OPOBJXY, cursmx, cursmy, pcursobj);
+		NetSendCmdLocParam1(true, CMD_OPOBJXY, cursmx, cursmy, pcursobj);
 	}
 }
 

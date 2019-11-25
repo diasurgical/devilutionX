@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.10) # CMP0083 NEW
 
 include(CMake/out_of_tree.cmake)
 
@@ -63,6 +63,15 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake")
 
+if(SWITCH)
+  set(ASAN OFF)
+  set(UBSAN OFF)
+  set(PIE ON)
+
+  list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/switch")
+  find_package(LIBNX REQUIRED)
+endif()
+
 if(3DS)
   set(ASAN OFF)
   set(UBSAN OFF)
@@ -71,10 +80,10 @@ if(3DS)
   list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/ctr/modules")
   find_package(CITRO3D REQUIRED)
   find_package(BZip2 REQUIRED)
-  find_package(FREETYPE REQUIRED)
-  find_package(VORBIS REQUIRED)
+  find_package(Freetype REQUIRED)
+  find_package(Vorbis REQUIRED)
   find_package(OGG REQUIRED)
-  find_package(MIKMOD REQUIRED)
+  find_package(MikMod REQUIRED)
   find_package(MAD REQUIRED)
   find_package(PNG REQUIRED)
 endif()
@@ -240,6 +249,7 @@ set(devilutionx_SRCS
   SourceX/controls/game_controls.cpp
   SourceX/controls/menu_controls.cpp
   SourceX/controls/plrctrls.cpp
+  SourceX/controls/touch.cpp
   SourceX/miniwin/ddraw.cpp
   SourceX/miniwin/misc.cpp
   SourceX/miniwin/misc_io.cpp
@@ -289,6 +299,14 @@ if(NOT NONET)
 endif()
 
 set(BIN_TARGET devilutionx)
+
+if(SWITCH)
+  list(APPEND devilutionx_SRCS
+    SourceX/platform/switch/network.cpp
+    SourceX/platform/switch/keyboard.cpp
+    SourceX/platform/switch/docking.cpp)
+  set(BIN_TARGET devilutionx.elf)
+endif()
 
 if(3DS)
   set(BIN_TARGET devilutionx.elf)
@@ -418,6 +436,11 @@ foreach(target devilution ${BIN_TARGET})
     target_link_libraries(${target} PUBLIC -fsanitize=undefined)
   endif()
 
+  if(SWITCH)
+    target_link_libraries(${target} PRIVATE switch::libnx
+      -lfreetype -lvorbisfile -lvorbis -logg -lmodplug -lmpg123 -lSDL2 -lopusfile -lopus -lEGL -lglapi -ldrm_nouveau -lpng -lbz2 -lz -lnx)
+  endif()
+
   if(3DS)
     target_link_libraries(${target} PRIVATE ${BZIP2_LIBRARIES})
     target_include_directories(${target} PRIVATE ${BZIP2_INCLUDE_DIR})
@@ -426,7 +449,7 @@ foreach(target devilution ${BIN_TARGET})
     target_link_libraries(${target} PRIVATE 3ds::ogg 3ds::mikmod 3ds::mad 3ds::freetype 3ds::png)
     target_link_libraries(${target} PRIVATE 3ds::citro3d 3ds::ctrulib)
   endif()
-
+  
   target_compile_definitions(${target} PRIVATE ${def_list})
 endforeach(target)
 
@@ -514,6 +537,15 @@ if(APPLE)
   set(CPACK_GENERATOR "DragNDrop")
 
   include(CPack)
+endif()
+
+if(SWITCH)
+  set(APP_TITLE "DevilutionX")
+  set(APP_AUTHOR "Devilution Team")
+  set(APP_ICON "${PROJECT_SOURCE_DIR}/Packaging/switch/icon.jpg")
+  set(APP_VERSION ${PROJECT_VERSION})
+  include(nx-utils)
+  build_switch_binaries(${BIN_TARGET})
 endif()
 
 if(3DS)

@@ -1,5 +1,8 @@
 #include <string>
 #include <SDL.h>
+#ifdef __SWITCH__
+#include "platform/switch/network.h"
+#endif
 
 #if defined(__3DS__)
 #include <3ds.h>
@@ -40,6 +43,11 @@ int main(int argc, char **argv)
 #endif
 
 	auto cmdline = build_cmdline(argc, argv);
+
+#ifdef __SWITCH__
+	switch_enable_network();
+#endif
+
 	return dvl::WinMain(NULL, NULL, (char *)cmdline.c_str(), 0);
 
 }

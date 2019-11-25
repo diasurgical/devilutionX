@@ -121,6 +121,7 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
 
 // Controller support: Actions to run after updating the cursor state.
 // Defined in SourceX/controls/plctrls.cpp.
+extern void finish_simulated_mouse_clicks(int current_mouse_x, int current_mouse_y);
 extern void plrctrls_after_check_curs_move();
 
 static void ProcessInput()
@@ -134,6 +135,9 @@ static void ProcessInput()
 	}
 
 	if (!gmenu_exception() && sgnTimeoutCurs == 0) {
+#ifndef USE_SDL1
+		finish_simulated_mouse_clicks(MouseX, MouseY);
+#endif
 		CheckCursMove();
 		plrctrls_after_check_curs_move();
 		track_process();
@@ -1700,6 +1704,9 @@ void game_logic()
 	}
 
 	if (!gmenu_exception() && sgnTimeoutCurs == 0) {
+#ifndef USE_SDL1
+		finish_simulated_mouse_clicks(MouseX, MouseY);
+#endif
 		CheckCursMove();
 		plrctrls_after_check_curs_move();
 		track_process();
