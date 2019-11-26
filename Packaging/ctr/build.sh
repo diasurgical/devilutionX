@@ -18,8 +18,7 @@ build() {
 	mkdir -p ../../build
 	cd ../../build
 	rm -f CMakeCache.txt
-	DEVKITPRO="$DEVKITPRO" cmake .. -DBINARY_RELEASE=ON -DUSE_SDL1=ON -DNONET=ON \
-		-DSDL1_VIDEO_MODE_FLAGS='SDL_SWSURFACE|SDL_CONSOLEBOTTOM' \
+	DEVKITPRO="$DEVKITPRO" cmake .. -DBINARY_RELEASE=ON \
 		-DCMAKE_TOOLCHAIN_FILE=../CMake/ctr/devkitarm-libctru.cmake
 	DEVKITPRO="$DEVKITPRO" make -j "$(nproc)"
 	cd -
@@ -28,8 +27,8 @@ build() {
 install_deps() {
 	"$DEVKITPRO/pacman/bin/pacman" -S --needed --noconfirm --quiet \
 		3ds-sdl 3ds-sdl_ttf 3ds-sdl_mixer \
-		3ds-freetype 3ds-libvorbis 3ds-libmikmod\
-		libctru devkitARM general-tools 3ds-tools devkitpro-pkgbuild-helpers
+		3ds-freetype 3ds-libogg 3ds-libvorbisidec 3ds-mikmod \
+		libctru citro3d picasso devkitARM general-tools 3dslink 3dstools devkitpro-pkgbuild-helpers
 }
 
 prepare_devkitpro() {
