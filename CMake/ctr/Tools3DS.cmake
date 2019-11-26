@@ -102,7 +102,7 @@ message(STATUS "Looking for 3ds tools...")
 ##############
 if(NOT _3DSXTOOL)
     # message(STATUS "Looking for 3dsxtool...")
-    find_program(_3DSXTOOL 3dsxtool ${DEVKITARM}/bin)
+    find_program(_3DSXTOOL 3dsxtool ${DEVKITPRO}/tools/bin)
     if(_3DSXTOOL)
         message(STATUS "3dsxtool: ${_3DSXTOOL} - found")
     else()
@@ -116,7 +116,7 @@ endif()
 ##############
 if(NOT SMDHTOOL)
     # message(STATUS "Looking for smdhtool...")
-    find_program(SMDHTOOL smdhtool ${DEVKITARM}/bin)
+    find_program(SMDHTOOL smdhtool ${DEVKITPRO}/tools/bin)
     if(SMDHTOOL)
         message(STATUS "smdhtool: ${SMDHTOOL} - found")
     else()
@@ -129,7 +129,7 @@ endif()
 ################
 if(NOT BANNERTOOL)
     # message(STATUS "Looking for bannertool...")
-    find_program(BANNERTOOL bannertool ${DEVKITARM}/bin)
+    find_program(BANNERTOOL bannertool ${DEVKITPRO}/tools/bin /usr/local/bin)
     if(BANNERTOOL)
         message(STATUS "bannertool: ${BANNERTOOL} - found")
     else()
@@ -144,7 +144,7 @@ set(FORCE_SMDHTOOL FALSE CACHE BOOL "Force the use of smdhtool instead of banner
 #############
 if(NOT MAKEROM)
     # message(STATUS "Looking for makerom...")
-    find_program(MAKEROM makerom ${DEVKITARM}/bin)
+    find_program(MAKEROM makerom ${DEVKITPRO}/tools/bin /usr/local/bin)
     if(MAKEROM)
         message(STATUS "makerom: ${MAKEROM} - found")
     else()
@@ -174,7 +174,7 @@ endif()
 #############
 if(NOT BIN2S)
     # message(STATUS "Looking for bin2s...")
-    find_program(BIN2S bin2s ${DEVKITARM}/bin)
+    find_program(BIN2S bin2s ${DEVKITPRO}/tools/bin)
     if(BIN2S)
         message(STATUS "bin2s: ${BIN2S} - found")
     else()
@@ -187,7 +187,7 @@ endif()
 ###############
 if(NOT _3DSLINK)
     # message(STATUS "Looking for 3dslink...")
-    find_program(_3DSLINK 3dslink ${DEVKITARM}/bin)
+    find_program(_3DSLINK 3dslink ${DEVKITPRO}/tools/bin)
     if(_3DSLINK)
         message(STATUS "3dslink: ${_3DSLINK} - found")
     else()
@@ -200,7 +200,7 @@ endif()
 #############
 if(NOT PICASSO_EXE)
     # message(STATUS "Looking for Picasso...")
-    find_program(PICASSO_EXE picasso ${DEVKITARM}/bin)
+    find_program(PICASSO_EXE picasso ${DEVKITPRO}/tools/bin)
     if(PICASSO_EXE)
         message(STATUS "Picasso: ${PICASSO_EXE} - found")
         set(SHADER_AS picasso CACHE STRING "The shader assembler to be used. Allowed values are 'none', 'picasso' or 'nihstro'")
@@ -216,7 +216,7 @@ endif()
 
 if(NOT NIHSTRO_AS)
     # message(STATUS "Looking for nihstro...")
-    find_program(NIHSTRO_AS nihstro ${DEVKITARM}/bin)
+    find_program(NIHSTRO_AS nihstro ${DEVKITPRO}/tools/bin)
     if(NIHSTRO_AS)
         message(STATUS "nihstro: ${NIHSTRO_AS} - found")
         set(SHADER_AS nihstro CACHE STRING "The shader assembler to be used. Allowed values are 'none', 'picasso' or 'nihstro'")
@@ -287,21 +287,20 @@ function(add_3dsx_target target)
         if( NOT ${target_we}.smdh)
             __add_smdh(${target_we}.smdh ${APP_TITLE} ${APP_DESCRIPTION} ${APP_AUTHOR} ${APP_ICON})
         endif()
-        add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.3dsx
-                            COMMAND ${_3DSXTOOL} $<TARGET_FILE:${target}> ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.3dsx --smdh=${CMAKE_CURRENT_BINARY_DIR}/${target_we}.smdh
-                            DEPENDS ${target} ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.smdh
-                            VERBATIM
+        add_custom_command(OUTPUT ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${target_we}.3dsx
+                COMMAND ${_3DSXTOOL} $<TARGET_FILE:${target}> ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${target_we}.3dsx --romfs=${PROJECT_SOURCE_DIR}/res/romfs --smdh=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${target_we}.smdh
+                DEPENDS ${target} ${ROMFS_FILES} ${SHADER_OUTPUT} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${target_we}.smdh
+                VERBATIM
         )
     else()
         message(STATUS "No smdh file will be generated")
-        add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.3dsx
-                            COMMAND ${_3DSXTOOL} $<TARGET_FILE:${target}> ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.3dsx
-                            DEPENDS ${target}
-                            VERBATIM
+        add_custom_command(OUTPUT ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${target_we}.3dsx
+                COMMAND ${_3DSXTOOL} $<TARGET_FILE:${target}> ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${target_we}.3dsx
+                DEPENDS ${target}
+                VERBATIM
         )
     endif()
-    add_custom_target(${target_we}_3dsx ALL SOURCES ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.3dsx)
-    set_target_properties(${target} PROPERTIES LINK_FLAGS "-specs=3dsx.specs")
+    add_custom_target(${target_we}.3dsx ALL SOURCES ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${target_we}.3dsx)
 endfunction()
 
 function(__add_ncch_banner target IMAGE SOUND)
