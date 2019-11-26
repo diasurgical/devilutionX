@@ -29,14 +29,6 @@ static std::string build_cmdline(int argc, char **argv)
 	return str;
 }
 
-#if defined(__3DS__)
-void ctrExit()
-{
-romfsExit();
-return;
-}
-#endif
-
 int main(int argc, char **argv)
 {
 #if defined(__3DS__)
@@ -47,7 +39,7 @@ int main(int argc, char **argv)
 		osSetSpeedupEnable(true);
 
 	romfsInit();
-	atexit(ctrExit);
+	atexit([]() { romfsExit(); });
 #endif
 
 	auto cmdline = build_cmdline(argc, argv);
