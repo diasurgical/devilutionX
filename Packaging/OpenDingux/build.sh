@@ -54,10 +54,10 @@ prepare_buildroot() {
 		tar xf "$BUILDROOT_ARCHIVE" -C "$(dirname "$BUILDROOT_ARCHIVE")"
 		mv "${BUILDROOT_ARCHIVE%.tar.gz}" "$BUILDROOT"
 	fi
-	cp buildroot_${TARGET}_defconfig "$BUILDROOT/configs/${TARGET}_devilutionx_defconfig"
 }
 
 make_buildroot() {
+	cp buildroot_${TARGET}_defconfig "$BUILDROOT/configs/${TARGET}_devilutionx_defconfig"
 	cd "$BUILDROOT"
 	if [[ "$TARGET" != "rg350" ]]; then
 		if ! grep 'enable-static' package/libsodium/libsodium.mk > /dev/null; then
