@@ -120,7 +120,11 @@ WINBOOL DeleteFileA(LPCSTR lpFileName)
 
 bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 {
+#if defined(__3DS__)
+	if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO) <= -1) {
+#else
 	if (SDL_Init(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) <= -1) {
+#endif
 		ErrSdl();
 	}
 

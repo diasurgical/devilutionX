@@ -82,12 +82,14 @@ jobs:
       - checkout
       - run: echo deb http://deb.debian.org/debian stretch-backports main > /etc/apt/sources.list.d/debian-backports.list
       - run: apt-get update && apt-get install -y -t stretch-backports cmake
+      - run: dkp-pacman -Syu --noconfirm
       # Install cmake files (https://github.com/devkitPro/docker/issues/3)
       - run: dkp-pacman -S --needed --noconfirm --quiet devkitpro-pkgbuild-helpers
       # NOTE: Doesn't link without LTO ("read-only segment has dynamic relocations").
-      - run: cd build && cmake .. -DBINARY_RELEASE=ON -DUSE_SDL1=ON -DNONET=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/ctr/devkitarm-libctru.cmake
+      - run: cd build && cmake .. -DBINARY_RELEASE=ON -DUSE_SDL1=ON -DNONET=ON -DPREFILL_PLAYER_NAME=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/ctr/devkitarm-libctru.cmake
       - run: cd build && cmake --build . -j $(nproc)
       - store_artifacts: {path: ./build/devilutionx.3dsx, destination: devilutionx.3dsx}
+      - store_artifacts: {path: ./build/devilutionx.cia, destination: devilutionx.cia}
 
 workflows:
   version: 2
