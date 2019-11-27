@@ -755,7 +755,7 @@ inline char *SDL_GetBasePath()
 #endif
 
 #if defined(__3DS__)
-	retval = "sdmc:/3ds/devilutionx/";
+	retval = SDL_strdup("sdmc:/3ds/devilutionx/");
 	return retval;
 #endif
 

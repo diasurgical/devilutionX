@@ -49,5 +49,4 @@ int main(int argc, char **argv)
 #endif
 
 	return dvl::WinMain(NULL, NULL, (char *)cmdline.c_str(), 0);
-
 }
