@@ -69,7 +69,7 @@ jobs:
       - run: dkp-pacman -Syu --noconfirm
       # Install cmake files (https://github.com/devkitPro/docker/issues/3)
       - run: dkp-pacman -S --needed --noconfirm --quiet devkitpro-pkgbuild-helpers
-      - run: cd build && cmake .. -DBINARY_RELEASE=ON -DNONET=ON -DPREFILL_PLAYER_NAME=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/switch/devkita64-libnx.cmake
+      - run: cd build && cmake .. -DBINARY_RELEASE=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/switch/devkita64-libnx.cmake
       - run: cd build && cmake --build . -j $(nproc)
       - store_artifacts: {path: ./build/devilutionx.nro, destination: devilutionx.nro}
 

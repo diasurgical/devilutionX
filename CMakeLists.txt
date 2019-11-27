@@ -70,6 +70,15 @@ if(SWITCH)
 
   list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/switch")
   find_package(LIBNX REQUIRED)
+  include(switch_defs)
+endif()
+
+if(RG350)
+  include(rg350_defs)
+endif()
+
+if(RETROFW)
+  include(retrofw_defs)
 endif()
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD OR ${CMAKE_SYSTEM_NAME} STREQUAL OpenBSD)
@@ -89,7 +98,7 @@ if(HAIKU)
   set(ASAN OFF)
 endif()
 
-if(DIST OR DINGUX)
+if(DIST)
   set(sodium_USE_STATIC_LIBS ON)
 endif()
 
@@ -323,7 +332,6 @@ foreach(
   def_name
   SPAWN
   NONET
-  DINGUX
   RETROFW
   PREFILL_PLAYER_NAME
 )
@@ -513,6 +521,6 @@ if(SWITCH)
   build_switch_binaries(${BIN_TARGET})
 endif()
 
-if(DINGUX)
+if(RETROFW OR RG350)
   set_target_properties(${BIN_TARGET} PROPERTIES OUTPUT_NAME "devilutionx.dge")
 endif()
