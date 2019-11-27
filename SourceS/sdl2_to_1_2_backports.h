@@ -759,6 +759,10 @@ inline char *SDL_GetBasePath()
 		}
 	}
 #endif
+#if defined(__3DS__)
+	retval = SDL_strdup("file:sdmc:/3ds/devilutionx/");
+	return retval;
+#endif
 
 	/* is a Linux-style /proc filesystem available? */
 	if (!retval && (access("/proc", F_OK) == 0)) {
@@ -824,6 +828,11 @@ inline char *SDL_GetPrefPath(const char *org, const char *app)
 	char *retval = NULL;
 	char *ptr = NULL;
 	size_t len = 0;
+
+#if defined(__3DS__)
+	retval = SDL_strdup("sdmc:/3ds/devilutionx/");
+	return retval;
+#endif
 
 	if (!app) {
 		SDL_InvalidParamError("app");

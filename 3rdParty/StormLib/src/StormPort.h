@@ -174,6 +174,28 @@
   #define PLATFORM_DEFINED
 
 #endif
+
+#if !defined(PLATFORM_DEFINED) && defined(__3DS__)
+  #include <sys/stat.h>
+  #include <fcntl.h>
+  #include <unistd.h>
+  #include <stdint.h>
+  #include <stdlib.h>
+  #include <stdio.h>
+  #include <stdarg.h>
+  #include <string.h>
+  #include <strings.h>
+  #include <ctype.h>
+  #include <assert.h>
+  #include <errno.h>
+
+  #define PLATFORM_LITTLE_ENDIAN
+
+  #define PLATFORM_CTR
+  #define PLATFORM_DEFINED
+
+#endif
+
 //-----------------------------------------------------------------------------
 // Assumption: we are not on Windows nor Macintosh, so this must be linux *grin*
 
@@ -275,7 +297,7 @@
 #endif // !PLATFORM_WINDOWS
 
 // 64-bit calls are supplied by "normal" calls on Mac
-#if defined(PLATFORM_MAC) || defined(PLATFORM_HAIKU) || defined(PLATFORM_AMIGA) || defined(PLATFORM_SWITCH)
+#if defined(PLATFORM_MAC) || defined(PLATFORM_HAIKU) || defined(PLATFORM_AMIGA) || defined(PLATFORM_SWITCH) || defined(PLATFORM_CTR)
   #define stat64  stat
   #define fstat64 fstat
   #define lseek64 lseek
@@ -285,7 +307,7 @@
 #endif
 
 // Platform-specific error codes for UNIX-based platforms
-#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU) || defined(PLATFORM_AMIGA) || defined(PLATFORM_SWITCH)
+#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU) || defined(PLATFORM_AMIGA) || defined(PLATFORM_SWITCH) || defined(PLATFORM_CTR)
   #define ERROR_SUCCESS                  0
   #define ERROR_FILE_NOT_FOUND           ENOENT
   #define ERROR_ACCESS_DENIED            EPERM
