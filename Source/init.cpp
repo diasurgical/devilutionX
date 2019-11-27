@@ -97,7 +97,7 @@ HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int dwPri
 #if !defined(__SWITCH__) || !defined(__3DS__)
 		if (SFileOpenArchive(mpq_path, dwPriority, MPQ_FLAG_READ_ONLY, &archive)) {
 #else
-		if (SFileOpenArchive(mpq_path, dwPriority, 1, &archive)) {
+		if (SFileOpenArchive(mpq_path, dwPriority, 0, &archive)) {
 #endif
 			SFileSetBasePath(Buffer[i]);
 			return archive;
