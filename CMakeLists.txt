@@ -87,6 +87,7 @@ if(3DS)
   find_package(MikMod)
   find_package(MAD)
   find_package(PNG)
+  include(n3ds_defs)
 endif()
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD OR ${CMAKE_SYSTEM_NAME} STREQUAL OpenBSD)
