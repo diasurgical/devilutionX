@@ -447,6 +447,8 @@ if(HAIKU)
   target_link_libraries(${BIN_TARGET} PRIVATE network)
 endif()
 
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
+
 if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   # Change __FILE__ to only show the path relative to the project folder
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-builtin-macro-redefined -D'__FILE__=\"$(subst $(realpath ${CMAKE_SOURCE_DIR})/,,$(abspath $<))\"'")
