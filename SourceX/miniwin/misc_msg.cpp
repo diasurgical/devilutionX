@@ -10,6 +10,7 @@
 #include "controls/plrctrls.h"
 #include "controls/touch.h"
 #include "miniwin/ddraw.h"
+#include "controls/controller.h"
 
 #ifdef __SWITCH__
 #include "platform/switch/docking.h"
@@ -480,6 +481,15 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	}
 
 	switch (e.type) {
+#ifndef USE_SDL1
+	case SDL_CONTROLLERDEVICEADDED:
+	case SDL_CONTROLLERDEVICEREMOVED:
+		break;
+	case SDL_JOYDEVICEADDED:
+	case SDL_JOYDEVICEREMOVED:
+		InitController();
+		break;
+#endif
 	case SDL_QUIT:
 		lpMsg->message = DVL_WM_QUIT;
 		break;

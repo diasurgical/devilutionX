@@ -15,6 +15,7 @@
 #include "DiabloUI/fonts.h"
 #include "DiabloUI/button.h"
 #include "DiabloUI/dialogs.h"
+#include "controls/controller.h"
 
 #ifdef __SWITCH__
 // for virtual keyboard on Switch
@@ -187,9 +188,6 @@ void selhero_CatToName(char *in_buf, char *out_buf, int cnt)
 
 bool UiFocusNavigation(SDL_Event *event)
 {
-	if (event->type == SDL_QUIT)
-		exit(0);
-
 	switch (GetMenuAction(*event)) {
 	case MenuAction::SELECT:
 		UiFocusNavigationSelect();
@@ -300,6 +298,19 @@ bool UiFocusNavigation(SDL_Event *event)
 	}
 
 	return false;
+}
+
+void UiHandleEvents(SDL_Event *event)
+{
+	if (event->type == SDL_QUIT)
+		exit(0);
+
+#ifndef USE_SDL1
+	if (event->type == SDL_JOYDEVICEADDED || event->type == SDL_JOYDEVICEREMOVED) {
+		InitController();
+		return;
+	}
+#endif
 }
 
 void UiFocusNavigationSelect()
@@ -544,6 +555,7 @@ void UiPollAndRender()
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
 		UiFocusNavigation(&event);
+		UiHandleEvents(&event);
 	}
 	UiRenderItems(gUiItems, gUiItemCnt);
 	DrawMouse();

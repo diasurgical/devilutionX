@@ -7,7 +7,9 @@ namespace dvl {
 MenuAction GetMenuAction(const SDL_Event &event)
 {
 	const ControllerButtonEvent ctrl_event = ToControllerButtonEvent(event);
-	sgbControllerActive = true;
+	if (ctrl_event.button != ControllerButton::NONE)
+		sgbControllerActive = true;
+
 	if (!ctrl_event.up) {
 		switch (ctrl_event.button) {
 		case ControllerButton::IGNORE:
@@ -36,10 +38,11 @@ MenuAction GetMenuAction(const SDL_Event &event)
 			break;
 		}
 	}
-	if (ctrl_event.button == ControllerButton::NONE && (event.type < SDL_JOYAXISMOTION || event.type >= 0x700))
-		sgbControllerActive = false;
 
 #if HAS_KBCTRL == 0
+	if (event.type >= SDL_KEYDOWN && event.type < SDL_JOYAXISMOTION)
+		sgbControllerActive = false;
+
 	if (event.type == SDL_KEYDOWN) {
 		switch (event.key.keysym.sym) {
 		case SDLK_UP:

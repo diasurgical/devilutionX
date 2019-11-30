@@ -108,9 +108,8 @@ BOOL UiProgressDialog(HWND window, char *msg, int enable, int (*fnfunc)(), int r
 			case SDL_MOUSEBUTTONDOWN:
 				endMenu = true;
 				break;
-			case SDL_QUIT:
-				exit(0);
 			}
+			UiHandleEvents(&event);
 		}
 	}
 	BlackPalette();

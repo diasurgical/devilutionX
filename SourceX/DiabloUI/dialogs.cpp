@@ -262,8 +262,6 @@ void DialogLoop(UiItem *items, std::size_t num_items, UiItem *render_behind, std
 			case SDL_MOUSEBUTTONUP:
 				UiItemMouseEvents(&event, items, num_items);
 				break;
-			case SDL_QUIT:
-				exit(0);
 			default:
 				switch (GetMenuAction(event)) {
 				case MenuAction::BACK:
@@ -275,6 +273,7 @@ void DialogLoop(UiItem *items, std::size_t num_items, UiItem *render_behind, std
 				}
 				break;
 			}
+			UiHandleEvents(&event);
 		}
 
 		if (render_behind_size == 0) {
