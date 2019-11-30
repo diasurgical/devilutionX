@@ -187,7 +187,7 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 	}
 
 #ifdef USE_SDL1
-	refreshDelay = 16; // rougly 60hz
+	refreshDelay = 1000000 / 60; // 60hz
 #endif
 
 	if (upscale) {
@@ -212,7 +212,7 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 #ifndef USE_SDL1
 		SDL_DisplayMode mode;
 		SDL_GetDisplayMode(0, 0, &mode);
-		refreshDelay = 1000 / mode.refresh_rate;
+		refreshDelay = 1000000 / mode.refresh_rate;
 #endif
 	}
 	return window != NULL;

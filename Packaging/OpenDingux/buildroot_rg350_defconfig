@@ -1,5 +1,5 @@
 BR2_mipsel=y
-BR2_mips_32r2=y
+BR2_mips_xburst=y
 # BR2_MIPS_SOFT_FLOAT is not set
 BR2_OPTIMIZE_2=y
 BR2_KERNEL_HEADERS_3_12=y

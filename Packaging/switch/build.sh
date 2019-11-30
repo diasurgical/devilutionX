@@ -18,14 +18,7 @@ build() {
 	mkdir -p ../../build
 	cd ../../build
 	rm -f CMakeCache.txt
-	DEVKITPRO="$DEVKITPRO" cmake .. \
-		-DJOY_BUTTON_DPAD_LEFT=16 \
-		-DJOY_BUTTON_DPAD_UP=17 \
-		-DJOY_BUTTON_DPAD_RIGHT=18 \
-		-DJOY_BUTTON_DPAD_DOWN=19 \
-		-DBINARY_RELEASE=ON \
-		-DNONET=ON \
-		-DPREFILL_PLAYER_NAME=ON \
+	DEVKITPRO="$DEVKITPRO" cmake .. -DBINARY_RELEASE=ON \
 		-DCMAKE_TOOLCHAIN_FILE=../CMake/switch/devkita64-libnx.cmake
 	DEVKITPRO="$DEVKITPRO" make -j "$(getconf _NPROCESSORS_ONLN)"
 	cd -

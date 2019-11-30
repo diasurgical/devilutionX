@@ -243,6 +243,11 @@ static int translate_sdl_key(SDL_Keysym key)
 
 namespace {
 
+LPARAM position_for_mouse(int x, int y)
+{
+	return ((y & 0xFFFF) << 16) | (x & 0xFFFF);
+}
+
 WPARAM keystate_for_mouse(WPARAM ret)
 {
 	ret |= (SDL_GetModState() & KMOD_SHIFT) ? DVL_MK_SHIFT : 0;
@@ -463,7 +468,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 				lpMsg->message = action.send_mouse_click.up ? DVL_WM_RBUTTONUP : DVL_WM_RBUTTONDOWN;
 				break;
 			}
-			lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+			lpMsg->lParam = position_for_mouse(MouseX, MouseY);
 			break;
 		}
 		return true;
@@ -490,35 +495,35 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	} break;
 	case SDL_MOUSEMOTION:
 		lpMsg->message = DVL_WM_MOUSEMOVE;
-		lpMsg->lParam = (e.motion.y << 16) | (e.motion.x & 0xFFFF);
+		lpMsg->lParam = position_for_mouse(e.motion.x, e.motion.y);
 		lpMsg->wParam = keystate_for_mouse(0);
 		break;
 	case SDL_MOUSEBUTTONDOWN: {
 		int button = e.button.button;
-		if (button == SDL_BUTTON_LEFT) {
-			lpMsg->message = DVL_WM_LBUTTONDOWN;
-			lpMsg->lParam = (e.button.y << 16) | (e.button.x & 0xFFFF);
-			lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
-		} else if (button == SDL_BUTTON_RIGHT) {
-			lpMsg->message = DVL_WM_RBUTTONDOWN;
-			lpMsg->lParam = (e.button.y << 16) | (e.button.x & 0xFFFF);
-			lpMsg->wParam = keystate_for_mouse(DVL_MK_RBUTTON);
-		} else {
-			return false_avail("SDL_MOUSEBUTTONDOWN", button);
+		if (e.button.x > 0 && e.button.y > 0 && e.button.x <= SCREEN_WIDTH && e.button.y <= SCREEN_HEIGHT) {
+			if (button == SDL_BUTTON_LEFT) {
+				lpMsg->message = DVL_WM_LBUTTONDOWN;
+				lpMsg->lParam = position_for_mouse(e.button.x, e.button.y);
+				lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
+			} else if (button == SDL_BUTTON_RIGHT) {
+				lpMsg->message = DVL_WM_RBUTTONDOWN;
+				lpMsg->lParam = position_for_mouse(e.button.x, e.button.y);
+				lpMsg->wParam = keystate_for_mouse(DVL_MK_RBUTTON);
+			}
 		}
 	} break;
 	case SDL_MOUSEBUTTONUP: {
 		int button = e.button.button;
-		if (button == SDL_BUTTON_LEFT) {
-			lpMsg->message = DVL_WM_LBUTTONUP;
-			lpMsg->lParam = (e.button.y << 16) | (e.button.x & 0xFFFF);
-			lpMsg->wParam = keystate_for_mouse(0);
-		} else if (button == SDL_BUTTON_RIGHT) {
-			lpMsg->message = DVL_WM_RBUTTONUP;
-			lpMsg->lParam = (e.button.y << 16) | (e.button.x & 0xFFFF);
-			lpMsg->wParam = keystate_for_mouse(0);
-		} else {
-			return false_avail("SDL_MOUSEBUTTONUP", button);
+		if (e.button.x > 0 && e.button.y > 0 && e.button.x <= SCREEN_WIDTH && e.button.y <= SCREEN_HEIGHT) {
+			if (button == SDL_BUTTON_LEFT) {
+				lpMsg->message = DVL_WM_LBUTTONUP;
+				lpMsg->lParam = position_for_mouse(e.button.x, e.button.y);
+				lpMsg->wParam = keystate_for_mouse(0);
+			} else if (button == SDL_BUTTON_RIGHT) {
+				lpMsg->message = DVL_WM_RBUTTONUP;
+				lpMsg->lParam = position_for_mouse(e.button.x, e.button.y);
+				lpMsg->wParam = keystate_for_mouse(0);
+			}
 		}
 	} break;
 #ifndef USE_SDL1

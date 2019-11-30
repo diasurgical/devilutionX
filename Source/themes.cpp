@@ -723,7 +723,7 @@ void Theme_Library(int t)
 		for (xp = 1; xp < MAXDUNX - 1; xp++) {
 			if (CheckThemeObj3(xp, yp, t, -1) && dMonster[xp][yp] == 0 && random_(0, librnd[leveltype - 1]) == 0) {
 				AddObject(OBJ_BOOKSTAND, xp, yp);
-				if (random_(0, 2 * librnd[leveltype - 1]) != 0) {
+				if (random_(0, 2 * librnd[leveltype - 1]) != 0 && dObject[xp][yp]) { /// BUGFIX: check dObject[xp][yp] was populated by AddObject (fixed)
 					oi = dObject[xp][yp] - 1;
 					object[oi]._oSelFlag = 0;
 					object[oi]._oAnimFrame += 2;
