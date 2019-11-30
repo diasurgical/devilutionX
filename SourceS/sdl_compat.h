@@ -11,6 +11,30 @@
 #define SDLC_KEYSTATE_LEFT SDL_SCANCODE_LEFT
 #define SDLC_KEYSTATE_RIGHT SDL_SCANCODE_RIGHT
 #else
+#if defined(__AMIGA__) // Add other systems that require an 8bit screen here
+
+short ac68080 = 0;
+
+extern "C"
+{
+
+#include <dos/dos.h>
+#include <exec/exec.h>
+
+extern struct ExecBase *SysBase;
+
+int is_vampire()
+{
+	if (SysBase->AttnFlags &(1 << 10)) {
+		printf("Vampire accelerator detected, using SAGA Direct Draw\n");
+		return 1;
+	}
+	else
+		return 0;
+}
+
+} //extern C
+#endif
 #define SDLC_KEYSTATE_LEFTSHIFT SDLK_LSHIFT
 #define SDLC_KEYSTATE_RIGHTSHIFT SDLK_LSHIFT
 #define SDLC_KEYSTATE_MENU SDLK_MENU
