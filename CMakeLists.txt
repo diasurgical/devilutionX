@@ -558,7 +558,6 @@ if(SWITCH)
   build_switch_binaries(${BIN_TARGET})
 endif()
 
-<<<<<<< HEAD
 if(3DS)
   set(APP_TITLE "DevilutionX")
   set(APP_AUTHOR "Devilution Team")
@@ -577,9 +576,6 @@ if(3DS)
   add_cia_target(${BIN_TARGET} ${APP_RSF} ${APP_BANNER} ${APP_AUDIO})
 endif()
 
-if(DINGUX)
-=======
 if(RETROFW OR RG350)
->>>>>>> 1d500497da6d176a61896168616ca7c34d29ecfa
   set_target_properties(${BIN_TARGET} PROPERTIES OUTPUT_NAME "devilutionx.dge")
 endif()
