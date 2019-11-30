@@ -15,6 +15,7 @@ find_package(PNG REQUIRED)
 
 #additional compilation definitions
 add_definitions(-D__3DS__)
+set(CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE}\ -DTTF_FONT_PATH=\\"romfs:/CharisSILB.ttf\\")
 
 #Force scaling, for now..
 set(SDL1_VIDEO_MODE_FLAGS SDL_FULLSCREEN)
