@@ -322,7 +322,7 @@ function(__add_ncch_banner target IMAGE SOUND)
     )
 endfunction()
 
-function(add_cia_target target RSF IMAGE SOUND )
+function(add_cia_target target RSF IMAGE SOUND)
     get_filename_component(target_we ${target} NAME_WE)
     if(${ARGC} GREATER 6)
         set(APP_TITLE ${ARGV4})
@@ -364,6 +364,7 @@ function(add_cia_target target RSF IMAGE SOUND )
                                             -o ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.cia
                                             -elf $<TARGET_FILE:${target}>-stripped
                                             -rsf ${RSF}
+                                            -romfs ${ROMFS}
                                             -banner ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.bnr
                                             -icon ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.smdh
                         DEPENDS ${target} ${RSF} ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.bnr ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.smdh

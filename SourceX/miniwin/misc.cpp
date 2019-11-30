@@ -186,9 +186,6 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 		ErrSdl();
 	}
 
-
-#if !defined(__3DS__)
-
 #ifdef USE_SDL1
 	refreshDelay = 16; // rougly 60hz
 #endif
@@ -218,7 +215,6 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 		refreshDelay = 1000 / mode.refresh_rate;
 #endif
 	}
-#endif
 	return window != NULL;
 }
 } // namespace dvl
