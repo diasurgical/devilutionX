@@ -364,7 +364,7 @@ function(add_cia_target target RSF IMAGE SOUND)
                                             -o ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.cia
                                             -elf $<TARGET_FILE:${target}>-stripped
                                             -rsf ${RSF}
-                                            -romfs ${ROMFS}
+                                            -romfs ${APP_ROMFS}
                                             -banner ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.bnr
                                             -icon ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.smdh
                         DEPENDS ${target} ${RSF} ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.bnr ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.smdh
