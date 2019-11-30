@@ -573,7 +573,7 @@ if(3DS)
   set(APP_VERSION ${PROJECT_VERSION})
   include(Tools3DS)
   add_3dsx_target(${BIN_TARGET})
-  add_cia_target(${BIN_TARGET} ${APP_RSF} ${APP_BANNER} ${APP_AUDIO})
+  add_cia_target(${BIN_TARGET} ${APP_RSF} ${APP_BANNER} ${APP_AUDIO} ${APP_ROMFS})
 endif()
 
 if(RETROFW OR RG350)
