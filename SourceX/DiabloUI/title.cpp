@@ -64,4 +64,4 @@ void UiSetSpawned(BOOL bSpawned)
 	gbSpawned = bSpawned;
 }
 
-}
+} // namespace dvl

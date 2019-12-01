@@ -331,27 +331,11 @@ void BlurInventory()
 		FocusOnCharInfo();
 }
 
-WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg)
+WINBOOL PeekMessageA(LPMSG lpMsg)
 {
 #ifdef __SWITCH__
 	HandleDocking();
 #endif
-
-	if (wMsgFilterMin != 0)
-		UNIMPLEMENTED();
-	if (wMsgFilterMax != 0)
-		UNIMPLEMENTED();
-	if (hWnd != NULL)
-		UNIMPLEMENTED();
-
-	if (wRemoveMsg == DVL_PM_NOREMOVE) {
-		// This does not actually fill out lpMsg, but this is ok
-		// since the engine never uses it in this case
-		return !message_queue.empty() || SDL_PollEvent(NULL);
-	}
-	if (wRemoveMsg != DVL_PM_REMOVE) {
-		UNIMPLEMENTED();
-	}
 
 	if (!message_queue.empty()) {
 		*lpMsg = message_queue.front();
@@ -364,7 +348,6 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		return false;
 	}
 
-	lpMsg->hwnd = hWnd;
 	lpMsg->message = 0;
 	lpMsg->lParam = 0;
 	lpMsg->wParam = 0;
@@ -602,7 +585,6 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 
 WINBOOL TranslateMessage(const MSG *lpMsg)
 {
-	assert(lpMsg->hwnd == 0);
 	if (lpMsg->message == DVL_WM_KEYDOWN) {
 		int key = lpMsg->wParam;
 		unsigned mod = (DWORD)lpMsg->lParam >> 16;
@@ -705,7 +687,6 @@ SHORT GetAsyncKeyState(int vKey)
 LRESULT DispatchMessageA(const MSG *lpMsg)
 {
 	DUMMY_ONCE();
-	assert(lpMsg->hwnd == 0);
 	assert(CurrentProc);
 	// assert(CurrentProc == GM_Game);
 
