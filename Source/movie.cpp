@@ -18,7 +18,7 @@ void play_movie(char *pszMovie, BOOL user_can_close)
 	SVidPlayBegin(pszMovie, 0, 0, 0, 0, loop_movie ? 0x100C0808 : 0x10280808, &video_stream);
 	MSG Msg;
 	while (video_stream && movie_playing) {
-		while (movie_playing && PeekMessage(&Msg, NULL, 0, 0, PM_REMOVE)) {
+		while (movie_playing && PeekMessage(&Msg)) {
 			TranslateMessage(&Msg);
 			switch (Msg.message) {
 			case WM_KEYDOWN:

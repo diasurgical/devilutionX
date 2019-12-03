@@ -8,7 +8,14 @@
 #include "controls/controller_motion.h"
 #include "controls/game_controls.h"
 #include "controls/plrctrls.h"
+#include "controls/touch.h"
 #include "miniwin/ddraw.h"
+#include "controls/controller.h"
+
+#ifdef __SWITCH__
+#include "platform/switch/docking.h"
+#include <switch.h>
+#endif
 
 /** @file
  * *
@@ -237,6 +244,11 @@ static int translate_sdl_key(SDL_Keysym key)
 
 namespace {
 
+LPARAM position_for_mouse(int x, int y)
+{
+	return ((y & 0xFFFF) << 16) | (x & 0xFFFF);
+}
+
 WPARAM keystate_for_mouse(WPARAM ret)
 {
 	ret |= (SDL_GetModState() & KMOD_SHIFT) ? DVL_MK_SHIFT : 0;
@@ -319,23 +331,11 @@ void BlurInventory()
 		FocusOnCharInfo();
 }
 
-WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg)
+WINBOOL PeekMessageA(LPMSG lpMsg)
 {
-	if (wMsgFilterMin != 0)
-		UNIMPLEMENTED();
-	if (wMsgFilterMax != 0)
-		UNIMPLEMENTED();
-	if (hWnd != NULL)
-		UNIMPLEMENTED();
-
-	if (wRemoveMsg == DVL_PM_NOREMOVE) {
-		// This does not actually fill out lpMsg, but this is ok
-		// since the engine never uses it in this case
-		return !message_queue.empty() || SDL_PollEvent(NULL);
-	}
-	if (wRemoveMsg != DVL_PM_REMOVE) {
-		UNIMPLEMENTED();
-	}
+#ifdef __SWITCH__
+	HandleDocking();
+#endif
 
 	if (!message_queue.empty()) {
 		*lpMsg = message_queue.front();
@@ -348,7 +348,6 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		return false;
 	}
 
-	lpMsg->hwnd = hWnd;
 	lpMsg->message = 0;
 	lpMsg->lParam = 0;
 	lpMsg->wParam = 0;
@@ -357,6 +356,10 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		lpMsg->message = DVL_WM_QUIT;
 		return true;
 	}
+
+#ifndef USE_SDL1
+	handle_touch(&e, MouseX, MouseY);
+#endif
 
 #ifdef USE_SDL1
 	if (e.type == SDL_MOUSEMOTION) {
@@ -405,14 +408,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 			PerformSecondaryAction();
 			break;
 		case GameActionType::CAST_SPELL:
-			if (pcurs >= CURSOR_FIRSTITEM && invflag)
-				// Drop item so that it does not get destroyed.
-				DropItemBeforeTrig();
-			if (!invflag && !talkflag)
-				// Cast the spell.
-				RightMouseDown();
-			// Close active menu if any / stop walking.
-			PressEscKey();
+			PerformSpellAction();
 			break;
 		case GameActionType::TOGGLE_QUICK_SPELL_MENU:
 			lpMsg->message = DVL_WM_KEYDOWN;
@@ -456,7 +452,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 				lpMsg->message = action.send_mouse_click.up ? DVL_WM_RBUTTONUP : DVL_WM_RBUTTONDOWN;
 				break;
 			}
-			lpMsg->lParam = (MouseY << 16) | (MouseX & 0xFFFF);
+			lpMsg->lParam = position_for_mouse(MouseX, MouseY);
 			break;
 		}
 		return true;
@@ -468,6 +464,15 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	}
 
 	switch (e.type) {
+#ifndef USE_SDL1
+	case SDL_CONTROLLERDEVICEADDED:
+	case SDL_CONTROLLERDEVICEREMOVED:
+		break;
+	case SDL_JOYDEVICEADDED:
+	case SDL_JOYDEVICEREMOVED:
+		InitController();
+		break;
+#endif
 	case SDL_QUIT:
 		lpMsg->message = DVL_WM_QUIT;
 		break;
@@ -483,35 +488,35 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	} break;
 	case SDL_MOUSEMOTION:
 		lpMsg->message = DVL_WM_MOUSEMOVE;
-		lpMsg->lParam = (e.motion.y << 16) | (e.motion.x & 0xFFFF);
+		lpMsg->lParam = position_for_mouse(e.motion.x, e.motion.y);
 		lpMsg->wParam = keystate_for_mouse(0);
 		break;
 	case SDL_MOUSEBUTTONDOWN: {
 		int button = e.button.button;
-		if (button == SDL_BUTTON_LEFT) {
-			lpMsg->message = DVL_WM_LBUTTONDOWN;
-			lpMsg->lParam = (e.button.y << 16) | (e.button.x & 0xFFFF);
-			lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
-		} else if (button == SDL_BUTTON_RIGHT) {
-			lpMsg->message = DVL_WM_RBUTTONDOWN;
-			lpMsg->lParam = (e.button.y << 16) | (e.button.x & 0xFFFF);
-			lpMsg->wParam = keystate_for_mouse(DVL_MK_RBUTTON);
-		} else {
-			return false_avail("SDL_MOUSEBUTTONDOWN", button);
+		if (e.button.x > 0 && e.button.y > 0 && e.button.x <= SCREEN_WIDTH && e.button.y <= SCREEN_HEIGHT) {
+			if (button == SDL_BUTTON_LEFT) {
+				lpMsg->message = DVL_WM_LBUTTONDOWN;
+				lpMsg->lParam = position_for_mouse(e.button.x, e.button.y);
+				lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
+			} else if (button == SDL_BUTTON_RIGHT) {
+				lpMsg->message = DVL_WM_RBUTTONDOWN;
+				lpMsg->lParam = position_for_mouse(e.button.x, e.button.y);
+				lpMsg->wParam = keystate_for_mouse(DVL_MK_RBUTTON);
+			}
 		}
 	} break;
 	case SDL_MOUSEBUTTONUP: {
 		int button = e.button.button;
-		if (button == SDL_BUTTON_LEFT) {
-			lpMsg->message = DVL_WM_LBUTTONUP;
-			lpMsg->lParam = (e.button.y << 16) | (e.button.x & 0xFFFF);
-			lpMsg->wParam = keystate_for_mouse(0);
-		} else if (button == SDL_BUTTON_RIGHT) {
-			lpMsg->message = DVL_WM_RBUTTONUP;
-			lpMsg->lParam = (e.button.y << 16) | (e.button.x & 0xFFFF);
-			lpMsg->wParam = keystate_for_mouse(0);
-		} else {
-			return false_avail("SDL_MOUSEBUTTONUP", button);
+		if (e.button.x > 0 && e.button.y > 0 && e.button.x <= SCREEN_WIDTH && e.button.y <= SCREEN_HEIGHT) {
+			if (button == SDL_BUTTON_LEFT) {
+				lpMsg->message = DVL_WM_LBUTTONUP;
+				lpMsg->lParam = position_for_mouse(e.button.x, e.button.y);
+				lpMsg->wParam = keystate_for_mouse(0);
+			} else if (button == SDL_BUTTON_RIGHT) {
+				lpMsg->message = DVL_WM_RBUTTONUP;
+				lpMsg->lParam = position_for_mouse(e.button.x, e.button.y);
+				lpMsg->wParam = keystate_for_mouse(0);
+			}
 		}
 	} break;
 #ifndef USE_SDL1
@@ -580,7 +585,6 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 
 WINBOOL TranslateMessage(const MSG *lpMsg)
 {
-	assert(lpMsg->hwnd == 0);
 	if (lpMsg->message == DVL_WM_KEYDOWN) {
 		int key = lpMsg->wParam;
 		unsigned mod = (DWORD)lpMsg->lParam >> 16;
@@ -683,7 +687,6 @@ SHORT GetAsyncKeyState(int vKey)
 LRESULT DispatchMessageA(const MSG *lpMsg)
 {
 	DUMMY_ONCE();
-	assert(lpMsg->hwnd == 0);
 	assert(CurrentProc);
 	// assert(CurrentProc == GM_Game);
 

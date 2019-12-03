@@ -2049,8 +2049,11 @@ void AddHealOther(int mi, int sx, int sy, int dx, int dy, int midir, char mienem
 {
 	missile[mi]._miDelFlag = TRUE;
 	UseMana(id, SPL_HEALOTHER);
-	if (id == myplr)
+	if (id == myplr) {
 		SetCursor_(CURSOR_HEALOTHER);
+		if (sgbControllerActive)
+			TryIconCurs();
+	}
 }
 
 void AddElement(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam)
@@ -2206,8 +2209,15 @@ void AddDisarm(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, 
 {
 	missile[mi]._miDelFlag = TRUE;
 	UseMana(id, SPL_DISARM);
-	if (id == myplr)
+	if (id == myplr) {
 		SetCursor_(CURSOR_DISARM);
+		if (sgbControllerActive) {
+			if (pcursobj != -1)
+				NetSendCmdLocParam1(true, CMD_DISARMXY, cursmx, cursmy, pcursobj);
+			else
+				SetCursor_(CURSOR_HAND);
+		}
+	}
 }
 
 void AddApoca(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam)
@@ -2336,8 +2346,11 @@ void AddHbolt(int mi, int sx, int sy, int dx, int dy, int midir, char micaster, 
 void AddResurrect(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam)
 {
 	UseMana(id, SPL_RESURRECT);
-	if (id == myplr)
+	if (id == myplr) {
 		SetCursor_(CURSOR_RESURRECT);
+		if (sgbControllerActive)
+			TryIconCurs();
+	}
 	missile[mi]._miDelFlag = TRUE;
 }
 

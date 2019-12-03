@@ -5,10 +5,6 @@
 #define HAS_KBCTRL 0
 #endif
 
-#if defined(RETROFW)
-#define HAS_KBCTRL 1
-#endif
-
 #if HAS_KBCTRL == 1
 #include <SDL.h>
 #include "controls/controller_buttons.h"

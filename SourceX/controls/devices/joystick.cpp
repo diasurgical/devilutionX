@@ -4,13 +4,6 @@
 #include "controls/controller_motion.h"
 #include "stubs.h"
 
-#ifdef SWITCH
-#define JOY_BUTTON_DPAD_LEFT 16
-#define JOY_BUTTON_DPAD_UP 17
-#define JOY_BUTTON_DPAD_RIGHT 18
-#define JOY_BUTTON_DPAD_DOWN 19
-#endif
-
 namespace dvl {
 
 ControllerButton JoyButtonToControllerButton(const SDL_Event &event)
@@ -267,8 +260,17 @@ int CurrentJoystickIndex()
 
 void InitJoystick()
 {
-	if (SDL_NumJoysticks() == 0)
+#if HAS_KBCTRL == 1
+	sgbControllerActive = true;
+#endif
+
+	if (SDL_NumJoysticks() == 0) {
+		current_joystick_index = -1;
+#if HAS_KBCTRL == 0
+		sgbControllerActive = false;
+#endif
 		return;
+	}
 
 	// Get the first available controller.
 	for (int i = 0; i < SDL_NumJoysticks(); ++i) {
@@ -283,6 +285,7 @@ void InitJoystick()
 			continue;
 		}
 		current_joystick_index = i;
+		sgbControllerActive = true;
 		break;
 	}
 }
