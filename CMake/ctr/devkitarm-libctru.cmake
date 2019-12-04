@@ -46,7 +46,7 @@ set(CMAKE_SIZE_UTIL "${TOOLCHAIN_PREFIX}size${TOOLCHAIN_SUFFIX}" CACHE INTERNAL 
 set(3DS ON)
 add_definitions(-D__3DS__ -D_3DS) # _3DS is used and expected by the devkit SDL headers.
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft -mword-relocations")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_C_FLAGS}")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=armv6k -mtune=mpcore -mfloat-abi=hard -mtp=soft -mword-relocations" CACHE STRING "")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_C_FLAGS}" CACHE STRING "")
 
 set(CMAKE_INSTALL_PREFIX ${PORTLIBS} CACHE PATH "Install libraries in the portlibs dir")

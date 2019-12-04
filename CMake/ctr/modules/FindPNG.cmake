@@ -14,6 +14,11 @@ if(NOT 3DS)
     message(FATAL_ERROR "This module can only be used if you are using the 3DS toolchain file. Please erase this build directory or create another one, and then use -DCMAKE_TOOLCHAIN_FILE=DevkitArm3DS.cmake when calling cmake for the 1st time. For more information, see the Readme.md for more information.")
 endif()
 
+if(PNG_INCLUDE_DIR)
+    # Already in cache, be silent
+    set(PNG_FIND_QUIETLY TRUE)
+endif(PNG_INCLUDE_DIR)
+
 include(LibFindMacros)
 include(try_add_imported_target)
 

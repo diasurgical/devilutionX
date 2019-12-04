@@ -89,11 +89,11 @@ if(3DS)
   list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/ctr")
   list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/ctr/modules")
   find_package(CITRO3D REQUIRED)
-  find_package(BZip2)
-  find_package(Freetype REQUIRED)
+  find_package(FREETYPE REQUIRED)
+  find_package(BZIP2)
   find_package(Tremor)
-  find_package(Ogg)
-  find_package(MikMod)
+  find_package(OGG)
+  find_package(MIKMOD)
   find_package(MAD)
   find_package(PNG)
   include(n3ds_defs)
@@ -131,7 +131,7 @@ set(CMAKE_THREAD_PREFER_PTHREAD ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 if(NOT 3DS)
-find_package(Threads REQUIRED)
+  find_package(Threads REQUIRED)
 endif()
 
 if(NOT NONET)
@@ -320,6 +320,8 @@ if(SWITCH)
 endif()
 
 if(3DS)
+  list(APPEND devilutionx_SRCS
+    SourceX/platform/ctr/system.cpp)
   set(BIN_TARGET devilutionx.elf)
 endif()
 
@@ -334,7 +336,7 @@ target_include_directories(${BIN_TARGET} PRIVATE
   3rdParty/libsmacker)
 
 if(NOT 3DS)
-target_link_libraries(devilution PUBLIC Threads::Threads)
+  target_link_libraries(devilution PUBLIC Threads::Threads)
 endif()
 
 target_link_libraries(${BIN_TARGET} PRIVATE
@@ -427,7 +429,7 @@ endforeach(def_name)
 foreach(target devilution ${BIN_TARGET})
   if(USE_SDL1)
     target_link_libraries(${target} PRIVATE
-      ${SDL_LIBRARY} ${SDL_TTF_LIBRARY} ${SDL_MIXER_LIBRARY})
+      ${SDL_TTF_LIBRARY} ${SDL_MIXER_LIBRARY} ${SDL_LIBRARY})
     target_compile_definitions(${target} PRIVATE USE_SDL1)
   else()
     target_link_libraries(${target} PRIVATE
@@ -452,11 +454,9 @@ foreach(target devilution ${BIN_TARGET})
   endif()
 
   if(3DS)
-    target_link_libraries(${target} PRIVATE ${BZIP2_LIBRARIES})
-    target_include_directories(${target} PRIVATE ${BZIP2_INCLUDE_DIR})
     target_link_libraries(${target} PRIVATE ${TREMOR_LIBRARIES})
     target_include_directories(${target} PRIVATE ${TREMOR_INCLUDE_DIRS})
-    target_link_libraries(${target} PRIVATE 3ds::ogg 3ds::mikmod 3ds::mad 3ds::freetype 3ds::png)
+    target_link_libraries(${target} PRIVATE 3ds::ogg 3ds::mikmod 3ds::mad 3ds::freetype 3ds::bzip2 3ds::png)
     target_link_libraries(${target} PRIVATE 3ds::citro3d 3ds::ctrulib)
   endif()
 
@@ -572,7 +572,7 @@ if(3DS)
      DESTINATION ${APP_ROMFS})
   set(APP_VERSION ${PROJECT_VERSION})
   include(Tools3DS)
-  add_3dsx_target(${BIN_TARGET})
+# add_3dsx_target(${BIN_TARGET} "NO_SMDH")
   add_cia_target(${BIN_TARGET} ${APP_RSF} ${APP_BANNER} ${APP_AUDIO} ${APP_ROMFS})
 endif()
 

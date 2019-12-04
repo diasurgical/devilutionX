@@ -215,6 +215,7 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 		refreshDelay = 1000000 / mode.refresh_rate;
 #endif
 	}
+
 	return window != NULL;
 }
 } // namespace dvl

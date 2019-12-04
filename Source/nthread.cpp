@@ -86,7 +86,7 @@ BOOL nthread_recv_turns(BOOL *pfSendAsync)
 		return TRUE;
 	}
 #if defined(__3DS__)
-	return 0;
+	return FALSE;
 #else
 	if (!SNetReceiveTurns(0, MAX_PLRS, (char **)glpMsgTbl, gdwMsgLenTbl, (LPDWORD)player_state)) {
 		if (SErrGetLastError() != STORM_ERROR_NO_MESSAGES_WAITING)
