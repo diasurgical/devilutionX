@@ -19,7 +19,7 @@ build() {
 	cd ../../build
 	rm -f CMakeCache.txt
 	DEVKITPRO="$DEVKITPRO" cmake .. -DBINARY_RELEASE=ON \
-		-DCMAKE_TOOLCHAIN_FILE=../CMake/ctr/devkitarm-libctru.cmake
+		-DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/3ds.cmake
 	DEVKITPRO="$DEVKITPRO" make -j "$(nproc)"
 	cd -
 }
