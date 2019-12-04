@@ -65,7 +65,8 @@ void progress_Render(BYTE progress)
 		SDL_Rect dsc_rect = {
 			static_cast<decltype(SDL_Rect().x)>(SCREEN_X + x + 50),
 			static_cast<decltype(SDL_Rect().y)>(SCREEN_Y + y + 8),
-			SCREEN_WIDTH, SCREEN_HEIGHT };
+			SCREEN_WIDTH, SCREEN_HEIGHT
+		};
 		if (SDL_BlitSurface(msgSurface, NULL, pal_surface, &dsc_rect) <= -1) {
 			ErrSdl();
 		}
@@ -108,9 +109,8 @@ BOOL UiProgressDialog(HWND window, char *msg, int enable, int (*fnfunc)(), int r
 			case SDL_MOUSEBUTTONDOWN:
 				endMenu = true;
 				break;
-			case SDL_QUIT:
-				exit(0);
 			}
+			UiHandleEvents(&event);
 		}
 	}
 	BlackPalette();
@@ -119,4 +119,4 @@ BOOL UiProgressDialog(HWND window, char *msg, int enable, int (*fnfunc)(), int r
 	return progress == 100;
 }
 
-}
+} // namespace dvl

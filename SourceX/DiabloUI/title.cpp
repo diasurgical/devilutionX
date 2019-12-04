@@ -50,9 +50,8 @@ void UiTitleDialog()
 			case SDL_MOUSEBUTTONDOWN:
 				endMenu = true;
 				break;
-			case SDL_QUIT:
-				exit(0);
 			}
+			UiHandleEvents(&event);
 		}
 	}
 	BlackPalette();
@@ -65,4 +64,4 @@ void UiSetSpawned(BOOL bSpawned)
 	gbSpawned = bSpawned;
 }
 
-}
+} // namespace dvl

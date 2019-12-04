@@ -9,12 +9,6 @@
 
 namespace dvl {
 
-typedef struct bfsNode {
-	int x;
-	int y;
-	int steps;
-} bfsNode;
-
 bool sgbControllerActive = false;
 coords speedspellscoords[50];
 const int repeatRate = 100;
@@ -224,16 +218,22 @@ void FindMeleeTarget()
 	bool visited[MAXDUNX][MAXDUNY] = { 0 };
 	int maxSteps = 25; // Max steps for FindPath is 25
 	int rotations = 5;
-	int x = plr[myplr]._px;
-	int y = plr[myplr]._py;
 
-	std::list<bfsNode> queue;
+	struct SearchNode {
+		int x, y;
+		int steps;
+	};
+	std::list<SearchNode> queue;
 
-	visited[x][y] = true;
-	queue.push_back({ x, y, 0 });
+	{
+		const int start_x = plr[myplr]._px;
+		const int start_y = plr[myplr]._py;
+		visited[start_x][start_y] = true;
+		queue.push_back({ start_x, start_y, 0 });
+	}
 
 	while (!queue.empty()) {
-		bfsNode node = queue.front();
+		SearchNode node = queue.front();
 		queue.pop_front();
 
 		for (int i = 0; i < 8; i++) {
@@ -252,9 +252,9 @@ void FindMeleeTarget()
 				visited[dx][dy] = true;
 
 				if (dMonster[dx][dy] != 0) {
-					int mi = dMonster[dx][dy] > 0 ? dMonster[dx][dy] - 1 : -(dMonster[dx][dy] + 1);
+					const int mi = dMonster[dx][dy] > 0 ? dMonster[dx][dy] - 1 : -(dMonster[dx][dy] + 1);
 					if (CanTargetMonster(mi)) {
-						int newRotations = GetRotaryDistance(dx, dy);
+						const int newRotations = GetRotaryDistance(dx, dy);
 						if (rotations < newRotations || (pcursmonst != -1 && CanTalkToMonst(i)))
 							continue;
 						rotations = newRotations;

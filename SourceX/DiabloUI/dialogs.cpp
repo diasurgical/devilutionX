@@ -54,7 +54,7 @@ UiItem OK_DIALOG[] = {
 
 UiItem OK_DIALOG_WITH_CAPTION[] = {
 	DIALOG_ART_L,
-	UiText(dialogText, SDL_Color { 255, 255, 0, 0 }, { 147, 110, 345, 20 }, UIS_CENTER),
+	UiText(dialogText, SDL_Color{ 255, 255, 0, 0 }, { 147, 110, 345, 20 }, UIS_CENTER),
 	UiText(dialogCaption, { 147, 141, 345, 190 }, UIS_CENTER),
 	MakeSmlButton("OK", &DialogActionOK, 264, 335),
 };
@@ -262,8 +262,6 @@ void DialogLoop(UiItem *items, std::size_t num_items, UiItem *render_behind, std
 			case SDL_MOUSEBUTTONUP:
 				UiItemMouseEvents(&event, items, num_items);
 				break;
-			case SDL_QUIT:
-				exit(0);
 			default:
 				switch (GetMenuAction(event)) {
 				case MenuAction::BACK:
@@ -275,6 +273,7 @@ void DialogLoop(UiItem *items, std::size_t num_items, UiItem *render_behind, std
 				}
 				break;
 			}
+			UiHandleEvents(&event);
 		}
 
 		if (render_behind_size == 0) {

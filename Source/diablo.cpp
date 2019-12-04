@@ -124,14 +124,14 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
 extern void finish_simulated_mouse_clicks(int current_mouse_x, int current_mouse_y);
 extern void plrctrls_after_check_curs_move();
 
-static void ProcessInput()
+static bool ProcessInput()
 {
 	if (PauseMode == 2) {
-		return;
+		return false;
 	}
 	if (gbMaxPlayers == 1 && gmenu_exception()) {
 		force_redraw |= 1;
-		return;
+		return false;
 	}
 
 	if (!gmenu_exception() && sgnTimeoutCurs == 0) {
@@ -142,6 +142,8 @@ static void ProcessInput()
 		plrctrls_after_check_curs_move();
 		track_process();
 	}
+
+	return true;
 }
 
 void run_game_loop(unsigned int uMsg)
@@ -167,28 +169,23 @@ void run_game_loop(unsigned int uMsg)
 	nthread_ignore_mutex(FALSE);
 
 	while (gbRunGame) {
-		diablo_color_cyc_logic();
-		if (PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE)) {
-			SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_ABOVE_NORMAL);
-			while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
-				if (msg.message == WM_QUIT) {
-					gbRunGameResult = FALSE;
-					gbRunGame = FALSE;
-					break;
-				}
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
+		while (PeekMessage(&msg)) {
+			if (msg.message == WM_QUIT) {
+				gbRunGameResult = FALSE;
+				gbRunGame = FALSE;
+				break;
 			}
-			bLoop = gbRunGame && nthread_has_500ms_passed(FALSE);
-			SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_NORMAL);
-			if (!bLoop) {
-				continue;
-			}
-		} else if (!nthread_has_500ms_passed(FALSE)) {
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+		if (!gbRunGame)
+			break;
+		if (!nthread_has_500ms_passed(FALSE)) {
 			ProcessInput();
 			DrawAndBlit();
 			continue;
 		}
+		diablo_color_cyc_logic();
 		multi_process_network_packets();
 		game_loop(gbGameLoopStartup);
 		gbGameLoopStartup = FALSE;
@@ -1692,24 +1689,8 @@ extern void plrctrls_after_game_logic();
 
 void game_logic()
 {
-	if (PauseMode == 2) {
+	if (!ProcessInput()) {
 		return;
-	}
-	if (PauseMode == 1) {
-		PauseMode = 2;
-	}
-	if (gbMaxPlayers == 1 && gmenu_exception()) {
-		force_redraw |= 1;
-		return;
-	}
-
-	if (!gmenu_exception() && sgnTimeoutCurs == 0) {
-#ifndef USE_SDL1
-		finish_simulated_mouse_clicks(MouseX, MouseY);
-#endif
-		CheckCursMove();
-		plrctrls_after_check_curs_move();
-		track_process();
 	}
 	if (gbProcessPlayers) {
 		ProcessPlayers();
@@ -1766,19 +1747,13 @@ void timeout_cursor(BOOL bTimeout)
 
 void diablo_color_cyc_logic()
 {
-	DWORD tc;
+	if (!palette_get_colour_cycling())
+		return;
 
-	tc = GetTickCount();
-	if (tc - color_cycle_timer >= 50) {
-		color_cycle_timer = tc;
-		if (palette_get_colour_cycling()) {
-			if (leveltype == DTYPE_HELL) {
-				lighting_color_cycling();
-			} else if (leveltype == DTYPE_CAVES) {
-				//if (fullscreen)
-					palette_update_caves();
-			}
-		}
+	if (leveltype == DTYPE_HELL) {
+		lighting_color_cycling();
+	} else if (leveltype == DTYPE_CAVES) {
+		palette_update_caves();
 	}
 }
 

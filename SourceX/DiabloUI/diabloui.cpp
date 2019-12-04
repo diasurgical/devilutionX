@@ -15,6 +15,7 @@
 #include "DiabloUI/fonts.h"
 #include "DiabloUI/button.h"
 #include "DiabloUI/dialogs.h"
+#include "controls/controller.h"
 
 #ifdef __SWITCH__
 // for virtual keyboard on Switch
@@ -185,35 +186,32 @@ void selhero_CatToName(char *in_buf, char *out_buf, int cnt)
 	strncat(out_buf, output.c_str(), cnt - strlen(out_buf));
 }
 
-bool UiFocusNavigation(SDL_Event *event)
+void UiFocusNavigation(SDL_Event *event)
 {
-	if (event->type == SDL_QUIT)
-		exit(0);
-
 	switch (GetMenuAction(*event)) {
 	case MenuAction::SELECT:
 		UiFocusNavigationSelect();
-		return true;
+		return;
 	case MenuAction::UP:
 		UiFocus(SelectedItem - 1, UiItemsWraps);
-		return true;
+		return;
 	case MenuAction::DOWN:
 		UiFocus(SelectedItem + 1, UiItemsWraps);
-		return true;
+		return;
 	case MenuAction::PAGE_UP:
 		UiFocusPageUp();
-		return true;
+		return;
 	case MenuAction::PAGE_DOWN:
 		UiFocusPageDown();
-		return true;
+		return;
 	case MenuAction::DELETE:
 		UiFocusNavigationYesNo();
-		return true;
+		return;
 	case MenuAction::BACK:
 		if (!gfnListEsc)
 			break;
 		UiFocusNavigationEsc();
-		return true;
+		return;
 	default:
 		break;
 	}
@@ -254,7 +252,7 @@ bool UiFocusNavigation(SDL_Event *event)
 						selhero_CatToName(clipboard, UiTextInput, UiTextInputLen);
 					}
 				}
-				return true;
+				return;
 #endif
 			case SDLK_BACKSPACE:
 			case SDLK_LEFT: {
@@ -262,7 +260,7 @@ bool UiFocusNavigation(SDL_Event *event)
 				if (nameLen > 0) {
 					UiTextInput[nameLen - 1] = '\0';
 				}
-				return true;
+				return;
 			}
 			default:
 				break;
@@ -283,7 +281,7 @@ bool UiFocusNavigation(SDL_Event *event)
 #ifndef USE_SDL1
 		case SDL_TEXTINPUT:
 			selhero_CatToName(event->text.text, UiTextInput, UiTextInputLen);
-			return true;
+			return;
 #endif
 		default:
 			break;
@@ -296,10 +294,21 @@ bool UiFocusNavigation(SDL_Event *event)
 		OutputToLogical(&event->button.x, &event->button.y);
 #endif
 		if (UiItemMouseEvents(event, gUiItems, gUiItemCnt))
-			return true;
+			return;
 	}
+}
 
-	return false;
+void UiHandleEvents(SDL_Event *event)
+{
+	if (event->type == SDL_QUIT)
+		exit(0);
+
+#ifndef USE_SDL1
+	if (event->type == SDL_JOYDEVICEADDED || event->type == SDL_JOYDEVICEREMOVED) {
+		InitController();
+		return;
+	}
+#endif
 }
 
 void UiFocusNavigationSelect()
@@ -544,6 +553,7 @@ void UiPollAndRender()
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
 		UiFocusNavigation(&event);
+		UiHandleEvents(&event);
 	}
 	UiRenderItems(gUiItems, gUiItemCnt);
 	DrawMouse();
