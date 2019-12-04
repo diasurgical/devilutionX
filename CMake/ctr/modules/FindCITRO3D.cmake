@@ -10,9 +10,14 @@
 # target_link_libraries(mytarget ${CITRO3D_LIBRARIES})
 # target_include_directories(mytarget PRIVATE ${CITRO3D_INCLUDE_DIRS})
 
-if(NOT 3DS)
+if(NOT N3DS)
     message(FATAL_ERROR "This module can only be used if you are using the 3DS toolchain file. Please erase this build directory or create another one, and then use -DCMAKE_TOOLCHAIN_FILE=DevkitArm3DS.cmake when calling cmake for the 1st time. For more information, see the Readme.md for more information.")
 endif()
+
+if(CITRO3D_INCLUDE_DIR)
+    # Already in cache, be silent
+    set(CITRO3D_FIND_QUIETLY TRUE)
+endif(CITRO3D_INCLUDE_DIR)
 
 include(LibFindMacros)
 include(try_add_imported_target)
