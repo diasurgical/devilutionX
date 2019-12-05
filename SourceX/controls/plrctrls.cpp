@@ -127,13 +127,13 @@ void FindItemOrObject()
 
 	for (int xx = -1; xx < 2; xx++) {
 		for (int yy = -1; yy < 2; yy++) {
-			if (xx == 0 && yy == 0)
-				continue; // Ignore doorway so we don't get stuck behind barrels
 			if (dObject[mx + xx][my + yy] == 0)
 				continue;
 			int o = dObject[mx + xx][my + yy] > 0 ? dObject[mx + xx][my + yy] - 1 : -(dObject[mx + xx][my + yy] + 1);
 			if (object[o]._oSelFlag == 0)
 				continue;
+			if (xx == 0 && yy == 0 && object[o]._oDoorFlag)
+				continue; // Ignore doorway so we don't get stuck behind barrels
 			int newRotations = GetRotaryDistance(mx + xx, my + yy);
 			if (rotations < newRotations)
 				continue;
