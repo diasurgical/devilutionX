@@ -148,7 +148,8 @@ void FindItemOrObject()
 void CheckTownersNearby()
 {
 	for (int i = 0; i < 16; i++) {
-		if (GetDistance(towner[i]._tx, towner[i]._ty, 2) == 0)
+		int distance = GetDistance(towner[i]._tx, towner[i]._ty, 2);
+		if (distance == 0 || distance > 2)
 			continue;
 		pcursmonst = i;
 	}
@@ -339,6 +340,46 @@ void FindActor()
 
 	if (gbMaxPlayers != 1)
 		CheckPlayerNearby();
+}
+
+int pcursmissile;
+int pcurstrig;
+
+void FindTrigger()
+{
+	if (pcursitem != -1 || pcursobj != -1)
+		return; // Prefer showing items/objects over triggers (use of cursm* conflicts)
+
+	for (int i = 0; i < nummissiles; i++) {
+		int mi = missileactive[i];
+		if (missile[mi]._mitype == MIS_TOWN || missile[mi]._mitype == MIS_RPORTAL) {
+			int distance = GetDistance(missile[mi]._mix, missile[mi]._miy, 2);
+			if (distance == 0 || distance > 2)
+				continue;
+			cursmx = missile[mi]._mix;
+			cursmy = missile[mi]._miy;
+			pcursmissile = mi;
+		}
+	}
+
+	if (pcursmissile == -1) {
+		for (int i = 0; i < numtrigs; i++) {
+			int tx = trigs[i]._tx;
+			int ty = trigs[i]._ty;
+			if (trigs[i]._tlvl == 13)
+				ty -= 1;
+			int distance = GetDistance(tx, ty, 2);
+			if (distance == 0 || distance > 2)
+				continue;
+			cursmx = tx;
+			cursmy = ty;
+			pcurstrig = i;
+		}
+	}
+
+	CheckTrigForce();
+	CheckTown();
+	CheckRportal();
 }
 
 void Interact()
@@ -767,11 +808,14 @@ void plrctrls_after_check_curs_move()
 		pcursmonst = -1;
 		pcursitem = -1;
 		pcursobj = -1;
+		pcursmissile = -1;
+		pcurstrig = -1;
 		if (!invflag) {
 			*infostr = '\0';
 			ClearPanel();
 			FindActor();
 			FindItemOrObject();
+			FindTrigger();
 		}
 	}
 }
@@ -914,6 +958,12 @@ void PerformSecondaryAction()
 		NetSendCmdLocParam1(true, CMD_GOTOAGETITEM, cursmx, cursmy, pcursitem);
 	} else if (pcursobj != -1) {
 		NetSendCmdLocParam1(true, CMD_OPOBJXY, cursmx, cursmy, pcursobj);
+	} else if (pcursmissile != -1) {
+		MakePlrPath(myplr, missile[pcursmissile]._mix, missile[pcursmissile]._miy, true);
+		plr[myplr].destAction = ACTION_WALK;
+	} else if (pcurstrig != -1) {
+		MakePlrPath(myplr, trigs[pcurstrig]._tx, trigs[pcurstrig]._ty, true);
+		plr[myplr].destAction = ACTION_WALK;
 	}
 }
 
