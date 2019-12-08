@@ -244,10 +244,10 @@ Default controller mappings (A/B/X/Y as in Nintendo layout, so the rightmost but
 - B: Select spell, cancel while in main menu
 - X: pickup gold, potions & equipment from ground, open chests and doors that are nearby, use item when in inventory (useful to read books etc.)
 - Y: cast spell, go to previous screen when talking to people and in shops, delete character while in main menu
-- R1: inventory
-- L1: character sheet
-- R2: use mana potion from belt
-- L2: use health item from belt
+- R1: use mana potion from belt
+- L1: use health item from belt
+- R2: inventory
+- L2: character sheet
 - Left analog click: toggle automap
 - Right analog click: left mouse click
 - Select: quest log

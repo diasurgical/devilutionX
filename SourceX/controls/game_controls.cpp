@@ -52,11 +52,11 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 			return true;
 		case ControllerButton::AXIS_TRIGGERLEFT: // ZL (aka L2)
 			if (!ctrl_event.up)
-				*action = GameAction(GameActionType::USE_HEALTH_POTION);
+				*action = GameAction(GameActionType::TOGGLE_CHARACTER_INFO);
 			return true;
 		case ControllerButton::AXIS_TRIGGERRIGHT: // ZR (aka R2)
 			if (!ctrl_event.up)
-				*action = GameAction(GameActionType::USE_MANA_POTION);
+				*action = GameAction(GameActionType::TOGGLE_INVENTORY);
 			return true;
 		case ControllerButton::BUTTON_B: // Right button
 			if (!ctrl_event.up)
@@ -76,11 +76,11 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 			return true;
 		case ControllerButton::BUTTON_LEFTSHOULDER:
 			if (!stextflag && !ctrl_event.up)
-				*action = GameAction(GameActionType::TOGGLE_CHARACTER_INFO);
+				*action = GameAction(GameActionType::USE_HEALTH_POTION);
 			return true;
 		case ControllerButton::BUTTON_RIGHTSHOULDER:
 			if (!stextflag && !ctrl_event.up)
-				*action = GameAction(GameActionType::TOGGLE_INVENTORY);
+				*action = GameAction(GameActionType::USE_MANA_POTION);
 			return true;
 		case ControllerButton::BUTTON_DPAD_UP:
 		case ControllerButton::BUTTON_DPAD_DOWN:
