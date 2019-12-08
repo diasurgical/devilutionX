@@ -1,4 +1,4 @@
-set(sodium_USE_STATIC_LIBS ON)
+set(NONET ON)
 set(USE_SDL1 ON)
 set(PREFILL_PLAYER_NAME ON)
 set(HAS_KBCTRL 1)
