@@ -422,8 +422,10 @@ WINBOOL PeekMessageA(LPMSG lpMsg)
 			break;
 		case GameActionType::TOGGLE_QUICK_SPELL_MENU:
 			if (!invflag || BlurInventory()) {
-				lpMsg->message = DVL_WM_KEYDOWN;
-				lpMsg->wParam = 'S';
+				if (!spselflag)
+					DoSpeedBook();
+				else
+					spselflag = false;
 				chrflag = false;
 				questlog = false;
 				invflag = false;
@@ -441,6 +443,15 @@ WINBOOL PeekMessageA(LPMSG lpMsg)
 				FocusOnCharInfo();
 			}
 			break;
+		case GameActionType::TOGGLE_QUEST_LOG:
+			if (!questlog) {
+				StartQuestlog();
+				chrflag = false;
+				spselflag = false;
+			} else {
+				questlog = false;
+			}
+			break;
 		case GameActionType::TOGGLE_INVENTORY:
 			if (invflag) {
 				invflag = !BlurInventory();
@@ -451,6 +462,13 @@ WINBOOL PeekMessageA(LPMSG lpMsg)
 				if (pcurs == CURSOR_DISARM)
 					SetCursor_(CURSOR_HAND);
 				FocusOnInventory();
+			}
+			break;
+		case GameActionType::TOGGLE_SPELL_BOOK:
+			if (BlurInventory()) {
+				invflag = false;
+				spselflag = false;
+				sbookflag = !sbookflag;
 			}
 			break;
 		case GameActionType::SEND_KEY:

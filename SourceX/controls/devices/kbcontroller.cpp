@@ -42,14 +42,10 @@ ControllerButton KbCtrlToControllerButton(const SDL_Event &event)
 #endif
 #ifdef KBCTRL_BUTTON_B
 		case KBCTRL_BUTTON_B: // Right button
-			if (IsModifierKey())
-				return ControllerButton::BUTTON_RIGHTSTICK;
 			return ControllerButton::BUTTON_B;
 #endif
 #ifdef KBCTRL_BUTTON_X
 		case KBCTRL_BUTTON_X: // Left button
-			if (IsModifierKey())
-				return ControllerButton::BUTTON_BACK;
 			return ControllerButton::BUTTON_X;
 #endif
 #ifdef KBCTRL_BUTTON_Y
@@ -233,7 +229,6 @@ bool ProcessKbCtrlAxisMotion(const SDL_Event &event)
 	}
 	return true;
 }
-
 
 } // namespace dvl
 #endif

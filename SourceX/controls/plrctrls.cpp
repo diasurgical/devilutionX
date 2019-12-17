@@ -18,7 +18,6 @@ int speedspellcount = 0;
 bool InGameMenu()
 {
 	return stextflag > 0
-	    || questlog
 	    || helpflag
 	    || talkflag
 	    || qtextflag
@@ -719,6 +718,23 @@ void HotSpellMove(MoveDirection dir)
 	}
 }
 
+void SpellBookMove(MoveDirection dir)
+{
+	DWORD ticks = GetTickCount();
+	if (ticks - invmove < repeatRate) {
+		return;
+	}
+	invmove = ticks;
+
+	if (dir.x == MoveDirectionX::LEFT) {
+		if (sbooktab > 0)
+			sbooktab--;
+	} else if (dir.x == MoveDirectionX::RIGHT) {
+		if (sbooktab < 3)
+			sbooktab++;
+	}
+}
+
 static const direction kFaceDir[3][3] = {
 	// NONE      UP      DOWN
 	{ DIR_OMNI, DIR_N, DIR_S }, // NONE
@@ -806,7 +822,7 @@ void WalkInDir(MoveDirection dir)
 
 void Movement()
 {
-	if (InGameMenu())
+	if (InGameMenu() || questlog)
 		return;
 
 	MoveDirection move_dir = GetMoveDirection();
@@ -820,6 +836,8 @@ void Movement()
 		AttrIncBtnSnap(move_dir.y);
 	} else if (spselflag) {
 		HotSpellMove(move_dir);
+	} else if (sbookflag) {
+		SpellBookMove(move_dir);
 	} else {
 		WalkInDir(move_dir);
 	}
@@ -1019,7 +1037,7 @@ bool TryDropItem()
 
 void PerformSpellAction()
 {
-	if (InGameMenu())
+	if (InGameMenu() || questlog || sbookflag)
 		return;
 
 	if (invflag) {
