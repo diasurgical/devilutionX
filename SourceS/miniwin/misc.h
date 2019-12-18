@@ -113,7 +113,6 @@ typedef struct tagSIZE {
 } SIZE;
 
 typedef struct tagMSG {
-	HWND hwnd;
 	UINT message;
 	WPARAM wParam;
 	LPARAM lParam;
@@ -195,11 +194,11 @@ void FocusOnCharInfo();
 
 SHORT WINAPI GetAsyncKeyState(int vKey);
 
-WINBOOL WINAPI PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg);
+WINBOOL WINAPI PeekMessageA(LPMSG lpMsg);
 
 WINBOOL WINAPI TranslateMessage(const MSG *lpMsg);
 LRESULT WINAPI DispatchMessageA(const MSG *lpMsg);
-WINBOOL WINAPI PostMessageA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
+WINBOOL WINAPI PostMessageA(UINT Msg, WPARAM wParam, LPARAM lParam);
 
 bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight);
 
@@ -464,8 +463,6 @@ constexpr auto DVL_FILE_BEGIN = 0;
 constexpr auto DVL_FILE_CURRENT = 1;
 constexpr auto DVL_ERROR_FILE_NOT_FOUND = 2;
 
-constexpr auto DVL_PM_NOREMOVE = 0x0000;
-constexpr auto DVL_PM_REMOVE = 0x0001;
 constexpr auto DVL_WM_QUIT = 0x0012;
 constexpr auto DVL_INFINITE = 0xFFFFFFFF;
 

@@ -46,62 +46,54 @@ DWORD translate_controller_button_to_key(ControllerButton controller_button)
 bool GetGameAction(const SDL_Event &event, GameAction *action)
 {
 	const ControllerButtonEvent ctrl_event = ToControllerButtonEvent(event);
-	switch (ctrl_event.button) {
-	case ControllerButton::IGNORE:
-		return true;
-	case ControllerButton::AXIS_TRIGGERLEFT: // ZL (aka L2)
-		if (!ctrl_event.up)
-			*action = GameAction(GameActionType::USE_HEALTH_POTION);
-		return true;
-	case ControllerButton::AXIS_TRIGGERRIGHT: // ZR (aka R2)
-		if (!ctrl_event.up)
-			*action = GameAction(GameActionType::USE_MANA_POTION);
-		return true;
-	case ControllerButton::BUTTON_B: // Right button
-		if (InGameMenu())
-			break; // Map to keyboard key
-		if (!ctrl_event.up)
-			*action = GameAction(GameActionType::PRIMARY_ACTION);
-		return true;
-	case ControllerButton::BUTTON_Y: // Top button
-		if (InGameMenu())
-			break; // Map to keyboard key
-		if (!ctrl_event.up)
-			*action = GameAction(GameActionType::SECONDARY_ACTION);
-		return true;
-	case ControllerButton::BUTTON_X: // Left button
-		if (InGameMenu())
-			break; // Map to keyboard key
-		if (!ctrl_event.up)
-			*action = GameAction(GameActionType::CAST_SPELL);
-		return true;
-	case ControllerButton::BUTTON_A: // Bottom button
-		if (InGameMenu())
-			break; // Map to keyboard key
-		if (!ctrl_event.up)
-			*action = GameAction(GameActionType::TOGGLE_QUICK_SPELL_MENU);
-		return true;
-	case ControllerButton::BUTTON_LEFTSHOULDER:
-		if (!stextflag && !ctrl_event.up)
-			*action = GameAction(GameActionType::TOGGLE_CHARACTER_INFO);
-		return true;
-	case ControllerButton::BUTTON_RIGHTSHOULDER:
-		if (!stextflag && !ctrl_event.up)
-			*action = GameAction(GameActionType::TOGGLE_INVENTORY);
-		return true;
-	case ControllerButton::BUTTON_DPAD_UP:
-	case ControllerButton::BUTTON_DPAD_DOWN:
-	case ControllerButton::BUTTON_DPAD_LEFT:
-	case ControllerButton::BUTTON_DPAD_RIGHT:
-		if (InGameMenu())
+	if (!InGameMenu()) {
+		switch (ctrl_event.button) {
+		case ControllerButton::IGNORE:
+			return true;
+		case ControllerButton::AXIS_TRIGGERLEFT: // ZL (aka L2)
+			if (!ctrl_event.up)
+				*action = GameAction(GameActionType::TOGGLE_CHARACTER_INFO);
+			return true;
+		case ControllerButton::AXIS_TRIGGERRIGHT: // ZR (aka R2)
+			if (!ctrl_event.up)
+				*action = GameAction(GameActionType::TOGGLE_INVENTORY);
+			return true;
+		case ControllerButton::BUTTON_B: // Right button
+			if (!ctrl_event.up)
+				*action = GameAction(GameActionType::PRIMARY_ACTION);
+			return true;
+		case ControllerButton::BUTTON_Y: // Top button
+			if (!ctrl_event.up)
+				*action = GameAction(GameActionType::SECONDARY_ACTION);
+			return true;
+		case ControllerButton::BUTTON_X: // Left button
+			if (!ctrl_event.up)
+				*action = GameAction(GameActionType::CAST_SPELL);
+			return true;
+		case ControllerButton::BUTTON_A: // Bottom button
+			if (!ctrl_event.up)
+				*action = GameAction(GameActionType::TOGGLE_QUICK_SPELL_MENU);
+			return true;
+		case ControllerButton::BUTTON_LEFTSHOULDER:
+			if (!stextflag && !ctrl_event.up)
+				*action = GameAction(GameActionType::USE_HEALTH_POTION);
+			return true;
+		case ControllerButton::BUTTON_RIGHTSHOULDER:
+			if (!stextflag && !ctrl_event.up)
+				*action = GameAction(GameActionType::USE_MANA_POTION);
+			return true;
+		case ControllerButton::BUTTON_DPAD_UP:
+		case ControllerButton::BUTTON_DPAD_DOWN:
+		case ControllerButton::BUTTON_DPAD_LEFT:
+		case ControllerButton::BUTTON_DPAD_RIGHT:
+			// The rest is handled in charMovement() on every game_logic() call.
+			return true;
+		case ControllerButton::BUTTON_RIGHTSTICK:
+			*action = GameActionSendMouseClick { GameActionSendMouseClick::LEFT, ctrl_event.up };
+			return true;
+		default:
 			break;
-		// The rest is handled in charMovement() on every game_logic() call.
-		return true;
-	case ControllerButton::BUTTON_RIGHTSTICK:
-		*action = GameActionSendMouseClick { GameActionSendMouseClick::LEFT, ctrl_event.up };
-		return true;
-	default:
-		break;
+		}
 	}
 
 	// By default, map to a keyboard key.

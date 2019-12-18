@@ -2892,6 +2892,7 @@ typedef enum shrine_type {
 } shrine_type;
 
 typedef enum action_id {
+	ACTION_WALK        = -2, // Automatic walk when using gamepad
 	ACTION_NONE        = -1,
 	ACTION_ATTACK      = 9,
 	ACTION_RATTACK     = 10,

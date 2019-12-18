@@ -10,6 +10,7 @@
 #include "controls/plrctrls.h"
 #include "controls/touch.h"
 #include "miniwin/ddraw.h"
+#include "controls/controller.h"
 
 #ifdef __SWITCH__
 #include "platform/switch/docking.h"
@@ -330,27 +331,11 @@ void BlurInventory()
 		FocusOnCharInfo();
 }
 
-WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg)
+WINBOOL PeekMessageA(LPMSG lpMsg)
 {
 #ifdef __SWITCH__
 	HandleDocking();
 #endif
-
-	if (wMsgFilterMin != 0)
-		UNIMPLEMENTED();
-	if (wMsgFilterMax != 0)
-		UNIMPLEMENTED();
-	if (hWnd != NULL)
-		UNIMPLEMENTED();
-
-	if (wRemoveMsg == DVL_PM_NOREMOVE) {
-		// This does not actually fill out lpMsg, but this is ok
-		// since the engine never uses it in this case
-		return !message_queue.empty() || SDL_PollEvent(NULL);
-	}
-	if (wRemoveMsg != DVL_PM_REMOVE) {
-		UNIMPLEMENTED();
-	}
 
 	if (!message_queue.empty()) {
 		*lpMsg = message_queue.front();
@@ -363,7 +348,6 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 		return false;
 	}
 
-	lpMsg->hwnd = hWnd;
 	lpMsg->message = 0;
 	lpMsg->lParam = 0;
 	lpMsg->wParam = 0;
@@ -480,6 +464,15 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 	}
 
 	switch (e.type) {
+#ifndef USE_SDL1
+	case SDL_CONTROLLERDEVICEADDED:
+	case SDL_CONTROLLERDEVICEREMOVED:
+		break;
+	case SDL_JOYDEVICEADDED:
+	case SDL_JOYDEVICEREMOVED:
+		InitController();
+		break;
+#endif
 	case SDL_QUIT:
 		lpMsg->message = DVL_WM_QUIT;
 		break;
@@ -592,7 +585,6 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 
 WINBOOL TranslateMessage(const MSG *lpMsg)
 {
-	assert(lpMsg->hwnd == 0);
 	if (lpMsg->message == DVL_WM_KEYDOWN) {
 		int key = lpMsg->wParam;
 		unsigned mod = (DWORD)lpMsg->lParam >> 16;
@@ -660,7 +652,7 @@ WINBOOL TranslateMessage(const MSG *lpMsg)
 #endif
 
 			// XXX: This does not add extended info to lParam
-			PostMessageA(lpMsg->hwnd, DVL_WM_CHAR, key, 0);
+			PostMessageA(DVL_WM_CHAR, key, 0);
 		}
 	}
 
@@ -695,19 +687,15 @@ SHORT GetAsyncKeyState(int vKey)
 LRESULT DispatchMessageA(const MSG *lpMsg)
 {
 	DUMMY_ONCE();
-	assert(lpMsg->hwnd == 0);
 	assert(CurrentProc);
 	// assert(CurrentProc == GM_Game);
 
-	return CurrentProc(lpMsg->hwnd, lpMsg->message, lpMsg->wParam, lpMsg->lParam);
+	return CurrentProc(NULL, lpMsg->message, lpMsg->wParam, lpMsg->lParam);
 }
 
-WINBOOL PostMessageA(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
+WINBOOL PostMessageA(UINT Msg, WPARAM wParam, LPARAM lParam)
 {
-	assert(hWnd == 0);
-
 	MSG msg;
-	msg.hwnd = hWnd;
 	msg.message = Msg;
 	msg.wParam = wParam;
 	msg.lParam = lParam;

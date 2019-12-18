@@ -9,12 +9,6 @@
 
 namespace dvl {
 
-typedef struct bfsNode {
-	int x;
-	int y;
-	int steps;
-} bfsNode;
-
 bool sgbControllerActive = false;
 coords speedspellscoords[50];
 const int repeatRate = 100;
@@ -87,7 +81,11 @@ int GetDistance(int dx, int dy, int maxDistance)
 	}
 
 	char walkpath[25];
-	return FindPath(PosOkPlayer, myplr, plr[myplr]._px, plr[myplr]._py, dx, dy, walkpath);
+	int steps = FindPath(PosOkPlayer, myplr, plr[myplr]._px, plr[myplr]._py, dx, dy, walkpath);
+	if (steps > maxDistance)
+		return 0;
+
+	return steps;
 }
 
 /**
@@ -97,8 +95,8 @@ int GetDistance(int dx, int dy, int maxDistance)
  */
 int GetDistanceRanged(int dx, int dy)
 {
-	int a = abs(plr[myplr]._px - dx);
-	int b = abs(plr[myplr]._py - dy);
+	int a = plr[myplr]._px - dx;
+	int b = plr[myplr]._py - dy;
 
 	return sqrt(a * a + b * b);
 }
@@ -133,13 +131,13 @@ void FindItemOrObject()
 
 	for (int xx = -1; xx < 2; xx++) {
 		for (int yy = -1; yy < 2; yy++) {
-			if (xx == 0 && yy == 0)
-				continue; // Ignore doorway so we don't get stuck behind barrels
 			if (dObject[mx + xx][my + yy] == 0)
 				continue;
 			int o = dObject[mx + xx][my + yy] > 0 ? dObject[mx + xx][my + yy] - 1 : -(dObject[mx + xx][my + yy] + 1);
 			if (object[o]._oSelFlag == 0)
 				continue;
+			if (xx == 0 && yy == 0 && object[o]._oDoorFlag)
+				continue; // Ignore doorway so we don't get stuck behind barrels
 			int newRotations = GetRotaryDistance(mx + xx, my + yy);
 			if (rotations < newRotations)
 				continue;
@@ -154,7 +152,8 @@ void FindItemOrObject()
 void CheckTownersNearby()
 {
 	for (int i = 0; i < 16; i++) {
-		if (GetDistance(towner[i]._tx, towner[i]._ty, 2) == 0)
+		int distance = GetDistance(towner[i]._tx, towner[i]._ty, 2);
+		if (distance == 0)
 			continue;
 		pcursmonst = i;
 	}
@@ -192,30 +191,28 @@ bool CanTargetMonster(int mi)
 
 void FindRangedTarget()
 {
-	int newRotations, newDdistance;
-	int distance = 2 * (MAXDUNX + MAXDUNY);
-	int rotations = 5;
+	int distance, rotations;
+	bool canTalk;
 
 	// The first MAX_PLRS monsters are reserved for players' golems.
-	for (int i = MAX_PLRS; i < MAXMONSTERS; i++) {
-		const auto &monst = monster[i];
+	for (int mi = MAX_PLRS; mi < MAXMONSTERS; mi++) {
+		const auto &monst = monster[mi];
 		const int mx = monst._mx;
 		const int my = monst._my;
-		if (!CanTargetMonster(i))
+		if (!CanTargetMonster(mi))
 			continue;
 
-		newDdistance = GetDistanceRanged(mx, my);
-		if (distance < newDdistance || (pcursmonst != -1 && CanTalkToMonst(i))) {
+		const int newDdistance = GetDistanceRanged(mx, my);
+		const int newCanTalk = CanTalkToMonst(mi);
+		if (pcursmonst != -1 && !canTalk && (newCanTalk || distance < newDdistance))
 			continue;
-		}
-		if (distance == newDdistance) {
-			newRotations = GetRotaryDistance(mx, my);
-			if (rotations < newRotations)
-				continue;
-		}
+		const int newRotations = GetRotaryDistance(mx, my);
+		if (pcursmonst != -1 && !canTalk && distance == newDdistance && rotations < newRotations)
+			continue;
 		distance = newDdistance;
 		rotations = newRotations;
-		pcursmonst = i;
+		pcursmonst = mi;
+		canTalk = newCanTalk;
 	}
 }
 
@@ -223,17 +220,24 @@ void FindMeleeTarget()
 {
 	bool visited[MAXDUNX][MAXDUNY] = { 0 };
 	int maxSteps = 25; // Max steps for FindPath is 25
-	int rotations = 5;
-	int x = plr[myplr]._px;
-	int y = plr[myplr]._py;
+	int rotations;
+	bool canTalk;
 
-	std::list<bfsNode> queue;
+	struct SearchNode {
+		int x, y;
+		int steps;
+	};
+	std::list<SearchNode> queue;
 
-	visited[x][y] = true;
-	queue.push_back({ x, y, 0 });
+	{
+		const int start_x = plr[myplr]._px;
+		const int start_y = plr[myplr]._py;
+		visited[start_x][start_y] = true;
+		queue.push_back({ start_x, start_y, 0 });
+	}
 
 	while (!queue.empty()) {
-		bfsNode node = queue.front();
+		SearchNode node = queue.front();
 		queue.pop_front();
 
 		for (int i = 0; i < 8; i++) {
@@ -243,7 +247,7 @@ void FindMeleeTarget()
 			if (visited[dx][dy])
 				continue; // already visisted
 
-			if (node.steps >= maxSteps) {
+			if (node.steps > maxSteps) {
 				visited[dx][dy] = true;
 				continue;
 			}
@@ -252,14 +256,17 @@ void FindMeleeTarget()
 				visited[dx][dy] = true;
 
 				if (dMonster[dx][dy] != 0) {
-					int mi = dMonster[dx][dy] > 0 ? dMonster[dx][dy] - 1 : -(dMonster[dx][dy] + 1);
+					const int mi = dMonster[dx][dy] > 0 ? dMonster[dx][dy] - 1 : -(dMonster[dx][dy] + 1);
 					if (CanTargetMonster(mi)) {
-						int newRotations = GetRotaryDistance(dx, dy);
-						if (rotations < newRotations || (pcursmonst != -1 && CanTalkToMonst(i)))
+						const int newRotations = GetRotaryDistance(dx, dy);
+						const bool newCanTalk = CanTalkToMonst(mi);
+						if (pcursmonst != -1 && !canTalk && (newCanTalk || rotations < newRotations))
 							continue;
 						rotations = newRotations;
 						pcursmonst = mi;
-						maxSteps = node.steps; // Monsters found, cap search to current steps
+						canTalk = newCanTalk;
+						if (!canTalk)
+							maxSteps = node.steps; // Monsters found, cap search to current steps
 					}
 				}
 
@@ -290,9 +297,7 @@ void CheckMonstersNearby()
 
 void CheckPlayerNearby()
 {
-	int newRotations, newDdistance;
-	int distance = 2 * (MAXDUNX + MAXDUNY);
-	int rotations = 5;
+	int distance, newDdistance, rotations;
 
 	if (pcursmonst != -1)
 		return;
@@ -311,19 +316,20 @@ void CheckPlayerNearby()
 		    || (plr[i]._pHitPoints == 0 && spl != SPL_RESURRECT))
 			continue;
 
-		if (plr[myplr]._pwtype == WT_RANGED || HasRangedSpell() || spl == SPL_HEALOTHER)
+		if (plr[myplr]._pwtype == WT_RANGED || HasRangedSpell() || spl == SPL_HEALOTHER) {
 			newDdistance = GetDistanceRanged(mx, my);
-		else
+		} else {
 			newDdistance = GetDistance(mx, my, distance);
-
-		if (newDdistance == 0 || distance < newDdistance) {
-			continue;
-		}
-		if (distance == newDdistance) {
-			newRotations = GetRotaryDistance(mx, my);
-			if (rotations < newRotations)
+			if (newDdistance == 0)
 				continue;
 		}
+
+		if (pcursplr != -1 && distance < newDdistance)
+			continue;
+		const int newRotations = GetRotaryDistance(mx, my);
+		if (pcursplr != -1 && distance == newDdistance && rotations < newRotations)
+			continue;
+
 		distance = newDdistance;
 		rotations = newRotations;
 		pcursplr = i;
@@ -341,6 +347,74 @@ void FindActor()
 		CheckPlayerNearby();
 }
 
+int pcursmissile;
+int pcurstrig;
+int pcursquest;
+
+void FindTrigger()
+{
+	int distance, rotations;
+
+	if (pcursitem != -1 || pcursobj != -1)
+		return; // Prefer showing items/objects over triggers (use of cursm* conflicts)
+
+	for (int i = 0; i < nummissiles; i++) {
+		int mi = missileactive[i];
+		if (missile[mi]._mitype == MIS_TOWN || missile[mi]._mitype == MIS_RPORTAL) {
+			int mix = missile[mi]._mix;
+			int miy = missile[mi]._miy;
+			const int newDdistance = GetDistance(mix, miy, 2);
+			if (newDdistance == 0)
+				continue;
+			if (pcursmissile != -1 && distance < newDdistance)
+				continue;
+			const int newRotations = GetRotaryDistance(mix, miy);
+			if (pcursmissile != -1 && distance == newDdistance && rotations < newRotations)
+				continue;
+			cursmx = mix;
+			cursmy = miy;
+			pcursmissile = mi;
+			distance = newDdistance;
+			rotations = newRotations;
+		}
+	}
+
+	if (pcursmissile == -1) {
+		for (int i = 0; i < numtrigs; i++) {
+			int tx = trigs[i]._tx;
+			int ty = trigs[i]._ty;
+			if (trigs[i]._tlvl == 13)
+				ty -= 1;
+			const int newDdistance = GetDistance(tx, ty, 2);
+			if (newDdistance == 0)
+				continue;
+			cursmx = tx;
+			cursmy = ty;
+			pcurstrig = i;
+		}
+
+		if (pcurstrig == -1) {
+			for (int i = 0; i < MAXQUESTS; i++) {
+				if (i == QTYPE_VB || currlevel != quests[i]._qlevel || quests[i]._qslvl == 0)
+					continue;
+				const int newDdistance = GetDistance(quests[i]._qtx, quests[i]._qty, 2);
+				if (newDdistance == 0)
+					continue;
+				cursmx = quests[i]._qtx;
+				cursmy = quests[i]._qty;
+				pcursquest = i;
+			}
+		}
+	}
+
+	if (pcursmonst != -1 || pcursplr != -1 || cursmx == -1 || cursmy == -1)
+		return; // Prefer monster/player info text
+
+	CheckTrigForce();
+	CheckTown();
+	CheckRportal();
+}
+
 void Interact()
 {
 	if (leveltype == DTYPE_TOWN && pcursmonst != -1) {
@@ -351,7 +425,7 @@ void Interact()
 		} else {
 			NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
 		}
-	} else if (pcursplr != -1 && !FriendlyMode) {
+	} else if (leveltype != DTYPE_TOWN && pcursplr != -1 && !FriendlyMode) {
 		NetSendCmdParam1(true, plr[myplr]._pwtype == WT_RANGED ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
 	}
 }
@@ -635,31 +709,35 @@ void HotSpellMove(MoveDirection dir)
 	}
 }
 
-static const _walk_path kMoveToWalkDir[3][3] = {
-	// NONE      UP      DOWN
-	{ WALK_NONE, WALK_N, WALK_S }, // NONE
-	{ WALK_W, WALK_NW, WALK_SW },  // LEFT
-	{ WALK_E, WALK_NE, WALK_SE },  // RIGHT
-};
 static const direction kFaceDir[3][3] = {
 	// NONE      UP      DOWN
 	{ DIR_OMNI, DIR_N, DIR_S }, // NONE
 	{ DIR_W, DIR_NW, DIR_SW },  // LEFT
 	{ DIR_E, DIR_NE, DIR_SE },  // RIGHT
 };
-
+static const int kOffsets[8][2] = {
+	{ 1, 1 },   // DIR_S
+	{ 0, 1 },   // DIR_SW
+	{ -1, 1 },  // DIR_W
+	{ -1, 0 },  // DIR_NW
+	{ -1, -1 }, // DIR_N
+	{ 0, -1 },  // DIR_NE
+	{ 1, -1 },  // DIR_E
+	{ 1, 0 },   // DIR_SE
+};
 void WalkInDir(MoveDirection dir)
 {
+	const int x = plr[myplr]._px;
+	const int y = plr[myplr]._py;
 	if (dir.x == MoveDirectionX::NONE && dir.y == MoveDirectionY::NONE) {
-		if (sgbControllerActive && plr[myplr].destAction == ACTION_NONE)
-			ClrPlrPath(myplr);
+		if (sgbControllerActive && plr[myplr].walkpath[0] != WALK_NONE && plr[myplr].destAction == ACTION_NONE)
+			NetSendCmdLoc(true, CMD_WALKXY, x, y);
 		return;
 	}
 
-	ClrPlrPath(myplr);
-	plr[myplr].walkpath[0] = kMoveToWalkDir[static_cast<std::size_t>(dir.x)][static_cast<std::size_t>(dir.y)];
-	plr[myplr].destAction = ACTION_NONE; // stop attacking, etc.
-	plr[myplr]._pdir = kFaceDir[static_cast<std::size_t>(dir.x)][static_cast<std::size_t>(dir.y)];
+	const int pdir = kFaceDir[static_cast<std::size_t>(dir.x)][static_cast<std::size_t>(dir.y)];
+	NetSendCmdLoc(true, CMD_WALKXY, x + kOffsets[pdir][0], y + kOffsets[pdir][1]);
+	plr[myplr]._pdir = pdir;
 }
 
 void Movement()
@@ -752,11 +830,17 @@ void plrctrls_after_check_curs_move()
 		pcursmonst = -1;
 		pcursitem = -1;
 		pcursobj = -1;
+		pcursmissile = -1;
+		pcurstrig = -1;
+		pcursquest = -1;
+		cursmx = -1;
+		cursmy = -1;
 		if (!invflag) {
 			*infostr = '\0';
 			ClearPanel();
 			FindActor();
 			FindItemOrObject();
+			FindTrigger();
 		}
 	}
 }
@@ -841,16 +925,6 @@ void UpdateSpellTarget()
 	pcursplr = -1;
 	pcursmonst = -1;
 
-	static const int kOffsets[8][2] = {
-		{ 1, 1 },   // DIR_S
-		{ 0, 1 },   // DIR_SW
-		{ -1, 1 },  // DIR_W
-		{ -1, 0 },  // DIR_NW
-		{ -1, -1 }, // DIR_N
-		{ 0, -1 },  // DIR_NE
-		{ 1, -1 },  // DIR_E
-		{ 1, 0 },   // DIR_SE
-	};
 	const auto &player = plr[myplr];
 	cursmx = player._px + kOffsets[player._pdir][0];
 	cursmy = player._py + kOffsets[player._pdir][1];
@@ -909,6 +983,15 @@ void PerformSecondaryAction()
 		NetSendCmdLocParam1(true, CMD_GOTOAGETITEM, cursmx, cursmy, pcursitem);
 	} else if (pcursobj != -1) {
 		NetSendCmdLocParam1(true, CMD_OPOBJXY, cursmx, cursmy, pcursobj);
+	} else if (pcursmissile != -1) {
+		MakePlrPath(myplr, missile[pcursmissile]._mix, missile[pcursmissile]._miy, true);
+		plr[myplr].destAction = ACTION_WALK;
+	} else if (pcurstrig != -1) {
+		MakePlrPath(myplr, trigs[pcurstrig]._tx, trigs[pcurstrig]._ty, true);
+		plr[myplr].destAction = ACTION_WALK;
+	} else if (pcursquest != -1) {
+		MakePlrPath(myplr, quests[pcursquest]._qtx, quests[pcursquest]._qty, true);
+		plr[myplr].destAction = ACTION_WALK;
 	}
 }
 

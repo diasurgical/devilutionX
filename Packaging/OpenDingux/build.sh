@@ -59,16 +59,11 @@ prepare_buildroot() {
 make_buildroot() {
 	cp buildroot_${TARGET}_defconfig "$BUILDROOT/configs/${TARGET}_devilutionx_defconfig"
 	cd "$BUILDROOT"
-	if [[ "$TARGET" != "rg350" ]]; then
-		if ! grep 'enable-static' package/libsodium/libsodium.mk > /dev/null; then
-			echo 'LIBSODIUM_CONF_OPTS += --enable-static' >> package/libsodium/libsodium.mk
-		fi
-	fi
 	make ${TARGET}_devilutionx_defconfig
 	if [[ "$TARGET" == "rg350" ]]; then
 		BR2_JLEVEL=0 make
 	else
-		BR2_JLEVEL=0 make toolchain libsodium libzip sdl sdl_mixer sdl_ttf
+		BR2_JLEVEL=0 make toolchain libzip sdl sdl_mixer sdl_ttf
 	fi
 	cd -
 }

@@ -13,7 +13,7 @@ void interface_msg_pump()
 {
 	MSG Msg;
 
-	while (PeekMessage(&Msg, NULL, 0, 0, PM_REMOVE)) {
+	while (PeekMessage(&Msg)) {
 		if (Msg.message != WM_QUIT) {
 			TranslateMessage(&Msg);
 			DispatchMessage(&Msg);

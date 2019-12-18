@@ -128,9 +128,8 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 
 #ifdef USE_SDL1
 	SDL_EnableUNICODE(1);
-#endif
-
 	InitController();
+#endif
 
 	int upscale = 1;
 	DvlIntSetting("upscale", &upscale);
