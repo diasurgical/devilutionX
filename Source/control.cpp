@@ -47,7 +47,7 @@ BYTE *pSpellBkCel;
 char infostr[MAX_PATH];
 int numpanbtns;
 BYTE *pStatusPanel;
-char panelstr[256];
+char panelstr[4][64];
 BOOL panelflag;
 BYTE SplTransTbl[256];
 int initialDropGoldValue;
@@ -109,10 +109,43 @@ const BYTE gbFontTransTbl[256] = {
 /* data */
 
 char SpellITbl[MAX_SPELLS] = {
-	1, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-	28, 13, 12, 18, 16, 14, 18, 19, 11, 20,
-	15, 21, 23, 24, 25, 22, 26, 29, 37, 38,
-	39, 42, 41, 40, 10, 36, 30
+	1,
+	1,
+	2,
+	3,
+	4,
+	5,
+	6,
+	7,
+	8,
+	9,
+	28,
+	13,
+	12,
+	18,
+	16,
+	14,
+	18,
+	19,
+	11,
+	20,
+	15,
+	21,
+	23,
+	24,
+	25,
+	22,
+	26,
+	29,
+	37,
+	38,
+	39,
+	42,
+	41,
+	40,
+	10,
+	36,
+	30,
 };
 int PanBtnPos[8][5] = {
 	{ PANEL_LEFT +   9, PANEL_TOP +   9, 71, 19, 1 }, // char button
@@ -486,7 +519,7 @@ void CPrintString(int sx, int sy, int nCel, char col)
 
 void AddPanelString(char *str, BOOL just)
 {
-	strcpy(&panelstr[64 * pnumlines], str);
+	strcpy(panelstr[pnumlines], str);
 	pstrjust[pnumlines] = just;
 
 	if (pnumlines < 4)
@@ -1203,7 +1236,7 @@ void control_draw_info_str()
 		}
 
 		for (i = 0; i < pnumlines; i++) {
-			control_print_info_str(i + yo, &panelstr[64 * i], pstrjust[i], pnumlines - lo);
+			control_print_info_str(i + yo, panelstr[i], pstrjust[i], pnumlines - lo);
 		}
 	}
 }

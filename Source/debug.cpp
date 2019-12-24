@@ -66,7 +66,7 @@ void StoresCheat()
 
 	numpremium = 0;
 
-	for (i = 0; i < 6; i++)
+	for (i = 0; i < SMITH_PREMIUM_ITEMS; i++)
 		premiumitem[i]._itype = -1;
 
 	SpawnPremium(30);

@@ -489,7 +489,9 @@ BOOL ForceL3Trig()
 	}
 
 	for (i = 0; L3DownList[i] != -1; i++) {
-		if (dPiece[cursmx][cursmy] == L3DownList[i] || dPiece[cursmx + 1][cursmy] == L3DownList[i] || dPiece[cursmx + 2][cursmy] == L3DownList[i]) {
+		if (dPiece[cursmx][cursmy] == L3DownList[i]
+		    || dPiece[cursmx + 1][cursmy] == L3DownList[i]
+		    || dPiece[cursmx + 2][cursmy] == L3DownList[i]) {
 			sprintf(infostr, "Down to level %i", currlevel + 1);
 			for (j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABNEXTLVL) {

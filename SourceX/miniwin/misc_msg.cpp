@@ -244,9 +244,9 @@ static int translate_sdl_key(SDL_Keysym key)
 
 namespace {
 
-LPARAM position_for_mouse(int x, int y)
+LPARAM position_for_mouse(short x, short y)
 {
-	return ((y & 0xFFFF) << 16) | (x & 0xFFFF);
+	return (((uint16_t)(y & 0xFFFF)) << 16) | (uint16_t)(x & 0xFFFF);
 }
 
 WPARAM keystate_for_mouse(WPARAM ret)
@@ -260,12 +260,6 @@ WINBOOL false_avail(const char *name, int value)
 {
 	DUMMY_PRINT("Unhandled SDL event: %s %d", name, value);
 	return true;
-}
-
-// Moves the mouse to the first inventory slot.
-void FocusOnInventory()
-{
-	SetCursorPos(InvRect[25].X + (INV_SLOT_SIZE_PX / 2), InvRect[25].Y - (INV_SLOT_SIZE_PX / 2));
 }
 
 void StoreSpellCoords()
@@ -319,16 +313,33 @@ void StoreSpellCoords()
 } // namespace
 
 /**
- * @brief Clean the inventory related cursor states.
+ * @brief Try to clean the inventory related cursor states.
+ * @return True if it is safe to close the inventory
  */
-void BlurInventory()
+bool BlurInventory()
 {
-	if (pcurs >= CURSOR_FIRSTITEM) // drop item to allow us to pick up other items
-		DropItemBeforeTrig();
-	if (pcurs == CURSOR_REPAIR || pcurs == CURSOR_RECHARGE)
+	if (pcurs >= CURSOR_FIRSTITEM) {
+		if (!TryDropItem()) {
+			if (plr[myplr]._pClass == PC_WARRIOR) {
+				PlaySFX(PS_WARR16); // "Where would I put this?"
+#ifndef SPAWN
+			} else if (plr[myplr]._pClass == PC_ROGUE) {
+				PlaySFX(PS_ROGUE16);
+			} else if (plr[myplr]._pClass == PC_SORCERER) {
+				PlaySFX(PS_MAGE16);
+#endif
+			}
+			return false;
+		}
+	}
+
+	invflag = false;
+	if (pcurs > CURSOR_HAND)
 		SetCursor_(CURSOR_HAND);
 	if (chrflag)
 		FocusOnCharInfo();
+
+	return true;
 }
 
 WINBOOL PeekMessageA(LPMSG lpMsg)
@@ -411,31 +422,35 @@ WINBOOL PeekMessageA(LPMSG lpMsg)
 			PerformSpellAction();
 			break;
 		case GameActionType::TOGGLE_QUICK_SPELL_MENU:
-			lpMsg->message = DVL_WM_KEYDOWN;
-			lpMsg->wParam = 'S';
-			chrflag = false;
-			questlog = false;
-			invflag = false;
-			BlurInventory();
-			sbookflag = false;
-			StoreSpellCoords();
+			if (!invflag || BlurInventory()) {
+				lpMsg->message = DVL_WM_KEYDOWN;
+				lpMsg->wParam = 'S';
+				chrflag = false;
+				questlog = false;
+				sbookflag = false;
+				StoreSpellCoords();
+			}
 			break;
 		case GameActionType::TOGGLE_CHARACTER_INFO:
 			chrflag = !chrflag;
 			if (chrflag) {
 				questlog = false;
 				spselflag = false;
+				if (pcurs == CURSOR_DISARM)
+					SetCursor_(CURSOR_HAND);
 				FocusOnCharInfo();
 			}
 			break;
 		case GameActionType::TOGGLE_INVENTORY:
-			invflag = !invflag;
 			if (invflag) {
+				BlurInventory();
+			} else {
 				sbookflag = false;
 				spselflag = false;
+				invflag = true;
+				if (pcurs == CURSOR_DISARM)
+					SetCursor_(CURSOR_HAND);
 				FocusOnInventory();
-			} else {
-				BlurInventory();
 			}
 			break;
 		case GameActionType::SEND_KEY:
@@ -493,30 +508,26 @@ WINBOOL PeekMessageA(LPMSG lpMsg)
 		break;
 	case SDL_MOUSEBUTTONDOWN: {
 		int button = e.button.button;
-		if (e.button.x > 0 && e.button.y > 0 && e.button.x <= SCREEN_WIDTH && e.button.y <= SCREEN_HEIGHT) {
-			if (button == SDL_BUTTON_LEFT) {
-				lpMsg->message = DVL_WM_LBUTTONDOWN;
-				lpMsg->lParam = position_for_mouse(e.button.x, e.button.y);
-				lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
-			} else if (button == SDL_BUTTON_RIGHT) {
-				lpMsg->message = DVL_WM_RBUTTONDOWN;
-				lpMsg->lParam = position_for_mouse(e.button.x, e.button.y);
-				lpMsg->wParam = keystate_for_mouse(DVL_MK_RBUTTON);
-			}
+		if (button == SDL_BUTTON_LEFT) {
+			lpMsg->message = DVL_WM_LBUTTONDOWN;
+			lpMsg->lParam = position_for_mouse(e.button.x, e.button.y);
+			lpMsg->wParam = keystate_for_mouse(DVL_MK_LBUTTON);
+		} else if (button == SDL_BUTTON_RIGHT) {
+			lpMsg->message = DVL_WM_RBUTTONDOWN;
+			lpMsg->lParam = position_for_mouse(e.button.x, e.button.y);
+			lpMsg->wParam = keystate_for_mouse(DVL_MK_RBUTTON);
 		}
 	} break;
 	case SDL_MOUSEBUTTONUP: {
 		int button = e.button.button;
-		if (e.button.x > 0 && e.button.y > 0 && e.button.x <= SCREEN_WIDTH && e.button.y <= SCREEN_HEIGHT) {
-			if (button == SDL_BUTTON_LEFT) {
-				lpMsg->message = DVL_WM_LBUTTONUP;
-				lpMsg->lParam = position_for_mouse(e.button.x, e.button.y);
-				lpMsg->wParam = keystate_for_mouse(0);
-			} else if (button == SDL_BUTTON_RIGHT) {
-				lpMsg->message = DVL_WM_RBUTTONUP;
-				lpMsg->lParam = position_for_mouse(e.button.x, e.button.y);
-				lpMsg->wParam = keystate_for_mouse(0);
-			}
+		if (button == SDL_BUTTON_LEFT) {
+			lpMsg->message = DVL_WM_LBUTTONUP;
+			lpMsg->lParam = position_for_mouse(e.button.x, e.button.y);
+			lpMsg->wParam = keystate_for_mouse(0);
+		} else if (button == SDL_BUTTON_RIGHT) {
+			lpMsg->message = DVL_WM_RBUTTONUP;
+			lpMsg->lParam = position_for_mouse(e.button.x, e.button.y);
+			lpMsg->wParam = keystate_for_mouse(0);
 		}
 	} break;
 #ifndef USE_SDL1

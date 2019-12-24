@@ -33,7 +33,7 @@ QuestData questlist[MAXQUESTS] = {
 	{       3,          3, DTYPE_CATHEDRAL, QTYPE_KING,   100,      1,       1, QUEST_KING2,    "The Curse of King Leoric" },
 	{       2,         -1, DTYPE_CAVES,     QTYPE_PW,     100,      4,       0, QUEST_POISON3,  "Poisoned Water Supply"    },
 	{       6,         -1, DTYPE_CATACOMBS, QTYPE_BONE,   100,      2,       0, QUEST_BONER,    "The Chamber of Bone"      },
-	{      15,         15, DTYPE_CATHEDRAL, QTYPE_VB,     100,      5,       1, QUEST_VILE1,    "Archbishop Lazarus"       }
+	{      15,         15, DTYPE_CATHEDRAL, QTYPE_VB,     100,      5,       1, QUEST_VILE1,    "Archbishop Lazarus"       },
 	// clang-format on
 };
 char questxoff[7] = { 0, -1, 0, -1, -2, -1, -2 };
@@ -67,10 +67,10 @@ void InitQuests()
 		}
 	}
 
-	initiatedQuests = 0;
 	questlog = FALSE;
 	PentSpn2Frame = 1;
 	WaterDone = 0;
+	initiatedQuests = 0;
 
 	for (z = 0; z < MAXQUESTS; z++) {
 		if (gbMaxPlayers <= 1 || questlist[z]._qflags & 1) {
@@ -90,11 +90,11 @@ void InitQuests()
 				quests[z]._qlog = 0;
 			}
 
-			quests[z]._qtx = 0;
 			quests[z]._qslvl = questlist[z]._qslvl;
+			quests[z]._qtx = 0;
+			quests[z]._qty = 0;
 			quests[z]._qidx = z;
 			quests[z]._qlvltype = questlist[z]._qlvlt;
-			quests[z]._qty = 0;
 			quests[z]._qvar2 = 0;
 			quests[z]._qmsg = questlist[z]._qdmsg;
 		}
@@ -305,12 +305,12 @@ void CheckQuestKill(int m, BOOL sendmsg)
 		sfxdelay = 30;
 		quests[QTYPE_MOD]._qactive = 2;
 
-		for (j = 0; j < 112; j++) {
-			for (i = 0; i < 112; i++) {
+		for (j = 0; j < MAXDUNY; j++) {
+			for (i = 0; i < MAXDUNX; i++) {
 				if (dPiece[i][j] == 370) {
 					trigs[numtrigs]._tx = i;
 					trigs[numtrigs]._ty = j;
-					trigs[numtrigs]._tmsg = 1026;
+					trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
 					numtrigs++;
 				}
 			}

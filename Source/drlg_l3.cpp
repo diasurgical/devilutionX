@@ -1232,12 +1232,14 @@ static void DRLG_L3Wood()
 				rt = random_(0, 2);
 				if (rt == 0) {
 					y1 = j;
-					while (WoodVertU(i, y1)) {
+					// BUGFIX: Check `y1 >= 0` first (fixed)
+					while (y1 >= 0 && WoodVertU(i, y1)) {
 						y1--;
 					}
 					y1++;
 					y2 = j;
-					while (WoodVertD(i, y2)) {
+					// BUGFIX: Check `y2 < DMAXY` first (fixed)
+					while (y2 < DMAXY && WoodVertD(i, y2)) {
 						y2++;
 					}
 					y2--;

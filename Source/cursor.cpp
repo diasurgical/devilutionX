@@ -5,7 +5,7 @@ DEVILUTION_BEGIN_NAMESPACE
 int cursH;
 int icursH28;
 int cursW;
-int pcursmonst;
+int pcursmonst = -1;
 int icursW28;
 BYTE *pCursCels;
 int icursH;
@@ -172,7 +172,7 @@ void CheckRportal()
 
 void CheckCursMove()
 {
-	int i, sx, sy, mx, my, tx, ty, px, py, xx, yy, mi;
+	int i, sx, sy, fx, fy, mx, my, tx, ty, px, py, xx, yy, mi;
 	char bv;
 	BOOL flipflag, flipx, flipy;
 
@@ -208,9 +208,14 @@ void CheckCursMove()
 	sx -= ScrollInfo._sxoff;
 	sy -= ScrollInfo._syoff;
 
+	fx = plr[myplr]._pVar6 / 256;
+	fy = plr[myplr]._pVar7 / 256;
+	fx -= (plr[myplr]._pVar6 + plr[myplr]._pxvel) / 256;
+	fy -= (plr[myplr]._pVar7 + plr[myplr]._pyvel) / 256;
+
 	if (ScrollInfo._sdir != 0) {
-		sx += ((plr[myplr]._pVar6 + plr[myplr]._pxvel) / 256) - (plr[myplr]._pVar6 / 256);
-		sy += ((plr[myplr]._pVar7 + plr[myplr]._pyvel) / 256) - (plr[myplr]._pVar7 / 256);
+		sx -= fx;
+		sy -= fy;
 	}
 
 	if (sx < 0) {

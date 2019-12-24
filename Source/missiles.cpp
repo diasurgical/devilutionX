@@ -510,7 +510,7 @@ BOOL MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, BOOLEAN shif
 		hper = 5;
 	if (hper > 95)
 		hper = 95;
-	if (CheckMonsterHit(m, &ret)) {
+	if (CheckMonsterHit(m, ret)) {
 		return ret;
 	}
 #ifdef _DEBUG
@@ -608,7 +608,7 @@ BOOL MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, BOOLE
 		hper = 95;
 	if (monster[m]._mmode == MM_STONE)
 		hit = 0;
-	if (CheckMonsterHit(m, &ret))
+	if (CheckMonsterHit(m, ret))
 		return ret;
 #ifdef _DEBUG
 	if (hit >= hper && !debug_mode_key_inverted_v && !debug_mode_dollar_sign)
@@ -1286,10 +1286,11 @@ void AddRndTeleport(int mi, int sx, int sy, int dx, int dy, int midir, char mien
 		if (random_(58, 2) == 1)
 			r2 = -r2;
 
-	} while (nSolidTable[dPiece[r1 + sx][sy + r2]] || dObject[r1 + sx][sy + r2] || dMonster[r1 + sx][sy + r2]);
+		pn = dPiece[r1 + sx][sy + r2];
+	} while (nSolidTable[pn] || dObject[r1 + sx][sy + r2] || dMonster[r1 + sx][sy + r2]);
 
-	missile[mi]._miVar1 = 0;
 	missile[mi]._mirange = 2;
+	missile[mi]._miVar1 = 0;
 	if (!setlevel || setlvlnum != SL_VILEBETRAYER) {
 		missile[mi]._mix = sx + r1;
 		missile[mi]._miy = sy + r2;
@@ -2081,6 +2082,8 @@ void AddElement(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy,
 	UseMana(id, SPL_ELEMENT);
 }
 
+extern void FocusOnInventory();
+
 void AddIdentify(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam)
 {
 	missile[mi]._miDelFlag = TRUE;
@@ -2088,8 +2091,11 @@ void AddIdentify(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy
 	if (id == myplr) {
 		if (sbookflag)
 			sbookflag = FALSE;
-		if (!invflag)
+		if (!invflag) {
 			invflag = 1;
+			if (sgbControllerActive)
+				FocusOnInventory();
+		}
 		SetCursor_(CURSOR_IDENTIFY);
 	}
 }
@@ -2186,8 +2192,11 @@ void AddRepair(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, 
 	if (id == myplr) {
 		if (sbookflag)
 			sbookflag = FALSE;
-		if (!invflag)
+		if (!invflag) {
 			invflag = 1;
+			if (sgbControllerActive)
+				FocusOnInventory();
+		}
 		SetCursor_(CURSOR_REPAIR);
 	}
 }
@@ -2199,8 +2208,11 @@ void AddRecharge(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy
 	if (id == myplr) {
 		if (sbookflag)
 			sbookflag = FALSE;
-		if (!invflag)
+		if (!invflag) {
 			invflag = 1;
+			if (sgbControllerActive)
+				FocusOnInventory();
+		}
 		SetCursor_(CURSOR_RECHARGE);
 	}
 }
@@ -3138,12 +3150,12 @@ void MI_Manashield(int i)
 				plr[id]._pMana -= diff;
 				plr[id]._pManaBase -= diff;
 			} else {
-				missile[i]._miDelFlag = TRUE;
 				plr[id]._pHitPoints = plr[id]._pMana + missile[i]._miVar1 - diff;
 				plr[id]._pHPBase = plr[id]._pMana + missile[i]._miVar2 - diff;
 				plr[id]._pMana = 0;
 				plr[id]._pManaBase = plr[id]._pMaxManaBase - plr[id]._pMaxMana;
 				missile[i]._mirange = 0;
+				missile[i]._miDelFlag = TRUE;
 				if (plr[id]._pHitPoints < 0)
 					SetPlayerHitPoints(id, 0);
 				if (!(plr[id]._pHitPoints >> 6) && id == myplr) {

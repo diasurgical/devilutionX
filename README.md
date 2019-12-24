@@ -10,11 +10,10 @@ Nightly builds | Platform
 ![Discord Channel](https://avatars3.githubusercontent.com/u/1965106?s=16&v=4) [Discord Chat Channel](https://discord.gg/aQBQdDe)
 
 # How To Play:
- - Copy diabdat.mpq from your CD, or GoG install folder, to the DevilutionX install folder or data folder; make sure it is all lowercase. The DeviliutionX install is the one that contains the DevilutionX executable, the data folder path differ depending on OS version and and security setting, but will normally be as following:
+ - Copy diabdat.mpq from your CD, or GoG install folder, to the DevilutionX install folder or data folder; make sure it is all lowercase. The DeviliutionX install is the one that contains the DevilutionX executable. The data folder path may differ depending on OS version and security setting, but will normally be as following:
     - macOS `~/Library/Application Support/diasurgical/devilution`
     - Linux `~/.local/share/diasurgical/devilution/`
     - Windows `C:\Users[username]\AppData\Roaming\diasurgical\devilution`
-    - These paths may differ depending on OS version and security setting, so the most reliable recommended location is the directory that contains the DevilutionX executable.
  - [Download DevilutionX](https://github.com/diasurgical/devilutionX/releases), or build from source
  - Install [SDL2](https://www.libsdl.org/download-2.0.php) (including [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/) and [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/))
  - Run `./devilutionx`
@@ -287,11 +286,12 @@ Hellfire was a bit of a flop on the developer's part. Support may come in the fu
 - [BWAPI Team](https://github.com/bwapi) - providing library API to work with Storm
 - [Ladislav Zezula](https://github.com/ladislav-zezula) - reversing PKWARE library, further documenting Storm
 - [fearedbliss](https://github.com/fearedbliss) - being awe-inspiring
+- Diablodin - providing additional info about the PSX release
 - Climax Studios & Sony - secretly helping with their undercover QA :P
 - Blizzard North - wait, this was a typo!
 - Depression - reason to waste four months of my life doing this ;)
 
-And a special thanks to all the support and people who work on Devilution to make it possible! <3
+And a special thanks to all the support and people who work on this project to make it possible! <3
 
 # Changelog
 [From the beginning until release](docs/CHANGELOG.md)

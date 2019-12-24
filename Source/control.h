@@ -42,7 +42,7 @@ extern BYTE *pSpellBkCel;
 extern char infostr[MAX_PATH];
 extern int numpanbtns;
 extern BYTE *pStatusPanel;
-extern char panelstr[256];
+extern char panelstr[4][64];
 extern BOOL panelflag;
 extern BYTE SplTransTbl[256];
 extern int initialDropGoldValue;

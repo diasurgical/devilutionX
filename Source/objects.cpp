@@ -456,7 +456,10 @@ BOOL TorchLocOK(int xp, int yp)
 	if (dFlags[xp][yp] & BFLAG_POPULATED)
 		return FALSE;
 
-	return nTrapTable[dPiece[xp][yp]] != FALSE;
+	if (nTrapTable[dPiece[xp][yp]] != FALSE)
+		return TRUE;
+	else
+		return FALSE;
 }
 
 void AddObjTraps()
@@ -968,18 +971,14 @@ void SetBookMsg(int i, int msg)
 
 void AddL1Door(int i, int x, int y, int ot)
 {
-	int p1, p2;
-
 	object[i]._oDoorFlag = TRUE;
 	if (ot == 1) {
-		p1 = dPiece[x][y];
-		p2 = dPiece[x][y - 1];
+		object[i]._oVar1 = dPiece[x][y];
+		object[i]._oVar2 = dPiece[x][y - 1];
 	} else {
-		p1 = dPiece[x][y];
-		p2 = dPiece[x - 1][y];
+		object[i]._oVar1 = dPiece[x][y];
+		object[i]._oVar2 = dPiece[x - 1][y];
 	}
-	object[i]._oVar1 = p1;
-	object[i]._oVar2 = p2;
 	object[i]._oVar4 = 0;
 }
 
@@ -1223,8 +1222,8 @@ void AddMagicCircle(int i)
 {
 	object[i]._oRndSeed = GetRndSeed();
 	object[i]._oPreFlag = TRUE;
-	object[i]._oVar5 = 1;
 	object[i]._oVar6 = 0;
+	object[i]._oVar5 = 1;
 }
 
 void AddBrnCross(int i)
@@ -1275,7 +1274,7 @@ void AddTorturedBody(int i)
 	object[i]._oPreFlag = TRUE;
 }
 
-void GetRndObjLoc(int randarea, int *xx, int *yy)
+void GetRndObjLoc(int randarea, int &xx, int &yy)
 {
 	BOOL failed;
 	int i, j, tries;
@@ -1288,12 +1287,12 @@ void GetRndObjLoc(int randarea, int *xx, int *yy)
 		tries++;
 		if (tries > 1000 && randarea > 1)
 			randarea--;
-		*xx = random_(0, MAXDUNX);
-		*yy = random_(0, MAXDUNY);
+		xx = random_(0, MAXDUNX);
+		yy = random_(0, MAXDUNY);
 		failed = FALSE;
 		for (i = 0; i < randarea && !failed; i++) {
 			for (j = 0; j < randarea && !failed; j++) {
-				failed = !RndLocOk(i + *xx, j + *yy);
+				failed = !RndLocOk(i + xx, j + yy);
 			}
 		}
 		if (!failed)
@@ -1308,7 +1307,7 @@ void AddMushPatch()
 
 	if (nobjects < MAXOBJECTS) {
 		i = objectavail[0];
-		GetRndObjLoc(5, &x, &y);
+		GetRndObjLoc(5, x, y);
 		dObject[x + 1][y + 1] = -1 - i;
 		dObject[x + 2][y + 1] = -1 - i;
 		dObject[x + 1][y + 2] = -1 - i;
@@ -1320,7 +1319,7 @@ void AddSlainHero()
 {
 	int x, y;
 
-	GetRndObjLoc(5, &x, &y);
+	GetRndObjLoc(5, x, y);
 	AddObject(OBJ_SLAINHERO, x + 2, y + 2);
 }
 
@@ -1636,7 +1635,7 @@ void Obj_FlameTrap(int i)
 void Obj_Trap(int i)
 {
 	int oti, dir;
-	BOOL otrig;
+	BOOLEAN otrig;
 	int sx, sy, dx, dy, x, y;
 
 	otrig = FALSE;
@@ -2599,10 +2598,10 @@ void OperateMushPatch(int pnum, int i)
 		if (object[i]._oSelFlag != 0) {
 			if (!deltaload)
 				PlaySfxLoc(IS_CHEST, object[i]._ox, object[i]._oy);
-			object[i]._oAnimFrame++;
 			object[i]._oSelFlag = 0;
+			object[i]._oAnimFrame++;
 			if (!deltaload) {
-				GetSuperItemLoc(object[i]._ox, object[i]._oy, &x, &y);
+				GetSuperItemLoc(object[i]._ox, object[i]._oy, x, y);
 				SpawnQuestItem(IDI_MUSHROOM, x, y, 0, 0);
 				quests[QTYPE_BLKM]._qvar1 = QS_MUSHSPAWNED;
 			}
@@ -2633,7 +2632,7 @@ void OperateInnSignChest(int pnum, int i)
 			object[i]._oAnimFrame += 2;
 			object[i]._oSelFlag = 0;
 			if (!deltaload) {
-				GetSuperItemLoc(object[i]._ox, object[i]._oy, &x, &y);
+				GetSuperItemLoc(object[i]._ox, object[i]._oy, x, y);
 				SpawnQuestItem(IDI_BANNER, x, y, 0, 0);
 			}
 		}
@@ -3204,11 +3203,11 @@ void OperateShrine(int pnum, int i, int sType)
 		if (pnum != myplr)
 			return;
 		if (2 * currlevel < 7) {
-			CreateTypeItem(object[i]._ox, object[i]._oy, 0, ITYPE_MISC, IMISC_FULLMANA, 0, 1);
-			CreateTypeItem(object[i]._ox, object[i]._oy, 0, ITYPE_MISC, IMISC_FULLHEAL, 0, 1);
+			CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_MISC, IMISC_FULLMANA, 0, 1);
+			CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_MISC, IMISC_FULLHEAL, 0, 1);
 		} else {
-			CreateTypeItem(object[i]._ox, object[i]._oy, 0, ITYPE_MISC, IMISC_FULLREJUV, 0, 1);
-			CreateTypeItem(object[i]._ox, object[i]._oy, 0, ITYPE_MISC, IMISC_FULLREJUV, 0, 1);
+			CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_MISC, IMISC_FULLREJUV, 0, 1);
+			CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_MISC, IMISC_FULLREJUV, 0, 1);
 		}
 		plr[pnum]._pMana = plr[pnum]._pMaxMana;
 		plr[pnum]._pManaBase = plr[pnum]._pMaxManaBase;
@@ -3433,9 +3432,9 @@ void OperateSkelBook(int pnum, int i, BOOL sendmsg)
 		if (!deltaload) {
 			SetRndSeed(object[i]._oRndSeed);
 			if (random_(161, 5))
-				CreateTypeItem(object[i]._ox, object[i]._oy, 0, ITYPE_MISC, 21, sendmsg, 0);
+				CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_MISC, 21, sendmsg, 0);
 			else
-				CreateTypeItem(object[i]._ox, object[i]._oy, 0, ITYPE_MISC, 24, sendmsg, 0);
+				CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_MISC, 24, sendmsg, 0);
 			if (pnum == myplr)
 				NetSendCmdParam1(FALSE, CMD_OPERATEOBJ, i);
 		}
@@ -3451,7 +3450,7 @@ void OperateBookCase(int pnum, int i, BOOL sendmsg)
 		object[i]._oSelFlag = 0;
 		if (!deltaload) {
 			SetRndSeed(object[i]._oRndSeed);
-			CreateTypeItem(object[i]._ox, object[i]._oy, 0, ITYPE_MISC, IMISC_BOOK, sendmsg, 0);
+			CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_MISC, IMISC_BOOK, sendmsg, 0);
 			if (QuestStatus(QTYPE_ZHAR)
 			    && monster[MAX_PLRS].mName == UniqMonst[UMT_ZHAR].mName
 			    && monster[MAX_PLRS]._msquelch == UCHAR_MAX
@@ -3482,7 +3481,7 @@ void OperateDecap(int pnum, int i, BOOL sendmsg)
 
 void OperateArmorStand(int pnum, int i, BOOL sendmsg)
 {
-	int uniqueRnd;
+	BOOL uniqueRnd;
 
 	if (object[i]._oSelFlag != 0) {
 		object[i]._oAnimFrame++;
@@ -3491,13 +3490,13 @@ void OperateArmorStand(int pnum, int i, BOOL sendmsg)
 			SetRndSeed(object[i]._oRndSeed);
 			uniqueRnd = random_(0, 2);
 			if (currlevel <= 5) {
-				CreateTypeItem(object[i]._ox, object[i]._oy, 1, ITYPE_LARMOR, 0, sendmsg, 0);
+				CreateTypeItem(object[i]._ox, object[i]._oy, TRUE, ITYPE_LARMOR, 0, sendmsg, 0);
 			} else if (currlevel >= 6 && currlevel <= 9) {
 				CreateTypeItem(object[i]._ox, object[i]._oy, uniqueRnd, ITYPE_MARMOR, 0, sendmsg, 0);
 			} else if (currlevel >= 10 && currlevel <= 12) {
-				CreateTypeItem(object[i]._ox, object[i]._oy, 0, ITYPE_HARMOR, 0, sendmsg, 0);
+				CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_HARMOR, 0, sendmsg, 0);
 			} else if (currlevel >= 13 && currlevel <= 16) {
-				CreateTypeItem(object[i]._ox, object[i]._oy, 1, ITYPE_HARMOR, 0, sendmsg, 0);
+				CreateTypeItem(object[i]._ox, object[i]._oy, TRUE, ITYPE_HARMOR, 0, sendmsg, 0);
 			}
 			if (pnum == myplr)
 				NetSendCmdParam1(FALSE, CMD_OPERATEOBJ, i);
@@ -3514,7 +3513,7 @@ int FindValidShrine(int i)
 	while (1) {
 		done = FALSE;
 		while (!done) {
-			rv = random_(0, 26);
+			rv = random_(0, NUM_SHRINETYPE);
 			if (currlevel >= shrinemin[rv] && currlevel <= shrinemax[rv] && rv != 8)
 				done = TRUE;
 		}
@@ -3700,9 +3699,9 @@ void OperateWeaponRack(int pnum, int i, BOOL sendmsg)
 		return;
 
 	if (leveltype > 1)
-		CreateTypeItem(object[i]._ox, object[i]._oy, 1, weaponType, 0, sendmsg, 0);
+		CreateTypeItem(object[i]._ox, object[i]._oy, TRUE, weaponType, 0, sendmsg, 0);
 	else
-		CreateTypeItem(object[i]._ox, object[i]._oy, 0, weaponType, 0, sendmsg, 0);
+		CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, weaponType, 0, sendmsg, 0);
 	if (pnum == myplr)
 		NetSendCmdParam1(FALSE, CMD_OPERATEOBJ, i);
 }
@@ -3724,7 +3723,7 @@ void OperateLazStand(int pnum, int i)
 	if (object[i]._oSelFlag != 0 && !deltaload && !qtextflag && pnum == myplr) {
 		object[i]._oAnimFrame++;
 		object[i]._oSelFlag = 0;
-		GetSuperItemLoc(object[i]._ox, object[i]._oy, &xx, &yy);
+		GetSuperItemLoc(object[i]._ox, object[i]._oy, xx, yy);
 		SpawnQuestItem(IDI_LAZSTAFF, xx, yy, 0, 0);
 	}
 }

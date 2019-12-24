@@ -140,6 +140,7 @@ void DrawInv()
 {
 	BOOL invtest[NUM_INV_GRID_ELEM];
 	int frame, frame_width, colour, screen_x, screen_y, i, j, ii;
+	BYTE *pBuff;
 
 	CelDraw(RIGHT_PANEL_X, 351 + SCREEN_Y, pInvCels, 1, SPANEL_WIDTH);
 
@@ -270,11 +271,10 @@ void DrawInv()
 			light_table_index = 0;
 			cel_transparency_active = 1;
 
-			CelClippedBlitLightTrans(
-			    frame_width == INV_SLOT_SIZE_PX
-			        ? &gpBuffer[SCREENXY(RIGHT_PANEL_X + 197, SCREEN_Y)]
-			        : &gpBuffer[SCREENXY(RIGHT_PANEL_X + 183, SCREEN_Y)],
-			    pCursCels, frame, frame_width);
+			pBuff = frame_width == INV_SLOT_SIZE_PX
+				? &gpBuffer[SCREENXY(RIGHT_PANEL_X + 197, SCREEN_Y)]
+				: &gpBuffer[SCREENXY(RIGHT_PANEL_X + 183, SCREEN_Y)];
+			CelClippedBlitLightTrans(pBuff, pCursCels, frame, frame_width);
 
 			cel_transparency_active = 0;
 		}
@@ -331,6 +331,7 @@ void DrawInv()
 	}
 
 	for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
+		invtest[i] = FALSE;
 		if (plr[myplr].InvGrid[i] != 0) {
 			InvDrawSlotBack(
 			    InvRect[i + SLOTXY_INV_FIRST].X + SCREEN_X,
@@ -409,10 +410,11 @@ void DrawInvBelt()
 				CelBlitOutline(colour, InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X, InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, pCursCels, frame, frame_width);
 		}
 
-		if (plr[myplr].SpdList[i]._iStatFlag)
+		if (plr[myplr].SpdList[i]._iStatFlag) {
 			CelClippedDraw(InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X, InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, pCursCels, frame, frame_width);
-		else
+		} else {
 			CelDrawLightRed(InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X, InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, pCursCels, frame, frame_width, 1);
+		}
 
 		if (AllItemsList[plr[myplr].SpdList[i].IDidx].iUsable
 		    && plr[myplr].SpdList[i]._iStatFlag
@@ -443,10 +445,10 @@ BOOL AutoPlace(int pnum, int ii, int sx, int sy, BOOL saveflag)
 			xx = 0;
 		}
 		for (i = 0; i < sx && done; i++) {
-			if (xx < 10) {
-				done = plr[pnum].InvGrid[xx + yy] == 0;
-			} else {
+			if (xx >= 10) {
 				done = FALSE;
+			} else {
+				done = plr[pnum].InvGrid[xx + yy] == 0;
 			}
 			xx++;
 		}
@@ -498,10 +500,10 @@ BOOL SpecialAutoPlace(int pnum, int ii, int sx, int sy, BOOL saveflag)
 			xx = 0;
 		}
 		for (i = 0; i < sx && done; i++) {
-			if (xx < 10) {
-				done = plr[pnum].InvGrid[xx + yy] == 0;
-			} else {
+			if (xx >= 10) {
 				done = FALSE;
+			} else {
+				done = plr[pnum].InvGrid[xx + yy] == 0;
 			}
 			xx++;
 		}
@@ -1086,7 +1088,7 @@ void CheckInvCut(int pnum, int mx, int my)
 	int r;
 	BOOL done;
 	char ii;
-	int iv, i, j, offs;
+	int iv, i, j, offs, ig;
 
 	if (plr[pnum]._pmode > PM_WALK3) {
 		return;
@@ -1099,7 +1101,6 @@ void CheckInvCut(int pnum, int mx, int my)
 
 	done = FALSE;
 
-	// TODO: this loop is compiled differently (via InvRect pointers)
 	for (r = 0; (DWORD)r < NUM_XY_SLOTS && !done; r++) {
 		// check which inventory rectangle the mouse is in, if any
 		if (mx >= InvRect[r].X
@@ -1179,7 +1180,8 @@ void CheckInvCut(int pnum, int mx, int my)
 	}
 
 	if (r >= SLOTXY_INV_FIRST && r <= SLOTXY_INV_LAST) {
-		ii = plr[pnum].InvGrid[r - SLOTXY_INV_FIRST];
+		ig = r - SLOTXY_INV_FIRST;
+		ii = plr[pnum].InvGrid[ig];
 		if (ii) {
 			iv = ii;
 			if (ii <= 0) {
@@ -1243,10 +1245,10 @@ void inv_update_rem_item(int pnum, BYTE iv)
 		plr[pnum].InvBody[iv]._itype = ITYPE_NONE;
 	}
 
-	if (plr[pnum]._pmode == PM_DEATH) {
-		CalcPlrInv(pnum, FALSE);
-	} else {
+	if (plr[pnum]._pmode != PM_DEATH) {
 		CalcPlrInv(pnum, TRUE);
+	} else {
+		CalcPlrInv(pnum, FALSE);
 	}
 }
 
@@ -1656,13 +1658,15 @@ void SyncGetItem(int x, int y, int idx, WORD ci, int iseed)
 			if (itemactive[i] == ii) {
 				DeleteItem(itemactive[i], i);
 				FindGetItem(idx, ci, iseed);
-				FindGetItem(idx, ci, iseed); /* check idx */
+				/// ASSERT: assert(FindGetItem(idx,ci,iseed) == -1);
+				FindGetItem(idx, ci, iseed); /* todo: replace with above */
 				i = 0;
 			} else {
 				i++;
 			}
 		}
-		FindGetItem(idx, ci, iseed);
+		/// ASSERT: assert(FindGetItem(idx, ci, iseed) == -1);
+		FindGetItem(idx, ci, iseed); /* todo: replace with above */
 	}
 }
 
@@ -1695,7 +1699,9 @@ BOOL CanPut(int x, int y)
 			return FALSE;
 	}
 
-	if (!currlevel && (dMonster[x][y] || dMonster[x + 1][y + 1]))
+	if (currlevel == 0 && dMonster[x][y] != 0)
+		return FALSE;
+	if (currlevel == 0 && dMonster[x + 1][y + 1] != 0)
 		return FALSE;
 
 	return TRUE;
@@ -1743,6 +1749,7 @@ int InvPutItem(int pnum, int x, int y)
 	int d, ii;
 	int i, j, l;
 	int xx, yy;
+	int xp, yp;
 
 	if (numitems >= 127)
 		return -1;
@@ -1771,13 +1778,13 @@ int InvPutItem(int pnum, int x, int y)
 				done = FALSE;
 				for (l = 1; l < 50 && !done; l++) {
 					for (j = -l; j <= l && !done; j++) {
-						yy = j + plr[pnum].WorldY;
+						yp = j + plr[pnum].WorldY;
 						for (i = -l; i <= l && !done; i++) {
-							xx = i + plr[pnum].WorldX;
-							if (CanPut(xx, yy)) {
+							xp = i + plr[pnum].WorldX;
+							if (CanPut(xp, yp)) {
 								done = TRUE;
-								x = xx;
-								y = yy;
+								x = xp;
+								y = yp;
 							}
 						}
 					}
@@ -1811,6 +1818,7 @@ int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, in
 	int d, ii;
 	int i, j, l;
 	int xx, yy;
+	int xp, yp;
 
 	if (numitems >= 127)
 		return -1;
@@ -1839,13 +1847,13 @@ int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, in
 				done = FALSE;
 				for (l = 1; l < 50 && !done; l++) {
 					for (j = -l; j <= l && !done; j++) {
-						yy = j + plr[pnum].WorldY;
+						yp = j + plr[pnum].WorldY;
 						for (i = -l; i <= l && !done; i++) {
-							xx = i + plr[pnum].WorldX;
-							if (CanPut(xx, yy)) {
+							xp = i + plr[pnum].WorldX;
+							if (CanPut(xp, yp)) {
 								done = TRUE;
-								x = xx;
-								y = yy;
+								x = xp;
+								y = yp;
 							}
 						}
 					}
@@ -2078,8 +2086,8 @@ BOOL UseInvItem(int pnum, int cii)
 
 	if (cii <= 46) {
 		c = cii - 7;
-		speedlist = FALSE;
 		Item = &plr[pnum].InvList[c];
+		speedlist = FALSE;
 	} else {
 		if (talkflag)
 			return TRUE;
@@ -2149,6 +2157,7 @@ BOOL UseInvItem(int pnum, int cii)
 	if (Item->_iMiscId == IMISC_SCROLLT && currlevel == 0 && !spelldata[Item->_iSpell].sTownSpell) {
 		return TRUE;
 	}
+
 	idata = ItemCAnimTbl[Item->_iCurs];
 	if (Item->_iMiscId == IMISC_BOOK)
 		PlaySFX(IS_RBOOK);
@@ -2159,7 +2168,10 @@ BOOL UseInvItem(int pnum, int cii)
 
 	if (speedlist) {
 		RemoveSpdBarItem(pnum, c);
-	} else if (plr[pnum].InvList[c]._iMiscId != IMISC_MAPOFDOOM) {
+		return TRUE;
+	} else {
+		if (plr[pnum].InvList[c]._iMiscId == IMISC_MAPOFDOOM)
+			return TRUE;
 		RemoveInvItem(pnum, c);
 	}
 

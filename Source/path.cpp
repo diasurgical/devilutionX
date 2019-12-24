@@ -62,27 +62,27 @@ int FindPath(BOOL (*PosOk)(int, int, int), int PosOkArg, int sx, int sy, int dx,
 	while ((next_node = GetNextPath())) {
 		// reached the end, success!
 		if (next_node->x == dx && next_node->y == dy)
-			break;
+		{
+			current = next_node;
+			path_length = 0;
+			while (current->Parent) {
+				if (path_length >= 25)
+					break;
+				pnode_vals[path_length++] = path_directions[3 * (current->y - current->Parent->y) - current->Parent->x + 4 + current->x];
+				current = current->Parent;
+			}
+			if (path_length != 25) {
+				for (i = 0; i < path_length; i++)
+					path[i] = pnode_vals[path_length - i - 1];
+				return i;
+			}
+			return 0;
+		}
 		// ran out of nodes, abort!
 		if (!path_get_path(PosOk, PosOkArg, next_node, dx, dy))
 			return 0;
 	}
 	// frontier is empty, no path!
-	if (!next_node)
-		return 0;
-	current = next_node;
-	path_length = 0;
-	while (current->Parent) {
-		if (path_length >= 25)
-			break;
-		pnode_vals[path_length++] = path_directions[3 * (current->y - current->Parent->y) - current->Parent->x + 4 + current->x];
-		current = current->Parent;
-	}
-	if (path_length != 25) {
-		for (i = 0; i < path_length; i++)
-			path[i] = pnode_vals[path_length - i - 1];
-		return i;
-	}
 	return 0;
 }
 

@@ -566,21 +566,21 @@ LRESULT CALLBACK GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	case WM_MOUSEMOVE:
-		MouseX = LOWORD(lParam);
-		MouseY = HIWORD(lParam);
+		MouseX = (short)LOWORD(lParam);
+		MouseY = (short)HIWORD(lParam);
 		gmenu_on_mouse_move();
 		return 0;
 	case WM_LBUTTONDOWN:
-		MouseX = LOWORD(lParam);
-		MouseY = HIWORD(lParam);
+		MouseX = (short)LOWORD(lParam);
+		MouseY = (short)HIWORD(lParam);
 		if (sgbMouseDown == 0) {
 			sgbMouseDown = 1;
 			track_repeat_walk(LeftMouseDown(wParam));
 		}
 		return 0;
 	case WM_LBUTTONUP:
-		MouseX = LOWORD(lParam);
-		MouseY = HIWORD(lParam);
+		MouseX = (short)LOWORD(lParam);
+		MouseY = (short)HIWORD(lParam);
 		if (sgbMouseDown == 1) {
 			sgbMouseDown = 0;
 			LeftMouseUp();
@@ -588,16 +588,16 @@ LRESULT CALLBACK GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		return 0;
 	case WM_RBUTTONDOWN:
-		MouseX = LOWORD(lParam);
-		MouseY = HIWORD(lParam);
+		MouseX = (short)LOWORD(lParam);
+		MouseY = (short)HIWORD(lParam);
 		if (sgbMouseDown == 0) {
 			sgbMouseDown = 2;
 			RightMouseDown();
 		}
 		return 0;
 	case WM_RBUTTONUP:
-		MouseX = LOWORD(lParam);
-		MouseY = HIWORD(lParam);
+		MouseX = (short)LOWORD(lParam);
+		MouseY = (short)HIWORD(lParam);
 		if (sgbMouseDown == 2) {
 			sgbMouseDown = 0;
 		}

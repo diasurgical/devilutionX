@@ -147,7 +147,7 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 	SDL_SetVideoMode(nWidth, nHeight, SDL1_VIDEO_MODE_BPP, flags);
 #else // RETROFW
 	// JZ4760 IPU scaler (e.g. on RG-300 v2/3) - automatic high-quality scaling.
-	if (access("/proc/jz/ipu_ratio", F_OK) == 0) {
+	if (access("/proc/jz/ipu", F_OK) == 0 || access("/proc/jz/ipu_ratio", F_OK) == 0) {
 		SDL_SetVideoMode(nWidth, nHeight, SDL1_VIDEO_MODE_BPP, flags);
 	} else {
 		// Other RetroFW devices have 320x480 screens with non-square pixels.

@@ -265,13 +265,11 @@ static void DRLG_L1Shadows()
 
 static int DRLG_PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, BOOL setview, int noquad, int ldir)
 {
-	int xx, yy, sx, sy;
-	int ii, i, t, found;
-	int numt;
+	int sx, sy, sw, sh, xx, yy, i, ii, numt, found, t;
 	BOOL abort;
 
-	int sw = miniset[0];
-	int sh = miniset[1];
+	sw = miniset[0];
+	sh = miniset[1];
 
 	if (tmax - tmin == 0)
 		numt = 1;
@@ -861,7 +859,7 @@ static void L5makeDungeon()
 
 static void L5makeDmt()
 {
-	int i, j, dmtx, dmty;
+	int i, j, idx, val, dmtx, dmty;
 
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
@@ -871,11 +869,12 @@ static void L5makeDmt()
 
 	for (j = 0, dmty = 1; dmty <= 77; j++, dmty += 2) {
 		for (i = 0, dmtx = 1; dmtx <= 77; i++, dmtx += 2) {
-			int val = L5dungeon[dmtx + 1][dmty + 1];
-			val = 2 * val + L5dungeon[dmtx][dmty + 1];
-			val = 2 * val + L5dungeon[dmtx + 1][dmty];
-			val = 2 * val + L5dungeon[dmtx][dmty];
-			dungeon[i][j] = L5ConvTbl[val];
+			val = 8 * L5dungeon[dmtx + 1][dmty + 1]
+			    + 4 * L5dungeon[dmtx][dmty + 1]
+			    + 2 * L5dungeon[dmtx + 1][dmty]
+			    + L5dungeon[dmtx][dmty];
+			idx = L5ConvTbl[val];
+			dungeon[i][j] = idx;
 		}
 	}
 }

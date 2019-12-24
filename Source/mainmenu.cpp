@@ -18,7 +18,7 @@ void mainmenu_refresh_music()
 		menu_music_track_id++;
 		if (menu_music_track_id == NUM_MUSIC)
 			menu_music_track_id = TMUSIC_TOWN;
-	} while (!menu_music_track_id || menu_music_track_id == TMUSIC_L1);
+	} while (menu_music_track_id == TMUSIC_TOWN || menu_music_track_id == TMUSIC_L1);
 #endif
 }
 

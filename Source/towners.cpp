@@ -12,7 +12,7 @@ BYTE *pCowCels;
 TownerStruct towner[16];
 
 #ifndef SPAWN
-const int snSFX[3][3] = {
+const int snSFX[3][NUM_CLASSES] = {
 	{ PS_WARR52, PS_ROGUE52, PS_MAGE52 },
 	{ PS_WARR49, PS_ROGUE49, PS_MAGE49 },
 	{ PS_WARR50, PS_ROGUE50, PS_MAGE50 }

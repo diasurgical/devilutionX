@@ -176,7 +176,7 @@ void gmenu_draw()
 
 void gmenu_draw_menu_item(TMenuItem *pItem, int y)
 {
-	DWORD x, w, nSteps, step, pos, t;
+	DWORD w, x, nSteps, step, pos, t;
 	t = y - 2;
 	w = gmenu_get_lfont(pItem);
 	if (pItem->dwFlags & GMENU_SLIDER) {
