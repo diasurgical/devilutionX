@@ -10,7 +10,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Dependencies
-      run: sudo apt install cmake g++ libsdl2-mixer-dev libsdl2-ttf-dev libsodium-dev
+      run: sudo apt install -y cmake g++ libsdl2-mixer-dev libsdl2-ttf-dev libsodium-dev
     - name: CNMake
       run: cd build && cmake ..
     - name: Make
