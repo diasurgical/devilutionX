@@ -278,8 +278,9 @@ set(devilutionx_SRCS
   SourceX/DiabloUI/title.cpp
   SourceX/DiabloUI/ttf_render_wrapped.cpp
   SourceX/main.cpp
-  ./Packaging/macOS/AppIcon.icns
-  ./Packaging/resources/CharisSILB.ttf)
+  Packaging/macOS/AppIcon.icns
+  Packaging/resources/CharisSILB.ttf
+  Packaging/windows/devilutionx.rc)
 
 if(NOT NONET)
   list(APPEND devilutionx_SRCS
@@ -298,7 +299,7 @@ if(SWITCH)
   set(BIN_TARGET devilutionx.elf)
 endif()
 
-add_executable(${BIN_TARGET} MACOSX_BUNDLE ${devilutionx_SRCS})
+add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionx_SRCS})
 
 configure_file(SourceS/config.h.in config.h @ONLY)
 target_include_directories(devilution PUBLIC Source SourceS ${CMAKE_CURRENT_BINARY_DIR})
