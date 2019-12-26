@@ -12,13 +12,4 @@ jobs:
     - name: cmake
       run: cd build && cmake ..
     - name: make
-      run: make -j$(nproc)
-    - name: clang-format lint
-      uses: DoozyX/clang-format-lint-action@v0.5
-      with:
-        source: .
-        exclude: 3rdParty
-    - name: clang-tidy check
-      uses: muxee/clang-tidy-action@0.0.1-rc1
-    - name: C++ code linter (clang-tidy and cppcheck)
-      uses: smay1613/cpp-linter-action@0.0.2
+      run: cd build && make -j$(nproc)
