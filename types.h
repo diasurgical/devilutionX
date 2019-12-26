@@ -8,7 +8,6 @@
 #define DEVILUTION_BEGIN_NAMESPACE namespace dvl {
 #define DEVILUTION_END_NAMESPACE }
 
-#include "miniwin/pushdecl.inc"
 #include "miniwin.h"
 
 DEVILUTION_BEGIN_NAMESPACE

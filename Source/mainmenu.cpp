@@ -22,13 +22,13 @@ void mainmenu_refresh_music()
 #endif
 }
 
-void __stdcall mainmenu_change_name(int arg1, int arg2, int arg3, int arg4, char *name_1, char *name_2)
+void mainmenu_change_name(int arg1, int arg2, int arg3, int arg4, char *name_1, char *name_2)
 {
 	if (UiValidPlayerName(name_2))
 		pfile_rename_hero(name_1, name_2);
 }
 
-int __stdcall mainmenu_select_hero_dialog(
+int mainmenu_select_hero_dialog(
     const _SNETPROGRAMDATA *client_info,
     const _SNETPLAYERDATA *user_info,
     const _SNETUIDATA *ui_info,

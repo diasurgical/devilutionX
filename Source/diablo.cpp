@@ -249,7 +249,7 @@ void free_game()
 	FreeGameMem();
 }
 
-void diablo_init(LPSTR lpCmdLine)
+void diablo_init(const char *lpCmdLine)
 {
 	init_create_window();
 
@@ -294,7 +294,7 @@ void diablo_splash()
 	UiTitleDialog();
 }
 
-int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+int DiabloMain(const char *lpCmdLine)
 {
 	diablo_init(lpCmdLine);
 	diablo_splash();
@@ -303,7 +303,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	return 0;
 }
 
-void diablo_parse_flags(char *args)
+void diablo_parse_flags(const char *args)
 {
 	char c;
 #ifdef _DEBUG
@@ -503,7 +503,7 @@ BOOL PressEscKey()
 	return rv;
 }
 
-LRESULT CALLBACK DisableInputWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT DisableInputWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg) {
 	case WM_KEYDOWN:
@@ -542,7 +542,7 @@ LRESULT CALLBACK DisableInputWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 	return MainWndProc(hWnd, uMsg, wParam, lParam);
 }
 
-LRESULT CALLBACK GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg) {
 	case WM_KEYDOWN:
@@ -1682,7 +1682,6 @@ void game_loop(BOOL bStartup)
 			break;
 	}
 }
-
 
 // Controller support:
 extern void plrctrls_after_game_logic();

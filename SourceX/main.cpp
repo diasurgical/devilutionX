@@ -33,5 +33,5 @@ int main(int argc, char **argv)
 	switch_enable_network();
 #endif
 
-	return dvl::WinMain(NULL, NULL, (char *)cmdline.c_str(), 0);
+	return dvl::DiabloMain(cmdline.c_str());
 }

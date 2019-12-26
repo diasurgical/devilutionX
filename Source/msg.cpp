@@ -1369,7 +1369,7 @@ DWORD On_SBSPELL(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-void __cdecl msg_errorf(const char *pszFmt, ...)
+void msg_errorf(const char *pszFmt, ...)
 {
 	static DWORD msg_err_timer;
 	DWORD ticks;

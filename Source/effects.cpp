@@ -1233,7 +1233,7 @@ void sound_init()
 	priv_sound_init(SFX_UI);
 }
 
-void __stdcall effects_play_sound(char *snd_file)
+void effects_play_sound(char *snd_file)
 {
 	DWORD i;
 

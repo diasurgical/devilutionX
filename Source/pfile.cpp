@@ -185,7 +185,7 @@ BYTE game_2_ui_class(const PlayerStruct *p)
 	return uiclass;
 }
 
-BOOL __stdcall pfile_ui_set_hero_infos(BOOL(__stdcall *ui_add_hero_info)(_uiheroinfo *))
+BOOL pfile_ui_set_hero_infos(BOOL(*ui_add_hero_info)(_uiheroinfo *))
 {
 	DWORD i, save_num;
 	char FileName[MAX_PATH];
@@ -290,7 +290,7 @@ BOOL pfile_archive_contains_game(HANDLE hsArchive, DWORD save_num)
 	return TRUE;
 }
 
-BOOL __stdcall pfile_ui_set_class_stats(unsigned int player_class_nr, _uidefaultstats *class_stats)
+BOOL pfile_ui_set_class_stats(unsigned int player_class_nr, _uidefaultstats *class_stats)
 {
 	int c;
 
@@ -315,7 +315,7 @@ char pfile_get_player_class(unsigned int player_class_nr)
 	return pc_class;
 }
 
-BOOL __stdcall pfile_ui_save_create(_uiheroinfo *heroinfo)
+BOOL pfile_ui_save_create(_uiheroinfo *heroinfo)
 {
 	DWORD save_num;
 	char cl;
@@ -346,7 +346,7 @@ BOOL __stdcall pfile_ui_save_create(_uiheroinfo *heroinfo)
 	return TRUE;
 }
 
-BOOL __stdcall pfile_get_file_name(DWORD lvl, char *dst)
+BOOL pfile_get_file_name(DWORD lvl, char *dst)
 {
 	const char *fmt;
 
@@ -371,7 +371,7 @@ BOOL __stdcall pfile_get_file_name(DWORD lvl, char *dst)
 	return TRUE;
 }
 
-BOOL __stdcall pfile_delete_save(_uiheroinfo *hero_info)
+BOOL pfile_delete_save(_uiheroinfo *hero_info)
 {
 	DWORD save_num;
 	char FileName[MAX_PATH];
@@ -451,7 +451,7 @@ void pfile_remove_temp_files()
 	}
 }
 
-BOOL __stdcall GetTempSaveNames(DWORD dwIndex, char *szTemp)
+BOOL GetTempSaveNames(DWORD dwIndex, char *szTemp)
 {
 	const char *fmt;
 
@@ -495,7 +495,7 @@ void pfile_rename_temp_to_perm()
 	pfile_flush(TRUE, dwChar);
 }
 
-BOOL __stdcall GetPermSaveNames(DWORD dwIndex, char *szPerm)
+BOOL GetPermSaveNames(DWORD dwIndex, char *szPerm)
 {
 	const char *fmt;
 

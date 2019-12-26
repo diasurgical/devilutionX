@@ -114,7 +114,7 @@ void init_get_file_info()
 	snprintf(gszVersionNumber, MAX_PATH, "version %s", PROJECT_VERSION);
 }
 
-LRESULT __stdcall MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
+LRESULT MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (Msg) {
 	case WM_ERASEBKGND:

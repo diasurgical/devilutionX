@@ -8,7 +8,7 @@ char sz_error_buf[256];
 BOOL terminating;
 int cleanup_thread_id;
 
-void __cdecl app_fatal(const char *pszFmt, ...)
+void app_fatal(const char *pszFmt, ...)
 {
 	va_list va;
 
@@ -48,7 +48,7 @@ void FreeDlg()
 	SNetDestroy();
 }
 
-void __cdecl DrawDlg(char *pszFmt, ...)
+void DrawDlg(char *pszFmt, ...)
 {
 	char text[256];
 	va_list arglist;
