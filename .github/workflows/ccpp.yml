@@ -9,7 +9,9 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
-    - name: cmake
+    - name: Dependencies
+      run: apt install cmake g++ libsdl2-mixer-dev libsdl2-ttf-dev libsodium-dev
+    - name: CNMake
       run: cd build && cmake ..
-    - name: make
+    - name: Make
       run: cd build && make -j$(nproc)
