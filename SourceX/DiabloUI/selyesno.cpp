@@ -45,7 +45,7 @@ void selyesno_Esc()
 	selyesno_endMenu = true;
 }
 
-BOOL UiSelHeroDelYesNoDialog(
+void UiSelHeroDelYesNoDialog(
     BOOL (*fnremove)(_uiheroinfo *),
     _uiheroinfo *selectHero,
     bool isMultiplayer)
@@ -74,6 +74,5 @@ BOOL UiSelHeroDelYesNoDialog(
 	BlackPalette();
 
 	selyesno_Free();
-	return true;
 }
 }

@@ -36,6 +36,7 @@ Art ArtBackground;
 Art ArtCursor;
 Art ArtHero;
 bool gbSpawned;
+int heroLevel;
 
 void (*gfnSoundFunction)(char *file);
 void (*gfnListFocus)(int value);
@@ -415,6 +416,27 @@ BOOL UiValidPlayerName(char *name)
 	for (BYTE *letter = (BYTE *)name; *letter; letter++)
 		if (*letter < 0x20 || (*letter > 0x7E && *letter < 0xC0))
 			return false;
+
+	char *reserved[] = {
+		"gvdl",
+		"dvou",
+		"tiju",
+		"cjudi",
+		"bttipmf",
+		"ojhhfs",
+		"cmj{{bse",
+		"benjo",
+	};
+
+	char tmpname[PLR_NAME_LEN];
+	strcpy(tmpname, name);
+	for (size_t i = 0, n = strlen(tmpname); i < n; i++)
+		tmpname[i]++;
+
+	for (int i = 0; i < sizeof(reserved) / sizeof(*reserved); i++) {
+		if (strstr(tmpname, reserved[i]))
+			return false;
+	}
 
 	return true;
 }

@@ -5,6 +5,7 @@
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/text.h"
 #include "DiabloUI/dialogs.h"
+#include "DiabloUI/selok.h"
 
 namespace dvl {
 
@@ -26,6 +27,9 @@ constexpr UiArtTextButton SELGAME_CANCEL = UiArtTextButton("CANCEL", &UiFocusNav
 
 UiArtText SELGAME_DESCRIPTION(selgame_Description, { 35, 256, 205, 192 });
 
+namespace {
+
+char title[32];
 UiListItem SELDIFF_DIALOG_ITEMS[] = {
 	{ "Normal", DIFF_NORMAL },
 	{ "Nightmare", DIFF_NIGHTMARE },
@@ -34,7 +38,7 @@ UiListItem SELDIFF_DIALOG_ITEMS[] = {
 UiItem SELDIFF_DIALOG[] = {
 	MAINMENU_BACKGROUND,
 	MAINMENU_LOGO,
-	UiArtText("Create Game", { 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG),
+	UiArtText(title, { 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG),
 	UiArtText(selgame_Label, { 34, 211, 205, 33 }, UIS_CENTER | UIS_BIG), // DIFF
 	SELGAME_DESCRIPTION,
 	UiArtText("Select Difficulty", { 299, 211, 295, 35 }, UIS_CENTER | UIS_BIG),
@@ -43,7 +47,7 @@ UiItem SELDIFF_DIALOG[] = {
 	SELGAME_CANCEL,
 };
 
-constexpr UiArtText SELUDPGAME_TITLE = UiArtText("Join TCP/UDP Games", { 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG);
+constexpr UiArtText SELUDPGAME_TITLE = UiArtText(title, { 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG);
 constexpr UiArtText SELUDPGAME_DESCRIPTION_LABEL = UiArtText("Description:", { 35, 211, 205, 192 }, UIS_MED);
 
 UiListItem SELUDPGAME_DIALOG_ITEMS[] = {
@@ -86,6 +90,8 @@ UiItem ENTERPASSWORD_DIALOG[] = {
 	SELGAME_CANCEL,
 };
 
+} // namespace
+
 void selgame_Free()
 {
 	ArtBackground.Unload();
@@ -103,6 +109,7 @@ void selgame_GameSelection_Init()
 	}
 
 	getIniValue("Phone Book", "Entry1", selgame_Ip, 128);
+	strcpy(title, "Client-Server (TCP)");
 	UiInitList(0, 1, selgame_GameSelection_Focus, selgame_GameSelection_Select, selgame_GameSelection_Esc, SELUDPGAME_DIALOG, size(SELUDPGAME_DIALOG));
 }
 
@@ -126,9 +133,11 @@ void selgame_GameSelection_Select(int value)
 
 	switch (value) {
 	case 0:
+		strcpy(title, "Create Game");
 		UiInitList(0, NUM_DIFFICULTIES - 1, selgame_Diff_Focus, selgame_Diff_Select, selgame_Diff_Esc, SELDIFF_DIALOG, size(SELDIFF_DIALOG));
 		break;
 	case 1:
+		strcpy(title, "Join TCP Games");
 		UiInitList(0, 0, NULL, selgame_Password_Init, selgame_GameSelection_Init, ENTERIP_DIALOG, size(ENTERIP_DIALOG));
 		break;
 	}
@@ -160,8 +169,32 @@ void selgame_Diff_Focus(int value)
 	WordWrapArtStr(selgame_Description, SELGAME_DESCRIPTION.rect.w);
 }
 
+bool IsDifficultyAllowed(int value)
+{
+	if (value == 0 || (value == 1 && heroLevel >= 20) || (value == 2 && heroLevel >= 30)) {
+		return true;
+	}
+
+	selgame_Free();
+	BlackPalette();
+
+	if (value == 1)
+		UiSelOkDialog(title, "Your character must reach level 20 before you can enter a multiplayer game of Nightmare difficulty.", false);
+	if (value == 2)
+		UiSelOkDialog(title, "Your character must reach level 30 before you can enter a multiplayer game of Hell difficulty.", false);
+
+	LoadBackgroundArt("ui_art\\selgame.pcx");
+
+	return false;
+}
+
 void selgame_Diff_Select(int value)
 {
+	if (!IsDifficultyAllowed(value)) {
+		selgame_GameSelection_Select(0);
+		return;
+	}
+
 	gbDifficulty = value;
 
 	if (provider == SELCONN_LOOPBACK) {
@@ -193,13 +226,18 @@ void selgame_Password_Select(int value)
 	if (selgame_selectedGame) {
 		setIniValue("Phone Book", "Entry1", selgame_Ip);
 		if (SNetJoinGame(selgame_selectedGame, selgame_Ip, selgame_Password, NULL, NULL, gdwPlayerId)) {
+			if (!IsDifficultyAllowed(m_client_info->initdata->bDiff)) {
+				selgame_GameSelection_Select(1);
+				return;
+			}
+
 			UiInitList(0, 0, NULL, NULL, NULL, NULL, 0);
 			selgame_endMenu = true;
 		} else {
-			UiErrorOkDialog(
-			    "Unable to establish a connection.",
-			    PROJECT_NAME " v" PROJECT_VERSION " game not found or password invalid.",
-			    ENTERPASSWORD_DIALOG, size(ENTERPASSWORD_DIALOG));
+			selgame_Free();
+			BlackPalette();
+			UiSelOkDialog("Multi Player Game", SDL_GetError(), false);
+			LoadBackgroundArt("ui_art\\selgame.pcx");
 			selgame_Password_Init(selgame_selectedGame);
 		}
 		return;
@@ -212,7 +250,10 @@ void selgame_Password_Select(int value)
 		UiInitList(0, 0, NULL, NULL, NULL, NULL, 0);
 		selgame_endMenu = true;
 	} else {
-		UiErrorOkDialog("Unable to create game.", ENTERPASSWORD_DIALOG, size(ENTERPASSWORD_DIALOG));
+		selgame_Free();
+		BlackPalette();
+		UiSelOkDialog("Multi Player Game", SDL_GetError(), false);
+		LoadBackgroundArt("ui_art\\selgame.pcx");
 		selgame_Password_Init(0);
 	}
 }
@@ -239,4 +280,4 @@ int UiSelectGame(int a1, _SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_in
 
 	return selgame_enteringGame;
 }
-}
+} // namespace dvl

@@ -1,5 +1,6 @@
 #include "devilution.h"
 #include "DiabloUI/diabloui.h"
+#include "DiabloUI/selok.h"
 
 namespace dvl {
 
@@ -8,11 +9,11 @@ DWORD dwAttractTicks;
 
 int MainMenuResult;
 UiListItem MAINMENU_DIALOG_ITEMS[] = {
-	{"Single Player", MAINMENU_SINGLE_PLAYER},
-	{"Multi Player", MAINMENU_MULTIPLAYER},
-	{"Replay Intro", MAINMENU_REPLAY_INTRO},
-	{"Show Credits", MAINMENU_SHOW_CREDITS},
-	{"Exit Diablo", MAINMENU_EXIT_DIABLO}
+	{ "Single Player", MAINMENU_SINGLE_PLAYER },
+	{ "Multi Player", MAINMENU_MULTIPLAYER },
+	{ "Replay Intro", MAINMENU_REPLAY_INTRO },
+	{ "Show Credits", MAINMENU_SHOW_CREDITS },
+	{ "Exit Diablo", MAINMENU_EXIT_DIABLO }
 };
 UiItem MAINMENU_DIALOG[] = {
 	MAINMENU_BACKGROUND,
@@ -41,8 +42,6 @@ void mainmenu_Load(char *name, void (*fnSound)(char *file))
 	gfnSoundFunction = fnSound;
 	MAINMENU_DIALOG[size(MAINMENU_DIALOG) - 1].art_text.text = name;
 
-	MainMenuResult = 0;
-
 	if (!gbSpawned) {
 		LoadBackgroundArt("ui_art\\mainmenu.pcx");
 	} else {
@@ -59,23 +58,31 @@ void mainmenu_Free()
 
 BOOL UiMainMenuDialog(char *name, int *pdwResult, void (*fnSound)(char *file), int attractTimeOut)
 {
-	mainmenu_attract_time_out = attractTimeOut;
-	mainmenu_Load(name, fnSound);
-
-	mainmenu_restart_repintro(); // for automatic starts
-
+	MainMenuResult = 0;
 	while (MainMenuResult == 0) {
-		UiPollAndRender();
-		if (GetTickCount() >= dwAttractTicks) {
-			MainMenuResult = MAINMENU_ATTRACT_MODE;
+		mainmenu_attract_time_out = attractTimeOut;
+		mainmenu_Load(name, fnSound);
+
+		mainmenu_restart_repintro(); // for automatic starts
+
+		while (MainMenuResult == 0) {
+			UiPollAndRender();
+			if (!gbSpawned && GetTickCount() >= dwAttractTicks) {
+				MainMenuResult = MAINMENU_ATTRACT_MODE;
+			}
+		}
+
+		BlackPalette();
+		mainmenu_Free();
+
+		if (gbSpawned && MainMenuResult == MAINMENU_REPLAY_INTRO) {
+			UiSelOkDialog(nullptr, "The Diablo introduction cinematic is only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase.", true);
+			MainMenuResult = 0;
 		}
 	}
-
-	BlackPalette();
-	mainmenu_Free();
 
 	*pdwResult = MainMenuResult;
 	return true;
 }
 
-}
+} // namespace dvl

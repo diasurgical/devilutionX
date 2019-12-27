@@ -273,6 +273,7 @@ set(devilutionx_SRCS
   SourceX/DiabloUI/selgame.cpp
   SourceX/DiabloUI/selhero.cpp
   SourceX/DiabloUI/selyesno.cpp
+  SourceX/DiabloUI/selok.cpp
   SourceX/DiabloUI/text_draw.cpp
   SourceX/DiabloUI/text.cpp
   SourceX/DiabloUI/title.cpp

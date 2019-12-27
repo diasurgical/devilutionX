@@ -26,6 +26,7 @@ extern Art ArtBackground;
 extern Art ArtCursor;
 extern Art ArtHero;
 extern bool gbSpawned;
+extern int heroLevel;
 
 constexpr auto MAINMENU_BACKGROUND = UiImage(&ArtBackground, { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT });
 constexpr auto MAINMENU_LOGO = UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, { 0, 0, 0, 0 }, UIS_CENTER);
