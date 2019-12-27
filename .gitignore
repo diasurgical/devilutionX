@@ -15,6 +15,9 @@
 devilution-comparer
 comparer-config.toml
 
+#android project ignore because it is another git project
+android-project
+
 #ignore cmake cache
 /build/
 /build32/
