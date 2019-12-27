@@ -190,7 +190,12 @@ void SetEvent(HANDLE hEvent);
 void ResetEvent(HANDLE hEvent);
 int WINAPI WaitForSingleObject(HANDLE hHandle, DWORD dwMilliseconds);
 
+#ifdef __ANDROID__
+WINBOOL SetCursorPos(int X, int Y);
+#endif
+#ifndef __ANDROID__
 void SetCursorPos(int X, int Y);
+#endif
 void FocusOnCharInfo();
 
 SHORT WINAPI GetAsyncKeyState(int vKey);

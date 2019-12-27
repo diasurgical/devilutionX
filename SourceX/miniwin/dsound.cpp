@@ -24,15 +24,37 @@ void DirectSoundBuffer::GetStatus(LPDWORD pdwStatus)
 
 void DirectSoundBuffer::Play(int lVolume, int lPan)
 {
+	// int channel = Mix_PlayChannel(-1, chunk, 0);
+	// if (channel == -1) {
+	// 	SDL_Log("Too few channels, skipping sound\n");
+	// 	return;
+	// }
+
+	// Mix_Volume(channel, pow(10, lVolume / 2000.0) * MIX_MAX_VOLUME);
+	// int pan = copysign(pow(10, -abs(lPan) / 2000.0) * 255, lPan);
+	// Mix_SetPanning(channel, pan > 0 ? pan : 255, pan < 0 ? abs(pan) : 255);
+
 	int channel = Mix_PlayChannel(-1, chunk, 0);
 	if (channel == -1) {
 		SDL_Log("Too few channels, skipping sound\n");
-		return;
+		return ;
 	}
 
 	Mix_Volume(channel, pow(10, lVolume / 2000.0) * MIX_MAX_VOLUME);
+	//volume = pow(10, lVolume / 2000.0) * MIX_MAX_VOLUME;
 	int pan = copysign(pow(10, -abs(lPan) / 2000.0) * 255, lPan);
-	Mix_SetPanning(channel, pan > 0 ? pan : 255, pan < 0 ? abs(pan) : 255);
+	//pan = copysign(pow(10, -abs(lPan) / 2000.0) * 255, lPan);
+	Mix_SetPanning(channel, lPan > 0 ? lPan : 255, lPan < 0 ? abs(lPan) : 255);
+
+
+
+
+
+
+
+
+
+
 };
 
 void DirectSoundBuffer::Stop()

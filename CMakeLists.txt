@@ -237,8 +237,66 @@ add_library(devilution STATIC
   Source/trigs.cpp
   Source/wave.cpp)
 
+
+
+if(ANDROID)
+  
+set(devilutionx_SRCS
+SourceX/dx.cpp
+SourceX/miniwin/androidinput.cpp
+SourceX/controls/devices/game_controller.cpp
+SourceX/controls/devices/joystick.cpp
+SourceX/controls/devices/kbcontroller.cpp
+SourceX/controls/controller.cpp
+SourceX/controls/controller_motion.cpp
+SourceX/controls/game_controls.cpp
+SourceX/controls/menu_controls.cpp
+SourceX/controls/plrctrls.cpp
+SourceX/controls/touch.cpp
+SourceX/miniwin/ddraw.cpp
+SourceX/miniwin/misc.cpp
+SourceX/miniwin/misc_io.cpp
+SourceX/miniwin/android_misc_msg.cpp
+SourceX/miniwin/rand.cpp
+SourceX/miniwin/thread.cpp
+SourceX/miniwin/dsound.cpp
+SourceX/sound.cpp
+SourceX/storm/storm.cpp
+SourceX/storm/storm_net.cpp
+SourceX/storm/storm_dx.cpp
+SourceX/dvlnet/abstract_net.cpp
+SourceX/dvlnet/loopback.cpp
+SourceX/dvlnet/packet.cpp
+SourceX/dvlnet/base.cpp
+SourceX/dvlnet/frame_queue.cpp
+SourceX/dvlnet/cdwrap.cpp
+SourceX/DiabloUI/art_draw.cpp
+SourceX/DiabloUI/errorart.cpp
+SourceX/DiabloUI/art.cpp
+SourceX/DiabloUI/button.cpp
+SourceX/DiabloUI/credits.cpp
+SourceX/DiabloUI/credits_lines.cpp
+SourceX/DiabloUI/diabloui.cpp
+SourceX/DiabloUI/dialogs.cpp
+SourceX/DiabloUI/fonts.cpp
+SourceX/DiabloUI/mainmenu.cpp
+SourceX/DiabloUI/progress.cpp
+SourceX/DiabloUI/scrollbar.cpp
+SourceX/DiabloUI/selconn.cpp
+SourceX/DiabloUI/selgame.cpp
+SourceX/DiabloUI/selhero.cpp
+SourceX/DiabloUI/selyesno.cpp
+SourceX/DiabloUI/text_draw.cpp
+SourceX/DiabloUI/text.cpp
+SourceX/DiabloUI/title.cpp
+SourceX/DiabloUI/ttf_render_wrapped.cpp
+SourceX/main.cpp)
+endif()
+
+if (NOT ANDROID)
 set(devilutionx_SRCS
   SourceX/dx.cpp
+  SourceX/miniwin/androidinput.cpp
   SourceX/controls/devices/game_controller.cpp
   SourceX/controls/devices/joystick.cpp
   SourceX/controls/devices/kbcontroller.cpp
@@ -286,6 +344,8 @@ set(devilutionx_SRCS
   SourceX/DiabloUI/title.cpp
   SourceX/DiabloUI/ttf_render_wrapped.cpp
   SourceX/main.cpp)
+endif()
+
 
 set(BIN_TARGET devilutionx)
 
@@ -324,7 +384,8 @@ if (ANDROID)
     ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2/src
 
     ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_mixer
-    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_ttf)
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_ttf
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_image/include)  # added image for ANDROID
   target_include_directories(devilutionx PUBLIC
     SourceX
     ${CMAKE_CURRENT_SOURCE_DIR}/android-project/app/libs/include
@@ -334,11 +395,13 @@ if (ANDROID)
     ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2/src
 
     ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_mixer
-    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_ttf)
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_ttf
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_image/include) #added image for ANDROID
 
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2/ ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2)
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_mixer/ ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_mixer)
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_ttf/ ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_ttf)
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_image/ ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_image) #added for image ANDROID
 endif()
 configure_file(SourceS/config.h.in config.h @ONLY)
 target_include_directories(devilution PUBLIC Source SourceS ${CMAKE_CURRENT_BINARY_DIR})
@@ -446,13 +509,16 @@ foreach(target devilution ${BIN_TARGET})
       target_link_libraries(${target} PRIVATE
         SDL2::SDL2main
         SDL2::SDL2_ttf
-        SDL2::SDL2_mixer)
+        SDL2::SDL2_image
+        )
     endif()
   else()
     target_link_libraries(devilutionx PRIVATE
       SDL2
       SDL2_ttf
-      SDL2_mixer)
+      SDL2_mixer
+      SDL2_image
+      )
   endif()
 
   if(ASAN)

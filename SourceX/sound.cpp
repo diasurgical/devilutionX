@@ -78,6 +78,8 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 	}
 	DSB->Play(lVolume, lPan);
 	pSnd->start_tc = tc;
+
+
 }
 
 TSnd *sound_file_load(char *path)

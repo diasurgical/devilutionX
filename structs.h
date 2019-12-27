@@ -449,11 +449,110 @@ typedef struct MissileStruct {
 // effects/sound
 //////////////////////////////////////////////////
 
+// ADDED
+/*
+#define DEVILUTION_MINIWIN_COM
+
+#ifndef DEVILUTION_ENGINE
+#pragma push_macro("DECLARE_INTERFACE_")
+#pragma push_macro("STDMETHOD")
+#pragma push_macro("STDMETHOD_")
+#pragma push_macro("THIS_")
+#pragma push_macro("THIS")
+#pragma push_macro("PURE")
+#pragma push_macro("REFIID")
+#undef DECLARE_INTERFACE_
+#undef STDMETHOD
+#undef STDMETHOD_
+#undef THIS_
+#undef THIS
+#undef PURE
+#undef REFIID
+#endif
+
+
+#define DECLARE_INTERFACE_(name, base) struct name : public base
+#define THIS_
+#define THIS
+#define PURE = 0
+
+#define STDMETHOD(name) STDMETHOD_(HRESULT, name)
+#define STDMETHOD_(type, name) virtual WINAPI type name
+
+typedef void *DVL_REFIID;
+#define REFIID DVL_REFIID
+
+struct IUnknown {
+	// clang-format off
+	STDMETHOD_(ULONG, Release)(THIS) PURE;
+	// clang-format on
+};
+
+
+
+
+
+
+typedef unsigned short WORD;
+typedef unsigned int   DWORD;
+
+
+
+DECLARE_INTERFACE_(IDirectSoundBuffer, IUnknown)
+{
+	// clang-format off
+	STDMETHOD(GetStatus)(THIS_ LPDWORD pdwStatus) PURE;
+	STDMETHOD(Lock)(THIS_ DWORD dwOffset, DWORD dwBytes, LPVOID *ppvAudioPtr1, LPDWORD pdwAudioBytes1,
+			LPVOID *ppvAudioPtr2, LPDWORD pdwAudioBytes2, DWORD dwFlags) PURE;
+	STDMETHOD(Play)(THIS_ DWORD dwReserved1, DWORD dwPriority, DWORD dwFlags) PURE;
+	STDMETHOD(SetFormat)(THIS_ LPCWAVEFORMATEX pcfxFormat) PURE;
+	STDMETHOD(SetVolume)(THIS_ LONG lVolume) PURE;
+	STDMETHOD(SetPan)(THIS_ LONG lPan) PURE;
+	STDMETHOD(Stop)(THIS) PURE;
+	STDMETHOD(Unlock)(THIS_ LPVOID pvAudioPtr1, DWORD dwAudioBytes1, LPVOID pvAudioPtr2, DWORD dwAudioBytes2) PURE;
+	STDMETHOD(Restore)(THIS) PURE;
+	// clang-format on
+};
+
+typedef IDirectSoundBuffer *LPDIRECTSOUNDBUFFER;
+
+
+typedef struct tWAVEFORMATEX {
+	WORD wFormatTag;
+	WORD nChannels;
+	DWORD nSamplesPerSec;
+	DWORD nAvgBytesPerSec;
+	WORD nBlockAlign;
+	WORD wBitsPerSample;
+	WORD cbSize;
+} WAVEFORMATEX, *LPWAVEFORMATEX, *LPCWAVEFORMATEX;
+
+
+
+
+typedef struct CKINFO {
+	DWORD dwSize;
+	DWORD dwOffset;
+} CKINFO;
+
 typedef struct TSnd {
+	WAVEFORMATEX fmt;
+	CKINFO chunk;
 	char *sound_path;
 	LPDIRECTSOUNDBUFFER DSB;
 	int start_tc;
 } TSnd;
+
+ */
+//END
+
+
+//Origional TSND 
+ typedef struct TSnd {
+ 	char *sound_path;
+ 	LPDIRECTSOUNDBUFFER DSB;
+ 	int start_tc;
+ } TSnd;
 
 #pragma pack(push, 1)
 typedef struct TSFX {

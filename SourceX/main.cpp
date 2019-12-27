@@ -27,6 +27,20 @@ static std::string build_cmdline(int argc, char **argv)
 
 #ifdef __ANDROID__
 int SDL_main(int argc, char **argv)
+
+
+//Add check paths in later.
+
+
+
+
+
+
+
+
+
+
+
 #else
 int main(int argc, char **argv)
 #endif
