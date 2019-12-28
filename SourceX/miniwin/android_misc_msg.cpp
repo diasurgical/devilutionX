@@ -362,10 +362,11 @@ WINBOOL PeekMessageA(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilter
 				UseInvItem(myplr, pcursinvitem);
 			} else {
 				//	SDL_Log("2 finger -- Right click --- X %d  Y %d \n",Xclick , Yclick );
-				lpMsg->message = DVL_WM_RBUTTONDOWN; // Not sure if this is needed...
-				lpMsg->lParam = (Yclick << 16) | (Xclick & 0xFFFF);
-				lpMsg->wParam = keystate_for_mouse(DVL_MK_RBUTTON);
-				checkMonstersNearby(true, true);
+				// Removed because of accidental spell casting.
+				// lpMsg->message = DVL_WM_RBUTTONDOWN; // Not sure if this is needed...
+				// lpMsg->lParam = (Yclick << 16) | (Xclick & 0xFFFF);
+				// lpMsg->wParam = keystate_for_mouse(DVL_MK_RBUTTON);
+				// checkMonstersNearby(true, true);
 			}
 		}
 

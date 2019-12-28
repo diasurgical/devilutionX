@@ -10,6 +10,7 @@
 
 namespace dvl {
 	 SDL_Surface * JoyStickS;
+
 	 SDL_Texture * JoyStickT;
 	 SDL_Surface * AJoyStickS;
 	 SDL_Texture * AJoyStickT;
@@ -100,24 +101,24 @@ SDL_Rect RGameUIMenu   ={555,350,85,130};
 SDL_Rect LGameUIMenu   ={0,350,85,130};
 SDL_Rect Arect         ={520,250,100,95};
 SDL_Rect Crect         ={560,180,90,80};
-SDL_Rect Shiftrect     ={58,257,57,52};
+SDL_Rect Shiftrect     ={54,252,63,63};
 SDL_Rect Jrect         ={1,200,170,170};
 
 //x , y , w, h 
 SDL_Rect DemoN ={68,202,57,52}; 
-SDL_Rect DemoE ={130,257,67,52};   
+SDL_Rect DemoE ={128,257,67,52};   
 SDL_Rect DemoW ={0,257,67,52};		
-SDL_Rect DemoS ={68,315,57,52};  
+SDL_Rect DemoS ={68,312,57,52};
 
 //x , y , w, h 
 SDL_Rect DemoNW={0,204,67,52};
-SDL_Rect DemoNE={130,204,67,52};	
-SDL_Rect DemoSW={0,315,67,52};
-SDL_Rect DemoSE={130,315,67,52};
+SDL_Rect DemoNE={128,204,67,52};
+SDL_Rect DemoSW={0,312,67,52};
+SDL_Rect DemoSE={128,312,67,52};
 
 
 SDL_Rect DemonHealth={100,350,85,130};
-SDL_Rect AngelMana={460,350,85,130};
+SDL_Rect AngelMana  ={460,350,85,130};
 
 
 
@@ -153,7 +154,8 @@ bool DemoMode = false;
 	 ShiftStickS = IMG_Load("/sdcard/devilutionx/shift.png");
      ShiftStickT = SDL_CreateTextureFromSurface(renderer, ShiftStickS);
 	 SDL_SetTextureBlendMode(ShiftStickT, SDL_BLENDMODE_BLEND);
-	 SDL_SetTextureAlphaMod(ShiftStickT, 255);
+	 SDL_SetTextureAlphaMod(ShiftStickT, 150);
+	 
 
 
 	 //Loading Walking Joystick.
@@ -313,7 +315,7 @@ void DrawAndroidUI(){
 			SDL_RenderCopy(renderer, ShiftStickT, NULL, &Shiftrect);
 		}
 		else{
-			SDL_SetTextureColorMod(ShiftStickT, 220,220,220);
+			SDL_SetTextureColorMod(ShiftStickT, 255,255,255);
 			SDL_RenderCopy(renderer, ShiftStickT, NULL, &Shiftrect);
 			if(DemoModeEnabled){
 				SDL_RenderCopy(renderer, DemoSqT, NULL, &Shiftrect);
