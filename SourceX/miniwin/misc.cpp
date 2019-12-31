@@ -95,6 +95,8 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 
 #ifdef USE_SDL1
 	SDL_EnableUNICODE(1);
+#endif
+#if defined(USE_SDL1) || defined(__SWITCH__)
 	InitController();
 #endif
 
