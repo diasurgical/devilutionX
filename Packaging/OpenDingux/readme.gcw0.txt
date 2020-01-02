@@ -1,4 +1,4 @@
-Copy diabdat.mpq from your CD, or GoG install folder to:
+Copy diabdat.mpq from your CD (or GoG install folder) to:
 /media/home/.local/share/diasurgical/devilution/diabdat.mpq
 
 diabdat.mpq filename must be lowercase.
@@ -10,9 +10,9 @@ Controls:
 
 - Left analog: move hero
 - Right analog: simulate mouse
-- A: attack nearby enemies, talk to towns people and merchants, pickup/place items in the inventory, OK while in main menu
-- B: Select spell, back while in menus
-- X: pickup items, open chests and doors that are nearby, use item in the inventory
+- A: attack nearby enemies, talk to townspeople and merchants, pickup/place items in the inventory, OK while in main menu
+- B: select spell, back while in menus
+- X: pickup items, open nearby chests and doors, use item in the inventory
 - Y: cast spell, delete character while in main menu
 - R1: use mana potion from belt
 - L1: use health item from belt
@@ -20,7 +20,7 @@ Controls:
 - L2: character sheet
 - Left analog click: toggle automap
 - Right analog click: left mouse click
-- Start: game Menu, skip movie
+- Start: game menu, skip movie
 - Select + L2: quest log
 - Select + R2: spell book
 - Select + Right analog click: right mouse click

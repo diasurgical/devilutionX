@@ -10,7 +10,7 @@ Nightly builds | Platform
 ![Discord Channel](https://avatars3.githubusercontent.com/u/1965106?s=16&v=4) [Discord Chat Channel](https://discord.gg/aQBQdDe)
 
 # How To Play:
- - Copy diabdat.mpq from your CD, or GoG install folder, to the DevilutionX install folder or data folder; make sure it is all lowercase. The DeviliutionX install folder is the one that contains the DevilutionX executable. The data folder path may differ depending on OS version and security settings, but will normally be as follows:
+ - Copy diabdat.mpq from your CD (or GoG install folder) to the DevilutionX install folder or data folder; make sure it is all lowercase. The DeviliutionX install folder is the one that contains the DevilutionX executable. The data folder path may differ depending on OS version and security settings, but will normally be as follows:
     - macOS `~/Library/Application Support/diasurgical/devilution`
     - Linux `~/.local/share/diasurgical/devilution/`
     - Windows `C:\Users\[username]\AppData\Roaming\diasurgical\devilution`
@@ -242,7 +242,7 @@ Default controller mappings (A/B/X/Y as in Nintendo layout, so the rightmost but
 - Left analog / DPad: move hero
 - Right analog: simulate mouse
 - A: attack nearby enemies, talk to townspeople and merchants, pickup/place items in the inventory, OK while in main menu
-- B: Select spell, back while in menus
+- B: select spell, back while in menus
 - X: pickup items, open nearby chests and doors, use item in the inventory
 - Y: cast spell, delete character while in main menu
 - R1: use mana potion from belt
