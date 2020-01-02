@@ -2,6 +2,7 @@
 Name=devilutionX
 GenericName=DevilutionX
 Comment=Play Diablo I on Linux
+Comment[hr]=Igrajte Diablo I na Linuxu
 Exec=devilutionx
 Icon=devilutionx.png
 Terminal=false
