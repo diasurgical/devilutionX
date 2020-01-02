@@ -10,7 +10,7 @@ Nightly builds | Platform
 ![Discord Channel](https://avatars3.githubusercontent.com/u/1965106?s=16&v=4) [Discord Chat Channel](https://discord.gg/aQBQdDe)
 
 # How To Play:
- - Copy diabdat.mpq from your CD, or GoG install folder, to the DevilutionX install folder or data folder; make sure it is all lowercase. The DeviliutionX install folder is the one that contains the DevilutionX executable. The data folder path may differ depending on OS version and security setting, but will normally be as following:
+ - Copy diabdat.mpq from your CD, or GoG install folder, to the DevilutionX install folder or data folder; make sure it is all lowercase. The DeviliutionX install folder is the one that contains the DevilutionX executable. The data folder path may differ depending on OS version and security settings, but will normally be as follows:
     - macOS `~/Library/Application Support/diasurgical/devilution`
     - Linux `~/.local/share/diasurgical/devilution/`
     - Windows `C:\Users\[username]\AppData\Roaming\diasurgical\devilution`
@@ -241,9 +241,9 @@ Default controller mappings (A/B/X/Y as in Nintendo layout, so the rightmost but
 
 - Left analog / DPad: move hero
 - Right analog: simulate mouse
-- A: attack nearby enemies, talk to towns people and merchants, pickup/place items in the inventory, OK while in main menu
+- A: attack nearby enemies, talk to townspeople and merchants, pickup/place items in the inventory, OK while in main menu
 - B: Select spell, back while in menus
-- X: pickup items, open chests and doors that are nearby, use item in the inventory
+- X: pickup items, open nearby chests and doors, use item in the inventory
 - Y: cast spell, delete character while in main menu
 - R1: use mana potion from belt
 - L1: use health item from belt
@@ -251,7 +251,7 @@ Default controller mappings (A/B/X/Y as in Nintendo layout, so the rightmost but
 - L2: character sheet
 - Left analog click: toggle automap
 - Right analog click: left mouse click
-- Start: game Menu, skip movie
+- Start: game menu, skip movie
 - Select + L2: quest log
 - Select + R2: spell book
 - Select + Right analog click: right mouse click
@@ -267,20 +267,20 @@ variable (see
 # F.A.Q.
 > Wow, does this mean I can download and play Diablo for free now?
 
-No, you'll need access to the data from the original game. If you don't have an original CD then you can [buy Diablo from GoG.com](https://www.gog.com/game/diablo). Alternatively you can also use `spawn.mpq` from the [http://ftp.blizzard.com/pub/demos/diablosw.exe](shareware) version and compile the with the SPAWN flag defined.
+No, you'll need access to the data from the original game. If you don't have an original CD then you can [buy Diablo from GoG.com](https://www.gog.com/game/diablo). Alternately you can use `spawn.mpq` from the [http://ftp.blizzard.com/pub/demos/diablosw.exe](shareware) version and compile the with the SPAWN flag defined.
 > What game changes does DevilutionX provide
 
-DevilutionX's main focuse is to making the game work on multiple platforms and making the engine mod frindly. As such there are not change to the gameplay, but we will be making some enhancments to the engine it self. To give some examples there is now upscaling, unlocked fps and controller support and multiplayer via TCP.
+DevilutionX's main focus is to make the game work on multiple platforms. An additional goal is to make the engine mod friendly. As such, there are not many changes to gameplay, but we will be making some enhancments to the engine itself. For example, the engine now has upscaling, unlocked fps, controller support, and multiplayer via TCP.
 > Is 1080p supported?
 
-Currently the game simply scales the original 640x480 to beset fit, but we are working on widescreen support.
+Currently the game simply scales the original 640x480 to best fit, but we are working on widescreen support.
 > What about Hellfire?
 
-Hellfire is being worked on and is mostly done though not fully playable at the moment.
+Hellfire is being worked on and is mostly done, though not fully playable at the moment.
 > Does it work with Battle.net?
 
-Battle.net is a service provided by Blizzard, as we are not associated with them we have not worked on intergrating with there service.
-</details>`
+Battle.net is a service provided by Blizzard. We are not associated with them, so we have not worked on intergrating with their service.
+</details>
 
 # Credits
 - The original Devilution project [Devilution](https://github.com/diasurgical/devilution#credits)
@@ -291,8 +291,8 @@ Battle.net is a service provided by Blizzard, as we are not associated with them
 [From the beginning until release](docs/CHANGELOG.md)
 
 # Legal
-DevilutionX is released to the Public Domain. The documentation and function provided by Devilution may only be utilized with assets provided by ownership of Diablo.
+DevilutionX is released to the Public Domain. The documentation and functionality provided by Devilution may only be utilized with assets provided by ownership of Diablo.
 
-Diablo(R) - Copyright (C) 1996 Blizzard Entertainment, Inc. All rights reserved. Diablo and Blizzard Entertainment are trademarks or registered trademarks of Blizzard Entertainment, Inc. in the U.S. and/or other countries.
+Diablo® - Copyright © 1996 Blizzard Entertainment, Inc. All rights reserved. Diablo and Blizzard Entertainment are trademarks or registered trademarks of Blizzard Entertainment, Inc. in the U.S. and/or other countries.
 
-Devilution and any of its' maintainers are in no way associated with or endorsed by Blizzard Entertainment(R).
+Devilution and any of its maintainers are in no way associated with or endorsed by Blizzard Entertainment®.
