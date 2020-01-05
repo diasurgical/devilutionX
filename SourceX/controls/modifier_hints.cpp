@@ -40,6 +40,11 @@ struct CircleMenuHint {
 	{
 	}
 
+	int width() const
+	{
+		return 2 * x_mid;
+	}
+
 	bool is_dpad;
 
 	const char *top;
@@ -100,8 +105,8 @@ void DrawCircleMenuHint(const CircleMenuHint &hint, int x, int y)
 	PrintGameStr(x + hint.x_mid - hint.bottom_w / 2, y, hint.bottom, CircleMenuHintTextColor(IsBottomActive(hint)));
 }
 
-constexpr int kCirclesDist = 200;
-constexpr int kCirclesTop = VIEWPORT_HEIGHT / 2 + TILE_SIZE / 2;
+constexpr int kCircleMarginX = 16;
+constexpr int kCirclesTop = PANEL_TOP - 76;
 
 void DrawStartModifierMenu()
 {
@@ -109,8 +114,8 @@ void DrawStartModifierMenu()
 		return;
 	static const CircleMenuHint kDpad(/*is_dpad=*/true, /*top=*/"Menu", /*right=*/"Inv", /*bottom=*/"Map", /*left=*/"Char");
 	static const CircleMenuHint kButtons(/*is_dpad=*/false, /*top=*/"", /*right=*/"", /*bottom=*/"Spells", /*left=*/"Quests");
-	DrawCircleMenuHint(kDpad, SCREEN_WIDTH / 2 - kDpad.x_mid - kCirclesDist / 2, kCirclesTop);
-	DrawCircleMenuHint(kButtons, SCREEN_WIDTH / 2 - kButtons.x_mid + kCirclesDist / 2, kCirclesTop);
+	DrawCircleMenuHint(kDpad, kCircleMarginX, kCirclesTop);
+	DrawCircleMenuHint(kButtons, SCREEN_WIDTH - kButtons.width() - kCircleMarginX, kCirclesTop);
 }
 
 void DrawSelectModifierMenu()
@@ -118,7 +123,7 @@ void DrawSelectModifierMenu()
 	if (!select_modifier_active)
 		return;
 	static const CircleMenuHint kSpells(/*is_dpad=*/false, "F6", "F8", "F7", "F5");
-	DrawCircleMenuHint(kSpells, SCREEN_WIDTH / 2 - kSpells.x_mid + kCirclesDist / 2, kCirclesTop);
+	DrawCircleMenuHint(kSpells, SCREEN_WIDTH - kSpells.width() - kCircleMarginX, kCirclesTop);
 }
 
 } // namespace
