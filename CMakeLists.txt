@@ -305,14 +305,13 @@ endif()
 add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionx_SRCS})
 
 configure_file(SourceS/config.h.in config.h @ONLY)
-target_include_directories(devilution PUBLIC Source SourceS ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(devilution PUBLIC Source SourceS  ${Intl_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR})
 target_include_directories(${BIN_TARGET} PRIVATE
   SourceX
+  ${Intl_INCLUDE_DIRS}
   3rdParty/asio/include
   3rdParty/Radon/Radon/include
   3rdParty/libsmacker)
-
-target_include_directories(${BIN_TARGET} PUBLIC ${Intl_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR})
 
 target_link_libraries(devilution PUBLIC Threads::Threads)
 target_link_libraries(${BIN_TARGET} PRIVATE
