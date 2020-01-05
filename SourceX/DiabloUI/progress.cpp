@@ -29,7 +29,7 @@ UiItem PROGRESS_DIALOG[] = {
 	UiImage(&dialogArt, { 180, 168, 280, 144 }),
 	UiText(dialogText, { 180, 177, 280, 43 }, UIS_CENTER),
 	UiImage(&progressArt, { 205, 220, 228, 38 }),
-	MakeSmlButton("Cancel", &DialogActionCancel, 330, 265),
+	MakeSmlButton(N_("Cancel"), &DialogActionCancel, 330, 265),
 };
 
 void progress_Load(char *msg)
@@ -45,8 +45,8 @@ void progress_Load(char *msg)
 		SDL_Color color = { 243, 243, 243, 0 };
 
 		msgSurface = TTF_RenderUTF8_Solid(font, msg, color);
-		cancleSurface = TTF_RenderUTF8_Solid(font, "Cancel", color);
-		TTF_SizeUTF8(font, "Cancel", &textWidth, NULL);
+		cancleSurface = TTF_RenderUTF8_Solid(font, _("Cancel"), color);
+		TTF_SizeUTF8(font, _("Cancel"), &textWidth, NULL);
 	}
 }
 

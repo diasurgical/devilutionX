@@ -29,7 +29,7 @@ void MsgBox(const char *pszFmt, va_list va)
 
 	wvsprintf(Text, pszFmt, va);
 
-	UiErrorOkDialog("Error", Text);
+	UiErrorOkDialog(_("Error"), Text);
 }
 
 void FreeDlg()
@@ -63,7 +63,7 @@ void DrawDlg(char *pszFmt, ...)
 #ifdef _DEBUG
 void assert_fail(int nLineNo, const char *pszFile, const char *pszFail)
 {
-	app_fatal("assertion failed (%d:%s)\n%s", nLineNo, pszFile, pszFail);
+	app_fatal(_("assertion failed (%d:%s)\n%s"), nLineNo, pszFile, pszFail);
 }
 #endif
 
@@ -73,7 +73,7 @@ void ErrDlg(const char *title, const char *error, char *log_file_path, int log_l
 
 	FreeDlg();
 
-	snprintf(text, 1024, "%s\n\nThe error occurred at: %s line %d", error, log_file_path, log_line_nr);
+	snprintf(text, 1024, _("%s\n\nThe error occurred at: %s line %d"), error, log_file_path, log_line_nr);
 
 	UiErrorOkDialog(title, text);
 	app_fatal(NULL);
@@ -91,13 +91,13 @@ void FileErrDlg(const char *error)
 	snprintf(
 	    text,
 	    1024,
-	    "Unable to open a required file.\n"
+	    _("Unable to open a required file.\n"
 	    "\n"
 	    "Verify that the MD5 of diabdat.mpq matches on of the following values\n"
 	    "011bc6518e6166206231080a4440b373\n"
 	    "68f049866b44688a7af65ba766bef75a\n"
 	    "\n"
-	    "The problem occurred when loading:\n%s",
+	    "The problem occurred when loading:\n%s"),
 	    error);
 
 	UiErrorOkDialog("Data File Error", text);
@@ -110,9 +110,9 @@ void InsertCDDlg(const char *fileName)
 	snprintf(
 	    text,
 	    1024,
-	    "Unable to open %s.\n"
+	    _("Unable to open %s.\n"
 	    "\n"
-	    "Make sure that it is in the game folder and that the file name is in all lowercase.",
+	    "Make sure that it is in the game folder and that the file name is in all lowercase."),
 	    fileName);
 
 	UiErrorOkDialog("Date File Error", text);
@@ -123,9 +123,9 @@ void DirErrorDlg(char *error)
 {
 	char text[1024];
 
-	snprintf(text, 1024, "Unable to write to location:\n%s", error);
+	snprintf(text, 1024, _("Unable to write to location:\n%s"), error);
 
-	UiErrorOkDialog("Read-Only Directory Error", text);
+	UiErrorOkDialog(_("Read-Only Directory Error"), text);
 	app_fatal(NULL);
 }
 

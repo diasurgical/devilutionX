@@ -45,7 +45,7 @@ void gmenu_draw_pause()
 		RedBack();
 	if (!sgpCurrentMenu) {
 		light_table_index = 0;
-		gmenu_print_text(316 + PANEL_LEFT, 336, "Pause");
+		gmenu_print_text(316 + PANEL_LEFT, 336, _("Pause"));
 	}
 }
 

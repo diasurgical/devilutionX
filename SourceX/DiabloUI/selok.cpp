@@ -30,7 +30,7 @@ void selok_Esc()
 }
 
 UiListItem SELOK_DIALOG_ITEMS[] = {
-	{ "OK", 0 }
+	{ N_("OK"), 0 }
 };
 
 UiItem SELOK_DIALOG[] = {

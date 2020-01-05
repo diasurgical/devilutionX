@@ -28,7 +28,7 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 
 	/* Get the dimensions of the text surface */
 	if ((TTF_SizeUTF8(font, text, &width, &height) < 0) || !width) {
-		TTF_SetError("Text has zero width");
+		TTF_SetError(_("Text has zero width"));
 		return nullptr;
 	}
 
@@ -46,7 +46,7 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 
 		str = SDL_stack_alloc(char, str_len + 1);
 		if (str == nullptr) {
-			TTF_SetError("Out of memory");
+			TTF_SetError(_("Out of memory"));
 			return nullptr;
 		}
 
@@ -56,7 +56,7 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 		do {
 			strLines = (char **)SDL_realloc(strLines, (numLines + 1) * sizeof(*strLines));
 			if (!strLines) {
-				TTF_SetError("Out of memory");
+				TTF_SetError(_("Out of memory"));
 				return nullptr;
 			}
 			strLines[numLines++] = tok;

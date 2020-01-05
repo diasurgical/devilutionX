@@ -9,11 +9,11 @@ DWORD dwAttractTicks;
 
 int MainMenuResult;
 UiListItem MAINMENU_DIALOG_ITEMS[] = {
-	{ "Single Player", MAINMENU_SINGLE_PLAYER },
-	{ "Multi Player", MAINMENU_MULTIPLAYER },
-	{ "Replay Intro", MAINMENU_REPLAY_INTRO },
-	{ "Show Credits", MAINMENU_SHOW_CREDITS },
-	{ "Exit Diablo", MAINMENU_EXIT_DIABLO }
+	{ N_("Single Player"), MAINMENU_SINGLE_PLAYER },
+	{ N_("Multi Player"), MAINMENU_MULTIPLAYER },
+	{ N_("Replay Intro"), MAINMENU_REPLAY_INTRO },
+	{ N_("Show Credits"), MAINMENU_SHOW_CREDITS },
+	{ N_("Exit Diablo"), MAINMENU_EXIT_DIABLO }
 };
 UiItem MAINMENU_DIALOG[] = {
 	MAINMENU_BACKGROUND,
@@ -76,7 +76,7 @@ BOOL UiMainMenuDialog(char *name, int *pdwResult, void (*fnSound)(char *file), i
 		mainmenu_Free();
 
 		if (gbSpawned && MainMenuResult == MAINMENU_REPLAY_INTRO) {
-			UiSelOkDialog(nullptr, "The Diablo introduction cinematic is only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase.", true);
+			UiSelOkDialog(nullptr, _("The Diablo introduction cinematic is only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase."), true);
 			MainMenuResult = 0;
 		}
 	}

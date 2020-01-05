@@ -5,21 +5,21 @@ DEVILUTION_BEGIN_NAMESPACE
 TMenuItem sgSingleMenu[6] = {
 	// clang-format off
 	//   dwFlags, pszStr,        fnMenu
-	{ GMENU_ENABLED, "Save Game",   &gamemenu_save_game },
-	{ GMENU_ENABLED, "Options",     &gamemenu_options   },
-	{ GMENU_ENABLED, "New Game",    &gamemenu_new_game  },
-	{ GMENU_ENABLED, "Load Game",   &gamemenu_load_game },
-	{ GMENU_ENABLED, "Quit Diablo", &gamemenu_quit_game },
+	{ GMENU_ENABLED, N_("Save Game"),   &gamemenu_save_game },
+	{ GMENU_ENABLED, N_("Options"),     &gamemenu_options   },
+	{ GMENU_ENABLED, N_("New Game"),    &gamemenu_new_game  },
+	{ GMENU_ENABLED, N_("Load Game"),   &gamemenu_load_game },
+	{ GMENU_ENABLED, N_("Quit Diablo"), &gamemenu_quit_game },
 	{ GMENU_ENABLED, NULL, NULL }
 	// clang-format on
 };
 TMenuItem sgMultiMenu[5] = {
 	// clang-format off
 	//   dwFlags, pszStr,            fnMenu
-	{ GMENU_ENABLED, "Options",         &gamemenu_options      },
-	{ GMENU_ENABLED, "New Game",        &gamemenu_new_game     },
-	{ GMENU_ENABLED, "Restart In Town", &gamemenu_restart_town },
-	{ GMENU_ENABLED, "Quit Diablo",     &gamemenu_quit_game    },
+	{ GMENU_ENABLED, N_("Options"),         &gamemenu_options      },
+	{ GMENU_ENABLED, N_("New Game"),        &gamemenu_new_game     },
+	{ GMENU_ENABLED, N_("Restart In Town"), &gamemenu_restart_town },
+	{ GMENU_ENABLED, N_("Quit Diablo"),     &gamemenu_quit_game    },
 	{ GMENU_ENABLED, NULL,              NULL                   }
 	// clang-format on
 };
@@ -28,15 +28,15 @@ TMenuItem sgOptionsMenu[6] = {
 	//                     dwFlags, pszStr,          fnMenu
 	{ GMENU_ENABLED | GMENU_SLIDER, NULL,            &gamemenu_music_volume  },
 	{ GMENU_ENABLED | GMENU_SLIDER, NULL,            &gamemenu_sound_volume  },
-	{ GMENU_ENABLED | GMENU_SLIDER, "Gamma",         &gamemenu_gamma         },
+	{ GMENU_ENABLED | GMENU_SLIDER, N_("Gamma"),         &gamemenu_gamma         },
 	{ GMENU_ENABLED               , NULL,            &gamemenu_color_cycling },
-	{ GMENU_ENABLED               , "Previous Menu", &j_gamemenu_previous    },
+	{ GMENU_ENABLED               , N_("Previous Menu"), &j_gamemenu_previous    },
 	{ GMENU_ENABLED               , NULL,            NULL                    }
 	// clang-format on
 };
-char *music_toggle_names[] = { "Music", "Music Disabled" };
-char *sound_toggle_names[] = { "Sound", "Sound Disabled" };
-char *color_cycling_toggle_names[] = { "Color Cycling Off", "Color Cycling On" };
+char *music_toggle_names[] = { N_("Music"), N_("Music Disabled") };
+char *sound_toggle_names[] = { N_("Sound"), N_("Sound Disabled") };
+char *color_cycling_toggle_names[] = { N_("Color Cycling Off"), N_("Color Cycling On") };
 
 void gamemenu_previous()
 {

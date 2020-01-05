@@ -22,8 +22,8 @@ int gbDifficulty;
 static _SNETPROGRAMDATA *m_client_info;
 extern int provider;
 
-constexpr UiArtTextButton SELGAME_OK = UiArtTextButton("OK", &UiFocusNavigationSelect, { 299, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD);
-constexpr UiArtTextButton SELGAME_CANCEL = UiArtTextButton("CANCEL", &UiFocusNavigationEsc, { 449, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD);
+constexpr UiArtTextButton SELGAME_OK = UiArtTextButton(N_("OK"), &UiFocusNavigationSelect, { 299, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD);
+constexpr UiArtTextButton SELGAME_CANCEL = UiArtTextButton(N_("CANCEL"), &UiFocusNavigationEsc, { 449, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD);
 
 UiArtText SELGAME_DESCRIPTION(selgame_Description, { 35, 256, 205, 192 });
 
@@ -31,9 +31,9 @@ namespace {
 
 char title[32];
 UiListItem SELDIFF_DIALOG_ITEMS[] = {
-	{ "Normal", DIFF_NORMAL },
-	{ "Nightmare", DIFF_NIGHTMARE },
-	{ "Hell", DIFF_HELL }
+	{ N_("Normal"), DIFF_NORMAL },
+	{ N_("Nightmare"), DIFF_NIGHTMARE },
+	{ N_("Hell"), DIFF_HELL }
 };
 UiItem SELDIFF_DIALOG[] = {
 	MAINMENU_BACKGROUND,
@@ -41,7 +41,7 @@ UiItem SELDIFF_DIALOG[] = {
 	UiArtText(title, { 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG),
 	UiArtText(selgame_Label, { 34, 211, 205, 33 }, UIS_CENTER | UIS_BIG), // DIFF
 	SELGAME_DESCRIPTION,
-	UiArtText("Select Difficulty", { 299, 211, 295, 35 }, UIS_CENTER | UIS_BIG),
+	UiArtText(N_("Select Difficulty"), { 299, 211, 295, 35 }, UIS_CENTER | UIS_BIG),
 	UiList(SELDIFF_DIALOG_ITEMS, 300, 282, 295, 26, UIS_CENTER | UIS_MED | UIS_GOLD),
 	SELGAME_OK,
 	SELGAME_CANCEL,
@@ -51,8 +51,8 @@ constexpr UiArtText SELUDPGAME_TITLE = UiArtText(title, { 24, 161, 590, 35 }, UI
 constexpr UiArtText SELUDPGAME_DESCRIPTION_LABEL = UiArtText("Description:", { 35, 211, 205, 192 }, UIS_MED);
 
 UiListItem SELUDPGAME_DIALOG_ITEMS[] = {
-	{ "Create Game", 0 },
-	{ "Enter IP", 1 },
+	{ N_("Create Game"), 0 },
+	{ N_("Enter IP"), 1 },
 };
 UiItem SELUDPGAME_DIALOG[] = {
 	MAINMENU_BACKGROUND,
@@ -60,7 +60,7 @@ UiItem SELUDPGAME_DIALOG[] = {
 	SELUDPGAME_TITLE,
 	SELUDPGAME_DESCRIPTION_LABEL,
 	SELGAME_DESCRIPTION,
-	UiArtText("Select Action", { 300, 211, 295, 33 }, UIS_CENTER | UIS_BIG),
+	UiArtText(N_("Select Action"), { 300, 211, 295, 33 }, UIS_CENTER | UIS_BIG),
 	UiList(SELUDPGAME_DIALOG_ITEMS, 305, 255, 285, 26, UIS_CENTER | UIS_MED | UIS_GOLD),
 	SELGAME_OK,
 	SELGAME_CANCEL,
@@ -72,7 +72,7 @@ UiItem ENTERIP_DIALOG[] = {
 	SELUDPGAME_TITLE,
 	SELUDPGAME_DESCRIPTION_LABEL,
 	SELGAME_DESCRIPTION,
-	UiArtText("Enter IP", { 305, 211, 285, 33 }, UIS_CENTER | UIS_BIG),
+	UiArtText(N_("Enter IP"), { 305, 211, 285, 33 }, UIS_CENTER | UIS_BIG),
 	UiEdit(selgame_Ip, 128, { 305, 314, 285, 33 }, UIS_MED | UIS_GOLD),
 	SELGAME_OK,
 	SELGAME_CANCEL,
@@ -84,7 +84,7 @@ UiItem ENTERPASSWORD_DIALOG[] = {
 	SELUDPGAME_TITLE,
 	SELUDPGAME_DESCRIPTION_LABEL,
 	SELGAME_DESCRIPTION,
-	UiArtText("Enter Password", { 305, 211, 285, 33 }, UIS_CENTER | UIS_BIG),
+	UiArtText(N_("Enter Password"), { 305, 211, 285, 33 }, UIS_CENTER | UIS_BIG),
 	UiEdit(selgame_Password, 15, { 305, 314, 285, 33 }, UIS_MED | UIS_GOLD),
 	SELGAME_OK,
 	SELGAME_CANCEL,
@@ -109,7 +109,7 @@ void selgame_GameSelection_Init()
 	}
 
 	getIniValue("Phone Book", "Entry1", selgame_Ip, 128);
-	strcpy(title, "Client-Server (TCP)");
+	strcpy(title, _("Client-Server (TCP)"));
 	UiInitList(0, 1, selgame_GameSelection_Focus, selgame_GameSelection_Select, selgame_GameSelection_Esc, SELUDPGAME_DIALOG, size(SELUDPGAME_DIALOG));
 }
 
@@ -117,10 +117,10 @@ void selgame_GameSelection_Focus(int value)
 {
 	switch (value) {
 	case 0:
-		strcpy(selgame_Description, "Create a new game with a difficulty setting of your choice.");
+		strcpy(selgame_Description, _("Create a new game with a difficulty setting of your choice."));
 		break;
 	case 1:
-		strcpy(selgame_Description, "Enter an IP and join a game already in progress at that address.");
+		strcpy(selgame_Description, _("Enter an IP and join a game already in progress at that address."));
 		break;
 	}
 	WordWrapArtStr(selgame_Description, SELGAME_DESCRIPTION.rect.w);
@@ -133,11 +133,11 @@ void selgame_GameSelection_Select(int value)
 
 	switch (value) {
 	case 0:
-		strcpy(title, "Create Game");
+		strcpy(title, _("Create Game"));
 		UiInitList(0, NUM_DIFFICULTIES - 1, selgame_Diff_Focus, selgame_Diff_Select, selgame_Diff_Esc, SELDIFF_DIALOG, size(SELDIFF_DIALOG));
 		break;
 	case 1:
-		strcpy(title, "Join TCP Games");
+		strcpy(title, _("Join TCP Games"));
 		UiInitList(0, 0, NULL, selgame_Password_Init, selgame_GameSelection_Init, ENTERIP_DIALOG, size(ENTERIP_DIALOG));
 		break;
 	}
@@ -154,16 +154,16 @@ void selgame_Diff_Focus(int value)
 {
 	switch (value) {
 	case DIFF_NORMAL:
-		strcpy(selgame_Label, "Normal");
-		strcpy(selgame_Description, "Normal Difficulty\nThis is where a starting character should begin the quest to defeat Diablo.");
+		strcpy(selgame_Label, _("Normal"));
+		strcpy(selgame_Description, _("Normal Difficulty\nThis is where a starting character should begin the quest to defeat Diablo."));
 		break;
 	case DIFF_NIGHTMARE:
-		strcpy(selgame_Label, "Nightmare");
-		strcpy(selgame_Description, "Nightmare Difficulty\nThe denizens of the Labyrinth have been bolstered and will prove to be a greater challenge. This is recommended for experienced characters only.");
+		strcpy(selgame_Label, _("Nightmare"));
+		strcpy(selgame_Description, _("Nightmare Difficulty\nThe denizens of the Labyrinth have been bolstered and will prove to be a greater challenge. This is recommended for experienced characters only."));
 		break;
 	case DIFF_HELL:
-		strcpy(selgame_Label, "Hell");
-		strcpy(selgame_Description, "Hell Difficulty\nThe most powerful of the underworld's creatures lurk at the gateway into Hell. Only the most experienced characters should venture in this realm.");
+		strcpy(selgame_Label, _("Hell"));
+		strcpy(selgame_Description, _("Hell Difficulty\nThe most powerful of the underworld's creatures lurk at the gateway into Hell. Only the most experienced characters should venture in this realm."));
 		break;
 	}
 	WordWrapArtStr(selgame_Description, SELGAME_DESCRIPTION.rect.w);
@@ -179,9 +179,9 @@ bool IsDifficultyAllowed(int value)
 	BlackPalette();
 
 	if (value == 1)
-		UiSelOkDialog(title, "Your character must reach level 20 before you can enter a multiplayer game of Nightmare difficulty.", false);
+		UiSelOkDialog(title, _("Your character must reach level 20 before you can enter a multiplayer game of Nightmare difficulty."), false);
 	if (value == 2)
-		UiSelOkDialog(title, "Your character must reach level 30 before you can enter a multiplayer game of Hell difficulty.", false);
+		UiSelOkDialog(title, _("Your character must reach level 30 before you can enter a multiplayer game of Hell difficulty."), false);
 
 	LoadBackgroundArt("ui_art\\selgame.pcx");
 
@@ -236,7 +236,7 @@ void selgame_Password_Select(int value)
 		} else {
 			selgame_Free();
 			BlackPalette();
-			UiSelOkDialog("Multi Player Game", SDL_GetError(), false);
+			UiSelOkDialog(_("Multi Player Game"), SDL_GetError(), false);
 			LoadBackgroundArt("ui_art\\selgame.pcx");
 			selgame_Password_Init(selgame_selectedGame);
 		}
@@ -252,7 +252,7 @@ void selgame_Password_Select(int value)
 	} else {
 		selgame_Free();
 		BlackPalette();
-		UiSelOkDialog("Multi Player Game", SDL_GetError(), false);
+		UiSelOkDialog(_("Multi Player Game"), SDL_GetError(), false);
 		LoadBackgroundArt("ui_art\\selgame.pcx");
 		selgame_Password_Init(0);
 	}

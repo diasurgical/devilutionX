@@ -32,7 +32,7 @@ void LoadArt(const char *pszFile, Art *art, int frames, PALETTEENTRY *pPalette)
 
 	if (!SBmpLoadImage(pszFile, pPalette, static_cast<BYTE *>(art_surface->pixels),
 	        art_surface->pitch * art_surface->format->BytesPerPixel * height, 0, 0, 0)) {
-		SDL_Log("Failed to load image");
+		SDL_Log(_("Failed to load image"));
 		SDL_FreeSurface(art_surface);
 		art->surface = nullptr;
 		return;

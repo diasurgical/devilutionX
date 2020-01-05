@@ -12,8 +12,8 @@ char selyesno_confirmationMessage[256];
 char selyesno_title[32];
 
 UiListItem SELYESNO_DIALOG_ITEMS[] = {
-	{ "Yes", 0 },
-	{ "No", 1 }
+	{ N_("Yes"), 0 },
+	{ N_("No"), 1 }
 };
 
 UiItem SELYESNO_DIALOG[] = {
