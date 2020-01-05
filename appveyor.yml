@@ -7,7 +7,7 @@ image: Visual Studio 2017
 cache: c:\tools\vcpkg\installed\
 
 install:
-  - vcpkg install sdl2:x64-windows sdl2-mixer:x64-windows sdl2-ttf:x64-windows libsodium:x64-windows
+  - vcpkg install sdl2:x64-windows sdl2-mixer:x64-windows sdl2-ttf:x64-windows libsodium:x64-windows gettext:x64-windows
 
 before_build:
   - cmake -G "Visual Studio 15 2017" -A x64 -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake .

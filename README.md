@@ -23,7 +23,7 @@ Nightly builds | Platform
 
 ### Installing dependencies on Debian and Ubuntu
 ```
-sudo apt-get install cmake g++ libsdl2-mixer-dev libsdl2-ttf-dev libsodium-dev
+sudo apt-get install cmake g++ libsdl2-mixer-dev libsdl2-ttf-dev libsodium-dev gettext
 ```
 ### Installing dependencies on Fedora
 ```
@@ -83,7 +83,7 @@ cmake --build . -j $(sysctl -n hw.ncpuonline)
 Download and place the 32bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/), [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/) and [Libsodium](https://github.com/jedisct1/libsodium/releases) in `/usr/i686-w64-mingw32`.
 
 ```
-sudo apt-get install cmake gcc-mingw-w64-i686 g++-mingw-w64-i686
+sudo apt-get install cmake gcc-mingw-w64-i686 g++-mingw-w64-i686 gettext
 ```
 ### Compiling
 ```
@@ -106,13 +106,13 @@ Make sure to install the `C++ CMake tools for Windows` component for Visual Stud
    For the 64-bit version of the dependencies please run this command:
 
    ```
-   vcpkg install sdl2:x64-windows sdl2-mixer:x64-windows sdl2-ttf:x64-windows libsodium:x64-windows
+   vcpkg install sdl2:x64-windows sdl2-mixer:x64-windows sdl2-ttf:x64-windows libsodium:x64-windows gettext:x64-windows
    ```
 
    For the 32-bit version of the dependencies please run this command:
 
    ```
-   vcpkg install sdl2:x86-windows sdl2-mixer:x86-windows sdl2-ttf:x86-windows libsodium:x86-windows
+   vcpkg install sdl2:x86-windows sdl2-mixer:x86-windows sdl2-ttf:x86-windows libsodium:x86-windows gettext:x86-windows
    ```
 
 * **Manually**
