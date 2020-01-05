@@ -13,6 +13,7 @@ addons:
     brewfile: true
 
 script:
+  - brew unlink gettext && brew link --force gettext
   - cd build
   - cmake -DBINARY_RELEASE=ON ..
   - sudo cmake --build . --target package -j $(sysctl -n hw.physicalcpu)
