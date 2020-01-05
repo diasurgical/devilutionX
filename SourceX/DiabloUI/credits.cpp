@@ -61,6 +61,9 @@ CachedLine PrepareLine(std::size_t index)
 	if (contents[0] == '\t')
 		++contents;
 
+	if (contents[0] != '\0')
+		contents = _(contents);
+
 	const SDL_Color shadow_color = { 0, 0, 0, 0 };
 	auto text = RenderText(contents, shadow_color);
 

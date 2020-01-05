@@ -192,7 +192,7 @@ void gmenu_draw_menu_item(TMenuItem *pItem, int y)
 	}
 	x = SCREEN_WIDTH / 2 - w / 2 + SCREEN_X;
 	light_table_index = (pItem->dwFlags & GMENU_ENABLED) ? 0 : 15;
-	gmenu_print_text(x, y, pItem->pszStr);
+	gmenu_print_text(x, y, _(pItem->pszStr));
 	if (pItem == sgpCurrItem) {
 		CelDraw(x - 54, y + 1, PentSpin_cel, PentSpin_frame, 48);
 		CelDraw(x + 4 + w, y + 1, PentSpin_cel, PentSpin_frame, 48);
@@ -218,7 +218,7 @@ int gmenu_get_lfont(TMenuItem *pItem)
 
 	if (pItem->dwFlags & GMENU_SLIDER)
 		return 490;
-	text = pItem->pszStr;
+	text = _(pItem->pszStr);
 	i = 0;
 	while (*text) {
 		c = gbFontTransTbl[(BYTE)*text++];

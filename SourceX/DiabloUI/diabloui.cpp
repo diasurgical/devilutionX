@@ -613,7 +613,7 @@ namespace {
 
 void Render(UiText *ui_text)
 {
-	DrawTTF(ui_text->text,
+	DrawTTF(_(ui_text->text),
 	    ui_text->rect,
 	    ui_text->flags,
 	    ui_text->color,
@@ -623,7 +623,7 @@ void Render(UiText *ui_text)
 
 void Render(const UiArtText &ui_art_text)
 {
-	DrawArtStr(ui_art_text.text, ui_art_text.rect, ui_art_text.flags);
+	DrawArtStr(_(ui_art_text.text), ui_art_text.rect, ui_art_text.flags);
 }
 
 void Render(const UiImage &ui_image)
@@ -642,7 +642,7 @@ void Render(const UiImage &ui_image)
 
 void Render(const UiArtTextButton &ui_button)
 {
-	DrawArtStr(ui_button.text, ui_button.rect, ui_button.flags);
+	DrawArtStr(_(ui_button.text), ui_button.rect, ui_button.flags);
 }
 
 void Render(const UiList &ui_list)
@@ -652,7 +652,7 @@ void Render(const UiList &ui_list)
 		const auto &item = ui_list.items[i];
 		if (item.value == SelectedItem)
 			DrawSelector(rect);
-		DrawArtStr(item.text, rect, ui_list.flags);
+		DrawArtStr(_(item.text), rect, ui_list.flags);
 	}
 }
 

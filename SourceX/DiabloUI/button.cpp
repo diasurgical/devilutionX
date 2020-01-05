@@ -25,7 +25,7 @@ void RenderButton(UiButton *button)
 	SDL_Rect text_rect = button->rect;
 	if (!button->pressed)
 		--text_rect.y;
-	DrawTTF(button->text, text_rect, UIS_CENTER,
+	DrawTTF(_(button->text), text_rect, UIS_CENTER,
 	    SDL_Color { 243, 243, 243, 0 }, SDL_Color { 0, 0, 0, 0 }, &button->render_cache);
 }
 
