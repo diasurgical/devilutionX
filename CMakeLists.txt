@@ -238,6 +238,7 @@ set(devilutionx_SRCS
   SourceX/controls/controller_motion.cpp
   SourceX/controls/game_controls.cpp
   SourceX/controls/menu_controls.cpp
+  SourceX/controls/modifier_hints.cpp
   SourceX/controls/plrctrls.cpp
   SourceX/controls/touch.cpp
   SourceX/miniwin/ddraw.cpp

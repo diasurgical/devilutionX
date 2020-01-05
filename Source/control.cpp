@@ -1274,7 +1274,7 @@ void control_print_info_str(int y, char *str, BOOL center, int lines)
 	}
 }
 
-void PrintGameStr(int x, int y, char *str, int color)
+void PrintGameStr(int x, int y, const char *str, int color)
 {
 	BYTE c;
 	int sx, sy;

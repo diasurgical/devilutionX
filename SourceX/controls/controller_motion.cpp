@@ -3,6 +3,7 @@
 #include "controls/devices/game_controller.h"
 #include "controls/devices/joystick.h"
 #include "controls/devices/kbcontroller.h"
+#include "controls/controller.h"
 
 namespace dvl {
 
@@ -93,7 +94,32 @@ bool ProcessControllerMotion(const SDL_Event &event)
 	if (ProcessKbCtrlAxisMotion(event))
 		return true;
 #endif
-	return false;
+
+	// SELECT + D-Pad simulating mouse movement.
+	if (!IsControllerButtonPressed(ControllerButton::BUTTON_BACK)) {
+		rightStickX = 0;
+		rightStickY = 0;
+		return false;
+	}
+
+	const ControllerButtonEvent ctrl_event = ToControllerButtonEvent(event);
+	if (!IsDPadButton(ctrl_event.button))
+		return false;
+	if (IsControllerButtonPressed(ControllerButton::BUTTON_DPAD_LEFT)) {
+		rightStickX = -1;
+	} else if (IsControllerButtonPressed(ControllerButton::BUTTON_DPAD_RIGHT)) {
+		rightStickX = 1;
+	} else {
+		rightStickX = 0;
+	}
+	if (IsControllerButtonPressed(ControllerButton::BUTTON_DPAD_UP)) {
+		rightStickY = 1;
+	} else if (IsControllerButtonPressed(ControllerButton::BUTTON_DPAD_DOWN)) {
+		rightStickY = -1;
+	} else {
+		rightStickY = 0;
+	}
+	return true;
 }
 
 } // namespace dvl

@@ -83,4 +83,7 @@ struct MoveDirection {
 };
 MoveDirection GetMoveDirection();
 
+extern bool start_modifier_active;
+extern bool select_modifier_active;
+
 } // namespace dvl

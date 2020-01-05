@@ -28,4 +28,12 @@ enum class ControllerButton {
 	BUTTON_DPAD_RIGHT
 };
 
+inline bool IsDPadButton(ControllerButton button)
+{
+	return button == ControllerButton::BUTTON_DPAD_UP
+	    || button == ControllerButton::BUTTON_DPAD_DOWN
+	    || button == ControllerButton::BUTTON_DPAD_LEFT
+	    || button == ControllerButton::BUTTON_DPAD_RIGHT;
+}
+
 } // namespace dvl

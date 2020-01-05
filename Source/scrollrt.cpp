@@ -872,6 +872,9 @@ static void DrawGame(int x, int y)
 	}
 }
 
+// DevilutionX extension.
+extern void DrawControllerModifierHints();
+
 /**
  * @brief Start rendering of screen, town variation
  * @param StartX Center of view in dPiece coordinate
@@ -926,6 +929,7 @@ void DrawView(int StartX, int StartY)
 		gmenu_draw_pause();
 	}
 
+	DrawControllerModifierHints();
 	DrawPlrMsg();
 	gmenu_draw();
 	doom_draw();
