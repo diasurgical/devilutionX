@@ -312,6 +312,8 @@ target_include_directories(${BIN_TARGET} PRIVATE
   3rdParty/Radon/Radon/include
   3rdParty/libsmacker)
 
+target_include_directories(${BIN_TARGET} PUBLIC ${Intl_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR})
+
 target_link_libraries(devilution PUBLIC Threads::Threads)
 target_link_libraries(${BIN_TARGET} PRIVATE
   devilution
@@ -410,6 +412,8 @@ foreach(target devilution ${BIN_TARGET})
       SDL2::SDL2_ttf
       SDL2::SDL2_mixer)
   endif()
+
+  target_link_libraries(${target} PRIVATE ${Intl_LIBRARIES})
 
   if(ASAN)
     target_compile_options(${target} PUBLIC -fsanitize=address -fsanitize-recover=address)
