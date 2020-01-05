@@ -16,5 +16,9 @@ DEVILUTION_BEGIN_NAMESPACE
 #include "defs.h"
 #include "enums.h"
 #include "structs.h"
+#include <libintl.h>
+
+#define _(s) gettext(s)
+#define N_(s) (s)
 
 #endif

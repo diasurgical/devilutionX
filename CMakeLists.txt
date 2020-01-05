@@ -131,6 +131,8 @@ else()
   find_package(SDL2_mixer REQUIRED)
 endif()
 
+find_package(Gettext REQUIRED)
+
 add_library(smacker STATIC
   3rdParty/libsmacker/smk_bitstream.c
   3rdParty/libsmacker/smk_hufftree.c
