@@ -129,4 +129,6 @@ MisFileData misfiledata[] = {
 	// clang-format on
 };
 
+size_t misfilelength = sizeof(misfiledata);
+
 DEVILUTION_END_NAMESPACE

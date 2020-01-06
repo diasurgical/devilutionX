@@ -4,5 +4,6 @@
 
 extern MissileData missiledata[];
 extern MisFileData misfiledata[];
+extern size_t misfilelength;
 
 #endif /* __MISDAT_H__ */
