@@ -13,6 +13,9 @@ DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 %:
 	dh $@ --buildsystem=cmake --builddirectory=obj-${DEB_HOST_MULTIARCH}
 
+override_dh_auto_configure:
+	dh_auto_configure -- -DNIGHTLY_BUILD=ON #-DSPAWN=ON
+
 override_dh_auto_install:
 	install -pdm755 debian/diablo-data/usr/share/games/diablo/
 	test -f "../diabdat.mpq" && cp ../diabdat.mpq debian/diablo-data/usr/share/games/diablo/ || true
