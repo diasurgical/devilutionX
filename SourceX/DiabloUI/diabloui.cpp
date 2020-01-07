@@ -36,6 +36,7 @@ Art ArtBackground;
 Art ArtCursor;
 Art ArtHero;
 bool gbSpawned;
+int heroLevel;
 
 void (*gfnSoundFunction)(char *file);
 void (*gfnListFocus)(int value);
@@ -188,6 +189,29 @@ void selhero_CatToName(char *in_buf, char *out_buf, int cnt)
 
 void UiFocusNavigation(SDL_Event *event)
 {
+	switch (event->type) {
+	case SDL_KEYUP:
+	case SDL_MOUSEBUTTONUP:
+	case SDL_MOUSEMOTION:
+#ifndef USE_SDL1
+	case SDL_MOUSEWHEEL:
+#endif
+	case SDL_JOYBUTTONUP:
+	case SDL_JOYAXISMOTION:
+	case SDL_JOYBALLMOTION:
+	case SDL_JOYHATMOTION:
+#ifndef USE_SDL1
+	case SDL_FINGERUP:
+	case SDL_FINGERMOTION:
+	case SDL_CONTROLLERBUTTONUP:
+	case SDL_CONTROLLERAXISMOTION:
+	case SDL_WINDOWEVENT:
+#endif
+	case SDL_SYSWMEVENT:
+		mainmenu_restart_repintro();
+		break;
+	}
+
 	switch (GetMenuAction(*event)) {
 	case MenuAction::SELECT:
 		UiFocusNavigationSelect();
@@ -216,27 +240,16 @@ void UiFocusNavigation(SDL_Event *event)
 		break;
 	}
 
-	switch (event->type) {
-	case SDL_KEYUP:
-	case SDL_MOUSEBUTTONUP:
-	case SDL_MOUSEMOTION:
 #ifndef USE_SDL1
-	case SDL_MOUSEWHEEL:
-#endif
-	case SDL_JOYBUTTONUP:
-	case SDL_JOYAXISMOTION:
-	case SDL_JOYBALLMOTION:
-	case SDL_JOYHATMOTION:
-#ifndef USE_SDL1
-	case SDL_FINGERUP:
-	case SDL_FINGERMOTION:
-	case SDL_CONTROLLERBUTTONUP:
-	case SDL_CONTROLLERAXISMOTION:
-	case SDL_WINDOWEVENT:
-#endif
-	case SDL_SYSWMEVENT:
-		mainmenu_restart_repintro();
+	if (event->type == SDL_MOUSEWHEEL) {
+		if (event->wheel.y > 0) {
+			UiFocus(SelectedItem - 1, UiItemsWraps);
+		} else if (event->wheel.y < 0) {
+			UiFocus(SelectedItem + 1, UiItemsWraps);
+		}
+		return;
 	}
+#endif
 
 	if (SDL_IsTextInputActive()) {
 		switch (event->type) {
@@ -300,6 +313,15 @@ void UiFocusNavigation(SDL_Event *event)
 
 void UiHandleEvents(SDL_Event *event)
 {
+	if (event->type == SDL_MOUSEMOTION) {
+#ifdef USE_SDL1
+		OutputToLogical(&event->motion.x, &event->motion.y);
+#endif
+		MouseX = event->motion.x;
+		MouseY = event->motion.y;
+		return;
+	}
+
 	if (event->type == SDL_QUIT)
 		exit(0);
 
@@ -307,6 +329,13 @@ void UiHandleEvents(SDL_Event *event)
 	if (event->type == SDL_JOYDEVICEADDED || event->type == SDL_JOYDEVICEREMOVED) {
 		InitController();
 		return;
+	}
+
+	if (event->type == SDL_WINDOWEVENT) {
+		if (event->window.event == SDL_WINDOWEVENT_SHOWN)
+			gbActive = true;
+		else if (event->window.event == SDL_WINDOWEVENT_HIDDEN)
+			gbActive = false;
 	}
 #endif
 }
@@ -376,7 +405,6 @@ void UiInitialize()
 
 int UiProfileGetString()
 {
-	DUMMY();
 	return 0;
 }
 
@@ -415,6 +443,27 @@ BOOL UiValidPlayerName(char *name)
 	for (BYTE *letter = (BYTE *)name; *letter; letter++)
 		if (*letter < 0x20 || (*letter > 0x7E && *letter < 0xC0))
 			return false;
+
+	char *reserved[] = {
+		"gvdl",
+		"dvou",
+		"tiju",
+		"cjudi",
+		"bttipmf",
+		"ojhhfs",
+		"cmj{{bse",
+		"benjo",
+	};
+
+	char tmpname[PLR_NAME_LEN];
+	strcpy(tmpname, name);
+	for (size_t i = 0, n = strlen(tmpname); i < n; i++)
+		tmpname[i]++;
+
+	for (int i = 0; i < sizeof(reserved) / sizeof(*reserved); i++) {
+		if (strstr(tmpname, reserved[i]))
+			return false;
+	}
 
 	return true;
 }
@@ -808,8 +857,6 @@ void DrawMouse()
 	if (sgbControllerActive)
 		return;
 
-	SDL_GetMouseState(&MouseX, &MouseY);
-	OutputToLogical(&MouseX, &MouseY);
 	DrawArt(MouseX, MouseY, &ArtCursor);
 }
 

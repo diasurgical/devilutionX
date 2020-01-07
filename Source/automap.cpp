@@ -588,52 +588,52 @@ void SetAutomapView(int x, int y)
 	case 2:
 		if (solid) {
 			if (GetAutomapType(xx, yy + 1, FALSE) == 0x4007)
-				automapview[xx][yy + 1] = 1;
+				automapview[xx][yy + 1] = TRUE;
 		} else if (GetAutomapType(xx - 1, yy, FALSE) & 0x4000) {
-			automapview[xx - 1][yy] = 1;
+			automapview[xx - 1][yy] = TRUE;
 		}
 		break;
 	case 3:
 		if (solid) {
 			if (GetAutomapType(xx + 1, yy, FALSE) == 0x4007)
-				automapview[xx + 1][yy] = 1;
+				automapview[xx + 1][yy] = TRUE;
 		} else if (GetAutomapType(xx, yy - 1, FALSE) & 0x4000) {
-			automapview[xx][yy - 1] = 1;
+			automapview[xx][yy - 1] = TRUE;
 		}
 		break;
 	case 4:
 		if (solid) {
 			if (GetAutomapType(xx, yy + 1, FALSE) == 0x4007)
-				automapview[xx][yy + 1] = 1;
+				automapview[xx][yy + 1] = TRUE;
 			if (GetAutomapType(xx + 1, yy, FALSE) == 0x4007)
-				automapview[xx + 1][yy] = 1;
+				automapview[xx + 1][yy] = TRUE;
 		} else {
 			if (GetAutomapType(xx - 1, yy, FALSE) & 0x4000)
-				automapview[xx - 1][yy] = 1;
+				automapview[xx - 1][yy] = TRUE;
 			if (GetAutomapType(xx, yy - 1, FALSE) & 0x4000)
-				automapview[xx][yy - 1] = 1;
+				automapview[xx][yy - 1] = TRUE;
 			if (GetAutomapType(xx - 1, yy - 1, FALSE) & 0x4000)
-				automapview[xx - 1][yy - 1] = 1;
+				automapview[xx - 1][yy - 1] = TRUE;
 		}
 		break;
 	case 5:
 		if (solid) {
 			if (GetAutomapType(xx, yy - 1, FALSE) & 0x4000)
-				automapview[xx][yy - 1] = 1;
+				automapview[xx][yy - 1] = TRUE;
 			if (GetAutomapType(xx, yy + 1, FALSE) == 0x4007)
-				automapview[xx][yy + 1] = 1;
+				automapview[xx][yy + 1] = TRUE;
 		} else if (GetAutomapType(xx - 1, yy, FALSE) & 0x4000) {
-			automapview[xx - 1][yy] = 1;
+			automapview[xx - 1][yy] = TRUE;
 		}
 		break;
 	case 6:
 		if (solid) {
 			if (GetAutomapType(xx - 1, yy, FALSE) & 0x4000)
-				automapview[xx - 1][yy] = 1;
+				automapview[xx - 1][yy] = TRUE;
 			if (GetAutomapType(xx + 1, yy, FALSE) == 0x4007)
-				automapview[xx + 1][yy] = 1;
+				automapview[xx + 1][yy] = TRUE;
 		} else if (GetAutomapType(xx, yy - 1, FALSE) & 0x4000) {
-			automapview[xx][yy - 1] = 1;
+			automapview[xx][yy - 1] = TRUE;
 		}
 		break;
 	}

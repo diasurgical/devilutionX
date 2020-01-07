@@ -19,7 +19,7 @@ void init_create_window();
 void init_archives();
 HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags, int fs);
 void init_get_file_info();
-LRESULT __stdcall MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
+LRESULT MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 void init_activate_window(HWND hWnd, BOOL bActive);
 WNDPROC SetWindowProc(WNDPROC NewProc);
 

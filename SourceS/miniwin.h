@@ -33,5 +33,4 @@
 #endif
 #ifdef DEVILUTION_ENGINE
 #include "miniwin/misc_macro.h"
-#include "miniwin/com_macro.h"
 #endif

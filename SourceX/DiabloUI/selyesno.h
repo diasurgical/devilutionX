@@ -3,7 +3,7 @@
 #include "devilution.h"
 
 namespace dvl {
-BOOL UiSelHeroDelYesNoDialog(BOOL (*fnremove)(_uiheroinfo *), _uiheroinfo *selectHero, bool isMultiplayer);
+bool UiSelHeroYesNoDialog(const char *title, const char *body);
 void selyesno_Free();
 void selyesno_Select(int value);
 void selyesno_Esc();

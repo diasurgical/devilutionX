@@ -9,7 +9,7 @@ namespace dvl {
 struct DirectSoundBuffer final : public IDirectSoundBuffer {
 public:
 	void Release() override;
-	void GetStatus(LPDWORD pdwStatus) override;
+	bool IsPlaying() override;
 	void Play(int lVolume, int lPan) override;
 	void Stop() override;
 	int SetChunk(BYTE *fileData, DWORD dwBytes) override;

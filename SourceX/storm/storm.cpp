@@ -16,8 +16,11 @@
 
 namespace dvl {
 
+std::string basePath;
+
 DWORD nLastError = 0;
 bool directFileAccess = false;
+char SBasePath[DVL_MAX_PATH];
 
 static std::string getIniPath()
 {
@@ -33,6 +36,11 @@ static Mix_Chunk *SFileChunk;
 
 void GetBasePath(char *buffer, size_t size)
 {
+	if (basePath.length()) {
+		snprintf(buffer, size, "%s", basePath.c_str());
+		return;
+	}
+
 	char *path = SDL_GetBasePath();
 	if (path == NULL) {
 		SDL_Log(SDL_GetError());
@@ -160,9 +168,11 @@ BOOL SFileOpenFile(const char *filename, HANDLE *phFile)
 
 	if (directFileAccess) {
 		char directPath[DVL_MAX_PATH] = "\0";
+		char tmpPath[DVL_MAX_PATH] = "\0";
 		for (size_t i = 0; i < strlen(filename); i++) {
-			directPath[i] = AsciiToLowerTable_Path[static_cast<unsigned char>(filename[i])];
+			tmpPath[i] = AsciiToLowerTable_Path[static_cast<unsigned char>(filename[i])];
 		}
+		snprintf(directPath, DVL_MAX_PATH, "%s%s", SBasePath, tmpPath);
 		result = SFileOpenFileEx((HANDLE)0, directPath, 0xFFFFFFFF, phFile);
 	}
 	if (!result && patch_rt_mpq) {
@@ -508,7 +518,9 @@ void SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 		return;
 	}
 
-	SVidLoop = flags & 0x40000;
+	SVidLoop = false;
+	if (flags & 0x40000)
+		SVidLoop = true;
 	bool enableVideo = !(flags & 0x100000);
 	bool enableAudio = !(flags & 0x1000000);
 	//0x8 // Non-interlaced
@@ -711,7 +723,6 @@ BOOL SVidPlayContinue(void)
 		SDL_FreeSurface(tmp);
 	}
 
-	bufferUpdated = true;
 	RenderPresent();
 
 	double now = SDL_GetTicks() * 1000;
@@ -788,9 +799,9 @@ int SStrCopy(char *dest, const char *src, int max_length)
 	return strlen(dest);
 }
 
-BOOL SFileSetBasePath(char *)
+BOOL SFileSetBasePath(char *path)
 {
-	DUMMY();
+	strncpy(SBasePath, path, DVL_MAX_PATH);
 	return true;
 }
 

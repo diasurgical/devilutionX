@@ -130,7 +130,7 @@ int mpqapi_get_hash_index(short index, int hash_a, int hash_b, int locale)
 	return -1;
 }
 
-void mpqapi_remove_hash_entries(BOOL(__stdcall *fnGetName)(DWORD, char *))
+void mpqapi_remove_hash_entries(BOOL(*fnGetName)(DWORD, char *))
 {
 	DWORD dwIndex, i;
 	char pszFileName[MAX_PATH];

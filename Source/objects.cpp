@@ -1531,7 +1531,7 @@ void Obj_Circle(int i)
 			if (quests[QTYPE_VB]._qactive == 2)
 				quests[QTYPE_VB]._qvar1 = 4;
 			AddMissile(plr[myplr].WorldX, plr[myplr].WorldY, 35, 46, plr[myplr]._pdir, MIS_RNDTELEPORT, 0, myplr, 0, 0);
-			track_repeat_walk(0);
+			track_repeat_walk(FALSE);
 			sgbMouseDown = 0;
 			ClrPlrPath(myplr);
 			StartStand(myplr, 0);
@@ -2545,12 +2545,12 @@ void OperateChest(int pnum, int i, BOOL sendmsg)
 			SetRndSeed(object[i]._oRndSeed);
 			if (setlevel) {
 				for (j = 0; j < object[i]._oVar1; j++) {
-					CreateRndItem(object[i]._ox, object[i]._oy, TRUE, sendmsg, 0);
+					CreateRndItem(object[i]._ox, object[i]._oy, TRUE, sendmsg, FALSE);
 				}
 			} else {
 				for (j = 0; j < object[i]._oVar1; j++) {
 					if (object[i]._oVar2)
-						CreateRndItem(object[i]._ox, object[i]._oy, 0, sendmsg, 0);
+						CreateRndItem(object[i]._ox, object[i]._oy, FALSE, sendmsg, FALSE);
 					else
 						CreateRndUseful(pnum, object[i]._ox, object[i]._oy, sendmsg);
 				}
@@ -2709,7 +2709,7 @@ void OperateSarc(int pnum, int i, BOOL sendmsg)
 			object[i]._oAnimDelay = 3;
 			SetRndSeed(object[i]._oRndSeed);
 			if (object[i]._oVar1 <= 2)
-				CreateRndItem(object[i]._ox, object[i]._oy, 0, sendmsg, 0);
+				CreateRndItem(object[i]._ox, object[i]._oy, FALSE, sendmsg, FALSE);
 			if (object[i]._oVar1 >= 8)
 				SpawnSkeleton(object[i]._oVar2, object[i]._ox, object[i]._oy);
 			if (pnum == myplr)
@@ -3203,11 +3203,11 @@ void OperateShrine(int pnum, int i, int sType)
 		if (pnum != myplr)
 			return;
 		if (2 * currlevel < 7) {
-			CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_MISC, IMISC_FULLMANA, 0, 1);
-			CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_MISC, IMISC_FULLHEAL, 0, 1);
+			CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_MISC, IMISC_FULLMANA, FALSE, TRUE);
+			CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_MISC, IMISC_FULLHEAL, FALSE, TRUE);
 		} else {
-			CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_MISC, IMISC_FULLREJUV, 0, 1);
-			CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_MISC, IMISC_FULLREJUV, 0, 1);
+			CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_MISC, IMISC_FULLREJUV, FALSE, TRUE);
+			CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_MISC, IMISC_FULLREJUV, FALSE, TRUE);
 		}
 		plr[pnum]._pMana = plr[pnum]._pMaxMana;
 		plr[pnum]._pManaBase = plr[pnum]._pMaxManaBase;
@@ -3328,7 +3328,7 @@ void OperateShrine(int pnum, int i, int sType)
 
 		for (yy = 0; yy < DMAXY; yy++) {
 			for (xx = 0; xx < DMAXX; xx++) {
-				automapview[xx][yy] = 1;
+				automapview[xx][yy] = TRUE;
 			}
 		}
 		InitDiabloMsg(EMSG_SHRINE_SECLUDED);
@@ -3432,9 +3432,9 @@ void OperateSkelBook(int pnum, int i, BOOL sendmsg)
 		if (!deltaload) {
 			SetRndSeed(object[i]._oRndSeed);
 			if (random_(161, 5))
-				CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_MISC, 21, sendmsg, 0);
+				CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_MISC, 21, sendmsg, FALSE);
 			else
-				CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_MISC, 24, sendmsg, 0);
+				CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_MISC, 24, sendmsg, FALSE);
 			if (pnum == myplr)
 				NetSendCmdParam1(FALSE, CMD_OPERATEOBJ, i);
 		}
@@ -3450,7 +3450,7 @@ void OperateBookCase(int pnum, int i, BOOL sendmsg)
 		object[i]._oSelFlag = 0;
 		if (!deltaload) {
 			SetRndSeed(object[i]._oRndSeed);
-			CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_MISC, IMISC_BOOK, sendmsg, 0);
+			CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_MISC, IMISC_BOOK, sendmsg, FALSE);
 			if (QuestStatus(QTYPE_ZHAR)
 			    && monster[MAX_PLRS].mName == UniqMonst[UMT_ZHAR].mName
 			    && monster[MAX_PLRS]._msquelch == UCHAR_MAX
@@ -3472,7 +3472,7 @@ void OperateDecap(int pnum, int i, BOOL sendmsg)
 		object[i]._oSelFlag = 0;
 		if (!deltaload) {
 			SetRndSeed(object[i]._oRndSeed);
-			CreateRndItem(object[i]._ox, object[i]._oy, 0, sendmsg, 0);
+			CreateRndItem(object[i]._ox, object[i]._oy, FALSE, sendmsg, FALSE);
 			if (pnum == myplr)
 				NetSendCmdParam1(FALSE, CMD_OPERATEOBJ, i);
 		}
@@ -3490,13 +3490,13 @@ void OperateArmorStand(int pnum, int i, BOOL sendmsg)
 			SetRndSeed(object[i]._oRndSeed);
 			uniqueRnd = random_(0, 2);
 			if (currlevel <= 5) {
-				CreateTypeItem(object[i]._ox, object[i]._oy, TRUE, ITYPE_LARMOR, 0, sendmsg, 0);
+				CreateTypeItem(object[i]._ox, object[i]._oy, TRUE, ITYPE_LARMOR, 0, sendmsg, FALSE);
 			} else if (currlevel >= 6 && currlevel <= 9) {
-				CreateTypeItem(object[i]._ox, object[i]._oy, uniqueRnd, ITYPE_MARMOR, 0, sendmsg, 0);
+				CreateTypeItem(object[i]._ox, object[i]._oy, uniqueRnd, ITYPE_MARMOR, 0, sendmsg, FALSE);
 			} else if (currlevel >= 10 && currlevel <= 12) {
-				CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_HARMOR, 0, sendmsg, 0);
+				CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_HARMOR, 0, sendmsg, FALSE);
 			} else if (currlevel >= 13 && currlevel <= 16) {
-				CreateTypeItem(object[i]._ox, object[i]._oy, TRUE, ITYPE_HARMOR, 0, sendmsg, 0);
+				CreateTypeItem(object[i]._ox, object[i]._oy, TRUE, ITYPE_HARMOR, 0, sendmsg, FALSE);
 			}
 			if (pnum == myplr)
 				NetSendCmdParam1(FALSE, CMD_OPERATEOBJ, i);
@@ -3699,9 +3699,9 @@ void OperateWeaponRack(int pnum, int i, BOOL sendmsg)
 		return;
 
 	if (leveltype > 1)
-		CreateTypeItem(object[i]._ox, object[i]._oy, TRUE, weaponType, 0, sendmsg, 0);
+		CreateTypeItem(object[i]._ox, object[i]._oy, TRUE, weaponType, 0, sendmsg, FALSE);
 	else
-		CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, weaponType, 0, sendmsg, 0);
+		CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, weaponType, 0, sendmsg, FALSE);
 	if (pnum == myplr)
 		NetSendCmdParam1(FALSE, CMD_OPERATEOBJ, i);
 }
@@ -3872,9 +3872,9 @@ void SyncOpL1Door(int pnum, int cmd, int i)
 		do_sync = TRUE;
 	if (do_sync) {
 		if (object[i]._otype == OBJ_L1LDOOR)
-			OperateL1LDoor(-1, i, 0);
+			OperateL1LDoor(-1, i, FALSE);
 		if (object[i]._otype == OBJ_L1RDOOR)
-			OperateL1RDoor(-1, i, 0);
+			OperateL1RDoor(-1, i, FALSE);
 	}
 }
 
@@ -3895,9 +3895,9 @@ void SyncOpL2Door(int pnum, int cmd, int i)
 		do_sync = TRUE;
 	if (do_sync) {
 		if (object[i]._otype == OBJ_L2LDOOR)
-			OperateL2LDoor(-1, i, 0);
+			OperateL2LDoor(-1, i, FALSE);
 		if (object[i]._otype == OBJ_L2RDOOR)
-			OperateL2RDoor(-1, i, 0);
+			OperateL2RDoor(-1, i, FALSE);
 	}
 }
 
@@ -3918,9 +3918,9 @@ void SyncOpL3Door(int pnum, int cmd, int i)
 		do_sync = TRUE;
 	if (do_sync) {
 		if (object[i]._otype == OBJ_L3LDOOR)
-			OperateL2LDoor(-1, i, 0);
+			OperateL2LDoor(-1, i, FALSE);
 		if (object[i]._otype == OBJ_L3RDOOR)
-			OperateL2RDoor(-1, i, 0);
+			OperateL2RDoor(-1, i, FALSE);
 	}
 }
 
@@ -3972,11 +3972,11 @@ void SyncOpObject(int pnum, int cmd, int i)
 		OperateBookCase(pnum, i, FALSE);
 		break;
 	case OBJ_DECAP:
-		OperateDecap(pnum, i, 0);
+		OperateDecap(pnum, i, FALSE);
 		break;
 	case OBJ_ARMORSTAND:
 	case OBJ_WARARMOR:
-		OperateArmorStand(pnum, i, 0);
+		OperateArmorStand(pnum, i, FALSE);
 		break;
 	case OBJ_GOATSHRINE:
 		OperateGoatShrine(pnum, i, LS_GSHRINE);
@@ -4081,9 +4081,9 @@ void BreakBarrel(int pnum, int i, int dam, BOOL forcebreak, int sendmsg)
 		for (yp = object[i]._oy - 1; yp <= object[i]._oy + 1; yp++) {
 			for (xp = object[i]._ox - 1; xp <= object[i]._ox + 1; xp++) {
 				if (dMonster[xp][yp] > 0)
-					MonsterTrapHit(dMonster[xp][yp] - 1, 1, 4, 0, 1, 0);
+					MonsterTrapHit(dMonster[xp][yp] - 1, 1, 4, 0, 1, FALSE);
 				if (dPlayer[xp][yp] > 0)
-					PlayerMHit(dPlayer[xp][yp] - 1, -1, 0, 8, 16, 1, 0, 0);
+					PlayerMHit(dPlayer[xp][yp] - 1, -1, 0, 8, 16, 1, FALSE, 0);
 				if (dObject[xp][yp] > 0) {
 					oi = dObject[xp][yp] - 1;
 					if (object[oi]._otype == OBJ_BARRELEX && object[oi]._oBreak != -1)
@@ -4098,7 +4098,7 @@ void BreakBarrel(int pnum, int i, int dam, BOOL forcebreak, int sendmsg)
 			if (!object[i]._oVar3)
 				CreateRndUseful(pnum, object[i]._ox, object[i]._oy, sendmsg);
 			else
-				CreateRndItem(object[i]._ox, object[i]._oy, 0, sendmsg, 0);
+				CreateRndItem(object[i]._ox, object[i]._oy, FALSE, sendmsg, FALSE);
 		}
 		if (object[i]._oVar2 >= 8)
 			SpawnSkeleton(object[i]._oVar4, object[i]._ox, object[i]._oy);
@@ -4127,7 +4127,7 @@ void BreakObject(int pnum, int oi)
 		break;
 	case OBJ_BARREL:
 	case OBJ_BARRELEX:
-		BreakBarrel(pnum, oi, objdam, 0, 1);
+		BreakBarrel(pnum, oi, objdam, FALSE, TRUE);
 		break;
 	}
 }
@@ -4135,7 +4135,7 @@ void BreakObject(int pnum, int oi)
 void SyncBreakObj(int pnum, int oi)
 {
 	if (object[oi]._otype >= OBJ_BARREL && object[oi]._otype <= OBJ_BARRELEX)
-		BreakBarrel(pnum, oi, 0, TRUE, 0);
+		BreakBarrel(pnum, oi, 0, TRUE, FALSE);
 }
 
 void SyncL1Doors(int i)

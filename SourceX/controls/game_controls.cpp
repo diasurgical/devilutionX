@@ -26,8 +26,6 @@ DWORD translate_controller_button_to_key(ControllerButton controller_button)
 		return DVL_VK_TAB; // Map
 	case ControllerButton::BUTTON_START:
 		return DVL_VK_ESCAPE;
-	case ControllerButton::BUTTON_BACK:
-		return 'Q'; // Quest log
 	case ControllerButton::BUTTON_DPAD_LEFT:
 		return DVL_VK_LEFT;
 	case ControllerButton::BUTTON_DPAD_RIGHT:
@@ -48,57 +46,112 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 	const ControllerButtonEvent ctrl_event = ToControllerButtonEvent(event);
 	if (!InGameMenu()) {
 		switch (ctrl_event.button) {
-		case ControllerButton::IGNORE:
-			return true;
 		case ControllerButton::AXIS_TRIGGERLEFT: // ZL (aka L2)
-			if (!ctrl_event.up)
-				*action = GameAction(GameActionType::TOGGLE_CHARACTER_INFO);
+			if (!ctrl_event.up) {
+#if HAS_KBCTRL == 0
+				if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK))
+					*action = GameAction(GameActionType::TOGGLE_QUEST_LOG);
+				else
+#endif
+					*action = GameAction(GameActionType::TOGGLE_CHARACTER_INFO);
+			}
 			return true;
 		case ControllerButton::AXIS_TRIGGERRIGHT: // ZR (aka R2)
-			if (!ctrl_event.up)
-				*action = GameAction(GameActionType::TOGGLE_INVENTORY);
+			if (!ctrl_event.up) {
+#if HAS_KBCTRL == 0
+				if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK))
+					*action = GameAction(GameActionType::TOGGLE_SPELL_BOOK);
+				else
+#endif
+					*action = GameAction(GameActionType::TOGGLE_INVENTORY);
+			}
 			return true;
-		case ControllerButton::BUTTON_B: // Right button
-			if (!ctrl_event.up)
-				*action = GameAction(GameActionType::PRIMARY_ACTION);
-			return true;
-		case ControllerButton::BUTTON_Y: // Top button
-			if (!ctrl_event.up)
-				*action = GameAction(GameActionType::SECONDARY_ACTION);
-			return true;
-		case ControllerButton::BUTTON_X: // Left button
-			if (!ctrl_event.up)
-				*action = GameAction(GameActionType::CAST_SPELL);
-			return true;
-		case ControllerButton::BUTTON_A: // Bottom button
-			if (!ctrl_event.up)
-				*action = GameAction(GameActionType::TOGGLE_QUICK_SPELL_MENU);
-			return true;
-		case ControllerButton::BUTTON_LEFTSHOULDER:
-			if (!stextflag && !ctrl_event.up)
-				*action = GameAction(GameActionType::USE_HEALTH_POTION);
-			return true;
-		case ControllerButton::BUTTON_RIGHTSHOULDER:
-			if (!stextflag && !ctrl_event.up)
-				*action = GameAction(GameActionType::USE_MANA_POTION);
-			return true;
-		case ControllerButton::BUTTON_DPAD_UP:
-		case ControllerButton::BUTTON_DPAD_DOWN:
-		case ControllerButton::BUTTON_DPAD_LEFT:
-		case ControllerButton::BUTTON_DPAD_RIGHT:
-			// The rest is handled in charMovement() on every game_logic() call.
-			return true;
-		case ControllerButton::BUTTON_RIGHTSTICK:
-			*action = GameActionSendMouseClick { GameActionSendMouseClick::LEFT, ctrl_event.up };
-			return true;
+#if HAS_KBCTRL == 1
+		case ControllerButton::BUTTON_LEFTSTICK:
+			if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK)) {
+				*action = GameActionSendMouseClick { GameActionSendMouseClick::LEFT, ctrl_event.up };
+				return true;
+			}
+			break;
+		case ControllerButton::BUTTON_START:
+			if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK)) {
+				*action = GameActionSendMouseClick { GameActionSendMouseClick::RIGHT, ctrl_event.up };
+				return true;
+			}
+			break;
+#endif
 		default:
 			break;
 		}
+		if (!questlog && !sbookflag) {
+			switch (ctrl_event.button) {
+			case ControllerButton::IGNORE:
+				return true;
+			case ControllerButton::BUTTON_B: // Right button
+				if (!ctrl_event.up) {
+					if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK))
+						*action = GameActionSendKey { DVL_VK_F8, ctrl_event.up };
+					else
+						*action = GameAction(GameActionType::PRIMARY_ACTION);
+				}
+				return true;
+			case ControllerButton::BUTTON_Y: // Top button
+				if (!ctrl_event.up) {
+					if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK))
+						*action = GameActionSendKey { DVL_VK_F6, ctrl_event.up };
+					else
+						*action = GameAction(GameActionType::SECONDARY_ACTION);
+				}
+				return true;
+			case ControllerButton::BUTTON_X: // Left button
+				if (!ctrl_event.up) {
+					if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK))
+						*action = GameActionSendKey { DVL_VK_F5, ctrl_event.up };
+					else
+						*action = GameAction(GameActionType::CAST_SPELL);
+				}
+				return true;
+			case ControllerButton::BUTTON_A: // Bottom button
+				if (!ctrl_event.up) {
+					if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK))
+						*action = GameActionSendKey { DVL_VK_F7, ctrl_event.up };
+					else
+						*action = GameAction(GameActionType::TOGGLE_QUICK_SPELL_MENU);
+				}
+				return true;
+			case ControllerButton::BUTTON_LEFTSHOULDER:
+				if (!stextflag && !ctrl_event.up)
+					*action = GameAction(GameActionType::USE_HEALTH_POTION);
+				return true;
+			case ControllerButton::BUTTON_RIGHTSHOULDER:
+				if (!stextflag && !ctrl_event.up)
+					*action = GameAction(GameActionType::USE_MANA_POTION);
+				return true;
+			case ControllerButton::BUTTON_DPAD_UP:
+			case ControllerButton::BUTTON_DPAD_DOWN:
+			case ControllerButton::BUTTON_DPAD_LEFT:
+			case ControllerButton::BUTTON_DPAD_RIGHT:
+				// The rest is handled in charMovement() on every game_logic() call.
+				return true;
+			case ControllerButton::BUTTON_RIGHTSTICK:
+				if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK))
+					*action = GameActionSendMouseClick { GameActionSendMouseClick::RIGHT, ctrl_event.up };
+				else
+					*action = GameActionSendMouseClick { GameActionSendMouseClick::LEFT, ctrl_event.up };
+				return true;
+			default:
+				break;
+			}
+		}
+	}
+
+	if (ctrl_event.button == ControllerButton::BUTTON_BACK) {
+		return true; // Ignore mod button
 	}
 
 	// By default, map to a keyboard key.
 	if (ctrl_event.button != ControllerButton::NONE) {
-		*action = GameActionSendKey{ translate_controller_button_to_key(ctrl_event.button),
+		*action = GameActionSendKey { translate_controller_button_to_key(ctrl_event.button),
 			ctrl_event.up };
 		return true;
 	}
@@ -121,7 +174,7 @@ MoveDirection GetMoveDirection()
 {
 	const float stickX = leftStickX;
 	const float stickY = leftStickY;
-	MoveDirection result{ MoveDirectionX::NONE, MoveDirectionY::NONE };
+	MoveDirection result { MoveDirectionX::NONE, MoveDirectionY::NONE };
 
 	if (stickY >= 0.5 || IsControllerButtonPressed(ControllerButton::BUTTON_DPAD_UP)) {
 		result.y = MoveDirectionY::UP;

@@ -125,13 +125,13 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer);
 void run_game_loop(unsigned int uMsg);
 void start_game(unsigned int uMsg);
 void free_game();
-int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow);
-void diablo_parse_flags(char *args);
+int DiabloMain(int argc, char **argv);
+void diablo_parse_flags(int argc, char **argv);
 void diablo_init_screen();
 void diablo_reload_process(HINSTANCE hInstance);
 BOOL PressEscKey();
-LRESULT CALLBACK DisableInputWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-LRESULT CALLBACK GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+LRESULT DisableInputWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+LRESULT GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 BOOL LeftMouseDown(int wParam);
 BOOL LeftMouseCmd(BOOL bShift);
 BOOL TryIconCurs();
@@ -158,8 +158,8 @@ void diablo_color_cyc_logic();
 /* rdata */
 
 extern BOOL fullscreen;
-#ifdef _DEBUG
 extern int showintrodebug;
+#ifdef _DEBUG
 extern int questdebug;
 extern int debug_mode_key_s;
 extern int debug_mode_key_w;
@@ -180,7 +180,6 @@ extern BOOL FriendlyMode;
 extern char *spszMsgTbl[4];
 extern char *spszMsgHotKeyTbl[4];
 
-#include "miniwin/popdecl.inc"
 DEVILUTION_END_NAMESPACE
 
 #endif /* __DIABLO_H__ */

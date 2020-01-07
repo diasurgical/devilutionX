@@ -6,10 +6,12 @@
 #include <random>
 
 #include "DiabloUI/diabloui.h"
-#include "DiabloUI/dialogs.h"
+#include "../../DiabloUI/diabloui.h"
 #include "devilution.h"
-#include "scrollbar.h"
-#include "selyesno.h"
+#include "DiabloUI/dialogs.h"
+#include "DiabloUI/scrollbar.h"
+#include "DiabloUI/selyesno.h"
+#include "DiabloUI/selok.h"
 
 namespace dvl {
 
@@ -31,8 +33,6 @@ bool selhero_deleteEnabled;
 BOOL(*gfnHeroStats)
 (unsigned int, _uidefaultstats *);
 BOOL(*gfnHeroCreate)
-(_uiheroinfo *);
-BOOL(*gfnHeroDelete)
 (_uiheroinfo *);
 
 namespace {
@@ -59,7 +59,7 @@ UiListItem SELLIST_DIALOG_ITEMS[kMaxViewportItems];
 UiItem SELLIST_DIALOG[] = {
 	UiArtText("Select Hero", { 264, 211, 320, 33 }, UIS_CENTER | UIS_BIG),
 	UiList(SELLIST_DIALOG_ITEMS, 265, 256, 320, 26, UIS_CENTER | UIS_MED | UIS_GOLD),
-	MakeScrollBar({585, 244, 25, 178}),
+	MakeScrollBar({ 585, 244, 25, 178 }),
 	UiArtTextButton("OK", &UiFocusNavigationSelect, { 239, 429, 120, 35 }, UIS_CENTER | UIS_BIG | UIS_GOLD),
 	UiArtTextButton("Delete", &selhero_UiFocusNavigationYesNo, { 364, 429, 120, 35 }, UIS_CENTER | UIS_BIG | UIS_DISABLED),
 	UiArtTextButton("Cancel", &UiFocusNavigationEsc, { 489, 429, 120, 35 }, UIS_CENTER | UIS_BIG | UIS_GOLD)
@@ -239,6 +239,15 @@ void selhero_ClassSelector_Focus(int value)
 
 void selhero_ClassSelector_Select(int value)
 {
+	if (gbSpawned && (value == 1 || value == 2)) {
+		selhero_Free();
+		BlackPalette();
+		UiSelOkDialog(nullptr, "The Rogue and Sorcerer are only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase.", false);
+		LoadBackgroundArt("ui_art\\selhero.pcx");
+		selhero_List_Select(selhero_SaveCount);
+		return;
+	}
+
 	strcpy(title, "New Single Player Hero");
 	if (selhero_isMultiPlayer) {
 		strcpy(title, "New Multi Player Hero");
@@ -262,14 +271,42 @@ void selhero_ClassSelector_Esc()
 
 void selhero_Name_Select(int value)
 {
-	if (gfnHeroCreate(&selhero_heroInfo)) {
-		UiInitList(0, 0, NULL, NULL, NULL, NULL, 0);
-		selhero_endMenu = true;
+
+	if (!UiValidPlayerName(selhero_heroInfo.name)) {
+		selhero_Free();
+		BlackPalette();
+		UiSelOkDialog(title, "Invalid name. A name cannot contain spaces, reserved characters, or reserved words.\n", false);
+		LoadBackgroundArt("ui_art\\selhero.pcx");
 	} else {
-		UiErrorOkDialog("Unable to create character.", SELHERO_DIALOG, size(SELHERO_DIALOG));
-		memset(selhero_heroInfo.name, '\0', sizeof(selhero_heroInfo.name));
-		selhero_ClassSelector_Select(selhero_heroInfo.heroclass);
+		bool overwrite = true;
+		for (std::size_t i = 0; i < selhero_SaveCount; i++) {
+			if (strcasecmp(selhero_heros[i].name, selhero_heroInfo.name) == 0) {
+				selhero_Free();
+				BlackPalette();
+				char dialogText[256];
+				sprintf(dialogText, "Character already exists. Do you want to overwrite \"%s\"?", selhero_heroInfo.name);
+				overwrite = UiSelHeroYesNoDialog(title, dialogText);
+				LoadBackgroundArt("ui_art\\selhero.pcx");
+				break;
+			}
+		}
+
+		if (overwrite) {
+			if (gfnHeroCreate(&selhero_heroInfo)) {
+				UiInitList(0, 0, NULL, NULL, NULL, NULL, 0);
+				selhero_endMenu = true;
+				return;
+			} else {
+				UiErrorOkDialog("Unable to create character.", SELHERO_DIALOG, size(SELHERO_DIALOG));
+			}
+		}
 	}
+
+	memset(selhero_heroInfo.name, '\0', sizeof(selhero_heroInfo.name));
+#ifdef PREFILL_PLAYER_NAME
+	strcpy(selhero_heroInfo.name, selhero_GenerateName(selhero_heroInfo.heroclass));
+#endif
+	selhero_ClassSelector_Select(selhero_heroInfo.heroclass);
 }
 
 void selhero_Name_Esc()
@@ -316,7 +353,6 @@ BOOL UiSelHeroDialog(
 		selhero_result = *dlgresult;
 		gfnHeroStats = fnstats;
 		gfnHeroCreate = fncreate;
-		gfnHeroDelete = fnremove;
 
 		selhero_navigateYesNo = false;
 
@@ -339,13 +375,23 @@ BOOL UiSelHeroDialog(
 		selhero_Free();
 
 		if (selhero_navigateYesNo) {
-			if (!UiSelHeroDelYesNoDialog(gfnHeroDelete, &selhero_heroInfo, selhero_isMultiPlayer))
-				app_fatal("Unable to load Yes/No dialog");
+			char dialogTitle[32];
+			char dialogText[256];
+			if (selhero_isMultiPlayer) {
+				strcpy(dialogTitle, "Delete Multi Player Hero");
+			} else {
+				strcpy(dialogTitle, "Delete Single Player Hero");
+			}
+			sprintf(dialogText, "Are you sure you want to delete the character \"%s\"?", selhero_heroInfo.name);
+
+			if (UiSelHeroYesNoDialog(dialogTitle, dialogText))
+				fnremove(&selhero_heroInfo);
 		}
 	} while (selhero_navigateYesNo);
 
 	*dlgresult = selhero_result;
 	strcpy(name, selhero_heroInfo.name);
+	heroLevel = selhero_heroInfo.level;
 
 	UnloadScrollBar();
 	return true;

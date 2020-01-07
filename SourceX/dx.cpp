@@ -1,7 +1,6 @@
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "miniwin/ddraw.h"
-#include "miniwin/com_macro.h"
 #include <SDL.h>
 
 namespace dvl {
@@ -32,8 +31,6 @@ SDL_Surface *renderer_texture_surface = nullptr;
 
 /** 8-bit surface wrapper around #gpBuffer */
 SDL_Surface *pal_surface;
-
-bool bufferUpdated = false;
 
 static void dx_create_back_buffer()
 {
@@ -112,7 +109,6 @@ static void unlock_buf_priv()
 	if (sgdwLockCount == 0) {
 		gpBufEnd -= (uintptr_t)gpBuffer;
 		//gpBuffer = NULL; unable to return to menu
-		RenderPresent();
 	}
 	sgMemCrit.Leave();
 }
@@ -209,7 +205,6 @@ void BltFast(DWORD dwX, DWORD dwY, LPRECT lpSrcRect)
 			ErrSdl();
 		}
 	}
-	bufferUpdated = true;
 }
 
 /**
@@ -238,7 +233,8 @@ void RenderPresent()
 #endif
 	assert(!SDL_MUSTLOCK(surface));
 
-	if (!bufferUpdated) {
+	if (!gbActive) {
+		LimitFrameRate();
 		return;
 	}
 
@@ -278,8 +274,6 @@ void RenderPresent()
 	}
 	LimitFrameRate();
 #endif
-
-	bufferUpdated = false;
 }
 
 void PaletteGetEntries(DWORD dwNumEntries, LPPALETTEENTRY lpEntries)

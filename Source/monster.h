@@ -6,6 +6,7 @@ extern int MissileFileFlag;
 extern int monstkills[MAXMONSTERS];
 extern int monstactive[MAXMONSTERS];
 extern int nummonsters;
+extern BOOLEAN sgbSaveSoundOn;
 extern MonsterStruct monster[MAXMONSTERS];
 extern int totalmonsters;
 extern CMonster Monsters[MAX_LVLMTYPES];

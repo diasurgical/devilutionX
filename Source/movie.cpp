@@ -1,5 +1,6 @@
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
+#include "../SourceX/miniwin/ddraw.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -19,17 +20,16 @@ void play_movie(char *pszMovie, BOOL user_can_close)
 	MSG Msg;
 	while (video_stream && movie_playing) {
 		while (movie_playing && PeekMessage(&Msg)) {
-			TranslateMessage(&Msg);
 			switch (Msg.message) {
 			case WM_KEYDOWN:
-			case WM_CHAR:
 			case WM_LBUTTONDOWN:
 			case WM_RBUTTONDOWN:
-				if (user_can_close || (Msg.message == WM_CHAR && Msg.wParam == VK_ESCAPE))
+				if (user_can_close || (Msg.message == WM_KEYDOWN && Msg.wParam == VK_ESCAPE))
 					movie_playing = FALSE;
 				break;
 			case WM_QUIT:
-				movie_playing = FALSE;
+				SVidPlayEnd(video_stream);
+				exit(0);
 				break;
 			}
 		}
@@ -40,6 +40,8 @@ void play_movie(char *pszMovie, BOOL user_can_close)
 		SVidPlayEnd(video_stream);
 	sound_disable_music(FALSE);
 	movie_playing = FALSE;
+	SDL_GetMouseState(&MouseX, &MouseY);
+	OutputToLogical(&MouseX, &MouseY);
 }
 
 DEVILUTION_END_NAMESPACE

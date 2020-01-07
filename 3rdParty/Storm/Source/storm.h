@@ -3,15 +3,17 @@
 #ifndef __BLIZZARD_STORM_HEADER
 #define __BLIZZARD_STORM_HEADER
 
-#include "miniwin/pushdecl.inc"
 #include <limits>
+#include <string>
 namespace dvl {
+
+extern std::string basePath;
 
 // Note to self: Linker error => forgot a return value in cpp
 
 // Storm API definition
 #ifndef STORMAPI
-#define STORMAPI __stdcall
+#define STORMAPI
 #endif
 
 #ifndef __STORM_SMAX
@@ -454,8 +456,6 @@ SNetSetGameMode(
       BOOLEAN makePublic);
 
 #define SNMakeGamePublic() SNetSetGameMode( (DWORD mode, SNetGetGameInfo(GAMEINFO_MODEFLAGS, &mode, 4), mode), true)
-
-BOOL STORMAPI SNetEnumGamesEx(int a1, int a2, int (__fastcall *callback)(DWORD, DWORD, DWORD), int *hintnextcall);
 
 BOOL STORMAPI SNetDisconnectAll(DWORD flags);
 BOOL STORMAPI SNetCreateLadderGame(const char *pszGameName, const char *pszGamePassword, const char *pszGameStatString, DWORD dwGameType, DWORD dwGameLadderType, DWORD dwGameModeFlags, char *GameTemplateData, int GameTemplateSize, int playerCount, char *creatorName, char *a11, int *playerID);
@@ -1180,8 +1180,7 @@ void  STORMAPI SRgn529i(int handle, int a2, int a3);
  *
  *  Returns TRUE if the user chose to continue execution, FALSE otherwise.
  */
-BOOL __cdecl
-SErrDisplayErrorFmt(
+BOOL SErrDisplayErrorFmt(
     DWORD dwErrMsg,
     const char *logfilename,
     int logline,
@@ -1234,7 +1233,7 @@ char *STORMAPI SStrChrR(const char *string, char c);
  *
  *  Returns the number of characters written.
  */
-unsigned int __cdecl
+unsigned int
 SStrVPrintf(
     char *dest,
     unsigned int size,
@@ -1251,37 +1250,36 @@ int STORMAPI SBigPowMod(void *buffer1, void *buffer2, int a3, int a4);
 
 int STORMAPI SBigToBinaryBuffer(void *buffer, int length, int a3, int a4);
 
-void __stdcall SDrawMessageBox(char *,char *,int);
-void __cdecl SDrawDestroy(void);
-BOOLEAN __cdecl StormDestroy(void);
-BOOL __stdcall SFileSetBasePath(char *);
-void __cdecl SDrawRealizePalette(void);
-BOOL __cdecl SVidPlayContinue(void);
-BOOL __stdcall SNetGetOwnerTurnsWaiting(DWORD *);
-BOOL __stdcall SNetUnregisterEventHandler(int,SEVTHANDLER);
-BOOL __stdcall SNetRegisterEventHandler(int,SEVTHANDLER);
-BOOLEAN __stdcall SNetSetBasePlayer(int);
-int __stdcall SNetInitializeProvider(unsigned long,struct _SNETPROGRAMDATA *,struct _SNETPLAYERDATA *,struct _SNETUIDATA *,struct _SNETVERSIONDATA *);
-int __stdcall SNetGetProviderCaps(struct _SNETCAPS *);
-int __stdcall SFileSetFilePointer(HANDLE,int,HANDLE,int);
-void __stdcall SDrawClearSurface(int a1);
-BOOL __stdcall SDlgSetBitmapI(HWND hWnd, int a2, char *src, int mask1, int flags, void *pBuff, int a7, int width, int height, int mask2);
-void __stdcall SDlgBeginPaint(HWND hWnd, char *a2);
-void __stdcall SDlgEndPaint(HWND hWnd, char *a2);
-void __stdcall SDlgSetSystemCursor(BYTE *a1, BYTE *a2, int *a3, int a4);
-void __stdcall SDlgSetCursor(HWND hWnd, HCURSOR a2, int a3, int *a4);
-BOOL __stdcall SDlgSetTimer(int a1, int a2, int a3, void (__stdcall *a4)(int, int, int, int));
-BOOL __stdcall SDlgKillTimer(int a1, int a2);
-BOOL __stdcall SDlgDrawBitmap(HWND hWnd, int a2, int a3, int a4, int a5, int a6, int a7);
-BOOL __stdcall SDlgDialogBoxParam(HINSTANCE hInst, char *szDialog, int hWnd, WNDPROC func, int selhero_is_good);
-BOOL __stdcall SGdiTextOut(void *pBuffer, int x, int y, int mask, char *str, int len);
-BOOL __stdcall SFileEnableDirectAccess(BOOL enable);
+void SDrawMessageBox(char *, char *, int);
+void SDrawDestroy(void);
+BOOLEAN StormDestroy(void);
+BOOL SFileSetBasePath(char *);
+void SDrawRealizePalette(void);
+BOOL SVidPlayContinue(void);
+BOOL SNetGetOwnerTurnsWaiting(DWORD *);
+BOOL SNetUnregisterEventHandler(int, SEVTHANDLER);
+BOOL SNetRegisterEventHandler(int, SEVTHANDLER);
+BOOLEAN SNetSetBasePlayer(int);
+int SNetInitializeProvider(unsigned long, struct _SNETPROGRAMDATA *, struct _SNETPLAYERDATA *, struct _SNETUIDATA *, struct _SNETVERSIONDATA *);
+int SNetGetProviderCaps(struct _SNETCAPS *);
+int SFileSetFilePointer(HANDLE, int, HANDLE, int);
+void SDrawClearSurface(int a1);
+BOOL SDlgSetBitmapI(HWND hWnd, int a2, char *src, int mask1, int flags, void *pBuff, int a7, int width, int height, int mask2);
+void SDlgBeginPaint(HWND hWnd, char *a2);
+void SDlgEndPaint(HWND hWnd, char *a2);
+void SDlgSetSystemCursor(BYTE *a1, BYTE *a2, int *a3, int a4);
+void SDlgSetCursor(HWND hWnd, HCURSOR a2, int a3, int *a4);
+BOOL SDlgSetTimer(int a1, int a2, int a3, void (*a4)(int, int, int, int));
+BOOL SDlgKillTimer(int a1, int a2);
+BOOL SDlgDrawBitmap(HWND hWnd, int a2, int a3, int a4, int a5, int a6, int a7);
+BOOL SDlgDialogBoxParam(HINSTANCE hInst, char *szDialog, int hWnd, WNDPROC func, int selhero_is_good);
+BOOL SGdiTextOut(void *pBuffer, int x, int y, int mask, char *str, int len);
+BOOL SFileEnableDirectAccess(BOOL enable);
 
 #if defined(__GNUC__) || defined(__cplusplus)
 }
 #endif
 
 }
-#include "miniwin/popdecl.inc"
 
 #endif
