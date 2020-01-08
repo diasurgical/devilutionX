@@ -812,10 +812,15 @@ inline char *SDL_GetPrefPath(const char *org, const char *app)
      *
      * http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
      */
+#ifndef __AMIGA__
 	const char *envr = SDL_getenv("XDG_DATA_HOME");
+	char *ptr = NULL;
+#else
+	const char *envr = "PROGDIR:";
+#endif
+
 	const char *append;
 	char *retval = NULL;
-	char *ptr = NULL;
 	size_t len = 0;
 
 	if (!app) {
@@ -834,15 +839,19 @@ inline char *SDL_GetPrefPath(const char *org, const char *app)
 			SDL_SetError("neither XDG_DATA_HOME nor HOME environment is set");
 			return NULL;
 		}
+
 		append = "/.local/share/";
+
 	} else {
+#ifndef __AMIGA__
 		append = "/";
+#endif
 	}
 
 	len = SDL_strlen(envr);
 	if (envr[len - 1] == '/')
 		append += 1;
-
+#ifndef __AMIGA__
 	len += SDL_strlen(append) + SDL_strlen(org) + SDL_strlen(app) + 3;
 	retval = (char *)SDL_malloc(len);
 	if (!retval) {
@@ -855,7 +864,12 @@ inline char *SDL_GetPrefPath(const char *org, const char *app)
 	} else {
 		SDL_snprintf(retval, len, "%s%s%s/", envr, append, app);
 	}
+#else
+	retval = (char *)SDL_malloc(9);
+	SDL_snprintf(retval, 9, "PROGDIR:");
+#endif
 
+#ifndef __AMIGA__
 	for (ptr = retval + 1; *ptr; ptr++) {
 		if (*ptr == '/') {
 			*ptr = '\0';
@@ -870,6 +884,27 @@ inline char *SDL_GetPrefPath(const char *org, const char *app)
 		SDL_free(retval);
 		return NULL;
 	}
+#endif
 
 	return retval;
+}
+
+char *SDL_itoa(int _Value, char *_Dest, int _Radix)
+{
+	switch (_Radix) {
+	case 8:
+		sprintf(_Dest, "%o", _Value);
+		break;
+	case 10:
+		sprintf(_Dest, "%d", _Value);
+		break;
+	case 16:
+		sprintf(_Dest, "%x", _Value);
+		break;
+	default:
+		UNIMPLEMENTED();
+		break;
+	}
+
+	return _Dest;
 }

@@ -633,7 +633,7 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy, int eflag)
 	}
 
 	if (MissilePreFlag) {
-		DrawMissile(sx, sy, dx, dy, 1);
+		DrawMissile(sx, sy, dx, dy, TRUE);
 	}
 
 	if (light_table_index < lightmax && bDead != 0) {
@@ -668,7 +668,7 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy, int eflag)
 	if (dMonster[sx][sy] > 0) {
 		DrawMonsterHelper(sx, sy, 0, dx, dy, eflag);
 	}
-	DrawMissile(sx, sy, dx, dy, 0);
+	DrawMissile(sx, sy, dx, dy, FALSE);
 	DrawObject(sx, sy, dx, dy, 0);
 	DrawItem(sx, sy, dx, dy, 0);
 
@@ -1170,6 +1170,7 @@ void scrollrt_draw_game_screen(BOOL draw_cursor)
 		scrollrt_draw_cursor_back_buffer();
 		unlock_buf(0);
 	}
+	RenderPresent();
 }
 
 /**
@@ -1232,6 +1233,7 @@ void DrawAndBlit()
 	lock_buf(0);
 	scrollrt_draw_cursor_back_buffer();
 	unlock_buf(0);
+	RenderPresent();
 
 	drawhpflag = FALSE;
 	drawmanaflag = FALSE;

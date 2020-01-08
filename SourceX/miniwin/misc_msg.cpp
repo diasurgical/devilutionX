@@ -237,7 +237,7 @@ static int translate_sdl_key(SDL_Keysym key)
 		} else if (sym >= SDLK_F1 && sym <= SDLK_F12) {
 			return DVL_VK_F1 + (sym - SDLK_F1);
 		}
-		DUMMY_PRINT("unknown key: name=%s sym=0x%X scan=%d mod=0x%X", SDL_GetKeyName(sym), sym, key.scancode, key.mod);
+		SDL_Log("unknown key: name=%s sym=0x%X scan=%d mod=0x%X", SDL_GetKeyName(sym), sym, key.scancode, key.mod);
 		return -1;
 	}
 }
@@ -258,7 +258,7 @@ WPARAM keystate_for_mouse(WPARAM ret)
 
 WINBOOL false_avail(const char *name, int value)
 {
-	DUMMY_PRINT("Unhandled SDL event: %s %d", name, value);
+	SDL_Log("Unhandled SDL event: %s %d", name, value);
 	return true;
 }
 
@@ -396,7 +396,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg)
 			sgbControllerActive = true;
 
 			if (movie_playing) {
-				lpMsg->message = DVL_WM_CHAR;
+				lpMsg->message = DVL_WM_KEYDOWN;
 				if (action.type == GameActionType::SEND_KEY)
 					lpMsg->wParam = action.send_key.vk_code;
 				return true;
@@ -423,8 +423,10 @@ WINBOOL PeekMessageA(LPMSG lpMsg)
 			break;
 		case GameActionType::TOGGLE_QUICK_SPELL_MENU:
 			if (!invflag || BlurInventory()) {
-				lpMsg->message = DVL_WM_KEYDOWN;
-				lpMsg->wParam = 'S';
+				if (!spselflag)
+					DoSpeedBook();
+				else
+					spselflag = false;
 				chrflag = false;
 				questlog = false;
 				sbookflag = false;
@@ -441,6 +443,15 @@ WINBOOL PeekMessageA(LPMSG lpMsg)
 				FocusOnCharInfo();
 			}
 			break;
+		case GameActionType::TOGGLE_QUEST_LOG:
+			if (!questlog) {
+				StartQuestlog();
+				chrflag = false;
+				spselflag = false;
+			} else {
+				questlog = false;
+			}
+			break;
 		case GameActionType::TOGGLE_INVENTORY:
 			if (invflag) {
 				BlurInventory();
@@ -451,6 +462,13 @@ WINBOOL PeekMessageA(LPMSG lpMsg)
 				if (pcurs == CURSOR_DISARM)
 					SetCursor_(CURSOR_HAND);
 				FocusOnInventory();
+			}
+			break;
+		case GameActionType::TOGGLE_SPELL_BOOK:
+			if (BlurInventory()) {
+				invflag = false;
+				spselflag = false;
+				sbookflag = !sbookflag;
 			}
 			break;
 		case GameActionType::SEND_KEY:
@@ -531,6 +549,18 @@ WINBOOL PeekMessageA(LPMSG lpMsg)
 		}
 	} break;
 #ifndef USE_SDL1
+	case SDL_MOUSEWHEEL:
+		lpMsg->message = DVL_WM_KEYDOWN;
+		if (e.wheel.y > 0) {
+			lpMsg->wParam = GetAsyncKeyState(DVL_VK_CONTROL) ? DVL_VK_OEM_PLUS : DVL_VK_UP;
+		} else if (e.wheel.y < 0) {
+			lpMsg->wParam = GetAsyncKeyState(DVL_VK_CONTROL) ? DVL_VK_OEM_MINUS : DVL_VK_DOWN;
+		} else if (e.wheel.x > 0) {
+			lpMsg->wParam = DVL_VK_LEFT;
+		} else if (e.wheel.x < 0) {
+			lpMsg->wParam = DVL_VK_RIGHT;
+		}
+		break;
 #if SDL_VERSION_ATLEAST(2, 0, 4)
 	case SDL_AUDIODEVICEADDED:
 		return false_avail("SDL_AUDIODEVICEADDED", e.adevice.which);
@@ -612,7 +642,38 @@ WINBOOL TranslateMessage(const MSG *lpMsg)
 			if (!upper && is_alpha) {
 				key = tolower(key);
 			} else if (shift && is_numeric) {
-				key = key == '0' ? ')' : key - 0x10;
+				switch (key) {
+				case '1':
+					key = '!';
+					break;
+				case '2':
+					key = '@';
+					break;
+				case '3':
+					key = '#';
+					break;
+				case '4':
+					key = '$';
+					break;
+				case '5':
+					key = '%';
+					break;
+				case '6':
+					key = '^';
+					break;
+				case '7':
+					key = '&';
+					break;
+				case '8':
+					key = '*';
+					break;
+				case '9':
+					key = '(';
+					break;
+				case '0':
+					key = ')';
+					break;
+				}
 			} else if (is_oem) {
 				// XXX: This probably only supports US keyboard layout
 				switch (key) {
@@ -637,7 +698,6 @@ WINBOOL TranslateMessage(const MSG *lpMsg)
 				case DVL_VK_OEM_7:
 					key = shift ? '"' : '\'';
 					break;
-
 				case DVL_VK_OEM_MINUS:
 					key = shift ? '_' : '-';
 					break;
@@ -678,6 +738,8 @@ SHORT GetAsyncKeyState(int vKey)
 		return SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT);
 	const Uint8 *state = SDLC_GetKeyState();
 	switch (vKey) {
+	case DVL_VK_CONTROL:
+		return state[SDLC_KEYSTATE_LEFTCTRL] || state[SDLC_KEYSTATE_RIGHTCTRL] ? 0x8000 : 0;
 	case DVL_VK_SHIFT:
 		return state[SDLC_KEYSTATE_LEFTSHIFT] || state[SDLC_KEYSTATE_RIGHTSHIFT] ? 0x8000 : 0;
 	case DVL_VK_MENU:
@@ -697,9 +759,7 @@ SHORT GetAsyncKeyState(int vKey)
 
 LRESULT DispatchMessageA(const MSG *lpMsg)
 {
-	DUMMY_ONCE();
 	assert(CurrentProc);
-	// assert(CurrentProc == GM_Game);
 
 	return CurrentProc(NULL, lpMsg->message, lpMsg->wParam, lpMsg->lParam);
 }

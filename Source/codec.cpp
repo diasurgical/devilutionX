@@ -1,4 +1,5 @@
 #include "diablo.h"
+#include "../3rdParty/StormLib/src/StormPort.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -25,6 +26,7 @@ int codec_decode(BYTE *pbSrcDst, DWORD size, char *pszPassword)
 	for (i = size; i != 0; pbSrcDst += 64, i -= 64) {
 		memcpy(buf, pbSrcDst, 64);
 		SHA1Result(0, dst);
+		BSWAP_ARRAY32_UNSIGNED(&dst, sizeof(dst));
 		for (int j = 0; j < 64; j++) {
 			buf[j] ^= dst[j % SHA1HashSize];
 		}
@@ -40,6 +42,9 @@ int codec_decode(BYTE *pbSrcDst, DWORD size, char *pszPassword)
 	}
 
 	SHA1Result(0, dst);
+	BSWAP_ARRAY32_UNSIGNED(&dst, sizeof(dst));
+	*(DWORD *)dst = SwapLE32(*(DWORD *)dst);
+	sig->checksum = SwapLE32(sig->checksum);
 	if (sig->checksum != *(DWORD *)dst) {
 		memset(dst, 0, sizeof(dst));
 		goto error;
@@ -78,6 +83,7 @@ void codec_init_key(int unused, char *pszPassword)
 	SHA1Reset(0);
 	SHA1Calculate(0, pw, digest);
 	SHA1Clear();
+    BSWAP_ARRAY32_UNSIGNED(&digest, sizeof(digest));
 	for (i = 0; (DWORD)i < 136; i++)
 		key[i] ^= digest[i % SHA1HashSize];
 	memset(pw, 0, sizeof(pw));
@@ -116,6 +122,7 @@ void codec_encode(BYTE *pbSrcDst, DWORD size, int size_64, char *pszPassword)
 		if (chunk < 64)
 			memset(buf + chunk, 0, 64 - chunk);
 		SHA1Result(0, dst);
+		BSWAP_ARRAY32_UNSIGNED(&dst, sizeof(dst));
 		SHA1Calculate(0, buf, NULL);
 		for (int j = 0; j < 64; j++) {
 			buf[j] ^= dst[j % SHA1HashSize];

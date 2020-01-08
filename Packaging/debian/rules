@@ -26,6 +26,6 @@ override_dh_auto_install:
 	mkdir -p debian/devilutionx/usr/share/icons/hicolor/16x16/apps/
 	mkdir -p debian/devilutionx/usr/share/icons/hicolor/32x32/apps/
 	mkdir -p debian/devilutionx/usr/share/icons/hicolor/48x48/apps/
-	cp Packaging/resources/16.png debian/devilutionx/usr/share/icons/hicolor/16x16/apps/diablo.png 
-	cp Packaging/resources/Diablo_32.png debian/devilutionx/usr/share/icons/hicolor/32x32/apps/diablo.png 
-	cp Packaging/resources/Diablo_48.png debian/devilutionx/usr/share/icons/hicolor/48x48/apps/diablo.png 
+	cp Packaging/resources/16.png debian/devilutionx/usr/share/icons/hicolor/16x16/apps/devilutionx.png 
+	cp Packaging/resources/Diablo_32.png debian/devilutionx/usr/share/icons/hicolor/32x32/apps/devilutionx.png 
+	cp Packaging/resources/Diablo_48.png debian/devilutionx/usr/share/icons/hicolor/48x48/apps/devilutionx.png 

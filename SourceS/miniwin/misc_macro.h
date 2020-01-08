@@ -50,6 +50,7 @@
 #define OPEN_EXISTING DVL_OPEN_EXISTING
 #define OPEN_ALWAYS 4
 #define ERROR_FILE_NOT_FOUND DVL_ERROR_FILE_NOT_FOUND
+#define ERROR_SUCCESS DVL_ERROR_SUCCESS
 #define FILE_ATTRIBUTE_NORMAL 128
 #define FILE_ATTRIBUTE_HIDDEN 0x00000002
 #define FILE_ATTRIBUTE_SYSTEM 0x00000004
@@ -94,7 +95,6 @@
 #define GetFileAttributes GetFileAttributesA
 #define SetFileAttributes SetFileAttributesA
 #define CreateFile CreateFileA
-#define GetComputerName GetComputerNameA
 #define DeleteFile DeleteFileA
 
 #define GWL_STYLE (-16)

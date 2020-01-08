@@ -36,7 +36,7 @@ char *ErrorPlrMsg(const char *pszMsg)
 	return result;
 }
 
-size_t __cdecl EventPlrMsg(const char *pszFmt, ...)
+size_t EventPlrMsg(const char *pszFmt, ...)
 {
 	_plrmsg *pMsg;
 	va_list va;

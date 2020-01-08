@@ -8,7 +8,7 @@ char sz_error_buf[256];
 BOOL terminating;
 int cleanup_thread_id;
 
-void __cdecl app_fatal(const char *pszFmt, ...)
+void app_fatal(const char *pszFmt, ...)
 {
 	va_list va;
 
@@ -48,7 +48,7 @@ void FreeDlg()
 	SNetDestroy();
 }
 
-void __cdecl DrawDlg(char *pszFmt, ...)
+void DrawDlg(char *pszFmt, ...)
 {
 	char text[256];
 	va_list arglist;
@@ -93,7 +93,7 @@ void FileErrDlg(const char *error)
 	    1024,
 	    "Unable to open a required file.\n"
 	    "\n"
-	    "Verify that the MD5 of diabdat.mpq matches on of the following values\n"
+	    "Verify that the MD5 of diabdat.mpq matches one of the following values\n"
 	    "011bc6518e6166206231080a4440b373\n"
 	    "68f049866b44688a7af65ba766bef75a\n"
 	    "\n"

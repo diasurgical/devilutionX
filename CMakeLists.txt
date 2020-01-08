@@ -19,16 +19,6 @@ option(NIGHTLY_BUILD "Enable options for nightly build" OFF)
 option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network" OFF)
 
-include(CMake/git.cmake)
-get_git_tag(GIT_TAG)
-if(NOT CMAKE_BUILD_TYPE MATCHES "Release")
-  get_git_commit_hash(GIT_COMMIT_HASH)
-endif()
-
-project(DevilutionX
-  VERSION ${GIT_TAG}
-  LANGUAGES C CXX)
-
 if(BINARY_RELEASE)
   set(CMAKE_BUILD_TYPE "Release")
   set(ASAN OFF)
@@ -48,6 +38,16 @@ if(NIGHTLY_BUILD)
   set(DIST ON)
   set(FASTER OFF)
 endif()
+
+include(CMake/git.cmake)
+get_git_tag(GIT_TAG)
+if(NOT CMAKE_BUILD_TYPE MATCHES "Release")
+  get_git_commit_hash(GIT_COMMIT_HASH)
+endif()
+
+project(DevilutionX
+  VERSION ${GIT_TAG}
+  LANGUAGES C CXX)
 
 if(LTO)
   # Use LTO on compilers where it is supported.
@@ -286,13 +286,15 @@ set(devilutionx_SRCS
   SourceX/DiabloUI/selgame.cpp
   SourceX/DiabloUI/selhero.cpp
   SourceX/DiabloUI/selyesno.cpp
+  SourceX/DiabloUI/selok.cpp
   SourceX/DiabloUI/text_draw.cpp
   SourceX/DiabloUI/text.cpp
   SourceX/DiabloUI/title.cpp
   SourceX/DiabloUI/ttf_render_wrapped.cpp
   SourceX/main.cpp
-  ./Packaging/macOS/AppIcon.icns
-  ./Packaging/resources/CharisSILB.ttf)
+  Packaging/macOS/AppIcon.icns
+  Packaging/resources/CharisSILB.ttf
+  Packaging/windows/devilutionx.rc)
 
 if(NOT NONET)
   list(APPEND devilutionx_SRCS
@@ -311,7 +313,7 @@ if(SWITCH)
   set(BIN_TARGET devilutionx.elf)
 endif()
 
-add_executable(${BIN_TARGET} MACOSX_BUNDLE ${devilutionx_SRCS})
+add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionx_SRCS})
 
 configure_file(SourceS/config.h.in config.h @ONLY)
 target_include_directories(devilution PUBLIC Source SourceS ${CMAKE_CURRENT_BINARY_DIR})
@@ -374,7 +376,6 @@ foreach(
   KBCTRL_BUTTON_LEFTSHOULDER
   KBCTRL_BUTTON_START
   KBCTRL_BUTTON_BACK
-  KBCTRL_MODIFIER_KEY
   KBCTRL_IGNORE_1
   JOY_AXIS_LEFTX
   JOY_AXIS_LEFTY

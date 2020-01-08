@@ -230,6 +230,11 @@ void CopyShorts(const void *src, const int n, void *dst)
 
 void CopyInt(const void *src, void *dst)
 {
+	CopyBytes(src, 4, SwapLE32(dst));
+}
+
+void CopyIntNoSwap(const void *src, void *dst)
+{
 	CopyBytes(src, 4, dst);
 }
 
@@ -247,7 +252,7 @@ void LoadPlayer(int i)
 {
 	PlayerStruct *pPlayer = &plr[i];
 
-	CopyInt(tbuff, &pPlayer->_pmode);
+	CopyIntNoSwap(tbuff, &pPlayer->_pmode);
 	CopyBytes(tbuff, 25, pPlayer->walkpath);
 	CopyBytes(tbuff, 1, &pPlayer->plractive);
 	tbuff += 2; // Alignment
@@ -336,7 +341,7 @@ void LoadPlayer(int i)
 	CopyInt(tbuff, &pPlayer->_pMaxManaBase);
 	CopyInt(tbuff, &pPlayer->_pMana);
 	CopyInt(tbuff, &pPlayer->_pMaxMana);
-	CopyInt(tbuff, &pPlayer->_pManaPer);
+	CopyIntNoSwap(tbuff, &pPlayer->_pManaPer);
 	CopyChar(tbuff, &pPlayer->_pLevel);
 	CopyChar(tbuff, &pPlayer->_pMaxLvl);
 	tbuff += 2; // Alignment
@@ -1690,7 +1695,7 @@ void LoadLevel()
 	AutomapZoomReset();
 	ResyncQuests();
 	SyncPortals();
-	dolighting = 1;
+	dolighting = TRUE;
 
 	for (i = 0; i < MAX_PLRS; i++) {
 		if (plr[i].plractive && currlevel == plr[i].plrlevel)

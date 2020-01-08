@@ -26,7 +26,7 @@ void effects_cleanup_sfx();
 void stream_update();
 void priv_sound_init(BYTE bLoadMask);
 void sound_init();
-void __stdcall effects_play_sound(char *snd_file);
+void effects_play_sound(char *snd_file);
 
 /* rdata */
 

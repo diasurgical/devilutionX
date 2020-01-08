@@ -579,7 +579,7 @@ void DeltaLoadLevel()
 				item[ii]._ix = x;
 				item[ii]._iy = y;
 				dItem[x][y] = ii + 1;
-				RespawnItem(ii, 0);
+				RespawnItem(ii, FALSE);
 				numitems++;
 			}
 		}
@@ -1259,13 +1259,13 @@ void DeltaImportJunk(BYTE *src)
 		if (*src == 0xFF) {
 			memset(&sgJunk.portal[i], 0xFF, sizeof(DPortal));
 			src++;
-			SetPortalStats(i, 0, 0, 0, 0, 0);
+			SetPortalStats(i, FALSE, 0, 0, 0, 0);
 		} else {
 			memcpy(&sgJunk.portal[i], src, sizeof(DPortal));
 			src += sizeof(DPortal);
 			SetPortalStats(
 			    i,
-			    1,
+			    TRUE,
 			    sgJunk.portal[i].x,
 			    sgJunk.portal[i].y,
 			    sgJunk.portal[i].level,
@@ -1369,7 +1369,7 @@ DWORD On_SBSPELL(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-void __cdecl msg_errorf(const char *pszFmt, ...)
+void msg_errorf(const char *pszFmt, ...)
 {
 	static DWORD msg_err_timer;
 	DWORD ticks;
@@ -1664,7 +1664,7 @@ void delta_put_item(TCmdPItem *pI, int x, int y, BYTE bLevel)
 void check_update_plr(int pnum)
 {
 	if (gbMaxPlayers != 1 && pnum == myplr)
-		pfile_update(1);
+		pfile_update(TRUE);
 }
 
 DWORD On_SYNCPUTITEM(TCmd *pCmd, int pnum)

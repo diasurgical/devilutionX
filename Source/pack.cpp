@@ -27,6 +27,8 @@ static void PackItem(PkItemStruct *id, ItemStruct *is)
 			id->bCh = is->_iCharges;
 			id->bMCh = is->_iMaxCharges;
 			if (is->IDidx == IDI_GOLD)
+				if (is->_ivalue>10000) //check if swapped
+					is->_ivalue = SwapLE16(is->_ivalue);
 				id->wValue = is->_ivalue;
 		}
 	}
@@ -189,15 +191,16 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL killok)
 	pPlayer->_pLevel = pPack->pLevel;
 	pPlayer->_pStatPts = pPack->pStatPts;
 	pPlayer->_pExperience = pPack->pExperience;
-	pPlayer->_pGold = pPack->pGold;
-	pPlayer->_pMaxHPBase = pPack->pMaxHPBase;
-	pPlayer->_pHPBase = pPack->pHPBase;
+	pPlayer->_pGold = SwapLE32(pPack->pGold);
+	pPlayer->_pMaxHPBase = SwapLE32(pPack->pMaxHPBase);
+	pPlayer->_pHPBase = SwapLE32(pPack->pHPBase);
+
 	if (!killok)
 		if ((int)(pPlayer->_pHPBase & 0xFFFFFFC0) < 64)
 			pPlayer->_pHPBase = 64;
 
-	pPlayer->_pMaxManaBase = pPack->pMaxManaBase;
-	pPlayer->_pManaBase = pPack->pManaBase;
+	pPlayer->_pMaxManaBase = SwapLE32(pPack->pMaxManaBase);
+	pPlayer->_pManaBase = SwapLE32(pPack->pManaBase);
 	pPlayer->_pMemSpells = pPack->pMemSpells;
 
 	for (i = 0; i < MAX_SPELLS; i++)

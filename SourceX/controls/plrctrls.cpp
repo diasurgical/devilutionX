@@ -18,7 +18,6 @@ int speedspellcount = 0;
 bool InGameMenu()
 {
 	return stextflag > 0
-	    || questlog
 	    || helpflag
 	    || talkflag
 	    || qtextflag
@@ -226,7 +225,7 @@ void FindRangedTarget()
 
 void FindMeleeTarget()
 {
-	bool visited[MAXDUNX][MAXDUNY] = { 0 };
+	bool visited[MAXDUNX][MAXDUNY] = { { 0 } };
 	int maxSteps = 25; // Max steps for FindPath is 25
 	int rotations;
 	bool canTalk;
@@ -719,6 +718,23 @@ void HotSpellMove(MoveDirection dir)
 	}
 }
 
+void SpellBookMove(MoveDirection dir)
+{
+	DWORD ticks = GetTickCount();
+	if (ticks - invmove < repeatRate) {
+		return;
+	}
+	invmove = ticks;
+
+	if (dir.x == MoveDirectionX::LEFT) {
+		if (sbooktab > 0)
+			sbooktab--;
+	} else if (dir.x == MoveDirectionX::RIGHT) {
+		if (sbooktab < 3)
+			sbooktab++;
+	}
+}
+
 static const direction kFaceDir[3][3] = {
 	// NONE      UP      DOWN
 	{ DIR_OMNI, DIR_N, DIR_S }, // NONE
@@ -806,7 +822,7 @@ void WalkInDir(MoveDirection dir)
 
 void Movement()
 {
-	if (InGameMenu())
+	if (InGameMenu() || questlog)
 		return;
 
 	MoveDirection move_dir = GetMoveDirection();
@@ -820,66 +836,64 @@ void Movement()
 		AttrIncBtnSnap(move_dir.y);
 	} else if (spselflag) {
 		HotSpellMove(move_dir);
+	} else if (sbookflag) {
+		SpellBookMove(move_dir);
 	} else {
 		WalkInDir(move_dir);
 	}
 }
 
 struct RightStickAccumulator {
-	void start(int *x, int *y)
+	void pool(int *x, int *y, int slowdown)
 	{
-		hiresDX += rightStickX * kGranularity;
-		hiresDY += rightStickY * kGranularity;
+		DWORD tc = SDL_GetTicks();
+		hiresDX += rightStickX * (tc - lastTc);
+		hiresDY += rightStickY * (tc - lastTc);
 		*x += hiresDX / slowdown;
 		*y += -hiresDY / slowdown;
-	}
-
-	void finish()
-	{
+		lastTc = tc;
 		// keep track of remainder for sub-pixel motion
 		hiresDX %= slowdown;
 		hiresDY %= slowdown;
 	}
 
-	static const int kGranularity = (1 << 15) - 1;
-	int slowdown; // < kGranularity
-	int hiresDX;
-	int hiresDY;
+	void clear()
+	{
+		lastTc = SDL_GetTicks();
+	}
+
+	DWORD lastTc = SDL_GetTicks();
+	int hiresDX = 0;
+	int hiresDY = 0;
 };
 
 } // namespace
 
 void HandleRightStickMotion()
 {
+	static RightStickAccumulator acc;
 	// deadzone is handled in ScaleJoystickAxes() already
-	if (rightStickX == 0 && rightStickY == 0)
+	if (rightStickX == 0 && rightStickY == 0) {
+		acc.clear();
 		return;
+	}
 
-	if (automapflag) { // move map
-		static RightStickAccumulator acc = { /*slowdown=*/(1 << 14) + (1 << 13), 0, 0 };
+	if (automapflag && currlevel != DTYPE_TOWN) { // move map
 		int dx = 0, dy = 0;
-		acc.start(&dx, &dy);
-		if (dy > 1)
-			AutomapUp();
-		else if (dy < -1)
-			AutomapDown();
-		else if (dx < -1)
-			AutomapRight();
-		else if (dx > 1)
-			AutomapLeft();
-		acc.finish();
-	} else { // move cursor
+		acc.pool(&dx, &dy, 32);
+		AutoMapXOfs += dy + dx;
+		AutoMapYOfs += dy - dx;
+		return;
+	}
+
+	{ // move cursor
 		sgbControllerActive = false;
-		static RightStickAccumulator acc = { /*slowdown=*/(1 << 13) + (1 << 12), 0, 0 };
 		int x = MouseX;
 		int y = MouseY;
-		acc.start(&x, &y);
-		if (x < 0)
-			x = 0;
-		if (y < 0)
-			y = 0;
+		acc.pool(&x, &y, 2);
+		x = std::min(std::max(x, 0), SCREEN_WIDTH - 1);
+		y = std::min(std::max(y, 0), SCREEN_HEIGHT - 1);
 		SetCursorPos(x, y);
-		acc.finish();
 	}
 }
 
@@ -996,8 +1010,13 @@ void UpdateSpellTarget()
 	pcursmonst = -1;
 
 	const auto &player = plr[myplr];
-	cursmx = player._px + kOffsets[player._pdir][0];
-	cursmy = player._py + kOffsets[player._pdir][1];
+
+	int range = 1;
+	if (plr[myplr]._pRSpell == SPL_TELEPORT)
+		range = 4;
+
+	cursmx = player._px + kOffsets[player._pdir][0] * range;
+	cursmy = player._py + kOffsets[player._pdir][1] * range;
 }
 
 /**
@@ -1019,7 +1038,7 @@ bool TryDropItem()
 
 void PerformSpellAction()
 {
-	if (InGameMenu())
+	if (InGameMenu() || questlog || sbookflag)
 		return;
 
 	if (invflag) {

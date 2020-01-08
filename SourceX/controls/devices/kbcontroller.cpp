@@ -13,8 +13,8 @@ namespace {
 
 bool IsModifierKey()
 {
-#ifdef KBCTRL_MODIFIER_KEY
-	return SDLC_GetKeyState()[KBCTRL_MODIFIER_KEY];
+#ifdef KBCTRL_BUTTON_BACK
+	return SDLC_GetKeyState()[KBCTRL_BUTTON_BACK];
 #else
 	return false;
 #endif
@@ -32,24 +32,16 @@ ControllerButton KbCtrlToControllerButton(const SDL_Event &event)
 		case KBCTRL_IGNORE_1:
 			return ControllerButton::IGNORE;
 #endif
-#ifdef KBCTRL_MODIFIER_KEY
-		case KBCTRL_MODIFIER_KEY:
-			return ControllerButton::IGNORE;
-#endif
 #ifdef KBCTRL_BUTTON_A
 		case KBCTRL_BUTTON_A:
 			return ControllerButton::BUTTON_A;
 #endif
 #ifdef KBCTRL_BUTTON_B
 		case KBCTRL_BUTTON_B: // Right button
-			if (IsModifierKey())
-				return ControllerButton::BUTTON_RIGHTSTICK;
 			return ControllerButton::BUTTON_B;
 #endif
 #ifdef KBCTRL_BUTTON_X
 		case KBCTRL_BUTTON_X: // Left button
-			if (IsModifierKey())
-				return ControllerButton::BUTTON_BACK;
 			return ControllerButton::BUTTON_X;
 #endif
 #ifdef KBCTRL_BUTTON_Y
@@ -233,7 +225,6 @@ bool ProcessKbCtrlAxisMotion(const SDL_Event &event)
 	}
 	return true;
 }
-
 
 } // namespace dvl
 #endif

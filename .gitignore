@@ -428,3 +428,6 @@ DerivedData/
 
 ### Nintendo Switch ###
 exefs/main
+/buildx86/
+/.settings/
+/.cproject

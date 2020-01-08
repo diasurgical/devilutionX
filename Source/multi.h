@@ -16,7 +16,7 @@ extern BYTE gbDeltaSender;
 extern int player_state[MAX_PLRS];
 
 #ifdef _DEBUG
-void __cdecl dumphist(const char *pszFmt, ...);
+void dumphist(const char *pszFmt, ...);
 #endif
 void multi_msg_add(BYTE *pbMsg, BYTE bLen);
 void NetSendLoPri(BYTE *pbMsg, BYTE bLen);
@@ -44,7 +44,7 @@ void multi_process_tmsgs();
 void multi_send_zero_packet(int pnum, BYTE bCmd, BYTE *pbSrc, DWORD dwLen);
 void NetClose();
 void multi_event_handler(BOOL add);
-void __stdcall multi_handle_events(_SNETEVENT *pEvt);
+void multi_handle_events(_SNETEVENT *pEvt);
 BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram);
 void buffer_init(TBuffer *pBuf);
 void multi_send_pinfo(int pnum, char cmd);
