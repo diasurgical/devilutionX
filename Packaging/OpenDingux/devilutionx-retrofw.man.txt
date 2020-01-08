@@ -1,4 +1,4 @@
-Copy diabdat.mpq from your CD, or GoG install folder to:
+Copy diabdat.mpq from your CD (or GoG install folder) to:
 /home/retrofw/.local/share/diasurgical/diabdat.mpq
 
 Game saves and diablo.ini are located at:
@@ -6,16 +6,17 @@ Game saves and diablo.ini are located at:
 
 Controls:
 - D-pad: move hero
-- A: attack nearby enemies, talk to towns people and merchants, pickup & drop items in inventory, OK while in main menu
-- B: Select spell, cancel while in main menu
-- X: pickup gold, potions & equipment from ground, open chests and doors that are nearby, use item when in inventory (useful to read books etc.)
-- Y: cast spell, go to previous screen when talking to people and in shops, delete character while in main menu
-- R1: Drink health potion
-- L1: Drink mana potion
+- A: attack nearby enemies, talk to townspeople and merchants, pickup/place items in the inventory, OK while in main menu
+- B: select spell, back while in menus
+- X: pickup items, open nearby chests and doors, use item in the inventory
+- Y: cast spell, delete character while in main menu
+- R1: use mana potion from belt
+- L1: use health item from belt
+- Suspend: toggle automap
+- Start: game menu, skip movie
 - Select + R1: inventory
 - Select + R2: character
-- Select + D-pad: Move map/cursor
-- Select + A: Left click
-- Select + Y: Quest log
-- Suspend: Map
-- Start: game Menu, skip intro
+- Select + A/B/X/Y: hot spell
+- Select + D-pad: move map/cursor
+- Select + Suspend: left mouse click
+- Select + Start: right mouse click

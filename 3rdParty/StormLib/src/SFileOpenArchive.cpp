@@ -94,14 +94,25 @@ static int VerifyMpqTablePositions(TMPQArchive * ha, ULONGLONG FileSize)
     if(pHeader->wHashTablePosHi || pHeader->dwHashTablePos)
     {
         ByteOffset = FileOffsetFromMpqOffset(ha, MAKE_OFFSET64(pHeader->wHashTablePosHi, pHeader->dwHashTablePos));
+
+		if (ByteOffset == 1753219072)
+			ByteOffset = BSWAP_INT32_UNSIGNED(ByteOffset);
+
         if(ByteOffset > FileSize)
             return ERROR_BAD_FORMAT;
     }
 
     // Check the begin of block table
+	if (pHeader->dwBlockTablePos == 1744830464)
+		pHeader->dwBlockTablePos = BSWAP_INT32_UNSIGNED(pHeader->dwBlockTablePos);
+
     if(pHeader->wBlockTablePosHi || pHeader->dwBlockTablePos)
     {
         ByteOffset = FileOffsetFromMpqOffset(ha, MAKE_OFFSET64(pHeader->wBlockTablePosHi, pHeader->dwBlockTablePos));
+
+		if (ByteOffset == 1744830464)
+			ByteOffset = BSWAP_INT32_UNSIGNED(ByteOffset);
+			
         if(ByteOffset > FileSize)
             return ERROR_BAD_FORMAT;
     }
@@ -277,7 +288,10 @@ bool STORMAPI SFileOpenArchive(
 
                 // If there is the MPQ user data, process it
                 // Note that Warcraft III does not check for user data, which is abused by many map protectors
-                dwHeaderID = BSWAP_INT32_UNSIGNED(ha->HeaderData[0]);
+                dwHeaderID = ha->HeaderData[0];
+                if (dwHeaderID == 1297109274)
+                	dwHeaderID = BSWAP_INT32_UNSIGNED(ha->HeaderData[0]);
+
                 if(bIsWarcraft3Map == false && (dwFlags & MPQ_OPEN_FORCE_MPQ_V1) == 0)
                 {
                     if(ha->pUserData == NULL && dwHeaderID == ID_MPQ_USERDATA)
@@ -302,7 +316,10 @@ bool STORMAPI SFileOpenArchive(
                 // tests the MPQ header size. It must be at least 0x20 bytes in order to load it
                 // Abused by Spazzler Map protector. Note that the size check is not present
                 // in Storm.dll v 1.00, so Diablo I code would load the MPQ anyway.
-                dwHeaderSize = BSWAP_INT32_UNSIGNED(ha->HeaderData[1]);
+                dwHeaderSize = (ha->HeaderData[1]);
+                if (dwHeaderSize == 536870912)
+                	dwHeaderSize = BSWAP_INT32_UNSIGNED(ha->HeaderData[1]);
+
                 if(dwHeaderID == ID_MPQ && dwHeaderSize >= MPQ_HEADER_SIZE_V1)
                 {
                     // Now convert the header to version 4
@@ -375,7 +392,12 @@ bool STORMAPI SFileOpenArchive(
         // Observed in the malformed Warcraft III maps
         // Example map: MPQ_2016_v1_ProtectedMap_TableSizeOverflow.w3x
         ha->pHeader->dwBlockTableSize = (ha->pHeader->dwBlockTableSize & BLOCK_INDEX_MASK);
+        if (ha->pHeader->dwBlockTableSize == 524288)
+            ha->pHeader->dwBlockTableSize = BSWAP_INT32_UNSIGNED(ha->pHeader->dwBlockTableSize & BLOCK_INDEX_MASK);
+
         ha->pHeader->dwHashTableSize = (ha->pHeader->dwHashTableSize & BLOCK_INDEX_MASK);
+        if (ha->pHeader->dwHashTableSize == 524288)
+            ha->pHeader->dwHashTableSize = BSWAP_INT32_UNSIGNED(ha->pHeader->dwHashTableSize & BLOCK_INDEX_MASK);
 
         // Both MPQ_OPEN_NO_LISTFILE or MPQ_OPEN_NO_ATTRIBUTES trigger read only mode
         if(dwFlags & (MPQ_OPEN_NO_LISTFILE | MPQ_OPEN_NO_ATTRIBUTES))

@@ -52,7 +52,7 @@ void UnloadArtFonts()
 void LoadTtfFont() {
 	if (!TTF_WasInit()) {
 		if (TTF_Init() == -1) {
-			printf("TTF_Init: %s\n", TTF_GetError());
+			SDL_Log("TTF_Init: %s", TTF_GetError());
 			exit(1);
 		}
 		atexit(TTF_Quit);
@@ -60,7 +60,7 @@ void LoadTtfFont() {
 
 	font = TTF_OpenFont(TTF_FONT_PATH, 17);
 	if (font == NULL) {
-		printf("TTF_OpenFont: %s\n", TTF_GetError());
+		SDL_Log("TTF_OpenFont: %s", TTF_GetError());
 		return;
 	}
 

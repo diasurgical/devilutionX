@@ -20,15 +20,13 @@ inline BYTE *CelGetFrameStart(BYTE *pCelBuff, int nCel)
 	return pCelBuff + SwapLE32(pFrameTable[nCel]);
 }
 
+#define LOAD_LE32(b) (((DWORD)(b)[3] << 24) | ((DWORD)(b)[2] << 16) | ((DWORD)(b)[1] << 8) | (DWORD)(b)[0])
 inline BYTE *CelGetFrame(BYTE *pCelBuff, int nCel, int *nDataSize)
 {
-	DWORD *pFrameTable;
 	DWORD nCellStart;
 
-	pFrameTable = (DWORD *)pCelBuff;
-	nCellStart = SwapLE32(pFrameTable[nCel]);
-	*nDataSize = SwapLE32(pFrameTable[nCel + 1]) - nCellStart;
-
+	nCellStart = LOAD_LE32(&pCelBuff[nCel * 4]);
+	*nDataSize = LOAD_LE32(&pCelBuff[(nCel+1) * 4]) - nCellStart;
 	return pCelBuff + nCellStart;
 }
 

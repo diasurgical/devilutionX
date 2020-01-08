@@ -40,7 +40,7 @@ void SHA1Result(int n, char Message_Digest[SHA1HashSize])
 	Message_Digest_Block = (DWORD *)Message_Digest;
 	if (Message_Digest) {
 		for (i = 0; i < 5; i++) {
-			*Message_Digest_Block = sgSHA1[n].state[i];
+			*Message_Digest_Block = (unsigned int)sgSHA1[n].state[i];
 			Message_Digest_Block++;
 		}
 	}
@@ -77,9 +77,9 @@ void SHA1ProcessMessageBlock(SHA1Context *context)
 	DWORD W[80];
 	DWORD A, B, C, D, E;
 
-	DWORD *buf = (DWORD *)context->buffer;
+//	DWORD *buf = (DWORD *)context->buffer; // probably can be removed?
 	for (i = 0; i < 16; i++)
-		W[i] = buf[i];
+		W[i] = (unsigned int)context->buffer[i];//no need for swapping; same as SwapLE32(buf[i]);
 
 	for (i = 16; i < 80; i++) {
 		W[i] = W[i - 16] ^ W[i - 14] ^ W[i - 8] ^ W[i - 3];

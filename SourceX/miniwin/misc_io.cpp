@@ -27,7 +27,7 @@ HANDLE CreateFileA(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode,
 {
 	char name[DVL_MAX_PATH];
 	TranslateFileName(name, sizeof(name), lpFileName);
-	DUMMY_PRINT("file: %s (%s)", lpFileName, name);
+	SDL_Log("file: %s (%s)", lpFileName, name);
 	UNIMPLEMENTED_UNLESS(!(dwDesiredAccess & ~(DVL_GENERIC_READ | DVL_GENERIC_WRITE)));
 	memfile *file = new memfile;
 	file->path = name;

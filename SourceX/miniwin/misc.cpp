@@ -8,11 +8,6 @@
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/dialogs.h"
 
-#ifdef _MSC_VER
-#define strcasecmp _stricmp
-#define strncasecmp _strnicmp
-#endif
-
 #if defined(USE_SDL1) && defined(RETROFW)
 #include <unistd.h>
 #endif
@@ -62,26 +57,6 @@ int _strnicmp(const char *_Str1, const char *_Str2, size_t n)
 	return strncasecmp(_Str1, _Str2, n);
 }
 
-char *_itoa(int _Value, char *_Dest, int _Radix)
-{
-	switch (_Radix) {
-	case 8:
-		sprintf(_Dest, "%o", _Value);
-		break;
-	case 10:
-		sprintf(_Dest, "%d", _Value);
-		break;
-	case 16:
-		sprintf(_Dest, "%x", _Value);
-		break;
-	default:
-		UNIMPLEMENTED();
-		break;
-	}
-
-	return _Dest;
-}
-
 DWORD GetTickCount()
 {
 	return SDL_GetTicks();
@@ -90,14 +65,6 @@ DWORD GetTickCount()
 void Sleep(DWORD dwMilliseconds)
 {
 	SDL_Delay(dwMilliseconds);
-}
-
-WINBOOL GetComputerNameA(LPSTR lpBuffer, LPDWORD nSize)
-{
-	DUMMY();
-	strncpy(lpBuffer, "localhost", *nSize);
-	*nSize = strlen(lpBuffer);
-	return true;
 }
 
 WINBOOL DeleteFileA(LPCSTR lpFileName)
@@ -128,12 +95,15 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 
 #ifdef USE_SDL1
 	SDL_EnableUNICODE(1);
+#endif
+#if defined(USE_SDL1) || defined(__SWITCH__)
 	InitController();
 #endif
 
 	int upscale = 1;
 	DvlIntSetting("upscale", &upscale);
-	DvlIntSetting("fullscreen", (int *)&fullscreen);
+	if (fullscreen)
+		DvlIntSetting("fullscreen", (int *)&fullscreen);
 
 	int grabInput = 1;
 	DvlIntSetting("grab input", &grabInput);
@@ -183,6 +153,10 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 
 #ifdef USE_SDL1
 	refreshDelay = 1000000 / 60; // 60hz
+#else
+	SDL_DisplayMode mode;
+	SDL_GetDisplayMode(0, 0, &mode);
+	refreshDelay = 1000000 / mode.refresh_rate;
 #endif
 
 	if (upscale) {
@@ -202,12 +176,6 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 		if (SDL_RenderSetLogicalSize(renderer, nWidth, nHeight) <= -1) {
 			ErrSdl();
 		}
-#endif
-	} else {
-#ifndef USE_SDL1
-		SDL_DisplayMode mode;
-		SDL_GetDisplayMode(0, 0, &mode);
-		refreshDelay = 1000000 / mode.refresh_rate;
 #endif
 	}
 

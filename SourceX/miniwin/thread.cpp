@@ -57,12 +57,6 @@ DWORD GetCurrentThreadId()
 	return SDL_GetThreadID(NULL);
 }
 
-HANDLE GetCurrentThread()
-{
-	// Only used for SetThreadPriority, which is unimplemented
-	return NULL;
-}
-
 WINBOOL SetThreadPriority(HANDLE hThread, int nPriority)
 {
 	// SDL cannot set the priority of the non-current thread

@@ -386,7 +386,10 @@ int ConvertMpqHeaderToFormat4(
             // Only low byte of sector size is really used
             if(pHeader->wSectorSize & 0xFF00)
                 ha->dwFlags |= MPQ_FLAG_MALFORMED;
-            pHeader->wSectorSize = pHeader->wSectorSize & 0xFF;
+            pHeader->wSectorSize = BSWAP_INT16_UNSIGNED(pHeader->wSectorSize/* & 0xFF*/);
+
+            if (pHeader->wSectorSize == 768)
+            	pHeader->wSectorSize = BSWAP_INT16_UNSIGNED(pHeader->wSectorSize);
 
             // Fill the rest of the header
             memset((LPBYTE)pHeader + MPQ_HEADER_SIZE_V1, 0, sizeof(TMPQHeader) - MPQ_HEADER_SIZE_V1);

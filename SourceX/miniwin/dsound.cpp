@@ -12,21 +12,22 @@ void DirectSoundBuffer::Release()
 	Mix_FreeChunk(chunk);
 };
 
-void DirectSoundBuffer::GetStatus(LPDWORD pdwStatus)
+bool DirectSoundBuffer::IsPlaying()
 {
 	for (int i = 1; i < Mix_AllocateChannels(-1); i++) {
 		if (Mix_GetChunk(i) == chunk && Mix_Playing(i)) {
-			*pdwStatus = DVL_DSBSTATUS_PLAYING;
-			break;
+			return true;
 		}
 	}
+
+	return false;
 };
 
 void DirectSoundBuffer::Play(int lVolume, int lPan)
 {
 	int channel = Mix_PlayChannel(-1, chunk, 0);
 	if (channel == -1) {
-		SDL_Log("Too few channels, skipping sound\n");
+		SDL_Log("Too few channels, skipping sound");
 		return;
 	}
 

@@ -1,6 +1,7 @@
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
+#include <config.h>
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -38,8 +39,8 @@ int color_cycle_timer;
 /* rdata */
 
 BOOL fullscreen = TRUE;
-#ifdef _DEBUG
 int showintrodebug = 1;
+#ifdef _DEBUG
 int questdebug = -1;
 int debug_mode_key_s;
 int debug_mode_key_w;
@@ -226,7 +227,7 @@ void start_game(unsigned int uMsg)
 	InitLevelCursor();
 	sgnTimeoutCurs = 0;
 	sgbMouseDown = 0;
-	track_repeat_walk(0);
+	track_repeat_walk(FALSE);
 }
 
 void free_game()
@@ -249,7 +250,7 @@ void free_game()
 	FreeGameMem();
 }
 
-void diablo_init(LPSTR lpCmdLine)
+void diablo_init()
 {
 	init_create_window();
 
@@ -269,7 +270,6 @@ void diablo_init(LPSTR lpCmdLine)
 	InitHash();
 
 	diablo_init_screen();
-	diablo_parse_flags(lpCmdLine);
 
 	snd_init(NULL);
 	atexit(sound_cleanup);
@@ -279,10 +279,8 @@ void diablo_init(LPSTR lpCmdLine)
 
 void diablo_splash()
 {
-#ifdef _DEBUG
 	if (!showintrodebug)
 		return;
-#endif
 
 	play_movie("gendata\\logo.smk", TRUE);
 #ifndef SPAWN
@@ -294,154 +292,112 @@ void diablo_splash()
 	UiTitleDialog();
 }
 
-int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+int DiabloMain(int argc, char **argv)
 {
-	diablo_init(lpCmdLine);
+	diablo_parse_flags(argc, argv);
+	diablo_init();
 	diablo_splash();
 	mainmenu_loop();
 
 	return 0;
 }
 
-void diablo_parse_flags(char *args)
+static void print_help_and_exit()
 {
-	char c;
+	printf("Options:\n");
+	printf("    %-20s %-30s\n", "-h, --help", "Print this message and exit");
+	printf("    %-20s %-30s\n", "--version", "Print the version and exit");
+	printf("    %-20s %-30s\n", "--data-dir", "Specify the folder of diabdat.mpq");
+	printf("    %-20s %-30s\n", "-n", "Skip startup videos");
+	printf("    %-20s %-30s\n", "-f", "Display frames per second");
+	printf("    %-20s %-30s\n", "-x", "Run in windowed mode");
 #ifdef _DEBUG
-	int i;
+	printf("\nDebug options:\n");
+	printf("    %-20s %-30s\n", "-d", "Increaased item drops");
+	printf("    %-20s %-30s\n", "-w", "Enable cheats");
+	printf("    %-20s %-30s\n", "-$", "Enable god mode");
+	printf("    %-20s %-30s\n", "-^", "Enable god mode and debug tools");
+	//printf("    %-20s %-30s\n", "-b", "Enable item drop log");
+	printf("    %-20s %-30s\n", "-v", "Highlight visibility");
+	printf("    %-20s %-30s\n", "-i", "Ignore network timeout");
+	//printf("    %-20s %-30s\n", "-j <##>", "Init trigger at level");
+	printf("    %-20s %-30s\n", "-l <##> <##>", "Start in level as type");
+	printf("    %-20s %-30s\n", "-m <##>", "Add debug monster, up to 10 allowed");
+	printf("    %-20s %-30s\n", "-q <#>", "Force a certain quest");
+	printf("    %-20s %-30s\n", "-r <##########>", "Set map seed");
+	printf("    %-20s %-30s\n", "-t <##>", "Set current quest level");
 #endif
+	printf("\nReport bugs at https://github.com/diasurgical/devilutionX/\n");
+	exit(0);
+}
 
-	while (*args != '\0') {
-		while (isspace(*args)) {
-			args++;
-		}
-		{
-			c = tolower(*args);
-			args++;
-			switch (c) {
-#ifdef _DEBUG
-			case '^':
-				debug_mode_key_inverted_v = 1;
-				break;
-			case '$':
-				debug_mode_dollar_sign = 1;
-				break;
-			case 'b':
-				/*
-				debug_mode_key_b = 1;
-			*/
-				break;
-			case 'd':
-				showintrodebug = 0;
-				debug_mode_key_d = 1;
-				break;
+void diablo_parse_flags(int argc, char **argv)
+{
+	for (int i = 1; i < argc; i++) {
+		if (strcasecmp("-h", argv[i]) == 0 || strcasecmp("--help", argv[i]) == 0) {
+			print_help_and_exit();
+		} else if (strcasecmp("--version", argv[i]) == 0) {
+			printf("%s v%s\n", PROJECT_NAME, PROJECT_VERSION);
+			exit(0);
+		} else if (strcasecmp("--data-dir", argv[i]) == 0) {
+			basePath = argv[++i];
+#ifdef _WIN32
+			if (basePath.back() != '\\')
+				basePath += '\\';
+#else
+			if (basePath.back() != '/')
+				basePath += '/';
 #endif
-			case 'f':
-				EnableFrameCount();
-				break;
+		} else if (strcasecmp("-n", argv[i]) == 0) {
+			showintrodebug = 0;
+		} else if (strcasecmp("-f", argv[i]) == 0) {
+			EnableFrameCount();
+		} else if (strcasecmp("-x", argv[i]) == 0) {
+			fullscreen = FALSE;
 #ifdef _DEBUG
-			case 'i':
-				debug_mode_key_i = 1;
-				break;
-			case 'j':
-				/*
-				while(isspace(*args)) {
-					args++;
-				}
-				i = 0;
-				while(isdigit(*args)) {
-					i = *args + 10 * i - '0';
-					args++;
-				}
-				debug_mode_key_J_trigger = i;
-			*/
-				break;
-			case 'l':
-				setlevel = FALSE;
-				leveldebug = TRUE;
-				while (isspace(*args)) {
-					args++;
-				}
-				i = 0;
-				while (isdigit(*args)) {
-					i = *args + 10 * i - '0';
-					args++;
-				}
-				leveltype = i;
-				while (isspace(*args)) {
-					args++;
-				}
-				i = 0;
-				while (isdigit(*args)) {
-					i = *args + 10 * i - '0';
-					args++;
-				}
-				currlevel = i;
-				plr[0].plrlevel = i;
-				break;
-			case 'm':
-				monstdebug = TRUE;
-				while (isspace(*args)) {
-					args++;
-				}
-				i = 0;
-				while (isdigit(*args)) {
-					i = *args + 10 * i - '0';
-					args++;
-				}
-				DebugMonsters[debugmonsttypes++] = i;
-				break;
-			case 'n':
-				showintrodebug = 0;
-				break;
-			case 'q':
-				while (isspace(*args)) {
-					args++;
-				}
-				i = 0;
-				while (isdigit(*args)) {
-					i = *args + 10 * i - '0';
-					args++;
-				}
-				questdebug = i;
-				break;
-			case 'r':
-				while (isspace(*args)) {
-					args++;
-				}
-				i = 0;
-				while (isdigit(*args)) {
-					i = *args + 10 * i - '0';
-					args++;
-				}
-				setseed = i;
-				break;
-			case 's':
-				debug_mode_key_s = 1;
-				break;
-			case 't':
-				leveldebug = TRUE;
-				setlevel = TRUE;
-				while (isspace(*args)) {
-					args++;
-				}
-				i = 0;
-				while (isdigit(*args)) {
-					i = *args + 10 * i - '0';
-					args++;
-				}
-				setlvlnum = i;
-				break;
-			case 'v':
-				visiondebug = TRUE;
-				break;
-			case 'w':
-				debug_mode_key_w = 1;
-				break;
-			case 'x':
-				fullscreen = FALSE;
-				break;
+		} else if (strcasecmp("-^", argv[i]) == 0) {
+			debug_mode_key_inverted_v = 1;
+		} else if (strcasecmp("-$", argv[i]) == 0) {
+			debug_mode_dollar_sign = 1;
+		/*
+		} else if (strcasecmp("-b", argv[i]) == 0) {
+			debug_mode_key_b = 1;
+		*/
+		} else if (strcasecmp("-d", argv[i]) == 0) {
+			debug_mode_key_d = 1;
+		} else if (strcasecmp("-i", argv[i]) == 0) {
+			debug_mode_key_i = 1;
+		/*
+		} else if (strcasecmp("-j", argv[i]) == 0) {
+			debug_mode_key_J_trigger = argv[++i];
+		*/
+		} else if (strcasecmp("-l", argv[i]) == 0) {
+			setlevel = FALSE;
+			leveldebug = TRUE;
+			leveltype = SDL_atoi(argv[++i]);
+			currlevel = SDL_atoi(argv[++i]);
+			plr[0].plrlevel = currlevel;
+		} else if (strcasecmp("-m", argv[i]) == 0) {
+			monstdebug = TRUE;
+			DebugMonsters[debugmonsttypes++] = SDL_atoi(argv[++i]);
+		} else if (strcasecmp("-q", argv[i]) == 0) {
+			questdebug = SDL_atoi(argv[++i]);
+		} else if (strcasecmp("-r", argv[i]) == 0) {
+			setseed = SDL_atoi(argv[++i]);
+		} else if (strcasecmp("-s", argv[i]) == 0) {
+			debug_mode_key_s = 1;
+		} else if (strcasecmp("-t", argv[i]) == 0) {
+			leveldebug = TRUE;
+			setlevel = TRUE;
+			setlvlnum = SDL_atoi(argv[++i]);
+		} else if (strcasecmp("-v", argv[i]) == 0) {
+			visiondebug = TRUE;
+		} else if (strcasecmp("-w", argv[i]) == 0) {
+			debug_mode_key_w = 1;
 #endif
-			}
+		} else {
+			printf("unrecognized option '%s'\n", argv[i]);
+			print_help_and_exit();
 		}
 	}
 }
@@ -452,6 +408,8 @@ void diablo_init_screen()
 
 	MouseX = SCREEN_WIDTH / 2;
 	MouseY = SCREEN_HEIGHT / 2;
+	if (!sgbControllerActive)
+		SetCursorPos(MouseX, MouseY);
 	ScrollInfo._sdx = 0;
 	ScrollInfo._sdy = 0;
 	ScrollInfo._sxoff = 0;
@@ -503,7 +461,7 @@ BOOL PressEscKey()
 	return rv;
 }
 
-LRESULT CALLBACK DisableInputWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT DisableInputWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg) {
 	case WM_KEYDOWN:
@@ -512,6 +470,8 @@ LRESULT CALLBACK DisableInputWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 	case WM_SYSKEYDOWN:
 	case WM_SYSCOMMAND:
 	case WM_MOUSEMOVE:
+		MouseX = (short)LOWORD(lParam);
+		MouseY = (short)HIWORD(lParam);
 		return 0;
 	case WM_LBUTTONDOWN:
 		if (sgbMouseDown == 0) {
@@ -542,7 +502,7 @@ LRESULT CALLBACK DisableInputWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 	return MainWndProc(hWnd, uMsg, wParam, lParam);
 }
 
-LRESULT CALLBACK GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg) {
 	case WM_KEYDOWN:
@@ -892,7 +852,7 @@ void PressKey(int vkey)
 	}
 	if (vkey == VK_ESCAPE) {
 		if (!PressEscKey()) {
-			track_repeat_walk(0);
+			track_repeat_walk(FALSE);
 			gamemenu_previous();
 		}
 		return;
@@ -924,7 +884,7 @@ void PressKey(int vkey)
 			ClearPanel();
 			AddPanelString("No help available", TRUE); /// BUGFIX: message isn't displayed
 			AddPanelString("while in stores", TRUE);
-			track_repeat_walk(0);
+			track_repeat_walk(FALSE);
 		} else {
 			invflag = 0;
 			chrflag = FALSE;
@@ -935,7 +895,7 @@ void PressKey(int vkey)
 				sfx_stop();
 			}
 			questlog = FALSE;
-			automapflag = 0;
+			automapflag = FALSE;
 			msgdelay = 0;
 			gamemenu_off();
 			DisplayHelp();
@@ -1044,7 +1004,7 @@ void PressKey(int vkey)
 			SetCursorPos(MouseX - 160, MouseY);
 		}
 		helpflag = 0;
-		invflag = 0;
+		invflag = FALSE;
 		chrflag = FALSE;
 		sbookflag = FALSE;
 		spselflag = 0;
@@ -1053,7 +1013,7 @@ void PressKey(int vkey)
 			sfx_stop();
 		}
 		questlog = FALSE;
-		automapflag = 0;
+		automapflag = FALSE;
 		msgdelay = 0;
 		gamemenu_off();
 		doom_close();
@@ -1068,7 +1028,7 @@ void diablo_pause_game()
 		} else {
 			PauseMode = 2;
 			FreeMonsterSnd();
-			track_repeat_walk(0);
+			track_repeat_walk(FALSE);
 		}
 		force_redraw = 255;
 	}
@@ -1155,19 +1115,19 @@ void PressChar(int vkey)
 	case 'S':
 	case 's':
 		if (!stextflag) {
-			invflag = 0;
+			invflag = FALSE;
 			if (!spselflag) {
 				DoSpeedBook();
 			} else {
 				spselflag = 0;
 			}
-			track_repeat_walk(0);
+			track_repeat_walk(FALSE);
 		}
 		return;
 	case 'B':
 	case 'b':
 		if (!stextflag) {
-			invflag = 0;
+			invflag = FALSE;
 			sbookflag = !sbookflag;
 		}
 		return;
@@ -1682,7 +1642,6 @@ void game_loop(BOOL bStartup)
 			break;
 	}
 }
-
 
 // Controller support:
 extern void plrctrls_after_game_logic();

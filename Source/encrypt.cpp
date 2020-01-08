@@ -108,7 +108,7 @@ int PkwareCompress(void *buf, int size)
 	return size;
 }
 
-unsigned int __cdecl PkwareBufferRead(char *buf, unsigned int *size, void *param)
+unsigned int PkwareBufferRead(char *buf, unsigned int *size, void *param)
 {
 	TDataInfo *pInfo;
 	DWORD sSize;
@@ -127,7 +127,7 @@ unsigned int __cdecl PkwareBufferRead(char *buf, unsigned int *size, void *param
 	return sSize;
 }
 
-void __cdecl PkwareBufferWrite(char *buf, unsigned int *size, void *param)
+void PkwareBufferWrite(char *buf, unsigned int *size, void *param)
 {
 	TDataInfo *pInfo;
 

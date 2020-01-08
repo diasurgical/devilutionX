@@ -16,8 +16,11 @@
 
 namespace dvl {
 
+std::string basePath;
+
 DWORD nLastError = 0;
 bool directFileAccess = false;
+char SBasePath[DVL_MAX_PATH];
 
 static std::string getIniPath()
 {
@@ -33,27 +36,47 @@ static Mix_Chunk *SFileChunk;
 
 void GetBasePath(char *buffer, size_t size)
 {
+#ifndef __AMIGA__
+
+	if (basePath.length()) {
+		snprintf(buffer, size, "%s", basePath.c_str());
+		return;
+	}
+
 	char *path = SDL_GetBasePath();
 	if (path == NULL) {
 		SDL_Log(SDL_GetError());
 		buffer[0] = '\0';
 		return;
 	}
+#else
+	snprintf(buffer, 9, "%s", "PROGDIR:");
+#endif
 
+#ifndef __AMIGA__
 	snprintf(buffer, size, "%s", path);
 	SDL_free(path);
+#endif
+
 }
 
 void GetPrefPath(char *buffer, size_t size)
 {
+#ifndef __AMIGA__
 	char *path = SDL_GetPrefPath("diasurgical", "devilution");
 	if (path == NULL) {
 		buffer[0] = '\0';
 		return;
-	}
+	}	
+#else
+	snprintf(buffer, 9, "%s", "PROGDIR:");
+#endif
 
+#ifndef __AMIGA__
 	snprintf(buffer, size, "%s", path);
 	SDL_free(path);
+#endif
+
 }
 
 void TranslateFileName(char *dst, int dstLen, const char *src)
@@ -160,9 +183,11 @@ BOOL SFileOpenFile(const char *filename, HANDLE *phFile)
 
 	if (directFileAccess) {
 		char directPath[DVL_MAX_PATH] = "\0";
+		char tmpPath[DVL_MAX_PATH] = "\0";
 		for (size_t i = 0; i < strlen(filename); i++) {
-			directPath[i] = AsciiToLowerTable_Path[static_cast<unsigned char>(filename[i])];
+			tmpPath[i] = AsciiToLowerTable_Path[static_cast<unsigned char>(filename[i])];
 		}
+		snprintf(directPath, DVL_MAX_PATH, "%s%s", SBasePath, tmpPath);
 		result = SFileOpenFileEx((HANDLE)0, directPath, 0xFFFFFFFF, phFile);
 	}
 	if (!result && patch_rt_mpq) {
@@ -577,7 +602,7 @@ void SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 		}
 	}
 #elif SDL1_VIDEO_MODE_BPP == 8
-	SDL_SetVideoMode(SVidWidth, SVidHeight, SDL1_VIDEO_MODE_BPP, GetOutputSurface()->flags);
+	SDL_SetVideoMode(SVidWidth, 200, SDL1_VIDEO_MODE_BPP, GetOutputSurface()->flags);
 #endif
 	memcpy(SVidPreviousPalette, orig_palette, 1024);
 
@@ -703,7 +728,9 @@ BOOL SVidPlayContinue(void)
 		Uint32 format = SDL_GetWindowPixelFormat(window);
 		SDL_Surface *tmp = SDL_ConvertSurfaceFormat(SVidSurface, format, 0);
 #endif
-		ScaleOutputRect(&pal_surface_offset);
+#ifndef __AMIGA__
+		ScaleOutputRect(&pal_surface_offset); // somehow this lead to pb with amiga's SDL
+#endif
 		if (SDL_BlitScaled(tmp, NULL, GetOutputSurface(), &pal_surface_offset) <= -1) {
 			SDL_Log(SDL_GetError());
 			return false;
@@ -711,7 +738,6 @@ BOOL SVidPlayContinue(void)
 		SDL_FreeSurface(tmp);
 	}
 
-	bufferUpdated = true;
 	RenderPresent();
 
 	double now = SDL_GetTicks() * 1000;
@@ -788,9 +814,9 @@ int SStrCopy(char *dest, const char *src, int max_length)
 	return strlen(dest);
 }
 
-BOOL SFileSetBasePath(char *)
+BOOL SFileSetBasePath(char *path)
 {
-	DUMMY();
+	strncpy(SBasePath, path, DVL_MAX_PATH);
 	return true;
 }
 

@@ -8,7 +8,6 @@ constexpr auto DVL_MAX_PATH = 260;
 typedef char CHAR;
 typedef uint16_t SHORT;
 typedef int32_t LONG;
-typedef uint8_t BOOLEAN;
 
 typedef LONG *PLONG;
 typedef uint32_t ULONG;
@@ -20,7 +19,7 @@ typedef UCHAR *PUCHAR;
 typedef char *PSZ;
 
 typedef uint32_t DWORD;
-typedef int BOOL, WINBOOL;
+typedef bool BOOL, BOOLEAN, WINBOOL;
 typedef unsigned char BYTE;
 typedef unsigned short WORD;
 typedef float FLOAT;
@@ -71,7 +70,7 @@ typedef LONG LCID;
 
 typedef DWORD COLORREF;
 
-typedef LRESULT(CALLBACK *WNDPROC)(HWND, UINT, WPARAM, LPARAM);
+typedef LRESULT(*WNDPROC)(HWND, UINT, WPARAM, LPARAM);
 
 #pragma pack(push, 1)
 typedef struct waveformat_tag {
@@ -175,48 +174,43 @@ typedef struct _LIST_ENTRY {
 	struct _LIST_ENTRY *Blink;
 } LIST_ENTRY, *PLIST_ENTRY;
 
-DWORD WINAPI GetTickCount();
+DWORD GetTickCount();
 
-DWORD WINAPI GetLastError();
-void WINAPI SetLastError(DWORD dwErrCode);
+DWORD GetLastError();
+void SetLastError(DWORD dwErrCode);
 
-WINBOOL WINAPI CloseHandle(HANDLE hObject);
+WINBOOL CloseHandle(HANDLE hObject);
 
-HANDLE WINAPI CreateEventA(LPSECURITY_ATTRIBUTES lpEventAttributes, WINBOOL bManualReset, WINBOOL bInitialState,
+HANDLE CreateEventA(LPSECURITY_ATTRIBUTES lpEventAttributes, WINBOOL bManualReset, WINBOOL bInitialState,
     LPCSTR lpName);
 BOOL CloseEvent(HANDLE event);
 void SetEvent(HANDLE hEvent);
 void ResetEvent(HANDLE hEvent);
-int WINAPI WaitForSingleObject(HANDLE hHandle, DWORD dwMilliseconds);
+int WaitForSingleObject(HANDLE hHandle, DWORD dwMilliseconds);
 
 void SetCursorPos(int X, int Y);
 void FocusOnCharInfo();
 
-SHORT WINAPI GetAsyncKeyState(int vKey);
+SHORT GetAsyncKeyState(int vKey);
 
-WINBOOL WINAPI PeekMessageA(LPMSG lpMsg);
+WINBOOL PeekMessageA(LPMSG lpMsg);
 
-WINBOOL WINAPI TranslateMessage(const MSG *lpMsg);
-LRESULT WINAPI DispatchMessageA(const MSG *lpMsg);
-WINBOOL WINAPI PostMessageA(UINT Msg, WPARAM wParam, LPARAM lParam);
+WINBOOL TranslateMessage(const MSG *lpMsg);
+LRESULT DispatchMessageA(const MSG *lpMsg);
+WINBOOL PostMessageA(UINT Msg, WPARAM wParam, LPARAM lParam);
 
 bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight);
 
-typedef LONG(WINAPI *PTOP_LEVEL_EXCEPTION_FILTER)(
-    struct _EXCEPTION_POINTERS *ExceptionInfo);
-
-uintptr_t __cdecl DVL_beginthreadex(void *_Security, unsigned _StackSize, unsigned(__stdcall *_StartAddress)(void *),
+uintptr_t DVL_beginthreadex(void *_Security, unsigned _StackSize, unsigned(*_StartAddress)(void *),
     void *_ArgList, unsigned _InitFlag, unsigned *_ThrdAddr);
-HANDLE WINAPI GetCurrentThread();
-DWORD WINAPI GetCurrentThreadId();
-WINBOOL WINAPI SetThreadPriority(HANDLE hThread, int nPriority);
-void WINAPI Sleep(DWORD dwMilliseconds);
+DWORD GetCurrentThreadId();
+WINBOOL SetThreadPriority(HANDLE hThread, int nPriority);
+void Sleep(DWORD dwMilliseconds);
 
-int WINAPIV wsprintfA(LPSTR, LPCSTR, ...);
-int WINAPIV wvsprintfA(LPSTR dest, LPCSTR format, va_list arglist);
-int __cdecl _strcmpi(const char *_Str1, const char *_Str2);
-int __cdecl _strnicmp(const char *_Str1, const char *_Str2, size_t n);
-char *__cdecl _itoa(int _Value, char *_Dest, int _Radix);
+int wsprintfA(LPSTR, LPCSTR, ...);
+int wvsprintfA(LPSTR dest, LPCSTR format, va_list arglist);
+int _strcmpi(const char *_Str1, const char *_Str2);
+int _strnicmp(const char *_Str1, const char *_Str2, size_t n);
 
 //
 // File I/O
@@ -321,20 +315,19 @@ typedef struct _IMAGE_SECTION_HEADER {
 
 typedef LONG LSTATUS, HKEY, REGSAM, PHKEY;
 
-WINBOOL WINAPI WriteFile(HANDLE hFile, LPCVOID lpBuffer, DWORD nNumberOfBytesToWrite, LPDWORD lpNumberOfBytesWritten,
+WINBOOL WriteFile(HANDLE hFile, LPCVOID lpBuffer, DWORD nNumberOfBytesToWrite, LPDWORD lpNumberOfBytesWritten,
     LPOVERLAPPED lpOverlapped);
-DWORD WINAPI SetFilePointer(HANDLE hFile, LONG lDistanceToMove, PLONG lpDistanceToMoveHigh, DWORD dwMoveMethod);
-WINBOOL WINAPI SetEndOfFile(HANDLE hFile);
-DWORD WINAPI GetFileAttributesA(LPCSTR lpFileName);
-WINBOOL WINAPI SetFileAttributesA(LPCSTR lpFileName, DWORD dwFileAttributes);
-HANDLE WINAPI CreateFileA(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode,
+DWORD SetFilePointer(HANDLE hFile, LONG lDistanceToMove, PLONG lpDistanceToMoveHigh, DWORD dwMoveMethod);
+WINBOOL SetEndOfFile(HANDLE hFile);
+DWORD GetFileAttributesA(LPCSTR lpFileName);
+WINBOOL SetFileAttributesA(LPCSTR lpFileName, DWORD dwFileAttributes);
+HANDLE CreateFileA(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode,
     LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition,
     DWORD dwFlagsAndAttributes, HANDLE hTemplateFile);
-WINBOOL WINAPI ReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead, LPDWORD lpNumberOfBytesRead,
+WINBOOL ReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead, LPDWORD lpNumberOfBytesRead,
     LPOVERLAPPED lpOverlapped);
-DWORD WINAPI GetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh);
-WINBOOL WINAPI GetComputerNameA(LPSTR lpBuffer, LPDWORD nSize);
-WINBOOL WINAPI DeleteFileA(LPCSTR lpFileName);
+DWORD GetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh);
+WINBOOL DeleteFileA(LPCSTR lpFileName);
 
 typedef struct _CONTEXT {
 
@@ -408,25 +401,6 @@ typedef struct _CONTEXT {
 
 typedef CONTEXT *PCONTEXT;
 
-//
-// Exception record definition.
-//
-
-typedef struct _EXCEPTION_RECORD {
-	DWORD ExceptionCode;
-	DWORD ExceptionFlags;
-	struct _EXCEPTION_RECORD *ExceptionRecord;
-	PVOID ExceptionAddress;
-	DWORD NumberParameters;
-} EXCEPTION_RECORD;
-
-typedef EXCEPTION_RECORD *PEXCEPTION_RECORD;
-
-typedef struct _EXCEPTION_POINTERS {
-	PEXCEPTION_RECORD ExceptionRecord;
-	PCONTEXT ContextRecord;
-} EXCEPTION_POINTERS, *PEXCEPTION_POINTERS;
-
 typedef struct _MEMORY_BASIC_INFORMATION {
 	PVOID BaseAddress;
 	PVOID AllocationBase;
@@ -450,7 +424,7 @@ typedef struct {
 extern void LoadCharNames();
 extern void LoadAndPlaySound(char *FilePath, int lVolume, int lPan);
 extern void DrawArtWithMask(int SX, int SY, int SW, int SH, int nFrame, BYTE bMask, void *pBuffer);
-extern BOOL __cdecl LoadArtWithPal(char *pszFile, void **pBuffer, int frames, DWORD *data);
+extern BOOL LoadArtWithPal(char *pszFile, void **pBuffer, int frames, DWORD *data);
 
 constexpr auto DVL_WM_SYSKEYUP = 0x0105;
 constexpr auto DVL_VER_PLATFORM_WIN32_NT = 2;

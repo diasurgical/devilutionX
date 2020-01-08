@@ -39,7 +39,7 @@ const int event_types[3] = {
 };
 
 #ifdef _DEBUG
-void __cdecl dumphist(const char *pszFmt, ...)
+void dumphist(const char *pszFmt, ...)
 {
 	static FILE *sgpHistFile = NULL;
 	DWORD dwTicks;
@@ -636,7 +636,7 @@ void multi_event_handler(BOOL add)
 	}
 }
 
-void __stdcall multi_handle_events(_SNETEVENT *pEvt)
+void multi_handle_events(_SNETEVENT *pEvt)
 {
 	DWORD LeftReason;
 	DWORD *data;
@@ -943,7 +943,7 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv)
 	sgwPackPlrOffsetTbl[pnum] = 0;
 	multi_player_left_msg(pnum, 0);
 	plr[pnum]._pGFXLoad = 0;
-	UnPackPlayer(&netplr[pnum], pnum, 1);
+	UnPackPlayer(&netplr[pnum], pnum, TRUE);
 
 	if (!recv) {
 #ifdef _DEBUG
