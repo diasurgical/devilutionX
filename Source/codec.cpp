@@ -42,12 +42,9 @@ int codec_decode(BYTE *pbSrcDst, DWORD size, char *pszPassword)
 	}
 
 	SHA1Result(0, dst);
-	
 	BSWAP_ARRAY32_UNSIGNED(&dst, sizeof(dst));
-	
-	*(DWORD *)dst = SDL_SwapLE32(*(DWORD *)dst); //not needed
-	sig->checksum = SDL_SwapLE32(sig->checksum);
-	
+	*(DWORD *)dst = SwapLE32(*(DWORD *)dst);
+	sig->checksum = SwapLE32(sig->checksum);
 	if (sig->checksum != *(DWORD *)dst) {
 		memset(dst, 0, sizeof(dst));
 		goto error;
@@ -84,12 +81,9 @@ void codec_init_key(int unused, char *pszPassword)
 		ch++;
 	}
 	SHA1Reset(0);
-
 	SHA1Calculate(0, pw, digest);
 	SHA1Clear();
-	
     BSWAP_ARRAY32_UNSIGNED(&digest, sizeof(digest));
-
 	for (i = 0; (DWORD)i < 136; i++)
 		key[i] ^= digest[i % SHA1HashSize];
 	memset(pw, 0, sizeof(pw));
