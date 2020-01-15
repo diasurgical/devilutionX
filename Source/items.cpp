@@ -1941,7 +1941,7 @@ int RndTypeItems(int itype, int imid)
 
 int CheckUnique(int i, int lvl, int uper, BOOL recreate)
 {
-	int j, idata, numu;
+	int j, idata, numu, rv;
 	BOOLEAN uok[128];
 
 	if (random_(28, 100) > uper)
@@ -1950,7 +1950,8 @@ int CheckUnique(int i, int lvl, int uper, BOOL recreate)
 	numu = 0;
 	memset(uok, 0, sizeof(uok));
 	for (j = 0; UniqueItemList[j].UIItemId != UITYPE_INVALID; j++) {
-		if (UniqueItemList[j].UIItemId == AllItemsList[item[i].IDidx].iItemId
+		idata = item[i].IDidx;
+		if (UniqueItemList[j].UIItemId == AllItemsList[idata].iItemId
 		    && lvl >= UniqueItemList[j].UIMinLvl
 		    && (recreate || !UniqueItemFlag[j] || gbMaxPlayers != 1)) {
 			uok[j] = TRUE;
@@ -1961,19 +1962,33 @@ int CheckUnique(int i, int lvl, int uper, BOOL recreate)
 	if (!numu)
 		return -1;
 
-	random_(29, 10);
-	idata = 0;
+#ifdef FIX_UNIQUEITEMS
+	rv = random_(29, numu);
+	int k = 0;
+	for(j = 0; j < sizeof(uok); j++) {
+		if(!uok[j]) {
+			continue;
+		}
+		if(k == rv) {
+			break;
+		}
+		k++;
+	}
+#else
+	rv = random_(29, 10);
+	j = 0;
 	while (numu > 0) {
-		if (uok[idata])
+		if (uok[j])
 			numu--;
 		if (numu > 0) {
-			idata++;
-			if (idata == 128)
-				idata = 0;
+			j++;
+			if (j == 128)
+				j = 0;
 		}
 	}
+#endif
+	return j;
 
-	return idata;
 }
 
 void GetUniqueItem(int i, int uid)
