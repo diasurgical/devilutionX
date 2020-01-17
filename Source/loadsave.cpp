@@ -215,32 +215,48 @@ void CopyBytes(const void *src, const int n, void *dst)
 
 void CopyChar(const void *src, void *dst)
 {
-	CopyBytes(src, 1, dst);
+	*(char*)dst = *(char*)src;
+	tbuff += 1;
 }
 
 void CopyShort(const void *src, void *dst)
 {
-	CopyBytes(src, 2, dst);
+	*(unsigned short*)dst = SwapLE16(*(unsigned short*)src);
+	tbuff += 2;
 }
 
 void CopyShorts(const void *src, const int n, void *dst)
 {
-	CopyBytes(src, 2 * n, dst);
+	unsigned short *s=src, *d=dst;
+	int i=n;
+	tbuff += 2*n;
+	while(i) {
+		*d = SwapLE16(*s); 
+		++d; ++s; --i;
+	}
 }
 
 void CopyInt(const void *src, void *dst)
 {
-	CopyBytes(src, 4, dst);
+	*(unsigned int*)dst = SwapLE32(*(unsigned int*)src);
+	tbuff += 4;
 }
 
 void CopyInts(const void *src, const int n, void *dst)
 {
-	CopyBytes(src, 4 * n, dst);
+	unsigned int *s=src, *d=dst;
+	int i=n;
+	tbuff += 4*n;
+	while(i) {
+		*d = SwapLE32(*s); 
+		++d; ++s; --i;
+	}
 }
 
 void CopyInt64(const void *src, void *dst)
 {
-	CopyBytes(src, 8, dst);
+	*(unsigned long long*)dst = SDL_SwapLE64(*(unsigned long long*)src);
+	tbuff += 8;
 }
 
 void LoadPlayer(int i)
