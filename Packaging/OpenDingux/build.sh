@@ -60,11 +60,7 @@ make_buildroot() {
 	cp buildroot_${TARGET}_defconfig "$BUILDROOT/configs/${TARGET}_devilutionx_defconfig"
 	cd "$BUILDROOT"
 	make ${TARGET}_devilutionx_defconfig
-	if [[ "$TARGET" == "rg350" ]]; then
-		BR2_JLEVEL=0 make
-	else
-		BR2_JLEVEL=0 make toolchain libzip sdl sdl_mixer sdl_ttf
-	fi
+	BR2_JLEVEL=0 make toolchain libzip sdl sdl_mixer sdl_ttf
 	cd -
 }
 
