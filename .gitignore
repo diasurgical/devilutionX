@@ -17,6 +17,8 @@ comparer-config.toml
 
 #ignore cmake cache
 /build/
+/build-retrofw/
+/build-rg350/
 /build32/
 .vscode/tasks.json
 

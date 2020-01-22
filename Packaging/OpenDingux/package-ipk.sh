@@ -4,8 +4,13 @@ set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
-readonly OUT="${1:-../../build/devilutionx.ipk}"
-readonly IN="${2:-../../build/devilutionx.dge}"
+if [[ -z "$1" ]]; then
+	echo "Error: output path is required"
+	exit 1
+fi
+
+readonly OUT="$1"
+readonly IN="${2:-$(dirname "$OUT")/devilutionx.dge}"
 
 readonly PKG_TARGET=devilutionx
 readonly TMP="tmp/${PKG_TARGET}"
@@ -49,6 +54,7 @@ printf "%s\n" \
 tar --owner=0 --group=0 -czvf "${TMP}/control.tar.gz" -C "${TMP}/" control conffiles
 
 printf '2.0\n' > "${TMP}/debian-binary"
+rm -f "$OUT"
 ar r "$OUT" \
   "${TMP}/control.tar.gz" \
   "${TMP}/data.tar.gz" \
