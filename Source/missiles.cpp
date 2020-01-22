@@ -1067,6 +1067,10 @@ void SetMissAnim(int mi, int animtype)
 {
 	int dir = missile[mi]._mimfnum;
 
+    if (animtype > MFILE_NULL) {
+        animtype = MFILE_NULL;
+    }
+
 	missile[mi]._miAnimType = animtype;
 	missile[mi]._miAnimFlags = misfiledata[animtype].mFlags;
 	missile[mi]._miAnimData = misfiledata[animtype].mAnimData[dir];

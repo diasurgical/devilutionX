@@ -2,8 +2,13 @@
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
-readonly OUT="${1:-../../build/devilutionx.opk}"
-readonly IN="${2:-../../build/devilutionx.dge}"
+if [[ -z "$1" ]]; then
+	echo "Error: output path is required"
+	exit 1
+fi
+
+readonly OUT="$1"
+readonly IN="${2:-$(dirname "$OUT")/devilutionx.dge}"
 
 readonly TMP="tmp/opk"
 

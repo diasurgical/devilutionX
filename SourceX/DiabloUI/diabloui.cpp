@@ -460,7 +460,7 @@ BOOL UiValidPlayerName(char *name)
 	for (size_t i = 0, n = strlen(tmpname); i < n; i++)
 		tmpname[i]++;
 
-	for (int i = 0; i < sizeof(reserved) / sizeof(*reserved); i++) {
+	for (uint32_t i = 0; i < sizeof(reserved) / sizeof(*reserved); i++) {
 		if (strstr(tmpname, reserved[i]))
 			return false;
 	}
