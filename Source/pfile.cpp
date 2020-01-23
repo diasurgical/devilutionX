@@ -62,7 +62,7 @@ BOOL pfile_open_archive(BOOL update, DWORD save_num)
 	char FileName[MAX_PATH];
 
 	pfile_get_save_path(FileName, sizeof(FileName), save_num);
-	if (OpenMPQ(FileName, FALSE, save_num))
+	if (OpenMPQ(FileName, save_num))
 		return TRUE;
 
 	return FALSE;

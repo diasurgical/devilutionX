@@ -176,9 +176,6 @@ typedef struct _LIST_ENTRY {
 
 DWORD GetTickCount();
 
-DWORD GetLastError();
-void SetLastError(DWORD dwErrCode);
-
 WINBOOL CloseHandle(HANDLE hObject);
 
 HANDLE CreateEventA(LPSECURITY_ATTRIBUTES lpEventAttributes, WINBOOL bManualReset, WINBOOL bInitialState,
@@ -319,8 +316,6 @@ WINBOOL WriteFile(HANDLE hFile, LPCVOID lpBuffer, DWORD nNumberOfBytesToWrite, L
     LPOVERLAPPED lpOverlapped);
 DWORD SetFilePointer(HANDLE hFile, LONG lDistanceToMove, PLONG lpDistanceToMoveHigh, DWORD dwMoveMethod);
 WINBOOL SetEndOfFile(HANDLE hFile);
-DWORD GetFileAttributesA(LPCSTR lpFileName);
-WINBOOL SetFileAttributesA(LPCSTR lpFileName, DWORD dwFileAttributes);
 HANDLE CreateFileA(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode,
     LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition,
     DWORD dwFlagsAndAttributes, HANDLE hTemplateFile);
@@ -435,7 +430,6 @@ constexpr auto DVL_GENERIC_WRITE = 0x40000000L;
 constexpr auto DVL_OPEN_EXISTING = 3;
 constexpr auto DVL_FILE_BEGIN = 0;
 constexpr auto DVL_FILE_CURRENT = 1;
-constexpr auto DVL_ERROR_FILE_NOT_FOUND = 2;
 
 constexpr auto DVL_WM_QUIT = 0x0012;
 constexpr auto DVL_INFINITE = 0xFFFFFFFF;

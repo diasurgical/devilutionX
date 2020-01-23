@@ -23,18 +23,6 @@
 
 namespace dvl {
 
-DWORD last_error;
-
-DWORD GetLastError()
-{
-	return last_error;
-}
-
-void SetLastError(DWORD dwErrCode)
-{
-	last_error = dwErrCode;
-}
-
 int wsprintfA(LPSTR dest, LPCSTR format, ...)
 {
 	va_list args;

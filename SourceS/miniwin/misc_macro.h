@@ -49,13 +49,8 @@
 #define GENERIC_WRITE DVL_GENERIC_WRITE
 #define OPEN_EXISTING DVL_OPEN_EXISTING
 #define OPEN_ALWAYS 4
-#define ERROR_FILE_NOT_FOUND DVL_ERROR_FILE_NOT_FOUND
 #define ERROR_SUCCESS DVL_ERROR_SUCCESS
 #define FILE_ATTRIBUTE_NORMAL 128
-#define FILE_ATTRIBUTE_HIDDEN 0x00000002
-#define FILE_ATTRIBUTE_SYSTEM 0x00000004
-#define FILE_ATTRIBUTE_DIRECTORY 0x00000010
-#define FILE_SHARE_READ 1
 
 #define OFS_MAXPATHNAME DVL_OFS_MAXPATHNAME
 
@@ -92,8 +87,6 @@
 #define KEY_WRITE 0x20006
 #define REG_SZ 1
 
-#define GetFileAttributes GetFileAttributesA
-#define SetFileAttributes SetFileAttributesA
 #define CreateFile CreateFileA
 #define DeleteFile DeleteFileA
 

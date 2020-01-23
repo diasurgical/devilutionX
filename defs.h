@@ -165,10 +165,6 @@
 
 #define ERR_DLG(title, text) ErrDlg(title, text, __FILE__, __LINE__)
 
-#ifndef INVALID_FILE_ATTRIBUTES
-#define INVALID_FILE_ATTRIBUTES ((DWORD)-1)
-#endif
-
 // To apply to certain functions which have local variables aligned by 1 for unknown yet reason
 #if (_MSC_VER == 1200)
 #define ALIGN_BY_1 __declspec(align(1))

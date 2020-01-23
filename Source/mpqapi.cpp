@@ -15,21 +15,6 @@ _BLOCKENTRY *sgpBlockTbl;
 
 HANDLE sghArchive = INVALID_HANDLE_VALUE;
 
-BOOL mpqapi_set_hidden(const char *pszArchive, BOOL hidden)
-{
-	DWORD dwFileAttributes;
-	DWORD dwFileAttributesToSet;
-
-	dwFileAttributes = GetFileAttributes(pszArchive);
-	if (dwFileAttributes == INVALID_FILE_ATTRIBUTES)
-		return GetLastError() == ERROR_FILE_NOT_FOUND;
-	dwFileAttributesToSet = hidden ? FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_HIDDEN : 0;
-	if (dwFileAttributes == dwFileAttributesToSet)
-		return TRUE;
-	else
-		return SetFileAttributes(pszArchive, dwFileAttributesToSet);
-}
-
 void mpqapi_remove_hash_entry(const char *pszName)
 {
 	_HASHENTRY *pHashTbl;
@@ -324,7 +309,7 @@ BOOL mpqapi_has_file(const char *pszName)
 	return FetchHandle(pszName) != -1;
 }
 
-BOOL OpenMPQ(const char *pszArchive, BOOL hidden, DWORD dwChar)
+BOOL OpenMPQ(const char *pszArchive, DWORD dwChar)
 {
 	DWORD dwFlagsAndAttributes;
 	DWORD key;
@@ -332,13 +317,10 @@ BOOL OpenMPQ(const char *pszArchive, BOOL hidden, DWORD dwChar)
 	_FILEHEADER fhdr;
 
 	InitHash();
-	if (!mpqapi_set_hidden(pszArchive, hidden)) {
-		return FALSE;
-	}
 	dwFlagsAndAttributes = gbMaxPlayers > 1 ? FILE_FLAG_WRITE_THROUGH : 0;
 	sghArchive = CreateFile(pszArchive, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, dwFlagsAndAttributes, NULL);
 	if (sghArchive == INVALID_HANDLE_VALUE) {
-		sghArchive = CreateFile(pszArchive, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, dwFlagsAndAttributes | (hidden ? FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_HIDDEN : 0), NULL);
+		sghArchive = CreateFile(pszArchive, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, dwFlagsAndAttributes, NULL);
 		if (sghArchive == INVALID_HANDLE_VALUE)
 			return FALSE;
 		save_archive_modified = TRUE;

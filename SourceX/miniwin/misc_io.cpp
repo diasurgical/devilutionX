@@ -106,23 +106,6 @@ WINBOOL SetEndOfFile(HANDLE hFile)
 	return true;
 }
 
-DWORD GetFileAttributesA(LPCSTR lpFileName)
-{
-	char name[DVL_MAX_PATH];
-	TranslateFileName(name, sizeof(name), lpFileName);
-	std::ifstream filestream(name, std::ios::binary);
-	if (filestream.fail()) {
-		SetLastError(DVL_ERROR_FILE_NOT_FOUND);
-		return (DWORD)-1;
-	}
-	return 0x80;
-}
-
-WINBOOL SetFileAttributesA(LPCSTR lpFileName, DWORD dwFileAttributes)
-{
-	return true;
-}
-
 void ShowOutOfDiskError()
 {
 	char *text = "Failed to save, please free some disk space and try again.";
