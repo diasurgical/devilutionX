@@ -20,6 +20,23 @@ Nightly builds | Platform
     - Ubuntu/Debian/Rasbian `sudo apt-get install libsdl2-ttf-2.0-0 libsdl2-mixer-2.0-0`
  - Run `./devilutionx`
 
+# Distro installation
+
+ - Installing and playing on **Ubuntu**
+    - Add [DevilutionX stable](https://launchpad.net/~devilutionx/+archive/ubuntu/stable) or [DevilutionX git](https://launchpad.net/~devilutionx/+archive/ubuntu/dev) PPA repository
+      ```
+      sudo add-apt-repository ppa:devilutionx/stable
+      sudo add-apt-repository ppa:devilutionx/dev
+      ```
+    - Install DeviliutionX
+      ```
+      sudo apt update
+      sudo apt install devilutionx
+      ```
+    - Copy diabdat.mpq file to `~/.local/share/diasurgical/devilution/` folder
+    
+    - Run devilutionX from menu
+
 # Building from Source
 <details><summary>Linux</summary>
 
