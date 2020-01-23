@@ -218,6 +218,7 @@ void selgame_Diff_Esc()
 void selgame_Password_Init(int value)
 {
 	memset(&selgame_Password, 0, sizeof(selgame_Password));
+	getIniValue("Phone Book", "Password1", selgame_Password, 15);
 	UiInitList(0, 0, NULL, selgame_Password_Select, selgame_Password_Esc, ENTERPASSWORD_DIALOG, size(ENTERPASSWORD_DIALOG));
 }
 
