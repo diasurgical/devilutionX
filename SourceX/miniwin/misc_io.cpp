@@ -1,5 +1,5 @@
 #include <cstdio>
-#include <set>
+#include <unordered_set>
 #include <string>
 #include <iterator>
 #include <vector>
@@ -19,7 +19,7 @@ struct memfile {
 	std::size_t pos = 0;
 };
 
-static std::set<memfile *> files;
+static std::unordered_set<memfile *> files;
 
 HANDLE CreateFileA(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode,
     LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition,
