@@ -115,11 +115,12 @@ void ShowOutOfDiskError()
 WINBOOL CloseHandle(HANDLE hObject)
 {
 	memfile *file = static_cast<memfile *>(hObject);
-	if (files.find(file) == files.end())
+	const auto file_it = files.find(file);
+	if (file_it == files.end())
 		return CloseEvent(hObject);
 	std::unique_ptr<memfile> ufile(file); // ensure that delete file is
 	                                      // called on returning
-	files.erase(file);
+	files.erase(file_it);
 	std::ofstream filestream(file->path + ".tmp", std::ios::binary | std::ios::trunc);
 	if (filestream.fail()) {
 		ShowOutOfDiskError();
