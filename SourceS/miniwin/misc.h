@@ -8,6 +8,7 @@ constexpr auto DVL_MAX_PATH = 260;
 typedef char CHAR;
 typedef uint16_t SHORT;
 typedef int32_t LONG;
+typedef uint8_t BOOLEAN;
 
 typedef LONG *PLONG;
 typedef uint32_t ULONG;
@@ -19,7 +20,7 @@ typedef UCHAR *PUCHAR;
 typedef char *PSZ;
 
 typedef uint32_t DWORD;
-typedef bool BOOL, BOOLEAN, WINBOOL;
+typedef int BOOL, WINBOOL;
 typedef unsigned char BYTE;
 typedef unsigned short WORD;
 typedef float FLOAT;
