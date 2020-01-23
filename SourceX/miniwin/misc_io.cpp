@@ -92,6 +92,7 @@ DWORD SetFilePointer(HANDLE hFile, LONG lDistanceToMove, PLONG lpDistanceToMoveH
 		file->pos += lDistanceToMove;
 	} else {
 		UNIMPLEMENTED();
+
 	}
 	if (file->buf.size() < file->pos + 1)
 		file->buf.resize(file->pos + 1);

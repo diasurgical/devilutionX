@@ -221,42 +221,49 @@ void CopyChar(const void *src, void *dst)
 
 void CopyShort(const void *src, void *dst)
 {
-	*(unsigned short*)dst = SwapLE16(*(unsigned short*)src);
+	unsigned short buf;
+	memcpy(&buf, src, 2);
 	tbuff += 2;
+	buf = SwapLE16(buf);
+	memcpy(dst, &buf, 2);
 }
 
 void CopyShorts(const void *src, const int n, void *dst)
 {
-	unsigned short *s=src, *d=dst;
-	int i=n;
-	tbuff += 2*n;
-	while(i) {
-		*d = SwapLE16(*s); 
-		++d; ++s; --i;
+	const auto *s = reinterpret_cast<const unsigned short *>(src);
+	auto *d = reinterpret_cast<unsigned short *>(dst);
+	for(int i = 0; i < n; i++) {
+		CopyShort(s, d);
+		++d; ++s;
 	}
 }
 
 void CopyInt(const void *src, void *dst)
 {
-	*(unsigned int*)dst = SwapLE32(*(unsigned int*)src);
+	unsigned int buf;
+	memcpy(&buf, src, 4);
 	tbuff += 4;
+	buf = SwapLE32(buf);
+	memcpy(dst, &buf, 4);
 }
 
 void CopyInts(const void *src, const int n, void *dst)
 {
-	unsigned int *s=src, *d=dst;
-	int i=n;
-	tbuff += 4*n;
-	while(i) {
-		*d = SwapLE32(*s); 
-		++d; ++s; --i;
+	const auto *s = reinterpret_cast<const unsigned int *>(src);
+	auto *d = reinterpret_cast<unsigned int *>(dst);
+	for(int i = 0; i < n; i++) {
+		CopyInt(s, d);
+		++d; ++s;
 	}
 }
 
 void CopyInt64(const void *src, void *dst)
 {
-	*(unsigned long long*)dst = SDL_SwapLE64(*(unsigned long long*)src);
+	unsigned long long buf;
+	memcpy(&buf, src, 8);
 	tbuff += 8;
+	buf = SDL_SwapLE64(buf);
+	memcpy(dst, &buf, 8);
 }
 
 void LoadPlayer(int i)
