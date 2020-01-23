@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cstring>
 #include <unordered_set>
 #include <string>
 #include <iterator>
@@ -54,7 +55,7 @@ WINBOOL ReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead, LPDW
 	memfile *file = static_cast<memfile *>(hFile);
 	UNIMPLEMENTED_UNLESS(!lpOverlapped);
 	size_t len = std::min<size_t>(file->buf.size() - file->pos, nNumberOfBytesToRead);
-	std::copy(file->buf.begin() + file->pos, file->buf.begin() + file->pos + len, static_cast<char *>(lpBuffer));
+	std::memcpy(lpBuffer, file->buf.data() + file->pos, len);
 	file->pos += len;
 	*lpNumberOfBytesRead = len;
 	return true;
@@ -75,9 +76,7 @@ WINBOOL WriteFile(HANDLE hFile, LPCVOID lpBuffer, DWORD nNumberOfBytesToWrite,
 		return true;
 	if (file->buf.size() < file->pos + nNumberOfBytesToWrite)
 		file->buf.resize(file->pos + nNumberOfBytesToWrite);
-	std::copy(static_cast<const char *>(lpBuffer),
-	    static_cast<const char *>(lpBuffer) + nNumberOfBytesToWrite,
-	    file->buf.begin() + file->pos);
+	std::memcpy(file->buf.data() + file->pos, lpBuffer, nNumberOfBytesToWrite);
 	file->pos += nNumberOfBytesToWrite;
 	*lpNumberOfBytesWritten = nNumberOfBytesToWrite;
 	return true;
