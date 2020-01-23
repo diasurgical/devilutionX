@@ -108,7 +108,7 @@ WINBOOL SetEndOfFile(HANDLE hFile)
 
 void ShowOutOfDiskError()
 {
-	char *text = "Failed to save, please free some disk space and try again.";
+	constexpr char text[] = "Failed to save, please free some disk space and try again.";
 	UiErrorOkDialog("Out of Disk Space", text);
 }
 
