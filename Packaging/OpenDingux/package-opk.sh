@@ -9,6 +9,7 @@ fi
 
 readonly OUT="$1"
 readonly DESKTOP_FILE="$2"
+readonly README_FILE="$2"
 
 readonly IN="$(dirname "$OUT")/devilutionx"
 
@@ -25,9 +26,10 @@ set -x
 rm -rf "${TMP}"
 mkdir -p "${TMP}"
 cp "$DESKTOP_FILE" "${TMP}/default.gcw0.desktop"
+cp "$README_FILE" "${TMP}/readme.gcw0.txt"
 
 mksquashfs \
-  "${TMP}/default.gcw0.desktop" readme.gcw0.txt "$IN" \
+  "${TMP}/default.gcw0.desktop" "${TMP}/readme.gcw0.txt" "$IN" \
   ../resources/Diablo_32.png ../resources/CharisSILB.ttf \
   "$OUT" \
   -all-root -no-xattrs -noappend -no-exports

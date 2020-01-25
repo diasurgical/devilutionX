@@ -16,6 +16,8 @@ Controls:
 - Start + Left: character info
 - Start + Right: inventory
 - Start + Down: map
+- Start + Y: Quest log
+- Start + B: Spell book
 - Select + A/B/X/Y: hot spell
 - Select + D-pad: move map/cursor
 - Select + L1: left mouse click

@@ -84,7 +84,8 @@ package() {
 		Packaging/OpenDingux/package-ipk.sh "${PWD}/${BUILD_DIR}/devilutionx-${TARGET}.ipk"
 	else
 		Packaging/OpenDingux/package-opk.sh "${PWD}/${BUILD_DIR}/devilutionx-${TARGET}.opk" \
-			"${PWD}/Packaging/OpenDingux/${TARGET}.desktop"
+			"${PWD}/Packaging/OpenDingux/${TARGET}.desktop" \
+			"${PWD}/Packaging/OpenDingux/manual-${TARGET}.txt"
 	fi
 }
 
