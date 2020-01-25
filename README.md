@@ -187,27 +187,21 @@ The build script does the following:
 
 1. Downloads and configures the buildroot if necessary.
 2. Builds the executable (using CMake).
-3. Packages the executable and all related resources into an `.ipk` package.
+3. Packages the executable and all related resources into an `.ipk` or `.opk` package.
 
-The buildroot uses ~4 GiB of disk space and can take almost an hour to build.
+The buildroot uses ~2.5 GiB of disk space and can take 20 minutes to build.
 
 For OpenDingux builds `mksquashfs` needs to be installed.
 
-### RetroFW (RS97, RG300, LDK)
-
-The RetroFW build uses the buildroot at `$HOME/buildroot-2018.02.9-retrofw`.
+To build, run the following command
 
 ~~~ bash
-Packaging/OpenDingux/build-retrofw.sh
+Packaging/OpenDingux/build.sh <platform>
 ~~~
 
-### OpenDingux (RG350, GCW0)
+Replace `<platform>` with one of: `retrofw`, `rg350`, or `gkd350h`.
 
-This OpenDingux build uses the buildroot at `$HOME/buildroot-rg350-devilutionx`.
-
-~~~ bash
-Packaging/OpenDingux/build-rg350.sh
-~~~
+This prepares and uses the buildroot at `$HOME/buildroot-$PLATFORM-devilutionx`.
 
 </details>
 

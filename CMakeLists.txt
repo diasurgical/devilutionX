@@ -77,6 +77,10 @@ if(RG350)
   include(rg350_defs)
 endif()
 
+if (GKD350H)
+  include(gkd350h_defs)
+endif()
+
 if(RETROFW)
   include(retrofw_defs)
 endif()
@@ -346,6 +350,8 @@ endforeach(def_name)
 # Defines with value
 foreach(
   def_name
+  SDL1_VIDEO_MODE_WIDTH
+  SDL1_VIDEO_MODE_HEIGHT
   SDL1_VIDEO_MODE_BPP
   SDL1_VIDEO_MODE_FLAGS
   HAS_KBCTRL
@@ -521,8 +527,4 @@ if(SWITCH)
   set(APP_VERSION ${PROJECT_VERSION})
   include(nx-utils)
   build_switch_binaries(${BIN_TARGET})
-endif()
-
-if(RETROFW OR RG350)
-  set_target_properties(${BIN_TARGET} PROPERTIES OUTPUT_NAME "devilutionx.dge")
 endif()
