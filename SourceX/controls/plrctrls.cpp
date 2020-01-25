@@ -872,6 +872,10 @@ struct RightStickAccumulator {
 
 } // namespace
 
+bool IsAutomapActive() {
+	return automapflag && currlevel != DTYPE_TOWN;
+}
+
 void HandleRightStickMotion()
 {
 	static RightStickAccumulator acc;
@@ -881,7 +885,7 @@ void HandleRightStickMotion()
 		return;
 	}
 
-	if (automapflag && currlevel != DTYPE_TOWN) { // move map
+	if (IsAutomapActive()) { // move map
 		int dx = 0, dy = 0;
 		acc.pool(&dx, &dy, 32);
 		AutoMapXOfs += dy + dx;

@@ -71,13 +71,15 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 		switch (ctrl_event.button) {
 		case ControllerButton::BUTTON_LEFTSHOULDER:
 			if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK)) {
-				*action = GameActionSendMouseClick{ GameActionSendMouseClick::LEFT, ctrl_event.up };
+				if (!IsAutomapActive())
+					*action = GameActionSendMouseClick{ GameActionSendMouseClick::LEFT, ctrl_event.up };
 				return true;
 			}
 			break;
 		case ControllerButton::BUTTON_RIGHTSHOULDER:
 			if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK)) {
-				*action = GameActionSendMouseClick{ GameActionSendMouseClick::RIGHT, ctrl_event.up };
+				if (!IsAutomapActive())
+					*action = GameActionSendMouseClick{ GameActionSendMouseClick::RIGHT, ctrl_event.up };
 				return true;
 			}
 			break;
@@ -99,7 +101,8 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 			return true;
 		case ControllerButton::BUTTON_LEFTSTICK:
 			if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK)) {
-				*action = GameActionSendMouseClick{ GameActionSendMouseClick::LEFT, ctrl_event.up };
+				if (!IsAutomapActive())
+					*action = GameActionSendMouseClick{ GameActionSendMouseClick::LEFT, ctrl_event.up };
 				return true;
 			}
 			break;
@@ -200,10 +203,12 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 				// The rest of D-Pad actions are handled in charMovement() on every game_logic() call.
 				return true;
 			case ControllerButton::BUTTON_RIGHTSTICK:
-				if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK))
-					*action = GameActionSendMouseClick{ GameActionSendMouseClick::RIGHT, ctrl_event.up };
-				else
-					*action = GameActionSendMouseClick{ GameActionSendMouseClick::LEFT, ctrl_event.up };
+				if (!IsAutomapActive()) {
+					if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK))
+						*action = GameActionSendMouseClick{ GameActionSendMouseClick::RIGHT, ctrl_event.up };
+					else
+						*action = GameActionSendMouseClick{ GameActionSendMouseClick::LEFT, ctrl_event.up };
+				}
 				return true;
 			default:
 				break;
