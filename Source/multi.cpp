@@ -5,9 +5,6 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 BOOLEAN gbSomebodyWonGameKludge;
-#ifdef _DEBUG
-DWORD gdwHistTicks;
-#endif
 TBuffer sgHiPriBuf;
 char szPlayerDescript[128];
 WORD sgwPackPlrOffsetTbl[MAX_PLRS];
@@ -37,43 +34,6 @@ const int event_types[3] = {
 	EVENT_TYPE_PLAYER_CREATE_GAME,
 	EVENT_TYPE_PLAYER_MESSAGE
 };
-
-#ifdef _DEBUG
-void dumphist(const char *pszFmt, ...)
-{
-	static FILE *sgpHistFile = NULL;
-	DWORD dwTicks;
-	va_list va;
-
-	va_start(va, pszFmt);
-
-	char path[MAX_PATH], dumpHistPath[MAX_PATH];
-	if (sgpHistFile == NULL) {
-		GetPrefPath(path, MAX_PATH);
-		snprintf(dumpHistPath, MAX_PATH, "%sdumphist.txt", path);
-		sgpHistFile = fopen(dumpHistPath, "wb");
-		if (sgpHistFile == NULL) {
-			return;
-		}
-	}
-
-	dwTicks = GetTickCount();
-	fprintf(sgpHistFile, "%4u.%02u  ", (dwTicks - gdwHistTicks) / 1000, (dwTicks - gdwHistTicks) % 1000 / 10);
-	vfprintf(sgpHistFile, pszFmt, va);
-	fprintf(
-	    sgpHistFile,
-	    "\r\n          (%d,%d)(%d,%d)(%d,%d)(%d,%d)\r\n",
-	    plr[0].plractive,
-	    player_state[0],
-	    plr[1].plractive,
-	    player_state[1],
-	    plr[2].plractive,
-	    player_state[2],
-	    plr[3].plractive,
-	    player_state[3]);
-	fflush(sgpHistFile);
-}
-#endif
 
 void multi_msg_add(BYTE *pbMsg, BYTE bLen)
 {
@@ -408,16 +368,6 @@ void multi_begin_timeout()
 	/// ASSERT: assert(nLowestActive != -1);
 	/// ASSERT: assert(nLowestPlayer != -1);
 
-#ifdef _DEBUG
-	dumphist(
-	    "(%d) grp:%d ngrp:%d lowp:%d lowa:%d",
-	    myplr,
-	    bGroupPlayers,
-	    bGroupCount,
-	    nLowestPlayer,
-	    nLowestActive);
-#endif
-
 	if (bGroupPlayers < bGroupCount) {
 		gbGameDestroyed = TRUE;
 	} else if (bGroupPlayers == bGroupCount) {
@@ -730,10 +680,6 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 			if (!multi_init_multi(&ProgramData, &plrdata, &UiData, pfExitProgram))
 				return FALSE;
 		}
-#ifdef _DEBUG
-		gdwHistTicks = GetTickCount();
-		dumphist("(%d) new game started", myplr);
-#endif
 		sgbNetInited = TRUE;
 		sgbTimeout = FALSE;
 		delta_init();
@@ -946,9 +892,6 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv)
 	UnPackPlayer(&netplr[pnum], pnum, TRUE);
 
 	if (!recv) {
-#ifdef _DEBUG
-		dumphist("(%d) received all %d plrinfo", myplr, pnum);
-#endif
 		return;
 	}
 
@@ -978,9 +921,6 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv)
 			dFlags[plr[pnum].WorldX][plr[pnum].WorldY] |= BFLAG_DEAD_PLAYER;
 		}
 	}
-#ifdef _DEBUG
-	dumphist("(%d) making %d active -- recv_plrinfo", myplr, pnum);
-#endif
 }
 
 DEVILUTION_END_NAMESPACE

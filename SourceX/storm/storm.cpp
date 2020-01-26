@@ -162,8 +162,6 @@ unsigned char AsciiToLowerTable_Path[256] = {
 
 BOOL SFileOpenFile(const char *filename, HANDLE *phFile)
 {
-	//eprintf("%s: %s\n", __FUNCTION__, filename);
-
 	bool result = false;
 
 	if (directFileAccess) {
@@ -183,7 +181,7 @@ BOOL SFileOpenFile(const char *filename, HANDLE *phFile)
 	}
 
 	if (!result || !*phFile) {
-		eprintf("%s: Not found: %s\n", __FUNCTION__, filename);
+		SDL_Log("%s: Not found: %s", __FUNCTION__, filename);
 	}
 	return result;
 }
@@ -309,14 +307,12 @@ BOOL SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 
 void *SMemAlloc(unsigned int amount, char *logfilename, int logline, int defaultValue)
 {
-	// fprintf(stderr, "%s: %d (%s:%d)\n", __FUNCTION__, amount, logfilename, logline);
 	assert(amount != -1u);
 	return malloc(amount);
 }
 
 BOOL SMemFree(void *location, char *logfilename, int logline, char defaultValue)
 {
-	// fprintf(stderr, "%s: (%s:%d)\n", __FUNCTION__, logfilename, logline);
 	assert(location);
 	free(location);
 	return true;

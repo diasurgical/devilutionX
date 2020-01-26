@@ -326,7 +326,6 @@ BOOL OpenMPQ(const char *pszArchive, DWORD dwChar)
 	_FILEHEADER fhdr;
 
 	InitHash();
-	dwFlagsAndAttributes = gbMaxPlayers > 1 ? FILE_FLAG_WRITE_THROUGH : 0;
 
 	if (archive != nullptr) {
 		delete archive;

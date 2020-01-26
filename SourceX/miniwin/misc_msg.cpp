@@ -717,7 +717,7 @@ WINBOOL TranslateMessage(const MSG *lpMsg)
 
 #ifdef _DEBUG
 			if (key >= 32) {
-				DUMMY_PRINT("char: %c", key);
+				SDL_Log("char: %c", key);
 			}
 #endif
 

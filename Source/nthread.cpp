@@ -204,7 +204,7 @@ void nthread_cleanup()
 		if (WaitForSingleObject(sghThread, 0xFFFFFFFF) == -1) {
 			app_fatal("nthread3:\n(%s)", TraceLastError());
 		}
-		CloseHandle(sghThread);
+		CloseEvent(sghThread);
 		sghThread = INVALID_HANDLE_VALUE;
 	}
 }

@@ -59,9 +59,9 @@ WINBOOL DeleteFileA(LPCSTR lpFileName)
 		fclose(f);
 		remove(name);
 		f = NULL;
-		eprintf("Removed file: %s\n", name);
+		SDL_Log("Removed file: %s", name);
 	} else {
-		eprintf("Failed to remove file: %s\n", name);
+		SDL_Log("Failed to remove file: %s", name);
 	}
 
 	return true;

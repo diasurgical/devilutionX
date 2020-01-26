@@ -251,7 +251,6 @@ set(devilutionx_SRCS
   SourceX/controls/touch.cpp
   SourceX/miniwin/ddraw.cpp
   SourceX/miniwin/misc.cpp
-  SourceX/miniwin/misc_io.cpp
   SourceX/miniwin/misc_msg.cpp
   SourceX/miniwin/rand.cpp
   SourceX/miniwin/thread.cpp

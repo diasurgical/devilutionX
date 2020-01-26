@@ -23,7 +23,7 @@ int udp_p2p::create(std::string addrstr, std::string passwd)
 		try {
 			sock.bind(asio::ip::udp::endpoint(asio::ip::address_v6(), port));
 		} catch (std::exception &e) {
-			eprintf("bind: %s,  %s\n", asio::ip::address_v6().to_string(),
+			SDL_Log("bind: %s,  %s", asio::ip::address_v6().to_string(),
 			e.what());
 		}
 		++port;
