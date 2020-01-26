@@ -1057,6 +1057,10 @@ void PressChar(int vkey)
 	}
 
 	switch (vkey) {
+	case 'R':
+	case 'r':
+		debugRender = !debugRender;
+		return;
 	case 'G':
 	case 'g':
 		DecreaseGamma();
@@ -1267,15 +1271,6 @@ void PressChar(int vkey)
 		return;
 	case 'm':
 		GetDebugMonster();
-		return;
-	case 'R':
-	case 'r':
-		sprintf(tempstr, "seed = %i", glSeedTbl[currlevel]);
-		NetSendCmdString(1 << myplr, tempstr);
-		sprintf(tempstr, "Mid1 = %i : Mid2 = %i : Mid3 = %i", glMid1Seed[currlevel], glMid2Seed[currlevel], glMid3Seed[currlevel]);
-		NetSendCmdString(1 << myplr, tempstr);
-		sprintf(tempstr, "End = %i", glEndSeed[currlevel]);
-		NetSendCmdString(1 << myplr, tempstr);
 		return;
 	case 'T':
 	case 't':

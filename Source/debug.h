@@ -2,6 +2,7 @@
 #ifndef __DEBUG_H__
 #define __DEBUG_H__
 
+extern BOOL debugRender;
 extern BYTE *pSquareCel;
 extern char dMonsDbg[NUMLEVELS][MAXDUNX][MAXDUNY];
 extern char dFlagDbg[NUMLEVELS][MAXDUNX][MAXDUNY];

@@ -104,15 +104,18 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 	if (mask == 0xFFFFFFFF) {
 		if (light_table_index == lightmax) {
 			memset(*dst, 0, n);
+	StepRender();
 			(*src) += n;
 			(*dst) += n;
 		} else if (light_table_index == 0) {
 			memcpy(*dst, *src, n);
+	StepRender();
 			(*src) += n;
 			(*dst) += n;
 		} else {
 			for (i = 0; i < n; i++, (*src)++, (*dst)++) {
 				(*dst)[0] = tbl[(*src)[0]];
+	StepRender();
 			}
 		}
 	} else {
@@ -121,18 +124,21 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 			for (i = 0; i < n; i++, (*dst)++, mask <<= 1) {
 				if (mask & 0x80000000) {
 					(*dst)[0] = 0;
+	StepRender();
 				}
 			}
 		} else if (light_table_index == 0) {
 			for (i = 0; i < n; i++, (*src)++, (*dst)++, mask <<= 1) {
 				if (mask & 0x80000000) {
 					(*dst)[0] = (*src)[0];
+	StepRender();
 				}
 			}
 		} else {
 			for (i = 0; i < n; i++, (*src)++, (*dst)++, mask <<= 1) {
 				if (mask & 0x80000000) {
 					(*dst)[0] = tbl[(*src)[0]];
+	StepRender();
 				}
 			}
 		}
@@ -266,10 +272,12 @@ void world_draw_black_tile(int sx, int sy)
 
 	for (i = 30, j = 1; i >= 0; i -= 2, j++, dst -= BUFFER_WIDTH + 2) {
 		memset(dst, 0, 4 * j);
+	StepRender();
 	}
 	dst += 4;
 	for (i = 2, j = 15; i != 32; i += 2, j--, dst -= BUFFER_WIDTH - 2) {
 		memset(dst, 0, 4 * j);
+	StepRender();
 	}
 }
 
@@ -283,8 +291,11 @@ void trans_rect(int sx, int sy, int width, int height)
 	BYTE *pix = &gpBuffer[SCREENXY(sx, sy)];
 	for (row = 0; row < height; row++) {
 		for (col = 0; col < width; col++) {
-			if ((row & 1 && col & 1) || (!(row & 1) && !(col & 1)))
+			if ((row & 1 && col & 1) || (!(row & 1) && !(col & 1))) {
 				*pix = 0;
+
+	StepRender();
+			}
 			pix++;
 		}
 		pix += BUFFER_WIDTH - width;

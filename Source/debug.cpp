@@ -5,6 +5,7 @@ DEVILUTION_BEGIN_NAMESPACE
 #ifdef _DEBUG
 BOOL update_seed_check = FALSE;
 #endif
+BOOL debugRender = FALSE;
 
 int seed_index;
 int level_seeds[NUMLEVELS];

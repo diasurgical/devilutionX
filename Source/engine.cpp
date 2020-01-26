@@ -113,6 +113,7 @@ void CelDrawLightRed(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char 
 				w -= width;
 				while (width) {
 					*dst = tbl[*pRLEBytes];
+	StepRender();
 					pRLEBytes++;
 					dst++;
 					width--;
@@ -150,6 +151,7 @@ void CelBlitSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth)
 				i -= width;
 				if (dst < gpBufEnd && dst > gpBufStart) {
 					memcpy(dst, src, width);
+	StepRender();
 				}
 				src += width;
 				dst += width;
@@ -206,22 +208,29 @@ void CelBlitLightSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidt
 				if (dst < gpBufEnd && dst > gpBufStart) {
 					if (width & 1) {
 						dst[0] = tbl[src[0]];
+	StepRender();
 						src++;
 						dst++;
 					}
 					width >>= 1;
 					if (width & 1) {
 						dst[0] = tbl[src[0]];
+	StepRender();
 						dst[1] = tbl[src[1]];
+	StepRender();
 						src += 2;
 						dst += 2;
 					}
 					width >>= 1;
 					for (; width; width--) {
 						dst[0] = tbl[src[0]];
+	StepRender();
 						dst[1] = tbl[src[1]];
+	StepRender();
 						dst[2] = tbl[src[2]];
+	StepRender();
 						dst[3] = tbl[src[3]];
+	StepRender();
 						src += 4;
 						dst += 4;
 					}
@@ -277,13 +286,16 @@ void CelBlitLightTransSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int 
 							width >>= 1;
 							if (width & 1) {
 								dst[0] = tbl[src[0]];
+	StepRender();
 								src += 2;
 								dst += 2;
 							}
 							width >>= 1;
 							for (; width; width--) {
 								dst[0] = tbl[src[0]];
+	StepRender();
 								dst[2] = tbl[src[2]];
+	StepRender();
 								src += 4;
 								dst += 4;
 							}
@@ -293,19 +305,23 @@ void CelBlitLightTransSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int 
 							goto L_EVEN;
 						} else {
 							dst[0] = tbl[src[0]];
+	StepRender();
 							src++;
 							dst++;
 						L_ODD:
 							width >>= 1;
 							if (width & 1) {
 								dst[1] = tbl[src[1]];
+	StepRender();
 								src += 2;
 								dst += 2;
 							}
 							width >>= 1;
 							for (; width; width--) {
 								dst[1] = tbl[src[1]];
+	StepRender();
 								dst[3] = tbl[src[3]];
+	StepRender();
 								src += 4;
 								dst += 4;
 							}
@@ -373,6 +389,7 @@ void CelDrawLightRedSafe(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, c
 				if (dst < gpBufEnd && dst > gpBufStart) {
 					while (width) {
 						*dst = tbl[*pRLEBytes];
+	StepRender();
 						pRLEBytes++;
 						dst++;
 						width--;
@@ -413,6 +430,7 @@ void CelBlitWidth(BYTE *pBuff, int x, int y, int wdt, BYTE *pCelBuff, int nCel, 
 			if (!(width & 0x80)) {
 				i -= width;
 				memcpy(dst, pRLEBytes, width);
+	StepRender();
 				dst += width;
 				pRLEBytes += width;
 			} else {
@@ -447,8 +465,11 @@ void CelBlitOutline(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWid
 						while (width) {
 							if (*src++) {
 								dst[-BUFFER_WIDTH] = col;
+	StepRender();
 								dst[-1] = col;
+	StepRender();
 								dst[1] = col;
+	StepRender();
 							}
 							dst++;
 							width--;
@@ -457,9 +478,13 @@ void CelBlitOutline(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWid
 						while (width) {
 							if (*src++) {
 								dst[-BUFFER_WIDTH] = col;
+	StepRender();
 								dst[-1] = col;
+	StepRender();
 								dst[1] = col;
+	StepRender();
 								dst[BUFFER_WIDTH] = col;
+	StepRender();
 							}
 							dst++;
 							width--;
@@ -489,8 +514,10 @@ void ENG_set_pixel(int sx, int sy, BYTE col)
 
 	dst = &gpBuffer[sx + BUFFER_WIDTH * sy];
 
-	if (dst < gpBufEnd && dst > gpBufStart)
+	if (dst < gpBufEnd && dst > gpBufStart) {
 		*dst = col;
+	StepRender();
+	}
 }
 
 void engine_draw_pixel(int sx, int sy)
@@ -509,8 +536,10 @@ void engine_draw_pixel(int sx, int sy)
 		dst = &gpBuffer[sx + BUFFER_WIDTH * sy];
 	}
 
-	if (dst < gpBufEnd && dst > gpBufStart)
+	if (dst < gpBufEnd && dst > gpBufStart) {
 		*dst = gbPixelCol;
+	StepRender();
+	}
 }
 
 // Exact copy from https://github.com/erich666/GraphicsGems/blob/dad26f941e12c8bf1f96ea21c1c04cd2206ae7c9/gems/DoubleLine.c
@@ -883,12 +912,14 @@ void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel)
 					nDataSize--;
 					assert(nDataSize >= 0);
 					*dst = ttbl[*dst];
+				StepRender();
 					dst++;
 				} else {
 					nDataSize -= width;
 					assert(nDataSize >= 0);
 					while (width) {
 						*dst = ttbl[*dst];
+	StepRender();
 						dst++;
 						width--;
 					}
@@ -940,6 +971,7 @@ void Cl2BlitSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth)
 					w -= width;
 					while (width) {
 						*dst = fill;
+	StepRender();
 						dst++;
 						width--;
 					}
@@ -955,6 +987,7 @@ void Cl2BlitSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth)
 					w -= width;
 					while (width) {
 						*dst = *src;
+	StepRender();
 						src++;
 						dst++;
 						width--;
@@ -1029,10 +1062,14 @@ void Cl2BlitOutlineSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWi
 				if (*src++ && dst < gpBufEnd && dst > gpBufStart) {
 					w -= width;
 					dst[-1] = col;
+	StepRender();
 					dst[width] = col;
+	StepRender();
 					while (width) {
 						dst[-BUFFER_WIDTH] = col;
+	StepRender();
 						dst[BUFFER_WIDTH] = col;
+	StepRender();
 						dst++;
 						width--;
 					}
@@ -1049,9 +1086,13 @@ void Cl2BlitOutlineSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWi
 					while (width) {
 						if (*src++) {
 							dst[-1] = col;
+	StepRender();
 							dst[1] = col;
+	StepRender();
 							dst[-BUFFER_WIDTH] = col;
+	StepRender();
 							dst[BUFFER_WIDTH] = col;
+	StepRender();
 						}
 						dst++;
 						width--;
@@ -1135,6 +1176,7 @@ void Cl2BlitLightSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidt
 					w -= width;
 					while (width) {
 						*dst = fill;
+	StepRender();
 						dst++;
 						width--;
 					}
@@ -1150,6 +1192,7 @@ void Cl2BlitLightSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidt
 					w -= width;
 					while (width) {
 						*dst = pTable[*src];
+	StepRender();
 						src++;
 						dst++;
 						width--;

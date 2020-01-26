@@ -185,9 +185,9 @@ void PaletteFadeIn(int fr)
 
 	ApplyGamma(logical_palette, orig_palette, 256);
 	DWORD tc = SDL_GetTicks();
-	for (i = 0; i < 256; i = (SDL_GetTicks() - tc) / 2.083) { // 32 frames @ 60hz
-		SetFadeLevel(i);
-	}
+	//for (i = 0; i < 256; i = (SDL_GetTicks() - tc) / 2.083) { // 32 frames @ 60hz
+	//	SetFadeLevel(i);
+	//}
 	SetFadeLevel(256);
 	memcpy(logical_palette, orig_palette, sizeof(orig_palette));
 	sgbFadedIn = TRUE;
@@ -198,11 +198,12 @@ void PaletteFadeOut(int fr)
 	int i;
 
 	if (sgbFadedIn) {
-		DWORD tc = SDL_GetTicks();
-		for (i = 256; i > 0; i = 256 - (SDL_GetTicks() - tc) / 2.083) { // 32 frames @ 60hz
-			SetFadeLevel(i);
-		}
-		SetFadeLevel(0);
+		//DWORD tc = SDL_GetTicks();
+		//for (i = 256; i > 0; i = 256 - (SDL_GetTicks() - tc) / 2.083) { // 32 frames @ 60hz
+		//	SetFadeLevel(i);
+		//}
+	ApplyGamma(logical_palette, orig_palette, 256);
+	SetFadeLevel(256);
 		sgbFadedIn = FALSE;
 	}
 }

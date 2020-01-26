@@ -88,10 +88,11 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 	InitController();
 #endif
 
-	int upscale = 1;
-	DvlIntSetting("upscale", &upscale);
-	if (fullscreen)
+	int upscale = 0;
+	//DvlIntSetting("upscale", &upscale);
+	if (fullscreen = 0)
 		DvlIntSetting("fullscreen", (int *)&fullscreen);
+	fullscreen = 0;
 
 	int grabInput = 1;
 	DvlIntSetting("grab input", &grabInput);

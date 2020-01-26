@@ -248,7 +248,7 @@ void RenderPresent()
 		if (SDL_UpdateWindowSurface(window) <= -1) {
 			ErrSdl();
 		}
-		LimitFrameRate();
+		//LimitFrameRate();
 	}
 #else
 	if (SDL_Flip(surface) <= -1) {

@@ -21,6 +21,7 @@ void ClearScreenBuffer();
 void ScrollView();
 #endif
 void EnableFrameCount();
+void StepRender();
 void scrollrt_draw_game_screen(BOOL draw_cursor);
 void DrawAndBlit();
 

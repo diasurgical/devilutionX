@@ -1089,6 +1089,15 @@ static void DoBlitScreen(DWORD dwX, DWORD dwY, DWORD dwWdt, DWORD dwHgt)
 	BltFast(dwX, dwY, &SrcRect);
 }
 
+void StepRender()
+{
+	if (!debugRender)
+		return;
+
+	DoBlitScreen(0, 0, 640, 480);
+	RenderPresent();
+}
+
 /**
  * @brief Check render pipline and blit indivudal screen parts
  * @param dwHgt Section of screen to update from top to bottom
@@ -1184,6 +1193,8 @@ void DrawAndBlit()
 	if (!gbRunGame) {
 		return;
 	}
+	force_redraw = 255;
+	memset(&gpBuffer[SCREEN_Y * BUFFER_WIDTH], 0, BUFFER_WIDTH * 480);
 
 	if (SCREEN_WIDTH > PANEL_WIDTH || SCREEN_HEIGHT > VIEWPORT_HEIGHT + PANEL_HEIGHT || force_redraw == 255) {
 		drawhpflag = TRUE;
