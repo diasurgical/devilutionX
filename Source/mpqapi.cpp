@@ -366,8 +366,11 @@ BOOL OpenMPQ(const char *pszArchive, DWORD dwChar)
 			key = Hash("(hash table)", 3);
 			Decrypt(sgpHashTbl, 0x8000, key);
 		}
-		return TRUE;
 	}
+	// Set output position to the end to ensure the file is not cleared if the MPQ
+	// is closed without having anything written to it.
+	if (exists)
+		GOTO_IF_FAIL(on_error, archive, seekp, 0, std::ios::end);
 	return TRUE;
 on_error:
 	CloseMPQ(pszArchive, TRUE, dwChar);
