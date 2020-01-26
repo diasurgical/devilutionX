@@ -100,7 +100,7 @@ static std::ofstream *CaptureFile(char *dst_path)
 {
 	char path[MAX_PATH];
 
-	GetPrefPath(dst_path, MAX_PATH);
+	GetPrefPath(path, MAX_PATH);
 
 	for (int i = 0; i <= 99; i++) {
 		snprintf(dst_path, MAX_PATH, "%sscreen%02d.PCX", path, i);
