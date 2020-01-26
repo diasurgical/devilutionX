@@ -2,7 +2,7 @@
 #ifndef __PORTAL_H__
 #define __PORTAL_H__
 
-extern PortalStruct portal[MAXPORTAL];
+extern PortalStruct portal[MAX_PLRS];
 extern int portalindex;
 
 void InitPortals();
@@ -20,7 +20,7 @@ void GetPortalLvlPos();
 BOOL PosOkPortal(int lvl, int x, int y);
 
 /* rdata */
-extern int WarpDropX[MAXPORTAL];
-extern int WarpDropY[MAXPORTAL];
+extern int WarpDropX[MAX_PLRS];
+extern int WarpDropY[MAX_PLRS];
 
 #endif /* __PORTAL_H__ */

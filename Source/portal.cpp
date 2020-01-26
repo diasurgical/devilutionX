@@ -2,17 +2,17 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-PortalStruct portal[MAXPORTAL];
+PortalStruct portal[MAX_PLRS];
 int portalindex;
 
-int WarpDropX[MAXPORTAL] = { 57, 59, 61, 63 };
-int WarpDropY[MAXPORTAL] = { 40, 40, 40, 40 };
+int WarpDropX[MAX_PLRS] = { 57, 59, 61, 63, 57, 59, 61, 63, 57, 59, 61, 63, 57, 59, 61, 63 };
+int WarpDropY[MAX_PLRS] = { 40, 40, 40, 40, 42, 42, 42, 42, 38, 38, 38, 38, 44, 44, 44, 44 };
 
 void InitPortals()
 {
 	int i;
 
-	for (i = 0; i < MAXPORTAL; i++) {
+	for (i = 0; i < MAX_PLRS; i++) {
 		if (delta_portal_inited(i))
 			portal[i].open = FALSE;
 	}
@@ -50,7 +50,7 @@ void SyncPortals()
 {
 	int i;
 
-	for (i = 0; i < MAXPORTAL; i++) {
+	for (i = 0; i < MAX_PLRS; i++) {
 		if (!portal[i].open)
 			continue;
 		if (currlevel == 0)
@@ -167,7 +167,7 @@ BOOL PosOkPortal(int lvl, int x, int y)
 {
 	int i;
 
-	for (i = 0; i < MAXPORTAL; i++) {
+	for (i = 0; i < MAX_PLRS; i++) {
 		if (portal[i].open && portal[i].level == lvl && ((portal[i].x == x && portal[i].y == y) || (portal[i].x == x - 1 && portal[i].y == y - 1)))
 			return TRUE;
 	}

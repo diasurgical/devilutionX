@@ -43,8 +43,8 @@ void LoadGame(BOOL firstflag)
 
 	for (i = 0; i < MAXQUESTS; i++)
 		LoadQuest(i);
-	for (i = 0; i < MAXPORTAL; i++)
-		LoadPortal(i);
+	LoadPortal(0);
+	tbuff += 6 * 4 * 3; // Unused portals
 
 	LoadGameLevel(firstflag, 4);
 	SyncInitPlr(myplr);
@@ -828,8 +828,8 @@ void SaveGame()
 
 	for (i = 0; i < MAXQUESTS; i++)
 		SaveQuest(i);
-	for (i = 0; i < MAXPORTAL; i++)
-		SavePortal(i);
+	SavePortal(0);
+	tbuff += 6 * 4 * 3; // Unused portals
 	for (i = 0; i < MAXMONSTERS; i++)
 		ISave(monstkills[i]);
 

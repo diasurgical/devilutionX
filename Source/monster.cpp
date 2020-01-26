@@ -929,10 +929,8 @@ void InitMonsters()
 	if (gbMaxPlayers != 1)
 		CheckDungeonClear();
 	if (!setlevel) {
-		AddMonster(1, 0, 0, 0, FALSE);
-		AddMonster(1, 0, 0, 0, FALSE);
-		AddMonster(1, 0, 0, 0, FALSE);
-		AddMonster(1, 0, 0, 0, FALSE);
+		for (int j = 0; j < MAX_PLRS; j++)
+			AddMonster(1, 0, 0, 0, FALSE);
 	}
 #ifndef SPAWN
 	if (!setlevel && currlevel == 16)
@@ -1029,10 +1027,8 @@ void SetMapMonsters(BYTE *pMap, int startx, int starty)
 	int mtype;
 
 	AddMonsterType(MT_GOLEM, 2);
-	AddMonster(1, 0, 0, 0, FALSE);
-	AddMonster(1, 0, 0, 0, FALSE);
-	AddMonster(1, 0, 0, 0, FALSE);
-	AddMonster(1, 0, 0, 0, FALSE);
+	for (int k = 0; k < MAX_PLRS; k++)
+		AddMonster(1, 0, 0, 0, FALSE);
 	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
 		AddMonsterType(UniqMonst[UMT_LAZURUS].mtype, 4);
 		AddMonsterType(UniqMonst[UMT_RED_VEX].mtype, 4);
@@ -1652,7 +1648,7 @@ void MonstStartKill(int i, int pnum, BOOL sendmsg)
 	SetRndSeed(monster[i]._mRndSeed);
 	if (QuestStatus(QTYPE_GARB) && monster[i].mName == UniqMonst[UMT_GARBUD].mName) {
 		CreateTypeItem(monster[i]._mx + 1, monster[i]._my + 1, TRUE, 4, 0, TRUE, FALSE);
-	} else if (i > 3) {
+	} else if (i > MAX_PLRS - 1) {
 		SpawnItem(i, monster[i]._mx, monster[i]._my, sendmsg);
 	}
 	if (monster[i].MType->mtype == MT_DIABLO)
