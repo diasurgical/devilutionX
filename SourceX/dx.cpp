@@ -5,10 +5,6 @@
 
 namespace dvl {
 
-#ifdef __AMIGA__
-Uint32 old_buffer;
-#endif
-
 int sgdwLockCount;
 BYTE *gpBuffer;
 #ifdef _DEBUG
@@ -70,9 +66,6 @@ void dx_init(HWND hWnd)
 	SDL_RaiseWindow(window);
 	SDL_ShowWindow(window);
 
-#ifdef __AMIGA__
-	ac68080 = is_vampire();
-#endif
 	dx_create_primary_surface();
 	palette_init();
 	dx_create_back_buffer();
@@ -225,12 +218,6 @@ void LimitFrameRate()
 void RenderPresent()
 {
 	SDL_Surface *surface = GetOutputSurface();
-#ifdef __AMIGA__
-	if (ac68080)	{
-		old_buffer = surface->pixels;
-		surface->pixels = (void*)(~31 & (31+(Uint32)old_buffer));
-	}
-#endif
 	assert(!SDL_MUSTLOCK(surface));
 
 	if (!gbActive) {
@@ -264,11 +251,6 @@ void RenderPresent()
 		LimitFrameRate();
 	}
 #else
-#ifdef __AMIGA__
-	if (ac68080)
-		*(volatile Uint32 *) 0xDFF1EC = (Uint32)surface->pixels;
-	else
-#endif
 	if (SDL_Flip(surface) <= -1) {
 		ErrSdl();
 	}
