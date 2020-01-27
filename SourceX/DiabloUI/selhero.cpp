@@ -1,6 +1,5 @@
 #include "selhero.h"
 
-#include <cwchar>
 #include <algorithm>
 #include <chrono>
 #include <random>

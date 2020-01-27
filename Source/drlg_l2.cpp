@@ -1,6 +1,5 @@
 #ifndef SPAWN
 
-#include <cwchar>
 #include <algorithm>
 
 #include "diablo.h"
