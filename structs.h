@@ -171,7 +171,7 @@ typedef struct ItemStruct {
 
 typedef struct PlayerStruct {
 	int _pmode;
-	char walkpath[25];
+	char walkpath[MAX_PATH_LENGTH];
 	BOOLEAN plractive;
 	int destAction;
 	int destParam1;

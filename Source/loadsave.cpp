@@ -271,7 +271,7 @@ void LoadPlayer(int i)
 	PlayerStruct *pPlayer = &plr[i];
 
 	CopyInt(tbuff, &pPlayer->_pmode);
-	CopyBytes(tbuff, 25, pPlayer->walkpath);
+	CopyBytes(tbuff, MAX_PATH_LENGTH, pPlayer->walkpath);
 	CopyBytes(tbuff, 1, &pPlayer->plractive);
 	tbuff += 2; // Alignment
 	CopyInt(tbuff, &pPlayer->destAction);
@@ -996,7 +996,7 @@ void SavePlayer(int i)
 	PlayerStruct *pPlayer = &plr[i];
 
 	CopyInt(&pPlayer->_pmode, tbuff);
-	CopyBytes(&pPlayer->walkpath, 25, tbuff);
+	CopyBytes(&pPlayer->walkpath, MAX_PATH_LENGTH, tbuff);
 	CopyBytes(&pPlayer->plractive, 1, tbuff);
 	tbuff += 2; // Alignment
 	CopyInt(&pPlayer->destAction, tbuff);

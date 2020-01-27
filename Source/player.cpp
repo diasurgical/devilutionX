@@ -3096,11 +3096,11 @@ void CheckNewPath(int pnum)
 				break;
 			}
 
-			for (i = 1; i < 25; i++) {
+			for (i = 1; i < MAX_PATH_LENGTH; i++) {
 				plr[pnum].walkpath[i - 1] = plr[pnum].walkpath[i];
 			}
 
-			plr[pnum].walkpath[24] = WALK_NONE;
+			plr[pnum].walkpath[MAX_PATH_LENGTH-1] = WALK_NONE;
 
 			if (plr[pnum]._pmode == PM_STAND) {
 				StartStand(pnum, plr[pnum]._pdir);

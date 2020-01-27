@@ -66,6 +66,9 @@
 
 #define MAXPATHNODES			300
 
+// Careful! Changing this variable causes saves with a different one to crash! Default: 25
+#define MAX_PATH_LENGTH			25
+
 // 256 kilobytes + 3 bytes (demo leftover) for file magic (262147)
 // final game uses 4-byte magic instead of 3
 #define FILEBUFF				((256*1024)+3)
@@ -95,8 +98,8 @@
 #define PAL16_RED		224
 #define PAL16_GRAY		240
 
-#define SCREEN_WIDTH	640
-#define SCREEN_HEIGHT	480
+#define SCREEN_WIDTH	1280
+#define SCREEN_HEIGHT	960
 
 #define ZOOM_WIDTH		384
 #define ZOOM_HEIGHT		224

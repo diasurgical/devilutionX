@@ -80,7 +80,7 @@ int GetDistance(int dx, int dy, int maxDistance)
 		return 0;
 	}
 
-	char walkpath[25];
+	char walkpath[MAX_PATH_LENGTH];
 	int steps = FindPath(PosOkPlayer, myplr, plr[myplr]._px, plr[myplr]._py, dx, dy, walkpath);
 	if (steps > maxDistance)
 		return 0;
