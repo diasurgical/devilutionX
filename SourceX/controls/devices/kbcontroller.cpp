@@ -3,24 +3,10 @@
 #if HAS_KBCTRL == 1
 
 #include "controls/controller_motion.h"
-#include "sdl2_to_1_2_backports.h"
 #include "sdl_compat.h"
 #include "stubs.h"
 
 namespace dvl {
-
-namespace {
-
-bool IsModifierKey()
-{
-#ifdef KBCTRL_BUTTON_BACK
-	return SDLC_GetKeyState()[KBCTRL_BUTTON_BACK];
-#else
-	return false;
-#endif
-}
-
-} // namespace
 
 ControllerButton KbCtrlToControllerButton(const SDL_Event &event)
 {
@@ -58,14 +44,10 @@ ControllerButton KbCtrlToControllerButton(const SDL_Event &event)
 #endif
 #ifdef KBCTRL_BUTTON_LEFTSHOULDER
 		case KBCTRL_BUTTON_LEFTSHOULDER:
-			if (IsModifierKey())
-				return ControllerButton::AXIS_TRIGGERLEFT;
 			return ControllerButton::BUTTON_LEFTSHOULDER;
 #endif
 #ifdef KBCTRL_BUTTON_RIGHTSHOULDER
 		case KBCTRL_BUTTON_RIGHTSHOULDER:
-			if (IsModifierKey())
-				return ControllerButton::AXIS_TRIGGERRIGHT;
 			return ControllerButton::BUTTON_RIGHTSHOULDER;
 #endif
 #ifdef KBCTRL_BUTTON_START
@@ -78,26 +60,18 @@ ControllerButton KbCtrlToControllerButton(const SDL_Event &event)
 #endif
 #ifdef KBCTRL_BUTTON_DPAD_UP
 		case KBCTRL_BUTTON_DPAD_UP:
-			if (IsModifierKey())
-				return ControllerButton::IGNORE;
 			return ControllerButton::BUTTON_DPAD_UP;
 #endif
 #ifdef KBCTRL_BUTTON_DPAD_DOWN
 		case KBCTRL_BUTTON_DPAD_DOWN:
-			if (IsModifierKey())
-				return ControllerButton::IGNORE;
 			return ControllerButton::BUTTON_DPAD_DOWN;
 #endif
 #ifdef KBCTRL_BUTTON_DPAD_LEFT
 		case KBCTRL_BUTTON_DPAD_LEFT:
-			if (IsModifierKey())
-				return ControllerButton::IGNORE;
 			return ControllerButton::BUTTON_DPAD_LEFT;
 #endif
 #ifdef KBCTRL_BUTTON_DPAD_RIGHT
 		case KBCTRL_BUTTON_DPAD_RIGHT:
-			if (IsModifierKey())
-				return ControllerButton::IGNORE;
 			return ControllerButton::BUTTON_DPAD_RIGHT;
 #endif
 		default:
@@ -176,7 +150,9 @@ int ControllerButtonToKbCtrlKeyCode(ControllerButton button)
 	}
 }
 
-bool IsButtonPressed(ControllerButton button)
+} // namespace
+
+bool IsKbCtrlButtonPressed(ControllerButton button)
 {
 	int key_code = ControllerButtonToKbCtrlKeyCode(button);
 	if (key_code == -1)
@@ -188,42 +164,10 @@ bool IsButtonPressed(ControllerButton button)
 #endif
 }
 
-} // namespace
-
-bool IsKbCtrlButtonPressed(ControllerButton button)
-{
-	if (IsModifierKey() && (button == ControllerButton::BUTTON_DPAD_UP || button == ControllerButton::BUTTON_DPAD_DOWN || button == ControllerButton::BUTTON_DPAD_LEFT || button == ControllerButton::BUTTON_DPAD_RIGHT))
-		return false;
-	return IsButtonPressed(button);
-}
-
 bool ProcessKbCtrlAxisMotion(const SDL_Event &event)
 {
-	if (!IsModifierKey()) {
-		rightStickX = 0;
-		rightStickY = 0;
-		return false;
-	}
-	if (event.type != SDL_KEYUP && event.type != SDL_KEYDOWN)
-		return false;
-	const auto sym = event.key.keysym.sym;
-	if (sym != KBCTRL_BUTTON_DPAD_UP && sym != KBCTRL_BUTTON_DPAD_DOWN && sym != KBCTRL_BUTTON_DPAD_LEFT && sym != KBCTRL_BUTTON_DPAD_RIGHT)
-		return false;
-	if (IsButtonPressed(ControllerButton::BUTTON_DPAD_LEFT)) {
-		rightStickX = -1;
-	} else if (IsButtonPressed(ControllerButton::BUTTON_DPAD_RIGHT)) {
-		rightStickX = 1;
-	} else {
-		rightStickX = 0;
-	}
-	if (IsButtonPressed(ControllerButton::BUTTON_DPAD_UP)) {
-		rightStickY = 1;
-	} else if (IsButtonPressed(ControllerButton::BUTTON_DPAD_DOWN)) {
-		rightStickY = -1;
-	} else {
-		rightStickY = 0;
-	}
-	return true;
+	// Mapping keyboard to right stick axis not implemented.
+	return false;
 }
 
 } // namespace dvl

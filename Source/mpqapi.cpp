@@ -216,7 +216,7 @@ BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD d
 			}
 			destsize += nNumberOfBytesToWrite;
 		}
-		sectoroffsettable[j] = destsize;
+		sectoroffsettable[j] = SwapLE32(destsize);
 		if (!WriteFile(sghArchive, mpq_buf, len, &len, NULL)) {
 			goto on_error;
 		}
@@ -228,7 +228,7 @@ BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD d
 		destsize += len;
 	}
 
-	sectoroffsettable[j] = destsize;
+	sectoroffsettable[j] = SwapLE32(destsize);
 	if (SetFilePointer(sghArchive, -destsize, NULL, FILE_CURRENT) == (DWORD)-1) {
 		goto on_error;
 	}
@@ -358,6 +358,20 @@ on_error:
 	return FALSE;
 }
 
+static BOOL byteSwapHdr(_FILEHEADER *pHdr)
+{
+	pHdr->signature = SDL_SwapLE32(pHdr->signature);
+	pHdr->headersize = SDL_SwapLE32(pHdr->headersize);
+	pHdr->filesize = SDL_SwapLE32(pHdr->filesize);
+	pHdr->version = SDL_SwapLE16(pHdr->version);
+	pHdr->sectorsizeid = SDL_SwapLE16(pHdr->sectorsizeid);
+	pHdr->hashoffset = SDL_SwapLE32(pHdr->hashoffset);
+	pHdr->blockoffset = SDL_SwapLE32(pHdr->blockoffset);
+	pHdr->hashcount = SDL_SwapLE32(pHdr->hashcount);
+	pHdr->blockcount = SDL_SwapLE32(pHdr->blockcount);
+	return false;
+}
+
 BOOL ParseMPQHeader(_FILEHEADER *pHdr, DWORD *pdwNextFileStart)
 {
 	DWORD size;
@@ -369,6 +383,7 @@ BOOL ParseMPQHeader(_FILEHEADER *pHdr, DWORD *pdwNextFileStart)
 	if (size == -1
 	    || size < sizeof(*pHdr)
 	    || !ReadFile(sghArchive, pHdr, sizeof(*pHdr), &NumberOfBytesRead, NULL)
+	    || byteSwapHdr(pHdr)
 	    || NumberOfBytesRead != 104
 	    || pHdr->signature != '\x1AQPM'
 	    || pHdr->headersize != 32

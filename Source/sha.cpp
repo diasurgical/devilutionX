@@ -40,7 +40,7 @@ void SHA1Result(int n, char Message_Digest[SHA1HashSize])
 	Message_Digest_Block = (DWORD *)Message_Digest;
 	if (Message_Digest) {
 		for (i = 0; i < 5; i++) {
-			*Message_Digest_Block = sgSHA1[n].state[i];
+			*Message_Digest_Block = SwapLE32(sgSHA1[n].state[i]);
 			Message_Digest_Block++;
 		}
 	}
@@ -79,7 +79,8 @@ void SHA1ProcessMessageBlock(SHA1Context *context)
 
 	DWORD *buf = (DWORD *)context->buffer;
 	for (i = 0; i < 16; i++)
-		W[i] = buf[i];
+		W[i] = SwapLE32(buf[i]);
+
 
 	for (i = 16; i < 80; i++) {
 		W[i] = W[i - 16] ^ W[i - 14] ^ W[i - 8] ^ W[i - 3];

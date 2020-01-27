@@ -1274,7 +1274,7 @@ void control_print_info_str(int y, char *str, BOOL center, int lines)
 	}
 }
 
-void PrintGameStr(int x, int y, char *str, int color)
+void PrintGameStr(int x, int y, const char *str, int color)
 {
 	BYTE c;
 	int sx, sy;
@@ -1906,7 +1906,7 @@ void control_drop_gold(char vkey)
 	}
 
 	memset(input, 0, sizeof(input));
-	SDL_itoa(dropGoldValue, input, 10);
+	snprintf(input, sizeof(input), "%d", dropGoldValue);
 	if (vkey == VK_RETURN) {
 		if (dropGoldValue > 0)
 			control_remove_gold(myplr, initialDropGoldIndex);

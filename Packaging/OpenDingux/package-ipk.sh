@@ -10,7 +10,7 @@ if [[ -z "$1" ]]; then
 fi
 
 readonly OUT="$1"
-readonly IN="${2:-$(dirname "$OUT")/devilutionx.dge}"
+readonly IN="${2:-$(dirname "$OUT")/devilutionx}"
 
 readonly PKG_TARGET=devilutionx
 readonly TMP="tmp/${PKG_TARGET}"
@@ -32,7 +32,7 @@ mkdir -p "${TMP}"
 
 # data.tar.gz
 mkdir -p "${TMP}/root/${PKG_INSTALL_DIR}" "${TMP}/root/${PKG_LOCAL_DIR}"
-cp "$IN" "${TMP}/root/${PKG_INSTALL_DIR}/${PKG_TARGET}.dge"
+cp "$IN" "${TMP}/root/${PKG_INSTALL_DIR}/${PKG_TARGET}"
 cp ../resources/Diablo_32.png "${TMP}/root/${PKG_INSTALL_DIR}/devilutionx.png"
 cp ../resources/CharisSILB.ttf ../resources/LICENSE.CharisSILB.txt "${TMP}/root/${PKG_INSTALL_DIR}"
 cp devilutionx-retrofw.man.txt "${TMP}/root/${PKG_INSTALL_DIR}/devilutionx.man.txt"
@@ -41,7 +41,7 @@ mkdir -p "${TMP}/root/$(dirname "$PKG_MENU_LNK_OUT")"
 printf "%s\n" \
   "title=DevilutionX" \
   "description=$(pkg_control_get Description)" \
-  "exec=/${PKG_INSTALL_DIR}/${PKG_TARGET}.dge" \
+  "exec=/${PKG_INSTALL_DIR}/${PKG_TARGET}" \
   > "${TMP}/root/${PKG_MENU_LNK_OUT}"
 tar --owner=0 --group=0 -czvf "${TMP}/data.tar.gz" -C "${TMP}/root/" .
 

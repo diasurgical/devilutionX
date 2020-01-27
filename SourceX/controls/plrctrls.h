@@ -24,6 +24,9 @@ void HandleRightStickMotion();
 // Whether we're in a dialog menu that the game handles natively with keyboard controls.
 bool InGameMenu();
 
+// Whether the automap is being displayed.
+bool IsAutomapActive();
+
 void UseBeltItem(int type);
 
 // Talk to towners, click on inv items, attack, etc.

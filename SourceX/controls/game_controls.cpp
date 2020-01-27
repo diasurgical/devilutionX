@@ -7,6 +7,7 @@
 #include "controls/devices/game_controller.h"
 #include "controls/devices/joystick.h"
 #include "controls/menu_controls.h"
+#include "controls/modifier_hints.h"
 #include "controls/plrctrls.h"
 
 namespace dvl {
@@ -41,47 +42,115 @@ DWORD translate_controller_button_to_key(ControllerButton controller_button)
 
 } // namespace
 
+bool start_modifier_active = false;
+bool select_modifier_active = false;
+
 bool GetGameAction(const SDL_Event &event, GameAction *action)
 {
 	const ControllerButtonEvent ctrl_event = ToControllerButtonEvent(event);
-	if (!InGameMenu()) {
+	const bool in_game_menu = InGameMenu();
+
+	start_modifier_active = !in_game_menu && IsControllerButtonPressed(ControllerButton::BUTTON_START);
+	select_modifier_active = !in_game_menu && IsControllerButtonPressed(ControllerButton::BUTTON_BACK);
+
+	// SELECT + D-Pad simulating mouse movement.
+	if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK) && IsDPadButton(ctrl_event.button)) {
+		return true;
+	}
+
+	// START + SELECT
+	if (!ctrl_event.up
+	    && ((ctrl_event.button == ControllerButton::BUTTON_BACK && IsControllerButtonPressed(ControllerButton::BUTTON_START))
+	           || (ctrl_event.button == ControllerButton::BUTTON_START && IsControllerButtonPressed(ControllerButton::BUTTON_BACK)))) {
+		select_modifier_active = start_modifier_active = false;
+		*action = GameActionSendKey{ DVL_VK_ESCAPE, ctrl_event.up };
+		return true;
+	}
+
+	if (!in_game_menu) {
 		switch (ctrl_event.button) {
+		case ControllerButton::BUTTON_LEFTSHOULDER:
+			if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK)) {
+				if (!IsAutomapActive())
+					*action = GameActionSendMouseClick{ GameActionSendMouseClick::LEFT, ctrl_event.up };
+				return true;
+			}
+			break;
+		case ControllerButton::BUTTON_RIGHTSHOULDER:
+			if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK)) {
+				if (!IsAutomapActive())
+					*action = GameActionSendMouseClick{ GameActionSendMouseClick::RIGHT, ctrl_event.up };
+				return true;
+			}
+			break;
 		case ControllerButton::AXIS_TRIGGERLEFT: // ZL (aka L2)
 			if (!ctrl_event.up) {
-#if HAS_KBCTRL == 0
 				if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK))
 					*action = GameAction(GameActionType::TOGGLE_QUEST_LOG);
 				else
-#endif
 					*action = GameAction(GameActionType::TOGGLE_CHARACTER_INFO);
 			}
 			return true;
 		case ControllerButton::AXIS_TRIGGERRIGHT: // ZR (aka R2)
 			if (!ctrl_event.up) {
-#if HAS_KBCTRL == 0
 				if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK))
 					*action = GameAction(GameActionType::TOGGLE_SPELL_BOOK);
 				else
-#endif
 					*action = GameAction(GameActionType::TOGGLE_INVENTORY);
 			}
 			return true;
-#if HAS_KBCTRL == 1
 		case ControllerButton::BUTTON_LEFTSTICK:
 			if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK)) {
-				*action = GameActionSendMouseClick { GameActionSendMouseClick::LEFT, ctrl_event.up };
+				if (!IsAutomapActive())
+					*action = GameActionSendMouseClick{ GameActionSendMouseClick::LEFT, ctrl_event.up };
 				return true;
 			}
 			break;
 		case ControllerButton::BUTTON_START:
 			if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK)) {
-				*action = GameActionSendMouseClick { GameActionSendMouseClick::RIGHT, ctrl_event.up };
-				return true;
+				*action = GameActionSendKey{ DVL_VK_ESCAPE, ctrl_event.up };
 			}
+			return true;
 			break;
-#endif
 		default:
 			break;
+		}
+		if (IsControllerButtonPressed(ControllerButton::BUTTON_START)) {
+			switch (ctrl_event.button) {
+			case ControllerButton::IGNORE:
+			case ControllerButton::BUTTON_START:
+				return true;
+			case ControllerButton::BUTTON_DPAD_UP:
+				*action = GameActionSendKey{ DVL_VK_ESCAPE, ctrl_event.up };
+				return true;
+			case ControllerButton::BUTTON_DPAD_RIGHT:
+				if (!ctrl_event.up)
+					*action = GameAction(GameActionType::TOGGLE_INVENTORY);
+				return true;
+			case ControllerButton::BUTTON_DPAD_DOWN:
+				*action = GameActionSendKey{ DVL_VK_TAB, ctrl_event.up };
+				return true;
+			case ControllerButton::BUTTON_DPAD_LEFT:
+				if (!ctrl_event.up)
+					*action = GameAction(GameActionType::TOGGLE_CHARACTER_INFO);
+				return true;
+			case ControllerButton::BUTTON_Y: // Top button
+				// Not mapped. Reserved for future use.
+				return true;
+			case ControllerButton::BUTTON_B: // Right button
+				// Not mapped. TODO: map to attack in place.
+				return true;
+			case ControllerButton::BUTTON_A: // Bottom button
+				if (!ctrl_event.up)
+					*action = GameAction(GameActionType::TOGGLE_SPELL_BOOK);
+				return true;
+			case ControllerButton::BUTTON_X: // Left button
+				if (!ctrl_event.up)
+					*action = GameAction(GameActionType::TOGGLE_QUEST_LOG);
+				return true;
+			default:
+				return true;
+			}
 		}
 		if (!questlog && !sbookflag) {
 			switch (ctrl_event.button) {
@@ -90,7 +159,7 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 			case ControllerButton::BUTTON_B: // Right button
 				if (!ctrl_event.up) {
 					if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK))
-						*action = GameActionSendKey { DVL_VK_F8, ctrl_event.up };
+						*action = GameActionSendKey{ DVL_VK_F8, ctrl_event.up };
 					else
 						*action = GameAction(GameActionType::PRIMARY_ACTION);
 				}
@@ -98,7 +167,7 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 			case ControllerButton::BUTTON_Y: // Top button
 				if (!ctrl_event.up) {
 					if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK))
-						*action = GameActionSendKey { DVL_VK_F6, ctrl_event.up };
+						*action = GameActionSendKey{ DVL_VK_F6, ctrl_event.up };
 					else
 						*action = GameAction(GameActionType::SECONDARY_ACTION);
 				}
@@ -106,7 +175,7 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 			case ControllerButton::BUTTON_X: // Left button
 				if (!ctrl_event.up) {
 					if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK))
-						*action = GameActionSendKey { DVL_VK_F5, ctrl_event.up };
+						*action = GameActionSendKey{ DVL_VK_F5, ctrl_event.up };
 					else
 						*action = GameAction(GameActionType::CAST_SPELL);
 				}
@@ -114,7 +183,7 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 			case ControllerButton::BUTTON_A: // Bottom button
 				if (!ctrl_event.up) {
 					if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK))
-						*action = GameActionSendKey { DVL_VK_F7, ctrl_event.up };
+						*action = GameActionSendKey{ DVL_VK_F7, ctrl_event.up };
 					else
 						*action = GameAction(GameActionType::TOGGLE_QUICK_SPELL_MENU);
 				}
@@ -131,13 +200,15 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 			case ControllerButton::BUTTON_DPAD_DOWN:
 			case ControllerButton::BUTTON_DPAD_LEFT:
 			case ControllerButton::BUTTON_DPAD_RIGHT:
-				// The rest is handled in charMovement() on every game_logic() call.
+				// The rest of D-Pad actions are handled in charMovement() on every game_logic() call.
 				return true;
 			case ControllerButton::BUTTON_RIGHTSTICK:
-				if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK))
-					*action = GameActionSendMouseClick { GameActionSendMouseClick::RIGHT, ctrl_event.up };
-				else
-					*action = GameActionSendMouseClick { GameActionSendMouseClick::LEFT, ctrl_event.up };
+				if (!IsAutomapActive()) {
+					if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK))
+						*action = GameActionSendMouseClick{ GameActionSendMouseClick::RIGHT, ctrl_event.up };
+					else
+						*action = GameActionSendMouseClick{ GameActionSendMouseClick::LEFT, ctrl_event.up };
+				}
 				return true;
 			default:
 				break;
@@ -151,7 +222,7 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 
 	// By default, map to a keyboard key.
 	if (ctrl_event.button != ControllerButton::NONE) {
-		*action = GameActionSendKey { translate_controller_button_to_key(ctrl_event.button),
+		*action = GameActionSendKey{ translate_controller_button_to_key(ctrl_event.button),
 			ctrl_event.up };
 		return true;
 	}
@@ -174,7 +245,7 @@ MoveDirection GetMoveDirection()
 {
 	const float stickX = leftStickX;
 	const float stickY = leftStickY;
-	MoveDirection result { MoveDirectionX::NONE, MoveDirectionY::NONE };
+	MoveDirection result{ MoveDirectionX::NONE, MoveDirectionY::NONE };
 
 	if (stickY >= 0.5 || IsControllerButtonPressed(ControllerButton::BUTTON_DPAD_UP)) {
 		result.y = MoveDirectionY::UP;

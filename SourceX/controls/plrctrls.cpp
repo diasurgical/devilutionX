@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <list>
 
+#include "controls/controller.h"
 #include "controls/controller_motion.h"
 #include "controls/game_controls.h"
 
@@ -822,7 +823,9 @@ void WalkInDir(MoveDirection dir)
 
 void Movement()
 {
-	if (InGameMenu() || questlog)
+	if (InGameMenu() || questlog
+	    || IsControllerButtonPressed(ControllerButton::BUTTON_START)
+	    || IsControllerButtonPressed(ControllerButton::BUTTON_BACK))
 		return;
 
 	MoveDirection move_dir = GetMoveDirection();
@@ -869,6 +872,10 @@ struct RightStickAccumulator {
 
 } // namespace
 
+bool IsAutomapActive() {
+	return automapflag && currlevel != DTYPE_TOWN;
+}
+
 void HandleRightStickMotion()
 {
 	static RightStickAccumulator acc;
@@ -878,7 +885,7 @@ void HandleRightStickMotion()
 		return;
 	}
 
-	if (automapflag && currlevel != DTYPE_TOWN) { // move map
+	if (IsAutomapActive()) { // move map
 		int dx = 0, dy = 0;
 		acc.pool(&dx, &dy, 32);
 		AutoMapXOfs += dy + dx;

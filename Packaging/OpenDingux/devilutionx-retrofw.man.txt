@@ -12,11 +12,15 @@ Controls:
 - Y: cast spell, delete character while in main menu
 - R1: use mana potion from belt
 - L1: use health item from belt
-- Suspend: toggle automap
-- Start: game menu, skip movie
-- Select + R1: inventory
-- Select + R2: character
+- Start + Up: game menu
+- Start + Left: character info
+- Start + Right: inventory
+- Start + Down: map
+- Start + Y: Quest log
+- Start + B: Spell book
 - Select + A/B/X/Y: hot spell
 - Select + D-pad: move map/cursor
-- Select + Suspend: left mouse click
-- Select + Start: right mouse click
+- Select + L1: left mouse click
+- Select + R1: right mouse click
+- Start + Select: game menu
+- Suspend: map

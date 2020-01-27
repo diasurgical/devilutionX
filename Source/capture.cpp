@@ -1,9 +1,12 @@
+#include <fstream>
+
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
+#include "file_util.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
-static BOOL CaptureHdr(HANDLE hFile, short width, short height)
+static BOOL CaptureHdr(short width, short height, std::ofstream *out)
 {
 	DWORD lpNumBytes;
 	PCXHEADER Buffer;
@@ -13,19 +16,19 @@ static BOOL CaptureHdr(HANDLE hFile, short width, short height)
 	Buffer.Version = 5;
 	Buffer.Encoding = 1;
 	Buffer.BitsPerPixel = 8;
-	Buffer.Xmax = width - 1;
-	Buffer.Ymax = height - 1;
-	Buffer.HDpi = width;
-	Buffer.VDpi = height;
+	Buffer.Xmax = SDL_SwapLE16(width - 1);
+	Buffer.Ymax = SDL_SwapLE16(height - 1);
+	Buffer.HDpi = SDL_SwapLE16(width);
+	Buffer.VDpi = SDL_SwapLE16(height);
 	Buffer.NPlanes = 1;
-	Buffer.BytesPerLine = width;
+	Buffer.BytesPerLine = SDL_SwapLE16(width);
 
-	return WriteFile(hFile, &Buffer, sizeof(Buffer), &lpNumBytes, NULL) && lpNumBytes == sizeof(Buffer);
+	out->write(reinterpret_cast<const char*>(&Buffer), sizeof(Buffer));
+	return !out->fail();
 }
 
-static BOOL CapturePal(HANDLE hFile, PALETTEENTRY *palette)
+static BOOL CapturePal(PALETTEENTRY *palette, std::ofstream *out)
 {
-	DWORD NumberOfBytesWritten;
 	BYTE pcx_palette[769];
 	int i;
 
@@ -36,7 +39,8 @@ static BOOL CapturePal(HANDLE hFile, PALETTEENTRY *palette)
 		pcx_palette[1 + 3 * i + 2] = palette[i].peBlue;
 	}
 
-	return WriteFile(hFile, pcx_palette, 769, &NumberOfBytesWritten, 0) && NumberOfBytesWritten == 769;
+	out->write(reinterpret_cast<const char *>(pcx_palette), sizeof(pcx_palette));
+	return !out->fail();
 }
 
 static BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
@@ -73,7 +77,7 @@ static BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
 	return dst;
 }
 
-static BOOL CapturePix(HANDLE hFile, WORD width, WORD height, WORD stride, BYTE *pixels)
+static bool CapturePix(WORD width, WORD height, WORD stride, BYTE *pixels, std::ofstream *out)
 {
 	int writeSize;
 	DWORD lpNumBytes;
@@ -84,32 +88,27 @@ static BOOL CapturePix(HANDLE hFile, WORD width, WORD height, WORD stride, BYTE 
 		pBufferEnd = CaptureEnc(pixels, pBuffer, width);
 		pixels += stride;
 		writeSize = pBufferEnd - pBuffer;
-		if (!(WriteFile(hFile, pBuffer, writeSize, &lpNumBytes, 0) && lpNumBytes == writeSize)) {
-			return FALSE;
-		}
+		out->write(reinterpret_cast<const char *>(pBuffer), writeSize);
+		if (out->fail()) return false;
 	}
 	mem_free_dbg(pBuffer);
-	return TRUE;
+	return true;
 }
 
-static HANDLE CaptureFile(char *dst_path)
+// Returns a pointer because in GCC < 5 ofstream itself is not moveable due to a bug.
+static std::ofstream *CaptureFile(char *dst_path)
 {
 	char path[MAX_PATH];
 
-	GetPrefPath(dst_path, MAX_PATH);
+	GetPrefPath(path, MAX_PATH);
 
 	for (int i = 0; i <= 99; i++) {
 		snprintf(dst_path, MAX_PATH, "%sscreen%02d.PCX", path, i);
-		FILE *file = fopen(dst_path, "r");
-
-		if (file == NULL) {
-			return CreateFile(dst_path, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-		}
-
-		fclose(file);
+		if (!FileExists(dst_path))
+			return new std::ofstream(dst_path, std::ios::binary | std::ios::trunc);
 	}
 
-	return INVALID_HANDLE_VALUE;
+	return nullptr;
 }
 
 static void RedPalette(PALETTEENTRY *pal)
@@ -129,34 +128,37 @@ static void RedPalette(PALETTEENTRY *pal)
 
 void CaptureScreen()
 {
-	HANDLE hObject;
 	PALETTEENTRY palette[256];
 	char FileName[MAX_PATH];
 	BOOL success;
 
-	hObject = CaptureFile(FileName);
-	if (hObject != INVALID_HANDLE_VALUE) {
-		DrawAndBlit();
-		PaletteGetEntries(256, palette);
-		RedPalette(palette);
+	std::ofstream *out = CaptureFile(FileName);
+	if (out == nullptr) return;
+	DrawAndBlit();
+	PaletteGetEntries(256, palette);
+	RedPalette(palette);
 
-		lock_buf(2);
-		success = CaptureHdr(hObject, SCREEN_WIDTH, SCREEN_HEIGHT);
-		if (success) {
-			success = CapturePix(hObject, SCREEN_WIDTH, SCREEN_HEIGHT, BUFFER_WIDTH, &gpBuffer[SCREENXY(0, 0)]);
-		}
-		if (success) {
-			success = CapturePal(hObject, palette);
-		}
-		unlock_buf(2);
-		CloseHandle(hObject);
-
-		if (!success)
-			DeleteFile(FileName);
-
-		Sleep(300);
-		PaletteGetEntries(256, palette);
+	lock_buf(2);
+	success = CaptureHdr(SCREEN_WIDTH, SCREEN_HEIGHT, out);
+	if (success) {
+		success = CapturePix(SCREEN_WIDTH, SCREEN_HEIGHT, BUFFER_WIDTH, &gpBuffer[SCREENXY(0, 0)], out);
 	}
+	if (success) {
+		success = CapturePal(palette, out);
+	}
+	unlock_buf(2);
+	out->close();
+
+	if (!success) {
+		SDL_Log("Failed to save screenshot at %s", FileName);
+		DeleteFile(FileName);
+	} else {
+		SDL_Log("Screenshot saved at %s", FileName);
+	}
+
+	Sleep(300);
+	PaletteGetEntries(256, palette);
+	delete out;
 }
 
 DEVILUTION_END_NAMESPACE

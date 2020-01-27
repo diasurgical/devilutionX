@@ -19,6 +19,12 @@
 #ifndef SDL1_VIDEO_MODE_FLAGS
 #define SDL1_VIDEO_MODE_FLAGS SDL_SWSURFACE
 #endif
+#ifndef SDL1_VIDEO_MODE_WIDTH
+#define SDL1_VIDEO_MODE_WIDTH nWidth
+#endif
+#ifndef SDL1_VIDEO_MODE_HEIGHT
+#define SDL1_VIDEO_MODE_HEIGHT nHeight
+#endif
 #endif
 
 namespace dvl {
@@ -73,6 +79,24 @@ WINBOOL DeleteFileA(LPCSTR lpFileName)
 	return true;
 }
 
+namespace {
+
+#ifdef USE_SDL1
+void InitVideoMode(int width, int height, int bpp, std::uint32_t flags)
+{
+	const auto &best = *SDL_GetVideoInfo();
+	SDL_Log("Best video mode reported as: %dx%d bpp=%d hw_available=%u",
+	    best.current_w, best.current_h, best.vfmt->BitsPerPixel, best.hw_available);
+	SDL_Log("Setting video mode %dx%d bpp=%u flags=0x%08X", width, height, bpp, flags);
+	SDL_SetVideoMode(width, height, bpp, flags);
+	const auto &current = *SDL_GetVideoInfo();
+	SDL_Log("Video mode is now %dx%d bpp=%u",
+	    current.current_w, current.current_h, current.vfmt->BitsPerPixel);
+}
+#endif
+
+} // namespace
+
 bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) <= -1) {
@@ -102,14 +126,14 @@ bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
 		flags |= SDL_FULLSCREEN;
 	SDL_WM_SetCaption(lpWindowName, WINDOW_ICON_NAME);
 #ifndef RETROFW
-	SDL_SetVideoMode(nWidth, nHeight, SDL1_VIDEO_MODE_BPP, flags);
+	InitVideoMode(SDL1_VIDEO_MODE_WIDTH, SDL1_VIDEO_MODE_HEIGHT, SDL1_VIDEO_MODE_BPP, flags);
 #else // RETROFW
 	// JZ4760 IPU scaler (e.g. on RG-300 v2/3) - automatic high-quality scaling.
 	if (access("/proc/jz/ipu", F_OK) == 0 || access("/proc/jz/ipu_ratio", F_OK) == 0) {
-		SDL_SetVideoMode(nWidth, nHeight, SDL1_VIDEO_MODE_BPP, flags);
+		InitVideoMode(SDL1_VIDEO_MODE_WIDTH, SDL1_VIDEO_MODE_HEIGHT, SDL1_VIDEO_MODE_BPP, flags);
 	} else {
 		// Other RetroFW devices have 320x480 screens with non-square pixels.
-		SDL_SetVideoMode(320, 480, SDL1_VIDEO_MODE_BPP, flags);
+		InitVideoMode(320, 480, SDL1_VIDEO_MODE_BPP, flags);
 	}
 #endif
 	window = SDL_GetVideoSurface();
