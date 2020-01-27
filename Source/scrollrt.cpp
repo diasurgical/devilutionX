@@ -3,6 +3,11 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 int light_table_index;
+int testvar1 = 0;
+int testvar2 = 0;
+int testvar3 = 0;
+int testvar4 = 0;
+int testvar5 = 0;
 DWORD sgdwCursWdtOld;
 DWORD sgdwCursX;
 DWORD sgdwCursY;
@@ -476,7 +481,11 @@ static void drawRow(int x, int y, int sx, int sy, int eflag)
 	MICROS *pMap;
 
 	level_piece_id = dPiece[x][y];
+	if (testvar4 == 0) {
 	light_table_index = dLight[x][y];
+	} else {
+		light_table_index = 0;
+	}
 
 	dst = &gpBuffer[sx + sy * BUFFER_WIDTH];
 	pMap = &dpiece_defs_map_2[x][y];

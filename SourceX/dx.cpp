@@ -215,6 +215,149 @@ void LimitFrameRate()
 	frameDeadline = tc + v + refreshDelay;
 }
 
+SDL_Surface *lightSurf;
+int derp = 0;
+void PutPixel32_nolock(SDL_Surface *surface, int x, int y, Uint32 color)
+{
+	Uint8 *pixel = (Uint8 *)surface->pixels;
+	pixel += (y * surface->pitch) + (x * sizeof(Uint32));
+	*((Uint32 *)pixel) = color;
+}
+
+Uint32 GetPixel32(SDL_Surface *surface, int x, int y)
+{
+	Uint8 *pixel = (Uint8 *)surface->pixels;
+	pixel += (y * surface->pitch) + (x * sizeof(Uint32));
+	return *((Uint32 *)pixel);
+}
+
+POINT gameToScreen(int targetRow, int targetCol)
+{
+	int playerRow = plr[myplr].WorldX;
+	int playerCol = plr[myplr].WorldY;
+	int sx = 32 * (targetRow - playerRow) + 32 * (playerCol - targetCol) + SCREEN_WIDTH / 2;
+	if (ScrollInfo._sdir == 3) {
+		sx -= 32;
+	} else if (ScrollInfo._sdir == 7) {
+		sx += 32;
+	}
+	int sy = 32 * (targetCol - playerCol) + sx / 2;
+	if (ScrollInfo._sdir == 7) {
+		sy -= 32;
+	}
+	POINT ret;
+	ret.x = sx;
+	ret.y = sy;
+	return ret;
+}
+
+float distance(int x1, int y1, int x2, int y2)
+{
+	// Calculating distance
+	return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2) * 1.0);
+}
+
+float distance2(int x1, int y1, int x2, int y2)
+{
+	// Calculating distance
+	return sqrt(pow(x2 - x1, 2) + pow((y2 - y1)*2, 2) * 1.0);
+}
+
+int mergeChannel(int a, int b, float amount)
+{
+	float result = (a * amount) + (b * (1 - amount));
+	return (int)result;
+}
+
+Uint32 blendColors(Uint32 c1, Uint32 c2, float howmuch)
+{
+	int r = mergeChannel(c1 & 0x0000FF, c2 & 0x0000FF, howmuch);
+	int g = mergeChannel((c1 & 0x00FF00) >> 8, (c2 & 0x00FF00) >> 8, howmuch);
+	int b = mergeChannel((c1 & 0xFF0000) >> 16, (c2 & 0xFF0000) >> 16, howmuch);
+	return r + (g << 8) + (b << 16);
+
+	/*
+    int r1 = (c1 & 0x0000FF);
+    int g1 = (c1 & 0x00FF00);
+    int b1 = (c1 & 0xFF0000);
+    Uint32 out = r1 + (g1 << 8) + (b1 << 16);
+    printf("IN: %08X OUT: %08X  %d %d %d\n", c1, out, r1,b1,g1);
+    return out;
+    */
+}
+
+void drawRadius(int lid, int row, int col, int radius)
+{
+	POINT pos = gameToScreen(row, col);
+	int sx = pos.x;
+	int sy = pos.y;
+
+	int xoff = 0;
+	int yoff = 0;
+
+	for (int i = 0; i < nummissiles; i++) {
+		MissileStruct *mis = &missile[missileactive[i]];
+		if (mis->_mlid == lid) {
+			xoff = mis->_mixoff;
+			yoff = mis->_miyoff;
+			break;
+		}
+	}
+	printf("RADIUS %d", radius);
+	sx += xoff;
+	sy += yoff;
+	int hey = radius * 64;
+	for (int x = sx - hey; x < sx + hey; x++) {
+		for (int y = sy - hey/2; y < sy + hey/2; y++) {
+			if (x >= 0 && x < SCREEN_WIDTH && y >= 0 && y < SCREEN_HEIGHT) {
+				float howmuch;
+				float diffx = sx - x;
+				float diffy = sy - y;
+				float sa = diffx / 32;
+				float a = sa * sa;
+				float sb = diffy / 16;
+				float b = sb * sb;
+				float c = radius * 32;
+				float ab = a + b;
+				if (ab <= c) {
+
+				//float dist = distance2(sx, sy, x, y);
+				//if (dist <= radius * 32) {
+
+					//howmuch = 0;
+					//howmuch = 0.5*a/c + 0.5*b/c;
+					switch (testvar1) {
+					case 0:
+						howmuch = 0;
+						break;
+					case 1:
+						howmuch = (ab) / c;
+						break;
+					case 2:
+						howmuch = cbrt(ab / c);
+						break;
+					}
+					Uint32 pix = GetPixel32(lightSurf, x, y);
+					if (pix == 0 || 1 != 0) {
+						pix = GetPixel32(GetOutputSurface(), x, y);
+					}
+					//PutPixel32_nolock(lightSurf, x, y, blendColors(0x000000, pix, howmuch));
+					PutPixel32_nolock(lightSurf, x, y, pix);
+					//PutPixel32_nolock(GetOutputSurface(), x, y, 0x000000);
+				}
+			}
+		}
+	}
+}
+
+void turbopotato()
+{
+	for (int i = 0; i < numlights; i++) {
+		int lid = lightactive[i];
+		drawRadius(lid, LightList[lid]._lx, LightList[lid]._ly, LightList[lid]._lradius);
+	}
+}
+
 void RenderPresent()
 {
 	SDL_Surface *surface = GetOutputSurface();
@@ -227,8 +370,39 @@ void RenderPresent()
 
 #ifndef USE_SDL1
 	if (renderer) {
-		if (SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch) <= -1) { //pitch is 2560
-			ErrSdl();
+		if (testvar3 == 0) {
+			SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch);
+		} else {
+			if (derp == 0) {
+				derp = 1;
+				int width, height;
+				SDL_RenderGetLogicalSize(renderer, &width, &height);
+				Uint32 format;
+				if (SDL_QueryTexture(texture, &format, nullptr, nullptr, nullptr) < 0)
+					ErrSdl();
+				lightSurf = SDL_CreateRGBSurfaceWithFormat(0, width, height, SDL_BITSPERPIXEL(format), format);
+			}
+			SDL_FillRect(lightSurf, NULL, SDL_MapRGB(lightSurf->format, 0, 0, 0));
+			SDL_BlendMode bm;
+			switch (testvar5) {
+			case 0:
+				bm = SDL_BLENDMODE_NONE;
+				break;
+			case 1:
+				bm = SDL_BLENDMODE_BLEND;
+				break;
+			case 2:
+				bm = SDL_BLENDMODE_ADD;
+				break;
+			case 3:
+				bm = SDL_BLENDMODE_MOD;
+				break;
+			}
+			SDL_SetSurfaceBlendMode(lightSurf, bm);
+			turbopotato();
+			SDL_BlitSurface(lightSurf, NULL, surface, NULL);
+			//SDL_UpdateTexture(texture, NULL, lightSurf->pixels, lightSurf->pitch);
+			SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch);
 		}
 
 		// Clear buffer to avoid artifacts in case the window was resized
@@ -239,7 +413,6 @@ void RenderPresent()
 		if (SDL_RenderClear(renderer) <= -1) {
 			ErrSdl();
 		}
-
 		if (SDL_RenderCopy(renderer, texture, NULL, NULL) <= -1) {
 			ErrSdl();
 		}

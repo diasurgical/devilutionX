@@ -39,7 +39,7 @@ int color_cycle_timer;
 /* rdata */
 
 BOOL fullscreen = TRUE;
-int showintrodebug = 1;
+int showintrodebug = 0;
 #ifdef _DEBUG
 int questdebug = -1;
 int debug_mode_key_s;
@@ -332,7 +332,7 @@ static void print_help_and_exit()
 }
 
 void diablo_parse_flags(int argc, char **argv)
-{
+{;
 	for (int i = 1; i < argc; i++) {
 		if (strcasecmp("-h", argv[i]) == 0 || strcasecmp("--help", argv[i]) == 0) {
 			print_help_and_exit();
@@ -1144,37 +1144,55 @@ void PressChar(int vkey)
 		}
 		return;
 	case 'v':
-		NetSendCmdString(1 << myplr, gszProductName);
 		return;
 	case 'V':
 		NetSendCmdString(1 << myplr, gszVersionNumber);
 		return;
 	case '!':
 	case '1':
+		//char buf2[200];
+		testvar1++;
+		testvar1 = testvar1 % 3;
+		//sprintf(buf2, "T: %d", testvar1);
+		//NetSendCmdString(1 << myplr, buf2);
+		CalcPlrItemVals(myplr, FALSE);
+		return;
 		if (plr[myplr].SpdList[0]._itype != -1 && plr[myplr].SpdList[0]._itype != 11) {
 			UseInvItem(myplr, INVITEM_BELT_FIRST);
 		}
 		return;
 	case '@':
 	case '2':
+		testvar2 = ++testvar2 % 5;
+		CalcPlrItemVals(myplr, FALSE);
+		return;
 		if (plr[myplr].SpdList[1]._itype != -1 && plr[myplr].SpdList[1]._itype != 11) {
 			UseInvItem(myplr, INVITEM_BELT_FIRST + 1);
 		}
 		return;
 	case '#':
 	case '3':
+		testvar3 = ++testvar3 % 2;
+		CalcPlrItemVals(myplr, FALSE);
+		return;
 		if (plr[myplr].SpdList[2]._itype != -1 && plr[myplr].SpdList[2]._itype != 11) {
 			UseInvItem(myplr, INVITEM_BELT_FIRST + 2);
 		}
 		return;
 	case '$':
 	case '4':
+		testvar4 = ++testvar4 % 2;
+		CalcPlrItemVals(myplr, FALSE);
+		return;
 		if (plr[myplr].SpdList[3]._itype != -1 && plr[myplr].SpdList[3]._itype != 11) {
 			UseInvItem(myplr, INVITEM_BELT_FIRST + 3);
 		}
 		return;
 	case '%':
 	case '5':
+		testvar5= ++testvar5 % 4;
+		CalcPlrItemVals(myplr, FALSE);
+		return;
 		if (plr[myplr].SpdList[4]._itype != -1 && plr[myplr].SpdList[4]._itype != 11) {
 			UseInvItem(myplr, INVITEM_BELT_FIRST + 4);
 		}

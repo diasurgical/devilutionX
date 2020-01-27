@@ -4,6 +4,11 @@
 
 extern bool sgbControllerActive;
 extern int light_table_index;
+extern int testvar1;
+extern int testvar2;
+extern int testvar3;
+extern int testvar4;
+extern int testvar5;
 extern BYTE *gpBufStart;
 extern BYTE *gpBufEnd;
 extern DWORD level_cel_block;
