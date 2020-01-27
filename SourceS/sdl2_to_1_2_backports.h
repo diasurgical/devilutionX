@@ -873,24 +873,3 @@ inline char *SDL_GetPrefPath(const char *org, const char *app)
 
 	return retval;
 }
-
-inline char *SDL_itoa(int _Value, char *_Dest, int _Radix)
-{
-	switch (_Radix) {
-	case 8:
-		sprintf(_Dest, "%o", _Value);
-		break;
-	case 10:
-		sprintf(_Dest, "%d", _Value);
-		break;
-	case 16:
-		sprintf(_Dest, "%x", _Value);
-		break;
-	default:
-		UNIMPLEMENTED();
-		break;
-	}
-
-	return _Dest;
-}
-
