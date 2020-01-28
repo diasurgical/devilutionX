@@ -514,6 +514,25 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 	block_x = 0;
 	block_y = 0;
 
+#ifdef PIXEL_LIGHT
+	if (Lnum == -1){
+		for (int i = 0; i < 100; i++) {
+			LightListStruct *it = &staticLights[currlevel][i];
+			if (it->_lradius == -1){
+				it->_lx = nXPos;
+				it->_ly = nYPos;
+				it->_lradius = nRadius;
+				it->_color = 0xFFCC66;
+				break;
+			}
+			if (it->_lx == nXPos && it->_ly == nYPos) {
+				it->_lradius = nRadius;
+				break;
+			}
+		}
+	}
+
+#endif
 	if (Lnum >= 0) {
 		xoff = LightList[Lnum]._xoff;
 		yoff = LightList[Lnum]._yoff;

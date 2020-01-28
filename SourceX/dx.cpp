@@ -279,12 +279,14 @@ void drawRadius(int lid, int row, int col, int radius, int color)
 	int xoff = 0;
 	int yoff = 0;
 
-	for (int i = 0; i < nummissiles; i++) {
-		MissileStruct *mis = &missile[missileactive[i]];
-		if (mis->_mlid == lid) {
-			xoff = mis->_mixoff;
-			yoff = mis->_miyoff;
-			break;
+	if (lid != -1) {
+		for (int i = 0; i < nummissiles; i++) {
+			MissileStruct *mis = &missile[missileactive[i]];
+			if (mis->_mlid == lid) {
+				xoff = mis->_mixoff;
+				yoff = mis->_miyoff;
+				break;
+			}
 		}
 	}
 	sx += xoff;
@@ -303,9 +305,9 @@ void drawRadius(int lid, int row, int col, int radius, int color)
 	rect.w = width;
 	rect.h = height;
 
-	Uint8 r = (color & 0x0000FF);
+	Uint8 r = (color & 0xFF0000) >> 16;
 	Uint8 g = (color & 0x00FF00) >> 8;
-	Uint8 b = (color & 0xFF0000) >> 16;
+	Uint8 b = (color & 0x0000FF);
 	if(SDL_SetTextureColorMod(ellipsesTextures[radius], r, g, b) < 0)
 		ErrSdl();
 	if(SDL_RenderCopy(renderer, ellipsesTextures[radius], NULL, &rect) < 0)
@@ -316,7 +318,15 @@ void lightLoop()
 {
 	for (int i = 0; i < numlights; i++) {
 		int lid = lightactive[i];
-		drawRadius(lid, LightList[lid]._lx, LightList[lid]._ly, LightList[lid]._lradius + 1, LightList[lid]._color);
+		drawRadius(lid, LightList[lid]._lx, LightList[lid]._ly, LightList[lid]._lradius, LightList[lid]._color);
+	}
+
+	for (int i = 0; i < 100; i++) {
+		LightListStruct *it = &staticLights[currlevel][i];
+		if (it->_lradius == -1) {
+			break;
+		}
+		drawRadius(-1, it->_lx, it->_ly, it->_lradius, it->_color);
 	}
 }
 
@@ -338,7 +348,7 @@ void predrawEllipse(int radius)
 				float c = hey;
 				float ab = a + b;
 				if (ab <= c) {
-					howmuch = cbrt(ab / c);
+					howmuch = sqrt(ab / c);
 					PutPixel32_nolock(predrawnEllipses[radius], x, y, blendColors(0x000000, 0xFFFFFF, howmuch));
 				}
 			}
@@ -377,6 +387,12 @@ void showFPS(){
 
 void prepareLight()
 {
+	for (int lv = 0; lv < 25; lv++) {
+		for (int i = 0; i < 100; i++) {
+			staticLights[lv][i]._lradius = -1;
+		}
+	}
+
 	SDL_RenderGetLogicalSize(renderer, &width, &height);
 	if (SDL_QueryTexture(texture, &format, nullptr, nullptr, nullptr) < 0)
 		ErrSdl();
@@ -414,7 +430,7 @@ void RenderPresent()
 #ifndef USE_SDL1
 	if (renderer) {
 #ifdef PIXEL_LIGHT
-		if (testvar3 != 0) {
+		if (testvar3 != 0 && leveltype != DTYPE_TOWN) {
 			if (lightReady != 1) {
 				lightReady = 1;
 				prepareLight();
@@ -464,7 +480,7 @@ void RenderPresent()
 		}
 
 #ifdef PIXEL_LIGHT
-		if (testvar3 != 0) {
+		if (testvar3 != 0 && leveltype != DTYPE_TOWN) {
 			if (SDL_RenderCopy(renderer, lightTex, NULL, NULL) < 0)
 				ErrSdl();
 			lightLoop();

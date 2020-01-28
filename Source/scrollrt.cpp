@@ -1,5 +1,4 @@
 #include "diablo.h"
-
 DEVILUTION_BEGIN_NAMESPACE
 
 int light_table_index;
@@ -9,6 +8,7 @@ int testvar2 = 8; // changing player's light radius (2 + testvar2)
 int testvar3 = 1; // enable pixel light
 int testvar4 = 1; // 0 = normal light, 1 = fully lit
 int testvar5 = 3; // change texture blend mode
+LightListStruct staticLights[25][100];
 #endif
 DWORD sgdwCursWdtOld;
 DWORD sgdwCursX;

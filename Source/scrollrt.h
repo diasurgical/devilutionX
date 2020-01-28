@@ -10,6 +10,7 @@ extern int testvar2;
 extern int testvar3;
 extern int testvar4;
 extern int testvar5;
+extern LightListStruct staticLights[25][100];
 #endif
 extern BYTE *gpBufStart;
 extern BYTE *gpBufEnd;
