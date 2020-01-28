@@ -896,6 +896,7 @@ void DrawView(int StartX, int StartY)
 {
 #ifdef PIXEL_LIGHT
 	gpBuffer = (BYTE *)pal_surface->pixels;
+	memset(gpBuffer, 0, sizeof(gpBuffer));
 #endif
 	DrawGame(StartX, StartY);
 #ifdef PIXEL_LIGHT

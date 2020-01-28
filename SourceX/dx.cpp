@@ -30,6 +30,7 @@ SDL_Surface *pal_surface;
 
 #ifdef PIXEL_LIGHT
 SDL_Surface *ui_surface;
+SDL_Surface *ui_surface_24;
 SDL_Texture *ui_texture;
 #endif
 
@@ -40,15 +41,6 @@ static void dx_create_back_buffer()
 		ErrSdl();
 	}
 
-#ifdef PIXEL_LIGHT
-	ui_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);
-	if (ui_surface == NULL) {
-		ErrSdl();
-	}
-	if (SDL_FillRect(ui_surface, NULL, SDL_MapRGB(ui_surface->format, 0, 125, 0)) < 0)
-		ErrSdl();
-
-#endif
 	gpBuffer = (BYTE *)pal_surface->pixels;
 
 	if (SDLC_SetSurfaceColors(pal_surface, palette) <= -1) {
@@ -230,7 +222,6 @@ void LimitFrameRate()
 }
 
 #ifdef PIXEL_LIGHT
-SDL_Surface *fpsVision;
 SDL_Texture *fpsTex;
 
 SDL_Surface *predrawnEllipses[20];
@@ -305,7 +296,6 @@ void drawRadius(int lid, int row, int col, int radius, int color)
 	}
 	sx += xoff;
 	sy += yoff;
-	SDL_Rect rect;
 
 	int srcx = width / 2;
 	int srcy = height / 2;
@@ -314,6 +304,7 @@ void drawRadius(int lid, int row, int col, int radius, int color)
 	int offsetx = targetx - srcx;
 	int offsety = targety - srcy;
 
+	SDL_Rect rect;
 	rect.x = offsetx;
 	rect.y = offsety;
 	rect.w = width;
@@ -373,7 +364,7 @@ void predrawEllipse(int radius)
 void prepareFPS(){
 	if (!frameflag)
 		return;
-	fpsVision = SDL_CreateRGBSurfaceWithFormat(0, 50, 50, SDL_BITSPERPIXEL(format), format);
+	SDL_Surface *fpsVision = SDL_CreateRGBSurfaceWithFormat(0, 50, 50, SDL_BITSPERPIXEL(format), format);
 	if (fpsVision == NULL)
 		ErrSdl();
 	if(SDL_SetSurfaceBlendMode(fpsVision, SDL_BLENDMODE_ADD) < 0)
@@ -383,6 +374,7 @@ void prepareFPS(){
 	fpsTex = SDL_CreateTextureFromSurface(renderer, fpsVision);
 	if (fpsTex == NULL)
 		ErrSdl();
+	SDL_FreeSurface(fpsVision);
 	if(SDL_SetTextureBlendMode(fpsTex, SDL_BLENDMODE_ADD) < 0)
 		ErrSdl();
 }
@@ -424,14 +416,25 @@ void prepareLight()
 			ErrSdl();
 		if (SDL_SetTextureBlendMode(ellipsesTextures[i], SDL_BLENDMODE_ADD) < 0)
 			ErrSdl();
-
-
-		ui_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, width, height);
-		if (ui_texture == NULL) 
-			ErrSdl();
-		if (SDL_SetTextureBlendMode(ui_texture, SDL_BLENDMODE_MOD) < 0)
-			ErrSdl();
 	}
+
+	ui_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);
+	//ui_surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, SDL_BITSPERPIXEL(format), format);
+	if (ui_surface == NULL)
+		ErrSdl();
+	if (SDLC_SetSurfaceColors(ui_surface, palette) < 0)
+		ErrSdl();
+	if (SDL_FillRect(ui_surface, NULL, SDL_MapRGB(ui_surface->format, 0, 125, 0)) < 0)
+		ErrSdl();
+
+	ui_surface_24 = SDL_CreateRGBSurfaceWithFormat(0, width, height, SDL_BITSPERPIXEL(format), format);
+	if (ui_surface_24 == NULL)
+		ErrSdl();
+	ui_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, width, height);
+	if (ui_texture == NULL)
+		ErrSdl();
+	if (SDL_SetTextureBlendMode(ui_texture, SDL_BLENDMODE_ADD) < 0)
+		ErrSdl();
 }
 
 #endif
@@ -502,12 +505,19 @@ void RenderPresent()
 		}
 #ifdef PIXEL_LIGHT
 		if (testvar3 != 0 && leveltype != DTYPE_TOWN) {
-		SDL_Surface *tmp = SDL_ConvertSurface(ui_surface, GetOutputSurface()->format, 0);
-		if (tmp ==  NULL)
+		//SDL_Surface *tmp = SDL_ConvertSurface(ui_surface, GetOutputSurface()->format, 0);
+		//if (tmp ==  NULL)
+		//	ErrSdl();
+		 SDL_Rect rect;
+			rect.x = 0;
+			rect.y = 0;
+			rect.w = 250;
+			rect.h = 250;
+		if(SDL_BlitSurface(ui_surface, NULL, ui_surface_24, &rect) < 0)
 			ErrSdl();
-		if (SDL_UpdateTexture(ui_texture, NULL, tmp->pixels, tmp->pitch) < 0)
+		if (SDL_UpdateTexture(ui_texture, NULL, ui_surface_24->pixels, ui_surface_24->pitch) < 0)
 			ErrSdl();
-		SDL_FreeSurface(tmp);
+		//SDL_FreeSurface(tmp);
 		if (SDL_RenderCopy(renderer, ui_texture, NULL, NULL) < 0)
 			ErrSdl();
 		}
