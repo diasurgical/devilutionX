@@ -216,9 +216,14 @@ void LimitFrameRate()
 }
 
 SDL_Surface *lightSurf;
+SDL_Texture *lightTex;
+
 SDL_Surface *fpsVision;
+SDL_Texture *fpsTex;
+
 SDL_Surface *predrawnEllipses[20];
 SDL_Texture *ellipsesTextures[20];
+
 int width, height;
 int derp = 0;
 Uint32 format;
@@ -300,65 +305,20 @@ void drawRadius(int lid, int row, int col, int radius)
 
 	int xoff = 0;
 	int yoff = 0;
+	int ismissile = 0;
 
 	for (int i = 0; i < nummissiles; i++) {
 		MissileStruct *mis = &missile[missileactive[i]];
 		if (mis->_mlid == lid) {
 			xoff = mis->_mixoff;
 			yoff = mis->_miyoff;
+			ismissile = 1;
 			break;
 		}
 	}
 	printf("RADIUS %d", radius);
 	sx += xoff;
 	sy += yoff;
-	/*
-	int hey = radius * 64;
-	for (int x = sx - hey; x < sx + hey; x++) {
-		for (int y = sy - hey/2; y < sy + hey/2; y++) {
-			if (x >= 0 && x < SCREEN_WIDTH && y >= 0 && y < SCREEN_HEIGHT) {
-				float howmuch;
-				float diffx = sx - x;
-				float diffy = sy - y;
-				float sa = diffx / 32;
-				float a = sa * sa;
-				float sb = diffy / 16;
-				float b = sb * sb;
-				float c = radius * 32;
-				float ab = a + b;
-				if (ab <= c) {
-
-				//float dist = distance2(sx, sy, x, y);
-				//if (dist <= radius * 32) {
-
-					//howmuch = 0;
-					//howmuch = 0.5*a/c + 0.5*b/c;
-					switch (testvar1) {
-					case 0:
-						howmuch = 0;
-						break;
-					case 1:
-						howmuch = (ab) / c;
-						break;
-					case 2:
-						howmuch = cbrt(ab / c);
-						break;
-					}
-					
-					Uint32 pix = GetPixel32(lightSurf, x, y);
-					Uint32 base_color = 0x000000;
-					if (pix != 0) {
-						//pix = GetPixel32(GetOutputSurface(), x, y);
-						base_color = pix;
-					}
-					PutPixel32_nolock(lightSurf, x, y, blendColors(base_color, 0xFFFFFF, howmuch));
-					//PutPixel32_nolock(lightSurf, x, y, blendColors(0x000000, pix, howmuch));
-					//PutPixel32_nolock(lightSurf, x, y, pix);
-					//PutPixel32_nolock(GetOutputSurface(), x, y, 0x000000);
-				}
-			}
-		}
-	}*/
 	SDL_Rect rect;
 
 	int srcx = width / 2;
@@ -372,7 +332,15 @@ void drawRadius(int lid, int row, int col, int radius)
 	rect.y = offsety;
 	rect.w = width;
 	rect.h = height;
-	SDL_BlitSurface(predrawnEllipses[radius], NULL, lightSurf, &rect);
+	//SDL_BlitSurface(predrawnEllipses[radius], NULL, lightSurf, &rect);
+	if (ismissile) {
+		SDL_SetTextureColorMod(ellipsesTextures[radius], 0x22, 0x82, 0xDA);
+	} else {
+		SDL_SetTextureColorMod(ellipsesTextures[radius], 0xDA, 0xA2, 0x22);
+	}
+	
+
+	SDL_RenderCopy(renderer, ellipsesTextures[radius], NULL, &rect);
 }
 
 void turbopotato()
@@ -382,12 +350,14 @@ void turbopotato()
 		drawRadius(lid, LightList[lid]._lx, LightList[lid]._ly, LightList[lid]._lradius+1);
 	}
 
+	/*
 	for (int i = 0; i < 100; i++) {
 		if (staticLights[0][i]._lradius == -1) {
 			break;
 		}
 		drawRadius(-1, staticLights[0][i]._lx, staticLights[0][i]._ly, staticLights[0][i]._lradius);
 	}
+	*/
 }
 
 void predrawEllipse(int radius)
@@ -423,18 +393,24 @@ void predrawEllipse(int radius)
 
 }
 
-void showFPS(){
+void prepareFPS(){
 	/////////
 	fpsVision = SDL_CreateRGBSurfaceWithFormat(0, 50, 50, SDL_BITSPERPIXEL(format), format);
 	SDL_SetSurfaceBlendMode(fpsVision, SDL_BLENDMODE_ADD);
 	SDL_FillRect(fpsVision, NULL, SDL_MapRGB(fpsVision->format, 255, 255, 255));
+	//SDL_BlitSurface(fpsVision, NULL, lightSurf, &rect);
+	fpsTex = SDL_CreateTextureFromSurface(renderer, fpsVision);
+	SDL_SetTextureBlendMode(fpsTex, SDL_BLENDMODE_ADD);
+	//////////
+}
+
+void showFPS(){
 	SDL_Rect rect;
 	rect.x = 0;
 	rect.y = 35;
 	rect.w = 50;
 	rect.h = 50;
-	SDL_BlitSurface(fpsVision, NULL, lightSurf, &rect);
-	//////////
+	SDL_RenderCopy(renderer, fpsTex, NULL, &rect);
 }
 
 void RenderPresent()
@@ -454,11 +430,12 @@ void RenderPresent()
 		} else {
 			if (derp == 0) {
 				derp = 1;
+				/*
 				for (int lv = 0; lv < 25; lv++) {
 					for (int i = 0; i < 100; i++) {
 						staticLights[lv][i]._lradius = -1;
 					}
-				}
+				}*/
 				SDL_RenderGetLogicalSize(renderer, &width, &height);
 				if (SDL_QueryTexture(texture, &format, nullptr, nullptr, nullptr) < 0)
 					ErrSdl();
@@ -468,9 +445,10 @@ void RenderPresent()
 					SDL_SetSurfaceBlendMode(predrawnEllipses[i], SDL_BLENDMODE_ADD);
 					SDL_FillRect(predrawnEllipses[i], NULL, SDL_MapRGB(predrawnEllipses[i]->format, 0, 0, 0));
 					predrawEllipse(i);
-					//SDL_CreateTextureFromSurface(renderer, predrawnEllipses[i]);
+					ellipsesTextures[i] = SDL_CreateTextureFromSurface(renderer, predrawnEllipses[i]);
+					SDL_SetTextureBlendMode(ellipsesTextures[i], SDL_BLENDMODE_ADD);
 				}
-				//SDL_SetTextureAlphaMod(texture, 125);
+				prepareFPS();
 			}
 			SDL_FillRect(lightSurf, NULL, SDL_MapRGB(lightSurf->format, 0, 0, 0));
 			SDL_BlendMode bm;
@@ -488,12 +466,14 @@ void RenderPresent()
 				bm = SDL_BLENDMODE_MOD;
 				break;
 			}
-			SDL_SetSurfaceBlendMode(lightSurf, bm);
-			turbopotato();
-			showFPS();
+			lightTex = SDL_CreateTextureFromSurface(renderer, lightSurf);
+			SDL_SetTextureBlendMode(lightTex, bm);
+			SDL_SetTextureBlendMode(texture, bm);
+			//turbopotato();
+			//showFPS();
 
 
-			SDL_BlitSurface(lightSurf, NULL, surface, NULL);
+			//SDL_BlitSurface(lightSurf, NULL, surface, NULL);
 			//SDL_UpdateTexture(texture, NULL, lightSurf->pixels, lightSurf->pitch);
 			SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch);
 		}
@@ -506,6 +486,9 @@ void RenderPresent()
 		if (SDL_RenderClear(renderer) <= -1) {
 			ErrSdl();
 		}
+		SDL_RenderCopy(renderer, lightTex, NULL, NULL);
+		turbopotato();
+		showFPS();
 		if (SDL_RenderCopy(renderer, texture, NULL, NULL) <= -1) {
 			ErrSdl();
 		}
