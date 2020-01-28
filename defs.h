@@ -99,6 +99,10 @@
 #define SCREEN_HEIGHT	960
 #define _DEBUG 1
 #define PIXEL_LIGHT 1
+#ifdef USE_SDL1
+#undef PIXEL_LIGHT
+#endif
+
 
 #define ZOOM_WIDTH		384
 #define ZOOM_HEIGHT		224
