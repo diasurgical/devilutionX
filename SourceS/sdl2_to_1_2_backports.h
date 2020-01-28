@@ -834,7 +834,11 @@ inline char *SDL_GetPrefPath(const char *org, const char *app)
 			SDL_SetError("neither XDG_DATA_HOME nor HOME environment is set");
 			return NULL;
 		}
+#if !defined(__AMIGA__)
 		append = "/.local/share/";
+#else
+		append = "/";
+#endif
 	} else {
 		append = "/";
 	}
@@ -851,9 +855,9 @@ inline char *SDL_GetPrefPath(const char *org, const char *app)
 	}
 
 	if (*org) {
-		SDL_snprintf(retval, len, "%s%s%s/%s/", envr, append, org, app);
+		SDL_snprintf(retval, len, "%s%s%s/%s", envr, append, org, app);
 	} else {
-		SDL_snprintf(retval, len, "%s%s%s/", envr, append, app);
+		SDL_snprintf(retval, len, "%s%s%s", envr, append, app);
 	}
 
 	for (ptr = retval + 1; *ptr; ptr++) {
@@ -870,6 +874,8 @@ inline char *SDL_GetPrefPath(const char *org, const char *app)
 		SDL_free(retval);
 		return NULL;
 	}
+	
+	SDL_snprintf(retval, len, "%s/", retval);
 
 	return retval;
 }
