@@ -28,6 +28,11 @@ SDL_Surface *renderer_texture_surface = nullptr;
 /** 8-bit surface wrapper around #gpBuffer */
 SDL_Surface *pal_surface;
 
+#ifdef PIXEL_LIGHT
+SDL_Surface *ui_surface;
+SDL_Texture *ui_texture;
+#endif
+
 static void dx_create_back_buffer()
 {
 	pal_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);
@@ -35,6 +40,15 @@ static void dx_create_back_buffer()
 		ErrSdl();
 	}
 
+#ifdef PIXEL_LIGHT
+	ui_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);
+	if (ui_surface == NULL) {
+		ErrSdl();
+	}
+	if (SDL_FillRect(ui_surface, NULL, SDL_MapRGB(ui_surface->format, 0, 125, 0)) < 0)
+		ErrSdl();
+
+#endif
 	gpBuffer = (BYTE *)pal_surface->pixels;
 
 	if (SDLC_SetSurfaceColors(pal_surface, palette) <= -1) {
@@ -416,6 +430,13 @@ void prepareLight()
 			ErrSdl();
 		if (SDL_SetTextureBlendMode(ellipsesTextures[i], SDL_BLENDMODE_ADD) < 0)
 			ErrSdl();
+
+
+		ui_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, width, height);
+		if (ui_texture == NULL) 
+			ErrSdl();
+		if (SDL_SetTextureBlendMode(ui_texture, SDL_BLENDMODE_MOD) < 0)
+			ErrSdl();
 	}
 }
 
@@ -495,6 +516,18 @@ void RenderPresent()
 		if (SDL_RenderCopy(renderer, texture, NULL, NULL) <= -1) {
 			ErrSdl();
 		}
+#ifdef PIXEL_LIGHT
+		if (testvar3 != 0 && leveltype != DTYPE_TOWN) {
+		SDL_Surface *tmp = SDL_ConvertSurface(ui_surface, GetOutputSurface()->format, 0);
+		if (tmp ==  NULL)
+			ErrSdl();
+		if (SDL_UpdateTexture(ui_texture, NULL, tmp->pixels, tmp->pitch) < 0)
+			ErrSdl();
+		SDL_FreeSurface(tmp);
+		if (SDL_RenderCopy(renderer, ui_texture, NULL, NULL) < 0)
+			ErrSdl();
+		}
+#endif
 		SDL_RenderPresent(renderer);
 	} else {
 		if (SDL_UpdateWindowSurface(window) <= -1) {

@@ -894,7 +894,14 @@ extern void DrawControllerModifierHints();
  */
 void DrawView(int StartX, int StartY)
 {
+#ifdef PIXEL_LIGHT
+	gpBuffer = (BYTE *)pal_surface->pixels;
+#endif
 	DrawGame(StartX, StartY);
+#ifdef PIXEL_LIGHT
+	gpBuffer = (BYTE *)ui_surface->pixels;
+	memset(gpBuffer, 0, sizeof(gpBuffer));
+#endif
 	if (automapflag) {
 		DrawAutomap();
 	}

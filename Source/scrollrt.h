@@ -40,4 +40,8 @@ void DrawAndBlit();
 extern char *szMonModeAssert[18];
 extern char *szPlrModeAssert[12];
 
+#ifdef PIXEL_LIGHT
+extern SDL_Surface *pal_surface;
+extern SDL_Surface *ui_surface;
+#endif
 #endif /* __SCROLLRT_H__ */
