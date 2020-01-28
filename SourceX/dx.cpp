@@ -440,7 +440,9 @@ void RenderPresent()
 		}
 #endif
 
-		SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch);
+		if (SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch) <= -1) { //pitch is 2560
+			ErrSdl();
+		}
 
 		// Clear buffer to avoid artifacts in case the window was resized
 		if (SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255) <= -1) { // TODO only do this if window was resized
