@@ -786,6 +786,9 @@ void LoadLighting(int i)
 	CopyInt(tbuff, &pLight->_xoff);
 	CopyInt(tbuff, &pLight->_yoff);
 	CopyInt(tbuff, &pLight->_lflags);
+#ifdef PIXEL_LIGHT
+	CopyInt(tbuff, &pLight->_color);
+#endif
 }
 
 void LoadVision(int i)
@@ -1504,6 +1507,9 @@ void SaveLighting(int i)
 	CopyInt(&pLight->_xoff, tbuff);
 	CopyInt(&pLight->_yoff, tbuff);
 	CopyInt(&pLight->_lflags, tbuff);
+#ifdef PIXEL_LIGHT
+	CopyInt(&pLight->_color, tbuff);
+#endif
 }
 
 void SaveVision(int i)

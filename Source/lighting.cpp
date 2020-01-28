@@ -1010,6 +1010,7 @@ void InitLighting()
 		lightactive[i] = i;
 	}
 }
+
 #ifdef PIXEL_LIGHT
 int AddLight(int x, int y, int r, int color = 0xFFFFFF)
 #else

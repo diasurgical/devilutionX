@@ -347,6 +347,8 @@ void predrawEllipse(int radius)
 }
 
 void prepareFPS(){
+	if (!frameflag)
+		return;
 	fpsVision = SDL_CreateRGBSurfaceWithFormat(0, 50, 50, SDL_BITSPERPIXEL(format), format);
 	if (fpsVision == NULL)
 		ErrSdl();
@@ -362,6 +364,8 @@ void prepareFPS(){
 }
 
 void showFPS(){
+	if (!frameflag)
+		return;
 	SDL_Rect rect;
 	rect.x = 0;
 	rect.y = 35;
