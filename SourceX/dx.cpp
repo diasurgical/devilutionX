@@ -288,6 +288,9 @@ void drawRadius(int lid, int row, int col, int radius, int color)
 				break;
 			}
 		}
+	} else {
+		xoff = -plr[myplr]._pxoff;
+		yoff = -plr[myplr]._pyoff;
 	}
 	sx += xoff;
 	sy += yoff;
