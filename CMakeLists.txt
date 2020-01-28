@@ -109,7 +109,6 @@ if(AMIGA)
   set(USE_SDL1 ON)
   find_package(Freetype REQUIRED)
   find_package(ZLIB REQUIRED)
-  # Enable exception suport as they are used in dvlnet code
   set(TTF_FONT_PATH \"LiberationSerif-Bold.ttf\")
   set(SDL1_VIDEO_MODE_BPP 8)
 endif()
