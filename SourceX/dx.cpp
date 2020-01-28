@@ -416,7 +416,8 @@ void RenderPresent()
 				prepareLight();
 				prepareFPS();
 			}
-			SDL_FillRect(lightSurf, NULL, SDL_MapRGB(lightSurf->format, 0, 0, 0));
+			if(SDL_FillRect(lightSurf, NULL, SDL_MapRGB(lightSurf->format, 0, 0, 0)) < 0)
+				ErrSdl();
 			SDL_BlendMode bm;
 			switch (testvar5) {
 			case 0:
@@ -433,10 +434,15 @@ void RenderPresent()
 				break;
 			}
 			lightTex = SDL_CreateTextureFromSurface(renderer, lightSurf);
-			SDL_SetTextureBlendMode(lightTex, bm);
-			SDL_SetTextureBlendMode(texture, bm);
+			if (lightTex == NULL)
+				ErrSdl();
+			if(SDL_SetTextureBlendMode(lightTex, bm) < 0)
+				ErrSdl();
+			if(SDL_SetTextureBlendMode(texture, bm) < 0)
+				ErrSdl();
 		} else {
-			SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_NONE);
+			if(SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_NONE) < 0)
+				ErrSdl();
 		}
 #endif
 
@@ -455,7 +461,8 @@ void RenderPresent()
 
 #ifdef PIXEL_LIGHT
 		if (testvar3 != 0) {
-			SDL_RenderCopy(renderer, lightTex, NULL, NULL);
+			if (SDL_RenderCopy(renderer, lightTex, NULL, NULL) < 0)
+				ErrSdl();
 			lightLoop();
 			showFPS();
 		}
