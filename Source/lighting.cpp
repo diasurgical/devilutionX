@@ -506,9 +506,6 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 	int x, y, v, xoff, yoff, mult, radius_block;
 	int min_x, max_x, min_y, max_y;
 	int dist_x, dist_y, light_x, light_y, block_x, block_y, temp_x, temp_y;
-	if (Lnum != -1) {
-		//DoVision(nXPos, nYPos, nRadius, FALSE, TRUE);
-	}
 
 	xoff = 0;
 	yoff = 0;
