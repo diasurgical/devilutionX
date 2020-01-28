@@ -504,7 +504,7 @@ void RenderPresent()
 			SDL_Texture *ui_texture = SDL_CreateTextureFromSurface(renderer, ui_surface);
 			if (ui_texture == NULL)
 				ErrSdl();
-			if (SDL_SetTextureBlendMode(ui_texture, SDL_BLENDMODE_BLEND) < 0)
+			if (SDL_SetTextureBlendMode(ui_texture, SDL_BLENDMODE_ADD) < 0)
 				ErrSdl();
 			if (SDL_RenderCopy(renderer, ui_texture, NULL, NULL) < 0)
 				ErrSdl();

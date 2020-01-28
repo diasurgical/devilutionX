@@ -902,10 +902,10 @@ void DrawView(int StartX, int StartY)
 	DrawGame(StartX, StartY);
 #ifdef PIXEL_LIGHT
 	if (testvar3 != 0 && leveltype != DTYPE_TOWN) {
-		SDL_FillRect(ui_surface, NULL, 0);
+		//SDL_FillRect(ui_surface, NULL, 0);
 		gpBuffer = (BYTE *)ui_surface->pixels;
+		//memset(gpBuffer, 0, sizeof(gpBuffer));
 	}
-	//memset(gpBuffer, 0, sizeof(gpBuffer));
 #endif
 	if (automapflag) {
 		DrawAutomap();
