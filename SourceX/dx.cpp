@@ -383,10 +383,10 @@ void turbopotato()
 	}
 
 	for (int i = 0; i < 100; i++) {
-		if (staticLights[currlevel][i]._lradius == -1) {
+		if (staticLights[0][i]._lradius == -1) {
 			break;
 		}
-		drawRadius(-1, staticLights[currlevel][i]._lx, staticLights[currlevel][i]._ly, staticLights[currlevel][i]._lradius);
+		drawRadius(-1, staticLights[0][i]._lx, staticLights[0][i]._ly, staticLights[0[i]._lradius);
 	}
 }
 
