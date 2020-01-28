@@ -218,6 +218,7 @@ void LimitFrameRate()
 SDL_Surface *lightSurf;
 SDL_Surface *fpsVision;
 SDL_Surface *predrawnEllipses[20];
+SDL_Texture *ellipsesTextures[20];
 int width, height;
 int derp = 0;
 Uint32 format;
@@ -265,8 +266,7 @@ float distance(int x1, int y1, int x2, int y2)
 
 float distance2(int x1, int y1, int x2, int y2)
 {
-	// Calculating distance
-	return sqrt(pow(x2 - x1, 2) + pow((y2 - y1)*2, 2) * 1.0);
+	return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) * 4;
 }
 
 int mergeChannel(int a, int b, float amount)
@@ -379,14 +379,14 @@ void turbopotato()
 {
 	for (int i = 0; i < numlights; i++) {
 		int lid = lightactive[i];
-		drawRadius(lid, LightList[lid]._lx, LightList[lid]._ly, LightList[lid]._lradius);
+		drawRadius(lid, LightList[lid]._lx, LightList[lid]._ly, LightList[lid]._lradius+1);
 	}
 
 	for (int i = 0; i < 100; i++) {
 		if (staticLights[0][i]._lradius == -1) {
 			break;
 		}
-		drawRadius(-1, staticLights[0][i]._lx, staticLights[0][i]._ly, staticLights[0[i]._lradius);
+		drawRadius(-1, staticLights[0][i]._lx, staticLights[0][i]._ly, staticLights[0][i]._lradius);
 	}
 }
 
@@ -409,7 +409,10 @@ void predrawEllipse(int radius)
 				float c = hey;
 				float ab = a + b;
 				if (ab <= c) {
+				//float dist = distance2(sx, sy, x, y);
+				//if (dist <= hey*hey) {
 					howmuch = cbrt(ab / c);
+					//howmuch = cbrt(dist / (hey * hey));
 					Uint32 base_color = 0x000000;
 					PutPixel32_nolock(predrawnEllipses[radius], x, y, blendColors(base_color, 0xFFFFFF, howmuch));
 				}
@@ -465,6 +468,7 @@ void RenderPresent()
 					SDL_SetSurfaceBlendMode(predrawnEllipses[i], SDL_BLENDMODE_ADD);
 					SDL_FillRect(predrawnEllipses[i], NULL, SDL_MapRGB(predrawnEllipses[i]->format, 0, 0, 0));
 					predrawEllipse(i);
+					//SDL_CreateTextureFromSurface(renderer, predrawnEllipses[i]);
 				}
 				//SDL_SetTextureAlphaMod(texture, 125);
 			}
