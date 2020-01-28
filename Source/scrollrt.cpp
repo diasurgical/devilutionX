@@ -1,4 +1,5 @@
 #include "diablo.h"
+
 DEVILUTION_BEGIN_NAMESPACE
 
 int light_table_index;
@@ -896,12 +897,15 @@ void DrawView(int StartX, int StartY)
 {
 #ifdef PIXEL_LIGHT
 	gpBuffer = (BYTE *)pal_surface->pixels;
-	memset(gpBuffer, 0, sizeof(gpBuffer));
+	//memset(gpBuffer, 0, sizeof(gpBuffer));
 #endif
 	DrawGame(StartX, StartY);
 #ifdef PIXEL_LIGHT
-	gpBuffer = (BYTE *)ui_surface->pixels;
-	memset(gpBuffer, 0, sizeof(gpBuffer));
+	if (testvar3 != 0 && leveltype != DTYPE_TOWN) {
+		SDL_FillRect(ui_surface, NULL, 0);
+		gpBuffer = (BYTE *)ui_surface->pixels;
+	}
+	//memset(gpBuffer, 0, sizeof(gpBuffer));
 #endif
 	if (automapflag) {
 		DrawAutomap();

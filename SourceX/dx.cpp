@@ -30,8 +30,6 @@ SDL_Surface *pal_surface;
 
 #ifdef PIXEL_LIGHT
 SDL_Surface *ui_surface;
-SDL_Surface *ui_surface_24;
-SDL_Texture *ui_texture;
 #endif
 
 static void dx_create_back_buffer()
@@ -47,6 +45,15 @@ static void dx_create_back_buffer()
 		ErrSdl();
 	}
 
+	#ifdef PIXEL_LIGHT
+	ui_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);
+	//ui_surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, SDL_BITSPERPIXEL(format), format);
+	if (ui_surface == NULL)
+		ErrSdl();
+	if (SDL_SetSurfacePalette(ui_surface, pal_surface->format->palette) < 0)
+		ErrSdl();
+
+#endif
 	pal_surface_palette_version = 1;
 }
 
@@ -417,24 +424,6 @@ void prepareLight()
 		if (SDL_SetTextureBlendMode(ellipsesTextures[i], SDL_BLENDMODE_ADD) < 0)
 			ErrSdl();
 	}
-
-	ui_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);
-	//ui_surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, SDL_BITSPERPIXEL(format), format);
-	if (ui_surface == NULL)
-		ErrSdl();
-	if (SDLC_SetSurfaceColors(ui_surface, palette) < 0)
-		ErrSdl();
-	if (SDL_FillRect(ui_surface, NULL, SDL_MapRGB(ui_surface->format, 0, 125, 0)) < 0)
-		ErrSdl();
-
-	ui_surface_24 = SDL_CreateRGBSurfaceWithFormat(0, width, height, SDL_BITSPERPIXEL(format), format);
-	if (ui_surface_24 == NULL)
-		ErrSdl();
-	ui_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, width, height);
-	if (ui_texture == NULL)
-		ErrSdl();
-	if (SDL_SetTextureBlendMode(ui_texture, SDL_BLENDMODE_ADD) < 0)
-		ErrSdl();
 }
 
 #endif
@@ -505,21 +494,22 @@ void RenderPresent()
 		}
 #ifdef PIXEL_LIGHT
 		if (testvar3 != 0 && leveltype != DTYPE_TOWN) {
-		//SDL_Surface *tmp = SDL_ConvertSurface(ui_surface, GetOutputSurface()->format, 0);
-		//if (tmp ==  NULL)
-		//	ErrSdl();
-		 SDL_Rect rect;
-			rect.x = 0;
-			rect.y = 0;
-			rect.w = 250;
-			rect.h = 250;
-		if(SDL_BlitSurface(ui_surface, NULL, ui_surface_24, &rect) < 0)
-			ErrSdl();
-		if (SDL_UpdateTexture(ui_texture, NULL, ui_surface_24->pixels, ui_surface_24->pitch) < 0)
-			ErrSdl();
-		//SDL_FreeSurface(tmp);
-		if (SDL_RenderCopy(renderer, ui_texture, NULL, NULL) < 0)
-			ErrSdl();
+			if (SDL_SetSurfacePalette(ui_surface, pal_surface->format->palette) < 0)
+				ErrSdl();
+			if (SDL_SetColorKey(ui_surface, SDL_TRUE, 0) < 0)
+				ErrSdl();
+			//SDL_Surface *tmp = SDL_ConvertSurface(ui_surface, GetOutputSurface()->format, 0);
+			//if (tmp == NULL)
+			//	ErrSdl();
+			SDL_Texture *ui_texture = SDL_CreateTextureFromSurface(renderer, ui_surface);
+			if (ui_texture == NULL)
+				ErrSdl();
+			if (SDL_SetTextureBlendMode(ui_texture, SDL_BLENDMODE_BLEND) < 0)
+				ErrSdl();
+			if (SDL_RenderCopy(renderer, ui_texture, NULL, NULL) < 0)
+				ErrSdl();
+			SDL_DestroyTexture(ui_texture);
+			//SDL_FreeSurface(tmp);
 		}
 #endif
 		SDL_RenderPresent(renderer);
