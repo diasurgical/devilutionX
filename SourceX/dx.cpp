@@ -230,9 +230,6 @@ void LimitFrameRate()
 }
 
 #ifdef PIXEL_LIGHT
-SDL_Surface *lightSurf;
-SDL_Texture *lightTex;
-
 SDL_Surface *fpsVision;
 SDL_Texture *fpsTex;
 
@@ -413,9 +410,6 @@ void prepareLight()
 	SDL_RenderGetLogicalSize(renderer, &width, &height);
 	if (SDL_QueryTexture(texture, &format, nullptr, nullptr, nullptr) < 0)
 		ErrSdl();
-	lightSurf = SDL_CreateRGBSurfaceWithFormat(0, width, height, SDL_BITSPERPIXEL(format), format);
-	if (lightSurf == NULL)
-		ErrSdl();
 	for (int i = 1; i <= 15; i++) {
 		predrawnEllipses[i] = SDL_CreateRGBSurfaceWithFormat(0, width, height, SDL_BITSPERPIXEL(format), format);
 		if (predrawnEllipses[i] == NULL)
@@ -460,11 +454,6 @@ void RenderPresent()
 				prepareLight();
 				prepareFPS();
 			}
-			if(SDL_FillRect(lightSurf, NULL, SDL_MapRGB(lightSurf->format, 0, 0, 0)) < 0)
-				ErrSdl();
-			lightTex = SDL_CreateTextureFromSurface(renderer, lightSurf);
-			if (lightTex == NULL)
-				ErrSdl();
 			SDL_BlendMode bm;
 			switch (testvar5) {
 			case 0:
@@ -480,8 +469,6 @@ void RenderPresent()
 				bm = SDL_BLENDMODE_MOD;
 				break;
 			}
-			if(SDL_SetTextureBlendMode(lightTex, bm) < 0)
-				ErrSdl();
 			if(SDL_SetTextureBlendMode(texture, bm) < 0)
 				ErrSdl();
 		} else {
@@ -505,11 +492,8 @@ void RenderPresent()
 
 #ifdef PIXEL_LIGHT
 		if (testvar3 != 0 && leveltype != DTYPE_TOWN) {
-			if (SDL_RenderCopy(renderer, lightTex, NULL, NULL) < 0)
-				ErrSdl();
 			lightLoop();
 			showFPS();
-			SDL_DestroyTexture(lightTex);
 		}
 
 #endif
