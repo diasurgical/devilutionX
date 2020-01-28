@@ -1010,8 +1010,11 @@ void InitLighting()
 		lightactive[i] = i;
 	}
 }
-
+#ifdef PIXEL_LIGHT
+int AddLight(int x, int y, int r, int color = 0xFFFFFF)
+#else
 int AddLight(int x, int y, int r)
+#endif
 {
 	int lid;
 
@@ -1030,6 +1033,9 @@ int AddLight(int x, int y, int r)
 		LightList[lid]._yoff = 0;
 		LightList[lid]._ldel = 0;
 		LightList[lid]._lunflag = 0;
+#ifdef PIXEL_LIGHT
+		LightList[lid]._color = color;
+#endif
 		dolighting = TRUE;
 	}
 

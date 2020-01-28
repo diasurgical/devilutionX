@@ -270,7 +270,7 @@ Uint32 blendColors(Uint32 c1, Uint32 c2, float howmuch)
 	return r + (g << 8) + (b << 16);
 }
 
-void drawRadius(int lid, int row, int col, int radius)
+void drawRadius(int lid, int row, int col, int radius, int color)
 {
 	POINT pos = gameToScreen(row, col);
 	int sx = pos.x;
@@ -278,14 +278,12 @@ void drawRadius(int lid, int row, int col, int radius)
 
 	int xoff = 0;
 	int yoff = 0;
-	int ismissile = 0;
 
 	for (int i = 0; i < nummissiles; i++) {
 		MissileStruct *mis = &missile[missileactive[i]];
 		if (mis->_mlid == lid) {
 			xoff = mis->_mixoff;
 			yoff = mis->_miyoff;
-			ismissile = 1;
 			break;
 		}
 	}
@@ -304,19 +302,21 @@ void drawRadius(int lid, int row, int col, int radius)
 	rect.y = offsety;
 	rect.w = width;
 	rect.h = height;
-	if (ismissile) {
-		SDL_SetTextureColorMod(ellipsesTextures[radius], 0x22, 0x82, 0xDA);
-	} else {
-		SDL_SetTextureColorMod(ellipsesTextures[radius], 0xDA, 0xA2, 0x22);
-	}
-	SDL_RenderCopy(renderer, ellipsesTextures[radius], NULL, &rect);
+
+	Uint8 r = (color & 0x0000FF);
+	Uint8 g = (color & 0x00FF00) >> 8;
+	Uint8 b = (color & 0xFF0000) >> 16;
+	if(SDL_SetTextureColorMod(ellipsesTextures[radius], r, g, b) < 0)
+		ErrSdl();
+	if(SDL_RenderCopy(renderer, ellipsesTextures[radius], NULL, &rect) < 0)
+		ErrSdl();
 }
 
 void lightLoop()
 {
 	for (int i = 0; i < numlights; i++) {
 		int lid = lightactive[i];
-		drawRadius(lid, LightList[lid]._lx, LightList[lid]._ly, LightList[lid]._lradius+1);
+		drawRadius(lid, LightList[lid]._lx, LightList[lid]._ly, LightList[lid]._lradius + 1, LightList[lid]._color);
 	}
 }
 
@@ -465,6 +465,7 @@ void RenderPresent()
 				ErrSdl();
 			lightLoop();
 			showFPS();
+			SDL_DestroyTexture(lightTex);
 		}
 
 #endif

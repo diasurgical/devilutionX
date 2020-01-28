@@ -1183,6 +1183,9 @@ typedef struct LightListStruct {
 	int _xoff;
 	int _yoff;
 	int _lflags;
+#ifdef PIXEL_LIGHT
+	int _color;
+#endif
 } LightListStruct;
 
 //////////////////////////////////////////////////
