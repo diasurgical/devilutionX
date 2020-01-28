@@ -4,10 +4,11 @@ DEVILUTION_BEGIN_NAMESPACE
 
 int light_table_index;
 int testvar1 = 0;
-int testvar2 = 0;
-int testvar3 = 0;
-int testvar4 = 0;
-int testvar5 = 0;
+int testvar2 = 8;
+int testvar3 = 1;
+int testvar4 = 1;
+int testvar5 = 3;
+LightListStruct staticLights[25][100];
 DWORD sgdwCursWdtOld;
 DWORD sgdwCursX;
 DWORD sgdwCursY;

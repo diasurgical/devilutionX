@@ -1163,7 +1163,7 @@ void PressChar(int vkey)
 		return;
 	case '@':
 	case '2':
-		testvar2 = ++testvar2 % 5;
+		testvar2 = ++testvar2 % 10;
 		CalcPlrItemVals(myplr, FALSE);
 		return;
 		if (plr[myplr].SpdList[1]._itype != -1 && plr[myplr].SpdList[1]._itype != 11) {
