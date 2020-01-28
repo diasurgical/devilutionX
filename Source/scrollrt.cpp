@@ -3,12 +3,13 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 int light_table_index;
+#ifdef PIXEL_LIGHT
 int testvar1 = 0;
-int testvar2 = 8;
-int testvar3 = 1;
-int testvar4 = 1;
-int testvar5 = 3;
-LightListStruct staticLights[25][100];
+int testvar2 = 8; // changing player's light radius (2 + testvar2)
+int testvar3 = 1; // enable pixel light
+int testvar4 = 1; // 0 = normal light, 1 = fully lit
+int testvar5 = 3; // change texture blend mode
+#endif
 DWORD sgdwCursWdtOld;
 DWORD sgdwCursX;
 DWORD sgdwCursY;
@@ -482,11 +483,12 @@ static void drawRow(int x, int y, int sx, int sy, int eflag)
 	MICROS *pMap;
 
 	level_piece_id = dPiece[x][y];
-	if (testvar4 == 0) {
 	light_table_index = dLight[x][y];
-	} else {
+#ifdef PIXEL_LIGHT
+	if (testvar4 != 0) {
 		light_table_index = 0;
 	}
+#endif
 
 	dst = &gpBuffer[sx + sy * BUFFER_WIDTH];
 	pMap = &dpiece_defs_map_2[x][y];

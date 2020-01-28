@@ -1087,15 +1087,6 @@ void AddObjLight(int i, int r)
 {
 	if (InitObjFlag) {
 		DoLighting(object[i]._ox, object[i]._oy, r, -1);
-		for (int j = 0; j < 100; j++) {
-			break;
-			if (staticLights[0][j]._lradius != -1){
-				staticLights[0][j]._lradius = r;
-				staticLights[0][j]._lx = object[i]._ox;
-				staticLights[0][j]._ly = object[i]._oy;
-				break;
-			}
-		}
 		object[i]._oVar1 = -1;
 	} else {
 		object[i]._oVar1 = 0;

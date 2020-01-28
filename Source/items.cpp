@@ -321,7 +321,9 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 	int ghit = 0; // increased damage from enemies
 
 	int lrad = 10; // light radius
+#ifdef PIXEL_LIGHT
 	lrad = 2 + testvar2;
+#endif
 
 	int ihp = 0;   // increased HP
 	int imana = 0; // increased mana
