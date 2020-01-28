@@ -418,6 +418,9 @@ void RenderPresent()
 			}
 			if(SDL_FillRect(lightSurf, NULL, SDL_MapRGB(lightSurf->format, 0, 0, 0)) < 0)
 				ErrSdl();
+			lightTex = SDL_CreateTextureFromSurface(renderer, lightSurf);
+			if (lightTex == NULL)
+				ErrSdl();
 			SDL_BlendMode bm;
 			switch (testvar5) {
 			case 0:
@@ -433,9 +436,6 @@ void RenderPresent()
 				bm = SDL_BLENDMODE_MOD;
 				break;
 			}
-			lightTex = SDL_CreateTextureFromSurface(renderer, lightSurf);
-			if (lightTex == NULL)
-				ErrSdl();
 			if(SDL_SetTextureBlendMode(lightTex, bm) < 0)
 				ErrSdl();
 			if(SDL_SetTextureBlendMode(texture, bm) < 0)
