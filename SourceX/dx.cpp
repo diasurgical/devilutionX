@@ -373,7 +373,8 @@ void predrawEllipse(int radius)
 void prepareSpellColors()
 {
 	int orange = 0xff9900;
-	int blue = 0x6699ff;
+	//int blue = 0x6699ff;
+	int blue = 0x0033cc;
 	int green = 0x00ff00;
 	//SPL_NULL = 0x0,
 	spellColors[SPL_FIREBOLT] = orange;
