@@ -52,9 +52,6 @@ static void dx_create_back_buffer()
 		ErrSdl();
 	if (SDL_SetSurfacePalette(ui_surface, pal_surface->format->palette) < 0)
 		ErrSdl();
-	if (SDL_SetColorKey(pal_surface, SDL_TRUE, 0) < 0)
-		ErrSdl();
-
 #endif
 	pal_surface_palette_version = 1;
 }
