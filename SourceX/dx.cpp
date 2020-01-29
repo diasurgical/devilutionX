@@ -59,6 +59,12 @@ static void dx_create_back_buffer()
 	ui_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);
 	if (ui_surface == NULL)
 		ErrSdl();
+
+	if (SDL_SetSurfacePalette(ui_surface, palette) < 0)
+		ErrSdl();
+	if (SDL_SetColorKey(ui_surface, SDL_TRUE, PALETTE_TRANSPARENT_COLOR) < 0)
+		ErrSdl();
+
 	tmp_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);
 	if (tmp_surface == NULL)
 		ErrSdl();
@@ -523,14 +529,9 @@ void RenderPresent()
 		}
 #ifdef PIXEL_LIGHT
 		if (testvar3 != 0 && leveltype != DTYPE_TOWN && redrawLights != 0) {
-			if (SDL_SetSurfacePalette(ui_surface, pal_surface->format->palette) < 0)
-				ErrSdl();
-			if (SDL_SetColorKey(ui_surface, SDL_TRUE, 64) < 0)
-				ErrSdl();
 			SDL_Texture *ui_texture = SDL_CreateTextureFromSurface(renderer, ui_surface);
 			if (ui_texture == NULL)
 				ErrSdl();
-			memset(ui_surface->pixels, 64, (ui_surface->w * ui_surface->h * sizeof(int)));
 			if (SDL_SetTextureBlendMode(ui_texture, SDL_BLENDMODE_BLEND) < 0)
 				ErrSdl();
 			SDL_Rect rect;
