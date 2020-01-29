@@ -48,7 +48,6 @@ static void dx_create_back_buffer()
 
 #ifdef PIXEL_LIGHT
 	ui_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);
-	//ui_surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, SDL_BITSPERPIXEL(format), format);
 	if (ui_surface == NULL)
 		ErrSdl();
 	if (SDL_SetSurfacePalette(ui_surface, pal_surface->format->palette) < 0)
@@ -300,10 +299,12 @@ void drawRadius(int lid, int row, int col, int radius, int color)
 				break;
 			}
 		}
-	} else {
+	}
+	if (lid != plr[myplr]._plid) {
 		xoff = -plr[myplr]._pxoff;
 		yoff = -plr[myplr]._pyoff;
 	}
+	
 	sx += xoff;
 	sy += yoff;
 

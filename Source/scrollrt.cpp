@@ -901,12 +901,16 @@ void DrawView(int StartX, int StartY)
 		tmp_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);
 		if (tmp_surface == NULL)
 			ErrSdl();
+		if (SDL_SetSurfacePalette(tmp_surface, pal_surface->format->palette) < 0)
+			ErrSdl();
+		//if (SDL_SetColorKey(tmp_surface, SDL_TRUE, 0) < 0)
+		//	ErrSdl();	
 		if (SDL_BlitSurface(pal_surface, NULL, tmp_surface, NULL) < 0)
 			ErrSdl();
 		if(SDL_FillRect(pal_surface, NULL, 0))
 			ErrSdl();
-		//if (SDL_SetSurfacePalette(ui_surface, pal_surface->format->palette) < 0)
-		//	ErrSdl();
+		if (SDL_FillRect(ui_surface, NULL, 0))
+			ErrSdl();
 	}
 #endif
 	if (automapflag) {
