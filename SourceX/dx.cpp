@@ -370,6 +370,51 @@ void predrawEllipse(int radius)
 	}
 }
 
+void prepareSpellColors()
+{
+	int orange = 0xff9900;
+	int blue = 0x6699ff;
+	int green = 0x00ff00;
+	//SPL_NULL = 0x0,
+	spellColors[SPL_FIREBOLT] = orange;
+	//SPL_HEAL = 0x2,
+	spellColors[SPL_LIGHTNING] = blue;
+	//spellColors[SPL_FLASH] = blue;
+	//SPL_IDENTIFY = 0x5,
+	spellColors[SPL_FIREWALL] = orange;
+	spellColors[SPL_TOWN] = blue;
+	//SPL_STONE = 0x8,
+	//SPL_INFRA = 0x9,
+	//SPL_RNDTELEPORT = 0xA,
+	//SPL_MANASHIELD = 0xB,
+	spellColors[SPL_FIREBALL] = orange;
+	spellColors[SPL_GUARDIAN] = orange;
+	spellColors[SPL_CHAIN] = blue;
+	spellColors[SPL_WAVE] = orange;
+	//SPL_DOOMSERP = 0x10,
+	//SPL_BLODRIT = 0x11,
+	spellColors[SPL_NOVA] = blue;
+	//SPL_INVISIBIL = 0x13,
+	//SPL_FLAME = 0x14,
+	//SPL_GOLEM = 0x15,
+	//SPL_BLODBOIL = 0x16,
+	//SPL_TELEPORT = 0x17,
+	spellColors[SPL_APOCA] = orange;
+	//SPL_ETHEREALIZE = 0x19,
+	//SPL_REPAIR = 0x1A,
+	//SPL_RECHARGE = 0x1B,
+	//SPL_DISARM = 0x1C,
+	spellColors[SPL_ELEMENT] = orange;
+	spellColors[SPL_CBOLT] = blue;
+	spellColors[SPL_HBOLT] = blue;
+	//SPL_RESURRECT = 0x20,
+	//SPL_TELEKINESIS = 0x21,
+	//SPL_HEALOTHER = 0x22,
+	//SPL_FLARE = 0x23,
+	spellColors[SPL_BONESPIRIT] = green;
+
+}
+
 void prepareFPS(){
 	if (!frameflag)
 		return;
@@ -445,6 +490,7 @@ void RenderPresent()
 		if (testvar3 != 0 && leveltype != DTYPE_TOWN) {
 			if (lightReady != 1) {
 				lightReady = 1;
+				prepareSpellColors();
 				prepareLight();
 				prepareFPS();
 			}

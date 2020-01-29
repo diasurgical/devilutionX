@@ -10,6 +10,7 @@ int testvar3 = 1; // enable pixel light
 int testvar4 = 1; // 0 = normal light, 1 = fully lit
 int testvar5 = 3; // change texture blend mode
 LightListStruct staticLights[25][100];
+int spellColors[100];
 #endif
 DWORD sgdwCursWdtOld;
 DWORD sgdwCursX;
