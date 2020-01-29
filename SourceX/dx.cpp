@@ -362,7 +362,7 @@ void predrawEllipse(int radius)
 				float c = hey;
 				float ab = a + b;
 				if (ab <= c) {
-					howmuch = sqrt(ab / c);
+					howmuch = cbrt(ab / c);
 					PutPixel32_nolock(predrawnEllipses[radius], x, y, blendColors(0x000000, 0xFFFFFF, howmuch));
 				}
 			//}
