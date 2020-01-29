@@ -904,9 +904,10 @@ void DrawView(int StartX, int StartY)
 			ErrSdl();
 		if (SDL_BlitSurface(pal_surface, NULL, tmp_surface, NULL) < 0)
 			ErrSdl();
-		if(SDL_FillRect(pal_surface, NULL, 0))
+		if (SDL_SetColorKey(pal_surface, SDL_TRUE, PALETTE_TRANSPARENT_COLOR) < 0)
 			ErrSdl();
-		memset(ui_surface->pixels, 64, (ui_surface->w * ui_surface->h * sizeof(int)));
+		if(SDL_FillRect(pal_surface, NULL, PALETTE_TRANSPARENT_COLOR))
+			ErrSdl();
 	}
 #endif
 	if (automapflag) {
@@ -1262,7 +1263,11 @@ void DrawAndBlit()
 #ifdef PIXEL_LIGHT
 	if (testvar3 != 0 && leveltype != DTYPE_TOWN && redrawLights == 0) {
 		redrawLights = 1;
+		if (SDL_FillRect(ui_surface, NULL, PALETTE_TRANSPARENT_COLOR) < 0)
+			ErrSdl();
 		if (SDL_BlitSurface(pal_surface, NULL, ui_surface, NULL) < 0)
+			ErrSdl();
+		if (SDL_SetColorKey(pal_surface, SDL_FALSE, 0) < 0)
 			ErrSdl();
 		if (SDL_BlitSurface(tmp_surface, NULL, pal_surface, NULL) < 0)
 			ErrSdl();
