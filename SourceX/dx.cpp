@@ -306,8 +306,8 @@ void drawRadius(int lid, int row, int col, int radius, int color)
 	sx += xoff;
 	sy += yoff;
 
-	int srcx = width / 2;
-	int srcy = height / 2;
+	int srcx = width;
+	int srcy = height;
 	int targetx = sx;
 	int targety = sy;
 	int offsetx = targetx - srcx;
@@ -316,8 +316,8 @@ void drawRadius(int lid, int row, int col, int radius, int color)
 	SDL_Rect rect;
 	rect.x = offsetx;
 	rect.y = offsety;
-	rect.w = width;
-	rect.h = height;
+	rect.w = width*2;
+	rect.h = height*2;
 
 	Uint8 r = (color & 0xFF0000) >> 16;
 	Uint8 g = (color & 0x00FF00) >> 8;
@@ -346,12 +346,12 @@ void lightLoop()
 
 void predrawEllipse(int radius)
 {
-	int sx = width / 2;
-	int sy = height / 2;
+	int sx = width;
+	int sy = height;
 	int hey = radius * 16;
-	for (int x = 0; x < width; x++) {
-		for (int y = 0; y < height; y++) {
-			if (x >= 0 && x < SCREEN_WIDTH && y >= 0 && y < SCREEN_HEIGHT) {
+	for (int x = 0; x < width*2; x++) {
+		for (int y = 0; y < height*2; y++) {
+			//if (x >= 0 && x < SCREEN_WIDTH && y >= 0 && y < SCREEN_HEIGHT) {
 				float howmuch;
 				float diffx = sx - x;
 				float diffy = sy - y;
@@ -365,7 +365,7 @@ void predrawEllipse(int radius)
 					howmuch = sqrt(ab / c);
 					PutPixel32_nolock(predrawnEllipses[radius], x, y, blendColors(0x000000, 0xFFFFFF, howmuch));
 				}
-			}
+			//}
 		}
 	}
 }
@@ -457,7 +457,7 @@ void prepareLight()
 	if (SDL_QueryTexture(texture, &format, nullptr, nullptr, nullptr) < 0)
 		ErrSdl();
 	for (int i = 1; i <= 15; i++) {
-		predrawnEllipses[i] = SDL_CreateRGBSurfaceWithFormat(0, width, height, SDL_BITSPERPIXEL(format), format);
+		predrawnEllipses[i] = SDL_CreateRGBSurfaceWithFormat(0, width*2, height*2, SDL_BITSPERPIXEL(format), format);
 		if (predrawnEllipses[i] == NULL)
 			ErrSdl();
 		if (SDL_SetSurfaceBlendMode(predrawnEllipses[i], SDL_BLENDMODE_ADD) < 0)

@@ -98,7 +98,6 @@
 #define SCREEN_WIDTH	640
 #define SCREEN_HEIGHT	480
 
-#define _DEBUG 1
 #define PIXEL_LIGHT 1
 #ifdef USE_SDL1
 #undef PIXEL_LIGHT
