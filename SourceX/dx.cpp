@@ -33,7 +33,6 @@ SDL_Surface *tmp_surface;
 SDL_Surface *ui_surface;
 SDL_Surface *predrawnEllipses[20];
 SDL_Texture *ellipsesTextures[20];
-SDL_Texture *fpsTex;
 int lightReady = 0;
 #endif
 
@@ -152,7 +151,6 @@ void dx_cleanup()
 	SDL_DestroyWindow(window);
 #ifdef PIXEL_LIGHT
 	SDL_FreeSurface(ui_surface);
-	SDL_DestroyTexture(fpsTex);
 	for (int i = 0; i < 20; i++) {
 		SDL_FreeSurface(predrawnEllipses[i]);
 		SDL_DestroyTexture(ellipsesTextures[i]);
@@ -422,38 +420,6 @@ void prepareSpellColors()
 	spellColors[SPL_BONESPIRIT] = green;
 }
 
-void prepareFPS()
-{
-	if (!frameflag)
-		return;
-	SDL_Surface *fpsVision = SDL_CreateRGBSurfaceWithFormat(0, 50, 50, SDL_BITSPERPIXEL(format), format);
-	if (fpsVision == NULL)
-		ErrSdl();
-	if (SDL_SetSurfaceBlendMode(fpsVision, SDL_BLENDMODE_ADD) < 0)
-		ErrSdl();
-	if (SDL_FillRect(fpsVision, NULL, SDL_MapRGB(fpsVision->format, 255, 255, 255)) < 0)
-		ErrSdl();
-	fpsTex = SDL_CreateTextureFromSurface(renderer, fpsVision);
-	if (fpsTex == NULL)
-		ErrSdl();
-	SDL_FreeSurface(fpsVision);
-	if (SDL_SetTextureBlendMode(fpsTex, SDL_BLENDMODE_ADD) < 0)
-		ErrSdl();
-}
-
-void showFPS()
-{
-	if (!frameflag)
-		return;
-	SDL_Rect rect;
-	rect.x = 0;
-	rect.y = 35;
-	rect.w = 50;
-	rect.h = 50;
-	if (SDL_RenderCopy(renderer, fpsTex, NULL, &rect) < 0)
-		ErrSdl();
-}
-
 void prepareLight()
 {
 	for (int lv = 0; lv < 25; lv++) {
@@ -501,7 +467,6 @@ void RenderPresent()
 				lightReady = 1;
 				prepareSpellColors();
 				prepareLight();
-				prepareFPS();
 			}
 			SDL_BlendMode bm;
 			switch (testvar5) {
@@ -542,7 +507,6 @@ void RenderPresent()
 #ifdef PIXEL_LIGHT
 		if (testvar3 != 0 && leveltype != DTYPE_TOWN && redrawLights != 0) {
 			lightLoop();
-			showFPS();
 		}
 
 #endif
