@@ -1155,7 +1155,7 @@ void PressChar(int vkey)
 		return;
 	case '!':
 	case '1':
-#ifdef PIXEL_LIGHT
+#if defined PIXEL_LIGHT && defined _DEBUG
 		testvar1 = ++testvar1 % 3;
 		CalcPlrItemVals(myplr, FALSE);
 		return;
@@ -1166,7 +1166,7 @@ void PressChar(int vkey)
 		return;
 	case '@':
 	case '2':
-#ifdef PIXEL_LIGHT
+#if defined PIXEL_LIGHT && defined _DEBUG
 		testvar2 = ++testvar2 % 10;
 		CalcPlrItemVals(myplr, FALSE);
 		return;
@@ -1177,7 +1177,7 @@ void PressChar(int vkey)
 		return;
 	case '#':
 	case '3':
-#ifdef PIXEL_LIGHT
+#if defined PIXEL_LIGHT && defined _DEBUG
 		testvar3 = ++testvar3 % 2;
 		CalcPlrItemVals(myplr, FALSE);
 		return;
@@ -1188,7 +1188,7 @@ void PressChar(int vkey)
 		return;
 	case '$':
 	case '4':
-#ifdef PIXEL_LIGHT
+#if defined PIXEL_LIGHT && defined _DEBUG
 		testvar4 = ++testvar4 % 2;
 		CalcPlrItemVals(myplr, FALSE);
 		return;
@@ -1199,7 +1199,7 @@ void PressChar(int vkey)
 		return;
 	case '%':
 	case '5':
-#ifdef PIXEL_LIGHT
+#if defined PIXEL_LIGHT && defined _DEBUG
 		testvar5 = ++testvar5 % 4;
 		CalcPlrItemVals(myplr, FALSE);
 #endif

@@ -95,8 +95,8 @@
 #define PAL16_RED		224
 #define PAL16_GRAY		240
 
-#define SCREEN_WIDTH	1280
-#define SCREEN_HEIGHT	960
+#define SCREEN_WIDTH	640
+#define SCREEN_HEIGHT	480
 
 #define _DEBUG 1
 #define PIXEL_LIGHT 1

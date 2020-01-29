@@ -498,17 +498,13 @@ void RenderPresent()
 		if (testvar3 != 0 && leveltype != DTYPE_TOWN) {
 			if (SDL_SetSurfacePalette(ui_surface, pal_surface->format->palette) < 0)
 				ErrSdl();
-			if (SDL_SetColorKey(ui_surface, SDL_TRUE, 0) < 0)
+			if (SDL_SetColorKey(ui_surface, SDL_TRUE, 64) < 0)
 				ErrSdl();
-			//SDL_Surface *tmp = SDL_ConvertSurface(ui_surface, GetOutputSurface()->format, 0);
-			//if (tmp == NULL)
-			//	ErrSdl();
 			SDL_Texture *ui_texture = SDL_CreateTextureFromSurface(renderer, ui_surface);
 			if (ui_texture == NULL)
 				ErrSdl();
 			if (SDL_SetTextureBlendMode(ui_texture, SDL_BLENDMODE_BLEND) < 0)
 				ErrSdl();
-			//if (SDL_RenderCopy(renderer, ui_texture, NULL, NULL) < 0)
 			SDL_Rect rect;
 			rect.x = BORDER_LEFT;
 			rect.y = BORDER_TOP;
@@ -517,7 +513,6 @@ void RenderPresent()
 			if (SDL_RenderCopy(renderer, ui_texture, &rect, NULL) > 0)
 				ErrSdl();
 			SDL_DestroyTexture(ui_texture);
-			//SDL_FreeSurface(tmp);
 		}
 #endif
 		SDL_RenderPresent(renderer);

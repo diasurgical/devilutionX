@@ -903,14 +903,11 @@ void DrawView(int StartX, int StartY)
 			ErrSdl();
 		if (SDL_SetSurfacePalette(tmp_surface, pal_surface->format->palette) < 0)
 			ErrSdl();
-		//if (SDL_SetColorKey(tmp_surface, SDL_TRUE, 0) < 0)
-		//	ErrSdl();	
 		if (SDL_BlitSurface(pal_surface, NULL, tmp_surface, NULL) < 0)
 			ErrSdl();
 		if(SDL_FillRect(pal_surface, NULL, 0))
 			ErrSdl();
-		if (SDL_FillRect(ui_surface, NULL, 0))
-			ErrSdl();
+		memset(ui_surface->pixels, 64, (ui_surface->w * ui_surface->h * sizeof(int)));
 	}
 #endif
 	if (automapflag) {
@@ -1219,7 +1216,11 @@ void DrawAndBlit()
 		return;
 	}
 
+#ifdef PIXEL_LIGHT
+	if (1){
+#else
 	if (SCREEN_WIDTH > PANEL_WIDTH || SCREEN_HEIGHT > VIEWPORT_HEIGHT + PANEL_HEIGHT || force_redraw == 255) {
+#endif
 		drawhpflag = TRUE;
 		drawmanaflag = TRUE;
 		drawbtnflag = TRUE;
@@ -1266,8 +1267,6 @@ void DrawAndBlit()
 		if (SDL_BlitSurface(tmp_surface, NULL, pal_surface, NULL) < 0)
 			ErrSdl();
 		SDL_FreeSurface(tmp_surface);
-		//if (SDL_SetSurfacePalette(ui_surface, pal_surface->format->palette) < 0)
-		//	ErrSdl();
 	}
 #endif
 
