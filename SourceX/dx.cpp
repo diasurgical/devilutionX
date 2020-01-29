@@ -45,9 +45,15 @@ static void dx_create_back_buffer()
 
 	gpBuffer = (BYTE *)pal_surface->pixels;
 
-	if (SDLC_SetSurfaceColors(pal_surface, palette) <= -1) {
+#ifndef USE_SDL1
+	// In SDL2, `pal_surface` points to the global `palette`.
+	if (SDL_SetSurfacePalette(pal_surface, palette) < 0)
 		ErrSdl();
-	}
+#else
+	// In SDL1, `pal_surface` owns its palette and we must update it every
+	// time the global `palette` is changed. No need to do anything here as
+	// the global `palette` doesn't have any colors set yet.
+#endif
 
 #ifdef PIXEL_LIGHT
 	ui_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);

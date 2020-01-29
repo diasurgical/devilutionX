@@ -205,6 +205,17 @@ This prepares and uses the buildroot at `$HOME/buildroot-$PLATFORM-devilutionx`.
 
 </details>
 
+<details><summary>Clockwork PI GameShell</summary>
+
+You can either call
+~~~ bash
+Packaging/cpi-gamesh/build.sh
+~~~
+to install dependencies and build the code.
+
+Or you create a new directory under `/home/cpi/apps/Menu` and copy [the file](Packaging/cpi-gamesh/__init__.py) there. After restarting the UI, you can download and compile the game directly from the device itself. See [the readme](Packaging/cpi-gamesh/readme.md) for more details.
+</details>
+
 <details><summary><b>CMake build options</b></summary>
 
 ### General
