@@ -900,9 +900,6 @@ void DrawView(int StartX, int StartY)
 	DrawGame(StartX, StartY);
 #ifdef PIXEL_LIGHT
 	if (testvar3 != 0 && leveltype != DTYPE_TOWN && redrawLights == 0) {
-		tmp_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);
-		if (tmp_surface == NULL)
-			ErrSdl();
 		if (SDL_SetSurfacePalette(tmp_surface, pal_surface->format->palette) < 0)
 			ErrSdl();
 		if (SDL_BlitSurface(pal_surface, NULL, tmp_surface, NULL) < 0)
@@ -1269,7 +1266,6 @@ void DrawAndBlit()
 			ErrSdl();
 		if (SDL_BlitSurface(tmp_surface, NULL, pal_surface, NULL) < 0)
 			ErrSdl();
-		SDL_FreeSurface(tmp_surface);
 	}
 #endif
 

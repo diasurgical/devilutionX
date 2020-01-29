@@ -53,7 +53,8 @@ static void dx_create_back_buffer()
 	ui_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);
 	if (ui_surface == NULL)
 		ErrSdl();
-	if (SDL_SetSurfacePalette(ui_surface, pal_surface->format->palette) < 0)
+	tmp_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);
+	if (tmp_surface == NULL)
 		ErrSdl();
 #endif
 	pal_surface_palette_version = 1;
@@ -150,6 +151,7 @@ void dx_cleanup()
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 #ifdef PIXEL_LIGHT
+	SDL_FreeSurface(tmp_surface);
 	SDL_FreeSurface(ui_surface);
 	for (int i = 0; i < 20; i++) {
 		SDL_FreeSurface(predrawnEllipses[i]);
