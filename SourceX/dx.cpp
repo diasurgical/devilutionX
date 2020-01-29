@@ -249,13 +249,13 @@ POINT gameToScreen(int targetRow, int targetCol)
 	int playerRow = plr[myplr].WorldX;
 	int playerCol = plr[myplr].WorldY;
 	int sx = 32 * (targetRow - playerRow) + 32 * (playerCol - targetCol) + SCREEN_WIDTH / 2;
-	if (ScrollInfo._sdir == 3) {
+	if (ScrollInfo._sdir == SDIR_E) {
 		sx -= 32;
-	} else if (ScrollInfo._sdir == 7) {
+	} else if (ScrollInfo._sdir == SDIR_W) {
 		sx += 32;
 	}
 	int sy = 32 * (targetCol - playerCol) + sx / 2;
-	if (ScrollInfo._sdir == 7) {
+	if (ScrollInfo._sdir == SDIR_W) {
 		sy -= 32;
 	}
 	POINT ret;
@@ -297,9 +297,10 @@ void drawRadius(int lid, int row, int col, int radius, int color)
 			}
 		}
 	}
+
 	if (lid != plr[myplr]._plid) {
-		xoff = -plr[myplr]._pxoff;
-		yoff = -plr[myplr]._pyoff;
+		xoff -= plr[myplr]._pxoff;
+		yoff -= plr[myplr]._pyoff;
 	}
 	
 	sx += xoff;
