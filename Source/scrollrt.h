@@ -11,6 +11,9 @@ extern int testvar3;
 extern int testvar4;
 extern int testvar5;
 extern LightListStruct staticLights[25][100];
+extern SDL_Surface *pal_surface;
+extern SDL_Surface *ui_surface;
+extern SDL_Surface *tmp_surface;
 #endif
 extern BYTE *gpBufStart;
 extern BYTE *gpBufEnd;
@@ -40,8 +43,4 @@ void DrawAndBlit();
 extern char *szMonModeAssert[18];
 extern char *szPlrModeAssert[12];
 
-#ifdef PIXEL_LIGHT
-extern SDL_Surface *pal_surface;
-extern SDL_Surface *ui_surface;
-#endif
 #endif /* __SCROLLRT_H__ */

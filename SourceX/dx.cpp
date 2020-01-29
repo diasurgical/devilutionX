@@ -29,6 +29,7 @@ SDL_Surface *renderer_texture_surface = nullptr;
 SDL_Surface *pal_surface;
 
 #ifdef PIXEL_LIGHT
+SDL_Surface *tmp_surface;
 SDL_Surface *ui_surface;
 #endif
 
@@ -45,12 +46,14 @@ static void dx_create_back_buffer()
 		ErrSdl();
 	}
 
-	#ifdef PIXEL_LIGHT
+#ifdef PIXEL_LIGHT
 	ui_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);
 	//ui_surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, SDL_BITSPERPIXEL(format), format);
 	if (ui_surface == NULL)
 		ErrSdl();
 	if (SDL_SetSurfacePalette(ui_surface, pal_surface->format->palette) < 0)
+		ErrSdl();
+	if (SDL_SetColorKey(pal_surface, SDL_TRUE, 0) < 0)
 		ErrSdl();
 
 #endif
@@ -504,9 +507,15 @@ void RenderPresent()
 			SDL_Texture *ui_texture = SDL_CreateTextureFromSurface(renderer, ui_surface);
 			if (ui_texture == NULL)
 				ErrSdl();
-			if (SDL_SetTextureBlendMode(ui_texture, SDL_BLENDMODE_ADD) < 0)
+			if (SDL_SetTextureBlendMode(ui_texture, SDL_BLENDMODE_BLEND) < 0)
 				ErrSdl();
-			if (SDL_RenderCopy(renderer, ui_texture, NULL, NULL) < 0)
+			//if (SDL_RenderCopy(renderer, ui_texture, NULL, NULL) < 0)
+			SDL_Rect rect;
+			rect.x = BORDER_LEFT;
+			rect.y = BORDER_TOP;
+			rect.w = SCREEN_WIDTH;
+			rect.h = SCREEN_HEIGHT;
+			if (SDL_RenderCopy(renderer, ui_texture, &rect, NULL) > 0)
 				ErrSdl();
 			SDL_DestroyTexture(ui_texture);
 			//SDL_FreeSurface(tmp);

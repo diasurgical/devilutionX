@@ -895,16 +895,18 @@ extern void DrawControllerModifierHints();
  */
 void DrawView(int StartX, int StartY)
 {
-#ifdef PIXEL_LIGHT
-	gpBuffer = (BYTE *)pal_surface->pixels;
-	//memset(gpBuffer, 0, sizeof(gpBuffer));
-#endif
 	DrawGame(StartX, StartY);
 #ifdef PIXEL_LIGHT
 	if (testvar3 != 0 && leveltype != DTYPE_TOWN) {
-		//SDL_FillRect(ui_surface, NULL, 0);
-		gpBuffer = (BYTE *)ui_surface->pixels;
-		//memset(gpBuffer, 0, sizeof(gpBuffer));
+		tmp_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);
+		if (tmp_surface == NULL)
+			ErrSdl();
+		if (SDL_BlitSurface(pal_surface, NULL, tmp_surface, NULL) < 0)
+			ErrSdl();
+		if(SDL_FillRect(pal_surface, NULL, 0))
+			ErrSdl();
+		//if (SDL_SetSurfacePalette(ui_surface, pal_surface->format->palette) < 0)
+		//	ErrSdl();
 	}
 #endif
 	if (automapflag) {
@@ -1253,6 +1255,17 @@ void DrawAndBlit()
 	scrollrt_draw_cursor_item();
 
 	DrawFPS();
+#ifdef PIXEL_LIGHT
+	if (testvar3 != 0 && leveltype != DTYPE_TOWN) {
+		if (SDL_BlitSurface(pal_surface, NULL, ui_surface, NULL) < 0)
+			ErrSdl();
+		if (SDL_BlitSurface(tmp_surface, NULL, pal_surface, NULL) < 0)
+			ErrSdl();
+		SDL_FreeSurface(tmp_surface);
+		//if (SDL_SetSurfacePalette(ui_surface, pal_surface->format->palette) < 0)
+		//	ErrSdl();
+	}
+#endif
 
 	unlock_buf(0);
 
