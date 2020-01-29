@@ -38,8 +38,8 @@ class DevilutionPage(Page):
 	_CiteDone = "You must venture through the portal..."
 	_CiteFailed = "Game Over. Better luck next time!"
 
-	_GitURL = "https://github.com/danie1kr/devilutionX.git"
-	_GitBranch = "gameshell"
+	_GitURL = "https://github.com/diasurgical/devilutionX.git"
+	_GitBranch = "master"
 	_GitRevision = ""
 
 	_GameIcon = None
