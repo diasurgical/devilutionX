@@ -1,14 +1,12 @@
 
-### devilutionX package for ClockworkPi GameShell
+# devilutionX package for ClockworkPi GameShell
 For more information about this device see [here](https://www.clockworkpi.com/gameshell).
 
 ## Install devilutionX on the CPi GameShell
 
-To install devilutionX, just copy the [\_\_init__.py](https://raw.githubusercontent.com/danie1kr/devilutionX/gameshell/Packaging/cpi-gamesh/__init__.py) to a newly created folder under /home/cpi/apps/Menu and run it from the menu. The folder then symbolizes the devilutionX icon.
+To install devilutionX, just copy the [\_\_init__.py](__init__.py) to a newly created folder under /home/cpi/apps/Menu and run it from the menu. The folder then symbolizes the devilutionX icon.
 From this menu, you can press 'X' to clone the git repository for devilutionX and compile the code. Dependencies are installed automatically (cmake and SDL development packages).
 Once installed, 'X' pulls the updated code and does the compiling. Note that any changes made locally to the source are reverted before pulling.
-
-Currently, the code is cloned from [a fork](https://github.com/danie1kr/devilutionX.git), branch "gameshell".
 
 When the compile is finished and the diabdat.mpq is in place at '/home/cpi/.local/share/diasurgical/devilution/', you can play the game. Enjoy!
 
