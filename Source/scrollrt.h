@@ -12,6 +12,7 @@ extern int testvar4;
 extern int testvar5;
 extern LightListStruct staticLights[25][100];
 extern int spellColors[100];
+extern int redrawLights;
 extern SDL_Surface *pal_surface;
 extern SDL_Surface *ui_surface;
 extern SDL_Surface *tmp_surface;

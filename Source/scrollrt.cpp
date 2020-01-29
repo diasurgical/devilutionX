@@ -11,6 +11,7 @@ int testvar4 = 1; // 0 = normal light, 1 = fully lit
 int testvar5 = 3; // change texture blend mode
 LightListStruct staticLights[25][100];
 int spellColors[100];
+int redrawLights = 0;
 #endif
 DWORD sgdwCursWdtOld;
 DWORD sgdwCursX;
@@ -898,7 +899,7 @@ void DrawView(int StartX, int StartY)
 {
 	DrawGame(StartX, StartY);
 #ifdef PIXEL_LIGHT
-	if (testvar3 != 0 && leveltype != DTYPE_TOWN) {
+	if (testvar3 != 0 && leveltype != DTYPE_TOWN && redrawLights == 0) {
 		tmp_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);
 		if (tmp_surface == NULL)
 			ErrSdl();
@@ -1262,7 +1263,8 @@ void DrawAndBlit()
 
 	DrawFPS();
 #ifdef PIXEL_LIGHT
-	if (testvar3 != 0 && leveltype != DTYPE_TOWN) {
+	if (testvar3 != 0 && leveltype != DTYPE_TOWN && redrawLights == 0) {
+		redrawLights = 1;
 		if (SDL_BlitSurface(pal_surface, NULL, ui_surface, NULL) < 0)
 			ErrSdl();
 		if (SDL_BlitSurface(tmp_surface, NULL, pal_surface, NULL) < 0)
