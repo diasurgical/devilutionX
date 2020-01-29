@@ -248,16 +248,16 @@ POINT gameToScreen(int targetRow, int targetCol)
 {
 	int playerRow = plr[myplr].WorldX;
 	int playerCol = plr[myplr].WorldY;
-	int sx = 32 * (targetRow - playerRow) + 32 * (playerCol - targetCol) + SCREEN_WIDTH / 2;
-	if (ScrollInfo._sdir == SDIR_E) {
-		sx -= 32;
-	} else if (ScrollInfo._sdir == SDIR_W) {
-		sx += 32;
-	}
-	int sy = 32 * (targetCol - playerCol) + sx / 2;
-	if (ScrollInfo._sdir == SDIR_W) {
-		sy -= 32;
-	}
+	int sx = TILE_SIZE * (targetRow - playerRow) + TILE_SIZE * (playerCol - targetCol) + SCREEN_WIDTH / 2;
+	if (ScrollInfo._sdir == SDIR_E) 
+		sx -= TILE_SIZE;
+	 else if (ScrollInfo._sdir == SDIR_W) 
+		sx += TILE_SIZE;
+	
+	int sy = TILE_SIZE * (targetCol - playerCol) + sx / 2;
+	if (ScrollInfo._sdir == SDIR_W) 
+		sy -= TILE_SIZE;
+	
 	POINT ret;
 	ret.x = sx;
 	ret.y = sy;
