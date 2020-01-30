@@ -9,7 +9,7 @@
 #define GMENU_ENABLED			0x80000000
 
 // must be unsigned to generate unsigned comparisons with pnum
-#define MAX_PLRS				4
+#define MAX_PLRS				16
 
 #define MAX_CHARACTERS			10
 #define MAX_LVLMTYPES			16
@@ -27,7 +27,6 @@
 #define MAXMONSTERS				200
 #define MAXMULTIQUESTS			4
 #define MAXOBJECTS				127
-#define MAXPORTAL				4
 #define MAXQUESTS				16
 #define MAXTHEMES				50
 #define MAXTILES				2048

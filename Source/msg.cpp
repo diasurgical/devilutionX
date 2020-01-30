@@ -258,7 +258,7 @@ BYTE *DeltaExportJunk(BYTE *dst)
 	MultiQuests *mq;
 	DPortal *pD;
 
-	for (i = 0; i < MAXPORTAL; i++) {
+	for (i = 0; i < MAX_PLRS; i++) {
 		pD = &sgJunk.portal[i];
 		if (pD->x == 0xFF) {
 			*dst = 0xFF;
@@ -1255,7 +1255,7 @@ void DeltaImportJunk(BYTE *src)
 	int i;
 	MultiQuests *mq;
 
-	for (i = 0; i < MAXPORTAL; i++) {
+	for (i = 0; i < MAX_PLRS; i++) {
 		if (*src == 0xFF) {
 			memset(&sgJunk.portal[i], 0xFF, sizeof(DPortal));
 			src++;

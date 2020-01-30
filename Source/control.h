@@ -22,7 +22,7 @@ extern BYTE *pTalkBtns;
 extern int pstrjust[4];
 extern int pnumlines;
 extern BOOL pinfoflag;
-extern BOOL talkbtndown[3];
+extern BOOL talkbtndown[MAX_PLRS - 1];
 extern int pSpell;
 extern BYTE *pManaBuff;
 extern char infoclr;
