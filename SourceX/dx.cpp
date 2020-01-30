@@ -296,7 +296,6 @@ Uint32 blendColors(Uint32 c1, Uint32 c2, float howmuch)
 
 void drawRadius(int lid, int row, int col, int radius, int color)
 {
-	SDL_Log("%d",radius);
 	POINT pos = gameToScreen(row, col);
 	int sx = pos.x;
 	int sy = pos.y;
@@ -473,7 +472,6 @@ void RenderPresent()
 				lightReady = 1;
 				prepareSpellColors();
 				prepareLight();
-				SDL_Log("Prepare light");
 			}
 			SDL_BlendMode bm;
 			switch (testvar5) {
