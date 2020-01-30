@@ -85,6 +85,10 @@ if(RETROFW)
   include(retrofw_defs)
 endif()
 
+if(CPIGAMESH)
+  include(cpigamesh_defs)
+endif()
+
 if(${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD OR ${CMAKE_SYSTEM_NAME} STREQUAL OpenBSD)
   set(ASAN OFF)
   set(UBSAN OFF)
