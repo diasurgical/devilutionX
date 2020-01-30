@@ -165,8 +165,8 @@ void SetFadeLevel(DWORD fadeval)
 		palette_update();
 
 		// Workaround for flickering mouse in caves https://github.com/diasurgical/devilutionX/issues/7
-		SrcRect.left = 64;
-		SrcRect.top = 160;
+		SrcRect.left = BORDER_LEFT;
+		SrcRect.top = BORDER_TOP;
 		SrcRect.right = BUFFER_WIDTH;
 		SrcRect.bottom = BUFFER_HEIGHT; // menu isn't offset so make sure we copy all of it
 		BltFast(0, 0, &SrcRect);
