@@ -217,6 +217,22 @@ to install dependencies and build the code.
 Or you create a new directory under `/home/cpi/apps/Menu` and copy [the file](Packaging/cpi-gamesh/__init__.py) there. After restarting the UI, you can download and compile the game directly from the device itself. See [the readme](Packaging/cpi-gamesh/readme.md) for more details.
 </details>
 
+<details><summary>Amiga via Docker</summary>
+
+### Start the container from the repo root
+```
+docker run -ti --rm -v $(pwd):/work amigadev/crosstools:m68k-amigaos bash
+```
+### Installing dependencies and build
+```
+Packaging/amiga/prep.sh
+cd build
+PKG_CONFIG_PATH=/opt/m68k-amigaos/lib/pkgconfig/:/opt/m68k-amigaos/share/pkgconfig/ cmake -DBINARY_RELEASE=ON -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-s -ffast-math -O3 -noixemul -D__BIG_ENDIAN__ -D__AMIGA__ -fpermissive" ..
+cmake --build . -j $(nproc)
+```
+Make sure the resulting devilutionx file has the correct permissions for your user afterwards.
+</details>
+
 <details><summary><b>CMake build options</b></summary>
 
 ### General
