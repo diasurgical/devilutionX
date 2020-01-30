@@ -296,6 +296,7 @@ Uint32 blendColors(Uint32 c1, Uint32 c2, float howmuch)
 
 void drawRadius(int lid, int row, int col, int radius, int color)
 {
+	SDL_Log("%d",radius);
 	POINT pos = gameToScreen(row, col);
 	int sx = pos.x;
 	int sy = pos.y;
@@ -353,7 +354,7 @@ void lightLoop()
 
 	for (int i = 0; i < 100; i++) {
 		LightListStruct *it = &staticLights[currlevel][i];
-		if (it->_lradius == -1) {
+		if (it->_lradius == 0) {
 			break;
 		}
 		drawRadius(-1, it->_lx, it->_ly, it->_lradius, it->_color);
@@ -433,12 +434,6 @@ void prepareSpellColors()
 
 void prepareLight()
 {
-	for (int lv = 0; lv < 25; lv++) {
-		for (int i = 0; i < 100; i++) {
-			staticLights[lv][i]._lradius = -1;
-		}
-	}
-
 	SDL_RenderGetLogicalSize(renderer, &width, &height);
 	if (SDL_QueryTexture(texture, &format, nullptr, nullptr, nullptr) < 0)
 		ErrSdl();
@@ -478,6 +473,7 @@ void RenderPresent()
 				lightReady = 1;
 				prepareSpellColors();
 				prepareLight();
+				SDL_Log("Prepare light");
 			}
 			SDL_BlendMode bm;
 			switch (testvar5) {
