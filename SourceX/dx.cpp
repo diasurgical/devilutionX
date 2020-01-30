@@ -62,8 +62,6 @@ static void dx_create_back_buffer()
 
 	if (SDL_SetSurfacePalette(ui_surface, palette) < 0)
 		ErrSdl();
-	if (SDL_SetColorKey(ui_surface, SDL_TRUE, PALETTE_TRANSPARENT_COLOR) < 0)
-		ErrSdl();
 
 	tmp_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);
 	if (tmp_surface == NULL)
@@ -224,16 +222,15 @@ void BltFast(DWORD dwX, DWORD dwY, LPRECT lpSrcRect)
 		ScaleOutputRect(&dst_rect);
 		// Convert from 8-bit to 32-bit
 		SDL_Surface *tmp = SDL_ConvertSurface(pal_surface, GetOutputSurface()->format, 0);
-		if (SDL_BlitScaled(tmp, &src_rect, GetOutputSurface(), &dst_rect) <= -1) {
+		if (SDL_BlitScaled(tmp, &src_rect, GetOutputSurface(), &dst_rect) < 0) {
 			SDL_FreeSurface(tmp);
 			ErrSdl();
 		}
 		SDL_FreeSurface(tmp);
 	} else {
 		// Convert from 8-bit to 32-bit
-		if (SDL_BlitSurface(pal_surface, &src_rect, GetOutputSurface(), &dst_rect) <= -1) {
+		if (SDL_BlitSurface(pal_surface, &src_rect, GetOutputSurface(), &dst_rect) < 0) 
 			ErrSdl();
-		}
 	}
 }
 
@@ -505,18 +502,16 @@ void RenderPresent()
 		}
 #endif
 
-		if (SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch) <= -1) { //pitch is 2560
+		if (SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch) < 0) //pitch is 2560
 			ErrSdl();
-		}
 
 		// Clear buffer to avoid artifacts in case the window was resized
-		if (SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255) <= -1) { // TODO only do this if window was resized
+		if (SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255) < 0) // TODO only do this if window was resized
 			ErrSdl();
-		}
+		
 
-		if (SDL_RenderClear(renderer) <= -1) {
+		if (SDL_RenderClear(renderer) < 0) 
 			ErrSdl();
-		}
 
 #ifdef PIXEL_LIGHT
 		if (testvar3 != 0 && leveltype != DTYPE_TOWN && redrawLights != 0) {
@@ -524,9 +519,8 @@ void RenderPresent()
 		}
 
 #endif
-		if (SDL_RenderCopy(renderer, texture, NULL, NULL) <= -1) {
+		if (SDL_RenderCopy(renderer, texture, NULL, NULL) < 0)
 			ErrSdl();
-		}
 #ifdef PIXEL_LIGHT
 		if (testvar3 != 0 && leveltype != DTYPE_TOWN && redrawLights != 0) {
 			SDL_Texture *ui_texture = SDL_CreateTextureFromSurface(renderer, ui_surface);
@@ -547,15 +541,14 @@ void RenderPresent()
 #endif
 		SDL_RenderPresent(renderer);
 	} else {
-		if (SDL_UpdateWindowSurface(window) <= -1) {
+		if (SDL_UpdateWindowSurface(window) < 0) 
 			ErrSdl();
-		}
 		LimitFrameRate();
 	}
 #else
-	if (SDL_Flip(surface) <= -1) {
+	if (SDL_Flip(surface) < 0) 
 		ErrSdl();
-	}
+	
 	LimitFrameRate();
 #endif
 }
