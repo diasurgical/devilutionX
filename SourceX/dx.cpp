@@ -264,13 +264,10 @@ void RenderPresent()
 #endif
 }
 
-void PaletteGetEntries(DWORD dwNumEntries, LPPALETTEENTRY lpEntries)
+void PaletteGetEntries(DWORD dwNumEntries, SDL_Color *lpEntries)
 {
 	for (DWORD i = 0; i < dwNumEntries; i++) {
-		lpEntries[i].peFlags = 0;
-		lpEntries[i].peRed = system_palette[i].peRed;
-		lpEntries[i].peGreen = system_palette[i].peGreen;
-		lpEntries[i].peBlue = system_palette[i].peBlue;
+		lpEntries[i] = system_palette[i];
 	}
 }
 } // namespace dvl

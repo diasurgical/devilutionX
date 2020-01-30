@@ -161,13 +161,6 @@ typedef WORD ATOM;
 //
 // Everything else
 //
-typedef struct tagPALETTEENTRY {
-	BYTE peRed;
-	BYTE peGreen;
-	BYTE peBlue;
-	BYTE peFlags;
-} PALETTEENTRY, *PPALETTEENTRY, *LPPALETTEENTRY;
-
 typedef void *LPSECURITY_ATTRIBUTES;
 
 typedef struct _LIST_ENTRY {

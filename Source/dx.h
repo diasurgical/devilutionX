@@ -16,8 +16,8 @@ void dx_reinit();
 void CreatePalette();
 void BltFast(DWORD dwX, DWORD dwY, LPRECT lpSrcRect);
 void RenderPresent();
-void PaletteGetEntries(DWORD dwNumEntries, LPPALETTEENTRY lpEntries);
-void PaletteSetEntries(DWORD dwCount, LPPALETTEENTRY lpEntries);
+void PaletteGetEntries(DWORD dwNumEntries, SDL_Color *lpEntries);
+void PaletteSetEntries(DWORD dwCount, SDL_Color *lpEntries);
 
 /* data */
 
