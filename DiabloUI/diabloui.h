@@ -47,7 +47,7 @@ BOOL UiGetDataCallback(int game_type, int data_code, void *a3, int a4, int a5);
 BOOL UiAuthCallback(int a1, char *a2, char *a3, char a4, char *a5, LPSTR lpBuffer, int cchBufferMax);
 BOOL UiSoundCallback(int a1, int type, int a3);
 void UiMessageBoxCallback(HWND hWnd, char *lpText, LPCSTR lpCaption, UINT uType);
-BOOL UiDrawDescCallback(int game_type, COLORREF color, LPCSTR lpString, char *a4, int a5, UINT align, time_t a7, HDC *a8);
+BOOL UiDrawDescCallback(int game_type, DWORD color, LPCSTR lpString, char *a4, int a5, UINT align, time_t a7, HDC *a8);
 BOOL UiCreateGameCallback(int a1, int a2, int a3, int a4, int a5, int a6);
 BOOL UiArtCallback(int game_type, unsigned int art_code, SDL_Color *pPalette, BYTE *pBuffer, DWORD dwBuffersize, DWORD *pdwWidth, DWORD *pdwHeight, DWORD *pdwBpp);
 int UiSelectGame(int a1, _SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info, _SNETUIDATA *ui_info, _SNETVERSIONDATA *file_info, int *a6);

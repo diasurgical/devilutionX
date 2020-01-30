@@ -599,7 +599,6 @@ WINBOOL PeekMessageA(LPMSG lpMsg)
 #endif
 			break;
 		case SDL_WINDOWEVENT_ENTER:
-			lpMsg->message = DVL_WM_MOUSEHOVER;
 			// Bug in SDL, SDL_WarpMouseInWindow doesn't emit SDL_MOUSEMOTION
 			// and SDL_GetMouseState gives previous location if mouse was
 			// outside window (observed on Ubuntu 19.04)

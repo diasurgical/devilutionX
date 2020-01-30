@@ -29,13 +29,6 @@
 
 namespace dvl {
 
-int wsprintfA(LPSTR dest, LPCSTR format, ...)
-{
-	va_list args;
-	va_start(args, format);
-	return vsprintf(dest, format, args);
-}
-
 int wvsprintfA(LPSTR dest, LPCSTR format, va_list arglist)
 {
 	return vsnprintf(dest, 256, format, arglist);
@@ -44,11 +37,6 @@ int wvsprintfA(LPSTR dest, LPCSTR format, va_list arglist)
 int _strcmpi(const char *_Str1, const char *_Str2)
 {
 	return strcasecmp(_Str1, _Str2);
-}
-
-int _strnicmp(const char *_Str1, const char *_Str2, size_t n)
-{
-	return strncasecmp(_Str1, _Str2, n);
 }
 
 DWORD GetTickCount()
