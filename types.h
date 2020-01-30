@@ -9,6 +9,7 @@
 #define DEVILUTION_END_NAMESPACE }
 
 #include "miniwin.h"
+#include "ssound.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 

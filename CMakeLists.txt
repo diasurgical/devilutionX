@@ -255,8 +255,8 @@ set(devilutionx_SRCS
   SourceX/miniwin/misc_msg.cpp
   SourceX/miniwin/rand.cpp
   SourceX/miniwin/thread.cpp
-  SourceX/miniwin/dsound.cpp
   SourceX/sound.cpp
+  SourceX/ssound.cpp
   SourceX/storm/storm.cpp
   SourceX/storm/storm_net.cpp
   SourceX/storm/storm_dx.cpp

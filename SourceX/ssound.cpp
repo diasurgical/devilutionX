@@ -1,18 +1,17 @@
 #include "devilution.h"
-#include "miniwin/dsound.h"
 #include "stubs.h"
 #include <SDL.h>
 
 namespace dvl {
 
-///// DirectSoundBuffer /////
+///// SoundSample /////
 
-void DirectSoundBuffer::Release()
+void SoundSample::Release()
 {
 	Mix_FreeChunk(chunk);
 };
 
-bool DirectSoundBuffer::IsPlaying()
+bool SoundSample::IsPlaying()
 {
 	for (int i = 1; i < Mix_AllocateChannels(-1); i++) {
 		if (Mix_GetChunk(i) == chunk && Mix_Playing(i)) {
@@ -23,7 +22,7 @@ bool DirectSoundBuffer::IsPlaying()
 	return false;
 };
 
-void DirectSoundBuffer::Play(int lVolume, int lPan)
+void SoundSample::Play(int lVolume, int lPan)
 {
 	int channel = Mix_PlayChannel(-1, chunk, 0);
 	if (channel == -1) {
@@ -36,7 +35,7 @@ void DirectSoundBuffer::Play(int lVolume, int lPan)
 	Mix_SetPanning(channel, pan > 0 ? pan : 255, pan < 0 ? abs(pan) : 255);
 };
 
-void DirectSoundBuffer::Stop()
+void SoundSample::Stop()
 {
 	for (int i = 1; i < Mix_AllocateChannels(-1); i++) {
 		if (Mix_GetChunk(i) != chunk) {
@@ -47,7 +46,7 @@ void DirectSoundBuffer::Stop()
 	}
 };
 
-int DirectSoundBuffer::SetChunk(BYTE *fileData, DWORD dwBytes)
+int SoundSample::SetChunk(BYTE *fileData, DWORD dwBytes)
 {
 	SDL_RWops *buf1 = SDL_RWFromConstMem(fileData, dwBytes);
 	if (buf1 == NULL) {
