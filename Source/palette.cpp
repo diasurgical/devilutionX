@@ -195,7 +195,7 @@ void PaletteFadeIn(int fr)
 	memcpy(logical_palette, orig_palette, sizeof(orig_palette));
 	sgbFadedIn = TRUE;
 #ifdef PIXEL_LIGHT
-	testvar1 = 1;
+	testvar1 = 0;
 #endif
 }
 
