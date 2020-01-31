@@ -779,16 +779,13 @@ void LoadLighting(int i)
 	CopyInt(tbuff, &pLight->_lid);
 	CopyInt(tbuff, &pLight->_ldel);
 	CopyInt(tbuff, &pLight->_lunflag);
-	CopyInt(tbuff, &pLight->field_18);
+	CopyInt(tbuff, &pLight->_lcolor);
 	CopyInt(tbuff, &pLight->_lunx);
 	CopyInt(tbuff, &pLight->_luny);
 	CopyInt(tbuff, &pLight->_lunr);
 	CopyInt(tbuff, &pLight->_xoff);
 	CopyInt(tbuff, &pLight->_yoff);
 	CopyInt(tbuff, &pLight->_lflags);
-#ifdef PIXEL_LIGHT
-	CopyInt(tbuff, &pLight->_color);
-#endif
 }
 
 void LoadVision(int i)
@@ -801,7 +798,7 @@ void LoadVision(int i)
 	CopyInt(tbuff, &pVision->_lid);
 	CopyInt(tbuff, &pVision->_ldel);
 	CopyInt(tbuff, &pVision->_lunflag);
-	CopyInt(tbuff, &pVision->field_18);
+	CopyInt(tbuff, &pVision->_lcolor);
 	CopyInt(tbuff, &pVision->_lunx);
 	CopyInt(tbuff, &pVision->_luny);
 	CopyInt(tbuff, &pVision->_lunr);
@@ -1500,16 +1497,13 @@ void SaveLighting(int i)
 	CopyInt(&pLight->_lid, tbuff);
 	CopyInt(&pLight->_ldel, tbuff);
 	CopyInt(&pLight->_lunflag, tbuff);
-	CopyInt(&pLight->field_18, tbuff);
+	CopyInt(&pLight->_lcolor, tbuff);
 	CopyInt(&pLight->_lunx, tbuff);
 	CopyInt(&pLight->_luny, tbuff);
 	CopyInt(&pLight->_lunr, tbuff);
 	CopyInt(&pLight->_xoff, tbuff);
 	CopyInt(&pLight->_yoff, tbuff);
 	CopyInt(&pLight->_lflags, tbuff);
-#ifdef PIXEL_LIGHT
-	CopyInt(&pLight->_color, tbuff);
-#endif
 }
 
 void SaveVision(int i)
@@ -1522,7 +1516,7 @@ void SaveVision(int i)
 	CopyInt(&pVision->_lid, tbuff);
 	CopyInt(&pVision->_ldel, tbuff);
 	CopyInt(&pVision->_lunflag, tbuff);
-	CopyInt(&pVision->field_18, tbuff);
+	CopyInt(&pVision->_lcolor, tbuff);
 	CopyInt(&pVision->_lunx, tbuff);
 	CopyInt(&pVision->_luny, tbuff);
 	CopyInt(&pVision->_lunr, tbuff);

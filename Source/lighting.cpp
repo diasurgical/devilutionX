@@ -522,7 +522,7 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 				it->_lx = nXPos;
 				it->_ly = nYPos;
 				it->_lradius = nRadius;
-				it->_color = 0xFFCC66;
+				it->_lcolor = 0xFFCC66;
 				break;
 			}
 			if (it->_lx == nXPos && it->_ly == nYPos) {
@@ -1054,7 +1054,7 @@ int AddLight(int x, int y, int r)
 		LightList[lid]._ldel = 0;
 		LightList[lid]._lunflag = 0;
 #ifdef PIXEL_LIGHT
-		LightList[lid]._color = color;
+		LightList[lid]._lcolor = color;
 #endif
 		dolighting = TRUE;
 	}

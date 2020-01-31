@@ -351,7 +351,7 @@ void lightLoop()
 {
 	for (int i = 0; i < numlights; i++) {
 		int lid = lightactive[i];
-		drawRadius(lid, LightList[lid]._lx, LightList[lid]._ly, LightList[lid]._lradius, LightList[lid]._color);
+		drawRadius(lid, LightList[lid]._lx, LightList[lid]._ly, LightList[lid]._lradius, LightList[lid]._lcolor);
 	}
 
 	for (int i = 0; i < 100; i++) {
@@ -359,7 +359,7 @@ void lightLoop()
 		if (it->_lradius == 0) {
 			break;
 		}
-		drawRadius(-1, it->_lx, it->_ly, it->_lradius, it->_color);
+		drawRadius(-1, it->_lx, it->_ly, it->_lradius, it->_lcolor);
 	}
 }
 
