@@ -3,13 +3,13 @@
 #include <SDL.h>
 
 #include "devilution.h"
-#include "miniwin/ddraw.h"
+#include "display.h"
 #include "stubs.h"
 #include "controls/controller_motion.h"
 #include "controls/game_controls.h"
 #include "controls/plrctrls.h"
 #include "controls/touch.h"
-#include "miniwin/ddraw.h"
+#include "display.h"
 #include "controls/controller.h"
 
 #ifdef __SWITCH__

@@ -1,5 +1,5 @@
 #include "devilution.h"
-#include "miniwin/ddraw.h"
+#include "display.h"
 #include "stubs.h"
 #include "utf8.h"
 #include <string>

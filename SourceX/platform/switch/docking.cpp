@@ -1,6 +1,6 @@
 #include <switch.h>
 #include <SDL.h>
-#include "miniwin/ddraw.h"
+#include "display.h"
 #include "platform/switch/docking.h"
 
 namespace dvl {

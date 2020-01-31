@@ -1,6 +1,6 @@
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
-#include "miniwin/ddraw.h"
+#include "display.h"
 #include <SDL.h>
 
 namespace dvl {

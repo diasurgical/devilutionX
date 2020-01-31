@@ -59,4 +59,20 @@ inline bool ResizeFile(const char *path, std::uint32_t size)
 #endif
 }
 
+inline void RemoveFile(char *lpFileName)
+{
+	char name[DVL_MAX_PATH];
+	TranslateFileName(name, sizeof(name), lpFileName);
+
+	FILE *f = fopen(name, "r+");
+	if (f) {
+		fclose(f);
+		remove(name);
+		f = NULL;
+		SDL_Log("Removed file: %s", name);
+	} else {
+		SDL_Log("Failed to remove file: %s", name);
+	}
+}
+
 } // namespace dvl

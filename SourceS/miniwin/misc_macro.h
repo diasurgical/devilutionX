@@ -20,9 +20,9 @@
 #define DispatchMessage DispatchMessageA
 #define PostMessage PostMessageA
 
-#define THREAD_PRIORITY_HIGHEST 2
+#define _strcmpi(a, b) strcasecmp(a, b)
 
-#define wvsprintf wvsprintfA
+#define THREAD_PRIORITY_HIGHEST 2
 
 //
 // File I/O

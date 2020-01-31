@@ -34,7 +34,7 @@ void mainmenu_Esc()
 
 void mainmenu_restart_repintro()
 {
-	dwAttractTicks = GetTickCount() + mainmenu_attract_time_out * 1000;
+	dwAttractTicks = SDL_GetTicks() + mainmenu_attract_time_out * 1000;
 }
 
 void mainmenu_Load(char *name, void (*fnSound)(char *file))
@@ -67,7 +67,7 @@ BOOL UiMainMenuDialog(char *name, int *pdwResult, void (*fnSound)(char *file), i
 
 		while (MainMenuResult == 0) {
 			UiPollAndRender();
-			if (!gbSpawned && GetTickCount() >= dwAttractTicks) {
+			if (!gbSpawned && SDL_GetTicks() >= dwAttractTicks) {
 				MainMenuResult = MAINMENU_ATTRACT_MODE;
 			}
 		}

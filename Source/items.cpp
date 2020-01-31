@@ -3998,7 +3998,7 @@ BOOL GetItemRecord(int nSeed, WORD wCI, int nIndex)
 	int i;
 	DWORD dwTicks;
 
-	dwTicks = GetTickCount();
+	dwTicks = SDL_GetTicks();
 
 	for (i = 0; i < gnNumGetRecords; i++) {
 		if (dwTicks - itemrecord[i].dwTimestamp > 6000) {
@@ -4030,7 +4030,7 @@ void SetItemRecord(int nSeed, WORD wCI, int nIndex)
 {
 	DWORD dwTicks;
 
-	dwTicks = GetTickCount();
+	dwTicks = SDL_GetTicks();
 
 	if (gnNumGetRecords == MAXITEMS) {
 		return;
@@ -4048,7 +4048,7 @@ void PutItemRecord(int nSeed, WORD wCI, int nIndex)
 	int i;
 	DWORD dwTicks;
 
-	dwTicks = GetTickCount();
+	dwTicks = SDL_GetTicks();
 
 	for (i = 0; i < gnNumGetRecords; i++) {
 		if (dwTicks - itemrecord[i].dwTimestamp > 6000) {

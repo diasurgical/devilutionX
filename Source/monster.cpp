@@ -2534,7 +2534,7 @@ void DoEnding()
 	music_stop();
 
 	if (gbMaxPlayers > 1) {
-		Sleep(1000);
+		SDL_Delay(1000);
 	}
 
 #ifndef SPAWN

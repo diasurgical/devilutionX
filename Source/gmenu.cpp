@@ -164,7 +164,7 @@ void gmenu_draw()
 			}
 		}
 
-		ticks = GetTickCount();
+		ticks = SDL_GetTicks();
 		if ((int)(ticks - PentSpin_tick) > 50) { // BUGFIX: thould be 50ms (Fixed)
 			PentSpin_frame++;
 			if (PentSpin_frame == 9)

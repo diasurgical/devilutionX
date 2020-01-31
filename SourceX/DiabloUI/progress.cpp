@@ -1,5 +1,5 @@
 #include "devilution.h"
-#include "miniwin/ddraw.h"
+#include "display.h"
 
 #include "DiabloUI/button.h"
 #include "DiabloUI/diabloui.h"

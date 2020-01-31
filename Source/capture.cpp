@@ -150,12 +150,12 @@ void CaptureScreen()
 
 	if (!success) {
 		SDL_Log("Failed to save screenshot at %s", FileName);
-		DeleteFile(FileName);
+		RemoveFile(FileName);
 	} else {
 		SDL_Log("Screenshot saved at %s", FileName);
 	}
 
-	Sleep(300);
+	SDL_Delay(300);
 	PaletteGetEntries(256, palette);
 	delete out;
 }

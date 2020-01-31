@@ -266,7 +266,7 @@ void diablo_init()
 
 	ReadOnlyTest();
 
-	srand(GetTickCount());
+	srand(SDL_GetTicks());
 	InitHash();
 
 	diablo_init_screen();

@@ -73,7 +73,7 @@ void InitStores()
 
 void PentSpn2Spin()
 {
-	DWORD ticks = GetTickCount();
+	DWORD ticks = SDL_GetTicks();
 	if (ticks - PentSpn2Tick > 50) {
 		PentSpn2Frame = (PentSpn2Frame & 7) + 1;
 		PentSpn2Tick = ticks;
@@ -84,7 +84,7 @@ void SetupTownStores()
 {
 	int i, l;
 
-	SetRndSeed(glSeedTbl[currlevel] * GetTickCount());
+	SetRndSeed(glSeedTbl[currlevel] * SDL_GetTicks());
 	if (gbMaxPlayers == 1) {
 		l = 0;
 		for (i = 0; i < NUMLEVELS; i++) {

@@ -1048,7 +1048,7 @@ void ScrollView()
 void EnableFrameCount()
 {
 	frameflag = frameflag == 0;
-	framestart = GetTickCount();
+	framestart = SDL_GetTicks();
 }
 
 /**
@@ -1062,7 +1062,7 @@ static void DrawFPS()
 
 	if (frameflag && gbActive && pPanelText) {
 		frameend++;
-		tc = GetTickCount();
+		tc = SDL_GetTicks();
 		frames = tc - framestart;
 		if (tc - framestart >= 1000) {
 			framestart = tc;

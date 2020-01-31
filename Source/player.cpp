@@ -534,7 +534,7 @@ void CreatePlayer(int pnum, char c)
 	int i;
 
 	ClearPlrRVars(&plr[pnum]);
-	SetRndSeed(GetTickCount());
+	SetRndSeed(SDL_GetTicks());
 
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("CreatePlayer: illegal player %d", pnum);

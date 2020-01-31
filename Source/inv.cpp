@@ -1736,7 +1736,7 @@ void DrawInvMsg(char *msg)
 {
 	DWORD dwTicks;
 
-	dwTicks = GetTickCount();
+	dwTicks = SDL_GetTicks();
 	if (dwTicks - sgdwLastTime >= 5000) {
 		sgdwLastTime = dwTicks;
 		ErrorPlrMsg(msg);
