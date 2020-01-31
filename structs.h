@@ -451,7 +451,7 @@ typedef struct MissileStruct {
 
 typedef struct TSnd {
 	char *sound_path;
-	LPDIRECTSOUNDBUFFER DSB;
+	SoundSample *DSB;
 	int start_tc;
 } TSnd;
 

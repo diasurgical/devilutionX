@@ -3,9 +3,9 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-PALETTEENTRY logical_palette[256];
-PALETTEENTRY system_palette[256];
-PALETTEENTRY orig_palette[256];
+SDL_Color logical_palette[256];
+SDL_Color system_palette[256];
+SDL_Color orig_palette[256];
 int gdwPalEntries;
 
 /* data */
@@ -30,7 +30,7 @@ static void palette_update()
 	}
 }
 
-void ApplyGamma(PALETTEENTRY *dst, const PALETTEENTRY *src, int n)
+void ApplyGamma(SDL_Color *dst, const SDL_Color *src, int n)
 {
 	int i;
 	double g;
@@ -38,9 +38,9 @@ void ApplyGamma(PALETTEENTRY *dst, const PALETTEENTRY *src, int n)
 	g = gamma_correction / 100.0;
 
 	for (i = 0; i < n; i++) {
-		dst->peRed = pow(src->peRed / 256.0, g) * 256.0;
-		dst->peGreen = pow(src->peGreen / 256.0, g) * 256.0;
-		dst->peBlue = pow(src->peBlue / 256.0, g) * 256.0;
+		dst->r = pow(src->r / 256.0, g) * 256.0;
+		dst->g = pow(src->g / 256.0, g) * 256.0;
+		dst->b = pow(src->b / 256.0, g) * 256.0;
 		dst++;
 		src++;
 	}
@@ -93,10 +93,12 @@ void LoadPalette(char *pszFileName)
 	WCloseFile(pBuf);
 
 	for (i = 0; i < 256; i++) {
-		orig_palette[i].peRed = PalData[i][0];
-		orig_palette[i].peGreen = PalData[i][1];
-		orig_palette[i].peBlue = PalData[i][2];
-		orig_palette[i].peFlags = 0;
+		orig_palette[i].r = PalData[i][0];
+		orig_palette[i].g = PalData[i][1];
+		orig_palette[i].b = PalData[i][2];
+#ifndef USE_SDL1
+		orig_palette[i].a = SDL_ALPHA_OPAQUE;
+#endif
 	}
 }
 
@@ -158,15 +160,15 @@ void SetFadeLevel(DWORD fadeval)
 
 	if (1) {
 		for (i = 0; i < 255; i++) {
-			system_palette[i].peRed = (fadeval * logical_palette[i].peRed) >> 8;
-			system_palette[i].peGreen = (fadeval * logical_palette[i].peGreen) >> 8;
-			system_palette[i].peBlue = (fadeval * logical_palette[i].peBlue) >> 8;
+			system_palette[i].r = (fadeval * logical_palette[i].r) >> 8;
+			system_palette[i].g = (fadeval * logical_palette[i].g) >> 8;
+			system_palette[i].b = (fadeval * logical_palette[i].b) >> 8;
 		}
 		palette_update();
 
 		// Workaround for flickering mouse in caves https://github.com/diasurgical/devilutionX/issues/7
-		SrcRect.left = 64;
-		SrcRect.top = 160;
+		SrcRect.left = BORDER_LEFT;
+		SrcRect.top = BORDER_TOP;
 		SrcRect.right = BUFFER_WIDTH;
 		SrcRect.bottom = BUFFER_HEIGHT; // menu isn't offset so make sure we copy all of it
 		BltFast(0, 0, &SrcRect);
@@ -222,17 +224,13 @@ void PaletteFadeOut(int fr)
 void palette_update_caves()
 {
 	int i;
-	PALETTEENTRY col;
+	SDL_Color col;
 
 	col = system_palette[1];
 	for (i = 1; i < 31; i++) {
-		system_palette[i].peRed = system_palette[i + 1].peRed;
-		system_palette[i].peGreen = system_palette[i + 1].peGreen;
-		system_palette[i].peBlue = system_palette[i + 1].peBlue;
+		system_palette[i] = system_palette[i + 1];
 	}
-	system_palette[i].peRed = col.peRed;
-	system_palette[i].peGreen = col.peGreen;
-	system_palette[i].peBlue = col.peBlue;
+	system_palette[i] = col;
 
 	palette_update();
 }

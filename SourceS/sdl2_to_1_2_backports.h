@@ -103,7 +103,7 @@ inline int SDL_ShowSimpleMessageBox(Uint32 flags,
     const char *message,
     SDL_Surface *window)
 {
-	fprintf(stderr, "MSGBOX: %s\n%s\n", title, message);
+	SDL_Log("MSGBOX: %s\n%s", title, message);
 	return 0;
 }
 
