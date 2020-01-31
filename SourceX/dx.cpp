@@ -66,6 +66,9 @@ static void dx_create_back_buffer()
 	tmp_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);
 	if (tmp_surface == NULL)
 		ErrSdl();
+
+	if (SDL_SetSurfacePalette(tmp_surface, palette) < 0)
+		ErrSdl();
 #endif
 	pal_surface_palette_version = 1;
 }
@@ -467,7 +470,7 @@ void RenderPresent()
 #ifndef USE_SDL1
 	if (renderer) {
 #ifdef PIXEL_LIGHT
-		if (testvar3 != 0 && leveltype != DTYPE_TOWN && redrawLights != 0) {
+		if (testvar3 != 0 && leveltype != DTYPE_TOWN && (redrawLights == 1 || (testvar1 == 1 && redrawLights != -1))) {
 			if (lightReady != 1) {
 				lightReady = 1;
 				prepareSpellColors();
@@ -508,7 +511,7 @@ void RenderPresent()
 			ErrSdl();
 
 #ifdef PIXEL_LIGHT
-		if (testvar3 != 0 && leveltype != DTYPE_TOWN && redrawLights != 0) {
+		if (testvar3 != 0 && leveltype != DTYPE_TOWN && (redrawLights == 1 || (testvar1 == 1 && redrawLights != -1))) {
 			lightLoop();
 		}
 
@@ -516,9 +519,14 @@ void RenderPresent()
 		if (SDL_RenderCopy(renderer, texture, NULL, NULL) < 0)
 			ErrSdl();
 #ifdef PIXEL_LIGHT
-		if (testvar3 != 0 && leveltype != DTYPE_TOWN && redrawLights != 0) {
+		if (testvar3 != 0 && leveltype != DTYPE_TOWN && (redrawLights == 1 || (testvar1 == 1 && redrawLights != -1))) {
+			//Setting the color key here because it might change each frame during fadein/fadeout which modify palette
+			if (SDL_SetColorKey(ui_surface, SDL_TRUE, PALETTE_TRANSPARENT_COLOR) < 0)
+				ErrSdl();
 			SDL_Texture *ui_texture = SDL_CreateTextureFromSurface(renderer, ui_surface);
 			if (ui_texture == NULL)
+				ErrSdl();
+			if (SDL_SetColorKey(ui_surface, SDL_FALSE, PALETTE_TRANSPARENT_COLOR) < 0)
 				ErrSdl();
 			if (SDL_SetTextureBlendMode(ui_texture, SDL_BLENDMODE_BLEND) < 0)
 				ErrSdl();
@@ -530,7 +538,8 @@ void RenderPresent()
 			if (SDL_RenderCopy(renderer, ui_texture, &rect, NULL) > 0)
 				ErrSdl();
 			SDL_DestroyTexture(ui_texture);
-			redrawLights = 0;
+			if (testvar1 != 1)
+				redrawLights = 0;
 		}
 #endif
 		SDL_RenderPresent(renderer);

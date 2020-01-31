@@ -230,6 +230,10 @@ void ShowProgress(unsigned int uMsg)
 
 	/// ASSERT: assert(ghMainWnd);
 
+#ifdef PIXEL_LIGHT
+	// disables light system till next DrawAndBlit which renders the dungeon
+	redrawLights = -1;
+#endif
 	PaletteFadeOut(8);
 	FreeInterface();
 

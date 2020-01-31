@@ -202,6 +202,10 @@ void run_game_loop(unsigned int uMsg)
 	SetCursor_(CURSOR_NONE);
 	ClearScreenBuffer();
 	force_redraw = 255;
+#ifdef PIXEL_LIGHT
+	//deals with the transition while quitting diablo
+	redrawLights = 1;
+#endif
 	scrollrt_draw_game_screen(TRUE);
 	saveProc = SetWindowProc(saveProc);
 	/// ASSERT: assert(saveProc == GM_Game);

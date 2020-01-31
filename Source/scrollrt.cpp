@@ -4,7 +4,7 @@ DEVILUTION_BEGIN_NAMESPACE
 
 int light_table_index;
 #ifdef PIXEL_LIGHT
-int testvar1 = 0;
+int testvar1 = 0; // 1 forces light system/ui drawing
 int testvar2 = 8; // changing player's light radius (2 + testvar2)
 int testvar3 = 1; // enable pixel light
 int testvar4 = 1; // 0 = normal light, 1 = fully lit
@@ -899,12 +899,8 @@ void DrawView(int StartX, int StartY)
 {
 	DrawGame(StartX, StartY);
 #ifdef PIXEL_LIGHT
-	if (testvar3 != 0 && leveltype != DTYPE_TOWN && redrawLights == 0 && sgbFadedIn != 0) {
-		if (SDL_SetSurfacePalette(tmp_surface, pal_surface->format->palette) < 0)
-			ErrSdl();
+	if (testvar3 != 0 && leveltype != DTYPE_TOWN) {
 		if (SDL_BlitSurface(pal_surface, NULL, tmp_surface, NULL) < 0)
-			ErrSdl();
-		if (SDL_SetColorKey(pal_surface, SDL_TRUE, PALETTE_TRANSPARENT_COLOR) < 0)
 			ErrSdl();
 		if(SDL_FillRect(pal_surface, NULL, PALETTE_TRANSPARENT_COLOR) < 0)
 			ErrSdl();
@@ -1261,16 +1257,10 @@ void DrawAndBlit()
 
 	DrawFPS();
 #ifdef PIXEL_LIGHT
-	if (testvar3 != 0 && leveltype != DTYPE_TOWN && redrawLights == 0 && sgbFadedIn != 0) {
+	if (testvar3 != 0 && leveltype != DTYPE_TOWN) {
 		redrawLights = 1;
-		if (SDL_SetColorKey(ui_surface, SDL_TRUE, PALETTE_TRANSPARENT_COLOR) < 0)
-			ErrSdl();
-		if (SDL_FillRect(ui_surface, NULL, PALETTE_TRANSPARENT_COLOR) < 0)
-			ErrSdl();
 		if (SDL_BlitSurface(pal_surface, NULL, ui_surface, NULL) < 0)
 			ErrSdl();
-		//if (SDL_SetColorKey(pal_surface, SDL_FALSE, 0) < 0)
-		//	ErrSdl();
 		if (SDL_BlitSurface(tmp_surface, NULL, pal_surface, NULL) < 0)
 			ErrSdl();
 	}

@@ -515,10 +515,10 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 	block_y = 0;
 
 #ifdef PIXEL_LIGHT
-	if (Lnum == -1){
+	if (Lnum == -1) {
 		for (int i = 0; i < 100; i++) {
 			LightListStruct *it = &staticLights[currlevel][i];
-			if (it->_lradius == 0){
+			if (it->_lradius == 0) {
 				it->_lx = nXPos;
 				it->_ly = nYPos;
 				it->_lradius = nRadius;
