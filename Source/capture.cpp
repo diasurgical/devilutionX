@@ -27,16 +27,16 @@ static BOOL CaptureHdr(short width, short height, std::ofstream *out)
 	return !out->fail();
 }
 
-static BOOL CapturePal(PALETTEENTRY *palette, std::ofstream *out)
+static BOOL CapturePal(SDL_Color *palette, std::ofstream *out)
 {
 	BYTE pcx_palette[769];
 	int i;
 
 	pcx_palette[0] = 12;
 	for (i = 0; i < 256; i++) {
-		pcx_palette[1 + 3 * i + 0] = palette[i].peRed;
-		pcx_palette[1 + 3 * i + 1] = palette[i].peGreen;
-		pcx_palette[1 + 3 * i + 2] = palette[i].peBlue;
+		pcx_palette[1 + 3 * i + 0] = palette[i].r;
+		pcx_palette[1 + 3 * i + 1] = palette[i].g;
+		pcx_palette[1 + 3 * i + 2] = palette[i].b;
 	}
 
 	out->write(reinterpret_cast<const char *>(pcx_palette), sizeof(pcx_palette));
@@ -111,16 +111,15 @@ static std::ofstream *CaptureFile(char *dst_path)
 	return nullptr;
 }
 
-static void RedPalette(PALETTEENTRY *pal)
+static void RedPalette(SDL_Color *pal)
 {
-	PALETTEENTRY red[256];
+	SDL_Color red[256];
 	int i;
 
 	for (i = 0; i < 256; i++) {
-		red[i].peRed = pal[i].peRed;
-		red[i].peGreen = 0;
-		red[i].peBlue = 0;
-		red[i].peFlags = 0;
+		red[i].r = pal[i].r;
+		red[i].g = 0;
+		red[i].b = 0;
 	}
 
 	PaletteGetEntries(256, red);
@@ -128,7 +127,7 @@ static void RedPalette(PALETTEENTRY *pal)
 
 void CaptureScreen()
 {
-	PALETTEENTRY palette[256];
+	SDL_Color palette[256];
 	char FileName[MAX_PATH];
 	BOOL success;
 
@@ -151,12 +150,12 @@ void CaptureScreen()
 
 	if (!success) {
 		SDL_Log("Failed to save screenshot at %s", FileName);
-		DeleteFile(FileName);
+		RemoveFile(FileName);
 	} else {
 		SDL_Log("Screenshot saved at %s", FileName);
 	}
 
-	Sleep(300);
+	SDL_Delay(300);
 	PaletteGetEntries(256, palette);
 	delete out;
 }

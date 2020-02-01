@@ -149,7 +149,7 @@ void InitTownerInfo(int i, int w, int sel, int t, int x, int y, int ao, int tp)
 	towner[i]._tSelFlag = sel;
 	towner[i]._tAnimWidth = w;
 	towner[i]._tAnimWidth2 = (w - 64) >> 1;
-	towner[i]._tMsgSaid = 0;
+	towner[i]._tMsgSaid = FALSE;
 	towner[i]._ttype = t;
 	towner[i]._tx = x;
 	towner[i]._ty = y;
@@ -165,7 +165,7 @@ void InitQstSnds(int i)
 	tl = i;
 	if (boyloadflag)
 		tl++;
-	for (j = 0; j < 16; j++) {
+	for (j = 0; j < MAXQUESTS; j++) {
 		towner[i].qsts[j]._qsttype = quests[j]._qtype;
 		towner[i].qsts[j]._qstmsg = ((int *)(Qtalklist + tl))[j];
 		if (((int *)(Qtalklist + tl))[j] != -1)

@@ -778,8 +778,6 @@ static void DrawGame(int x, int y)
 	}
 
 	switch (ScrollInfo._sdir) {
-	case SDIR_NONE:
-		break;
 	case SDIR_N:
 		sy -= 32;
 		x--;
@@ -1048,7 +1046,7 @@ void ScrollView()
 void EnableFrameCount()
 {
 	frameflag = frameflag == 0;
-	framestart = GetTickCount();
+	framestart = SDL_GetTicks();
 }
 
 /**
@@ -1062,14 +1060,14 @@ static void DrawFPS()
 
 	if (frameflag && gbActive && pPanelText) {
 		frameend++;
-		tc = GetTickCount();
+		tc = SDL_GetTicks();
 		frames = tc - framestart;
 		if (tc - framestart >= 1000) {
 			framestart = tc;
 			framerate = 1000 * frameend / frames;
 			frameend = 0;
 		}
-		wsprintf(String, "%d FPS", framerate);
+		snprintf(String, 12, "%d FPS", framerate);
 		PrintGameStr(8, 65, String, COL_RED);
 	}
 }

@@ -1,6 +1,6 @@
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
-#include "miniwin/ddraw.h"
+#include "display.h"
 #include <SDL.h>
 
 namespace dvl {
@@ -37,9 +37,15 @@ static void dx_create_back_buffer()
 
 	gpBuffer = (BYTE *)pal_surface->pixels;
 
-	if (SDLC_SetSurfaceColors(pal_surface, palette) <= -1) {
+#ifndef USE_SDL1
+	// In SDL2, `pal_surface` points to the global `palette`.
+	if (SDL_SetSurfacePalette(pal_surface, palette) < 0)
 		ErrSdl();
-	}
+#else
+	// In SDL1, `pal_surface` owns its palette and we must update it every
+	// time the global `palette` is changed. No need to do anything here as
+	// the global `palette` doesn't have any colors set yet.
+#endif
 
 	pal_surface_palette_version = 1;
 }
@@ -138,27 +144,23 @@ void dx_cleanup()
 
 void dx_reinit()
 {
-	int lockCount;
-
-	sgMemCrit.Enter();
-	ClearCursor();
-	lockCount = sgdwLockCount;
-
-	while (sgdwLockCount != 0)
-		unlock_buf_priv();
-
-	dx_cleanup();
-
-	force_redraw = 255;
-
-	dx_init(ghMainWnd);
-
-	while (lockCount != 0) {
-		lock_buf_priv();
-		lockCount--;
+#ifdef USE_SDL1
+	int flags = window->flags;
+	window = SDL_SetVideoMode(0, 0, 0, window->flags ^ SDL_FULLSCREEN);
+	if (window == NULL) {
+		ErrSdl();
 	}
-
-	sgMemCrit.Leave();
+#else
+	Uint32 flags = 0;
+	if (!fullscreen) {
+		flags = renderer ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_FULLSCREEN;
+	}
+	if (SDL_SetWindowFullscreen(window, flags)) {
+		ErrSdl();
+	}
+#endif
+	fullscreen = !fullscreen;
+	force_redraw = 255;
 }
 
 void CreatePalette()
@@ -258,13 +260,10 @@ void RenderPresent()
 #endif
 }
 
-void PaletteGetEntries(DWORD dwNumEntries, LPPALETTEENTRY lpEntries)
+void PaletteGetEntries(DWORD dwNumEntries, SDL_Color *lpEntries)
 {
 	for (DWORD i = 0; i < dwNumEntries; i++) {
-		lpEntries[i].peFlags = 0;
-		lpEntries[i].peRed = system_palette[i].peRed;
-		lpEntries[i].peGreen = system_palette[i].peGreen;
-		lpEntries[i].peBlue = system_palette[i].peBlue;
+		lpEntries[i] = system_palette[i];
 	}
 }
 } // namespace dvl

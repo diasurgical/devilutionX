@@ -448,7 +448,7 @@ void AttrIncBtnSnap(MoveDirectionY dir)
 	if (chrbtnactive && plr[myplr]._pStatPts <= 0)
 		return;
 
-	DWORD ticks = GetTickCount();
+	DWORD ticks = SDL_GetTicks();
 	if (ticks - invmove < repeatRate) {
 		return;
 	}
@@ -485,7 +485,7 @@ void AttrIncBtnSnap(MoveDirectionY dir)
 // small inventory squares are 29x29 (roughly)
 void InvMove(MoveDirection dir)
 {
-	DWORD ticks = GetTickCount();
+	DWORD ticks = SDL_GetTicks();
 	if (ticks - invmove < repeatRate) {
 		return;
 	}
@@ -654,7 +654,7 @@ void HotSpellMove(MoveDirection dir)
 	int x = 0;
 	int y = 0;
 
-	DWORD ticks = GetTickCount();
+	DWORD ticks = SDL_GetTicks();
 	if (ticks - invmove < repeatRate) {
 		return;
 	}
@@ -721,7 +721,7 @@ void HotSpellMove(MoveDirection dir)
 
 void SpellBookMove(MoveDirection dir)
 {
-	DWORD ticks = GetTickCount();
+	DWORD ticks = SDL_GetTicks();
 	if (ticks - invmove < repeatRate) {
 		return;
 	}

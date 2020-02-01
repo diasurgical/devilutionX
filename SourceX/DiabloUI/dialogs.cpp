@@ -53,7 +53,7 @@ UiItem OK_DIALOG_WITH_CAPTION[] = {
 void LoadFallbackPalette()
 {
 	// clang-format off
-	static const PALETTEENTRY fallback_palette[256] = {
+	static const SDL_Color fallback_palette[256] = {
 		{ 0x00, 0x00, 0x00, 0 },
 		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
 		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,

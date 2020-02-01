@@ -4,7 +4,7 @@
 #include <queue>
 #endif
 
-#include "miniwin/ddraw.h"
+#include "display.h"
 #include "stubs.h"
 #include <Radon.hpp>
 #include <SDL.h>
@@ -162,8 +162,6 @@ unsigned char AsciiToLowerTable_Path[256] = {
 
 BOOL SFileOpenFile(const char *filename, HANDLE *phFile)
 {
-	//eprintf("%s: %s\n", __FUNCTION__, filename);
-
 	bool result = false;
 
 	if (directFileAccess) {
@@ -183,12 +181,12 @@ BOOL SFileOpenFile(const char *filename, HANDLE *phFile)
 	}
 
 	if (!result || !*phFile) {
-		eprintf("%s: Not found: %s\n", __FUNCTION__, filename);
+		SDL_Log("%s: Not found: %s", __FUNCTION__, filename);
 	}
 	return result;
 }
 
-BOOL SBmpLoadImage(const char *pszFileName, PALETTEENTRY *pPalette, BYTE *pBuffer, DWORD dwBuffersize, DWORD *pdwWidth, DWORD *dwHeight, DWORD *pdwBpp)
+BOOL SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, DWORD dwBuffersize, DWORD *pdwWidth, DWORD *dwHeight, DWORD *pdwBpp)
 {
 	HANDLE hFile;
 	size_t size;
@@ -227,7 +225,7 @@ BOOL SBmpLoadImage(const char *pszFileName, PALETTEENTRY *pPalette, BYTE *pBuffe
 		pszFileName = strchr(pszFileName, 46);
 
 	// omit all types except PCX
-	if (!pszFileName || _strcmpi(pszFileName, ".pcx")) {
+	if (!pszFileName || strcasecmp(pszFileName, ".pcx")) {
 		return false;
 	}
 
@@ -293,10 +291,12 @@ BOOL SBmpLoadImage(const char *pszFileName, PALETTEENTRY *pPalette, BYTE *pBuffe
 		SFileSetFilePointer(hFile, -768, 0, 1);
 		SFileReadFile(hFile, paldata, 768, 0, 0);
 		for (int i = 0; i < 256; i++) {
-			pPalette[i].peRed = paldata[i][0];
-			pPalette[i].peGreen = paldata[i][1];
-			pPalette[i].peBlue = paldata[i][2];
-			pPalette[i].peFlags = 0;
+			pPalette[i].r = paldata[i][0];
+			pPalette[i].g = paldata[i][1];
+			pPalette[i].b = paldata[i][2];
+#ifndef USE_SDL1
+			pPalette[i].a = SDL_ALPHA_OPAQUE;
+#endif
 		}
 	}
 
@@ -307,14 +307,12 @@ BOOL SBmpLoadImage(const char *pszFileName, PALETTEENTRY *pPalette, BYTE *pBuffe
 
 void *SMemAlloc(unsigned int amount, char *logfilename, int logline, int defaultValue)
 {
-	// fprintf(stderr, "%s: %d (%s:%d)\n", __FUNCTION__, amount, logfilename, logline);
 	assert(amount != -1u);
 	return malloc(amount);
 }
 
 BOOL SMemFree(void *location, char *logfilename, int logline, char defaultValue)
 {
-	// fprintf(stderr, "%s: (%s:%d)\n", __FUNCTION__, logfilename, logline);
 	assert(location);
 	free(location);
 	return true;
@@ -394,7 +392,7 @@ double SVidFrameEnd;
 double SVidFrameLength;
 BYTE SVidLoop;
 smk SVidSMK;
-PALETTEENTRY SVidPreviousPalette[256];
+SDL_Color SVidPreviousPalette[256];
 SDL_Palette *SVidPalette;
 SDL_Surface *SVidSurface;
 BYTE *SVidBuffer;
@@ -644,10 +642,9 @@ BOOL SVidPlayContinue(void)
 			colors[i].a = SDL_ALPHA_OPAQUE;
 #endif
 
-			orig_palette[i].peFlags = 0;
-			orig_palette[i].peRed = palette_data[i * 3 + 0];
-			orig_palette[i].peGreen = palette_data[i * 3 + 1];
-			orig_palette[i].peBlue = palette_data[i * 3 + 2];
+			orig_palette[i].r = palette_data[i * 3 + 0];
+			orig_palette[i].g = palette_data[i * 3 + 1];
+			orig_palette[i].b = palette_data[i * 3 + 2];
 		}
 		memcpy(logical_palette, orig_palette, 1024);
 

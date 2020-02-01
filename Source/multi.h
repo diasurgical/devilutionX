@@ -9,15 +9,12 @@ extern PkPlayerStruct netplr[MAX_PLRS];
 extern BOOL gbShouldValidatePackage;
 extern BYTE gbActivePlayers;
 extern BOOLEAN gbGameDestroyed;
-extern BOOLEAN gbGameUninitialized;
+extern BOOLEAN gbSelectProvider;
 extern BYTE gbMaxPlayers;
 extern char szPlayerName[128];
 extern BYTE gbDeltaSender;
 extern int player_state[MAX_PLRS];
 
-#ifdef _DEBUG
-void dumphist(const char *pszFmt, ...);
-#endif
 void multi_msg_add(BYTE *pbMsg, BYTE bLen);
 void NetSendLoPri(BYTE *pbMsg, BYTE bLen);
 void multi_copy_packet(TBuffer *pBuf, void *packet, BYTE size);

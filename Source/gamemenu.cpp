@@ -197,7 +197,7 @@ void gamemenu_get_sound()
 
 void gamemenu_get_color_cycling()
 {
-	sgOptionsMenu[3].pszStr = color_cycling_toggle_names[palette_get_colour_cycling() & 1];
+	sgOptionsMenu[3].pszStr = color_cycling_toggle_names[palette_get_color_cycling() & 1];
 }
 
 void gamemenu_get_gamma()
@@ -285,7 +285,8 @@ void gamemenu_gamma(BOOL bActivate)
 {
 	int gamma;
 	if (bActivate) {
-		if (UpdateGamma(0) == 30)
+		gamma = UpdateGamma(0);
+		if (gamma == 30)
 			gamma = 100;
 		else
 			gamma = 30;
@@ -306,7 +307,7 @@ void gamemenu_color_cycling(BOOL bActivate)
 {
 	BOOL color_cycling;
 
-	color_cycling = palette_set_color_cycling(palette_get_colour_cycling() == 0);
+	color_cycling = palette_set_color_cycling(palette_get_color_cycling() == 0);
 	sgOptionsMenu[3].pszStr = color_cycling_toggle_names[color_cycling & 1];
 }
 

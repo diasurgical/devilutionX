@@ -104,7 +104,7 @@ unsigned int dthread_handler(void *)
 			mem_free_dbg(pkt);
 
 			if (dwMilliseconds)
-				Sleep(dwMilliseconds);
+				SDL_Delay(dwMilliseconds);
 		}
 	}
 
@@ -127,10 +127,10 @@ void dthread_cleanup()
 			error_buf = TraceLastError();
 			app_fatal("dthread3:\n(%s)", error_buf);
 		}
-		CloseHandle(sghThread);
+		CloseEvent(sghThread);
 		sghThread = INVALID_HANDLE_VALUE;
 	}
-	CloseHandle(sghWorkToDoEvent);
+	CloseEvent(sghWorkToDoEvent);
 	sghWorkToDoEvent = NULL;
 
 	while (sgpInfoHead) {

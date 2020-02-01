@@ -85,6 +85,10 @@ if(RETROFW)
   include(retrofw_defs)
 endif()
 
+if(CPIGAMESH)
+  include(cpigamesh_defs)
+endif()
+
 if(${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD OR ${CMAKE_SYSTEM_NAME} STREQUAL OpenBSD)
   set(ASAN OFF)
   set(UBSAN OFF)
@@ -245,14 +249,12 @@ set(devilutionx_SRCS
   SourceX/controls/modifier_hints.cpp
   SourceX/controls/plrctrls.cpp
   SourceX/controls/touch.cpp
-  SourceX/miniwin/ddraw.cpp
-  SourceX/miniwin/misc.cpp
-  SourceX/miniwin/misc_io.cpp
+  SourceX/display.cpp
   SourceX/miniwin/misc_msg.cpp
   SourceX/miniwin/rand.cpp
   SourceX/miniwin/thread.cpp
-  SourceX/miniwin/dsound.cpp
   SourceX/sound.cpp
+  SourceX/soundsample.cpp
   SourceX/storm/storm.cpp
   SourceX/storm/storm_net.cpp
   SourceX/storm/storm_dx.cpp

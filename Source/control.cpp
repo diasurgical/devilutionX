@@ -54,7 +54,7 @@ int initialDropGoldValue;
 BYTE *pSpellCels;
 BOOL panbtndown;
 BYTE *pTalkPanel;
-int spselflag;
+BOOL spselflag;
 
 const BYTE fontframe[128] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -411,8 +411,8 @@ void DrawSpellList()
 
 void SetSpell()
 {
-	spselflag = 0;
-	if (pSpell != -1) {
+	spselflag = FALSE;
+	if (pSpell != SPL_INVALID) {
 		ClearPanel();
 		plr[myplr]._pRSpell = pSpell;
 		plr[myplr]._pRSplType = pSplType;
@@ -774,7 +774,7 @@ void InitControlPan()
 	drawhpflag = TRUE;
 	drawmanaflag = TRUE;
 	chrflag = FALSE;
-	spselflag = 0;
+	spselflag = FALSE;
 	pSpellBkCel = LoadFileInMem("Data\\SpellBk.CEL", NULL);
 	pSBkBtnCel = LoadFileInMem("Data\\SpellBkB.CEL", NULL);
 	pSBkIconCels = LoadFileInMem("Data\\SpellI2.CEL", NULL);
@@ -836,7 +836,7 @@ void DoSpeedBook()
 	unsigned __int64 spells, spell;
 	int xo, yo, X, Y, i, j;
 
-	spselflag = 1;
+	spselflag = TRUE;
 	xo = PANEL_X + 12 + 56 * 10;
 	yo = PANEL_Y - 17;
 	X = PANEL_LEFT + 12 + 56 * 10 + 56 / 2;
@@ -1004,14 +1004,14 @@ void CheckPanelInfo()
 				AddPanelString(tempstr, TRUE);
 				s = 0;
 				for (i = 0; i < plr[myplr]._pNumInv; i++) {
-					if (plr[myplr].InvList[i]._itype != -1
+					if (plr[myplr].InvList[i]._itype != ITYPE_NONE
 					    && (plr[myplr].InvList[i]._iMiscId == IMISC_SCROLL || plr[myplr].InvList[i]._iMiscId == IMISC_SCROLLT)
 					    && plr[myplr].InvList[i]._iSpell == v) {
 						s++;
 					}
 				}
 				for (i = 0; i < MAXBELTITEMS; i++) {
-					if (plr[myplr].SpdList[i]._itype != -1
+					if (plr[myplr].SpdList[i]._itype != ITYPE_NONE
 					    && (plr[myplr].SpdList[i]._iMiscId == IMISC_SCROLL || plr[myplr].SpdList[i]._iMiscId == IMISC_SCROLLT)
 					    && plr[myplr].SpdList[i]._iSpell == v) {
 						s++;
@@ -1906,7 +1906,7 @@ void control_drop_gold(char vkey)
 	}
 
 	memset(input, 0, sizeof(input));
-	SDL_itoa(dropGoldValue, input, 10);
+	snprintf(input, sizeof(input), "%d", dropGoldValue);
 	if (vkey == VK_RETURN) {
 		if (dropGoldValue > 0)
 			control_remove_gold(myplr, initialDropGoldIndex);
@@ -1935,15 +1935,15 @@ void control_remove_gold(int pnum, int gold_index)
 {
 	int gi;
 
-	if (gold_index <= 46) {
-		gi = gold_index - 7;
+	if (gold_index <= INVITEM_INV_LAST) {
+		gi = gold_index - INVITEM_INV_FIRST;
 		plr[pnum].InvList[gi]._ivalue -= dropGoldValue;
 		if (plr[pnum].InvList[gi]._ivalue > 0)
 			SetGoldCurs(pnum, gi);
 		else
 			RemoveInvItem(pnum, gi);
 	} else {
-		gi = gold_index - 47;
+		gi = gold_index - INVITEM_BELT_FIRST;
 		plr[pnum].SpdList[gi]._ivalue -= dropGoldValue;
 		if (plr[pnum].SpdList[gi]._ivalue > 0)
 			SetSpdbarGoldCurs(pnum, gi);
@@ -1953,7 +1953,7 @@ void control_remove_gold(int pnum, int gold_index)
 	SetPlrHandItem(&plr[pnum].HoldItem, IDI_GOLD);
 	GetGoldSeed(pnum, &plr[pnum].HoldItem);
 	plr[pnum].HoldItem._ivalue = dropGoldValue;
-	plr[pnum].HoldItem._iStatFlag = 1;
+	plr[pnum].HoldItem._iStatFlag = TRUE;
 	control_set_gold_curs(pnum);
 	plr[pnum]._pGold = CalculateGold(pnum);
 	dropGoldValue = 0;

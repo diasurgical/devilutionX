@@ -22,8 +22,6 @@
 #endif
 
 #include "miniwin/misc.h"
-#include "miniwin/com.h"
-#include "miniwin/ui.h"
 #include "miniwin/thread.h"
 #include "miniwin/rand.h"
 #include "storm_full.h"

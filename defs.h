@@ -66,7 +66,6 @@
 
 #define MAXPATHNODES			300
 
-// Careful! Changing this variable causes saves with a different one to crash! Default: 25
 #define MAX_PATH_LENGTH			25
 
 // 256 kilobytes + 3 bytes (demo leftover) for file magic (262147)

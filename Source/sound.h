@@ -2,7 +2,7 @@
 #ifndef __SOUND_H__
 #define __SOUND_H__
 
-extern IDirectSoundBuffer *DSBs[8];
+extern SoundSample *DSBs[8];
 extern BOOLEAN gbSndInited;
 extern HMODULE hDsound_dll;
 
@@ -10,8 +10,8 @@ void snd_update(BOOL bStopAll);
 void snd_stop_snd(TSnd *pSnd);
 BOOL snd_playing(TSnd *pSnd);
 void snd_play_snd(TSnd *pSnd, int lVolume, int lPan);
-IDirectSoundBuffer *sound_dup_channel(IDirectSoundBuffer *DSB);
-BOOL sound_file_reload(TSnd *sound_file, IDirectSoundBuffer *DSB);
+SoundSample *sound_dup_channel(SoundSample *DSB);
+BOOL sound_file_reload(TSnd *sound_file, SoundSample *DSB);
 TSnd *sound_file_load(char *path);
 void sound_CreateSoundBuffer(TSnd *sound_file);
 void sound_file_cleanup(TSnd *sound_file);

@@ -589,15 +589,15 @@ BOOL STORMAPI SBltROP3Tiled(void *lpDstBuffer, RECT *lpDstRect, POINT *lpDstPt, 
 BOOL
 STORMAPI
 SBmpDecodeImage(
-    DWORD        dwImgType,
-    void         *pSrcBuffer,
-    DWORD        dwSrcBuffersize,
-    PALETTEENTRY *pPalette,
-    void         *pDstBuffer,
-    DWORD        dwDstBuffersize,
-    DWORD        *pdwWidth,
-    DWORD        *pdwHeight,
-    DWORD        *pdwBpp);
+    DWORD     dwImgType,
+    void      *pSrcBuffer,
+    DWORD     dwSrcBuffersize,
+    SDL_Color *pPalette,
+    void      *pDstBuffer,
+    DWORD     dwDstBuffersize,
+    DWORD     *pdwWidth,
+    DWORD     *pdwHeight,
+    DWORD     *pdwBpp);
 
 
 /*  SBmpLoadImage @ 323
@@ -617,13 +617,13 @@ SBmpDecodeImage(
 BOOL
 STORMAPI
 SBmpLoadImage(
-    const char   *pszFileName,
-    PALETTEENTRY *pPalette ,
-    BYTE         *pBuffer,
-    DWORD        dwBuffersize,
-    DWORD        *pdwWidth,
-    DWORD        *pdwHeight,
-    DWORD        *pdwBpp);
+    const char *pszFileName,
+    SDL_Color  *pPalette ,
+    BYTE       *pBuffer,
+    DWORD      dwBuffersize,
+    DWORD      *pdwWidth,
+    DWORD      *pdwHeight,
+    DWORD      *pdwBpp);
 
 /*  SBmpSaveImage @ 324
  *
@@ -642,15 +642,15 @@ SBmpLoadImage(
 BOOL
 STORMAPI
 SBmpSaveImage(
-    const char    *pszFileName,
-    PALETTEENTRY  *pPalette,
-    void          *pBuffer,
-    DWORD         dwWidth,
-    DWORD         dwHeight,
-    DWORD         dwBpp);
+    const char *pszFileName,
+    SDL_Color  *pPalette,
+    void       *pBuffer,
+    DWORD      dwWidth,
+    DWORD      dwHeight,
+    DWORD      dwBpp);
 
 
-HANDLE STORMAPI SBmpAllocLoadImage(const char *fileName, PALETTEENTRY *palette, void **buffer, int *width, int *height, int unused6, int unused7, void *(STORMAPI *allocFunction)(DWORD));
+HANDLE STORMAPI SBmpAllocLoadImage(const char *fileName, SDL_Color *palette, void **buffer, int *width, int *height, int unused6, int unused7, void *(STORMAPI *allocFunction)(DWORD));
 
 BOOL STORMAPI SCodeCompile(char *directives1, char *directives2, char *loopstring, unsigned int maxiterations, unsigned int flags, HANDLE handle);
 BOOL STORMAPI SCodeDelete(HANDLE handle);
@@ -726,7 +726,7 @@ SDrawPostClose();
 //BOOL STORMAPI SDrawRealizePalette();
 
 BOOL STORMAPI SDrawUnlockSurface(int surfacenumber, void *lpSurface, int a3, RECT *lpRect);
-void SDrawUpdatePalette(unsigned int firstentry, unsigned int numentries, PALETTEENTRY *pPalEntries, int a4);
+void SDrawUpdatePalette(unsigned int firstentry, unsigned int numentries, SDL_Color *pPalEntries, int a4);
 
 BOOL STORMAPI SEvtDispatch(DWORD dwMessageID, DWORD dwFlags, int type, PS_EVT pEvent);
 

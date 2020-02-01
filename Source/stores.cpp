@@ -73,7 +73,7 @@ void InitStores()
 
 void PentSpn2Spin()
 {
-	DWORD ticks = GetTickCount();
+	DWORD ticks = SDL_GetTicks();
 	if (ticks - PentSpn2Tick > 50) {
 		PentSpn2Frame = (PentSpn2Frame & 7) + 1;
 		PentSpn2Tick = ticks;
@@ -84,7 +84,7 @@ void SetupTownStores()
 {
 	int i, l;
 
-	SetRndSeed(glSeedTbl[currlevel] * GetTickCount());
+	SetRndSeed(glSeedTbl[currlevel] * SDL_GetTicks());
 	if (gbMaxPlayers == 1) {
 		l = 0;
 		for (i = 0; i < NUMLEVELS; i++) {
@@ -452,7 +452,7 @@ void PrintStoreItem(ItemStruct *x, int l, char iclr)
 	} else {
 		strcat(sstr, "Indestructible,  ");
 	}
-	if (!x->_itype)
+	if (x->_itype == ITYPE_MISC)
 		sstr[0] = '\0';
 	str = x->_iMinStr;
 	dex = x->_iMinDex;
@@ -515,7 +515,7 @@ void S_ScrollSPBuy(int idx)
 	}
 
 	for (l = 5; l < 20 && idx < 6; l += 4) {
-		if (premiumitem[idx]._itype != -1) {
+		if (premiumitem[idx]._itype != ITYPE_NONE) {
 			iclr = COL_WHITE;
 			if (premiumitem[idx]._iMagical)
 				iclr = COL_BLUE;
@@ -1340,7 +1340,7 @@ void S_StartTalk()
 	AddSText(0, 16, 1, "version", COL_WHITE, 0);
 #else
 	sn = 0;
-	for (i = 0; i < 16; i++) {
+	for (i = 0; i < MAXQUESTS; i++) {
 		if (quests[i]._qactive == 2 && ((DWORD *)&Qtalklist[talker])[i] != -1 && quests[i]._qlog)
 			sn++;
 	}
@@ -1355,7 +1355,7 @@ void S_StartTalk()
 
 	sn2 = sn - 2;
 
-	for (i = 0; i < 16; i++) {
+	for (i = 0; i < MAXQUESTS; i++) {
 		if (quests[i]._qactive == 2 && ((DWORD *)&Qtalklist[talker])[i] != -1 && quests[i]._qlog) {
 			AddSText(0, sn, 1, questlist[i]._qlstr, COL_WHITE, 1);
 			sn += la;
@@ -1970,7 +1970,7 @@ BOOL StoreGoldFit(int idx)
 	SetCursor_(CURSOR_HAND);
 
 	if (numsqrs >= sz)
-		return 1;
+		return TRUE;
 
 	for (i = 0; i < 40; i++) {
 		if (!plr[myplr].InvGrid[i])
@@ -2556,7 +2556,7 @@ void S_TalkEnter()
 	}
 
 	sn = 0;
-	for (i = 0; i < 16; i++) {
+	for (i = 0; i < MAXQUESTS; i++) {
 		if (quests[i]._qactive == 2 && ((DWORD *)&Qtalklist[talker])[i] != -1 && quests[i]._qlog)
 			sn++;
 	}
@@ -2575,7 +2575,7 @@ void S_TalkEnter()
 		return;
 	}
 
-	for (i = 0; i < 16; i++) {
+	for (i = 0; i < MAXQUESTS; i++) {
 		if (quests[i]._qactive == 2 && ((DWORD *)&Qtalklist[talker])[i] != -1 && quests[i]._qlog) {
 			if (sn == stextsel) {
 				InitQTextMsg(((DWORD *)&Qtalklist[talker])[i]);

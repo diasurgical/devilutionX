@@ -4,7 +4,7 @@
 
 #include "controls/menu_controls.h"
 #include "devilution.h"
-#include "miniwin/ddraw.h"
+#include "display.h"
 
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/credits_lines.h"

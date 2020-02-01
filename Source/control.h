@@ -49,7 +49,7 @@ extern int initialDropGoldValue;
 extern BYTE *pSpellCels;
 extern BOOL panbtndown;
 extern BYTE *pTalkPanel;
-extern int spselflag;
+extern BOOL spselflag;
 
 void DrawSpellCel(int xp, int yp, BYTE *Trans, int nCel, int w);
 void SetSpellTrans(char t);

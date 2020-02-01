@@ -124,15 +124,6 @@ LRESULT MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_CLOSE:
 		return 0;
-#ifdef _DEBUG
-	case WM_SYSKEYUP:
-		if (wParam == VK_RETURN) {
-			fullscreen = !fullscreen;
-			dx_reinit();
-			return 0;
-		}
-		break;
-#endif
 	case WM_QUERYNEWPALETTE:
 		return 1;
 	case WM_QUERYENDSESSION:

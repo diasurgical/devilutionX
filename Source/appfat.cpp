@@ -25,24 +25,24 @@ void app_fatal(const char *pszFmt, ...)
 
 void MsgBox(const char *pszFmt, va_list va)
 {
-	char Text[256];
+	char text[256];
 
-	wvsprintf(Text, pszFmt, va);
+	vsnprintf(text, 256, pszFmt, va);
 
-	UiErrorOkDialog("Error", Text);
+	UiErrorOkDialog("Error", text);
 }
 
 void FreeDlg()
 {
 	if (terminating && cleanup_thread_id != GetCurrentThreadId())
-		Sleep(20000);
+		SDL_Delay(20000);
 
 	terminating = TRUE;
 	cleanup_thread_id = GetCurrentThreadId();
 
 	if (gbMaxPlayers > 1) {
 		if (SNetLeaveGame(3))
-			Sleep(2000);
+			SDL_Delay(2000);
 	}
 
 	SNetDestroy();
@@ -51,11 +51,11 @@ void FreeDlg()
 void DrawDlg(char *pszFmt, ...)
 {
 	char text[256];
-	va_list arglist;
+	va_list va;
 
-	va_start(arglist, pszFmt);
-	wvsprintf(text, pszFmt, arglist);
-	va_end(arglist);
+	va_start(va, pszFmt);
+	vsnprintf(text, 256, pszFmt, va);
+	va_end(va);
 
 	UiErrorOkDialog(PROJECT_NAME, text, false);
 }
