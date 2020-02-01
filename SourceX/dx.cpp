@@ -247,6 +247,11 @@ void PutPixel32_nolock(SDL_Surface *surface, int x, int y, Uint32 color)
 	*((Uint32 *)pixel) = color;
 }
 
+struct POINT {
+	int x;
+	int y;
+};
+
 POINT gameToScreen(int targetRow, int targetCol)
 {
 	int playerRow = plr[myplr].WorldX;
