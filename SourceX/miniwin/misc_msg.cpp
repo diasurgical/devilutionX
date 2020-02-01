@@ -3,13 +3,13 @@
 #include <SDL.h>
 
 #include "devilution.h"
-#include "miniwin/ddraw.h"
+#include "display.h"
 #include "stubs.h"
 #include "controls/controller_motion.h"
 #include "controls/game_controls.h"
 #include "controls/plrctrls.h"
 #include "controls/touch.h"
-#include "miniwin/ddraw.h"
+#include "display.h"
 #include "controls/controller.h"
 
 #ifdef __SWITCH__
@@ -742,7 +742,7 @@ SHORT GetAsyncKeyState(int vKey)
 	case DVL_VK_SHIFT:
 		return state[SDLC_KEYSTATE_LEFTSHIFT] || state[SDLC_KEYSTATE_RIGHTSHIFT] ? 0x8000 : 0;
 	case DVL_VK_MENU:
-		return state[SDLC_KEYSTATE_MENU] ? 0x8000 : 0;
+		return state[SDLC_KEYSTATE_LALT] || state[SDLC_KEYSTATE_RALT] ? 0x8000 : 0;
 	case DVL_VK_LEFT:
 		return state[SDLC_KEYSTATE_LEFT] ? 0x8000 : 0;
 	case DVL_VK_UP:

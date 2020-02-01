@@ -1,7 +1,7 @@
 #include <SDL.h>
 
 #include "devilution.h"
-#include "miniwin/ddraw.h"
+#include "display.h"
 #include "stubs.h"
 
 namespace dvl {

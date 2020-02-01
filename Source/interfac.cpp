@@ -48,7 +48,7 @@ void DrawCutscene()
 
 	unlock_buf(1);
 	force_redraw = 255;
-	scrollrt_draw_game_screen(0);
+	scrollrt_draw_game_screen(FALSE);
 }
 
 void DrawProgress(int screen_x, int screen_y, int progress_id)

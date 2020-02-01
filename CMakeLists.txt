@@ -249,13 +249,12 @@ set(devilutionx_SRCS
   SourceX/controls/modifier_hints.cpp
   SourceX/controls/plrctrls.cpp
   SourceX/controls/touch.cpp
-  SourceX/miniwin/ddraw.cpp
-  SourceX/miniwin/misc.cpp
+  SourceX/display.cpp
   SourceX/miniwin/misc_msg.cpp
   SourceX/miniwin/rand.cpp
   SourceX/miniwin/thread.cpp
   SourceX/sound.cpp
-  SourceX/ssound.cpp
+  SourceX/soundsample.cpp
   SourceX/storm/storm.cpp
   SourceX/storm/storm_net.cpp
   SourceX/storm/storm_dx.cpp

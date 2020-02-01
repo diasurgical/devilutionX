@@ -4,7 +4,7 @@
 
 extern int help_select_line;
 extern int dword_634494;
-extern int helpflag;
+extern BOOL helpflag;
 extern int displayinghelp[22];
 extern int HelpTop;
 

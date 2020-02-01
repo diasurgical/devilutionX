@@ -57,7 +57,7 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 		return;
 	}
 
-	tc = GetTickCount();
+	tc = SDL_GetTicks();
 	if (tc - pSnd->start_tc < 80) {
 		return;
 	}
@@ -84,7 +84,7 @@ TSnd *sound_file_load(char *path)
 	pSnd = (TSnd *)DiabloAllocPtr(sizeof(TSnd));
 	memset(pSnd, 0, sizeof(TSnd));
 	pSnd->sound_path = path;
-	pSnd->start_tc = GetTickCount() - 81;
+	pSnd->start_tc = SDL_GetTicks() - 81;
 
 	dwBytes = SFileGetFileSize(file, NULL);
 	wave_file = DiabloAllocPtr(dwBytes);

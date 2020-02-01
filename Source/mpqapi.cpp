@@ -17,18 +17,18 @@ _BLOCKENTRY *sgpBlockTbl;
 
 /* data */
 
-#define RETURN_IF_FAIL(obj, op, ...)                                                                          \
-	obj->op(__VA_ARGS__);                                                                                     \
-	if (obj->fail()) {                                                                                        \
-		SDL_Log("%s->%s(%s) failed in %s at %s:%d\n", #obj, #op, #__VA_ARGS__, __func__, __FILE__, __LINE__); \
-		return FALSE;                                                                                         \
+#define RETURN_IF_FAIL(obj, op, ...)                                                                        \
+	obj->op(__VA_ARGS__);                                                                                   \
+	if (obj->fail()) {                                                                                      \
+		SDL_Log("%s->%s(%s) failed in %s at %s:%d", #obj, #op, #__VA_ARGS__, __func__, __FILE__, __LINE__); \
+		return FALSE;                                                                                       \
 	}
 
-#define GOTO_IF_FAIL(label, obj, op, ...)                                                                     \
-	obj->op(__VA_ARGS__);                                                                                     \
-	if (obj->fail()) {                                                                                        \
-		SDL_Log("%s->%s(%s) failed in %s at %s:%d\n", #obj, #op, #__VA_ARGS__, __func__, __FILE__, __LINE__); \
-		goto label;                                                                                           \
+#define GOTO_IF_FAIL(label, obj, op, ...)                                                                   \
+	obj->op(__VA_ARGS__);                                                                                   \
+	if (obj->fail()) {                                                                                      \
+		SDL_Log("%s->%s(%s) failed in %s at %s:%d", #obj, #op, #__VA_ARGS__, __func__, __FILE__, __LINE__); \
+		goto label;                                                                                         \
 	}
 
 namespace {
@@ -108,7 +108,7 @@ _BLOCKENTRY *mpqapi_new_block(int *block_index)
 		blockEntry++;
 		if (i >= 2048) {
 			app_fatal("Out of free block entries");
-			return 0;
+			return NULL;
 		}
 	}
 	if (block_index)
@@ -338,7 +338,7 @@ BOOL OpenMPQ(const char *pszArchive, DWORD dwChar)
 		archive = new std::fstream(pszArchive, std::ios::in | std::ios::out | std::ios::binary | std::ios::trunc);
 	}
 	if (archive->fail()) {
-		SDL_Log("Failed to OpenMPQ at %s\n", pszArchive);
+		SDL_Log("Failed to OpenMPQ at %s", pszArchive);
 		delete archive;
 		archive = nullptr;
 		return FALSE;
@@ -454,7 +454,7 @@ BOOL mpqapi_flush_and_close(const char *pszArchive, BOOL bFree, DWORD dwChar)
 		}
 	}
 	CloseMPQ(pszArchive, bFree, dwChar);
-	if (ret)
+	if (ret && sgdwMpqOffset)
 		ret = ResizeFile(pszArchive, sgdwMpqOffset);
 	return ret;
 }

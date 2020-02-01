@@ -939,16 +939,16 @@ void SetupObject(int i, int x, int y, int ot)
 		object[i]._oAnimFrame = random_(146, AllObjects[ot].oAnimLen - 1) + 1;
 	} else {
 		object[i]._oAnimDelay = 1000;
+		object[i]._oAnimCnt = 0;
 		object[i]._oAnimLen = AllObjects[ot].oAnimLen;
 		object[i]._oAnimFrame = AllObjects[ot].oAnimDelay;
-		object[i]._oAnimCnt = 0;
 	}
 	object[i]._oAnimWidth = AllObjects[ot].oAnimWidth;
 	object[i]._oSolidFlag = AllObjects[ot].oSolidFlag;
 	object[i]._oMissFlag = AllObjects[ot].oMissFlag;
 	object[i]._oLight = AllObjects[ot].oLightFlag;
-	object[i]._oBreak = AllObjects[ot].oBreak;
 	object[i]._oDelFlag = FALSE;
+	object[i]._oBreak = AllObjects[ot].oBreak;
 	object[i]._oSelFlag = AllObjects[ot].oSelFlag;
 	object[i]._oPreFlag = FALSE;
 	object[i]._oTrapFlag = FALSE;
@@ -1065,7 +1065,7 @@ void AddFlameTrap(int i)
 void AddFlameLvr(int i)
 {
 	object[i]._oVar1 = trapid;
-	object[i]._oVar2 = 49;
+	object[i]._oVar2 = MIS_FLAMEC;
 }
 
 void AddTrap(int i, int ot)
@@ -1075,11 +1075,11 @@ void AddTrap(int i, int ot)
 	mt = currlevel / 3 + 1;
 	mt = random_(148, mt);
 	if (mt == 0)
-		object[i]._oVar3 = 0; // arrow
+		object[i]._oVar3 = MIS_ARROW;
 	if (mt == 1)
-		object[i]._oVar3 = 1; // firebolt
+		object[i]._oVar3 = MIS_FIREBOLT;
 	if (mt == 2)
-		object[i]._oVar3 = 7; // lightning
+		object[i]._oVar3 = MIS_LIGHTCTRL;
 	object[i]._oVar4 = 0;
 }
 
@@ -1336,6 +1336,15 @@ void AddObject(int ot, int ox, int oy)
 	dObject[ox][oy] = oi + 1;
 	SetupObject(oi, ox, oy, ot);
 	switch (ot) {
+	case OBJ_L1LIGHT:
+		AddObjLight(oi, 5);
+		break;
+	case OBJ_SKFIRE:
+	case OBJ_CANDLE1:
+	case OBJ_CANDLE2:
+	case OBJ_BOOKCANDLE:
+		AddObjLight(oi, 5);
+		break;
 	case OBJ_STORYCANDLE:
 		AddObjLight(oi, 3);
 		break;
@@ -1440,13 +1449,6 @@ void AddObject(int ot, int ox, int oy)
 		AddBrnCross(oi);
 		AddObjLight(oi, 5);
 		break;
-	case OBJ_L1LIGHT:
-	case OBJ_SKFIRE:
-	case OBJ_CANDLE1:
-	case OBJ_CANDLE2:
-	case OBJ_BOOKCANDLE:
-		AddObjLight(oi, 5);
-		break;
 	case OBJ_PEDISTAL:
 		AddPedistal(oi);
 		break;
@@ -1498,34 +1500,25 @@ void Obj_Light(int i, int lr)
 
 void Obj_Circle(int i)
 {
-	int ox, oy;
+	int ox, oy, wx, wy;
 
 	ox = object[i]._ox;
 	oy = object[i]._oy;
-	if (plr[myplr].WorldX != ox || plr[myplr].WorldY != object[i]._oy) {
-		if (object[i]._otype == OBJ_MCIRCLE1)
-			object[i]._oAnimFrame = 1;
-		if (object[i]._otype == OBJ_MCIRCLE2)
-			object[i]._oAnimFrame = 3;
-		object[i]._oVar6 = 0;
-	} else {
+	wx = plr[myplr].WorldX;
+	wy = plr[myplr].WorldY;
+	if (wx == ox && wy == oy) {
 		if (object[i]._otype == OBJ_MCIRCLE1)
 			object[i]._oAnimFrame = 2;
 		if (object[i]._otype == OBJ_MCIRCLE2)
 			object[i]._oAnimFrame = 4;
-		if (ox == 45) {
-			if (oy == 47) {
-				object[i]._oVar6 = 2;
-				return;
-			}
+		if (ox == 45 && oy == 47) {
+			object[i]._oVar6 = 2;
+		} else if (ox == 26 && oy == 46) {
+			object[i]._oVar6 = 1;
 		} else {
-			if (object[i]._ox == 26 && object[i]._oy == 46) {
-				object[i]._oVar6 = 1;
-				return;
-			}
+			object[i]._oVar6 = 0;
 		}
-		object[i]._oVar6 = 0;
-		if (ox == 35 && object[i]._oy == 36 && object[i]._oVar5 == 3) {
+		if (ox == 35 && oy == 36 && object[i]._oVar5 == 3) {
 			object[i]._oVar6 = 4;
 			ObjChangeMapResync(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
 			if (quests[QTYPE_VB]._qactive == 2)
@@ -1536,6 +1529,12 @@ void Obj_Circle(int i)
 			ClrPlrPath(myplr);
 			StartStand(myplr, 0);
 		}
+	} else {
+		if (object[i]._otype == OBJ_MCIRCLE1)
+			object[i]._oAnimFrame = 1;
+		if (object[i]._otype == OBJ_MCIRCLE2)
+			object[i]._oAnimFrame = 3;
+		object[i]._oVar6 = 0;
 	}
 }
 
@@ -1726,22 +1725,25 @@ void ProcessObjects()
 	for (i = 0; i < nobjects; ++i) {
 		oi = objectactive[i];
 		switch (object[oi]._otype) {
-		case OBJ_STORYCANDLE:
-			Obj_Light(oi, 3);
+		case OBJ_L1LIGHT:
+			Obj_Light(oi, 10);
 			break;
 		case OBJ_SKFIRE:
 		case OBJ_CANDLE2:
 		case OBJ_BOOKCANDLE:
 			Obj_Light(oi, 5);
 			break;
-		case OBJ_TORCHL:
-		case OBJ_TORCHR:
-		case OBJ_TORCHL2:
-		case OBJ_TORCHR2:
-			Obj_Light(oi, 8);
+		case OBJ_STORYCANDLE:
+			Obj_Light(oi, 3);
 			break;
-		case OBJ_L1LIGHT:
-			Obj_Light(oi, 10);
+		case OBJ_CRUX1:
+		case OBJ_CRUX2:
+		case OBJ_CRUX3:
+		case OBJ_BARREL:
+		case OBJ_BARRELEX:
+		case OBJ_SHRINEL:
+		case OBJ_SHRINER:
+			Obj_StopAnim(oi);
 			break;
 		case OBJ_L1LDOOR:
 		case OBJ_L1RDOOR:
@@ -1751,27 +1753,17 @@ void ProcessObjects()
 		case OBJ_L3RDOOR:
 			Obj_Door(oi);
 			break;
-		case OBJ_CRUX1:
-		case OBJ_CRUX2:
-		case OBJ_CRUX3:
-			Obj_StopAnim(oi);
-			break;
-		case OBJ_BCROSS:
-		case OBJ_TBCROSS:
-			Obj_Light(oi, 10);
-			Obj_BCrossDamage(oi);
+		case OBJ_TORCHL:
+		case OBJ_TORCHR:
+		case OBJ_TORCHL2:
+		case OBJ_TORCHR2:
+			Obj_Light(oi, 8);
 			break;
 		case OBJ_SARC:
 			Obj_Sarc(oi);
 			break;
 		case OBJ_FLAMEHOLE:
 			Obj_FlameTrap(oi);
-			break;
-		case OBJ_BARREL:
-		case OBJ_BARRELEX:
-		case OBJ_SHRINEL:
-		case OBJ_SHRINER:
-			Obj_StopAnim(oi);
 			break;
 		case OBJ_TRAPL:
 		case OBJ_TRAPR:
@@ -1780,6 +1772,11 @@ void ProcessObjects()
 		case OBJ_MCIRCLE1:
 		case OBJ_MCIRCLE2:
 			Obj_Circle(oi);
+			break;
+		case OBJ_BCROSS:
+		case OBJ_TBCROSS:
+			Obj_Light(oi, 10);
+			Obj_BCrossDamage(oi);
 			break;
 		}
 		if (object[oi]._oAnimFlag == 0)
@@ -2678,8 +2675,8 @@ void OperateTrapLvr(int i)
 		for (; j < nobjects; j++) {
 			oi = objectactive[j];
 			if (object[oi]._otype == object[i]._oVar2 && object[oi]._oVar1 == object[i]._oVar1) {
-				object[oi]._oAnimFlag = 0;
 				object[oi]._oVar2 = 1;
+				object[oi]._oAnimFlag = 0;
 			}
 		}
 		return;
@@ -2906,8 +2903,8 @@ void OperateShrine(int pnum, int i, int sType)
 				}
 				if (cnt == 0)
 					break;
-				r = random_(0, 7);
-				if (plr[pnum].InvBody[r]._itype == -1 || plr[pnum].InvBody[r]._iMaxDur == DUR_INDESTRUCTIBLE || plr[pnum].InvBody[r]._iMaxDur == 0)
+				r = random_(0, NUM_INVLOC);
+				if (plr[pnum].InvBody[r]._itype == ITYPE_NONE || plr[pnum].InvBody[r]._iMaxDur == DUR_INDESTRUCTIBLE || plr[pnum].InvBody[r]._iMaxDur == 0)
 					continue;
 
 				plr[pnum].InvBody[r]._iDurability -= 20;
@@ -3156,14 +3153,14 @@ void OperateShrine(int pnum, int i, int sType)
 				    || plr[pnum].InvList[j]._iMiscId == IMISC_MANA) {
 					SetPlrHandItem(&plr[pnum].HoldItem, ItemMiscIdIdx(IMISC_REJUV));
 					GetPlrHandSeed(&plr[pnum].HoldItem);
-					plr[pnum].HoldItem._iStatFlag = 1;
+					plr[pnum].HoldItem._iStatFlag = TRUE;
 					plr[pnum].InvList[j] = plr[pnum].HoldItem;
 				}
 				if (plr[pnum].InvList[j]._iMiscId == IMISC_FULLHEAL
 				    || plr[pnum].InvList[j]._iMiscId == IMISC_FULLMANA) {
 					SetPlrHandItem(&plr[pnum].HoldItem, ItemMiscIdIdx(IMISC_FULLREJUV));
 					GetPlrHandSeed(&plr[pnum].HoldItem);
-					plr[pnum].HoldItem._iStatFlag = 1;
+					plr[pnum].HoldItem._iStatFlag = TRUE;
 					plr[pnum].InvList[j] = plr[pnum].HoldItem;
 				}
 			}
@@ -3174,14 +3171,14 @@ void OperateShrine(int pnum, int i, int sType)
 				    || plr[pnum].SpdList[j]._iMiscId == IMISC_MANA) {
 					SetPlrHandItem(&plr[pnum].HoldItem, ItemMiscIdIdx(IMISC_REJUV));
 					GetPlrHandSeed(&plr[pnum].HoldItem);
-					plr[pnum].HoldItem._iStatFlag = 1;
+					plr[pnum].HoldItem._iStatFlag = TRUE;
 					plr[pnum].SpdList[j] = plr[pnum].HoldItem;
 				}
 				if (plr[pnum].SpdList[j]._iMiscId == IMISC_FULLHEAL
 				    || plr[pnum].SpdList[j]._iMiscId == IMISC_FULLMANA) {
 					SetPlrHandItem(&plr[pnum].HoldItem, ItemMiscIdIdx(IMISC_FULLREJUV));
 					GetPlrHandSeed(&plr[pnum].HoldItem);
-					plr[pnum].HoldItem._iStatFlag = 1;
+					plr[pnum].HoldItem._iStatFlag = TRUE;
 					plr[pnum].SpdList[j] = plr[pnum].HoldItem;
 				}
 			}
@@ -3432,9 +3429,9 @@ void OperateSkelBook(int pnum, int i, BOOL sendmsg)
 		if (!deltaload) {
 			SetRndSeed(object[i]._oRndSeed);
 			if (random_(161, 5))
-				CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_MISC, 21, sendmsg, FALSE);
+				CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_MISC, IMISC_SCROLL, sendmsg, FALSE);
 			else
-				CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_MISC, 24, sendmsg, FALSE);
+				CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_MISC, IMISC_BOOK, sendmsg, FALSE);
 			if (pnum == myplr)
 				NetSendCmdParam1(FALSE, CMD_OPERATEOBJ, i);
 		}
@@ -3490,13 +3487,13 @@ void OperateArmorStand(int pnum, int i, BOOL sendmsg)
 			SetRndSeed(object[i]._oRndSeed);
 			uniqueRnd = random_(0, 2);
 			if (currlevel <= 5) {
-				CreateTypeItem(object[i]._ox, object[i]._oy, TRUE, ITYPE_LARMOR, 0, sendmsg, FALSE);
+				CreateTypeItem(object[i]._ox, object[i]._oy, TRUE, ITYPE_LARMOR, IMISC_NONE, sendmsg, FALSE);
 			} else if (currlevel >= 6 && currlevel <= 9) {
-				CreateTypeItem(object[i]._ox, object[i]._oy, uniqueRnd, ITYPE_MARMOR, 0, sendmsg, FALSE);
+				CreateTypeItem(object[i]._ox, object[i]._oy, uniqueRnd, ITYPE_MARMOR, IMISC_NONE, sendmsg, FALSE);
 			} else if (currlevel >= 10 && currlevel <= 12) {
-				CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_HARMOR, 0, sendmsg, FALSE);
+				CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_HARMOR, IMISC_NONE, sendmsg, FALSE);
 			} else if (currlevel >= 13 && currlevel <= 16) {
-				CreateTypeItem(object[i]._ox, object[i]._oy, TRUE, ITYPE_HARMOR, 0, sendmsg, FALSE);
+				CreateTypeItem(object[i]._ox, object[i]._oy, TRUE, ITYPE_HARMOR, IMISC_NONE, sendmsg, FALSE);
 			}
 			if (pnum == myplr)
 				NetSendCmdParam1(FALSE, CMD_OPERATEOBJ, i);
@@ -3546,8 +3543,8 @@ void OperateCauldron(int pnum, int i, int sType)
 	SetRndSeed(object[i]._oRndSeed);
 	object[i]._oVar1 = FindValidShrine(i);
 	OperateShrine(pnum, i, sType);
-	object[i]._oAnimFlag = 0;
 	object[i]._oAnimFrame = 3;
+	object[i]._oAnimFlag = 0;
 	force_redraw = 255;
 }
 
@@ -3699,9 +3696,9 @@ void OperateWeaponRack(int pnum, int i, BOOL sendmsg)
 		return;
 
 	if (leveltype > 1)
-		CreateTypeItem(object[i]._ox, object[i]._oy, TRUE, weaponType, 0, sendmsg, FALSE);
+		CreateTypeItem(object[i]._ox, object[i]._oy, TRUE, weaponType, IMISC_NONE, sendmsg, FALSE);
 	else
-		CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, weaponType, 0, sendmsg, FALSE);
+		CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, weaponType, IMISC_NONE, sendmsg, FALSE);
 	if (pnum == myplr)
 		NetSendCmdParam1(FALSE, CMD_OPERATEOBJ, i);
 }
@@ -4228,30 +4225,22 @@ void SyncPedistal(int i)
 
 void SyncL2Doors(int i)
 {
-	int val;
 	int x, y;
 
-	val = object[i]._oVar4;
-	if (!val)
+	if (object[i]._oVar4 == 0)
 		object[i]._oMissFlag = FALSE;
 	else
 		object[i]._oMissFlag = TRUE;
 	x = object[i]._ox;
 	y = object[i]._oy;
 	object[i]._oSelFlag = 2;
-	if (object[i]._otype == OBJ_L2LDOOR && val == 0) {
+	if (object[i]._otype == OBJ_L2LDOOR && object[i]._oVar4 == 0) {
 		ObjSetMicro(x, y, 538);
-		return;
-	}
-	if (object[i]._otype == OBJ_L2LDOOR && (val == 1 || val == 2)) {
+	} else if (object[i]._otype == OBJ_L2LDOOR && (object[i]._oVar4 == 1 || object[i]._oVar4 == 2)) {
 		ObjSetMicro(x, y, 13);
-		return;
-	}
-	if (object[i]._otype == OBJ_L2RDOOR && val == 0) {
+	} else if (object[i]._otype == OBJ_L2RDOOR && object[i]._oVar4 == 0) {
 		ObjSetMicro(x, y, 540);
-		return;
-	}
-	if (object[i]._otype == OBJ_L2RDOOR && (val == 1 || val == 2)) {
+	} else if (object[i]._otype == OBJ_L2RDOOR && (object[i]._oVar4 == 1 || object[i]._oVar4 == 2)) {
 		ObjSetMicro(x, y, 17);
 	}
 }
@@ -4266,17 +4255,11 @@ void SyncL3Doors(int i)
 	object[i]._oSelFlag = 2;
 	if (object[i]._otype == OBJ_L3LDOOR && object[i]._oVar4 == 0) {
 		ObjSetMicro(x, y, 531);
-		return;
-	}
-	if (object[i]._otype == OBJ_L3LDOOR && (object[i]._oVar4 == 1 || object[i]._oVar4 == 2)) {
+	} else if (object[i]._otype == OBJ_L3LDOOR && (object[i]._oVar4 == 1 || object[i]._oVar4 == 2)) {
 		ObjSetMicro(x, y, 538);
-		return;
-	}
-	if (object[i]._otype == OBJ_L3RDOOR && object[i]._oVar4 == 0) {
+	} else if (object[i]._otype == OBJ_L3RDOOR && object[i]._oVar4 == 0) {
 		ObjSetMicro(x, y, 534);
-		return;
-	}
-	if (object[i]._otype == OBJ_L3RDOOR && (object[i]._oVar4 == 1 || object[i]._oVar4 == 2)) {
+	} else if (object[i]._otype == OBJ_L3RDOOR && (object[i]._oVar4 == 1 || object[i]._oVar4 == 2)) {
 		ObjSetMicro(x, y, 541);
 	}
 }

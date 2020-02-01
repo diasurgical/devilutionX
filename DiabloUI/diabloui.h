@@ -39,7 +39,7 @@ BOOL UiSelHeroSingDialog(BOOL (*fninfo)(BOOL (*fninfofunc)(_uiheroinfo *)), BOOL
 BOOL UiCreditsDialog(int a1);
 BOOL UiMainMenuDialog(char *name, int *pdwResult, void (*fnSound)(char *file), int attractTimeOut);
 BOOL UiProgressDialog(HWND window, char *msg, int enable, int (*fnfunc)(), int rate);
-int UiProfileGetString();
+const char **UiProfileGetString();
 void UiProfileCallback();
 void UiProfileDraw();
 BOOL UiCategoryCallback(int a1, int a2, int a3, int a4, int a5, DWORD *a6, DWORD *a7);

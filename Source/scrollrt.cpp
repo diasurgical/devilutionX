@@ -793,8 +793,6 @@ static void DrawGame(int x, int y)
 	}
 
 	switch (ScrollInfo._sdir) {
-	case SDIR_NONE:
-		break;
 	case SDIR_N:
 		sy -= 32;
 		x--;
@@ -1071,7 +1069,7 @@ void ScrollView()
 void EnableFrameCount()
 {
 	frameflag = frameflag == 0;
-	framestart = GetTickCount();
+	framestart = SDL_GetTicks();
 }
 
 /**
@@ -1085,7 +1083,7 @@ static void DrawFPS()
 
 	if (frameflag && gbActive && pPanelText) {
 		frameend++;
-		tc = GetTickCount();
+		tc = SDL_GetTicks();
 		frames = tc - framestart;
 		if (tc - framestart >= 1000) {
 			framestart = tc;

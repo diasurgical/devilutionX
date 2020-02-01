@@ -1,5 +1,5 @@
 #include "devilution.h"
-#include "miniwin/ddraw.h"
+#include "display.h"
 #include "stubs.h"
 #include "utf8.h"
 #include <string>
@@ -320,6 +320,14 @@ void UiHandleEvents(SDL_Event *event)
 		MouseX = event->motion.x;
 		MouseY = event->motion.y;
 		return;
+	}
+
+	if (event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_RETURN) {
+		const Uint8 *state = SDLC_GetKeyState();
+		if (state[SDLC_KEYSTATE_LALT] || state[SDLC_KEYSTATE_RALT]) {
+			dx_reinit();
+			return;
+		}
 	}
 
 	if (event->type == SDL_QUIT)

@@ -20,9 +20,9 @@
 #define DispatchMessage DispatchMessageA
 #define PostMessage PostMessageA
 
-#define THREAD_PRIORITY_HIGHEST 2
+#define _strcmpi(a, b) strcasecmp(a, b)
 
-#define wvsprintf wvsprintfA
+#define THREAD_PRIORITY_HIGHEST 2
 
 //
 // File I/O
@@ -61,7 +61,6 @@
 #define WM_CLOSE DVL_WM_CLOSE
 #define WM_QUERYENDSESSION DVL_WM_QUERYENDSESSION
 #define WM_ERASEBKGND DVL_WM_ERASEBKGND
-#define WM_SYSKEYUP DVL_WM_SYSKEYUP
 #define WM_QUERYNEWPALETTE DVL_WM_QUERYNEWPALETTE
 
 #define SC_CLOSE DVL_SC_CLOSE

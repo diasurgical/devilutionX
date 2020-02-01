@@ -164,7 +164,7 @@ void gmenu_draw()
 			}
 		}
 
-		ticks = GetTickCount();
+		ticks = SDL_GetTicks();
 		if ((int)(ticks - PentSpin_tick) > 50) { // BUGFIX: thould be 50ms (Fixed)
 			PentSpin_frame++;
 			if (PentSpin_frame == 9)
@@ -230,7 +230,7 @@ int gmenu_get_lfont(TMenuItem *pItem)
 BOOL gmenu_presskeys(int vkey)
 {
 	if (!sgpCurrentMenu)
-		return 0;
+		return FALSE;
 	switch (vkey) {
 	case VK_RETURN:
 		if ((sgpCurrItem->dwFlags & GMENU_ENABLED) != 0) {
@@ -303,14 +303,14 @@ BOOLEAN gmenu_valid_mouse_pos(int *plOffset)
 	*plOffset = 282;
 	if (MouseX < 282 + PANEL_LEFT) {
 		*plOffset = 0;
-		return 0;
+		return FALSE;
 	}
 	if (MouseX > 538 + PANEL_LEFT) {
 		*plOffset = 256;
-		return 0;
+		return FALSE;
 	}
 	*plOffset = MouseX - 282 - PANEL_LEFT;
-	return 1;
+	return TRUE;
 }
 
 BOOL gmenu_left_mouse(BOOL isDown)

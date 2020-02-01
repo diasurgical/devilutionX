@@ -17,7 +17,7 @@ BYTE gbActivePlayers;
 BOOLEAN gbGameDestroyed;
 BOOLEAN sgbSendDeltaTbl[MAX_PLRS];
 _gamedata sgGameInitInfo;
-BOOLEAN gbGameUninitialized;
+BOOLEAN gbSelectProvider;
 int sglTimeoutStart;
 int sgdwPlayerLeftReasonTbl[MAX_PLRS];
 TBuffer sgLoPriBuf;
@@ -261,7 +261,7 @@ void multi_player_left_msg(int pnum, int left)
 void multi_net_ping()
 {
 	sgbTimeout = TRUE;
-	sglTimeoutStart = GetTickCount();
+	sglTimeoutStart = SDL_GetTicks();
 }
 
 int multi_handle_delta()
@@ -334,7 +334,7 @@ void multi_begin_timeout()
 	}
 #endif
 
-	nTicks = GetTickCount() - sglTimeoutStart;
+	nTicks = SDL_GetTicks() - sglTimeoutStart;
 	if (nTicks > 20000) {
 		gbRunGame = FALSE;
 		return;
@@ -565,7 +565,7 @@ void NetClose()
 	multi_event_handler(FALSE);
 	SNetLeaveGame(3);
 	if (gbMaxPlayers > 1)
-		Sleep(2000);
+		SDL_Delay(2000);
 }
 
 void multi_event_handler(BOOL add)
@@ -703,7 +703,7 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		if (sgbPlayerTurnBitTbl[myplr] == 0 || msg_wait_resync())
 			break;
 		NetClose();
-		gbGameUninitialized = FALSE;
+		gbSelectProvider = FALSE;
 	}
 	gnDifficulty = sgGameInitInfo.bDiff;
 	SetRndSeed(sgGameInitInfo.dwSeed);
@@ -808,7 +808,7 @@ BOOL multi_init_multi(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info,
 
 	for (first = TRUE;; first = FALSE) {
 		type = 0x00;
-		if (gbGameUninitialized) {
+		if (gbSelectProvider) {
 			if (!UiSelectProvider(0, client_info, user_info, ui_info, &fileinfo, &type)
 			    && (!first || SErrGetLastError() != STORM_ERROR_REQUIRES_UPGRADE || !multi_upgrade(pfExitProgram))) {
 				return FALSE;
@@ -821,7 +821,7 @@ BOOL multi_init_multi(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info,
 		if (UiSelectGame(1, client_info, user_info, ui_info, &fileinfo, &playerId))
 			break;
 
-		gbGameUninitialized = TRUE;
+		gbSelectProvider = TRUE;
 	}
 
 	if ((DWORD)playerId >= MAX_PLRS) {

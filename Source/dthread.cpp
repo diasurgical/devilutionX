@@ -104,7 +104,7 @@ unsigned int dthread_handler(void *)
 			mem_free_dbg(pkt);
 
 			if (dwMilliseconds)
-				Sleep(dwMilliseconds);
+				SDL_Delay(dwMilliseconds);
 		}
 	}
 

@@ -4,7 +4,7 @@
 #include <queue>
 #endif
 
-#include "miniwin/ddraw.h"
+#include "display.h"
 #include "stubs.h"
 #include <Radon.hpp>
 #include <SDL.h>
@@ -225,7 +225,7 @@ BOOL SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 		pszFileName = strchr(pszFileName, 46);
 
 	// omit all types except PCX
-	if (!pszFileName || _strcmpi(pszFileName, ".pcx")) {
+	if (!pszFileName || strcasecmp(pszFileName, ".pcx")) {
 		return false;
 	}
 

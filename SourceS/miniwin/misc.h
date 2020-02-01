@@ -87,8 +87,6 @@ typedef struct tagMSG {
 //
 typedef void *LPSECURITY_ATTRIBUTES;
 
-DWORD GetTickCount();
-
 HANDLE CreateEventA(LPSECURITY_ATTRIBUTES lpEventAttributes, WINBOOL bManualReset, WINBOOL bInitialState,
     LPCSTR lpName);
 BOOL CloseEvent(HANDLE event);
@@ -107,24 +105,10 @@ WINBOOL TranslateMessage(const MSG *lpMsg);
 LRESULT DispatchMessageA(const MSG *lpMsg);
 WINBOOL PostMessageA(UINT Msg, WPARAM wParam, LPARAM lParam);
 
-bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight);
-
 uintptr_t DVL_beginthreadex(void *_Security, unsigned _StackSize, unsigned(*_StartAddress)(void *),
     void *_ArgList, unsigned _InitFlag, unsigned *_ThrdAddr);
 DWORD GetCurrentThreadId();
 WINBOOL SetThreadPriority(HANDLE hThread, int nPriority);
-void Sleep(DWORD dwMilliseconds);
-
-int wvsprintfA(LPSTR dest, LPCSTR format, va_list arglist);
-int _strcmpi(const char *_Str1, const char *_Str2);
-
-//
-// File I/O
-//
-
-typedef void *LPOVERLAPPED;
-
-WINBOOL DeleteFileA(LPCSTR lpFileName);
 
 //
 // Total fakes
@@ -135,8 +119,6 @@ typedef struct {
 //
 // MSCVRT emulation
 //
-
-constexpr auto DVL_WM_SYSKEYUP = 0x0105;
 
 constexpr auto DVL_FILE_CURRENT = 1;
 
