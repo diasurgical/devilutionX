@@ -12,6 +12,7 @@ int testvar5 = 3; // change texture blend mode
 LightListStruct staticLights[25][100] = {0};
 int spellColors[100];
 int redrawLights = 0;
+bool drawRed = false;
 #endif
 DWORD sgdwCursWdtOld;
 DWORD sgdwCursX;

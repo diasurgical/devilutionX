@@ -16,6 +16,7 @@ extern int redrawLights;
 extern SDL_Surface *pal_surface;
 extern SDL_Surface *ui_surface;
 extern SDL_Surface *tmp_surface;
+extern bool drawRed;
 #endif
 extern BYTE *gpBufStart;
 extern BYTE *gpBufEnd;

@@ -1688,6 +1688,10 @@ void RedBack()
 {
 	int idx;
 
+#ifdef PIXEL_LIGHT
+	drawRed = true;
+	return;
+#endif
 	idx = light4flag ? 1536 : 4608;
 
 	/// ASSERT: assert(gpBuffer);

@@ -459,6 +459,9 @@ void RenderPresent()
 #ifndef USE_SDL1
 	if (renderer) {
 #ifdef PIXEL_LIGHT
+		Uint8 red_r = 255;
+		Uint8 red_g = 100;
+		Uint8 red_b = 55;
 		if (testvar3 != 0 && leveltype != DTYPE_TOWN && (redrawLights == 1 || (testvar1 == 1 && redrawLights != -1))) {
 			if (lightReady != 1) {
 				lightReady = 1;
@@ -503,11 +506,21 @@ void RenderPresent()
 		if (testvar3 != 0 && leveltype != DTYPE_TOWN && (redrawLights == 1 || (testvar1 == 1 && redrawLights != -1))) {
 			lightLoop();
 		}
+		if (drawRed) {
+			if (SDL_SetTextureColorMod(texture, red_r, red_g, red_b) < 0)
+				ErrSdl();
+		} 
 
 #endif
 		if (SDL_RenderCopy(renderer, texture, NULL, NULL) < 0)
 			ErrSdl();
 #ifdef PIXEL_LIGHT
+		int tmpRed = drawRed;
+		if (drawRed){
+			if (SDL_SetTextureColorMod(texture, 255, 255, 255) < 0)
+				ErrSdl();
+			drawRed = false;
+		}
 		if (testvar3 != 0 && leveltype != DTYPE_TOWN && (redrawLights == 1 || (testvar1 == 1 && redrawLights != -1))) {
 			//Setting the color key here because it might change each frame during fadein/fadeout which modify palette
 			if (SDL_SetColorKey(ui_surface, SDL_TRUE, PALETTE_TRANSPARENT_COLOR) < 0)
@@ -526,8 +539,16 @@ void RenderPresent()
 			rect.y = BORDER_TOP;
 			rect.w = SCREEN_WIDTH;
 			rect.h = SCREEN_HEIGHT;
+			if (tmpRed) {
+				if (SDL_SetTextureColorMod(ui_texture, red_r, red_g, red_b) < 0)
+					ErrSdl();
+			}
 			if (SDL_RenderCopy(renderer, ui_texture, &rect, NULL) > 0)
 				ErrSdl();
+			if (tmpRed) {
+				if (SDL_SetTextureColorMod(ui_texture, 255, 255, 255) < 0)
+					ErrSdl();
+			}
 			if (SDL_SetColorKey(ui_surface, SDL_FALSE, PALETTE_TRANSPARENT_COLOR) < 0)
 				ErrSdl();
 			SDL_DestroyTexture(ui_texture);
