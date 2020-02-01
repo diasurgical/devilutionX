@@ -870,7 +870,9 @@ void PressKey(int vkey)
 	}
 
 	if (vkey == VK_RETURN) {
-		if (stextflag) {
+		if (GetAsyncKeyState(VK_MENU) & 0x8000) {
+			dx_reinit();
+		} else if (stextflag) {
 			STextEnter();
 		} else if (questlog) {
 			QuestlogEnter();

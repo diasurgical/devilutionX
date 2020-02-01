@@ -58,7 +58,13 @@ MenuAction GetMenuAction(const SDL_Event &event)
 			return MenuAction::PAGE_UP;
 		case SDLK_PAGEDOWN:
 			return MenuAction::PAGE_DOWN;
-		case SDLK_RETURN:
+		case SDLK_RETURN: {
+			const Uint8 *state = SDLC_GetKeyState();
+			if (!state[SDLC_KEYSTATE_LALT] && !state[SDLC_KEYSTATE_RALT]) {
+				return MenuAction::SELECT;
+			}
+			break;
+		}
 		case SDLK_KP_ENTER:
 		case SDLK_SPACE:
 			return MenuAction::SELECT;

@@ -136,8 +136,6 @@ typedef struct {
 // MSCVRT emulation
 //
 
-constexpr auto DVL_WM_SYSKEYUP = 0x0105;
-
 constexpr auto DVL_FILE_CURRENT = 1;
 
 constexpr auto DVL_WM_QUIT = 0x0012;

@@ -144,27 +144,23 @@ void dx_cleanup()
 
 void dx_reinit()
 {
-	int lockCount;
-
-	sgMemCrit.Enter();
-	ClearCursor();
-	lockCount = sgdwLockCount;
-
-	while (sgdwLockCount != 0)
-		unlock_buf_priv();
-
-	dx_cleanup();
-
-	force_redraw = 255;
-
-	dx_init(ghMainWnd);
-
-	while (lockCount != 0) {
-		lock_buf_priv();
-		lockCount--;
+#ifdef USE_SDL1
+	int flags = window->flags;
+	window = SDL_SetVideoMode(0, 0, 0, window->flags ^ SDL_FULLSCREEN);
+	if (window == NULL) {
+		ErrSdl();
 	}
-
-	sgMemCrit.Leave();
+#else
+	Uint32 flags = 0;
+	if (!fullscreen) {
+		flags = renderer ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_FULLSCREEN;
+	}
+	if (SDL_SetWindowFullscreen(window, flags)) {
+		ErrSdl();
+	}
+#endif
+	fullscreen = !fullscreen;
+	force_redraw = 255;
 }
 
 void CreatePalette()
