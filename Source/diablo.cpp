@@ -1730,6 +1730,10 @@ void timeout_cursor(BOOL bTimeout)
 			SetCursor_(CURSOR_HOURGLASS);
 			force_redraw = 255;
 		}
+#ifdef PIXEL_LIGHT
+		//deals with the lights while lagging
+		redrawLights = 1;
+#endif
 		scrollrt_draw_game_screen(TRUE);
 	} else if (sgnTimeoutCurs) {
 		SetCursor_(sgnTimeoutCurs);
