@@ -51,6 +51,7 @@ void init_create_window()
 	gbActive = true;
 	gpBufStart = &gpBuffer[BUFFER_WIDTH * SCREEN_Y];
 	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_HEIGHT + SCREEN_Y)];
+	gpBufEnd -= (uintptr_t)gpBuffer;
 	SDL_DisableScreenSaver();
 }
 
