@@ -83,6 +83,10 @@ static void scrollrt_draw_cursor_back_buffer()
 	int i;
 	BYTE *src, *dst;
 
+#ifdef PIXEL_LIGHT
+	// fixes the cursor during loading/entering new level by skipping this function
+	sgdwCursWdt = 0;
+#endif
 	if (sgdwCursWdt == 0) {
 		return;
 	}
