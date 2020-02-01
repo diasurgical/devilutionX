@@ -519,10 +519,15 @@ void RenderPresent()
 			//Setting the color key here because it might change each frame during fadein/fadeout which modify palette
 			if (SDL_SetColorKey(ui_surface, SDL_TRUE, PALETTE_TRANSPARENT_COLOR) < 0)
 				ErrSdl();
-			SDL_Texture *ui_texture = SDL_CreateTextureFromSurface(renderer, ui_surface);
-			if (ui_texture == NULL)
+			SDL_Surface *sur24 = SDL_CreateRGBSurfaceWithFormat(0, SCREEN_WIDTH, SCREEN_HEIGHT, 8, SDL_PIXELFORMAT_RGB888);
+			if (sur32 == NULL)
 				ErrSdl();
-			if (SDL_SetColorKey(ui_surface, SDL_FALSE, PALETTE_TRANSPARENT_COLOR) < 0)
+			// Convert from 8-bit to 24-bit
+			SDL_Surface *tmp = SDL_ConvertSurface(ui_surface, sur24->format, 0);
+			if (tmp == NULL)
+				ErrSdl();
+			SDL_Texture *ui_texture = SDL_CreateTextureFromSurface(renderer, tmp);
+			if (ui_texture == NULL)
 				ErrSdl();
 			if (SDL_SetTextureBlendMode(ui_texture, SDL_BLENDMODE_BLEND) < 0)
 				ErrSdl();
@@ -533,7 +538,11 @@ void RenderPresent()
 			rect.h = SCREEN_HEIGHT;
 			if (SDL_RenderCopy(renderer, ui_texture, &rect, NULL) > 0)
 				ErrSdl();
+			if (SDL_SetColorKey(ui_surface, SDL_FALSE, PALETTE_TRANSPARENT_COLOR) < 0)
+				ErrSdl();
 			SDL_DestroyTexture(ui_texture);
+			SDL_FreeSurface(tmp);
+			SDL_FreeSurface(sur32);
 			if (testvar1 != 1)
 				redrawLights = 0;
 		}

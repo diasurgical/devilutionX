@@ -1258,6 +1258,8 @@ void DrawAndBlit()
 		redrawLights = 1;
 		if (SDL_BlitSurface(pal_surface, NULL, ui_surface, NULL) < 0)
 			ErrSdl();
+		if (SDL_FillRect(pal_surface, NULL, PALETTE_TRANSPARENT_COLOR) < 0)
+			ErrSdl();
 		if (SDL_BlitSurface(tmp_surface, NULL, pal_surface, NULL) < 0)
 			ErrSdl();
 	}
