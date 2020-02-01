@@ -520,7 +520,7 @@ void RenderPresent()
 			if (SDL_SetColorKey(ui_surface, SDL_TRUE, PALETTE_TRANSPARENT_COLOR) < 0)
 				ErrSdl();
 			SDL_Surface *sur24 = SDL_CreateRGBSurfaceWithFormat(0, SCREEN_WIDTH, SCREEN_HEIGHT, 8, SDL_PIXELFORMAT_RGB888);
-			if (sur32 == NULL)
+			if (sur24 == NULL)
 				ErrSdl();
 			// Convert from 8-bit to 24-bit
 			SDL_Surface *tmp = SDL_ConvertSurface(ui_surface, sur24->format, 0);
@@ -542,7 +542,7 @@ void RenderPresent()
 				ErrSdl();
 			SDL_DestroyTexture(ui_texture);
 			SDL_FreeSurface(tmp);
-			SDL_FreeSurface(sur32);
+			SDL_FreeSurface(sur24);
 			if (testvar1 != 1)
 				redrawLights = 0;
 		}
