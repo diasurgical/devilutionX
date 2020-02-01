@@ -43,7 +43,7 @@ void InitVideoMode(int width, int height, int bpp, std::uint32_t flags)
 
 } // namespace
 
-bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight)
+bool SpawnWindow(const char *lpWindowName, int nWidth, int nHeight)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) <= -1) {
 		ErrSdl();

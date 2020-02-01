@@ -270,7 +270,6 @@ void diablo_init()
 
 	ReadOnlyTest();
 
-	srand(SDL_GetTicks());
 	InitHash();
 
 	diablo_init_screen();

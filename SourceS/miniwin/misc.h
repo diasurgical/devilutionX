@@ -4,49 +4,34 @@ namespace dvl {
 
 constexpr auto DVL_MAX_PATH = 260;
 
-typedef char CHAR;
 typedef uint16_t SHORT;
 typedef int32_t LONG;
 typedef uint8_t BOOLEAN;
 
-typedef LONG *PLONG;
 typedef unsigned char UCHAR;
 
 typedef uint32_t DWORD;
-typedef int BOOL, WINBOOL;
+typedef int BOOL;
 typedef unsigned char BYTE;
 typedef unsigned short WORD;
-typedef float FLOAT;
 typedef DWORD *LPDWORD;
 typedef void *LPVOID;
 typedef void *PVOID;
-typedef const void *LPCVOID;
 
-typedef int INT;
 typedef unsigned int UINT;
 
-typedef intptr_t INT_PTR, *PINT_PTR;
-
-typedef intptr_t LONG_PTR, *PLONG_PTR;
-typedef uintptr_t ULONG_PTR, *PULONG_PTR;
-
-typedef ULONG_PTR DWORD_PTR, *PDWORD_PTR;
-
-typedef CHAR *LPSTR;
-typedef const CHAR *LPCSTR;
+typedef uintptr_t DWORD_PTR, *PDWORD_PTR;
 
 typedef uintptr_t WPARAM;
-typedef LONG_PTR LPARAM;
-typedef LONG_PTR LRESULT;
+typedef uintptr_t LPARAM;
+typedef uintptr_t LRESULT;
 
 //
 // Handles
 //
 typedef void *HANDLE;
 
-typedef HANDLE HWND, HGDIOBJ, HMODULE, HDC, HRGN, HINSTANCE, HCURSOR;
-
-typedef LONG LCID;
+typedef HANDLE HWND, HMODULE, HDC, HINSTANCE;
 
 typedef LRESULT(*WNDPROC)(HWND, UINT, WPARAM, LPARAM);
 
@@ -55,40 +40,17 @@ typedef struct _FILETIME {
 	DWORD dwHighDateTime;
 } FILETIME, *LPFILETIME;
 
-typedef struct tagRECT {
-	LONG left;
-	LONG top;
-	LONG right;
-	LONG bottom;
-} RECT;
-
-typedef RECT *LPRECT;
-
-typedef struct tagPOINT {
-	LONG x;
-	LONG y;
-} POINT;
-
-typedef struct tagSIZE {
-	LONG cx;
-	LONG cy;
-} SIZE;
-
 typedef struct tagMSG {
 	UINT message;
 	WPARAM wParam;
 	LPARAM lParam;
-	DWORD time;
-	POINT pt;
 } MSG, *LPMSG;
 
 //
 // Everything else
 //
-typedef void *LPSECURITY_ATTRIBUTES;
 
-HANDLE CreateEventA(LPSECURITY_ATTRIBUTES lpEventAttributes, WINBOOL bManualReset, WINBOOL bInitialState,
-    LPCSTR lpName);
+HANDLE CreateEventA();
 BOOL CloseEvent(HANDLE event);
 void SetEvent(HANDLE hEvent);
 void ResetEvent(HANDLE hEvent);
@@ -99,22 +61,16 @@ void FocusOnCharInfo();
 
 SHORT GetAsyncKeyState(int vKey);
 
-WINBOOL PeekMessageA(LPMSG lpMsg);
+bool PeekMessageA(LPMSG lpMsg);
 
-WINBOOL TranslateMessage(const MSG *lpMsg);
+bool TranslateMessage(const MSG *lpMsg);
 LRESULT DispatchMessageA(const MSG *lpMsg);
-WINBOOL PostMessageA(UINT Msg, WPARAM wParam, LPARAM lParam);
+bool PostMessageA(UINT Msg, WPARAM wParam, LPARAM lParam);
 
 uintptr_t DVL_beginthreadex(void *_Security, unsigned _StackSize, unsigned(*_StartAddress)(void *),
     void *_ArgList, unsigned _InitFlag, unsigned *_ThrdAddr);
 DWORD GetCurrentThreadId();
-WINBOOL SetThreadPriority(HANDLE hThread, int nPriority);
-
-//
-// Total fakes
-//
-typedef struct {
-} SOCKADDR;
+bool SetThreadPriority(HANDLE hThread, int nPriority);
 
 //
 // MSCVRT emulation

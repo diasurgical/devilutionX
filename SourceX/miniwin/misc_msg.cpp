@@ -256,7 +256,7 @@ WPARAM keystate_for_mouse(WPARAM ret)
 	return ret;
 }
 
-WINBOOL false_avail(const char *name, int value)
+bool false_avail(const char *name, int value)
 {
 	SDL_Log("Unhandled SDL event: %s %d", name, value);
 	return true;
@@ -342,7 +342,7 @@ bool BlurInventory()
 	return true;
 }
 
-WINBOOL PeekMessageA(LPMSG lpMsg)
+bool PeekMessageA(LPMSG lpMsg)
 {
 #ifdef __SWITCH__
 	HandleDocking();
@@ -623,7 +623,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg)
 	return true;
 }
 
-WINBOOL TranslateMessage(const MSG *lpMsg)
+bool TranslateMessage(const MSG *lpMsg)
 {
 	if (lpMsg->message == DVL_WM_KEYDOWN) {
 		int key = lpMsg->wParam;
@@ -763,7 +763,7 @@ LRESULT DispatchMessageA(const MSG *lpMsg)
 	return CurrentProc(NULL, lpMsg->message, lpMsg->wParam, lpMsg->lParam);
 }
 
-WINBOOL PostMessageA(UINT Msg, WPARAM wParam, LPARAM lParam)
+bool PostMessageA(UINT Msg, WPARAM wParam, LPARAM lParam)
 {
 	MSG msg;
 	msg.message = Msg;

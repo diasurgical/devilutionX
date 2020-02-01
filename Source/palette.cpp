@@ -156,24 +156,30 @@ int UpdateGamma(int gamma)
 void SetFadeLevel(DWORD fadeval)
 {
 	int i;
-	RECT SrcRect;
 
-	if (1) {
-		for (i = 0; i < 255; i++) {
-			system_palette[i].r = (fadeval * logical_palette[i].r) >> 8;
-			system_palette[i].g = (fadeval * logical_palette[i].g) >> 8;
-			system_palette[i].b = (fadeval * logical_palette[i].b) >> 8;
-		}
-		palette_update();
-
-		// Workaround for flickering mouse in caves https://github.com/diasurgical/devilutionX/issues/7
-		SrcRect.left = BORDER_LEFT;
-		SrcRect.top = BORDER_TOP;
-		SrcRect.right = BUFFER_WIDTH;
-		SrcRect.bottom = BUFFER_HEIGHT; // menu isn't offset so make sure we copy all of it
-		BltFast(0, 0, &SrcRect);
-		RenderPresent();
+	for (i = 0; i < 255; i++) {
+		system_palette[i].r = (fadeval * logical_palette[i].r) >> 8;
+		system_palette[i].g = (fadeval * logical_palette[i].g) >> 8;
+		system_palette[i].b = (fadeval * logical_palette[i].b) >> 8;
 	}
+	palette_update();
+
+	// Workaround for flickering mouse in caves https://github.com/diasurgical/devilutionX/issues/7
+	SDL_Rect SrcRect = {
+		SCREEN_X,
+		SCREEN_Y,
+		SCREEN_WIDTH,
+		SCREEN_HEIGHT,
+	};
+	SDL_Rect DstRect = {
+		0,
+		0,
+		SCREEN_WIDTH,
+		SCREEN_HEIGHT,
+	};
+
+	BltFast(&SrcRect, &DstRect);
+	RenderPresent();
 }
 
 void BlackPalette()

@@ -1104,14 +1104,20 @@ static void DrawFPS()
  */
 static void DoBlitScreen(DWORD dwX, DWORD dwY, DWORD dwWdt, DWORD dwHgt)
 {
-	RECT SrcRect;
+	SDL_Rect SrcRect = {
+		dwX + SCREEN_X,
+		dwY + SCREEN_Y,
+		dwWdt,
+		dwHgt,
+	};
+	SDL_Rect DstRect = {
+		dwX,
+		dwY,
+		dwWdt,
+		dwHgt,
+	};
 
-	SrcRect.left = dwX + SCREEN_X;
-	SrcRect.top = dwY + SCREEN_Y;
-	SrcRect.right = SrcRect.left + dwWdt - 1;
-	SrcRect.bottom = SrcRect.top + dwHgt - 1;
-
-	BltFast(dwX, dwY, &SrcRect);
+	BltFast(&SrcRect, &DstRect);
 }
 
 /**

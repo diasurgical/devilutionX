@@ -57,7 +57,7 @@ DWORD GetCurrentThreadId()
 	return SDL_GetThreadID(NULL);
 }
 
-WINBOOL SetThreadPriority(HANDLE hThread, int nPriority)
+bool SetThreadPriority(HANDLE hThread, int nPriority)
 {
 	// SDL cannot set the priority of the non-current thread
 	// (and e.g. unprivileged processes on Linux cannot increase it)
@@ -92,23 +92,8 @@ void DeleteCriticalSection(LPCRITICAL_SECTION lpCriticalSection)
 	SDL_DestroyMutex(*((SDL_mutex **)lpCriticalSection));
 }
 
-HANDLE CreateEventA(LPSECURITY_ATTRIBUTES lpEventAttributes, WINBOOL bManualReset, WINBOOL bInitialState,
-    LPCSTR lpName)
+HANDLE CreateEventA()
 {
-	if (lpName != NULL && !strcmp(lpName, "DiabloEvent")) {
-		// This is used by diablo.cpp to check whether
-		// the game is already running
-		// (we do not want to replicate this behaviour anyway)
-		return NULL;
-	}
-	if (lpEventAttributes != NULL)
-		UNIMPLEMENTED();
-	if (bManualReset != true)
-		UNIMPLEMENTED();
-	if (bInitialState != false)
-		UNIMPLEMENTED();
-	if (lpName != NULL)
-		UNIMPLEMENTED();
 	struct event_emul *ret;
 	ret = (struct event_emul *)malloc(sizeof(struct event_emul));
 	ret->mutex = SDL_CreateMutex();

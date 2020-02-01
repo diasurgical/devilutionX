@@ -58,7 +58,7 @@ void dthread_start()
 		return;
 	}
 
-	sghWorkToDoEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+	sghWorkToDoEvent = CreateEvent();
 	if (!sghWorkToDoEvent) {
 		error_buf = TraceLastError();
 		app_fatal("dthread:1\n%s", error_buf);

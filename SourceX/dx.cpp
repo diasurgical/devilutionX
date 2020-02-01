@@ -203,32 +203,20 @@ void CreatePalette()
 	}
 }
 
-void BltFast(DWORD dwX, DWORD dwY, LPRECT lpSrcRect)
+void BltFast(SDL_Rect *src_rect, SDL_Rect *dst_rect)
 {
-	auto w = static_cast<decltype(SDL_Rect().w)>(lpSrcRect->right - lpSrcRect->left + 1);
-	auto h = static_cast<decltype(SDL_Rect().h)>(lpSrcRect->bottom - lpSrcRect->top + 1);
-	SDL_Rect src_rect = {
-		static_cast<decltype(SDL_Rect().x)>(lpSrcRect->left),
-		static_cast<decltype(SDL_Rect().y)>(lpSrcRect->top),
-		w, h
-	};
-	SDL_Rect dst_rect = {
-		static_cast<decltype(SDL_Rect().x)>(dwX),
-		static_cast<decltype(SDL_Rect().y)>(dwY),
-		w, h
-	};
 	if (OutputRequiresScaling()) {
-		ScaleOutputRect(&dst_rect);
+		ScaleOutputRect(dst_rect);
 		// Convert from 8-bit to 32-bit
 		SDL_Surface *tmp = SDL_ConvertSurface(pal_surface, GetOutputSurface()->format, 0);
-		if (SDL_BlitScaled(tmp, &src_rect, GetOutputSurface(), &dst_rect) < 0) {
+		if (SDL_BlitScaled(tmp, src_rect, GetOutputSurface(), dst_rect) < 0) {
 			SDL_FreeSurface(tmp);
 			ErrSdl();
 		}
 		SDL_FreeSurface(tmp);
 	} else {
 		// Convert from 8-bit to 32-bit
-		if (SDL_BlitSurface(pal_surface, &src_rect, GetOutputSurface(), &dst_rect) < 0) 
+		if (SDL_BlitSurface(pal_surface, src_rect, GetOutputSurface(), dst_rect) < 0) 
 			ErrSdl();
 	}
 }
@@ -517,8 +505,8 @@ void RenderPresent()
 #ifdef PIXEL_LIGHT
 		if (testvar3 != 0 && leveltype != DTYPE_TOWN && (redrawLights == 1 || (testvar1 == 1 && redrawLights != -1))) {
 			//Setting the color key here because it might change each frame during fadein/fadeout which modify palette
-			//if (SDL_SetColorKey(ui_surface, SDL_TRUE, PALETTE_TRANSPARENT_COLOR) < 0)
-			//	ErrSdl();
+			if (SDL_SetColorKey(ui_surface, SDL_TRUE, PALETTE_TRANSPARENT_COLOR) < 0)
+				ErrSdl();
 			// Convert from 8-bit to 24-bit
 			SDL_Surface *tmp = SDL_ConvertSurface(ui_surface, renderer_texture_surface->format, 0);
 			if (tmp == NULL)
@@ -535,8 +523,8 @@ void RenderPresent()
 			rect.h = SCREEN_HEIGHT;
 			if (SDL_RenderCopy(renderer, ui_texture, &rect, NULL) > 0)
 				ErrSdl();
-			//if (SDL_SetColorKey(ui_surface, SDL_FALSE, PALETTE_TRANSPARENT_COLOR) < 0)
-			//	ErrSdl();
+			if (SDL_SetColorKey(ui_surface, SDL_FALSE, PALETTE_TRANSPARENT_COLOR) < 0)
+				ErrSdl();
 			SDL_DestroyTexture(ui_texture);
 			SDL_FreeSurface(tmp);
 			if (testvar1 != 1)

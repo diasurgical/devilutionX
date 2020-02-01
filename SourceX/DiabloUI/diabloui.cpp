@@ -411,9 +411,9 @@ void UiInitialize()
 	}
 }
 
-int UiProfileGetString()
+const char **UiProfileGetString()
 {
-	return 0;
+	return NULL;
 }
 
 char connect_plrinfostr[128];
@@ -496,7 +496,7 @@ BOOL UiGetDataCallback(int game_type, int data_code, void *a3, int a4, int a5)
 	UNIMPLEMENTED();
 }
 
-BOOL UiAuthCallback(int a1, char *a2, char *a3, char a4, char *a5, LPSTR lpBuffer, int cchBufferMax)
+BOOL UiAuthCallback(int a1, char *a2, char *a3, char a4, char *a5, char *lpBuffer, int cchBufferMax)
 {
 	UNIMPLEMENTED();
 }
@@ -506,12 +506,12 @@ BOOL UiSoundCallback(int a1, int type, int a3)
 	UNIMPLEMENTED();
 }
 
-void UiMessageBoxCallback(HWND hWnd, char *lpText, LPCSTR lpCaption, UINT uType)
+void UiMessageBoxCallback(HWND hWnd, char *lpText, const char *lpCaption, UINT uType)
 {
 	UNIMPLEMENTED();
 }
 
-BOOL UiDrawDescCallback(int game_type, DWORD color, LPCSTR lpString, char *a4, int a5, UINT align, time_t a7,
+BOOL UiDrawDescCallback(int game_type, DWORD color, const char *lpString, char *a4, int a5, UINT align, time_t a7,
     HDC *a8)
 {
 	UNIMPLEMENTED();
