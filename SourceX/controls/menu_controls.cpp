@@ -66,8 +66,12 @@ MenuAction GetMenuAction(const SDL_Event &event)
 			break;
 		}
 		case SDLK_KP_ENTER:
-		case SDLK_SPACE:
 			return MenuAction::SELECT;
+		case SDLK_SPACE:
+			if (!SDL_IsTextInputActive()) {
+				return MenuAction::SELECT;
+			}
+			break;
 		case SDLK_DELETE:
 			return MenuAction::DELETE;
 		case SDLK_LEFT:
