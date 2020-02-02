@@ -2920,11 +2920,11 @@ typedef enum dlrg_flag {
 } dlrg_flag;
 
 typedef enum conn_type {
+	SELCONN_LOOPBACK = 0,
 #ifndef NONET
 	SELCONN_TCP,
 #ifdef BUGGY
 	SELCONN_UDP,
 #endif
 #endif
-	SELCONN_LOOPBACK,
 } conn_type;
