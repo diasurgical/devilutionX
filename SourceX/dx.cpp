@@ -389,7 +389,7 @@ void lightLoop()
 		drawRadius(lid, LightList[lid]._lx, LightList[lid]._ly, LightList[lid]._lradius, LightList[lid]._lcolor);
 	}
 
-	for (int i = 0; i < staticLights[currlevel + setlvlnum * 32].size(); i++) {
+	for (unsigned int i = 0; i < staticLights[currlevel + setlvlnum * 32].size(); i++) {
 		LightListStruct *it = &staticLights[currlevel + setlvlnum * 32][i];
 		drawRadius(-1, it->_lx, it->_ly, it->_lradius, it->_lcolor);
 	}
