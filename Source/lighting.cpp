@@ -522,7 +522,7 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 				it->_lx = nXPos;
 				it->_ly = nYPos;
 				it->_lradius = nRadius;
-				it->_lcolor = 0xFFCC66;
+				it->_lcolor = lightColorMap["STATICLIGHT"];
 				break;
 			}
 			if (it->_lx == nXPos && it->_ly == nYPos) {

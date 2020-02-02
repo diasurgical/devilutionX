@@ -1583,7 +1583,11 @@ void ActivateTrapLine(int ttype, int tid)
 			object[oi]._oVar4 = 1;
 			object[oi]._oAnimFlag = 1;
 			object[oi]._oAnimDelay = 1;
+#ifdef PIXEL_LIGHT
+			object[oi]._olid = AddLight(object[oi]._ox, object[oi]._oy, 1, lightColorMap["TRAPLIGHT"]);
+#else
 			object[oi]._olid = AddLight(object[oi]._ox, object[oi]._oy, 1);
+#endif
 		}
 	}
 }

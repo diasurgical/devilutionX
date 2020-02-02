@@ -34,6 +34,46 @@ SDL_Surface *ui_surface;
 SDL_Surface *predrawnEllipses[20];
 SDL_Texture *ellipsesTextures[20];
 int lightReady = 0;
+
+void prepareLightColors()
+{
+	int orange = 0xff9933;
+	int darkorange = 0xff6600;
+	int blue = 0x0000ff;
+	int darkblue = 0x003399;
+	int green = 0x00ff00;
+	int red = 0xff0000;
+	int white = 0xffffff;
+
+	//others
+	lightColorMap["PLAYERLIGHT"] = white;
+	lightColorMap["TRAPLIGHT"] = green;
+	lightColorMap["LIGHTNINGARROW"] = blue;
+	lightColorMap["FIREARROW"] = darkorange;
+	lightColorMap["MAGMABALL"] = green;
+	lightColorMap["BLOODSTAR"] = red;
+	lightColorMap["DIABLODEATH"] = red;
+	lightColorMap["UNIQUEMONSTER"] = green;
+	lightColorMap["REDPORTAL"] = green;
+	lightColorMap["STATICLIGHT"] = darkorange;
+
+	//spells
+	lightColorMap["FIREBOLT"] = darkorange;
+	lightColorMap["LIGHTNING"] = blue;
+	lightColorMap["FLASH"] = blue;
+	lightColorMap["FIREWALL"] = red;
+	lightColorMap["TOWNPORTAL"] = blue;
+	lightColorMap["FIREBALL"] = orange;
+	lightColorMap["GUARDIAN"] = green;
+	lightColorMap["FLAMEWAVE"] = red;
+	lightColorMap["NOVA"] = blue;
+	lightColorMap["INFERNO"] = red;
+	lightColorMap["APOCALYPSE"] = darkorange;
+	lightColorMap["ELEMENTAL"] = darkorange;
+	lightColorMap["CHARGEDBOLT"] = darkblue;
+	lightColorMap["HOLYBOLT"] = blue;
+	lightColorMap["BONESPIRIT"] = green;
+}
 #endif
 
 static void dx_create_back_buffer()
@@ -56,6 +96,7 @@ static void dx_create_back_buffer()
 #endif
 
 #ifdef PIXEL_LIGHT
+	prepareLightColors();
 	ui_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);
 	if (ui_surface == NULL)
 		ErrSdl();
@@ -378,51 +419,6 @@ void predrawEllipse(int radius)
 	}
 }
 
-void prepareSpellColors()
-{
-	int orange = 0xff9900;
-	//int blue = 0x6699ff;
-	int blue = 0x0033cc;
-	int green = 0x00ff00;
-	//SPL_NULL = 0x0,
-	spellColors[SPL_FIREBOLT] = orange;
-	//SPL_HEAL = 0x2,
-	spellColors[SPL_LIGHTNING] = blue;
-	//spellColors[SPL_FLASH] = blue;
-	//SPL_IDENTIFY = 0x5,
-	spellColors[SPL_FIREWALL] = orange;
-	spellColors[SPL_TOWN] = blue;
-	//SPL_STONE = 0x8,
-	//SPL_INFRA = 0x9,
-	//SPL_RNDTELEPORT = 0xA,
-	//SPL_MANASHIELD = 0xB,
-	spellColors[SPL_FIREBALL] = orange;
-	spellColors[SPL_GUARDIAN] = orange;
-	spellColors[SPL_CHAIN] = blue;
-	spellColors[SPL_WAVE] = orange;
-	//SPL_DOOMSERP = 0x10,
-	//SPL_BLODRIT = 0x11,
-	spellColors[SPL_NOVA] = blue;
-	//SPL_INVISIBIL = 0x13,
-	//SPL_FLAME = 0x14,
-	//SPL_GOLEM = 0x15,
-	//SPL_BLODBOIL = 0x16,
-	//SPL_TELEPORT = 0x17,
-	spellColors[SPL_APOCA] = orange;
-	//SPL_ETHEREALIZE = 0x19,
-	//SPL_REPAIR = 0x1A,
-	//SPL_RECHARGE = 0x1B,
-	//SPL_DISARM = 0x1C,
-	spellColors[SPL_ELEMENT] = orange;
-	spellColors[SPL_CBOLT] = blue;
-	spellColors[SPL_HBOLT] = blue;
-	//SPL_RESURRECT = 0x20,
-	//SPL_TELEKINESIS = 0x21,
-	//SPL_HEALOTHER = 0x22,
-	//SPL_FLARE = 0x23,
-	spellColors[SPL_BONESPIRIT] = green;
-}
-
 void prepareLight()
 {
 	SDL_RenderGetLogicalSize(renderer, &width, &height);
@@ -465,7 +461,6 @@ void RenderPresent()
 		if (testvar3 != 0 && leveltype != DTYPE_TOWN && (redrawLights == 1 || (testvar1 == 1 && redrawLights != -1))) {
 			if (lightReady != 1) {
 				lightReady = 1;
-				prepareSpellColors();
 				prepareLight();
 			}
 			SDL_BlendMode bm;

@@ -10,9 +10,9 @@ int testvar3 = 1; // enable pixel light
 int testvar4 = 1; // 0 = normal light, 1 = fully lit
 int testvar5 = 3; // change texture blend mode
 LightListStruct staticLights[25][100] = {0};
-int spellColors[100];
 int redrawLights = 0;
 bool drawRed = false;
+std::map<std::string, int> lightColorMap;
 #endif
 DWORD sgdwCursWdtOld;
 DWORD sgdwCursX;

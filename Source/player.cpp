@@ -906,7 +906,11 @@ void InitPlayer(int pnum, BOOL FirstTime)
 		plr[pnum].destAction = ACTION_NONE;
 
 		if (pnum == myplr) {
+#ifdef PIXEL_LIGHT
+			plr[pnum]._plid = AddLight(plr[pnum].WorldX, plr[pnum].WorldY, plr[pnum]._pLightRad, lightColorMap["PLAYERLIGHT"]);
+#else
 			plr[pnum]._plid = AddLight(plr[pnum].WorldX, plr[pnum].WorldY, plr[pnum]._pLightRad);
+#endif
 		} else {
 			plr[pnum]._plid = -1;
 		}

@@ -684,7 +684,11 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int unpackfilesize)
 	Monst->mMaxDamage2 = Uniq->mMaxDamage;
 	Monst->mMagicRes = Uniq->mMagicRes;
 	Monst->mtalkmsg = Uniq->mtalkmsg;
+#ifdef PIXEL_LIGHT
+	Monst->mlid = AddLight(Monst->_mx, Monst->_my, 3, lightColorMap["UNIQUEMONSTER"]);
+#else
 	Monst->mlid = AddLight(Monst->_mx, Monst->_my, 3);
+#endif
 
 	if (gbMaxPlayers == 1) {
 		if (Monst->mtalkmsg) {
@@ -1570,7 +1574,11 @@ void M_DiabloDeath(int i, BOOL sendmsg)
 		M_ClearSquares(k);
 		dMonster[pmonster->_mx][pmonster->_my] = k + 1;
 	}
+#ifdef PIXEL_LIGHT
+	AddLight(Monst->_mx, Monst->_my, 8, lightColorMap["DIABLODEATH"]);
+#else
 	AddLight(Monst->_mx, Monst->_my, 8);
+#endif
 	DoVision(Monst->_mx, Monst->_my, 8, FALSE, TRUE);
 	if (abs(ViewX - Monst->_mx) > abs(ViewY - Monst->_my))
 		dist = abs(ViewX - Monst->_mx);

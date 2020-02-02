@@ -40,7 +40,11 @@ void AddWarpMissile(int i, int x, int y)
 		SetMissDir(mi, 1);
 
 		if (currlevel != 0)
+#ifdef PIXEL_LIGHT
+			missile[mi]._mlid = AddLight(missile[mi]._mix, missile[mi]._miy, 15, lightColorMap["TOWNPORTAL"]);
+#else
 			missile[mi]._mlid = AddLight(missile[mi]._mix, missile[mi]._miy, 15);
+#endif
 
 		missiledata[MIS_TOWN].mlSFX = LS_SENTINEL;
 	}
