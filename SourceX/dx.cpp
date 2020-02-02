@@ -44,35 +44,40 @@ void prepareLightColors()
 	int green = 0x00ff00;
 	int red = 0xff0000;
 	int white = 0xffffff;
+	int lime = 0xbfff00;
 
 	//others
-	lightColorMap["PLAYERLIGHT"] = white;
-	lightColorMap["TRAPLIGHT"] = green;
-	lightColorMap["LIGHTNINGARROW"] = blue;
-	lightColorMap["FIREARROW"] = darkorange;
-	lightColorMap["MAGMABALL"] = green;
-	lightColorMap["BLOODSTAR"] = red;
-	lightColorMap["DIABLODEATH"] = red;
-	lightColorMap["UNIQUEMONSTER"] = green;
-	lightColorMap["REDPORTAL"] = green;
-	lightColorMap["STATICLIGHT"] = darkorange;
+	lightColorMap.at("PLAYERLIGHT") = white;
+	lightColorMap.at("TRAPLIGHT") = green;
+	lightColorMap.at("LIGHTNINGARROW") = blue;
+	lightColorMap.at("FIREARROW") = darkorange;
+	lightColorMap.at("MAGMABALL") = green;
+	lightColorMap.at("BLOODSTAR_RED") = red;
+	lightColorMap.at("BLOODSTAR_BLUE") = darkblue;
+	lightColorMap.at("BLOODSTAR_YELLOW") = lime;
+	lightColorMap.at("ACIDMISSILE") = lime;
+	lightColorMap.at("ACIDPUDDLE") = lime;
+	lightColorMap.at("DIABLODEATH") = red;
+	lightColorMap.at("UNIQUEMONSTER") = green;
+	lightColorMap.at("REDPORTAL") = green;
+	lightColorMap.at("STATICLIGHT") = darkorange;
 
 	//spells
-	lightColorMap["FIREBOLT"] = darkorange;
-	lightColorMap["LIGHTNING"] = blue;
-	lightColorMap["FLASH"] = blue;
-	lightColorMap["FIREWALL"] = red;
-	lightColorMap["TOWNPORTAL"] = blue;
-	lightColorMap["FIREBALL"] = orange;
-	lightColorMap["GUARDIAN"] = green;
-	lightColorMap["FLAMEWAVE"] = red;
-	lightColorMap["NOVA"] = blue;
-	lightColorMap["INFERNO"] = red;
-	lightColorMap["APOCALYPSE"] = darkorange;
-	lightColorMap["ELEMENTAL"] = darkorange;
-	lightColorMap["CHARGEDBOLT"] = darkblue;
-	lightColorMap["HOLYBOLT"] = blue;
-	lightColorMap["BONESPIRIT"] = green;
+	lightColorMap.at("FIREBOLT") = darkorange;
+	lightColorMap.at("LIGHTNING") = blue;
+	lightColorMap.at("FLASH") = blue;
+	lightColorMap.at("FIREWALL") = red;
+	lightColorMap.at("TOWNPORTAL") = blue;
+	lightColorMap.at("FIREBALL") = orange;
+	lightColorMap.at("GUARDIAN") = green;
+	lightColorMap.at("FLAMEWAVE") = red;
+	lightColorMap.at("NOVA") = blue;
+	lightColorMap.at("INFERNO") = red;
+	lightColorMap.at("APOCALYPSE") = darkorange;
+	lightColorMap.at("ELEMENTAL") = darkorange;
+	lightColorMap.at("CHARGEDBOLT") = darkblue;
+	lightColorMap.at("HOLYBOLT") = blue;
+	lightColorMap.at("BONESPIRIT") = green;
 }
 #endif
 
@@ -384,11 +389,8 @@ void lightLoop()
 		drawRadius(lid, LightList[lid]._lx, LightList[lid]._ly, LightList[lid]._lradius, LightList[lid]._lcolor);
 	}
 
-	for (int i = 0; i < 100; i++) {
-		LightListStruct *it = &staticLights[currlevel][i];
-		if (it->_lradius == 0) {
-			break;
-		}
+	for (int i = 0; i < staticLights[currlevel + setlvlnum * 32].size(); i++) {
+		LightListStruct *it = &staticLights[currlevel + setlvlnum * 32][i];
 		drawRadius(-1, it->_lx, it->_ly, it->_lradius, it->_lcolor);
 	}
 }

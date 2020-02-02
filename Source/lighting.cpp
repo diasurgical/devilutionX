@@ -516,19 +516,22 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 
 #ifdef PIXEL_LIGHT
 	if (Lnum == -1) {
-		for (int i = 0; i < 100; i++) {
-			LightListStruct *it = &staticLights[currlevel][i];
-			if (it->_lradius == 0) {
-				it->_lx = nXPos;
-				it->_ly = nYPos;
-				it->_lradius = nRadius;
-				it->_lcolor = lightColorMap["STATICLIGHT"];
-				break;
-			}
+		bool updated = false;
+		for (int i = 0; i < staticLights[currlevel + setlvlnum * 32].size(); i++) {
+			LightListStruct *it = &staticLights[currlevel + setlvlnum * 32][i];
 			if (it->_lx == nXPos && it->_ly == nYPos) {
 				it->_lradius = nRadius;
+				updated = true;
 				break;
 			}
+		}
+		if (!updated){
+			LightListStruct tmp;
+			tmp._lx = nXPos;
+			tmp._ly = nYPos;
+			tmp._lradius = nRadius;
+			tmp._lcolor = lightColorMap.at("STATICLIGHT");
+			staticLights[currlevel + setlvlnum * 32].push_back(tmp);
 		}
 	}
 

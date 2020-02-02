@@ -9,7 +9,7 @@ int testvar2 = 8; // changing player's light radius (2 + testvar2)
 int testvar3 = 1; // enable pixel light
 int testvar4 = 1; // 0 = normal light, 1 = fully lit
 int testvar5 = 3; // change texture blend mode
-LightListStruct staticLights[25][100] = {0};
+std::map<int,std::vector<LightListStruct> > staticLights;
 int redrawLights = 0;
 bool drawRed = false;
 std::map<std::string, int> lightColorMap;
