@@ -35,6 +35,9 @@ void FreeMissileGFX(int mi);
 void FreeMissiles();
 void FreeMissiles2();
 void InitMissiles();
+#ifdef PIXEL_LIGHT
+void AddFArrow(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam);
+#endif
 void AddLArrow(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam);
 void AddArrow(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam);
 void GetVileMissPos(int mi, int dx, int dy);

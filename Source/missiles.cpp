@@ -1201,6 +1201,31 @@ void InitMissiles()
 	}
 }
 
+#ifdef PIXEL_LIGHT
+void AddFArrow(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam)
+{
+	if (sx == dx && sy == dy) {
+		dx += XDirAdd[midir];
+		dy += YDirAdd[midir];
+	}
+	if (!mienemy) {
+		if (plr[id]._pClass == PC_ROGUE)
+			GetMissileVel(mi, sx, sy, dx, dy, (plr[id]._pLevel >> 2) + 31);
+		else if (plr[id]._pClass == PC_WARRIOR)
+			GetMissileVel(mi, sx, sy, dx, dy, (plr[id]._pLevel >> 3) + 31);
+		else
+			GetMissileVel(mi, sx, sy, dx, dy, 32);
+	} else
+		GetMissileVel(mi, sx, sy, dx, dy, 32);
+
+	SetMissDir(mi, GetDirection16(sx, sy, dx, dy));
+	missile[mi]._mirange = 256;
+	missile[mi]._miVar1 = sx;
+	missile[mi]._miVar2 = sy;
+	missile[mi]._mlid = AddLight(sx, sy, 5, lightColorMap["FIREARROW"]);
+}
+
+#endif
 void AddLArrow(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam)
 {
 	if (sx == dx && sy == dy) {
@@ -1222,15 +1247,7 @@ void AddLArrow(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, 
 	missile[mi]._miVar1 = sx;
 	missile[mi]._miVar2 = sy;
 #ifdef PIXEL_LIGHT
-	// TODO: split fire and lightning arrow functions allowing monsters to use colored light for arrows (player has pIFlags, no way of checking for a monster)
-	if (!mienemy) {
-		if (plr[id]._pIFlags & ISPL_FIRE_ARROWS)
-			missile[mi]._mlid = AddLight(sx, sy, 5, lightColorMap["FIREARROW"]);
-		else if (plr[id]._pIFlags & ISPL_LIGHT_ARROWS)
-			missile[mi]._mlid = AddLight(sx, sy, 5, lightColorMap["LIGHTNINGARROW"]);
-	} else {
-		missile[mi]._mlid = AddLight(sx, sy, 5);
-	}
+	missile[mi]._mlid = AddLight(sx, sy, 5, lightColorMap["LIGHTNINGARROW"]);
 #else
 	missile[mi]._mlid = AddLight(sx, sy, 5);
 #endif

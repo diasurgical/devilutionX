@@ -32,7 +32,11 @@ MissileData missiledata[] = {
 	{  MIS_FLARE,         &AddFlare,         &MI_Firebolt,      TRUE,      1, MISR_MAGIC,     MFILE_FLARE,    -1,          -1          },
 	{  MIS_MISEXP2,       &AddMisexp,        &MI_Misexp,        TRUE,      2, MISR_MAGIC,     MFILE_FLAREEXP, -1,          -1          },
 	{  MIS_TELEPORT,      &AddTeleport,      &MI_Teleport,      FALSE,     1, 0,              MFILE_NONE,     LS_ELEMENTL, -1          },
+#ifdef PIXEL_LIGHT
+	{  MIS_FARROW,        &AddFArrow,        &MI_LArrow,        TRUE,      0, MISR_FIRE,      MFILE_FARROW,   -1,          -1          },
+#else
 	{  MIS_FARROW,        &AddLArrow,        &MI_LArrow,        TRUE,      0, MISR_FIRE,      MFILE_FARROW,   -1,          -1          },
+#endif
 	{  MIS_DOOMSERP,      NULL,              NULL,              FALSE,     1, MISR_MAGIC,     MFILE_DOOM,     LS_DSERP,    -1          },
 	{  MIS_FIREWALLA,     &miss_null_1D,     &MI_Firewall,      TRUE,      2, MISR_FIRE,      MFILE_FIREWAL,  -1,          -1          },
 	{  MIS_STONE,         &AddStone,         &MI_Stone,         FALSE,     1, MISR_MAGIC,     MFILE_NONE,     LS_SCURIMP,  -1          },
