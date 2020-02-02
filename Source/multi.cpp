@@ -784,7 +784,7 @@ BOOL multi_init_single(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info
 {
 	int unused;
 
-	if (!SNetInitializeProvider(0, client_info, user_info, ui_info, &fileinfo)) {
+	if (!SNetInitializeProvider(SELCONN_LOOPBACK, client_info, user_info, ui_info, &fileinfo)) {
 		SErrGetLastError();
 		return FALSE;
 	}
