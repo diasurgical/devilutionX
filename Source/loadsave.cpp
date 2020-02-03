@@ -4,6 +4,9 @@ DEVILUTION_BEGIN_NAMESPACE
 
 BYTE *tbuff;
 
+#ifdef PIXEL_LIGHT
+void CopyInt(const void *src, void *dst);
+#endif
 void LoadGame(BOOL firstflag)
 {
 	int i, j;
@@ -14,6 +17,32 @@ void LoadGame(BOOL firstflag)
 
 	FreeGameMem();
 	pfile_remove_temp_files();
+#ifdef PIXEL_LIGHT
+	staticLights.clear();
+	SDL_Log("Starting loading lights");
+	int mapSize;
+	LoadBuff = pfile_read("staticlights", &dwLen);
+	if (LoadBuff != NULL) {
+		SDL_Log("static not null");
+		tbuff = LoadBuff;
+		CopyInt(tbuff, &mapSize);
+		for (int i = 0; i < mapSize; i++) {
+			int key, vectorSize;
+			CopyInt(tbuff, &key);
+			CopyInt(tbuff, &vectorSize);
+			for (int j = 0; j < vectorSize; j++) {
+				LightListStruct tmpLight;
+				CopyInt(tbuff, &tmpLight._lx);
+				CopyInt(tbuff, &tmpLight._ly);
+				CopyInt(tbuff, &tmpLight._lradius);
+				CopyInt(tbuff, &tmpLight._lcolor);
+				staticLights[key].push_back(tmpLight);
+			}
+		}
+		mem_free_dbg(LoadBuff);
+		SDL_Log("END LOADING LIGHTS");
+	}
+#endif
 	pfile_get_game_name(szName);
 	LoadBuff = pfile_read(szName, &dwLen);
 	tbuff = LoadBuff;
@@ -215,7 +244,7 @@ void CopyBytes(const void *src, const int n, void *dst)
 
 void CopyChar(const void *src, void *dst)
 {
-	*(char*)dst = *(char*)src;
+	*(char *)dst = *(char *)src;
 	tbuff += 1;
 }
 
@@ -232,9 +261,10 @@ void CopyShorts(const void *src, const int n, void *dst)
 {
 	const auto *s = reinterpret_cast<const unsigned short *>(src);
 	auto *d = reinterpret_cast<unsigned short *>(dst);
-	for(int i = 0; i < n; i++) {
+	for (int i = 0; i < n; i++) {
 		CopyShort(s, d);
-		++d; ++s;
+		++d;
+		++s;
 	}
 }
 
@@ -251,9 +281,10 @@ void CopyInts(const void *src, const int n, void *dst)
 {
 	const auto *s = reinterpret_cast<const unsigned int *>(src);
 	auto *d = reinterpret_cast<unsigned int *>(dst);
-	for(int i = 0; i < n; i++) {
+	for (int i = 0; i < n; i++) {
 		CopyInt(s, d);
-		++d; ++s;
+		++d;
+		++s;
 	}
 }
 
@@ -957,6 +988,45 @@ void SaveGame()
 	dwLen = codec_get_encoded_len(tbuff - SaveBuff);
 	pfile_write_save_file(szName, SaveBuff, tbuff - SaveBuff, dwLen);
 	mem_free_dbg(SaveBuff);
+#ifdef PIXEL_LIGHT
+	SDL_Log("Starting saving lights");
+	int staticSize = 1;
+	for (std::map<int, std::vector<LightListStruct>>::iterator it = staticLights.begin(); it != staticLights.end(); ++it) {
+		staticSize += it->second.size() * 4 + 2;
+	}
+	//1 for map size, 4 for every vector element, 2 per vector for key and vector size
+	staticSize *= 4;
+	dwLen = codec_get_encoded_len(staticSize);
+	SaveBuff = DiabloAllocPtr(dwLen);
+	tbuff = SaveBuff;
+	int num = staticLights.size();
+	CopyInt(&num, tbuff);
+
+	for (std::map<int, std::vector<LightListStruct>>::iterator it = staticLights.begin(); it != staticLights.end(); ++it) {
+		num = it->first;
+		CopyInt(&num, tbuff);
+		num = it->second.size();
+		CopyInt(&num, tbuff);
+		for (int j = 0; j < it->second.size(); j++) {
+			num = it->second[j]._lx;
+			CopyInt(&num, tbuff);
+			num = it->second[j]._ly;
+			CopyInt(&num, tbuff);
+			num = it->second[j]._lradius;
+			CopyInt(&num, tbuff);
+			num = it->second[j]._lcolor;
+			CopyInt(&num, tbuff);
+		}
+	}
+
+	SDL_Log("END copying lights to tbuff");
+	dwLen = codec_get_encoded_len(tbuff - SaveBuff);
+	SDL_Log("encoded");
+	pfile_write_save_file("staticlights", SaveBuff, tbuff - SaveBuff, dwLen);
+	SDL_Log("writesavefile");
+	mem_free_dbg(SaveBuff);
+	SDL_Log("END SAVING lights");
+#endif
 	gbValidSaveFile = TRUE;
 	pfile_rename_temp_to_perm();
 	pfile_write_hero();
@@ -1108,7 +1178,7 @@ void SavePlayer(int i)
 	CopyInt(&pPlayer->_pVar8, tbuff);
 	CopyBytes(&pPlayer->_pLvlVisited, NUMLEVELS, tbuff);
 	CopyBytes(&pPlayer->_pSLvlVisited, NUMLEVELS, tbuff); // only 10 used
-	tbuff += 2; // Alignment
+	tbuff += 2;                                           // Alignment
 
 	CopyInt(&pPlayer->_pGFXLoad, tbuff);
 	tbuff += 4 * 8; // Skip pointers _pNAnim

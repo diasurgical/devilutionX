@@ -517,11 +517,12 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 #ifdef PIXEL_LIGHT
 	if (Lnum == -1) {
 		bool updated = false;
-		for (int i = 0; i < staticLights[currlevel + setlvlnum * 32].size(); i++) {
-			LightListStruct *it = &staticLights[currlevel + setlvlnum * 32][i];
+		for (int i = 0; i < staticLights[currlevel + setlvlnum * (32 * setlevel)].size(); i++) {
+			LightListStruct *it = &staticLights[currlevel + setlvlnum * (32 * setlevel)][i];
 			if (it->_lx == nXPos && it->_ly == nYPos) {
 				it->_lradius = nRadius;
 				updated = true;
+				SDL_Log("Updating static light");
 				break;
 			}
 		}
@@ -531,7 +532,8 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 			tmp._ly = nYPos;
 			tmp._lradius = nRadius;
 			tmp._lcolor = lightColorMap["STATICLIGHT"];
-			staticLights[currlevel + setlvlnum * 32].push_back(tmp);
+			SDL_Log("Adding static light");
+			staticLights[currlevel + setlvlnum * (32 * setlevel)].push_back(tmp);
 		}
 	}
 

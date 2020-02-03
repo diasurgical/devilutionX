@@ -108,6 +108,9 @@ void gamemenu_new_game(BOOL bActivate)
 	scrollrt_draw_game_screen(TRUE);
 	gbRunGame = FALSE;
 	gamemenu_off();
+#ifdef PIXEL_LIGHT
+	staticLights.clear();
+#endif
 }
 
 void gamemenu_quit_game(BOOL bActivate)
