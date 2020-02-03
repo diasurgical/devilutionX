@@ -244,7 +244,7 @@ void CopyBytes(const void *src, const int n, void *dst)
 
 void CopyChar(const void *src, void *dst)
 {
-	*(char *)dst = *(char *)src;
+	*(char*)dst = *(char *)src;
 	tbuff += 1;
 }
 
@@ -261,10 +261,9 @@ void CopyShorts(const void *src, const int n, void *dst)
 {
 	const auto *s = reinterpret_cast<const unsigned short *>(src);
 	auto *d = reinterpret_cast<unsigned short *>(dst);
-	for (int i = 0; i < n; i++) {
+	for(int i = 0; i < n; i++) {
 		CopyShort(s, d);
-		++d;
-		++s;
+		++d; ++s;
 	}
 }
 
@@ -1178,7 +1177,7 @@ void SavePlayer(int i)
 	CopyInt(&pPlayer->_pVar8, tbuff);
 	CopyBytes(&pPlayer->_pLvlVisited, NUMLEVELS, tbuff);
 	CopyBytes(&pPlayer->_pSLvlVisited, NUMLEVELS, tbuff); // only 10 used
-	tbuff += 2;                                           // Alignment
+	tbuff += 2; // Alignment
 
 	CopyInt(&pPlayer->_pGFXLoad, tbuff);
 	tbuff += 4 * 8; // Skip pointers _pNAnim
