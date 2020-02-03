@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <map>
 #include <vector>
+#include <string>
 
 #ifdef USE_SDL1
 #include "sdl2_to_1_2_backports.h"

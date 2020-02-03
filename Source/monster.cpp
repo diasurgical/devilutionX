@@ -685,7 +685,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int unpackfilesize)
 	Monst->mMagicRes = Uniq->mMagicRes;
 	Monst->mtalkmsg = Uniq->mtalkmsg;
 #ifdef PIXEL_LIGHT
-	Monst->mlid = AddLight(Monst->_mx, Monst->_my, 3, lightColorMap.at("UNIQUEMONSTER"));
+	Monst->mlid = AddLight(Monst->_mx, Monst->_my, 3, lightColorMap["UNIQUEMONSTER"]);
 #else
 	Monst->mlid = AddLight(Monst->_mx, Monst->_my, 3);
 #endif
@@ -1575,7 +1575,7 @@ void M_DiabloDeath(int i, BOOL sendmsg)
 		dMonster[pmonster->_mx][pmonster->_my] = k + 1;
 	}
 #ifdef PIXEL_LIGHT
-	AddLight(Monst->_mx, Monst->_my, 8, lightColorMap.at("DIABLODEATH"));
+	AddLight(Monst->_mx, Monst->_my, 8, lightColorMap["DIABLODEATH"]);
 #else
 	AddLight(Monst->_mx, Monst->_my, 8);
 #endif

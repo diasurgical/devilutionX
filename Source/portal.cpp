@@ -41,7 +41,7 @@ void AddWarpMissile(int i, int x, int y)
 
 		if (currlevel != 0)
 #ifdef PIXEL_LIGHT
-			missile[mi]._mlid = AddLight(missile[mi]._mix, missile[mi]._miy, 15, lightColorMap.at("TOWNPORTAL"));
+			missile[mi]._mlid = AddLight(missile[mi]._mix, missile[mi]._miy, 15, lightColorMap["TOWNPORTAL"]);
 #else
 			missile[mi]._mlid = AddLight(missile[mi]._mix, missile[mi]._miy, 15);
 #endif

@@ -530,7 +530,7 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 			tmp._lx = nXPos;
 			tmp._ly = nYPos;
 			tmp._lradius = nRadius;
-			tmp._lcolor = lightColorMap.at("STATICLIGHT");
+			tmp._lcolor = lightColorMap["STATICLIGHT"];
 			staticLights[currlevel + setlvlnum * 32].push_back(tmp);
 		}
 	}
