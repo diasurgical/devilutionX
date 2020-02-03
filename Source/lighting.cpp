@@ -521,6 +521,7 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 			LightListStruct *it = &staticLights[currlevel + setlvlnum * (32 * setlevel)][i];
 			if (it->_lx == nXPos && it->_ly == nYPos) {
 				it->_lradius = nRadius;
+				it->_lcolor = lightColorMap["STATICLIGHT"];
 				updated = true;
 				SDL_Log("Updating static light");
 				break;

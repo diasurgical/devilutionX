@@ -37,10 +37,10 @@ int lightReady = 0;
 
 void prepareLightColors()
 {
-	int orange = 0xff9933;
-	int darkorange = 0xff6600;
+	int orange = 0xff9900;
+	int darkorange = 0xcc0000;
 	int blue = 0x0000ff;
-	int darkblue = 0x003399;
+	int darkblue = 0x000099;
 	int green = 0x00ff00;
 	int red = 0xff0000;
 	int white = 0xffffff;
@@ -59,7 +59,7 @@ void prepareLightColors()
 	lightColorMap["ACIDPUDDLE"] = lime;
 	lightColorMap["DIABLODEATH"] = red;
 	lightColorMap["UNIQUEMONSTER"] = green;
-	lightColorMap["REDPORTAL"] = green;
+	lightColorMap["REDPORTAL"] = red;
 	lightColorMap["STATICLIGHT"] = darkorange;
 
 	//spells
