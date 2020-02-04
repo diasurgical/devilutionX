@@ -1154,7 +1154,6 @@ void PressChar(int vkey)
 		}
 		return;
 	case 'v':
-	{
 		NetSendCmdString(1 << myplr, gszProductName);
 		return;
 	case 'V':
