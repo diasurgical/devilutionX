@@ -19,11 +19,9 @@ void LoadGame(BOOL firstflag)
 	pfile_remove_temp_files();
 #ifdef PIXEL_LIGHT
 	staticLights.clear();
-	SDL_Log("Starting loading lights");
 	int mapSize;
 	LoadBuff = pfile_read("staticlights", &dwLen);
 	if (LoadBuff != NULL) {
-		SDL_Log("static not null");
 		tbuff = LoadBuff;
 		CopyInt(tbuff, &mapSize);
 		for (int i = 0; i < mapSize; i++) {
@@ -40,7 +38,6 @@ void LoadGame(BOOL firstflag)
 			}
 		}
 		mem_free_dbg(LoadBuff);
-		SDL_Log("END LOADING LIGHTS");
 	}
 #endif
 	pfile_get_game_name(szName);
@@ -987,7 +984,6 @@ void SaveGame()
 	pfile_write_save_file(szName, SaveBuff, tbuff - SaveBuff, dwLen);
 	mem_free_dbg(SaveBuff);
 #ifdef PIXEL_LIGHT
-	SDL_Log("Starting saving lights");
 	int staticSize = 1;
 	for (std::map<int, std::vector<LightListStruct>>::iterator it = staticLights.begin(); it != staticLights.end(); ++it) {
 		staticSize += it->second.size() * 4 + 2;
@@ -1017,13 +1013,9 @@ void SaveGame()
 		}
 	}
 
-	SDL_Log("END copying lights to tbuff");
 	dwLen = codec_get_encoded_len(tbuff - SaveBuff);
-	SDL_Log("encoded");
 	pfile_write_save_file("staticlights", SaveBuff, tbuff - SaveBuff, dwLen);
-	SDL_Log("writesavefile");
 	mem_free_dbg(SaveBuff);
-	SDL_Log("END SAVING lights");
 #endif
 	gbValidSaveFile = TRUE;
 	pfile_rename_temp_to_perm();

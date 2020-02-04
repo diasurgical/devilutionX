@@ -523,7 +523,6 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 				it->_lradius = nRadius;
 				it->_lcolor = lightColorMap["STATICLIGHT"];
 				updated = true;
-				SDL_Log("Updating static light");
 				break;
 			}
 		}
@@ -533,7 +532,6 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 			tmp._ly = nYPos;
 			tmp._lradius = nRadius;
 			tmp._lcolor = lightColorMap["STATICLIGHT"];
-			SDL_Log("Adding static light");
 			staticLights[currlevel + setlvlnum * (32 * setlevel)].push_back(tmp);
 		}
 	}

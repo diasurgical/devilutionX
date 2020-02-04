@@ -1155,17 +1155,6 @@ void PressChar(int vkey)
 		return;
 	case 'v':
 	{
-		SDL_Log("Movement %d %d ", plr[myplr].WorldX, plr[myplr].WorldY);
-		SDL_Log("CURRLVL %d QLVL %d %d", currlevel, setlvlnum, setlevel);
-		SDL_Log("MAP SIZE %d", staticLights.size());
-		for (std::map<int, std::vector<LightListStruct>>::iterator it = staticLights.begin(); it != staticLights.end(); ++it) {
-			SDL_Log("MAP KEY %d", it->first);
-			SDL_Log("VECTOR SIZE %d", it->second.size());
-			for (int j = 0; j < it->second.size(); j++) {
-				SDL_Log("I %d X %d Y %d R %d CLR %d", j, it->second[j]._lx, it->second[j]._ly, it->second[j]._lradius, it->second[j]._lcolor);
-			}
-		}
-	}
 		NetSendCmdString(1 << myplr, gszProductName);
 		return;
 	case 'V':
