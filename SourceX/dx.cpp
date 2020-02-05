@@ -340,6 +340,7 @@ void drawRadius(int lid, int row, int col, int radius, int color)
 
 	int xoff = 0;
 	int yoff = 0;
+	bool isMis = false;
 
 	if (lid != -1) {
 		for (int i = 0; i < nummissiles; i++) {
@@ -347,7 +348,17 @@ void drawRadius(int lid, int row, int col, int radius, int color)
 			if (mis->_mlid == lid) {
 				xoff = mis->_mixoff;
 				yoff = mis->_miyoff;
+				isMis = true;
 				break;
+			}
+		}
+		if (!isMis) {
+			for (int i = 0; i < nummonsters; i++) {
+				MonsterStruct *mon = &monster[monstactive[i]];
+				if (mon->mlid == lid){
+					xoff = mon->_mxoff;
+					yoff = mon->_myoff;
+				}
 			}
 		}
 	}
