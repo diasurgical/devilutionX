@@ -380,6 +380,9 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 {
 	CMonster *monst = &Monsters[mtype];
 
+#ifdef PIXEL_LIGHT
+	monster[i].mlid = -1;
+#endif
 	monster[i]._mdir = rd;
 	monster[i]._mx = x;
 	monster[i]._my = y;

@@ -358,6 +358,7 @@ void drawRadius(int lid, int row, int col, int radius, int color)
 				if (mon->mlid == lid){
 					xoff = mon->_mxoff;
 					yoff = mon->_myoff;
+					break;
 				}
 			}
 		}
