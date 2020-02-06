@@ -87,7 +87,7 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
 	BOOL fExitProgram;
 	unsigned int uMsg;
 
-	gbGameUninitialized = TRUE;
+	gbSelectProvider = TRUE;
 
 	do {
 		fExitProgram = FALSE;
@@ -98,7 +98,7 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
 			break;
 		}
 
-		gbGameUninitialized = FALSE;
+		gbSelectProvider = FALSE;
 
 		if (bNewGame || !gbValidSaveFile) {
 			InitLevels();
@@ -266,7 +266,6 @@ void diablo_init()
 
 	ReadOnlyTest();
 
-	srand(GetTickCount());
 	InitHash();
 
 	diablo_init_screen();
@@ -428,12 +427,12 @@ BOOL PressEscKey()
 		rv = TRUE;
 	}
 	if (helpflag) {
-		helpflag = 0;
+		helpflag = FALSE;
 		rv = TRUE;
 	}
 
 	if (qtextflag) {
-		qtextflag = 0;
+		qtextflag = FALSE;
 		sfx_stop();
 		rv = TRUE;
 	} else if (stextflag) {
@@ -454,7 +453,7 @@ BOOL PressEscKey()
 		rv = TRUE;
 	}
 	if (spselflag) {
-		spselflag = 0;
+		spselflag = FALSE;
 		rv = TRUE;
 	}
 
@@ -474,28 +473,29 @@ LRESULT DisableInputWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		MouseY = (short)HIWORD(lParam);
 		return 0;
 	case WM_LBUTTONDOWN:
-		if (sgbMouseDown == 0) {
-			sgbMouseDown = 1;
-		}
+		if (sgbMouseDown != 0)
+			return 0;
+		sgbMouseDown = 1;
 		return 0;
 	case WM_LBUTTONUP:
-		if (sgbMouseDown == 1) {
-			sgbMouseDown = 0;
-		}
+		if (sgbMouseDown != 1)
+			return 0;
+		sgbMouseDown = 0;
 		return 0;
 	case WM_RBUTTONDOWN:
-		if (sgbMouseDown == 0) {
-			sgbMouseDown = 2;
-		}
+		if (sgbMouseDown != 0)
+			return 0;
+		sgbMouseDown = 2;
 		return 0;
 	case WM_RBUTTONUP:
-		if (sgbMouseDown == 2) {
-			sgbMouseDown = 0;
-		}
+		if (sgbMouseDown != 2)
+			return 0;
+		sgbMouseDown = 0;
 		return 0;
 	case WM_CAPTURECHANGED:
-		if (hWnd != (HWND)lParam)
-			sgbMouseDown = 0;
+		if (hWnd == (HWND)lParam)
+			return 0;
+		sgbMouseDown = 0;
 		return 0;
 	}
 
@@ -782,7 +782,7 @@ void RightMouseDown()
 				if (pcurs == 1) {
 					if (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem))
 						CheckPlrSpell();
-				} else if (pcurs > 1 && pcurs < 12) {
+				} else if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
 					SetCursor_(CURSOR_HAND);
 				}
 			}
@@ -870,7 +870,9 @@ void PressKey(int vkey)
 	}
 
 	if (vkey == VK_RETURN) {
-		if (stextflag) {
+		if (GetAsyncKeyState(VK_MENU) & 0x8000) {
+			dx_reinit();
+		} else if (stextflag) {
 			STextEnter();
 		} else if (questlog) {
 			QuestlogEnter();
@@ -879,17 +881,17 @@ void PressKey(int vkey)
 		}
 	} else if (vkey == VK_F1) {
 		if (helpflag) {
-			helpflag = 0;
+			helpflag = FALSE;
 		} else if (stextflag) {
 			ClearPanel();
 			AddPanelString("No help available", TRUE); /// BUGFIX: message isn't displayed
 			AddPanelString("while in stores", TRUE);
 			track_repeat_walk(FALSE);
 		} else {
-			invflag = 0;
+			invflag = FALSE;
 			chrflag = FALSE;
 			sbookflag = FALSE;
-			spselflag = 0;
+			spselflag = FALSE;
 			if (qtextflag && leveltype == DTYPE_TOWN) {
 				qtextflag = FALSE;
 				sfx_stop();
@@ -928,28 +930,32 @@ void PressKey(int vkey)
 #endif
 	else if (vkey == VK_F5) {
 		if (spselflag) {
-			SetSpeedSpell(0);
-		} else {
 			ToggleSpell(0);
+			return;
 		}
+		SetSpeedSpell(0);
+		return;
 	} else if (vkey == VK_F6) {
 		if (spselflag) {
-			SetSpeedSpell(1);
-		} else {
 			ToggleSpell(1);
+			return;
 		}
+		SetSpeedSpell(1);
+		return;
 	} else if (vkey == VK_F7) {
 		if (spselflag) {
-			SetSpeedSpell(2);
-		} else {
 			ToggleSpell(2);
+			return;
 		}
+		SetSpeedSpell(2);
+		return;
 	} else if (vkey == VK_F8) {
 		if (spselflag) {
-			SetSpeedSpell(3);
-		} else {
 			ToggleSpell(3);
+			return;
 		}
+		SetSpeedSpell(3);
+		return;
 	} else if (vkey == VK_F9) {
 		diablo_hotkey_msg(0);
 	} else if (vkey == VK_F10) {
@@ -1003,11 +1009,11 @@ void PressKey(int vkey)
 		if (!invflag && chrflag && MouseX > 160 && MouseY < PANEL_TOP && PANELS_COVER) {
 			SetCursorPos(MouseX - 160, MouseY);
 		}
-		helpflag = 0;
+		helpflag = FALSE;
 		invflag = FALSE;
 		chrflag = FALSE;
 		sbookflag = FALSE;
-		spselflag = 0;
+		spselflag = FALSE;
 		if (qtextflag && leveltype == DTYPE_TOWN) {
 			qtextflag = FALSE;
 			sfx_stop();
@@ -1119,7 +1125,7 @@ void PressChar(int vkey)
 			if (!spselflag) {
 				DoSpeedBook();
 			} else {
-				spselflag = 0;
+				spselflag = FALSE;
 			}
 			track_repeat_walk(FALSE);
 		}
@@ -1151,43 +1157,43 @@ void PressChar(int vkey)
 		return;
 	case '!':
 	case '1':
-		if (plr[myplr].SpdList[0]._itype != -1 && plr[myplr].SpdList[0]._itype != 11) {
+		if (plr[myplr].SpdList[0]._itype != ITYPE_NONE && plr[myplr].SpdList[0]._itype != ITYPE_GOLD) {
 			UseInvItem(myplr, INVITEM_BELT_FIRST);
 		}
 		return;
 	case '@':
 	case '2':
-		if (plr[myplr].SpdList[1]._itype != -1 && plr[myplr].SpdList[1]._itype != 11) {
+		if (plr[myplr].SpdList[1]._itype != ITYPE_NONE && plr[myplr].SpdList[1]._itype != ITYPE_GOLD) {
 			UseInvItem(myplr, INVITEM_BELT_FIRST + 1);
 		}
 		return;
 	case '#':
 	case '3':
-		if (plr[myplr].SpdList[2]._itype != -1 && plr[myplr].SpdList[2]._itype != 11) {
+		if (plr[myplr].SpdList[2]._itype != ITYPE_NONE && plr[myplr].SpdList[2]._itype != ITYPE_GOLD) {
 			UseInvItem(myplr, INVITEM_BELT_FIRST + 2);
 		}
 		return;
 	case '$':
 	case '4':
-		if (plr[myplr].SpdList[3]._itype != -1 && plr[myplr].SpdList[3]._itype != 11) {
+		if (plr[myplr].SpdList[3]._itype != ITYPE_NONE && plr[myplr].SpdList[3]._itype != ITYPE_GOLD) {
 			UseInvItem(myplr, INVITEM_BELT_FIRST + 3);
 		}
 		return;
 	case '%':
 	case '5':
-		if (plr[myplr].SpdList[4]._itype != -1 && plr[myplr].SpdList[4]._itype != 11) {
+		if (plr[myplr].SpdList[4]._itype != ITYPE_NONE && plr[myplr].SpdList[4]._itype != ITYPE_GOLD) {
 			UseInvItem(myplr, INVITEM_BELT_FIRST + 4);
 		}
 		return;
 	case '^':
 	case '6':
-		if (plr[myplr].SpdList[5]._itype != -1 && plr[myplr].SpdList[5]._itype != 11) {
+		if (plr[myplr].SpdList[5]._itype != ITYPE_NONE && plr[myplr].SpdList[5]._itype != ITYPE_GOLD) {
 			UseInvItem(myplr, INVITEM_BELT_FIRST + 5);
 		}
 		return;
 	case '&':
 	case '7':
-		if (plr[myplr].SpdList[6]._itype != -1 && plr[myplr].SpdList[6]._itype != 11) {
+		if (plr[myplr].SpdList[6]._itype != ITYPE_NONE && plr[myplr].SpdList[6]._itype != ITYPE_GOLD) {
 			UseInvItem(myplr, INVITEM_BELT_FIRST + 6);
 		}
 		return;
@@ -1199,7 +1205,7 @@ void PressChar(int vkey)
 			return;
 		}
 #endif
-		if (plr[myplr].SpdList[7]._itype != -1 && plr[myplr].SpdList[7]._itype != 11) {
+		if (plr[myplr].SpdList[7]._itype != ITYPE_NONE && plr[myplr].SpdList[7]._itype != ITYPE_GOLD) {
 			UseInvItem(myplr, INVITEM_BELT_FIRST + 7);
 		}
 		return;
@@ -1695,7 +1701,7 @@ void timeout_cursor(BOOL bTimeout)
 			SetCursor_(CURSOR_HOURGLASS);
 			force_redraw = 255;
 		}
-		scrollrt_draw_game_screen(1);
+		scrollrt_draw_game_screen(TRUE);
 	} else if (sgnTimeoutCurs) {
 		SetCursor_(sgnTimeoutCurs);
 		sgnTimeoutCurs = 0;
@@ -1706,7 +1712,7 @@ void timeout_cursor(BOOL bTimeout)
 
 void diablo_color_cyc_logic()
 {
-	if (!palette_get_colour_cycling())
+	if (!palette_get_color_cycling())
 		return;
 
 	if (leveltype == DTYPE_HELL) {

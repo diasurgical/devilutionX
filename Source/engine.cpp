@@ -391,7 +391,14 @@ void CelDrawLightRedSafe(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, c
 }
 
 /**
- * @brief Same as CelBlit but cropped to given width
+ * @brief Blit to a buffer at given coordinates
+ * @param pBuff Target buffer
+ * @param x Cordinate in pBuff buffer
+ * @param y Cordinate in pBuff buffer
+ * @param wdt Width of pBuff
+ * @param pCelBuff Cel data
+ * @param nCel Frame of cel
+ * @param nWidth Width of cel
  */
 void CelBlitWidth(BYTE *pBuff, int x, int y, int wdt, BYTE *pCelBuff, int nCel, int nWidth)
 {
@@ -1206,7 +1213,7 @@ void PlayInGameMovie(char *pszMovie)
 	play_movie(pszMovie, FALSE);
 	ClearScreenBuffer();
 	force_redraw = 255;
-	scrollrt_draw_game_screen(1);
+	scrollrt_draw_game_screen(TRUE);
 	PaletteFadeIn(8);
 	force_redraw = 255;
 }

@@ -1,5 +1,4 @@
 #include "devilution.h"
-#include "miniwin/dsound.h"
 #include "stubs.h"
 #include <SDL.h>
 #include <SDL_mixer.h>
@@ -46,7 +45,7 @@ BOOL snd_playing(TSnd *pSnd)
 
 void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 {
-	LPDIRECTSOUNDBUFFER DSB;
+	SoundSample *DSB;
 	DWORD tc;
 
 	if (!pSnd || !gbSoundOn) {
@@ -58,7 +57,7 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 		return;
 	}
 
-	tc = GetTickCount();
+	tc = SDL_GetTicks();
 	if (tc - pSnd->start_tc < 80) {
 		return;
 	}
@@ -85,13 +84,13 @@ TSnd *sound_file_load(char *path)
 	pSnd = (TSnd *)DiabloAllocPtr(sizeof(TSnd));
 	memset(pSnd, 0, sizeof(TSnd));
 	pSnd->sound_path = path;
-	pSnd->start_tc = GetTickCount() - 81;
+	pSnd->start_tc = SDL_GetTicks() - 81;
 
 	dwBytes = SFileGetFileSize(file, NULL);
 	wave_file = DiabloAllocPtr(dwBytes);
 	SFileReadFile(file, wave_file, dwBytes, NULL, NULL);
 
-	pSnd->DSB = new DirectSoundBuffer();
+	pSnd->DSB = new SoundSample();
 	error = pSnd->DSB->SetChunk(wave_file, dwBytes);
 	WCloseFile(file);
 	mem_free_dbg(wave_file);
@@ -108,7 +107,7 @@ void sound_file_cleanup(TSnd *sound_file)
 		if (sound_file->DSB) {
 			sound_file->DSB->Stop();
 			sound_file->DSB->Release();
-			delete static_cast<DirectSoundBuffer *>(sound_file->DSB);
+			delete sound_file->DSB;
 			sound_file->DSB = NULL;
 		}
 

@@ -171,7 +171,7 @@ typedef struct ItemStruct {
 
 typedef struct PlayerStruct {
 	int _pmode;
-	char walkpath[25];
+	char walkpath[MAX_PATH_LENGTH];
 	BOOLEAN plractive;
 	int destAction;
 	int destParam1;
@@ -451,7 +451,7 @@ typedef struct MissileStruct {
 
 typedef struct TSnd {
 	char *sound_path;
-	LPDIRECTSOUNDBUFFER DSB;
+	SoundSample *DSB;
 	int start_tc;
 } TSnd;
 
@@ -1060,7 +1060,7 @@ typedef struct TownerStruct {
 	int _teflag;
 	int _tbtcnt;
 	int _tSelFlag;
-	int _tMsgSaid;
+	BOOL _tMsgSaid;
 	TNQ qsts[MAXQUESTS];
 	int _tSeed;
 	int _tVar1;
@@ -1330,7 +1330,7 @@ typedef struct _SNETUIDATA {
 	void(* categorylistcallback)();
 	void(* newaccountcallback)();
 	void(* profilecallback)();
-	int profilefields;
+	const char **profilefields;
 	void(* profilebitmapcallback)();
 	int(*selectnamecallback)(
 	    const struct _SNETPROGRAMDATA *,

@@ -1,5 +1,5 @@
 #include "devilution.h"
-#include "miniwin/ddraw.h"
+#include "display.h"
 #include "stubs.h"
 #include "utf8.h"
 #include <string>
@@ -322,6 +322,14 @@ void UiHandleEvents(SDL_Event *event)
 		return;
 	}
 
+	if (event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_RETURN) {
+		const Uint8 *state = SDLC_GetKeyState();
+		if (state[SDLC_KEYSTATE_LALT] || state[SDLC_KEYSTATE_RALT]) {
+			dx_reinit();
+			return;
+		}
+	}
+
 	if (event->type == SDL_QUIT)
 		exit(0);
 
@@ -403,9 +411,9 @@ void UiInitialize()
 	}
 }
 
-int UiProfileGetString()
+const char **UiProfileGetString()
 {
-	return 0;
+	return NULL;
 }
 
 char connect_plrinfostr[128];
@@ -488,7 +496,7 @@ BOOL UiGetDataCallback(int game_type, int data_code, void *a3, int a4, int a5)
 	UNIMPLEMENTED();
 }
 
-BOOL UiAuthCallback(int a1, char *a2, char *a3, char a4, char *a5, LPSTR lpBuffer, int cchBufferMax)
+BOOL UiAuthCallback(int a1, char *a2, char *a3, char a4, char *a5, char *lpBuffer, int cchBufferMax)
 {
 	UNIMPLEMENTED();
 }
@@ -498,12 +506,12 @@ BOOL UiSoundCallback(int a1, int type, int a3)
 	UNIMPLEMENTED();
 }
 
-void UiMessageBoxCallback(HWND hWnd, char *lpText, LPCSTR lpCaption, UINT uType)
+void UiMessageBoxCallback(HWND hWnd, char *lpText, const char *lpCaption, UINT uType)
 {
 	UNIMPLEMENTED();
 }
 
-BOOL UiDrawDescCallback(int game_type, COLORREF color, LPCSTR lpString, char *a4, int a5, UINT align, time_t a7,
+BOOL UiDrawDescCallback(int game_type, DWORD color, const char *lpString, char *a4, int a5, UINT align, time_t a7,
     HDC *a8)
 {
 	UNIMPLEMENTED();
@@ -514,7 +522,7 @@ BOOL UiCreateGameCallback(int a1, int a2, int a3, int a4, int a5, int a6)
 	UNIMPLEMENTED();
 }
 
-BOOL UiArtCallback(int game_type, unsigned int art_code, PALETTEENTRY *pPalette, BYTE *pBuffer,
+BOOL UiArtCallback(int game_type, unsigned int art_code, SDL_Color *pPalette, BYTE *pBuffer,
     DWORD dwBuffersize, DWORD *pdwWidth, DWORD *pdwHeight, DWORD *pdwBpp)
 {
 	UNIMPLEMENTED();
@@ -554,7 +562,7 @@ int GetCenterOffset(int w, int bw)
 
 void LoadBackgroundArt(const char *pszFile)
 {
-	PALETTEENTRY pPal[256];
+	SDL_Color pPal[256];
 
 	fadeValue = 0;
 	LoadArt(pszFile, &ArtBackground, 1, pPal);
@@ -811,13 +819,10 @@ bool HandleMouseEvent(const SDL_Event &event, UiItem *item)
 
 } // namespace
 
-void LoadPalInMem(const PALETTEENTRY *pPal)
+void LoadPalInMem(const SDL_Color *pPal)
 {
 	for (int i = 0; i < 256; i++) {
-		orig_palette[i].peFlags = 0;
-		orig_palette[i].peRed = pPal[i].peRed;
-		orig_palette[i].peGreen = pPal[i].peGreen;
-		orig_palette[i].peBlue = pPal[i].peBlue;
+		orig_palette[i] = pPal[i];
 	}
 }
 

@@ -5,9 +5,6 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 BOOLEAN gbSomebodyWonGameKludge;
-#ifdef _DEBUG
-DWORD gdwHistTicks;
-#endif
 TBuffer sgHiPriBuf;
 char szPlayerDescript[128];
 WORD sgwPackPlrOffsetTbl[MAX_PLRS];
@@ -20,7 +17,7 @@ BYTE gbActivePlayers;
 BOOLEAN gbGameDestroyed;
 BOOLEAN sgbSendDeltaTbl[MAX_PLRS];
 _gamedata sgGameInitInfo;
-BOOLEAN gbGameUninitialized;
+BOOLEAN gbSelectProvider;
 int sglTimeoutStart;
 int sgdwPlayerLeftReasonTbl[MAX_PLRS];
 TBuffer sgLoPriBuf;
@@ -37,43 +34,6 @@ const int event_types[3] = {
 	EVENT_TYPE_PLAYER_CREATE_GAME,
 	EVENT_TYPE_PLAYER_MESSAGE
 };
-
-#ifdef _DEBUG
-void dumphist(const char *pszFmt, ...)
-{
-	static FILE *sgpHistFile = NULL;
-	DWORD dwTicks;
-	va_list va;
-
-	va_start(va, pszFmt);
-
-	char path[MAX_PATH], dumpHistPath[MAX_PATH];
-	if (sgpHistFile == NULL) {
-		GetPrefPath(path, MAX_PATH);
-		snprintf(dumpHistPath, MAX_PATH, "%sdumphist.txt", path);
-		sgpHistFile = fopen(dumpHistPath, "wb");
-		if (sgpHistFile == NULL) {
-			return;
-		}
-	}
-
-	dwTicks = GetTickCount();
-	fprintf(sgpHistFile, "%4u.%02u  ", (dwTicks - gdwHistTicks) / 1000, (dwTicks - gdwHistTicks) % 1000 / 10);
-	vfprintf(sgpHistFile, pszFmt, va);
-	fprintf(
-	    sgpHistFile,
-	    "\r\n          (%d,%d)(%d,%d)(%d,%d)(%d,%d)\r\n",
-	    plr[0].plractive,
-	    player_state[0],
-	    plr[1].plractive,
-	    player_state[1],
-	    plr[2].plractive,
-	    player_state[2],
-	    plr[3].plractive,
-	    player_state[3]);
-	fflush(sgpHistFile);
-}
-#endif
 
 void multi_msg_add(BYTE *pbMsg, BYTE bLen)
 {
@@ -301,7 +261,7 @@ void multi_player_left_msg(int pnum, int left)
 void multi_net_ping()
 {
 	sgbTimeout = TRUE;
-	sglTimeoutStart = GetTickCount();
+	sglTimeoutStart = SDL_GetTicks();
 }
 
 int multi_handle_delta()
@@ -374,7 +334,7 @@ void multi_begin_timeout()
 	}
 #endif
 
-	nTicks = GetTickCount() - sglTimeoutStart;
+	nTicks = SDL_GetTicks() - sglTimeoutStart;
 	if (nTicks > 20000) {
 		gbRunGame = FALSE;
 		return;
@@ -407,16 +367,6 @@ void multi_begin_timeout()
 	/// ASSERT: assert(bGroupPlayers);
 	/// ASSERT: assert(nLowestActive != -1);
 	/// ASSERT: assert(nLowestPlayer != -1);
-
-#ifdef _DEBUG
-	dumphist(
-	    "(%d) grp:%d ngrp:%d lowp:%d lowa:%d",
-	    myplr,
-	    bGroupPlayers,
-	    bGroupCount,
-	    nLowestPlayer,
-	    nLowestActive);
-#endif
 
 	if (bGroupPlayers < bGroupCount) {
 		gbGameDestroyed = TRUE;
@@ -615,7 +565,7 @@ void NetClose()
 	multi_event_handler(FALSE);
 	SNetLeaveGame(3);
 	if (gbMaxPlayers > 1)
-		Sleep(2000);
+		SDL_Delay(2000);
 }
 
 void multi_event_handler(BOOL add)
@@ -730,10 +680,6 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 			if (!multi_init_multi(&ProgramData, &plrdata, &UiData, pfExitProgram))
 				return FALSE;
 		}
-#ifdef _DEBUG
-		gdwHistTicks = GetTickCount();
-		dumphist("(%d) new game started", myplr);
-#endif
 		sgbNetInited = TRUE;
 		sgbTimeout = FALSE;
 		delta_init();
@@ -757,7 +703,7 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		if (sgbPlayerTurnBitTbl[myplr] == 0 || msg_wait_resync())
 			break;
 		NetClose();
-		gbGameUninitialized = FALSE;
+		gbSelectProvider = FALSE;
 	}
 	gnDifficulty = sgGameInitInfo.bDiff;
 	SetRndSeed(sgGameInitInfo.dwSeed);
@@ -838,7 +784,7 @@ BOOL multi_init_single(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info
 {
 	int unused;
 
-	if (!SNetInitializeProvider(0, client_info, user_info, ui_info, &fileinfo)) {
+	if (!SNetInitializeProvider(SELCONN_LOOPBACK, client_info, user_info, ui_info, &fileinfo)) {
 		SErrGetLastError();
 		return FALSE;
 	}
@@ -862,7 +808,7 @@ BOOL multi_init_multi(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info,
 
 	for (first = TRUE;; first = FALSE) {
 		type = 0x00;
-		if (gbGameUninitialized) {
+		if (gbSelectProvider) {
 			if (!UiSelectProvider(0, client_info, user_info, ui_info, &fileinfo, &type)
 			    && (!first || SErrGetLastError() != STORM_ERROR_REQUIRES_UPGRADE || !multi_upgrade(pfExitProgram))) {
 				return FALSE;
@@ -875,7 +821,7 @@ BOOL multi_init_multi(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info,
 		if (UiSelectGame(1, client_info, user_info, ui_info, &fileinfo, &playerId))
 			break;
 
-		gbGameUninitialized = TRUE;
+		gbSelectProvider = TRUE;
 	}
 
 	if ((DWORD)playerId >= MAX_PLRS) {
@@ -946,9 +892,6 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv)
 	UnPackPlayer(&netplr[pnum], pnum, TRUE);
 
 	if (!recv) {
-#ifdef _DEBUG
-		dumphist("(%d) received all %d plrinfo", myplr, pnum);
-#endif
 		return;
 	}
 
@@ -978,9 +921,6 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv)
 			dFlags[plr[pnum].WorldX][plr[pnum].WorldY] |= BFLAG_DEAD_PLAYER;
 		}
 	}
-#ifdef _DEBUG
-	dumphist("(%d) making %d active -- recv_plrinfo", myplr, pnum);
-#endif
 }
 
 DEVILUTION_END_NAMESPACE

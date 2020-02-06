@@ -2,7 +2,7 @@
 
 namespace dvl {
 
-BOOL EndDialog(HWND hDlg, INT_PTR nResult);
+bool SpawnWindow(const char *lpWindowName, int nWidth, int nHeight);
 void UiErrorOkDialog(const char *text, const char *caption, bool error = true);
 
 } // namespace dvl

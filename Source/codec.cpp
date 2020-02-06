@@ -61,11 +61,12 @@ void codec_init_key(int unused, char *pszPassword)
 	char digest[SHA1HashSize];
 	char *keyInit;
 
-	srand(0x7058);
+	uint32_t rand_state = 0x7058;
 
 	keyInit = key;
 	for (i = 0; i < 136; i++) {
-		*keyInit = rand();
+		rand_state = rand_state * 214013 + 2531011;
+		*keyInit = (rand_state >> 16) & 0x7FFF;
 		keyInit++;
 	}
 	ch = 0;

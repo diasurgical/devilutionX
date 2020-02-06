@@ -67,7 +67,7 @@ BOOL TFit_Shrine(int i)
 			    && dObject[xp + 1][yp - 1] == 0) {
 				found = 1;
 			}
-			if (!found
+			if (found == 0
 			    && nTrapTable[dPiece[xp - 1][yp]]
 			    && !nSolidTable[dPiece[xp][yp - 1]]
 			    && !nSolidTable[dPiece[xp][yp + 1]]

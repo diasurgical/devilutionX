@@ -3,13 +3,13 @@
 #include <SDL.h>
 
 #include "devilution.h"
-#include "miniwin/ddraw.h"
+#include "display.h"
 #include "stubs.h"
 #include "controls/controller_motion.h"
 #include "controls/game_controls.h"
 #include "controls/plrctrls.h"
 #include "controls/touch.h"
-#include "miniwin/ddraw.h"
+#include "display.h"
 #include "controls/controller.h"
 
 #ifdef __SWITCH__
@@ -256,7 +256,7 @@ WPARAM keystate_for_mouse(WPARAM ret)
 	return ret;
 }
 
-WINBOOL false_avail(const char *name, int value)
+bool false_avail(const char *name, int value)
 {
 	SDL_Log("Unhandled SDL event: %s %d", name, value);
 	return true;
@@ -342,7 +342,7 @@ bool BlurInventory()
 	return true;
 }
 
-WINBOOL PeekMessageA(LPMSG lpMsg)
+bool PeekMessageA(LPMSG lpMsg)
 {
 #ifdef __SWITCH__
 	HandleDocking();
@@ -599,7 +599,6 @@ WINBOOL PeekMessageA(LPMSG lpMsg)
 #endif
 			break;
 		case SDL_WINDOWEVENT_ENTER:
-			lpMsg->message = DVL_WM_MOUSEHOVER;
 			// Bug in SDL, SDL_WarpMouseInWindow doesn't emit SDL_MOUSEMOTION
 			// and SDL_GetMouseState gives previous location if mouse was
 			// outside window (observed on Ubuntu 19.04)
@@ -624,7 +623,7 @@ WINBOOL PeekMessageA(LPMSG lpMsg)
 	return true;
 }
 
-WINBOOL TranslateMessage(const MSG *lpMsg)
+bool TranslateMessage(const MSG *lpMsg)
 {
 	if (lpMsg->message == DVL_WM_KEYDOWN) {
 		int key = lpMsg->wParam;
@@ -718,7 +717,7 @@ WINBOOL TranslateMessage(const MSG *lpMsg)
 
 #ifdef _DEBUG
 			if (key >= 32) {
-				DUMMY_PRINT("char: %c", key);
+				SDL_Log("char: %c", key);
 			}
 #endif
 
@@ -743,7 +742,7 @@ SHORT GetAsyncKeyState(int vKey)
 	case DVL_VK_SHIFT:
 		return state[SDLC_KEYSTATE_LEFTSHIFT] || state[SDLC_KEYSTATE_RIGHTSHIFT] ? 0x8000 : 0;
 	case DVL_VK_MENU:
-		return state[SDLC_KEYSTATE_MENU] ? 0x8000 : 0;
+		return state[SDLC_KEYSTATE_LALT] || state[SDLC_KEYSTATE_RALT] ? 0x8000 : 0;
 	case DVL_VK_LEFT:
 		return state[SDLC_KEYSTATE_LEFT] ? 0x8000 : 0;
 	case DVL_VK_UP:
@@ -764,7 +763,7 @@ LRESULT DispatchMessageA(const MSG *lpMsg)
 	return CurrentProc(NULL, lpMsg->message, lpMsg->wParam, lpMsg->lParam);
 }
 
-WINBOOL PostMessageA(UINT Msg, WPARAM wParam, LPARAM lParam)
+bool PostMessageA(UINT Msg, WPARAM wParam, LPARAM lParam)
 {
 	MSG msg;
 	msg.message = Msg;

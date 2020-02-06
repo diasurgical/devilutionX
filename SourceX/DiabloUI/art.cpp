@@ -2,7 +2,7 @@
 
 namespace dvl {
 
-void LoadArt(const char *pszFile, Art *art, int frames, PALETTEENTRY *pPalette)
+void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 {
 	if (art == NULL || art->surface != NULL)
 		return;

@@ -67,7 +67,7 @@ void InitQTextMsg(int m)
 			scrolltexty = 50 / -(sgLastScroll - 1);
 		else
 			scrolltexty = ((sgLastScroll + 1) * 50) / sgLastScroll;
-		qtextSpd = GetTickCount();
+		qtextSpd = SDL_GetTicks();
 	}
 	PlaySFX(alltext[m].sfxnr);
 }
@@ -156,7 +156,7 @@ void DrawQText()
 		}
 	}
 
-	for (currTime = GetTickCount(); qtextSpd + scrolltexty < currTime; qtextSpd += scrolltexty) {
+	for (currTime = SDL_GetTicks(); qtextSpd + scrolltexty < currTime; qtextSpd += scrolltexty) {
 		qtexty--;
 		if (qtexty <= 209) {
 			qtexty += 38;

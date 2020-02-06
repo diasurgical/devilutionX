@@ -778,8 +778,6 @@ static void DrawGame(int x, int y)
 	}
 
 	switch (ScrollInfo._sdir) {
-	case SDIR_NONE:
-		break;
 	case SDIR_N:
 		sy -= 32;
 		x--;
@@ -1048,7 +1046,7 @@ void ScrollView()
 void EnableFrameCount()
 {
 	frameflag = frameflag == 0;
-	framestart = GetTickCount();
+	framestart = SDL_GetTicks();
 }
 
 /**
@@ -1062,14 +1060,14 @@ static void DrawFPS()
 
 	if (frameflag && gbActive && pPanelText) {
 		frameend++;
-		tc = GetTickCount();
+		tc = SDL_GetTicks();
 		frames = tc - framestart;
 		if (tc - framestart >= 1000) {
 			framestart = tc;
 			framerate = 1000 * frameend / frames;
 			frameend = 0;
 		}
-		wsprintf(String, "%d FPS", framerate);
+		snprintf(String, 12, "%d FPS", framerate);
 		PrintGameStr(8, 65, String, COL_RED);
 	}
 }
@@ -1083,14 +1081,20 @@ static void DrawFPS()
  */
 static void DoBlitScreen(DWORD dwX, DWORD dwY, DWORD dwWdt, DWORD dwHgt)
 {
-	RECT SrcRect;
+	SDL_Rect SrcRect = {
+		dwX + SCREEN_X,
+		dwY + SCREEN_Y,
+		dwWdt,
+		dwHgt,
+	};
+	SDL_Rect DstRect = {
+		dwX,
+		dwY,
+		dwWdt,
+		dwHgt,
+	};
 
-	SrcRect.left = dwX + SCREEN_X;
-	SrcRect.top = dwY + SCREEN_Y;
-	SrcRect.right = SrcRect.left + dwWdt - 1;
-	SrcRect.bottom = SrcRect.top + dwHgt - 1;
-
-	BltFast(dwX, dwY, &SrcRect);
+	BltFast(&SrcRect, &DstRect);
 }
 
 /**

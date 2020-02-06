@@ -1,6 +1,7 @@
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
+#include "file_util.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -371,7 +372,7 @@ BOOL pfile_delete_save(_uiheroinfo *hero_info)
 	if (save_num < MAX_CHARACTERS) {
 		hero_names[save_num][0] = '\0';
 		pfile_get_save_path(FileName, sizeof(FileName), save_num);
-		DeleteFile(FileName);
+		RemoveFile(FileName);
 	}
 	return TRUE;
 }
@@ -574,7 +575,7 @@ void pfile_update(BOOL force_save)
 	static int save_prev_tc;
 
 	if (gbMaxPlayers != 1) {
-		int tick = GetTickCount();
+		int tick = SDL_GetTicks();
 		if (force_save || tick - save_prev_tc > 60000) {
 			save_prev_tc = tick;
 			pfile_write_hero();

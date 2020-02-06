@@ -2,185 +2,55 @@
 
 namespace dvl {
 
-constexpr auto DVL_OFS_MAXPATHNAME = 128;
 constexpr auto DVL_MAX_PATH = 260;
 
-typedef char CHAR;
 typedef uint16_t SHORT;
 typedef int32_t LONG;
 typedef uint8_t BOOLEAN;
 
-typedef LONG *PLONG;
-typedef uint32_t ULONG;
-typedef ULONG *PULONG;
-typedef unsigned short USHORT;
-typedef USHORT *PUSHORT;
 typedef unsigned char UCHAR;
-typedef UCHAR *PUCHAR;
-typedef char *PSZ;
 
 typedef uint32_t DWORD;
-typedef int BOOL, WINBOOL;
+typedef int BOOL;
 typedef unsigned char BYTE;
 typedef unsigned short WORD;
-typedef float FLOAT;
-typedef FLOAT *PFLOAT;
-typedef BOOL *LPBOOL;
-typedef BYTE *LPBYTE;
-typedef int *LPINT;
-typedef WORD *LPWORD;
-typedef long *LPLONG;
 typedef DWORD *LPDWORD;
 typedef void *LPVOID;
 typedef void *PVOID;
-typedef const void *LPCVOID;
-typedef void *HMENU;
-typedef void *LPITEMIDLIST;
-typedef LPITEMIDLIST PIDLIST_ABSOLUTE;
-typedef LPITEMIDLIST PCIDLIST_ABSOLUTE;
 
-typedef int INT;
 typedef unsigned int UINT;
-typedef unsigned int *PUINT;
 
-typedef intptr_t INT_PTR, *PINT_PTR;
-typedef uintptr_t UINT_PTR, *PUINT_PTR;
+typedef uintptr_t DWORD_PTR, *PDWORD_PTR;
 
-typedef intptr_t LONG_PTR, *PLONG_PTR;
-typedef uintptr_t ULONG_PTR, *PULONG_PTR;
-typedef ULONG_PTR SIZE_T;
-
-typedef ULONG_PTR DWORD_PTR, *PDWORD_PTR;
-
-typedef CHAR *LPSTR;
-typedef CHAR *LPTSTR;
-typedef const CHAR *LPCSTR;
-
-typedef UINT_PTR WPARAM;
-typedef LONG_PTR LPARAM;
-typedef LONG_PTR LRESULT;
+typedef uintptr_t WPARAM;
+typedef uintptr_t LPARAM;
+typedef uintptr_t LRESULT;
 
 //
 // Handles
 //
 typedef void *HANDLE;
 
-typedef HANDLE HWND, HGDIOBJ, HMODULE, HDC, HRGN, HINSTANCE, HPALETTE, HCURSOR;
-
-typedef LONG LCID;
-
-typedef DWORD COLORREF;
+typedef HANDLE HWND, HMODULE, HDC, HINSTANCE;
 
 typedef LRESULT(*WNDPROC)(HWND, UINT, WPARAM, LPARAM);
-
-#pragma pack(push, 1)
-typedef struct waveformat_tag {
-	WORD wFormatTag;
-	WORD nChannels;
-	DWORD nSamplesPerSec;
-	DWORD nAvgBytesPerSec;
-	WORD nBlockAlign;
-} WAVEFORMAT, *PWAVEFORMAT, *LPWAVEFORMAT;
-
-typedef struct pcmwaveformat_tag {
-	WAVEFORMAT wf;
-	WORD wBitsPerSample;
-} PCMWAVEFORMAT, *PPCMWAVEFORMAT, *LPPCMWAVEFORMAT;
-#pragma pack(pop)
 
 typedef struct _FILETIME {
 	DWORD dwLowDateTime;
 	DWORD dwHighDateTime;
 } FILETIME, *LPFILETIME;
 
-typedef struct tagRECT {
-	LONG left;
-	LONG top;
-	LONG right;
-	LONG bottom;
-} RECT;
-
-typedef RECT *LPRECT;
-
-typedef struct tagPOINT {
-	LONG x;
-	LONG y;
-} POINT;
-
-typedef struct tagSIZE {
-	LONG cx;
-	LONG cy;
-} SIZE;
-
 typedef struct tagMSG {
 	UINT message;
 	WPARAM wParam;
 	LPARAM lParam;
-	DWORD time;
-	POINT pt;
 } MSG, *LPMSG;
-
-typedef uint32_t FOURCC;
-
-typedef struct {
-	FOURCC ckid;
-	DWORD cksize;
-	FOURCC fccType;
-	DWORD dwDataOffset;
-	DWORD dwFlags;
-} MMCKINFO;
-
-//
-// System time is represented with the following structure:
-//
-
-typedef struct _SYSTEMTIME {
-	WORD wYear;
-	WORD wMonth;
-	WORD wDayOfWeek;
-	WORD wDay;
-	WORD wHour;
-	WORD wMinute;
-	WORD wSecond;
-	WORD wMilliseconds;
-} SYSTEMTIME, *PSYSTEMTIME, *LPSYSTEMTIME;
-
-typedef unsigned long _fsize_t; /* Could be 64 bits for Win32 */
-
-struct DVL_finddata_t {
-	unsigned attrib;
-	time_t time_create; /* -1 for FAT file systems */
-	time_t time_access; /* -1 for FAT file systems */
-	time_t time_write;
-	_fsize_t size;
-	char name[DVL_MAX_PATH];
-};
-
-typedef WORD ATOM;
 
 //
 // Everything else
 //
-typedef struct tagPALETTEENTRY {
-	BYTE peRed;
-	BYTE peGreen;
-	BYTE peBlue;
-	BYTE peFlags;
-} PALETTEENTRY, *PPALETTEENTRY, *LPPALETTEENTRY;
 
-typedef void *LPSECURITY_ATTRIBUTES;
-
-typedef struct _LIST_ENTRY {
-	struct _LIST_ENTRY *Flink;
-	struct _LIST_ENTRY *Blink;
-} LIST_ENTRY, *PLIST_ENTRY;
-
-DWORD GetTickCount();
-
-WINBOOL CloseHandle(HANDLE hObject);
-
-HANDLE CreateEventA(LPSECURITY_ATTRIBUTES lpEventAttributes, WINBOOL bManualReset, WINBOOL bInitialState,
-    LPCSTR lpName);
+HANDLE CreateEventA();
 BOOL CloseEvent(HANDLE event);
 void SetEvent(HANDLE hEvent);
 void ResetEvent(HANDLE hEvent);
@@ -191,245 +61,21 @@ void FocusOnCharInfo();
 
 SHORT GetAsyncKeyState(int vKey);
 
-WINBOOL PeekMessageA(LPMSG lpMsg);
+bool PeekMessageA(LPMSG lpMsg);
 
-WINBOOL TranslateMessage(const MSG *lpMsg);
+bool TranslateMessage(const MSG *lpMsg);
 LRESULT DispatchMessageA(const MSG *lpMsg);
-WINBOOL PostMessageA(UINT Msg, WPARAM wParam, LPARAM lParam);
-
-bool SpawnWindow(LPCSTR lpWindowName, int nWidth, int nHeight);
+bool PostMessageA(UINT Msg, WPARAM wParam, LPARAM lParam);
 
 uintptr_t DVL_beginthreadex(void *_Security, unsigned _StackSize, unsigned(*_StartAddress)(void *),
     void *_ArgList, unsigned _InitFlag, unsigned *_ThrdAddr);
 DWORD GetCurrentThreadId();
-WINBOOL SetThreadPriority(HANDLE hThread, int nPriority);
-void Sleep(DWORD dwMilliseconds);
-
-int wsprintfA(LPSTR, LPCSTR, ...);
-int wvsprintfA(LPSTR dest, LPCSTR format, va_list arglist);
-int _strcmpi(const char *_Str1, const char *_Str2);
-int _strnicmp(const char *_Str1, const char *_Str2, size_t n);
-
-//
-// File I/O
-//
-
-typedef void *LPOVERLAPPED;
-
-typedef struct _IMAGE_FILE_HEADER {
-	WORD Machine;
-	WORD NumberOfSections;
-	DWORD TimeDateStamp;
-	DWORD PointerToSymbolTable;
-	DWORD NumberOfSymbols;
-	WORD SizeOfOptionalHeader;
-	WORD Characteristics;
-} IMAGE_FILE_HEADER, *PIMAGE_FILE_HEADER;
-
-typedef struct _IMAGE_OPTIONAL_HEADER {
-	WORD Magic;
-	BYTE MajorLinkerVersion;
-	BYTE MinorLinkerVersion;
-	DWORD SizeOfCode;
-	DWORD SizeOfInitializedData;
-	DWORD SizeOfUninitializedData;
-	DWORD AddressOfEntryPoint;
-	DWORD BaseOfCode;
-	DWORD BaseOfData;
-	DWORD ImageBase;
-	DWORD SectionAlignment;
-	DWORD FileAlignment;
-	WORD MajorOperatingSystemVersion;
-	WORD MinorOperatingSystemVersion;
-	WORD MajorImageVersion;
-	WORD MinorImageVersion;
-	WORD MajorSubsystemVersion;
-	WORD MinorSubsystemVersion;
-	DWORD Win32VersionValue;
-	DWORD SizeOfImage;
-	DWORD SizeOfHeaders;
-	DWORD CheckSum;
-	WORD Subsystem;
-	WORD DllCharacteristics;
-	DWORD SizeOfStackReserve;
-	DWORD SizeOfStackCommit;
-	DWORD SizeOfHeapReserve;
-	DWORD SizeOfHeapCommit;
-	DWORD LoaderFlags;
-	DWORD NumberOfRvaAndSizes;
-} IMAGE_OPTIONAL_HEADER32, *PIMAGE_OPTIONAL_HEADER32;
-
-typedef struct _IMAGE_NT_HEADERS {
-	DWORD Signature;
-	IMAGE_FILE_HEADER FileHeader;
-	IMAGE_OPTIONAL_HEADER32 OptionalHeader;
-} IMAGE_NT_HEADERS, *PIMAGE_NT_HEADERS;
-
-typedef struct _IMAGE_DOS_HEADER {
-	WORD e_magic;
-	WORD e_cblp;
-	WORD e_cp;
-	WORD e_crlc;
-	WORD e_cparhdr;
-	WORD e_minalloc;
-	WORD e_maxalloc;
-	WORD e_ss;
-	WORD e_sp;
-	WORD e_csum;
-	WORD e_ip;
-	WORD e_cs;
-	WORD e_lfarlc;
-	WORD e_ovno;
-	WORD e_res[4];
-	WORD e_oemid;
-	WORD e_oeminfo;
-	WORD e_res2[10];
-	LONG e_lfanew;
-} IMAGE_DOS_HEADER, *PIMAGE_DOS_HEADER;
-
-typedef struct _OSVERSIONINFOA {
-	DWORD dwOSVersionInfoSize;
-	DWORD dwMajorVersion;
-	DWORD dwMinorVersion;
-	DWORD dwBuildNumber;
-	DWORD dwPlatformId;
-	CHAR szCSDVersion[128];
-} OSVERSIONINFO, *LPOSVERSIONINFOA;
-
-typedef struct _IMAGE_SECTION_HEADER {
-	union {
-		DWORD PhysicalAddress;
-		DWORD VirtualSize;
-	} Misc;
-	DWORD VirtualAddress;
-	DWORD SizeOfRawData;
-	DWORD PointerToRawData;
-	DWORD PointerToRelocations;
-	DWORD PointerToLinenumbers;
-	WORD NumberOfRelocations;
-	WORD NumberOfLinenumbers;
-	DWORD Characteristics;
-} IMAGE_SECTION_HEADER, *PIMAGE_SECTION_HEADER;
-
-typedef LONG LSTATUS, HKEY, REGSAM, PHKEY;
-
-WINBOOL WriteFile(HANDLE hFile, LPCVOID lpBuffer, DWORD nNumberOfBytesToWrite, LPDWORD lpNumberOfBytesWritten,
-    LPOVERLAPPED lpOverlapped);
-DWORD SetFilePointer(HANDLE hFile, LONG lDistanceToMove, PLONG lpDistanceToMoveHigh, DWORD dwMoveMethod);
-WINBOOL SetEndOfFile(HANDLE hFile);
-HANDLE CreateFileA(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode,
-    LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition,
-    DWORD dwFlagsAndAttributes, HANDLE hTemplateFile);
-WINBOOL ReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead, LPDWORD lpNumberOfBytesRead,
-    LPOVERLAPPED lpOverlapped);
-DWORD GetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh);
-WINBOOL DeleteFileA(LPCSTR lpFileName);
-
-typedef struct _CONTEXT {
-
-	//
-	// The flags values within this flag control the contents of
-	// a CONTEXT record.
-	//
-	// If the context record is used as an input parameter, then
-	// for each portion of the context record controlled by a flag
-	// whose value is set, it is assumed that that portion of the
-	// context record contains valid context. If the context record
-	// is being used to modify a threads context, then only that
-	// portion of the threads context will be modified.
-	//
-	// If the context record is used as an IN OUT parameter to capture
-	// the context of a thread, then only those portions of the thread's
-	// context corresponding to set flags will be returned.
-	//
-	// The context record is never used as an OUT only parameter.
-	//
-
-	DWORD ContextFlags;
-
-	//
-	// This section is specified/returned if CONTEXT_DEBUG_REGISTERS is
-	// set in ContextFlags.  Note that CONTEXT_DEBUG_REGISTERS is NOT
-	// included in CONTEXT_FULL.
-	//
-
-	DWORD Dr0;
-	DWORD Dr1;
-	DWORD Dr2;
-	DWORD Dr3;
-	DWORD Dr6;
-	DWORD Dr7;
-
-	//
-	// This section is specified/returned if the
-	// ContextFlags word contains the flag CONTEXT_SEGMENTS.
-	//
-
-	DWORD SegGs;
-	DWORD SegFs;
-	DWORD SegEs;
-	DWORD SegDs;
-
-	//
-	// This section is specified/returned if the
-	// ContextFlags word contains the flag CONTEXT_INTEGER.
-	//
-
-	DWORD Edi;
-	DWORD Esi;
-	DWORD Ebx;
-	DWORD Edx;
-	DWORD Ecx;
-	DWORD Eax;
-
-	//
-	// This section is specified/returned if the
-	// ContextFlags word contains the flag CONTEXT_CONTROL.
-	//
-
-	DWORD Ebp;
-	DWORD Eip;
-	DWORD SegCs;  // MUST BE SANITIZED
-	DWORD EFlags; // MUST BE SANITIZED
-	DWORD Esp;
-	DWORD SegSs;
-} CONTEXT;
-
-typedef CONTEXT *PCONTEXT;
-
-typedef struct _MEMORY_BASIC_INFORMATION {
-	PVOID BaseAddress;
-	PVOID AllocationBase;
-	DWORD AllocationProtect;
-	SIZE_T RegionSize;
-	DWORD State;
-	DWORD Protect;
-	DWORD Type;
-} MEMORY_BASIC_INFORMATION, *PMEMORY_BASIC_INFORMATION;
-
-//
-// Total fakes
-//
-typedef struct {
-} SOCKADDR;
+bool SetThreadPriority(HANDLE hThread, int nPriority);
 
 //
 // MSCVRT emulation
 //
 
-extern void LoadCharNames();
-extern void LoadAndPlaySound(char *FilePath, int lVolume, int lPan);
-extern void DrawArtWithMask(int SX, int SY, int SW, int SH, int nFrame, BYTE bMask, void *pBuffer);
-extern BOOL LoadArtWithPal(char *pszFile, void **pBuffer, int frames, DWORD *data);
-
-constexpr auto DVL_WM_SYSKEYUP = 0x0105;
-constexpr auto DVL_VER_PLATFORM_WIN32_NT = 2;
-
-constexpr auto DVL_CREATE_ALWAYS = 2;
-constexpr auto DVL_GENERIC_READ = 0x80000000L;
-constexpr auto DVL_GENERIC_WRITE = 0x40000000L;
-constexpr auto DVL_OPEN_EXISTING = 3;
-constexpr auto DVL_FILE_BEGIN = 0;
 constexpr auto DVL_FILE_CURRENT = 1;
 
 constexpr auto DVL_WM_QUIT = 0x0012;
@@ -438,7 +84,6 @@ constexpr auto DVL_INFINITE = 0xFFFFFFFF;
 //
 // Events
 //
-constexpr auto DVL_WM_MOUSEFIRST = 0x0200;
 constexpr auto DVL_WM_MOUSEMOVE = 0x0200;
 constexpr auto DVL_WM_LBUTTONDOWN = 0x0201;
 constexpr auto DVL_WM_LBUTTONUP = 0x0202;
@@ -454,14 +99,11 @@ constexpr auto DVL_WM_SYSCOMMAND = 0x0112;
 constexpr auto DVL_WM_CHAR = 0x0102;
 constexpr auto DVL_WM_CAPTURECHANGED = 0x0215;
 
-constexpr auto DVL_WM_CREATE = 0x0001;
 constexpr auto DVL_WM_PAINT = 0x000F;
 constexpr auto DVL_WM_CLOSE = 0x0010;
 constexpr auto DVL_WM_QUERYENDSESSION = 0x0011;
 constexpr auto DVL_WM_ERASEBKGND = 0x0014;
-constexpr auto DVL_WM_MOUSEHOVER = 0x02A1;
 constexpr auto DVL_WM_QUERYNEWPALETTE = 0x030F;
-constexpr auto DVL_WM_PALETTECHANGED = 0x0311;
 
 constexpr auto DVL_SC_CLOSE = 0xF060;
 

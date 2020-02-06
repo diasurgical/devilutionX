@@ -1,6 +1,6 @@
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
-#include "miniwin/ddraw.h"
+#include "display.h"
 #include <SDL.h>
 
 namespace dvl {
@@ -144,27 +144,23 @@ void dx_cleanup()
 
 void dx_reinit()
 {
-	int lockCount;
-
-	sgMemCrit.Enter();
-	ClearCursor();
-	lockCount = sgdwLockCount;
-
-	while (sgdwLockCount != 0)
-		unlock_buf_priv();
-
-	dx_cleanup();
-
-	force_redraw = 255;
-
-	dx_init(ghMainWnd);
-
-	while (lockCount != 0) {
-		lock_buf_priv();
-		lockCount--;
+#ifdef USE_SDL1
+	int flags = window->flags;
+	window = SDL_SetVideoMode(0, 0, 0, window->flags ^ SDL_FULLSCREEN);
+	if (window == NULL) {
+		ErrSdl();
 	}
-
-	sgMemCrit.Leave();
+#else
+	Uint32 flags = 0;
+	if (!fullscreen) {
+		flags = renderer ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_FULLSCREEN;
+	}
+	if (SDL_SetWindowFullscreen(window, flags)) {
+		ErrSdl();
+	}
+#endif
+	fullscreen = !fullscreen;
+	force_redraw = 255;
 }
 
 void CreatePalette()
@@ -175,32 +171,20 @@ void CreatePalette()
 	}
 }
 
-void BltFast(DWORD dwX, DWORD dwY, LPRECT lpSrcRect)
+void BltFast(SDL_Rect *src_rect, SDL_Rect *dst_rect)
 {
-	auto w = static_cast<decltype(SDL_Rect().w)>(lpSrcRect->right - lpSrcRect->left + 1);
-	auto h = static_cast<decltype(SDL_Rect().h)>(lpSrcRect->bottom - lpSrcRect->top + 1);
-	SDL_Rect src_rect = {
-		static_cast<decltype(SDL_Rect().x)>(lpSrcRect->left),
-		static_cast<decltype(SDL_Rect().y)>(lpSrcRect->top),
-		w, h
-	};
-	SDL_Rect dst_rect = {
-		static_cast<decltype(SDL_Rect().x)>(dwX),
-		static_cast<decltype(SDL_Rect().y)>(dwY),
-		w, h
-	};
 	if (OutputRequiresScaling()) {
-		ScaleOutputRect(&dst_rect);
+		ScaleOutputRect(dst_rect);
 		// Convert from 8-bit to 32-bit
 		SDL_Surface *tmp = SDL_ConvertSurface(pal_surface, GetOutputSurface()->format, 0);
-		if (SDL_BlitScaled(tmp, &src_rect, GetOutputSurface(), &dst_rect) <= -1) {
+		if (SDL_BlitScaled(tmp, src_rect, GetOutputSurface(), dst_rect) <= -1) {
 			SDL_FreeSurface(tmp);
 			ErrSdl();
 		}
 		SDL_FreeSurface(tmp);
 	} else {
 		// Convert from 8-bit to 32-bit
-		if (SDL_BlitSurface(pal_surface, &src_rect, GetOutputSurface(), &dst_rect) <= -1) {
+		if (SDL_BlitSurface(pal_surface, src_rect, GetOutputSurface(), dst_rect) <= -1) {
 			ErrSdl();
 		}
 	}
@@ -264,13 +248,10 @@ void RenderPresent()
 #endif
 }
 
-void PaletteGetEntries(DWORD dwNumEntries, LPPALETTEENTRY lpEntries)
+void PaletteGetEntries(DWORD dwNumEntries, SDL_Color *lpEntries)
 {
 	for (DWORD i = 0; i < dwNumEntries; i++) {
-		lpEntries[i].peFlags = 0;
-		lpEntries[i].peRed = system_palette[i].peRed;
-		lpEntries[i].peGreen = system_palette[i].peGreen;
-		lpEntries[i].peBlue = system_palette[i].peBlue;
+		lpEntries[i] = system_palette[i];
 	}
 }
 } // namespace dvl

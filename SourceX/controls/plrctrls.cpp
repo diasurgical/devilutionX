@@ -80,7 +80,7 @@ int GetDistance(int dx, int dy, int maxDistance)
 		return 0;
 	}
 
-	char walkpath[25];
+	char walkpath[MAX_PATH_LENGTH];
 	int steps = FindPath(PosOkPlayer, myplr, plr[myplr]._px, plr[myplr]._py, dx, dy, walkpath);
 	if (steps > maxDistance)
 		return 0;
@@ -448,7 +448,7 @@ void AttrIncBtnSnap(MoveDirectionY dir)
 	if (chrbtnactive && plr[myplr]._pStatPts <= 0)
 		return;
 
-	DWORD ticks = GetTickCount();
+	DWORD ticks = SDL_GetTicks();
 	if (ticks - invmove < repeatRate) {
 		return;
 	}
@@ -485,7 +485,7 @@ void AttrIncBtnSnap(MoveDirectionY dir)
 // small inventory squares are 29x29 (roughly)
 void InvMove(MoveDirection dir)
 {
-	DWORD ticks = GetTickCount();
+	DWORD ticks = SDL_GetTicks();
 	if (ticks - invmove < repeatRate) {
 		return;
 	}
@@ -654,7 +654,7 @@ void HotSpellMove(MoveDirection dir)
 	int x = 0;
 	int y = 0;
 
-	DWORD ticks = GetTickCount();
+	DWORD ticks = SDL_GetTicks();
 	if (ticks - invmove < repeatRate) {
 		return;
 	}
@@ -721,7 +721,7 @@ void HotSpellMove(MoveDirection dir)
 
 void SpellBookMove(MoveDirection dir)
 {
-	DWORD ticks = GetTickCount();
+	DWORD ticks = SDL_GetTicks();
 	if (ticks - invmove < repeatRate) {
 		return;
 	}

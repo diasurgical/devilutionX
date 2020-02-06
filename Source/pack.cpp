@@ -4,7 +4,7 @@ DEVILUTION_BEGIN_NAMESPACE
 
 static void PackItem(PkItemStruct *id, ItemStruct *is)
 {
-	if (is->_itype == -1) {
+	if (is->_itype == ITYPE_NONE) {
 		id->idx = 0xFFFF;
 	} else {
 		id->idx = SwapLE16(is->IDidx);
@@ -114,7 +114,7 @@ static void UnPackItem(PkItemStruct *is, ItemStruct *id)
 	WORD idx = SwapLE16(is->idx);
 
 	if (idx == 0xFFFF) {
-		id->_itype = -1;
+		id->_itype = ITYPE_NONE;
 	} else {
 		if (idx == IDI_EAR) {
 			RecreateEar(
@@ -240,7 +240,7 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL killok)
 
 	if (pnum == myplr) {
 		for (i = 0; i < 20; i++)
-			witchitem[i]._itype = -1;
+			witchitem[i]._itype = ITYPE_NONE;
 	}
 
 	CalcPlrInv(pnum, FALSE);
