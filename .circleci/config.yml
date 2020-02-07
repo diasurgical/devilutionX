@@ -19,12 +19,11 @@ jobs:
     steps:
       - checkout
       - run: apt-get update -y
-      - run: apt-get install -y g++ libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev git cmake libsodium-dev libgtest-dev python-pip python-yaml
-      - run: pip install --user cpp-coveralls
+      - run: apt-get install -y g++ libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev git cmake libsodium-dev libgtest-dev lcov curl
       - run: cd build && cmake .. -DRUN_TESTS=ON
       - run: cd build && cmake --build . -j $(nproc)
       - run: cd build && cmake --build . -j $(nproc) --target test
-      - run: ~/.local/bin/coveralls --exclude 3rdParty --exclude DiabloUI --exclude SourceT --gcov-options '\-lp'
+      - run: bash <(curl -s https://codecov.io/bash)
   linux_x86_64_sdl1:
     docker:
       - image: debian:stretch-backports
