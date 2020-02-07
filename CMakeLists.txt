@@ -309,6 +309,7 @@ endif()
 
 if(RUN_TESTS)
   list(APPEND devilutionx_SRCS
+    SourceT/appfat.cpp
     SourceT/automap.cpp
     SourceT/control.cpp
     SourceT/cursor.cpp)
