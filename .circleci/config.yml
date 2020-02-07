@@ -24,7 +24,7 @@ jobs:
       - run: cd build && cmake .. -DRUN_TESTS=ON
       - run: cd build && cmake --build . -j $(nproc)
       - run: cd build && cmake --build . -j $(nproc) --target test
-      - run: ~/.local/bin/coveralls --exclude 3rdParty --exclude DiabloUI --exclude SourceT --exclude build --gcov-options '\-lp'
+      - run: ~/.local/bin/coveralls --exclude 3rdParty --exclude DiabloUI --exclude SourceT --gcov-options '\-lp'
   linux_x86_64_sdl1:
     docker:
       - image: debian:stretch-backports
