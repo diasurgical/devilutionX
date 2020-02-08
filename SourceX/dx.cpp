@@ -263,7 +263,7 @@ void BltFast(SDL_Rect *src_rect, SDL_Rect *dst_rect)
 		SDL_FreeSurface(tmp);
 	} else {
 		// Convert from 8-bit to 32-bit
-		if (SDL_BlitSurface(pal_surface, src_rect, GetOutputSurface(), dst_rect) < 0) 
+		if (SDL_BlitSurface(pal_surface, src_rect, GetOutputSurface(), dst_rect) < 0)
 			ErrSdl();
 	}
 }
@@ -317,7 +317,7 @@ POINT gameToScreen(int targetRow, int targetCol)
 	if (ScrollInfo._sdir == SDIR_W)
 		sy -= TILE_SIZE;
 
-	return POINT(sx,sy);
+	return POINT(sx, sy);
 }
 
 int mergeChannel(int a, int b, float amount)
@@ -357,7 +357,7 @@ void drawRadius(int lid, int row, int col, int radius, int color)
 		if (!isMis) {
 			for (int i = 0; i < nummonsters; i++) {
 				MonsterStruct *mon = &monster[monstactive[i]];
-				if (mon->mlid == lid){
+				if (mon->mlid == lid) {
 					xoff = mon->_mxoff;
 					yoff = mon->_myoff;
 					break;
@@ -383,7 +383,7 @@ void drawRadius(int lid, int row, int col, int radius, int color)
 	if (offsetx > (SCREEN_WIDTH + width) || offsety > (SCREEN_HEIGHT + height) || offsetx < (-width) || offsety < (-height)) {
 		return;
 	}
-	
+
 	SDL_Rect rect;
 	rect.x = offsetx;
 	rect.y = offsety;
@@ -414,8 +414,8 @@ void lightLoop()
 
 POINT predrawEllipse(int radius, bool test, int width, int height)
 {
-	int sx = width/2 + 20;
-	int sy = height/2 + 20;
+	int sx = width / 2;
+	int sy = height / 2;
 	int hey = radius * 16;
 	int maxx = 0, maxy = 0;
 	for (int x = 0; x < width; x++) {
@@ -432,14 +432,14 @@ POINT predrawEllipse(int radius, bool test, int width, int height)
 			float ab = a + b;
 			if (ab <= c) {
 				howmuch = cbrt(ab / c);
-				if (test){
+				if (test) {
 					if (diffx > maxx) {
 						maxx = diffx;
 					}
-					if (diffy > maxy){
+					if (diffy > maxy) {
 						maxy = diffy;
 					}
-				} else{
+				} else {
 					PutPixel32_nolock(predrawnEllipses[radius - 1], x, y, blendColors(0x000000, 0xFFFFFF, howmuch));
 				}
 			}
@@ -520,9 +520,8 @@ void RenderPresent()
 		// Clear buffer to avoid artifacts in case the window was resized
 		if (SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255) < 0) // TODO only do this if window was resized
 			ErrSdl();
-		
 
-		if (SDL_RenderClear(renderer) < 0) 
+		if (SDL_RenderClear(renderer) < 0)
 			ErrSdl();
 
 #ifdef PIXEL_LIGHT
@@ -532,14 +531,14 @@ void RenderPresent()
 		if (drawRed) {
 			if (SDL_SetTextureColorMod(texture, red_r, red_g, red_b) < 0)
 				ErrSdl();
-		} 
+		}
 
 #endif
 		if (SDL_RenderCopy(renderer, texture, NULL, NULL) < 0)
 			ErrSdl();
 #ifdef PIXEL_LIGHT
 		int tmpRed = drawRed;
-		if (drawRed){
+		if (drawRed) {
 			if (SDL_SetTextureColorMod(texture, 255, 255, 255) < 0)
 				ErrSdl();
 			drawRed = false;
@@ -582,14 +581,14 @@ void RenderPresent()
 #endif
 		SDL_RenderPresent(renderer);
 	} else {
-		if (SDL_UpdateWindowSurface(window) < 0) 
+		if (SDL_UpdateWindowSurface(window) < 0)
 			ErrSdl();
 		LimitFrameRate();
 	}
 #else
-	if (SDL_Flip(surface) < 0) 
+	if (SDL_Flip(surface) < 0)
 		ErrSdl();
-	
+
 	LimitFrameRate();
 #endif
 }
