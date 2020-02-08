@@ -60,6 +60,7 @@ void prepareLightColors()
 	lightColorMap["ACIDPUDDLE"] = lime;
 	lightColorMap["DIABLODEATH"] = red;
 	lightColorMap["UNIQUEMONSTER"] = green;
+	lightColorMap["DEADUNIQUEMONSTER"] = white;
 	lightColorMap["REDPORTAL"] = red;
 	lightColorMap["STATICLIGHT"] = darkorange;
 
@@ -316,6 +317,7 @@ POINT gameToScreen(int targetRow, int targetCol)
 	int sy = TILE_SIZE * (targetCol - playerCol) + sx / 2;
 	if (ScrollInfo._sdir == SDIR_W)
 		sy -= TILE_SIZE;
+	sy += TILE_SIZE / 2;
 
 	return POINT(sx, sy);
 }
@@ -334,14 +336,10 @@ Uint32 blendColors(Uint32 c1, Uint32 c2, float howmuch)
 	return r + (g << 8) + (b << 16);
 }
 
-void drawRadius(int lid, int row, int col, int radius, int color)
+void drawRadius(int lid, int row, int col, int radius, int color, int xoff, int yoff)
 {
-	POINT pos = gameToScreen(row, col);
-	int sx = pos.x;
-	int sy = pos.y;
-
-	int xoff = 0;
-	int yoff = 0;
+	xoff = 0;
+	yoff = 0;
 	bool isMis = false;
 
 	if (lid != -1) {
@@ -360,6 +358,10 @@ void drawRadius(int lid, int row, int col, int radius, int color)
 				if (mon->mlid == lid) {
 					xoff = mon->_mxoff;
 					yoff = mon->_myoff;
+					if (abs(mon->_mx - row) >= 2 || abs(mon->_my - col) >= 2) {
+						row = mon->_mx;
+						col = mon->_my;
+					}
 					break;
 				}
 			}
@@ -370,6 +372,10 @@ void drawRadius(int lid, int row, int col, int radius, int color)
 		xoff -= plr[myplr]._pxoff;
 		yoff -= plr[myplr]._pyoff;
 	}
+
+	POINT pos = gameToScreen(row, col);
+	int sx = pos.x;
+	int sy = pos.y;
 
 	sx += xoff;
 	sy += yoff;
@@ -403,12 +409,12 @@ void lightLoop()
 {
 	for (int i = 0; i < numlights; i++) {
 		int lid = lightactive[i];
-		drawRadius(lid, LightList[lid]._lx, LightList[lid]._ly, LightList[lid]._lradius, LightList[lid]._lcolor);
+		drawRadius(lid, LightList[lid]._lx, LightList[lid]._ly, LightList[lid]._lradius, LightList[lid]._lcolor, LightList[lid]._xoff, LightList[lid]._yoff);
 	}
 
 	for (unsigned int i = 0; i < staticLights[currlevel + setlvlnum * (32 * setlevel)].size(); i++) {
 		LightListStruct *it = &staticLights[currlevel + setlvlnum * (32 * setlevel)][i];
-		drawRadius(-1, it->_lx, it->_ly, it->_lradius, it->_lcolor);
+		drawRadius(-1, it->_lx, it->_ly, it->_lradius, it->_lcolor, 0, 0);
 	}
 }
 
