@@ -31,8 +31,9 @@ SDL_Surface *pal_surface;
 #ifdef PIXEL_LIGHT
 SDL_Surface *tmp_surface;
 SDL_Surface *ui_surface;
-SDL_Surface *predrawnEllipses[20];
-SDL_Texture *ellipsesTextures[20];
+const int num_ellipses = 15;
+SDL_Surface *predrawnEllipses[num_ellipses];
+SDL_Texture *ellipsesTextures[num_ellipses];
 int lightReady = 0;
 
 void prepareLightColors()
@@ -212,7 +213,7 @@ void dx_cleanup()
 #ifdef PIXEL_LIGHT
 	SDL_FreeSurface(tmp_surface);
 	SDL_FreeSurface(ui_surface);
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < num_ellipses; i++) {
 		SDL_FreeSurface(predrawnEllipses[i]);
 		SDL_DestroyTexture(ellipsesTextures[i]);
 	}
@@ -294,8 +295,12 @@ void PutPixel32_nolock(SDL_Surface *surface, int x, int y, Uint32 color)
 }
 
 struct POINT {
-	int x;
-	int y;
+	int x, y;
+	POINT(int x1, int y1)
+	    : x(x1)
+	    , y(y1)
+	{
+	}
 };
 
 POINT gameToScreen(int targetRow, int targetCol)
@@ -312,10 +317,7 @@ POINT gameToScreen(int targetRow, int targetCol)
 	if (ScrollInfo._sdir == SDIR_W)
 		sy -= TILE_SIZE;
 
-	POINT ret;
-	ret.x = sx;
-	ret.y = sy;
-	return ret;
+	return POINT(sx,sy);
 }
 
 int mergeChannel(int a, int b, float amount)
@@ -372,25 +374,28 @@ void drawRadius(int lid, int row, int col, int radius, int color)
 	sx += xoff;
 	sy += yoff;
 
-	int srcx = width;
-	int srcy = height;
-	int targetx = sx;
-	int targety = sy;
-	int offsetx = targetx - srcx;
-	int offsety = targety - srcy;
-
+	int width = predrawnEllipses[radius - 1]->w;
+	int height = predrawnEllipses[radius - 1]->h;
+	int srcx = width / 2;
+	int srcy = height / 2;
+	int offsetx = sx - srcx;
+	int offsety = sy - srcy;
+	if (offsetx > (SCREEN_WIDTH + width) || offsety > (SCREEN_HEIGHT + height) || offsetx < (-width) || offsety < (-height)) {
+		return;
+	}
+	
 	SDL_Rect rect;
 	rect.x = offsetx;
 	rect.y = offsety;
-	rect.w = width * 2;
-	rect.h = height * 2;
+	rect.w = width;
+	rect.h = height;
 
 	Uint8 r = (color & 0xFF0000) >> 16;
 	Uint8 g = (color & 0x00FF00) >> 8;
 	Uint8 b = (color & 0x0000FF);
-	if (SDL_SetTextureColorMod(ellipsesTextures[radius], r, g, b) < 0)
+	if (SDL_SetTextureColorMod(ellipsesTextures[radius - 1], r, g, b) < 0)
 		ErrSdl();
-	if (SDL_RenderCopy(renderer, ellipsesTextures[radius], NULL, &rect) < 0)
+	if (SDL_RenderCopy(renderer, ellipsesTextures[radius - 1], NULL, &rect) < 0)
 		ErrSdl();
 }
 
@@ -407,13 +412,14 @@ void lightLoop()
 	}
 }
 
-void predrawEllipse(int radius)
+POINT predrawEllipse(int radius, bool test, int width, int height)
 {
-	int sx = width;
-	int sy = height;
+	int sx = width/2 + 20;
+	int sy = height/2 + 20;
 	int hey = radius * 16;
-	for (int x = 0; x < width * 2; x++) {
-		for (int y = 0; y < height * 2; y++) {
+	int maxx = 0, maxy = 0;
+	for (int x = 0; x < width; x++) {
+		for (int y = 0; y < height; y++) {
 			//if (x >= 0 && x < SCREEN_WIDTH && y >= 0 && y < SCREEN_HEIGHT) {
 			float howmuch;
 			float diffx = sx - x;
@@ -426,11 +432,21 @@ void predrawEllipse(int radius)
 			float ab = a + b;
 			if (ab <= c) {
 				howmuch = cbrt(ab / c);
-				PutPixel32_nolock(predrawnEllipses[radius], x, y, blendColors(0x000000, 0xFFFFFF, howmuch));
+				if (test){
+					if (diffx > maxx) {
+						maxx = diffx;
+					}
+					if (diffy > maxy){
+						maxy = diffy;
+					}
+				} else{
+					PutPixel32_nolock(predrawnEllipses[radius - 1], x, y, blendColors(0x000000, 0xFFFFFF, howmuch));
+				}
 			}
 			//}
 		}
 	}
+	return POINT(maxx, maxy);
 }
 
 void prepareLight()
@@ -438,15 +454,16 @@ void prepareLight()
 	SDL_RenderGetLogicalSize(renderer, &width, &height);
 	if (SDL_QueryTexture(texture, &format, nullptr, nullptr, nullptr) < 0)
 		ErrSdl();
-	for (int i = 1; i <= 15; i++) {
-		predrawnEllipses[i] = SDL_CreateRGBSurfaceWithFormat(0, width * 2, height * 2, SDL_BITSPERPIXEL(format), format);
+	for (int i = 0; i < num_ellipses; i++) {
+		POINT eliSize = predrawEllipse(i + 1, true, 2048, 2048);
+		predrawnEllipses[i] = SDL_CreateRGBSurfaceWithFormat(0, eliSize.x * 2, eliSize.y * 2, SDL_BITSPERPIXEL(format), format);
 		if (predrawnEllipses[i] == NULL)
 			ErrSdl();
 		if (SDL_SetSurfaceBlendMode(predrawnEllipses[i], SDL_BLENDMODE_ADD) < 0)
 			ErrSdl();
 		if (SDL_FillRect(predrawnEllipses[i], NULL, SDL_MapRGB(predrawnEllipses[i]->format, 0, 0, 0)) < 0)
 			ErrSdl();
-		predrawEllipse(i);
+		predrawEllipse(i + 1, false, predrawnEllipses[i]->w, predrawnEllipses[i]->h);
 		ellipsesTextures[i] = SDL_CreateTextureFromSurface(renderer, predrawnEllipses[i]);
 		if (ellipsesTextures[i] == NULL)
 			ErrSdl();
