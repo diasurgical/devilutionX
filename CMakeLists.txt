@@ -18,6 +18,7 @@ option(BINARY_RELEASE "Enable options for binary release" OFF)
 option(NIGHTLY_BUILD "Enable options for nightly build" OFF)
 option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network" OFF)
+option(RUN_TESTS "Build and run tests." OFF)
 
 if(BINARY_RELEASE)
   set(CMAKE_BUILD_TYPE "Release")
@@ -306,7 +307,25 @@ if(SWITCH)
   set(BIN_TARGET devilutionx.elf)
 endif()
 
+if(RUN_TESTS)
+  list(APPEND devilutionx_SRCS
+    SourceT/appfat.cpp
+    SourceT/automap.cpp
+    SourceT/control.cpp
+    SourceT/cursor.cpp)
+endif()
+
 add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionx_SRCS})
+
+if(RUN_TESTS)
+  include(CTest)
+  include(GoogleTest)
+  find_package(GTest REQUIRED)
+  include_directories(${GTEST_INCLUDE_DIRS})
+  add_definitions(-fprofile-arcs -ftest-coverage -DRUN_TESTS)
+  target_link_libraries(${BIN_TARGET} PRIVATE -fprofile-arcs ${GTEST_LIBRARIES})
+  gtest_add_tests(${BIN_TARGET} "" AUTO)
+endif()
 
 configure_file(SourceS/config.h.in config.h @ONLY)
 target_include_directories(devilution PUBLIC Source SourceS ${CMAKE_CURRENT_BINARY_DIR})
