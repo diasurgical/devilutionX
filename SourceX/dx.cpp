@@ -29,10 +29,16 @@ SDL_Surface *renderer_texture_surface = nullptr;
 SDL_Surface *pal_surface;
 
 #ifdef PIXEL_LIGHT
+struct POINT {
+	int x, y;
+	POINT(){}
+	POINT(int x1, int y1): x(x1), y(y1){}
+};
+
 SDL_Surface *tmp_surface;
 SDL_Surface *ui_surface;
 const int num_ellipses = 15;
-SDL_Surface *predrawnEllipses[num_ellipses];
+POINT eliSizes[num_ellipses];
 SDL_Texture *ellipsesTextures[num_ellipses];
 int lightReady = 0;
 
@@ -215,7 +221,6 @@ void dx_cleanup()
 	SDL_FreeSurface(tmp_surface);
 	SDL_FreeSurface(ui_surface);
 	for (int i = 0; i < num_ellipses; i++) {
-		SDL_FreeSurface(predrawnEllipses[i]);
 		SDL_DestroyTexture(ellipsesTextures[i]);
 	}
 	lightReady = 0;
@@ -295,15 +300,6 @@ void PutPixel32_nolock(SDL_Surface *surface, int x, int y, Uint32 color)
 	*((Uint32 *)pixel) = color;
 }
 
-struct POINT {
-	int x, y;
-	POINT(int x1, int y1)
-	    : x(x1)
-	    , y(y1)
-	{
-	}
-};
-
 POINT gameToScreen(int targetRow, int targetCol)
 {
 	int playerRow = plr[myplr].WorldX;
@@ -380,8 +376,8 @@ void drawRadius(int lid, int row, int col, int radius, int color, int xoff, int 
 	sx += xoff;
 	sy += yoff;
 
-	int width = predrawnEllipses[radius - 1]->w;
-	int height = predrawnEllipses[radius - 1]->h;
+	int width = eliSizes[radius - 1].x;
+	int height = eliSizes[radius - 1].y;
 	int srcx = width / 2;
 	int srcy = height / 2;
 	int offsetx = sx - srcx;
@@ -418,7 +414,7 @@ void lightLoop()
 	}
 }
 
-POINT predrawEllipse(int radius, bool test, int width, int height)
+POINT predrawEllipse(SDL_Surface* eli, int radius, bool test, int width, int height)
 {
 	int sx = width / 2;
 	int sy = height / 2;
@@ -446,13 +442,13 @@ POINT predrawEllipse(int radius, bool test, int width, int height)
 						maxy = diffy;
 					}
 				} else {
-					PutPixel32_nolock(predrawnEllipses[radius - 1], x, y, blendColors(0x000000, 0xFFFFFF, howmuch));
+					PutPixel32_nolock(eli, x, y, blendColors(0x000000, 0xFFFFFF, howmuch));
 				}
 			}
 			//}
 		}
 	}
-	return POINT(maxx, maxy);
+	return POINT(maxx * 2, maxy * 2);
 }
 
 void prepareLight()
@@ -461,18 +457,17 @@ void prepareLight()
 	if (SDL_QueryTexture(texture, &format, nullptr, nullptr, nullptr) < 0)
 		ErrSdl();
 	for (int i = 0; i < num_ellipses; i++) {
-		POINT eliSize = predrawEllipse(i + 1, true, 2048, 2048);
-		predrawnEllipses[i] = SDL_CreateRGBSurfaceWithFormat(0, eliSize.x * 2, eliSize.y * 2, SDL_BITSPERPIXEL(format), format);
-		if (predrawnEllipses[i] == NULL)
+		eliSizes[i] = predrawEllipse(NULL, i + 1, true, 2048, 2048);
+		SDL_Surface* tmpEllipse = SDL_CreateRGBSurfaceWithFormat(0, eliSizes[i].x, eliSizes[i].y, SDL_BITSPERPIXEL(format), format);
+		if (tmpEllipse == NULL)
 			ErrSdl();
-		if (SDL_SetSurfaceBlendMode(predrawnEllipses[i], SDL_BLENDMODE_ADD) < 0)
+		if (SDL_FillRect(tmpEllipse, NULL, SDL_MapRGB(tmpEllipse->format, 0, 0, 0)) < 0)
 			ErrSdl();
-		if (SDL_FillRect(predrawnEllipses[i], NULL, SDL_MapRGB(predrawnEllipses[i]->format, 0, 0, 0)) < 0)
-			ErrSdl();
-		predrawEllipse(i + 1, false, predrawnEllipses[i]->w, predrawnEllipses[i]->h);
-		ellipsesTextures[i] = SDL_CreateTextureFromSurface(renderer, predrawnEllipses[i]);
+		predrawEllipse(tmpEllipse, i + 1, false, eliSizes[i].x, eliSizes[i].y);
+		ellipsesTextures[i] = SDL_CreateTextureFromSurface(renderer, tmpEllipse);
 		if (ellipsesTextures[i] == NULL)
 			ErrSdl();
+		SDL_FreeSurface(tmpEllipse);
 		if (SDL_SetTextureBlendMode(ellipsesTextures[i], SDL_BLENDMODE_ADD) < 0)
 			ErrSdl();
 	}
