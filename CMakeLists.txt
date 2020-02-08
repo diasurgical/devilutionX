@@ -310,10 +310,10 @@ endif()
 
 if(RUN_TESTS)
   list(APPEND devilutionx_SRCS
-    SourceT/appfat.cpp
-    SourceT/automap.cpp
-    SourceT/control.cpp
-    SourceT/cursor.cpp)
+    SourceT/appfat_test.cpp
+    SourceT/automap_test.cpp
+    SourceT/control_test.cpp
+    SourceT/cursor_test.cpp)
 endif()
 
 add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionx_SRCS})
