@@ -16,7 +16,7 @@ namespace dvl {
 
 namespace {
 
-const SDL_Rect VIEWPORT = { SCREEN_X, SCREEN_Y + 114, SCREEN_WIDTH, 251 };
+const SDL_Rect VIEWPORT = { 0, 114, SCREEN_WIDTH, 251 };
 constexpr int SHADOW_OFFSET_X = 2;
 constexpr int SHADOW_OFFSET_Y = 2;
 constexpr int LINE_H = 22;
@@ -194,7 +194,7 @@ private:
 
 void CreditsRenderer::Render()
 {
-	const int offset_y = -(VIEWPORT.y - LINE_H) + (SDL_GetTicks() - ticks_begin_) / 40;
+	const int offset_y = -VIEWPORT.h + (SDL_GetTicks() - ticks_begin_) / 40;
 	if (offset_y == prev_offset_y_)
 		return;
 	prev_offset_y_ = offset_y;
@@ -219,7 +219,7 @@ void CreditsRenderer::Render()
 	while (lines_.back().index + 1 != lines_end)
 		lines_.push_back(PrepareLine(lines_.back().index + 1));
 
-	SDL_SetClipRect(pal_surface, &VIEWPORT);
+	SDL_SetClipRect(GetOutputSurface(), &VIEWPORT);
 	decltype(SDL_Rect().y) dest_y = VIEWPORT.y - (offset_y - lines_begin * LINE_H);
 	for (std::size_t i = 0; i < lines_.size(); ++i, dest_y += LINE_H) {
 		auto &line = lines_[i];
@@ -234,11 +234,10 @@ void CreditsRenderer::Render()
 		if (CREDITS_LINES[line.index][0] == '\t')
 			dest_x += 40;
 
-		SDL_Rect dest_rect = { dest_x, dest_y, 0, 0 };
-		if (SDL_BlitSurface(line.surface.get(), nullptr, pal_surface, &dest_rect) <= -1)
-			ErrSdl();
+		SDL_Rect dest_rect = { dest_x, dest_y, line.surface.get()->w, line.surface.get()->h };
+		Blit(line.surface.get(), nullptr, &dest_rect);
 	}
-	SDL_SetClipRect(pal_surface, nullptr);
+	SDL_SetClipRect(GetOutputSurface(), nullptr);
 }
 
 } // namespace

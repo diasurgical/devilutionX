@@ -190,6 +190,25 @@ void BltFast(SDL_Rect *src_rect, SDL_Rect *dst_rect)
 	}
 }
 
+void Blit(SDL_Surface *src, SDL_Rect *src_rect, SDL_Rect *dst_rect)
+{
+	if (OutputRequiresScaling()) {
+		ScaleOutputRect(dst_rect);
+		// Convert from 8-bit to 32-bit
+		SDL_Surface *tmp = SDL_ConvertSurface(src, GetOutputSurface()->format, 0);
+		if (SDL_BlitScaled(tmp, src_rect, GetOutputSurface(), dst_rect) <= -1) {
+			SDL_FreeSurface(tmp);
+			ErrSdl();
+		}
+		SDL_FreeSurface(tmp);
+	} else {
+		// Convert from 8-bit to 32-bit
+		if (SDL_BlitSurface(src, src_rect, GetOutputSurface(), dst_rect) <= -1) {
+			ErrSdl();
+		}
+	}
+}
+
 /**
  * @brief Limit FPS to avoid high CPU load, use when v-sync isn't available
  */

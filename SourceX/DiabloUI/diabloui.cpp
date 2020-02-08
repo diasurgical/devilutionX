@@ -51,6 +51,7 @@ int UiTextInputLen;
 
 namespace {
 
+DWORD fadeTc;
 int fadeValue = 0;
 int SelectedItem = 0;
 
@@ -564,6 +565,7 @@ void LoadBackgroundArt(const char *pszFile)
 {
 	SDL_Color pPal[256];
 
+	fadeTc = 0;
 	fadeValue = 0;
 	LoadArt(pszFile, &ArtBackground, 1, pPal);
 	if (ArtBackground.surface == nullptr)
@@ -575,18 +577,18 @@ void LoadBackgroundArt(const char *pszFile)
 
 void UiFadeIn()
 {
-	static DWORD tc;
-	if (fadeValue == 0 && tc == 0)
-		tc = SDL_GetTicks();
 	if (fadeValue < 256) {
-		fadeValue = (SDL_GetTicks() - tc) / 2.083; // 32 frames @ 60hz
+		if (fadeValue == 0 && fadeTc == 0)
+			fadeTc = SDL_GetTicks();
+		fadeValue = (SDL_GetTicks() - fadeTc) / 2.083; // 32 frames @ 60hz
 		if (fadeValue > 256) {
 			fadeValue = 256;
-			tc = 0;
+			fadeTc = 0;
 		}
+		SetFadeLevel(fadeValue);
 	}
 
-	SetFadeLevel(fadeValue);
+	RenderPresent();
 }
 
 void DrawSelector(const SDL_Rect &rect)
