@@ -360,7 +360,6 @@ foreach(
   def_name
   SPAWN
   NONET
-  RETROFW
   PREFILL_PLAYER_NAME
 )
 if(${def_name})

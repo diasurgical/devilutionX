@@ -2,10 +2,6 @@
 #include "DiabloUI/diabloui.h"
 #include "controls/controller.h"
 
-#if defined(USE_SDL1) && defined(RETROFW)
-#include <unistd.h>
-#endif
-
 #ifdef USE_SDL1
 #ifndef SDL1_VIDEO_MODE_BPP
 #define SDL1_VIDEO_MODE_BPP 0
@@ -39,17 +35,7 @@ void SetVideoModeToPrimary(bool fullscreen) {
 	int flags = SDL1_VIDEO_MODE_FLAGS | SDL_HWPALETTE;
 	if (fullscreen)
 		flags |= SDL_FULLSCREEN;
-#ifndef RETROFW
 	SetVideoMode(SDL1_VIDEO_MODE_WIDTH, SDL1_VIDEO_MODE_HEIGHT, SDL1_VIDEO_MODE_BPP, flags);
-#else // RETROFW
-	// JZ4760 IPU scaler (e.g. on RG-300 v2/3) - automatic high-quality scaling.
-	if (access("/proc/jz/ipu", F_OK) == 0 || access("/proc/jz/ipu_ratio", F_OK) == 0) {
-		SetVideoMode(SDL1_VIDEO_MODE_WIDTH, SDL1_VIDEO_MODE_HEIGHT, SDL1_VIDEO_MODE_BPP, flags);
-	} else {
-		// Other RetroFW devices have 320x480 screens with non-square pixels.
-		SetVideoMode(320, 480, SDL1_VIDEO_MODE_BPP, flags);
-	}
-#endif
 	if (OutputRequiresScaling())
 		SDL_Log("Using software scaling");
 }
