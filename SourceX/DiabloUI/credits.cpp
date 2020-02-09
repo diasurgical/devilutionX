@@ -21,6 +21,11 @@ constexpr int SHADOW_OFFSET_X = 2;
 constexpr int SHADOW_OFFSET_Y = 2;
 constexpr int LINE_H = 22;
 
+// The maximum number of visible lines is the number of whole lines
+// (VIEWPORT.h / LINE_H) rounded up, plus one extra line for when
+// a line is leaving the screen while another one is entering.
+#define MAX_VISIBLE_LINES ((VIEWPORT.h - 1) / LINE_H + 2)
+
 struct SurfaceDeleter {
 	void operator()(SDL_Surface *surface)
 	{
@@ -162,7 +167,7 @@ class CreditsRenderer {
 
 public:
 	CreditsRenderer()
-	    : lines_(VIEWPORT.h / LINE_H + 1)
+	    : lines_(MAX_VISIBLE_LINES)
 	    , finished_(false)
 	    , prev_offset_y_(0)
 
@@ -204,7 +209,7 @@ void CreditsRenderer::Render()
 		return;
 
 	const std::size_t lines_begin = std::max(offset_y / LINE_H, 0);
-	const std::size_t lines_end = std::min(lines_begin + (VIEWPORT.h - 1) / LINE_H + 1, CREDITS_LINES_SIZE);
+	const std::size_t lines_end = std::min(lines_begin + MAX_VISIBLE_LINES, CREDITS_LINES_SIZE);
 
 	if (lines_begin >= lines_end) {
 		if (lines_end == CREDITS_LINES_SIZE)
