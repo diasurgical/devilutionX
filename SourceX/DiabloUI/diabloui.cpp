@@ -564,15 +564,18 @@ int GetCenterOffset(int w, int bw)
 void LoadBackgroundArt(const char *pszFile)
 {
 	SDL_Color pPal[256];
-
-	fadeTc = 0;
-	fadeValue = 0;
 	LoadArt(pszFile, &ArtBackground, 1, pPal);
 	if (ArtBackground.surface == nullptr)
 		return;
 
 	LoadPalInMem(pPal);
 	ApplyGamma(logical_palette, orig_palette, 256);
+
+	fadeTc = 0;
+	fadeValue = 0;
+	BlackPalette();
+	SDL_FillRect(GetOutputSurface(), NULL, 0x000000);
+	RenderPresent();
 }
 
 void UiFadeIn()

@@ -240,7 +240,6 @@ void selhero_ClassSelector_Select(int value)
 {
 	if (gbSpawned && (value == 1 || value == 2)) {
 		selhero_Free();
-		BlackPalette();
 		UiSelOkDialog(nullptr, "The Rogue and Sorcerer are only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase.", false);
 		LoadBackgroundArt("ui_art\\selhero.pcx");
 		selhero_List_Select(selhero_SaveCount);
@@ -273,7 +272,6 @@ void selhero_Name_Select(int value)
 
 	if (!UiValidPlayerName(selhero_heroInfo.name)) {
 		selhero_Free();
-		BlackPalette();
 		UiSelOkDialog(title, "Invalid name. A name cannot contain spaces, reserved characters, or reserved words.\n", false);
 		LoadBackgroundArt("ui_art\\selhero.pcx");
 	} else {
@@ -281,7 +279,6 @@ void selhero_Name_Select(int value)
 		for (std::size_t i = 0; i < selhero_SaveCount; i++) {
 			if (strcasecmp(selhero_heros[i].name, selhero_heroInfo.name) == 0) {
 				selhero_Free();
-				BlackPalette();
 				char dialogText[256];
 				sprintf(dialogText, "Character already exists. Do you want to overwrite \"%s\"?", selhero_heroInfo.name);
 				overwrite = UiSelHeroYesNoDialog(title, dialogText);
@@ -370,7 +367,6 @@ BOOL UiSelHeroDialog(
 			UiRenderItems(SELHERO_DIALOG, size(SELHERO_DIALOG));
 			UiPollAndRender();
 		}
-		BlackPalette();
 		selhero_Free();
 
 		if (selhero_navigateYesNo) {

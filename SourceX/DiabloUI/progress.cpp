@@ -128,7 +128,6 @@ BOOL UiProgressDialog(HWND window, char *msg, int enable, int (*fnfunc)(), int r
 			UiHandleEvents(&event);
 		}
 	}
-	BlackPalette();
 	progress_Free();
 
 	return progress == 100;

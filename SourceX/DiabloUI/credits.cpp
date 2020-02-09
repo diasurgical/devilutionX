@@ -270,7 +270,6 @@ BOOL UiCreditsDialog(int a1)
 			UiHandleEvents(&event);
 		}
 	} while (!endMenu && !credits_renderer.Finished());
-	BlackPalette();
 
 	return true;
 }

@@ -54,7 +54,6 @@ void UiTitleDialog()
 			UiHandleEvents(&event);
 		}
 	}
-	BlackPalette();
 
 	title_Free();
 }
