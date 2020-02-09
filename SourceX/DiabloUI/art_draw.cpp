@@ -9,7 +9,7 @@ void DrawArt(int screenX, int screenY, Art *art, int nFrame,
     decltype(SDL_Rect().w) srcW, decltype(SDL_Rect().h) srcH)
 {
 	screenX += PANEL_LEFT;
-	if (screenY >= SCREEN_Y + SCREEN_HEIGHT || screenX >= SCREEN_X + SCREEN_WIDTH || art->surface == nullptr)
+	if (screenY >= SCREEN_HEIGHT || screenX >= SCREEN_WIDTH || art->surface == nullptr)
 		return;
 
 	SDL_Rect src_rect = {
@@ -22,11 +22,7 @@ void DrawArt(int screenX, int screenY, Art *art, int nFrame,
 		src_rect.w = srcW;
 	if (srcH && srcH < src_rect.h)
 		src_rect.h = srcH;
-	SDL_Rect dst_rect = {
-		static_cast<decltype(SDL_Rect().x)>(screenX + SCREEN_X),
-		static_cast<decltype(SDL_Rect().y)>(screenY + SCREEN_Y),
-		src_rect.w, src_rect.h
-	};
+	SDL_Rect dst_rect = { screenX, screenY, src_rect.w, src_rect.h };
 
 	if (art->surface->format->BitsPerPixel == 8 && art->palette_version != pal_surface_palette_version) {
 		if (SDLC_SetSurfaceColors(art->surface, pal_surface->format->palette) <= -1)
@@ -34,9 +30,7 @@ void DrawArt(int screenX, int screenY, Art *art, int nFrame,
 		art->palette_version = pal_surface_palette_version;
 	}
 
-	if (SDL_BlitSurface(art->surface, &src_rect, pal_surface, &dst_rect) <= -1) {
-		ErrSdl();
-	}
+	Blit(art->surface, &src_rect, &dst_rect);
 }
 
 void DrawAnimatedArt(Art *art, int screenX, int screenY) {

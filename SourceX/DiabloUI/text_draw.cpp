@@ -53,18 +53,14 @@ void DrawTTF(const char *text, const SDL_Rect &rectIn, int flags,
 		return;
 
 	SDL_Rect dest_rect = rect;
-	const int x_offset = AlignXOffset(flags, rect, text_surface->w);
-	const int y_offset = (flags & UIS_VCENTER) ? (rect.h - text_surface->h) / 2 : 0;
-	dest_rect.x += static_cast<decltype(SDL_Rect().x)>(SCREEN_X + x_offset);
-	dest_rect.y += static_cast<decltype(SDL_Rect().y)>(SCREEN_Y + y_offset);
+	dest_rect.x += AlignXOffset(flags, rect, text_surface->w);
+	dest_rect.y += (flags & UIS_VCENTER) ? (rect.h - text_surface->h) / 2 : 0;
 
 	SDL_Rect shadow_rect = dest_rect;
 	++shadow_rect.x;
 	++shadow_rect.y;
-	if (SDL_BlitSurface(shadow_surface, nullptr, pal_surface, &shadow_rect) <= -1)
-		ErrSdl();
-	if (SDL_BlitSurface(text_surface, nullptr, pal_surface, &dest_rect) <= -1)
-		ErrSdl();
+	Blit(shadow_surface, nullptr, &shadow_rect);
+	Blit(text_surface, nullptr, &dest_rect);
 }
 
 void DrawArtStr(const char *text, const SDL_Rect &rect, int flags, bool drawTextCursor)
