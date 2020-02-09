@@ -220,17 +220,34 @@ Or you create a new directory under `/home/cpi/apps/Menu` and copy [the file](Pa
 <details><summary>Amiga via Docker</summary>
 
 ### Start the container from the repo root
-```
-docker run -ti --rm -v $(pwd):/work amigadev/crosstools:m68k-amigaos bash
-```
+
+~~~ bash
+docker run -ti --rm -v "${PWD}:/work" amigadev/crosstools:m68k-amigaos bash
+~~~
+
 ### Installing dependencies and build
-```
-Packaging/amiga/prep.sh
-cd build
+
+From the docker container prompt, run:
+
+~~~ bash
+mkdir -p build-amiga && cd build-amiga
+../Packaging/amiga/prep.sh
 PKG_CONFIG_PATH=/opt/m68k-amigaos/lib/pkgconfig/:/opt/m68k-amigaos/share/pkgconfig/ cmake -DBINARY_RELEASE=ON -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-s -ffast-math -O3 -noixemul -D__BIG_ENDIAN__ -D__AMIGA__ -fpermissive" ..
 cmake --build . -j $(nproc)
-```
-Make sure the resulting devilutionx file has the correct permissions for your user afterwards.
+~~~
+
+### Copy the necessary files and update permissions
+
+Outside of the Docker container, from the DevilutionX directory, run:
+
+~~~ bash
+cp Packaging/amiga/devilutionx.info Packaging/amiga/LiberationSerif-Bold.ttf build-amiga/
+sudo chown "${USER}:" build-amiga/*
+~~~
+
+To actually start DevilutionX, increase the stack size to 50KiB in Amiga.
+You can do this by selecting the DevilutionX icon, then hold right mouse button and
+select Icons -> Information in the top menu.
 </details>
 
 <details><summary><b>CMake build options</b></summary>

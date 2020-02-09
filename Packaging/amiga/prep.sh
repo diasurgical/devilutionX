@@ -11,6 +11,9 @@ export M68K_COMMON="-s -ffast-math -fomit-frame-pointer"
 export M68K_CFLAGS="${CFLAGS} ${M68K_CPU} ${M68K_COMMON}"
 export M68K_CXXFLAGS="${CXXFLAGS} ${M68K_CPU} ${M68K_COMMON}"
 
+mkdir -p deps
+cd deps
+
 # ZLIB
 wget https://www.zlib.net/zlib-1.2.11.tar.gz -O zlib-1.2.11.tar.gz
 tar -xvf zlib-1.2.11.tar.gz
