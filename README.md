@@ -236,7 +236,18 @@ PKG_CONFIG_PATH=/opt/m68k-amigaos/lib/pkgconfig/:/opt/m68k-amigaos/share/pkgconf
 cmake --build . -j $(nproc)
 ~~~
 
-Make sure the resulting devilutionx file has the correct permissions for your user afterwards.
+### Copy the necessary files and update permissions
+
+Outside of the Docker container, from the DevilutionX directory, run:
+
+~~~ bash
+cp Packaging/amiga/devilutionx.info Packaging/amiga/LiberationSerif-Bold.ttf build-amiga/
+sudo chown "${USER}:${USER}" build-amiga/*
+~~~
+
+To actually start DevilutionX, increase the stack size to 50KiB in Amiga.
+You can do this by selecting the DevilutionX icon, then hold right mouse button and
+select Icons -> Information in the top menu.
 </details>
 
 <details><summary><b>CMake build options</b></summary>
