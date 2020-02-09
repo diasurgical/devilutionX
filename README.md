@@ -242,7 +242,7 @@ Outside of the Docker container, from the DevilutionX directory, run:
 
 ~~~ bash
 cp Packaging/amiga/devilutionx.info Packaging/amiga/LiberationSerif-Bold.ttf build-amiga/
-sudo chown "${USER}:${USER}" build-amiga/*
+sudo chown "${USER}:" build-amiga/*
 ~~~
 
 To actually start DevilutionX, increase the stack size to 50KiB in Amiga.
