@@ -118,7 +118,6 @@ int UiSelectProvider(
 	while (!selconn_EndMenu) {
 		UiPollAndRender();
 	}
-	BlackPalette();
 	selconn_Free();
 
 	return selconn_ReturnValue;

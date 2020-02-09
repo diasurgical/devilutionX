@@ -59,8 +59,6 @@ bool UiSelHeroYesNoDialog(const char *title, const char *body)
 		UiPollAndRender();
 	}
 
-	BlackPalette();
-
 	selyesno_Free();
 
 	return selyesno_value;

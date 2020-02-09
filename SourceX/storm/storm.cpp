@@ -22,6 +22,10 @@ DWORD nLastError = 0;
 bool directFileAccess = false;
 char SBasePath[DVL_MAX_PATH];
 
+#ifdef USE_SDL1
+static bool IsSVidVideoMode = false;
+#endif
+
 static std::string getIniPath()
 {
 	char path[DVL_MAX_PATH];
@@ -586,6 +590,23 @@ void SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 			ErrSdl();
 		}
 	}
+#else
+	// Set the video mode close to the SVid resolution while preserving aspect ratio.
+	{
+		const auto *display = SDL_GetVideoSurface();
+		IsSVidVideoMode = (display->flags & (SDL_FULLSCREEN | SDL_NOFRAME)) != 0;
+		if (IsSVidVideoMode) {
+			int w, h;
+			if (display->w * SVidWidth > display->h * SVidHeight) {
+				w = SVidWidth;
+				h = SVidWidth * display->h / display->w;
+			} else {
+				w = SVidHeight * display->w / display->h;
+				h = SVidHeight;
+			}
+			SetVideoMode(w, h, display->format->BitsPerPixel, display->flags);
+		}
+	}
 #endif
 	memcpy(SVidPreviousPalette, orig_palette, 1024);
 
@@ -682,10 +703,11 @@ BOOL SVidPlayContinue(void)
 	} else
 #endif
 	{
+		auto *output_surface = GetOutputSurface();
 		int factor;
-		int wFactor = SCREEN_WIDTH / SVidWidth;
-		int hFactor = SCREEN_HEIGHT / SVidHeight;
-		if (wFactor > hFactor && SCREEN_HEIGHT > SVidHeight) {
+		int wFactor = output_surface->w / SVidWidth;
+		int hFactor = output_surface->h / SVidHeight;
+		if (wFactor > hFactor && output_surface->h > SVidHeight) {
 			factor = hFactor;
 		} else {
 			factor = wFactor;
@@ -694,25 +716,28 @@ BOOL SVidPlayContinue(void)
 		const int scaledH = SVidHeight * factor;
 
 		SDL_Rect pal_surface_offset = {
-			static_cast<decltype(SDL_Rect().x)>((SCREEN_WIDTH - scaledW) / 2),
-			static_cast<decltype(SDL_Rect().y)>((SCREEN_HEIGHT - scaledH) / 2),
+			static_cast<decltype(SDL_Rect().x)>((output_surface->w - scaledW) / 2),
+			static_cast<decltype(SDL_Rect().y)>((output_surface->h - scaledH) / 2),
 			static_cast<decltype(SDL_Rect().w)>(scaledW),
 			static_cast<decltype(SDL_Rect().h)>(scaledH)
 		};
+		if (factor == 1) {
+			if (SDL_BlitSurface(SVidSurface, nullptr, output_surface, &pal_surface_offset) <= -1) {
+				ErrSdl();
+			}
+		} else {
 #ifdef USE_SDL1
-		SDL_Surface *tmp = SDL_ConvertSurface(SVidSurface, window->format, 0);
-		// NOTE: Consider resolution switching instead if video doesn't play
-		// fast enough.
+			SDL_Surface *tmp = SDL_ConvertSurface(SVidSurface, window->format, 0);
 #else
-		Uint32 format = SDL_GetWindowPixelFormat(window);
-		SDL_Surface *tmp = SDL_ConvertSurfaceFormat(SVidSurface, format, 0);
+			Uint32 format = SDL_GetWindowPixelFormat(window);
+			SDL_Surface *tmp = SDL_ConvertSurfaceFormat(SVidSurface, format, 0);
 #endif
-		ScaleOutputRect(&pal_surface_offset);
-		if (SDL_BlitScaled(tmp, NULL, GetOutputSurface(), &pal_surface_offset) <= -1) {
-			SDL_Log(SDL_GetError());
-			return false;
+			if (SDL_BlitScaled(tmp, nullptr, output_surface, &pal_surface_offset) <= -1) {
+				SDL_Log(SDL_GetError());
+				return false;
+			}
+			SDL_FreeSurface(tmp);
 		}
-		SDL_FreeSurface(tmp);
 	}
 
 	RenderPresent();
@@ -768,6 +793,8 @@ void SVidPlayEnd(HANDLE video)
 			ErrSdl();
 		}
 	}
+#else
+	if (IsSVidVideoMode) SetVideoModeToPrimary();
 #endif
 }
 

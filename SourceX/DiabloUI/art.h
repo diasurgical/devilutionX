@@ -7,12 +7,13 @@ namespace dvl {
 struct Art {
 	SDL_Surface *surface = NULL;
 	int frames = 1;
-	int frame_height = 0;
+	int logical_width = 0;
+	int frame_height = 0; // logical frame height (before scaling)
 	unsigned int palette_version = 0;
 
 	int w() const
 	{
-		return surface ? surface->w : 0;
+		return logical_width;
 	}
 
 	int h() const

@@ -303,10 +303,6 @@ void UiFocusNavigation(SDL_Event *event)
 	}
 
 	if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
-		// In SDL2 mouse events already use logical coordinates.
-#ifdef USE_SDL1
-		OutputToLogical(&event->button.x, &event->button.y);
-#endif
 		if (UiItemMouseEvents(event, gUiItems, gUiItemCnt))
 			return;
 	}
@@ -564,15 +560,18 @@ int GetCenterOffset(int w, int bw)
 void LoadBackgroundArt(const char *pszFile)
 {
 	SDL_Color pPal[256];
-
-	fadeTc = 0;
-	fadeValue = 0;
 	LoadArt(pszFile, &ArtBackground, 1, pPal);
 	if (ArtBackground.surface == nullptr)
 		return;
 
 	LoadPalInMem(pPal);
 	ApplyGamma(logical_palette, orig_palette, 256);
+
+	fadeTc = 0;
+	fadeValue = 0;
+	BlackPalette();
+	SDL_FillRect(GetOutputSurface(), NULL, 0x000000);
+	RenderPresent();
 }
 
 void UiFadeIn()
@@ -838,6 +837,11 @@ bool UiItemMouseEvents(SDL_Event *event, UiItem *items, std::size_t size)
 {
 	if (!items || size == 0)
 		return false;
+
+	// In SDL2 mouse events already use logical coordinates.
+#ifdef USE_SDL1
+	OutputToLogical(&event->button.x, &event->button.y);
+#endif
 
 	bool handled = false;
 	for (std::size_t i = 0; i < size; i++) {

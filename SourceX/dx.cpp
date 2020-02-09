@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "display.h"
@@ -230,7 +232,6 @@ void dx_cleanup()
 void dx_reinit()
 {
 #ifdef USE_SDL1
-	int flags = window->flags;
 	window = SDL_SetVideoMode(0, 0, 0, window->flags ^ SDL_FULLSCREEN);
 	if (window == NULL) {
 		ErrSdl();
@@ -258,39 +259,63 @@ void CreatePalette()
 
 void BltFast(SDL_Rect *src_rect, SDL_Rect *dst_rect)
 {
-	if (OutputRequiresScaling()) {
-		ScaleOutputRect(dst_rect);
-		// Convert from 8-bit to 32-bit
-		SDL_Surface *tmp = SDL_ConvertSurface(pal_surface, GetOutputSurface()->format, 0);
-		if (SDL_BlitScaled(tmp, src_rect, GetOutputSurface(), dst_rect) < 0) {
-			SDL_FreeSurface(tmp);
-			ErrSdl();
-		}
-		SDL_FreeSurface(tmp);
-	} else {
-		// Convert from 8-bit to 32-bit
-		if (SDL_BlitSurface(pal_surface, src_rect, GetOutputSurface(), dst_rect) < 0)
-			ErrSdl();
-	}
+	Blit(pal_surface, src_rect, dst_rect);
 }
 
 void Blit(SDL_Surface *src, SDL_Rect *src_rect, SDL_Rect *dst_rect)
 {
-	if (OutputRequiresScaling()) {
-		ScaleOutputRect(dst_rect);
-		// Convert from 8-bit to 32-bit
-		SDL_Surface *tmp = SDL_ConvertSurface(src, GetOutputSurface()->format, 0);
-		if (SDL_BlitScaled(tmp, src_rect, GetOutputSurface(), dst_rect) <= -1) {
-			SDL_FreeSurface(tmp);
+	SDL_Surface *dst = GetOutputSurface();
+#ifndef USE_SDL1
+	if (SDL_BlitSurface(src, src_rect, dst, dst_rect) < 0)
 			ErrSdl();
-		}
-		SDL_FreeSurface(tmp);
-	} else {
-		// Convert from 8-bit to 32-bit
-		if (SDL_BlitSurface(src, src_rect, GetOutputSurface(), dst_rect) <= -1) {
+		return;
+#else
+	if (!OutputRequiresScaling()) {
+		if (SDL_BlitSurface(src, src_rect, dst, dst_rect) < 0)
 			ErrSdl();
-		}
+		return;
 	}
+
+	SDL_Rect scaled_dst_rect;
+	if (dst_rect != nullptr) {
+		scaled_dst_rect = *dst_rect;
+		ScaleOutputRect(&scaled_dst_rect);
+		dst_rect = &scaled_dst_rect;
+	}
+
+	// Same pixel format: We can call BlitScaled directly.
+	if (SDLBackport_PixelFormatFormatEq(src->format, dst->format)) {
+		if (SDL_BlitScaled(src, src_rect, dst, dst_rect) < 0)
+			ErrSdl();
+		return;
+	}
+
+	// If the surface has a color key, we must stretch first and can then call BlitSurface.
+	if (SDL_HasColorKey(src)) {
+		SDL_Surface *stretched = SDL_CreateRGBSurface(SDL_SWSURFACE, dst_rect->w, dst_rect->h, src->format->BitsPerPixel,
+		    src->format->Rmask, src->format->Gmask, src->format->BitsPerPixel, src->format->Amask);
+		SDL_SetColorKey(stretched, SDL_SRCCOLORKEY, src->format->colorkey);
+		if (src->format->palette != nullptr)
+			SDL_SetPalette(stretched, SDL_LOGPAL, src->format->palette->colors, 0, src->format->palette->ncolors);
+		SDL_Rect stretched_rect = { 0, 0, dst_rect->w, dst_rect->h };
+		if (SDL_SoftStretch(src, src_rect, stretched, &stretched_rect) < 0
+		    || SDL_BlitSurface(stretched, &stretched_rect, dst, dst_rect) < 0) {
+			SDL_FreeSurface(stretched);
+			ErrSdl();
+		}
+		SDL_FreeSurface(stretched);
+		return;
+	}
+
+	// A surface with a non-output pixel format but without a color key needs scaling.
+	// We can convert the format and then call BlitScaled.
+	SDL_Surface *converted = SDL_ConvertSurface(src, dst->format, 0);
+	if (SDL_BlitScaled(converted, src_rect, dst, dst_rect) < 0) {
+		SDL_FreeSurface(converted);
+		ErrSdl();
+	}
+	SDL_FreeSurface(converted);
+#endif
 }
 
 /**

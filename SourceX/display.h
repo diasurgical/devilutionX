@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #include "devilution.h"
 #include <SDL.h>
 #include <type_traits>
@@ -15,6 +17,12 @@ extern SDL_Palette *palette;
 extern SDL_Surface *pal_surface;
 extern unsigned int pal_surface_palette_version;
 
+#ifdef USE_SDL1
+void SetVideoMode(int width, int height, int bpp, std::uint32_t flags);
+bool IsFullScreen();
+void SetVideoModeToPrimary(bool fullscreen = IsFullScreen());
+#endif
+
 // Returns:
 // SDL1: Video surface.
 // SDL2, no upscale: Window surface.
@@ -27,6 +35,9 @@ bool OutputRequiresScaling();
 
 // Scales rect if necessary.
 void ScaleOutputRect(SDL_Rect *rect);
+
+// If the output requires software scaling, replaces the given surface with a scaled one.
+void ScaleSurfaceToOutput(SDL_Surface **surface);
 
 // Convert from output coordinates to logical (resolution-independent) coordinates.
 template <

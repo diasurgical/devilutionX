@@ -176,7 +176,6 @@ bool IsDifficultyAllowed(int value)
 	}
 
 	selgame_Free();
-	BlackPalette();
 
 	if (value == 1)
 		UiSelOkDialog(title, "Your character must reach level 20 before you can enter a multiplayer game of Nightmare difficulty.", false);
@@ -235,7 +234,6 @@ void selgame_Password_Select(int value)
 			selgame_endMenu = true;
 		} else {
 			selgame_Free();
-			BlackPalette();
 			UiSelOkDialog("Multi Player Game", SDL_GetError(), false);
 			LoadBackgroundArt("ui_art\\selgame.pcx");
 			selgame_Password_Init(selgame_selectedGame);
@@ -251,7 +249,6 @@ void selgame_Password_Select(int value)
 		selgame_endMenu = true;
 	} else {
 		selgame_Free();
-		BlackPalette();
 		UiSelOkDialog("Multi Player Game", SDL_GetError(), false);
 		LoadBackgroundArt("ui_art\\selgame.pcx");
 		selgame_Password_Init(0);
@@ -275,7 +272,6 @@ int UiSelectGame(int a1, _SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_in
 	while (!selgame_endMenu) {
 		UiPollAndRender();
 	}
-	BlackPalette();
 	selgame_Free();
 
 	return selgame_enteringGame;

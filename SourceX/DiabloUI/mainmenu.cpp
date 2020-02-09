@@ -72,7 +72,6 @@ BOOL UiMainMenuDialog(char *name, int *pdwResult, void (*fnSound)(char *file), i
 			}
 		}
 
-		BlackPalette();
 		mainmenu_Free();
 
 		if (gbSpawned && MainMenuResult == MAINMENU_REPLAY_INTRO) {

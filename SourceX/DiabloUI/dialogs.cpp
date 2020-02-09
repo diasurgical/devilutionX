@@ -7,6 +7,7 @@
 #include "DiabloUI/button.h"
 #include "DiabloUI/fonts.h"
 #include "DiabloUI/errorart.h"
+#include "display.h"
 
 namespace dvl {
 
@@ -173,9 +174,16 @@ void LoadFallbackPalette()
 	ApplyGamma(logical_palette, fallback_palette, 256);
 }
 
-void Init(const char *text, const char *caption, bool error)
+void Init(const char *text, const char *caption, bool error, bool render_behind)
 {
 	strcpy(dialogText, text);
+	if (!render_behind) {
+		LoadBackgroundArt("ui_art\\black.pcx");
+		if (ArtBackground.surface == nullptr) {
+			LoadFallbackPalette();
+		}
+	}
+	SetFadeLevel(256);
 	if (caption == nullptr) {
 		LoadMaskedArt(error ? "ui_art\\srpopup.pcx" : "ui_art\\spopup.pcx", &dialogArt);
 		dialogItems = OK_DIALOG;
@@ -216,12 +224,6 @@ void DialogLoop(UiItem *items, std::size_t num_items, UiItem *render_behind, std
 {
 	SDL_Event event;
 	dialogEnd = false;
-	if (render_behind_size == 0) {
-		LoadBackgroundArt("ui_art\\black.pcx");
-		if (ArtBackground.surface == nullptr) {
-			LoadFallbackPalette();
-		}
-	}
 	do {
 		while (SDL_PollEvent(&event)) {
 			switch (event.type) {
@@ -244,7 +246,7 @@ void DialogLoop(UiItem *items, std::size_t num_items, UiItem *render_behind, std
 		}
 
 		if (render_behind_size == 0) {
-			SDL_FillRect(pal_surface, nullptr, 0);
+			SDL_FillRect(GetOutputSurface(), nullptr, 0);
 		} else {
 			UiRenderItems(render_behind, render_behind_size);
 		}
@@ -277,7 +279,7 @@ void UiOkDialog(const char *text, const char *caption, bool error, UiItem *rende
 	}
 
 	inDialog = true;
-	Init(text, caption, error);
+	Init(text, caption, error, render_behind_size > 0);
 	DialogLoop(dialogItems, dialogItemsSize, render_behind, render_behind_size);
 	Deinit();
 	inDialog = false;

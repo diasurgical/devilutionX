@@ -217,6 +217,39 @@ to install dependencies and build the code.
 Or you create a new directory under `/home/cpi/apps/Menu` and copy [the file](Packaging/cpi-gamesh/__init__.py) there. After restarting the UI, you can download and compile the game directly from the device itself. See [the readme](Packaging/cpi-gamesh/readme.md) for more details.
 </details>
 
+<details><summary>Amiga via Docker</summary>
+
+### Start the container from the repo root
+
+~~~ bash
+docker run -ti --rm -v "${PWD}:/work" amigadev/crosstools:m68k-amigaos bash
+~~~
+
+### Installing dependencies and build
+
+From the docker container prompt, run:
+
+~~~ bash
+mkdir -p build-amiga && cd build-amiga
+../Packaging/amiga/prep.sh
+PKG_CONFIG_PATH=/opt/m68k-amigaos/lib/pkgconfig/:/opt/m68k-amigaos/share/pkgconfig/ cmake -DBINARY_RELEASE=ON -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-s -ffast-math -O3 -noixemul -D__BIG_ENDIAN__ -D__AMIGA__ -fpermissive" ..
+cmake --build . -j $(nproc)
+~~~
+
+### Copy the necessary files and update permissions
+
+Outside of the Docker container, from the DevilutionX directory, run:
+
+~~~ bash
+cp Packaging/amiga/devilutionx.info Packaging/amiga/LiberationSerif-Bold.ttf build-amiga/
+sudo chown "${USER}:" build-amiga/*
+~~~
+
+To actually start DevilutionX, increase the stack size to 50KiB in Amiga.
+You can do this by selecting the DevilutionX icon, then hold right mouse button and
+select Icons -> Information in the top menu.
+</details>
+
 <details><summary><b>CMake build options</b></summary>
 
 ### General
