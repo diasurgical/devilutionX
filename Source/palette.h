@@ -5,8 +5,8 @@
 extern SDL_Color logical_palette[256];
 extern SDL_Color system_palette[256];
 extern SDL_Color orig_palette[256];
-extern int gdwPalEntries;
 
+void palette_update();
 void SaveGamma();
 void palette_init();
 void LoadPalette(char *pszFileName);

@@ -18,7 +18,7 @@ option(BINARY_RELEASE "Enable options for binary release" OFF)
 option(NIGHTLY_BUILD "Enable options for nightly build" OFF)
 option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network" OFF)
-option(RUN_TESTS "Build and run tests." OFF)
+option(RUN_TESTS "Build and run tests" OFF)
 
 if(BINARY_RELEASE)
   set(CMAKE_BUILD_TYPE "Release")
@@ -105,6 +105,7 @@ endif()
 
 if(HAIKU)
   set(ASAN OFF)
+  set(UBSAN OFF)
 endif()
 
 if(DIST)
@@ -309,10 +310,10 @@ endif()
 
 if(RUN_TESTS)
   list(APPEND devilutionx_SRCS
-    SourceT/appfat.cpp
-    SourceT/automap.cpp
-    SourceT/control.cpp
-    SourceT/cursor.cpp)
+    SourceT/appfat_test.cpp
+    SourceT/automap_test.cpp
+    SourceT/control_test.cpp
+    SourceT/cursor_test.cpp)
 endif()
 
 add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionx_SRCS})
@@ -454,7 +455,7 @@ foreach(target devilution ${BIN_TARGET})
   target_compile_definitions(${target} PRIVATE ${def_list})
 endforeach(target)
 
-if(DIST AND CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+if(DIST AND CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT HAIKU)
   target_link_libraries(${BIN_TARGET} PUBLIC -static-libgcc -static-libstdc++)
 endif()
 

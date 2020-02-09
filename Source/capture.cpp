@@ -95,7 +95,9 @@ static bool CapturePix(WORD width, WORD height, WORD stride, BYTE *pixels, std::
 	return true;
 }
 
-// Returns a pointer because in GCC < 5 ofstream itself is not moveable due to a bug.
+/**
+ * Returns a pointer because in GCC < 5 ofstream itself is not moveable due to a bug.
+ */
 static std::ofstream *CaptureFile(char *dst_path)
 {
 	char path[MAX_PATH];
@@ -111,18 +113,24 @@ static std::ofstream *CaptureFile(char *dst_path)
 	return nullptr;
 }
 
-static void RedPalette(SDL_Color *pal)
+/**
+ * @brief remove green and blue from the current palette
+ */
+static void RedPalette()
 {
-	SDL_Color red[256];
-	int i;
-
-	for (i = 0; i < 256; i++) {
-		red[i].r = pal[i].r;
-		red[i].g = 0;
-		red[i].b = 0;
+	for (int i = 0; i < 255; i++) {
+		system_palette[i].g = 0;
+		system_palette[i].b = 0;
 	}
-
-	PaletteGetEntries(256, red);
+	palette_update();
+	SDL_Rect SrcRect = {
+		SCREEN_X,
+		SCREEN_Y,
+		SCREEN_WIDTH,
+		SCREEN_HEIGHT,
+	};
+	BltFast(&SrcRect, NULL);
+	RenderPresent();
 }
 
 void CaptureScreen()
@@ -135,7 +143,7 @@ void CaptureScreen()
 	if (out == nullptr) return;
 	DrawAndBlit();
 	PaletteGetEntries(256, palette);
-	RedPalette(palette);
+	RedPalette();
 
 	lock_buf(2);
 	success = CaptureHdr(SCREEN_WIDTH, SCREEN_HEIGHT, out);
@@ -154,9 +162,12 @@ void CaptureScreen()
 	} else {
 		SDL_Log("Screenshot saved at %s", FileName);
 	}
-
 	SDL_Delay(300);
-	PaletteGetEntries(256, palette);
+	for (int i = 0; i < 255; i++) {
+		system_palette[i] = palette[i];
+	}
+	palette_update();
+	force_redraw = 255;
 	delete out;
 }
 

@@ -4,7 +4,7 @@ set -euo pipefail
 
 usage() {
 	echo "Usage: build.sh [target]"
-	echo "	target: target architecture: rg350, gkd350h, or retrofw"
+	echo "	target: target platform: rg350, gkd350h, or retrofw"
 }
 
 if [[ $# -ne 1 ]]; then
@@ -80,13 +80,20 @@ build() {
 }
 
 package() {
-	if [[ "$TARGET" == "retrofw" ]]; then
-		Packaging/OpenDingux/package-ipk.sh "${PWD}/${BUILD_DIR}/devilutionx-${TARGET}.ipk"
-	else
-		Packaging/OpenDingux/package-opk.sh "${PWD}/${BUILD_DIR}/devilutionx-${TARGET}.opk" \
-			"${PWD}/Packaging/OpenDingux/${TARGET}.desktop" \
-			"${PWD}/Packaging/OpenDingux/manual-${TARGET}.txt"
+	local ext=gcw0
+	if [[ $TARGET == retrofw ]]; then
+	  ext=retrofw
 	fi
+	local -r tmp="${BUILD_DIR}/opk"
+	rm -rf "$tmp"
+	mkdir -p "$tmp"
+	cp "Packaging/OpenDingux/${TARGET}.desktop" "${tmp}/default.${ext}.desktop"
+	cp "Packaging/OpenDingux/${TARGET}-manual.txt" "${tmp}/readme.${ext}.txt"
+	mksquashfs "${BUILD_DIR}/devilutionx" \
+		"${tmp}/default.${ext}.desktop" "${tmp}/readme.${ext}.txt" \
+		Packaging/resources/Diablo_32.png Packaging/resources/CharisSILB.ttf \
+		"${BUILD_DIR}/devilutionx-${TARGET}.opk" \
+		-all-root -no-xattrs -noappend -no-exports
 }
 
 main
