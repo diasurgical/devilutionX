@@ -313,7 +313,16 @@ if(RUN_TESTS)
     SourceT/appfat_test.cpp
     SourceT/automap_test.cpp
     SourceT/control_test.cpp
-    SourceT/cursor_test.cpp)
+    SourceT/cursor_test.cpp
+    SourceT/codec_test.cpp
+    SourceT/dead_test.cpp
+    SourceT/diablo_test.cpp
+    SourceT/doom_test.cpp
+    SourceT/drlg_l1_test.cpp
+    SourceT/drlg_l2_test.cpp
+    SourceT/drlg_l3_test.cpp
+    SourceT/drlg_l4_test.cpp
+    SourceT/effects_test.cpp)
 endif()
 
 add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionx_SRCS})
