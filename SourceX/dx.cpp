@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "diablo.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "display.h"
@@ -188,7 +190,13 @@ void Blit(SDL_Surface *src, SDL_Rect *src_rect, SDL_Rect *dst_rect)
 			ErrSdl();
 		return;
 	}
-	if (dst_rect != nullptr) ScaleOutputRect(dst_rect);
+
+	SDL_Rect scaled_dst_rect;
+	if (dst_rect != nullptr) {
+		scaled_dst_rect = *dst_rect;
+		ScaleOutputRect(&scaled_dst_rect);
+		dst_rect = &scaled_dst_rect;
+	}
 
 	// Same pixel format: We can call BlitScaled directly.
 	if (SDLBackport_PixelFormatFormatEq(src->format, dst->format)) {

@@ -40,6 +40,7 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 	}
 
 	art->surface = art_surface;
+	art->logical_width = art_surface->w;
 	art->frame_height = height / frames;
 
 	ScaleSurfaceToOutput(&art->surface);
@@ -57,6 +58,7 @@ void LoadArt(Art *art, const BYTE *artData, int w, int h, int frames)
 	art->frames = frames;
 	art->surface = SDL_CreateRGBSurfaceWithFormatFrom(
 		const_cast<BYTE *>(artData), w, h, 8, w, SDL_PIXELFORMAT_INDEX8);
+	art->logical_width = w;
 	art->frame_height = h / frames;
 	ScaleSurfaceToOutput(&art->surface);
 }

@@ -303,10 +303,6 @@ void UiFocusNavigation(SDL_Event *event)
 	}
 
 	if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
-		// In SDL2 mouse events already use logical coordinates.
-#ifdef USE_SDL1
-		OutputToLogical(&event->button.x, &event->button.y);
-#endif
 		if (UiItemMouseEvents(event, gUiItems, gUiItemCnt))
 			return;
 	}
@@ -841,6 +837,11 @@ bool UiItemMouseEvents(SDL_Event *event, UiItem *items, std::size_t size)
 {
 	if (!items || size == 0)
 		return false;
+
+	// In SDL2 mouse events already use logical coordinates.
+#ifdef USE_SDL1
+	OutputToLogical(&event->button.x, &event->button.y);
+#endif
 
 	bool handled = false;
 	for (std::size_t i = 0; i < size; i++) {
