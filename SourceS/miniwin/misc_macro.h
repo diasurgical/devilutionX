@@ -3,26 +3,9 @@
 #define TRUE true
 #define FALSE false
 
-#define INVALID_HANDLE_VALUE ((HANDLE)-1)
-#define INVALID_HANDLE ((HANDLE)-1)
-
-//
-// Intrinsics
-//
-#define LOWORD(l) ((WORD)(((DWORD_PTR)(l)) & 0xffff))
-#define HIWORD(l) ((WORD)((((DWORD_PTR)(l)) >> 16) & 0xffff))
-
-#define CreateEvent CreateEventA
-
-#define WM_QUIT DVL_WM_QUIT
-
 #define PeekMessage PeekMessageA
 #define DispatchMessage DispatchMessageA
 #define PostMessage PostMessageA
-
-#define _strcmpi(a, b) strcasecmp(a, b)
-
-#define THREAD_PRIORITY_HIGHEST 2
 
 //
 // File I/O
@@ -31,16 +14,10 @@
 #define FILE_CURRENT DVL_FILE_CURRENT
 
 //
-// Calculate the byte offset of a field in a structure of type type.
-//
-
-#define DeleteFile DeleteFileA
-
-//
 // Events
 //
 
-#define _beginthreadex DVL_beginthreadex
+#define WM_QUIT DVL_WM_QUIT
 
 #define WM_MOUSEMOVE DVL_WM_MOUSEMOVE
 #define WM_LBUTTONDOWN DVL_WM_LBUTTONDOWN

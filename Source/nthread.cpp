@@ -10,7 +10,7 @@ DWORD gdwDeltaBytesSec;
 BOOLEAN nthread_should_run;
 DWORD gdwTurnsInTransit;
 uintptr_t glpMsgTbl[MAX_PLRS];
-unsigned int glpNThreadId;
+SDL_threadID glpNThreadId;
 char sgbSyncCountdown;
 int turn_upper_bit;
 BOOLEAN sgbTicsOutOfSync;
@@ -21,7 +21,7 @@ DWORD gdwNormalMsgSize;
 int last_tick;
 
 /* data */
-static HANDLE sghThread = INVALID_HANDLE_VALUE;
+static SDL_Thread *sghThread = NULL;
 
 void nthread_terminate_game(const char *pszFcn)
 {
@@ -157,12 +157,11 @@ void nthread_start(BOOL set_turn_upper_bit)
 		sgbThreadIsRunning = FALSE;
 		sgMemCrit.Enter();
 		nthread_should_run = TRUE;
-		sghThread = (HANDLE)_beginthreadex(NULL, 0, nthread_handler, NULL, 0, &glpNThreadId);
-		if (sghThread == INVALID_HANDLE_VALUE) {
+		sghThread = CreateThread(nthread_handler, &glpNThreadId);
+		if (sghThread == NULL) {
 			err2 = TraceLastError();
 			app_fatal("nthread2:\n%s", err2);
 		}
-		SetThreadPriority(sghThread, THREAD_PRIORITY_HIGHEST);
 	}
 }
 
@@ -198,20 +197,17 @@ void nthread_cleanup()
 	gdwTurnsInTransit = 0;
 	gdwNormalMsgSize = 0;
 	gdwLargestMsgSize = 0;
-	if (sghThread != INVALID_HANDLE_VALUE && glpNThreadId != GetCurrentThreadId()) {
+	if (sghThread != NULL && glpNThreadId != SDL_GetThreadID(NULL)) {
 		if (!sgbThreadIsRunning)
 			sgMemCrit.Leave();
-		if (WaitForSingleObject(sghThread, 0xFFFFFFFF) == -1) {
-			app_fatal("nthread3:\n(%s)", TraceLastError());
-		}
-		CloseEvent(sghThread);
-		sghThread = INVALID_HANDLE_VALUE;
+		SDL_WaitThread(sghThread, NULL);
+		sghThread = NULL;
 	}
 }
 
 void nthread_ignore_mutex(BOOL bStart)
 {
-	if (sghThread != INVALID_HANDLE_VALUE) {
+	if (sghThread != NULL) {
 		if (bStart)
 			sgMemCrit.Leave();
 		else

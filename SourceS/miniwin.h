@@ -22,7 +22,6 @@
 #endif
 
 #include "miniwin/misc.h"
-#include "miniwin/thread.h"
 #include "storm_full.h"
 
 #ifndef MAX_PATH

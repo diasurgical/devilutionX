@@ -20,8 +20,6 @@ typedef void *PVOID;
 
 typedef unsigned int UINT;
 
-typedef uintptr_t DWORD_PTR, *PDWORD_PTR;
-
 typedef uintptr_t WPARAM;
 typedef uintptr_t LPARAM;
 typedef uintptr_t LRESULT;
@@ -50,12 +48,6 @@ typedef struct tagMSG {
 // Everything else
 //
 
-HANDLE CreateEventA();
-BOOL CloseEvent(HANDLE event);
-void SetEvent(HANDLE hEvent);
-void ResetEvent(HANDLE hEvent);
-int WaitForSingleObject(HANDLE hHandle, DWORD dwMilliseconds);
-
 void SetCursorPos(int X, int Y);
 void FocusOnCharInfo();
 
@@ -67,11 +59,6 @@ bool TranslateMessage(const MSG *lpMsg);
 LRESULT DispatchMessageA(const MSG *lpMsg);
 bool PostMessageA(UINT Msg, WPARAM wParam, LPARAM lParam);
 
-uintptr_t DVL_beginthreadex(void *_Security, unsigned _StackSize, unsigned(*_StartAddress)(void *),
-    void *_ArgList, unsigned _InitFlag, unsigned *_ThrdAddr);
-DWORD GetCurrentThreadId();
-bool SetThreadPriority(HANDLE hThread, int nPriority);
-
 //
 // MSCVRT emulation
 //
@@ -79,7 +66,6 @@ bool SetThreadPriority(HANDLE hThread, int nPriority);
 constexpr auto DVL_FILE_CURRENT = 1;
 
 constexpr auto DVL_WM_QUIT = 0x0012;
-constexpr auto DVL_INFINITE = 0xFFFFFFFF;
 
 //
 // Events

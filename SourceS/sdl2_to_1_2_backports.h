@@ -21,6 +21,8 @@
 
 //== Events handling
 
+#define SDL_threadID Uint32
+
 #define SDL_Keysym SDL_keysym
 #define SDL_Keycode SDLKey
 

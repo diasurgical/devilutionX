@@ -257,7 +257,7 @@ set(devilutionx_SRCS
   SourceX/controls/touch.cpp
   SourceX/display.cpp
   SourceX/miniwin/misc_msg.cpp
-  SourceX/miniwin/thread.cpp
+  SourceX/thread.cpp
   SourceX/sound.cpp
   SourceX/soundsample.cpp
   SourceX/storm/storm.cpp

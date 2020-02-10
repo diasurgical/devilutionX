@@ -34,11 +34,11 @@ void MsgBox(const char *pszFmt, va_list va)
 
 void FreeDlg()
 {
-	if (terminating && cleanup_thread_id != GetCurrentThreadId())
+	if (terminating && cleanup_thread_id != SDL_GetThreadID(NULL))
 		SDL_Delay(20000);
 
 	terminating = TRUE;
-	cleanup_thread_id = GetCurrentThreadId();
+	cleanup_thread_id = SDL_GetThreadID(NULL);
 
 	if (gbMaxPlayers > 1) {
 		if (SNetLeaveGame(3))

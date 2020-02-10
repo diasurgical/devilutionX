@@ -2,7 +2,7 @@
 #ifndef __DTHREAD_H__
 #define __DTHREAD_H__
 
-extern unsigned int glpDThreadId;
+extern SDL_threadID glpDThreadId;
 extern BOOLEAN dthread_running;
 
 void dthread_remove_player(int pnum);

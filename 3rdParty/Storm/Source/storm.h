@@ -14,26 +14,31 @@ extern std::string basePath;
 #endif
 
 #ifdef __cplusplus
-//static float infinity = std::numeric_limits<float>::infinity();
-
 struct CCritSect {
-	CRITICAL_SECTION m_critsect;
+	SDL_mutex *m_critsect;
 
 	CCritSect()
 	{
-		InitializeCriticalSection(&m_critsect);
+		m_critsect = SDL_CreateMutex();
+		if (m_critsect == NULL) {
+			ErrSdl();
+		}
 	}
 	~CCritSect()
 	{
-		DeleteCriticalSection(&m_critsect);
+		SDL_DestroyMutex(m_critsect);
 	}
 	void Enter()
 	{
-		EnterCriticalSection(&m_critsect);
+		if (SDL_LockMutex(m_critsect) < 0) {
+			ErrSdl();
+		}
 	}
 	void Leave()
 	{
-		LeaveCriticalSection(&m_critsect);
+		if (SDL_UnlockMutex(m_critsect) < 0) {
+			ErrSdl();
+		}
 	}
 };
 #endif
