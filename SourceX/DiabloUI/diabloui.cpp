@@ -49,11 +49,12 @@ bool UiItemsWraps;
 char *UiTextInput;
 int UiTextInputLen;
 
+int SelectedItem = 0;
+
 namespace {
 
 DWORD fadeTc;
 int fadeValue = 0;
-int SelectedItem = 0;
 
 struct {
 	bool upArrowPressed = false;
