@@ -1,4 +1,6 @@
 #include <cstdint>
+#include <cstring>
+#include <cerrno>
 #include <fstream>
 
 #include "diablo.h"
@@ -17,18 +19,21 @@ _BLOCKENTRY *sgpBlockTbl;
 
 /* data */
 
-#define RETURN_IF_FAIL(obj, op, ...)                                                                        \
-	obj->op(__VA_ARGS__);                                                                                   \
-	if (obj->fail()) {                                                                                      \
-		SDL_Log("%s->%s(%s) failed in %s at %s:%d", #obj, #op, #__VA_ARGS__, __func__, __FILE__, __LINE__); \
-		return FALSE;                                                                                       \
+#define LOG_ERRNO_FAIL(prefix, ...) \
+	SDL_Log(prefix " failed with \"%s\" in %s at %s:%d", __VA_ARGS__, std::strerror(errno), __func__, __FILE__, __LINE__)
+
+#define RETURN_IF_FAIL(obj, op, ...)                     \
+	obj->op(__VA_ARGS__);                                \
+	if (obj->fail()) {                                   \
+		LOG_ERRNO_FAIL("%s->%s(%s)", #obj, #op, #__VA_ARGS__); \
+		return FALSE;                                    \
 	}
 
-#define GOTO_IF_FAIL(label, obj, op, ...)                                                                   \
-	obj->op(__VA_ARGS__);                                                                                   \
-	if (obj->fail()) {                                                                                      \
-		SDL_Log("%s->%s(%s) failed in %s at %s:%d", #obj, #op, #__VA_ARGS__, __func__, __FILE__, __LINE__); \
-		goto label;                                                                                         \
+#define GOTO_IF_FAIL(label, obj, op, ...)                \
+	obj->op(__VA_ARGS__);                                \
+	if (obj->fail()) {                                   \
+		LOG_ERRNO_FAIL("%s->%s(%s)", #obj, #op, #__VA_ARGS__); \
+		goto label;                                      \
 	}
 
 namespace {
@@ -338,7 +343,7 @@ BOOL OpenMPQ(const char *pszArchive, DWORD dwChar)
 		archive = new std::fstream(pszArchive, std::ios::in | std::ios::out | std::ios::binary | std::ios::trunc);
 	}
 	if (archive->fail()) {
-		SDL_Log("Failed to OpenMPQ at %s", pszArchive);
+		LOG_ERRNO_FAIL("Failed to OpenMPQ at %s", pszArchive);
 		delete archive;
 		archive = nullptr;
 		return FALSE;
