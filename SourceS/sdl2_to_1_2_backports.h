@@ -21,6 +21,8 @@
 
 //== Events handling
 
+#define SDL_threadID Uint32
+
 #define SDL_Keysym SDL_keysym
 #define SDL_Keycode SDLKey
 
@@ -881,7 +883,12 @@ inline char *SDL_GetPrefPath(const char *org, const char *app)
 		return NULL;
 	}
 
-	SDL_snprintf(retval, len, "%s/", retval);
+	// Append trailing /
+	size_t final_len = SDL_strlen(retval);
+	if (final_len + 1 < len) {
+		retval[final_len++] = '/';
+		retval[final_len] = '\0';
+	}
 
 	return retval;
 }

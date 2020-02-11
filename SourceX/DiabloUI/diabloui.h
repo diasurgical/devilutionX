@@ -8,6 +8,8 @@
 
 namespace dvl {
 
+extern int SelectedItem;
+
 typedef enum _artFocus {
 	FOCUS_SMALL,
 	FOCUS_MED,

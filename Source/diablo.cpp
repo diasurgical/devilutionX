@@ -464,6 +464,12 @@ BOOL PressEscKey()
 	return rv;
 }
 
+static void GetMousePos(LPARAM lParam)
+{
+	MouseX = (short)(lParam & 0xffff);
+	MouseY = (short)((lParam >> 16) & 0xffff);
+}
+
 LRESULT DisableInputWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg) {
@@ -473,8 +479,7 @@ LRESULT DisableInputWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_SYSKEYDOWN:
 	case WM_SYSCOMMAND:
 	case WM_MOUSEMOVE:
-		MouseX = (short)LOWORD(lParam);
-		MouseY = (short)HIWORD(lParam);
+		GetMousePos(lParam);
 		return 0;
 	case WM_LBUTTONDOWN:
 		if (sgbMouseDown != 0)
@@ -530,21 +535,18 @@ LRESULT GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	case WM_MOUSEMOVE:
-		MouseX = (short)LOWORD(lParam);
-		MouseY = (short)HIWORD(lParam);
+		GetMousePos(lParam);
 		gmenu_on_mouse_move();
 		return 0;
 	case WM_LBUTTONDOWN:
-		MouseX = (short)LOWORD(lParam);
-		MouseY = (short)HIWORD(lParam);
+		GetMousePos(lParam);
 		if (sgbMouseDown == 0) {
 			sgbMouseDown = 1;
 			track_repeat_walk(LeftMouseDown(wParam));
 		}
 		return 0;
 	case WM_LBUTTONUP:
-		MouseX = (short)LOWORD(lParam);
-		MouseY = (short)HIWORD(lParam);
+		GetMousePos(lParam);
 		if (sgbMouseDown == 1) {
 			sgbMouseDown = 0;
 			LeftMouseUp();
@@ -552,16 +554,14 @@ LRESULT GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		return 0;
 	case WM_RBUTTONDOWN:
-		MouseX = (short)LOWORD(lParam);
-		MouseY = (short)HIWORD(lParam);
+		GetMousePos(lParam);
 		if (sgbMouseDown == 0) {
 			sgbMouseDown = 2;
 			RightMouseDown();
 		}
 		return 0;
 	case WM_RBUTTONUP:
-		MouseX = (short)LOWORD(lParam);
-		MouseY = (short)HIWORD(lParam);
+		GetMousePos(lParam);
 		if (sgbMouseDown == 2) {
 			sgbMouseDown = 0;
 		}

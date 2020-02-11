@@ -8,7 +8,7 @@ extern DWORD gdwDeltaBytesSec;
 extern BOOLEAN nthread_should_run;
 extern DWORD gdwTurnsInTransit;
 extern uintptr_t glpMsgTbl[MAX_PLRS];
-extern unsigned int glpNThreadId;
+extern SDL_threadID glpNThreadId;
 extern int turn_upper_bit;
 extern BOOLEAN sgbThreadIsRunning;
 extern DWORD gdwLargestMsgSize;

@@ -34,7 +34,7 @@ DWORD pfile_get_save_num_from_name(const char *name)
 	DWORD i;
 
 	for (i = 0; i < MAX_CHARACTERS; i++) {
-		if (!_strcmpi(hero_names[i], name))
+		if (!strcasecmp(hero_names[i], name))
 			break;
 	}
 
@@ -124,7 +124,7 @@ BOOL pfile_rename_hero(const char *name_1, const char *name_2)
 
 	if (pfile_get_save_num_from_name(name_2) == MAX_CHARACTERS) {
 		for (i = 0; i != MAX_PLRS; i++) {
-			if (!_strcmpi(name_1, plr[i]._pName)) {
+			if (!strcasecmp(name_1, plr[i]._pName)) {
 				found = TRUE;
 				break;
 			}
@@ -139,7 +139,7 @@ BOOL pfile_rename_hero(const char *name_1, const char *name_2)
 
 	SStrCopy(hero_names[save_num], name_2, PLR_NAME_LEN);
 	SStrCopy(plr[i]._pName, name_2, PLR_NAME_LEN);
-	if (!_strcmpi(gszHero, name_1))
+	if (!strcasecmp(gszHero, name_1))
 		SStrCopy(gszHero, name_2, sizeof(gszHero));
 	game_2_ui_player(plr, &uihero, gbValidSaveFile);
 	UiSetupPlayerInfo(gszHero, &uihero, GAME_ID);

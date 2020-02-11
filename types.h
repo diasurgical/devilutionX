@@ -10,6 +10,7 @@
 
 #include "miniwin.h"
 #include "soundsample.h"
+#include "thread.h"
 #include "ui_fwd.h"
 
 DEVILUTION_BEGIN_NAMESPACE
