@@ -152,6 +152,25 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 				return true;
 			}
 		}
+
+		// Bottom button: Closes menus or opens quick spell book if nothing is open.
+		if (ctrl_event.button == ControllerButton::BUTTON_A) { // Bottom button
+			if (ctrl_event.up) return true;
+			if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK))
+				*action = GameActionSendKey { DVL_VK_F7, ctrl_event.up };
+			else if (invflag)
+				*action = GameAction(GameActionType::TOGGLE_INVENTORY);
+			else if (sbookflag)
+				*action = GameAction(GameActionType::TOGGLE_SPELL_BOOK);
+			else if (questlog)
+				*action = GameAction(GameActionType::TOGGLE_QUEST_LOG);
+			else if (chrflag)
+				*action = GameAction(GameActionType::TOGGLE_CHARACTER_INFO);
+			else
+				*action = GameAction(GameActionType::TOGGLE_QUICK_SPELL_MENU);
+			return true;
+		}
+
 		if (!questlog && !sbookflag) {
 			switch (ctrl_event.button) {
 			case ControllerButton::IGNORE:
@@ -178,14 +197,6 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 						*action = GameActionSendKey{ DVL_VK_F5, ctrl_event.up };
 					else
 						*action = GameAction(GameActionType::CAST_SPELL);
-				}
-				return true;
-			case ControllerButton::BUTTON_A: // Bottom button
-				if (!ctrl_event.up) {
-					if (IsControllerButtonPressed(ControllerButton::BUTTON_BACK))
-						*action = GameActionSendKey{ DVL_VK_F7, ctrl_event.up };
-					else
-						*action = GameAction(GameActionType::TOGGLE_QUICK_SPELL_MENU);
 				}
 				return true;
 			case ControllerButton::BUTTON_LEFTSHOULDER:
