@@ -1,4 +1,4 @@
-#include "diablo.h"
+#include "all.h"
 
 #include <cstdint>
 

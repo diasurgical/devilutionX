@@ -1,6 +1,6 @@
 #include <algorithm>
 
-#include "diablo.h"
+#include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "display.h"
 #include <SDL.h>
