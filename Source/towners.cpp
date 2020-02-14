@@ -554,11 +554,11 @@ void ProcessTowners()
 	}
 }
 
-ItemStruct *PlrHasItem(int pnum, int item, int &i)
+ItemStruct *PlrHasItem(int pnum, int item, int *i)
 {
-	for (i = 0; i < plr[pnum]._pNumInv; i++) {
-		if (plr[pnum].InvList[i].IDidx == item)
-			return &plr[pnum].InvList[i];
+	for (*i = 0; *i < plr[pnum]._pNumInv; (*i)++) {
+		if (plr[pnum].InvList[*i].IDidx == item)
+			return &plr[pnum].InvList[*i];
 	}
 
 	return NULL;
@@ -647,7 +647,7 @@ void TalkToTowner(int p, int t)
 				InitQTextMsg(QUEST_BANNER2);
 				towner[t]._tMsgSaid = TRUE;
 			}
-			if (quests[QTYPE_BOL]._qvar2 == 1 && PlrHasItem(p, IDI_BANNER, i) != NULL && !towner[t]._tMsgSaid) {
+			if (quests[QTYPE_BOL]._qvar2 == 1 && PlrHasItem(p, IDI_BANNER, &i) != NULL && !towner[t]._tMsgSaid) {
 				quests[QTYPE_BOL]._qactive = 3;
 				quests[QTYPE_BOL]._qvar1 = 3;
 				RemoveInvItem(p, i);
@@ -711,7 +711,7 @@ void TalkToTowner(int p, int t)
 					InitQTextMsg(QUEST_INFRA5);
 					towner[t]._tMsgSaid = TRUE;
 				}
-				if (quests[QTYPE_INFRA]._qvar2 == 1 && PlrHasItem(p, IDI_ROCK, i) != NULL && !towner[t]._tMsgSaid) {
+				if (quests[QTYPE_INFRA]._qvar2 == 1 && PlrHasItem(p, IDI_ROCK, &i) != NULL && !towner[t]._tMsgSaid) {
 					quests[QTYPE_INFRA]._qactive = 3;
 					quests[QTYPE_INFRA]._qvar2 = 2;
 					quests[QTYPE_INFRA]._qvar1 = 2;
@@ -738,7 +738,7 @@ void TalkToTowner(int p, int t)
 						towner[t]._tMsgSaid = TRUE;
 					}
 				}
-				if (quests[QTYPE_ANVIL]._qvar2 == 1 && PlrHasItem(p, IDI_ANVIL, i) != NULL) {
+				if (quests[QTYPE_ANVIL]._qvar2 == 1 && PlrHasItem(p, IDI_ANVIL, &i) != NULL) {
 					if (!towner[t]._tMsgSaid) {
 						quests[QTYPE_ANVIL]._qactive = 3;
 						quests[QTYPE_ANVIL]._qvar2 = 2;
@@ -760,7 +760,7 @@ void TalkToTowner(int p, int t)
 			}
 		}
 	} else if (t == GetActiveTowner(TOWN_WITCH)) {
-		if (quests[QTYPE_BLKM]._qactive == 1 && PlrHasItem(p, IDI_FUNGALTM, i) != NULL) {
+		if (quests[QTYPE_BLKM]._qactive == 1 && PlrHasItem(p, IDI_FUNGALTM, &i) != NULL) {
 			RemoveInvItem(p, i);
 			quests[QTYPE_BLKM]._qactive = 2;
 			quests[QTYPE_BLKM]._qlog = TRUE;
@@ -771,7 +771,7 @@ void TalkToTowner(int p, int t)
 			towner[t]._tMsgSaid = TRUE;
 		} else if (quests[QTYPE_BLKM]._qactive == 2) {
 			if (quests[QTYPE_BLKM]._qvar1 >= 2 && quests[QTYPE_BLKM]._qvar1 <= 4) {
-				if (PlrHasItem(p, IDI_MUSHROOM, i) != NULL) {
+				if (PlrHasItem(p, IDI_MUSHROOM, &i) != NULL) {
 					RemoveInvItem(p, i);
 					quests[QTYPE_BLKM]._qvar1 = 5;
 					Qtalklist[TOWN_HEALER]._qblkm = QUEST_MUSH3;
@@ -789,7 +789,7 @@ void TalkToTowner(int p, int t)
 					towner[t]._tMsgSaid = TRUE;
 				}
 			} else {
-				Item = PlrHasItem(p, IDI_SPECELIX, i);
+				Item = PlrHasItem(p, IDI_SPECELIX, &i);
 				if (Item != NULL) {
 					towner[t]._tbtcnt = 150;
 					towner[t]._tVar1 = p;
@@ -797,7 +797,7 @@ void TalkToTowner(int p, int t)
 					quests[QTYPE_BLKM]._qactive = 3;
 					towner[t]._tMsgSaid = TRUE;
 					AllItemsList[Item->IDidx].iUsable = TRUE;
-				} else if (PlrHasItem(p, IDI_BRAIN, i) != NULL && quests[QTYPE_BLKM]._qvar2 != QUEST_MUSH11) {
+				} else if (PlrHasItem(p, IDI_BRAIN, &i) != NULL && quests[QTYPE_BLKM]._qvar2 != QUEST_MUSH11) {
 					towner[t]._tbtcnt = 150;
 					towner[t]._tVar1 = p;
 					quests[QTYPE_BLKM]._qvar2 = QUEST_MUSH11;
@@ -847,7 +847,7 @@ void TalkToTowner(int p, int t)
 					towner[t]._tMsgSaid = TRUE;
 				}
 			}
-			if (quests[QTYPE_BLKM]._qactive == 2 && quests[QTYPE_BLKM]._qmsg == QUEST_MUSH10 && PlrHasItem(p, IDI_BRAIN, i) != NULL) {
+			if (quests[QTYPE_BLKM]._qactive == 2 && quests[QTYPE_BLKM]._qmsg == QUEST_MUSH10 && PlrHasItem(p, IDI_BRAIN, &i) != NULL) {
 				RemoveInvItem(p, i);
 				SpawnQuestItem(IDI_SPECELIX, towner[t]._tx, towner[t]._ty + 1, 0, 0);
 				InitQTextMsg(QUEST_MUSH4);
@@ -870,7 +870,7 @@ void TalkToTowner(int p, int t)
 		}
 	} else if (t == GetActiveTowner(TOWN_STORY)) {
 		if (gbMaxPlayers == 1) {
-			if (quests[QTYPE_VB]._qactive == 1 && PlrHasItem(p, IDI_LAZSTAFF, i) != NULL) {
+			if (quests[QTYPE_VB]._qactive == 1 && PlrHasItem(p, IDI_LAZSTAFF, &i) != NULL) {
 				RemoveInvItem(p, i);
 				quests[QTYPE_VB]._qvar1 = 2;
 				towner[t]._tbtcnt = 150;

@@ -35,7 +35,7 @@ void CreatePlrItems(int p);
 BOOL ItemSpaceOk(int i, int j);
 BOOL GetItemSpace(int x, int y, char inum);
 void GetSuperItemSpace(int x, int y, char inum);
-void GetSuperItemLoc(int x, int y, int &xx, int &yy);
+void GetSuperItemLoc(int x, int y, int *xx, int *yy);
 void CalcItemValue(int i);
 void GetBookSpell(int i, int lvl);
 void GetStaffPower(int i, int lvl, int bs, BOOL onlygood);
