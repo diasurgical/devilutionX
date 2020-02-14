@@ -239,8 +239,6 @@ SBmpLoadImage(
     DWORD      *pdwHeight,
     DWORD      *pdwBpp);
 
-void SDrawUpdatePalette(unsigned int firstentry, unsigned int numentries, SDL_Color *pPalEntries, int a4);
-
 /*  SMemAlloc @ 401
  *
  *  Allocates a block of memory. This block is different

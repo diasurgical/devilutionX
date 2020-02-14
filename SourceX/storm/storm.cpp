@@ -609,7 +609,7 @@ void SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 		}
 	}
 #endif
-	memcpy(SVidPreviousPalette, orig_palette, 1024);
+	memcpy(SVidPreviousPalette, orig_palette, sizeof(SVidPreviousPalette));
 
 	// Copy frame to buffer
 	SVidSurface = SDL_CreateRGBSurfaceWithFormatFrom(
@@ -668,7 +668,7 @@ BOOL SVidPlayContinue(void)
 			orig_palette[i].g = palette_data[i * 3 + 1];
 			orig_palette[i].b = palette_data[i * 3 + 2];
 		}
-		memcpy(logical_palette, orig_palette, 1024);
+		memcpy(logical_palette, orig_palette, sizeof(logical_palette));
 
 		if (SDLC_SetSurfaceAndPaletteColors(SVidSurface, SVidPalette, colors, 0, 256) <= -1) {
 			SDL_Log(SDL_GetError());
@@ -782,7 +782,7 @@ void SVidPlayEnd(HANDLE video)
 	SFileCloseFile(video);
 	video = NULL;
 
-	memcpy(orig_palette, SVidPreviousPalette, 1024);
+	memcpy(orig_palette, SVidPreviousPalette, sizeof(orig_palette));
 #ifndef USE_SDL1
 	if (renderer) {
 		SDL_DestroyTexture(texture);

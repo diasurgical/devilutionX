@@ -262,7 +262,6 @@ set(devilutionx_SRCS
   SourceX/soundsample.cpp
   SourceX/storm/storm.cpp
   SourceX/storm/storm_net.cpp
-  SourceX/storm/storm_dx.cpp
   SourceX/dvlnet/abstract_net.cpp
   SourceX/dvlnet/loopback.cpp
   SourceX/dvlnet/packet.cpp
