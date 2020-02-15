@@ -49,3 +49,9 @@ YouTube video:
 Repo: https://github.com/qndel/devilutionX/tree/pixellight
 
 ![Screenshot](https://user-images.githubusercontent.com/14297035/73365812-2bcf4200-42ad-11ea-9916-9f9d4b12f791.png "Per-pixel lighting")
+
+## Quality-of-Life patches
+
+Repo: https://github.com/majek/devilutionX/commits?author=majek
+
+* Highlight other players on automap
