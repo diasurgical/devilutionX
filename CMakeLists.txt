@@ -173,6 +173,9 @@ add_library(PKWare STATIC
   3rdParty/PKWare/explode.cpp
   3rdParty/PKWare/implode.cpp)
 
+add_library(SDL_gfx STATIC
+  3rdParty/SDL_gfx-2.0.25/SDL_rotozoom.c)
+
 add_library(devilution STATIC
   Source/appfat.cpp
   Source/automap.cpp
@@ -442,8 +445,10 @@ foreach(target devilution ${BIN_TARGET})
     target_link_libraries(${target} PRIVATE
       ${SDL_TTF_LIBRARY}
       ${SDL_MIXER_LIBRARY}
-      ${SDL_LIBRARY})
+      ${SDL_LIBRARY}
+      SDL_gfx)
     target_compile_definitions(${target} PRIVATE USE_SDL1)
+    target_include_directories(${target} PRIVATE 3rdParty/SDL_gfx-2.0.25)
   else()
     target_link_libraries(${target} PRIVATE
       SDL2::SDL2_ttf

@@ -39,6 +39,11 @@ void ScaleOutputRect(SDL_Rect *rect);
 // If the output requires software scaling, replaces the given surface with a scaled one.
 void ScaleSurfaceToOutput(SDL_Surface **surface);
 
+#ifdef USE_SDL1
+// Scales the surface to output (SDL1 only, check OutputRequiresScaling before calling this).
+SDL_Surface *CreateOutputScaledSurface(SDL_Surface *src);
+#endif
+
 // Convert from output coordinates to logical (resolution-independent) coordinates.
 template <
     typename T,

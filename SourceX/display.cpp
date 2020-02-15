@@ -3,6 +3,7 @@
 #include "controls/controller.h"
 
 #ifdef USE_SDL1
+#include <SDL_rotozoom.h>
 #ifndef SDL1_VIDEO_MODE_BPP
 #define SDL1_VIDEO_MODE_BPP 0
 #endif
@@ -164,26 +165,42 @@ void ScaleOutputRect(SDL_Rect *rect)
 #ifdef USE_SDL1
 namespace {
 
-SDL_Surface *CreateScaledSurface(SDL_Surface *src)
-{
-	SDL_Rect stretched_rect = { 0, 0, static_cast<Uint16>(src->w), static_cast<Uint16>(src->h) };
-	ScaleOutputRect(&stretched_rect);
-	SDL_Surface *stretched = SDL_CreateRGBSurface(
-			SDL_SWSURFACE, stretched_rect.w, stretched_rect.h, src->format->BitsPerPixel,
-	    src->format->Rmask, src->format->Gmask, src->format->Bmask, src->format->Amask);
-	if (SDL_HasColorKey(src)) {
-		SDL_SetColorKey(stretched, SDL_SRCCOLORKEY, src->format->colorkey);
-		if (src->format->palette != nullptr)
-			SDL_SetPalette(stretched, SDL_LOGPAL, src->format->palette->colors, 0, src->format->palette->ncolors);
+bool GetIntegerOutputDownscalingFactors(int *shrinkx, int *shrinky) {
+	const auto *screen = GetOutputSurface();
+	if (screen->w <= SCREEN_WIDTH && (SCREEN_WIDTH % screen->w) == 0 && screen->h <= SCREEN_HEIGHT && (SCREEN_HEIGHT % screen->h) == 0) {
+		*shrinkx = SCREEN_WIDTH / screen->w;
+		*shrinky = SCREEN_HEIGHT / screen->h;
+		return true;
 	}
-	if (SDL_SoftStretch((src), nullptr, stretched, &stretched_rect) < 0) {
-		SDL_FreeSurface(stretched);
-		ErrSdl();
-	}
-	return stretched;
+	return false;
 }
 
 } // namespace
+
+SDL_Surface *CreateOutputScaledSurface(SDL_Surface *src)
+{
+	const auto *screen = GetOutputSurface();
+	SDL_Surface *result = nullptr;
+
+	// We use the optimized down-scaling routine, shrinkSurface, when possible.
+	int shrinkx, shrinky;
+	if (!SDL_HasColorKey(src) && GetIntegerOutputDownscalingFactors(&shrinkx, &shrinky)) {
+		if (src->format->BitsPerPixel == 8) {
+			SDL_Surface *tmp = SDL_ConvertSurface(src, screen->format, 0);
+			result = shrinkSurface(tmp, shrinkx, shrinky);
+			SDL_FreeSurface(tmp);
+		} else {
+			result = shrinkSurface(src, shrinkx, shrinky);
+		}
+	} else {
+		const double zoomx = static_cast<double>(screen->w) / SCREEN_WIDTH;
+		const double zoomy = static_cast<double>(screen->h) / SCREEN_HEIGHT;
+		result = zoomSurface(src, zoomx, zoomy, /*smooth=*/SMOOTHING_ON);
+	}
+	if (result == nullptr)
+		ErrSdl();
+	return result;
+}
 #endif // USE_SDL1
 
 void ScaleSurfaceToOutput(SDL_Surface **surface)
@@ -191,7 +208,7 @@ void ScaleSurfaceToOutput(SDL_Surface **surface)
 #ifdef USE_SDL1
 	if (!OutputRequiresScaling())
 		return;
-	SDL_Surface *stretched = CreateScaledSurface(*surface);
+	SDL_Surface *stretched = CreateOutputScaledSurface(*surface);
 	SDL_FreeSurface((*surface));
 	*surface = stretched;
 #endif

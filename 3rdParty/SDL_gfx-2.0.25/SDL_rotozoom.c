@@ -27,7 +27,9 @@ Andreas Schiffler -- aschiffler at ferzkopp dot net
 
 */
 
-#ifdef WIN32
+#if defined(_WIN64) || defined(_WIN32)
+// Suppress definitions of `min` and `max` macros by <windows.h>:
+#define NOMINMAX 1
 #include <windows.h>
 #endif
 

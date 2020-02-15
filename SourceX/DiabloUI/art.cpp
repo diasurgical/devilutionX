@@ -3,7 +3,9 @@
 
 namespace dvl {
 
-void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
+extern SDL_Color system_palette[256];
+
+void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette, int mask)
 {
 	if (art == NULL || art->surface != NULL)
 		return;
@@ -31,33 +33,44 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 	}
 	SDL_Surface *art_surface = SDL_CreateRGBSurfaceWithFormat(SDL_SWSURFACE, width, height, bpp, format);
 
-	if (!SBmpLoadImage(pszFile, pPalette, static_cast<BYTE *>(art_surface->pixels),
+	SDL_Color art_palette[256];
+	if (!SBmpLoadImage(pszFile, art_palette, static_cast<BYTE *>(art_surface->pixels),
 	        art_surface->pitch * art_surface->format->BytesPerPixel * height, 0, 0, 0)) {
 		SDL_Log("Failed to load image");
 		SDL_FreeSurface(art_surface);
 		art->surface = nullptr;
 		return;
 	}
-
 	art->surface = art_surface;
 	art->logical_width = art_surface->w;
 	art->frame_height = height / frames;
+
+	if (pPalette != nullptr)
+		memcpy(pPalette, art_palette, sizeof(art_palette));
+	if (mask != -1)
+		SDLC_SetColorKey(art->surface, mask);
+
+// If output requires scaling (always false on SDL2), the palette needs to be set first.
+#ifdef USE_SDL1
+	if (OutputRequiresScaling()) {
+		if (SDL_SetPalette(art->surface, SDL_LOGPAL, art_palette, 0, sizeof(art_palette) / sizeof(art_palette[0])) == 0)
+			ErrSdl();
+	}
+#endif
 
 	ScaleSurfaceToOutput(&art->surface);
 }
 
 void LoadMaskedArt(const char *pszFile, Art *art, int frames, int mask)
 {
-	LoadArt(pszFile, art, frames);
-	if (art->surface != nullptr)
-		SDLC_SetColorKey(art->surface, mask);
+	LoadArt(pszFile, art, frames, nullptr, mask);
 }
 
 void LoadArt(Art *art, const BYTE *artData, int w, int h, int frames)
 {
 	art->frames = frames;
 	art->surface = SDL_CreateRGBSurfaceWithFormatFrom(
-		const_cast<BYTE *>(artData), w, h, 8, w, SDL_PIXELFORMAT_INDEX8);
+	    const_cast<BYTE *>(artData), w, h, 8, w, SDL_PIXELFORMAT_INDEX8);
 	art->logical_width = w;
 	art->frame_height = h / frames;
 	ScaleSurfaceToOutput(&art->surface);
