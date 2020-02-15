@@ -7,6 +7,57 @@ namespace net {
 static constexpr bool disable_encryption = false;
 #endif
 
+const char *packet_type_to_string(uint8_t packet_type)
+{
+	switch (packet_type) {
+	case PT_MESSAGE:
+		return "PT_MESSAGE";
+	case PT_TURN:
+		return "PT_TURN";
+	case PT_JOIN_REQUEST:
+		return "PT_JOIN_REQUEST";
+	case PT_JOIN_ACCEPT:
+		return "PT_JOIN_ACCEPT";
+	case PT_CONNECT:
+		return "PT_CONNECT";
+	case PT_DISCONNECT:
+		return "PT_DISCONNECT";
+	default:
+		return nullptr;
+	}
+}
+
+wrong_packet_type_exception::wrong_packet_type_exception(std::initializer_list<packet_type> expected_types, std::uint8_t actual)
+{
+	message_ = "Expected packet of type ";
+	const auto append_packet_type = [this](std::uint8_t t) {
+		const char *type_str = packet_type_to_string(t);
+		if (type_str != nullptr)
+			message_.append(type_str);
+		else
+			message_.append(std::to_string(t));
+	};
+
+	constexpr char kJoinTypes[] = " or ";
+	for (const packet_type t : expected_types) {
+		append_packet_type(t);
+		message_.append(kJoinTypes);
+	}
+	message_.resize(message_.size() - (sizeof(kJoinTypes) - 1));
+	message_.append(", got");
+	append_packet_type(actual);
+}
+
+namespace {
+
+void CheckPacketTypeOneOf(std::initializer_list<packet_type> expected_types, std::uint8_t actual_type) {
+	for (std::uint8_t packet_type : expected_types)
+		if (actual_type == packet_type) return;
+	throw wrong_packet_type_exception(std::move(expected_types), actual_type);
+}
+
+} // namespace
+
 const buffer_t &packet::data()
 {
 	if (!have_decrypted || !have_encrypted)
@@ -39,8 +90,7 @@ const buffer_t &packet::message()
 {
 	if (!have_decrypted)
 		ABORT();
-	if (m_type != PT_MESSAGE)
-		throw packet_exception();
+	CheckPacketTypeOneOf({PT_MESSAGE}, m_type);
 	return m_message;
 }
 
@@ -48,8 +98,7 @@ turn_t packet::turn()
 {
 	if (!have_decrypted)
 		ABORT();
-	if (m_type != PT_TURN)
-		throw packet_exception();
+	CheckPacketTypeOneOf({PT_TURN}, m_type);
 	return m_turn;
 }
 
@@ -57,8 +106,7 @@ cookie_t packet::cookie()
 {
 	if (!have_decrypted)
 		ABORT();
-	if (m_type != PT_JOIN_REQUEST && m_type != PT_JOIN_ACCEPT)
-		throw packet_exception();
+	CheckPacketTypeOneOf({PT_JOIN_REQUEST, PT_JOIN_ACCEPT}, m_type);
 	return m_cookie;
 }
 
@@ -66,9 +114,7 @@ plr_t packet::newplr()
 {
 	if (!have_decrypted)
 		ABORT();
-	if (m_type != PT_JOIN_ACCEPT && m_type != PT_CONNECT
-		&& m_type != PT_DISCONNECT)
-		throw packet_exception();
+	CheckPacketTypeOneOf({PT_JOIN_ACCEPT, PT_CONNECT, PT_DISCONNECT}, m_type);
 	return m_newplr;
 }
 
@@ -76,8 +122,7 @@ const buffer_t &packet::info()
 {
 	if (!have_decrypted)
 		ABORT();
-	if (m_type != PT_JOIN_REQUEST && m_type != PT_JOIN_ACCEPT)
-		throw packet_exception();
+	CheckPacketTypeOneOf({PT_JOIN_REQUEST, PT_JOIN_ACCEPT}, m_type);
 	return m_info;
 }
 
@@ -85,8 +130,7 @@ leaveinfo_t packet::leaveinfo()
 {
 	if (!have_decrypted)
 		ABORT();
-	if (m_type != PT_DISCONNECT)
-		throw packet_exception();
+	CheckPacketTypeOneOf({PT_DISCONNECT}, m_type);
 	return m_leaveinfo;
 }
 

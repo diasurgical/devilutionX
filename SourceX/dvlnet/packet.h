@@ -23,6 +23,9 @@ enum packet_type : uint8_t {
 	PT_DISCONNECT = 0x14,
 };
 
+// Returns nullptr for an invalid packet type.
+const char *packet_type_to_string(uint8_t packet_type);
+
 typedef uint8_t plr_t;
 typedef uint32_t cookie_t;
 typedef int turn_t;      // change int to something else in devilution code later
@@ -40,6 +43,19 @@ public:
 	{
 		return "Incorrect package size";
 	}
+};
+
+class wrong_packet_type_exception : public packet_exception {
+public:
+	wrong_packet_type_exception(std::initializer_list<packet_type> expected_types, std::uint8_t actual);
+
+	const char *what() const throw() override
+	{
+		return message_.c_str();
+	}
+
+private:
+	std::string message_;
 };
 
 class packet {
