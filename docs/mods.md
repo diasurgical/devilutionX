@@ -14,19 +14,7 @@ Repo: https://github.com/qndel/Infernity
 ![Screenshot 6: Highlighting items](https://i.imgur.com/xQrMDFA.jpg "highlighting items with alt")
 ![Screenshot 7: Loot filters](https://i.imgur.com/cPSnknD.jpg "loot filters to customize names and colors")
 
-## Quality-of-Life patches
-
-Repo: https://github.com/Manuel-K/devilutionX-QOL-patches
-
-* Run in town
-* Highlight items
-* Monster HP bar
-
-## Equine
-
-Repo: https://github.com/sergi4ua/equine
-
-> Mod manager/launcher for Diablo 1
+# Ports
 
 ## Raspberry Pi Sense HAT Renderer
 
@@ -44,14 +32,41 @@ YouTube video:
 
 [![Rogule-like game play video](https://img.youtube.com/vi/3p9j7j2SVOA/0.jpg)](https://www.youtube.com/watch?v=3p9j7j2SVOA "Rogue-like game play video")
 
+# Quality-of-Life patches
+
 ## Per-pixel lighting
 
 Repo: https://github.com/qndel/devilutionX/tree/pixellight
 
 ![Screenshot](https://user-images.githubusercontent.com/14297035/73365812-2bcf4200-42ad-11ea-9916-9f9d4b12f791.png "Per-pixel lighting")
 
-## Quality-of-Life patches
+## QOL patches by [@Manuel-K](https://github.com/Manuel-K)
+
+Repo: https://github.com/Manuel-K/devilutionX-QOL-patches
+
+* Run in town
+* Highlight items
+* Monster HP bar
+
+## QOL patches by [@majek](https://github.com/majek)
 
 Repo: https://github.com/majek/devilutionX/commits?author=majek
 
 * Highlight other players on automap
+
+## QOL patches by [@rafal-kowalski](https://github.com/rafal-kowalski)
+
+Repo: https://github.com/rafal-kowalski/devilutionX/tree/more-qol
+
+* Give monster experience to all players
+* Don't hurt other players if PvP is off
+* Don't drop items on death
+* Increase max gold pile size to 50k
+
+# Meta
+
+## Equine
+
+Repo: https://github.com/sergi4ua/equine
+
+> Mod manager/launcher for Diablo 1
