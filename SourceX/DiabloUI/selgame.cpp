@@ -34,6 +34,10 @@ char title[32];
 std::vector<UiListItem *> vecSelGameDlgItems;
 std::vector<UiItemBase *> vecSelGameDialog;
 
+const char kIniConnectionSection[] = "Phone Book";
+const char kIniLastConnectionIp[] = "Entry1";
+const char kIniLastConnectionPassword[] = "Password1";
+
 } // namespace
 
 void selgame_FreeVectors()
@@ -69,7 +73,11 @@ void selgame_GameSelection_Init()
 		return;
 	}
 
-	getIniValue("Phone Book", "Entry1", selgame_Ip, 128);
+	getIniValue(kIniConnectionSection, kIniLastConnectionIp, selgame_Ip, sizeof(selgame_Ip) - 1);
+#ifdef MULTIPLAYER_DEFAULT_IP
+	if (*selgame_Ip == '\0')
+		strncpy(selgame_Ip, MULTIPLAYER_DEFAULT_IP, sizeof(selgame_Ip) - 1);
+#endif
 
 	selgame_FreeVectors();
 
@@ -351,6 +359,11 @@ void selgame_Speed_Select(int value)
 void selgame_Password_Init(int value)
 {
 	memset(&selgame_Password, 0, sizeof(selgame_Password));
+	getIniValue(kIniConnectionSection, kIniLastConnectionPassword, selgame_Password, sizeof(selgame_Password) - 1);
+#ifdef MULTIPLAYER_DEFAULT_PASSWORD
+	if (*selgame_Password == '\0')
+		strncpy(selgame_Password, MULTIPLAYER_DEFAULT_PASSWORD, sizeof(selgame_Password) - 1);
+#endif
 
 	selgame_FreeVectors();
 
@@ -409,7 +422,8 @@ static bool IsGameCompatible(GameData *data)
 void selgame_Password_Select(int value)
 {
 	if (selgame_selectedGame) {
-		setIniValue("Phone Book", "Entry1", selgame_Ip);
+		setIniValue(kIniConnectionSection, kIniLastConnectionIp, selgame_Ip);
+		setIniValue(kIniConnectionSection, kIniLastConnectionPassword, selgame_Password);
 		if (SNetJoinGame(selgame_selectedGame, selgame_Ip, selgame_Password, NULL, NULL, gdwPlayerId)) {
 			if (!IsGameCompatible(m_client_info->initdata)) {
 				selgame_GameSelection_Select(1);

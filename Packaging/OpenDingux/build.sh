@@ -61,11 +61,7 @@ prepare_buildroot() {
 
 buildroot_libsodium_enable_static() {
 	if ! grep 'enable-static' package/libsodium/libsodium.mk > /dev/null; then
-		if [[ "$TARGET" == "rg350" ]]; then
-			echo 'LIBSODIUM_CONF_OPT += --enable-static' >> package/libsodium/libsodium.mk
-		else
-			echo 'LIBSODIUM_CONF_OPTS += --enable-static' >> package/libsodium/libsodium.mk
-		fi
+		echo 'LIBSODIUM_CONF_OPTS += --enable-static' >> package/libsodium/libsodium.mk
 	fi
 }
 
