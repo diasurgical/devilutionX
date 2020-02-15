@@ -306,6 +306,10 @@ variable (see
 # Contributing
 [Guidelines](docs/CONTRIBUTING.md)
 
+# Mods
+
+[List of known mods based on DevilutionX](docs/mods.md)
+
 # F.A.Q.
 > Wow, does this mean I can download and play Diablo for free now?
 
