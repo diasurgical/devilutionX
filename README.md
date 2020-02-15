@@ -219,24 +219,29 @@ Or you create a new directory under `/home/cpi/apps/Menu` and copy [the file](Pa
 
 <details><summary>Amiga via Docker</summary>
 
-### Start the container from the repo root
+### Build the container from the repo root
 
 ~~~ bash
-docker run -ti --rm -v "${PWD}:/work" amigadev/crosstools:m68k-amigaos bash
+docker build -f Packaging/amiga/Dockerfile -t devilutionx-amiga .
 ~~~
 
-### Installing dependencies and build
-
-From the docker container prompt, run:
+### Build DevilutionX Amiga binary
 
 ~~~ bash
-mkdir -p build-amiga && cd build-amiga
-../Packaging/amiga/prep.sh
-PKG_CONFIG_PATH=/opt/m68k-amigaos/lib/pkgconfig/:/opt/m68k-amigaos/share/pkgconfig/ cmake -DBINARY_RELEASE=ON -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-s -ffast-math -O3 -noixemul -D__BIG_ENDIAN__ -D__AMIGA__ -fpermissive" ..
-cmake --build . -j $(nproc)
+docker run --rm -v "${PWD}:/work" devilutionx-amiga
+sudo chown "${USER}:" build-amiga/*
 ~~~
 
-### Copy the necessary files and update permissions
+The command above builds DevilutionX in release mode.
+For other build options, you can run the container interactively:
+
+~~~ bash
+docker run -ti --rm -v "${PWD}:/work" devilutionx-amiga bash
+~~~
+
+See the `CMD` in `Packaging/amiga/Dockerfile` for reference.
+
+### Copy the necessary files
 
 Outside of the Docker container, from the DevilutionX directory, run:
 
