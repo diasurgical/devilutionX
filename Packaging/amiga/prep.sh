@@ -6,10 +6,12 @@ set -eo pipefail
 #set compiler params
 export TARGET='m68k-amigaos'
 export SYSROOT=/opt/$TARGET
-export M68K_CPU="-m68040 -mhard-float"
+export M68K_CPU="68040"
+export M68K_FPU="hard"
+export M68K_CPU_FPU="-m${M68K_CPU} -m${M68K_FPU}-float"
 export M68K_COMMON="-s -ffast-math -fomit-frame-pointer"
-export M68K_CFLAGS="${CFLAGS} ${M68K_CPU} ${M68K_COMMON}"
-export M68K_CXXFLAGS="${CXXFLAGS} ${M68K_CPU} ${M68K_COMMON}"
+export M68K_CFLAGS="${CFLAGS} ${M68K_CPU_FPU} ${M68K_COMMON}"
+export M68K_CXXFLAGS="${CXXFLAGS} ${M68K_CPU_FPU} ${M68K_COMMON}"
 
 mkdir -p deps
 cd deps
@@ -19,7 +21,7 @@ wget https://www.zlib.net/zlib-1.2.11.tar.gz -O zlib-1.2.11.tar.gz
 tar -xvf zlib-1.2.11.tar.gz
 mkdir -p zlib-1.2.11/build
 cd zlib-1.2.11/build
-cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="${M68K_COMMON} -O3 -fno-exceptions -w -noixemul -DBIG_ENDIAN -DAMIGA -fpermissive -std=c++14"
+cmake .. -DM68K_CPU=${M68K_CPU} -DM68K_FPU=${M68K_FPU} -DM68K_COMMON="${M68K_COMMON} -O3 -fno-exceptions -w -noixemul -DBIG_ENDIAN -DAMIGA -fpermissive -std=c++14"
 cmake --build . --config Release --target install -- -j$(getconf _NPROCESSORS_ONLN)
 cd ../..
 
@@ -47,7 +49,7 @@ wget https://download.savannah.gnu.org/releases/freetype/freetype-2.10.1.tar.gz 
 tar -xvf freetype-2.10.1.tar.gz
 mkdir -p freetype-2.10.1/build
 cd freetype-2.10.1/build
-cmake .. -DCMAKE_INSTALL_PREFIX=${SYSROOT} -DUNIX=1 -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="${M68K_COMMON}"
+cmake .. -DUNIX=1 -DM68K_CPU=${M68K_CPU} -DM68K_FPU=${M68K_FPU} -DM68K_COMMON="${M68K_COMMON}"
 cmake --build . --config Release --target install -- -j$(getconf _NPROCESSORS_ONLN)
 cd ../..
 
