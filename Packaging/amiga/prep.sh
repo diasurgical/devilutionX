@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # exit when any command fails
-set -eo pipefail
+set -euo pipefail
 
 #set compiler params
 export TARGET='m68k-amigaos'
@@ -62,6 +62,6 @@ wget https://github.com/SDL-mirror/SDL_ttf/archive/SDL-1.2.tar.gz -O SDL_ttf-SDL
 tar -xvf SDL_ttf-SDL-1.2.tar.gz
 cd SDL_ttf-SDL-1.2
 ./autogen.sh
-SDL_LIBS='-lSDL -ldebug' SDL_CFLAGS="-I${SYSROOT}/usr/include/SDL -noixemul"  CFLAGS="${M68K_CFLAGS}" CXXFLAGS="${M68K_CXXFLAGS}" FT2_CFLAGS="-I${SYSROOT}/usr/include/freetype2" FT2_LIBS="-lfreetype -lzlib" ./configure --disable-shared --enable-static --host=${TARGET} --prefix=${SYSROOT}/usr
+LDFLAGS="$LDFLAGS -L${SYSROOT}/usr/lib" SDL_LIBS='-lSDL -ldebug' SDL_CFLAGS="-L${SYSROOT}/usr/lib -I${SYSROOT}/usr/include/SDL -noixemul"  CFLAGS="${M68K_CFLAGS}" CXXFLAGS="${M68K_CXXFLAGS}" FT2_CFLAGS="-L${SYSROOT}/usr/lib -I${SYSROOT}/usr/include/freetype2" FT2_LIBS="-lfreetype -lzlib" ./configure --disable-shared --enable-static --host=${TARGET} --prefix=${SYSROOT}/usr
 make -j$(getconf _NPROCESSORS_ONLN)
 make install
