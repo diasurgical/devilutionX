@@ -6,7 +6,6 @@
 #include "DiabloUI/text.h"
 #include "DiabloUI/dialogs.h"
 #include "DiabloUI/selok.h"
-#include "DiabloUI/selyesno.h"
 
 namespace dvl {
 
