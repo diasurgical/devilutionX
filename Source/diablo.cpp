@@ -42,6 +42,7 @@ int PauseMode;
 int sgnTimeoutCurs;
 char sgbMouseDown;
 int color_cycle_timer;
+WORD game_speed;
 
 /* rdata */
 
