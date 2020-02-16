@@ -10,6 +10,7 @@
 
 #if _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)
 #include <unistd.h>
+#include <sys/stat.h>
 #else
 #include <cstdio>
 #endif
@@ -28,7 +29,33 @@ inline bool FileExists(const char *path)
 #endif
 }
 
-inline bool ResizeFile(const char *path, std::uint32_t size)
+inline bool GetFileSize(const char *path, std::uintmax_t *size)
+{
+#if defined(_WIN64) || defined(_WIN32)
+	WIN32_FILE_ATTRIBUTE_DATA attr;
+	int path_utf16_size = MultiByteToWideChar(CP_UTF8, 0, path, -1, nullptr, 0);
+	auto path_utf16 = new wchar_t[path_utf16_size];
+	if (MultiByteToWideChar(CP_UTF8, 0, path, -1, path_utf16, path_utf16_size) != path_utf16_size) {
+		delete[] path_utf16;
+		return false;
+	}
+	if (!GetFileAttributesExW(path_utf16, GetFileExInfoStandard, &attr)) {
+		delete[] path_utf16;
+		return false;
+	}
+	delete[] path_utf16;
+	*size = (attr.nFileSizeHigh) << (sizeof(attr.nFileSizeHigh) * 8) | attr.nFileSizeLow;
+	return true;
+#else
+	struct ::stat stat_result;
+	if (::stat(path, &stat_result) == -1)
+		return false;
+	*size = static_cast<uintmax_t>(stat_result.st_size);
+	return true;
+#endif
+}
+
+inline bool ResizeFile(const char *path, std::uintmax_t size)
 {
 #if defined(_WIN64) || defined(_WIN32)
 	LARGE_INTEGER lisize;
