@@ -35,6 +35,7 @@ int PauseMode;
 int sgnTimeoutCurs;
 char sgbMouseDown;
 int color_cycle_timer;
+WORD game_speed;
 
 /* rdata */
 
@@ -168,6 +169,13 @@ void run_game_loop(unsigned int uMsg)
 	force_redraw = 255;
 	gbGameLoopStartup = TRUE;
 	nthread_ignore_mutex(FALSE);
+	char speed_str[2];
+	if (!getIniValue("devilutionx", "game speed", speed_str, 2)) {
+		game_speed = 50;
+	}
+	else {
+		game_speed = 1000 / std::atoi(speed_str);
+	}
 
 	while (gbRunGame) {
 		while (PeekMessage(&msg)) {
