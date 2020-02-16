@@ -1,6 +1,14 @@
 #pragma once
 
+#include <algorithm>
+#include <string>
 #include <cstdint>
+
+#include <SDL.h>
+
+#ifdef USE_SDL1
+#include "sdl2_to_1_2_backports.h"
+#endif
 
 #if defined(_WIN64) || defined(_WIN32)
 // Suppress definitions of `min` and `max` macros by <windows.h>:
@@ -88,17 +96,16 @@ inline bool ResizeFile(const char *path, std::uintmax_t size)
 
 inline void RemoveFile(char *lpFileName)
 {
-	char name[DVL_MAX_PATH];
-	TranslateFileName(name, sizeof(name), lpFileName);
-
-	FILE *f = fopen(name, "r+");
+	std::string name = lpFileName;
+	std::replace(name.begin(), name.end(), '\\', '/');
+	FILE *f = fopen(name.c_str(), "r+");
 	if (f) {
 		fclose(f);
-		remove(name);
+		remove(name.c_str());
 		f = NULL;
-		SDL_Log("Removed file: %s", name);
+		SDL_Log("Removed file: %s", name.c_str());
 	} else {
-		SDL_Log("Failed to remove file: %s", name);
+		SDL_Log("Failed to remove file: %s", name.c_str());
 	}
 }
 

@@ -325,7 +325,8 @@ if(RUN_TESTS)
     SourceT/drlg_l2_test.cpp
     SourceT/drlg_l3_test.cpp
     SourceT/drlg_l4_test.cpp
-    SourceT/effects_test.cpp)
+    SourceT/effects_test.cpp
+    SourceT/file_util_test.cpp)
 endif()
 
 add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionx_SRCS})

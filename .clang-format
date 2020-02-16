@@ -1,11 +1,14 @@
 {
 	BasedOnStyle: webkit,
+	AlignConsecutiveAssignments: false,
+	AlignConsecutiveDeclarations: false,
 	AlignTrailingComments: true,
 	AllowShortBlocksOnASingleLine: true,
 	AllowShortFunctionsOnASingleLine: None,
 	PointerAlignment: Right,
-	AlignConsecutiveAssignments: true,
 	TabWidth: 4,
 	UseTab: ForIndentation,
 	SortIncludes: false,
+	FixNamespaceComments: true,
+	NamespaceIndentation: None,
 }
