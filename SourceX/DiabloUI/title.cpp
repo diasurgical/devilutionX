@@ -1,4 +1,4 @@
-#include "devilution.h"
+#include "all.h"
 #include "controls/menu_controls.h"
 #include "DiabloUI/diabloui.h"
 

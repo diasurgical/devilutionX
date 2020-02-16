@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "devilution.h"
+#include "all.h"
 
 TEST(Appfat, app_fatal) {
     EXPECT_EXIT(dvl::app_fatal("test"), ::testing::ExitedWithCode(1), "test");

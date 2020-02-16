@@ -75,7 +75,7 @@ void AddPedistal(int i);
 void AddStoryBook(int i);
 void AddWeaponRack(int i);
 void AddTorturedBody(int i);
-void GetRndObjLoc(int randarea, int &xx, int &yy);
+void GetRndObjLoc(int randarea, int *xx, int *yy);
 void AddMushPatch();
 void AddSlainHero();
 void AddObject(int ot, int ox, int oy);

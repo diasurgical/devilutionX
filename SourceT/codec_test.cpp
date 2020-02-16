@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "devilution.h"
+#include "all.h"
 
 TEST(Codec, codec_get_encoded_len) {
 	EXPECT_EQ(dvl::codec_get_encoded_len(50), 72);

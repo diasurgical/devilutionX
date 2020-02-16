@@ -2,7 +2,7 @@
 
 #include <cstddef>
 
-#include "devilution.h"
+#include "all.h"
 #include "controls/controller.h"
 #include "controls/game_controls.h"
 

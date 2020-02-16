@@ -6,7 +6,7 @@
 #include <gtest/gtest.h>
 #endif
 
-#include "devilution.h"
+#include "all.h"
 
 #if !defined(__APPLE__)
 extern "C" const char *__asan_default_options()

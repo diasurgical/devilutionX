@@ -1,19 +1,44 @@
-#include "diablo.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
+/**
+ * Specifies the current light entry.
+ */
 int light_table_index;
 DWORD sgdwCursWdtOld;
 DWORD sgdwCursX;
 DWORD sgdwCursY;
+/**
+ * Upper bound of back buffer.
+ */
 BYTE *gpBufStart;
+/**
+ * Lower bound of back buffer.
+ */
 BYTE *gpBufEnd;
 DWORD sgdwCursHgt;
+
+/**
+ * Specifies the current MIN block of the level CEL file, as used during rendering of the level tiles.
+ *
+ * frameNum  := block & 0x0FFF
+ * frameType := block & 0x7000 >> 12
+ */
 DWORD level_cel_block;
 DWORD sgdwCursXOld;
 DWORD sgdwCursYOld;
+/**
+ * Specifies the type of arches to render.
+ */
 char arch_draw_type;
+/**
+ * Specifies whether transparency is active for the current CEL file being decoded.
+ */
 int cel_transparency_active;
+/**
+ * Specifies the current dungeon piece ID of the level, as used during rendering of the level tiles.
+ */
 int level_piece_id;
 DWORD sgdwCursWdt;
 void (*DrawPlrProc)(int, int, int, int, int, BYTE *, int, int, int, int);
@@ -59,6 +84,9 @@ char *szPlrModeAssert[12] = {
 	"quitting"
 };
 
+/**
+ * @brief Clear cursor state
+ */
 void ClearCursor() // CODE_FIX: this was supposed to be in cursor.cpp
 {
 	sgdwCursWdt = 0;
@@ -66,7 +94,7 @@ void ClearCursor() // CODE_FIX: this was supposed to be in cursor.cpp
 }
 
 /**
- * @brief Remove the cursor from the backbuffer
+ * @brief Remove the cursor from the back buffer
  */
 static void scrollrt_draw_cursor_back_buffer()
 {
@@ -98,7 +126,7 @@ static void scrollrt_draw_cursor_back_buffer()
 }
 
 /**
- * @brief Draw the cursor on the backbuffer
+ * @brief Draw the cursor on the back buffer
  */
 static void scrollrt_draw_cursor_item()
 {
@@ -178,6 +206,13 @@ static void scrollrt_draw_cursor_item()
 	}
 }
 
+/**
+ * @brief Render a missile sprite
+ * @param m Pointer to MissileStruct struct
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
+ * @param pre Is the sprite in the background
+ */
 void DrawMissilePrivate(MissileStruct *m, int sx, int sy, BOOL pre)
 {
 	int mx, my, nCel, frames;
@@ -208,11 +243,11 @@ void DrawMissilePrivate(MissileStruct *m, int sx, int sy, BOOL pre)
 }
 
 /**
- * @brief Render a missile sprite
+ * @brief Render a missile sprites for a given tile
  * @param x dPiece coordinate
  * @param y dPiece coordinate
- * @param sx Backbuffer coordinate
- * @param sy Backbuffer coordinate
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
  * @param pre Is the sprite in the background
  */
 void DrawMissile(int x, int y, int sx, int sy, BOOL pre)
@@ -242,8 +277,9 @@ void DrawMissile(int x, int y, int sx, int sy, BOOL pre)
  * @brief Render a monster sprite
  * @param x dPiece coordinate
  * @param y dPiece coordinate
- * @param mx Backbuffer coordinate
- * @param my Backbuffer coordinate
+ * @param mx Back buffer coordinate
+ * @param my Back buffer coordinate
+ * @param m Id of monster
  */
 static void DrawMonster(int x, int y, int mx, int my, int m)
 {
@@ -298,12 +334,12 @@ static void DrawMonster(int x, int y, int mx, int my, int m)
 }
 
 /**
- * @brief Render a monster sprite
+ * @brief Render a player sprite
  * @param pnum Player id
  * @param x dPiece coordinate
  * @param y dPiece coordinate
- * @param px Backbuffer coordinate
- * @param py Backbuffer coordinate
+ * @param px Back buffer coordinate
+ * @param py Back buffer coordinate
  * @param pCelBuff sprite buffer
  * @param nCel frame
  * @param nWidth width
@@ -375,11 +411,11 @@ static void DrawPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, i
 }
 
 /**
- * @brief Render a monster sprite
+ * @brief Render a player sprite
  * @param x dPiece coordinate
  * @param y dPiece coordinate
- * @param sx Backbuffer coordinate
- * @param sy Backbuffer coordinate
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
  */
 void DrawDeadPlayer(int x, int y, int sx, int sy)
 {
@@ -415,8 +451,8 @@ void DrawDeadPlayer(int x, int y, int sx, int sy)
  * @brief Render an object sprite
  * @param x dPiece coordinate
  * @param y dPiece coordinate
- * @param ox Backbuffer coordinate
- * @param oy Backbuffer coordinate
+ * @param ox Back buffer coordinate
+ * @param oy Back buffer coordinate
  * @param pre Is the sprite in the background
  */
 static void DrawObject(int x, int y, int ox, int oy, BOOL pre)
@@ -470,6 +506,14 @@ static void DrawObject(int x, int y, int ox, int oy, BOOL pre)
 
 static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy, int eflag);
 
+/**
+ * @brief Render a row of tile
+ * @param x dPiece coordinate
+ * @param y dPiece coordinate
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
+ * @param eflag is it an even (0) or odd (1) row
+ */
 static void drawRow(int x, int y, int sx, int sy, int eflag)
 {
 	BYTE *dst;
@@ -504,8 +548,8 @@ static void drawRow(int x, int y, int sx, int sy, int eflag)
  * @brief Re render tile to workaround sorting issues with players walking east/west
  * @param y dPiece coordinate
  * @param x dPiece coordinate
- * @param sx Backbuffer coordinate
- * @param sy Backbuffer coordinate
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
  */
 static void scrollrt_draw_e_flag(int x, int y, int sx, int sy)
 {
@@ -522,6 +566,14 @@ static void scrollrt_draw_e_flag(int x, int y, int sx, int sy)
 	level_piece_id = lpi_old;
 }
 
+/**
+ * @brief Draw item for a given tile
+ * @param y dPiece coordinate
+ * @param x dPiece coordinate
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
+ * @param pre Is the sprite in the background
+ */
 static void DrawItem(int x, int y, int sx, int sy, BOOL pre)
 {
 	char bItem = dItem[x][y];
@@ -542,6 +594,15 @@ static void DrawItem(int x, int y, int sx, int sy, BOOL pre)
 	CelClippedDrawLight(px, sy, pItem->_iAnimData, pItem->_iAnimFrame, pItem->_iAnimWidth);
 }
 
+/**
+ * @brief Check if and how a mosnter should be rendered
+ * @param y dPiece coordinate
+ * @param x dPiece coordinate
+ * @param oy dPiece Y offset
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
+ * @param eflag Should the sorting workaround be applied
+ */
 static void DrawMonsterHelper(int x, int y, int oy, int sx, int sy, int eflag)
 {
 	int mi, px, py;
@@ -587,6 +648,15 @@ static void DrawMonsterHelper(int x, int y, int oy, int sx, int sy, int eflag)
 	}
 }
 
+/**
+ * @brief Check if and how a player should be rendered
+ * @param y dPiece coordinate
+ * @param x dPiece coordinate
+ * @param oy dPiece Y offset
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
+ * @param eflag Should the sorting workaround be applied
+ */
 static void DrawPlayerHelper(int x, int y, int oy, int sx, int sy, int eflag)
 {
 	int p = dPlayer[x][y + oy];
@@ -608,8 +678,8 @@ static void DrawPlayerHelper(int x, int y, int oy, int sx, int sy, int eflag)
  * @brief Render object sprites
  * @param sx dPiece coordinate
  * @param sy dPiece coordinate
- * @param dx Backbuffer coordinate
- * @param dy Backbuffer coordinate
+ * @param dx Back buffer coordinate
+ * @param dy Back buffer coordinate
  * @param eflag Should the sorting workaround be applied
  */
 static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy, int eflag)
@@ -688,8 +758,8 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy, int eflag)
  * @brief Render a row of tile
  * @param x dPiece coordinate
  * @param y dPiece coordinate
- * @param sx Backbuffer coordinate
- * @param sy Backbuffer coordinate
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
  * @param chunks tile width of row
  * @param row current row being rendered
  */
@@ -1073,11 +1143,11 @@ static void DrawFPS()
 }
 
 /**
- * @brief Update part of the screen from the backbuffer
- * @param dwX Backbuffer coordinate
- * @param dwY Backbuffer coordinate
- * @param dwWdt Backbuffer coordinate
- * @param dwHgt Backbuffer coordinate
+ * @brief Update part of the screen from the back buffer
+ * @param dwX Back buffer coordinate
+ * @param dwY Back buffer coordinate
+ * @param dwWdt Back buffer coordinate
+ * @param dwHgt Back buffer coordinate
  */
 static void DoBlitScreen(DWORD dwX, DWORD dwY, DWORD dwWdt, DWORD dwHgt)
 {
@@ -1154,6 +1224,10 @@ static void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BO
 	}
 }
 
+/**
+ * @brief Redraw screen
+ * @param draw_cursor
+ */
 void scrollrt_draw_game_screen(BOOL draw_cursor)
 {
 	int hgt;

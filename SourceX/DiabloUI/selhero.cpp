@@ -6,7 +6,7 @@
 
 #include "DiabloUI/diabloui.h"
 #include "../../DiabloUI/diabloui.h"
-#include "devilution.h"
+#include "all.h"
 #include "DiabloUI/dialogs.h"
 #include "DiabloUI/scrollbar.h"
 #include "DiabloUI/selyesno.h"

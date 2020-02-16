@@ -6,7 +6,7 @@
 #include <array>
 #include <memory>
 
-#include "devilution.h"
+#include "all.h"
 #include "dvlnet/abstract_net.h"
 #include "dvlnet/packet.h"
 

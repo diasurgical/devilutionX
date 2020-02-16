@@ -3,7 +3,7 @@
 #include <cerrno>
 #include <fstream>
 
-#include "diablo.h"
+#include "all.h"
 #include "../SourceS/file_util.h"
 #include "../3rdParty/Storm/Source/storm.h"
 

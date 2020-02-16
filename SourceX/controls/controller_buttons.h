@@ -1,7 +1,7 @@
 #pragma once
 // Unifies joystick, gamepad, and keyboard controller APIs.
 
-#include "devilution.h"
+#include "all.h"
 
 namespace dvl {
 

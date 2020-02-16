@@ -1,6 +1,6 @@
 #include "selgame.h"
 
-#include "devilution.h"
+#include "all.h"
 #include "config.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/text.h"

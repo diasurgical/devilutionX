@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "devilution.h"
+#include "all.h"
 
 TEST(Drlg_l1, DRLG_Init_Globals_4flag) {
 	dvl::lightflag = false;

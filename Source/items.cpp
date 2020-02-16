@@ -1,4 +1,4 @@
-#include "diablo.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -1073,16 +1073,16 @@ void GetSuperItemSpace(int x, int y, char inum)
 	}
 }
 
-void GetSuperItemLoc(int x, int y, int &xx, int &yy)
+void GetSuperItemLoc(int x, int y, int *xx, int *yy)
 {
 	int i, j, k;
 
 	for (k = 1; k < 50; k++) {
 		for (j = -k; j <= k; j++) {
-			yy = y + j;
+			*yy = y + j;
 			for (i = -k; i <= k; i++) {
-				xx = i + x;
-				if (ItemSpaceOk(xx, yy)) {
+				*xx = i + x;
+				if (ItemSpaceOk(*xx, *yy)) {
 					return;
 				}
 			}

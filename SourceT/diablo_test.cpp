@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "devilution.h"
+#include "all.h"
 
 TEST(Diablo, diablo_pause_game_unpause) {
 	dvl::PauseMode = 1;

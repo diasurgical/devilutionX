@@ -1,4 +1,5 @@
-#include "diablo.h"
+#include "all.h"
+#include "../SourceX/display.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -15,7 +16,11 @@ BOOLEAN sgbFadedIn = TRUE;
 
 void palette_update()
 {
-	SDrawUpdatePalette(0, 256, system_palette, 0);
+	assert(palette);
+	if (SDLC_SetSurfaceAndPaletteColors(pal_surface, palette, system_palette, 0, 256) < 0) {
+		ErrSdl();
+	}
+	pal_surface_palette_version++;
 }
 
 void ApplyGamma(SDL_Color *dst, const SDL_Color *src, int n)

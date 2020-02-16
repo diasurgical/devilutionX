@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "devilution.h"
+#include "all.h"
 
 TEST(Drlg_l4, IsDURWall) {
 	EXPECT_EQ(dvl::IsDURWall(25), true);

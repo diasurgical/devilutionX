@@ -1,4 +1,4 @@
-#include "diablo.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -142,8 +142,11 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 #if defined(__clang__) || defined(__GNUC__)
 __attribute__((no_sanitize("shift-base")))
 #endif
-void
-RenderTile(BYTE *pBuff)
+/**
+ * @brief Blit current world CEL to the given buffer
+ * @param pBuff Output buffer
+ */
+void RenderTile(BYTE *pBuff)
 {
 	int i, j;
 	char c, v, tile;
@@ -276,6 +279,11 @@ void world_draw_black_tile(int sx, int sy)
 /**
  * Draws a half-transparent rectangle by blacking out odd pixels on odd lines,
  * even pixels on even lines.
+ * @brief Render a transparent black rectangle
+ * @param sx Screen coordinate
+ * @param sy Screen coordinate
+ * @param width Rectangle width
+ * @param height Rectangle height
  */
 void trans_rect(int sx, int sy, int width, int height)
 {
