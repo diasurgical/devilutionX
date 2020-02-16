@@ -52,7 +52,7 @@ Repo: https://github.com/Manuel-K/devilutionX-QOL-patches
 
 Repo: https://github.com/majek/devilutionX/commits?author=majek
 
-* Highlight other players on automap
+* Draw all players on automap
 
 ## QOL patches by [@rafal-kowalski](https://github.com/rafal-kowalski)
 
@@ -62,6 +62,14 @@ Repo: https://github.com/rafal-kowalski/devilutionX/tree/more-qol
 * Don't hurt other players if PvP is off
 * Don't drop items on death
 * Increase max gold pile size to 50k
+
+## QOL patches by [@cain05](https://github.com/cain05)
+
+Repo: https://github.com/cain05/devilutionX/commits/master?author=cain05
+
+* Draw all players on automap
+* Increase max gold pile size to 50k
+* Two-handed swords may be held in one hand
 
 # Meta
 
