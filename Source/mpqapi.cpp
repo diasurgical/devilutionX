@@ -80,7 +80,7 @@ public:
 
 	bool IsOpen() const
 	{
-		return s_ == nullptr;
+		return s_ != nullptr;
 	}
 
 	bool seekg(std::streampos pos)
@@ -89,7 +89,7 @@ public:
 		FSTREAM_CHECK("seekg(%d)", pos);
 	}
 
-	bool seekg(std::streampos pos, std::ios::seekdir dir)
+	bool seekg(std::streamoff pos, std::ios::seekdir dir)
 	{
 		s_->seekg(pos, dir);
 		FSTREAM_CHECK("seekg(%d, %s)", static_cast<int>(pos), DirToString(dir));
@@ -101,7 +101,7 @@ public:
 		FSTREAM_CHECK("seekp(%d)", pos);
 	}
 
-	bool seekp(std::streampos pos, std::ios::seekdir dir)
+	bool seekp(std::streamoff pos, std::ios::seekdir dir)
 	{
 		s_->seekp(pos, dir);
 		FSTREAM_CHECK("seekp(%d, %s)", static_cast<int>(pos), DirToString(dir));
@@ -340,7 +340,7 @@ BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD d
 			if (!archive.write(reinterpret_cast<const char *>(sectoroffsettable), nNumberOfBytesToWrite))
 				goto on_error;
 		}
-		if (archive.tellp(&end_pos))
+		if (!archive.tellp(&end_pos))
 			goto on_error;
 		sectoroffsettable[j] = SwapLE32(end_pos - start_pos);
 		if (!archive.write(mpq_buf, len))
