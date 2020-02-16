@@ -77,49 +77,49 @@ public:
 	bool seekg(std::streampos pos)
 	{
 		s_->seekg(pos);
-		FSTREAM_CHECK("seekg(%d)", pos);
+		FSTREAM_CHECK("seekg(%ju)", static_cast<std::uintmax_t>(pos));
 	}
 
 	bool seekg(std::streamoff pos, std::ios::seekdir dir)
 	{
 		s_->seekg(pos, dir);
-		FSTREAM_CHECK("seekg(%d, %s)", static_cast<int>(pos), DirToString(dir));
+		FSTREAM_CHECK("seekg(%jd, %s)", static_cast<std::intmax_t>(pos), DirToString(dir));
 	}
 
 	bool seekp(std::streampos pos)
 	{
 		s_->seekp(pos);
-		FSTREAM_CHECK("seekp(%d)", pos);
+		FSTREAM_CHECK("seekp(%ju)", static_cast<std::uintmax_t>(pos));
 	}
 
 	bool seekp(std::streamoff pos, std::ios::seekdir dir)
 	{
 		s_->seekp(pos, dir);
-		FSTREAM_CHECK("seekp(%d, %s)", static_cast<int>(pos), DirToString(dir));
+		FSTREAM_CHECK("seekp(%jd, %s)", static_cast<std::intmax_t>(pos), DirToString(dir));
 	}
 
 	bool tellg(std::streampos *result)
 	{
 		*result = s_->tellg();
-		FSTREAM_CHECK("tellg() = %d", *result);
+		FSTREAM_CHECK("tellg() = %ju", static_cast<std::uintmax_t>(*result));
 	}
 
 	bool tellp(std::streampos *result)
 	{
 		*result = s_->tellp();
-		FSTREAM_CHECK("tellp() = %d", *result);
+		FSTREAM_CHECK("tellp() = %ju", static_cast<std::uintmax_t>(*result));
 	}
 
 	bool write(const char *data, std::streamsize size)
 	{
 		s_->write(data, size);
-		FSTREAM_CHECK("write(data, %d)", size);
+		FSTREAM_CHECK("write(data, %ju)", static_cast<std::uintmax_t>(size));
 	}
 
 	bool read(char *out, std::streamsize size)
 	{
 		s_->read(out, size);
-		FSTREAM_CHECK("read(out, %d)", size);
+		FSTREAM_CHECK("read(out, %ju)", static_cast<std::uintmax_t>(size));
 	}
 
 private:
@@ -150,7 +150,7 @@ struct Archive {
 		std::ios::openmode mode = std::ios::in | std::ios::out | std::ios::binary;
 		if (exists) {
 			if (GetFileSize(name, &size)) {
-				FSTREAM_LOG_DEBUG("GetFileSize(\"%s\") = %u", name, size);
+				FSTREAM_LOG_DEBUG("GetFileSize(\"%s\") = %ju", name, size);
 			} else {
 				SDL_Log("GetFileSize(\"%s\") failed with \"%s\"", name, std::strerror(errno));
 				return false;
@@ -179,7 +179,7 @@ struct Archive {
 			result = false;
 		stream.Close();
 		if (result && size != 0) {
-			FSTREAM_LOG_DEBUG("ResizeFile(\"%s\", %d)", name.c_str(), size);
+			FSTREAM_LOG_DEBUG("ResizeFile(\"%s\", %ju)", name.c_str(), size);
 
 			// NOTE: The original code called ResizeFile even if the file wasn't modified.
 			// It does not seem necessary, we should revisit this.
