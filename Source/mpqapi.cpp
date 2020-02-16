@@ -178,11 +178,8 @@ struct Archive {
 		if (modified && !(stream.seekp(0, std::ios::beg) && WriteHeaderAndTables()))
 			result = false;
 		stream.Close();
-		if (result && size != 0) {
+		if (modified && result && size != 0) {
 			FSTREAM_LOG_DEBUG("ResizeFile(\"%s\", %ju)", name.c_str(), size);
-
-			// NOTE: The original code called ResizeFile even if the file wasn't modified.
-			// It does not seem necessary, we should revisit this.
 			result = ResizeFile(name.c_str(), size);
 		}
 		name.clear();
