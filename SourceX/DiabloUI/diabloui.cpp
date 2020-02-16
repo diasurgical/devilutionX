@@ -36,7 +36,7 @@ Art ArtBackground;
 Art ArtCursor;
 Art ArtHero;
 bool gbSpawned;
-int heroLevel;
+_uiheroinfo *heroInfo;
 
 void (*gfnSoundFunction)(char *file);
 void (*gfnListFocus)(int value);
