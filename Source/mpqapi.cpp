@@ -175,7 +175,7 @@ struct Archive {
 		FSTREAM_LOG_DEBUG("Closing %s", name.c_str());
 
 		bool result = true;
-		if (modified && !(stream.seekp(0, std::ios::beg) && WriteHeader() && WriteBlockTable() && WriteHashTable()))
+		if (modified && !(stream.seekp(0, std::ios::beg) && WriteHeaderAndTables()))
 			result = false;
 		stream.Close();
 		if (result && size != 0) {
@@ -193,6 +193,10 @@ struct Archive {
 			sgpBlockTbl = nullptr;
 		}
 		return result;
+	}
+
+	bool WriteHeaderAndTables() {
+		return WriteHeader() && WriteBlockTable() && WriteHashTable();
 	}
 
 	~Archive()
@@ -620,6 +624,14 @@ BOOL OpenMPQ(const char *pszArchive, DWORD dwChar)
 			key = Hash("(hash table)", 3);
 			Decrypt(cur_archive.sgpHashTbl, kHashEntrySize, key);
 		}
+
+#ifndef __AMIGA__
+		// Amiga currently cannot seekp beyond end-of-file, so we fill up the space.
+		// The data is incorrect at this point, it will be overwritten on Close.
+		// See https://github.com/bebbo/libnix/issues/30
+		if (!cur_archive.exists)
+			cur_archive.WriteHeaderAndTables();
+#endif
 	}
 	return TRUE;
 on_error:
