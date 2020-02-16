@@ -172,41 +172,9 @@ void selgame_Diff_Focus(int value)
 
 bool IsDifficultyAllowed(int value)
 {
-	int allowLeveling = 0;
-	DvlIntSetting("allow upleveling", &allowLeveling);
 	if (value == 0 || (value == 1 && heroInfo->level >= 20) || (value == 2 && heroInfo->level >= 30)) {
 		return true;
 	}
-	else if (heroInfo->level == 1 && allowLeveling > 0)
-	{
-		selgame_Free();
-
-
-		int lvl = 0;
-		DvlIntSetting("uplevel to", &lvl);
-
-		if (lvl == 0)
-		{
-			lvl = 1;
-			if (value == 1) {
-				//nightmare hero
-				lvl = 20;
-			} else if (value == 2) {
-				//hell hero
-				lvl = 30;
-			}
-		}
-
-		char dialogText[256];
-		sprintf(dialogText, "Would you like to upgrade to a new level %d hero to join this game?", lvl);
-		if (UiSelHeroYesNoDialog(title, dialogText))
-		{
-			pfile_ui_save_create_at_lvl(heroInfo,lvl);
-			LoadBackgroundArt("ui_art\\selgame.pcx");
-			return true;
-		}
-	}
-	selgame_Free();
 
 	if (value == 1)
 		UiSelOkDialog(title, "Your character must reach level 20 before you can enter a multiplayer game of Nightmare difficulty.", false);
