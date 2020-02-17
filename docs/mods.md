@@ -32,7 +32,7 @@ YouTube video:
 
 [![Rogule-like game play video](https://img.youtube.com/vi/3p9j7j2SVOA/0.jpg)](https://www.youtube.com/watch?v=3p9j7j2SVOA "Rogue-like game play video")
 
-# Quality-of-Life patches
+# Quality-of-Life and Extension patches
 
 ## Per-pixel lighting
 
@@ -70,6 +70,13 @@ Repo: https://github.com/cain05/devilutionX/commits/master?author=cain05
 * Draw all players on automap
 * Increase max gold pile size to 50k
 * Two-handed swords may be held in one hand
+
+## QOL patches by [@falquinho](https://github.com/falquinho)
+
+Repo: https://github.com/falquinho/devilutionX/commits/falquinho/modern-ui?author=falquinho
+
+* Equipment comparison information
+* Cast spells from spell bar
 
 # Meta
 
