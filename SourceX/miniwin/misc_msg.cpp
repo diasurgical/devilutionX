@@ -2,7 +2,7 @@
 #include <deque>
 #include <SDL.h>
 
-#include "devilution.h"
+#include "all.h"
 #include "display.h"
 #include "stubs.h"
 #include "controls/controller_motion.h"

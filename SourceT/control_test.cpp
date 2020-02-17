@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "devilution.h"
+#include "all.h"
 
 TEST(Control, SetSpell) {
 	dvl::pnumlines = 1;

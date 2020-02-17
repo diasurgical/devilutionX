@@ -224,13 +224,13 @@ add_library(devilution STATIC
   Source/player.cpp
   Source/plrmsg.cpp
   Source/portal.cpp
-  Source/spelldat.cpp
   Source/quests.cpp
   Source/render.cpp
   Source/restrict.cpp
   Source/scrollrt.cpp
   Source/setmaps.cpp
   Source/sha.cpp
+  Source/spelldat.cpp
   Source/spells.cpp
   Source/stores.cpp
   Source/sync.cpp
@@ -262,7 +262,6 @@ set(devilutionx_SRCS
   SourceX/soundsample.cpp
   SourceX/storm/storm.cpp
   SourceX/storm/storm_net.cpp
-  SourceX/storm/storm_dx.cpp
   SourceX/dvlnet/abstract_net.cpp
   SourceX/dvlnet/loopback.cpp
   SourceX/dvlnet/packet.cpp

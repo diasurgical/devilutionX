@@ -1,4 +1,4 @@
-#include "devilution.h"
+#include "all.h"
 #include "display.h"
 #include "stubs.h"
 #include "utf8.h"

@@ -2,6 +2,10 @@
 
 #include <SDL.h>
 
+#ifdef USE_SDL1
+#include "sdl2_to_1_2_backports.h"
+#endif
+
 namespace dvl {
 namespace net {
 
@@ -92,7 +96,7 @@ void udp_p2p::recv()
 				auto pkt = pktfty->make_packet(pkt_buf);
 				recv_decrypted(*pkt, sender);
 			} catch (packet_exception &e) {
-				SDL_Log("Incorrect package size");
+				SDL_Log(e.what());
 				// drop packet
 			}
 		}

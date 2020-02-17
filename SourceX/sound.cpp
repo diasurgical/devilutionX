@@ -1,4 +1,5 @@
-#include "devilution.h"
+#include "all.h"
+#include "../3rdParty/Storm/Source/storm.h"
 #include "stubs.h"
 #include <SDL.h>
 #include <SDL_mixer.h>

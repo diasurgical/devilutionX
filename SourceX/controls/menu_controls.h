@@ -1,6 +1,6 @@
 #pragma once
 
-#include "devilution.h"
+#include "all.h"
 
 namespace dvl {
 

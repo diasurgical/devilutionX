@@ -1,4 +1,4 @@
-#include "devilution.h"
+#include "all.h"
 #include "stubs.h"
 #include <SDL.h>
 

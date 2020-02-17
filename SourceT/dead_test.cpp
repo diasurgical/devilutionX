@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "devilution.h"
+#include "all.h"
 
 TEST(Dead, AddDead) {
 	dvl::AddDead(21, 48, 8, dvl::DIR_W);

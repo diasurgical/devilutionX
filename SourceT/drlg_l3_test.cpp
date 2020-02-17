@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "devilution.h"
+#include "all.h"
 
 TEST(Drlg_l3, AddFenceDoors_x) {
 	memset(dvl::dungeon, 0, sizeof(dvl::dungeon));

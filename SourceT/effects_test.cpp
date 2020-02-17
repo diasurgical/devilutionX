@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "devilution.h"
+#include "all.h"
 
 TEST(Drlg_l4, calc_snd_position_center) {
 	dvl::plr[dvl::myplr].WorldX = 50;

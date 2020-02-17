@@ -1,7 +1,7 @@
 #pragma once
 // Controller actions implementation
 
-#include "devilution.h"
+#include "all.h"
 
 namespace dvl {
 

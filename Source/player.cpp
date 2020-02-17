@@ -1,4 +1,4 @@
-#include "diablo.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -2405,7 +2405,7 @@ BOOL PlrHitMonst(int pnum, int m)
 		hper = 95;
 	}
 
-	if (CheckMonsterHit(m, ret)) {
+	if (CheckMonsterHit(m, &ret)) {
 		return ret;
 	}
 #ifdef _DEBUG

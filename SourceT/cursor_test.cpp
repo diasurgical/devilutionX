@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "devilution.h"
+#include "all.h"
 
 TEST(Cursor, SetCursor) {
 	int i = dvl::ICURS_SPIKED_CLUB + dvl::CURSOR_FIRSTITEM;

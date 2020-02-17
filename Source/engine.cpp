@@ -1,4 +1,4 @@
-#include "diablo.h"
+#include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -12,14 +12,36 @@ static CCritSect sgMemCrit;
 int SeedCount;
 BOOL gbNotInView; // valid - if x/y are in bounds
 
+/**
+ * Specifies the increment used in the Borland C/C++ pseudo-random.
+ */
 const int RndInc = 1;
+
+/**
+ * Specifies the multiplier used in the Borland C/C++ pseudo-random number generator algorithm.
+ */
 const int RndMult = 0x015A4E35;
 
+/**
+ * @brief Blit CEL sprite to the back buffer at the given coordinates
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
+ * @param pCelBuff Cel data
+ * @param nCel CEL frame number
+ * @param nWidth Width of sprite
+ */
 void CelDraw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	CelBlitFrame(&gpBuffer[sx + BUFFER_WIDTH * sy], pCelBuff, nCel, nWidth);
 }
 
+/**
+ * @brief Blit a given CEL frame to the given buffer
+ * @param pBuff Target buffer
+ * @param pCelBuff Cel data
+ * @param nCel CEL frame number
+ * @param nWidth Width of sprite
+ */
 void CelBlitFrame(BYTE *pBuff, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	int nDataSize;
@@ -32,6 +54,14 @@ void CelBlitFrame(BYTE *pBuff, BYTE *pCelBuff, int nCel, int nWidth)
 	CelBlitSafe(pBuff, pRLEBytes, nDataSize, nWidth);
 }
 
+/**
+ * @brief Same as CelDraw but with the option to skip parts of the top and bottom of the sprite
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
+ * @param pCelBuff Cel data
+ * @param nCel CEL frame number
+ * @param nWidth Width of sprite
+ */
 void CelClippedDraw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	BYTE *pRLEBytes;
@@ -49,6 +79,14 @@ void CelClippedDraw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 	    nWidth);
 }
 
+/**
+ * @brief Blit CEL sprite, and apply lighting, to the back buffer at the given coordinates
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
+ * @param pCelBuff Cel data
+ * @param nCel CEL frame number
+ * @param nWidth Width of sprite
+ */
 void CelDrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, BYTE *tbl)
 {
 	int nDataSize;
@@ -66,6 +104,14 @@ void CelDrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, BYTE *tb
 		CelBlitSafe(pDecodeTo, pRLEBytes, nDataSize, nWidth);
 }
 
+/**
+ * @brief Same as CelDrawLight but with the option to skip parts of the top and bottom of the sprite
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
+ * @param pCelBuff Cel data
+ * @param nCel CEL frame number
+ * @param nWidth Width of sprite
+ */
 void CelClippedDrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	int nDataSize;
@@ -83,6 +129,15 @@ void CelClippedDrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 		CelBlitSafe(pDecodeTo, pRLEBytes, nDataSize, nWidth);
 }
 
+/**
+ * @brief Blit CEL sprite, and apply lighting, to the back buffer at the given coordinates, translated to a red hue
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
+ * @param pCelBuff Cel data
+ * @param nCel CEL frame number
+ * @param nWidth Width of sprite
+ * @param light Light shade to use
+ */
 void CelDrawLightRed(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char light)
 {
 	int nDataSize, w, idx;
@@ -127,7 +182,11 @@ void CelDrawLightRed(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char 
 }
 
 /**
- * @brief Same as CelBlit but checks for drawing outside the buffer
+ * @brief Blit CEL sprite to the given buffer, checks for drawing outside the buffer
+ * @param pDecodeTo The output buffer
+ * @param pRLEBytes CEL pixel stream (run-length encoded)
+ * @param nDataSize Size of CEL in bytes
+ * @param nWidth Width of sprite
  */
 void CelBlitSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth)
 {
@@ -162,6 +221,14 @@ void CelBlitSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth)
 	}
 }
 
+/**
+ * @brief Same as CelClippedDraw but checks for drawing outside the buffer
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
+ * @param pCelBuff Cel data
+ * @param nCel CEL frame number
+ * @param nWidth Width of sprite
+ */
 void CelClippedDrawSafe(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	BYTE *pRLEBytes;
@@ -180,7 +247,12 @@ void CelClippedDrawSafe(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 }
 
 /**
- * @brief Same as CelBlitLight but checks for drawing outside the buffer
+ * @brief Blit CEL sprite, and apply lighting, to the given buffer, checks for drawing outside the buffer
+ * @param pDecodeTo The output buffer
+ * @param pRLEBytes CEL pixel stream (run-length encoded)
+ * @param nDataSize Size of CEL in bytes
+ * @param nWidth Width of sprite
+ * @param tbl Palette translation table
  */
 void CelBlitLightSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE *tbl)
 {
@@ -239,7 +311,11 @@ void CelBlitLightSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidt
 }
 
 /**
- * @brief Same as CelBlitLightTrans but checks for drawing outside the buffer
+ * @brief Same as CelBlitLightSafe, with transparancy applied
+ * @param pDecodeTo The output buffer
+ * @param pRLEBytes CEL pixel stream (run-length encoded)
+ * @param nDataSize Size of CEL in bytes
+ * @param nWidth Width of sprite
  */
 void CelBlitLightTransSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth)
 {
@@ -324,6 +400,13 @@ void CelBlitLightTransSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int 
 	}
 }
 
+/**
+ * @brief Same as CelBlitLightTransSafe
+ * @param pBuff Target buffer
+ * @param pCelBuff Cel data
+ * @param nCel CEL frame number
+ * @param nWidth Width of sprite
+ */
 void CelClippedBlitLightTrans(BYTE *pBuff, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	int nDataSize;
@@ -341,6 +424,15 @@ void CelClippedBlitLightTrans(BYTE *pBuff, BYTE *pCelBuff, int nCel, int nWidth)
 		CelBlitSafe(pBuff, pRLEBytes, nDataSize, nWidth);
 }
 
+/**
+ * @brief Same as CelDrawLightRed but checks for drawing outside the buffer
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
+ * @param pCelBuff Cel data
+ * @param nCel CEL frame number
+ * @param nWidth Width of cel
+ * @param light Light shade to use
+ */
 void CelDrawLightRedSafe(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char light)
 {
 	int nDataSize, w, idx;
@@ -397,7 +489,7 @@ void CelDrawLightRedSafe(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, c
  * @param y Cordinate in pBuff buffer
  * @param wdt Width of pBuff
  * @param pCelBuff Cel data
- * @param nCel Frame of cel
+ * @param nCel CEL frame number
  * @param nWidth Width of cel
  */
 void CelBlitWidth(BYTE *pBuff, int x, int y, int wdt, BYTE *pCelBuff, int nCel, int nWidth)
@@ -431,6 +523,15 @@ void CelBlitWidth(BYTE *pBuff, int x, int y, int wdt, BYTE *pCelBuff, int nCel, 
 	}
 }
 
+/**
+ * @brief Blit a solid colder shape one pixel larger then the given sprite shape, to the back buffer at the given coordianates
+ * @param col Color index from current palette
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
+ * @param pCelBuff CEL buffer
+ * @param nCel CEL frame number
+ * @param nWidth Width of sprite
+ */
 void CelBlitOutline(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	int nDataSize, w;
@@ -485,6 +586,12 @@ void CelBlitOutline(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWid
 	}
 }
 
+/**
+ * @brief Set the value of a single pixel in the back buffer, checks bounds
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
+ * @param col Color index from current palette
+ */
 void ENG_set_pixel(int sx, int sy, BYTE col)
 {
 	BYTE *dst;
@@ -500,6 +607,11 @@ void ENG_set_pixel(int sx, int sy, BYTE col)
 		*dst = col;
 }
 
+/**
+ * @brief Set the value of a single pixel in the back buffer to that of gbPixelCol, checks bounds
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
+ */
 void engine_draw_pixel(int sx, int sy)
 {
 	BYTE *dst;
@@ -520,18 +632,6 @@ void engine_draw_pixel(int sx, int sy)
 		*dst = gbPixelCol;
 }
 
-// Exact copy from https://github.com/erich666/GraphicsGems/blob/dad26f941e12c8bf1f96ea21c1c04cd2206ae7c9/gems/DoubleLine.c
-// Except:
-// * not in view checks
-// * global variable instead of reverse flag
-// * condition for pixels_left < 0 removed
-
-/*
-Symmetric Double Step Line Algorithm
-by Brian Wyvill
-from "Graphics Gems", Academic Press, 1990
-*/
-
 #define GG_SWAP(A, B) \
 	{                 \
 		(A) ^= (B);   \
@@ -540,6 +640,24 @@ from "Graphics Gems", Academic Press, 1990
 	}
 #define GG_ABSOLUTE(I, J, K) (((I) - (J)) * ((K) = (((I) - (J)) < 0 ? -1 : 1)))
 
+/**
+ * Symmetric Double Step Line Algorithm
+ * by Brian Wyvill
+ * from "Graphics Gems", Academic Press, 1990
+ *
+ * Exact copy from https://github.com/erich666/GraphicsGems/blob/dad26f941e12c8bf1f96ea21c1c04cd2206ae7c9/gems/DoubleLine.c
+ * Except:
+ * - not in view checks
+ * - global variable instead of reverse flag
+ * - condition for pixels_left < 0 removed
+ *
+ * @brief Draw a line on the back buffer
+ * @param x0 Back buffer coordinate
+ * @param y0 Back buffer coordinate
+ * @param x1 Back buffer coordinate
+ * @param y1 Back buffer coordinate
+ * @param col Color index from current palette
+ */
 void DrawLine(int x0, int y0, int x1, int y1, BYTE col)
 {
 	int dx, dy, incr1, incr2, D, x, y, xend, c, pixels_left;
@@ -729,6 +847,14 @@ void DrawLine(int x0, int y0, int x1, int y1, BYTE col)
 	}
 }
 
+/**
+ * @brief Calculate the best fit direction between two points
+ * @param x1 Tile coordinate
+ * @param y1 Tile coordinate
+ * @param x2 Tile coordinate
+ * @param y2 Tile coordinate
+ * @return A value from the direction enum
+ */
 int GetDirection(int x1, int y1, int x2, int y2)
 {
 	int mx, my;
@@ -770,6 +896,10 @@ int GetDirection(int x1, int y1, int x2, int y2)
 	return md;
 }
 
+/**
+ * @brief Set the RNG seed
+ * @param s RNG seed
+ */
 void SetRndSeed(int s)
 {
 	SeedCount = 0;
@@ -777,6 +907,10 @@ void SetRndSeed(int s)
 	orgseed = s;
 }
 
+/**
+ * @brief Get the current RNG seed
+ * @return RNG seed
+ */
 int GetRndSeed()
 {
 	SeedCount++;
@@ -784,6 +918,12 @@ int GetRndSeed()
 	return abs(sglGameSeed);
 }
 
+/**
+ * @brief Main RNG function
+ * @param idx Unused
+ * @param v The upper limit for the return value
+ * @return A random number from 0 to (v-1)
+ */
 int random_(BYTE idx, int v)
 {
 	if (v <= 0)
@@ -793,6 +933,10 @@ int random_(BYTE idx, int v)
 	return GetRndSeed() % v;
 }
 
+/**
+ * @brief Multithreaded safe malloc
+ * @param dwBytes Byte size to allocate
+ */
 BYTE *DiabloAllocPtr(DWORD dwBytes)
 {
 	BYTE *buf;
@@ -810,6 +954,10 @@ BYTE *DiabloAllocPtr(DWORD dwBytes)
 	return buf;
 }
 
+/**
+ * @brief Multithreaded safe memfree
+ * @param p Memory pointer to free
+ */
 void mem_free_dbg(void *p)
 {
 	if (p) {
@@ -819,6 +967,12 @@ void mem_free_dbg(void *p)
 	}
 }
 
+/**
+ * @brief Load a file in to a buffer
+ * @param pszName Path of file
+ * @param pdwFileLen Will be set to file size if non-NULL
+ * @return Buffer with content of file
+ */
 BYTE *LoadFileInMem(char *pszName, DWORD *pdwFileLen)
 {
 	HANDLE file;
@@ -842,6 +996,12 @@ BYTE *LoadFileInMem(char *pszName, DWORD *pdwFileLen)
 	return buf;
 }
 
+/**
+ * @brief Load a file in to the given buffer
+ * @param pszName Path of file
+ * @param p Target buffer
+ * @return Size of file
+ */
 DWORD LoadFileWithMem(const char *pszName, void *p)
 {
 	DWORD dwFileLen;
@@ -867,6 +1027,9 @@ DWORD LoadFileWithMem(const char *pszName, void *p)
 
 /**
  * @brief Apply the color swaps to a CL2 sprite
+ * @param p CL2 buffer
+ * @param ttbl Palette translation table
+ * @param nCel Frame number in CL2 file
  */
 void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel)
 {
@@ -905,6 +1068,14 @@ void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel)
 	}
 }
 
+/**
+ * @brief Blit CL2 sprite, to the back buffer at the given coordianates
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
+ * @param pCelBuff CL2 buffer
+ * @param nCel CL2 frame number
+ * @param nWidth Width of sprite
+ */
 void Cl2Draw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	BYTE *pRLEBytes;
@@ -923,6 +1094,13 @@ void Cl2Draw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 	    nWidth);
 }
 
+/**
+ * @brief Blit CL2 sprite to the given buffer
+ * @param pDecodeTo The output buffer
+ * @param pRLEBytes CL2 pixel stream (run-length encoded)
+ * @param nDataSize Size of CL2 in bytes
+ * @param nWidth Width of sprite
+ */
 void Cl2BlitSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth)
 {
 	int w;
@@ -994,6 +1172,15 @@ void Cl2BlitSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth)
 	}
 }
 
+/**
+ * @brief Blit a solid colder shape one pixel larger then the given sprite shape, to the back buffer at the given coordianates
+ * @param col Color index from current palette
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
+ * @param pCelBuff CL2 buffer
+ * @param nCel CL2 frame number
+ * @param nWidth Width of sprite
+ */
 void Cl2DrawOutline(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	int nDataSize;
@@ -1015,6 +1202,14 @@ void Cl2DrawOutline(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWid
 	gpBufEnd += BUFFER_WIDTH;
 }
 
+/**
+ * @brief Blit a solid colder shape one pixel larger then the given sprite shape, to the given buffer
+ * @param pDecodeTo The output buffer
+ * @param pRLEBytes CL2 pixel stream (run-length encoded)
+ * @param nDataSize Size of CL2 in bytes
+ * @param nWidth Width of sprite
+ * @param col Color index from current palette
+ */
 void Cl2BlitOutlineSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth, char col)
 {
 	int w;
@@ -1091,6 +1286,15 @@ void Cl2BlitOutlineSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWi
 	}
 }
 
+/**
+ * @brief Blit CL2 sprite, and apply a given lighting, to the back buffer at the given coordianates
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
+ * @param pCelBuff CL2 buffer
+ * @param nCel CL2 frame number
+ * @param nWidth Width of sprite
+ * @param light Light shade to use
+ */
 void Cl2DrawLightTbl(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char light)
 {
 	int nDataSize, idx;
@@ -1117,6 +1321,14 @@ void Cl2DrawLightTbl(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char 
 	    &pLightTbl[idx]);
 }
 
+/**
+ * @brief Blit CL2 sprite, and apply lighting, to the given buffer
+ * @param pDecodeTo The output buffer
+ * @param pRLEBytes CL2 pixel stream (run-length encoded)
+ * @param nDataSize Size of CL2 in bytes
+ * @param nWidth With of CL2 sprite
+ * @param pTable Light color table
+ */
 void Cl2BlitLightSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE *pTable)
 {
 	int w;
@@ -1189,6 +1401,14 @@ void Cl2BlitLightSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidt
 	}
 }
 
+/**
+ * @brief Blit CL2 sprite, and apply lighting, to the back buffer at the given coordinates
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
+ * @param pCelBuff CL2 buffer
+ * @param nCel CL2 frame number
+ * @param nWidth Width of sprite
+ */
 void Cl2DrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	int nDataSize;
@@ -1207,6 +1427,10 @@ void Cl2DrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 		Cl2BlitSafe(pDecodeTo, pRLEBytes, nDataSize, nWidth);
 }
 
+/**
+ * @brief Fade to black and play a video
+ * @param pszMovie file path of movie
+ */
 void PlayInGameMovie(char *pszMovie)
 {
 	PaletteFadeOut(8);

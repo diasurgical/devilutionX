@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-#include "devilution.h"
+#include "all.h"
 #include <SDL.h>
 #include <type_traits>
 

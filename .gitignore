@@ -19,8 +19,10 @@ comparer-config.toml
 /build-*/
 .vscode/tasks.json
 
-# ELF object file.
+# ELF object file, shared library and object archive.
 *.o
+*.so
+*.a
 
 # PE shared library and associated files.
 *.lib

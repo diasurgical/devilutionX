@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "devilution.h"
+#include "all.h"
 #include "stubs.h"
 
 #include "DiabloUI/art.h"

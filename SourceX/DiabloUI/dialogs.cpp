@@ -1,7 +1,7 @@
 #include "DiabloUI/dialogs.h"
 
 #include "controls/menu_controls.h"
-#include "devilution.h"
+#include "all.h"
 #include "dx.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/button.h"

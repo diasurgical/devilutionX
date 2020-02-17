@@ -1,4 +1,4 @@
-#include "diablo.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -117,7 +117,10 @@ void SetDungeonMicros()
 	WORD *pPiece;
 	MICROS *pMap;
 
-	if (leveltype != DTYPE_HELL) {
+	if (leveltype == DTYPE_TOWN) {
+		MicroTileLen = 16;
+		blocks = 16;
+	} else if (leveltype != DTYPE_HELL) {
 		MicroTileLen = 10;
 		blocks = 10;
 	} else {
@@ -131,7 +134,7 @@ void SetDungeonMicros()
 			pMap = &dpiece_defs_map_2[x][y];
 			if (lv) {
 				lv--;
-				if (leveltype != DTYPE_HELL)
+				if (leveltype != DTYPE_HELL && leveltype != DTYPE_TOWN)
 					pPiece = (WORD *)&pLevelPieces[20 * lv];
 				else
 					pPiece = (WORD *)&pLevelPieces[32 * lv];

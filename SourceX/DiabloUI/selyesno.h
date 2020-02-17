@@ -1,6 +1,6 @@
 #pragma once
 
-#include "devilution.h"
+#include "all.h"
 
 namespace dvl {
 bool UiSelHeroYesNoDialog(const char *title, const char *body);

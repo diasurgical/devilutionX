@@ -1,4 +1,4 @@
-#include "diablo.h"
+#include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 #include <config.h>
@@ -1632,8 +1632,7 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 		}
 	}
 
-	if (leveltype != DTYPE_TOWN)
-		SetDungeonMicros();
+	SetDungeonMicros();
 
 	InitLightMax();
 	IncProgress();

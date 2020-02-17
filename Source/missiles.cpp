@@ -1,4 +1,4 @@
-#include "diablo.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -510,7 +510,7 @@ BOOL MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, BOOLEAN shif
 		hper = 5;
 	if (hper > 95)
 		hper = 95;
-	if (CheckMonsterHit(m, ret)) {
+	if (CheckMonsterHit(m, &ret)) {
 		return ret;
 	}
 #ifdef _DEBUG
@@ -608,7 +608,7 @@ BOOL MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, BOOLE
 		hper = 95;
 	if (monster[m]._mmode == MM_STONE)
 		hit = 0;
-	if (CheckMonsterHit(m, ret))
+	if (CheckMonsterHit(m, &ret))
 		return ret;
 #ifdef _DEBUG
 	if (hit >= hper && !debug_mode_key_inverted_v && !debug_mode_dollar_sign)
