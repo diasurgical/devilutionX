@@ -88,6 +88,20 @@ Repo: https://github.com/falquinho/devilutionX/commits/falquinho/modern-ui?autho
 * Equipment comparison information
 * Cast spells from spell bar
 
+## Extension patches by [@footballhead](https://github.com/footballhead)
+
+Repo: https://github.com/footballhead/devilutionX/commits/demo/bloodboil?author=footballhead
+
+* Add Blood Boil spell from Diablo Battle.net Beta
+
+Repo: https://github.com/footballhead/devilutionX/commits/demo/doom?author=footballhead
+
+* Map of the Stars quest
+
+Repo: https://github.com/footballhead/devilutionX/commits/etherealize_demo?author=footballhead
+
+* Add Etherealize spell
+
 # Meta
 
 ## Equine
