@@ -32,6 +32,16 @@ YouTube video:
 
 [![Rogule-like game play video](https://img.youtube.com/vi/3p9j7j2SVOA/0.jpg)](https://www.youtube.com/watch?v=3p9j7j2SVOA "Rogue-like game play video")
 
+## GKD350h, RG-350 handheld and RetroFW (RG300/RS97/LDK)
+
+Repo: https://github.com/glebm/devilutionX/releases
+
+![GKD350h](https://user-images.githubusercontent.com/216339/73123835-32e41080-3f8c-11ea-970c-8dd159c6e4ef.jpg "GKD350h")
+
+[![RG-350 handheld](https://user-images.githubusercontent.com/216339/66907570-73cda000-f001-11e9-9341-539fda20eff4.jpg "RG-350 handheld")](https://www.youtube.com/watch?v=ItA3TMiqXu8)
+
+[![RetroFW (RG300/RS97/LDK)](https://user-images.githubusercontent.com/216339/66889273-ae234700-efd9-11e9-8746-489f4eece210.jpg "RetroFW (RG300/RS97/LDK)")](https://www.youtube.com/watch?v=fxpdc1iZK94)
+
 # Quality-of-Life and Extension patches
 
 ## Per-pixel lighting
