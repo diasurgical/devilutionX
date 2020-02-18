@@ -184,9 +184,9 @@ struct Archive {
 		}
 		name.clear();
 		if (clear_tables) {
-			std::free(sgpHashTbl);
+			delete[] sgpHashTbl;
 			sgpHashTbl = nullptr;
-			std::free(sgpBlockTbl);
+			delete[] sgpBlockTbl;
 			sgpBlockTbl = nullptr;
 		}
 		return result;
@@ -492,7 +492,7 @@ BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD d
 		len = PkwareCompress(cur_archive.mpq_buf, len);
 		if (j == 0) {
 			nNumberOfBytesToWrite = 4 * num_bytes + 4;
-			sectoroffsettable = (DWORD *)DiabloAllocPtr(nNumberOfBytesToWrite);
+			sectoroffsettable = new DWORD[nNumberOfBytesToWrite / sizeof(DWORD)];
 			memset(sectoroffsettable, 0, nNumberOfBytesToWrite);
 			if (!cur_archive.stream.write(reinterpret_cast<const char *>(sectoroffsettable), nNumberOfBytesToWrite))
 				goto on_error;
@@ -520,7 +520,7 @@ BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD d
 	if (!cur_archive.stream.seekp(end_pos))
 		goto on_error;
 
-	mem_free_dbg(sectoroffsettable);
+	delete[] sectoroffsettable;
 	if (destsize < pBlk->sizealloc) {
 		block_size = pBlk->sizealloc - destsize;
 		if (block_size >= 1024) {
@@ -531,7 +531,7 @@ BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD d
 	return TRUE;
 on_error:
 	if (sectoroffsettable)
-		mem_free_dbg(sectoroffsettable);
+		delete[] sectoroffsettable;
 	return FALSE;
 }
 
@@ -605,7 +605,7 @@ BOOL OpenMPQ(const char *pszArchive, DWORD dwChar)
 		} else if (!ReadMPQHeader(&cur_archive, &fhdr)) {
 			goto on_error;
 		}
-		cur_archive.sgpBlockTbl = (_BLOCKENTRY *)DiabloAllocPtr(kBlockEntrySize);
+		cur_archive.sgpBlockTbl = new _BLOCKENTRY[kBlockEntrySize / sizeof(_BLOCKENTRY)];
 		std::memset(cur_archive.sgpBlockTbl, 0, kBlockEntrySize);
 		if (fhdr.blockcount) {
 			if (!cur_archive.stream.read(reinterpret_cast<char *>(cur_archive.sgpBlockTbl), kBlockEntrySize))
@@ -613,7 +613,7 @@ BOOL OpenMPQ(const char *pszArchive, DWORD dwChar)
 			key = Hash("(block table)", 3);
 			Decrypt(cur_archive.sgpBlockTbl, kBlockEntrySize, key);
 		}
-		cur_archive.sgpHashTbl = (_HASHENTRY *)DiabloAllocPtr(kHashEntrySize);
+		cur_archive.sgpHashTbl = new _HASHENTRY[kHashEntrySize / sizeof(_HASHENTRY)];
 		std::memset(cur_archive.sgpHashTbl, 255, kHashEntrySize);
 		if (fhdr.hashcount) {
 			if (!cur_archive.stream.read(reinterpret_cast<char *>(cur_archive.sgpHashTbl), kHashEntrySize))
