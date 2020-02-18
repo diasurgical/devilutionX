@@ -454,7 +454,7 @@ _BLOCKENTRY *mpqapi_add_file(const char *pszName, _BLOCKENTRY *pBlk, int block_i
 BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD dwLen, _BLOCKENTRY *pBlk)
 {
 	DWORD *sectoroffsettable;
-	DWORD destsize, num_bytes, block_size, nNumberOfBytesToWrite;
+	DWORD num_bytes, block_size, nNumberOfBytesToWrite;
 	const BYTE *src;
 	const char *tmp, *str_ptr;
 	int i, j;
@@ -473,12 +473,10 @@ BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD d
 	pBlk->offset = mpqapi_find_free_block(dwLen + nNumberOfBytesToWrite, &pBlk->sizealloc);
 	pBlk->sizefile = dwLen;
 	pBlk->flags = 0x80000100;
-	std::streampos start_pos, end_pos;
+	std::uint32_t destsize = 0;
 	if (!cur_archive.stream.seekp(pBlk->offset, std::ios::beg))
 		goto on_error;
 	j = 0;
-	if (!cur_archive.stream.tellp(&start_pos))
-		goto on_error;
 	sectoroffsettable = NULL;
 	while (dwLen != 0) {
 		DWORD len;
@@ -496,28 +494,25 @@ BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD d
 			memset(sectoroffsettable, 0, nNumberOfBytesToWrite);
 			if (!cur_archive.stream.write(reinterpret_cast<const char *>(sectoroffsettable), nNumberOfBytesToWrite))
 				goto on_error;
+			destsize += nNumberOfBytesToWrite;
 		}
-		if (!cur_archive.stream.tellp(&end_pos))
-			goto on_error;
-		sectoroffsettable[j] = SwapLE32(static_cast<std::uint32_t>(end_pos - start_pos));
+		sectoroffsettable[j] = SwapLE32(destsize);
 		if (!cur_archive.stream.write(cur_archive.mpq_buf, len))
 			goto on_error;
+		destsize += len;
 		j++;
 		if (dwLen > 4096)
 			dwLen -= 4096;
 		else
 			dwLen = 0;
 	}
-	if (!cur_archive.stream.tellp(&end_pos))
-		goto on_error;
-	destsize = end_pos - start_pos;
 
 	sectoroffsettable[j] = SwapLE32(destsize);
-	if (!cur_archive.stream.seekp(start_pos))
+	if (!cur_archive.stream.seekp(pBlk->offset, std::ios::beg))
 		goto on_error;
 	if (!cur_archive.stream.write(reinterpret_cast<const char *>(sectoroffsettable), nNumberOfBytesToWrite))
 		goto on_error;
-	if (!cur_archive.stream.seekp(end_pos))
+	if (!cur_archive.stream.seekp(pBlk->offset + destsize, std::ios::beg))
 		goto on_error;
 
 	delete[] sectoroffsettable;
