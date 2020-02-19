@@ -13,6 +13,12 @@ DEVILUTION_BEGIN_NAMESPACE
 // #define FSTREAM_LOG_DEBUG(...) {}
 #define FSTREAM_LOG_DEBUG(...) SDL_Log(__VA_ARGS__)
 
+// Amiga cannot seekp beyond EOF.
+// See https://github.com/bebbo/libnix/issues/30
+#ifndef __AMIGA__
+#define CAN_SEEKP_BEYOND_EOF
+#endif
+
 namespace {
 
 
@@ -139,6 +145,10 @@ struct Archive {
 	std::uintmax_t size;
 	bool modified;
 	bool exists;
+
+#ifndef CAN_SEEKP_BEYOND_EOF
+	std::streampos stream_begin;
+#endif
 
 	_HASHENTRY *sgpHashTbl;
 	_BLOCKENTRY *sgpBlockTbl;
@@ -468,17 +478,34 @@ BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD d
 	pBlk->offset = mpqapi_find_free_block(dwLen + offset_table_bytesize, &pBlk->sizealloc);
 	pBlk->sizefile = dwLen;
 	pBlk->flags = 0x80000100;
-	if (!cur_archive.stream.seekp(pBlk->offset, std::ios::beg))
-		return FALSE;
 
 	// We populate the table of sector offset while we write the data.
 	// We can't pre-populate it because we don't know the compressed sector sizes yet.
 	// First offset is the start of the first sector, last offset is the end of the last sector.
 	std::unique_ptr<std::uint32_t[]> sectoroffsettable(new std::uint32_t[num_sectors + 1]);
 
-	// Write garbage offset table data because some platforms cannot seekp beyond EOF.
-	if (!cur_archive.stream.write(reinterpret_cast<const char *>(sectoroffsettable.get()), offset_table_bytesize))
+#ifdef CAN_SEEKP_BEYOND_EOF
+	if (!cur_archive.stream.seekp(pBlk->offset + offset_table_bytesize, std::ios::beg))
 		return FALSE;
+#else
+	// Ensure we do not seekp beyond EOF by filling the missing space.
+	std::streampos stream_end;
+	if (!cur_archive.stream.seekp(0, std::ios::end) || !cur_archive.stream.tellp(&stream_end))
+		return FALSE;
+	const std::uintmax_t cur_size = stream_end - cur_archive.stream_begin;
+	if (cur_size < pBlk->offset + offset_table_bytesize) {
+		if (cur_size < pBlk->offset) {
+			std::unique_ptr<char[]> filler(new char[pBlk->offset - cur_size]);
+			if (!cur_archive.stream.write(filler.get(), pBlk->offset - cur_size))
+				return FALSE;
+		}
+		if (!cur_archive.stream.write(reinterpret_cast<const char *>(sectoroffsettable.get()), offset_table_bytesize))
+			return FALSE;
+	} else {
+		if (!cur_archive.stream.seekp(pBlk->offset + offset_table_bytesize, std::ios::beg))
+			return FALSE;
+	}
+#endif
 
 	const BYTE *src = pbData;
 	std::uint32_t destsize = offset_table_bytesize;
@@ -604,10 +631,16 @@ BOOL OpenMPQ(const char *pszArchive, DWORD dwChar)
 			Decrypt(cur_archive.sgpHashTbl, kHashEntrySize, key);
 		}
 
-#ifndef __AMIGA__
-		// Amiga currently cannot seekp beyond end-of-file, so we fill up the space.
+#ifndef CAN_SEEKP_BEYOND_EOF
+		if (!cur_archive.stream.seekp(0, std::ios::beg))
+			goto on_error;
+
+		// Memorize stream begin, we'll need it for calculations later.
+		if (!cur_archive.stream.tellp(&cur_archive.stream_begin))
+			goto on_error;
+
+		// Write garbage header and tables because some platforms cannot `seekp` beyond EOF.
 		// The data is incorrect at this point, it will be overwritten on Close.
-		// See https://github.com/bebbo/libnix/issues/30
 		if (!cur_archive.exists)
 			cur_archive.WriteHeaderAndTables();
 #endif
