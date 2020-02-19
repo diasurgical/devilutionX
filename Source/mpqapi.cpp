@@ -10,8 +10,13 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-// #define FSTREAM_LOG_DEBUG(...) {}
+#define LOG_FSTREAM_CALLS 1
+
+#if LOG_FSTREAM_CALLS == 1
 #define FSTREAM_LOG_DEBUG(...) SDL_Log(__VA_ARGS__)
+#else
+#define FSTREAM_LOG_DEBUG(...) {}
+#endif
 
 // Amiga cannot seekp beyond EOF.
 // See https://github.com/bebbo/libnix/issues/30
@@ -57,13 +62,17 @@ std::string OpenModeToString(std::ios::openmode mode)
 }
 
 // Wraps fstream with error checks and logging.
+//
+// We can't use `FSTREAM_LOG_DEBUG` in the else clause because MSVC
+// doesn't handle __VA_ARGS__ correctly, see:
+// https://stackoverflow.com/questions/5134523/msvc-doesnt-expand-va-args-correctly
 #define FSTREAM_CHECK(fmt, ...)                             \
 	if (s_->fail()) {                                       \
 		const char *error_message = std::strerror(errno);   \
 		SDL_Log(fmt ": failed with \"%s\"", __VA_ARGS__,    \
 		    error_message != nullptr ? error_message : ""); \
-	} else {                                                \
-		FSTREAM_LOG_DEBUG(fmt, __VA_ARGS__);                \
+	} else if (LOG_FSTREAM_CALLS) {                         \
+		SDL_Log(fmt, __VA_ARGS__);                          \
 	}                                                       \
 	return !s_->fail()
 
