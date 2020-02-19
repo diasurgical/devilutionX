@@ -57,11 +57,14 @@ std::string OpenModeToString(std::ios::openmode mode)
 }
 
 // Wraps fstream with error checks and logging.
-#define FSTREAM_CHECK(fmt, ...)                                                 \
-	if (s_->fail())                                                             \
-		SDL_Log(fmt ": failed with \"%s\"", __VA_ARGS__, std::strerror(errno)); \
-	else                                                                        \
-		FSTREAM_LOG_DEBUG(fmt, __VA_ARGS__);                                    \
+#define FSTREAM_CHECK(fmt, ...)                             \
+	if (s_->fail()) {                                       \
+		const char *error_message = std::strerror(errno);   \
+		SDL_Log(fmt ": failed with \"%s\"", __VA_ARGS__,    \
+		    error_message != nullptr ? error_message : ""); \
+	} else {                                                \
+		FSTREAM_LOG_DEBUG(fmt, __VA_ARGS__);                \
+	}                                                       \
 	return !s_->fail()
 
 struct FStreamWrapper {
@@ -223,8 +226,8 @@ private:
 		fhdr.filesize = SDL_SwapLE32(static_cast<std::uint32_t>(size));
 		fhdr.version = SDL_SwapLE16(0);
 		fhdr.sectorsizeid = SDL_SwapLE16(3);
-		fhdr.hashoffset = SDL_SwapLE32(kMpqHashEntryOffset);
-		fhdr.blockoffset = SDL_SwapLE32(kMpqBlockEntryOffset);
+		fhdr.hashoffset = SDL_SwapLE32(static_cast<std::uint32_t>(kMpqHashEntryOffset));
+		fhdr.blockoffset = SDL_SwapLE32(static_cast<std::uint32_t>(kMpqBlockEntryOffset));
 		fhdr.hashcount = SDL_SwapLE32(2048);
 		fhdr.blockcount = SDL_SwapLE32(2048);
 
