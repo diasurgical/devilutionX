@@ -42,6 +42,7 @@ SDL_Surface *ui_surface;
 const int num_ellipses = 15;
 POINT eliSizes[num_ellipses];
 SDL_Texture *ellipsesTextures[num_ellipses];
+Uint32 light_format;
 int lightReady = 0;
 
 void prepareLightColors()
@@ -334,9 +335,6 @@ void LimitFrameRate()
 }
 
 #ifdef PIXEL_LIGHT
-int width, height;
-Uint32 format;
-
 void PutPixel32_nolock(SDL_Surface *surface, int x, int y, Uint32 color)
 {
 	Uint8 *pixel = (Uint8 *)surface->pixels;
@@ -497,12 +495,11 @@ POINT predrawEllipse(SDL_Surface* eli, int radius, bool test, int width, int hei
 
 void prepareLight()
 {
-	SDL_RenderGetLogicalSize(renderer, &width, &height);
-	if (SDL_QueryTexture(texture, &format, nullptr, nullptr, nullptr) < 0)
+	if (SDL_QueryTexture(texture, &light_format, nullptr, nullptr, nullptr) < 0)
 		ErrSdl();
 	for (int i = 0; i < num_ellipses; i++) {
 		eliSizes[i] = predrawEllipse(NULL, i + 1, true, 2048, 2048);
-		SDL_Surface* tmpEllipse = SDL_CreateRGBSurfaceWithFormat(0, eliSizes[i].x, eliSizes[i].y, SDL_BITSPERPIXEL(format), format);
+		SDL_Surface* tmpEllipse = SDL_CreateRGBSurfaceWithFormat(0, eliSizes[i].x, eliSizes[i].y, SDL_BITSPERPIXEL(light_format), light_format);
 		if (tmpEllipse == NULL)
 			ErrSdl();
 		if (SDL_FillRect(tmpEllipse, NULL, SDL_MapRGB(tmpEllipse->format, 0, 0, 0)) < 0)
