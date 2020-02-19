@@ -141,7 +141,27 @@ void CaptureScreen()
 
 	std::ofstream *out = CaptureFile(FileName);
 	if (out == nullptr) return;
+#ifdef PIXEL_LIGHT
+	//disables per pixel light during screenshot
+	int tmp1 = testvar1;
+	int tmp2 = testvar2;
+	int tmp3 = testvar3;
+	int tmp4 = testvar4;
+	int tmp5 = testvar5;
+	testvar1 = 0;
+	testvar2 = 8;
+	testvar3 = 0;
+	testvar4 = 0;
+	testvar5 = 0;
+#endif
 	DrawAndBlit();
+#ifdef PIXEL_LIGHT
+	testvar1 = tmp1;
+	testvar2 = tmp2;
+	testvar3 = tmp3;
+	testvar4 = tmp4;
+	testvar5 = tmp5;
+#endif
 	PaletteGetEntries(256, palette);
 	RedPalette();
 
