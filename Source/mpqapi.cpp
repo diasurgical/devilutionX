@@ -23,6 +23,8 @@ const char *DirToString(std::ios::seekdir dir)
 		return "std::ios::beg";
 	case std::ios::end:
 		return "std::ios::end";
+	case std::ios::cur:
+		return "std::ios::cur";
 	default:
 		return "invalid";
 	}
@@ -138,7 +140,6 @@ struct Archive {
 	bool modified;
 	bool exists;
 
-	char mpq_buf[4096];
 	_HASHENTRY *sgpHashTbl;
 	_BLOCKENTRY *sgpBlockTbl;
 
@@ -453,81 +454,67 @@ _BLOCKENTRY *mpqapi_add_file(const char *pszName, _BLOCKENTRY *pBlk, int block_i
 
 BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD dwLen, _BLOCKENTRY *pBlk)
 {
-	DWORD *sectoroffsettable;
-	DWORD num_bytes, block_size, nNumberOfBytesToWrite;
-	const BYTE *src;
-	const char *tmp, *str_ptr;
-	int i, j;
-
-	str_ptr = pszName;
-	src = pbData;
-	while ((tmp = strchr(str_ptr, ':'))) {
+	const char *str_ptr = pszName;
+	const char *tmp;
+	while ((tmp = strchr(str_ptr, ':')))
 		str_ptr = tmp + 1;
-	}
-	while ((tmp = strchr(str_ptr, '\\'))) {
+	while ((tmp = strchr(str_ptr, '\\')))
 		str_ptr = tmp + 1;
-	}
 	Hash(str_ptr, 3);
-	num_bytes = (dwLen + 4095) >> 12;
-	nNumberOfBytesToWrite = 4 * num_bytes + 4;
-	pBlk->offset = mpqapi_find_free_block(dwLen + nNumberOfBytesToWrite, &pBlk->sizealloc);
+
+	constexpr std::uint32_t kSectorSize = 4096;
+	const std::uint32_t num_sectors = (dwLen + (kSectorSize - 1)) / kSectorSize;
+	const std::uint32_t offset_table_bytesize = sizeof(std::uint32_t) * (num_sectors + 1);
+	pBlk->offset = mpqapi_find_free_block(dwLen + offset_table_bytesize, &pBlk->sizealloc);
 	pBlk->sizefile = dwLen;
 	pBlk->flags = 0x80000100;
-	std::uint32_t destsize = 0;
 	if (!cur_archive.stream.seekp(pBlk->offset, std::ios::beg))
-		goto on_error;
-	j = 0;
-	sectoroffsettable = NULL;
-	while (dwLen != 0) {
-		DWORD len;
-		for (i = 0; i < 4096; i++)
-			cur_archive.mpq_buf[i] -= 86;
-		len = dwLen;
-		if (dwLen >= 4096)
-			len = 4096;
-		memcpy(cur_archive.mpq_buf, src, len);
+		return FALSE;
+
+	// We populate the table of sector offset while we write the data.
+	// We can't pre-populate it because we don't know the compressed sector sizes yet.
+	// First offset is the start of the first sector, last offset is the end of the last sector.
+	std::unique_ptr<std::uint32_t[]> sectoroffsettable(new std::uint32_t[num_sectors + 1]);
+
+	// Write garbage offset table data because some platforms cannot seekp beyond EOF.
+	if (!cur_archive.stream.write(reinterpret_cast<const char *>(sectoroffsettable.get()), offset_table_bytesize))
+		return FALSE;
+
+	const BYTE *src = pbData;
+	std::uint32_t destsize = offset_table_bytesize;
+	char mpq_buf[kSectorSize];
+	std::size_t cur_sector = 0;
+	while (true) {
+		std::uint32_t len = std::min(dwLen, kSectorSize);
+		memcpy(mpq_buf, src, len);
 		src += len;
-		len = PkwareCompress(cur_archive.mpq_buf, len);
-		if (j == 0) {
-			nNumberOfBytesToWrite = 4 * num_bytes + 4;
-			sectoroffsettable = new DWORD[nNumberOfBytesToWrite / sizeof(DWORD)];
-			memset(sectoroffsettable, 0, nNumberOfBytesToWrite);
-			if (!cur_archive.stream.write(reinterpret_cast<const char *>(sectoroffsettable), nNumberOfBytesToWrite))
-				goto on_error;
-			destsize += nNumberOfBytesToWrite;
-		}
-		sectoroffsettable[j] = SwapLE32(destsize);
-		if (!cur_archive.stream.write(cur_archive.mpq_buf, len))
-			goto on_error;
-		destsize += len;
-		j++;
-		if (dwLen > 4096)
-			dwLen -= 4096;
+		len = PkwareCompress(mpq_buf, len);
+		if (!cur_archive.stream.write(mpq_buf, len))
+			return FALSE;
+		sectoroffsettable[cur_sector++] = SwapLE32(destsize);
+		destsize += len;  // compressed length
+		if (dwLen > kSectorSize)
+			dwLen -= kSectorSize;
 		else
-			dwLen = 0;
+			break;
 	}
 
-	sectoroffsettable[j] = SwapLE32(destsize);
+	sectoroffsettable[num_sectors] = SwapLE32(destsize);
 	if (!cur_archive.stream.seekp(pBlk->offset, std::ios::beg))
-		goto on_error;
-	if (!cur_archive.stream.write(reinterpret_cast<const char *>(sectoroffsettable), nNumberOfBytesToWrite))
-		goto on_error;
-	if (!cur_archive.stream.seekp(pBlk->offset + destsize, std::ios::beg))
-		goto on_error;
+		return FALSE;
+	if (!cur_archive.stream.write(reinterpret_cast<const char *>(sectoroffsettable.get()), offset_table_bytesize))
+		return FALSE;
+	if (!cur_archive.stream.seekp(destsize - offset_table_bytesize, std::ios::cur))
+		return FALSE;
 
-	delete[] sectoroffsettable;
 	if (destsize < pBlk->sizealloc) {
-		block_size = pBlk->sizealloc - destsize;
+		const std::uint32_t block_size = pBlk->sizealloc - destsize;
 		if (block_size >= 1024) {
 			pBlk->sizealloc = destsize;
 			mpqapi_alloc_block(pBlk->sizealloc + pBlk->offset, block_size);
 		}
 	}
 	return TRUE;
-on_error:
-	if (sectoroffsettable)
-		delete[] sectoroffsettable;
-	return FALSE;
 }
 
 int mpqapi_find_free_block(int size, int *block_size)
