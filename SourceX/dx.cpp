@@ -42,19 +42,21 @@ SDL_Surface *ui_surface;
 const int num_ellipses = 15;
 POINT eliSizes[num_ellipses];
 SDL_Texture *ellipsesTextures[num_ellipses];
-Uint32 light_format;
 int lightReady = 0;
 
 void prepareLightColors()
 {
-	int orange = 0xff9900;
-	int darkorange = 0xcc0000;
+	int orange = 0xffae00;
+	int darkorange = 0xd66b0d;
 	int blue = 0x0000ff;
+	int lightblue = 0x147ee0;
 	int darkblue = 0x000099;
 	int green = 0x00ff00;
 	int red = 0xff0000;
 	int white = 0xffffff;
 	int lime = 0xbfff00;
+	int lightorange = 0xff9500;
+	int lightyellow = 0xfff27a;
 
 	//others
 	lightColorMap["PLAYERLIGHT"] = white;
@@ -71,23 +73,25 @@ void prepareLightColors()
 	lightColorMap["UNIQUEMONSTER"] = green;
 	lightColorMap["DEADUNIQUEMONSTER"] = white;
 	lightColorMap["REDPORTAL"] = red;
-	lightColorMap["STATICLIGHT"] = darkorange;
+	lightColorMap["STATICLIGHT"] = lightyellow;
+	lightColorMap["POISONEDWATER"] = lime;
+	lightColorMap["CLEAREDWATER"] = lightblue;
 
 	//spells
-	lightColorMap["FIREBOLT"] = darkorange;
-	lightColorMap["LIGHTNING"] = blue;
-	lightColorMap["FLASH"] = blue;
-	lightColorMap["FIREWALL"] = red;
-	lightColorMap["TOWNPORTAL"] = blue;
+	lightColorMap["FIREBOLT"] = orange;
 	lightColorMap["FIREBALL"] = orange;
-	lightColorMap["GUARDIAN"] = green;
-	lightColorMap["FLAMEWAVE"] = red;
-	lightColorMap["NOVA"] = blue;
-	lightColorMap["INFERNO"] = red;
+	lightColorMap["FIREWALL"] = darkorange;
+	lightColorMap["FLAMEWAVE"] = darkorange;
+	lightColorMap["INFERNO"] = darkorange;
 	lightColorMap["APOCALYPSE"] = darkorange;
 	lightColorMap["ELEMENTAL"] = darkorange;
-	lightColorMap["CHARGEDBOLT"] = darkblue;
-	lightColorMap["HOLYBOLT"] = blue;
+	lightColorMap["FLASH"] = blue;
+	lightColorMap["TOWNPORTAL"] = lightblue;
+	lightColorMap["LIGHTNING"] = lightblue;
+	lightColorMap["NOVA"] = lightblue;
+	lightColorMap["CHARGEDBOLT"] = lightblue;
+	lightColorMap["HOLYBOLT"] = lightblue;
+	lightColorMap["GUARDIAN"] = green;
 	lightColorMap["BONESPIRIT"] = green;
 }
 #endif
@@ -360,20 +364,6 @@ POINT gameToScreen(int targetRow, int targetCol)
 	return POINT(sx, sy);
 }
 
-int mergeChannel(int a, int b, float amount)
-{
-	float result = (a * amount) + (b * (1 - amount));
-	return (int)result;
-}
-
-Uint32 blendColors(Uint32 c1, Uint32 c2, float howmuch)
-{
-	int r = mergeChannel(c1 & 0x0000FF, c2 & 0x0000FF, howmuch);
-	int g = mergeChannel((c1 & 0x00FF00) >> 8, (c2 & 0x00FF00) >> 8, howmuch);
-	int b = mergeChannel((c1 & 0xFF0000) >> 16, (c2 & 0xFF0000) >> 16, howmuch);
-	return r + (g << 8) + (b << 16);
-}
-
 void drawRadius(int lid, int row, int col, int radius, int color, int xoff, int yoff)
 {
 	xoff = 0;
@@ -464,7 +454,6 @@ POINT predrawEllipse(SDL_Surface* eli, int radius, bool test, int width, int hei
 	int maxx = 0, maxy = 0;
 	for (int x = 0; x < width; x++) {
 		for (int y = 0; y < height; y++) {
-			//if (x >= 0 && x < SCREEN_WIDTH && y >= 0 && y < SCREEN_HEIGHT) {
 			float howmuch;
 			float diffx = sx - x;
 			float diffy = sy - y;
@@ -475,7 +464,8 @@ POINT predrawEllipse(SDL_Surface* eli, int radius, bool test, int width, int hei
 			float c = hey;
 			float ab = a + b;
 			if (ab <= c) {
-				howmuch = cbrt(ab / c);
+				howmuch = 1 - (ab / c);
+				howmuch = howmuch * howmuch;
 				if (test) {
 					if (diffx > maxx) {
 						maxx = diffx;
@@ -484,10 +474,9 @@ POINT predrawEllipse(SDL_Surface* eli, int radius, bool test, int width, int hei
 						maxy = diffy;
 					}
 				} else {
-					PutPixel32_nolock(eli, x, y, blendColors(0x000000, 0xFFFFFF, howmuch));
+					PutPixel32_nolock(eli, x, y, SDL_MapRGBA(eli->format, 0xFF, 0xFF, 0xFF, 0xFF * howmuch));
 				}
 			}
-			//}
 		}
 	}
 	return POINT(maxx * 2, maxy * 2);
@@ -495,21 +484,20 @@ POINT predrawEllipse(SDL_Surface* eli, int radius, bool test, int width, int hei
 
 void prepareLight()
 {
-	if (SDL_QueryTexture(texture, &light_format, nullptr, nullptr, nullptr) < 0)
-		ErrSdl();
+	Uint32 light_format = SDL_PIXELFORMAT_ARGB8888;
 	for (int i = 0; i < num_ellipses; i++) {
 		eliSizes[i] = predrawEllipse(NULL, i + 1, true, 2048, 2048);
 		SDL_Surface* tmpEllipse = SDL_CreateRGBSurfaceWithFormat(0, eliSizes[i].x, eliSizes[i].y, SDL_BITSPERPIXEL(light_format), light_format);
 		if (tmpEllipse == NULL)
 			ErrSdl();
-		if (SDL_FillRect(tmpEllipse, NULL, SDL_MapRGB(tmpEllipse->format, 0, 0, 0)) < 0)
+		if (SDL_FillRect(tmpEllipse, NULL, SDL_MapRGBA(tmpEllipse->format, 0, 0, 0, 0)) < 0)
 			ErrSdl();
 		predrawEllipse(tmpEllipse, i + 1, false, eliSizes[i].x, eliSizes[i].y);
 		ellipsesTextures[i] = SDL_CreateTextureFromSurface(renderer, tmpEllipse);
 		if (ellipsesTextures[i] == NULL)
 			ErrSdl();
 		SDL_FreeSurface(tmpEllipse);
-		if (SDL_SetTextureBlendMode(ellipsesTextures[i], SDL_BLENDMODE_ADD) < 0)
+		if (SDL_SetTextureBlendMode(ellipsesTextures[i], SDL_BLENDMODE_BLEND) < 0)
 			ErrSdl();
 	}
 }

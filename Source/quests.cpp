@@ -187,6 +187,22 @@ void CheckQuests()
 		if (WaterDone > 0) {
 			palette_update_quest_palette(WaterDone);
 			WaterDone--;
+#ifdef PIXEL_LIGHT
+			//light color transition between poisoned and cleared water
+			for (unsigned int i = 0; i < staticLights[currlevel + setlvlnum * (32 * setlevel)].size(); i++) {
+				LightListStruct *it = &staticLights[currlevel + setlvlnum * (32 * setlevel)][i];
+				Uint8 r1 = (lightColorMap["POISONEDWATER"] & 0xFF0000) >> 16;
+				Uint8 g1 = (lightColorMap["POISONEDWATER"] & 0x00FF00) >> 8;
+				Uint8 b1 = (lightColorMap["POISONEDWATER"] & 0x0000FF);
+				Uint8 r2 = (lightColorMap["CLEAREDWATER"] & 0xFF0000) >> 16;
+				Uint8 g2 = (lightColorMap["CLEAREDWATER"] & 0x00FF00) >> 8;
+				Uint8 b2 = (lightColorMap["CLEAREDWATER"] & 0x0000FF);
+				Uint8 r3 = ((WaterDone * r1) + (32 - WaterDone) * r2) / 32;
+				Uint8 g3 = ((WaterDone * g1) + (32 - WaterDone) * g2) / 32;
+				Uint8 b3 = ((WaterDone * b1) + (32 - WaterDone) * b2) / 32;
+				it->_lcolor = (r3 << 16) + (g3 << 8) + b3;
+			}
+#endif
 		}
 	} else if (plr[myplr]._pmode == PM_STAND) {
 		for (i = 0; i < MAXQUESTS; i++) {
