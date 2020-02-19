@@ -79,6 +79,15 @@ bool SpawnWindow(const char *lpWindowName, int nWidth, int nHeight)
 	atexit(SDL_VideoQuit); // Without this video mode is not restored after fullscreen.
 #else
 	int flags = 0;
+#ifdef PIXEL_LIGHT
+	if (upscale == 0) {
+		testvar1 = 0;
+		testvar2 = 8;
+		testvar3 = 0;
+		testvar4 = 0;
+		testvar5 = 0;
+	}
+#endif
 	if (upscale) {
 		flags |= fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_RESIZABLE;
 
