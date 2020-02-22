@@ -1,6 +1,14 @@
 #pragma once
 
+#include <algorithm>
+#include <string>
 #include <cstdint>
+
+#include <SDL.h>
+
+#ifdef USE_SDL1
+#include "sdl2_to_1_2_backports.h"
+#endif
 
 #if defined(_WIN64) || defined(_WIN32)
 // Suppress definitions of `min` and `max` macros by <windows.h>:
@@ -10,6 +18,7 @@
 
 #if _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)
 #include <unistd.h>
+#include <sys/stat.h>
 #else
 #include <cstdio>
 #endif
@@ -28,7 +37,33 @@ inline bool FileExists(const char *path)
 #endif
 }
 
-inline bool ResizeFile(const char *path, std::uint32_t size)
+inline bool GetFileSize(const char *path, std::uintmax_t *size)
+{
+#if defined(_WIN64) || defined(_WIN32)
+	WIN32_FILE_ATTRIBUTE_DATA attr;
+	int path_utf16_size = MultiByteToWideChar(CP_UTF8, 0, path, -1, nullptr, 0);
+	auto path_utf16 = new wchar_t[path_utf16_size];
+	if (MultiByteToWideChar(CP_UTF8, 0, path, -1, path_utf16, path_utf16_size) != path_utf16_size) {
+		delete[] path_utf16;
+		return false;
+	}
+	if (!GetFileAttributesExW(path_utf16, GetFileExInfoStandard, &attr)) {
+		delete[] path_utf16;
+		return false;
+	}
+	delete[] path_utf16;
+	*size = (attr.nFileSizeHigh) << (sizeof(attr.nFileSizeHigh) * 8) | attr.nFileSizeLow;
+	return true;
+#else
+	struct ::stat stat_result;
+	if (::stat(path, &stat_result) == -1)
+		return false;
+	*size = static_cast<uintmax_t>(stat_result.st_size);
+	return true;
+#endif
+}
+
+inline bool ResizeFile(const char *path, std::uintmax_t size)
 {
 #if defined(_WIN64) || defined(_WIN32)
 	LARGE_INTEGER lisize;
@@ -61,17 +96,16 @@ inline bool ResizeFile(const char *path, std::uint32_t size)
 
 inline void RemoveFile(char *lpFileName)
 {
-	char name[DVL_MAX_PATH];
-	TranslateFileName(name, sizeof(name), lpFileName);
-
-	FILE *f = fopen(name, "r+");
+	std::string name = lpFileName;
+	std::replace(name.begin(), name.end(), '\\', '/');
+	FILE *f = fopen(name.c_str(), "r+");
 	if (f) {
 		fclose(f);
-		remove(name);
+		remove(name.c_str());
 		f = NULL;
-		SDL_Log("Removed file: %s", name);
+		SDL_Log("Removed file: %s", name.c_str());
 	} else {
-		SDL_Log("Failed to remove file: %s", name);
+		SDL_Log("Failed to remove file: %s", name.c_str());
 	}
 }
 

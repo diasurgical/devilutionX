@@ -255,14 +255,18 @@ void RenderTile(BYTE *pBuff)
 
 /**
  * @brief Render a black tile
- * @param pBuff pointer where to render the tile
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
  */
 void world_draw_black_tile(int sx, int sy)
 {
 	int i, j, k;
 	BYTE *dst;
 
-	if (sx >= SCREEN_WIDTH - 64 || sy >= SCREEN_HEIGHT - 32)
+	if (sx >= SCREEN_X + SCREEN_WIDTH || sy >= SCREEN_Y + VIEWPORT_HEIGHT + 32)
+		return;
+
+	if (sx < SCREEN_X - 60 || sy < SCREEN_Y)
 		return;
 
 	dst = &gpBuffer[sx + BUFFER_WIDTH * sy] + 30;
