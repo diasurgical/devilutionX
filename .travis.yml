@@ -11,6 +11,9 @@ git:
 addons:
   homebrew:
     brewfile: true
+    # TODO: Remove the `update` line once this PR has been released:
+    # https://github.com/travis-ci/packer-templates-mac/pull/13
+    update: true
 
 script:
   - cd build
