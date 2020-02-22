@@ -1,6 +1,7 @@
+#include <cerrno>
+#include <cinttypes>
 #include <cstdint>
 #include <cstring>
-#include <cerrno>
 #include <fstream>
 #include <memory>
 
@@ -82,49 +83,49 @@ public:
 	bool seekg(std::streampos pos)
 	{
 		s_->seekg(pos);
-		return CheckError("seekg(%ju)", static_cast<std::uintmax_t>(pos));
+		return CheckError("seekg(%" PRIuMAX ")", static_cast<std::uintmax_t>(pos));
 	}
 
 	bool seekg(std::streamoff pos, std::ios::seekdir dir)
 	{
 		s_->seekg(pos, dir);
-		return CheckError("seekg(%jd, %s)", static_cast<std::intmax_t>(pos), DirToString(dir));
+		return CheckError("seekg(%" PRIdMAX ", %s)", static_cast<std::intmax_t>(pos), DirToString(dir));
 	}
 
 	bool seekp(std::streampos pos)
 	{
 		s_->seekp(pos);
-		return CheckError("seekp(%ju)", static_cast<std::uintmax_t>(pos));
+		return CheckError("seekp(%" PRIuMAX ")", static_cast<std::uintmax_t>(pos));
 	}
 
 	bool seekp(std::streamoff pos, std::ios::seekdir dir)
 	{
 		s_->seekp(pos, dir);
-		return CheckError("seekp(%jd, %s)", static_cast<std::intmax_t>(pos), DirToString(dir));
+		return CheckError("seekp(%" PRIdMAX ", %s)", static_cast<std::intmax_t>(pos), DirToString(dir));
 	}
 
 	bool tellg(std::streampos *result)
 	{
 		*result = s_->tellg();
-		return CheckError("tellg() = %ju", static_cast<std::uintmax_t>(*result));
+		return CheckError("tellg() = %" PRIuMAX, static_cast<std::uintmax_t>(*result));
 	}
 
 	bool tellp(std::streampos *result)
 	{
 		*result = s_->tellp();
-		return CheckError("tellp() = %ju", static_cast<std::uintmax_t>(*result));
+		return CheckError("tellp() = %" PRIuMAX, static_cast<std::uintmax_t>(*result));
 	}
 
 	bool write(const char *data, std::streamsize size)
 	{
 		s_->write(data, size);
-		return CheckError("write(data, %ju)", static_cast<std::uintmax_t>(size));
+		return CheckError("write(data, %" PRIuMAX ")", static_cast<std::uintmax_t>(size));
 	}
 
 	bool read(char *out, std::streamsize size)
 	{
 		s_->read(out, size);
-		return CheckError("read(out, %ju)", static_cast<std::uintmax_t>(size));
+		return CheckError("read(out, %" PRIuMAX ")", static_cast<std::uintmax_t>(size));
 	}
 
 private:
@@ -174,7 +175,7 @@ struct Archive {
 		std::ios::openmode mode = std::ios::in | std::ios::out | std::ios::binary;
 		if (exists) {
 			if (GetFileSize(name, &size)) {
-				FSTREAM_LOG_DEBUG("GetFileSize(\"%s\") = %ju", name, size);
+				FSTREAM_LOG_DEBUG("GetFileSize(\"%s\") = %" PRIuMAX, name, size);
 			} else {
 				SDL_Log("GetFileSize(\"%s\") failed with \"%s\"", name, std::strerror(errno));
 				return false;
@@ -203,7 +204,7 @@ struct Archive {
 			result = false;
 		stream.Close();
 		if (modified && result && size != 0) {
-			FSTREAM_LOG_DEBUG("ResizeFile(\"%s\", %ju)", name.c_str(), size);
+			FSTREAM_LOG_DEBUG("ResizeFile(\"%s\", %" PRIuMAX ")", name.c_str(), size);
 			result = ResizeFile(name.c_str(), size);
 		}
 		name.clear();
