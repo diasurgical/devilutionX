@@ -972,7 +972,7 @@ void DrawView(int StartX, int StartY)
 {
 	DrawGame(StartX, StartY);
 #ifdef PIXEL_LIGHT
-	if (testvar3 != 0 && leveltype != DTYPE_TOWN) {
+	if (testvar3 != 0) {
 		if (SDL_BlitSurface(pal_surface, NULL, tmp_surface, NULL) < 0)
 			ErrSdl();
 		if(SDL_FillRect(pal_surface, NULL, PALETTE_TRANSPARENT_COLOR) < 0)
@@ -1339,7 +1339,7 @@ void DrawAndBlit()
 
 	DrawFPS();
 #ifdef PIXEL_LIGHT
-	if (testvar3 != 0 && leveltype != DTYPE_TOWN) {
+	if (testvar3 != 0) {
 		redrawLights = 1;
 		if (SDL_BlitSurface(pal_surface, NULL, ui_surface, NULL) < 0)
 			ErrSdl();

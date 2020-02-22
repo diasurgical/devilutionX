@@ -519,7 +519,7 @@ void RenderPresent()
 		Uint8 red_r = 255;
 		Uint8 red_g = 100;
 		Uint8 red_b = 55;
-		if (testvar3 != 0 && leveltype != DTYPE_TOWN && (redrawLights == 1 || (testvar1 == 1 && redrawLights != -1))) {
+		if (testvar3 != 0 && (redrawLights == 1 || (testvar1 == 1 && redrawLights != -1))) {
 			if (lightReady != 1) {
 				lightReady = 1;
 				prepareLight();
@@ -555,7 +555,7 @@ void RenderPresent()
 			ErrSdl();
 
 #ifdef PIXEL_LIGHT
-		if (testvar3 != 0 && leveltype != DTYPE_TOWN && (redrawLights == 1 || (testvar1 == 1 && redrawLights != -1))) {
+		if (testvar3 != 0 && (redrawLights == 1 || (testvar1 == 1 && redrawLights != -1))) {
 			lightLoop();
 		}
 		if (drawRed) {
@@ -573,7 +573,7 @@ void RenderPresent()
 				ErrSdl();
 			drawRed = false;
 		}
-		if (testvar3 != 0 && leveltype != DTYPE_TOWN && (redrawLights == 1 || (testvar1 == 1 && redrawLights != -1))) {
+		if (testvar3 != 0 && (redrawLights == 1 || (testvar1 == 1 && redrawLights != -1))) {
 			//Setting the color key here because it might change each frame during fadein/fadeout which modify palette
 			if (SDL_SetColorKey(ui_surface, SDL_TRUE, PALETTE_TRANSPARENT_COLOR) < 0)
 				ErrSdl();
