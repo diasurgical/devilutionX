@@ -61,27 +61,12 @@ std::string OpenModeToString(std::ios::openmode mode)
 	return result;
 }
 
-// Wraps fstream with error checks and logging.
-//
-// We can't use `FSTREAM_LOG_DEBUG` in the else clause because MSVC
-// doesn't handle __VA_ARGS__ correctly, see:
-// https://stackoverflow.com/questions/5134523/msvc-doesnt-expand-va-args-correctly
-#define FSTREAM_CHECK(fmt, ...)                             \
-	if (s_->fail()) {                                       \
-		const char *error_message = std::strerror(errno);   \
-		SDL_Log(fmt ": failed with \"%s\"", __VA_ARGS__,    \
-		    error_message != nullptr ? error_message : ""); \
-	} else if (LOG_FSTREAM_CALLS) {                         \
-		SDL_Log(fmt, __VA_ARGS__);                          \
-	}                                                       \
-	return !s_->fail()
-
 struct FStreamWrapper {
 public:
 	bool Open(const char *path, std::ios::openmode mode)
 	{
 		s_.reset(new std::fstream(path, mode));
-		FSTREAM_CHECK("new std::fstream(\"%s\", %s)", path, OpenModeToString(mode).c_str());
+		return CheckError("new std::fstream(\"%s\", %s)", path, OpenModeToString(mode).c_str());
 	}
 
 	void Close()
@@ -97,52 +82,68 @@ public:
 	bool seekg(std::streampos pos)
 	{
 		s_->seekg(pos);
-		FSTREAM_CHECK("seekg(%ju)", static_cast<std::uintmax_t>(pos));
+		return CheckError("seekg(%ju)", static_cast<std::uintmax_t>(pos));
 	}
 
 	bool seekg(std::streamoff pos, std::ios::seekdir dir)
 	{
 		s_->seekg(pos, dir);
-		FSTREAM_CHECK("seekg(%jd, %s)", static_cast<std::intmax_t>(pos), DirToString(dir));
+		return CheckError("seekg(%jd, %s)", static_cast<std::intmax_t>(pos), DirToString(dir));
 	}
 
 	bool seekp(std::streampos pos)
 	{
 		s_->seekp(pos);
-		FSTREAM_CHECK("seekp(%ju)", static_cast<std::uintmax_t>(pos));
+		return CheckError("seekp(%ju)", static_cast<std::uintmax_t>(pos));
 	}
 
 	bool seekp(std::streamoff pos, std::ios::seekdir dir)
 	{
 		s_->seekp(pos, dir);
-		FSTREAM_CHECK("seekp(%jd, %s)", static_cast<std::intmax_t>(pos), DirToString(dir));
+		return CheckError("seekp(%jd, %s)", static_cast<std::intmax_t>(pos), DirToString(dir));
 	}
 
 	bool tellg(std::streampos *result)
 	{
 		*result = s_->tellg();
-		FSTREAM_CHECK("tellg() = %ju", static_cast<std::uintmax_t>(*result));
+		return CheckError("tellg() = %ju", static_cast<std::uintmax_t>(*result));
 	}
 
 	bool tellp(std::streampos *result)
 	{
 		*result = s_->tellp();
-		FSTREAM_CHECK("tellp() = %ju", static_cast<std::uintmax_t>(*result));
+		return CheckError("tellp() = %ju", static_cast<std::uintmax_t>(*result));
 	}
 
 	bool write(const char *data, std::streamsize size)
 	{
 		s_->write(data, size);
-		FSTREAM_CHECK("write(data, %ju)", static_cast<std::uintmax_t>(size));
+		return CheckError("write(data, %ju)", static_cast<std::uintmax_t>(size));
 	}
 
 	bool read(char *out, std::streamsize size)
 	{
 		s_->read(out, size);
-		FSTREAM_CHECK("read(out, %ju)", static_cast<std::uintmax_t>(size));
+		return CheckError("read(out, %ju)", static_cast<std::uintmax_t>(size));
 	}
 
 private:
+	template <typename... PrintFArgs>
+	bool CheckError(const char *fmt, PrintFArgs... args)
+	{
+		if (s_->fail()) {
+			std::string fmt_with_error = fmt;
+			fmt_with_error.append(": failed with \"%s\"");
+			const char *error_message = std::strerror(errno);
+			if (error_message == nullptr)
+				error_message = "";
+			SDL_Log(fmt_with_error.c_str(), args..., error_message);
+		} else if (LOG_FSTREAM_CALLS) {
+			SDL_Log(fmt, args...);
+		}
+		return !s_->fail();
+	}
+
 	std::unique_ptr<std::fstream> s_;
 };
 
