@@ -97,6 +97,9 @@ make -j$(nproc)
 <details><summary>Windows via Visual Studio</summary>
 
 ### Installing dependencies
+
+Visual Studio 2019 or newer is required.
+
 Make sure to install the `C++ CMake tools for Windows` component for Visual Studio.
 
 * **Using vcpkg (recommended)**
