@@ -1428,6 +1428,11 @@ void StartWalk3(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int 
 		ChangeLightXY(plr[pnum]._plid, x, y);
 		PM_ChangeLightOff(pnum);
 	}
+#ifdef PIXEL_LIGHT
+	else {
+		PM_ChangeLightOff(pnum);
+	}
+#endif
 
 	plr[pnum]._pmode = PM_WALK3;
 	plr[pnum]._pxvel = xvel;
@@ -2156,6 +2161,11 @@ BOOL PM_DoWalk(int pnum)
 			ChangeLightXY(plr[pnum]._plid, plr[pnum].WorldX, plr[pnum].WorldY);
 			ChangeVisionXY(plr[pnum]._pvid, plr[pnum].WorldX, plr[pnum].WorldY);
 		}
+#ifdef PIXEL_LIGHT
+		else {
+			ChangeLightXY(plr[pnum]._plid, plr[pnum].WorldX, plr[pnum].WorldY);
+		}
+#endif
 
 		if (pnum == myplr && ScrollInfo._sdir) {
 			ViewX = plr[pnum].WorldX - ScrollInfo._sdx;
@@ -2173,6 +2183,11 @@ BOOL PM_DoWalk(int pnum)
 		if (leveltype != DTYPE_TOWN) {
 			ChangeLightOff(plr[pnum]._plid, 0, 0);
 		}
+#ifdef PIXEL_LIGHT
+		else {
+			ChangeLightOff(plr[pnum]._plid, 0, 0);
+		}
+#endif
 
 		return TRUE;
 	}
@@ -2207,6 +2222,11 @@ BOOL PM_DoWalk2(int pnum)
 			ChangeLightXY(plr[pnum]._plid, plr[pnum].WorldX, plr[pnum].WorldY);
 			ChangeVisionXY(plr[pnum]._pvid, plr[pnum].WorldX, plr[pnum].WorldY);
 		}
+#ifdef PIXEL_LIGHT
+		else {
+			ChangeLightXY(plr[pnum]._plid, plr[pnum].WorldX, plr[pnum].WorldY);
+		}
+#endif
 
 		if (pnum == myplr && ScrollInfo._sdir) {
 			ViewX = plr[pnum].WorldX - ScrollInfo._sdx;
@@ -2224,6 +2244,11 @@ BOOL PM_DoWalk2(int pnum)
 		if (leveltype != DTYPE_TOWN) {
 			ChangeLightOff(plr[pnum]._plid, 0, 0);
 		}
+#ifdef PIXEL_LIGHT
+		else {
+			ChangeLightOff(plr[pnum]._plid, 0, 0);
+		}
+#endif
 
 		return TRUE;
 	}
@@ -2262,6 +2287,11 @@ BOOL PM_DoWalk3(int pnum)
 			ChangeLightXY(plr[pnum]._plid, plr[pnum].WorldX, plr[pnum].WorldY);
 			ChangeVisionXY(plr[pnum]._pvid, plr[pnum].WorldX, plr[pnum].WorldY);
 		}
+#ifdef PIXEL_LIGHT
+		else {
+			ChangeLightXY(plr[pnum]._plid, plr[pnum].WorldX, plr[pnum].WorldY);
+		}
+#endif
 
 		if (pnum == myplr && ScrollInfo._sdir) {
 			ViewX = plr[pnum].WorldX - ScrollInfo._sdx;
@@ -2279,6 +2309,11 @@ BOOL PM_DoWalk3(int pnum)
 		if (leveltype != DTYPE_TOWN) {
 			ChangeLightOff(plr[pnum]._plid, 0, 0);
 		}
+#ifdef PIXEL_LIGHT
+		else{
+			ChangeLightOff(plr[pnum]._plid, 0, 0);
+		}
+#endif
 
 		return TRUE;
 	}

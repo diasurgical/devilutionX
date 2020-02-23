@@ -1154,6 +1154,7 @@ void PressChar(int vkey)
 		}
 		return;
 	case 'v':
+		SDL_Log("%d %d", plr[myplr].WorldX, plr[myplr].WorldY);
 		NetSendCmdString(1 << myplr, gszProductName);
 		return;
 	case 'V':
@@ -1472,6 +1473,11 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 		InitLighting();
 		InitVision();
 	}
+#ifdef PIXEL_LIGHT
+	else {
+		InitLighting();
+	}
+#endif
 
 	InitLevelMonsters();
 	IncProgress();
@@ -1646,6 +1652,11 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 		ProcessLightList();
 		ProcessVisionList();
 	}
+#ifdef PIXEL_LIGHT
+	else {
+		ProcessLightList();
+	}
+#endif
 
 	music_start(leveltype);
 
@@ -1696,6 +1707,9 @@ void game_logic()
 		ProcessLightList();
 		ProcessVisionList();
 	} else {
+#ifdef PIXEL_LIGHT
+		ProcessLightList();
+#endif
 		ProcessTowners();
 		ProcessItems();
 		ProcessMissiles();

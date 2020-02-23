@@ -119,6 +119,16 @@ void LoadGame(BOOL firstflag)
 		for (i = 0; i < numvision; i++)
 			LoadVision(i);
 	}
+#ifdef PIXEL_LIGHT
+	else {
+		numlights = WLoad();
+
+		for (i = 0; i < MAXLIGHTS; i++)
+			lightactive[i] = BLoad();
+		for (i = 0; i < numlights; i++)
+			LoadLighting(lightactive[i]);
+	}
+#endif
 
 	for (i = 0; i < MAXITEMS; i++)
 		itemactive[i] = BLoad();
@@ -913,6 +923,16 @@ void SaveGame()
 		for (i = 0; i < numvision; i++)
 			SaveVision(i);
 	}
+#ifdef PIXEL_LIGHT
+	else {
+		WSave(numlights);
+
+		for (i = 0; i < MAXLIGHTS; i++)
+			BSave(lightactive[i]);
+		for (i = 0; i < numlights; i++)
+			SaveLighting(lightactive[i]);
+	}
+#endif
 
 	for (i = 0; i < MAXITEMS; i++)
 		BSave(itemactive[i]);

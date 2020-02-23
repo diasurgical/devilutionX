@@ -43,6 +43,30 @@ const int num_ellipses = 15;
 POINT eliSizes[num_ellipses];
 SDL_Texture *ellipsesTextures[num_ellipses];
 int lightReady = 0;
+std::vector<LightListStruct> townLights;
+
+void addTownLight(int x, int y, int radius, int color)
+{
+	LightListStruct tmp;
+	tmp._lx = x;
+	tmp._ly = y;
+	tmp._lradius = radius;
+	tmp._lcolor = color;
+	townLights.push_back(tmp);
+}
+
+void prepareTownLights()
+{
+	if (townLights.size() > 0)
+		return;
+	addTownLight(63, 61, 8, 0xFF7700); // griswold
+	addTownLight(70, 59, 3, 0xFFFFCC); // griswold's window
+	addTownLight(54, 79, 5, 0xFFFFCC); // pepin
+	addTownLight(53, 80, 1, 0xFFFFCC); // pepin's back window #1
+	addTownLight(51, 80, 1, 0xFFFFCC); // pepin's back window #2
+	addTownLight(54, 61, 8, 0xFFFFCC); // ogden
+	addTownLight(25, 29, 10, 0xCC0000); // cathedral
+}
 
 void prepareLightColors()
 {
@@ -346,19 +370,23 @@ void PutPixel32_nolock(SDL_Surface *surface, int x, int y, Uint32 color)
 	*((Uint32 *)pixel) = color;
 }
 
-POINT gameToScreen(int targetRow, int targetCol)
+POINT gameToScreen(int targetRow, int targetCol, bool changePos)
 {
 	int playerRow = plr[myplr].WorldX;
 	int playerCol = plr[myplr].WorldY;
 	int sx = TILE_SIZE * (targetRow - playerRow) + TILE_SIZE * (playerCol - targetCol) + SCREEN_WIDTH / 2;
-	if (ScrollInfo._sdir == SDIR_E)
-		sx -= TILE_SIZE;
-	else if (ScrollInfo._sdir == SDIR_W)
-		sx += TILE_SIZE;
+	if (changePos) {
+		if (ScrollInfo._sdir == SDIR_E)
+			sx -= TILE_SIZE;
+		else if (ScrollInfo._sdir == SDIR_W)
+			sx += TILE_SIZE;
+	}
 
 	int sy = TILE_SIZE * (targetCol - playerCol) + sx / 2;
-	if (ScrollInfo._sdir == SDIR_W)
-		sy -= TILE_SIZE;
+	if (changePos) {
+		if (ScrollInfo._sdir == SDIR_W)
+			sy -= TILE_SIZE;
+	}
 	sy += TILE_SIZE / 2;
 
 	return POINT(sx, sy);
@@ -401,7 +429,7 @@ void drawRadius(int lid, int row, int col, int radius, int color, int xoff, int 
 		yoff -= plr[myplr]._pyoff;
 	}
 
-	POINT pos = gameToScreen(row, col);
+	POINT pos = gameToScreen(row, col, leveltype != DTYPE_TOWN || lid == -1);
 	int sx = pos.x;
 	int sy = pos.y;
 
@@ -440,9 +468,16 @@ void lightLoop()
 		drawRadius(lid, LightList[lid]._lx, LightList[lid]._ly, LightList[lid]._lradius, LightList[lid]._lcolor, LightList[lid]._xoff, LightList[lid]._yoff);
 	}
 
-	for (unsigned int i = 0; i < staticLights[currlevel + setlvlnum * (32 * setlevel)].size(); i++) {
-		LightListStruct *it = &staticLights[currlevel + setlvlnum * (32 * setlevel)][i];
-		drawRadius(-1, it->_lx, it->_ly, it->_lradius, it->_lcolor, 0, 0);
+	if (leveltype != DTYPE_TOWN) {
+		for (unsigned int i = 0; i < staticLights[currlevel + setlvlnum * (32 * setlevel)].size(); i++) {
+			LightListStruct *it = &staticLights[currlevel + setlvlnum * (32 * setlevel)][i];
+			drawRadius(-1, it->_lx, it->_ly, it->_lradius, it->_lcolor, 0, 0);
+		}
+	} else{
+		for (unsigned int i = 0; i < townLights.size(); i++) {
+			LightListStruct *it = &townLights[i];
+			drawRadius(-1, it->_lx, it->_ly, it->_lradius, it->_lcolor, 0, 0);
+		}
 	}
 }
 
@@ -519,10 +554,12 @@ void RenderPresent()
 		Uint8 red_r = 255;
 		Uint8 red_g = 100;
 		Uint8 red_b = 55;
-		if (testvar3 != 0 && (redrawLights == 1 || (testvar1 == 1 && redrawLights != -1))) {
+		bool doLight = testvar3 != 0 && (redrawLights == 1 || (testvar1 == 1 && redrawLights != -1));
+		if (doLight) {
 			if (lightReady != 1) {
 				lightReady = 1;
 				prepareLight();
+				prepareTownLights();
 			}
 			SDL_BlendMode bm = SDL_BLENDMODE_NONE;
 			switch (testvar5) {
@@ -548,14 +585,24 @@ void RenderPresent()
 			ErrSdl();
 
 		// Clear buffer to avoid artifacts in case the window was resized
+#ifdef PIXEL_LIGHT
+		if (doLight && leveltype == DTYPE_TOWN) {
+			if (SDL_SetRenderDrawColor(renderer, 15, 15, 15, 255) < 0) // Allow to see things outside of light in town
+				ErrSdl();
+		} else{
+			if (SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255) < 0) 
+				ErrSdl();
+		}
+#else
 		if (SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255) < 0) // TODO only do this if window was resized
 			ErrSdl();
+#endif
 
 		if (SDL_RenderClear(renderer) < 0)
 			ErrSdl();
 
 #ifdef PIXEL_LIGHT
-		if (testvar3 != 0 && (redrawLights == 1 || (testvar1 == 1 && redrawLights != -1))) {
+		if (doLight) {
 			lightLoop();
 		}
 		if (drawRed) {
@@ -573,7 +620,7 @@ void RenderPresent()
 				ErrSdl();
 			drawRed = false;
 		}
-		if (testvar3 != 0 && (redrawLights == 1 || (testvar1 == 1 && redrawLights != -1))) {
+		if (doLight) {
 			//Setting the color key here because it might change each frame during fadein/fadeout which modify palette
 			if (SDL_SetColorKey(ui_surface, SDL_TRUE, PALETTE_TRANSPARENT_COLOR) < 0)
 				ErrSdl();
