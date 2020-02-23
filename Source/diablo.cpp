@@ -172,13 +172,10 @@ void run_game_loop(unsigned int uMsg)
 	char speed_str[32];
 
 	if (!getIniValue("devilutionx", "game speed", speed_str, sizeof(speed_str))) {
-
 		game_speed = 50;
-	}
-	else {
+	} else {
 				speed_str[sizeof(speed_str)-1] = '\0';
 				game_speed = 1000 / std::atoi(speed_str);
-
 	}
 
 	while (gbRunGame) {
