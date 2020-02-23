@@ -171,7 +171,8 @@ void run_game_loop(unsigned int uMsg)
 	nthread_ignore_mutex(FALSE);
 	char speed_str[32];
 
-	if (!getIniValue("devilutionx", "game speed", speed_str, 2)) {
+	if (!getIniValue("devilutionx", "game speed", speed_str, sizeof(speed_str))) {
+
 		game_speed = 50;
 	}
 	else {
