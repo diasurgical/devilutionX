@@ -169,7 +169,8 @@ void run_game_loop(unsigned int uMsg)
 	force_redraw = 255;
 	gbGameLoopStartup = TRUE;
 	nthread_ignore_mutex(FALSE);
-	char speed_str[2];
+	char speed_str[32];
+
 	if (!getIniValue("devilutionx", "game speed", speed_str, 2)) {
 		game_speed = 50;
 	}
