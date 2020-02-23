@@ -176,7 +176,9 @@ void run_game_loop(unsigned int uMsg)
 		game_speed = 50;
 	}
 	else {
-		game_speed = 1000 / std::atoi(speed_str);
+				speed_str[sizeof(speed_str)-1] = '\0';
+				game_speed = 1000 / std::atoi(speed_str);
+
 	}
 
 	while (gbRunGame) {
