@@ -5,7 +5,7 @@ DEVILUTION_BEGIN_NAMESPACE
 WORD level_frame_types[MAXTILES];
 int themeCount;
 /**
- * List of transparent dPices
+ * List of transparent dPieces
  */
 BOOLEAN nTransTable[2049];
 //int dword_52D204;
@@ -25,7 +25,7 @@ BYTE *pMegaTiles;
 BYTE *pLevelPieces;
 int gnDifficulty;
 /**
- * List of transparancy masks to use for dPices
+ * List of transparancy masks to use for dPieces
  */
 char block_lvid[2049];
 //char byte_5B78EB;
@@ -35,7 +35,7 @@ BYTE leveltype;
 BYTE currlevel;
 BOOLEAN TransList[256];
 /**
- * List of path blocking dPices
+ * List of path blocking dPieces
  */
 BOOLEAN nSolidTable[2049];
 ScrollStruct ScrollInfo;
@@ -44,7 +44,7 @@ THEME_LOC themeLoc[MAXTHEMES];
 char dPlayer[MAXDUNX][MAXDUNY];
 char dArch[MAXDUNX][MAXDUNY];
 /**
- * List of light blocking dPices
+ * List of light blocking dPieces
  */
 BOOLEAN nBlockTable[2049];
 BYTE *pSpecialCels;
@@ -52,7 +52,7 @@ char dFlags[MAXDUNX][MAXDUNY];
 char dItem[MAXDUNX][MAXDUNY];
 BYTE setlvlnum;
 /**
- * List of missile blocking dPices
+ * List of missile blocking dPieces
  */
 BOOLEAN nMissileTable[2049];
 BYTE *pSetPiece;
