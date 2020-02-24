@@ -16,12 +16,13 @@ devilution-comparer
 comparer-config.toml
 
 #ignore cmake cache
-/build/
-/build32/
+/build-*/
 .vscode/tasks.json
 
-# ELF object file.
+# ELF object file, shared library and object archive.
 *.o
+*.so
+*.a
 
 # PE shared library and associated files.
 *.lib
@@ -428,3 +429,4 @@ DerivedData/
 
 ### Nintendo Switch ###
 exefs/main
+/out/isenseconfig/CPI-Debug

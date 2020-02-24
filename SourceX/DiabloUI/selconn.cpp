@@ -1,6 +1,6 @@
 #include "selconn.h"
 
-#include "devilution.h"
+#include "all.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/text.h"
 
@@ -118,7 +118,6 @@ int UiSelectProvider(
 	while (!selconn_EndMenu) {
 		UiPollAndRender();
 	}
-	BlackPalette();
 	selconn_Free();
 
 	return selconn_ReturnValue;

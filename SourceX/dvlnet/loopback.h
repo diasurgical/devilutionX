@@ -3,7 +3,8 @@
 #include <string>
 #include <queue>
 
-#include "devilution.h"
+#include "all.h"
+#include "../3rdParty/Storm/Source/storm.h"
 #include "dvlnet/abstract_net.h"
 
 namespace dvl {

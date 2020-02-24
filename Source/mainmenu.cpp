@@ -1,4 +1,4 @@
-#include "diablo.h"
+#include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 
@@ -18,17 +18,17 @@ void mainmenu_refresh_music()
 		menu_music_track_id++;
 		if (menu_music_track_id == NUM_MUSIC)
 			menu_music_track_id = TMUSIC_TOWN;
-	} while (!menu_music_track_id || menu_music_track_id == TMUSIC_L1);
+	} while (menu_music_track_id == TMUSIC_TOWN || menu_music_track_id == TMUSIC_L1);
 #endif
 }
 
-void __stdcall mainmenu_change_name(int arg1, int arg2, int arg3, int arg4, char *name_1, char *name_2)
+void mainmenu_change_name(int arg1, int arg2, int arg3, int arg4, char *name_1, char *name_2)
 {
 	if (UiValidPlayerName(name_2))
 		pfile_rename_hero(name_1, name_2);
 }
 
-int __stdcall mainmenu_select_hero_dialog(
+int mainmenu_select_hero_dialog(
     const _SNETPROGRAMDATA *client_info,
     const _SNETPLAYERDATA *user_info,
     const _SNETUIDATA *ui_info,
@@ -159,7 +159,7 @@ BOOL mainmenu_multi_player()
 void mainmenu_play_intro()
 {
 	music_stop();
-	play_movie("gendata\\diablo1.smk", 1);
+	play_movie("gendata\\diablo1.smk", TRUE);
 	mainmenu_refresh_music();
 }
 #endif

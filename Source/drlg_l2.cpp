@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-#include "diablo.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 

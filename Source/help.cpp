@@ -1,10 +1,10 @@
-#include "diablo.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
 int help_select_line;
 int dword_634494;
-int helpflag;
+BOOL helpflag;
 int displayinghelp[22]; /* check, does nothing? */
 int HelpTop;
 
@@ -439,7 +439,7 @@ const char gszHelpText[] = {
 
 void InitHelp()
 {
-	helpflag = 0;
+	helpflag = FALSE;
 	dword_634494 = 0;
 	displayinghelp[0] = 0;
 }
@@ -452,7 +452,7 @@ void DrawHelp()
 
 	DrawSTextHelp();
 	DrawQTextBack();
-	PrintSString(0, 2, 1, "Diablo Help", COL_GOLD, 0);
+	PrintSString(0, 2, TRUE, "Diablo Help", COL_GOLD, 0);
 	DrawSLine(5);
 
 	s = gszHelpText;
@@ -530,7 +530,7 @@ void DrawHelp()
 		}
 	}
 
-	PrintSString(0, 23, 1, "Press ESC to end or the arrow keys to scroll.", COL_GOLD, 0);
+	PrintSString(0, 23, TRUE, "Press ESC to end or the arrow keys to scroll.", COL_GOLD, 0);
 }
 
 void DrawHelpLine(int always_0, int help_line_nr, char *text, char color)
@@ -557,7 +557,7 @@ void DrawHelpLine(int always_0, int help_line_nr, char *text, char color)
 void DisplayHelp()
 {
 	help_select_line = 0;
-	helpflag = 1;
+	helpflag = TRUE;
 	HelpTop = 5000;
 }
 

@@ -1,4 +1,4 @@
-#include "diablo.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -91,7 +91,7 @@ int L4PentaList[33] = {
 void InitNoTriggers()
 {
 	numtrigs = 0;
-	trigflag = 0;
+	trigflag = FALSE;
 }
 #endif
 
@@ -180,7 +180,7 @@ void InitL1Triggers()
 			}
 		}
 	}
-	trigflag = 0;
+	trigflag = FALSE;
 }
 
 #ifndef SPAWN
@@ -214,7 +214,7 @@ void InitL2Triggers()
 			}
 		}
 	}
-	trigflag = 0;
+	trigflag = FALSE;
 }
 
 void InitL3Triggers()
@@ -246,7 +246,7 @@ void InitL3Triggers()
 			}
 		}
 	}
-	trigflag = 0;
+	trigflag = FALSE;
 }
 
 void InitL4Triggers()
@@ -290,12 +290,12 @@ void InitL4Triggers()
 			}
 		}
 	}
-	trigflag = 0;
+	trigflag = FALSE;
 }
 
 void InitSKingTriggers()
 {
-	trigflag = 0;
+	trigflag = FALSE;
 	numtrigs = 1;
 	trigs[0]._tx = 82;
 	trigs[0]._ty = 42;
@@ -304,7 +304,7 @@ void InitSKingTriggers()
 
 void InitSChambTriggers()
 {
-	trigflag = 0;
+	trigflag = FALSE;
 	numtrigs = 1;
 	trigs[0]._tx = 70;
 	trigs[0]._ty = 39;
@@ -313,7 +313,7 @@ void InitSChambTriggers()
 
 void InitPWaterTriggers()
 {
-	trigflag = 0;
+	trigflag = FALSE;
 	numtrigs = 1;
 	trigs[0]._tx = 30;
 	trigs[0]._ty = 83;
@@ -322,7 +322,7 @@ void InitPWaterTriggers()
 
 void InitVPTriggers()
 {
-	trigflag = 0;
+	trigflag = FALSE;
 	numtrigs = 1;
 	trigs[0]._tx = 35;
 	trigs[0]._ty = 32;
@@ -489,7 +489,9 @@ BOOL ForceL3Trig()
 	}
 
 	for (i = 0; L3DownList[i] != -1; i++) {
-		if (dPiece[cursmx][cursmy] == L3DownList[i] || dPiece[cursmx + 1][cursmy] == L3DownList[i] || dPiece[cursmx + 2][cursmy] == L3DownList[i]) {
+		if (dPiece[cursmx][cursmy] == L3DownList[i]
+		    || dPiece[cursmx + 1][cursmy] == L3DownList[i]
+		    || dPiece[cursmx + 2][cursmy] == L3DownList[i]) {
 			sprintf(infostr, "Down to level %i", currlevel + 1);
 			for (j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
@@ -661,7 +663,7 @@ void CheckTrigForce()
 {
 	trigflag = FALSE;
 
-	if (MouseY > PANEL_TOP - 1) {
+	if (!sgbControllerActive && MouseY > PANEL_TOP - 1) {
 		return;
 	}
 

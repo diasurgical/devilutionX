@@ -2,30 +2,35 @@
 # -*- makefile -*-
 
 # Uncomment this to turn on verbose mode.
-export DH_VERBOSE=1
+#export DH_VERBOSE=1
 export COMPILE_FLAGS="-O0"
-
-export DH_VERBOSE = 1
 export DEB_BUILD_MAINT_OPTIONS = hardening=-all
 export DEB_CFLAGS_MAINT_APPEND  = -Wno-error 
 export DEB_LDFLAGS_MAINT_APPEND = -Wno-error
 export CXXFLAGS="-DTTF_FONT_PATH=\"/usr/share/fonts/truetype/CharisSILB.ttf\""
+DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 
 %:
-	dh $@ --buildsystem=cmake
+	dh $@ --buildsystem=cmake --builddirectory=obj-${DEB_HOST_MULTIARCH}
 
-#override_dh_auto_clean:
-#	dh_auto_clean
-#override_dh_auto_configure:
-#	dh_auto_configure -O--buildsystem=cmake -- -DDESTDIR=/usr/games -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_VERBOSE_MAKEFILE=ON -DCMAKE_BUILD_TYPE=None -DCMAKE_INSTALL_SYSCONFDIR=/etc -DCMAKE_INSTALL_LOCALSTATEDIR=/var
+override_dh_auto_configure:
+	dh_auto_configure -- -DNIGHTLY_BUILD=ON #-DSPAWN=ON
 
 override_dh_auto_install:
-	mkdir -p debian/diablo-data/usr/share/games/diablo/
+	install -pdm755 debian/diablo-data/usr/share/games/diablo/
 	test -f "../diabdat.mpq" && cp ../diabdat.mpq debian/diablo-data/usr/share/games/diablo/ || true
 	dh_auto_install
-	mkdir -p debian/devilutionx/usr/share/icons/hicolor/16x16/apps/
-	mkdir -p debian/devilutionx/usr/share/icons/hicolor/32x32/apps/
-	mkdir -p debian/devilutionx/usr/share/icons/hicolor/48x48/apps/
-	cp Packaging/resources/16.png debian/devilutionx/usr/share/icons/hicolor/16x16/apps/diablo.png 
-	cp Packaging/resources/Diablo_32.png debian/devilutionx/usr/share/icons/hicolor/32x32/apps/diablo.png 
-	cp Packaging/resources/Diablo_48.png debian/devilutionx/usr/share/icons/hicolor/48x48/apps/diablo.png 
+	install -pdm755 debian/devilutionx/usr/share/icons/hicolor/48x48/apps/
+	install -pdm755 debian/devilutionx/usr/share/applications/
+	install -pdm755 debian/devilutionx/usr/share/fonts/truetype/
+	install -pdm755 debian/devilutionx/usr/share/icons/hicolor/16x16/apps/
+	install -pdm755 debian/devilutionx/usr/share/icons/hicolor/32x32/apps/
+	install -pdm755 debian/devilutionx/usr/share/icons/hicolor/48x48/apps/
+	install -pdm755 debian/devilutionx/usr/share/games/diablo/
+	install -Dm664 Packaging/resources/16.png debian/devilutionx/usr/share/icons/hicolor/16x16/apps/devilutionx.png 
+	install -Dm664 Packaging/resources/Diablo_32.png debian/devilutionx/usr/share/icons/hicolor/32x32/apps/devilutionx.png 
+	install -Dm664 Packaging/resources/Diablo_48.png debian/devilutionx/usr/share/icons/hicolor/48x48/apps/devilutionx.png 
+	install -Dm664 Packaging/fedora/devilutionx.desktop debian/devilutionx/usr/share/applications/
+	install -Dm664 Packaging/resources/CharisSILB.ttf debian/devilutionx/usr/share/fonts/truetype/
+	install -Dm755 obj-${DEB_HOST_MULTIARCH}/devilutionx debian/devilutionx/usr/share/games/diablo/ 
+

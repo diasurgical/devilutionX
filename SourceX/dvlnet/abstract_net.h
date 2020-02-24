@@ -5,7 +5,8 @@
 #include <string>
 #include <exception>
 
-#include "devilution.h"
+#include "all.h"
+#include "../3rdParty/Storm/Source/storm.h"
 
 namespace dvl {
 namespace net {
@@ -13,6 +14,11 @@ namespace net {
 typedef std::vector<unsigned char> buffer_t;
 typedef unsigned long provider_t;
 class dvlnet_exception : public std::exception {
+public:
+	const char *what() const throw() override
+	{
+		return "Network error";
+	}
 };
 
 class abstract_net {

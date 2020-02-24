@@ -8,8 +8,10 @@
 #define DEVILUTION_BEGIN_NAMESPACE namespace dvl {
 #define DEVILUTION_END_NAMESPACE }
 
-#include "miniwin/pushdecl.inc"
 #include "miniwin.h"
+#include "soundsample.h"
+#include "thread.h"
+#include "ui_fwd.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -17,24 +19,5 @@ DEVILUTION_BEGIN_NAMESPACE
 #include "defs.h"
 #include "enums.h"
 #include "structs.h"
-
-// If defined, use copy protection [Default -> Defined]
-#if !defined(_DEBUG) && !defined(SPAWN)
-//#define COPYPROT
-#endif
-
-// If defined, don't reload for debuggers [Default -> Undefined]
-// Note that with patch 1.03 the command line was hosed, this is required to pass arguments to the game
-#ifdef _DEBUG
-#define DEBUGGER
-#endif
-
-// If defined, don't fry the CPU [Default -> Undefined]
-//#ifdef _DEBUG
-#define SLEEPFIX
-//#endif
-
-// If defined, fix palette glitch in Windows Vista+ [Default -> Undefined]
-//#define COLORFIX
 
 #endif

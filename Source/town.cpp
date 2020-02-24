@@ -1,33 +1,6 @@
-#include "diablo.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
-
-void SetTownMicros()
-{
-	int i, x, y, lv;
-	WORD *pPiece;
-	MICROS *pMap;
-
-	MicroTileLen = 16;
-
-	for (y = 0; y < MAXDUNY; y++) {
-		for (x = 0; x < MAXDUNX; x++) {
-			lv = dPiece[x][y];
-			pMap = &dpiece_defs_map_2[x][y];
-			if (lv != 0) {
-				lv--;
-				pPiece = (WORD *)&pLevelPieces[32 * lv];
-				for (i = 0; i < 16; i++) {
-					pMap->mt[i] = SDL_SwapLE16(pPiece[(i & 1) + 16 - 2 - (i & 0xE)]);
-				}
-			} else {
-				for (i = 0; i < 16; i++) {
-					pMap->mt[i] = 0;
-				}
-			}
-		}
-	}
-}
 
 /**
  * @brief Load level data into dPiece
@@ -244,8 +217,6 @@ void CreateTown(int entry)
 			}
 		}
 	}
-
-	SetTownMicros();
 }
 
 DEVILUTION_END_NAMESPACE

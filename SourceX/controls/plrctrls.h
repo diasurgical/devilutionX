@@ -1,7 +1,7 @@
 #pragma once
 // Controller actions implementation
 
-#include "devilution.h"
+#include "all.h"
 
 namespace dvl {
 
@@ -24,6 +24,9 @@ void HandleRightStickMotion();
 // Whether we're in a dialog menu that the game handles natively with keyboard controls.
 bool InGameMenu();
 
+// Whether the automap is being displayed.
+bool IsAutomapActive();
+
 void UseBeltItem(int type);
 
 // Talk to towners, click on inv items, attack, etc.
@@ -31,6 +34,8 @@ void PerformPrimaryAction();
 
 // Open chests, doors, pickup items.
 void PerformSecondaryAction();
+bool TryDropItem();
+void FocusOnInventory();
 void PerformSpellAction();
 
 typedef struct coords {

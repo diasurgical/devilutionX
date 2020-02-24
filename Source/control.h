@@ -42,14 +42,14 @@ extern BYTE *pSpellBkCel;
 extern char infostr[MAX_PATH];
 extern int numpanbtns;
 extern BYTE *pStatusPanel;
-extern char panelstr[256];
+extern char panelstr[4][64];
 extern BOOL panelflag;
 extern BYTE SplTransTbl[256];
 extern int initialDropGoldValue;
 extern BYTE *pSpellCels;
 extern BOOL panbtndown;
 extern BYTE *pTalkPanel;
-extern int spselflag;
+extern BOOL spselflag;
 
 void DrawSpellCel(int xp, int yp, BYTE *Trans, int nCel, int w);
 void SetSpellTrans(char t);
@@ -85,7 +85,7 @@ BOOL control_WriteStringToBuffer(BYTE *str);
 void DrawInfoBox();
 void control_draw_info_str();
 void control_print_info_str(int y, char *str, BOOL center, int lines);
-void PrintGameStr(int x, int y, char *str, int color);
+void PrintGameStr(int x, int y, const char *str, int color);
 void DrawChr();
 #define ADD_PlrStringXY(x, y, width, pszStr, col) MY_PlrStringXY(x, y, width, pszStr, col, 1)
 void MY_PlrStringXY(int x, int y, int width, char *pszStr, char col, int base);

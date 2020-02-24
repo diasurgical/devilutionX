@@ -1,8 +1,9 @@
 #include "DiabloUI/art.h"
+#include "display.h"
 
 namespace dvl {
 
-void LoadArt(const char *pszFile, Art *art, int frames, PALETTEENTRY *pPalette)
+void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 {
 	if (art == NULL || art->surface != NULL)
 		return;
@@ -39,7 +40,10 @@ void LoadArt(const char *pszFile, Art *art, int frames, PALETTEENTRY *pPalette)
 	}
 
 	art->surface = art_surface;
+	art->logical_width = art_surface->w;
 	art->frame_height = height / frames;
+
+	ScaleSurfaceToOutput(&art->surface);
 }
 
 void LoadMaskedArt(const char *pszFile, Art *art, int frames, int mask)
@@ -54,7 +58,9 @@ void LoadArt(Art *art, const BYTE *artData, int w, int h, int frames)
 	art->frames = frames;
 	art->surface = SDL_CreateRGBSurfaceWithFormatFrom(
 		const_cast<BYTE *>(artData), w, h, 8, w, SDL_PIXELFORMAT_INDEX8);
+	art->logical_width = w;
 	art->frame_height = h / frames;
+	ScaleSurfaceToOutput(&art->surface);
 }
 
 } // namespace dvl

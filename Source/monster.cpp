@@ -1,4 +1,4 @@
-#include "diablo.h"
+#include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -13,8 +13,7 @@ int nummonsters;
 BOOLEAN sgbSaveSoundOn;
 MonsterStruct monster[MAXMONSTERS];
 int totalmonsters;
-CMonster Monsters[16];
-// int END_Monsters_17;
+CMonster Monsters[MAX_LVLMTYPES];
 int monstimgtot;
 int uniquetrans;
 int nummtypes;
@@ -95,7 +94,7 @@ void (*AiProc[])(int i) = {
 	&MAI_Lazurus,
 	&MAI_Lazhelp,
 	&MAI_Lachdanan,
-	&MAI_Warlord
+	&MAI_Warlord,
 };
 
 void InitMonsterTRN(int monst, BOOL special)
@@ -235,7 +234,7 @@ void GetLevelMTypes()
 		}
 
 		nt = 0;
-		for (i = 0; i < 111; i++) {
+		for (i = 0; i < NUM_MTYPES; i++) {
 			minl = 15 * monsterdata[i].mMinDLvl / 30 + 1;
 			maxl = 15 * monsterdata[i].mMaxDLvl / 30 + 1;
 
@@ -924,7 +923,7 @@ void InitMonsters()
 	int numplacemonsters;
 	int mtype;
 	int numscattypes;
-	int scattertypes[111];
+	int scattertypes[NUM_MTYPES];
 
 	numscattypes = 0;
 	if (gbMaxPlayers != 1)
@@ -934,11 +933,11 @@ void InitMonsters()
 		AddMonster(1, 0, 0, 0, FALSE);
 		AddMonster(1, 0, 0, 0, FALSE);
 		AddMonster(1, 0, 0, 0, FALSE);
-#ifndef SPAWN
-		if (!setlevel && currlevel == 16)
-			LoadDiabMonsts();
-#endif
 	}
+#ifndef SPAWN
+	if (!setlevel && currlevel == 16)
+		LoadDiabMonsts();
+#endif
 	nt = numtrigs;
 	if (currlevel == 15)
 		nt = 1;
@@ -1043,9 +1042,9 @@ void SetMapMonsters(BYTE *pMap, int startx, int starty)
 		PlaceUniqueMonst(UMT_BLACKJADE, 0, 0);
 	}
 	lm = (WORD *)pMap;
-	rw = *lm;
+	rw = SDL_SwapLE16(*lm);
 	lm++;
-	rh = *lm;
+	rh = SDL_SwapLE16(*lm);
 	lm += (rw * rh + 1);
 	rw = rw << 1;
 	rh = rh << 1;
@@ -1054,7 +1053,7 @@ void SetMapMonsters(BYTE *pMap, int startx, int starty)
 	for (j = 0; j < rh; j++) {
 		for (i = 0; i < rw; i++) {
 			if (*lm) {
-				mtype = AddMonsterType(MonstConvTbl[(*lm) - 1], 2);
+				mtype = AddMonsterType(MonstConvTbl[SDL_SwapLE16(*lm) - 1], 2);
 				PlaceMonster(nummonsters++, mtype, i + startx + 16, j + starty + 16);
 			}
 			lm++;
@@ -1556,7 +1555,7 @@ void M_DiabloDeath(int i, BOOL sendmsg)
 			continue;
 
 		pmonster = monster + k;
-		NewMonsterAnim(k, pmonster->MType->Anims + MA_DEATH, pmonster->_mdir);
+		NewMonsterAnim(k, &pmonster->MType->Anims[MA_DEATH], pmonster->_mdir);
 		monster[k]._mxoff = 0;
 		monster[k]._myoff = 0;
 		monster[k]._mVar1 = 0;
@@ -1652,8 +1651,8 @@ void MonstStartKill(int i, int pnum, BOOL sendmsg)
 	monster[i]._mhitpoints = 0;
 	SetRndSeed(monster[i]._mRndSeed);
 	if (QuestStatus(QTYPE_GARB) && monster[i].mName == UniqMonst[UMT_GARBUD].mName) {
-		CreateTypeItem(monster[i]._mx + 1, monster[i]._my + 1, TRUE, 4, FALSE, TRUE, FALSE);
-	} else if (i > 3) {
+		CreateTypeItem(monster[i]._mx + 1, monster[i]._my + 1, TRUE, ITYPE_MACE, IMISC_NONE, TRUE, FALSE);
+	} else if (i > MAX_PLRS - 1) { // Golems should not spawn items
 		SpawnItem(i, monster[i]._mx, monster[i]._my, sendmsg);
 	}
 	if (monster[i].MType->mtype == MT_DIABLO)
@@ -1872,7 +1871,8 @@ void M_ChangeLightOffset(int monst)
 		_myoff = 1;
 	}
 
-	ChangeLightOff(monster[monst].mlid, _mxoff, _myoff * (ly >> 3));
+	_myoff *= (ly >> 3);
+	ChangeLightOff(monster[monst].mlid, _mxoff, _myoff);
 }
 
 BOOL M_DoStand(int i)
@@ -2151,7 +2151,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 		SyncPlrKill(pnum, 0);
 		return;
 	}
-	StartPlrHit(pnum, dam, 0);
+	StartPlrHit(pnum, dam, FALSE);
 	if (monster[i]._mFlags & MFLAG_KNOCKBACK) {
 		if (plr[pnum]._pmode != PM_GOTHIT)
 			StartPlrHit(pnum, 0, TRUE);
@@ -2404,7 +2404,7 @@ int M_DoTalk(int i)
 	    && !(Monst->_mFlags & MFLAG_QUEST_COMPLETE)) {
 		quests[QTYPE_ZHAR]._qactive = 2;
 		quests[QTYPE_ZHAR]._qlog = TRUE;
-		CreateTypeItem(Monst->_mx + 1, Monst->_my + 1, FALSE, 0, 24, TRUE, 0);
+		CreateTypeItem(Monst->_mx + 1, Monst->_my + 1, FALSE, ITYPE_MISC, IMISC_BOOK, TRUE, FALSE);
 		Monst->_mFlags |= MFLAG_QUEST_COMPLETE;
 	}
 	if (Monst->mName == UniqMonst[UMT_SNOTSPIL].mName) {
@@ -2534,18 +2534,18 @@ void DoEnding()
 	music_stop();
 
 	if (gbMaxPlayers > 1) {
-		Sleep(1000);
+		SDL_Delay(1000);
 	}
 
 #ifndef SPAWN
 	if (plr[myplr]._pClass == PC_WARRIOR) {
-		play_movie("gendata\\DiabVic2.smk", 0);
+		play_movie("gendata\\DiabVic2.smk", FALSE);
 	} else if (plr[myplr]._pClass == PC_SORCERER) {
-		play_movie("gendata\\DiabVic1.smk", 0);
+		play_movie("gendata\\DiabVic1.smk", FALSE);
 	} else {
-		play_movie("gendata\\DiabVic3.smk", 0);
+		play_movie("gendata\\DiabVic3.smk", FALSE);
 	}
-	play_movie("gendata\\Diabend.smk", 0);
+	play_movie("gendata\\Diabend.smk", FALSE);
 
 	bMusicOn = gbMusicOn;
 	gbMusicOn = TRUE;
@@ -2555,7 +2555,7 @@ void DoEnding()
 
 	music_start(TMUSIC_L2);
 	loop_movie = TRUE;
-	play_movie("gendata\\loopdend.smk", 1);
+	play_movie("gendata\\loopdend.smk", TRUE);
 	loop_movie = FALSE;
 	music_stop();
 
@@ -2628,8 +2628,8 @@ BOOL M_DoDeath(int i)
 		else
 			AddDead(monster[i]._mx, monster[i]._my, monster[i]._udeadval, (direction)monster[i]._mdir);
 
-		monster[i]._mDelFlag = TRUE;
 		dMonster[monster[i]._mx][monster[i]._my] = 0;
+		monster[i]._mDelFlag = TRUE;
 
 		M_UpdateLeader(i);
 	}
@@ -3028,8 +3028,9 @@ void MAI_Snake(int i)
 	int pnum;
 	int tmp;
 
-	if ((DWORD)i >= MAXMONSTERS)
+	if ((DWORD)i >= MAXMONSTERS) {
 		app_fatal("MAI_Snake: Invalid monster %d", i);
+	}
 	char pattern[6] = { 1, 1, 0, -1, -1, 0 };
 	Monst = monster + i;
 	pnum = Monst->_menemy;
@@ -3045,8 +3046,8 @@ void MAI_Snake(int i)
 		if (abs(mx) < 3 && abs(my) < 3 && LineClearF1(PosOkMonst, i, Monst->_mx, Monst->_my, fx, fy) && Monst->_mVar1 != MM_CHARGE) {
 			if (AddMissile(Monst->_mx, Monst->_my, fx, fy, md, MIS_RHINO, pnum, i, 0, 0) != -1) {
 				PlayEffect(i, 0);
+				dMonster[Monst->_mx][Monst->_my] = -(i + 1);
 				Monst->_mmode = MM_CHARGE;
-				dMonster[Monst->_mx][Monst->_my] = -1 - i;
 			}
 		} else if (Monst->_mVar1 == MM_DELAY || random_(106, 100) >= 35 - 2 * Monst->_mint) {
 			if (md + pattern[Monst->_mgoalvar1] < 0) {
@@ -4063,7 +4064,7 @@ void MAI_Rhino(int i)
 					Monst->_mgoalvar1 = 0;
 					Monst->_mgoalvar2 = random_(133, 2);
 				}
-				Monst->_mgoal = 4;
+				Monst->_mgoal = MGOAL_MOVE;
 				if (abs(mx) > abs(my)) {
 					dist = abs(mx);
 				} else {
@@ -4533,17 +4534,19 @@ void ProcessMonsters()
 			Monst->_mAISeed = GetRndSeed();
 		}
 		if (!(monster[mi]._mFlags & MFLAG_NOHEAL) && Monst->_mhitpoints < Monst->_mmaxhp && Monst->_mhitpoints >> 6 > 0) {
-			if (Monst->mLevel <= 1) {
-				Monst->_mhitpoints += Monst->mLevel;
-			} else {
+			if (Monst->mLevel > 1) {
 				Monst->_mhitpoints += Monst->mLevel >> 1;
+			} else {
+				Monst->_mhitpoints += Monst->mLevel;
 			}
 		}
 		mx = Monst->_mx;
 		my = Monst->_my;
 #ifndef SPAWN
-		if (dFlags[mx][my] & BFLAG_VISIBLE && Monst->_msquelch == 0 && Monst->MType->mtype == MT_CLEAVER) {
-			PlaySFX(USFX_CLEAVER);
+		if (dFlags[mx][my] & BFLAG_VISIBLE && Monst->_msquelch == 0) {
+			if (Monst->MType->mtype == MT_CLEAVER) {
+				PlaySFX(USFX_CLEAVER);
+			}
 		}
 #endif
 		if (Monst->_mFlags & MFLAG_TARGETS_MONSTER) {
@@ -5080,7 +5083,7 @@ void PrintMonstHistory(int mt)
 			}
 		}
 	}
-	pinfoflag = 1;
+	pinfoflag = TRUE;
 }
 
 void PrintUniqueHistory()
@@ -5149,7 +5152,7 @@ void MissToMonst(int i, int x, int y)
 				M_TryH2HHit(m, dPlayer[oldx][oldy] - 1, 500, Monst->mMinDamage2, Monst->mMaxDamage2);
 				if (pnum == dPlayer[oldx][oldy] - 1 && (Monst->MType->mtype < MT_NSNAKE || Monst->MType->mtype > MT_GSNAKE)) {
 					if (plr[pnum]._pmode != 7 && plr[pnum]._pmode != 8)
-						StartPlrHit(pnum, 0, 1);
+						StartPlrHit(pnum, 0, TRUE);
 					newx = oldx + offset_x[Monst->_mdir];
 					newy = oldy + offset_y[Monst->_mdir];
 					if (PosOkPlayer(pnum, newx, newy)) {
@@ -5324,7 +5327,7 @@ int M_SpawnSkel(int x, int y, int dir)
 			if (IsSkel(Monsters[i].mtype))
 				j++;
 		}
-		skel = AddMonster(x, y, dir, i - 1, 1);
+		skel = AddMonster(x, y, dir, i - 1, TRUE);
 		if (skel != -1)
 			M_StartSpStand(skel, dir);
 
@@ -5419,7 +5422,7 @@ int PreSpawnSkeleton()
 			if (IsSkel(Monsters[i].mtype))
 				j++;
 		}
-		skel = AddMonster(0, 0, 0, i - 1, 0);
+		skel = AddMonster(0, 0, 0, i - 1, FALSE);
 		if (skel != -1)
 			M_StartStand(skel, 0);
 
@@ -5441,14 +5444,14 @@ void TalktoMonster(int i)
 	pnum = Monst->_menemy;
 	Monst->_mmode = MM_TALK;
 	if (Monst->_mAi == AI_SNOTSPIL || Monst->_mAi == AI_LACHDAN) {
-		if (QuestStatus(QTYPE_BOL) && quests[QTYPE_BOL]._qvar1 == 2 && PlrHasItem(pnum, IDI_BANNER, itm)) {
+		if (QuestStatus(QTYPE_BOL) && quests[QTYPE_BOL]._qvar1 == 2 && PlrHasItem(pnum, IDI_BANNER, &itm) != NULL) {
 			RemoveInvItem(pnum, itm);
 			quests[QTYPE_BOL]._qactive = 3;
 			Monst->mtalkmsg = QUEST_BANNER12;
 			Monst->_mgoal = MGOAL_INQUIRING;
 		}
 		if (QuestStatus(QTYPE_VEIL) && Monst->mtalkmsg >= QUEST_VEIL9) {
-			if (PlrHasItem(pnum, IDI_GLDNELIX, itm)) {
+			if (PlrHasItem(pnum, IDI_GLDNELIX, &itm) != NULL) {
 				RemoveInvItem(pnum, itm);
 				Monst->mtalkmsg = QUEST_VEIL11;
 				Monst->_mgoal = MGOAL_INQUIRING;

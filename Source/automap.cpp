@@ -1,4 +1,4 @@
-#include "diablo.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -534,10 +534,12 @@ WORD GetAutomapType(int x, int y, BOOL view)
 	}
 
 	rv = automaptype[(BYTE)dungeon[x][y]];
-	if (rv == 7
-	    && GetAutomapType(x - 1, y, FALSE) & (MAPFLAG_HORZARCH << 8)
-	    && GetAutomapType(x, y - 1, FALSE) & (MAPFLAG_VERTARCH << 8)) {
-		rv = 1;
+	if (rv == 7) {
+		if ((GetAutomapType(x - 1, y, FALSE) >> 8) & MAPFLAG_HORZARCH) {
+			if ((GetAutomapType(x, y - 1, FALSE) >> 8) & MAPFLAG_VERTARCH) {
+				rv = 1;
+			}
+		}
 	}
 	return rv;
 }
@@ -586,52 +588,52 @@ void SetAutomapView(int x, int y)
 	case 2:
 		if (solid) {
 			if (GetAutomapType(xx, yy + 1, FALSE) == 0x4007)
-				automapview[xx][yy + 1] = 1;
+				automapview[xx][yy + 1] = TRUE;
 		} else if (GetAutomapType(xx - 1, yy, FALSE) & 0x4000) {
-			automapview[xx - 1][yy] = 1;
+			automapview[xx - 1][yy] = TRUE;
 		}
 		break;
 	case 3:
 		if (solid) {
 			if (GetAutomapType(xx + 1, yy, FALSE) == 0x4007)
-				automapview[xx + 1][yy] = 1;
+				automapview[xx + 1][yy] = TRUE;
 		} else if (GetAutomapType(xx, yy - 1, FALSE) & 0x4000) {
-			automapview[xx][yy - 1] = 1;
+			automapview[xx][yy - 1] = TRUE;
 		}
 		break;
 	case 4:
 		if (solid) {
 			if (GetAutomapType(xx, yy + 1, FALSE) == 0x4007)
-				automapview[xx][yy + 1] = 1;
+				automapview[xx][yy + 1] = TRUE;
 			if (GetAutomapType(xx + 1, yy, FALSE) == 0x4007)
-				automapview[xx + 1][yy] = 1;
+				automapview[xx + 1][yy] = TRUE;
 		} else {
 			if (GetAutomapType(xx - 1, yy, FALSE) & 0x4000)
-				automapview[xx - 1][yy] = 1;
+				automapview[xx - 1][yy] = TRUE;
 			if (GetAutomapType(xx, yy - 1, FALSE) & 0x4000)
-				automapview[xx][yy - 1] = 1;
+				automapview[xx][yy - 1] = TRUE;
 			if (GetAutomapType(xx - 1, yy - 1, FALSE) & 0x4000)
-				automapview[xx - 1][yy - 1] = 1;
+				automapview[xx - 1][yy - 1] = TRUE;
 		}
 		break;
 	case 5:
 		if (solid) {
 			if (GetAutomapType(xx, yy - 1, FALSE) & 0x4000)
-				automapview[xx][yy - 1] = 1;
+				automapview[xx][yy - 1] = TRUE;
 			if (GetAutomapType(xx, yy + 1, FALSE) == 0x4007)
-				automapview[xx][yy + 1] = 1;
+				automapview[xx][yy + 1] = TRUE;
 		} else if (GetAutomapType(xx - 1, yy, FALSE) & 0x4000) {
-			automapview[xx - 1][yy] = 1;
+			automapview[xx - 1][yy] = TRUE;
 		}
 		break;
 	case 6:
 		if (solid) {
 			if (GetAutomapType(xx - 1, yy, FALSE) & 0x4000)
-				automapview[xx - 1][yy] = 1;
+				automapview[xx - 1][yy] = TRUE;
 			if (GetAutomapType(xx + 1, yy, FALSE) == 0x4007)
-				automapview[xx + 1][yy] = 1;
+				automapview[xx + 1][yy] = TRUE;
 		} else if (GetAutomapType(xx, yy - 1, FALSE) & 0x4000) {
-			automapview[xx][yy - 1] = 1;
+			automapview[xx][yy - 1] = TRUE;
 		}
 		break;
 	}

@@ -1,7 +1,8 @@
-#include "diablo.h"
+#include <algorithm>
+
+#include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
-#include "miniwin/ddraw.h"
-#include "miniwin/com_macro.h"
+#include "display.h"
 #include <SDL.h>
 
 namespace dvl {
@@ -29,8 +30,6 @@ SDL_Surface *renderer_texture_surface = nullptr;
 /** 8-bit surface wrapper around #gpBuffer */
 SDL_Surface *pal_surface;
 
-bool bufferUpdated = false;
-
 static void dx_create_back_buffer()
 {
 	pal_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);
@@ -40,9 +39,15 @@ static void dx_create_back_buffer()
 
 	gpBuffer = (BYTE *)pal_surface->pixels;
 
-	if (SDLC_SetSurfaceColors(pal_surface, palette) <= -1) {
+#ifndef USE_SDL1
+	// In SDL2, `pal_surface` points to the global `palette`.
+	if (SDL_SetSurfacePalette(pal_surface, palette) < 0)
 		ErrSdl();
-	}
+#else
+	// In SDL1, `pal_surface` owns its palette and we must update it every
+	// time the global `palette` is changed. No need to do anything here as
+	// the global `palette` doesn't have any colors set yet.
+#endif
 
 	pal_surface_palette_version = 1;
 }
@@ -105,7 +110,6 @@ static void unlock_buf_priv()
 	if (sgdwLockCount == 0) {
 		gpBufEnd -= (uintptr_t)gpBuffer;
 		//gpBuffer = NULL; unable to return to menu
-		RenderPresent();
 	}
 	sgMemCrit.Leave();
 }
@@ -142,27 +146,22 @@ void dx_cleanup()
 
 void dx_reinit()
 {
-	int lockCount;
-
-	sgMemCrit.Enter();
-	ClearCursor();
-	lockCount = sgdwLockCount;
-
-	while (sgdwLockCount != 0)
-		unlock_buf_priv();
-
-	dx_cleanup();
-
-	force_redraw = 255;
-
-	dx_init(ghMainWnd);
-
-	while (lockCount != 0) {
-		lock_buf_priv();
-		lockCount--;
+#ifdef USE_SDL1
+	window = SDL_SetVideoMode(0, 0, 0, window->flags ^ SDL_FULLSCREEN);
+	if (window == NULL) {
+		ErrSdl();
 	}
-
-	sgMemCrit.Leave();
+#else
+	Uint32 flags = 0;
+	if (!fullscreen) {
+		flags = renderer ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_FULLSCREEN;
+	}
+	if (SDL_SetWindowFullscreen(window, flags)) {
+		ErrSdl();
+	}
+#endif
+	fullscreen = !fullscreen;
+	force_redraw = 255;
 }
 
 void CreatePalette()
@@ -173,36 +172,65 @@ void CreatePalette()
 	}
 }
 
-void BltFast(DWORD dwX, DWORD dwY, LPRECT lpSrcRect)
+void BltFast(SDL_Rect *src_rect, SDL_Rect *dst_rect)
 {
-	auto w = static_cast<decltype(SDL_Rect().w)>(lpSrcRect->right - lpSrcRect->left + 1);
-	auto h = static_cast<decltype(SDL_Rect().h)>(lpSrcRect->bottom - lpSrcRect->top + 1);
-	SDL_Rect src_rect = {
-		static_cast<decltype(SDL_Rect().x)>(lpSrcRect->left),
-		static_cast<decltype(SDL_Rect().y)>(lpSrcRect->top),
-		w, h
-	};
-	SDL_Rect dst_rect = {
-		static_cast<decltype(SDL_Rect().x)>(dwX),
-		static_cast<decltype(SDL_Rect().y)>(dwY),
-		w, h
-	};
-	if (OutputRequiresScaling()) {
-		ScaleOutputRect(&dst_rect);
-		// Convert from 8-bit to 32-bit
-		SDL_Surface *tmp = SDL_ConvertSurface(pal_surface, GetOutputSurface()->format, 0);
-		if (SDL_BlitScaled(tmp, &src_rect, GetOutputSurface(), &dst_rect) <= -1) {
-			SDL_FreeSurface(tmp);
+	Blit(pal_surface, src_rect, dst_rect);
+}
+
+void Blit(SDL_Surface *src, SDL_Rect *src_rect, SDL_Rect *dst_rect)
+{
+	SDL_Surface *dst = GetOutputSurface();
+#ifndef USE_SDL1
+	if (SDL_BlitSurface(src, src_rect, dst, dst_rect) < 0)
 			ErrSdl();
-		}
-		SDL_FreeSurface(tmp);
-	} else {
-		// Convert from 8-bit to 32-bit
-		if (SDL_BlitSurface(pal_surface, &src_rect, GetOutputSurface(), &dst_rect) <= -1) {
+		return;
+#else
+	if (!OutputRequiresScaling()) {
+		if (SDL_BlitSurface(src, src_rect, dst, dst_rect) < 0)
 			ErrSdl();
-		}
+		return;
 	}
-	bufferUpdated = true;
+
+	SDL_Rect scaled_dst_rect;
+	if (dst_rect != nullptr) {
+		scaled_dst_rect = *dst_rect;
+		ScaleOutputRect(&scaled_dst_rect);
+		dst_rect = &scaled_dst_rect;
+	}
+
+	// Same pixel format: We can call BlitScaled directly.
+	if (SDLBackport_PixelFormatFormatEq(src->format, dst->format)) {
+		if (SDL_BlitScaled(src, src_rect, dst, dst_rect) < 0)
+			ErrSdl();
+		return;
+	}
+
+	// If the surface has a color key, we must stretch first and can then call BlitSurface.
+	if (SDL_HasColorKey(src)) {
+		SDL_Surface *stretched = SDL_CreateRGBSurface(SDL_SWSURFACE, dst_rect->w, dst_rect->h, src->format->BitsPerPixel,
+		    src->format->Rmask, src->format->Gmask, src->format->BitsPerPixel, src->format->Amask);
+		SDL_SetColorKey(stretched, SDL_SRCCOLORKEY, src->format->colorkey);
+		if (src->format->palette != nullptr)
+			SDL_SetPalette(stretched, SDL_LOGPAL, src->format->palette->colors, 0, src->format->palette->ncolors);
+		SDL_Rect stretched_rect = { 0, 0, dst_rect->w, dst_rect->h };
+		if (SDL_SoftStretch(src, src_rect, stretched, &stretched_rect) < 0
+		    || SDL_BlitSurface(stretched, &stretched_rect, dst, dst_rect) < 0) {
+			SDL_FreeSurface(stretched);
+			ErrSdl();
+		}
+		SDL_FreeSurface(stretched);
+		return;
+	}
+
+	// A surface with a non-output pixel format but without a color key needs scaling.
+	// We can convert the format and then call BlitScaled.
+	SDL_Surface *converted = SDL_ConvertSurface(src, dst->format, 0);
+	if (SDL_BlitScaled(converted, src_rect, dst, dst_rect) < 0) {
+		SDL_FreeSurface(converted);
+		ErrSdl();
+	}
+	SDL_FreeSurface(converted);
+#endif
 }
 
 /**
@@ -225,7 +253,8 @@ void RenderPresent()
 	SDL_Surface *surface = GetOutputSurface();
 	assert(!SDL_MUSTLOCK(surface));
 
-	if (!bufferUpdated) {
+	if (!gbActive) {
+		LimitFrameRate();
 		return;
 	}
 
@@ -260,17 +289,12 @@ void RenderPresent()
 	}
 	LimitFrameRate();
 #endif
-
-	bufferUpdated = false;
 }
 
-void PaletteGetEntries(DWORD dwNumEntries, LPPALETTEENTRY lpEntries)
+void PaletteGetEntries(DWORD dwNumEntries, SDL_Color *lpEntries)
 {
 	for (DWORD i = 0; i < dwNumEntries; i++) {
-		lpEntries[i].peFlags = 0;
-		lpEntries[i].peRed = system_palette[i].peRed;
-		lpEntries[i].peGreen = system_palette[i].peGreen;
-		lpEntries[i].peBlue = system_palette[i].peBlue;
+		lpEntries[i] = system_palette[i];
 	}
 }
 } // namespace dvl

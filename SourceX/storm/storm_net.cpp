@@ -1,6 +1,6 @@
 #include <memory>
 
-#include "devilution.h"
+#include "all.h"
 #include "stubs.h"
 #include "dvlnet/abstract_net.h"
 
@@ -86,6 +86,8 @@ BOOL SNetGetGameInfo(int type, void *dst, unsigned int length, unsigned int *byt
 
 BOOL SNetLeaveGame(int type)
 {
+	if (dvlnet_inst == nullptr)
+		return true;
 	return dvlnet_inst->SNetLeaveGame(type);
 }
 

@@ -1,4 +1,4 @@
-#include "diablo.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -67,7 +67,7 @@ BOOL TFit_Shrine(int i)
 			    && dObject[xp + 1][yp - 1] == 0) {
 				found = 1;
 			}
-			if (!found
+			if (found == 0
 			    && nTrapTable[dPiece[xp - 1][yp]]
 			    && !nSolidTable[dPiece[xp][yp - 1]]
 			    && !nSolidTable[dPiece[xp][yp + 1]]
@@ -500,7 +500,7 @@ void PlaceThemeMonsts(int t, int f)
 		for (xp = 0; xp < MAXDUNX; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && !nSolidTable[dPiece[xp][yp]] && dItem[xp][yp] == 0 && dObject[xp][yp] == 0) {
 				if (random_(0, f) == 0) {
-					AddMonster(xp, yp, random_(0, 8), mtype, 1);
+					AddMonster(xp, yp, random_(0, 8), mtype, TRUE);
 				}
 			}
 		}
@@ -858,7 +858,7 @@ void Theme_GoatShrine(int t)
 	for (yy = themey - 1; yy <= themey + 1; yy++) {
 		for (xx = themex - 1; xx <= themex + 1; xx++) {
 			if (dTransVal[xx][yy] == themes[t].ttval && !nSolidTable[dPiece[xx][yy]] && (xx != themex || yy != themey)) {
-				AddMonster(xx, yy, DIR_SW, themeVar1, 1);
+				AddMonster(xx, yy, DIR_SW, themeVar1, TRUE);
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-#include "diablo.h"
+#include "all.h"
 
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
@@ -94,7 +94,7 @@ HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int dwPri
 
 	for (int i = 0; i < 2; i++) {
 		snprintf(mpq_path, MAX_PATH, "%s%s", Buffer[i], mpq_name);
-#ifndef __SWITCH__
+#if !defined(__SWITCH__) && !defined(__AMIGA__)
 		if (SFileOpenArchive(mpq_path, dwPriority, MPQ_FLAG_READ_ONLY, &archive)) {
 #else
 		if (SFileOpenArchive(mpq_path, dwPriority, 0, &archive)) {
@@ -114,7 +114,7 @@ void init_get_file_info()
 	snprintf(gszVersionNumber, MAX_PATH, "version %s", PROJECT_VERSION);
 }
 
-LRESULT __stdcall MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
+LRESULT MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (Msg) {
 	case WM_ERASEBKGND:
@@ -124,15 +124,6 @@ LRESULT __stdcall MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_CLOSE:
 		return 0;
-#ifdef _DEBUG
-	case WM_SYSKEYUP:
-		if (wParam == VK_RETURN) {
-			fullscreen = !fullscreen;
-			dx_reinit();
-			return 0;
-		}
-		break;
-#endif
 	case WM_QUERYNEWPALETTE:
 		return 1;
 	case WM_QUERYENDSESSION:

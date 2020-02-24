@@ -1,12 +1,12 @@
-#include "diablo.h"
+#include "all.h"
+#include "../SourceX/display.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
-PALETTEENTRY logical_palette[256];
-PALETTEENTRY system_palette[256];
-PALETTEENTRY orig_palette[256];
-int gdwPalEntries;
+SDL_Color logical_palette[256];
+SDL_Color system_palette[256];
+SDL_Color orig_palette[256];
 
 /* data */
 
@@ -14,23 +14,16 @@ int gamma_correction = 100;
 BOOL color_cycling_enabled = TRUE;
 BOOLEAN sgbFadedIn = TRUE;
 
-static void palette_update()
+void palette_update()
 {
-	int nentries;
-	int max_entries;
-
-	if (1) {
-		nentries = 0;
-		max_entries = 256;
-		if (!fullscreen) {
-			nentries = gdwPalEntries;
-			max_entries = 2 * (128 - gdwPalEntries);
-		}
-		SDrawUpdatePalette(nentries, max_entries, &system_palette[nentries], 0);
+	assert(palette);
+	if (SDLC_SetSurfaceAndPaletteColors(pal_surface, palette, system_palette, 0, 256) < 0) {
+		ErrSdl();
 	}
+	pal_surface_palette_version++;
 }
 
-void ApplyGamma(PALETTEENTRY *dst, const PALETTEENTRY *src, int n)
+void ApplyGamma(SDL_Color *dst, const SDL_Color *src, int n)
 {
 	int i;
 	double g;
@@ -38,9 +31,9 @@ void ApplyGamma(PALETTEENTRY *dst, const PALETTEENTRY *src, int n)
 	g = gamma_correction / 100.0;
 
 	for (i = 0; i < n; i++) {
-		dst->peRed = pow(src->peRed / 256.0, g) * 256.0;
-		dst->peGreen = pow(src->peGreen / 256.0, g) * 256.0;
-		dst->peBlue = pow(src->peBlue / 256.0, g) * 256.0;
+		dst->r = pow(src->r / 256.0, g) * 256.0;
+		dst->g = pow(src->g / 256.0, g) * 256.0;
+		dst->b = pow(src->b / 256.0, g) * 256.0;
 		dst++;
 		src++;
 	}
@@ -88,15 +81,17 @@ void LoadPalette(char *pszFileName)
 
 	assert(pszFileName);
 
-	WOpenFile(pszFileName, &pBuf, 0);
+	WOpenFile(pszFileName, &pBuf, FALSE);
 	WReadFile(pBuf, (char *)PalData, sizeof(PalData), pszFileName);
 	WCloseFile(pBuf);
 
 	for (i = 0; i < 256; i++) {
-		orig_palette[i].peRed = PalData[i][0];
-		orig_palette[i].peGreen = PalData[i][1];
-		orig_palette[i].peBlue = PalData[i][2];
-		orig_palette[i].peFlags = 0;
+		orig_palette[i].r = PalData[i][0];
+		orig_palette[i].g = PalData[i][1];
+		orig_palette[i].b = PalData[i][2];
+#ifndef USE_SDL1
+		orig_palette[i].a = SDL_ALPHA_OPAQUE;
+#endif
 	}
 }
 
@@ -154,24 +149,13 @@ int UpdateGamma(int gamma)
 void SetFadeLevel(DWORD fadeval)
 {
 	int i;
-	RECT SrcRect;
 
-	if (1) {
-		for (i = 0; i < 255; i++) {
-			system_palette[i].peRed = (fadeval * logical_palette[i].peRed) >> 8;
-			system_palette[i].peGreen = (fadeval * logical_palette[i].peGreen) >> 8;
-			system_palette[i].peBlue = (fadeval * logical_palette[i].peBlue) >> 8;
-		}
-		palette_update();
-
-		// Workaround for flickering mouse in caves https://github.com/diasurgical/devilutionX/issues/7
-		SrcRect.left = 64;
-		SrcRect.top = 160;
-		SrcRect.right = BUFFER_WIDTH;
-		SrcRect.bottom = BUFFER_HEIGHT; // menu isn't offset so make sure we copy all of it
-		BltFast(0, 0, &SrcRect);
-		RenderPresent();
+	for (i = 0; i < 255; i++) {
+		system_palette[i].r = (fadeval * logical_palette[i].r) >> 8;
+		system_palette[i].g = (fadeval * logical_palette[i].g) >> 8;
+		system_palette[i].b = (fadeval * logical_palette[i].b) >> 8;
 	}
+	palette_update();
 }
 
 void BlackPalette()
@@ -187,6 +171,9 @@ void PaletteFadeIn(int fr)
 	DWORD tc = SDL_GetTicks();
 	for (i = 0; i < 256; i = (SDL_GetTicks() - tc) / 2.083) { // 32 frames @ 60hz
 		SetFadeLevel(i);
+		SDL_Rect SrcRect = { SCREEN_X, SCREEN_Y, SCREEN_WIDTH, SCREEN_HEIGHT };
+		BltFast(&SrcRect, NULL);
+		RenderPresent();
 	}
 	SetFadeLevel(256);
 	memcpy(logical_palette, orig_palette, sizeof(orig_palette));
@@ -201,6 +188,9 @@ void PaletteFadeOut(int fr)
 		DWORD tc = SDL_GetTicks();
 		for (i = 256; i > 0; i = 256 - (SDL_GetTicks() - tc) / 2.083) { // 32 frames @ 60hz
 			SetFadeLevel(i);
+			SDL_Rect SrcRect = { SCREEN_X, SCREEN_Y, SCREEN_WIDTH, SCREEN_HEIGHT };
+			BltFast(&SrcRect, NULL);
+			RenderPresent();
 		}
 		SetFadeLevel(0);
 		sgbFadedIn = FALSE;
@@ -210,17 +200,13 @@ void PaletteFadeOut(int fr)
 void palette_update_caves()
 {
 	int i;
-	PALETTEENTRY col;
+	SDL_Color col;
 
 	col = system_palette[1];
 	for (i = 1; i < 31; i++) {
-		system_palette[i].peRed = system_palette[i + 1].peRed;
-		system_palette[i].peGreen = system_palette[i + 1].peGreen;
-		system_palette[i].peBlue = system_palette[i + 1].peBlue;
+		system_palette[i] = system_palette[i + 1];
 	}
-	system_palette[i].peRed = col.peRed;
-	system_palette[i].peGreen = col.peGreen;
-	system_palette[i].peBlue = col.peBlue;
+	system_palette[i] = col;
 
 	palette_update();
 }
@@ -238,7 +224,7 @@ void palette_update_quest_palette(int n)
 }
 #endif
 
-BOOL palette_get_colour_cycling()
+BOOL palette_get_color_cycling()
 {
 	return color_cycling_enabled;
 }

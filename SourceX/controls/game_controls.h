@@ -1,6 +1,6 @@
 #pragma once
 
-#include "devilution.h"
+#include "all.h"
 
 namespace dvl {
 
@@ -14,6 +14,8 @@ enum class GameActionType {
 	TOGGLE_INVENTORY,
 	TOGGLE_CHARACTER_INFO,
 	TOGGLE_QUICK_SPELL_MENU,
+	TOGGLE_SPELL_BOOK,
+	TOGGLE_QUEST_LOG,
 	SEND_KEY,
 	SEND_MOUSE_CLICK,
 };
@@ -80,5 +82,8 @@ struct MoveDirection {
 	MoveDirectionY y;
 };
 MoveDirection GetMoveDirection();
+
+extern bool start_modifier_active;
+extern bool select_modifier_active;
 
 } // namespace dvl

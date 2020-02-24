@@ -1,4 +1,4 @@
-#include "diablo.h"
+#include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include <config.h>
 
@@ -8,7 +8,7 @@ char sz_error_buf[256];
 BOOL terminating;
 int cleanup_thread_id;
 
-void __cdecl app_fatal(const char *pszFmt, ...)
+void app_fatal(const char *pszFmt, ...)
 {
 	va_list va;
 
@@ -25,37 +25,37 @@ void __cdecl app_fatal(const char *pszFmt, ...)
 
 void MsgBox(const char *pszFmt, va_list va)
 {
-	char Text[256];
+	char text[256];
 
-	wvsprintf(Text, pszFmt, va);
+	vsnprintf(text, 256, pszFmt, va);
 
-	UiErrorOkDialog("Error", Text);
+	UiErrorOkDialog("Error", text);
 }
 
 void FreeDlg()
 {
-	if (terminating && cleanup_thread_id != GetCurrentThreadId())
-		Sleep(20000);
+	if (terminating && cleanup_thread_id != SDL_GetThreadID(NULL))
+		SDL_Delay(20000);
 
 	terminating = TRUE;
-	cleanup_thread_id = GetCurrentThreadId();
+	cleanup_thread_id = SDL_GetThreadID(NULL);
 
 	if (gbMaxPlayers > 1) {
 		if (SNetLeaveGame(3))
-			Sleep(2000);
+			SDL_Delay(2000);
 	}
 
 	SNetDestroy();
 }
 
-void __cdecl DrawDlg(char *pszFmt, ...)
+void DrawDlg(char *pszFmt, ...)
 {
 	char text[256];
-	va_list arglist;
+	va_list va;
 
-	va_start(arglist, pszFmt);
-	wvsprintf(text, pszFmt, arglist);
-	va_end(arglist);
+	va_start(va, pszFmt);
+	vsnprintf(text, 256, pszFmt, va);
+	va_end(va);
 
 	UiErrorOkDialog(PROJECT_NAME, text, false);
 }
@@ -93,7 +93,7 @@ void FileErrDlg(const char *error)
 	    1024,
 	    "Unable to open a required file.\n"
 	    "\n"
-	    "Verify that the MD5 of diabdat.mpq matches on of the following values\n"
+	    "Verify that the MD5 of diabdat.mpq matches one of the following values\n"
 	    "011bc6518e6166206231080a4440b373\n"
 	    "68f049866b44688a7af65ba766bef75a\n"
 	    "\n"

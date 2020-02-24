@@ -66,7 +66,7 @@ DWORD On_ADDMAG(TCmd *pCmd, int pnum);
 DWORD On_ADDDEX(TCmd *pCmd, int pnum);
 DWORD On_ADDVIT(TCmd *pCmd, int pnum);
 DWORD On_SBSPELL(TCmd *pCmd, int pnum);
-void __cdecl msg_errorf(const char *pszFmt, ...);
+void msg_errorf(const char *pszFmt, ...);
 DWORD On_GOTOGETITEM(TCmd *pCmd, int pnum);
 DWORD On_REQUESTGITEM(TCmd *pCmd, int pnum);
 BOOL i_own_level(int nReqLevel);

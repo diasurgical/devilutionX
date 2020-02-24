@@ -1,4 +1,4 @@
-#include "diablo.h"
+#include "all.h"
 #include "../3rdParty/PKWare/pkware.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -13,9 +13,11 @@ void Decrypt(void *block, DWORD size, DWORD key)
 	castBlock = (DWORD *)block;
 	seed = 0xEEEEEEEE;
 	for (i = 0; i < (size >> 2); i++) {
+		DWORD t = SwapLE32(*castBlock);
 		seed += hashtable[0x400 + (key & 0xFF)];
-		*castBlock ^= seed + key;
-		seed += *castBlock + (seed << 5) + 3;
+		t ^= seed + key;
+		*castBlock = t;
+		seed += t + (seed << 5) + 3;
 		key = ((~key << 0x15) + 0x11111111) | (key >> 0x0B);
 		castBlock++;
 	}
@@ -29,9 +31,10 @@ void Encrypt(void *block, DWORD size, DWORD key)
 	castBlock = (DWORD *)block;
 	seed = 0xEEEEEEEE;
 	for (i = 0; i < (size >> 2); i++) {
-		ch = *castBlock;
+		DWORD t = ch = *castBlock;
 		seed += hashtable[0x400 + (key & 0xFF)];
-		*castBlock ^= seed + key;
+		t ^= seed + key;
+		*castBlock = SwapLE32(t);
 		seed += ch + (seed << 5) + 3;
 		key = ((~key << 0x15) + 0x11111111) | (key >> 0x0B);
 		castBlock++;
@@ -108,7 +111,7 @@ int PkwareCompress(void *buf, int size)
 	return size;
 }
 
-unsigned int __cdecl PkwareBufferRead(char *buf, unsigned int *size, void *param)
+unsigned int PkwareBufferRead(char *buf, unsigned int *size, void *param)
 {
 	TDataInfo *pInfo;
 	DWORD sSize;
@@ -127,7 +130,7 @@ unsigned int __cdecl PkwareBufferRead(char *buf, unsigned int *size, void *param
 	return sSize;
 }
 
-void __cdecl PkwareBufferWrite(char *buf, unsigned int *size, void *param)
+void PkwareBufferWrite(char *buf, unsigned int *size, void *param)
 {
 	TDataInfo *pInfo;
 

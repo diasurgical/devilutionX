@@ -12,6 +12,18 @@ jobs:
       - run: cd build && cmake .. -DNIGHTLY_BUILD=ON
       - run: cd build && cmake --build . -j $(nproc)
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64}
+  linux_x86_64_test:
+    docker:
+      - image: debian:stable
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: apt-get update -y
+      - run: apt-get install -y g++ libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev git cmake libsodium-dev libgtest-dev lcov curl
+      - run: cd build && cmake .. -DRUN_TESTS=ON
+      - run: cd build && cmake --build . -j $(nproc)
+      - run: cd build && cmake --build . -j $(nproc) --target test
+      - run: bash <(curl -s https://codecov.io/bash)
   linux_x86_64_sdl1:
     docker:
       - image: debian:stretch-backports
@@ -73,6 +85,16 @@ jobs:
       - run: cd build && cmake .. -DBINARY_RELEASE=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/switch/devkita64-libnx.cmake
       - run: cd build && cmake --build . -j $(nproc)
       - store_artifacts: {path: ./build/devilutionx.nro, destination: devilutionx.nro}
+  amigaos-m68k:
+    docker:
+      - image: amigadev/crosstools:m68k-amigaos
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: Packaging/amiga/prep.sh
+      - run: cd build && PKG_CONFIG_PATH=/opt/m68k-amigaos/lib/pkgconfig/:/opt/m68k-amigaos/share/pkgconfig/ cmake -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-s -ffast-math -O3 -noixemul -D__BIG_ENDIAN__ -D__AMIGA__ -fpermissive" ..
+      - run: cd build && make -j$(nproc)
+      - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_m68k}
 
   3ds:
     docker:
@@ -107,8 +129,10 @@ workflows:
   testflow:
     jobs:
       - linux_x86_64
+      - linux_x86_64_test
       - linux_x86
       - windows_x86
       - linux_x86_64_sdl1
       - switch
       - 3ds
+      - amigaos-m68k

@@ -1,4 +1,4 @@
-#include "diablo.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -11,7 +11,7 @@ int gdwCurNodes;
 /* for reconstructing the path after the A* search is done. The longest
  * possible path is actually 24 steps, even though we can fit 25
  */
-int pnode_vals[25];
+int pnode_vals[MAX_PATH_LENGTH];
 // a linked list of all visited nodes
 PATHNODE *pnode_ptr;
 // a stack for recursively searching nodes
@@ -62,27 +62,27 @@ int FindPath(BOOL (*PosOk)(int, int, int), int PosOkArg, int sx, int sy, int dx,
 	while ((next_node = GetNextPath())) {
 		// reached the end, success!
 		if (next_node->x == dx && next_node->y == dy)
-			break;
+		{
+			current = next_node;
+			path_length = 0;
+			while (current->Parent) {
+				if (path_length >= MAX_PATH_LENGTH)
+					break;
+				pnode_vals[path_length++] = path_directions[3 * (current->y - current->Parent->y) - current->Parent->x + 4 + current->x];
+				current = current->Parent;
+			}
+			if (path_length != MAX_PATH_LENGTH) {
+				for (i = 0; i < path_length; i++)
+					path[i] = pnode_vals[path_length - i - 1];
+				return i;
+			}
+			return 0;
+		}
 		// ran out of nodes, abort!
 		if (!path_get_path(PosOk, PosOkArg, next_node, dx, dy))
 			return 0;
 	}
 	// frontier is empty, no path!
-	if (!next_node)
-		return 0;
-	current = next_node;
-	path_length = 0;
-	while (current->Parent) {
-		if (path_length >= 25)
-			break;
-		pnode_vals[path_length++] = path_directions[3 * (current->y - current->Parent->y) - current->Parent->x + 4 + current->x];
-		current = current->Parent;
-	}
-	if (path_length != 25) {
-		for (i = 0; i < path_length; i++)
-			path[i] = pnode_vals[path_length - i - 1];
-		return i;
-	}
 	return 0;
 }
 

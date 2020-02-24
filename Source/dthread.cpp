@@ -1,16 +1,16 @@
-#include "diablo.h"
+#include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
 static CCritSect sgMemCrit;
-unsigned int glpDThreadId;
+SDL_threadID glpDThreadId;
 TMegaPkt *sgpInfoHead; /* may not be right struct */
 BOOLEAN dthread_running;
-HANDLE sghWorkToDoEvent;
+event_emul *sghWorkToDoEvent;
 
 /* rdata */
-static HANDLE sghThread = INVALID_HANDLE_VALUE;
+static SDL_Thread *sghThread = NULL;
 
 void dthread_remove_player(int pnum)
 {
@@ -58,7 +58,7 @@ void dthread_start()
 		return;
 	}
 
-	sghWorkToDoEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+	sghWorkToDoEvent = StartEvent();
 	if (!sghWorkToDoEvent) {
 		error_buf = TraceLastError();
 		app_fatal("dthread:1\n%s", error_buf);
@@ -66,21 +66,21 @@ void dthread_start()
 
 	dthread_running = TRUE;
 
-	sghThread = (HANDLE)_beginthreadex(NULL, 0, dthread_handler, NULL, 0, &glpDThreadId);
-	if (sghThread == INVALID_HANDLE_VALUE) {
+	sghThread = CreateThread(dthread_handler, &glpDThreadId);
+	if (sghThread == NULL) {
 		error_buf = TraceLastError();
 		app_fatal("dthread2:\n%s", error_buf);
 	}
 }
 
-unsigned int __stdcall dthread_handler(void *)
+unsigned int dthread_handler(void *)
 {
 	const char *error_buf;
 	TMegaPkt *pkt;
 	DWORD dwMilliseconds;
 
 	while (dthread_running) {
-		if (!sgpInfoHead && WaitForSingleObject(sghWorkToDoEvent, 0xFFFFFFFF) == -1) {
+		if (!sgpInfoHead && WaitForEvent(sghWorkToDoEvent) == -1) {
 			error_buf = TraceLastError();
 			app_fatal("dthread4:\n%s", error_buf);
 		}
@@ -104,7 +104,7 @@ unsigned int __stdcall dthread_handler(void *)
 			mem_free_dbg(pkt);
 
 			if (dwMilliseconds)
-				Sleep(dwMilliseconds);
+				SDL_Delay(dwMilliseconds);
 		}
 	}
 
@@ -122,15 +122,11 @@ void dthread_cleanup()
 
 	dthread_running = FALSE;
 	SetEvent(sghWorkToDoEvent);
-	if (sghThread != INVALID_HANDLE_VALUE && glpDThreadId != GetCurrentThreadId()) {
-		if (WaitForSingleObject(sghThread, 0xFFFFFFFF) == -1) {
-			error_buf = TraceLastError();
-			app_fatal("dthread3:\n(%s)", error_buf);
-		}
-		CloseHandle(sghThread);
-		sghThread = INVALID_HANDLE_VALUE;
+	if (sghThread != NULL && glpDThreadId != SDL_GetThreadID(NULL)) {
+		SDL_WaitThread(sghThread, NULL);
+		sghThread = NULL;
 	}
-	CloseHandle(sghWorkToDoEvent);
+	EndEvent(sghWorkToDoEvent);
 	sghWorkToDoEvent = NULL;
 
 	while (sgpInfoHead) {

@@ -1,4 +1,4 @@
-#include "diablo.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -154,7 +154,7 @@ void LoadGame(BOOL firstflag)
 	numpremium = WLoad();
 	premiumlevel = WLoad();
 
-	for (i = 0; i < 6; i++)
+	for (i = 0; i < SMITH_PREMIUM_ITEMS; i++)
 		LoadPremium(i);
 
 	automapflag = OLoad();
@@ -215,32 +215,55 @@ void CopyBytes(const void *src, const int n, void *dst)
 
 void CopyChar(const void *src, void *dst)
 {
-	CopyBytes(src, 1, dst);
+	*(char*)dst = *(char*)src;
+	tbuff += 1;
 }
 
 void CopyShort(const void *src, void *dst)
 {
-	CopyBytes(src, 2, dst);
+	unsigned short buf;
+	memcpy(&buf, src, 2);
+	tbuff += 2;
+	buf = SwapLE16(buf);
+	memcpy(dst, &buf, 2);
 }
 
 void CopyShorts(const void *src, const int n, void *dst)
 {
-	CopyBytes(src, 2 * n, dst);
+	const auto *s = reinterpret_cast<const unsigned short *>(src);
+	auto *d = reinterpret_cast<unsigned short *>(dst);
+	for(int i = 0; i < n; i++) {
+		CopyShort(s, d);
+		++d; ++s;
+	}
 }
 
 void CopyInt(const void *src, void *dst)
 {
-	CopyBytes(src, 4, dst);
+	unsigned int buf;
+	memcpy(&buf, src, 4);
+	tbuff += 4;
+	buf = SwapLE32(buf);
+	memcpy(dst, &buf, 4);
 }
 
 void CopyInts(const void *src, const int n, void *dst)
 {
-	CopyBytes(src, 4 * n, dst);
+	const auto *s = reinterpret_cast<const unsigned int *>(src);
+	auto *d = reinterpret_cast<unsigned int *>(dst);
+	for(int i = 0; i < n; i++) {
+		CopyInt(s, d);
+		++d; ++s;
+	}
 }
 
 void CopyInt64(const void *src, void *dst)
 {
-	CopyBytes(src, 8, dst);
+	unsigned long long buf;
+	memcpy(&buf, src, 8);
+	tbuff += 8;
+	buf = SDL_SwapLE64(buf);
+	memcpy(dst, &buf, 8);
 }
 
 void LoadPlayer(int i)
@@ -248,7 +271,7 @@ void LoadPlayer(int i)
 	PlayerStruct *pPlayer = &plr[i];
 
 	CopyInt(tbuff, &pPlayer->_pmode);
-	CopyBytes(tbuff, 25, pPlayer->walkpath);
+	CopyBytes(tbuff, MAX_PATH_LENGTH, pPlayer->walkpath);
 	CopyBytes(tbuff, 1, &pPlayer->plractive);
 	tbuff += 2; // Alignment
 	CopyInt(tbuff, &pPlayer->destAction);
@@ -925,7 +948,7 @@ void SaveGame()
 	WSave(numpremium);
 	WSave(premiumlevel);
 
-	for (i = 0; i < 6; i++)
+	for (i = 0; i < SMITH_PREMIUM_ITEMS; i++)
 		SavePremium(i);
 
 	OSave(automapflag);
@@ -973,7 +996,7 @@ void SavePlayer(int i)
 	PlayerStruct *pPlayer = &plr[i];
 
 	CopyInt(&pPlayer->_pmode, tbuff);
-	CopyBytes(&pPlayer->walkpath, 25, tbuff);
+	CopyBytes(&pPlayer->walkpath, MAX_PATH_LENGTH, tbuff);
 	CopyBytes(&pPlayer->plractive, 1, tbuff);
 	tbuff += 2; // Alignment
 	CopyInt(&pPlayer->destAction, tbuff);
@@ -1690,7 +1713,7 @@ void LoadLevel()
 	AutomapZoomReset();
 	ResyncQuests();
 	SyncPortals();
-	dolighting = 1;
+	dolighting = TRUE;
 
 	for (i = 0; i < MAX_PLRS; i++) {
 		if (plr[i].plractive && currlevel == plr[i].plrlevel)

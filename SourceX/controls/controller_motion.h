@@ -2,7 +2,7 @@
 
 // Processes and stores mouse and joystick motion.
 
-#include "devilution.h"
+#include "all.h"
 
 namespace dvl {
 

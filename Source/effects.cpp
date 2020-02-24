@@ -1,4 +1,4 @@
-#include "diablo.h"
+#include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include <SDL_mixer.h>
 
@@ -1029,7 +1029,7 @@ BOOL calc_snd_position(int x, int y, int *plVolume, int *plPan)
 void PlaySFX(int psfx)
 {
 	psfx = RndSFX(psfx);
-	PlaySFX_priv(&sgSFX[psfx], 0, 0, 0);
+	PlaySFX_priv(&sgSFX[psfx], FALSE, 0, 0);
 }
 
 void PlaySFX_priv(TSFX *pSFX, BOOL loc, int x, int y)
@@ -1137,7 +1137,7 @@ void PlaySfxLoc(int psfx, int x, int y)
 			pSnd->start_tc = 0;
 	}
 
-	PlaySFX_priv(&sgSFX[psfx], 1, x, y);
+	PlaySFX_priv(&sgSFX[psfx], TRUE, x, y);
 }
 
 void FreeMonsterSnd()
@@ -1233,7 +1233,7 @@ void sound_init()
 	priv_sound_init(SFX_UI);
 }
 
-void __stdcall effects_play_sound(char *snd_file)
+void effects_play_sound(char *snd_file)
 {
 	DWORD i;
 
@@ -1242,7 +1242,7 @@ void __stdcall effects_play_sound(char *snd_file)
 	}
 
 	for (i = 0; i < sizeof(sgSFX) / sizeof(TSFX); i++) {
-		if (!_strcmpi(sgSFX[i].pszName, snd_file) && sgSFX[i].pSnd) {
+		if (!strcasecmp(sgSFX[i].pszName, snd_file) && sgSFX[i].pSnd) {
 			if (!snd_playing(sgSFX[i].pSnd))
 				snd_play_snd(sgSFX[i].pSnd, 0, 0);
 

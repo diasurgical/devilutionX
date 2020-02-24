@@ -1,5 +1,5 @@
-#include "devilution.h"
-#include "miniwin/ddraw.h"
+#include "all.h"
+#include "display.h"
 #include "stubs.h"
 #include "utf8.h"
 #include <string>
@@ -36,6 +36,7 @@ Art ArtBackground;
 Art ArtCursor;
 Art ArtHero;
 bool gbSpawned;
+int heroLevel;
 
 void (*gfnSoundFunction)(char *file);
 void (*gfnListFocus)(int value);
@@ -48,10 +49,12 @@ bool UiItemsWraps;
 char *UiTextInput;
 int UiTextInputLen;
 
+int SelectedItem = 0;
+
 namespace {
 
+DWORD fadeTc;
 int fadeValue = 0;
-int SelectedItem = 0;
 
 struct {
 	bool upArrowPressed = false;
@@ -188,6 +191,29 @@ void selhero_CatToName(char *in_buf, char *out_buf, int cnt)
 
 void UiFocusNavigation(SDL_Event *event)
 {
+	switch (event->type) {
+	case SDL_KEYUP:
+	case SDL_MOUSEBUTTONUP:
+	case SDL_MOUSEMOTION:
+#ifndef USE_SDL1
+	case SDL_MOUSEWHEEL:
+#endif
+	case SDL_JOYBUTTONUP:
+	case SDL_JOYAXISMOTION:
+	case SDL_JOYBALLMOTION:
+	case SDL_JOYHATMOTION:
+#ifndef USE_SDL1
+	case SDL_FINGERUP:
+	case SDL_FINGERMOTION:
+	case SDL_CONTROLLERBUTTONUP:
+	case SDL_CONTROLLERAXISMOTION:
+	case SDL_WINDOWEVENT:
+#endif
+	case SDL_SYSWMEVENT:
+		mainmenu_restart_repintro();
+		break;
+	}
+
 	switch (GetMenuAction(*event)) {
 	case MenuAction::SELECT:
 		UiFocusNavigationSelect();
@@ -216,27 +242,16 @@ void UiFocusNavigation(SDL_Event *event)
 		break;
 	}
 
-	switch (event->type) {
-	case SDL_KEYUP:
-	case SDL_MOUSEBUTTONUP:
-	case SDL_MOUSEMOTION:
 #ifndef USE_SDL1
-	case SDL_MOUSEWHEEL:
-#endif
-	case SDL_JOYBUTTONUP:
-	case SDL_JOYAXISMOTION:
-	case SDL_JOYBALLMOTION:
-	case SDL_JOYHATMOTION:
-#ifndef USE_SDL1
-	case SDL_FINGERUP:
-	case SDL_FINGERMOTION:
-	case SDL_CONTROLLERBUTTONUP:
-	case SDL_CONTROLLERAXISMOTION:
-	case SDL_WINDOWEVENT:
-#endif
-	case SDL_SYSWMEVENT:
-		mainmenu_restart_repintro();
+	if (event->type == SDL_MOUSEWHEEL) {
+		if (event->wheel.y > 0) {
+			UiFocus(SelectedItem - 1, UiItemsWraps);
+		} else if (event->wheel.y < 0) {
+			UiFocus(SelectedItem + 1, UiItemsWraps);
+		}
+		return;
 	}
+#endif
 
 	if (SDL_IsTextInputActive()) {
 		switch (event->type) {
@@ -289,10 +304,6 @@ void UiFocusNavigation(SDL_Event *event)
 	}
 
 	if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
-		// In SDL2 mouse events already use logical coordinates.
-#ifdef USE_SDL1
-		OutputToLogical(&event->button.x, &event->button.y);
-#endif
 		if (UiItemMouseEvents(event, gUiItems, gUiItemCnt))
 			return;
 	}
@@ -300,6 +311,23 @@ void UiFocusNavigation(SDL_Event *event)
 
 void UiHandleEvents(SDL_Event *event)
 {
+	if (event->type == SDL_MOUSEMOTION) {
+#ifdef USE_SDL1
+		OutputToLogical(&event->motion.x, &event->motion.y);
+#endif
+		MouseX = event->motion.x;
+		MouseY = event->motion.y;
+		return;
+	}
+
+	if (event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_RETURN) {
+		const Uint8 *state = SDLC_GetKeyState();
+		if (state[SDLC_KEYSTATE_LALT] || state[SDLC_KEYSTATE_RALT]) {
+			dx_reinit();
+			return;
+		}
+	}
+
 	if (event->type == SDL_QUIT)
 		exit(0);
 
@@ -307,6 +335,13 @@ void UiHandleEvents(SDL_Event *event)
 	if (event->type == SDL_JOYDEVICEADDED || event->type == SDL_JOYDEVICEREMOVED) {
 		InitController();
 		return;
+	}
+
+	if (event->type == SDL_WINDOWEVENT) {
+		if (event->window.event == SDL_WINDOWEVENT_SHOWN)
+			gbActive = true;
+		else if (event->window.event == SDL_WINDOWEVENT_HIDDEN)
+			gbActive = false;
 	}
 #endif
 }
@@ -374,10 +409,9 @@ void UiInitialize()
 	}
 }
 
-int UiProfileGetString()
+const char **UiProfileGetString()
 {
-	DUMMY();
-	return 0;
+	return NULL;
 }
 
 char connect_plrinfostr[128];
@@ -416,6 +450,27 @@ BOOL UiValidPlayerName(char *name)
 		if (*letter < 0x20 || (*letter > 0x7E && *letter < 0xC0))
 			return false;
 
+	char *reserved[] = {
+		"gvdl",
+		"dvou",
+		"tiju",
+		"cjudi",
+		"bttipmf",
+		"ojhhfs",
+		"cmj{{bse",
+		"benjo",
+	};
+
+	char tmpname[PLR_NAME_LEN];
+	strcpy(tmpname, name);
+	for (size_t i = 0, n = strlen(tmpname); i < n; i++)
+		tmpname[i]++;
+
+	for (uint32_t i = 0; i < sizeof(reserved) / sizeof(*reserved); i++) {
+		if (strstr(tmpname, reserved[i]))
+			return false;
+	}
+
 	return true;
 }
 
@@ -439,7 +494,7 @@ BOOL UiGetDataCallback(int game_type, int data_code, void *a3, int a4, int a5)
 	UNIMPLEMENTED();
 }
 
-BOOL UiAuthCallback(int a1, char *a2, char *a3, char a4, char *a5, LPSTR lpBuffer, int cchBufferMax)
+BOOL UiAuthCallback(int a1, char *a2, char *a3, char a4, char *a5, char *lpBuffer, int cchBufferMax)
 {
 	UNIMPLEMENTED();
 }
@@ -449,12 +504,12 @@ BOOL UiSoundCallback(int a1, int type, int a3)
 	UNIMPLEMENTED();
 }
 
-void UiMessageBoxCallback(HWND hWnd, char *lpText, LPCSTR lpCaption, UINT uType)
+void UiMessageBoxCallback(HWND hWnd, char *lpText, const char *lpCaption, UINT uType)
 {
 	UNIMPLEMENTED();
 }
 
-BOOL UiDrawDescCallback(int game_type, COLORREF color, LPCSTR lpString, char *a4, int a5, UINT align, time_t a7,
+BOOL UiDrawDescCallback(int game_type, DWORD color, const char *lpString, char *a4, int a5, UINT align, time_t a7,
     HDC *a8)
 {
 	UNIMPLEMENTED();
@@ -465,7 +520,7 @@ BOOL UiCreateGameCallback(int a1, int a2, int a3, int a4, int a5, int a6)
 	UNIMPLEMENTED();
 }
 
-BOOL UiArtCallback(int game_type, unsigned int art_code, PALETTEENTRY *pPalette, BYTE *pBuffer,
+BOOL UiArtCallback(int game_type, unsigned int art_code, SDL_Color *pPalette, BYTE *pBuffer,
     DWORD dwBuffersize, DWORD *pdwWidth, DWORD *pdwHeight, DWORD *pdwBpp)
 {
 	UNIMPLEMENTED();
@@ -505,31 +560,35 @@ int GetCenterOffset(int w, int bw)
 
 void LoadBackgroundArt(const char *pszFile)
 {
-	PALETTEENTRY pPal[256];
-
-	fadeValue = 0;
+	SDL_Color pPal[256];
 	LoadArt(pszFile, &ArtBackground, 1, pPal);
 	if (ArtBackground.surface == nullptr)
 		return;
 
 	LoadPalInMem(pPal);
 	ApplyGamma(logical_palette, orig_palette, 256);
+
+	fadeTc = 0;
+	fadeValue = 0;
+	BlackPalette();
+	SDL_FillRect(GetOutputSurface(), NULL, 0x000000);
+	RenderPresent();
 }
 
 void UiFadeIn()
 {
-	static DWORD tc;
-	if (fadeValue == 0 && tc == 0)
-		tc = SDL_GetTicks();
 	if (fadeValue < 256) {
-		fadeValue = (SDL_GetTicks() - tc) / 2.083; // 32 frames @ 60hz
+		if (fadeValue == 0 && fadeTc == 0)
+			fadeTc = SDL_GetTicks();
+		fadeValue = (SDL_GetTicks() - fadeTc) / 2.083; // 32 frames @ 60hz
 		if (fadeValue > 256) {
 			fadeValue = 256;
-			tc = 0;
+			fadeTc = 0;
 		}
+		SetFadeLevel(fadeValue);
 	}
 
-	SetFadeLevel(fadeValue);
+	RenderPresent();
 }
 
 void DrawSelector(const SDL_Rect &rect)
@@ -762,13 +821,10 @@ bool HandleMouseEvent(const SDL_Event &event, UiItem *item)
 
 } // namespace
 
-void LoadPalInMem(const PALETTEENTRY *pPal)
+void LoadPalInMem(const SDL_Color *pPal)
 {
 	for (int i = 0; i < 256; i++) {
-		orig_palette[i].peFlags = 0;
-		orig_palette[i].peRed = pPal[i].peRed;
-		orig_palette[i].peGreen = pPal[i].peGreen;
-		orig_palette[i].peBlue = pPal[i].peBlue;
+		orig_palette[i] = pPal[i];
 	}
 }
 
@@ -782,6 +838,11 @@ bool UiItemMouseEvents(SDL_Event *event, UiItem *items, std::size_t size)
 {
 	if (!items || size == 0)
 		return false;
+
+	// In SDL2 mouse events already use logical coordinates.
+#ifdef USE_SDL1
+	OutputToLogical(&event->button.x, &event->button.y);
+#endif
 
 	bool handled = false;
 	for (std::size_t i = 0; i < size; i++) {
@@ -808,8 +869,6 @@ void DrawMouse()
 	if (sgbControllerActive)
 		return;
 
-	SDL_GetMouseState(&MouseX, &MouseY);
-	OutputToLogical(&MouseX, &MouseY);
 	DrawArt(MouseX, MouseY, &ArtCursor);
 }
 

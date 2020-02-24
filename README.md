@@ -1,5 +1,6 @@
 [![Downloads](https://img.shields.io/github/downloads/diasurgical/devilutionX/total.svg)](https://github.com/diasurgical/devilutionX/releases)
 [![github stars](https://img.shields.io/github/stars/diasurgical/devilutionX.svg)](https://github.com/diasurgical/devilutionX/stargazers)
+[![codecov](https://codecov.io/gh/diasurgical/devilutionX/branch/master/graph/badge.svg)](https://codecov.io/gh/diasurgical/devilutionX)
 
 Nightly builds | Platform
 ---:| ---
@@ -10,16 +11,14 @@ Nightly builds | Platform
 ![Discord Channel](https://avatars3.githubusercontent.com/u/1965106?s=16&v=4) [Discord Chat Channel](https://discord.gg/aQBQdDe)
 
 # How To Play:
- - Copy diabdat.mpq from your CD, or GoG install folder, to the DevilutionX install folder or data folder; make sure it is all lowercase. The DeviliutionX install is the one that contains the DevilutionX executable, the data folder path differ depending on OS version and and security setting, but will normally be as following:
+ - Download [the latest DevilutionX release](https://github.com/diasurgical/devilutionX/releases), or build from source
+ - Copy diabdat.mpq from your CD or GoG installation (or [extract it from the GoG installer](https://github.com/diasurgical/devilutionX/wiki/Extracting-the-DIABDAT.MPQ-from-the-GoG-installer)) to the DevilutionX install folder or data folder; make sure it is all lowercase. The DeviliutionX install folder is the one that contains the DevilutionX executable. The data folder path may differ depending on OS version and security settings, but will normally be as follows:
     - macOS `~/Library/Application Support/diasurgical/devilution`
     - Linux `~/.local/share/diasurgical/devilution/`
-    - Windows `C:\Users[username]\AppData\Roaming\diasurgical\devilution`
-    - These paths may differ depending on OS version and security setting, so the most reliable recommended location is the directory that contains the DevilutionX executable.
- - [Download DevilutionX](https://github.com/diasurgical/devilutionX/releases), or build from source
- - Install [SDL2](https://www.libsdl.org/download-2.0.php) (including [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/) and [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/))
+    - Windows `C:\Users\[username]\AppData\Roaming\diasurgical\devilution`
+ - Install [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/) and [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/) (included in macOS and Windows releases):
+    - Ubuntu/Debian/Rasbian `sudo apt-get install libsdl2-ttf-2.0-0 libsdl2-mixer-2.0-0`
  - Run `./devilutionx`
-
-Please keep in mind that this is still being worked on and is missing parts of UI and some minor bugs, see [milestone 1](https://github.com/diasurgical/devilutionX/milestone/1) for a full list of known issues.
 
 # Building from Source
 <details><summary>Linux</summary>
@@ -36,7 +35,7 @@ sudo dnf install cmake glibc-devel SDL2-devel SDL2_ttf-devel SDL2_mixer-devel li
 ```
 cd build
 cmake ..
-cmake --build . -j $(nproc)
+make -j$(nproc)
 ```
 </details>
 
@@ -92,7 +91,7 @@ sudo apt-get install cmake gcc-mingw-w64-i686 g++-mingw-w64-i686
 ```
 cd build
 cmake -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake ..
-cmake --build . -j $(nproc)
+make -j$(nproc)
 ```
 </details>
 <details><summary>Windows via Visual Studio</summary>
@@ -189,42 +188,89 @@ The build script does the following:
 
 1. Downloads and configures the buildroot if necessary.
 2. Builds the executable (using CMake).
-3. Packages the executable and all related resources into an `.ipk` package.
+3. Packages the executable and all related resources into an `.ipk` or `.opk` package.
 
-The buildroot uses ~4 GiB of disk space and can take almost an hour to build.
+The buildroot uses ~2.5 GiB of disk space and can take 20 minutes to build.
 
 For OpenDingux builds `mksquashfs` needs to be installed.
 
-### RetroFW (RS97, RG300, LDK)
-
-The RetroFW build uses the buildroot at `$HOME/buildroot-2018.02.9-retrofw`.
+To build, run the following command
 
 ~~~ bash
-Packaging/OpenDingux/build-retrofw.sh
+Packaging/OpenDingux/build.sh <platform>
 ~~~
 
-### OpenDingux (RG350, GCW0)
+Replace `<platform>` with one of: `retrofw`, `rg350`, or `gkd350h`.
 
-This OpenDingux build uses the buildroot at `$HOME/buildroot-rg350-devilutionx`.
-
-~~~ bash
-Packaging/OpenDingux/build-rg350.sh
-~~~
+This prepares and uses the buildroot at `$HOME/buildroot-$PLATFORM-devilutionx`.
 
 </details>
 
-## CMake arguments
-### General
-The default build type is `Debug`. This can be changed with `-DBINARY_RELEASE=ON`. Independently of this, the debug mode of the Diablo engine is always enabled by default. It can be disabled with `-DDEBUG=OFF`. Finally, in debug builds the address sanitizer is enabled by default. This can be disabled with `-DASAN=OFF`.
-You can also generate 32bit builds on 64bit platforms by setting `-DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake` (remember to use the `linux32` command if on Linux).
-Network support can be disabled using `-DNONET=ON`, this also removes the need for the ASIO and Sodium dependencies.
-You can compile the shareware version with `-DSPAWN=ON` this will allow you to try the game using spawn.mpq from the original shareware which can still be [downloaded](http://ftp.blizzard.com/pub/demos/diablosw.exe) for free.
+<details><summary>Clockwork PI GameShell</summary>
 
-### mingw32
-Use `-DCROSS_PREFIX=/path/to/prefix` if the `i686-w64-mingw32` directory is not in `/usr`.
-### Use SDL v1 instead of SDL v2.
-Pass `-DUSE_SDL1=ON` to build with SDL v1 instead of v2.
-Note that some features are not yet supported in SDL v1, notably upscaling, and fullscreen.
+You can either call
+~~~ bash
+Packaging/cpi-gamesh/build.sh
+~~~
+to install dependencies and build the code.
+
+Or you create a new directory under `/home/cpi/apps/Menu` and copy [the file](Packaging/cpi-gamesh/__init__.py) there. After restarting the UI, you can download and compile the game directly from the device itself. See [the readme](Packaging/cpi-gamesh/readme.md) for more details.
+</details>
+
+<details><summary>Amiga via Docker</summary>
+
+### Build the container from the repo root
+
+~~~ bash
+docker build -f Packaging/amiga/Dockerfile -t devilutionx-amiga .
+~~~
+
+### Build DevilutionX Amiga binary
+
+~~~ bash
+docker run --rm -v "${PWD}:/work" devilutionx-amiga
+sudo chown "${USER}:" build-amiga/*
+~~~
+
+The command above builds DevilutionX in release mode.
+For other build options, you can run the container interactively:
+
+~~~ bash
+docker run -ti --rm -v "${PWD}:/work" devilutionx-amiga bash
+~~~
+
+See the `CMD` in `Packaging/amiga/Dockerfile` for reference.
+
+### Copy the necessary files
+
+Outside of the Docker container, from the DevilutionX directory, run:
+
+~~~ bash
+cp Packaging/amiga/devilutionx.info Packaging/amiga/LiberationSerif-Bold.ttf build-amiga/
+sudo chown "${USER}:" build-amiga/*
+~~~
+
+To actually start DevilutionX, increase the stack size to 50KiB in Amiga.
+You can do this by selecting the DevilutionX icon, then hold right mouse button and
+select Icons -> Information in the top menu.
+</details>
+
+<details><summary><b>CMake build options</b></summary>
+
+### General
+- `-DBINARY_RELEASE=ON` changed build type to release and optimize for distribution.
+- `-DNONET=ON` disable network support, this also removes the need for the ASIO and Sodium.
+- `-DUSE_SDL1=ON` build for SDL v1 instead of v2, not all features are supported under SDL v1, notably upscaling.
+- `-DSPAWN=ON` build the shareware version, using spawn.mpq from the original shareware; which can still be [downloaded](http://ftp.blizzard.com/pub/demos/diablosw.exe) for free.
+- `-DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake` generate 32bit builds on 64bit platforms (remember to use the `linux32` command if on Linux).
+- `-DCROSS_PREFIX=/path/to/prefix` set the path to the `i686-w64-mingw32` directory.
+
+### Debug builds
+- `-DDEBUG=OFF` disable debug mode of the Diablo engine.
+- `-DASAN=OFF` disable address sanitizer.
+- `-DUBSAN=OFF` disable undefined behavior sanitizer.
+
+</details>
 
 # Multiplayer
  - TCP/IP only requires the host to expose port 6112
@@ -238,20 +284,25 @@ DevilutionX supports gamepad controls.
 
 Default controller mappings (A/B/X/Y as in Nintendo layout, so the rightmost button is attack):
 
-- Left analog / DPad: move hero
-- Right analog: simulate mouse
-- A: attack nearby enemies, talk to towns people and merchants, pickup & place items in the inventory, OK while in main menu
-- B: Select spell, cancel while in main menu
-- X: pickup gold, potions & equipment from ground, open chests and doors that are nearby, use item when in inventory (useful to read books etc.)
-- Y: cast spell, go to previous screen when talking to people and in shops, delete character while in main menu
-- R1: inventory
-- L1: character sheet
-- R2: use mana potion from belt
-- L2: use health item from belt
-- Left analog click: toggle automap
-- Right analog click: left mouse click
-- Select: quest log
-- Start: game Menu, skip intro
+- Left analog or D-Pad: move hero
+- A: attack nearby enemies, talk to townspeople and merchants, pickup/place items in the inventory, OK while in main menu
+- B: select spell, back while in menus
+- X: pickup items, open nearby chests and doors, use item in the inventory
+- Y: cast spell, delete character while in main menu
+- L1: use health item from belt
+- R1: use mana potion from belt
+- L2 or Start + Left: character sheet
+- R2 or Start + Right: inventory
+- Left analog click or Start + Down: toggle automap
+- Start + Up or Start + Select: game menu
+- Start + Left: character info
+- Start + Right: inventory
+- Select + A/B/X/Y: Spell hotkeys
+- Right analog: move automap or simulate mouse
+- Right analog click or Select + L1: left mouse click
+- Select + Right analog click or Select + R1: right mouse click
+- Select + L2 or Start + Y: quest log
+- Select + R2 or Start + B: spell book
 
 For now, they can be re-mapped by changing `SourceX/controls` or by setting the `SDL_GAMECONTROLLERCONFIG` environment
 variable (see
@@ -260,47 +311,39 @@ variable (see
 # Contributing
 [Guidelines](docs/CONTRIBUTING.md)
 
-# Modding
-Below are a few examples of some simple improvements made to the game. It is planned in the future to create tools for designing dungeons and graphics.
+# Mods
 
-![Screenshot 1: Monster lifebar+items](https://github.com/diasurgical/scalpel/blob/master/screens/mod1.png)
-
-![Screenshot 2: New trade screen](https://github.com/diasurgical/scalpel/blob/master/screens/mod2.png)
+[List of known mods based on DevilutionX](docs/mods.md)
 
 # F.A.Q.
-<details><summary>Click to reveal</summary>
-
 > Wow, does this mean I can download and play Diablo for free now?
 
-No, you'll need access to the data from the original game. If you don't have an original CD then you can [buy Diablo from GoG.com](https://www.gog.com/game/diablo). Alternatively you can also use `spawn.mpq` from the [http://ftp.blizzard.com/pub/demos/diablosw.exe](shareware) version and compile the with the SPAWN flag defined.
-> Cool, so I fired your mod up, but there's no 1080p or new features?
+No, you'll need access to the data from the original game. If you don't have an original CD then you can [buy Diablo from GoG.com](https://www.gog.com/game/diablo). Alternately you can use `spawn.mpq` from the [http://ftp.blizzard.com/pub/demos/diablosw.exe](shareware) version and compile the with the SPAWN flag defined.
+> What game changes does DevilutionX provide
 
-We're working on it.
+DevilutionX's main focus is to make the game work on multiple platforms. An additional goal is to make the engine mod friendly. As such, there are no changes to gameplay, but we will be making some enhancments to the engine itself. For example, the engine now has upscaling, unlocked fps, controller support, and multiplayer via TCP.
+> Is 1080p supported?
+
+Currently the game simply scales the original 640x480 to best fit, but we are working on widescreen support.
 > What about Hellfire?
 
-Hellfire was a bit of a flop on the developer's part. Support may come in the future once the base game is finished.
+Hellfire is being worked on and is mostly done, though not fully playable at the moment.
+> Does it work with Battle.net?
+
+Battle.net is a service provided by Blizzard. We are not associated with them, so we have not worked on intergrating with their service.
 </details>
 
 # Credits
-- Reverse engineered by GalaXyHaXz in 2018
-- [sanctuary](https://github.com/sanctuary) - extensively documenting Diablo's game engine
-- [BWAPI Team](https://github.com/bwapi) - providing library API to work with Storm
-- [Ladislav Zezula](https://github.com/ladislav-zezula) - reversing PKWARE library, further documenting Storm
-- [fearedbliss](https://github.com/fearedbliss) - being awe-inspiring
-- Climax Studios & Sony - secretly helping with their undercover QA :P
-- Blizzard North - wait, this was a typo!
-- Depression - reason to waste four months of my life doing this ;)
-
-And a special thanks to all the support and people who work on Devilution to make it possible! <3
+- The original Devilution project [Devilution](https://github.com/diasurgical/devilution#credits)
+- [Everyone](https://github.com/diasurgical/devilutionX/graphs/contributors) who worked on Devilution/DevilutionX
+- And a thanks to all who support the project, report bugs and help spread the word <3
 
 # Changelog
 [From the beginning until release](docs/CHANGELOG.md)
 
 # Legal
-Devilution is released to the Public Domain. The documentation and function provided by Devilution may only be utilized with assets provided by ownership of Diablo.
+DevilutionX is released to the Public Domain. The documentation and functionality provided by Devilution may only be utilized with assets provided by ownership of Diablo.
 
-Battle.net(R) - Copyright (C) 1996 Blizzard Entertainment, Inc. All rights reserved. Battle.net and Blizzard Entertainment are trademarks or registered trademarks of Blizzard Entertainment, Inc. in the U.S. and/or other countries.
+Diablo® - Copyright © 1996 Blizzard Entertainment, Inc. All rights reserved. Diablo and Blizzard Entertainment are trademarks or registered trademarks of Blizzard Entertainment, Inc. in the U.S. and/or other countries.
 
-Diablo(R) - Copyright (C) 1996 Blizzard Entertainment, Inc. All rights reserved. Diablo and Blizzard Entertainment are trademarks or registered trademarks of Blizzard Entertainment, Inc. in the U.S. and/or other countries.
-
-Devilution and any of its' maintainers are in no way associated with or endorsed by Blizzard Entertainment(R).
+Devilution and any of its maintainers are in no way associated with or endorsed by Blizzard Entertainment®.

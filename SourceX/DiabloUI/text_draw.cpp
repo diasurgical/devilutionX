@@ -5,6 +5,7 @@
 #include "DiabloUI/text.h"
 #include "DiabloUI/ui_item.h"
 #include "DiabloUI/ttf_render_wrapped.h"
+#include "display.h"
 
 namespace dvl {
 
@@ -45,7 +46,9 @@ void DrawTTF(const char *text, const SDL_Rect &rectIn, int flags,
 		*render_cache = new TtfSurfaceCache();
 		const auto x_align = XAlignmentFromFlags(flags);
 		(*render_cache)->text = RenderUTF8_Solid_Wrapped(font, text, text_color, rect.w, x_align);
+		ScaleSurfaceToOutput(&(*render_cache)->text);
 		(*render_cache)->shadow = RenderUTF8_Solid_Wrapped(font, text, shadow_color, rect.w, x_align);
+		ScaleSurfaceToOutput(&(*render_cache)->shadow);
 	}
 	SDL_Surface *text_surface = (*render_cache)->text;
 	SDL_Surface *shadow_surface = (*render_cache)->shadow;
@@ -53,17 +56,16 @@ void DrawTTF(const char *text, const SDL_Rect &rectIn, int flags,
 		return;
 
 	SDL_Rect dest_rect = rect;
-	const int x_offset = AlignXOffset(flags, rect, text_surface->w);
-	const int y_offset = (flags & UIS_VCENTER) ? (rect.h - text_surface->h) / 2 : 0;
-	dest_rect.x += static_cast<decltype(SDL_Rect().x)>(SCREEN_X + x_offset);
-	dest_rect.y += static_cast<decltype(SDL_Rect().y)>(SCREEN_Y + y_offset);
+	ScaleOutputRect(&dest_rect);
+	dest_rect.x += AlignXOffset(flags, dest_rect, text_surface->w);
+	dest_rect.y += (flags & UIS_VCENTER) ? (dest_rect.h - text_surface->h) / 2 : 0;
 
 	SDL_Rect shadow_rect = dest_rect;
 	++shadow_rect.x;
 	++shadow_rect.y;
-	if (SDL_BlitSurface(shadow_surface, nullptr, pal_surface, &shadow_rect) <= -1)
+	if (SDL_BlitSurface(shadow_surface, nullptr, GetOutputSurface(), &shadow_rect) < 0)
 		ErrSdl();
-	if (SDL_BlitSurface(text_surface, nullptr, pal_surface, &dest_rect) <= -1)
+	if (SDL_BlitSurface(text_surface, nullptr, GetOutputSurface(), &dest_rect) < 0)
 		ErrSdl();
 }
 
