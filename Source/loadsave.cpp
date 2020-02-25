@@ -357,6 +357,9 @@ void LoadPlayer(int i)
 	CopyInt(tbuff, &pPlayer->_pStatPts);
 	CopyInt(tbuff, &pPlayer->_pDamageMod);
 	CopyInt(tbuff, &pPlayer->_pBaseToBlk);
+	if (pPlayer->_pBaseToBlk == 0) {
+		pPlayer->_pBaseToBlk = ToBlkTbl[pPlayer->_pClass];
+	}
 	CopyInt(tbuff, &pPlayer->_pHPBase);
 	CopyInt(tbuff, &pPlayer->_pMaxHPBase);
 	CopyInt(tbuff, &pPlayer->_pHitPoints);
