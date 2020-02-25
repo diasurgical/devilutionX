@@ -452,6 +452,8 @@ void LoadPlayer(int i)
 	CopyInt(tbuff, &pPlayer->pDiabloKillLevel);
 	CopyInts(tbuff, 7, &pPlayer->dwReserved);
 
+	pPlayer->_pBaseToBlk = ToBlkTbl[pPlayer->_pClass];
+
 	// Omit pointer _pNData
 	// Omit pointer _pWData
 	// Omit pointer _pAData

@@ -194,6 +194,7 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL killok)
 	pPlayer->_pGold = SwapLE32(pPack->pGold);
 	pPlayer->_pMaxHPBase = SwapLE32(pPack->pMaxHPBase);
 	pPlayer->_pHPBase = SwapLE32(pPack->pHPBase);
+	pPlayer->_pBaseToBlk = ToBlkTbl[pPlayer->_pClass];
 	if (!killok)
 		if ((int)(pPlayer->_pHPBase & 0xFFFFFFC0) < 64)
 			pPlayer->_pHPBase = 64;
