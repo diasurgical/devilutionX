@@ -13,7 +13,7 @@ void unlock_buf(BYTE idx);
 void dx_cleanup();
 void dx_reinit();
 
-void CreatePalette();
+void InitPalette();
 void BltFast(SDL_Rect *src_rect, SDL_Rect *dst_rect);
 void Blit(SDL_Surface *src, SDL_Rect *src_rect, SDL_Rect *dst_rect);
 void RenderPresent();
