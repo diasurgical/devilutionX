@@ -149,6 +149,13 @@
 
 #define SCREENXY(x, y)	((x) + SCREEN_X + ((y) + SCREEN_Y) * BUFFER_WIDTH)
 
+#define NIGHTMARE_TO_HIT_BONUS  85
+#define HELL_TO_HIT_BONUS      120
+#define MAX_TO_HIT             255
+
+#define NIGHTMARE_AC_BONUS 50
+#define HELL_AC_BONUS      80
+
 #define MemFreeDbg(p)	\
 {						\
 	void *p__p;			\
