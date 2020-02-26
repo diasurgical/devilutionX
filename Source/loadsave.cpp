@@ -541,10 +541,10 @@ void LoadMonster(int i)
 	tbuff += 1; // Alignment
 	CopyShort(tbuff, &pMonster->mExp);
 
-	CopyChar(tbuff, &pMonster->mHit);
+	tbuff += 1; // Skip mHit as it's already initialized
 	CopyChar(tbuff, &pMonster->mMinDamage);
 	CopyChar(tbuff, &pMonster->mMaxDamage);
-	CopyChar(tbuff, &pMonster->mHit2);
+	tbuff += 1; // Skip mHit2 as it's already initialized
 	CopyChar(tbuff, &pMonster->mMinDamage2);
 	CopyChar(tbuff, &pMonster->mMaxDamage2);
 	CopyChar(tbuff, &pMonster->mArmorClass);
@@ -1200,6 +1200,7 @@ void SavePlayer(int i)
 void SaveMonster(int i)
 {
 	MonsterStruct *pMonster = &monster[i];
+	char tempChar
 
 	CopyInt(&pMonster->_mMTidx, tbuff);
 	CopyInt(&pMonster->_mmode, tbuff);
@@ -1267,10 +1268,14 @@ void SaveMonster(int i)
 	tbuff += 1; // Alignment
 	CopyShort(&pMonster->mExp, tbuff);
 
-	CopyChar(&pMonster->mHit, tbuff);
+	// Wtite mHit for backwards compatabiliyt
+	tempChar = pMonster->mHit < SCHAR_MAX ? pMonster->mHit : SCHAR_MAX;
+	CopyChar(&tempChar, tbuff);
 	CopyChar(&pMonster->mMinDamage, tbuff);
 	CopyChar(&pMonster->mMaxDamage, tbuff);
-	CopyChar(&pMonster->mHit2, tbuff);
+	// Wtite mHit2 for backwards compatabiliyt
+	tempChar = pMonster->mHit2 < SCHAR_MAX ? pMonster->mHit2 : SCHAR_MAX;
+	CopyChar(&tempChar, tbuff);
 	CopyChar(&pMonster->mMinDamage2, tbuff);
 	CopyChar(&pMonster->mMaxDamage2, tbuff);
 	CopyChar(&pMonster->mArmorClass, tbuff);
