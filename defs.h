@@ -151,7 +151,6 @@
 
 #define NIGHTMARE_TO_HIT_BONUS  85
 #define HELL_TO_HIT_BONUS      120
-#define MAX_TO_HIT             255
 
 #define NIGHTMARE_AC_BONUS 50
 #define HELL_AC_BONUS      80

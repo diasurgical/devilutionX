@@ -534,10 +534,10 @@ void LoadMonster(int i)
 	tbuff += 1; // Alignment
 	CopyShort(tbuff, &pMonster->mExp);
 
-	CopyChar(tbuff, &pMonster->mHit);
+	tbuff += 1; //skip mHit as it's already initialized
 	CopyChar(tbuff, &pMonster->mMinDamage);
 	CopyChar(tbuff, &pMonster->mMaxDamage);
-	CopyChar(tbuff, &pMonster->mHit2);
+	tbuff += 1; //skip mHit2 as it's already initialized
 	CopyChar(tbuff, &pMonster->mMinDamage2);
 	CopyChar(tbuff, &pMonster->mMaxDamage2);
 	CopyChar(tbuff, &pMonster->mArmorClass);
@@ -1260,10 +1260,10 @@ void SaveMonster(int i)
 	tbuff += 1; // Alignment
 	CopyShort(&pMonster->mExp, tbuff);
 
-	CopyChar(&pMonster->mHit, tbuff);
+	tbuff += 1; //don't write mHit as it's unnecessary
 	CopyChar(&pMonster->mMinDamage, tbuff);
 	CopyChar(&pMonster->mMaxDamage, tbuff);
-	CopyChar(&pMonster->mHit2, tbuff);
+	tbuff += 1; //don't write mHit2 as it's unnecessary
 	CopyChar(&pMonster->mMinDamage2, tbuff);
 	CopyChar(&pMonster->mMaxDamage2, tbuff);
 	CopyChar(&pMonster->mArmorClass, tbuff);

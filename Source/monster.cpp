@@ -454,13 +454,11 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 		monster[i].mLevel += 15;
 		monster[i].mExp = 2 * (monster[i].mExp + 1000);
 
-		unsigned short iHit = monster[i].mHit + NIGHTMARE_TO_HIT_BONUS;
-		monster[i].mHit = iHit > MAX_TO_HIT ? MAX_TO_HIT : (unsigned char)iHit;
+		monster[i].mHit += NIGHTMARE_TO_HIT_BONUS;
 		monster[i].mMinDamage = 2 * (monster[i].mMinDamage + 2);
 		monster[i].mMaxDamage = 2 * (monster[i].mMaxDamage + 2);
 
-		iHit = monster[i].mHit2 + NIGHTMARE_TO_HIT_BONUS;
-		monster[i].mHit2 = iHit > MAX_TO_HIT ? MAX_TO_HIT : (unsigned char)iHit;
+		monster[i].mHit2 += NIGHTMARE_TO_HIT_BONUS;
 		monster[i].mMinDamage2 = 2 * (monster[i].mMinDamage2 + 2);
 		monster[i].mMaxDamage2 = 2 * (monster[i].mMaxDamage2 + 2);
 		monster[i].mArmorClass += NIGHTMARE_AC_BONUS;
@@ -472,13 +470,11 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 		monster[i].mLevel += 30;
 		monster[i].mExp = 4 * (monster[i].mExp + 1000);
 
-		unsigned short iHit = monster[i].mHit + HELL_TO_HIT_BONUS;
-		monster[i].mHit = iHit > MAX_TO_HIT ? MAX_TO_HIT : (unsigned char)iHit;
+		monster[i].mHit += HELL_TO_HIT_BONUS;
 		monster[i].mMinDamage = 4 * monster[i].mMinDamage + 6;
 		monster[i].mMaxDamage = 4 * monster[i].mMaxDamage + 6;
 
-		iHit = monster[i].mHit2 + HELL_TO_HIT_BONUS;
-		monster[i].mHit2 = iHit > MAX_TO_HIT ? MAX_TO_HIT : (unsigned char)iHit;
+		monster[i].mHit2 += HELL_TO_HIT_BONUS;
 		monster[i].mMinDamage2 = 4 * monster[i].mMinDamage2 + 6;
 		monster[i].mMaxDamage2 = 4 * monster[i].mMaxDamage2 + 6;
 		monster[i].mArmorClass += HELL_AC_BONUS;
@@ -744,15 +740,11 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int unpackfilesize)
 		Monst->mHit2 = Uniq->mUnqVar1;
 
 		if (gnDifficulty == DIFF_NIGHTMARE) {
-			unsigned short iHit = Monst->mHit + NIGHTMARE_TO_HIT_BONUS;
-			Monst->mHit = iHit > MAX_TO_HIT ? MAX_TO_HIT : iHit;
-			iHit = Monst->mHit2 + NIGHTMARE_TO_HIT_BONUS;
-			Monst->mHit2 = iHit > MAX_TO_HIT ? MAX_TO_HIT : iHit;
+			Monst->mHit += NIGHTMARE_TO_HIT_BONUS;
+			Monst->mHit2 += NIGHTMARE_TO_HIT_BONUS;
 		} else if (gnDifficulty == DIFF_HELL) {
-			unsigned short iHit = Monst->mHit + HELL_TO_HIT_BONUS;
-			Monst->mHit = iHit > MAX_TO_HIT ? MAX_TO_HIT : iHit;
-			iHit = Monst->mHit2 + HELL_TO_HIT_BONUS;
-			Monst->mHit2 = iHit > MAX_TO_HIT ? MAX_TO_HIT : iHit;
+			Monst->mHit += HELL_TO_HIT_BONUS;
+			Monst->mHit2 += HELL_TO_HIT_BONUS;
 		}
 	}
 	if (Uniq->mUnqAttr & 8) {
