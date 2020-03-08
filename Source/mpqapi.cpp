@@ -4,6 +4,7 @@
 #include <cstring>
 #include <fstream>
 #include <memory>
+#include <type_traits>
 
 #include "all.h"
 #include "../SourceS/file_util.h"
@@ -27,6 +28,25 @@ DEVILUTION_BEGIN_NAMESPACE
 
 namespace {
 
+// Validates that a Type is of a particular size and that its alignment is <= the size of the type.
+// Done with templates so that error messages include actual size.
+template <std::size_t A, std::size_t B>
+struct assert_eq : std::true_type {
+	static_assert(A == B, "");
+};
+template <std::size_t A, std::size_t B>
+struct assert_lte : std::true_type {
+	static_assert(A <= B, "");
+};
+template <typename T, std::size_t S>
+struct check_size : assert_eq<sizeof(T), S>, assert_lte<alignof(T), sizeof(T)> {
+};
+
+// Check sizes and alignments of the structs that we decrypt and encrypt.
+// The decryption algorithm treats them as a stream of 32-bit uints, so the
+// sizes must be exact as there cannot be any padding.
+static_assert(check_size<_HASHENTRY, 4 * 4>::value, "");
+static_assert(check_size<_BLOCKENTRY, 4 * 4>::value, "");
 
 const char *DirToString(std::ios::seekdir dir)
 {
@@ -338,7 +358,7 @@ void mpqapi_remove_hash_entry(const char *pszName)
 	}
 }
 
-void mpqapi_alloc_block(int block_offset, int block_size)
+void mpqapi_alloc_block(uint32_t block_offset, uint32_t block_size)
 {
 	_BLOCKENTRY *block;
 	int i;
@@ -558,7 +578,7 @@ BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD d
 	return TRUE;
 }
 
-int mpqapi_find_free_block(int size, int *block_size)
+int mpqapi_find_free_block(uint32_t size, uint32_t *block_size)
 {
 	_BLOCKENTRY *pBlockTbl;
 	int i, result;
