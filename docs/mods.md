@@ -40,13 +40,13 @@ YouTube video:
 
 [![Sense HAT game play video](https://img.youtube.com/vi/756WmJguxZA/0.jpg)](https://www.youtube.com/watch?v=756WmJguxZA "Sense HAT game play video")
 
-## Rouge-like Text Renderer
+## Rogue-like Text Renderer
 
 Repo: https://github.com/AJenbo/devilutionX/tree/roguelike
 
 YouTube video:
 
-[![Rogule-like game play video](https://img.youtube.com/vi/3p9j7j2SVOA/0.jpg)](https://www.youtube.com/watch?v=3p9j7j2SVOA "Rogue-like game play video")
+[![Rogue-like game play video](https://img.youtube.com/vi/3p9j7j2SVOA/0.jpg)](https://www.youtube.com/watch?v=3p9j7j2SVOA "Rogue-like game play video")
 
 # Quality-of-Life and Extension patches
 
