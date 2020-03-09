@@ -4,6 +4,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## DevilutionX 1.0.1
+### Features
+- Toggle fullscreen at any point by hitting alt+enter (mouse grab can be disabled in diablo.ini)
+- Controller: B button closes the currently active panel.
+- Added a navigation menu for controllers
+- Focus on the exit item before quitting.
+- Minor performance improvements (save/load time and main menu).
+- Add a list of [known mods](https://github.com/diasurgical/devilutionX/blob/master/docs/mods.md)
+
+### Platforms
+- Added support for 32bit PowerPc
+- Added support for Amiga
+- Added support Clockwork PI GameShell
+- Added support for GKD350h
+- Switch to OPK for RetroFW (requires 2.0)
+- Update OpendDingus/RetroFW build root
+
+### Bugfixes
+- Game crashing on systems that do not report monitor refresh rate.
+- Fixed belt not working correctly when holding shift on us keyboard layouts
+- Always keep track of the latest hero level when selecting difficulty.
+- Correct screenshot path
+- Turn the screen red for 200ms when taking screenshots.
+- Fix town load screen missing on the first load.
+- Fix minor HOM issue at some houses in town.
+- Allow for space as text input
+- Fixed a couple of typos in error messages
+
+### Original Diablo bugs
+- Fix belt not working correctly when holding shift on *non-*us keyboard layouts
+- Fix one more rare crash.
+
 ## DevilutionX 1.0.0
 ### Features
 - FPS no longer capped at 20hz; smoother mouse and transitions
