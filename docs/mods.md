@@ -2,7 +2,7 @@
 
 This is a list of known mods to DevilutionX. Feel free to extend it by sending a PR.
 
-## Infernity
+## Infernity [Devilution mod - Windows only]
 
 Repo: https://github.com/qndel/Infernity
 
@@ -122,7 +122,7 @@ Repo: https://github.com/footballhead/devilutionX/commits/etherealize_demo?autho
 
 # Meta
 
-## Equine
+## Equine [Windows only]
 
 Repo: https://github.com/sergi4ua/equine
 
