@@ -1729,13 +1729,13 @@ void CalculateDataBlockHash(void * pvDataBlock, DWORD cbDataBlock, LPBYTE md5_ha
 //-----------------------------------------------------------------------------
 // Swapping functions
 
-#ifndef PLATFORM_LITTLE_ENDIAN
-
+#if !defined(PLATFORM_LITTLE_ENDIAN)
 //
 // Note that those functions are implemented for Mac operating system,
 // as this is the only supported platform that uses big endian.
 //
 
+#if defined(PLATFORM_MAC)
 // Swaps a signed 16-bit integer
 int16_t SwapInt16(uint16_t data)
 {
@@ -1771,6 +1771,47 @@ uint64_t SwapUInt64(uint64_t data)
 {
        return CFSwapInt64(data);
 }
+#else
+//! Byte swap unsigned short
+uint16_t SwapUInt16( uint16_t val )
+{
+    return (val << 8) | (val >> 8 );
+}
+
+//! Byte swap short
+int16_t SwapInt16( int16_t val )
+{
+    return (val << 8) | ((val >> 8) & 0xFF);
+}
+
+//! Byte swap unsigned int
+uint32_t SwapUInt32( uint32_t val )
+{
+    val = ((val << 8) & 0xFF00FF00 ) | ((val >> 8) & 0xFF00FF );
+    return (val << 16) | (val >> 16);
+}
+
+//! Byte swap int
+int32_t SwapInt32( int32_t val )
+{
+    val = ((val << 8) & 0xFF00FF00) | ((val >> 8) & 0xFF00FF );
+    return (val << 16) | ((val >> 16) & 0xFFFF);
+}
+
+int64_t SwapInt64( int64_t val )
+{
+    val = ((val << 8) & 0xFF00FF00FF00FF00ULL ) | ((val >> 8) & 0x00FF00FF00FF00FFULL );
+    val = ((val << 16) & 0xFFFF0000FFFF0000ULL ) | ((val >> 16) & 0x0000FFFF0000FFFFULL );
+    return (val << 32) | ((val >> 32) & 0xFFFFFFFFULL);
+}
+
+uint64_t SwapUInt64( uint64_t val )
+{
+    val = ((val << 8) & 0xFF00FF00FF00FF00ULL ) | ((val >> 8) & 0x00FF00FF00FF00FFULL );
+    val = ((val << 16) & 0xFFFF0000FFFF0000ULL ) | ((val >> 16) & 0x0000FFFF0000FFFFULL );
+    return (val << 32) | (val >> 32);
+}
+#endif
 
 // Swaps array of unsigned 16-bit integers
 void ConvertUInt16Buffer(void * ptr, size_t length)

@@ -1,4 +1,4 @@
-#include "diablo.h"
+#include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 
@@ -8,25 +8,27 @@ char gszHero[16];
 
 /* data */
 
-int menu_music_track_id = 5;
+int menu_music_track_id = TMUSIC_INTRO;
 
 void mainmenu_refresh_music()
 {
 	music_start(menu_music_track_id);
+#ifndef SPAWN
 	do {
 		menu_music_track_id++;
-		if (menu_music_track_id == 6)
-			menu_music_track_id = 0;
-	} while (!menu_music_track_id || menu_music_track_id == 1);
+		if (menu_music_track_id == NUM_MUSIC)
+			menu_music_track_id = TMUSIC_TOWN;
+	} while (menu_music_track_id == TMUSIC_TOWN || menu_music_track_id == TMUSIC_L1);
+#endif
 }
 
-void __stdcall mainmenu_create_hero(char *name_1, char *name_2)
+void mainmenu_change_name(int arg1, int arg2, int arg3, int arg4, char *name_1, char *name_2)
 {
-	if (UiValidPlayerName(name_1))
-		pfile_create_save_file(name_1, name_2);
+	if (UiValidPlayerName(name_2))
+		pfile_rename_hero(name_1, name_2);
 }
 
-int __stdcall mainmenu_select_hero_dialog(
+int mainmenu_select_hero_dialog(
     const _SNETPROGRAMDATA *client_info,
     const _SNETPLAYERDATA *user_info,
     const _SNETUIDATA *ui_info,
@@ -37,7 +39,7 @@ int __stdcall mainmenu_select_hero_dialog(
     BOOL *multi)
 {
 	BOOL hero_is_created = TRUE;
-	int dlgresult = NEW_GAME;
+	int dlgresult = 0;
 	if (gbMaxPlayers == 1) {
 		if (!UiSelHeroSingDialog(
 		        pfile_ui_set_hero_infos,
@@ -49,8 +51,7 @@ int __stdcall mainmenu_select_hero_dialog(
 		        &gnDifficulty))
 			app_fatal("Unable to display SelHeroSing");
 
-
-		if (dlgresult == LOAD_GAME)
+		if (dlgresult == SELHERO_CONTINUE)
 			gbLoadGame = TRUE;
 		else
 			gbLoadGame = FALSE;
@@ -65,7 +66,7 @@ int __stdcall mainmenu_select_hero_dialog(
 	               gszHero)) {
 		app_fatal("Can't load multiplayer dialog");
 	}
-	if (dlgresult == EXIT_MENU) {
+	if (dlgresult == SELHERO_PREVIOUS) {
 		SErrSetLastError(1223);
 		return 0;
 	}
@@ -93,7 +94,7 @@ void mainmenu_loop()
 
 	do {
 		menu = 0;
-		if (!UiMainMenuDialog("Diablo v1.09", &menu, effects_play_sound, 30))
+		if (!UiMainMenuDialog(gszProductName, &menu, effects_play_sound, 30))
 			app_fatal("Unable to display mainmenu");
 
 		switch (menu) {
@@ -107,8 +108,12 @@ void mainmenu_loop()
 			break;
 		case MAINMENU_REPLAY_INTRO:
 		case MAINMENU_ATTRACT_MODE:
+#ifdef SPAWN
+			done = FALSE;
+#else
 			if (gbActive)
 				mainmenu_play_intro();
+#endif
 			break;
 		case MAINMENU_SHOW_CREDITS:
 			UiCreditsDialog(16);
@@ -125,19 +130,19 @@ void mainmenu_loop()
 BOOL mainmenu_single_player()
 {
 	gbMaxPlayers = 1;
-	return mainmenu_init_menu(1);
+	return mainmenu_init_menu(SELHERO_NEW_DUNGEON);
 }
 
 BOOL mainmenu_init_menu(int type)
 {
 	BOOL success;
 
-	if (type == 4)
+	if (type == SELHERO_PREVIOUS)
 		return TRUE;
 
 	music_stop();
 
-	success = StartGame(type != 2, type != 3);
+	success = StartGame(type != SELHERO_CONTINUE, type != SELHERO_CONNECT);
 	if (success)
 		mainmenu_refresh_music();
 
@@ -147,14 +152,16 @@ BOOL mainmenu_init_menu(int type)
 BOOL mainmenu_multi_player()
 {
 	gbMaxPlayers = MAX_PLRS;
-	return mainmenu_init_menu(3);
+	return mainmenu_init_menu(SELHERO_CONNECT);
 }
 
+#ifndef SPAWN
 void mainmenu_play_intro()
 {
 	music_stop();
-	play_movie("gendata\\diablo1.smk", 1);
+	play_movie("gendata\\diablo1.smk", TRUE);
 	mainmenu_refresh_music();
 }
+#endif
 
 DEVILUTION_END_NAMESPACE

@@ -1,5 +1,4 @@
-#include "diablo.h"
-#include "../3rdParty/Storm/Source/storm.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -7,14 +6,14 @@ void *sgpBackCel;
 int sgdwProgress;
 int progress_id;
 
-const BYTE progress_bar_colours[3] = { 138, 43, 254 };
-const int progress_bar_screen_pos[3][2] = { { 53, 37 }, { 53, 421 }, { 53, 37 } };
+const BYTE BarColor[3] = { 138, 43, 254 };
+const int BarPos[3][2] = { { 53, 37 }, { 53, 421 }, { 53, 37 } };
 
 void interface_msg_pump()
 {
 	MSG Msg;
 
-	while (PeekMessage(&Msg, NULL, 0, 0, PM_REMOVE)) {
+	while (PeekMessage(&Msg)) {
 		if (Msg.message != WM_QUIT) {
 			TranslateMessage(&Msg);
 			DispatchMessage(&Msg);
@@ -25,7 +24,7 @@ void interface_msg_pump()
 BOOL IncProgress()
 {
 	interface_msg_pump();
-	sgdwProgress += 15;
+	sgdwProgress += 23;
 	if ((DWORD)sgdwProgress > 534)
 		sgdwProgress = 534;
 	if (sgpBackCel)
@@ -38,18 +37,18 @@ void DrawCutscene()
 	DWORD i;
 
 	lock_buf(1);
-	CelDecodeOnly(64, 639, (BYTE *)sgpBackCel, 1, 640);
+	CelDraw(PANEL_X, 480 + SCREEN_Y - 1, (BYTE *)sgpBackCel, 1, 640);
 
 	for (i = 0; i < sgdwProgress; i++) {
 		DrawProgress(
-		    progress_bar_screen_pos[progress_id][0] + i + 64,
-		    progress_bar_screen_pos[progress_id][1] + 160,
+		    BarPos[progress_id][0] + i + PANEL_X,
+		    BarPos[progress_id][1] + SCREEN_Y,
 		    progress_id);
 	}
 
 	unlock_buf(1);
-	drawpanflag = 255;
-	scrollrt_draw_game_screen(0);
+	force_redraw = 255;
+	scrollrt_draw_game_screen(FALSE);
 }
 
 void DrawProgress(int screen_x, int screen_y, int progress_id)
@@ -57,9 +56,9 @@ void DrawProgress(int screen_x, int screen_y, int progress_id)
 	BYTE *dst;
 	int i;
 
-	dst = &gpBuffer[screen_x + PitchTbl[screen_y]];
+	dst = &gpBuffer[screen_x + BUFFER_WIDTH * screen_y];
 	for (i = 0; i < 22; i++) {
-		*dst = progress_bar_colours[progress_id];
+		*dst = BarColor[progress_id];
 		dst += BUFFER_WIDTH;
 	}
 }
@@ -88,7 +87,9 @@ void ShowProgress(unsigned int uMsg)
 	switch (uMsg) {
 	case WM_DIABLOADGAME:
 		IncProgress();
+		IncProgress();
 		LoadGame(TRUE);
+		IncProgress();
 		IncProgress();
 		break;
 	case WM_DIABNEWGAME:
@@ -96,6 +97,7 @@ void ShowProgress(unsigned int uMsg)
 		FreeGameMem();
 		IncProgress();
 		pfile_remove_temp_files();
+		IncProgress();
 		LoadGameLevel(TRUE, 0);
 		IncProgress();
 		break;
@@ -106,6 +108,7 @@ void ShowProgress(unsigned int uMsg)
 		} else {
 			DeltaSaveLevel();
 		}
+		IncProgress();
 		FreeGameMem();
 		currlevel++;
 		leveltype = gnLevelTypeTbl[currlevel];
@@ -132,11 +135,13 @@ void ShowProgress(unsigned int uMsg)
 		break;
 	case WM_DIABSETLVL:
 		SetReturnLvlPos();
+		IncProgress();
 		if (gbMaxPlayers == 1) {
 			SaveLevel();
 		} else {
 			DeltaSaveLevel();
 		}
+		IncProgress();
 		setlevel = TRUE;
 		leveltype = setlvltype;
 		FreeGameMem();
@@ -145,11 +150,13 @@ void ShowProgress(unsigned int uMsg)
 		IncProgress();
 		break;
 	case WM_DIABRTNLVL:
+		IncProgress();
 		if (gbMaxPlayers == 1) {
 			SaveLevel();
 		} else {
 			DeltaSaveLevel();
 		}
+		IncProgress();
 		setlevel = FALSE;
 		FreeGameMem();
 		IncProgress();
@@ -164,6 +171,7 @@ void ShowProgress(unsigned int uMsg)
 		} else {
 			DeltaSaveLevel();
 		}
+		IncProgress();
 		FreeGameMem();
 		GetPortalLevel();
 		IncProgress();
@@ -177,6 +185,7 @@ void ShowProgress(unsigned int uMsg)
 		} else {
 			DeltaSaveLevel();
 		}
+		IncProgress();
 		FreeGameMem();
 		currlevel = plr[myplr].plrlevel;
 		leveltype = gnLevelTypeTbl[currlevel];
@@ -192,6 +201,7 @@ void ShowProgress(unsigned int uMsg)
 		} else {
 			DeltaSaveLevel();
 		}
+		IncProgress();
 		FreeGameMem();
 		currlevel = plr[myplr].plrlevel;
 		leveltype = gnLevelTypeTbl[currlevel];
@@ -207,6 +217,7 @@ void ShowProgress(unsigned int uMsg)
 		} else {
 			DeltaSaveLevel();
 		}
+		IncProgress();
 		FreeGameMem();
 		currlevel = plr[myplr].plrlevel;
 		leveltype = gnLevelTypeTbl[currlevel];
@@ -245,81 +256,81 @@ void InitCutscene(unsigned int uMsg)
 {
 	/// ASSERT: assert(! sgpBackCel);
 
-	switch(uMsg) {
+	switch (uMsg) {
 	case WM_DIABNEXTLVL:
-		switch(gnLevelTypeTbl[currlevel]) {
+		switch (gnLevelTypeTbl[currlevel]) {
 		case 0:
-			sgpBackCel = LoadFileInMem("Gendata\\Cuttt.CEL", 0);
+			sgpBackCel = LoadFileInMem("Gendata\\Cuttt.CEL", NULL);
 			LoadPalette("Gendata\\Cuttt.pal");
 			progress_id = 1;
 			break;
 		case 1:
-			sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", 0);
+			sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", NULL);
 			LoadPalette("Gendata\\Cutl1d.pal");
 			progress_id = 0;
 			break;
 		case 2:
-			sgpBackCel = LoadFileInMem("Gendata\\Cut2.CEL", 0);
+			sgpBackCel = LoadFileInMem("Gendata\\Cut2.CEL", NULL);
 			LoadPalette("Gendata\\Cut2.pal");
 			progress_id = 2;
 			break;
 		case 3:
-			sgpBackCel = LoadFileInMem("Gendata\\Cut3.CEL", 0);
+			sgpBackCel = LoadFileInMem("Gendata\\Cut3.CEL", NULL);
 			LoadPalette("Gendata\\Cut3.pal");
 			progress_id = 1;
 			break;
 		case 4:
-			if(currlevel < 15) {
-				sgpBackCel = LoadFileInMem("Gendata\\Cut4.CEL", 0);
+			if (currlevel < 15) {
+				sgpBackCel = LoadFileInMem("Gendata\\Cut4.CEL", NULL);
 				LoadPalette("Gendata\\Cut4.pal");
 				progress_id = 1;
 			} else {
-				sgpBackCel = LoadFileInMem("Gendata\\Cutgate.CEL", 0);
+				sgpBackCel = LoadFileInMem("Gendata\\Cutgate.CEL", NULL);
 				LoadPalette("Gendata\\Cutgate.pal");
 				progress_id = 1;
 			}
 			break;
 		default:
-			sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", 0);
+			sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", NULL);
 			LoadPalette("Gendata\\Cutl1d.pal");
 			progress_id = 0;
 			break;
 		}
 		break;
 	case WM_DIABPREVLVL:
-		if(gnLevelTypeTbl[currlevel - 1] == 0) {
-			sgpBackCel = LoadFileInMem("Gendata\\Cuttt.CEL", 0);
+		if (gnLevelTypeTbl[currlevel - 1] == 0) {
+			sgpBackCel = LoadFileInMem("Gendata\\Cuttt.CEL", NULL);
 			LoadPalette("Gendata\\Cuttt.pal");
 			progress_id = 1;
 		} else {
-			switch(gnLevelTypeTbl[currlevel]) {
+			switch (gnLevelTypeTbl[currlevel]) {
 			case 0:
-				sgpBackCel = LoadFileInMem("Gendata\\Cuttt.CEL", 0);
+				sgpBackCel = LoadFileInMem("Gendata\\Cuttt.CEL", NULL);
 				LoadPalette("Gendata\\Cuttt.pal");
 				progress_id = 1;
 				break;
 			case 1:
-				sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", 0);
+				sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", NULL);
 				LoadPalette("Gendata\\Cutl1d.pal");
 				progress_id = 0;
 				break;
 			case 2:
-				sgpBackCel = LoadFileInMem("Gendata\\Cut2.CEL", 0);
+				sgpBackCel = LoadFileInMem("Gendata\\Cut2.CEL", NULL);
 				LoadPalette("Gendata\\Cut2.pal");
 				progress_id = 2;
 				break;
 			case 3:
-				sgpBackCel = LoadFileInMem("Gendata\\Cut3.CEL", 0);
+				sgpBackCel = LoadFileInMem("Gendata\\Cut3.CEL", NULL);
 				LoadPalette("Gendata\\Cut3.pal");
 				progress_id = 1;
 				break;
 			case 4:
-				sgpBackCel = LoadFileInMem("Gendata\\Cut4.CEL", 0);
+				sgpBackCel = LoadFileInMem("Gendata\\Cut4.CEL", NULL);
 				LoadPalette("Gendata\\Cut4.pal");
 				progress_id = 1;
 				break;
 			default:
-				sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", 0);
+				sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", NULL);
 				LoadPalette("Gendata\\Cutl1d.pal");
 				progress_id = 0;
 				break;
@@ -327,77 +338,77 @@ void InitCutscene(unsigned int uMsg)
 		}
 		break;
 	case WM_DIABSETLVL:
-		if(setlvlnum == SL_BONECHAMB) {
-			sgpBackCel = LoadFileInMem("Gendata\\Cut2.CEL", 0);
+		if (setlvlnum == SL_BONECHAMB) {
+			sgpBackCel = LoadFileInMem("Gendata\\Cut2.CEL", NULL);
 			LoadPalette("Gendata\\Cut2.pal");
 			progress_id = 2;
-		} else if(setlvlnum == SL_VILEBETRAYER) {
-			sgpBackCel = LoadFileInMem("Gendata\\Cutportr.CEL", 0);
+		} else if (setlvlnum == SL_VILEBETRAYER) {
+			sgpBackCel = LoadFileInMem("Gendata\\Cutportr.CEL", NULL);
 			LoadPalette("Gendata\\Cutportr.pal");
 			progress_id = 1;
 		} else {
-			sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", 0);
+			sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", NULL);
 			LoadPalette("Gendata\\Cutl1d.pal");
 			progress_id = 0;
 		}
 		break;
 	case WM_DIABRTNLVL:
-		if(setlvlnum == SL_BONECHAMB) {
-			sgpBackCel = LoadFileInMem("Gendata\\Cut2.CEL", 0);
+		if (setlvlnum == SL_BONECHAMB) {
+			sgpBackCel = LoadFileInMem("Gendata\\Cut2.CEL", NULL);
 			LoadPalette("Gendata\\Cut2.pal");
 			progress_id = 2;
-		} else if(setlvlnum == SL_VILEBETRAYER) {
-			sgpBackCel = LoadFileInMem("Gendata\\Cutportr.CEL", 0);
+		} else if (setlvlnum == SL_VILEBETRAYER) {
+			sgpBackCel = LoadFileInMem("Gendata\\Cutportr.CEL", NULL);
 			LoadPalette("Gendata\\Cutportr.pal");
 			progress_id = 1;
 		} else {
-			sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", 0);
+			sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", NULL);
 			LoadPalette("Gendata\\Cutl1d.pal");
 			progress_id = 0;
 		}
 		break;
 	case WM_DIABWARPLVL:
-		sgpBackCel = LoadFileInMem("Gendata\\Cutportl.CEL", 0);
+		sgpBackCel = LoadFileInMem("Gendata\\Cutportl.CEL", NULL);
 		LoadPalette("Gendata\\Cutportl.pal");
 		progress_id = 1;
 		break;
 	case WM_DIABLOADGAME:
-		sgpBackCel = LoadFileInMem("Gendata\\Cutstart.CEL", 0);
+		sgpBackCel = LoadFileInMem("Gendata\\Cutstart.CEL", NULL);
 		LoadPalette("Gendata\\Cutstart.pal");
 		progress_id = 1;
 		break;
 	case WM_DIABNEWGAME:
-		sgpBackCel = LoadFileInMem("Gendata\\Cutstart.CEL", 0);
+		sgpBackCel = LoadFileInMem("Gendata\\Cutstart.CEL", NULL);
 		LoadPalette("Gendata\\Cutstart.pal");
 		progress_id = 1;
 		break;
 	case WM_DIABTOWNWARP:
 	case WM_DIABTWARPUP:
-		switch(gnLevelTypeTbl[plr[myplr].plrlevel]) {
+		switch (gnLevelTypeTbl[plr[myplr].plrlevel]) {
 		case 0:
-			sgpBackCel = LoadFileInMem("Gendata\\Cuttt.CEL", 0);
+			sgpBackCel = LoadFileInMem("Gendata\\Cuttt.CEL", NULL);
 			LoadPalette("Gendata\\Cuttt.pal");
 			progress_id = 1;
 			break;
 		case 2:
-			sgpBackCel = LoadFileInMem("Gendata\\Cut2.CEL", 0);
+			sgpBackCel = LoadFileInMem("Gendata\\Cut2.CEL", NULL);
 			LoadPalette("Gendata\\Cut2.pal");
 			progress_id = 2;
 			break;
 		case 3:
-			sgpBackCel = LoadFileInMem("Gendata\\Cut3.CEL", 0);
+			sgpBackCel = LoadFileInMem("Gendata\\Cut3.CEL", NULL);
 			LoadPalette("Gendata\\Cut3.pal");
 			progress_id = 1;
 			break;
 		case 4:
-			sgpBackCel = LoadFileInMem("Gendata\\Cut4.CEL", 0);
+			sgpBackCel = LoadFileInMem("Gendata\\Cut4.CEL", NULL);
 			LoadPalette("Gendata\\Cut4.pal");
 			progress_id = 1;
 			break;
 		}
 		break;
 	case WM_DIABRETOWN:
-		sgpBackCel = LoadFileInMem("Gendata\\Cuttt.CEL", 0);
+		sgpBackCel = LoadFileInMem("Gendata\\Cuttt.CEL", NULL);
 		LoadPalette("Gendata\\Cuttt.pal");
 		progress_id = 1;
 		break;

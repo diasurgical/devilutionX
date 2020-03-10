@@ -1,9 +1,9 @@
-#include "diablo.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
 char msgtable[MAX_SEND_STR_LEN];
-char msgdelay;
+DWORD msgdelay;
 char msgflag;
 char msgcnt;
 
@@ -58,17 +58,19 @@ void InitDiabloMsg(char e)
 {
 	int i;
 
+	if (msgcnt >= sizeof(msgtable))
+		return;
+
 	for (i = 0; i < msgcnt; i++) {
 		if (msgtable[i] == e)
 			return;
 	}
 
 	msgtable[msgcnt] = e;
-	if (msgcnt < (BYTE)sizeof(msgtable))
-		msgcnt++;
+	msgcnt++;
 
 	msgflag = msgtable[0];
-	msgdelay = 70;
+	msgdelay = SDL_GetTicks();
 }
 
 void ClrDiabloMsg()
@@ -84,66 +86,63 @@ void ClrDiabloMsg()
 
 void DrawDiabloMsg()
 {
-	int i, len, off, width, sx, sy;
+	int i, len, width, sx, sy;
 	BYTE c;
 
-	CelDecodeOnly(165, 318, (BYTE *)pSTextSlidCels, 1, 12);
-	CelDecodeOnly(591, 318, (BYTE *)pSTextSlidCels, 4, 12);
-	CelDecodeOnly(165, 366, (BYTE *)pSTextSlidCels, 2, 12);
-	CelDecodeOnly(591, 366, (BYTE *)pSTextSlidCels, 3, 12);
+	CelDraw(PANEL_X + 101, DIALOG_Y, pSTextSlidCels, 1, 12);
+	CelDraw(PANEL_X + 527, DIALOG_Y, pSTextSlidCels, 4, 12);
+	CelDraw(PANEL_X + 101, DIALOG_Y + 48, pSTextSlidCels, 2, 12);
+	CelDraw(PANEL_X + 527, DIALOG_Y + 48, pSTextSlidCels, 3, 12);
 
-	sx = 173;
-	for(i = 0; i < 35; i++) {
-		CelDecodeOnly(sx, 318, (BYTE *)pSTextSlidCels, 5, 12);
-		CelDecodeOnly(sx, 366, (BYTE *)pSTextSlidCels, 7, 12);
+	sx = PANEL_X + 109;
+	for (i = 0; i < 35; i++) {
+		CelDraw(sx, DIALOG_Y, pSTextSlidCels, 5, 12);
+		CelDraw(sx, DIALOG_Y + 48, pSTextSlidCels, 7, 12);
 		sx += 12;
 	}
-	sy = 330;
-	for(i = 0; i < 3; i++) {
-		CelDecodeOnly(165, sy, (BYTE *)pSTextSlidCels, 6, 12);
-		CelDecodeOnly(591, sy, (BYTE *)pSTextSlidCels, 8, 12);
+	sy = DIALOG_Y + 12;
+	for (i = 0; i < 3; i++) {
+		CelDraw(PANEL_X + 101, sy, pSTextSlidCels, 6, 12);
+		CelDraw(PANEL_X + 527, sy, pSTextSlidCels, 8, 12);
 		sy += 12;
 	}
 
 	/// ASSERT: assert(gpBuffer);
 
-#define TRANS_RECT_X 104
-#define TRANS_RECT_Y 150
-#define TRANS_RECT_WIDTH 432
-#define TRANS_RECT_HEIGHT 54
-#include "asm_trans_rect.inc"
+	trans_rect(PANEL_LEFT + 104, DIALOG_TOP - 8, 432, 54);
 
 	strcpy(tempstr, MsgStrings[msgflag]);
-	off = 165 + PitchTbl[342];
+	sx = PANEL_X + 101;
+	sy = DIALOG_Y + 24;
 	len = strlen(tempstr);
 	width = 0;
 
-	for(i = 0; i < len; i++) {
+	for (i = 0; i < len; i++) {
 		width += fontkern[fontframe[gbFontTransTbl[(BYTE)tempstr[i]]]] + 1;
 	}
 
-	if(width < 442) {
-		off += (442 - width) >> 1;
+	if (width < 442) {
+		sx += (442 - width) >> 1;
 	}
 
-	for(i = 0; i < len; i++) {
+	for (i = 0; i < len; i++) {
 		c = fontframe[gbFontTransTbl[(BYTE)tempstr[i]]];
-		if(c != '\0') {
-			CPrintString(off, c, COL_GOLD);
+		if (c != '\0') {
+			PrintChar(sx, sy, c, COL_GOLD);
 		}
-		off += fontkern[c] + 1;
+		sx += fontkern[c] + 1;
 	}
 
-	if(msgdelay > 0) {
-		msgdelay--;
+	if (msgdelay > 0 && msgdelay <= SDL_GetTicks() - 3500) {
+		msgdelay = 0;
 	}
-	if(msgdelay == 0) {
+	if (msgdelay == 0) {
 		msgcnt--;
-		msgdelay = 70;
-		if(msgcnt == 0) {
+		if (msgcnt == 0) {
 			msgflag = 0;
 		} else {
 			msgflag = msgtable[msgcnt];
+			msgdelay = SDL_GetTicks();
 		}
 	}
 }

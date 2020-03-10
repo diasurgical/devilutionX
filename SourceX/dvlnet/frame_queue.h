@@ -7,19 +7,28 @@
 namespace dvl {
 namespace net {
 
-class frame_queue_exception : public dvlnet_exception {};
+class frame_queue_exception : public dvlnet_exception {
+public:
+	const char *what() const throw() override
+	{
+		return "Incorrect frame size";
+	}
+};
+
+typedef uint32_t framesize_t;
 
 class frame_queue {
 public:
-	typedef uint32_t framesize_t;
 	constexpr static framesize_t max_frame_size = 0xFFFF;
-private:
-	size_t current_size = 0;
-	std::deque<buffer_t> buffer_deque;
-	size_t nextsize = 0;
 
-	size_t size();
-	buffer_t read(size_t s);
+private:
+	framesize_t current_size = 0;
+	std::deque<buffer_t> buffer_deque;
+	framesize_t nextsize = 0;
+
+	framesize_t size();
+	buffer_t read(framesize_t s);
+
 public:
 	bool packet_ready();
 	buffer_t read_packet();
@@ -28,5 +37,5 @@ public:
 	static buffer_t make_frame(buffer_t packetbuf);
 };
 
-}  // namespace net
-}  // namespace dvl
+} // namespace net
+} // namespace dvl

@@ -1,15 +1,23 @@
-#include "diablo.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
-void *pSquareCel;
+#ifdef _DEBUG
+BOOL update_seed_check = FALSE;
+#endif
+
+int seed_index;
+int level_seeds[NUMLEVELS];
+int seed_table[4096];
+
+BYTE *pSquareCel;
 char dMonsDbg[NUMLEVELS][MAXDUNX][MAXDUNY];
 char dFlagDbg[NUMLEVELS][MAXDUNX][MAXDUNY];
 
 void LoadDebugGFX()
 {
 	if (visiondebug)
-		pSquareCel = LoadFileInMem("Data\\Square.CEL", 0);
+		pSquareCel = LoadFileInMem("Data\\Square.CEL", NULL);
 }
 
 void FreeDebugGFX()
@@ -28,8 +36,8 @@ void CheckDungeonClear()
 			if (dPlayer[i][j])
 				app_fatal("Players not cleared");
 
-			dMonsDbg[currlevel][i][j] = dFlags[i][j] & DFLAG_VISIBLE;
-			dFlagDbg[currlevel][i][j] = dFlags[i][j] & DFLAG_POPULATED;
+			dMonsDbg[currlevel][i][j] = dFlags[i][j] & BFLAG_VISIBLE;
+			dFlagDbg[currlevel][i][j] = dFlags[i][j] & BFLAG_POPULATED;
 		}
 	}
 }
@@ -39,14 +47,14 @@ void GiveGoldCheat()
 {
 	int i, ni;
 
-	for (i = 0; i < 40; i++) {
+	for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
 		if (!plr[myplr].InvGrid[i]) {
 			ni = plr[myplr]._pNumInv++;
 			SetPlrHandItem(&plr[myplr].InvList[ni], IDI_GOLD);
 			GetPlrHandSeed(&plr[myplr].InvList[ni]);
-			plr[myplr].InvList[ni]._ivalue = 5000;
-			plr[myplr].InvList[ni]._iCurs = 6;
-			plr[myplr]._pGold += 5000;
+			plr[myplr].InvList[ni]._ivalue = GOLD_MAX_LIMIT;
+			plr[myplr].InvList[ni]._iCurs = ICURS_GOLD_LARGE;
+			plr[myplr]._pGold += GOLD_MAX_LIMIT;
 			plr[myplr].InvGrid[i] = plr[myplr]._pNumInv;
 		}
 	}
@@ -58,13 +66,13 @@ void StoresCheat()
 
 	numpremium = 0;
 
-	for (i = 0; i < 6; i++)
-		premiumitem[i]._itype = -1;
+	for (i = 0; i < SMITH_PREMIUM_ITEMS; i++)
+		premiumitem[i]._itype = ITYPE_NONE;
 
 	SpawnPremium(30);
 
 	for (i = 0; i < 20; i++)
-		witchitem[i]._itype = -1;
+		witchitem[i]._itype = ITYPE_NONE;
 
 	SpawnWitch(30);
 }
@@ -74,7 +82,7 @@ void TakeGoldCheat()
 	int i;
 	char ig;
 
-	for (i = 0; i < 40; i++) {
+	for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
 		ig = plr[myplr].InvGrid[i];
 		if (ig > 0 && plr[myplr].InvList[ig - 1]._itype == ITYPE_GOLD)
 			RemoveInvItem(myplr, ig - 1);
@@ -82,7 +90,7 @@ void TakeGoldCheat()
 
 	for (i = 0; i < MAXBELTITEMS; i++) {
 		if (plr[myplr].SpdList[i]._itype == ITYPE_GOLD)
-			plr[myplr].SpdList[i]._itype = -1;
+			plr[myplr].SpdList[i]._itype = ITYPE_NONE;
 	}
 
 	plr[myplr]._pGold = 0;
@@ -137,7 +145,7 @@ void PrintDebugPlayer(BOOL bNextPlayer)
 	char dstr[128];
 
 	if (bNextPlayer)
-		dbgplr = ((_BYTE)dbgplr + 1) & 3;
+		dbgplr = ((BYTE)dbgplr + 1) & 3;
 
 	sprintf(dstr, "Plr %i : Active = %i", dbgplr, plr[dbgplr].plractive);
 	NetSendCmdString(1 << myplr, dstr);
@@ -162,7 +170,7 @@ void PrintDebugQuest()
 
 	sprintf(dstr, "Quest %i :  Active = %i, Var1 = %i", dbgqst, quests[dbgqst]._qactive, quests[dbgqst]._qvar1);
 	NetSendCmdString(1 << myplr, dstr);
-	
+
 	dbgqst++;
 	if (dbgqst == MAXQUESTS)
 		dbgqst = 0;
@@ -171,8 +179,8 @@ void PrintDebugQuest()
 void PrintDebugMonster(int m)
 {
 	BOOL bActive;
-	int i;          
-	char dstr[128]; 
+	int i;
+	char dstr[128];
 
 	sprintf(dstr, "Monster %i = %s", m, monster[m].mName);
 	NetSendCmdString(1 << myplr, dstr);
@@ -183,11 +191,11 @@ void PrintDebugMonster(int m)
 	sprintf(dstr, "Mode = %i, Var1 = %i", monster[m]._mmode, monster[m]._mVar1);
 	NetSendCmdString(1 << myplr, dstr);
 
-	bActive = 0;
+	bActive = FALSE;
 
 	for (i = 0; i < nummonsters; i++) {
 		if (monstactive[i] == m)
-			bActive = 1;
+			bActive = TRUE;
 	}
 
 	sprintf(dstr, "Active List = %i, Squelch = %i", bActive, monster[m]._msquelch);

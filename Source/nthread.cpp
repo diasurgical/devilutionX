@@ -1,139 +1,125 @@
-#include "diablo.h"
+#include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
-char byte_679704; // weak
-int gdwMsgLenTbl[MAX_PLRS];
-#ifdef __cplusplus
+BYTE sgbNetUpdateRate;
+DWORD gdwMsgLenTbl[MAX_PLRS];
 static CCritSect sgMemCrit;
-#endif
-int gdwDeltaBytesSec;    // weak
-char nthread_should_run; // weak
-DWORD gdwTurnsInTransit; // weak
-char *glpMsgTbl[MAX_PLRS];
-unsigned int glpNThreadId;
-char sgbSyncCountdown;   // weak
-int turn_upper_bit;      // weak
-char byte_679758;        // weak
-char sgbPacketCountdown; // weak
-char sgbThreadIsRunning; // weak
-int gdwLargestMsgSize;   // weak
-int gdwNormalMsgSize;    // weak
-int last_tick;           // weak
+DWORD gdwDeltaBytesSec;
+BOOLEAN nthread_should_run;
+DWORD gdwTurnsInTransit;
+uintptr_t glpMsgTbl[MAX_PLRS];
+SDL_threadID glpNThreadId;
+char sgbSyncCountdown;
+int turn_upper_bit;
+BOOLEAN sgbTicsOutOfSync;
+char sgbPacketCountdown;
+BOOLEAN sgbThreadIsRunning;
+DWORD gdwLargestMsgSize;
+DWORD gdwNormalMsgSize;
+int last_tick;
 
 /* data */
-static HANDLE sghThread = INVALID_HANDLE_VALUE;
+static SDL_Thread *sghThread = NULL;
 
 void nthread_terminate_game(const char *pszFcn)
 {
-	DWORD sErr; // eax
+	DWORD sErr;
 
 	sErr = SErrGetLastError();
-	if (sErr != STORM_ERROR_INVALID_PLAYER) {
-		if (sErr == STORM_ERROR_GAME_TERMINATED || sErr == STORM_ERROR_NOT_IN_GAME) {
-			gbGameDestroyed = 1;
-		} else {
-			app_fatal("%s:\n%s", pszFcn, TraceLastError());
-		}
+	if (sErr == STORM_ERROR_INVALID_PLAYER) {
+		return;
+	} else if (sErr == STORM_ERROR_GAME_TERMINATED) {
+		gbGameDestroyed = TRUE;
+	} else if (sErr == STORM_ERROR_NOT_IN_GAME) {
+		gbGameDestroyed = TRUE;
+	} else {
+		app_fatal("%s:\n%s", pszFcn, TraceLastError());
 	}
 }
-// 67862D: using guessed type char gbGameDestroyed;
 
-int nthread_send_and_recv_turn(int cur_turn, int turn_delta)
+DWORD nthread_send_and_recv_turn(DWORD cur_turn, int turn_delta)
 {
-	unsigned int new_cur_turn; // edi
-	const char *lastStormFn;   // ecx
-	int turn_tmp;              // eax
-	int turn;                  // [esp+Ch] [ebp-8h]
-	int curTurnsInTransit;     // [esp+10h] [ebp-4h]
+	DWORD new_cur_turn;
+	int turn, turn_tmp;
+	int curTurnsInTransit;
 
 	new_cur_turn = cur_turn;
-	if (SNetGetTurnsInTransit(&curTurnsInTransit)) {
-		if (curTurnsInTransit >= (unsigned int)gdwTurnsInTransit)
-			return new_cur_turn;
-		while (1) {
-			++curTurnsInTransit;
+	if (!SNetGetTurnsInTransit(&curTurnsInTransit)) {
+		nthread_terminate_game("SNetGetTurnsInTransit");
+		return 0;
+	}
+	while (curTurnsInTransit < gdwTurnsInTransit) {
+		curTurnsInTransit++;
 
-			turn_tmp = turn_upper_bit | new_cur_turn & 0x7FFFFFFF;
-			turn_upper_bit = 0;
-			turn = turn_tmp;
+		turn_tmp = turn_upper_bit | new_cur_turn & 0x7FFFFFFF;
+		turn_upper_bit = 0;
+		turn = turn_tmp;
 
-			if (!SNetSendTurn((char *)&turn, sizeof(turn)))
-				break;
-
-			new_cur_turn += turn_delta;
-			if (new_cur_turn >= 0x7FFFFFFF)
-				new_cur_turn = (unsigned short)new_cur_turn;
-			if (curTurnsInTransit >= (unsigned int)gdwTurnsInTransit)
-				return new_cur_turn;
+		if (!SNetSendTurn((char *)&turn, sizeof(turn))) {
+			nthread_terminate_game("SNetSendTurn");
+			return 0;
 		}
-		lastStormFn = "SNetSendTurn";
-	} else {
-		lastStormFn = "SNetGetTurnsInTransit";
+
+		new_cur_turn += turn_delta;
+		if (new_cur_turn >= 0x7FFFFFFF)
+			new_cur_turn &= 0xFFFF;
 	}
-	nthread_terminate_game(lastStormFn);
-	return 0;
+	return new_cur_turn;
 }
-// 679738: using guessed type int gdwTurnsInTransit;
-// 679754: using guessed type int turn_upper_bit;
 
-int nthread_recv_turns(int *pfSendAsync)
+BOOL nthread_recv_turns(BOOL *pfSendAsync)
 {
-	BOOLEAN hasCountedDown; // zf
-
-	*pfSendAsync = 0;
-	if (--sgbPacketCountdown) {
+	*pfSendAsync = FALSE;
+	sgbPacketCountdown--;
+	if (sgbPacketCountdown) {
 		last_tick += 50;
-		return 1;
+		return TRUE;
 	}
-	hasCountedDown = sgbSyncCountdown-- == 1;
-	sgbPacketCountdown = byte_679704;
-	if (!hasCountedDown)
-		goto LABEL_11;
-	if (SNetReceiveTurns(0, MAX_PLRS, (char **)glpMsgTbl, (unsigned int *)gdwMsgLenTbl, (LPDWORD)player_state)) {
-		if (!byte_679758) {
-			byte_679758 = 1;
-			last_tick = GetTickCount();
+	sgbSyncCountdown--;
+	sgbPacketCountdown = sgbNetUpdateRate;
+	if (sgbSyncCountdown != 0) {
+
+		*pfSendAsync = TRUE;
+		last_tick += 50;
+		return TRUE;
+	}
+	if (!SNetReceiveTurns(0, MAX_PLRS, (char **)glpMsgTbl, gdwMsgLenTbl, (LPDWORD)player_state)) {
+		if (SErrGetLastError() != STORM_ERROR_NO_MESSAGES_WAITING)
+			nthread_terminate_game("SNetReceiveTurns");
+		sgbTicsOutOfSync = FALSE;
+		sgbSyncCountdown = 1;
+		sgbPacketCountdown = 1;
+		return FALSE;
+	} else {
+		if (!sgbTicsOutOfSync) {
+			sgbTicsOutOfSync = TRUE;
+			last_tick = SDL_GetTicks();
 		}
 		sgbSyncCountdown = 4;
 		multi_msg_countdown();
-	LABEL_11:
-		*pfSendAsync = 1;
+		*pfSendAsync = TRUE;
 		last_tick += 50;
-		return 1;
+		return TRUE;
 	}
-	if (SErrGetLastError() != STORM_ERROR_NO_MESSAGES_WAITING)
-		nthread_terminate_game("SNetReceiveTurns");
-	byte_679758 = 0;
-	sgbSyncCountdown = 1;
-	sgbPacketCountdown = 1;
-	return 0;
 }
-// 679704: using guessed type char byte_679704;
-// 679750: using guessed type char sgbSyncCountdown;
-// 679758: using guessed type char byte_679758;
-// 679759: using guessed type char sgbPacketCountdown;
-// 679764: using guessed type int last_tick;
 
 void nthread_set_turn_upper_bit()
 {
 	turn_upper_bit = 0x80000000;
 }
-// 679754: using guessed type int turn_upper_bit;
 
 void nthread_start(BOOL set_turn_upper_bit)
 {
-	char *err;                   // eax
-	unsigned int largestMsgSize; // esi
-	unsigned int normalMsgSize;  // eax
-	char *err2;                  // eax
-	_SNETCAPS caps;              // [esp+8h] [ebp-24h]
+	const char *err, *err2;
+	DWORD largestMsgSize;
+	_SNETCAPS caps;
 
-	last_tick = GetTickCount();
+	last_tick = SDL_GetTicks();
 	sgbPacketCountdown = 1;
 	sgbSyncCountdown = 1;
-	byte_679758 = 1;
+	sgbTicsOutOfSync = TRUE;
 	if (set_turn_upper_bit)
 		nthread_set_turn_upper_bit();
 	else
@@ -146,134 +132,96 @@ void nthread_start(BOOL set_turn_upper_bit)
 	gdwTurnsInTransit = caps.defaultturnsintransit;
 	if (!caps.defaultturnsintransit)
 		gdwTurnsInTransit = 1;
-	if (caps.defaultturnssec <= 0x14u && caps.defaultturnssec)
-		byte_679704 = 0x14u / caps.defaultturnssec;
+	if (caps.defaultturnssec <= 20 && caps.defaultturnssec)
+		sgbNetUpdateRate = 20 / caps.defaultturnssec;
 	else
-		byte_679704 = 1;
+		sgbNetUpdateRate = 1;
 	largestMsgSize = 512;
-	if (caps.maxmessagesize < 0x200u)
+	if (caps.maxmessagesize < 0x200)
 		largestMsgSize = caps.maxmessagesize;
-	gdwDeltaBytesSec = (unsigned int)caps.bytessec >> 2;
+	gdwDeltaBytesSec = caps.bytessec >> 2;
 	gdwLargestMsgSize = largestMsgSize;
-	if (caps.maxplayers > 4u)
-		caps.maxplayers = 4;
-	normalMsgSize = (3 * (caps.bytessec * (unsigned int)(unsigned char)byte_679704 / 0x14) >> 2) / caps.maxplayers;
-	gdwNormalMsgSize = normalMsgSize;
-	if (normalMsgSize < 0x80) {
-		do {
-			byte_679704 *= 2;
-			normalMsgSize *= 2;
-		} while (normalMsgSize < 0x80);
-		gdwNormalMsgSize = normalMsgSize;
+	gdwNormalMsgSize = caps.bytessec * sgbNetUpdateRate / 20;
+	gdwNormalMsgSize *= 3;
+	gdwNormalMsgSize >>= 2;
+	if (caps.maxplayers > MAX_PLRS)
+		caps.maxplayers = MAX_PLRS;
+	gdwNormalMsgSize /= caps.maxplayers;
+	while (gdwNormalMsgSize < 0x80) {
+		gdwNormalMsgSize *= 2;
+		sgbNetUpdateRate *= 2;
 	}
-	if (normalMsgSize > largestMsgSize)
+	if (gdwNormalMsgSize > largestMsgSize)
 		gdwNormalMsgSize = largestMsgSize;
-	if ((unsigned char)gbMaxPlayers > 1u) {
-		sgbThreadIsRunning = 0;
-#ifdef __cplusplus
+	if (gbMaxPlayers > 1) {
+		sgbThreadIsRunning = FALSE;
 		sgMemCrit.Enter();
-#endif
-		nthread_should_run = 1;
-		sghThread = (HANDLE)_beginthreadex(NULL, 0, nthread_handler, NULL, 0, &glpNThreadId);
-		if (sghThread == (HANDLE)-1) {
+		nthread_should_run = TRUE;
+		sghThread = CreateThread(nthread_handler, &glpNThreadId);
+		if (sghThread == NULL) {
 			err2 = TraceLastError();
 			app_fatal("nthread2:\n%s", err2);
 		}
-		SetThreadPriority(sghThread, THREAD_PRIORITY_HIGHEST);
 	}
 }
-// 679660: using guessed type char gbMaxPlayers;
-// 679704: using guessed type char byte_679704;
-// 679730: using guessed type int gdwDeltaBytesSec;
-// 679734: using guessed type char nthread_should_run;
-// 679738: using guessed type int gdwTurnsInTransit;
-// 679750: using guessed type char sgbSyncCountdown;
-// 679754: using guessed type int turn_upper_bit;
-// 679758: using guessed type char byte_679758;
-// 679759: using guessed type char sgbPacketCountdown;
-// 67975A: using guessed type char sgbThreadIsRunning;
-// 67975C: using guessed type int gdwLargestMsgSize;
-// 679760: using guessed type int gdwNormalMsgSize;
-// 679764: using guessed type int last_tick;
 
-unsigned int __stdcall nthread_handler(void *a1)
+unsigned int nthread_handler(void *)
 {
-	signed int delta; // esi
-	int received;     // [esp+Ch] [ebp-4h]
+	int delta;
+	BOOL received;
 
 	if (nthread_should_run) {
 		while (1) {
-#ifdef __cplusplus
 			sgMemCrit.Enter();
-#endif
 			if (!nthread_should_run)
 				break;
 			nthread_send_and_recv_turn(0, 0);
 			if (nthread_recv_turns(&received))
-				delta = last_tick - GetTickCount();
+				delta = last_tick - SDL_GetTicks();
 			else
 				delta = 50;
-#ifdef __cplusplus
 			sgMemCrit.Leave();
-#endif
 			if (delta > 0)
-				Sleep(delta);
+				SDL_Delay(delta);
 			if (!nthread_should_run)
 				return 0;
 		}
-#ifdef __cplusplus
 		sgMemCrit.Leave();
-#endif
 	}
 	return 0;
 }
-// 679734: using guessed type char nthread_should_run;
-// 679764: using guessed type int last_tick;
 
 void nthread_cleanup()
 {
-	nthread_should_run = 0;
+	nthread_should_run = FALSE;
 	gdwTurnsInTransit = 0;
 	gdwNormalMsgSize = 0;
 	gdwLargestMsgSize = 0;
-	if (sghThread != (HANDLE)-1 && glpNThreadId != GetCurrentThreadId()) {
-#ifdef __cplusplus
+	if (sghThread != NULL && glpNThreadId != SDL_GetThreadID(NULL)) {
 		if (!sgbThreadIsRunning)
 			sgMemCrit.Leave();
-#endif
-		if (WaitForSingleObject(sghThread, 0xFFFFFFFF) == -1) {
-			app_fatal("nthread3:\n(%s)", TraceLastError());
-		}
-		CloseHandle(sghThread);
-		sghThread = (HANDLE)-1;
+		SDL_WaitThread(sghThread, NULL);
+		sghThread = NULL;
 	}
 }
-// 679734: using guessed type char nthread_should_run;
-// 679738: using guessed type int gdwTurnsInTransit;
-// 67975A: using guessed type char sgbThreadIsRunning;
-// 67975C: using guessed type int gdwLargestMsgSize;
-// 679760: using guessed type int gdwNormalMsgSize;
 
 void nthread_ignore_mutex(BOOL bStart)
 {
-	if (sghThread != (HANDLE)-1) {
-#ifdef __cplusplus
+	if (sghThread != NULL) {
 		if (bStart)
 			sgMemCrit.Leave();
 		else
 			sgMemCrit.Enter();
-#endif
 		sgbThreadIsRunning = bStart;
 	}
 }
-// 67975A: using guessed type char sgbThreadIsRunning;
 
 BOOL nthread_has_500ms_passed(BOOL unused)
 {
-	DWORD currentTickCount; // eax
-	int ticksElapsed;       // ecx
+	DWORD currentTickCount;
+	int ticksElapsed;
 
-	currentTickCount = GetTickCount();
+	currentTickCount = SDL_GetTicks();
 	ticksElapsed = currentTickCount - last_tick;
 	if (gbMaxPlayers == 1 && ticksElapsed > 500) {
 		last_tick = currentTickCount;
@@ -281,7 +229,5 @@ BOOL nthread_has_500ms_passed(BOOL unused)
 	}
 	return ticksElapsed >= 0;
 }
-// 679660: using guessed type char gbMaxPlayers;
-// 679764: using guessed type int last_tick;
 
 DEVILUTION_END_NAMESPACE

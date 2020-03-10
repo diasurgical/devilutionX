@@ -2,15 +2,11 @@
 #ifndef __TRIGS_H__
 #define __TRIGS_H__
 
-// The trigflag variables (0-4) here were split up from the trigflag array.
-// Complete diff is part of PR #947 on Github.
-extern int trigflag_0;
-extern int trigflag_1;
-extern int trigflag_2;
-extern int trigflag_3;
-extern int trigflag_4;
+extern BOOL townwarps[3];
+extern BOOL trigflag;
+extern int numtrigs;
 extern TriggerStruct trigs[MAXTRIGGERS];
-extern int TWarpFrom; // weak
+extern int TWarpFrom;
 
 void InitNoTriggers();
 void InitTownTriggers();

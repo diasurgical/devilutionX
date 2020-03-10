@@ -1,8 +1,8 @@
-#include "diablo.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
-static unsigned char plr_msg_slot;
+static BYTE plr_msg_slot;
 _plrmsg plr_msgs[PMSG_COUNT];
 
 const char text_color_from_player_num[MAX_PLRS + 1] = { COL_WHITE, COL_WHITE, COL_WHITE, COL_WHITE, COL_GOLD };
@@ -14,11 +14,11 @@ void plrmsg_delay(BOOL delay)
 	static DWORD plrmsg_ticks;
 
 	if (delay) {
-		plrmsg_ticks = -GetTickCount();
+		plrmsg_ticks = -SDL_GetTicks();
 		return;
 	}
 
-	plrmsg_ticks += GetTickCount();
+	plrmsg_ticks += SDL_GetTicks();
 	pMsg = plr_msgs;
 	for (i = 0; i < PMSG_COUNT; i++, pMsg++)
 		pMsg->time += plrmsg_ticks;
@@ -30,13 +30,13 @@ char *ErrorPlrMsg(const char *pszMsg)
 	_plrmsg *pMsg = &plr_msgs[plr_msg_slot];
 	plr_msg_slot = (plr_msg_slot + 1) & (PMSG_COUNT - 1);
 	pMsg->player = MAX_PLRS;
-	pMsg->time = GetTickCount();
+	pMsg->time = SDL_GetTicks();
 	result = strncpy(pMsg->str, pszMsg, sizeof(pMsg->str));
 	pMsg->str[sizeof(pMsg->str) - 1] = '\0';
 	return result;
 }
 
-size_t __cdecl EventPlrMsg(const char *pszFmt, ...)
+size_t EventPlrMsg(const char *pszFmt, ...)
 {
 	_plrmsg *pMsg;
 	va_list va;
@@ -45,7 +45,7 @@ size_t __cdecl EventPlrMsg(const char *pszFmt, ...)
 	pMsg = &plr_msgs[plr_msg_slot];
 	plr_msg_slot = (plr_msg_slot + 1) & (PMSG_COUNT - 1);
 	pMsg->player = MAX_PLRS;
-	pMsg->time = GetTickCount();
+	pMsg->time = SDL_GetTicks();
 	vsprintf(pMsg->str, pszFmt, va);
 	va_end(va);
 	return strlen(pMsg->str);
@@ -56,7 +56,7 @@ void SendPlrMsg(int pnum, const char *pszStr)
 	_plrmsg *pMsg = &plr_msgs[plr_msg_slot];
 	plr_msg_slot = (plr_msg_slot + 1) & (PMSG_COUNT - 1);
 	pMsg->player = pnum;
-	pMsg->time = GetTickCount();
+	pMsg->time = SDL_GetTicks();
 	strlen(plr[pnum]._pName); /* these are used in debug */
 	strlen(pszStr);
 	sprintf(pMsg->str, "%s (lvl %d): %s", plr[pnum]._pName, plr[pnum]._pLevel, pszStr);
@@ -66,7 +66,7 @@ void ClearPlrMsg()
 {
 	int i;
 	_plrmsg *pMsg = plr_msgs;
-	DWORD tick = GetTickCount();
+	DWORD tick = SDL_GetTicks();
 
 	for (i = 0; i < PMSG_COUNT; i++, pMsg++) {
 		if ((int)(tick - pMsg->time) > 10000)
@@ -83,18 +83,23 @@ void InitPlrMsg()
 void DrawPlrMsg()
 {
 	int i;
-	int x = 74;
-	int y = 230;
-	int width = 620;
+	DWORD x = 74;
+	DWORD y = 230;
+	DWORD width = SCREEN_WIDTH - 20;
 	_plrmsg *pMsg;
 
 	if (chrflag || questlog) {
-		if (invflag || sbookflag)
-			return;
 		x = 394;
-		width = 300;
-	} else if (invflag || sbookflag)
-		width = 300;
+		width -= 300;
+	}
+	if (invflag || sbookflag)
+		width -= 300;
+
+	if (width < 300)
+		return;
+
+	if (width > 620)
+		width = 620;
 
 	pMsg = plr_msgs;
 	for (i = 0; i < 8; i++) {
@@ -105,20 +110,20 @@ void DrawPlrMsg()
 	}
 }
 
-void PrintPlrMsg(unsigned int x, unsigned int y, unsigned int width, const char *str, unsigned char col)
+void PrintPlrMsg(DWORD x, DWORD y, DWORD width, const char *str, BYTE col)
 {
 	int line = 0;
 
 	while (*str) {
-		unsigned char c;
-		int screen = PitchTbl[y] + x;
+		BYTE c;
+		int sx = x;
+		DWORD len = 0;
 		const char *sstr = str;
-		unsigned int len = 0;
 		const char *endstr = sstr;
 
 		while (1) {
 			if (*sstr) {
-				c = gbFontTransTbl[(unsigned char)*sstr++];
+				c = gbFontTransTbl[(BYTE)*sstr++];
 				c = fontframe[c];
 				len += fontkern[c] + 1;
 				if (!c) // allow wordwrap on blank glyph
@@ -132,11 +137,11 @@ void PrintPlrMsg(unsigned int x, unsigned int y, unsigned int width, const char 
 		}
 
 		while (str < endstr) {
-			c = gbFontTransTbl[(unsigned char)*str++];
+			c = gbFontTransTbl[(BYTE)*str++];
 			c = fontframe[c];
 			if (c)
-				CPrintString(screen, c, col);
-			screen += fontkern[c] + 1;
+				PrintChar(sx, y, c, col);
+			sx += fontkern[c] + 1;
 		}
 
 		y += 10;

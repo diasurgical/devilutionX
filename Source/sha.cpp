@@ -1,6 +1,29 @@
-#include "diablo.h"
+#include "all.h"
+
+#include <cstdint>
 
 DEVILUTION_BEGIN_NAMESPACE
+
+// NOTE: Diablo's "SHA1" is different from actual SHA1 in that it uses arithmetic
+// right shifts (sign bit extension).
+
+namespace {
+
+/*
+ * Diablo-"SHA1" circular left shift, portable version.
+ */
+std::uint32_t SHA1CircularShift(std::uint32_t bits, std::uint32_t word) {
+	assert(bits < 32);
+	assert(bits > 0);
+
+	if(word >> 31) {
+		return (word << bits) | (~((~word) >> (32 - bits)));
+	} else {
+		return (word << bits) | (word >> (32 - bits));
+	}
+}
+
+} // namespace
 
 SHA1Context sgSHA1[3];
 
@@ -17,7 +40,7 @@ void SHA1Result(int n, char Message_Digest[SHA1HashSize])
 	Message_Digest_Block = (DWORD *)Message_Digest;
 	if (Message_Digest) {
 		for (i = 0; i < 5; i++) {
-			*Message_Digest_Block = sgSHA1[n].state[i];
+			*Message_Digest_Block = SwapLE32(sgSHA1[n].state[i]);
 			Message_Digest_Block++;
 		}
 	}
@@ -50,13 +73,14 @@ void SHA1Input(SHA1Context *context, const char *message_array, int len)
 
 void SHA1ProcessMessageBlock(SHA1Context *context)
 {
-	int i, temp;
-	int W[80];
-	int A, B, C, D, E;
+	DWORD i, temp;
+	DWORD W[80];
+	DWORD A, B, C, D, E;
 
 	DWORD *buf = (DWORD *)context->buffer;
 	for (i = 0; i < 16; i++)
-		W[i] = buf[i];
+		W[i] = SwapLE32(buf[i]);
+
 
 	for (i = 16; i < 80; i++) {
 		W[i] = W[i - 16] ^ W[i - 14] ^ W[i - 8] ^ W[i - 3];

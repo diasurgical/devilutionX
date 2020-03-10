@@ -1,4 +1,4 @@
-#include "diablo.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -172,7 +172,7 @@ void SyncPlrInv(TSyncHeader *pHdr)
 
 	/// ASSERT: assert((DWORD) sgnSyncPInv < NUM_INVLOC);
 	pItem = &plr[myplr].InvBody[sgnSyncPInv];
-	if (pItem->_itype != -1) {
+	if (pItem->_itype != ITYPE_NONE) {
 		pHdr->bPInvLoc = sgnSyncPInv;
 		pHdr->wPInvIndx = pItem->IDidx;
 		pHdr->wPInvCI = pItem->_iCreateInfo;
@@ -263,7 +263,7 @@ void sync_monster(int pnum, const TSyncMonster *p)
 				M_ClearSquares(ndx);
 				dMonster[monster[ndx]._mx][monster[ndx]._my] = ndx + 1;
 				M_WalkDir(ndx, md);
-				monster[ndx]._msquelch = -1;
+				monster[ndx]._msquelch = UCHAR_MAX;
 			}
 		}
 	} else if (dMonster[p->_mx][p->_my] == 0) {
@@ -274,7 +274,7 @@ void sync_monster(int pnum, const TSyncMonster *p)
 		decode_enemy(ndx, p->_menemy);
 		md = GetDirection(p->_mx, p->_my, monster[ndx]._menemyx, monster[ndx]._menemyy);
 		M_StartStand(ndx, md);
-		monster[ndx]._msquelch = -1;
+		monster[ndx]._msquelch = UCHAR_MAX;
 	}
 
 	decode_enemy(ndx, p->_menemy);

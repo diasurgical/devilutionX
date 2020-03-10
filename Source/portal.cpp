@@ -1,4 +1,4 @@
-#include "diablo.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -20,12 +20,12 @@ void InitPortals()
 
 void SetPortalStats(int i, BOOL o, int x, int y, int lvl, int lvltype)
 {
-	portal[i].setlvl = FALSE;
+	portal[i].open = o;
 	portal[i].x = x;
 	portal[i].y = y;
-	portal[i].open = o;
 	portal[i].level = lvl;
 	portal[i].ltype = lvltype;
+	portal[i].setlvl = FALSE;
 }
 
 void AddWarpMissile(int i, int x, int y)
@@ -104,7 +104,7 @@ void RemovePortalMissile(int id)
 	for (i = 0; i < nummissiles; i++) {
 		mi = missileactive[i];
 		if (missile[mi]._mitype == MIS_TOWN && missile[mi]._misource == id) {
-			dFlags[missile[mi]._mix][missile[mi]._miy] &= ~DFLAG_MISSILE;
+			dFlags[missile[mi]._mix][missile[mi]._miy] &= ~BFLAG_MISSILE;
 			dMissile[missile[mi]._mix][missile[mi]._miy] = 0;
 
 			if (portal[id].level)
@@ -123,19 +123,19 @@ void SetCurrentPortal(int p)
 void GetPortalLevel()
 {
 	if (currlevel) {
-		setlevel = 0;
+		setlevel = FALSE;
 		currlevel = 0;
 		plr[myplr].plrlevel = 0;
-		leveltype = 0;
+		leveltype = DTYPE_TOWN;
 	} else {
 		if (portal[portalindex].setlvl) {
-			setlevel = 1;
+			setlevel = TRUE;
 			setlvlnum = portal[portalindex].level;
 			currlevel = portal[portalindex].level;
 			plr[myplr].plrlevel = setlvlnum;
 			leveltype = portal[portalindex].ltype;
 		} else {
-			setlevel = 0;
+			setlevel = FALSE;
 			currlevel = portal[portalindex].level;
 			plr[myplr].plrlevel = currlevel;
 			leveltype = portal[portalindex].ltype;

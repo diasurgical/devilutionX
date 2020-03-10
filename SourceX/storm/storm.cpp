@@ -1,29 +1,73 @@
-#include <SDL.h>
-#include <SDL_mixer.h>
+#include "all.h"
+#include "../3rdParty/Storm/Source/storm.h"
+
+#if !SDL_VERSION_ATLEAST(2, 0, 4)
+#include <queue>
+#endif
+
+#include "display.h"
+#include "stubs.h"
 #include <Radon.hpp>
+#include <SDL.h>
+#include <SDL_endian.h>
+#include <SDL_mixer.h>
 #include <smacker.h>
 
-#include "devilution.h"
-#include "stubs.h"
 #include "DiabloUI/diabloui.h"
-#include "miniwin/ddraw.h"
 
 namespace dvl {
 
+std::string basePath;
+
 DWORD nLastError = 0;
+bool directFileAccess = false;
+char SBasePath[DVL_MAX_PATH];
+
+#ifdef USE_SDL1
+static bool IsSVidVideoMode = false;
+#endif
 
 static std::string getIniPath()
 {
 	char path[DVL_MAX_PATH];
-	int len = GetModuleFileNameA(ghInst, path, DVL_MAX_PATH);
-	path[len - 1] = '/';
-	strcat(path, "diablo.ini");
-
-	return path;
+	GetPrefPath(path, DVL_MAX_PATH);
+	std::string result = path;
+	result.append("diablo.ini");
+	return result;
 }
 
 static radon::File ini(getIniPath());
 static Mix_Chunk *SFileChunk;
+
+void GetBasePath(char *buffer, size_t size)
+{
+	if (basePath.length()) {
+		snprintf(buffer, size, "%s", basePath.c_str());
+		return;
+	}
+
+	char *path = SDL_GetBasePath();
+	if (path == NULL) {
+		SDL_Log(SDL_GetError());
+		buffer[0] = '\0';
+		return;
+	}
+
+	snprintf(buffer, size, "%s", path);
+	SDL_free(path);
+}
+
+void GetPrefPath(char *buffer, size_t size)
+{
+	char *path = SDL_GetPrefPath("diasurgical", "devilution");
+	if (path == NULL) {
+		buffer[0] = '\0';
+		return;
+	}
+
+	snprintf(buffer, size, "%s", path);
+	SDL_free(path);
+}
 
 void TranslateFileName(char *dst, int dstLen, const char *src)
 {
@@ -36,24 +80,18 @@ void TranslateFileName(char *dst, int dstLen, const char *src)
 	}
 }
 
-// BOOL SFileCloseArchive(HANDLE hArchive)
-// {
-// 	UNIMPLEMENTED();
-// }
-
-// BOOL SFileCloseFile(HANDLE hFile)
-// {
-// 	UNIMPLEMENTED();
-// }
-
 BOOL SFileDdaBeginEx(HANDLE hFile, DWORD flags, DWORD mask, unsigned __int32 lDistanceToMove,
     signed __int32 volume, signed int pan, int a7)
 {
 	DWORD bytestoread = SFileGetFileSize(hFile, 0);
 	char *SFXbuffer = (char *)malloc(bytestoread);
-	SFileReadFile(hFile, SFXbuffer, bytestoread, NULL, 0);
+	SFileReadFile(hFile, SFXbuffer, bytestoread, NULL, NULL);
 
 	SDL_RWops *rw = SDL_RWFromConstMem(SFXbuffer, bytestoread);
+	if (rw == NULL) {
+		SDL_Log(SDL_GetError());
+		return false;
+	}
 	SFileChunk = Mix_LoadWAV_RW(rw, 1);
 	free(SFXbuffer);
 
@@ -79,7 +117,7 @@ BOOL SFileDdaEnd(HANDLE hFile)
 	return true;
 }
 
-BOOL SFileDdaGetPos(HANDLE hFile, int *current, int *end)
+BOOL SFileDdaGetPos(HANDLE hFile, DWORD *current, DWORD *end)
 {
 	*current = 0;
 	*end = 1;
@@ -91,11 +129,6 @@ BOOL SFileDdaGetPos(HANDLE hFile, int *current, int *end)
 	return true;
 }
 
-BOOL SFileDdaInitialize(HANDLE directsound)
-{
-	return true;
-}
-
 BOOL SFileDdaSetVolume(HANDLE hFile, signed int bigvolume, signed int volume)
 {
 	Mix_VolumeMusic(MIX_MAX_VOLUME - MIX_MAX_VOLUME * bigvolume / VOLUME_MIN);
@@ -103,57 +136,66 @@ BOOL SFileDdaSetVolume(HANDLE hFile, signed int bigvolume, signed int volume)
 	return true;
 }
 
-BOOL SFileGetFileArchive(HANDLE hFile, HANDLE *archive)
-{
-	UNIMPLEMENTED();
-	return true;
-}
-
-// LONG SFileGetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh)
-// {
-// 	UNIMPLEMENTED();
-// }
-
-// BOOL SFileOpenArchive(const char *szMpqName, DWORD dwPriority, DWORD dwFlags, HANDLE
-// *phMpq)
-// {
-// 	UNIMPLEMENTED();
-// }
+// Converts ASCII characters to lowercase
+// Converts slash (0x2F) / backslash (0x5C) to system file-separator
+unsigned char AsciiToLowerTable_Path[256] = {
+	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
+	0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F,
+#ifdef _WIN32
+	0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x5C,
+#else
+	0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2F,
+#endif
+	0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F,
+	0x40, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6A, 0x6B, 0x6C, 0x6D, 0x6E, 0x6F,
+#ifdef _WIN32
+	0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79, 0x7A, 0x5B, 0x5C, 0x5D, 0x5E, 0x5F,
+#else
+	0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79, 0x7A, 0x5B, 0x2F, 0x5D, 0x5E, 0x5F,
+#endif
+	0x60, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6A, 0x6B, 0x6C, 0x6D, 0x6E, 0x6F,
+	0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79, 0x7A, 0x7B, 0x7C, 0x7D, 0x7E, 0x7F,
+	0x80, 0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8A, 0x8B, 0x8C, 0x8D, 0x8E, 0x8F,
+	0x90, 0x91, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98, 0x99, 0x9A, 0x9B, 0x9C, 0x9D, 0x9E, 0x9F,
+	0xA0, 0xA1, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7, 0xA8, 0xA9, 0xAA, 0xAB, 0xAC, 0xAD, 0xAE, 0xAF,
+	0xB0, 0xB1, 0xB2, 0xB3, 0xB4, 0xB5, 0xB6, 0xB7, 0xB8, 0xB9, 0xBA, 0xBB, 0xBC, 0xBD, 0xBE, 0xBF,
+	0xC0, 0xC1, 0xC2, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xC9, 0xCA, 0xCB, 0xCC, 0xCD, 0xCE, 0xCF,
+	0xD0, 0xD1, 0xD2, 0xD3, 0xD4, 0xD5, 0xD6, 0xD7, 0xD8, 0xD9, 0xDA, 0xDB, 0xDC, 0xDD, 0xDE, 0xDF,
+	0xE0, 0xE1, 0xE2, 0xE3, 0xE4, 0xE5, 0xE6, 0xE7, 0xE8, 0xE9, 0xEA, 0xEB, 0xEC, 0xED, 0xEE, 0xEF,
+	0xF0, 0xF1, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8, 0xF9, 0xFA, 0xFB, 0xFC, 0xFD, 0xFE, 0xFF
+};
 
 BOOL SFileOpenFile(const char *filename, HANDLE *phFile)
 {
-	//eprintf("%s: %s\n", __FUNCTION__, filename);
+	bool result = false;
 
-	BOOL result;
-
-	result = patch_rt_mpq && SFileOpenFileEx((HANDLE)patch_rt_mpq, filename, 0, phFile);
+	if (directFileAccess) {
+		char directPath[DVL_MAX_PATH] = "\0";
+		char tmpPath[DVL_MAX_PATH] = "\0";
+		for (size_t i = 0; i < strlen(filename); i++) {
+			tmpPath[i] = AsciiToLowerTable_Path[static_cast<unsigned char>(filename[i])];
+		}
+		snprintf(directPath, DVL_MAX_PATH, "%s%s", SBasePath, tmpPath);
+		result = SFileOpenFileEx((HANDLE)0, directPath, 0xFFFFFFFF, phFile);
+	}
+	if (!result && patch_rt_mpq) {
+		result = SFileOpenFileEx((HANDLE)patch_rt_mpq, filename, 0, phFile);
+	}
 	if (!result) {
 		result = SFileOpenFileEx((HANDLE)diabdat_mpq, filename, 0, phFile);
 	}
 
 	if (!result || !*phFile) {
-		eprintf("%s: Not found: %s\n", __FUNCTION__, filename);
+		SDL_Log("%s: Not found: %s", __FUNCTION__, filename);
 	}
 	return result;
 }
 
-// BOOL SFileOpenFileEx(HANDLE hMpq, const char *szFileName, DWORD dwSearchScope, HANDLE
-// *phFile)
-// {
-// 	UNIMPLEMENTED();
-// }
-
-// BOOL SFileReadFile(HANDLE hFile, void *buffer, DWORD nNumberOfBytesToRead, DWORD *read,
-// LONG lpDistanceToMoveHigh)
-// {
-// 	UNIMPLEMENTED();
-// }
-
-BOOL SBmpLoadImage(const char *pszFileName, PALETTEENTRY *pPalette, BYTE *pBuffer, DWORD dwBuffersize, DWORD *pdwWidth, DWORD *dwHeight, DWORD *pdwBpp)
+BOOL SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, DWORD dwBuffersize, DWORD *pdwWidth, DWORD *dwHeight, DWORD *pdwBpp)
 {
 	HANDLE hFile;
 	size_t size;
-	PCXHeader pcxhdr;
+	PCXHEADER pcxhdr;
 	BYTE paldata[256][3];
 	BYTE *dataPtr, *fileBuffer;
 	BYTE byte;
@@ -188,7 +230,7 @@ BOOL SBmpLoadImage(const char *pszFileName, PALETTEENTRY *pPalette, BYTE *pBuffe
 		pszFileName = strchr(pszFileName, 46);
 
 	// omit all types except PCX
-	if (!pszFileName || _strcmpi(pszFileName, ".pcx")) {
+	if (!pszFileName || strcasecmp(pszFileName, ".pcx")) {
 		return false;
 	}
 
@@ -197,15 +239,22 @@ BOOL SBmpLoadImage(const char *pszFileName, PALETTEENTRY *pPalette, BYTE *pBuffe
 		return false;
 	}
 
-	int width = pcxhdr.xmax - pcxhdr.xmin + 1;
-	int height = pcxhdr.ymax - pcxhdr.ymin + 1;
+	int width = SDL_SwapLE16(pcxhdr.Xmax) - SDL_SwapLE16(pcxhdr.Xmin) + 1;
+	int height = SDL_SwapLE16(pcxhdr.Ymax) - SDL_SwapLE16(pcxhdr.Ymin) + 1;
+
+	// If the given buffer is larger than width * height, assume the extra data
+	// is scanline padding.
+	//
+	// This is useful because in SDL the pitch size is often slightly larger
+	// than image width for efficiency.
+	const int x_skip = dwBuffersize / height - width;
 
 	if (pdwWidth)
 		*pdwWidth = width;
 	if (dwHeight)
 		*dwHeight = height;
 	if (pdwBpp)
-		*pdwBpp = pcxhdr.bitsPerPixel;
+		*pdwBpp = pcxhdr.BitsPerPixel;
 
 	if (!pBuffer) {
 		SFileSetFilePointer(hFile, 0, 0, 2);
@@ -236,19 +285,23 @@ BOOL SBmpLoadImage(const char *pszFileName, PALETTEENTRY *pPalette, BYTE *pBuffe
 					x++;
 				}
 			}
+			// Skip the pitch padding.
+			pBuffer += x_skip;
 		}
 
 		free(fileBuffer);
 	}
 
-	if (pPalette && pcxhdr.bitsPerPixel == 8) {
+	if (pPalette && pcxhdr.BitsPerPixel == 8) {
 		SFileSetFilePointer(hFile, -768, 0, 1);
 		SFileReadFile(hFile, paldata, 768, 0, 0);
 		for (int i = 0; i < 256; i++) {
-			pPalette[i].peRed = paldata[i][0];
-			pPalette[i].peGreen = paldata[i][1];
-			pPalette[i].peBlue = paldata[i][2];
-			pPalette[i].peFlags = 0;
+			pPalette[i].r = paldata[i][0];
+			pPalette[i].g = paldata[i][1];
+			pPalette[i].b = paldata[i][2];
+#ifndef USE_SDL1
+			pPalette[i].a = SDL_ALPHA_OPAQUE;
+#endif
 		}
 	}
 
@@ -257,45 +310,30 @@ BOOL SBmpLoadImage(const char *pszFileName, PALETTEENTRY *pPalette, BYTE *pBuffe
 	return true;
 }
 
-// int SFileSetFilePointer(HANDLE, int, HANDLE, int)
-// {
-// 	UNIMPLEMENTED();
-// }
-
-HWND SDrawGetFrameWindow(HWND *sdraw_framewindow)
+void *SMemAlloc(unsigned int amount, char *logfilename, int logline, int defaultValue)
 {
-	DUMMY();
-	return NULL;
-}
-
-// BOOL SDrawManualInitialize(HWND hWnd, LPDIRECTDRAW ddInterface, LPDIRECTDRAWSURFACE
-// primarySurface, LPDIRECTDRAWSURFACE surface2, LPDIRECTDRAWSURFACE surface3, LPDIRECTDRAWSURFACE
-// backSurface, LPDIRECTDRAWPALETTE ddPalette, HPALETTE hPalette)
-//{
-//	UNIMPLEMENTED();
-//}
-
-void *SMemAlloc(unsigned int amount, char *logfilename, int logline, char defaultValue)
-{
-	// fprintf(stderr, "%s: %d (%s:%d)\n", __FUNCTION__, amount, logfilename, logline);
 	assert(amount != -1u);
 	return malloc(amount);
 }
 
 BOOL SMemFree(void *location, char *logfilename, int logline, char defaultValue)
 {
-	// fprintf(stderr, "%s: (%s:%d)\n", __FUNCTION__, logfilename, logline);
 	assert(location);
 	free(location);
 	return true;
 }
 
-void *SMemReAlloc(void *location, unsigned int amount, char *logfilename, int logline, char defaultValue)
+bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue)
 {
-	UNIMPLEMENTED();
+	char string[2];
+
+	if (!getIniValue(sectionName, keyName, string, 2))
+		return defaultValue;
+
+	return strtol(string, NULL, 10) != 0;
 }
 
-bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, int *dataSize = NULL)
+bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, int *dataSize)
 {
 	radon::Section *section = ini.getSection(sectionName);
 	if (!section)
@@ -315,7 +353,7 @@ bool getIniValue(const char *sectionName, const char *keyName, char *string, int
 	return true;
 }
 
-void setIniValue(const char *sectionName, const char *keyName, char *value, int len = 0)
+void setIniValue(const char *sectionName, const char *keyName, char *value, int len)
 {
 	radon::Section *section = ini.getSection(sectionName);
 	if (!section) {
@@ -335,16 +373,6 @@ void setIniValue(const char *sectionName, const char *keyName, char *value, int 
 	ini.saveToFile();
 }
 
-BOOL SRegLoadData(const char *keyname, const char *valuename, int size, LPBYTE lpData, BYTE flags, LPDWORD lpcbData)
-{
-	return getIniValue(keyname, valuename, (char *)lpData, size, (int *)lpcbData);
-}
-
-BOOL SRegLoadString(const char *keyname, const char *valuename, BYTE flags, char *buffer, unsigned int buffersize)
-{
-	return getIniValue(keyname, valuename, buffer, buffersize);
-}
-
 BOOL SRegLoadValue(const char *keyname, const char *valuename, BYTE flags, int *value)
 {
 	char string[10];
@@ -356,20 +384,6 @@ BOOL SRegLoadValue(const char *keyname, const char *valuename, BYTE flags, int *
 	return false;
 }
 
-BOOL SRegSaveData(const char *keyname, const char *valuename, int size, BYTE *lpData, DWORD cbData)
-{
-	setIniValue(keyname, valuename, (char *)lpData, cbData);
-
-	return true;
-}
-
-BOOL SRegSaveString(const char *keyname, const char *valuename, BYTE flags, char *string)
-{
-	setIniValue(keyname, valuename, string);
-
-	return true;
-}
-
 BOOL SRegSaveValue(const char *keyname, const char *valuename, BYTE flags, DWORD result)
 {
 	char str[10];
@@ -379,35 +393,137 @@ BOOL SRegSaveValue(const char *keyname, const char *valuename, BYTE flags, DWORD
 	return true;
 }
 
-BOOL SVidInitialize(HANDLE video)
-{
-	DUMMY();
-	return true;
-}
-
-BOOL SVidDestroy()
-{
-	DUMMY();
-	return true;
-}
-
 double SVidFrameEnd;
 double SVidFrameLength;
 BYTE SVidLoop;
 smk SVidSMK;
-PALETTEENTRY SVidPreviousPalette[256];
+SDL_Color SVidPreviousPalette[256];
 SDL_Palette *SVidPalette;
 SDL_Surface *SVidSurface;
 BYTE *SVidBuffer;
-SDL_AudioDeviceID deviceId;
+unsigned long SVidWidth, SVidHeight;
 
-BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HANDLE *video)
+#if SDL_VERSION_ATLEAST(2, 0, 4)
+SDL_AudioDeviceID deviceId;
+static bool HaveAudio()
 {
-	if (flags & 0x10000 || flags & 0x20000000) {
-		return false;
+	return deviceId != 0;
+}
+#else
+static bool HaveAudio()
+{
+	return SDL_GetAudioStatus() != SDL_AUDIO_STOPPED;
+}
+#endif
+
+void SVidRestartMixer()
+{
+	if (Mix_OpenAudio(22050, AUDIO_S16LSB, 2, 1024) < 0) {
+		SDL_Log(Mix_GetError());
+	}
+	Mix_AllocateChannels(25);
+	Mix_ReserveChannels(1);
+}
+
+#if !SDL_VERSION_ATLEAST(2, 0, 4)
+struct AudioQueueItem {
+	unsigned char *data;
+	unsigned long len;
+	const unsigned char *pos;
+};
+
+class AudioQueue {
+public:
+	static void Callback(void *userdata, Uint8 *out, int out_len)
+	{
+		static_cast<AudioQueue *>(userdata)->Dequeue(out, out_len);
 	}
 
-	SVidLoop = flags & 0x40000;
+	void Subscribe(SDL_AudioSpec *spec)
+	{
+		spec->userdata = this;
+		spec->callback = AudioQueue::Callback;
+	}
+
+	void Enqueue(const unsigned char *data, unsigned long len)
+	{
+#if SDL_VERSION_ATLEAST(2, 0, 4)
+		SDL_LockAudioDevice(deviceId);
+		EnqueueUnsafe(data, len);
+		SDL_UnlockAudioDevice(deviceId);
+#else
+		SDL_LockAudio();
+		EnqueueUnsafe(data, len);
+		SDL_UnlockAudio();
+#endif
+	}
+
+	void Clear()
+	{
+		while (!queue_.empty())
+			Pop();
+	}
+
+private:
+	void EnqueueUnsafe(const unsigned char *data, unsigned long len)
+	{
+		AudioQueueItem item;
+		item.data = new unsigned char[len];
+		memcpy(item.data, data, len * sizeof(item.data[0]));
+		item.len = len;
+		item.pos = item.data;
+		queue_.push(item);
+	}
+
+	void Dequeue(Uint8 *out, int out_len)
+	{
+		SDL_memset(out, 0, sizeof(out[0]) * out_len);
+		AudioQueueItem *item;
+		while ((item = Next()) != NULL) {
+			if (static_cast<unsigned long>(out_len) <= item->len) {
+				SDL_MixAudio(out, item->pos, out_len, SDL_MIX_MAXVOLUME);
+				item->pos += out_len;
+				item->len -= out_len;
+				return;
+			}
+
+			SDL_MixAudio(out, item->pos, item->len, SDL_MIX_MAXVOLUME);
+			out += item->len;
+			out_len -= item->len;
+			Pop();
+		}
+	}
+
+	AudioQueueItem *Next()
+	{
+		while (!queue_.empty() && queue_.front().len == 0)
+			Pop();
+		if (queue_.empty())
+			return NULL;
+		return &queue_.front();
+	}
+
+	void Pop()
+	{
+		delete[] queue_.front().data;
+		queue_.pop();
+	}
+
+	std::queue<AudioQueueItem> queue_;
+};
+
+static AudioQueue *sVidAudioQueue = new AudioQueue();
+#endif
+
+void SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HANDLE *video)
+{
+	if (flags & 0x10000 || flags & 0x20000000) {
+		return;
+	}
+
+	SVidLoop = false;
+	if (flags & 0x40000)
+		SVidLoop = true;
 	bool enableVideo = !(flags & 0x100000);
 	bool enableAudio = !(flags & 0x1000000);
 	//0x8 // Non-interlaced
@@ -424,10 +540,9 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 
 	SVidSMK = smk_open_memory(SVidBuffer, bytestoread);
 	if (SVidSMK == NULL) {
-		return false;
+		return;
 	}
 
-	deviceId = 0;
 	unsigned char channels[7], depth[7];
 	unsigned long rate[7];
 	smk_info_audio(SVidSMK, NULL, channels, depth, rate);
@@ -436,49 +551,88 @@ BOOL SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 		SDL_AudioSpec audioFormat;
 		SDL_zero(audioFormat);
 		audioFormat.freq = rate[0];
-		audioFormat.format = depth[0] == 16 ? AUDIO_S16 : AUDIO_U8;
+		audioFormat.format = depth[0] == 16 ? AUDIO_S16SYS : AUDIO_U8;
 		audioFormat.channels = channels[0];
 
+		Mix_CloseAudio();
+
+#if SDL_VERSION_ATLEAST(2, 0, 4)
 		deviceId = SDL_OpenAudioDevice(NULL, 0, &audioFormat, NULL, 0);
 		if (deviceId == 0) {
-			SDL_Log("SDL_OpenAudioDevice: %s\n", SDL_GetError());
-			return false;
-		} else {
-			SDL_PauseAudioDevice(deviceId, 0); /* start audio playing. */
+			ErrSdl();
 		}
+
+		SDL_PauseAudioDevice(deviceId, 0); /* start audio playing. */
+#else
+		sVidAudioQueue->Subscribe(&audioFormat);
+		if (SDL_OpenAudio(&audioFormat, NULL) != 0) {
+			ErrSdl();
+		}
+		SDL_PauseAudio(0);
+#endif
 	}
 
-	unsigned long width, height, nFrames;
+	unsigned long nFrames;
 	smk_info_all(SVidSMK, NULL, &nFrames, &SVidFrameLength);
-	smk_info_video(SVidSMK, &width, &height, NULL);
+	smk_info_video(SVidSMK, &SVidWidth, &SVidHeight, NULL);
 
 	smk_enable_video(SVidSMK, enableVideo);
 	smk_first(SVidSMK); // Decode first frame
 
-	smk_info_video(SVidSMK, &width, &height, NULL);
-	SDL_DestroyTexture(texture);
-	texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, width, height);
-	SDL_RenderSetLogicalSize(renderer, width, height);
-	memcpy(SVidPreviousPalette, orig_palette, 1024);
+	smk_info_video(SVidSMK, &SVidWidth, &SVidHeight, NULL);
+#ifndef USE_SDL1
+	if (renderer) {
+		SDL_DestroyTexture(texture);
+		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, SVidWidth, SVidHeight);
+		if (texture == NULL) {
+			ErrSdl();
+		}
+		if (SDL_RenderSetLogicalSize(renderer, SVidWidth, SVidHeight) <= -1) {
+			ErrSdl();
+		}
+	}
+#else
+	// Set the video mode close to the SVid resolution while preserving aspect ratio.
+	{
+		const auto *display = SDL_GetVideoSurface();
+		IsSVidVideoMode = (display->flags & (SDL_FULLSCREEN | SDL_NOFRAME)) != 0;
+		if (IsSVidVideoMode) {
+			int w, h;
+			if (display->w * SVidWidth > display->h * SVidHeight) {
+				w = SVidWidth;
+				h = SVidWidth * display->h / display->w;
+			} else {
+				w = SVidHeight * display->w / display->h;
+				h = SVidHeight;
+			}
+			SetVideoMode(w, h, display->format->BitsPerPixel, display->flags);
+		}
+	}
+#endif
+	memcpy(SVidPreviousPalette, orig_palette, sizeof(SVidPreviousPalette));
 
 	// Copy frame to buffer
 	SVidSurface = SDL_CreateRGBSurfaceWithFormatFrom(
 	    (unsigned char *)smk_get_video(SVidSMK),
-	    width,
-	    height,
+	    SVidWidth,
+	    SVidHeight,
 	    8,
-	    width,
+	    SVidWidth,
 	    SDL_PIXELFORMAT_INDEX8);
+	if (SVidSurface == NULL) {
+		ErrSdl();
+	}
 
 	SVidPalette = SDL_AllocPalette(256);
-	if (SDL_SetSurfacePalette(SVidSurface, SVidPalette) != 0) {
-		SDL_Log("SDL_SetSurfacePalette: %s\n", SDL_GetError());
-		return false;
+	if (SVidPalette == NULL) {
+		ErrSdl();
+	}
+	if (SDLC_SetSurfaceColors(SVidSurface, SVidPalette) <= -1) {
+		ErrSdl();
 	}
 
 	SVidFrameEnd = SDL_GetTicks() * 1000 + SVidFrameLength;
-
-	return true;
+	SDL_FillRect(GetOutputSurface(), NULL, 0x000000);
 }
 
 BOOL SVidLoadNextFrame()
@@ -506,17 +660,18 @@ BOOL SVidPlayContinue(void)
 			colors[i].r = palette_data[i * 3 + 0];
 			colors[i].g = palette_data[i * 3 + 1];
 			colors[i].b = palette_data[i * 3 + 2];
+#ifndef USE_SDL1
 			colors[i].a = SDL_ALPHA_OPAQUE;
+#endif
 
-			orig_palette[i].peFlags = 0;
-			orig_palette[i].peRed = palette_data[i * 3 + 0];
-			orig_palette[i].peGreen = palette_data[i * 3 + 1];
-			orig_palette[i].peBlue = palette_data[i * 3 + 2];
+			orig_palette[i].r = palette_data[i * 3 + 0];
+			orig_palette[i].g = palette_data[i * 3 + 1];
+			orig_palette[i].b = palette_data[i * 3 + 2];
 		}
-		memcpy(logical_palette, orig_palette, 1024);
+		memcpy(logical_palette, orig_palette, sizeof(logical_palette));
 
-		if (SDL_SetPaletteColors(SVidPalette, colors, 0, 256) != 0) {
-			SDL_Log("SDL_SetPaletteColors: %s\n", SDL_GetError());
+		if (SDLC_SetSurfaceAndPaletteColors(SVidSurface, SVidPalette, colors, 0, 256) <= -1) {
+			SDL_Log(SDL_GetError());
 			return false;
 		}
 	}
@@ -525,37 +680,89 @@ BOOL SVidPlayContinue(void)
 		return SVidLoadNextFrame(); // Skip video and audio if the system is to slow
 	}
 
-	if (deviceId && SDL_QueueAudio(deviceId, smk_get_audio(SVidSMK, 0), smk_get_audio_size(SVidSMK, 0)) == -1) {
-		SDL_Log("SDL_QueueAudio: %s\n", SDL_GetError());
-		return false;
+	if (HaveAudio()) {
+#if SDL_VERSION_ATLEAST(2, 0, 4)
+		if (SDL_QueueAudio(deviceId, smk_get_audio(SVidSMK, 0), smk_get_audio_size(SVidSMK, 0)) <= -1) {
+			SDL_Log(SDL_GetError());
+			return false;
+		}
+#else
+	sVidAudioQueue->Enqueue(smk_get_audio(SVidSMK, 0), smk_get_audio_size(SVidSMK, 0));
+#endif
 	}
 
 	if (SDL_GetTicks() * 1000 >= SVidFrameEnd) {
 		return SVidLoadNextFrame(); // Skip video if the system is to slow
 	}
 
-	SDL_Rect pal_surface_offset = { 64, 160, 0, 0 };
-	if (SDL_BlitSurface(SVidSurface, NULL, pal_surface, &pal_surface_offset) != 0) {
-		SDL_Log("SDL_BlitSurface: %s\n", SDL_GetError());
-		return false;
+#ifndef USE_SDL1
+	if (renderer) {
+		if (SDL_BlitSurface(SVidSurface, NULL, GetOutputSurface(), NULL) <= -1) {
+			SDL_Log(SDL_GetError());
+			return false;
+		}
+	} else
+#endif
+	{
+		auto *output_surface = GetOutputSurface();
+		int factor;
+		int wFactor = output_surface->w / SVidWidth;
+		int hFactor = output_surface->h / SVidHeight;
+		if (wFactor > hFactor && (unsigned int)output_surface->h > SVidHeight) {
+			factor = hFactor;
+		} else {
+			factor = wFactor;
+		}
+		const int scaledW = SVidWidth * factor;
+		const int scaledH = SVidHeight * factor;
+
+		SDL_Rect pal_surface_offset = {
+			static_cast<decltype(SDL_Rect().x)>((output_surface->w - scaledW) / 2),
+			static_cast<decltype(SDL_Rect().y)>((output_surface->h - scaledH) / 2),
+			static_cast<decltype(SDL_Rect().w)>(scaledW),
+			static_cast<decltype(SDL_Rect().h)>(scaledH)
+		};
+		if (factor == 1) {
+			if (SDL_BlitSurface(SVidSurface, nullptr, output_surface, &pal_surface_offset) <= -1) {
+				ErrSdl();
+			}
+		} else {
+#ifdef USE_SDL1
+			SDL_Surface *tmp = SDL_ConvertSurface(SVidSurface, window->format, 0);
+#else
+			Uint32 format = SDL_GetWindowPixelFormat(window);
+			SDL_Surface *tmp = SDL_ConvertSurfaceFormat(SVidSurface, format, 0);
+#endif
+			if (SDL_BlitScaled(tmp, nullptr, output_surface, &pal_surface_offset) <= -1) {
+				SDL_Log(SDL_GetError());
+				return false;
+			}
+			SDL_FreeSurface(tmp);
+		}
 	}
 
-	SetFadeLevel(256); // present frame
+	RenderPresent();
 
 	double now = SDL_GetTicks() * 1000;
 	if (now < SVidFrameEnd) {
-		SDL_Delay((SVidFrameEnd - now)/1000); // wait with next frame if the system is to fast
+		SDL_Delay((SVidFrameEnd - now) / 1000); // wait with next frame if the system is to fast
 	}
 
 	return SVidLoadNextFrame();
 }
 
-BOOL SVidPlayEnd(HANDLE video)
+void SVidPlayEnd(HANDLE video)
 {
-	if (deviceId) {
+	if (HaveAudio()) {
+#if SDL_VERSION_ATLEAST(2, 0, 4)
 		SDL_ClearQueuedAudio(deviceId);
 		SDL_CloseAudioDevice(deviceId);
 		deviceId = 0;
+#else
+		SDL_CloseAudio();
+		sVidAudioQueue->Clear();
+#endif
+		SVidRestartMixer();
 	}
 
 	if (SVidSMK)
@@ -567,29 +774,29 @@ BOOL SVidPlayEnd(HANDLE video)
 	}
 
 	SDL_FreePalette(SVidPalette);
+	SVidPalette = NULL;
+
 	SDL_FreeSurface(SVidSurface);
+	SVidSurface = NULL;
 
 	SFileCloseFile(video);
 	video = NULL;
 
-	memcpy(orig_palette, SVidPreviousPalette, 1024);
-	SDL_DestroyTexture(texture);
-	texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
-	SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
-
-	return true;
-}
-
-BOOL SErrDisplayError(DWORD dwErrMsg, const char *logfilename, int logline, const char *message,
-    BOOL allowOption, int exitCode)
-{
-	UNIMPLEMENTED();
-}
-
-BOOL SErrGetErrorStr(DWORD dwErrCode, char *buffer, unsigned int bufferchars)
-{
-	DUMMY();
-	return false;
+	memcpy(orig_palette, SVidPreviousPalette, sizeof(orig_palette));
+#ifndef USE_SDL1
+	if (renderer) {
+		SDL_DestroyTexture(texture);
+		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
+		if (texture == NULL) {
+			ErrSdl();
+		}
+		if (renderer && SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT) <= -1) {
+			ErrSdl();
+		}
+	}
+#else
+	if (IsSVidVideoMode) SetVideoModeToPrimary();
+#endif
 }
 
 DWORD SErrGetLastError()
@@ -602,73 +809,21 @@ void SErrSetLastError(DWORD dwErrCode)
 	nLastError = dwErrCode;
 }
 
-void SMemCopy(void *dest, const void *source, unsigned int size)
-{
-	UNIMPLEMENTED();
-}
-
-void SMemFill(void *location, unsigned int length, char fillWith)
-{
-	UNIMPLEMENTED();
-}
-
-void SMemZero(void *location, DWORD length)
-{
-	UNIMPLEMENTED();
-}
-
-int SMemCmp(void *location1, void *location2, DWORD size)
-{
-	UNIMPLEMENTED();
-}
-
 int SStrCopy(char *dest, const char *src, int max_length)
 {
 	strncpy(dest, src, max_length);
 	return strlen(dest);
 }
 
-int SStrCmp(const char *string1, const char *string2, unsigned int size)
+BOOL SFileSetBasePath(char *path)
 {
-	UNIMPLEMENTED();
-}
-
-int SStrCmpI(const char *string1, const char *string2, unsigned int size)
-{
-	UNIMPLEMENTED();
-}
-
-void SDrawMessageBox(char *Text, char *Title, int Flags)
-{
-	MessageBoxA(NULL, Text, Title, Flags);
-}
-
-void SDrawDestroy(void)
-{
-	DUMMY();
-}
-
-BOOLEAN StormDestroy(void)
-{
-	DUMMY();
+	strncpy(SBasePath, path, DVL_MAX_PATH);
 	return true;
-}
-
-BOOLEAN SFileSetBasePath(char *)
-{
-	DUMMY();
-	return true;
-}
-
-void SDrawRealizePalette(void)
-{
-	DUMMY();
 }
 
 BOOL SFileEnableDirectAccess(BOOL enable)
 {
-	DUMMY();
+	directFileAccess = enable;
 	return true;
 }
-
 }

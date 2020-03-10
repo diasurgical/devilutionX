@@ -51,7 +51,7 @@ void __fastcall drlg_l1_load_dun(char *dun_path, int view_x, int view_y);
 
 ### Interactive Disassembler Usage
 
-* Open the `Diablo.exe` (verison 1.09b in IDA) and wait for it to finish
+* Open the `Diablo.exe` (version 1.09b in IDA) and wait for it to finish
   analysis
   * Open as "Portable Executable"
   * Processor type i386 (80386)

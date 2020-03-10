@@ -6,4 +6,7 @@
 	PointerAlignment: Right,
 	TabWidth: 4,
 	UseTab: ForIndentation,
+	SortIncludes: false,
+	NamespaceIndentation: None,
+	FixNamespaceComments: true,
 }

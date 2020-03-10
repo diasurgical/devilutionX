@@ -9,15 +9,14 @@ namespace net {
 void base::setup_gameinfo(buffer_t info)
 {
 	game_init_info = std::move(info);
-	pktfty = std::make_unique<packet_factory>();
 }
 
 void base::setup_password(std::string pw)
 {
-	pktfty = std::make_unique<packet_factory>(pw);
+	pktfty.reset(new packet_factory(pw));
 }
 
-void base::run_event_handler(_SNETEVENT& ev)
+void base::run_event_handler(_SNETEVENT &ev)
 {
 	auto f = registered_handlers[static_cast<event_type>(ev.eventid)];
 	if (f) {
@@ -25,7 +24,7 @@ void base::run_event_handler(_SNETEVENT& ev)
 	}
 }
 
-void base::handle_accept(packet& pkt)
+void base::handle_accept(packet &pkt)
 {
 	if (plr_self != PLR_BROADCAST) {
 		return; // already have player id
@@ -39,7 +38,7 @@ void base::handle_accept(packet& pkt)
 		_SNETEVENT ev;
 		ev.eventid = EVENT_TYPE_PLAYER_CREATE_GAME;
 		ev.playerid = plr_self;
-		ev.data = const_cast<unsigned char*>(pkt.info().data());
+		ev.data = const_cast<unsigned char *>(pkt.info().data());
 		ev.databytes = pkt.info().size();
 		run_event_handler(ev);
 	}
@@ -48,15 +47,14 @@ void base::handle_accept(packet& pkt)
 void base::clear_msg(plr_t plr)
 {
 	message_queue.erase(std::remove_if(message_queue.begin(),
-	                                   message_queue.end(),
-	                                   [&](message_t& msg)
-	                                   {
-		                                   return msg.sender == plr;
-	                                   }),
-	                    message_queue.end());
+	                        message_queue.end(),
+	                        [&](message_t &msg) {
+		                        return msg.sender == plr;
+	                        }),
+	    message_queue.end());
 }
 
-void base::recv_local(packet& pkt)
+void base::recv_local(packet &pkt)
 {
 	if (pkt.src() < MAX_PLRS) {
 		connected_table[pkt.src()] = true;
@@ -81,7 +79,7 @@ void base::recv_local(packet& pkt)
 				_SNETEVENT ev;
 				ev.eventid = EVENT_TYPE_PLAYER_LEAVE_GAME;
 				ev.playerid = pkt.newplr();
-				ev.data = reinterpret_cast<unsigned char*>(&leaveinfo);
+				ev.data = reinterpret_cast<unsigned char *>(&leaveinfo);
 				ev.databytes = sizeof(leaveinfo_t);
 				run_event_handler(ev);
 				connected_table[pkt.newplr()] = false;
@@ -98,7 +96,7 @@ void base::recv_local(packet& pkt)
 	}
 }
 
-bool base::SNetReceiveMessage(int* sender, char** data, int* size)
+bool base::SNetReceiveMessage(int *sender, char **data, int *size)
 {
 	poll();
 	if (message_queue.empty())
@@ -107,16 +105,16 @@ bool base::SNetReceiveMessage(int* sender, char** data, int* size)
 	message_queue.pop_front();
 	*sender = message_last.sender;
 	*size = message_last.payload.size();
-	*data = reinterpret_cast<char*>(message_last.payload.data());
+	*data = reinterpret_cast<char *>(message_last.payload.data());
 	return true;
 }
 
-bool base::SNetSendMessage(int playerID, void* data, unsigned int size)
+bool base::SNetSendMessage(int playerID, void *data, unsigned int size)
 {
 	if (playerID != SNPLAYER_ALL && playerID != SNPLAYER_OTHERS
 	    && (playerID < 0 || playerID >= MAX_PLRS))
 		abort();
-	auto raw_message = reinterpret_cast<unsigned char*>(data);
+	auto raw_message = reinterpret_cast<unsigned char *>(data);
 	buffer_t message(raw_message, raw_message + size);
 	if (playerID == plr_self || playerID == SNPLAYER_ALL)
 		message_queue.push_back(message_t(plr_self, message));
@@ -132,7 +130,7 @@ bool base::SNetSendMessage(int playerID, void* data, unsigned int size)
 	return true;
 }
 
-bool base::SNetReceiveTurns(char** data, unsigned int* size, DWORD* status)
+bool base::SNetReceiveTurns(char **data, unsigned int *size, DWORD *status)
 {
 	poll();
 	bool all_turns_arrived = true;
@@ -152,7 +150,7 @@ bool base::SNetReceiveTurns(char** data, unsigned int* size, DWORD* status)
 				status[i] |= PS_TURN_ARRIVED;
 				turn_last[i] = turn_queue[i].front();
 				turn_queue[i].pop_front();
-				data[i] = reinterpret_cast<char*>(&turn_last[i]);
+				data[i] = reinterpret_cast<char *>(&turn_last[i]);
 			}
 		}
 		return true;
@@ -168,7 +166,7 @@ bool base::SNetReceiveTurns(char** data, unsigned int* size, DWORD* status)
 	}
 }
 
-bool base::SNetSendTurn(char* data, unsigned int size)
+bool base::SNetSendTurn(char *data, unsigned int size)
 {
 	if (size != sizeof(turn_t))
 		ABORT();
@@ -180,7 +178,7 @@ bool base::SNetSendTurn(char* data, unsigned int size)
 	return true;
 }
 
-int base::SNetGetProviderCaps(struct _SNETCAPS* caps)
+int base::SNetGetProviderCaps(struct _SNETCAPS *caps)
 {
 	caps->size = 0;                  // engine writes only ?!?
 	caps->flags = 0;                 // unused
@@ -195,30 +193,30 @@ int base::SNetGetProviderCaps(struct _SNETCAPS* caps)
 	return 1;
 }
 
-void* base::SNetUnregisterEventHandler(event_type evtype, snet_event_func func)
+bool base::SNetUnregisterEventHandler(event_type evtype, SEVTHANDLER func)
 {
 	registered_handlers.erase(evtype);
-	return (void*)func;
+	return true;
 }
 
-void* base::SNetRegisterEventHandler(event_type evtype, snet_event_func func)
+bool base::SNetRegisterEventHandler(event_type evtype, SEVTHANDLER func)
 {
 	/*
-	  engine registers handler for:
-	  EVENT_TYPE_PLAYER_LEAVE_GAME
-	  EVENT_TYPE_PLAYER_CREATE_GAME (should be raised during SNetCreateGame
-	  for non-creating player)
-	  EVENT_TYPE_PLAYER_MESSAGE (for bnet? not implemented)
-	  (engine uses same function for all three)
-	*/
+  engine registers handler for:
+  EVENT_TYPE_PLAYER_LEAVE_GAME
+  EVENT_TYPE_PLAYER_CREATE_GAME (should be raised during SNetCreateGame
+  for non-creating player)
+  EVENT_TYPE_PLAYER_MESSAGE (for bnet? not implemented)
+  (engine uses same function for all three)
+*/
 	registered_handlers[evtype] = func;
-	return (void*)func;
+	return true;
 }
 
 bool base::SNetLeaveGame(int type)
 {
 	auto pkt = pktfty->make_packet<PT_DISCONNECT>(plr_self, PLR_BROADCAST,
-	                                              plr_self, type);
+	    plr_self, type);
 	send(*pkt);
 	return true;
 }
@@ -226,9 +224,9 @@ bool base::SNetLeaveGame(int type)
 bool base::SNetDropPlayer(int playerid, DWORD flags)
 {
 	auto pkt = pktfty->make_packet<PT_DISCONNECT>(plr_self,
-	                                              PLR_BROADCAST,
-	                                              (plr_t)playerid,
-	                                              (leaveinfo_t)flags);
+	    PLR_BROADCAST,
+	    (plr_t)playerid,
+	    (leaveinfo_t)flags);
 	send(*pkt);
 	recv_local(*pkt);
 	return true;
@@ -256,5 +254,5 @@ bool base::SNetGetTurnsInTransit(int *turns)
 	return true;
 }
 
-}  // namespace net
-}  // namespace dvl
+} // namespace net
+} // namespace dvl

@@ -1,17 +1,17 @@
-#include "diablo.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
-int qtexty; // weak
+int qtexty;
 char *qtextptr;
-int qtextSpd;     // weak
-char qtextflag;   // weak
-int scrolltexty;  // weak
-int sgLastScroll; // weak
-void *pMedTextCels;
-void *pTextBoxCels;
+int qtextSpd;
+BOOLEAN qtextflag;
+int scrolltexty;
+int sgLastScroll;
+BYTE *pMedTextCels;
+BYTE *pTextBoxCels;
 
-const unsigned char mfontframe[127] = {
+const BYTE mfontframe[127] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -26,7 +26,7 @@ const unsigned char mfontframe[127] = {
 	14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
 	24, 25, 26, 48, 0, 49, 0
 };
-const unsigned char mfontkern[56] = {
+const BYTE mfontkern[56] = {
 	5, 15, 10, 13, 14, 10, 9, 13, 11, 5,
 	5, 11, 10, 16, 13, 16, 10, 15, 12, 10,
 	14, 17, 17, 22, 17, 16, 11, 5, 11, 11,
@@ -37,6 +37,9 @@ const unsigned char mfontkern[56] = {
 
 /* data */
 
+/**
+ * Positive numbers will delay scrolling 1 out of n frames, negative numbers will scroll 1+(-n) pixels.
+ */
 int qscroll_spd_tbl[9] = { 2, 4, 6, 8, 0, -1, -2, -3, -4 };
 
 void FreeQuestText()
@@ -47,11 +50,10 @@ void FreeQuestText()
 
 void InitQuestText()
 {
-	pMedTextCels = LoadFileInMem("Data\\MedTextS.CEL", 0);
-	pTextBoxCels = LoadFileInMem("Data\\TextBox.CEL", 0);
+	pMedTextCels = LoadFileInMem("Data\\MedTextS.CEL", NULL);
+	pTextBoxCels = LoadFileInMem("Data\\TextBox.CEL", NULL);
 	qtextflag = FALSE;
 }
-// 646D00: using guessed type char qtextflag;
 
 void InitQTextMsg(int m)
 {
@@ -60,144 +62,35 @@ void InitQTextMsg(int m)
 		qtextptr = alltext[m].txtstr;
 		qtextflag = TRUE;
 		qtexty = 500;
-		sgLastScroll = qscroll_spd_tbl[alltext[m].txtspd - 1]; /* double check offset */
-		scrolltexty = sgLastScroll;
-		qtextSpd = GetTickCount();
+		sgLastScroll = qscroll_spd_tbl[alltext[m].txtspd - 1];
+		if (sgLastScroll <= 0)
+			scrolltexty = 50 / -(sgLastScroll - 1);
+		else
+			scrolltexty = ((sgLastScroll + 1) * 50) / sgLastScroll;
+		qtextSpd = SDL_GetTicks();
 	}
 	PlaySFX(alltext[m].sfxnr);
 }
-// 646CF4: using guessed type int qtexty;
-// 646CFC: using guessed type int qtextSpd;
-// 646D00: using guessed type char qtextflag;
-// 646D04: using guessed type int scrolltexty;
-// 646D08: using guessed type int sgLastScroll;
 
 void DrawQTextBack()
 {
-	CelDecodeOnly(88, 487, (BYTE *)pTextBoxCels, 1, 591);
-
-#define TRANS_RECT_X 27
-#define TRANS_RECT_Y 28
-#define TRANS_RECT_WIDTH 585
-#define TRANS_RECT_HEIGHT 297
-#include "asm_trans_rect.inc"
+	CelDraw(PANEL_X + 24, 487, pTextBoxCels, 1, 591);
+	trans_rect(PANEL_LEFT + 27, 28, 585, 297);
 }
 
 void PrintQTextChr(int sx, int sy, BYTE *pCelBuff, int nCel)
 {
-	BYTE *dst, *pStart, *pEnd, *end;
+	BYTE *pStart, *pEnd;
 
 	/// ASSERT: assert(gpBuffer);
+	pStart = gpBufStart;
+	gpBufStart = &gpBuffer[BUFFER_WIDTH * (49 + SCREEN_Y)];
+	pEnd = gpBufEnd;
+	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (309 + SCREEN_Y)];
+	CelDraw(sx, sy, pCelBuff, nCel, 22);
 
-	dst = &gpBuffer[sx + PitchTbl[sy]];
-	pStart = &gpBuffer[PitchTbl[209]];
-	pEnd = &gpBuffer[PitchTbl[469]];
-
-#ifdef USE_ASM
-	__asm {
-		mov		ebx, pCelBuff
-		mov		eax, nCel
-		shl		eax, 2
-		add		ebx, eax
-		mov		eax, [ebx+4]
-		sub		eax, [ebx]
-		mov		end, eax
-		mov		esi, pCelBuff
-		add		esi, [ebx]
-		mov		edi, dst
-		mov		ebx, end
-		add		ebx, esi
-	label1:
-		mov		edx, 22
-	label2:
-		xor		eax, eax
-		lodsb
-		or		al, al
-		js		label7
-		sub		edx, eax
-		cmp		edi, pStart
-		jb		label5
-		cmp		edi, pEnd
-		ja		label5
-		mov		ecx, eax
-		shr		ecx, 1
-		jnb		label3
-		movsb
-		jecxz	label6
-	label3:
-		shr		ecx, 1
-		jnb		label4
-		movsw
-		jecxz	label6
-	label4:
-		rep movsd
-		jmp		label6
-	label5:
-		add		esi, eax
-		add		edi, eax
-	label6:
-		or		edx, edx
-		jz		label8
-		jmp		label2
-	label7:
-		neg		al
-		add		edi, eax
-		sub		edx, eax
-		jnz		label2
-	label8:
-		sub		edi, 768 + 22
-		cmp		ebx, esi
-		jnz		label1
-	}
-#else
-	int i;
-	BYTE width;
-	BYTE *src;
-	DWORD *pFrameTable;
-
-	pFrameTable = (DWORD *)&pCelBuff[4 * nCel];
-	src = &pCelBuff[pFrameTable[0]];
-	end = &src[pFrameTable[1] - pFrameTable[0]];
-
-	for (; src != end; dst -= 768 + 22) {
-		for (i = 22; i;) {
-			width = *src++;
-			if (!(width & 0x80)) {
-				i -= width;
-				if (dst >= pStart && dst <= pEnd) {
-					if (width & 1) {
-						dst[0] = src[0];
-						src++;
-						dst++;
-					}
-					width >>= 1;
-					if (width & 1) {
-						dst[0] = src[0];
-						dst[1] = src[1];
-						src += 2;
-						dst += 2;
-					}
-					width >>= 1;
-					for (; width; width--) {
-						dst[0] = src[0];
-						dst[1] = src[1];
-						dst[2] = src[2];
-						dst[3] = src[3];
-						src += 4;
-						dst += 4;
-					}
-				} else {
-					src += width;
-					dst += width;
-				}
-			} else {
-				width = -(char)width;
-				dst += width;
-				i -= width;
-			}
-		}
-	}
-#endif
+	gpBufStart = pStart;
+	gpBufEnd = pEnd;
 }
 
 void DrawQText()
@@ -213,18 +106,18 @@ void DrawQText()
 
 	p = qtextptr;
 	pnl = NULL;
-	tx = 112;
+	tx = 48 + PANEL_X;
 	ty = qtexty;
 
 	doneflag = FALSE;
-	while(!doneflag) {
+	while (!doneflag) {
 		w = 0;
 		s = p;
 		l = 0;
-		while(*s != '\n' && *s != '|' && w < 543) {
+		while (*s != '\n' && *s != '|' && w < 543) {
 			c = gbFontTransTbl[(BYTE)*s];
 			s++;
-			if(c != '\0') {
+			if (c != '\0') {
 				tempstr[l] = c;
 				w += mfontkern[mfontframe[c]] + 2;
 			} else {
@@ -233,69 +126,47 @@ void DrawQText()
 			l++;
 		}
 		tempstr[l] = '\0';
-		if(*s == '|') {
+		if (*s == '|') {
 			tempstr[l] = '\0';
 			doneflag = TRUE;
-		} else if(*s != '\n') {
-			while(tempstr[l] != ' ' && l > 0) {
+		} else if (*s != '\n') {
+			while (tempstr[l] != ' ' && l > 0) {
 				tempstr[l] = '\0';
 				l--;
 			}
 		}
-		for(i = 0; tempstr[i]; i++) {
+		for (i = 0; tempstr[i]; i++) {
 			p++;
 			c = mfontframe[gbFontTransTbl[(BYTE)tempstr[i]]];
-			if(*p == '\n') {
+			if (*p == '\n') {
 				p++;
 			}
-			if(c != 0) {
-				PrintQTextChr(tx, ty, (BYTE *)pMedTextCels, c);
+			if (c != 0) {
+				PrintQTextChr(tx, ty, pMedTextCels, c);
 			}
 			tx += mfontkern[c] + 2;
 		}
-		if(pnl == NULL) {
+		if (pnl == NULL) {
 			pnl = p;
 		}
-		tx = 112;
+		tx = 48 + PANEL_X;
 		ty += 38;
-		if(ty > 501) {
+		if (ty > 501) {
 			doneflag = TRUE;
 		}
 	}
 
-	currTime = GetTickCount();
-	while(1) {
-		if(sgLastScroll <= 0) {
-			qtexty--;
-			qtexty += sgLastScroll;
-		} else {
-			scrolltexty--;
-			if(scrolltexty != 0) {
-				qtexty--;
-			}
-		}
-		if(scrolltexty == 0) {
-			scrolltexty = sgLastScroll;
-		}
-		if(qtexty <= 209) {
+	for (currTime = SDL_GetTicks(); qtextSpd + scrolltexty < currTime; qtextSpd += scrolltexty) {
+		qtexty--;
+		if (qtexty <= 209) {
 			qtexty += 38;
 			qtextptr = pnl;
-			if(*pnl == '|') {
-				qtextflag = 0;
+			if (*pnl == '|') {
+				qtextflag = FALSE;
 			}
-			break;
-		}
-		qtextSpd += 50;
-		if(currTime - qtextSpd >= 0x7FFFFFFF) {
 			break;
 		}
 	}
 }
-// 646CF4: using guessed type int qtexty;
-// 646CFC: using guessed type int qtextSpd;
-// 646D00: using guessed type char qtextflag;
-// 646D04: using guessed type int scrolltexty;
-// 646D08: using guessed type int sgLastScroll;
-// 428202: using guessed type char qstr[128];
 
 DEVILUTION_END_NAMESPACE

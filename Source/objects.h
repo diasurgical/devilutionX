@@ -2,17 +2,17 @@
 #ifndef __OBJECTS_H__
 #define __OBJECTS_H__
 
-extern int trapid;  // weak
-extern int trapdir; // weak
-extern unsigned char *pObjCels[40];
+extern int trapid;
+extern int trapdir;
+extern BYTE *pObjCels[40];
 extern char ObjFileList[40];
 extern int objectactive[MAXOBJECTS];
-extern int nobjects; // idb
-extern int leverid;  // idb
+extern int nobjects;
+extern int leverid;
 extern int objectavail[MAXOBJECTS];
 extern ObjectStruct object[MAXOBJECTS];
 extern BOOL InitObjFlag;
-extern int numobjfiles; // weak
+extern int numobjfiles;
 
 void InitObjectGFX();
 void FreeObjectGFX();
@@ -41,7 +41,7 @@ void AddHookedBodies(int freq);
 void AddL4Goodies();
 void AddLazStand();
 void InitObjects();
-void SetMapObjects(unsigned char *pMap, int startx, int starty);
+void SetMapObjects(BYTE *pMap, int startx, int starty);
 void DeleteObject_(int oi, int i);
 void SetupObject(int i, int x, int y, int ot);
 void SetObjMapRange(int i, int x1, int y1, int x2, int y2, int v);
@@ -54,7 +54,7 @@ void AddL3Door(int i, int x, int y, int ot);
 void AddSarc(int i);
 void AddFlameTrap(int i);
 void AddFlameLvr(int i);
-void AddTrap(int i, int t);
+void AddTrap(int i, int ot);
 void AddObjLight(int i, int r);
 void AddBarrel(int i, int t);
 void AddShrine(int i);
@@ -105,7 +105,7 @@ void OperateL3LDoor(int pnum, int oi, BOOL sendflag);
 void MonstCheckDoors(int m);
 void ObjChangeMap(int x1, int y1, int x2, int y2);
 void ObjChangeMapResync(int x1, int y1, int x2, int y2);
-void OperateL1Door(int pnum, int i, unsigned char sendflag);
+void OperateL1Door(int pnum, int i, BOOL sendflag);
 void OperateLever(int pnum, int i);
 void OperateBook(int pnum, int i);
 void OperateBookLever(int pnum, int i);
@@ -116,8 +116,8 @@ void OperateInnSignChest(int pnum, int i);
 void OperateSlainHero(int pnum, int i, BOOL sendmsg);
 void OperateTrapLvr(int i);
 void OperateSarc(int pnum, int i, BOOL sendmsg);
-void OperateL2Door(int pnum, int i, unsigned char sendflag);
-void OperateL3Door(int pnum, int i, unsigned char sendflag);
+void OperateL2Door(int pnum, int i, BOOL sendflag);
+void OperateL3Door(int pnum, int i, BOOL sendflag);
 void OperatePedistal(int pnum, int i);
 void TryDisarm(int pnum, int i);
 int ItemMiscIdIdx(int imiscid);
@@ -159,7 +159,7 @@ extern int byadd[8];
 extern char *shrinestrs[NUM_SHRINETYPE];
 extern char shrinemin[NUM_SHRINETYPE];
 extern char shrinemax[NUM_SHRINETYPE];
-extern unsigned char shrineavail[NUM_SHRINETYPE];
+extern BYTE shrineavail[NUM_SHRINETYPE];
 extern char *StoryBookName[9];
 extern int StoryText[3][3];
 

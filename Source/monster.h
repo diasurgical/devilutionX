@@ -2,15 +2,15 @@
 #ifndef __MONSTER_H__
 #define __MONSTER_H__
 
-extern int MissileFileFlag; // weak
+extern int MissileFileFlag;
 extern int monstkills[MAXMONSTERS];
 extern int monstactive[MAXMONSTERS];
 extern int nummonsters;
+extern BOOLEAN sgbSaveSoundOn;
 extern MonsterStruct monster[MAXMONSTERS];
-extern int totalmonsters; // weak
-extern CMonster Monsters[16];
-// int END_Monsters_17; // weak
-extern int monstimgtot; // weak
+extern int totalmonsters;
+extern CMonster Monsters[MAX_LVLMTYPES];
+extern int monstimgtot;
 extern int uniquetrans;
 extern int nummtypes;
 
@@ -24,13 +24,13 @@ void InitMonster(int i, int rd, int mtype, int x, int y);
 void ClrAllMonsters();
 BOOL MonstPlace(int xp, int yp);
 void PlaceMonster(int i, int mtype, int x, int y);
-void PlaceUniqueMonst(int uniqindex, int miniontype, int packsize);
+void PlaceUniqueMonst(int uniqindex, int miniontype, int unpackfilesize);
 void PlaceQuestMonsters();
 void PlaceGroup(int mtype, int num, int leaderf, int leader);
 void LoadDiabMonsts();
 void InitMonsters();
 void PlaceUniques();
-void SetMapMonsters(unsigned char *pMap, int startx, int starty);
+void SetMapMonsters(BYTE *pMap, int startx, int starty);
 void DeleteMonster(int i);
 int AddMonster(int x, int y, int dir, int mtype, BOOL InMap);
 void NewMonsterAnim(int i, AnimStruct *anim, int md);
@@ -112,7 +112,7 @@ void MAI_Succ(int i);
 void MAI_AcidUniq(int i);
 void MAI_Scav(int i);
 void MAI_Garg(int i);
-void MAI_RoundRanged(int i, int missile_type, unsigned char checkdoors, int dam, int lessmissiles);
+void MAI_RoundRanged(int i, int missile_type, BOOL checkdoors, int dam, int lessmissiles);
 void MAI_Magma(int i);
 void MAI_Storm(int i);
 void MAI_Acid(int i);
@@ -136,9 +136,9 @@ void FreeMonsters();
 BOOL DirOK(int i, int mdir);
 BOOL PosOkMissile(int x, int y);
 BOOL CheckNoSolid(int x, int y);
-BOOL LineClearF(BOOL(*Clear)(int, int), int x1, int y1, int x2, int y2);
+BOOL LineClearF(BOOL (*Clear)(int, int), int x1, int y1, int x2, int y2);
 BOOL LineClear(int x1, int y1, int x2, int y2);
-BOOL LineClearF1(BOOL(*Clear)(int, int, int), int monst, int x1, int y1, int x2, int y2);
+BOOL LineClearF1(BOOL (*Clear)(int, int, int), int monst, int x1, int y1, int x2, int y2);
 void SyncMonsterAnim(int i);
 void M_FallenFear(int x, int y);
 void PrintMonstHistory(int mt);
@@ -163,7 +163,7 @@ void decode_enemy(int m, int enemy);
 /* rdata */
 
 extern const char plr2monst[9];
-extern const unsigned char counsmiss[4];
+extern const BYTE counsmiss[4];
 
 /* data */
 
@@ -182,6 +182,6 @@ extern int rnd20[4];
 extern int rnd60[4];
 //
 
-extern void(*AiProc[])(int i);
+extern void (*AiProc[])(int i);
 
 #endif /* __MONSTER_H__ */

@@ -4,27 +4,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define eprintf(...) fprintf(stderr, __VA_ARGS__)
-
 #define UNIMPLEMENTED()                                                           \
 	do {                                                                          \
-		eprintf("UNIMPLEMENTED: %s @ %s:%d\n", __FUNCTION__, __FILE__, __LINE__); \
+		SDL_Log("UNIMPLEMENTED: %s @ %s:%d", __FUNCTION__, __FILE__, __LINE__); \
 		abort();                                                                  \
 	} while (0)
 
 #define UNIMPLEMENTED_UNLESS(x) \
-	do { \
-		if(!(x)) \
-			UNIMPLEMENTED(); \
+	do {                        \
+		if (!(x))               \
+			UNIMPLEMENTED();    \
 	} while (0)
 
 #define ABORT()                                                           \
 	do {                                                                  \
-		eprintf("ABORT: %s @ %s:%d\n", __FUNCTION__, __FILE__, __LINE__); \
+		SDL_Log("ABORT: %s @ %s:%d", __FUNCTION__, __FILE__, __LINE__); \
 		abort();                                                          \
 	} while (0)
 
-#define DUMMY() eprintf("DUMMY: %s @ %s:%d\n", __FUNCTION__, __FILE__, __LINE__)
+#define DUMMY() SDL_Log("DUMMY: %s @ %s:%d", __FUNCTION__, __FILE__, __LINE__)
 
 #define DUMMY_ONCE()                     \
 	do {                                 \
@@ -35,15 +33,13 @@
 		}                                \
 	} while (0)
 
-#define DUMMY_PRINT(fmt, ...) eprintf("DUMMY: %s : " fmt "\n", __FUNCTION__, ##__VA_ARGS__)
-
 static inline const char *nullstr(const char *a)
 {
 	return a ? a : "(null)";
 }
 
-#define ASSERT(x)                                                                   \
-	if (!(x)) {                                                                     \
-		fprintf(stderr, "Assertion failed in %s:%d: %s\n", __FILE__, __LINE__, #x); \
-		abort();                                                                    \
+#define ASSERT(x)                                                         \
+	if (!(x)) {                                                           \
+		SDL_Log("Assertion failed in %s:%d: %s", __FILE__, __LINE__, #x); \
+		abort();                                                          \
 	}

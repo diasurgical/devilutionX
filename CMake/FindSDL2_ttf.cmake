@@ -92,7 +92,7 @@ if(APPLE AND "${SDL2_ttf_LIBRARY}" MATCHES "(/[^/]+)*.framework(/.*)?$")
 		# If we found a framework, do a search for the header ahead of time that will be more likely to get the framework header.
 		find_path(SDL2_ttf_INCLUDE_DIR
 			NAMES
-			SDL_mixer.h 
+			SDL_ttf.h 
 			HINTS
 			"${SDL2_ttf_FRAMEWORK}/Headers/")
 	else()
@@ -104,7 +104,7 @@ endif()
 
 find_path(SDL2_ttf_INCLUDE_DIR
 	NAMES
-	SDL_mixer.h 
+	SDL_ttf.h 
 	HINTS
 	${SDL2_ttf_INCLUDE_HINTS}
 	PATHS

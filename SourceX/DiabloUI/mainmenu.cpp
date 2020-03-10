@@ -1,17 +1,25 @@
-#include "devilution.h"
+#include "all.h"
 #include "DiabloUI/diabloui.h"
+#include "DiabloUI/selok.h"
 
 namespace dvl {
 
+int mainmenu_attract_time_out; //seconds
+DWORD dwAttractTicks;
+
 int MainMenuResult;
-UI_Item MAINMENU_DIALOG[] = {
-	{ { 0, 0, 640, 480 }, UI_IMAGE, 0, 0, NULL, &ArtBackground },
-	{ { 64, 192, 510, 43 }, UI_LIST, UIS_HUGE | UIS_GOLD | UIS_CENTER, MAINMENU_SINGLE_PLAYER, "Single Player" },
-	{ { 64, 235, 510, 43 }, UI_LIST, UIS_HUGE | UIS_GOLD | UIS_CENTER, MAINMENU_MULTIPLAYER, "Multi Player" },
-	{ { 64, 277, 510, 43 }, UI_LIST, UIS_HUGE | UIS_GOLD | UIS_CENTER, MAINMENU_REPLAY_INTRO, "Replay Intro" },
-	{ { 64, 320, 510, 43 }, UI_LIST, UIS_HUGE | UIS_GOLD | UIS_CENTER, MAINMENU_SHOW_CREDITS, "Show Credits" },
-	{ { 64, 363, 510, 43 }, UI_LIST, UIS_HUGE | UIS_GOLD | UIS_CENTER, MAINMENU_EXIT_DIABLO, "Exit Diablo" },
-	{ { 17, 444, 605, 21 }, UI_TEXT, UIS_SMALL },
+UiListItem MAINMENU_DIALOG_ITEMS[] = {
+	{ "Single Player", MAINMENU_SINGLE_PLAYER },
+	{ "Multi Player", MAINMENU_MULTIPLAYER },
+	{ "Replay Intro", MAINMENU_REPLAY_INTRO },
+	{ "Show Credits", MAINMENU_SHOW_CREDITS },
+	{ "Exit Diablo", MAINMENU_EXIT_DIABLO }
+};
+UiItem MAINMENU_DIALOG[] = {
+	MAINMENU_BACKGROUND,
+	MAINMENU_LOGO,
+	UiList(MAINMENU_DIALOG_ITEMS, 64, 192, 510, 43, UIS_HUGE | UIS_GOLD | UIS_CENTER),
+	UiArtText(nullptr, { 17, 444, 605, 21 }, UIS_SMALL)
 };
 
 void UiMainMenuSelect(int value)
@@ -21,43 +29,63 @@ void UiMainMenuSelect(int value)
 
 void mainmenu_Esc()
 {
-	UiMainMenuSelect(MAINMENU_EXIT_DIABLO);
+	if (SelectedItem == MAINMENU_EXIT_DIABLO) {
+		UiMainMenuSelect(MAINMENU_EXIT_DIABLO);
+	} else {
+		SelectedItem = MAINMENU_EXIT_DIABLO;
+	}
 }
 
-void mainmenu_Load(char *name, void(*fnSound)(char *file))
+void mainmenu_restart_repintro()
+{
+	dwAttractTicks = SDL_GetTicks() + mainmenu_attract_time_out * 1000;
+}
+
+void mainmenu_Load(char *name, void (*fnSound)(char *file))
 {
 	gfnSoundFunction = fnSound;
-	MAINMENU_DIALOG[6].caption = name;
+	MAINMENU_DIALOG[size(MAINMENU_DIALOG) - 1].art_text.text = name;
 
-	MainMenuResult = 0;
-
-	char *pszFile = "ui_art\\mainmenu.pcx";
-	if (false) //DiabloUI_GetSpawned()
-		pszFile = "ui_art\\swmmenu.pcx";
-	LoadBackgroundArt(pszFile);
+	if (!gbSpawned) {
+		LoadBackgroundArt("ui_art\\mainmenu.pcx");
+	} else {
+		LoadBackgroundArt("ui_art\\swmmenu.pcx");
+	}
 
 	UiInitList(MAINMENU_SINGLE_PLAYER, MAINMENU_EXIT_DIABLO, NULL, UiMainMenuSelect, mainmenu_Esc, MAINMENU_DIALOG, size(MAINMENU_DIALOG), true);
 }
 
 void mainmenu_Free()
 {
-	mem_free_dbg(ArtBackground.data);
-	ArtBackground.data = NULL;
+	ArtBackground.Unload();
 }
 
-BOOL UiMainMenuDialog(char *name, int *pdwResult, void(*fnSound)(char *file), int a4)
+BOOL UiMainMenuDialog(char *name, int *pdwResult, void (*fnSound)(char *file), int attractTimeOut)
 {
-	mainmenu_Load(name, fnSound);
-
+	MainMenuResult = 0;
 	while (MainMenuResult == 0) {
-		UiRender();
-	}
+		mainmenu_attract_time_out = attractTimeOut;
+		mainmenu_Load(name, fnSound);
 
-	BlackPalette();
-	mainmenu_Free();
+		mainmenu_restart_repintro(); // for automatic starts
+
+		while (MainMenuResult == 0) {
+			UiPollAndRender();
+			if (!gbSpawned && SDL_GetTicks() >= dwAttractTicks) {
+				MainMenuResult = MAINMENU_ATTRACT_MODE;
+			}
+		}
+
+		mainmenu_Free();
+
+		if (gbSpawned && MainMenuResult == MAINMENU_REPLAY_INTRO) {
+			UiSelOkDialog(nullptr, "The Diablo introduction cinematic is only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase.", true);
+			MainMenuResult = 0;
+		}
+	}
 
 	*pdwResult = MainMenuResult;
 	return true;
 }
 
-}
+} // namespace dvl

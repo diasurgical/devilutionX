@@ -1,264 +1,106 @@
-#include "diablo.h"
+#include <algorithm>
+
+#include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
-#include "miniwin/ddraw.h"
+#include "display.h"
+#include <SDL.h>
 
 namespace dvl {
 
-BYTE *sgpBackBuf;
-LPDIRECTDRAW lpDDInterface;
-IDirectDrawPalette *lpDDPalette; // idb
 int sgdwLockCount;
 BYTE *gpBuffer;
-IDirectDrawSurface *lpDDSBackBuf;
-IDirectDrawSurface *lpDDSPrimary;
 #ifdef _DEBUG
 int locktbl[256];
 #endif
-#ifdef __cplusplus
 static CCritSect sgMemCrit;
+HMODULE ghDiabMod;
+
+int refreshDelay;
+SDL_Window *window;
+SDL_Renderer *renderer;
+SDL_Texture *texture;
+
+/** Currently active palette */
+SDL_Palette *palette;
+unsigned int pal_surface_palette_version = 0;
+
+/** 24-bit renderer texture surface */
+SDL_Surface *renderer_texture_surface = nullptr;
+
+/** 8-bit surface wrapper around #gpBuffer */
+SDL_Surface *pal_surface;
+
+static void dx_create_back_buffer()
+{
+	pal_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);
+	if (pal_surface == NULL) {
+		ErrSdl();
+	}
+
+	gpBuffer = (BYTE *)pal_surface->pixels;
+
+#ifndef USE_SDL1
+	// In SDL2, `pal_surface` points to the global `palette`.
+	if (SDL_SetSurfacePalette(pal_surface, palette) < 0)
+		ErrSdl();
+#else
+	// In SDL1, `pal_surface` owns its palette and we must update it every
+	// time the global `palette` is changed. No need to do anything here as
+	// the global `palette` doesn't have any colors set yet.
 #endif
-char gbBackBuf;    // weak
-char gbEmulate;    // weak
-HMODULE ghDiabMod; // idb
+
+	pal_surface_palette_version = 1;
+}
+
+static void dx_create_primary_surface()
+{
+#ifndef USE_SDL1
+	if (renderer) {
+		int width, height;
+		SDL_RenderGetLogicalSize(renderer, &width, &height);
+		Uint32 format;
+		if (SDL_QueryTexture(texture, &format, nullptr, nullptr, nullptr) < 0)
+			ErrSdl();
+		renderer_texture_surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, SDL_BITSPERPIXEL(format), format);
+	}
+#endif
+	if (GetOutputSurface() == nullptr) {
+		ErrSdl();
+	}
+}
 
 void dx_init(HWND hWnd)
 {
-	HRESULT hDDVal;
-	int winw, winh;
-	BOOL bSuccess;
-	GUID *lpGUID;
-
-	/// ASSERT: assert(! gpBuffer);
-	/// ASSERT: assert(! sgdwLockCount);
-	/// ASSERT: assert(! sgpBackBuf);
-
-	SetFocus(hWnd);
-	ShowWindow(hWnd, 1);
-
-	lpGUID = NULL;
-	if (!gbEmulate) {
-		lpGUID = NULL;
-	}
-	hDDVal = dx_DirectDrawCreate(lpGUID, &lpDDInterface, NULL);
-	if (hDDVal != DVL_S_OK) {
-		ErrDlg(IDD_DIALOG1, hDDVal, "C:\\Src\\Diablo\\Source\\dx.cpp", 149);
-	}
-
-#ifdef COLORFIX
-#ifdef __DDRAWI_INCLUDED__
-	((LPDDRAWI_DIRECTDRAW_INT)lpDDInterface)->lpLcl->dwAppHackFlags |= 0x800;
-#else
-	((DWORD **)lpDDInterface)[1][18] |= 0x800;
-#endif
-#endif
-
-#ifndef _DEBUG
-	fullscreen = true;
-#endif
-	if (!fullscreen) {
-#ifdef __cplusplus
-		hDDVal = lpDDInterface->SetCooperativeLevel(hWnd, 0 | 0);
-#else
-		hDDVal = lpDDInterface->lpVtbl->SetCooperativeLevel(lpDDInterface, hWnd, DDSCL_NORMAL | DDSCL_ALLOWREBOOT);
-#endif
-		if (hDDVal == 1) {
-			TriggerBreak();
-		} else if (hDDVal != DVL_S_OK) {
-			ErrDlg(IDD_DIALOG1, hDDVal, "C:\\Diablo\\Direct\\dx.cpp", 155);
-		}
-		SetWindowPos(hWnd, 0, 0, 0, 0, 0, 0 | 0 | 0);
-	} else {
-#ifdef __cplusplus
-		hDDVal = lpDDInterface->SetCooperativeLevel(hWnd, 0 | 0 | 0);
-#else
-		hDDVal = lpDDInterface->lpVtbl->SetCooperativeLevel(lpDDInterface, hWnd, DDSCL_EXCLUSIVE | DDSCL_ALLOWREBOOT | DDSCL_FULLSCREEN);
-#endif
-		if (hDDVal == 1) {
-			TriggerBreak();
-		} else if (hDDVal != DVL_S_OK) {
-			ErrDlg(IDD_DIALOG1, hDDVal, "C:\\Src\\Diablo\\Source\\dx.cpp", 170);
-		}
-#ifdef __cplusplus
-		hDDVal = lpDDInterface->SetDisplayMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP);
-#else
-		hDDVal = lpDDInterface->lpVtbl->SetDisplayMode(lpDDInterface, SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP);
-#endif
-		if (hDDVal != DVL_S_OK) {
-			winw = GetSystemMetrics(DVL_SM_CXSCREEN);
-			winh = GetSystemMetrics(DVL_SM_CYSCREEN);
-#ifdef __cplusplus
-			hDDVal = lpDDInterface->SetDisplayMode(winw, winh, SCREEN_BPP);
-#else
-			hDDVal = lpDDInterface->lpVtbl->SetDisplayMode(lpDDInterface, winw, winh, SCREEN_BPP);
-#endif
-			if (hDDVal != DVL_S_OK) {
-				ErrDlg(IDD_DIALOG1, hDDVal, "C:\\Src\\Diablo\\Source\\dx.cpp", 183);
-			}
-		}
-	}
+	SDL_RaiseWindow(window);
+	SDL_ShowWindow(window);
 
 	dx_create_primary_surface();
 	palette_init();
-	GdiSetBatchLimit(1);
 	dx_create_back_buffer();
-	bSuccess = SDrawManualInitialize(hWnd, lpDDInterface, lpDDSPrimary, NULL, NULL, lpDDSBackBuf, lpDDPalette, NULL);
-	/// ASSERT: assert(bSuccess);
 }
-// 52A549: using guessed type char gbEmulate;
-
-void dx_create_back_buffer()
+static void lock_buf_priv()
 {
-	DDSCAPS caps;
-	HRESULT error_code;
-	DDSURFACEDESC ddsd;
-
-#ifdef __cplusplus
-	error_code = lpDDSPrimary->GetCaps(&caps);
-#else
-	error_code = lpDDSPrimary->lpVtbl->GetCaps(lpDDSPrimary, &caps);
-#endif
-	if (error_code != DVL_S_OK)
-		DDErrMsg(error_code, 59, "C:\\Src\\Diablo\\Source\\dx.cpp");
-
-	gbBackBuf = 1;
-	if (!gbBackBuf) {
-		ddsd.dwSize = sizeof(ddsd);
-#ifdef __cplusplus
-		error_code = lpDDSPrimary->Lock(NULL, &ddsd, 0 | 0, NULL);
-#else
-		error_code = lpDDSPrimary->lpVtbl->Lock(lpDDSPrimary, NULL, &ddsd, DDLOCK_WRITEONLY | DDLOCK_WAIT, NULL);
-#endif
-		if (error_code == DVL_S_OK) {
-#ifdef __cplusplus
-			lpDDSPrimary->Unlock(NULL);
-#else
-			lpDDSPrimary->lpVtbl->Unlock(lpDDSPrimary, NULL);
-#endif
-			sgpBackBuf = (BYTE *)DiabloAllocPtr(BUFFER_HEIGHT * BUFFER_WIDTH);
-			return;
-		}
-		if (error_code != 2)
-			ErrDlg(IDD_DIALOG1, error_code, "C:\\Src\\Diablo\\Source\\dx.cpp", 81);
+	sgMemCrit.Enter();
+	if (sgdwLockCount != 0) {
+		sgdwLockCount++;
+		return;
 	}
 
-	memset(&ddsd, 0, sizeof(ddsd));
-	ddsd.dwWidth = BUFFER_WIDTH;
-	ddsd.lPitch = BUFFER_WIDTH;
-	ddsd.dwSize = sizeof(ddsd);
-	ddsd.dwFlags = 0 | 0 | 0 | 0 | 0;
-	ddsd.ddsCaps.dwCaps = 0 | 0;
-	ddsd.dwHeight = BUFFER_HEIGHT;
-	ddsd.ddpfPixelFormat.dwSize = sizeof(ddsd.ddpfPixelFormat);
-#ifdef __cplusplus
-	error_code = lpDDSPrimary->GetPixelFormat(&ddsd.ddpfPixelFormat);
-#else
-	error_code = lpDDSPrimary->lpVtbl->GetPixelFormat(lpDDSPrimary, &ddsd.ddpfPixelFormat);
-#endif
-	if (error_code != DVL_S_OK)
-		ErrDlg(IDD_DIALOG1, error_code, "C:\\Src\\Diablo\\Source\\dx.cpp", 94);
-#ifdef __cplusplus
-	error_code = lpDDInterface->CreateSurface(&ddsd, &lpDDSBackBuf, NULL);
-#else
-	error_code = lpDDInterface->lpVtbl->CreateSurface(lpDDInterface, &ddsd, &lpDDSBackBuf, NULL);
-#endif
-	if (error_code != DVL_S_OK)
-		ErrDlg(IDD_DIALOG1, error_code, "C:\\Src\\Diablo\\Source\\dx.cpp", 96);
-}
-// 52A548: using guessed type char gbBackBuf;
-
-void dx_create_primary_surface()
-{
-	DDSURFACEDESC ddsd;
-	HRESULT error_code;
-
-	memset(&ddsd, 0, sizeof(ddsd));
-	ddsd.dwSize = sizeof(ddsd);
-	ddsd.dwFlags = 0;
-	ddsd.ddsCaps.dwCaps = 0;
-#ifdef __cplusplus
-	error_code = lpDDInterface->CreateSurface(&ddsd, &lpDDSPrimary, NULL);
-#else
-	error_code = lpDDInterface->lpVtbl->CreateSurface(lpDDInterface, &ddsd, &lpDDSPrimary, NULL);
-#endif
-	if (error_code != DVL_S_OK)
-		ErrDlg(IDD_DIALOG1, error_code, "C:\\Src\\Diablo\\Source\\dx.cpp", 109);
-}
-
-HRESULT dx_DirectDrawCreate(LPGUID guid, LPDIRECTDRAW *lplpDD, LPUNKNOWN pUnkOuter)
-{
-	if (ghDiabMod == NULL) {
-		ghDiabMod = NULL; //ghDiabMod = LoadLibrary("ddraw.dll");
-		if (ghDiabMod == NULL) {
-			//ErrDlg(IDD_DIALOG4, GetLastError(), "C:\\Src\\Diablo\\Source\\dx.cpp", 122);
-		}
-	}
-
-	*lplpDD = new StubDraw();
-
-	return DVL_S_OK;
+	gpBufEnd += (uintptr_t)(BYTE *)pal_surface->pixels;
+	gpBuffer = (BYTE *)pal_surface->pixels;
+	sgdwLockCount++;
 }
 
 void lock_buf(BYTE idx)
 {
 #ifdef _DEBUG
-	++locktbl[idx];
+	locktbl[idx]++;
 #endif
 	lock_buf_priv();
 }
 
-void lock_buf_priv()
+static void unlock_buf_priv()
 {
-	DDSURFACEDESC ddsd;
-	HRESULT error_code;
-
-#ifdef __cplusplus
-	sgMemCrit.Enter();
-#endif
-	if (sgpBackBuf != NULL) {
-		gpBuffer = sgpBackBuf;
-		sgdwLockCount++;
-		return;
-	}
-
-	if (lpDDSBackBuf == NULL) {
-		Sleep(20000);
-		app_fatal("lock_buf_priv");
-		sgdwLockCount++;
-		return;
-	}
-
-	if (sgdwLockCount != 0) {
-		sgdwLockCount++;
-		return;
-	}
-	ddsd.dwSize = sizeof(ddsd);
-#ifdef __cplusplus
-	error_code = lpDDSBackBuf->Lock(NULL, &ddsd, 0, NULL);
-#else
-	error_code = lpDDSBackBuf->lpVtbl->Lock(lpDDSBackBuf, NULL, &ddsd, DDLOCK_WAIT, NULL);
-#endif
-	if (error_code != DVL_S_OK)
-		DDErrMsg(error_code, 235, "C:\\Src\\Diablo\\Source\\dx.cpp");
-
-	gpBufEnd += (uintptr_t)ddsd.lpSurface;
-	gpBuffer = (BYTE *)ddsd.lpSurface;
-	sgdwLockCount++;
-}
-
-void unlock_buf(BYTE idx)
-{
-#ifdef _DEBUG
-	if (!locktbl[idx])
-		app_fatal("Draw lock underflow: 0x%x", idx);
-	--locktbl[idx];
-#endif
-	unlock_buf_priv();
-}
-
-void unlock_buf_priv()
-{
-	HRESULT error_code;
-
 	if (sgdwLockCount == 0)
 		app_fatal("draw main unlock error");
 	if (!gpBuffer)
@@ -268,101 +110,191 @@ void unlock_buf_priv()
 	if (sgdwLockCount == 0) {
 		gpBufEnd -= (uintptr_t)gpBuffer;
 		//gpBuffer = NULL; unable to return to menu
-		if (sgpBackBuf == NULL) {
-#ifdef __cplusplus
-			error_code = lpDDSBackBuf->Unlock(NULL);
-#else
-			error_code = lpDDSBackBuf->lpVtbl->Unlock(lpDDSBackBuf, NULL);
-#endif
-			if (error_code != DVL_S_OK)
-				DDErrMsg(error_code, 273, "C:\\Src\\Diablo\\Source\\dx.cpp");
-		}
 	}
-#ifdef __cplusplus
 	sgMemCrit.Leave();
+}
+
+void unlock_buf(BYTE idx)
+{
+#ifdef _DEBUG
+	if (!locktbl[idx])
+		app_fatal("Draw lock underflow: 0x%x", idx);
+	locktbl[idx]--;
 #endif
+	unlock_buf_priv();
 }
 
 void dx_cleanup()
 {
-	BYTE *v0; // ecx
-
 	if (ghMainWnd)
-		ShowWindow(ghMainWnd, 0);
-	SDrawDestroy();
-#ifdef __cplusplus
+		SDL_HideWindow(window);
 	sgMemCrit.Enter();
-#endif
-	if (sgpBackBuf != NULL) {
-		v0 = sgpBackBuf;
-		sgpBackBuf = 0;
-		mem_free_dbg(v0);
-	} else if (lpDDSBackBuf != NULL) {
-#ifdef __cplusplus
-		lpDDSBackBuf->Release();
-#else
-		lpDDSBackBuf->lpVtbl->Release(lpDDSBackBuf);
-#endif
-		lpDDSBackBuf = NULL;
-	}
 	sgdwLockCount = 0;
-	gpBuffer = 0;
-#ifdef __cplusplus
+	gpBuffer = NULL;
 	sgMemCrit.Leave();
-#endif
-	if (lpDDSPrimary) {
-#ifdef __cplusplus
-		lpDDSPrimary->Release();
-#else
-		lpDDSPrimary->lpVtbl->Release(lpDDSPrimary);
-#endif
-		lpDDSPrimary = NULL;
-	}
-	if (lpDDPalette) {
-#ifdef __cplusplus
-		lpDDPalette->Release();
-#else
-		lpDDPalette->lpVtbl->Release(lpDDPalette);
-#endif
-		lpDDPalette = NULL;
-	}
-	if (lpDDInterface) {
-#ifdef __cplusplus
-		lpDDInterface->Release();
-#else
-		lpDDInterface->lpVtbl->Release(lpDDInterface);
-#endif
-		lpDDInterface = NULL;
-	}
+
+	if (pal_surface == nullptr)
+		return;
+	SDL_FreeSurface(pal_surface);
+	pal_surface = nullptr;
+	SDL_FreePalette(palette);
+	SDL_FreeSurface(renderer_texture_surface);
+	SDL_DestroyTexture(texture);
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
 }
 
 void dx_reinit()
 {
-	int lockCount;
-
-#ifdef __cplusplus
-	sgMemCrit.Enter();
+#ifdef USE_SDL1
+	window = SDL_SetVideoMode(0, 0, 0, window->flags ^ SDL_FULLSCREEN);
+	if (window == NULL) {
+		ErrSdl();
+	}
+#else
+	Uint32 flags = 0;
+	if (!fullscreen) {
+		flags = renderer ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_FULLSCREEN;
+	}
+	if (SDL_SetWindowFullscreen(window, flags)) {
+		ErrSdl();
+	}
 #endif
-	ClearCursor();
-	lockCount = sgdwLockCount;
+	fullscreen = !fullscreen;
+	force_redraw = 255;
+}
 
-	while (sgdwLockCount != 0)
-		unlock_buf_priv();
+void InitPalette()
+{
+	palette = SDL_AllocPalette(256);
+	if (palette == NULL) {
+		ErrSdl();
+	}
+}
 
-	dx_cleanup();
+void BltFast(SDL_Rect *src_rect, SDL_Rect *dst_rect)
+{
+	Blit(pal_surface, src_rect, dst_rect);
+}
 
-	drawpanflag = 255;
-
-	dx_init(ghMainWnd);
-
-	while (lockCount != 0) {
-		lock_buf_priv();
-		lockCount--;
+void Blit(SDL_Surface *src, SDL_Rect *src_rect, SDL_Rect *dst_rect)
+{
+	SDL_Surface *dst = GetOutputSurface();
+#ifndef USE_SDL1
+	if (SDL_BlitSurface(src, src_rect, dst, dst_rect) < 0)
+			ErrSdl();
+		return;
+#else
+	if (!OutputRequiresScaling()) {
+		if (SDL_BlitSurface(src, src_rect, dst, dst_rect) < 0)
+			ErrSdl();
+		return;
 	}
 
-#ifdef __cplusplus
-	sgMemCrit.Leave();
+	SDL_Rect scaled_dst_rect;
+	if (dst_rect != nullptr) {
+		scaled_dst_rect = *dst_rect;
+		ScaleOutputRect(&scaled_dst_rect);
+		dst_rect = &scaled_dst_rect;
+	}
+
+	// Same pixel format: We can call BlitScaled directly.
+	if (SDLBackport_PixelFormatFormatEq(src->format, dst->format)) {
+		if (SDL_BlitScaled(src, src_rect, dst, dst_rect) < 0)
+			ErrSdl();
+		return;
+	}
+
+	// If the surface has a color key, we must stretch first and can then call BlitSurface.
+	if (SDL_HasColorKey(src)) {
+		SDL_Surface *stretched = SDL_CreateRGBSurface(SDL_SWSURFACE, dst_rect->w, dst_rect->h, src->format->BitsPerPixel,
+		    src->format->Rmask, src->format->Gmask, src->format->BitsPerPixel, src->format->Amask);
+		SDL_SetColorKey(stretched, SDL_SRCCOLORKEY, src->format->colorkey);
+		if (src->format->palette != nullptr)
+			SDL_SetPalette(stretched, SDL_LOGPAL, src->format->palette->colors, 0, src->format->palette->ncolors);
+		SDL_Rect stretched_rect = { 0, 0, dst_rect->w, dst_rect->h };
+		if (SDL_SoftStretch(src, src_rect, stretched, &stretched_rect) < 0
+		    || SDL_BlitSurface(stretched, &stretched_rect, dst, dst_rect) < 0) {
+			SDL_FreeSurface(stretched);
+			ErrSdl();
+		}
+		SDL_FreeSurface(stretched);
+		return;
+	}
+
+	// A surface with a non-output pixel format but without a color key needs scaling.
+	// We can convert the format and then call BlitScaled.
+	SDL_Surface *converted = SDL_ConvertSurface(src, dst->format, 0);
+	if (SDL_BlitScaled(converted, src_rect, dst, dst_rect) < 0) {
+		SDL_FreeSurface(converted);
+		ErrSdl();
+	}
+	SDL_FreeSurface(converted);
 #endif
 }
 
+/**
+ * @brief Limit FPS to avoid high CPU load, use when v-sync isn't available
+ */
+void LimitFrameRate()
+{
+	static uint32_t frameDeadline;
+	uint32_t tc = SDL_GetTicks() * 1000;
+	uint32_t v = 0;
+	if (frameDeadline > tc) {
+		v = tc % refreshDelay;
+		SDL_Delay(v / 1000 + 1); // ceil
+	}
+	frameDeadline = tc + v + refreshDelay;
+}
+
+void RenderPresent()
+{
+	SDL_Surface *surface = GetOutputSurface();
+	assert(!SDL_MUSTLOCK(surface));
+
+	if (!gbActive) {
+		LimitFrameRate();
+		return;
+	}
+
+#ifndef USE_SDL1
+	if (renderer) {
+		if (SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch) <= -1) { //pitch is 2560
+			ErrSdl();
+		}
+
+		// Clear buffer to avoid artifacts in case the window was resized
+		if (SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255) <= -1) { // TODO only do this if window was resized
+			ErrSdl();
+		}
+
+		if (SDL_RenderClear(renderer) <= -1) {
+			ErrSdl();
+		}
+
+		if (SDL_RenderCopy(renderer, texture, NULL, NULL) <= -1) {
+			ErrSdl();
+		}
+		SDL_RenderPresent(renderer);
+	} else {
+		if (SDL_UpdateWindowSurface(window) <= -1) {
+			ErrSdl();
+		}
+		LimitFrameRate();
+	}
+#else
+	if (SDL_Flip(surface) <= -1) {
+		ErrSdl();
+	}
+	LimitFrameRate();
+#endif
+}
+
+void PaletteGetEntries(DWORD dwNumEntries, SDL_Color *lpEntries)
+{
+	for (DWORD i = 0; i < dwNumEntries; i++) {
+		lpEntries[i] = system_palette[i];
+	}
+}
 } // namespace dvl

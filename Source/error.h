@@ -3,7 +3,7 @@
 #define __ERROR_H__
 
 extern char msgtable[MAX_SEND_STR_LEN];
-extern char msgdelay;
+extern DWORD msgdelay;
 extern char msgflag;
 extern char msgcnt;
 

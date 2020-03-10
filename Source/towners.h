@@ -5,8 +5,8 @@
 extern TownerStruct towner[16];
 
 int GetActiveTowner(int t);
-void SetTownerGPtrs(BYTE *pData, BYTE **pAnim); /* unsigned char *+** */
-void NewTownerAnim(int tnum, unsigned char *pAnim, int numFrames, int Delay);
+void SetTownerGPtrs(BYTE *pData, BYTE **pAnim);
+void NewTownerAnim(int tnum, BYTE *pAnim, int numFrames, int Delay);
 void InitTownerInfo(int i, int w, int sel, int t, int x, int y, int ao, int tp);
 void InitQstSnds(int i);
 void InitSmith();

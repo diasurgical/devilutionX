@@ -5,11 +5,11 @@
 extern int missileactive[MAXMISSILES];
 extern int missileavail[MAXMISSILES];
 extern MissileStruct missile[MAXMISSILES];
-extern int nummissiles; // idb
-extern int ManashieldFlag;
+extern int nummissiles;
+extern BOOL ManashieldFlag;
 extern ChainStruct chain[MAXMISSILES];
-extern int MissilePreFlag; // weak
-extern int numchains;      // weak
+extern BOOL MissilePreFlag;
+extern int numchains;
 
 void GetDamageAmt(int i, int *mind, int *maxd);
 BOOL CheckBlock(int fx, int fy, int tx, int ty);
@@ -22,11 +22,11 @@ void GetMissileVel(int i, int sx, int sy, int dx, int dy, int v);
 void PutMissile(int i);
 void GetMissilePos(int i);
 void MoveMissilePos(int i);
-BOOL MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, int shift);
-BOOLEAN MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, int shift);
-BOOLEAN PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, int shift, int earflag);
-BOOLEAN Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, int shift);
-void CheckMissileCol(int i, int mindam, int maxdam, BOOLEAN shift, int mx, int my, int nodel);
+BOOL MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, BOOLEAN shift);
+BOOL MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, BOOLEAN shift);
+BOOL PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, BOOLEAN shift, int earflag);
+BOOL Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, BOOLEAN shift);
+void CheckMissileCol(int i, int mindam, int maxdam, BOOL shift, int mx, int my, BOOLEAN nodel);
 void SetMissAnim(int mi, int animtype);
 void SetMissDir(int mi, int dir);
 void LoadMissileGFX(BYTE mi);
@@ -81,6 +81,7 @@ void AddFirewallC(int mi, int sx, int sy, int dx, int dy, int midir, char mienem
 void AddInfra(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam);
 void AddWave(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam);
 void AddNova(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam);
+void AddBlodboil(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam);
 void AddRepair(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam);
 void AddRecharge(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam);
 void AddDisarm(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam);

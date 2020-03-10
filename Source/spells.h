@@ -4,10 +4,9 @@
 
 int GetManaAmount(int id, int sn);
 void UseMana(int id, int sn);
-BOOL CheckSpell(int id, int sn, BYTE st, BOOL manaonly);
+BOOL CheckSpell(int id, int sn, char st, BOOL manaonly);
 void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int caster, int spllvl);
 void DoResurrect(int pnum, int rid);
-void PlacePlayer(int pnum);
 void DoHealOther(int pnum, int rid);
 
 #endif /* __SPELLS_H__ */

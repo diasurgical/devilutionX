@@ -1,4 +1,5 @@
-#include "devilution.h"
+#include "all.h"
+#include "controls/menu_controls.h"
 #include "DiabloUI/diabloui.h"
 
 namespace dvl {
@@ -6,22 +7,21 @@ namespace dvl {
 void title_Load()
 {
 	LoadBackgroundArt("ui_art\\title.pcx");
-	LoadMaskedArtFont("ui_art\\logo.pcx", &ArtLogos[LOGO_BIG], 15);
+	LoadMaskedArt("ui_art\\logo.pcx", &ArtLogos[LOGO_BIG], 15);
 }
 
 void title_Free()
 {
-	mem_free_dbg(ArtBackground.data);
-	ArtBackground.data = NULL;
-	mem_free_dbg(ArtLogos[LOGO_BIG].data);
-	ArtLogos[LOGO_BIG].data = NULL;
+	ArtBackground.Unload();
+	ArtLogos[LOGO_BIG].Unload();
 }
 
-BOOL UiTitleDialog(int a1)
+void UiTitleDialog()
 {
-	UI_Item TITLESCREEN_DIALOG[] = {
-		{ { 0, 0, 640, 480 }, UI_IMAGE, 0, 0, NULL, &ArtBackground },
-		{ { 49, 410, 550, 26 }, UI_TEXT, UIS_MED | UIS_CENTER, 0, "Copyright \xA9 1996-2001 Blizzard Entertainment" },
+	UiItem TITLESCREEN_DIALOG[] = {
+		MAINMENU_BACKGROUND,
+		UiImage(&ArtLogos[LOGO_BIG], /*animated=*/true, /*frame=*/0, { 0, 182, 0, 0 }, UIS_CENTER),
+		UiArtText("Copyright \xA9 1996-2001 Blizzard Entertainment", { 49, 410, 550, 26 }, UIS_MED | UIS_CENTER)
 	};
 
 	title_Load();
@@ -32,10 +32,13 @@ BOOL UiTitleDialog(int a1)
 	SDL_Event event;
 	while (!endMenu && SDL_GetTicks() < timeOut) {
 		UiRenderItems(TITLESCREEN_DIALOG, size(TITLESCREEN_DIALOG));
-		DrawLogo(182, LOGO_BIG);
 		UiFadeIn();
 
 		while (SDL_PollEvent(&event)) {
+			if (GetMenuAction(event) != MenuAction::NONE) {
+				endMenu = true;
+				break;
+			}
 			switch (event.type) {
 			case SDL_KEYDOWN: /* To match the original uncomment this
 				if (event.key.keysym.sym == SDLK_UP
@@ -47,16 +50,17 @@ BOOL UiTitleDialog(int a1)
 			case SDL_MOUSEBUTTONDOWN:
 				endMenu = true;
 				break;
-			case SDL_QUIT:
-				exit(0);
 			}
+			UiHandleEvents(&event);
 		}
 	}
-	BlackPalette();
 
 	title_Free();
-
-	return true;
 }
 
+void UiSetSpawned(BOOL bSpawned)
+{
+	gbSpawned = bSpawned;
 }
+
+} // namespace dvl

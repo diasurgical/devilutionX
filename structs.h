@@ -20,7 +20,7 @@ typedef struct PLStruct {
 	int PLParam2;
 	char PLMinLvl;
 	int PLIType;
-	int PLGOE;
+	BYTE PLGOE;
 	BOOL PLDouble;
 	BOOL PLOk;
 	int PLMinVal;
@@ -102,7 +102,7 @@ typedef struct ItemStruct {
 	int _iAnimFrame;
 	int _iAnimWidth;
 	int _iAnimWidth2; // width 2?
-	int _isin;        // set when item is flagged for deletion, deprecated in 1.02
+	BOOL _iDelFlag; // set when item is flagged for deletion, deprecated in 1.02
 	char _iSelFlag;
 	BOOL _iPostDraw;
 	BOOL _iIdentified;
@@ -171,7 +171,7 @@ typedef struct ItemStruct {
 
 typedef struct PlayerStruct {
 	int _pmode;
-	char walkpath[25];
+	char walkpath[MAX_PATH_LENGTH];
 	BOOLEAN plractive;
 	int destAction;
 	int destParam1;
@@ -217,17 +217,17 @@ typedef struct PlayerStruct {
 	int _pSBkSpell;
 	char _pSBkSplType;
 	char _pSplLvl[64];
-	unsigned __int64 _pMemSpells;
-	unsigned __int64 _pAblSpells;
-	unsigned __int64 _pScrlSpells;
+	uint64_t _pMemSpells;
+	uint64_t _pAblSpells;
+	uint64_t _pScrlSpells;
 	UCHAR _pSpellFlags;
 	int _pSplHotKey[4];
 	char _pSplTHotKey[4];
 	int _pwtype;
-	unsigned char _pBlockFlag;
-	unsigned char _pInvincible;
+	BOOLEAN _pBlockFlag;
+	BOOLEAN _pInvincible;
 	char _pLightRad;
-	unsigned char _pLvlChanging;
+	BOOLEAN _pLvlChanging;
 	char _pName[PLR_NAME_LEN];
 	// plr_class enum value.
 	// TODO: this could very well be `enum plr_class _pClass`
@@ -267,7 +267,7 @@ typedef struct PlayerStruct {
 	char _pFireResist;
 	char _pLghtResist;
 	int _pGold;
-	int _pInfraFlag;
+	BOOL _pInfraFlag;
 	int _pVar1;
 	int _pVar2;
 	int _pVar3;
@@ -276,8 +276,8 @@ typedef struct PlayerStruct {
 	int _pVar6;
 	int _pVar7;
 	int _pVar8;
-	unsigned char _pLvlVisited[NUMLEVELS];
-	unsigned char _pSLvlVisited[NUMLEVELS]; // only 10 used
+	BOOLEAN _pLvlVisited[NUMLEVELS];
+	BOOLEAN _pSLvlVisited[NUMLEVELS]; // only 10 used
 	int _pGFXLoad;
 	unsigned char *_pNAnim[8];
 	int _pNFrames;
@@ -317,7 +317,7 @@ typedef struct PlayerStruct {
 	int _pIBonusToHit;
 	int _pIBonusAC;
 	int _pIBonusDamMod;
-	unsigned __int64 _pISpells;
+	uint64_t _pISpells;
 	int _pIFlags;
 	int _pIGetHit;
 	char _pISplLvlAdd;
@@ -449,16 +449,9 @@ typedef struct MissileStruct {
 // effects/sound
 //////////////////////////////////////////////////
 
-typedef struct CKINFO {
-	DWORD dwSize;
-	DWORD dwOffset;
-} CKINFO;
-
 typedef struct TSnd {
-	WAVEFORMATEX fmt;
-	CKINFO chunk;
 	char *sound_path;
-	LPDIRECTSOUNDBUFFER DSB;
+	SoundSample *DSB;
 	int start_tc;
 } TSnd;
 
@@ -501,11 +494,11 @@ typedef struct MonsterData {
 	char mAi;
 	int mFlags;
 	unsigned char mInt;
-	unsigned char mHit; // BUGFIX: Some monsters overflow this value on high dificulty
+	unsigned char mHit; // BUGFIX: Some monsters overflow this value on high difficulty
 	unsigned char mAFNum;
 	unsigned char mMinDamage;
 	unsigned char mMaxDamage;
-	unsigned char mHit2; // BUGFIX: Some monsters overflow this value on high dificulty
+	unsigned char mHit2; // BUGFIX: Some monsters overflow this value on high difficulty
 	unsigned char mAFNum2;
 	unsigned char mMinDamage2;
 	unsigned char mMaxDamage2;
@@ -534,7 +527,7 @@ typedef struct CMonster {
 	MonsterData *MData;
 	// A TRN file contains a sequence of colour transitions, represented
 	// as indexes into a palette. (a 256 byte array of palette indices)
-	unsigned char *trans_file;
+	BYTE *trans_file;
 } CMonster;
 
 typedef struct MonsterStruct { // note: missing field _mAFNum
@@ -582,7 +575,7 @@ typedef struct MonsterStruct { // note: missing field _mAFNum
 	unsigned char _mint;
 	short falign_9A;
 	int _mFlags;
-	char _msquelch; /* unsigned char */
+	BYTE _msquelch;
 	int falign_A4;
 	int _lastx;
 	int _lasty;
@@ -866,7 +859,7 @@ typedef struct TSyncHeader {
 	BYTE bItemY;
 	WORD wItemIndx;
 	WORD wItemCI;
-	int dwItemSeed;
+	DWORD dwItemSeed;
 	BYTE bItemId;
 	BYTE bItemDur;
 	BYTE bItemMDur;
@@ -877,15 +870,15 @@ typedef struct TSyncHeader {
 	BYTE bPInvLoc;
 	WORD wPInvIndx;
 	WORD wPInvCI;
-	int dwPInvSeed;
+	DWORD dwPInvSeed;
 	BYTE bPInvId;
 } TSyncHeader;
 
 typedef struct TSyncMonster {
 	BYTE _mndx;
-	char _mx;
-	char _my;
-	char _menemy;
+	BYTE _mx;
+	BYTE _my;
+	BYTE _menemy;
 	BYTE _mdelta;
 } TSyncMonster;
 
@@ -913,7 +906,7 @@ typedef struct DMonsterStr {
 	BYTE _my;
 	BYTE _mdir;
 	BYTE _menemy;
-	char _mactive;
+	BYTE _mactive;
 	int _mhitpoints;
 } DMonsterStr;
 
@@ -940,7 +933,7 @@ typedef struct DPortal {
 } DPortal;
 
 typedef struct MultiQuests {
-	char qstate;
+	BYTE qstate;
 	BYTE qlog;
 	BYTE qvar1;
 } MultiQuests;
@@ -951,11 +944,13 @@ typedef struct DJunk {
 } DJunk;
 #pragma pack(pop)
 
+#pragma pack(push, 1)
 typedef struct TMegaPkt {
 	struct TMegaPkt *pNext;
 	DWORD dwSpaceLeft;
 	BYTE data[32000];
 } TMegaPkt;
+#pragma pack(pop)
 
 typedef struct TBuffer {
 	DWORD dwNextWriteOffset;
@@ -1039,7 +1034,7 @@ typedef struct SpellData {
 typedef struct TNQ {
 	unsigned char _qsttype;
 	unsigned char _qstmsg;
-	unsigned char _qstmsgact;
+	BOOLEAN _qstmsgact;
 } TNQ;
 
 typedef struct TownerStruct {
@@ -1065,8 +1060,8 @@ typedef struct TownerStruct {
 	int _teflag;
 	int _tbtcnt;
 	int _tSelFlag;
-	int _tMsgSaid;
-	TNQ qsts[16];
+	BOOL _tMsgSaid;
+	TNQ qsts[MAXQUESTS];
 	int _tSeed;
 	int _tVar1;
 	int _tVar2;
@@ -1210,29 +1205,29 @@ typedef struct DeadStruct {
 
 typedef struct _gamedata {
 	int dwSeed;
-	unsigned char bDiff;
+	BYTE bDiff;
 } _gamedata;
 
 typedef struct _uidefaultstats {
-	unsigned short strength;
-	unsigned short magic;
-	unsigned short dexterity;
-	unsigned short vitality;
+	WORD strength;
+	WORD magic;
+	WORD dexterity;
+	WORD vitality;
 } _uidefaultstats;
 
 typedef struct _uiheroinfo {
 	struct _uiheroinfo *next;
 	char name[16];
-	unsigned short level;
-	unsigned char heroclass;
-	unsigned char herorank;
-	unsigned short strength;
-	unsigned short magic;
-	unsigned short dexterity;
-	unsigned short vitality;
+	WORD level;
+	BYTE heroclass;
+	BYTE herorank;
+	WORD strength;
+	WORD magic;
+	WORD dexterity;
+	WORD vitality;
 	int gold;
 	int hassaved;
-	int spawned;
+	BOOL spawned;
 } _uiheroinfo;
 
 // TPDEF PTR FCN UCHAR ENUMHEROPROC
@@ -1247,28 +1242,26 @@ typedef struct _uiheroinfo {
 // storm
 //////////////////////////////////////////////////
 
-// TPDEF PTR FCN VOID SEVTHANDLER
-
 // TPDEF PTR FCN UCHAR SMSGIDLEPROC
 // TPDEF PTR FCN VOID SMSGHANDLER
 
 typedef struct _SNETCAPS {
-	int size;
-	int flags;
-	int maxmessagesize;
-	int maxqueuesize;
-	int maxplayers;
-	int bytessec;
-	int latencyms;
-	int defaultturnssec;
-	int defaultturnsintransit;
+	DWORD size;
+	DWORD flags;
+	DWORD maxmessagesize;
+	DWORD maxqueuesize;
+	DWORD maxplayers;
+	DWORD bytessec;
+	DWORD latencyms;
+	DWORD defaultturnssec;
+	DWORD defaultturnsintransit;
 } _SNETCAPS;
 
 typedef struct _SNETEVENT {
-	int eventid;
-	int playerid;
+	DWORD eventid;
+	DWORD playerid;
 	void *data;
-	int databytes;
+	DWORD databytes;
 } _SNETEVENT;
 
 // TPDEF PTR FCN UCHAR SNETABORTPROC
@@ -1312,6 +1305,14 @@ typedef struct _SNETPROGRAMDATA {
 	int lcid;
 } _SNETPROGRAMDATA;
 
+typedef struct _SNETVERSIONDATA {
+	int size;
+	char *versionstring;
+	char *executablefile;
+	char *originalarchivefile;
+	char *patcharchivefile;
+} _SNETVERSIONDATA;
+
 typedef struct _SNETUIDATA {
 	int size;
 	int uiflags;
@@ -1329,9 +1330,9 @@ typedef struct _SNETUIDATA {
 	void(* categorylistcallback)();
 	void(* newaccountcallback)();
 	void(* profilecallback)();
-	int profilefields;
+	const char **profilefields;
 	void(* profilebitmapcallback)();
-	int(__stdcall *selectnamecallback)(
+	int(*selectnamecallback)(
 	    const struct _SNETPROGRAMDATA *,
 	    const struct _SNETPLAYERDATA *,
 	    const struct _SNETUIDATA *,
@@ -1343,14 +1344,6 @@ typedef struct _SNETUIDATA {
 	    );
 	void(* changenamecallback)();
 } _SNETUIDATA;
-
-typedef struct _SNETVERSIONDATA {
-	int size;
-	char *versionstring;
-	char *executablefile;
-	char *originalarchivefile;
-	char *patcharchivefile;
-} _SNETVERSIONDATA;
 
 // TPDEF PTR FCN UCHAR SNETSPIBIND
 // TPDEF PTR FCN UCHAR SNETSPIQUERY
@@ -1398,8 +1391,8 @@ typedef struct PkPlayerStruct {
 	int pManaBase;
 	int pMaxManaBase;
 	char pSplLvl[MAX_SPELLS];
-	unsigned __int64 pMemSpells;
-	PkItemStruct InvBody[7];
+	uint64_t pMemSpells;
+	PkItemStruct InvBody[NUM_INVLOC];
 	PkItemStruct InvList[NUM_INV_GRID_ELEM];
 	char InvGrid[NUM_INV_GRID_ELEM];
 	BYTE _pNumInv;
@@ -1440,8 +1433,8 @@ typedef struct PATHNODE {
 //////////////////////////////////////////////////
 
 typedef struct SHA1Context {
-	int state[5];
-	int count[2];
+	DWORD state[5];
+	DWORD count[2];
 	char buffer[64];
 } SHA1Context;
 
@@ -1474,7 +1467,7 @@ typedef struct _FILEHEADER {
 	int signature;
 	int headersize;
 	int filesize;
-	short version;
+	WORD version;
 	short sectorsizeid;
 	int hashoffset;
 	int blockoffset;
@@ -1554,22 +1547,26 @@ typedef struct _plrmsg {
 // capture
 //////////////////////////////////////////////////
 
-typedef struct PCXHeader {
-	char manufacturer;
-	char version;
-	char encoding;
-	char bitsPerPixel;
-	short xmin, ymin;
-	short xmax, ymax;
-	short horzRes, vertRes;
-	char palette[48];
-	char reserved;
-	char numColorPlanes;
-	short bytesPerScanLine;
-	short paletteType;
-	short horzSize, vertSize;
-	char padding[54];
-} PCXHeader;
+typedef struct _PcxHeader {
+	BYTE Manufacturer;
+	BYTE Version;
+	BYTE Encoding;
+	BYTE BitsPerPixel;
+	WORD Xmin;
+	WORD Ymin;
+	WORD Xmax;
+	WORD Ymax;
+	WORD HDpi;
+	WORD VDpi;
+	BYTE Colormap[48];
+	BYTE Reserved;
+	BYTE NPlanes;
+	WORD BytesPerLine;
+	WORD PaletteInfo;
+	WORD HscreenSize;
+	WORD VscreenSize;
+	BYTE Filler[54];
+} PCXHEADER;
 
 //////////////////////////////////////////////////
 // encrypt

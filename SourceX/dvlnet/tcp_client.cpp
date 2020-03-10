@@ -14,9 +14,10 @@ int tcp_client::create(std::string addrstr, std::string passwd)
 {
 	try {
 		auto port = default_port;
-		local_server = std::make_unique<tcp_server>(ioc, addrstr, port, passwd);
+		local_server.reset(new tcp_server(ioc, addrstr, port, passwd));
 		return join(local_server->localhost_self(), passwd);
-	} catch(std::system_error) {
+	} catch (std::system_error &e) {
+		SDL_SetError(e.what());
 		return -1;
 	}
 }
@@ -32,21 +33,23 @@ int tcp_client::join(std::string addrstr, std::string passwd)
 		sock.connect(asio::ip::tcp::endpoint(ipaddr, default_port));
 		asio::ip::tcp::no_delay option(true);
 		sock.set_option(option);
-	} catch(std::exception e) {
+	} catch (std::exception &e) {
+		SDL_SetError(e.what());
 		return -1;
 	}
 	start_recv();
 	{
-		randombytes_buf(reinterpret_cast<unsigned char*>(&cookie_self),
-		                sizeof(cookie_t));
+		randombytes_buf(reinterpret_cast<unsigned char *>(&cookie_self),
+		    sizeof(cookie_t));
 		auto pkt = pktfty->make_packet<PT_JOIN_REQUEST>(PLR_BROADCAST,
-		                                                PLR_MASTER, cookie_self,
-		                                                game_init_info);
+		    PLR_MASTER, cookie_self,
+		    game_init_info);
 		send(*pkt);
 		for (auto i = 0; i < no_sleep; ++i) {
 			try {
 				poll();
-			} catch (const std::runtime_error e) {
+			} catch (const std::runtime_error &e) {
+				SDL_SetError(e.what());
 				return -1;
 			}
 			if (plr_self != PLR_BROADCAST)
@@ -54,7 +57,12 @@ int tcp_client::join(std::string addrstr, std::string passwd)
 			SDL_Delay(ms_sleep);
 		}
 	}
-	return (plr_self == PLR_BROADCAST ? -1 : plr_self);
+	if (plr_self == PLR_BROADCAST) {
+		SDL_SetError("Unable to connect");
+		return -1;
+	}
+
+	return plr_self;
 }
 
 void tcp_client::poll()
@@ -62,7 +70,7 @@ void tcp_client::poll()
 	ioc.poll();
 }
 
-void tcp_client::handle_recv(const asio::error_code& error, size_t bytes_read)
+void tcp_client::handle_recv(const asio::error_code &error, size_t bytes_read)
 {
 	if (error) {
 		// error in recv from server
@@ -86,22 +94,36 @@ void tcp_client::handle_recv(const asio::error_code& error, size_t bytes_read)
 void tcp_client::start_recv()
 {
 	sock.async_receive(asio::buffer(recv_buffer),
-	                   std::bind(&tcp_client::handle_recv, this,
-	                             std::placeholders::_1, std::placeholders::_2));
+	    std::bind(&tcp_client::handle_recv, this,
+	        std::placeholders::_1, std::placeholders::_2));
 }
 
-void tcp_client::handle_send(const asio::error_code& error, size_t bytes_sent)
+void tcp_client::handle_send(const asio::error_code &error, size_t bytes_sent)
 {
 	// empty for now
 }
 
-void tcp_client::send(packet& pkt)
+void tcp_client::send(packet &pkt)
 {
-	auto frame = frame_queue::make_frame(pkt.data());
-	asio::async_write(sock, asio::buffer(frame),
-	                  std::bind(&tcp_client::handle_send, this,
-	                            std::placeholders::_1, std::placeholders::_2));
+	const auto *frame = new buffer_t(frame_queue::make_frame(pkt.data()));
+	auto buf = asio::buffer(*frame);
+	asio::async_write(sock, buf, [this, frame](const asio::error_code &error, size_t bytes_sent) {
+		handle_send(error, bytes_sent);
+		delete frame;
+	});
 }
 
-}  // namespace net
-}  // namespace dvl
+bool tcp_client::SNetLeaveGame(int type)
+{
+	auto ret = base::SNetLeaveGame(type);
+	poll();
+	local_server.reset();
+	return ret;
+}
+
+tcp_client::~tcp_client()
+{
+}
+
+} // namespace net
+} // namespace dvl

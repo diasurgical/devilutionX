@@ -16,12 +16,13 @@ devilution-comparer
 comparer-config.toml
 
 #ignore cmake cache
-/build/
-/build32/
+/build-*/
 .vscode/tasks.json
 
-# ELF object file.
+# ELF object file, shared library and object archive.
 *.o
+*.so
+*.a
 
 # PE shared library and associated files.
 *.lib
@@ -127,6 +128,7 @@ StyleCopReport.xml
 *.pidb
 *.svclog
 *.scc
+CMakeSettings.json
 
 # Chutzpah Test files
 _Chutzpah*
@@ -421,3 +423,10 @@ DerivedData/
 /libs
 
 # End of https://www.gitignore.io/api/xcode
+
+# Don't accidently commit the diabdat.mpq
+*.mpq
+
+### Nintendo Switch ###
+exefs/main
+/out/isenseconfig/CPI-Debug

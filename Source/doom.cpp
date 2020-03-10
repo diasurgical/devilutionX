@@ -1,10 +1,10 @@
-#include "diablo.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
 int doom_quest_time;
 int doom_stars_drawn;
-void *pDoomCel;
+BYTE *pDoomCel;
 BOOL doomflag;
 int DoomQuestState;
 
@@ -39,7 +39,7 @@ int doom_get_frame_from_time()
 
 void doom_alloc_cel()
 {
-	pDoomCel = DiabloAllocPtr(229376);
+	pDoomCel = DiabloAllocPtr(0x38000);
 }
 
 void doom_cleanup()
@@ -93,7 +93,7 @@ void doom_draw()
 		}
 	}
 
-	CelDecodeOnly(64, 511, (BYTE *)pDoomCel, 1, 640);
+	CelDraw(SCREEN_X, PANEL_Y - 1, pDoomCel, 1, SCREEN_WIDTH);
 }
 
 DEVILUTION_END_NAMESPACE

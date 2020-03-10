@@ -2,8 +2,6 @@
 #ifndef __RESTRICT_H__
 #define __RESTRICT_H__
 
-BOOL SystemSupported();
-BOOL RestrictedTest();
-BOOL ReadOnlyTest();
+void ReadOnlyTest();
 
 #endif /* __RESTRICT_H__ */

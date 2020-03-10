@@ -2,7 +2,7 @@
 #ifndef __DEAD_H__
 #define __DEAD_H__
 
-extern int spurtndx; // weak
+extern int spurtndx;
 extern DeadStruct dead[MAXDEAD];
 extern int stonendx;
 

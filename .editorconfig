@@ -7,5 +7,28 @@ charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 
+[*.yml]
+indent_style = space
+end_of_line = lf
+
 [*.sh]
+end_of_line = lf
+
+[.clang-format]
+end_of_line = lf
+
+[.gitignore]
+end_of_line = lf
+
+[CMakeLists.txt]
+indent_style = space
+indent_size = 2
+
+[*.cmake]
+indent_style = space
+indent_size = 2
+
+[*.md]
+indent_style = space
+indent_size = 2
 end_of_line = lf

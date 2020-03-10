@@ -3,7 +3,7 @@
 #define __LIGHTING_H__
 
 extern LightListStruct VisionList[MAXVISION];
-extern unsigned char lightactive[MAXLIGHTS];
+extern BYTE lightactive[MAXLIGHTS];
 extern LightListStruct LightList[MAXLIGHTS];
 extern int numlights;
 extern BYTE lightradius[16][128];
@@ -11,7 +11,7 @@ extern BOOL dovision;
 extern int numvision;
 extern char lightmax;
 extern BOOL dolighting;
-extern BYTE lightblock[8][8][16][16];
+extern BYTE lightblock[64][16][16];
 extern int visionid;
 extern BYTE *pLightTbl;
 extern BOOL lightflag;
@@ -25,7 +25,6 @@ void FreeLightTable();
 void InitLightTable();
 void MakeLightTable();
 #ifdef _DEBUG
-void ToggleLighting_2();
 void ToggleLighting();
 #endif
 void InitLightMax();
@@ -49,8 +48,8 @@ void lighting_color_cycling();
 
 extern char CrawlTable[2749];
 extern char *pCrawlTable[19];
-extern unsigned char vCrawlTable[23][30];
-extern unsigned char byte_49463C[18][18];
-extern unsigned char RadiusAdj[23];
+extern BYTE vCrawlTable[23][30];
+extern BYTE byte_49463C[18][18];
+extern BYTE RadiusAdj[23];
 
 #endif /* __LIGHTING_H__ */

@@ -21,7 +21,7 @@
 #   sodium_INCLUDE_DIR
 #   sodium_LIBRARY_DEBUG
 #   sodium_LIBRARY_RELEASE
-#
+#   sodium_VERSION_STRING
 #
 # Furthermore an imported "sodium" target is created.
 #
@@ -47,7 +47,7 @@ endif()
 
 ########################################################################
 # UNIX
-if (UNIX)
+if (UNIX OR CMAKE_SYSTEM_NAME STREQUAL "Generic" OR AMIGA)
     # import pkg-config
     find_package(PkgConfig QUIET)
     if (PKG_CONFIG_FOUND)
@@ -55,22 +55,22 @@ if (UNIX)
     endif()
 
     if(sodium_USE_STATIC_LIBS)
-        if (sodium_PKG_STATIC_LIBRARIES)
-            foreach(_libname ${sodium_PKG_STATIC_LIBRARIES})
-                if (NOT _libname MATCHES "^lib.*\\.a$") # ignore strings already ending with .a
-                    list(INSERT sodium_PKG_STATIC_LIBRARIES 0 "lib${_libname}.a")
-                endif()
-            endforeach()
-            list(REMOVE_DUPLICATES sodium_PKG_STATIC_LIBRARIES)
-        else()
-            # if pkgconfig for libsodium doesn't provide
-            # static lib info, then override PKG_STATIC here..
+    if(sodium_PKG_STATIC_LIBRARIES)
+        foreach(_libname ${sodium_PKG_STATIC_LIBRARIES})
+            if (NOT _libname MATCHES "^lib.*\\.a$") # ignore strings already ending with .a
+                list(INSERT sodium_PKG_STATIC_LIBRARIES 0 "lib${_libname}.a")
+            endif()
+        endforeach()
+        list(REMOVE_DUPLICATES sodium_PKG_STATIC_LIBRARIES)
+    else()
+        # if pkgconfig for libsodium doesn't provide
+        # static lib info, then override PKG_STATIC here..
             set(sodium_PKG_STATIC_LIBRARIES libsodium.a)
         endif()
 
         set(XPREFIX sodium_PKG_STATIC)
     else()
-        if (sodium_PKG_LIBRARIES STREQUAL "")
+    if(sodium_PKG_LIBRARIES STREQUAL "")
             set(sodium_PKG_LIBRARIES sodium)
         endif()
 
@@ -101,7 +101,7 @@ elseif (WIN32)
 
     if (MSVC)
         # detect target architecture
-        file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/arch.c" [=[
+    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/arch.c" [=[
             #if defined _M_IX86
             #error ARCH_VALUE x86_32
             #elif defined _M_X64
@@ -109,7 +109,7 @@ elseif (WIN32)
             #endif
             #error ARCH_VALUE unknown
         ]=])
-        try_compile(_UNUSED_VAR "${CMAKE_CURRENT_BINARY_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/arch.c"
+    try_compile(_UNUSED_VAR "${CMAKE_CURRENT_BINARY_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/arch.c"
             OUTPUT_VARIABLE _COMPILATION_LOG
         )
         string(REGEX REPLACE ".*ARCH_VALUE ([a-zA-Z0-9_]+).*" "\\1" _TARGET_ARCH "${_COMPILATION_LOG}")
@@ -213,24 +213,25 @@ endif()
 
 # extract sodium version
 if (sodium_INCLUDE_DIR)
-    set(_VERSION_HEADER "${_INCLUDE_DIR}/sodium/version.h")
-    if (EXISTS _VERSION_HEADER)
+  set(_VERSION_HEADER "${sodium_INCLUDE_DIR}/sodium/version.h")
+  if(EXISTS "${_VERSION_HEADER}")
         file(READ "${_VERSION_HEADER}" _VERSION_HEADER_CONTENT)
-        string(REGEX REPLACE ".*#[ \t]*define[ \t]*SODIUM_VERSION_STRING[ \t]*\"([^\n]*)\".*" "\\1"
-            sodium_VERSION "${_VERSION_HEADER_CONTENT}")
-        set(sodium_VERSION "${sodium_VERSION}" PARENT_SCOPE)
+    string(REGEX REPLACE ".*define[ \t]+SODIUM_VERSION_STRING[^\"]+\"([^\"]+)\".*" "\\1"
+                   sodium_VERSION_STRING "${_VERSION_HEADER_CONTENT}")
+    set(sodium_VERSION_STRING "${sodium_VERSION_STRING}")
     endif()
 endif()
 
 # communicate results
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(sodium
+find_package_handle_standard_args(
+    sodium # The name must be either uppercase or match the filename case.
     REQUIRED_VARS
         sodium_LIBRARY_RELEASE
         sodium_LIBRARY_DEBUG
         sodium_INCLUDE_DIR
     VERSION_VAR
-        sodium_VERSION
+    sodium_VERSION_STRING
 )
 
 # mark file paths as advanced

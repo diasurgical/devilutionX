@@ -1,22 +1,29 @@
-language: bash
+language: cpp
 
-os:
-  - osx
+os: osx
 
-osx_image: xcode9.4
+osx_image: xcode10.3
 
-matrix:
-    include:
-    - env: ARCH=--build-all-x86
-    - env: ARCH=--build-all-x64
+git:
+  depth: false
+  quiet: true
+
+addons:
+  homebrew:
+    brewfile: true
+    # TODO: Remove the `update` line once this PR has been released:
+    # https://github.com/travis-ci/packer-templates-mac/pull/13
+    update: true
 
 script:
-    - bash ./macos-build.sh $ARCH
+  - cd build
+  - cmake -DBINARY_RELEASE=ON ..
+  - sudo cmake --build . --target package -j $(sysctl -n hw.physicalcpu)
 
 deploy:
   provider: releases
   api_key: "$GITHUB_TOKEN"
-  file: "build/devilutionX.dmg"
+  file: "build/devilutionx.dmg"
   skip_cleanup: true
   on:
     tags: true

@@ -3,7 +3,7 @@ There are debug features available through both in-game and through the command-
 Command-line parameters
 - `-^` : enable god mode and debug tools
 - `-$` : enable god mode with less stuff (further documenting needed) [NOT YET IMPLEMENTED]
-- `-b` : enables item drop log [NOT YET IMPLEMENTED]
+- `-b` : enable item drop log [NOT YET IMPLEMENTED]
 - `-d` : disable startup video + increased item drops [PARTIALLY IMPLEMENTED]
 - `-f` : display frames per second
 - `-i` : disable network timeout

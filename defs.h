@@ -4,7 +4,9 @@
 #define DMAXY					40
 
 #define LIGHTSIZE				6912 // 27 * 256
-#define ROW_PITCH				768
+
+#define GMENU_SLIDER			0x40000000
+#define GMENU_ENABLED			0x80000000
 
 // must be unsigned to generate unsigned comparisons with pnum
 #define MAX_PLRS				4
@@ -34,6 +36,7 @@
 #define MDMAXX					40
 #define MDMAXY					40
 #define MAXCHARLEVEL			51
+#define ITEMTYPES				35
 
 // number of inventory grid cells
 #define NUM_INV_GRID_ELEM		40
@@ -46,15 +49,24 @@
 #define VOLUME_MAX				0
 
 // todo: enums
-#define NUM_SFX					858
 #define NUMLEVELS				17
+#define SMITH_ITEMS				20
+#define SMITH_PREMIUM_ITEMS		6
+#define SMITH_MAX_VALUE			140000
+#define SMITH_MAX_PREMIUM_VALUE 140000
 
 // from diablo 2 beta
 #define MAXEXP					2000000000
 
+#define GOLD_SMALL_LIMIT		1000
+#define GOLD_MEDIUM_LIMIT		2500
+#define GOLD_MAX_LIMIT			5000
+
 #define PLR_NAME_LEN			32
 
 #define MAXPATHNODES			300
+
+#define MAX_PATH_LENGTH			25
 
 // 256 kilobytes + 3 bytes (demo leftover) for file magic (262147)
 // final game uses 4-byte magic instead of 3
@@ -88,6 +100,9 @@
 #define SCREEN_WIDTH	640
 #define SCREEN_HEIGHT	480
 
+#define ZOOM_WIDTH		384
+#define ZOOM_HEIGHT		224
+
 // If defined, use 32-bit colors instead of 8-bit [Default -> Undefined]
 //#define RGBMODE
 
@@ -97,11 +112,42 @@
 #define SCREEN_BPP		32
 #endif
 
-#define BUFFER_WIDTH	(64 + SCREEN_WIDTH + 64)
-#define BUFFER_HEIGHT	(160 + SCREEN_HEIGHT + 16)
+#define BORDER_LEFT		64
+#define BORDER_TOP		160
+#define BORDER_RIGHT	64
+#define BORDER_BOTTOM	16
+
+#define SCREEN_X		BORDER_LEFT
+#define SCREEN_Y		BORDER_TOP
+
+#define BUFFER_WIDTH	(BORDER_LEFT + SCREEN_WIDTH + BORDER_RIGHT)
+#define BUFFER_HEIGHT	(BORDER_TOP + SCREEN_HEIGHT + BORDER_BOTTOM)
 #define TILE_SIZE		32
 
-#define SCREENXY(x, y)	((x) + 64 + (((y) + 160) * BUFFER_WIDTH))
+#define PANEL_WIDTH     640
+#define PANEL_HEIGHT    128
+#define PANEL_TOP		(SCREEN_HEIGHT - PANEL_HEIGHT)
+#define PANEL_LEFT		(SCREEN_WIDTH - PANEL_WIDTH) / 2
+#define PANEL_X			(SCREEN_X + PANEL_LEFT)
+#define PANEL_Y			(SCREEN_Y + PANEL_TOP)
+
+#define SPANEL_WIDTH	 320
+#define SPANEL_HEIGHT	 352
+#define PANELS_COVER (SCREEN_WIDTH <= PANEL_WIDTH && SCREEN_HEIGHT <= SPANEL_HEIGHT + PANEL_HEIGHT)
+
+#define RIGHT_PANEL		(SCREEN_WIDTH - SPANEL_WIDTH)
+#define RIGHT_PANEL_X	(SCREEN_X + RIGHT_PANEL)
+
+#if SCREEN_WIDTH <= PANEL_WIDTH
+#define VIEWPORT_HEIGHT	(SCREEN_HEIGHT - PANEL_HEIGHT)
+#else
+#define VIEWPORT_HEIGHT	SCREEN_HEIGHT
+#endif
+
+#define DIALOG_TOP		((SCREEN_HEIGHT - PANEL_HEIGHT) / 2 - 18)
+#define DIALOG_Y		(SCREEN_Y + DIALOG_TOP)
+
+#define SCREENXY(x, y)	((x) + SCREEN_X + ((y) + SCREEN_Y) * BUFFER_WIDTH)
 
 #define MemFreeDbg(p)	\
 {						\
@@ -119,72 +165,21 @@
 #define assert(exp) (void)( (exp) || (assert_fail(__LINE__, __FILE__, #exp), 0) )
 #endif
 
-#ifndef INVALID_FILE_ATTRIBUTES
-#define INVALID_FILE_ATTRIBUTES ((DWORD)-1)
+#define ERR_DLG(title, text) ErrDlg(title, text, __FILE__, __LINE__)
+
+// To apply to certain functions which have local variables aligned by 1 for unknown yet reason
+#if (_MSC_VER == 1200)
+#define ALIGN_BY_1 __declspec(align(1))
+#else
+#define ALIGN_BY_1
 #endif
 
-/////////////////////////////////////////////////////////////////////////
-/* temporary stuff from the decompiler */
-/* remove all the garbage below in the future */
-/////////////////////////////////////////////////////////////////////////
-#ifndef IDA_GARBAGE
-#define IDA_GARBAGE
+#define SwapLE32 SDL_SwapLE32
+#define SwapLE16 SDL_SwapLE16
 
-// Partially defined types. They are used when the decompiler does not know
-// anything about the type except its size.
-#define _BYTE  unsigned char
-#define _WORD  unsigned short
-#define _DWORD unsigned int
+#define ErrSdl() ErrDlg("SDL Error", SDL_GetError(), __FILE__, __LINE__)
 
-// Some convenience macros to make partial accesses nicer
-#define LAST_IND(x,part_type)    (sizeof(x)/sizeof(part_type) - 1)
-#if defined(__BYTE_ORDER) && __BYTE_ORDER == __BIG_ENDIAN
-#  define LOW_IND(x,part_type)   LAST_IND(x,part_type)
-#  define HIGH_IND(x,part_type)  0
-#else
-#  define HIGH_IND(x,part_type)  LAST_IND(x,part_type)
-#  define LOW_IND(x,part_type)   0
-#endif
-
-// first unsigned macros:
-#define BYTEn(x, n)   (*((BYTE*)&(x)+n))
-#define WORDn(x, n)   (*((WORD*)&(x)+n))
-
-#define _LOBYTE(x)  BYTEn(x,LOW_IND(x,BYTE))
-#define _LOWORD(x)  WORDn(x,LOW_IND(x,WORD))
-#define _HIBYTE(x)  BYTEn(x,HIGH_IND(x,BYTE))
-#define BYTE1(x)   BYTEn(x,  1)         // byte 1 (counting from 0)
-#define BYTE2(x)   BYTEn(x,  2)
-
-#define SLOBYTE(x)   (*((char*)&(x)+LOW_IND(x,char)))
-
-// Helper functions to represent some assembly instructions.
-
-__inline void *qmemcpy(void *dst, const void *src, size_t cnt)
-{
-	char *out      = (char *)dst;
-	const char *in = (const char *)src;
-	while (cnt > 0) {
-		*out++ = *in++;
-		--cnt;
-	}
-	return dst;
-}
-
-#endif /* IDA_GARBAGE */
-
-// Typedef for the function pointer
-typedef void (*_PVFV)(void);
-
-#if defined(_MSC_VER) && !defined(__APPLE__)
-// Define our segment names
-#define SEGMENT_C_INIT ".CRT$XCU"
-
-// Build our various function tables and insert them into the correct segments.
-#pragma data_seg(SEGMENT_C_INIT)
-#pragma data_seg() // Switch back to the default segment
-// Call function pointer arrays and place them in the segments created above
-#define SEG_ALLOCATE(SEGMENT) __declspec(allocate(SEGMENT))
-#else
-#define SEG_ALLOCATE(SEGMENT)
+#ifdef _MSC_VER
+#define strcasecmp _stricmp
+#define strncasecmp _strnicmp
 #endif

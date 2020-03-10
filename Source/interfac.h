@@ -14,8 +14,7 @@ void InitCutscene(unsigned int uMsg);
 
 /* rdata */
 
-extern const int interfac_inf; // weak
-extern const unsigned char progress_bar_colours[3];
-extern const int progress_bar_screen_pos[3][2];
+extern const BYTE BarColor[3];
+extern const int BarPos[3][2];
 
 #endif /* __INTERFAC_H__ */

@@ -1,10 +1,9 @@
-#include "diablo.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
 int GetManaAmount(int id, int sn)
 {
-	int i;  // "raw" mana cost
 	int ma; // mana amount
 
 	// mana adjust
@@ -17,30 +16,25 @@ int GetManaAmount(int id, int sn)
 		sl = 0;
 	}
 
-	if (sl > 0) {
-		adj = sl * spelldata[sn].sManaAdj;
-	}
 	if (sn == SPL_FIREBOLT) {
 		adj >>= 1;
-	}
-	if (sn == SPL_RESURRECT && sl > 0) {
+	} else if (sn == SPL_RESURRECT && sl > 0) {
 		adj = sl * (spelldata[SPL_RESURRECT].sManaCost / 8);
+	} else if (sl > 0) {
+		adj = sl * spelldata[sn].sManaAdj;
 	}
 
-	if (spelldata[sn].sManaCost == 255) {
-		i = (BYTE)plr[id]._pMaxManaBase;
+	if (sn == SPL_HEAL || sn == SPL_HEALOTHER) {
+		ma = (spelldata[SPL_HEAL].sManaCost + 2 * plr[id]._pLevel - adj);
+	} else if (spelldata[sn].sManaCost == 255) {
+		ma = ((BYTE)plr[id]._pMaxManaBase - adj);
 	} else {
-		i = spelldata[sn].sManaCost;
+		ma = (spelldata[sn].sManaCost - adj);
 	}
 
-	ma = (i - adj) << 6;
-
-	if (sn == SPL_HEAL) {
-		ma = (spelldata[SPL_HEAL].sManaCost + 2 * plr[id]._pLevel - adj) << 6;
-	}
-	if (sn == SPL_HEALOTHER) {
-		ma = (spelldata[SPL_HEAL].sManaCost + 2 * plr[id]._pLevel - adj) << 6;
-	}
+	if (ma < 0)
+		ma = 0;
+	ma <<= 6;
 
 	if (plr[id]._pClass == PC_ROGUE) {
 		ma -= ma >> 2;
@@ -59,6 +53,15 @@ void UseMana(int id, int sn)
 
 	if (id == myplr) {
 		switch (plr[id]._pSplType) {
+		case RSPLTYPE_SKILL:
+		case RSPLTYPE_INVALID:
+			break;
+		case RSPLTYPE_SCROLL:
+			RemoveScroll(id);
+			break;
+		case RSPLTYPE_CHARGES:
+			UseStaffCharge(id);
+			break;
 		case RSPLTYPE_SPELL:
 #ifdef _DEBUG
 			if (!debug_mode_key_inverted_v) {
@@ -71,17 +74,11 @@ void UseMana(int id, int sn)
 			}
 #endif
 			break;
-		case RSPLTYPE_SCROLL:
-			RemoveScroll(id);
-			break;
-		case RSPLTYPE_CHARGES:
-			UseStaffCharge(id);
-			break;
 		}
 	}
 }
 
-BOOL CheckSpell(int id, int sn, BYTE st, BOOL manaonly)
+BOOL CheckSpell(int id, int sn, char st, BOOL manaonly)
 {
 	BOOL result;
 
@@ -137,62 +134,13 @@ void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int caster, int 
 	if (spelldata[spl].sMissiles[0] == MIS_CBOLT) {
 		UseMana(id, SPL_CBOLT);
 
-		for (i = 0; i < (spllvl >> 1) + 3; i++) {
+		for (i = (spllvl >> 1) + 3; i > 0; i--) {
 			AddMissile(sx, sy, dx, dy, dir, MIS_CBOLT, caster, id, 0, spllvl);
 		}
 	}
 }
 
-/**
- * @param pnum player index
- * @param rid target player index
- */
-void DoResurrect(int pnum, int rid)
-{
-	int hp;
-
-	if ((char)rid != -1) {
-		AddMissile(plr[rid].WorldX, plr[rid].WorldY, plr[rid].WorldX, plr[rid].WorldY, 0, MIS_RESURRECTBEAM, 0, pnum, 0, 0);
-	}
-
-	if (pnum == myplr) {
-		NewCursor(CURSOR_HAND);
-	}
-
-	if ((char)rid != -1 && plr[rid]._pHitPoints == 0) {
-		if (rid == myplr) {
-			deathflag = FALSE;
-			gamemenu_off();
-			drawhpflag = TRUE;
-			drawmanaflag = TRUE;
-		}
-
-		ClrPlrPath(rid);
-		plr[rid].destAction = ACTION_NONE;
-		plr[rid]._pInvincible = 0;
-		PlacePlayer(rid);
-
-		hp = 640;
-		if (plr[rid]._pMaxHPBase < 640) {
-			hp = plr[rid]._pMaxHPBase;
-		}
-		SetPlayerHitPoints(rid, hp);
-
-		plr[rid]._pMana = 0;
-		plr[rid]._pHPBase = plr[rid]._pHitPoints + (plr[rid]._pMaxHPBase - plr[rid]._pMaxHP);
-		plr[rid]._pManaBase = plr[rid]._pMaxManaBase - plr[rid]._pMaxMana;
-
-		CalcPlrInv(rid, TRUE);
-
-		if (plr[rid].plrlevel == currlevel) {
-			StartStand(rid, plr[rid]._pdir);
-		} else {
-			plr[rid]._pmode = 0;
-		}
-	}
-}
-
-void PlacePlayer(int pnum)
+static void PlacePlayer(int pnum)
 {
 	int nx, ny, max, min, x, y;
 	DWORD i;
@@ -238,6 +186,55 @@ void PlacePlayer(int pnum)
 	}
 }
 
+/**
+ * @param pnum player index
+ * @param rid target player index
+ */
+void DoResurrect(int pnum, int rid)
+{
+	int hp;
+
+	if ((char)rid != -1) {
+		AddMissile(plr[rid].WorldX, plr[rid].WorldY, plr[rid].WorldX, plr[rid].WorldY, 0, MIS_RESURRECTBEAM, 0, pnum, 0, 0);
+	}
+
+	if (pnum == myplr) {
+		NewCursor(CURSOR_HAND);
+	}
+
+	if ((char)rid != -1 && plr[rid]._pHitPoints == 0) {
+		if (rid == myplr) {
+			deathflag = FALSE;
+			gamemenu_off();
+			drawhpflag = TRUE;
+			drawmanaflag = TRUE;
+		}
+
+		ClrPlrPath(rid);
+		plr[rid].destAction = ACTION_NONE;
+		plr[rid]._pInvincible = FALSE;
+		PlacePlayer(rid);
+
+		hp = 640;
+		if (plr[rid]._pMaxHPBase < 640) {
+			hp = plr[rid]._pMaxHPBase;
+		}
+		SetPlayerHitPoints(rid, hp);
+
+		plr[rid]._pHPBase = plr[rid]._pHitPoints + (plr[rid]._pMaxHPBase - plr[rid]._pMaxHP);
+		plr[rid]._pMana = 0;
+		plr[rid]._pManaBase = plr[rid]._pMana + (plr[rid]._pMaxManaBase - plr[rid]._pMaxMana);
+
+		CalcPlrInv(rid, TRUE);
+
+		if (plr[rid].plrlevel == currlevel) {
+			StartStand(rid, plr[rid]._pdir);
+		} else {
+			plr[rid]._pmode = PM_STAND;
+		}
+	}
+}
+
 void DoHealOther(int pnum, int rid)
 {
 	int i, j, hp;
@@ -247,14 +244,14 @@ void DoHealOther(int pnum, int rid)
 	}
 
 	if ((char)rid != -1 && (plr[rid]._pHitPoints >> 6) > 0) {
-		hp = (random(57, 10) + 1) << 6;
+		hp = (random_(57, 10) + 1) << 6;
 
 		for (i = 0; i < plr[pnum]._pLevel; i++) {
-			hp += (random(57, 4) + 1) << 6;
+			hp += (random_(57, 4) + 1) << 6;
 		}
 
 		for (j = 0; j < GetSpellLevel(pnum, SPL_HEALOTHER); ++j) {
-			hp += (random(57, 6) + 1) << 6;
+			hp += (random_(57, 6) + 1) << 6;
 		}
 
 		if (plr[pnum]._pClass == PC_WARRIOR) {

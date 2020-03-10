@@ -1,9 +1,9 @@
-#include "diablo.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
 LightListStruct VisionList[MAXVISION];
-unsigned char lightactive[MAXLIGHTS];
+BYTE lightactive[MAXLIGHTS];
 LightListStruct LightList[MAXLIGHTS];
 int numlights;
 BYTE lightradius[16][128];
@@ -11,11 +11,34 @@ BOOL dovision;
 int numvision;
 char lightmax;
 BOOL dolighting;
-BYTE lightblock[8][8][16][16];
+BYTE lightblock[64][16][16];
 int visionid;
 BYTE *pLightTbl;
 BOOL lightflag;
 
+/**
+ * CrawlTable specifies X- and Y-coordinate deltas from a missile target coordinate.
+ *
+ * n=4
+ *
+ *    y
+ *    ^
+ *    |  1
+ *    | 3#4
+ *    |  2
+ *    +-----> x
+ *
+ * n=16
+ *
+ *    y
+ *    ^
+ *    |  314
+ *    | B7 8C
+ *    | F # G
+ *    | D9 AE
+ *    |  526
+ *    +-------> x
+ */
 char CrawlTable[2749] = {
 	1,
 	0, 0,
@@ -380,29 +403,34 @@ char CrawlTable[2749] = {
 	-18, -1, 18, -1, -18, 0, 18, 0
 };
 
-char *pCrawlTable[19] = /* figure out what this is for */
-    {
-	    CrawlTable,
-	    CrawlTable + 3,
-	    CrawlTable + 12,
-	    CrawlTable + 45,
-	    CrawlTable + 94,
-	    CrawlTable + 159,
-	    CrawlTable + 240,
-	    CrawlTable + 337,
-	    CrawlTable + 450,
-	    CrawlTable + 579,
-	    CrawlTable + 724,
-	    CrawlTable + 885,
-	    CrawlTable + 1062,
-	    CrawlTable + 1255,
-	    CrawlTable + 1464,
-	    CrawlTable + 1689,
-	    CrawlTable + 1930,
-	    CrawlTable + 2187,
-	    CrawlTable + 2460
-    };
-unsigned char vCrawlTable[23][30] = {
+/**
+ * pCrawlTable maps from circle radius to the X- and Y-coordinate deltas from the center of a circle.
+ */
+char *pCrawlTable[19] = {
+	CrawlTable,
+	CrawlTable + 3,
+	CrawlTable + 12,
+	CrawlTable + 45,
+	CrawlTable + 94,
+	CrawlTable + 159,
+	CrawlTable + 240,
+	CrawlTable + 337,
+	CrawlTable + 450,
+	CrawlTable + 579,
+	CrawlTable + 724,
+	CrawlTable + 885,
+	CrawlTable + 1062,
+	CrawlTable + 1255,
+	CrawlTable + 1464,
+	CrawlTable + 1689,
+	CrawlTable + 1930,
+	CrawlTable + 2187,
+	CrawlTable + 2460
+};
+/**
+ * vCrawlTable specifies the X- Y-coordinate offsets of lighting visions.
+ */
+BYTE vCrawlTable[23][30] = {
 	{ 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 0, 9, 0, 10, 0, 11, 0, 12, 0, 13, 0, 14, 0, 15, 0 },
 	{ 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 1, 9, 1, 10, 1, 11, 1, 12, 1, 13, 1, 14, 1, 15, 1 },
 	{ 1, 0, 2, 0, 3, 0, 4, 1, 5, 1, 6, 1, 7, 1, 8, 1, 9, 1, 10, 1, 11, 1, 12, 2, 13, 2, 14, 2, 15, 2 },
@@ -427,7 +455,7 @@ unsigned char vCrawlTable[23][30] = {
 	{ 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 1, 8, 1, 9, 1, 10, 1, 11, 1, 12, 1, 13, 1, 14, 1, 15 },
 	{ 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 0, 9, 0, 10, 0, 11, 0, 12, 0, 13, 0, 14, 0, 15 }
 };
-unsigned char byte_49463C[18][18] = /* unused */
+BYTE byte_49463C[18][18] = /* unused */
     {
 	    { 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 },
 	    { 0, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 },
@@ -449,7 +477,10 @@ unsigned char byte_49463C[18][18] = /* unused */
 	    { 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2 }
     };
 
-unsigned char RadiusAdj[23] = { 0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 4, 3, 2, 2, 2, 1, 1, 1, 0, 0, 0, 0 };
+/**
+ * RadiusAdj maps from vCrawlTable index to lighting vision radius adjustment.
+ */
+BYTE RadiusAdj[23] = { 0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 4, 3, 2, 2, 2, 1, 1, 1, 0, 0, 0, 0 };
 
 void RotateRadius(int *x, int *y, int *dx, int *dy, int *lx, int *ly, int *bx, int *by)
 {
@@ -535,7 +566,7 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 	mult = xoff + 8 * yoff;
 	for (y = 0; y < min_y; y++) {
 		for (x = 1; x < max_x; x++) {
-			radius_block = lightblock[0][mult][y][x];
+			radius_block = lightblock[mult][y][x];
 			if (radius_block < 128) {
 				temp_x = nXPos + x;
 				temp_y = nYPos + y;
@@ -552,7 +583,7 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 	mult = xoff + 8 * yoff;
 	for (y = 0; y < max_y; y++) {
 		for (x = 1; x < max_x; x++) {
-			radius_block = lightblock[0][mult][y + block_y][x + block_x];
+			radius_block = lightblock[mult][y + block_y][x + block_x];
 			if (radius_block < 128) {
 				temp_x = nXPos + y;
 				temp_y = nYPos - x;
@@ -569,7 +600,7 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 	mult = xoff + 8 * yoff;
 	for (y = 0; y < max_y; y++) {
 		for (x = 1; x < min_x; x++) {
-			radius_block = lightblock[0][mult][y + block_y][x + block_x];
+			radius_block = lightblock[mult][y + block_y][x + block_x];
 			if (radius_block < 128) {
 				temp_x = nXPos - x;
 				temp_y = nYPos - y;
@@ -586,7 +617,7 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 	mult = xoff + 8 * yoff;
 	for (y = 0; y < min_y; y++) {
 		for (x = 1; x < min_x; x++) {
-			radius_block = lightblock[0][mult][y + block_y][x + block_x];
+			radius_block = lightblock[mult][y + block_y][x + block_x];
 			if (radius_block < 128) {
 				temp_x = nXPos - y;
 				temp_y = nYPos + x;
@@ -658,14 +689,15 @@ void DoUnVision(int nXPos, int nYPos, int nRadius)
 
 	for (i = x1; i < x2; i++) {
 		for (j = y1; j < y2; j++) {
-			dFlags[i][j] &= ~(DFLAG_VISIBLE | DFLAG_LIT);
+			dFlags[i][j] &= ~(BFLAG_VISIBLE | BFLAG_LIT);
 		}
 	}
 }
 
 void DoVision(int nXPos, int nYPos, int nRadius, BOOL doautomap, BOOL visible)
 {
-	int nCrawlX, nCrawlY, nLineLen, nBlockerFlag, nTrans;
+	BOOL nBlockerFlag;
+	int nCrawlX, nCrawlY, nLineLen, nTrans;
 	int j, k, v, x1adj, x2adj, y1adj, y2adj;
 
 	if (nXPos >= 0 && nXPos <= MAXDUNX && nYPos >= 0 && nYPos <= MAXDUNY) {
@@ -673,12 +705,12 @@ void DoVision(int nXPos, int nYPos, int nRadius, BOOL doautomap, BOOL visible)
 			if (dFlags[nXPos][nYPos] >= 0) {
 				SetAutomapView(nXPos, nXPos);
 			}
-			dFlags[nXPos][nYPos] |= DFLAG_EXPLORED;
+			dFlags[nXPos][nYPos] |= BFLAG_EXPLORED;
 		}
 		if (visible) {
-			dFlags[nXPos][nYPos] |= DFLAG_LIT;
+			dFlags[nXPos][nYPos] |= BFLAG_LIT;
 		}
-		dFlags[nXPos][nYPos] |= DFLAG_VISIBLE;
+		dFlags[nXPos][nYPos] |= BFLAG_VISIBLE;
 	}
 
 	for (v = 0; v < 4; v++) {
@@ -724,24 +756,26 @@ void DoVision(int nXPos, int nYPos, int nRadius, BOOL doautomap, BOOL visible)
 					}
 					break;
 				}
-				if (nCrawlX >= 0 && nCrawlX <= MAXDUNX && nCrawlY >= 0 && nCrawlY <= MAXDUNY) {
-					nBlockerFlag = (unsigned char)nBlockTable[dPiece[nCrawlX][nCrawlY]];
-					if (!nBlockTable[dPiece[x1adj + nCrawlX][y1adj + nCrawlY]]
-					    || !nBlockTable[dPiece[x2adj + nCrawlX][y2adj + nCrawlY]]) {
+				if (nCrawlX >= 0 && nCrawlX < MAXDUNX && nCrawlY >= 0 && nCrawlY < MAXDUNY) {
+					nBlockerFlag = nBlockTable[dPiece[nCrawlX][nCrawlY]];
+					if ((x1adj + nCrawlX >= 0 && x1adj + nCrawlX < MAXDUNX && y1adj + nCrawlY >= 0 && y1adj + nCrawlY < MAXDUNY
+						&& !nBlockTable[dPiece[x1adj + nCrawlX][y1adj + nCrawlY]])
+					    || (x2adj + nCrawlX >= 0 && x2adj + nCrawlX < MAXDUNX && y2adj + nCrawlY >= 0 && y2adj + nCrawlY < MAXDUNY
+						&& !nBlockTable[dPiece[x2adj + nCrawlX][y2adj + nCrawlY]])) {
 						if (doautomap) {
 							if (dFlags[nCrawlX][nCrawlY] >= 0) {
 								SetAutomapView(nCrawlX, nCrawlY);
 							}
-							dFlags[nCrawlX][nCrawlY] |= DFLAG_EXPLORED;
+							dFlags[nCrawlX][nCrawlY] |= BFLAG_EXPLORED;
 						}
 						if (visible) {
-							dFlags[nCrawlX][nCrawlY] |= DFLAG_LIT;
+							dFlags[nCrawlX][nCrawlY] |= BFLAG_LIT;
 						}
-						dFlags[nCrawlX][nCrawlY] |= DFLAG_VISIBLE;
+						dFlags[nCrawlX][nCrawlY] |= BFLAG_VISIBLE;
 						if (!nBlockerFlag) {
 							nTrans = dTransVal[nCrawlX][nCrawlY];
 							if (nTrans != 0) {
-								TransList[nTrans] = 1;
+								TransList[nTrans] = TRUE;
 							}
 						}
 					}
@@ -878,13 +912,13 @@ void MakeLightTable()
 		tbl += 224;
 	}
 
-	trn = LoadFileInMem("PlrGFX\\Infra.TRN", 0);
+	trn = LoadFileInMem("PlrGFX\\Infra.TRN", NULL);
 	for (i = 0; i < 256; i++) {
 		*tbl++ = trn[i];
 	}
 	mem_free_dbg(trn);
 
-	trn = LoadFileInMem("PlrGFX\\Stone.TRN", 0);
+	trn = LoadFileInMem("PlrGFX\\Stone.TRN", NULL);
 	for (i = 0; i < 256; i++) {
 		*tbl++ = trn[i];
 	}
@@ -916,12 +950,12 @@ void MakeLightTable()
 		*tbl++ = 0;
 	}
 
-	for (i = 0; i < 16; i++) {
-		for (j = 0; j < 128; j++) {
-			if (j > (i + 1) * 8) { /* check */
-				lightradius[i][j] = 15;
+	for (k = 0; k < 16; k++) {
+		for (l = 0; l < 128; l++) {
+			if (l > (k + 1) * 8) {
+				lightradius[k][l] = 15;
 			} else {
-				lightradius[i][j] = j * 15.0 / ((i + 1) * 8.0) + 0.5;
+				lightradius[k][l] = l * 15.0 / ((k + 1) * 8.0) + 0.5;
 			}
 		}
 	}
@@ -936,7 +970,7 @@ void MakeLightTable()
 					} else {
 						fa = 0.5;
 					}
-					lightblock[i][j][k][l] = fs + fa;
+					lightblock[i * 8 + j][k][l] = fs + fa;
 				}
 			}
 		}
@@ -944,22 +978,6 @@ void MakeLightTable()
 }
 
 #ifdef _DEBUG
-void ToggleLighting_2()
-{
-	int i;
-
-	if (lightflag) {
-		memset(dLight, 0, sizeof(dLight));
-	} else {
-		memset(dLight, lightmax, sizeof(dLight));
-		for (i = 0; i < MAX_PLRS; i++) {
-			if (plr[i].plractive && plr[i].plrlevel == currlevel) {
-				DoLighting(plr[i].WorldX, plr[i].WorldY, plr[i]._pLightRad, -1);
-			}
-		}
-	}
-}
-
 void ToggleLighting()
 {
 	int i;
@@ -1099,7 +1117,7 @@ void ChangeLight(int i, int x, int y, int r)
 void ProcessLightList()
 {
 	int i, j;
-	unsigned char temp;
+	BYTE temp;
 
 	if (lightflag) {
 		return;
@@ -1152,15 +1170,13 @@ void InitVision()
 	visionid = 1;
 
 	for (i = 0; i < TransVal; i++) {
-		TransList[i] = 0;
+		TransList[i] = FALSE;
 	}
 }
 
 int AddVision(int x, int y, int r, BOOL mine)
 {
-	int vid;
-
-	vid = r;
+	int vid; // BUGFIX: if numvision >= MAXVISION behavior is undefined
 
 	if (numvision < MAXVISION) {
 		VisionList[numvision]._lx = x;
@@ -1227,7 +1243,7 @@ void ProcessVisionList()
 			}
 		}
 		for (i = 0; i < TransVal; i++) {
-			TransList[i] = 0;
+			TransList[i] = FALSE;
 		}
 		for (i = 0; i < numvision; i++) {
 			if (!VisionList[i]._ldel) {
@@ -1277,8 +1293,8 @@ void lighting_color_cycling()
 			tbl[0] = tbl[1];
 			tbl++;
 		}
-		*tbl++ = col;
-		tbl += 224;
+		*tbl = col;
+		tbl += 225;
 	}
 }
 
