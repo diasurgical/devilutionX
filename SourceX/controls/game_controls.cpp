@@ -148,6 +148,14 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 				if (!ctrl_event.up)
 					*action = GameAction(GameActionType::TOGGLE_QUEST_LOG);
 				return true;
+			case ControllerButton::BUTTON_LEFTSHOULDER:
+				if (!ctrl_event.up)
+					*action = GameAction(GameActionType::TOGGLE_CHARACTER_INFO);
+				return true;
+			case ControllerButton::BUTTON_RIGHTSHOULDER:
+				if (!ctrl_event.up)
+					*action = GameAction(GameActionType::TOGGLE_INVENTORY);
+				return true;
 			default:
 				return true;
 			}
