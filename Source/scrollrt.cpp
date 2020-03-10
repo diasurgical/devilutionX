@@ -45,6 +45,8 @@ void (*DrawPlrProc)(int, int, int, int, int, BYTE *, int, int, int, int);
 BYTE sgSaveBack[8192];
 DWORD sgdwCursHgtOld;
 
+bool dRendered[MAXDUNX][MAXDUNY];
+
 /* data */
 
 /* used in 1.00 debug */
@@ -504,22 +506,20 @@ static void DrawObject(int x, int y, int ox, int oy, BOOL pre)
 	}
 }
 
-static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy, int eflag);
+static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy);
 
 /**
- * @brief Render a row of tile
+ * @brief Render a cell
  * @param x dPiece coordinate
  * @param y dPiece coordinate
  * @param sx Back buffer coordinate
  * @param sy Back buffer coordinate
- * @param eflag is it an even (0) or odd (1) row
  */
-static void drawRow(int x, int y, int sx, int sy, int eflag)
+static void drawCell(int x, int y, int sx, int sy)
 {
 	BYTE *dst;
 	MICROS *pMap;
 
-	level_piece_id = dPiece[x][y];
 	light_table_index = dLight[x][y];
 
 	dst = &gpBuffer[sx + sy * BUFFER_WIDTH];
@@ -529,41 +529,71 @@ static void drawRow(int x, int y, int sx, int sy, int eflag)
 		arch_draw_type = i == 0 ? 1 : 0;
 		level_cel_block = pMap->mt[2 * i];
 		if (level_cel_block != 0) {
-			drawUpperScreen(dst);
+			RenderTile(dst);
 		}
 		arch_draw_type = i == 0 ? 2 : 0;
 		level_cel_block = pMap->mt[2 * i + 1];
 		if (level_cel_block != 0) {
-			drawUpperScreen(dst + 32);
+			RenderTile(dst + 32);
 		}
 		dst -= BUFFER_WIDTH * 32;
 	}
-
-	scrollrt_draw_dungeon(x, y, sx, sy, eflag);
 }
 
 /**
- * This variant checks for of screen element on the lower screen
- * This function it self causes rendering issues since it will render on top of objects on the other side of walls
- * @brief Re render tile to workaround sorting issues with players walking east/west
- * @param y dPiece coordinate
+ * @brief Render grass and leafs
  * @param x dPiece coordinate
+ * @param y dPiece coordinate
  * @param sx Back buffer coordinate
  * @param sy Back buffer coordinate
  */
-static void scrollrt_draw_e_flag(int x, int y, int sx, int sy)
+static void drawCellFoliage(int x, int y, int sx, int sy)
 {
-	int lti_old, cta_old, lpi_old;
+	BYTE *dst;
+	MICROS *pMap;
 
-	lti_old = light_table_index;
-	cta_old = cel_transparency_active;
-	lpi_old = level_piece_id;
+	light_table_index = dLight[x][y];
+	dst = &gpBuffer[sx + sy * BUFFER_WIDTH];
+	dst -= BUFFER_WIDTH * 32;
+	pMap = &dpiece_defs_map_2[x][y];
+	cel_transparency_active = (BYTE)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
+	for (int i = 1; i<MicroTileLen>> 1; i++) {
+		arch_draw_type = 0;
+		level_cel_block = pMap->mt[2 * i];
+		if (level_cel_block != 0) {
+			RenderTile(dst);
+		}
+		level_cel_block = pMap->mt[2 * i + 1];
+		if (level_cel_block != 0) {
+			RenderTile(dst + 32);
+		}
+		dst -= BUFFER_WIDTH * 32;
+	}
+}
 
-	drawRow(x, y, sx, sy, 0);
+/**
+ * @brief Render a floor tiles
+ * @param x dPiece coordinate
+ * @param y dPiece coordinate
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
+ */
+static void drawFloor(int x, int y, int sx, int sy)
+{
+	cel_transparency_active = 0;
+	light_table_index = dLight[x][y];
 
-	light_table_index = lti_old;
-	cel_transparency_active = cta_old;
-	level_piece_id = lpi_old;
+	BYTE *dst = &gpBuffer[sx + sy * BUFFER_WIDTH];
+	arch_draw_type = 1;
+	level_cel_block = dpiece_defs_map_2[x][y].mt[0];
+	if (level_cel_block != 0) {
+		RenderTile(dst);
+	}
+	arch_draw_type = 2;
+	level_cel_block = dpiece_defs_map_2[x][y].mt[1];
+	if (level_cel_block != 0) {
+		RenderTile(dst + 32);
+	}
 }
 
 /**
@@ -601,9 +631,8 @@ static void DrawItem(int x, int y, int sx, int sy, BOOL pre)
  * @param oy dPiece Y offset
  * @param sx Back buffer coordinate
  * @param sy Back buffer coordinate
- * @param eflag Should the sorting workaround be applied
  */
-static void DrawMonsterHelper(int x, int y, int oy, int sx, int sy, int eflag)
+static void DrawMonsterHelper(int x, int y, int oy, int sx, int sy)
 {
 	int mi, px, py;
 	MonsterStruct *pMonster;
@@ -643,9 +672,6 @@ static void DrawMonsterHelper(int x, int y, int oy, int sx, int sy, int eflag)
 		Cl2DrawOutline(233, px, py, pMonster->_mAnimData, pMonster->_mAnimFrame, pMonster->MType->width);
 	}
 	DrawMonster(x, y, px, py, mi);
-	if (eflag && !pMonster->_meflag) {
-		scrollrt_draw_e_flag(x - 1, y + 1, sx - 64, sy);
-	}
 }
 
 /**
@@ -655,9 +681,8 @@ static void DrawMonsterHelper(int x, int y, int oy, int sx, int sy, int eflag)
  * @param oy dPiece Y offset
  * @param sx Back buffer coordinate
  * @param sy Back buffer coordinate
- * @param eflag Should the sorting workaround be applied
  */
-static void DrawPlayerHelper(int x, int y, int oy, int sx, int sy, int eflag)
+static void DrawPlayerHelper(int x, int y, int oy, int sx, int sy)
 {
 	int p = dPlayer[x][y + oy];
 	p = p > 0 ? p - 1 : -(p + 1);
@@ -666,12 +691,6 @@ static void DrawPlayerHelper(int x, int y, int oy, int sx, int sy, int eflag)
 	int py = sy + pPlayer->_pyoff;
 
 	DrawPlayer(p, x, y + oy, px, py, pPlayer->_pAnimData, pPlayer->_pAnimFrame, pPlayer->_pAnimWidth);
-	if (eflag && pPlayer->_peflag != 0) {
-		if (pPlayer->_peflag == 2) {
-			scrollrt_draw_e_flag(x - 2, y + 1, sx - 96, sy - 16);
-		}
-		scrollrt_draw_e_flag(x - 1, y + 1, sx - 64, sy);
-	}
 }
 
 /**
@@ -680,9 +699,8 @@ static void DrawPlayerHelper(int x, int y, int oy, int sx, int sy, int eflag)
  * @param sy dPiece coordinate
  * @param dx Back buffer coordinate
  * @param dy Back buffer coordinate
- * @param eflag Should the sorting workaround be applied
  */
-static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy, int eflag)
+static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy)
 {
 	int mi, px, py, nCel, nMon, negMon, frames;
 	char bFlag, bDead, bObj, bItem, bPlr, bArch, bMap, negPlr, dd;
@@ -691,9 +709,16 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy, int eflag)
 
 	assert((DWORD)sx < MAXDUNX);
 	assert((DWORD)sy < MAXDUNY);
+
+	if (dRendered[sx][sy])
+		return;
+
+	dRendered[sx][sy] = true;
+
+	light_table_index = dLight[sx][sy];
+
 	bFlag = dFlags[sx][sy];
 	bDead = dDead[sx][sy];
-	bArch = dArch[sx][sy];
 	bMap = dTransVal[sx][sy];
 
 	negMon = dMonster[sx][sy - 1];
@@ -724,32 +749,85 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy, int eflag)
 	DrawItem(sx, sy, dx, dy, 1);
 	if (bFlag & BFLAG_PLAYERLR) {
 		assert((DWORD)(sy-1) < MAXDUNY);
-		DrawPlayerHelper(sx, sy, -1, dx, dy, eflag);
+		DrawPlayerHelper(sx, sy, -1, dx, dy);
 	}
 	if (bFlag & BFLAG_MONSTLR && negMon < 0) {
-		DrawMonsterHelper(sx, sy, -1, dx, dy, eflag);
+		DrawMonsterHelper(sx, sy, -1, dx, dy);
 	}
 	if (bFlag & BFLAG_DEAD_PLAYER) {
 		DrawDeadPlayer(sx, sy, dx, dy);
 	}
 	if (dPlayer[sx][sy] > 0) {
-		DrawPlayerHelper(sx, sy, 0, dx, dy, eflag);
+		DrawPlayerHelper(sx, sy, 0, dx, dy);
 	}
 	if (dMonster[sx][sy] > 0) {
-		DrawMonsterHelper(sx, sy, 0, dx, dy, eflag);
+		DrawMonsterHelper(sx, sy, 0, dx, dy);
 	}
 	DrawMissile(sx, sy, dx, dy, FALSE);
 	DrawObject(sx, sy, dx, dy, 0);
 	DrawItem(sx, sy, dx, dy, 0);
 
-	if (bArch != 0) {
-		cel_transparency_active = TransList[bMap];
-		if (leveltype != DTYPE_TOWN) {
+	if (leveltype != DTYPE_TOWN) {
+		bArch = dArch[sx][sy];
+		if (bArch != 0) {
+			cel_transparency_active = TransList[bMap];
 			CelClippedBlitLightTrans(&gpBuffer[dx + BUFFER_WIDTH * dy], pSpecialCels, bArch, 64);
+		}
+	} else {
+		if (sx - 2 >= 0 && sx - 2 < MAXDUNX && sy + 1 >= 0 && sy + 1 < MAXDUNY) {
+			bArch = dArch[sx - 2][sy + 1];
+			if (bArch != 0 && dx - 64 - 32 >= 0) {
+				CelBlitFrame(&gpBuffer[dx - 64 - 32 + BUFFER_WIDTH * (dy - 16)], pSpecialCels, bArch, 64);
+			}
+		}
+	}
+}
+
+/**
+ * @brief Render a row of floor tiles
+ * @param x dPiece coordinate
+ * @param y dPiece coordinate
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
+ * @param blocks Number of rows
+ * @param chunks Tile in a row
+ */
+static void scrollrt_drawFloor(int x, int y, int sx, int sy, int blocks, int chunks)
+{
+	assert(gpBuffer);
+
+	for (int i = 0; i < (blocks << 1); i++) {
+		for (int j = 0; j < chunks ; j++) {
+			if (x >= 0 && x < MAXDUNX && y >= 0 && y < MAXDUNY) {
+				level_piece_id = dPiece[x][y];
+				if (level_piece_id != 0) {
+					if (!nSolidTable[level_piece_id])
+						drawFloor(x, y, sx, sy);
+				} else {
+					world_draw_black_tile(sx, sy);
+				}
+			} else {
+				world_draw_black_tile(sx, sy);
+			}
+			x++;
+			y--;
+			sx += 64;
+		}
+		// Return to start of row
+		x -= chunks;
+		y += chunks;
+		sx -= chunks * 64;
+		sy += 16;
+
+		// Jump to next row
+		if (i & 1) {
+			x++;
+			chunks--;
+			sx += 32;
 		} else {
-#if 0 // Special tree rendering, disabled in 1.09
-			CelBlitFrame(&gpBuffer[dx + BUFFER_WIDTH * dy], pSpecialCels, bArch, 64);
-#endif
+			y++;
+			chunks++;
+			sx -= 32;
 		}
 	}
 }
@@ -760,34 +838,49 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy, int eflag)
  * @param y dPiece coordinate
  * @param sx Back buffer coordinate
  * @param sy Back buffer coordinate
- * @param chunks tile width of row
- * @param row current row being rendered
+ * @param blocks Number of rows
+ * @param chunks Tile in a row
  */
-static void scrollrt_draw(int x, int y, int sx, int sy, int chunks, int row)
+static void scrollrt_draw(int x, int y, int sx, int sy, int blocks, int chunks)
 {
 	assert(gpBuffer);
 
-	if (row & 1) {
-		x -= 1;
-		y += 1;
-		sx -= 32;
-		chunks += 1;
-	}
-
-	for (int j = 0; j < chunks; j++) {
-		if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX) {
-			level_piece_id = dPiece[x][y];
-			if (level_piece_id != 0) {
-				drawRow(x, y, sx, sy, 1);
-			} else {
-				world_draw_black_tile(sx, sy);
+	for (int i = 0; i < (blocks << 1); i++) {
+		for (int j = 0; j < chunks ; j++) {
+			if (x >= 0 && x < MAXDUNX && y >= 0 && y < MAXDUNY) {
+				level_piece_id = dPiece[x][y];
+				if (level_piece_id != 0) {
+					if (nSolidTable[level_piece_id]) {
+						// Avoid sprites poaking through walls
+						if (x + 2 >= 0 && x + 2 < MAXDUNX && y - 1 >= 0 && y - 1 < MAXDUNY && sx + 64 <= SCREEN_X + SCREEN_WIDTH)
+							scrollrt_draw_dungeon(x + 1, y - 1, sx + 64, sy);
+						drawCell(x, y, sx, sy);
+					} else {
+						drawCellFoliage(x, y, sx, sy);
+					}
+					scrollrt_draw_dungeon(x, y, sx, sy);
+				}
 			}
-		} else {
-			world_draw_black_tile(sx, sy);
+			x++;
+			y--;
+			sx += 64;
 		}
-		x++;
-		y--;
-		sx += 64;
+		// Return to start of row
+		x -= chunks;
+		y += chunks;
+		sx -= chunks * 64;
+		sy += 16;
+
+		// Jump to next row
+		if (i & 1) {
+			x++;
+			chunks--;
+			sx += 32;
+		} else {
+			y++;
+			chunks++;
+			sx -= 32;
+		}
 	}
 }
 
@@ -893,14 +986,10 @@ static void DrawGame(int x, int y)
 		break;
 	}
 
-	for (i = 0; i < (blocks << 1); i++) {
-		scrollrt_draw(x, y, sx, sy, chunks, i);
-		sy += 16;
-		if (i & 1)
-			y++;
-		else
-			x++;
-	}
+	memset(dRendered, 0, sizeof(dRendered));
+	scrollrt_drawFloor(x, y, sx, sy, blocks, chunks);
+	scrollrt_draw(x, y, sx, sy, blocks, chunks);
+
 	gpBufStart = &gpBuffer[BUFFER_WIDTH * SCREEN_Y];
 	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_HEIGHT + SCREEN_Y)];
 
