@@ -152,6 +152,8 @@ DEVKITPRO=<path to devkit> Packaging/switch/build.sh
 ```
 
 The nro-file will be generated in the build folder. Test with an emulator (RyuJinx) or real hardware.
+
+[Nintendo Switch manual](docs/manual/platforms/switch.md)
 </details>
 
 <details><summary>Haiku</summary>
@@ -203,6 +205,12 @@ Packaging/OpenDingux/build.sh <platform>
 Replace `<platform>` with one of: `retrofw`, `rg350`, or `gkd350h`.
 
 This prepares and uses the buildroot at `$HOME/buildroot-$PLATFORM-devilutionx`.
+
+End-user manuals are available here:
+
+* [RetroFW manual](docs/manual/platforms/retrofw.md)
+* [RG-350 manual](docs/manual/platforms/rg350.md)
+* [GKD350h manual](docs/manual/platforms/gkd350h.md)
 
 </details>
 
