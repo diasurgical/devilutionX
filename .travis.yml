@@ -1,29 +1,56 @@
 language: cpp
-
-os: osx
-
-osx_image: xcode10.3
-
-git:
-  depth: false
-  quiet: true
-
+jobs:
+  include:
+    - os: osx
+      osx_image: xcode10.3
+      script:
+        - cd build
+        - cmake -DBINARY_RELEASE=ON ..
+        - sudo cmake --build . --target package -j $(sysctl -n hw.physicalcpu)
+    - os: linux
+      dist: bionic
+      arch: ppc64le
+      script:
+        - cd build
+        - cmake -DBINARY_RELEASE=ON ..
+        - sudo cmake --build .
+        - mkdir -p ./packaging/devilutionx
+        - mv ./devilutionx ./packaging/devilutionx/
+        - cp ../Packaging/resources/CharisSILB.ttf ./packaging/devilutionx/
+        - cp ../Packaging/resources/LICENSE.CharisSILB.txt ./packaging/devilutionx/
+        - cp ../Packaging/nix/README.txt ./packaging/devilutionx/
+        - cd ./packaging
+        - 7z a ../devilutionx-linux-ppc64le.7z ./devilutionx/
 addons:
+  apt:
+    update: true
+    packages:
+    - libsodium-dev
+    - libsdl2-mixer-dev
+    - libsdl2-ttf-dev
+    - p7zip-full
   homebrew:
     brewfile: true
     # TODO: Remove the `update` line once this PR has been released:
     # https://github.com/travis-ci/packer-templates-mac/pull/13
     update: true
 
-script:
-  - cd build
-  - cmake -DBINARY_RELEASE=ON ..
-  - sudo cmake --build . --target package -j $(sysctl -n hw.physicalcpu)
+git:
+  depth: false
+  quiet: true
 
 deploy:
-  provider: releases
-  api_key: "$GITHUB_TOKEN"
-  file: "build/devilutionx.dmg"
-  skip_cleanup: true
-  on:
-    tags: true
+  - provider: releases
+    api_key: "$GITHUB_TOKEN"
+    file: "build/devilutionx.dmg"
+    skip_cleanup: true
+    on:
+      tags: true
+      condition: $TRAVIS_OS_NAME = osx
+  - provider: releases
+    api_key: "$GITHUB_TOKEN"
+    file: "build/devilutionx-linux-ppc64le.7z"
+    skip_cleanup: true
+    on:
+      tags: true
+      condition: $TRAVIS_OS_NAME = linux
