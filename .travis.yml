@@ -41,7 +41,7 @@ deploy:
       condition: $TRAVIS_OS_NAME = osx
   - provider: releases
     api_key: "$GITHUB_TOKEN"
-    file: "build/devilutionx-linux-ppc64le.tar.gz"
+    file: "build/devilutionx-linux-ppc64le.7z"
     skip_cleanup: true
     on:
       tags: true
