@@ -13,14 +13,7 @@ jobs:
       script:
         - cd build
         - cmake -DBINARY_RELEASE=ON ..
-        - sudo cmake --build .
-        - mkdir -p ./packaging/devilutionx
-        - mv ./devilutionx ./packaging/devilutionx/
-        - cp ../Packaging/resources/CharisSILB.ttf ./packaging/devilutionx/
-        - cp ../Packaging/resources/LICENSE.CharisSILB.txt ./packaging/devilutionx/
-        - cp ../Packaging/nix/README.txt ./packaging/devilutionx/
-        - cd ./packaging
-        - 7z a ../devilutionx-linux-ppc64le.7z ./devilutionx/
+        - sudo cmake --build . --target package
 addons:
   apt:
     update: true
@@ -28,7 +21,6 @@ addons:
     - libsodium-dev
     - libsdl2-mixer-dev
     - libsdl2-ttf-dev
-    - p7zip-full
   homebrew:
     brewfile: true
     # TODO: Remove the `update` line once this PR has been released:
@@ -49,8 +41,8 @@ deploy:
       condition: $TRAVIS_OS_NAME = osx
   - provider: releases
     api_key: "$GITHUB_TOKEN"
-    file: "build/devilutionx-linux-ppc64le.7z"
+    file: "build/devilutionx-linux-ppc64le.tar.gz"
     skip_cleanup: true
     on:
       tags: true
-      condition: $TRAVIS_OS_NAME = linux
+      condition: $TRAVIS_OS_NAME = linux AND $TRAVIS_CPU_ARCH = ppc64le
