@@ -35,7 +35,7 @@ devilutionx (1.0.1) UNRELEASED; urgency=medium
   * Fix belt not working correctly when holding shift on *non-*us keyboard layouts
   * Fix one more rare crash.
 
- -- Goran Vidovic (gogo) <trebelnik2@gmail.com>  Thu, 02 Jan 2019 21:35:11 +0200
+ -- Goran Vidovic (gogo) <trebelnik2@gmail.com>  Sat, 14 Mar 2020 16:10:11 +0200
 
 devilutionx (1.0.0) UNRELEASED; urgency=medium
 
@@ -75,7 +75,7 @@ devilutionx (1.0.0) UNRELEASED; urgency=medium
   * Correctly take open panels into account when casting spells
   * Fix sound some times being muted after Diablo dies
 
- -- Goran Vidovic (gogo) <trebelnik2@gmail.com>  Thu, 14 Mar 2020 16:00:11 +0200
+ -- Goran Vidovic (gogo) <trebelnik2@gmail.com>  Thu, 02 Jan 2019 21:35:11 +0200
 
 devilutionx (0.5.0.3) UNRELEASED; urgency=medium
 
