@@ -35,7 +35,6 @@ devilutionx (1.0.1) UNRELEASED; urgency=medium
   * Fix belt not working correctly when holding shift on *non-*us keyboard layouts
   * Fix one more rare crash.
 
-
  -- Goran Vidovic (gogo) <trebelnik2@gmail.com>  Thu, 02 Jan 2019 21:35:11 +0200
 
 devilutionx (1.0.0) UNRELEASED; urgency=medium
