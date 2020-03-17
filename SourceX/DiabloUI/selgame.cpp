@@ -145,10 +145,11 @@ void selgame_GameSelection_Select(int value)
 	selgame_enteringGame = true;
 	selgame_selectedGame = value;
 
+	gfnHeroInfo(UpdateHeroLevel);
+
 	switch (value) {
 	case 0:
 		strcpy(title, "Create Game");
-		gfnHeroInfo(UpdateHeroLevel);
 		UiInitList(0, NUM_DIFFICULTIES - 1, selgame_Diff_Focus, selgame_Diff_Select, selgame_Diff_Esc, SELDIFF_DIALOG, size(SELDIFF_DIALOG));
 		break;
 	case 1:
