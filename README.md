@@ -12,7 +12,7 @@ Nightly builds | Platform
 
 # How To Play:
  - Download [the latest DevilutionX release](https://github.com/diasurgical/devilutionX/releases), or build from source
- - Copy diabdat.mpq from your CD or GoG installation (or [extract it from the GoG installer](https://github.com/diasurgical/devilutionX/wiki/Extracting-the-DIABDAT.MPQ-from-the-GoG-installer)) to the DevilutionX install folder or data folder; make sure it is all lowercase. The DeviliutionX install folder is the one that contains the DevilutionX executable. The data folder path may differ depending on OS version and security settings, but will normally be as follows:
+ - Copy diabdat.mpq from your CD or GoG installation (or [extract it from the GoG installer](https://github.com/diasurgical/devilutionX/wiki/Extracting-the-DIABDAT.MPQ-from-the-GoG-installer)) to the DevilutionX install folder or data folder; make sure it is all lowercase. The DevilutionX install folder is the one that contains the DevilutionX executable. The data folder path may differ depending on OS version and security settings, but will normally be as follows:
     - macOS `~/Library/Application Support/diasurgical/devilution`
     - Linux `~/.local/share/diasurgical/devilution/`
     - Windows `C:\Users\[username]\AppData\Roaming\diasurgical\devilution`
