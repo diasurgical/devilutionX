@@ -130,12 +130,12 @@ static bool ProcessInput()
 	if (PauseMode == 2) {
 		return false;
 	}
-	if (gbMaxPlayers == 1 && gmenu_exception()) {
+	if (gbMaxPlayers == 1 && gmenu_is_active()) {
 		force_redraw |= 1;
 		return false;
 	}
 
-	if (!gmenu_exception() && sgnTimeoutCurs == 0) {
+	if (!gmenu_is_active() && sgnTimeoutCurs == 0) {
 #ifndef USE_SDL1
 		finish_simulated_mouse_clicks(MouseX, MouseY);
 #endif
@@ -614,7 +614,7 @@ BOOL LeftMouseDown(int wParam)
 			} else if (stextflag) {
 				CheckStoreBtn();
 			} else if (MouseY < PANEL_TOP || MouseX < PANEL_LEFT || MouseX > PANEL_LEFT + PANEL_WIDTH) {
-				if (!gmenu_exception() && !TryIconCurs()) {
+				if (!gmenu_is_active() && !TryIconCurs()) {
 					if (questlog && MouseX > 32 && MouseX < 288 && MouseY > 32 && MouseY < 308) {
 						QuestlogESC();
 					} else if (qtextflag) {
@@ -640,7 +640,7 @@ BOOL LeftMouseDown(int wParam)
 					}
 				}
 			} else {
-				if (!talkflag && !dropGoldFlag && !gmenu_exception())
+				if (!talkflag && !dropGoldFlag && !gmenu_is_active())
 					CheckInvScrn();
 				DoPanBtn();
 				if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM)
@@ -773,7 +773,7 @@ void LeftMouseUp()
 
 void RightMouseDown()
 {
-	if (!gmenu_exception() && sgnTimeoutCurs == CURSOR_NONE && PauseMode != 2 && !plr[myplr]._pInvincible) {
+	if (!gmenu_is_active() && sgnTimeoutCurs == CURSOR_NONE && PauseMode != 2 && !plr[myplr]._pInvincible) {
 		if (doomflag) {
 			doom_close();
 		} else if (!stextflag) {
@@ -796,7 +796,7 @@ void RightMouseDown()
 
 BOOL PressSysKey(int wParam)
 {
-	if (gmenu_exception() || wParam != VK_F10)
+	if (gmenu_is_active() || wParam != VK_F10)
 		return FALSE;
 	diablo_hotkey_msg(1);
 	return TRUE;
@@ -857,7 +857,7 @@ void PressKey(int vkey)
 	if (vkey == VK_ESCAPE) {
 		if (!PressEscKey()) {
 			track_repeat_walk(FALSE);
-			gamemenu_previous();
+			gamemenu_on();
 		}
 		return;
 	}
@@ -934,31 +934,31 @@ void PressKey(int vkey)
 #endif
 	else if (vkey == VK_F5) {
 		if (spselflag) {
-			ToggleSpell(0);
+			SetSpeedSpell(0);
 			return;
 		}
-		SetSpeedSpell(0);
+		ToggleSpell(0);
 		return;
 	} else if (vkey == VK_F6) {
 		if (spselflag) {
-			ToggleSpell(1);
+			SetSpeedSpell(1);
 			return;
 		}
-		SetSpeedSpell(1);
+		ToggleSpell(1);
 		return;
 	} else if (vkey == VK_F7) {
 		if (spselflag) {
-			ToggleSpell(2);
+			SetSpeedSpell(2);
 			return;
 		}
-		SetSpeedSpell(2);
+		ToggleSpell(2);
 		return;
 	} else if (vkey == VK_F8) {
 		if (spselflag) {
-			ToggleSpell(3);
+			SetSpeedSpell(3);
 			return;
 		}
-		SetSpeedSpell(3);
+		ToggleSpell(3);
 		return;
 	} else if (vkey == VK_F9) {
 		diablo_hotkey_msg(0);
@@ -1047,7 +1047,7 @@ void diablo_pause_game()
 /* NOTE: `return` must be used instead of `break` to be bin exact as C++ */
 void PressChar(int vkey)
 {
-	if (gmenu_exception() || control_talk_last_key(vkey) || sgnTimeoutCurs != 0 || deathflag) {
+	if (gmenu_is_active() || control_talk_last_key(vkey) || sgnTimeoutCurs != 0 || deathflag) {
 		return;
 	}
 	if ((char)vkey == 'p' || (char)vkey == 'P') {

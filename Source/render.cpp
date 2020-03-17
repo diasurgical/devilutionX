@@ -272,11 +272,13 @@ void world_draw_black_tile(int sx, int sy)
 	dst = &gpBuffer[sx + BUFFER_WIDTH * sy] + 30;
 
 	for (i = 30, j = 1; i >= 0; i -= 2, j++, dst -= BUFFER_WIDTH + 2) {
-		memset(dst, 0, 4 * j);
+		if (dst < gpBufEnd)
+			memset(dst, 0, 4 * j);
 	}
 	dst += 4;
 	for (i = 2, j = 15; i != 32; i += 2, j--, dst -= BUFFER_WIDTH - 2) {
-		memset(dst, 0, 4 * j);
+		if (dst < gpBufEnd)
+			memset(dst, 0, 4 * j);
 	}
 }
 

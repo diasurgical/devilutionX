@@ -1477,16 +1477,16 @@ typedef struct _FILEHEADER {
 } _FILEHEADER;
 
 typedef struct _HASHENTRY {
-	int hashcheck[2];
-	int lcid;
-	int block;
+	uint32_t hashcheck[2];
+	uint32_t lcid;
+	uint32_t block;
 } _HASHENTRY;
 
 typedef struct _BLOCKENTRY {
-	int offset;
-	int sizealloc;
-	int sizefile;
-	int flags;
+	uint32_t offset;
+	uint32_t sizealloc;
+	uint32_t sizefile;
+	uint32_t flags;
 } _BLOCKENTRY;
 
 // TPDEF PTR FCN UCHAR TGetNameFcn

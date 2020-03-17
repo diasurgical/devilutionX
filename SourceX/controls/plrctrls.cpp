@@ -22,7 +22,7 @@ bool InGameMenu()
 	    || helpflag
 	    || talkflag
 	    || qtextflag
-	    || gmenu_exception()
+	    || gmenu_is_active()
 	    || PauseMode == 2
 	    || plr[myplr]._pInvincible;
 }

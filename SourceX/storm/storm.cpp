@@ -708,7 +708,7 @@ BOOL SVidPlayContinue(void)
 		int factor;
 		int wFactor = output_surface->w / SVidWidth;
 		int hFactor = output_surface->h / SVidHeight;
-		if (wFactor > hFactor && output_surface->h > SVidHeight) {
+		if (wFactor > hFactor && (unsigned int)output_surface->h > SVidHeight) {
 			factor = hFactor;
 		} else {
 			factor = wFactor;

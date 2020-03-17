@@ -421,7 +421,7 @@ void DrawInvBelt()
 		    && plr[myplr].SpdList[i]._itype != ITYPE_GOLD) {
 			fi = i + 49;
 			ff = fontframe[gbFontTransTbl[fi]];
-			CPrintString(InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X + 28 - fontkern[ff], InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, ff, 0);
+			PrintChar(InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X + 28 - fontkern[ff], InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, ff, 0);
 		}
 	}
 }
@@ -1485,6 +1485,10 @@ void AutoGetItem(int pnum, int ii)
 	int i, idx;
 	int w, h;
 	BOOL done;
+
+	if (pcurs != CURSOR_HAND) {
+		return;
+	}
 
 	if (dropGoldFlag) {
 		dropGoldFlag = FALSE;

@@ -471,7 +471,7 @@ void ToggleSpell(int slot)
  * @param nCel Number of letter in Windows-1252
  * @param col text_color color value
  */
-void CPrintString(int sx, int sy, int nCel, char col)
+void PrintChar(int sx, int sy, int nCel, char col)
 {
 	/// ASSERT: assert(gpBuffer);
 
@@ -798,7 +798,7 @@ void InitControlPan()
 	PentSpn2Frame = 1;
 }
 
-void ClearCtrlPan()
+void DrawCtrlPan()
 {
 	DrawPanelBox(0, sgbPlrTalkTbl + 16, PANEL_WIDTH, PANEL_HEIGHT, PANEL_X, PANEL_Y);
 	DrawInfoBox();
@@ -808,7 +808,7 @@ void ClearCtrlPan()
  * Draws the control panel buttons in their current state. If the button is in the default
  * state draw it from the panel cel(extract its sub-rect). Else draw it from the buttons cel.
  */
-void DrawCtrlPan()
+void DrawCtrlBtns()
 {
 	int i;
 
@@ -947,15 +947,14 @@ void DoAutoMap()
  */
 void CheckPanelInfo()
 {
-	int i, c, v, s;
+	int i, c, v, s, xend, yend;
 
 	panelflag = FALSE;
 	ClearPanel();
 	for (i = 0; i < numpanbtns; i++) {
-		if (MouseX >= PanBtnPos[i][0]
-		    && MouseX <= PanBtnPos[i][0] + PanBtnPos[i][2]
-		    && MouseY >= PanBtnPos[i][1]
-		    && MouseY <= PanBtnPos[i][1] + PanBtnPos[i][3]) {
+		xend = PanBtnPos[i][0] + PanBtnPos[i][2];
+		yend = PanBtnPos[i][1] + PanBtnPos[i][3];
+		if (MouseX >= PanBtnPos[i][0] && MouseX <= xend && MouseY >= PanBtnPos[i][1] && MouseY <= yend) {
 			if (i != 7) {
 				strcpy(infostr, PanBtnStr[i]);
 			} else {
@@ -1219,10 +1218,10 @@ void DrawInfoBox()
 		}
 	}
 	if (infostr[0] || pnumlines)
-		control_draw_info_str();
+		PrintInfo();
 }
 
-void control_draw_info_str()
+void PrintInfo()
 {
 	int yo, lo, i;
 
@@ -1230,18 +1229,18 @@ void control_draw_info_str()
 		yo = 0;
 		lo = 1;
 		if (infostr[0]) {
-			control_print_info_str(0, infostr, TRUE, pnumlines);
+			CPrintString(0, infostr, TRUE, pnumlines);
 			yo = 1;
 			lo = 0;
 		}
 
 		for (i = 0; i < pnumlines; i++) {
-			control_print_info_str(i + yo, panelstr[i], pstrjust[i], pnumlines - lo);
+			CPrintString(i + yo, panelstr[i], pstrjust[i], pnumlines - lo);
 		}
 	}
 }
 
-void control_print_info_str(int y, char *str, BOOL center, int lines)
+void CPrintString(int y, char *str, BOOL center, int lines)
 {
 	BYTE c;
 	char *tmp;
@@ -1267,7 +1266,7 @@ void control_print_info_str(int y, char *str, BOOL center, int lines)
 		lineOffset += fontkern[c] + 2;
 		if (c) {
 			if (lineOffset < 288) {
-				CPrintString(sx, sy, c, infoclr);
+				PrintChar(sx, sy, c, infoclr);
 			}
 		}
 		sx += fontkern[c] + 2;
@@ -1284,7 +1283,7 @@ void PrintGameStr(int x, int y, const char *str, int color)
 		c = gbFontTransTbl[(BYTE)*str++];
 		c = fontframe[c];
 		if (c)
-			CPrintString(sx, sy, c, color);
+			PrintChar(sx, sy, c, color);
 		sx += fontkern[c] + 1;
 	}
 }
@@ -1494,7 +1493,6 @@ void DrawChr()
 	ADD_PlrStringXY(143, 332, 174, chrstr, col);
 }
 
-
 /**
  * @brief Render text string to back buffer
  * @param x Screen coordinate
@@ -1529,7 +1527,7 @@ void MY_PlrStringXY(int x, int y, int endX, char *pszStr, char col, int base)
 		line += fontkern[c] + base;
 		if (c) {
 			if (line < widthOffset)
-				CPrintString(sx, sy, c, col);
+				PrintChar(sx, sy, c, col);
 		}
 		sx += fontkern[c] + base;
 	}
@@ -1831,7 +1829,7 @@ void PrintSBookStr(int x, int y, BOOL cjustflag, char *pszStr, char col)
 		line += fontkern[c] + 1;
 		if (c) {
 			if (line <= 222)
-				CPrintString(sx, y, c, col);
+				PrintChar(sx, y, c, col);
 		}
 		sx += fontkern[c] + 1;
 	}
@@ -2052,7 +2050,7 @@ char *control_print_talk_msg(char *msg, int *x, int y, int color)
 			return msg;
 		msg++;
 		if (c) {
-			CPrintString(*x, y + 22 + PANEL_Y, c, color);
+			PrintChar(*x, y + 22 + PANEL_Y, c, color);
 		}
 		*x += fontkern[c] + 1;
 	}

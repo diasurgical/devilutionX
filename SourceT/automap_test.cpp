@@ -5,11 +5,11 @@ TEST(Automap, InitAutomap) {
 	dvl::InitAutomapOnce();
 	EXPECT_EQ(dvl::automapflag, false);
 	EXPECT_EQ(dvl::AutoMapScale, 50);
-	EXPECT_EQ(dvl::AutoMapPosBits, 32);
-	EXPECT_EQ(dvl::AutoMapXPos, 16);
-	EXPECT_EQ(dvl::AutoMapYPos, 8);
-	EXPECT_EQ(dvl::AMPlayerX, 4);
-	EXPECT_EQ(dvl::AMPlayerY, 2);
+	EXPECT_EQ(dvl::AmLine64, 32);
+	EXPECT_EQ(dvl::AmLine32, 16);
+	EXPECT_EQ(dvl::AmLine16, 8);
+	EXPECT_EQ(dvl::AmLine8, 4);
+	EXPECT_EQ(dvl::AmLine4, 2);
 }
 
 TEST(Automap, StartAutomap) {
@@ -55,11 +55,11 @@ TEST(Automap, AutomapZoomIn) {
 	dvl::AutoMapScale = 50;
 	dvl::AutomapZoomIn();
 	EXPECT_EQ(dvl::AutoMapScale, 55);
-	EXPECT_EQ(dvl::AutoMapPosBits, 35);
-	EXPECT_EQ(dvl::AutoMapXPos, 17);
-	EXPECT_EQ(dvl::AutoMapYPos, 8);
-	EXPECT_EQ(dvl::AMPlayerX, 4);
-	EXPECT_EQ(dvl::AMPlayerY, 2);
+	EXPECT_EQ(dvl::AmLine64, 35);
+	EXPECT_EQ(dvl::AmLine32, 17);
+	EXPECT_EQ(dvl::AmLine16, 8);
+	EXPECT_EQ(dvl::AmLine8, 4);
+	EXPECT_EQ(dvl::AmLine4, 2);
 }
 
 TEST(Automap, AutomapZoomIn_Max) {
@@ -67,22 +67,22 @@ TEST(Automap, AutomapZoomIn_Max) {
 	dvl::AutomapZoomIn();
 	dvl::AutomapZoomIn();
 	EXPECT_EQ(dvl::AutoMapScale, 200);
-	EXPECT_EQ(dvl::AutoMapPosBits, 128);
-	EXPECT_EQ(dvl::AutoMapXPos, 64);
-	EXPECT_EQ(dvl::AutoMapYPos, 32);
-	EXPECT_EQ(dvl::AMPlayerX, 16);
-	EXPECT_EQ(dvl::AMPlayerY, 8);
+	EXPECT_EQ(dvl::AmLine64, 128);
+	EXPECT_EQ(dvl::AmLine32, 64);
+	EXPECT_EQ(dvl::AmLine16, 32);
+	EXPECT_EQ(dvl::AmLine8, 16);
+	EXPECT_EQ(dvl::AmLine4, 8);
 }
 
 TEST(Automap, AutomapZoomOut) {
 	dvl::AutoMapScale = 200;
 	dvl::AutomapZoomOut();
 	EXPECT_EQ(dvl::AutoMapScale, 195);
-	EXPECT_EQ(dvl::AutoMapPosBits, 124);
-	EXPECT_EQ(dvl::AutoMapXPos, 62);
-	EXPECT_EQ(dvl::AutoMapYPos, 31);
-	EXPECT_EQ(dvl::AMPlayerX, 15);
-	EXPECT_EQ(dvl::AMPlayerY, 7);
+	EXPECT_EQ(dvl::AmLine64, 124);
+	EXPECT_EQ(dvl::AmLine32, 62);
+	EXPECT_EQ(dvl::AmLine16, 31);
+	EXPECT_EQ(dvl::AmLine8, 15);
+	EXPECT_EQ(dvl::AmLine4, 7);
 }
 
 TEST(Automap, AutomapZoomOut_Min) {
@@ -90,11 +90,11 @@ TEST(Automap, AutomapZoomOut_Min) {
 	dvl::AutomapZoomOut();
 	dvl::AutomapZoomOut();
 	EXPECT_EQ(dvl::AutoMapScale, 50);
-	EXPECT_EQ(dvl::AutoMapPosBits, 32);
-	EXPECT_EQ(dvl::AutoMapXPos, 16);
-	EXPECT_EQ(dvl::AutoMapYPos, 8);
-	EXPECT_EQ(dvl::AMPlayerX, 4);
-	EXPECT_EQ(dvl::AMPlayerY, 2);
+	EXPECT_EQ(dvl::AmLine64, 32);
+	EXPECT_EQ(dvl::AmLine32, 16);
+	EXPECT_EQ(dvl::AmLine16, 8);
+	EXPECT_EQ(dvl::AmLine8, 4);
+	EXPECT_EQ(dvl::AmLine4, 2);
 }
 
 TEST(Automap, AutomapZoomReset) {
@@ -105,9 +105,9 @@ TEST(Automap, AutomapZoomReset) {
 	EXPECT_EQ(dvl::AutoMapXOfs, 0);
 	EXPECT_EQ(dvl::AutoMapYOfs, 0);
 	EXPECT_EQ(dvl::AutoMapScale, 50);
-	EXPECT_EQ(dvl::AutoMapPosBits, 32);
-	EXPECT_EQ(dvl::AutoMapXPos, 16);
-	EXPECT_EQ(dvl::AutoMapYPos, 8);
-	EXPECT_EQ(dvl::AMPlayerX, 4);
-	EXPECT_EQ(dvl::AMPlayerY, 2);
+	EXPECT_EQ(dvl::AmLine64, 32);
+	EXPECT_EQ(dvl::AmLine32, 16);
+	EXPECT_EQ(dvl::AmLine16, 8);
+	EXPECT_EQ(dvl::AmLine8, 4);
+	EXPECT_EQ(dvl::AmLine4, 2);
 }

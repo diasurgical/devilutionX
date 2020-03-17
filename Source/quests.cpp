@@ -737,7 +737,7 @@ void PrintQLString(int x, int y, BOOL cjustflag, char *str, int col)
 		c = fontframe[gbFontTransTbl[(BYTE)str[i]]];
 		k += fontkern[c] + 1;
 		if (c && k <= 257) {
-			CPrintString(sx, sy, c, col);
+			PrintChar(sx, sy, c, col);
 		}
 		sx += fontkern[c] + 1;
 	}

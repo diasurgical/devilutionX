@@ -115,7 +115,7 @@ void InsertCDDlg(const char *fileName)
 	    "Make sure that it is in the game folder and that the file name is in all lowercase.",
 	    fileName);
 
-	UiErrorOkDialog("Date File Error", text);
+	UiErrorOkDialog("Data File Error", text);
 	app_fatal(NULL);
 }
 

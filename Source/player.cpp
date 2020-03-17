@@ -3033,7 +3033,7 @@ BOOL PM_DoDeath(int pnum)
 			if (deathdelay == 1) {
 				deathflag = TRUE;
 				if (gbMaxPlayers == 1) {
-					gamemenu_previous();
+					gamemenu_on();
 				}
 			}
 		}

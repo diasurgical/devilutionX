@@ -29,10 +29,12 @@ bool selhero_isMultiPlayer;
 bool selhero_navigateYesNo;
 bool selhero_deleteEnabled;
 
-BOOL(*gfnHeroStats)
-(unsigned int, _uidefaultstats *);
+BOOL (*gfnHeroInfo)
+(BOOL (*fninfofunc)(_uiheroinfo *));
 BOOL(*gfnHeroCreate)
 (_uiheroinfo *);
+BOOL(*gfnHeroStats)
+(unsigned int, _uidefaultstats *);
 
 namespace {
 
@@ -346,14 +348,15 @@ BOOL UiSelHeroDialog(
 		LoadBackgroundArt("ui_art\\selhero.pcx");
 		LoadScrollBar();
 
-		selhero_result = *dlgresult;
-		gfnHeroStats = fnstats;
+		gfnHeroInfo = fninfo;
 		gfnHeroCreate = fncreate;
+		gfnHeroStats = fnstats;
+		selhero_result = *dlgresult;
 
 		selhero_navigateYesNo = false;
 
 		selhero_SaveCount = 0;
-		fninfo(SelHero_GetHeroInfo);
+		gfnHeroInfo(SelHero_GetHeroInfo);
 		std::reverse(selhero_heros, selhero_heros + selhero_SaveCount);
 
 		if (selhero_SaveCount) {
@@ -386,7 +389,6 @@ BOOL UiSelHeroDialog(
 
 	*dlgresult = selhero_result;
 	strcpy(name, selhero_heroInfo.name);
-	heroLevel = selhero_heroInfo.level;
 
 	UnloadScrollBar();
 	return true;

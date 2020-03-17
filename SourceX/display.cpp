@@ -108,13 +108,15 @@ bool SpawnWindow(const char *lpWindowName, int nWidth, int nHeight)
 		ErrSdl();
 	}
 
-#ifdef USE_SDL1
-	refreshDelay = 1000000 / 60; // 60hz
-#else
+	int refreshRate = 60;
+#ifndef USE_SDL1
 	SDL_DisplayMode mode;
 	SDL_GetDisplayMode(0, 0, &mode);
-	refreshDelay = 1000000 / mode.refresh_rate;
+	if (mode.refresh_rate != 0) {
+		refreshRate = mode.refresh_rate;
+	}
 #endif
+	refreshDelay = 1000000 / refreshRate;
 
 	if (upscale) {
 #ifdef USE_SDL1

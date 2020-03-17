@@ -4,20 +4,13 @@
 #include <cstring>
 #include <fstream>
 #include <memory>
+#include <type_traits>
 
 #include "all.h"
 #include "../SourceS/file_util.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
 DEVILUTION_BEGIN_NAMESPACE
-
-#define LOG_FSTREAM_CALLS 1
-
-#if LOG_FSTREAM_CALLS == 1
-#define FSTREAM_LOG_DEBUG(...) SDL_Log(__VA_ARGS__)
-#else
-#define FSTREAM_LOG_DEBUG(...) {}
-#endif
 
 // Amiga cannot seekp beyond EOF.
 // See https://github.com/bebbo/libnix/issues/30
@@ -27,6 +20,25 @@ DEVILUTION_BEGIN_NAMESPACE
 
 namespace {
 
+// Validates that a Type is of a particular size and that its alignment is <= the size of the type.
+// Done with templates so that error messages include actual size.
+template <std::size_t A, std::size_t B>
+struct assert_eq : std::true_type {
+	static_assert(A == B, "");
+};
+template <std::size_t A, std::size_t B>
+struct assert_lte : std::true_type {
+	static_assert(A <= B, "");
+};
+template <typename T, std::size_t S>
+struct check_size : assert_eq<sizeof(T), S>, assert_lte<alignof(T), sizeof(T)> {
+};
+
+// Check sizes and alignments of the structs that we decrypt and encrypt.
+// The decryption algorithm treats them as a stream of 32-bit uints, so the
+// sizes must be exact as there cannot be any padding.
+static_assert(check_size<_HASHENTRY, 4 * 4>::value, "");
+static_assert(check_size<_BLOCKENTRY, 4 * 4>::value, "");
 
 const char *DirToString(std::ios::seekdir dir)
 {
@@ -139,8 +151,10 @@ private:
 			if (error_message == nullptr)
 				error_message = "";
 			SDL_Log(fmt_with_error.c_str(), args..., error_message);
-		} else if (LOG_FSTREAM_CALLS) {
+#ifdef _DEBUG
+		} else {
 			SDL_Log(fmt, args...);
+#endif
 		}
 		return !s_->fail();
 	}
@@ -170,15 +184,19 @@ struct Archive {
 	bool Open(const char *name)
 	{
 		Close();
-		FSTREAM_LOG_DEBUG("Opening %s", name);
+#ifdef _DEBUG
+		SDL_Log("Opening %s", name);
+#endif
 		exists = FileExists(name);
 		std::ios::openmode mode = std::ios::in | std::ios::out | std::ios::binary;
 		if (exists) {
-			if (GetFileSize(name, &size)) {
-				FSTREAM_LOG_DEBUG("GetFileSize(\"%s\") = %" PRIuMAX, name, size);
-			} else {
+			if (GetFileSize(name, &size) == 0) {
 				SDL_Log("GetFileSize(\"%s\") failed with \"%s\"", name, std::strerror(errno));
 				return false;
+#ifdef _DEBUG
+			} else {
+				SDL_Log("GetFileSize(\"%s\") = %" PRIuMAX, name, size);
+#endif
 			}
 		} else {
 			mode |= std::ios::trunc;
@@ -197,14 +215,18 @@ struct Archive {
 	{
 		if (!stream.IsOpen())
 			return true;
-		FSTREAM_LOG_DEBUG("Closing %s", name.c_str());
+#ifdef _DEBUG
+		SDL_Log("Closing %s", name.c_str());
+#endif
 
 		bool result = true;
 		if (modified && !(stream.seekp(0, std::ios::beg) && WriteHeaderAndTables()))
 			result = false;
 		stream.Close();
 		if (modified && result && size != 0) {
-			FSTREAM_LOG_DEBUG("ResizeFile(\"%s\", %" PRIuMAX ")", name.c_str(), size);
+#ifdef _DEBUG
+			SDL_Log("ResizeFile(\"%s\", %" PRIuMAX ")", name.c_str(), size);
+#endif
 			result = ResizeFile(name.c_str(), size);
 		}
 		name.clear();
@@ -338,7 +360,7 @@ void mpqapi_remove_hash_entry(const char *pszName)
 	}
 }
 
-void mpqapi_alloc_block(int block_offset, int block_size)
+void mpqapi_alloc_block(uint32_t block_offset, uint32_t block_size)
 {
 	_BLOCKENTRY *block;
 	int i;
@@ -558,7 +580,7 @@ BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD d
 	return TRUE;
 }
 
-int mpqapi_find_free_block(int size, int *block_size)
+int mpqapi_find_free_block(uint32_t size, uint32_t *block_size)
 {
 	_BLOCKENTRY *pBlockTbl;
 	int i, result;

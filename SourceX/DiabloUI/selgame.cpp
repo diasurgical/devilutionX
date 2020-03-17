@@ -18,6 +18,7 @@ int selgame_selectedGame;
 bool selgame_endMenu;
 int *gdwPlayerId;
 int gbDifficulty;
+int heroLevel;
 
 static _SNETPROGRAMDATA *m_client_info;
 extern int provider;
@@ -126,6 +127,19 @@ void selgame_GameSelection_Focus(int value)
 	WordWrapArtStr(selgame_Description, SELGAME_DESCRIPTION.rect.w);
 }
 
+/**
+ * @brief Load the current hero level from save file
+ * @param pInfo Hero info
+ * @return always true
+ */
+BOOL UpdateHeroLevel(_uiheroinfo *pInfo)
+{
+	if (strcasecmp(pInfo->name, gszHero) == 0)
+		heroLevel = pInfo->level;
+
+	return true;
+}
+
 void selgame_GameSelection_Select(int value)
 {
 	selgame_enteringGame = true;
@@ -134,6 +148,7 @@ void selgame_GameSelection_Select(int value)
 	switch (value) {
 	case 0:
 		strcpy(title, "Create Game");
+		gfnHeroInfo(UpdateHeroLevel);
 		UiInitList(0, NUM_DIFFICULTIES - 1, selgame_Diff_Focus, selgame_Diff_Select, selgame_Diff_Esc, SELDIFF_DIALOG, size(SELDIFF_DIALOG));
 		break;
 	case 1:
