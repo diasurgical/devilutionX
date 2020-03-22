@@ -37,6 +37,10 @@ char arch_draw_type;
  */
 int cel_transparency_active;
 /**
+ * Specifies whether foliage (tile has extra content that overlaps previous tile) being rendered.
+ */
+int cel_foliage_active = false;
+/**
  * Specifies the current dungeon piece ID of the level, as used during rendering of the level tiles.
  */
 int level_piece_id;
@@ -554,21 +558,23 @@ static void drawCellFoliage(int x, int y, int sx, int sy)
 
 	light_table_index = dLight[x][y];
 	dst = &gpBuffer[sx + sy * BUFFER_WIDTH];
-	dst -= BUFFER_WIDTH * 32;
 	pMap = &dpiece_defs_map_2[x][y];
 	cel_transparency_active = (BYTE)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
-	for (int i = 1; i<MicroTileLen>> 1; i++) {
-		arch_draw_type = 0;
+	cel_foliage_active = true;
+	for (int i = 0; i<MicroTileLen>> 1; i++) {
 		level_cel_block = pMap->mt[2 * i];
 		if (level_cel_block != 0) {
+			arch_draw_type = i == 0 ? 1 : 0;
 			RenderTile(dst);
 		}
 		level_cel_block = pMap->mt[2 * i + 1];
 		if (level_cel_block != 0) {
+			arch_draw_type = i == 0 ? 2 : 0;
 			RenderTile(dst + 32);
 		}
 		dst -= BUFFER_WIDTH * 32;
 	}
+	cel_foliage_active = false;
 }
 
 /**
@@ -584,12 +590,12 @@ static void drawFloor(int x, int y, int sx, int sy)
 	light_table_index = dLight[x][y];
 
 	BYTE *dst = &gpBuffer[sx + sy * BUFFER_WIDTH];
-	arch_draw_type = 1;
+	arch_draw_type = 1; // Left
 	level_cel_block = dpiece_defs_map_2[x][y].mt[0];
 	if (level_cel_block != 0) {
 		RenderTile(dst);
 	}
-	arch_draw_type = 2;
+	arch_draw_type = 2; // Right
 	level_cel_block = dpiece_defs_map_2[x][y].mt[1];
 	if (level_cel_block != 0) {
 		RenderTile(dst + 32);
