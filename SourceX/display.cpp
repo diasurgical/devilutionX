@@ -80,7 +80,10 @@ bool SpawnWindow(const char *lpWindowName, int nWidth, int nHeight)
 #else
 	int flags = 0;
 	if (upscale) {
-		flags |= fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_RESIZABLE;
+		if (fullscreen) {
+			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+		}
+		flags |= SDL_WINDOW_RESIZABLE;
 
 		char scaleQuality[2] = "2";
 		DvlStringSetting("scaling quality", scaleQuality, 2);
