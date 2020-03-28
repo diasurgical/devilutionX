@@ -48,7 +48,7 @@ jobs:
       - run: dpkg --add-architecture i386
       - run: apt-get update -y
       - run: apt-get install -y g++-multilib libsdl2-dev:i386 libsdl2-mixer-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev git
-      - run: apt-get install -y -f -t 'stretch-backports*' cmake libsodium-dev:i386
+      - run: apt-get install -y -t 'stretch-backports*' cmake libsodium-dev:i386
       - run: cd build && cmake -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake ..
       - run: cd build && cmake --build . -j $(nproc)
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86}
