@@ -502,8 +502,14 @@ endif()
 
 if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   # Change __FILE__ to only show the path relative to the project folder
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-builtin-macro-redefined -D'__FILE__=\"$(subst $(realpath ${CMAKE_SOURCE_DIR})/,,$(abspath $<))\"'")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-builtin-macro-redefined -D'__FILE__=\"$(subst $(realpath ${CMAKE_SOURCE_DIR})/,,$(abspath $<))\"'")
+  get_target_property(devilution_SRCS devilution SOURCES)
+  foreach(SOURCE_FILE ${devilution_SRCS} ${devilutionx_SRCS})
+    set_source_files_properties(${SOURCE_FILE} PROPERTIES
+      COMPILE_DEFINITIONS __FILE__="${SOURCE_FILE}"
+    )
+  endforeach(SOURCE_FILE)
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-builtin-macro-redefined")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-builtin-macro-redefined")
 
   if(DEBUG)
     # Note: For Valgrind suppor.

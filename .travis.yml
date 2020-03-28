@@ -2,7 +2,7 @@ language: cpp
 jobs:
   include:
     - os: osx
-      osx_image: xcode10.3
+      osx_image: xcode11.3
       script:
         - cd build
         - cmake -DBINARY_RELEASE=ON ..
@@ -16,16 +16,12 @@ jobs:
         - sudo cmake --build . --target package
 addons:
   apt:
-    update: true
     packages:
     - libsodium-dev
     - libsdl2-mixer-dev
     - libsdl2-ttf-dev
   homebrew:
     brewfile: true
-    # TODO: Remove the `update` line once this PR has been released:
-    # https://github.com/travis-ci/packer-templates-mac/pull/13
-    update: true
 
 git:
   depth: false

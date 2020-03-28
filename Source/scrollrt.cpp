@@ -37,6 +37,10 @@ char arch_draw_type;
  */
 int cel_transparency_active;
 /**
+ * Specifies whether foliage (tile has extra content that overlaps previous tile) being rendered.
+ */
+int cel_foliage_active = false;
+/**
  * Specifies the current dungeon piece ID of the level, as used during rendering of the level tiles.
  */
 int level_piece_id;
@@ -520,55 +524,25 @@ static void drawCell(int x, int y, int sx, int sy)
 	BYTE *dst;
 	MICROS *pMap;
 
-	light_table_index = dLight[x][y];
-
 	dst = &gpBuffer[sx + sy * BUFFER_WIDTH];
 	pMap = &dpiece_defs_map_2[x][y];
+	level_piece_id = dPiece[x][y];
 	cel_transparency_active = (BYTE)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
+	cel_foliage_active = !nSolidTable[level_piece_id];
 	for (int i = 0; i<MicroTileLen>> 1; i++) {
-		arch_draw_type = i == 0 ? 1 : 0;
 		level_cel_block = pMap->mt[2 * i];
 		if (level_cel_block != 0) {
-			RenderTile(dst);
-		}
-		arch_draw_type = i == 0 ? 2 : 0;
-		level_cel_block = pMap->mt[2 * i + 1];
-		if (level_cel_block != 0) {
-			RenderTile(dst + 32);
-		}
-		dst -= BUFFER_WIDTH * 32;
-	}
-}
-
-/**
- * @brief Render grass and leafs
- * @param x dPiece coordinate
- * @param y dPiece coordinate
- * @param sx Back buffer coordinate
- * @param sy Back buffer coordinate
- */
-static void drawCellFoliage(int x, int y, int sx, int sy)
-{
-	BYTE *dst;
-	MICROS *pMap;
-
-	light_table_index = dLight[x][y];
-	dst = &gpBuffer[sx + sy * BUFFER_WIDTH];
-	dst -= BUFFER_WIDTH * 32;
-	pMap = &dpiece_defs_map_2[x][y];
-	cel_transparency_active = (BYTE)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
-	for (int i = 1; i<MicroTileLen>> 1; i++) {
-		arch_draw_type = 0;
-		level_cel_block = pMap->mt[2 * i];
-		if (level_cel_block != 0) {
+			arch_draw_type = i == 0 ? 1 : 0;
 			RenderTile(dst);
 		}
 		level_cel_block = pMap->mt[2 * i + 1];
 		if (level_cel_block != 0) {
+			arch_draw_type = i == 0 ? 2 : 0;
 			RenderTile(dst + 32);
 		}
 		dst -= BUFFER_WIDTH * 32;
 	}
+	cel_foliage_active = false;
 }
 
 /**
@@ -584,12 +558,12 @@ static void drawFloor(int x, int y, int sx, int sy)
 	light_table_index = dLight[x][y];
 
 	BYTE *dst = &gpBuffer[sx + sy * BUFFER_WIDTH];
-	arch_draw_type = 1;
+	arch_draw_type = 1; // Left
 	level_cel_block = dpiece_defs_map_2[x][y].mt[0];
 	if (level_cel_block != 0) {
 		RenderTile(dst);
 	}
-	arch_draw_type = 2;
+	arch_draw_type = 2; // Right
 	level_cel_block = dpiece_defs_map_2[x][y].mt[1];
 	if (level_cel_block != 0) {
 		RenderTile(dst + 32);
@@ -712,10 +686,11 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy)
 
 	if (dRendered[sx][sy])
 		return;
-
 	dRendered[sx][sy] = true;
 
 	light_table_index = dLight[sx][sy];
+
+	drawCell(sx, sy, dx, dy);
 
 	bFlag = dFlags[sx][sy];
 	bDead = dDead[sx][sy];
@@ -774,10 +749,13 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy)
 			CelClippedBlitLightTrans(&gpBuffer[dx + BUFFER_WIDTH * dy], pSpecialCels, bArch, 64);
 		}
 	} else {
-		if (sx - 2 >= 0 && sx - 2 < MAXDUNX && sy + 1 >= 0 && sy + 1 < MAXDUNY) {
-			bArch = dArch[sx - 2][sy + 1];
-			if (bArch != 0 && dx - 64 - 32 >= 0) {
-				CelBlitFrame(&gpBuffer[dx - 64 - 32 + BUFFER_WIDTH * (dy - 16)], pSpecialCels, bArch, 64);
+		// Tree leafs should always cover player when entering or leaving the tile,
+		// So delay the rendering untill after the next row is being drawn.
+		// This could probably have been better solved by sprites in screen space.
+		if (sx > 0 && sy > 0 && dy > 32 + SCREEN_Y) {
+			bArch = dArch[sx - 1][sy - 1];
+			if (bArch != 0) {
+				CelBlitFrame(&gpBuffer[dx + BUFFER_WIDTH * (dy - 32)], pSpecialCels, bArch, 64);
 			}
 		}
 	}
@@ -832,6 +810,9 @@ static void scrollrt_drawFloor(int x, int y, int sx, int sy, int blocks, int chu
 	}
 }
 
+#define IsWall(x, y) (dPiece[x][y] == 0 || nSolidTable[dPiece[x][y]] || dArch[x][y] != 0)
+#define IsWalktabke(x, y) (dPiece[x][y] != 0 && !nSolidTable[dPiece[x][y]])
+
 /**
  * @brief Render a row of tile
  * @param x dPiece coordinate
@@ -848,16 +829,18 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int blocks, int chunks)
 	for (int i = 0; i < (blocks << 1); i++) {
 		for (int j = 0; j < chunks ; j++) {
 			if (x >= 0 && x < MAXDUNX && y >= 0 && y < MAXDUNY) {
-				level_piece_id = dPiece[x][y];
-				if (level_piece_id != 0) {
-					if (nSolidTable[level_piece_id]) {
-						// Avoid sprites poaking through walls
-						if (x + 2 >= 0 && x + 2 < MAXDUNX && y - 1 >= 0 && y - 1 < MAXDUNY && sx + 64 <= SCREEN_X + SCREEN_WIDTH)
+				if (x + 1 < MAXDUNX && y - 1 >= 0 && sx + 64 <= SCREEN_X + SCREEN_WIDTH) {
+					// Render objects behind walls first to prevent sprites, that are moving
+					// between tiles, from poking through the walls as they exceed the tile bound.
+					// A propper fix for this would probably be to layout the sceen and render by
+					// sprite screen position rather then tile position.
+					if (IsWall(x, y) && (IsWall(x + 1, y) || (x > 0 && IsWall(x - 1, y)))) { // Part of a wall aligned on the x-axis
+						if (IsWalktabke(x + 1, y - 1) && IsWalktabke(x, y - 1) ) { // Has wakable area behind it
 							scrollrt_draw_dungeon(x + 1, y - 1, sx + 64, sy);
-						drawCell(x, y, sx, sy);
-					} else {
-						drawCellFoliage(x, y, sx, sy);
+						}
 					}
+				}
+				if (dPiece[x][y] != 0) {
 					scrollrt_draw_dungeon(x, y, sx, sy);
 				}
 			}

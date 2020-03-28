@@ -1486,6 +1486,10 @@ void AutoGetItem(int pnum, int ii)
 	int w, h;
 	BOOL done;
 
+	if (pcurs != CURSOR_HAND) {
+		return;
+	}
+
 	if (dropGoldFlag) {
 		dropGoldFlag = FALSE;
 		dropGoldValue = 0;

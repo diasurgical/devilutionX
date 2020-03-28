@@ -89,6 +89,44 @@ static DWORD SolidMask[32] = {
 	0xFFFFFFFF, 0xFFFFFFFF
 };
 
+static DWORD RightFoliageMask[32] = {
+	0xFFFFFFFF, 0x3FFFFFFF,
+	0x0FFFFFFF, 0x03FFFFFF,
+	0x00FFFFFF, 0x003FFFFF,
+	0x000FFFFF, 0x0003FFFF,
+	0x0000FFFF, 0x00003FFF,
+	0x00000FFF, 0x000003FF,
+	0x000000FF, 0x0000003F,
+	0x0000000F, 0x00000003,
+	0x00000000, 0x00000003,
+	0x0000000F, 0x0000003F,
+	0x000000FF, 0x000003FF,
+	0x00000FFF, 0x00003FFF,
+	0x0000FFFF, 0x0003FFFF,
+	0x000FFFFF, 0x003FFFFF,
+	0x00FFFFFF, 0x03FFFFFF,
+	0x0FFFFFFF, 0x3FFFFFFF,
+};
+
+static DWORD LeftFoliageMask[32] = {
+	0xFFFFFFFF, 0xFFFFFFFC,
+	0xFFFFFFF0, 0xFFFFFFC0,
+	0xFFFFFF00, 0xFFFFFC00,
+	0xFFFFF000, 0xFFFFC000,
+	0xFFFF0000, 0xFFFC0000,
+	0xFFF00000, 0xFFC00000,
+	0xFF000000, 0xFC000000,
+	0xF0000000, 0xC0000000,
+	0x00000000, 0xC0000000,
+	0xF0000000, 0xFC000000,
+	0xFF000000, 0xFFC00000,
+	0xFFF00000, 0xFFFC0000,
+	0xFFFF0000, 0xFFFFC000,
+	0xFFFFF000, 0xFFFFFC00,
+	0xFFFFFF00, 0xFFFFFFC0,
+	0xFFFFFFF0, 0xFFFFFFFC,
+};
+
 inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD mask)
 {
 	int i;
@@ -177,6 +215,16 @@ void RenderTile(BYTE *pBuff)
 			if (c == 2 || c == 3) {
 				mask = &RightMask[31];
 			}
+		}
+	} else if (arch_draw_type && cel_foliage_active) {
+		if (tile != RT_TRANSPARENT) {
+			return;
+		}
+		if (arch_draw_type == 1) {
+			mask = &LeftFoliageMask[31];
+		}
+		if (arch_draw_type == 2) {
+			mask = &RightFoliageMask[31];
 		}
 	}
 
