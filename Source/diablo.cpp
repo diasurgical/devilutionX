@@ -1,3 +1,8 @@
+/**
+ * @file diablo.cpp
+ *
+ * Implementation of the main game initialization functions.
+ */
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
@@ -24,11 +29,13 @@ int DebugMonsters[10];
 BOOLEAN cineflag;
 int force_redraw;
 BOOL visiondebug;
-BOOL scrollflag; /* unused */
+/** unused */
+BOOL scrollflag;
 BOOL light4flag;
 BOOL leveldebug;
 BOOL monstdebug;
-BOOL trigdebug; /* unused */
+/** unused */
+BOOL trigdebug;
 int setseed;
 int debugmonsttypes;
 int PauseMode;
@@ -58,12 +65,14 @@ int frameend;
 int framerate;
 int framestart;
 BOOL FriendlyMode = TRUE;
+/** Default quick messages */
 char *spszMsgTbl[4] = {
 	"I need help! Come Here!",
 	"Follow me.",
 	"Here's something for you.",
 	"Now you DIE!"
 };
+/** INI files variable names for quick message keys */
 char *spszMsgHotKeyTbl[4] = { "F9", "F10", "F11", "F12" };
 
 void FreeGameMem()
@@ -78,7 +87,7 @@ void FreeGameMem()
 	FreeMissiles();
 	FreeMonsters();
 	FreeObjectGFX();
-	FreeEffects();
+	FreeMonsterSnd();
 	FreeTownerGFX();
 }
 
@@ -158,7 +167,7 @@ void run_game_loop(unsigned int uMsg)
 	/// ASSERT: assert(ghMainWnd);
 	saveProc = SetWindowProc(GM_Game);
 	control_update_life_mana();
-	msg_process_net_packets();
+	run_delta_info();
 	gbRunGame = TRUE;
 	gbProcessPlayers = TRUE;
 	gbRunGameResult = TRUE;
@@ -433,7 +442,7 @@ BOOL PressEscKey()
 
 	if (qtextflag) {
 		qtextflag = FALSE;
-		sfx_stop();
+		stream_stop();
 		rv = TRUE;
 	} else if (stextflag) {
 		STextESC();
@@ -580,7 +589,7 @@ LRESULT GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			pfile_write_hero();
 		nthread_ignore_mutex(TRUE);
 		PaletteFadeOut(8);
-		FreeMonsterSnd();
+		sound_stop();
 		music_stop();
 		track_repeat_walk(FALSE);
 		sgbMouseDown = 0;
@@ -615,7 +624,7 @@ BOOL LeftMouseDown(int wParam)
 						QuestlogESC();
 					} else if (qtextflag) {
 						qtextflag = FALSE;
-						sfx_stop();
+						stream_stop();
 					} else if (chrflag && MouseX < SPANEL_WIDTH && MouseY < SPANEL_HEIGHT) {
 						CheckChrBtns();
 					} else if (invflag && MouseX > RIGHT_PANEL && MouseY < SPANEL_HEIGHT) {
@@ -894,7 +903,7 @@ void PressKey(int vkey)
 			spselflag = FALSE;
 			if (qtextflag && leveltype == DTYPE_TOWN) {
 				qtextflag = FALSE;
-				sfx_stop();
+				stream_stop();
 			}
 			questlog = FALSE;
 			automapflag = FALSE;
@@ -1016,7 +1025,7 @@ void PressKey(int vkey)
 		spselflag = FALSE;
 		if (qtextflag && leveltype == DTYPE_TOWN) {
 			qtextflag = FALSE;
-			sfx_stop();
+			stream_stop();
 		}
 		questlog = FALSE;
 		automapflag = FALSE;
@@ -1033,7 +1042,7 @@ void diablo_pause_game()
 			PauseMode = 0;
 		} else {
 			PauseMode = 2;
-			FreeMonsterSnd();
+			sound_stop();
 			track_repeat_walk(FALSE);
 		}
 		force_redraw = 255;
@@ -1624,7 +1633,7 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 		;
 
 #ifndef SPAWN
-	if (setlevel && setlvlnum == SL_SKELKING && quests[QTYPE_KING]._qactive == 2)
+	if (setlevel && setlvlnum == SL_SKELKING && quests[Q_SKELKING]._qactive == QUEST_ACTIVE)
 		PlaySFX(USFX_SKING1);
 #endif
 }

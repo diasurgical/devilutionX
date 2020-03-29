@@ -1,5 +1,8 @@
-// temporary file
-
+/**
+ * @file types.h
+ *
+ * Include OS headers and set compiler state.
+ */
 #ifndef _TYPES_H
 #define _TYPES_H
 

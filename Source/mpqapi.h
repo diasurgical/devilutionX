@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file mpqapi.h
+ *
+ * Interface of functions for creating and editing MPQ files.
+ */
 #ifndef __MPQAPI_H__
 #define __MPQAPI_H__
 

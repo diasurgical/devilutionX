@@ -1,3 +1,8 @@
+/**
+ * @file gendung.cpp
+ *
+ * Implementation of general dungeon generation code.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -42,7 +47,7 @@ ScrollStruct ScrollInfo;
 BYTE *pDungeonCels;
 THEME_LOC themeLoc[MAXTHEMES];
 char dPlayer[MAXDUNX][MAXDUNY];
-char dArch[MAXDUNX][MAXDUNY];
+char dSpecial[MAXDUNX][MAXDUNY];
 /**
  * List of light blocking dPieces
  */

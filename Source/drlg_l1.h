@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file drlg_l1.h
+ *
+ * Interface of the cathedral level generation algorithms.
+ */
 #ifndef __DRLG_L1_H__
 #define __DRLG_L1_H__
 

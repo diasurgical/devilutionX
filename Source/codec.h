@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file codec.h
+ *
+ * Interface of save game encryption algorithm.
+ */
 #ifndef __CODEC_H__
 #define __CODEC_H__
 

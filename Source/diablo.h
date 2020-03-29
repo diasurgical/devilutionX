@@ -1,3 +1,8 @@
+/**
+ * @file diablo.h
+ *
+ * Interface of the main game initialization functions.
+ */
 #ifndef __DIABLO_H__
 #define __DIABLO_H__
 
@@ -21,11 +26,13 @@ extern int DebugMonsters[10];
 extern BOOLEAN cineflag;
 extern int force_redraw;
 extern BOOL visiondebug;
-extern BOOL scrollflag; /* unused */
+/** unused */
+extern BOOL scrollflag;
 extern BOOL light4flag;
 extern BOOL leveldebug;
 extern BOOL monstdebug;
-extern BOOL trigdebug; /* unused */
+/** unused */
+extern BOOL trigdebug;
 extern int setseed;
 extern int debugmonsttypes;
 extern int PauseMode;

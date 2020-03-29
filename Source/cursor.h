@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file cursor.h
+ *
+ * Interface of cursor tracking functionality.
+ */
 #ifndef __CURSOR_H__
 #define __CURSOR_H__
 

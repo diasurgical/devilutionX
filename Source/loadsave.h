@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file loadsave.h
+ *
+ * Interface of save game functionality.
+ */
 #ifndef __LOADSAVE_H__
 #define __LOADSAVE_H__
 

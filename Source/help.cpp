@@ -1,3 +1,8 @@
+/**
+ * @file help.cpp
+ *
+ * Implementation of the in-game help text.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE

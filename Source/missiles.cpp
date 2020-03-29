@@ -1,3 +1,8 @@
+/**
+ * @file missiles.cpp
+ *
+ * Implementation of missile functionality.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -11,7 +16,9 @@ ChainStruct chain[MAXMISSILES];
 BOOL MissilePreFlag;
 int numchains;
 
+/** Maps from direction to X-offset. */
 int XDirAdd[8] = { 1, 0, -1, -1, -1, 0, 1, 1 };
+/** Maps from direction to Y-offset. */
 int YDirAdd[8] = { 1, 1, 1, 0, -1, -1, -1, 0 };
 
 void GetDamageAmt(int i, int *mind, int *maxd)

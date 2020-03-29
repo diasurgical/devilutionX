@@ -1,3 +1,8 @@
+/**
+ * @file gamemenu.cpp
+ *
+ * Implementation of the in-game menu functions.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -259,7 +264,7 @@ void gamemenu_sound_volume(BOOL bActivate)
 	if (bActivate) {
 		if (gbSoundOn) {
 			gbSoundOn = FALSE;
-			FreeMonsterSnd();
+			sound_stop();
 			sound_get_or_set_sound_volume(VOLUME_MIN);
 		} else {
 			gbSoundOn = TRUE;
@@ -271,7 +276,7 @@ void gamemenu_sound_volume(BOOL bActivate)
 		if (volume == VOLUME_MIN) {
 			if (gbSoundOn) {
 				gbSoundOn = FALSE;
-				FreeMonsterSnd();
+				sound_stop();
 			}
 		} else if (!gbSoundOn) {
 			gbSoundOn = TRUE;

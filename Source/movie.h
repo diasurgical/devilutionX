@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file movie.h
+ *
+ * Interface of video playback.
+ */
 #ifndef __MOVIE_H__
 #define __MOVIE_H__
 

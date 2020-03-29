@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file nthread.h
+ *
+ * Interface of functions for managing game ticks.
+ */
 #ifndef __NTHREAD_H__
 #define __NTHREAD_H__
 
@@ -20,7 +24,7 @@ DWORD nthread_send_and_recv_turn(DWORD cur_turn, int turn_delta);
 BOOL nthread_recv_turns(BOOL *pfSendAsync);
 void nthread_set_turn_upper_bit();
 void nthread_start(BOOL set_turn_upper_bit);
-unsigned int nthread_handler(void *);
+unsigned int nthread_handler(void *data);
 void nthread_cleanup();
 void nthread_ignore_mutex(BOOL bStart);
 BOOL nthread_has_500ms_passed(BOOL unused);

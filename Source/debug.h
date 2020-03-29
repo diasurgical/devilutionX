@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file debug.h
+ *
+ * Interface of debug functions.
+ */
 #ifndef __DEBUG_H__
 #define __DEBUG_H__
 

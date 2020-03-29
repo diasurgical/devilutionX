@@ -1,3 +1,8 @@
+/**
+ * @file init.cpp
+ *
+ * Implementation of routines for initializing the environment, disable screen saver, load MPQ.
+ */
 #include "all.h"
 
 #include "../3rdParty/Storm/Source/storm.h"

@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file misdat.h
+ *
+ * Interface of data related to missiles.
+ */
 #ifndef __MISDAT_H__
 #define __MISDAT_H__
 

@@ -1,3 +1,8 @@
+/**
+ * @file themes.cpp
+ *
+ * Implementation of the theme room placing algorithms.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -428,7 +433,7 @@ void InitThemes()
 	if (leveltype == DTYPE_CATACOMBS || leveltype == DTYPE_CAVES || leveltype == DTYPE_HELL) {
 		for (i = 0; i < themeCount; i++)
 			themes[i].ttype = THEME_NONE;
-		if (QuestStatus(QTYPE_ZHAR)) {
+		if (QuestStatus(Q_ZHAR)) {
 			for (j = 0; j < themeCount; j++) {
 				themes[j].ttval = themeLoc[j].ttval;
 				if (SpecialThemeFit(j, THEME_LIBRARY)) {
@@ -453,7 +458,9 @@ void InitThemes()
 	}
 }
 
-// HoldThemeRooms marks theme rooms as populated.
+/**
+ * @brief HoldThemeRooms marks theme rooms as populated.
+ */
 void HoldThemeRooms()
 {
 	int i, x, y;
@@ -477,11 +484,12 @@ void HoldThemeRooms()
 	}
 }
 
-// PlaceThemeMonsts places theme monsters with the specified frequency.
-//
-// Parameters:
-//    - t: theme number (index into themes array).
-//    - f: frequency (1/f likelihood of adding monster).
+/**
+ * PlaceThemeMonsts places theme monsters with the specified frequency.
+ *
+ * @param t theme number (index into themes array).
+ * @param f frequency (1/f likelihood of adding monster).
+ */
 void PlaceThemeMonsts(int t, int f)
 {
 	int xp, yp;
@@ -507,10 +515,11 @@ void PlaceThemeMonsts(int t, int f)
 	}
 }
 
-// Theme_Barrel initializes the barrel theme.
-//
-// Parameters:
-//    - t: theme number (index into themes array).
+/**
+ * Theme_Barrel initializes the barrel theme.
+ *
+ * @param t theme number (index into themes array).
+ */
 void Theme_Barrel(int t)
 {
 	int xp, yp, r;
@@ -534,10 +543,11 @@ void Theme_Barrel(int t)
 	PlaceThemeMonsts(t, monstrnd[leveltype - 1]);
 }
 
-// Theme_Shrine initializes the shrine theme.
-//
-// Parameters:
-//    - t: theme number (index into themes array).
+/**
+ * Theme_Shrine initializes the shrine theme.
+ *
+ * @param t theme number (index into themes array).
+ */
 void Theme_Shrine(int t)
 {
 	char monstrnd[4] = { 6, 6, 3, 9 };
@@ -555,10 +565,11 @@ void Theme_Shrine(int t)
 	PlaceThemeMonsts(t, monstrnd[leveltype - 1]);
 }
 
-// Theme_MonstPit initializes the monster pit theme.
-//
-// Parameters:
-//    - t: theme number (index into themes array).
+/**
+ * Theme_MonstPit initializes the monster pit theme.
+ *
+ * @param t theme number (index into themes array).
+ */
 void Theme_MonstPit(int t)
 {
 	int r;
@@ -591,10 +602,11 @@ void Theme_MonstPit(int t)
 	PlaceThemeMonsts(t, monstrnd[leveltype - 1]);
 }
 
-// Theme_SkelRoom initializes the skeleton room theme.
-//
-// Parameters:
-//    - t: theme number (index into themes array).
+/**
+ * Theme_SkelRoom initializes the skeleton room theme.
+ *
+ * @param t theme number (index into themes array).
+ */
 void Theme_SkelRoom(int t)
 {
 	int xp, yp, i;
@@ -660,10 +672,11 @@ void Theme_SkelRoom(int t)
 	}
 }
 
-// Theme_Treasure initializes the treasure theme.
-//
-// Parameters:
-//    - t: theme number (index into themes array).
+/**
+ * Theme_Treasure initializes the treasure theme.
+ *
+ * @param t theme number (index into themes array).
+ */
 void Theme_Treasure(int t)
 {
 	int xp, yp;
@@ -697,10 +710,11 @@ void Theme_Treasure(int t)
 	PlaceThemeMonsts(t, monstrnd[leveltype - 1]);
 }
 
-// Theme_Library initializes the library theme.
-//
-// Parameters:
-//    - t: theme number (index into themes array).
+/**
+ * Theme_Library initializes the library theme.
+ *
+ * @param t theme number (index into themes array).
+ */
 void Theme_Library(int t)
 {
 	int xp, yp, oi;
@@ -732,7 +746,7 @@ void Theme_Library(int t)
 		}
 	}
 
-	if (QuestStatus(QTYPE_ZHAR)) {
+	if (QuestStatus(Q_ZHAR)) {
 		if (t == zharlib) {
 			return;
 		}
@@ -742,10 +756,11 @@ void Theme_Library(int t)
 	}
 }
 
-// Theme_Torture initializes the torture theme.
-//
-// Parameters:
-//    - t: theme number (index into themes array).
+/**
+ * Theme_Torture initializes the torture theme.
+ *
+ * @param t theme number (index into themes array).
+ */
 void Theme_Torture(int t)
 {
 	int xp, yp;
@@ -766,10 +781,10 @@ void Theme_Torture(int t)
 	PlaceThemeMonsts(t, monstrnd[leveltype - 1]);
 }
 
-// Theme_BloodFountain initializes the blood fountain theme.
-//
-// Parameters:
-//    - t: theme number (index into themes array).
+/**
+ * Theme_BloodFountain initializes the blood fountain theme.
+ * @param t Theme number (index into themes array).
+ */
 void Theme_BloodFountain(int t)
 {
 	char monstrnd[4] = { 6, 8, 3, 9 };
@@ -779,10 +794,11 @@ void Theme_BloodFountain(int t)
 	PlaceThemeMonsts(t, monstrnd[leveltype - 1]);
 }
 
-// Theme_Decap initializes the decapitated theme.
-//
-// Parameters:
-//    - t: theme number (index into themes array).
+/**
+ * Theme_Decap initializes the decapitated theme.
+ *
+ * @param t theme number (index into themes array).
+ */
 void Theme_Decap(int t)
 {
 	int xp, yp;
@@ -803,10 +819,11 @@ void Theme_Decap(int t)
 	PlaceThemeMonsts(t, monstrnd[leveltype - 1]);
 }
 
-// Theme_PurifyingFountain initializes the purifying fountain theme.
-//
-// Parameters:
-//    - t: theme number (index into themes array).
+/**
+ * Theme_PurifyingFountain initializes the purifying fountain theme.
+ *
+ * @param t theme number (index into themes array).
+ */
 void Theme_PurifyingFountain(int t)
 {
 	char monstrnd[4] = { 6, 7, 3, 9 };
@@ -816,10 +833,11 @@ void Theme_PurifyingFountain(int t)
 	PlaceThemeMonsts(t, monstrnd[leveltype - 1]);
 }
 
-// Theme_ArmorStand initializes the armor stand theme.
-//
-// Parameters:
-//    - t: theme number (index into themes array).
+/**
+ * Theme_ArmorStand initializes the armor stand theme.
+ *
+ * @param t theme number (index into themes array).
+ */
 void Theme_ArmorStand(int t)
 {
 	int xp, yp;
@@ -845,10 +863,11 @@ void Theme_ArmorStand(int t)
 	armorFlag = FALSE;
 }
 
-// Theme_GoatShrine initializes the goat shrine theme.
-//
-// Parameters:
-//    - t: theme number (index into themes array).
+/**
+ * Theme_GoatShrine initializes the goat shrine theme.
+ *
+ * @param t theme number (index into themes array).
+ */
 void Theme_GoatShrine(int t)
 {
 	int xx, yy;
@@ -864,10 +883,11 @@ void Theme_GoatShrine(int t)
 	}
 }
 
-// Theme_Cauldron initializes the cauldron theme.
-//
-// Parameters:
-//    - t: theme number (index into themes array).
+/**
+ * Theme_Cauldron initializes the cauldron theme.
+ *
+ * @param t theme number (index into themes array).
+ */
 void Theme_Cauldron(int t)
 {
 	char monstrnd[4] = { 6, 7, 3, 9 };
@@ -877,10 +897,11 @@ void Theme_Cauldron(int t)
 	PlaceThemeMonsts(t, monstrnd[leveltype - 1]);
 }
 
-// Theme_MurkyFountain initializes the murky fountain theme.
-//
-// Parameters:
-//    - t: theme number (index into themes array).
+/**
+ * Theme_MurkyFountain initializes the murky fountain theme.
+ *
+ * @param t theme number (index into themes array).
+ */
 void Theme_MurkyFountain(int t)
 {
 	char monstrnd[4] = { 6, 7, 3, 9 };
@@ -890,10 +911,11 @@ void Theme_MurkyFountain(int t)
 	PlaceThemeMonsts(t, monstrnd[leveltype - 1]);
 }
 
-// Theme_TearFountain initializes the tear fountain theme.
-//
-// Parameters:
-//    - t: theme number (index into themes array).
+/**
+ * Theme_TearFountain initializes the tear fountain theme.
+ *
+ * @param t theme number (index into themes array).
+ */
 void Theme_TearFountain(int t)
 {
 	char monstrnd[4] = { 6, 7, 3, 9 };
@@ -903,10 +925,11 @@ void Theme_TearFountain(int t)
 	PlaceThemeMonsts(t, monstrnd[leveltype - 1]);
 }
 
-// Theme_BrnCross initializes the burning cross theme.
-//
-// Parameters:
-//    - t: theme number (index into themes array).
+/**
+ * Theme_BrnCross initializes the burning cross theme.
+ *
+ * @param t theme number (index into themes array).
+ */
 void Theme_BrnCross(int t)
 {
 	int xp, yp;
@@ -928,10 +951,11 @@ void Theme_BrnCross(int t)
 	bCrossFlag = TRUE;
 }
 
-// Theme_WeaponRack initializes the weapon rack theme.
-//
-// Parameters:
-//    - t: theme number (index into themes array).
+/**
+ * Theme_WeaponRack initializes the weapon rack theme.
+ *
+ * @param t theme number (index into themes array).
+ */
 void Theme_WeaponRack(int t)
 {
 	int xp, yp;
@@ -957,7 +981,9 @@ void Theme_WeaponRack(int t)
 	weaponFlag = FALSE;
 }
 
-// UpdateL4Trans sets each value of the transparency map to 1.
+/**
+ * UpdateL4Trans sets each value of the transparency map to 1.
+ */
 void UpdateL4Trans()
 {
 	int i, j;
@@ -971,7 +997,9 @@ void UpdateL4Trans()
 	}
 }
 
-// CreateThemeRooms adds thematic elements to rooms.
+/**
+ * CreateThemeRooms adds thematic elements to rooms.
+ */
 void CreateThemeRooms()
 {
 	int i;

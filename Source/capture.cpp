@@ -1,3 +1,8 @@
+/**
+ * @file capture.cpp
+ *
+ * Implementation of the screenshot function.
+ */
 #include <fstream>
 
 #include "all.h"
@@ -6,6 +11,13 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+/**
+ * @brief Write the PCX-file header
+ * @param width Image width
+ * @param height Image height
+ * @param out File stream to write to
+ * @return True on success
+ */
 static BOOL CaptureHdr(short width, short height, std::ofstream *out)
 {
 	DWORD lpNumBytes;

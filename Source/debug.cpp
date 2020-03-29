@@ -1,3 +1,8 @@
+/**
+ * @file debug.cpp
+ *
+ * Implementation of debug functions.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE

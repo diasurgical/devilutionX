@@ -1,18 +1,22 @@
-//HEADER_GOES_HERE
+/**
+ * @file msg.h
+ *
+ * Interface of function for sending and reciving network messages.
+ */
 #ifndef __MSG_H__
 #define __MSG_H__
 
 extern BOOL deltaload;
 extern BYTE gbBufferMsgs;
-extern int pkt_counter;
+extern int dwRecCount;
 
 void msg_send_drop_pkt(int pnum, int reason);
 void msg_send_packet(int pnum, const void *packet, DWORD dwSize);
-TMegaPkt *msg_get_next_packet();
+void msg_get_next_packet();
 BOOL msg_wait_resync();
 void msg_free_packets();
 int msg_wait_for_turns();
-void msg_process_net_packets();
+void run_delta_info();
 void msg_pre_packet();
 void DeltaExportData(int pnum);
 BYTE *DeltaExportItem(BYTE *dst, TCmdPItem *src);
@@ -51,7 +55,7 @@ void NetSendCmdDelItem(BOOL bHiPri, BYTE bLoc);
 void NetSendCmdDItem(BOOL bHiPri, int ii);
 void NetSendCmdDamage(BOOL bHiPri, BYTE bPlr, DWORD dwDam);
 void NetSendCmdString(int pmask, const char *pszStr);
-void RemovePlrPortal(int pnum);
+void delta_close_portal(int pnum);
 DWORD ParseCmd(int pnum, TCmd *pCmd);
 DWORD On_DLEVEL(int pnum, TCmd *pCmd);
 void DeltaImportData(BYTE cmd, DWORD recv_offset);

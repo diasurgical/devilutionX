@@ -1,3 +1,8 @@
+/**
+ * @file drlg_l4.cpp
+ *
+ * Implementation of the hell level generation algorithms.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -341,7 +346,7 @@ static void InitL4Dungeon()
 void DRLG_LoadL4SP()
 {
 	setloadflag = FALSE;
-	if (QuestStatus(QTYPE_WARLRD)) {
+	if (QuestStatus(Q_WARLORD)) {
 		pSetPiece = LoadFileInMem("Levels\\L4Data\\Warlord.DUN", NULL);
 		setloadflag = TRUE;
 	}
@@ -1322,11 +1327,11 @@ static void L4firstRoom()
 	int x, y, w, h, rndx, rndy, xmin, xmax, ymin, ymax, tx, ty;
 
 	if (currlevel != 16) {
-		if (currlevel == quests[QTYPE_WARLRD]._qlevel && quests[QTYPE_WARLRD]._qactive) {
+		if (currlevel == quests[Q_WARLORD]._qlevel && quests[Q_WARLORD]._qactive) {
 			/// ASSERT: assert(gbMaxPlayers == 1);
 			w = 11;
 			h = 11;
-		} else if (currlevel == quests[QTYPE_VB]._qlevel && gbMaxPlayers != 1) {
+		} else if (currlevel == quests[Q_BETRAYER]._qlevel && gbMaxPlayers != 1) {
 			w = 11;
 			h = 11;
 		} else {
@@ -1361,7 +1366,7 @@ static void L4firstRoom()
 		l4holdx = x;
 		l4holdy = y;
 	}
-	if (QuestStatus(QTYPE_WARLRD) || currlevel == quests[QTYPE_VB]._qlevel && gbMaxPlayers != 1) {
+	if (QuestStatus(Q_WARLORD) || currlevel == quests[Q_BETRAYER]._qlevel && gbMaxPlayers != 1) {
 		SP4x1 = x + 1;
 		SP4y1 = y + 1;
 		SP4x2 = SP4x1 + w;
@@ -1529,8 +1534,8 @@ static BOOL DRLG_L4PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx,
 	}
 
 	if (currlevel == 15) {
-		quests[QTYPE_VB]._qtx = sx + 1;
-		quests[QTYPE_VB]._qty = sy + 1;
+		quests[Q_BETRAYER]._qtx = sx + 1;
+		quests[Q_BETRAYER]._qty = sy + 1;
 	}
 	if (setview == TRUE) {
 		ViewX = 2 * sx + 21;
@@ -1746,7 +1751,7 @@ static void DRLG_L4(int entry)
 		if (currlevel == 16) {
 			L4SaveQuads();
 		}
-		if (QuestStatus(QTYPE_WARLRD) || currlevel == quests[QTYPE_VB]._qlevel && gbMaxPlayers != 1) {
+		if (QuestStatus(Q_WARLORD) || currlevel == quests[Q_BETRAYER]._qlevel && gbMaxPlayers != 1) {
 			for (spi = SP4x1; spi < SP4x2; spi++) {
 				for (spj = SP4y1; spj < SP4y2; spj++) {
 					dflags[spi][spj] = 1;
@@ -1762,7 +1767,7 @@ static void DRLG_L4(int entry)
 		if (currlevel == 16) {
 			DRLG_LoadDiabQuads(TRUE);
 		}
-		if (QuestStatus(QTYPE_WARLRD)) {
+		if (QuestStatus(Q_WARLORD)) {
 			if (entry == 0) {
 				doneflag = DRLG_L4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, 1, 0);
 				if (doneflag && currlevel == 13) {
@@ -1816,7 +1821,7 @@ static void DRLG_L4(int entry)
 			if (entry == 0) {
 				doneflag = DRLG_L4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, 1, 0);
 				if (doneflag) {
-					if (gbMaxPlayers == 1 && quests[QTYPE_MOD]._qactive != 2) {
+					if (gbMaxPlayers == 1 && quests[Q_DIABLO]._qactive != QUEST_ACTIVE) {
 						doneflag = DRLG_L4PlaceMiniSet(L4PENTA, 1, 1, -1, -1, 0, 1);
 					} else {
 						doneflag = DRLG_L4PlaceMiniSet(L4PENTA2, 1, 1, -1, -1, 0, 1);
@@ -1826,7 +1831,7 @@ static void DRLG_L4(int entry)
 			} else {
 				doneflag = DRLG_L4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, 0, 0);
 				if (doneflag) {
-					if (gbMaxPlayers == 1 && quests[QTYPE_MOD]._qactive != 2) {
+					if (gbMaxPlayers == 1 && quests[Q_DIABLO]._qactive != QUEST_ACTIVE) {
 						doneflag = DRLG_L4PlaceMiniSet(L4PENTA, 1, 1, -1, -1, 1, 1);
 					} else {
 						doneflag = DRLG_L4PlaceMiniSet(L4PENTA2, 1, 1, -1, -1, 1, 1);
@@ -1848,7 +1853,7 @@ static void DRLG_L4(int entry)
 	DRLG_L4Subs();
 	DRLG_Init_Globals();
 
-	if (QuestStatus(QTYPE_WARLRD)) {
+	if (QuestStatus(Q_WARLORD)) {
 		for (j = 0; j < DMAXY; j++) {
 			for (i = 0; i < DMAXX; i++) {
 				pdungeon[i][j] = dungeon[i][j];

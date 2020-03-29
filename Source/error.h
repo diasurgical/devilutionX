@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file error.h
+ *
+ * Interface of in-game message functions.
+ */
 #ifndef __ERROR_H__
 #define __ERROR_H__
 

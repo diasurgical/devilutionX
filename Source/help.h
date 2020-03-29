@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file help.h
+ *
+ * Interface of the in-game help text.
+ */
 #ifndef __HELP_H__
 #define __HELP_H__
 

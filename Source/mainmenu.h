@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file mainmenu.h
+ *
+ * Interface of functions for interacting with the main menu.
+ */
 #ifndef __MAINMENU_H__
 #define __MAINMENU_H__
 

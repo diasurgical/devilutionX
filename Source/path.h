@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file path.h
+ *
+ * Interface of the path finding algorithms.
+ */
 #ifndef __PATH_H__
 #define __PATH_H__
 

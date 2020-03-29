@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file dx.h
+ *
+ * Interface of functions setting up the graphics pipeline.
+ */
 #ifndef __DX_H__
 #define __DX_H__
 

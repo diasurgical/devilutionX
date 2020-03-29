@@ -1,3 +1,8 @@
+/**
+ * @file error.cpp
+ *
+ * Implementation of in-game message functions.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -7,6 +12,7 @@ DWORD msgdelay;
 char msgflag;
 char msgcnt;
 
+/** Maps from error_id to error message. */
 char *MsgStrings[44] = {
 	"",
 	"No automap available in town",

@@ -2,10 +2,14 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+/** In-game state of portals. */
 PortalStruct portal[MAXPORTAL];
+/** Current portal number (a portal array index). */
 int portalindex;
 
+/** X-coordinate of each players portal in town. */
 int WarpDropX[MAXPORTAL] = { 57, 59, 61, 63 };
+/** Y-coordinate of each players portal in town. */
 int WarpDropY[MAXPORTAL] = { 40, 40, 40, 40 };
 
 void InitPortals()

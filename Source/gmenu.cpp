@@ -1,3 +1,8 @@
+/**
+ * @file gmenu.cpp
+ *
+ * Implementation of the in-game navigation and interaction.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -15,6 +20,7 @@ BYTE *option_cel;
 BYTE *sgpLogo;
 int sgCurrentMenuIdx;
 
+/** Maps from font index to bigtgold.cel frame number. */
 const BYTE lfontframe[127] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -30,6 +36,7 @@ const BYTE lfontframe[127] = {
 	14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
 	24, 25, 26, 20, 0, 21, 0
 };
+/* Maps from bigtgold.cel frame number to character width. */
 const BYTE lfontkern[56] = {
 	18, 33, 21, 26, 28, 19, 19, 26, 25, 11,
 	12, 25, 19, 34, 28, 32, 20, 32, 28, 20,

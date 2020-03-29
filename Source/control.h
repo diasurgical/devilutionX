@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file control.h
+ *
+ * Interface of the character and main control panels
+ */
 #ifndef __CONTROL_H__
 #define __CONTROL_H__
 
@@ -39,7 +43,7 @@ extern BOOL sbookflag;
 extern BOOL chrflag;
 extern BOOL drawbtnflag;
 extern BYTE *pSpellBkCel;
-extern char infostr[MAX_PATH];
+extern char infostr[256];
 extern int numpanbtns;
 extern BYTE *pStatusPanel;
 extern char panelstr[4][64];

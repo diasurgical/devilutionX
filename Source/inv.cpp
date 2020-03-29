@@ -1,3 +1,8 @@
+/**
+ * @file inv.cpp
+ *
+ * Implementation of player inventory.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -1371,8 +1376,8 @@ void CheckBookLevel(int pnum)
 void CheckQuestItem(int pnum)
 {
 	if (plr[pnum].HoldItem.IDidx == IDI_OPTAMULET)
-		quests[QTYPE_BLIND]._qactive = 3;
-	if (plr[pnum].HoldItem.IDidx == IDI_MUSHROOM && quests[QTYPE_BLKM]._qactive == 2 && quests[QTYPE_BLKM]._qvar1 == QS_MUSHSPAWNED) {
+		quests[Q_BLIND]._qactive = QUEST_DONE;
+	if (plr[pnum].HoldItem.IDidx == IDI_MUSHROOM && quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && quests[Q_MUSHROOM]._qvar1 == QS_MUSHSPAWNED) {
 #ifndef SPAWN
 		sfxdelay = 10;
 		if (plr[pnum]._pClass == PC_WARRIOR) { // BUGFIX: Voice for this quest might be wrong in MP
@@ -1383,15 +1388,15 @@ void CheckQuestItem(int pnum)
 			sfxdnum = PS_MAGE95;
 		}
 #endif
-		quests[QTYPE_BLKM]._qvar1 = QS_MUSHPICKED;
+		quests[Q_MUSHROOM]._qvar1 = QS_MUSHPICKED;
 	}
 	if (plr[pnum].HoldItem.IDidx == IDI_ANVIL) {
-		if (quests[QTYPE_ANVIL]._qactive == 1) {
-			quests[QTYPE_ANVIL]._qactive = 2;
-			quests[QTYPE_ANVIL]._qvar1 = 1;
+		if (quests[Q_ANVIL]._qactive == QUEST_INIT) {
+			quests[Q_ANVIL]._qactive = QUEST_ACTIVE;
+			quests[Q_ANVIL]._qvar1 = 1;
 		}
 #ifndef SPAWN
-		if (quests[QTYPE_ANVIL]._qlog == 1) {
+		if (quests[Q_ANVIL]._qlog == 1) {
 			sfxdelay = 10;
 			if (plr[myplr]._pClass == PC_WARRIOR) {
 				sfxdnum = PS_WARR89;
@@ -1416,12 +1421,12 @@ void CheckQuestItem(int pnum)
 	}
 #endif
 	if (plr[pnum].HoldItem.IDidx == IDI_ROCK) {
-		if (quests[QTYPE_INFRA]._qactive == 1) {
-			quests[QTYPE_INFRA]._qactive = 2;
-			quests[QTYPE_INFRA]._qvar1 = 1;
+		if (quests[Q_ROCK]._qactive == QUEST_INIT) {
+			quests[Q_ROCK]._qactive = QUEST_ACTIVE;
+			quests[Q_ROCK]._qvar1 = 1;
 		}
 #ifndef SPAWN
-		if (quests[QTYPE_INFRA]._qlog == 1) {
+		if (quests[Q_ROCK]._qlog == 1) {
 			sfxdelay = 10;
 			if (plr[myplr]._pClass == PC_WARRIOR) {
 				sfxdnum = PS_WARR87;
@@ -1434,7 +1439,7 @@ void CheckQuestItem(int pnum)
 #endif
 	}
 	if (plr[pnum].HoldItem.IDidx == IDI_ARMOFVAL) {
-		quests[QTYPE_BLOOD]._qactive = 3;
+		quests[Q_BLOOD]._qactive = QUEST_DONE;
 #ifndef SPAWN
 		sfxdelay = 20;
 		if (plr[myplr]._pClass == PC_WARRIOR) {
