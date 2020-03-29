@@ -13,7 +13,7 @@ jobs:
       script:
         - cd build
         - cmake -DBINARY_RELEASE=ON ..
-        - sudo cmake --build . --target package
+        - cmake --build . --target package
 addons:
   apt:
     packages:
