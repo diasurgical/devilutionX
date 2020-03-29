@@ -6,8 +6,6 @@
 #ifndef _TYPES_H
 #define _TYPES_H
 
-#include "resource.h"
-
 #define DEVILUTION_BEGIN_NAMESPACE namespace dvl {
 #define DEVILUTION_END_NAMESPACE }
 
