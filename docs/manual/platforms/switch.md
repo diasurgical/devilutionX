@@ -22,7 +22,7 @@ Launch `devilutionx.nro`. (Do not use album to launch; see the note below.)
 - L: use health item from belt
 - R: use mana potion from belt
 - ZL: character sheet (alt: Start + L or ←)
-- ZR: inventory (alt: Start + ZL or →)
+- ZR: inventory (alt: Start + R or →)
 - Left analog click: toggle automap (alt: Start + ↓)
 - Start + Select: game menu (alt: Start + ↑)
 - Select + A/B/X/Y: Spell hotkeys
