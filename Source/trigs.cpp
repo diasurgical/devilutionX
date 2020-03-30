@@ -191,7 +191,7 @@ void InitL2Triggers()
 	numtrigs = 0;
 	for (j = 0; j < MAXDUNY; j++) {
 		for (i = 0; i < MAXDUNX; i++) {
-			if (dPiece[i][j] == 267 && (i != quests[QTYPE_BONE]._qtx || j != quests[QTYPE_BONE]._qty)) {
+			if (dPiece[i][j] == 267 && (i != quests[Q_SCHAMB]._qtx || j != quests[Q_SCHAMB]._qty)) {
 				trigs[numtrigs]._tx = i;
 				trigs[numtrigs]._ty = j;
 				trigs[numtrigs]._tmsg = WM_DIABPREVLVL;
@@ -282,7 +282,7 @@ void InitL4Triggers()
 
 	for (j = 0; j < MAXDUNY; j++) {
 		for (i = 0; i < MAXDUNX; i++) {
-			if (dPiece[i][j] == 370 && quests[QTYPE_VB]._qactive == 3) {
+			if (dPiece[i][j] == 370 && quests[Q_BETRAYER]._qactive == QUEST_DONE) {
 				trigs[numtrigs]._tx = i;
 				trigs[numtrigs]._ty = j;
 				trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
@@ -614,7 +614,7 @@ BOOL ForceSKingTrig()
 
 	for (i = 0; L1UpList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == L1UpList[i]) {
-			sprintf(infostr, "Back to Level %i", quests[QTYPE_KING]._qlevel);
+			sprintf(infostr, "Back to Level %i", quests[Q_SKELKING]._qlevel);
 			cursmx = trigs[0]._tx;
 			cursmy = trigs[0]._ty;
 
@@ -631,7 +631,7 @@ BOOL ForceSChambTrig()
 
 	for (i = 0; L2DownList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == L2DownList[i]) {
-			sprintf(infostr, "Back to Level %i", quests[QTYPE_BONE]._qlevel);
+			sprintf(infostr, "Back to Level %i", quests[Q_SCHAMB]._qlevel);
 			cursmx = trigs[0]._tx;
 			cursmy = trigs[0]._ty;
 
@@ -648,7 +648,7 @@ BOOL ForcePWaterTrig()
 
 	for (i = 0; L3DownList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == L3DownList[i]) {
-			sprintf(infostr, "Back to Level %i", quests[QTYPE_PW]._qlevel);
+			sprintf(infostr, "Back to Level %i", quests[Q_PWATER]._qlevel);
 			cursmx = trigs[0]._tx;
 			cursmy = trigs[0]._ty;
 

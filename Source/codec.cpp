@@ -1,13 +1,21 @@
+/**
+ * @file codec.cpp
+ *
+ * Implementation of save game encryption algorithm.
+ */
 #include "all.h"
+
+#include <cstddef>
+#include <cstdint>
 
 DEVILUTION_BEGIN_NAMESPACE
 
-struct CodecSignature {
+typedef struct CodecSignature {
 	DWORD checksum;
 	BYTE error;
 	BYTE last_chunk_size;
 	WORD unused;
-};
+} CodecSignature;
 
 int codec_decode(BYTE *pbSrcDst, DWORD size, char *pszPassword)
 {
@@ -55,37 +63,32 @@ error:
 
 void codec_init_key(int unused, char *pszPassword)
 {
-	int i, ch, n;
 	char key[136]; // last 64 bytes are the SHA1
-	char pw[64];
-	char digest[SHA1HashSize];
-	char *keyInit;
-
-	uint32_t rand_state = 0x7058;
-
-	keyInit = key;
-	for (i = 0; i < 136; i++) {
+	std::uint32_t rand_state = 0x7058;
+	for (std::size_t i = 0; i < sizeof(key); ++i) {
 		rand_state = rand_state * 214013 + 2531011;
-		*keyInit = (rand_state >> 16) & 0x7FFF;
-		keyInit++;
+		key[i] = rand_state >> 16; // Downcasting to char keeps the 2 least-significant bytes
 	}
-	ch = 0;
-	for (i = 0; i < 64; i++) {
-		if (!pszPassword[ch])
-			ch = 0;
-		pw[i] = pszPassword[ch];
-		ch++;
+
+	char pw[64];
+	std::size_t password_i = 0;
+	for (std::size_t i = 0; i < sizeof(pw); ++i, ++password_i) {
+		if (pszPassword[password_i] == '\0')
+			password_i = 0;
+		pw[i] = pszPassword[password_i];
 	}
+
+	char digest[SHA1HashSize];
 	SHA1Reset(0);
 	SHA1Calculate(0, pw, digest);
 	SHA1Clear();
-	for (i = 0; (DWORD)i < 136; i++)
+	for (std::size_t i = 0; i < sizeof(key); ++i)
 		key[i] ^= digest[i % SHA1HashSize];
 	memset(pw, 0, sizeof(pw));
 	memset(digest, 0, sizeof(digest));
-	for (n = 0; n < 3; n++) {
+	for (int n = 0; n < 3; ++n) {
 		SHA1Reset(n);
-		SHA1Calculate(n, &key[72], NULL);
+		SHA1Calculate(n, &key[72], nullptr);
 	}
 	memset(key, 0, sizeof(key));
 }

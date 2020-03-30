@@ -22,7 +22,7 @@ bool InGameMenu()
 	    || helpflag
 	    || talkflag
 	    || qtextflag
-	    || gmenu_exception()
+	    || gmenu_is_active()
 	    || PauseMode == 2
 	    || plr[myplr]._pInvincible;
 }
@@ -405,7 +405,7 @@ void FindTrigger()
 
 		if (pcurstrig == -1) {
 			for (int i = 0; i < MAXQUESTS; i++) {
-				if (i == QTYPE_VB || currlevel != quests[i]._qlevel || quests[i]._qslvl == 0)
+				if (i == Q_BETRAYER || currlevel != quests[i]._qlevel || quests[i]._qslvl == 0)
 					continue;
 				const int newDdistance = GetDistance(quests[i]._qtx, quests[i]._qty, 2);
 				if (newDdistance == 0)

@@ -1,4 +1,8 @@
-// some global definitions, found in debug release
+/**
+ * @file defs.h
+ *
+ * Global definitions and Macros.
+ */
 
 #define DMAXX					40
 #define DMAXY					40

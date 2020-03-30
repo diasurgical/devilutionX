@@ -164,7 +164,7 @@ void dx_reinit()
 	force_redraw = 255;
 }
 
-void CreatePalette()
+void InitPalette()
 {
 	palette = SDL_AllocPalette(256);
 	if (palette == NULL) {

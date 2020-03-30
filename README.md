@@ -4,15 +4,15 @@
 
 Nightly builds | Platform
 ---:| ---
-[![CircleCI](https://circleci.com/gh/diasurgical/devilutionX.svg?style=svg)](https://circleci.com/gh/diasurgical/devilutionX) | Linux 32bit & 64bit, Windows 32bit, Nintendo Switch, SDL1
-[![Build Status](https://travis-ci.org/diasurgical/devilutionX.svg?branch=master)](https://travis-ci.org/diasurgical/devilutionX) | macOS 64bit
+[![CircleCI](https://circleci.com/gh/diasurgical/devilutionX.svg?style=svg)](https://circleci.com/gh/diasurgical/devilutionX) | Linux 32bit & 64bit, Windows 32bit, Nintendo Switch, SDL1, Amiga
+[![Build Status](https://travis-ci.org/diasurgical/devilutionX.svg?branch=master)](https://travis-ci.org/diasurgical/devilutionX) | macOS 64bit, Linux ppc64le
 [![Build status](https://ci.appveyor.com/api/projects/status/1a0jus2372qvksht?svg=true)](https://ci.appveyor.com/project/AJenbo/devilutionx) | Windows 64bit (MSVC)
 
 ![Discord Channel](https://avatars3.githubusercontent.com/u/1965106?s=16&v=4) [Discord Chat Channel](https://discord.gg/aQBQdDe)
 
 # How To Play:
  - Download [the latest DevilutionX release](https://github.com/diasurgical/devilutionX/releases), or build from source
- - Copy diabdat.mpq from your CD or GoG installation (or [extract it from the GoG installer](https://github.com/diasurgical/devilutionX/wiki/Extracting-the-DIABDAT.MPQ-from-the-GoG-installer)) to the DevilutionX install folder or data folder; make sure it is all lowercase. The DeviliutionX install folder is the one that contains the DevilutionX executable. The data folder path may differ depending on OS version and security settings, but will normally be as follows:
+ - Copy diabdat.mpq from your CD or GoG installation (or [extract it from the GoG installer](https://github.com/diasurgical/devilutionX/wiki/Extracting-the-DIABDAT.MPQ-from-the-GoG-installer)) to the DevilutionX install folder or data folder; make sure it is all lowercase. The DevilutionX install folder is the one that contains the DevilutionX executable. The data folder path may differ depending on OS version and security settings, but will normally be as follows:
     - macOS `~/Library/Application Support/diasurgical/devilution`
     - Linux `~/.local/share/diasurgical/devilution/`
     - Windows `C:\Users\[username]\AppData\Roaming\diasurgical\devilution`
@@ -152,6 +152,8 @@ DEVKITPRO=<path to devkit> Packaging/switch/build.sh
 ```
 
 The nro-file will be generated in the build folder. Test with an emulator (RyuJinx) or real hardware.
+
+[Nintendo Switch manual](docs/manual/platforms/switch.md)
 </details>
 
 <details><summary>Haiku</summary>
@@ -203,6 +205,12 @@ Packaging/OpenDingux/build.sh <platform>
 Replace `<platform>` with one of: `retrofw`, `rg350`, or `gkd350h`.
 
 This prepares and uses the buildroot at `$HOME/buildroot-$PLATFORM-devilutionx`.
+
+End-user manuals are available here:
+
+* [RetroFW manual](docs/manual/platforms/retrofw.md)
+* [RG-350 manual](docs/manual/platforms/rg350.md)
+* [GKD350h manual](docs/manual/platforms/gkd350h.md)
 
 </details>
 
@@ -282,7 +290,7 @@ All games are encrypted and password protected.
 
 DevilutionX supports gamepad controls.
 
-Default controller mappings (A/B/X/Y as in Nintendo layout, so the rightmost button is attack):
+Default controller mappings (A/B/X/Y as in Nintendo layout, so the rightmost button is attack; A ○, B ×, X △, Y □):
 
 - Left analog or D-Pad: move hero
 - A: attack nearby enemies, talk to townspeople and merchants, pickup/place items in the inventory, OK while in main menu
@@ -291,18 +299,16 @@ Default controller mappings (A/B/X/Y as in Nintendo layout, so the rightmost but
 - Y: cast spell, delete character while in main menu
 - L1: use health item from belt
 - R1: use mana potion from belt
-- L2 or Start + Left: character sheet
-- R2 or Start + Right: inventory
-- Left analog click or Start + Down: toggle automap
-- Start + Up or Start + Select: game menu
-- Start + Left: character info
-- Start + Right: inventory
+- L2: character sheet (alt: Start + L1 or ←)
+- R2: inventory (alt: Start + L2 or →)
+- Left analog click: toggle automap (alt: Start + ↓)
+- Start + Select: game menu (alt: Start + ↑)
 - Select + A/B/X/Y: Spell hotkeys
 - Right analog: move automap or simulate mouse
-- Right analog click or Select + L1: left mouse click
-- Select + Right analog click or Select + R1: right mouse click
-- Select + L2 or Start + Y: quest log
-- Select + R2 or Start + B: spell book
+- Right analog click: left mouse click (alt: Select + L1)
+- Select + Right analog click: right mouse click (alt: Select + R1)
+- Select + L2: quest log (alt: Start + Y)
+- Select + R2: spell book (alt: Start + B)
 
 For now, they can be re-mapped by changing `SourceX/controls` or by setting the `SDL_GAMECONTROLLERCONFIG` environment
 variable (see

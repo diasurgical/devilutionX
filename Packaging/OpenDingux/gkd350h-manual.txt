@@ -9,20 +9,19 @@ Game saves and diablo.ini are located at:
 Controls:
 
 - Joystick / D-Pad: move hero
-- Right analog: simulate mouse
-- **○** circle: attack nearby enemies, talk to townspeople and merchants, pickup/place items in the inventory, OK while in main menu
-- **×** cross: select spell, back while in menus
-- **△** triangle: pickup items, open nearby chests and doors, use item in the inventory
-- **□** square: cast spell, delete character while in main menu
+- ○: attack nearby enemies, talk to townspeople and merchants, pickup/place items in the inventory, OK while in main menu
+- ×: select spell, back while in menus
+- △: pickup items, open nearby chests and doors, use item in the inventory
+- □: cast spell, delete character while in main menu
 - L: use health item from belt
 - R: use mana potion from belt
-- Select + ↑ up: game menu
-- Select + ← left: character info
-- Select + → right: inventory
-- Select + ↓ down: map
-- Select + **□** square: Quest log
-- Select + **×** cross: Spell book
-- Start + **△○×□**: Quick spell hotkeys
+- Select + ↑: game menu
+- Select + L or ←: character info
+- Select + R or →: inventory
+- Select + ↓: map
+- Select + □: Quest log
+- Select + ×: Spell book
+- Start + △○×□: Quick spell hotkeys
 
 Known issues/quirks:
 

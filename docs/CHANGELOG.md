@@ -4,6 +4,91 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## DevilutionX 1.0.1
+### Features
+- Toggle fullscreen at any point by hitting alt+enter (mouse grab can be disabled in diablo.ini)
+- Controller: B button closes the currently active panel.
+- Added a navigation menu for controllers
+- Focus on the exit item before quitting.
+- Minor performance improvements (save/load time and main menu).
+- Add a list of [known mods](https://github.com/diasurgical/devilutionX/blob/master/docs/mods.md)
+
+### Platforms
+- Added support for 32bit PowerPc
+- Added support for Amiga
+- Added support Clockwork PI GameShell
+- Added support for GKD350h
+- Switch to OPK for RetroFW (requires 2.0)
+- Update OpendDingus/RetroFW build root
+
+### Bugfixes
+- Game crashing on systems that do not report monitor refresh rate.
+- Fixed belt not working correctly when holding shift on us keyboard layouts
+- Always keep track of the latest hero level when selecting difficulty.
+- Correct screenshot path
+- Turn the screen red for 200ms when taking screenshots.
+- Fix town load screen missing on the first load.
+- Fix minor HOM issue at some houses in town.
+- Allow for space as text input
+- Fixed a couple of typos in error messages
+
+### Original Diablo bugs
+- Fix belt not working correctly when holding shift on *non-*us keyboard layouts
+- Fix one more rare crash.
+
+## DevilutionX 1.0.0
+### Features
+- FPS no longer capped at 20hz; smoother mouse and transitions
+- Full-featured gamepad support
+- All movies can now be skipped via ESC
+- Implement `--help`, `--version` and `--data-dir`
+- Implement FPS counter (`-f`)
+- Force windowed mode with `-x`
+- Skip startup movies with `-n`
+- Implement scroll wheel navigation
+- Implement touch support
+- Load assets from the same folder as the mpq
+- Faster loading
+
+### Platforms
+- Added Nintendo Switch support
+- Added Retro Gamer Handheld (OpenDingux/Retrofw) support
+- Added OpenBSD support
+- Windows version is now build as GUI an app and has an icon
+
+### Bugfixes
+- Fixed random missing sounds
+- Fixed NPCs not talking about the right quest
+- Error messages implemented in GUI
+- Fixed having to restart the game between network sessions
+- Fixed game not working on some Radeon GPUs
+- Fixed panel missing after minimizing game if upscaling is disabled
+- Fixed clicks in the left letterbox being incorrectly handled
+- Fixed end movie not looping
+
+### Original Diablo bugs
+- Fixed a large number of rare stability issues from the original game
+- Correctly take open panels into account when casting spells
+- Fix sound some times being muted after Diablo dies
+
+## DevilutionX 0.5.0
+### Features
+- Sound is now accurate to the original
+- All in-game issues fixed
+- Delete hero, inline dialogs and scrollbars are now implemented
+- Screenshots now have different names
+- Multiple simultaneous dialogs fixed
+- All builds are now 64bit (except for Windows and Raspberry Pi)
+- Memory leaks and crashes fixed
+- All keys are now mapped
+- UI text now has correct shadows
+- Much lower CPU usage
+- diabdat.mpq can now be loaded with read-only access
+
+### Known issues
+- Error dialogs not implemented in main UI
+- The game must restart after hosting multiplayer
+
 ## [0.10.0](https://github.com/diasurgical/devilution/compare/0.9.6...0.10.0)
 ### June 22, 2019
 - [All functions are now binary identical](https://github.com/diasurgical/devilution/milestone/3) to the 1.09b version

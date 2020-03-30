@@ -1,3 +1,8 @@
+/**
+ * @file encrypt.cpp
+ *
+ * Implementation of functions for compression and decompressing MPQ data.
+ */
 #include "all.h"
 #include "../3rdParty/PKWare/pkware.h"
 

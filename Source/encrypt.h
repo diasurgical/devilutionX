@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file encrypt.h
+ *
+ * Interface of functions for compression and decompressing MPQ data.
+ */
 #ifndef __ENCRYPT_H__
 #define __ENCRYPT_H__
 

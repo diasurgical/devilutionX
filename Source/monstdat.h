@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file monstdat.h
+ *
+ * Interface of all monster data.
+ */
 #ifndef __MONSTDAT_H__
 #define __MONSTDAT_H__
 

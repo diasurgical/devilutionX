@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file missiles.h
+ *
+ * Interface of missile functionality.
+ */
 #ifndef __MISSILES_H__
 #define __MISSILES_H__
 

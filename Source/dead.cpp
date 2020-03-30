@@ -1,8 +1,13 @@
+/**
+ * @file dead.cpp
+ *
+ * Implementation of functions for placing dead monsters.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
-// unused, this was probably for blood boil/burn
+/** unused, this was probably for blood boil/burn */
 int spurtndx;
 DeadStruct dead[MAXDEAD];
 int stonendx;

@@ -13,6 +13,7 @@ DEVILUTION_BEGIN_NAMESPACE
 #define PASSWORD_MULTI "szqnlsk1"
 #endif
 
+/** List of character names for the character selection screen. */
 static char hero_names[MAX_CHARACTERS][PLR_NAME_LEN];
 BOOL gbValidSaveFile;
 

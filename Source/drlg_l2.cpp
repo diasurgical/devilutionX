@@ -1,3 +1,8 @@
+/**
+ * @file drlg_l2.cpp
+ *
+ * Implementation of the catacombs level generation algorithms.
+ */
 #ifndef SPAWN
 
 #include <algorithm>
@@ -470,13 +475,13 @@ static void DRLG_LoadL2SP()
 {
 	setloadflag = FALSE;
 
-	if (QuestStatus(QTYPE_BLIND)) {
+	if (QuestStatus(Q_BLIND)) {
 		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blind2.DUN", NULL);
 		setloadflag = TRUE;
-	} else if (QuestStatus(QTYPE_BLOOD)) {
+	} else if (QuestStatus(Q_BLOOD)) {
 		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blood1.DUN", NULL);
 		setloadflag = TRUE;
-	} else if (QuestStatus(QTYPE_BONE)) {
+	} else if (QuestStatus(Q_SCHAMB)) {
 		pSetPiece = LoadFileInMem("Levels\\L2Data\\Bonestr2.DUN", NULL);
 		setloadflag = TRUE;
 	}
@@ -1383,21 +1388,21 @@ static BOOL CreateDungeon()
 
 	switch (currlevel) {
 	case 5:
-		if (quests[QTYPE_BLOOD]._qactive) {
+		if (quests[Q_BLOOD]._qactive) {
 			ForceHW = TRUE;
 			ForceH = 20;
 			ForceW = 14;
 		}
 		break;
 	case 6:
-		if (quests[QTYPE_BONE]._qactive) {
+		if (quests[Q_SCHAMB]._qactive) {
 			ForceHW = TRUE;
 			ForceW = 10;
 			ForceH = 10;
 		}
 		break;
 	case 7:
-		if (quests[QTYPE_BLIND]._qactive) {
+		if (quests[Q_BLIND]._qactive) {
 			ForceHW = TRUE;
 			ForceW = 15;
 			ForceH = 15;
@@ -1924,17 +1929,17 @@ static void DRLG_InitL2Vals()
 			} else {
 				continue;
 			}
-			dArch[i][j] = pc;
+			dSpecial[i][j] = pc;
 		}
 	}
 	for (j = 0; j < MAXDUNY; j++) {
 		for (i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] == 132) {
-				dArch[i][j + 1] = 2;
-				dArch[i][j + 2] = 1;
+				dSpecial[i][j + 1] = 2;
+				dSpecial[i][j + 2] = 1;
 			} else if (dPiece[i][j] == 135 || dPiece[i][j] == 139) {
-				dArch[i + 1][j] = 3;
-				dArch[i + 2][j] = 4;
+				dSpecial[i + 1][j] = 3;
+				dSpecial[i + 2][j] = 4;
 			}
 		}
 	}
@@ -2008,17 +2013,17 @@ void LoadL2Dungeon(char *sFileName, int vx, int vy)
 			if (dPiece[i][j] == 17) {
 				pc = 6;
 			}
-			dArch[i][j] = pc;
+			dSpecial[i][j] = pc;
 		}
 	}
 	for (j = 0; j < MAXDUNY; j++) {
 		for (i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] == 132) {
-				dArch[i][j + 1] = 2;
-				dArch[i][j + 2] = 1;
+				dSpecial[i][j + 1] = 2;
+				dSpecial[i][j + 2] = 1;
 			} else if (dPiece[i][j] == 135 || dPiece[i][j] == 139) {
-				dArch[i + 1][j] = 3;
-				dArch[i + 2][j] = 4;
+				dSpecial[i + 1][j] = 3;
+				dSpecial[i + 2][j] = 4;
 			}
 		}
 	}
@@ -2082,13 +2087,13 @@ void LoadPreL2Dungeon(char *sFileName, int vx, int vy)
 void CreateL2Dungeon(DWORD rseed, int entry)
 {
 	if (gbMaxPlayers == 1) {
-		if (currlevel == 7 && !quests[QTYPE_BLIND]._qactive) {
+		if (currlevel == 7 && !quests[Q_BLIND]._qactive) {
 			currlevel = 6;
 			CreateL2Dungeon(glSeedTbl[6], 4);
 			currlevel = 7;
 		}
 		if (currlevel == 8) {
-			if (!quests[QTYPE_BLIND]._qactive) {
+			if (!quests[Q_BLIND]._qactive) {
 				currlevel = 6;
 				CreateL2Dungeon(glSeedTbl[6], 4);
 				currlevel = 8;

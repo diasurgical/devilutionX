@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file drlg_l2.h
+ *
+ * Interface of the catacombs level generation algorithms.
+ */
 #ifndef __DRLG_L2_H__
 #define __DRLG_L2_H__
 

@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file appfat.h
+ *
+ * Interface of error dialogs.
+ */
 #ifndef __APPFAT_H__
 #define __APPFAT_H__
 

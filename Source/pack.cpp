@@ -107,8 +107,14 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield)
 		pPack->pManaShield = FALSE;
 }
 
-// Note: last slot of item[MAXITEMS+1] used as temporary buffer
-// find real name reference below, possibly [sizeof(item[])/sizeof(ItemStruct)]
+/**
+ * Expand a PkItemStruct in to a ItemStruct
+ *
+ * Note: last slot of item[MAXITEMS+1] used as temporary buffer
+ * find real name reference below, possibly [sizeof(item[])/sizeof(ItemStruct)]
+ * @param is The source packed item
+ * @param id The distination item
+ */
 static void UnPackItem(PkItemStruct *is, ItemStruct *id)
 {
 	WORD idx = SwapLE16(is->idx);

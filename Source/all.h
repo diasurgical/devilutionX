@@ -1,3 +1,8 @@
+/**
+ * @file all.h
+ *
+ * Include all aplication headers.
+ */
 #ifndef __ALL_H__
 #define __ALL_H__
 

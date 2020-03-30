@@ -1,3 +1,8 @@
+/**
+ * @file itemdat.cpp
+ *
+ * Implementation of all item data.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE

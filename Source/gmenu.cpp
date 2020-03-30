@@ -1,3 +1,8 @@
+/**
+ * @file gmenu.cpp
+ *
+ * Implementation of the in-game navigation and interaction.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -15,6 +20,7 @@ BYTE *option_cel;
 BYTE *sgpLogo;
 int sgCurrentMenuIdx;
 
+/** Maps from font index to bigtgold.cel frame number. */
 const BYTE lfontframe[127] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -30,6 +36,7 @@ const BYTE lfontframe[127] = {
 	14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
 	24, 25, 26, 20, 0, 21, 0
 };
+/* Maps from bigtgold.cel frame number to character width. */
 const BYTE lfontkern[56] = {
 	18, 33, 21, 26, 28, 19, 19, 26, 25, 11,
 	12, 25, 19, 34, 28, 32, 20, 32, 28, 20,
@@ -86,12 +93,12 @@ void gmenu_init_menu()
 	optbar_cel = LoadFileInMem("Data\\optbar.CEL", NULL);
 }
 
-BOOL gmenu_exception()
+BOOL gmenu_is_active()
 {
 	return sgpCurrentMenu != 0;
 }
 
-void gmenu_call_proc(TMenuItem *pItem, void (*gmFunc)(TMenuItem *))
+void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)(TMenuItem *))
 {
 	int i;
 
@@ -240,7 +247,7 @@ BOOL gmenu_presskeys(int vkey)
 		break;
 	case VK_ESCAPE:
 		PlaySFX(IS_TITLEMOV);
-		gmenu_call_proc(0, 0);
+		gmenu_set_items(0, 0);
 		break;
 	case VK_SPACE:
 		return FALSE;
@@ -287,7 +294,7 @@ BOOL gmenu_on_mouse_move()
 
 	if (!mouseNavigation)
 		return FALSE;
-	gmenu_valid_mouse_pos(&step);
+	gmenu_get_mouse_slider(&step);
 	nSteps = (int)(sgpCurrItem->dwFlags & 0xFFF000) >> 12;
 	step *= nSteps;
 	step /= 256;
@@ -298,7 +305,7 @@ BOOL gmenu_on_mouse_move()
 	return TRUE;
 }
 
-BOOLEAN gmenu_valid_mouse_pos(int *plOffset)
+BOOLEAN gmenu_get_mouse_slider(int *plOffset)
 {
 	*plOffset = 282;
 	if (MouseX < 282 + PANEL_LEFT) {
@@ -355,7 +362,7 @@ BOOL gmenu_left_mouse(BOOL isDown)
 	sgpCurrItem = pItem;
 	PlaySFX(IS_TITLEMOV);
 	if (pItem->dwFlags & GMENU_SLIDER) {
-		mouseNavigation = gmenu_valid_mouse_pos(&dummy);
+		mouseNavigation = gmenu_get_mouse_slider(&dummy);
 		gmenu_on_mouse_move();
 	} else {
 		sgpCurrItem->fnMenu(TRUE);

@@ -2,6 +2,7 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+/** Data related to each spell ID. */
 SpellData spelldata[MAX_SPELLS] = {
 	// clang-format off
 	// sName,    sManaCost, sType,           sNameText,         sSkillText, sBookLvl, sStaffLvl, sTargeted, sTownSpell, sMinInt, sSFX,     sMissiles[3],                      sManaAdj, sMinMana, sStaffMin, sStaffMax, sBookCost, sStaffCost

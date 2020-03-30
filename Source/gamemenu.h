@@ -1,13 +1,17 @@
-//HEADER_GOES_HERE
+/**
+ * @file gamemenu.h
+ *
+ * Interface of the in-game menu functions.
+ */
 #ifndef __GAMEMENU_H__
 #define __GAMEMENU_H__
 
-void gamemenu_previous();
-void gamemenu_enable_single(TMenuItem *pMenuItems);
-void gamemenu_enable_multi(TMenuItem *pMenuItems);
+void gamemenu_on();
+void gamemenu_update_single(TMenuItem *pMenuItems);
+void gamemenu_update_multi(TMenuItem *pMenuItems);
 void gamemenu_off();
 void gamemenu_handle_previous();
-void j_gamemenu_previous(BOOL bActivate);
+void gamemenu_previous(BOOL bActivate);
 void gamemenu_new_game(BOOL bActivate);
 void gamemenu_quit_game(BOOL bActivate);
 void gamemenu_load_game(BOOL bActivate);

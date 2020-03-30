@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file gendung.h
+ *
+ * Interface of general dungeon generation code.
+ */
 #ifndef __GENDUNG_H__
 #define __GENDUNG_H__
 
@@ -33,7 +37,11 @@ extern ScrollStruct ScrollInfo;
 extern BYTE *pDungeonCels;
 extern THEME_LOC themeLoc[MAXTHEMES];
 extern char dPlayer[MAXDUNX][MAXDUNY];
-extern char dArch[MAXDUNX][MAXDUNY];
+extern int ViewBX;
+extern int ViewBY;
+extern int ViewDX;
+extern int ViewDY;
+extern char dSpecial[MAXDUNX][MAXDUNY];
 extern BOOLEAN nBlockTable[2049];
 extern BYTE *pSpecialCels;
 extern char dFlags[MAXDUNX][MAXDUNY];

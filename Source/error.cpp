@@ -1,3 +1,8 @@
+/**
+ * @file error.cpp
+ *
+ * Implementation of in-game message functions.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -7,6 +12,7 @@ DWORD msgdelay;
 char msgflag;
 char msgcnt;
 
+/** Maps from error_id to error message. */
 char *MsgStrings[44] = {
 	"",
 	"No automap available in town",
@@ -128,7 +134,7 @@ void DrawDiabloMsg()
 	for (i = 0; i < len; i++) {
 		c = fontframe[gbFontTransTbl[(BYTE)tempstr[i]]];
 		if (c != '\0') {
-			CPrintString(sx, sy, c, COL_GOLD);
+			PrintChar(sx, sy, c, COL_GOLD);
 		}
 		sx += fontkern[c] + 1;
 	}

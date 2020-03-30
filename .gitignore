@@ -430,3 +430,5 @@ DerivedData/
 ### Nintendo Switch ###
 exefs/main
 /out/isenseconfig/CPI-Debug
+
+/docs/html/

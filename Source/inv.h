@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file inv.h
+ *
+ * Interface of player inventory.
+ */
 #ifndef __INV_H__
 #define __INV_H__
 

@@ -2,7 +2,7 @@
 
 This is a list of known mods to DevilutionX. Feel free to extend it by sending a PR.
 
-## Infernity
+## Infernity [Devilution mod - Windows only]
 
 Repo: https://github.com/qndel/Infernity
 
@@ -16,6 +16,22 @@ Repo: https://github.com/qndel/Infernity
 
 # Ports
 
+## Nintendo 3DS
+
+Repo: https://github.com/MrHuu/devilutionX-3ds
+
+## PSP Vita
+
+Repo: https://github.com/gokuhs/devilutionX
+
+## Android
+
+Repo: https://github.com/diasurgical/devilutionX/pull/522
+
+## iOS
+
+Repo: https://github.com/MaxDesiatov/devilutionX/tree/iOS-arm64
+
 ## Raspberry Pi Sense HAT Renderer
 
 Repo: https://github.com/AJenbo/devilutionX/tree/SenseHAT
@@ -24,19 +40,20 @@ YouTube video:
 
 [![Sense HAT game play video](https://img.youtube.com/vi/756WmJguxZA/0.jpg)](https://www.youtube.com/watch?v=756WmJguxZA "Sense HAT game play video")
 
-## Rouge-like Text Renderer
+## Rogue-like Text Renderer
 
 Repo: https://github.com/AJenbo/devilutionX/tree/roguelike
 
 YouTube video:
 
-[![Rogule-like game play video](https://img.youtube.com/vi/3p9j7j2SVOA/0.jpg)](https://www.youtube.com/watch?v=3p9j7j2SVOA "Rogue-like game play video")
+[![Rogue-like game play video](https://img.youtube.com/vi/3p9j7j2SVOA/0.jpg)](https://www.youtube.com/watch?v=3p9j7j2SVOA "Rogue-like game play video")
 
 # Quality-of-Life and Extension patches
 
 ## Per-pixel lighting
 
 Repo: https://github.com/qndel/devilutionX/tree/pixellight
+PR: https://github.com/diasurgical/devilutionX/pull/559
 
 ![Screenshot](https://user-images.githubusercontent.com/14297035/73365812-2bcf4200-42ad-11ea-9916-9f9d4b12f791.png "Per-pixel lighting")
 
@@ -47,6 +64,18 @@ Repo: https://github.com/Manuel-K/devilutionX-QOL-patches
 * Run in town
 * Highlight items
 * Monster HP bar
+
+##  Add fix to allow all unique items to drop
+
+Repo: https://github.com/diasurgical/devilutionX/pull/540
+
+## 16 player support
+
+Repo: https://github.com/diasurgical/devilutionX/pull/551
+
+## Multiplayer support on RetroFW/OpenDingux
+
+Repo: https://github.com/diasurgical/devilutionX/pull/542
 
 ## QOL patches by [@majek](https://github.com/majek)
 
@@ -94,7 +123,7 @@ Repo: https://github.com/footballhead/devilutionX/commits/etherealize_demo?autho
 
 # Meta
 
-## Equine
+## Equine [Windows only]
 
 Repo: https://github.com/sergi4ua/equine
 

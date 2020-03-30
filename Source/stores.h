@@ -43,7 +43,7 @@ void FreeStoreMem();
 void DrawSTextBack();
 void PrintSString(int x, int y, BOOL cjustflag, char *str, char col, int val);
 void DrawSLine(int y);
-void DrawSArrows(int y1, int y2);
+void DrawSSlider(int y1, int y2);
 void DrawSTextHelp();
 void ClearSText(int s, int e);
 void AddSLine(int y);

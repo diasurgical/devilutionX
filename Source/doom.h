@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file doom.h
+ *
+ * Interface of the map of the stars quest.
+ */
 #ifndef __DOOM_H__
 #define __DOOM_H__
 

@@ -1,3 +1,8 @@
+/**
+ * @file help.cpp
+ *
+ * Implementation of the in-game help text.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -548,7 +553,7 @@ void DrawHelpLine(int always_0, int help_line_nr, char *text, char color)
 		width += fontkern[c] + 1;
 		if (c) {
 			if (width <= 577)
-				CPrintString(sx, sy, c, color);
+				PrintChar(sx, sy, c, color);
 		}
 		sx += fontkern[c] + 1;
 	}

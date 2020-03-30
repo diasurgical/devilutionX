@@ -12,17 +12,16 @@ Controls:
 - B: select spell, back while in menus
 - X: pickup items, open nearby chests and doors, use item in the inventory
 - Y: cast spell, delete character while in main menu
-- R1: use mana potion from belt
-- L1: use health item from belt
-- Start + Up: game menu
-- Start + Left: character info
-- Start + Right: inventory
-- Start + Down: map
+- R: use mana potion from belt
+- L: use health item from belt
+- Start + Select: game menu (alt: Start + ↑)
+- Start + L or ←: character info
+- Start + R or →: inventory
+- Start + ↓: map
 - Start + Y: Quest log
 - Start + B: Spell book
 - Select + A/B/X/Y: hot spell
 - Select + D-pad: move map/cursor
-- Select + L1: left mouse click
-- Select + R1: right mouse click
-- Start + Select: game menu
+- Select + L: left mouse click
+- Select + R: right mouse click
 - Suspend: map

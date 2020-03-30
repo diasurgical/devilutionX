@@ -5,6 +5,7 @@ DEVILUTION_BEGIN_NAMESPACE
 static BYTE plr_msg_slot;
 _plrmsg plr_msgs[PMSG_COUNT];
 
+/** Maps from player_num to text colour, as used in chat messages. */
 const char text_color_from_player_num[MAX_PLRS + 1] = { COL_WHITE, COL_WHITE, COL_WHITE, COL_WHITE, COL_GOLD };
 
 void plrmsg_delay(BOOL delay)
@@ -140,7 +141,7 @@ void PrintPlrMsg(DWORD x, DWORD y, DWORD width, const char *str, BYTE col)
 			c = gbFontTransTbl[(BYTE)*str++];
 			c = fontframe[c];
 			if (c)
-				CPrintString(sx, y, c, col);
+				PrintChar(sx, y, c, col);
 			sx += fontkern[c] + 1;
 		}
 

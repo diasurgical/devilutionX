@@ -1,3 +1,15 @@
+/**
+ * @file engine.cpp
+ *
+ * Implementation of basic engine helper functions:
+ * - Sprite blitting
+ * - Drawing
+ * - Angle calculation
+ * - RNG
+ * - Memory allocation
+ * - File loading
+ * - Video playback
+ */
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
@@ -6,7 +18,9 @@ DEVILUTION_BEGIN_NAMESPACE
 char gbPixelCol;  // automap pixel color 8-bit (palette entry)
 BOOL gbRotateMap; // flip - if y < x
 int orgseed;
+/** Width of sprite being blitted */
 int sgnWidth;
+/** Current game seed */
 int sglGameSeed;
 static CCritSect sgMemCrit;
 int SeedCount;
@@ -632,25 +646,7 @@ void engine_draw_pixel(int sx, int sy)
 		*dst = gbPixelCol;
 }
 
-#define GG_SWAP(A, B) \
-	{                 \
-		(A) ^= (B);   \
-		(B) ^= (A);   \
-		(A) ^= (B);   \
-	}
-#define GG_ABSOLUTE(I, J, K) (((I) - (J)) * ((K) = (((I) - (J)) < 0 ? -1 : 1)))
-
 /**
- * Symmetric Double Step Line Algorithm
- * by Brian Wyvill
- * from "Graphics Gems", Academic Press, 1990
- *
- * Exact copy from https://github.com/erich666/GraphicsGems/blob/dad26f941e12c8bf1f96ea21c1c04cd2206ae7c9/gems/DoubleLine.c
- * Except:
- * - not in view checks
- * - global variable instead of reverse flag
- * - condition for pixels_left < 0 removed
- *
  * @brief Draw a line on the back buffer
  * @param x0 Back buffer coordinate
  * @param y0 Back buffer coordinate
@@ -660,190 +656,19 @@ void engine_draw_pixel(int sx, int sy)
  */
 void DrawLine(int x0, int y0, int x1, int y1, BYTE col)
 {
-	int dx, dy, incr1, incr2, D, x, y, xend, c, pixels_left;
-	int sign_x, sign_y, step, i;
-	int x1_, y1_;
+	int i, dx, dy, steps;
+	float ix, iy, sx, sy;
 
-	gbPixelCol = col;
+	dx = x1 - x0;
+	dy = y1 - y0;
+	steps = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
+	ix = dx / (float)steps;
+	iy = dy / (float)steps;
+	sx = x0;
+	sy = y0;
 
-	gbNotInView = FALSE;
-	if (x0 < 0 + SCREEN_X || x0 >= SCREEN_WIDTH + SCREEN_X) {
-		gbNotInView = TRUE;
-	}
-	if (x1 < 0 + SCREEN_X || x1 >= SCREEN_WIDTH + SCREEN_X) {
-		gbNotInView = TRUE;
-	}
-	if (y0 < 0 + SCREEN_Y || y0 >= PANEL_Y) {
-		gbNotInView = TRUE;
-	}
-	if (y1 < 0 + SCREEN_Y || y1 >= PANEL_Y) {
-		gbNotInView = TRUE;
-	}
-
-	dx = GG_ABSOLUTE(x1, x0, sign_x);
-	dy = GG_ABSOLUTE(y1, y0, sign_y);
-	/* decide increment sign by the slope sign */
-	if (sign_x == sign_y)
-		step = 1;
-	else
-		step = -1;
-
-	if (dy > dx) { /* chooses axis of greatest movement (make
-						* dx) */
-		GG_SWAP(x0, y0);
-		GG_SWAP(x1, y1);
-		GG_SWAP(dx, dy);
-		gbRotateMap = TRUE;
-	} else
-		gbRotateMap = FALSE;
-	/* note error check for dx==0 should be included here */
-	if (x0 > x1) { /* start from the smaller coordinate */
-		x = x1;
-		y = y1;
-		x1_ = x0;
-		y1_ = y0;
-	} else {
-		x = x0;
-		y = y0;
-		x1_ = x1;
-		y1_ = y1;
-	}
-
-	/* Note dx=n implies 0 - n or (dx+1) pixels to be set */
-	/* Go round loop dx/4 times then plot last 0,1,2 or 3 pixels */
-	/* In fact (dx-1)/4 as 2 pixels are already plotted */
-	xend = (dx - 1) / 4;
-	pixels_left = (dx - 1) % 4; /* number of pixels left over at the end */
-	engine_draw_pixel(x, y);
-	engine_draw_pixel(x1_, y1_); /* plot first two points */
-	incr2 = 4 * dy - 2 * dx;
-	if (incr2 < 0) { /* slope less than 1/2 */
-		c = 2 * dy;
-		incr1 = 2 * c;
-		D = incr1 - dx;
-
-		for (i = 0; i < xend; i++) { /* plotting loop */
-			++x;
-			--x1_;
-			if (D < 0) {
-				/* pattern 1 forwards */
-				engine_draw_pixel(x, y);
-				engine_draw_pixel(++x, y);
-				/* pattern 1 backwards */
-				engine_draw_pixel(x1_, y1_);
-				engine_draw_pixel(--x1_, y1_);
-				D += incr1;
-			} else {
-				if (D < c) {
-					/* pattern 2 forwards */
-					engine_draw_pixel(x, y);
-					engine_draw_pixel(++x, y += step);
-					/* pattern 2 backwards */
-					engine_draw_pixel(x1_, y1_);
-					engine_draw_pixel(--x1_, y1_ -= step);
-				} else {
-					/* pattern 3 forwards */
-					engine_draw_pixel(x, y += step);
-					engine_draw_pixel(++x, y);
-					/* pattern 3 backwards */
-					engine_draw_pixel(x1_, y1_ -= step);
-					engine_draw_pixel(--x1_, y1_);
-				}
-				D += incr2;
-			}
-		} /* end for */
-
-		/* plot last pattern */
-		if (pixels_left) {
-			if (D < 0) {
-				engine_draw_pixel(++x, y); /* pattern 1 */
-				if (pixels_left > 1)
-					engine_draw_pixel(++x, y);
-				if (pixels_left > 2)
-					engine_draw_pixel(--x1_, y1_);
-			} else {
-				if (D < c) {
-					engine_draw_pixel(++x, y); /* pattern 2  */
-					if (pixels_left > 1)
-						engine_draw_pixel(++x, y += step);
-					if (pixels_left > 2)
-						engine_draw_pixel(--x1_, y1_);
-				} else {
-					/* pattern 3 */
-					engine_draw_pixel(++x, y += step);
-					if (pixels_left > 1)
-						engine_draw_pixel(++x, y);
-					if (pixels_left > 2)
-						engine_draw_pixel(--x1_, y1_ -= step);
-				}
-			}
-		} /* end if pixels_left */
-	}
-	/* end slope < 1/2 */
-	else { /* slope greater than 1/2 */
-		c = 2 * (dy - dx);
-		incr1 = 2 * c;
-		D = incr1 + dx;
-		for (i = 0; i < xend; i++) {
-			++x;
-			--x1_;
-			if (D > 0) {
-				/* pattern 4 forwards */
-				engine_draw_pixel(x, y += step);
-				engine_draw_pixel(++x, y += step);
-				/* pattern 4 backwards */
-				engine_draw_pixel(x1_, y1_ -= step);
-				engine_draw_pixel(--x1_, y1_ -= step);
-				D += incr1;
-			} else {
-				if (D < c) {
-					/* pattern 2 forwards */
-					engine_draw_pixel(x, y);
-					engine_draw_pixel(++x, y += step);
-
-					/* pattern 2 backwards */
-					engine_draw_pixel(x1_, y1_);
-					engine_draw_pixel(--x1_, y1_ -= step);
-				} else {
-					/* pattern 3 forwards */
-					engine_draw_pixel(x, y += step);
-					engine_draw_pixel(++x, y);
-					/* pattern 3 backwards */
-					engine_draw_pixel(x1_, y1_ -= step);
-					engine_draw_pixel(--x1_, y1_);
-				}
-				D += incr2;
-			}
-		} /* end for */
-		/* plot last pattern */
-		if (pixels_left) {
-			if (D > 0) {
-				engine_draw_pixel(++x, y += step); /* pattern 4 */
-				if (pixels_left > 1)
-					engine_draw_pixel(++x, y += step);
-				if (pixels_left > 2)
-					engine_draw_pixel(--x1_, y1_ -= step);
-			} else {
-				if (D < c) {
-					engine_draw_pixel(++x, y); /* pattern 2  */
-					if (pixels_left > 1)
-						engine_draw_pixel(++x, y += step);
-					if (pixels_left > 2)
-						engine_draw_pixel(--x1_, y1_);
-				} else {
-					/* pattern 3 */
-					engine_draw_pixel(++x, y += step);
-					if (pixels_left > 1)
-						engine_draw_pixel(++x, y);
-					if (pixels_left > 2) {
-						if (D > c) /* step 3 */
-							engine_draw_pixel(--x1_, y1_ -= step);
-						else /* step 2 */
-							engine_draw_pixel(--x1_, y1_);
-					}
-				}
-			}
-		}
+	for(i = 0; i <= steps; i++, sx += ix, sy += iy) {
+		ENG_set_pixel(sx, sy, col);
 	}
 }
 

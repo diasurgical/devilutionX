@@ -70,7 +70,7 @@ void palette_init()
 {
 	LoadGamma();
 	memcpy(system_palette, orig_palette, sizeof(orig_palette));
-	CreatePalette();
+	InitPalette();
 }
 
 void LoadPalette(char *pszFileName)
