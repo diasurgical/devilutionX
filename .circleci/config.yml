@@ -107,7 +107,8 @@ jobs:
     steps:
       - checkout
       - run: echo deb http://deb.debian.org/debian stretch-backports main > /etc/apt/sources.list.d/debian-backports.list
-      - run: apt-get update && apt-get install -y -t stretch-backports cmake unzip
+      - run: echo deb http://deb.debian.org/debian stretch-backports-sloppy main >> /etc/apt/sources.list.d/debian-backports.list
+      - run: apt-get update && apt-get install -y -t 'stretch-backports*' cmake unzip
       - run: dkp-pacman -Syu --noconfirm
       # Install cmake files (https://github.com/devkitPro/docker/issues/3)
       - run: dkp-pacman -S --needed --noconfirm --quiet devkitpro-pkgbuild-helpers
