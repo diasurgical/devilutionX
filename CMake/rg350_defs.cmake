@@ -27,3 +27,6 @@ set(JOY_BUTTON_TRIGGERLEFT 6)
 set(JOY_BUTTON_TRIGGERRIGHT 7)
 set(JOY_BUTTON_START 9)
 set(JOY_BUTTON_BACK 8)
+
+# Map Power button to Esc (Menu in-game / Exit in-menu).
+set(REMAP_KEYBOARD_KEYS "{SDLK_HOME,SDLK_ESCAPE}")

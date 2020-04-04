@@ -1,6 +1,7 @@
 #include "controls/menu_controls.h"
 
 #include "controls/controller.h"
+#include "controls/remap_keyboard.h"
 
 namespace dvl {
 
@@ -44,7 +45,9 @@ MenuAction GetMenuAction(const SDL_Event &event)
 		sgbControllerActive = false;
 
 	if (event.type == SDL_KEYDOWN) {
-		switch (event.key.keysym.sym) {
+		auto sym = event.key.keysym.sym;
+		remap_keyboard_key(&sym);
+		switch (sym) {
 		case SDLK_UP:
 			return MenuAction::UP;
 		case SDLK_DOWN:
