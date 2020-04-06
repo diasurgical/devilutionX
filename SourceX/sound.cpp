@@ -25,14 +25,17 @@ char *sgszMusicTracks[NUM_MUSIC] = {
 #ifdef SPAWN
 	"Music\\sTowne.wav",
 	"Music\\sLvlA.wav",
-	"Music\\sintro.wav"
+	"Music\\sLvlA.wav",
+	"Music\\sLvlA.wav",
+	"Music\\sLvlA.wav",
+	"Music\\sintro.wav",
 #else
 	"Music\\DTowne.wav",
 	"Music\\DLvlA.wav",
 	"Music\\DLvlB.wav",
 	"Music\\DLvlC.wav",
 	"Music\\DLvlD.wav",
-	"Music\\Dintro.wav"
+	"Music\\Dintro.wav",
 #endif
 };
 
@@ -54,7 +57,7 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 	}
 
 	DSB = pSnd->DSB;
-	if (!DSB) {
+	if (DSB == NULL) {
 		return;
 	}
 
@@ -85,7 +88,7 @@ TSnd *sound_file_load(char *path)
 	pSnd = (TSnd *)DiabloAllocPtr(sizeof(TSnd));
 	memset(pSnd, 0, sizeof(TSnd));
 	pSnd->sound_path = path;
-	pSnd->start_tc = SDL_GetTicks() - 81;
+	pSnd->start_tc = SDL_GetTicks() - 80 - 1;
 
 	dwBytes = SFileGetFileSize(file, NULL);
 	wave_file = DiabloAllocPtr(dwBytes);

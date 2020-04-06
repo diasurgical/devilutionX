@@ -81,7 +81,7 @@ BOOL msg_wait_resync()
 	sgbRecvCmd = CMD_DLEVEL_END;
 	gbBufferMsgs = 1;
 	sgdwOwnerWait = SDL_GetTicks();
-	success = UiProgressDialog(ghMainWnd, "Waiting for game data...", 1, msg_wait_for_turns, 20);
+	success = UiProgressDialog("Waiting for game data...", 1, msg_wait_for_turns, 20);
 	gbBufferMsgs = 0;
 	if (!success) {
 		msg_free_packets();
@@ -1262,7 +1262,7 @@ void DeltaImportJunk(BYTE *src)
 		if (*src == 0xFF) {
 			memset(&sgJunk.portal[i], 0xFF, sizeof(DPortal));
 			src++;
-			SetPortalStats(i, FALSE, 0, 0, 0, 0);
+			SetPortalStats(i, FALSE, 0, 0, 0, DTYPE_TOWN);
 		} else {
 			memcpy(&sgJunk.portal[i], src, sizeof(DPortal));
 			src += sizeof(DPortal);

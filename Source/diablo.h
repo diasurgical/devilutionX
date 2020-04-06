@@ -6,7 +6,7 @@
 #ifndef __DIABLO_H__
 #define __DIABLO_H__
 
-extern HWND ghMainWnd;
+extern SDL_Window *ghMainWnd;
 extern int glMid1Seed[NUMLEVELS];
 extern int glMid2Seed[NUMLEVELS];
 extern int gnLevelTypeTbl[NUMLEVELS];

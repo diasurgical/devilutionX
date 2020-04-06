@@ -195,7 +195,7 @@ void CheckQuests()
 			    && quests[i]._qactive != QUEST_NOTAVAIL
 			    && plr[myplr].WorldX == quests[i]._qtx
 			    && plr[myplr].WorldY == quests[i]._qty) {
-				if (quests[i]._qlvltype != 255) {
+				if (quests[i]._qlvltype != DTYPE_NONE) {
 					setlvltype = quests[i]._qlvltype;
 				}
 				StartNewLvl(myplr, WM_DIABSETLVL, quests[i]._qslvl);

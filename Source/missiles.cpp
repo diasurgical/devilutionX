@@ -2389,7 +2389,7 @@ void AddResurrectBeam(int mi, int sx, int sy, int dx, int dy, int midir, char mi
 	missile[mi]._misy = missile[mi]._miy;
 	missile[mi]._mixvel = 0;
 	missile[mi]._miyvel = 0;
-	missile[mi]._mirange = misfiledata[36].mAnimLen[0];
+	missile[mi]._mirange = misfiledata[MFILE_RESSUR1].mAnimLen[0];
 }
 
 void AddTelekinesis(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam)

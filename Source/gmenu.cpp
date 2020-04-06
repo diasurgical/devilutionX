@@ -36,7 +36,8 @@ const BYTE lfontframe[127] = {
 	14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
 	24, 25, 26, 20, 0, 21, 0
 };
-/* Maps from bigtgold.cel frame number to character width. */
+
+/** Maps from bigtgold.cel frame number to character width. */
 const BYTE lfontkern[56] = {
 	18, 33, 21, 26, 28, 19, 19, 26, 25, 11,
 	12, 25, 19, 34, 28, 32, 20, 32, 28, 20,
@@ -81,7 +82,7 @@ void FreeGMenu()
 void gmenu_init_menu()
 {
 	PentSpin_frame = 1;
-	sgpCurrentMenu = 0;
+	sgpCurrentMenu = NULL;
 	sgpCurrItem = 0;
 	dword_63447C = 0;
 	sgCurrentMenuIdx = 0;
@@ -95,7 +96,7 @@ void gmenu_init_menu()
 
 BOOL gmenu_is_active()
 {
-	return sgpCurrentMenu != 0;
+	return sgpCurrentMenu != NULL;
 }
 
 void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)(TMenuItem *))

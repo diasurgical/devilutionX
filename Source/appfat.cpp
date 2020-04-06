@@ -86,7 +86,6 @@ void ErrDlg(const char *title, const char *error, char *log_file_path, int log_l
 	app_fatal(NULL);
 }
 
-
 void FileErrDlg(const char *error)
 {
 	char text[1024];

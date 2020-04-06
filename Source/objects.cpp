@@ -836,7 +836,7 @@ void InitObjects()
 		InitRndLocObj(1, 5, 7);
 		if (leveltype != DTYPE_HELL)
 			AddObjTraps();
-		if (leveltype > 1)
+		if (leveltype > DTYPE_CATHEDRAL)
 			AddChestTraps();
 		InitObjFlag = FALSE;
 	}
@@ -4035,7 +4035,7 @@ void BreakCrux(int i)
 	ObjChangeMap(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
 }
 
-void BreakBarrel(int pnum, int i, int dam, BOOL forcebreak, int sendmsg)
+void BreakBarrel(int pnum, int i, int dam, BOOL forcebreak, BOOL sendmsg)
 {
 	int oi;
 	int xp, yp;
@@ -4066,7 +4066,7 @@ void BreakBarrel(int pnum, int i, int dam, BOOL forcebreak, int sendmsg)
 	object[i]._oMissFlag = TRUE;
 	object[i]._oSelFlag = 0;
 	object[i]._oPreFlag = TRUE;
-	if (deltaload != 0) {
+	if (deltaload) {
 		object[i]._oAnimCnt = 0;
 		object[i]._oAnimFrame = object[i]._oAnimLen;
 		object[i]._oAnimDelay = 1000;

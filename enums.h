@@ -2284,11 +2284,9 @@ typedef enum _talker_id {
 typedef enum _music_id {
 	TMUSIC_TOWN,
 	TMUSIC_L1,
-#ifndef SPAWN
 	TMUSIC_L2,
 	TMUSIC_L3,
 	TMUSIC_L4,
-#endif
 	TMUSIC_INTRO,
 	NUM_MUSIC,
 } _music_id;

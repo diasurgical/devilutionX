@@ -728,9 +728,9 @@ BOOL SVidPlayContinue(void)
 			}
 		} else {
 #ifdef USE_SDL1
-			SDL_Surface *tmp = SDL_ConvertSurface(SVidSurface, window->format, 0);
+			SDL_Surface *tmp = SDL_ConvertSurface(SVidSurface, ghMainWnd->format, 0);
 #else
-			Uint32 format = SDL_GetWindowPixelFormat(window);
+			Uint32 format = SDL_GetWindowPixelFormat(ghMainWnd);
 			SDL_Surface *tmp = SDL_ConvertSurfaceFormat(SVidSurface, format, 0);
 #endif
 			if (SDL_BlitScaled(tmp, nullptr, output_surface, &pal_surface_offset) <= -1) {

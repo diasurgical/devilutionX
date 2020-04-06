@@ -27,6 +27,10 @@ int sglTimeoutStart;
 int sgdwPlayerLeftReasonTbl[MAX_PLRS];
 TBuffer sgLoPriBuf;
 DWORD sgdwGameLoops;
+/**
+ * Specifies the maximum number of players in a game, where 1
+ * represents a single player game and 4 represents a multi player game.
+ */
 BYTE gbMaxPlayers;
 BOOLEAN sgbTimeout;
 char szPlayerName[128];
@@ -34,6 +38,10 @@ BYTE gbDeltaSender;
 BOOL sgbNetInited;
 int player_state[MAX_PLRS];
 
+/**
+ * Contains the set of supported event types supported by the multiplayer
+ * event handler.
+ */
 const int event_types[3] = {
 	EVENT_TYPE_PLAYER_LEAVE_GAME,
 	EVENT_TYPE_PLAYER_CREATE_GAME,

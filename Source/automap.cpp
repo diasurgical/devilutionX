@@ -7,13 +7,19 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-// BUGFIX: only the first 256 elements are ever read
+/**
+ * Maps from tile_id to automap type.
+ * BUGFIX: only the first 256 elements are ever read
+ */
 WORD automaptype[512];
 static int AutoMapX;
 static int AutoMapY;
+/** Specifies whether the automap is enabled. */
 BOOL automapflag;
 char AmShiftTab[31];
+/** Tracks the explored areas of the map. */
 BOOLEAN automapview[DMAXX][DMAXY];
+/** Specifies the scale of the automap. */
 int AutoMapScale;
 int AutoMapXOfs;
 int AutoMapYOfs;

@@ -10,7 +10,7 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-HWND ghMainWnd;
+SDL_Window *ghMainWnd;
 int glMid1Seed[NUMLEVELS];
 int glMid2Seed[NUMLEVELS];
 int gnLevelTypeTbl[NUMLEVELS];
@@ -45,6 +45,10 @@ int color_cycle_timer;
 
 /* rdata */
 
+/**
+ * Specifies whether to give the game exclusive access to the
+ * screen, as needed for efficient rendering in fullscreen mode.
+ */
 BOOL fullscreen = TRUE;
 int showintrodebug = 1;
 #ifdef _DEBUG
@@ -64,6 +68,7 @@ int frameflag;
 int frameend;
 int framerate;
 int framestart;
+/** Specifies whether players are in non-PvP mode. */
 BOOL FriendlyMode = TRUE;
 /** Default quick messages */
 char *spszMsgTbl[4] = {
@@ -164,7 +169,7 @@ void run_game_loop(unsigned int uMsg)
 
 	nthread_ignore_mutex(TRUE);
 	start_game(uMsg);
-	/// ASSERT: assert(ghMainWnd);
+	assert(ghMainWnd);
 	saveProc = SetWindowProc(GM_Game);
 	control_update_life_mana();
 	run_delta_info();
@@ -213,7 +218,7 @@ void run_game_loop(unsigned int uMsg)
 	force_redraw = 255;
 	scrollrt_draw_game_screen(TRUE);
 	saveProc = SetWindowProc(saveProc);
-	/// ASSERT: assert(saveProc == GM_Game);
+	assert(saveProc == GM_Game);
 	free_game();
 
 	if (cineflag) {
@@ -229,12 +234,12 @@ void start_game(unsigned int uMsg)
 	InitCursor();
 	InitLightTable();
 	LoadDebugGFX();
-	/// ASSERT: assert(ghMainWnd);
+	assert(ghMainWnd);
 	music_stop();
 	ShowProgress(uMsg);
 	gmenu_init_menu();
 	InitLevelCursor();
-	sgnTimeoutCurs = 0;
+	sgnTimeoutCurs = CURSOR_NONE;
 	sgbMouseDown = 0;
 	track_repeat_walk(FALSE);
 }
@@ -788,7 +793,7 @@ void RightMouseDown()
 			    || (!sbookflag || MouseX <= RIGHT_PANEL)
 			        && !TryIconCurs()
 			        && (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem))) {
-				if (pcurs == 1) {
+				if (pcurs == CURSOR_HAND) {
 					if (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem))
 						CheckPlrSpell();
 				} else if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
@@ -1049,7 +1054,9 @@ void diablo_pause_game()
 	}
 }
 
-/* NOTE: `return` must be used instead of `break` to be bin exact as C++ */
+/**
+ * @internal `return` must be used instead of `break` to be bin exact as C++
+ */
 void PressChar(int vkey)
 {
 	if (gmenu_is_active() || control_talk_last_key(vkey) || sgnTimeoutCurs != 0 || deathflag) {
@@ -1084,7 +1091,7 @@ void PressChar(int vkey)
 	case 'i':
 		if (!stextflag) {
 			sbookflag = FALSE;
-			invflag = invflag == 0;
+			invflag = !invflag;
 			if (!invflag || chrflag) {
 				if (MouseX < 480 && MouseY < PANEL_TOP && PANELS_COVER) {
 					SetCursorPos(MouseX + 160, MouseY);

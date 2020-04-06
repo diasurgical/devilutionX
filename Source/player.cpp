@@ -1420,7 +1420,7 @@ void StartWalk3(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int 
 	plr[pnum]._pxoff = xoff;
 	plr[pnum]._pyoff = yoff;
 
-	if (leveltype) {
+	if (leveltype != DTYPE_TOWN) {
 		ChangeLightXY(plr[pnum]._plid, x, y);
 		PM_ChangeLightOff(pnum);
 	}
@@ -3228,7 +3228,7 @@ void CheckNewPath(int pnum)
 				i = plr[pnum].destParam1;
 				x = abs(plr[pnum].WorldX - item[i]._ix);
 				y = abs(plr[pnum].WorldY - item[i]._iy);
-				if (x <= 1 && y <= 1 && pcurs == 1 && !item[i]._iRequest) {
+				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND && !item[i]._iRequest) {
 					NetSendCmdGItem(TRUE, CMD_REQUESTGITEM, myplr, myplr, i);
 					item[i]._iRequest = TRUE;
 				}
@@ -3239,7 +3239,7 @@ void CheckNewPath(int pnum)
 				i = plr[pnum].destParam1;
 				x = abs(plr[pnum].WorldX - item[i]._ix);
 				y = abs(plr[pnum].WorldY - item[i]._iy);
-				if (x <= 1 && y <= 1 && pcurs == 1) {
+				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND) {
 					NetSendCmdGItem(TRUE, CMD_REQUESTAGITEM, myplr, myplr, i);
 				}
 			}

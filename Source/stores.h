@@ -49,7 +49,7 @@ void ClearSText(int s, int e);
 void AddSLine(int y);
 void AddSTextVal(int y, int val);
 void OffsetSTextY(int y, int yo);
-void AddSText(int x, int y, int j, char *str, char clr, int sel);
+void AddSText(int x, int y, BOOL j, char *str, char clr, BOOL sel);
 void StoreAutoPlace();
 void S_StartSmith();
 void S_ScrollSBuy(int idx);
