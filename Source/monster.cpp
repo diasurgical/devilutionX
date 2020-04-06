@@ -1204,39 +1204,6 @@ int M_GetDir(int i)
 	return GetDirection(monster[i]._mx, monster[i]._my, monster[i]._menemyx, monster[i]._menemyy);
 }
 
-void M_CheckEFlag(int i)
-{
-	int f, j;
-	int x, y;
-	WORD *m;
-
-	x = monster[i]._mx - 1;
-	y = monster[i]._my + 1;
-
-	if (x < 0 || y >= MAXDUNY) {
-		monster[i]._meflag = FALSE;
-		return;
-	}
-
-	f = 0;
-	// BUGFIX check (x > 0 && y < MAXDUNY) (fixed)
-	m = dpiece_defs_map_2[x][y].mt;
-	if (m >= dpiece_defs_map_2[0][0].mt) {
-		for (j = 2; j < 10; j++) {
-			f |= m[j];
-		}
-	} else {
-		monster[i]._meflag = FALSE;
-		return;
-	}
-
-	if (f | dSpecial[x][y])
-		monster[i]._meflag = TRUE;
-	else {
-		monster[i]._meflag = FALSE;
-	}
-}
-
 void M_StartStand(int i, int md)
 {
 	ClearMVars(i);
@@ -1254,7 +1221,6 @@ void M_StartStand(int i, int md)
 	monster[i]._moldx = monster[i]._mx;
 	monster[i]._moldy = monster[i]._my;
 	monster[i]._mdir = md;
-	M_CheckEFlag(i);
 	M_Enemy(i);
 }
 
@@ -1281,7 +1247,6 @@ void M_StartSpStand(int i, int md)
 	monster[i]._moldx = monster[i]._mx;
 	monster[i]._moldy = monster[i]._my;
 	monster[i]._mdir = md;
-	M_CheckEFlag(i);
 }
 
 void M_StartWalk(int i, int xvel, int yvel, int xadd, int yadd, int EndDir)
@@ -1305,7 +1270,6 @@ void M_StartWalk(int i, int xvel, int yvel, int xadd, int yadd, int EndDir)
 	monster[i]._mVar6 = 0;
 	monster[i]._mVar7 = 0;
 	monster[i]._mVar8 = 0;
-	M_CheckEFlag(i);
 }
 
 void M_StartWalk2(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int EndDir)
@@ -1336,7 +1300,6 @@ void M_StartWalk2(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	monster[i]._mVar6 = 16 * xoff;
 	monster[i]._mVar7 = 16 * yoff;
 	monster[i]._mVar8 = 0;
-	M_CheckEFlag(i);
 }
 
 void M_StartWalk3(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, int EndDir)
@@ -1371,7 +1334,6 @@ void M_StartWalk3(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	monster[i]._mVar6 = 16 * xoff;
 	monster[i]._mVar7 = 16 * yoff;
 	monster[i]._mVar8 = 0;
-	M_CheckEFlag(i);
 }
 
 void M_StartAttack(int i)
@@ -1386,7 +1348,6 @@ void M_StartAttack(int i)
 	monster[i]._moldx = monster[i]._mx;
 	monster[i]._moldy = monster[i]._my;
 	monster[i]._mdir = md;
-	M_CheckEFlag(i);
 }
 
 void M_StartRAttack(int i, int missile_type, int dam)
@@ -1403,7 +1364,6 @@ void M_StartRAttack(int i, int missile_type, int dam)
 	monster[i]._moldx = monster[i]._mx;
 	monster[i]._moldy = monster[i]._my;
 	monster[i]._mdir = md;
-	M_CheckEFlag(i);
 }
 
 void M_StartRSpAttack(int i, int missile_type, int dam)
@@ -1421,7 +1381,6 @@ void M_StartRSpAttack(int i, int missile_type, int dam)
 	monster[i]._moldx = monster[i]._mx;
 	monster[i]._moldy = monster[i]._my;
 	monster[i]._mdir = md;
-	M_CheckEFlag(i);
 }
 
 void M_StartSpAttack(int i)
@@ -1436,7 +1395,6 @@ void M_StartSpAttack(int i)
 	monster[i]._moldx = monster[i]._mx;
 	monster[i]._moldy = monster[i]._my;
 	monster[i]._mdir = md;
-	M_CheckEFlag(i);
 }
 
 void M_StartEat(int i)
@@ -1449,7 +1407,6 @@ void M_StartEat(int i)
 	monster[i]._mfuty = monster[i]._my;
 	monster[i]._moldx = monster[i]._mx;
 	monster[i]._moldy = monster[i]._my;
-	M_CheckEFlag(i);
 }
 
 void M_ClearSquares(int i)
@@ -1494,7 +1451,6 @@ void M_GetKnockback(int i)
 		// BUGFIX useless assignment
 		monster[i]._moldx = monster[i]._mx;
 		monster[i]._moldy = monster[i]._my;
-		M_CheckEFlag(i);
 		M_ClearSquares(i);
 		dMonster[monster[i]._mx][monster[i]._my] = i + 1;
 	}
@@ -1531,7 +1487,6 @@ void M_StartHit(int i, int pnum, int dam)
 			monster[i]._my = monster[i]._moldy;
 			monster[i]._mfutx = monster[i]._moldx;
 			monster[i]._mfuty = monster[i]._moldy;
-			M_CheckEFlag(i);
 			M_ClearSquares(i);
 			dMonster[monster[i]._mx][monster[i]._my] = i + 1;
 		}
@@ -1571,7 +1526,6 @@ void M_DiabloDeath(int i, BOOL sendmsg)
 		monster[k]._mmode = MM_DEATH;
 		monster[k]._mx = _moldx;
 		monster[k]._mfutx = _moldx;
-		M_CheckEFlag(k);
 		M_ClearSquares(k);
 		dMonster[pmonster->_mx][pmonster->_my] = k + 1;
 	}
@@ -1630,7 +1584,6 @@ void M2MStartHit(int mid, int i, int dam)
 			monster[mid]._my = monster[mid]._moldy;
 			monster[mid]._mfutx = monster[mid]._moldx;
 			monster[mid]._mfuty = monster[mid]._moldy;
-			M_CheckEFlag(mid);
 			M_ClearSquares(mid);
 			dMonster[monster[mid]._mx][monster[mid]._my] = mid + 1;
 		}
@@ -1679,7 +1632,6 @@ void MonstStartKill(int i, int pnum, BOOL sendmsg)
 	monster[i]._my = monster[i]._moldy;
 	monster[i]._mfutx = monster[i]._moldx;
 	monster[i]._mfuty = monster[i]._moldy;
-	M_CheckEFlag(i);
 	M_ClearSquares(i);
 	dMonster[monster[i]._mx][monster[i]._my] = i + 1;
 	CheckQuestKill(i, sendmsg);
@@ -1735,7 +1687,6 @@ void M2MStartKill(int i, int mid)
 	monster[mid]._my = monster[mid]._moldy;
 	monster[mid]._mfutx = monster[mid]._moldx;
 	monster[mid]._mfuty = monster[mid]._moldy;
-	M_CheckEFlag(mid);
 	M_ClearSquares(mid);
 	dMonster[monster[mid]._mx][monster[mid]._my] = mid + 1;
 	CheckQuestKill(mid, TRUE);
@@ -1802,7 +1753,6 @@ void M_StartFadein(int i, int md, BOOL backwards)
 	monster[i]._mfuty = monster[i]._my;
 	monster[i]._moldx = monster[i]._mx;
 	monster[i]._moldy = monster[i]._my;
-	M_CheckEFlag(i);
 	monster[i]._mdir = md;
 	monster[i]._mFlags &= ~MFLAG_HIDDEN;
 	if (backwards) {
@@ -1826,7 +1776,6 @@ void M_StartFadeout(int i, int md, BOOL backwards)
 	monster[i]._mfuty = monster[i]._my;
 	monster[i]._moldx = monster[i]._mx;
 	monster[i]._moldy = monster[i]._my;
-	M_CheckEFlag(i);
 	monster[i]._mdir = md;
 	if (backwards) {
 		monster[i]._mFlags |= MFLAG_LOCK_ANIMATION;
@@ -2489,7 +2438,6 @@ void M_Teleport(int i)
 		Monst->_moldx = x;
 		Monst->_moldy = y;
 		Monst->_mdir = M_GetDir(i);
-		M_CheckEFlag(i);
 	}
 }
 

@@ -1272,12 +1272,6 @@ void PressChar(int vkey)
 	case 'd':
 		PrintDebugPlayer(FALSE);
 		return;
-	case 'e':
-		if (debug_mode_key_d) {
-			sprintf(tempstr, "EFlag = %i", plr[myplr]._peflag);
-			NetSendCmdString(1 << myplr, tempstr);
-		}
-		return;
 	case 'L':
 	case 'l':
 		if (debug_mode_key_inverted_v) {
