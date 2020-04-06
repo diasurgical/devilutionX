@@ -74,19 +74,15 @@ if(SWITCH)
   include(switch_defs)
 endif()
 
-if(RG350)
-  include(rg350_defs)
-endif()
-
-if (GKD350H)
-  include(gkd350h_defs)
-endif()
-
-if(RETROFW)
+set(TARGET_PLATFORM host CACHE STRING "Target platform")
+set_property(CACHE TARGET_PLATFORM PROPERTY STRINGS host retrofw rg350 gkd350h cpigamesh)
+if(TARGET_PLATFORM STREQUAL "retrofw")
   include(retrofw_defs)
-endif()
-
-if(CPIGAMESH)
+elseif(TARGET_PLATFORM STREQUAL "rg350")
+  include(rg350_defs)
+elseif(TARGET_PLATFORM STREQUAL "gkd350h")
+  include(gkd350h_defs)
+elseif(TARGET_PLATFORM STREQUAL "cpigamesh")
   include(cpigamesh_defs)
 endif()
 

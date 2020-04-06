@@ -64,7 +64,7 @@ build() {
 	mkdir -p "$BUILD_DIR"
 	cd "$BUILD_DIR"
 	rm -f CMakeCache.txt
-	cmake .. -DBINARY_RELEASE=ON "-D${TARGET^^}=ON" \
+	cmake .. -DBINARY_RELEASE=ON "-DTARGET_PLATFORM=$TARGET" \
 		-DCMAKE_TOOLCHAIN_FILE="$BUILDROOT/output/host/usr/share/buildroot/toolchainfile.cmake"
 	make -j $(getconf _NPROCESSORS_ONLN)
 	cd -
