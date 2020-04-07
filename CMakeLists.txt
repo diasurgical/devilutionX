@@ -443,9 +443,9 @@ foreach(target devilution ${BIN_TARGET})
     target_compile_definitions(${target} PRIVATE USE_SDL1)
   else()
     target_link_libraries(${target} PRIVATE
+      SDL2::SDL2main
       SDL2::SDL2_ttf
-      SDL2::SDL2_mixer
-      SDL2::SDL2main)
+      SDL2::SDL2_mixer)
   endif()
 
   if(ASAN)
