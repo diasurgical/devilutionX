@@ -1,64 +1,56 @@
 cmake_minimum_required(VERSION 3.10) # CMP0083 NEW
 
 include(CMake/out_of_tree.cmake)
+include(CMake/genex.cmake)
 
-if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE "Debug")
-endif()
-
-option(ASAN "Enable address sanitizer" ON)
-option(UBSAN "Enable undefined behaviour sanitizer" ON)
-option(DEBUG "Enable debug mode in engine" ON)
+DEBUG_OPTION(ASAN "Enable address sanitizer")
+DEBUG_OPTION(UBSAN "Enable undefined behaviour sanitizer")
+DEBUG_OPTION(DEBUG "Enable debug mode in engine")
+option(DISABLE_LTO "Disable link-time optimization (by default enabled in release mode)" OFF)
 option(PIE "Generate position-independent code" OFF)
-option(LTO "Enable link-time optimization (if supported by the toolchain)" OFF)
 option(SPAWN "Build the shareware version" OFF)
 option(DIST "Dynamically link only glibc and SDL2" OFF)
-option(FASTER "Enable FASTER in engine" ON)
 option(BINARY_RELEASE "Enable options for binary release" OFF)
 option(NIGHTLY_BUILD "Enable options for nightly build" OFF)
 option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network" OFF)
 option(RUN_TESTS "Build and run tests" OFF)
 
-if(BINARY_RELEASE)
+if(BINARY_RELEASE OR CMAKE_BUILD_TYPE STREQUAL "Release")
+  set(BINARY_RELEASE ON)
   set(CMAKE_BUILD_TYPE "Release")
-  set(ASAN OFF)
-  set(UBSAN OFF)
-  set(DEBUG OFF)
-  set(LTO ON)
   set(DIST ON)
-  set(FASTER OFF)
 endif()
 
-if(NIGHTLY_BUILD)
+if(NIGHTLY_BUILD OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+  set(NIGHTLY_BUILD ON)
   set(CMAKE_BUILD_TYPE "RelWithDebInfo")
-  set(ASAN OFF)
-  set(UBSAN OFF)
-  set(DEBUG ON)
-  set(LTO ON)
   set(DIST ON)
-  set(FASTER OFF)
 endif()
 
-include(CMake/git.cmake)
-get_git_tag(GIT_TAG)
-if(NOT CMAKE_BUILD_TYPE MATCHES "Release")
+if(NOT VERSION_NUM)
+  include(CMake/git.cmake)
+  get_git_tag(VERSION_NUM)
   get_git_commit_hash(GIT_COMMIT_HASH)
+  if(NOT VERSION_SUFFIX)
+    set(VERSION_SUFFIX "$<$<NOT:$<CONFIG:Release>>:-${GIT_COMMIT_HASH}>")
+  endif()
 endif()
 
 project(DevilutionX
-  VERSION ${GIT_TAG}
+  VERSION ${VERSION_NUM}
   LANGUAGES C CXX)
 
-if(LTO)
-  # Use LTO on compilers where it is supported.
+# Not a genexp because CMake doesn't support it
+# https://gitlab.kitware.com/cmake/cmake/-/issues/20546
+if(NOT DISABLE_LTO)
+  # LTO if supported:
   include(CheckIPOSupported)
-  check_ipo_supported(RESULT result OUTPUT lto_error)
-  if(result)
-    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
-  else()
-    message(WARNING "LTO not supported by this compiler and/or CMake version:")
-    message(WARNING ${lto_error})
+  check_ipo_supported(RESULT is_ipo_supported OUTPUT lto_error)
+  if(is_ipo_supported)
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELEASE ON)
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELWITHDEBINFO ON)
+    set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_MINSIZEREL ON)
   endif()
 endif()
 
@@ -327,6 +319,22 @@ endif()
 
 add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionx_SRCS})
 
+# Use file GENERATE instead of configure_file because configure_file
+# does not support generator expressions.
+get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+if(is_multi_config)
+  set(CONFIG_PATH $<CONFIG>/config.h)
+  target_include_directories(devilution PRIVATE ${CMAKE_BINARY_DIR}/$<CONFIG>)
+  target_include_directories(${BIN_TARGET} PRIVATE ${CMAKE_BINARY_DIR}/$<CONFIG>)
+else()
+  set(CONFIG_PATH config.h)
+endif()
+file(GENERATE OUTPUT ${CONFIG_PATH} CONTENT
+"#pragma once
+#define PROJECT_NAME \"${PROJECT_NAME}\"
+#define PROJECT_VERSION \"${PROJECT_VERSION}${VERSION_SUFFIX}\"
+")
+
 if(RUN_TESTS)
   include(CTest)
   include(GoogleTest)
@@ -337,7 +345,6 @@ if(RUN_TESTS)
   gtest_add_tests(${BIN_TARGET} "" AUTO)
 endif()
 
-configure_file(SourceS/config.h.in config.h @ONLY)
 target_include_directories(devilution PUBLIC Source SourceS ${CMAKE_CURRENT_BINARY_DIR})
 target_include_directories(${BIN_TARGET} PRIVATE
   SourceX
@@ -358,10 +365,8 @@ if(NOT NONET)
 endif()
 
 target_compile_definitions(devilution PRIVATE DEVILUTION_ENGINE)
-target_compile_definitions(devilution PUBLIC
-  "$<$<BOOL:${DEBUG}>:_DEBUG>"
-  # Skip fades and other fluff
-  "$<$<BOOL:${FASTER}>:FASTER>")
+genex_for_option(DEBUG)
+target_compile_definitions(devilution PUBLIC "$<${DEBUG_GENEX}:_DEBUG>")
 target_compile_definitions(${BIN_TARGET} PRIVATE ASIO_STANDALONE)
 
 # Defines without value
@@ -434,7 +439,14 @@ foreach(
   endif()
 endforeach(def_name)
 
+genex_for_option(ASAN)
+genex_for_option(UBSAN)
 foreach(target devilution ${BIN_TARGET})
+  target_compile_options(${target} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
+  target_link_libraries(${target} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
+  target_compile_options(${target} PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined>)
+  target_link_libraries(${target} PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined>)
+
   if(USE_SDL1)
     target_link_libraries(${target} PRIVATE
       ${SDL_TTF_LIBRARY}
@@ -446,16 +458,6 @@ foreach(target devilution ${BIN_TARGET})
       SDL2::SDL2main
       SDL2::SDL2_ttf
       SDL2::SDL2_mixer)
-  endif()
-
-  if(ASAN)
-    target_compile_options(${target} PUBLIC -fsanitize=address -fsanitize-recover=address)
-    target_link_libraries(${target} PUBLIC -fsanitize=address -fsanitize-recover=address)
-  endif()
-
-  if(UBSAN)
-    target_compile_options(${target} PUBLIC -fsanitize=undefined)
-    target_link_libraries(${target} PUBLIC -fsanitize=undefined)
   endif()
 
   if(SWITCH)
@@ -475,8 +477,8 @@ foreach(target devilution ${BIN_TARGET})
   target_compile_definitions(${target} PRIVATE ${def_list})
 endforeach(target)
 
-if(DIST AND CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT HAIKU)
-  target_link_libraries(${BIN_TARGET} PUBLIC -static-libgcc -static-libstdc++)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT HAIKU)
+  target_link_libraries(${BIN_TARGET} PUBLIC "$<$<NOT:$<CONFIG:Debug>>:-static-libgcc;-static-libstdc++>")
 endif()
 
 if(WIN32)
@@ -507,10 +509,9 @@ if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-builtin-macro-redefined")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-builtin-macro-redefined")
 
-  if(DEBUG)
-    # Note: For Valgrind suppor.
-    target_compile_options(devilution PUBLIC -fno-omit-frame-pointer)
-  endif()
+  # Note: For Valgrind support.
+  genex_for_option(DEBUG)
+  target_compile_options(devilution PUBLIC $<${DEBUG_GENEX}:-fno-omit-frame-pointer>)
   # Ignore serious warnings due to "quality" of decompiled code
   # Currently, disable ignore all warnings (-w), to be removed later
   target_compile_options(devilution PRIVATE -fpermissive -w)
