@@ -5,6 +5,8 @@ namespace dvl {
 TTF_Font *font = nullptr;
 BYTE *FontTables[4];
 Art ArtFonts[4][2];
+/* This is so we know ttf has been init when we get to the diablo_deinit() function */
+BOOL was_ttf_init = false;
 
 namespace {
 
@@ -53,9 +55,9 @@ void LoadTtfFont() {
 	if (!TTF_WasInit()) {
 		if (TTF_Init() == -1) {
 			SDL_Log("TTF_Init: %s", TTF_GetError());
-			exit(1);
+			diablo_quit(1);
 		}
-		atexit(TTF_Quit);
+		was_ttf_init = true;
 	}
 
 	font = TTF_OpenFont(TTF_FONT_PATH, 17);
@@ -72,6 +74,10 @@ void UnloadTtfFont() {
 	if (font && TTF_WasInit())
 		TTF_CloseFont(font);
 	font = nullptr;
+}
+
+void DeinitTtf() {
+	TTF_Quit();	
 }
 
 } // namespace dvl

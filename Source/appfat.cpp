@@ -27,7 +27,7 @@ void app_fatal(const char *pszFmt, ...)
 
 	va_end(va);
 
-	exit(1);
+	diablo_quit(1);
 }
 
 void MsgBox(const char *pszFmt, va_list va)
