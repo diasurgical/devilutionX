@@ -23,6 +23,17 @@ std::uint32_t SHA1CircularShift(std::uint32_t bits, std::uint32_t word) {
 	}
 }
 
+void SHA1Init(SHA1Context *context)
+{
+	context->count[0] = 0;
+	context->count[1] = 0;
+	context->state[0] = 0x67452301;
+	context->state[1] = 0xEFCDAB89;
+	context->state[2] = 0x98BADCFE;
+	context->state[3] = 0x10325476;
+	context->state[4] = 0xC3D2E1F0;
+}
+
 } // namespace
 
 SHA1Context sgSHA1[3];
@@ -138,17 +149,6 @@ void SHA1ProcessMessageBlock(SHA1Context *context)
 void SHA1Reset(int n)
 {
 	SHA1Init(&sgSHA1[n]);
-}
-
-void SHA1Init(SHA1Context *context)
-{
-	context->count[0] = 0;
-	context->count[1] = 0;
-	context->state[0] = 0x67452301;
-	context->state[1] = 0xEFCDAB89;
-	context->state[2] = 0x98BADCFE;
-	context->state[3] = 0x10325476;
-	context->state[4] = 0xC3D2E1F0;
 }
 
 DEVILUTION_END_NAMESPACE
