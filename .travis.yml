@@ -11,7 +11,7 @@ jobs:
       arch: ppc64le
       script:
         # CMake 3.10: no -S/-B and -j is build tool specific.
-        - mkdir build && cd build
+        - mkdir -p build && cd build
         - cmake .. -DBINARY_RELEASE=ON
         - cmake --build . --target package -- -j $(nproc)
 addons:
