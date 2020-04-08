@@ -27,8 +27,7 @@ LRESULT MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 void init_activate_window(HWND hWnd, BOOL bActive);
 WNDPROC SetWindowProc(WNDPROC NewProc);
 
-extern BOOL was_dx_init;     // defined in dx.cpp
-extern BOOL was_diablo_init; // defined in diablo.cpp
+extern BOOL was_window_init;   /** defined in dx.cpp */
 
 /* rdata */
 

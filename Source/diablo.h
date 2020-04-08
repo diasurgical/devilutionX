@@ -27,8 +27,8 @@ extern BOOLEAN cineflag;
 extern int force_redraw;
 extern BOOL visiondebug;
 /* These are defined in fonts.h */ 
-extern BOOL was_ttf_init;
-extern void DeinitTtf();
+extern BOOL was_fonts_init;
+extern void FontsCleanup();
 /** unused */
 extern BOOL scrollflag;
 extern BOOL light4flag;

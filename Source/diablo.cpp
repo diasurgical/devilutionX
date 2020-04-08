@@ -81,7 +81,7 @@ char *spszMsgTbl[4] = {
 char *spszMsgHotKeyTbl[4] = { "F9", "F10", "F11", "F12" };
 
 /** To know if these things have been done when we get to the diablo_deinit() function */
-BOOL was_diablo_init = false;
+BOOL was_archives_init = false;
 BOOL was_ui_init = false;
 BOOL was_snd_init = false;
 BOOL was_sfx_init = false;
@@ -276,7 +276,7 @@ void diablo_init()
 
 	SFileEnableDirectAccess(TRUE);
 	init_archives();
-	was_diablo_init = true;
+	was_archives_init = true;
 
 	UiInitialize();
 #ifdef SPAWN
@@ -320,12 +320,12 @@ void diablo_deinit()
 		sound_cleanup();
 	if (was_ui_init)
 		UiDestroy();
-	if (was_diablo_init)
+	if (was_archives_init)
 		init_cleanup();
-	if (was_dx_init)
+	if (was_window_init)
 		dx_cleanup();  // Cleanup SDL surfaces stuff, so we have to do it before SDL_Quit().
-	if (was_ttf_init)
-		DeinitTtf();	
+	if (was_fonts_init)
+		FontsCleanup();	
 	if (SDL_WasInit(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC))
 		SDL_Quit();
 }

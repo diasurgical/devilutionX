@@ -52,7 +52,7 @@ void init_create_window()
 	if (!SpawnWindow(PROJECT_NAME, SCREEN_WIDTH, SCREEN_HEIGHT))
 		app_fatal("Unable to create main window");
 	dx_init(NULL);
-	was_dx_init = true;
+	was_window_init = true;
 	gbActive = true;
 	gpBufStart = &gpBuffer[BUFFER_WIDTH * SCREEN_Y];
 	gpBufEnd = (BYTE *)(BUFFER_WIDTH * (SCREEN_HEIGHT + SCREEN_Y));
