@@ -32,6 +32,9 @@ SDL_Surface *renderer_texture_surface = nullptr;
 /** 8-bit surface wrapper around #gpBuffer */
 SDL_Surface *pal_surface;
 
+/** To know if surfaces have been initialized or not */
+BOOL was_window_init = false;
+
 static void dx_create_back_buffer()
 {
 	pal_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);

@@ -19,7 +19,9 @@
 
 namespace dvl {
 
-extern SDL_Surface *renderer_texture_surface; // defined in dx.cpp
+extern BOOL was_window_init; /** defined in dx.cpp */
+
+extern SDL_Surface *renderer_texture_surface; /** defined in dx.cpp */
 
 #ifdef USE_SDL1
 void SetVideoMode(int width, int height, int bpp, std::uint32_t flags) {
@@ -50,8 +52,6 @@ bool SpawnWindow(const char *lpWindowName, int nWidth, int nHeight)
 	if (SDL_Init(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) <= -1) {
 		ErrSdl();
 	}
-
-	atexit(SDL_Quit);
 
 #ifdef USE_SDL1
 	SDL_EnableUNICODE(1);

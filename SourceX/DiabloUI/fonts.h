@@ -33,5 +33,6 @@ void UnloadArtFonts();
 
 void LoadTtfFont();
 void UnloadTtfFont();
+void FontsCleanup();
 
 } // namespace dvl

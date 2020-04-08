@@ -80,6 +80,12 @@ char *spszMsgTbl[4] = {
 /** INI files variable names for quick message keys */
 char *spszMsgHotKeyTbl[4] = { "F9", "F10", "F11", "F12" };
 
+/** To know if these things have been done when we get to the diablo_deinit() function */
+BOOL was_archives_init = false;
+BOOL was_ui_init = false;
+BOOL was_snd_init = false;
+BOOL was_sfx_init = false;
+
 void FreeGameMem()
 {
 	music_stop();
@@ -270,13 +276,13 @@ void diablo_init()
 
 	SFileEnableDirectAccess(TRUE);
 	init_archives();
-	atexit(init_cleanup);
+	was_archives_init = true;
 
 	UiInitialize();
 #ifdef SPAWN
 	UiSetSpawned(TRUE);
 #endif
-	atexit(UiDestroy);
+	was_ui_init = true;
 
 	ReadOnlyTest();
 
@@ -285,9 +291,10 @@ void diablo_init()
 	diablo_init_screen();
 
 	snd_init(NULL);
-	atexit(sound_cleanup);
+	was_snd_init = true;
+
 	sound_init();
-	atexit(effects_cleanup_sfx);
+	was_sfx_init = true;
 }
 
 void diablo_splash()
@@ -305,12 +312,37 @@ void diablo_splash()
 	UiTitleDialog();
 }
 
+void diablo_deinit()
+{
+	if (was_sfx_init)
+		effects_cleanup_sfx();
+	if (was_snd_init)
+		sound_cleanup();
+	if (was_ui_init)
+		UiDestroy();
+	if (was_archives_init)
+		init_cleanup();
+	if (was_window_init)
+		dx_cleanup();  // Cleanup SDL surfaces stuff, so we have to do it before SDL_Quit().
+	if (was_fonts_init)
+		FontsCleanup();	
+	if (SDL_WasInit(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC))
+		SDL_Quit();
+}
+
+void diablo_quit(int exitStatus)
+{
+	diablo_deinit();
+	exit(exitStatus);
+}
+
 int DiabloMain(int argc, char **argv)
 {
 	diablo_parse_flags(argc, argv);
 	diablo_init();
 	diablo_splash();
 	mainmenu_loop();
+	diablo_deinit();
 
 	return 0;
 }
@@ -341,7 +373,7 @@ static void print_help_and_exit()
 	printf("    %-20s %-30s\n", "-t <##>", "Set current quest level");
 #endif
 	printf("\nReport bugs at https://github.com/diasurgical/devilutionX/\n");
-	exit(0);
+	diablo_quit(0);
 }
 
 void diablo_parse_flags(int argc, char **argv)
@@ -351,7 +383,7 @@ void diablo_parse_flags(int argc, char **argv)
 			print_help_and_exit();
 		} else if (strcasecmp("--version", argv[i]) == 0) {
 			printf("%s v%s\n", PROJECT_NAME, PROJECT_VERSION);
-			exit(0);
+			diablo_quit(0);
 		} else if (strcasecmp("--data-dir", argv[i]) == 0) {
 			basePath = argv[++i];
 #ifdef _WIN32
