@@ -172,7 +172,7 @@ void PaletteFadeIn(int fr)
 	for (i = 0; i < 256; i = (SDL_GetTicks() - tc) / 2.083) { // 32 frames @ 60hz
 		SetFadeLevel(i);
 		SDL_Rect SrcRect = { SCREEN_X, SCREEN_Y, SCREEN_WIDTH, SCREEN_HEIGHT };
-		BltFast(&SrcRect, NULL);
+		//BltFast(&SrcRect, NULL); // avoid scaling issue when using scale2x
 		RenderPresent();
 	}
 	SetFadeLevel(256);
@@ -189,7 +189,7 @@ void PaletteFadeOut(int fr)
 		for (i = 256; i > 0; i = 256 - (SDL_GetTicks() - tc) / 2.083) { // 32 frames @ 60hz
 			SetFadeLevel(i);
 			SDL_Rect SrcRect = { SCREEN_X, SCREEN_Y, SCREEN_WIDTH, SCREEN_HEIGHT };
-			BltFast(&SrcRect, NULL);
+			//BltFast(&SrcRect, NULL); // avoid scaling issue when using scale2x
 			RenderPresent();
 		}
 		SetFadeLevel(0);
