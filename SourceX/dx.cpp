@@ -28,7 +28,7 @@ unsigned int pal_surface_palette_version = 0;
 
 /** 24-bit renderer texture surface */
 SDL_Surface *renderer_texture_surface = nullptr;
-
+SDL_Surface *scale2x_renderer_texture_surface = nullptr; // surface for scale2x
 /** 8-bit surface wrapper around #gpBuffer */
 SDL_Surface *pal_surface;
 
@@ -66,7 +66,8 @@ static void dx_create_primary_surface()
 		Uint32 format;
 		if (SDL_QueryTexture(texture, &format, nullptr, nullptr, nullptr) < 0)
 			ErrSdl();
-		renderer_texture_surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, SDL_BITSPERPIXEL(format), format);
+		renderer_texture_surface = SDL_CreateRGBSurfaceWithFormat(0, 1280/*width*/, 960/*height*/, SDL_BITSPERPIXEL(format), format); // increase buffer size by 2x
+		scale2x_renderer_texture_surface = SDL_CreateRGBSurfaceWithFormat(0, 1280/*width*/, 960/*height*/, SDL_BITSPERPIXEL(format), format); // create surface for scale2x
 	}
 #endif
 	if (GetOutputSurface() == nullptr) {
@@ -143,6 +144,7 @@ void dx_cleanup()
 	pal_surface = nullptr;
 	SDL_FreePalette(palette);
 	SDL_FreeSurface(renderer_texture_surface);
+	SDL_FreeSurface(scale2x_renderer_texture_surface); //destroy surface for scale2x
 	SDL_DestroyTexture(texture);
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(ghMainWnd);
