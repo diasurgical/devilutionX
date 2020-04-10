@@ -121,12 +121,12 @@ bool SpawnWindow(const char *lpWindowName, int nWidth, int nHeight)
 			ErrSdl();
 		}
 
-		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, nWidth, nHeight);
+		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, 1280/*nWidth*/, 960/*nHeight*/); //inceased size for scale2x
 		if (texture == NULL) {
 			ErrSdl();
 		}
 
-		if (SDL_RenderSetLogicalSize(renderer, nWidth, nHeight) <= -1) {
+		if (SDL_RenderSetLogicalSize(renderer, 1280/*nWidth*/, 960/*nHeight*/) <= -1) {
 			ErrSdl();
 		}
 #endif
