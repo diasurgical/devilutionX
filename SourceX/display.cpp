@@ -126,7 +126,7 @@ bool SpawnWindow(const char *lpWindowName, int nWidth, int nHeight)
 			ErrSdl();
 		}
 
-		if (SDL_RenderSetLogicalSize(renderer, 1280/*nWidth*/, 960/*nHeight*/) <= -1) {
+		if (SDL_RenderSetLogicalSize(renderer, 1280/*nWidth*/, 960/*nHeight*/) <= -1) { //inceased size for scale2x
 			ErrSdl();
 		}
 #endif
