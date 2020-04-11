@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file control.h
+ *
+ * Interface of the character and main control panels
+ */
 #ifndef __CONTROL_H__
 #define __CONTROL_H__
 
@@ -6,8 +10,8 @@ extern BYTE *pDurIcons;
 extern BYTE *pChrButtons;
 extern BOOL drawhpflag;
 extern BOOL dropGoldFlag;
-extern int panbtn[8];
-extern int chrbtn[4];
+extern BOOL panbtn[8];
+extern BOOL chrbtn[4];
 extern BYTE *pMultiBtns;
 extern BYTE *pPanelButtons;
 extern BYTE *pChrPanel;
@@ -39,7 +43,7 @@ extern BOOL sbookflag;
 extern BOOL chrflag;
 extern BOOL drawbtnflag;
 extern BYTE *pSpellBkCel;
-extern char infostr[MAX_PATH];
+extern char infostr[256];
 extern int numpanbtns;
 extern BYTE *pStatusPanel;
 extern char panelstr[4][64];

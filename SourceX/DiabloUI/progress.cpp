@@ -92,7 +92,7 @@ void progress_Render(BYTE progress)
 	}
 }
 
-BOOL UiProgressDialog(HWND window, char *msg, int enable, int (*fnfunc)(), int rate)
+BOOL UiProgressDialog(char *msg, int enable, int (*fnfunc)(), int rate)
 {
 	progress_Load(msg);
 	SetFadeLevel(256);

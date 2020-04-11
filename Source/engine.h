@@ -1,15 +1,31 @@
-//HEADER_GOES_HERE
+/**
+ * @file engine.h
+ *
+ *  of basic engine helper functions:
+ * - Sprite blitting
+ * - Drawing
+ * - Angle calculation
+ * - RNG
+ * - Memory allocation
+ * - File loading
+ * - Video playback
+ */
 #ifndef __ENGINE_H__
 #define __ENGINE_H__
 
 //offset 0
 //pCelBuff->pFrameTable[0]
 
-extern char gbPixelCol;  // automap pixel color 8-bit (palette entry)
-extern BOOL gbRotateMap; // flip - if y < x
+/** automap pixel color 8-bit (palette entry) */
+extern char gbPixelCol;
+/** flip - if y < x */
+extern BOOL gbRotateMap;
+/** Seed value before the most recent call to SetRndSeed() */
 extern int orgseed;
+/** Track number of calls to GetRndSeed() since last call to SetRndSeed() */
 extern int SeedCount;
-extern BOOL gbNotInView; // valid - if x/y are in bounds
+/** valid - if x/y are in bounds */
+extern BOOL gbNotInView;
 
 inline BYTE *CelGetFrameStart(BYTE *pCelBuff, int nCel)
 {

@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file items.h
+ *
+ * Interface of item functionality.
+ */
 #ifndef __ITEMS_H__
 #define __ITEMS_H__
 

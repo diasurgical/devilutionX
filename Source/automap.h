@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file automap.h
+ *
+ * Interface of the in-game map overlay.
+ */
 #ifndef __AUTOMAP_H__
 #define __AUTOMAP_H__
 

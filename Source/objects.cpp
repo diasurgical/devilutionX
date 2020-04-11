@@ -54,7 +54,7 @@ char shrinemax[NUM_SHRINETYPE] = {
 	16, 16, 16, 16, 16, 16, 16, 16, 16, 16,
 	16, 16, 16, 16, 16, 16
 };
-// 0 - sp+mp, 1 - sp only, 2 - mp only
+/** 0 - sp+mp, 1 - sp only, 2 - mp only */
 BYTE shrineavail[NUM_SHRINETYPE] = {
 	0, 0, 1, 1, 0, 0, 0, 0, 1, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 2, 0,
@@ -72,9 +72,9 @@ char *StoryBookName[9] = {
 	"The Black King"
 };
 int StoryText[3][3] = {
-	{ QUEST_BOOK11, QUEST_BOOK12, QUEST_BOOK13 },
-	{ QUEST_BOOK21, QUEST_BOOK22, QUEST_BOOK23 },
-	{ QUEST_BOOK31, QUEST_BOOK32, QUEST_BOOK33 }
+	{ TEXT_BOOK11, TEXT_BOOK12, TEXT_BOOK13 },
+	{ TEXT_BOOK21, TEXT_BOOK22, TEXT_BOOK23 },
+	{ TEXT_BOOK31, TEXT_BOOK32, TEXT_BOOK33 }
 };
 
 void InitObjectGFX()
@@ -278,8 +278,8 @@ void AddCandles()
 {
 	int tx, ty;
 
-	tx = quests[QTYPE_PW]._qtx;
-	ty = quests[QTYPE_PW]._qty;
+	tx = quests[Q_PWATER]._qtx;
+	ty = quests[Q_PWATER]._qty;
 	AddObject(OBJ_STORYCANDLE, tx - 2, ty + 1);
 	AddObject(OBJ_STORYCANDLE, tx + 3, ty + 1);
 	AddObject(OBJ_STORYCANDLE, tx - 1, ty + 2);
@@ -309,11 +309,11 @@ void AddBookLever(int lx1, int ly1, int lx2, int ly2, int x1, int y1, int x2, in
 			return;
 	}
 
-	if (QuestStatus(QTYPE_BLIND))
+	if (QuestStatus(Q_BLIND))
 		AddObject(OBJ_BLINDBOOK, xp, yp);
-	if (QuestStatus(QTYPE_WARLRD))
+	if (QuestStatus(Q_WARLORD))
 		AddObject(OBJ_STEELTOME, xp, yp);
-	if (QuestStatus(QTYPE_BLOOD)) {
+	if (QuestStatus(Q_BLOOD)) {
 		xp = 2 * setpc_x + 25;
 		yp = 2 * setpc_y + 40;
 		AddObject(OBJ_BLOODBOOK, xp, yp);
@@ -753,7 +753,7 @@ void InitObjects()
 		GetRndSeed();
 		if (currlevel == 9 && gbMaxPlayers == 1)
 			AddSlainHero();
-		if (currlevel == quests[QTYPE_BLKM]._qlevel && quests[QTYPE_BLKM]._qactive == 1)
+		if (currlevel == quests[Q_MUSHROOM]._qlevel && quests[Q_MUSHROOM]._qactive == QUEST_INIT)
 			AddMushPatch();
 		if (currlevel == 4)
 			AddStoryBooks();
@@ -762,46 +762,46 @@ void InitObjects()
 		if (currlevel == 12)
 			AddStoryBooks();
 		if (leveltype == DTYPE_CATHEDRAL) {
-			if (QuestStatus(QTYPE_BUTCH))
+			if (QuestStatus(Q_BUTCHER))
 				AddTortures();
-			if (QuestStatus(QTYPE_PW))
+			if (QuestStatus(Q_PWATER))
 				AddCandles();
-			if (QuestStatus(QTYPE_BOL))
+			if (QuestStatus(Q_LTBANNER))
 				AddObject(OBJ_SIGNCHEST, 2 * setpc_x + 26, 2 * setpc_y + 19);
 			InitRndLocBigObj(10, 15, OBJ_SARC);
 			AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
 			InitRndBarrels();
 		}
 		if (leveltype == DTYPE_CATACOMBS) {
-			if (QuestStatus(QTYPE_INFRA))
+			if (QuestStatus(Q_ROCK))
 				InitRndLocObj5x5(1, 1, OBJ_STAND);
-			if (QuestStatus(QTYPE_BONE))
+			if (QuestStatus(Q_SCHAMB))
 				InitRndLocObj5x5(1, 1, OBJ_BOOK2R);
 			AddL2Objs(0, 0, MAXDUNX, MAXDUNY);
 			AddL2Torches();
-			if (QuestStatus(QTYPE_BLIND)) {
+			if (QuestStatus(Q_BLIND)) {
 				if (plr[myplr]._pClass == PC_WARRIOR) {
-					sp_id = QUEST_BLINDING;
+					sp_id = TEXT_BLINDING;
 				} else if (plr[myplr]._pClass == PC_ROGUE) {
-					sp_id = QUEST_RBLINDING;
+					sp_id = TEXT_RBLINDING;
 				} else if (plr[myplr]._pClass == PC_SORCERER) {
-					sp_id = QUEST_MBLINDING;
+					sp_id = TEXT_MBLINDING;
 				}
-				quests[QTYPE_BLIND]._qmsg = sp_id;
+				quests[Q_BLIND]._qmsg = sp_id;
 				AddBookLever(0, 0, MAXDUNX, MAXDUNY, setpc_x, setpc_y, setpc_w + setpc_x + 1, setpc_h + setpc_y + 1, sp_id);
 				mem = LoadFileInMem("Levels\\L2Data\\Blind2.DUN", NULL);
 				LoadMapObjs(mem, 2 * setpc_x, 2 * setpc_y);
 				mem_free_dbg(mem);
 			}
-			if (QuestStatus(QTYPE_BLOOD)) {
+			if (QuestStatus(Q_BLOOD)) {
 				if (plr[myplr]._pClass == PC_WARRIOR) {
-					sp_id = QUEST_BLOODY;
+					sp_id = TEXT_BLOODY;
 				} else if (plr[myplr]._pClass == PC_ROGUE) {
-					sp_id = QUEST_RBLOODY;
+					sp_id = TEXT_RBLOODY;
 				} else if (plr[myplr]._pClass == PC_SORCERER) {
-					sp_id = QUEST_MBLOODY;
+					sp_id = TEXT_MBLOODY;
 				}
-				quests[QTYPE_BLOOD]._qmsg = sp_id;
+				quests[Q_BLOOD]._qmsg = sp_id;
 				AddBookLever(0, 0, MAXDUNX, MAXDUNY, setpc_x, setpc_y + 3, setpc_x + 2, setpc_y + 7, sp_id);
 				AddObject(OBJ_PEDISTAL, 2 * setpc_x + 25, 2 * setpc_y + 32);
 			}
@@ -812,21 +812,21 @@ void InitObjects()
 			InitRndBarrels();
 		}
 		if (leveltype == DTYPE_HELL) {
-			if (QuestStatus(QTYPE_WARLRD)) {
+			if (QuestStatus(Q_WARLORD)) {
 				if (plr[myplr]._pClass == PC_WARRIOR) {
-					sp_id = QUEST_BLOODWAR;
+					sp_id = TEXT_BLOODWAR;
 				} else if (plr[myplr]._pClass == PC_ROGUE) {
-					sp_id = QUEST_RBLOODWAR;
+					sp_id = TEXT_RBLOODWAR;
 				} else if (plr[myplr]._pClass == PC_SORCERER) {
-					sp_id = QUEST_MBLOODWAR;
+					sp_id = TEXT_MBLOODWAR;
 				}
-				quests[QTYPE_WARLRD]._qmsg = sp_id;
+				quests[Q_WARLORD]._qmsg = sp_id;
 				AddBookLever(0, 0, MAXDUNX, MAXDUNY, setpc_x, setpc_y, setpc_x + setpc_w, setpc_y + setpc_h, sp_id);
 				mem = LoadFileInMem("Levels\\L4Data\\Warlord.DUN", NULL);
 				LoadMapObjs(mem, 2 * setpc_x, 2 * setpc_y);
 				mem_free_dbg(mem);
 			}
-			if (QuestStatus(QTYPE_VB) && gbMaxPlayers == 1)
+			if (QuestStatus(Q_BETRAYER) && gbMaxPlayers == 1)
 				AddLazStand();
 			InitRndBarrels();
 			AddL4Goodies();
@@ -836,7 +836,7 @@ void InitObjects()
 		InitRndLocObj(1, 5, 7);
 		if (leveltype != DTYPE_HELL)
 			AddObjTraps();
-		if (leveltype > 1)
+		if (leveltype > DTYPE_CATHEDRAL)
 			AddChestTraps();
 		InitObjFlag = FALSE;
 	}
@@ -1521,8 +1521,8 @@ void Obj_Circle(int i)
 		if (ox == 35 && oy == 36 && object[i]._oVar5 == 3) {
 			object[i]._oVar6 = 4;
 			ObjChangeMapResync(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
-			if (quests[QTYPE_VB]._qactive == 2)
-				quests[QTYPE_VB]._qvar1 = 4;
+			if (quests[Q_BETRAYER]._qactive == QUEST_ACTIVE)
+				quests[Q_BETRAYER]._qvar1 = 4;
 			AddMissile(plr[myplr].WorldX, plr[myplr].WorldY, 35, 46, plr[myplr]._pdir, MIS_RNDTELEPORT, 0, myplr, 0, 0);
 			track_repeat_walk(FALSE);
 			sgbMouseDown = 0;
@@ -1869,35 +1869,35 @@ void ObjL1Special(int x1, int y1, int x2, int y2)
 
 	for (i = y1; i <= y2; ++i) {
 		for (j = x1; j <= x2; ++j) {
-			dArch[j][i] = 0;
+			dSpecial[j][i] = 0;
 			if (dPiece[j][i] == 12)
-				dArch[j][i] = 1;
+				dSpecial[j][i] = 1;
 			if (dPiece[j][i] == 11)
-				dArch[j][i] = 2;
+				dSpecial[j][i] = 2;
 			if (dPiece[j][i] == 71)
-				dArch[j][i] = 1;
+				dSpecial[j][i] = 1;
 			if (dPiece[j][i] == 259)
-				dArch[j][i] = 5;
+				dSpecial[j][i] = 5;
 			if (dPiece[j][i] == 249)
-				dArch[j][i] = 2;
+				dSpecial[j][i] = 2;
 			if (dPiece[j][i] == 325)
-				dArch[j][i] = 2;
+				dSpecial[j][i] = 2;
 			if (dPiece[j][i] == 321)
-				dArch[j][i] = 1;
+				dSpecial[j][i] = 1;
 			if (dPiece[j][i] == 255)
-				dArch[j][i] = 4;
+				dSpecial[j][i] = 4;
 			if (dPiece[j][i] == 211)
-				dArch[j][i] = 1;
+				dSpecial[j][i] = 1;
 			if (dPiece[j][i] == 344)
-				dArch[j][i] = 2;
+				dSpecial[j][i] = 2;
 			if (dPiece[j][i] == 341)
-				dArch[j][i] = 1;
+				dSpecial[j][i] = 1;
 			if (dPiece[j][i] == 331)
-				dArch[j][i] = 2;
+				dSpecial[j][i] = 2;
 			if (dPiece[j][i] == 418)
-				dArch[j][i] = 1;
+				dSpecial[j][i] = 1;
 			if (dPiece[j][i] == 421)
-				dArch[j][i] = 2;
+				dSpecial[j][i] = 2;
 		}
 	}
 }
@@ -1908,32 +1908,32 @@ void ObjL2Special(int x1, int y1, int x2, int y2)
 
 	for (j = y1; j <= y2; j++) {
 		for (i = x1; i <= x2; i++) {
-			dArch[i][j] = 0;
+			dSpecial[i][j] = 0;
 			if (dPiece[i][j] == 541)
-				dArch[i][j] = 5;
+				dSpecial[i][j] = 5;
 			if (dPiece[i][j] == 178)
-				dArch[i][j] = 5;
+				dSpecial[i][j] = 5;
 			if (dPiece[i][j] == 551)
-				dArch[i][j] = 5;
+				dSpecial[i][j] = 5;
 			if (dPiece[i][j] == 542)
-				dArch[i][j] = 6;
+				dSpecial[i][j] = 6;
 			if (dPiece[i][j] == 553)
-				dArch[i][j] = 6;
+				dSpecial[i][j] = 6;
 			if (dPiece[i][j] == 13)
-				dArch[i][j] = 5;
+				dSpecial[i][j] = 5;
 			if (dPiece[i][j] == 17)
-				dArch[i][j] = 6;
+				dSpecial[i][j] = 6;
 		}
 	}
 	for (j = y1; j <= y2; j++) {
 		for (i = x1; i <= x2; i++) {
 			if (dPiece[i][j] == 132) {
-				dArch[i][j + 1] = 2;
-				dArch[i][j + 2] = 1;
+				dSpecial[i][j + 1] = 2;
+				dSpecial[i][j + 2] = 1;
 			}
 			if (dPiece[i][j] == 135 || dPiece[i][j] == 139) {
-				dArch[i + 1][j] = 3;
-				dArch[i + 2][j] = 4;
+				dSpecial[i + 1][j] = 3;
+				dSpecial[i + 2][j] = 4;
 			}
 		}
 	}
@@ -2009,7 +2009,7 @@ void OperateL1RDoor(int pnum, int oi, BOOL sendflag)
 		if (!deltaload)
 			PlaySfxLoc(IS_DOOROPEN, object[oi]._ox, object[oi]._oy);
 		ObjSetMicro(xp, yp, 395);
-		dArch[xp][yp] = 8;
+		dSpecial[xp][yp] = 8;
 		objects_set_door_piece(xp, yp - 1);
 		object[oi]._oAnimFrame += 2;
 		object[oi]._oPreFlag = TRUE;
@@ -2065,7 +2065,7 @@ void OperateL1LDoor(int pnum, int oi, BOOL sendflag)
 			ObjSetMicro(xp, yp, 408);
 		else
 			ObjSetMicro(xp, yp, 393);
-		dArch[xp][yp] = 7;
+		dSpecial[xp][yp] = 7;
 		objects_set_door_piece(xp - 1, yp);
 		object[oi]._oAnimFrame += 2;
 		object[oi]._oPreFlag = TRUE;
@@ -2435,7 +2435,7 @@ void OperateBook(int pnum, int i)
 		plr[myplr]._pMemSpells |= ((__int64)1 << (SPL_GUARDIAN - 1));
 		if (plr[pnum]._pSplLvl[SPL_GUARDIAN] < 15)
 			plr[myplr]._pSplLvl[SPL_GUARDIAN]++;
-		quests[QTYPE_BONE]._qactive = 3;
+		quests[Q_SCHAMB]._qactive = QUEST_DONE;
 		if (!deltaload)
 			PlaySfxLoc(IS_QUESTDN, object[i]._ox, object[i]._oy);
 		InitDiabloMsg(EMSG_BONECHAMB);
@@ -2469,24 +2469,24 @@ void OperateBookLever(int pnum, int i)
 	x = 2 * setpc_x + 16;
 	y = 2 * setpc_y + 16;
 	if (object[i]._oSelFlag != 0 && !qtextflag) {
-		if (object[i]._otype == OBJ_BLINDBOOK && !quests[QTYPE_BLIND]._qvar1) {
-			quests[QTYPE_BLIND]._qactive = 2;
-			quests[QTYPE_BLIND]._qlog = 1;
-			quests[QTYPE_BLIND]._qvar1 = 1;
+		if (object[i]._otype == OBJ_BLINDBOOK && !quests[Q_BLIND]._qvar1) {
+			quests[Q_BLIND]._qactive = QUEST_ACTIVE;
+			quests[Q_BLIND]._qlog = 1;
+			quests[Q_BLIND]._qvar1 = 1;
 		}
-		if (object[i]._otype == OBJ_BLOODBOOK && !quests[QTYPE_BLOOD]._qvar1) {
-			quests[QTYPE_BLOOD]._qactive = 2;
-			quests[QTYPE_BLOOD]._qlog = 1;
-			quests[QTYPE_BLOOD]._qvar1 = 1;
+		if (object[i]._otype == OBJ_BLOODBOOK && !quests[Q_BLOOD]._qvar1) {
+			quests[Q_BLOOD]._qactive = QUEST_ACTIVE;
+			quests[Q_BLOOD]._qlog = 1;
+			quests[Q_BLOOD]._qvar1 = 1;
 			SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 19, 2 * setpc_y + 26, 0, 1);
 			SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 31, 2 * setpc_y + 26, 0, 1);
 			SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 25, 2 * setpc_y + 33, 0, 1);
 		}
 		object[i]._otype = object[i]._otype;
-		if (object[i]._otype == OBJ_STEELTOME && !quests[QTYPE_WARLRD]._qvar1) {
-			quests[QTYPE_WARLRD]._qactive = 2;
-			quests[QTYPE_WARLRD]._qlog = 1;
-			quests[QTYPE_WARLRD]._qvar1 = 1;
+		if (object[i]._otype == OBJ_STEELTOME && !quests[Q_WARLORD]._qvar1) {
+			quests[Q_WARLORD]._qactive = QUEST_ACTIVE;
+			quests[Q_WARLORD]._qlog = 1;
+			quests[Q_WARLORD]._qvar1 = 1;
 		}
 		if (object[i]._oAnimFrame != object[i]._oVar6) {
 			if (object[i]._otype != OBJ_BLOODBOOK)
@@ -2517,18 +2517,18 @@ void OperateSChambBk(int pnum, int i)
 				SyncObjectAnim(objectactive[j]);
 		}
 		object[i]._oAnimFrame = object[i]._oVar6;
-		if (quests[QTYPE_BONE]._qactive == 1) {
-			quests[QTYPE_BONE]._qactive = 2;
-			quests[QTYPE_BONE]._qlog = 1;
+		if (quests[Q_SCHAMB]._qactive == QUEST_INIT) {
+			quests[Q_SCHAMB]._qactive = QUEST_ACTIVE;
+			quests[Q_SCHAMB]._qlog = 1;
 		}
 		if (plr[myplr]._pClass == PC_WARRIOR) {
-			textdef = QUEST_BONER;
+			textdef = TEXT_BONER;
 		} else if (plr[myplr]._pClass == PC_ROGUE) {
-			textdef = QUEST_RBONER;
+			textdef = TEXT_RBONER;
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
-			textdef = QUEST_MBONER;
+			textdef = TEXT_MBONER;
 		}
-		quests[QTYPE_BONE]._qmsg = textdef;
+		quests[Q_SCHAMB]._qmsg = textdef;
 		InitQTextMsg(textdef);
 	}
 }
@@ -2583,7 +2583,7 @@ void OperateMushPatch(int pnum, int i)
 {
 	int x, y;
 
-	if (quests[QTYPE_BLKM]._qactive != 2 || quests[QTYPE_BLKM]._qvar1 < QS_TOMEGIVEN) {
+	if (quests[Q_MUSHROOM]._qactive != QUEST_ACTIVE || quests[Q_MUSHROOM]._qvar1 < QS_TOMEGIVEN) {
 		if (!deltaload && pnum == myplr) {
 			if (plr[myplr]._pClass == PC_WARRIOR) {
 				PlaySFX(PS_WARR13);
@@ -2604,7 +2604,7 @@ void OperateMushPatch(int pnum, int i)
 			if (!deltaload) {
 				GetSuperItemLoc(object[i]._ox, object[i]._oy, &x, &y);
 				SpawnQuestItem(IDI_MUSHROOM, x, y, 0, 0);
-				quests[QTYPE_BLKM]._qvar1 = QS_MUSHSPAWNED;
+				quests[Q_MUSHROOM]._qvar1 = QS_MUSHSPAWNED;
 			}
 		}
 	}
@@ -2614,7 +2614,7 @@ void OperateInnSignChest(int pnum, int i)
 {
 	int x, y;
 
-	if (quests[QTYPE_BOL]._qvar1 != 2) {
+	if (quests[Q_LTBANNER]._qvar1 != 2) {
 		if (!deltaload && pnum == myplr) {
 			if (plr[myplr]._pClass == PC_WARRIOR) {
 				PlaySFX(PS_WARR24);
@@ -3452,11 +3452,11 @@ void OperateBookCase(int pnum, int i, BOOL sendmsg)
 		if (!deltaload) {
 			SetRndSeed(object[i]._oRndSeed);
 			CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_MISC, IMISC_BOOK, sendmsg, FALSE);
-			if (QuestStatus(QTYPE_ZHAR)
+			if (QuestStatus(Q_ZHAR)
 			    && monster[MAX_PLRS].mName == UniqMonst[UMT_ZHAR].mName
 			    && monster[MAX_PLRS]._msquelch == UCHAR_MAX
 			    && monster[MAX_PLRS]._mhitpoints) {
-				monster[MAX_PLRS].mtalkmsg = QUEST_ZHAR2;
+				monster[MAX_PLRS].mtalkmsg = TEXT_ZHAR2;
 				M_StartStand(0, monster[MAX_PLRS]._mdir);
 				monster[MAX_PLRS]._mgoal = MGOAL_SHOOT;
 				monster[MAX_PLRS]._mmode = MM_TALK;
@@ -4039,7 +4039,7 @@ void BreakCrux(int i)
 	ObjChangeMap(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
 }
 
-void BreakBarrel(int pnum, int i, int dam, BOOL forcebreak, int sendmsg)
+void BreakBarrel(int pnum, int i, int dam, BOOL forcebreak, BOOL sendmsg)
 {
 	int oi;
 	int xp, yp;
@@ -4070,7 +4070,7 @@ void BreakBarrel(int pnum, int i, int dam, BOOL forcebreak, int sendmsg)
 	object[i]._oMissFlag = TRUE;
 	object[i]._oSelFlag = 0;
 	object[i]._oPreFlag = TRUE;
-	if (deltaload != 0) {
+	if (deltaload) {
 		object[i]._oAnimCnt = 0;
 		object[i]._oAnimFrame = object[i]._oAnimLen;
 		object[i]._oAnimDelay = 1000;
@@ -4157,12 +4157,12 @@ void SyncL1Doors(int i)
 			ObjSetMicro(x, y, 408);
 		else
 			ObjSetMicro(x, y, 393);
-		dArch[x][y] = 7;
+		dSpecial[x][y] = 7;
 		objects_set_door_piece(x - 1, y);
 		y--;
 	} else {
 		ObjSetMicro(x, y, 395);
-		dArch[x][y] = 8;
+		dSpecial[x][y] = 8;
 		objects_set_door_piece(x, y - 1);
 		x--;
 	}

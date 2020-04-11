@@ -1,7 +1,13 @@
+/**
+ * @file misdat.cpp
+ *
+ * Implementation of data related to missiles.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
+/** Data related to each missile ID. */
 MissileData missiledata[] = {
 	// clang-format off
 	// mName,             mAddProc,          mProc,             mDraw, mType, mResist,        mFileNum,       miSFX,       mlSFX;
@@ -80,6 +86,7 @@ MissileData missiledata[] = {
 	// clang-format on
 };
 
+/** Data related to each missile graphic ID. */
 MisFileData misfiledata[] = {
 	// clang-format off
 	// mAnimName, mAnimFAmt, mName, mFlags, mAnimData[16],                                      mAnimDelay[16],                                     mAnimLen[16],                                                       mAnimWidth[16],                                                             mAnimWidth2[16]

@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file interfac.h
+ *
+ * Interface of load screens.
+ */
 #ifndef __INTERFAC_H__
 #define __INTERFAC_H__
 

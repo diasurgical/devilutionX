@@ -1,7 +1,13 @@
+/**
+ * @file itemdat.cpp
+ *
+ * Implementation of all item data.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
+/** Contains the data related to each item ID. */
 ItemDataStruct AllItemsList[] = {
 	// clang-format off
 	// iRnd,          iClass,        iLoc,             iCurs,                         itype, iItemId,            iName,                         iSName, iMinMLvl, iDurability, iMinDam, iMaxDam, iMinAC, iMaxAC, iMinStr, iMinMag, iMinDex, iFlags,            iMiscId,         iSpell,          iUsable, iValue, iMaxValue
@@ -165,6 +171,7 @@ ItemDataStruct AllItemsList[] = {
 	// clang-format on
 };
 
+/** Contains the data related to each item prefix. */
 const PLStruct PL_Prefix[] = {
 	// clang-format off
 	// PLName,        PLPower,        PLParam1, PLParam2, PLMinLvl, PLIType,                                                      PLGOE, PLDouble, PLOk,  PLMinVal, PLMaxVal, PLMultVal
@@ -255,6 +262,7 @@ const PLStruct PL_Prefix[] = {
 	// clang-format on
 };
 
+/** Contains the data related to each item suffix. */
 const PLStruct PL_Suffix[] = {
 	// clang-format off
 	// PLName,         PLPower,       PLParam1, PLParam2, PLMinLvl, PLIType,                                                      PLGOE, PLDouble, PLOk,  PLMinVal, PLMaxVal, PLMultVal
@@ -357,6 +365,7 @@ const PLStruct PL_Suffix[] = {
 	// clang-format on
 };
 
+/** Contains the data related to each unique item ID. */
 const UItemStruct UniqueItemList[] = {
 	// clang-format off
 	// UIName,                    UIItemId,     UIMinLvl, UINumPL, UIValue, UIPower1,     UIParam1, UIParam2, UIPower2,      UIParam3, UIParam4, UIPower3,      UIParam5, UIParam6, UIPower4,      UIParam7, UIParam8, UIPower5,      UIParam9, UIParam10, UIPower6, UIParam11, UIParam12

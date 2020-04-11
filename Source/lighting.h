@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file lighting.h
+ *
+ * Interface of light and vision.
+ */
 #ifndef __LIGHTING_H__
 #define __LIGHTING_H__
 

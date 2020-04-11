@@ -1,3 +1,8 @@
+/**
+ * @file diablo.cpp
+ *
+ * Implementation of the main game initialization functions.
+ */
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
@@ -5,7 +10,7 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-HWND ghMainWnd;
+SDL_Window *ghMainWnd;
 int glMid1Seed[NUMLEVELS];
 int glMid2Seed[NUMLEVELS];
 int gnLevelTypeTbl[NUMLEVELS];
@@ -24,11 +29,13 @@ int DebugMonsters[10];
 BOOLEAN cineflag;
 int force_redraw;
 BOOL visiondebug;
-BOOL scrollflag; /* unused */
+/** unused */
+BOOL scrollflag;
 BOOL light4flag;
 BOOL leveldebug;
 BOOL monstdebug;
-BOOL trigdebug; /* unused */
+/** unused */
+BOOL trigdebug;
 int setseed;
 int debugmonsttypes;
 int PauseMode;
@@ -38,6 +45,10 @@ int color_cycle_timer;
 
 /* rdata */
 
+/**
+ * Specifies whether to give the game exclusive access to the
+ * screen, as needed for efficient rendering in fullscreen mode.
+ */
 BOOL fullscreen = TRUE;
 int showintrodebug = 1;
 #ifdef _DEBUG
@@ -57,14 +68,23 @@ int frameflag;
 int frameend;
 int framerate;
 int framestart;
+/** Specifies whether players are in non-PvP mode. */
 BOOL FriendlyMode = TRUE;
+/** Default quick messages */
 char *spszMsgTbl[4] = {
 	"I need help! Come Here!",
 	"Follow me.",
 	"Here's something for you.",
 	"Now you DIE!"
 };
+/** INI files variable names for quick message keys */
 char *spszMsgHotKeyTbl[4] = { "F9", "F10", "F11", "F12" };
+
+/** To know if these things have been done when we get to the diablo_deinit() function */
+BOOL was_archives_init = false;
+BOOL was_ui_init = false;
+BOOL was_snd_init = false;
+BOOL was_sfx_init = false;
 
 void FreeGameMem()
 {
@@ -78,7 +98,7 @@ void FreeGameMem()
 	FreeMissiles();
 	FreeMonsters();
 	FreeObjectGFX();
-	FreeEffects();
+	FreeMonsterSnd();
 	FreeTownerGFX();
 }
 
@@ -155,10 +175,10 @@ void run_game_loop(unsigned int uMsg)
 
 	nthread_ignore_mutex(TRUE);
 	start_game(uMsg);
-	/// ASSERT: assert(ghMainWnd);
+	assert(ghMainWnd);
 	saveProc = SetWindowProc(GM_Game);
 	control_update_life_mana();
-	msg_process_net_packets();
+	run_delta_info();
 	gbRunGame = TRUE;
 	gbProcessPlayers = TRUE;
 	gbRunGameResult = TRUE;
@@ -208,7 +228,7 @@ void run_game_loop(unsigned int uMsg)
 #endif
 	scrollrt_draw_game_screen(TRUE);
 	saveProc = SetWindowProc(saveProc);
-	/// ASSERT: assert(saveProc == GM_Game);
+	assert(saveProc == GM_Game);
 	free_game();
 
 	if (cineflag) {
@@ -224,12 +244,12 @@ void start_game(unsigned int uMsg)
 	InitCursor();
 	InitLightTable();
 	LoadDebugGFX();
-	/// ASSERT: assert(ghMainWnd);
+	assert(ghMainWnd);
 	music_stop();
 	ShowProgress(uMsg);
 	gmenu_init_menu();
 	InitLevelCursor();
-	sgnTimeoutCurs = 0;
+	sgnTimeoutCurs = CURSOR_NONE;
 	sgbMouseDown = 0;
 	track_repeat_walk(FALSE);
 }
@@ -260,13 +280,13 @@ void diablo_init()
 
 	SFileEnableDirectAccess(TRUE);
 	init_archives();
-	atexit(init_cleanup);
+	was_archives_init = true;
 
 	UiInitialize();
 #ifdef SPAWN
 	UiSetSpawned(TRUE);
 #endif
-	atexit(UiDestroy);
+	was_ui_init = true;
 
 	ReadOnlyTest();
 
@@ -275,9 +295,10 @@ void diablo_init()
 	diablo_init_screen();
 
 	snd_init(NULL);
-	atexit(sound_cleanup);
+	was_snd_init = true;
+
 	sound_init();
-	atexit(effects_cleanup_sfx);
+	was_sfx_init = true;
 }
 
 void diablo_splash()
@@ -295,12 +316,37 @@ void diablo_splash()
 	UiTitleDialog();
 }
 
+void diablo_deinit()
+{
+	if (was_sfx_init)
+		effects_cleanup_sfx();
+	if (was_snd_init)
+		sound_cleanup();
+	if (was_ui_init)
+		UiDestroy();
+	if (was_archives_init)
+		init_cleanup();
+	if (was_window_init)
+		dx_cleanup();  // Cleanup SDL surfaces stuff, so we have to do it before SDL_Quit().
+	if (was_fonts_init)
+		FontsCleanup();	
+	if (SDL_WasInit(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC))
+		SDL_Quit();
+}
+
+void diablo_quit(int exitStatus)
+{
+	diablo_deinit();
+	exit(exitStatus);
+}
+
 int DiabloMain(int argc, char **argv)
 {
 	diablo_parse_flags(argc, argv);
 	diablo_init();
 	diablo_splash();
 	mainmenu_loop();
+	diablo_deinit();
 
 	return 0;
 }
@@ -331,7 +377,7 @@ static void print_help_and_exit()
 	printf("    %-20s %-30s\n", "-t <##>", "Set current quest level");
 #endif
 	printf("\nReport bugs at https://github.com/diasurgical/devilutionX/\n");
-	exit(0);
+	diablo_quit(0);
 }
 
 void diablo_parse_flags(int argc, char **argv)
@@ -341,7 +387,7 @@ void diablo_parse_flags(int argc, char **argv)
 			print_help_and_exit();
 		} else if (strcasecmp("--version", argv[i]) == 0) {
 			printf("%s v%s\n", PROJECT_NAME, PROJECT_VERSION);
-			exit(0);
+			diablo_quit(0);
 		} else if (strcasecmp("--data-dir", argv[i]) == 0) {
 			basePath = argv[++i];
 #ifdef _WIN32
@@ -437,7 +483,7 @@ BOOL PressEscKey()
 
 	if (qtextflag) {
 		qtextflag = FALSE;
-		sfx_stop();
+		stream_stop();
 		rv = TRUE;
 	} else if (stextflag) {
 		STextESC();
@@ -584,7 +630,7 @@ LRESULT GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			pfile_write_hero();
 		nthread_ignore_mutex(TRUE);
 		PaletteFadeOut(8);
-		FreeMonsterSnd();
+		sound_stop();
 		music_stop();
 		track_repeat_walk(FALSE);
 		sgbMouseDown = 0;
@@ -619,7 +665,7 @@ BOOL LeftMouseDown(int wParam)
 						QuestlogESC();
 					} else if (qtextflag) {
 						qtextflag = FALSE;
-						sfx_stop();
+						stream_stop();
 					} else if (chrflag && MouseX < SPANEL_WIDTH && MouseY < SPANEL_HEIGHT) {
 						CheckChrBtns();
 					} else if (invflag && MouseX > RIGHT_PANEL && MouseY < SPANEL_HEIGHT) {
@@ -783,7 +829,7 @@ void RightMouseDown()
 			    || (!sbookflag || MouseX <= RIGHT_PANEL)
 			        && !TryIconCurs()
 			        && (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem))) {
-				if (pcurs == 1) {
+				if (pcurs == CURSOR_HAND) {
 					if (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem))
 						CheckPlrSpell();
 				} else if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
@@ -898,7 +944,7 @@ void PressKey(int vkey)
 			spselflag = FALSE;
 			if (qtextflag && leveltype == DTYPE_TOWN) {
 				qtextflag = FALSE;
-				sfx_stop();
+				stream_stop();
 			}
 			questlog = FALSE;
 			automapflag = FALSE;
@@ -1020,7 +1066,7 @@ void PressKey(int vkey)
 		spselflag = FALSE;
 		if (qtextflag && leveltype == DTYPE_TOWN) {
 			qtextflag = FALSE;
-			sfx_stop();
+			stream_stop();
 		}
 		questlog = FALSE;
 		automapflag = FALSE;
@@ -1037,14 +1083,16 @@ void diablo_pause_game()
 			PauseMode = 0;
 		} else {
 			PauseMode = 2;
-			FreeMonsterSnd();
+			sound_stop();
 			track_repeat_walk(FALSE);
 		}
 		force_redraw = 255;
 	}
 }
 
-/* NOTE: `return` must be used instead of `break` to be bin exact as C++ */
+/**
+ * @internal `return` must be used instead of `break` to be bin exact as C++
+ */
 void PressChar(int vkey)
 {
 	if (gmenu_is_active() || control_talk_last_key(vkey) || sgnTimeoutCurs != 0 || deathflag) {
@@ -1079,7 +1127,7 @@ void PressChar(int vkey)
 	case 'i':
 		if (!stextflag) {
 			sbookflag = FALSE;
-			invflag = invflag == 0;
+			invflag = !invflag;
 			if (!invflag || chrflag) {
 				if (MouseX < 480 && MouseY < PANEL_TOP && PANELS_COVER) {
 					SetCursorPos(MouseX + 160, MouseY);
@@ -1285,12 +1333,6 @@ void PressChar(int vkey)
 		return;
 	case 'd':
 		PrintDebugPlayer(FALSE);
-		return;
-	case 'e':
-		if (debug_mode_key_d) {
-			sprintf(tempstr, "EFlag = %i", plr[myplr]._peflag);
-			NetSendCmdString(1 << myplr, tempstr);
-		}
 		return;
 	case 'L':
 	case 'l':
@@ -1664,7 +1706,7 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 		;
 
 #ifndef SPAWN
-	if (setlevel && setlvlnum == SL_SKELKING && quests[QTYPE_KING]._qactive == 2)
+	if (setlevel && setlvlnum == SL_SKELKING && quests[Q_SKELKING]._qactive == QUEST_ACTIVE)
 		PlaySFX(USFX_SKING1);
 #endif
 }

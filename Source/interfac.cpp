@@ -1,3 +1,8 @@
+/**
+ * @file interfac.cpp
+ *
+ * Implementation of load screens.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -6,7 +11,9 @@ void *sgpBackCel;
 int sgdwProgress;
 int progress_id;
 
+/** The colour used for the progress bar as an index into the palette. */
 const BYTE BarColor[3] = { 138, 43, 254 };
+/** The screen position of the top left corner of the progress bar. */
 const int BarPos[3][2] = { { 53, 37 }, { 53, 421 }, { 53, 37 } };
 
 void interface_msg_pump()
@@ -85,7 +92,7 @@ void ShowProgress(unsigned int uMsg)
 	DrawCutscene();
 	PaletteFadeIn(8);
 	IncProgress();
-	stream_update();
+	sound_init();
 	IncProgress();
 
 	switch (uMsg) {

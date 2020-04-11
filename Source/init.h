@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file init.h
+ *
+ * Interface of routines for initializing the environment, disable screen saver, load MPQ.
+ */
 #ifndef __INIT_H__
 #define __INIT_H__
 
@@ -22,6 +26,8 @@ void init_get_file_info();
 LRESULT MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 void init_activate_window(HWND hWnd, BOOL bActive);
 WNDPROC SetWindowProc(WNDPROC NewProc);
+
+extern BOOL was_window_init;   /** defined in dx.cpp */
 
 /* rdata */
 

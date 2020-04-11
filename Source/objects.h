@@ -139,7 +139,7 @@ void SyncOpL2Door(int pnum, int cmd, int i);
 void SyncOpL3Door(int pnum, int cmd, int i);
 void SyncOpObject(int pnum, int cmd, int i);
 void BreakCrux(int i);
-void BreakBarrel(int pnum, int i, int dam, BOOL forcebreak, int sendmsg);
+void BreakBarrel(int pnum, int i, int dam, BOOL forcebreak, BOOL sendmsg);
 void BreakObject(int pnum, int oi);
 void SyncBreakObj(int pnum, int oi);
 void SyncL1Doors(int i);

@@ -1,3 +1,8 @@
+/**
+ * @file multi.cpp
+ *
+ * Implementation of functions for keeping multiplaye games in sync.
+ */
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
@@ -22,6 +27,10 @@ int sglTimeoutStart;
 int sgdwPlayerLeftReasonTbl[MAX_PLRS];
 TBuffer sgLoPriBuf;
 DWORD sgdwGameLoops;
+/**
+ * Specifies the maximum number of players in a game, where 1
+ * represents a single player game and 4 represents a multi player game.
+ */
 BYTE gbMaxPlayers;
 BOOLEAN sgbTimeout;
 char szPlayerName[128];
@@ -29,6 +38,10 @@ BYTE gbDeltaSender;
 BOOL sgbNetInited;
 int player_state[MAX_PLRS];
 
+/**
+ * Contains the set of supported event types supported by the multiplayer
+ * event handler.
+ */
 const int event_types[3] = {
 	EVENT_TYPE_PLAYER_LEAVE_GAME,
 	EVENT_TYPE_PLAYER_CREATE_GAME,
@@ -237,7 +250,7 @@ void multi_player_left_msg(int pnum, int left)
 		RemovePlrFromMap(pnum);
 		RemovePortalMissile(pnum);
 		DeactivatePortal(pnum);
-		RemovePlrPortal(pnum);
+		delta_close_portal(pnum);
 		RemovePlrMissiles(pnum);
 		if (left) {
 			pszFmt = "Player '%s' just left the game";
@@ -404,7 +417,7 @@ void multi_process_network_packets()
 	multi_clear_left_tbl();
 	multi_process_tmsgs();
 	while (SNetReceiveMessage((int *)&dwID, &data, (int *)&dwMsgSize)) {
-		pkt_counter++;
+		dwRecCount++;
 		multi_clear_left_tbl();
 		pkt = (TPktHdr *)data;
 		if (dwMsgSize < sizeof(TPktHdr))

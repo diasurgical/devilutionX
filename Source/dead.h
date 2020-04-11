@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file dead.h
+ *
+ * Interface of functions for placing dead monsters.
+ */
 #ifndef __DEAD_H__
 #define __DEAD_H__
 

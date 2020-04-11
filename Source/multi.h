@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file multi.h
+ *
+ * Interface of functions for keeping multiplaye games in sync.
+ */
 #ifndef __MULTI_H__
 #define __MULTI_H__
 

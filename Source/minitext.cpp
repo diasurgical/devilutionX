@@ -1,3 +1,8 @@
+/**
+ * @file minitext.cpp
+ *
+ * Implementation of scrolling dialog text.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -11,6 +16,7 @@ int sgLastScroll;
 BYTE *pMedTextCels;
 BYTE *pTextBoxCels;
 
+/** Maps from font index to medtexts.cel frame number. */
 const BYTE mfontframe[127] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -26,6 +32,11 @@ const BYTE mfontframe[127] = {
 	14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
 	24, 25, 26, 48, 0, 49, 0
 };
+/**
+ * Maps from medtexts.cel frame number to character width. Note, the
+ * character width may be distinct from the frame width, which is 22 for every
+ * medtexts.cel frame.
+ */
 const BYTE mfontkern[56] = {
 	5, 15, 10, 13, 14, 10, 9, 13, 11, 5,
 	5, 11, 10, 16, 13, 16, 10, 15, 12, 10,
@@ -38,7 +49,8 @@ const BYTE mfontkern[56] = {
 /* data */
 
 /**
- * Positive numbers will delay scrolling 1 out of n frames, negative numbers will scroll 1+(-n) pixels.
+ * Text scroll speeds. Positive numbers will delay scrolling 1 out of n frames,
+ * negative numbers will scroll 1+(-n) pixels.
  */
 int qscroll_spd_tbl[9] = { 2, 4, 6, 8, 0, -1, -2, -3, -4 };
 

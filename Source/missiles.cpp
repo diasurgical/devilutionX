@@ -1,3 +1,8 @@
+/**
+ * @file missiles.cpp
+ *
+ * Implementation of missile functionality.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -11,7 +16,9 @@ ChainStruct chain[MAXMISSILES];
 BOOL MissilePreFlag;
 int numchains;
 
+/** Maps from direction to X-offset. */
 int XDirAdd[8] = { 1, 0, -1, -1, -1, 0, 1, 1 };
+/** Maps from direction to Y-offset. */
 int YDirAdd[8] = { 1, 1, 1, 0, -1, -1, -1, 0 };
 
 void GetDamageAmt(int i, int *mind, int *maxd)
@@ -2475,7 +2482,7 @@ void AddResurrectBeam(int mi, int sx, int sy, int dx, int dy, int midir, char mi
 	missile[mi]._misy = missile[mi]._miy;
 	missile[mi]._mixvel = 0;
 	missile[mi]._miyvel = 0;
-	missile[mi]._mirange = misfiledata[36].mAnimLen[0];
+	missile[mi]._mirange = misfiledata[MFILE_RESSUR1].mAnimLen[0];
 }
 
 void AddTelekinesis(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam)

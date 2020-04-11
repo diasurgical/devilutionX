@@ -1,3 +1,8 @@
+/**
+ * @file cursor.cpp
+ *
+ * Implementation of cursor tracking functionality.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -10,7 +15,7 @@ int icursW28;
 BYTE *pCursCels;
 int icursH;
 
-// inv_item value
+/** inv_item value */
 char pcursinvitem;
 int icursW;
 char pcursitem;
@@ -22,6 +27,7 @@ int pcurstemp;
 int pcurs;
 
 /* rdata */
+/** Maps from objcurs.cel frame number to frame width. */
 const int InvItemWidth[180] = {
 	// Cursors
 	0, 33, 32, 32, 32, 32, 32, 32, 32, 32, 32, 23,
@@ -45,6 +51,7 @@ const int InvItemWidth[180] = {
 	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28
 };
 
+/** Maps from objcurs.cel frame number to frame height. */
 const int InvItemHeight[180] = {
 	// Cursors
 	0, 29, 32, 32, 32, 32, 32, 32, 32, 32, 32, 35,

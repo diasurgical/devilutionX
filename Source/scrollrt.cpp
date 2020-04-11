@@ -156,7 +156,7 @@ static void scrollrt_draw_cursor_item()
 
 	assert(! sgdwCursWdt);
 
-	if (pcurs <= 0 || cursW == 0 || cursH == 0) {
+	if (pcurs <= CURSOR_NONE || cursW == 0 || cursH == 0) {
 		return;
 	}
 
@@ -758,7 +758,7 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy)
 	DrawItem(sx, sy, dx, dy, 0);
 
 	if (leveltype != DTYPE_TOWN) {
-		bArch = dArch[sx][sy];
+		bArch = dSpecial[sx][sy];
 		if (bArch != 0) {
 			cel_transparency_active = TransList[bMap];
 			CelClippedBlitLightTrans(&gpBuffer[dx + BUFFER_WIDTH * dy], pSpecialCels, bArch, 64);
@@ -768,7 +768,7 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy)
 		// So delay the rendering untill after the next row is being drawn.
 		// This could probably have been better solved by sprites in screen space.
 		if (sx > 0 && sy > 0 && dy > 32 + SCREEN_Y) {
-			bArch = dArch[sx - 1][sy - 1];
+			bArch = dSpecial[sx - 1][sy - 1];
 			if (bArch != 0) {
 				CelBlitFrame(&gpBuffer[dx + BUFFER_WIDTH * (dy - 32)], pSpecialCels, bArch, 64);
 			}
@@ -825,7 +825,7 @@ static void scrollrt_drawFloor(int x, int y, int sx, int sy, int blocks, int chu
 	}
 }
 
-#define IsWall(x, y) (dPiece[x][y] == 0 || nSolidTable[dPiece[x][y]] || dArch[x][y] != 0)
+#define IsWall(x, y) (dPiece[x][y] == 0 || nSolidTable[dPiece[x][y]] || dSpecial[x][y] != 0)
 #define IsWalktabke(x, y) (dPiece[x][y] != 0 && !nSolidTable[dPiece[x][y]])
 
 /**

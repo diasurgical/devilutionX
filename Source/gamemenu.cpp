@@ -1,7 +1,13 @@
+/**
+ * @file gamemenu.cpp
+ *
+ * Implementation of the in-game menu functions.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
+/** Contains the game menu items of the single player menu. */
 TMenuItem sgSingleMenu[6] = {
 	// clang-format off
 	//   dwFlags, pszStr,        fnMenu
@@ -13,6 +19,7 @@ TMenuItem sgSingleMenu[6] = {
 	{ GMENU_ENABLED, NULL, NULL }
 	// clang-format on
 };
+/** Contains the game menu items of the multi player menu. */
 TMenuItem sgMultiMenu[5] = {
 	// clang-format off
 	//   dwFlags, pszStr,            fnMenu
@@ -34,8 +41,11 @@ TMenuItem sgOptionsMenu[6] = {
 	{ GMENU_ENABLED               , NULL,            NULL                    }
 	// clang-format on
 };
+/** Specifies the menu names for music enabled and disabled. */
 char *music_toggle_names[] = { "Music", "Music Disabled" };
+/** Specifies the menu names for sound enabled and disabled. */
 char *sound_toggle_names[] = { "Sound", "Sound Disabled" };
+/** Specifies the menu names for colour cycling disabled and enabled. */
 char *color_cycling_toggle_names[] = { "Color Cycling Off", "Color Cycling On" };
 
 void gamemenu_on()
@@ -266,7 +276,7 @@ void gamemenu_sound_volume(BOOL bActivate)
 	if (bActivate) {
 		if (gbSoundOn) {
 			gbSoundOn = FALSE;
-			FreeMonsterSnd();
+			sound_stop();
 			sound_get_or_set_sound_volume(VOLUME_MIN);
 		} else {
 			gbSoundOn = TRUE;
@@ -278,7 +288,7 @@ void gamemenu_sound_volume(BOOL bActivate)
 		if (volume == VOLUME_MIN) {
 			if (gbSoundOn) {
 				gbSoundOn = FALSE;
-				FreeMonsterSnd();
+				sound_stop();
 			}
 		} else if (!gbSoundOn) {
 			gbSoundOn = TRUE;

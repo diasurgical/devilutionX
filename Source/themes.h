@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file themes.h
+ *
+ * Interface of the theme room placing algorithms.
+ */
 #ifndef __THEMES_H__
 #define __THEMES_H__
 

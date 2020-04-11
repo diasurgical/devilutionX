@@ -19,7 +19,9 @@
 
 namespace dvl {
 
-extern SDL_Surface *renderer_texture_surface; // defined in dx.cpp
+extern BOOL was_window_init; /** defined in dx.cpp */
+
+extern SDL_Surface *renderer_texture_surface; /** defined in dx.cpp */
 
 #ifdef USE_SDL1
 void SetVideoMode(int width, int height, int bpp, std::uint32_t flags) {
@@ -28,7 +30,7 @@ void SetVideoMode(int width, int height, int bpp, std::uint32_t flags) {
 	const auto &current = *SDL_GetVideoInfo();
 	SDL_Log("Video mode is now %dx%d bpp=%u flags=0x%08X",
 	    current.current_w, current.current_h, current.vfmt->BitsPerPixel, SDL_GetVideoSurface()->flags);
-	window = SDL_GetVideoSurface();
+	ghMainWnd = SDL_GetVideoSurface();
 }
 
 void SetVideoModeToPrimary(bool fullscreen) {
@@ -50,8 +52,6 @@ bool SpawnWindow(const char *lpWindowName, int nWidth, int nHeight)
 	if (SDL_Init(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) <= -1) {
 		ErrSdl();
 	}
-
-	atexit(SDL_Quit);
 
 #ifdef USE_SDL1
 	SDL_EnableUNICODE(1);
@@ -105,9 +105,9 @@ bool SpawnWindow(const char *lpWindowName, int nWidth, int nHeight)
 		flags |= SDL_WINDOW_INPUT_GRABBED;
 	}
 
-	window = SDL_CreateWindow(lpWindowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, nWidth, nHeight, flags);
+	ghMainWnd = SDL_CreateWindow(lpWindowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, nWidth, nHeight, flags);
 #endif
-	if (window == NULL) {
+	if (ghMainWnd == NULL) {
 		ErrSdl();
 	}
 
@@ -125,7 +125,7 @@ bool SpawnWindow(const char *lpWindowName, int nWidth, int nHeight)
 #ifdef USE_SDL1
 		SDL_Log("upscaling not supported with USE_SDL1");
 #else
-		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+		renderer = SDL_CreateRenderer(ghMainWnd, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
 		if (renderer == NULL) {
 			ErrSdl();
 		}
@@ -141,7 +141,7 @@ bool SpawnWindow(const char *lpWindowName, int nWidth, int nHeight)
 #endif
 	}
 
-	return window != NULL;
+	return ghMainWnd != NULL;
 }
 
 SDL_Surface *GetOutputSurface()
@@ -151,7 +151,7 @@ SDL_Surface *GetOutputSurface()
 #else
 	if (renderer)
 		return renderer_texture_surface;
-	return SDL_GetWindowSurface(window);
+	return SDL_GetWindowSurface(ghMainWnd);
 #endif
 }
 

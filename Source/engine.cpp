@@ -1,3 +1,15 @@
+/**
+ * @file engine.cpp
+ *
+ * Implementation of basic engine helper functions:
+ * - Sprite blitting
+ * - Drawing
+ * - Angle calculation
+ * - RNG
+ * - Memory allocation
+ * - File loading
+ * - Video playback
+ */
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
@@ -6,7 +18,9 @@ DEVILUTION_BEGIN_NAMESPACE
 char gbPixelCol;  // automap pixel color 8-bit (palette entry)
 BOOL gbRotateMap; // flip - if y < x
 int orgseed;
+/** Width of sprite being blitted */
 int sgnWidth;
+/** Current game seed */
 int sglGameSeed;
 static CCritSect sgMemCrit;
 int SeedCount;

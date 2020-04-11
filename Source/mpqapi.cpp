@@ -1,3 +1,8 @@
+/**
+ * @file mpqapi.cpp
+ *
+ * Implementation of functions for creating and editing MPQ files.
+ */
 #include <cerrno>
 #include <cinttypes>
 #include <cstdint>

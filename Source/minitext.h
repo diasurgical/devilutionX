@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file minitext.h
+ *
+ * Interface of scrolling dialog text.
+ */
 #ifndef __MINITEXT_H__
 #define __MINITEXT_H__
 

@@ -1,3 +1,8 @@
+/**
+ * @file loadsave.cpp
+ *
+ * Implementation of save game functionality.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -340,7 +345,7 @@ void LoadPlayer(int i)
 	CopyInt(tbuff, &pPlayer->_pAnimFrame);
 	CopyInt(tbuff, &pPlayer->_pAnimWidth);
 	CopyInt(tbuff, &pPlayer->_pAnimWidth2);
-	CopyInt(tbuff, &pPlayer->_peflag);
+	tbuff += 4; // Skip _peflag
 	CopyInt(tbuff, &pPlayer->_plid);
 	CopyInt(tbuff, &pPlayer->_pvid);
 
@@ -535,7 +540,7 @@ void LoadMonster(int i)
 	CopyInt(tbuff, &pMonster->_mAnimCnt);
 	CopyInt(tbuff, &pMonster->_mAnimLen);
 	CopyInt(tbuff, &pMonster->_mAnimFrame);
-	CopyInt(tbuff, &pMonster->_meflag);
+	tbuff += 4; // Skip _meflag
 	CopyInt(tbuff, &pMonster->_mDelFlag);
 	CopyInt(tbuff, &pMonster->_mVar1);
 	CopyInt(tbuff, &pMonster->_mVar2);
@@ -1109,7 +1114,7 @@ void SavePlayer(int i)
 	CopyInt(&pPlayer->_pAnimFrame, tbuff);
 	CopyInt(&pPlayer->_pAnimWidth, tbuff);
 	CopyInt(&pPlayer->_pAnimWidth2, tbuff);
-	CopyInt(&pPlayer->_peflag, tbuff);
+	tbuff += 4; // Skip _peflag
 	CopyInt(&pPlayer->_plid, tbuff);
 	CopyInt(&pPlayer->_pvid, tbuff);
 
@@ -1305,7 +1310,7 @@ void SaveMonster(int i)
 	CopyInt(&pMonster->_mAnimCnt, tbuff);
 	CopyInt(&pMonster->_mAnimLen, tbuff);
 	CopyInt(&pMonster->_mAnimFrame, tbuff);
-	CopyInt(&pMonster->_meflag, tbuff);
+	tbuff += 4; // Skip _meflag
 	CopyInt(&pMonster->_mDelFlag, tbuff);
 	CopyInt(&pMonster->_mVar1, tbuff);
 	CopyInt(&pMonster->_mVar2, tbuff);
