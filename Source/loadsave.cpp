@@ -256,7 +256,7 @@ void CopyBytes(const void *src, const int n, void *dst)
 
 void CopyChar(const void *src, void *dst)
 {
-	*(char*)dst = *(char *)src;
+	*(char*)dst = *(char*)src;
 	tbuff += 1;
 }
 

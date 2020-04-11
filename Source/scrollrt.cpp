@@ -571,6 +571,11 @@ static void drawFloor(int x, int y, int sx, int sy)
 {
 	cel_transparency_active = 0;
 	light_table_index = dLight[x][y];
+#ifdef PIXEL_LIGHT
+	if (testvar4 != 0) {
+		light_table_index = 0;
+	}
+#endif
 
 	BYTE *dst = &gpBuffer[sx + sy * BUFFER_WIDTH];
 	arch_draw_type = 1; // Left
@@ -704,6 +709,11 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy)
 	dRendered[sx][sy] = true;
 
 	light_table_index = dLight[sx][sy];
+#ifdef PIXEL_LIGHT
+	if (testvar4 != 0) {
+		light_table_index = 0;
+	}
+#endif
 
 	drawCell(sx, sy, dx, dy);
 
