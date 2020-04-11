@@ -664,6 +664,7 @@ void RenderPresent()
 	} else {
 		if (SDL_UpdateWindowSurface(ghMainWnd) <= -1) {
 			ErrSdl();
+		}
 		LimitFrameRate();
 	}
 #else

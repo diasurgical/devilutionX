@@ -526,7 +526,7 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 		bool updated = false;
 		int color = lightColorMap["STATICLIGHT"];
 		if (setlevel && setlvlnum == SL_POISONWATER) {
-			if (quests[QTYPE_PW]._qactive == 3) {
+			if (quests[Q_PWATER]._qactive == QUEST_DONE) {
 				color = lightColorMap["CLEAREDWATER"];
 			} else {
 				color = lightColorMap["POISONEDWATER"];
