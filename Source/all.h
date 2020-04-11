@@ -101,4 +101,3 @@ extern "C" {
 DEVILUTION_END_NAMESPACE
 
 #endif /* __ALL_H__ */
->>>>>>> 03662be548435cc25517ec7568f09aafab67bae0
