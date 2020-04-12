@@ -7,11 +7,11 @@
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 #include <config.h>
+
 DEVILUTION_BEGIN_NAMESPACE
 
 int paletteNum = 0;
 int tilesetNum = 0;
-
 SDL_Window *ghMainWnd;
 int glMid1Seed[NUMLEVELS];
 int glMid2Seed[NUMLEVELS];
@@ -1098,6 +1098,7 @@ void PressChar(int vkey)
 	}
 	if ((char)vkey == 'p' || (char)vkey == 'P') {
 		diablo_pause_game();
+		return;
 	}
 	if ((char)vkey == '1') {
 		tilesetNum--;
