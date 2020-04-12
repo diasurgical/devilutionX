@@ -199,7 +199,6 @@ void LoadSetMap()
 	case SL_TEST2:
 	case SL_TEST3:
 	case SL_TEST4:
-
 		char dunbuf[100];
 		char palbuf[100];
 		sprintf(palbuf, "derp%d.pal", paletteNum);
@@ -217,8 +216,9 @@ void LoadSetMap()
 			LoadL3Dungeon(dunbuf, 83, 45);
 		}
 		if (tilesetNum == 3) {
-			//LoadPreL4Dungeon(dunbuf, 83, 45);
-			//LoadL4Dungeon(dunbuf, 83, 45);
+			memset(automapview, 1, sizeof(automapview));
+			LoadPreL4Dungeon(dunbuf, 83, 45);
+			LoadL4Dungeon(dunbuf, 83, 45);
 		}
 		LoadPalette(palbuf);
 		//AddL1Objs(0, 0, MAXDUNX, MAXDUNY);

@@ -351,10 +351,10 @@ DWORD GetPlrGFXSize(char *szCel)
 #endif
 			for (w = &WepChar[0]; *w; w++) {
 				if (szCel[0] == 'D' && szCel[1] == 'T' && *w != 'N') {
-					continue; //Death has no weapon
+					continue;   //Death has no weapon
 				}
 				if (szCel[0] == 'B' && szCel[1] == 'L' && (*w != 'U' && *w != 'D' && *w != 'H')) {
-					continue; //No block without weapon
+					continue;   //No block without weapon
 				}
 				sprintf(Type, "%c%c%c", CharChar[c], *a, *w);
 				sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", ClassStrTbl[c], Type, Type, szCel);
@@ -1109,7 +1109,7 @@ void PM_ChangeLightOff(int pnum)
 	}
 
 	// check if issue is upstream
-	if (plr[pnum]._plid == -1)
+	if(plr[pnum]._plid == -1)
 		return;
 
 	l = &LightList[plr[pnum]._plid];
@@ -1237,8 +1237,7 @@ void StartWalk(int pnum, int xvel, int yvel, int xadd, int yadd, int EndDir, int
 #if defined(__clang__) || defined(__GNUC__)
 __attribute__((no_sanitize("shift-base")))
 #endif
-void
-StartWalk2(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int EndDir, int sdir)
+void StartWalk2(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int EndDir, int sdir)
 {
 	int px, py;
 
@@ -1314,8 +1313,7 @@ StartWalk2(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd,
 #if defined(__clang__) || defined(__GNUC__)
 __attribute__((no_sanitize("shift-base")))
 #endif
-void
-StartWalk3(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, int EndDir, int sdir)
+void StartWalk3(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, int EndDir, int sdir)
 {
 	int px, py, x, y;
 
@@ -1622,8 +1620,7 @@ void RespawnDeadItem(ItemStruct *itm, int x, int y)
 #if defined(__clang__) || defined(__GNUC__)
 __attribute__((no_sanitize("shift-base")))
 #endif
-void
-StartPlayerKill(int pnum, int earflag)
+void StartPlayerKill(int pnum, int earflag)
 {
 	BOOL diablolevel;
 	int i, pdd;
@@ -1967,15 +1964,9 @@ void InitLevelChange(int pnum)
 #if defined(__clang__) || defined(__GNUC__)
 __attribute__((no_sanitize("shift-base")))
 #endif
-void
-StartNewLvl(int pnum, int fom, int lvl)
+void StartNewLvl(int pnum, int fom, int lvl)
 {
 	SDL_Log("START NEW LVL %d %d %d %d\n", fom, lvl, setlevel, setlvltype);
-	SDL_Log("TEST");
-	SDL_Log("TEST");
-	SDL_Log("TEST");
-	SDL_Log("TEST");
-	SDL_Log("TEST");
 	InitLevelChange(pnum);
 
 	if ((DWORD)pnum >= MAX_PLRS) {
@@ -3630,17 +3621,17 @@ void CheckPlrSpell()
 	}
 
 	if (!sgbControllerActive) {
-		if (pcurs != CURSOR_HAND
-		    || (MouseY >= PANEL_TOP && MouseX >= PANEL_LEFT && MouseX <= RIGHT_PANEL)     // inside main panel
-		    || ((chrflag || questlog) && MouseX < SPANEL_WIDTH && MouseY < SPANEL_HEIGHT) // inside left panel
+	if (pcurs != CURSOR_HAND
+		|| (MouseY >= PANEL_TOP && MouseX >= PANEL_LEFT && MouseX <= RIGHT_PANEL) // inside main panel
+		|| ((chrflag || questlog) && MouseX < SPANEL_WIDTH && MouseY < SPANEL_HEIGHT) // inside left panel
 		    || ((invflag || sbookflag) && MouseX > RIGHT_PANEL && MouseY < SPANEL_HEIGHT) // inside right panel
-		        && rspell != SPL_HEAL
-		        && rspell != SPL_IDENTIFY
-		        && rspell != SPL_REPAIR
-		        && rspell != SPL_INFRA
-		        && rspell != SPL_RECHARGE) {
+		    && rspell != SPL_HEAL
+		    && rspell != SPL_IDENTIFY
+		    && rspell != SPL_REPAIR
+		    && rspell != SPL_INFRA
+		    && rspell != SPL_RECHARGE) {
 			return;
-		}
+	}
 	}
 
 	addflag = FALSE;

@@ -1955,6 +1955,85 @@ void CreateL4Dungeon(DWORD rseed, int entry)
 	DRLG_FreeL4SP();
 	DRLG_SetPC();
 }
+
+void LoadL4Dungeon(char *sFileName, int vx, int vy)
+{
+	int i, j, rw, rh;
+	BYTE *pLevelMap, *lm;
+
+	dminx = 16;
+	dminy = 16;
+	dmaxx = 96;
+	dmaxy = 96;
+
+	DRLG_InitTrans();
+	InitL4Dungeon();
+	pLevelMap = LoadFileInMem(sFileName, NULL);
+
+
+	lm = pLevelMap;
+	rw = *lm;
+	lm += 2;
+	rh = *lm;
+	lm += 2;
+
+	for (j = 0; j < rh; j++) {
+		for (i = 0; i < rw; i++) {
+			if (*lm != 0) {
+				dungeon[i][j] = *lm;
+				dflags[i][j] |= 0x80;
+			} else {
+				dungeon[i][j] = 13;
+			}
+			lm += 2;
+		}
+	}
+
+	ViewX = vx;
+	ViewY = vy;
+	DRLG_L4Pass3();
+	DRLG_Init_Globals();
+	DRLG_L4FloodTVal();
+	DRLG_L4TransFix();
+
+	SetMapMonsters(pLevelMap, 0, 0);
+	SetMapObjects(pLevelMap, 0, 0);
+	mem_free_dbg(pLevelMap);
+}
+
+void LoadPreL4Dungeon(char *sFileName, int vx, int vy)
+{
+	int i, j, rw, rh;
+	BYTE *pLevelMap, *lm;
+
+	dminx = 16;
+	dminy = 16;
+	dmaxx = 96;
+	dmaxy = 96;
+
+	InitL4Dungeon();
+
+	pLevelMap = LoadFileInMem(sFileName, NULL);
+
+	lm = pLevelMap;
+	rw = *lm;
+	lm += 2;
+	rh = *lm;
+	lm += 2;
+
+	for (j = 0; j < rh; j++) {
+		for (i = 0; i < rw; i++) {
+			if (*lm != 0) {
+				dungeon[i][j] = *lm;
+				dflags[i][j] |= DLRG_PROTECTED;
+			} else {
+				dungeon[i][j] = 13;
+			}
+			lm += 2;
+		}
+	}
+	mem_free_dbg(pLevelMap);
+}
 #endif
 
 DEVILUTION_END_NAMESPACE
