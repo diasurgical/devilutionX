@@ -25,6 +25,9 @@ extern BYTE L4dungeon[80][80];
 extern BYTE dung[20][20];
 //int dword_52A4DC;
 
+void LoadPreL4Dungeon(char *sFileName, int vx, int vy);
+void LoadL4Dungeon(char *sFileName, int vx, int vy);
+
 void DRLG_LoadL4SP();
 void DRLG_FreeL4SP();
 void DRLG_L4SetSPRoom(int rx1, int ry1);
