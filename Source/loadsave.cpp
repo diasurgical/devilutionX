@@ -22,29 +22,6 @@ void LoadGame(BOOL firstflag)
 
 	FreeGameMem();
 	pfile_remove_temp_files();
-#ifdef PIXEL_LIGHT
-	staticLights.clear();
-	int mapSize;
-	LoadBuff = pfile_read("staticlights", &dwLen);
-	if (LoadBuff != NULL) {
-		tbuff = LoadBuff;
-		CopyInt(tbuff, &mapSize);
-		for (int i = 0; i < mapSize; i++) {
-			int key, vectorSize;
-			CopyInt(tbuff, &key);
-			CopyInt(tbuff, &vectorSize);
-			for (int j = 0; j < vectorSize; j++) {
-				LightListStruct tmpLight;
-				CopyInt(tbuff, &tmpLight._lx);
-				CopyInt(tbuff, &tmpLight._ly);
-				CopyInt(tbuff, &tmpLight._lradius);
-				CopyInt(tbuff, &tmpLight._lcolor);
-				staticLights[key].push_back(tmpLight);
-			}
-		}
-		mem_free_dbg(LoadBuff);
-	}
-#endif
 	pfile_get_game_name(szName);
 	LoadBuff = pfile_read(szName, &dwLen);
 	tbuff = LoadBuff;
@@ -124,16 +101,6 @@ void LoadGame(BOOL firstflag)
 		for (i = 0; i < numvision; i++)
 			LoadVision(i);
 	}
-#ifdef PIXEL_LIGHT
-	else {
-		numlights = WLoad();
-
-		for (i = 0; i < MAXLIGHTS; i++)
-			lightactive[i] = BLoad();
-		for (i = 0; i < numlights; i++)
-			LoadLighting(lightactive[i]);
-	}
-#endif
 
 	for (i = 0; i < MAXITEMS; i++)
 		itemactive[i] = BLoad();
@@ -204,6 +171,37 @@ void LoadGame(BOOL firstflag)
 	AutomapZoomReset();
 	ResyncQuests();
 
+#ifdef PIXEL_LIGHT
+	staticLights.clear();
+	int mapSize;
+	LoadBuff = pfile_read("pixellight", &dwLen);
+	if (LoadBuff != NULL) {
+		tbuff = LoadBuff;
+		CopyInt(tbuff, &mapSize);
+		for (int i = 0; i < mapSize; i++) {
+			int key, vectorSize;
+			CopyInt(tbuff, &key);
+			CopyInt(tbuff, &vectorSize);
+			for (int j = 0; j < vectorSize; j++) {
+				LightListStruct tmpLight;
+				CopyInt(tbuff, &tmpLight._lx);
+				CopyInt(tbuff, &tmpLight._ly);
+				CopyInt(tbuff, &tmpLight._lradius);
+				CopyInt(tbuff, &tmpLight._lcolor);
+				staticLights[key].push_back(tmpLight);
+			}
+		}
+		if (leveltype == DTYPE_TOWN) {
+			numlights = WLoad();
+			for (i = 0; i < MAXLIGHTS; i++)
+				lightactive[i] = BLoad();
+			for (i = 0; i < numlights; i++)
+				LoadLighting(lightactive[i]);
+		}
+		mem_free_dbg(LoadBuff);
+	}
+#endif
+
 	if (leveltype != DTYPE_TOWN)
 		ProcessLightList();
 
@@ -256,7 +254,7 @@ void CopyBytes(const void *src, const int n, void *dst)
 
 void CopyChar(const void *src, void *dst)
 {
-	*(char*)dst = *(char *)src;
+	*(char*)dst = *(char*)src;
 	tbuff += 1;
 }
 
@@ -928,16 +926,6 @@ void SaveGame()
 		for (i = 0; i < numvision; i++)
 			SaveVision(i);
 	}
-#ifdef PIXEL_LIGHT
-	else {
-		WSave(numlights);
-
-		for (i = 0; i < MAXLIGHTS; i++)
-			BSave(lightactive[i]);
-		for (i = 0; i < numlights; i++)
-			SaveLighting(lightactive[i]);
-	}
-#endif
 
 	for (i = 0; i < MAXITEMS; i++)
 		BSave(itemactive[i]);
@@ -1038,8 +1026,16 @@ void SaveGame()
 		}
 	}
 
+	if (leveltype == DTYPE_TOWN) {
+		WSave(numlights);
+		for (i = 0; i < MAXLIGHTS; i++)
+			BSave(lightactive[i]);
+		for (i = 0; i < numlights; i++)
+			SaveLighting(lightactive[i]);
+	}
+
 	dwLen = codec_get_encoded_len(tbuff - SaveBuff);
-	pfile_write_save_file("staticlights", SaveBuff, tbuff - SaveBuff, dwLen);
+	pfile_write_save_file("pixellight", SaveBuff, tbuff - SaveBuff, dwLen);
 	mem_free_dbg(SaveBuff);
 #endif
 	gbValidSaveFile = TRUE;
