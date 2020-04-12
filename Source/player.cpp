@@ -1966,7 +1966,6 @@ __attribute__((no_sanitize("shift-base")))
 #endif
 void StartNewLvl(int pnum, int fom, int lvl)
 {
-	SDL_Log("START NEW LVL %d %d %d %d\n", fom, lvl, setlevel, setlvltype);
 	InitLevelChange(pnum);
 
 	if ((DWORD)pnum >= MAX_PLRS) {

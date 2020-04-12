@@ -353,10 +353,6 @@ void InitCutscene(unsigned int uMsg)
 			sgpBackCel = LoadFileInMem("Gendata\\Cutportr.CEL", NULL);
 			LoadPalette("Gendata\\Cutportr.pal");
 			progress_id = 1;
-		} else if (setlvlnum == SL_TEST1 || setlvlnum == SL_TEST2 || setlvlnum == SL_TEST3 || setlvlnum == SL_TEST4) {
-				sgpBackCel = LoadFileInMem("Gendata\\Cutportr.CEL", NULL);
-				LoadPalette("Gendata\\Cutportr.pal");
-				progress_id = 1;
 		} else {
 			sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", NULL);
 			LoadPalette("Gendata\\Cutl1d.pal");
@@ -369,10 +365,6 @@ void InitCutscene(unsigned int uMsg)
 			LoadPalette("Gendata\\Cut2.pal");
 			progress_id = 2;
 		} else if (setlvlnum == SL_VILEBETRAYER) {
-			sgpBackCel = LoadFileInMem("Gendata\\Cutportr.CEL", NULL);
-			LoadPalette("Gendata\\Cutportr.pal");
-			progress_id = 1;
-		} else if (setlvlnum == SL_TEST1 || setlvlnum == SL_TEST2 || setlvlnum == SL_TEST3 || setlvlnum == SL_TEST4) {
 			sgpBackCel = LoadFileInMem("Gendata\\Cutportr.CEL", NULL);
 			LoadPalette("Gendata\\Cutportr.pal");
 			progress_id = 1;
