@@ -64,6 +64,7 @@ char *quest_level_names[] = {
 	"Maze",
 	"Poisoned Water Supply",
 	"Archbishop Lazarus' Lair",
+	"TEST QUEST LEVEL",
 };
 
 int ObjIndex(int x, int y)
@@ -188,6 +189,30 @@ void LoadSetMap()
 		AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
 		AddVileObjs();
 		DRLG_SetMapTrans("Levels\\L1Data\\Vile1.DUN");
+		InitNoTriggers();
+		break;
+	case SL_TEST:
+		char dunbuf[100];
+		char palbuf[100];
+		sprintf(palbuf, "derp%d.pal", paletteNum);
+		sprintf(dunbuf, "derp%d.dun", tilesetNum);
+		if (tilesetNum == 0) {
+			LoadL1Dungeon(dunbuf, 30, 30);
+			AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
+		}
+		if (tilesetNum == 1) {
+			LoadL2Dungeon(dunbuf, 30, 30);
+			AddL2Objs(0, 0, MAXDUNX, MAXDUNY);
+		}
+		if (tilesetNum == 2) {
+			LoadL3Dungeon(dunbuf, 30, 30);
+			AddL3Objs(0, 0, MAXDUNX, MAXDUNY);
+		}
+		if (tilesetNum == 3) {
+			LoadL4Dungeon(dunbuf, 53, 78);
+		}
+		DRLG_SetMapTrans(dunbuf);
+		LoadPalette(palbuf);
 		InitNoTriggers();
 		break;
 	}

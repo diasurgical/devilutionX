@@ -2543,6 +2543,7 @@ typedef enum _setlevels {
 	SL_MAZE         = 0x3,
 	SL_POISONWATER  = 0x4,
 	SL_VILEBETRAYER = 0x5,
+	SL_TEST         = 0x6,
 } _setlevels;
 
 typedef enum quest_id {

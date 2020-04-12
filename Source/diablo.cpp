@@ -10,6 +10,8 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+int paletteNum = 0;
+int tilesetNum = 0;
 SDL_Window *ghMainWnd;
 DWORD glSeedTbl[NUMLEVELS];
 int gnLevelTypeTbl[NUMLEVELS];
@@ -1098,6 +1100,55 @@ void PressChar(int vkey)
 		diablo_pause_game();
 		return;
 	}
+	if ((char)vkey == '1') {
+		tilesetNum--;
+		if (tilesetNum < 0) {
+			tilesetNum = 0;
+		}
+		char msgg[100];
+		sprintf(msgg, "CHOSEN TILESET: %d", tilesetNum);
+		NetSendCmdString(1 << myplr, msgg);
+		return;
+	}
+
+	if ((char)vkey == '2') {
+		tilesetNum++;
+		if (tilesetNum > 3) {
+			tilesetNum = 3;
+		}
+		char msgg[100];
+		sprintf(msgg, "CHOSEN TILESET: %d", tilesetNum);
+		NetSendCmdString(1 << myplr, msgg);
+		return;
+	}
+
+		if ((char)vkey == '3') {
+		paletteNum--;
+		   if (paletteNum < 0) {
+			paletteNum = 0;
+		}
+		char msgg[100];
+		sprintf(msgg, "CHOSEN PALETTE: %d", paletteNum);
+		NetSendCmdString(1 << myplr, msgg);
+		return;
+	}
+
+	if ((char)vkey == '4') {
+		paletteNum++;
+		if (paletteNum > 4) {
+			paletteNum = 4;
+		}
+		char msgg[100];
+		NetSendCmdString(1 << myplr, msgg);
+		return;
+	}
+
+	if ((char)vkey == 'l') {
+		setlvltype = DTYPE_CATHEDRAL + tilesetNum;
+		StartNewLvl(myplr, WM_DIABSETLVL, SL_TEST);
+		return;
+	}
+
 	if (PauseMode == 2) {
 		return;
 	}
