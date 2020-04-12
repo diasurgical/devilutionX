@@ -1,0 +1,678 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-04-12 10:04+0200\n"
+"PO-Revision-Date: 2020-04-12 11:39+0200\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.3\n"
+"X-Poedit-SourceCharset: CP1252\n"
+"X-Poedit-KeywordsList: _;N_\n"
+"X-Poedit-Basepath: ..\n"
+"Last-Translator: Gianluca Boiano <morf3089@gmail.com>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: it\n"
+"X-Poedit-SearchPath-0: Source\n"
+"X-Poedit-SearchPath-1: SourceX\n"
+
+#: Source/appfat.cpp:32
+msgid "Error"
+msgstr "Errore"
+
+#: Source/appfat.cpp:66
+#, c-format
+msgid ""
+"assertion failed (%d:%s)\n"
+"%s"
+msgstr ""
+"operazione non riuscita(%d:%s)\n"
+"%s"
+
+#: Source/appfat.cpp:76
+#, c-format
+msgid ""
+"%s\n"
+"\n"
+"The error occurred at: %s line %d"
+msgstr ""
+"%s\n"
+"\n"
+"L'errore si è verificato alla linea: %s %d"
+
+#: Source/appfat.cpp:94
+#, c-format
+msgid ""
+"Unable to open a required file.\n"
+"\n"
+"Verify that the MD5 of diabdat.mpq matches on of the following values\n"
+"011bc6518e6166206231080a4440b373\n"
+"68f049866b44688a7af65ba766bef75a\n"
+"\n"
+"The problem occurred when loading:\n"
+"%s"
+msgstr ""
+"Impossibile aprire un file necessario.\n"
+"\n"
+"Verifica che l'MD5 di diabdat.mpq corrisponda con i seguenti valori\n"
+"011bc6518e6166206231080a4440b373\n"
+"68f049866b44688a7af65ba766bef75a\n"
+"\n"
+"Si è verificato un problema nel caricamento di:\n"
+"%s"
+
+#: Source/appfat.cpp:113
+#, c-format
+msgid ""
+"Unable to open %s.\n"
+"\n"
+"Make sure that it is in the game folder and that the file name is in all "
+"lowercase."
+msgstr ""
+"Impossibile aprire %s.\n"
+"\n"
+"Assicurati che sia presente nella cartella di gioco e che il nome del file "
+"sia in lettere minuscole."
+
+#: Source/appfat.cpp:126
+#, c-format
+msgid ""
+"Unable to write to location:\n"
+"%s"
+msgstr ""
+"Impossibile scrivere nella posizione:\n"
+"%s"
+
+#: Source/appfat.cpp:128
+msgid "Read-Only Directory Error"
+msgstr "Errore di Cartella in Sola Lettura"
+
+#: Source/gamemenu.cpp:8
+msgid "Save Game"
+msgstr "Salva"
+
+#: Source/gamemenu.cpp:9 Source/gamemenu.cpp:19
+msgid "Options"
+msgstr "Opzioni"
+
+#: Source/gamemenu.cpp:10 Source/gamemenu.cpp:20
+#: SourceX/DiabloUI/selhero.cpp:91
+msgid "New Game"
+msgstr "Nuovo"
+
+#: Source/gamemenu.cpp:11 SourceX/DiabloUI/selhero.cpp:90
+msgid "Load Game"
+msgstr "Carica"
+
+#: Source/gamemenu.cpp:12 Source/gamemenu.cpp:22
+msgid "Quit Diablo"
+msgstr "Esci da Diablo"
+
+#: Source/gamemenu.cpp:21
+msgid "Restart In Town"
+msgstr "Torna in Città"
+
+#: Source/gamemenu.cpp:31
+msgid "Gamma"
+msgstr "Gamma"
+
+#: Source/gamemenu.cpp:33
+msgid "Previous Menu"
+msgstr "Menu Precedente"
+
+#: Source/gamemenu.cpp:37 SourceX/DiabloUI/credits_lines.cpp:78
+msgid "Music"
+msgstr "Musica"
+
+#: Source/gamemenu.cpp:37
+msgid "Music Disabled"
+msgstr "Musica Spenta"
+
+#: Source/gamemenu.cpp:38
+msgid "Sound"
+msgstr "Suoni"
+
+#: Source/gamemenu.cpp:38
+msgid "Sound Disabled"
+msgstr "Suoni Spenti"
+
+#: Source/gamemenu.cpp:39
+msgid "Color Cycling Off"
+msgstr "Ciclo Colori No"
+
+#: Source/gamemenu.cpp:39
+msgid "Color Cycling On"
+msgstr "Ciclo Colori Si"
+
+#: Source/gmenu.cpp:48
+msgid "Pause"
+msgstr "Pausa"
+
+#: SourceX/DiabloUI/art.cpp:35
+msgid "Failed to load image"
+msgstr "Caricamento dell'immagine fallito"
+
+#: SourceX/DiabloUI/credits_lines.cpp:8
+msgid "Game Design"
+msgstr "Design di Gioco"
+
+#: SourceX/DiabloUI/credits_lines.cpp:11
+msgid "Senior Designers"
+msgstr "Designer Senior"
+
+#: SourceX/DiabloUI/credits_lines.cpp:14
+msgid "Additional Design"
+msgstr "Design Supplementare"
+
+#: SourceX/DiabloUI/credits_lines.cpp:17
+msgid "Lead Programmer"
+msgstr "Programmatore Principale"
+
+#: SourceX/DiabloUI/credits_lines.cpp:20
+msgid "Senior Programmers"
+msgstr "Programmatori Senior"
+
+#: SourceX/DiabloUI/credits_lines.cpp:24
+msgid "Programming"
+msgstr "Programmazione"
+
+#: SourceX/DiabloUI/credits_lines.cpp:27
+msgid "Special Guest Programmers"
+msgstr "Programmatori Ospiti Speciali"
+
+#: SourceX/DiabloUI/credits_lines.cpp:30
+msgid "Battle.net Programming"
+msgstr "Programmazione Battle.net"
+
+#: SourceX/DiabloUI/credits_lines.cpp:33
+msgid "Serial Communications Programming"
+msgstr "Programmazione Comunicazioni Seriali"
+
+#: SourceX/DiabloUI/credits_lines.cpp:36
+msgid "Installer Programming"
+msgstr "Sviluppo Installer"
+
+#: SourceX/DiabloUI/credits_lines.cpp:39
+msgid "Art Directors"
+msgstr "Direttori Artistici"
+
+#: SourceX/DiabloUI/credits_lines.cpp:42
+msgid "Artwork"
+msgstr "Grafica"
+
+#: SourceX/DiabloUI/credits_lines.cpp:49
+msgid "Technical Artwork"
+msgstr "Illustrazione Tecnica"
+
+#: SourceX/DiabloUI/credits_lines.cpp:53
+msgid "Cinematic Art Directors"
+msgstr "Direttori Artistici dei Filmati"
+
+#: SourceX/DiabloUI/credits_lines.cpp:56
+msgid "3D Cinematic Artwork"
+msgstr "Grafica dei Filmati 3D"
+
+#: SourceX/DiabloUI/credits_lines.cpp:62
+msgid "Cinematic Technical Artwork"
+msgstr "Illustrazione Tecnica dei Filmati"
+
+#: SourceX/DiabloUI/credits_lines.cpp:65
+msgid "Executive Producer"
+msgstr "Produttore Esecutivo"
+
+#: SourceX/DiabloUI/credits_lines.cpp:68
+msgid "Producer"
+msgstr "Produttore"
+
+#: SourceX/DiabloUI/credits_lines.cpp:71
+msgid "Associate Producer"
+msgstr "Produttore Associato"
+
+#: SourceX/DiabloUI/credits_lines.cpp:74
+msgid "Diablo Strike Team"
+msgstr "Diablo Strike Team"
+
+#: SourceX/DiabloUI/credits_lines.cpp:81
+msgid "Sound Design"
+msgstr "Design Suono"
+
+#: SourceX/DiabloUI/credits_lines.cpp:84
+msgid "Cinematic Music & Sound"
+msgstr "Musica & Suono Filmati"
+
+#: SourceX/DiabloUI/credits_lines.cpp:87
+msgid "Voice Production, Direction & Casting"
+msgstr "Produzione Voci, Regia & Casting"
+
+#: SourceX/DiabloUI/credits_lines.cpp:90
+msgid "Script & Story"
+msgstr "Sceneggiatura & Storia"
+
+#: SourceX/DiabloUI/credits_lines.cpp:94
+msgid "Voice Editing"
+msgstr "Elaborazione Voce"
+
+#: SourceX/DiabloUI/credits_lines.cpp:97
+msgid "Voices"
+msgstr "Voci"
+
+#: SourceX/DiabloUI/credits_lines.cpp:102
+msgid "Recording Engineer"
+msgstr "Tecnico di Registrazione"
+
+#: SourceX/DiabloUI/credits_lines.cpp:105
+msgid "Manual Design & Layout"
+msgstr "Design Manuale & Impaginazione"
+
+#: SourceX/DiabloUI/credits_lines.cpp:109
+msgid "Manual Artwork"
+msgstr "Grafica Manuale"
+
+#: SourceX/DiabloUI/credits_lines.cpp:113
+msgid "Provisional Director of QA (Lead Tester)"
+msgstr "Direttore Provvisorio QA (Responsabile Tester)"
+
+#: SourceX/DiabloUI/credits_lines.cpp:116
+msgid "QA Assault Team (Testers)"
+msgstr "Squadra d'Assalto QA (Tester)"
+
+#: SourceX/DiabloUI/credits_lines.cpp:121
+msgid "QA Special Ops Team (Compatibility Testers)"
+msgstr "Squadra Special Ops QA (Tester Compatibilità)"
+
+#: SourceX/DiabloUI/credits_lines.cpp:124
+msgid "QA Artillery Support (Additional Testers) "
+msgstr "Supporto d'Artiglieria QA (Tester Aggiuntivi) "
+
+#: SourceX/DiabloUI/credits_lines.cpp:128
+msgid "QA Counterintelligence"
+msgstr "Controspionaggio QA"
+
+#: SourceX/DiabloUI/credits_lines.cpp:131
+msgid "Order of Network Information Services"
+msgstr "Ordine dei Servizi di Informazione di Rete"
+
+#: SourceX/DiabloUI/credits_lines.cpp:135
+msgid "Customer Support"
+msgstr "Assistenza Clienti"
+
+#: SourceX/DiabloUI/credits_lines.cpp:140
+msgid "Sales"
+msgstr "Vendite"
+
+#: SourceX/DiabloUI/credits_lines.cpp:143
+msgid "Dunsel"
+msgstr "Babbeo"
+
+#: SourceX/DiabloUI/credits_lines.cpp:146
+msgid "Mr. Dabiri's Background Vocalists"
+msgstr "Cori di Sottofondo di Mr. Dabiri"
+
+#: SourceX/DiabloUI/credits_lines.cpp:150
+msgid "Public Relations"
+msgstr "Pubbliche Relazioni"
+
+#: SourceX/DiabloUI/credits_lines.cpp:153
+msgid "Marketing"
+msgstr "Marketing"
+
+#: SourceX/DiabloUI/credits_lines.cpp:156
+msgid "International Sales"
+msgstr "Vendite Internazionali"
+
+#: SourceX/DiabloUI/credits_lines.cpp:159
+msgid "U.S. Sales"
+msgstr "Vendite in US"
+
+#: SourceX/DiabloUI/credits_lines.cpp:162
+msgid "Manufacturing"
+msgstr "Produzione"
+
+#: SourceX/DiabloUI/credits_lines.cpp:165
+msgid "Legal & Business"
+msgstr "Legale & Commerciale"
+
+#: SourceX/DiabloUI/credits_lines.cpp:168
+msgid "Special Thanks To"
+msgstr "Ringraziamenti Speciali"
+
+#: SourceX/DiabloUI/credits_lines.cpp:172
+msgid "Thanks To"
+msgstr "Grazie A"
+
+#: SourceX/DiabloUI/credits_lines.cpp:201
+msgid "In memory of"
+msgstr "In memoria di"
+
+#: SourceX/DiabloUI/credits_lines.cpp:207
+msgid "Very Special Thanks to"
+msgstr "Ringraziamenti Speciali"
+
+#: SourceX/DiabloUI/credits_lines.cpp:211
+msgid "The Ring of One Thousand"
+msgstr "L'Anello dei Mille"
+
+#: SourceX/DiabloUI/credits_lines.cpp:457
+msgid "\tNo souls were sold in the making of this game."
+msgstr ""
+"\tNessuna anima è stata venduta durante la realizzazione di questo gioco."
+
+#: SourceX/DiabloUI/dialogs.cpp:39 SourceX/DiabloUI/dialogs.cpp:46
+#: SourceX/DiabloUI/selconn.cpp:46 SourceX/DiabloUI/selgame.cpp:25
+#: SourceX/DiabloUI/selhero.cpp:62 SourceX/DiabloUI/selhero.cpp:78
+#: SourceX/DiabloUI/selhero.cpp:85 SourceX/DiabloUI/selhero.cpp:96
+#: SourceX/DiabloUI/selok.cpp:33
+msgid "OK"
+msgstr "OK"
+
+#: SourceX/DiabloUI/mainmenu.cpp:12
+msgid "Single Player"
+msgstr "Single Player"
+
+#: SourceX/DiabloUI/mainmenu.cpp:13
+msgid "Multi Player"
+msgstr "Multi Player"
+
+#: SourceX/DiabloUI/mainmenu.cpp:14
+msgid "Replay Intro"
+msgstr "Intro"
+
+#: SourceX/DiabloUI/mainmenu.cpp:15
+msgid "Show Credits"
+msgstr "Mostra Crediti"
+
+#: SourceX/DiabloUI/mainmenu.cpp:16
+msgid "Exit Diablo"
+msgstr "Esci da Diablo"
+
+#: SourceX/DiabloUI/mainmenu.cpp:79
+msgid ""
+"The Diablo introduction cinematic is only available in the full retail "
+"version of Diablo. Visit https://www.gog.com/game/diablo to purchase."
+msgstr ""
+"Il filmato introduttivo di Diablo è disponibile solo nella versione "
+"completa. Visita https://www.gog.com/game/diablo per acquistare."
+
+#: SourceX/DiabloUI/progress.cpp:32 SourceX/DiabloUI/progress.cpp:48
+#: SourceX/DiabloUI/progress.cpp:49 SourceX/DiabloUI/selconn.cpp:47
+#: SourceX/DiabloUI/selhero.cpp:64 SourceX/DiabloUI/selhero.cpp:79
+#: SourceX/DiabloUI/selhero.cpp:86 SourceX/DiabloUI/selhero.cpp:97
+msgid "Cancel"
+msgstr "Annulla"
+
+#: SourceX/DiabloUI/selconn.cpp:26 SourceX/DiabloUI/selgame.cpp:112
+msgid "Client-Server (TCP)"
+msgstr "Client-Server (TCP)"
+
+#: SourceX/DiabloUI/selconn.cpp:28
+msgid "Peer-to-Peer (UDP)"
+msgstr "Peer-to-Peer (UDP)"
+
+#: SourceX/DiabloUI/selconn.cpp:31
+msgid "Loopback"
+msgstr "Loopback"
+
+#: SourceX/DiabloUI/selconn.cpp:37 SourceX/DiabloUI/selgame.cpp:239
+#: SourceX/DiabloUI/selgame.cpp:255
+msgid "Multi Player Game"
+msgstr "Multi Player"
+
+#: SourceX/DiabloUI/selconn.cpp:39
+msgid "Requirements:"
+msgstr "Requisiti:"
+
+#: SourceX/DiabloUI/selconn.cpp:41
+msgid "no gateway needed"
+msgstr "gateway non richiesto"
+
+#: SourceX/DiabloUI/selconn.cpp:43
+msgid "Select Connection"
+msgstr "Seleziona Connessione"
+
+#: SourceX/DiabloUI/selconn.cpp:44
+msgid "Change Gateway"
+msgstr "Cambia Gateway"
+
+#: SourceX/DiabloUI/selconn.cpp:73
+msgid "All computers must be connected to a TCP-compatible network."
+msgstr "Tutti i computer devono essere connessi ad una rete TCP compatibile."
+
+#: SourceX/DiabloUI/selconn.cpp:78
+msgid "All computers must be connected to a UDP-compatible network."
+msgstr "Tutti i computer devono essere connessi ad una rete UDP compatibile."
+
+#: SourceX/DiabloUI/selconn.cpp:84
+msgid "Play by yourself with no network exposure."
+msgstr "Gioca da solo senza esporti sulla rete."
+
+#: SourceX/DiabloUI/selconn.cpp:89
+#, c-format
+msgid "Players Supported: %d"
+msgstr "Giocatori Supportati: %d"
+
+#: SourceX/DiabloUI/selgame.cpp:26
+msgid "CANCEL"
+msgstr "ANNULLA"
+
+#: SourceX/DiabloUI/selgame.cpp:34 SourceX/DiabloUI/selgame.cpp:157
+msgid "Normal"
+msgstr "Normale"
+
+#: SourceX/DiabloUI/selgame.cpp:35 SourceX/DiabloUI/selgame.cpp:161
+msgid "Nightmare"
+msgstr "Incubo"
+
+#: SourceX/DiabloUI/selgame.cpp:36 SourceX/DiabloUI/selgame.cpp:165
+msgid "Hell"
+msgstr "Inferno"
+
+#: SourceX/DiabloUI/selgame.cpp:44
+msgid "Select Difficulty"
+msgstr "Seleziona Difficoltà"
+
+#: SourceX/DiabloUI/selgame.cpp:54 SourceX/DiabloUI/selgame.cpp:136
+msgid "Create Game"
+msgstr "Nuovo"
+
+#: SourceX/DiabloUI/selgame.cpp:55 SourceX/DiabloUI/selgame.cpp:75
+msgid "Enter IP"
+msgstr "Inserisci IP"
+
+#: SourceX/DiabloUI/selgame.cpp:63
+msgid "Select Action"
+msgstr "Seleziona Azione"
+
+#: SourceX/DiabloUI/selgame.cpp:87
+msgid "Enter Password"
+msgstr "Inserisci Password"
+
+#: SourceX/DiabloUI/selgame.cpp:120
+msgid "Create a new game with a difficulty setting of your choice."
+msgstr "Crea un nuovo gioco con una difficoltà a tua scelta."
+
+#: SourceX/DiabloUI/selgame.cpp:123
+msgid "Enter an IP and join a game already in progress at that address."
+msgstr "Inserisci un IP e partecipa al gioco già in corso a quell'indirizzo."
+
+#: SourceX/DiabloUI/selgame.cpp:140
+msgid "Join TCP Games"
+msgstr "Gioca su TCP"
+
+#: SourceX/DiabloUI/selgame.cpp:158
+msgid ""
+"Normal Difficulty\n"
+"This is where a starting character should begin the quest to defeat Diablo."
+msgstr ""
+"Difficoltà Normale\n"
+"Qui è dove un personaggio iniziale dovrebbe iniziare la missione per "
+"sconfiggere Diablo."
+
+#: SourceX/DiabloUI/selgame.cpp:162
+msgid ""
+"Nightmare Difficulty\n"
+"The denizens of the Labyrinth have been bolstered and will prove to be a "
+"greater challenge. This is recommended for experienced characters only."
+msgstr ""
+"Difficoltà Incubo\n"
+"Gli abitanti del Labirinto sono stati rafforzati e si rivelerà una sfida più "
+"grande. Raccomandato solo per personaggi esperti."
+
+#: SourceX/DiabloUI/selgame.cpp:166
+msgid ""
+"Hell Difficulty\n"
+"The most powerful of the underworld's creatures lurk at the gateway into "
+"Hell. Only the most experienced characters should venture in this realm."
+msgstr ""
+"Difficoltà Inferno\n"
+"La più potente delle creature degli inferi si nasconde alle porte "
+"dell'Inferno. Solo i personaggi più esperti dovrebbero avventurarsi in "
+"questo regno."
+
+#: SourceX/DiabloUI/selgame.cpp:182
+msgid ""
+"Your character must reach level 20 before you can enter a multiplayer game "
+"of Nightmare difficulty."
+msgstr ""
+"Il tuo personaggio deve raggiungere il livello 20 prima di poter partecipare "
+"al multiplayer di difficoltà Incubo."
+
+#: SourceX/DiabloUI/selgame.cpp:184
+msgid ""
+"Your character must reach level 30 before you can enter a multiplayer game "
+"of Hell difficulty."
+msgstr ""
+"Il tuo personaggio deve raggiungere il livello 30 prima di poter partecipare "
+"al multiplayer di difficoltà Inferno."
+
+#: SourceX/DiabloUI/selhero.cpp:44
+msgid "Level:"
+msgstr "Livello:"
+
+#: SourceX/DiabloUI/selhero.cpp:46
+msgid "Strength:"
+msgstr "Forza:"
+
+#: SourceX/DiabloUI/selhero.cpp:48
+msgid "Magic:"
+msgstr "Magia:"
+
+#: SourceX/DiabloUI/selhero.cpp:50
+msgid "Dexterity:"
+msgstr "Destrezza:"
+
+#: SourceX/DiabloUI/selhero.cpp:52
+msgid "Vitality:"
+msgstr "Vitalità:"
+
+#: SourceX/DiabloUI/selhero.cpp:59
+msgid "Select Hero"
+msgstr "Seleziona Eroe"
+
+#: SourceX/DiabloUI/selhero.cpp:63
+msgid "Delete"
+msgstr "Elimina"
+
+#: SourceX/DiabloUI/selhero.cpp:71
+msgid "Warrior"
+msgstr "Guerriero"
+
+#: SourceX/DiabloUI/selhero.cpp:72
+msgid "Rogue"
+msgstr "Ladro"
+
+#: SourceX/DiabloUI/selhero.cpp:73
+msgid "Sorcerer"
+msgstr "Mago"
+
+#: SourceX/DiabloUI/selhero.cpp:76
+msgid "Choose Class"
+msgstr "Scegli Classe"
+
+#: SourceX/DiabloUI/selhero.cpp:83
+msgid "Enter Name"
+msgstr "Inserisci Nome"
+
+#: SourceX/DiabloUI/selhero.cpp:94
+msgid "Save File Exists"
+msgstr "Salvataggio Esistente"
+
+#: SourceX/DiabloUI/selhero.cpp:134
+msgid "New Hero"
+msgstr "Nuovo Eroe"
+
+#: SourceX/DiabloUI/selhero.cpp:161
+msgid "Multi Player Characters"
+msgstr "Personaggi Multi Player"
+
+#: SourceX/DiabloUI/selhero.cpp:163 SourceX/DiabloUI/selhero.cpp:210
+msgid "Single Player Characters"
+msgstr "Personaggi Single Player"
+
+#: SourceX/DiabloUI/selhero.cpp:203 SourceX/DiabloUI/selhero.cpp:252
+msgid "New Multi Player Hero"
+msgstr "Nuovo Eroe Multi Player"
+
+#: SourceX/DiabloUI/selhero.cpp:205 SourceX/DiabloUI/selhero.cpp:254
+msgid "New Single Player Hero"
+msgstr "Nuovo Eroe Single Player"
+
+#: SourceX/DiabloUI/selhero.cpp:245
+msgid ""
+"The Rogue and Sorcerer are only available in the full retail version of "
+"Diablo. Visit https://www.gog.com/game/diablo to purchase."
+msgstr ""
+"Il Ladro e il Mago sono disponibili solo nella versione completa di Diablo. "
+"Visita https://www.gog.com/game/diablo per acquistare."
+
+#: SourceX/DiabloUI/selhero.cpp:279
+msgid ""
+"Invalid name. A name cannot contain spaces, reserved characters, or reserved "
+"words.\n"
+msgstr ""
+"Nome non valido. Non può contenere spazi, caratteri speciali, o parole "
+"speciali.\n"
+
+#: SourceX/DiabloUI/selhero.cpp:288
+#, c-format
+msgid "Character already exists. Do you want to overwrite \"%s\"?"
+msgstr "Personaggio esistente. Vuoi sovrascrivere \"%s\"?"
+
+#: SourceX/DiabloUI/selhero.cpp:301
+msgid "Unable to create character."
+msgstr "Impossibile creare il personaggio."
+
+#: SourceX/DiabloUI/selhero.cpp:382
+msgid "Delete Multi Player Hero"
+msgstr "Elimina Eroe Multi Player"
+
+#: SourceX/DiabloUI/selhero.cpp:384
+msgid "Delete Single Player Hero"
+msgstr "Elimina Eroe Single Player"
+
+#: SourceX/DiabloUI/selhero.cpp:386
+#, c-format
+msgid "Are you sure you want to delete the character \"%s\"?"
+msgstr "Sei sicuro di voler eliminare il personaggio \"%s\"?"
+
+#: SourceX/DiabloUI/selyesno.cpp:15
+msgid "Yes"
+msgstr "Si"
+
+#: SourceX/DiabloUI/selyesno.cpp:16
+msgid "No"
+msgstr "No"
+
+#: SourceX/DiabloUI/title.cpp:24
+msgid "Copyright © 1996-2001 Blizzard Entertainment"
+msgstr "Copyright © 1996-2001 Blizzard Entertainment"
+
+#: SourceX/DiabloUI/ttf_render_wrapped.cpp:31
+msgid "Text has zero width"
+msgstr "Testo con larghezza nulla"
+
+#: SourceX/DiabloUI/ttf_render_wrapped.cpp:49
+#: SourceX/DiabloUI/ttf_render_wrapped.cpp:59
+msgid "Out of memory"
+msgstr "Memoria insufficiente"
