@@ -1002,6 +1002,11 @@ void SaveGame()
 		staticSize += it->second.size() * 4 + 2;
 	}
 	//1 for map size, 4 for every vector element, 2 per vector for key and vector size
+	if (leveltype == DTYPE_TOWN) {
+		staticSize += 1;              // numlights
+		staticSize += MAXLIGHTS;      //size of lightactive
+		staticSize += 13 * numlights; // 13 ints in LightListStruct x numlights
+	}
 	staticSize *= 4;
 	dwLen = codec_get_encoded_len(staticSize);
 	SaveBuff = DiabloAllocPtr(dwLen);
