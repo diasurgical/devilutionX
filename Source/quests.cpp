@@ -573,6 +573,15 @@ void SetReturnLvlPos()
 		ReturnLvl = quests[Q_BETRAYER]._qlevel;
 		ReturnLvlT = DTYPE_HELL;
 		break;
+	case SL_TEST1:
+	case SL_TEST2:
+	case SL_TEST3:
+	case SL_TEST4:
+		ReturnLvlX = quests[Q_SKELKING]._qtx + 1;
+		ReturnLvlY = quests[Q_SKELKING]._qty;
+		ReturnLvl = quests[Q_SKELKING]._qlevel;
+		ReturnLvlT = DTYPE_CATHEDRAL;
+		break;
 	}
 }
 

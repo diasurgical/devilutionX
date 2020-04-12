@@ -6,6 +6,9 @@
 #ifndef __DIABLO_H__
 #define __DIABLO_H__
 
+extern int paletteNum;
+extern int tilesetNum;
+
 extern SDL_Window *ghMainWnd;
 extern int glMid1Seed[NUMLEVELS];
 extern int glMid2Seed[NUMLEVELS];
