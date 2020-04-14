@@ -257,6 +257,36 @@ BYTE MonstConvTbl[] = {
 	MT_NZOMBIE,
 	MT_BIGFALL,
 	MT_DARKMAGE,
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	MT_CLEAVER,
+	MT_INVILORD,
+	MT_LRDSAYTR,
 };
 
 #define MAT_NEVER 0
