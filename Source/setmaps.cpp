@@ -64,11 +64,7 @@ char *quest_level_names[] = {
 	"Maze",
 	"Poisoned Water Supply",
 	"Archbishop Lazarus' Lair",
-	"TEST QUEST LEVEL1",
-	"TEST QUEST LEVEL2",
-	"TEST QUEST LEVEL3",
-	"TEST QUEST LEVEL4",
-	"TEST QUEST LEVEL5",
+	"TEST QUEST LEVEL",
 };
 
 int ObjIndex(int x, int y)
@@ -177,7 +173,7 @@ void LoadSetMap()
 		if (quests[Q_PWATER]._qactive == QUEST_INIT)
 			quests[Q_PWATER]._qactive = QUEST_ACTIVE;
 		LoadPreL3Dungeon("Levels\\L3Data\\Foulwatr.DUN", 19, 50);
-		LoadL3Dungeon("Levels\\L3Data\\Foulwatr.DUN", 20, 50);
+		LoadL3Dungeon("Levels\\L3Data\\Foulwatr.DUN", 31, 81);
 		LoadPalette("Levels\\L3Data\\L3pfoul.pal");
 		InitPWaterTriggers();
 		break;
@@ -195,33 +191,31 @@ void LoadSetMap()
 		DRLG_SetMapTrans("Levels\\L1Data\\Vile1.DUN");
 		InitNoTriggers();
 		break;
-	case SL_TEST1:
-	case SL_TEST2:
-	case SL_TEST3:
-	case SL_TEST4:
+	case SL_TEST:
 		char dunbuf[100];
 		char palbuf[100];
 		sprintf(palbuf, "derp%d.pal", paletteNum);
 		sprintf(dunbuf, "derp%d.dun", tilesetNum);
 		if (tilesetNum == 0) {
-			LoadPreL1Dungeon(dunbuf, 83, 45);
-			LoadL1Dungeon(dunbuf, 83, 45);
+			LoadPreL1Dungeon(dunbuf, 0, 0);
+			LoadL1Dungeon(dunbuf, 30, 30);
+			AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
 		}
 		if (tilesetNum == 1) {
-			LoadPreL2Dungeon(dunbuf, 83, 45);
-			LoadL2Dungeon(dunbuf, 83, 45);
+			LoadPreL2Dungeon(dunbuf, 0, 0);
+			LoadL2Dungeon(dunbuf, 30, 30);
+			AddL2Objs(0, 0, MAXDUNX, MAXDUNY);
 		}
 		if (tilesetNum == 2) {
-			LoadPreL3Dungeon(dunbuf, 83, 45);
-			LoadL3Dungeon(dunbuf, 83, 45);
+			LoadPreL3Dungeon(dunbuf, 0, 0);
+			LoadL3Dungeon(dunbuf, 30, 30);
+			AddL3Objs(0, 0, MAXDUNX, MAXDUNY);
 		}
 		if (tilesetNum == 3) {
-			memset(automapview, 1, sizeof(automapview));
-			LoadPreL4Dungeon(dunbuf, 83, 45);
-			LoadL4Dungeon(dunbuf, 83, 45);
+			LoadPreL4Dungeon(dunbuf, 0, 0);
+			LoadL4Dungeon(dunbuf, 53, 78);
 		}
 		LoadPalette(palbuf);
-		//AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
 		InitNoTriggers();
 		break;
 	}

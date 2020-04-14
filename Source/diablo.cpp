@@ -1139,14 +1139,14 @@ void PressChar(int vkey)
 			paletteNum = 4;
 		}
 		char msgg[100];
-		sprintf(msgg, "CHOSEN PALETTE: %d", paletteNum);
+		sprintf(msgg, "CHOSEN PALETTE: %d %d %d", paletteNum, plr[myplr].WorldX, plr[myplr].WorldY);
 		NetSendCmdString(1 << myplr, msgg);
 		return;
 	}
 
 	if ((char)vkey == 'l') {
 		setlvltype = DTYPE_CATHEDRAL + tilesetNum;
-		StartNewLvl(myplr, WM_DIABSETLVL, SL_TEST1 + setlvltype - 1);
+		StartNewLvl(myplr, WM_DIABSETLVL, SL_TEST);
 		return;
 	}
 

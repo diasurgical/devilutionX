@@ -1983,7 +1983,7 @@ void LoadL4Dungeon(char *sFileName, int vx, int vy)
 				dungeon[i][j] = *lm;
 				dflags[i][j] |= 0x80;
 			} else {
-				dungeon[i][j] = 13;
+				dungeon[i][j] = 6;
 			}
 			lm += 2;
 		}
@@ -1993,8 +1993,6 @@ void LoadL4Dungeon(char *sFileName, int vx, int vy)
 	ViewY = vy;
 	DRLG_L4Pass3();
 	DRLG_Init_Globals();
-	DRLG_L4FloodTVal();
-	DRLG_L4TransFix();
 
 	SetMapMonsters(pLevelMap, 0, 0);
 	SetMapObjects(pLevelMap, 0, 0);
@@ -2027,7 +2025,7 @@ void LoadPreL4Dungeon(char *sFileName, int vx, int vy)
 				dungeon[i][j] = *lm;
 				dflags[i][j] |= DLRG_PROTECTED;
 			} else {
-				dungeon[i][j] = 13;
+				dungeon[i][j] = 6;
 			}
 			lm += 2;
 		}
