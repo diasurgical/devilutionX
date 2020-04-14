@@ -7,7 +7,7 @@
 #define __MONSTDAT_H__
 
 extern MonsterData monsterdata[];
-extern char MonstConvTbl[128];
+extern BYTE MonstConvTbl[];
 extern BYTE MonstAvailTbl[];
 extern UniqMonstStruct UniqMonst[];
 

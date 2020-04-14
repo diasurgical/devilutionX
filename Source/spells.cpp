@@ -148,8 +148,8 @@ static void PlacePlayer(int pnum)
 
 	if (plr[pnum].plrlevel == currlevel) {
 		for (i = 0; i < 8; i++) {
-			nx = plr[pnum].WorldX + plrxoff2[i];
-			ny = plr[pnum].WorldY + plryoff2[i];
+			nx = plr[pnum]._px + plrxoff2[i];
+			ny = plr[pnum]._py + plryoff2[i];
 
 			if (PosOkPlayer(pnum, nx, ny)) {
 				break;
@@ -161,10 +161,10 @@ static void PlacePlayer(int pnum)
 
 			for (max = 1, min = -1; min > -50 && !done; max++, min--) {
 				for (y = min; y <= max && !done; y++) {
-					ny = plr[pnum].WorldY + y;
+					ny = plr[pnum]._py + y;
 
 					for (x = min; x <= max && !done; x++) {
-						nx = plr[pnum].WorldX + x;
+						nx = plr[pnum]._px + x;
 
 						if (PosOkPlayer(pnum, nx, ny)) {
 							done = TRUE;
@@ -174,8 +174,8 @@ static void PlacePlayer(int pnum)
 			}
 		}
 
-		plr[pnum].WorldX = nx;
-		plr[pnum].WorldY = ny;
+		plr[pnum]._px = nx;
+		plr[pnum]._py = ny;
 
 		dPlayer[nx][ny] = pnum + 1;
 
@@ -195,7 +195,7 @@ void DoResurrect(int pnum, int rid)
 	int hp;
 
 	if ((char)rid != -1) {
-		AddMissile(plr[rid].WorldX, plr[rid].WorldY, plr[rid].WorldX, plr[rid].WorldY, 0, MIS_RESURRECTBEAM, 0, pnum, 0, 0);
+		AddMissile(plr[rid]._px, plr[rid]._py, plr[rid]._px, plr[rid]._py, 0, MIS_RESURRECTBEAM, 0, pnum, 0, 0);
 	}
 
 	if (pnum == myplr) {

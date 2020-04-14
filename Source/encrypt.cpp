@@ -8,18 +8,16 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-DWORD hashtable[1280];
+DWORD hashtable[5][256];
 
-void Decrypt(void *block, DWORD size, DWORD key)
+void Decrypt(DWORD *castBlock, DWORD size, DWORD key)
 {
-	DWORD *castBlock;
 	DWORD seed, i;
 
-	castBlock = (DWORD *)block;
 	seed = 0xEEEEEEEE;
 	for (i = 0; i < (size >> 2); i++) {
 		DWORD t = SwapLE32(*castBlock);
-		seed += hashtable[0x400 + (key & 0xFF)];
+		seed += hashtable[4][(key & 0xFF)];
 		t ^= seed + key;
 		*castBlock = t;
 		seed += t + (seed << 5) + 3;
@@ -28,16 +26,14 @@ void Decrypt(void *block, DWORD size, DWORD key)
 	}
 }
 
-void Encrypt(void *block, DWORD size, DWORD key)
+void Encrypt(DWORD *castBlock, DWORD size, DWORD key)
 {
-	DWORD *castBlock;
 	DWORD seed, i, ch;
 
-	castBlock = (DWORD *)block;
 	seed = 0xEEEEEEEE;
 	for (i = 0; i < (size >> 2); i++) {
 		DWORD t = ch = *castBlock;
-		seed += hashtable[0x400 + (key & 0xFF)];
+		seed += hashtable[4][(key & 0xFF)];
 		t ^= seed + key;
 		*castBlock = SwapLE32(t);
 		seed += ch + (seed << 5) + 3;
@@ -56,7 +52,7 @@ DWORD Hash(const char *s, int type)
 	while (s != NULL && *s) {
 		ch = *s++;
 		ch = toupper(ch);
-		seed1 = hashtable[(type << 8) + ch] ^ (seed1 + seed2);
+		seed1 = hashtable[type][ch] ^ (seed1 + seed2);
 		seed2 += ch + seed1 + (seed2 << 5) + 3;
 	}
 	return seed1;
@@ -74,24 +70,23 @@ void InitHash()
 			seed = (125 * seed + 3) % 0x2AAAAB;
 			ch = (seed & 0xFFFF);
 			seed = (125 * seed + 3) % 0x2AAAAB;
-			hashtable[i + j * 256] = ch << 16 | (seed & 0xFFFF);
+			hashtable[j][i] = ch << 16 | (seed & 0xFFFF);
 		}
 	}
 }
 
-int PkwareCompress(void *buf, int size)
+int PkwareCompress(BYTE *srcData, int size)
 {
-	BYTE *srcData, *destData;
+	BYTE *destData;
 	char *ptr;
 	unsigned int destSize, type, dsize;
 	TDataInfo param;
 
-	srcData = (BYTE *)buf;
 	ptr = (char *)DiabloAllocPtr(CMP_BUFFER_SIZE);
 
 	destSize = 2 * size;
-	if (destSize < 8192)
-		destSize = 8192;
+	if (destSize < 2 * 4096)
+		destSize = 2 * 4096;
 
 	destData = (BYTE *)DiabloAllocPtr(destSize);
 
@@ -145,14 +140,13 @@ void PkwareBufferWrite(char *buf, unsigned int *size, void *param)
 	pInfo->destOffset += *size;
 }
 
-void PkwareDecompress(void *param, int recv_size, int dwMaxBytes)
+void PkwareDecompress(BYTE *pbInBuff, int recv_size, int dwMaxBytes)
 {
 	char *ptr;
-	BYTE *pbInBuff, *pbOutBuff;
+	BYTE *pbOutBuff;
 	TDataInfo info;
 
 	ptr = (char *)DiabloAllocPtr(CMP_BUFFER_SIZE);
-	pbInBuff = (BYTE *)param;
 	pbOutBuff = DiabloAllocPtr(dwMaxBytes);
 
 	info.srcData = pbInBuff;

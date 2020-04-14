@@ -40,7 +40,7 @@ void gmenu_slider_steps(TMenuItem *pItem, int dwTicks);
 
 /* rdata */
 
-extern const BYTE lfontframe[127];
-extern const BYTE lfontkern[56];
+extern const BYTE lfontframe[];
+extern const BYTE lfontkern[];
 
 #endif /* __GMENU_H__ */

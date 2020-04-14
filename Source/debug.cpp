@@ -161,7 +161,7 @@ void PrintDebugPlayer(BOOL bNextPlayer)
 		NetSendCmdString(1 << myplr, dstr);
 		sprintf(dstr, "  Lvl = %i : Change = %i", plr[dbgplr].plrlevel, plr[dbgplr]._pLvlChanging);
 		NetSendCmdString(1 << myplr, dstr);
-		sprintf(dstr, "  x = %i, y = %i : tx = %i, ty = %i", plr[dbgplr].WorldX, plr[dbgplr].WorldY, plr[dbgplr]._ptargx, plr[dbgplr]._ptargy);
+		sprintf(dstr, "  x = %i, y = %i : tx = %i, ty = %i", plr[dbgplr]._px, plr[dbgplr]._py, plr[dbgplr]._ptargx, plr[dbgplr]._ptargy);
 		NetSendCmdString(1 << myplr, dstr);
 		sprintf(dstr, "  mode = %i : daction = %i : walk[0] = %i", plr[dbgplr]._pmode, plr[dbgplr].destAction, plr[dbgplr].walkpath[0]);
 		NetSendCmdString(1 << myplr, dstr);

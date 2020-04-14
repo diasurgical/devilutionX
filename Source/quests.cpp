@@ -10,8 +10,8 @@ int qline;
 int qlist[MAXQUESTS];
 int numqlines;
 int WaterDone;
-int ReturnLvlY;
 int ReturnLvlX;
+int ReturnLvlY;
 int ReturnLvlT;
 int ReturnLvl;
 
@@ -180,7 +180,7 @@ void CheckQuests()
 		    && nummonsters == 4
 		    && quests[Q_PWATER]._qactive != QUEST_DONE) {
 			quests[Q_PWATER]._qactive = QUEST_DONE;
-			PlaySfxLoc(IS_QUESTDN, plr[myplr].WorldX, plr[myplr].WorldY);
+			PlaySfxLoc(IS_QUESTDN, plr[myplr]._px, plr[myplr]._py);
 			LoadPalette("Levels\\L3Data\\L3pwater.pal");
 			WaterDone = 32;
 		}
@@ -193,8 +193,8 @@ void CheckQuests()
 			if (currlevel == quests[i]._qlevel
 			    && quests[i]._qslvl != 0
 			    && quests[i]._qactive != QUEST_NOTAVAIL
-			    && plr[myplr].WorldX == quests[i]._qtx
-			    && plr[myplr].WorldY == quests[i]._qty) {
+			    && plr[myplr]._px == quests[i]._qtx
+			    && plr[myplr]._py == quests[i]._qty) {
 				if (quests[i]._qlvltype != DTYPE_NONE) {
 					setlvltype = quests[i]._qlvltype;
 				}

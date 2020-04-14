@@ -12,8 +12,8 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 int nSx1;
-int nSx2;
 int nSy1;
+int nSx2;
 int nSy2;
 int nRoomCnt;
 BYTE predungeon[DMAXX][DMAXY];
@@ -1490,8 +1490,7 @@ static void DRLG_L2Pass3()
 	v3 = SDL_SwapLE16(*(MegaTiles + 2)) + 1;
 	v4 = SDL_SwapLE16(*(MegaTiles + 3)) + 1;
 
-	for (j = 0; j < MAXDUNY; j += 2)
-	{
+	for (j = 0; j < MAXDUNY; j += 2) {
 		for (i = 0; i < MAXDUNX; i += 2) {
 			dPiece[i][j] = v1;
 			dPiece[i + 1][j] = v2;

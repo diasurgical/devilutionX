@@ -2,7 +2,7 @@
 #ifndef __WAVE_H__
 #define __WAVE_H__
 
-BOOL WCloseFile(HANDLE file);
+void WCloseFile(HANDLE file);
 LONG WGetFileSize(HANDLE hsFile, DWORD *lpFileSizeHigh, const char *FileName);
 void WGetFileArchive(HANDLE hsFile, DWORD *retry, const char *FileName);
 BOOL WOpenFile(const char *FileName, HANDLE *phsFile, BOOL mayNotExist);

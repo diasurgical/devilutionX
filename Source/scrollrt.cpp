@@ -139,7 +139,7 @@ static void scrollrt_draw_cursor_item()
 	int i, mx, my, col;
 	BYTE *src, *dst;
 
-	assert(! sgdwCursWdt);
+	assert(!sgdwCursWdt);
 
 	if (pcurs <= CURSOR_NONE || cursW == 0 || cursH == 0) {
 		return;
@@ -433,7 +433,7 @@ void DrawDeadPlayer(int x, int y, int sx, int sy)
 
 	for (i = 0; i < MAX_PLRS; i++) {
 		p = &plr[i];
-		if (p->plractive && !p->_pHitPoints && p->plrlevel == (BYTE)currlevel && p->WorldX == x && p->WorldY == y) {
+		if (p->plractive && !p->_pHitPoints && p->plrlevel == (BYTE)currlevel && p->_px == x && p->_py == y) {
 			pCelBuff = p->_pAnimData;
 			if (!pCelBuff) {
 				// app_fatal("Drawing dead player %d \"%s\": NULL Cel Buffer", i, p->_pName);
@@ -723,7 +723,7 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy)
 	DrawObject(sx, sy, dx, dy, 1);
 	DrawItem(sx, sy, dx, dy, 1);
 	if (bFlag & BFLAG_PLAYERLR) {
-		assert((DWORD)(sy-1) < MAXDUNY);
+		assert((DWORD)(sy - 1) < MAXDUNY);
 		DrawPlayerHelper(sx, sy, -1, dx, dy);
 	}
 	if (bFlag & BFLAG_MONSTLR && negMon < 0) {
@@ -1042,7 +1042,7 @@ void DrawView(int StartX, int StartY)
 		DrawQuestLog();
 	}
 	if (!chrflag && plr[myplr]._pStatPts != 0 && !spselflag
-		&& (!questlog || SCREEN_HEIGHT >= SPANEL_HEIGHT + PANEL_HEIGHT + 74 || SCREEN_WIDTH >= 4 * SPANEL_WIDTH)) {
+	    && (!questlog || SCREEN_HEIGHT >= SPANEL_HEIGHT + PANEL_HEIGHT + 74 || SCREEN_WIDTH >= 4 * SPANEL_WIDTH)) {
 		DrawLevelUpIcon();
 	}
 	if (uitemflag) {
@@ -1317,7 +1317,7 @@ void scrollrt_draw_game_screen(BOOL draw_cursor)
 		unlock_buf(0);
 	}
 
-	DrawMain(hgt, 0, 0, 0, 0, 0);
+	DrawMain(hgt, FALSE, FALSE, FALSE, FALSE, FALSE);
 
 	if (draw_cursor) {
 		lock_buf(0);
