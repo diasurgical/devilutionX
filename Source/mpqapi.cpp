@@ -551,14 +551,14 @@ BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD d
 
 	const BYTE *src = pbData;
 	std::uint32_t destsize = offset_table_bytesize;
-	char mpq_buf[kSectorSize];
+	BYTE mpq_buf[kSectorSize];
 	std::size_t cur_sector = 0;
 	while (true) {
 		std::uint32_t len = std::min(dwLen, kSectorSize);
 		memcpy(mpq_buf, src, len);
 		src += len;
 		len = PkwareCompress(mpq_buf, len);
-		if (!cur_archive.stream.write(mpq_buf, len))
+		if (!cur_archive.stream.write((char *)mpq_buf, len))
 			return FALSE;
 		sectoroffsettable[cur_sector++] = SwapLE32(destsize);
 		destsize += len; // compressed length
