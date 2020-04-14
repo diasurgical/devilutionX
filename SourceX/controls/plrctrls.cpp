@@ -128,7 +128,7 @@ void FindItemOrObject()
 		}
 	}
 
-	if (currlevel == DTYPE_TOWN || pcursitem != -1)
+	if (leveltype == DTYPE_TOWN || pcursitem != -1)
 		return; // Don't look for objects in town
 
 	for (int xx = -1; xx < 2; xx++) {
@@ -873,7 +873,7 @@ struct RightStickAccumulator {
 } // namespace
 
 bool IsAutomapActive() {
-	return automapflag && currlevel != DTYPE_TOWN;
+	return automapflag && leveltype != DTYPE_TOWN;
 }
 
 void HandleRightStickMotion()
