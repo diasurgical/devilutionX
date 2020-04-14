@@ -12,8 +12,8 @@ jobs:
       script:
         # CMake 3.10: no -S/-B and -j is build tool specific.
         - mkdir -p build && cd build
-        - cmake .. -DBINARY_RELEASE=ON
-        - cmake --build . --target package -- -j $(nproc)
+        - if [[ $TRAVIS_BRANCH == "master" ]]; then cmake .. -DBINARY_RELEASE=ON && cmake --build . --target package -- -j $(nproc) ; fi
+        - if [[ $TRAVIS_BRANCH != "master" ]]; then cmake .. && cmake --build . -- -j $(nproc) ; fi
 addons:
   apt:
     packages:
