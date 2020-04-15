@@ -7,7 +7,7 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-void *sgpBackCel;
+BYTE *sgpBackCel;
 int sgdwProgress;
 int progress_id;
 
@@ -44,7 +44,7 @@ void DrawCutscene()
 	DWORD i;
 
 	lock_buf(1);
-	CelDraw(PANEL_X, 480 + SCREEN_Y - 1, (BYTE *)sgpBackCel, 1, 640);
+	CelDraw(PANEL_X, 480 + SCREEN_Y - 1, sgpBackCel, 1, 640);
 
 	for (i = 0; i < sgdwProgress; i++) {
 		DrawProgress(
@@ -77,7 +77,7 @@ void ShowProgress(unsigned int uMsg)
 	gbSomebodyWonGameKludge = FALSE;
 	plrmsg_delay(TRUE);
 
-	/// ASSERT: assert(ghMainWnd);
+	assert(ghMainWnd);
 	saveProc = SetWindowProc(DisableInputWndProc);
 
 	interface_msg_pump();
@@ -119,7 +119,7 @@ void ShowProgress(unsigned int uMsg)
 		FreeGameMem();
 		currlevel++;
 		leveltype = gnLevelTypeTbl[currlevel];
-		/// ASSERT: assert(plr[myplr].plrlevel == currlevel);
+		assert(plr[myplr].plrlevel == currlevel);
 		IncProgress();
 		LoadGameLevel(FALSE, 0);
 		IncProgress();
@@ -135,7 +135,7 @@ void ShowProgress(unsigned int uMsg)
 		FreeGameMem();
 		currlevel--;
 		leveltype = gnLevelTypeTbl[currlevel];
-		/// ASSERT: assert(plr[myplr].plrlevel == currlevel);
+		assert(plr[myplr].plrlevel == currlevel);
 		IncProgress();
 		LoadGameLevel(FALSE, 1);
 		IncProgress();
@@ -196,7 +196,7 @@ void ShowProgress(unsigned int uMsg)
 		FreeGameMem();
 		currlevel = plr[myplr].plrlevel;
 		leveltype = gnLevelTypeTbl[currlevel];
-		/// ASSERT: assert(plr[myplr].plrlevel == currlevel);
+		assert(plr[myplr].plrlevel == currlevel);
 		IncProgress();
 		LoadGameLevel(FALSE, 6);
 		IncProgress();
@@ -212,7 +212,7 @@ void ShowProgress(unsigned int uMsg)
 		FreeGameMem();
 		currlevel = plr[myplr].plrlevel;
 		leveltype = gnLevelTypeTbl[currlevel];
-		/// ASSERT: assert(plr[myplr].plrlevel == currlevel);
+		assert(plr[myplr].plrlevel == currlevel);
 		IncProgress();
 		LoadGameLevel(FALSE, 7);
 		IncProgress();
@@ -228,22 +228,22 @@ void ShowProgress(unsigned int uMsg)
 		FreeGameMem();
 		currlevel = plr[myplr].plrlevel;
 		leveltype = gnLevelTypeTbl[currlevel];
-		/// ASSERT: assert(plr[myplr].plrlevel == currlevel);
+		assert(plr[myplr].plrlevel == currlevel);
 		IncProgress();
 		LoadGameLevel(FALSE, 0);
 		IncProgress();
 		break;
 	}
 
-	/// ASSERT: assert(ghMainWnd);
+	assert(ghMainWnd);
 
 	PaletteFadeOut(8);
 	FreeInterface();
 
 	saveProc = SetWindowProc(saveProc);
-	/// ASSERT: assert(saveProc == DisableInputWndProc);
+	assert(saveProc == DisableInputWndProc);
 
-	NetSendCmdLocParam1(TRUE, CMD_PLAYER_JOINLEVEL, plr[myplr].WorldX, plr[myplr].WorldY, plr[myplr].plrlevel);
+	NetSendCmdLocParam1(TRUE, CMD_PLAYER_JOINLEVEL, plr[myplr]._px, plr[myplr]._py, plr[myplr].plrlevel);
 	plrmsg_delay(FALSE);
 	ResetPal();
 
@@ -261,7 +261,7 @@ void FreeInterface()
 
 void InitCutscene(unsigned int uMsg)
 {
-	/// ASSERT: assert(! sgpBackCel);
+	assert(!sgpBackCel);
 
 	switch (uMsg) {
 	case WM_DIABNEXTLVL:

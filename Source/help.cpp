@@ -460,7 +460,7 @@ void DrawHelp()
 	PrintSString(0, 2, TRUE, "Diablo Help", COL_GOLD, 0);
 	DrawSLine(5);
 
-	s = gszHelpText;
+	s = &gszHelpText[0];
 
 	for (i = 0; i < help_select_line; i++) {
 		c = 0;

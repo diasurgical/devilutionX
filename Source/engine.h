@@ -42,7 +42,7 @@ inline BYTE *CelGetFrame(BYTE *pCelBuff, int nCel, int *nDataSize)
 	DWORD nCellStart;
 
 	nCellStart = LOAD_LE32(&pCelBuff[nCel * 4]);
-	*nDataSize = LOAD_LE32(&pCelBuff[(nCel+1) * 4]) - nCellStart;
+	*nDataSize = LOAD_LE32(&pCelBuff[(nCel + 1) * 4]) - nCellStart;
 	return pCelBuff + nCellStart;
 }
 
@@ -82,7 +82,7 @@ void engine_debug_trap(BOOL show_cursor);
 BYTE *DiabloAllocPtr(DWORD dwBytes);
 void mem_free_dbg(void *p);
 BYTE *LoadFileInMem(char *pszName, DWORD *pdwFileLen);
-DWORD LoadFileWithMem(const char *pszName, void *p);
+DWORD LoadFileWithMem(const char *pszName, BYTE *p);
 void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel);
 void Cl2Draw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
 void Cl2DrawOutline(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);

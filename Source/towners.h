@@ -40,6 +40,6 @@ void CowSFX(int pnum);
 
 /* data */
 
-extern QuestTalkData Qtalklist[11];
+extern QuestTalkData Qtalklist[];
 
 #endif /* __TOWNERS_H__ */

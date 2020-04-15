@@ -990,7 +990,7 @@ void UpdateL4Trans()
 
 	for (j = 0; j < MAXDUNY; j++) {
 		for (i = 0; i < MAXDUNX; i++) {
-			if (dTransVal[i][j]) {
+			if (dTransVal[i][j] != 0) {
 				dTransVal[i][j] = 1;
 			}
 		}

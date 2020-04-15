@@ -132,11 +132,11 @@ void PutItemRecord(int nSeed, WORD wCI, int nIndex);
 
 /* data */
 
-extern BYTE ItemCAnimTbl[169];
-extern char *ItemDropNames[ITEMTYPES];
-extern BYTE ItemAnimLs[ITEMTYPES];
-extern int ItemDropSnds[ITEMTYPES];
-extern int ItemInvSnds[ITEMTYPES];
+extern BYTE ItemCAnimTbl[];
+extern char *ItemDropNames[];
+extern BYTE ItemAnimLs[];
+extern int ItemDropSnds[];
+extern int ItemInvSnds[];
 extern int idoppely;
 extern int premiumlvladd[6];
 

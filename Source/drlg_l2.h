@@ -7,8 +7,8 @@
 #define __DRLG_L2_H__
 
 extern int nSx1;
-extern int nSx2;
 extern int nSy1;
+extern int nSx2;
 extern int nSy2;
 extern int nRoomCnt;
 extern BYTE predungeon[DMAXX][DMAXY];

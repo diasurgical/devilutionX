@@ -14,6 +14,7 @@ extern BOOLEAN sgbSaveSoundOn;
 extern MonsterStruct monster[MAXMONSTERS];
 extern int totalmonsters;
 extern CMonster Monsters[MAX_LVLMTYPES];
+extern BYTE GraphicTable[NUMLEVELS][MAX_LVLMTYPES];
 extern int monstimgtot;
 extern int uniquetrans;
 extern int nummtypes;

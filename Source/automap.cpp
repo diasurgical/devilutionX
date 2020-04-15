@@ -47,6 +47,9 @@ int AmLine4;
 #define MAPFLAG_DIRT 0x40
 #define MAPFLAG_STAIRS 0x80
 
+/**
+ * @brief Initializes the automap.
+ */
 void InitAutomapOnce()
 {
 	automapflag = FALSE;
@@ -58,6 +61,9 @@ void InitAutomapOnce()
 	AmLine4 = 2;
 }
 
+/**
+ * @brief Loads the mapping between tile IDs and automap shapes.
+ */
 void InitAutomap()
 {
 	BYTE b1, b2;
@@ -98,7 +104,7 @@ void InitAutomap()
 		return;
 	}
 
-	dwTiles >>= 1;
+	dwTiles /= 2;
 	pTmp = pAFile;
 
 	for (i = 1; i <= dwTiles; i++) {
@@ -116,6 +122,9 @@ void InitAutomap()
 	}
 }
 
+/**
+ * @brief Displays the automap.
+ */
 void StartAutomap()
 {
 	AutoMapXOfs = 0;
@@ -123,30 +132,45 @@ void StartAutomap()
 	automapflag = TRUE;
 }
 
+/**
+ * @brief Scrolls the automap upwards.
+ */
 void AutomapUp()
 {
 	AutoMapXOfs--;
 	AutoMapYOfs--;
 }
 
+/**
+ * @brief Scrolls the automap downwards.
+ */
 void AutomapDown()
 {
 	AutoMapXOfs++;
 	AutoMapYOfs++;
 }
 
+/**
+ * @brief Scrolls the automap leftwards.
+ */
 void AutomapLeft()
 {
 	AutoMapXOfs--;
 	AutoMapYOfs++;
 }
 
+/**
+ * @brief Scrolls the automap rightwards.
+ */
 void AutomapRight()
 {
 	AutoMapXOfs++;
 	AutoMapYOfs--;
 }
 
+/**
+ * @brief Increases the zoom level of the automap.
+ */
 void AutomapZoomIn()
 {
 	if (AutoMapScale < 200) {
@@ -159,6 +183,9 @@ void AutomapZoomIn()
 	}
 }
 
+/**
+ * @brief Decreases the zoom level of the automap.
+ */
 void AutomapZoomOut()
 {
 	if (AutoMapScale > 50) {
@@ -171,6 +198,9 @@ void AutomapZoomOut()
 	}
 }
 
+/**
+ * @brief Renders the automap on screen.
+ */
 void DrawAutomap()
 {
 	int cells;
@@ -236,7 +266,7 @@ void DrawAutomap()
 
 		for (j = 0; j < cells; j++) {
 			WORD maptype = GetAutomapType(mapx + j, mapy - j, TRUE);
-			if (maptype)
+			if (maptype != 0)
 				DrawAutomapTile(x, sy, maptype);
 			x += AmLine64;
 		}
@@ -245,7 +275,7 @@ void DrawAutomap()
 		y = sy + AmLine16;
 		for (j = 0; j <= cells; j++) {
 			WORD maptype = GetAutomapType(mapx + j, mapy - j, TRUE);
-			if (maptype)
+			if (maptype != 0)
 				DrawAutomapTile(x, y, maptype);
 			x += AmLine64;
 		}
@@ -257,6 +287,9 @@ void DrawAutomap()
 	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_HEIGHT + SCREEN_Y)];
 }
 
+/**
+ * @brief Renders the given automap shape at the specified screen coordinates.
+ */
 void DrawAutomapTile(int sx, int sy, WORD automap_type)
 {
 	BOOL do_vert;
@@ -369,7 +402,7 @@ void DrawAutomapTile(int sx, int sy, WORD automap_type)
 			DrawLine(sx, sy, x1, y2, COLOR_DIM);
 			DrawLine(sx, sy, x2, y2, COLOR_DIM);
 		}
-		if (!(flags & (MAPFLAG_VERTDOOR | MAPFLAG_VERTGRATE | MAPFLAG_VERTARCH)))
+		if ((flags & (MAPFLAG_VERTDOOR | MAPFLAG_VERTGRATE | MAPFLAG_VERTARCH)) == 0)
 			DrawLine(sx, sy - AmLine16, sx - AmLine32, sy, COLOR_DIM);
 	}
 
@@ -402,7 +435,7 @@ void DrawAutomapTile(int sx, int sy, WORD automap_type)
 			DrawLine(sx, sy, x1, y2, COLOR_DIM);
 			DrawLine(sx, sy, x2, y2, COLOR_DIM);
 		}
-		if (!(flags & (MAPFLAG_HORZDOOR | MAPFLAG_HORZGRATE | MAPFLAG_HORZARCH)))
+		if ((flags & (MAPFLAG_HORZDOOR | MAPFLAG_HORZGRATE | MAPFLAG_HORZARCH)) == 0)
 			DrawLine(sx, sy - AmLine16, sx + AmLine32, sy, COLOR_DIM);
 	}
 
@@ -442,21 +475,24 @@ void DrawAutomapTile(int sx, int sy, WORD automap_type)
 	}
 }
 
+/**
+ * @brief Renders an arrow on the automap, centered on and facing the direction of the player.
+ */
 void DrawAutomapPlr()
 {
 	int px, py;
 	int x, y;
 
 	if (plr[myplr]._pmode == PM_WALK3) {
-		x = plr[myplr]._px;
-		y = plr[myplr]._py;
+		x = plr[myplr]._pfutx;
+		y = plr[myplr]._pfuty;
 		if (plr[myplr]._pdir == DIR_W)
 			x++;
 		else
 			y++;
 	} else {
-		x = plr[myplr].WorldX;
-		y = plr[myplr].WorldY;
+		x = plr[myplr]._px;
+		y = plr[myplr]._py;
 	}
 	px = x - 2 * AutoMapXOfs - ViewX;
 	py = y - 2 * AutoMapYOfs - ViewY;
@@ -514,6 +550,9 @@ void DrawAutomapPlr()
 	}
 }
 
+/**
+ * @brief Returns the automap shape at the given coordinate.
+ */
 WORD GetAutomapType(int x, int y, BOOL view)
 {
 	WORD rv;
@@ -555,6 +594,9 @@ WORD GetAutomapType(int x, int y, BOOL view)
 	return rv;
 }
 
+/**
+ * @brief Renders game info, such as the name of the current level, and in multi player the name of the game and the game password.
+ */
 void DrawAutomapText()
 {
 	char desc[256];
@@ -570,14 +612,17 @@ void DrawAutomapText()
 			nextline = 50;
 		}
 	}
-	if (setlevel)
+	if (setlevel) {
 		PrintGameStr(8, nextline, quest_level_names[(BYTE)setlvlnum], COL_GOLD);
-	else if (currlevel) {
+	} else if (currlevel) {
 		sprintf(desc, "Level: %i", currlevel);
 		PrintGameStr(8, nextline, desc, COL_GOLD);
 	}
 }
 
+/**
+ * @brief Marks the given coordinate as within view on the automap.
+ */
 void SetAutomapView(int x, int y)
 {
 	WORD maptype, solid;
@@ -650,6 +695,9 @@ void SetAutomapView(int x, int y)
 	}
 }
 
+/**
+ * @brief Resets the zoom level of the automap.
+ */
 void AutomapZoomReset()
 {
 	AutoMapXOfs = 0;

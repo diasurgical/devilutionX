@@ -185,10 +185,10 @@ typedef struct PlayerStruct {
 	int destParam3;
 	int destParam4;
 	int plrlevel;
-	int WorldX;
-	int WorldY;
 	int _px;
 	int _py;
+	int _pfutx;
+	int _pfuty;
 	int _ptargx;
 	int _ptargy;
 	int _pownerx;
@@ -1338,7 +1338,7 @@ typedef struct _SNETUIDATA {
 	void (*profilecallback)();
 	const char **profilefields;
 	void (*profilebitmapcallback)();
-	int(*selectnamecallback)(
+	int (*selectnamecallback)(
 	    const struct _SNETPROGRAMDATA *,
 	    const struct _SNETPLAYERDATA *,
 	    const struct _SNETUIDATA *,

@@ -8,59 +8,59 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 /** Contains the game menu items of the single player menu. */
-TMenuItem sgSingleMenu[6] = {
+TMenuItem sgSingleMenu[] = {
 	// clang-format off
-	//   dwFlags, pszStr,        fnMenu
-	{ GMENU_ENABLED, "Save Game",   &gamemenu_save_game },
-	{ GMENU_ENABLED, "Options",     &gamemenu_options   },
-	{ GMENU_ENABLED, "New Game",    &gamemenu_new_game  },
-	{ GMENU_ENABLED, "Load Game",   &gamemenu_load_game },
-	{ GMENU_ENABLED, "Quit Diablo", &gamemenu_quit_game },
-	{ GMENU_ENABLED, NULL, NULL }
+	// dwFlags,      pszStr,         fnMenu
+	{ GMENU_ENABLED, "Save Game",    &gamemenu_save_game  },
+	{ GMENU_ENABLED, "Options",      &gamemenu_options    },
+	{ GMENU_ENABLED, "New Game",     &gamemenu_new_game   },
+	{ GMENU_ENABLED, "Load Game",    &gamemenu_load_game  },
+	{ GMENU_ENABLED, "Quit Diablo",  &gamemenu_quit_game  },
+	{ GMENU_ENABLED, NULL,           NULL }
 	// clang-format on
 };
 /** Contains the game menu items of the multi player menu. */
-TMenuItem sgMultiMenu[5] = {
+TMenuItem sgMultiMenu[] = {
 	// clang-format off
-	//   dwFlags, pszStr,            fnMenu
+	// dwFlags,      pszStr,            fnMenu
 	{ GMENU_ENABLED, "Options",         &gamemenu_options      },
 	{ GMENU_ENABLED, "New Game",        &gamemenu_new_game     },
 	{ GMENU_ENABLED, "Restart In Town", &gamemenu_restart_town },
 	{ GMENU_ENABLED, "Quit Diablo",     &gamemenu_quit_game    },
-	{ GMENU_ENABLED, NULL,              NULL                   }
+	{ GMENU_ENABLED, NULL,              NULL                   },
 	// clang-format on
 };
-TMenuItem sgOptionsMenu[6] = {
+TMenuItem sgOptionsMenu[] = {
 	// clang-format off
-	//                     dwFlags, pszStr,          fnMenu
+	// dwFlags,                     pszStr,          fnMenu
 	{ GMENU_ENABLED | GMENU_SLIDER, NULL,            &gamemenu_music_volume  },
 	{ GMENU_ENABLED | GMENU_SLIDER, NULL,            &gamemenu_sound_volume  },
 	{ GMENU_ENABLED | GMENU_SLIDER, "Gamma",         &gamemenu_gamma         },
 	{ GMENU_ENABLED               , NULL,            &gamemenu_color_cycling },
-	{ GMENU_ENABLED               , "Previous Menu", &gamemenu_previous    },
-	{ GMENU_ENABLED               , NULL,            NULL                    }
+	{ GMENU_ENABLED               , "Previous Menu", &gamemenu_previous      },
+	{ GMENU_ENABLED               , NULL,            NULL                    },
 	// clang-format on
 };
 /** Specifies the menu names for music enabled and disabled. */
-char *music_toggle_names[] = { "Music", "Music Disabled" };
+char *music_toggle_names[] = {
+	"Music",
+	"Music Disabled",
+};
 /** Specifies the menu names for sound enabled and disabled. */
-char *sound_toggle_names[] = { "Sound", "Sound Disabled" };
+char *sound_toggle_names[] = {
+	"Sound",
+	"Sound Disabled",
+};
 /** Specifies the menu names for colour cycling disabled and enabled. */
 char *color_cycling_toggle_names[] = { "Color Cycling Off", "Color Cycling On" };
 
 void gamemenu_on()
 {
-	void (*proc)(TMenuItem *);
-	TMenuItem *item;
-
 	if (gbMaxPlayers == 1) {
-		proc = gamemenu_update_single;
-		item = sgSingleMenu;
+		gmenu_set_items(sgSingleMenu, gamemenu_update_single);
 	} else {
-		proc = gamemenu_update_multi;
-		item = sgMultiMenu;
+		gmenu_set_items(sgMultiMenu, gamemenu_update_multi);
 	}
-	gmenu_set_items(item, proc);
 	PressEscKey();
 }
 
@@ -74,7 +74,7 @@ void gamemenu_update_single(TMenuItem *pMenuItems)
 	if (plr[myplr]._pmode != PM_DEATH && !deathflag)
 		enable = TRUE;
 
-	gmenu_enable(sgSingleMenu, enable);
+	gmenu_enable(&sgSingleMenu[0], enable);
 }
 
 void gamemenu_update_multi(TMenuItem *pMenuItems)
@@ -84,7 +84,7 @@ void gamemenu_update_multi(TMenuItem *pMenuItems)
 
 void gamemenu_off()
 {
-	gmenu_set_items(0, NULL);
+	gmenu_set_items(NULL, NULL);
 }
 
 void gamemenu_handle_previous()
@@ -219,42 +219,31 @@ void gamemenu_get_gamma()
 void gamemenu_music_volume(BOOL bActivate)
 {
 	int volume;
+
 	if (bActivate) {
 		if (gbMusicOn) {
 			gbMusicOn = FALSE;
 			music_stop();
 			sound_get_or_set_music_volume(VOLUME_MIN);
-			gamemenu_get_music();
-			return;
+		} else {
+			gbMusicOn = TRUE;
+			sound_get_or_set_music_volume(VOLUME_MAX);
+			music_start(leveltype);
 		}
-		gbMusicOn = TRUE;
-		sound_get_or_set_music_volume(VOLUME_MAX);
-		music_start(leveltype);
-		gamemenu_get_music();
-		return;
-	}
+	} else {
+		volume = gamemenu_slider_music_sound(&sgOptionsMenu[0]);
+		sound_get_or_set_music_volume(volume);
 
-	volume = gamemenu_slider_music_sound(sgOptionsMenu);
-	sound_get_or_set_music_volume(volume);
-
-	if (volume == VOLUME_MIN) {
-
-		if (gbMusicOn) {
-			gbMusicOn = FALSE;
-			music_stop();
+		if (volume == VOLUME_MIN) {
+			if (gbMusicOn) {
+				gbMusicOn = FALSE;
+				music_stop();
+			}
+		} else if (!gbMusicOn) {
+			gbMusicOn = TRUE;
+			music_start(leveltype);
 		}
-
-		gamemenu_get_music();
-		return;
 	}
-
-	if (gbMusicOn) {
-		gamemenu_get_music();
-		return;
-	}
-
-	gbMusicOn = TRUE;
-	music_start(leveltype);
 	gamemenu_get_music();
 }
 

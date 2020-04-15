@@ -785,7 +785,7 @@ const TextDataStruct alltext[] = {
 	    1, 3, PS_NAR9 },
 #endif
 	{ "Thank goodness you've returned!\nMuch has changed since you lived here, my friend. All was peaceful until the dark riders came and destroyed our village. Many were cut down where they stood, and those who took up arms were slain or dragged away to become slaves - or worse. The church at the edge of town has been desecrated and is being used for dark rituals. The screams that echo in the night are inhuman, but some of our townsfolk may yet survive. Follow the path that lies between my tavern and the blacksmith shop to find the church and save who you can. \n \nPerhaps I can tell you more if we speak again. Good luck.|",
-	    1, 5, TSFX_TAVERN0 }
+	    1, 5, TSFX_TAVERN0 },
 };
 /** unused */
 const DWORD gdwAllTextEntries = 259;

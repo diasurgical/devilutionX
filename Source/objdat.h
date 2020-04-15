@@ -2,7 +2,7 @@
 #ifndef __OBJDAT_H__
 #define __OBJDAT_H__
 
-extern int ObjTypeConv[113];
+extern int ObjTypeConv[];
 extern ObjDataStruct AllObjects[99];
 extern char *ObjMasterLoadList[56];
 
