@@ -20,14 +20,14 @@ RELEASE_OPTION(CPACK "Configure CPack")
 
 if(BINARY_RELEASE OR CMAKE_BUILD_TYPE STREQUAL "Release")
   set(BINARY_RELEASE ON)
-  set(CMAKE_BUILD_TYPE "Release")
+  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "")
   set(DIST ON)
   set(CPACK ON)
 endif()
 
 if(NIGHTLY_BUILD OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
   set(NIGHTLY_BUILD ON)
-  set(CMAKE_BUILD_TYPE "RelWithDebInfo")
+  set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "")
   set(DIST ON)
 endif()
 
