@@ -41,6 +41,12 @@ if(NOT VERSION_NUM)
   endif()
 endif()
 
+find_program(CCACHE_PROGRAM ccache)
+if(CCACHE_PROGRAM)
+  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
+endif()
+
+
 project(DevilutionX
   VERSION ${VERSION_NUM}
   LANGUAGES C CXX)
@@ -323,6 +329,9 @@ endif()
 
 add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionx_SRCS})
 
+# Copy the font to the build directory to it works from the build directory
+file(COPY "Packaging/resources/CharisSILB.ttf" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+
 # Use file GENERATE instead of configure_file because configure_file
 # does not support generator expressions.
 get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
@@ -390,7 +399,8 @@ foreach(
   def_name
   SDL1_VIDEO_MODE_WIDTH
   SDL1_VIDEO_MODE_HEIGHT
-  TTF_FONT_PATH
+  TTF_FONT_DIR
+  TTF_FONT_NAME
   SDL1_VIDEO_MODE_BPP
   SDL1_VIDEO_MODE_FLAGS
   HAS_KBCTRL
@@ -585,7 +595,7 @@ if(CPACK)
     # Common *nix files
     set(CPACK_STRIP_FILES TRUE)
     install(TARGETS ${BIN_TARGET} DESTINATION bin)
-    set(desktop_file "${PROJECT_SOURCE_DIR}/Packaging/fedora/${project_name}.desktop")
+    set(desktop_file "${PROJECT_SOURCE_DIR}/Packaging/nix/${project_name}.desktop")
 
     find_program(DFI desktop-file-install)
     if(DFI)
@@ -598,7 +608,6 @@ if(CPACK)
     )
     install(FILES
         "${PROJECT_SOURCE_DIR}/Packaging/nix/README.txt"
-        "${PROJECT_SOURCE_DIR}/Packaging/resources/LICENSE.CharisSILB.txt"
       DESTINATION "share/diasurgical/${project_name}"
     )
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/16.png"
