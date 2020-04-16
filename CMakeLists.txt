@@ -15,12 +15,14 @@ option(NIGHTLY_BUILD "Enable options for nightly build" OFF)
 option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network" OFF)
 option(RUN_TESTS "Build and run tests" OFF)
-option(CPACK "Configure CPack" OFF)
+RELEASE_OPTION(CPACK "Configure CPack")
+
 
 if(BINARY_RELEASE OR CMAKE_BUILD_TYPE STREQUAL "Release")
   set(BINARY_RELEASE ON)
   set(CMAKE_BUILD_TYPE "Release")
   set(DIST ON)
+  set(CPACK ON)
 endif()
 
 if(NIGHTLY_BUILD OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
