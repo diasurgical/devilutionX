@@ -8,10 +8,11 @@ jobs:
       - checkout
       - run: echo deb http://deb.debian.org/debian stretch-backports-sloppy main >> /etc/apt/sources.list.d/debian-backports.list
       - run: apt-get update -y
-      - run: apt-get install -y g++ libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev git
+      - run: apt-get install -y g++ libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev git rpm
       - run: apt-get install -y -t 'stretch-backports*' cmake libsodium-dev
       - run: cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON
       - run: cmake --build build -j $(nproc)
+      - run: cmake --build build --target package
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64}
   linux_x86_64_test:
     docker:
@@ -33,10 +34,11 @@ jobs:
       - checkout
       - run: echo deb http://deb.debian.org/debian stretch-backports-sloppy main >> /etc/apt/sources.list.d/debian-backports.list
       - run: apt-get update -y
-      - run: apt-get install -y g++ libsdl-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev git
+      - run: apt-get install -y g++ libsdl-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev git rpm
       - run: apt-get install -y -t 'stretch-backports*' cmake libsodium-dev
       - run: cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON -DUSE_SDL1=ON
       - run: cmake --build build -j $(nproc)
+      - run: cmake --build build --target package
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64_sdl1}
   linux_x86:
     docker:
@@ -47,10 +49,11 @@ jobs:
       - run: echo deb http://deb.debian.org/debian stretch-backports-sloppy main >> /etc/apt/sources.list.d/debian-backports.list
       - run: dpkg --add-architecture i386
       - run: apt-get update -y
-      - run: apt-get install -y g++-multilib libsdl2-dev:i386 libsdl2-mixer-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev git
+      - run: apt-get install -y g++-multilib libsdl2-dev:i386 libsdl2-mixer-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev git rpm
       - run: apt-get install -y -t 'stretch-backports*' cmake libsodium-dev:i386
       - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake
       - run: cmake --build build -j $(nproc)
+      - run: cmake --build build --target package
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86}
   windows_x86:
     docker:
