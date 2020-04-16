@@ -131,6 +131,7 @@ else()
   endif()
   find_package(SDL2_ttf REQUIRED)
   find_package(SDL2_mixer REQUIRED)
+  find_package(SDL2_image REQUIRED)
 endif()
 
 add_library(smacker STATIC
@@ -457,7 +458,8 @@ foreach(target devilution ${BIN_TARGET})
     target_link_libraries(${target} PRIVATE
       SDL2::SDL2main
       SDL2::SDL2_ttf
-      SDL2::SDL2_mixer)
+      SDL2::SDL2_mixer
+      SDL2::SDL2_image)
   endif()
 
   if(SWITCH)
