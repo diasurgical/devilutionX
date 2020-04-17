@@ -920,6 +920,7 @@ void sfx_stop()
 	if (sfx_stream) {
 		SFileDdaEnd(sfx_stream);
 		SFileCloseFile(sfx_stream);
+		SFileFreeChunk();
 		sfx_stream = NULL;
 		sfx_data_cur = NULL;
 	}

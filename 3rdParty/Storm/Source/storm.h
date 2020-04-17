@@ -200,6 +200,7 @@ BOOL STORMAPI SFileCloseArchive(HANDLE hArchive);
 BOOL STORMAPI SFileCloseFile(HANDLE hFile);
 
 BOOL STORMAPI SFileDdaBeginEx(HANDLE hFile, DWORD flags, DWORD mask, unsigned __int32 lDistanceToMove, signed __int32 volume, signed int pan, int a7);
+void SFileFreeChunk();
 BOOL STORMAPI SFileDdaDestroy();
 BOOL STORMAPI SFileDdaEnd(HANDLE hFile);
 BOOL STORMAPI SFileDdaGetPos(HANDLE hFile, DWORD *current, DWORD *end);
