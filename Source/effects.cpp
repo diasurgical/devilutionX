@@ -936,6 +936,7 @@ void stream_stop()
 	if (sghStream) {
 		SFileDdaEnd(sghStream);
 		SFileCloseFile(sghStream);
+		SFileFreeChunk();
 		sghStream = NULL;
 		sgpStreamSFX = NULL;
 	}
