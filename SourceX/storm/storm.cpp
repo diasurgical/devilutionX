@@ -103,6 +103,12 @@ BOOL SFileDdaBeginEx(HANDLE hFile, DWORD flags, DWORD mask, unsigned __int32 lDi
 	return true;
 }
 
+void SFileFreeChunk()
+{
+	if(SFileChunk)
+		Mix_FreeChunk(SFileChunk);
+}
+
 BOOL SFileDdaDestroy()
 {
 	Mix_FreeChunk(SFileChunk);
