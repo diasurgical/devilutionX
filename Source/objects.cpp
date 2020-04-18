@@ -1870,6 +1870,10 @@ void ObjL1Special(int x1, int y1, int x2, int y2)
 				dSpecial[j][i] = 2;
 			if (dPiece[j][i] == 71)
 				dSpecial[j][i] = 1;
+			if (dPiece[j][i] == 253)
+				dSpecial[j][i] = 3;
+			if (dPiece[j][i] == 267)
+				dSpecial[j][i] = 6;
 			if (dPiece[j][i] == 259)
 				dSpecial[j][i] = 5;
 			if (dPiece[j][i] == 249)
