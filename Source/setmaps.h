@@ -2,6 +2,8 @@
 #ifndef __SETMAPS_H__
 #define __SETMAPS_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
 int ObjIndex(int x, int y);
 void AddSKingObjs();
 void AddSChamObjs();
@@ -18,5 +20,7 @@ extern BYTE SkelChamTrans1[20];
 extern BYTE SkelChamTrans2[8];
 extern BYTE SkelChamTrans3[36];
 extern char *quest_level_names[];
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __SETMAPS_H__ */

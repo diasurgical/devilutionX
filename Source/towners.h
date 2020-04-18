@@ -2,6 +2,8 @@
 #ifndef __TOWNERS_H__
 #define __TOWNERS_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
 extern TownerStruct towner[16];
 
 int GetActiveTowner(int t);
@@ -41,5 +43,6 @@ void CowSFX(int pnum);
 /* data */
 
 extern QuestTalkData Qtalklist[];
+DEVILUTION_END_NAMESPACE
 
 #endif /* __TOWNERS_H__ */

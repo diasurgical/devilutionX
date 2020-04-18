@@ -7,6 +7,9 @@
 #define __MPQAPI_H__
 
 #include <stdint.h>
+
+DEVILUTION_BEGIN_NAMESPACE
+
 extern BYTE mpq_buf[4096];
 extern BOOL save_archive_modified;
 extern BOOLEAN save_archive_open;
@@ -28,5 +31,6 @@ BOOL mpqapi_flush_and_close(const char *pszArchive, BOOL bFree, DWORD dwChar);
 /* rdata */
 
 /* data */
+DEVILUTION_END_NAMESPACE
 
 #endif /* __MPQAPI_H__ */

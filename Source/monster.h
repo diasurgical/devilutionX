@@ -6,6 +6,8 @@
 #ifndef __MONSTER_H__
 #define __MONSTER_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
 extern int MissileFileFlag;
 extern int monstkills[MAXMONSTERS];
 extern int monstactive[MAXMONSTERS];
@@ -188,5 +190,7 @@ extern int rnd60[4];
 //
 
 extern void (*AiProc[])(int i);
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __MONSTER_H__ */

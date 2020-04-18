@@ -6,6 +6,8 @@
 #ifndef __CONTROL_H__
 #define __CONTROL_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
 extern BYTE *pDurIcons;
 extern BYTE *pChrButtons;
 extern BOOL drawhpflag;
@@ -136,5 +138,7 @@ extern char *PanBtnHotKey[8];
 extern char *PanBtnStr[8];
 extern RECT32 ChrBtnsRect[4];
 extern int SpellPages[6][7];
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __CONTROL_H__ */

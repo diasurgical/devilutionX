@@ -6,6 +6,8 @@
 #ifndef __LOADSAVE_H__
 #define __LOADSAVE_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
 extern BYTE *tbuff;
 
 void LoadGame(BOOL firstflag);
@@ -44,5 +46,7 @@ void SaveVision(int i);
 void SavePortal(int i);
 void SaveLevel();
 void LoadLevel();
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __LOADSAVE_H__ */

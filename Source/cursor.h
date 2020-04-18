@@ -6,6 +6,8 @@
 #ifndef __CURSOR_H__
 #define __CURSOR_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
 extern int cursW;
 extern int cursH;
 extern int pcursmonst;
@@ -36,5 +38,7 @@ void CheckCursMove();
 /* rdata */
 extern const int InvItemWidth[];
 extern const int InvItemHeight[];
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __CURSOR_H__ */

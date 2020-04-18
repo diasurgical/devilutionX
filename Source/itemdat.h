@@ -6,9 +6,13 @@
 #ifndef __ITEMDAT_H__
 #define __ITEMDAT_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
 extern ItemDataStruct AllItemsList[];
 extern const PLStruct PL_Prefix[];
 extern const PLStruct PL_Suffix[];
 extern const UItemStruct UniqueItemList[];
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __ITEMDAT_H__ */

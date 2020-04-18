@@ -6,6 +6,8 @@
 #ifndef __MSG_H__
 #define __MSG_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
 extern BOOL deltaload;
 extern BYTE gbBufferMsgs;
 extern int dwRecCount;
@@ -145,5 +147,7 @@ DWORD On_DEBUG(TCmd *pCmd, int pnum);
 DWORD On_NOVA(TCmd *pCmd, int pnum);
 DWORD On_SETSHIELD(TCmd *pCmd, int pnum);
 DWORD On_REMSHIELD(TCmd *pCmd, int pnum);
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __MSG_H__ */

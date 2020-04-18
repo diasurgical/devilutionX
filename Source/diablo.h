@@ -6,6 +6,8 @@
 #ifndef __DIABLO_H__
 #define __DIABLO_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
 extern SDL_Window *ghMainWnd;
 extern DWORD glSeedTbl[NUMLEVELS];
 extern int gnLevelTypeTbl[NUMLEVELS];
@@ -102,5 +104,7 @@ extern int framestart;
 extern BOOL FriendlyMode;
 extern char *spszMsgTbl[4];
 extern char *spszMsgHotKeyTbl[4];
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __DIABLO_H__ */

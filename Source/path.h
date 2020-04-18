@@ -6,6 +6,8 @@
 #ifndef __PATH_H__
 #define __PATH_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
 extern PATHNODE path_nodes[MAXPATHNODES];
 extern int gdwCurPathStep;
 extern int gdwCurNodes;
@@ -37,5 +39,7 @@ extern const char pathydir[8];
 
 /* data */
 extern char path_directions[9];
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __PATH_H__ */

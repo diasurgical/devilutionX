@@ -6,6 +6,8 @@
 #ifndef __EFFECTS_H__
 #define __EFFECTS_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
 extern int sfxdelay;
 extern int sfxdnum;
 extern HANDLE sghStream;
@@ -37,5 +39,6 @@ void effects_play_sound(char *snd_file);
 extern const char MonstSndChar[];
 
 /* data */
+DEVILUTION_END_NAMESPACE
 
 #endif /* __EFFECTS_H__ */

@@ -6,6 +6,8 @@
 #ifndef __DTHREAD_H__
 #define __DTHREAD_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
 extern SDL_threadID glpDThreadId;
 extern BOOLEAN dthread_running;
 
@@ -16,5 +18,6 @@ unsigned int dthread_handler(void *data);
 void dthread_cleanup();
 
 /* data */
+DEVILUTION_END_NAMESPACE
 
 #endif /* __DTHREAD_H__ */

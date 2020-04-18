@@ -6,6 +6,8 @@
 #ifndef __DOOM_H__
 #define __DOOM_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
 extern int doom_quest_time;
 extern int doom_stars_drawn;
 extern BYTE *pDoomCel;
@@ -23,5 +25,7 @@ void doom_load_graphics();
 void doom_init();
 void doom_close();
 void doom_draw();
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __DOOM_H__ */

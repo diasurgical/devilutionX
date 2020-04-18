@@ -6,6 +6,8 @@
 #ifndef __DRLG_L2_H__
 #define __DRLG_L2_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
 extern int nSx1;
 extern int nSy1;
 extern int nSx2;
@@ -144,5 +146,7 @@ extern BYTE CTRDOOR6[];
 extern BYTE CTRDOOR7[];
 extern BYTE CTRDOOR8[];
 extern int Patterns[100][10];
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __DRLG_L2_H__ */
