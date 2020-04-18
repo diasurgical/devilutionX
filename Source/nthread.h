@@ -8,6 +8,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern BYTE sgbNetUpdateRate;
 extern DWORD gdwMsgLenTbl[MAX_PLRS];
 extern DWORD gdwDeltaBytesSec;
@@ -32,6 +36,10 @@ void nthread_ignore_mutex(BOOL bStart);
 BOOL nthread_has_500ms_passed(BOOL unused);
 
 /* rdata */
+#ifdef __cplusplus
+}
+#endif
+
 DEVILUTION_END_NAMESPACE
 
 #endif /* __NTHREAD_H__ */

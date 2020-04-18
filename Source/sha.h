@@ -4,6 +4,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define SHA1HashSize 20
 
 //sha
@@ -15,6 +19,10 @@ void SHA1Input(SHA1Context *context, const char *message_array, int len);
 void SHA1ProcessMessageBlock(SHA1Context *context);
 void SHA1Reset(int n);
 void SHA1Init(SHA1Context *context);
+
+#ifdef __cplusplus
+}
+#endif
 
 DEVILUTION_END_NAMESPACE
 

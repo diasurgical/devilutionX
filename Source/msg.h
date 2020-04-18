@@ -8,6 +8,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern BOOL deltaload;
 extern BYTE gbBufferMsgs;
 extern int dwRecCount;
@@ -147,6 +151,10 @@ DWORD On_DEBUG(TCmd *pCmd, int pnum);
 DWORD On_NOVA(TCmd *pCmd, int pnum);
 DWORD On_SETSHIELD(TCmd *pCmd, int pnum);
 DWORD On_REMSHIELD(TCmd *pCmd, int pnum);
+
+#ifdef __cplusplus
+}
+#endif
 
 DEVILUTION_END_NAMESPACE
 

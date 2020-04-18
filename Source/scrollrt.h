@@ -4,6 +4,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern bool sgbControllerActive;
 extern int light_table_index;
 extern BYTE *gpBufStart;
@@ -34,6 +38,10 @@ void DrawAndBlit();
 /** used in 1.00 debug */
 extern char *szMonModeAssert[18];
 extern char *szPlrModeAssert[12];
+
+#ifdef __cplusplus
+}
+#endif
 
 DEVILUTION_END_NAMESPACE
 

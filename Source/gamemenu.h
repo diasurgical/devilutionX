@@ -8,6 +8,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void gamemenu_on();
 void gamemenu_update_single(TMenuItem *pMenuItems);
 void gamemenu_update_multi(TMenuItem *pMenuItems);
@@ -36,6 +40,10 @@ void gamemenu_color_cycling(BOOL bActivate);
 extern char *music_toggle_names[];
 extern char *sound_toggle_names[];
 extern char *color_cycling_toggle_names[];
+
+#ifdef __cplusplus
+}
+#endif
 
 DEVILUTION_END_NAMESPACE
 

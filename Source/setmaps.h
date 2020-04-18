@@ -4,6 +4,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int ObjIndex(int x, int y);
 void AddSKingObjs();
 void AddSChamObjs();
@@ -20,6 +24,10 @@ extern BYTE SkelChamTrans1[20];
 extern BYTE SkelChamTrans2[8];
 extern BYTE SkelChamTrans3[36];
 extern char *quest_level_names[];
+
+#ifdef __cplusplus
+}
+#endif
 
 DEVILUTION_END_NAMESPACE
 

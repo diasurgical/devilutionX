@@ -4,6 +4,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern WORD sync_word_6AA708[MAXMONSTERS];
 extern int sgnMonsters;
 extern WORD sgwLRU[MAXMONSTERS];
@@ -18,6 +22,10 @@ void SyncPlrInv(TSyncHeader *pHdr);
 DWORD sync_update(int pnum, const BYTE *pbBuf);
 void sync_monster(int pnum, const TSyncMonster *p);
 void sync_init();
+
+#ifdef __cplusplus
+}
+#endif
 
 DEVILUTION_END_NAMESPACE
 

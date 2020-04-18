@@ -8,6 +8,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern LightListStruct VisionList[MAXVISION];
 extern BYTE lightactive[MAXLIGHTS];
 extern LightListStruct LightList[MAXLIGHTS];
@@ -57,6 +61,10 @@ extern char *pCrawlTable[19];
 extern BYTE vCrawlTable[23][30];
 extern BYTE byte_49463C[18][18];
 extern BYTE RadiusAdj[23];
+
+#ifdef __cplusplus
+}
+#endif
 
 DEVILUTION_END_NAMESPACE
 

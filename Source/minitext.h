@@ -8,6 +8,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern int qtexty;
 extern char *qtextptr;
 extern BOOLEAN qtextflag;
@@ -29,6 +33,10 @@ extern const BYTE mfontkern[56];
 /* data */
 
 extern int qscroll_spd_tbl[9];
+
+#ifdef __cplusplus
+}
+#endif
 
 DEVILUTION_END_NAMESPACE
 

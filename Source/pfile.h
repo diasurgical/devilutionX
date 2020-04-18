@@ -4,6 +4,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern BOOL gbValidSaveFile;
 
 void pfile_init_save_directory();
@@ -44,6 +48,10 @@ BYTE *pfile_read(const char *pszName, DWORD *pdwLen);
 void pfile_update(BOOL force_save);
 
 /* rdata */
+#ifdef __cplusplus
+}
+#endif
+
 DEVILUTION_END_NAMESPACE
 
 #endif /* __PFILE_H__ */

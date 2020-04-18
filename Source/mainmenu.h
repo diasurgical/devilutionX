@@ -8,6 +8,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern char gszHero[16];
 
 void mainmenu_refresh_music();
@@ -32,6 +36,10 @@ void mainmenu_play_intro();
 /* data */
 
 extern int menu_music_track_id;
+
+#ifdef __cplusplus
+}
+#endif
 
 DEVILUTION_END_NAMESPACE
 

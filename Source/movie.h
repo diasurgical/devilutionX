@@ -8,6 +8,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern BYTE movie_playing;
 extern BOOL loop_movie;
 
@@ -15,6 +19,10 @@ void play_movie(char *pszMovie, BOOL user_can_close);
 LRESULT MovieWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 
 /* rdata */
+
+#ifdef __cplusplus
+}
+#endif
 
 DEVILUTION_END_NAMESPACE
 

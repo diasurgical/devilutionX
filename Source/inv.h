@@ -8,6 +8,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern BOOL invflag;
 extern BOOL drawsbarflag;
 extern const InvXY InvRect[73];
@@ -56,6 +60,10 @@ BOOL DropItemBeforeTrig();
 /* data */
 
 extern int AP2x2Tbl[10];
+
+#ifdef __cplusplus
+}
+#endif
 
 DEVILUTION_END_NAMESPACE
 

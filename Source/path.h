@@ -8,6 +8,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern PATHNODE path_nodes[MAXPATHNODES];
 extern int gdwCurPathStep;
 extern int gdwCurNodes;
@@ -39,6 +43,10 @@ extern const char pathydir[8];
 
 /* data */
 extern char path_directions[9];
+
+#ifdef __cplusplus
+}
+#endif
 
 DEVILUTION_END_NAMESPACE
 

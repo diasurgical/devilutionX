@@ -8,6 +8,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern int cursW;
 extern int cursH;
 extern int pcursmonst;
@@ -38,6 +42,10 @@ void CheckCursMove();
 /* rdata */
 extern const int InvItemWidth[];
 extern const int InvItemHeight[];
+
+#ifdef __cplusplus
+}
+#endif
 
 DEVILUTION_END_NAMESPACE
 
