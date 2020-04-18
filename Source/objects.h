@@ -2,6 +2,8 @@
 #ifndef __OBJECTS_H__
 #define __OBJECTS_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
 extern int trapid;
 extern int trapdir;
 extern BYTE *pObjCels[40];
@@ -162,5 +164,7 @@ extern char shrinemax[NUM_SHRINETYPE];
 extern BYTE shrineavail[NUM_SHRINETYPE];
 extern char *StoryBookName[9];
 extern int StoryText[3][3];
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __OBJECTS_H__ */

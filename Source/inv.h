@@ -6,6 +6,8 @@
 #ifndef __INV_H__
 #define __INV_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
 extern BOOL invflag;
 extern BOOL drawsbarflag;
 extern const InvXY InvRect[73];
@@ -54,5 +56,7 @@ BOOL DropItemBeforeTrig();
 /* data */
 
 extern int AP2x2Tbl[10];
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __INV_H__ */

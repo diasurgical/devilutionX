@@ -2,6 +2,8 @@
 #ifndef __SOUND_H__
 #define __SOUND_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
 extern SoundSample *DSBs[8];
 extern BOOLEAN gbSndInited;
 extern HMODULE hDsound_dll;
@@ -34,5 +36,7 @@ extern BOOLEAN gbMusicOn;
 extern BOOLEAN gbSoundOn;
 extern BOOLEAN gbDupSounds;
 extern char unk_volume[4][2];
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __SOUND_H__ */

@@ -2,6 +2,8 @@
 #ifndef __SCROLLRT_H__
 #define __SCROLLRT_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
 extern bool sgbControllerActive;
 extern int light_table_index;
 extern BYTE *gpBufStart;
@@ -32,5 +34,7 @@ void DrawAndBlit();
 /** used in 1.00 debug */
 extern char *szMonModeAssert[18];
 extern char *szPlrModeAssert[12];
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __SCROLLRT_H__ */

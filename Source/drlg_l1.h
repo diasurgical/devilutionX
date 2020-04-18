@@ -6,6 +6,8 @@
 #ifndef __DRLG_L1_H__
 #define __DRLG_L1_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
 extern BYTE L5dungeon[80][80];
 extern BYTE L5dflags[DMAXX][DMAXY];
 extern BOOL L5setloadflag;
@@ -37,5 +39,7 @@ extern const BYTE PWATERIN[];
 
 /* data */
 extern BYTE L5ConvTbl[16];
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __DRLG_L1_H__ */

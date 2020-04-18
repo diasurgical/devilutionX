@@ -2,6 +2,8 @@
 #ifndef __TRIGS_H__
 #define __TRIGS_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
 extern BOOL townwarps[3];
 extern BOOL trigflag;
 extern int numtrigs;
@@ -47,4 +49,5 @@ extern int L4DownList[6];
 extern int L4TWarpUpList[4];
 extern int L4PentaList[33];
 
+DEVILUTION_END_NAMESPACE
 #endif /* __TRIGS_H__ */

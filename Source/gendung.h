@@ -6,6 +6,8 @@
 #ifndef __GENDUNG_H__
 #define __GENDUNG_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
 extern BYTE dungeon[DMAXX][DMAXY];
 extern BYTE pdungeon[DMAXX][DMAXY];
 extern char dflags[DMAXX][DMAXY];
@@ -88,5 +90,7 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, int rnd
 void DRLG_HoldThemeRooms();
 BOOL SkipThemeRoom(int x, int y);
 void InitLevels();
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __GENDUNG_H__ */

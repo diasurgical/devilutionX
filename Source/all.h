@@ -18,9 +18,6 @@
 
 #include "../types.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 #include "appfat.h"
 #include "automap.h"
 #include "capture.h"
@@ -91,10 +88,5 @@ extern "C" {
 #include "trigs.h"
 #include "wave.h"
 #include "render.h" // linked last, likely .s/.asm
-#ifdef __cplusplus
-}
-#endif
-
-DEVILUTION_END_NAMESPACE
 
 #endif /* __ALL_H__ */

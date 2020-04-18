@@ -6,6 +6,8 @@
 #ifndef __MINITEXT_H__
 #define __MINITEXT_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
 extern int qtexty;
 extern char *qtextptr;
 extern BOOLEAN qtextflag;
@@ -27,5 +29,7 @@ extern const BYTE mfontkern[56];
 /* data */
 
 extern int qscroll_spd_tbl[9];
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __MINITEXT_H__ */

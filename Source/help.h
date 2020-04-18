@@ -6,6 +6,8 @@
 #ifndef __HELP_H__
 #define __HELP_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
 extern int help_select_line;
 extern int dword_634494;
 extern BOOL helpflag;
@@ -21,5 +23,7 @@ void HelpScrollDown();
 
 /* rdata */
 extern const char gszHelpText[];
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __HELP_H__ */

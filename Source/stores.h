@@ -2,6 +2,8 @@
 #ifndef __STORES_H__
 #define __STORES_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
 extern int stextup;
 extern int storenumh;
 extern int stextlhold;
@@ -136,5 +138,6 @@ void ReleaseStoreBtn();
 /* rdata */
 
 extern char *talkname[9];
+DEVILUTION_END_NAMESPACE
 
 #endif /* __STORES_H__ */
