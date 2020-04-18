@@ -8,6 +8,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern int progress_id;
 
 void interface_msg_pump();
@@ -22,6 +26,10 @@ void InitCutscene(unsigned int uMsg);
 
 extern const BYTE BarColor[3];
 extern const int BarPos[3][2];
+
+#ifdef __cplusplus
+}
+#endif
 
 DEVILUTION_END_NAMESPACE
 

@@ -8,6 +8,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern int missileactive[MAXMISSILES];
 extern int missileavail[MAXMISSILES];
 extern MissileStruct missile[MAXMISSILES];
@@ -156,6 +160,10 @@ void ClearMissileSpot(int mi);
 
 extern int XDirAdd[8];
 extern int YDirAdd[8];
+
+#ifdef __cplusplus
+}
+#endif
 
 DEVILUTION_END_NAMESPACE
 

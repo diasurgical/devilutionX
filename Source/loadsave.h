@@ -8,6 +8,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern BYTE *tbuff;
 
 void LoadGame(BOOL firstflag);
@@ -46,6 +50,10 @@ void SaveVision(int i);
 void SavePortal(int i);
 void SaveLevel();
 void LoadLevel();
+
+#ifdef __cplusplus
+}
+#endif
 
 DEVILUTION_END_NAMESPACE
 

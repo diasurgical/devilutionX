@@ -8,6 +8,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern int sfxdelay;
 extern int sfxdnum;
 extern HANDLE sghStream;
@@ -39,6 +43,10 @@ void effects_play_sound(char *snd_file);
 extern const char MonstSndChar[];
 
 /* data */
+#ifdef __cplusplus
+}
+#endif
+
 DEVILUTION_END_NAMESPACE
 
 #endif /* __EFFECTS_H__ */

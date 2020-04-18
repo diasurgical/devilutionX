@@ -4,6 +4,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern int plr_lframe_size;
 extern int plr_wframe_size;
 extern BYTE plr_gfx_flag;
@@ -136,6 +140,10 @@ extern int MaxStats[3][4];
 extern int ExpLvlsTbl[MAXCHARLEVEL];
 extern char *ClassStrTbl[];
 extern BYTE fix[9];
+
+#ifdef __cplusplus
+}
+#endif
 
 DEVILUTION_END_NAMESPACE
 

@@ -4,6 +4,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern SDL_Color logical_palette[256];
 extern SDL_Color system_palette[256];
 extern SDL_Color orig_palette[256];
@@ -33,6 +37,10 @@ BOOL palette_set_color_cycling(BOOL enabled);
 
 extern int gamma_correction;
 extern BOOL color_cycling_enabled;
+
+#ifdef __cplusplus
+}
+#endif
 
 DEVILUTION_END_NAMESPACE
 

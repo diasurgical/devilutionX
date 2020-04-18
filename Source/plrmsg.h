@@ -4,6 +4,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern _plrmsg plr_msgs[PMSG_COUNT];
 
 void plrmsg_delay(BOOL delay);
@@ -18,6 +22,10 @@ void PrintPlrMsg(DWORD x, DWORD y, DWORD width, const char *str, BYTE col);
 /* rdata */
 
 extern const char text_color_from_player_num[MAX_PLRS + 1];
+
+#ifdef __cplusplus
+}
+#endif
 
 DEVILUTION_END_NAMESPACE
 

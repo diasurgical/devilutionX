@@ -4,6 +4,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern int stextup;
 extern int storenumh;
 extern int stextlhold;
@@ -138,6 +142,10 @@ void ReleaseStoreBtn();
 /* rdata */
 
 extern char *talkname[9];
+#ifdef __cplusplus
+}
+#endif
+
 DEVILUTION_END_NAMESPACE
 
 #endif /* __STORES_H__ */

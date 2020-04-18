@@ -8,6 +8,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern SDL_Window *ghMainWnd;
 extern DWORD glSeedTbl[NUMLEVELS];
 extern int gnLevelTypeTbl[NUMLEVELS];
@@ -104,6 +108,10 @@ extern int framestart;
 extern BOOL FriendlyMode;
 extern char *spszMsgTbl[4];
 extern char *spszMsgHotKeyTbl[4];
+
+#ifdef __cplusplus
+}
+#endif
 
 DEVILUTION_END_NAMESPACE
 

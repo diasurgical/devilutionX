@@ -8,6 +8,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern int doom_quest_time;
 extern int doom_stars_drawn;
 extern BYTE *pDoomCel;
@@ -25,6 +29,10 @@ void doom_load_graphics();
 void doom_init();
 void doom_close();
 void doom_draw();
+
+#ifdef __cplusplus
+}
+#endif
 
 DEVILUTION_END_NAMESPACE
 

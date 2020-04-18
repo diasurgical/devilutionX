@@ -8,6 +8,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern BYTE *gpBuffer;
 extern char gbBackBuf;
 extern char gbEmulate;
@@ -27,6 +31,10 @@ void PaletteGetEntries(DWORD dwNumEntries, SDL_Color *lpEntries);
 void PaletteSetEntries(DWORD dwCount, SDL_Color *lpEntries);
 
 /* data */
+#ifdef __cplusplus
+}
+#endif
+
 DEVILUTION_END_NAMESPACE
 
 #endif /* __DX_H__ */

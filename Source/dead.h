@@ -8,6 +8,10 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern int spurtndx;
 extern DeadStruct dead[MAXDEAD];
 extern int stonendx;
@@ -15,6 +19,10 @@ extern int stonendx;
 void InitDead();
 void AddDead(int dx, int dy, char dv, int ddir);
 void SetDead();
+
+#ifdef __cplusplus
+}
+#endif
 
 DEVILUTION_END_NAMESPACE
 
