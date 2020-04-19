@@ -1,6 +1,7 @@
 #include "display.h"
 #include "DiabloUI/diabloui.h"
 #include "controls/controller.h"
+#include <unistd.h> // sleep(); sysconf(); for multithreading
 
 #ifdef USE_SDL1
 #ifndef SDL1_VIDEO_MODE_BPP
