@@ -1261,8 +1261,8 @@ static void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BO
 	}
 
 	assert(ysize >= 0 && ysize <= SCREEN_HEIGHT);
-
-	if (ysize > 0) {
+/* comment out because of panel rendering issues*/
+	/*if (ysize > 0) {
 		DoBlitScreen(0, 0, SCREEN_WIDTH, ysize);
 	}
 	if (ysize < SCREEN_HEIGHT) {
@@ -1293,7 +1293,9 @@ static void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BO
 		if (sgdwCursWdt != 0) {
 			DoBlitScreen(sgdwCursX, sgdwCursY, sgdwCursWdt, sgdwCursHgt);
 		}
-	}
+	}*/
+	/*instead blitting everything on surface with slight decrease of performance*/
+    DoBlitScreen(0, 0, 640, 480); 
 }
 
 /**
