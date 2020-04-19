@@ -232,6 +232,7 @@ add_library(devilution STATIC
   Source/wave.cpp)
 
 set(devilutionx_SRCS
+  SourceX/filters/xbrz/xbrz.cpp
   SourceX/dx.cpp
   SourceX/controls/devices/game_controller.cpp
   SourceX/controls/devices/joystick.cpp
