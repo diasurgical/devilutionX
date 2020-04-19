@@ -6,6 +6,10 @@
 #ifndef __CONTROL_H__
 #define __CONTROL_H__
 
+extern SDL_Surface *test_surface;
+SDL_Surface *safePngLoad(char *path);
+extern int testvar;
+
 extern BYTE *pDurIcons;
 extern BYTE *pChrButtons;
 extern BOOL drawhpflag;
@@ -68,7 +72,9 @@ void ClearPanel();
 void DrawPanelBox(int x, int y, int w, int h, int sx, int sy);
 void InitPanelStr();
 void SetFlaskHeight(BYTE *pCelBuff, int min, int max, int sx, int sy);
+void SetFlaskHeight_png(SDL_Surface *pCelBuff, int min, int max, int sx, int sy);
 void DrawFlask(BYTE *pCelBuff, int w, int nSrcOff, BYTE *pBuff, int nDstOff, int h);
+void DrawFlask_png(SDL_Surface *pCelBuff, int w, int h, int srcx, int srcy, int dstx, int dsty);
 void DrawLifeFlask();
 void UpdateLifeFlask();
 void DrawManaFlask();

@@ -106,8 +106,8 @@
 #define PAL16_RED		224
 #define PAL16_GRAY		240
 
-#define SCREEN_WIDTH	640
-#define SCREEN_HEIGHT	480
+#define SCREEN_WIDTH	800
+#define SCREEN_HEIGHT	600
 
 #define ZOOM_WIDTH		384
 #define ZOOM_HEIGHT		224

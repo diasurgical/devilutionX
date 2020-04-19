@@ -6,6 +6,23 @@
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
+SDL_Surface *test_surface;
+SDL_Surface *pBtmBuff_png;
+SDL_Surface *pLifeBuff_png;
+SDL_Surface *pManaBuff_png;
+char* png_path = "H:\\DIABLOPNG\\_dump_\\";
+int testvar = 0;
+SDL_Surface *safePngLoad(char* path)
+{
+	char buffer[256]; 
+	strncpy(buffer, png_path, sizeof(buffer));
+	strncat(buffer, path, sizeof(buffer));
+
+	SDL_Surface *loadedSurface = IMG_Load(buffer);
+	if (loadedSurface == NULL)
+		ErrSdl();
+	return loadedSurface;
+}
 
 BYTE sgbNextTalkSave;
 BYTE sgbTalkSavePos;
@@ -564,6 +581,23 @@ void ClearPanel()
 
 void DrawPanelBox(int x, int y, int w, int h, int sx, int sy)
 {
+	if (testvar % 2) {
+		sx -= SCREEN_X;
+		sy -= SCREEN_Y;
+		SDL_Rect rectsrc;
+		rectsrc.x = x;
+		rectsrc.y = y;
+		rectsrc.w = w;
+		rectsrc.h = h;
+
+		SDL_Rect rectdst;
+		rectdst.x = sx;
+		rectdst.y = sy;
+		rectdst.w = w;
+		rectdst.h = h;
+		SDL_BlitSurface(pBtmBuff_png, &rectsrc, test_surface, &rectdst);
+		return;
+	}
 	int nSrcOff, nDstOff;
 
 	assert(gpBuffer);
@@ -611,6 +645,27 @@ void SetFlaskHeight(BYTE *pCelBuff, int min, int max, int sx, int sy)
 		memcpy(dst, src, 88);
 }
 
+void SetFlaskHeight_png(SDL_Surface *pCelBuff, int min, int max, int sx, int sy)
+{
+	sx -= SCREEN_X;
+	sy -= SCREEN_Y;
+
+	SDL_Rect rectsrc;
+	rectsrc.x = 0;
+	rectsrc.y = min;
+	rectsrc.w = 88;
+	rectsrc.h = max - min;
+
+	SDL_Rect rectdst;
+	rectdst.x = sx;
+	rectdst.y = sy;
+	rectdst.w = 88;
+	rectdst.h = max - min;
+
+	SDL_BlitSurface(pCelBuff, &rectsrc , test_surface, &rectdst);
+
+}
+
 /**
  * Draws the dome of the flask that protrudes above the panel top line.
  * It draws a rectangle of fixed width 59 and height 'h' from the source buffer
@@ -640,6 +695,25 @@ void DrawFlask(BYTE *pCelBuff, int w, int nSrcOff, BYTE *pBuff, int nDstOff, int
 	}
 }
 
+void DrawFlask_png(SDL_Surface *pCelBuff, int w, int h, int srcx, int srcy, int dstx, int dsty)
+{
+	SDL_Rect rectsrc;
+	rectsrc.x = srcx;
+	rectsrc.y = srcy;
+	rectsrc.w = w;
+	rectsrc.h = h;
+
+	SDL_Rect rectdst;
+	rectdst.x = dstx;
+	rectdst.y = dsty;
+	rectdst.w = w;
+	rectdst.h = h;
+
+	SDL_SetColorKey(pCelBuff, SDL_TRUE, 0);
+	SDL_BlitSurface(pCelBuff, &rectsrc, test_surface, &rectdst);
+	SDL_SetColorKey(pCelBuff, SDL_FALSE, 0);
+}
+
 /**
  * Draws the top dome of the life flask (that part that protrudes out of the control panel).
  * First it draws the empty flask cel and then draws the filled part on top if needed.
@@ -658,6 +732,14 @@ void DrawLifeFlask()
 	if (filled > 11)
 		filled = 11;
 	filled += 2;
+
+	if (testvar % 2) {
+		DrawFlask_png(pLifeBuff_png, 88, filled, 13, 3, PANEL_LEFT + 109, PANEL_TOP - 13);
+		if (filled != 13) {
+			DrawFlask_png(pBtmBuff_png, PANEL_WIDTH, 13 - filled, 109, filled + 3, PANEL_LEFT + 109, PANEL_TOP - 13 + filled);
+		}
+		return;
+	}
 
 	DrawFlask(pLifeBuff, 88, 277, gpBuffer, SCREENXY(PANEL_LEFT + 109, PANEL_TOP - 13), filled);
 	if (filled != 13)
@@ -681,6 +763,11 @@ void UpdateLifeFlask()
 		filled = 69;
 	else if (filled < 0)
 		filled = 0;
+	if (testvar % 2) {
+		if (filled != 69)
+			SetFlaskHeight_png(pLifeBuff_png, 16, 85 - filled, 96 + PANEL_X, PANEL_Y);
+		return;
+	}
 	if (filled != 69)
 		SetFlaskHeight(pLifeBuff, 16, 85 - filled, 96 + PANEL_X, PANEL_Y);
 	if (filled != 0)
@@ -696,6 +783,14 @@ void DrawManaFlask()
 	if (filled > 11)
 		filled = 11;
 	filled += 2;
+
+	if (testvar % 2) {
+		DrawFlask_png(pManaBuff_png, 88, filled, 13, 3, PANEL_LEFT + 475, PANEL_TOP - 13);
+		if (filled != 13) {
+			DrawFlask_png(pBtmBuff_png, PANEL_WIDTH, 13 - filled, 109, filled + 3, PANEL_LEFT + 475, PANEL_TOP - 13 + filled);
+		}
+		return;
+	}
 
 	DrawFlask(pManaBuff, 88, 277, gpBuffer, SCREENXY(PANEL_LEFT + 475, PANEL_TOP - 13), filled);
 	if (filled != 13)
@@ -742,6 +837,14 @@ void UpdateManaFlask()
 
 	if (filled > 69)
 		filled = 69;
+
+	if (testvar % 2) {
+		if (filled != 69)
+			SetFlaskHeight_png(pManaBuff_png, 16, 85 - filled, PANEL_X + 368 + 96, PANEL_Y);
+		return;
+	}
+
+
 	if (filled != 69)
 		SetFlaskHeight(pManaBuff, 16, 85 - filled, 96 + PANEL_X + 368, PANEL_Y);
 	if (filled != 0)
@@ -771,9 +874,12 @@ void InitControlPan()
 	SetSpellTrans(RSPLTYPE_SKILL);
 	pStatusPanel = LoadFileInMem("CtrlPan\\Panel8.CEL", NULL);
 	CelBlitWidth(pBtmBuff, 0, (PANEL_HEIGHT + 16) - 1, PANEL_WIDTH, pStatusPanel, 1, PANEL_WIDTH);
+	pBtmBuff_png = safePngLoad("ctrlpan\\Panel8\\Panel8.png");
 	MemFreeDbg(pStatusPanel);
 	pStatusPanel = LoadFileInMem("CtrlPan\\P8Bulbs.CEL", NULL);
 	CelBlitWidth(pLifeBuff, 0, 87, 88, pStatusPanel, 1, 88);
+	pLifeBuff_png = safePngLoad("CtrlPan\\P8Bulbs\\P8Bulbs_0001.png");
+	pManaBuff_png = safePngLoad("CtrlPan\\P8Bulbs\\P8Bulbs_0002.png");
 	CelBlitWidth(pManaBuff, 0, 87, 88, pStatusPanel, 2, 88);
 	MemFreeDbg(pStatusPanel);
 	talkflag = FALSE;

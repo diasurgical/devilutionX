@@ -1339,6 +1339,7 @@ void DrawAndBlit()
 		return;
 	}
 
+	force_redraw = 255;
 	if (SCREEN_WIDTH > PANEL_WIDTH || SCREEN_HEIGHT > VIEWPORT_HEIGHT + PANEL_HEIGHT || force_redraw == 255) {
 		drawhpflag = TRUE;
 		drawmanaflag = TRUE;

@@ -7,7 +7,6 @@
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 #include <config.h>
-#include <SDL_image.h>
 #include "../SourceX/display.h"
 
 
@@ -1201,8 +1200,8 @@ void PressChar(int vkey)
 		}
 		return;
 	case 'v':
-		IMG_SavePNG(GetOutputSurface(), "test.png");
-		NetSendCmdString(1 << myplr, gszProductName);
+		testvar++;
+		//NetSendCmdString(1 << myplr, gszProductName);
 		return;
 	case 'V':
 		NetSendCmdString(1 << myplr, gszVersionNumber);
