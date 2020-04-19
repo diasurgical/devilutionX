@@ -17,6 +17,8 @@
 #endif
 #endif
 
+int processors; /* for calculating the number of cpu cores*/
+
 namespace dvl {
 
 extern BOOL was_window_init; /** defined in dx.cpp */
@@ -68,6 +70,10 @@ bool SpawnWindow(const char *lpWindowName, int nWidth, int nHeight)
 	int grabInput = 1;
 	DvlIntSetting("grab input", &grabInput);
 
+	/* calculate the number of cpu cores for multithreaded operations */
+    	processors = sysconf(_SC_NPROCESSORS_ONLN);
+   	/* calculate the number of cpu cores for multithreaded operations */
+	
 #ifdef USE_SDL1
 	SDL_WM_SetCaption(lpWindowName, WINDOW_ICON_NAME);
 	const auto &best = *SDL_GetVideoInfo();
@@ -116,17 +122,17 @@ bool SpawnWindow(const char *lpWindowName, int nWidth, int nHeight)
 #ifdef USE_SDL1
 		SDL_Log("upscaling not supported with USE_SDL1");
 #else
-		renderer = SDL_CreateRenderer(ghMainWnd, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+		renderer = SDL_CreateRenderer(ghMainWnd, -1, /*SDL_RENDERER_PRESENTVSYNC |*/ SDL_RENDERER_ACCELERATED); /*no vsync for fps testing*/
 		if (renderer == NULL) {
 			ErrSdl();
 		}
 
-		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, nWidth, nHeight);
+		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, /*nWidth*/1280, /*nHeight*/960);
 		if (texture == NULL) {
 			ErrSdl();
 		}
 
-		if (SDL_RenderSetLogicalSize(renderer, nWidth, nHeight) <= -1) {
+		if (SDL_RenderSetLogicalSize(renderer, /*nWidth*/1280, /*nHeight*/960) <= -1) {
 			ErrSdl();
 		}
 #endif
