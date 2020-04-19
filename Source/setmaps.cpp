@@ -194,6 +194,11 @@ void LoadSetMap()
 	case SL_TEST:
 		char dunbuf[100];
 		char palbuf[100];
+		InitNoTriggers();
+		ReturnLvlX = ViewX;
+		ReturnLvlY = ViewY;
+		ReturnLvl = currlevel;
+		ReturnLvlT = leveltype;
 		sprintf(palbuf, "derp%d.pal", paletteNum);
 		sprintf(dunbuf, "derp%d.dun", tilesetNum);
 		if (tilesetNum == 0) {
@@ -213,7 +218,6 @@ void LoadSetMap()
 		}
 		DRLG_SetMapTrans(dunbuf);
 		LoadPalette(palbuf);
-		InitNoTriggers();
 		break;
 	}
 }

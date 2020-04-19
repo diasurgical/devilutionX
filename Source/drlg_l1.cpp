@@ -214,6 +214,7 @@ static void DRLG_L1Shadows()
 		}
 	}
 
+	// Swap arch shadoes for gate shadows
 	for (y = 1; y < DMAXY; y++) {
 		for (x = 1; x < DMAXX; x++) {
 			if (dungeon[x - 1][y] == 139 && !L5dflags[x - 1][y]) {
@@ -568,6 +569,21 @@ void LoadL1Dungeon(char *sFileName, int vx, int vy)
 			if (*lm != 0) {
 				dungeon[i][j] = *lm;
 				L5dflags[i][j] |= DLRG_PROTECTED;
+				// Place player in front of stairs if found
+				if (*lm == 57 || *lm == 64) {
+					vx = i * 2 + 16 + 1;
+					vy = j * 2 + 16 + 2;
+					trigs[numtrigs]._tx = vx;
+					trigs[numtrigs]._ty = vy;
+					trigs[numtrigs]._tmsg = WM_DIABRTNLVL;
+					if (*lm == 57) {
+						vy++;
+					} else if (*lm == 64) {
+						trigs[numtrigs]._tx -= 1;
+						trigs[numtrigs]._ty -= 2;
+					}
+					numtrigs++;
+				}
 			} else {
 				dungeon[i][j] = 13;
 			}
