@@ -223,6 +223,7 @@ void dx_cleanup()
 	pal_surface = nullptr;
 	SDL_FreePalette(palette);
 	SDL_FreeSurface(renderer_texture_surface);
+	SDL_FreeSurface(scale_renderer_texture_surface);
 	SDL_DestroyTexture(texture);
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(ghMainWnd);
