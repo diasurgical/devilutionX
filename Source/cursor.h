@@ -12,6 +12,7 @@ extern int pcursmonst;
 extern int icursW28;
 extern int icursH28;
 extern BYTE *pCursCels;
+extern std::vector<SDL_Surface *> pCursCels_png;
 extern int icursH;
 extern char pcursinvitem;
 extern int icursW;

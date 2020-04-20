@@ -107,6 +107,11 @@ void CelClippedDraw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 	    nWidth);
 }
 
+void CelClippedDrawPNG(int sx, int sy, std::vector<SDL_Surface *> &pCelBuff, int nCel, int nWidth)
+{
+	CelBlitSafePNG(sx, sy, pCelBuff[nCel - 1]);
+}
+
 /**
  * @brief Blit CEL sprite, and apply lighting, to the back buffer at the given coordinates
  * @param sx Back buffer coordinate

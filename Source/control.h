@@ -7,7 +7,7 @@
 #define __CONTROL_H__
 
 extern SDL_Surface *test_surface;
-SDL_Surface *safePngLoad(char *path);
+extern std::string png_path;
 extern int testvar;
 
 extern BYTE *pDurIcons;

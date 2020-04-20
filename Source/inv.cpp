@@ -134,6 +134,32 @@ void InitInv()
 
 void InvDrawSlotBack(int X, int Y, int W, int H)
 {
+	if (testvar % 2) {
+		SDL_PixelFormat *pixelFormat = test_surface->format;
+		Uint32 pixelFormatEnum = pixelFormat->format;
+		//const char *surfacePixelFormatName = SDL_GetPixelFormatName(pixelFormatEnum);
+		//SDL_Log("The surface's pixelformat is %s", surfacePixelFormatName);
+
+		//SDL_Surface *tmp_surf = SDL_ConvertSurfaceFormat(surf, pixelFormatEnum, 0);
+		SDL_Surface *tmp_surf = SDL_CreateRGBSurfaceWithFormat(0, W, H, 0, pixelFormatEnum);
+		if (tmp_surf == NULL)
+			ErrSdl();
+		if (SDL_FillRect(tmp_surf, NULL, SDL_MapRGBA(tmp_surf->format, 255, 0, 0, 50)) < 0)
+			ErrSdl();
+		
+		X -= SCREEN_X;
+		Y -= SCREEN_Y - 1;
+		SDL_Rect rectdst;
+		rectdst.x = X;
+		rectdst.y = Y - H;
+		rectdst.w = W;
+		rectdst.h = H;
+		if (SDL_BlitSurface(tmp_surf, NULL, test_surface, &rectdst) < 0)
+			ErrSdl();
+		SDL_FreeSurface(tmp_surf);
+		return;
+	}
+
 	BYTE *dst;
 
 	assert(gpBuffer);
@@ -427,12 +453,16 @@ void DrawInvBelt()
 				color = ICOL_BLUE;
 			if (!plr[myplr].SpdList[i]._iStatFlag)
 				color = ICOL_RED;
-			if (!sgbControllerActive || invflag)
+			if (!sgbControllerActive || invflag) {
 				CelBlitOutline(color, InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X, InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, pCursCels, frame, frame_width);
+			}
 		}
 
 		if (plr[myplr].SpdList[i]._iStatFlag) {
-			CelClippedDraw(InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X, InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, pCursCels, frame, frame_width);
+			if (testvar % 2)
+				CelClippedDrawPNG(InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X, InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, pCursCels_png, frame, frame_width);
+			else
+				CelClippedDraw(InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X, InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, pCursCels, frame, frame_width);
 		} else {
 			CelDrawLightRed(InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X, InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, pCursCels, frame, frame_width, 1);
 		}

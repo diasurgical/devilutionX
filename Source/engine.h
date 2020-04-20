@@ -61,6 +61,7 @@ void CelDraw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
 void CelDrawPNG(int sx, int sy, std::vector<SDL_Surface*> &pCelBuff, int nCel, int nWidth);
 void CelBlitFrame(BYTE *pBuff, BYTE *pCelBuff, int nCel, int nWidth);
 void CelClippedDraw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
+void CelClippedDrawPNG(int sx, int sy, std::vector<SDL_Surface *> &pCelBuff, int nCel, int nWidth);
 void CelDrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, BYTE *tbl);
 void CelDrawLightPNG(int sx, int sy, std::vector<SDL_Surface*> &pCelBuff, int nCel, int nWidth, BYTE *tbl);
 void CelClippedDrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
