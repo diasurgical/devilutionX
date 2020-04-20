@@ -13,6 +13,7 @@ SDL_Surface *pManaBuff_png;
 std::vector<SDL_Surface *> pPanelButtons_png;
 std::vector<SDL_Surface *> pSpellCels_png;
 std::vector<SDL_Surface *> pSBkIconCels_png;
+std::vector<SDL_Surface *> pPanelText_png;
 std::string png_path = "H:\\DIABLOPNG\\_dump_\\";
 int testvar = 0;
 
@@ -598,7 +599,10 @@ void PrintChar(int sx, int sy, int nCel, char col)
 
 	switch (col) {
 	case COL_WHITE:
-		CelDraw(sx, sy, pPanelText, nCel, 13);
+		if (testvar % 2)
+			CelDrawPNG(sx, sy, pPanelText_png, nCel, 13);
+		else
+			CelDraw(sx, sy, pPanelText, nCel, 13);
 		return;
 	case COL_BLUE:
 		for (i = 0; i < 256; i++) {
@@ -631,7 +635,10 @@ void PrintChar(int sx, int sy, int nCel, char col)
 		}
 		break;
 	}
-	CelDrawLight(sx, sy, pPanelText, nCel, 13, tbl);
+	if (testvar % 2)
+		CelDrawLightPNG(sx, sy, pPanelText_png, nCel, 13, tbl);
+	else
+		CelDrawLight(sx, sy, pPanelText, nCel, 13, tbl);
 }
 
 void AddPanelString(char *str, BOOL just)
@@ -935,6 +942,7 @@ void InitControlPan()
 	pLifeBuff = DiabloAllocPtr(88 * 88);
 	memset(pLifeBuff, 0, 88 * 88);
 	pPanelText = LoadFileInMem("CtrlPan\\SmalText.CEL", NULL);
+	pPanelText_png = safePNGLoadVector("CtrlPan\\SmalText");
 	pChrPanel = LoadFileInMem("Data\\Char.CEL", NULL);
 	pSpellCels = LoadFileInMem("CtrlPan\\SpelIcon.CEL", NULL);
 	pSpellCels_png = safePNGLoadVector("CtrlPan\\SpelIcon");

@@ -52,7 +52,7 @@ void CelDraw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 void CelDrawPNG(int sx, int sy, std::vector<SDL_Surface *> &pCelBuff, int nCel, int nWidth)
 {
 	sx -= SCREEN_X;
-	sy -= SCREEN_Y;
+	sy -= SCREEN_Y - 1;
 
 	SDL_Rect rectdst;
 	rectdst.x = sx;
