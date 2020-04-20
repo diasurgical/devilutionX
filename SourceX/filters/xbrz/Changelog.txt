@@ -1,0 +1,66 @@
+xBRZ 1.8 [2019-11-28]
+---------------------
+Consider ARGB outside area as transparent
+Fixed ARGB scaling issue on image borders
+
+
+xBRZ 1.7 [2019-07-04]
+---------------------
+Fixed asymmetric color distance
+New parameter: "Center direction bias"
+
+
+xBRZ 1.6 [2018-02-27]
+---------------------
+Added bilinear scaling
+Option to skip color buffer creation
+Updated license info
+
+
+xBRZ 1.5 [2017-08-07]
+---------------------
+Added RGB conversion routines
+
+
+xBRZ 1.4 [2015-07-25]
+---------------------
+Added 6xBRZ scaler
+Create color distance buffer lazily
+
+
+xBRZ 1.3 [2015-04-03]
+---------------------
+Improved ARGB performance by 15%
+Fixed alpha channel gradient bug
+
+
+xBRZ 1.2 [2014-11-21]
+---------------------
+Further improved performance by over 30%
+
+
+xBRZ 1.1 [2014-11-02]
+---------------------
+Support images with alpha channel
+Improved color analysis
+
+
+xBRZ 1.0 [2013-02-11]
+---------------------
+Fixed xBRZ scaler compiler issues for GCC
+
+ 
+xBRZ 0.2 [2012-12-11]
+---------------------
+Added 5xBRZ scaler
+Optimized xBRZ scaler performance by factor 3
+Further improved image quality of xBRZ scaler
+
+
+xBRZ 0.1 [2012-09-26]
+---------------------
+Initial release:
+- scale while preserving small image features
+- support multithreading
+- support 64-bit architectures
+- support processing image slices
