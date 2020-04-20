@@ -10,15 +10,59 @@ SDL_Surface *test_surface;
 SDL_Surface *pBtmBuff_png;
 SDL_Surface *pLifeBuff_png;
 SDL_Surface *pManaBuff_png;
-char* png_path = "H:\\DIABLOPNG\\_dump_\\";
+std::vector<SDL_Surface *> pPanelButtons_png;
+std::string png_path = "H:\\DIABLOPNG\\_dump_\\";
 int testvar = 0;
-SDL_Surface *safePngLoad(char* path)
-{
-	char buffer[256]; 
-	strncpy(buffer, png_path, sizeof(buffer));
-	strncat(buffer, path, sizeof(buffer));
 
-	SDL_Surface *loadedSurface = IMG_Load(buffer);
+std::string base_name(std::string const &path)
+{
+	return path.substr(path.find_last_of("/\\") + 1);
+}
+
+std::string generate_number(int n)
+{
+	char buf[5];
+	sprintf(buf, "%04d", n);
+	std::string base(buf);
+	return base;
+}
+
+std::vector<SDL_Surface *> safePNGLoadVector(std::string path)
+{
+	std::string name = base_name(path);
+	std::vector<SDL_Surface *> out;
+	for (int i = 1;; i++) {
+		std::string merged_path = png_path;
+		merged_path += path;
+		merged_path += "\\";
+		merged_path += name;
+		merged_path += "_";
+		merged_path += generate_number(i);
+		merged_path += ".png";
+		SDL_Surface *loadedSurface = IMG_Load(merged_path.c_str());
+		if (loadedSurface != NULL) {
+			out.push_back(loadedSurface);
+		} else {
+			break;
+		}
+	}
+
+	if (out.size() == 0) {
+		ErrSdl();
+	}
+	return out;
+}
+
+
+SDL_Surface *safePNGLoad(std::string path)
+{
+	std::string merged_path = png_path;
+	merged_path += path;
+	std::string name = base_name(merged_path);
+	merged_path += "\\";
+	merged_path += name;
+	merged_path += ".png";
+	SDL_Surface *loadedSurface = IMG_Load(merged_path.c_str());
 	if (loadedSurface == NULL)
 		ErrSdl();
 	return loadedSurface;
@@ -874,12 +918,13 @@ void InitControlPan()
 	SetSpellTrans(RSPLTYPE_SKILL);
 	pStatusPanel = LoadFileInMem("CtrlPan\\Panel8.CEL", NULL);
 	CelBlitWidth(pBtmBuff, 0, (PANEL_HEIGHT + 16) - 1, PANEL_WIDTH, pStatusPanel, 1, PANEL_WIDTH);
-	pBtmBuff_png = safePngLoad("ctrlpan\\Panel8\\Panel8.png");
+	pBtmBuff_png = safePNGLoad("ctrlpan\\Panel8");
 	MemFreeDbg(pStatusPanel);
 	pStatusPanel = LoadFileInMem("CtrlPan\\P8Bulbs.CEL", NULL);
 	CelBlitWidth(pLifeBuff, 0, 87, 88, pStatusPanel, 1, 88);
-	pLifeBuff_png = safePngLoad("CtrlPan\\P8Bulbs\\P8Bulbs_0001.png");
-	pManaBuff_png = safePngLoad("CtrlPan\\P8Bulbs\\P8Bulbs_0002.png");
+	std::vector<SDL_Surface *> v = safePNGLoadVector("CtrlPan\\P8Bulbs");
+	pLifeBuff_png = v[0];
+	pManaBuff_png = v[1];
 	CelBlitWidth(pManaBuff, 0, 87, 88, pStatusPanel, 2, 88);
 	MemFreeDbg(pStatusPanel);
 	talkflag = FALSE;
@@ -899,6 +944,7 @@ void InitControlPan()
 	panelflag = FALSE;
 	lvlbtndown = FALSE;
 	pPanelButtons = LoadFileInMem("CtrlPan\\Panel8bu.CEL", NULL);
+	pPanelButtons_png = safePNGLoadVector("CtrlPan\\Panel8bu");
 	for (i = 0; i < sizeof(panbtn) / sizeof(panbtn[0]); i++)
 		panbtn[i] = FALSE;
 	panbtndown = FALSE;
@@ -957,8 +1003,13 @@ void DrawCtrlBtns()
 	for (i = 0; i < 6; i++) {
 		if (!panbtn[i])
 			DrawPanelBox(PanBtnPos[i][0] - PANEL_LEFT, PanBtnPos[i][1] - (PANEL_TOP - 16), 71, 20, PanBtnPos[i][0] + SCREEN_X, PanBtnPos[i][1] + SCREEN_Y);
-		else
-			CelDraw(PanBtnPos[i][0] + SCREEN_X, PanBtnPos[i][1] + SCREEN_Y + 18, pPanelButtons, i + 1, 71);
+		else {
+			if (testvar % 2 == 0) {
+				CelDrawPNG(PanBtnPos[i][0] + SCREEN_X, PanBtnPos[i][1] + SCREEN_Y + 18, pPanelButtons_png, i + 1, 71);
+			} else {
+				CelDraw(PanBtnPos[i][0] + SCREEN_X, PanBtnPos[i][1] + SCREEN_Y + 18, pPanelButtons, i + 1, 71);
+			}
+		}
 	}
 	if (numpanbtns == 8) {
 		CelDraw(87 + PANEL_X, 122 + PANEL_Y, pMultiBtns, panbtn[6] + 1, 33);
