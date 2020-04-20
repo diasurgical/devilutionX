@@ -53,17 +53,12 @@ void CelDrawPNG(int sx, int sy, std::vector<SDL_Surface *> &pCelBuff, int nCel, 
 {
 	sx -= SCREEN_X;
 	sy -= SCREEN_Y;
-	SDL_Rect rectsrc;
-	//rectsrc.x = srcx;
-	//rectsrc.y = srcy;
-	//rectsrc.w = w;
-	//rectsrc.h = h;
 
 	SDL_Rect rectdst;
 	rectdst.x = sx;
-	rectdst.y = sy;
-	//rectdst.w = w;
-	//rectdst.h = h;
+	rectdst.y = sy - pCelBuff[nCel - 1]->h;
+	rectdst.w = nWidth;
+	rectdst.h = pCelBuff[nCel - 1]->h;
 
 	SDL_BlitSurface(pCelBuff[nCel - 1], NULL, test_surface, &rectdst);
 }
