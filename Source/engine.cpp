@@ -133,7 +133,10 @@ void CelDrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, BYTE *tb
 
 void CelDrawLightPNG(int sx, int sy, std::vector<SDL_Surface *> &pCelBuff, int nCel, int nWidth, BYTE *tbl)
 {
-	CelBlitSafePNG(sx, sy, pCelBuff[nCel - 1]);
+	if (light_table_index || tbl)
+		CelBlitLightSafePNG(sx, sy, pCelBuff[nCel - 1], tbl);
+	else
+		CelBlitSafePNG(sx, sy, pCelBuff[nCel - 1]);
 }
 
 /**
@@ -262,7 +265,6 @@ void CelBlitSafePNG(int dx, int dy, SDL_Surface *surf)
 	rectdst.y = dy - surf->h;
 	rectdst.w = surf->w;
 	rectdst.h = surf->h;
-
 	SDL_BlitSurface(surf, NULL, test_surface, &rectdst);
 }
 
@@ -353,6 +355,46 @@ void CelBlitLightSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidt
 			}
 		}
 	}
+}
+
+void CelBlitLightSafePNG(int dx, int dy, SDL_Surface *surf, BYTE *tbl)
+{
+	if (tbl == NULL)
+		tbl = &pLightTbl[light_table_index * 256];
+	std::map<Uint32, Uint32> swapMap;
+
+	SDL_PixelFormat *pixelFormat = test_surface->format;
+	Uint32 pixelFormatEnum = pixelFormat->format;
+	//const char *surfacePixelFormatName = SDL_GetPixelFormatName(pixelFormatEnum);
+	//SDL_Log("The surface's pixelformat is %s", surfacePixelFormatName);
+
+	SDL_Surface *tmp_surf = SDL_ConvertSurfaceFormat(surf, pixelFormatEnum, 0);
+	if (tmp_surf == NULL)
+		ErrSdl();
+	if (SDL_BlitSurface(surf, NULL, tmp_surf, NULL) < 0)
+		ErrSdl();
+
+	for (int i = 0; i < 256; i++) {
+		Uint32 index = SDL_MapRGBA(pixelFormat, system_palette[i].r, system_palette[i].g, system_palette[i].b, 255);//system_palette[i].a);
+		Uint32 val = SDL_MapRGBA(pixelFormat, system_palette[tbl[i]].r, system_palette[tbl[i]].g, system_palette[tbl[i]].b, 255);//system_palette[tbl[i]].a);
+		swapMap[index] = val;
+	}
+
+	Uint32 *ptr = (Uint32 *)tmp_surf->pixels;
+	for (int i = 0; i < tmp_surf->h * tmp_surf->pitch / sizeof(unsigned int); i++) {
+		*ptr = swapMap[*ptr];
+		ptr++;
+	}
+	dx -= SCREEN_X;
+	dy -= SCREEN_Y - 1;
+	SDL_Rect rectdst;
+	rectdst.x = dx;
+	rectdst.y = dy - surf->h;
+	rectdst.w = surf->w;
+	rectdst.h = surf->h;
+	if (SDL_BlitSurface(tmp_surf, NULL, test_surface, &rectdst) < 0)
+		ErrSdl();
+	SDL_FreeSurface(tmp_surf);
 }
 
 /**

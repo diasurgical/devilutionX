@@ -7,7 +7,6 @@
 #include "../3rdParty/Storm/Source/storm.h"
 #include "display.h"
 #include <SDL.h>
-#include <SDL_image.h>
 namespace dvl {
 
 int sgdwLockCount;
@@ -264,7 +263,7 @@ void RenderPresent()
 
 #ifndef USE_SDL1
 	if (renderer) {
-		if (test_surface == NULL){
+		if (test_surface == NULL) {
 			Uint32 light_format = SDL_PIXELFORMAT_ARGB8888;
 			test_surface = SDL_CreateRGBSurfaceWithFormat(0, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_BITSPERPIXEL(light_format), light_format);
 			if (test_surface == NULL) {
@@ -278,7 +277,7 @@ void RenderPresent()
 		if (SDL_UpdateTexture(texture, NULL, surface->pixels, surface->pitch) <= -1) { //pitch is 2560
 			ErrSdl();
 		}
-		if (SDL_FillRect(test_surface, NULL, SDL_MapRGBA(renderer_texture_surface->format,0,0,0,255)) < 0)
+		if (SDL_FillRect(test_surface, NULL, SDL_MapRGBA(renderer_texture_surface->format, 0, 0, 0, 255)) < 0)
 			ErrSdl();
 
 		// Clear buffer to avoid artifacts in case the window was resized
