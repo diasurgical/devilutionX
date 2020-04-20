@@ -125,11 +125,15 @@ void CelDrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, BYTE *tb
 
 	pRLEBytes = CelGetFrame(pCelBuff, nCel, &nDataSize);
 	pDecodeTo = &gpBuffer[sx + BUFFER_WIDTH * sy];
-
 	if (light_table_index || tbl)
 		CelBlitLightSafe(pDecodeTo, pRLEBytes, nDataSize, nWidth, tbl);
 	else
 		CelBlitSafe(pDecodeTo, pRLEBytes, nDataSize, nWidth);
+}
+
+void CelDrawLightPNG(int sx, int sy, std::vector<SDL_Surface *> &pCelBuff, int nCel, int nWidth, BYTE *tbl)
+{
+	CelBlitSafePNG(sx, sy, pCelBuff[nCel - 1]);
 }
 
 /**
@@ -247,6 +251,19 @@ void CelBlitSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth)
 			}
 		}
 	}
+}
+
+void CelBlitSafePNG(int dx, int dy, SDL_Surface *surf)
+{
+	dx -= SCREEN_X;
+	dy -= SCREEN_Y - 1;
+	SDL_Rect rectdst;
+	rectdst.x = dx;
+	rectdst.y = dy - surf->h;
+	rectdst.w = surf->w;
+	rectdst.h = surf->h;
+
+	SDL_BlitSurface(surf, NULL, test_surface, &rectdst);
 }
 
 /**

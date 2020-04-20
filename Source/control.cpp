@@ -11,6 +11,8 @@ SDL_Surface *pBtmBuff_png;
 SDL_Surface *pLifeBuff_png;
 SDL_Surface *pManaBuff_png;
 std::vector<SDL_Surface *> pPanelButtons_png;
+std::vector<SDL_Surface *> pSpellCels_png;
+std::vector<SDL_Surface *> pSBkIconCels_png;
 std::string png_path = "H:\\DIABLOPNG\\_dump_\\";
 int testvar = 0;
 
@@ -288,6 +290,11 @@ void DrawSpellCel(int xp, int yp, BYTE *Trans, int nCel, int w)
 	CelDrawLight(xp, yp, Trans, nCel, w, SplTransTbl);
 }
 
+void DrawSpellCelPNG(int xp, int yp, std::vector<SDL_Surface *> &Trans, int nCel, int w)
+{
+	CelDrawLightPNG(xp, yp, Trans, nCel, w, SplTransTbl);
+}
+
 void SetSpellTrans(char t)
 {
 	int i;
@@ -369,10 +376,17 @@ void DrawSpell()
 	if (plr[myplr]._pRSpell < 0)
 		st = RSPLTYPE_INVALID;
 	SetSpellTrans(st);
-	if (spl != SPL_INVALID)
-		DrawSpellCel(PANEL_X + 565, PANEL_Y + 119, pSpellCels, SpellITbl[spl], SPLICONLENGTH);
-	else
-		DrawSpellCel(PANEL_X + 565, PANEL_Y + 119, pSpellCels, 27, SPLICONLENGTH);
+	if (testvar % 2) {
+		if (spl != SPL_INVALID)
+			DrawSpellCelPNG(PANEL_X + 565, PANEL_Y + 119, pSpellCels_png, SpellITbl[spl], SPLICONLENGTH);
+		else
+			DrawSpellCelPNG(PANEL_X + 565, PANEL_Y + 119, pSpellCels_png, 27, SPLICONLENGTH);
+	} else {
+		if (spl != SPL_INVALID)
+			DrawSpellCel(PANEL_X + 565, PANEL_Y + 119, pSpellCels, SpellITbl[spl], SPLICONLENGTH);
+		else
+			DrawSpellCel(PANEL_X + 565, PANEL_Y + 119, pSpellCels, 27, SPLICONLENGTH);
+	}
 }
 
 void DrawSpellList()
@@ -422,13 +436,21 @@ void DrawSpellList()
 			}
 			if (currlevel == 0 && !spelldata[j].sTownSpell)
 				SetSpellTrans(RSPLTYPE_INVALID);
-			DrawSpellCel(x, y, pSpellCels, SpellITbl[j], SPLICONLENGTH);
+			if (testvar % 2) {
+				DrawSpellCelPNG(x, y, pSpellCels_png, SpellITbl[j], SPLICONLENGTH);
+			} else {
+				DrawSpellCel(x, y, pSpellCels, SpellITbl[j], SPLICONLENGTH);
+			}
 			lx = x - BORDER_LEFT;
 			ly = y - BORDER_TOP - SPLICONLENGTH;
 			if (MouseX >= lx && MouseX < lx + SPLICONLENGTH && MouseY >= ly && MouseY < ly + SPLICONLENGTH) {
 				pSpell = j;
 				pSplType = i;
-				DrawSpellCel(x, y, pSpellCels, c, SPLICONLENGTH);
+				if (testvar % 2) {
+					DrawSpellCelPNG(x, y, pSpellCels_png, c, SPLICONLENGTH);
+				} else {
+					DrawSpellCel(x, y, pSpellCels, c, SPLICONLENGTH);
+				}
 				switch (i) {
 				case RSPLTYPE_SKILL:
 					sprintf(infostr, "%s Skill", spelldata[pSpell].sSkillText);
@@ -479,7 +501,11 @@ void DrawSpellList()
 				}
 				for (t = 0; t < 4; t++) {
 					if (plr[myplr]._pSplHotKey[t] == pSpell && plr[myplr]._pSplTHotKey[t] == pSplType) {
-						DrawSpellCel(x, y, pSpellCels, t + SPLICONLAST + 5, SPLICONLENGTH);
+						if (testvar % 2) {
+							DrawSpellCelPNG(x, y, pSpellCels_png, t + SPLICONLAST + 5, SPLICONLENGTH);
+						} else {
+							DrawSpellCel(x, y, pSpellCels, t + SPLICONLAST + 5, SPLICONLENGTH);
+						}
 						sprintf(tempstr, "Spell Hot Key #F%i", t + 5);
 						AddPanelString(tempstr, TRUE);
 					}
@@ -782,12 +808,11 @@ void DrawLifeFlask()
 		if (filled != 13) {
 			DrawFlask_png(pBtmBuff_png, PANEL_WIDTH, 13 - filled, 109, filled + 3, PANEL_LEFT + 109, PANEL_TOP - 13 + filled);
 		}
-		return;
+	} else {
+		DrawFlask(pLifeBuff, 88, 277, gpBuffer, SCREENXY(PANEL_LEFT + 109, PANEL_TOP - 13), filled);
+		if (filled != 13)
+			DrawFlask(pBtmBuff, PANEL_WIDTH, PANEL_WIDTH * (filled + 3) + 109, gpBuffer, SCREENXY(PANEL_LEFT + 109, PANEL_TOP - 13 + filled), 13 - filled);
 	}
-
-	DrawFlask(pLifeBuff, 88, 277, gpBuffer, SCREENXY(PANEL_LEFT + 109, PANEL_TOP - 13), filled);
-	if (filled != 13)
-		DrawFlask(pBtmBuff, PANEL_WIDTH, PANEL_WIDTH * (filled + 3) + 109, gpBuffer, SCREENXY(PANEL_LEFT + 109, PANEL_TOP - 13 + filled), 13 - filled);
 }
 
 /**
@@ -810,10 +835,10 @@ void UpdateLifeFlask()
 	if (testvar % 2) {
 		if (filled != 69)
 			SetFlaskHeight_png(pLifeBuff_png, 16, 85 - filled, 96 + PANEL_X, PANEL_Y);
-		return;
+	} else {
+		if (filled != 69)
+			SetFlaskHeight(pLifeBuff, 16, 85 - filled, 96 + PANEL_X, PANEL_Y);
 	}
-	if (filled != 69)
-		SetFlaskHeight(pLifeBuff, 16, 85 - filled, 96 + PANEL_X, PANEL_Y);
 	if (filled != 0)
 		DrawPanelBox(96, 85 - filled, 88, filled, 96 + PANEL_X, PANEL_Y + 69 - filled);
 }
@@ -833,12 +858,11 @@ void DrawManaFlask()
 		if (filled != 13) {
 			DrawFlask_png(pBtmBuff_png, PANEL_WIDTH, 13 - filled, 109, filled + 3, PANEL_LEFT + 475, PANEL_TOP - 13 + filled);
 		}
-		return;
+	} else {
+		DrawFlask(pManaBuff, 88, 277, gpBuffer, SCREENXY(PANEL_LEFT + 475, PANEL_TOP - 13), filled);
+		if (filled != 13)
+			DrawFlask(pBtmBuff, PANEL_WIDTH, PANEL_WIDTH * (filled + 3) + 475, gpBuffer, SCREENXY(PANEL_LEFT + 475, PANEL_TOP - 13 + filled), 13 - filled);
 	}
-
-	DrawFlask(pManaBuff, 88, 277, gpBuffer, SCREENXY(PANEL_LEFT + 475, PANEL_TOP - 13), filled);
-	if (filled != 13)
-		DrawFlask(pBtmBuff, PANEL_WIDTH, PANEL_WIDTH * (filled + 3) + 475, gpBuffer, SCREENXY(PANEL_LEFT + 475, PANEL_TOP - 13 + filled), 13 - filled);
 }
 
 void control_update_life_mana()
@@ -885,12 +909,10 @@ void UpdateManaFlask()
 	if (testvar % 2) {
 		if (filled != 69)
 			SetFlaskHeight_png(pManaBuff_png, 16, 85 - filled, PANEL_X + 368 + 96, PANEL_Y);
-		return;
-	}
-
-
-	if (filled != 69)
-		SetFlaskHeight(pManaBuff, 16, 85 - filled, 96 + PANEL_X + 368, PANEL_Y);
+	} else {
+		if (filled != 69)
+			SetFlaskHeight(pManaBuff, 16, 85 - filled, 96 + PANEL_X + 368, PANEL_Y);
+		}
 	if (filled != 0)
 		DrawPanelBox(96 + 368, 85 - filled, 88, filled, 96 + PANEL_X + 368, PANEL_Y + 69 - filled);
 
@@ -915,6 +937,7 @@ void InitControlPan()
 	pPanelText = LoadFileInMem("CtrlPan\\SmalText.CEL", NULL);
 	pChrPanel = LoadFileInMem("Data\\Char.CEL", NULL);
 	pSpellCels = LoadFileInMem("CtrlPan\\SpelIcon.CEL", NULL);
+	pSpellCels_png = safePNGLoadVector("CtrlPan\\SpelIcon");
 	SetSpellTrans(RSPLTYPE_SKILL);
 	pStatusPanel = LoadFileInMem("CtrlPan\\Panel8.CEL", NULL);
 	CelBlitWidth(pBtmBuff, 0, (PANEL_HEIGHT + 16) - 1, PANEL_WIDTH, pStatusPanel, 1, PANEL_WIDTH);
@@ -966,6 +989,7 @@ void InitControlPan()
 	pSpellBkCel = LoadFileInMem("Data\\SpellBk.CEL", NULL);
 	pSBkBtnCel = LoadFileInMem("Data\\SpellBkB.CEL", NULL);
 	pSBkIconCels = LoadFileInMem("Data\\SpellI2.CEL", NULL);
+	pSBkIconCels_png = safePNGLoadVector("Data\\SpellI2");
 	sbooktab = 0;
 	sbookflag = FALSE;
 	if (plr[myplr]._pClass == PC_WARRIOR) {
@@ -1951,10 +1975,18 @@ void DrawSpellBook()
 		if (sn != -1 && spl & (__int64)1 << (sn - 1)) {
 			st = GetSBookTrans(sn, TRUE);
 			SetSpellTrans(st);
-			DrawSpellCel(RIGHT_PANEL + 75, yp, pSBkIconCels, SpellITbl[sn], 37);
+			if (testvar % 2) {
+				DrawSpellCelPNG(RIGHT_PANEL + 75, yp, pSBkIconCels_png, SpellITbl[sn], 37);
+			} else{
+				DrawSpellCel(RIGHT_PANEL + 75, yp, pSBkIconCels, SpellITbl[sn], 37);
+			}
 			if (sn == plr[myplr]._pRSpell && st == plr[myplr]._pRSplType) {
 				SetSpellTrans(RSPLTYPE_SKILL);
-				DrawSpellCel(RIGHT_PANEL + 75, yp, pSBkIconCels, SPLICONLAST, 37);
+				if (testvar % 2) {
+					DrawSpellCelPNG(RIGHT_PANEL + 75, yp, pSBkIconCels_png, SPLICONLAST, 37);
+				} else {
+					DrawSpellCel(RIGHT_PANEL + 75, yp, pSBkIconCels, SPLICONLAST, 37);
+				}
 			}
 			PrintSBookStr(10, yp - 23, FALSE, spelldata[sn].sNameText, COL_WHITE);
 			switch (GetSBookTrans(sn, FALSE)) {

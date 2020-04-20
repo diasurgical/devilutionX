@@ -60,6 +60,7 @@ extern BYTE *pTalkPanel;
 extern BOOL spselflag;
 
 void DrawSpellCel(int xp, int yp, BYTE *Trans, int nCel, int w);
+void DrawSpellCelPNG(int xp, int yp, std::vector<SDL_Surface*> &Trans, int nCel, int w);
 void SetSpellTrans(char t);
 void DrawSpell();
 void DrawSpellList();
