@@ -722,7 +722,7 @@ void SetFlaskHeight(BYTE *pCelBuff, int min, int max, int sx, int sy)
 		memcpy(dst, src, 88);
 }
 
-void SetFlaskHeight_png(SDL_Surface *pCelBuff, int min, int max, int sx, int sy)
+void SetFlaskHeightPNG(SDL_Surface *pCelBuff, int min, int max, int sx, int sy)
 {
 	sx -= SCREEN_X;
 	sy -= SCREEN_Y;
@@ -772,18 +772,18 @@ void DrawFlask(BYTE *pCelBuff, int w, int nSrcOff, BYTE *pBuff, int nDstOff, int
 	}
 }
 
-void DrawFlask_png(SDL_Surface *pCelBuff, int w, int h, int srcx, int srcy, int dstx, int dsty)
+void DrawFlaskPNG(SDL_Surface *pCelBuff, int w, int h, int srcx, int srcy, int dstx, int dsty)
 {
 	SDL_Rect rectsrc;
 	rectsrc.x = srcx;
 	rectsrc.y = srcy;
-	rectsrc.w = w;
+	rectsrc.w = 59;
 	rectsrc.h = h;
 
 	SDL_Rect rectdst;
 	rectdst.x = dstx;
 	rectdst.y = dsty;
-	rectdst.w = w;
+	rectdst.w = 59;
 	rectdst.h = h;
 
 	SDL_SetColorKey(pCelBuff, SDL_TRUE, 0);
@@ -811,9 +811,9 @@ void DrawLifeFlask()
 	filled += 2;
 
 	if (testvar % 2) {
-		DrawFlask_png(pLifeBuff_png, 88, filled, 13, 3, PANEL_LEFT + 109, PANEL_TOP - 13);
+		DrawFlaskPNG(pLifeBuff_png, 88, filled, 13, 3, PANEL_LEFT + 109, PANEL_TOP - 13);
 		if (filled != 13) {
-			DrawFlask_png(pBtmBuff_png, PANEL_WIDTH, 13 - filled, 109, filled + 3, PANEL_LEFT + 109, PANEL_TOP - 13 + filled);
+			DrawFlaskPNG(pBtmBuff_png, PANEL_WIDTH, 13 - filled, 109, filled + 3, PANEL_LEFT + 109, PANEL_TOP - 13 + filled);
 		}
 	} else {
 		DrawFlask(pLifeBuff, 88, 277, gpBuffer, SCREENXY(PANEL_LEFT + 109, PANEL_TOP - 13), filled);
@@ -841,7 +841,7 @@ void UpdateLifeFlask()
 		filled = 0;
 	if (testvar % 2) {
 		if (filled != 69)
-			SetFlaskHeight_png(pLifeBuff_png, 16, 85 - filled, 96 + PANEL_X, PANEL_Y);
+			SetFlaskHeightPNG(pLifeBuff_png, 16, 85 - filled, 96 + PANEL_X, PANEL_Y);
 	} else {
 		if (filled != 69)
 			SetFlaskHeight(pLifeBuff, 16, 85 - filled, 96 + PANEL_X, PANEL_Y);
@@ -861,9 +861,9 @@ void DrawManaFlask()
 	filled += 2;
 
 	if (testvar % 2) {
-		DrawFlask_png(pManaBuff_png, 88, filled, 13, 3, PANEL_LEFT + 475, PANEL_TOP - 13);
+		DrawFlaskPNG(pManaBuff_png, 88, filled, 13, 3, PANEL_LEFT + 475, PANEL_TOP - 13);
 		if (filled != 13) {
-			DrawFlask_png(pBtmBuff_png, PANEL_WIDTH, 13 - filled, 109, filled + 3, PANEL_LEFT + 475, PANEL_TOP - 13 + filled);
+			DrawFlaskPNG(pBtmBuff_png, PANEL_WIDTH, 13 - filled, 475, filled + 3, PANEL_LEFT + 475, PANEL_TOP - 13 + filled);
 		}
 	} else {
 		DrawFlask(pManaBuff, 88, 277, gpBuffer, SCREENXY(PANEL_LEFT + 475, PANEL_TOP - 13), filled);
@@ -915,11 +915,11 @@ void UpdateManaFlask()
 
 	if (testvar % 2) {
 		if (filled != 69)
-			SetFlaskHeight_png(pManaBuff_png, 16, 85 - filled, PANEL_X + 368 + 96, PANEL_Y);
+			SetFlaskHeightPNG(pManaBuff_png, 16, 85 - filled, PANEL_X + 368 + 96, PANEL_Y);
 	} else {
 		if (filled != 69)
 			SetFlaskHeight(pManaBuff, 16, 85 - filled, 96 + PANEL_X + 368, PANEL_Y);
-		}
+	}
 	if (filled != 0)
 		DrawPanelBox(96 + 368, 85 - filled, 88, filled, 96 + PANEL_X + 368, PANEL_Y + 69 - filled);
 
