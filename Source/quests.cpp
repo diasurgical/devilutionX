@@ -734,8 +734,8 @@ void DrawQuestLog()
 {
 	int y, i;
 
-	PrintQLString(0, 2, TRUE, "Quest Log", 3);
 	CelDraw(SCREEN_X, SCREEN_Y + 351, pQLogCel, 1, SPANEL_WIDTH);
+	PrintQLString(0, 2, TRUE, "Quest Log", 3);
 	y = qtopline;
 	for (i = 0; i < numqlines; i++) {
 		PrintQLString(0, y, TRUE, questlist[qlist[i]]._qlstr, 0);
