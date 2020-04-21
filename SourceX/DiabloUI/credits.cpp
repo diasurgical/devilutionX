@@ -204,8 +204,8 @@ private:
 void CreditsRenderer::Render()
 {
 	const int offset_y = -VIEWPORT.h + (SDL_GetTicks() - ticks_begin_) / 40;
-	if (offset_y == prev_offset_y_)
-		return;
+	/*if (offset_y == prev_offset_y_)
+		return;*/
 	prev_offset_y_ = offset_y;
 
 	DrawArt(0, 0, &ArtBackground);
