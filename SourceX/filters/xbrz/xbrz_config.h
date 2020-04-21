@@ -24,10 +24,10 @@ namespace xbrz
 struct ScalerCfg
 {
     double luminanceWeight            = 1;
-    double equalColorTolerance        = 19;
-    double centerDirectionBias        = 0;
-    double dominantDirectionThreshold = 3.6;
-    double steepDirectionThreshold    = 2.2;
+    double equalColorTolerance        = 0;
+    double centerDirectionBias        = 1;
+    double dominantDirectionThreshold = 3600.0;
+    double steepDirectionThreshold    = 6.0;
     double newTestAttribute           = 0; //unused; test new parameters
 };
 }
