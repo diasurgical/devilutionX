@@ -792,11 +792,11 @@ void SVidPlayEnd(HANDLE video)
 #ifndef USE_SDL1
 	if (renderer) {
 		SDL_DestroyTexture(texture);
-		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
+		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, 1280/*SCREEN_WIDTH*/, 960/*SCREEN_HEIGHT*/);
 		if (texture == NULL) {
 			ErrSdl();
 		}
-		if (renderer && SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT) <= -1) {
+		if (renderer && SDL_RenderSetLogicalSize(renderer, 1280/*SCREEN_WIDTH*/, 960/*SCREEN_HEIGHT*/) <= -1) {
 			ErrSdl();
 		}
 	}
