@@ -425,8 +425,8 @@ void CelBlitLightSafePNG(int dx, int dy, SDL_Surface *surf, BYTE *tbl)
 		ErrSdl();
 
 	for (int i = 0; i < 256; i++) {
-		Uint32 index = SDL_MapRGBA(pixelFormat, system_palette[i].r, system_palette[i].g, system_palette[i].b, 255);              //system_palette[i].a);
-		Uint32 val = SDL_MapRGBA(pixelFormat, system_palette[tbl[i]].r, system_palette[tbl[i]].g, system_palette[tbl[i]].b, 255); //system_palette[tbl[i]].a);
+		Uint32 index = SDL_MapRGBA(pixelFormat, logical_palette[i].r, logical_palette[i].g, logical_palette[i].b, 255);              //logical_palette[i].a);
+		Uint32 val = SDL_MapRGBA(pixelFormat, logical_palette[tbl[i]].r, logical_palette[tbl[i]].g, logical_palette[tbl[i]].b, 255); //logical_palette[tbl[i]].a);
 		swapMap[index] = val;
 	}
 

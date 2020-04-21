@@ -10,10 +10,12 @@ SDL_Surface *test_surface;
 SDL_Surface *pBtmBuff_png;
 SDL_Surface *pLifeBuff_png;
 SDL_Surface *pManaBuff_png;
+
 std::vector<SDL_Surface *> pPanelButtons_png;
 std::vector<SDL_Surface *> pSpellCels_png;
 std::vector<SDL_Surface *> pSBkIconCels_png;
 std::vector<SDL_Surface *> pPanelText_png;
+std::vector<SDL_Surface *> pChrPanel_png;
 std::string png_path = "H:\\DIABLOPNG\\_dump_\\";
 int testvar = 0;
 
@@ -34,6 +36,19 @@ std::vector<SDL_Surface *> safePNGLoadVector(std::string path)
 {
 	std::string name = base_name(path);
 	std::vector<SDL_Surface *> out;
+
+	std::string merged_path_single = png_path;
+	merged_path_single += path;
+	merged_path_single += "\\";
+	merged_path_single += name;
+	merged_path_single += ".png";
+	SDL_Surface *loadedSurface = IMG_Load(merged_path_single.c_str());
+	if (loadedSurface != NULL) {
+		out.push_back(loadedSurface);
+		return out;
+	}
+
+
 	for (int i = 1;; i++) {
 		std::string merged_path = png_path;
 		merged_path += path;
@@ -944,6 +959,7 @@ void InitControlPan()
 	pPanelText = LoadFileInMem("CtrlPan\\SmalText.CEL", NULL);
 	pPanelText_png = safePNGLoadVector("CtrlPan\\SmalText");
 	pChrPanel = LoadFileInMem("Data\\Char.CEL", NULL);
+	pChrPanel_png = safePNGLoadVector("Data\\Char");
 	pSpellCels = LoadFileInMem("CtrlPan\\SpelIcon.CEL", NULL);
 	pSpellCels_png = safePNGLoadVector("CtrlPan\\SpelIcon");
 	SetSpellTrans(RSPLTYPE_SKILL);
@@ -1519,7 +1535,10 @@ void DrawChr()
 	char chrstr[64];
 	int pc, mindam, maxdam;
 
-	CelDraw(SCREEN_X, 351 + SCREEN_Y, pChrPanel, 1, SPANEL_WIDTH);
+	if (testvar % 2)
+		CelDrawPNG(SCREEN_X, 351 + SCREEN_Y, pChrPanel_png, 1, SPANEL_WIDTH);
+	else
+		CelDraw(SCREEN_X, 351 + SCREEN_Y, pChrPanel, 1, SPANEL_WIDTH);
 	ADD_PlrStringXY(20, 32, 151, plr[myplr]._pName, COL_WHITE);
 
 	if (plr[myplr]._pClass == PC_WARRIOR) {
