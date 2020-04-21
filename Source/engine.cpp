@@ -221,6 +221,37 @@ void CelDrawLightRed(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char 
 	}
 }
 
+void CelDrawLightRedPNG(int sx, int sy, std::vector<SDL_Surface *> &pCelBuff, int nCel, int nWidth, char light)
+{
+	SDL_PixelFormat *pixelFormat = test_surface->format;
+	Uint32 pixelFormatEnum = pixelFormat->format;
+	int W = pCelBuff[nCel - 1]->w;
+	int H = pCelBuff[nCel - 1]->h;
+	SDL_Surface *tmp_surf = SDL_CreateRGBSurfaceWithFormat(0, W, H, 0, pixelFormatEnum);
+	if (tmp_surf == NULL)
+		ErrSdl();
+	if (SDL_BlitSurface(pCelBuff[nCel - 1], NULL, tmp_surf, NULL) < 0)
+		ErrSdl();
+
+	Uint32 *ptr = (Uint32 *)tmp_surf->pixels;
+	for (int i = 0; i < tmp_surf->h * tmp_surf->pitch / sizeof(unsigned int); i++) {
+		*ptr >>= 16;
+		*ptr <<= 16;
+		ptr++;
+	}
+
+	sx -= SCREEN_X;
+	sy -= SCREEN_Y - 1;
+	SDL_Rect rectdst;
+	rectdst.x = sx;
+	rectdst.y = sy - H;
+	rectdst.w = W;
+	rectdst.h = H;
+	if (SDL_BlitSurface(tmp_surf, NULL, test_surface, &rectdst) < 0)
+		ErrSdl();
+	SDL_FreeSurface(tmp_surf);
+}
+
 /**
  * @brief Blit CEL sprite to the given buffer, checks for drawing outside the buffer
  * @param pDecodeTo The output buffer
@@ -296,6 +327,20 @@ void CelClippedDrawSafe(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 	    pRLEBytes,
 	    nDataSize,
 	    nWidth);
+}
+
+void CelClippedDrawSafePNG(int sx, int sy, std::vector<SDL_Surface *> &pCelBuff, int nCel, int nWidth)
+{
+	sx -= SCREEN_X;
+	sy -= SCREEN_Y - 1;
+
+	SDL_Rect rectdst;
+	rectdst.x = sx;
+	rectdst.y = sy - pCelBuff[nCel - 1]->h;
+	rectdst.w = nWidth;
+	rectdst.h = pCelBuff[nCel - 1]->h;
+
+	SDL_BlitSurface(pCelBuff[nCel - 1], NULL, test_surface, &rectdst);
 }
 
 /**
@@ -380,8 +425,8 @@ void CelBlitLightSafePNG(int dx, int dy, SDL_Surface *surf, BYTE *tbl)
 		ErrSdl();
 
 	for (int i = 0; i < 256; i++) {
-		Uint32 index = SDL_MapRGBA(pixelFormat, system_palette[i].r, system_palette[i].g, system_palette[i].b, 255);//system_palette[i].a);
-		Uint32 val = SDL_MapRGBA(pixelFormat, system_palette[tbl[i]].r, system_palette[tbl[i]].g, system_palette[tbl[i]].b, 255);//system_palette[tbl[i]].a);
+		Uint32 index = SDL_MapRGBA(pixelFormat, system_palette[i].r, system_palette[i].g, system_palette[i].b, 255);              //system_palette[i].a);
+		Uint32 val = SDL_MapRGBA(pixelFormat, system_palette[tbl[i]].r, system_palette[tbl[i]].g, system_palette[tbl[i]].b, 255); //system_palette[tbl[i]].a);
 		swapMap[index] = val;
 	}
 
@@ -492,6 +537,40 @@ void CelBlitLightTransSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int 
 	}
 }
 
+void CelBlitLightTransSafePNG(int dx, int dy, SDL_Surface *surf, int nWidth)
+{
+	SDL_PixelFormat *pixelFormat = test_surface->format;
+	Uint32 pixelFormatEnum = pixelFormat->format;
+	int W = surf->w;
+	int H = surf->h;
+	SDL_Surface *tmp_surf = SDL_CreateRGBSurfaceWithFormat(0, W, H, 0, pixelFormatEnum);
+	if (tmp_surf == NULL)
+		ErrSdl();
+	if (SDL_BlitSurface(surf, NULL, tmp_surf, NULL) < 0)
+		ErrSdl();
+
+	Uint32 *ptr = (Uint32 *)tmp_surf->pixels;
+	for (int i = 0; i < tmp_surf->h * tmp_surf->pitch / sizeof(unsigned int); i++) {
+		if (*ptr){
+			*ptr ^= 0xFF000000;
+			*ptr |= 0x80000000;
+		}
+		ptr++;
+	}
+
+	dx -= SCREEN_X;
+	dy -= SCREEN_Y - 1;
+	SDL_Rect rectdst;
+	rectdst.x = dx;
+	rectdst.y = dy - H;
+	rectdst.w = W;
+	rectdst.h = H;
+
+	if (SDL_BlitSurface(tmp_surf, NULL, test_surface, &rectdst) < 0)
+		ErrSdl();
+	SDL_FreeSurface(tmp_surf);
+}
+
 /**
  * @brief Same as CelBlitLightTransSafe
  * @param pBuff Target buffer
@@ -514,6 +593,16 @@ void CelClippedBlitLightTrans(BYTE *pBuff, BYTE *pCelBuff, int nCel, int nWidth)
 		CelBlitLightSafe(pBuff, pRLEBytes, nDataSize, nWidth, NULL);
 	else
 		CelBlitSafe(pBuff, pRLEBytes, nDataSize, nWidth);
+}
+
+void CelClippedBlitLightTransPNG(int x, int y, std::vector<SDL_Surface *> &pCelBuff, int nCel, int nWidth)
+{
+	if (cel_transparency_active)
+		CelBlitLightTransSafePNG(x, y, pCelBuff[nCel - 1], nWidth);
+	else if (light_table_index)
+		CelBlitLightSafePNG(x, y, pCelBuff[nCel - 1], NULL);
+	else
+		CelBlitSafePNG(x, y, pCelBuff[nCel - 1]);
 }
 
 /**

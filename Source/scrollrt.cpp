@@ -203,12 +203,19 @@ static void scrollrt_draw_cursor_item()
 		}
 		CelBlitOutline(col, mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW);
 		if (col != PAL16_RED + 5) {
-			CelClippedDrawSafe(mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW);
+			if (testvar % 2) {
+				CelClippedDrawSafePNG(mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels_png, pcurs, cursW);
+			} else{
+				CelClippedDrawSafe(mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW);
+			}
 		} else {
 			CelDrawLightRedSafe(mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW, 1);
 		}
 	} else {
-		CelClippedDrawSafe(mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW);
+		if (testvar % 2)
+			CelClippedDrawSafePNG(mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels_png, pcurs, cursW);
+		else
+			CelClippedDrawSafe(mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW);
 	}
 }
 

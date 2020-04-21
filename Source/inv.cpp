@@ -7,8 +7,74 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+std::string png_path3 = "H:\\DIABLOPNG\\_dump_\\";
+
+std::string base_name3(std::string const &path)
+{
+	return path.substr(path.find_last_of("/\\") + 1);
+}
+
+std::string generate_number3(int n)
+{
+	char buf[5];
+	sprintf(buf, "%04d", n);
+	std::string base(buf);
+	return base;
+}
+
+std::vector<SDL_Surface *> safePNGLoadVector3(std::string path)
+{
+	std::string name = base_name3(path);
+	std::vector<SDL_Surface *> out;
+	std::string merged_path_single = png_path3;
+	merged_path_single += path;
+	merged_path_single += "\\";
+	merged_path_single += name;
+	merged_path_single += ".png";
+	SDL_Surface *loadedSurface = IMG_Load(merged_path_single.c_str());
+	if (loadedSurface != NULL) {
+		out.push_back(loadedSurface);
+		return out;
+	}
+	for (int i = 1;; i++) {
+		std::string merged_path = png_path3;
+		merged_path += path;
+		merged_path += "\\";
+		merged_path += name;
+		merged_path += "_";
+		merged_path += generate_number3(i);
+		merged_path += ".png";
+		loadedSurface = IMG_Load(merged_path.c_str());
+		if (loadedSurface != NULL) {
+			out.push_back(loadedSurface);
+		} else {
+			break;
+		}
+	}
+
+	if (out.size() == 0) {
+		ErrSdl();
+	}
+	return out;
+}
+
+SDL_Surface *safePNGLoad3(std::string path)
+{
+	std::string merged_path = png_path3;
+	merged_path += path;
+	std::string name = base_name3(merged_path);
+	merged_path += "\\";
+	merged_path += name;
+	merged_path += ".png";
+	SDL_Surface *loadedSurface = IMG_Load(merged_path.c_str());
+	if (loadedSurface == NULL)
+		ErrSdl();
+	return loadedSurface;
+}
+
 BOOL invflag;
 BYTE *pInvCels;
+std::vector<SDL_Surface *> pInvCels_png;
 BOOL drawsbarflag;
 int sgdwLastTime; // check name
 
@@ -120,11 +186,14 @@ void InitInv()
 {
 	if (plr[myplr]._pClass == PC_WARRIOR) {
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", NULL);
+		pInvCels_png = safePNGLoadVector3("Data\\Inv\\Inv");
 #ifndef SPAWN
 	} else if (plr[myplr]._pClass == PC_ROGUE) {
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv_rog.CEL", NULL);
+		pInvCels_png = safePNGLoadVector3("Data\\Inv\\Inv_rog");
 	} else if (plr[myplr]._pClass == PC_SORCERER) {
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv_Sor.CEL", NULL);
+		pInvCels_png = safePNGLoadVector3("Data\\Inv\\Inv_Sor");
 #endif
 	}
 
@@ -144,9 +213,9 @@ void InvDrawSlotBack(int X, int Y, int W, int H)
 		SDL_Surface *tmp_surf = SDL_CreateRGBSurfaceWithFormat(0, W, H, 0, pixelFormatEnum);
 		if (tmp_surf == NULL)
 			ErrSdl();
-		if (SDL_FillRect(tmp_surf, NULL, SDL_MapRGBA(tmp_surf->format, 255, 0, 0, 50)) < 0)
+		if (SDL_FillRect(tmp_surf, NULL, SDL_MapRGBA(tmp_surf->format, 255, 0, 0, 30)) < 0)
 			ErrSdl();
-		
+
 		X -= SCREEN_X;
 		Y -= SCREEN_Y - 1;
 		SDL_Rect rectdst;
@@ -189,7 +258,10 @@ void DrawInv()
 	int frame, frame_width, color, screen_x, screen_y, i, j, ii;
 	BYTE *pBuff;
 
-	CelDraw(RIGHT_PANEL_X, 351 + SCREEN_Y, pInvCels, 1, SPANEL_WIDTH);
+	if (testvar % 2)
+		CelDrawPNG(RIGHT_PANEL_X, 351 + SCREEN_Y, pInvCels_png, 1, SPANEL_WIDTH);
+	else
+		CelDraw(RIGHT_PANEL_X, 351 + SCREEN_Y, pInvCels, 1, SPANEL_WIDTH);
 
 	if (plr[myplr].InvBody[INVLOC_HEAD]._itype != ITYPE_NONE) {
 		InvDrawSlotBack(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 2 * INV_SLOT_SIZE_PX);
@@ -207,11 +279,18 @@ void DrawInv()
 			}
 			CelBlitOutline(color, RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width);
 		}
-
-		if (plr[myplr].InvBody[INVLOC_HEAD]._iStatFlag) {
-			CelClippedDraw(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width);
+		if (testvar % 2) {
+			if (plr[myplr].InvBody[INVLOC_HEAD]._iStatFlag) {
+				CelClippedDrawPNG(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels_png, frame, frame_width);
+			} else {
+				CelDrawLightRedPNG(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels_png, frame, frame_width, 1);
+			}
 		} else {
-			CelDrawLightRed(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+			if (plr[myplr].InvBody[INVLOC_HEAD]._iStatFlag) {
+				CelClippedDraw(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width);
+			} else {
+				CelDrawLightRed(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+			}
 		}
 	}
 
@@ -232,10 +311,18 @@ void DrawInv()
 			CelBlitOutline(color, RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width);
 		}
 
-		if (plr[myplr].InvBody[INVLOC_RING_LEFT]._iStatFlag) {
-			CelClippedDraw(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width);
+		if (testvar % 2) {
+			if (plr[myplr].InvBody[INVLOC_RING_LEFT]._iStatFlag) {
+				CelClippedDrawPNG(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels_png, frame, frame_width);
+			} else {
+				CelDrawLightRedPNG(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels_png, frame, frame_width, 1);
+			}
 		} else {
-			CelDrawLightRed(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+			if (plr[myplr].InvBody[INVLOC_RING_LEFT]._iStatFlag) {
+				CelClippedDraw(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width);
+			} else {
+				CelDrawLightRed(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+			}
 		}
 	}
 
@@ -256,10 +343,18 @@ void DrawInv()
 			CelBlitOutline(color, RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width);
 		}
 
-		if (plr[myplr].InvBody[INVLOC_RING_RIGHT]._iStatFlag) {
-			CelClippedDraw(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width);
+		if (testvar % 2) {
+			if (plr[myplr].InvBody[INVLOC_RING_RIGHT]._iStatFlag) {
+				CelClippedDrawPNG(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels_png, frame, frame_width);
+			} else {
+				CelDrawLightRedPNG(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels_png, frame, frame_width, 1);
+			}
 		} else {
-			CelDrawLightRed(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+			if (plr[myplr].InvBody[INVLOC_RING_RIGHT]._iStatFlag) {
+				CelClippedDraw(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width);
+			} else {
+				CelDrawLightRed(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+			}
 		}
 	}
 
@@ -279,11 +374,18 @@ void DrawInv()
 			}
 			CelBlitOutline(color, RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width);
 		}
-
-		if (plr[myplr].InvBody[INVLOC_AMULET]._iStatFlag) {
-			CelClippedDraw(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width);
+		if (testvar % 2) {
+			if (plr[myplr].InvBody[INVLOC_AMULET]._iStatFlag) {
+				CelClippedDrawPNG(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels_png, frame, frame_width);
+			} else {
+				CelDrawLightRedPNG(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels_png, frame, frame_width, 1);
+			}
 		} else {
-			CelDrawLightRed(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+			if (plr[myplr].InvBody[INVLOC_AMULET]._iStatFlag) {
+				CelClippedDraw(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width);
+			} else {
+				CelDrawLightRed(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+			}
 		}
 	}
 
@@ -307,10 +409,18 @@ void DrawInv()
 			CelBlitOutline(color, screen_x, screen_y, pCursCels, frame, frame_width);
 		}
 
-		if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
-			CelClippedDraw(screen_x, screen_y, pCursCels, frame, frame_width);
+		if (testvar % 2) {
+			if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
+				CelClippedDrawPNG(screen_x, screen_y, pCursCels_png, frame, frame_width);
+			} else {
+				CelDrawLightRedPNG(screen_x, screen_y, pCursCels_png, frame, frame_width, 1);
+			}
 		} else {
-			CelDrawLightRed(screen_x, screen_y, pCursCels, frame, frame_width, 1);
+			if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
+				CelClippedDraw(screen_x, screen_y, pCursCels, frame, frame_width);
+			} else {
+				CelDrawLightRed(screen_x, screen_y, pCursCels, frame, frame_width, 1);
+			}
 		}
 
 		if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND) {
@@ -321,7 +431,14 @@ void DrawInv()
 			pBuff = frame_width == INV_SLOT_SIZE_PX
 			    ? &gpBuffer[SCREENXY(RIGHT_PANEL_X + 197, SCREEN_Y)]
 			    : &gpBuffer[SCREENXY(RIGHT_PANEL_X + 183, SCREEN_Y)];
-			CelClippedBlitLightTrans(pBuff, pCursCels, frame, frame_width);
+			if (testvar % 2) {
+				CelClippedBlitLightTransPNG(
+				    frame_width == INV_SLOT_SIZE_PX ? (RIGHT_PANEL_X + 261) : (RIGHT_PANEL_X + 247),
+				    InvItemHeight[frame] == (3 * INV_SLOT_SIZE_PX) ? (160 + SCREEN_Y) : (146 + SCREEN_Y),
+					pCursCels_png, frame, frame_width);
+			} else {
+				CelClippedBlitLightTrans(pBuff, pCursCels, frame, frame_width);
+			}
 
 			cel_transparency_active = FALSE;
 		}
@@ -346,10 +463,18 @@ void DrawInv()
 			CelBlitOutline(color, screen_x, screen_y, pCursCels, frame, frame_width);
 		}
 
-		if (plr[myplr].InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
-			CelClippedDraw(screen_x, screen_y, pCursCels, frame, frame_width);
+		if (testvar % 2) {
+			if (plr[myplr].InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
+				CelClippedDrawPNG(screen_x, screen_y, pCursCels_png, frame, frame_width);
+			} else {
+				CelDrawLightRedPNG(screen_x, screen_y, pCursCels_png, frame, frame_width, 1);
+			}
 		} else {
-			CelDrawLightRed(screen_x, screen_y, pCursCels, frame, frame_width, 1);
+			if (plr[myplr].InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
+				CelClippedDraw(screen_x, screen_y, pCursCels, frame, frame_width);
+			} else {
+				CelDrawLightRed(screen_x, screen_y, pCursCels, frame, frame_width, 1);
+			}
 		}
 	}
 
@@ -370,11 +495,20 @@ void DrawInv()
 			CelBlitOutline(color, RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width);
 		}
 
-		if (plr[myplr].InvBody[INVLOC_CHEST]._iStatFlag) {
-			CelClippedDraw(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width);
+		if (testvar % 2) {
+			if (plr[myplr].InvBody[INVLOC_CHEST]._iStatFlag) {
+				CelClippedDrawPNG(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels_png, frame, frame_width);
+			} else {
+				CelDrawLightRedPNG(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels_png, frame, frame_width, 1);
+			}
 		} else {
-			CelDrawLightRed(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+			if (plr[myplr].InvBody[INVLOC_CHEST]._iStatFlag) {
+				CelClippedDraw(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width);
+			} else {
+				CelDrawLightRed(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+			}
 		}
+
 	}
 
 	for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
@@ -412,16 +546,30 @@ void DrawInv()
 				    pCursCels, frame, frame_width);
 			}
 
-			if (plr[myplr].InvList[ii]._iStatFlag) {
-				CelClippedDraw(
-				    InvRect[j + SLOTXY_INV_FIRST].X + SCREEN_X,
-				    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
-				    pCursCels, frame, frame_width);
+			if (testvar % 2) {
+				if (plr[myplr].InvList[ii]._iStatFlag) {
+					CelClippedDrawPNG(
+					    InvRect[j + SLOTXY_INV_FIRST].X + SCREEN_X,
+					    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
+					    pCursCels_png, frame, frame_width);
+				} else {
+					CelDrawLightRedPNG(
+					    InvRect[j + SLOTXY_INV_FIRST].X + SCREEN_X,
+					    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
+					    pCursCels_png, frame, frame_width, 1);
+				}
 			} else {
-				CelDrawLightRed(
-				    InvRect[j + SLOTXY_INV_FIRST].X + SCREEN_X,
-				    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
-				    pCursCels, frame, frame_width, 1);
+				if (plr[myplr].InvList[ii]._iStatFlag) {
+					CelClippedDraw(
+					    InvRect[j + SLOTXY_INV_FIRST].X + SCREEN_X,
+					    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
+					    pCursCels, frame, frame_width);
+				} else {
+					CelDrawLightRed(
+					    InvRect[j + SLOTXY_INV_FIRST].X + SCREEN_X,
+					    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
+					    pCursCels, frame, frame_width, 1);
+				}
 			}
 		}
 	}
@@ -457,14 +605,18 @@ void DrawInvBelt()
 				CelBlitOutline(color, InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X, InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, pCursCels, frame, frame_width);
 			}
 		}
-
-		if (plr[myplr].SpdList[i]._iStatFlag) {
-			if (testvar % 2)
+		if (testvar % 2) {
+			if (plr[myplr].SpdList[i]._iStatFlag) {
 				CelClippedDrawPNG(InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X, InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, pCursCels_png, frame, frame_width);
-			else
-				CelClippedDraw(InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X, InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, pCursCels, frame, frame_width);
+			} else {
+				CelDrawLightRedPNG(InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X, InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, pCursCels_png, frame, frame_width, 1);
+			}
 		} else {
-			CelDrawLightRed(InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X, InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, pCursCels, frame, frame_width, 1);
+			if (plr[myplr].SpdList[i]._iStatFlag) {
+				CelClippedDraw(InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X, InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, pCursCels, frame, frame_width);
+			} else {
+				CelDrawLightRed(InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X, InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, pCursCels, frame, frame_width, 1);
+			}
 		}
 
 		if (AllItemsList[plr[myplr].SpdList[i].IDidx].iUsable
