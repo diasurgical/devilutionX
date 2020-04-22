@@ -798,7 +798,9 @@ void CelBlitOutlinePNG(int col, int sx, int sy, std::vector<SDL_Surface *> &pCel
 	int pixels_in_row = tmp_surf->pitch / sizeof(unsigned int);
 	for (int i = 0; i < tmp_surf->h * pixels_in_row; i++) {
 		if (*ptr) {
-			ptr2[-1] = color;
+			if (i % pixels_in_row != 0) {
+				ptr2[-1] = color;
+			}
 			ptr2[0] = color;
 			ptr2[1] = color;
 			ptr2[pixels_in_row] = color;
