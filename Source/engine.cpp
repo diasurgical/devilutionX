@@ -551,7 +551,7 @@ void CelBlitLightTransSafePNG(int dx, int dy, SDL_Surface *surf, int nWidth)
 
 	Uint32 *ptr = (Uint32 *)tmp_surf->pixels;
 	for (int i = 0; i < tmp_surf->h * tmp_surf->pitch / sizeof(unsigned int); i++) {
-		if (*ptr){
+		if (*ptr) {
 			*ptr ^= 0xFF000000;
 			*ptr |= 0x80000000;
 		}
@@ -765,6 +765,58 @@ void CelBlitOutline(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWid
 			}
 		}
 	}
+}
+
+void CelBlitOutlinePNG(int col, int sx, int sy, std::vector<SDL_Surface *> &pCelBuff, int nCel, int nWidth)
+{
+	SDL_PixelFormat *pixelFormat = test_surface->format;
+	Uint32 pixelFormatEnum = pixelFormat->format;
+
+	SDL_Surface *tmp_surf = SDL_ConvertSurfaceFormat(pCelBuff[nCel -1], pixelFormatEnum, 0);
+	if (tmp_surf == NULL)
+		ErrSdl();
+	//if (SDL_BlitSurface(surf, NULL, tmp_surf, NULL) < 0)
+	//	ErrSdl();
+
+	int r = 0, g = 0, b = 0;
+	switch (col) {
+		case 0: {
+			r = 255;
+			break;
+		}
+	    case 1: {
+		    r = 255;
+		    g = 255;
+		    b = 255;
+		    break;
+	    }
+	}
+	Uint32 color = SDL_MapRGBA(pixelFormat, r, g, b, 255);   
+
+	Uint32 *ptr = (Uint32 *)pCelBuff[nCel - 1]->pixels;
+	Uint32 *ptr2 = (Uint32 *)tmp_surf->pixels;
+	int pixels_in_row = tmp_surf->pitch / sizeof(unsigned int);
+	for (int i = 0; i < tmp_surf->h * pixels_in_row; i++) {
+		if (*ptr) {
+			ptr2[-1] = color;
+			ptr2[0] = color;
+			ptr2[1] = color;
+			ptr2[pixels_in_row] = color;
+			ptr2[-pixels_in_row] = color;
+		}
+		ptr++;
+		ptr2++;
+	}
+	sx -= SCREEN_X;
+	sy -= SCREEN_Y - 1;
+	SDL_Rect rectdst;
+	rectdst.x = sx;
+	rectdst.y = sy - tmp_surf->h;
+	rectdst.w = tmp_surf->w;
+	rectdst.h = tmp_surf->h;
+	if (SDL_BlitSurface(tmp_surf, NULL, test_surface, &rectdst) < 0)
+		ErrSdl();
+	SDL_FreeSurface(tmp_surf);
 }
 
 /**

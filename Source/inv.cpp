@@ -602,7 +602,12 @@ void DrawInvBelt()
 			if (!plr[myplr].SpdList[i]._iStatFlag)
 				color = ICOL_RED;
 			if (!sgbControllerActive || invflag) {
-				CelBlitOutline(color, InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X, InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, pCursCels, frame, frame_width);
+				if (testvar % 2) {
+					CelBlitOutlinePNG(1, InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X, InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, pCursCels_png, frame, frame_width);
+				} else {
+					CelBlitOutline(color, InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X, InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, pCursCels, frame, frame_width);
+				}
+				
 			}
 		}
 		if (testvar % 2) {

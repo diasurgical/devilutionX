@@ -80,6 +80,7 @@ void CelBlitLightTransSafePNG(int dx, int dy, SDL_Surface *surf, int nWidth);
 void CelDrawLightRedSafe(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char light);
 void CelBlitWidth(BYTE *pBuff, int x, int y, int wdt, BYTE *pCelBuff, int nCel, int nWidth);
 void CelBlitOutline(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
+void CelBlitOutlinePNG(int col, int sx, int sy, std::vector<SDL_Surface *> &pCelBuff, int nCel, int nWidth);
 void ENG_set_pixel(int sx, int sy, BYTE col);
 void engine_draw_pixel(int sx, int sy);
 void DrawLine(int x0, int y0, int x1, int y1, BYTE col);
