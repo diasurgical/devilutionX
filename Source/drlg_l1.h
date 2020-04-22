@@ -6,6 +6,12 @@
 #ifndef __DRLG_L1_H__
 #define __DRLG_L1_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern BYTE L5dungeon[80][80];
 extern BYTE L5dflags[DMAXX][DMAXY];
 extern BOOL L5setloadflag;
@@ -37,5 +43,11 @@ extern const BYTE PWATERIN[];
 
 /* data */
 extern BYTE L5ConvTbl[16];
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __DRLG_L1_H__ */

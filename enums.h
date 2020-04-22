@@ -4,6 +4,8 @@
  * Various global enumerators.
  */
 
+DEVILUTION_BEGIN_NAMESPACE
+
 typedef enum item_quality {
 	ITEM_QUALITY_NORMAL = 0,
 	ITEM_QUALITY_MAGIC  = 1,
@@ -2941,3 +2943,5 @@ typedef enum conn_type {
 #endif
 	SELCONN_LOOPBACK,
 } conn_type;
+
+DEVILUTION_END_NAMESPACE

@@ -6,6 +6,12 @@
 #ifndef __DRLG_L4_H__
 #define __DRLG_L4_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern int diabquad1x;
 extern int diabquad1y;
 extern int diabquad2x;
@@ -48,5 +54,11 @@ extern const BYTE L4DSTAIRS[52];
 extern const BYTE L4PENTA[52];
 extern const BYTE L4PENTA2[52];
 extern const BYTE L4BTYPES[140];
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __DRLG_L4_H__ */

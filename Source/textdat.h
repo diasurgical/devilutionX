@@ -2,7 +2,19 @@
 #ifndef __TEXTDAT_H__
 #define __TEXTDAT_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern const TextDataStruct alltext[];
 extern const DWORD gdwAllTextEntries;
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __TEXTDAT_H__ */
