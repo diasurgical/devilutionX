@@ -5,6 +5,7 @@
 extern int qtopline;
 extern BOOL questlog;
 extern BYTE *pQLogCel;
+extern std::vector<SDL_Surface *> pQLogCel_png;
 extern QuestStruct quests[MAXQUESTS];
 extern int qline;
 extern int qlist[MAXQUESTS];

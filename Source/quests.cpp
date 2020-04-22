@@ -734,7 +734,10 @@ void DrawQuestLog()
 {
 	int y, i;
 
-	CelDraw(SCREEN_X, SCREEN_Y + 351, pQLogCel, 1, SPANEL_WIDTH);
+	if (testvar % 2)
+		CelDrawPNG(SCREEN_X, SCREEN_Y + 351, pQLogCel_png, 1, SPANEL_WIDTH);
+	else
+		CelDraw(SCREEN_X, SCREEN_Y + 351, pQLogCel, 1, SPANEL_WIDTH);
 	PrintQLString(0, 2, TRUE, "Quest Log", 3);
 	y = qtopline;
 	for (i = 0; i < numqlines; i++) {

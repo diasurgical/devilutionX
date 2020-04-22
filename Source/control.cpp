@@ -16,7 +16,11 @@ std::vector<SDL_Surface *> pSpellCels_png;
 std::vector<SDL_Surface *> pSBkIconCels_png;
 std::vector<SDL_Surface *> pPanelText_png;
 std::vector<SDL_Surface *> pChrPanel_png;
-std::string png_path = "H:\\DIABLOPNG\\_dump_\\";
+std::vector<SDL_Surface *> pQLogCel_png;
+std::vector<SDL_Surface *> pSpellBkCel_png;
+std::vector<SDL_Surface *> pSBkBtnCel_png;
+
+    std::string png_path = "H:\\DIABLOPNG\\_dump_\\";
 int testvar = 0;
 
 std::string base_name(std::string const &path)
@@ -1011,7 +1015,9 @@ void InitControlPan()
 	chrflag = FALSE;
 	spselflag = FALSE;
 	pSpellBkCel = LoadFileInMem("Data\\SpellBk.CEL", NULL);
+	pSpellBkCel_png = safePNGLoadVector("Data\\SpellBk");
 	pSBkBtnCel = LoadFileInMem("Data\\SpellBkB.CEL", NULL);
+	pSBkBtnCel_png = safePNGLoadVector("Data\\SpellBkB");
 	pSBkIconCels = LoadFileInMem("Data\\SpellI2.CEL", NULL);
 	pSBkIconCels_png = safePNGLoadVector("Data\\SpellI2");
 	sbooktab = 0;
@@ -1026,6 +1032,7 @@ void InitControlPan()
 #endif
 	}
 	pQLogCel = LoadFileInMem("Data\\Quest.CEL", NULL);
+	pQLogCel_png = safePNGLoadVector("Data\\Quest");
 	pGBoxBuff = LoadFileInMem("CtrlPan\\Golddrop.cel", NULL);
 	dropGoldFlag = FALSE;
 	dropGoldValue = 0;
@@ -1991,8 +1998,13 @@ void DrawSpellBook()
 	char st;
 	unsigned __int64 spl;
 
-	CelDraw(RIGHT_PANEL_X, 351 + SCREEN_Y, pSpellBkCel, 1, SPANEL_WIDTH);
-	CelDraw(RIGHT_PANEL_X + 76 * sbooktab + 7, 348 + SCREEN_Y, pSBkBtnCel, sbooktab + 1, 76);
+	if (testvar % 2) {
+		CelDrawPNG(RIGHT_PANEL_X, 351 + SCREEN_Y, pSpellBkCel_png, 1, SPANEL_WIDTH);
+		CelDrawPNG(RIGHT_PANEL_X + 76 * sbooktab + 7, 348 + SCREEN_Y, pSBkBtnCel_png, sbooktab + 1, 76);
+	} else {
+		CelDraw(RIGHT_PANEL_X, 351 + SCREEN_Y, pSpellBkCel, 1, SPANEL_WIDTH);
+		CelDraw(RIGHT_PANEL_X + 76 * sbooktab + 7, 348 + SCREEN_Y, pSBkBtnCel, sbooktab + 1, 76);
+	}
 
 	spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
 
