@@ -51,6 +51,10 @@ void CelDraw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 
 void CelDrawPNG(int sx, int sy, std::vector<SDL_Surface *> &pCelBuff, int nCel, int nWidth)
 {
+	if (pCelBuff.size() < nCel) {
+		SDL_Log("INVALID SURFACE VECTOR IN CEL_DRAW_PNG");
+		return;
+	}
 	sx -= SCREEN_X;
 	sy -= SCREEN_Y - 1;
 
@@ -109,6 +113,10 @@ void CelClippedDraw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 
 void CelClippedDrawPNG(int sx, int sy, std::vector<SDL_Surface *> &pCelBuff, int nCel, int nWidth)
 {
+	if (pCelBuff.size() < nCel) {
+		SDL_Log("INVALID SURFACE VECTOR IN CEL_CLIPPED_DRAW_PNG");
+		return;
+	}
 	CelBlitSafePNG(sx, sy, pCelBuff[nCel - 1]);
 }
 
@@ -138,6 +146,11 @@ void CelDrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, BYTE *tb
 
 void CelDrawLightPNG(int sx, int sy, std::vector<SDL_Surface *> &pCelBuff, int nCel, int nWidth, BYTE *tbl)
 {
+	if (pCelBuff.size() < nCel) {
+		SDL_Log("INVALID SURFACE VECTOR IN CEL_DRAW_LIGHT_PNG");
+		return;
+	}
+
 	if (light_table_index || tbl)
 		CelBlitLightSafePNG(sx, sy, pCelBuff[nCel - 1], tbl);
 	else
@@ -223,6 +236,11 @@ void CelDrawLightRed(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char 
 
 void CelDrawLightRedPNG(int sx, int sy, std::vector<SDL_Surface *> &pCelBuff, int nCel, int nWidth, char light)
 {
+	if (pCelBuff.size() < nCel) {
+		SDL_Log("INVALID SURFACE VECTOR IN CEL_DRAW_LIGHT_RED_PNG");
+		return;
+	}
+
 	SDL_PixelFormat *pixelFormat = test_surface->format;
 	Uint32 pixelFormatEnum = pixelFormat->format;
 	int W = pCelBuff[nCel - 1]->w;
@@ -331,6 +349,10 @@ void CelClippedDrawSafe(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 
 void CelClippedDrawSafePNG(int sx, int sy, std::vector<SDL_Surface *> &pCelBuff, int nCel, int nWidth)
 {
+	if (pCelBuff.size() < nCel) {
+		SDL_Log("INVALID SURFACE VECTOR IN CEL_CLIPPED_DRAW_SAFE_PNG");
+		return;
+	}
 	sx -= SCREEN_X;
 	sy -= SCREEN_Y - 1;
 
@@ -597,6 +619,11 @@ void CelClippedBlitLightTrans(BYTE *pBuff, BYTE *pCelBuff, int nCel, int nWidth)
 
 void CelClippedBlitLightTransPNG(int x, int y, std::vector<SDL_Surface *> &pCelBuff, int nCel, int nWidth)
 {
+	if (pCelBuff.size() < nCel) {
+		SDL_Log("INVALID SURFACE VECTOR IN CEL_CLIPPED_BLIT_LIGHT_TRANS_PNG");
+		return;
+	}
+
 	if (cel_transparency_active)
 		CelBlitLightTransSafePNG(x, y, pCelBuff[nCel - 1], nWidth);
 	else if (light_table_index)
@@ -769,10 +796,14 @@ void CelBlitOutline(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWid
 
 void CelBlitOutlinePNG(int col, int sx, int sy, std::vector<SDL_Surface *> &pCelBuff, int nCel, int nWidth)
 {
+	if (pCelBuff.size() < nCel) {
+		SDL_Log("INVALID SURFACE VECTOR IN CEL_BLIT_OUTLINE_PNG");
+		return;
+	}
 	SDL_PixelFormat *pixelFormat = test_surface->format;
 	Uint32 pixelFormatEnum = pixelFormat->format;
 
-	SDL_Surface *tmp_surf = SDL_ConvertSurfaceFormat(pCelBuff[nCel -1], pixelFormatEnum, 0);
+	SDL_Surface *tmp_surf = SDL_ConvertSurfaceFormat(pCelBuff[nCel - 1], pixelFormatEnum, 0);
 	if (tmp_surf == NULL)
 		ErrSdl();
 	//if (SDL_BlitSurface(surf, NULL, tmp_surf, NULL) < 0)

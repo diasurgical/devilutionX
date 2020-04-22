@@ -20,7 +20,7 @@ std::vector<SDL_Surface *> pQLogCel_png;
 std::vector<SDL_Surface *> pSpellBkCel_png;
 std::vector<SDL_Surface *> pSBkBtnCel_png;
 
-    std::string png_path = "H:\\DIABLOPNG\\_dump_\\";
+std::string png_path = "H:\\DIABLOPNG\\_dump_\\";
 int testvar = 0;
 
 std::string base_name(std::string const &path)

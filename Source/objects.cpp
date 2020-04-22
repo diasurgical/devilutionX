@@ -2,9 +2,79 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+
+
+std::string png_path4 = "H:\\DIABLOPNG\\_dump_\\";
+
+std::string base_name4(std::string const &path)
+{
+	return path.substr(path.find_last_of("/\\") + 1);
+}
+
+std::string generate_number4(int n)
+{
+	char buf[5];
+	sprintf(buf, "%04d", n);
+	std::string base(buf);
+	return base;
+}
+
+std::vector<SDL_Surface *> safePNGLoadVector4(std::string path)
+{
+	std::string name = base_name4(path);
+	std::vector<SDL_Surface *> out;
+
+	std::string merged_path_single = png_path;
+	merged_path_single += path;
+	merged_path_single += "\\";
+	merged_path_single += name;
+	merged_path_single += ".png";
+	SDL_Surface *loadedSurface = IMG_Load(merged_path_single.c_str());
+	if (loadedSurface != NULL) {
+		out.push_back(loadedSurface);
+		return out;
+	}
+
+	for (int i = 1;; i++) {
+		std::string merged_path = png_path;
+		merged_path += path;
+		merged_path += "\\";
+		merged_path += name;
+		merged_path += "_";
+		merged_path += generate_number4(i);
+		merged_path += ".png";
+		SDL_Surface *loadedSurface = IMG_Load(merged_path.c_str());
+		if (loadedSurface != NULL) {
+			out.push_back(loadedSurface);
+		} else {
+			break;
+		}
+	}
+
+	if (out.size() == 0) {
+		//ErrSdl();
+	}
+	return out;
+}
+
+SDL_Surface *safePNGLoad4(std::string path)
+{
+	std::string merged_path = png_path;
+	merged_path += path;
+	std::string name = base_name4(merged_path);
+	merged_path += "\\";
+	merged_path += name;
+	merged_path += ".png";
+	SDL_Surface *loadedSurface = IMG_Load(merged_path.c_str());
+	if (loadedSurface == NULL)
+		ErrSdl();
+	return loadedSurface;
+}
+
 int trapid;
 int trapdir;
 BYTE *pObjCels[40];
+std::vector<SDL_Surface *> pObjCels_png[40];
 char ObjFileList[40];
 int objectactive[MAXOBJECTS];
 int nobjects;
@@ -109,6 +179,11 @@ void InitObjectGFX()
 			ObjFileList[numobjfiles] = i;
 			sprintf(filestr, "Objects\\%s.CEL", ObjMasterLoadList[i]);
 			pObjCels[numobjfiles] = LoadFileInMem(filestr, NULL);
+
+			char filestr2[32];
+			sprintf(filestr2, "Objects\\%s", ObjMasterLoadList[i]);
+			pObjCels_png[numobjfiles] = safePNGLoadVector4(filestr2);
+
 			numobjfiles++;
 		}
 	}
@@ -892,6 +967,12 @@ void SetMapObjects(BYTE *pMap, int startx, int starty)
 		ObjFileList[numobjfiles] = i;
 		sprintf(filestr, "Objects\\%s.CEL", ObjMasterLoadList[i]);
 		pObjCels[numobjfiles] = LoadFileInMem(filestr, NULL);
+
+		char filestr2[32];
+		sprintf(filestr2, "Objects\\%s", ObjMasterLoadList[i]);
+		pObjCels_png[numobjfiles] = safePNGLoadVector4(filestr2);
+
+
 		numobjfiles++;
 	}
 
@@ -934,6 +1015,7 @@ void SetupObject(int i, int x, int y, int ot)
 		j++;
 	}
 	object[i]._oAnimData = pObjCels[j];
+	object[i]._oAnimData2 = &pObjCels_png[j];
 	object[i]._oAnimFlag = AllObjects[ot].oAnimFlag;
 	if (AllObjects[ot].oAnimFlag) {
 		object[i]._oAnimDelay = AllObjects[ot].oAnimDelay;
@@ -4270,6 +4352,7 @@ void SyncObjectAnim(int o)
 		i++;
 	}
 	object[o]._oAnimData = pObjCels[i];
+	object[o]._oAnimData2 = &pObjCels_png[i];
 	switch (object[o]._otype) {
 	case OBJ_BOOK2R:
 	case OBJ_BLINDBOOK:

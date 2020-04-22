@@ -661,6 +661,7 @@ typedef struct ObjectStruct {
 	int _oLight;
 	int _oAnimFlag;
 	unsigned char *_oAnimData;
+	std::vector<SDL_Surface *> * _oAnimData2;
 	int _oAnimDelay;
 	int _oAnimCnt;
 	int _oAnimLen;

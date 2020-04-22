@@ -508,12 +508,22 @@ static void DrawObject(int x, int y, int ox, int oy, BOOL pre)
 		return;
 	}
 
-	if (bv == pcursobj)
-		CelBlitOutline(194, sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth);
-	if (object[bv]._oLight) {
-		CelClippedDrawLight(sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth);
+	if (testvar % 2) {
+		if (bv == pcursobj)
+			CelBlitOutlinePNG(1, sx, sy, *object[bv]._oAnimData2, object[bv]._oAnimFrame, object[bv]._oAnimWidth);
+		if (0 && object[bv]._oLight) {
+			CelClippedDrawLight(sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth);
+		} else {
+			CelClippedDrawPNG(sx, sy, *object[bv]._oAnimData2, object[bv]._oAnimFrame, object[bv]._oAnimWidth);
+		}
 	} else {
-		CelClippedDraw(sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth);
+		if (bv == pcursobj)
+			CelBlitOutline(194, sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth);
+		if (object[bv]._oLight) {
+			CelClippedDrawLight(sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth);
+		} else {
+			CelClippedDraw(sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth);
+		}
 	}
 }
 
