@@ -1751,8 +1751,8 @@ void LoadL3Dungeon(char *sFileName, int vx, int vy)
 	abyssx = MAXDUNX; // Unused
 	DRLG_L3Pass3();
 	DRLG_Init_Globals();
-	ViewX = vx;
-	ViewY = vy;
+	ViewX = 31;
+	ViewY = 83;
 	SetMapMonsters(pLevelMap, 0, 0);
 	SetMapObjects(pLevelMap, 0, 0);
 
