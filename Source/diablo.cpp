@@ -1099,6 +1099,7 @@ void PressChar(int vkey)
 		return;
 	}
 	if (PauseMode == 2) {
+		if (GetAsyncKeyState(VK_MENU) & 0x8000) dx_reinit();
 		return;
 	}
 	if (doomflag) {
