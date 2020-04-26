@@ -3,9 +3,9 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-BOOL WCloseFile(HANDLE file)
+void WCloseFile(HANDLE file)
 {
-	return SFileCloseFile(file);
+	SFileCloseFile(file);
 }
 
 LONG WGetFileSize(HANDLE hsFile, DWORD *lpFileSizeHigh, const char *FileName)

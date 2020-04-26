@@ -646,9 +646,12 @@ void DrawFlask(BYTE *pCelBuff, int w, int nSrcOff, BYTE *pBuff, int nDstOff, int
  */
 void DrawLifeFlask()
 {
-	int filled = (double)plr[myplr]._pHitPoints / (double)plr[myplr]._pMaxHP * 80.0;
-	plr[myplr]._pHPPer = filled;
+	double p;
+	int filled;
 
+	p = (double)plr[myplr]._pHitPoints / (double)plr[myplr]._pMaxHP * 80.0;
+	plr[myplr]._pHPPer = p;
+	filled = plr[myplr]._pHPPer;
 	if (filled > 80)
 		filled = 80;
 	filled = 80 - filled;
@@ -656,7 +659,7 @@ void DrawLifeFlask()
 		filled = 11;
 	filled += 2;
 
-	DrawFlask(pLifeBuff, 88, 277, gpBuffer, SCREENXY(PANEL_LEFT + 109, PANEL_TOP - 13), filled);
+	DrawFlask(pLifeBuff, 88, 88 * 3 + 13, gpBuffer, SCREENXY(PANEL_LEFT + 109, PANEL_TOP - 13), filled);
 	if (filled != 13)
 		DrawFlask(pBtmBuff, PANEL_WIDTH, PANEL_WIDTH * (filled + 3) + 109, gpBuffer, SCREENXY(PANEL_LEFT + 109, PANEL_TOP - 13 + filled), 13 - filled);
 }
@@ -668,7 +671,10 @@ void DrawLifeFlask()
  */
 void UpdateLifeFlask()
 {
-	int filled = (double)plr[myplr]._pHitPoints / (double)plr[myplr]._pMaxHP * 80.0;
+	double p;
+	int filled;
+	p = (double)plr[myplr]._pHitPoints / (double)plr[myplr]._pMaxHP * 80.0;
+	filled = p;
 	plr[myplr]._pHPPer = filled;
 
 	if (filled > 69)
@@ -691,7 +697,7 @@ void DrawManaFlask()
 		filled = 11;
 	filled += 2;
 
-	DrawFlask(pManaBuff, 88, 277, gpBuffer, SCREENXY(PANEL_LEFT + 475, PANEL_TOP - 13), filled);
+	DrawFlask(pManaBuff, 88, 88 * 3 + 13, gpBuffer, SCREENXY(PANEL_LEFT + 475, PANEL_TOP - 13), filled);
 	if (filled != 13)
 		DrawFlask(pBtmBuff, PANEL_WIDTH, PANEL_WIDTH * (filled + 3) + 475, gpBuffer, SCREENXY(PANEL_LEFT + 475, PANEL_TOP - 13 + filled), 13 - filled);
 }
@@ -737,9 +743,9 @@ void UpdateManaFlask()
 	if (filled > 69)
 		filled = 69;
 	if (filled != 69)
-		SetFlaskHeight(pManaBuff, 16, 85 - filled, 96 + PANEL_X + 368, PANEL_Y);
+		SetFlaskHeight(pManaBuff, 16, 85 - filled, PANEL_X + 464, PANEL_Y);
 	if (filled != 0)
-		DrawPanelBox(96 + 368, 85 - filled, 88, filled, 96 + PANEL_X + 368, PANEL_Y + 69 - filled);
+		DrawPanelBox(464, 85 - filled, 88, filled, PANEL_X + 464, PANEL_Y + 69 - filled);
 
 	DrawSpell();
 }
@@ -778,7 +784,7 @@ void InitControlPan()
 		pMultiBtns = LoadFileInMem("CtrlPan\\P8But2.CEL", NULL);
 		pTalkBtns = LoadFileInMem("CtrlPan\\TalkButt.CEL", NULL);
 		sgbPlrTalkTbl = 0;
-		sgszTalkMsg[0] = 0;
+		sgszTalkMsg[0] = '\0';
 		for (i = 0; i < MAX_PLRS; i++)
 			whisper[i] = TRUE;
 		for (i = 0; i < sizeof(talkbtndown) / sizeof(talkbtndown[0]); i++)
@@ -1279,7 +1285,7 @@ void CPrintString(int y, char *str, BOOL center, int lines)
 	lineOffset = 0;
 	sx = 177 + PANEL_X;
 	sy = lineOffsets[lines][y] + PANEL_Y;
-	if (center == 1) {
+	if (center == TRUE) {
 		strWidth = 0;
 		tmp = str;
 		while (*tmp) {
@@ -1580,7 +1586,7 @@ void DrawLevelUpIcon()
 {
 	int nCel;
 
-	if (!stextflag) {
+	if (stextflag == STORE_NONE) {
 		nCel = lvlbtndown ? 3 : 2;
 		ADD_PlrStringXY(PANEL_LEFT + 0, PANEL_TOP - 49, PANEL_LEFT + 120, "Level Up", COL_WHITE);
 		CelDraw(40 + PANEL_X, -17 + PANEL_Y, pChrButtons, nCel, 41);
@@ -1911,7 +1917,7 @@ void DrawGoldSplit(int amount)
 	ADD_PlrStringXY(366, 121, 600, "you want to remove?", COL_GOLD);
 	if (amount > 0) {
 		sprintf(tempstr, "%u", amount);
-		PrintGameStr(388, 140, tempstr, 0);
+		PrintGameStr(388, 140, tempstr, COL_WHITE);
 		for (i = 0; i < tempstr[i]; i++) {
 			screen_x += fontkern[fontframe[gbFontTransTbl[(BYTE)tempstr[i]]]] + 1;
 		}
@@ -1946,7 +1952,7 @@ void control_drop_gold(char vkey)
 		input[strlen(input) - 1] = '\0';
 		dropGoldValue = atoi(input);
 	} else if (vkey - '0' >= 0 && vkey - '0' <= 9) {
-		if (dropGoldValue || atoi(input) <= initialDropGoldValue) {
+		if (dropGoldValue != 0 || atoi(input) <= initialDropGoldValue) {
 			input[strlen(input)] = vkey;
 			if (atoi(input) > initialDropGoldValue)
 				return;
@@ -2075,7 +2081,7 @@ char *control_print_talk_msg(char *msg, int *x, int y, int color)
 		if (width > 514 + PANEL_LEFT)
 			return msg;
 		msg++;
-		if (c) {
+		if (c != 0) {
 			PrintChar(*x, y + 22 + PANEL_Y, c, color);
 		}
 		*x += fontkern[c] + 1;
@@ -2137,7 +2143,7 @@ void control_reset_talk_msg(char *msg)
 		if (whisper[i])
 			pmask |= 1 << i;
 	}
-		NetSendCmdString(pmask, sgszTalkMsg);
+	NetSendCmdString(pmask, sgszTalkMsg);
 }
 
 void control_type_message()
@@ -2149,7 +2155,7 @@ void control_type_message()
 	}
 
 	talkflag = TRUE;
-	sgszTalkMsg[0] = 0;
+	sgszTalkMsg[0] = '\0';
 	PentSpn2Frame = 1;
 	for (i = 0; i < 3; i++) {
 		talkbtndown[i] = FALSE;
@@ -2225,7 +2231,7 @@ void control_press_enter()
 	int i;
 	BYTE talk_save;
 
-	if (sgszTalkMsg[0]) {
+	if (sgszTalkMsg[0] != 0) {
 		control_reset_talk_msg(sgszTalkMsg);
 		for (i = 0; i < 8; i++) {
 			if (!strcmp(sgszTalkSave[i], sgszTalkMsg))

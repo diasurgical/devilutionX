@@ -6,65 +6,76 @@
 #ifndef __GENDUNG_H__
 #define __GENDUNG_H__
 
-extern WORD level_frame_types[MAXTILES];
-extern int themeCount;
-extern BOOLEAN nTransTable[2049];
-//int dword_52D204;
-extern int dMonster[MAXDUNX][MAXDUNY];
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern BYTE dungeon[DMAXX][DMAXY];
-extern char dObject[MAXDUNX][MAXDUNY];
 extern BYTE pdungeon[DMAXX][DMAXY];
-extern char dDead[MAXDUNX][MAXDUNY];
-extern char dPreLight[MAXDUNX][MAXDUNY];
-extern char TransVal;
-extern int MicroTileLen;
 extern char dflags[DMAXX][DMAXY];
-extern int dPiece[MAXDUNX][MAXDUNY];
-extern char dLight[MAXDUNX][MAXDUNY];
+extern int setpc_x;
+extern int setpc_y;
+extern int setpc_w;
+extern int setpc_h;
+extern BYTE *pSetPiece;
 extern BOOL setloadflag;
+extern BYTE *pSpecialCels;
 extern BYTE *pMegaTiles;
 extern BYTE *pLevelPieces;
+extern BYTE *pDungeonCels;
+extern BYTE *pSpeedCels;
+extern int SpeedFrameTbl[128][16];
+extern char block_lvid[MAXTILES + 1];
+extern int level_frame_count[MAXTILES];
+extern int tile_defs[MAXTILES];
+extern WORD level_frame_types[MAXTILES];
+extern int level_frame_sizes[MAXTILES];
+extern int nlevel_frames;
+extern BOOLEAN nBlockTable[MAXTILES + 1];
+extern BOOLEAN nSolidTable[MAXTILES + 1];
+extern BOOLEAN nTransTable[MAXTILES + 1];
+extern BOOLEAN nMissileTable[MAXTILES + 1];
+extern BOOLEAN nTrapTable[MAXTILES + 1];
+extern int dminx;
+extern int dminy;
+extern int dmaxx;
+extern int dmaxy;
 extern int gnDifficulty;
-extern char block_lvid[2049];
-//char byte_5B78EB;
-extern char dTransVal[MAXDUNX][MAXDUNY];
-extern BOOLEAN nTrapTable[2049];
 extern BYTE leveltype;
 extern BYTE currlevel;
-extern BOOLEAN TransList[256];
-extern BOOLEAN nSolidTable[2049];
-extern ScrollStruct ScrollInfo;
-extern BYTE *pDungeonCels;
-extern THEME_LOC themeLoc[MAXTHEMES];
-extern char dPlayer[MAXDUNX][MAXDUNY];
+extern BOOLEAN setlevel;
+extern BYTE setlvlnum;
+extern char setlvltype;
+extern int ViewX;
+extern int ViewY;
 extern int ViewBX;
 extern int ViewBY;
 extern int ViewDX;
 extern int ViewDY;
-extern char dSpecial[MAXDUNX][MAXDUNY];
-extern BOOLEAN nBlockTable[2049];
-extern BYTE *pSpecialCels;
-extern char dFlags[MAXDUNX][MAXDUNY];
-extern char dItem[MAXDUNX][MAXDUNY];
-extern BYTE setlvlnum;
-extern BOOLEAN nMissileTable[2049];
-extern BYTE *pSetPiece;
-extern char setlvltype;
-extern BOOLEAN setlevel;
-extern int LvlViewY;
+extern ScrollStruct ScrollInfo;
 extern int LvlViewX;
-extern int dmaxx;
-extern int dmaxy;
-extern int setpc_h;
-extern int setpc_w;
-extern int setpc_x;
-extern int ViewX;
-extern int ViewY;
-extern int setpc_y;
-extern char dMissile[MAXDUNX][MAXDUNY];
-extern int dminx;
-extern int dminy;
+extern int LvlViewY;
+extern int MicroTileLen;
+extern char TransVal;
+extern BOOLEAN TransList[256];
+extern int dPiece[MAXDUNX][MAXDUNY];
 extern MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
+extern MICROS dpiece_defs_map_1[MAXDUNX * MAXDUNY];
+extern char dTransVal[MAXDUNX][MAXDUNY];
+extern char dLight[MAXDUNX][MAXDUNY];
+extern char dPreLight[MAXDUNX][MAXDUNY];
+extern char dFlags[MAXDUNX][MAXDUNY];
+extern char dPlayer[MAXDUNX][MAXDUNY];
+extern int dMonster[MAXDUNX][MAXDUNY];
+extern char dDead[MAXDUNX][MAXDUNY];
+extern char dObject[MAXDUNX][MAXDUNY];
+extern char dItem[MAXDUNX][MAXDUNY];
+extern char dMissile[MAXDUNX][MAXDUNY];
+extern char dSpecial[MAXDUNX][MAXDUNY];
+extern int themeCount;
+extern THEME_LOC themeLoc[MAXTHEMES];
 
 void FillSolidBlockTbls();
 void SetDungeonMicros();
@@ -83,5 +94,11 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, int rnd
 void DRLG_HoldThemeRooms();
 BOOL SkipThemeRoom(int x, int y);
 void InitLevels();
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __GENDUNG_H__ */

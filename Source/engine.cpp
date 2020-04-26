@@ -165,7 +165,7 @@ void CelDrawLightRed(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char 
 
 	idx = light4flag ? 1024 : 4096;
 	if (light == 2)
-		idx += 256;
+		idx += 256; // gray colors
 	if (light >= 4)
 		idx += (light - 1) << 8;
 
@@ -460,7 +460,7 @@ void CelDrawLightRedSafe(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, c
 
 	idx = light4flag ? 1024 : 4096;
 	if (light == 2)
-		idx += 256;
+		idx += 256; // gray colors
 	if (light >= 4)
 		idx += (light - 1) << 8;
 
@@ -667,7 +667,7 @@ void DrawLine(int x0, int y0, int x1, int y1, BYTE col)
 	sx = x0;
 	sy = y0;
 
-	for(i = 0; i <= steps; i++, sx += ix, sy += iy) {
+	for (i = 0; i <= steps; i++, sx += ix, sy += iy) {
 		ENG_set_pixel(sx, sy, col);
 	}
 }
@@ -772,7 +772,7 @@ BYTE *DiabloAllocPtr(DWORD dwBytes)
 
 	if (buf == NULL) {
 		char *text = "System memory exhausted.\n"
-		"Make sure you have at least 64MB of free system memory before running the game";
+		             "Make sure you have at least 64MB of free system memory before running the game";
 		ERR_DLG("Out of Memory Error", text);
 	}
 
@@ -827,7 +827,7 @@ BYTE *LoadFileInMem(char *pszName, DWORD *pdwFileLen)
  * @param p Target buffer
  * @return Size of file
  */
-DWORD LoadFileWithMem(const char *pszName, void *p)
+DWORD LoadFileWithMem(const char *pszName, BYTE *p)
 {
 	DWORD dwFileLen;
 	HANDLE hsFile;
@@ -1134,7 +1134,7 @@ void Cl2DrawLightTbl(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char 
 
 	idx = light4flag ? 1024 : 4096;
 	if (light == 2)
-		idx += 256;
+		idx += 256; // gray colors
 	if (light >= 4)
 		idx += (light - 1) << 8;
 

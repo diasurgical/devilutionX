@@ -9,10 +9,10 @@ DEVILUTION_BEGIN_NAMESPACE
 
 int diabquad1x;
 int diabquad1y;
-int diabquad3x;
-int diabquad3y;
 int diabquad2x;
 int diabquad2y;
+int diabquad3x;
+int diabquad3y;
 int diabquad4x;
 int diabquad4y;
 #ifndef SPAWN
@@ -20,8 +20,8 @@ BOOL hallok[20];
 int l4holdx;
 int l4holdy;
 int SP4x1;
-int SP4x2;
 int SP4y1;
+int SP4x2;
 int SP4y2;
 BYTE L4dungeon[80][80];
 BYTE dung[20][20];
@@ -1144,8 +1144,8 @@ static void uShape()
 			}
 			if (dung[i][j] == 1) {
 				// BUGFIX: check that i + 1 < 20 and j + 1 < 20 (fixed)
-				if (i + 1 < 20 && j + 1 < 20 &&
-				    dung[i][j + 1] == 1 && dung[i + 1][j + 1] == 0) {
+				if (i + 1 < 20 && j + 1 < 20
+				    && dung[i][j + 1] == 1 && dung[i + 1][j + 1] == 0) {
 					hallok[j] = TRUE;
 				} else {
 					hallok[j] = FALSE;
@@ -1182,8 +1182,8 @@ static void uShape()
 			}
 			if (dung[i][j] == 1) {
 				// BUGFIX: check that i + 1 < 20 and j + 1 < 20 (fixed)
-				if (i + 1 < 20 && j + 1 < 20 &&
-				    dung[i + 1][j] == 1 && dung[i + 1][j + 1] == 0) {
+				if (i + 1 < 20 && j + 1 < 20
+				    && dung[i + 1][j] == 1 && dung[i + 1][j + 1] == 0) {
 					hallok[i] = TRUE;
 				} else {
 					hallok[i] = FALSE;
@@ -1899,8 +1899,7 @@ static void DRLG_L4Pass3()
 	v3 = SDL_SwapLE16(*(MegaTiles + 2)) + 1;
 	v4 = SDL_SwapLE16(*(MegaTiles + 3)) + 1;
 
-	for (j = 0; j < MAXDUNY; j += 2)
-	{
+	for (j = 0; j < MAXDUNY; j += 2) {
 		for (i = 0; i < MAXDUNX; i += 2) {
 			dPiece[i][j] = v1;
 			dPiece[i + 1][j] = v2;
@@ -1954,6 +1953,83 @@ void CreateL4Dungeon(DWORD rseed, int entry)
 	DRLG_L4Pass3();
 	DRLG_FreeL4SP();
 	DRLG_SetPC();
+}
+
+void LoadL4Dungeon(char *sFileName, int vx, int vy)
+{
+	int i, j, rw, rh;
+	BYTE *pLevelMap, *lm;
+
+	dminx = 16;
+	dminy = 16;
+	dmaxx = 96;
+	dmaxy = 96;
+
+	DRLG_InitTrans();
+	InitL4Dungeon();
+	pLevelMap = LoadFileInMem(sFileName, NULL);
+
+
+	lm = pLevelMap;
+	rw = *lm;
+	lm += 2;
+	rh = *lm;
+	lm += 2;
+
+	for (j = 0; j < rh; j++) {
+		for (i = 0; i < rw; i++) {
+			if (*lm != 0) {
+				dungeon[i][j] = *lm;
+				dflags[i][j] |= 0x80;
+			} else {
+				dungeon[i][j] = 6;
+			}
+			lm += 2;
+		}
+	}
+
+	ViewX = vx;
+	ViewY = vy;
+	DRLG_L4Pass3();
+	DRLG_Init_Globals();
+
+	SetMapMonsters(pLevelMap, 0, 0);
+	SetMapObjects(pLevelMap, 0, 0);
+	mem_free_dbg(pLevelMap);
+}
+
+void LoadPreL4Dungeon(char *sFileName, int vx, int vy)
+{
+	int i, j, rw, rh;
+	BYTE *pLevelMap, *lm;
+
+	dminx = 16;
+	dminy = 16;
+	dmaxx = 96;
+	dmaxy = 96;
+
+	InitL4Dungeon();
+
+	pLevelMap = LoadFileInMem(sFileName, NULL);
+
+	lm = pLevelMap;
+	rw = *lm;
+	lm += 2;
+	rh = *lm;
+	lm += 2;
+
+	for (j = 0; j < rh; j++) {
+		for (i = 0; i < rw; i++) {
+			if (*lm != 0) {
+				dungeon[i][j] = *lm;
+				dflags[i][j] |= DLRG_PROTECTED;
+			} else {
+				dungeon[i][j] = 6;
+			}
+			lm += 2;
+		}
+	}
+	mem_free_dbg(pLevelMap);
 }
 #endif
 

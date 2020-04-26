@@ -74,11 +74,11 @@ void InitQTextMsg(int m)
 		qtextptr = alltext[m].txtstr;
 		qtextflag = TRUE;
 		qtexty = 500;
-		sgLastScroll = qscroll_spd_tbl[alltext[m].txtspd - 1];
-		if (sgLastScroll <= 0)
-			scrolltexty = 50 / -(sgLastScroll - 1);
+		qtextSpd = qscroll_spd_tbl[alltext[m].txtspd - 1];
+		if (qtextSpd <= 0)
+			scrolltexty = 50 / -(qtextSpd - 1);
 		else
-			scrolltexty = ((sgLastScroll + 1) * 50) / sgLastScroll;
+			scrolltexty = ((qtextSpd + 1) * 50) / qtextSpd;
 		qtextSpd = SDL_GetTicks();
 	}
 	PlaySFX(alltext[m].sfxnr);

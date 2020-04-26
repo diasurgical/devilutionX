@@ -35,7 +35,7 @@ void track_repeat_walk(BOOL rep)
 
 	sgbIsWalking = rep;
 	if (rep) {
-		sgbIsScrolling = 0;
+		sgbIsScrolling = FALSE;
 		sgdwLastWalk = SDL_GetTicks() - 50;
 		NetSendCmdLoc(TRUE, CMD_WALKXY, cursmx, cursmy);
 	} else if (sgbIsScrolling) {

@@ -6,11 +6,17 @@
 #ifndef __CURSOR_H__
 #define __CURSOR_H__
 
-extern int cursH;
-extern int icursH28;
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern int cursW;
+extern int cursH;
 extern int pcursmonst;
 extern int icursW28;
+extern int icursH28;
 extern BYTE *pCursCels;
 extern int icursH;
 extern char pcursinvitem;
@@ -34,7 +40,13 @@ void CheckRportal();
 void CheckCursMove();
 
 /* rdata */
-extern const int InvItemWidth[180];
-extern const int InvItemHeight[180];
+extern const int InvItemWidth[];
+extern const int InvItemHeight[];
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __CURSOR_H__ */

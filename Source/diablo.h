@@ -6,27 +6,33 @@
 #ifndef __DIABLO_H__
 #define __DIABLO_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern SDL_Window *ghMainWnd;
+extern DWORD glSeedTbl[NUMLEVELS];
+extern int gnLevelTypeTbl[NUMLEVELS];
+extern int glEndSeed[NUMLEVELS];
 extern int glMid1Seed[NUMLEVELS];
 extern int glMid2Seed[NUMLEVELS];
-extern int gnLevelTypeTbl[NUMLEVELS];
-extern int MouseY;
-extern int MouseX;
-extern BOOL gbGameLoopStartup;
-extern DWORD glSeedTbl[NUMLEVELS];
-extern BOOL gbRunGame;
 extern int glMid3Seed[NUMLEVELS];
+extern int MouseX;
+extern int MouseY;
+extern BOOL gbGameLoopStartup;
+extern BOOL gbRunGame;
 extern BOOL gbRunGameResult;
 extern BOOL zoomflag;
 extern BOOL gbProcessPlayers;
-extern int glEndSeed[NUMLEVELS];
 extern BOOL gbLoadGame;
 extern HINSTANCE ghInst;
 extern int DebugMonsters[10];
 extern BOOLEAN cineflag;
 extern int force_redraw;
 extern BOOL visiondebug;
-/* These are defined in fonts.h */ 
+/* These are defined in fonts.h */
 extern BOOL was_fonts_init;
 extern void FontsCleanup();
 /** unused */
@@ -102,5 +108,11 @@ extern int framestart;
 extern BOOL FriendlyMode;
 extern char *spszMsgTbl[4];
 extern char *spszMsgHotKeyTbl[4];
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __DIABLO_H__ */

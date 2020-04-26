@@ -220,7 +220,7 @@ void CopyBytes(const void *src, const int n, void *dst)
 
 void CopyChar(const void *src, void *dst)
 {
-	*(char*)dst = *(char*)src;
+	*(char *)dst = *(char *)src;
 	tbuff += 1;
 }
 
@@ -237,9 +237,10 @@ void CopyShorts(const void *src, const int n, void *dst)
 {
 	const auto *s = reinterpret_cast<const unsigned short *>(src);
 	auto *d = reinterpret_cast<unsigned short *>(dst);
-	for(int i = 0; i < n; i++) {
+	for (int i = 0; i < n; i++) {
 		CopyShort(s, d);
-		++d; ++s;
+		++d;
+		++s;
 	}
 }
 
@@ -256,9 +257,10 @@ void CopyInts(const void *src, const int n, void *dst)
 {
 	const auto *s = reinterpret_cast<const unsigned int *>(src);
 	auto *d = reinterpret_cast<unsigned int *>(dst);
-	for(int i = 0; i < n; i++) {
+	for (int i = 0; i < n; i++) {
 		CopyInt(s, d);
-		++d; ++s;
+		++d;
+		++s;
 	}
 }
 
@@ -285,10 +287,10 @@ void LoadPlayer(int i)
 	CopyInt(tbuff, &pPlayer->destParam3);
 	CopyInt(tbuff, &pPlayer->destParam4);
 	CopyInt(tbuff, &pPlayer->plrlevel);
-	CopyInt(tbuff, &pPlayer->WorldX);
-	CopyInt(tbuff, &pPlayer->WorldY);
 	CopyInt(tbuff, &pPlayer->_px);
 	CopyInt(tbuff, &pPlayer->_py);
+	CopyInt(tbuff, &pPlayer->_pfutx);
+	CopyInt(tbuff, &pPlayer->_pfuty);
 	CopyInt(tbuff, &pPlayer->_ptargx);
 	CopyInt(tbuff, &pPlayer->_ptargy);
 	CopyInt(tbuff, &pPlayer->_pownerx);
@@ -1010,10 +1012,10 @@ void SavePlayer(int i)
 	CopyInt(&pPlayer->destParam3, tbuff);
 	CopyInt(&pPlayer->destParam4, tbuff);
 	CopyInt(&pPlayer->plrlevel, tbuff);
-	CopyInt(&pPlayer->WorldX, tbuff);
-	CopyInt(&pPlayer->WorldY, tbuff);
 	CopyInt(&pPlayer->_px, tbuff);
 	CopyInt(&pPlayer->_py, tbuff);
+	CopyInt(&pPlayer->_pfutx, tbuff);
+	CopyInt(&pPlayer->_pfuty, tbuff);
 	CopyInt(&pPlayer->_ptargx, tbuff);
 	CopyInt(&pPlayer->_ptargy, tbuff);
 	CopyInt(&pPlayer->_pownerx, tbuff);
@@ -1113,7 +1115,7 @@ void SavePlayer(int i)
 	CopyInt(&pPlayer->_pVar8, tbuff);
 	CopyBytes(&pPlayer->_pLvlVisited, NUMLEVELS, tbuff);
 	CopyBytes(&pPlayer->_pSLvlVisited, NUMLEVELS, tbuff); // only 10 used
-	tbuff += 2; // Alignment
+	tbuff += 2;                                           // Alignment
 
 	CopyInt(&pPlayer->_pGFXLoad, tbuff);
 	tbuff += 4 * 8; // Skip pointers _pNAnim
@@ -1549,7 +1551,7 @@ void SaveLevel()
 	int dwLen;
 	BYTE *SaveBuff;
 
-	if (!currlevel)
+	if (currlevel == 0)
 		glSeedTbl[0] = GetRndSeed();
 
 	dwLen = codec_get_encoded_len(FILEBUFF);
@@ -1722,7 +1724,7 @@ void LoadLevel()
 
 	for (i = 0; i < MAX_PLRS; i++) {
 		if (plr[i].plractive && currlevel == plr[i].plrlevel)
-			LightList[plr[i]._plid]._lunflag = 1;
+			LightList[plr[i]._plid]._lunflag = TRUE;
 	}
 
 	mem_free_dbg(LoadBuff);

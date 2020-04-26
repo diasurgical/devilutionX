@@ -7,76 +7,85 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-WORD level_frame_types[MAXTILES];
-int themeCount;
-/**
- * List of transparent dPieces
- */
-BOOLEAN nTransTable[2049];
-//int dword_52D204;
-int dMonster[MAXDUNX][MAXDUNY];
 BYTE dungeon[DMAXX][DMAXY];
-char dObject[MAXDUNX][MAXDUNY];
 BYTE pdungeon[DMAXX][DMAXY];
-char dDead[MAXDUNX][MAXDUNY];
-char dPreLight[MAXDUNX][MAXDUNY];
-char TransVal;
-int MicroTileLen;
 char dflags[DMAXX][DMAXY];
-int dPiece[MAXDUNX][MAXDUNY];
-char dLight[MAXDUNX][MAXDUNY];
+int setpc_x;
+int setpc_y;
+int setpc_w;
+int setpc_h;
+BYTE *pSetPiece;
 BOOL setloadflag;
+BYTE *pSpecialCels;
 BYTE *pMegaTiles;
 BYTE *pLevelPieces;
-int gnDifficulty;
+BYTE *pDungeonCels;
+BYTE *pSpeedCels;
+int SpeedFrameTbl[128][16];
 /**
  * List of transparancy masks to use for dPieces
  */
-char block_lvid[2049];
-//char byte_5B78EB;
-char dTransVal[MAXDUNX][MAXDUNY];
-BOOLEAN nTrapTable[2049];
-BYTE leveltype;
-BYTE currlevel;
-BOOLEAN TransList[256];
-/**
- * List of path blocking dPieces
- */
-BOOLEAN nSolidTable[2049];
-ScrollStruct ScrollInfo;
-BYTE *pDungeonCels;
-THEME_LOC themeLoc[MAXTHEMES];
-char dPlayer[MAXDUNX][MAXDUNY];
-char dSpecial[MAXDUNX][MAXDUNY];
+char block_lvid[MAXTILES + 1];
+int level_frame_count[MAXTILES];
+int tile_defs[MAXTILES];
+WORD level_frame_types[MAXTILES];
+int level_frame_sizes[MAXTILES];
+int nlevel_frames;
 /**
  * List of light blocking dPieces
  */
-BOOLEAN nBlockTable[2049];
-BYTE *pSpecialCels;
-char dFlags[MAXDUNX][MAXDUNY];
-char dItem[MAXDUNX][MAXDUNY];
-BYTE setlvlnum;
+BOOLEAN nBlockTable[MAXTILES + 1];
+/**
+ * List of path blocking dPieces
+ */
+BOOLEAN nSolidTable[MAXTILES + 1];
+/**
+ * List of transparent dPieces
+ */
+BOOLEAN nTransTable[MAXTILES + 1];
 /**
  * List of missile blocking dPieces
  */
-BOOLEAN nMissileTable[2049];
-BYTE *pSetPiece;
-char setlvltype;
-BOOLEAN setlevel;
-int LvlViewY;
-int LvlViewX;
-int dmaxx;
-int dmaxy;
-int setpc_h;
-int setpc_w;
-int setpc_x;
-int ViewX;
-int ViewY;
-int setpc_y;
-char dMissile[MAXDUNX][MAXDUNY];
+BOOLEAN nMissileTable[MAXTILES + 1];
+BOOLEAN nTrapTable[MAXTILES + 1];
 int dminx;
 int dminy;
+int dmaxx;
+int dmaxy;
+int gnDifficulty;
+BYTE leveltype;
+BYTE currlevel;
+BOOLEAN setlevel;
+BYTE setlvlnum;
+char setlvltype;
+int ViewX;
+int ViewY;
+int ViewBX;
+int ViewBY;
+int ViewDX;
+int ViewDY;
+ScrollStruct ScrollInfo;
+int LvlViewX;
+int LvlViewY;
+int MicroTileLen;
+char TransVal;
+BOOLEAN TransList[256];
+int dPiece[MAXDUNX][MAXDUNY];
 MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
+MICROS dpiece_defs_map_1[MAXDUNX * MAXDUNY];
+char dTransVal[MAXDUNX][MAXDUNY];
+char dLight[MAXDUNX][MAXDUNY];
+char dPreLight[MAXDUNX][MAXDUNY];
+char dFlags[MAXDUNX][MAXDUNY];
+char dPlayer[MAXDUNX][MAXDUNY];
+int dMonster[MAXDUNX][MAXDUNY];
+char dDead[MAXDUNX][MAXDUNY];
+char dObject[MAXDUNX][MAXDUNY];
+char dItem[MAXDUNX][MAXDUNY];
+char dMissile[MAXDUNX][MAXDUNY];
+char dSpecial[MAXDUNX][MAXDUNY];
+int themeCount;
+THEME_LOC themeLoc[MAXTHEMES];
 
 void FillSolidBlockTbls()
 {
@@ -152,7 +161,7 @@ void SetDungeonMicros()
 		for (x = 0; x < MAXDUNX; x++) {
 			lv = dPiece[x][y];
 			pMap = &dpiece_defs_map_2[x][y];
-			if (lv) {
+			if (lv != 0) {
 				lv--;
 				if (leveltype != DTYPE_HELL && leveltype != DTYPE_TOWN)
 					pPiece = (WORD *)&pLevelPieces[20 * lv];
@@ -214,7 +223,7 @@ void DRLG_CopyTrans(int sx, int sy, int dx, int dy)
 void DRLG_ListTrans(int num, BYTE *List)
 {
 	int i;
-	BYTE x1, x2, y1, y2;
+	BYTE x1, y1, x2, y2;
 
 	for (i = 0; i < num; i++) {
 		x1 = *List++;
@@ -228,7 +237,7 @@ void DRLG_ListTrans(int num, BYTE *List)
 void DRLG_AreaTrans(int num, BYTE *List)
 {
 	int i;
-	BYTE x1, x2, y1, y2;
+	BYTE x1, y1, x2, y2;
 
 	for (i = 0; i < num; i++) {
 		x1 = *List++;
@@ -261,7 +270,7 @@ void DRLG_SetPC()
 
 	for (j = 0; j < h; j++) {
 		for (i = 0; i < w; i++) {
-			dFlags[i + x][j + y] |= 8;
+			dFlags[i + x][j + y] |= BFLAG_POPULATED;
 		}
 	}
 }
@@ -278,7 +287,7 @@ void Make_SetPC(int x, int y, int w, int h)
 
 	for (j = 0; j < dh; j++) {
 		for (i = 0; i < dw; i++) {
-			dFlags[i + dx][j + dy] |= 8;
+			dFlags[i + dx][j + dy] |= BFLAG_POPULATED;
 		}
 	}
 }

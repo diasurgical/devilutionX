@@ -3,17 +3,17 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 // BUGFIX: constant data should be const
-BYTE SkelKingTrans1[8] = {
+BYTE SkelKingTrans1[] = {
 	19, 47, 26, 55,
 	26, 49, 30, 53
 };
 
-BYTE SkelKingTrans2[8] = {
+BYTE SkelKingTrans2[] = {
 	33, 19, 47, 29,
 	37, 29, 43, 39
 };
 
-BYTE SkelKingTrans3[20] = {
+BYTE SkelKingTrans3[] = {
 	27, 53, 35, 61,
 	27, 35, 34, 42,
 	45, 35, 53, 43,
@@ -21,7 +21,7 @@ BYTE SkelKingTrans3[20] = {
 	31, 39, 49, 57
 };
 
-BYTE SkelKingTrans4[28] = {
+BYTE SkelKingTrans4[] = {
 	49, 45, 58, 51,
 	57, 31, 62, 37,
 	63, 31, 69, 40,
@@ -31,7 +31,7 @@ BYTE SkelKingTrans4[28] = {
 	79, 43, 89, 53
 };
 
-BYTE SkelChamTrans1[20] = {
+BYTE SkelChamTrans1[] = {
 	43, 19, 50, 26,
 	51, 19, 59, 26,
 	35, 27, 42, 34,
@@ -39,12 +39,12 @@ BYTE SkelChamTrans1[20] = {
 	50, 27, 59, 34
 };
 
-BYTE SkelChamTrans2[8] = {
+BYTE SkelChamTrans2[] = {
 	19, 31, 34, 47,
 	34, 35, 42, 42
 };
 
-BYTE SkelChamTrans3[36] = {
+BYTE SkelChamTrans3[] = {
 	43, 35, 50, 42,
 	51, 35, 62, 42,
 	63, 31, 66, 46,
@@ -63,7 +63,7 @@ char *quest_level_names[] = {
 	"Bone Chamber",
 	"Maze",
 	"Poisoned Water Supply",
-	"Archbishop Lazarus' Lair"
+	"Archbishop Lazarus' Lair",
 };
 
 int ObjIndex(int x, int y)
@@ -142,10 +142,10 @@ void LoadSetMap()
 		LoadPreL1Dungeon("Levels\\L1Data\\SklKng1.DUN", 83, 45);
 		LoadL1Dungeon("Levels\\L1Data\\SklKng2.DUN", 83, 45);
 		LoadPalette("Levels\\L1Data\\L1_2.pal");
-		DRLG_AreaTrans(sizeof(SkelKingTrans1) / 4, SkelKingTrans1);
-		DRLG_ListTrans(sizeof(SkelKingTrans2) / 4, SkelKingTrans2);
-		DRLG_AreaTrans(sizeof(SkelKingTrans3) / 4, SkelKingTrans3);
-		DRLG_ListTrans(sizeof(SkelKingTrans4) / 4, SkelKingTrans4);
+		DRLG_AreaTrans(sizeof(SkelKingTrans1) / 4, &SkelKingTrans1[0]);
+		DRLG_ListTrans(sizeof(SkelKingTrans2) / 4, &SkelKingTrans2[0]);
+		DRLG_AreaTrans(sizeof(SkelKingTrans3) / 4, &SkelKingTrans3[0]);
+		DRLG_ListTrans(sizeof(SkelKingTrans4) / 4, &SkelKingTrans4[0]);
 		AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
 		AddSKingObjs();
 		InitSKingTriggers();
@@ -154,9 +154,9 @@ void LoadSetMap()
 		LoadPreL2Dungeon("Levels\\L2Data\\Bonecha2.DUN", 69, 39);
 		LoadL2Dungeon("Levels\\L2Data\\Bonecha1.DUN", 69, 39);
 		LoadPalette("Levels\\L2Data\\L2_2.pal");
-		DRLG_ListTrans(sizeof(SkelChamTrans1) / 4, SkelChamTrans1);
-		DRLG_AreaTrans(sizeof(SkelChamTrans2) / 4, SkelChamTrans2);
-		DRLG_ListTrans(sizeof(SkelChamTrans3) / 4, SkelChamTrans3);
+		DRLG_ListTrans(sizeof(SkelChamTrans1) / 4, &SkelChamTrans1[0]);
+		DRLG_AreaTrans(sizeof(SkelChamTrans2) / 4, &SkelChamTrans2[0]);
+		DRLG_ListTrans(sizeof(SkelChamTrans3) / 4, &SkelChamTrans3[0]);
 		AddL2Objs(0, 0, MAXDUNX, MAXDUNY);
 		AddSChamObjs();
 		InitSChambTriggers();
@@ -172,7 +172,7 @@ void LoadSetMap()
 		if (quests[Q_PWATER]._qactive == QUEST_INIT)
 			quests[Q_PWATER]._qactive = QUEST_ACTIVE;
 		LoadPreL3Dungeon("Levels\\L3Data\\Foulwatr.DUN", 19, 50);
-		LoadL3Dungeon("Levels\\L3Data\\Foulwatr.DUN", 20, 50);
+		LoadL3Dungeon("Levels\\L3Data\\Foulwatr.DUN", 31, 83);
 		LoadPalette("Levels\\L3Data\\L3pfoul.pal");
 		InitPWaterTriggers();
 		break;

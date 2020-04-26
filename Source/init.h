@@ -6,6 +6,12 @@
 #ifndef __INIT_H__
 #define __INIT_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern _SNETVERSIONDATA fileinfo;
 extern int gbActive;
 extern char diablo_exe_path[MAX_PATH];
@@ -35,5 +41,11 @@ extern BOOL was_window_init;   /** defined in dx.cpp */
 
 extern char gszVersionNumber[MAX_PATH];
 extern char gszProductName[MAX_PATH];
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __INIT_H__ */

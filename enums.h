@@ -4,6 +4,8 @@
  * Various global enumerators.
  */
 
+DEVILUTION_BEGIN_NAMESPACE
+
 typedef enum item_quality {
 	ITEM_QUALITY_NORMAL = 0,
 	ITEM_QUALITY_MAGIC  = 1,
@@ -1167,14 +1169,14 @@ typedef enum _sfx_id {
 } _sfx_id;
 
 typedef enum sfx_flag {
-	SFX_STREAM   = 0x01,
-	SFX_MISC     = 0x02,
-	SFX_UI       = 0x04,
-	SFX_MONK     = 0x08,
-	SFX_ROGUE    = 0x10,
-	SFX_WARRIOR  = 0x20,
-	SFX_SORCEROR = 0x40,
-	SFX_LOADED   = 0x80,
+	sfx_STREAM   = 0x01,
+	sfx_MISC     = 0x02,
+	sfx_UI       = 0x04,
+	sfx_MONK     = 0x08,
+	sfx_ROGUE    = 0x10,
+	sfx_WARRIOR  = 0x20,
+	sfx_SORCEROR = 0x40,
+	sfx_LOADED   = 0x80,
 } sfx_flag;
 
 typedef enum item_equip_type {
@@ -1482,7 +1484,8 @@ typedef enum _monster_id {
 	MT_ADVOCATE = 0x6C,
 	MT_GOLEM    = 0x6D,
 	MT_DIABLO   = 0x6E,
-	NUM_MTYPES,
+	MT_DARKMAGE = 0x6F,
+	NUM_MTYPES  = 0x6F, /// BUGFIX the count is off by one
 } _monster_id;
 
 // this enum contains indexes from UniqMonst array for special unique monsters (usually quest related)
@@ -1802,7 +1805,7 @@ typedef enum _speech_id {
 	TEXT_BOOK31     = 0xFF,
 	TEXT_BOOK32     = 0x100,
 	TEXT_BOOK33     = 0x101,
-	TEXT_INTRO      = 0x102
+	TEXT_INTRO      = 0x102,
 } _speech_id;
 
 typedef enum object_graphic_id {
@@ -2545,22 +2548,23 @@ typedef enum _setlevels {
 } _setlevels;
 
 typedef enum quest_id {
-	Q_ROCK      = 0x0,
-	Q_MUSHROOM  = 0x1,
-	Q_GARBUD    = 0x2,
-	Q_ZHAR      = 0x3,
-	Q_VEIL      = 0x4,
-	Q_DIABLO    = 0x5,
-	Q_BUTCHER   = 0x6,
-	Q_LTBANNER  = 0x7,
-	Q_BLIND     = 0x8,
-	Q_BLOOD     = 0x9,
-	Q_ANVIL     = 0xA,
-	Q_WARLORD   = 0xB,
-	Q_SKELKING  = 0xC,
-	Q_PWATER    = 0xD,
-	Q_SCHAMB    = 0xE,
-	Q_BETRAYER  = 0xF
+	Q_ROCK     = 0x0,
+	Q_MUSHROOM = 0x1,
+	Q_GARBUD   = 0x2,
+	Q_ZHAR     = 0x3,
+	Q_VEIL     = 0x4,
+	Q_DIABLO   = 0x5,
+	Q_BUTCHER  = 0x6,
+	Q_LTBANNER = 0x7,
+	Q_BLIND    = 0x8,
+	Q_BLOOD    = 0x9,
+	Q_ANVIL    = 0xA,
+	Q_WARLORD  = 0xB,
+	Q_SKELKING = 0xC,
+	Q_PWATER   = 0xD,
+	Q_SCHAMB   = 0xE,
+	Q_BETRAYER = 0xF,
+	Q_INVALID  = -1,
 } quest_id;
 
 typedef enum quest_state {
@@ -2710,9 +2714,9 @@ typedef enum plr_class {
 } plr_class;
 
 typedef enum _ui_classes {
-	UI_WARRIOR     = 0x0,
-	UI_ROGUE       = 0x1,
-	UI_SORCERER    = 0x2,
+	UI_WARRIOR  = 0x0,
+	UI_ROGUE    = 0x1,
+	UI_SORCERER = 0x2,
 	UI_NUM_CLASSES,
 } _ui_classes;
 
@@ -2938,3 +2942,5 @@ typedef enum conn_type {
 #endif
 	SELCONN_LOOPBACK,
 } conn_type;
+
+DEVILUTION_END_NAMESPACE

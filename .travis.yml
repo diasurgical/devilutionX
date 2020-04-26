@@ -41,4 +41,4 @@ deploy:
     skip_cleanup: true
     on:
       tags: true
-      condition: $TRAVIS_OS_NAME = linux AND $TRAVIS_CPU_ARCH = ppc64le
+      condition: $TRAVIS_OS_NAME == "linux" && $TRAVIS_CPU_ARCH == "ppc64le"

@@ -2,6 +2,12 @@
 #ifndef __QUESTS_H__
 #define __QUESTS_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern int qtopline;
 extern BOOL questlog;
 extern BYTE *pQLogCel;
@@ -10,8 +16,8 @@ extern int qline;
 extern int qlist[MAXQUESTS];
 extern int numqlines;
 extern int WaterDone;
-extern int ReturnLvlY;
 extern int ReturnLvlX;
+extern int ReturnLvlY;
 extern int ReturnLvlT;
 extern int ALLQUESTS;
 extern int ReturnLvl;
@@ -51,5 +57,11 @@ extern int QuestGroup1[3];
 extern int QuestGroup2[3];
 extern int QuestGroup3[3];
 extern int QuestGroup4[2];
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __QUESTS_H__ */

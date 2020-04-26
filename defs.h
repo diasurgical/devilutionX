@@ -4,6 +4,10 @@
  * Global definitions and Macros.
  */
 
+#define DIABOOL					BOOL
+#define GAME_NAME				"DIABLO"
+#define APP_NAME				"Diablo"
+
 #define DMAXX					40
 #define DMAXY					40
 
@@ -51,6 +55,8 @@
 
 #define VOLUME_MIN				-1600
 #define VOLUME_MAX				0
+
+#define NUM_TOWNERS				16
 
 // todo: enums
 #define NUMLEVELS				17

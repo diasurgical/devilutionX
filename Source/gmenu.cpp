@@ -21,7 +21,7 @@ BYTE *sgpLogo;
 int sgCurrentMenuIdx;
 
 /** Maps from font index to bigtgold.cel frame number. */
-const BYTE lfontframe[127] = {
+const BYTE lfontframe[] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -34,11 +34,11 @@ const BYTE lfontframe[127] = {
 	26, 42, 0, 43, 0, 0, 0, 1, 2, 3,
 	4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
 	14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-	24, 25, 26, 20, 0, 21, 0
+	24, 25, 26, 20, 0, 21, 0, 0
 };
 
 /** Maps from bigtgold.cel frame number to character width. */
-const BYTE lfontkern[56] = {
+const BYTE lfontkern[] = {
 	18, 33, 21, 26, 28, 19, 19, 26, 25, 11,
 	12, 25, 19, 34, 28, 32, 20, 32, 28, 20,
 	28, 36, 35, 46, 33, 33, 24, 11, 23, 22,
@@ -64,7 +64,7 @@ void gmenu_print_text(int x, int y, char *pszStr)
 	while (*pszStr) {
 		c = gbFontTransTbl[(BYTE)*pszStr++];
 		c = lfontframe[c];
-		if (c)
+		if (c != 0)
 			CelDrawLight(x, y, BigTGold_cel, c, 46, NULL);
 		x += lfontkern[c] + 2;
 	}
@@ -83,8 +83,8 @@ void gmenu_init_menu()
 {
 	PentSpin_frame = 1;
 	sgpCurrentMenu = NULL;
-	sgpCurrItem = 0;
-	dword_63447C = 0;
+	sgpCurrItem = NULL;
+	dword_63447C = NULL;
 	sgCurrentMenuIdx = 0;
 	mouseNavigation = FALSE;
 	sgpLogo = LoadFileInMem("Data\\Diabsmal.CEL", NULL);
@@ -248,7 +248,7 @@ BOOL gmenu_presskeys(int vkey)
 		break;
 	case VK_ESCAPE:
 		PlaySFX(IS_TITLEMOV);
-		gmenu_set_items(0, 0);
+		gmenu_set_items(NULL, NULL);
 		break;
 	case VK_SPACE:
 		return FALSE;
@@ -386,7 +386,7 @@ void gmenu_slider_set(TMenuItem *pItem, int min, int max, int value)
 {
 	int nSteps;
 
-	/// ASSERT: assertassert(pItem, "gmenu.cpp", 445);
+	assert(pItem);
 	nSteps = (int)(pItem->dwFlags & 0xFFF000) >> 12;
 	if (nSteps < 2)
 		nSteps = 2;

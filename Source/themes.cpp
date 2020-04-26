@@ -26,7 +26,7 @@ BOOL bCrossFlag;
 
 int ThemeGood[4] = { THEME_GOATSHRINE, THEME_SHRINE, THEME_SKELROOM, THEME_LIBRARY };
 
-int trm5x[25] = {
+int trm5x[] = {
 	-2, -1, 0, 1, 2,
 	-2, -1, 0, 1, 2,
 	-2, -1, 0, 1, 2,
@@ -34,7 +34,7 @@ int trm5x[25] = {
 	-2, -1, 0, 1, 2
 };
 
-int trm5y[25] = {
+int trm5y[] = {
 	-2, -2, -2, -2, -2,
 	-1, -1, -1, -1, -1,
 	0, 0, 0, 0, 0,
@@ -42,13 +42,13 @@ int trm5y[25] = {
 	2, 2, 2, 2, 2
 };
 
-int trm3x[9] = {
+int trm3x[] = {
 	-1, 0, 1,
 	-1, 0, 1,
 	-1, 0, 1
 };
 
-int trm3y[9] = {
+int trm3y[] = {
 	-1, -1, -1,
 	0, 0, 0,
 	1, 1, 1
@@ -990,7 +990,7 @@ void UpdateL4Trans()
 
 	for (j = 0; j < MAXDUNY; j++) {
 		for (i = 0; i < MAXDUNX; i++) {
-			if (dTransVal[i][j]) {
+			if (dTransVal[i][j] != 0) {
 				dTransVal[i][j] = 1;
 			}
 		}
