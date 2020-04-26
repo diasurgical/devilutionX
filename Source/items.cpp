@@ -1444,7 +1444,7 @@ void SaveItemPower(int i, int power, int param1, int param2, int minval, int max
 		break;
 	case IPL_SPELL:
 		item[i]._iSpell = param1;
-		item[i]._iCharges = param1;
+		item[i]._iCharges = param1; // BUGFIX: should be param2. This code was correct in v1.04, and the bug was introduced between 1.04 and 1.09b.
 		item[i]._iMaxCharges = param2;
 		break;
 	case IPL_FIREDAM:
@@ -1697,7 +1697,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, int flgs, BOOL onlygood)
 				}
 			}
 		}
-		if (nl != 0) {
+		if (nt != 0) {
 			preidx = l[random_(23, nt)];
 			sprintf(istr, "%s %s", PL_Prefix[preidx].PLName, item[i]._iIName);
 			strcpy(item[i]._iIName, istr);
