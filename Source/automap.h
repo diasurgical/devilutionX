@@ -6,6 +6,12 @@
 #ifndef __AUTOMAP_H__
 #define __AUTOMAP_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern WORD automaptype[512];
 extern BOOL automapflag;
 extern char AmShiftTab[31];
@@ -35,5 +41,11 @@ WORD GetAutomapType(int x, int y, BOOL view);
 void DrawAutomapText();
 void SetAutomapView(int x, int y);
 void AutomapZoomReset();
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __AUTOMAP_H__ */
