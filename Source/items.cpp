@@ -1444,7 +1444,7 @@ void SaveItemPower(int i, int power, int param1, int param2, int minval, int max
 		break;
 	case IPL_SPELL:
 		item[i]._iSpell = param1;
-		item[i]._iCharges = param1;
+		item[i]._iCharges = param1; // BUGFIX: should be param2. This code was correct in v1.04, and the bug was introduced between 1.04 and 1.09b.
 		item[i]._iMaxCharges = param2;
 		break;
 	case IPL_FIREDAM:

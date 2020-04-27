@@ -35,30 +35,34 @@ void InitTownTriggers()
 {
 	int i;
 
-	trigs[0]._tx = 25;
-	trigs[0]._ty = 29;
-	trigs[0]._tmsg = WM_DIABNEXTLVL;
+	numtrigs = 0;
 
-	numtrigs = 1;
+	trigs[numtrigs]._tx = 25;
+	trigs[numtrigs]._ty = 29;
+	trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
+	numtrigs++;
+
 
 #ifndef SPAWN
 	if (gbMaxPlayers == MAX_PLRS) {
 		for (i = 0; i < sizeof(townwarps) / sizeof(townwarps[0]); i++) {
 			townwarps[i] = TRUE;
 		}
-		trigs[1]._tx = 49;
-		trigs[1]._ty = 21;
-		trigs[1]._tmsg = WM_DIABTOWNWARP;
-		trigs[1]._tlvl = 5;
-		trigs[2]._tx = 17;
-		trigs[2]._ty = 69;
-		trigs[2]._tmsg = WM_DIABTOWNWARP;
-		trigs[2]._tlvl = 9;
-		trigs[3]._tx = 41;
-		trigs[3]._ty = 80;
-		trigs[3]._tmsg = WM_DIABTOWNWARP;
-		trigs[3]._tlvl = 13;
-		numtrigs = 4;
+		trigs[numtrigs]._tx = 49;
+		trigs[numtrigs]._ty = 21;
+		trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
+		trigs[numtrigs]._tlvl = 5;
+		numtrigs++;
+		trigs[numtrigs]._tx = 17;
+		trigs[numtrigs]._ty = 69;
+		trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
+		trigs[numtrigs]._tlvl = 9;
+		numtrigs++;
+		trigs[numtrigs]._tx = 41;
+		trigs[numtrigs]._ty = 80;
+		trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
+		trigs[numtrigs]._tlvl = 13;
+		numtrigs++;
 	} else {
 #endif
 		for (i = 0; i < MAX_PLRS - 1; i++) {
@@ -66,11 +70,11 @@ void InitTownTriggers()
 		}
 #ifndef SPAWN
 		if (plr[myplr].pTownWarps & 1) {
-			trigs[1]._tx = 49;
-			trigs[1]._ty = 21;
-			trigs[1]._tmsg = WM_DIABTOWNWARP;
-			trigs[1]._tlvl = 5;
-			numtrigs = 2;
+			trigs[numtrigs]._tx = 49;
+			trigs[numtrigs]._ty = 21;
+			trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
+			trigs[numtrigs]._tlvl = 5;
+			numtrigs++;
 			townwarps[0] = TRUE;
 		}
 		if (plr[myplr].pTownWarps & 2) {
