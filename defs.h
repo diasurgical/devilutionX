@@ -56,6 +56,8 @@
 #define VOLUME_MIN				-1600
 #define VOLUME_MAX				0
 
+#define NUM_TOWNERS				16
+
 // todo: enums
 #define NUMLEVELS				17
 #define SMITH_ITEMS				20

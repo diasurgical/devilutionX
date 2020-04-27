@@ -659,7 +659,7 @@ void DrawLifeFlask()
 		filled = 11;
 	filled += 2;
 
-	DrawFlask(pLifeBuff, 88, 277, gpBuffer, SCREENXY(PANEL_LEFT + 109, PANEL_TOP - 13), filled);
+	DrawFlask(pLifeBuff, 88, 88 * 3 + 13, gpBuffer, SCREENXY(PANEL_LEFT + 109, PANEL_TOP - 13), filled);
 	if (filled != 13)
 		DrawFlask(pBtmBuff, PANEL_WIDTH, PANEL_WIDTH * (filled + 3) + 109, gpBuffer, SCREENXY(PANEL_LEFT + 109, PANEL_TOP - 13 + filled), 13 - filled);
 }
@@ -697,7 +697,7 @@ void DrawManaFlask()
 		filled = 11;
 	filled += 2;
 
-	DrawFlask(pManaBuff, 88, 277, gpBuffer, SCREENXY(PANEL_LEFT + 475, PANEL_TOP - 13), filled);
+	DrawFlask(pManaBuff, 88, 88 * 3 + 13, gpBuffer, SCREENXY(PANEL_LEFT + 475, PANEL_TOP - 13), filled);
 	if (filled != 13)
 		DrawFlask(pBtmBuff, PANEL_WIDTH, PANEL_WIDTH * (filled + 3) + 475, gpBuffer, SCREENXY(PANEL_LEFT + 475, PANEL_TOP - 13 + filled), 13 - filled);
 }
@@ -743,9 +743,9 @@ void UpdateManaFlask()
 	if (filled > 69)
 		filled = 69;
 	if (filled != 69)
-		SetFlaskHeight(pManaBuff, 16, 85 - filled, 96 + PANEL_X + 368, PANEL_Y);
+		SetFlaskHeight(pManaBuff, 16, 85 - filled, PANEL_X + 464, PANEL_Y);
 	if (filled != 0)
-		DrawPanelBox(96 + 368, 85 - filled, 88, filled, 96 + PANEL_X + 368, PANEL_Y + 69 - filled);
+		DrawPanelBox(464, 85 - filled, 88, filled, PANEL_X + 464, PANEL_Y + 69 - filled);
 
 	DrawSpell();
 }
