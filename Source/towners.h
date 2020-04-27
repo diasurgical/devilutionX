@@ -8,7 +8,7 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
-extern TownerStruct towner[16];
+extern TownerStruct towner[NUM_TOWNERS];
 
 int GetActiveTowner(int t);
 void SetTownerGPtrs(BYTE *pData, BYTE **pAnim);
