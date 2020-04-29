@@ -892,7 +892,7 @@ void PressKey(int vkey)
 		if (vkey == VK_RETURN) {
 			if (GetAsyncKeyState(VK_MENU) & 0x8000)
 				dx_reinit();
-					control_type_message();
+			control_type_message();
 		}
 		if (vkey != VK_ESCAPE) {
 			return;
