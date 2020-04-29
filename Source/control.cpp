@@ -899,11 +899,13 @@ void InitControlPan()
 	SetSpellTrans(RSPLTYPE_SKILL);
 	pStatusPanel = LoadFileInMem("CtrlPan\\Panel8.CEL", NULL);
 	CelBlitWidth(pBtmBuff, 0, (PANEL_HEIGHT + 16) - 1, PANEL_WIDTH, pStatusPanel, 1, PANEL_WIDTH);
-	pBtmBuff_png = safePNGLoad("ctrlpan\\Panel8");
+	std::vector<SDL_Surface *> v = safePNGLoadVector("CtrlPan\\Panel8");
+	pBtmBuff_png = v[0];
+	v.clear();
 	MemFreeDbg(pStatusPanel);
 	pStatusPanel = LoadFileInMem("CtrlPan\\P8Bulbs.CEL", NULL);
 	CelBlitWidth(pLifeBuff, 0, 87, 88, pStatusPanel, 1, 88);
-	std::vector<SDL_Surface *> v = safePNGLoadVector("CtrlPan\\P8Bulbs");
+	v = safePNGLoadVector("CtrlPan\\P8Bulbs");
 	pLifeBuff_png = v[0];
 	pManaBuff_png = v[1];
 	CelBlitWidth(pManaBuff, 0, 87, 88, pStatusPanel, 2, 88);

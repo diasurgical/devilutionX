@@ -69,20 +69,6 @@ std::vector<SDL_Surface *> safePNGLoadVector(std::string path)
 	return out;
 }
 
-SDL_Surface *safePNGLoad(std::string path)
-{
-	std::string merged_path = png_path;
-	merged_path += path;
-	std::string name = base_name(merged_path);
-	merged_path += "\\";
-	merged_path += name;
-	merged_path += ".png";
-	SDL_Surface *loadedSurface = IMG_Load(merged_path.c_str());
-	if (loadedSurface == NULL)
-		ErrSdl();
-	return loadedSurface;
-}
-
 char gbPixelCol;  // automap pixel color 8-bit (palette entry)
 BOOL gbRotateMap; // flip - if y < x
 int orgseed;
