@@ -172,7 +172,7 @@ void LoadSetMap()
 		if (quests[Q_PWATER]._qactive == QUEST_INIT)
 			quests[Q_PWATER]._qactive = QUEST_ACTIVE;
 		LoadPreL3Dungeon("Levels\\L3Data\\Foulwatr.DUN", 19, 50);
-		LoadL3Dungeon("Levels\\L3Data\\Foulwatr.DUN", 20, 50);
+		LoadL3Dungeon("Levels\\L3Data\\Foulwatr.DUN", 31, 83);
 		LoadPalette("Levels\\L3Data\\L3pfoul.pal");
 		InitPWaterTriggers();
 		break;

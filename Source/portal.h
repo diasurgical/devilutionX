@@ -2,6 +2,12 @@
 #ifndef __PORTAL_H__
 #define __PORTAL_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern PortalStruct portal[MAXPORTAL];
 extern int portalindex;
 
@@ -22,5 +28,11 @@ BOOL PosOkPortal(int lvl, int x, int y);
 /* rdata */
 extern int WarpDropX[MAXPORTAL];
 extern int WarpDropY[MAXPORTAL];
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __PORTAL_H__ */

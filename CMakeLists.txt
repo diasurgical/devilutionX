@@ -37,9 +37,14 @@ if(NOT VERSION_NUM)
   endif()
 endif()
 
-project(DevilutionX
-  VERSION ${VERSION_NUM}
-  LANGUAGES C CXX)
+if(VERSION_NUM MATCHES untagged)
+  project(DevilutionX
+    LANGUAGES C CXX)
+else()
+  project(DevilutionX
+    VERSION ${VERSION_NUM}
+    LANGUAGES C CXX)
+endif()
 
 # Not a genexp because CMake doesn't support it
 # https://gitlab.kitware.com/cmake/cmake/-/issues/20546

@@ -502,6 +502,10 @@ static void DRLG_InitL1Vals()
 				pc = 2;
 			} else if (dPiece[i][j] == 71) {
 				pc = 1;
+			} else if (dPiece[i][j] == 253) {
+				pc = 3;
+			} else if (dPiece[i][j] == 267) {
+				pc = 6;
 			} else if (dPiece[i][j] == 259) {
 				pc = 5;
 			} else if (dPiece[i][j] == 249) {

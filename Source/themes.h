@@ -6,6 +6,12 @@
 #ifndef __THEMES_H__
 #define __THEMES_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern int numthemes;
 extern BOOL armorFlag;
 extern BOOL ThemeGoodIn[4];
@@ -62,5 +68,11 @@ extern int trm5x[25];
 extern int trm5y[25];
 extern int trm3x[9];
 extern int trm3y[9];
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __THEMES_H__ */

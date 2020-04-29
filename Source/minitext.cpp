@@ -168,7 +168,7 @@ void DrawQText()
 		}
 	}
 
-	for (currTime = SDL_GetTicks(); sgLastScroll + scrolltexty < currTime; sgLastScroll += scrolltexty) {
+	for (currTime = SDL_GetTicks(); qtextSpd + scrolltexty < currTime; qtextSpd += scrolltexty) {
 		qtexty--;
 		if (qtexty <= 209) {
 			qtexty += 38;
