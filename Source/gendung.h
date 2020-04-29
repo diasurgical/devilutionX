@@ -25,6 +25,7 @@ extern BYTE *pSpecialCels;
 extern BYTE *pMegaTiles;
 extern BYTE *pLevelPieces;
 extern BYTE *pDungeonCels;
+extern std::vector<SDL_Surface *> pDungeonCels_png;
 extern BYTE *pSpeedCels;
 extern int SpeedFrameTbl[128][16];
 extern char block_lvid[MAXTILES + 1];

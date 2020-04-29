@@ -15,6 +15,15 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+std::vector<SDL_Surface *> safePNGLoadVector(std::string path);
+SDL_Surface *safePNGLoad(std::string path);
+
+
+extern SDL_Surface *test_surface;
+extern std::string png_path;
+extern int testvar;
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -15,47 +15,6 @@ int icursH28;
 BYTE *pCursCels;
 std::vector<SDL_Surface *> pCursCels_png;
 
-std::string base_name2(std::string const &path)
-{
-	return path.substr(path.find_last_of("/\\") + 1);
-}
-
-std::string generate_number2(int n)
-{
-	char buf[5];
-	sprintf(buf, "%04d", n);
-	std::string base(buf);
-	return base;
-}
-
-std::vector<SDL_Surface *> safePNGLoadVector2(std::string path)
-{
-	std::string name = base_name2(path);
-	std::vector<SDL_Surface *> out;
-	for (int i = 1;; i++) {
-		std::string merged_path = png_path;
-		merged_path += path;
-		merged_path += "\\";
-		merged_path += name;
-		merged_path += "_";
-		merged_path += generate_number2(i);
-		merged_path += ".png";
-		SDL_Surface *loadedSurface = IMG_Load(merged_path.c_str());
-		if (loadedSurface != NULL) {
-			out.push_back(loadedSurface);
-		} else {
-			break;
-		}
-	}
-
-	if (out.size() == 0) {
-		ErrSdl();
-	}
-	return out;
-}
-
-
-
 /** inv_item value */
 char pcursinvitem;
 int icursW;
@@ -125,7 +84,7 @@ void InitCursor()
 {
 	assert(!pCursCels);
 	pCursCels = LoadFileInMem("Data\\Inv\\Objcurs.CEL", NULL);
-	pCursCels_png = safePNGLoadVector2("Data\\Inv\\Objcurs");
+	pCursCels_png = safePNGLoadVector("Data\\Inv\\Objcurs");
 	ClearCursor();
 }
 

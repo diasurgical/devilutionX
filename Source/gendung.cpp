@@ -20,6 +20,7 @@ BYTE *pSpecialCels;
 BYTE *pMegaTiles;
 BYTE *pLevelPieces;
 BYTE *pDungeonCels;
+std::vector<SDL_Surface *> pDungeonCels_png;
 BYTE *pSpeedCels;
 int SpeedFrameTbl[128][16];
 /**

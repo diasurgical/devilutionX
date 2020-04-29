@@ -7,71 +7,6 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-std::string png_path3 = "H:\\DIABLOPNG\\_dump_\\";
-
-std::string base_name3(std::string const &path)
-{
-	return path.substr(path.find_last_of("/\\") + 1);
-}
-
-std::string generate_number3(int n)
-{
-	char buf[5];
-	sprintf(buf, "%04d", n);
-	std::string base(buf);
-	return base;
-}
-
-std::vector<SDL_Surface *> safePNGLoadVector3(std::string path)
-{
-	std::string name = base_name3(path);
-	std::vector<SDL_Surface *> out;
-	std::string merged_path_single = png_path3;
-	merged_path_single += path;
-	merged_path_single += "\\";
-	merged_path_single += name;
-	merged_path_single += ".png";
-	SDL_Surface *loadedSurface = IMG_Load(merged_path_single.c_str());
-	if (loadedSurface != NULL) {
-		out.push_back(loadedSurface);
-		return out;
-	}
-	for (int i = 1;; i++) {
-		std::string merged_path = png_path3;
-		merged_path += path;
-		merged_path += "\\";
-		merged_path += name;
-		merged_path += "_";
-		merged_path += generate_number3(i);
-		merged_path += ".png";
-		loadedSurface = IMG_Load(merged_path.c_str());
-		if (loadedSurface != NULL) {
-			out.push_back(loadedSurface);
-		} else {
-			break;
-		}
-	}
-
-	if (out.size() == 0) {
-		ErrSdl();
-	}
-	return out;
-}
-
-SDL_Surface *safePNGLoad3(std::string path)
-{
-	std::string merged_path = png_path3;
-	merged_path += path;
-	std::string name = base_name3(merged_path);
-	merged_path += "\\";
-	merged_path += name;
-	merged_path += ".png";
-	SDL_Surface *loadedSurface = IMG_Load(merged_path.c_str());
-	if (loadedSurface == NULL)
-		ErrSdl();
-	return loadedSurface;
-}
-
 BOOL invflag;
 BYTE *pInvCels;
 std::vector<SDL_Surface *> pInvCels_png;
@@ -186,14 +121,14 @@ void InitInv()
 {
 	if (plr[myplr]._pClass == PC_WARRIOR) {
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", NULL);
-		pInvCels_png = safePNGLoadVector3("Data\\Inv\\Inv");
+		pInvCels_png = safePNGLoadVector("Data\\Inv\\Inv");
 #ifndef SPAWN
 	} else if (plr[myplr]._pClass == PC_ROGUE) {
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv_rog.CEL", NULL);
-		pInvCels_png = safePNGLoadVector3("Data\\Inv\\Inv_rog");
+		pInvCels_png = safePNGLoadVector("Data\\Inv\\Inv_rog");
 	} else if (plr[myplr]._pClass == PC_SORCERER) {
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv_Sor.CEL", NULL);
-		pInvCels_png = safePNGLoadVector3("Data\\Inv\\Inv_Sor");
+		pInvCels_png = safePNGLoadVector("Data\\Inv\\Inv_Sor");
 #endif
 	}
 

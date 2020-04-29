@@ -11,9 +11,6 @@ DEVILUTION_BEGIN_NAMESPACE
 #ifdef __cplusplus
 extern "C" {
 #endif
-extern SDL_Surface *test_surface;
-extern std::string png_path;
-extern int testvar;
 
 extern BYTE *pDurIcons;
 extern BYTE *pChrButtons;
