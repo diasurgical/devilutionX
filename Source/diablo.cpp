@@ -891,8 +891,8 @@ void PressKey(int vkey)
 		}
 		if (vkey == VK_RETURN) {
 			if (GetAsyncKeyState(VK_MENU) & 0x8000)
-			dx_reinit();
-			control_type_message();
+				dx_reinit();
+					control_type_message();
 		}
 		if (vkey != VK_ESCAPE) {
 			return;
@@ -915,7 +915,7 @@ void PressKey(int vkey)
 	}
 	if (PauseMode == 2) {
 		if ((vkey == VK_RETURN) && (GetAsyncKeyState(VK_MENU) & 0x8000))
-		dx_reinit();
+			dx_reinit();
 		return;
 	}
 
