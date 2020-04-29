@@ -890,9 +890,9 @@ void PressKey(int vkey)
 			diablo_hotkey_msg(3);
 		}
 		if (vkey == VK_RETURN) {
+			control_type_message();
 			if (GetAsyncKeyState(VK_MENU) & 0x8000)
 				dx_reinit();
-			control_type_message();
 		}
 		if (vkey != VK_ESCAPE) {
 			return;
