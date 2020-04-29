@@ -206,6 +206,7 @@ void CelDrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, BYTE *tb
 
 	pRLEBytes = CelGetFrame(pCelBuff, nCel, &nDataSize);
 	pDecodeTo = &gpBuffer[sx + BUFFER_WIDTH * sy];
+
 	if (light_table_index || tbl)
 		CelBlitLightSafe(pDecodeTo, pRLEBytes, nDataSize, nWidth, tbl);
 	else
