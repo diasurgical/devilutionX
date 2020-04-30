@@ -17,6 +17,7 @@ int setpc_h;
 BYTE *pSetPiece;
 BOOL setloadflag;
 BYTE *pSpecialCels;
+std::vector<SDL_Surface *> pSpecialCels_png;
 BYTE *pMegaTiles;
 BYTE *pLevelPieces;
 BYTE *pDungeonCels;

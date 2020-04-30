@@ -1363,12 +1363,15 @@ void LoadLvlGFX()
 		pMegaTiles = LoadFileInMem("Levels\\TownData\\Town.TIL", NULL);
 		pLevelPieces = LoadFileInMem("Levels\\TownData\\Town.MIN", NULL);
 		pSpecialCels = LoadFileInMem("Levels\\TownData\\TownS.CEL", NULL);
+		pSpecialCels_png = safePNGLoadVector("Levels\\TownData\\TownS", "town");
 		break;
 	case DTYPE_CATHEDRAL:
 		pDungeonCels = LoadFileInMem("Levels\\L1Data\\L1.CEL", NULL);
+		pDungeonCels_png = safePNGLoadVector("Levels\\L1Data\\L1", "l1_1");
 		pMegaTiles = LoadFileInMem("Levels\\L1Data\\L1.TIL", NULL);
 		pLevelPieces = LoadFileInMem("Levels\\L1Data\\L1.MIN", NULL);
 		pSpecialCels = LoadFileInMem("Levels\\L1Data\\L1S.CEL", NULL);
+		pSpecialCels_png = safePNGLoadVector("Levels\\L1Data\\L1S", "l1_1");
 		break;
 #ifndef SPAWN
 	case DTYPE_CATACOMBS:

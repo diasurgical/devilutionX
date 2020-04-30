@@ -205,7 +205,7 @@ static void scrollrt_draw_cursor_item()
 		if (col != PAL16_RED + 5) {
 			if (testvar % 2) {
 				CelClippedDrawSafePNG(mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels_png, pcurs, cursW);
-			} else{
+			} else {
 				CelClippedDrawSafe(mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW);
 			}
 		} else {
@@ -552,7 +552,7 @@ static void drawCell(int x, int y, int sx, int sy)
 			arch_draw_type = i == 0 ? 1 : 0;
 			if (testvar % 2) {
 				RenderTilePNG(sx, sy);
-				sx += 32;
+				//sx += 32;
 				//sy += 32;
 			} else
 				RenderTile(dst);
@@ -561,10 +561,11 @@ static void drawCell(int x, int y, int sx, int sy)
 		if (level_cel_block != 0) {
 			arch_draw_type = i == 0 ? 2 : 0;
 			if (testvar % 2) {
-				RenderTilePNG(sx, sy);
+				RenderTilePNG(sx + 32, sy);
 			} else
 				RenderTile(dst + 32);
 		}
+		sy -= 32;
 		dst -= BUFFER_WIDTH * 32;
 	}
 	cel_foliage_active = false;
@@ -588,7 +589,7 @@ static void drawFloor(int x, int y, int sx, int sy)
 	if (level_cel_block != 0) {
 		if (testvar % 2) {
 			RenderTilePNG(sx, sy);
-			sx += 32;
+			//sx += 32;
 			//sy += 32;
 		} else
 			RenderTile(dst);
@@ -597,7 +598,7 @@ static void drawFloor(int x, int y, int sx, int sy)
 	level_cel_block = dpiece_defs_map_2[x][y].mt[1];
 	if (level_cel_block != 0) {
 		if (testvar % 2) {
-			RenderTilePNG(sx, sy);
+			RenderTilePNG(sx + 32, sy);
 		} else
 			RenderTile(dst + 32);
 	}
@@ -779,7 +780,10 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy)
 		bArch = dSpecial[sx][sy];
 		if (bArch != 0) {
 			cel_transparency_active = TransList[bMap];
-			CelClippedBlitLightTrans(&gpBuffer[dx + BUFFER_WIDTH * dy], pSpecialCels, bArch, 64);
+			if (testvar % 2)
+				CelClippedBlitLightTransPNG(dx, dy, pSpecialCels_png, bArch, 64);
+			else
+				CelClippedBlitLightTrans(&gpBuffer[dx + BUFFER_WIDTH * dy], pSpecialCels, bArch, 64);
 		}
 	} else {
 		// Tree leafs should always cover player when entering or leaving the tile,
@@ -788,7 +792,10 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy)
 		if (sx > 0 && sy > 0 && dy > 32 + SCREEN_Y) {
 			bArch = dSpecial[sx - 1][sy - 1];
 			if (bArch != 0) {
-				CelBlitFrame(&gpBuffer[dx + BUFFER_WIDTH * (dy - 32)], pSpecialCels, bArch, 64);
+				if (testvar % 2)
+					CelBlitFramePNG(dx, (dy - 32), pSpecialCels_png, bArch, 64);
+				else
+					CelBlitFrame(&gpBuffer[dx + BUFFER_WIDTH * (dy - 32)], pSpecialCels, bArch, 64);
 			}
 		}
 	}
@@ -808,7 +815,7 @@ static void scrollrt_drawFloor(int x, int y, int sx, int sy, int blocks, int chu
 	assert(gpBuffer);
 
 	for (int i = 0; i < (blocks << 1); i++) {
-		for (int j = 0; j < chunks ; j++) {
+		for (int j = 0; j < chunks; j++) {
 			if (x >= 0 && x < MAXDUNX && y >= 0 && y < MAXDUNY) {
 				level_piece_id = dPiece[x][y];
 				if (level_piece_id != 0) {
@@ -860,7 +867,7 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int blocks, int chunks)
 	assert(gpBuffer);
 
 	for (int i = 0; i < (blocks << 1); i++) {
-		for (int j = 0; j < chunks ; j++) {
+		for (int j = 0; j < chunks; j++) {
 			if (x >= 0 && x < MAXDUNX && y >= 0 && y < MAXDUNY) {
 				if (x + 1 < MAXDUNX && y - 1 >= 0 && sx + 64 <= SCREEN_X + SCREEN_WIDTH) {
 					// Render objects behind walls first to prevent sprites, that are moving
@@ -868,7 +875,7 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int blocks, int chunks)
 					// A propper fix for this would probably be to layout the sceen and render by
 					// sprite screen position rather then tile position.
 					if (IsWall(x, y) && (IsWall(x + 1, y) || (x > 0 && IsWall(x - 1, y)))) { // Part of a wall aligned on the x-axis
-						if (IsWalktabke(x + 1, y - 1) && IsWalktabke(x, y - 1) ) { // Has wakable area behind it
+						if (IsWalktabke(x + 1, y - 1) && IsWalktabke(x, y - 1)) {            // Has wakable area behind it
 							scrollrt_draw_dungeon(x + 1, y - 1, sx + 64, sy);
 						}
 					}

@@ -68,7 +68,7 @@ std::vector<SDL_Surface *> safePNGLoadVector(std::string path, std::string pal)
 	}
 
 	if (out.size() == 0) {
-		ErrSdl();
+		//ErrSdl();
 	}
 	return out;
 }
@@ -147,6 +147,15 @@ void CelBlitFrame(BYTE *pBuff, BYTE *pCelBuff, int nCel, int nWidth)
 
 	pRLEBytes = CelGetFrame(pCelBuff, nCel, &nDataSize);
 	CelBlitSafe(pBuff, pRLEBytes, nDataSize, nWidth);
+}
+
+void CelBlitFramePNG(int sx, int sy, std::vector<SDL_Surface *> &pCelBuff, int nCel, int nWidth)
+{
+	if (pCelBuff.size() < nCel) {
+		SDL_Log("INVALID SURFACE VECTOR IN CelBlitFramePNG");
+		return;
+	}
+	CelBlitSafePNG(sx, sy, pCelBuff[nCel - 1]);
 }
 
 /**

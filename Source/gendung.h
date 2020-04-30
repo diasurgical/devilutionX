@@ -22,6 +22,7 @@ extern int setpc_h;
 extern BYTE *pSetPiece;
 extern BOOL setloadflag;
 extern BYTE *pSpecialCels;
+extern std::vector<SDL_Surface *> pSpecialCels_png;
 extern BYTE *pMegaTiles;
 extern BYTE *pLevelPieces;
 extern BYTE *pDungeonCels;

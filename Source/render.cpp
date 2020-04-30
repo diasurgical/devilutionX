@@ -197,7 +197,6 @@ void RenderTile(BYTE *pBuff)
 	src = &pDungeonCels[SDL_SwapLE32(pFrameTable[level_cel_block & 0xFFF])];
 	tile = (level_cel_block & 0x7000) >> 12;
 	tbl = &pLightTbl[256 * light_table_index];
-
 	mask = &SolidMask[31];
 
 	if (cel_transparency_active) {
@@ -307,41 +306,24 @@ void RenderTilePNG(int x, int y)
 	int w = pDungeonCels_png[(level_cel_block & 0xFFF) - 1]->w, h = pDungeonCels_png[(level_cel_block & 0xFFF) - 1]->h;
 
 	switch (tile) {
-		case RT_LTRIANGLE:
-		case RT_RTRIANGLE:
-	    //case RT_TRANSPARENT:
+		//case RT_LTRIANGLE:
+		//case RT_RTRIANGLE:
+		//case RT_TRANSPARENT:
 	    //case RT_SQUARE:
 	    //case RT_LTRAPEZOID:
 	    //case RT_RTRAPEZOID:
-		{
-		    x -= SCREEN_X;
-		    y -= SCREEN_Y;
-		    break;
-		}
-	    case RT_TRANSPARENT:
-		{
-		    x -= SCREEN_X;
-		    y -= SCREEN_Y;
-		    x -= w;
-		    y -= h;
-		    break;
-		}
-		case RT_SQUARE:
-		{
-		    return;
-		    x -= SCREEN_X;
-		    y -= SCREEN_Y;
-		    x -= w;
-		    y -= h;
-		    break;
-		}
+		//{
+		//	return;
+		//}
+
 		default:
-			return;
+		    x -= SCREEN_X;
+		    y -= SCREEN_Y - 1;
 	}
 
 	SDL_Rect rectdst;
 	rectdst.x = x;
-	rectdst.y = y - h;
+	rectdst.y = y - 32;
 	rectdst.w = w;
 	rectdst.h = h;
 	SDL_BlitSurface(pDungeonCels_png[(level_cel_block & 0xFFF) - 1], NULL, test_surface, &rectdst);
