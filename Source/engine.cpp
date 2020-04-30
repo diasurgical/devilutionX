@@ -31,7 +31,7 @@ std::string generate_number(int n)
 	return base;
 }
 
-std::vector<SDL_Surface *> safePNGLoadVector(std::string path)
+std::vector<SDL_Surface *> safePNGLoadVector(std::string path, std::string pal)
 {
 	std::string name = base_name(path);
 	std::vector<SDL_Surface *> out;
@@ -51,6 +51,10 @@ std::vector<SDL_Surface *> safePNGLoadVector(std::string path)
 		std::string merged_path = png_path;
 		merged_path += path;
 		merged_path += "\\";
+		if (pal != "") {
+			merged_path += pal;
+			merged_path += ".pal\\";
+		}
 		merged_path += name;
 		merged_path += "_";
 		merged_path += generate_number(i);
@@ -67,6 +71,11 @@ std::vector<SDL_Surface *> safePNGLoadVector(std::string path)
 		ErrSdl();
 	}
 	return out;
+}
+
+std::vector<SDL_Surface *> safePNGLoadVector(std::string path)
+{
+	return safePNGLoadVector(path, "");
 }
 
 char gbPixelCol;  // automap pixel color 8-bit (palette entry)

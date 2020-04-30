@@ -1359,6 +1359,7 @@ void LoadLvlGFX()
 	switch (leveltype) {
 	case DTYPE_TOWN:
 		pDungeonCels = LoadFileInMem("Levels\\TownData\\Town.CEL", NULL);
+		pDungeonCels_png = safePNGLoadVector("Levels\\TownData\\Town", "town");
 		pMegaTiles = LoadFileInMem("Levels\\TownData\\Town.TIL", NULL);
 		pLevelPieces = LoadFileInMem("Levels\\TownData\\Town.MIN", NULL);
 		pSpecialCels = LoadFileInMem("Levels\\TownData\\TownS.CEL", NULL);

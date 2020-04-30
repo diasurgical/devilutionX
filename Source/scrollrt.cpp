@@ -550,12 +550,20 @@ static void drawCell(int x, int y, int sx, int sy)
 		level_cel_block = pMap->mt[2 * i];
 		if (level_cel_block != 0) {
 			arch_draw_type = i == 0 ? 1 : 0;
-			RenderTile(dst);
+			if (testvar % 2) {
+				RenderTilePNG(sx, sy);
+				sx += 32;
+				//sy += 32;
+			} else
+				RenderTile(dst);
 		}
 		level_cel_block = pMap->mt[2 * i + 1];
 		if (level_cel_block != 0) {
 			arch_draw_type = i == 0 ? 2 : 0;
-			RenderTile(dst + 32);
+			if (testvar % 2) {
+				RenderTilePNG(sx, sy);
+			} else
+				RenderTile(dst + 32);
 		}
 		dst -= BUFFER_WIDTH * 32;
 	}
@@ -578,12 +586,20 @@ static void drawFloor(int x, int y, int sx, int sy)
 	arch_draw_type = 1; // Left
 	level_cel_block = dpiece_defs_map_2[x][y].mt[0];
 	if (level_cel_block != 0) {
-		RenderTile(dst);
+		if (testvar % 2) {
+			RenderTilePNG(sx, sy);
+			sx += 32;
+			//sy += 32;
+		} else
+			RenderTile(dst);
 	}
 	arch_draw_type = 2; // Right
 	level_cel_block = dpiece_defs_map_2[x][y].mt[1];
 	if (level_cel_block != 0) {
-		RenderTile(dst + 32);
+		if (testvar % 2) {
+			RenderTilePNG(sx, sy);
+		} else
+			RenderTile(dst + 32);
 	}
 }
 

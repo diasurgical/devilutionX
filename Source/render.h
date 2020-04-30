@@ -8,6 +8,7 @@ extern "C" {
 #endif
 
 void RenderTile(BYTE *pBuff);
+void RenderTilePNG(int x, int y);
 void world_draw_black_tile(int sx, int sy);
 void trans_rect(int sx, int sy, int width, int height);
 
