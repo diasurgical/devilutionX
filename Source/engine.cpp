@@ -16,6 +16,7 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 std::string png_path = "H:\\DIABLOPNG\\_dump_\\";
+std::string level_pal = "";
 int testvar = 0;
 
 std::string base_name(std::string const &path)
@@ -31,7 +32,7 @@ std::string generate_number(int n)
 	return base;
 }
 
-std::vector<SDL_Surface *> safePNGLoadVector(std::string path, std::string pal)
+std::vector<SDL_Surface *> safePNGLoadVector(std::string path, std::string pal, std::string separator)
 {
 	std::string name = base_name(path);
 	std::vector<SDL_Surface *> out;
@@ -47,6 +48,7 @@ std::vector<SDL_Surface *> safePNGLoadVector(std::string path, std::string pal)
 		return out;
 	}
 
+	derp:
 	for (int i = 1;; i++) {
 		std::string merged_path = png_path;
 		merged_path += path;
@@ -56,9 +58,10 @@ std::vector<SDL_Surface *> safePNGLoadVector(std::string path, std::string pal)
 			merged_path += ".pal\\";
 		}
 		merged_path += name;
-		merged_path += "_";
+		merged_path += separator;
 		merged_path += generate_number(i);
 		merged_path += ".png";
+		SDL_Log("%s", merged_path.c_str());
 		SDL_Surface *loadedSurface = IMG_Load(merged_path.c_str());
 		if (loadedSurface != NULL) {
 			out.push_back(loadedSurface);
@@ -68,14 +71,13 @@ std::vector<SDL_Surface *> safePNGLoadVector(std::string path, std::string pal)
 	}
 
 	if (out.size() == 0) {
-		//ErrSdl();
+		if (pal != "") {
+			pal = "";
+			goto derp;
+		}
+		ErrSdl();
 	}
 	return out;
-}
-
-std::vector<SDL_Surface *> safePNGLoadVector(std::string path)
-{
-	return safePNGLoadVector(path, "");
 }
 
 char gbPixelCol;  // automap pixel color 8-bit (palette entry)

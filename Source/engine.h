@@ -15,11 +15,11 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-std::vector<SDL_Surface *> safePNGLoadVector(std::string path, std::string pal);
-std::vector<SDL_Surface *> safePNGLoadVector(std::string path);
+std::vector<SDL_Surface *> safePNGLoadVector(std::string path, std::string pal = "", std::string separator = "_");
 
 extern SDL_Surface *test_surface;
 extern std::string png_path;
+extern std::string level_pal;
 extern int testvar;
 
 

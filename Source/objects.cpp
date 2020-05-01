@@ -113,7 +113,7 @@ void InitObjectGFX()
 
 			char filestr2[32];
 			sprintf(filestr2, "Objects\\%s", ObjMasterLoadList[i]);
-			pObjCels_png[numobjfiles] = safePNGLoadVector(filestr2);
+			pObjCels_png[numobjfiles] = safePNGLoadVector(filestr2, level_pal);
 
 			numobjfiles++;
 		}
@@ -901,7 +901,7 @@ void SetMapObjects(BYTE *pMap, int startx, int starty)
 
 		char filestr2[32];
 		sprintf(filestr2, "Objects\\%s", ObjMasterLoadList[i]);
-		pObjCels_png[numobjfiles] = safePNGLoadVector(filestr2);
+		pObjCels_png[numobjfiles] = safePNGLoadVector(filestr2, level_pal);
 
 
 		numobjfiles++;

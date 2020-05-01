@@ -1367,11 +1367,14 @@ void LoadLvlGFX()
 		break;
 	case DTYPE_CATHEDRAL:
 		pDungeonCels = LoadFileInMem("Levels\\L1Data\\L1.CEL", NULL);
-		pDungeonCels_png = safePNGLoadVector("Levels\\L1Data\\L1", "l1_1");
+		char buf[200];
+		sprintf(buf, "l1_%d", random_(0, 4) + 1);
+		pDungeonCels_png = safePNGLoadVector("Levels\\L1Data\\L1", buf);
 		pMegaTiles = LoadFileInMem("Levels\\L1Data\\L1.TIL", NULL);
 		pLevelPieces = LoadFileInMem("Levels\\L1Data\\L1.MIN", NULL);
 		pSpecialCels = LoadFileInMem("Levels\\L1Data\\L1S.CEL", NULL);
-		pSpecialCels_png = safePNGLoadVector("Levels\\L1Data\\L1S", "l1_1");
+		pSpecialCels_png = safePNGLoadVector("Levels\\L1Data\\L1S", buf);
+		level_pal = buf;
 		break;
 #ifndef SPAWN
 	case DTYPE_CATACOMBS:
