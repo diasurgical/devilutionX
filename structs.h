@@ -106,6 +106,7 @@ typedef struct ItemStruct {
 	int _iy;
 	BOOL _iAnimFlag;
 	unsigned char *_iAnimData; // PSX name -> ItemFrame
+	std::vector<SDL_Surface *> *_iAnimData_png;
 	int _iAnimLen;
 	int _iAnimFrame;
 	int _iAnimWidth;

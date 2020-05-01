@@ -34,6 +34,9 @@ std::string generate_number(int n)
 
 std::vector<SDL_Surface *> safePNGLoadVector(std::string path, std::string pal, std::string separator)
 {
+	if (path.substr(path.length() - 4, 4) == ".CEL") {
+		path = path.substr(0, path.length() - 4);
+	}
 	std::string name = base_name(path);
 	std::vector<SDL_Surface *> out;
 
@@ -394,6 +397,7 @@ void CelBlitSafePNG(int dx, int dy, SDL_Surface *surf)
 	rectdst.y = dy - surf->h;
 	rectdst.w = surf->w;
 	rectdst.h = surf->h;
+
 	SDL_BlitSurface(surf, NULL, test_surface, &rectdst);
 }
 

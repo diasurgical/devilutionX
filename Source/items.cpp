@@ -15,6 +15,7 @@ ItemGetRecordStruct itemrecord[MAXITEMS];
 ItemStruct item[MAXITEMS + 1];
 BOOL itemhold[3][3];
 BYTE *itemanims[ITEMTYPES];
+std::vector<SDL_Surface *> itemanims_png[ITEMTYPES];
 BOOL UniqueItemFlag[128];
 int numitems;
 int gnNumGetRecords;
@@ -199,6 +200,7 @@ void InitItemGFX()
 	for (i = 0; i < ITEMTYPES; i++) {
 		sprintf(arglist, "Items\\%s.CEL", ItemDropNames[i]);
 		itemanims[i] = LoadFileInMem(arglist, NULL);
+		itemanims_png[i] = safePNGLoadVector(arglist);
 	}
 	memset(UniqueItemFlag, 0, sizeof(UniqueItemFlag));
 }
@@ -1797,6 +1799,7 @@ void SetupItem(int i)
 
 	it = ItemCAnimTbl[item[i]._iCurs];
 	item[i]._iAnimData = itemanims[it];
+	item[i]._iAnimData_png = &itemanims_png[it];
 	item[i]._iAnimLen = ItemAnimLs[it];
 	item[i]._iAnimWidth = 96;
 	item[i]._iAnimWidth2 = 16;
@@ -2396,6 +2399,7 @@ void RespawnItem(int i, BOOL FlipFlag)
 
 	it = ItemCAnimTbl[item[i]._iCurs];
 	item[i]._iAnimData = itemanims[it];
+	item[i]._iAnimData_png = &itemanims_png[it];
 	item[i]._iAnimLen = ItemAnimLs[it];
 	item[i]._iAnimWidth = 96;
 	item[i]._iAnimWidth2 = 16;
@@ -2488,6 +2492,7 @@ void FreeItemGFX()
 void GetItemFrm(int i)
 {
 	item[i]._iAnimData = itemanims[ItemCAnimTbl[item[i]._iCurs]];
+	item[i]._iAnimData_png = &itemanims_png[ItemCAnimTbl[item[i]._iCurs]];
 }
 
 void GetItemStr(int i)
