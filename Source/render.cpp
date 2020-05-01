@@ -303,6 +303,15 @@ void RenderTile(BYTE *pBuff)
 void RenderTilePNG(int x, int y)
 {
 	char tile = (level_cel_block & 0x7000) >> 12;
+
+	if (cel_transparency_active) {
+
+	} else if (arch_draw_type && cel_foliage_active) {
+		if (tile != RT_TRANSPARENT) {
+			return;
+		}
+	}
+
 	int w = pDungeonCels_png[(level_cel_block & 0xFFF) - 1]->w, h = pDungeonCels_png[(level_cel_block & 0xFFF) - 1]->h;
 
 	switch (tile) {
