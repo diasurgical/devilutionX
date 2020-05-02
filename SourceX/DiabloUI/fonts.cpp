@@ -1,4 +1,5 @@
 #include "DiabloUI/fonts.h"
+#include "file_util.h"
 
 namespace dvl {
 
@@ -60,7 +61,18 @@ void LoadTtfFont() {
 		was_fonts_init = true;
 	}
 
-	font = TTF_OpenFont(TTF_FONT_PATH, 17);
+	const char* ttf_font_path = TTF_FONT_NAME;
+	if (!FileExists(ttf_font_path))
+	{
+		ttf_font_path = TTF_FONT_DIR TTF_FONT_NAME;
+	}
+#ifdef __linux__
+	if (!FileExists(ttf_font_path))
+	{
+		ttf_font_path = "/usr/share/fonts/truetype/" TTF_FONT_NAME;
+	}
+#endif
+	font = TTF_OpenFont(ttf_font_path, 17);
 	if (font == NULL) {
 		SDL_Log("TTF_OpenFont: %s", TTF_GetError());
 		return;
