@@ -533,7 +533,7 @@ msgid ""
 msgstr ""
 "Mareridt sværhedsgrad\n"
 "Borgerne i labyrinten er styrket og vil vise sig at være en større "
-"udfordring. Dette anbefales kun til erfarne helt."
+"udfordring. Dette anbefales kun til erfarne helte."
 
 #: SourceX/DiabloUI/selgame.cpp:166
 msgid ""
