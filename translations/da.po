@@ -522,7 +522,7 @@ msgid ""
 "Normal Difficulty\n"
 "This is where a starting character should begin the quest to defeat Diablo."
 msgstr ""
-"Normal vanskelighed\n"
+"Normal sværhedsgrad\n"
 "Det er her en nybegynder skal starte sin stræben efter at besejre Diablo."
 
 #: SourceX/DiabloUI/selgame.cpp:162
