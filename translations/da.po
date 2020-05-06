@@ -257,7 +257,7 @@ msgstr "Manuskript og historie"
 
 #: SourceX/DiabloUI/credits_lines.cpp:94
 msgid "Voice Editing"
-msgstr "Stemmedigering"
+msgstr "Stemmeredigering"
 
 #: SourceX/DiabloUI/credits_lines.cpp:97
 msgid "Voices"
