@@ -506,7 +506,7 @@ msgstr "Indtast adgangskode"
 #: SourceX/DiabloUI/selgame.cpp:120
 msgid "Create a new game with a difficulty setting of your choice."
 msgstr ""
-"Opret et nyt spil med en indstilling af vanskeligheder efter eget valg."
+"Opret et nyt spil med sværhedsgrad efter eget valg."
 
 #: SourceX/DiabloUI/selgame.cpp:123
 msgid "Enter an IP and join a game already in progress at that address."
