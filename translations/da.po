@@ -273,7 +273,7 @@ msgstr "Manuel design og layout"
 
 #: SourceX/DiabloUI/credits_lines.cpp:109
 msgid "Manual Artwork"
-msgstr "Manuel kunst"
+msgstr "Manualkunst"
 
 #: SourceX/DiabloUI/credits_lines.cpp:113
 msgid "Provisional Director of QA (Lead Tester)"
