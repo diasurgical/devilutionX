@@ -638,7 +638,7 @@ msgid ""
 "The Rogue and Sorcerer are only available in the full retail version of "
 "Diablo. Visit https://www.gog.com/game/diablo to purchase."
 msgstr ""
-"The skytten  og troldmanden  er kun tilgængelig i den fulde detailversion af "
+"Skytten og Troldmanden er kun tilgængelige i den fulde detailversion af "
 "Diablo. Besøg https://www.gog.com/game/diablo for at købe den."
 
 #: SourceX/DiabloUI/selhero.cpp:279
