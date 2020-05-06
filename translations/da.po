@@ -201,7 +201,7 @@ msgstr "Installationsprogrammering"
 
 #: SourceX/DiabloUI/credits_lines.cpp:39
 msgid "Art Directors"
-msgstr "Kunst Instruktør"
+msgstr "Kunst instruktører"
 
 #: SourceX/DiabloUI/credits_lines.cpp:42
 msgid "Artwork"
