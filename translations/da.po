@@ -660,7 +660,7 @@ msgstr "Kunne ikke oprette karakter."
 
 #: SourceX/DiabloUI/selhero.cpp:382
 msgid "Delete Multi Player Hero"
-msgstr "Set multiplayer-helt"
+msgstr "Slet multiplayer-helt"
 
 #: SourceX/DiabloUI/selhero.cpp:384
 msgid "Delete Single Player Hero"
