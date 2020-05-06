@@ -301,7 +301,7 @@ msgstr "Bestilling af netværksinformationstjenester"
 
 #: SourceX/DiabloUI/credits_lines.cpp:135
 msgid "Customer Support"
-msgstr "Kunde support"
+msgstr "Kundesupport"
 
 #: SourceX/DiabloUI/credits_lines.cpp:140
 msgid "Sales"
