@@ -1,14 +1,9 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-05T19:13:09+00:00\n"
-"PO-Revision-Date: 2020-05-05T19:13:09+00:00\n"
+"POT-Creation-Date: 2020-05-05 07:13-0300\n"
+"PO-Revision-Date: 2020-05-06 03:09-0300\n"
 "Last-Translator: Cyro Dubeux <xorycx@gmail.com>\n"
 "Language-Team: \n"
 "Language: pt-BR\n"
@@ -312,7 +307,7 @@ msgstr "Dunsel"
 
 #: SourceX/DiabloUI/credits_lines.cpp:146
 msgid "Mr. Dabiri's Background Vocalists"
-msgstr "Vocal de apoio do senhor Dabiris"
+msgstr "Vocal de apoio do senhor Dabiri"
 
 #: SourceX/DiabloUI/credits_lines.cpp:150
 msgid "Public Relations"
