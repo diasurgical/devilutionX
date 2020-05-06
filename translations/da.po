@@ -269,7 +269,7 @@ msgstr "Optagelsesingeniør"
 
 #: SourceX/DiabloUI/credits_lines.cpp:105
 msgid "Manual Design & Layout"
-msgstr "Manuel design og layout"
+msgstr "Design af manual og layout"
 
 #: SourceX/DiabloUI/credits_lines.cpp:109
 msgid "Manual Artwork"
