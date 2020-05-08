@@ -643,7 +643,7 @@ if(3DS)
      DESTINATION ${APP_ROMFS})
   set(APP_VERSION ${PROJECT_VERSION})
   include(Tools3DS)
-# add_3dsx_target(${BIN_TARGET} "NO_SMDH")
+  add_3dsx_target(${BIN_TARGET} "NO_SMDH")
   add_cia_target(${BIN_TARGET} ${APP_RSF} ${APP_BANNER} ${APP_AUDIO} ${APP_ROMFS})
 endif()
 

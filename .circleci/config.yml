@@ -129,7 +129,7 @@ jobs:
       - run: cd build && cmake .. -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/ctr/devkitarm-libctru.cmake
       - run: cd build && cmake --build . -j $(nproc)
       - store_artifacts: {path: ./build/devilutionx.elf, destination: devilutionx.elf}
-#     - store_artifacts: {path: ./build/devilutionx.3dsx, destination: devilutionx.3dsx}
+      - store_artifacts: {path: ./build/devilutionx.3dsx, destination: devilutionx.3dsx}
       - store_artifacts: {path: ./build/devilutionx.cia, destination: devilutionx.cia}
 
 workflows:
