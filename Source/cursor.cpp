@@ -7,17 +7,17 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-int cursH;
-int icursH28;
 int cursW;
+int cursH;
 int pcursmonst = -1;
 int icursW28;
+int icursH28;
 BYTE *pCursCels;
-int icursH;
 
 /** inv_item value */
 char pcursinvitem;
 int icursW;
+int icursH;
 char pcursitem;
 char pcursobj;
 char pcursplr;
@@ -28,7 +28,8 @@ int pcurs;
 
 /* rdata */
 /** Maps from objcurs.cel frame number to frame width. */
-const int InvItemWidth[180] = {
+const int InvItemWidth[] = {
+	// clang-format off
 	// Cursors
 	0, 33, 32, 32, 32, 32, 32, 32, 32, 32, 32, 23,
 	// Items
@@ -48,11 +49,13 @@ const int InvItemWidth[180] = {
 	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
 	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
 	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
-	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28
+	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
+	// clang-format on
 };
 
 /** Maps from objcurs.cel frame number to frame height. */
-const int InvItemHeight[180] = {
+const int InvItemHeight[] = {
+	// clang-format off
 	// Cursors
 	0, 29, 32, 32, 32, 32, 32, 32, 32, 32, 32, 35,
 	// Items
@@ -72,12 +75,13 @@ const int InvItemHeight[180] = {
 	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
 	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
 	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
-	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28
+	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
+	// clang-format on
 };
 
 void InitCursor()
 {
-	/// ASSERT: assert(! pCursCels);
+	assert(!pCursCels);
 	pCursCels = LoadFileInMem("Data\\Inv\\Objcurs.CEL", NULL);
 	ClearCursor();
 }
@@ -186,17 +190,16 @@ void CheckCursMove()
 	sx = MouseX;
 	sy = MouseY;
 
-
 	if (PANELS_COVER) {
 		if (chrflag || questlog) {
-			if (sx >= 160) {
-				sx -= 160;
+			if (sx >= SCREEN_WIDTH / 4) {
+				sx -= SCREEN_WIDTH / 4;
 			} else {
 				sx = 0;
 			}
 		} else if (invflag || sbookflag) {
-			if (sx <= 320) {
-				sx += 160;
+			if (sx <= SCREEN_WIDTH / 2) {
+				sx += SCREEN_WIDTH / 4;
 			} else {
 				sx = 0;
 			}
@@ -238,8 +241,8 @@ void CheckCursMove()
 		sy = SCREEN_HEIGHT;
 	}
 
-	tx = sx >> 6; // sx / 64
-	ty = sy >> 5; // sy / 32
+	tx = sx >> 6;   // sx / 64
+	ty = sy >> 5;   // sy / 32
 	px = sx & 0x3F; // sx % 64
 	py = sy & 0x1F; // sx % 32
 	mx = ViewX + tx + ty - (zoomflag ? (SCREEN_WIDTH / 64) : (SCREEN_WIDTH / 2 / 64));
@@ -495,7 +498,7 @@ void CheckCursMove()
 		}
 		if (dFlags[mx][my] & BFLAG_DEAD_PLAYER) {
 			for (i = 0; i < MAX_PLRS; i++) {
-				if (plr[i].WorldX == mx && plr[i].WorldY == my && i != myplr) {
+				if (plr[i]._px == mx && plr[i]._py == my && i != myplr) {
 					cursmx = mx;
 					cursmy = my;
 					pcursplr = i;
@@ -507,7 +510,7 @@ void CheckCursMove()
 				for (yy = -1; yy < 2; yy++) {
 					if (dFlags[mx + xx][my + yy] & BFLAG_DEAD_PLAYER) {
 						for (i = 0; i < MAX_PLRS; i++) {
-							if (plr[i].WorldX == mx + xx && plr[i].WorldY == my + yy && i != myplr) {
+							if (plr[i]._px == mx + xx && plr[i]._py == my + yy && i != myplr) {
 								cursmx = mx + xx;
 								cursmy = my + yy;
 								pcursplr = i;

@@ -83,6 +83,7 @@ cmake --build . -j $(sysctl -n hw.ncpuonline)
 ### Installing dependencies on WSL, Debian and Ubuntu
 
 Download and place the 32bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/), [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/) and [Libsodium](https://github.com/jedisct1/libsodium/releases) in `/usr/i686-w64-mingw32`.
+NOTE: SDL2 2.0.12 appears to not compile correctly.
 
 ```
 sudo apt-get install cmake gcc-mingw-w64-i686 g++-mingw-w64-i686

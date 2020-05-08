@@ -24,10 +24,6 @@ build() {
 	cd -
 }
 
-package() {
-	./package.sh ../../build/devilutionx-opendingux-musl-sdl1.ipk
-}
-
 install_deps() {
 	"$DEVKITPRO/pacman/bin/pacman" -S --needed --noconfirm --quiet \
 		switch-freetype switch-mesa switch-glad switch-glm switch-sdl2 \

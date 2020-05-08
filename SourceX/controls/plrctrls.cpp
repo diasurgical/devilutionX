@@ -44,11 +44,11 @@ int GetRotaryDistance(int x, int y)
 {
 	int d, d1, d2;
 
-	if (plr[myplr]._px == x && plr[myplr]._py == y)
+	if (plr[myplr]._pfutx == x && plr[myplr]._pfuty == y)
 		return -1;
 
 	d1 = plr[myplr]._pdir;
-	d2 = GetDirection(plr[myplr]._px, plr[myplr]._py, x, y);
+	d2 = GetDirection(plr[myplr]._pfutx, plr[myplr]._pfuty, x, y);
 
 	d = abs(d1 - d2);
 	if (d > 4)
@@ -64,7 +64,7 @@ int GetRotaryDistance(int x, int y)
  */
 int GetMinDistance(int dx, int dy)
 {
-	return std::max(abs(plr[myplr]._px - dx), abs(plr[myplr]._py - dy));
+	return std::max(abs(plr[myplr]._pfutx - dx), abs(plr[myplr]._pfuty - dy));
 }
 
 /**
@@ -81,7 +81,7 @@ int GetDistance(int dx, int dy, int maxDistance)
 	}
 
 	char walkpath[MAX_PATH_LENGTH];
-	int steps = FindPath(PosOkPlayer, myplr, plr[myplr]._px, plr[myplr]._py, dx, dy, walkpath);
+	int steps = FindPath(PosOkPlayer, myplr, plr[myplr]._pfutx, plr[myplr]._pfuty, dx, dy, walkpath);
 	if (steps > maxDistance)
 		return 0;
 
@@ -95,16 +95,16 @@ int GetDistance(int dx, int dy, int maxDistance)
  */
 int GetDistanceRanged(int dx, int dy)
 {
-	int a = plr[myplr]._px - dx;
-	int b = plr[myplr]._py - dy;
+	int a = plr[myplr]._pfutx - dx;
+	int b = plr[myplr]._pfuty - dy;
 
 	return sqrt(a * a + b * b);
 }
 
 void FindItemOrObject()
 {
-	int mx = plr[myplr]._px;
-	int my = plr[myplr]._py;
+	int mx = plr[myplr]._pfutx;
+	int my = plr[myplr]._pfuty;
 	int rotations = 5;
 
 	// As the player can not stand on the edge fo the map this is safe from OOB
@@ -128,7 +128,7 @@ void FindItemOrObject()
 		}
 	}
 
-	if (currlevel == DTYPE_TOWN || pcursitem != -1)
+	if (leveltype == DTYPE_TOWN || pcursitem != -1)
 		return; // Don't look for objects in town
 
 	for (int xx = -1; xx < 2; xx++) {
@@ -201,8 +201,8 @@ void FindRangedTarget()
 	// The first MAX_PLRS monsters are reserved for players' golems.
 	for (int mi = MAX_PLRS; mi < MAXMONSTERS; mi++) {
 		const auto &monst = monster[mi];
-		const int mx = monst._mx;
-		const int my = monst._my;
+		const int mx = monst._mfutx;
+		const int my = monst._mfuty;
 		if (!CanTargetMonster(mi))
 			continue;
 
@@ -238,8 +238,8 @@ void FindMeleeTarget()
 	std::list<SearchNode> queue;
 
 	{
-		const int start_x = plr[myplr]._px;
-		const int start_y = plr[myplr]._py;
+		const int start_x = plr[myplr]._pfutx;
+		const int start_y = plr[myplr]._pfuty;
 		visited[start_x][start_y] = true;
 		queue.push_back({ start_x, start_y, 0 });
 	}
@@ -319,8 +319,8 @@ void CheckPlayerNearby()
 	for (int i = 0; i < MAX_PLRS; i++) {
 		if (i == myplr)
 			continue;
-		const int mx = plr[i].WorldX;
-		const int my = plr[i].WorldY;
+		const int mx = plr[i]._pfutx;
+		const int my = plr[i]._pfuty;
 		if (dPlayer[mx][my] == 0
 		    || !(dFlags[mx][my] & BFLAG_LIT)
 		    || (plr[i]._pHitPoints == 0 && spl != SPL_RESURRECT))
@@ -801,8 +801,8 @@ bool IsPathBlocked(int x, int y, int dir)
 
 void WalkInDir(MoveDirection dir)
 {
-	const int x = plr[myplr]._px;
-	const int y = plr[myplr]._py;
+	const int x = plr[myplr]._pfutx;
+	const int y = plr[myplr]._pfuty;
 
 	if (dir.x == MoveDirectionX::NONE && dir.y == MoveDirectionY::NONE) {
 		if (sgbControllerActive && plr[myplr].walkpath[0] != WALK_NONE && plr[myplr].destAction == ACTION_NONE)
@@ -872,8 +872,9 @@ struct RightStickAccumulator {
 
 } // namespace
 
-bool IsAutomapActive() {
-	return automapflag && currlevel != DTYPE_TOWN;
+bool IsAutomapActive()
+{
+	return automapflag && leveltype != DTYPE_TOWN;
 }
 
 void HandleRightStickMotion()
@@ -1022,8 +1023,8 @@ void UpdateSpellTarget()
 	if (plr[myplr]._pRSpell == SPL_TELEPORT)
 		range = 4;
 
-	cursmx = player._px + kOffsets[player._pdir][0] * range;
-	cursmy = player._py + kOffsets[player._pdir][1] * range;
+	cursmx = player._pfutx + kOffsets[player._pdir][0] * range;
+	cursmy = player._pfuty + kOffsets[player._pdir][1] * range;
 }
 
 /**
@@ -1031,12 +1032,12 @@ void UpdateSpellTarget()
  */
 bool TryDropItem()
 {
-	cursmx = plr[myplr].WorldX + 1;
-	cursmy = plr[myplr].WorldY;
+	cursmx = plr[myplr]._pfutx + 1;
+	cursmy = plr[myplr]._pfuty;
 	if (!DropItemBeforeTrig()) {
 		// Try to drop on the other side
-		cursmx = plr[myplr].WorldX;
-		cursmy = plr[myplr].WorldY + 1;
+		cursmx = plr[myplr]._pfutx;
+		cursmy = plr[myplr]._pfuty + 1;
 		DropItemBeforeTrig();
 	}
 

@@ -7,14 +7,13 @@ export COMPILE_FLAGS="-O0"
 export DEB_BUILD_MAINT_OPTIONS = hardening=-all
 export DEB_CFLAGS_MAINT_APPEND  = -Wno-error 
 export DEB_LDFLAGS_MAINT_APPEND = -Wno-error
-export CXXFLAGS="-DTTF_FONT_PATH=\"/usr/share/fonts/truetype/CharisSILB.ttf\""
 DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 
 %:
 	dh $@ --buildsystem=cmake --builddirectory=obj-${DEB_HOST_MULTIARCH}
 
 override_dh_auto_configure:
-	dh_auto_configure -- -DNIGHTLY_BUILD=ON #-DSPAWN=ON
+	dh_auto_configure -- -DNIGHTLY_BUILD=ON -DVERSION_NUM=1.0.1 #-DVERSION_SUFFIX=-5641e2bd #-DSPAWN=ON
 
 override_dh_auto_install:
 	install -pdm755 debian/diablo-data/usr/share/games/diablo/

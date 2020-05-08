@@ -6,6 +6,12 @@
 #ifndef __GMENU_H__
 #define __GMENU_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern BYTE *optbar_cel;
 extern BOOLEAN mouseNavigation;
 extern BYTE *PentSpin_cel;
@@ -40,7 +46,13 @@ void gmenu_slider_steps(TMenuItem *pItem, int dwTicks);
 
 /* rdata */
 
-extern const BYTE lfontframe[127];
-extern const BYTE lfontkern[56];
+extern const BYTE lfontframe[];
+extern const BYTE lfontkern[];
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __GMENU_H__ */

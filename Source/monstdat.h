@@ -6,9 +6,21 @@
 #ifndef __MONSTDAT_H__
 #define __MONSTDAT_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern MonsterData monsterdata[];
-extern char MonstConvTbl[128];
+extern BYTE MonstConvTbl[];
 extern BYTE MonstAvailTbl[];
 extern UniqMonstStruct UniqMonst[];
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __MONSTDAT_H__ */

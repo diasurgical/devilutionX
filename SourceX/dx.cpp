@@ -1,5 +1,8 @@
-#include <algorithm>
-
+/**
+ * @file dx.cpp
+ *
+ * Implementation of functions setting up the graphics pipeline.
+ */
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "display.h"
@@ -16,7 +19,6 @@ static CCritSect sgMemCrit;
 HMODULE ghDiabMod;
 
 int refreshDelay;
-SDL_Window *window;
 SDL_Renderer *renderer;
 SDL_Texture *texture;
 
@@ -29,6 +31,9 @@ SDL_Surface *renderer_texture_surface = nullptr;
 
 /** 8-bit surface wrapper around #gpBuffer */
 SDL_Surface *pal_surface;
+
+/** To know if surfaces have been initialized or not */
+BOOL was_window_init = false;
 
 static void dx_create_back_buffer()
 {
@@ -71,8 +76,8 @@ static void dx_create_primary_surface()
 
 void dx_init(HWND hWnd)
 {
-	SDL_RaiseWindow(window);
-	SDL_ShowWindow(window);
+	SDL_RaiseWindow(ghMainWnd);
+	SDL_ShowWindow(ghMainWnd);
 
 	dx_create_primary_surface();
 	palette_init();
@@ -94,7 +99,7 @@ static void lock_buf_priv()
 void lock_buf(BYTE idx)
 {
 #ifdef _DEBUG
-	locktbl[idx]++;
+	++locktbl[idx];
 #endif
 	lock_buf_priv();
 }
@@ -103,13 +108,12 @@ static void unlock_buf_priv()
 {
 	if (sgdwLockCount == 0)
 		app_fatal("draw main unlock error");
-	if (!gpBuffer)
+	if (gpBuffer == NULL)
 		app_fatal("draw consistency error");
 
 	sgdwLockCount--;
 	if (sgdwLockCount == 0) {
 		gpBufEnd -= (uintptr_t)gpBuffer;
-		//gpBuffer = NULL; unable to return to menu
 	}
 	sgMemCrit.Leave();
 }
@@ -119,7 +123,7 @@ void unlock_buf(BYTE idx)
 #ifdef _DEBUG
 	if (!locktbl[idx])
 		app_fatal("Draw lock underflow: 0x%x", idx);
-	locktbl[idx]--;
+	--locktbl[idx];
 #endif
 	unlock_buf_priv();
 }
@@ -127,7 +131,7 @@ void unlock_buf(BYTE idx)
 void dx_cleanup()
 {
 	if (ghMainWnd)
-		SDL_HideWindow(window);
+		SDL_HideWindow(ghMainWnd);
 	sgMemCrit.Enter();
 	sgdwLockCount = 0;
 	gpBuffer = NULL;
@@ -141,14 +145,14 @@ void dx_cleanup()
 	SDL_FreeSurface(renderer_texture_surface);
 	SDL_DestroyTexture(texture);
 	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(window);
+	SDL_DestroyWindow(ghMainWnd);
 }
 
 void dx_reinit()
 {
 #ifdef USE_SDL1
-	window = SDL_SetVideoMode(0, 0, 0, window->flags ^ SDL_FULLSCREEN);
-	if (window == NULL) {
+	ghMainWnd = SDL_SetVideoMode(0, 0, 0, ghMainWnd->flags ^ SDL_FULLSCREEN);
+	if (ghMainWnd == NULL) {
 		ErrSdl();
 	}
 #else
@@ -156,7 +160,7 @@ void dx_reinit()
 	if (!fullscreen) {
 		flags = renderer ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_FULLSCREEN;
 	}
-	if (SDL_SetWindowFullscreen(window, flags)) {
+	if (SDL_SetWindowFullscreen(ghMainWnd, flags)) {
 		ErrSdl();
 	}
 #endif
@@ -279,7 +283,7 @@ void RenderPresent()
 		}
 		SDL_RenderPresent(renderer);
 	} else {
-		if (SDL_UpdateWindowSurface(window) <= -1) {
+		if (SDL_UpdateWindowSurface(ghMainWnd) <= -1) {
 			ErrSdl();
 		}
 		LimitFrameRate();

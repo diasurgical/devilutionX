@@ -52,7 +52,7 @@ void init_create_window()
 	if (!SpawnWindow(PROJECT_NAME, SCREEN_WIDTH, SCREEN_HEIGHT))
 		app_fatal("Unable to create main window");
 	dx_init(NULL);
-	atexit(dx_cleanup);
+	was_window_init = true;
 	gbActive = true;
 	gpBufStart = &gpBuffer[BUFFER_WIDTH * SCREEN_Y];
 	gpBufEnd = (BYTE *)(BUFFER_WIDTH * (SCREEN_HEIGHT + SCREEN_Y));
@@ -132,7 +132,7 @@ LRESULT MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 	case WM_QUERYNEWPALETTE:
 		return 1;
 	case WM_QUERYENDSESSION:
-		exit(0);
+		diablo_quit(0);
 	}
 
 	return 0;

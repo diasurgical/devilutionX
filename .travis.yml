@@ -4,16 +4,16 @@ jobs:
     - os: osx
       osx_image: xcode11.3
       script:
-        - cd build
-        - cmake -DBINARY_RELEASE=ON ..
-        - sudo cmake --build . --target package -j $(sysctl -n hw.physicalcpu)
+        - cmake -S. -Bbuild -DBINARY_RELEASE=ON
+        - sudo cmake --build build --target package --config Release -j $(sysctl -n hw.physicalcpu)
     - os: linux
       dist: bionic
       arch: ppc64le
       script:
-        - cd build
-        - cmake -DBINARY_RELEASE=ON ..
-        - cmake --build . --target package
+        # CMake 3.10: no -S/-B and -j is build tool specific.
+        - mkdir -p build && cd build
+        - cmake .. -DBINARY_RELEASE=ON
+        - cmake --build . --target package -- -j $(nproc)
 addons:
   apt:
     packages:
@@ -41,4 +41,4 @@ deploy:
     skip_cleanup: true
     on:
       tags: true
-      condition: $TRAVIS_OS_NAME = linux AND $TRAVIS_CPU_ARCH = ppc64le
+      condition: $TRAVIS_OS_NAME == "linux" && $TRAVIS_CPU_ARCH == "ppc64le"

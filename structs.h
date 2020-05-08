@@ -4,6 +4,8 @@
  * Various global structures.
  */
 
+DEVILUTION_BEGIN_NAMESPACE
+
 //////////////////////////////////////////////////
 // control
 //////////////////////////////////////////////////
@@ -185,10 +187,10 @@ typedef struct PlayerStruct {
 	int destParam3;
 	int destParam4;
 	int plrlevel;
-	int WorldX;
-	int WorldY;
 	int _px;
 	int _py;
+	int _pfutx;
+	int _pfuty;
 	int _ptargx;
 	int _ptargy;
 	int _pownerx;
@@ -461,13 +463,11 @@ typedef struct TSnd {
 	int start_tc;
 } TSnd;
 
-#pragma pack(push, 1)
 typedef struct TSFX {
 	unsigned char bFlags;
 	char *pszName;
 	TSnd *pSnd;
 } TSFX;
-#pragma pack(pop)
 
 //////////////////////////////////////////////////
 // monster
@@ -818,7 +818,7 @@ typedef struct TCmdChItem {
 	WORD wIndx;
 	WORD wCI;
 	int dwSeed;
-	BYTE bId;
+	BOOLEAN bId;
 } TCmdChItem;
 
 typedef struct TCmdDelItem {
@@ -1338,7 +1338,7 @@ typedef struct _SNETUIDATA {
 	void (*profilecallback)();
 	const char **profilefields;
 	void (*profilebitmapcallback)();
-	int(*selectnamecallback)(
+	int (*selectnamecallback)(
 	    const struct _SNETPROGRAMDATA *,
 	    const struct _SNETPLAYERDATA *,
 	    const struct _SNETUIDATA *,
@@ -1518,10 +1518,10 @@ typedef struct STextStruct {
 	int _sx;
 	int _syoff;
 	char _sstr[128];
-	int _sjust;
+	BOOL _sjust;
 	char _sclr;
 	int _sline;
-	int _ssel;
+	BOOL _ssel;
 	int _sval;
 } STextStruct;
 
@@ -1585,3 +1585,5 @@ typedef struct TDataInfo {
 	DWORD destOffset;
 	DWORD size;
 } TDataInfo;
+
+DEVILUTION_END_NAMESPACE

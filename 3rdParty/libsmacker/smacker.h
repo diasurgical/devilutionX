@@ -1,29 +1,22 @@
 /**
 	libsmacker - A C library for decoding .smk Smacker Video files
-	Copyright (C) 2012-2017 Greg Kennedy
+	Copyright (C) 2012-2020 Greg Kennedy
 
 	libsmacker is a cross-platform C library which can be used for
 	decoding Smacker Video files produced by RAD Game Tools.
 
-	This software is released under the following license:
-	Creative Commons Attribution-NonCommercial 2.0 (CC BY-NC 2.0)
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU Lesser General Public License as published by
+	the Free Software Foundation, either version 2.1 of the License, or
+	(at your option) any later version.
 
-	You are free:
-	* to Share - to copy, distribute and transmit the work
-	* to Remix - to adapt the work
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU Lesser General Public License for more details.
 
-	Under the following conditions:
-
-	* Attribution - You must attribute the work in the manner specified by
-		the author or licensor (but not in any way that suggests that
-		they endorse you or your use of the work).
-	* Noncommercial - You may not use this work for commercial purposes.
-
-	This is a human-readable summary of the Legal Code (the full license).
-
-	You should have received a copy of the full license
-		along with libsmacker.  If not, see
-		<http://creativecommons.org/licenses/by-nc/2.0>.
+	You should have received a copy of the GNU Lesser General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #ifndef SMACKER_H

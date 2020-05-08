@@ -6,12 +6,18 @@
 #ifndef __CONTROL_H__
 #define __CONTROL_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern BYTE *pDurIcons;
 extern BYTE *pChrButtons;
 extern BOOL drawhpflag;
 extern BOOL dropGoldFlag;
-extern int panbtn[8];
-extern int chrbtn[4];
+extern BOOL panbtn[8];
+extern BOOL chrbtn[4];
 extern BYTE *pMultiBtns;
 extern BYTE *pPanelButtons;
 extern BYTE *pChrPanel;
@@ -136,5 +142,11 @@ extern char *PanBtnHotKey[8];
 extern char *PanBtnStr[8];
 extern RECT32 ChrBtnsRect[4];
 extern int SpellPages[6][7];
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __CONTROL_H__ */

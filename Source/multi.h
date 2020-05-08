@@ -6,6 +6,12 @@
 #ifndef __MULTI_H__
 #define __MULTI_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern BOOLEAN gbSomebodyWonGameKludge;
 extern char szPlayerDescript[128];
 extern WORD sgwPackPlrOffsetTbl[MAX_PLRS];
@@ -59,5 +65,11 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv);
 /* rdata */
 
 extern const int event_types[3];
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __MULTI_H__ */

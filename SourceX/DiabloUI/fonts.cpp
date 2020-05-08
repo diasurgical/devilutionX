@@ -1,10 +1,13 @@
 #include "DiabloUI/fonts.h"
+#include "file_util.h"
 
 namespace dvl {
 
 TTF_Font *font = nullptr;
 BYTE *FontTables[4];
 Art ArtFonts[4][2];
+/** This is so we know ttf has been init when we get to the diablo_deinit() function */
+BOOL was_fonts_init = false;
 
 namespace {
 
@@ -53,12 +56,23 @@ void LoadTtfFont() {
 	if (!TTF_WasInit()) {
 		if (TTF_Init() == -1) {
 			SDL_Log("TTF_Init: %s", TTF_GetError());
-			exit(1);
+			diablo_quit(1);
 		}
-		atexit(TTF_Quit);
+		was_fonts_init = true;
 	}
 
-	font = TTF_OpenFont(TTF_FONT_PATH, 17);
+	const char* ttf_font_path = TTF_FONT_NAME;
+	if (!FileExists(ttf_font_path))
+	{
+		ttf_font_path = TTF_FONT_DIR TTF_FONT_NAME;
+	}
+#ifdef __linux__
+	if (!FileExists(ttf_font_path))
+	{
+		ttf_font_path = "/usr/share/fonts/truetype/" TTF_FONT_NAME;
+	}
+#endif
+	font = TTF_OpenFont(ttf_font_path, 17);
 	if (font == NULL) {
 		SDL_Log("TTF_OpenFont: %s", TTF_GetError());
 		return;
@@ -72,6 +86,10 @@ void UnloadTtfFont() {
 	if (font && TTF_WasInit())
 		TTF_CloseFont(font);
 	font = nullptr;
+}
+
+void FontsCleanup() {
+	TTF_Quit();	
 }
 
 } // namespace dvl

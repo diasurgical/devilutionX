@@ -41,7 +41,7 @@ static BOOL CaptureHdr(short width, short height, std::ofstream *out)
 
 static BOOL CapturePal(SDL_Color *palette, std::ofstream *out)
 {
-	BYTE pcx_palette[769];
+	BYTE pcx_palette[1 + 256 * 3];
 	int i;
 
 	pcx_palette[0] = 12;

@@ -8,84 +8,20 @@ int numtrigs;
 TriggerStruct trigs[MAXTRIGGERS];
 int TWarpFrom;
 
-int TownDownList[11] = { 716, 715, 719, 720, 721, 723, 724, 725, 726, 727, -1 };
-int TownWarp1List[13] = {
-	1171,
-	1172,
-	1173,
-	1174,
-	1175,
-	1176,
-	1177,
-	1178,
-	1179,
-	1181,
-	1183,
-	1185,
-	-1
-};
-int L1UpList[12] = { 127, 129, 130, 131, 132, 133, 135, 137, 138, 139, 140, -1 };
-int L1DownList[10] = { 106, 107, 108, 109, 110, 112, 114, 115, 118, -1 };
-int L2UpList[3] = { 266, 267, -1 };
-int L2DownList[5] = { 269, 270, 271, 272, -1 };
-int L2TWarpUpList[3] = { 558, 559, -1 };
-int L3UpList[15] = {
-	170,
-	171,
-	172,
-	173,
-	174,
-	175,
-	176,
-	177,
-	178,
-	179,
-	180,
-	181,
-	182,
-	183,
-	-1
-};
-int L3DownList[9] = { 162, 163, 164, 165, 166, 167, 168, 169, -1 };
-int L3TWarpUpList[14] = { 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, 560, -1 };
-int L4UpList[4] = { 82, 83, 90, -1 };
-int L4DownList[6] = { 120, 130, 131, 132, 133, -1 };
-int L4TWarpUpList[4] = { 421, 422, 429, -1 };
-int L4PentaList[33] = {
-	353,
-	354,
-	355,
-	356,
-	357,
-	358,
-	359,
-	360,
-	361,
-	362,
-	363,
-	364,
-	365,
-	366,
-	367,
-	368,
-	369,
-	370,
-	371,
-	372,
-	373,
-	374,
-	375,
-	376,
-	377,
-	378,
-	379,
-	380,
-	381,
-	382,
-	383,
-	384,
-	-1
-};
+int TownDownList[] = { 716, 715, 719, 720, 721, 723, 724, 725, 726, 727, -1 };
+int TownWarp1List[] = { 1171, 1172, 1173, 1174, 1175, 1176, 1177, 1178, 1179, 1181, 1183, 1185, -1 };
+int L1UpList[] = { 127, 129, 130, 131, 132, 133, 135, 137, 138, 139, 140, -1 };
+int L1DownList[] = { 106, 107, 108, 109, 110, 112, 114, 115, 118, -1 };
+int L2UpList[] = { 266, 267, -1 };
+int L2DownList[] = { 269, 270, 271, 272, -1 };
+int L2TWarpUpList[] = { 558, 559, -1 };
+int L3UpList[] = { 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, -1 };
+int L3DownList[] = { 162, 163, 164, 165, 166, 167, 168, 169, -1 };
+int L3TWarpUpList[] = { 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, 560, -1 };
+int L4UpList[] = { 82, 83, 90, -1 };
+int L4DownList[] = { 120, 130, 131, 132, 133, -1 };
+int L4TWarpUpList[] = { 421, 422, 429, -1 };
+int L4PentaList[] = { 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383, 384, -1 };
 
 #ifndef SPAWN
 void InitNoTriggers()
@@ -99,42 +35,46 @@ void InitTownTriggers()
 {
 	int i;
 
-	trigs[0]._tx = 25;
-	trigs[0]._ty = 29;
-	trigs[0]._tmsg = WM_DIABNEXTLVL;
+	numtrigs = 0;
 
-	numtrigs = 1;
+	trigs[numtrigs]._tx = 25;
+	trigs[numtrigs]._ty = 29;
+	trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
+	numtrigs++;
+
 
 #ifndef SPAWN
 	if (gbMaxPlayers == MAX_PLRS) {
 		for (i = 0; i < sizeof(townwarps) / sizeof(townwarps[0]); i++) {
 			townwarps[i] = TRUE;
 		}
-		trigs[1]._tx = 49;
-		trigs[1]._ty = 21;
-		trigs[1]._tmsg = WM_DIABTOWNWARP;
-		trigs[1]._tlvl = 5;
-		trigs[2]._tx = 17;
-		trigs[2]._ty = 69;
-		trigs[2]._tmsg = WM_DIABTOWNWARP;
-		trigs[2]._tlvl = 9;
-		trigs[3]._tx = 41;
-		trigs[3]._ty = 80;
-		trigs[3]._tmsg = WM_DIABTOWNWARP;
-		trigs[3]._tlvl = 13;
-		numtrigs = 4;
+		trigs[numtrigs]._tx = 49;
+		trigs[numtrigs]._ty = 21;
+		trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
+		trigs[numtrigs]._tlvl = 5;
+		numtrigs++;
+		trigs[numtrigs]._tx = 17;
+		trigs[numtrigs]._ty = 69;
+		trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
+		trigs[numtrigs]._tlvl = 9;
+		numtrigs++;
+		trigs[numtrigs]._tx = 41;
+		trigs[numtrigs]._ty = 80;
+		trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
+		trigs[numtrigs]._tlvl = 13;
+		numtrigs++;
 	} else {
 #endif
-		for (i = 0; i < 3; i++) {
+		for (i = 0; i < MAX_PLRS - 1; i++) {
 			townwarps[i] = FALSE;
 		}
 #ifndef SPAWN
 		if (plr[myplr].pTownWarps & 1) {
-			trigs[1]._tx = 49;
-			trigs[1]._ty = 21;
-			trigs[1]._tmsg = WM_DIABTOWNWARP;
-			trigs[1]._tlvl = 5;
-			numtrigs = 2;
+			trigs[numtrigs]._tx = 49;
+			trigs[numtrigs]._ty = 21;
+			trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
+			trigs[numtrigs]._tlvl = 5;
+			numtrigs++;
 			townwarps[0] = TRUE;
 		}
 		if (plr[myplr].pTownWarps & 2) {
@@ -161,7 +101,7 @@ void InitTownTriggers()
 
 void InitL1Triggers()
 {
-	int j, i;
+	int i, j;
 
 	numtrigs = 0;
 	for (j = 0; j < MAXDUNY; j++) {
@@ -594,7 +534,7 @@ BOOL ForceL4Trig()
 
 void Freeupstairs()
 {
-	int i, tx, ty, yy, xx;
+	int i, tx, ty, xx, yy;
 
 	for (i = 0; i < numtrigs; i++) {
 		tx = trigs[i]._tx;
@@ -713,11 +653,11 @@ void CheckTriggers()
 	BOOL abort;
 	char abortflag;
 
-	if (plr[myplr]._pmode)
+	if (plr[myplr]._pmode != PM_STAND)
 		return;
 
 	for (i = 0; i < numtrigs; i++) {
-		if (plr[myplr].WorldX != trigs[i]._tx || plr[myplr].WorldY != trigs[i]._ty) {
+		if (plr[myplr]._px != trigs[i]._tx || plr[myplr]._py != trigs[i]._ty) {
 			continue;
 		}
 
@@ -725,7 +665,7 @@ void CheckTriggers()
 		case WM_DIABNEXTLVL:
 #ifdef SPAWN
 			if (currlevel >= 2) {
-				NetSendCmdLoc(TRUE, CMD_WALKXY, plr[myplr].WorldX, plr[myplr].WorldY + 1);
+				NetSendCmdLoc(TRUE, CMD_WALKXY, plr[myplr]._px, plr[myplr]._py + 1);
 				PlaySFX(PS_WARR18);
 				InitDiabloMsg(EMSG_NOT_IN_SHAREWARE);
 			} else {
@@ -751,22 +691,22 @@ void CheckTriggers()
 
 				if (trigs[i]._tlvl == 5 && plr[myplr]._pLevel < 8) {
 					abort = TRUE;
-					x = plr[myplr].WorldX;
-					y = plr[myplr].WorldY + 1;
+					x = plr[myplr]._px;
+					y = plr[myplr]._py + 1;
 					abortflag = EMSG_REQUIRES_LVL_8;
 				}
 
 				if (trigs[i]._tlvl == 9 && plr[myplr]._pLevel < 13) {
 					abort = TRUE;
-					x = plr[myplr].WorldX + 1;
-					y = plr[myplr].WorldY;
+					x = plr[myplr]._px + 1;
+					y = plr[myplr]._py;
 					abortflag = EMSG_REQUIRES_LVL_13;
 				}
 
 				if (trigs[i]._tlvl == 13 && plr[myplr]._pLevel < 17) {
 					abort = TRUE;
-					x = plr[myplr].WorldX;
-					y = plr[myplr].WorldY + 1;
+					x = plr[myplr]._px;
+					y = plr[myplr]._py + 1;
 					abortflag = EMSG_REQUIRES_LVL_17;
 				}
 

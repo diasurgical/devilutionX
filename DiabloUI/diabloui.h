@@ -13,7 +13,7 @@ BOOL UiSelHeroMultDialog(BOOL(*fninfo)(BOOL(*fninfofunc)(_uiheroinfo *)), BOOL(*
 BOOL UiSelHeroSingDialog(BOOL(*fninfo)(BOOL(*fninfofunc)(_uiheroinfo *)), BOOL(*fncreate)(_uiheroinfo *), BOOL(*fnremove)(_uiheroinfo *), BOOL(*fnstats)(unsigned int, _uidefaultstats *), int *dlgresult, char *name, int *difficulty);
 BOOL UiCreditsDialog(int a1);
 BOOL UiMainMenuDialog(char *name, int *pdwResult, void(*fnSound)(char *file), int attractTimeOut);
-BOOL UiProgressDialog(HWND window, char *msg, int enable, int(*fnfunc)(), int rate);
+BOOL UiProgressDialog(char *msg, int enable, int(*fnfunc)(), int rate);
 const char **UiProfileGetString();
 void UiProfileCallback();
 void UiProfileDraw();

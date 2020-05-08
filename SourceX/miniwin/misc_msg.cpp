@@ -8,6 +8,7 @@
 #include "controls/controller_motion.h"
 #include "controls/game_controls.h"
 #include "controls/plrctrls.h"
+#include "controls/remap_keyboard.h"
 #include "controls/touch.h"
 #include "display.h"
 #include "controls/controller.h"
@@ -36,7 +37,7 @@ void SetCursorPos(int X, int Y)
 	mouseWarpingY = Y;
 	mouseWarping = true;
 	LogicalToOutput(&X, &Y);
-	SDL_WarpMouseInWindow(window, X, Y);
+	SDL_WarpMouseInWindow(ghMainWnd, X, Y);
 }
 
 // Moves the mouse to the first attribute "+" button.
@@ -82,6 +83,7 @@ static int translate_sdl_key(SDL_Keysym key)
 	// ref: https://wiki.libsdl.org/SDL_Keycode
 	// ref: https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
 	SDL_Keycode sym = key.sym;
+	remap_keyboard_key(&sym);
 	switch (sym) {
 	case SDLK_BACKSPACE:
 		return DVL_VK_BACK;

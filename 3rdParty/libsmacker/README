@@ -1,10 +1,10 @@
 libsmacker
 A C library for decoding .smk Smacker Video files
 
-version 1.1
-2017-01-27
+version 1.1.1
+2020-01-05
 
-(c) Greg Kennedy 2013-2017
+(c) Greg Kennedy 2013-2020
 http://libsmacker.sourceforge.net
 ----
 
@@ -18,15 +18,7 @@ libsmacker implements the minimum feature set required from smackw32.dll to get 
 ---
 License
 ---
-libsmacker is released under a Creative Commons Attribution Non-Commercial License V2.0. This means, first, that projects using libsmacker must indicate somewhere that they use libsmacker in the code. Also: the Non-Commercial tag means exactly what it suggests: LIBSMACKER MAY NOT BE USED IN ANY COMMERCIAL PROJECT. PERIOD. Non-commercial DOES NOT mean simply "non-profit": commercial includes for-profit, but may also encompass other non-profit activites as well.
-
-Static- or dynamic-linking against unmodified libsmacker does not automatically re-license your code.  If you alter the library code (.c, .h files), your changes become a Derivative Work and are subject to the conditions outlined in the license.  Unmodified redistributions of binary libsmacker in your own projects must meet the conditions of this license.
-
-A human-readable summary of the license is available online:
-http://creativecommons.org/licenses/by-nc/2.0/
-
-The complete license text is here:
-http://creativecommons.org/licenses/by-nc/2.0/legalcode
+libsmacker is released under the Lesser GNU Public License, v2.1.  See the file COPYING for more information.
 
 ---
 Usage
@@ -40,6 +32,8 @@ Though the libraries are "bulletproofed" the sample apps are not: be cautious if
 ---
 Changelog
 ---
+1.1.1
+* Re-license under LGPL 2.1
 1.1
 * Switch to autotools-based build
 * Incorporates patches from Dalerank Slim, Gennady Trafimenkov, and Bianca van Schaik
