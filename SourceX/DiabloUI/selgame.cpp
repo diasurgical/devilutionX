@@ -285,6 +285,7 @@ int UiSelectGame(int a1, _SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_in
 
 	selgame_endMenu = false;
 	while (!selgame_endMenu) {
+		UiClearScreen();
 		UiPollAndRender();
 	}
 	selgame_Free();

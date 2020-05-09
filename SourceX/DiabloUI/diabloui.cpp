@@ -606,6 +606,12 @@ void DrawSelector(const SDL_Rect &rect)
 	DrawArt(rect.x + rect.w - art->w(), y, art, frame);
 }
 
+void UiClearScreen()
+{
+	if (SCREEN_WIDTH > 640) // Background size
+		SDL_FillRect(GetOutputSurface(), NULL, 0x000000);
+}
+
 void UiPollAndRender()
 {
 	SDL_Event event;
