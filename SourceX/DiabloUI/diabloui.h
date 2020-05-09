@@ -29,7 +29,7 @@ extern Art ArtCursor;
 extern Art ArtHero;
 extern bool gbSpawned;
 
-constexpr auto MAINMENU_BACKGROUND = UiImage(&ArtBackground, { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT });
+constexpr auto MAINMENU_BACKGROUND = UiImage(&ArtBackground, { PANEL_LEFT, 0, 640, 480 });
 constexpr auto MAINMENU_LOGO = UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, { 0, 0, 0, 0 }, UIS_CENTER);
 
 template <class T, size_t N>

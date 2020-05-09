@@ -23,10 +23,10 @@ int heroLevel;
 static _SNETPROGRAMDATA *m_client_info;
 extern int provider;
 
-constexpr UiArtTextButton SELGAME_OK = UiArtTextButton("OK", &UiFocusNavigationSelect, { 299, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD);
-constexpr UiArtTextButton SELGAME_CANCEL = UiArtTextButton("CANCEL", &UiFocusNavigationEsc, { 449, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD);
+constexpr UiArtTextButton SELGAME_OK = UiArtTextButton("OK", &UiFocusNavigationSelect, { PANEL_LEFT + 299, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD);
+constexpr UiArtTextButton SELGAME_CANCEL = UiArtTextButton("CANCEL", &UiFocusNavigationEsc, { PANEL_LEFT + 449, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD);
 
-UiArtText SELGAME_DESCRIPTION(selgame_Description, { 35, 256, 205, 192 });
+UiArtText SELGAME_DESCRIPTION(selgame_Description, { PANEL_LEFT + 35, 256, 205, 192 });
 
 namespace {
 
@@ -39,17 +39,17 @@ UiListItem SELDIFF_DIALOG_ITEMS[] = {
 UiItem SELDIFF_DIALOG[] = {
 	MAINMENU_BACKGROUND,
 	MAINMENU_LOGO,
-	UiArtText(title, { 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG),
-	UiArtText(selgame_Label, { 34, 211, 205, 33 }, UIS_CENTER | UIS_BIG), // DIFF
+	UiArtText(title, { PANEL_LEFT + 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG),
+	UiArtText(selgame_Label, { PANEL_LEFT + 34, 211, 205, 33 }, UIS_CENTER | UIS_BIG), // DIFF
 	SELGAME_DESCRIPTION,
-	UiArtText("Select Difficulty", { 299, 211, 295, 35 }, UIS_CENTER | UIS_BIG),
-	UiList(SELDIFF_DIALOG_ITEMS, 300, 282, 295, 26, UIS_CENTER | UIS_MED | UIS_GOLD),
+	UiArtText("Select Difficulty", { PANEL_LEFT + 299, 211, 295, 35 }, UIS_CENTER | UIS_BIG),
+	UiList(SELDIFF_DIALOG_ITEMS, PANEL_LEFT + 300, 282, 295, 26, UIS_CENTER | UIS_MED | UIS_GOLD),
 	SELGAME_OK,
 	SELGAME_CANCEL,
 };
 
-constexpr UiArtText SELUDPGAME_TITLE = UiArtText(title, { 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG);
-constexpr UiArtText SELUDPGAME_DESCRIPTION_LABEL = UiArtText("Description:", { 35, 211, 205, 192 }, UIS_MED);
+constexpr UiArtText SELUDPGAME_TITLE = UiArtText(title, { PANEL_LEFT + 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG);
+constexpr UiArtText SELUDPGAME_DESCRIPTION_LABEL = UiArtText("Description:", { PANEL_LEFT + 35, 211, 205, 192 }, UIS_MED);
 
 UiListItem SELUDPGAME_DIALOG_ITEMS[] = {
 	{ "Create Game", 0 },
@@ -61,8 +61,8 @@ UiItem SELUDPGAME_DIALOG[] = {
 	SELUDPGAME_TITLE,
 	SELUDPGAME_DESCRIPTION_LABEL,
 	SELGAME_DESCRIPTION,
-	UiArtText("Select Action", { 300, 211, 295, 33 }, UIS_CENTER | UIS_BIG),
-	UiList(SELUDPGAME_DIALOG_ITEMS, 305, 255, 285, 26, UIS_CENTER | UIS_MED | UIS_GOLD),
+	UiArtText("Select Action", { PANEL_LEFT + 300, 211, 295, 33 }, UIS_CENTER | UIS_BIG),
+	UiList(SELUDPGAME_DIALOG_ITEMS, PANEL_LEFT + 305, 255, 285, 26, UIS_CENTER | UIS_MED | UIS_GOLD),
 	SELGAME_OK,
 	SELGAME_CANCEL,
 };
@@ -73,8 +73,8 @@ UiItem ENTERIP_DIALOG[] = {
 	SELUDPGAME_TITLE,
 	SELUDPGAME_DESCRIPTION_LABEL,
 	SELGAME_DESCRIPTION,
-	UiArtText("Enter IP", { 305, 211, 285, 33 }, UIS_CENTER | UIS_BIG),
-	UiEdit(selgame_Ip, 128, { 305, 314, 285, 33 }, UIS_MED | UIS_GOLD),
+	UiArtText("Enter IP", { PANEL_LEFT + 305, 211, 285, 33 }, UIS_CENTER | UIS_BIG),
+	UiEdit(selgame_Ip, 128, { PANEL_LEFT + 305, 314, 285, 33 }, UIS_MED | UIS_GOLD),
 	SELGAME_OK,
 	SELGAME_CANCEL,
 };
@@ -85,8 +85,8 @@ UiItem ENTERPASSWORD_DIALOG[] = {
 	SELUDPGAME_TITLE,
 	SELUDPGAME_DESCRIPTION_LABEL,
 	SELGAME_DESCRIPTION,
-	UiArtText("Enter Password", { 305, 211, 285, 33 }, UIS_CENTER | UIS_BIG),
-	UiEdit(selgame_Password, 15, { 305, 314, 285, 33 }, UIS_MED | UIS_GOLD),
+	UiArtText("Enter Password", { PANEL_LEFT + 305, 211, 285, 33 }, UIS_CENTER | UIS_BIG),
+	UiEdit(selgame_Password, 15, { PANEL_LEFT + 305, 314, 285, 33 }, UIS_MED | UIS_GOLD),
 	SELGAME_OK,
 	SELGAME_CANCEL,
 };

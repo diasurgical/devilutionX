@@ -551,7 +551,7 @@ BOOL UiCreatePlayerDescription(_uiheroinfo *info, DWORD mode, char *desc)
 int GetCenterOffset(int w, int bw)
 {
 	if (bw == 0) {
-		bw = PANEL_WIDTH;
+		bw = SCREEN_WIDTH;
 	}
 
 	return (bw - w) / 2;
