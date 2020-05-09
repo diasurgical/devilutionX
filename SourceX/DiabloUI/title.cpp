@@ -21,7 +21,7 @@ void UiTitleDialog()
 	UiItem TITLESCREEN_DIALOG[] = {
 		MAINMENU_BACKGROUND,
 		UiImage(&ArtLogos[LOGO_BIG], /*animated=*/true, /*frame=*/0, { 0, 182, 0, 0 }, UIS_CENTER),
-		UiArtText("Copyright \xA9 1996-2001 Blizzard Entertainment", { 49, 410, 550, 26 }, UIS_MED | UIS_CENTER)
+		UiArtText("Copyright \xA9 1996-2001 Blizzard Entertainment", { PANEL_LEFT + 49, 410, 550, 26 }, UIS_MED | UIS_CENTER)
 	};
 
 	title_Load();
