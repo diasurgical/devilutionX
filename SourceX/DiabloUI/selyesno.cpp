@@ -55,6 +55,7 @@ bool UiSelHeroYesNoDialog(const char *title, const char *body)
 	selyesno_value = true;
 	selyesno_endMenu = false;
 	while (!selyesno_endMenu) {
+		UiClearScreen();
 		UiRenderItems(SELYESNO_DIALOG, size(SELYESNO_DIALOG));
 		UiPollAndRender();
 	}

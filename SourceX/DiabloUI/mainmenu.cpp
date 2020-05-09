@@ -70,6 +70,7 @@ BOOL UiMainMenuDialog(char *name, int *pdwResult, void (*fnSound)(char *file), i
 		mainmenu_restart_repintro(); // for automatic starts
 
 		while (MainMenuResult == 0) {
+			UiClearScreen();
 			UiPollAndRender();
 			if (!gbSpawned && SDL_GetTicks() >= dwAttractTicks) {
 				MainMenuResult = MAINMENU_ATTRACT_MODE;

@@ -367,6 +367,7 @@ BOOL UiSelHeroDialog(
 
 		selhero_endMenu = false;
 		while (!selhero_endMenu && !selhero_navigateYesNo) {
+			UiClearScreen();
 			UiRenderItems(SELHERO_DIALOG, size(SELHERO_DIALOG));
 			UiPollAndRender();
 		}

@@ -75,6 +75,7 @@ void UiSelOkDialog(const char *title, const char *body, bool background)
 
 	selok_endMenu = false;
 	while (!selok_endMenu) {
+		UiClearScreen();
 		UiRenderItems(items, itemCnt);
 		UiPollAndRender();
 	}

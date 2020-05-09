@@ -116,6 +116,7 @@ int UiSelectProvider(
 	selconn_ReturnValue = true;
 	selconn_EndMenu = false;
 	while (!selconn_EndMenu) {
+		UiClearScreen();
 		UiPollAndRender();
 	}
 	selconn_Free();
