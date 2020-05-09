@@ -655,7 +655,7 @@ BOOL LeftMouseDown(int wParam)
 				SetSpell();
 			} else if (stextflag != STORE_NONE) {
 				CheckStoreBtn();
-			} else if (MouseY < PANEL_TOP || MouseX < PANEL_LEFT || MouseX > PANEL_LEFT + PANEL_WIDTH) {
+			} else if (MouseY < PANEL_TOP || MouseX < PANEL_LEFT || MouseX >= PANEL_LEFT + PANEL_WIDTH) {
 				if (!gmenu_is_active() && !TryIconCurs()) {
 					if (questlog && MouseX > 32 && MouseX < 288 && MouseY > 32 && MouseY < 308) {
 						QuestlogESC();
@@ -698,7 +698,7 @@ BOOL LeftMouseCmd(BOOL bShift)
 {
 	BOOL bNear;
 
-	assert(MouseY < PANEL_TOP); // 352
+	assert(MouseY < PANEL_TOP || MouseX < PANEL_LEFT || MouseX >= PANEL_LEFT + PANEL_WIDTH);
 
 	if (leveltype == DTYPE_TOWN) {
 		if (pcursitem != -1 && pcurs == CURSOR_HAND)
