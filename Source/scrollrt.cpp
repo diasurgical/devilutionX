@@ -696,7 +696,9 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy)
 	bDead = dDead[sx][sy];
 	bMap = dTransVal[sx][sy];
 
-	negMon = dMonster[sx][sy - 1];
+	negMon = 0;
+	if (sy > 0) // check for OOB
+		negMon = dMonster[sx][sy - 1];
 
 	if (visiondebug && bFlag & BFLAG_LIT) {
 		CelClippedDraw(dx, dy, pSquareCel, 1, 64);
