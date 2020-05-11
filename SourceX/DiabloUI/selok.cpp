@@ -14,9 +14,40 @@ char dialogText[256];
 int selok_endMenu;
 char selok_title[32];
 
+std::vector<UiListItem*> vecSelOkDialogItems;
+std::vector<UiItemBase*> vecSelOkDialog;
+std::vector<UiItemBase*> vecSpawnErrorOkDialog;
+
 void selok_Free()
 {
 	ArtBackground.Unload();
+
+	for(int i = 0; i < (int)vecSelOkDialogItems.size(); i++)
+	{
+		UiListItem* pUIListItem = vecSelOkDialogItems[i];
+		if(pUIListItem)
+			delete pUIListItem;
+
+		vecSelOkDialogItems.clear();
+	}
+
+	for(int i = 0; i < (int)vecSelOkDialog.size(); i++)
+	{
+		UiItemBase* pUIItem = vecSelOkDialog[i];
+		if(pUIItem)
+			delete pUIItem;
+
+		vecSelOkDialog.clear();
+	}
+
+	for(int i = 0; i < (int)vecSpawnErrorOkDialog.size(); i++)
+	{
+		UiItemBase* pUIItem = vecSpawnErrorOkDialog[i];
+		if(pUIItem)
+			delete pUIItem;
+
+		vecSpawnErrorOkDialog.clear();
+	}
 }
 
 void selok_Select(int value)
@@ -29,27 +60,39 @@ void selok_Esc()
 	selok_endMenu = true;
 }
 
-UiListItem SELOK_DIALOG_ITEMS[] = {
-	{ "OK", 0 }
-};
-
-UiItem SELOK_DIALOG[] = {
-	MAINMENU_BACKGROUND,
-	MAINMENU_LOGO,
-	UiArtText(selok_title, { 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG),
-	UiArtText(dialogText, { 140, 210, 560, 168 }, UIS_MED),
-	UiList(SELOK_DIALOG_ITEMS, 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD)
-};
-
-UiItem SPAWNERR_DIALOG[] = {
-	MAINMENU_BACKGROUND,
-	MAINMENU_LOGO,
-	UiArtText(dialogText, { 140, 197, 560, 168 }, UIS_MED),
-	UiList(SELOK_DIALOG_ITEMS, 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD)
-};
-
 void UiSelOkDialog(const char *title, const char *body, bool background)
 {
+	vecSelOkDialogItems.push_back(new UiListItem("OK", 0));
+
+	{
+		SDL_Rect rect1 = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+		vecSelOkDialog.push_back(new UiImage(&ArtBackground, rect1));
+	
+		SDL_Rect rect2 = { 0, 0, 0, 0 };
+		vecSelOkDialog.push_back(new UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, rect2, UIS_CENTER));
+
+		SDL_Rect rect3 = { 24, 161, 590, 35 };
+		vecSelOkDialog.push_back(new UiArtText(selok_title, rect3, UIS_CENTER | UIS_BIG));
+
+		SDL_Rect rect4 = { 140, 210, 560, 168 };
+		vecSelOkDialog.push_back(new UiArtText(dialogText, rect4, UIS_MED));
+
+		vecSelOkDialog.push_back(new UiList(vecSelOkDialogItems, 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD));
+	}
+
+	{
+		SDL_Rect rect1 = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+		vecSpawnErrorOkDialog.push_back(new UiImage(&ArtBackground, rect1));
+	
+		SDL_Rect rect2 = { 0, 182, 0, 0 };
+		vecSpawnErrorOkDialog.push_back(new UiImage(&ArtLogos[LOGO_BIG], /*animated=*/true, /*frame=*/0, rect2, UIS_CENTER));
+
+		SDL_Rect rect3 = { 140, 197, 560, 168 };
+		vecSpawnErrorOkDialog.push_back(new UiArtText(dialogText, rect3, UIS_MED));
+
+		vecSpawnErrorOkDialog.push_back(new UiList(vecSelOkDialogItems, 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD));
+	}
+
 	if (!background) {
 		LoadBackgroundArt("ui_art\\black.pcx");
 	} else {
@@ -60,12 +103,12 @@ void UiSelOkDialog(const char *title, const char *body, bool background)
 		}
 	}
 
-	UiItem *items = SPAWNERR_DIALOG;
-	int itemCnt = size(SPAWNERR_DIALOG);
+	vUiItemBase items = vecSpawnErrorOkDialog;
+	int itemCnt = items.size();
 	if (title != NULL) {
 		strcpy(selok_title, title);
-		items = SELOK_DIALOG;
-		itemCnt = size(SELOK_DIALOG);
+		items = vecSelOkDialog;
+		itemCnt = items.size();
 	}
 
 	strcpy(dialogText, body);

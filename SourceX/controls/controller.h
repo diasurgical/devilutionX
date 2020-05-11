@@ -5,13 +5,26 @@
 namespace dvl {
 
 struct ControllerButtonEvent {
-	ControllerButton button;
+	
+	ControllerButtonEvent()
+	{
+		button = ControllerButtonNS::NONE;
+		up = false;
+	}
+
+	ControllerButtonEvent(ControllerButtonNS::ControllerButton pButton, bool bUp)
+	{
+		button = pButton;
+		up = bUp;
+	}
+
+	ControllerButtonNS::ControllerButton button;
 	bool up;
 };
 
 ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event);
 
-bool IsControllerButtonPressed(ControllerButton button);
+bool IsControllerButtonPressed(ControllerButtonNS::ControllerButton button);
 
 void InitController();
 

@@ -604,7 +604,7 @@ bool STORMAPI SFileCloseArchive(HANDLE hMpq)
 
     // Invalidate the add file callback so it won't be called
     // when saving (listfile) and (attributes)
-    ha->pfnAddFileCB = NULL;
+  //  ha->pfnAddFileCB = NULL;
     ha->pvAddFileUserData = NULL;
 
 #ifdef FULL

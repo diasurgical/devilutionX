@@ -1,7 +1,9 @@
 #include "controls/plrctrls.h"
 
+#ifndef _XBOX
 #include <cstdint>
 #include <algorithm>
+#endif
 #include <list>
 
 #include "controls/controller.h"
@@ -64,7 +66,7 @@ int GetRotaryDistance(int x, int y)
  */
 int GetMinDistance(int dx, int dy)
 {
-	return std::max(abs(plr[myplr]._pfutx - dx), abs(plr[myplr]._pfuty - dy));
+	return max(abs(plr[myplr]._pfutx - dx), abs(plr[myplr]._pfuty - dy));
 }
 
 /**
@@ -98,7 +100,11 @@ int GetDistanceRanged(int dx, int dy)
 	int a = plr[myplr]._pfutx - dx;
 	int b = plr[myplr]._pfuty - dy;
 
+#ifdef _XBOX
+	return sqrt(static_cast<double>(a * a + b * b));
+#else
 	return sqrt(a * a + b * b);
+#endif
 }
 
 void FindItemOrObject()
@@ -224,6 +230,23 @@ void FindRangedTarget()
 	}
 }
 
+struct SearchNode {
+	SearchNode()
+	{
+		x = y = steps = 0;
+	}
+
+	SearchNode(int iX, int iY, int iSteps)
+	{
+		x = iX;
+		y = iY;
+		steps = iSteps;
+	}
+
+	int x, y;
+	int steps;
+};
+
 void FindMeleeTarget()
 {
 	bool visited[MAXDUNX][MAXDUNY] = { { 0 } };
@@ -231,17 +254,15 @@ void FindMeleeTarget()
 	int rotations;
 	bool canTalk;
 
-	struct SearchNode {
-		int x, y;
-		int steps;
-	};
 	std::list<SearchNode> queue;
 
 	{
 		const int start_x = plr[myplr]._pfutx;
 		const int start_y = plr[myplr]._pfuty;
 		visited[start_x][start_y] = true;
-		queue.push_back({ start_x, start_y, 0 });
+		
+		SearchNode sTmp(start_x, start_y, 0);
+		queue.push_back(sTmp);
 	}
 
 	while (!queue.empty()) {
@@ -288,7 +309,8 @@ void FindMeleeTarget()
 			pPath.y = node.y;
 
 			if (path_solid_pieces(&pPath, dx, dy)) {
-				queue.push_back({ dx, dy, node.steps + 1 });
+				SearchNode sTmp(dx, dy, node.steps + 1);
+				queue.push_back(sTmp);
 				visited[dx][dy] = true;
 			}
 		}
@@ -440,9 +462,9 @@ void Interact()
 	}
 }
 
-void AttrIncBtnSnap(MoveDirectionY dir)
+void AttrIncBtnSnap(MoveDirectionYNS::MoveDirectionY dir)
 {
-	if (dir == MoveDirectionY::NONE)
+	if (dir == MoveDirectionYNS::NONE)
 		return;
 
 	if (chrbtnactive && plr[myplr]._pStatPts <= 0)
@@ -466,10 +488,10 @@ void AttrIncBtnSnap(MoveDirectionY dir)
 		}
 	}
 
-	if (dir == MoveDirectionY::UP) {
+	if (dir == MoveDirectionYNS::UP) {
 		if (slot > 0)
 			--slot;
-	} else if (dir == MoveDirectionY::DOWN) {
+	} else if (dir == MoveDirectionYNS::DOWN) {
 		if (slot < 3)
 			++slot;
 	}
@@ -507,7 +529,7 @@ void InvMove(MoveDirection dir)
 		slot = SLOTXY_BELT_LAST;
 
 	// when item is on cursor, this is the real cursor XY
-	if (dir.x == MoveDirectionX::LEFT) {
+	if (dir.x == MoveDirectionXNS::LEFT) {
 		if (slot >= SLOTXY_HAND_RIGHT_FIRST && slot <= SLOTXY_HAND_RIGHT_LAST) {
 			x = InvRect[SLOTXY_CHEST_FIRST].X + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_CHEST_FIRST].Y - (INV_SLOT_SIZE_PX / 2);
@@ -535,7 +557,7 @@ void InvMove(MoveDirection dir)
 				y = InvRect[slot].Y - (INV_SLOT_SIZE_PX / 2);
 			}
 		}
-	} else if (dir.x == MoveDirectionX::RIGHT) {
+	} else if (dir.x == MoveDirectionXNS::RIGHT) {
 		if (slot == SLOTXY_RING_LEFT) {
 			x = InvRect[SLOTXY_RING_RIGHT].X + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_RING_RIGHT].Y - (INV_SLOT_SIZE_PX / 2);
@@ -562,7 +584,7 @@ void InvMove(MoveDirection dir)
 			}
 		}
 	}
-	if (dir.y == MoveDirectionY::UP) {
+	if (dir.y == MoveDirectionYNS::UP) {
 		if (slot > 24 && slot <= 27) { // first 3 general slots
 			x = InvRect[SLOTXY_RING_LEFT].X + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_RING_LEFT].Y - (INV_SLOT_SIZE_PX / 2);
@@ -596,7 +618,7 @@ void InvMove(MoveDirection dir)
 			x = InvRect[slot].X + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[slot].Y - (INV_SLOT_SIZE_PX / 2);
 		}
-	} else if (dir.y == MoveDirectionY::DOWN) {
+	} else if (dir.y == MoveDirectionYNS::DOWN) {
 		if (slot >= SLOTXY_HEAD_FIRST && slot <= SLOTXY_HEAD_LAST) {
 			x = InvRect[SLOTXY_CHEST_FIRST].X + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_CHEST_FIRST].Y - (INV_SLOT_SIZE_PX / 2);
@@ -675,7 +697,7 @@ void HotSpellMove(MoveDirection dir)
 		}
 	}
 
-	if (dir.y == MoveDirectionY::UP) {
+	if (dir.y == MoveDirectionYNS::UP) {
 		if (speedspellscoords[spbslot].y == 307 && hsr[1] > 0) { // we're in row 1, check if row 2 has spells
 			if (HSExists(MouseX, 251)) {
 				x = MouseX;
@@ -687,7 +709,7 @@ void HotSpellMove(MoveDirection dir)
 				y = 195;
 			}
 		}
-	} else if (dir.y == MoveDirectionY::DOWN) {
+	} else if (dir.y == MoveDirectionYNS::DOWN) {
 		if (speedspellscoords[spbslot].y == 251) { // we're in row 2
 			if (HSExists(MouseX, 307)) {
 				x = MouseX;
@@ -700,13 +722,13 @@ void HotSpellMove(MoveDirection dir)
 			}
 		}
 	}
-	if (dir.x == MoveDirectionX::LEFT) {
+	if (dir.x == MoveDirectionXNS::LEFT) {
 		if (spbslot >= speedspellcount - 1)
 			return;
 		spbslot++;
 		x = speedspellscoords[spbslot].x;
 		y = speedspellscoords[spbslot].y;
-	} else if (dir.x == MoveDirectionX::RIGHT) {
+	} else if (dir.x == MoveDirectionXNS::RIGHT) {
 		if (spbslot <= 0)
 			return;
 		spbslot--;
@@ -727,10 +749,10 @@ void SpellBookMove(MoveDirection dir)
 	}
 	invmove = ticks;
 
-	if (dir.x == MoveDirectionX::LEFT) {
+	if (dir.x == MoveDirectionXNS::LEFT) {
 		if (sbooktab > 0)
 			sbooktab--;
-	} else if (dir.x == MoveDirectionX::RIGHT) {
+	} else if (dir.x == MoveDirectionXNS::RIGHT) {
 		if (sbooktab < 3)
 			sbooktab++;
 	}
@@ -804,7 +826,7 @@ void WalkInDir(MoveDirection dir)
 	const int x = plr[myplr]._pfutx;
 	const int y = plr[myplr]._pfuty;
 
-	if (dir.x == MoveDirectionX::NONE && dir.y == MoveDirectionY::NONE) {
+	if (dir.x == MoveDirectionXNS::NONE && dir.y == MoveDirectionYNS::NONE) {
 		if (sgbControllerActive && plr[myplr].walkpath[0] != WALK_NONE && plr[myplr].destAction == ACTION_NONE)
 			NetSendCmdLoc(true, CMD_WALKXY, x, y); // Stop walking
 		return;
@@ -824,12 +846,12 @@ void WalkInDir(MoveDirection dir)
 void Movement()
 {
 	if (InGameMenu() || questlog
-	    || IsControllerButtonPressed(ControllerButton::BUTTON_START)
-	    || IsControllerButtonPressed(ControllerButton::BUTTON_BACK))
+	    || IsControllerButtonPressed(ControllerButtonNS::BUTTON_START)
+	    || IsControllerButtonPressed(ControllerButtonNS::BUTTON_BACK))
 		return;
 
 	MoveDirection move_dir = GetMoveDirection();
-	if (move_dir.x != MoveDirectionX::NONE || move_dir.y != MoveDirectionY::NONE) {
+	if (move_dir.x != MoveDirectionXNS::NONE || move_dir.y != MoveDirectionYNS::NONE) {
 		sgbControllerActive = true;
 	}
 
@@ -847,6 +869,14 @@ void Movement()
 }
 
 struct RightStickAccumulator {
+
+	RightStickAccumulator()
+	{
+		lastTc = SDL_GetTicks();
+		hiresDX = 0;
+		hiresDY = 0;
+	}
+
 	void pool(int *x, int *y, int slowdown)
 	{
 		DWORD tc = SDL_GetTicks();
@@ -865,9 +895,9 @@ struct RightStickAccumulator {
 		lastTc = SDL_GetTicks();
 	}
 
-	DWORD lastTc = SDL_GetTicks();
-	int hiresDX = 0;
-	int hiresDY = 0;
+	DWORD lastTc;
+	int hiresDX;
+	int hiresDY;
 };
 
 } // namespace
@@ -899,8 +929,8 @@ void HandleRightStickMotion()
 		int x = MouseX;
 		int y = MouseY;
 		acc.pool(&x, &y, 2);
-		x = std::min(std::max(x, 0), SCREEN_WIDTH - 1);
-		y = std::min(std::max(y, 0), SCREEN_HEIGHT - 1);
+		x = min(max(x, 0), SCREEN_WIDTH - 1);
+		y = min(max(y, 0), SCREEN_HEIGHT - 1);
 		SetCursorPos(x, y);
 	}
 }

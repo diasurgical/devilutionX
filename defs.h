@@ -5,8 +5,14 @@
  */
 
 #define DIABOOL					BOOL
+#ifdef _XBOX
+#define GAME_NAME				"DIABLOX"
+#define APP_NAME				"DiabloX"
+#define PROJECT_VERSION  		"1.0"
+#else
 #define GAME_NAME				"DIABLO"
 #define APP_NAME				"Diablo"
+#endif
 
 #define DMAXX					40
 #define DMAXY					40
@@ -191,6 +197,11 @@
 #define SwapLE16 SDL_SwapLE16
 
 #define ErrSdl() ErrDlg("SDL Error", SDL_GetError(), __FILE__, __LINE__)
+
+#ifdef _XBOX
+#define snprintf SDL_snprintf
+#define vsnprintf SDL_vsnprintf
+#endif
 
 #ifdef _MSC_VER
 #define strcasecmp _stricmp

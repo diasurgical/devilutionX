@@ -6,6 +6,10 @@
 #ifndef __ALL_H__
 #define __ALL_H__
 
+#ifdef _XBOX
+#include <xtl.h>
+#endif
+
 #include <SDL.h>
 
 #ifdef USE_SDL1

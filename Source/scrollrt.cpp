@@ -880,17 +880,26 @@ static void DrawGame(int x, int y)
 	sx = (SCREEN_WIDTH % TILE_WIDTH) / 2;
 	sy = (VIEWPORT_HEIGHT % TILE_HEIGHT) / 2;
 
+	double dWidth = 0;
+	double dHeight = 0;
+
 	if (zoomflag) {
-		chunks = ceil(SCREEN_WIDTH / TILE_WIDTH);
-		blocks = ceil(VIEWPORT_HEIGHT / TILE_HEIGHT);
+		dWidth = SCREEN_WIDTH / TILE_WIDTH;
+		dHeight = VIEWPORT_HEIGHT / TILE_HEIGHT;
+
+		chunks = ceil(dWidth);
+		blocks = ceil(dHeight);
 
 		gpBufStart = &gpBuffer[BUFFER_WIDTH * SCREEN_Y];
 		gpBufEnd = &gpBuffer[BUFFER_WIDTH * (VIEWPORT_HEIGHT + SCREEN_Y)];
 	} else {
 		sy -= TILE_HEIGHT;
 
-		chunks = ceil(SCREEN_WIDTH / 2 / TILE_WIDTH) + 1; // TODO why +1?
-		blocks = ceil(VIEWPORT_HEIGHT / 2 / TILE_HEIGHT);
+		dWidth = SCREEN_WIDTH / 2 / TILE_WIDTH;
+		dHeight = VIEWPORT_HEIGHT / 2 / TILE_HEIGHT;
+
+		chunks = ceil(dWidth) + 1; // TODO why +1?
+		blocks = ceil(dHeight);
 
 		gpBufStart = &gpBuffer[(-(TILE_HEIGHT / 2 + 1) + SCREEN_Y) * BUFFER_WIDTH];
 		gpBufEnd = &gpBuffer[((VIEWPORT_HEIGHT - TILE_HEIGHT) / 2 + SCREEN_Y) * BUFFER_WIDTH];

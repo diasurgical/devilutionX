@@ -822,16 +822,16 @@ BOOL multi_init_multi(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info,
 	for (first = TRUE;; first = FALSE) {
 		type = 0x00;
 		if (gbSelectProvider) {
-			if (!UiSelectProvider(0, client_info, user_info, ui_info, &fileinfo, &type)
-			    && (!first || SErrGetLastError() != STORM_ERROR_REQUIRES_UPGRADE || !multi_upgrade(pfExitProgram))) {
+//			if (!UiSelectProvider(0, client_info, user_info, ui_info, &fileinfo, &type)
+//			    && (!first || SErrGetLastError() != STORM_ERROR_REQUIRES_UPGRADE || !multi_upgrade(pfExitProgram))) {
 				return FALSE;
-			}
+//			}
 			if (type == 'BNET')
 				plr[0].pBattleNet = 1;
 		}
 
 		multi_event_handler(TRUE);
-		if (UiSelectGame(1, client_info, user_info, ui_info, &fileinfo, &playerId))
+//		if (UiSelectGame(1, client_info, user_info, ui_info, &fileinfo, &playerId))
 			break;
 
 		gbSelectProvider = TRUE;

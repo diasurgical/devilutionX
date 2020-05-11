@@ -5,7 +5,12 @@
  */
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
+#ifndef _XBOX
 #include <config.h>
+#endif
+#ifdef _XBOX
+#include "xboxfuncs.h"
+#endif
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -30,7 +35,11 @@ void app_fatal(const char *pszFmt, ...)
 
 	va_end(va);
 
-	diablo_quit(1);
+#ifdef _XBOX
+	CXBFunctions::QuitToDash();
+#else
+	exit(1);
+#endif
 }
 
 /**
@@ -76,7 +85,7 @@ void DrawDlg(char *pszFmt, ...)
 	vsnprintf(text, 256, pszFmt, va);
 	va_end(va);
 
-	UiErrorOkDialog(PROJECT_NAME, text, false);
+	UiErrorOkDialog(APP_NAME, text, false);
 }
 
 #ifdef _DEBUG

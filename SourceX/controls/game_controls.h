@@ -3,8 +3,8 @@
 #include "all.h"
 
 namespace dvl {
-
-enum class GameActionType {
+namespace GameActionTypeNS {
+enum GameActionType {
 	NONE = 0,
 	USE_HEALTH_POTION,
 	USE_MANA_POTION,
@@ -19,8 +19,19 @@ enum class GameActionType {
 	SEND_KEY,
 	SEND_MOUSE_CLICK,
 };
+}
 
 struct GameActionSendKey {
+	GameActionSendKey()
+	{
+	}
+
+	GameActionSendKey(DWORD vkcode, bool bUp)
+	{
+		vk_code = vkcode;
+		up = bUp;
+	}
+
 	DWORD vk_code;
 	bool up;
 };
@@ -30,56 +41,78 @@ struct GameActionSendMouseClick {
 		LEFT = 0,
 		RIGHT,
 	};
+
+	GameActionSendMouseClick() {
+	}
+
+	GameActionSendMouseClick(Button pButton, bool bUp) {
+		button = pButton;
+		up = bUp;
+	}	
+
 	Button button;
 	bool up;
 };
 
 struct GameAction {
-	GameActionType type;
-
-	GameAction()
-	    : type(GameActionType::NONE)
-	{
+	GameAction() {
+		type = GameActionTypeNS::NONE;
 	}
 
-	explicit GameAction(GameActionType type)
-	    : type(type)
-	{
+	GameAction(GameActionTypeNS::GameActionType ptype) {
+		type = ptype;
 	}
 
-	GameAction(GameActionSendKey send_key)
-	    : type(GameActionType::SEND_KEY)
-	    , send_key(send_key)
-	{
+	GameAction(GameActionSendKey skey) {
+		type = GameActionTypeNS::SEND_KEY;
+		send_key = skey;
 	}
 
-	GameAction(GameActionSendMouseClick send_mouse_click)
-	    : type(GameActionType::SEND_MOUSE_CLICK)
-	    , send_mouse_click(send_mouse_click)
-	{
+	GameAction(GameActionSendMouseClick s_mouse_click) {
+		type = GameActionTypeNS::SEND_MOUSE_CLICK;
+		send_mouse_click = s_mouse_click;
 	}
 
-	union {
+//private:
+	GameActionTypeNS::GameActionType type;
 		GameActionSendKey send_key;
 		GameActionSendMouseClick send_mouse_click;
-	};
+
 };
 
 bool GetGameAction(const SDL_Event &event, GameAction *action);
 
-enum class MoveDirectionX {
+namespace MoveDirectionXNS {
+enum MoveDirectionX {
 	NONE = 0,
 	LEFT,
 	RIGHT
 };
-enum class MoveDirectionY {
+}
+
+namespace MoveDirectionYNS {
+enum MoveDirectionY {
 	NONE = 0,
 	UP,
 	DOWN
 };
+}
+
 struct MoveDirection {
-	MoveDirectionX x;
-	MoveDirectionY y;
+	MoveDirection()
+	{
+		x = MoveDirectionXNS::NONE;
+		y = MoveDirectionYNS::NONE;
+	}
+
+	MoveDirection(MoveDirectionXNS::MoveDirectionX MX, MoveDirectionYNS::MoveDirectionY MY)
+	{
+		x = MX;
+		y = MY;
+	}
+
+	MoveDirectionXNS::MoveDirectionX x;
+	MoveDirectionYNS::MoveDirectionY y;
 };
 MoveDirection GetMoveDirection();
 

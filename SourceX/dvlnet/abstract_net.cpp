@@ -11,23 +11,23 @@
 namespace dvl {
 namespace net {
 
-std::unique_ptr<abstract_net> abstract_net::make_net(provider_t provider)
+abstract_net* abstract_net::make_net(provider_t provider)
 {
 #ifdef NONET
-	return std::unique_ptr<abstract_net>(new loopback);
+	return new loopback;
 #else
 	switch (provider) {
-	case SELCONN_TCP:
-		return std::unique_ptr<abstract_net>(new cdwrap<tcp_client>);
-#ifdef BUGGY
-	case SELCONN_UDP:
-		return std::unique_ptr<abstract_net>(new cdwrap<udp_p2p>);
-#endif
-	case SELCONN_LOOPBACK:
-		return std::unique_ptr<abstract_net>(new loopback);
+	//TODO: No networking on Xbox atm
 	default:
 		ABORT();
 	}
+#endif
+}
+
+abstract_net::~abstract_net()
+{
+#if 0//def NONET
+	delete loopback;
 #endif
 }
 

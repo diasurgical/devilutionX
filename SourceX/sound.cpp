@@ -184,8 +184,47 @@ void music_stop()
 	}
 }
 
+#ifdef _OGG_MUSIC
+struct sMusicOgg
+{
+std::string strOggFile;
+int iTrack;
+};
+
+sMusicOgg OGGTracks[6] = 
+{
+	{"dtowne.ogg", TMUSIC_TOWN},
+	{"dlvla.ogg", TMUSIC_L1},
+	{"dlvlb.ogg", TMUSIC_L2},
+	{"dlvlc.ogg", TMUSIC_L3},
+	{"dlvld.ogg", TMUSIC_L4},
+	{"dintro.ogg", TMUSIC_INTRO}
+};
+#endif
+
 void music_start(int nTrack)
 {
+#ifdef _OGG_MUSIC
+	assert((DWORD)nTrack < NUM_MUSIC);
+	music_stop();
+
+	if (gbMusicOn)
+	{
+		for(int i = 0; i < sizeof(OGGTracks)/sizeof(OGGTracks[0]); i++)
+		{
+			if(OGGTracks[i].iTrack == nTrack)
+			{
+				std::string strPath("D:\\assets\\music\\");
+				strPath += OGGTracks[i].strOggFile;
+				music = Mix_LoadMUS(strPath.c_str());
+				Mix_VolumeMusic(MIX_MAX_VOLUME - MIX_MAX_VOLUME * sglMusicVolume / VOLUME_MIN);
+				Mix_PlayMusic(music, -1);
+				break;
+			}
+		}
+		sgnMusicTrack = nTrack;
+	}
+#else
 	BOOL success;
 
 	assert((DWORD)nTrack < NUM_MUSIC);
@@ -210,6 +249,7 @@ void music_start(int nTrack)
 			sgnMusicTrack = nTrack;
 		}
 	}
+#endif
 }
 
 void sound_disable_music(BOOL disable)

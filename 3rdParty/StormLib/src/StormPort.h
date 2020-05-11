@@ -38,7 +38,7 @@
 //-----------------------------------------------------------------------------
 // Defines for Windows
 
-#if !defined(PLATFORM_DEFINED) && defined(_WIN32)
+#if !defined(PLATFORM_DEFINED) && defined(_XBOX)//defined(_WIN32)
 
   // In MSVC 8.0, there are some functions declared as deprecated.
   #if _MSC_VER >= 1400
@@ -52,10 +52,12 @@
   #include <stdio.h>
 
   // Suppress definitions of `min` and `max` macros by <windows.h>:
+#ifndef _XBOX
   #define NOMINMAX 1
   #include <windows.h>
 
   #include <wininet.h>
+#endif
   #define PLATFORM_LITTLE_ENDIAN
 
   #ifdef _WIN64
@@ -67,6 +69,10 @@
   #define PLATFORM_WINDOWS
   #define PLATFORM_DEFINED                  // The platform is known now
 
+#endif
+
+#ifdef _XBOX
+#include <xtl.h>
 #endif
 
 //-----------------------------------------------------------------------------
@@ -189,7 +195,6 @@
   #include <stdio.h>
   #include <stdarg.h>
   #include <string.h>
-  #include <strings.h>
   #include <ctype.h>
   #include <assert.h>
   #include <errno.h>

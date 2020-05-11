@@ -810,8 +810,8 @@ static void DRLG_L3Pool()
 				found = TRUE;
 			}
 			poolchance = random_(0, 100);
-			for (j = std::max(duny - totarea, 0); j < std::min(duny + totarea, DMAXY); j++) {
-				for (i = std::max(dunx - totarea, 0); i < std::min(dunx + totarea, DMAXX); i++) {
+			for (j = max(duny - totarea, 0); j < min(duny + totarea, DMAXY); j++) {
+				for (i = max(dunx - totarea, 0); i < min(dunx + totarea, DMAXX); i++) {
 					// BUGFIX: In the following swap the order to first do the
 					// index checks and only then access dungeon[i][j] (fixed)
 					if (dungeon[i][j] & 0x80) {

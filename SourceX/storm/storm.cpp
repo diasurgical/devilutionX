@@ -46,6 +46,7 @@ void GetBasePath(char *buffer, size_t size)
 		return;
 	}
 
+#ifndef _XBOX
 	char *path = SDL_GetBasePath();
 	if (path == NULL) {
 		SDL_Log(SDL_GetError());
@@ -55,10 +56,14 @@ void GetBasePath(char *buffer, size_t size)
 
 	snprintf(buffer, size, "%s", path);
 	SDL_free(path);
+#else
+	snprintf(buffer, size, "%s", "D:\\");
+#endif
 }
 
 void GetPrefPath(char *buffer, size_t size)
 {
+#ifndef _XBOX
 	char *path = SDL_GetPrefPath("diasurgical", "devilution");
 	if (path == NULL) {
 		buffer[0] = '\0';
@@ -67,13 +72,20 @@ void GetPrefPath(char *buffer, size_t size)
 
 	snprintf(buffer, size, "%s", path);
 	SDL_free(path);
+#else
+	snprintf(buffer, size, "%s", "D:\\");
+#endif
 }
 
 void TranslateFileName(char *dst, int dstLen, const char *src)
 {
 	for (int i = 0; i < dstLen; i++) {
 		char c = *src++;
+#ifndef _XBOX
 		dst[i] = c == '\\' ? '/' : c;
+#else
+		dst[i] = c == '\\' ? '\\' : c;
+#endif
 		if (!c) {
 			break;
 		}
@@ -722,12 +734,12 @@ BOOL SVidPlayContinue(void)
 		const int scaledW = SVidWidth * factor;
 		const int scaledH = SVidHeight * factor;
 
-		SDL_Rect pal_surface_offset = {
-			static_cast<decltype(SDL_Rect().x)>((output_surface->w - scaledW) / 2),
-			static_cast<decltype(SDL_Rect().y)>((output_surface->h - scaledH) / 2),
-			static_cast<decltype(SDL_Rect().w)>(scaledW),
-			static_cast<decltype(SDL_Rect().h)>(scaledH)
-		};
+		SDL_Rect pal_surface_offset;
+		pal_surface_offset.x = static_cast<Sint16>((output_surface->w - scaledW) / 2);
+		pal_surface_offset.y = static_cast<Sint16>((output_surface->h - scaledH) / 2);
+		pal_surface_offset.w = static_cast<Uint16>(scaledW);
+		pal_surface_offset.h = static_cast<Uint16>(scaledH);
+
 		if (factor == 1) {
 			if (SDL_BlitSurface(SVidSurface, NULL, output_surface, &pal_surface_offset) <= -1) {
 				ErrSdl();

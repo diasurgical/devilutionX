@@ -8,7 +8,9 @@
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 #include <SDL.h>
+#ifndef _XBOX
 #include <config.h>
+#endif
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -49,7 +51,7 @@ void init_cleanup()
 
 void init_create_window()
 {
-	if (!SpawnWindow(PROJECT_NAME, SCREEN_WIDTH, SCREEN_HEIGHT))
+	if (!SpawnWindow(APP_NAME, SCREEN_WIDTH, SCREEN_HEIGHT))
 		app_fatal("Unable to create main window");
 	dx_init(NULL);
 	was_window_init = true;
@@ -114,7 +116,7 @@ HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int dwPri
 
 void init_get_file_info()
 {
-	snprintf(gszProductName, MAX_PATH, "%s v%s", PROJECT_NAME, PROJECT_VERSION);
+	snprintf(gszProductName, MAX_PATH, "%s v%s", APP_NAME, PROJECT_VERSION);
 	snprintf(gszVersionNumber, MAX_PATH, "version %s", PROJECT_VERSION);
 }
 

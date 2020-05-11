@@ -22,14 +22,14 @@ bool loopback::SNetReceiveMessage(int *sender, char **data, int *size)
 	message_queue.pop();
 	*sender = plr_single;
 	*size = message_last.size();
-	*data = reinterpret_cast<char *>(message_last.data());
+	*data = reinterpret_cast<char *>(&message_last.front());
 	return true;
 }
 
 bool loopback::SNetSendMessage(int dest, void *data, unsigned int size)
 {
 	if (dest == plr_single || dest == SNPLAYER_ALL) {
-		auto raw_message = reinterpret_cast<unsigned char *>(data);
+		unsigned char *raw_message = reinterpret_cast<unsigned char *>(data);
 		buffer_t message(raw_message, raw_message + size);
 		message_queue.push(message);
 	}

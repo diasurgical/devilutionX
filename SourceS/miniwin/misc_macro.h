@@ -1,7 +1,9 @@
 #pragma once
 
+#ifndef _XBOX
 #define TRUE true
 #define FALSE false
+#endif
 
 #define PeekMessage PeekMessageA
 #define DispatchMessage DispatchMessageA
@@ -11,7 +13,9 @@
 // File I/O
 //
 
+#ifndef _XBOX
 #define FILE_CURRENT DVL_FILE_CURRENT
+#endif
 
 //
 // Events

@@ -155,10 +155,20 @@ BOOL mainmenu_init_menu(int type)
 	return success;
 }
 
+#if NONET
+void UiSelOkDialog(const char *title, const char *body, bool background);
+#endif
+
 BOOL mainmenu_multi_player()
 {
 	gbMaxPlayers = MAX_PLRS;
+
+#if NONET
+	UiSelOkDialog(NULL, "There is no network support in this Xbox port at the momment...sorry", false);
+	return true;
+#else
 	return mainmenu_init_menu(SELHERO_CONNECT);
+#endif
 }
 
 #ifndef SPAWN

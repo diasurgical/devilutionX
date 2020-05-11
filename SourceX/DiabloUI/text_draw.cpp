@@ -13,13 +13,13 @@ extern SDL_Surface *pal_surface;
 
 namespace {
 
-TextAlignment XAlignmentFromFlags(int flags)
+	TextAlignmentNS::TextAlignment XAlignmentFromFlags(int flags)
 {
 	if (flags & UIS_CENTER)
-		return TextAlignment::CENTER;
+		return TextAlignmentNS::CENTER;
 	if (flags & UIS_RIGHT)
-		return TextAlignment::END;
-	return TextAlignment::BEGIN;
+		return TextAlignmentNS::END;
+	return TextAlignmentNS::BEGIN;
 }
 
 int AlignXOffset(int flags, const SDL_Rect &dest, int w)

@@ -8,7 +8,9 @@
 #else
 #include <stdarg.h>
 #endif
+#ifndef _XBOX
 #include <stdint.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -27,6 +29,6 @@
 #ifndef MAX_PATH
 #define MAX_PATH DVL_MAX_PATH
 #endif
-#ifdef DEVILUTION_ENGINE
+#if 1//DEVILUTION_ENGINE
 #include "miniwin/misc_macro.h"
 #endif

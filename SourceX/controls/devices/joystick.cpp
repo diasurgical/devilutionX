@@ -3,10 +3,15 @@
 
 #include "controls/controller_motion.h"
 #include "stubs.h"
+#ifdef _XBOX
+#include "controls/xbgamepaddefs.h"
+#endif
+
+#pragma warning(disable:4244)
 
 namespace dvl {
 
-ControllerButton JoyButtonToControllerButton(const SDL_Event &event)
+ControllerButtonNS::ControllerButton JoyButtonToControllerButton(const SDL_Event &event)
 {
 	switch (event.type) {
 	case SDL_JOYBUTTONDOWN:
@@ -14,51 +19,51 @@ ControllerButton JoyButtonToControllerButton(const SDL_Event &event)
 		switch (event.jbutton.button) {
 #ifdef JOY_BUTTON_A
 		case JOY_BUTTON_A:
-			return ControllerButton::BUTTON_A;
+			return ControllerButtonNS::BUTTON_A;
 #endif
 #ifdef JOY_BUTTON_B
 		case JOY_BUTTON_B:
-			return ControllerButton::BUTTON_B;
+			return ControllerButtonNS::BUTTON_B;
 #endif
 #ifdef JOY_BUTTON_X
 		case JOY_BUTTON_X:
-			return ControllerButton::BUTTON_X;
+			return ControllerButtonNS::BUTTON_X;
 #endif
 #ifdef JOY_BUTTON_Y
 		case JOY_BUTTON_Y:
-			return ControllerButton::BUTTON_Y;
+			return ControllerButtonNS::BUTTON_Y;
 #endif
 #ifdef JOY_BUTTON_LEFTSTICK
 		case JOY_BUTTON_LEFTSTICK:
-			return ControllerButton::BUTTON_LEFTSTICK;
+			return ControllerButtonNS::BUTTON_LEFTSTICK;
 #endif
 #ifdef JOY_BUTTON_RIGHTSTICK
 		case JOY_BUTTON_RIGHTSTICK:
-			return ControllerButton::BUTTON_RIGHTSTICK;
+			return ControllerButtonNS::BUTTON_RIGHTSTICK;
 #endif
 #ifdef JOY_BUTTON_LEFTSHOULDER
 		case JOY_BUTTON_LEFTSHOULDER:
-			return ControllerButton::BUTTON_LEFTSHOULDER;
+			return ControllerButtonNS::BUTTON_LEFTSHOULDER;
 #endif
 #ifdef JOY_BUTTON_RIGHTSHOULDER
 		case JOY_BUTTON_RIGHTSHOULDER:
-			return ControllerButton::BUTTON_RIGHTSHOULDER;
+			return ControllerButtonNS::BUTTON_RIGHTSHOULDER;
 #endif
 #ifdef JOY_BUTTON_TRIGGERLEFT
 		case JOY_BUTTON_TRIGGERLEFT:
-			return ControllerButton::AXIS_TRIGGERLEFT;
+			return ControllerButtonNS::AXIS_TRIGGERLEFT;
 #endif
 #ifdef JOY_BUTTON_TRIGGERRIGHT
 		case JOY_BUTTON_TRIGGERRIGHT:
-			return ControllerButton::AXIS_TRIGGERRIGHT;
+			return ControllerButtonNS::AXIS_TRIGGERRIGHT;
 #endif
 #ifdef JOY_BUTTON_START
 		case JOY_BUTTON_START:
-			return ControllerButton::BUTTON_START;
+			return ControllerButtonNS::BUTTON_START;
 #endif
 #ifdef JOY_BUTTON_BACK
 		case JOY_BUTTON_BACK:
-			return ControllerButton::BUTTON_BACK;
+			return ControllerButtonNS::BUTTON_BACK;
 #endif
 #ifdef JOY_BUTTON_DPAD_LEFT
 		case JOY_BUTTON_DPAD_LEFT:
@@ -83,89 +88,89 @@ ControllerButton JoyButtonToControllerButton(const SDL_Event &event)
 	case SDL_JOYHATMOTION:
 #if defined(JOY_HAT_DPAD_UP_HAT) && defined(JOY_HAT_DPAD_UP)
 		if (event.jhat.hat == JOY_HAT_DPAD_UP_HAT && (event.jhat.value & JOY_HAT_DPAD_UP) != 0)
-			return ControllerButton::BUTTON_DPAD_UP;
+			return ControllerButtonNS::BUTTON_DPAD_UP;
 #endif
 #if defined(JOY_HAT_DPAD_DOWN_HAT) && defined(JOY_HAT_DPAD_DOWN)
 		if (event.jhat.hat == JOY_HAT_DPAD_DOWN_HAT && (event.jhat.value & JOY_HAT_DPAD_DOWN) != 0)
-			return ControllerButton::BUTTON_DPAD_DOWN;
+			return ControllerButtonNS::BUTTON_DPAD_DOWN;
 #endif
 #if defined(JOY_HAT_DPAD_LEFT_HAT) && defined(JOY_HAT_DPAD_LEFT)
 		if (event.jhat.hat == JOY_HAT_DPAD_LEFT_HAT && (event.jhat.value & JOY_HAT_DPAD_LEFT) != 0)
-			return ControllerButton::BUTTON_DPAD_LEFT;
+			return ControllerButtonNS::BUTTON_DPAD_LEFT;
 #endif
 #if defined(JOY_HAT_DPAD_RIGHT_HAT) && defined(JOY_HAT_DPAD_RIGHT)
 		if (event.jhat.hat == JOY_HAT_DPAD_RIGHT_HAT && (event.jhat.value & JOY_HAT_DPAD_RIGHT) != 0)
-			return ControllerButton::BUTTON_DPAD_RIGHT;
+			return ControllerButtonNS::BUTTON_DPAD_RIGHT;
 #endif
-		return ControllerButton::IGNORE;
+		return ControllerButtonNS::CBIGNORE;
 		break;
 	default:
 		break;
 	}
-	return ControllerButton::NONE;
+	return ControllerButtonNS::NONE;
 }
 
 namespace {
 
-int JoyButtonToControllerButton(ControllerButton button)
+int JoyButtonToControllerButton(ControllerButtonNS::ControllerButton button)
 {
-	if (button == ControllerButton::AXIS_TRIGGERLEFT || button == ControllerButton::AXIS_TRIGGERRIGHT)
+	if (button == ControllerButtonNS::AXIS_TRIGGERLEFT || button == ControllerButtonNS::AXIS_TRIGGERRIGHT)
 		UNIMPLEMENTED();
 	switch (button) {
 #ifdef JOY_BUTTON_A
-	case ControllerButton::BUTTON_A:
+	case ControllerButtonNS::BUTTON_A:
 		return JOY_BUTTON_A;
 #endif
 #ifdef JOY_BUTTON_B
-	case ControllerButton::BUTTON_B:
+	case ControllerButtonNS::BUTTON_B:
 		return JOY_BUTTON_B;
 #endif
 #ifdef JOY_BUTTON_X
-	case ControllerButton::BUTTON_X:
+	case ControllerButtonNS::BUTTON_X:
 		return JOY_BUTTON_X;
 #endif
 #ifdef JOY_BUTTON_Y
-	case ControllerButton::BUTTON_Y:
+	case ControllerButtonNS::BUTTON_Y:
 		return JOY_BUTTON_Y;
 #endif
 #ifdef JOY_BUTTON_BACK
-	case ControllerButton::BUTTON_BACK:
+	case ControllerButtonNS::BUTTON_BACK:
 		return JOY_BUTTON_BACK;
 #endif
 #ifdef JOY_BUTTON_START
-	case ControllerButton::BUTTON_START:
+	case ControllerButtonNS::BUTTON_START:
 		return JOY_BUTTON_START;
 #endif
 #ifdef JOY_BUTTON_LEFTSTICK
-	case ControllerButton::BUTTON_LEFTSTICK:
+	case ControllerButtonNS::BUTTON_LEFTSTICK:
 		return JOY_BUTTON_LEFTSTICK;
 #endif
 #ifdef JOY_BUTTON_RIGHTSTICK
-	case ControllerButton::BUTTON_RIGHTSTICK:
+	case ControllerButtonNS::BUTTON_RIGHTSTICK:
 		return JOY_BUTTON_RIGHTSTICK;
 #endif
 #ifdef JOY_BUTTON_LEFTSHOULDER
-	case ControllerButton::BUTTON_LEFTSHOULDER:
+	case ControllerButtonNS::BUTTON_LEFTSHOULDER:
 		return JOY_BUTTON_LEFTSHOULDER;
 #endif
 #ifdef JOY_BUTTON_RIGHTSHOULDER
-	case ControllerButton::BUTTON_RIGHTSHOULDER:
+	case ControllerButtonNS::BUTTON_RIGHTSHOULDER:
 		return JOY_BUTTON_RIGHTSHOULDER;
 #endif
 #ifdef JOY_BUTTON_DPAD_UP
-	case ControllerButton::BUTTON_DPAD_UP:
+	case ControllerButtonNS::BUTTON_DPAD_UP:
 		return JOY_BUTTON_DPAD_UP;
 #endif
 #ifdef JOY_BUTTON_DPAD_DOWN
-	case ControllerButton::BUTTON_DPAD_DOWN:
+	case ControllerButtonNS::BUTTON_DPAD_DOWN:
 		return JOY_BUTTON_DPAD_DOWN;
 #endif
 #ifdef JOY_BUTTON_DPAD_LEFT
-	case ControllerButton::BUTTON_DPAD_LEFT:
+	case ControllerButtonNS::BUTTON_DPAD_LEFT:
 		return JOY_BUTTON_DPAD_LEFT;
 #endif
 #ifdef JOY_BUTTON_DPAD_RIGHT
-	case ControllerButton::BUTTON_DPAD_RIGHT:
+	case ControllerButtonNS::BUTTON_DPAD_RIGHT:
 		return JOY_BUTTON_DPAD_RIGHT;
 #endif
 	default:
@@ -173,23 +178,23 @@ int JoyButtonToControllerButton(ControllerButton button)
 	}
 }
 
-bool IsJoystickHatButtonPressed(ControllerButton button)
+bool IsJoystickHatButtonPressed(ControllerButtonNS::ControllerButton button)
 {
 	switch (button) {
 #if defined(JOY_HAT_DPAD_UP_HAT) && defined(JOY_HAT_DPAD_UP)
-	case ControllerButton::BUTTON_DPAD_UP:
+	case ControllerButtonNS::BUTTON_DPAD_UP:
 		return (SDL_JoystickGetHat(CurrentJoystick(), JOY_HAT_DPAD_UP_HAT) & JOY_HAT_DPAD_UP) != 0;
 #endif
 #if defined(JOY_HAT_DPAD_DOWN_HAT) && defined(JOY_HAT_DPAD_DOWN)
-	case ControllerButton::BUTTON_DPAD_DOWN:
+	case ControllerButtonNS::BUTTON_DPAD_DOWN:
 		return (SDL_JoystickGetHat(CurrentJoystick(), JOY_HAT_DPAD_DOWN_HAT) & JOY_HAT_DPAD_DOWN) != 0;
 #endif
 #if defined(JOY_HAT_DPAD_LEFT_HAT) && defined(JOY_HAT_DPAD_LEFT)
-	case ControllerButton::BUTTON_DPAD_LEFT:
+	case ControllerButtonNS::BUTTON_DPAD_LEFT:
 		return (SDL_JoystickGetHat(CurrentJoystick(), JOY_HAT_DPAD_LEFT_HAT) & JOY_HAT_DPAD_LEFT) != 0;
 #endif
 #if defined(JOY_HAT_DPAD_RIGHT_HAT) && defined(JOY_HAT_DPAD_RIGHT)
-	case ControllerButton::BUTTON_DPAD_RIGHT:
+	case ControllerButtonNS::BUTTON_DPAD_RIGHT:
 		return (SDL_JoystickGetHat(CurrentJoystick(), JOY_HAT_DPAD_RIGHT_HAT) & JOY_HAT_DPAD_RIGHT) != 0;
 #endif
 	default:
@@ -199,7 +204,7 @@ bool IsJoystickHatButtonPressed(ControllerButton button)
 
 } // namespace
 
-bool IsJoystickButtonPressed(ControllerButton button)
+bool IsJoystickButtonPressed(ControllerButtonNS::ControllerButton button)
 {
 	if (CurrentJoystick() == NULL)
 		return false;

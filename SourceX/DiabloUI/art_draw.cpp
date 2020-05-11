@@ -7,18 +7,18 @@ extern SDL_Surface *pal_surface;
 extern unsigned int pal_surface_palette_version;
 
 void DrawArt(int screenX, int screenY, Art *art, int nFrame,
-    decltype(SDL_Rect().w) srcW, decltype(SDL_Rect().h) srcH)
+    Uint16 srcW, Uint16 srcH)
 {
 	screenX += PANEL_LEFT;
 	if (screenY >= SCREEN_HEIGHT || screenX >= SCREEN_WIDTH || art->surface == NULL)
 		return;
 
-	SDL_Rect src_rect = {
-		0,
-		static_cast<decltype(SDL_Rect().y)>(nFrame * art->h()),
-		static_cast<decltype(SDL_Rect().w)>(art->w()),
-		static_cast<decltype(SDL_Rect().h)>(art->h())
-	};
+	SDL_Rect src_rect;
+	src_rect.x = 0;
+	src_rect.y = static_cast<Sint16>(nFrame * art->h());
+	src_rect.w = static_cast<Uint16>(art->w());
+	src_rect.h = static_cast<Uint16>(art->h());
+
 	ScaleOutputRect(&src_rect);
 
 	if (srcW && srcW < src_rect.w)

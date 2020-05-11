@@ -13,15 +13,9 @@ namespace net {
 
 typedef std::vector<unsigned char> buffer_t;
 typedef unsigned long provider_t;
-class dvlnet_exception : public std::exception {
-public:
-	const char *what() const throw() override
-	{
-		return "Network error";
-	}
-};
 
-class abstract_net {
+class abstract_net
+	{
 public:
 	virtual int create(std::string addrstr, std::string passwd) = 0;
 	virtual int join(std::string addrstr, std::string passwd) = 0;
@@ -47,9 +41,9 @@ public:
 	virtual bool SNetGetOwnerTurnsWaiting(DWORD *turns) = 0;
 	virtual bool SNetGetTurnsInTransit(int *turns) = 0;
 	virtual void setup_gameinfo(buffer_t info) = 0;
-	virtual ~abstract_net() = default;
+	virtual ~abstract_net();
 
-	static std::unique_ptr<abstract_net> make_net(provider_t provider);
+	static abstract_net* make_net(provider_t provider);
 };
 
 } // namespace net

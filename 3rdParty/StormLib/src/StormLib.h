@@ -104,6 +104,7 @@ extern "C" {
 #define STORMLIB_NO_AUTO_LINK // Define this if you don't want to link using pragmas when using msvc
 #endif
 
+#ifndef _XBOX
 #if defined(_MSC_VER) && !defined(STORMLIB_NO_AUTO_LINK)
   #ifdef _DEBUG                                 // DEBUG VERSIONS
     #ifndef _UNICODE                            
@@ -135,6 +136,7 @@ extern "C" {
     #endif
   #endif
 
+#endif
 #endif
 
 //-----------------------------------------------------------------------------
@@ -1113,8 +1115,8 @@ extern DWORD nLastError;
 DWORD STORMAPI SErrGetLastError();
 void STORMAPI SErrSetLastError(DWORD dwErrCode);
 
-#define SetLastError SErrSetLastError
-#define GetLastError SErrGetLastError
+//#define SetLastError SErrSetLastError
+//#define GetLastError SErrGetLastError
 
 #endif
 

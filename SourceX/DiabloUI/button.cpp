@@ -16,18 +16,21 @@ void LoadSmlButtonArt()
 void RenderButton(UiButton *button)
 {
 	int frame;
-	if (button->pressed) {
+	if (button->m_pressed) {
 		frame = UiButton::PRESSED;
 	} else {
 		frame = UiButton::DEFAULT;
 	}
-	DrawArt(button->rect.x, button->rect.y, button->art, frame, button->rect.w, button->rect.h);
+	DrawArt(button->m_rect.x, button->m_rect.y, button->m_art, frame, button->m_rect.w, button->m_rect.h);
 
-	SDL_Rect text_rect = button->rect;
-	if (!button->pressed)
+	SDL_Rect text_rect = button->m_rect;
+	if (!button->m_pressed)
 		--text_rect.y;
-	DrawTTF(button->text, text_rect, UIS_CENTER,
-	    SDL_Color { 243, 243, 243, 0 }, SDL_Color { 0, 0, 0, 0 }, &button->render_cache);
+
+	SDL_Color color1 = { 243, 243, 243, 0 };
+	SDL_Color color2 = { 0, 0, 0, 0 };
+	DrawTTF(button->m_text, text_rect, UIS_CENTER,
+	    color1, color2, &button->m_render_cache);
 }
 
 bool HandleMouseEventButton(const SDL_Event &event, UiButton *button)
@@ -36,10 +39,10 @@ bool HandleMouseEventButton(const SDL_Event &event, UiButton *button)
 		return false;
 	switch (event.type) {
 	case SDL_MOUSEBUTTONUP:
-		button->action();
+		button->m_action();
 		return true;
 	case SDL_MOUSEBUTTONDOWN:
-		button->pressed = true;
+		button->m_pressed = true;
 		return true;
 	default:
 		return false;
@@ -48,7 +51,7 @@ bool HandleMouseEventButton(const SDL_Event &event, UiButton *button)
 
 void HandleGlobalMouseUpButton(UiButton *button)
 {
-	button->pressed = false;
+	button->m_pressed = false;
 }
 
 } // namespace dvl

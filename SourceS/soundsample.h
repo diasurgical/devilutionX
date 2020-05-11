@@ -3,7 +3,7 @@
 
 namespace dvl {
 
-typedef struct SoundSample final {
+typedef struct SoundSample {
 public:
 	void Release() ;
 	bool IsPlaying() ;
