@@ -611,9 +611,6 @@ static void DrawMonsterHelper(int x, int y, int oy, int sx, int sy)
 	int mi, px, py;
 	MonsterStruct *pMonster;
 
-	if (!(dFlags[x][y] & BFLAG_LIT) && !plr[myplr]._pInfraFlag)
-		return;
-
 	mi = dMonster[x][y + oy];
 	mi = mi > 0 ? mi - 1 : -(mi + 1);
 
@@ -626,6 +623,9 @@ static void DrawMonsterHelper(int x, int y, int oy, int sx, int sy)
 		CelClippedDraw(px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
 		return;
 	}
+
+	if (!(dFlags[x][y] & BFLAG_LIT) && !plr[myplr]._pInfraFlag)
+		return;
 
 	if ((DWORD)mi >= MAXMONSTERS) {
 		// app_fatal("Draw Monster: tried to draw illegal monster %d", mi);
