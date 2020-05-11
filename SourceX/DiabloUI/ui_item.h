@@ -38,316 +38,314 @@ enum UiFlags {
 	UIS_HIDDEN = 1 << 10,
 };
 
-struct UiItemBase {
-	constexpr UiItemBase(SDL_Rect rect, int flags)
-	    : rect(rect)
-	    , flags(flags)
+class UiItemBase {
+public:
+	UiItemBase(SDL_Rect rect, int flags)
 	{
-	}
+		m_rect = rect;
+		m_iFlags = flags;
+	};
+
+	UiItemBase(Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, int flags)
+	{
+		SDL_Rect tmp;
+		tmp.x = x;
+		tmp.y = y;
+		tmp.w = item_width;
+		tmp.h = item_height;
+
+		m_rect = tmp;
+		m_iFlags = flags;
+	};
+
+	virtual ~UiItemBase() {};
 
 	bool has_flag(UiFlags flag) const
 	{
-		return flags & flag;
+		return m_iFlags & flag;
 	}
 
 	bool has_any_flag(int flags) const
 	{
-		return (this->flags & flags) != 0;
+		return (m_iFlags & flags) != 0;
 	}
 
 	void add_flag(UiFlags flag)
 	{
-		flags |= flag;
+		m_iFlags |= flag;
 	}
 
 	void remove_flag(UiFlags flag)
 	{
-		flags &= ~flag;
+		m_iFlags &= ~flag;
 	}
 
-	SDL_Rect rect;
-	int flags;
+	//protected:
+	UiType m_type;
+	SDL_Rect m_rect;
+	int m_iFlags;
 };
 
-struct UiImage : public UiItemBase {
-	constexpr UiImage(Art *art, bool animated, int frame, SDL_Rect rect, int flags = 0)
+//=============================================================================
+
+class UiImage : public UiItemBase {
+public:
+	UiImage(Art *art, SDL_Rect rect, int flags = 0)
 	    : UiItemBase(rect, flags)
-	    , art(art)
-	    , animated(animated)
-	    , frame(frame)
 	{
+		m_type = UI_IMAGE;
+		m_art = art;
+		m_animated = false;
+		m_frame = 0;
+	};
+
+	UiImage(Art *art, bool bAnimated, int iFrame, SDL_Rect rect, int flags)
+	    : UiItemBase(rect, flags)
+	{
+		m_type = UI_IMAGE;
+		m_art = art;
+		m_animated = bAnimated;
+		m_frame = iFrame;
+	};
+
+	UiImage(Art *art, int frame, SDL_Rect rect, int flags = 0)
+	    : UiItemBase(rect, flags)
+	{
+		m_type = UI_IMAGE;
+		m_art = art;
+		m_animated = false;
+		m_frame = frame;
 	}
 
-	constexpr UiImage(Art *art, int frame, SDL_Rect rect, int flags = 0)
-	    : UiImage(art, /*animated=*/false, frame, rect, flags)
-	{
-	}
+	~UiImage() {};
 
-	constexpr UiImage(Art *art, SDL_Rect rect, int flags = 0)
-	    : UiImage(art, /*frame=*/0, rect, flags)
-	{
-	}
-
-	Art *art;
-	bool animated;
-	int frame;
+	//private:
+	Art *m_art;
+	bool m_animated;
+	int m_frame;
 };
 
-// Plain text (TTF).
-struct UiText : public UiItemBase {
-	constexpr UiText(const char *text, SDL_Color color, SDL_Rect rect, int flags = 0)
+//=============================================================================
+
+class UiArtText : public UiItemBase {
+public:
+	UiArtText(const char *text, SDL_Rect rect, int flags = 0)
 	    : UiItemBase(rect, flags)
-	    , color(color)
-	    , shadow_color { 0, 0, 0, 0 }
-	    , text(text)
-	    , render_cache(NULL)
 	{
+		m_type = UI_ART_TEXT;
+		m_text = text;
+	};
+
+	~UiArtText() {};
+
+	//private:
+	const char *m_text;
+};
+
+//=============================================================================
+
+class UiScrollBar : public UiItemBase {
+public:
+	UiScrollBar(Art *bg, Art *thumb, Art *arrow, SDL_Rect rect, int flags = 0)
+	    : UiItemBase(rect, flags)
+	{
+		m_type = UI_SCROLLBAR;
+		m_bg = bg;
+		m_thumb = thumb;
+		m_arrow = arrow;
+	};
+
+	//private:
+	Art *m_bg;
+	Art *m_thumb;
+	Art *m_arrow;
+};
+
+//=============================================================================
+
+class UiArtTextButton : public UiItemBase {
+public:
+	UiArtTextButton(const char *text, void (*action)(), SDL_Rect rect, int flags = 0)
+	    : UiItemBase(rect, flags)
+	{
+		m_type = UI_ART_TEXT_BUTTON;
+		m_text = text;
+		m_action = action;
+	};
+	//private:
+	const char *m_text;
+	void (*m_action)();
+};
+
+//=============================================================================
+
+class UiEdit : public UiItemBase {
+public:
+	UiEdit(char *value, std::size_t max_length, SDL_Rect rect, int flags = 0)
+	    : UiItemBase(rect, flags)
+	{
+		m_type = UI_EDIT;
+		m_value = value;
+		m_max_length = max_length;
 	}
 
-	constexpr UiText(const char *text, SDL_Rect rect, int flags = 0)
-	    : UiText(text, SDL_Color { 243, 243, 243, 0 }, rect, flags)
+	//private:
+	char *m_value;
+	std::size_t m_max_length;
+};
+
+//=============================================================================
+
+// Plain text (TTF)
+
+class UiText : public UiItemBase {
+public:
+	UiText(const char *text, SDL_Color color1, SDL_Rect rect, int flags = 0)
+	    : UiItemBase(rect, flags)
 	{
+		m_type = UI_TEXT;
+		m_color = color1;
+
+		SDL_Color color2 = { 0, 0, 0, 0 };
+		m_shadow_color = color2;
+
+		m_text = text;
+		m_render_cache = NULL;
 	}
 
-	SDL_Color color;
-	SDL_Color shadow_color;
-	const char *text;
+	UiText(const char *text, SDL_Rect rect, int flags = 0)
+	    : UiItemBase(rect, flags)
+	{
+		m_type = UI_TEXT;
+
+		SDL_Color color1 = { 243, 243, 243, 0 };
+		m_color = color1;
+
+		SDL_Color color2 = { 0, 0, 0, 0 };
+		m_shadow_color = color2;
+
+		m_text = text;
+		m_render_cache = NULL;
+	}
+
+	//private:
+	SDL_Color m_color;
+	SDL_Color m_shadow_color;
+	const char *m_text;
 
 	// State:
-	TtfSurfaceCache *render_cache;
+	TtfSurfaceCache *m_render_cache;
 
-	void FreeCache()
+	virtual void FreeCache()
 	{
-		delete render_cache;
-		render_cache = NULL;
+		delete m_render_cache;
+		m_render_cache = NULL;
 	}
 };
 
-// Text drawn with Diablo sprites.
-struct UiArtText : public UiItemBase {
-	constexpr UiArtText(const char *text, SDL_Rect rect, int flags = 0)
+//=============================================================================
+
+// A button (uses Diablo sprites)
+
+class UiButton : public UiItemBase {
+public:
+	UiButton(Art *art, const char *text, void (*action)(), SDL_Rect rect, int flags = 0)
 	    : UiItemBase(rect, flags)
-	    , text(text)
 	{
+		m_type = UI_BUTTON;
+		m_art = art;
+		m_text = text;
+		m_action = action;
+		m_pressed = false;
+		m_render_cache = NULL;
 	}
 
-	const char *text;
-};
-
-// Clickable Diablo sprites text.
-struct UiArtTextButton : public UiItemBase {
-	constexpr UiArtTextButton(const char *text, void (*action)(), SDL_Rect rect, int flags = 0)
-	    : UiItemBase(rect, flags)
-	    , text(text)
-	    , action(action)
-	{
-	}
-
-	const char *text;
-	void (*action)();
-};
-
-// A button (uses Diablo sprites).
-struct UiButton : public UiItemBase {
 	enum FrameKey {
 		DEFAULT = 0,
 		PRESSED,
 		DISABLED
 	};
 
-	constexpr UiButton(Art *art, const char *text, void (*action)(), SDL_Rect rect, int flags = 0)
-	    : UiItemBase(rect, flags)
-	    , art(art)
-	    , text(text)
-	    , action(action)
-	    , pressed(false)
-	    , render_cache(NULL)
-	{
-	}
+	//private:
+	Art *m_art;
 
-	Art *art;
-
-	const char *text;
-	void (*action)();
+	const char *m_text;
+	void (*m_action)();
 
 	// State
-	bool pressed;
-	TtfSurfaceCache *render_cache;
+	bool m_pressed;
+	TtfSurfaceCache *m_render_cache;
 
-	void FreeCache()
+	virtual void FreeCache()
 	{
-		delete render_cache;
-		render_cache = NULL;
+		delete m_render_cache;
+		m_render_cache = NULL;
 	}
 };
 
-struct UiListItem {
-	constexpr UiListItem(const char *text = "", int value = 0)
-	    : text(text)
-	    , value(value)
+//=============================================================================
+
+class UiListItem {
+public:
+	UiListItem(const char *text = "", int value = 0)
+	{
+		m_text = text;
+		m_value = value;
+	}
+
+	~UiListItem()
 	{
 	}
-	const char *text;
-	int value;
+
+	//private:
+	const char *m_text;
+	int m_value;
 };
 
-struct UiList : public UiItemBase {
-	template <std::size_t N>
-	constexpr UiList(
-	    UiListItem (&items)[N],
-	    Sint16 x,
-	    Sint16 y,
-	    Uint16 item_width,
-	    Uint16 item_height,
-	    int flags)
-	    : UiItemBase({ x, y, item_width, static_cast<Uint16>(item_height * N) }, flags)
-	    , x(x)
-	    , y(y)
-	    , item_width(item_width)
-	    , item_height(item_height)
-	    , items(items)
-	    , length(N)
-	{
-	}
+typedef std::vector<UiListItem *> vUiListItem;
 
-	Sint16 x;
-	Sint16 y;
-	Uint16 item_width;
-	Uint16 item_height;
-	UiListItem *items;
-	std::size_t length;
-
-	SDL_Rect itemRect(std::size_t i) const
+class UiList : public UiItemBase {
+public:
+	UiList(vUiListItem vItems, Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, int flags = 0)
+	    : UiItemBase(x, y, item_width, item_height * vItems.size(), flags)
 	{
-		return { x, static_cast<Sint16>(y + item_height * i), item_width, item_height };
+		m_type = UI_LIST;
+		m_vecItems = vItems;
+		m_x = x;
+		m_y = y;
+		m_width = item_width;
+		m_height = item_height;
+	};
+
+	~UiList() {};
+
+	SDL_Rect itemRect(int i) const
+	{
+		SDL_Rect tmp;
+		tmp.x = m_x;
+		tmp.y = m_y + m_height * i;
+		tmp.w = m_width;
+		tmp.h = m_height;
+
+		return tmp;
 	}
 
 	UiListItem *itemAt(Sint16 y) const
 	{
-		ASSERT(y >= rect.y);
-		const std::size_t index = (y - rect.y) / item_height;
-		ASSERT(index < length);
-		return &items[index];
+		ASSERT(y >= m_rect.y);
+		const std::size_t index = (y - m_rect.y) / m_height;
+		ASSERT(index < m_vecItems.size());
+		return m_vecItems[index];
 	}
+
+	UiListItem *GetItem(int i) const
+	{
+		return m_vecItems[i];
+	}
+
+	//private:
+	Sint16 m_x, m_y;
+	Uint16 m_width, m_height;
+	std::vector<UiListItem *> m_vecItems;
 };
-
-struct UiScrollBar : public UiItemBase {
-	constexpr UiScrollBar(Art *bg, Art *thumb, Art *arrow, SDL_Rect rect, int flags = 0)
-	    : UiItemBase(rect, flags)
-	    , bg(bg)
-	    , thumb(thumb)
-	    , arrow(arrow)
-	{
-	}
-
-	Art *bg;
-	Art *thumb;
-	Art *arrow;
-};
-
-struct UiEdit : public UiItemBase {
-	constexpr UiEdit(char *value, std::size_t max_length, SDL_Rect rect, int flags)
-	    : UiItemBase(rect, flags)
-	    , value(value)
-	    , max_length(max_length)
-
-	{
-	}
-
-	char *value;
-	std::size_t max_length;
-};
-
-struct UiItem {
-	constexpr UiItem(UiText text)
-	    : type(UI_TEXT)
-	    , text(text)
-	{
-	}
-
-	constexpr UiItem(UiArtText text)
-	    : type(UI_ART_TEXT)
-	    , art_text(text)
-	{
-	}
-
-	constexpr UiItem(UiArtTextButton art_text_button)
-	    : type(UI_ART_TEXT_BUTTON)
-	    , art_text_button(art_text_button)
-	{
-	}
-
-	constexpr UiItem(UiImage image)
-	    : type(UI_IMAGE)
-	    , image(image)
-	{
-	}
-
-	constexpr UiItem(UiButton button)
-	    : type(UI_BUTTON)
-	    , button(button)
-	{
-	}
-
-	constexpr UiItem(UiList list)
-	    : type(UI_LIST)
-	    , list(list)
-	{
-	}
-
-	constexpr UiItem(UiScrollBar scrollbar)
-	    : type(UI_SCROLLBAR)
-	    , scrollbar(scrollbar)
-	{
-	}
-
-	constexpr UiItem(UiEdit edit)
-	    : type(UI_EDIT)
-	    , edit(edit)
-	{
-	}
-
-	UiType type;
-	union {
-		UiText text;
-		UiArtText art_text;
-		UiImage image;
-		UiArtTextButton art_text_button;
-		UiButton button;
-		UiList list;
-		UiScrollBar scrollbar;
-		UiEdit edit;
-		UiItemBase common;
-	};
-
-	bool has_flag(UiFlags flag) const
-	{
-		return common.has_flag(flag);
-	}
-
-	bool has_any_flag(int flags) const
-	{
-		return common.has_any_flag(flags);
-	}
-
-	const SDL_Rect &rect() const
-	{
-		return common.rect;
-	}
-
-	void FreeCache()
-	{
-		switch (type) {
-		case UI_BUTTON:
-			button.FreeCache();
-			break;
-		case UI_TEXT:
-			text.FreeCache();
-			break;
-		default:
-			break;
-		}
-	}
-};
-
 } // namespace dvl

@@ -4,6 +4,8 @@
 
 namespace dvl {
 
+std::vector<UiItemBase *> vecTitleScreen;
+
 void title_Load()
 {
 	LoadBackgroundArt("ui_art\\title.pcx");
@@ -14,15 +16,21 @@ void title_Free()
 {
 	ArtBackground.Unload();
 	ArtLogos[LOGO_BIG].Unload();
+
+	for (std::size_t i = 0; i < vecTitleScreen.size(); i++) {
+		UiItemBase *pUIItem = vecTitleScreen[i];
+		delete pUIItem;
+	}
+	vecTitleScreen.clear();
 }
 
 void UiTitleDialog()
 {
-	UiItem TITLESCREEN_DIALOG[] = {
-		MAINMENU_BACKGROUND,
-		UiImage(&ArtLogos[LOGO_BIG], /*animated=*/true, /*frame=*/0, { 0, 182, 0, 0 }, UIS_CENTER),
-		UiArtText("Copyright \xA9 1996-2001 Blizzard Entertainment", { PANEL_LEFT + 49, 410, 550, 26 }, UIS_MED | UIS_CENTER)
-	};
+	UiAddBackground(&vecTitleScreen);
+	UiAddLogo(&vecTitleScreen, LOGO_BIG, 182);
+
+	SDL_Rect rect = { PANEL_LEFT + 49, 410, 550, 26 };
+	vecTitleScreen.push_back(new UiArtText("Copyright \xA9 1996-2001 Blizzard Entertainment", rect, UIS_MED | UIS_CENTER));
 
 	title_Load();
 
@@ -31,7 +39,7 @@ void UiTitleDialog()
 
 	SDL_Event event;
 	while (!endMenu && SDL_GetTicks() < timeOut) {
-		UiRenderItems(TITLESCREEN_DIALOG, size(TITLESCREEN_DIALOG));
+		UiRenderItems(vecTitleScreen);
 		UiFadeIn();
 
 		while (SDL_PollEvent(&event)) {

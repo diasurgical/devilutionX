@@ -18,44 +18,78 @@ _SNETVERSIONDATA *selconn_FileInfo;
 
 int provider;
 
-UiArtText SELCONNECT_DIALOG_DESCRIPTION(selconn_Description, { PANEL_LEFT + 35, 275, 205, 66 });
+std::vector<UiListItem *> vecConnItems;
+std::vector<UiItemBase *> vecSelConnDlg;
 
-// Should be in the same order than conn_type (See enums.h)
-UiListItem SELCONN_DIALOG_ITEMS[] = {
-#ifndef NONET
-	{ "Client-Server (TCP)", SELCONN_TCP },
-#ifdef BUGGY
-	{ "Peer-to-Peer (UDP)", SELCONN_UDP },
-#endif
-#endif
-	{ "Loopback", SELCONN_LOOPBACK },
-};
-
-UiItem SELCONNECT_DIALOG[] = {
-	MAINMENU_BACKGROUND,
-	MAINMENU_LOGO,
-	UiArtText("Multi Player Game", { PANEL_LEFT + 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG),
-	UiArtText(selconn_MaxPlayers, { PANEL_LEFT + 35, 218, 205, 21 }),
-	UiArtText("Requirements:", { PANEL_LEFT + 35, 256, 205, 21 }),
-	SELCONNECT_DIALOG_DESCRIPTION,
-	UiArtText("no gateway needed", { PANEL_LEFT + 30, 356, 220, 31 }, UIS_CENTER | UIS_MED),
-	UiArtText(selconn_Gateway, { PANEL_LEFT + 35, 393, 205, 21 }, UIS_CENTER),
-	UiArtText("Select Connection", { PANEL_LEFT + 300, 211, 295, 33 }, UIS_CENTER | UIS_BIG),
-	UiArtTextButton("Change Gateway", NULL, { PANEL_LEFT + 16, 427, 250, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD | UIS_HIDDEN),
-	UiList(SELCONN_DIALOG_ITEMS, PANEL_LEFT + 305, 256, 285, 26, UIS_CENTER | UIS_VCENTER | UIS_GOLD),
-	UiArtTextButton("OK", &UiFocusNavigationSelect, { PANEL_LEFT + 299, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD),
-	UiArtTextButton("Cancel", &UiFocusNavigationEsc, { PANEL_LEFT + 454, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD)
-};
+#define DESCRIPTION_WIDTH 205
 
 void selconn_Load()
 {
 	LoadBackgroundArt("ui_art\\selconn.pcx");
-	UiInitList(0, size(SELCONN_DIALOG_ITEMS) - 1, selconn_Focus, selconn_Select, selconn_Esc, SELCONNECT_DIALOG, size(SELCONNECT_DIALOG));
+
+	// vecConnItems Should be in the same order as conn_type (See enums.h)
+#ifndef NONET
+	vecConnItems.push_back(new UiListItem("Client-Server (TCP)", SELCONN_TCP));
+#ifdef BUGGY
+	vecConnItems.push_back(new UiListItem("Peer-to-Peer (UDP)", SELCONN_UDP));
+#endif
+#endif
+	vecConnItems.push_back(new UiListItem("Loopback", SELCONN_LOOPBACK));
+
+	UiAddBackground(&vecSelConnDlg);
+	UiAddLogo(&vecSelConnDlg);
+
+	SDL_Rect rect1 = { PANEL_LEFT + 24, 161, 590, 35 };
+	vecSelConnDlg.push_back(new UiArtText("Multi Player Game", rect1, UIS_CENTER | UIS_BIG));
+
+	SDL_Rect rect2 = { PANEL_LEFT + 35, 218, DESCRIPTION_WIDTH, 21 };
+	vecSelConnDlg.push_back(new UiArtText(selconn_MaxPlayers, rect2));
+
+	SDL_Rect rect3 = { PANEL_LEFT + 35, 256, DESCRIPTION_WIDTH, 21 };
+	vecSelConnDlg.push_back(new UiArtText("Requirements:", rect3));
+
+	SDL_Rect rect4 = { PANEL_LEFT + 35, 275, DESCRIPTION_WIDTH, 66 };
+	vecSelConnDlg.push_back(new UiArtText(selconn_Description, rect4));
+
+	SDL_Rect rect5 = { PANEL_LEFT + 30, 356, 220, 31 };
+	vecSelConnDlg.push_back(new UiArtText("no gateway needed", rect5, UIS_CENTER | UIS_MED));
+
+	SDL_Rect rect6 = { PANEL_LEFT + 35, 393, DESCRIPTION_WIDTH, 21 };
+	vecSelConnDlg.push_back(new UiArtText(selconn_Gateway, rect6, UIS_CENTER));
+
+	SDL_Rect rect7 = { PANEL_LEFT + 300, 211, 295, 33 };
+	vecSelConnDlg.push_back(new UiArtText("Select Connection", rect7, UIS_CENTER | UIS_BIG));
+
+	SDL_Rect rect8 = { PANEL_LEFT + 16, 427, 250, 35 };
+	vecSelConnDlg.push_back(new UiArtTextButton("Change Gateway", NULL, rect8, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD | UIS_HIDDEN));
+
+	vecSelConnDlg.push_back(new UiList(vecConnItems, PANEL_LEFT + 305, 256, 285, 26, UIS_CENTER | UIS_VCENTER | UIS_GOLD));
+
+	SDL_Rect rect9 = { PANEL_LEFT + 299, 427, 140, 35 };
+	vecSelConnDlg.push_back(new UiArtTextButton("OK", &UiFocusNavigationSelect, rect9, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
+
+	SDL_Rect rect10 = { PANEL_LEFT + 454, 427, 140, 35 };
+	vecSelConnDlg.push_back(new UiArtTextButton("Cancel", &UiFocusNavigationEsc, rect10, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
+
+	UiInitList(0, vecConnItems.size() - 1, selconn_Focus, selconn_Select, selconn_Esc, vecSelConnDlg);
 }
 
 void selconn_Free()
 {
 	ArtBackground.Unload();
+
+	for (std::size_t i = 0; i < vecConnItems.size(); i++) {
+		UiListItem *pUIItem = vecConnItems[i];
+		delete pUIItem;
+	}
+	vecConnItems.clear();
+
+	for (std::size_t i = 0; i < vecSelConnDlg.size(); i++) {
+		UiItemBase *pUIMenuItem = vecSelConnDlg[i];
+		if (pUIMenuItem)
+			delete pUIMenuItem;
+	}
+	vecSelConnDlg.clear();
 }
 
 void selconn_Esc()
@@ -87,7 +121,7 @@ void selconn_Focus(int value)
 	}
 
 	sprintf(selconn_MaxPlayers, "Players Supported: %d", players);
-	WordWrapArtStr(selconn_Description, SELCONNECT_DIALOG_DESCRIPTION.rect.w);
+	WordWrapArtStr(selconn_Description, DESCRIPTION_WIDTH);
 }
 
 void selconn_Select(int value)

@@ -29,36 +29,27 @@ extern Art ArtCursor;
 extern Art ArtHero;
 extern bool gbSpawned;
 
-constexpr auto MAINMENU_BACKGROUND = UiImage(&ArtBackground, { PANEL_LEFT, 0, 640, 480 });
-constexpr auto MAINMENU_LOGO = UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, { 0, 0, 0, 0 }, UIS_CENTER);
-
-template <class T, size_t N>
-constexpr size_t size(T (&)[N])
-{
-	return N;
-}
-
 extern void (*gfnSoundFunction)(char *file);
 extern BOOL (*gfnHeroInfo)(BOOL (*fninfofunc)(_uiheroinfo *));
 
-bool IsInsideRect(const SDL_Event &event, const SDL_Rect &rect);
 void UiFadeIn();
-void UiFocusNavigation(SDL_Event *event);
 void UiHandleEvents(SDL_Event *event);
-bool UiItemMouseEvents(SDL_Event *event, UiItem *items, std::size_t size);
+bool UiItemMouseEvents(SDL_Event *event, std::vector<UiItemBase *> items);
 int GetCenterOffset(int w, int bw = 0);
 void LoadPalInMem(const SDL_Color *pPal);
 void DrawMouse();
 void LoadBackgroundArt(const char *pszFile);
-void SetMenu(int MenuId);
+void UiAddBackground(std::vector<UiItemBase *> *vecDialog);
+void UiAddLogo(std::vector<UiItemBase *> *vecDialog, int size = LOGO_MED, int height = 0);
 void UiFocusNavigationSelect();
 void UiFocusNavigationEsc();
 void UiFocusNavigationYesNo();
-void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), UiItem *items, int size, bool wraps = false, bool (*fnYesNo)() = NULL);
+void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), std::vector<UiItemBase *> items, bool wraps = false, bool (*fnYesNo)() = NULL);
 void UiInitScrollBar(UiScrollBar *ui_sb, std::size_t viewport_size, const std::size_t *current_offset);
 void UiClearScreen();
 void UiPollAndRender();
-void UiRenderItems(UiItem *items, std::size_t size);
+void UiRenderItems(std::vector<UiItemBase *> items);
+void UiInitList_clear();
 
 void DvlIntSetting(const char *valuename, int *value);
 void DvlStringSetting(const char *valuename, char *string, int len);
