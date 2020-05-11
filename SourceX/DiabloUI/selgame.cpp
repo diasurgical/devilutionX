@@ -1,7 +1,9 @@
 #include "selgame.h"
 
 #include "all.h"
+#ifndef _XBOX
 #include "config.h"
+#endif
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/text.h"
 #include "DiabloUI/dialogs.h"

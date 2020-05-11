@@ -2,6 +2,7 @@
 
 namespace dvl {
 
+#ifndef _XBOX
 typedef uint16_t SHORT;
 typedef int32_t LONG;
 typedef uint8_t BOOLEAN;
@@ -9,7 +10,9 @@ typedef uint8_t BOOLEAN;
 typedef unsigned char UCHAR;
 
 typedef uint32_t DWORD;
+#endif
 typedef int BOOL;
+#ifndef _XBOX
 typedef unsigned char BYTE;
 typedef unsigned short WORD;
 typedef DWORD *LPDWORD;
@@ -21,6 +24,7 @@ typedef unsigned int UINT;
 typedef uintptr_t WPARAM;
 typedef uintptr_t LPARAM;
 typedef uintptr_t LRESULT;
+#endif
 
 //
 // Handles
@@ -31,10 +35,12 @@ typedef HANDLE HWND, HMODULE, HDC, HINSTANCE;
 
 typedef LRESULT(*WNDPROC)(HWND, UINT, WPARAM, LPARAM);
 
+#ifndef _XBOX
 typedef struct _FILETIME {
 	DWORD dwLowDateTime;
 	DWORD dwHighDateTime;
 } FILETIME, *LPFILETIME;
+#endif
 
 typedef struct tagMSG {
 	UINT message;

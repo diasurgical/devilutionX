@@ -8,7 +8,9 @@
 #else
 #include <stdarg.h>
 #endif
+#ifndef _XBOX
 #include <stdint.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

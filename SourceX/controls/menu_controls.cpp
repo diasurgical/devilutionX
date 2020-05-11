@@ -45,7 +45,11 @@ MenuAction GetMenuAction(const SDL_Event &event)
 		sgbControllerActive = false;
 
 	if (event.type == SDL_KEYDOWN) {
-		auto sym = event.key.keysym.sym;
+#ifdef USE_SDL1
+		SDLKey sym = event.key.keysym.sym;
+#else
+		int sym = event.key.keysym.sym;
+#endif
 		remap_keyboard_key(&sym);
 		switch (sym) {
 		case SDLK_UP:

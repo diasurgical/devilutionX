@@ -2,6 +2,8 @@
 #include "../SourceX/display.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
+#pragma warning(disable:4244)
+
 DEVILUTION_BEGIN_NAMESPACE
 
 SDL_Color logical_palette[256];

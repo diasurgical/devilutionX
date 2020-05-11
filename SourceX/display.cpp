@@ -159,7 +159,7 @@ void ScaleOutputRect(SDL_Rect *rect)
 {
 	if (!OutputRequiresScaling())
 		return;
-	const SDL_Surface *surface = GetOutputSurface();
+	SDL_Surface *surface = GetOutputSurface();
 	rect->x = rect->x * surface->w / SCREEN_WIDTH;
 	rect->y = rect->y * surface->h / SCREEN_HEIGHT;
 	rect->w = rect->w * surface->w / SCREEN_WIDTH;
@@ -201,5 +201,17 @@ void ScaleSurfaceToOutput(SDL_Surface **surface)
 	*surface = stretched;
 #endif
 }
+
+#ifdef _XBOX
+void OutputToLogical(Uint16 *x, Uint16 *y)
+{
+	if (!OutputRequiresScaling())
+		return;
+
+	const SDL_Surface *surface = GetOutputSurface();
+	*x = *x * SCREEN_WIDTH / surface->w;
+	*y = *y * SCREEN_HEIGHT / surface->h;
+}
+#endif
 
 } // namespace dvl

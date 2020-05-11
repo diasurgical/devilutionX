@@ -13,6 +13,7 @@ namespace net {
 
 typedef std::vector<unsigned char> buffer_t;
 typedef unsigned long provider_t;
+#ifndef _XBOX
 class dvlnet_exception : public std::exception {
 public:
 	const char *what() const throw() override
@@ -20,6 +21,7 @@ public:
 		return "Network error";
 	}
 };
+#endif
 
 class abstract_net {
 public:
@@ -47,9 +49,9 @@ public:
 	virtual bool SNetGetOwnerTurnsWaiting(DWORD *turns) = 0;
 	virtual bool SNetGetTurnsInTransit(int *turns) = 0;
 	virtual void setup_gameinfo(buffer_t info) = 0;
-	virtual ~abstract_net() = default;
+	virtual ~abstract_net();
 
-	static std::unique_ptr<abstract_net> make_net(provider_t provider);
+	static abstract_net* make_net(provider_t provider);
 };
 
 } // namespace net

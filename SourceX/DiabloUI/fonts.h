@@ -7,7 +7,11 @@
 #include "DiabloUI/art.h"
 
 #ifndef TTF_FONT_DIR
+#ifdef _XBOX
+#define TTF_FONT_DIR "D:\\assets\\"
+#else
 #define TTF_FONT_DIR ""
+#endif
 #endif
 
 #ifndef TTF_FONT_NAME

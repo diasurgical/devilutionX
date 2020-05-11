@@ -18,8 +18,10 @@
 #include "StormCommon.h"
 #include "FileStream.h"
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(_XBOX)
+#ifndef _XBOX
 #pragma comment(lib, "wininet.lib")             // Internet functions for HTTP stream
+#endif
 #pragma warning(disable: 4800)                  // 'BOOL' : forcing value to bool 'true' or 'false' (performance warning)
 #endif
 
@@ -75,7 +77,7 @@ static void BaseNone_Init(TFileStream *)
 
 static bool BaseFile_Create(TFileStream * pStream)
 {
-#ifdef PLATFORM_WINDOWS
+#if defined(PLATFORM_WINDOWS) || defined(_XBOX)
     {
         DWORD dwWriteShare = (pStream->dwFlags & STREAM_FLAG_WRITE_SHARE) ? FILE_SHARE_WRITE : 0;
 
@@ -115,7 +117,7 @@ static bool BaseFile_Create(TFileStream * pStream)
 
 static bool BaseFile_Open(TFileStream * pStream, const TCHAR * szFileName, DWORD dwStreamFlags)
 {
-#ifdef PLATFORM_WINDOWS
+#if defined(PLATFORM_WINDOWS) || defined(_XBOX)
     {
         ULARGE_INTEGER FileSize;
         DWORD dwWriteAccess = (dwStreamFlags & STREAM_FLAG_READ_ONLY) ? 0 : FILE_WRITE_DATA | FILE_APPEND_DATA | FILE_WRITE_ATTRIBUTES;
@@ -188,7 +190,7 @@ static bool BaseFile_Read(
     ULONGLONG ByteOffset = (pByteOffset != NULL) ? *pByteOffset : pStream->Base.File.FilePos;
     DWORD dwBytesRead = 0;                  // Must be set by platform-specific code
 
-#ifdef PLATFORM_WINDOWS
+#if defined(PLATFORM_WINDOWS) || defined(_XBOX)
     {
         // Note: StormLib no longer supports Windows 9x.
         // Thus, we can use the OVERLAPPED structure to specify
@@ -259,7 +261,7 @@ static bool BaseFile_Write(TFileStream * pStream, ULONGLONG * pByteOffset, const
     ULONGLONG ByteOffset = (pByteOffset != NULL) ? *pByteOffset : pStream->Base.File.FilePos;
     DWORD dwBytesWritten = 0;               // Must be set by platform-specific code
 
-#ifdef PLATFORM_WINDOWS
+#if defined(PLATFORM_WINDOWS) || defined(_XBOX)
     {
         // Note: StormLib no longer supports Windows 9x.
         // Thus, we can use the OVERLAPPED structure to specify
@@ -325,7 +327,7 @@ static bool BaseFile_Write(TFileStream * pStream, ULONGLONG * pByteOffset, const
  */
 static bool BaseFile_Resize(TFileStream * pStream, ULONGLONG NewFileSize)
 {
-#ifdef PLATFORM_WINDOWS
+#if defined(PLATFORM_WINDOWS) || defined(_XBOX)
     {
         LONG FileSizeHi = (LONG)(NewFileSize >> 32);
         LONG FileSizeLo;
@@ -385,7 +387,7 @@ static bool BaseFile_GetPos(TFileStream * pStream, ULONGLONG * pByteOffset)
 // Renames the file pointed by pStream so that it contains data from pNewStream
 static bool BaseFile_Replace(TFileStream * pStream, TFileStream * pNewStream)
 {
-#ifdef PLATFORM_WINDOWS
+#if defined(PLATFORM_WINDOWS) || defined(_XBOX)
     // Delete the original stream file. Don't check the result value,
     // because if the file doesn't exist, it would fail
     DeleteFile(pStream->szFileName);
@@ -410,7 +412,7 @@ static void BaseFile_Close(TFileStream * pStream)
 {
     if(pStream->Base.File.hFile != INVALID_HANDLE_VALUE)
     {
-#ifdef PLATFORM_WINDOWS
+#if defined(PLATFORM_WINDOWS) || defined(_XBOX)
         CloseHandle(pStream->Base.File.hFile);
 #endif
 
@@ -441,11 +443,13 @@ static void BaseFile_Init(TFileStream * pStream)
 
 static bool BaseMap_Open(TFileStream * pStream, const TCHAR * szFileName, DWORD dwStreamFlags)
 {
-#ifdef PLATFORM_WINDOWS
+#if defined(PLATFORM_WINDOWS) || defined(_XBOX)
 
     ULARGE_INTEGER FileSize;
     HANDLE hFile;
+#ifndef _XBOX
     HANDLE hMap;
+#endif
     bool bResult = false;
 
     // Keep compiler happy
@@ -460,6 +464,7 @@ static bool BaseMap_Open(TFileStream * pStream, const TCHAR * szFileName, DWORD 
         if(FileSize.QuadPart != 0)
         {
             // Now create mapping object
+#ifndef _XBOX // Not implemented in DevilutionX atm, save a call
             hMap = CreateFileMapping(hFile, NULL, PAGE_READONLY, 0, 0, NULL);
             if(hMap != NULL)
             {
@@ -481,6 +486,7 @@ static bool BaseMap_Open(TFileStream * pStream, const TCHAR * szFileName, DWORD 
                 // Close the map handle
                 CloseHandle(hMap);
             }
+#endif
         }
 
         // Close the file handle
@@ -563,7 +569,7 @@ static bool BaseMap_Read(
 
 static void BaseMap_Close(TFileStream * pStream)
 {
-#ifdef PLATFORM_WINDOWS
+#if defined(PLATFORM_WINDOWS) && !defined(_XBOX)
     if(pStream->Base.Map.pbFile != NULL)
         UnmapViewOfFile(pStream->Base.Map.pbFile);
 #endif
@@ -597,6 +603,7 @@ static void BaseMap_Init(TFileStream * pStream)
 //-----------------------------------------------------------------------------
 // Local functions - base HTTP file support
 
+#ifndef _XBOX
 static const TCHAR * BaseHttp_ExtractServerName(const TCHAR * szFileName, TCHAR * szServerName)
 {
     // Check for HTTP
@@ -619,10 +626,11 @@ static const TCHAR * BaseHttp_ExtractServerName(const TCHAR * szFileName, TCHAR 
     // Return the remainder
     return szFileName;
 }
+#endif
 
 static bool BaseHttp_Open(TFileStream * pStream, const TCHAR * szFileName, DWORD dwStreamFlags)
 {
-#ifdef PLATFORM_WINDOWS
+#if defined(PLATFORM_WINDOWS) && !defined(_XBOX)
 
     HINTERNET hRequest;
     DWORD dwTemp = 0;
@@ -721,7 +729,7 @@ static bool BaseHttp_Read(
     void * pvBuffer,                        // Pointer to data to be read
     DWORD dwBytesToRead)                    // Number of bytes to read from the file
 {
-#ifdef PLATFORM_WINDOWS
+#if defined(PLATFORM_WINDOWS) && !defined(_XBOX)
     ULONGLONG ByteOffset = (pByteOffset != NULL) ? *pByteOffset : pStream->Base.Http.FilePos;
     DWORD dwTotalBytesRead = 0;
 
@@ -794,7 +802,7 @@ static bool BaseHttp_Read(
 
 static void BaseHttp_Close(TFileStream * pStream)
 {
-#ifdef PLATFORM_WINDOWS
+#if defined(PLATFORM_WINDOWS) && !defined(_XBOX)
     if(pStream->Base.Http.hConnect != NULL)
         InternetCloseHandle(pStream->Base.Http.hConnect);
     pStream->Base.Http.hConnect = NULL;
@@ -807,6 +815,7 @@ static void BaseHttp_Close(TFileStream * pStream)
 #endif
 }
 
+#ifndef _XBOX
 // Initializes base functions for the mapped file
 static void BaseHttp_Init(TFileStream * pStream)
 {
@@ -820,6 +829,7 @@ static void BaseHttp_Init(TFileStream * pStream)
     // HTTP files are read-only
     pStream->dwFlags |= STREAM_FLAG_READ_ONLY;
 }
+#endif
 
 //-----------------------------------------------------------------------------
 // Local functions - base block-based support
@@ -997,8 +1007,10 @@ static STREAM_INIT StreamBaseInit[4] =
 {
     BaseFile_Init,
     BaseMap_Init, 
+#ifndef _XBOX
     BaseHttp_Init,
     BaseNone_Init
+#endif
 };
 
 // This function allocates an empty structure for the file stream
@@ -1055,7 +1067,11 @@ static TFileStream * AllocateFileStream(
         pStream->szFileName[FileNameSize / sizeof(TCHAR)] = 0;
 
         // Initialize the stream functions
+#ifndef _XBOX
         StreamBaseInit[dwStreamFlags & 0x03](pStream);
+#else
+        StreamBaseInit[0](pStream);
+#endif
     }
 
     return pStream;

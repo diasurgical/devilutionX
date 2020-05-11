@@ -16,27 +16,9 @@ namespace radon
 	}
 
 
-	Key::Key(const std::string & name, const float & value)
-		: Named(name), value(std::to_string(value))
-	{
-	}
-
-
 	std::string Key::getStringValue()
 	{
 		return value;
-	}
-
-
-	float Key::getFloatValue()
-	{
-		return (float)(atof(value.data()));
-	}
-
-
-	void Key::setValue(float & value)
-	{
-		this->value = std::to_string(value);
 	}
 
 

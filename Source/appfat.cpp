@@ -5,7 +5,9 @@
  */
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
+#ifndef _XBOX
 #include <config.h>
+#endif
 
 DEVILUTION_BEGIN_NAMESPACE
 

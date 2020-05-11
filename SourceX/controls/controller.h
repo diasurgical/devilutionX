@@ -5,6 +5,19 @@
 namespace dvl {
 
 struct ControllerButtonEvent {
+
+	ControllerButtonEvent()
+	{
+		button = ControllerButton_NONE;
+		up = false;
+	}
+
+	ControllerButtonEvent(ControllerButton pButton, bool bUp)
+	{
+		button = pButton;
+		up = bUp;
+	}
+
 	ControllerButton button;
 	bool up;
 };

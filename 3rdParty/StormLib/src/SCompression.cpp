@@ -269,9 +269,11 @@ static void Compress_PKLIB(void * pvOutBuffer, int * pcbOutBuffer, void * pvInBu
         else
             dict_size = CMP_IMPLODE_DICT_SIZE3;
 
+#ifndef _XBOX
         // Do the compression
         if(implode(ReadInputData, WriteOutputData, work_buf, &Info, &ctype, &dict_size) == CMP_NO_ERROR)
             *pcbOutBuffer = (int)(Info.pbOutBuff - (unsigned char *)pvOutBuffer);
+#endif
 
         STORM_FREE(work_buf);
     }

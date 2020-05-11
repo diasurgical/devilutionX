@@ -1,15 +1,18 @@
 #pragma once
 
+#ifndef _XBOX
 #include <cstdint>
+#endif
 
 #include "all.h"
 #include <SDL.h>
+#ifndef _XBOX
 #include <type_traits>
+#endif
 
 namespace dvl {
 
 extern int refreshDelay; // Screen refresh rate in nanoseconds
-extern SDL_Window *window;
 extern SDL_Renderer *renderer;
 extern SDL_Texture *texture;
 
@@ -40,6 +43,9 @@ void ScaleOutputRect(SDL_Rect *rect);
 void ScaleSurfaceToOutput(SDL_Surface **surface);
 
 // Convert from output coordinates to logical (resolution-independent) coordinates.
+#ifdef _XBOX
+void OutputToLogical(Uint16 *x, Uint16 *y);
+#else
 template <
     typename T,
     typename = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
@@ -91,5 +97,6 @@ void LogicalToOutput(T *x, T *y)
 	*y = *y * surface->h / SCREEN_HEIGHT;
 #endif
 }
+#endif
 
 } // namespace dvl

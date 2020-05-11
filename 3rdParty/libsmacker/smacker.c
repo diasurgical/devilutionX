@@ -25,6 +25,11 @@
 #define SMK_TREE_FULL	2
 #define SMK_TREE_TYPE	3
 
+#ifdef _XBOX
+#pragma warning(disable:4244)
+#pragma warning(disable:4028)
+#endif
+
 /* SMACKER DATA STRUCTURES */
 struct smk_t
 {

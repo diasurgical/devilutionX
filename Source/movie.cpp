@@ -47,8 +47,10 @@ void play_movie(char *pszMovie, BOOL user_can_close)
 		SVidPlayEnd(video_stream);
 	sound_disable_music(FALSE);
 	movie_playing = FALSE;
+#ifndef _XBOX
 	SDL_GetMouseState(&MouseX, &MouseY);
 	OutputToLogical(&MouseX, &MouseY);
+#endif
 }
 
 DEVILUTION_END_NAMESPACE

@@ -1,6 +1,8 @@
 #include "all.h"
 
+#ifndef _XBOX
 #include <cstdint>
+#endif
 
 DEVILUTION_BEGIN_NAMESPACE
 

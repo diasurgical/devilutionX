@@ -1,14 +1,17 @@
 #include "controls/controller.h"
 
-#include "controls/devices/kbcontroller.h"
 #include "controls/devices/joystick.h"
+#ifndef _XBOX
+#include "controls/devices/kbcontroller.h"
 #include "controls/devices/game_controller.h"
+#endif
 
 namespace dvl {
 
 ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event)
 {
-	ControllerButtonEvent result{ ControllerButton_NONE, false };
+	ControllerButtonEvent result( ControllerButton_NONE, false );
+
 	switch (event.type) {
 #ifndef USE_SDL1
 	case SDL_CONTROLLERBUTTONUP:
