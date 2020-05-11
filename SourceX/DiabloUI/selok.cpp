@@ -12,11 +12,28 @@ char dialogText[256];
 } // namespace
 
 int selok_endMenu;
-char selok_title[32];
+
+std::vector<UiListItem *> vecSelOkDialogItems;
+std::vector<UiItemBase *> vecSelOkDialog;
+
+#define MESSAGE_WIDTH 280
 
 void selok_Free()
 {
 	ArtBackground.Unload();
+
+	for (std::size_t i = 0; i < vecSelOkDialogItems.size(); i++) {
+		UiListItem *pUIListItem = vecSelOkDialogItems[i];
+		if (pUIListItem)
+			delete pUIListItem;
+	}
+	vecSelOkDialogItems.clear();
+
+	for (std::size_t i = 0; i < vecSelOkDialog.size(); i++) {
+		UiItemBase *pUIItem = vecSelOkDialog[i];
+		delete pUIItem;
+	}
+	vecSelOkDialog.clear();
 }
 
 void selok_Select(int value)
@@ -28,25 +45,6 @@ void selok_Esc()
 {
 	selok_endMenu = true;
 }
-
-UiListItem SELOK_DIALOG_ITEMS[] = {
-	{ "OK", 0 }
-};
-
-UiItem SELOK_DIALOG[] = {
-	MAINMENU_BACKGROUND,
-	MAINMENU_LOGO,
-	UiArtText(selok_title, { PANEL_LEFT + 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG),
-	UiArtText(dialogText, { PANEL_LEFT + 140, 210, 560, 168 }, UIS_MED),
-	UiList(SELOK_DIALOG_ITEMS, PANEL_LEFT + 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD)
-};
-
-UiItem SPAWNERR_DIALOG[] = {
-	MAINMENU_BACKGROUND,
-	MAINMENU_LOGO,
-	UiArtText(dialogText, { PANEL_LEFT + 140, 197, 560, 168 }, UIS_MED),
-	UiList(SELOK_DIALOG_ITEMS, PANEL_LEFT + 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD)
-};
 
 void UiSelOkDialog(const char *title, const char *body, bool background)
 {
@@ -60,23 +58,35 @@ void UiSelOkDialog(const char *title, const char *body, bool background)
 		}
 	}
 
-	UiItem *items = SPAWNERR_DIALOG;
-	int itemCnt = size(SPAWNERR_DIALOG);
+	UiAddBackground(&vecSelOkDialog);
+	UiAddLogo(&vecSelOkDialog);
+
 	if (title != NULL) {
-		strcpy(selok_title, title);
-		items = SELOK_DIALOG;
-		itemCnt = size(SELOK_DIALOG);
+		SDL_Rect rect1 = { PANEL_LEFT + 24, 161, 590, 35 };
+		vecSelOkDialog.push_back(new UiArtText(title, rect1, UIS_CENTER | UIS_BIG));
+
+		SDL_Rect rect2 = { PANEL_LEFT + 140, 210, 560, 168 };
+		vecSelOkDialog.push_back(new UiArtText(dialogText, rect2, UIS_MED));
+	} else {
+		SDL_Rect rect1 = { PANEL_LEFT + 140, 197, 560, 168 };
+		vecSelOkDialog.push_back(new UiArtText(dialogText, rect1, UIS_MED));
 	}
 
-	strcpy(dialogText, body);
-	WordWrapArtStr(dialogText, 280);
+	SDL_Rect rect3 = { PANEL_LEFT + 140, 210, 560, 168 };
+	vecSelOkDialog.push_back(new UiArtText(dialogText, rect3, UIS_MED));
 
-	UiInitList(0, 0, NULL, selok_Select, selok_Esc, items, itemCnt, false, NULL);
+	vecSelOkDialogItems.push_back(new UiListItem("OK", 0));
+	vecSelOkDialog.push_back(new UiList(vecSelOkDialogItems, PANEL_LEFT + 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD));
+
+	strcpy(dialogText, body);
+	WordWrapArtStr(dialogText, MESSAGE_WIDTH);
+
+	UiInitList(0, 0, NULL, selok_Select, selok_Esc, vecSelOkDialog, false, NULL);
 
 	selok_endMenu = false;
 	while (!selok_endMenu) {
 		UiClearScreen();
-		UiRenderItems(items, itemCnt);
+		UiRenderItems(vecSelOkDialog);
 		UiPollAndRender();
 	}
 

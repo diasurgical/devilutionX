@@ -7,20 +7,10 @@ namespace dvl {
 int mainmenu_attract_time_out; //seconds
 DWORD dwAttractTicks;
 
+std::vector<UiItemBase *> vecMainMenuDialog;
+std::vector<UiListItem *> vecMenuItems;
+
 int MainMenuResult;
-UiListItem MAINMENU_DIALOG_ITEMS[] = {
-	{ "Single Player", MAINMENU_SINGLE_PLAYER },
-	{ "Multi Player", MAINMENU_MULTIPLAYER },
-	{ "Replay Intro", MAINMENU_REPLAY_INTRO },
-	{ "Show Credits", MAINMENU_SHOW_CREDITS },
-	{ "Exit Diablo", MAINMENU_EXIT_DIABLO }
-};
-UiItem MAINMENU_DIALOG[] = {
-	MAINMENU_BACKGROUND,
-	MAINMENU_LOGO,
-	UiList(MAINMENU_DIALOG_ITEMS, PANEL_LEFT + 64, 192, 510, 43, UIS_HUGE | UIS_GOLD | UIS_CENTER),
-	UiArtText(NULL, { 17, 444, 605, 21 }, UIS_SMALL)
-};
 
 void UiMainMenuSelect(int value)
 {
@@ -44,7 +34,20 @@ void mainmenu_restart_repintro()
 void mainmenu_Load(char *name, void (*fnSound)(char *file))
 {
 	gfnSoundFunction = fnSound;
-	MAINMENU_DIALOG[size(MAINMENU_DIALOG) - 1].art_text.text = name;
+
+	vecMenuItems.push_back(new UiListItem("Single Player", MAINMENU_SINGLE_PLAYER));
+	vecMenuItems.push_back(new UiListItem("Multi Player", MAINMENU_MULTIPLAYER));
+	vecMenuItems.push_back(new UiListItem("Replay Intro", MAINMENU_REPLAY_INTRO));
+	vecMenuItems.push_back(new UiListItem("Show Credits", MAINMENU_SHOW_CREDITS));
+	vecMenuItems.push_back(new UiListItem("Exit Diablo", MAINMENU_EXIT_DIABLO));
+
+	UiAddBackground(&vecMainMenuDialog);
+	UiAddLogo(&vecMainMenuDialog);
+
+	vecMainMenuDialog.push_back(new UiList(vecMenuItems, PANEL_LEFT + 64, 192, 510, 43, UIS_HUGE | UIS_GOLD | UIS_CENTER));
+
+	SDL_Rect rect = { 17, 444, 605, 21 };
+	vecMainMenuDialog.push_back(new UiArtText(name, rect, UIS_SMALL));
 
 	if (!gbSpawned) {
 		LoadBackgroundArt("ui_art\\mainmenu.pcx");
@@ -52,12 +55,25 @@ void mainmenu_Load(char *name, void (*fnSound)(char *file))
 		LoadBackgroundArt("ui_art\\swmmenu.pcx");
 	}
 
-	UiInitList(MAINMENU_SINGLE_PLAYER, MAINMENU_EXIT_DIABLO, NULL, UiMainMenuSelect, mainmenu_Esc, MAINMENU_DIALOG, size(MAINMENU_DIALOG), true);
+	UiInitList(MAINMENU_SINGLE_PLAYER, MAINMENU_EXIT_DIABLO, NULL, UiMainMenuSelect, mainmenu_Esc, vecMainMenuDialog, true);
 }
 
 void mainmenu_Free()
 {
 	ArtBackground.Unload();
+
+	for (std::size_t i = 0; i < vecMainMenuDialog.size(); i++) {
+		UiItemBase *pUIItem = vecMainMenuDialog[i];
+		delete pUIItem;
+	}
+	vecMainMenuDialog.clear();
+
+	for (std::size_t i = 0; i < vecMenuItems.size(); i++) {
+		UiListItem *pUIMenuItem = vecMenuItems[i];
+		if (pUIMenuItem)
+			delete pUIMenuItem;
+	}
+	vecMenuItems.clear();
 }
 
 BOOL UiMainMenuDialog(char *name, int *pdwResult, void (*fnSound)(char *file), int attractTimeOut)
