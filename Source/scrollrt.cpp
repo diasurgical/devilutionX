@@ -1240,6 +1240,49 @@ static void DoBlitScreen(DWORD dwX, DWORD dwY, DWORD dwWdt, DWORD dwHgt)
 }
 
 /**
+ * @brief function for scale2x scaling
+**/
+static inline void scale2x_32_def_single(unsigned int * __restrict__ dst, const unsigned int * __restrict__ src0, const unsigned int * __restrict__ src1, const unsigned int * __restrict__ src2, unsigned int count)
+{
+
+	/* first pixel */
+	dst[0] = src1[0];
+	if (src1[1] == src0[0] && src2[0] != src0[0])
+		dst[1] = src0[0];
+	else
+		dst[1] = src1[0];
+	++src0;
+	++src1;
+	++src2;
+	dst += 2;
+
+	/* central pixels */
+	count -= 2;
+	while (count) {
+		if (src0[0] != src2[0] && src1[-1] != src1[1]) {
+			dst[0] = src1[-1] == src0[0] ? src0[0] : src1[0];
+			dst[1] = src1[1] == src0[0] ? src0[0] : src1[0];
+		} else {
+			dst[0] = src1[0];
+			dst[1] = src1[0];
+		}
+
+		++src0;
+		++src1;
+		++src2;
+		dst += 2;
+		--count;
+	}
+
+	/* last pixel */
+	if (src1[-1] == src0[0] && src2[0] != src0[0])
+		dst[0] = src0[0];
+	else
+		dst[0] = src1[0];
+	dst[1] = src1[0];
+}
+
+/**
  * @brief Check render pipline and blit indivudal screen parts
  * @param dwHgt Section of screen to update from top to bottom
  * @param draw_desc Render info box
@@ -1262,7 +1305,8 @@ static void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BO
 
 	assert(ysize >= 0 && ysize <= SCREEN_HEIGHT);
 
-	if (ysize > 0) {
+	    /* comment out because of panel rendering issues*/
+	/*if (ysize > 0) {
 		DoBlitScreen(0, 0, SCREEN_WIDTH, ysize);
 	}
 	if (ysize < SCREEN_HEIGHT) {
@@ -1293,7 +1337,41 @@ static void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BO
 		if (sgdwCursWdt != 0) {
 			DoBlitScreen(sgdwCursX, sgdwCursY, sgdwCursWdt, sgdwCursHgt);
 		}
-	}
+	}*/
+
+/*instead blitting everything on surface with slight decrease of performance*/
+    DoBlitScreen(0, 0, 640, 480); 
+
+/* scaling operation start */
+extern SDL_Surface *renderer_texture_surface; /** defined in dx.cpp */
+extern SDL_Surface *scale2x_renderer_texture_surface; /** surface for scaling defined in dx.cpp */
+
+    unsigned int *pixels = (unsigned int*)renderer_texture_surface->pixels;
+	unsigned int *scale2x_pixels = (unsigned int*)scale2x_renderer_texture_surface->pixels;
+
+
+    for(int y=0; y<480;y++)
+    {
+        unsigned int *src0, *src1, *src2, *dst0, *dst1;
+
+        dst0 = &scale2x_pixels[2*y*640*2];
+        dst1 = &scale2x_pixels[(2*y+1)*640*2];
+
+        int y_prev=y-1 , y_next=y+1;
+        if(y_prev < 0) y_prev=0;
+        if(y_next > 480-1) y_next=480-1;
+
+        src0 = &pixels[y_prev*640*2];
+        src1 = &pixels[y*640*2];
+        src2 = &pixels[y_next*640*2];
+
+        scale2x_32_def_single(dst0, src0, src1, src2, 640);
+        scale2x_32_def_single(dst1, src2, src1, src0, 640);
+    }
+/* scaling operation end */
+
+/* copy back the scaled surface to renderer_texture_surface */
+    memcpy(pixels, scale2x_pixels, sizeof(*pixels)*640*480*2*2);
 }
 
 /**
