@@ -192,7 +192,7 @@ void CheckCursMove()
 
 	if (PANELS_COVER) {
 		if (chrflag || questlog) {
-			if (sx >= SCREEN_WIDTH / 4) {
+			if (sx >= SCREEN_WIDTH / 4) { /// BUGFIX: (sx >= SCREEN_WIDTH / 2)
 				sx -= SCREEN_WIDTH / 4;
 			} else {
 				sx = 0;
@@ -215,14 +215,15 @@ void CheckCursMove()
 		sy >>= 1;
 	}
 
+	// Adjust by player offset
 	sx -= ScrollInfo._sxoff;
 	sy -= ScrollInfo._syoff;
 
+	// Predict the next frame when walking to avoid input jitter
 	fx = plr[myplr]._pVar6 / 256;
 	fy = plr[myplr]._pVar7 / 256;
 	fx -= (plr[myplr]._pVar6 + plr[myplr]._pxvel) / 256;
 	fy -= (plr[myplr]._pVar7 + plr[myplr]._pyvel) / 256;
-
 	if (ScrollInfo._sdir != SDIR_NONE) {
 		sx -= fx;
 		sy -= fy;
@@ -241,18 +242,23 @@ void CheckCursMove()
 		sy = SCREEN_HEIGHT;
 	}
 
-	tx = sx >> 6;   // sx / 64
-	ty = sy >> 5;   // sy / 32
-	px = sx & 0x3F; // sx % 64
-	py = sy & 0x1F; // sx % 32
-	mx = ViewX + tx + ty - (zoomflag ? (SCREEN_WIDTH / 64) : (SCREEN_WIDTH / 2 / 64));
+	// Convert to tile grid
+
+	tx = sx >> 6; // sx / TILE_WIDTH
+	ty = sy >> 5; // sy / TILE_HEIGHT
+	px = sx & (TILE_WIDTH - 1);
+	py = sy & (TILE_HEIGHT - 1);
+
+	// Center player tile on screen
+	mx = ViewX + tx + ty - (zoomflag ? (SCREEN_WIDTH / TILE_WIDTH) : (SCREEN_WIDTH / 2 / TILE_WIDTH));
 	my = ViewY + ty - tx;
 
+	// Shift position to match diamond grid aligment
 	flipy = py < (px >> 1);
 	if (flipy) {
 		my--;
 	}
-	flipx = py >= 32 - (px >> 1);
+	flipx = py >= TILE_HEIGHT - (px >> 1);
 	if (flipx) {
 		mx++;
 	}
@@ -270,7 +276,7 @@ void CheckCursMove()
 		my = MAXDUNY - 1;
 	}
 
-	flipflag = flipy && flipx || (flipy || flipx) && px < 32;
+	flipflag = flipy && flipx || (flipy || flipx) && px < TILE_WIDTH / 2;
 
 	pcurstemp = pcursmonst;
 	pcursmonst = -1;

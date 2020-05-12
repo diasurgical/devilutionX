@@ -111,8 +111,8 @@
 #define SCREEN_WIDTH	640
 #define SCREEN_HEIGHT	480
 
-#define ZOOM_WIDTH		384
-#define ZOOM_HEIGHT		224
+#define ZOOM_WIDTH		(SCREEN_WIDTH / 2 + TILE_WIDTH)
+#define ZOOM_HEIGHT		(VIEWPORT_HEIGHT / 2 + TILE_HEIGHT + TILE_HEIGHT / 2)
 
 // If defined, use 32-bit colors instead of 8-bit [Default -> Undefined]
 //#define RGBMODE
@@ -133,7 +133,9 @@
 
 #define BUFFER_WIDTH	(BORDER_LEFT + SCREEN_WIDTH + BORDER_RIGHT)
 #define BUFFER_HEIGHT	(BORDER_TOP + SCREEN_HEIGHT + BORDER_BOTTOM)
-#define TILE_SIZE		32
+
+#define TILE_WIDTH		64
+#define TILE_HEIGHT		32
 
 #define PANEL_WIDTH     640
 #define PANEL_HEIGHT    128

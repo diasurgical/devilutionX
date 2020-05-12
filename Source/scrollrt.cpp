@@ -538,9 +538,9 @@ static void drawCell(int x, int y, int sx, int sy)
 		level_cel_block = pMap->mt[2 * i + 1];
 		if (level_cel_block != 0) {
 			arch_draw_type = i == 0 ? 2 : 0;
-			RenderTile(dst + 32);
+			RenderTile(dst + TILE_WIDTH / 2);
 		}
-		dst -= BUFFER_WIDTH * 32;
+		dst -= BUFFER_WIDTH * TILE_HEIGHT;
 	}
 	cel_foliage_active = false;
 }
@@ -566,7 +566,7 @@ static void drawFloor(int x, int y, int sx, int sy)
 	arch_draw_type = 2; // Right
 	level_cel_block = dpiece_defs_map_2[x][y].mt[1];
 	if (level_cel_block != 0) {
-		RenderTile(dst + 32);
+		RenderTile(dst + TILE_WIDTH / 2);
 	}
 }
 
@@ -752,10 +752,10 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy)
 		// Tree leafs should always cover player when entering or leaving the tile,
 		// So delay the rendering untill after the next row is being drawn.
 		// This could probably have been better solved by sprites in screen space.
-		if (sx > 0 && sy > 0 && dy > 32 + SCREEN_Y) {
+		if (sx > 0 && sy > 0 && dy > TILE_HEIGHT + SCREEN_Y) {
 			bArch = dSpecial[sx - 1][sy - 1];
 			if (bArch != 0) {
-				CelBlitFrame(&gpBuffer[dx + BUFFER_WIDTH * (dy - 32)], pSpecialCels, bArch, 64);
+				CelBlitFrame(&gpBuffer[dx + BUFFER_WIDTH * (dy - TILE_HEIGHT)], pSpecialCels, bArch, 64);
 			}
 		}
 	}
@@ -789,23 +789,23 @@ static void scrollrt_drawFloor(int x, int y, int sx, int sy, int blocks, int chu
 			}
 			x++;
 			y--;
-			sx += 64;
+			sx += TILE_WIDTH;
 		}
 		// Return to start of row
 		x -= chunks;
 		y += chunks;
-		sx -= chunks * 64;
-		sy += 16;
+		sx -= chunks * TILE_WIDTH;
+		sy += TILE_HEIGHT / 2;
 
 		// Jump to next row
 		if (i & 1) {
 			x++;
 			chunks--;
-			sx += 32;
+			sx += TILE_WIDTH / 2;
 		} else {
 			y++;
 			chunks++;
-			sx -= 32;
+			sx -= TILE_WIDTH / 2;
 		}
 	}
 }
@@ -829,14 +829,14 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int blocks, int chunks)
 	for (int i = 0; i < (blocks << 1); i++) {
 		for (int j = 0; j < chunks ; j++) {
 			if (x >= 0 && x < MAXDUNX && y >= 0 && y < MAXDUNY) {
-				if (x + 1 < MAXDUNX && y - 1 >= 0 && sx + 64 <= SCREEN_X + SCREEN_WIDTH) {
+				if (x + 1 < MAXDUNX && y - 1 >= 0 && sx + TILE_WIDTH <= SCREEN_X + SCREEN_WIDTH) {
 					// Render objects behind walls first to prevent sprites, that are moving
 					// between tiles, from poking through the walls as they exceed the tile bound.
 					// A propper fix for this would probably be to layout the sceen and render by
 					// sprite screen position rather then tile position.
 					if (IsWall(x, y) && (IsWall(x + 1, y) || (x > 0 && IsWall(x - 1, y)))) { // Part of a wall aligned on the x-axis
 						if (IsWalktabke(x + 1, y - 1) && IsWalktabke(x, y - 1) ) { // Has wakable area behind it
-							scrollrt_draw_dungeon(x + 1, y - 1, sx + 64, sy);
+							scrollrt_draw_dungeon(x + 1, y - 1, sx + TILE_WIDTH, sy);
 						}
 					}
 				}
@@ -846,23 +846,23 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int blocks, int chunks)
 			}
 			x++;
 			y--;
-			sx += 64;
+			sx += TILE_WIDTH;
 		}
 		// Return to start of row
 		x -= chunks;
 		y += chunks;
-		sx -= chunks * 64;
-		sy += 16;
+		sx -= chunks * TILE_WIDTH;
+		sy += TILE_HEIGHT / 2;
 
 		// Jump to next row
 		if (i & 1) {
 			x++;
 			chunks--;
-			sx += 32;
+			sx += TILE_WIDTH / 2;
 		} else {
 			y++;
 			chunks++;
-			sx -= 32;
+			sx -= TILE_WIDTH / 2;
 		}
 	}
 }
@@ -877,27 +877,27 @@ static void DrawGame(int x, int y)
 	int i, sx, sy, chunks, blocks;
 	int wdt, nSrcOff, nDstOff;
 
-	sx = (SCREEN_WIDTH % 64) / 2;
-	sy = (VIEWPORT_HEIGHT % 32) / 2;
+	sx = (SCREEN_WIDTH % TILE_WIDTH) / 2;
+	sy = (VIEWPORT_HEIGHT % TILE_HEIGHT) / 2;
 
 	if (zoomflag) {
-		chunks = ceil(SCREEN_WIDTH / 64);
-		blocks = ceil(VIEWPORT_HEIGHT / 32);
+		chunks = ceil(SCREEN_WIDTH / TILE_WIDTH);
+		blocks = ceil(VIEWPORT_HEIGHT / TILE_HEIGHT);
 
 		gpBufStart = &gpBuffer[BUFFER_WIDTH * SCREEN_Y];
 		gpBufEnd = &gpBuffer[BUFFER_WIDTH * (VIEWPORT_HEIGHT + SCREEN_Y)];
 	} else {
-		sy -= 32;
+		sy -= TILE_HEIGHT;
 
-		chunks = ceil(SCREEN_WIDTH / 2 / 64) + 1; // TODO why +1?
-		blocks = ceil(VIEWPORT_HEIGHT / 2 / 32);
+		chunks = ceil(SCREEN_WIDTH / 2 / TILE_WIDTH) + 1; // TODO why +1?
+		blocks = ceil(VIEWPORT_HEIGHT / 2 / TILE_HEIGHT);
 
-		gpBufStart = &gpBuffer[(-17 + SCREEN_Y) * BUFFER_WIDTH];
-		gpBufEnd = &gpBuffer[(160 + SCREEN_Y) * BUFFER_WIDTH];
+		gpBufStart = &gpBuffer[(-(TILE_HEIGHT / 2 + 1) + SCREEN_Y) * BUFFER_WIDTH];
+		gpBufEnd = &gpBuffer[((VIEWPORT_HEIGHT - TILE_HEIGHT) / 2 + SCREEN_Y) * BUFFER_WIDTH];
 	}
 
 	sx += ScrollInfo._sxoff + SCREEN_X;
-	sy += ScrollInfo._syoff + SCREEN_Y + 15;
+	sy += ScrollInfo._syoff + SCREEN_Y + TILE_HEIGHT / 2 - 1;
 
 	// Center screen
 	x -= chunks;
@@ -911,13 +911,13 @@ static void DrawGame(int x, int y)
 			if (chrflag || questlog) {
 				x += 2;
 				y -= 2;
-				sx += 288;
+				sx += SPANEL_WIDTH - TILE_WIDTH / 2;
 				chunks -= 4;
 			}
 			if (invflag || sbookflag) {
 				x += 2;
 				y -= 2;
-				sx -= 32;
+				sx -= TILE_WIDTH / 2;
 				chunks -= 4;
 			}
 		}
@@ -925,13 +925,13 @@ static void DrawGame(int x, int y)
 
 	switch (ScrollInfo._sdir) {
 	case SDIR_N:
-		sy -= 32;
+		sy -= TILE_HEIGHT;
 		x--;
 		y--;
 		blocks++;
 		break;
 	case SDIR_NE:
-		sy -= 32;
+		sy -= TILE_HEIGHT;
 		x--;
 		y--;
 		chunks++;
@@ -948,21 +948,21 @@ static void DrawGame(int x, int y)
 		blocks++;
 		break;
 	case SDIR_SW:
-		sx -= 64;
+		sx -= TILE_WIDTH;
 		x--;
 		y++;
 		chunks++;
 		blocks++;
 		break;
 	case SDIR_W:
-		sx -= 64;
+		sx -= TILE_WIDTH;
 		x--;
 		y++;
 		chunks++;
 		break;
 	case SDIR_NW:
-		sx -= 64;
-		sy -= 32;
+		sx -= TILE_WIDTH;
+		sy -= TILE_HEIGHT;
 		x -= 2;
 		chunks++;
 		blocks++;
@@ -979,16 +979,16 @@ static void DrawGame(int x, int y)
 	if (zoomflag)
 		return;
 
-	nSrcOff = SCREENXY(32, VIEWPORT_HEIGHT / 2 - 17);
+	nSrcOff = SCREENXY(TILE_WIDTH / 2, VIEWPORT_HEIGHT / 2 - (TILE_HEIGHT / 2 + 1));
 	nDstOff = SCREENXY(0, VIEWPORT_HEIGHT - 2);
 	wdt = SCREEN_WIDTH / 2;
 	if (PANELS_COVER) {
 		if (chrflag || questlog) {
-			nSrcOff = SCREENXY(112, VIEWPORT_HEIGHT / 2 - 17);
+			nSrcOff = SCREENXY(TILE_WIDTH / 2 + SPANEL_WIDTH / 4, VIEWPORT_HEIGHT / 2 - (TILE_HEIGHT / 2 + 1));
 			nDstOff = SCREENXY(SPANEL_WIDTH, VIEWPORT_HEIGHT - 2);
 			wdt = (SCREEN_WIDTH - SPANEL_WIDTH) / 2;
 		} else if (invflag || sbookflag) {
-			nSrcOff = SCREENXY(112, VIEWPORT_HEIGHT / 2 - 17);
+			nSrcOff = SCREENXY(TILE_WIDTH / 2 + SPANEL_WIDTH / 4, VIEWPORT_HEIGHT / 2 - (TILE_HEIGHT / 2 + 1));
 			nDstOff = SCREENXY(0, VIEWPORT_HEIGHT - 2);
 			wdt = (SCREEN_WIDTH - SPANEL_WIDTH) / 2;
 		}

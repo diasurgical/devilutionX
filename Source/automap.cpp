@@ -77,10 +77,10 @@ void InitAutomap()
 
 	for (i = 0; i < 31; i++) {
 		d = (j << 6) / 100;
-		AmShiftTab[i] = 2 * (320 / d) + 1;
-		if (320 % d)
+		AmShiftTab[i] = 2 * (SCREEN_WIDTH / 2 / d) + 1;
+		if ((SCREEN_WIDTH / 2) % d)
 			AmShiftTab[i]++;
-		if (320 % d >= (j << 5) / 100)
+		if ((SCREEN_WIDTH / 2) % d >= (j << 5) / 100)
 			AmShiftTab[i]++;
 		j += 5;
 	}
@@ -213,7 +213,7 @@ void DrawAutomap()
 		return;
 	}
 
-	gpBufEnd = &gpBuffer[(PANEL_Y)*BUFFER_WIDTH];
+	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_Y + VIEWPORT_HEIGHT)];
 
 	AutoMapX = (ViewX - 16) >> 1;
 	while (AutoMapX + AutoMapXOfs < 0)
@@ -236,11 +236,11 @@ void DrawAutomap()
 	mapy = AutoMapY - 1;
 
 	if (cells & 1) {
-		sx = 384 - AmLine64 * ((cells - 1) >> 1);
-		sy = 336 - AmLine32 * ((cells + 1) >> 1);
+		sx = SCREEN_WIDTH / 2 + SCREEN_X - AmLine64 * ((cells - 1) >> 1);
+		sy = (SCREEN_HEIGHT - PANEL_HEIGHT) / 2 + SCREEN_Y - AmLine32 * ((cells + 1) >> 1);
 	} else {
-		sx = 384 - AmLine64 * (cells >> 1) + AmLine32;
-		sy = 336 - AmLine32 * (cells >> 1) - AmLine16;
+		sx = SCREEN_WIDTH / 2 + SCREEN_X - AmLine64 * (cells >> 1) + AmLine32;
+		sy = (SCREEN_HEIGHT - PANEL_HEIGHT) / 2 + SCREEN_Y - AmLine32 * (cells >> 1) - AmLine16;
 	}
 	if (ViewX & 1) {
 		sx -= AmLine16;
@@ -254,10 +254,10 @@ void DrawAutomap()
 	sx += AutoMapScale * ScrollInfo._sxoff / 100 >> 1;
 	sy += AutoMapScale * ScrollInfo._syoff / 100 >> 1;
 	if (invflag || sbookflag) {
-		sx -= 160;
+		sx -= SCREEN_WIDTH / 4;
 	}
 	if (chrflag || questlog) {
-		sx += 160;
+		sx += SCREEN_WIDTH / 4;
 	}
 
 	for (i = 0; i <= cells + 1; i++) {
@@ -497,13 +497,13 @@ void DrawAutomapPlr()
 	px = x - 2 * AutoMapXOfs - ViewX;
 	py = y - 2 * AutoMapYOfs - ViewY;
 
-	x = (plr[myplr]._pxoff * AutoMapScale / 100 >> 1) + (ScrollInfo._sxoff * AutoMapScale / 100 >> 1) + (px - py) * AmLine16 + 384;
-	y = (plr[myplr]._pyoff * AutoMapScale / 100 >> 1) + (ScrollInfo._syoff * AutoMapScale / 100 >> 1) + (px + py) * AmLine8 + 336;
+	x = (plr[myplr]._pxoff * AutoMapScale / 100 >> 1) + (ScrollInfo._sxoff * AutoMapScale / 100 >> 1) + (px - py) * AmLine16 + SCREEN_WIDTH / 2 + SCREEN_X;
+	y = (plr[myplr]._pyoff * AutoMapScale / 100 >> 1) + (ScrollInfo._syoff * AutoMapScale / 100 >> 1) + (px + py) * AmLine8 + (SCREEN_HEIGHT - PANEL_HEIGHT) / 2 + SCREEN_Y;
 
 	if (invflag || sbookflag)
-		x -= 160;
+		x -= SCREEN_WIDTH / 4;
 	if (chrflag || questlog)
-		x += 160;
+		x += SCREEN_WIDTH / 4;
 	y -= AmLine8;
 
 	switch (plr[myplr]._pdir) {
