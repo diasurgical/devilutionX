@@ -192,7 +192,7 @@ void CheckCursMove()
 
 	if (PANELS_COVER) {
 		if (chrflag || questlog) {
-			if (sx >= SCREEN_WIDTH / 4) { /// BUGFIX: (sx >= SCREEN_WIDTH / 2)
+			if (sx >= SCREEN_WIDTH / 2) { /// BUGFIX: (sx >= SCREEN_WIDTH / 2) (fixed)
 				sx -= SCREEN_WIDTH / 4;
 			} else {
 				sx = 0;
