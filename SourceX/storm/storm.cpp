@@ -7,7 +7,7 @@
 
 #include "display.h"
 #include "stubs.h"
-#include <Radon.hpp>
+#include "Radon.hpp"
 #include <SDL.h>
 #include <SDL_endian.h>
 #include <SDL_mixer.h>
