@@ -27,7 +27,7 @@ extern SDL_Surface *renderer_texture_surface; /** defined in dx.cpp */
 void SetVideoMode(int width, int height, int bpp, uint32_t flags) {
 	SDL_Log("Setting video mode %dx%d bpp=%u flags=0x%08X", width, height, bpp, flags);
 	SDL_SetVideoMode(width, height, bpp, flags);
-	const auto &current = *SDL_GetVideoInfo();
+	const SDL_VideoInfo &current = *SDL_GetVideoInfo();
 	SDL_Log("Video mode is now %dx%d bpp=%u flags=0x%08X",
 	    current.current_w, current.current_h, current.vfmt->BitsPerPixel, SDL_GetVideoSurface()->flags);
 	ghMainWnd = SDL_GetVideoSurface();
@@ -70,7 +70,7 @@ bool SpawnWindow(const char *lpWindowName, int nWidth, int nHeight)
 
 #ifdef USE_SDL1
 	SDL_WM_SetCaption(lpWindowName, WINDOW_ICON_NAME);
-	const auto &best = *SDL_GetVideoInfo();
+	const SDL_VideoInfo &best = *SDL_GetVideoInfo();
 	SDL_Log("Best video mode reported as: %dx%d bpp=%d hw_available=%u",
 	    best.current_w, best.current_h, best.vfmt->BitsPerPixel, best.hw_available);
 	SetVideoModeToPrimary(fullscreen);
@@ -159,7 +159,7 @@ void ScaleOutputRect(SDL_Rect *rect)
 {
 	if (!OutputRequiresScaling())
 		return;
-	const auto *surface = GetOutputSurface();
+	const SDL_Surface *surface = GetOutputSurface();
 	rect->x = rect->x * surface->w / SCREEN_WIDTH;
 	rect->y = rect->y * surface->h / SCREEN_HEIGHT;
 	rect->w = rect->w * surface->w / SCREEN_WIDTH;

@@ -600,7 +600,7 @@ void SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 #else
 	// Set the video mode close to the SVid resolution while preserving aspect ratio.
 	{
-		const auto *display = SDL_GetVideoSurface();
+		const SDL_Surface *display = SDL_GetVideoSurface();
 		IsSVidVideoMode = (display->flags & (SDL_FULLSCREEN | SDL_NOFRAME)) != 0;
 		if (IsSVidVideoMode) {
 			int w, h;
@@ -710,7 +710,7 @@ BOOL SVidPlayContinue(void)
 	} else
 #endif
 	{
-		auto *output_surface = GetOutputSurface();
+		SDL_Surface *output_surface = GetOutputSurface();
 		int factor;
 		int wFactor = output_surface->w / SVidWidth;
 		int hFactor = output_surface->h / SVidHeight;
