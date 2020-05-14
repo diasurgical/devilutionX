@@ -63,35 +63,35 @@ bool PostMessageA(UINT Msg, WPARAM wParam, LPARAM lParam);
 // MSCVRT emulation
 //
 
-constexpr auto DVL_FILE_CURRENT = 1;
+#define  DVL_FILE_CURRENT 1
 
-constexpr auto DVL_WM_QUIT = 0x0012;
+#define  DVL_WM_QUIT 0x0012
 
 //
 // Events
 //
-constexpr auto DVL_WM_MOUSEMOVE = 0x0200;
-constexpr auto DVL_WM_LBUTTONDOWN = 0x0201;
-constexpr auto DVL_WM_LBUTTONUP = 0x0202;
-constexpr auto DVL_WM_RBUTTONDOWN = 0x0204;
-constexpr auto DVL_WM_RBUTTONUP = 0x0205;
+#define DVL_WM_MOUSEMOVE 0x0200
+#define DVL_WM_LBUTTONDOWN 0x0201
+#define DVL_WM_LBUTTONUP 0x0202
+#define DVL_WM_RBUTTONDOWN 0x0204
+#define DVL_WM_RBUTTONUP 0x0205
 
-constexpr auto DVL_WM_KEYDOWN = 0x0100;
-constexpr auto DVL_WM_KEYUP = 0x0101;
-constexpr auto DVL_WM_SYSKEYDOWN = 0x0104;
+#define DVL_WM_KEYDOWN 0x0100
+#define DVL_WM_KEYUP 0x0101
+#define DVL_WM_SYSKEYDOWN 0x0104
 
-constexpr auto DVL_WM_SYSCOMMAND = 0x0112;
+#define DVL_WM_SYSCOMMAND 0x0112
 
-constexpr auto DVL_WM_CHAR = 0x0102;
-constexpr auto DVL_WM_CAPTURECHANGED = 0x0215;
+#define DVL_WM_CHAR 0x0102
+#define DVL_WM_CAPTURECHANGED 0x0215
 
-constexpr auto DVL_WM_PAINT = 0x000F;
-constexpr auto DVL_WM_CLOSE = 0x0010;
-constexpr auto DVL_WM_QUERYENDSESSION = 0x0011;
-constexpr auto DVL_WM_ERASEBKGND = 0x0014;
-constexpr auto DVL_WM_QUERYNEWPALETTE = 0x030F;
+#define DVL_WM_PAINT 0x000F
+#define DVL_WM_CLOSE 0x0010
+#define DVL_WM_QUERYENDSESSION 0x0011
+#define DVL_WM_ERASEBKGND 0x0014
+#define DVL_WM_QUERYNEWPALETTE 0x030F
 
-constexpr auto DVL_SC_CLOSE = 0xF060;
+#define DVL_SC_CLOSE 0xF060
 
 // Virtual key codes.
 //
