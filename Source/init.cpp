@@ -91,7 +91,6 @@ void init_archives()
 HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int dwPriority, int fs)
 {
 	char Buffer[2][MAX_PATH];
-	char *sdlPath;
 	HANDLE archive;
 
 	GetBasePath(Buffer[0], MAX_PATH);
