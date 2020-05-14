@@ -24,7 +24,7 @@ BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD d
 int mpqapi_find_free_block(int size, int *block_size);
 void mpqapi_rename(char *pszOld, char *pszNew);
 BOOL mpqapi_has_file(const char *pszName);
-BOOL OpenMPQ(const char *pszArchive, BOOL hidden, DWORD dwChar);
+BOOL OpenMPQ(const char *pszArchive, DWORD dwChar);
 BOOL mpqapi_flush_and_close(const char *pszArchive, BOOL bFree, DWORD dwChar);
 /* rdata */
 

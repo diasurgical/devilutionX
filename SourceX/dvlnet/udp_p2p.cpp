@@ -87,7 +87,7 @@ void udp_p2p::recv()
 {
 	try {
 		while (1) { // read until kernel buffer is empty?
-			try {
+//			try {
 				endpoint sender;
 				buffer_t pkt_buf(packet_factory::max_packet_size);
 				size_t pkt_len;
@@ -95,10 +95,10 @@ void udp_p2p::recv()
 				pkt_buf.resize(pkt_len);
 				auto pkt = pktfty->make_packet(pkt_buf);
 				recv_decrypted(*pkt, sender);
-			} catch (packet_exception &e) {
-				SDL_Log(e.what());
+//			} catch (packet_exception &e) {
+//				SDL_Log(e.what());
 				// drop packet
-			}
+//			}
 		}
 	} catch (std::exception &e) {
 		SDL_Log(e.what());

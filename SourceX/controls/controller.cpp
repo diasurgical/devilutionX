@@ -26,13 +26,13 @@ ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event)
 
 #if HAS_KBCTRL == 1
 	result.button = KbCtrlToControllerButton(event);
-	if (result.button != ControllerButton::NONE)
+	if (result.button != ControllerButtonNS::ControllerButton::NONE)
 		return result;
 #endif
 
 #ifndef USE_SDL1
 	result.button = GameControllerToControllerButton(event);
-	if (result.button != ControllerButton::NONE)
+	if (result.button != ControllerButtonNS::ControllerButton::NONE)
 		return result;
 #endif
 

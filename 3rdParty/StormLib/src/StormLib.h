@@ -1115,8 +1115,10 @@ extern DWORD nLastError;
 DWORD STORMAPI SErrGetLastError();
 void STORMAPI SErrSetLastError(DWORD dwErrCode);
 
-//#define SetLastError SErrSetLastError
-//#define GetLastError SErrGetLastError
+#ifndef _XBOX
+#define SetLastError SErrSetLastError
+#define GetLastError SErrGetLastError
+#endif
 
 #endif
 

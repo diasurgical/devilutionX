@@ -5,12 +5,7 @@
  */
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
-#ifndef _XBOX
 #include <config.h>
-#endif
-#ifdef _XBOX
-#include "xboxfuncs.h"
-#endif
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -35,11 +30,7 @@ void app_fatal(const char *pszFmt, ...)
 
 	va_end(va);
 
-#ifdef _XBOX
-	CXBFunctions::QuitToDash();
-#else
-	exit(1);
-#endif
+	diablo_quit(1);
 }
 
 /**

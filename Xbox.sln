@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DiabloX", "DiabloX.vcproj", "{A21C8DC1-51B0-4649-8CB4-B6E530F7147B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DevilutionX for Xbox", "Xbox.vcproj", "{A21C8DC1-51B0-4649-8CB4-B6E530F7147B}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject

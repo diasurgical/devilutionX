@@ -150,7 +150,11 @@ UiArtTextButton *SELLIST_DIALOG_DELETE_BUTTON;
 
 void selhero_UpdateViewportItems()
 {
+#ifdef _XBOX
 	const size_t num_viewport_heroes = min(selhero_SaveCount - listOffset, kMaxViewportItems);
+#else
+	const size_t num_viewport_heroes = std::min(selhero_SaveCount - listOffset, kMaxViewportItems);
+#endif
 	SELLIST_DIALOG_LIST->m_length = num_viewport_heroes;
 	for (std::size_t i = 0; i < num_viewport_heroes; i++) {
 		const std::size_t index = i + listOffset;
@@ -159,8 +163,8 @@ void selhero_UpdateViewportItems()
 //		SELLIST_DIALOG_ITEMS[i] = { selhero_heros[index].name, static_cast<int>(index) };
 	}
 	if (num_viewport_heroes < kMaxViewportItems) {
-		vecSellistDlgItems[i]->m_text = "New Hero";
-		vecSellistDlgItems[i]->m_value = static_cast<int>(selhero_SaveCount);
+//		vecSellistDlgItems[i]->m_text = "New Hero";
+//		vecSellistDlgItems[i]->m_value = static_cast<int>(selhero_SaveCount);
 //		SELLIST_DIALOG_ITEMS[num_viewport_heroes] = { "New Hero", static_cast<int>(selhero_SaveCount) };
 		++SELLIST_DIALOG_LIST->m_length;
 	}
@@ -184,7 +188,7 @@ void selhero_ScrollIntoView(std::size_t index)
 void selhero_List_Init()
 {
 	SDL_Rect rect1 = {264, 211, 320, 33};
-	vecSelDlgItems.push_back(new UiArtText("Select Hero", rect1, UIS_CENTER | UIS_BIG));	
+	vecSelDlgItems.push_back(new UiArtText("Select Hero", rect1, UIS_CENTER | UIS_BIG));
 
 	SELLIST_DIALOG_LIST = new UiList(vecSellistDlgItems, 265, 256, 320, 26, UIS_CENTER | UIS_MED | UIS_GOLD);
 	vecSelDlgItems.push_back(SELLIST_DIALOG_LIST);
@@ -247,20 +251,20 @@ bool selhero_List_DeleteYesNo()
 void selhero_List_Select(int value)
 {
 	SDL_Rect rect1 = { 264, 211, 320, 33 };
-	vecSelClassDialog.push_back(new UiArtText("Choose Class", rect1, UIS_CENTER | UIS_BIG));	
+	vecSelClassDialog.push_back(new UiArtText("Choose Class", rect1, UIS_CENTER | UIS_BIG));
 
 	vecClassDlgItems.push_back(new UiListItem("Warrior", UI_WARRIOR));
 	vecClassDlgItems.push_back(new UiListItem("Rogue", UI_ROGUE));
 	vecClassDlgItems.push_back(new UiListItem("Sorcerer", UI_SORCERER));
 
 	SDL_Rect rect2 = { 264, 285, 320, 33 };
-	vecSelClassDialog.push_back(new UiList(/*SELCLAS_DIALOG_ITEMS*/vecClassDlgItems, 264, 285, 320, 33, UIS_CENTER | UIS_MED | UIS_GOLD));	
+	vecSelClassDialog.push_back(new UiList(/*SELCLAS_DIALOG_ITEMS*/vecClassDlgItems, 264, 285, 320, 33, UIS_CENTER | UIS_MED | UIS_GOLD));
 
 	SDL_Rect rect3 = { 279, 429, 140, 35 };
-	vecSelClassDialog.push_back(new UiArtTextButton("OK", &UiFocusNavigationSelect, rect3, UIS_CENTER | UIS_BIG | UIS_GOLD));	
+	vecSelClassDialog.push_back(new UiArtTextButton("OK", &UiFocusNavigationSelect, rect3, UIS_CENTER | UIS_BIG | UIS_GOLD));
 
 	SDL_Rect rect4 = { 429, 429, 140, 35 };
-	vecSelClassDialog.push_back(new UiArtTextButton("Cancel", &UiFocusNavigationEsc, rect4, UIS_CENTER | UIS_BIG | UIS_GOLD));	
+	vecSelClassDialog.push_back(new UiArtTextButton("Cancel", &UiFocusNavigationEsc, rect4, UIS_CENTER | UIS_BIG | UIS_GOLD));
 
 	if (static_cast<std::size_t>(value) == selhero_SaveCount) {
 		UiInitList(0, 2, selhero_ClassSelector_Focus, selhero_ClassSelector_Select, selhero_ClassSelector_Esc, /*SELCLASS_DIALOG*/vecSelClassDialog, /*size(SELCLASS_DIALOG)*/vecSelClassDialog.size());
@@ -275,9 +279,9 @@ void selhero_List_Select(int value)
 		vecSelLoadDlgItems.push_back(new UiListItem("New Game", 1));
 
 		SDL_Rect rect1 = { 264, 211, 320, 33 };
-		vecSelLoadDialog.push_back(new UiArtText("Save File Exists", rect1, UIS_CENTER | UIS_BIG));	
+		vecSelLoadDialog.push_back(new UiArtText("Save File Exists", rect1, UIS_CENTER | UIS_BIG));
 
-		vecSelLoadDialog.push_back(new UiList(/*SELLOAD_DIALOG_ITEMS*/vecSelLoadDlgItems, 265, 285, 320, 33, UIS_CENTER | UIS_MED | UIS_GOLD));	
+		vecSelLoadDialog.push_back(new UiList(/*SELLOAD_DIALOG_ITEMS*/vecSelLoadDlgItems, 265, 285, 320, 33, UIS_CENTER | UIS_MED | UIS_GOLD));
 
 		SDL_Rect rect2 = { 279, 427, 140, 35 };
 		vecSelLoadDialog.push_back(new UiArtTextButton("OK", &UiFocusNavigationSelect, rect2 , UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
@@ -336,16 +340,16 @@ void selhero_ClassSelector_Select(int value)
 	strcpy(selhero_heroInfo.name, selhero_GenerateName(selhero_heroInfo.heroclass));
 #endif
 	SDL_Rect rect1 = { 264, 211, 320, 33 };
-	vecSelNameDialog.push_back(new UiArtText("Enter Name", rect1, UIS_CENTER | UIS_BIG));	
+	vecSelNameDialog.push_back(new UiArtText("Enter Name", rect1, UIS_CENTER | UIS_BIG));
 
 	SDL_Rect rect2 = { 265, 317, 320, 33 };
 	vecSelNameDialog.push_back(new UiEdit(selhero_heroInfo.name, 15, rect2, UIS_MED | UIS_GOLD));
 
 	SDL_Rect rect3 = { 279, 429, 140, 35 };
-	vecSelNameDialog.push_back(new UiArtTextButton("OK", &UiFocusNavigationSelect, rect3, UIS_CENTER | UIS_BIG | UIS_GOLD));	
+	vecSelNameDialog.push_back(new UiArtTextButton("OK", &UiFocusNavigationSelect, rect3, UIS_CENTER | UIS_BIG | UIS_GOLD));
 
 	SDL_Rect rect4 = { 429, 429, 140, 35  };
-	vecSelNameDialog.push_back(new UiArtTextButton("Cancel", &UiFocusNavigationEsc, rect4, UIS_CENTER | UIS_BIG | UIS_GOLD));	
+	vecSelNameDialog.push_back(new UiArtTextButton("Cancel", &UiFocusNavigationEsc, rect4, UIS_CENTER | UIS_BIG | UIS_GOLD));
 
 	UiInitList(0, 0, NULL, selhero_Name_Select, selhero_Name_Esc, /*ENTERNAME_DIALOG*/vecSelNameDialog, /*size(ENTERNAME_DIALOG)*/vecSelNameDialog.size());
 }
@@ -624,7 +628,7 @@ const char *selhero_GenerateName(uint8_t hero_class)
 		    "Horazon",
 		}
 	};
-	
+
 	int iRand = rand() % 9;
 
 	return kNames[hero_class][iRand];

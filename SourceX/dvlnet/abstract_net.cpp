@@ -13,7 +13,7 @@ namespace net {
 
 abstract_net* abstract_net::make_net(provider_t provider)
 {
-#ifdef NONET
+#if 1//def NONET
 	return new loopback;
 #else
 	switch (provider) {

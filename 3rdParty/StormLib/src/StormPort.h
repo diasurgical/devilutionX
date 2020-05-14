@@ -38,7 +38,7 @@
 //-----------------------------------------------------------------------------
 // Defines for Windows
 
-#if !defined(PLATFORM_DEFINED) && defined(_XBOX)//defined(_WIN32)
+#if !defined(PLATFORM_DEFINED) && (defined(_WIN32) || defined(_XBOX))
 
   // In MSVC 8.0, there are some functions declared as deprecated.
   #if _MSC_VER >= 1400
@@ -195,6 +195,9 @@
   #include <stdio.h>
   #include <stdarg.h>
   #include <string.h>
+#ifndef _XBOX
+  #include <strings.h>
+#endif
   #include <ctype.h>
   #include <assert.h>
   #include <errno.h>

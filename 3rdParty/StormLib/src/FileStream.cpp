@@ -18,8 +18,10 @@
 #include "StormCommon.h"
 #include "FileStream.h"
 
-#if 1//def _MSC_VER
-//#pragma comment(lib, "wininet.lib")             // Internet functions for HTTP stream
+#if defined(_MSC_VER) || defined(_XBOX)
+#ifndef _XBOX
+#pragma comment(lib, "wininet.lib")             // Internet functions for HTTP stream
+#endif
 #pragma warning(disable: 4800)                  // 'BOOL' : forcing value to bool 'true' or 'false' (performance warning)
 #endif
 
@@ -75,7 +77,7 @@ static void BaseNone_Init(TFileStream *)
 
 static bool BaseFile_Create(TFileStream * pStream)
 {
-#if 1//def PLATFORM_WINDOWS
+#if defined(PLATFORM_WINDOWS) || defined(_XBOX)
     {
         DWORD dwWriteShare = (pStream->dwFlags & STREAM_FLAG_WRITE_SHARE) ? FILE_SHARE_WRITE : 0;
 
@@ -91,7 +93,7 @@ static bool BaseFile_Create(TFileStream * pStream)
     }
 #endif
 
-#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU)
+#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU) || defined(PLATFORM_AMIGA) || defined(PLATFORM_SWITCH)
     {
         intptr_t handle;
 
@@ -115,7 +117,7 @@ static bool BaseFile_Create(TFileStream * pStream)
 
 static bool BaseFile_Open(TFileStream * pStream, const TCHAR * szFileName, DWORD dwStreamFlags)
 {
-#if 1//def PLATFORM_WINDOWS
+#if defined(PLATFORM_WINDOWS) || defined(_XBOX)
     {
         ULARGE_INTEGER FileSize;
         DWORD dwWriteAccess = (dwStreamFlags & STREAM_FLAG_READ_ONLY) ? 0 : FILE_WRITE_DATA | FILE_APPEND_DATA | FILE_WRITE_ATTRIBUTES;
@@ -141,7 +143,7 @@ static bool BaseFile_Open(TFileStream * pStream, const TCHAR * szFileName, DWORD
     }
 #endif
 
-#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU)
+#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU) || defined(PLATFORM_AMIGA) || defined(PLATFORM_SWITCH)
     {
         struct stat64 fileinfo;
         int oflag = (dwStreamFlags & STREAM_FLAG_READ_ONLY) ? O_RDONLY : O_RDWR;
@@ -188,7 +190,7 @@ static bool BaseFile_Read(
     ULONGLONG ByteOffset = (pByteOffset != NULL) ? *pByteOffset : pStream->Base.File.FilePos;
     DWORD dwBytesRead = 0;                  // Must be set by platform-specific code
 
-#if 1//def PLATFORM_WINDOWS
+#if defined(PLATFORM_WINDOWS) || defined(_XBOX)
     {
         // Note: StormLib no longer supports Windows 9x.
         // Thus, we can use the OVERLAPPED structure to specify
@@ -212,7 +214,7 @@ static bool BaseFile_Read(
     }
 #endif
 
-#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU)
+#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU) || defined(PLATFORM_AMIGA) || defined(PLATFORM_SWITCH)
     {
         ssize_t bytes_read;
 
@@ -259,7 +261,7 @@ static bool BaseFile_Write(TFileStream * pStream, ULONGLONG * pByteOffset, const
     ULONGLONG ByteOffset = (pByteOffset != NULL) ? *pByteOffset : pStream->Base.File.FilePos;
     DWORD dwBytesWritten = 0;               // Must be set by platform-specific code
 
-#if 1//def PLATFORM_WINDOWS
+#if defined(PLATFORM_WINDOWS) || defined(_XBOX)
     {
         // Note: StormLib no longer supports Windows 9x.
         // Thus, we can use the OVERLAPPED structure to specify
@@ -283,7 +285,7 @@ static bool BaseFile_Write(TFileStream * pStream, ULONGLONG * pByteOffset, const
     }
 #endif
 
-#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU)
+#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU) || defined(PLATFORM_AMIGA) || defined(PLATFORM_SWITCH)
     {
         ssize_t bytes_written;
 
@@ -325,7 +327,7 @@ static bool BaseFile_Write(TFileStream * pStream, ULONGLONG * pByteOffset, const
  */
 static bool BaseFile_Resize(TFileStream * pStream, ULONGLONG NewFileSize)
 {
-#if 1//def PLATFORM_WINDOWS
+#if defined(PLATFORM_WINDOWS) || defined(_XBOX)
     {
         LONG FileSizeHi = (LONG)(NewFileSize >> 32);
         LONG FileSizeLo;
@@ -350,7 +352,7 @@ static bool BaseFile_Resize(TFileStream * pStream, ULONGLONG NewFileSize)
     }
 #endif
 
-#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU)
+#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU) || defined(PLATFORM_AMIGA) || defined(PLATFORM_SWITCH)
     {
         if(ftruncate64((intptr_t)pStream->Base.File.hFile, (off64_t)NewFileSize) == -1)
         {
@@ -385,7 +387,7 @@ static bool BaseFile_GetPos(TFileStream * pStream, ULONGLONG * pByteOffset)
 // Renames the file pointed by pStream so that it contains data from pNewStream
 static bool BaseFile_Replace(TFileStream * pStream, TFileStream * pNewStream)
 {
-#if 1//def PLATFORM_WINDOWS
+#if defined(PLATFORM_WINDOWS) || defined(_XBOX)
     // Delete the original stream file. Don't check the result value,
     // because if the file doesn't exist, it would fail
     DeleteFile(pStream->szFileName);
@@ -394,7 +396,7 @@ static bool BaseFile_Replace(TFileStream * pStream, TFileStream * pNewStream)
     return (bool)MoveFile(pNewStream->szFileName, pStream->szFileName);
 #endif
 
-#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU)
+#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU) || defined(PLATFORM_AMIGA) || defined(PLATFORM_SWITCH)
     // "rename" on Linux also works if the target file exists
     if(rename(pNewStream->szFileName, pStream->szFileName) == -1)
     {
@@ -410,11 +412,11 @@ static void BaseFile_Close(TFileStream * pStream)
 {
     if(pStream->Base.File.hFile != INVALID_HANDLE_VALUE)
     {
-#if 1//def PLATFORM_WINDOWS
+#if defined(PLATFORM_WINDOWS) || defined(_XBOX)
         CloseHandle(pStream->Base.File.hFile);
 #endif
 
-#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU)
+#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU) || defined(PLATFORM_AMIGA) || defined(PLATFORM_SWITCH)
         close((intptr_t)pStream->Base.File.hFile);
 #endif
     }
@@ -441,7 +443,7 @@ static void BaseFile_Init(TFileStream * pStream)
 
 static bool BaseMap_Open(TFileStream * pStream, const TCHAR * szFileName, DWORD dwStreamFlags)
 {
-#if 1//def PLATFORM_WINDOWS
+#if defined(PLATFORM_WINDOWS) || defined(_XBOX)
 
     ULARGE_INTEGER FileSize;
     HANDLE hFile;
@@ -463,7 +465,7 @@ static bool BaseMap_Open(TFileStream * pStream, const TCHAR * szFileName, DWORD 
         {
             // Now create mapping object
 #ifndef _XBOX // Not implemented in DevilutionX atm, save a call
-            hMap = CreateFileMappingA(hFile, NULL, PAGE_READONLY, 0, 0, NULL);
+            hMap = CreateFileMapping(hFile, NULL, PAGE_READONLY, 0, 0, NULL);
             if(hMap != NULL)
             {
                 // Map the entire view into memory
@@ -497,7 +499,7 @@ static bool BaseMap_Open(TFileStream * pStream, const TCHAR * szFileName, DWORD 
         return false;
 #endif
 
-#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU)
+#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU) || defined(PLATFORM_AMIGA) || defined(PLATFORM_SWITCH)
     struct stat64 fileinfo;
     intptr_t handle;
     bool bResult = false;
@@ -567,15 +569,18 @@ static bool BaseMap_Read(
 
 static void BaseMap_Close(TFileStream * pStream)
 {
-#if 1//def PLATFORM_WINDOWS
-	if(pStream->Base.Map.pbFile != NULL) {}
-    //    UnmapViewOfFile(pStream->Base.Map.pbFile);
+#if defined(PLATFORM_WINDOWS) && !defined(_XBOX)
+    if(pStream->Base.Map.pbFile != NULL)
+        UnmapViewOfFile(pStream->Base.Map.pbFile);
 #endif
 
-#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU)
+#if (defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU)) && !defined(PLATFORM_AMIGA) && !defined(PLATFORM_SWITCH)
     //Todo(Amiga): Fix a proper solution for this
     if(pStream->Base.Map.pbFile != NULL)
         munmap(pStream->Base.Map.pbFile, (size_t )pStream->Base.Map.FileSize);
+#elif defined(PLATFORM_SWITCH)
+    if(pStream->Base.Map.pbFile != NULL)
+        free(pStream->Base.Map.pbFile);
 #endif
 
     pStream->Base.Map.pbFile = NULL;
@@ -598,7 +603,7 @@ static void BaseMap_Init(TFileStream * pStream)
 //-----------------------------------------------------------------------------
 // Local functions - base HTTP file support
 
-#ifndef NONET
+#ifndef _XBOX
 static const TCHAR * BaseHttp_ExtractServerName(const TCHAR * szFileName, TCHAR * szServerName)
 {
     // Check for HTTP
@@ -625,7 +630,7 @@ static const TCHAR * BaseHttp_ExtractServerName(const TCHAR * szFileName, TCHAR 
 
 static bool BaseHttp_Open(TFileStream * pStream, const TCHAR * szFileName, DWORD dwStreamFlags)
 {
-#ifndef NONET//def PLATFORM_WINDOWS
+#if defined(PLATFORM_WINDOWS) && !defined(_XBOX)
 
     HINTERNET hRequest;
     DWORD dwTemp = 0;
@@ -724,7 +729,7 @@ static bool BaseHttp_Read(
     void * pvBuffer,                        // Pointer to data to be read
     DWORD dwBytesToRead)                    // Number of bytes to read from the file
 {
-#ifndef NONET//def PLATFORM_WINDOWS
+#if defined(PLATFORM_WINDOWS) && !defined(_XBOX)
     ULONGLONG ByteOffset = (pByteOffset != NULL) ? *pByteOffset : pStream->Base.Http.FilePos;
     DWORD dwTotalBytesRead = 0;
 
@@ -797,7 +802,7 @@ static bool BaseHttp_Read(
 
 static void BaseHttp_Close(TFileStream * pStream)
 {
-#if 0//def PLATFORM_WINDOWS
+#if defined(PLATFORM_WINDOWS) && !defined(_XBOX)
     if(pStream->Base.Http.hConnect != NULL)
         InternetCloseHandle(pStream->Base.Http.hConnect);
     pStream->Base.Http.hConnect = NULL;
@@ -810,7 +815,7 @@ static void BaseHttp_Close(TFileStream * pStream)
 #endif
 }
 
-#ifndef NONET
+#ifndef _XBOX
 // Initializes base functions for the mapped file
 static void BaseHttp_Init(TFileStream * pStream)
 {
@@ -1002,7 +1007,7 @@ static STREAM_INIT StreamBaseInit[4] =
 {
     BaseFile_Init,
     BaseMap_Init, 
-#ifndef NONET
+#ifndef _XBOX
     BaseHttp_Init,
     BaseNone_Init
 #endif
@@ -1062,7 +1067,11 @@ static TFileStream * AllocateFileStream(
         pStream->szFileName[FileNameSize / sizeof(TCHAR)] = 0;
 
         // Initialize the stream functions
+#ifndef _XBOX
+        StreamBaseInit[dwStreamFlags & 0x03](pStream);
+#else
         StreamBaseInit[0](pStream);
+#endif
     }
 
     return pStream;

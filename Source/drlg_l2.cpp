@@ -357,8 +357,13 @@ static void DRLG_L2PlaceRndSet(BYTE *miniset, int rndper)
 			}
 			kk = sw * sh + 2;
 			if (found == TRUE) {
+#ifdef _XBOX
 				for (yy = max(sy - sh, 0); yy < min(sy + 2 * sh, DMAXY) && found == TRUE; yy++) {
 					for (xx = max(sx - sw, 0); xx < min(sx + 2 * sw, DMAXX); xx++) {
+#else
+				for (yy = std::max(sy - sh, 0); yy < std::min(sy + 2 * sh, DMAXY) && found == TRUE; yy++) {
+					for (xx = std::max(sx - sw, 0); xx < std::min(sx + 2 * sw, DMAXX); xx++) {
+#endif
 						// BUGFIX: yy and xx can go out of bounds (fixed)
 						if (dungeon[xx][yy] == miniset[kk]) {
 							found = FALSE;

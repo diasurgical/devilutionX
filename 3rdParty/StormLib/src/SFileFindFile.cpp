@@ -216,7 +216,8 @@ static bool DoMPQSearch_FileEntry(
     TMPQHash * pHashEntry,
     TFileEntry * pFileEntry)
 {
-/*    TFileEntry * pPatchEntry;
+#ifndef _XBOX
+    TFileEntry * pPatchEntry;
     HANDLE hFile = NULL;
     const char * szFileName;
     size_t nPrefixLength = (ha->pPatchPrefix != NULL) ? ha->pPatchPrefix->nLength : 0;
@@ -286,7 +287,8 @@ static bool DoMPQSearch_FileEntry(
             }
         }
     }
-*/
+#endif
+
     // Either not a valid item or was found before
     return false;
 }

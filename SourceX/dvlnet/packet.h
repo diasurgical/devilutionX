@@ -37,6 +37,7 @@ typedef std::array<unsigned char, crypto_secretbox_KEYBYTES> key_t;
 static constexpr plr_t PLR_MASTER = 0xFE;
 static constexpr plr_t PLR_BROADCAST = 0xFF;
 
+/*
 class packet_exception : public dvlnet_exception {
 public:
 	const char *what() const throw() override
@@ -57,7 +58,7 @@ public:
 private:
 	std::string message_;
 };
-
+*/
 class packet {
 protected:
 	packet_type m_type;
@@ -169,8 +170,8 @@ inline void packet_in::process_element(buffer_t &x)
 template <class T>
 void packet_in::process_element(T &x)
 {
-	if (decrypted_buffer.size() < sizeof(T))
-		throw packet_exception();
+//	if (decrypted_buffer.size() < sizeof(T))
+//		throw packet_exception();
 	std::memcpy(&x, decrypted_buffer.data(), sizeof(T));
 	decrypted_buffer.erase(decrypted_buffer.begin(),
 	    decrypted_buffer.begin() + sizeof(T));

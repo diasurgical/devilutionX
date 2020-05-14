@@ -189,10 +189,6 @@ void BltFast(SDL_Rect *src_rect, SDL_Rect *dst_rect)
 
 void Blit(SDL_Surface *src, SDL_Rect *src_rect, SDL_Rect *dst_rect)
 {
-#ifdef _DEBUG
-	CXBFunctions::GetMemoryUsage();
-#endif
-
 	SDL_Surface *dst = GetOutputSurface();
 #ifndef USE_SDL1
 	if (SDL_BlitSurface(src, src_rect, dst, dst_rect) < 0)

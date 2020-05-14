@@ -90,14 +90,17 @@ BOOL nthread_recv_turns(BOOL *pfSendAsync)
 		last_tick += 50;
 		return TRUE;
 	}
-	/*if (!SNetReceiveTurns(0, MAX_PLRS, (char **)glpMsgTbl, gdwMsgLenTbl, (LPDWORD)player_state)) {
+#ifndef _XBOX
+	if (!SNetReceiveTurns(0, MAX_PLRS, (char **)glpMsgTbl, gdwMsgLenTbl, (LPDWORD)player_state)) {
 		if (SErrGetLastError() != STORM_ERROR_NO_MESSAGES_WAITING)
 			nthread_terminate_game("SNetReceiveTurns");
 		sgbTicsOutOfSync = FALSE;
 		sgbSyncCountdown = 1;
 		sgbPacketCountdown = 1;
 		return FALSE;
-	} else */{
+	} else
+#endif
+	{
 		if (!sgbTicsOutOfSync) {
 			sgbTicsOutOfSync = TRUE;
 			last_tick = SDL_GetTicks();

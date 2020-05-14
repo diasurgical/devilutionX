@@ -30,7 +30,7 @@ UiListItem SELCONN_DIALOG_ITEMS[] = {
 #endif
 	{ "Loopback", SELCONN_LOOPBACK },
 };
-
+/*
 UiItem SELCONNECT_DIALOG[] = {
 	MAINMENU_BACKGROUND,
 	MAINMENU_LOGO,
@@ -46,11 +46,11 @@ UiItem SELCONNECT_DIALOG[] = {
 	UiArtTextButton("OK", &UiFocusNavigationSelect, { 299, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD),
 	UiArtTextButton("Cancel", &UiFocusNavigationEsc, { 454, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD)
 };
-
+*/
 void selconn_Load()
 {
 	LoadBackgroundArt("ui_art\\selconn.pcx");
-	UiInitList(0, size(SELCONN_DIALOG_ITEMS) - 1, selconn_Focus, selconn_Select, selconn_Esc, SELCONNECT_DIALOG, size(SELCONNECT_DIALOG));
+//	UiInitList(0, size(SELCONN_DIALOG_ITEMS) - 1, selconn_Focus, selconn_Select, selconn_Esc, SELCONNECT_DIALOG, size(SELCONNECT_DIALOG));
 }
 
 void selconn_Free()
@@ -87,7 +87,7 @@ void selconn_Focus(int value)
 	}
 
 	sprintf(selconn_MaxPlayers, "Players Supported: %d", players);
-	WordWrapArtStr(selconn_Description, SELCONNECT_DIALOG_DESCRIPTION.rect.w);
+//	WordWrapArtStr(selconn_Description, SELCONNECT_DIALOG_DESCRIPTION.rect.w);
 }
 
 void selconn_Select(int value)

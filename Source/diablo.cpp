@@ -352,6 +352,7 @@ int DiabloMain(int argc, char **argv)
 #ifdef _XBOX // 128MB Xboxes needs this to fucntion correctly
 	CXBFunctions::Check128MBPatch();
 #endif
+
 	diablo_parse_flags(argc, argv);
 	diablo_init();
 	diablo_splash();
@@ -366,31 +367,6 @@ int DiabloMain(int argc, char **argv)
 
 static void print_help_and_exit()
 {
-#if 0//def _XBOX // TODO
-	OutputDebugString("Options:\n");
-	OutputDebugString("    %-20s %-30s\n", "-h, --help", "Print this message and exit");
-	OutputDebugString("    %-20s %-30s\n", "--version", "Print the version and exit");
-	OutputDebugString("    %-20s %-30s\n", "--data-dir", "Specify the folder of diabdat.mpq");
-	OutputDebugString("    %-20s %-30s\n", "-n", "Skip startup videos");
-	OutputDebugString("    %-20s %-30s\n", "-f", "Display frames per second");
-	OutputDebugString("    %-20s %-30s\n", "-x", "Run in windowed mode");
-#ifdef _DEBUG
-	OutputDebugString("\nDebug options:\n");
-	OutputDebugString("    %-20s %-30s\n", "-d", "Increaased item drops");
-	OutputDebugString("    %-20s %-30s\n", "-w", "Enable cheats");
-	OutputDebugString("    %-20s %-30s\n", "-$", "Enable god mode");
-	OutputDebugString("    %-20s %-30s\n", "-^", "Enable god mode and debug tools");
-	//OutputDebugString("    %-20s %-30s\n", "-b", "Enable item drop log");
-	OutputDebugString("    %-20s %-30s\n", "-v", "Highlight visibility");
-	OutputDebugString("    %-20s %-30s\n", "-i", "Ignore network timeout");
-	//OutputDebugString("    %-20s %-30s\n", "-j <##>", "Init trigger at level");
-	OutputDebugString("    %-20s %-30s\n", "-l <##> <##>", "Start in level as type");
-	OutputDebugString("    %-20s %-30s\n", "-m <##>", "Add debug monster, up to 10 allowed");
-	OutputDebugString("    %-20s %-30s\n", "-q <#>", "Force a certain quest");
-	OutputDebugString("    %-20s %-30s\n", "-r <##########>", "Set map seed");
-	OutputDebugString("    %-20s %-30s\n", "-t <##>", "Set current quest level");
-#endif
-#else
 	printf("Options:\n");
 	printf("    %-20s %-30s\n", "-h, --help", "Print this message and exit");
 	printf("    %-20s %-30s\n", "--version", "Print the version and exit");
@@ -414,7 +390,6 @@ static void print_help_and_exit()
 	printf("    %-20s %-30s\n", "-r <##########>", "Set map seed");
 	printf("    %-20s %-30s\n", "-t <##>", "Set current quest level");
 #endif
-#endif
 	printf("\nReport bugs at https://github.com/diasurgical/devilutionX/\n");
 	diablo_quit(0);
 }
@@ -429,7 +404,7 @@ void diablo_parse_flags(int argc, char **argv)
 			diablo_quit(0);
 		} else if (strcasecmp("--data-dir", argv[i]) == 0) {
 			basePath = argv[++i];
-#if defined (_WIN32) || (_XBOX)
+#if defined(_WIN32) || defined(_XBOX)
 			char sTmp = basePath.at(basePath.length() - 2);
 			if (sTmp != '\\')
 				basePath += '\\';

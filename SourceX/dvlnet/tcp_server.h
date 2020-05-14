@@ -15,13 +15,13 @@
 namespace dvl {
 namespace net {
 
-class server_exception : public dvlnet_exception {
-public:
-	const char *what() const throw() override
-	{
-		return "Invalid player ID";
-	}
-};
+//class server_exception : public dvlnet_exception {
+//public:
+//	const char *what() const throw() override
+//	{
+//		return "Invalid player ID";
+//	}
+//};
 
 class tcp_server {
 public:

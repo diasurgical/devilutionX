@@ -12,11 +12,11 @@
 #include "sdl2_to_1_2_backports.h"
 #endif
 
-#if 0//defined(_WIN64) || defined(_WIN32)
+#if (defined(_WIN64) || defined(_WIN32)) && !defined(_XBOX)
 // Suppress definitions of `min` and `max` macros by <windows.h>:
 #define NOMINMAX 1
 #include <windows.h>
-#else
+#elif defined(_XBOX)
 #include <xtl.h>
 #endif
 
@@ -43,7 +43,7 @@ inline bool FileExists(const char *path)
 
 inline bool GetFileSize(const char *path, size_t *size)
 {
-#if 1//defined(_WIN64) || defined(_WIN32)
+#if defined(_WIN64) || defined(_WIN32) || defined(_XBOX)
 	WIN32_FILE_ATTRIBUTE_DATA attr;
 	int path_utf16_size = MultiByteToWideChar(CP_UTF8, 0, path, -1, NULL, 0);
 	wchar_t* path_utf16 = new wchar_t[path_utf16_size];
@@ -68,6 +68,39 @@ inline bool GetFileSize(const char *path, size_t *size)
 	return true;
 #endif
 }
+
+#ifndef _XBOX
+inline bool ResizeFile(const char *path, std::uintmax_t size)
+{
+#if defined(_WIN64) || defined(_WIN32)
+	LARGE_INTEGER lisize;
+	lisize.QuadPart = static_cast<LONGLONG>(size);
+	if (lisize.QuadPart < 0) {
+		return false;
+	}
+	int path_utf16_size = MultiByteToWideChar(CP_UTF8, 0, path, -1, NULL, 0);
+	wchar_t *path_utf16 = new wchar_t[path_utf16_size];
+	if (MultiByteToWideChar(CP_UTF8, 0, path, -1, path_utf16, path_utf16_size) != path_utf16_size) {
+		delete[] path_utf16;
+		return false;
+	}
+	HANDLE file = ::CreateFileW(path_utf16, GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
+	delete[] path_utf16;
+	if (file == INVALID_HANDLE_VALUE) {
+		return false;
+	} else if (::SetFilePointerEx(file, lisize, NULL, FILE_BEGIN) == 0 || ::SetEndOfFile(file) == 0) {
+		::CloseHandle(file);
+		return false;
+	}
+	::CloseHandle(file);
+	return true;
+#elif _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)
+	return ::truncate(path, static_cast<off_t>(size)) == 0;
+#else
+	static_assert(false, "truncate not implemented for the current platform");
+#endif
+}
+#endif
 
 inline void RemoveFile(char *lpFileName)
 {

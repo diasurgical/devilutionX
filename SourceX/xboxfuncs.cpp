@@ -4,7 +4,7 @@
 void CXBFunctions::QuitToDash()
 {
 	LD_LAUNCH_DASHBOARD LaunchData = { XLD_LAUNCH_DASHBOARD_MAIN_MENU };
-	XLaunchNewImage( NULL, (LAUNCH_DATA*)&LaunchData );	
+	XLaunchNewImage( NULL, (LAUNCH_DATA*)&LaunchData );
 }
 
 void CXBFunctions::Check128MBPatch()
@@ -24,37 +24,5 @@ void CXBFunctions::Check128MBPatch()
 			mov al, 0x06
 			wrmsr
 		}
-	}
-}
-
-#define MB	(1024*1024)
-#define AddStr(a,b) (pstrOut += wsprintf( pstrOut, a, b ))
-
-void CXBFunctions::GetMemoryUsage()
-{
-	static DWORD dwTicks = 0;
-
-	if(dwTicks < GetTickCount())
-	{
-		MEMORYSTATUS stat;
-		CHAR strOut[1024], *pstrOut;
-
-		// Get the memory status.
-		GlobalMemoryStatus( &stat );
-
-		// Setup the output string.
-		pstrOut = strOut;
-		AddStr( "%4d total MB of virtual memory.\n", stat.dwTotalVirtual / MB );
-		AddStr( "%4d  free MB of virtual memory.\n", stat.dwAvailVirtual / MB );
-		AddStr( "%4d total MB of physical memory.\n", stat.dwTotalPhys / MB );
-		AddStr( "%4d  free MB of physical memory.\n", stat.dwAvailPhys / MB );
-		AddStr( "%4d total MB of paging file.\n", stat.dwTotalPageFile / MB );
-		AddStr( "%4d  free MB of paging file.\n", stat.dwAvailPageFile / MB );
-		AddStr( "%4d  percent of memory is in use.\n", stat.dwMemoryLoad );
-
-		// Output the string.
-		OutputDebugString( strOut );
-
-		dwTicks = GetTickCount() + 2000;
 	}
 }

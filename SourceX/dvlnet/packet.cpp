@@ -26,7 +26,7 @@ const char *packet_type_to_string(uint8_t packet_type)
 		return NULL;
 	}
 }
-
+/*
 wrong_packet_type_exception::wrong_packet_type_exception(std::initializer_list<packet_type> expected_types, std::uint8_t actual)
 {
 	message_ = "Expected packet of type ";
@@ -47,13 +47,13 @@ wrong_packet_type_exception::wrong_packet_type_exception(std::initializer_list<p
 	message_.append(", got");
 	append_packet_type(actual);
 }
-
+*/
 namespace {
 
 void CheckPacketTypeOneOf(std::initializer_list<packet_type> expected_types, std::uint8_t actual_type) {
 	for (std::uint8_t packet_type : expected_types)
 		if (actual_type == packet_type) return;
-	throw wrong_packet_type_exception(std::move(expected_types), actual_type);
+	//throw wrong_packet_type_exception(std::move(expected_types), actual_type);
 }
 
 } // namespace
@@ -148,7 +148,7 @@ void packet_in::decrypt()
 		ABORT();
 	if (have_decrypted)
 		return;
-#ifndef NONET
+#if 0//ndef NONET
 	if (!disable_encryption) {
 		if (encrypted_buffer.size() < crypto_secretbox_NONCEBYTES
 				+ crypto_secretbox_MACBYTES
@@ -169,8 +169,8 @@ void packet_in::decrypt()
 	} else
 #endif
 	{
-		if (encrypted_buffer.size() < sizeof(packet_type) + 2 * sizeof(plr_t))
-			throw packet_exception();
+//		if (encrypted_buffer.size() < sizeof(packet_type) + 2 * sizeof(plr_t))
+//			throw packet_exception();
 		decrypted_buffer = encrypted_buffer;
 	}
 

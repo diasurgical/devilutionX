@@ -6,11 +6,25 @@
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
+#include <cstring>
+#include <vector>
+#include <fstream>
+#include <algorithm>
+
 DEVILUTION_BEGIN_NAMESPACE
 
-#ifndef INVALID_FILE_ATTRIBUTES
-#define INVALID_FILE_ATTRIBUTES ((DWORD)-1)
-#endif
+#define INVALID_HANDLE_VALUE ((HANDLE)-1)
+
+#define FILE_BEGIN 0
+#define FILE_CURRENT 1
+
+#define GENERIC_READ 0x80000000L
+#define GENERIC_WRITE 0x40000000L
+
+#define CREATE_ALWAYS 2
+#define OPEN_EXISTING 3
+
+#define FILE_FLAG_WRITE_THROUGH 0x80000000
 
 DWORD sgdwMpqOffset;
 char mpq_buf[4096];
@@ -18,143 +32,12 @@ char mpq_buf[4096];
 /** Has the savegame-file been modified in memory. */
 BOOL save_archive_modified;
 	_BLOCKENTRY *sgpBlockTbl;
-/** Is the savegame-file currently open. */
-BOOLEAN save_archive_open;
-BOOLEAN mpqapi_reg_store_modification_time(char *pbData, DWORD dwLen);
-BOOL mpqapi_reg_load_modification_time(char *dst, int size);
 
 //note: 32872 = 32768 + 104 (sizeof(_FILEHEADER))
-
-BOOL ParseMPQHeader(_FILEHEADER *pHdr, DWORD *pdwNextFileStart);
-BOOL mpqapi_write_block_table();
-BOOL mpqapi_write_hash_table();
-BOOL WriteMPQHeader();
-BOOL mpqapi_can_seek();
-void mpqapi_store_modified_time(const char *pszArchive, DWORD dwChar);
-void CloseMPQ(const char *pszArchive, BOOL bFree, DWORD dwChar);
-void mpqapi_xor_buf(char *pbData);
 
 /* data */
 
 HANDLE sghArchive = INVALID_HANDLE_VALUE;
-
-BOOL mpqapi_set_hidden(const char *pszArchive, BOOL hidden)
-	{
-	DWORD dwFileAttributes;
-	DWORD dwFileAttributesToSet;
-
-	dwFileAttributes = GetFileAttributes(pszArchive);
-	if (dwFileAttributes == INVALID_FILE_ATTRIBUTES)
-		return GetLastError() == ERROR_FILE_NOT_FOUND;
-	dwFileAttributesToSet = hidden ? FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_HIDDEN : 0;
-	if (dwFileAttributes == dwFileAttributesToSet)
-		return TRUE;
-	else
-		return SetFileAttributes(pszArchive, dwFileAttributesToSet);
-	}
-
-void mpqapi_store_creation_time(const char *pszArchive, DWORD dwChar)
-	{
-	HANDLE handle;
-	struct _WIN32_FIND_DATAA FindFileData;
-	char dst[160];
-
-	if (gbMaxPlayers != 1) {
-		mpqapi_reg_load_modification_time(dst, 160);
-		handle = FindFirstFile(pszArchive, &FindFileData);
-		if (handle != INVALID_HANDLE_VALUE) {
-			FindClose(handle);
-			*((FILETIME *)(dst) + dwChar * 2) = FindFileData.ftCreationTime;
-			mpqapi_reg_store_modification_time(dst, 160);
-		}
-		}
-	}
-
-BOOL mpqapi_reg_load_modification_time(char *dst, int size)
-	{
-	char *pszDst;
-	char *pbData;
-	DWORD nbytes_read;
-
-	pszDst = dst;
-	memset(dst, 0, size);
-#ifdef SPAWN
-//	if (!SRegLoadData("Diablo", "Audio Playback ", 0, (BYTE *)pszDst, size, &nbytes_read)) {
-#else
-//	if (!SRegLoadData("Diablo", "Video Player ", 0, (BYTE *)pszDst, size, &nbytes_read)) {
-#endif
-		return FALSE;
-//	}
-
-	if (nbytes_read != size)
-		return FALSE;
-
-	for (; size >= 8u; size -= 8) {
-		pbData = pszDst;
-		pszDst += 8;
-		mpqapi_xor_buf(pbData);
-	}
-
-	return TRUE;
-	}
-
-void mpqapi_xor_buf(char *pbData)
-	{
-	DWORD mask;
-	char *pbCurrentData;
-	int i;
-
-	mask = 0xF0761AB;
-	pbCurrentData = pbData;
-
-	for (i = 0; i < 8; i++) {
-		*pbCurrentData ^= mask;
-		pbCurrentData++;
-		mask = _rotl(mask, 1);
-	}
-	}
-
-void mpqapi_store_default_time(DWORD dwChar)
-	{
-	/*
-	DWORD idx;
-	char dst[160];
-
-	if(gbMaxPlayers == 1) {
-		return;
-	}
-
-	/// ASSERT: assert(dwChar < MAX_CHARACTERS);
-	idx = 16 * dwChar;
-	mpqapi_reg_load_modification_time(dst, sizeof(dst));
-	*(DWORD *)&dst[idx + 4] = 0x78341348; // dwHighDateTime
-	mpqapi_reg_store_modification_time(dst, sizeof(dst));
-*/
-}
-
-BOOLEAN mpqapi_reg_store_modification_time(char *pbData, DWORD dwLen)
-{
-	char *pbCurrentData, *pbDataToXor;
-	DWORD i;
-
-	pbCurrentData = pbData;
-	if (dwLen >= 8) {
-		i = dwLen >> 3;
-		do {
-			pbDataToXor = pbCurrentData;
-			pbCurrentData += 8;
-			mpqapi_xor_buf(pbDataToXor);
-			i--;
-		} while (i);
-}
-
-#ifdef SPAWN
-//	return SRegSaveData("Diablo", "Audio Playback ", 0, (BYTE *)pbData, dwLen);
-#else
-//	return SRegSaveData("Diablo", "Video Player ", 0, (BYTE *)pbData, dwLen);
-#endif
-	return true;
-}
 
 void mpqapi_remove_hash_entry(const char *pszName)
 {
@@ -311,6 +194,39 @@ _BLOCKENTRY *mpqapi_add_file(const char *pszName, _BLOCKENTRY *pBlk, int block_i
 	return pBlk;
 }
 
+struct memfile {
+	std::string path;
+	std::vector<char> buf;
+	std::size_t pos = 0;
+};
+
+DWORD SetFilePointer(HANDLE hFile, LONG lDistanceToMove, LONG *lpDistanceToMoveHigh, DWORD dwMoveMethod)
+{
+	memfile *file = (memfile *)hFile;
+	if (dwMoveMethod == FILE_BEGIN) {
+		file->pos = lDistanceToMove;
+	} else if (dwMoveMethod == FILE_CURRENT) {
+		file->pos += lDistanceToMove;
+	}
+	if (file->buf.size() < file->pos + 1)
+		file->buf.resize(file->pos + 1);
+	return file->pos;
+}
+
+BOOL WriteFile(HANDLE hFile, void *lpBuffer, DWORD nNumberOfBytesToWrite,
+    LPDWORD lpNumberOfBytesWritten)
+{
+	memfile *file = (memfile *)hFile;
+	if (!nNumberOfBytesToWrite)
+		return true;
+	if (file->buf.size() < file->pos + nNumberOfBytesToWrite)
+		file->buf.resize(file->pos + nNumberOfBytesToWrite);
+	std::memcpy(file->buf.data() + file->pos, lpBuffer, nNumberOfBytesToWrite);
+	file->pos += nNumberOfBytesToWrite;
+	*lpNumberOfBytesWritten = nNumberOfBytesToWrite;
+	return true;
+}
+
 BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD dwLen, _BLOCKENTRY *pBlk)
 {
 	DWORD *sectoroffsettable;
@@ -353,13 +269,13 @@ BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD d
 			nNumberOfBytesToWrite = 4 * num_bytes + 4;
 			sectoroffsettable = (DWORD *)DiabloAllocPtr(nNumberOfBytesToWrite);
 			memset(sectoroffsettable, 0, nNumberOfBytesToWrite);
-			if (!WriteFile(sghArchive, sectoroffsettable, nNumberOfBytesToWrite, &nNumberOfBytesToWrite, 0)) {
+			if (!WriteFile(sghArchive, sectoroffsettable, nNumberOfBytesToWrite, &nNumberOfBytesToWrite)) {
 				goto on_error;
 			}
 			destsize += nNumberOfBytesToWrite;
 		}
-		sectoroffsettable[j] = destsize;
-		if (!WriteFile(sghArchive, mpq_buf, len, &len, NULL)) {
+		sectoroffsettable[j] = SwapLE32(destsize);
+		if (!WriteFile(sghArchive, mpq_buf, len, &len)) {
 			goto on_error;
 		}
 		j++;
@@ -370,12 +286,12 @@ BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD d
 		destsize += len;
 	}
 
-	sectoroffsettable[j] = destsize;
+	sectoroffsettable[j] = SwapLE32(destsize);
 	if (SetFilePointer(sghArchive, -destsize, NULL, FILE_CURRENT) == (DWORD)-1) {
 		goto on_error;
 	}
 
-	if (!WriteFile(sghArchive, sectoroffsettable, nNumberOfBytesToWrite, &nNumberOfBytesToWrite, 0)) {
+	if (!WriteFile(sghArchive, sectoroffsettable, nNumberOfBytesToWrite, &nNumberOfBytesToWrite)) {
 		goto on_error;
 	}
 
@@ -451,7 +367,42 @@ BOOL mpqapi_has_file(const char *pszName)
 	return FetchHandle(pszName) != -1;
 }
 
-BOOL OpenMPQ(const char *pszArchive, BOOL hidden, DWORD dwChar)
+
+BOOL ParseMPQHeader(_FILEHEADER *pHdr, DWORD *pdwNextFileStart);
+void CloseMPQ(const char *pszArchive, BOOL bFree, DWORD dwChar);
+
+HANDLE CreateFile(const char *lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode,
+    int lpSecurityAttributes, DWORD dwCreationDisposition,
+    DWORD dwFlagsAndAttributes, HANDLE hTemplateFile)
+{
+	char name[DVL_MAX_PATH];
+	TranslateFileName(name, sizeof(name), lpFileName);
+	memfile *file = new memfile;
+	file->path = name;
+	if (dwCreationDisposition == OPEN_EXISTING) {
+		// read contents of existing file into buffer
+		std::ifstream filestream(file->path, std::ios::binary);
+		if (!filestream.fail()) {
+			file->buf.insert(file->buf.begin(),
+			    std::istreambuf_iterator<char>(filestream),
+			    std::istreambuf_iterator<char>());
+		}
+	}
+	return file;
+}
+
+BOOL ReadFile(HANDLE hFile, void *lpBuffer, DWORD nNumberOfBytesToRead, DWORD *lpNumberOfBytesRead,
+    void *lpOverlapped)
+{
+	memfile *file = (memfile *)hFile;
+	size_t len = std::min<size_t>(file->buf.size() - file->pos, nNumberOfBytesToRead);
+	std::memcpy(lpBuffer, file->buf.data() + file->pos, len);
+	file->pos += len;
+	*lpNumberOfBytesRead = len;
+	return true;
+}
+
+BOOL OpenMPQ(const char *pszArchive, DWORD dwChar)
 {
 	DWORD dwFlagsAndAttributes;
 	DWORD key;
@@ -459,17 +410,12 @@ BOOL OpenMPQ(const char *pszArchive, BOOL hidden, DWORD dwChar)
 	_FILEHEADER fhdr;
 
 	InitHash();
-	if (!mpqapi_set_hidden(pszArchive, hidden)) {
-		return FALSE;
-	}
 	dwFlagsAndAttributes = gbMaxPlayers > 1 ? FILE_FLAG_WRITE_THROUGH : 0;
-	save_archive_open = FALSE;
 	sghArchive = CreateFile(pszArchive, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, dwFlagsAndAttributes, NULL);
 	if (sghArchive == INVALID_HANDLE_VALUE) {
-		sghArchive = CreateFile(pszArchive, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, dwFlagsAndAttributes | (hidden ? FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_HIDDEN : 0), NULL);
+		sghArchive = CreateFile(pszArchive, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, dwFlagsAndAttributes, NULL);
 		if (sghArchive == INVALID_HANDLE_VALUE)
 			return FALSE;
-		save_archive_open = TRUE;
 		save_archive_modified = TRUE;
 	}
 	if (sgpBlockTbl == NULL || sgpHashTbl == NULL) {
@@ -505,6 +451,33 @@ on_error:
 	return FALSE;
 }
 
+static BOOL byteSwapHdr(_FILEHEADER *pHdr)
+{
+	pHdr->signature = SDL_SwapLE32(pHdr->signature);
+	pHdr->headersize = SDL_SwapLE32(pHdr->headersize);
+	pHdr->filesize = SDL_SwapLE32(pHdr->filesize);
+	pHdr->version = SDL_SwapLE16(pHdr->version);
+	pHdr->sectorsizeid = SDL_SwapLE16(pHdr->sectorsizeid);
+	pHdr->hashoffset = SDL_SwapLE32(pHdr->hashoffset);
+	pHdr->blockoffset = SDL_SwapLE32(pHdr->blockoffset);
+	pHdr->hashcount = SDL_SwapLE32(pHdr->hashcount);
+	pHdr->blockcount = SDL_SwapLE32(pHdr->blockcount);
+	return false;
+}
+
+DWORD GetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh)
+{
+	memfile *file = (memfile *)hFile;
+	return file->buf.size();
+}
+
+BOOL SetEndOfFile(HANDLE hFile)
+{
+	memfile *file = (memfile *)hFile;
+	file->buf.erase(file->buf.begin() + file->pos, file->buf.end());
+	return true;
+}
+
 BOOL ParseMPQHeader(_FILEHEADER *pHdr, DWORD *pdwNextFileStart)
 {
 	DWORD size;
@@ -516,6 +489,7 @@ BOOL ParseMPQHeader(_FILEHEADER *pHdr, DWORD *pdwNextFileStart)
 	if (size == -1
 	    || size < sizeof(*pHdr)
 	    || !ReadFile(sghArchive, pHdr, sizeof(*pHdr), &NumberOfBytesRead, NULL)
+	    || byteSwapHdr(pHdr)
 	    || NumberOfBytesRead != 104
 	    || pHdr->signature != '\x1AQPM'
 	    || pHdr->headersize != 32
@@ -539,10 +513,28 @@ BOOL ParseMPQHeader(_FILEHEADER *pHdr, DWORD *pdwNextFileStart)
 		pHdr->version = 0;
 		*pdwNextFileStart = 0x10068;
 		save_archive_modified = TRUE;
-		save_archive_open = TRUE;
 	}
 
 	return TRUE;
+}
+
+BOOL CloseHandle(HANDLE hFile)
+{
+	memfile *file = (memfile *)hFile;
+	std::ofstream filestream(file->path + ".tmp", std::ios::binary | std::ios::trunc);
+	if (filestream.fail()) {
+		return false;
+	}
+	filestream.write(file->buf.data(), file->buf.size());
+	if (filestream.fail()) {
+		return false;
+	}
+	filestream.close();
+	std::remove(file->path.c_str());
+	if (std::rename((file->path + ".tmp").c_str(), file->path.c_str())) {
+		return false;
+	}
+	return true;
 }
 
 void CloseMPQ(const char *pszArchive, BOOL bFree, DWORD dwChar)
@@ -555,32 +547,13 @@ void CloseMPQ(const char *pszArchive, BOOL bFree, DWORD dwChar)
 		CloseHandle(sghArchive);
 		sghArchive = INVALID_HANDLE_VALUE;
 	}
-	if (save_archive_modified) {
 		save_archive_modified = FALSE;
-		mpqapi_store_modified_time(pszArchive, dwChar);
-	}
-	if (save_archive_open) {
-		save_archive_open = FALSE;
-		mpqapi_store_creation_time(pszArchive, dwChar);
-	}
 }
 
-void mpqapi_store_modified_time(const char *pszArchive, DWORD dwChar)
-{
-	HANDLE handle;
-	struct _WIN32_FIND_DATAA FindFileData;
-	char dst[160];
-
-	if (gbMaxPlayers != 1) {
-		mpqapi_reg_load_modification_time(dst, 160);
-		handle = FindFirstFile(pszArchive, &FindFileData);
-		if (handle != INVALID_HANDLE_VALUE) {
-			FindClose(handle);
-			*((FILETIME *)(dst) + dwChar * 2 + 1) = FindFileData.ftLastWriteTime;
-			mpqapi_reg_store_modification_time(dst, 160);
-		}
-	}
-}
+BOOL mpqapi_write_hash_table();
+BOOL mpqapi_write_block_table();
+BOOL WriteMPQHeader();
+BOOL mpqapi_can_seek();
 
 BOOL mpqapi_flush_and_close(const char *pszArchive, BOOL bFree, DWORD dwChar)
 {
@@ -608,19 +581,19 @@ BOOL WriteMPQHeader()
 	DWORD NumberOfBytesWritten;
 
 	memset(&fhdr, 0, sizeof(fhdr));
-	fhdr.signature = '\x1AQPM';
-	fhdr.headersize = 32;
-	fhdr.filesize = GetFileSize(sghArchive, 0);
-	fhdr.version = 0;
-	fhdr.sectorsizeid = 3;
-	fhdr.hashoffset = 32872;
-	fhdr.blockoffset = 104;
-	fhdr.hashcount = 2048;
-	fhdr.blockcount = 2048;
+	fhdr.signature = SDL_SwapLE32('\x1AQPM');
+	fhdr.headersize = SDL_SwapLE32(32);
+	fhdr.filesize = SDL_SwapLE32(GetFileSize(sghArchive, 0));
+	fhdr.version = SDL_SwapLE16(0);
+	fhdr.sectorsizeid = SDL_SwapLE16(3);
+	fhdr.hashoffset = SDL_SwapLE32(32872);
+	fhdr.blockoffset = SDL_SwapLE32(104);
+	fhdr.hashcount = SDL_SwapLE32(2048);
+	fhdr.blockcount = SDL_SwapLE32(2048);
 
 	if (SetFilePointer(sghArchive, 0, NULL, FILE_BEGIN) == -1)
 		return FALSE;
-	if (!WriteFile(sghArchive, &fhdr, sizeof(fhdr), &NumberOfBytesWritten, 0))
+	if (!WriteFile(sghArchive, &fhdr, sizeof(fhdr), &NumberOfBytesWritten))
 		return FALSE;
 
 	return NumberOfBytesWritten == 104;
@@ -635,7 +608,7 @@ BOOL mpqapi_write_block_table()
 		return FALSE;
 
 	Encrypt((DWORD*)sgpBlockTbl, 0x8000, Hash("(block table)", 3));
-	success = WriteFile(sghArchive, sgpBlockTbl, 0x8000, &NumberOfBytesWritten, 0);
+	success = WriteFile(sghArchive, sgpBlockTbl, 0x8000, &NumberOfBytesWritten);
 	Decrypt((DWORD*)sgpBlockTbl, 0x8000, Hash("(block table)", 3));
 	return success && NumberOfBytesWritten == 0x8000;
 }
@@ -649,7 +622,7 @@ BOOL mpqapi_write_hash_table()
 		return FALSE;
 
 	Encrypt((DWORD*)sgpHashTbl, 0x8000, Hash("(hash table)", 3));
-	success = WriteFile(sghArchive, sgpHashTbl, 0x8000, &NumberOfBytesWritten, 0);
+	success = WriteFile(sghArchive, sgpHashTbl, 0x8000, &NumberOfBytesWritten);
 	Decrypt((DWORD*)sgpHashTbl, 0x8000, Hash("(hash table)", 3));
 	return success && NumberOfBytesWritten == 0x8000;
 }
@@ -660,6 +633,5 @@ BOOL mpqapi_can_seek()
 		return FALSE;
 	return SetEndOfFile(sghArchive);
 }
-
 
 DEVILUTION_END_NAMESPACE

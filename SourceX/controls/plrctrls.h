@@ -3,12 +3,10 @@
 
 #include "all.h"
 
-namespace dvl {
+#define BLT_HEALING 0
+#define BLT_MANA 1
 
-typedef enum belt_item_type {
-	BLT_HEALING,
-	BLT_MANA,
-} belt_item_type;
+namespace dvl {
 
 // Run after every game logic iteration.
 // Handles player and menu movement.
