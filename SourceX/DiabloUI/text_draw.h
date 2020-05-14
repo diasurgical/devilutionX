@@ -11,8 +11,8 @@ struct TtfSurfaceCache {
 		mem_free_dbg(shadow);
 	}
 
-	SDL_Surface *text = nullptr;
-	SDL_Surface *shadow = nullptr;
+	SDL_Surface *text = NULL;
+	SDL_Surface *shadow = NULL;
 };
 
 void DrawTTF(const char *text, const SDL_Rect &rect, int flags,

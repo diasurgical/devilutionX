@@ -242,7 +242,7 @@ void selhero_ClassSelector_Select(int value)
 {
 	if (gbSpawned && (value == 1 || value == 2)) {
 		selhero_Free();
-		UiSelOkDialog(nullptr, "The Rogue and Sorcerer are only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase.", false);
+		UiSelOkDialog(NULL, "The Rogue and Sorcerer are only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase.", false);
 		LoadBackgroundArt("ui_art\\selhero.pcx");
 		selhero_List_Select(selhero_SaveCount);
 		return;

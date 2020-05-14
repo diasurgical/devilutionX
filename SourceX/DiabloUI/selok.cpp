@@ -62,7 +62,7 @@ void UiSelOkDialog(const char *title, const char *body, bool background)
 
 	UiItem *items = SPAWNERR_DIALOG;
 	int itemCnt = size(SPAWNERR_DIALOG);
-	if (title != nullptr) {
+	if (title != NULL) {
 		strcpy(selok_title, title);
 		items = SELOK_DIALOG;
 		itemCnt = size(SELOK_DIALOG);

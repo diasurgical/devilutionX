@@ -100,7 +100,7 @@ struct UiText : public UiItemBase {
 	    , color(color)
 	    , shadow_color { 0, 0, 0, 0 }
 	    , text(text)
-	    , render_cache(nullptr)
+	    , render_cache(NULL)
 	{
 	}
 
@@ -119,7 +119,7 @@ struct UiText : public UiItemBase {
 	void FreeCache()
 	{
 		delete render_cache;
-		render_cache = nullptr;
+		render_cache = NULL;
 	}
 };
 
@@ -161,7 +161,7 @@ struct UiButton : public UiItemBase {
 	    , text(text)
 	    , action(action)
 	    , pressed(false)
-	    , render_cache(nullptr)
+	    , render_cache(NULL)
 	{
 	}
 
@@ -177,7 +177,7 @@ struct UiButton : public UiItemBase {
 	void FreeCache()
 	{
 		delete render_cache;
-		render_cache = nullptr;
+		render_cache = NULL;
 	}
 };
 

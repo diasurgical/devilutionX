@@ -249,7 +249,7 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 #ifndef USE_SDL1
 	// Ignore unhandled joystick events if gamepad is active.
 	// We receive the same events as gamepad events.
-	if (CurrentGameController() != nullptr && event.type >= SDL_JOYAXISMOTION && event.type <= SDL_JOYBUTTONUP) {
+	if (CurrentGameController() != NULL && event.type >= SDL_JOYAXISMOTION && event.type <= SDL_JOYBUTTONUP) {
 		return true;
 	}
 	if (event.type == SDL_CONTROLLERAXISMOTION) {

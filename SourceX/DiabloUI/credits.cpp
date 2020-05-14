@@ -53,9 +53,9 @@ struct CachedLine {
 SurfacePtr RenderText(const char *text, SDL_Color color)
 {
 	if (text[0] == '\0')
-		return nullptr;
+		return NULL;
 	SDL_Surface *result = TTF_RenderUTF8_Solid(font, text, color);
-	if (result == nullptr)
+	if (result == NULL)
 		SDL_Log(TTF_GetError());
 	return SurfacePtr(result);
 }
@@ -71,7 +71,7 @@ CachedLine PrepareLine(std::size_t index)
 
 	// Precompose shadow and text:
 	SurfacePtr surface;
-	if (text != nullptr) {
+	if (text != NULL) {
 		// Set up the target surface to have 3 colors: mask, text, and shadow.
 		surface.reset(
 		    SDL_CreateRGBSurfaceWithFormat(0, text->w + SHADOW_OFFSET_X, text->h + SHADOW_OFFSET_Y, 8, SDL_PIXELFORMAT_INDEX8));
@@ -84,7 +84,7 @@ CachedLine PrepareLine(std::size_t index)
 
 		// Blit the shadow first:
 		SDL_Rect shadow_rect = { SHADOW_OFFSET_X, SHADOW_OFFSET_Y, 0, 0 };
-		if (SDL_BlitSurface(text.get(), nullptr, surface.get(), &shadow_rect) <= -1)
+		if (SDL_BlitSurface(text.get(), NULL, surface.get(), &shadow_rect) <= -1)
 			ErrSdl();
 
 		// Change the text surface color and blit again:
@@ -93,7 +93,7 @@ CachedLine PrepareLine(std::size_t index)
 			ErrSdl();
 		SDLC_SetColorKey(text.get(), 0);
 
-		if (SDL_BlitSurface(text.get(), nullptr, surface.get(), nullptr) <= -1)
+		if (SDL_BlitSurface(text.get(), NULL, surface.get(), NULL) <= -1)
 			ErrSdl();
 
 		SDL_Surface *surface_ptr = surface.release();
@@ -209,7 +209,7 @@ void CreditsRenderer::Render()
 	prev_offset_y_ = offset_y;
 
 	DrawArt(0, 0, &ArtBackground);
-	if (font == nullptr)
+	if (font == NULL)
 		return;
 
 	const std::size_t lines_begin = std::max(offset_y / LINE_H, 0);
@@ -236,7 +236,7 @@ void CreditsRenderer::Render()
 	decltype(SDL_Rect().y) dest_y = VIEWPORT.y - (offset_y - lines_begin * LINE_H);
 	for (std::size_t i = 0; i < lines_.size(); ++i, dest_y += LINE_H) {
 		auto &line = lines_[i];
-		if (line.surface == nullptr)
+		if (line.surface == NULL)
 			continue;
 
 		// Still fading in: the cached line was drawn with a different fade level.
@@ -251,10 +251,10 @@ void CreditsRenderer::Render()
 		ScaleOutputRect(&dst_rect);
 		dst_rect.w = line.surface.get()->w;
 		dst_rect.h = line.surface.get()->h;
-		if (SDL_BlitSurface(line.surface.get(), nullptr, GetOutputSurface(), &dst_rect) < 0)
+		if (SDL_BlitSurface(line.surface.get(), NULL, GetOutputSurface(), &dst_rect) < 0)
 			ErrSdl();
 	}
-	SDL_SetClipRect(GetOutputSurface(), nullptr);
+	SDL_SetClipRect(GetOutputSurface(), NULL);
 }
 
 } // namespace

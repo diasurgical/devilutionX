@@ -3,7 +3,7 @@
 
 namespace dvl {
 
-TTF_Font *font = nullptr;
+TTF_Font *font = NULL;
 BYTE *FontTables[4];
 Art ArtFonts[4][2];
 /** This is so we know ttf has been init when we get to the diablo_deinit() function */
@@ -43,13 +43,13 @@ void UnloadArtFonts()
 	ArtFonts[AFT_BIG][AFC_GOLD].Unload();
 	ArtFonts[AFT_HUGE][AFC_GOLD].Unload();
 	mem_free_dbg(FontTables[AFT_SMALL]);
-	FontTables[AFT_SMALL] = nullptr;
+	FontTables[AFT_SMALL] = NULL;
 	mem_free_dbg(FontTables[AFT_MED]);
-	FontTables[AFT_MED] = nullptr;
+	FontTables[AFT_MED] = NULL;
 	mem_free_dbg(FontTables[AFT_BIG]);
-	FontTables[AFT_BIG] = nullptr;
+	FontTables[AFT_BIG] = NULL;
 	mem_free_dbg(FontTables[AFT_HUGE]);
-	FontTables[AFT_HUGE] = nullptr;
+	FontTables[AFT_HUGE] = NULL;
 }
 
 void LoadTtfFont() {
@@ -85,7 +85,7 @@ void LoadTtfFont() {
 void UnloadTtfFont() {
 	if (font && TTF_WasInit())
 		TTF_CloseFont(font);
-	font = nullptr;
+	font = NULL;
 }
 
 void FontsCleanup() {

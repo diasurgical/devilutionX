@@ -729,7 +729,7 @@ BOOL SVidPlayContinue(void)
 			static_cast<decltype(SDL_Rect().h)>(scaledH)
 		};
 		if (factor == 1) {
-			if (SDL_BlitSurface(SVidSurface, nullptr, output_surface, &pal_surface_offset) <= -1) {
+			if (SDL_BlitSurface(SVidSurface, NULL, output_surface, &pal_surface_offset) <= -1) {
 				ErrSdl();
 			}
 		} else {
@@ -739,7 +739,7 @@ BOOL SVidPlayContinue(void)
 			Uint32 format = SDL_GetWindowPixelFormat(ghMainWnd);
 			SDL_Surface *tmp = SDL_ConvertSurfaceFormat(SVidSurface, format, 0);
 #endif
-			if (SDL_BlitScaled(tmp, nullptr, output_surface, &pal_surface_offset) <= -1) {
+			if (SDL_BlitScaled(tmp, NULL, output_surface, &pal_surface_offset) <= -1) {
 				SDL_Log(SDL_GetError());
 				return false;
 			}

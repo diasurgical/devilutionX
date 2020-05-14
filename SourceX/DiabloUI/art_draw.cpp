@@ -10,7 +10,7 @@ void DrawArt(int screenX, int screenY, Art *art, int nFrame,
     decltype(SDL_Rect().w) srcW, decltype(SDL_Rect().h) srcH)
 {
 	screenX += PANEL_LEFT;
-	if (screenY >= SCREEN_HEIGHT || screenX >= SCREEN_WIDTH || art->surface == nullptr)
+	if (screenY >= SCREEN_HEIGHT || screenX >= SCREEN_WIDTH || art->surface == NULL)
 		return;
 
 	SDL_Rect src_rect = {

@@ -90,7 +90,7 @@ void codec_init_key(int unused, char *pszPassword)
 	memset(digest, 0, sizeof(digest));
 	for (int n = 0; n < 3; ++n) {
 		SHA1Reset(n);
-		SHA1Calculate(n, &key[72], nullptr);
+		SHA1Calculate(n, &key[72], NULL);
 	}
 	memset(key, 0, sizeof(key));
 }
