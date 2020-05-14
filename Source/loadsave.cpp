@@ -258,7 +258,7 @@ void CopyInts(const void *src, const int n, void *dst)
 	const auto *s = reinterpret_cast<const unsigned int *>(src);
 	auto *d = reinterpret_cast<unsigned int *>(dst);
 	for (int i = 0; i < n; i++) {
-		CopyInt(s, d);
+		CopyInt(s, (void*)d);
 		++d;
 		++s;
 	}

@@ -30,8 +30,8 @@ void SoundSample::Play(int lVolume, int lPan)
 		return;
 	}
 
-	Mix_Volume(channel, pow(10, lVolume / 2000.0) * MIX_MAX_VOLUME);
-	int pan = copysign(pow(10, -abs(lPan) / 2000.0) * 255, lPan);
+	Mix_Volume(channel, pow((double)10, (double)lVolume / 2000.0) * MIX_MAX_VOLUME);
+	int pan = copysign(pow((double)10, -abs(lPan) / 2000.0) * 255, (double)lPan);
 	Mix_SetPanning(channel, pan > 0 ? pan : 255, pan < 0 ? abs(pan) : 255);
 };
 

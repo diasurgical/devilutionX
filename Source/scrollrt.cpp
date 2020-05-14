@@ -904,7 +904,7 @@ static void DrawGame(int x, int y)
 	y--;
 
 	// Keep evaulating untill MicroTiles can't affect screen
-	blocks += ceil(MicroTileLen / 2);
+	blocks += ceil((double)MicroTileLen / 2);
 
 	if (PANELS_COVER) {
 		if (zoomflag) {
