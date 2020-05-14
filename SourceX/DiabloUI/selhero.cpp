@@ -460,7 +460,7 @@ const char *selhero_GenerateName(std::uint8_t hero_class)
 		    "Horazon",
 		}
 	};
-	const auto seed = std::chrono::system_clock::now().time_since_epoch().count();
+	const int seed = std::chrono::system_clock::now().time_since_epoch().count();
 	std::default_random_engine generator(seed);
 	std::uniform_int_distribution<std::size_t> dist(0, sizeof(kNames[0]) / sizeof(kNames[0][0]) - 1);
 	return kNames[hero_class][dist(generator)];

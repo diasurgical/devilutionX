@@ -60,7 +60,7 @@ void OutputToLogical(T *x, T *y)
 #else
 	if (!OutputRequiresScaling())
 		return;
-	const auto *surface = GetOutputSurface();
+	const SDL_Surface *surface = GetOutputSurface();
 	*x = *x * SCREEN_WIDTH / surface->w;
 	*y = *y * SCREEN_HEIGHT / surface->h;
 #endif
@@ -86,7 +86,7 @@ void LogicalToOutput(T *x, T *y)
 #else
 	if (!OutputRequiresScaling())
 		return;
-	const auto *surface = GetOutputSurface();
+	const SDL_Surface *surface = GetOutputSurface();
 	*x = *x * surface->w / SCREEN_WIDTH;
 	*y = *y * surface->h / SCREEN_HEIGHT;
 #endif
