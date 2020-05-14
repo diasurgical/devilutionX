@@ -169,7 +169,6 @@ static bool ProcessInput()
 
 void run_game_loop(unsigned int uMsg)
 {
-	BOOL bLoop;
 	WNDPROC saveProc;
 	MSG msg;
 
@@ -449,8 +448,6 @@ void diablo_parse_flags(int argc, char **argv)
 
 void diablo_init_screen()
 {
-	int i;
-
 	MouseX = SCREEN_WIDTH / 2;
 	MouseY = SCREEN_HEIGHT / 2;
 	if (!sgbControllerActive)

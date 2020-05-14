@@ -20,7 +20,6 @@ DEVILUTION_BEGIN_NAMESPACE
  */
 static BOOL CaptureHdr(short width, short height, std::ofstream *out)
 {
-	DWORD lpNumBytes;
 	PCXHEADER Buffer;
 
 	memset(&Buffer, 0, sizeof(Buffer));
@@ -92,7 +91,6 @@ static BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
 static bool CapturePix(WORD width, WORD height, WORD stride, BYTE *pixels, std::ofstream *out)
 {
 	int writeSize;
-	DWORD lpNumBytes;
 	BYTE *pBuffer, *pBufferEnd;
 
 	pBuffer = (BYTE *)DiabloAllocPtr(2 * width);
