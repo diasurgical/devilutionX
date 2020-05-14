@@ -24,7 +24,7 @@ extern BOOL was_window_init; /** defined in dx.cpp */
 extern SDL_Surface *renderer_texture_surface; /** defined in dx.cpp */
 
 #ifdef USE_SDL1
-void SetVideoMode(int width, int height, int bpp, std::uint32_t flags) {
+void SetVideoMode(int width, int height, int bpp, uint32_t flags) {
 	SDL_Log("Setting video mode %dx%d bpp=%u flags=0x%08X", width, height, bpp, flags);
 	SDL_SetVideoMode(width, height, bpp, flags);
 	const auto &current = *SDL_GetVideoInfo();
