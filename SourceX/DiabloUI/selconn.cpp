@@ -41,7 +41,7 @@ UiItem SELCONNECT_DIALOG[] = {
 	UiArtText("no gateway needed", { 30, 356, 220, 31 }, UIS_CENTER | UIS_MED),
 	UiArtText(selconn_Gateway, { 35, 393, 205, 21 }, UIS_CENTER),
 	UiArtText("Select Connection", { 300, 211, 295, 33 }, UIS_CENTER | UIS_BIG),
-	UiArtTextButton("Change Gateway", nullptr, { 16, 427, 250, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD | UIS_HIDDEN),
+	UiArtTextButton("Change Gateway", NULL, { 16, 427, 250, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD | UIS_HIDDEN),
 	UiList(SELCONN_DIALOG_ITEMS, 305, 256, 285, 26, UIS_CENTER | UIS_VCENTER | UIS_GOLD),
 	UiArtTextButton("OK", &UiFocusNavigationSelect, { 299, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD),
 	UiArtTextButton("Cancel", &UiFocusNavigationEsc, { 454, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD)

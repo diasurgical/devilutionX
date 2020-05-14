@@ -178,10 +178,10 @@ SDL_Surface *CreateScaledSurface(SDL_Surface *src)
 	    src->format->Rmask, src->format->Gmask, src->format->Bmask, src->format->Amask);
 	if (SDL_HasColorKey(src)) {
 		SDL_SetColorKey(stretched, SDL_SRCCOLORKEY, src->format->colorkey);
-		if (src->format->palette != nullptr)
+		if (src->format->palette != NULL)
 			SDL_SetPalette(stretched, SDL_LOGPAL, src->format->palette->colors, 0, src->format->palette->ncolors);
 	}
-	if (SDL_SoftStretch((src), nullptr, stretched, &stretched_rect) < 0) {
+	if (SDL_SoftStretch((src), NULL, stretched, &stretched_rect) < 0) {
 		SDL_FreeSurface(stretched);
 		ErrSdl();
 	}

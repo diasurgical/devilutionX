@@ -179,12 +179,12 @@ void Init(const char *text, const char *caption, bool error, bool render_behind)
 	strcpy(dialogText, text);
 	if (!render_behind) {
 		LoadBackgroundArt("ui_art\\black.pcx");
-		if (ArtBackground.surface == nullptr) {
+		if (ArtBackground.surface == NULL) {
 			LoadFallbackPalette();
 		}
 	}
 	SetFadeLevel(256);
-	if (caption == nullptr) {
+	if (caption == NULL) {
 		LoadMaskedArt(error ? "ui_art\\srpopup.pcx" : "ui_art\\spopup.pcx", &dialogArt);
 		dialogItems = OK_DIALOG;
 		dialogItemsSize = size(OK_DIALOG);
@@ -200,7 +200,7 @@ void Init(const char *text, const char *caption, bool error, bool render_behind)
 	}
 	LoadSmlButtonArt();
 
-	fontWasLoaded = font != nullptr;
+	fontWasLoaded = font != NULL;
 	if (!fontWasLoaded)
 		LoadTtfFont();
 	textInputWasActive = SDL_IsTextInputActive();
@@ -246,7 +246,7 @@ void DialogLoop(UiItem *items, std::size_t num_items, UiItem *render_behind, std
 		}
 
 		if (render_behind_size == 0) {
-			SDL_FillRect(GetOutputSurface(), nullptr, 0);
+			SDL_FillRect(GetOutputSurface(), NULL, 0);
 		} else {
 			UiRenderItems(render_behind, render_behind_size);
 		}
@@ -292,12 +292,12 @@ void UiErrorOkDialog(const char *text, const char *caption, UiItem *render_behin
 
 void UiErrorOkDialog(const char *text, const char *caption, bool error)
 {
-	UiOkDialog(text, caption, error, nullptr, 0);
+	UiOkDialog(text, caption, error, NULL, 0);
 }
 
 void UiErrorOkDialog(const char *text, UiItem *render_behind, std::size_t render_behind_size)
 {
-	UiErrorOkDialog(text, nullptr, render_behind, render_behind_size);
+	UiErrorOkDialog(text, NULL, render_behind, render_behind_size);
 }
 
 } // namespace dvl

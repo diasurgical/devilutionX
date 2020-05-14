@@ -40,9 +40,9 @@ void DrawTTF(const char *text, const SDL_Rect &rectIn, int flags,
 	SDL_Rect rect(rectIn);
 	if(! (flags & UIS_CENTER))
 		rect.x += PANEL_LEFT;
-	if (font == nullptr || text == nullptr || *text == '\0')
+	if (font == NULL || text == NULL || *text == '\0')
 		return;
-	if (*render_cache == nullptr) {
+	if (*render_cache == NULL) {
 		*render_cache = new TtfSurfaceCache();
 		const auto x_align = XAlignmentFromFlags(flags);
 		(*render_cache)->text = RenderUTF8_Solid_Wrapped(font, text, text_color, rect.w, x_align);
@@ -52,7 +52,7 @@ void DrawTTF(const char *text, const SDL_Rect &rectIn, int flags,
 	}
 	SDL_Surface *text_surface = (*render_cache)->text;
 	SDL_Surface *shadow_surface = (*render_cache)->shadow;
-	if (text_surface == nullptr)
+	if (text_surface == NULL)
 		return;
 
 	SDL_Rect dest_rect = rect;
@@ -63,9 +63,9 @@ void DrawTTF(const char *text, const SDL_Rect &rectIn, int flags,
 	SDL_Rect shadow_rect = dest_rect;
 	++shadow_rect.x;
 	++shadow_rect.y;
-	if (SDL_BlitSurface(shadow_surface, nullptr, GetOutputSurface(), &shadow_rect) < 0)
+	if (SDL_BlitSurface(shadow_surface, NULL, GetOutputSurface(), &shadow_rect) < 0)
 		ErrSdl();
-	if (SDL_BlitSurface(text_surface, nullptr, GetOutputSurface(), &dest_rect) < 0)
+	if (SDL_BlitSurface(text_surface, NULL, GetOutputSurface(), &dest_rect) < 0)
 		ErrSdl();
 }
 

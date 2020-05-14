@@ -122,7 +122,7 @@ static std::ofstream *CaptureFile(char *dst_path)
 			return new std::ofstream(dst_path, std::ios::binary | std::ios::trunc);
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 /**
@@ -152,7 +152,7 @@ void CaptureScreen()
 	BOOL success;
 
 	std::ofstream *out = CaptureFile(FileName);
-	if (out == nullptr) return;
+	if (out == NULL) return;
 	DrawAndBlit();
 	PaletteGetEntries(256, palette);
 	RedPalette();

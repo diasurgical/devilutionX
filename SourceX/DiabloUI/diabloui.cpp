@@ -28,7 +28,7 @@ int SelectedItemMin = 1;
 int SelectedItemMax = 1;
 
 std::size_t ListViewportSize = 1;
-const std::size_t *ListOffset = nullptr;
+const std::size_t *ListOffset = NULL;
 
 Art ArtLogos[3];
 Art ArtFocus[3];
@@ -152,7 +152,7 @@ void UiFocus(int itemIndex, bool wrap = false)
 
 void UiFocusPageUp()
 {
-	if (ListOffset == nullptr || *ListOffset == 0) {
+	if (ListOffset == NULL || *ListOffset == 0) {
 		UiFocus(SelectedItemMin);
 	} else {
 		const std::size_t relpos = (SelectedItem - SelectedItemMin) - *ListOffset;
@@ -168,7 +168,7 @@ void UiFocusPageUp()
 
 void UiFocusPageDown()
 {
-	if (ListOffset == nullptr || *ListOffset + ListViewportSize > static_cast<std::size_t>(SelectedItemMax)) {
+	if (ListOffset == NULL || *ListOffset + ListViewportSize > static_cast<std::size_t>(SelectedItemMax)) {
 		UiFocus(SelectedItemMax);
 	} else {
 		const std::size_t relpos = (SelectedItem - SelectedItemMin) - *ListOffset;
@@ -401,7 +401,7 @@ void UiInitialize()
 {
 	LoadUiGFX();
 	LoadArtFonts();
-	if (ArtCursor.surface != nullptr) {
+	if (ArtCursor.surface != NULL) {
 		if (SDL_ShowCursor(SDL_DISABLE) <= -1) {
 			ErrSdl();
 		}
@@ -561,7 +561,7 @@ void LoadBackgroundArt(const char *pszFile)
 {
 	SDL_Color pPal[256];
 	LoadArt(pszFile, &ArtBackground, 1, pPal);
-	if (ArtBackground.surface == nullptr)
+	if (ArtBackground.surface == NULL)
 		return;
 
 	LoadPalInMem(pPal);
@@ -638,7 +638,7 @@ void Render(const UiArtText &ui_art_text)
 void Render(const UiImage &ui_image)
 {
 	int x = ui_image.rect.x;
-	if ((ui_image.flags & UIS_CENTER) && ui_image.art != nullptr) {
+	if ((ui_image.flags & UIS_CENTER) && ui_image.art != NULL) {
 		const int x_offset = GetCenterOffset(ui_image.art->w(), ui_image.rect.w);
 		x += x_offset;
 	}

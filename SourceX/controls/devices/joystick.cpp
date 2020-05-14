@@ -201,7 +201,7 @@ bool IsJoystickHatButtonPressed(ControllerButton button)
 
 bool IsJoystickButtonPressed(ControllerButton button)
 {
-	if (CurrentJoystick() == nullptr)
+	if (CurrentJoystick() == NULL)
 		return false;
 	if (IsJoystickHatButtonPressed(button))
 		return true;
@@ -244,7 +244,7 @@ bool ProcessJoystickAxisMotion(const SDL_Event &event)
 	return true;
 }
 
-static SDL_Joystick *current_joystick = nullptr;
+static SDL_Joystick *current_joystick = NULL;
 
 SDL_Joystick *CurrentJoystick()
 {
@@ -280,7 +280,7 @@ void InitJoystick()
 #endif
 		SDL_Log("Initializing joystick %d: %s", i, SDL_JoystickNameForIndex(i));
 		current_joystick = SDL_JoystickOpen(i);
-		if (current_joystick == nullptr) {
+		if (current_joystick == NULL) {
 			SDL_Log(SDL_GetError());
 			continue;
 		}

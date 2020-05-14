@@ -89,12 +89,12 @@ public:
 
 	void Close()
 	{
-		s_ = nullptr;
+		s_ = NULL;
 	}
 
 	bool IsOpen() const
 	{
-		return s_ != nullptr;
+		return s_ != NULL;
 	}
 
 	bool seekg(std::streampos pos)
@@ -153,7 +153,7 @@ private:
 			std::string fmt_with_error = fmt;
 			fmt_with_error.append(": failed with \"%s\"");
 			const char *error_message = std::strerror(errno);
-			if (error_message == nullptr)
+			if (error_message == NULL)
 				error_message = "";
 			SDL_Log(fmt_with_error.c_str(), args..., error_message);
 #ifdef _DEBUG
@@ -237,9 +237,9 @@ struct Archive {
 		name.clear();
 		if (clear_tables) {
 			delete[] sgpHashTbl;
-			sgpHashTbl = nullptr;
+			sgpHashTbl = NULL;
 			delete[] sgpBlockTbl;
-			sgpBlockTbl = nullptr;
+			sgpBlockTbl = NULL;
 		}
 		return result;
 	}

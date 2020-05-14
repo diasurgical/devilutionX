@@ -7,7 +7,7 @@
 
 namespace dvl {
 
-static SDL_GameController *current_game_controller = nullptr;
+static SDL_GameController *current_game_controller = NULL;
 static bool sgbTriggerLeftDown = false;
 static bool sgbTriggerRightDown = false;
 
@@ -120,7 +120,7 @@ SDL_GameControllerButton ControllerButtonToGameControllerButton(ControllerButton
 
 bool IsGameControllerButtonPressed(ControllerButton button)
 {
-	if (current_game_controller == nullptr)
+	if (current_game_controller == NULL)
 		return false;
 	const SDL_GameControllerButton gc_button = ControllerButtonToGameControllerButton(button);
 	return gc_button != SDL_CONTROLLER_BUTTON_INVALID && SDL_GameControllerGetButton(current_game_controller, gc_button);
@@ -165,7 +165,7 @@ void InitGameController()
 	const SDL_JoystickGUID guid = SDL_JoystickGetGUID(CurrentJoystick());
 	SDL_Log("Opening gamepad %d: %s", CurrentJoystickIndex(), SDL_GameControllerMappingForGUID(guid));
 	current_game_controller = SDL_GameControllerOpen(CurrentJoystickIndex());
-	if (current_game_controller == nullptr)
+	if (current_game_controller == NULL)
 		SDL_Log(SDL_GetError());
 }
 
