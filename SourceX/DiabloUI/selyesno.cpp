@@ -57,20 +57,20 @@ bool UiSelHeroYesNoDialog(const char *title, const char *body)
 	vecSelYesNoDialogItems.push_back(new UiListItem( "Yes", 0 ));
 	vecSelYesNoDialogItems.push_back(new UiListItem( "No", 1 ));
 
-	SDL_Rect rect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
-	vecSelYesNoDialog.push_back(new UiImage(&ArtBackground, rect));
-	
+	SDL_Rect rect1 = { PANEL_LEFT, 0, 640, 480 };
+	vecSelYesNoDialog.push_back(new UiImage(&ArtBackground, rect1));
+
 	SDL_Rect rect2 = { 0, 0, 0, 0 };
 	vecSelYesNoDialog.push_back(new UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, rect2, UIS_CENTER));
 
-	SDL_Rect rect3 = { 24, 161, 590, 35 };
+	SDL_Rect rect3 = { PANEL_LEFT + 24, 161, 590, 35 };
 	vecSelYesNoDialog.push_back(new UiArtText(selyesno_title, rect3, UIS_CENTER | UIS_BIG));
 
-	SDL_Rect rect4 = { 120, 236, 280, 168 };
+	SDL_Rect rect4 = { PANEL_LEFT + 120, 236, 280, 168 };
 	SELYESNO_DIALOG_CONFIRMATION_MESSAGE = new UiArtText(selyesno_confirmationMessage, rect4, UIS_MED);
 	vecSelYesNoDialog.push_back(SELYESNO_DIALOG_CONFIRMATION_MESSAGE);
 
-	vecSelYesNoDialog.push_back(new UiList(vecSelYesNoDialogItems, 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD));
+	vecSelYesNoDialog.push_back(new UiList(vecSelYesNoDialogItems, PANEL_LEFT + 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD));
 
 	strcpy(selyesno_title, title);
 	strcpy(selyesno_confirmationMessage, body);
@@ -81,6 +81,7 @@ bool UiSelHeroYesNoDialog(const char *title, const char *body)
 	selyesno_value = true;
 	selyesno_endMenu = false;
 	while (!selyesno_endMenu) {
+		UiClearScreen();
 		UiRenderItems(vecSelYesNoDialog, vecSelYesNoDialog.size());
 		UiPollAndRender();
 	}

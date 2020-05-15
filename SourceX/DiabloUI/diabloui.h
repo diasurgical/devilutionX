@@ -30,7 +30,7 @@ extern Art ArtHero;
 extern bool gbSpawned;
 
 #ifndef _XBOX
-#define MAINMENU_BACKGROUND UiImage(&ArtBackground, { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT });
+#define MAINMENU_BACKGROUND UiImage(&ArtBackground, { PANEL_LEFT, 0, 640, 480 });
 #define MAINMENU_LOGO UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, { 0, 0, 0, 0 }, UIS_CENTER);
 
 template <class T, size_t N>
@@ -55,6 +55,7 @@ void UiFocusNavigationEsc();
 void UiFocusNavigationYesNo();
 void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), vUiItemBase items, int size, bool wraps = false, bool (*fnYesNo)() = NULL);
 void UiInitScrollBar(UiScrollBar *ui_sb, std::size_t viewport_size, const std::size_t *current_offset);
+void UiClearScreen();
 void UiPollAndRender();
 void UiRenderItems(vUiItemBase items, std::size_t size);
 void UiInitList_clear();

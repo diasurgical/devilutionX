@@ -575,7 +575,7 @@ BOOL UiCreatePlayerDescription(_uiheroinfo *info, DWORD mode, char *desc)
 int GetCenterOffset(int w, int bw)
 {
 	if (bw == 0) {
-		bw = PANEL_WIDTH;
+		bw = SCREEN_WIDTH;
 	}
 
 	return (bw - w) / 2;
@@ -628,6 +628,12 @@ void DrawSelector(const SDL_Rect &rect)
 
 	DrawArt(rect.x, y, art, frame);
 	DrawArt(rect.x + rect.w - art->w(), y, art, frame);
+}
+
+void UiClearScreen()
+{
+	if (SCREEN_WIDTH > 640) // Background size
+		SDL_FillRect(GetOutputSurface(), NULL, 0x000000);
 }
 
 void UiPollAndRender()

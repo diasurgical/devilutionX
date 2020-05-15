@@ -38,8 +38,6 @@ void DrawTTF(const char *text, const SDL_Rect &rectIn, int flags,
     TtfSurfaceCache **render_cache)
 {
 	SDL_Rect rect(rectIn);
-	if(! (flags & UIS_CENTER))
-		rect.x += PANEL_LEFT;
 	if (font == NULL || text == NULL || *text == '\0')
 		return;
 	if (*render_cache == NULL) {

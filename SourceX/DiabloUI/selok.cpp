@@ -65,32 +65,32 @@ void UiSelOkDialog(const char *title, const char *body, bool background)
 	vecSelOkDialogItems.push_back(new UiListItem("OK", 0));
 
 	{
-		SDL_Rect rect1 = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+		SDL_Rect rect1 = { PANEL_LEFT, 0, 640, 480 };
 		vecSelOkDialog.push_back(new UiImage(&ArtBackground, rect1));
-	
+
 		SDL_Rect rect2 = { 0, 0, 0, 0 };
 		vecSelOkDialog.push_back(new UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, rect2, UIS_CENTER));
 
-		SDL_Rect rect3 = { 24, 161, 590, 35 };
+		SDL_Rect rect3 = { PANEL_LEFT + 24, 161, 590, 35 };
 		vecSelOkDialog.push_back(new UiArtText(selok_title, rect3, UIS_CENTER | UIS_BIG));
 
-		SDL_Rect rect4 = { 140, 210, 560, 168 };
+		SDL_Rect rect4 = { PANEL_LEFT + 140, 210, 560, 168 };
 		vecSelOkDialog.push_back(new UiArtText(dialogText, rect4, UIS_MED));
 
-		vecSelOkDialog.push_back(new UiList(vecSelOkDialogItems, 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD));
+		vecSelOkDialog.push_back(new UiList(vecSelOkDialogItems, PANEL_LEFT + 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD));
 	}
 
 	{
-		SDL_Rect rect1 = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+		SDL_Rect rect1 = { PANEL_LEFT, 0, 640, 480 };
 		vecSpawnErrorOkDialog.push_back(new UiImage(&ArtBackground, rect1));
-	
+
 		SDL_Rect rect2 = { 0, 182, 0, 0 };
 		vecSpawnErrorOkDialog.push_back(new UiImage(&ArtLogos[LOGO_BIG], /*animated=*/true, /*frame=*/0, rect2, UIS_CENTER));
 
-		SDL_Rect rect3 = { 140, 197, 560, 168 };
+		SDL_Rect rect3 = { PANEL_LEFT + 140, 197, 560, 168 };
 		vecSpawnErrorOkDialog.push_back(new UiArtText(dialogText, rect3, UIS_MED));
 
-		vecSpawnErrorOkDialog.push_back(new UiList(vecSelOkDialogItems, 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD));
+		vecSpawnErrorOkDialog.push_back(new UiList(vecSelOkDialogItems, PANEL_LEFT + 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD));
 	}
 
 	if (!background) {
@@ -118,6 +118,7 @@ void UiSelOkDialog(const char *title, const char *body, bool background)
 
 	selok_endMenu = false;
 	while (!selok_endMenu) {
+		UiClearScreen();
 		UiRenderItems(items, itemCnt);
 		UiPollAndRender();
 	}

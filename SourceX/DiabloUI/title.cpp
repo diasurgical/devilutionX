@@ -29,11 +29,14 @@ void title_Free()
 
 void UiTitleDialog()
 {
-	SDL_Rect rect1 = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+	SDL_Rect rect1 = { PANEL_LEFT, 0, 640, 480 };
 	vecTitleScreen.push_back(new UiImage(&ArtBackground, rect1));
-	
+
 	SDL_Rect rect2 = { 0, 182, 0, 0 };
 	vecTitleScreen.push_back(new UiImage(&ArtLogos[LOGO_BIG], /*animated=*/true, /*frame=*/0, rect2, UIS_CENTER));
+
+	SDL_Rect rect3 = { PANEL_LEFT + 49, 410, 550, 26 };
+	vecTitleScreen.push_back(new UiArtText("Copyright \xA9 1996-2001 Blizzard Entertainment", rect3, UIS_MED | UIS_CENTER));
 
 	title_Load();
 
