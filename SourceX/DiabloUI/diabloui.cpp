@@ -96,7 +96,7 @@ void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(i
 	for (int i = 0; i < itemCnt; i++) {
 		if (items[i]->m_type == UI_EDIT) {
 #ifdef __SWITCH__
-			switch_start_text_input(items[i - 1].art_text.text, items[i].edit.value, /*multiline=*/0);
+//			switch_start_text_input(items[i - 1].art_text.text, items[i].edit.value, /*multiline=*/0);
 #endif
 			UiEdit* pItemUIEdit = (UiEdit*)items[i];
 
