@@ -184,7 +184,7 @@ void music_stop()
 	}
 }
 
-#ifdef _OGG_MUSIC
+#if defined(_OGG_MUSIC) && defined(_XBOX)
 struct sMusicOgg
 {
 std::string strOggFile;
@@ -204,7 +204,9 @@ sMusicOgg OGGTracks[6] =
 
 void music_start(int nTrack)
 {
-#ifdef _OGG_MUSIC
+#if defined(_OGG_MUSIC) && defined(_XBOX)
+// Need compressed music on Xbox due to 
+// limited memory, this saves us 20MB+
 	assert((DWORD)nTrack < NUM_MUSIC);
 	music_stop();
 
