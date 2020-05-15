@@ -195,9 +195,14 @@ _BLOCKENTRY *mpqapi_add_file(const char *pszName, _BLOCKENTRY *pBlk, int block_i
 }
 
 struct memfile {
+	memfile()
+	{
+		pos = 0;
+	}
+
 	std::string path;
 	std::vector<char> buf;
-	std::size_t pos = 0;
+	std::size_t pos;
 };
 
 DWORD SetFilePointer(HANDLE hFile, LONG lDistanceToMove, LONG *lpDistanceToMoveHigh, DWORD dwMoveMethod)
@@ -221,7 +226,7 @@ BOOL WriteFile(HANDLE hFile, void *lpBuffer, DWORD nNumberOfBytesToWrite,
 		return true;
 	if (file->buf.size() < file->pos + nNumberOfBytesToWrite)
 		file->buf.resize(file->pos + nNumberOfBytesToWrite);
-	std::memcpy(file->buf.data() + file->pos, lpBuffer, nNumberOfBytesToWrite);
+	std::memcpy(&file->buf[0] + file->pos, lpBuffer, nNumberOfBytesToWrite);
 	file->pos += nNumberOfBytesToWrite;
 	*lpNumberOfBytesWritten = nNumberOfBytesToWrite;
 	return true;
@@ -381,7 +386,7 @@ HANDLE CreateFile(const char *lpFileName, DWORD dwDesiredAccess, DWORD dwShareMo
 	file->path = name;
 	if (dwCreationDisposition == OPEN_EXISTING) {
 		// read contents of existing file into buffer
-		std::ifstream filestream(file->path, std::ios::binary);
+		std::ifstream filestream(file->path.c_str(), std::ios::binary);
 		if (!filestream.fail()) {
 			file->buf.insert(file->buf.begin(),
 			    std::istreambuf_iterator<char>(filestream),
@@ -396,7 +401,7 @@ BOOL ReadFile(HANDLE hFile, void *lpBuffer, DWORD nNumberOfBytesToRead, DWORD *l
 {
 	memfile *file = (memfile *)hFile;
 	size_t len = std::min<size_t>(file->buf.size() - file->pos, nNumberOfBytesToRead);
-	std::memcpy(lpBuffer, file->buf.data() + file->pos, len);
+	std::memcpy(lpBuffer, &file->buf[0] + file->pos, len);
 	file->pos += len;
 	*lpNumberOfBytesRead = len;
 	return true;
@@ -521,11 +526,12 @@ BOOL ParseMPQHeader(_FILEHEADER *pHdr, DWORD *pdwNextFileStart)
 BOOL CloseHandle(HANDLE hFile)
 {
 	memfile *file = (memfile *)hFile;
-	std::ofstream filestream(file->path + ".tmp", std::ios::binary | std::ios::trunc);
+	std::string strTmp(file->path + ".tmp");
+	std::ofstream filestream(strTmp.c_str(), std::ios::binary | std::ios::trunc);
 	if (filestream.fail()) {
 		return false;
 	}
-	filestream.write(file->buf.data(), file->buf.size());
+	filestream.write(&file->buf[0], file->buf.size());
 	if (filestream.fail()) {
 		return false;
 	}
