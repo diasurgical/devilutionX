@@ -46,7 +46,7 @@ void GetBasePath(char *buffer, size_t size)
 		return;
 	}
 
-#if !defined(_XBOX) && defined(USE_SDL1)
+#if !defined(_XBOX)
 	char *path = SDL_GetBasePath();
 	if (path == NULL) {
 		SDL_Log(SDL_GetError());
@@ -63,7 +63,7 @@ void GetBasePath(char *buffer, size_t size)
 
 void GetPrefPath(char *buffer, size_t size)
 {
-#if !defined(_XBOX) && defined(USE_SDL1) // Maybe move into the SDL2->SDL1.2 wrapper?
+#if !defined(_XBOX) // Maybe move into the SDL2->SDL1.2 wrapper?
 	char *path = SDL_GetPrefPath("diasurgical", "devilution");
 	if (path == NULL) {
 		buffer[0] = '\0';

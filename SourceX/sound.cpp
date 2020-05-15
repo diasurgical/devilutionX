@@ -184,7 +184,7 @@ void music_stop()
 	}
 }
 
-#ifdef _OGG_MUSIC && defined(_XBOX)
+#if defined(_OGG_MUSIC) && defined(_XBOX)
 struct sMusicOgg
 {
 std::string strOggFile;
