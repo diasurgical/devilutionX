@@ -191,7 +191,7 @@ std::string strOggFile;
 int iTrack;
 };
 
-sMusicOgg OGGTracks[6] = 
+sMusicOgg OGGTracks[] = 
 {
 	{"dtowne.ogg", TMUSIC_TOWN},
 	{"dlvla.ogg", TMUSIC_L1},
