@@ -18,7 +18,7 @@ std::size_t selhero_SaveCount = 0;
 _uiheroinfo selhero_heros[MAX_CHARACTERS];
 _uiheroinfo selhero_heroInfo;
 std::size_t listOffset = 0;
-constexpr std::size_t kMaxViewportItems = 6;
+const size_t kMaxViewportItems = 6;
 char textStats[5][4];
 char title[32];
 char selhero_Lable[32];

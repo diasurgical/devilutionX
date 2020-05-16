@@ -55,9 +55,15 @@ namespace {
 DWORD fadeTc;
 int fadeValue = 0;
 
-struct {
-	bool upArrowPressed = false;
-	bool downArrowPressed = false;
+struct scrollBarState {
+	bool upArrowPressed;
+	bool downArrowPressed;
+
+	scrollBarState()
+	{
+		upArrowPressed = false;
+		downArrowPressed = false;
+	}
 } scrollBarState;
 
 } // namespace

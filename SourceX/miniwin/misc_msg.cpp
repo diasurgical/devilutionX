@@ -266,10 +266,10 @@ bool false_avail(const char *name, int value)
 
 void StoreSpellCoords()
 {
-	constexpr int START_X = 20;
-	constexpr int END_X = 636;
-	constexpr int END_Y = 495;
-	constexpr int BOX_SIZE = 56;
+	const int START_X = 20;
+	const int END_X = 636;
+	const int END_Y = 495;
+	const int BOX_SIZE = 56;
 	speedspellcount = 0;
 	int xo = END_X, yo = END_Y;
 	for (int i = 0; i < 4; i++) {
@@ -344,7 +344,7 @@ bool BlurInventory()
 	return true;
 }
 
-bool PeekMessageA(LPMSG lpMsg)
+bool PeekMessage(LPMSG lpMsg)
 {
 #ifdef __SWITCH__
 	HandleDocking();
@@ -724,7 +724,7 @@ bool TranslateMessage(const MSG *lpMsg)
 #endif
 
 			// XXX: This does not add extended info to lParam
-			PostMessageA(DVL_WM_CHAR, key, 0);
+			PostMessage(DVL_WM_CHAR, key, 0);
 		}
 	}
 
@@ -758,14 +758,14 @@ SHORT GetAsyncKeyState(int vKey)
 	}
 }
 
-LRESULT DispatchMessageA(const MSG *lpMsg)
+LRESULT DispatchMessage(const MSG *lpMsg)
 {
 	assert(CurrentProc);
 
 	return CurrentProc(NULL, lpMsg->message, lpMsg->wParam, lpMsg->lParam);
 }
 
-bool PostMessageA(UINT Msg, WPARAM wParam, LPARAM lParam)
+bool PostMessage(UINT Msg, WPARAM wParam, LPARAM lParam)
 {
 	MSG msg;
 	msg.message = Msg;

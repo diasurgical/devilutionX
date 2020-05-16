@@ -385,7 +385,6 @@ if(NOT NONET)
   target_link_libraries(${BIN_TARGET} PRIVATE sodium)
 endif()
 
-target_compile_definitions(devilution PRIVATE DEVILUTION_ENGINE)
 genex_for_option(DEBUG)
 target_compile_definitions(devilution PUBLIC "$<${DEBUG_GENEX}:_DEBUG>")
 target_compile_definitions(${BIN_TARGET} PRIVATE ASIO_STANDALONE)
@@ -639,7 +638,7 @@ if(CPACK)
     set(CPACK_PACKAGE_CONTACT "kai@gnukai.com")
     set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
     set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
-    
+
     # -G RPM
     set(CPACK_RPM_FILE_NAME RPM-DEFAULT)
 
