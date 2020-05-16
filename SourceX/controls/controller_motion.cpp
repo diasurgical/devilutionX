@@ -63,8 +63,8 @@ bool leftStickNeedsScaling, rightStickNeedsScaling;
 
 void ScaleJoysticks()
 {
-	constexpr float rightDeadzone = 0.07;
-	constexpr float leftDeadzone = 0.07;
+	const float rightDeadzone = 0.07;
+	const float leftDeadzone = 0.07;
 
 	if (leftStickNeedsScaling) {
 		leftStickX = leftStickXUnscaled;

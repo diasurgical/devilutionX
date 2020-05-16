@@ -121,16 +121,16 @@ void init_get_file_info()
 LRESULT MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (Msg) {
-	case WM_ERASEBKGND:
+	case DVL_WM_ERASEBKGND:
 		return 0;
-	case WM_PAINT:
+	case DVL_WM_PAINT:
 		force_redraw = 255;
 		break;
-	case WM_CLOSE:
+	case DVL_WM_CLOSE:
 		return 0;
-	case WM_QUERYNEWPALETTE:
+	case DVL_WM_QUERYNEWPALETTE:
 		return 1;
-	case WM_QUERYENDSESSION:
+	case DVL_WM_QUERYENDSESSION:
 		diablo_quit(0);
 	}
 

@@ -6,7 +6,7 @@
 namespace dvl {
 
 extern Art ArtScrollBarBackground;
-constexpr decltype(SDL_Rect().w) SCROLLBAR_BG_WIDTH = 25;
+const decltype(SDL_Rect().w) SCROLLBAR_BG_WIDTH = 25;
 
 extern Art ArtScrollBarArrow;
 enum class ScrollBarArrowFrame {
@@ -17,7 +17,7 @@ enum class ScrollBarArrowFrame {
 };
 
 extern Art ArtScrollBarThumb;
-constexpr decltype(SDL_Rect().w) SCROLLBAR_ARROW_WIDTH = 25;
+const decltype(SDL_Rect().w) SCROLLBAR_ARROW_WIDTH = 25;
 
 inline SDL_Rect UpArrowRect(const UiScrollBar &sb)
 {
@@ -56,7 +56,7 @@ inline SDL_Rect BarRect(const UiScrollBar &sb)
 
 inline SDL_Rect ThumbRect(const UiScrollBar &sb, std::size_t selected_index, std::size_t num_items)
 {
-	constexpr int THUMB_OFFSET_X = 3;
+	const int THUMB_OFFSET_X = 3;
 	const int thumb_max_y = BarHeight(sb) - sb.thumb->h();
 	const int thumb_y = (selected_index * thumb_max_y / (num_items - 1));
 	return {

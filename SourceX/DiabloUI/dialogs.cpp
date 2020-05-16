@@ -32,7 +32,7 @@ void DialogActionOK()
 	dialogEnd = true;
 }
 
-constexpr auto DIALOG_ART_L = UiImage(&dialogArt, { PANEL_LEFT + 127, 100, 385, 280 });
+const auto DIALOG_ART_L = UiImage(&dialogArt, { PANEL_LEFT + 127, 100, 385, 280 });
 
 UiItem OK_DIALOG[] = {
 	UiImage(&dialogArt, { PANEL_LEFT + 180, 168, 280, 144 }),

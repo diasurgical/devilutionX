@@ -17,9 +17,9 @@ namespace dvl {
 namespace {
 
 const SDL_Rect VIEWPORT = { 0, 114, SCREEN_WIDTH, 251 };
-constexpr int SHADOW_OFFSET_X = 2;
-constexpr int SHADOW_OFFSET_Y = 2;
-constexpr int LINE_H = 22;
+const int SHADOW_OFFSET_X = 2;
+const int SHADOW_OFFSET_Y = 2;
+const int LINE_H = 22;
 
 // The maximum number of visible lines is the number of whole lines
 // (VIEWPORT.h / LINE_H) rounded up, plus one extra line for when
