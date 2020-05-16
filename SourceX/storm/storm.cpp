@@ -21,7 +21,7 @@ std::string basePath;
 
 DWORD nLastError = 0;
 bool directFileAccess = false;
-char SBasePath[DVL_MAX_PATH];
+char SBasePath[MAX_PATH];
 
 #ifdef USE_SDL1
 static bool IsSVidVideoMode = false;
@@ -29,8 +29,8 @@ static bool IsSVidVideoMode = false;
 
 static std::string getIniPath()
 {
-	char path[DVL_MAX_PATH];
-	GetPrefPath(path, DVL_MAX_PATH);
+	char path[MAX_PATH];
+	GetPrefPath(path, MAX_PATH);
 	std::string result = path;
 	result.append("diablo.ini");
 	return result;
@@ -188,12 +188,12 @@ BOOL SFileOpenFile(const char *filename, HANDLE *phFile)
 	bool result = false;
 
 	if (directFileAccess) {
-		char directPath[DVL_MAX_PATH] = "\0";
-		char tmpPath[DVL_MAX_PATH] = "\0";
+		char directPath[MAX_PATH] = "\0";
+		char tmpPath[MAX_PATH] = "\0";
 		for (size_t i = 0; i < strlen(filename); i++) {
 			tmpPath[i] = AsciiToLowerTable_Path[static_cast<unsigned char>(filename[i])];
 		}
-		snprintf(directPath, DVL_MAX_PATH, "%s%s", SBasePath, tmpPath);
+		snprintf(directPath, MAX_PATH, "%s%s", SBasePath, tmpPath);
 		result = SFileOpenFileEx((HANDLE)0, directPath, 0xFFFFFFFF, phFile);
 	}
 	if (!result && patch_rt_mpq) {
@@ -835,7 +835,7 @@ int SStrCopy(char *dest, const char *src, int max_length)
 
 BOOL SFileSetBasePath(char *path)
 {
-	strncpy(SBasePath, path, DVL_MAX_PATH);
+	strncpy(SBasePath, path, MAX_PATH);
 	return true;
 }
 

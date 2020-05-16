@@ -172,10 +172,8 @@ public:
 		LoadBackgroundArt("ui_art\\credits.pcx");
 		LoadTtfFont();
 		ticks_begin_ = SDL_GetTicks();
-
 		prev_offset_y_ = 0;
 		finished_ = false;
-
 	}
 
 	~CreditsRenderer()

@@ -2,8 +2,6 @@
 
 namespace dvl {
 
-#define DVL_MAX_PATH 260
-
 #ifndef _XBOX
 typedef uint16_t SHORT;
 typedef int32_t LONG;
@@ -59,11 +57,18 @@ void FocusOnCharInfo();
 
 SHORT GetAsyncKeyState(int vKey);
 
-bool PeekMessageA(LPMSG lpMsg);
+bool PeekMessage(LPMSG lpMsg);
 
 bool TranslateMessage(const MSG *lpMsg);
-LRESULT DispatchMessageA(const MSG *lpMsg);
-bool PostMessageA(UINT Msg, WPARAM wParam, LPARAM lParam);
+LRESULT DispatchMessage(const MSG *lpMsg);
+bool PostMessage(UINT Msg, WPARAM wParam, LPARAM lParam);
+
+#ifndef TRUE
+#define TRUE true
+#endif
+#ifndef FALSE
+#define FALSE false
+#endif
 
 //
 // MSCVRT emulation

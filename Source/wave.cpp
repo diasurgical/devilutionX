@@ -28,7 +28,7 @@ BOOL WOpenFile(const char *FileName, HANDLE *phsFile, BOOL mayNotExist)
 
 void WReadFile(HANDLE hsFile, LPVOID buf, DWORD to_read, const char *FileName)
 {
-	if (SFileSetFilePointer(hsFile, 0, NULL, FILE_CURRENT) == -1)
+	if (SFileSetFilePointer(hsFile, 0, NULL, DVL_FILE_CURRENT) == -1)
 		FileErrDlg(FileName);
 
 	if (!SFileReadFile(hsFile, buf, to_read, NULL, NULL))

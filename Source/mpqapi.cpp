@@ -380,7 +380,7 @@ HANDLE CreateFile(const char *lpFileName, DWORD dwDesiredAccess, DWORD dwShareMo
     int lpSecurityAttributes, DWORD dwCreationDisposition,
     DWORD dwFlagsAndAttributes, HANDLE hTemplateFile)
 {
-	char name[DVL_MAX_PATH];
+	char name[MAX_PATH];
 	TranslateFileName(name, sizeof(name), lpFileName);
 	memfile *file = new memfile;
 	file->path = name;

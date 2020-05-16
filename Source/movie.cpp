@@ -28,13 +28,13 @@ void play_movie(char *pszMovie, BOOL user_can_close)
 	while (video_stream && movie_playing) {
 		while (movie_playing && PeekMessage(&Msg)) {
 			switch (Msg.message) {
-			case WM_KEYDOWN:
-			case WM_LBUTTONDOWN:
-			case WM_RBUTTONDOWN:
-				if (user_can_close || (Msg.message == WM_KEYDOWN && Msg.wParam == VK_ESCAPE))
+			case DVL_WM_KEYDOWN:
+			case DVL_WM_LBUTTONDOWN:
+			case DVL_WM_RBUTTONDOWN:
+				if (user_can_close || (Msg.message == DVL_WM_KEYDOWN && Msg.wParam == DVL_VK_ESCAPE))
 					movie_playing = FALSE;
 				break;
-			case WM_QUIT:
+			case DVL_WM_QUIT:
 				SVidPlayEnd(video_stream);
 				diablo_quit(0);
 				break;
