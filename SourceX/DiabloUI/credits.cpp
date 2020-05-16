@@ -110,13 +110,14 @@ CachedLine PrepareLine(std::size_t index)
 class LinesBuffer {
 public:
 	LinesBuffer(std::size_t capacity)
-	    : start_(0)
-	    , end_(0)
-	    , empty_(true)
 	{
 		data_.reserve(capacity);
 		for (std::size_t i = 0; i < capacity; ++i)
-			data_.push_back(CachedLine());
+			data_.push_back(CachedLine(0, NULL));
+
+		start_ = 0;
+		end_ = 0;
+		empty_ = true;
 	}
 
 	bool empty() const
@@ -172,13 +173,12 @@ class CreditsRenderer {
 public:
 	CreditsRenderer()
 	    : lines_(MAX_VISIBLE_LINES)
-	    , finished_(false)
-	    , prev_offset_y_(0)
-
 	{
 		LoadBackgroundArt("ui_art\\credits.pcx");
 		LoadTtfFont();
 		ticks_begin_ = SDL_GetTicks();
+		prev_offset_y_ = 0;
+		finished_ = false;
 	}
 
 	~CreditsRenderer()

@@ -847,6 +847,14 @@ void Movement()
 }
 
 struct RightStickAccumulator {
+
+	RightStickAccumulator()
+	{
+		lastTc = SDL_GetTicks();
+		hiresDX = 0;
+		hiresDY = 0;
+	}
+
 	void pool(int *x, int *y, int slowdown)
 	{
 		DWORD tc = SDL_GetTicks();
@@ -865,9 +873,9 @@ struct RightStickAccumulator {
 		lastTc = SDL_GetTicks();
 	}
 
-	DWORD lastTc = SDL_GetTicks();
-	int hiresDX = 0;
-	int hiresDY = 0;
+	DWORD lastTc;
+	int hiresDX;
+	int hiresDY;
 };
 
 } // namespace
