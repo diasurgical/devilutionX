@@ -18,51 +18,17 @@ _SNETVERSIONDATA *selconn_FileInfo;
 
 int provider;
 
-#ifdef _XBOX
 std::vector<UiListItem*> vecConnItems;
 std::vector<UiItemBase*> vecSelConnDlg;
-#endif
 
-#ifdef _XBOX
 UiArtText* SELCONNECT_DIALOG_DESCRIPTION = NULL;
-#else
-UiArtText SELCONNECT_DIALOG_DESCRIPTION(selconn_Description, { PANEL_LEFT + 35, 275, 205, 66 });
-#endif
 
-// Should be in the same order than conn_type (See enums.h)
-#ifndef _XBOX
-UiListItem SELCONN_DIALOG_ITEMS[] = {
-#ifndef NONET
-	{ "Client-Server (TCP)", SELCONN_TCP },
-#ifdef BUGGY
-	{ "Peer-to-Peer (UDP)", SELCONN_UDP },
-#endif
-#endif
-	{ "Loopback", SELCONN_LOOPBACK },
-};
-
-UiItem SELCONNECT_DIALOG[] = {
-	MAINMENU_BACKGROUND,
-	MAINMENU_LOGO,
-	UiArtText("Multi Player Game", { PANEL_LEFT + 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG),
-	UiArtText(selconn_MaxPlayers, { PANEL_LEFT + 35, 218, 205, 21 }),
-	UiArtText("Requirements:", { PANEL_LEFT + 35, 256, 205, 21 }),
-	SELCONNECT_DIALOG_DESCRIPTION,
-	UiArtText("no gateway needed", { PANEL_LEFT + 30, 356, 220, 31 }, UIS_CENTER | UIS_MED),
-	UiArtText(selconn_Gateway, { PANEL_LEFT + 35, 393, 205, 21 }, UIS_CENTER),
-	UiArtText("Select Connection", { PANEL_LEFT + 300, 211, 295, 33 }, UIS_CENTER | UIS_BIG),
-	UiArtTextButton("Change Gateway", NULL, { PANEL_LEFT + 16, 427, 250, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD | UIS_HIDDEN),
-	UiList(SELCONN_DIALOG_ITEMS, PANEL_LEFT + 305, 256, 285, 26, UIS_CENTER | UIS_VCENTER | UIS_GOLD),
-	UiArtTextButton("OK", &UiFocusNavigationSelect, { PANEL_LEFT + 299, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD),
-	UiArtTextButton("Cancel", &UiFocusNavigationEsc, { PANEL_LEFT + 454, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD)
-};
-#endif
 
 void selconn_Load()
 {
 	LoadBackgroundArt("ui_art\\selconn.pcx");
 
-#ifdef _XBOX
+	// vecConnItems Should be in the same order as conn_type (See enums.h)
 #ifndef NONET
 	vecConnItems.push_back(new UiListItem("Client-Server (TCP)", SELCONN_TCP));
 #ifdef BUGGY
@@ -70,7 +36,7 @@ void selconn_Load()
 #endif
 #endif
 	vecConnItems.push_back(new UiListItem("Loopback", SELCONN_LOOPBACK));
-	
+
 	SDL_Rect rect1 = {PANEL_LEFT, 0, 640, 480};
 	vecSelConnDlg.push_back(new UiImage(&ArtBackground, rect1));
 
@@ -86,37 +52,31 @@ void selconn_Load()
 	SDL_Rect rect5 = {PANEL_LEFT + 35, 256, 205, 21};
 	vecSelConnDlg.push_back(new UiArtText("Requirements:", rect5));
 
-	SDL_Rect rect6 = {PANEL_LEFT + 35, 256, 205, 21};
-	vecSelConnDlg.push_back(new UiArtText("Requirements:", rect6));
-
-	SDL_Rect rect7 = {PANEL_LEFT + 35, 275, 205, 66};
-	SELCONNECT_DIALOG_DESCRIPTION = new UiArtText(selconn_Description, rect7);
+	SDL_Rect rect6 = {PANEL_LEFT + 35, 275, 205, 66};
+	SELCONNECT_DIALOG_DESCRIPTION = new UiArtText(selconn_Description, rect6);
 	vecSelConnDlg.push_back(SELCONNECT_DIALOG_DESCRIPTION);
 
-	SDL_Rect rect8 = {PANEL_LEFT + 30, 356, 220, 31};
-	vecSelConnDlg.push_back(new UiArtText("no gateway needed", rect8, UIS_CENTER | UIS_MED));
+	SDL_Rect rect7 = {PANEL_LEFT + 30, 356, 220, 31};
+	vecSelConnDlg.push_back(new UiArtText("no gateway needed", rect7, UIS_CENTER | UIS_MED));
 
-	SDL_Rect rect9 = {PANEL_LEFT + 35, 393, 205, 21};
-	vecSelConnDlg.push_back(new UiArtText(selconn_Gateway, rect9, UIS_CENTER));
+	SDL_Rect rect8 = {PANEL_LEFT + 35, 393, 205, 21};
+	vecSelConnDlg.push_back(new UiArtText(selconn_Gateway, rect8, UIS_CENTER));
 
-	SDL_Rect rect10 = {PANEL_LEFT + 300, 211, 295, 33};
-	vecSelConnDlg.push_back(new UiArtText("Select Connection", rect10, UIS_CENTER | UIS_BIG));
+	SDL_Rect rect9 = {PANEL_LEFT + 300, 211, 295, 33};
+	vecSelConnDlg.push_back(new UiArtText("Select Connection", rect9, UIS_CENTER | UIS_BIG));
 
-	SDL_Rect rect11 = {PANEL_LEFT + 16, 427, 250, 35};
-	vecSelConnDlg.push_back(new UiArtTextButton("Change Gateway", NULL, rect11, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD | UIS_HIDDEN));
+	SDL_Rect rect10 = {PANEL_LEFT + 16, 427, 250, 35};
+	vecSelConnDlg.push_back(new UiArtTextButton("Change Gateway", NULL, rect10, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD | UIS_HIDDEN));
 
 	vecSelConnDlg.push_back(new UiList(vecConnItems, PANEL_LEFT + 305, 256, 285, 26, UIS_CENTER | UIS_VCENTER | UIS_GOLD));
 
-	SDL_Rect rect12 = {PANEL_LEFT + 299, 427, 140, 35};
-	vecSelConnDlg.push_back(new UiArtTextButton("OK", &UiFocusNavigationSelect, rect12, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
+	SDL_Rect rect11 = {PANEL_LEFT + 299, 427, 140, 35};
+	vecSelConnDlg.push_back(new UiArtTextButton("OK", &UiFocusNavigationSelect, rect11, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
 
-	SDL_Rect rect13 = {PANEL_LEFT + 454, 427, 140, 35};
-	vecSelConnDlg.push_back(new UiArtTextButton("Cancel", &UiFocusNavigationEsc, rect13, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
+	SDL_Rect rect12 = {PANEL_LEFT + 454, 427, 140, 35};
+	vecSelConnDlg.push_back(new UiArtTextButton("Cancel", &UiFocusNavigationEsc, rect12, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
 
 	UiInitList(0, vecConnItems.size() - 1, selconn_Focus, selconn_Select, selconn_Esc, vecSelConnDlg, vecSelConnDlg.size());
-#else
-	UiInitList(0, size(SELCONN_DIALOG_ITEMS) - 1, selconn_Focus, selconn_Select, selconn_Esc, SELCONNECT_DIALOG, size(SELCONNECT_DIALOG));
-#endif
 }
 
 void selconn_Free()
@@ -174,11 +134,7 @@ void selconn_Focus(int value)
 	}
 
 	sprintf(selconn_MaxPlayers, "Players Supported: %d", players);
-#ifdef _XBOX
 	WordWrapArtStr(selconn_Description, SELCONNECT_DIALOG_DESCRIPTION->m_rect.w);
-#else
-	WordWrapArtStr(selconn_Description, SELCONNECT_DIALOG_DESCRIPTION.rect.w);
-#endif
 }
 
 void selconn_Select(int value)

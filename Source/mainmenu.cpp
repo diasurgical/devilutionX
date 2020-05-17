@@ -158,7 +158,6 @@ BOOL mainmenu_init_menu(int type)
 BOOL mainmenu_multi_player()
 {
 	gbMaxPlayers = MAX_PLRS;
-
 	return mainmenu_init_menu(SELHERO_CONNECT);
 }
 

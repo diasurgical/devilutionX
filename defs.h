@@ -6,13 +6,12 @@
 
 #define DIABOOL					BOOL
 #ifdef _XBOX
-#define GAME_NAME				"DIABLOX"
-#define APP_NAME				"DiabloX"
-#define PROJECT_VERSION  		"1.0"
-#else
+#define PROJECT_NAME  			"DevilutionX"
+#define PROJECT_VERSION  		"1.0.1"
+#define PREFILL_PLAYER_NAME
+#endif
 #define GAME_NAME				"DIABLO"
 #define APP_NAME				"Diablo"
-#endif
 
 #define DMAXX					40
 #define DMAXY					40

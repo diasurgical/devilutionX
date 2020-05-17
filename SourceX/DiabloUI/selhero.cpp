@@ -334,7 +334,7 @@ void selhero_ClassSelector_Select(int value)
 		strcpy(title, "New Multi Player Hero");
 	}
 	memset(selhero_heroInfo.name, '\0', sizeof(selhero_heroInfo.name));
-#if 1//def PREFILL_PLAYER_NAME
+#ifdef PREFILL_PLAYER_NAME
 	strcpy(selhero_heroInfo.name, selhero_GenerateName(selhero_heroInfo.heroclass));
 #endif
 	SDL_Rect rect1 = { PANEL_LEFT + 264, 211, 320, 33 };

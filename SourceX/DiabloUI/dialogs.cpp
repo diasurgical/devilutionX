@@ -32,9 +32,6 @@ void DialogActionOK()
 	dialogEnd = true;
 }
 
-SDL_Rect rect = { PANEL_LEFT + 127, 100, 385, 280 };
-const UiImage* DIALOG_ART_L = new UiImage(&dialogArt, rect);
-
 std::vector<UiItemBase*> vecNULL;
 std::vector<UiItemBase*> vecOkDialog;
 std::vector<UiItemBase*> vecOkDialogWithCaption;
@@ -179,8 +176,9 @@ void Init(const char *text, const char *caption, bool error, bool render_behind)
 		vecOkDialogWithCaption.push_back(new UiButton(&SmlButton, "OK", &DialogActionOK, rect3, 0));
 	}
 
+	SDL_Rect rect = { PANEL_LEFT + 127, 100, 385, 280 };
 	{
-		vecOkDialogWithCaption.push_back((UiItemBase*)DIALOG_ART_L);
+		vecOkDialogWithCaption.push_back(new UiImage(&dialogArt, rect));
 
 		SDL_Rect rect1 = { PANEL_LEFT + 147, 110, 345, 20 };
 		SDL_Color color1 = { 255, 255, 0, 0 };
@@ -207,7 +205,7 @@ void Init(const char *text, const char *caption, bool error, bool render_behind)
 		dialogItemsSize = vecOkDialog.size();
 	} else {
 		if (error) {
-			LoadArt(&dialogArt, popupData, DIALOG_ART_L->m_rect.w, DIALOG_ART_L->m_rect.h);
+			LoadArt(&dialogArt, popupData, rect.w, rect.h);
 		} else {
 			LoadMaskedArt("ui_art\\lpopup.pcx", &dialogArt);
 		}
@@ -306,7 +304,7 @@ void UiOkDialog(const char *text, const char *caption, bool error, vUiItemBase r
 		if (SDL_ShowCursor(SDL_ENABLE) <= -1) {
 			SDL_Log(SDL_GetError());
 		}
-#if 0//ndef RUN_TESTS
+#ifndef RUN_TESTS
 		if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, text, caption, NULL) <= -1) {
 			SDL_Log(SDL_GetError());
 #else

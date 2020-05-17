@@ -400,7 +400,7 @@ void diablo_parse_flags(int argc, char **argv)
 		if (strcasecmp("-h", argv[i]) == 0 || strcasecmp("--help", argv[i]) == 0) {
 			print_help_and_exit();
 		} else if (strcasecmp("--version", argv[i]) == 0) {
-			printf("%s v%s\n", APP_NAME, PROJECT_VERSION);
+			printf("%s v%s\n", PROJECT_NAME, PROJECT_VERSION);
 			diablo_quit(0);
 		} else if (strcasecmp("--data-dir", argv[i]) == 0) {
 			basePath = argv[++i];

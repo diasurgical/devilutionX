@@ -78,7 +78,7 @@ void DrawDlg(char *pszFmt, ...)
 	vsnprintf(text, 256, pszFmt, va);
 	va_end(va);
 
-	UiErrorOkDialog(APP_NAME, text, false);
+	UiErrorOkDialog(PROJECT_NAME, text, false);
 }
 
 #ifdef _DEBUG

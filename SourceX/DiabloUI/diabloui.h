@@ -41,6 +41,7 @@ constexpr size_t size(T (&)[N])
 #endif
 
 extern void (*gfnSoundFunction)(char *file);
+extern BOOL (*gfnHeroInfo)(BOOL (*fninfofunc)(_uiheroinfo *));
 
 void UiFadeIn();
 bool UiItemMouseEvents(SDL_Event *event, vUiItemBase items, std::size_t size);
