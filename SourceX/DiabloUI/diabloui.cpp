@@ -701,11 +701,7 @@ void Render(UiScrollBar* ui_sb)
 		const std::size_t bg_y_end = DownArrowRect(ui_sb).y;
 		std::size_t bg_y = ui_sb->m_rect.y + ui_sb->m_arrow->h();
 		while (bg_y < bg_y_end) {
-#ifdef _XBOX
-			std::size_t drawH = min(bg_y + ui_sb->m_bg->h(), bg_y_end) - bg_y;
-#else
 			std::size_t drawH = std::min(bg_y + ui_sb->m_bg->h(), bg_y_end) - bg_y;
-#endif
 			DrawArt(ui_sb->m_rect.x, bg_y, ui_sb->m_bg, 0, SCROLLBAR_BG_WIDTH, drawH);
 			bg_y += drawH;
 		}

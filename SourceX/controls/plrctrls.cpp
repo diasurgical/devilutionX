@@ -66,11 +66,7 @@ int GetRotaryDistance(int x, int y)
  */
 int GetMinDistance(int dx, int dy)
 {
-#ifdef _XBOX
-	return max(abs(plr[myplr]._pfutx - dx), abs(plr[myplr]._pfuty - dy));
-#else
 	return std::max(abs(plr[myplr]._pfutx - dx), abs(plr[myplr]._pfuty - dy));
-#endif
 }
 
 /**
@@ -933,13 +929,8 @@ void HandleRightStickMotion()
 		int x = MouseX;
 		int y = MouseY;
 		acc.pool(&x, &y, 2);
-#ifdef _XBOX
-		x = min(max(x, 0), SCREEN_WIDTH - 1);
-		y = min(max(y, 0), SCREEN_HEIGHT - 1);
-#else
 		x = std::min(std::max(x, 0), SCREEN_WIDTH - 1);
 		y = std::min(std::max(y, 0), SCREEN_HEIGHT - 1);
-#endif
 		SetCursorPos(x, y);
 	}
 }

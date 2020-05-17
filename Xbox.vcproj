@@ -416,6 +416,12 @@
 						RelativePath=".\SourceX\DiabloUI\scrollbar.cpp">
 					</File>
 					<File
+						RelativePath=".\SourceX\DiabloUI\selconn.cpp">
+					</File>
+					<File
+						RelativePath=".\SourceX\DiabloUI\selgame.cpp">
+					</File>
+					<File
 						RelativePath=".\SourceX\DiabloUI\selhero.cpp">
 					</File>
 					<File
@@ -848,6 +854,12 @@
 					</File>
 					<File
 						RelativePath=".\SourceX\DiabloUI\scrollbar.h">
+					</File>
+					<File
+						RelativePath=".\SourceX\DiabloUI\selconn.h">
+					</File>
+					<File
+						RelativePath=".\SourceX\DiabloUI\selgame.h">
 					</File>
 					<File
 						RelativePath=".\SourceX\DiabloUI\selhero.h">
