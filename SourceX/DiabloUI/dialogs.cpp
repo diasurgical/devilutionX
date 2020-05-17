@@ -32,7 +32,7 @@ void DialogActionOK()
 	dialogEnd = true;
 }
 
-SDL_Rect rect = { 127, 100, 385, 280 };
+SDL_Rect rect = { PANEL_LEFT + 127, 100, 385, 280 };
 const UiImage* DIALOG_ART_L = new UiImage(&dialogArt, rect);
 
 std::vector<UiItemBase*> vecNULL;
@@ -169,27 +169,27 @@ void LoadFallbackPalette()
 void Init(const char *text, const char *caption, bool error, bool render_behind)
 {
 	{
-		SDL_Rect rect1 = { 180, 168, 280, 144 };
+		SDL_Rect rect1 = { PANEL_LEFT + 180, 168, 280, 144 };
 		vecOkDialog.push_back(new UiImage(&dialogArt, rect1));
 
-		SDL_Rect rect2 = { 200, 211, 240, 80 };
+		SDL_Rect rect2 = { PANEL_LEFT + 200, 211, 240, 80 };
 		vecOkDialog.push_back(new UiText(dialogText, rect2, UIS_CENTER));
 
-		SDL_Rect rect3 = { 265, 265, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT};
+		SDL_Rect rect3 = { PANEL_LEFT + 265, 265, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
 		vecOkDialogWithCaption.push_back(new UiButton(&SmlButton, "OK", &DialogActionOK, rect3, 0));
 	}
 
 	{
 		vecOkDialogWithCaption.push_back((UiItemBase*)DIALOG_ART_L);
 
-		SDL_Rect rect1 = { 147, 110, 345, 20 };
+		SDL_Rect rect1 = { PANEL_LEFT + 147, 110, 345, 20 };
 		SDL_Color color1 = { 255, 255, 0, 0 };
 		vecOkDialogWithCaption.push_back(new UiText(dialogText, color1, rect1, UIS_CENTER));
 
-		SDL_Rect rect2 = { 147, 141, 345, 190 };
+		SDL_Rect rect2 = { PANEL_LEFT + 147, 141, 345, 190 };
 		vecOkDialogWithCaption.push_back(new UiText(dialogCaption, rect2, UIS_CENTER));
 
-		SDL_Rect rect3 = { 264, 335, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT};
+		SDL_Rect rect3 = { PANEL_LEFT + 264, 335, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
 		vecOkDialogWithCaption.push_back(new UiButton(&SmlButton, "OK", &DialogActionOK, rect3, 0));
 	}
 

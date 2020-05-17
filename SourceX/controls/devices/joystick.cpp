@@ -67,19 +67,19 @@ ControllerButtonNS::ControllerButton JoyButtonToControllerButton(const SDL_Event
 #endif
 #ifdef JOY_BUTTON_DPAD_LEFT
 		case JOY_BUTTON_DPAD_LEFT:
-			return ControllerButton::BUTTON_DPAD_LEFT;
+			return ControllerButtonNS::BUTTON_DPAD_LEFT;
 #endif
 #ifdef JOY_BUTTON_DPAD_UP
 		case JOY_BUTTON_DPAD_UP:
-			return ControllerButton::BUTTON_DPAD_UP;
+			return ControllerButtonNS::BUTTON_DPAD_UP;
 #endif
 #ifdef JOY_BUTTON_DPAD_RIGHT
 		case JOY_BUTTON_DPAD_RIGHT:
-			return ControllerButton::BUTTON_DPAD_RIGHT;
+			return ControllerButtonNS::BUTTON_DPAD_RIGHT;
 #endif
 #ifdef JOY_BUTTON_DPAD_DOWN
 		case JOY_BUTTON_DPAD_DOWN:
-			return ControllerButton::BUTTON_DPAD_DOWN;
+			return ControllerButtonNS::BUTTON_DPAD_DOWN;
 #endif
 		default:
 			break;

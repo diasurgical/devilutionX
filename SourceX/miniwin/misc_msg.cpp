@@ -350,7 +350,7 @@ bool BlurInventory()
 	return true;
 }
 
-bool PeekMessageA(LPMSG lpMsg)
+bool PeekMessage(LPMSG lpMsg)
 {
 #ifdef __SWITCH__
 	HandleDocking();
@@ -730,7 +730,7 @@ bool TranslateMessage(const MSG *lpMsg)
 #endif
 
 			// XXX: This does not add extended info to lParam
-			PostMessageA(DVL_WM_CHAR, key, 0);
+			PostMessage(DVL_WM_CHAR, key, 0);
 		}
 	}
 
@@ -764,14 +764,14 @@ SHORT GetAsyncKeyState(int vKey)
 	}
 }
 
-LRESULT DispatchMessageA(const MSG *lpMsg)
+LRESULT DispatchMessage(const MSG *lpMsg)
 {
 	assert(CurrentProc);
 
 	return CurrentProc(NULL, lpMsg->message, lpMsg->wParam, lpMsg->lParam);
 }
 
-bool PostMessageA(UINT Msg, WPARAM wParam, LPARAM lParam)
+bool PostMessage(UINT Msg, WPARAM wParam, LPARAM lParam)
 {
 	MSG msg;
 	msg.message = Msg;

@@ -70,20 +70,7 @@ void InitAutomap()
 	DWORD dwTiles;
 	int x, y;
 	BYTE *pAFile, *pTmp;
-	int i, j;
-	int d;
-
-	j = 50;
-
-	for (i = 0; i < 31; i++) {
-		d = (j << 6) / 100;
-		AmShiftTab[i] = 2 * (SCREEN_WIDTH / 2 / d) + 1;
-		if ((SCREEN_WIDTH / 2) % d)
-			AmShiftTab[i]++;
-		if ((SCREEN_WIDTH / 2) % d >= (j << 5) / 100)
-			AmShiftTab[i]++;
-		j += 5;
-	}
+	int i;
 
 	memset(automaptype, 0, sizeof(automaptype));
 
@@ -205,7 +192,7 @@ void DrawAutomap()
 {
 	int cells;
 	int sx, sy;
-	int i, j;
+	int i, j, d;
 	int mapx, mapy;
 
 	if (leveltype == DTYPE_TOWN) {
@@ -229,7 +216,13 @@ void DrawAutomap()
 		AutoMapYOfs--;
 	AutoMapY += AutoMapYOfs;
 
-	cells = AmShiftTab[(AutoMapScale - 50) / 5];
+	d = (AutoMapScale << 6) / 100;
+	cells = 2 * (SCREEN_WIDTH / 2 / d) + 1;
+	if ((SCREEN_WIDTH / 2) % d)
+		cells++;
+	if ((SCREEN_WIDTH / 2) % d >= (AutoMapScale << 5) / 100)
+		cells++;
+
 	if (ScrollInfo._sxoff + ScrollInfo._syoff)
 		cells++;
 	mapx = AutoMapX - cells;
@@ -253,11 +246,13 @@ void DrawAutomap()
 
 	sx += AutoMapScale * ScrollInfo._sxoff / 100 >> 1;
 	sy += AutoMapScale * ScrollInfo._syoff / 100 >> 1;
-	if (invflag || sbookflag) {
-		sx -= SCREEN_WIDTH / 4;
-	}
-	if (chrflag || questlog) {
-		sx += SCREEN_WIDTH / 4;
+	if (PANELS_COVER) {
+		if (invflag || sbookflag) {
+			sx -= SCREEN_WIDTH / 4;
+		}
+		if (chrflag || questlog) {
+			sx += SCREEN_WIDTH / 4;
+		}
 	}
 
 	for (i = 0; i <= cells + 1; i++) {
@@ -284,7 +279,7 @@ void DrawAutomap()
 	}
 	DrawAutomapPlr();
 	DrawAutomapText();
-	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_HEIGHT + SCREEN_Y)];
+	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_Y + SCREEN_HEIGHT)];
 }
 
 /**
@@ -500,10 +495,12 @@ void DrawAutomapPlr()
 	x = (plr[myplr]._pxoff * AutoMapScale / 100 >> 1) + (ScrollInfo._sxoff * AutoMapScale / 100 >> 1) + (px - py) * AmLine16 + SCREEN_WIDTH / 2 + SCREEN_X;
 	y = (plr[myplr]._pyoff * AutoMapScale / 100 >> 1) + (ScrollInfo._syoff * AutoMapScale / 100 >> 1) + (px + py) * AmLine8 + (SCREEN_HEIGHT - PANEL_HEIGHT) / 2 + SCREEN_Y;
 
-	if (invflag || sbookflag)
-		x -= SCREEN_WIDTH / 4;
-	if (chrflag || questlog)
-		x += SCREEN_WIDTH / 4;
+	if (PANELS_COVER) {
+		if (invflag || sbookflag)
+			x -= SCREEN_WIDTH / 4;
+		if (chrflag || questlog)
+			x += SCREEN_WIDTH / 4;
+	}
 	y -= AmLine8;
 
 	switch (plr[myplr]._pdir) {

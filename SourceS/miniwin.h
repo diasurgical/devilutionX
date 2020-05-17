@@ -27,8 +27,5 @@
 #include "storm_full.h"
 
 #ifndef MAX_PATH
-#define MAX_PATH DVL_MAX_PATH
-#endif
-#if 1//DEVILUTION_ENGINE
-#include "miniwin/misc_macro.h"
+#define MAX_PATH 260
 #endif

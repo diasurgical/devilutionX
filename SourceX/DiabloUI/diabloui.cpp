@@ -55,16 +55,15 @@ namespace {
 DWORD fadeTc;
 int fadeValue = 0;
 
-struct SBARS {
+struct scrollBarState {
 	bool upArrowPressed;
 	bool downArrowPressed;
 
-	SBARS()
+	scrollBarState()
 	{
 		upArrowPressed = false;
 		downArrowPressed = false;
 	}
-
 } scrollBarState;
 
 } // namespace
@@ -96,7 +95,7 @@ void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(i
 	for (int i = 0; i < itemCnt; i++) {
 		if (items[i]->m_type == UI_EDIT) {
 #ifdef __SWITCH__
-			switch_start_text_input(items[i - 1].art_text.text, items[i].edit.value, /*multiline=*/0);
+//			switch_start_text_input(items[i - 1].art_text.text, items[i].edit.value, /*multiline=*/0);
 #endif
 			UiEdit* pItemUIEdit = (UiEdit*)items[i];
 
@@ -575,7 +574,7 @@ BOOL UiCreatePlayerDescription(_uiheroinfo *info, DWORD mode, char *desc)
 int GetCenterOffset(int w, int bw)
 {
 	if (bw == 0) {
-		bw = PANEL_WIDTH;
+		bw = SCREEN_WIDTH;
 	}
 
 	return (bw - w) / 2;
@@ -628,6 +627,12 @@ void DrawSelector(const SDL_Rect &rect)
 
 	DrawArt(rect.x, y, art, frame);
 	DrawArt(rect.x + rect.w - art->w(), y, art, frame);
+}
+
+void UiClearScreen()
+{
+	if (SCREEN_WIDTH > 640) // Background size
+		SDL_FillRect(GetOutputSurface(), NULL, 0x000000);
 }
 
 void UiPollAndRender()

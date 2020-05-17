@@ -1941,14 +1941,14 @@ void control_drop_gold(char vkey)
 
 	memset(input, 0, sizeof(input));
 	snprintf(input, sizeof(input), "%d", dropGoldValue);
-	if (vkey == VK_RETURN) {
+	if (vkey == DVL_VK_RETURN) {
 		if (dropGoldValue > 0)
 			control_remove_gold(myplr, initialDropGoldIndex);
 		dropGoldFlag = FALSE;
-	} else if (vkey == VK_ESCAPE) {
+	} else if (vkey == DVL_VK_ESCAPE) {
 		dropGoldFlag = FALSE;
 		dropGoldValue = 0;
-	} else if (vkey == VK_BACK) {
+	} else if (vkey == DVL_VK_BACK) {
 		input[strlen(input) - 1] = '\0';
 		dropGoldValue = atoi(input);
 	} else if (vkey - '0' >= 0 && vkey - '0' <= 9) {
@@ -2182,7 +2182,7 @@ BOOL control_talk_last_key(int vkey)
 	if (!talkflag)
 		return FALSE;
 
-	if ((DWORD)vkey < VK_SPACE)
+	if ((DWORD)vkey < DVL_VK_SPACE)
 		return FALSE;
 
 	result = strlen(sgszTalkMsg);
@@ -2202,18 +2202,18 @@ BOOL control_presskeys(int vkey)
 		if (!talkflag) {
 			ret = FALSE;
 		} else {
-			if (vkey == VK_SPACE) {
-			} else if (vkey == VK_ESCAPE) {
+			if (vkey == DVL_VK_SPACE) {
+			} else if (vkey == DVL_VK_ESCAPE) {
 				control_reset_talk();
-			} else if (vkey == VK_RETURN) {
+			} else if (vkey == DVL_VK_RETURN) {
 				control_press_enter();
-			} else if (vkey == VK_BACK) {
+			} else if (vkey == DVL_VK_BACK) {
 				len = strlen(sgszTalkMsg);
 				if (len > 0)
 					sgszTalkMsg[len - 1] = '\0';
-			} else if (vkey == VK_DOWN) {
+			} else if (vkey == DVL_VK_DOWN) {
 				control_up_down(1);
-			} else if (vkey == VK_UP) {
+			} else if (vkey == DVL_VK_UP) {
 				control_up_down(-1);
 			} else {
 				return FALSE;

@@ -172,10 +172,8 @@ public:
 		LoadBackgroundArt("ui_art\\credits.pcx");
 		LoadTtfFont();
 		ticks_begin_ = SDL_GetTicks();
-
 		prev_offset_y_ = 0;
 		finished_ = false;
-
 	}
 
 	~CreditsRenderer()
@@ -205,7 +203,8 @@ void CreditsRenderer::Render()
 		return;
 	prev_offset_y_ = offset_y;
 
-	DrawArt(0, 0, &ArtBackground);
+	SDL_FillRect(GetOutputSurface(), NULL, 0x000000);
+	DrawArt(PANEL_LEFT + 0, 0, &ArtBackground);
 	if (font == NULL)
 		return;
 
@@ -245,7 +244,7 @@ void CreditsRenderer::Render()
 		if (lines_[i].palette_version != pal_surface_palette_version)
 			lines_[i] = PrepareLine(lines_[i].m_index);
 
-		Sint16 dest_x = VIEWPORT.x + 31;
+		Sint16 dest_x = PANEL_LEFT + VIEWPORT.x + 31;
 		if (CREDITS_LINES[lines_[i].m_index][0] == '\t')
 			dest_x += 40;
 

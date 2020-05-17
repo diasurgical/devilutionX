@@ -41,15 +41,15 @@ void mainmenu_Load(char *name, void (*fnSound)(char *file))
 	vecMenuItems.push_back(new UiListItem("Show Credits", MAINMENU_SHOW_CREDITS));
 	vecMenuItems.push_back(new UiListItem("Exit Diablo", MAINMENU_EXIT_DIABLO));
 
-	SDL_Rect rect1 = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+	SDL_Rect rect1 = { PANEL_LEFT, 0, 640, 480 };
 	vecMainMenuDialog.push_back(new UiImage(&ArtBackground, rect1));
 
- 	SDL_Rect rect2 = {0, 0, 0, 0};
+ 	SDL_Rect rect2 = { 0, 0, 0, 0 };
 	vecMainMenuDialog.push_back(new UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, rect2, UIS_CENTER));
 
-	vecMainMenuDialog.push_back(new UiList(vecMenuItems, 64, 192, 510, 43, UIS_HUGE | UIS_GOLD | UIS_CENTER));
+	vecMainMenuDialog.push_back(new UiList(vecMenuItems, PANEL_LEFT + 64, 192, 510, 43, UIS_HUGE | UIS_GOLD | UIS_CENTER));
 
- 	SDL_Rect rect3 = {17, 444, 605, 21};
+ 	SDL_Rect rect3 = { 17, 444, 605, 21 };
 	vecMainMenuDialog.push_back(new UiArtText(name, rect3, UIS_SMALL));
 
 	if (!gbSpawned) {
@@ -94,6 +94,7 @@ BOOL UiMainMenuDialog(char *name, int *pdwResult, void (*fnSound)(char *file), i
 		mainmenu_restart_repintro(); // for automatic starts
 
 		while (MainMenuResult == 0) {
+			UiClearScreen();
 			UiPollAndRender();
 			if (!gbSpawned && SDL_GetTicks() >= dwAttractTicks) {
 				MainMenuResult = MAINMENU_ATTRACT_MODE;

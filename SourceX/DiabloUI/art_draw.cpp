@@ -9,7 +9,6 @@ extern unsigned int pal_surface_palette_version;
 void DrawArt(int screenX, int screenY, Art *art, int nFrame,
     Uint16 srcW, Uint16 srcH)
 {
-	screenX += PANEL_LEFT;
 	if (screenY >= SCREEN_HEIGHT || screenX >= SCREEN_WIDTH || art->surface == NULL)
 		return;
 
