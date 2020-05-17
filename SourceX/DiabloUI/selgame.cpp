@@ -1,7 +1,9 @@
 #include "selgame.h"
 
 #include "all.h"
+#ifndef _XBOX
 #include "config.h"
+#endif
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/text.h"
 #include "DiabloUI/dialogs.h"
@@ -26,18 +28,22 @@ extern int provider;
 //constexpr UiArtTextButton SELGAME_OK = UiArtTextButton("OK", &UiFocusNavigationSelect, { PANEL_LEFT + 299, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD);
 //constexpr UiArtTextButton SELGAME_CANCEL = UiArtTextButton("CANCEL", &UiFocusNavigationEsc, { PANEL_LEFT + 449, 427, 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD);
 
+#ifdef _XBOX
+UiArtText* SELGAME_DESCRIPTION = NULL;
+#else
 UiArtText SELGAME_DESCRIPTION(selgame_Description, { PANEL_LEFT + 35, 256, 205, 192 });
+#endif
 
 namespace {
 
 char title[32];
+#ifndef _XBOX
 UiListItem SELDIFF_DIALOG_ITEMS[] = {
 	{ "Normal", DIFF_NORMAL },
 	{ "Nightmare", DIFF_NIGHTMARE },
 	{ "Hell", DIFF_HELL }
 };
 
-/*
 UiItem SELDIFF_DIALOG[] = {
 	MAINMENU_BACKGROUND,
 	MAINMENU_LOGO,
@@ -49,7 +55,6 @@ UiItem SELDIFF_DIALOG[] = {
 	SELGAME_OK,
 	SELGAME_CANCEL,
 };
-*/
 
 //constexpr UiArtText SELUDPGAME_TITLE = UiArtText(title, { PANEL_LEFT + 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG);
 //constexpr UiArtText SELUDPGAME_DESCRIPTION_LABEL = UiArtText("Description:", { PANEL_LEFT + 35, 211, 205, 192 }, UIS_MED);
@@ -58,7 +63,7 @@ UiListItem SELUDPGAME_DIALOG_ITEMS[] = {
 	{ "Create Game", 0 },
 	{ "Enter IP", 1 },
 };
-/*
+
 UiItem SELUDPGAME_DIALOG[] = {
 	MAINMENU_BACKGROUND,
 	MAINMENU_LOGO,
@@ -93,7 +98,7 @@ UiItem ENTERPASSWORD_DIALOG[] = {
 	SELGAME_OK,
 	SELGAME_CANCEL,
 };
-*/
+#endif
 
 } // namespace
 
