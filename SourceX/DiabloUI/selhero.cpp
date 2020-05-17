@@ -150,11 +150,7 @@ UiArtTextButton *SELLIST_DIALOG_DELETE_BUTTON;
 
 void selhero_UpdateViewportItems()
 {
-#ifdef _XBOX
-	const size_t num_viewport_heroes = min(selhero_SaveCount - listOffset, kMaxViewportItems);
-#else
 	const size_t num_viewport_heroes = std::min(selhero_SaveCount - listOffset, kMaxViewportItems);
-#endif
 	SELLIST_DIALOG_LIST->m_length = num_viewport_heroes;
 	for (std::size_t i = 0; i < num_viewport_heroes; i++) {
 		const std::size_t index = i + listOffset;

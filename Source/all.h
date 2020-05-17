@@ -7,6 +7,7 @@
 #define __ALL_H__
 
 #ifdef _XBOX
+#define NOMINMAX
 #include <xtl.h>
 #endif
 

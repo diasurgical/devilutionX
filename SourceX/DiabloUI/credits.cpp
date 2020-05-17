@@ -208,13 +208,8 @@ void CreditsRenderer::Render()
 	if (font == NULL)
 		return;
 
-#ifdef _XBOX
-	const std::size_t lines_begin = max(offset_y / LINE_H, 0);
-	const std::size_t lines_end = min(lines_begin + MAX_VISIBLE_LINES, CREDITS_LINES_SIZE);
-#else
 	const std::size_t lines_begin = std::max(offset_y / LINE_H, 0);
 	const std::size_t lines_end = std::min(lines_begin + MAX_VISIBLE_LINES, CREDITS_LINES_SIZE);
-#endif
 
 	if (lines_begin >= lines_end) {
 		if (lines_end == CREDITS_LINES_SIZE)
