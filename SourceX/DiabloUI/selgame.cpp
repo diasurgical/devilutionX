@@ -38,7 +38,7 @@ std::vector<UiItemBase*> vecSelGameDialog;
 
 void selgame_FreeVectors()
 {
-	for(int i = 0; i < (int)vecSelGameDlgItems.size(); i++)
+	for(std::size_t i = 0; i < vecSelGameDlgItems.size(); i++)
 	{
 		UiListItem* pUIItem = vecSelGameDlgItems[i];
 		if(pUIItem)
@@ -47,7 +47,7 @@ void selgame_FreeVectors()
 		vecSelGameDlgItems.clear();
 	}
 
-	for(int i = 0; i < (int)vecSelGameDialog.size(); i++)
+	for(std::size_t i = 0; i < vecSelGameDialog.size(); i++)
 	{
 		UiItemBase* pUIItem = vecSelGameDialog[i];
 		if(pUIItem)
@@ -109,7 +109,7 @@ void selgame_GameSelection_Init()
 	SDL_Rect rect8 = { PANEL_LEFT + 449, 427, 140, 35 };
 	vecSelGameDialog.push_back(new UiArtTextButton("CANCEL", &UiFocusNavigationEsc, rect8, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
 
-	UiInitList(0, 1, selgame_GameSelection_Focus, selgame_GameSelection_Select, selgame_GameSelection_Esc, vecSelGameDialog, vecSelGameDialog.size());
+	UiInitList(0, 1, selgame_GameSelection_Focus, selgame_GameSelection_Select, selgame_GameSelection_Esc, vecSelGameDialog);
 }
 
 void selgame_GameSelection_Focus(int value)
@@ -182,7 +182,7 @@ void selgame_GameSelection_Select(int value)
 		SDL_Rect rect8 = { PANEL_LEFT + 449, 427, 140, 35 };
 		vecSelGameDialog.push_back(new UiArtTextButton("CANCEL", &UiFocusNavigationEsc, rect8, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
 
-		UiInitList(0, NUM_DIFFICULTIES - 1, selgame_Diff_Focus, selgame_Diff_Select, selgame_Diff_Esc, vecSelGameDialog, vecSelGameDialog.size());
+		UiInitList(0, NUM_DIFFICULTIES - 1, selgame_Diff_Focus, selgame_Diff_Select, selgame_Diff_Esc, vecSelGameDialog);
 		break;
 	}
 	case 1:
@@ -200,7 +200,7 @@ void selgame_GameSelection_Select(int value)
 		SDL_Rect rect9 = { PANEL_LEFT + 449, 427, 140, 35 };
 		vecSelGameDialog.push_back(new UiArtTextButton("CANCEL", &UiFocusNavigationEsc, rect9, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
 
-		UiInitList(0, 0, NULL, selgame_Password_Init, selgame_GameSelection_Init, vecSelGameDialog, vecSelGameDialog.size());
+		UiInitList(0, 0, NULL, selgame_Password_Init, selgame_GameSelection_Init, vecSelGameDialog);
 		break;
 	}
 }
@@ -310,7 +310,7 @@ void selgame_Password_Init(int value)
 	SDL_Rect rect9 = { PANEL_LEFT + 449, 427, 140, 35 };
 	vecSelGameDialog.push_back(new UiArtTextButton("CANCEL", &UiFocusNavigationEsc, rect9, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
 
-	UiInitList(0, 0, NULL, selgame_Password_Select, selgame_Password_Esc, vecSelGameDialog, vecSelGameDialog.size());
+	UiInitList(0, 0, NULL, selgame_Password_Select, selgame_Password_Esc, vecSelGameDialog);
 }
 
 void selgame_Password_Select(int value)

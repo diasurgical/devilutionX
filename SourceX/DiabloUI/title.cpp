@@ -17,7 +17,7 @@ void title_Free()
 	ArtBackground.Unload();
 	ArtLogos[LOGO_BIG].Unload();
 
-	for(int i = 0; i < (int)vecTitleScreen.size(); i++)
+	for(std::size_t i = 0; i < vecTitleScreen.size(); i++)
 	{
 		UiItemBase* pUIItem = vecTitleScreen[i];
 		if(pUIItem)
@@ -45,7 +45,7 @@ void UiTitleDialog()
 
 	SDL_Event event;
 	while (!endMenu && SDL_GetTicks() < timeOut) {
-		UiRenderItems(vecTitleScreen, vecTitleScreen.size());
+		UiRenderItems(vecTitleScreen);
 		UiFadeIn();
 
 		while (SDL_PollEvent(&event)) {

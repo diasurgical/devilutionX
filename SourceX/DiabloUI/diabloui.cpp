@@ -43,7 +43,6 @@ void (*gfnListSelect)(int value);
 void (*gfnListEsc)();
 bool (*gfnListYesNo)();
 std::vector<UiItemBase*> gUiItems;
-int gUiItemCnt;
 bool UiItemsWraps;
 char *UiTextInput;
 int UiTextInputLen;
@@ -75,7 +74,7 @@ void UiDestroy()
 	UnloadArtFonts();
 }
 
-void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), vUiItemBase items, int itemCnt, bool itemsWraps, bool (*fnYesNo)())
+void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), vUiItemBase items, bool itemsWraps, bool (*fnYesNo)())
 {
 	SelectedItem = min;
 	SelectedItemMin = min;
@@ -86,13 +85,12 @@ void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(i
 	gfnListEsc = fnEsc;
 	gfnListYesNo = fnYesNo;
 	gUiItems = items;
-	gUiItemCnt = itemCnt;
 	UiItemsWraps = itemsWraps;
 	if (fnFocus)
 		fnFocus(min);
 
 	SDL_StopTextInput(); // input is enabled by default
-	for (int i = 0; i < itemCnt; i++) {
+	for (std::size_t i = 0; i < items.size(); i++) {
 		if (items[i]->m_type == UI_EDIT) {
 #ifdef __SWITCH__
 //			switch_start_text_input(items[i - 1].art_text.text, items[i].edit.value, /*multiline=*/0);
@@ -128,7 +126,6 @@ void UiInitList_clear()
 	gfnListEsc = NULL;
 	gfnListYesNo = NULL;
 //	gUiItems = NULL;
-	gUiItemCnt = 0;
 	UiItemsWraps = false;
 }
 
@@ -326,7 +323,7 @@ void UiFocusNavigation(SDL_Event *event)
 	}
 
 	if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
-		if (UiItemMouseEvents(event, gUiItems, gUiItemCnt))
+		if (UiItemMouseEvents(event, gUiItems))
 			return;
 	}
 }
@@ -642,7 +639,7 @@ void UiPollAndRender()
 		UiFocusNavigation(&event);
 		UiHandleEvents(&event);
 	}
-	UiRenderItems(gUiItems, gUiItemCnt);
+	UiRenderItems(gUiItems);
 	DrawMouse();
 	UiFadeIn();
 }
@@ -685,7 +682,7 @@ void Render(UiArtTextButton* ui_button)
 
 void Render(UiList* ui_list)
 {
-	for (std::size_t i = 0; i < ui_list->m_length; ++i) {
+	for (int i = 0; i < ui_list->m_length; ++i) {
 		SDL_Rect rect = ui_list->itemRect(i);
 		const UiListItem* item = ui_list->GetItem(i);
 		if (item->m_value == SelectedItem)
@@ -859,15 +856,15 @@ void LoadPalInMem(const SDL_Color *pPal)
 	}
 }
 
-void UiRenderItems(vUiItemBase items, std::size_t size)
+void UiRenderItems(vUiItemBase items)
 {
-	for(int i = 0; i < (int)size; i++)
+	for(std::size_t i = 0; i < items.size(); i++)
 		RenderItem((UiItemBase*)items[i]);
 }
 
-bool UiItemMouseEvents(SDL_Event *event, vUiItemBase items, std::size_t size)
+bool UiItemMouseEvents(SDL_Event *event, vUiItemBase items)
 {
-	if (!items.size() || size == 0)
+	if (items.size() == 0)
 		return false;
 
 	// In SDL2 mouse events already use logical coordinates.
@@ -876,7 +873,7 @@ bool UiItemMouseEvents(SDL_Event *event, vUiItemBase items, std::size_t size)
 #endif
 
 	bool handled = false;
-	for (std::size_t i = 0; i < size; i++) {
+	for (std::size_t i = 0; i < items.size(); i++) {
 		if (HandleMouseEvent(*event, items[i])) {
 			handled = true;
 			break;
@@ -885,7 +882,7 @@ bool UiItemMouseEvents(SDL_Event *event, vUiItemBase items, std::size_t size)
 
 	if (event->type == SDL_MOUSEBUTTONUP && event->button.button == SDL_BUTTON_LEFT) {
 		scrollBarState.downArrowPressed = scrollBarState.upArrowPressed = false;
-		for (std::size_t i = 0; i < size; ++i) {
+		for (std::size_t i = 0; i < items.size(); ++i) {
 			UiItemBase* &item = items[i];
 			if (item->m_type == UI_BUTTON)
 				HandleGlobalMouseUpButton((UiButton*)item);

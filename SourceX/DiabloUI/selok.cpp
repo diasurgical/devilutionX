@@ -22,7 +22,7 @@ void selok_Free()
 {
 	ArtBackground.Unload();
 
-	for(int i = 0; i < (int)vecSelOkDialogItems.size(); i++)
+	for(std::size_t i = 0; i < vecSelOkDialogItems.size(); i++)
 	{
 		UiListItem* pUIListItem = vecSelOkDialogItems[i];
 		if(pUIListItem)
@@ -31,7 +31,7 @@ void selok_Free()
 		vecSelOkDialogItems.clear();
 	}
 
-	for(int i = 0; i < (int)vecSelOkDialog.size(); i++)
+	for(std::size_t i = 0; i < vecSelOkDialog.size(); i++)
 	{
 		UiItemBase* pUIItem = vecSelOkDialog[i];
 		if(pUIItem)
@@ -40,7 +40,7 @@ void selok_Free()
 		vecSelOkDialog.clear();
 	}
 
-	for(int i = 0; i < (int)vecSpawnErrorOkDialog.size(); i++)
+	for(std::size_t i = 0; i < vecSpawnErrorOkDialog.size(); i++)
 	{
 		UiItemBase* pUIItem = vecSpawnErrorOkDialog[i];
 		if(pUIItem)
@@ -104,22 +104,20 @@ void UiSelOkDialog(const char *title, const char *body, bool background)
 	}
 
 	vUiItemBase items = vecSpawnErrorOkDialog;
-	int itemCnt = items.size();
 	if (title != NULL) {
 		strcpy(selok_title, title);
 		items = vecSelOkDialog;
-		itemCnt = items.size();
 	}
 
 	strcpy(dialogText, body);
 	WordWrapArtStr(dialogText, 280);
 
-	UiInitList(0, 0, NULL, selok_Select, selok_Esc, items, itemCnt, false, NULL);
+	UiInitList(0, 0, NULL, selok_Select, selok_Esc, items, false, NULL);
 
 	selok_endMenu = false;
 	while (!selok_endMenu) {
 		UiClearScreen();
-		UiRenderItems(items, itemCnt);
+		UiRenderItems(items);
 		UiPollAndRender();
 	}
 

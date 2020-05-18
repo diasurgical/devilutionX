@@ -23,7 +23,6 @@ bool fontWasLoaded;
 bool textInputWasActive;
 
 vUiItemBase dialogItems;
-std::size_t dialogItemsSize;
 
 bool dialogEnd;
 
@@ -163,7 +162,7 @@ void LoadFallbackPalette()
 	ApplyGamma(logical_palette, fallback_palette, 256);
 }
 
-void Init(const char *text, const char *caption, bool error, bool render_behind)
+void Init(const char *text, const char *caption, bool error, bool renderBehind)
 {
 	{
 		SDL_Rect rect1 = { PANEL_LEFT + 180, 168, 280, 144 };
@@ -192,7 +191,7 @@ void Init(const char *text, const char *caption, bool error, bool render_behind)
 	}
 
 	strcpy(dialogText, text);
-	if (!render_behind) {
+	if (!renderBehind) {
 		LoadBackgroundArt("ui_art\\black.pcx");
 		if (ArtBackground.surface == NULL) {
 			LoadFallbackPalette();
@@ -202,7 +201,6 @@ void Init(const char *text, const char *caption, bool error, bool render_behind)
 	if (caption == NULL) {
 		LoadMaskedArt(error ? "ui_art\\srpopup.pcx" : "ui_art\\spopup.pcx", &dialogArt);
 		dialogItems = vecOkDialog;
-		dialogItemsSize = vecOkDialog.size();
 	} else {
 		if (error) {
 			LoadArt(&dialogArt, popupData, rect.w, rect.h);
@@ -211,7 +209,6 @@ void Init(const char *text, const char *caption, bool error, bool render_behind)
 		}
 		strcpy(dialogCaption, caption);
 		dialogItems = vecOkDialogWithCaption;
-		dialogItemsSize = vecOkDialogWithCaption.size();
 	}
 	LoadSmlButtonArt();
 
@@ -231,7 +228,7 @@ void Deinit()
 	if (textInputWasActive)
 		SDL_StartTextInput();
 
-	for(int i = 0; i < (int)dialogItems.size(); i++)
+	for(std::size_t i = 0; i < dialogItems.size(); i++)
 	{
 		UiItemBase* pUIItem = dialogItems[i];
 
@@ -239,7 +236,7 @@ void Deinit()
 			pUIItem->FreeCache();
 	}
 
-	for(int i = 0; i < (int)vecOkDialog.size(); i++)
+	for(std::size_t i = 0; i < vecOkDialog.size(); i++)
 	{
 		UiItemBase* pUIItem = vecOkDialog[i];
 		if(pUIItem)
@@ -248,7 +245,7 @@ void Deinit()
 		vecOkDialog.clear();
 	}
 
-	for(int i = 0; i < (int)vecOkDialogWithCaption.size(); i++)
+	for(std::size_t i = 0; i < vecOkDialogWithCaption.size(); i++)
 	{
 		UiItemBase* pUIItem = vecOkDialogWithCaption[i];
 		if(pUIItem)
@@ -258,7 +255,7 @@ void Deinit()
 	}
 }
 
-void DialogLoop(vUiItemBase items, std::size_t num_items, vUiItemBase render_behind, std::size_t render_behind_size)
+void DialogLoop(vUiItemBase items, vUiItemBase renderBehind)
 {
 	SDL_Event event;
 	dialogEnd = false;
@@ -267,7 +264,7 @@ void DialogLoop(vUiItemBase items, std::size_t num_items, vUiItemBase render_beh
 			switch (event.type) {
 			case SDL_MOUSEBUTTONDOWN:
 			case SDL_MOUSEBUTTONUP:
-				UiItemMouseEvents(&event, items, num_items);
+				UiItemMouseEvents(&event, items);
 				break;
 			default:
 				switch (GetMenuAction(event)) {
@@ -283,12 +280,12 @@ void DialogLoop(vUiItemBase items, std::size_t num_items, vUiItemBase render_beh
 			UiHandleEvents(&event);
 		}
 
-		if (render_behind_size == 0) {
+		if (renderBehind.size() == 0) {
 			SDL_FillRect(GetOutputSurface(), NULL, 0);
 		} else {
-			UiRenderItems(render_behind, render_behind_size);
+			UiRenderItems(renderBehind);
 		}
-		UiRenderItems(items, num_items);
+		UiRenderItems(items);
 		DrawMouse();
 		UiFadeIn();
 	} while (!dialogEnd);
@@ -296,7 +293,7 @@ void DialogLoop(vUiItemBase items, std::size_t num_items, vUiItemBase render_beh
 
 } // namespace
 
-void UiOkDialog(const char *text, const char *caption, bool error, vUiItemBase render_behind, std::size_t render_behind_size)
+void UiOkDialog(const char *text, const char *caption, bool error, vUiItemBase renderBehind)
 {
 	static bool inDialog = false;
 
@@ -317,25 +314,25 @@ void UiOkDialog(const char *text, const char *caption, bool error, vUiItemBase r
 	}
 
 	inDialog = true;
-	Init(text, caption, error, render_behind_size > 0);
-	DialogLoop(dialogItems, dialogItemsSize, render_behind, render_behind_size);
+	Init(text, caption, error, renderBehind.size() > 0);
+	DialogLoop(dialogItems, renderBehind);
 	Deinit();
 	inDialog = false;
 }
 
-void UiErrorOkDialog(const char *text, const char *caption, vUiItemBase render_behind, std::size_t render_behind_size)
+void UiErrorOkDialog(const char *text, const char *caption, vUiItemBase renderBehind)
 {
-	UiOkDialog(text, caption, /*error=*/true, render_behind, render_behind_size);
+	UiOkDialog(text, caption, /*error=*/true, renderBehind);
 }
 
 void UiErrorOkDialog(const char *text, const char *caption, bool error)
 {
-	UiOkDialog(text, caption, error, vecNULL, 0);
+	UiOkDialog(text, caption, error, vecNULL);
 }
 
-void UiErrorOkDialog(const char *text, vUiItemBase render_behind, std::size_t render_behind_size)
+void UiErrorOkDialog(const char *text, vUiItemBase renderBehind)
 {
-	UiErrorOkDialog(text, NULL, render_behind, render_behind_size);
+	UiErrorOkDialog(text, NULL, renderBehind);
 }
 
 } // namespace dvl

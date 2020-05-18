@@ -58,14 +58,14 @@ void mainmenu_Load(char *name, void (*fnSound)(char *file))
 		LoadBackgroundArt("ui_art\\swmmenu.pcx");
 	}
 
-	UiInitList(MAINMENU_SINGLE_PLAYER, MAINMENU_EXIT_DIABLO, NULL, UiMainMenuSelect, mainmenu_Esc, vecMainMenuDialog, vecMainMenuDialog.size(), true);
+	UiInitList(MAINMENU_SINGLE_PLAYER, MAINMENU_EXIT_DIABLO, NULL, UiMainMenuSelect, mainmenu_Esc, vecMainMenuDialog, true);
 }
 
 void mainmenu_Free()
 {
 	ArtBackground.Unload();
 
-	for(int i = 0; i < (int)vecMainMenuDialog.size(); i++)
+	for(std::size_t i = 0; i < vecMainMenuDialog.size(); i++)
 	{
 		UiItemBase* pUIItem = vecMainMenuDialog[i];
 		if(pUIItem)
@@ -74,7 +74,7 @@ void mainmenu_Free()
 		vecMainMenuDialog.clear();
 	}
 
-	for(int i = 0; i < (int)vecMenuItems.size(); i++)
+	for(std::size_t i = 0; i < vecMenuItems.size(); i++)
 	{
 		UiListItem* pUIMenuItem = vecMenuItems[i];
 		if(pUIMenuItem)

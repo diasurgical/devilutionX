@@ -60,7 +60,7 @@ public:
 		m_rect = tmp;
 		m_iFlags = flags;
 	};
-	
+
 	virtual ~UiItemBase()
 	{
 	};
@@ -217,9 +217,9 @@ public:
 		m_type = UI_TEXT;
 	    m_color = color;
 
-		SDL_Color color1 = { 0, 255, 0, 0 }; 
+		SDL_Color color1 = { 0, 255, 0, 0 };
 	    m_shadow_color = color1;
-			
+
 	    m_text = text;
 		m_render_cache = NULL;
 	}
@@ -228,10 +228,10 @@ public:
 	{
 		m_type = UI_TEXT;
 
-		SDL_Color color1 = { 243, 243, 243, 0 }; 
+		SDL_Color color1 = { 243, 243, 243, 0 };
 	    m_color = color1;
 
-		SDL_Color color2 = { 0, 0, 0, 0 }; 
+		SDL_Color color2 = { 0, 0, 0, 0 };
 	    m_shadow_color = color2;
 
 	    m_text = text;
@@ -295,7 +295,7 @@ public:
 
 //=============================================================================
 
-class UiListItem 
+class UiListItem
 	{
 public:
 	UiListItem(const char *text = "", int value = 0)
@@ -318,7 +318,7 @@ typedef std::vector<UiListItem*> vUiListItem;
 class UiList : public UiItemBase
 {
 public:
-	UiList(vUiListItem vItems, Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, int flags = 0) : UiItemBase(x, y, item_width, item_height, flags)
+	UiList(vUiListItem vItems, Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, int flags = 0) : UiItemBase(x, y, item_width, item_height * vItems.size(), flags)
 	{
 		m_type = UI_LIST;
 		m_length = vItems.size();

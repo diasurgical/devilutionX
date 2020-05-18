@@ -19,7 +19,7 @@ void selyesno_Free()
 {
 	ArtBackground.Unload();
 
-	for(int i = 0; i < (int)vecSelYesNoDialogItems.size(); i++)
+	for(std::size_t i = 0; i < vecSelYesNoDialogItems.size(); i++)
 	{
 		UiListItem* pUIListItem = vecSelYesNoDialogItems[i];
 		if(pUIListItem)
@@ -28,7 +28,7 @@ void selyesno_Free()
 		vecSelYesNoDialogItems.clear();
 	}
 
-	for(int i = 0; i < (int)vecSelYesNoDialog.size(); i++)
+	for(std::size_t i = 0; i < vecSelYesNoDialog.size(); i++)
 	{
 		UiItemBase* pUIItem = vecSelYesNoDialog[i];
 		if(pUIItem)
@@ -76,13 +76,13 @@ bool UiSelHeroYesNoDialog(const char *title, const char *body)
 	strcpy(selyesno_confirmationMessage, body);
 	WordWrapArtStr(selyesno_confirmationMessage, SELYESNO_DIALOG_CONFIRMATION_MESSAGE->m_rect.w);
 
-	UiInitList(0, 1, NULL, selyesno_Select, selyesno_Esc, vecSelYesNoDialog, vecSelYesNoDialog.size(), true, NULL);
+	UiInitList(0, 1, NULL, selyesno_Select, selyesno_Esc, vecSelYesNoDialog, true, NULL);
 
 	selyesno_value = true;
 	selyesno_endMenu = false;
 	while (!selyesno_endMenu) {
 		UiClearScreen();
-		UiRenderItems(vecSelYesNoDialog, vecSelYesNoDialog.size());
+		UiRenderItems(vecSelYesNoDialog);
 		UiPollAndRender();
 	}
 

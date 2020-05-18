@@ -44,9 +44,9 @@ extern void (*gfnSoundFunction)(char *file);
 extern BOOL (*gfnHeroInfo)(BOOL (*fninfofunc)(_uiheroinfo *));
 
 void UiFadeIn();
-bool UiItemMouseEvents(SDL_Event *event, vUiItemBase items, std::size_t size);
+bool UiItemMouseEvents(SDL_Event *event, vUiItemBase items);
 void UiHandleEvents(SDL_Event *event);
-bool UiItemMouseEvents(SDL_Event *event, vUiItemBase items, std::size_t size);
+bool UiItemMouseEvents(SDL_Event *event, vUiItemBase items);
 int GetCenterOffset(int w, int bw = 0);
 void LoadPalInMem(const SDL_Color *pPal);
 void DrawMouse();
@@ -54,11 +54,11 @@ void LoadBackgroundArt(const char *pszFile);
 void UiFocusNavigationSelect();
 void UiFocusNavigationEsc();
 void UiFocusNavigationYesNo();
-void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), vUiItemBase items, int size, bool wraps = false, bool (*fnYesNo)() = NULL);
+void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), vUiItemBase items, bool wraps = false, bool (*fnYesNo)() = NULL);
 void UiInitScrollBar(UiScrollBar *ui_sb, std::size_t viewport_size, const std::size_t *current_offset);
 void UiClearScreen();
 void UiPollAndRender();
-void UiRenderItems(vUiItemBase items, std::size_t size);
+void UiRenderItems(vUiItemBase items);
 void UiInitList_clear();
 
 void DvlIntSetting(const char *valuename, int *value);

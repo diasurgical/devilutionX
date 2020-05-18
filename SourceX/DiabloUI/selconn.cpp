@@ -76,14 +76,14 @@ void selconn_Load()
 	SDL_Rect rect12 = {PANEL_LEFT + 454, 427, 140, 35};
 	vecSelConnDlg.push_back(new UiArtTextButton("Cancel", &UiFocusNavigationEsc, rect12, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
 
-	UiInitList(0, vecConnItems.size() - 1, selconn_Focus, selconn_Select, selconn_Esc, vecSelConnDlg, vecSelConnDlg.size());
+	UiInitList(0, vecConnItems.size() - 1, selconn_Focus, selconn_Select, selconn_Esc, vecSelConnDlg);
 }
 
 void selconn_Free()
 {
 	ArtBackground.Unload();
 
-	for(int i = 0; i < (int)vecConnItems.size(); i++)
+	for(std::size_t i = 0; i < vecConnItems.size(); i++)
 	{
 		UiListItem* pUIItem = vecConnItems[i];
 		if(pUIItem)
@@ -92,7 +92,7 @@ void selconn_Free()
 		vecConnItems.clear();
 	}
 
-	for(int i = 0; i < (int)vecSelConnDlg.size(); i++)
+	for(std::size_t i = 0; i < vecSelConnDlg.size(); i++)
 	{
 		UiItemBase* pUIMenuItem = vecSelConnDlg[i];
 		if(pUIMenuItem)
