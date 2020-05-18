@@ -27,27 +27,24 @@ void selok_Free()
 		UiListItem* pUIListItem = vecSelOkDialogItems[i];
 		if(pUIListItem)
 			delete pUIListItem;
-
-		vecSelOkDialogItems.clear();
 	}
+	vecSelOkDialogItems.clear();
 
 	for(int i = 0; i < (int)vecSelOkDialog.size(); i++)
 	{
 		UiItemBase* pUIItem = vecSelOkDialog[i];
 		if(pUIItem)
 			delete pUIItem;
-
-		vecSelOkDialog.clear();
 	}
+	vecSelOkDialog.clear();
 
 	for(int i = 0; i < (int)vecSpawnErrorOkDialog.size(); i++)
 	{
 		UiItemBase* pUIItem = vecSpawnErrorOkDialog[i];
 		if(pUIItem)
 			delete pUIItem;
-
-		vecSpawnErrorOkDialog.clear();
 	}
+	vecSpawnErrorOkDialog.clear();
 }
 
 void selok_Select(int value)

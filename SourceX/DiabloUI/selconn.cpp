@@ -88,21 +88,22 @@ void selconn_Free()
 		UiListItem* pUIItem = vecConnItems[i];
 		if(pUIItem)
 			delete pUIItem;
-
-		vecConnItems.clear();
 	}
+	vecConnItems.clear();
 
 	for(int i = 0; i < (int)vecSelConnDlg.size(); i++)
 	{
 		UiItemBase* pUIMenuItem = vecSelConnDlg[i];
 		if(pUIMenuItem)
 			delete pUIMenuItem;
-
-		vecSelConnDlg.clear();
 	}
+	vecSelConnDlg.clear();
 
 	if(SELCONNECT_DIALOG_DESCRIPTION)
-		delete SELCONNECT_DIALOG_DESCRIPTION;
+	{
+//		delete SELCONNECT_DIALOG_DESCRIPTION; //Freed in the above loop
+		SELCONNECT_DIALOG_DESCRIPTION = NULL;
+	}
 }
 
 void selconn_Esc()

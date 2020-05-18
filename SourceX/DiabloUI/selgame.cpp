@@ -43,18 +43,16 @@ void selgame_FreeVectors()
 		UiListItem* pUIItem = vecSelGameDlgItems[i];
 		if(pUIItem)
 			delete pUIItem;
-
-		vecSelGameDlgItems.clear();
 	}
+	vecSelGameDlgItems.clear();
 
 	for(int i = 0; i < (int)vecSelGameDialog.size(); i++)
 	{
 		UiItemBase* pUIItem = vecSelGameDialog[i];
 		if(pUIItem)
 			delete pUIItem;
-
-		vecSelGameDialog.clear();
 	}
+	vecSelGameDialog.clear();
 }
 
 void selgame_Free()

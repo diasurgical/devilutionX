@@ -22,9 +22,8 @@ void title_Free()
 		UiItemBase* pUIItem = vecTitleScreen[i];
 		if(pUIItem)
 			delete pUIItem;
-
-		vecTitleScreen.clear();
 	}
+	vecTitleScreen.clear();
 }
 
 void UiTitleDialog()
