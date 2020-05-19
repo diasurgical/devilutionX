@@ -35,7 +35,7 @@ void UiTitleDialog()
 		UiFadeIn();
 
 		while (SDL_PollEvent(&event)) {
-			if (GetMenuAction(event) != MenuAction::NONE) {
+			if (GetMenuAction(event) != MenuAction_NONE) {
 				endMenu = true;
 				break;
 			}

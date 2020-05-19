@@ -277,8 +277,8 @@ BOOL UiCreditsDialog(int a1)
 				break;
 			default:
 				switch (GetMenuAction(event)) {
-				case MenuAction::BACK:
-				case MenuAction::SELECT:
+				case MenuAction_BACK:
+				case MenuAction_SELECT:
 					endMenu = true;
 					break;
 				default:

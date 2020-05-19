@@ -233,8 +233,8 @@ void DialogLoop(UiItem *items, std::size_t num_items, UiItem *render_behind, std
 				break;
 			default:
 				switch (GetMenuAction(event)) {
-				case MenuAction::BACK:
-				case MenuAction::SELECT:
+				case MenuAction_BACK:
+				case MenuAction_SELECT:
 					dialogEnd = true;
 					break;
 				default:

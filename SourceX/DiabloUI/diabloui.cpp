@@ -220,25 +220,25 @@ void UiFocusNavigation(SDL_Event *event)
 	}
 
 	switch (GetMenuAction(*event)) {
-	case MenuAction::SELECT:
+	case MenuAction_SELECT:
 		UiFocusNavigationSelect();
 		return;
-	case MenuAction::UP:
+	case MenuAction_UP:
 		UiFocus(SelectedItem - 1, UiItemsWraps);
 		return;
-	case MenuAction::DOWN:
+	case MenuAction_DOWN:
 		UiFocus(SelectedItem + 1, UiItemsWraps);
 		return;
-	case MenuAction::PAGE_UP:
+	case MenuAction_PAGE_UP:
 		UiFocusPageUp();
 		return;
-	case MenuAction::PAGE_DOWN:
+	case MenuAction_PAGE_DOWN:
 		UiFocusPageDown();
 		return;
-	case MenuAction::DELETE:
+	case MenuAction_DELETE:
 		UiFocusNavigationYesNo();
 		return;
-	case MenuAction::BACK:
+	case MenuAction_BACK:
 		if (!gfnListEsc)
 			break;
 		UiFocusNavigationEsc();

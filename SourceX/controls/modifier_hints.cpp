@@ -62,29 +62,29 @@ struct CircleMenuHint {
 bool IsTopActive(const CircleMenuHint &hint)
 {
 	if (hint.is_dpad)
-		return IsControllerButtonPressed(ControllerButton::BUTTON_DPAD_UP);
-	return IsControllerButtonPressed(ControllerButton::BUTTON_Y);
+		return IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_UP);
+	return IsControllerButtonPressed(ControllerButton_BUTTON_Y);
 }
 
 bool IsRightActive(const CircleMenuHint &hint)
 {
 	if (hint.is_dpad)
-		return IsControllerButtonPressed(ControllerButton::BUTTON_DPAD_RIGHT);
-	return IsControllerButtonPressed(ControllerButton::BUTTON_B);
+		return IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_RIGHT);
+	return IsControllerButtonPressed(ControllerButton_BUTTON_B);
 }
 
 bool IsBottomActive(const CircleMenuHint &hint)
 {
 	if (hint.is_dpad)
-		return IsControllerButtonPressed(ControllerButton::BUTTON_DPAD_DOWN);
-	return IsControllerButtonPressed(ControllerButton::BUTTON_A);
+		return IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_DOWN);
+	return IsControllerButtonPressed(ControllerButton_BUTTON_A);
 }
 
 bool IsLeftActive(const CircleMenuHint &hint)
 {
 	if (hint.is_dpad)
-		return IsControllerButtonPressed(ControllerButton::BUTTON_DPAD_LEFT);
-	return IsControllerButtonPressed(ControllerButton::BUTTON_X);
+		return IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_LEFT);
+	return IsControllerButtonPressed(ControllerButton_BUTTON_X);
 }
 
 text_color CircleMenuHintTextColor(bool active)
