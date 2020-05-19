@@ -8,7 +8,7 @@ namespace dvl {
 extern Art ArtScrollBarBackground;
 extern Art ArtScrollBarThumb;
 extern Art ArtScrollBarArrow;
-const Sint16 SCROLLBAR_BG_WIDTH = 25;
+const Uint16 SCROLLBAR_BG_WIDTH = 25;
 
 extern Art ArtScrollBarArrow;
 enum ScrollBarArrowFrame {
@@ -19,7 +19,7 @@ enum ScrollBarArrowFrame {
 };
 
 extern Art ArtScrollBarThumb;
-const Sint16 SCROLLBAR_ARROW_WIDTH = 25;
+const Uint16 SCROLLBAR_ARROW_WIDTH = 25;
 
 inline SDL_Rect UpArrowRect(const UiScrollBar* sb)
 {
@@ -43,7 +43,7 @@ inline SDL_Rect DownArrowRect(const UiScrollBar* sb)
 	return Tmp;
 }
 
-inline Uint16 BarHeight(const UiScrollBar* sb)
+inline Uint16 BarHeight(const UiScrollBar *sb)
 {
 	return sb->m_rect.h - 2 * sb->m_arrow->h();
 }
