@@ -3,23 +3,22 @@
 #include "all.h"
 
 namespace dvl {
-namespace MenuActionNS {
+
 enum MenuAction {
-	NONE = 0,
-	SELECT,
-	BACK,
-	MADELETE,
+	MenuAction_NONE = 0,
+	MenuAction_SELECT,
+	MenuAction_BACK,
+	MenuAction_DELETE,
 
-	UP,
-	DOWN,
-	LEFT,
-	RIGHT,
+	MenuAction_UP,
+	MenuAction_DOWN,
+	MenuAction_LEFT,
+	MenuAction_RIGHT,
 
-	PAGE_UP,
-	PAGE_DOWN,
+	MenuAction_PAGE_UP,
+	MenuAction_PAGE_DOWN,
 };
-}
 
-MenuActionNS::MenuAction GetMenuAction(const SDL_Event &event);
+MenuAction GetMenuAction(const SDL_Event &event);
 
 } // namespace dvl

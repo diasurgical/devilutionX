@@ -5,36 +5,36 @@
 
 namespace dvl {
 
-MenuActionNS::MenuAction GetMenuAction(const SDL_Event &event)
+MenuAction GetMenuAction(const SDL_Event &event)
 {
 	const ControllerButtonEvent ctrl_event = ToControllerButtonEvent(event);
-	if (ctrl_event.button != ControllerButtonNS::NONE)
+	if (ctrl_event.button != ControllerButton_NONE)
 		sgbControllerActive = true;
 
 	if (!ctrl_event.up) {
 		switch (ctrl_event.button) {
-		case ControllerButtonNS::CBIGNORE:
-			return MenuActionNS::NONE;
-		case ControllerButtonNS::BUTTON_B: // Right button
-		case  ControllerButtonNS::BUTTON_START:
-			return MenuActionNS::SELECT;
-		case  ControllerButtonNS::BUTTON_BACK:
-		case  ControllerButtonNS::BUTTON_A: // Bottom button
-			return MenuActionNS::BACK;
-		case  ControllerButtonNS::BUTTON_X: // Left button
-			return MenuActionNS::MADELETE;
-		case  ControllerButtonNS::BUTTON_DPAD_UP:
-			return MenuActionNS::UP;
-		case  ControllerButtonNS::BUTTON_DPAD_DOWN:
-			return MenuActionNS::DOWN;
-		case  ControllerButtonNS::BUTTON_DPAD_LEFT:
-			return MenuActionNS::LEFT;
-		case  ControllerButtonNS::BUTTON_DPAD_RIGHT:
-			return MenuActionNS::RIGHT;
-		case  ControllerButtonNS::BUTTON_LEFTSHOULDER:
-			return MenuActionNS::PAGE_UP;
-		case  ControllerButtonNS::BUTTON_RIGHTSHOULDER:
-			return MenuActionNS::PAGE_DOWN;
+		case ControllerButton_IGNORE:
+			return MenuAction_NONE;
+		case ControllerButton_BUTTON_B: // Right button
+		case  ControllerButton_BUTTON_START:
+			return MenuAction_SELECT;
+		case  ControllerButton_BUTTON_BACK:
+		case  ControllerButton_BUTTON_A: // Bottom button
+			return MenuAction_BACK;
+		case  ControllerButton_BUTTON_X: // Left button
+			return MenuAction_DELETE;
+		case  ControllerButton_BUTTON_DPAD_UP:
+			return MenuAction_UP;
+		case  ControllerButton_BUTTON_DPAD_DOWN:
+			return MenuAction_DOWN;
+		case  ControllerButton_BUTTON_DPAD_LEFT:
+			return MenuAction_LEFT;
+		case  ControllerButton_BUTTON_DPAD_RIGHT:
+			return MenuAction_RIGHT;
+		case  ControllerButton_BUTTON_LEFTSHOULDER:
+			return MenuAction_PAGE_UP;
+		case  ControllerButton_BUTTON_RIGHTSHOULDER:
+			return MenuAction_PAGE_DOWN;
 		default:
 			break;
 		}
@@ -53,47 +53,47 @@ MenuActionNS::MenuAction GetMenuAction(const SDL_Event &event)
 		remap_keyboard_key(&sym);
 		switch (sym) {
 		case SDLK_UP:
-			return MenuActionNS::UP;
+			return MenuAction_UP;
 		case SDLK_DOWN:
-			return MenuActionNS::DOWN;
+			return MenuAction_DOWN;
 		case SDLK_TAB:
 			if (SDL_GetModState() & KMOD_SHIFT)
-				return MenuActionNS::UP;
+				return MenuAction_UP;
 			else
-				return MenuActionNS::DOWN;
+				return MenuAction_DOWN;
 		case SDLK_PAGEUP:
-			return MenuActionNS::PAGE_UP;
+			return MenuAction_PAGE_UP;
 		case SDLK_PAGEDOWN:
-			return MenuActionNS::PAGE_DOWN;
+			return MenuAction_PAGE_DOWN;
 		case SDLK_RETURN: {
 			const Uint8 *state = SDLC_GetKeyState();
 			if (!state[SDLC_KEYSTATE_LALT] && !state[SDLC_KEYSTATE_RALT]) {
-				return MenuActionNS::SELECT;
+				return MenuAction_SELECT;
 			}
 			break;
 		}
 		case SDLK_KP_ENTER:
-			return MenuActionNS::SELECT;
+			return MenuAction_SELECT;
 		case SDLK_SPACE:
 			if (!SDL_IsTextInputActive()) {
-				return MenuActionNS::SELECT;
+				return MenuAction_SELECT;
 			}
 			break;
 		case SDLK_DELETE:
-			return MenuActionNS::MADELETE;
+			return MenuAction_DELETE;
 		case SDLK_LEFT:
-			return MenuActionNS::LEFT;
+			return MenuAction_LEFT;
 		case SDLK_RIGHT:
-			return MenuActionNS::RIGHT;
+			return MenuAction_RIGHT;
 		case SDLK_ESCAPE:
-			return MenuActionNS::BACK;
+			return MenuAction_BACK;
 		default:
 			break;
 		}
 	}
 #endif
 
-	return MenuActionNS::NONE;
+	return MenuAction_NONE;
 } // namespace dvl
 
 } // namespace dvl

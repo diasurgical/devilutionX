@@ -154,13 +154,13 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 		dest.h = static_cast<Uint16>(tmp->h);
 
 		switch (x_align) {
-		case TextAlignmentNS::END:
+		case TextAlignment_END:
 			dest.x = textbuf->w - tmp->w;
 			break;
-		case TextAlignmentNS::CENTER:
+		case TextAlignment_CENTER:
 			dest.x = (textbuf->w - tmp->w) / 2;
 			break;
-		case TextAlignmentNS::BEGIN:
+		case TextAlignment_BEGIN:
 			dest.x = 0;
 			break;
 		}

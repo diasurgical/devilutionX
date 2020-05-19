@@ -400,36 +400,36 @@ bool PeekMessage(LPMSG lpMsg)
 
 	GameAction action;
 	if (GetGameAction(e, &action)) {
-		if (action.type != GameActionTypeNS::NONE) {
+		if (action.type != GameActionType_NONE) {
 			sgbControllerActive = true;
 
 			if (movie_playing) {
 				lpMsg->message = DVL_WM_KEYDOWN;
-				if (action.type == GameActionTypeNS::SEND_KEY)
+				if (action.type == GameActionType_SEND_KEY)
 					lpMsg->wParam = action.send_key.vk_code;
 				return true;
 			}
 		}
 
 		switch (action.type) {
-		case GameActionTypeNS::NONE:
+		case GameActionType_NONE:
 			break;
-		case GameActionTypeNS::USE_HEALTH_POTION:
+		case GameActionType_USE_HEALTH_POTION:
 			UseBeltItem(BLT_HEALING);
 			break;
-		case GameActionTypeNS::USE_MANA_POTION:
+		case GameActionType_USE_MANA_POTION:
 			UseBeltItem(BLT_MANA);
 			break;
-		case GameActionTypeNS::PRIMARY_ACTION:
+		case GameActionType_PRIMARY_ACTION:
 			PerformPrimaryAction();
 			break;
-		case GameActionTypeNS::SECONDARY_ACTION:
+		case GameActionType_SECONDARY_ACTION:
 			PerformSecondaryAction();
 			break;
-		case GameActionTypeNS::CAST_SPELL:
+		case GameActionType_CAST_SPELL:
 			PerformSpellAction();
 			break;
-		case GameActionTypeNS::TOGGLE_QUICK_SPELL_MENU:
+		case GameActionType_TOGGLE_QUICK_SPELL_MENU:
 			if (!invflag || BlurInventory()) {
 				if (!spselflag)
 					DoSpeedBook();
@@ -441,7 +441,7 @@ bool PeekMessage(LPMSG lpMsg)
 				StoreSpellCoords();
 			}
 			break;
-		case GameActionTypeNS::TOGGLE_CHARACTER_INFO:
+		case GameActionType_TOGGLE_CHARACTER_INFO:
 			chrflag = !chrflag;
 			if (chrflag) {
 				questlog = false;
@@ -451,7 +451,7 @@ bool PeekMessage(LPMSG lpMsg)
 				FocusOnCharInfo();
 			}
 			break;
-		case GameActionTypeNS::TOGGLE_QUEST_LOG:
+		case GameActionType_TOGGLE_QUEST_LOG:
 			if (!questlog) {
 				StartQuestlog();
 				chrflag = false;
@@ -460,7 +460,7 @@ bool PeekMessage(LPMSG lpMsg)
 				questlog = false;
 			}
 			break;
-		case GameActionTypeNS::TOGGLE_INVENTORY:
+		case GameActionType_TOGGLE_INVENTORY:
 			if (invflag) {
 				BlurInventory();
 			} else {
@@ -472,18 +472,18 @@ bool PeekMessage(LPMSG lpMsg)
 				FocusOnInventory();
 			}
 			break;
-		case GameActionTypeNS::TOGGLE_SPELL_BOOK:
+		case GameActionType_TOGGLE_SPELL_BOOK:
 			if (BlurInventory()) {
 				invflag = false;
 				spselflag = false;
 				sbookflag = !sbookflag;
 			}
 			break;
-		case GameActionTypeNS::SEND_KEY:
+		case GameActionType_SEND_KEY:
 			lpMsg->message = action.send_key.up ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
 			lpMsg->wParam = action.send_key.vk_code;
 			return true;
-		case GameActionTypeNS::SEND_MOUSE_CLICK:
+		case GameActionType_SEND_MOUSE_CLICK:
 			sgbControllerActive = false;
 			switch (action.send_mouse_click.button) {
 			case GameActionSendMouseClick::LEFT:

@@ -6,14 +6,11 @@
 
 namespace dvl {
 
-namespace TextAlignmentNS
-{
 enum TextAlignment {
-	BEGIN = 0,
-	CENTER,
-	END,
+	TextAlignment_BEGIN = 0,
+	TextAlignment_CENTER,
+	TextAlignment_END,
 };
-}
 
 /**
  * Renders UTF-8, wrapping lines to avoid exceeding wrapLength, and aligning
@@ -22,6 +19,6 @@ enum TextAlignment {
  * This method is slow. Caching the result is recommended.
  */
 SDL_Surface *RenderUTF8_Solid_Wrapped(
-  TTF_Font *font, const char *text, SDL_Color fg, Uint32 wrapLength, const int x_align = TextAlignmentNS::BEGIN);
+  TTF_Font *font, const char *text, SDL_Color fg, Uint32 wrapLength, const int x_align = TextAlignment_BEGIN);
 
 } // namespace dvl

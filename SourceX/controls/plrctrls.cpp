@@ -260,7 +260,7 @@ void FindMeleeTarget()
 		const int start_x = plr[myplr]._pfutx;
 		const int start_y = plr[myplr]._pfuty;
 		visited[start_x][start_y] = true;
-		
+
 		SearchNode sTmp(start_x, start_y, 0);
 		queue.push_back(sTmp);
 	}
@@ -462,9 +462,9 @@ void Interact()
 	}
 }
 
-void AttrIncBtnSnap(MoveDirectionYNS::MoveDirectionY dir)
+void AttrIncBtnSnap(MoveDirectionY dir)
 {
-	if (dir == MoveDirectionYNS::NONE)
+	if (dir == MoveDirectionY_NONE)
 		return;
 
 	if (chrbtnactive && plr[myplr]._pStatPts <= 0)
@@ -488,10 +488,10 @@ void AttrIncBtnSnap(MoveDirectionYNS::MoveDirectionY dir)
 		}
 	}
 
-	if (dir == MoveDirectionYNS::UP) {
+	if (dir == MoveDirectionY_UP) {
 		if (slot > 0)
 			--slot;
-	} else if (dir == MoveDirectionYNS::DOWN) {
+	} else if (dir == MoveDirectionY_DOWN) {
 		if (slot < 3)
 			++slot;
 	}
@@ -529,7 +529,7 @@ void InvMove(MoveDirection dir)
 		slot = SLOTXY_BELT_LAST;
 
 	// when item is on cursor, this is the real cursor XY
-	if (dir.x == MoveDirectionXNS::LEFT) {
+	if (dir.x == MoveDirectionX_LEFT) {
 		if (slot >= SLOTXY_HAND_RIGHT_FIRST && slot <= SLOTXY_HAND_RIGHT_LAST) {
 			x = InvRect[SLOTXY_CHEST_FIRST].X + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_CHEST_FIRST].Y - (INV_SLOT_SIZE_PX / 2);
@@ -557,7 +557,7 @@ void InvMove(MoveDirection dir)
 				y = InvRect[slot].Y - (INV_SLOT_SIZE_PX / 2);
 			}
 		}
-	} else if (dir.x == MoveDirectionXNS::RIGHT) {
+	} else if (dir.x == MoveDirectionX_RIGHT) {
 		if (slot == SLOTXY_RING_LEFT) {
 			x = InvRect[SLOTXY_RING_RIGHT].X + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_RING_RIGHT].Y - (INV_SLOT_SIZE_PX / 2);
@@ -584,7 +584,7 @@ void InvMove(MoveDirection dir)
 			}
 		}
 	}
-	if (dir.y == MoveDirectionYNS::UP) {
+	if (dir.y == MoveDirectionY_UP) {
 		if (slot > 24 && slot <= 27) { // first 3 general slots
 			x = InvRect[SLOTXY_RING_LEFT].X + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_RING_LEFT].Y - (INV_SLOT_SIZE_PX / 2);
@@ -618,7 +618,7 @@ void InvMove(MoveDirection dir)
 			x = InvRect[slot].X + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[slot].Y - (INV_SLOT_SIZE_PX / 2);
 		}
-	} else if (dir.y == MoveDirectionYNS::DOWN) {
+	} else if (dir.y == MoveDirectionY_DOWN) {
 		if (slot >= SLOTXY_HEAD_FIRST && slot <= SLOTXY_HEAD_LAST) {
 			x = InvRect[SLOTXY_CHEST_FIRST].X + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_CHEST_FIRST].Y - (INV_SLOT_SIZE_PX / 2);
@@ -697,7 +697,7 @@ void HotSpellMove(MoveDirection dir)
 		}
 	}
 
-	if (dir.y == MoveDirectionYNS::UP) {
+	if (dir.y == MoveDirectionY_UP) {
 		if (speedspellscoords[spbslot].y == 307 && hsr[1] > 0) { // we're in row 1, check if row 2 has spells
 			if (HSExists(MouseX, 251)) {
 				x = MouseX;
@@ -709,7 +709,7 @@ void HotSpellMove(MoveDirection dir)
 				y = 195;
 			}
 		}
-	} else if (dir.y == MoveDirectionYNS::DOWN) {
+	} else if (dir.y == MoveDirectionY_DOWN) {
 		if (speedspellscoords[spbslot].y == 251) { // we're in row 2
 			if (HSExists(MouseX, 307)) {
 				x = MouseX;
@@ -722,13 +722,13 @@ void HotSpellMove(MoveDirection dir)
 			}
 		}
 	}
-	if (dir.x == MoveDirectionXNS::LEFT) {
+	if (dir.x == MoveDirectionX_LEFT) {
 		if (spbslot >= speedspellcount - 1)
 			return;
 		spbslot++;
 		x = speedspellscoords[spbslot].x;
 		y = speedspellscoords[spbslot].y;
-	} else if (dir.x == MoveDirectionXNS::RIGHT) {
+	} else if (dir.x == MoveDirectionX_RIGHT) {
 		if (spbslot <= 0)
 			return;
 		spbslot--;
@@ -749,10 +749,10 @@ void SpellBookMove(MoveDirection dir)
 	}
 	invmove = ticks;
 
-	if (dir.x == MoveDirectionXNS::LEFT) {
+	if (dir.x == MoveDirectionX_LEFT) {
 		if (sbooktab > 0)
 			sbooktab--;
-	} else if (dir.x == MoveDirectionXNS::RIGHT) {
+	} else if (dir.x == MoveDirectionX_RIGHT) {
 		if (sbooktab < 3)
 			sbooktab++;
 	}
@@ -826,7 +826,7 @@ void WalkInDir(MoveDirection dir)
 	const int x = plr[myplr]._pfutx;
 	const int y = plr[myplr]._pfuty;
 
-	if (dir.x == MoveDirectionXNS::NONE && dir.y == MoveDirectionYNS::NONE) {
+	if (dir.x == MoveDirectionX_NONE && dir.y == MoveDirectionY_NONE) {
 		if (sgbControllerActive && plr[myplr].walkpath[0] != WALK_NONE && plr[myplr].destAction == ACTION_NONE)
 			NetSendCmdLoc(true, CMD_WALKXY, x, y); // Stop walking
 		return;
@@ -846,12 +846,12 @@ void WalkInDir(MoveDirection dir)
 void Movement()
 {
 	if (InGameMenu() || questlog
-	    || IsControllerButtonPressed(ControllerButtonNS::BUTTON_START)
-	    || IsControllerButtonPressed(ControllerButtonNS::BUTTON_BACK))
+	    || IsControllerButtonPressed(ControllerButton_BUTTON_START)
+	    || IsControllerButtonPressed(ControllerButton_BUTTON_BACK))
 		return;
 
 	MoveDirection move_dir = GetMoveDirection();
-	if (move_dir.x != MoveDirectionXNS::NONE || move_dir.y != MoveDirectionYNS::NONE) {
+	if (move_dir.x != MoveDirectionX_NONE || move_dir.y != MoveDirectionY_NONE) {
 		sgbControllerActive = true;
 	}
 

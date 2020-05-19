@@ -98,7 +98,7 @@ bool ProcessControllerMotion(const SDL_Event &event)
 #endif
 
 	// SELECT + D-Pad simulating mouse movement.
-	if (!IsControllerButtonPressed(ControllerButtonNS::BUTTON_BACK)) {
+	if (!IsControllerButtonPressed(ControllerButton_BUTTON_BACK)) {
 		rightStickX = 0;
 		rightStickY = 0;
 		return false;
@@ -107,16 +107,16 @@ bool ProcessControllerMotion(const SDL_Event &event)
 	const ControllerButtonEvent ctrl_event = ToControllerButtonEvent(event);
 	if (!IsDPadButton(ctrl_event.button))
 		return false;
-	if (IsControllerButtonPressed(ControllerButtonNS::BUTTON_DPAD_LEFT)) {
+	if (IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_LEFT)) {
 		rightStickX = -1;
-	} else if (IsControllerButtonPressed(ControllerButtonNS::BUTTON_DPAD_RIGHT)) {
+	} else if (IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_RIGHT)) {
 		rightStickX = 1;
 	} else {
 		rightStickX = 0;
 	}
-	if (IsControllerButtonPressed(ControllerButtonNS::BUTTON_DPAD_UP)) {
+	if (IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_UP)) {
 		rightStickY = 1;
-	} else if (IsControllerButtonPressed(ControllerButtonNS::BUTTON_DPAD_DOWN)) {
+	} else if (IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_DOWN)) {
 		rightStickY = -1;
 	} else {
 		rightStickY = 0;

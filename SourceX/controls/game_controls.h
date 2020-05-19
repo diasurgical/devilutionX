@@ -3,23 +3,21 @@
 #include "all.h"
 
 namespace dvl {
-namespace GameActionTypeNS {
 enum GameActionType {
-	NONE = 0,
-	USE_HEALTH_POTION,
-	USE_MANA_POTION,
-	PRIMARY_ACTION,   // Talk to towners, click on inv items, attack, etc.
-	SECONDARY_ACTION, // Open chests, doors, pickup items.
-	CAST_SPELL,
-	TOGGLE_INVENTORY,
-	TOGGLE_CHARACTER_INFO,
-	TOGGLE_QUICK_SPELL_MENU,
-	TOGGLE_SPELL_BOOK,
-	TOGGLE_QUEST_LOG,
-	SEND_KEY,
-	SEND_MOUSE_CLICK,
+	GameActionType_NONE = 0,
+	GameActionType_USE_HEALTH_POTION,
+	GameActionType_USE_MANA_POTION,
+	GameActionType_PRIMARY_ACTION,   // Talk to towners, click on inv items, attack, etc.
+	GameActionType_SECONDARY_ACTION, // Open chests, doors, pickup items.
+	GameActionType_CAST_SPELL,
+	GameActionType_TOGGLE_INVENTORY,
+	GameActionType_TOGGLE_CHARACTER_INFO,
+	GameActionType_TOGGLE_QUICK_SPELL_MENU,
+	GameActionType_TOGGLE_SPELL_BOOK,
+	GameActionType_TOGGLE_QUEST_LOG,
+	GameActionType_SEND_KEY,
+	GameActionType_SEND_MOUSE_CLICK,
 };
-}
 
 struct GameActionSendKey {
 	GameActionSendKey()
@@ -48,7 +46,7 @@ struct GameActionSendMouseClick {
 	GameActionSendMouseClick(Button pButton, bool bUp) {
 		button = pButton;
 		up = bUp;
-	}	
+	}
 
 	Button button;
 	bool up;
@@ -56,25 +54,25 @@ struct GameActionSendMouseClick {
 
 struct GameAction {
 	GameAction() {
-		type = GameActionTypeNS::NONE;
+		type = GameActionType_NONE;
 	}
 
-	GameAction(GameActionTypeNS::GameActionType ptype) {
+	GameAction(GameActionType ptype) {
 		type = ptype;
 	}
 
 	GameAction(GameActionSendKey skey) {
-		type = GameActionTypeNS::SEND_KEY;
+		type = GameActionType_SEND_KEY;
 		send_key = skey;
 	}
 
 	GameAction(GameActionSendMouseClick s_mouse_click) {
-		type = GameActionTypeNS::SEND_MOUSE_CLICK;
+		type = GameActionType_SEND_MOUSE_CLICK;
 		send_mouse_click = s_mouse_click;
 	}
 
 //private:
-	GameActionTypeNS::GameActionType type;
+	GameActionType type;
 		GameActionSendKey send_key;
 		GameActionSendMouseClick send_mouse_click;
 
@@ -82,37 +80,33 @@ struct GameAction {
 
 bool GetGameAction(const SDL_Event &event, GameAction *action);
 
-namespace MoveDirectionXNS {
 enum MoveDirectionX {
-	NONE = 0,
-	LEFT,
-	RIGHT
+	MoveDirectionX_NONE = 0,
+	MoveDirectionX_LEFT,
+	MoveDirectionX_RIGHT
 };
-}
 
-namespace MoveDirectionYNS {
 enum MoveDirectionY {
-	NONE = 0,
-	UP,
-	DOWN
+	MoveDirectionY_NONE = 0,
+	MoveDirectionY_UP,
+	MoveDirectionY_DOWN
 };
-}
 
 struct MoveDirection {
 	MoveDirection()
 	{
-		x = MoveDirectionXNS::NONE;
-		y = MoveDirectionYNS::NONE;
+		x = MoveDirectionX_NONE;
+		y = MoveDirectionY_NONE;
 	}
 
-	MoveDirection(MoveDirectionXNS::MoveDirectionX MX, MoveDirectionYNS::MoveDirectionY MY)
+	MoveDirection(MoveDirectionX MX, MoveDirectionY MY)
 	{
 		x = MX;
 		y = MY;
 	}
 
-	MoveDirectionXNS::MoveDirectionX x;
-	MoveDirectionYNS::MoveDirectionY y;
+	MoveDirectionX x;
+	MoveDirectionY y;
 };
 MoveDirection GetMoveDirection();
 

@@ -7,9 +7,9 @@
 
 namespace dvl {
 
-ControllerButtonNS::ControllerButton JoyButtonToControllerButton(const SDL_Event &event);
+ControllerButton JoyButtonToControllerButton(const SDL_Event &event);
 
-bool IsJoystickButtonPressed(ControllerButtonNS::ControllerButton button);
+bool IsJoystickButtonPressed(ControllerButton button);
 
 bool ProcessJoystickAxisMotion(const SDL_Event &event);
 

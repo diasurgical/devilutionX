@@ -7,9 +7,9 @@
 #ifndef USE_SDL1
 namespace dvl {
 
-ControllerButtonNS::ControllerButton GameControllerToControllerButton(const SDL_Event &event);
+ControllerButton GameControllerToControllerButton(const SDL_Event &event);
 
-bool IsGameControllerButtonPressed(ControllerButtonNS::ControllerButton button);
+bool IsGameControllerButtonPressed(ControllerButton button);
 
 bool ProcessGameControllerAxisMotion(const SDL_Event &event);
 

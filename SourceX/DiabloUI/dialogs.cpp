@@ -266,8 +266,8 @@ void DialogLoop(vUiItemBase items, vUiItemBase renderBehind)
 				break;
 			default:
 				switch (GetMenuAction(event)) {
-				case MenuActionNS::BACK:
-				case MenuActionNS::SELECT:
+				case MenuAction_BACK:
+				case MenuAction_SELECT:
 					dialogEnd = true;
 					break;
 				default:

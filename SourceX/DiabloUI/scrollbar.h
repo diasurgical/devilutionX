@@ -11,15 +11,12 @@ extern Art ArtScrollBarArrow;
 const Sint16 SCROLLBAR_BG_WIDTH = 25;
 
 extern Art ArtScrollBarArrow;
-namespace ScrollBarArrowFrameNS
-{
 enum ScrollBarArrowFrame {
-	UP_ACTIVE = 0,
-	UP,
-	DOWN_ACTIVE,
-	DOWN,
+	ScrollBarArrowFrame_UP_ACTIVE = 0,
+	ScrollBarArrowFrame_UP,
+	ScrollBarArrowFrame_DOWN_ACTIVE,
+	ScrollBarArrowFrame_DOWN,
 };
-}
 
 extern Art ArtScrollBarThumb;
 const Sint16 SCROLLBAR_ARROW_WIDTH = 25;
