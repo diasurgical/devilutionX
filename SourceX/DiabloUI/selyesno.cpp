@@ -24,18 +24,16 @@ void selyesno_Free()
 		UiListItem* pUIListItem = vecSelYesNoDialogItems[i];
 		if(pUIListItem)
 			delete pUIListItem;
-
-		vecSelYesNoDialogItems.clear();
 	}
+	vecSelYesNoDialogItems.clear();
 
 	for(std::size_t i = 0; i < vecSelYesNoDialog.size(); i++)
 	{
 		UiItemBase* pUIItem = vecSelYesNoDialog[i];
 		if(pUIItem)
 			delete pUIItem;
-
-		vecSelYesNoDialog.clear();
 	}
+	vecSelYesNoDialog.clear();
 }
 
 void selyesno_Select(int value)

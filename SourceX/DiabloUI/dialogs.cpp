@@ -241,18 +241,16 @@ void Deinit()
 		UiItemBase* pUIItem = vecOkDialog[i];
 		if(pUIItem)
 			delete pUIItem;
-
-		vecOkDialog.clear();
 	}
+	vecOkDialog.clear();
 
 	for(std::size_t i = 0; i < vecOkDialogWithCaption.size(); i++)
 	{
 		UiItemBase* pUIItem = vecOkDialogWithCaption[i];
 		if(pUIItem)
 			delete pUIItem;
-
-		vecOkDialogWithCaption.clear();
 	}
+	vecOkDialogWithCaption.clear();
 }
 
 void DialogLoop(vUiItemBase items, vUiItemBase renderBehind)

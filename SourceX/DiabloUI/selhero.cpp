@@ -71,63 +71,57 @@ void selhero_Free()
 		UiItemBase* pUIItem = vecSelHeroDialog[i];
 		if(pUIItem)
 			delete pUIItem;
-
-		vecSelHeroDialog.clear();
 	}
+	vecSelHeroDialog.clear();
 
 	for(std::size_t i = 0; i < vecSelDlgItems.size(); i++)
 	{
 		UiItemBase* pUIItem = vecSelDlgItems[i];
 		if(pUIItem)
 			delete pUIItem;
-
-		vecSelDlgItems.clear();
 	}
+	vecSelDlgItems.clear();
 
 	for(std::size_t i = 0; i < vecSelClassDialog.size(); i++)
 	{
 		UiItemBase* pUIItem = vecSelClassDialog[i];
 		if(pUIItem)
 			delete pUIItem;
-
-		vecSelClassDialog.clear();
 	}
+	vecSelClassDialog.clear();
 
 	for(std::size_t i = 0; i < vecClassDlgItems.size(); i++)
 	{
 		UiListItem* pUIItem = vecClassDlgItems[i];
 		if(pUIItem)
 			delete pUIItem;
-
-		vecClassDlgItems.clear();
 	}
+	vecClassDlgItems.clear();
 
 	for(std::size_t i = 0; i < vecSelLoadDialog.size(); i++)
 	{
 		UiItemBase* pUIItem = vecSelLoadDialog[i];
 		if(pUIItem)
 			delete pUIItem;
-
-		vecSelLoadDialog.clear();
 	}
+	vecSelLoadDialog.clear();
 
 	for(std::size_t i = 0; i < vecSelLoadDlgItems.size(); i++)
 	{
 		UiListItem* pUIItem = vecSelLoadDlgItems[i];
 		if(pUIItem)
 			delete pUIItem;
-
-		vecSelLoadDlgItems.clear();
 	}
+	vecSelLoadDlgItems.clear();
 
 	for(std::size_t i = 0; i < vecSelNameDialog.size(); i++)
 	{
 		UiItemBase* pUIItem = vecSelNameDialog[i];
 		if(pUIItem)
 			delete pUIItem;
-
-		vecSelNameDialog.clear();
 	}
+	vecSelNameDialog.clear();
+
 
 	bUIElementsLoaded = false;
 }
@@ -357,27 +351,24 @@ void selhero_ClassSelector_Esc()
 		UiListItem* pUIItem = vecClassDlgItems[i];
 		if(pUIItem)
 			delete pUIItem;
-
-		vecClassDlgItems.clear();
 	}
+	vecClassDlgItems.clear();
 
 	for(std::size_t i = 0; i < vecSellistDlgItems.size(); i++)
 	{
 		UiListItem* pUIItem = vecSellistDlgItems[i];
 		if(pUIItem)
 			delete pUIItem;
-
-		vecSellistDlgItems.clear();
 	}
+	vecSellistDlgItems.clear();
 
 	for(std::size_t i = 0; i < vecSelClassDialog.size(); i++)
 	{
 		UiItemBase* pUIItem = vecSelClassDialog[i];
 		if(pUIItem)
 			delete pUIItem;
-
-		vecSelClassDialog.clear();
 	}
+	vecSelClassDialog.clear();
 
 	if (selhero_SaveCount) {
 		selhero_List_Init();

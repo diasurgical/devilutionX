@@ -70,18 +70,16 @@ void mainmenu_Free()
 		UiItemBase* pUIItem = vecMainMenuDialog[i];
 		if(pUIItem)
 			delete pUIItem;
-
-		vecMainMenuDialog.clear();
 	}
+	vecMainMenuDialog.clear();
 
 	for(std::size_t i = 0; i < vecMenuItems.size(); i++)
 	{
 		UiListItem* pUIMenuItem = vecMenuItems[i];
 		if(pUIMenuItem)
 			delete pUIMenuItem;
-
-		vecMenuItems.clear();
 	}
+	vecMenuItems.clear();
 }
 
 BOOL UiMainMenuDialog(char *name, int *pdwResult, void (*fnSound)(char *file), int attractTimeOut)
