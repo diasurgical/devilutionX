@@ -73,7 +73,7 @@ void tcp_server::handle_recv(scc con, const asio::error_code &ec,
 	con->recv_queue.write(std::move(con->recv_buffer));
 	con->recv_buffer.resize(frame_queue::max_frame_size);
 	while (con->recv_queue.packet_ready()) {
-//		try {
+		try {
 			auto pkt = pktfty.make_packet(con->recv_queue.read_packet());
 			if (con->plr == PLR_BROADCAST) {
 				handle_recv_newplr(con, *pkt);
@@ -81,11 +81,11 @@ void tcp_server::handle_recv(scc con, const asio::error_code &ec,
 				con->timeout = timeout_active;
 				handle_recv_packet(*pkt);
 			}
-//		} catch (dvlnet_exception &e) {
-//			SDL_Log("Network error: %s", e.what());
-//			drop_connection(con);
-//			return;
-//		}
+		} catch (dvlnet_exception &e) {
+			SDL_Log("Network error: %s", e.what());
+			drop_connection(con);
+			return;
+		}
 	}
 	start_recv(con);
 }
@@ -100,8 +100,8 @@ void tcp_server::send_connect(scc con)
 void tcp_server::handle_recv_newplr(scc con, packet &pkt)
 {
 	auto newplr = next_free();
-//	if (newplr == PLR_BROADCAST)
-//		throw server_exception();
+	if (newplr == PLR_BROADCAST)
+		throw server_exception();
 	if (empty())
 		game_init_info = pkt.info();
 	auto reply = pktfty.make_packet<PT_JOIN_ACCEPT>(PLR_MASTER, PLR_BROADCAST,
@@ -126,8 +126,8 @@ void tcp_server::send_packet(packet &pkt)
 			if (i != pkt.src() && connections[i])
 				start_send(connections[i], pkt);
 	} else {
-//		if (pkt.dest() >= MAX_PLRS)
-//			throw server_exception();
+		if (pkt.dest() >= MAX_PLRS)
+			throw server_exception();
 		if ((pkt.dest() != pkt.src()) && connections[pkt.dest()])
 			start_send(connections[pkt.dest()], pkt);
 	}

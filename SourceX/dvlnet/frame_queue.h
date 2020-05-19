@@ -6,7 +6,7 @@
 
 namespace dvl {
 namespace net {
-/*
+
 class frame_queue_exception : public dvlnet_exception {
 public:
 	const char *what() const throw() override
@@ -14,7 +14,7 @@ public:
 		return "Incorrect frame size";
 	}
 };
-*/
+
 typedef uint32_t framesize_t;
 
 class frame_queue {

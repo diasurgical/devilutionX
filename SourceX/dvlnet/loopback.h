@@ -10,8 +10,7 @@
 namespace dvl {
 namespace net {
 
-class loopback : public abstract_net
-{
+class loopback : public abstract_net {
 private:
 	std::queue<buffer_t> message_queue;
 	buffer_t message_last;

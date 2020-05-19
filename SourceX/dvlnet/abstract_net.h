@@ -13,9 +13,17 @@ namespace net {
 
 typedef std::vector<unsigned char> buffer_t;
 typedef unsigned long provider_t;
-
-class abstract_net
+#ifndef _XBOX
+class dvlnet_exception : public std::exception {
+public:
+	const char *what() const throw() override
 	{
+		return "Network error";
+	}
+};
+#endif
+
+class abstract_net {
 public:
 	virtual int create(std::string addrstr, std::string passwd) = 0;
 	virtual int join(std::string addrstr, std::string passwd) = 0;

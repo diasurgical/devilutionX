@@ -16,24 +16,24 @@ MenuAction GetMenuAction(const SDL_Event &event)
 		case ControllerButton_IGNORE:
 			return MenuAction_NONE;
 		case ControllerButton_BUTTON_B: // Right button
-		case  ControllerButton_BUTTON_START:
+		case ControllerButton_BUTTON_START:
 			return MenuAction_SELECT;
-		case  ControllerButton_BUTTON_BACK:
-		case  ControllerButton_BUTTON_A: // Bottom button
+		case ControllerButton_BUTTON_BACK:
+		case ControllerButton_BUTTON_A: // Bottom button
 			return MenuAction_BACK;
-		case  ControllerButton_BUTTON_X: // Left button
+		case ControllerButton_BUTTON_X: // Left button
 			return MenuAction_DELETE;
-		case  ControllerButton_BUTTON_DPAD_UP:
+		case ControllerButton_BUTTON_DPAD_UP:
 			return MenuAction_UP;
-		case  ControllerButton_BUTTON_DPAD_DOWN:
+		case ControllerButton_BUTTON_DPAD_DOWN:
 			return MenuAction_DOWN;
-		case  ControllerButton_BUTTON_DPAD_LEFT:
+		case ControllerButton_BUTTON_DPAD_LEFT:
 			return MenuAction_LEFT;
-		case  ControllerButton_BUTTON_DPAD_RIGHT:
+		case ControllerButton_BUTTON_DPAD_RIGHT:
 			return MenuAction_RIGHT;
-		case  ControllerButton_BUTTON_LEFTSHOULDER:
+		case ControllerButton_BUTTON_LEFTSHOULDER:
 			return MenuAction_PAGE_UP;
-		case  ControllerButton_BUTTON_RIGHTSHOULDER:
+		case ControllerButton_BUTTON_RIGHTSHOULDER:
 			return MenuAction_PAGE_DOWN;
 		default:
 			break;

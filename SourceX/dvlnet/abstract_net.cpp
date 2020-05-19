@@ -13,11 +13,18 @@ namespace net {
 
 abstract_net* abstract_net::make_net(provider_t provider)
 {
-#if 1//def NONET
+#ifdef NONET
 	return new loopback;
 #else
 	switch (provider) {
-	//TODO: No networking on Xbox atm
+	case SELCONN_TCP:
+		return new cdwrap<tcp_client>;
+#ifdef BUGGY
+	case SELCONN_UDP:
+		return new cdwrap<udp_p2p>;
+#endif
+	case SELCONN_LOOPBACK:
+		return new loopback;
 	default:
 		ABORT();
 	}
@@ -26,7 +33,7 @@ abstract_net* abstract_net::make_net(provider_t provider)
 
 abstract_net::~abstract_net()
 {
-#if 0//def NONET
+#if defined(NONET) && !defined(_XBOX)
 	delete loopback;
 #endif
 }

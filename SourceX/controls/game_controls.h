@@ -3,6 +3,7 @@
 #include "all.h"
 
 namespace dvl {
+
 enum GameActionType {
 	GameActionType_NONE = 0,
 	GameActionType_USE_HEALTH_POTION,

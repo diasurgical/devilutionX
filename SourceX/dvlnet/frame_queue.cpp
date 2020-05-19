@@ -14,8 +14,8 @@ framesize_t frame_queue::size()
 
 buffer_t frame_queue::read(framesize_t s)
 {
-//	if (current_size < s)
-//		throw frame_queue_exception();
+	if (current_size < s)
+		throw frame_queue_exception();
 	buffer_t ret;
 	while (s > 0 && s >= buffer_deque.front().size()) {
 		s -= buffer_deque.front().size();
@@ -49,8 +49,8 @@ bool frame_queue::packet_ready()
 			return false;
 		auto szbuf = read(sizeof(framesize_t));
 		std::memcpy(&nextsize, &szbuf[0], sizeof(framesize_t));
-//		if (!nextsize)
-//			throw frame_queue_exception();
+		if (!nextsize)
+			throw frame_queue_exception();
 	}
 	if (size() >= nextsize)
 		return true;
@@ -60,8 +60,8 @@ bool frame_queue::packet_ready()
 
 buffer_t frame_queue::read_packet()
 {
-//	if (!nextsize || (size() < nextsize))
-//		throw frame_queue_exception();
+	if (!nextsize || (size() < nextsize))
+		throw frame_queue_exception();
 	auto ret = read(nextsize);
 	nextsize = 0;
 	return ret;

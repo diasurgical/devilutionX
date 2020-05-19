@@ -40,7 +40,9 @@ void SetCursorPos(int X, int Y)
 	mouseWarpingX = X;
 	mouseWarpingY = Y;
 	mouseWarping = true;
-//	LogicalToOutput(&X, &Y);
+#ifndef _XBOX
+	LogicalToOutput(&X, &Y);
+#endif
 	SDL_WarpMouseInWindow(ghMainWnd, X, Y);
 }
 
