@@ -16,10 +16,10 @@ namespace {
 TextAlignment XAlignmentFromFlags(int flags)
 {
 	if (flags & UIS_CENTER)
-		return TextAlignment::CENTER;
+		return TextAlignment_CENTER;
 	if (flags & UIS_RIGHT)
-		return TextAlignment::END;
-	return TextAlignment::BEGIN;
+		return TextAlignment_END;
+	return TextAlignment_BEGIN;
 }
 
 int AlignXOffset(int flags, const SDL_Rect &dest, int w)
