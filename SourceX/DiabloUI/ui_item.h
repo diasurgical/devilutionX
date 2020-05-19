@@ -195,12 +195,12 @@ struct UiList : public UiItemBase {
 	template <std::size_t N>
 	constexpr UiList(
 	    UiListItem (&items)[N],
-	    decltype(SDL_Rect().x) x,
-	    decltype(SDL_Rect().y) y,
-	    decltype(SDL_Rect().w) item_width,
-	    decltype(SDL_Rect().h) item_height,
+	    Sint16 x,
+	    Sint16 y,
+	    Uint16 item_width,
+	    Uint16 item_height,
 	    int flags)
-	    : UiItemBase({ x, y, item_width, static_cast<decltype(SDL_Rect().h)>(item_height * N) }, flags)
+	    : UiItemBase({ x, y, item_width, static_cast<Uint16>(item_height * N) }, flags)
 	    , x(x)
 	    , y(y)
 	    , item_width(item_width)
@@ -210,19 +210,19 @@ struct UiList : public UiItemBase {
 	{
 	}
 
-	decltype(SDL_Rect().x) x;
-	decltype(SDL_Rect().y) y;
-	decltype(SDL_Rect().w) item_width;
-	decltype(SDL_Rect().h) item_height;
+	Sint16 x;
+	Sint16 y;
+	Uint16 item_width;
+	Uint16 item_height;
 	UiListItem *items;
 	std::size_t length;
 
 	SDL_Rect itemRect(std::size_t i) const
 	{
-		return { x, static_cast<decltype(SDL_Rect().y)>(y + item_height * i), item_width, item_height };
+		return { x, static_cast<Sint16>(y + item_height * i), item_width, item_height };
 	}
 
-	UiListItem *itemAt(decltype(SDL_Rect().y) y) const
+	UiListItem *itemAt(Sint16 y) const
 	{
 		ASSERT(y >= rect.y);
 		const std::size_t index = (y - rect.y) / item_height;

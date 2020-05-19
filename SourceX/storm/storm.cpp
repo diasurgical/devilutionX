@@ -719,14 +719,14 @@ BOOL SVidPlayContinue(void)
 		} else {
 			factor = wFactor;
 		}
-		const int scaledW = SVidWidth * factor;
-		const int scaledH = SVidHeight * factor;
+		const Sint16 scaledW = SVidWidth * factor;
+		const Sint16 scaledH = SVidHeight * factor;
 
 		SDL_Rect pal_surface_offset = {
-			static_cast<decltype(SDL_Rect().x)>((output_surface->w - scaledW) / 2),
-			static_cast<decltype(SDL_Rect().y)>((output_surface->h - scaledH) / 2),
-			static_cast<decltype(SDL_Rect().w)>(scaledW),
-			static_cast<decltype(SDL_Rect().h)>(scaledH)
+			(output_surface->w - scaledW) / 2,
+			(output_surface->h - scaledH) / 2,
+			scaledW,
+			scaledH
 		};
 		if (factor == 1) {
 			if (SDL_BlitSurface(SVidSurface, NULL, output_surface, &pal_surface_offset) <= -1) {

@@ -47,7 +47,7 @@ struct CachedLine {
 
 	std::size_t index;
 	SurfacePtr surface;
-	decltype(pal_surface_palette_version) palette_version;
+	unsigned int palette_version;
 };
 
 SurfacePtr RenderText(const char *text, SDL_Color color)
@@ -197,7 +197,7 @@ public:
 private:
 	LinesBuffer lines_;
 	bool finished_;
-	decltype(SDL_GetTicks()) ticks_begin_;
+	Uint32 ticks_begin_;
 	int prev_offset_y_;
 };
 
@@ -234,7 +234,7 @@ void CreditsRenderer::Render()
 	SDL_SetClipRect(GetOutputSurface(), &viewport);
 
 	// We use unscaled coordinates for calculation throughout.
-	decltype(SDL_Rect().y) dest_y = VIEWPORT.y - (offset_y - lines_begin * LINE_H);
+	Sint16 dest_y = VIEWPORT.y - (offset_y - lines_begin * LINE_H);
 	for (std::size_t i = 0; i < lines_.size(); ++i, dest_y += LINE_H) {
 		auto &line = lines_[i];
 		if (line.surface == NULL)
@@ -244,7 +244,7 @@ void CreditsRenderer::Render()
 		if (line.palette_version != pal_surface_palette_version)
 			line = PrepareLine(line.index);
 
-		decltype(SDL_Rect().x) dest_x = PANEL_LEFT + VIEWPORT.x + 31;
+		Sint16 dest_x = PANEL_LEFT + VIEWPORT.x + 31;
 		if (CREDITS_LINES[line.index][0] == '\t')
 			dest_x += 40;
 

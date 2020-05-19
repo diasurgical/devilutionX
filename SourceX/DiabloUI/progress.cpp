@@ -81,8 +81,8 @@ void progress_Render(BYTE progress)
 
 	if (msgSurface) {
 		SDL_Rect dsc_rect = {
-			static_cast<decltype(SDL_Rect().x)>(x + 50),
-			static_cast<decltype(SDL_Rect().y)>(y + 8),
+			static_cast<Sint16>(x + 50),
+			static_cast<Sint16>(y + 8),
 			msgSurface->w,
 			msgSurface->h
 		};
