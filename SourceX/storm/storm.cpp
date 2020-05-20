@@ -18,6 +18,7 @@
 namespace dvl {
 
 std::string basePath;
+std::string prefPath;
 
 DWORD nLastError = 0;
 bool directFileAccess = false;
@@ -59,6 +60,11 @@ void GetBasePath(char *buffer, size_t size)
 
 void GetPrefPath(char *buffer, size_t size)
 {
+	if (prefPath.length()) {
+		snprintf(buffer, size, "%s", prefPath.c_str());
+		return;
+	}
+
 	char *path = SDL_GetPrefPath("diasurgical", "devilution");
 	if (path == NULL) {
 		buffer[0] = '\0';
