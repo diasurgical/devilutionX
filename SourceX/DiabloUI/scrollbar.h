@@ -9,11 +9,11 @@ extern Art ArtScrollBarBackground;
 const Uint16 SCROLLBAR_BG_WIDTH = 25;
 
 extern Art ArtScrollBarArrow;
-enum class ScrollBarArrowFrame {
-	UP_ACTIVE = 0,
-	UP,
-	DOWN_ACTIVE,
-	DOWN,
+enum ScrollBarArrowFrame {
+	ScrollBarArrowFrame_UP_ACTIVE = 0,
+	ScrollBarArrowFrame_UP,
+	ScrollBarArrowFrame_DOWN_ACTIVE,
+	ScrollBarArrowFrame_DOWN,
 };
 
 extern Art ArtScrollBarThumb;
