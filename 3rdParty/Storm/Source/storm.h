@@ -5,6 +5,7 @@
 namespace dvl {
 
 extern std::string basePath;
+extern std::string prefPath;
 
 // Note to self: Linker error => forgot a return value in cpp
 

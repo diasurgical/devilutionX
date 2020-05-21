@@ -18,6 +18,7 @@
 namespace dvl {
 
 std::string basePath;
+std::string prefPath;
 
 DWORD nLastError = 0;
 bool directFileAccess = false;
@@ -36,7 +37,11 @@ static std::string getIniPath()
 	return result;
 }
 
-static radon::File ini(getIniPath());
+radon::File& getIni() {
+  static radon::File ini(getIniPath());
+  return ini;
+}
+
 static Mix_Chunk *SFileChunk;
 
 void GetBasePath(char *buffer, size_t size)
@@ -59,6 +64,11 @@ void GetBasePath(char *buffer, size_t size)
 
 void GetPrefPath(char *buffer, size_t size)
 {
+	if (prefPath.length()) {
+		snprintf(buffer, size, "%s", prefPath.c_str());
+		return;
+	}
+
 	char *path = SDL_GetPrefPath("diasurgical", "devilution");
 	if (path == NULL) {
 		buffer[0] = '\0';
@@ -341,7 +351,7 @@ bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue)
 
 bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, int *dataSize)
 {
-	radon::Section *section = ini.getSection(sectionName);
+	radon::Section *section = getIni().getSection(sectionName);
 	if (!section)
 		return false;
 
@@ -361,6 +371,8 @@ bool getIniValue(const char *sectionName, const char *keyName, char *string, int
 
 void setIniValue(const char *sectionName, const char *keyName, char *value, int len)
 {
+	radon::File& ini = getIni();
+
 	radon::Section *section = ini.getSection(sectionName);
 	if (!section) {
 		ini.addSection(sectionName);
