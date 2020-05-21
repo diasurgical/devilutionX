@@ -122,7 +122,7 @@ void selgame_GameSelection_Focus(int value)
 		strcpy(selgame_Description, "Create a new game with a difficulty setting of your choice.");
 		break;
 	case 1:
-		strcpy(selgame_Description, "Enter an IP and join a game already in progress at that address.");
+		strcpy(selgame_Description, "Enter an IP or a hostname and join a game already in progress at that address.");
 		break;
 	}
 	WordWrapArtStr(selgame_Description, SELGAME_DESCRIPTION.rect.w);
