@@ -53,7 +53,7 @@ constexpr UiArtText SELUDPGAME_DESCRIPTION_LABEL = UiArtText("Description:", { P
 
 UiListItem SELUDPGAME_DIALOG_ITEMS[] = {
 	{ "Create Game", 0 },
-	{ "Enter IP", 1 },
+	{ "Join Game", 1 },
 };
 UiItem SELUDPGAME_DIALOG[] = {
 	MAINMENU_BACKGROUND,
@@ -73,7 +73,8 @@ UiItem ENTERIP_DIALOG[] = {
 	SELUDPGAME_TITLE,
 	SELUDPGAME_DESCRIPTION_LABEL,
 	SELGAME_DESCRIPTION,
-	UiArtText("Enter IP", { PANEL_LEFT + 305, 211, 285, 33 }, UIS_CENTER | UIS_BIG),
+	UiArtText("Enter address", { PANEL_LEFT + 305, 211, 285, 33 }, UIS_CENTER | UIS_BIG),
+
 	UiEdit(selgame_Ip, 128, { PANEL_LEFT + 305, 314, 285, 33 }, UIS_MED | UIS_GOLD),
 	SELGAME_OK,
 	SELGAME_CANCEL,
