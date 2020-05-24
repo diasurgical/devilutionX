@@ -7,7 +7,7 @@ namespace dvl {
 int mainmenu_attract_time_out; //seconds
 DWORD dwAttractTicks;
 
-std::vector<UiItemBase*> vecMainMenuDialog;
+vUiItemBase vecMainMenuDialog;
 std::vector<UiListItem*> vecMenuItems;
 
 int MainMenuResult;
@@ -44,9 +44,7 @@ void mainmenu_Load(char *name, void (*fnSound)(char *file))
 	vecMenuItems.push_back(new UiListItem("Exit Diablo", MAINMENU_EXIT_DIABLO));
 
 	UiAddBackground(&vecMainMenuDialog);
-
- 	rect = { 0, 0, 0, 0 };
-	vecMainMenuDialog.push_back(new UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, rect, UIS_CENTER));
+	UiAddLogo(&vecMainMenuDialog);
 
 	vecMainMenuDialog.push_back(new UiList(vecMenuItems, PANEL_LEFT + 64, 192, 510, 43, UIS_HUGE | UIS_GOLD | UIS_CENTER));
 

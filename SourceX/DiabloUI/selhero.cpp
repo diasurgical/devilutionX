@@ -42,9 +42,9 @@ BOOL(*gfnHeroStats)
 
 namespace {
 
-std::vector<UiItemBase*> vecSelHeroDialog;
+vUiItemBase vecSelHeroDialog;
 std::vector<UiListItem*> vecSelHeroDlgItems;
-std::vector<UiItemBase*> vecSelDlgItems;
+vUiItemBase vecSelDlgItems;
 
 UiImage *SELHERO_DIALOG_HERO_IMG;
 } // namespace
@@ -415,10 +415,8 @@ BOOL UiSelHeroDialog(
 	do {
 		LoadBackgroundArt("ui_art\\selhero.pcx");
 		UiAddBackground(&vecSelHeroDialog);
+		UiAddLogo(&vecSelHeroDialog);
 		LoadScrollBar();
-
- 		rect = { 0, 0, 0, 0 };
-		vecSelHeroDialog.push_back(new UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, rect, UIS_CENTER));
 
 		selhero_FreeDlgItems();
  		rect = { PANEL_LEFT + 24, 161, 590, 35 };

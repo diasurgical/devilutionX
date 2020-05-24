@@ -28,8 +28,8 @@ void DialogActionOK()
 	dialogEnd = true;
 }
 
-std::vector<UiItemBase*> vecNULL;
-std::vector<UiItemBase*> vecOkDialog;
+vUiItemBase vecNULL;
+vUiItemBase vecOkDialog;
 
 // clang-format off
 #define BLANKCOLOR { 0, 0xFF, 0, 0 }

@@ -19,7 +19,7 @@ _SNETVERSIONDATA *selconn_FileInfo;
 int provider;
 
 std::vector<UiListItem*> vecConnItems;
-std::vector<UiItemBase*> vecSelConnDlg;
+vUiItemBase vecSelConnDlg;
 
 UiArtText* SELCONNECT_DIALOG_DESCRIPTION = NULL;
 
@@ -40,9 +40,7 @@ void selconn_Load()
 	vecConnItems.push_back(new UiListItem("Loopback", SELCONN_LOOPBACK));
 
 	UiAddBackground(&vecSelConnDlg);
-
-	rect = {0, 0, 0, 0};
-	vecSelConnDlg.push_back(new UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, rect, UIS_CENTER));
+	UiAddLogo(&vecSelConnDlg);
 
 	rect = {PANEL_LEFT + 24, 161, 590, 35};
 	vecSelConnDlg.push_back(new UiArtText("Multi Player Game", rect, UIS_CENTER | UIS_BIG));

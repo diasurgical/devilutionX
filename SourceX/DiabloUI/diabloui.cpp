@@ -42,7 +42,7 @@ void (*gfnListFocus)(int value);
 void (*gfnListSelect)(int value);
 void (*gfnListEsc)();
 bool (*gfnListYesNo)();
-std::vector<UiItemBase*> gUiItems;
+vUiItemBase gUiItems;
 bool UiItemsWraps;
 char *UiTextInput;
 int UiTextInputLen;
@@ -594,10 +594,16 @@ void LoadBackgroundArt(const char *pszFile)
 	RenderPresent();
 }
 
-void UiAddBackground(std::vector<UiItemBase*> *vecDialog)
+void UiAddBackground(vUiItemBase *vecDialog)
 {
 	SDL_Rect rect = { PANEL_LEFT, 0, 640, 480 };
 	vecDialog->push_back(new UiImage(&ArtBackground, rect));
+}
+
+void UiAddLogo(vUiItemBase *vecDialog, int size, int height)
+{
+	SDL_Rect rect = { 0, height, 0, 0 };
+	vecDialog->push_back(new UiImage(&ArtLogos[size], /*animated=*/true, /*frame=*/0, rect, UIS_CENTER));
 }
 
 void UiFadeIn()

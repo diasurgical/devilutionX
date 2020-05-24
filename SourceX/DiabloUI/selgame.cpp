@@ -32,7 +32,7 @@ namespace {
 char title[32];
 
 std::vector<UiListItem*> vecSelGameDlgItems;
-std::vector<UiItemBase*> vecSelGameDialog;
+vUiItemBase vecSelGameDialog;
 
 } // namespace
 
@@ -80,9 +80,7 @@ void selgame_GameSelection_Init()
 	selgame_FreeVectors();
 
 	UiAddBackground(&vecSelGameDialog);
-
-	rect = { 0, 0, 0, 0 };
-	vecSelGameDialog.push_back(new UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, rect, UIS_CENTER));
+	UiAddLogo(&vecSelGameDialog);
 
 	rect = { PANEL_LEFT + 24, 161, 590, 35 };
 	vecSelGameDialog.push_back(new UiArtText("Client-Server (TCP)", rect, UIS_CENTER | UIS_BIG));
@@ -149,9 +147,7 @@ void selgame_GameSelection_Select(int value)
 	selgame_FreeVectors();
 
 	UiAddBackground(&vecSelGameDialog);
-
-	rect = { 0, 0, 0, 0 };
-	vecSelGameDialog.push_back(new UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, rect, UIS_CENTER));
+	UiAddLogo(&vecSelGameDialog);
 
 	rect = { PANEL_LEFT + 24, 161, 590, 35 };
 	vecSelGameDialog.push_back(new UiArtText(title, rect, UIS_CENTER | UIS_BIG));
@@ -285,9 +281,7 @@ void selgame_Password_Init(int value)
 	selgame_FreeVectors();
 
 	UiAddBackground(&vecSelGameDialog);
-
-	rect = { 0, 0, 0, 0 };
-	vecSelGameDialog.push_back(new UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, rect, UIS_CENTER));
+	UiAddLogo(&vecSelGameDialog);
 
 	rect = { PANEL_LEFT + 24, 161, 590, 35 };
 	vecSelGameDialog.push_back(new UiArtText("Client-Server (TCP)", rect, UIS_CENTER | UIS_BIG));
