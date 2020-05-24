@@ -61,7 +61,7 @@ bool UiSelHeroYesNoDialog(const char *title, const char *body)
 	vecSelYesNoDialogItems.push_back(new UiListItem("No", 1));
 	vecSelYesNoDialog.push_back(new UiList(vecSelYesNoDialogItems, PANEL_LEFT + 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD));
 
-	strcpy(selyesno_confirmationMessage, body);
+	strncpy(selyesno_confirmationMessage, body, sizeof(selyesno_confirmationMessage) - 1);
 	WordWrapArtStr(selyesno_confirmationMessage, MESSAGE_WIDTH);
 
 	UiInitList(0, 1, NULL, selyesno_Select, selyesno_Esc, vecSelYesNoDialog, true, NULL);

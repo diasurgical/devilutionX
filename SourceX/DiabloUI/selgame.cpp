@@ -104,10 +104,10 @@ void selgame_GameSelection_Focus(int value)
 {
 	switch (value) {
 	case 0:
-		strcpy(selgame_Description, "Create a new game with a difficulty setting of your choice.");
+		strncpy(selgame_Description, "Create a new game with a difficulty setting of your choice.", sizeof(selgame_Description) - 1);
 		break;
 	case 1:
-		strcpy(selgame_Description, "Enter an IP or a hostname and join a game already in progress at that address.");
+		strncpy(selgame_Description, "Enter an IP or a hostname and join a game already in progress at that address.", sizeof(selgame_Description) - 1);
 		break;
 	}
 	WordWrapArtStr(selgame_Description, DESCRIPTION_WIDTH);
@@ -149,7 +149,7 @@ void selgame_GameSelection_Select(int value)
 
 	switch (value) {
 	case 0: {
-		strcpy(title, "Create Game");
+		strncpy(title, "Create Game", sizeof(title) - 1);
 
 		SDL_Rect rect4 = { PANEL_LEFT + 299, 211, 295, 35 };
 		vecSelGameDialog.push_back(new UiArtText("Select Difficulty", rect4, UIS_CENTER | UIS_BIG));
@@ -170,7 +170,7 @@ void selgame_GameSelection_Select(int value)
 		break;
 	}
 	case 1:
-		strcpy(title, "Join TCP Games");
+		strncpy(title, "Join TCP Games", sizeof(title) - 1);
 
 		SDL_Rect rect4 = { PANEL_LEFT + 305, 211, 285, 33 };
 		vecSelGameDialog.push_back(new UiArtText("Enter address", rect4, UIS_CENTER | UIS_BIG));
@@ -200,16 +200,16 @@ void selgame_Diff_Focus(int value)
 {
 	switch (value) {
 	case DIFF_NORMAL:
-		strcpy(selgame_Label, "Normal");
-		strcpy(selgame_Description, "Normal Difficulty\nThis is where a starting character should begin the quest to defeat Diablo.");
+		strncpy(selgame_Label, "Normal", sizeof(selgame_Label) - 1);
+		strncpy(selgame_Description, "Normal Difficulty\nThis is where a starting character should begin the quest to defeat Diablo.", sizeof(selgame_Description) - 1);
 		break;
 	case DIFF_NIGHTMARE:
-		strcpy(selgame_Label, "Nightmare");
-		strcpy(selgame_Description, "Nightmare Difficulty\nThe denizens of the Labyrinth have been bolstered and will prove to be a greater challenge. This is recommended for experienced characters only.");
+		strncpy(selgame_Label, "Nightmare", sizeof(selgame_Label) - 1);
+		strncpy(selgame_Description, "Nightmare Difficulty\nThe denizens of the Labyrinth have been bolstered and will prove to be a greater challenge. This is recommended for experienced characters only.", sizeof(selgame_Description) - 1);
 		break;
 	case DIFF_HELL:
-		strcpy(selgame_Label, "Hell");
-		strcpy(selgame_Description, "Hell Difficulty\nThe most powerful of the underworld's creatures lurk at the gateway into Hell. Only the most experienced characters should venture in this realm.");
+		strncpy(selgame_Label, "Hell", sizeof(selgame_Label) - 1);
+		strncpy(selgame_Description, "Hell Difficulty\nThe most powerful of the underworld's creatures lurk at the gateway into Hell. Only the most experienced characters should venture in this realm.", sizeof(selgame_Description) - 1);
 		break;
 	}
 	WordWrapArtStr(selgame_Description, DESCRIPTION_WIDTH);

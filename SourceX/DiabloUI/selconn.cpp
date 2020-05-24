@@ -104,23 +104,23 @@ void selconn_Focus(int value)
 	switch (value) {
 #ifndef NONET
 	case SELCONN_TCP:
-		strcpy(selconn_Description, "All computers must be connected to a TCP-compatible network.");
+		strncpy(selconn_Description, "All computers must be connected to a TCP-compatible network.", sizeof(selconn_Description) - 1);
 		players = MAX_PLRS;
 		break;
 #ifdef BUGGY
 	case SELCONN_UDP:
-		strcpy(selconn_Description, "All computers must be connected to a UDP-compatible network.");
+		strncpy(selconn_Description, "All computers must be connected to a UDP-compatible network.", sizeof(selconn_Description) - 1);
 		players = MAX_PLRS;
 		break;
 #endif
 #endif
 	case SELCONN_LOOPBACK:
-		strcpy(selconn_Description, "Play by yourself with no network exposure.");
+		strncpy(selconn_Description, "Play by yourself with no network exposure.", sizeof(selconn_Description) - 1);
 		players = 1;
 		break;
 	}
 
-	sprintf(selconn_MaxPlayers, "Players Supported: %d", players);
+	snprintf(selconn_MaxPlayers, sizeof(selconn_MaxPlayers), "Players Supported: %d", players);
 	WordWrapArtStr(selconn_Description, DESCRIPTION_WIDTH);
 }
 
