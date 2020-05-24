@@ -96,7 +96,7 @@ void selgame_GameSelection_Init()
 	vecSelGameDialog.push_back(new UiArtText("Select Action", rect6, UIS_CENTER | UIS_BIG));
 
 	vecSelGameDlgItems.push_back(new UiListItem("Create Game", 0));
-	vecSelGameDlgItems.push_back(new UiListItem("Enter IP", 1));
+	vecSelGameDlgItems.push_back(new UiListItem("Join Game", 1));
 
 	vecSelGameDialog.push_back(new UiList(vecSelGameDlgItems, PANEL_LEFT + 305, 255, 285, 26, UIS_CENTER | UIS_MED | UIS_GOLD));
 
@@ -116,7 +116,7 @@ void selgame_GameSelection_Focus(int value)
 		strcpy(selgame_Description, "Create a new game with a difficulty setting of your choice.");
 		break;
 	case 1:
-		strcpy(selgame_Description, "Enter an IP and join a game already in progress at that address.");
+		strcpy(selgame_Description, "Enter an IP or a hostname and join a game already in progress at that address.");
 		break;
 	}
 	WordWrapArtStr(selgame_Description, SELGAME_DESCRIPTION->m_rect.w);
@@ -185,7 +185,7 @@ void selgame_GameSelection_Select(int value)
 		strcpy(title, "Join TCP Games");
 
 		SDL_Rect rect6 = { PANEL_LEFT + 305, 211, 285, 33 };
-		vecSelGameDialog.push_back(new UiArtText("Enter IP", rect6, UIS_CENTER | UIS_BIG));
+		vecSelGameDialog.push_back(new UiArtText("Enter address", rect6, UIS_CENTER | UIS_BIG));
 
 		SDL_Rect rect7 = { PANEL_LEFT + 305, 314, 285, 33 };
 		vecSelGameDialog.push_back(new UiEdit(selgame_Ip, 128, rect7, UIS_MED | UIS_GOLD));
