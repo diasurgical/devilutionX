@@ -596,8 +596,8 @@ void LoadBackgroundArt(const char *pszFile)
 
 void UiAddBackground(std::vector<UiItemBase*> *vecDialog)
 {
-	SDL_Rect rect1 = { PANEL_LEFT, 0, 640, 480 };
-	vecDialog->push_back(new UiImage(&ArtBackground, rect1));
+	SDL_Rect rect = { PANEL_LEFT, 0, 640, 480 };
+	vecDialog->push_back(new UiImage(&ArtBackground, rect));
 }
 
 void UiFadeIn()

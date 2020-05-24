@@ -18,11 +18,8 @@ namespace {
 
 Art dialogArt;
 char dialogText[256];
-char dialogCaption[1024];
 bool fontWasLoaded;
 bool textInputWasActive;
-
-vUiItemBase dialogItems;
 
 bool dialogEnd;
 
@@ -33,7 +30,6 @@ void DialogActionOK()
 
 std::vector<UiItemBase*> vecNULL;
 std::vector<UiItemBase*> vecOkDialog;
-std::vector<UiItemBase*> vecOkDialogWithCaption;
 
 // clang-format off
 #define BLANKCOLOR { 0, 0xFF, 0, 0 }
@@ -164,30 +160,30 @@ void LoadFallbackPalette()
 
 void Init(const char *text, const char *caption, bool error, bool renderBehind)
 {
-	{
-		SDL_Rect rect1 = { PANEL_LEFT + 180, 168, 280, 144 };
-		vecOkDialog.push_back(new UiImage(&dialogArt, rect1));
+	SDL_Rect rect;
 
-		SDL_Rect rect2 = { PANEL_LEFT + 200, 211, 240, 80 };
-		vecOkDialog.push_back(new UiText(dialogText, rect2, UIS_CENTER));
+	if (caption == NULL) {
+		rect = { PANEL_LEFT + 180, 168, 280, 144 };
+		vecOkDialog.push_back(new UiImage(&dialogArt, rect));
 
-		SDL_Rect rect3 = { PANEL_LEFT + 265, 265, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
-		vecOkDialogWithCaption.push_back(new UiButton(&SmlButton, "OK", &DialogActionOK, rect3, 0));
-	}
+		rect = { PANEL_LEFT + 200, 211, 240, 80 };
+		vecOkDialog.push_back(new UiText(dialogText, rect, UIS_CENTER));
 
-	SDL_Rect rect = { PANEL_LEFT + 127, 100, 385, 280 };
-	{
-		vecOkDialogWithCaption.push_back(new UiImage(&dialogArt, rect));
+		rect = { PANEL_LEFT + 265, 265, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
+		vecOkDialog.push_back(new UiButton(&SmlButton, "OK", &DialogActionOK, rect, 0));
+	} else {
+		rect = { PANEL_LEFT + 127, 100, 385, 280 };
+		vecOkDialog.push_back(new UiImage(&dialogArt, rect));
 
-		SDL_Rect rect1 = { PANEL_LEFT + 147, 110, 345, 20 };
 		SDL_Color color1 = { 255, 255, 0, 0 };
-		vecOkDialogWithCaption.push_back(new UiText(dialogText, color1, rect1, UIS_CENTER));
+		rect = { PANEL_LEFT + 147, 110, 345, 20 };
+		vecOkDialog.push_back(new UiText(dialogText, color1, rect, UIS_CENTER));
 
-		SDL_Rect rect2 = { PANEL_LEFT + 147, 141, 345, 190 };
-		vecOkDialogWithCaption.push_back(new UiText(dialogCaption, rect2, UIS_CENTER));
+		rect = { PANEL_LEFT + 147, 141, 345, 190 };
+		vecOkDialog.push_back(new UiText(caption, rect, UIS_CENTER));
 
-		SDL_Rect rect3 = { PANEL_LEFT + 264, 335, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
-		vecOkDialogWithCaption.push_back(new UiButton(&SmlButton, "OK", &DialogActionOK, rect3, 0));
+		rect = { PANEL_LEFT + 264, 335, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
+		vecOkDialog.push_back(new UiButton(&SmlButton, "OK", &DialogActionOK, rect, 0));
 	}
 
 	strcpy(dialogText, text);
@@ -200,15 +196,12 @@ void Init(const char *text, const char *caption, bool error, bool renderBehind)
 	SetFadeLevel(256);
 	if (caption == NULL) {
 		LoadMaskedArt(error ? "ui_art\\srpopup.pcx" : "ui_art\\spopup.pcx", &dialogArt);
-		dialogItems = vecOkDialog;
 	} else {
 		if (error) {
-			LoadArt(&dialogArt, popupData, rect.w, rect.h);
+			LoadArt(&dialogArt, popupData, 385, 280);
 		} else {
 			LoadMaskedArt("ui_art\\lpopup.pcx", &dialogArt);
 		}
-		strcpy(dialogCaption, caption);
-		dialogItems = vecOkDialogWithCaption;
 	}
 	LoadSmlButtonArt();
 
@@ -228,14 +221,6 @@ void Deinit()
 	if (textInputWasActive)
 		SDL_StartTextInput();
 
-	for(std::size_t i = 0; i < dialogItems.size(); i++)
-	{
-		UiItemBase* pUIItem = dialogItems[i];
-
-		if(pUIItem)
-			pUIItem->FreeCache();
-	}
-
 	for(std::size_t i = 0; i < vecOkDialog.size(); i++)
 	{
 		UiItemBase* pUIItem = vecOkDialog[i];
@@ -243,14 +228,6 @@ void Deinit()
 			delete pUIItem;
 	}
 	vecOkDialog.clear();
-
-	for(std::size_t i = 0; i < vecOkDialogWithCaption.size(); i++)
-	{
-		UiItemBase* pUIItem = vecOkDialogWithCaption[i];
-		if(pUIItem)
-			delete pUIItem;
-	}
-	vecOkDialogWithCaption.clear();
 }
 
 void DialogLoop(vUiItemBase items, vUiItemBase renderBehind)
@@ -313,7 +290,7 @@ void UiOkDialog(const char *text, const char *caption, bool error, vUiItemBase r
 
 	inDialog = true;
 	Init(text, caption, error, renderBehind.size() > 0);
-	DialogLoop(dialogItems, renderBehind);
+	DialogLoop(vecOkDialog, renderBehind);
 	Deinit();
 	inDialog = false;
 }

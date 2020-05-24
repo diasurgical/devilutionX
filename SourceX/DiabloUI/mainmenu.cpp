@@ -33,6 +33,8 @@ void mainmenu_restart_repintro()
 
 void mainmenu_Load(char *name, void (*fnSound)(char *file))
 {
+	SDL_Rect rect;
+
 	gfnSoundFunction = fnSound;
 
 	vecMenuItems.push_back(new UiListItem("Single Player", MAINMENU_SINGLE_PLAYER));
@@ -43,13 +45,13 @@ void mainmenu_Load(char *name, void (*fnSound)(char *file))
 
 	UiAddBackground(&vecMainMenuDialog);
 
- 	SDL_Rect rect2 = { 0, 0, 0, 0 };
-	vecMainMenuDialog.push_back(new UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, rect2, UIS_CENTER));
+ 	rect = { 0, 0, 0, 0 };
+	vecMainMenuDialog.push_back(new UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, rect, UIS_CENTER));
 
 	vecMainMenuDialog.push_back(new UiList(vecMenuItems, PANEL_LEFT + 64, 192, 510, 43, UIS_HUGE | UIS_GOLD | UIS_CENTER));
 
- 	SDL_Rect rect3 = { 17, 444, 605, 21 };
-	vecMainMenuDialog.push_back(new UiArtText(name, rect3, UIS_SMALL));
+ 	rect = { 17, 444, 605, 21 };
+	vecMainMenuDialog.push_back(new UiArtText(name, rect, UIS_SMALL));
 
 	if (!gbSpawned) {
 		LoadBackgroundArt("ui_art\\mainmenu.pcx");

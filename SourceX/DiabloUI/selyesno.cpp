@@ -50,6 +50,8 @@ void selyesno_Esc()
 
 bool UiSelHeroYesNoDialog(const char *title, const char *body)
 {
+	SDL_Rect rect;
+
 	LoadBackgroundArt("ui_art\\black.pcx");
 
 	vecSelYesNoDialogItems.push_back(new UiListItem( "Yes", 0 ));
@@ -57,14 +59,14 @@ bool UiSelHeroYesNoDialog(const char *title, const char *body)
 
 	UiAddBackground(&vecSelYesNoDialog);
 
-	SDL_Rect rect2 = { 0, 0, 0, 0 };
-	vecSelYesNoDialog.push_back(new UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, rect2, UIS_CENTER));
+	rect = { 0, 0, 0, 0 };
+	vecSelYesNoDialog.push_back(new UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, rect, UIS_CENTER));
 
-	SDL_Rect rect3 = { PANEL_LEFT + 24, 161, 590, 35 };
-	vecSelYesNoDialog.push_back(new UiArtText(selyesno_title, rect3, UIS_CENTER | UIS_BIG));
+	rect = { PANEL_LEFT + 24, 161, 590, 35 };
+	vecSelYesNoDialog.push_back(new UiArtText(selyesno_title, rect, UIS_CENTER | UIS_BIG));
 
-	SDL_Rect rect4 = { PANEL_LEFT + 120, 236, 280, 168 };
-	SELYESNO_DIALOG_CONFIRMATION_MESSAGE = new UiArtText(selyesno_confirmationMessage, rect4, UIS_MED);
+	rect = { PANEL_LEFT + 120, 236, 280, 168 };
+	SELYESNO_DIALOG_CONFIRMATION_MESSAGE = new UiArtText(selyesno_confirmationMessage, rect, UIS_MED);
 	vecSelYesNoDialog.push_back(SELYESNO_DIALOG_CONFIRMATION_MESSAGE);
 
 	vecSelYesNoDialog.push_back(new UiList(vecSelYesNoDialogItems, PANEL_LEFT + 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD));

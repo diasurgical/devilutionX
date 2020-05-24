@@ -26,6 +26,8 @@ UiArtText* SELCONNECT_DIALOG_DESCRIPTION = NULL;
 
 void selconn_Load()
 {
+	SDL_Rect rect;
+
 	LoadBackgroundArt("ui_art\\selconn.pcx");
 
 	// vecConnItems Should be in the same order as conn_type (See enums.h)
@@ -39,41 +41,41 @@ void selconn_Load()
 
 	UiAddBackground(&vecSelConnDlg);
 
-	SDL_Rect rect2 = {0, 0, 0, 0};
-	vecSelConnDlg.push_back(new UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, rect2, UIS_CENTER));
+	rect = {0, 0, 0, 0};
+	vecSelConnDlg.push_back(new UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, rect, UIS_CENTER));
 
-	SDL_Rect rect3 = {PANEL_LEFT + 24, 161, 590, 35};
-	vecSelConnDlg.push_back(new UiArtText("Multi Player Game", rect3, UIS_CENTER | UIS_BIG));
+	rect = {PANEL_LEFT + 24, 161, 590, 35};
+	vecSelConnDlg.push_back(new UiArtText("Multi Player Game", rect, UIS_CENTER | UIS_BIG));
 
-	SDL_Rect rect4 = {PANEL_LEFT + 35, 218, 205, 21};
-	vecSelConnDlg.push_back(new UiArtText(selconn_MaxPlayers, rect4));
+	rect = {PANEL_LEFT + 35, 218, 205, 21};
+	vecSelConnDlg.push_back(new UiArtText(selconn_MaxPlayers, rect));
 
-	SDL_Rect rect5 = {PANEL_LEFT + 35, 256, 205, 21};
-	vecSelConnDlg.push_back(new UiArtText("Requirements:", rect5));
+	rect = {PANEL_LEFT + 35, 256, 205, 21};
+	vecSelConnDlg.push_back(new UiArtText("Requirements:", rect));
 
-	SDL_Rect rect6 = {PANEL_LEFT + 35, 275, 205, 66};
-	SELCONNECT_DIALOG_DESCRIPTION = new UiArtText(selconn_Description, rect6);
+	rect = {PANEL_LEFT + 35, 275, 205, 66};
+	SELCONNECT_DIALOG_DESCRIPTION = new UiArtText(selconn_Description, rect);
 	vecSelConnDlg.push_back(SELCONNECT_DIALOG_DESCRIPTION);
 
-	SDL_Rect rect7 = {PANEL_LEFT + 30, 356, 220, 31};
-	vecSelConnDlg.push_back(new UiArtText("no gateway needed", rect7, UIS_CENTER | UIS_MED));
+	rect = {PANEL_LEFT + 30, 356, 220, 31};
+	vecSelConnDlg.push_back(new UiArtText("no gateway needed", rect, UIS_CENTER | UIS_MED));
 
-	SDL_Rect rect8 = {PANEL_LEFT + 35, 393, 205, 21};
-	vecSelConnDlg.push_back(new UiArtText(selconn_Gateway, rect8, UIS_CENTER));
+	rect = {PANEL_LEFT + 35, 393, 205, 21};
+	vecSelConnDlg.push_back(new UiArtText(selconn_Gateway, rect, UIS_CENTER));
 
-	SDL_Rect rect9 = {PANEL_LEFT + 300, 211, 295, 33};
-	vecSelConnDlg.push_back(new UiArtText("Select Connection", rect9, UIS_CENTER | UIS_BIG));
+	rect = {PANEL_LEFT + 300, 211, 295, 33};
+	vecSelConnDlg.push_back(new UiArtText("Select Connection", rect, UIS_CENTER | UIS_BIG));
 
-	SDL_Rect rect10 = {PANEL_LEFT + 16, 427, 250, 35};
-	vecSelConnDlg.push_back(new UiArtTextButton("Change Gateway", NULL, rect10, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD | UIS_HIDDEN));
+	rect = {PANEL_LEFT + 16, 427, 250, 35};
+	vecSelConnDlg.push_back(new UiArtTextButton("Change Gateway", NULL, rect, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD | UIS_HIDDEN));
 
 	vecSelConnDlg.push_back(new UiList(vecConnItems, PANEL_LEFT + 305, 256, 285, 26, UIS_CENTER | UIS_VCENTER | UIS_GOLD));
 
-	SDL_Rect rect11 = {PANEL_LEFT + 299, 427, 140, 35};
-	vecSelConnDlg.push_back(new UiArtTextButton("OK", &UiFocusNavigationSelect, rect11, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
+	rect = {PANEL_LEFT + 299, 427, 140, 35};
+	vecSelConnDlg.push_back(new UiArtTextButton("OK", &UiFocusNavigationSelect, rect, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
 
-	SDL_Rect rect12 = {PANEL_LEFT + 454, 427, 140, 35};
-	vecSelConnDlg.push_back(new UiArtTextButton("Cancel", &UiFocusNavigationEsc, rect12, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
+	rect = {PANEL_LEFT + 454, 427, 140, 35};
+	vecSelConnDlg.push_back(new UiArtTextButton("Cancel", &UiFocusNavigationEsc, rect, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
 
 	UiInitList(0, vecConnItems.size() - 1, selconn_Focus, selconn_Select, selconn_Esc, vecSelConnDlg);
 }
@@ -98,11 +100,7 @@ void selconn_Free()
 	}
 	vecSelConnDlg.clear();
 
-	if(SELCONNECT_DIALOG_DESCRIPTION)
-	{
-//		delete SELCONNECT_DIALOG_DESCRIPTION; //Freed in the above loop
-		SELCONNECT_DIALOG_DESCRIPTION = NULL;
-	}
+	SELCONNECT_DIALOG_DESCRIPTION = NULL;
 }
 
 void selconn_Esc()
