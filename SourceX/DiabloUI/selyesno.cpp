@@ -55,8 +55,7 @@ bool UiSelHeroYesNoDialog(const char *title, const char *body)
 	vecSelYesNoDialogItems.push_back(new UiListItem( "Yes", 0 ));
 	vecSelYesNoDialogItems.push_back(new UiListItem( "No", 1 ));
 
-	SDL_Rect rect1 = { PANEL_LEFT, 0, 640, 480 };
-	vecSelYesNoDialog.push_back(new UiImage(&ArtBackground, rect1));
+	UiAddBackground(&vecSelYesNoDialog);
 
 	SDL_Rect rect2 = { 0, 0, 0, 0 };
 	vecSelYesNoDialog.push_back(new UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, rect2, UIS_CENTER));

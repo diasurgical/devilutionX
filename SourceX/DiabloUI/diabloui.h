@@ -29,17 +29,6 @@ extern Art ArtCursor;
 extern Art ArtHero;
 extern bool gbSpawned;
 
-#ifndef _XBOX
-#define MAINMENU_BACKGROUND UiImage(&ArtBackground, { PANEL_LEFT, 0, 640, 480 });
-#define MAINMENU_LOGO UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, { 0, 0, 0, 0 }, UIS_CENTER);
-
-template <class T, size_t N>
-constexpr size_t size(T (&)[N])
-{
-	return N;
-}
-#endif
-
 extern void (*gfnSoundFunction)(char *file);
 extern BOOL (*gfnHeroInfo)(BOOL (*fninfofunc)(_uiheroinfo *));
 
@@ -51,6 +40,7 @@ int GetCenterOffset(int w, int bw = 0);
 void LoadPalInMem(const SDL_Color *pPal);
 void DrawMouse();
 void LoadBackgroundArt(const char *pszFile);
+void UiAddBackground(std::vector<UiItemBase*> *vecDialog);
 void UiFocusNavigationSelect();
 void UiFocusNavigationEsc();
 void UiFocusNavigationYesNo();

@@ -41,8 +41,7 @@ void mainmenu_Load(char *name, void (*fnSound)(char *file))
 	vecMenuItems.push_back(new UiListItem("Show Credits", MAINMENU_SHOW_CREDITS));
 	vecMenuItems.push_back(new UiListItem("Exit Diablo", MAINMENU_EXIT_DIABLO));
 
-	SDL_Rect rect1 = { PANEL_LEFT, 0, 640, 480 };
-	vecMainMenuDialog.push_back(new UiImage(&ArtBackground, rect1));
+	UiAddBackground(&vecMainMenuDialog);
 
  	SDL_Rect rect2 = { 0, 0, 0, 0 };
 	vecMainMenuDialog.push_back(new UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, rect2, UIS_CENTER));

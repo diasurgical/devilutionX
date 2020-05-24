@@ -43,12 +43,10 @@ BOOL(*gfnHeroStats)
 namespace {
 
 std::vector<UiItemBase*> vecSelHeroDialog;
-std::vector<UiListItem*> vecSellistDlgItems;
+std::vector<UiListItem*> vecSelHeroDlgItems;
 std::vector<UiItemBase*> vecSelDlgItems;
 std::vector<UiItemBase*> vecSelClassDialog;
-std::vector<UiListItem*> vecClassDlgItems;
 std::vector<UiItemBase*> vecSelLoadDialog;
-std::vector<UiListItem*> vecSelLoadDlgItems;
 std::vector<UiItemBase*> vecSelNameDialog;
 
 UiImage *SELHERO_DIALOG_HERO_IMG;
@@ -60,6 +58,17 @@ void selhero_UiFocusNavigationYesNo()
 {
 	if (selhero_deleteEnabled)
 		UiFocusNavigationYesNo();
+}
+
+void selhero_FreeListItems()
+{
+	for(std::size_t i = 0; i < vecSelHeroDlgItems.size(); i++)
+	{
+		UiListItem* pUIItem = vecSelHeroDlgItems[i];
+		if(pUIItem)
+			delete pUIItem;
+	}
+	vecSelHeroDlgItems.clear();
 }
 
 void selhero_Free()
@@ -90,14 +99,6 @@ void selhero_Free()
 	}
 	vecSelClassDialog.clear();
 
-	for(std::size_t i = 0; i < vecClassDlgItems.size(); i++)
-	{
-		UiListItem* pUIItem = vecClassDlgItems[i];
-		if(pUIItem)
-			delete pUIItem;
-	}
-	vecClassDlgItems.clear();
-
 	for(std::size_t i = 0; i < vecSelLoadDialog.size(); i++)
 	{
 		UiItemBase* pUIItem = vecSelLoadDialog[i];
@@ -105,14 +106,6 @@ void selhero_Free()
 			delete pUIItem;
 	}
 	vecSelLoadDialog.clear();
-
-	for(std::size_t i = 0; i < vecSelLoadDlgItems.size(); i++)
-	{
-		UiListItem* pUIItem = vecSelLoadDlgItems[i];
-		if(pUIItem)
-			delete pUIItem;
-	}
-	vecSelLoadDlgItems.clear();
 
 	for(std::size_t i = 0; i < vecSelNameDialog.size(); i++)
 	{
@@ -122,6 +115,7 @@ void selhero_Free()
 	}
 	vecSelNameDialog.clear();
 
+	selhero_FreeListItems();
 
 	bUIElementsLoaded = false;
 }
@@ -138,24 +132,19 @@ void selhero_SetStats()
 
 namespace {
 
-UiList *SELLIST_DIALOG_LIST;
 UiArtTextButton *SELLIST_DIALOG_DELETE_BUTTON;
 
 void selhero_UpdateViewportItems()
 {
+	selhero_FreeListItems();
+
 	const size_t num_viewport_heroes = std::min(selhero_SaveCount - listOffset, kMaxViewportItems);
-	SELLIST_DIALOG_LIST->m_length = num_viewport_heroes;
 	for (std::size_t i = 0; i < num_viewport_heroes; i++) {
 		const std::size_t index = i + listOffset;
-		vecSellistDlgItems[i]->m_text = selhero_heros[index].name;
-		vecSellistDlgItems[i]->m_value = static_cast<int>(index);
-//		SELLIST_DIALOG_ITEMS[i] = { selhero_heros[index].name, static_cast<int>(index) };
+		vecSelHeroDlgItems.push_back(new UiListItem(selhero_heros[index].name, static_cast<int>(index)));
 	}
 	if (num_viewport_heroes < kMaxViewportItems) {
-//		vecSellistDlgItems[i]->m_text = "New Hero";
-//		vecSellistDlgItems[i]->m_value = static_cast<int>(selhero_SaveCount);
-//		SELLIST_DIALOG_ITEMS[num_viewport_heroes] = { "New Hero", static_cast<int>(selhero_SaveCount) };
-		++SELLIST_DIALOG_LIST->m_length;
+		vecSelHeroDlgItems.push_back(new UiListItem("New Hero", static_cast<int>(selhero_SaveCount)));
 	}
 }
 
@@ -179,8 +168,8 @@ void selhero_List_Init()
 	SDL_Rect rect1 = { PANEL_LEFT + 264, 211, 320, 33 };
 	vecSelDlgItems.push_back(new UiArtText("Select Hero", rect1, UIS_CENTER | UIS_BIG));
 
-	SELLIST_DIALOG_LIST = new UiList(vecSellistDlgItems, PANEL_LEFT + 265, 256, 320, 26, UIS_CENTER | UIS_MED | UIS_GOLD);
-	vecSelDlgItems.push_back(SELLIST_DIALOG_LIST);
+	selhero_UpdateViewportItems();
+	vecSelDlgItems.push_back(new UiList(vecSelHeroDlgItems, PANEL_LEFT + 265, 256, 320, 26, UIS_CENTER | UIS_MED | UIS_GOLD));
 
 	SDL_Rect rect2 = { PANEL_LEFT + 585, 244, 25, 178 };
 	UiScrollBar *scrollBar = new UiScrollBar(&ArtScrollBarBackground, &ArtScrollBarThumb, &ArtScrollBarArrow, rect2);
@@ -197,7 +186,6 @@ void selhero_List_Init()
 	vecSelDlgItems.push_back(new UiArtTextButton("Cancel", &UiFocusNavigationEsc, rect5, UIS_CENTER | UIS_BIG | UIS_GOLD));
 
 	listOffset = 0;
-	selhero_UpdateViewportItems();
 	UiInitList(0, selhero_SaveCount, selhero_List_Focus, selhero_List_Select, selhero_List_Esc, vecSelDlgItems, false, selhero_List_DeleteYesNo);
 	UiInitScrollBar(scrollBar, kMaxViewportItems, &listOffset);
 	if (selhero_isMultiPlayer) {
@@ -242,11 +230,11 @@ void selhero_List_Select(int value)
 	SDL_Rect rect1 = { PANEL_LEFT + 264, 211, 320, 33 };
 	vecSelClassDialog.push_back(new UiArtText("Choose Class", rect1, UIS_CENTER | UIS_BIG));
 
-	vecClassDlgItems.push_back(new UiListItem("Warrior", UI_WARRIOR));
-	vecClassDlgItems.push_back(new UiListItem("Rogue", UI_ROGUE));
-	vecClassDlgItems.push_back(new UiListItem("Sorcerer", UI_SORCERER));
-
-	vecSelClassDialog.push_back(new UiList(vecClassDlgItems, PANEL_LEFT + 264, 285, 320, 33, UIS_CENTER | UIS_MED | UIS_GOLD));
+	selhero_FreeListItems();
+	vecSelHeroDlgItems.push_back(new UiListItem("Warrior", UI_WARRIOR));
+	vecSelHeroDlgItems.push_back(new UiListItem("Rogue", UI_ROGUE));
+	vecSelHeroDlgItems.push_back(new UiListItem("Sorcerer", UI_SORCERER));
+	vecSelClassDialog.push_back(new UiList(vecSelHeroDlgItems, PANEL_LEFT + 264, 285, 320, 33, UIS_CENTER | UIS_MED | UIS_GOLD));
 
 	SDL_Rect rect2 = { PANEL_LEFT + 279, 429, 140, 35 };
 	vecSelClassDialog.push_back(new UiArtTextButton("OK", &UiFocusNavigationSelect, rect2, UIS_CENTER | UIS_BIG | UIS_GOLD));
@@ -265,13 +253,13 @@ void selhero_List_Select(int value)
 	}
 
 	if (selhero_heroInfo.hassaved) {
-		vecSelLoadDlgItems.push_back(new UiListItem("Load Game", 0));
-		vecSelLoadDlgItems.push_back(new UiListItem("New Game", 1));
-
 		SDL_Rect rect1 = { PANEL_LEFT + 264, 211, 320, 33 };
 		vecSelLoadDialog.push_back(new UiArtText("Save File Exists", rect1, UIS_CENTER | UIS_BIG));
 
-		vecSelLoadDialog.push_back(new UiList(/*SELLOAD_DIALOG_ITEMS*/vecSelLoadDlgItems, PANEL_LEFT + 265, 285, 320, 33, UIS_CENTER | UIS_MED | UIS_GOLD));
+		selhero_FreeListItems();
+		vecSelHeroDlgItems.push_back(new UiListItem("Load Game", 0));
+		vecSelHeroDlgItems.push_back(new UiListItem("New Game", 1));
+		vecSelLoadDialog.push_back(new UiList(vecSelHeroDlgItems, PANEL_LEFT + 265, 285, 320, 33, UIS_CENTER | UIS_MED | UIS_GOLD));
 
 		SDL_Rect rect2 = { PANEL_LEFT + 279, 427, 140, 35 };
 		vecSelLoadDialog.push_back(new UiArtTextButton("OK", &UiFocusNavigationSelect, rect2 , UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
@@ -346,22 +334,6 @@ void selhero_ClassSelector_Select(int value)
 
 void selhero_ClassSelector_Esc()
 {
-	for(std::size_t i = 0; i < vecClassDlgItems.size(); i++)
-	{
-		UiListItem* pUIItem = vecClassDlgItems[i];
-		if(pUIItem)
-			delete pUIItem;
-	}
-	vecClassDlgItems.clear();
-
-	for(std::size_t i = 0; i < vecSellistDlgItems.size(); i++)
-	{
-		UiListItem* pUIItem = vecSellistDlgItems[i];
-		if(pUIItem)
-			delete pUIItem;
-	}
-	vecSellistDlgItems.clear();
-
 	for(std::size_t i = 0; i < vecSelClassDialog.size(); i++)
 	{
 		UiItemBase* pUIItem = vecSelClassDialog[i];
@@ -369,6 +341,8 @@ void selhero_ClassSelector_Esc()
 			delete pUIItem;
 	}
 	vecSelClassDialog.clear();
+
+	selhero_FreeListItems();
 
 	if (selhero_SaveCount) {
 		selhero_List_Init();
@@ -455,15 +429,10 @@ BOOL UiSelHeroDialog(
 {
 	bUIElementsLoaded = true;
 
-	for(std::size_t i = 0; i < kMaxViewportItems; i++)
-		vecSellistDlgItems.push_back(new UiListItem("na", 0));
-
 	do {
 		LoadBackgroundArt("ui_art\\selhero.pcx");
+		UiAddBackground(&vecSelHeroDialog);
 		LoadScrollBar();
-
-		SDL_Rect rect1 = { PANEL_LEFT, 0, 640, 480 };
-		vecSelHeroDialog.push_back(new UiImage(&ArtBackground, rect1));
 
  		SDL_Rect rect2 = { 0, 0, 0, 0 };
 		vecSelHeroDialog.push_back(new UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, rect2, UIS_CENTER));

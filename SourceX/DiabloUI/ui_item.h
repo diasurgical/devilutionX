@@ -321,7 +321,6 @@ public:
 	UiList(vUiListItem vItems, Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, int flags = 0) : UiItemBase(x, y, item_width, item_height * vItems.size(), flags)
 	{
 		m_type = UI_LIST;
-		m_length = vItems.size();
 		m_vecItems = vItems;
 		m_x = x;
 		m_y = y;
@@ -348,7 +347,7 @@ public:
 	{
 		ASSERT(y >= m_rect.y);
 		const std::size_t index = (y - m_rect.y) / m_height;
-		ASSERT((int)index < m_length);
+		ASSERT(index < m_vecItems.size());
 		return m_vecItems[index];
 	}
 
@@ -360,7 +359,6 @@ public:
 //private:
 	Sint16 m_x, m_y;
 	Uint16 m_width, m_height;
-	int m_length;
 	std::vector<UiListItem*> m_vecItems;
 	};
 

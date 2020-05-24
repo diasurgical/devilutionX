@@ -37,8 +37,7 @@ void selconn_Load()
 #endif
 	vecConnItems.push_back(new UiListItem("Loopback", SELCONN_LOOPBACK));
 
-	SDL_Rect rect1 = {PANEL_LEFT, 0, 640, 480};
-	vecSelConnDlg.push_back(new UiImage(&ArtBackground, rect1));
+	UiAddBackground(&vecSelConnDlg);
 
 	SDL_Rect rect2 = {0, 0, 0, 0};
 	vecSelConnDlg.push_back(new UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, rect2, UIS_CENTER));

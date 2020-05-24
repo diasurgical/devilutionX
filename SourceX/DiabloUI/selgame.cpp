@@ -77,8 +77,7 @@ void selgame_GameSelection_Init()
 
 	selgame_FreeVectors();
 
-	SDL_Rect rect1 = { PANEL_LEFT, 0, 640, 480 };
-	vecSelGameDialog.push_back(new UiImage(&ArtBackground, rect1));
+	UiAddBackground(&vecSelGameDialog);
 
 	SDL_Rect rect2 = { 0, 0, 0, 0 };
 	vecSelGameDialog.push_back(new UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, rect2, UIS_CENTER));
@@ -145,8 +144,7 @@ void selgame_GameSelection_Select(int value)
 
 	selgame_FreeVectors();
 
-	SDL_Rect rect1 = { PANEL_LEFT, 0, 640, 480 };
-	vecSelGameDialog.push_back(new UiImage(&ArtBackground, rect1));
+	UiAddBackground(&vecSelGameDialog);
 
 	SDL_Rect rect2 = { 0, 0, 0, 0 };
 	vecSelGameDialog.push_back(new UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, rect2, UIS_CENTER));
@@ -280,8 +278,7 @@ void selgame_Password_Init(int value)
 
 	selgame_FreeVectors();
 
-	SDL_Rect rect1 = { PANEL_LEFT, 0, 640, 480 };
-	vecSelGameDialog.push_back(new UiImage(&ArtBackground, rect1));
+	UiAddBackground(&vecSelGameDialog);
 
 	SDL_Rect rect2 = { 0, 0, 0, 0 };
 	vecSelGameDialog.push_back(new UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, rect2, UIS_CENTER));

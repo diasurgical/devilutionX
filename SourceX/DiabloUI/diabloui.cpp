@@ -594,6 +594,12 @@ void LoadBackgroundArt(const char *pszFile)
 	RenderPresent();
 }
 
+void UiAddBackground(std::vector<UiItemBase*> *vecDialog)
+{
+	SDL_Rect rect1 = { PANEL_LEFT, 0, 640, 480 };
+	vecDialog->push_back(new UiImage(&ArtBackground, rect1));
+}
+
 void UiFadeIn()
 {
 	if (fadeValue < 256) {
@@ -682,7 +688,7 @@ void Render(UiArtTextButton* ui_button)
 
 void Render(UiList* ui_list)
 {
-	for (int i = 0; i < ui_list->m_length; ++i) {
+	for (std::size_t i = 0; i < ui_list->m_vecItems.size(); ++i) {
 		SDL_Rect rect = ui_list->itemRect(i);
 		const UiListItem* item = ui_list->GetItem(i);
 		if (item->m_value == SelectedItem)
