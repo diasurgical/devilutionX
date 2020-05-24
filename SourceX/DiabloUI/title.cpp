@@ -48,13 +48,7 @@ void UiTitleDialog()
 				break;
 			}
 			switch (event.type) {
-			case SDL_KEYDOWN: /* To match the original uncomment this
-				if (event.key.keysym.sym == SDLK_UP
-				    || event.key.keysym.sym == SDLK_UP
-				    || event.key.keysym.sym == SDLK_LEFT
-				    || event.key.keysym.sym == SDLK_RIGHT) {
-					break;
-				}*/
+			case SDL_KEYDOWN:
 			case SDL_MOUSEBUTTONDOWN:
 				endMenu = true;
 				break;
