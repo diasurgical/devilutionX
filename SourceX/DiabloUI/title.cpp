@@ -4,7 +4,7 @@
 
 namespace dvl {
 
-std::vector<UiItemBase*> vecTitleScreen;
+vUiItemBase vecTitleScreen;
 
 void title_Load()
 {
@@ -30,9 +30,7 @@ void UiTitleDialog()
 {
 	SDL_Rect rect;
 	UiAddBackground(&vecTitleScreen);
-
-	rect = { 0, 182, 0, 0 };
-	vecTitleScreen.push_back(new UiImage(&ArtLogos[LOGO_BIG], /*animated=*/true, /*frame=*/0, rect, UIS_CENTER));
+	UiAddLogo(&vecTitleScreen, LOGO_BIG, 182);
 
 	rect = { PANEL_LEFT + 49, 410, 550, 26 };
 	vecTitleScreen.push_back(new UiArtText("Copyright \xA9 1996-2001 Blizzard Entertainment", rect, UIS_MED | UIS_CENTER));

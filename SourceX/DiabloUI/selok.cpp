@@ -12,10 +12,9 @@ char dialogText[256];
 } // namespace
 
 int selok_endMenu;
-char selok_title[32];
 
 std::vector<UiListItem*> vecSelOkDialogItems;
-std::vector<UiItemBase*> vecSelOkDialog;
+vUiItemBase vecSelOkDialog;
 
 void selok_Free()
 {
@@ -63,16 +62,17 @@ void UiSelOkDialog(const char *title, const char *body, bool background)
 	}
 
 	UiAddBackground(&vecSelOkDialog);
+	UiAddLogo(&vecSelOkDialog);
 
-	if (!gbSpawned) {
-		rect = { 0, 0, 0, 0 };
-		vecSelOkDialog.push_back(new UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, rect, UIS_CENTER));
-
+	if (title != NULL) {
 		rect = { PANEL_LEFT + 24, 161, 590, 35 };
-		vecSelOkDialog.push_back(new UiArtText(selok_title, rect, UIS_CENTER | UIS_BIG));
+		vecSelOkDialog.push_back(new UiArtText(title, rect, UIS_CENTER | UIS_BIG));
+
+		rect = { PANEL_LEFT + 140, 210, 560, 168 };
+		vecSelOkDialog.push_back(new UiArtText(dialogText, rect, UIS_MED));
 	} else {
-		rect = { 0, 182, 0, 0 };
-		vecSelOkDialog.push_back(new UiImage(&ArtLogos[LOGO_BIG], /*animated=*/true, /*frame=*/0, rect, UIS_CENTER));
+		rect = { PANEL_LEFT + 140, 197, 560, 168 };
+		vecSelOkDialog.push_back(new UiArtText(dialogText, rect, UIS_MED));
 	}
 
 	rect = { PANEL_LEFT + 140, 210, 560, 168 };
@@ -81,11 +81,7 @@ void UiSelOkDialog(const char *title, const char *body, bool background)
 	vecSelOkDialogItems.push_back(new UiListItem("OK", 0));
 	vecSelOkDialog.push_back(new UiList(vecSelOkDialogItems, PANEL_LEFT + 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD));
 
-	if (title != NULL) {
-		strcpy(selok_title, title);
-	}
-
-	strcpy(dialogText, body);
+	strncpy(dialogText, body, sizeof(dialogText) - 1);
 	WordWrapArtStr(dialogText, 280);
 
 	UiInitList(0, 0, NULL, selok_Select, selok_Esc, vecSelOkDialog, false, NULL);

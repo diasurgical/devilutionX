@@ -17,7 +17,6 @@ extern SDL_Surface *pal_surface;
 namespace {
 
 Art dialogArt;
-char dialogText[256];
 bool fontWasLoaded;
 bool textInputWasActive;
 
@@ -167,7 +166,7 @@ void Init(const char *text, const char *caption, bool error, bool renderBehind)
 		vecOkDialog.push_back(new UiImage(&dialogArt, rect));
 
 		rect = { PANEL_LEFT + 200, 211, 240, 80 };
-		vecOkDialog.push_back(new UiText(dialogText, rect, UIS_CENTER));
+		vecOkDialog.push_back(new UiText(text, rect, UIS_CENTER));
 
 		rect = { PANEL_LEFT + 265, 265, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
 		vecOkDialog.push_back(new UiButton(&SmlButton, "OK", &DialogActionOK, rect, 0));
@@ -177,7 +176,7 @@ void Init(const char *text, const char *caption, bool error, bool renderBehind)
 
 		SDL_Color color1 = { 255, 255, 0, 0 };
 		rect = { PANEL_LEFT + 147, 110, 345, 20 };
-		vecOkDialog.push_back(new UiText(dialogText, color1, rect, UIS_CENTER));
+		vecOkDialog.push_back(new UiText(text, color1, rect, UIS_CENTER));
 
 		rect = { PANEL_LEFT + 147, 141, 345, 190 };
 		vecOkDialog.push_back(new UiText(caption, rect, UIS_CENTER));
@@ -186,7 +185,6 @@ void Init(const char *text, const char *caption, bool error, bool renderBehind)
 		vecOkDialog.push_back(new UiButton(&SmlButton, "OK", &DialogActionOK, rect, 0));
 	}
 
-	strcpy(dialogText, text);
 	if (!renderBehind) {
 		LoadBackgroundArt("ui_art\\black.pcx");
 		if (ArtBackground.surface == NULL) {
