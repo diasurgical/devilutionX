@@ -481,7 +481,7 @@ BOOL UiValidPlayerName(char *name)
 	};
 
 	char tmpname[PLR_NAME_LEN];
-	strcpy(tmpname, name);
+	strncpy(tmpname, name, PLR_NAME_LEN - 1);
 	for (size_t i = 0, n = strlen(tmpname); i < n; i++)
 		tmpname[i]++;
 
