@@ -212,13 +212,13 @@ public:
 class UiText : public UiItemBase
 {
 public:
-	UiText(const char *text, SDL_Color color, SDL_Rect rect, int flags = 0) : UiItemBase(rect, flags)
+	UiText(const char *text, SDL_Color color1, SDL_Rect rect, int flags = 0) : UiItemBase(rect, flags)
 	{
 		m_type = UI_TEXT;
-	    m_color = color;
+	    m_color = color1;
 
-		SDL_Color color1 = { 0, 255, 0, 0 };
-	    m_shadow_color = color1;
+		SDL_Color color2 = { 0, 0, 0, 0 };
+	    m_shadow_color = color2;
 
 	    m_text = text;
 		m_render_cache = NULL;

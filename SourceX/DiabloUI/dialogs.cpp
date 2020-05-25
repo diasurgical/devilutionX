@@ -174,9 +174,9 @@ void Init(const char *text, const char *caption, bool error, bool renderBehind)
 		rect = { PANEL_LEFT + 127, 100, 385, 280 };
 		vecOkDialog.push_back(new UiImage(&dialogArt, rect));
 
-		SDL_Color color1 = { 255, 255, 0, 0 };
+		SDL_Color color = { 255, 255, 0, 0 };
 		rect = { PANEL_LEFT + 147, 110, 345, 20 };
-		vecOkDialog.push_back(new UiText(text, color1, rect, UIS_CENTER));
+		vecOkDialog.push_back(new UiText(text, color, rect, UIS_CENTER));
 
 		rect = { PANEL_LEFT + 147, 141, 345, 190 };
 		vecOkDialog.push_back(new UiText(caption, rect, UIS_CENTER));

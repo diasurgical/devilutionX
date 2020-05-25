@@ -42,37 +42,37 @@ void selconn_Load()
 	UiAddBackground(&vecSelConnDlg);
 	UiAddLogo(&vecSelConnDlg);
 
-	rect = {PANEL_LEFT + 24, 161, 590, 35};
+	rect = { PANEL_LEFT + 24, 161, 590, 35 };
 	vecSelConnDlg.push_back(new UiArtText("Multi Player Game", rect, UIS_CENTER | UIS_BIG));
 
-	rect = {PANEL_LEFT + 35, 218, 205, 21};
+	rect = { PANEL_LEFT + 35, 218, 205, 21 };
 	vecSelConnDlg.push_back(new UiArtText(selconn_MaxPlayers, rect));
 
-	rect = {PANEL_LEFT + 35, 256, 205, 21};
+	rect = { PANEL_LEFT + 35, 256, 205, 21 };
 	vecSelConnDlg.push_back(new UiArtText("Requirements:", rect));
 
-	rect = {PANEL_LEFT + 35, 275, 205, 66};
+	rect = { PANEL_LEFT + 35, 275, 205, 66 };
 	SELCONNECT_DIALOG_DESCRIPTION = new UiArtText(selconn_Description, rect);
 	vecSelConnDlg.push_back(SELCONNECT_DIALOG_DESCRIPTION);
 
-	rect = {PANEL_LEFT + 30, 356, 220, 31};
+	rect = { PANEL_LEFT + 30, 356, 220, 31 };
 	vecSelConnDlg.push_back(new UiArtText("no gateway needed", rect, UIS_CENTER | UIS_MED));
 
-	rect = {PANEL_LEFT + 35, 393, 205, 21};
+	rect = { PANEL_LEFT + 35, 393, 205, 21 };
 	vecSelConnDlg.push_back(new UiArtText(selconn_Gateway, rect, UIS_CENTER));
 
-	rect = {PANEL_LEFT + 300, 211, 295, 33};
+	rect = { PANEL_LEFT + 300, 211, 295, 33 };
 	vecSelConnDlg.push_back(new UiArtText("Select Connection", rect, UIS_CENTER | UIS_BIG));
 
-	rect = {PANEL_LEFT + 16, 427, 250, 35};
+	rect = { PANEL_LEFT + 16, 427, 250, 35 };
 	vecSelConnDlg.push_back(new UiArtTextButton("Change Gateway", NULL, rect, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD | UIS_HIDDEN));
 
 	vecSelConnDlg.push_back(new UiList(vecConnItems, PANEL_LEFT + 305, 256, 285, 26, UIS_CENTER | UIS_VCENTER | UIS_GOLD));
 
-	rect = {PANEL_LEFT + 299, 427, 140, 35};
+	rect = { PANEL_LEFT + 299, 427, 140, 35 };
 	vecSelConnDlg.push_back(new UiArtTextButton("OK", &UiFocusNavigationSelect, rect, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
 
-	rect = {PANEL_LEFT + 454, 427, 140, 35};
+	rect = { PANEL_LEFT + 454, 427, 140, 35 };
 	vecSelConnDlg.push_back(new UiArtTextButton("Cancel", &UiFocusNavigationEsc, rect, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
 
 	UiInitList(0, vecConnItems.size() - 1, selconn_Focus, selconn_Select, selconn_Esc, vecSelConnDlg);
