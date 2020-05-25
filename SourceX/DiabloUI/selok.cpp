@@ -16,6 +16,8 @@ int selok_endMenu;
 std::vector<UiListItem*> vecSelOkDialogItems;
 vUiItemBase vecSelOkDialog;
 
+#define MESSAGE_WIDTH 280
+
 void selok_Free()
 {
 	ArtBackground.Unload();
@@ -82,7 +84,7 @@ void UiSelOkDialog(const char *title, const char *body, bool background)
 	vecSelOkDialog.push_back(new UiList(vecSelOkDialogItems, PANEL_LEFT + 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD));
 
 	strncpy(dialogText, body, sizeof(dialogText) - 1);
-	WordWrapArtStr(dialogText, 280);
+	WordWrapArtStr(dialogText, MESSAGE_WIDTH);
 
 	UiInitList(0, 0, NULL, selok_Select, selok_Esc, vecSelOkDialog, false, NULL);
 

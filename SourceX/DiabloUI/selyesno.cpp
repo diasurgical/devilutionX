@@ -12,7 +12,8 @@ char selyesno_confirmationMessage[256];
 
 std::vector<UiListItem*> vecSelYesNoDialogItems;
 vUiItemBase vecSelYesNoDialog;
-UiArtText *SELYESNO_DIALOG_CONFIRMATION_MESSAGE;
+
+#define MESSAGE_WIDTH 280
 
 void selyesno_Free()
 {
@@ -58,16 +59,15 @@ bool UiSelHeroYesNoDialog(const char *title, const char *body)
 	rect = { PANEL_LEFT + 24, 161, 590, 35 };
 	vecSelYesNoDialog.push_back(new UiArtText(title, rect, UIS_CENTER | UIS_BIG));
 
-	rect = { PANEL_LEFT + 120, 236, 280, 168 };
-	SELYESNO_DIALOG_CONFIRMATION_MESSAGE = new UiArtText(selyesno_confirmationMessage, rect, UIS_MED);
-	vecSelYesNoDialog.push_back(SELYESNO_DIALOG_CONFIRMATION_MESSAGE);
+	rect = { PANEL_LEFT + 120, 236, MESSAGE_WIDTH, 168 };
+	vecSelYesNoDialog.push_back(new UiArtText(selyesno_confirmationMessage, rect, UIS_MED));
 
 	vecSelYesNoDialogItems.push_back(new UiListItem( "Yes", 0 ));
 	vecSelYesNoDialogItems.push_back(new UiListItem( "No", 1 ));
 	vecSelYesNoDialog.push_back(new UiList(vecSelYesNoDialogItems, PANEL_LEFT + 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD));
 
 	strncpy(selyesno_confirmationMessage, body, sizeof(selyesno_confirmationMessage) - 1);
-	WordWrapArtStr(selyesno_confirmationMessage, SELYESNO_DIALOG_CONFIRMATION_MESSAGE->m_rect.w);
+	WordWrapArtStr(selyesno_confirmationMessage, MESSAGE_WIDTH);
 
 	UiInitList(0, 1, NULL, selyesno_Select, selyesno_Esc, vecSelYesNoDialog, true, NULL);
 

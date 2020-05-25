@@ -25,7 +25,7 @@ int heroLevel;
 static _SNETPROGRAMDATA *m_client_info;
 extern int provider;
 
-UiArtText* SELGAME_DESCRIPTION = NULL;
+#define DESCRIPTION_WIDTH 205
 
 namespace {
 
@@ -53,8 +53,6 @@ void selgame_FreeVectors()
 			delete pUIItem;
 	}
 	vecSelGameDialog.clear();
-
-	SELGAME_DESCRIPTION = NULL;
 }
 
 void selgame_Free()
@@ -90,9 +88,8 @@ void selgame_GameSelection_Init()
 	rect = { PANEL_LEFT + 35, 211, 205, 192 };
 	vecSelGameDialog.push_back(new UiArtText("Description:", rect, UIS_MED));
 
-	rect = { PANEL_LEFT + 35, 256, 205, 192 };
-	SELGAME_DESCRIPTION = new UiArtText(selgame_Description, rect);
-	vecSelGameDialog.push_back(SELGAME_DESCRIPTION);
+	rect = { PANEL_LEFT + 35, 256, DESCRIPTION_WIDTH, 192 };
+	vecSelGameDialog.push_back(new UiArtText(selgame_Description, rect));
 
 	rect = { PANEL_LEFT + 300, 211, 295, 33 };
 	vecSelGameDialog.push_back(new UiArtText("Select Action", rect, UIS_CENTER | UIS_BIG));
@@ -121,7 +118,7 @@ void selgame_GameSelection_Focus(int value)
 		strncpy(selgame_Description, "Enter an IP or a hostname and join a game already in progress at that address.", sizeof(selgame_Description) - 1);
 		break;
 	}
-	WordWrapArtStr(selgame_Description, SELGAME_DESCRIPTION->m_rect.w);
+	WordWrapArtStr(selgame_Description, DESCRIPTION_WIDTH);
 }
 
 /**
@@ -157,9 +154,8 @@ void selgame_GameSelection_Select(int value)
 	rect = { PANEL_LEFT + 34, 211, 205, 33 };
 	vecSelGameDialog.push_back(new UiArtText(selgame_Label, rect, UIS_CENTER | UIS_BIG));
 
-	rect = { PANEL_LEFT + 35, 256, 205, 192 };
-	SELGAME_DESCRIPTION = new UiArtText(selgame_Description, rect);
-	vecSelGameDialog.push_back(SELGAME_DESCRIPTION);
+	rect = { PANEL_LEFT + 35, 256, DESCRIPTION_WIDTH, 192 };
+	vecSelGameDialog.push_back(new UiArtText(selgame_Description, rect));
 
 	switch (value) {
 	case 0: {
@@ -226,7 +222,7 @@ void selgame_Diff_Focus(int value)
 		strncpy(selgame_Description, "Hell Difficulty\nThe most powerful of the underworld's creatures lurk at the gateway into Hell. Only the most experienced characters should venture in this realm.", sizeof(selgame_Description) - 1);
 		break;
 	}
-	WordWrapArtStr(selgame_Description, SELGAME_DESCRIPTION->m_rect.w);
+	WordWrapArtStr(selgame_Description, DESCRIPTION_WIDTH);
 }
 
 bool IsDifficultyAllowed(int value)
@@ -291,9 +287,8 @@ void selgame_Password_Init(int value)
 	rect = { PANEL_LEFT + 35, 211, 205, 192 };
 	vecSelGameDialog.push_back(new UiArtText("Description:", rect, UIS_MED));
 
-	rect = { PANEL_LEFT + 35, 256, 205, 192 };
-	SELGAME_DESCRIPTION = new UiArtText(selgame_Description, rect);
-	vecSelGameDialog.push_back(SELGAME_DESCRIPTION);
+	rect = { PANEL_LEFT + 35, 256, DESCRIPTION_WIDTH, 192 };
+	vecSelGameDialog.push_back(new UiArtText(selgame_Description, rect));
 
 	rect = { PANEL_LEFT + 305, 211, 285, 33 };
 	vecSelGameDialog.push_back(new UiArtText("Enter Password", rect, UIS_CENTER | UIS_BIG));

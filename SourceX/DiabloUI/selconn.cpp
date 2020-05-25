@@ -21,8 +21,7 @@ int provider;
 std::vector<UiListItem*> vecConnItems;
 vUiItemBase vecSelConnDlg;
 
-UiArtText* SELCONNECT_DIALOG_DESCRIPTION = NULL;
-
+#define DESCRIPTION_WIDTH 205
 
 void selconn_Load()
 {
@@ -45,20 +44,19 @@ void selconn_Load()
 	rect = { PANEL_LEFT + 24, 161, 590, 35 };
 	vecSelConnDlg.push_back(new UiArtText("Multi Player Game", rect, UIS_CENTER | UIS_BIG));
 
-	rect = { PANEL_LEFT + 35, 218, 205, 21 };
+	rect = { PANEL_LEFT + 35, 218, DESCRIPTION_WIDTH, 21 };
 	vecSelConnDlg.push_back(new UiArtText(selconn_MaxPlayers, rect));
 
-	rect = { PANEL_LEFT + 35, 256, 205, 21 };
+	rect = { PANEL_LEFT + 35, 256, DESCRIPTION_WIDTH, 21 };
 	vecSelConnDlg.push_back(new UiArtText("Requirements:", rect));
 
-	rect = { PANEL_LEFT + 35, 275, 205, 66 };
-	SELCONNECT_DIALOG_DESCRIPTION = new UiArtText(selconn_Description, rect);
-	vecSelConnDlg.push_back(SELCONNECT_DIALOG_DESCRIPTION);
+	rect = { PANEL_LEFT + 35, 275, DESCRIPTION_WIDTH, 66 };
+	vecSelConnDlg.push_back(new UiArtText(selconn_Description, rect));
 
 	rect = { PANEL_LEFT + 30, 356, 220, 31 };
 	vecSelConnDlg.push_back(new UiArtText("no gateway needed", rect, UIS_CENTER | UIS_MED));
 
-	rect = { PANEL_LEFT + 35, 393, 205, 21 };
+	rect = { PANEL_LEFT + 35, 393, DESCRIPTION_WIDTH, 21 };
 	vecSelConnDlg.push_back(new UiArtText(selconn_Gateway, rect, UIS_CENTER));
 
 	rect = { PANEL_LEFT + 300, 211, 295, 33 };
@@ -97,8 +95,6 @@ void selconn_Free()
 			delete pUIMenuItem;
 	}
 	vecSelConnDlg.clear();
-
-	SELCONNECT_DIALOG_DESCRIPTION = NULL;
 }
 
 void selconn_Esc()
@@ -130,7 +126,7 @@ void selconn_Focus(int value)
 	}
 
 	snprintf(selconn_MaxPlayers, sizeof(selconn_MaxPlayers), "Players Supported: %d", players);
-	WordWrapArtStr(selconn_Description, SELCONNECT_DIALOG_DESCRIPTION->m_rect.w);
+	WordWrapArtStr(selconn_Description, DESCRIPTION_WIDTH);
 }
 
 void selconn_Select(int value)
