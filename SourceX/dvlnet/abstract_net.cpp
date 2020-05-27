@@ -11,20 +11,26 @@
 namespace dvl {
 namespace net {
 
+abstract_net* g_pConn = NULL;
+
 abstract_net* abstract_net::make_net(provider_t provider)
 {
 #ifdef NONET
-	return new loopback;
+	g_pConn = new loopback;
+	return g_pConn;
 #else
 	switch (provider) {
 	case SELCONN_TCP:
-		return new cdwrap<tcp_client>;
+		g_pConn = new cdwrap<tcp_client>;
+		return g_pConn;
 #ifdef BUGGY
 	case SELCONN_UDP:
-		return new cdwrap<udp_p2p>;
+		g_pConn = new cdwrap<udp_p2p>
+		return g_pConn;
 #endif
 	case SELCONN_LOOPBACK:
-		return new loopback;
+		g_pConn = new loopback;
+		return g_pConn;
 	default:
 		ABORT();
 	}
@@ -33,9 +39,11 @@ abstract_net* abstract_net::make_net(provider_t provider)
 
 abstract_net::~abstract_net()
 {
-#if defined(NONET) && !defined(_XBOX)
-	delete loopback;
-#endif
+	if(g_pConn)
+	{
+		delete g_pConn;
+		g_pConn = NULL;
+	}
 }
 
 } // namespace net
