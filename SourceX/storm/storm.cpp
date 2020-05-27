@@ -103,6 +103,7 @@ BOOL SFileDdaBeginEx(HANDLE hFile, DWORD flags, DWORD mask, unsigned __int32 lDi
 		return false;
 	}
 	if (SFileChunk) {
+		SFileDdaEnd(hFile);
 		SFileFreeChunk();
 	}
 	SFileChunk = Mix_LoadWAV_RW(rw, 1);
