@@ -42,7 +42,7 @@ radon::File& getIni() {
   return ini;
 }
 
-static Mix_Chunk *SFileChunk;
+static Mix_Chunk *SFileChunk = NULL;
 
 void GetBasePath(char *buffer, size_t size)
 {
@@ -102,6 +102,10 @@ BOOL SFileDdaBeginEx(HANDLE hFile, DWORD flags, DWORD mask, unsigned __int32 lDi
 		SDL_Log(SDL_GetError());
 		return false;
 	}
+	if (SFileChunk) {
+		SFileDdaEnd(hFile);
+		SFileFreeChunk();
+	}
 	SFileChunk = Mix_LoadWAV_RW(rw, 1);
 	free(SFXbuffer);
 
@@ -115,13 +119,18 @@ BOOL SFileDdaBeginEx(HANDLE hFile, DWORD flags, DWORD mask, unsigned __int32 lDi
 
 void SFileFreeChunk()
 {
-	if(SFileChunk)
+	if (SFileChunk) {
 		Mix_FreeChunk(SFileChunk);
+		SFileChunk = NULL;
+	}
 }
 
 BOOL SFileDdaDestroy()
 {
-	Mix_FreeChunk(SFileChunk);
+	if (SFileChunk) {
+		Mix_FreeChunk(SFileChunk);
+		SFileChunk = NULL;
+	}
 
 	return true;
 }
