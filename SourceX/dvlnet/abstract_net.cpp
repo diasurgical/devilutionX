@@ -29,8 +29,8 @@ abstract_net* abstract_net::make_net(provider_t provider)
 		return g_pConn;
 #endif
 	case SELCONN_LOOPBACK:
-	g_pConn = new loopback;
-	return g_pConn;
+		g_pConn = new loopback;
+		return g_pConn;
 	default:
 		ABORT();
 	}
