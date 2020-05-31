@@ -136,6 +136,11 @@ void mainmenu_loop()
 BOOL mainmenu_single_player()
 {
 	gbMaxPlayers = 1;
+	int value = gnDifficulty;
+	if (!SRegLoadValue(APP_NAME, "SP Difficulty", 0, &value))
+		value = 0;
+	value = SDL_max(0, SDL_min(value, 2)); // Clamp values 0-Normal, 1-Nightmare, 2-Hell
+	gnDifficulty = value;
 	return mainmenu_init_menu(SELHERO_NEW_DUNGEON);
 }
 
