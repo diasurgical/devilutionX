@@ -16,7 +16,6 @@ BYTE *gpBuffer;
 int locktbl[256];
 #endif
 static CCritSect sgMemCrit;
-HMODULE ghDiabMod;
 
 int refreshDelay;
 SDL_Renderer *renderer;
