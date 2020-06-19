@@ -96,7 +96,15 @@ bool SpawnWindow(const char *lpWindowName, int nWidth, int nHeight)
 		flags |= SDL_WINDOW_INPUT_GRABBED;
 	}
 
-	ghMainWnd = SDL_CreateWindow(lpWindowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, nWidth, nHeight, flags);
+    display_id = abs(display_id);
+
+    const int displays_total = SDL_GetNumVideoDisplays();
+    if (display_id > displays_total) {
+        display_id = displays_total - 1;
+    }
+
+	const unsigned int window_pos = SDL_WINDOWPOS_UNDEFINED_DISPLAY(display_id);
+	ghMainWnd = SDL_CreateWindow(lpWindowName, window_pos, window_pos, nWidth, nHeight, flags);
 #endif
 	if (ghMainWnd == NULL) {
 		ErrSdl();
