@@ -1,6 +1,16 @@
-//HEADER_GOES_HERE
+/**
+ * @file items.h
+ *
+ * Interface of item functionality.
+ */
 #ifndef __ITEMS_H__
 #define __ITEMS_H__
+
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 extern int itemactive[MAXITEMS];
 extern BOOL uitemflag;
@@ -9,7 +19,7 @@ extern ItemStruct curruitem;
 extern ItemGetRecordStruct itemrecord[MAXITEMS];
 extern ItemStruct item[MAXITEMS + 1];
 extern BOOL itemhold[3][3];
-extern BYTE *itemanims[35];
+extern BYTE *itemanims[ITEMTYPES];
 extern BOOL UniqueItemFlag[128];
 extern int numitems;
 extern int gnNumGetRecords;
@@ -35,7 +45,7 @@ void CreatePlrItems(int p);
 BOOL ItemSpaceOk(int i, int j);
 BOOL GetItemSpace(int x, int y, char inum);
 void GetSuperItemSpace(int x, int y, char inum);
-void GetSuperItemLoc(int x, int y, int &xx, int &yy);
+void GetSuperItemLoc(int x, int y, int *xx, int *yy);
 void CalcItemValue(int i);
 void GetBookSpell(int i, int lvl);
 void GetStaffPower(int i, int lvl, int bs, BOOL onlygood);
@@ -128,12 +138,18 @@ void PutItemRecord(int nSeed, WORD wCI, int nIndex);
 
 /* data */
 
-extern BYTE ItemCAnimTbl[169];
-extern char *ItemDropNames[35];
-extern BYTE ItemAnimLs[35];
-extern int ItemDropSnds[35];
-extern int ItemInvSnds[35];
+extern BYTE ItemCAnimTbl[];
+extern char *ItemDropNames[];
+extern BYTE ItemAnimLs[];
+extern int ItemDropSnds[];
+extern int ItemInvSnds[];
 extern int idoppely;
 extern int premiumlvladd[6];
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __ITEMS_H__ */

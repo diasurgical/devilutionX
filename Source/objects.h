@@ -2,6 +2,12 @@
 #ifndef __OBJECTS_H__
 #define __OBJECTS_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern int trapid;
 extern int trapdir;
 extern BYTE *pObjCels[40];
@@ -75,7 +81,7 @@ void AddPedistal(int i);
 void AddStoryBook(int i);
 void AddWeaponRack(int i);
 void AddTorturedBody(int i);
-void GetRndObjLoc(int randarea, int &xx, int &yy);
+void GetRndObjLoc(int randarea, int *xx, int *yy);
 void AddMushPatch();
 void AddSlainHero();
 void AddObject(int ot, int ox, int oy);
@@ -139,7 +145,7 @@ void SyncOpL2Door(int pnum, int cmd, int i);
 void SyncOpL3Door(int pnum, int cmd, int i);
 void SyncOpObject(int pnum, int cmd, int i);
 void BreakCrux(int i);
-void BreakBarrel(int pnum, int i, int dam, BOOL forcebreak, int sendmsg);
+void BreakBarrel(int pnum, int i, int dam, BOOL forcebreak, BOOL sendmsg);
 void BreakObject(int pnum, int oi);
 void SyncBreakObj(int pnum, int oi);
 void SyncL1Doors(int i);
@@ -162,5 +168,11 @@ extern char shrinemax[NUM_SHRINETYPE];
 extern BYTE shrineavail[NUM_SHRINETYPE];
 extern char *StoryBookName[9];
 extern int StoryText[3][3];
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __OBJECTS_H__ */

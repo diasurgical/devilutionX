@@ -1,12 +1,13 @@
 #include "DiabloUI/dialogs.h"
 
 #include "controls/menu_controls.h"
-#include "devilution.h"
+#include "all.h"
 #include "dx.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/button.h"
 #include "DiabloUI/fonts.h"
 #include "DiabloUI/errorart.h"
+#include "display.h"
 
 namespace dvl {
 
@@ -16,7 +17,6 @@ extern SDL_Surface *pal_surface;
 namespace {
 
 Art dialogArt;
-Art progressArt;
 char dialogText[256];
 char dialogCaption[1024];
 bool fontWasLoaded;
@@ -25,58 +25,26 @@ bool textInputWasActive;
 UiItem *dialogItems;
 std::size_t dialogItemsSize;
 
-enum class State {
-	DEFAULT = 0,
-	OK,
-	CANCEL,
-};
-
-State state;
+bool dialogEnd;
 
 void DialogActionOK()
 {
-	state = State::OK;
+	dialogEnd = true;
 }
 
-void DialogActionCancel()
-{
-	state = State::CANCEL;
-}
-
-constexpr auto DIALOG_ART_S = UiImage(&dialogArt, { 180, 168, 280, 144 });
-constexpr auto DIALOG_ART_L = UiImage(&dialogArt, { 127, 100, 385, 280 });
+const auto DIALOG_ART_L = UiImage(&dialogArt, { PANEL_LEFT + 127, 100, 385, 280 });
 
 UiItem OK_DIALOG[] = {
-	DIALOG_ART_S,
-	UiText(dialogText, { 200, 211, 240, 80 }, UIS_CENTER),
-	MakeSmlButton("OK", &DialogActionOK, 265, 265),
+	UiImage(&dialogArt, { PANEL_LEFT + 180, 168, 280, 144 }),
+	UiText(dialogText, { PANEL_LEFT + 200, 211, 240, 80 }, UIS_CENTER),
+	MakeSmlButton("OK", &DialogActionOK, PANEL_LEFT + 265, 265),
 };
 
 UiItem OK_DIALOG_WITH_CAPTION[] = {
 	DIALOG_ART_L,
-	UiText(dialogText, SDL_Color{ 255, 255, 0, 0 }, { 147, 110, 345, 20 }, UIS_CENTER),
-	UiText(dialogCaption, { 147, 141, 345, 190 }, UIS_CENTER),
-	MakeSmlButton("OK", &DialogActionOK, 264, 335),
-};
-
-UiItem PROGRESS_DIALOG[] = {
-	DIALOG_ART_S,
-	UiText(dialogText, { 180, 177, 280, 43 }, UIS_CENTER),
-	UiImage(&progressArt, { 205, 220, 228, 38 }),
-	MakeSmlButton("Cancel", &DialogActionCancel, 330, 265),
-};
-
-UiListItem SELOK_DIALOG_ITEMS[] = {
-	{ "OK", 0 }
-};
-UiItem SELOK_DIALOG[] = {
-	UiText(dialogText, { 140, 210, 400, 168 }, UIS_CENTER),
-	UiList(SELOK_DIALOG_ITEMS, 230, 390, 180, 35, UIS_CENTER),
-};
-
-UiItem SPAWNERR_DIALOG[] = {
-	UiText("The Rogue and Sorcerer are only available in the full retail version of Diablo. For ordering information visit https://www.gog.com/game/diablo.", { 140, 199, 400, 177 }),
-	UiArtTextButton("OK", &DialogActionOK, { 230, 407, 180, 43 }),
+	UiText(dialogText, SDL_Color{ 255, 255, 0, 0 }, { PANEL_LEFT + 147, 110, 345, 20 }, UIS_CENTER),
+	UiText(dialogCaption, { PANEL_LEFT + 147, 141, 345, 190 }, UIS_CENTER),
+	MakeSmlButton("OK", &DialogActionOK, PANEL_LEFT + 264, 335),
 };
 
 // clang-format off
@@ -86,7 +54,7 @@ UiItem SPAWNERR_DIALOG[] = {
 void LoadFallbackPalette()
 {
 	// clang-format off
-	static const PALETTEENTRY fallback_palette[256] = {
+	static const SDL_Color fallback_palette[256] = {
 		{ 0x00, 0x00, 0x00, 0 },
 		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
 		BLANKCOLOR, BLANKCOLOR, BLANKCOLOR,
@@ -206,10 +174,17 @@ void LoadFallbackPalette()
 	ApplyGamma(logical_palette, fallback_palette, 256);
 }
 
-void Init(const char *text, const char *caption, bool error)
+void Init(const char *text, const char *caption, bool error, bool renderBehind)
 {
 	strcpy(dialogText, text);
-	if (caption == nullptr) {
+	if (!renderBehind) {
+		LoadBackgroundArt("ui_art\\black.pcx");
+		if (ArtBackground.surface == NULL) {
+			LoadFallbackPalette();
+		}
+	}
+	SetFadeLevel(256);
+	if (caption == NULL) {
 		LoadMaskedArt(error ? "ui_art\\srpopup.pcx" : "ui_art\\spopup.pcx", &dialogArt);
 		dialogItems = OK_DIALOG;
 		dialogItemsSize = size(OK_DIALOG);
@@ -225,7 +200,7 @@ void Init(const char *text, const char *caption, bool error)
 	}
 	LoadSmlButtonArt();
 
-	fontWasLoaded = font != nullptr;
+	fontWasLoaded = font != NULL;
 	if (!fontWasLoaded)
 		LoadTtfFont();
 	textInputWasActive = SDL_IsTextInputActive();
@@ -245,16 +220,10 @@ void Deinit()
 	}
 }
 
-void DialogLoop(UiItem *items, std::size_t num_items, UiItem *render_behind, std::size_t render_behind_size)
+void DialogLoop(UiItem *items, std::size_t num_items, UiItem *renderBehind, std::size_t renderBehind_size)
 {
 	SDL_Event event;
-	state = State::DEFAULT;
-	if (render_behind_size == 0) {
-		LoadBackgroundArt("ui_art\\black.pcx");
-		if (ArtBackground.surface == nullptr) {
-			LoadFallbackPalette();
-		}
-	}
+	dialogEnd = false;
 	do {
 		while (SDL_PollEvent(&event)) {
 			switch (event.type) {
@@ -264,9 +233,9 @@ void DialogLoop(UiItem *items, std::size_t num_items, UiItem *render_behind, std
 				break;
 			default:
 				switch (GetMenuAction(event)) {
-				case MenuAction::BACK:
-				case MenuAction::SELECT:
-					state = State::OK;
+				case MenuAction_BACK:
+				case MenuAction_SELECT:
+					dialogEnd = true;
 					break;
 				default:
 					break;
@@ -276,20 +245,20 @@ void DialogLoop(UiItem *items, std::size_t num_items, UiItem *render_behind, std
 			UiHandleEvents(&event);
 		}
 
-		if (render_behind_size == 0) {
-			SDL_FillRect(pal_surface, nullptr, 0);
+		if (renderBehind_size == 0) {
+			SDL_FillRect(GetOutputSurface(), NULL, 0);
 		} else {
-			UiRenderItems(render_behind, render_behind_size);
+			UiRenderItems(renderBehind, renderBehind_size);
 		}
 		UiRenderItems(items, num_items);
 		DrawMouse();
 		UiFadeIn();
-	} while (state == State::DEFAULT);
+	} while (!dialogEnd);
 }
 
 } // namespace
 
-void UiOkDialog(const char *text, const char *caption, bool error, UiItem *render_behind, std::size_t render_behind_size)
+void UiOkDialog(const char *text, const char *caption, bool error, UiItem *renderBehind, std::size_t renderBehind_size)
 {
 	static bool inDialog = false;
 
@@ -297,8 +266,12 @@ void UiOkDialog(const char *text, const char *caption, bool error, UiItem *rende
 		if (SDL_ShowCursor(SDL_ENABLE) <= -1) {
 			SDL_Log(SDL_GetError());
 		}
+#ifndef RUN_TESTS
 		if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, text, caption, NULL) <= -1) {
 			SDL_Log(SDL_GetError());
+#else
+		{
+#endif
 			SDL_Log(text);
 			SDL_Log(caption);
 		}
@@ -306,25 +279,25 @@ void UiOkDialog(const char *text, const char *caption, bool error, UiItem *rende
 	}
 
 	inDialog = true;
-	Init(text, caption, error);
-	DialogLoop(dialogItems, dialogItemsSize, render_behind, render_behind_size);
+	Init(text, caption, error, renderBehind_size > 0);
+	DialogLoop(dialogItems, dialogItemsSize, renderBehind, renderBehind_size);
 	Deinit();
 	inDialog = false;
 }
 
-void UiErrorOkDialog(const char *text, const char *caption, UiItem *render_behind, std::size_t render_behind_size)
+void UiErrorOkDialog(const char *text, const char *caption, UiItem *renderBehind, std::size_t renderBehind_size)
 {
-	UiOkDialog(text, caption, /*error=*/true, render_behind, render_behind_size);
+	UiOkDialog(text, caption, /*error=*/true, renderBehind, renderBehind_size);
 }
 
 void UiErrorOkDialog(const char *text, const char *caption, bool error)
 {
-	UiOkDialog(text, caption, error, nullptr, 0);
+	UiOkDialog(text, caption, error, NULL, 0);
 }
 
-void UiErrorOkDialog(const char *text, UiItem *render_behind, std::size_t render_behind_size)
+void UiErrorOkDialog(const char *text, UiItem *renderBehind, std::size_t renderBehind_size)
 {
-	UiErrorOkDialog(text, nullptr, render_behind, render_behind_size);
+	UiErrorOkDialog(text, NULL, renderBehind, renderBehind_size);
 }
 
 } // namespace dvl

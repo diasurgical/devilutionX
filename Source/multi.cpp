@@ -1,13 +1,15 @@
-#include "diablo.h"
+/**
+ * @file multi.cpp
+ *
+ * Implementation of functions for keeping multiplaye games in sync.
+ */
+#include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
 BOOLEAN gbSomebodyWonGameKludge;
-#ifdef _DEBUG
-DWORD gdwHistTicks;
-#endif
 TBuffer sgHiPriBuf;
 char szPlayerDescript[128];
 WORD sgwPackPlrOffsetTbl[MAX_PLRS];
@@ -20,11 +22,15 @@ BYTE gbActivePlayers;
 BOOLEAN gbGameDestroyed;
 BOOLEAN sgbSendDeltaTbl[MAX_PLRS];
 _gamedata sgGameInitInfo;
-BOOLEAN gbGameUninitialized;
+BOOLEAN gbSelectProvider;
 int sglTimeoutStart;
 int sgdwPlayerLeftReasonTbl[MAX_PLRS];
 TBuffer sgLoPriBuf;
 DWORD sgdwGameLoops;
+/**
+ * Specifies the maximum number of players in a game, where 1
+ * represents a single player game and 4 represents a multi player game.
+ */
 BYTE gbMaxPlayers;
 BOOLEAN sgbTimeout;
 char szPlayerName[128];
@@ -32,48 +38,15 @@ BYTE gbDeltaSender;
 BOOL sgbNetInited;
 int player_state[MAX_PLRS];
 
+/**
+ * Contains the set of supported event types supported by the multiplayer
+ * event handler.
+ */
 const int event_types[3] = {
 	EVENT_TYPE_PLAYER_LEAVE_GAME,
 	EVENT_TYPE_PLAYER_CREATE_GAME,
 	EVENT_TYPE_PLAYER_MESSAGE
 };
-
-#ifdef _DEBUG
-void __cdecl dumphist(const char *pszFmt, ...)
-{
-	static FILE *sgpHistFile = NULL;
-	DWORD dwTicks;
-	va_list va;
-
-	va_start(va, pszFmt);
-
-	char path[MAX_PATH], dumpHistPath[MAX_PATH];
-	if (sgpHistFile == NULL) {
-		GetPrefPath(path, MAX_PATH);
-		snprintf(dumpHistPath, MAX_PATH, "%sdumphist.txt", path);
-		sgpHistFile = fopen(dumpHistPath, "wb");
-		if (sgpHistFile == NULL) {
-			return;
-		}
-	}
-
-	dwTicks = GetTickCount();
-	fprintf(sgpHistFile, "%4u.%02u  ", (dwTicks - gdwHistTicks) / 1000, (dwTicks - gdwHistTicks) % 1000 / 10);
-	vfprintf(sgpHistFile, pszFmt, va);
-	fprintf(
-	    sgpHistFile,
-	    "\r\n          (%d,%d)(%d,%d)(%d,%d)(%d,%d)\r\n",
-	    plr[0].plractive,
-	    player_state[0],
-	    plr[1].plractive,
-	    player_state[1],
-	    plr[2].plractive,
-	    player_state[2],
-	    plr[3].plractive,
-	    player_state[3]);
-	fflush(sgpHistFile);
-}
-#endif
 
 void multi_msg_add(BYTE *pbMsg, BYTE bLen)
 {
@@ -120,8 +93,8 @@ void multi_send_packet(void *packet, BYTE dwSize)
 void NetRecvPlrData(TPkt *pkt)
 {
 	pkt->hdr.wCheck = 'ip';
-	pkt->hdr.px = plr[myplr].WorldX;
-	pkt->hdr.py = plr[myplr].WorldY;
+	pkt->hdr.px = plr[myplr]._px;
+	pkt->hdr.py = plr[myplr]._py;
 	pkt->hdr.targx = plr[myplr]._ptargx;
 	pkt->hdr.targy = plr[myplr]._ptargy;
 	pkt->hdr.php = plr[myplr]._pHitPoints;
@@ -277,7 +250,7 @@ void multi_player_left_msg(int pnum, int left)
 		RemovePlrFromMap(pnum);
 		RemovePortalMissile(pnum);
 		DeactivatePortal(pnum);
-		RemovePlrPortal(pnum);
+		delta_close_portal(pnum);
 		RemovePlrMissiles(pnum);
 		if (left) {
 			pszFmt = "Player '%s' just left the game";
@@ -301,7 +274,7 @@ void multi_player_left_msg(int pnum, int left)
 void multi_net_ping()
 {
 	sgbTimeout = TRUE;
-	sglTimeoutStart = GetTickCount();
+	sglTimeoutStart = SDL_GetTicks();
 }
 
 int multi_handle_delta()
@@ -355,7 +328,7 @@ void multi_mon_seeds()
 	DWORD l;
 
 	sgdwGameLoops++;
-	l = (sgdwGameLoops >> 8) | (sgdwGameLoops << 24);  // _rotr(sgdwGameLoops, 8)
+	l = (sgdwGameLoops >> 8) | (sgdwGameLoops << 24); // _rotr(sgdwGameLoops, 8)
 	for (i = 0; i < MAXMONSTERS; i++)
 		monster[i]._mAISeed = l + i;
 }
@@ -374,7 +347,7 @@ void multi_begin_timeout()
 	}
 #endif
 
-	nTicks = GetTickCount() - sglTimeoutStart;
+	nTicks = SDL_GetTicks() - sglTimeoutStart;
 	if (nTicks > 20000) {
 		gbRunGame = FALSE;
 		return;
@@ -407,16 +380,6 @@ void multi_begin_timeout()
 	/// ASSERT: assert(bGroupPlayers);
 	/// ASSERT: assert(nLowestActive != -1);
 	/// ASSERT: assert(nLowestPlayer != -1);
-
-#ifdef _DEBUG
-	dumphist(
-	    "(%d) grp:%d ngrp:%d lowp:%d lowa:%d",
-	    myplr,
-	    bGroupPlayers,
-	    bGroupCount,
-	    nLowestPlayer,
-	    nLowestActive);
-#endif
 
 	if (bGroupPlayers < bGroupCount) {
 		gbGameDestroyed = TRUE;
@@ -454,7 +417,7 @@ void multi_process_network_packets()
 	multi_clear_left_tbl();
 	multi_process_tmsgs();
 	while (SNetReceiveMessage((int *)&dwID, &data, (int *)&dwMsgSize)) {
-		pkt_counter++;
+		dwRecCount++;
 		multi_clear_left_tbl();
 		pkt = (TPktHdr *)data;
 		if (dwMsgSize < sizeof(TPktHdr))
@@ -477,31 +440,31 @@ void multi_process_network_packets()
 			plr[dwID]._pBaseDex = pkt->bdex;
 			if (!cond && plr[dwID].plractive && plr[dwID]._pHitPoints) {
 				if (currlevel == plr[dwID].plrlevel && !plr[dwID]._pLvlChanging) {
-					dx = abs(plr[dwID].WorldX - pkt->px);
-					dy = abs(plr[dwID].WorldY - pkt->py);
+					dx = abs(plr[dwID]._px - pkt->px);
+					dy = abs(plr[dwID]._py - pkt->py);
 					if ((dx > 3 || dy > 3) && dPlayer[pkt->px][pkt->py] == 0) {
 						FixPlrWalkTags(dwID);
-						plr[dwID]._poldx = plr[dwID].WorldX;
-						plr[dwID]._poldy = plr[dwID].WorldY;
+						plr[dwID]._poldx = plr[dwID]._px;
+						plr[dwID]._poldy = plr[dwID]._py;
 						FixPlrWalkTags(dwID);
-						plr[dwID].WorldX = pkt->px;
-						plr[dwID].WorldY = pkt->py;
 						plr[dwID]._px = pkt->px;
 						plr[dwID]._py = pkt->py;
-						dPlayer[plr[dwID].WorldX][plr[dwID].WorldY] = dwID + 1;
+						plr[dwID]._pfutx = pkt->px;
+						plr[dwID]._pfuty = pkt->py;
+						dPlayer[plr[dwID]._px][plr[dwID]._py] = dwID + 1;
 					}
-					dx = abs(plr[dwID]._px - plr[dwID].WorldX);
-					dy = abs(plr[dwID]._py - plr[dwID].WorldY);
+					dx = abs(plr[dwID]._pfutx - plr[dwID]._px);
+					dy = abs(plr[dwID]._pfuty - plr[dwID]._py);
 					if (dx > 1 || dy > 1) {
-						plr[dwID]._px = plr[dwID].WorldX;
-						plr[dwID]._py = plr[dwID].WorldY;
+						plr[dwID]._pfutx = plr[dwID]._px;
+						plr[dwID]._pfuty = plr[dwID]._py;
 					}
 					MakePlrPath(dwID, pkt->targx, pkt->targy, TRUE);
 				} else {
-					plr[dwID].WorldX = pkt->px;
-					plr[dwID].WorldY = pkt->py;
 					plr[dwID]._px = pkt->px;
 					plr[dwID]._py = pkt->py;
+					plr[dwID]._pfutx = pkt->px;
+					plr[dwID]._pfuty = pkt->py;
 					plr[dwID]._ptargx = pkt->targx;
 					plr[dwID]._ptargy = pkt->targy;
 				}
@@ -615,7 +578,7 @@ void NetClose()
 	multi_event_handler(FALSE);
 	SNetLeaveGame(3);
 	if (gbMaxPlayers > 1)
-		Sleep(2000);
+		SDL_Delay(2000);
 }
 
 void multi_event_handler(BOOL add)
@@ -636,7 +599,7 @@ void multi_event_handler(BOOL add)
 	}
 }
 
-void __stdcall multi_handle_events(_SNETEVENT *pEvt)
+void multi_handle_events(_SNETEVENT *pEvt)
 {
 	DWORD LeftReason;
 	DWORD *data;
@@ -730,10 +693,6 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 			if (!multi_init_multi(&ProgramData, &plrdata, &UiData, pfExitProgram))
 				return FALSE;
 		}
-#ifdef _DEBUG
-		gdwHistTicks = GetTickCount();
-		dumphist("(%d) new game started", myplr);
-#endif
 		sgbNetInited = TRUE;
 		sgbTimeout = FALSE;
 		delta_init();
@@ -757,12 +716,12 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		if (sgbPlayerTurnBitTbl[myplr] == 0 || msg_wait_resync())
 			break;
 		NetClose();
-		gbGameUninitialized = FALSE;
+		gbSelectProvider = FALSE;
 	}
 	gnDifficulty = sgGameInitInfo.bDiff;
 	SetRndSeed(sgGameInitInfo.dwSeed);
 
-	for (i = 0; i < 17; i++) {
+	for (i = 0; i < NUMLEVELS; i++) {
 		glSeedTbl[i] = GetRndSeed();
 		gnLevelTypeTbl[i] = InitLevelType(i);
 	}
@@ -821,10 +780,10 @@ void SetupLocalCoords()
 #endif
 	x += plrxoff[myplr];
 	y += plryoff[myplr];
-	plr[myplr].WorldX = x;
-	plr[myplr].WorldY = y;
 	plr[myplr]._px = x;
 	plr[myplr]._py = y;
+	plr[myplr]._pfutx = x;
+	plr[myplr]._pfuty = y;
 	plr[myplr]._ptargx = x;
 	plr[myplr]._ptargy = y;
 	plr[myplr].plrlevel = currlevel;
@@ -838,7 +797,7 @@ BOOL multi_init_single(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info
 {
 	int unused;
 
-	if (!SNetInitializeProvider(0, client_info, user_info, ui_info, &fileinfo)) {
+	if (!SNetInitializeProvider(SELCONN_LOOPBACK, client_info, user_info, ui_info, &fileinfo)) {
 		SErrGetLastError();
 		return FALSE;
 	}
@@ -862,7 +821,7 @@ BOOL multi_init_multi(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info,
 
 	for (first = TRUE;; first = FALSE) {
 		type = 0x00;
-		if (gbGameUninitialized) {
+		if (gbSelectProvider) {
 			if (!UiSelectProvider(0, client_info, user_info, ui_info, &fileinfo, &type)
 			    && (!first || SErrGetLastError() != STORM_ERROR_REQUIRES_UPGRADE || !multi_upgrade(pfExitProgram))) {
 				return FALSE;
@@ -875,7 +834,7 @@ BOOL multi_init_multi(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info,
 		if (UiSelectGame(1, client_info, user_info, ui_info, &fileinfo, &playerId))
 			break;
 
-		gbGameUninitialized = TRUE;
+		gbSelectProvider = TRUE;
 	}
 
 	if ((DWORD)playerId >= MAX_PLRS) {
@@ -943,12 +902,9 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv)
 	sgwPackPlrOffsetTbl[pnum] = 0;
 	multi_player_left_msg(pnum, 0);
 	plr[pnum]._pGFXLoad = 0;
-	UnPackPlayer(&netplr[pnum], pnum, 1);
+	UnPackPlayer(&netplr[pnum], pnum, TRUE);
 
 	if (!recv) {
-#ifdef _DEBUG
-		dumphist("(%d) received all %d plrinfo", myplr, pnum);
-#endif
 		return;
 	}
 
@@ -975,12 +931,9 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv)
 			NewPlrAnim(pnum, plr[pnum]._pDAnim[0], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
 			plr[pnum]._pAnimFrame = plr[pnum]._pAnimLen - 1;
 			plr[pnum]._pVar8 = 2 * plr[pnum]._pAnimLen;
-			dFlags[plr[pnum].WorldX][plr[pnum].WorldY] |= BFLAG_DEAD_PLAYER;
+			dFlags[plr[pnum]._px][plr[pnum]._py] |= BFLAG_DEAD_PLAYER;
 		}
 	}
-#ifdef _DEBUG
-	dumphist("(%d) making %d active -- recv_plrinfo", myplr, pnum);
-#endif
 }
 
 DEVILUTION_END_NAMESPACE

@@ -21,6 +21,8 @@
 
 //== Events handling
 
+#define SDL_threadID Uint32
+
 #define SDL_Keysym SDL_keysym
 #define SDL_Keycode SDLKey
 
@@ -103,7 +105,7 @@ inline int SDL_ShowSimpleMessageBox(Uint32 flags,
     const char *message,
     SDL_Surface *window)
 {
-	fprintf(stderr, "MSGBOX: %s\n%s\n", title, message);
+	SDL_Log("MSGBOX: %s\n%s", title, message);
 	return 0;
 }
 
@@ -215,6 +217,11 @@ SDL_FreePalette(SDL_Palette *palette)
 	SDL_free(palette);
 }
 
+inline bool SDL_HasColorKey(SDL_Surface *surface)
+{
+	return (surface->flags & SDL_SRCCOLORKEY) != 0;
+}
+
 //= Pixel formats
 
 #define SDL_PIXELFORMAT_INDEX8 1
@@ -259,7 +266,8 @@ inline void SDLBackport_PixelformatToMask(int pixelformat, Uint32 *flags, Uint32
  */
 inline bool SDLBackport_PixelFormatFormatEq(const SDL_PixelFormat *a, const SDL_PixelFormat *b)
 {
-	return a->BitsPerPixel == b->BitsPerPixel && (a->palette != nullptr) == (b->palette != nullptr);
+	return a->BitsPerPixel == b->BitsPerPixel && (a->palette != NULL) == (b->palette != NULL)
+	    && a->Rmask == b->Rmask && a->Gmask == b->Gmask && a->Bmask == b->Bmask;
 }
 
 /**
@@ -267,7 +275,7 @@ inline bool SDLBackport_PixelFormatFormatEq(const SDL_PixelFormat *a, const SDL_
  */
 inline bool SDLBackport_IsPixelFormatIndexed(const SDL_PixelFormat *pf)
 {
-	return pf->BitsPerPixel == 8 && pf->palette != nullptr;
+	return pf->BitsPerPixel == 8 && pf->palette != NULL;
 }
 
 //= Surface creation
@@ -834,7 +842,11 @@ inline char *SDL_GetPrefPath(const char *org, const char *app)
 			SDL_SetError("neither XDG_DATA_HOME nor HOME environment is set");
 			return NULL;
 		}
+#if defined(__unix__) || defined(__unix)
 		append = "/.local/share/";
+#else
+		append = "/";
+#endif
 	} else {
 		append = "/";
 	}
@@ -851,9 +863,9 @@ inline char *SDL_GetPrefPath(const char *org, const char *app)
 	}
 
 	if (*org) {
-		SDL_snprintf(retval, len, "%s%s%s/%s/", envr, append, org, app);
+		SDL_snprintf(retval, len, "%s%s%s/%s", envr, append, org, app);
 	} else {
-		SDL_snprintf(retval, len, "%s%s%s/", envr, append, app);
+		SDL_snprintf(retval, len, "%s%s%s", envr, append, app);
 	}
 
 	for (ptr = retval + 1; *ptr; ptr++) {
@@ -869,6 +881,13 @@ inline char *SDL_GetPrefPath(const char *org, const char *app)
 		SDL_SetError("Couldn't create directory '%s': '%s'", retval, strerror(errno));
 		SDL_free(retval);
 		return NULL;
+	}
+
+	// Append trailing /
+	size_t final_len = SDL_strlen(retval);
+	if (final_len + 1 < len) {
+		retval[final_len++] = '/';
+		retval[final_len] = '\0';
 	}
 
 	return retval;

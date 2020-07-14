@@ -1,10 +1,11 @@
-#include "diablo.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
 static BYTE plr_msg_slot;
 _plrmsg plr_msgs[PMSG_COUNT];
 
+/** Maps from player_num to text colour, as used in chat messages. */
 const char text_color_from_player_num[MAX_PLRS + 1] = { COL_WHITE, COL_WHITE, COL_WHITE, COL_WHITE, COL_GOLD };
 
 void plrmsg_delay(BOOL delay)
@@ -14,11 +15,11 @@ void plrmsg_delay(BOOL delay)
 	static DWORD plrmsg_ticks;
 
 	if (delay) {
-		plrmsg_ticks = -GetTickCount();
+		plrmsg_ticks = -SDL_GetTicks();
 		return;
 	}
 
-	plrmsg_ticks += GetTickCount();
+	plrmsg_ticks += SDL_GetTicks();
 	pMsg = plr_msgs;
 	for (i = 0; i < PMSG_COUNT; i++, pMsg++)
 		pMsg->time += plrmsg_ticks;
@@ -30,13 +31,13 @@ char *ErrorPlrMsg(const char *pszMsg)
 	_plrmsg *pMsg = &plr_msgs[plr_msg_slot];
 	plr_msg_slot = (plr_msg_slot + 1) & (PMSG_COUNT - 1);
 	pMsg->player = MAX_PLRS;
-	pMsg->time = GetTickCount();
+	pMsg->time = SDL_GetTicks();
 	result = strncpy(pMsg->str, pszMsg, sizeof(pMsg->str));
 	pMsg->str[sizeof(pMsg->str) - 1] = '\0';
 	return result;
 }
 
-size_t __cdecl EventPlrMsg(const char *pszFmt, ...)
+size_t EventPlrMsg(const char *pszFmt, ...)
 {
 	_plrmsg *pMsg;
 	va_list va;
@@ -45,7 +46,7 @@ size_t __cdecl EventPlrMsg(const char *pszFmt, ...)
 	pMsg = &plr_msgs[plr_msg_slot];
 	plr_msg_slot = (plr_msg_slot + 1) & (PMSG_COUNT - 1);
 	pMsg->player = MAX_PLRS;
-	pMsg->time = GetTickCount();
+	pMsg->time = SDL_GetTicks();
 	vsprintf(pMsg->str, pszFmt, va);
 	va_end(va);
 	return strlen(pMsg->str);
@@ -56,7 +57,7 @@ void SendPlrMsg(int pnum, const char *pszStr)
 	_plrmsg *pMsg = &plr_msgs[plr_msg_slot];
 	plr_msg_slot = (plr_msg_slot + 1) & (PMSG_COUNT - 1);
 	pMsg->player = pnum;
-	pMsg->time = GetTickCount();
+	pMsg->time = SDL_GetTicks();
 	strlen(plr[pnum]._pName); /* these are used in debug */
 	strlen(pszStr);
 	sprintf(pMsg->str, "%s (lvl %d): %s", plr[pnum]._pName, plr[pnum]._pLevel, pszStr);
@@ -66,7 +67,7 @@ void ClearPlrMsg()
 {
 	int i;
 	_plrmsg *pMsg = plr_msgs;
-	DWORD tick = GetTickCount();
+	DWORD tick = SDL_GetTicks();
 
 	for (i = 0; i < PMSG_COUNT; i++, pMsg++) {
 		if ((int)(tick - pMsg->time) > 10000)
@@ -140,7 +141,7 @@ void PrintPlrMsg(DWORD x, DWORD y, DWORD width, const char *str, BYTE col)
 			c = gbFontTransTbl[(BYTE)*str++];
 			c = fontframe[c];
 			if (c)
-				CPrintString(sx, y, c, col);
+				PrintChar(sx, y, c, col);
 			sx += fontkern[c] + 1;
 		}
 

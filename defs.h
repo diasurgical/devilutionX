@@ -1,4 +1,12 @@
-// some global definitions, found in debug release
+/**
+ * @file defs.h
+ *
+ * Global definitions and Macros.
+ */
+
+#define DIABOOL					BOOL
+#define GAME_NAME				"DIABLO"
+#define APP_NAME				"Diablo"
 
 #define DMAXX					40
 #define DMAXY					40
@@ -48,6 +56,8 @@
 #define VOLUME_MIN				-1600
 #define VOLUME_MAX				0
 
+#define NUM_TOWNERS				16
+
 // todo: enums
 #define NUMLEVELS				17
 #define SMITH_ITEMS				20
@@ -57,6 +67,7 @@
 
 // from diablo 2 beta
 #define MAXEXP					2000000000
+#define MAXRESIST				75
 
 #define GOLD_SMALL_LIMIT		1000
 #define GOLD_MEDIUM_LIMIT		2500
@@ -65,6 +76,8 @@
 #define PLR_NAME_LEN			32
 
 #define MAXPATHNODES			300
+
+#define MAX_PATH_LENGTH			25
 
 // 256 kilobytes + 3 bytes (demo leftover) for file magic (262147)
 // final game uses 4-byte magic instead of 3
@@ -95,11 +108,8 @@
 #define PAL16_RED		224
 #define PAL16_GRAY		240
 
-#define SCREEN_WIDTH	640
+#define SCREEN_WIDTH	900
 #define SCREEN_HEIGHT	480
-
-#define ZOOM_WIDTH		384
-#define ZOOM_HEIGHT		224
 
 // If defined, use 32-bit colors instead of 8-bit [Default -> Undefined]
 //#define RGBMODE
@@ -120,7 +130,9 @@
 
 #define BUFFER_WIDTH	(BORDER_LEFT + SCREEN_WIDTH + BORDER_RIGHT)
 #define BUFFER_HEIGHT	(BORDER_TOP + SCREEN_HEIGHT + BORDER_BOTTOM)
-#define TILE_SIZE		32
+
+#define TILE_WIDTH		64
+#define TILE_HEIGHT		32
 
 #define PANEL_WIDTH     640
 #define PANEL_HEIGHT    128
@@ -165,10 +177,6 @@
 
 #define ERR_DLG(title, text) ErrDlg(title, text, __FILE__, __LINE__)
 
-#ifndef INVALID_FILE_ATTRIBUTES
-#define INVALID_FILE_ATTRIBUTES ((DWORD)-1)
-#endif
-
 // To apply to certain functions which have local variables aligned by 1 for unknown yet reason
 #if (_MSC_VER == 1200)
 #define ALIGN_BY_1 __declspec(align(1))
@@ -180,3 +188,8 @@
 #define SwapLE16 SDL_SwapLE16
 
 #define ErrSdl() ErrDlg("SDL Error", SDL_GetError(), __FILE__, __LINE__)
+
+#ifdef _MSC_VER
+#define strcasecmp _stricmp
+#define strncasecmp _strnicmp
+#endif

@@ -1,4 +1,9 @@
-#include "diablo.h"
+/**
+ * @file drlg_l1.cpp
+ *
+ * Implementation of the cathedral level generation algorithms.
+ */
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -352,8 +357,8 @@ static int DRLG_PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, in
 		DRLG_MRectTrans(sx, sy + 2, sx + 5, sy + 4);
 		TransVal = t;
 
-		quests[QTYPE_PW]._qtx = 2 * sx + 21;
-		quests[QTYPE_PW]._qty = 2 * sy + 22;
+		quests[Q_PWATER]._qtx = 2 * sx + 21;
+		quests[Q_PWATER]._qty = 2 * sy + 22;
 	}
 
 	if (setview == TRUE) {
@@ -443,15 +448,15 @@ static void DRLG_L1Pass3()
 static void DRLG_LoadL1SP()
 {
 	L5setloadflag = FALSE;
-	if (QuestStatus(QTYPE_BUTCH)) {
+	if (QuestStatus(Q_BUTCHER)) {
 		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\rnd6.DUN", NULL);
 		L5setloadflag = TRUE;
 	}
-	if (QuestStatus(QTYPE_KING) && gbMaxPlayers == 1) {
+	if (QuestStatus(Q_SKELKING) && gbMaxPlayers == 1) {
 		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\SKngDO.DUN", NULL);
 		L5setloadflag = TRUE;
 	}
-	if (QuestStatus(QTYPE_BOL)) {
+	if (QuestStatus(Q_LTBANNER)) {
 		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\Banner2.DUN", NULL);
 		L5setloadflag = TRUE;
 	}
@@ -473,7 +478,7 @@ void DRLG_Init_Globals()
 	memset(dObject, 0, sizeof(dObject));
 	memset(dItem, 0, sizeof(dItem));
 	memset(dMissile, 0, sizeof(dMissile));
-	memset(dArch, 0, sizeof(dArch));
+	memset(dSpecial, 0, sizeof(dSpecial));
 	if (!lightflag) {
 		if (light4flag)
 			c = 3;
@@ -497,6 +502,10 @@ static void DRLG_InitL1Vals()
 				pc = 2;
 			} else if (dPiece[i][j] == 71) {
 				pc = 1;
+			} else if (dPiece[i][j] == 253) {
+				pc = 3;
+			} else if (dPiece[i][j] == 267) {
+				pc = 6;
 			} else if (dPiece[i][j] == 259) {
 				pc = 5;
 			} else if (dPiece[i][j] == 249) {
@@ -522,7 +531,7 @@ static void DRLG_InitL1Vals()
 			} else {
 				continue;
 			}
-			dArch[i][j] = pc;
+			dSpecial[i][j] = pc;
 		}
 	}
 }
@@ -1626,7 +1635,7 @@ static void DRLG_L5(int entry)
 
 		doneflag = TRUE;
 
-		if (QuestStatus(QTYPE_PW)) {
+		if (QuestStatus(Q_PWATER)) {
 			if (entry == 0) {
 				if (DRLG_PlaceMiniSet(PWATERIN, 1, 1, 0, 0, 1, -1, 0) < 0)
 					doneflag = FALSE;
@@ -1636,7 +1645,7 @@ static void DRLG_L5(int entry)
 				ViewY--;
 			}
 		}
-		if (QuestStatus(QTYPE_BOL)) {
+		if (QuestStatus(Q_LTBANNER)) {
 			if (entry == 0) {
 				if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, 1, -1, 0) < 0)
 					doneflag = FALSE;

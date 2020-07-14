@@ -23,6 +23,9 @@ enum packet_type : uint8_t {
 	PT_DISCONNECT = 0x14,
 };
 
+// Returns NULL for an invalid packet type.
+const char *packet_type_to_string(uint8_t packet_type);
+
 typedef uint8_t plr_t;
 typedef uint32_t cookie_t;
 typedef int turn_t;      // change int to something else in devilution code later
@@ -35,6 +38,24 @@ static constexpr plr_t PLR_MASTER = 0xFE;
 static constexpr plr_t PLR_BROADCAST = 0xFF;
 
 class packet_exception : public dvlnet_exception {
+public:
+	const char *what() const throw() override
+	{
+		return "Incorrect package size";
+	}
+};
+
+class wrong_packet_type_exception : public packet_exception {
+public:
+	wrong_packet_type_exception(std::initializer_list<packet_type> expected_types, std::uint8_t actual);
+
+	const char *what() const throw() override
+	{
+		return message_.c_str();
+	}
+
+private:
+	std::string message_;
 };
 
 class packet {
@@ -57,7 +78,7 @@ protected:
 
 public:
 	packet(const key_t &k)
-		: key(k) {};
+	    : key(k) {};
 
 	const buffer_t &data();
 
@@ -152,7 +173,7 @@ void packet_in::process_element(T &x)
 		throw packet_exception();
 	std::memcpy(&x, decrypted_buffer.data(), sizeof(T));
 	decrypted_buffer.erase(decrypted_buffer.begin(),
-		decrypted_buffer.begin() + sizeof(T));
+	    decrypted_buffer.begin() + sizeof(T));
 }
 
 template <>
@@ -181,7 +202,7 @@ inline void packet_out::create<PT_TURN>(plr_t s, plr_t d, turn_t u)
 
 template <>
 inline void packet_out::create<PT_JOIN_REQUEST>(plr_t s, plr_t d,
-	cookie_t c, buffer_t i)
+    cookie_t c, buffer_t i)
 {
 	if (have_encrypted || have_decrypted)
 		ABORT();
@@ -195,7 +216,7 @@ inline void packet_out::create<PT_JOIN_REQUEST>(plr_t s, plr_t d,
 
 template <>
 inline void packet_out::create<PT_JOIN_ACCEPT>(plr_t s, plr_t d, cookie_t c,
-	plr_t n, buffer_t i)
+    plr_t n, buffer_t i)
 {
 	if (have_encrypted || have_decrypted)
 		ABORT();
@@ -222,7 +243,7 @@ inline void packet_out::create<PT_CONNECT>(plr_t s, plr_t d, plr_t n)
 
 template <>
 inline void packet_out::create<PT_DISCONNECT>(plr_t s, plr_t d, plr_t n,
-	leaveinfo_t l)
+    leaveinfo_t l)
 {
 	if (have_encrypted || have_decrypted)
 		ABORT();

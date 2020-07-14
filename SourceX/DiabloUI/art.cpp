@@ -1,8 +1,9 @@
 #include "DiabloUI/art.h"
+#include "display.h"
 
 namespace dvl {
 
-void LoadArt(const char *pszFile, Art *art, int frames, PALETTEENTRY *pPalette)
+void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 {
 	if (art == NULL || art->surface != NULL)
 		return;
@@ -34,18 +35,21 @@ void LoadArt(const char *pszFile, Art *art, int frames, PALETTEENTRY *pPalette)
 	        art_surface->pitch * art_surface->format->BytesPerPixel * height, 0, 0, 0)) {
 		SDL_Log("Failed to load image");
 		SDL_FreeSurface(art_surface);
-		art->surface = nullptr;
+		art->surface = NULL;
 		return;
 	}
 
 	art->surface = art_surface;
+	art->logical_width = art_surface->w;
 	art->frame_height = height / frames;
+
+	ScaleSurfaceToOutput(&art->surface);
 }
 
 void LoadMaskedArt(const char *pszFile, Art *art, int frames, int mask)
 {
 	LoadArt(pszFile, art, frames);
-	if (art->surface != nullptr)
+	if (art->surface != NULL)
 		SDLC_SetColorKey(art->surface, mask);
 }
 
@@ -54,7 +58,9 @@ void LoadArt(Art *art, const BYTE *artData, int w, int h, int frames)
 	art->frames = frames;
 	art->surface = SDL_CreateRGBSurfaceWithFormatFrom(
 		const_cast<BYTE *>(artData), w, h, 8, w, SDL_PIXELFORMAT_INDEX8);
+	art->logical_width = w;
 	art->frame_height = h / frames;
+	ScaleSurfaceToOutput(&art->surface);
 }
 
 } // namespace dvl

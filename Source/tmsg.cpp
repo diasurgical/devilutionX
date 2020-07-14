@@ -1,4 +1,4 @@
-#include "diablo.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -12,7 +12,7 @@ int tmsg_get(BYTE *pbMsg, DWORD dwMaxLen)
 	if (!sgpTimedMsgHead)
 		return 0;
 
-	if ((int)(sgpTimedMsgHead->hdr.dwTime - GetTickCount()) >= 0)
+	if ((int)(sgpTimedMsgHead->hdr.dwTime - SDL_GetTicks()) >= 0)
 		return 0;
 	head = sgpTimedMsgHead;
 	sgpTimedMsgHead = head->hdr.pNext;
@@ -29,7 +29,7 @@ void tmsg_add(BYTE *pbMsg, BYTE bLen)
 
 	TMsg *msg = (TMsg *)DiabloAllocPtr(bLen + sizeof(*msg));
 	msg->hdr.pNext = NULL;
-	msg->hdr.dwTime = GetTickCount() + 500;
+	msg->hdr.dwTime = SDL_GetTicks() + 500;
 	msg->hdr.bLen = bLen;
 	memcpy(msg->body, pbMsg, bLen);
 	for (tail = &sgpTimedMsgHead; *tail; tail = &(*tail)->hdr.pNext) {
@@ -40,10 +40,10 @@ void tmsg_add(BYTE *pbMsg, BYTE bLen)
 
 void tmsg_start()
 {
-	/// ASSERT: assert(! sgpTimedMsgHead);
+	assert(!sgpTimedMsgHead);
 }
 
-void *tmsg_cleanup()
+void tmsg_cleanup()
 {
 	TMsg *next;
 
@@ -52,7 +52,6 @@ void *tmsg_cleanup()
 		MemFreeDbg(sgpTimedMsgHead);
 		sgpTimedMsgHead = next;
 	}
-	return sgpTimedMsgHead;
 }
 
 DEVILUTION_END_NAMESPACE

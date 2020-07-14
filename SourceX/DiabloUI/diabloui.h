@@ -8,6 +8,8 @@
 
 namespace dvl {
 
+extern int SelectedItem;
+
 typedef enum _artFocus {
 	FOCUS_SMALL,
 	FOCUS_MED,
@@ -27,7 +29,7 @@ extern Art ArtCursor;
 extern Art ArtHero;
 extern bool gbSpawned;
 
-constexpr auto MAINMENU_BACKGROUND = UiImage(&ArtBackground, { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT });
+constexpr auto MAINMENU_BACKGROUND = UiImage(&ArtBackground, { PANEL_LEFT, 0, 640, 480 });
 constexpr auto MAINMENU_LOGO = UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, { 0, 0, 0, 0 }, UIS_CENTER);
 
 template <class T, size_t N>
@@ -37,6 +39,7 @@ constexpr size_t size(T (&)[N])
 }
 
 extern void (*gfnSoundFunction)(char *file);
+extern BOOL (*gfnHeroInfo)(BOOL (*fninfofunc)(_uiheroinfo *));
 
 bool IsInsideRect(const SDL_Event &event, const SDL_Rect &rect);
 void UiFadeIn();
@@ -44,7 +47,7 @@ void UiFocusNavigation(SDL_Event *event);
 void UiHandleEvents(SDL_Event *event);
 bool UiItemMouseEvents(SDL_Event *event, UiItem *items, std::size_t size);
 int GetCenterOffset(int w, int bw = 0);
-void LoadPalInMem(const PALETTEENTRY *pPal);
+void LoadPalInMem(const SDL_Color *pPal);
 void DrawMouse();
 void LoadBackgroundArt(const char *pszFile);
 void SetMenu(int MenuId);
@@ -53,6 +56,7 @@ void UiFocusNavigationEsc();
 void UiFocusNavigationYesNo();
 void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), UiItem *items, int size, bool wraps = false, bool (*fnYesNo)() = NULL);
 void UiInitScrollBar(UiScrollBar *ui_sb, std::size_t viewport_size, const std::size_t *current_offset);
+void UiClearScreen();
 void UiPollAndRender();
 void UiRenderItems(UiItem *items, std::size_t size);
 

@@ -1,13 +1,23 @@
-//HEADER_GOES_HERE
+/**
+ * @file control.h
+ *
+ * Interface of the character and main control panels
+ */
 #ifndef __CONTROL_H__
 #define __CONTROL_H__
+
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 extern BYTE *pDurIcons;
 extern BYTE *pChrButtons;
 extern BOOL drawhpflag;
 extern BOOL dropGoldFlag;
-extern int panbtn[8];
-extern int chrbtn[4];
+extern BOOL panbtn[8];
+extern BOOL chrbtn[4];
 extern BYTE *pMultiBtns;
 extern BYTE *pPanelButtons;
 extern BYTE *pChrPanel;
@@ -39,7 +49,7 @@ extern BOOL sbookflag;
 extern BOOL chrflag;
 extern BOOL drawbtnflag;
 extern BYTE *pSpellBkCel;
-extern char infostr[MAX_PATH];
+extern char infostr[256];
 extern int numpanbtns;
 extern BYTE *pStatusPanel;
 extern char panelstr[4][64];
@@ -49,7 +59,7 @@ extern int initialDropGoldValue;
 extern BYTE *pSpellCels;
 extern BOOL panbtndown;
 extern BYTE *pTalkPanel;
-extern int spselflag;
+extern BOOL spselflag;
 
 void DrawSpellCel(int xp, int yp, BYTE *Trans, int nCel, int w);
 void SetSpellTrans(char t);
@@ -58,7 +68,7 @@ void DrawSpellList();
 void SetSpell();
 void SetSpeedSpell(int slot);
 void ToggleSpell(int slot);
-void CPrintString(int sx, int sy, int nCel, char col);
+void PrintChar(int sx, int sy, int nCel, char col);
 void AddPanelString(char *str, BOOL just);
 void ClearPanel();
 void DrawPanelBox(int x, int y, int w, int h, int sx, int sy);
@@ -71,8 +81,8 @@ void DrawManaFlask();
 void control_update_life_mana();
 void UpdateManaFlask();
 void InitControlPan();
-void ClearCtrlPan();
 void DrawCtrlPan();
+void DrawCtrlBtns();
 void DoSpeedBook();
 void DoPanBtn();
 void control_set_button_down(int btn_id);
@@ -83,9 +93,9 @@ void CheckBtnUp();
 void FreeControlPan();
 BOOL control_WriteStringToBuffer(BYTE *str);
 void DrawInfoBox();
-void control_draw_info_str();
-void control_print_info_str(int y, char *str, BOOL center, int lines);
-void PrintGameStr(int x, int y, char *str, int color);
+void PrintInfo();
+void CPrintString(int y, char *str, BOOL center, int lines);
+void PrintGameStr(int x, int y, const char *str, int color);
 void DrawChr();
 #define ADD_PlrStringXY(x, y, width, pszStr, col) MY_PlrStringXY(x, y, width, pszStr, col, 1)
 void MY_PlrStringXY(int x, int y, int width, char *pszStr, char col, int base);
@@ -132,5 +142,11 @@ extern char *PanBtnHotKey[8];
 extern char *PanBtnStr[8];
 extern RECT32 ChrBtnsRect[4];
 extern int SpellPages[6][7];
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __CONTROL_H__ */

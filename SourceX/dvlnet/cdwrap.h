@@ -6,7 +6,7 @@
 #include <exception>
 #include <map>
 
-#include "devilution.h"
+#include "all.h"
 
 #include "dvlnet/abstract_net.h"
 

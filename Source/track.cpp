@@ -1,4 +1,4 @@
-#include "diablo.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -18,12 +18,12 @@ void track_process()
 		return;
 
 	if (cursmx != plr[myplr]._ptargx || cursmy != plr[myplr]._ptargy) {
-		DWORD tick = GetTickCount();
+		DWORD tick = SDL_GetTicks();
 		if ((int)(tick - sgdwLastWalk) >= 300) {
 			sgdwLastWalk = tick;
 			NetSendCmdLoc(TRUE, CMD_WALKXY, cursmx, cursmy);
 			if (!sgbIsScrolling)
-				sgbIsScrolling = 1;
+				sgbIsScrolling = TRUE;
 		}
 	}
 }
@@ -35,11 +35,11 @@ void track_repeat_walk(BOOL rep)
 
 	sgbIsWalking = rep;
 	if (rep) {
-		sgbIsScrolling = 0;
-		sgdwLastWalk = GetTickCount() - 50;
+		sgbIsScrolling = FALSE;
+		sgdwLastWalk = SDL_GetTicks() - 50;
 		NetSendCmdLoc(TRUE, CMD_WALKXY, cursmx, cursmy);
 	} else if (sgbIsScrolling) {
-		sgbIsScrolling = 0;
+		sgbIsScrolling = FALSE;
 	}
 }
 

@@ -1,5 +1,5 @@
 #ifndef USE_SDL1
-#include "miniwin/ddraw.h"
+#include "display.h"
 #include "touch.h"
 #include "../../defs.h"
 #include <math.h>

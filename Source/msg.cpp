@@ -1,4 +1,9 @@
-#include "diablo.h"
+/**
+ * @file msg.cpp
+ *
+ * Implementation of function for sending and reciving network messages.
+ */
+#include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 
@@ -19,7 +24,7 @@ static BOOLEAN sgbDeltaChanged;
 static BYTE sgbDeltaChunks;
 BOOL deltaload;
 BYTE gbBufferMsgs;
-int pkt_counter;
+int dwRecCount;
 
 void msg_send_drop_pkt(int pnum, int reason)
 {
@@ -51,7 +56,7 @@ void msg_send_packet(int pnum, const void *packet, DWORD dwSize)
 	sgpCurrPkt->dwSpaceLeft -= dwSize;
 }
 
-TMegaPkt *msg_get_next_packet()
+void msg_get_next_packet()
 {
 	TMegaPkt *result;
 
@@ -64,8 +69,6 @@ TMegaPkt *msg_get_next_packet()
 		result = result->pNext;
 	}
 	result->pNext = sgpCurrPkt;
-
-	return result;
 }
 
 BOOL msg_wait_resync()
@@ -77,8 +80,8 @@ BOOL msg_wait_resync()
 	sgnCurrMegaPlayer = -1;
 	sgbRecvCmd = CMD_DLEVEL_END;
 	gbBufferMsgs = 1;
-	sgdwOwnerWait = GetTickCount();
-	success = UiProgressDialog(ghMainWnd, "Waiting for game data...", 1, msg_wait_for_turns, 20);
+	sgdwOwnerWait = SDL_GetTicks();
+	success = UiProgressDialog("Waiting for game data...", 1, msg_wait_for_turns, 20);
 	gbBufferMsgs = 0;
 	if (!success) {
 		msg_free_packets();
@@ -118,7 +121,7 @@ int msg_wait_for_turns()
 		nthread_send_and_recv_turn(0, 0);
 		if (!SNetGetOwnerTurnsWaiting(&turns) && SErrGetLastError() == STORM_ERROR_NOT_IN_GAME)
 			return 100;
-		if (GetTickCount() - sgdwOwnerWait <= 2000 && turns < gdwTurnsInTransit)
+		if (SDL_GetTicks() - sgdwOwnerWait <= 2000 && turns < gdwTurnsInTransit)
 			return 0;
 		sgbDeltaChunks++;
 	}
@@ -142,7 +145,7 @@ int msg_wait_for_turns()
 	return 100 * sgbDeltaChunks / 21;
 }
 
-void msg_process_net_packets()
+void run_delta_info()
 {
 	if (gbMaxPlayers != 1) {
 		gbBufferMsgs = 2;
@@ -579,7 +582,7 @@ void DeltaLoadLevel()
 				item[ii]._ix = x;
 				item[ii]._iy = y;
 				dItem[x][y] = ii + 1;
-				RespawnItem(ii, 0);
+				RespawnItem(ii, FALSE);
 				numitems++;
 			}
 		}
@@ -803,7 +806,7 @@ void NetSendCmdGItem2(BOOL usonly, BYTE bCmd, BYTE mast, BYTE pnum, TCmdGItem *p
 		return;
 	}
 
-	ticks = GetTickCount();
+	ticks = SDL_GetTicks();
 	if (!cmd.dwTime) {
 		cmd.dwTime = ticks;
 	} else if (ticks - cmd.dwTime > 5000) {
@@ -823,7 +826,7 @@ BOOL NetSendCmdReq2(BYTE bCmd, BYTE mast, BYTE pnum, TCmdGItem *p)
 	cmd.bPnum = pnum;
 	cmd.bMaster = mast;
 
-	ticks = GetTickCount();
+	ticks = SDL_GetTicks();
 	if (!cmd.dwTime) {
 		cmd.dwTime = ticks;
 	} else if (ticks - cmd.dwTime > 5000) {
@@ -970,7 +973,7 @@ void NetSendCmdString(int pmask, const char *pszStr)
 	multi_send_msg_packet(pmask, (BYTE *)&cmd.bCmd, dwStrLen + 2);
 }
 
-void RemovePlrPortal(int pnum)
+void delta_close_portal(int pnum)
 {
 	memset(&sgJunk.portal[pnum], 0xFF, sizeof(sgJunk.portal[pnum]));
 	sgbDeltaChanged = TRUE;
@@ -1259,13 +1262,13 @@ void DeltaImportJunk(BYTE *src)
 		if (*src == 0xFF) {
 			memset(&sgJunk.portal[i], 0xFF, sizeof(DPortal));
 			src++;
-			SetPortalStats(i, 0, 0, 0, 0, 0);
+			SetPortalStats(i, FALSE, 0, 0, 0, DTYPE_TOWN);
 		} else {
 			memcpy(&sgJunk.portal[i], src, sizeof(DPortal));
 			src += sizeof(DPortal);
 			SetPortalStats(
 			    i,
-			    1,
+			    TRUE,
 			    sgJunk.portal[i].x,
 			    sgJunk.portal[i].y,
 			    sgJunk.portal[i].level,
@@ -1369,7 +1372,7 @@ DWORD On_SBSPELL(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-void __cdecl msg_errorf(const char *pszFmt, ...)
+void msg_errorf(const char *pszFmt, ...)
 {
 	static DWORD msg_err_timer;
 	DWORD ticks;
@@ -1377,7 +1380,7 @@ void __cdecl msg_errorf(const char *pszFmt, ...)
 	va_list va;
 
 	va_start(va, pszFmt);
-	ticks = GetTickCount();
+	ticks = SDL_GetTicks();
 	if (ticks - msg_err_timer >= 5000) {
 		msg_err_timer = ticks;
 		vsprintf(msg, pszFmt, va);
@@ -1448,7 +1451,7 @@ DWORD On_GETITEM(TCmd *pCmd, int pnum)
 			if ((currlevel == p->bLevel || p->bPnum == myplr) && p->bMaster != myplr) {
 				if (p->bPnum == myplr) {
 					if (currlevel != p->bLevel) {
-						ii = SyncPutItem(myplr, plr[myplr].WorldX, plr[myplr].WorldY, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff);
+						ii = SyncPutItem(myplr, plr[myplr]._px, plr[myplr]._py, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff);
 						if (ii != -1)
 							InvGetItem(myplr, ii);
 					} else
@@ -1570,7 +1573,7 @@ DWORD On_AGETITEM(TCmd *pCmd, int pnum)
 			if ((currlevel == p->bLevel || p->bPnum == myplr) && p->bMaster != myplr) {
 				if (p->bPnum == myplr) {
 					if (currlevel != p->bLevel) {
-						int ii = SyncPutItem(myplr, plr[myplr].WorldX, plr[myplr].WorldY, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff);
+						int ii = SyncPutItem(myplr, plr[myplr]._px, plr[myplr]._py, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff);
 						if (ii != -1)
 							AutoGetItem(myplr, ii);
 					} else
@@ -1664,7 +1667,7 @@ void delta_put_item(TCmdPItem *pI, int x, int y, BYTE bLevel)
 void check_update_plr(int pnum)
 {
 	if (gbMaxPlayers != 1 && pnum == myplr)
-		pfile_update(1);
+		pfile_update(TRUE);
 }
 
 DWORD On_SYNCPUTITEM(TCmd *pCmd, int pnum)
@@ -1862,8 +1865,8 @@ DWORD On_ATTACKID(TCmd *pCmd, int pnum)
 	TCmdParam1 *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		int distx = abs(plr[pnum].WorldX - monster[p->wParam1]._mfutx);
-		int disty = abs(plr[pnum].WorldY - monster[p->wParam1]._mfuty);
+		int distx = abs(plr[pnum]._px - monster[p->wParam1]._mfutx);
+		int disty = abs(plr[pnum]._py - monster[p->wParam1]._mfuty);
 		if (distx > 1 || disty > 1)
 			MakePlrPath(pnum, monster[p->wParam1]._mfutx, monster[p->wParam1]._mfuty, FALSE);
 		plr[pnum].destAction = ACTION_ATTACKMON;
@@ -1878,7 +1881,7 @@ DWORD On_ATTACKPID(TCmd *pCmd, int pnum)
 	TCmdParam1 *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		MakePlrPath(pnum, plr[p->wParam1]._px, plr[p->wParam1]._py, FALSE);
+		MakePlrPath(pnum, plr[p->wParam1]._pfutx, plr[p->wParam1]._pfuty, FALSE);
 		plr[pnum].destAction = ACTION_ATTACKPLR;
 		plr[pnum].destParam1 = p->wParam1;
 	}
@@ -2120,7 +2123,7 @@ DWORD On_AWAKEGOLEM(TCmd *pCmd, int pnum)
 			}
 		}
 		if (addGolem)
-			AddMissile(plr[pnum].WorldX, plr[pnum].WorldY, p->_mx, p->_my, p->_mdir, MIS_GOLEM, 0, pnum, 0, 1);
+			AddMissile(plr[pnum]._px, plr[pnum]._py, p->_mx, p->_my, p->_mdir, MIS_GOLEM, 0, pnum, 0, 1);
 	}
 
 	return sizeof(*p);
@@ -2348,8 +2351,8 @@ DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 		}
 
 		if (plr[pnum].plractive && myplr != pnum) {
-			plr[pnum].WorldX = p->x;
-			plr[pnum].WorldY = p->y;
+			plr[pnum]._px = p->x;
+			plr[pnum]._py = p->y;
 			plr[pnum].plrlevel = p->wParam1;
 			plr[pnum]._pGFXLoad = 0;
 			if (currlevel == plr[pnum].plrlevel) {
@@ -2364,10 +2367,10 @@ DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 					NewPlrAnim(pnum, plr[pnum]._pDAnim[0], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
 					plr[pnum]._pAnimFrame = plr[pnum]._pAnimLen - 1;
 					plr[pnum]._pVar8 = plr[pnum]._pAnimLen << 1;
-					dFlags[plr[pnum].WorldX][plr[pnum].WorldY] |= BFLAG_DEAD_PLAYER;
+					dFlags[plr[pnum]._px][plr[pnum]._py] |= BFLAG_DEAD_PLAYER;
 				}
 
-				plr[pnum]._pvid = AddVision(plr[pnum].WorldX, plr[pnum].WorldY, plr[pnum]._pLightRad, pnum == myplr);
+				plr[pnum]._pvid = AddVision(plr[pnum]._px, plr[pnum]._py, plr[pnum]._pLightRad, pnum == myplr);
 				plr[pnum]._plid = -1;
 			}
 		}
@@ -2426,7 +2429,7 @@ DWORD On_DEACTIVATEPORTAL(TCmd *pCmd, int pnum)
 		if (PortalOnLevel(pnum))
 			RemovePortalMissile(pnum);
 		DeactivatePortal(pnum);
-		RemovePlrPortal(pnum);
+		delta_close_portal(pnum);
 	}
 
 	return sizeof(*pCmd);

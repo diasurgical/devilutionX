@@ -1,6 +1,16 @@
-//HEADER_GOES_HERE
+/**
+ * @file error.h
+ *
+ * Interface of in-game message functions.
+ */
 #ifndef __ERROR_H__
 #define __ERROR_H__
+
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 extern char msgtable[MAX_SEND_STR_LEN];
 extern DWORD msgdelay;
@@ -12,6 +22,12 @@ void ClrDiabloMsg();
 void DrawDiabloMsg();
 
 /* data */
-extern char *MsgStrings[44];
+extern char *MsgStrings[];
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __ERROR_H__ */

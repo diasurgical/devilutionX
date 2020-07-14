@@ -98,6 +98,12 @@ if(HAIKU)
   set(ASAN OFF)
 endif()
 
+if(ANDROID)
+  set(ASAN OFF)
+  set(UBSAN OFF)
+  set(NONET ON)
+endif()
+
 if(DIST)
   set(sodium_USE_STATIC_LIBS ON)
 endif()
@@ -117,18 +123,32 @@ if(NOT NONET)
   find_package(sodium REQUIRED)
 endif()
 
-if(USE_SDL1)
-  find_package(SDL REQUIRED)
-  find_package(SDL_ttf REQUIRED)
-  find_package(SDL_mixer REQUIRED)
-  include_directories(${SDL_INCLUDE_DIR})
-else()
-  find_package(SDL2 CONFIG QUIET)
-  if (NOT SDL2_FOUND)
-    find_package(SDL2 REQUIRED)
+if (NOT ANDROID)
+  if(USE_SDL1)
+    find_package(SDL REQUIRED)
+    find_package(SDL_ttf REQUIRED)
+    find_package(SDL_mixer REQUIRED)
+    include_directories(${SDL_INCLUDE_DIR})
+  else()
+    find_package(SDL2 CONFIG QUIET)
+    if (NOT SDL2_FOUND)
+      find_package(SDL2 REQUIRED)
+    endif()
+    find_package(SDL2_ttf REQUIRED)
+    find_package(SDL2_mixer REQUIRED)
   endif()
-  find_package(SDL2_ttf REQUIRED)
-  find_package(SDL2_mixer REQUIRED)
+endif()
+
+If(ANDROID)
+OPTION(DEFINE_MACRO "Option description" ON) # Enabled by default
+IF(DEFINE_MACRO)
+    ADD_DEFINITIONS(-DHAVE_NEON_INTRINSICS=0 )
+ENDIF(DEFINE_MACRO)
+
+
+
+
+
 endif()
 
 add_library(smacker STATIC
@@ -229,8 +249,67 @@ add_library(devilution STATIC
   Source/trigs.cpp
   Source/wave.cpp)
 
+
+
+if(ANDROID)
+
+set(devilutionx_SRCS
+  SourceX/miniwin/androidinput.cpp
+  SourceX/dx.cpp
+  SourceX/controls/devices/game_controller.cpp
+  SourceX/controls/devices/joystick.cpp
+  SourceX/controls/devices/kbcontroller.cpp
+  SourceX/controls/controller.cpp
+  SourceX/controls/controller_motion.cpp
+  SourceX/controls/game_controls.cpp
+  SourceX/controls/menu_controls.cpp
+  SourceX/controls/modifier_hints.cpp
+  SourceX/controls/plrctrls.cpp
+  SourceX/controls/touch.cpp
+  SourceX/display.cpp
+  SourceX/miniwin/misc_msg.cpp
+  SourceX/thread.cpp
+  SourceX/sound.cpp
+  SourceX/soundsample.cpp
+  SourceX/storm/storm.cpp
+  SourceX/storm/storm_net.cpp
+  SourceX/dvlnet/abstract_net.cpp
+  SourceX/dvlnet/loopback.cpp
+  SourceX/dvlnet/packet.cpp
+  SourceX/dvlnet/base.cpp
+  SourceX/dvlnet/frame_queue.cpp
+  SourceX/dvlnet/cdwrap.cpp
+  SourceX/DiabloUI/art_draw.cpp
+  SourceX/DiabloUI/errorart.cpp
+  SourceX/DiabloUI/art.cpp
+  SourceX/DiabloUI/button.cpp
+  SourceX/DiabloUI/credits.cpp
+  SourceX/DiabloUI/credits_lines.cpp
+  SourceX/DiabloUI/diabloui.cpp
+  SourceX/DiabloUI/dialogs.cpp
+  SourceX/DiabloUI/fonts.cpp
+  SourceX/DiabloUI/mainmenu.cpp
+  SourceX/DiabloUI/progress.cpp
+  SourceX/DiabloUI/scrollbar.cpp
+  SourceX/DiabloUI/selconn.cpp
+  SourceX/DiabloUI/selgame.cpp
+  SourceX/DiabloUI/selhero.cpp
+  SourceX/DiabloUI/selyesno.cpp
+  SourceX/DiabloUI/selok.cpp
+  SourceX/DiabloUI/text_draw.cpp
+  SourceX/DiabloUI/text.cpp
+  SourceX/DiabloUI/title.cpp
+  SourceX/DiabloUI/ttf_render_wrapped.cpp
+  SourceX/main.cpp
+  Packaging/resources/CharisSILB.ttf
+
+  )
+endif()
+
+if (NOT ANDROID)
 set(devilutionx_SRCS
   SourceX/dx.cpp
+  SourceX/miniwin/androidinput.cpp
   SourceX/controls/devices/game_controller.cpp
   SourceX/controls/devices/joystick.cpp
   SourceX/controls/devices/kbcontroller.cpp
@@ -277,9 +356,11 @@ set(devilutionx_SRCS
   SourceX/DiabloUI/text.cpp
   SourceX/DiabloUI/title.cpp
   SourceX/DiabloUI/ttf_render_wrapped.cpp
-  SourceX/main.cpp
-  ./Packaging/macOS/AppIcon.icns
-  ./Packaging/resources/CharisSILB.ttf)
+  SourceX/main.cpp)
+endif()
+
+
+set(BIN_TARGET devilutionx)
 
 if(NOT NONET)
   list(APPEND devilutionx_SRCS
@@ -287,8 +368,6 @@ if(NOT NONET)
     SourceX/dvlnet/tcp_server.cpp
     SourceX/dvlnet/udp_p2p.cpp)
 endif()
-
-set(BIN_TARGET devilutionx)
 
 if(SWITCH)
   list(APPEND devilutionx_SRCS
@@ -298,8 +377,45 @@ if(SWITCH)
   set(BIN_TARGET devilutionx.elf)
 endif()
 
-add_executable(${BIN_TARGET} MACOSX_BUNDLE ${devilutionx_SRCS})
+if (NOT ANDROID)
+  add_executable(${BIN_TARGET}
+    MACOSX_BUNDLE
+    ${devilutionx_SRCS}
+    ./Packaging/macOS/AppIcon.icns
+    ./Packaging/resources/CharisSILB.ttf)
+else()
+  add_library(devilutionx SHARED ${devilutionx_SRCS})
+endif()
 
+if (ANDROID)
+  target_include_directories(devilution PUBLIC
+    SourceX
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/app/libs/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2/include
+
+    # SDL_internal.h is located in src required by SDL_android_main.c bridge
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2/src
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_mixer
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_ttf
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_image/include)  # added image for ANDROID
+  target_include_directories(devilutionx PUBLIC
+    SourceX
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/app/libs/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2/include
+
+    # SDL_internal.h is located in src required by SDL_android_main.c bridge
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2/src
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_mixer
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_ttf
+    ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_image/include) #added image for ANDROID
+
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2/ ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2)
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_mixer/ ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_mixer)
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_ttf/ ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_ttf)
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_image/ ${CMAKE_CURRENT_SOURCE_DIR}/android-project/SDL2_image) #added for image ANDROID
+endif()
 configure_file(SourceS/config.h.in config.h @ONLY)
 target_include_directories(devilution PUBLIC Source SourceS ${CMAKE_CURRENT_BINARY_DIR})
 target_include_directories(${BIN_TARGET} PRIVATE
@@ -396,15 +512,25 @@ foreach(
 endforeach(def_name)
 
 foreach(target devilution ${BIN_TARGET})
-  if(USE_SDL1)
-    target_link_libraries(${target} PRIVATE
-      ${SDL_LIBRARY} ${SDL_TTF_LIBRARY} ${SDL_MIXER_LIBRARY})
-    target_compile_definitions(${target} PRIVATE USE_SDL1)
+  if (NOT ANDROID)
+    if(USE_SDL1)
+      target_link_libraries(${target} PRIVATE
+        ${SDL_LIBRARY} ${SDL_TTF_LIBRARY} ${SDL_MIXER_LIBRARY})
+      target_compile_definitions(${target} PRIVATE USE_SDL1)
+    else()
+      target_link_libraries(${target} PRIVATE
+        SDL2::SDL2main
+        SDL2::SDL2_ttf
+        SDL2::SDL2_image
+        )
+    endif()
   else()
-    target_link_libraries(${target} PRIVATE
-      SDL2::SDL2main
-      SDL2::SDL2_ttf
-      SDL2::SDL2_mixer)
+    target_link_libraries(devilutionx PRIVATE
+      SDL2
+      SDL2_ttf
+      SDL2_mixer
+      SDL2_image
+      )
   endif()
 
   if(ASAN)
@@ -447,9 +573,6 @@ if(HAIKU)
 endif()
 
 if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-  # Change __FILE__ to only show the path relative to the project folder
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-builtin-macro-redefined -D'__FILE__=\"$(subst $(realpath ${CMAKE_SOURCE_DIR})/,,$(abspath $<))\"'")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-builtin-macro-redefined -D'__FILE__=\"$(subst $(realpath ${CMAKE_SOURCE_DIR})/,,$(abspath $<))\"'")
 
   if(DEBUG)
     # Note: For Valgrind suppor.
@@ -473,11 +596,11 @@ endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   # Style issues
-  target_compile_options(${BIN_TARGET} PRIVATE -Wno-parentheses -Wno-logical-op-parentheses -Wno-bitwise-op-parentheses)
+  target_compile_options(${BIN_TARGET} PRIVATE -Wno-everything)
   # Silence warnings about __int64 alignment hack not always being applicable
-  target_compile_options(${BIN_TARGET} PRIVATE -Wno-ignored-attributes)
+  target_compile_options(${BIN_TARGET} PRIVATE -Wno-everything)
   # Silence appfat.cpp warnings
-  set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wno-narrowing")
+  set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wno-everything")
 endif()
 
 if(APPLE)

@@ -1,4 +1,9 @@
-#include "diablo.h"
+/**
+ * @file gmenu.cpp
+ *
+ * Implementation of the in-game navigation and interaction.
+ */
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -15,7 +20,8 @@ BYTE *option_cel;
 BYTE *sgpLogo;
 int sgCurrentMenuIdx;
 
-const BYTE lfontframe[127] = {
+/** Maps from font index to bigtgold.cel frame number. */
+const BYTE lfontframe[] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -28,9 +34,11 @@ const BYTE lfontframe[127] = {
 	26, 42, 0, 43, 0, 0, 0, 1, 2, 3,
 	4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
 	14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-	24, 25, 26, 20, 0, 21, 0
+	24, 25, 26, 20, 0, 21, 0, 0
 };
-const BYTE lfontkern[56] = {
+
+/** Maps from bigtgold.cel frame number to character width. */
+const BYTE lfontkern[] = {
 	18, 33, 21, 26, 28, 19, 19, 26, 25, 11,
 	12, 25, 19, 34, 28, 32, 20, 32, 28, 20,
 	28, 36, 35, 46, 33, 33, 24, 11, 23, 22,
@@ -56,7 +64,7 @@ void gmenu_print_text(int x, int y, char *pszStr)
 	while (*pszStr) {
 		c = gbFontTransTbl[(BYTE)*pszStr++];
 		c = lfontframe[c];
-		if (c)
+		if (c != 0)
 			CelDrawLight(x, y, BigTGold_cel, c, 46, NULL);
 		x += lfontkern[c] + 2;
 	}
@@ -74,9 +82,9 @@ void FreeGMenu()
 void gmenu_init_menu()
 {
 	PentSpin_frame = 1;
-	sgpCurrentMenu = 0;
-	sgpCurrItem = 0;
-	dword_63447C = 0;
+	sgpCurrentMenu = NULL;
+	sgpCurrItem = NULL;
+	dword_63447C = NULL;
 	sgCurrentMenuIdx = 0;
 	mouseNavigation = FALSE;
 	sgpLogo = LoadFileInMem("Data\\Diabsmal.CEL", NULL);
@@ -86,12 +94,12 @@ void gmenu_init_menu()
 	optbar_cel = LoadFileInMem("Data\\optbar.CEL", NULL);
 }
 
-BOOL gmenu_exception()
+BOOL gmenu_is_active()
 {
-	return sgpCurrentMenu != 0;
+	return sgpCurrentMenu != NULL;
 }
 
-void gmenu_call_proc(TMenuItem *pItem, void (*gmFunc)(TMenuItem *))
+void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)(TMenuItem *))
 {
 	int i;
 
@@ -110,7 +118,7 @@ void gmenu_call_proc(TMenuItem *pItem, void (*gmFunc)(TMenuItem *))
 		}
 	}
 	// BUGFIX: OOB access when sgCurrentMenuIdx is 0; should be set to NULL instead. (fixed)
-	sgpCurrItem = sgCurrentMenuIdx > 0 ? &sgpCurrentMenu[sgCurrentMenuIdx - 1] : nullptr;
+	sgpCurrItem = sgCurrentMenuIdx > 0 ? &sgpCurrentMenu[sgCurrentMenuIdx - 1] : NULL;
 	gmenu_up_down(TRUE);
 }
 
@@ -164,7 +172,7 @@ void gmenu_draw()
 			}
 		}
 
-		ticks = GetTickCount();
+		ticks = SDL_GetTicks();
 		if ((int)(ticks - PentSpin_tick) > 50) { // BUGFIX: thould be 50ms (Fixed)
 			PentSpin_frame++;
 			if (PentSpin_frame == 9)
@@ -230,30 +238,30 @@ int gmenu_get_lfont(TMenuItem *pItem)
 BOOL gmenu_presskeys(int vkey)
 {
 	if (!sgpCurrentMenu)
-		return 0;
+		return FALSE;
 	switch (vkey) {
-	case VK_RETURN:
+	case DVL_VK_RETURN:
 		if ((sgpCurrItem->dwFlags & GMENU_ENABLED) != 0) {
 			PlaySFX(IS_TITLEMOV);
 			sgpCurrItem->fnMenu(TRUE);
 		}
 		break;
-	case VK_ESCAPE:
+	case DVL_VK_ESCAPE:
 		PlaySFX(IS_TITLEMOV);
-		gmenu_call_proc(0, 0);
+		gmenu_set_items(NULL, NULL);
 		break;
-	case VK_SPACE:
+	case DVL_VK_SPACE:
 		return FALSE;
-	case VK_LEFT:
+	case DVL_VK_LEFT:
 		gmenu_left_right(FALSE);
 		break;
-	case VK_RIGHT:
+	case DVL_VK_RIGHT:
 		gmenu_left_right(TRUE);
 		break;
-	case VK_UP:
+	case DVL_VK_UP:
 		gmenu_up_down(FALSE);
 		break;
-	case VK_DOWN:
+	case DVL_VK_DOWN:
 		gmenu_up_down(TRUE);
 		break;
 	}
@@ -287,7 +295,7 @@ BOOL gmenu_on_mouse_move()
 
 	if (!mouseNavigation)
 		return FALSE;
-	gmenu_valid_mouse_pos(&step);
+	gmenu_get_mouse_slider(&step);
 	nSteps = (int)(sgpCurrItem->dwFlags & 0xFFF000) >> 12;
 	step *= nSteps;
 	step /= 256;
@@ -298,19 +306,19 @@ BOOL gmenu_on_mouse_move()
 	return TRUE;
 }
 
-BOOLEAN gmenu_valid_mouse_pos(int *plOffset)
+BOOLEAN gmenu_get_mouse_slider(int *plOffset)
 {
 	*plOffset = 282;
 	if (MouseX < 282 + PANEL_LEFT) {
 		*plOffset = 0;
-		return 0;
+		return FALSE;
 	}
 	if (MouseX > 538 + PANEL_LEFT) {
 		*plOffset = 256;
-		return 0;
+		return FALSE;
 	}
 	*plOffset = MouseX - 282 - PANEL_LEFT;
-	return 1;
+	return TRUE;
 }
 
 BOOL gmenu_left_mouse(BOOL isDown)
@@ -355,7 +363,7 @@ BOOL gmenu_left_mouse(BOOL isDown)
 	sgpCurrItem = pItem;
 	PlaySFX(IS_TITLEMOV);
 	if (pItem->dwFlags & GMENU_SLIDER) {
-		mouseNavigation = gmenu_valid_mouse_pos(&dummy);
+		mouseNavigation = gmenu_get_mouse_slider(&dummy);
 		gmenu_on_mouse_move();
 	} else {
 		sgpCurrItem->fnMenu(TRUE);
@@ -378,7 +386,7 @@ void gmenu_slider_set(TMenuItem *pItem, int min, int max, int value)
 {
 	int nSteps;
 
-	/// ASSERT: assertassert(pItem, "gmenu.cpp", 445);
+	assert(pItem);
 	nSteps = (int)(pItem->dwFlags & 0xFFF000) >> 12;
 	if (nSteps < 2)
 		nSteps = 2;

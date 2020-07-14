@@ -1,6 +1,6 @@
 #include <switch.h>
 #include <SDL.h>
-#include "miniwin/ddraw.h"
+#include "display.h"
 #include "platform/switch/docking.h"
 
 namespace dvl {
@@ -42,7 +42,7 @@ void HandleDocking()
 			SDL_RenderClear(renderer);
 			SDL_RenderPresent(renderer);
 		}
-		SDL_SetWindowSize(window, display_width, display_height);
+		SDL_SetWindowSize(ghMainWnd, display_width, display_height);
 	}
 }
 

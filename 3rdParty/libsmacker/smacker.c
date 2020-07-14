@@ -737,7 +737,7 @@ static char smk_render_palette(struct smk_video_t* s, unsigned char* p, unsigned
 	/* Helper variables */
 	unsigned short count, src;
 
-    static unsigned char oldPalette[256][3];
+	static unsigned char oldPalette[256][3];
 
 	/* Smacker palette map: smk colors are 6-bit, this table expands them to 8. */
 	const unsigned char palmap[64] =
@@ -756,8 +756,8 @@ static char smk_render_palette(struct smk_video_t* s, unsigned char* p, unsigned
 	smk_assert(s);
 	smk_assert(p);
 
-    // Copy palette to old palette
-    memcpy(oldPalette, s->palette, 256 * 3);
+	// Copy palette to old palette
+	memcpy(oldPalette, s->palette, 256 * 3);
 
 	/* Loop until palette is complete, or we are out of bytes to process */
 	while ( (i < 256) && (size > 0) )
@@ -807,7 +807,7 @@ static char smk_render_palette(struct smk_video_t* s, unsigned char* p, unsigned
 				goto error;
 			}
 
-            /* OK!  Copy the color-palette entries. */
+			/* OK!  Copy the color-palette entries. */
 			memmove(&s->palette[i][0],&oldPalette[src][0],count * 3);
 
 			i += count;
@@ -1310,6 +1310,10 @@ static char smk_render(smk s)
 			}
 			p += size;
 			i -= size;
+		}
+		else
+		{
+			s->audio[track].buffer_size = 0;
 		}
 	}
 

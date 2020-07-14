@@ -5,6 +5,7 @@
 #include "DiabloUI/text.h"
 #include "DiabloUI/ui_item.h"
 #include "DiabloUI/ttf_render_wrapped.h"
+#include "display.h"
 
 namespace dvl {
 
@@ -15,10 +16,10 @@ namespace {
 TextAlignment XAlignmentFromFlags(int flags)
 {
 	if (flags & UIS_CENTER)
-		return TextAlignment::CENTER;
+		return TextAlignment_CENTER;
 	if (flags & UIS_RIGHT)
-		return TextAlignment::END;
-	return TextAlignment::BEGIN;
+		return TextAlignment_END;
+	return TextAlignment_BEGIN;
 }
 
 int AlignXOffset(int flags, const SDL_Rect &dest, int w)
@@ -37,33 +38,32 @@ void DrawTTF(const char *text, const SDL_Rect &rectIn, int flags,
     TtfSurfaceCache **render_cache)
 {
 	SDL_Rect rect(rectIn);
-	if(! (flags & UIS_CENTER))
-		rect.x += PANEL_LEFT;
-	if (font == nullptr || text == nullptr || *text == '\0')
+	if (font == NULL || text == NULL || *text == '\0')
 		return;
-	if (*render_cache == nullptr) {
+	if (*render_cache == NULL) {
 		*render_cache = new TtfSurfaceCache();
-		const auto x_align = XAlignmentFromFlags(flags);
+		const TextAlignment x_align = XAlignmentFromFlags(flags);
 		(*render_cache)->text = RenderUTF8_Solid_Wrapped(font, text, text_color, rect.w, x_align);
+		ScaleSurfaceToOutput(&(*render_cache)->text);
 		(*render_cache)->shadow = RenderUTF8_Solid_Wrapped(font, text, shadow_color, rect.w, x_align);
+		ScaleSurfaceToOutput(&(*render_cache)->shadow);
 	}
 	SDL_Surface *text_surface = (*render_cache)->text;
 	SDL_Surface *shadow_surface = (*render_cache)->shadow;
-	if (text_surface == nullptr)
+	if (text_surface == NULL)
 		return;
 
 	SDL_Rect dest_rect = rect;
-	const int x_offset = AlignXOffset(flags, rect, text_surface->w);
-	const int y_offset = (flags & UIS_VCENTER) ? (rect.h - text_surface->h) / 2 : 0;
-	dest_rect.x += static_cast<decltype(SDL_Rect().x)>(SCREEN_X + x_offset);
-	dest_rect.y += static_cast<decltype(SDL_Rect().y)>(SCREEN_Y + y_offset);
+	ScaleOutputRect(&dest_rect);
+	dest_rect.x += AlignXOffset(flags, dest_rect, text_surface->w);
+	dest_rect.y += (flags & UIS_VCENTER) ? (dest_rect.h - text_surface->h) / 2 : 0;
 
 	SDL_Rect shadow_rect = dest_rect;
 	++shadow_rect.x;
 	++shadow_rect.y;
-	if (SDL_BlitSurface(shadow_surface, nullptr, pal_surface, &shadow_rect) <= -1)
+	if (SDL_BlitSurface(shadow_surface, NULL, GetOutputSurface(), &shadow_rect) < 0)
 		ErrSdl();
-	if (SDL_BlitSurface(text_surface, nullptr, pal_surface, &dest_rect) <= -1)
+	if (SDL_BlitSurface(text_surface, NULL, GetOutputSurface(), &dest_rect) < 0)
 		ErrSdl();
 }
 

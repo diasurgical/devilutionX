@@ -1,12 +1,20 @@
-//HEADER_GOES_HERE
+/**
+ * @file minitext.h
+ *
+ * Interface of scrolling dialog text.
+ */
 #ifndef __MINITEXT_H__
 #define __MINITEXT_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern int qtexty;
 extern char *qtextptr;
-extern int qtextSpd;
 extern BOOLEAN qtextflag;
-extern int scrolltexty;
 extern BYTE *pMedTextCels;
 extern BYTE *pTextBoxCels;
 
@@ -25,5 +33,11 @@ extern const BYTE mfontkern[56];
 /* data */
 
 extern int qscroll_spd_tbl[9];
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __MINITEXT_H__ */

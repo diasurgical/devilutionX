@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <list>
 
+#include "controls/controller.h"
 #include "controls/controller_motion.h"
 #include "controls/game_controls.h"
 
@@ -21,7 +22,7 @@ bool InGameMenu()
 	    || helpflag
 	    || talkflag
 	    || qtextflag
-	    || gmenu_exception()
+	    || gmenu_is_active()
 	    || PauseMode == 2
 	    || plr[myplr]._pInvincible;
 }
@@ -43,11 +44,11 @@ int GetRotaryDistance(int x, int y)
 {
 	int d, d1, d2;
 
-	if (plr[myplr]._px == x && plr[myplr]._py == y)
+	if (plr[myplr]._pfutx == x && plr[myplr]._pfuty == y)
 		return -1;
 
 	d1 = plr[myplr]._pdir;
-	d2 = GetDirection(plr[myplr]._px, plr[myplr]._py, x, y);
+	d2 = GetDirection(plr[myplr]._pfutx, plr[myplr]._pfuty, x, y);
 
 	d = abs(d1 - d2);
 	if (d > 4)
@@ -63,7 +64,7 @@ int GetRotaryDistance(int x, int y)
  */
 int GetMinDistance(int dx, int dy)
 {
-	return std::max(abs(plr[myplr]._px - dx), abs(plr[myplr]._py - dy));
+	return std::max(abs(plr[myplr]._pfutx - dx), abs(plr[myplr]._pfuty - dy));
 }
 
 /**
@@ -79,8 +80,8 @@ int GetDistance(int dx, int dy, int maxDistance)
 		return 0;
 	}
 
-	char walkpath[25];
-	int steps = FindPath(PosOkPlayer, myplr, plr[myplr]._px, plr[myplr]._py, dx, dy, walkpath);
+	char walkpath[MAX_PATH_LENGTH];
+	int steps = FindPath(PosOkPlayer, myplr, plr[myplr]._pfutx, plr[myplr]._pfuty, dx, dy, walkpath);
 	if (steps > maxDistance)
 		return 0;
 
@@ -94,16 +95,16 @@ int GetDistance(int dx, int dy, int maxDistance)
  */
 int GetDistanceRanged(int dx, int dy)
 {
-	int a = plr[myplr]._px - dx;
-	int b = plr[myplr]._py - dy;
+	int a = plr[myplr]._pfutx - dx;
+	int b = plr[myplr]._pfuty - dy;
 
 	return sqrt(a * a + b * b);
 }
 
 void FindItemOrObject()
 {
-	int mx = plr[myplr]._px;
-	int my = plr[myplr]._py;
+	int mx = plr[myplr]._pfutx;
+	int my = plr[myplr]._pfuty;
 	int rotations = 5;
 
 	// As the player can not stand on the edge fo the map this is safe from OOB
@@ -127,7 +128,7 @@ void FindItemOrObject()
 		}
 	}
 
-	if (currlevel == DTYPE_TOWN || pcursitem != -1)
+	if (leveltype == DTYPE_TOWN || pcursitem != -1)
 		return; // Don't look for objects in town
 
 	for (int xx = -1; xx < 2; xx++) {
@@ -175,7 +176,7 @@ bool HasRangedSpell()
 
 bool CanTargetMonster(int mi)
 {
-	const auto &monst = monster[mi];
+	const MonsterStruct &monst = monster[mi];
 
 	if (monst._mFlags & (MFLAG_HIDDEN | MFLAG_GOLEM))
 		return false;
@@ -199,9 +200,9 @@ void FindRangedTarget()
 
 	// The first MAX_PLRS monsters are reserved for players' golems.
 	for (int mi = MAX_PLRS; mi < MAXMONSTERS; mi++) {
-		const auto &monst = monster[mi];
-		const int mx = monst._mx;
-		const int my = monst._my;
+		const MonsterStruct &monst = monster[mi];
+		const int mx = monst._mfutx;
+		const int my = monst._mfuty;
 		if (!CanTargetMonster(mi))
 			continue;
 
@@ -225,7 +226,7 @@ void FindRangedTarget()
 
 void FindMeleeTarget()
 {
-	bool visited[MAXDUNX][MAXDUNY] = { 0 };
+	bool visited[MAXDUNX][MAXDUNY] = { { 0 } };
 	int maxSteps = 25; // Max steps for FindPath is 25
 	int rotations;
 	bool canTalk;
@@ -237,8 +238,8 @@ void FindMeleeTarget()
 	std::list<SearchNode> queue;
 
 	{
-		const int start_x = plr[myplr]._px;
-		const int start_y = plr[myplr]._py;
+		const int start_x = plr[myplr]._pfutx;
+		const int start_y = plr[myplr]._pfuty;
 		visited[start_x][start_y] = true;
 		queue.push_back({ start_x, start_y, 0 });
 	}
@@ -318,8 +319,8 @@ void CheckPlayerNearby()
 	for (int i = 0; i < MAX_PLRS; i++) {
 		if (i == myplr)
 			continue;
-		const int mx = plr[i].WorldX;
-		const int my = plr[i].WorldY;
+		const int mx = plr[i]._pfutx;
+		const int my = plr[i]._pfuty;
 		if (dPlayer[mx][my] == 0
 		    || !(dFlags[mx][my] & BFLAG_LIT)
 		    || (plr[i]._pHitPoints == 0 && spl != SPL_RESURRECT))
@@ -404,7 +405,7 @@ void FindTrigger()
 
 		if (pcurstrig == -1) {
 			for (int i = 0; i < MAXQUESTS; i++) {
-				if (i == QTYPE_VB || currlevel != quests[i]._qlevel || quests[i]._qslvl == 0)
+				if (i == Q_BETRAYER || currlevel != quests[i]._qlevel || quests[i]._qslvl == 0)
 					continue;
 				const int newDdistance = GetDistance(quests[i]._qtx, quests[i]._qty, 2);
 				if (newDdistance == 0)
@@ -441,13 +442,13 @@ void Interact()
 
 void AttrIncBtnSnap(MoveDirectionY dir)
 {
-	if (dir == MoveDirectionY::NONE)
+	if (dir == MoveDirectionY_NONE)
 		return;
 
 	if (chrbtnactive && plr[myplr]._pStatPts <= 0)
 		return;
 
-	DWORD ticks = GetTickCount();
+	DWORD ticks = SDL_GetTicks();
 	if (ticks - invmove < repeatRate) {
 		return;
 	}
@@ -465,10 +466,10 @@ void AttrIncBtnSnap(MoveDirectionY dir)
 		}
 	}
 
-	if (dir == MoveDirectionY::UP) {
+	if (dir == MoveDirectionY_UP) {
 		if (slot > 0)
 			--slot;
-	} else if (dir == MoveDirectionY::DOWN) {
+	} else if (dir == MoveDirectionY_DOWN) {
 		if (slot < 3)
 			++slot;
 	}
@@ -484,7 +485,7 @@ void AttrIncBtnSnap(MoveDirectionY dir)
 // small inventory squares are 29x29 (roughly)
 void InvMove(MoveDirection dir)
 {
-	DWORD ticks = GetTickCount();
+	DWORD ticks = SDL_GetTicks();
 	if (ticks - invmove < repeatRate) {
 		return;
 	}
@@ -506,7 +507,7 @@ void InvMove(MoveDirection dir)
 		slot = SLOTXY_BELT_LAST;
 
 	// when item is on cursor, this is the real cursor XY
-	if (dir.x == MoveDirectionX::LEFT) {
+	if (dir.x == MoveDirectionX_LEFT) {
 		if (slot >= SLOTXY_HAND_RIGHT_FIRST && slot <= SLOTXY_HAND_RIGHT_LAST) {
 			x = InvRect[SLOTXY_CHEST_FIRST].X + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_CHEST_FIRST].Y - (INV_SLOT_SIZE_PX / 2);
@@ -534,7 +535,7 @@ void InvMove(MoveDirection dir)
 				y = InvRect[slot].Y - (INV_SLOT_SIZE_PX / 2);
 			}
 		}
-	} else if (dir.x == MoveDirectionX::RIGHT) {
+	} else if (dir.x == MoveDirectionX_RIGHT) {
 		if (slot == SLOTXY_RING_LEFT) {
 			x = InvRect[SLOTXY_RING_RIGHT].X + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_RING_RIGHT].Y - (INV_SLOT_SIZE_PX / 2);
@@ -561,7 +562,7 @@ void InvMove(MoveDirection dir)
 			}
 		}
 	}
-	if (dir.y == MoveDirectionY::UP) {
+	if (dir.y == MoveDirectionY_UP) {
 		if (slot > 24 && slot <= 27) { // first 3 general slots
 			x = InvRect[SLOTXY_RING_LEFT].X + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_RING_LEFT].Y - (INV_SLOT_SIZE_PX / 2);
@@ -595,7 +596,7 @@ void InvMove(MoveDirection dir)
 			x = InvRect[slot].X + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[slot].Y - (INV_SLOT_SIZE_PX / 2);
 		}
-	} else if (dir.y == MoveDirectionY::DOWN) {
+	} else if (dir.y == MoveDirectionY_DOWN) {
 		if (slot >= SLOTXY_HEAD_FIRST && slot <= SLOTXY_HEAD_LAST) {
 			x = InvRect[SLOTXY_CHEST_FIRST].X + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_CHEST_FIRST].Y - (INV_SLOT_SIZE_PX / 2);
@@ -653,7 +654,7 @@ void HotSpellMove(MoveDirection dir)
 	int x = 0;
 	int y = 0;
 
-	DWORD ticks = GetTickCount();
+	DWORD ticks = SDL_GetTicks();
 	if (ticks - invmove < repeatRate) {
 		return;
 	}
@@ -674,7 +675,7 @@ void HotSpellMove(MoveDirection dir)
 		}
 	}
 
-	if (dir.y == MoveDirectionY::UP) {
+	if (dir.y == MoveDirectionY_UP) {
 		if (speedspellscoords[spbslot].y == 307 && hsr[1] > 0) { // we're in row 1, check if row 2 has spells
 			if (HSExists(MouseX, 251)) {
 				x = MouseX;
@@ -686,7 +687,7 @@ void HotSpellMove(MoveDirection dir)
 				y = 195;
 			}
 		}
-	} else if (dir.y == MoveDirectionY::DOWN) {
+	} else if (dir.y == MoveDirectionY_DOWN) {
 		if (speedspellscoords[spbslot].y == 251) { // we're in row 2
 			if (HSExists(MouseX, 307)) {
 				x = MouseX;
@@ -699,13 +700,13 @@ void HotSpellMove(MoveDirection dir)
 			}
 		}
 	}
-	if (dir.x == MoveDirectionX::LEFT) {
+	if (dir.x == MoveDirectionX_LEFT) {
 		if (spbslot >= speedspellcount - 1)
 			return;
 		spbslot++;
 		x = speedspellscoords[spbslot].x;
 		y = speedspellscoords[spbslot].y;
-	} else if (dir.x == MoveDirectionX::RIGHT) {
+	} else if (dir.x == MoveDirectionX_RIGHT) {
 		if (spbslot <= 0)
 			return;
 		spbslot--;
@@ -720,16 +721,16 @@ void HotSpellMove(MoveDirection dir)
 
 void SpellBookMove(MoveDirection dir)
 {
-	DWORD ticks = GetTickCount();
+	DWORD ticks = SDL_GetTicks();
 	if (ticks - invmove < repeatRate) {
 		return;
 	}
 	invmove = ticks;
 
-	if (dir.x == MoveDirectionX::LEFT) {
+	if (dir.x == MoveDirectionX_LEFT) {
 		if (sbooktab > 0)
 			sbooktab--;
-	} else if (dir.x == MoveDirectionX::RIGHT) {
+	} else if (dir.x == MoveDirectionX_RIGHT) {
 		if (sbooktab < 3)
 			sbooktab++;
 	}
@@ -800,10 +801,10 @@ bool IsPathBlocked(int x, int y, int dir)
 
 void WalkInDir(MoveDirection dir)
 {
-	const int x = plr[myplr]._px;
-	const int y = plr[myplr]._py;
+	const int x = plr[myplr]._pfutx;
+	const int y = plr[myplr]._pfuty;
 
-	if (dir.x == MoveDirectionX::NONE && dir.y == MoveDirectionY::NONE) {
+	if (dir.x == MoveDirectionX_NONE && dir.y == MoveDirectionY_NONE) {
 		if (sgbControllerActive && plr[myplr].walkpath[0] != WALK_NONE && plr[myplr].destAction == ACTION_NONE)
 			NetSendCmdLoc(true, CMD_WALKXY, x, y); // Stop walking
 		return;
@@ -822,11 +823,13 @@ void WalkInDir(MoveDirection dir)
 
 void Movement()
 {
-	if (InGameMenu() || questlog)
+	if (InGameMenu() || questlog
+	    || IsControllerButtonPressed(ControllerButton_BUTTON_START)
+	    || IsControllerButtonPressed(ControllerButton_BUTTON_BACK))
 		return;
 
 	MoveDirection move_dir = GetMoveDirection();
-	if (move_dir.x != MoveDirectionX::NONE || move_dir.y != MoveDirectionY::NONE) {
+	if (move_dir.x != MoveDirectionX_NONE || move_dir.y != MoveDirectionY_NONE) {
 		sgbControllerActive = true;
 	}
 
@@ -844,6 +847,14 @@ void Movement()
 }
 
 struct RightStickAccumulator {
+
+	RightStickAccumulator()
+	{
+		lastTc = SDL_GetTicks();
+		hiresDX = 0;
+		hiresDY = 0;
+	}
+
 	void pool(int *x, int *y, int slowdown)
 	{
 		DWORD tc = SDL_GetTicks();
@@ -862,12 +873,17 @@ struct RightStickAccumulator {
 		lastTc = SDL_GetTicks();
 	}
 
-	DWORD lastTc = SDL_GetTicks();
-	int hiresDX = 0;
-	int hiresDY = 0;
+	DWORD lastTc;
+	int hiresDX;
+	int hiresDY;
 };
 
 } // namespace
+
+bool IsAutomapActive()
+{
+	return automapflag && leveltype != DTYPE_TOWN;
+}
 
 void HandleRightStickMotion()
 {
@@ -878,7 +894,7 @@ void HandleRightStickMotion()
 		return;
 	}
 
-	if (automapflag) { // move map
+	if (IsAutomapActive()) { // move map
 		int dx = 0, dy = 0;
 		acc.pool(&dx, &dy, 32);
 		AutoMapXOfs += dy + dx;
@@ -939,8 +955,8 @@ void plrctrls_after_game_logic()
 void UseBeltItem(int type)
 {
 	for (int i = 0; i < MAXBELTITEMS; i++) {
-		const auto id = AllItemsList[plr[myplr].SpdList[i].IDidx].iMiscId;
-		const auto spellId = AllItemsList[plr[myplr].SpdList[i].IDidx].iSpell;
+		const int id = AllItemsList[plr[myplr].SpdList[i].IDidx].iMiscId;
+		const int spellId = AllItemsList[plr[myplr].SpdList[i].IDidx].iSpell;
 		if ((type == BLT_HEALING && (id == IMISC_HEAL || id == IMISC_FULLHEAL || (id == IMISC_SCROLL && spellId == SPL_HEAL)))
 		    || (type == BLT_MANA && (id == IMISC_MANA || id == IMISC_FULLMANA))
 		    || id == IMISC_REJUV || id == IMISC_FULLREJUV) {
@@ -1009,14 +1025,14 @@ void UpdateSpellTarget()
 	pcursplr = -1;
 	pcursmonst = -1;
 
-	const auto &player = plr[myplr];
+	const PlayerStruct &player = plr[myplr];
 
 	int range = 1;
 	if (plr[myplr]._pRSpell == SPL_TELEPORT)
 		range = 4;
 
-	cursmx = player._px + kOffsets[player._pdir][0] * range;
-	cursmy = player._py + kOffsets[player._pdir][1] * range;
+	cursmx = player._pfutx + kOffsets[player._pdir][0] * range;
+	cursmy = player._pfuty + kOffsets[player._pdir][1] * range;
 }
 
 /**
@@ -1024,12 +1040,12 @@ void UpdateSpellTarget()
  */
 bool TryDropItem()
 {
-	cursmx = plr[myplr].WorldX + 1;
-	cursmy = plr[myplr].WorldY;
+	cursmx = plr[myplr]._pfutx + 1;
+	cursmy = plr[myplr]._pfuty;
 	if (!DropItemBeforeTrig()) {
 		// Try to drop on the other side
-		cursmx = plr[myplr].WorldX;
-		cursmy = plr[myplr].WorldY + 1;
+		cursmx = plr[myplr]._pfutx;
+		cursmy = plr[myplr]._pfuty + 1;
 		DropItemBeforeTrig();
 	}
 

@@ -1,6 +1,16 @@
-//HEADER_GOES_HERE
+/**
+ * @file drlg_l3.h
+ *
+ * Interface of the caves level generation algorithms.
+ */
 #ifndef __DRLG_L3_H__
 #define __DRLG_L3_H__
+
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 extern BOOLEAN lavapool;
 extern int abyssx;
@@ -56,5 +66,11 @@ extern const BYTE L3XTRA3[4];
 extern const BYTE L3XTRA4[4];
 extern const BYTE L3XTRA5[4];
 extern const BYTE L3ANVIL[244];
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __DRLG_L3_H__ */

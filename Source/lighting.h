@@ -1,6 +1,16 @@
-//HEADER_GOES_HERE
+/**
+ * @file lighting.h
+ *
+ * Interface of light and vision.
+ */
 #ifndef __LIGHTING_H__
 #define __LIGHTING_H__
+
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 extern LightListStruct VisionList[MAXVISION];
 extern BYTE lightactive[MAXLIGHTS];
@@ -51,5 +61,11 @@ extern char *pCrawlTable[19];
 extern BYTE vCrawlTable[23][30];
 extern BYTE byte_49463C[18][18];
 extern BYTE RadiusAdj[23];
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __LIGHTING_H__ */

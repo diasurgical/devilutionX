@@ -1,4 +1,9 @@
-#include "diablo.h"
+/**
+ * @file doom.cpp
+ *
+ * Implementation of the map of the stars quest.
+ */
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 

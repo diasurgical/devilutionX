@@ -2,6 +2,12 @@
 #ifndef __STORES_H__
 #define __STORES_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern int stextup;
 extern int storenumh;
 extern int stextlhold;
@@ -43,13 +49,13 @@ void FreeStoreMem();
 void DrawSTextBack();
 void PrintSString(int x, int y, BOOL cjustflag, char *str, char col, int val);
 void DrawSLine(int y);
-void DrawSArrows(int y1, int y2);
+void DrawSSlider(int y1, int y2);
 void DrawSTextHelp();
 void ClearSText(int s, int e);
 void AddSLine(int y);
 void AddSTextVal(int y, int val);
 void OffsetSTextY(int y, int yo);
-void AddSText(int x, int y, int j, char *str, char clr, int sel);
+void AddSText(int x, int y, BOOL j, char *str, char clr, BOOL sel);
 void StoreAutoPlace();
 void S_StartSmith();
 void S_ScrollSBuy(int idx);
@@ -136,5 +142,10 @@ void ReleaseStoreBtn();
 /* rdata */
 
 extern char *talkname[9];
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __STORES_H__ */

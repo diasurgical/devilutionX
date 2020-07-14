@@ -1,33 +1,6 @@
-#include "diablo.h"
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
-
-void SetTownMicros()
-{
-	int i, x, y, lv;
-	WORD *pPiece;
-	MICROS *pMap;
-
-	MicroTileLen = 16;
-
-	for (y = 0; y < MAXDUNY; y++) {
-		for (x = 0; x < MAXDUNX; x++) {
-			lv = dPiece[x][y];
-			pMap = &dpiece_defs_map_2[x][y];
-			if (lv != 0) {
-				lv--;
-				pPiece = (WORD *)&pLevelPieces[32 * lv];
-				for (i = 0; i < 16; i++) {
-					pMap->mt[i] = SDL_SwapLE16(pPiece[(i & 1) + 16 - 2 - (i & 0xE)]);
-				}
-			} else {
-				for (i = 0; i < 16; i++) {
-					pMap->mt[i] = 0;
-				}
-			}
-		}
-	}
-}
 
 /**
  * @brief Load level data into dPiece
@@ -155,7 +128,7 @@ void T_Pass3()
 	}
 #endif
 
-	if (quests[QTYPE_PW]._qactive != 3 && quests[QTYPE_PW]._qactive) {
+	if (quests[Q_PWATER]._qactive != QUEST_DONE && quests[Q_PWATER]._qactive) {
 		T_FillTile(P3Tiles, 60, 70, 342);
 	} else {
 		T_FillTile(P3Tiles, 60, 70, 71);
@@ -207,45 +180,43 @@ void CreateTown(int entry)
 	memset(dMonster, 0, sizeof(dMonster));
 	memset(dObject, 0, sizeof(dObject));
 	memset(dItem, 0, sizeof(dItem));
-	memset(dArch, 0, sizeof(dArch));
+	memset(dSpecial, 0, sizeof(dSpecial));
 
 	for (y = 0; y < MAXDUNY; y++) {
 		for (x = 0; x < MAXDUNX; x++) {
 			if (dPiece[x][y] == 360) {
-				dArch[x][y] = 1;
+				dSpecial[x][y] = 1;
 			} else if (dPiece[x][y] == 358) {
-				dArch[x][y] = 2;
+				dSpecial[x][y] = 2;
 			} else if (dPiece[x][y] == 129) {
-				dArch[x][y] = 6;
+				dSpecial[x][y] = 6;
 			} else if (dPiece[x][y] == 130) {
-				dArch[x][y] = 7;
+				dSpecial[x][y] = 7;
 			} else if (dPiece[x][y] == 128) {
-				dArch[x][y] = 8;
+				dSpecial[x][y] = 8;
 			} else if (dPiece[x][y] == 117) {
-				dArch[x][y] = 9;
+				dSpecial[x][y] = 9;
 			} else if (dPiece[x][y] == 157) {
-				dArch[x][y] = 10;
+				dSpecial[x][y] = 10;
 			} else if (dPiece[x][y] == 158) {
-				dArch[x][y] = 11;
+				dSpecial[x][y] = 11;
 			} else if (dPiece[x][y] == 156) {
-				dArch[x][y] = 12;
+				dSpecial[x][y] = 12;
 			} else if (dPiece[x][y] == 162) {
-				dArch[x][y] = 13;
+				dSpecial[x][y] = 13;
 			} else if (dPiece[x][y] == 160) {
-				dArch[x][y] = 14;
+				dSpecial[x][y] = 14;
 			} else if (dPiece[x][y] == 214) {
-				dArch[x][y] = 15;
+				dSpecial[x][y] = 15;
 			} else if (dPiece[x][y] == 212) {
-				dArch[x][y] = 16;
+				dSpecial[x][y] = 16;
 			} else if (dPiece[x][y] == 217) {
-				dArch[x][y] = 17;
+				dSpecial[x][y] = 17;
 			} else if (dPiece[x][y] == 216) {
-				dArch[x][y] = 18;
+				dSpecial[x][y] = 18;
 			}
 		}
 	}
-
-	SetTownMicros();
 }
 
 DEVILUTION_END_NAMESPACE
