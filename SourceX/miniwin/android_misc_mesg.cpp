@@ -64,8 +64,6 @@ namespace dvl {
 
 
 
-
-
 static std::deque<MSG> message_queue;
 
 static int translate_sdl_key(SDL_Keysym key)

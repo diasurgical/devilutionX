@@ -75,6 +75,8 @@ void KillQuestMessage(){
 #endif
 
 /*
+
+
 void sfx_stop()
 {
 	if (sfx_stream) {

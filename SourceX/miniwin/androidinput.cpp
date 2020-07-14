@@ -104,8 +104,6 @@ void aiFocusOnCharInfo()
 
 
 
-
-
 androidcoords androidspeedspellscoords[50];
 bool ShiftButtonPressed = 0;
 bool change_controlPressed = 0;
