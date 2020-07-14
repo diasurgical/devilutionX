@@ -33,8 +33,6 @@ void mainmenu_restart_repintro()
 
 void mainmenu_Load(char *name, void (*fnSound)(char *file))
 {
-	SDL_Rect rect;
-
 	gfnSoundFunction = fnSound;
 
 	vecMenuItems.push_back(new UiListItem("Single Player", MAINMENU_SINGLE_PLAYER));
@@ -48,7 +46,7 @@ void mainmenu_Load(char *name, void (*fnSound)(char *file))
 
 	vecMainMenuDialog.push_back(new UiList(vecMenuItems, PANEL_LEFT + 64, 192, 510, 43, UIS_HUGE | UIS_GOLD | UIS_CENTER));
 
- 	rect = { 17, 444, 605, 21 };
+ 	SDL_Rect rect = { 17, 444, 605, 21 };
 	vecMainMenuDialog.push_back(new UiArtText(name, rect, UIS_SMALL));
 
 	if (!gbSpawned) {

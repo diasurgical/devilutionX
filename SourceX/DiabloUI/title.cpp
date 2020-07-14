@@ -28,11 +28,10 @@ void title_Free()
 
 void UiTitleDialog()
 {
-	SDL_Rect rect;
 	UiAddBackground(&vecTitleScreen);
 	UiAddLogo(&vecTitleScreen, LOGO_BIG, 182);
 
-	rect = { PANEL_LEFT + 49, 410, 550, 26 };
+	SDL_Rect rect = { PANEL_LEFT + 49, 410, 550, 26 };
 	vecTitleScreen.push_back(new UiArtText("Copyright \xA9 1996-2001 Blizzard Entertainment", rect, UIS_MED | UIS_CENTER));
 
 	title_Load();

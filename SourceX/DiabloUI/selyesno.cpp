@@ -50,17 +50,15 @@ void selyesno_Esc()
 
 bool UiSelHeroYesNoDialog(const char *title, const char *body)
 {
-	SDL_Rect rect;
-
 	LoadBackgroundArt("ui_art\\black.pcx");
 	UiAddBackground(&vecSelYesNoDialog);
 	UiAddLogo(&vecSelYesNoDialog);
 
-	rect = { PANEL_LEFT + 24, 161, 590, 35 };
-	vecSelYesNoDialog.push_back(new UiArtText(title, rect, UIS_CENTER | UIS_BIG));
+	SDL_Rect rect1 = { PANEL_LEFT + 24, 161, 590, 35 };
+	vecSelYesNoDialog.push_back(new UiArtText(title, rect1, UIS_CENTER | UIS_BIG));
 
-	rect = { PANEL_LEFT + 120, 236, MESSAGE_WIDTH, 168 };
-	vecSelYesNoDialog.push_back(new UiArtText(selyesno_confirmationMessage, rect, UIS_MED));
+	SDL_Rect rect2 = { PANEL_LEFT + 120, 236, MESSAGE_WIDTH, 168 };
+	vecSelYesNoDialog.push_back(new UiArtText(selyesno_confirmationMessage, rect2, UIS_MED));
 
 	vecSelYesNoDialogItems.push_back(new UiListItem( "Yes", 0 ));
 	vecSelYesNoDialogItems.push_back(new UiListItem( "No", 1 ));

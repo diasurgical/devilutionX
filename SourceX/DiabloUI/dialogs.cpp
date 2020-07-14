@@ -159,30 +159,28 @@ void LoadFallbackPalette()
 
 void Init(const char *text, const char *caption, bool error, bool renderBehind)
 {
-	SDL_Rect rect;
-
 	if (caption == NULL) {
-		rect = { PANEL_LEFT + 180, 168, 280, 144 };
-		vecOkDialog.push_back(new UiImage(&dialogArt, rect));
+		SDL_Rect rect1 = { PANEL_LEFT + 180, 168, 280, 144 };
+		vecOkDialog.push_back(new UiImage(&dialogArt, rect1));
 
-		rect = { PANEL_LEFT + 200, 211, 240, 80 };
-		vecOkDialog.push_back(new UiText(text, rect, UIS_CENTER));
+		SDL_Rect rect2 = { PANEL_LEFT + 200, 211, 240, 80 };
+		vecOkDialog.push_back(new UiText(text, rect2, UIS_CENTER));
 
-		rect = { PANEL_LEFT + 265, 265, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
-		vecOkDialog.push_back(new UiButton(&SmlButton, "OK", &DialogActionOK, rect, 0));
+		SDL_Rect rect3 = { PANEL_LEFT + 265, 265, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
+		vecOkDialog.push_back(new UiButton(&SmlButton, "OK", &DialogActionOK, rect3, 0));
 	} else {
-		rect = { PANEL_LEFT + 127, 100, 385, 280 };
-		vecOkDialog.push_back(new UiImage(&dialogArt, rect));
+		SDL_Rect rect1 = { PANEL_LEFT + 127, 100, 385, 280 };
+		vecOkDialog.push_back(new UiImage(&dialogArt, rect1));
 
 		SDL_Color color = { 255, 255, 0, 0 };
-		rect = { PANEL_LEFT + 147, 110, 345, 20 };
-		vecOkDialog.push_back(new UiText(text, color, rect, UIS_CENTER));
+		SDL_Rect rect2 = { PANEL_LEFT + 147, 110, 345, 20 };
+		vecOkDialog.push_back(new UiText(text, color, rect2, UIS_CENTER));
 
-		rect = { PANEL_LEFT + 147, 141, 345, 190 };
-		vecOkDialog.push_back(new UiText(caption, rect, UIS_CENTER));
+		SDL_Rect rect3 = { PANEL_LEFT + 147, 141, 345, 190 };
+		vecOkDialog.push_back(new UiText(caption, rect3, UIS_CENTER));
 
-		rect = { PANEL_LEFT + 264, 335, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
-		vecOkDialog.push_back(new UiButton(&SmlButton, "OK", &DialogActionOK, rect, 0));
+		SDL_Rect rect4 = { PANEL_LEFT + 264, 335, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
+		vecOkDialog.push_back(new UiButton(&SmlButton, "OK", &DialogActionOK, rect4, 0));
 	}
 
 	if (!renderBehind) {

@@ -51,8 +51,6 @@ void selok_Esc()
 
 void UiSelOkDialog(const char *title, const char *body, bool background)
 {
-	SDL_Rect rect;
-
 	if (!background) {
 		LoadBackgroundArt("ui_art\\black.pcx");
 	} else {
@@ -67,18 +65,18 @@ void UiSelOkDialog(const char *title, const char *body, bool background)
 	UiAddLogo(&vecSelOkDialog);
 
 	if (title != NULL) {
-		rect = { PANEL_LEFT + 24, 161, 590, 35 };
-		vecSelOkDialog.push_back(new UiArtText(title, rect, UIS_CENTER | UIS_BIG));
+		SDL_Rect rect1 = { PANEL_LEFT + 24, 161, 590, 35 };
+		vecSelOkDialog.push_back(new UiArtText(title, rect1, UIS_CENTER | UIS_BIG));
 
-		rect = { PANEL_LEFT + 140, 210, 560, 168 };
-		vecSelOkDialog.push_back(new UiArtText(dialogText, rect, UIS_MED));
+		SDL_Rect rect2 = { PANEL_LEFT + 140, 210, 560, 168 };
+		vecSelOkDialog.push_back(new UiArtText(dialogText, rect2, UIS_MED));
 	} else {
-		rect = { PANEL_LEFT + 140, 197, 560, 168 };
-		vecSelOkDialog.push_back(new UiArtText(dialogText, rect, UIS_MED));
+		SDL_Rect rect1 = { PANEL_LEFT + 140, 197, 560, 168 };
+		vecSelOkDialog.push_back(new UiArtText(dialogText, rect1, UIS_MED));
 	}
 
-	rect = { PANEL_LEFT + 140, 210, 560, 168 };
-	vecSelOkDialog.push_back(new UiArtText(dialogText, rect, UIS_MED));
+	SDL_Rect rect3 = { PANEL_LEFT + 140, 210, 560, 168 };
+	vecSelOkDialog.push_back(new UiArtText(dialogText, rect3, UIS_MED));
 
 	vecSelOkDialogItems.push_back(new UiListItem("OK", 0));
 	vecSelOkDialog.push_back(new UiList(vecSelOkDialogItems, PANEL_LEFT + 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD));
