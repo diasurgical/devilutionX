@@ -1,15 +1,37 @@
-//HEADER_GOES_HERE
+/**
+ * @file engine.h
+ *
+ *  of basic engine helper functions:
+ * - Sprite blitting
+ * - Drawing
+ * - Angle calculation
+ * - RNG
+ * - Memory allocation
+ * - File loading
+ * - Video playback
+ */
 #ifndef __ENGINE_H__
 #define __ENGINE_H__
+
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 //offset 0
 //pCelBuff->pFrameTable[0]
 
-extern char gbPixelCol;  // automap pixel color 8-bit (palette entry)
-extern BOOL gbRotateMap; // flip - if y < x
+/** automap pixel color 8-bit (palette entry) */
+extern char gbPixelCol;
+/** flip - if y < x */
+extern BOOL gbRotateMap;
+/** Seed value before the most recent call to SetRndSeed() */
 extern int orgseed;
+/** Track number of calls to GetRndSeed() since last call to SetRndSeed() */
 extern int SeedCount;
-extern BOOL gbNotInView; // valid - if x/y are in bounds
+/** valid - if x/y are in bounds */
+extern BOOL gbNotInView;
 
 inline BYTE *CelGetFrameStart(BYTE *pCelBuff, int nCel)
 {
@@ -20,15 +42,13 @@ inline BYTE *CelGetFrameStart(BYTE *pCelBuff, int nCel)
 	return pCelBuff + SwapLE32(pFrameTable[nCel]);
 }
 
+#define LOAD_LE32(b) (((DWORD)(b)[3] << 24) | ((DWORD)(b)[2] << 16) | ((DWORD)(b)[1] << 8) | (DWORD)(b)[0])
 inline BYTE *CelGetFrame(BYTE *pCelBuff, int nCel, int *nDataSize)
 {
-	DWORD *pFrameTable;
 	DWORD nCellStart;
 
-	pFrameTable = (DWORD *)pCelBuff;
-	nCellStart = SwapLE32(pFrameTable[nCel]);
-	*nDataSize = SwapLE32(pFrameTable[nCel + 1]) - nCellStart;
-
+	nCellStart = LOAD_LE32(&pCelBuff[nCel * 4]);
+	*nDataSize = LOAD_LE32(&pCelBuff[(nCel + 1) * 4]) - nCellStart;
 	return pCelBuff + nCellStart;
 }
 
@@ -68,7 +88,7 @@ void engine_debug_trap(BOOL show_cursor);
 BYTE *DiabloAllocPtr(DWORD dwBytes);
 void mem_free_dbg(void *p);
 BYTE *LoadFileInMem(char *pszName, DWORD *pdwFileLen);
-DWORD LoadFileWithMem(const char *pszName, void *p);
+DWORD LoadFileWithMem(const char *pszName, BYTE *p);
 void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel);
 void Cl2Draw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
 void Cl2DrawOutline(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
@@ -83,5 +103,11 @@ void PlayInGameMovie(char *pszMovie);
 
 extern const int RndInc;
 extern const int RndMult;
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __ENGINE_H__ */

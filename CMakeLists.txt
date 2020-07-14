@@ -139,6 +139,18 @@ if (NOT ANDROID)
   endif()
 endif()
 
+If(ANDROID)
+OPTION(DEFINE_MACRO "Option description" ON) # Enabled by default
+IF(DEFINE_MACRO)
+    ADD_DEFINITIONS(-DHAVE_NEON_INTRINSICS=0 )
+ENDIF(DEFINE_MACRO)
+
+
+
+
+
+endif()
+
 add_library(smacker STATIC
   3rdParty/libsmacker/smk_bitstream.c
   3rdParty/libsmacker/smk_hufftree.c
@@ -240,57 +252,58 @@ add_library(devilution STATIC
 
 
 if(ANDROID)
-  
+
 set(devilutionx_SRCS
-SourceX/dx.cpp
-SourceX/miniwin/androidinput.cpp
-SourceX/controls/devices/game_controller.cpp
-SourceX/controls/devices/joystick.cpp
-SourceX/controls/devices/kbcontroller.cpp
-SourceX/controls/controller.cpp
-SourceX/controls/controller_motion.cpp
-SourceX/controls/game_controls.cpp
-SourceX/controls/menu_controls.cpp
-SourceX/controls/plrctrls.cpp
-SourceX/controls/touch.cpp
-SourceX/miniwin/ddraw.cpp
-SourceX/miniwin/misc.cpp
-SourceX/miniwin/misc_io.cpp
-SourceX/miniwin/android_misc_msg.cpp
-SourceX/miniwin/rand.cpp
-SourceX/miniwin/thread.cpp
-SourceX/miniwin/dsound.cpp
-SourceX/sound.cpp
-SourceX/storm/storm.cpp
-SourceX/storm/storm_net.cpp
-SourceX/storm/storm_dx.cpp
-SourceX/dvlnet/abstract_net.cpp
-SourceX/dvlnet/loopback.cpp
-SourceX/dvlnet/packet.cpp
-SourceX/dvlnet/base.cpp
-SourceX/dvlnet/frame_queue.cpp
-SourceX/dvlnet/cdwrap.cpp
-SourceX/DiabloUI/art_draw.cpp
-SourceX/DiabloUI/errorart.cpp
-SourceX/DiabloUI/art.cpp
-SourceX/DiabloUI/button.cpp
-SourceX/DiabloUI/credits.cpp
-SourceX/DiabloUI/credits_lines.cpp
-SourceX/DiabloUI/diabloui.cpp
-SourceX/DiabloUI/dialogs.cpp
-SourceX/DiabloUI/fonts.cpp
-SourceX/DiabloUI/mainmenu.cpp
-SourceX/DiabloUI/progress.cpp
-SourceX/DiabloUI/scrollbar.cpp
-SourceX/DiabloUI/selconn.cpp
-SourceX/DiabloUI/selgame.cpp
-SourceX/DiabloUI/selhero.cpp
-SourceX/DiabloUI/selyesno.cpp
-SourceX/DiabloUI/text_draw.cpp
-SourceX/DiabloUI/text.cpp
-SourceX/DiabloUI/title.cpp
-SourceX/DiabloUI/ttf_render_wrapped.cpp
-SourceX/main.cpp)
+  SourceX/miniwin/androidinput.cpp
+  SourceX/dx.cpp
+  SourceX/controls/devices/game_controller.cpp
+  SourceX/controls/devices/joystick.cpp
+  SourceX/controls/devices/kbcontroller.cpp
+  SourceX/controls/controller.cpp
+  SourceX/controls/controller_motion.cpp
+  SourceX/controls/game_controls.cpp
+  SourceX/controls/menu_controls.cpp
+  SourceX/controls/modifier_hints.cpp
+  SourceX/controls/plrctrls.cpp
+  SourceX/controls/touch.cpp
+  SourceX/display.cpp
+  SourceX/miniwin/misc_msg.cpp
+  SourceX/thread.cpp
+  SourceX/sound.cpp
+  SourceX/soundsample.cpp
+  SourceX/storm/storm.cpp
+  SourceX/storm/storm_net.cpp
+  SourceX/dvlnet/abstract_net.cpp
+  SourceX/dvlnet/loopback.cpp
+  SourceX/dvlnet/packet.cpp
+  SourceX/dvlnet/base.cpp
+  SourceX/dvlnet/frame_queue.cpp
+  SourceX/dvlnet/cdwrap.cpp
+  SourceX/DiabloUI/art_draw.cpp
+  SourceX/DiabloUI/errorart.cpp
+  SourceX/DiabloUI/art.cpp
+  SourceX/DiabloUI/button.cpp
+  SourceX/DiabloUI/credits.cpp
+  SourceX/DiabloUI/credits_lines.cpp
+  SourceX/DiabloUI/diabloui.cpp
+  SourceX/DiabloUI/dialogs.cpp
+  SourceX/DiabloUI/fonts.cpp
+  SourceX/DiabloUI/mainmenu.cpp
+  SourceX/DiabloUI/progress.cpp
+  SourceX/DiabloUI/scrollbar.cpp
+  SourceX/DiabloUI/selconn.cpp
+  SourceX/DiabloUI/selgame.cpp
+  SourceX/DiabloUI/selhero.cpp
+  SourceX/DiabloUI/selyesno.cpp
+  SourceX/DiabloUI/selok.cpp
+  SourceX/DiabloUI/text_draw.cpp
+  SourceX/DiabloUI/text.cpp
+  SourceX/DiabloUI/title.cpp
+  SourceX/DiabloUI/ttf_render_wrapped.cpp
+  SourceX/main.cpp
+  Packaging/resources/CharisSILB.ttf
+
+  )
 endif()
 
 if (NOT ANDROID)
@@ -584,11 +597,11 @@ endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   # Style issues
-  target_compile_options(${BIN_TARGET} PRIVATE -Wno-parentheses -Wno-logical-op-parentheses -Wno-bitwise-op-parentheses)
+  target_compile_options(${BIN_TARGET} PRIVATE -Wno-everything)
   # Silence warnings about __int64 alignment hack not always being applicable
-  target_compile_options(${BIN_TARGET} PRIVATE -Wno-ignored-attributes)
+  target_compile_options(${BIN_TARGET} PRIVATE -Wno-everything)
   # Silence appfat.cpp warnings
-  set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wno-narrowing")
+  set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wno-everything")
 endif()
 
 if(APPLE)

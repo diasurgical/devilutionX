@@ -1,4 +1,9 @@
-#include "diablo.h"
+/**
+ * @file doom.cpp
+ *
+ * Implementation of the map of the stars quest.
+ */
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -39,7 +44,7 @@ int doom_get_frame_from_time()
 
 void doom_alloc_cel()
 {
-	pDoomCel = DiabloAllocPtr(229376);
+	pDoomCel = DiabloAllocPtr(0x38000);
 }
 
 void doom_cleanup()

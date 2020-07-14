@@ -1,6 +1,16 @@
-//HEADER_GOES_HERE
+/**
+ * @file missiles.h
+ *
+ * Interface of missile functionality.
+ */
 #ifndef __MISSILES_H__
 #define __MISSILES_H__
+
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 extern int missileactive[MAXMISSILES];
 extern int missileavail[MAXMISSILES];
@@ -81,6 +91,7 @@ void AddFirewallC(int mi, int sx, int sy, int dx, int dy, int midir, char mienem
 void AddInfra(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam);
 void AddWave(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam);
 void AddNova(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam);
+void AddBlodboil(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam);
 void AddRepair(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam);
 void AddRecharge(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam);
 void AddDisarm(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam);
@@ -149,5 +160,11 @@ void ClearMissileSpot(int mi);
 
 extern int XDirAdd[8];
 extern int YDirAdd[8];
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __MISSILES_H__ */

@@ -1,6 +1,16 @@
-//HEADER_GOES_HERE
+/**
+ * @file interfac.h
+ *
+ * Interface of load screens.
+ */
 #ifndef __INTERFAC_H__
 #define __INTERFAC_H__
+
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 extern int progress_id;
 
@@ -16,5 +26,11 @@ void InitCutscene(unsigned int uMsg);
 
 extern const BYTE BarColor[3];
 extern const int BarPos[3][2];
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __INTERFAC_H__ */

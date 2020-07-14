@@ -11,11 +11,11 @@ inline void UnloadSmlButtonArt()
 {
 	SmlButton.Unload();
 }
-constexpr decltype(SDL_Rect().w) SML_BUTTON_WIDTH = 110;
-constexpr decltype(SDL_Rect().h) SML_BUTTON_HEIGHT = 28;
+const Uint16 SML_BUTTON_WIDTH = 110;
+const Uint16 SML_BUTTON_HEIGHT = 28;
 
 constexpr UiButton MakeSmlButton(
-    const char *text, void (*action)(), decltype(SDL_Rect().x) x, decltype(SDL_Rect().y) y, int flags = 0)
+    const char *text, void (*action)(), Sint16 x, Sint16 y, int flags = 0)
 {
 	return UiButton(
 	    &SmlButton,

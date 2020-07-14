@@ -2,6 +2,10 @@
 
 #include <SDL.h>
 
+#ifdef USE_SDL1
+#include "sdl2_to_1_2_backports.h"
+#endif
+
 namespace dvl {
 namespace net {
 
@@ -23,7 +27,7 @@ int udp_p2p::create(std::string addrstr, std::string passwd)
 		try {
 			sock.bind(asio::ip::udp::endpoint(asio::ip::address_v6(), port));
 		} catch (std::exception &e) {
-			eprintf("bind: %s,  %s\n", asio::ip::address_v6().to_string(),
+			SDL_Log("bind: %s,  %s", asio::ip::address_v6().to_string(),
 			e.what());
 		}
 		++port;
@@ -32,6 +36,7 @@ int udp_p2p::create(std::string addrstr, std::string passwd)
 	try {
 		sock.bind(endpoint(ipaddr, port));
 	} catch (std::exception &e) {
+		SDL_SetError(e.what());
 		return -1;
 	}
 	plr_self = 0;
@@ -53,10 +58,10 @@ int udp_p2p::join(std::string addrstr, std::string passwd)
 	master = themaster;
 	{ // hack: try to join for 5 seconds
 		randombytes_buf(reinterpret_cast<unsigned char *>(&cookie_self),
-			sizeof(cookie_t));
+		    sizeof(cookie_t));
 		auto pkt = pktfty->make_packet<PT_JOIN_REQUEST>(PLR_BROADCAST,
-			PLR_MASTER, cookie_self,
-			game_init_info);
+		    PLR_MASTER, cookie_self,
+		    game_init_info);
 		send(*pkt);
 		for (auto i = 0; i < 5; ++i) {
 			recv();
@@ -91,10 +96,12 @@ void udp_p2p::recv()
 				auto pkt = pktfty->make_packet(pkt_buf);
 				recv_decrypted(*pkt, sender);
 			} catch (packet_exception &e) {
+				SDL_Log(e.what());
 				// drop packet
 			}
 		}
 	} catch (std::exception &e) {
+		SDL_Log(e.what());
 		return;
 	}
 }
@@ -120,7 +127,7 @@ std::set<udp_p2p::endpoint> udp_p2p::dests_for_addr(plr_t dest, endpoint sender)
 			if (i != plr_self && connected_table[i])
 				ret.insert(nexthop_table[i]);
 		ret.insert(connection_requests_pending.begin(),
-			connection_requests_pending.end());
+		    connection_requests_pending.end());
 	} else if (dest == PLR_MASTER) {
 		if (master != none)
 			ret.insert(master);
@@ -139,8 +146,8 @@ void udp_p2p::handle_join_request(packet &pkt, endpoint sender)
 		}
 	}
 	auto reply = pktfty->make_packet<PT_JOIN_ACCEPT>(plr_self, PLR_BROADCAST,
-		pkt.cookie(), i,
-		game_init_info);
+	    pkt.cookie(), i,
+	    game_init_info);
 	send(*reply);
 }
 

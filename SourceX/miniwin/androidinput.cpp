@@ -1,12 +1,18 @@
 
+/*
 #include "devilution.h"
 #include "miniwin/ddraw.h"
 #include "stubs.h"
+*/
+#include "androidinput.h"
+#include "display.h"
+
 #include <SDL.h>
 #include <SDL_image.h>
 #include <time.h>
 
 #include "DiabloUI/diabloui.h"
+#include <unistd.h>
 
 namespace dvl {
 	 SDL_Surface * JoyStickS;
@@ -22,12 +28,41 @@ namespace dvl {
 	 SDL_Surface * DemoSqS;
 	 SDL_Texture * DemoSqT;
 
+	 SDL_Surface * Change_controlsS;
+	 SDL_Texture * Change_controlsT;
+
+	 SDL_Surface * JoystickCircleS;
+	 SDL_Texture * JoystickCircleT;
+
+
 	 SDL_Surface * Fog  = NULL;
 	 SDL_Texture * gFog = NULL;
 
 
 
-void FocusOnCharInfo()
+void aiSetCursorPos(int X, int Y)
+{
+	assert(ghMainWnd);
+
+	if (renderer) {
+		SDL_Rect view;
+		SDL_RenderGetViewport(renderer, &view);
+		X += view.x;
+		Y += view.y;
+
+		float scaleX;
+		SDL_RenderGetScale(renderer, &scaleX, NULL);
+		X *= scaleX;
+		Y *= scaleX;
+	}
+
+	SDL_WarpMouseInWindow(ghMainWnd, X, Y);
+	//return true;
+}
+
+
+
+void aiFocusOnCharInfo()
 {
 	if (invflag || plr[myplr]._pStatPts <= 0)
 		return;
@@ -61,77 +96,135 @@ void FocusOnCharInfo()
 	if (stat == -1)
 		return;
 	const auto &rect = ChrBtnsRect[stat];
-	SetCursorPos(rect.x + (rect.w / 2), rect.y + (rect.h / 2));
+	aiSetCursorPos(rect.x + (rect.w / 2), rect.y + (rect.h / 2));
 }
 
 
 
-WINBOOL SetCursorPos(int X, int Y)
-{
-	assert(window);
 
-	if (renderer) {
-		SDL_Rect view;
-		SDL_RenderGetViewport(renderer, &view);
-		X += view.x;
-		Y += view.y;
-
-		float scaleX;
-		SDL_RenderGetScale(renderer, &scaleX, NULL);
-		X *= scaleX;
-		Y *= scaleX;
-	}
-
-	SDL_WarpMouseInWindow(window, X, Y);
-	return true;
-}
 
 
 
 
 androidcoords androidspeedspellscoords[50];
 bool ShiftButtonPressed = 0;
-bool DemoModeEnabled=false;
+bool change_controlPressed = 0;
 
- 
- 
- //x , y , w, h 
-SDL_Rect PotGameUIMenu ={195,350,245,50};
-SDL_Rect RGameUIMenu   ={555,350,85,130};
-SDL_Rect LGameUIMenu   ={0,350,85,130};
+
+
+
+ //x , y , w, h
+
+
+
+SDL_Rect JoyStickBox = {0 , 200 , 170, 400};
+
+//x , y , w, h
+SDL_Rect DemoN ={68,190,50,52};
+SDL_Rect DemoE ={120,242,67,52};
+SDL_Rect DemoW ={0,242,67,52};
+SDL_Rect DemoS ={68,294,50,52};
+
+//x , y , w, h
+SDL_Rect DemoNW={0,190,67,52};
+SDL_Rect DemoNE={120,190,67,52};
+SDL_Rect DemoSW={0,294,67,52};
+SDL_Rect DemoSE={120,294,67,52};
+
+
+
+/*
+Make individual buttons
+	{ PANEL_LEFT +   9, PANEL_TOP +   9, 71, 19, 1 }, // char button
+	{ PANEL_LEFT +   9, PANEL_TOP +  35, 71, 19, 0 }, // quests button
+	{ PANEL_LEFT +   9, PANEL_TOP +  75, 71, 19, 1 }, // map button
+	{ PANEL_LEFT +   9, PANEL_TOP + 101, 71, 19, 0 }, // menu button
+	{ PANEL_LEFT + 560, PANEL_TOP +   9, 71, 19, 1 }, // inv button
+	{ PANEL_LEFT + 560, PANEL_TOP +  35, 71, 19, 0 }, // spells button
+	{ PANEL_LEFT +  87, PANEL_TOP +  91, 33, 32, 1 }, // chat button
+	{ PANEL_LEFT + 527, PANEL_TOP +  91, 33, 32, 1 }, // friendly fire button
+
+
+*/
+
+
+
+//PANEL_LEFT + 205, PANEL_TOP + 50
+//PANEL_LEFT + 205, PANEL_TOP + 50
+#if SCREEN_WIDTH == 640
+SDL_Rect PotGameUIMenu ={PANEL_LEFT + 205, PANEL_TOP       ,245, 50};
+SDL_Rect RGameUIMenu   ={PANEL_LEFT + 560, PANEL_TOP +   9 ,85 ,130};
+SDL_Rect LGameUIMenu   ={PANEL_LEFT +   9, PANEL_TOP +   9 ,85 ,130};
+SDL_Rect DemonHealth   ={PANEL_LEFT + 100, PANEL_TOP       ,85 ,130};
+SDL_Rect AngelMana     ={PANEL_LEFT + 466, PANEL_TOP       ,85 ,130};
+
+
 SDL_Rect Arect         ={520,250,100,95};
 SDL_Rect Crect         ={560,180,90,80};
-SDL_Rect Shiftrect     ={54,252,63,63};
-SDL_Rect Jrect         ={1,200,170,170};
+SDL_Rect Shiftrect     ={600,140,40,40};
+SDL_Rect Jrect         ={1,180,170,170}; // Joystick circle
 
-//x , y , w, h 
-SDL_Rect DemoN ={68,202,57,52}; 
-SDL_Rect DemoE ={128,257,67,52};   
-SDL_Rect DemoW ={0,257,67,52};		
-SDL_Rect DemoS ={68,312,57,52};
+//x , y , w, h
+#elif SCREEN_WIDTH == 800
+SDL_Rect PotGameUIMenu ={PANEL_LEFT + 205 - 60,  PANEL_TOP       ,200, 50};
+SDL_Rect RGameUIMenu   ={PANEL_LEFT + 560 - 125, PANEL_TOP +   9 ,65 ,130};
+SDL_Rect LGameUIMenu   ={PANEL_LEFT +   9 - 20,  PANEL_TOP +   9 ,65 ,130};
+SDL_Rect DemonHealth   ={PANEL_LEFT + 100 - 40,  PANEL_TOP       ,65 ,130};
+SDL_Rect AngelMana     ={PANEL_LEFT + 466 - 110, PANEL_TOP       ,65 ,130};
 
-//x , y , w, h 
-SDL_Rect DemoNW={0,204,67,52};
-SDL_Rect DemoNE={128,204,67,52};
-SDL_Rect DemoSW={0,312,67,52};
-SDL_Rect DemoSE={128,312,67,52};
+//x , y , w, h
+#elif SCREEN_WIDTH == 1024
+SDL_Rect PotGameUIMenu ={PANEL_LEFT + 205, PANEL_TOP       ,245, 50};
+SDL_Rect RGameUIMenu   ={PANEL_LEFT + 560, PANEL_TOP +   9 ,85 ,130};
+SDL_Rect LGameUIMenu   ={PANEL_LEFT +   9, PANEL_TOP +   9 ,85 ,130};
+SDL_Rect DemonHealth   ={PANEL_LEFT + 100, PANEL_TOP       ,85 ,130};
+SDL_Rect AngelMana     ={PANEL_LEFT + 466, PANEL_TOP       ,85 ,130};
+
+//x , y , w, h
+#elif SCREEN_WIDTH == 1920
+SDL_Rect PotGameUIMenu ={PANEL_LEFT + 205, PANEL_TOP       ,245, 50};
+SDL_Rect RGameUIMenu   ={PANEL_LEFT + 560, PANEL_TOP +   9 ,85 ,130};
+SDL_Rect LGameUIMenu   ={PANEL_LEFT +   9, PANEL_TOP +   9 ,85 ,130};
+SDL_Rect DemonHealth   ={PANEL_LEFT + 100, PANEL_TOP       ,85 ,130};
+SDL_Rect AngelMana     ={PANEL_LEFT + 466, PANEL_TOP       ,85 ,130};
+#else
+	SDL_Rect PotGameUIMenu ={PANEL_LEFT + 205, PANEL_TOP       ,245, 50};
+	SDL_Rect RGameUIMenu   ={PANEL_LEFT + 560, PANEL_TOP +   9 ,85 ,130};
+	SDL_Rect LGameUIMenu   ={PANEL_LEFT +   9, PANEL_TOP +   9 ,85 ,130};
+	SDL_Rect DemonHealth   ={PANEL_LEFT + 100, PANEL_TOP       ,85 ,130};
+	SDL_Rect AngelMana     ={PANEL_LEFT + 466, PANEL_TOP       ,85 ,130};
+
+	SDL_Rect Arect         ={SCREEN_WIDTH - 130  ,SCREEN_HEIGHT - 125   ,100,100};
+	SDL_Rect Crect         ={SCREEN_WIDTH - 200  ,SCREEN_HEIGHT - 225   ,90,90};
+	SDL_Rect Shiftrect     ={SCREEN_WIDTH - 110  ,SCREEN_HEIGHT - 250   ,40,40};
+	SDL_Rect Jrect         ={1,180,170,170}; // Joystick circle
+
+#endif
+//1024 // 1920
 
 
-SDL_Rect DemonHealth={100,350,85,130};
-SDL_Rect AngelMana  ={460,350,85,130};
 
 
+SDL_Rect Change_controlsRect ={SCREEN_WIDTH - 40 ,0,40,40};
+SDL_Rect JoystickCircleRect  ={200,200,200,200};
 
 bool AttackButtonPressed;
 bool CastButtonPressed;
-bool gbAndroidInterfaceLoaded = 0;	   
-bool showJoystick = true;
+bool gbAndroidInterfaceLoaded = 0;
+bool showJoystick = false;
 bool newCurHidden = false;
 
-bool DemoMode = false;
-//			SDL_BlitSurface(surface, &source_rect, temp_surface, NULL);
-            // Figure out transparency.
-           
+// CONTROL STUFF
+
+// If false use DPAD
+bool JoyStickCTRL = false;
+
+
+// Show Squares for finger points
+
+bool DemoModeEnabled=false;
+////////////////////////
+
 
 
  void LoadAndroidImages(){
@@ -139,39 +232,56 @@ bool DemoMode = false;
 
 	//https://image.flaticon.com/icons/png/512/54/54528.png
 	//Loading Attack buttons
-	 AJoyStickS = IMG_Load("/sdcard/devilutionx/input_attack.png");
+	 AJoyStickS = IMG_Load("input_attack.png");
      AJoyStickT = SDL_CreateTextureFromSurface(renderer, AJoyStickS);
 	 SDL_SetTextureBlendMode(AJoyStickT, SDL_BLENDMODE_BLEND);
 	 SDL_SetTextureAlphaMod(AJoyStickT, 150);
 
 	 //Load CastButtons.
-	 CJoyStickS = IMG_Load("/sdcard/devilutionx/input_cast.png");
+	 CJoyStickS = IMG_Load("input_cast.png");
      CJoyStickT = SDL_CreateTextureFromSurface(renderer, CJoyStickS);
 	 SDL_SetTextureBlendMode(CJoyStickT, SDL_BLENDMODE_BLEND);
 	 SDL_SetTextureAlphaMod(CJoyStickT, 150);
-	 
+
 	 //https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Crossed_circle.svg/1200px-Crossed_circle.svg.png
-	 ShiftStickS = IMG_Load("/sdcard/devilutionx/shift.png");
+	 ShiftStickS = IMG_Load("shift.png");
      ShiftStickT = SDL_CreateTextureFromSurface(renderer, ShiftStickS);
 	 SDL_SetTextureBlendMode(ShiftStickT, SDL_BLENDMODE_BLEND);
 	 SDL_SetTextureAlphaMod(ShiftStickT, 150);
-	 
+
 
 
 	 //Loading Walking Joystick.
-	 JoyStickS = IMG_Load("/sdcard/devilutionx/dpad.png");
+	 JoyStickS = IMG_Load("dpad.png");
      JoyStickT = SDL_CreateTextureFromSurface(renderer, JoyStickS);
 	 SDL_SetTextureBlendMode(JoyStickT, SDL_BLENDMODE_BLEND);
 	 SDL_SetTextureAlphaMod(JoyStickT, 75);
 
 
-	DemoSqS = IMG_Load("/sdcard/devilutionx/demosq.png");
+	DemoSqS = IMG_Load("demosq.png");
 	DemoSqT = SDL_CreateTextureFromSurface(renderer, DemoSqS);
 	SDL_SetTextureBlendMode(DemoSqT, SDL_BLENDMODE_BLEND);
 	SDL_SetTextureAlphaMod(DemoSqT, 255);
 
-    bool gbAndroidInterfaceLoaded = true;
+
+
+	Change_controlsS = IMG_Load("change_controls.png");
+	Change_controlsT = SDL_CreateTextureFromSurface(renderer, Change_controlsS);
+	SDL_SetTextureBlendMode(Change_controlsT, SDL_BLENDMODE_BLEND);
+	SDL_SetTextureAlphaMod(Change_controlsT, 255);
+
+	//JoystickCircle
+	JoystickCircleS = IMG_Load("JoystickCircle.png");
+	JoystickCircleT = SDL_CreateTextureFromSurface(renderer, JoystickCircleS);
+	SDL_SetTextureBlendMode(JoystickCircleT, SDL_BLENDMODE_BLEND);
+	SDL_SetTextureAlphaMod(JoystickCircleT, 255);
+
+
+
+//   bool gbAndroidInterfaceLoaded = true;
  }
+
+
 
 
 
@@ -185,21 +295,21 @@ void HideCursor()
 }
 
 
-void DrawJoyStick(int MouseX, int MouseY, bool flag){
+void DrawDPAD(int MouseX, int MouseY, bool flag){
 
 
 
 		 //TX 181, TY 309 MX 181 MY 309
 	SDL_RenderCopy(renderer, JoyStickT, NULL, &Jrect);
 	if(DemoModeEnabled){
-	
+
 
 
 	//Dpad
 	SDL_RenderCopy(renderer, DemoSqT, NULL, &DemoE);
-	SDL_RenderCopy(renderer, DemoSqT, NULL, &DemoW); 
+	SDL_RenderCopy(renderer, DemoSqT, NULL, &DemoW);
 	SDL_RenderCopy(renderer, DemoSqT, NULL, &DemoS);
-	SDL_RenderCopy(renderer, DemoSqT, NULL, &DemoN); 
+	SDL_RenderCopy(renderer, DemoSqT, NULL, &DemoN);
 
 	SDL_RenderCopy(renderer, DemoSqT, NULL, &DemoNE);
 	SDL_RenderCopy(renderer, DemoSqT, NULL, &DemoNW);
@@ -271,42 +381,89 @@ void __fastcall checkTownersNearby(bool interact)
 }
 
 
-void DrawAndroidUI(){
-	if(!invflag && !spselflag && !chrflag && !stextflag && !questlog && !helpflag && !talkflag && !qtextflag && !sgpCurrentMenu && gbRunGame){
-		//if(showJoystick){
-			DrawJoyStick(MouseX, MouseY, true);
-			
+void RenderJoyStick(int X , int Y  ){
+
+		SDL_Rect JoystickCircleRect;
+	    JoystickCircleRect.x = X;
+		JoystickCircleRect.y = Y;
+		JoystickCircleRect.w = 230;
+		JoystickCircleRect.h = 230;
+
+		SDL_RenderCopy(renderer, JoystickCircleT, NULL, &JoystickCircleRect);
+
+}
 
 
-			if (AttackButtonPressed){
-				SDL_SetTextureColorMod(ShiftStickT, 255, 0, 0);
-				SDL_RenderCopy(renderer, AJoyStickT, NULL, &Arect);
-			}
-			else{
-				SDL_SetTextureColorMod(ShiftStickT, 255, 0, 0);
-				SDL_RenderCopy(renderer, AJoyStickT, NULL, &Arect);
-				if (DemoModeEnabled){
-					    // attack
-						SDL_RenderCopy(renderer, DemoSqT, NULL, &Arect);
-				}
-			}
 
 
-			if(CastButtonPressed){
-				SDL_SetTextureColorMod(ShiftStickT, 255, 0, 0);
-				SDL_RenderCopy(renderer, CJoyStickT, NULL, &Crect);
 
-			}
-			else{
-				SDL_RenderCopy(renderer, CJoyStickT, NULL, &Crect);
-				if (DemoModeEnabled){
-					    // attack
-						SDL_RenderCopy(renderer, DemoSqT, NULL, &Crect);
-				}
-				
-			}
+void PerformDPADMovement(){
+
+	if (TouchX > DemoN.x && TouchX < DemoN.x + DemoN.w && TouchY > DemoN.y && TouchY < DemoN.y + DemoN.h) {
+			AutoPickGold(myplr);
+			AutoPickItem(myplr);
+			walkInDir(WALK_N);
+			//SDL_Log("IN WALK_N\n");
+		}
+		if (TouchX > DemoE.x && TouchX < DemoE.x + DemoE.w && TouchY > DemoE.y && TouchY < DemoE.y + DemoE.h) {
+			AutoPickGold(myplr);
+			AutoPickItem(myplr);
+			walkInDir(WALK_E);
+			//SDL_Log("IN WALK_E\n");
+		}
+
+		if (TouchX > DemoW.x && TouchX < DemoW.x + DemoW.w && TouchY > DemoW.y && TouchY < DemoW.y + DemoW.h) {
+			AutoPickGold(myplr);
+			AutoPickItem(myplr);
+			walkInDir(WALK_W);
+		//	SDL_Log("IN WALK_W\n");
+		}
+
+		if (TouchX > DemoS.x && TouchX < DemoS.x + DemoS.w && TouchY > DemoS.y && TouchY < DemoS.y + DemoS.h) {
+			AutoPickGold(myplr);
+			AutoPickItem(myplr);
+			walkInDir(WALK_S);
+			//SDL_Log("IN WALK_S\n");
+		}
+
+		if (TouchX > DemoNE.x && TouchX < DemoNE.x + DemoNE.w && TouchY > DemoNE.y && TouchY < DemoNE.y + DemoNE.h) {
+			AutoPickGold(myplr);
+			AutoPickItem(myplr);
+			walkInDir(WALK_NE);
+		}
+
+		if (TouchX > DemoNW.x && TouchX < DemoNW.x + DemoNW.w && TouchY > DemoNW.y && MouseY < DemoNW.y + DemoNW.h) {
+			AutoPickGold(myplr);
+			AutoPickItem(myplr);
+			walkInDir(WALK_NW);
+		}
+		if (TouchX > DemoSW.x && TouchX < DemoSW.x + DemoSW.w && TouchY > DemoSW.y && TouchY < DemoSW.y + DemoSW.h) {
+			AutoPickGold(myplr);
+			AutoPickItem(myplr);
+			walkInDir(WALK_SW);
+		}
+		if (TouchX > DemoSE.x && TouchX < DemoSE.x + DemoSE.w && TouchY > DemoSE.y && TouchY < DemoSE.y + DemoSE.h) {
+			AutoPickGold(myplr);
+			AutoPickItem(myplr);
+			walkInDir(WALK_SE);
+
+		}
+}
 
 
+
+
+void DrawAndroidUI(){ // stextflag && !qtextflag
+	if(!invflag && !spselflag && !chrflag && !stextflag && !questlog && !helpflag && !talkflag && !qtextflag && !sgpCurrentMenu && gbRunGame && !sbookflag){
+
+		//RenderJoyStick(50 , 50 , &JoystickCircleRect );
+
+		if(showJoystick){
+		//	DrawDPAD(MouseX, MouseY, true);
+			// I want to change this to perfect circle being drawn
+			// Shift needs to be drawn somewhere else
+		}
+		else{
 
 
 
@@ -320,9 +477,58 @@ void DrawAndroidUI(){
 			if(DemoModeEnabled){
 				SDL_RenderCopy(renderer, DemoSqT, NULL, &Shiftrect);
 			}
-			
+
 		}
-	}	
+
+		if (change_controlPressed){
+			SDL_SetTextureColorMod(Change_controlsT, 255, 0, 0);
+			SDL_RenderCopy(renderer, Change_controlsT, NULL, &Change_controlsRect);
+			//JOYSTICK REMOVE THIS
+			DrawDPAD(MouseX, MouseY, true);
+
+		}
+		else{
+			SDL_SetTextureColorMod(Change_controlsT, 255,255,255);
+			SDL_RenderCopy(renderer, Change_controlsT, NULL, &Change_controlsRect);
+			DrawDPAD(MouseX, MouseY, true);
+
+
+
+
+			if(DemoModeEnabled){
+				SDL_RenderCopy(renderer, DemoSqT, NULL, &Change_controlsRect);
+			}
+
+		}
+
+		}
+			if (AttackButtonPressed){ // Doesn't work
+				SDL_SetTextureColorMod(ShiftStickT, 255, 0, 0);
+				SDL_RenderCopy(renderer, AJoyStickT, NULL, &Arect);
+			}
+			else{
+				SDL_SetTextureColorMod(ShiftStickT, 255, 0, 0);
+				SDL_RenderCopy(renderer, AJoyStickT, NULL, &Arect);
+				if (DemoModeEnabled){
+					    // attack
+						SDL_RenderCopy(renderer, DemoSqT, NULL, &Arect);
+				}
+			}
+			if(CastButtonPressed){
+				SDL_SetTextureColorMod(ShiftStickT, 255, 0, 0);
+				SDL_RenderCopy(renderer, CJoyStickT, NULL, &Crect);
+
+			}
+			else{
+				SDL_RenderCopy(renderer, CJoyStickT, NULL, &Crect);
+				if (DemoModeEnabled){
+					    // attack
+						SDL_RenderCopy(renderer, DemoSqT, NULL, &Crect);
+				}
+
+			}
+
+	}
 }
 
 
@@ -366,17 +572,17 @@ bool __fastcall checkMonstersNearby(bool attack,bool spellcast)
 		// 	attacktick = ticks;
 		if(ShiftButtonPressed){
 			if(spellcast){
-			sd = GetDirection(plr[myplr].WorldX, plr[myplr].WorldY, monster[pcursmonst]._mx, monster[pcursmonst]._my);
+			sd = GetDirection(plr[myplr]._px, plr[myplr]._py, monster[pcursmonst]._mx, monster[pcursmonst]._my);
 			sl = GetSpellLevel(myplr, plr[myplr]._pRSpell);
 			NetSendCmdLocParam3(true, CMD_SPELLXYD, monster[pcursmonst]._mx, monster[pcursmonst]._my, plr[myplr]._pRSpell, sd, sl); //CAST SPELL
 			}
 			else{
 			LeftMouseCmd(true);
 			}
-			
+
 		}else{
 			if(spellcast){
-			sd = GetDirection(plr[myplr].WorldX, plr[myplr].WorldY, monster[pcursmonst]._mx, monster[pcursmonst]._my);
+			sd = GetDirection(plr[myplr]._px, plr[myplr]._py, monster[pcursmonst]._mx, monster[pcursmonst]._my);
 			sl = GetSpellLevel(myplr, plr[myplr]._pRSpell);
 			NetSendCmdLocParam3(true, CMD_SPELLXYD, monster[pcursmonst]._mx, monster[pcursmonst]._my, plr[myplr]._pRSpell, sd, sl); //CAST SPELL
 			}
@@ -385,7 +591,7 @@ bool __fastcall checkMonstersNearby(bool attack,bool spellcast)
 			}
 		}
 
-				
+
 		// }
 		return true;
 	} else {
@@ -400,8 +606,8 @@ void AutoPickGold(int pnum) {
 	PlayerStruct& player = plr[pnum];
 	if (invflag) return;
 	for (int orient = 0; orient < 9; ++orient) {
-		int row = player.WorldX + pathxdir[orient];
-		int col = player.WorldY + pathydir[orient];
+		int row = player._px + pathxdir[orient];
+		int col = player._py + pathydir[orient];
 		int itemIndex = dItem[row][col] - 1;
 		if (itemIndex > -1) {
 			char* pcursitem = (char*)&item;
@@ -426,14 +632,14 @@ void AutoPickItem(int pnum){
 	PlayerStruct& player = plr[pnum];
 	if (invflag) return;
 	for (int orient = 0; orient < 9; ++orient) {
-		int row = player.WorldX; //+ pathxdir[orient];
-		int col = player.WorldY; //+ pathydir[orient];
+		int row = player._px; //+ pathxdir[orient];
+		int col = player._py; //+ pathydir[orient];
 
 		int itemIndex = dItem[row][col] - 1;
 		if (itemIndex > -1) {
 			char* pcursitem = (char*)&item;
 			ItemStruct* it = &(item[itemIndex]);
-			if (it->_itype != ITYPE_NONE || it->_itype != ITYPE_0E ) {
+			if (it->_itype != ITYPE_NONE || it->_itype != ITYPE_MEAT ) {
 				NetSendCmdGItem(1u, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
 				item[itemIndex]._iRequest = 1;
 				//dItem[row][col] = 0;
@@ -458,15 +664,15 @@ void useBeltPotion(bool mana)
 	// }
 	//menuopenslow = ticks;
 	for (int i = 0; i < MAXBELTITEMS; i++) {
-		if ((AllItemsList[plr[myplr].SpdList[i].IDidx].iMiscId == IMISC_HEAL && mana == false) || 
-		   (AllItemsList[plr[myplr].SpdList[i].IDidx].iMiscId == IMISC_FULLHEAL && mana == false) || 
-		   (AllItemsList[plr[myplr].SpdList[i].IDidx].iMiscId == IMISC_REJUV && mana == false) || 
-		   (AllItemsList[plr[myplr].SpdList[i].IDidx].iMiscId == IMISC_FULLREJUV && mana == false) || 
+		if ((AllItemsList[plr[myplr].SpdList[i].IDidx].iMiscId == IMISC_HEAL && mana == false) ||
+		   (AllItemsList[plr[myplr].SpdList[i].IDidx].iMiscId == IMISC_FULLHEAL && mana == false) ||
+		   (AllItemsList[plr[myplr].SpdList[i].IDidx].iMiscId == IMISC_REJUV && mana == false) ||
+		   (AllItemsList[plr[myplr].SpdList[i].IDidx].iMiscId == IMISC_FULLREJUV && mana == false) ||
 
-		   (AllItemsList[plr[myplr].SpdList[i].IDidx].iMiscId == IMISC_MANA && mana == true) || 
-		   (AllItemsList[plr[myplr].SpdList[i].IDidx].iMiscId == IMISC_FULLMANA && mana == true) 
+		   (AllItemsList[plr[myplr].SpdList[i].IDidx].iMiscId == IMISC_MANA && mana == true) ||
+		   (AllItemsList[plr[myplr].SpdList[i].IDidx].iMiscId == IMISC_FULLMANA && mana == true)
 		   //(AllItemsList[plr[myplr].SpdList[i].IDidx].iMiscId == IMISC_REJUV && AllItemsList[plr[myplr].SpdList[i].IDidx].iMiscId == IMISC_FULLREJUV)
-		   
+
 		   ) {
 			if (plr[myplr].SpdList[i]._itype > -1) {
 				invNum = i + INVITEM_BELT_FIRST;
@@ -521,7 +727,7 @@ void ActivateObjectz(bool interact){
 
 int diff_ms(timeval t1, timeval t2)
 {
-    return (((t1.tv_sec - t2.tv_sec) * 1000000) + 
+    return (((t1.tv_sec - t2.tv_sec) * 1000000) +
             (t1.tv_usec - t2.tv_usec))/1000;
 }
 
@@ -529,26 +735,26 @@ int diff_ms(timeval t1, timeval t2)
 
 
 void ActivateObject(bool interact){ // I think this function is dirty, but it does what I want.
-	int closest = 0;     
+	int closest = 0;
 	androidcoords objDistLast = { 10, 10 }; // previous obj distance
 	for (int i = 0; i < MAXOBJECTS; i++) {
-		
+
 		if (checkNearbyObjs(object[i]._ox, object[i]._oy, 1).x != -1 && object[i]._oSelFlag > 0 && object[i]._otype > -1 && currlevel) { // make sure we're in the dungeon to scan for objs
 			pcursobj = i;
 			androidcoords objDist = checkNearbyObjs(object[i]._ox, object[i]._oy, 6);
-			
+
 			if (objDist.x > -1 && objDist.x <= objDistLast.x && objDist.y <= objDistLast.y) {
 					closest = i;
 					//objDistLast = objDist;
 					if (interact) {
 						NetSendCmdLocParam1(true, pcurs == CURSOR_DISARM ? CMD_DISARMXY : CMD_OPOBJXY,  object[closest]._ox, object[closest]._oy, pcursobj);
-						Sleep(20); // might be good to remove this thing.
+						sleep(20); // might be good to remove this thing. // change was Sleep
 					}
 
 
 				}
 
-			
+
 		}
 	}
 }
@@ -562,8 +768,8 @@ void __fastcall checkItemsNearby(int pnum)
 {
 	PlayerStruct& player = plr[pnum];
 	for (int orient = 0; orient < 9; ++orient) {
-		int row = player.WorldX + pathxdir[orient];
-		int col = player.WorldY + pathydir[orient];
+		int row = player._px + pathxdir[orient];
+		int col = player._py + pathydir[orient];
 		checkNearbyObjs(row,col,1);
 				  //char tempstr[255] = {0};
    				  //sprintf(tempstr, "Activated!");
@@ -573,7 +779,7 @@ void __fastcall checkItemsNearby(int pnum)
 				  SetCursorPos(item[orient]._ix, item[orient]._iy);
 				  LeftMouseCmd(false);
 
-			
+
 		}
 }
 
@@ -581,15 +787,22 @@ template<typename T> inline T CLIP(T v, T amin, T amax)
 	{ if (v < amin) return amin; else if (v > amax) return amax; else return v; }
 
 
+
+
+
+
+
 int TouchX = 0;
 int TouchY = 0;
 #define DISPLAY_WIDTH 1920
 #define DISPLAY_HEIGHT 1080
-#define GAME_WIDTH 640
-#define GAME_HEIGHT 480
+#define GAME_WIDTH SCREEN_WIDTH
+#define GAME_HEIGHT SCREEN_HEIGHT
 
 
 void convert_touch_xy_to_game_xy(float touch_x, float touch_y, int *game_x, int *game_y) {
+
+
 
 	const int screen_h = GAME_HEIGHT;
 	const int screen_w = GAME_WIDTH;
@@ -619,7 +832,7 @@ void convert_touch_xy_to_game_xy(float touch_x, float touch_y, int *game_x, int 
 	int fooy = *game_y;
 	TouchX = *game_x;
 	TouchY = *game_y;
-	
+
 	//SDL_Log("GAME_X %d GAME_Y %d ", foox, fooy);
 }
 

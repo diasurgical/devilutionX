@@ -1,8 +1,13 @@
-#include "diablo.h"
+/**
+ * @file monstdat.cpp
+ *
+ * Implementation of all monster data.
+ */
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
-MonsterData monsterdata[112] = {
+MonsterData monsterdata[] = {
 	// clang-format off
 	// width, mImage, GraphicType,                       has_special, sndfile,                             snd_special, has_trans, TransFile,                         Frames[6],                  Rate[6],              mName,               mMinDLvl, mMaxDLvl, mLevel, mMinHP, mMaxHP, mAi,         mFlags,                                                              mInt, mHit, mAFNum, mMinDamage, mMaxDamage, mHit2, mAFNum2, mMinDamage2, mMaxDamage2, mArmorClass, mMonstClass, mMagicRes                                                    , mMagicRes2                                                   , mTreasure, mSelFlag,  mExp
 	{    128,    799, "Monsters\\Zombie\\Zombie%c.CL2",  FALSE,       "Monsters\\Zombie\\Zombie%c%i.WAV",  FALSE,       FALSE,     NULL,                              { 11, 24, 12,  6, 16,  0 }, { 4, 0, 0, 0, 0, 0 }, "Zombie",                   1,        3,      1,      4,      7, AI_ZOMBIE,   0                                                                  ,    0,   10,      8,          2,          5,     0,       0,           0,           0,           5, MC_UNDEAD,   IMUNE_MAGIC  |                                  IMUNE_NULL_40, IMUNE_MAGIC  |                                  IMUNE_NULL_40,         0,        3,    54 },
@@ -116,58 +121,307 @@ MonsterData monsterdata[112] = {
 	{    128,   2000, "Monsters\\Mage\\Mage%c.CL2",      TRUE,        "Monsters\\Mage\\Mage%c%i.WAV",      FALSE,       TRUE,      "Monsters\\Mage\\Cnselbk.TRN",     { 12,  1, 20,  8, 28, 20 }, { 0, 0, 0, 0, 0, 0 }, "Advocate",                30,       30,     30,    145,    145, AI_COUNSLR,                                                  MFLAG_CAN_OPEN_DOOR,    3,  120,      8,         15,         25,     0,       0,           0,           0,           0, MC_DEMON,    IMUNE_MAGIC  | RESIST_FIRE | IMUNE_LIGHTNING  | IMUNE_NULL_40, IMUNE_MAGIC  | IMUNE_FIRE  | IMUNE_LIGHTNING  | IMUNE_NULL_40,         0,        7,  4968 },
 	{     96,    386, "Monsters\\Golem\\Golem%c.CL2",    TRUE,        "Monsters\\Golem\\Golm%c%i.WAV",     FALSE,       FALSE,     NULL,                              {  0, 16, 12,  0, 12, 20 }, { 0, 0, 0, 0, 0, 0 }, "Golem",                    0,        0,     12,      1,      1, AI_GOLUM,                                                    MFLAG_CAN_OPEN_DOOR,    0,    0,      7,          1,          1,     0,       0,           0,           0,           1, MC_DEMON,    0                                                            , 0                                                            ,         0,        0,     0 },
 	{    160,   2000, "Monsters\\Diablo\\Diablo%c.CL2",  TRUE,        "Monsters\\Diablo\\Diablo%c%i.WAV",  TRUE,        FALSE,     NULL,                              { 16,  6, 16,  6, 16, 16 }, { 0, 0, 0, 0, 0, 0 }, "The Dark Lord",           50,       50,     30,   1666,   1666, AI_DIABLO,                  MFLAG_KNOCKBACK | MFLAG_SEARCH | MFLAG_CAN_OPEN_DOOR,    3,  220,      4,         30,         60,     0,      11,           0,           0,          70, MC_DEMON,    IMUNE_MAGIC  | RESIST_FIRE | RESIST_LIGHTNING | IMUNE_NULL_40, IMUNE_MAGIC  | RESIST_FIRE | RESIST_LIGHTNING | IMUNE_NULL_40,         0,        7, 31666 },
-	{    128,   1060, "Monsters\\DarkMage\\Dmage%c.CL2", TRUE,        "Monsters\\DarkMage\\Dmag%c%i.WAV",  FALSE,       FALSE,     NULL,                              {  6,  1, 21,  6, 23, 18 }, { 0, 0, 0, 0, 0, 0 }, "The Arch-Litch Malignus", 30,       30,     30,    160,    160, AI_COUNSLR,                                                  MFLAG_CAN_OPEN_DOOR,    3,  120,      8,         20,         40,     0,       0,           0,           0,          70, MC_DEMON,    RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMUNE_NULL_40, IMUNE_MAGIC  | IMUNE_FIRE  | IMUNE_LIGHTNING  | IMUNE_NULL_40,         0,        7,  4968 }
+	{    128,   1060, "Monsters\\DarkMage\\Dmage%c.CL2", TRUE,        "Monsters\\DarkMage\\Dmag%c%i.WAV",  FALSE,       FALSE,     NULL,                              {  6,  1, 21,  6, 23, 18 }, { 0, 0, 0, 0, 0, 0 }, "The Arch-Litch Malignus", 30,       30,     30,    160,    160, AI_COUNSLR,                                                  MFLAG_CAN_OPEN_DOOR,    3,  120,      8,         20,         40,     0,       0,           0,           0,          70, MC_DEMON,    RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMUNE_NULL_40, IMUNE_MAGIC  | IMUNE_FIRE  | IMUNE_LIGHTNING  | IMUNE_NULL_40,         0,        7,  4968 },
 	// clang-format on
 };
 
-char MonstConvTbl[128] = {
-	0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-	10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-	20, 21, 22, 23, 24, 25, 26, 27, 29, 30,
-	31, 32, 34, 35, 36, 37, 38, 40, 39, 41,
-	42, 43, 44, 45, 46, 47, 48, 49, 50, 52,
-	53, 54, 55, 56, 57, 59, 58, 60, 61, 62,
-	63, 64, 65, 66, 67, 68, 69, 70, 71, 0,
-	0, 0, 0, 72, 73, 74, 75, 0, 0, 0,
-	0, 77, 76, 78, 79, 81, 82, 83, 84, 85,
-	86, 87, 88, 89, 90, 92, 91, 93, 94, 95,
-	96, 97, 98, 99, 100, 101, 102, 103, 104, 105,
-	106, 107, 108, 0, 110, 0, 109, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 80, 111
-};
-
 /**
- * 0 = Never avalible
- * 1 = Avalible in retail and shareware
- * 2 = avalible in retail only
+ * Map between .DUN file value and monster type enum
  */
-BYTE MonstAvailTbl[112] = {
-	1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-	1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-	1, 1, 1, 1, 1, 1, 1, 1, 0, 2,
-	2, 2, 2, 0, 2, 2, 2, 2, 1, 1,
-	1, 1, 2, 2, 2, 2, 2, 2, 2, 2,
-	0, 0, 2, 2, 2, 2, 0, 0, 0, 0,
-	2, 2, 2, 2, 2, 2, 2, 2, 0, 0,
-	0, 0, 0, 0, 0, 0, 2, 2, 2, 2,
-	0, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-	2, 2, 2, 2, 2, 2, 2, 0, 0, 0,
-	0, 2, 2, 2, 2, 2, 2, 2, 2, 0,
-	0, 0
+BYTE MonstConvTbl[] = {
+	MT_NZOMBIE,
+	MT_BZOMBIE,
+	MT_GZOMBIE,
+	MT_YZOMBIE,
+	MT_RFALLSP,
+	MT_DFALLSP,
+	MT_YFALLSP,
+	MT_BFALLSP,
+	MT_WSKELAX,
+	MT_TSKELAX,
+	MT_RSKELAX,
+	MT_XSKELAX,
+	MT_RFALLSD,
+	MT_DFALLSD,
+	MT_YFALLSD,
+	MT_BFALLSD,
+	MT_NSCAV,
+	MT_BSCAV,
+	MT_WSCAV,
+	MT_YSCAV,
+	MT_WSKELBW,
+	MT_TSKELBW,
+	MT_RSKELBW,
+	MT_XSKELBW,
+	MT_WSKELSD,
+	MT_TSKELSD,
+	MT_RSKELSD,
+	MT_XSKELSD,
+	MT_SNEAK,
+	MT_STALKER,
+	MT_UNSEEN,
+	MT_ILLWEAV,
+	MT_NGOATMC,
+	MT_BGOATMC,
+	MT_RGOATMC,
+	MT_GGOATMC,
+	MT_FIEND,
+	MT_GLOOM,
+	MT_BLINK,
+	MT_FAMILIAR,
+	MT_NGOATBW,
+	MT_BGOATBW,
+	MT_RGOATBW,
+	MT_GGOATBW,
+	MT_NACID,
+	MT_RACID,
+	MT_BACID,
+	MT_XACID,
+	MT_SKING,
+	MT_FAT,
+	MT_MUDMAN,
+	MT_TOAD,
+	MT_FLAYED,
+	MT_WYRM,
+	MT_CAVSLUG,
+	MT_DEVOUR,
+	MT_DVLWYRM,
+	MT_NMAGMA,
+	MT_YMAGMA,
+	MT_BMAGMA,
+	MT_WMAGMA,
+	MT_HORNED,
+	MT_MUDRUN,
+	MT_FROSTC,
+	MT_OBLORD,
+	MT_BONEDMN,
+	MT_REDDTH,
+	MT_LTCHDMN,
+	MT_UDEDBLRG,
+	MT_NZOMBIE,
+	MT_NZOMBIE,
+	MT_NZOMBIE,
+	MT_NZOMBIE,
+	MT_INCIN,
+	MT_FLAMLRD,
+	MT_DOOMFIRE,
+	MT_HELLBURN,
+	MT_NZOMBIE,
+	MT_NZOMBIE,
+	MT_NZOMBIE,
+	MT_NZOMBIE,
+	MT_RSTORM,
+	MT_STORM,
+	MT_STORML,
+	MT_MAEL,
+	MT_WINGED,
+	MT_GARGOYLE,
+	MT_BLOODCLW,
+	MT_DEATHW,
+	MT_MEGA,
+	MT_GUARD,
+	MT_VTEXLRD,
+	MT_BALROG,
+	MT_NSNAKE,
+	MT_RSNAKE,
+	MT_GSNAKE,
+	MT_BSNAKE,
+	MT_NBLACK,
+	MT_RTBLACK,
+	MT_BTBLACK,
+	MT_RBLACK,
+	MT_UNRAV,
+	MT_HOLOWONE,
+	MT_PAINMSTR,
+	MT_REALWEAV,
+	MT_SUCCUBUS,
+	MT_SNOWWICH,
+	MT_HLSPWN,
+	MT_SOLBRNR,
+	MT_COUNSLR,
+	MT_MAGISTR,
+	MT_CABALIST,
+	MT_ADVOCATE,
+	MT_NZOMBIE,
+	MT_DIABLO,
+	MT_NZOMBIE,
+	MT_GOLEM,
+	MT_NZOMBIE,
+	MT_NZOMBIE,
+	MT_NZOMBIE,
+	MT_NZOMBIE,
+	MT_NZOMBIE,
+	MT_NZOMBIE,
+	MT_NZOMBIE,
+	MT_NZOMBIE,
+	MT_NZOMBIE,
+	MT_BIGFALL,
+	MT_DARKMAGE,
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	0, // Reserved for Hellfire
+	MT_CLEAVER,
+	MT_INVILORD,
+	MT_LRDSAYTR,
 };
 
-UniqMonstStruct UniqMonst[98] = {
+#define MAT_NEVER 0
+#define MAT_ALWAYS 1
+#define MAT_RETAIL 2
+/**
+ * Define what version a monster type is available in
+ */
+BYTE MonstAvailTbl[] = {
+	MAT_ALWAYS, // Zombie
+	MAT_ALWAYS, // Ghoul
+	MAT_ALWAYS, // Rotting Carcass
+	MAT_ALWAYS, // Black Death
+	MAT_ALWAYS, // Fallen One
+	MAT_ALWAYS, // Carver
+	MAT_ALWAYS, // Devil Kin
+	MAT_ALWAYS, // Dark One
+	MAT_ALWAYS, // Skeleton
+	MAT_ALWAYS, // Corpse Axe
+	MAT_ALWAYS, // Burning Dead
+	MAT_ALWAYS, // Horror
+	MAT_ALWAYS, // Fallen One
+	MAT_ALWAYS, // Carver
+	MAT_ALWAYS, // Devil Kin
+	MAT_ALWAYS, // Dark One
+	MAT_ALWAYS, // Scavenger
+	MAT_ALWAYS, // Plague Eater
+	MAT_ALWAYS, // Shadow Beast
+	MAT_ALWAYS, // Bone Gasher
+	MAT_ALWAYS, // Skeleton
+	MAT_ALWAYS, // Corpse Bow
+	MAT_ALWAYS, // Burning Dead
+	MAT_ALWAYS, // Horror
+	MAT_ALWAYS, // Skeleton Captain
+	MAT_ALWAYS, // Corpse Captain
+	MAT_ALWAYS, // Burning Dead Captain
+	MAT_ALWAYS, // Horror Captain
+	MAT_NEVER,  // Invisible Lord
+	MAT_RETAIL, // Hidden
+	MAT_RETAIL, // Stalker
+	MAT_RETAIL, // Unseen
+	MAT_RETAIL, // Illusion Weaver
+	MAT_NEVER,  // Lord Sayter
+	MAT_RETAIL, // Flesh Clan
+	MAT_RETAIL, // Stone Clan
+	MAT_RETAIL, // Fire Clan
+	MAT_RETAIL, // Night Clan
+	MAT_ALWAYS, // Fiend
+	MAT_ALWAYS, // Blink
+	MAT_ALWAYS, // Gloom
+	MAT_ALWAYS, // Familiar
+	MAT_RETAIL, // Flesh Clan
+	MAT_RETAIL, // Stone Clan
+	MAT_RETAIL, // Fire Clan
+	MAT_RETAIL, // Night Clan
+	MAT_RETAIL, // Acid Beast
+	MAT_RETAIL, // Poison Spitter
+	MAT_RETAIL, // Pit Beast
+	MAT_RETAIL, // Lava Maw
+	MAT_NEVER,  // Skeleton King
+	MAT_NEVER,  // The Butcher
+	MAT_RETAIL, // Overlord
+	MAT_RETAIL, // Mud Man
+	MAT_RETAIL, // Toad Demon
+	MAT_RETAIL, // Flayed One
+	MAT_NEVER,  // Wyrm
+	MAT_NEVER,  // Cave Slug
+	MAT_NEVER,  // Devil Wyrm
+	MAT_NEVER,  // Devourer
+	MAT_RETAIL, // Magma Demon
+	MAT_RETAIL, // Blood Stone
+	MAT_RETAIL, // Hell Stone
+	MAT_RETAIL, // Lava Lord
+	MAT_RETAIL, // Horned Demon
+	MAT_RETAIL, // Mud Runner
+	MAT_RETAIL, // Frost Charger
+	MAT_RETAIL, // Obsidian Lord
+	MAT_NEVER,  // Bone Demon (oldboned in Hellfire)
+	MAT_NEVER,  // Red Death
+	MAT_NEVER,  // Litch Demon
+	MAT_NEVER,  // Undead Balrog
+	MAT_NEVER,  // Incinerator
+	MAT_NEVER,  // Flame Lord
+	MAT_NEVER,  // Doom Fire
+	MAT_NEVER,  // Hell Burner
+	MAT_RETAIL, // Red Storm
+	MAT_RETAIL, // Storm Rider
+	MAT_RETAIL, // Storm Lord
+	MAT_RETAIL, // Maelstorm
+	MAT_NEVER,  // Devil Kin Brute
+	MAT_RETAIL, // Winged-Demon
+	MAT_RETAIL, // Gargoyle
+	MAT_RETAIL, // Blood Claw
+	MAT_RETAIL, // Death Wing
+	MAT_RETAIL, // Slayer
+	MAT_RETAIL, // Guardian
+	MAT_RETAIL, // Vortex Lord
+	MAT_RETAIL, // Balrog
+	MAT_RETAIL, // Cave Viper
+	MAT_RETAIL, // Fire Drake
+	MAT_RETAIL, // Gold Viper
+	MAT_RETAIL, // Azure Drake
+	MAT_RETAIL, // Black Knight
+	MAT_RETAIL, // Doom Guard
+	MAT_RETAIL, // Steel Lord
+	MAT_RETAIL, // Blood Knight
+	MAT_NEVER,  // Unraveler
+	MAT_NEVER,  // Hollow One
+	MAT_NEVER,  // Pain Master
+	MAT_NEVER,  // Reality Weaver
+	MAT_RETAIL, // Succubus
+	MAT_RETAIL, // Snow Witch
+	MAT_RETAIL, // Hell Spawn
+	MAT_RETAIL, // Soul Burner
+	MAT_RETAIL, // Counselor
+	MAT_RETAIL, // Magistrate
+	MAT_RETAIL, // Cabalist
+	MAT_RETAIL, // Advocate
+	MAT_NEVER,  // Golem
+	MAT_NEVER,  // The Dark Lord
+	MAT_NEVER,  // The Arch-Litch Malignus
+};
+
+UniqMonstStruct UniqMonst[] = {
 	// clang-format off
 	// mtype,       mName,                   mTrnName, mlevel, mmaxhp, mAi,      mint, mMinDamage, mMaxDamage, mMagicRes,                                                     mUnqAttr, mUnqVar1, mUnqVar2, mtalkmsg
-	{  MT_NGOATMC,  "Gharbad the Weak",         "BSDB",     4,    120, AI_GARBUD,   3,          8,         16,                              IMUNE_LIGHTNING  | IMUNE_NULL_40,        0,        0,        0, QUEST_GARBUD1  },
+	{  MT_NGOATMC,  "Gharbad the Weak",         "BSDB",     4,    120, AI_GARBUD,   3,          8,         16,                              IMUNE_LIGHTNING  | IMUNE_NULL_40,        0,        0,        0, TEXT_GARBUD1  },
 	{  MT_SKING,    "Skeleton King",            "GENRL",    0,    240, AI_SKELKING, 3,          6,         16, IMUNE_MAGIC  | RESIST_FIRE | RESIST_LIGHTNING | IMUNE_NULL_40,        1,        0,        0, 0              },
-	{  MT_COUNSLR,  "Zhar the Mad",             "GENERAL",  8,    360, AI_ZHAR,     3,         16,         40, IMUNE_MAGIC  | RESIST_FIRE | RESIST_LIGHTNING                ,        0,        0,        0, QUEST_ZHAR1    },
-	{  MT_BFALLSP,  "Snotspill",                "BNG",      4,    220, AI_SNOTSPIL, 3,         10,         18,                              RESIST_LIGHTNING                ,        0,        0,        0, QUEST_BANNER10 },
-	{  MT_ADVOCATE, "Arch-Bishop Lazarus",      "GENERAL",  0,    600, AI_LAZURUS,  3,         30,         50, IMUNE_MAGIC  | RESIST_FIRE | RESIST_LIGHTNING | IMUNE_NULL_40,        0,        0,        0, QUEST_VILE13   },
-	{  MT_HLSPWN,   "Red Vex",                  "REDV",     0,    400, AI_LAZHELP,  3,         30,         50, IMUNE_MAGIC  | RESIST_FIRE |                    IMUNE_NULL_40,        0,        0,        0, QUEST_VILE13   },
-	{  MT_HLSPWN,   "BlackJade",                "BLKJD",    0,    400, AI_LAZHELP,  3,         30,         50, IMUNE_MAGIC  |               RESIST_LIGHTNING | IMUNE_NULL_40,        0,        0,        0, QUEST_VILE13   },
-	{  MT_RBLACK,   "Lachdanan",                "BHKA",    14,    500, AI_LACHDAN,  3,          0,          0, 0                                                            ,        0,        0,        0, QUEST_VEIL9    },
-	{  MT_BTBLACK,  "Warlord of Blood",         "GENERAL", 13,    850, AI_WARLORD,  3,         35,         50, IMUNE_MAGIC  | IMUNE_FIRE  | IMUNE_LIGHTNING  | IMUNE_NULL_40,        0,        0,        0, QUEST_WARLRD9  },
+	{  MT_COUNSLR,  "Zhar the Mad",             "GENERAL",  8,    360, AI_ZHAR,     3,         16,         40, IMUNE_MAGIC  | RESIST_FIRE | RESIST_LIGHTNING                ,        0,        0,        0, TEXT_ZHAR1    },
+	{  MT_BFALLSP,  "Snotspill",                "BNG",      4,    220, AI_SNOTSPIL, 3,         10,         18,                              RESIST_LIGHTNING                ,        0,        0,        0, TEXT_BANNER10 },
+	{  MT_ADVOCATE, "Arch-Bishop Lazarus",      "GENERAL",  0,    600, AI_LAZURUS,  3,         30,         50, IMUNE_MAGIC  | RESIST_FIRE | RESIST_LIGHTNING | IMUNE_NULL_40,        0,        0,        0, TEXT_VILE13   },
+	{  MT_HLSPWN,   "Red Vex",                  "REDV",     0,    400, AI_LAZHELP,  3,         30,         50, IMUNE_MAGIC  | RESIST_FIRE |                    IMUNE_NULL_40,        0,        0,        0, TEXT_VILE13   },
+	{  MT_HLSPWN,   "BlackJade",                "BLKJD",    0,    400, AI_LAZHELP,  3,         30,         50, IMUNE_MAGIC  |               RESIST_LIGHTNING | IMUNE_NULL_40,        0,        0,        0, TEXT_VILE13   },
+	{  MT_RBLACK,   "Lachdanan",                "BHKA",    14,    500, AI_LACHDAN,  3,          0,          0, 0                                                            ,        0,        0,        0, TEXT_VEIL9    },
+	{  MT_BTBLACK,  "Warlord of Blood",         "GENERAL", 13,    850, AI_WARLORD,  3,         35,         50, IMUNE_MAGIC  | IMUNE_FIRE  | IMUNE_LIGHTNING  | IMUNE_NULL_40,        0,        0,        0, TEXT_WARLRD9  },
 	{  MT_CLEAVER,  "The Butcher",              "GENRL",    0,    220, AI_CLEAVER,  3,          6,         12,                RESIST_FIRE | RESIST_LIGHTNING | IMUNE_NULL_40,        0,        0,        0, 0              },
 	{  MT_TSKELAX,  "Bonehead Keenaxe",         "BHKA",     2,     91, AI_SKELSD,   2,          4,         10, IMUNE_MAGIC  |                                  IMUNE_NULL_40,        7,      100,        0, 0              },
 	{  MT_RFALLSD,  "Bladeskin the Slasher",    "BSTS",     2,     51, AI_FALLEN,   0,          6,         18,                RESIST_FIRE                                   ,       11,       45,        0, 0              },
@@ -256,7 +510,7 @@ UniqMonstStruct UniqMonst[98] = {
 	{  MT_SOLBRNR,  "Fleshdancer",              "GENERAL", 16,    999, AI_SUCC,     3,         30,         50, IMUNE_MAGIC  | RESIST_FIRE |                    IMUNE_NULL_40,        0,        0,        0, 0              },
 	{  MT_OBLORD,   "Grimspike",                "GENERAL", 19,    534, AI_SNEAK,    1,         25,         40, IMUNE_MAGIC  | RESIST_FIRE |                    IMUNE_NULL_40,        3,        0,        0, 0              },
 	{  MT_STORML,   "Doomlock",                 "GENERAL", 28,    534, AI_SNEAK,    1,         35,         55, IMUNE_MAGIC  | RESIST_FIRE | RESIST_LIGHTNING | IMUNE_NULL_40,        3,        0,        0, 0              },
-	{  -1,          NULL,                       NULL,       0,      0, 0,           0,          0,          0, 0                                                            ,        0,        0,        0, 0              }
+	{  -1,          NULL,                       NULL,       0,      0, 0,           0,          0,          0, 0                                                            ,        0,        0,        0, 0              },
 	// clang-format on
 };
 

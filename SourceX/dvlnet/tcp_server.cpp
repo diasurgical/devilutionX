@@ -82,6 +82,7 @@ void tcp_server::handle_recv(scc con, const asio::error_code &ec,
 				handle_recv_packet(*pkt);
 			}
 		} catch (dvlnet_exception &e) {
+			SDL_Log("Network error: %s", e.what());
 			drop_connection(con);
 			return;
 		}
@@ -201,7 +202,7 @@ void tcp_server::drop_connection(scc con)
 	if (con->plr != PLR_BROADCAST) {
 		auto pkt = pktfty.make_packet<PT_DISCONNECT>(PLR_MASTER, PLR_BROADCAST,
 		    con->plr, LEAVE_DROP);
-		connections[con->plr] = nullptr;
+		connections[con->plr] = NULL;
 		send_packet(*pkt);
 		// TODO: investigate if it is really ok for the server to
 		//       drop a client directly.

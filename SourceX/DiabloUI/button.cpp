@@ -2,6 +2,7 @@
 #include "DiabloUI/art_draw.h"
 #include "DiabloUI/text_draw.h"
 #include "DiabloUI/errorart.h"
+#include "display.h"
 
 namespace dvl {
 

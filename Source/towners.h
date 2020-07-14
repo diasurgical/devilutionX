@@ -2,7 +2,13 @@
 #ifndef __TOWNERS_H__
 #define __TOWNERS_H__
 
-extern TownerStruct towner[16];
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern TownerStruct towner[NUM_TOWNERS];
 
 int GetActiveTowner(int t);
 void SetTownerGPtrs(BYTE *pData, BYTE **pAnim);
@@ -33,13 +39,18 @@ void TownWitch();
 void TownBarMaid();
 void TownCow();
 void ProcessTowners();
-ItemStruct *PlrHasItem(int pnum, int item, int &i);
+ItemStruct *PlrHasItem(int pnum, int item, int *i);
 void TownerTalk(int first, int t);
 void TalkToTowner(int p, int t);
 void CowSFX(int pnum);
 
 /* data */
 
-extern QuestTalkData Qtalklist[11];
+extern QuestTalkData Qtalklist[];
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __TOWNERS_H__ */

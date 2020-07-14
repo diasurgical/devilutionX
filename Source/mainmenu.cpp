@@ -1,4 +1,9 @@
-#include "diablo.h"
+/**
+ * @file mainmenu.cpp
+ *
+ * Implementation of functions for interacting with the main menu.
+ */
+#include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 
@@ -8,6 +13,7 @@ char gszHero[16];
 
 /* data */
 
+/** The active music track id for the main menu. */
 int menu_music_track_id = TMUSIC_INTRO;
 
 void mainmenu_refresh_music()
@@ -18,17 +24,17 @@ void mainmenu_refresh_music()
 		menu_music_track_id++;
 		if (menu_music_track_id == NUM_MUSIC)
 			menu_music_track_id = TMUSIC_TOWN;
-	} while (!menu_music_track_id || menu_music_track_id == TMUSIC_L1);
+	} while (menu_music_track_id == TMUSIC_TOWN || menu_music_track_id == TMUSIC_L1);
 #endif
 }
 
-void __stdcall mainmenu_change_name(int arg1, int arg2, int arg3, int arg4, char *name_1, char *name_2)
+void mainmenu_change_name(int arg1, int arg2, int arg3, int arg4, char *name_1, char *name_2)
 {
 	if (UiValidPlayerName(name_2))
 		pfile_rename_hero(name_1, name_2);
 }
 
-int __stdcall mainmenu_select_hero_dialog(
+BOOL mainmenu_select_hero_dialog(
     const _SNETPROGRAMDATA *client_info,
     const _SNETPLAYERDATA *user_info,
     const _SNETUIDATA *ui_info,
@@ -68,7 +74,7 @@ int __stdcall mainmenu_select_hero_dialog(
 	}
 	if (dlgresult == SELHERO_PREVIOUS) {
 		SErrSetLastError(1223);
-		return 0;
+		return FALSE;
 	}
 
 	pfile_create_player_description(cdesc, cdlen);
@@ -81,7 +87,7 @@ int __stdcall mainmenu_select_hero_dialog(
 	if (cname && clen)
 		SStrCopy(cname, gszHero, clen);
 
-	return 1;
+	return TRUE;
 }
 
 void mainmenu_loop()
@@ -122,7 +128,7 @@ void mainmenu_loop()
 			done = TRUE;
 			break;
 		}
-	} while (done == FALSE);
+	} while (!done);
 
 	music_stop();
 }
@@ -159,7 +165,7 @@ BOOL mainmenu_multi_player()
 void mainmenu_play_intro()
 {
 	music_stop();
-	play_movie("gendata\\diablo1.smk", 1);
+	play_movie("gendata\\diablo1.smk", TRUE);
 	mainmenu_refresh_music();
 }
 #endif

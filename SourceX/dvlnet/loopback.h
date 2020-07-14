@@ -3,7 +3,8 @@
 #include <string>
 #include <queue>
 
-#include "devilution.h"
+#include "all.h"
+#include "../3rdParty/Storm/Source/storm.h"
 #include "dvlnet/abstract_net.h"
 
 namespace dvl {
@@ -13,9 +14,14 @@ class loopback : public abstract_net {
 private:
 	std::queue<buffer_t> message_queue;
 	buffer_t message_last;
-	const int plr_single = 0;
+	int plr_single;
 
 public:
+	loopback()
+	{
+		plr_single = 0;
+	};
+
 	virtual int create(std::string addrstr, std::string passwd);
 	virtual int join(std::string addrstr, std::string passwd);
 	virtual bool SNetReceiveMessage(int *sender, char **data, int *size);

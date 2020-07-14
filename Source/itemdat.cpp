@@ -1,8 +1,14 @@
-#include "diablo.h"
+/**
+ * @file itemdat.cpp
+ *
+ * Implementation of all item data.
+ */
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
-ItemDataStruct AllItemsList[157] = {
+/** Contains the data related to each item ID. */
+ItemDataStruct AllItemsList[] = {
 	// clang-format off
 	// iRnd,          iClass,        iLoc,             iCurs,                         itype, iItemId,            iName,                         iSName, iMinMLvl, iDurability, iMinDam, iMaxDam, iMinAC, iMaxAC, iMinStr, iMinMag, iMinDex, iFlags,            iMiscId,         iSpell,          iUsable, iValue, iMaxValue
 	{  IDROP_REGULAR, ICLASS_GOLD,   ILOC_UNEQUIPABLE, ICURS_GOLD,                       11, UITYPE_NONE,        "Gold",                        NULL,          1,           0,       0,       0,      0,      0,       0,       0,       0, ISPL_NONE,         IMISC_NONE,      SPL_NULL,        TRUE,         0,         0 },
@@ -13,7 +19,7 @@ ItemDataStruct AllItemsList[157] = {
 	{  IDROP_NEVER,   ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_SHORT_STAFF,                10, UITYPE_NONE,        "Short Staff of Charged Bolt", NULL,          1,          25,       2,       4,      0,      0,       0,      20,       0, ISPL_NONE,         IMISC_STAFF,     SPL_CBOLT,       FALSE,      520,       520 },
 	{  IDROP_NEVER,   ICLASS_WEAPON, ILOC_TWOHAND,     ICURS_CLEAVER,                     2, UITYPE_CLEAVER,     "Cleaver",                     NULL,         10,          10,       4,      24,      0,      0,       0,       0,       0, ISPL_NONE,         IMISC_UNIQUE,    SPL_NULL,        FALSE,     2000,      2000 },
 	{  IDROP_NEVER,   ICLASS_ARMOR,  ILOC_HELM,        ICURS_THE_UNDEAD_CROWN,            7, UITYPE_SKCROWN,     "The Undead Crown",            NULL,          0,          50,       0,       0,     15,     15,       0,       0,       0, ISPL_RNDSTEALLIFE, IMISC_UNIQUE,    SPL_NULL,        FALSE,    10000,     10000 },
-	{  IDROP_NEVER,   ICLASS_MISC,   ILOC_RING,        ICURS_EMPYREAN_BAND,              12, UITYPE_INFRARING,   "Empyrean Band",               NULL,          0,           0,       0,       0,      0,      0,       0,       0,       0, ISPL_NONE,         IMISC_UNIQUE,    SPL_NULL,        FALSE,     8000,       8000 },
+	{  IDROP_NEVER,   ICLASS_MISC,   ILOC_RING,        ICURS_EMPYREAN_BAND,              12, UITYPE_INFRARING,   "Empyrean Band",               NULL,          0,           0,       0,       0,      0,      0,       0,       0,       0, ISPL_NONE,         IMISC_UNIQUE,    SPL_NULL,        FALSE,     8000,      8000 },
 	{  IDROP_NEVER,   ICLASS_QUEST,  ILOC_UNEQUIPABLE, ICURS_MAGIC_ROCK,                  0, UITYPE_NONE,        "Magic Rock",                  NULL,          0,           0,       0,       0,      0,      0,       0,       0,       0, ISPL_NONE,         IMISC_NONE,      SPL_NULL,        FALSE,        0,         0 },
 	{  IDROP_NEVER,   ICLASS_MISC,   ILOC_AMULET,      ICURS_OPTIC_AMULET,               13, UITYPE_OPTAMULET,   "Optic Amulet",                NULL,          0,           0,       0,       0,      0,      0,       0,       0,       0, ISPL_NONE,         IMISC_UNIQUE,    SPL_NULL,        FALSE,     5000,      5000 },
 	{  IDROP_NEVER,   ICLASS_MISC,   ILOC_RING,        ICURS_RING_OF_TRUTH,              12, UITYPE_TRING,       "Ring of Truth",               NULL,          0,           0,       0,       0,      0,      0,       0,       0,       0, ISPL_NONE,         IMISC_UNIQUE,    SPL_NULL,        FALSE,     1000,      1000 },
@@ -161,11 +167,12 @@ ItemDataStruct AllItemsList[157] = {
 	{  IDROP_REGULAR, ICLASS_MISC,   ILOC_RING,        ICURS_RING,                       12, UITYPE_RING,        "Ring",                        "Ring",       15,           0,       0,       0,      0,      0,       0,       0,       0, ISPL_NONE,         IMISC_RING,      SPL_NULL,        FALSE,     1000,      1000 },
 	{  IDROP_REGULAR, ICLASS_MISC,   ILOC_AMULET,      ICURS_AMULET,                     13, UITYPE_AMULET,      "Amulet",                      "Amulet",      8,           0,       0,       0,      0,      0,       0,       0,       0, ISPL_NONE,         IMISC_AMULET,    SPL_NULL,        FALSE,     1200,      1200 },
 	{  IDROP_REGULAR, ICLASS_MISC,   ILOC_AMULET,      ICURS_AMULET,                     13, UITYPE_AMULET,      "Amulet",                      "Amulet",     16,           0,       0,       0,      0,      0,       0,       0,       0, ISPL_NONE,         IMISC_AMULET,    SPL_NULL,        FALSE,     1200,      1200 },
-	{  IDROP_NEVER,   ICLASS_NONE,   ILOC_INVALID,     ICURS_POTION_OF_FULL_MANA,         0, UITYPE_NONE,        NULL,                          NULL,          0,           0,       0,       0,      0,      0,       0,       0,       0, ISPL_NONE,         IMISC_NONE,      SPL_NULL,        FALSE,        0,         0 }
+	{  IDROP_NEVER,   ICLASS_NONE,   ILOC_INVALID,     ICURS_POTION_OF_FULL_MANA,         0, UITYPE_NONE,        NULL,                          NULL,          0,           0,       0,       0,      0,      0,       0,       0,       0, ISPL_NONE,         IMISC_NONE,      SPL_NULL,        FALSE,        0,         0 },
 	// clang-format on
 };
 
-const PLStruct PL_Prefix[84] = {
+/** Contains the data related to each item prefix. */
+const PLStruct PL_Prefix[] = {
 	// clang-format off
 	// PLName,        PLPower,        PLParam1, PLParam2, PLMinLvl, PLIType,                                                      PLGOE, PLDouble, PLOk,  PLMinVal, PLMaxVal, PLMultVal
 	{ "Tin",          IPL_TOHIT_CURSE,       6,       10,        3,                       PLT_WEAP |             PLT_BOW | PLT_MISC,  0, TRUE,     FALSE,        0,        0,        -3 },
@@ -251,11 +258,12 @@ const PLStruct PL_Prefix[84] = {
 	{ "Bountiful",    IPL_CHARGES,           3,        3,        9,                                  PLT_STAFF                     ,  0, FALSE,    TRUE,      3000,     3000,         3 },
 	{ "Flaming",      IPL_FIREDAM,           1,       10,        7,                       PLT_WEAP | PLT_STAFF                     ,  0, FALSE,    TRUE,      5000,     5000,         2 },
 	{ "Lightning",    IPL_LIGHTDAM,          2,       20,       18,                       PLT_WEAP | PLT_STAFF                     ,  0, FALSE,    TRUE,     10000,    10000,         2 },
-	{ "",  IPL_INVALID,           0,        0,        0, 0                                                              ,  0, FALSE,    FALSE,        0,        0,         0 }
+	{ "",             IPL_INVALID,           0,        0,        0, 0                                                              ,  0, FALSE,    FALSE,        0,        0,         0 },
 	// clang-format on
 };
 
-const PLStruct PL_Suffix[96] = {
+/** Contains the data related to each item suffix. */
+const PLStruct PL_Suffix[] = {
 	// clang-format off
 	// PLName,         PLPower,       PLParam1, PLParam2, PLMinLvl, PLIType,                                                      PLGOE, PLDouble, PLOk,  PLMinVal, PLMaxVal, PLMultVal
 	{ "quality",       IPL_DAMMOD,           1,        2,        2,                       PLT_WEAP |             PLT_BOW           ,  0, FALSE,    TRUE,       100,      200,         2 },
@@ -353,11 +361,12 @@ const PLStruct PL_Suffix[96] = {
 	{ "stability",     IPL_FASTRECOVER,      2,        2,       10, PLT_ARMO |                                             PLT_MISC,  0, FALSE,    TRUE,      4000,     4000,         4 },
 	{ "harmony",       IPL_FASTRECOVER,      3,        3,       20, PLT_ARMO |                                             PLT_MISC,  0, FALSE,    TRUE,      8000,     8000,         8 },
 	{ "blocking",      IPL_FASTBLOCK,        1,        1,        5,            PLT_SHLD                                            ,  0, FALSE,    TRUE,      4000,     4000,         4 },
-	{ "",   IPL_INVALID,          0,        0,        0, 0                                                              ,  0, FALSE,    FALSE,        0,        0,         0 }
+	{  "",             IPL_INVALID,          0,        0,        0, 0                                                              ,  0, FALSE,    FALSE,        0,        0,         0 },
 	// clang-format on
 };
 
-const UItemStruct UniqueItemList[91] = {
+/** Contains the data related to each unique item ID. */
+const UItemStruct UniqueItemList[] = {
 	// clang-format off
 	// UIName,                    UIItemId,     UIMinLvl, UINumPL, UIValue, UIPower1,     UIParam1, UIParam2, UIPower2,      UIParam3, UIParam4, UIPower3,      UIParam5, UIParam6, UIPower4,      UIParam7, UIParam8, UIPower5,      UIParam9, UIParam10, UIPower6, UIParam11, UIParam12
 	{  "The Butcher's Cleaver",   UITYPE_CLEAVER,      1,       3,    3650, IPL_STR,            10,       10, IPL_SETDAM,           4,       24, IPL_SETDUR,          10,       10, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,         0, IPL_TOHIT,        0,         0 },
@@ -450,7 +459,7 @@ const UItemStruct UniqueItemList[91] = {
 	{  "The Bleeder",             UITYPE_RING,         2,       4,    8500, IPL_MAGICRES,       20,       20, IPL_MANA,            30,       30, IPL_LIFE_CURSE,      10,       10, IPL_INVCURS,          8,        0, IPL_TOHIT,            0,         0, IPL_TOHIT,        0,         0 },
 	{  "Constricting Ring",       UITYPE_RING,         5,       3,   62000, IPL_ALLRES,         75,       75, IPL_DRAINLIFE,        0,        0, IPL_INVCURS,         14,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,         0, IPL_TOHIT,        0,         0 },
 	{  "Ring of Engagement",      UITYPE_RING,        11,       5,   12476, IPL_GETHIT,          1,        2, IPL_THORNS,           1,        3, IPL_SETAC,            5,        5, IPL_TARGAC,           4,       12, IPL_INVCURS,         13,         0, IPL_TOHIT,        0,         0 },
-	{  "",             UITYPE_INVALID,      0,       0,       0, IPL_TOHIT,           0,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,         0, IPL_TOHIT,        0,         0 }
+	{  "",                        UITYPE_INVALID,      0,       0,       0, IPL_TOHIT,           0,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,        0, IPL_TOHIT,            0,         0, IPL_TOHIT,        0,         0 },
 	// clang-format on
 };
 

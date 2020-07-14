@@ -1,5 +1,5 @@
-#include "devilution.h"
-#include "miniwin/ddraw.h"
+#include "all.h"
+#include "display.h"
 #include "stubs.h"
 #include "utf8.h"
 #include <string>
@@ -15,6 +15,7 @@
 #include "DiabloUI/fonts.h"
 #include "DiabloUI/button.h"
 #include "DiabloUI/dialogs.h"
+#include "controls/controller.h"
 
 #ifdef __SWITCH__
 // for virtual keyboard on Switch
@@ -27,7 +28,7 @@ int SelectedItemMin = 1;
 int SelectedItemMax = 1;
 
 std::size_t ListViewportSize = 1;
-const std::size_t *ListOffset = nullptr;
+const std::size_t *ListOffset = NULL;
 
 Art ArtLogos[3];
 Art ArtFocus[3];
@@ -47,14 +48,22 @@ bool UiItemsWraps;
 char *UiTextInput;
 int UiTextInputLen;
 
-namespace {
-
-int fadeValue = 0;
 int SelectedItem = 0;
 
-struct {
-	bool upArrowPressed = false;
-	bool downArrowPressed = false;
+namespace {
+
+DWORD fadeTc;
+int fadeValue = 0;
+
+struct scrollBarState {
+	bool upArrowPressed;
+	bool downArrowPressed;
+
+	scrollBarState()
+	{
+		upArrowPressed = false;
+		downArrowPressed = false;
+	}
 } scrollBarState;
 
 } // namespace
@@ -149,7 +158,7 @@ void UiFocus(int itemIndex, bool wrap = false)
 
 void UiFocusPageUp()
 {
-	if (ListOffset == nullptr || *ListOffset == 0) {
+	if (ListOffset == NULL || *ListOffset == 0) {
 		UiFocus(SelectedItemMin);
 	} else {
 		const std::size_t relpos = (SelectedItem - SelectedItemMin) - *ListOffset;
@@ -165,7 +174,7 @@ void UiFocusPageUp()
 
 void UiFocusPageDown()
 {
-	if (ListOffset == nullptr || *ListOffset + ListViewportSize > static_cast<std::size_t>(SelectedItemMax)) {
+	if (ListOffset == NULL || *ListOffset + ListViewportSize > static_cast<std::size_t>(SelectedItemMax)) {
 		UiFocus(SelectedItemMax);
 	} else {
 		const std::size_t relpos = (SelectedItem - SelectedItemMin) - *ListOffset;
@@ -185,39 +194,8 @@ void selhero_CatToName(char *in_buf, char *out_buf, int cnt)
 	strncat(out_buf, output.c_str(), cnt - strlen(out_buf));
 }
 
-bool UiFocusNavigation(SDL_Event *event)
+void UiFocusNavigation(SDL_Event *event)
 {
-	if (event->type == SDL_QUIT)
-		exit(0);
-
-	switch (GetMenuAction(*event)) {
-	case MenuAction::SELECT:
-		UiFocusNavigationSelect();
-		return true;
-	case MenuAction::UP:
-		UiFocus(SelectedItem - 1, UiItemsWraps);
-		return true;
-	case MenuAction::DOWN:
-		UiFocus(SelectedItem + 1, UiItemsWraps);
-		return true;
-	case MenuAction::PAGE_UP:
-		UiFocusPageUp();
-		return true;
-	case MenuAction::PAGE_DOWN:
-		UiFocusPageDown();
-		return true;
-	case MenuAction::DELETE:
-		UiFocusNavigationYesNo();
-		return true;
-	case MenuAction::BACK:
-		if (!gfnListEsc)
-			break;
-		UiFocusNavigationEsc();
-		return true;
-	default:
-		break;
-	}
-
 	switch (event->type) {
 	case SDL_KEYUP:
 	case SDL_MOUSEBUTTONUP:
@@ -238,7 +216,47 @@ bool UiFocusNavigation(SDL_Event *event)
 #endif
 	case SDL_SYSWMEVENT:
 		mainmenu_restart_repintro();
+		break;
 	}
+
+	switch (GetMenuAction(*event)) {
+	case MenuAction_SELECT:
+		UiFocusNavigationSelect();
+		return;
+	case MenuAction_UP:
+		UiFocus(SelectedItem - 1, UiItemsWraps);
+		return;
+	case MenuAction_DOWN:
+		UiFocus(SelectedItem + 1, UiItemsWraps);
+		return;
+	case MenuAction_PAGE_UP:
+		UiFocusPageUp();
+		return;
+	case MenuAction_PAGE_DOWN:
+		UiFocusPageDown();
+		return;
+	case MenuAction_DELETE:
+		UiFocusNavigationYesNo();
+		return;
+	case MenuAction_BACK:
+		if (!gfnListEsc)
+			break;
+		UiFocusNavigationEsc();
+		return;
+	default:
+		break;
+	}
+
+#ifndef USE_SDL1
+	if (event->type == SDL_MOUSEWHEEL) {
+		if (event->wheel.y > 0) {
+			UiFocus(SelectedItem - 1, UiItemsWraps);
+		} else if (event->wheel.y < 0) {
+			UiFocus(SelectedItem + 1, UiItemsWraps);
+		}
+		return;
+	}
+#endif
 
 	if (SDL_IsTextInputActive()) {
 		switch (event->type) {
@@ -254,7 +272,7 @@ bool UiFocusNavigation(SDL_Event *event)
 						selhero_CatToName(clipboard, UiTextInput, UiTextInputLen);
 					}
 				}
-				return true;
+				return;
 #endif
 			case SDLK_BACKSPACE:
 			case SDLK_LEFT: {
@@ -262,7 +280,7 @@ bool UiFocusNavigation(SDL_Event *event)
 				if (nameLen > 0) {
 					UiTextInput[nameLen - 1] = '\0';
 				}
-				return true;
+				return;
 			}
 			default:
 				break;
@@ -283,7 +301,7 @@ bool UiFocusNavigation(SDL_Event *event)
 #ifndef USE_SDL1
 		case SDL_TEXTINPUT:
 			selhero_CatToName(event->text.text, UiTextInput, UiTextInputLen);
-			return true;
+			return;
 #endif
 		default:
 			break;
@@ -291,15 +309,46 @@ bool UiFocusNavigation(SDL_Event *event)
 	}
 
 	if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
-		// In SDL2 mouse events already use logical coordinates.
-#ifdef USE_SDL1
-		OutputToLogical(&event->button.x, &event->button.y);
-#endif
 		if (UiItemMouseEvents(event, gUiItems, gUiItemCnt))
-			return true;
+			return;
+	}
+}
+
+void UiHandleEvents(SDL_Event *event)
+{
+	if (event->type == SDL_MOUSEMOTION) {
+#ifdef USE_SDL1
+		OutputToLogical(&event->motion.x, &event->motion.y);
+#endif
+		MouseX = event->motion.x;
+		MouseY = event->motion.y;
+		return;
 	}
 
-	return false;
+	if (event->type == SDL_KEYDOWN && event->key.keysym.sym == SDLK_RETURN) {
+		const Uint8 *state = SDLC_GetKeyState();
+		if (state[SDLC_KEYSTATE_LALT] || state[SDLC_KEYSTATE_RALT]) {
+			dx_reinit();
+			return;
+		}
+	}
+
+	if (event->type == SDL_QUIT)
+		diablo_quit(0);
+
+#ifndef USE_SDL1
+	if (event->type == SDL_JOYDEVICEADDED || event->type == SDL_JOYDEVICEREMOVED) {
+		InitController();
+		return;
+	}
+
+	if (event->type == SDL_WINDOWEVENT) {
+		if (event->window.event == SDL_WINDOWEVENT_SHOWN)
+			gbActive = true;
+		else if (event->window.event == SDL_WINDOWEVENT_HIDDEN)
+			gbActive = false;
+	}
+#endif
 }
 
 void UiFocusNavigationSelect()
@@ -358,17 +407,16 @@ void UiInitialize()
 {
 	LoadUiGFX();
 	LoadArtFonts();
-	if (ArtCursor.surface != nullptr) {
+	if (ArtCursor.surface != NULL) {
 		if (SDL_ShowCursor(SDL_DISABLE) <= -1) {
 			ErrSdl();
 		}
 	}
 }
 
-int UiProfileGetString()
+const char **UiProfileGetString()
 {
-	DUMMY();
-	return 0;
+	return NULL;
 }
 
 char connect_plrinfostr[128];
@@ -407,6 +455,27 @@ BOOL UiValidPlayerName(char *name)
 		if (*letter < 0x20 || (*letter > 0x7E && *letter < 0xC0))
 			return false;
 
+	char *reserved[] = {
+		"gvdl",
+		"dvou",
+		"tiju",
+		"cjudi",
+		"bttipmf",
+		"ojhhfs",
+		"cmj{{bse",
+		"benjo",
+	};
+
+	char tmpname[PLR_NAME_LEN];
+	strcpy(tmpname, name);
+	for (size_t i = 0, n = strlen(tmpname); i < n; i++)
+		tmpname[i]++;
+
+	for (uint32_t i = 0; i < sizeof(reserved) / sizeof(*reserved); i++) {
+		if (strstr(tmpname, reserved[i]))
+			return false;
+	}
+
 	return true;
 }
 
@@ -430,7 +499,7 @@ BOOL UiGetDataCallback(int game_type, int data_code, void *a3, int a4, int a5)
 	UNIMPLEMENTED();
 }
 
-BOOL UiAuthCallback(int a1, char *a2, char *a3, char a4, char *a5, LPSTR lpBuffer, int cchBufferMax)
+BOOL UiAuthCallback(int a1, char *a2, char *a3, char a4, char *a5, char *lpBuffer, int cchBufferMax)
 {
 	UNIMPLEMENTED();
 }
@@ -440,12 +509,12 @@ BOOL UiSoundCallback(int a1, int type, int a3)
 	UNIMPLEMENTED();
 }
 
-void UiMessageBoxCallback(HWND hWnd, char *lpText, LPCSTR lpCaption, UINT uType)
+void UiMessageBoxCallback(HWND hWnd, char *lpText, const char *lpCaption, UINT uType)
 {
 	UNIMPLEMENTED();
 }
 
-BOOL UiDrawDescCallback(int game_type, COLORREF color, LPCSTR lpString, char *a4, int a5, UINT align, time_t a7,
+BOOL UiDrawDescCallback(int game_type, DWORD color, const char *lpString, char *a4, int a5, UINT align, time_t a7,
     HDC *a8)
 {
 	UNIMPLEMENTED();
@@ -456,7 +525,7 @@ BOOL UiCreateGameCallback(int a1, int a2, int a3, int a4, int a5, int a6)
 	UNIMPLEMENTED();
 }
 
-BOOL UiArtCallback(int game_type, unsigned int art_code, PALETTEENTRY *pPalette, BYTE *pBuffer,
+BOOL UiArtCallback(int game_type, unsigned int art_code, SDL_Color *pPalette, BYTE *pBuffer,
     DWORD dwBuffersize, DWORD *pdwWidth, DWORD *pdwHeight, DWORD *pdwBpp)
 {
 	UNIMPLEMENTED();
@@ -488,7 +557,7 @@ BOOL UiCreatePlayerDescription(_uiheroinfo *info, DWORD mode, char *desc)
 int GetCenterOffset(int w, int bw)
 {
 	if (bw == 0) {
-		bw = PANEL_WIDTH;
+		bw = SCREEN_WIDTH;
 	}
 
 	return (bw - w) / 2;
@@ -496,31 +565,35 @@ int GetCenterOffset(int w, int bw)
 
 void LoadBackgroundArt(const char *pszFile)
 {
-	PALETTEENTRY pPal[256];
-
-	fadeValue = 0;
+	SDL_Color pPal[256];
 	LoadArt(pszFile, &ArtBackground, 1, pPal);
-	if (ArtBackground.surface == nullptr)
+	if (ArtBackground.surface == NULL)
 		return;
 
 	LoadPalInMem(pPal);
 	ApplyGamma(logical_palette, orig_palette, 256);
+
+	fadeTc = 0;
+	fadeValue = 0;
+	BlackPalette();
+	SDL_FillRect(GetOutputSurface(), NULL, 0x000000);
+	RenderPresent();
 }
 
 void UiFadeIn()
 {
-	static DWORD tc;
-	if (fadeValue == 0 && tc == 0)
-		tc = SDL_GetTicks();
 	if (fadeValue < 256) {
-		fadeValue = (SDL_GetTicks() - tc) / 2.083; // 32 frames @ 60hz
+		if (fadeValue == 0 && fadeTc == 0)
+			fadeTc = SDL_GetTicks();
+		fadeValue = (SDL_GetTicks() - fadeTc) / 2.083; // 32 frames @ 60hz
 		if (fadeValue > 256) {
 			fadeValue = 256;
-			tc = 0;
+			fadeTc = 0;
 		}
+		SetFadeLevel(fadeValue);
 	}
 
-	SetFadeLevel(fadeValue);
+	RenderPresent();
 }
 
 void DrawSelector(const SDL_Rect &rect)
@@ -539,11 +612,18 @@ void DrawSelector(const SDL_Rect &rect)
 	DrawArt(rect.x + rect.w - art->w(), y, art, frame);
 }
 
+void UiClearScreen()
+{
+	if (SCREEN_WIDTH > 640) // Background size
+		SDL_FillRect(GetOutputSurface(), NULL, 0x000000);
+}
+
 void UiPollAndRender()
 {
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
 		UiFocusNavigation(&event);
+		UiHandleEvents(&event);
 	}
 	UiRenderItems(gUiItems, gUiItemCnt);
 	DrawMouse();
@@ -570,7 +650,7 @@ void Render(const UiArtText &ui_art_text)
 void Render(const UiImage &ui_image)
 {
 	int x = ui_image.rect.x;
-	if ((ui_image.flags & UIS_CENTER) && ui_image.art != nullptr) {
+	if ((ui_image.flags & UIS_CENTER) && ui_image.art != NULL) {
 		const int x_offset = GetCenterOffset(ui_image.art->w(), ui_image.rect.w);
 		x += x_offset;
 	}
@@ -613,12 +693,12 @@ void Render(const UiScrollBar &ui_sb)
 	// Arrows:
 	{
 		const SDL_Rect rect = UpArrowRect(ui_sb);
-		const int frame = static_cast<int>(scrollBarState.upArrowPressed ? ScrollBarArrowFrame::UP_ACTIVE : ScrollBarArrowFrame::UP);
+		const int frame = static_cast<int>(scrollBarState.upArrowPressed ? ScrollBarArrowFrame_UP_ACTIVE : ScrollBarArrowFrame_UP);
 		DrawArt(rect.x, rect.y, ui_sb.arrow, frame, rect.w);
 	}
 	{
 		const SDL_Rect rect = DownArrowRect(ui_sb);
-		const int frame = static_cast<int>(scrollBarState.downArrowPressed ? ScrollBarArrowFrame::DOWN_ACTIVE : ScrollBarArrowFrame::DOWN);
+		const int frame = static_cast<int>(scrollBarState.downArrowPressed ? ScrollBarArrowFrame_DOWN_ACTIVE : ScrollBarArrowFrame_DOWN);
 		DrawArt(rect.x, rect.y, ui_sb.arrow, frame, rect.w);
 	}
 
@@ -752,13 +832,10 @@ bool HandleMouseEvent(const SDL_Event &event, UiItem *item)
 
 } // namespace
 
-void LoadPalInMem(const PALETTEENTRY *pPal)
+void LoadPalInMem(const SDL_Color *pPal)
 {
 	for (int i = 0; i < 256; i++) {
-		orig_palette[i].peFlags = 0;
-		orig_palette[i].peRed = pPal[i].peRed;
-		orig_palette[i].peGreen = pPal[i].peGreen;
-		orig_palette[i].peBlue = pPal[i].peBlue;
+		orig_palette[i] = pPal[i];
 	}
 }
 
@@ -772,6 +849,11 @@ bool UiItemMouseEvents(SDL_Event *event, UiItem *items, std::size_t size)
 {
 	if (!items || size == 0)
 		return false;
+
+	// In SDL2 mouse events already use logical coordinates.
+#ifdef USE_SDL1
+	OutputToLogical(&event->button.x, &event->button.y);
+#endif
 
 	bool handled = false;
 	for (std::size_t i = 0; i < size; i++) {
@@ -798,8 +880,6 @@ void DrawMouse()
 	if (sgbControllerActive)
 		return;
 
-	SDL_GetMouseState(&MouseX, &MouseY);
-	OutputToLogical(&MouseX, &MouseY);
 	DrawArt(MouseX, MouseY, &ArtCursor);
 }
 

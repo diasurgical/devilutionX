@@ -1,10 +1,26 @@
-//HEADER_GOES_HERE
+/**
+ * @file monstdat.h
+ *
+ * Interface of all monster data.
+ */
 #ifndef __MONSTDAT_H__
 #define __MONSTDAT_H__
 
-extern MonsterData monsterdata[112];
-extern char MonstConvTbl[128];
-extern BYTE MonstAvailTbl[112];
-extern UniqMonstStruct UniqMonst[98];
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern MonsterData monsterdata[];
+extern BYTE MonstConvTbl[];
+extern BYTE MonstAvailTbl[];
+extern UniqMonstStruct UniqMonst[];
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __MONSTDAT_H__ */

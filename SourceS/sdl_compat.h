@@ -3,17 +3,23 @@
 #include <SDL.h>
 
 #ifndef USE_SDL1
+#define SDLC_KEYSTATE_LEFTCTRL SDL_SCANCODE_LCTRL
+#define SDLC_KEYSTATE_RIGHTCTRL SDL_SCANCODE_RCTRL
 #define SDLC_KEYSTATE_LEFTSHIFT SDL_SCANCODE_LSHIFT
 #define SDLC_KEYSTATE_RIGHTSHIFT SDL_SCANCODE_RSHIFT
-#define SDLC_KEYSTATE_MENU SDL_SCANCODE_MENU
+#define SDLC_KEYSTATE_LALT SDL_SCANCODE_LALT
+#define SDLC_KEYSTATE_RALT SDL_SCANCODE_RALT
 #define SDLC_KEYSTATE_UP SDL_SCANCODE_UP
 #define SDLC_KEYSTATE_DOWN SDL_SCANCODE_DOWN
 #define SDLC_KEYSTATE_LEFT SDL_SCANCODE_LEFT
 #define SDLC_KEYSTATE_RIGHT SDL_SCANCODE_RIGHT
 #else
+#define SDLC_KEYSTATE_LEFTCTRL SDLK_LCTRL
+#define SDLC_KEYSTATE_RIGHTCTRL SDLK_RCTRL
 #define SDLC_KEYSTATE_LEFTSHIFT SDLK_LSHIFT
 #define SDLC_KEYSTATE_RIGHTSHIFT SDLK_LSHIFT
-#define SDLC_KEYSTATE_MENU SDLK_MENU
+#define SDLC_KEYSTATE_LALT SDLK_LALT
+#define SDLC_KEYSTATE_RALT SDLK_RALT
 #define SDLC_KEYSTATE_UP SDLK_UP
 #define SDLC_KEYSTATE_DOWN SDLK_DOWN
 #define SDLC_KEYSTATE_LEFT SDLK_LEFT
@@ -23,9 +29,9 @@
 inline const Uint8 *SDLC_GetKeyState()
 {
 #ifndef USE_SDL1
-	return SDL_GetKeyboardState(nullptr);
+	return SDL_GetKeyboardState(NULL);
 #else
-	return SDL_GetKeyState(nullptr);
+	return SDL_GetKeyState(NULL);
 #endif
 }
 
@@ -66,6 +72,11 @@ inline int SDLC_SetSurfaceAndPaletteColors(SDL_Surface *surface, SDL_Palette *pa
 	}
 	if (colors != (palette->colors + firstcolor))
 		SDL_memcpy(palette->colors + firstcolor, colors, ncolors * sizeof(*colors));
+
+	#if SDL1_VIDEO_MODE_BPP == 8
+		// When the video surface is 8bit, we need to set the output pallet as well.
+		SDL_SetColors(SDL_GetVideoSurface(), colors, firstcolor, ncolors);
+	#endif
 	// In SDL1, the surface always has its own distinct palette, so we need to
 	// update it as well.
 	return SDL_SetPalette(surface, SDL_LOGPAL, colors, firstcolor, ncolors) - 1;

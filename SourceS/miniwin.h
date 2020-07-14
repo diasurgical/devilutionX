@@ -22,16 +22,8 @@
 #endif
 
 #include "miniwin/misc.h"
-#include "miniwin/com.h"
-#include "miniwin/ui.h"
-#include "miniwin/thread.h"
-#include "miniwin/rand.h"
 #include "storm_full.h"
 
 #ifndef MAX_PATH
-#define MAX_PATH DVL_MAX_PATH
-#endif
-#ifdef DEVILUTION_ENGINE
-#include "miniwin/misc_macro.h"
-#include "miniwin/com_macro.h"
+#define MAX_PATH 260
 #endif

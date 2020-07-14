@@ -1,18 +1,28 @@
-//HEADER_GOES_HERE
+/**
+ * @file msg.h
+ *
+ * Interface of function for sending and reciving network messages.
+ */
 #ifndef __MSG_H__
 #define __MSG_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern BOOL deltaload;
 extern BYTE gbBufferMsgs;
-extern int pkt_counter;
+extern int dwRecCount;
 
 void msg_send_drop_pkt(int pnum, int reason);
 void msg_send_packet(int pnum, const void *packet, DWORD dwSize);
-TMegaPkt *msg_get_next_packet();
+void msg_get_next_packet();
 BOOL msg_wait_resync();
 void msg_free_packets();
 int msg_wait_for_turns();
-void msg_process_net_packets();
+void run_delta_info();
 void msg_pre_packet();
 void DeltaExportData(int pnum);
 BYTE *DeltaExportItem(BYTE *dst, TCmdPItem *src);
@@ -51,7 +61,7 @@ void NetSendCmdDelItem(BOOL bHiPri, BYTE bLoc);
 void NetSendCmdDItem(BOOL bHiPri, int ii);
 void NetSendCmdDamage(BOOL bHiPri, BYTE bPlr, DWORD dwDam);
 void NetSendCmdString(int pmask, const char *pszStr);
-void RemovePlrPortal(int pnum);
+void delta_close_portal(int pnum);
 DWORD ParseCmd(int pnum, TCmd *pCmd);
 DWORD On_DLEVEL(int pnum, TCmd *pCmd);
 void DeltaImportData(BYTE cmd, DWORD recv_offset);
@@ -66,7 +76,7 @@ DWORD On_ADDMAG(TCmd *pCmd, int pnum);
 DWORD On_ADDDEX(TCmd *pCmd, int pnum);
 DWORD On_ADDVIT(TCmd *pCmd, int pnum);
 DWORD On_SBSPELL(TCmd *pCmd, int pnum);
-void __cdecl msg_errorf(const char *pszFmt, ...);
+void msg_errorf(const char *pszFmt, ...);
 DWORD On_GOTOGETITEM(TCmd *pCmd, int pnum);
 DWORD On_REQUESTGITEM(TCmd *pCmd, int pnum);
 BOOL i_own_level(int nReqLevel);
@@ -141,5 +151,11 @@ DWORD On_DEBUG(TCmd *pCmd, int pnum);
 DWORD On_NOVA(TCmd *pCmd, int pnum);
 DWORD On_SETSHIELD(TCmd *pCmd, int pnum);
 DWORD On_REMSHIELD(TCmd *pCmd, int pnum);
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __MSG_H__ */

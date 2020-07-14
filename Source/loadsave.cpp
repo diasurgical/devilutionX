@@ -1,4 +1,9 @@
-#include "diablo.h"
+/**
+ * @file loadsave.cpp
+ *
+ * Implementation of save game functionality.
+ */
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -154,7 +159,7 @@ void LoadGame(BOOL firstflag)
 	numpremium = WLoad();
 	premiumlevel = WLoad();
 
-	for (i = 0; i < 6; i++)
+	for (i = 0; i < SMITH_PREMIUM_ITEMS; i++)
 		LoadPremium(i);
 
 	automapflag = OLoad();
@@ -215,32 +220,57 @@ void CopyBytes(const void *src, const int n, void *dst)
 
 void CopyChar(const void *src, void *dst)
 {
-	CopyBytes(src, 1, dst);
+	*(char *)dst = *(char *)src;
+	tbuff += 1;
 }
 
 void CopyShort(const void *src, void *dst)
 {
-	CopyBytes(src, 2, dst);
+	unsigned short buf;
+	memcpy(&buf, src, 2);
+	tbuff += 2;
+	buf = SwapLE16(buf);
+	memcpy(dst, &buf, 2);
 }
 
 void CopyShorts(const void *src, const int n, void *dst)
 {
-	CopyBytes(src, 2 * n, dst);
+	const unsigned short *s = reinterpret_cast<const unsigned short *>(src);
+	unsigned short *d = reinterpret_cast<unsigned short *>(dst);
+	for (int i = 0; i < n; i++) {
+		CopyShort(s, d);
+		++d;
+		++s;
+	}
 }
 
 void CopyInt(const void *src, void *dst)
 {
-	CopyBytes(src, 4, dst);
+	unsigned int buf;
+	memcpy(&buf, src, 4);
+	tbuff += 4;
+	buf = SwapLE32(buf);
+	memcpy(dst, &buf, 4);
 }
 
 void CopyInts(const void *src, const int n, void *dst)
 {
-	CopyBytes(src, 4 * n, dst);
+	const unsigned int *s = reinterpret_cast<const unsigned int *>(src);
+	const unsigned int *d = reinterpret_cast<unsigned int *>(dst);
+	for (int i = 0; i < n; i++) {
+		CopyInt(s, (void*)d);
+		++d;
+		++s;
+	}
 }
 
 void CopyInt64(const void *src, void *dst)
 {
-	CopyBytes(src, 8, dst);
+	unsigned long long buf;
+	memcpy(&buf, src, 8);
+	tbuff += 8;
+	buf = SDL_SwapLE64(buf);
+	memcpy(dst, &buf, 8);
 }
 
 void LoadPlayer(int i)
@@ -248,7 +278,7 @@ void LoadPlayer(int i)
 	PlayerStruct *pPlayer = &plr[i];
 
 	CopyInt(tbuff, &pPlayer->_pmode);
-	CopyBytes(tbuff, 25, pPlayer->walkpath);
+	CopyBytes(tbuff, MAX_PATH_LENGTH, pPlayer->walkpath);
 	CopyBytes(tbuff, 1, &pPlayer->plractive);
 	tbuff += 2; // Alignment
 	CopyInt(tbuff, &pPlayer->destAction);
@@ -257,10 +287,10 @@ void LoadPlayer(int i)
 	CopyInt(tbuff, &pPlayer->destParam3);
 	CopyInt(tbuff, &pPlayer->destParam4);
 	CopyInt(tbuff, &pPlayer->plrlevel);
-	CopyInt(tbuff, &pPlayer->WorldX);
-	CopyInt(tbuff, &pPlayer->WorldY);
 	CopyInt(tbuff, &pPlayer->_px);
 	CopyInt(tbuff, &pPlayer->_py);
+	CopyInt(tbuff, &pPlayer->_pfutx);
+	CopyInt(tbuff, &pPlayer->_pfuty);
 	CopyInt(tbuff, &pPlayer->_ptargx);
 	CopyInt(tbuff, &pPlayer->_ptargy);
 	CopyInt(tbuff, &pPlayer->_pownerx);
@@ -281,7 +311,7 @@ void LoadPlayer(int i)
 	CopyInt(tbuff, &pPlayer->_pAnimFrame);
 	CopyInt(tbuff, &pPlayer->_pAnimWidth);
 	CopyInt(tbuff, &pPlayer->_pAnimWidth2);
-	CopyInt(tbuff, &pPlayer->_peflag);
+	tbuff += 4; // Skip _peflag
 	CopyInt(tbuff, &pPlayer->_plid);
 	CopyInt(tbuff, &pPlayer->_pvid);
 
@@ -476,7 +506,7 @@ void LoadMonster(int i)
 	CopyInt(tbuff, &pMonster->_mAnimCnt);
 	CopyInt(tbuff, &pMonster->_mAnimLen);
 	CopyInt(tbuff, &pMonster->_mAnimFrame);
-	CopyInt(tbuff, &pMonster->_meflag);
+	tbuff += 4; // Skip _meflag
 	CopyInt(tbuff, &pMonster->_mDelFlag);
 	CopyInt(tbuff, &pMonster->_mVar1);
 	CopyInt(tbuff, &pMonster->_mVar2);
@@ -925,7 +955,7 @@ void SaveGame()
 	WSave(numpremium);
 	WSave(premiumlevel);
 
-	for (i = 0; i < 6; i++)
+	for (i = 0; i < SMITH_PREMIUM_ITEMS; i++)
 		SavePremium(i);
 
 	OSave(automapflag);
@@ -973,7 +1003,7 @@ void SavePlayer(int i)
 	PlayerStruct *pPlayer = &plr[i];
 
 	CopyInt(&pPlayer->_pmode, tbuff);
-	CopyBytes(&pPlayer->walkpath, 25, tbuff);
+	CopyBytes(&pPlayer->walkpath, MAX_PATH_LENGTH, tbuff);
 	CopyBytes(&pPlayer->plractive, 1, tbuff);
 	tbuff += 2; // Alignment
 	CopyInt(&pPlayer->destAction, tbuff);
@@ -982,10 +1012,10 @@ void SavePlayer(int i)
 	CopyInt(&pPlayer->destParam3, tbuff);
 	CopyInt(&pPlayer->destParam4, tbuff);
 	CopyInt(&pPlayer->plrlevel, tbuff);
-	CopyInt(&pPlayer->WorldX, tbuff);
-	CopyInt(&pPlayer->WorldY, tbuff);
 	CopyInt(&pPlayer->_px, tbuff);
 	CopyInt(&pPlayer->_py, tbuff);
+	CopyInt(&pPlayer->_pfutx, tbuff);
+	CopyInt(&pPlayer->_pfuty, tbuff);
 	CopyInt(&pPlayer->_ptargx, tbuff);
 	CopyInt(&pPlayer->_ptargy, tbuff);
 	CopyInt(&pPlayer->_pownerx, tbuff);
@@ -1006,7 +1036,7 @@ void SavePlayer(int i)
 	CopyInt(&pPlayer->_pAnimFrame, tbuff);
 	CopyInt(&pPlayer->_pAnimWidth, tbuff);
 	CopyInt(&pPlayer->_pAnimWidth2, tbuff);
-	CopyInt(&pPlayer->_peflag, tbuff);
+	tbuff += 4; // Skip _peflag
 	CopyInt(&pPlayer->_plid, tbuff);
 	CopyInt(&pPlayer->_pvid, tbuff);
 
@@ -1085,7 +1115,7 @@ void SavePlayer(int i)
 	CopyInt(&pPlayer->_pVar8, tbuff);
 	CopyBytes(&pPlayer->_pLvlVisited, NUMLEVELS, tbuff);
 	CopyBytes(&pPlayer->_pSLvlVisited, NUMLEVELS, tbuff); // only 10 used
-	tbuff += 2; // Alignment
+	tbuff += 2;                                           // Alignment
 
 	CopyInt(&pPlayer->_pGFXLoad, tbuff);
 	tbuff += 4 * 8; // Skip pointers _pNAnim
@@ -1202,7 +1232,7 @@ void SaveMonster(int i)
 	CopyInt(&pMonster->_mAnimCnt, tbuff);
 	CopyInt(&pMonster->_mAnimLen, tbuff);
 	CopyInt(&pMonster->_mAnimFrame, tbuff);
-	CopyInt(&pMonster->_meflag, tbuff);
+	tbuff += 4; // Skip _meflag
 	CopyInt(&pMonster->_mDelFlag, tbuff);
 	CopyInt(&pMonster->_mVar1, tbuff);
 	CopyInt(&pMonster->_mVar2, tbuff);
@@ -1521,7 +1551,7 @@ void SaveLevel()
 	int dwLen;
 	BYTE *SaveBuff;
 
-	if (!currlevel)
+	if (currlevel == 0)
 		glSeedTbl[0] = GetRndSeed();
 
 	dwLen = codec_get_encoded_len(FILEBUFF);
@@ -1690,11 +1720,11 @@ void LoadLevel()
 	AutomapZoomReset();
 	ResyncQuests();
 	SyncPortals();
-	dolighting = 1;
+	dolighting = TRUE;
 
 	for (i = 0; i < MAX_PLRS; i++) {
 		if (plr[i].plractive && currlevel == plr[i].plrlevel)
-			LightList[plr[i]._plid]._lunflag = 1;
+			LightList[plr[i]._plid]._lunflag = TRUE;
 	}
 
 	mem_free_dbg(LoadBuff);

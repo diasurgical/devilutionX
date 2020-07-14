@@ -1,4 +1,9 @@
-#include "diablo.h"
+/**
+ * @file error.cpp
+ *
+ * Implementation of in-game message functions.
+ */
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -7,7 +12,8 @@ DWORD msgdelay;
 char msgflag;
 char msgcnt;
 
-char *MsgStrings[44] = {
+/** Maps from error_id to error message. */
+char *MsgStrings[] = {
 	"",
 	"No automap available in town",
 	"No multiplayer functions in demo",
@@ -51,7 +57,7 @@ char *MsgStrings[44] = {
 	"You must be at least level 8 to use this.",
 	"You must be at least level 13 to use this.",
 	"You must be at least level 17 to use this.",
-	"Arcane knowledge gained!"
+	"Arcane knowledge gained!",
 };
 
 void InitDiabloMsg(char e)
@@ -70,7 +76,7 @@ void InitDiabloMsg(char e)
 	msgcnt++;
 
 	msgflag = msgtable[0];
-	msgdelay = GetTickCount();
+	msgdelay = SDL_GetTicks();
 }
 
 void ClrDiabloMsg()
@@ -107,7 +113,7 @@ void DrawDiabloMsg()
 		sy += 12;
 	}
 
-	/// ASSERT: assert(gpBuffer);
+	assert(gpBuffer);
 
 	trans_rect(PANEL_LEFT + 104, DIALOG_TOP - 8, 432, 54);
 
@@ -128,12 +134,12 @@ void DrawDiabloMsg()
 	for (i = 0; i < len; i++) {
 		c = fontframe[gbFontTransTbl[(BYTE)tempstr[i]]];
 		if (c != '\0') {
-			CPrintString(sx, sy, c, COL_GOLD);
+			PrintChar(sx, sy, c, COL_GOLD);
 		}
 		sx += fontkern[c] + 1;
 	}
 
-	if (msgdelay > 0 && msgdelay <= GetTickCount() - 3500) {
+	if (msgdelay > 0 && msgdelay <= SDL_GetTicks() - 3500) {
 		msgdelay = 0;
 	}
 	if (msgdelay == 0) {
@@ -142,7 +148,7 @@ void DrawDiabloMsg()
 			msgflag = 0;
 		} else {
 			msgflag = msgtable[msgcnt];
-			msgdelay = GetTickCount();
+			msgdelay = SDL_GetTicks();
 		}
 	}
 }

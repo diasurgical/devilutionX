@@ -1,5 +1,5 @@
-#include "devilution.h"
-#include "miniwin/dsound.h"
+#include "all.h"
+#include "../3rdParty/Storm/Source/storm.h"
 #include "stubs.h"
 #include <SDL.h>
 #include <SDL_mixer.h>
@@ -9,7 +9,7 @@ namespace dvl {
 BOOLEAN gbSndInited;
 int sglMusicVolume;
 int sglSoundVolume;
-HANDLE sgpMusicTrack;
+HANDLE sghMusic;
 
 Mix_Music *music;
 SDL_RWops *musicRw;
@@ -25,35 +25,31 @@ char *sgszMusicTracks[NUM_MUSIC] = {
 #ifdef SPAWN
 	"Music\\sTowne.wav",
 	"Music\\sLvlA.wav",
-	"Music\\sintro.wav"
+	"Music\\sLvlA.wav",
+	"Music\\sLvlA.wav",
+	"Music\\sLvlA.wav",
+	"Music\\sintro.wav",
 #else
 	"Music\\DTowne.wav",
 	"Music\\DLvlA.wav",
 	"Music\\DLvlB.wav",
 	"Music\\DLvlC.wav",
 	"Music\\DLvlD.wav",
-	"Music\\Dintro.wav"
+	"Music\\Dintro.wav",
 #endif
 };
 
 BOOL snd_playing(TSnd *pSnd)
 {
-	DWORD dwStatus;
-
-	if (!pSnd)
+	if (pSnd == NULL || pSnd->DSB == NULL)
 		return false;
 
-	if (pSnd->DSB == NULL)
-		return false;
-
-	pSnd->DSB->GetStatus(&dwStatus);
-
-	return dwStatus == DVL_DSBSTATUS_PLAYING;
+	return pSnd->DSB->IsPlaying();
 }
 
 void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 {
-	LPDIRECTSOUNDBUFFER DSB;
+	SoundSample *DSB;
 	DWORD tc;
 
 	if (!pSnd || !gbSoundOn) {
@@ -61,11 +57,11 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 	}
 
 	DSB = pSnd->DSB;
-	if (!DSB) {
+	if (DSB == NULL) {
 		return;
 	}
 
-	tc = GetTickCount();
+	tc = SDL_GetTicks();
 	if (tc - pSnd->start_tc < 80) {
 		return;
 	}
@@ -78,8 +74,6 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 	}
 	DSB->Play(lVolume, lPan);
 	pSnd->start_tc = tc;
-
-
 }
 
 TSnd *sound_file_load(char *path)
@@ -94,13 +88,13 @@ TSnd *sound_file_load(char *path)
 	pSnd = (TSnd *)DiabloAllocPtr(sizeof(TSnd));
 	memset(pSnd, 0, sizeof(TSnd));
 	pSnd->sound_path = path;
-	pSnd->start_tc = GetTickCount() - 81;
+	pSnd->start_tc = SDL_GetTicks() - 80 - 1;
 
 	dwBytes = SFileGetFileSize(file, NULL);
 	wave_file = DiabloAllocPtr(dwBytes);
 	SFileReadFile(file, wave_file, dwBytes, NULL, NULL);
 
-	pSnd->DSB = new DirectSoundBuffer();
+	pSnd->DSB = new SoundSample();
 	error = pSnd->DSB->SetChunk(wave_file, dwBytes);
 	WCloseFile(file);
 	mem_free_dbg(wave_file);
@@ -117,7 +111,7 @@ void sound_file_cleanup(TSnd *sound_file)
 		if (sound_file->DSB) {
 			sound_file->DSB->Stop();
 			sound_file->DSB->Release();
-			delete static_cast<DirectSoundBuffer *>(sound_file->DSB);
+			delete sound_file->DSB;
 			sound_file->DSB = NULL;
 		}
 
@@ -127,10 +121,11 @@ void sound_file_cleanup(TSnd *sound_file)
 
 void snd_init(HWND hWnd)
 {
-	sound_load_volume("Sound Volume", &sglSoundVolume);
+	snd_get_volume("Sound Volume", &sglSoundVolume);
 	gbSoundOn = sglSoundVolume > VOLUME_MIN;
+	sgbSaveSoundOn = gbSoundOn;
 
-	sound_load_volume("Music Volume", &sglMusicVolume);
+	snd_get_volume("Music Volume", &sglMusicVolume);
 	gbMusicOn = sglMusicVolume > VOLUME_MIN;
 
 	int result = Mix_OpenAudio(22050, AUDIO_S16LSB, 2, 1024);
@@ -143,7 +138,7 @@ void snd_init(HWND hWnd)
 	gbSndInited = true;
 }
 
-void sound_load_volume(char *value_name, int *value)
+void snd_get_volume(char *value_name, int *value)
 {
 	int v = *value;
 	if (!SRegLoadValue("Diablo", value_name, 0, &v)) {
@@ -165,22 +160,22 @@ void sound_cleanup()
 
 	if (gbSndInited) {
 		gbSndInited = false;
-		sound_store_volume("Sound Volume", sglSoundVolume);
-		sound_store_volume("Music Volume", sglMusicVolume);
+		snd_set_volume("Sound Volume", sglSoundVolume);
+		snd_set_volume("Music Volume", sglMusicVolume);
 	}
 }
 
-void sound_store_volume(char *key, int value)
+void snd_set_volume(char *key, int value)
 {
 	SRegSaveValue("Diablo", key, 0, value);
 }
 
 void music_stop()
 {
-	if (sgpMusicTrack) {
+	if (sghMusic) {
 		Mix_HaltMusic();
-		SFileCloseFile(sgpMusicTrack);
-		sgpMusicTrack = NULL;
+		SFileCloseFile(sghMusic);
+		sghMusic = NULL;
 		Mix_FreeMusic(music);
 		music = NULL;
 		musicRw = NULL;
@@ -193,16 +188,16 @@ void music_start(int nTrack)
 {
 	BOOL success;
 
-	assert((DWORD) nTrack < NUM_MUSIC);
+	assert((DWORD)nTrack < NUM_MUSIC);
 	music_stop();
 	if (gbMusicOn) {
-		success = SFileOpenFile(sgszMusicTracks[nTrack], &sgpMusicTrack);
+		success = SFileOpenFile(sgszMusicTracks[nTrack], &sghMusic);
 		if (!success) {
-			sgpMusicTrack = NULL;
+			sghMusic = NULL;
 		} else {
-			int bytestoread = SFileGetFileSize(sgpMusicTrack, 0);
+			int bytestoread = SFileGetFileSize(sghMusic, 0);
 			musicBuffer = (char *)DiabloAllocPtr(bytestoread);
-			SFileReadFile(sgpMusicTrack, musicBuffer, bytestoread, NULL, 0);
+			SFileReadFile(sghMusic, musicBuffer, bytestoread, NULL, 0);
 
 			musicRw = SDL_RWFromConstMem(musicBuffer, bytestoread);
 			if (musicRw == NULL) {
@@ -233,8 +228,8 @@ int sound_get_or_set_music_volume(int volume)
 
 	sglMusicVolume = volume;
 
-	if (sgpMusicTrack)
-		SFileDdaSetVolume(sgpMusicTrack, volume, 0);
+	if (sghMusic)
+		SFileDdaSetVolume(sghMusic, volume, 0);
 
 	return sglMusicVolume;
 }

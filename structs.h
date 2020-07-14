@@ -1,3 +1,11 @@
+/**
+ * @file structs.h
+ *
+ * Various global structures.
+ */
+
+DEVILUTION_BEGIN_NAMESPACE
+
 //////////////////////////////////////////////////
 // control
 //////////////////////////////////////////////////
@@ -102,7 +110,7 @@ typedef struct ItemStruct {
 	int _iAnimFrame;
 	int _iAnimWidth;
 	int _iAnimWidth2; // width 2?
-	BOOL _iDelFlag; // set when item is flagged for deletion, deprecated in 1.02
+	BOOL _iDelFlag;   // set when item is flagged for deletion, deprecated in 1.02
 	char _iSelFlag;
 	BOOL _iPostDraw;
 	BOOL _iIdentified;
@@ -171,7 +179,7 @@ typedef struct ItemStruct {
 
 typedef struct PlayerStruct {
 	int _pmode;
-	char walkpath[25];
+	char walkpath[MAX_PATH_LENGTH];
 	BOOLEAN plractive;
 	int destAction;
 	int destParam1;
@@ -179,10 +187,10 @@ typedef struct PlayerStruct {
 	int destParam3;
 	int destParam4;
 	int plrlevel;
-	int WorldX;
-	int WorldY;
 	int _px;
 	int _py;
+	int _pfutx;
+	int _pfuty;
 	int _ptargx;
 	int _ptargy;
 	int _pownerx;
@@ -370,8 +378,8 @@ typedef struct TextDataStruct {
 
 typedef struct MissileData {
 	unsigned char mName;
-	void(* mAddProc)(int, int, int, int, int, int, char, int, int);
-	void(* mProc)(int);
+	void (*mAddProc)(int, int, int, int, int, int, char, int, int);
+	void (*mProc)(int);
 	BOOL mDraw;
 	unsigned char mType;
 	unsigned char mResist;
@@ -449,118 +457,17 @@ typedef struct MissileStruct {
 // effects/sound
 //////////////////////////////////////////////////
 
-// ADDED
-/*
-#define DEVILUTION_MINIWIN_COM
-
-#ifndef DEVILUTION_ENGINE
-#pragma push_macro("DECLARE_INTERFACE_")
-#pragma push_macro("STDMETHOD")
-#pragma push_macro("STDMETHOD_")
-#pragma push_macro("THIS_")
-#pragma push_macro("THIS")
-#pragma push_macro("PURE")
-#pragma push_macro("REFIID")
-#undef DECLARE_INTERFACE_
-#undef STDMETHOD
-#undef STDMETHOD_
-#undef THIS_
-#undef THIS
-#undef PURE
-#undef REFIID
-#endif
-
-
-#define DECLARE_INTERFACE_(name, base) struct name : public base
-#define THIS_
-#define THIS
-#define PURE = 0
-
-#define STDMETHOD(name) STDMETHOD_(HRESULT, name)
-#define STDMETHOD_(type, name) virtual WINAPI type name
-
-typedef void *DVL_REFIID;
-#define REFIID DVL_REFIID
-
-struct IUnknown {
-	// clang-format off
-	STDMETHOD_(ULONG, Release)(THIS) PURE;
-	// clang-format on
-};
-
-
-
-
-
-
-typedef unsigned short WORD;
-typedef unsigned int   DWORD;
-
-
-
-DECLARE_INTERFACE_(IDirectSoundBuffer, IUnknown)
-{
-	// clang-format off
-	STDMETHOD(GetStatus)(THIS_ LPDWORD pdwStatus) PURE;
-	STDMETHOD(Lock)(THIS_ DWORD dwOffset, DWORD dwBytes, LPVOID *ppvAudioPtr1, LPDWORD pdwAudioBytes1,
-			LPVOID *ppvAudioPtr2, LPDWORD pdwAudioBytes2, DWORD dwFlags) PURE;
-	STDMETHOD(Play)(THIS_ DWORD dwReserved1, DWORD dwPriority, DWORD dwFlags) PURE;
-	STDMETHOD(SetFormat)(THIS_ LPCWAVEFORMATEX pcfxFormat) PURE;
-	STDMETHOD(SetVolume)(THIS_ LONG lVolume) PURE;
-	STDMETHOD(SetPan)(THIS_ LONG lPan) PURE;
-	STDMETHOD(Stop)(THIS) PURE;
-	STDMETHOD(Unlock)(THIS_ LPVOID pvAudioPtr1, DWORD dwAudioBytes1, LPVOID pvAudioPtr2, DWORD dwAudioBytes2) PURE;
-	STDMETHOD(Restore)(THIS) PURE;
-	// clang-format on
-};
-
-typedef IDirectSoundBuffer *LPDIRECTSOUNDBUFFER;
-
-
-typedef struct tWAVEFORMATEX {
-	WORD wFormatTag;
-	WORD nChannels;
-	DWORD nSamplesPerSec;
-	DWORD nAvgBytesPerSec;
-	WORD nBlockAlign;
-	WORD wBitsPerSample;
-	WORD cbSize;
-} WAVEFORMATEX, *LPWAVEFORMATEX, *LPCWAVEFORMATEX;
-
-
-
-
-typedef struct CKINFO {
-	DWORD dwSize;
-	DWORD dwOffset;
-} CKINFO;
-
 typedef struct TSnd {
-	WAVEFORMATEX fmt;
-	CKINFO chunk;
 	char *sound_path;
-	LPDIRECTSOUNDBUFFER DSB;
+	SoundSample *DSB;
 	int start_tc;
 } TSnd;
 
- */
-//END
-
-
-//Origional TSND 
- typedef struct TSnd {
- 	char *sound_path;
- 	LPDIRECTSOUNDBUFFER DSB;
- 	int start_tc;
- } TSnd;
-
-#pragma pack(push, 1)
 typedef struct TSFX {
 	unsigned char bFlags;
 	char *pszName;
 	TSnd *pSnd;
 } TSFX;
-#pragma pack(pop)
 
 //////////////////////////////////////////////////
 // monster
@@ -911,7 +818,7 @@ typedef struct TCmdChItem {
 	WORD wIndx;
 	WORD wCI;
 	int dwSeed;
-	BYTE bId;
+	BOOLEAN bId;
 } TCmdChItem;
 
 typedef struct TCmdDelItem {
@@ -1096,7 +1003,7 @@ typedef struct QuestData {
 typedef struct TMenuItem {
 	DWORD dwFlags;
 	char *pszStr;
-	void(* fnMenu)(BOOL); /* fix, should have one arg */
+	void (*fnMenu)(BOOL); /* fix, should have one arg */
 } TMenuItem;
 
 // TPDEF PTR FCN VOID TMenuUpdateFcn
@@ -1159,8 +1066,8 @@ typedef struct TownerStruct {
 	int _teflag;
 	int _tbtcnt;
 	int _tSelFlag;
-	int _tMsgSaid;
-	TNQ qsts[16];
+	BOOL _tMsgSaid;
+	TNQ qsts[MAXQUESTS];
 	int _tSeed;
 	int _tVar1;
 	int _tVar2;
@@ -1416,22 +1323,22 @@ typedef struct _SNETUIDATA {
 	int size;
 	int uiflags;
 	HWND parentwindow;
-	void(* artcallback)();
-	void(* authcallback)();
-	void(* createcallback)();
-	void(* drawdesccallback)();
-	void(* selectedcallback)();
-	void(* messageboxcallback)();
-	void(* soundcallback)();
-	void(* statuscallback)();
-	void(* getdatacallback)();
-	void(* categorycallback)();
-	void(* categorylistcallback)();
-	void(* newaccountcallback)();
-	void(* profilecallback)();
-	int profilefields;
-	void(* profilebitmapcallback)();
-	int(__stdcall *selectnamecallback)(
+	void (*artcallback)();
+	void (*authcallback)();
+	void (*createcallback)();
+	void (*drawdesccallback)();
+	void (*selectedcallback)();
+	void (*messageboxcallback)();
+	void (*soundcallback)();
+	void (*statuscallback)();
+	void (*getdatacallback)();
+	void (*categorycallback)();
+	void (*categorylistcallback)();
+	void (*newaccountcallback)();
+	void (*profilecallback)();
+	const char **profilefields;
+	void (*profilebitmapcallback)();
+	int (*selectnamecallback)(
 	    const struct _SNETPROGRAMDATA *,
 	    const struct _SNETPLAYERDATA *,
 	    const struct _SNETUIDATA *,
@@ -1440,8 +1347,8 @@ typedef struct _SNETUIDATA {
 	    char *, DWORD,  /* character name will be copied here */
 	    char *, DWORD,  /* character "description" will be copied here (used to advertise games) */
 	    BOOL *          /* new character? - unsure about this */
-	    );
-	void(* changenamecallback)();
+	);
+	void (*changenamecallback)();
 } _SNETUIDATA;
 
 // TPDEF PTR FCN UCHAR SNETSPIBIND
@@ -1576,16 +1483,16 @@ typedef struct _FILEHEADER {
 } _FILEHEADER;
 
 typedef struct _HASHENTRY {
-	int hashcheck[2];
-	int lcid;
-	int block;
+	uint32_t hashcheck[2];
+	uint32_t lcid;
+	uint32_t block;
 } _HASHENTRY;
 
 typedef struct _BLOCKENTRY {
-	int offset;
-	int sizealloc;
-	int sizefile;
-	int flags;
+	uint32_t offset;
+	uint32_t sizealloc;
+	uint32_t sizefile;
+	uint32_t flags;
 } _BLOCKENTRY;
 
 // TPDEF PTR FCN UCHAR TGetNameFcn
@@ -1611,10 +1518,10 @@ typedef struct STextStruct {
 	int _sx;
 	int _syoff;
 	char _sstr[128];
-	int _sjust;
+	BOOL _sjust;
 	char _sclr;
 	int _sline;
-	int _ssel;
+	BOOL _ssel;
 	int _sval;
 } STextStruct;
 
@@ -1678,3 +1585,5 @@ typedef struct TDataInfo {
 	DWORD destOffset;
 	DWORD size;
 } TDataInfo;
+
+DEVILUTION_END_NAMESPACE

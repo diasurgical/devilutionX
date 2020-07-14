@@ -2,10 +2,13 @@
 
 #include <functional>
 #include <exception>
+#include <sstream>
 #include <system_error>
 #include <stdexcept>
 #include <sodium.h>
 #include <SDL.h>
+
+#include <asio/connect.hpp>
 
 namespace dvl {
 namespace net {
@@ -17,7 +20,7 @@ int tcp_client::create(std::string addrstr, std::string passwd)
 		local_server.reset(new tcp_server(ioc, addrstr, port, passwd));
 		return join(local_server->localhost_self(), passwd);
 	} catch (std::system_error &e) {
-		eprintf("%s\n", e.what());
+		SDL_SetError(e.what());
 		return -1;
 	}
 }
@@ -29,12 +32,13 @@ int tcp_client::join(std::string addrstr, std::string passwd)
 
 	setup_password(passwd);
 	try {
-		auto ipaddr = asio::ip::make_address(addrstr);
-		sock.connect(asio::ip::tcp::endpoint(ipaddr, default_port));
+		std::stringstream port;
+		port << default_port;
+		asio::connect(sock, resolver.resolve(addrstr, port.str()));
 		asio::ip::tcp::no_delay option(true);
 		sock.set_option(option);
 	} catch (std::exception &e) {
-		eprintf("%s\n", e.what());
+		SDL_SetError(e.what());
 		return -1;
 	}
 	start_recv();
@@ -49,6 +53,7 @@ int tcp_client::join(std::string addrstr, std::string passwd)
 			try {
 				poll();
 			} catch (const std::runtime_error &e) {
+				SDL_SetError(e.what());
 				return -1;
 			}
 			if (plr_self != PLR_BROADCAST)
@@ -56,7 +61,12 @@ int tcp_client::join(std::string addrstr, std::string passwd)
 			SDL_Delay(ms_sleep);
 		}
 	}
-	return (plr_self == PLR_BROADCAST ? -1 : plr_self);
+	if (plr_self == PLR_BROADCAST) {
+		SDL_SetError("Unable to connect");
+		return -1;
+	}
+
+	return plr_self;
 }
 
 void tcp_client::poll()

@@ -1,8 +1,14 @@
-#include "diablo.h"
+/**
+ * @file misdat.cpp
+ *
+ * Implementation of data related to missiles.
+ */
+#include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
-MissileData missiledata[68] = {
+/** Data related to each missile ID. */
+MissileData missiledata[] = {
 	// clang-format off
 	// mName,             mAddProc,          mProc,             mDraw, mType, mResist,        mFileNum,       miSFX,       mlSFX;
 	{  MIS_ARROW,         &AddArrow,         &MI_Arrow,         TRUE,      0, 0,              MFILE_ARROWS,   -1,          -1          },
@@ -48,7 +54,7 @@ MissileData missiledata[68] = {
 	{  MIS_IDENTIFY,      &AddIdentify,      &MI_Dummy,         FALSE,     1, 0,              MFILE_NONE,     -1,          -1          },
 	{  MIS_WAVE,          &AddWave,          &MI_Wave,          TRUE,      1, MISR_FIRE,      MFILE_FIREWAL,  LS_FLAMWAVE, -1          },
 	{  MIS_NOVA,          &AddNova,          &MI_Nova,          TRUE,      1, MISR_LIGHTNING, MFILE_LGHNING,  LS_NOVA,     -1          },
-	{  MIS_BLODBOIL,      &miss_null_1F,     &MI_Blodboil,      TRUE,      1, 0,              MFILE_NONE,     -1,          LS_BLODBOIL },
+	{  MIS_BLODBOIL,      &AddBlodboil,      &MI_Blodboil,      TRUE,      1, 0,              MFILE_NONE,     -1,          LS_BLODBOIL },
 	{  MIS_APOCA,         &AddApoca,         &MI_Apoca,         TRUE,      1, MISR_MAGIC,     MFILE_NEWEXP,   LS_APOC,     -1          },
 	{  MIS_REPAIR,        &AddRepair,        &MI_Dummy,         FALSE,     2, 0,              MFILE_NONE,     -1,          -1          },
 	{  MIS_RECHARGE,      &AddRecharge,      &MI_Dummy,         FALSE,     2, 0,              MFILE_NONE,     -1,          -1          },
@@ -72,11 +78,12 @@ MissileData missiledata[68] = {
 	{  MIS_WEAPEXP,       &AddWeapexp,       &MI_Weapexp,       TRUE,      2, 0,              MFILE_NONE,     -1,          -1          },
 	{  MIS_RPORTAL,       &AddRportal,       &MI_Rportal,       TRUE,      2, 0,              MFILE_RPORTAL,  LS_SENTINEL, LS_ELEMENTL },
 	{  MIS_BOOM2,         &AddBoom,          &MI_Boom,          TRUE,      2, 0,              MFILE_FIREPLAR, -1,          -1          },
-	{  MIS_DIABAPOCA,     &AddDiabApoca,     &MI_Dummy,         FALSE,     2, 0,              MFILE_NONE,     -1,          -1          }
+	{  MIS_DIABAPOCA,     &AddDiabApoca,     &MI_Dummy,         FALSE,     2, 0,              MFILE_NONE,     -1,          -1          },
 	// clang-format on
 };
 
-MisFileData misfiledata[47] = {
+/** Data related to each missile graphic ID. */
+MisFileData misfiledata[] = {
 	// clang-format off
 	// mAnimName, mAnimFAmt, mName, mFlags, mAnimData[16],                                      mAnimDelay[16],                                     mAnimLen[16],                                                       mAnimWidth[16],                                                             mAnimWidth2[16]
 	{  MFILE_ARROWS,      1, "Arrows",   2, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
@@ -125,7 +132,7 @@ MisFileData misfiledata[47] = {
 	{  MFILE_SCBSEXPC,    1, "Scbsexpc", 1, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 128,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 32,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
 	{  MFILE_SCUBMISD,    1, "Scubmisd", 1, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
 	{  MFILE_SCBSEXPD,    1, "Scbsexpd", 1, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 128,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 32,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{  MFILE_NONE,        0, "",         0, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {   0,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } }
+	{  MFILE_NONE,        0, "",         0, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {   0,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
 	// clang-format on
 };
 
