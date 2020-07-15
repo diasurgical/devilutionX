@@ -118,9 +118,9 @@ void UiInitScrollBar(UiScrollBar *ui_sb, std::size_t viewport_size, const std::s
 void UiInitList_clear()
 {
 	SelectedItem = 0;
-	SelectedItemMin = 0;
-	SelectedItemMax = 0;
-	ListViewportSize = SelectedItemMax - SelectedItemMin + 1;
+	SelectedItemMin = 1;
+	SelectedItemMax = 1;
+	ListViewportSize = 1;
 	gfnListFocus = NULL;
 	gfnListSelect = NULL;
 	gfnListEsc = NULL;
@@ -729,7 +729,7 @@ void Render(UiScrollBar* ui_sb)
 	}
 
 	// Thumb:
-	{
+	if (SelectedItemMax - SelectedItemMin > 0) {
 		const SDL_Rect rect = ThumbRect(
 		    ui_sb, SelectedItem - SelectedItemMin, SelectedItemMax - SelectedItemMin + 1);
 		DrawArt(rect.x, rect.y, ui_sb->m_thumb);
@@ -793,7 +793,7 @@ bool HandleMouseEventList(const SDL_Event &event, UiList* ui_list)
 
 	const UiListItem* list_item = ui_list->itemAt(event.button.y);
 
-	if (gfnListFocus != NULL /*&& SelectedItem != list_item.m_value*/) {
+	if (gfnListFocus != NULL && SelectedItem != list_item->m_value) {
 		UiFocus(list_item->m_value);
 #ifdef USE_SDL1
 	} else if (gfnListFocus == NULL) {
