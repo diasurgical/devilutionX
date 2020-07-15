@@ -21,7 +21,6 @@ const char *selhero_GenerateName(uint8_t hero_class);
 std::size_t selhero_SaveCount = 0;
 _uiheroinfo selhero_heros[MAX_CHARACTERS];
 _uiheroinfo selhero_heroInfo;
-std::size_t listOffset = 0;
 const size_t kMaxViewportItems = 6;
 char textStats[5][4];
 char title[32];
@@ -109,19 +108,20 @@ void selhero_SetStats()
 
 namespace {
 
+std::size_t listOffset = 0;
 UiArtTextButton *SELLIST_DIALOG_DELETE_BUTTON;
 
 void selhero_UpdateViewportItems()
 {
-	selhero_FreeListItems();
-
 	const size_t num_viewport_heroes = std::min(selhero_SaveCount - listOffset, kMaxViewportItems);
 	for (std::size_t i = 0; i < num_viewport_heroes; i++) {
 		const std::size_t index = i + listOffset;
-		vecSelHeroDlgItems.push_back(new UiListItem(selhero_heros[index].name, static_cast<int>(index)));
+		vecSelHeroDlgItems[i]->m_text = selhero_heros[index].name;
+		vecSelHeroDlgItems[i]->m_value = static_cast<int>(index);
 	}
 	if (num_viewport_heroes < kMaxViewportItems) {
-		vecSelHeroDlgItems.push_back(new UiListItem("New Hero", static_cast<int>(selhero_SaveCount)));
+		vecSelHeroDlgItems[num_viewport_heroes]->m_text = "New Hero";
+		vecSelHeroDlgItems[num_viewport_heroes]->m_value = static_cast<int>(selhero_SaveCount);
 	}
 }
 
@@ -142,12 +142,19 @@ void selhero_ScrollIntoView(std::size_t index)
 
 void selhero_List_Init()
 {
+	listOffset = 0;
 	selhero_FreeDlgItems();
 
 	SDL_Rect rect1 = { PANEL_LEFT + 264, 211, 320, 33 };
 	vecSelDlgItems.push_back(new UiArtText("Select Hero", rect1, UIS_CENTER | UIS_BIG));
 
+	selhero_FreeListItems();
+	const size_t num_viewport_heroes = std::min(selhero_SaveCount + 1, kMaxViewportItems);
+	for (std::size_t i = 0; i < num_viewport_heroes; i++) {
+		vecSelHeroDlgItems.push_back(new UiListItem("", -1));
+	}
 	selhero_UpdateViewportItems();
+
 	vecSelDlgItems.push_back(new UiList(vecSelHeroDlgItems, PANEL_LEFT + 265, 256, 320, 26, UIS_CENTER | UIS_MED | UIS_GOLD));
 
 	SDL_Rect rect2 = { PANEL_LEFT + 585, 244, 25, 178 };
@@ -164,7 +171,6 @@ void selhero_List_Init()
 	SDL_Rect rect5 = { PANEL_LEFT + 489, 429, 120, 35 };
 	vecSelDlgItems.push_back(new UiArtTextButton("Cancel", &UiFocusNavigationEsc, rect5, UIS_CENTER | UIS_BIG | UIS_GOLD));
 
-	listOffset = 0;
 	UiInitList(0, selhero_SaveCount, selhero_List_Focus, selhero_List_Select, selhero_List_Esc, vecSelDlgItems, false, selhero_List_DeleteYesNo);
 	UiInitScrollBar(scrollBar, kMaxViewportItems, &listOffset);
 	if (selhero_isMultiPlayer) {
