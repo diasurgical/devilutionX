@@ -118,7 +118,7 @@ void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)(TMenuItem *))
 		}
 	}
 	// BUGFIX: OOB access when sgCurrentMenuIdx is 0; should be set to NULL instead. (fixed)
-	sgpCurrItem = sgCurrentMenuIdx > 0 ? &sgpCurrentMenu[sgCurrentMenuIdx - 1] : nullptr;
+	sgpCurrItem = sgCurrentMenuIdx > 0 ? &sgpCurrentMenu[sgCurrentMenuIdx - 1] : NULL;
 	gmenu_up_down(TRUE);
 }
 
@@ -240,28 +240,28 @@ BOOL gmenu_presskeys(int vkey)
 	if (!sgpCurrentMenu)
 		return FALSE;
 	switch (vkey) {
-	case VK_RETURN:
+	case DVL_VK_RETURN:
 		if ((sgpCurrItem->dwFlags & GMENU_ENABLED) != 0) {
 			PlaySFX(IS_TITLEMOV);
 			sgpCurrItem->fnMenu(TRUE);
 		}
 		break;
-	case VK_ESCAPE:
+	case DVL_VK_ESCAPE:
 		PlaySFX(IS_TITLEMOV);
 		gmenu_set_items(NULL, NULL);
 		break;
-	case VK_SPACE:
+	case DVL_VK_SPACE:
 		return FALSE;
-	case VK_LEFT:
+	case DVL_VK_LEFT:
 		gmenu_left_right(FALSE);
 		break;
-	case VK_RIGHT:
+	case DVL_VK_RIGHT:
 		gmenu_left_right(TRUE);
 		break;
-	case VK_UP:
+	case DVL_VK_UP:
 		gmenu_up_down(FALSE);
 		break;
-	case VK_DOWN:
+	case DVL_VK_DOWN:
 		gmenu_up_down(TRUE);
 		break;
 	}

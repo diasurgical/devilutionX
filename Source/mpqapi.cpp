@@ -89,12 +89,12 @@ public:
 
 	void Close()
 	{
-		s_ = nullptr;
+		s_ = NULL;
 	}
 
 	bool IsOpen() const
 	{
-		return s_ != nullptr;
+		return s_ != NULL;
 	}
 
 	bool seekg(std::streampos pos)
@@ -153,7 +153,7 @@ private:
 			std::string fmt_with_error = fmt;
 			fmt_with_error.append(": failed with \"%s\"");
 			const char *error_message = std::strerror(errno);
-			if (error_message == nullptr)
+			if (error_message == NULL)
 				error_message = "";
 			SDL_Log(fmt_with_error.c_str(), args..., error_message);
 #ifdef _DEBUG
@@ -237,9 +237,9 @@ struct Archive {
 		name.clear();
 		if (clear_tables) {
 			delete[] sgpHashTbl;
-			sgpHashTbl = nullptr;
+			sgpHashTbl = NULL;
 			delete[] sgpBlockTbl;
-			sgpBlockTbl = nullptr;
+			sgpBlockTbl = NULL;
 		}
 		return result;
 	}
@@ -262,11 +262,11 @@ private:
 		memset(&fhdr, 0, sizeof(fhdr));
 		fhdr.signature = SDL_SwapLE32('\x1AQPM');
 		fhdr.headersize = SDL_SwapLE32(32);
-		fhdr.filesize = SDL_SwapLE32(static_cast<std::uint32_t>(size));
+		fhdr.filesize = SDL_SwapLE32(static_cast<uint32_t>(size));
 		fhdr.version = SDL_SwapLE16(0);
 		fhdr.sectorsizeid = SDL_SwapLE16(3);
-		fhdr.hashoffset = SDL_SwapLE32(static_cast<std::uint32_t>(kMpqHashEntryOffset));
-		fhdr.blockoffset = SDL_SwapLE32(static_cast<std::uint32_t>(kMpqBlockEntryOffset));
+		fhdr.hashoffset = SDL_SwapLE32(static_cast<uint32_t>(kMpqHashEntryOffset));
+		fhdr.blockoffset = SDL_SwapLE32(static_cast<uint32_t>(kMpqBlockEntryOffset));
 		fhdr.hashcount = SDL_SwapLE32(2048);
 		fhdr.blockcount = SDL_SwapLE32(2048);
 
@@ -514,9 +514,9 @@ BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD d
 		str_ptr = tmp + 1;
 	Hash(str_ptr, 3);
 
-	constexpr std::uint32_t kSectorSize = 4096;
-	const std::uint32_t num_sectors = (dwLen + (kSectorSize - 1)) / kSectorSize;
-	const std::uint32_t offset_table_bytesize = sizeof(std::uint32_t) * (num_sectors + 1);
+	constexpr uint32_t kSectorSize = 4096;
+	const uint32_t num_sectors = (dwLen + (kSectorSize - 1)) / kSectorSize;
+	const uint32_t offset_table_bytesize = sizeof(uint32_t) * (num_sectors + 1);
 	pBlk->offset = mpqapi_find_free_block(dwLen + offset_table_bytesize, &pBlk->sizealloc);
 	pBlk->sizefile = dwLen;
 	pBlk->flags = 0x80000100;
@@ -524,7 +524,7 @@ BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD d
 	// We populate the table of sector offset while we write the data.
 	// We can't pre-populate it because we don't know the compressed sector sizes yet.
 	// First offset is the start of the first sector, last offset is the end of the last sector.
-	std::unique_ptr<std::uint32_t[]> sectoroffsettable(new std::uint32_t[num_sectors + 1]);
+	std::unique_ptr<uint32_t[]> sectoroffsettable(new uint32_t[num_sectors + 1]);
 
 #ifdef CAN_SEEKP_BEYOND_EOF
 	if (!cur_archive.stream.seekp(pBlk->offset + offset_table_bytesize, std::ios::beg))
@@ -550,11 +550,11 @@ BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD d
 #endif
 
 	const BYTE *src = pbData;
-	std::uint32_t destsize = offset_table_bytesize;
+	uint32_t destsize = offset_table_bytesize;
 	BYTE mpq_buf[kSectorSize];
 	std::size_t cur_sector = 0;
 	while (true) {
-		std::uint32_t len = std::min(dwLen, kSectorSize);
+		uint32_t len = std::min(dwLen, kSectorSize);
 		memcpy(mpq_buf, src, len);
 		src += len;
 		len = PkwareCompress(mpq_buf, len);
@@ -577,7 +577,7 @@ BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD d
 		return FALSE;
 
 	if (destsize < pBlk->sizealloc) {
-		const std::uint32_t block_size = pBlk->sizealloc - destsize;
+		const uint32_t block_size = pBlk->sizealloc - destsize;
 		if (block_size >= 1024) {
 			pBlk->sizealloc = destsize;
 			mpqapi_alloc_block(pBlk->sizealloc + pBlk->offset, block_size);

@@ -74,7 +74,7 @@ void FocusOnCharInfo()
 	}
 	if (stat == -1)
 		return;
-	const auto &rect = ChrBtnsRect[stat];
+	const RECT32 &rect = ChrBtnsRect[stat];
 	SetCursorPos(rect.x + (rect.w / 2), rect.y + (rect.h / 2));
 }
 
@@ -266,10 +266,10 @@ bool false_avail(const char *name, int value)
 
 void StoreSpellCoords()
 {
-	constexpr int START_X = 20;
-	constexpr int END_X = 636;
-	constexpr int END_Y = 495;
-	constexpr int BOX_SIZE = 56;
+	const int START_X = 20;
+	const int END_X = 636;
+	const int END_Y = 495;
+	const int BOX_SIZE = 56;
 	speedspellcount = 0;
 	int xo = END_X, yo = END_Y;
 	for (int i = 0; i < 4; i++) {
@@ -344,7 +344,7 @@ bool BlurInventory()
 	return true;
 }
 
-bool PeekMessageA(LPMSG lpMsg)
+bool PeekMessage(LPMSG lpMsg)
 {
 #ifdef __SWITCH__
 	HandleDocking();
@@ -394,36 +394,36 @@ bool PeekMessageA(LPMSG lpMsg)
 
 	GameAction action;
 	if (GetGameAction(e, &action)) {
-		if (action.type != GameActionType::NONE) {
+		if (action.type != GameActionType_NONE) {
 			sgbControllerActive = true;
 
 			if (movie_playing) {
 				lpMsg->message = DVL_WM_KEYDOWN;
-				if (action.type == GameActionType::SEND_KEY)
+				if (action.type == GameActionType_SEND_KEY)
 					lpMsg->wParam = action.send_key.vk_code;
 				return true;
 			}
 		}
 
 		switch (action.type) {
-		case GameActionType::NONE:
+		case GameActionType_NONE:
 			break;
-		case GameActionType::USE_HEALTH_POTION:
+		case GameActionType_USE_HEALTH_POTION:
 			UseBeltItem(BLT_HEALING);
 			break;
-		case GameActionType::USE_MANA_POTION:
+		case GameActionType_USE_MANA_POTION:
 			UseBeltItem(BLT_MANA);
 			break;
-		case GameActionType::PRIMARY_ACTION:
+		case GameActionType_PRIMARY_ACTION:
 			PerformPrimaryAction();
 			break;
-		case GameActionType::SECONDARY_ACTION:
+		case GameActionType_SECONDARY_ACTION:
 			PerformSecondaryAction();
 			break;
-		case GameActionType::CAST_SPELL:
+		case GameActionType_CAST_SPELL:
 			PerformSpellAction();
 			break;
-		case GameActionType::TOGGLE_QUICK_SPELL_MENU:
+		case GameActionType_TOGGLE_QUICK_SPELL_MENU:
 			if (!invflag || BlurInventory()) {
 				if (!spselflag)
 					DoSpeedBook();
@@ -435,7 +435,7 @@ bool PeekMessageA(LPMSG lpMsg)
 				StoreSpellCoords();
 			}
 			break;
-		case GameActionType::TOGGLE_CHARACTER_INFO:
+		case GameActionType_TOGGLE_CHARACTER_INFO:
 			chrflag = !chrflag;
 			if (chrflag) {
 				questlog = false;
@@ -445,7 +445,7 @@ bool PeekMessageA(LPMSG lpMsg)
 				FocusOnCharInfo();
 			}
 			break;
-		case GameActionType::TOGGLE_QUEST_LOG:
+		case GameActionType_TOGGLE_QUEST_LOG:
 			if (!questlog) {
 				StartQuestlog();
 				chrflag = false;
@@ -454,7 +454,7 @@ bool PeekMessageA(LPMSG lpMsg)
 				questlog = false;
 			}
 			break;
-		case GameActionType::TOGGLE_INVENTORY:
+		case GameActionType_TOGGLE_INVENTORY:
 			if (invflag) {
 				BlurInventory();
 			} else {
@@ -466,18 +466,18 @@ bool PeekMessageA(LPMSG lpMsg)
 				FocusOnInventory();
 			}
 			break;
-		case GameActionType::TOGGLE_SPELL_BOOK:
+		case GameActionType_TOGGLE_SPELL_BOOK:
 			if (BlurInventory()) {
 				invflag = false;
 				spselflag = false;
 				sbookflag = !sbookflag;
 			}
 			break;
-		case GameActionType::SEND_KEY:
+		case GameActionType_SEND_KEY:
 			lpMsg->message = action.send_key.up ? DVL_WM_KEYUP : DVL_WM_KEYDOWN;
 			lpMsg->wParam = action.send_key.vk_code;
 			return true;
-		case GameActionType::SEND_MOUSE_CLICK:
+		case GameActionType_SEND_MOUSE_CLICK:
 			sgbControllerActive = false;
 			switch (action.send_mouse_click.button) {
 			case GameActionSendMouseClick::LEFT:
@@ -724,7 +724,7 @@ bool TranslateMessage(const MSG *lpMsg)
 #endif
 
 			// XXX: This does not add extended info to lParam
-			PostMessageA(DVL_WM_CHAR, key, 0);
+			PostMessage(DVL_WM_CHAR, key, 0);
 		}
 	}
 
@@ -758,14 +758,14 @@ SHORT GetAsyncKeyState(int vKey)
 	}
 }
 
-LRESULT DispatchMessageA(const MSG *lpMsg)
+LRESULT DispatchMessage(const MSG *lpMsg)
 {
 	assert(CurrentProc);
 
 	return CurrentProc(NULL, lpMsg->message, lpMsg->wParam, lpMsg->lParam);
 }
 
-bool PostMessageA(UINT Msg, WPARAM wParam, LPARAM lParam)
+bool PostMessage(UINT Msg, WPARAM wParam, LPARAM lParam)
 {
 	MSG msg;
 	msg.message = Msg;

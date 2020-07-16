@@ -20,7 +20,6 @@ DEVILUTION_BEGIN_NAMESPACE
  */
 static BOOL CaptureHdr(short width, short height, std::ofstream *out)
 {
-	DWORD lpNumBytes;
 	PCXHEADER Buffer;
 
 	memset(&Buffer, 0, sizeof(Buffer));
@@ -92,7 +91,6 @@ static BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
 static bool CapturePix(WORD width, WORD height, WORD stride, BYTE *pixels, std::ofstream *out)
 {
 	int writeSize;
-	DWORD lpNumBytes;
 	BYTE *pBuffer, *pBufferEnd;
 
 	pBuffer = (BYTE *)DiabloAllocPtr(2 * width);
@@ -122,7 +120,7 @@ static std::ofstream *CaptureFile(char *dst_path)
 			return new std::ofstream(dst_path, std::ios::binary | std::ios::trunc);
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 /**
@@ -152,7 +150,7 @@ void CaptureScreen()
 	BOOL success;
 
 	std::ofstream *out = CaptureFile(FileName);
-	if (out == nullptr) return;
+	if (out == NULL) return;
 	DrawAndBlit();
 	PaletteGetEntries(256, palette);
 	RedPalette();

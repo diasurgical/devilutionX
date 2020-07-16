@@ -8,33 +8,33 @@ namespace dvl {
 MenuAction GetMenuAction(const SDL_Event &event)
 {
 	const ControllerButtonEvent ctrl_event = ToControllerButtonEvent(event);
-	if (ctrl_event.button != ControllerButton::NONE)
+	if (ctrl_event.button != ControllerButton_NONE)
 		sgbControllerActive = true;
 
 	if (!ctrl_event.up) {
 		switch (ctrl_event.button) {
-		case ControllerButton::IGNORE:
-			return MenuAction::NONE;
-		case ControllerButton::BUTTON_B: // Right button
-		case ControllerButton::BUTTON_START:
-			return MenuAction::SELECT;
-		case ControllerButton::BUTTON_BACK:
-		case ControllerButton::BUTTON_A: // Bottom button
-			return MenuAction::BACK;
-		case ControllerButton::BUTTON_X: // Left button
-			return MenuAction::DELETE;
-		case ControllerButton::BUTTON_DPAD_UP:
-			return MenuAction::UP;
-		case ControllerButton::BUTTON_DPAD_DOWN:
-			return MenuAction::DOWN;
-		case ControllerButton::BUTTON_DPAD_LEFT:
-			return MenuAction::LEFT;
-		case ControllerButton::BUTTON_DPAD_RIGHT:
-			return MenuAction::RIGHT;
-		case ControllerButton::BUTTON_LEFTSHOULDER:
-			return MenuAction::PAGE_UP;
-		case ControllerButton::BUTTON_RIGHTSHOULDER:
-			return MenuAction::PAGE_DOWN;
+		case ControllerButton_IGNORE:
+			return MenuAction_NONE;
+		case ControllerButton_BUTTON_B: // Right button
+		case ControllerButton_BUTTON_START:
+			return MenuAction_SELECT;
+		case ControllerButton_BUTTON_BACK:
+		case ControllerButton_BUTTON_A: // Bottom button
+			return MenuAction_BACK;
+		case ControllerButton_BUTTON_X: // Left button
+			return MenuAction_DELETE;
+		case ControllerButton_BUTTON_DPAD_UP:
+			return MenuAction_UP;
+		case ControllerButton_BUTTON_DPAD_DOWN:
+			return MenuAction_DOWN;
+		case ControllerButton_BUTTON_DPAD_LEFT:
+			return MenuAction_LEFT;
+		case ControllerButton_BUTTON_DPAD_RIGHT:
+			return MenuAction_RIGHT;
+		case ControllerButton_BUTTON_LEFTSHOULDER:
+			return MenuAction_PAGE_UP;
+		case ControllerButton_BUTTON_RIGHTSHOULDER:
+			return MenuAction_PAGE_DOWN;
 		default:
 			break;
 		}
@@ -49,47 +49,47 @@ MenuAction GetMenuAction(const SDL_Event &event)
 		remap_keyboard_key(&sym);
 		switch (sym) {
 		case SDLK_UP:
-			return MenuAction::UP;
+			return MenuAction_UP;
 		case SDLK_DOWN:
-			return MenuAction::DOWN;
+			return MenuAction_DOWN;
 		case SDLK_TAB:
 			if (SDL_GetModState() & KMOD_SHIFT)
-				return MenuAction::UP;
+				return MenuAction_UP;
 			else
-				return MenuAction::DOWN;
+				return MenuAction_DOWN;
 		case SDLK_PAGEUP:
-			return MenuAction::PAGE_UP;
+			return MenuAction_PAGE_UP;
 		case SDLK_PAGEDOWN:
-			return MenuAction::PAGE_DOWN;
+			return MenuAction_PAGE_DOWN;
 		case SDLK_RETURN: {
 			const Uint8 *state = SDLC_GetKeyState();
 			if (!state[SDLC_KEYSTATE_LALT] && !state[SDLC_KEYSTATE_RALT]) {
-				return MenuAction::SELECT;
+				return MenuAction_SELECT;
 			}
 			break;
 		}
 		case SDLK_KP_ENTER:
-			return MenuAction::SELECT;
+			return MenuAction_SELECT;
 		case SDLK_SPACE:
 			if (!SDL_IsTextInputActive()) {
-				return MenuAction::SELECT;
+				return MenuAction_SELECT;
 			}
 			break;
 		case SDLK_DELETE:
-			return MenuAction::DELETE;
+			return MenuAction_DELETE;
 		case SDLK_LEFT:
-			return MenuAction::LEFT;
+			return MenuAction_LEFT;
 		case SDLK_RIGHT:
-			return MenuAction::RIGHT;
+			return MenuAction_RIGHT;
 		case SDLK_ESCAPE:
-			return MenuAction::BACK;
+			return MenuAction_BACK;
 		default:
 			break;
 		}
 	}
 #endif
 
-	return MenuAction::NONE;
+	return MenuAction_NONE;
 } // namespace dvl
 
 } // namespace dvl

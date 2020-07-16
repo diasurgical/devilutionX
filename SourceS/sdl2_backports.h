@@ -19,7 +19,7 @@ SDL_CreateRGBSurfaceWithFormat(Uint32 flags, int width, int height, int depth,
 	int bpp;
 	Uint32 rmask, gmask, bmask, amask;
 	if (!SDL_PixelFormatEnumToMasks(format, &bpp, &rmask, &gmask, &bmask, &amask))
-		return nullptr;
+		return NULL;
 	return SDL_CreateRGBSurface(flags, width, height, bpp, rmask, gmask, bmask, amask);
 }
 

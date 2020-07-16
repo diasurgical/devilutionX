@@ -13,9 +13,6 @@ extern "C" {
 #endif
 
 extern BYTE *gpBuffer;
-extern char gbBackBuf;
-extern char gbEmulate;
-extern HMODULE ghDiabMod;
 
 void dx_init(HWND hWnd);
 void lock_buf(BYTE idx);

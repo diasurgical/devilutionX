@@ -2,10 +2,13 @@
 
 #include <functional>
 #include <exception>
+#include <sstream>
 #include <system_error>
 #include <stdexcept>
 #include <sodium.h>
 #include <SDL.h>
+
+#include <asio/connect.hpp>
 
 namespace dvl {
 namespace net {
@@ -29,8 +32,9 @@ int tcp_client::join(std::string addrstr, std::string passwd)
 
 	setup_password(passwd);
 	try {
-		auto ipaddr = asio::ip::make_address(addrstr);
-		sock.connect(asio::ip::tcp::endpoint(ipaddr, default_port));
+		std::stringstream port;
+		port << default_port;
+		asio::connect(sock, resolver.resolve(addrstr, port.str()));
 		asio::ip::tcp::no_delay option(true);
 		sock.set_option(option);
 	} catch (std::exception &e) {
