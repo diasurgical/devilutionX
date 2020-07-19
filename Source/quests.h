@@ -19,7 +19,6 @@ extern int WaterDone;
 extern int ReturnLvlX;
 extern int ReturnLvlY;
 extern int ReturnLvlT;
-extern int ALLQUESTS;
 extern int ReturnLvl;
 
 void InitQuests();
