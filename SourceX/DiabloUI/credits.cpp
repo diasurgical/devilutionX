@@ -68,8 +68,7 @@ CachedLine PrepareLine(std::size_t index)
 	SDL_Surface* surface = NULL;
 	if (text != NULL) {
 		// Set up the target surface to have 3 colors: mask, text, and shadow.
-//		surface.reset(
-		    surface = SDL_CreateRGBSurfaceWithFormat(0, text->w + SHADOW_OFFSET_X, text->h + SHADOW_OFFSET_Y, 8, SDL_PIXELFORMAT_INDEX8);//);
+		surface = SDL_CreateRGBSurfaceWithFormat(0, text->w + SHADOW_OFFSET_X, text->h + SHADOW_OFFSET_Y, 8, SDL_PIXELFORMAT_INDEX8);
 		const SDL_Color mask_color = { 0, 255, 0, 0 }; // Any color different from both shadow and text
 		const SDL_Color &text_color = palette->colors[224];
 		SDL_Color colors[3] = { mask_color, text_color, shadow_color };
@@ -149,7 +148,7 @@ public:
 			empty_ = true;
 	}
 
-	void push_back(CachedLine &line)
+	void push_back(CachedLine line)
 	{
 		end_ = (end_ + 1) % data_.size();
 		data_[end_] = line;
@@ -219,10 +218,10 @@ void CreditsRenderer::Render()
 
 	while (!lines_.empty() && lines_.front().m_index != lines_begin)
 		lines_.pop_front();
-//	if (lines_.empty())
-//		lines_.push_back(PrepareLine(lines_begin));
-//	while (lines_.back().m_index + 1 != lines_end)
-//		lines_.push_back(PrepareLine(lines_.back().m_index + 1));
+	if (lines_.empty())
+		lines_.push_back(PrepareLine(lines_begin));
+	while (lines_.back().m_index + 1 != lines_end)
+		lines_.push_back(PrepareLine(lines_.back().m_index + 1));
 
 	SDL_Rect viewport = VIEWPORT;
 	ScaleOutputRect(&viewport);
@@ -231,7 +230,6 @@ void CreditsRenderer::Render()
 	// We use unscaled coordinates for calculation throughout.
 	Sint16 dest_y = VIEWPORT.y - (offset_y - lines_begin * LINE_H);
 	for (std::size_t i = 0; i < lines_.size(); ++i, dest_y += LINE_H) {
-		//auto &line = lines_[i];
 		if (lines_[i].m_surface == NULL)
 			continue;
 
