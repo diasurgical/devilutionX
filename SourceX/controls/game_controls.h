@@ -21,6 +21,16 @@ enum GameActionType {
 };
 
 struct GameActionSendKey {
+	GameActionSendKey()
+	{
+	}
+
+	GameActionSendKey(DWORD vkcode, bool bUp)
+	{
+		vk_code = vkcode;
+		up = bUp;
+	}
+
 	DWORD vk_code;
 	bool up;
 };
@@ -30,39 +40,43 @@ struct GameActionSendMouseClick {
 		LEFT = 0,
 		RIGHT,
 	};
+
+	GameActionSendMouseClick() {
+	}
+
+	GameActionSendMouseClick(Button pButton, bool bUp) {
+		button = pButton;
+		up = bUp;
+	}
+
 	Button button;
 	bool up;
 };
 
 struct GameAction {
+	GameAction() {
+		type = GameActionType_NONE;
+	}
+
+	GameAction(GameActionType ptype) {
+		type = ptype;
+	}
+
+	GameAction(GameActionSendKey skey) {
+		type = GameActionType_SEND_KEY;
+		send_key = skey;
+	}
+
+	GameAction(GameActionSendMouseClick s_mouse_click) {
+		type = GameActionType_SEND_MOUSE_CLICK;
+		send_mouse_click = s_mouse_click;
+	}
+
+//private:
 	GameActionType type;
-
-	GameAction()
-	    : type(GameActionType_NONE)
-	{
-	}
-
-	explicit GameAction(GameActionType type)
-	    : type(type)
-	{
-	}
-
-	GameAction(GameActionSendKey send_key)
-	    : type(GameActionType_SEND_KEY)
-	    , send_key(send_key)
-	{
-	}
-
-	GameAction(GameActionSendMouseClick send_mouse_click)
-	    : type(GameActionType_SEND_MOUSE_CLICK)
-	    , send_mouse_click(send_mouse_click)
-	{
-	}
-
-	union {
 		GameActionSendKey send_key;
 		GameActionSendMouseClick send_mouse_click;
-	};
+
 };
 
 bool GetGameAction(const SDL_Event &event, GameAction *action);
@@ -72,12 +86,26 @@ enum MoveDirectionX {
 	MoveDirectionX_LEFT,
 	MoveDirectionX_RIGHT
 };
+
 enum MoveDirectionY {
 	MoveDirectionY_NONE = 0,
 	MoveDirectionY_UP,
 	MoveDirectionY_DOWN
 };
+
 struct MoveDirection {
+	MoveDirection()
+	{
+		x = MoveDirectionX_NONE;
+		y = MoveDirectionY_NONE;
+	}
+
+	MoveDirection(MoveDirectionX MX, MoveDirectionY MY)
+	{
+		x = MX;
+		y = MY;
+	}
+
 	MoveDirectionX x;
 	MoveDirectionY y;
 };

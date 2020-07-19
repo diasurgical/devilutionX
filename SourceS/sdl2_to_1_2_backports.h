@@ -1,7 +1,9 @@
 #pragma once
 
 #include <SDL.h>
+#ifndef _XBOX
 #include <unistd.h>
+#endif
 #include <errno.h>
 #include <stdio.h>
 #include <sys/stat.h>
@@ -680,6 +682,7 @@ inline int SDL_GetCurrentDisplayMode(int displayIndex, SDL_DisplayMode *mode)
 
 //== Filesystem
 
+#if !defined(_XBOX)
 #if !defined(__QNXNTO__)
 inline char *
 readSymLink(const char *path)
@@ -892,3 +895,4 @@ inline char *SDL_GetPrefPath(const char *org, const char *app)
 
 	return retval;
 }
+#endif

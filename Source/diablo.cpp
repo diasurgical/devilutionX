@@ -6,7 +6,12 @@
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
+#ifndef _XBOX
 #include <config.h>
+#endif
+#ifdef _XBOX
+#include "xboxfuncs.h"
+#endif
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -325,24 +330,38 @@ void diablo_deinit()
 		dx_cleanup(); // Cleanup SDL surfaces stuff, so we have to do it before SDL_Quit().
 	if (was_fonts_init)
 		FontsCleanup();
+#ifndef _XBOX // Not required
 	if (SDL_WasInit(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC))
 		SDL_Quit();
+#endif
 }
 
 void diablo_quit(int exitStatus)
 {
 	diablo_deinit();
+
+#ifdef _XBOX
+	CXBFunctions::QuitToDash();
+#else
 	exit(exitStatus);
+#endif
 }
 
 int DiabloMain(int argc, char **argv)
 {
+#ifdef _XBOX // 128MB Xboxes needs this to fucntion correctly
+	CXBFunctions::Check128MBPatch();
+#endif
+
 	diablo_parse_flags(argc, argv);
 	diablo_init();
 	diablo_splash();
 	mainmenu_loop();
 	diablo_deinit();
 
+#ifdef _XBOX
+	CXBFunctions::QuitToDash();
+#endif
 	return 0;
 }
 
@@ -386,8 +405,9 @@ void diablo_parse_flags(int argc, char **argv)
 			diablo_quit(0);
 		} else if (strcasecmp("--data-dir", argv[i]) == 0) {
 			basePath = argv[++i];
-#ifdef _WIN32
-			if (basePath.back() != '\\')
+#if defined(_WIN32) || defined(_XBOX)
+			char sTmp = basePath.at(basePath.length() - 2);
+			if (sTmp != '\\')
 				basePath += '\\';
 #else
 			if (basePath.back() != '/')

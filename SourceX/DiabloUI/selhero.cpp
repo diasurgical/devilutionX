@@ -1,8 +1,10 @@
 #include "selhero.h"
 
 #include <algorithm>
+#ifndef _XBOX
 #include <chrono>
 #include <random>
+#endif
 
 #include "DiabloUI/diabloui.h"
 #include "../../DiabloUI/diabloui.h"
@@ -97,11 +99,11 @@ void selhero_Free()
 void selhero_SetStats()
 {
 	SELHERO_DIALOG_HERO_IMG->m_frame = selhero_heroInfo.heroclass;
-	snprintf(textStats[0], sizeof(textStats[0]), "%d", selhero_heroInfo.level);
-	snprintf(textStats[1], sizeof(textStats[1]), "%d", selhero_heroInfo.strength);
-	snprintf(textStats[2], sizeof(textStats[2]), "%d", selhero_heroInfo.magic);
-	snprintf(textStats[3], sizeof(textStats[3]), "%d", selhero_heroInfo.dexterity);
-	snprintf(textStats[4], sizeof(textStats[4]), "%d", selhero_heroInfo.vitality);
+	sprintf(textStats[0], "%d", selhero_heroInfo.level);
+	sprintf(textStats[1], "%d", selhero_heroInfo.strength);
+	sprintf(textStats[2], "%d", selhero_heroInfo.magic);
+	sprintf(textStats[3], "%d", selhero_heroInfo.dexterity);
+	sprintf(textStats[4], "%d", selhero_heroInfo.vitality);
 }
 
 namespace {

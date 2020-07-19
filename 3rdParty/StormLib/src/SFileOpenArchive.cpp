@@ -604,7 +604,9 @@ bool STORMAPI SFileCloseArchive(HANDLE hMpq)
 
     // Invalidate the add file callback so it won't be called
     // when saving (listfile) and (attributes)
+#ifndef _XBOX
     ha->pfnAddFileCB = NULL;
+#endif
     ha->pvAddFileUserData = NULL;
 
 #ifdef FULL

@@ -1,10 +1,14 @@
 #include "controls/game_controls.h"
 
+#ifndef _XBOX
 #include <cstdint>
+#endif
 
 #include "controls/controller.h"
 #include "controls/controller_motion.h"
+#ifndef _XBOX
 #include "controls/devices/game_controller.h"
+#endif
 #include "controls/devices/joystick.h"
 #include "controls/menu_controls.h"
 #include "controls/modifier_hints.h"
@@ -63,7 +67,7 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 	    && ((ctrl_event.button == ControllerButton_BUTTON_BACK && IsControllerButtonPressed(ControllerButton_BUTTON_START))
 	           || (ctrl_event.button == ControllerButton_BUTTON_START && IsControllerButtonPressed(ControllerButton_BUTTON_BACK)))) {
 		select_modifier_active = start_modifier_active = false;
-		*action = GameActionSendKey{ DVL_VK_ESCAPE, ctrl_event.up };
+		*action = GameActionSendKey( DVL_VK_ESCAPE, ctrl_event.up );
 		return true;
 	}
 
@@ -72,14 +76,14 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 		case ControllerButton_BUTTON_LEFTSHOULDER:
 			if (IsControllerButtonPressed(ControllerButton_BUTTON_BACK)) {
 				if (!IsAutomapActive())
-					*action = GameActionSendMouseClick{ GameActionSendMouseClick::LEFT, ctrl_event.up };
+					*action = GameActionSendMouseClick( GameActionSendMouseClick::LEFT, ctrl_event.up );
 				return true;
 			}
 			break;
-		case ControllerButton_BUTTON_RIGHTSHOULDER:
+		case ControllerButton_BUTTON_LEFTSTICK:
 			if (IsControllerButtonPressed(ControllerButton_BUTTON_BACK)) {
 				if (!IsAutomapActive())
-					*action = GameActionSendMouseClick{ GameActionSendMouseClick::RIGHT, ctrl_event.up };
+					*action = GameActionSendMouseClick( GameActionSendMouseClick::RIGHT, ctrl_event.up );
 				return true;
 			}
 			break;
@@ -99,16 +103,16 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 					*action = GameAction(GameActionType_TOGGLE_INVENTORY);
 			}
 			return true;
-		case ControllerButton_BUTTON_LEFTSTICK:
-			if (IsControllerButtonPressed(ControllerButton_BUTTON_BACK)) {
-				if (!IsAutomapActive())
-					*action = GameActionSendMouseClick{ GameActionSendMouseClick::LEFT, ctrl_event.up };
-				return true;
-			}
-			break;
+//		case ControllerButton_BUTTON_LEFTSTICK:
+//			if (IsControllerButtonPressed(ControllerButton_BUTTON_BACK)) {
+//				if (!IsAutomapActive())
+//					*action = GameActionSendMouseClick( GameActionSendMouseClick::LEFT, ctrl_event.up );
+//				return true;
+//			}
+//			break;
 		case ControllerButton_BUTTON_START:
 			if (IsControllerButtonPressed(ControllerButton_BUTTON_BACK)) {
-				*action = GameActionSendKey{ DVL_VK_ESCAPE, ctrl_event.up };
+				*action = GameActionSendKey( DVL_VK_ESCAPE, ctrl_event.up );
 			}
 			return true;
 			break;
@@ -121,14 +125,14 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 			case ControllerButton_BUTTON_START:
 				return true;
 			case ControllerButton_BUTTON_DPAD_UP:
-				*action = GameActionSendKey{ DVL_VK_ESCAPE, ctrl_event.up };
+				*action = GameActionSendKey( DVL_VK_ESCAPE, ctrl_event.up );
 				return true;
 			case ControllerButton_BUTTON_DPAD_RIGHT:
 				if (!ctrl_event.up)
 					*action = GameAction(GameActionType_TOGGLE_INVENTORY);
 				return true;
 			case ControllerButton_BUTTON_DPAD_DOWN:
-				*action = GameActionSendKey{ DVL_VK_TAB, ctrl_event.up };
+				*action = GameActionSendKey( DVL_VK_TAB, ctrl_event.up );
 				return true;
 			case ControllerButton_BUTTON_DPAD_LEFT:
 				if (!ctrl_event.up)
@@ -165,7 +169,7 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 		if (ctrl_event.button == ControllerButton_BUTTON_A) { // Bottom button
 			if (ctrl_event.up) return true;
 			if (IsControllerButtonPressed(ControllerButton_BUTTON_BACK))
-				*action = GameActionSendKey { DVL_VK_F7, ctrl_event.up };
+				*action = GameActionSendKey( DVL_VK_F7, ctrl_event.up );
 			else if (invflag)
 				*action = GameAction(GameActionType_TOGGLE_INVENTORY);
 			else if (sbookflag)
@@ -186,7 +190,7 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 			case ControllerButton_BUTTON_B: // Right button
 				if (!ctrl_event.up) {
 					if (IsControllerButtonPressed(ControllerButton_BUTTON_BACK))
-						*action = GameActionSendKey{ DVL_VK_F8, ctrl_event.up };
+						*action = GameActionSendKey( DVL_VK_F8, ctrl_event.up );
 					else
 						*action = GameAction(GameActionType_PRIMARY_ACTION);
 				}
@@ -194,7 +198,7 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 			case ControllerButton_BUTTON_Y: // Top button
 				if (!ctrl_event.up) {
 					if (IsControllerButtonPressed(ControllerButton_BUTTON_BACK))
-						*action = GameActionSendKey{ DVL_VK_F6, ctrl_event.up };
+						*action = GameActionSendKey( DVL_VK_F6, ctrl_event.up );
 					else
 						*action = GameAction(GameActionType_SECONDARY_ACTION);
 				}
@@ -202,7 +206,7 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 			case ControllerButton_BUTTON_X: // Left button
 				if (!ctrl_event.up) {
 					if (IsControllerButtonPressed(ControllerButton_BUTTON_BACK))
-						*action = GameActionSendKey{ DVL_VK_F5, ctrl_event.up };
+						*action = GameActionSendKey( DVL_VK_F5, ctrl_event.up );
 					else
 						*action = GameAction(GameActionType_CAST_SPELL);
 				}
@@ -224,9 +228,9 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 			case ControllerButton_BUTTON_RIGHTSTICK:
 				if (!IsAutomapActive()) {
 					if (IsControllerButtonPressed(ControllerButton_BUTTON_BACK))
-						*action = GameActionSendMouseClick{ GameActionSendMouseClick::RIGHT, ctrl_event.up };
+						*action = GameActionSendMouseClick( GameActionSendMouseClick::RIGHT, ctrl_event.up );
 					else
-						*action = GameActionSendMouseClick{ GameActionSendMouseClick::LEFT, ctrl_event.up };
+						*action = GameActionSendMouseClick( GameActionSendMouseClick::LEFT, ctrl_event.up );
 				}
 				return true;
 			default:
@@ -241,8 +245,8 @@ bool GetGameAction(const SDL_Event &event, GameAction *action)
 
 	// By default, map to a keyboard key.
 	if (ctrl_event.button != ControllerButton_NONE) {
-		*action = GameActionSendKey{ translate_controller_button_to_key(ctrl_event.button),
-			ctrl_event.up };
+		*action = GameActionSendKey( translate_controller_button_to_key(ctrl_event.button),
+			ctrl_event.up );
 		return true;
 	}
 
@@ -264,7 +268,7 @@ MoveDirection GetMoveDirection()
 {
 	const float stickX = leftStickX;
 	const float stickY = leftStickY;
-	MoveDirection result{ MoveDirectionX_NONE, MoveDirectionY_NONE };
+	MoveDirection result(MoveDirectionX_NONE, MoveDirectionY_NONE);
 
 	if (stickY >= 0.5 || IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_UP)) {
 		result.y = MoveDirectionY_UP;

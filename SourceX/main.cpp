@@ -15,7 +15,11 @@ extern "C" const char *__asan_default_options()
 }
 #endif
 
+#ifdef _XBOX
+int main()
+#else
 int main(int argc, char **argv)
+#endif
 {
 #ifdef RUN_TESTS
     testing::InitGoogleTest(&argc, argv);
@@ -25,5 +29,9 @@ int main(int argc, char **argv)
 	switch_enable_network();
 #endif
 
+#ifdef _XBOX
+	return dvl::DiabloMain(NULL, NULL);
+#else
 	return dvl::DiabloMain(argc, argv);
+#endif
 }

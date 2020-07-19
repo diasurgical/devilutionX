@@ -1,6 +1,8 @@
 #pragma once
 
+#ifndef _XBOX
 #include <cstdint>
+#endif
 
 namespace dvl {
 

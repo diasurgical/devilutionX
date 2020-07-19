@@ -1,4 +1,6 @@
+#ifndef _XBOX
 #include <cstdint>
+#endif
 #include <deque>
 #include <SDL.h>
 
@@ -9,7 +11,9 @@
 #include "controls/game_controls.h"
 #include "controls/plrctrls.h"
 #include "controls/remap_keyboard.h"
+#ifndef _XBOX
 #include "controls/touch.h"
+#endif
 #include "display.h"
 #include "controls/controller.h"
 
@@ -36,7 +40,9 @@ void SetCursorPos(int X, int Y)
 	mouseWarpingX = X;
 	mouseWarpingY = Y;
 	mouseWarping = true;
+#ifndef _XBOX
 	LogicalToOutput(&X, &Y);
+#endif
 	SDL_WarpMouseInWindow(ghMainWnd, X, Y);
 }
 
@@ -273,7 +279,7 @@ void StoreSpellCoords()
 	speedspellcount = 0;
 	int xo = END_X, yo = END_Y;
 	for (int i = 0; i < 4; i++) {
-		std::uint64_t spells;
+		uint64_t spells;
 		switch (i) {
 		case RSPLTYPE_SKILL:
 			spells = plr[myplr]._pAblSpells;
@@ -290,10 +296,12 @@ void StoreSpellCoords()
 		default:
 			continue;
 		}
-		std::uint64_t spell = 1;
+		uint64_t spell = 1;
 		for (int j = 1; j < MAX_SPELLS; j++) {
 			if ((spell & spells)) {
-				speedspellscoords[speedspellcount] = { xo - 36, yo - 188 };
+				speedspellscoords[speedspellcount].x = xo - 36;
+				speedspellscoords[speedspellcount].y = yo - 188;
+
 				++speedspellcount;
 				xo -= BOX_SIZE;
 				if (xo == START_X) {

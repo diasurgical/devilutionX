@@ -1,7 +1,9 @@
 #pragma once
 
+#ifndef _XBOX
 #include <cstdint>
 #include <cstddef>
+#endif
 #include <string>
 #include <vector>
 

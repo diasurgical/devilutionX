@@ -8,6 +8,10 @@
 #include "display.h"
 #include <SDL.h>
 
+#ifdef _XBOX
+#include "xboxfuncs.h"
+#endif
+
 namespace dvl {
 
 int sgdwLockCount;
@@ -129,8 +133,10 @@ void unlock_buf(BYTE idx)
 
 void dx_cleanup()
 {
+#ifndef _XBOX
 	if (ghMainWnd)
 		SDL_HideWindow(ghMainWnd);
+#endif
 	sgMemCrit.Enter();
 	sgdwLockCount = 0;
 	gpBuffer = NULL;

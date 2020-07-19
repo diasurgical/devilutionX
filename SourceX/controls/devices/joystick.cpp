@@ -3,6 +3,11 @@
 
 #include "controls/controller_motion.h"
 #include "stubs.h"
+#ifdef _XBOX
+#include "controls/xbgamepaddefs.h"
+#endif
+
+#pragma warning(disable:4244)
 
 namespace dvl {
 

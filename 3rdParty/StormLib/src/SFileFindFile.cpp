@@ -12,6 +12,10 @@
 #include "StormLib.h"
 #include "StormCommon.h"
 
+  #ifndef _countof
+    #define _countof(x)  (sizeof(x) / sizeof(x[0]))
+  #endif
+
 //-----------------------------------------------------------------------------
 // Private structure used for file search (search handle)
 
@@ -212,6 +216,7 @@ static bool DoMPQSearch_FileEntry(
     TMPQHash * pHashEntry,
     TFileEntry * pFileEntry)
 {
+#ifndef _XBOX
     TFileEntry * pPatchEntry;
     HANDLE hFile = NULL;
     const char * szFileName;
@@ -282,6 +287,7 @@ static bool DoMPQSearch_FileEntry(
             }
         }
     }
+#endif
 
     // Either not a valid item or was found before
     return false;
