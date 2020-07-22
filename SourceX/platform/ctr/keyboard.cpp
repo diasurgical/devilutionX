@@ -3,38 +3,25 @@
 
 #include "platform/ctr/keyboard.h"
 
-static uint16_t maxLength = 16;
-
-static SwkbdCallbackResult MyCallback(void *user, const char **ppMessage, const char *inputText, size_t textLength)
-{
-	if (textLength > maxLength)
-	{
-		*ppMessage = "max 16 characters";
-		return SWKBD_CALLBACK_CONTINUE;
-	}
-
-	return SWKBD_CALLBACK_OK;
-}
-
-const char* ctr_vkbdInput(const char *title, char *outText)
+const char* ctr_vkbdInput(const char *hintText, const char *inText, char *outText)
 {
 	SwkbdState swkbd;
-	char mybuf[60];
 
-	swkbdInit(&swkbd, SWKBD_TYPE_WESTERN, 2, -1);
+	char mybuf[16];
+
+	swkbdInit(&swkbd, SWKBD_TYPE_WESTERN, 2, 15);
 	swkbdSetValidation(&swkbd, SWKBD_NOTEMPTY_NOTBLANK, 0, 0);
-	swkbdSetInitialText(&swkbd, mybuf);
-	swkbdSetHintText(&swkbd, title);
-	swkbdSetFilterCallback(&swkbd, MyCallback, NULL);
+	swkbdSetInitialText(&swkbd, inText);
+	swkbdSetHintText(&swkbd, hintText);
 
 	SwkbdButton button = swkbdInputText(&swkbd, mybuf, sizeof(mybuf));
 
 	if (button == SWKBD_BUTTON_CONFIRM)
 	{
-		strncpy(outText, mybuf, sizeof(maxLength));
-
-		return outText;
+		strncpy(outText, mybuf, strlen(mybuf));
+		return 0;
 	}
 
+	strncpy(outText, inText, strlen(inText));
 	return 0;
 }

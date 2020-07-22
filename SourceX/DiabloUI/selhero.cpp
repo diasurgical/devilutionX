@@ -260,7 +260,7 @@ void selhero_ClassSelector_Select(int value)
 #ifdef PREFILL_PLAYER_NAME
 	strcpy(selhero_heroInfo.name, selhero_GenerateName(selhero_heroInfo.heroclass));
 #elif defined __3DS__
-	ctr_vkbdInput("Hero name", selhero_heroInfo.name);
+	ctr_vkbdInput("Enter Hero name..", selhero_GenerateName(selhero_heroInfo.heroclass), selhero_heroInfo.name);
 #endif
 	UiInitList(0, 0, NULL, selhero_Name_Select, selhero_Name_Esc, ENTERNAME_DIALOG, size(ENTERNAME_DIALOG));
 }
