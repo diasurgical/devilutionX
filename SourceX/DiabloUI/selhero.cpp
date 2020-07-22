@@ -12,6 +12,10 @@
 #include "DiabloUI/selyesno.h"
 #include "DiabloUI/selok.h"
 
+#ifdef __3DS__
+#include "../platform/ctr/keyboard.h"
+#endif
+
 namespace dvl {
 
 std::size_t selhero_SaveCount = 0;
@@ -255,6 +259,8 @@ void selhero_ClassSelector_Select(int value)
 	memset(selhero_heroInfo.name, '\0', sizeof(selhero_heroInfo.name));
 #ifdef PREFILL_PLAYER_NAME
 	strcpy(selhero_heroInfo.name, selhero_GenerateName(selhero_heroInfo.heroclass));
+#elif defined __3DS__
+	ctr_vkbdInput("Hero name", selhero_heroInfo.name);
 #endif
 	UiInitList(0, 0, NULL, selhero_Name_Select, selhero_Name_Esc, ENTERNAME_DIALOG, size(ENTERNAME_DIALOG));
 }

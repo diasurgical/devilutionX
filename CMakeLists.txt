@@ -340,7 +340,8 @@ endif()
 
 if(3DS)
   list(APPEND devilutionx_SRCS
-    SourceX/platform/ctr/system.cpp)
+    SourceX/platform/ctr/system.cpp
+    SourceX/platform/ctr/keyboard.cpp)
   set(BIN_TARGET devilutionx.elf)
 endif()
 
