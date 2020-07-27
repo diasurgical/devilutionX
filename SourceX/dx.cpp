@@ -254,9 +254,8 @@ void LimitFrameRate()
 void RenderPresent()
 {
 	SDL_Surface *surface = GetOutputSurface();
-#if !defined(__3DS__)
 	assert(!SDL_MUSTLOCK(surface));
-#endif
+
 	if (!gbActive) {
 		LimitFrameRate();
 		return;

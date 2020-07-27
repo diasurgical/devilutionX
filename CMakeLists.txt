@@ -80,24 +80,6 @@ if(SWITCH)
   include(switch_defs)
 endif()
 
-if(3DS)
-  set(ASAN OFF)
-  set(UBSAN OFF)
-  set(PIE ON)
-
-  list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/ctr")
-  list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/ctr/modules")
-  find_package(CITRO3D REQUIRED)
-  find_package(FREETYPE REQUIRED)
-  find_package(BZIP2)
-  find_package(Tremor)
-  find_package(OGG)
-  find_package(MIKMOD)
-  find_package(MAD)
-  find_package(PNG)
-  include(n3ds_defs)
-endif()
-
 set(TARGET_PLATFORM host CACHE STRING "Target platform")
 set_property(CACHE TARGET_PLATFORM PROPERTY STRINGS host retrofw rg350 gkd350h cpigamesh)
 if(TARGET_PLATFORM STREQUAL "retrofw")
@@ -132,6 +114,11 @@ if(AMIGA)
   include(amiga_defs)
 endif()
 
+if(N3DS)
+  list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/ctr")
+  include(n3ds_defs)
+endif()
+
 if(DIST)
   set(sodium_USE_STATIC_LIBS ON)
 endif()
@@ -146,7 +133,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_THREAD_PREFER_PTHREAD ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
-if(NOT 3DS)
+if(NOT N3DS)
   find_package(Threads REQUIRED)
 endif()
 
@@ -338,7 +325,7 @@ if(SWITCH)
   set(BIN_TARGET devilutionx.elf)
 endif()
 
-if(3DS)
+if(N3DS)
   list(APPEND devilutionx_SRCS
     SourceX/platform/ctr/system.cpp
     SourceX/platform/ctr/keyboard.cpp)
@@ -401,7 +388,7 @@ target_include_directories(${BIN_TARGET} PRIVATE
   3rdParty/Radon/Radon/include
   3rdParty/libsmacker)
 
-if(NOT 3DS)
+if(NOT N3DS)
   target_link_libraries(devilution PUBLIC Threads::Threads)
 endif()
 
@@ -518,13 +505,6 @@ foreach(target devilution ${BIN_TARGET})
       -lfreetype -lvorbisfile -lvorbis -logg -lmodplug -lmpg123 -lSDL2 -lopusfile -lopus -lEGL -lglapi -ldrm_nouveau -lpng -lbz2 -lz -lnx)
   endif()
 
-  if(3DS)
-    target_link_libraries(${target} PRIVATE ${TREMOR_LIBRARIES})
-    target_include_directories(${target} PRIVATE ${TREMOR_INCLUDE_DIRS})
-    target_link_libraries(${target} PRIVATE 3ds::ogg 3ds::mikmod 3ds::mad 3ds::freetype 3ds::bzip2 3ds::png)
-    target_link_libraries(${target} PRIVATE 3ds::citro3d 3ds::ctrulib)
-  endif()
-
   if(AMIGA)
     target_link_libraries(${target} PRIVATE
       ${FREETYPE_LIBRARY}
@@ -532,6 +512,13 @@ foreach(target devilution ${BIN_TARGET})
     if(NOT WARPOS)
       target_link_libraries(${target} PRIVATE -ldebug)
     endif()
+  endif()
+
+  if(N3DS)
+    target_link_libraries(${target} PRIVATE ${TREMOR_LIBRARIES})
+    target_include_directories(${target} PRIVATE ${TREMOR_INCLUDE_DIRS})
+    target_link_libraries(${target} PRIVATE 3ds::ogg 3ds::mikmod 3ds::mad 3ds::freetype 3ds::bzip2 3ds::png)
+    target_link_libraries(${target} PRIVATE 3ds::citro3d 3ds::ctrulib)
   endif()
 
   target_compile_definitions(${target} PRIVATE ${def_list})
@@ -633,7 +620,7 @@ if(SWITCH)
   build_switch_binaries(${BIN_TARGET})
 endif()
 
-if(3DS)
+if(N3DS)
   set(APP_TITLE       "DevilutionX")
   set(APP_DESCRIPTION "DevilutionX port for 3DS")
   set(APP_AUTHOR      "Diasurgical Team")
@@ -642,7 +629,7 @@ if(3DS)
   set(APP_AUDIO       "${PROJECT_SOURCE_DIR}/Packaging/ctr/audio_silent.wav")
   set(APP_RSF         "${PROJECT_SOURCE_DIR}/Packaging/ctr/template.rsf")
   set(APP_ROMFS       "${CMAKE_BINARY_DIR}/romfs")
-  set(APP_ROMFS_FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf")
+  set(APP_ROMFS_FILES "${PROJECT_SOURCE_DIR}/Packaging/ctr/DiabloLight.ttf")
 
   file(MAKE_DIRECTORY ${APP_ROMFS})
   file(COPY ${APP_ROMFS_FILES}

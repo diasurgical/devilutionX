@@ -89,7 +89,7 @@
 #
 ############################################################################
 
-if(NOT 3DS)
+if(NOT N3DS)
     message(WARNING "Those tools can only be used if you are using the 3DS toolchain file. Please erase this build directory or create another one, and then use -DCMAKE_TOOLCHAIN_FILE=DevkitArm3DS.cmake when calling cmake for the 1st time. For more information, see the Readme.md for more information.")
 endif()
 
@@ -301,7 +301,7 @@ function(add_3dsx_target target)
         )
     endif()
     add_custom_target(${target_we}_3dsx ALL SOURCES ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.3dsx)
-    set_target_properties(${target} PROPERTIES LINK_FLAGS "-specs=3dsx.specs")
+    #set_target_properties(${target} PROPERTIES LINK_FLAGS "-specs=3dsx.specs")
 endfunction()
 
 function(__add_ncch_banner target IMAGE SOUND)
@@ -373,7 +373,7 @@ function(add_cia_target target RSF IMAGE SOUND)
     )
 
     add_custom_target(${target_we}_cia ALL SOURCES ${CMAKE_CURRENT_BINARY_DIR}/${target_we}.cia)
-    set_target_properties(${target} PROPERTIES LINK_FLAGS "-specs=3dsx.specs")
+    #set_target_properties(${target} PROPERTIES LINK_FLAGS "-specs=3dsx.specs")
 endfunction()
 
 macro(add_netload_target name target)

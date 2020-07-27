@@ -568,11 +568,11 @@ static void BaseMap_Close(TFileStream * pStream)
         UnmapViewOfFile(pStream->Base.Map.pbFile);
 #endif
 
-#if (defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU)) && !defined(PLATFORM_AMIGA) && !defined(PLATFORM_SWITCH)
+#if (defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU)) && !defined(PLATFORM_AMIGA) && !defined(PLATFORM_SWITCH) && !defined(PLATFORM_CTR)
     //Todo(Amiga): Fix a proper solution for this
     if(pStream->Base.Map.pbFile != NULL)
         munmap(pStream->Base.Map.pbFile, (size_t )pStream->Base.Map.FileSize);
-#elif defined(PLATFORM_SWITCH)
+#elif defined(PLATFORM_SWITCH) || defined(PLATFORM_CTR)
     if(pStream->Base.Map.pbFile != NULL)
         free(pStream->Base.Map.pbFile);
 #endif

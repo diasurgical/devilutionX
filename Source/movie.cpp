@@ -23,9 +23,7 @@ void play_movie(char *pszMovie, BOOL user_can_close)
 	stream_stop();
 	effects_play_sound("Sfx\\Misc\\blank.wav");
 
-#ifndef __3DS__ /// This allows suspend, sleep, shutdown. Disabled until 3ds-SDL-1.2 audio device switching has been fixed.
 	SVidPlayBegin(pszMovie, 0, 0, 0, 0, loop_movie ? 0x100C0808 : 0x10280808, &video_stream);
-#endif
 	MSG Msg;
 	while (video_stream && movie_playing) {
 		while (movie_playing && PeekMessage(&Msg)) {

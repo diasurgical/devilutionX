@@ -18,10 +18,10 @@ const char* ctr_vkbdInput(const char *hintText, const char *inText, char *outTex
 
 	if (button == SWKBD_BUTTON_CONFIRM)
 	{
-		strncpy(outText, mybuf, strlen(mybuf));
+		strcpy(outText, mybuf);
 		return 0;
 	}
 
-	strncpy(outText, inText, strlen(inText));
+	strcpy(outText, inText);
 	return 0;
 }
