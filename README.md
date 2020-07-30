@@ -9,7 +9,7 @@ Nightly builds | Platform
 
 ![Discord Channel](https://avatars3.githubusercontent.com/u/1965106?s=16&v=4) [Discord Chat Channel](https://discord.gg/aQBQdDe)
 
-# How To Play:
+## How To Play:
  - Copy diabdat.mpq from your CD, or GoG install folder, to the DevilutionX install folder or data folder; make sure it is all lowercase. The DeviliutionX install is the one that contains the DevilutionX executable. The data folder path may differ depending on OS version and security setting, but will normally be as following:
     - macOS `~/Library/Application Support/diasurgical/devilution`
     - Linux `~/.local/share/diasurgical/devilution/`
