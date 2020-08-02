@@ -4,20 +4,20 @@
 
 namespace dvl {
 
-enum class GameActionType {
-	NONE = 0,
-	USE_HEALTH_POTION,
-	USE_MANA_POTION,
-	PRIMARY_ACTION,   // Talk to towners, click on inv items, attack, etc.
-	SECONDARY_ACTION, // Open chests, doors, pickup items.
-	CAST_SPELL,
-	TOGGLE_INVENTORY,
-	TOGGLE_CHARACTER_INFO,
-	TOGGLE_QUICK_SPELL_MENU,
-	TOGGLE_SPELL_BOOK,
-	TOGGLE_QUEST_LOG,
-	SEND_KEY,
-	SEND_MOUSE_CLICK,
+enum GameActionType {
+	GameActionType_NONE = 0,
+	GameActionType_USE_HEALTH_POTION,
+	GameActionType_USE_MANA_POTION,
+	GameActionType_PRIMARY_ACTION,   // Talk to towners, click on inv items, attack, etc.
+	GameActionType_SECONDARY_ACTION, // Open chests, doors, pickup items.
+	GameActionType_CAST_SPELL,
+	GameActionType_TOGGLE_INVENTORY,
+	GameActionType_TOGGLE_CHARACTER_INFO,
+	GameActionType_TOGGLE_QUICK_SPELL_MENU,
+	GameActionType_TOGGLE_SPELL_BOOK,
+	GameActionType_TOGGLE_QUEST_LOG,
+	GameActionType_SEND_KEY,
+	GameActionType_SEND_MOUSE_CLICK,
 };
 
 struct GameActionSendKey {
@@ -38,7 +38,7 @@ struct GameAction {
 	GameActionType type;
 
 	GameAction()
-	    : type(GameActionType::NONE)
+	    : type(GameActionType_NONE)
 	{
 	}
 
@@ -48,13 +48,13 @@ struct GameAction {
 	}
 
 	GameAction(GameActionSendKey send_key)
-	    : type(GameActionType::SEND_KEY)
+	    : type(GameActionType_SEND_KEY)
 	    , send_key(send_key)
 	{
 	}
 
 	GameAction(GameActionSendMouseClick send_mouse_click)
-	    : type(GameActionType::SEND_MOUSE_CLICK)
+	    : type(GameActionType_SEND_MOUSE_CLICK)
 	    , send_mouse_click(send_mouse_click)
 	{
 	}
@@ -67,15 +67,15 @@ struct GameAction {
 
 bool GetGameAction(const SDL_Event &event, GameAction *action);
 
-enum class MoveDirectionX {
-	NONE = 0,
-	LEFT,
-	RIGHT
+enum MoveDirectionX {
+	MoveDirectionX_NONE = 0,
+	MoveDirectionX_LEFT,
+	MoveDirectionX_RIGHT
 };
-enum class MoveDirectionY {
-	NONE = 0,
-	UP,
-	DOWN
+enum MoveDirectionY {
+	MoveDirectionY_NONE = 0,
+	MoveDirectionY_UP,
+	MoveDirectionY_DOWN
 };
 struct MoveDirection {
 	MoveDirectionX x;

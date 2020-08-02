@@ -14,10 +14,6 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
-extern BYTE mpq_buf[4096];
-extern BOOL save_archive_modified;
-extern BOOLEAN save_archive_open;
-
 void mpqapi_remove_hash_entry(const char *pszName);
 void mpqapi_alloc_block(uint32_t block_offset, uint32_t block_size);
 _BLOCKENTRY *mpqapi_new_block(int *block_index);

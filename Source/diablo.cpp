@@ -171,7 +171,6 @@ static bool ProcessInput()
 
 void run_game_loop(unsigned int uMsg)
 {
-	BOOL bLoop;
 	WNDPROC saveProc;
 	MSG msg;
 
@@ -193,7 +192,7 @@ void run_game_loop(unsigned int uMsg)
 
 	while (gbRunGame) {
 		while (PeekMessage(&msg)) {
-			if (msg.message == WM_QUIT) {
+			if (msg.message == DVL_WM_QUIT) {
 				gbRunGameResult = FALSE;
 				gbRunGame = FALSE;
 				break;
@@ -355,6 +354,7 @@ static void print_help_and_exit()
 	printf("    %-20s %-30s\n", "-h, --help", "Print this message and exit");
 	printf("    %-20s %-30s\n", "--version", "Print the version and exit");
 	printf("    %-20s %-30s\n", "--data-dir", "Specify the folder of diabdat.mpq");
+	printf("    %-20s %-30s\n", "--save-dir", "Specify the folder of save files");
 	printf("    %-20s %-30s\n", "-n", "Skip startup videos");
 	printf("    %-20s %-30s\n", "-f", "Display frames per second");
 	printf("    %-20s %-30s\n", "-x", "Run in windowed mode");
@@ -395,6 +395,15 @@ void diablo_parse_flags(int argc, char **argv)
 #else
 			if (basePath.back() != '/')
 				basePath += '/';
+#endif
+		} else if (strcasecmp("--save-dir", argv[i]) == 0) {
+			prefPath = argv[++i];
+#ifdef _WIN32
+			if (prefPath.back() != '\\')
+				prefPath += '\\';
+#else
+			if (prefPath.back() != '/')
+				prefPath += '/';
 #endif
 		} else if (strcasecmp("-n", argv[i]) == 0) {
 			showintrodebug = FALSE;
@@ -452,8 +461,6 @@ void diablo_parse_flags(int argc, char **argv)
 
 void diablo_init_screen()
 {
-	int i;
-
 	MouseX = SCREEN_WIDTH / 2;
 	MouseY = SCREEN_HEIGHT / 2;
 	if (!sgbControllerActive)
@@ -498,7 +505,7 @@ BOOL PressEscKey()
 		rv = TRUE;
 	}
 	if (dropGoldFlag) {
-		control_drop_gold(VK_ESCAPE);
+		control_drop_gold(DVL_VK_ESCAPE);
 		rv = TRUE;
 	}
 	if (spselflag) {
@@ -518,35 +525,35 @@ static void GetMousePos(LPARAM lParam)
 LRESULT DisableInputWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg) {
-	case WM_KEYDOWN:
-	case WM_KEYUP:
-	case WM_CHAR:
-	case WM_SYSKEYDOWN:
-	case WM_SYSCOMMAND:
-	case WM_MOUSEMOVE:
+	case DVL_WM_KEYDOWN:
+	case DVL_WM_KEYUP:
+	case DVL_WM_CHAR:
+	case DVL_WM_SYSKEYDOWN:
+	case DVL_WM_SYSCOMMAND:
+	case DVL_WM_MOUSEMOVE:
 		GetMousePos(lParam);
 		return 0;
-	case WM_LBUTTONDOWN:
+	case DVL_WM_LBUTTONDOWN:
 		if (sgbMouseDown != 0)
 			return 0;
 		sgbMouseDown = 1;
 		return 0;
-	case WM_LBUTTONUP:
+	case DVL_WM_LBUTTONUP:
 		if (sgbMouseDown != 1)
 			return 0;
 		sgbMouseDown = 0;
 		return 0;
-	case WM_RBUTTONDOWN:
+	case DVL_WM_RBUTTONDOWN:
 		if (sgbMouseDown != 0)
 			return 0;
 		sgbMouseDown = 2;
 		return 0;
-	case WM_RBUTTONUP:
+	case DVL_WM_RBUTTONUP:
 		if (sgbMouseDown != 2)
 			return 0;
 		sgbMouseDown = 0;
 		return 0;
-	case WM_CAPTURECHANGED:
+	case DVL_WM_CAPTURECHANGED:
 		if (hWnd == (HWND)lParam)
 			return 0;
 		sgbMouseDown = 0;
@@ -559,38 +566,38 @@ LRESULT DisableInputWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 LRESULT GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg) {
-	case WM_KEYDOWN:
+	case DVL_WM_KEYDOWN:
 		PressKey(wParam);
 		return 0;
-	case WM_KEYUP:
+	case DVL_WM_KEYUP:
 		ReleaseKey(wParam);
 		return 0;
-	case WM_CHAR:
+	case DVL_WM_CHAR:
 		PressChar(wParam);
 		return 0;
-	case WM_SYSKEYDOWN:
+	case DVL_WM_SYSKEYDOWN:
 		if (PressSysKey(wParam))
 			return 0;
 		break;
-	case WM_SYSCOMMAND:
-		if (wParam == SC_CLOSE) {
+	case DVL_WM_SYSCOMMAND:
+		if (wParam == DVL_SC_CLOSE) {
 			gbRunGame = FALSE;
 			gbRunGameResult = FALSE;
 			return 0;
 		}
 		break;
-	case WM_MOUSEMOVE:
+	case DVL_WM_MOUSEMOVE:
 		GetMousePos(lParam);
 		gmenu_on_mouse_move();
 		return 0;
-	case WM_LBUTTONDOWN:
+	case DVL_WM_LBUTTONDOWN:
 		GetMousePos(lParam);
 		if (sgbMouseDown == 0) {
 			sgbMouseDown = 1;
 			track_repeat_walk(LeftMouseDown(wParam));
 		}
 		return 0;
-	case WM_LBUTTONUP:
+	case DVL_WM_LBUTTONUP:
 		GetMousePos(lParam);
 		if (sgbMouseDown == 1) {
 			sgbMouseDown = 0;
@@ -598,20 +605,20 @@ LRESULT GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			track_repeat_walk(FALSE);
 		}
 		return 0;
-	case WM_RBUTTONDOWN:
+	case DVL_WM_RBUTTONDOWN:
 		GetMousePos(lParam);
 		if (sgbMouseDown == 0) {
 			sgbMouseDown = 2;
 			RightMouseDown();
 		}
 		return 0;
-	case WM_RBUTTONUP:
+	case DVL_WM_RBUTTONUP:
 		GetMousePos(lParam);
 		if (sgbMouseDown == 2) {
 			sgbMouseDown = 0;
 		}
 		return 0;
-	case WM_CAPTURECHANGED:
+	case DVL_WM_CAPTURECHANGED:
 		if (hWnd != (HWND)lParam) {
 			sgbMouseDown = 0;
 			track_repeat_walk(FALSE);
@@ -658,7 +665,7 @@ BOOL LeftMouseDown(int wParam)
 				SetSpell();
 			} else if (stextflag != STORE_NONE) {
 				CheckStoreBtn();
-			} else if (MouseY < PANEL_TOP || MouseX < PANEL_LEFT || MouseX > PANEL_LEFT + PANEL_WIDTH) {
+			} else if (MouseY < PANEL_TOP || MouseX < PANEL_LEFT || MouseX >= PANEL_LEFT + PANEL_WIDTH) {
 				if (!gmenu_is_active() && !TryIconCurs()) {
 					if (questlog && MouseX > 32 && MouseX < 288 && MouseY > 32 && MouseY < 308) {
 						QuestlogESC();
@@ -681,7 +688,7 @@ BOOL LeftMouseDown(int wParam)
 						if (plr[myplr]._pStatPts != 0 && !spselflag)
 							CheckLvlBtn();
 						if (!lvlbtndown)
-							return LeftMouseCmd(wParam == MK_SHIFT + MK_LBUTTON);
+							return LeftMouseCmd(wParam == DVL_MK_SHIFT + DVL_MK_LBUTTON);
 					}
 				}
 			} else {
@@ -701,7 +708,7 @@ BOOL LeftMouseCmd(BOOL bShift)
 {
 	BOOL bNear;
 
-	assert(MouseY < PANEL_TOP); // 352
+	assert(MouseY < PANEL_TOP || MouseX < PANEL_LEFT || MouseX >= PANEL_LEFT + PANEL_WIDTH);
 
 	if (leveltype == DTYPE_TOWN) {
 		if (pcursitem != -1 && pcurs == CURSOR_HAND)
@@ -841,7 +848,7 @@ void RightMouseDown()
 
 BOOL PressSysKey(int wParam)
 {
-	if (gmenu_is_active() || wParam != VK_F10)
+	if (gmenu_is_active() || wParam != DVL_VK_F10)
 		return FALSE;
 	diablo_hotkey_msg(1);
 	return TRUE;
@@ -866,7 +873,7 @@ void diablo_hotkey_msg(DWORD dwMsg)
 
 void ReleaseKey(int vkey)
 {
-	if (vkey == VK_SNAPSHOT)
+	if (vkey == DVL_VK_SNAPSHOT)
 		CaptureScreen();
 }
 
@@ -880,26 +887,26 @@ void PressKey(int vkey)
 		if (sgnTimeoutCurs != CURSOR_NONE) {
 			return;
 		}
-		if (vkey == VK_F9) {
+		if (vkey == DVL_VK_F9) {
 			diablo_hotkey_msg(0);
 		}
-		if (vkey == VK_F10) {
+		if (vkey == DVL_VK_F10) {
 			diablo_hotkey_msg(1);
 		}
-		if (vkey == VK_F11) {
+		if (vkey == DVL_VK_F11) {
 			diablo_hotkey_msg(2);
 		}
-		if (vkey == VK_F12) {
+		if (vkey == DVL_VK_F12) {
 			diablo_hotkey_msg(3);
 		}
-		if (vkey == VK_RETURN) {
+		if (vkey == DVL_VK_RETURN) {
 			control_type_message();
 		}
-		if (vkey != VK_ESCAPE) {
+		if (vkey != DVL_VK_ESCAPE) {
 			return;
 		}
 	}
-	if (vkey == VK_ESCAPE) {
+	if (vkey == DVL_VK_ESCAPE) {
 		if (!PressEscKey()) {
 			track_repeat_walk(FALSE);
 			gamemenu_on();
@@ -910,7 +917,7 @@ void PressKey(int vkey)
 	if (sgnTimeoutCurs != CURSOR_NONE || dropGoldFlag) {
 		return;
 	}
-	if (vkey == VK_PAUSE) {
+	if (vkey == DVL_VK_PAUSE) {
 		diablo_pause_game();
 		return;
 	}
@@ -918,8 +925,8 @@ void PressKey(int vkey)
 		return;
 	}
 
-	if (vkey == VK_RETURN) {
-		if (GetAsyncKeyState(VK_MENU) & 0x8000) {
+	if (vkey == DVL_VK_RETURN) {
+		if (GetAsyncKeyState(DVL_VK_MENU) & 0x8000) {
 			dx_reinit();
 		} else if (stextflag) {
 			STextEnter();
@@ -928,7 +935,7 @@ void PressKey(int vkey)
 		} else {
 			control_type_message();
 		}
-	} else if (vkey == VK_F1) {
+	} else if (vkey == DVL_VK_F1) {
 		if (helpflag) {
 			helpflag = FALSE;
 		} else if (stextflag != STORE_NONE) {
@@ -954,11 +961,11 @@ void PressKey(int vkey)
 		}
 	}
 #ifdef _DEBUG
-	else if (vkey == VK_F2) {
+	else if (vkey == DVL_VK_F2) {
 	}
 #endif
 #ifdef _DEBUG
-	else if (vkey == VK_F3) {
+	else if (vkey == DVL_VK_F3) {
 		if (pcursitem != -1) {
 			sprintf(
 			    tempstr,
@@ -973,47 +980,47 @@ void PressKey(int vkey)
 	}
 #endif
 #ifdef _DEBUG
-	else if (vkey == VK_F4) {
+	else if (vkey == DVL_VK_F4) {
 		PrintDebugQuest();
 	}
 #endif
-	else if (vkey == VK_F5) {
+	else if (vkey == DVL_VK_F5) {
 		if (spselflag) {
 			SetSpeedSpell(0);
 			return;
 		}
 		ToggleSpell(0);
 		return;
-	} else if (vkey == VK_F6) {
+	} else if (vkey == DVL_VK_F6) {
 		if (spselflag) {
 			SetSpeedSpell(1);
 			return;
 		}
 		ToggleSpell(1);
 		return;
-	} else if (vkey == VK_F7) {
+	} else if (vkey == DVL_VK_F7) {
 		if (spselflag) {
 			SetSpeedSpell(2);
 			return;
 		}
 		ToggleSpell(2);
 		return;
-	} else if (vkey == VK_F8) {
+	} else if (vkey == DVL_VK_F8) {
 		if (spselflag) {
 			SetSpeedSpell(3);
 			return;
 		}
 		ToggleSpell(3);
 		return;
-	} else if (vkey == VK_F9) {
+	} else if (vkey == DVL_VK_F9) {
 		diablo_hotkey_msg(0);
-	} else if (vkey == VK_F10) {
+	} else if (vkey == DVL_VK_F10) {
 		diablo_hotkey_msg(1);
-	} else if (vkey == VK_F11) {
+	} else if (vkey == DVL_VK_F11) {
 		diablo_hotkey_msg(2);
-	} else if (vkey == VK_F12) {
+	} else if (vkey == DVL_VK_F12) {
 		diablo_hotkey_msg(3);
-	} else if (vkey == VK_UP) {
+	} else if (vkey == DVL_VK_UP) {
 		if (stextflag) {
 			STextUp();
 		} else if (questlog) {
@@ -1023,7 +1030,7 @@ void PressKey(int vkey)
 		} else if (automapflag) {
 			AutomapUp();
 		}
-	} else if (vkey == VK_DOWN) {
+	} else if (vkey == DVL_VK_DOWN) {
 		if (stextflag) {
 			STextDown();
 		} else if (questlog) {
@@ -1033,25 +1040,25 @@ void PressKey(int vkey)
 		} else if (automapflag) {
 			AutomapDown();
 		}
-	} else if (vkey == VK_PRIOR) {
+	} else if (vkey == DVL_VK_PRIOR) {
 		if (stextflag) {
 			STextPrior();
 		}
-	} else if (vkey == VK_NEXT) {
+	} else if (vkey == DVL_VK_NEXT) {
 		if (stextflag) {
 			STextNext();
 		}
-	} else if (vkey == VK_LEFT) {
+	} else if (vkey == DVL_VK_LEFT) {
 		if (automapflag && !talkflag) {
 			AutomapLeft();
 		}
-	} else if (vkey == VK_RIGHT) {
+	} else if (vkey == DVL_VK_RIGHT) {
 		if (automapflag && !talkflag) {
 			AutomapRight();
 		}
-	} else if (vkey == VK_TAB) {
+	} else if (vkey == DVL_VK_TAB) {
 		DoAutoMap();
-	} else if (vkey == VK_SPACE) {
+	} else if (vkey == DVL_VK_SPACE) {
 		if (!chrflag && invflag && MouseX < 480 && MouseY < PANEL_TOP && PANELS_COVER) {
 			SetCursorPos(MouseX + 160, MouseY);
 		}
@@ -1726,7 +1733,7 @@ void game_logic()
 	}
 
 #ifdef _DEBUG
-	if (debug_mode_key_inverted_v && GetAsyncKeyState(VK_SHIFT) & 0x8000) {
+	if (debug_mode_key_inverted_v && GetAsyncKeyState(DVL_VK_SHIFT) & 0x8000) {
 		ScrollView();
 	}
 #endif

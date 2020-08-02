@@ -18,8 +18,8 @@ UiListItem MAINMENU_DIALOG_ITEMS[] = {
 UiItem MAINMENU_DIALOG[] = {
 	MAINMENU_BACKGROUND,
 	MAINMENU_LOGO,
-	UiList(MAINMENU_DIALOG_ITEMS, 64, 192, 510, 43, UIS_HUGE | UIS_GOLD | UIS_CENTER),
-	UiArtText(nullptr, { 17, 444, 605, 21 }, UIS_SMALL)
+	UiList(MAINMENU_DIALOG_ITEMS, PANEL_LEFT + 64, 192, 510, 43, UIS_HUGE | UIS_GOLD | UIS_CENTER),
+	UiArtText(NULL, { 17, 444, 605, 21 }, UIS_SMALL)
 };
 
 void UiMainMenuSelect(int value)
@@ -70,6 +70,7 @@ BOOL UiMainMenuDialog(char *name, int *pdwResult, void (*fnSound)(char *file), i
 		mainmenu_restart_repintro(); // for automatic starts
 
 		while (MainMenuResult == 0) {
+			UiClearScreen();
 			UiPollAndRender();
 			if (!gbSpawned && SDL_GetTicks() >= dwAttractTicks) {
 				MainMenuResult = MAINMENU_ATTRACT_MODE;
@@ -79,7 +80,7 @@ BOOL UiMainMenuDialog(char *name, int *pdwResult, void (*fnSound)(char *file), i
 		mainmenu_Free();
 
 		if (gbSpawned && MainMenuResult == MAINMENU_REPLAY_INTRO) {
-			UiSelOkDialog(nullptr, "The Diablo introduction cinematic is only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase.", true);
+			UiSelOkDialog(NULL, "The Diablo introduction cinematic is only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase.", true);
 			MainMenuResult = 0;
 		}
 	}

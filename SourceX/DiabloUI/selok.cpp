@@ -36,16 +36,16 @@ UiListItem SELOK_DIALOG_ITEMS[] = {
 UiItem SELOK_DIALOG[] = {
 	MAINMENU_BACKGROUND,
 	MAINMENU_LOGO,
-	UiArtText(selok_title, { 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG),
-	UiArtText(dialogText, { 140, 210, 560, 168 }, UIS_MED),
-	UiList(SELOK_DIALOG_ITEMS, 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD)
+	UiArtText(selok_title, { PANEL_LEFT + 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG),
+	UiArtText(dialogText, { PANEL_LEFT + 140, 210, 560, 168 }, UIS_MED),
+	UiList(SELOK_DIALOG_ITEMS, PANEL_LEFT + 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD)
 };
 
 UiItem SPAWNERR_DIALOG[] = {
 	MAINMENU_BACKGROUND,
 	MAINMENU_LOGO,
-	UiArtText(dialogText, { 140, 197, 560, 168 }, UIS_MED),
-	UiList(SELOK_DIALOG_ITEMS, 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD)
+	UiArtText(dialogText, { PANEL_LEFT + 140, 197, 560, 168 }, UIS_MED),
+	UiList(SELOK_DIALOG_ITEMS, PANEL_LEFT + 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD)
 };
 
 void UiSelOkDialog(const char *title, const char *body, bool background)
@@ -62,7 +62,7 @@ void UiSelOkDialog(const char *title, const char *body, bool background)
 
 	UiItem *items = SPAWNERR_DIALOG;
 	int itemCnt = size(SPAWNERR_DIALOG);
-	if (title != nullptr) {
+	if (title != NULL) {
 		strcpy(selok_title, title);
 		items = SELOK_DIALOG;
 		itemCnt = size(SELOK_DIALOG);
@@ -75,6 +75,7 @@ void UiSelOkDialog(const char *title, const char *body, bool background)
 
 	selok_endMenu = false;
 	while (!selok_endMenu) {
+		UiClearScreen();
 		UiRenderItems(items, itemCnt);
 		UiPollAndRender();
 	}

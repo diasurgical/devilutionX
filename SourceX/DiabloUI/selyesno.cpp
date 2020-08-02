@@ -19,9 +19,9 @@ UiListItem SELYESNO_DIALOG_ITEMS[] = {
 UiItem SELYESNO_DIALOG[] = {
 	MAINMENU_BACKGROUND,
 	MAINMENU_LOGO,
-	UiArtText(selyesno_title, { 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG),
-	UiArtText(selyesno_confirmationMessage, { 120, 236, 280, 168 }, UIS_MED),
-	UiList(SELYESNO_DIALOG_ITEMS, 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD)
+	UiArtText(selyesno_title, { PANEL_LEFT + 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG),
+	UiArtText(selyesno_confirmationMessage, { PANEL_LEFT + 120, 236, 280, 168 }, UIS_MED),
+	UiList(SELYESNO_DIALOG_ITEMS, PANEL_LEFT + 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD)
 };
 UiArtText *SELYESNO_DIALOG_CONFIRMATION_MESSAGE = &SELYESNO_DIALOG[3].art_text;
 
@@ -55,6 +55,7 @@ bool UiSelHeroYesNoDialog(const char *title, const char *body)
 	selyesno_value = true;
 	selyesno_endMenu = false;
 	while (!selyesno_endMenu) {
+		UiClearScreen();
 		UiRenderItems(SELYESNO_DIALOG, size(SELYESNO_DIALOG));
 		UiPollAndRender();
 	}

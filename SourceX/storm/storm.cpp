@@ -7,7 +7,7 @@
 
 #include "display.h"
 #include "stubs.h"
-#include <Radon.hpp>
+#include "Radon.hpp"
 #include <SDL.h>
 #include <SDL_endian.h>
 #include <SDL_mixer.h>
@@ -18,10 +18,11 @@
 namespace dvl {
 
 std::string basePath;
+std::string prefPath;
 
 DWORD nLastError = 0;
 bool directFileAccess = false;
-char SBasePath[DVL_MAX_PATH];
+char SBasePath[MAX_PATH];
 
 #ifdef USE_SDL1
 static bool IsSVidVideoMode = false;
@@ -29,15 +30,19 @@ static bool IsSVidVideoMode = false;
 
 static std::string getIniPath()
 {
-	char path[DVL_MAX_PATH];
-	GetPrefPath(path, DVL_MAX_PATH);
+	char path[MAX_PATH];
+	GetPrefPath(path, MAX_PATH);
 	std::string result = path;
 	result.append("diablo.ini");
 	return result;
 }
 
-static radon::File ini(getIniPath());
-static Mix_Chunk *SFileChunk;
+radon::File& getIni() {
+  static radon::File ini(getIniPath());
+  return ini;
+}
+
+static Mix_Chunk *SFileChunk = NULL;
 
 void GetBasePath(char *buffer, size_t size)
 {
@@ -59,6 +64,11 @@ void GetBasePath(char *buffer, size_t size)
 
 void GetPrefPath(char *buffer, size_t size)
 {
+	if (prefPath.length()) {
+		snprintf(buffer, size, "%s", prefPath.c_str());
+		return;
+	}
+
 	char *path = SDL_GetPrefPath("diasurgical", "devilution");
 	if (path == NULL) {
 		buffer[0] = '\0';
@@ -92,6 +102,10 @@ BOOL SFileDdaBeginEx(HANDLE hFile, DWORD flags, DWORD mask, unsigned __int32 lDi
 		SDL_Log(SDL_GetError());
 		return false;
 	}
+	if (SFileChunk) {
+		SFileDdaEnd(hFile);
+		SFileFreeChunk();
+	}
 	SFileChunk = Mix_LoadWAV_RW(rw, 1);
 	free(SFXbuffer);
 
@@ -105,13 +119,18 @@ BOOL SFileDdaBeginEx(HANDLE hFile, DWORD flags, DWORD mask, unsigned __int32 lDi
 
 void SFileFreeChunk()
 {
-	if(SFileChunk)
+	if (SFileChunk) {
 		Mix_FreeChunk(SFileChunk);
+		SFileChunk = NULL;
+	}
 }
 
 BOOL SFileDdaDestroy()
 {
-	Mix_FreeChunk(SFileChunk);
+	if (SFileChunk) {
+		Mix_FreeChunk(SFileChunk);
+		SFileChunk = NULL;
+	}
 
 	return true;
 }
@@ -176,12 +195,12 @@ BOOL SFileOpenFile(const char *filename, HANDLE *phFile)
 	bool result = false;
 
 	if (directFileAccess) {
-		char directPath[DVL_MAX_PATH] = "\0";
-		char tmpPath[DVL_MAX_PATH] = "\0";
+		char directPath[MAX_PATH] = "\0";
+		char tmpPath[MAX_PATH] = "\0";
 		for (size_t i = 0; i < strlen(filename); i++) {
 			tmpPath[i] = AsciiToLowerTable_Path[static_cast<unsigned char>(filename[i])];
 		}
-		snprintf(directPath, DVL_MAX_PATH, "%s%s", SBasePath, tmpPath);
+		snprintf(directPath, MAX_PATH, "%s%s", SBasePath, tmpPath);
 		result = SFileOpenFileEx((HANDLE)0, directPath, 0xFFFFFFFF, phFile);
 	}
 	if (!result && patch_rt_mpq) {
@@ -341,7 +360,7 @@ bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue)
 
 bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, int *dataSize)
 {
-	radon::Section *section = ini.getSection(sectionName);
+	radon::Section *section = getIni().getSection(sectionName);
 	if (!section)
 		return false;
 
@@ -361,6 +380,8 @@ bool getIniValue(const char *sectionName, const char *keyName, char *string, int
 
 void setIniValue(const char *sectionName, const char *keyName, char *value, int len)
 {
+	radon::File& ini = getIni();
+
 	radon::Section *section = ini.getSection(sectionName);
 	if (!section) {
 		ini.addSection(sectionName);
@@ -600,7 +621,7 @@ void SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 #else
 	// Set the video mode close to the SVid resolution while preserving aspect ratio.
 	{
-		const auto *display = SDL_GetVideoSurface();
+		const SDL_Surface *display = SDL_GetVideoSurface();
 		IsSVidVideoMode = (display->flags & (SDL_FULLSCREEN | SDL_NOFRAME)) != 0;
 		if (IsSVidVideoMode) {
 			int w, h;
@@ -710,7 +731,7 @@ BOOL SVidPlayContinue(void)
 	} else
 #endif
 	{
-		auto *output_surface = GetOutputSurface();
+		SDL_Surface *output_surface = GetOutputSurface();
 		int factor;
 		int wFactor = output_surface->w / SVidWidth;
 		int hFactor = output_surface->h / SVidHeight;
@@ -719,17 +740,17 @@ BOOL SVidPlayContinue(void)
 		} else {
 			factor = wFactor;
 		}
-		const int scaledW = SVidWidth * factor;
-		const int scaledH = SVidHeight * factor;
+		const Sint16 scaledW = SVidWidth * factor;
+		const Sint16 scaledH = SVidHeight * factor;
 
 		SDL_Rect pal_surface_offset = {
-			static_cast<decltype(SDL_Rect().x)>((output_surface->w - scaledW) / 2),
-			static_cast<decltype(SDL_Rect().y)>((output_surface->h - scaledH) / 2),
-			static_cast<decltype(SDL_Rect().w)>(scaledW),
-			static_cast<decltype(SDL_Rect().h)>(scaledH)
+			(output_surface->w - scaledW) / 2,
+			(output_surface->h - scaledH) / 2,
+			scaledW,
+			scaledH
 		};
 		if (factor == 1) {
-			if (SDL_BlitSurface(SVidSurface, nullptr, output_surface, &pal_surface_offset) <= -1) {
+			if (SDL_BlitSurface(SVidSurface, NULL, output_surface, &pal_surface_offset) <= -1) {
 				ErrSdl();
 			}
 		} else {
@@ -739,7 +760,7 @@ BOOL SVidPlayContinue(void)
 			Uint32 format = SDL_GetWindowPixelFormat(ghMainWnd);
 			SDL_Surface *tmp = SDL_ConvertSurfaceFormat(SVidSurface, format, 0);
 #endif
-			if (SDL_BlitScaled(tmp, nullptr, output_surface, &pal_surface_offset) <= -1) {
+			if (SDL_BlitScaled(tmp, NULL, output_surface, &pal_surface_offset) <= -1) {
 				SDL_Log(SDL_GetError());
 				return false;
 			}
@@ -823,7 +844,7 @@ int SStrCopy(char *dest, const char *src, int max_length)
 
 BOOL SFileSetBasePath(char *path)
 {
-	strncpy(SBasePath, path, DVL_MAX_PATH);
+	strncpy(SBasePath, path, MAX_PATH);
 	return true;
 }
 

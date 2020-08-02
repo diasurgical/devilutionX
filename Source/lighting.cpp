@@ -962,7 +962,7 @@ void MakeLightTable()
 		for (j = 0; j < 8; j++) {
 			for (k = 0; k < 16; k++) {
 				for (l = 0; l < 16; l++) {
-					fs = (BYTE)sqrt((8 * l - j) * (8 * l - j) + (8 * k - i) * (8 * k - i));
+					fs = (BYTE)sqrt((double)(8 * l - j) * (8 * l - j) + (8 * k - i) * (8 * k - i));
 					if (fs < 0.0) {
 						fa = -0.5;
 					} else {

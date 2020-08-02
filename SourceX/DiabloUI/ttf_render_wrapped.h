@@ -6,10 +6,10 @@
 
 namespace dvl {
 
-enum class TextAlignment {
-	BEGIN = 0,
-	CENTER,
-	END,
+enum TextAlignment {
+	TextAlignment_BEGIN = 0,
+	TextAlignment_CENTER,
+	TextAlignment_END,
 };
 
 /**
@@ -19,6 +19,6 @@ enum class TextAlignment {
  * This method is slow. Caching the result is recommended.
  */
 SDL_Surface *RenderUTF8_Solid_Wrapped(
-    TTF_Font *font, const char *text, SDL_Color fg, Uint32 wrapLength, TextAlignment x_align = TextAlignment::BEGIN);
+    TTF_Font *font, const char *text, SDL_Color fg, Uint32 wrapLength, TextAlignment x_align = TextAlignment_BEGIN);
 
 } // namespace dvl

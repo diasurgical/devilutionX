@@ -62,29 +62,29 @@ struct CircleMenuHint {
 bool IsTopActive(const CircleMenuHint &hint)
 {
 	if (hint.is_dpad)
-		return IsControllerButtonPressed(ControllerButton::BUTTON_DPAD_UP);
-	return IsControllerButtonPressed(ControllerButton::BUTTON_Y);
+		return IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_UP);
+	return IsControllerButtonPressed(ControllerButton_BUTTON_Y);
 }
 
 bool IsRightActive(const CircleMenuHint &hint)
 {
 	if (hint.is_dpad)
-		return IsControllerButtonPressed(ControllerButton::BUTTON_DPAD_RIGHT);
-	return IsControllerButtonPressed(ControllerButton::BUTTON_B);
+		return IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_RIGHT);
+	return IsControllerButtonPressed(ControllerButton_BUTTON_B);
 }
 
 bool IsBottomActive(const CircleMenuHint &hint)
 {
 	if (hint.is_dpad)
-		return IsControllerButtonPressed(ControllerButton::BUTTON_DPAD_DOWN);
-	return IsControllerButtonPressed(ControllerButton::BUTTON_A);
+		return IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_DOWN);
+	return IsControllerButtonPressed(ControllerButton_BUTTON_A);
 }
 
 bool IsLeftActive(const CircleMenuHint &hint)
 {
 	if (hint.is_dpad)
-		return IsControllerButtonPressed(ControllerButton::BUTTON_DPAD_LEFT);
-	return IsControllerButtonPressed(ControllerButton::BUTTON_X);
+		return IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_LEFT);
+	return IsControllerButtonPressed(ControllerButton_BUTTON_X);
 }
 
 text_color CircleMenuHintTextColor(bool active)
@@ -94,7 +94,7 @@ text_color CircleMenuHintTextColor(bool active)
 
 void DrawCircleMenuHint(const CircleMenuHint &hint, int x, int y)
 {
-	constexpr int kLineHeight = 25;
+	const int kLineHeight = 25;
 	PrintGameStr(x + hint.x_mid - hint.top_w / 2, y, hint.top, CircleMenuHintTextColor(IsTopActive(hint)));
 	y += kLineHeight;
 
@@ -105,8 +105,8 @@ void DrawCircleMenuHint(const CircleMenuHint &hint, int x, int y)
 	PrintGameStr(x + hint.x_mid - hint.bottom_w / 2, y, hint.bottom, CircleMenuHintTextColor(IsBottomActive(hint)));
 }
 
-constexpr int kCircleMarginX = 16;
-constexpr int kCirclesTop = PANEL_TOP - 76;
+const int kCircleMarginX = 16;
+const int kCirclesTop = PANEL_TOP - 76;
 
 void DrawStartModifierMenu()
 {

@@ -6,18 +6,16 @@ namespace dvl {
 extern SDL_Surface *pal_surface;
 extern unsigned int pal_surface_palette_version;
 
-void DrawArt(int screenX, int screenY, Art *art, int nFrame,
-    decltype(SDL_Rect().w) srcW, decltype(SDL_Rect().h) srcH)
+void DrawArt(int screenX, int screenY, Art *art, int nFrame, Uint16 srcW, Uint16 srcH)
 {
-	screenX += PANEL_LEFT;
-	if (screenY >= SCREEN_HEIGHT || screenX >= SCREEN_WIDTH || art->surface == nullptr)
+	if (screenY >= SCREEN_HEIGHT || screenX >= SCREEN_WIDTH || art->surface == NULL)
 		return;
 
 	SDL_Rect src_rect = {
 		0,
-		static_cast<decltype(SDL_Rect().y)>(nFrame * art->h()),
-		static_cast<decltype(SDL_Rect().w)>(art->w()),
-		static_cast<decltype(SDL_Rect().h)>(art->h())
+		static_cast<Sint16>(nFrame * art->h()),
+		static_cast<Uint16>(art->w()),
+		static_cast<Uint16>(art->h())
 	};
 	ScaleOutputRect(&src_rect);
 

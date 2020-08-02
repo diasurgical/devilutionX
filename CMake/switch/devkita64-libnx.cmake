@@ -23,6 +23,13 @@ set(PORTLIBS_PATH ${DEVKITPRO}/portlibs)
 set(PORTLIBS ${PORTLIBS_PATH}/switch)
 set(CMAKE_FIND_ROOT_PATH ${DEVKITA64} ${LIBNX} ${PORTLIBS})
 
+# FIXME
+# Workarounds to fix various linker errors
+set(CMAKE_EXE_LINKER_FLAGS_INIT "-march=armv8-a+crc+crypto -mtune=cortex-a57 -mtp=soft -fPIE -ftls-model=local-exec -L${DEVKITPRO}/portlibs/switch/lib -L${DEVKITPRO}/libnx/lib -specs=${DEVKITPRO}/libnx/switch.specs")
+set(CMAKE_MODULE_LINKER_FLAGS_INIT "${CMAKE_EXE_LINKER_FLAGS_INIT}")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS_INIT}")
+set(CMAKE_EXE_MODULE_FLAGS "${CMAKE_EXE_MODULE_FLAGS_INIT}")
+
 # Set absolute tool paths:
 set(TOOLCHAIN_PREFIX ${DEVKITA64}/bin/aarch64-none-elf-)
 if(WIN32)

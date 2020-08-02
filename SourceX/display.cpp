@@ -24,10 +24,10 @@ extern BOOL was_window_init; /** defined in dx.cpp */
 extern SDL_Surface *renderer_texture_surface; /** defined in dx.cpp */
 
 #ifdef USE_SDL1
-void SetVideoMode(int width, int height, int bpp, std::uint32_t flags) {
+void SetVideoMode(int width, int height, int bpp, uint32_t flags) {
 	SDL_Log("Setting video mode %dx%d bpp=%u flags=0x%08X", width, height, bpp, flags);
 	SDL_SetVideoMode(width, height, bpp, flags);
-	const auto &current = *SDL_GetVideoInfo();
+	const SDL_VideoInfo &current = *SDL_GetVideoInfo();
 	SDL_Log("Video mode is now %dx%d bpp=%u flags=0x%08X",
 	    current.current_w, current.current_h, current.vfmt->BitsPerPixel, SDL_GetVideoSurface()->flags);
 	ghMainWnd = SDL_GetVideoSurface();
@@ -70,7 +70,7 @@ bool SpawnWindow(const char *lpWindowName, int nWidth, int nHeight)
 
 #ifdef USE_SDL1
 	SDL_WM_SetCaption(lpWindowName, WINDOW_ICON_NAME);
-	const auto &best = *SDL_GetVideoInfo();
+	const SDL_VideoInfo &best = *SDL_GetVideoInfo();
 	SDL_Log("Best video mode reported as: %dx%d bpp=%d hw_available=%u",
 	    best.current_w, best.current_h, best.vfmt->BitsPerPixel, best.hw_available);
 	SetVideoModeToPrimary(fullscreen);
@@ -159,7 +159,7 @@ void ScaleOutputRect(SDL_Rect *rect)
 {
 	if (!OutputRequiresScaling())
 		return;
-	const auto *surface = GetOutputSurface();
+	const SDL_Surface *surface = GetOutputSurface();
 	rect->x = rect->x * surface->w / SCREEN_WIDTH;
 	rect->y = rect->y * surface->h / SCREEN_HEIGHT;
 	rect->w = rect->w * surface->w / SCREEN_WIDTH;
@@ -178,10 +178,10 @@ SDL_Surface *CreateScaledSurface(SDL_Surface *src)
 	    src->format->Rmask, src->format->Gmask, src->format->Bmask, src->format->Amask);
 	if (SDL_HasColorKey(src)) {
 		SDL_SetColorKey(stretched, SDL_SRCCOLORKEY, src->format->colorkey);
-		if (src->format->palette != nullptr)
+		if (src->format->palette != NULL)
 			SDL_SetPalette(stretched, SDL_LOGPAL, src->format->palette->colors, 0, src->format->palette->ncolors);
 	}
-	if (SDL_SoftStretch((src), nullptr, stretched, &stretched_rect) < 0) {
+	if (SDL_SoftStretch((src), NULL, stretched, &stretched_rect) < 0) {
 		SDL_FreeSurface(stretched);
 		ErrSdl();
 	}

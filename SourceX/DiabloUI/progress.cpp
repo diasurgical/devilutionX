@@ -26,9 +26,9 @@ void DialogActionCancel()
 
 // TODO use PROGRESS_DIALOG for rendering the progressbar or delete it
 UiItem PROGRESS_DIALOG[] = {
-	UiImage(&dialogArt, { 180, 168, 280, 144 }),
-	UiText(dialogText, { 180, 177, 280, 43 }, UIS_CENTER),
-	UiImage(&progressArt, { 205, 220, 228, 38 }),
+	UiImage(&dialogArt, { PANEL_LEFT + 180, 168, 280, 144 }),
+	UiText(dialogText, { PANEL_LEFT + 180, 177, 280, 43 }, UIS_CENTER),
+	UiImage(&progressArt, { PANEL_LEFT + 205, 220, 228, 38 }),
 	MakeSmlButton("Cancel", &DialogActionCancel, 330, 265),
 };
 
@@ -66,6 +66,7 @@ void progress_Free()
 
 void progress_Render(BYTE progress)
 {
+	SDL_FillRect(GetOutputSurface(), NULL, 0x000000);
 	DrawArt(0, 0, &ArtBackground);
 
 	int x = GetCenterOffset(280);
@@ -80,8 +81,8 @@ void progress_Render(BYTE progress)
 
 	if (msgSurface) {
 		SDL_Rect dsc_rect = {
-			static_cast<decltype(SDL_Rect().x)>(x + 50),
-			static_cast<decltype(SDL_Rect().y)>(y + 8),
+			static_cast<Sint16>(x + 50),
+			static_cast<Sint16>(y + 8),
 			msgSurface->w,
 			msgSurface->h
 		};
