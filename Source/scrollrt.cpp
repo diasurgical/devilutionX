@@ -811,7 +811,7 @@ static void scrollrt_drawFloor(int x, int y, int sx, int sy, int rows, int colum
 }
 
 #define IsWall(x, y) (dPiece[x][y] == 0 || nSolidTable[dPiece[x][y]] || dSpecial[x][y] != 0)
-#define IsWalktabke(x, y) (dPiece[x][y] != 0 && !nSolidTable[dPiece[x][y]])
+#define IsWalkable(x, y) (dPiece[x][y] != 0 && !nSolidTable[dPiece[x][y]])
 
 /**
  * @brief Render a row of tile
@@ -835,11 +835,11 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int rows, int columns)
 			if (x >= 0 && x < MAXDUNX && y >= 0 && y < MAXDUNY) {
 				if (x + 1 < MAXDUNX && y - 1 >= 0 && sx + TILE_WIDTH <= SCREEN_X + SCREEN_WIDTH) {
 					// Render objects behind walls first to prevent sprites, that are moving
-					// between tiles, from poking through the walls as they exceed the tile bound.
-					// A propper fix for this would probably be to layout the sceen and render by
-					// sprite screen position rather then tile position.
+					// between tiles, from poking through the walls as they exceed the tile bounds.
+					// A proper fix for this would probably be to layout the sceen and render by
+					// sprite screen position rather than tile position.
 					if (IsWall(x, y) && (IsWall(x + 1, y) || (x > 0 && IsWall(x - 1, y)))) { // Part of a wall aligned on the x-axis
-						if (IsWalktabke(x + 1, y - 1) && IsWalktabke(x, y - 1) ) { // Has wakable area behind it
+						if (IsWalkable(x + 1, y - 1) && IsWalkable(x, y - 1) ) { // Has walkable area behind it
 							scrollrt_draw_dungeon(x + 1, y - 1, sx + TILE_WIDTH, sy);
 						}
 					}
