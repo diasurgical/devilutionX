@@ -661,7 +661,11 @@ static void DrawMonsterHelper(int x, int y, int oy, int sx, int sy)
 			CelBlitOutline(166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
 		}
 		assert(towner[mi]._tAnimData);
-		CelClippedDraw(px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
+		if (testvar % 2) {
+			CelClippedDrawPNG(px, sy, towner[mi]._tAnimData_png, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
+		} else {
+			CelClippedDraw(px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
+		}
 		return;
 	}
 

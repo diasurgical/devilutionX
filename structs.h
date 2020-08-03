@@ -662,7 +662,7 @@ typedef struct ObjectStruct {
 	int _oLight;
 	int _oAnimFlag;
 	unsigned char *_oAnimData;
-	std::vector<SDL_Surface *> * _oAnimData2;
+	std::vector<SDL_Surface *> *_oAnimData2;
 	int _oAnimDelay;
 	int _oAnimCnt;
 	int _oAnimLen;
@@ -1056,6 +1056,7 @@ typedef struct TownerStruct {
 	int _tyvel;
 	int _tdir;
 	unsigned char *_tAnimData;
+	std::vector<SDL_Surface *> _tAnimData_png;
 	int _tAnimDelay;
 	int _tAnimCnt;
 	int _tAnimLen;
@@ -1077,8 +1078,10 @@ typedef struct TownerStruct {
 	int _tVar4;
 	char _tName[PLR_NAME_LEN];
 	unsigned char *_tNAnim[8];
+	std::vector<SDL_Surface *> _tNAnim_png[8];
 	int _tNFrames;
 	unsigned char *_tNData;
+	std::vector<SDL_Surface *> _tNData_png;
 } TownerStruct;
 
 typedef struct QuestTalkData {
