@@ -116,7 +116,7 @@ bool SpawnWindow(const char *lpWindowName, int nWidth, int nHeight)
 #ifdef USE_SDL1
 		SDL_Log("upscaling not supported with USE_SDL1");
 #else
-		renderer = SDL_CreateRenderer(ghMainWnd, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+		renderer = SDL_CreateRenderer(ghMainWnd, -1, /* SDL_RENDERER_PRESENTVSYNC | */ SDL_RENDERER_ACCELERATED);
 		if (renderer == NULL) {
 			ErrSdl();
 		}
