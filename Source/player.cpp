@@ -141,7 +141,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 	char *cs;
 	BYTE *pData, *pAnim;
 	DWORD i;
-	int v = -1;
+	std::vector<SDL_Surface *> *pData_png;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("LoadPlrGFX: illegal player %d", pnum);
@@ -164,7 +164,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 			}
 			pData = p->_pNData;
 			pAnim = (BYTE *)p->_pNAnim;
-			v = 1;
+			pData_png = p->_pNAnim_png;
 			break;
 		case PFILE_WALK:
 			szCel = "AW";
@@ -173,7 +173,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 			}
 			pData = p->_pWData;
 			pAnim = (BYTE *)p->_pWAnim;
-			v = 2;
+			pData_png = p->_pWAnim_png;
 			break;
 		case PFILE_ATTACK:
 			if (leveltype == DTYPE_TOWN) {
@@ -182,7 +182,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 			szCel = "AT";
 			pData = p->_pAData;
 			pAnim = (BYTE *)p->_pAAnim;
-			v = 3;
+			pData_png = p->_pAAnim_png;
 			break;
 		case PFILE_HIT:
 			if (leveltype == DTYPE_TOWN) {
@@ -191,7 +191,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 			szCel = "HT";
 			pData = p->_pHData;
 			pAnim = (BYTE *)p->_pHAnim;
-			v = 4;
+			pData_png = p->_pHAnim_png;
 			break;
 		case PFILE_LIGHTNING:
 			if (leveltype == DTYPE_TOWN) {
@@ -200,7 +200,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 			szCel = "LM";
 			pData = p->_pLData;
 			pAnim = (BYTE *)p->_pLAnim;
-			v = 5;
+			pData_png = p->_pLAnim_png;
 			break;
 		case PFILE_FIRE:
 			if (leveltype == DTYPE_TOWN) {
@@ -209,7 +209,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 			szCel = "FM";
 			pData = p->_pFData;
 			pAnim = (BYTE *)p->_pFAnim;
-			v = 6;
+			pData_png = p->_pFAnim_png;
 			break;
 		case PFILE_MAGIC:
 			if (leveltype == DTYPE_TOWN) {
@@ -218,7 +218,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 			szCel = "QM";
 			pData = p->_pTData;
 			pAnim = (BYTE *)p->_pTAnim;
-			v = 7;
+			pData_png = p->_pTAnim_png;
 			break;
 		case PFILE_DEATH:
 			if (p->_pgfxnum & 0xF) {
@@ -227,7 +227,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 			szCel = "DT";
 			pData = p->_pDData;
 			pAnim = (BYTE *)p->_pDAnim;
-			v = 8;
+			pData_png = p->_pDAnim_png;
 			break;
 		case PFILE_BLOCK:
 			if (leveltype == DTYPE_TOWN) {
@@ -240,7 +240,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 			szCel = "BL";
 			pData = p->_pBData;
 			pAnim = (BYTE *)p->_pBAnim;
-			v = 9;
+			pData_png = p->_pBAnim_png;
 			break;
 		default:
 			app_fatal("PLR:2");
@@ -254,44 +254,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 		for (int j = 0; j < 8; j++) {
 			sprintf(pszName_png, "PlrGFX\\%s\\%s\\%s%s\\%s%s_%d.CL2", cs, prefix, prefix, szCel, prefix, szCel, j);
 			std::string tmp(pszName_png);
-			switch (v){
-			case 1: {
-				p->_pNAnim_png[j] = safePNGLoadVectorCL2(tmp);
-				break;
-				}
-			case 2: {
-				p->_pWAnim_png[j] = safePNGLoadVectorCL2(tmp);
-				break;
-			}
-			case 3: {
-				p->_pAAnim_png[j] = safePNGLoadVectorCL2(tmp);
-				break;
-			}
-			case 4: {
-				p->_pHAnim_png[j] = safePNGLoadVectorCL2(tmp);
-				break;
-			}
-			case 5: {
-				p->_pLAnim_png[j] = safePNGLoadVectorCL2(tmp);
-				break;
-			}
-			case 6: {
-				p->_pFAnim_png[j] = safePNGLoadVectorCL2(tmp);
-				break;
-			}
-			case 7: {
-				p->_pTAnim_png[j] = safePNGLoadVectorCL2(tmp);
-				break;
-			}
-			case 8: {
-				p->_pDAnim_png[j] = safePNGLoadVectorCL2(tmp);
-				break;
-			}
-			case 9: {
-				p->_pBAnim_png[j] = safePNGLoadVectorCL2(tmp);
-				break;
-			}
-			}
+			pData_png[j] = safePNGLoadVectorCL2(pszName_png);
 		}
 		p->_pGFXLoad |= i;
 	}
