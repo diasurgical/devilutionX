@@ -32,11 +32,47 @@ std::string generate_number(int n)
 	return base;
 }
 
+void fixPath(std::string &path)
+{
+	for (int i = 0; i < 8; i++) {
+		std::stringstream ss;
+		ss << "_" << i << "_";
+		size_t pos = path.find(ss.str());
+		if (pos != std::string::npos) {
+			path.replace(pos, 3, "_");
+		}
+	}
+}
+
+std::vector<SDL_Surface *> safePNGLoadVectorCL2(std::string path, std::string pal, std::string separator)
+{
+	//if (path.substr(path.length() - 4, 4) == ".CL2") {
+	//	path = path.substr(0, path.length() - 4);
+	//}
+	return safePNGLoadVector(path, pal, separator);
+}
+
+void logToFile(std::string s)
+{
+	std::ofstream myfile;
+	myfile.open("logs.txt", std::ios::app);
+	myfile << s << "\n";
+	myfile.close();
+}
+
 std::vector<SDL_Surface *> safePNGLoadVector(std::string path, std::string pal, std::string separator)
 {
 	if (path.substr(path.length() - 4, 4) == ".CEL") {
 		path = path.substr(0, path.length() - 4);
 	}
+
+	bool cl2 = false;
+	if (path.substr(path.length() - 4, 4) == ".CL2") {
+		path = path.substr(0, path.length() - 4);
+		cl2 = true;
+	}
+
+
 	std::string name = base_name(path);
 	std::vector<SDL_Surface *> out;
 
@@ -45,7 +81,11 @@ std::vector<SDL_Surface *> safePNGLoadVector(std::string path, std::string pal, 
 	merged_path_single += "\\";
 	merged_path_single += name;
 	merged_path_single += ".png";
+	fixPath(merged_path_single);
 	SDL_Surface *loadedSurface = IMG_Load(merged_path_single.c_str());
+	if (cl2)
+	logToFile(merged_path_single);
+
 	if (loadedSurface != NULL) {
 		out.push_back(loadedSurface);
 		return out;
@@ -65,7 +105,10 @@ std::vector<SDL_Surface *> safePNGLoadVector(std::string path, std::string pal, 
 		merged_path += generate_number(i);
 		merged_path += ".png";
 		SDL_Log("%s", merged_path.c_str());
+		fixPath(merged_path);
 		SDL_Surface *loadedSurface = IMG_Load(merged_path.c_str());
+		if (cl2)
+		logToFile(merged_path);
 		if (loadedSurface != NULL) {
 			out.push_back(loadedSurface);
 		} else {
@@ -1248,6 +1291,24 @@ void Cl2Draw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 	    pRLEBytes,
 	    nDataSize,
 	    nWidth);
+}
+
+void Cl2DrawPNG(int sx, int sy, std::vector<SDL_Surface *> pCelBuff, int nCel, int nWidth)
+{
+	if (pCelBuff.size() < nCel) {
+		SDL_Log("INVALID SURFACE VECTOR IN CL2_DRAW_PNG");
+		return;
+	}
+	sx -= SCREEN_X;
+	sy -= SCREEN_Y - 1;
+
+	SDL_Rect rectdst;
+	rectdst.x = sx;
+	rectdst.y = sy - pCelBuff[nCel - 1]->h;
+	rectdst.w = nWidth;
+	rectdst.h = pCelBuff[nCel - 1]->h;
+
+	SDL_BlitSurface(pCelBuff[nCel - 1], NULL, test_surface, &rectdst);
 }
 
 /**

@@ -423,6 +423,74 @@ static void DrawPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, i
 	}
 }
 
+static void DrawPlayerPNG(int pnum, int x, int y, int px, int py, std::vector<SDL_Surface *> &pCelBuff, int nCel, int nWidth)
+{
+	int l, frames;
+
+	if (dFlags[x][y] & BFLAG_LIT || plr[myplr]._pInfraFlag || !setlevel && !currlevel) {
+		//if (!pCelBuff) {
+			// app_fatal("Drawing player %d \"%s\": NULL Cel Buffer", pnum, plr[pnum]._pName);
+		//	return;
+		//}
+		//frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
+		//if (nCel < 1 || frames > 50 || nCel > frames) {
+			/*
+			const char *szMode = "unknown action";
+			if(plr[pnum]._pmode <= PM_QUIT)
+				szMode = szPlrModeAssert[plr[pnum]._pmode];
+			app_fatal(
+				"Drawing player %d \"%s\" %s: facing %d, frame %d of %d",
+				pnum,
+				plr[pnum]._pName,
+				szMode,
+				plr[pnum]._pdir,
+				nCel,
+				frames);
+			*/
+			//return;
+		//}
+		//if (pnum == pcursplr)
+		//	Cl2DrawOutline(165, px, py, pCelBuff, nCel, nWidth);
+		if (pnum == myplr) {
+			Cl2DrawPNG(px, py, pCelBuff, nCel, nWidth);
+			/*
+			if (plr[pnum].pManaShield)
+				Cl2Draw(
+				    px + plr[pnum]._pAnimWidth2 - misfiledata[MFILE_MANASHLD].mAnimWidth2[0],
+				    py,
+				    misfiledata[MFILE_MANASHLD].mAnimData[0],
+				    1,
+				    misfiledata[MFILE_MANASHLD].mAnimWidth[0]);
+					*/
+		} /*else if (!(dFlags[x][y] & BFLAG_LIT) || plr[myplr]._pInfraFlag && light_table_index > 8) {
+			Cl2DrawLightTbl(px, py, pCelBuff, nCel, nWidth, 1);
+			if (plr[pnum].pManaShield)
+				Cl2DrawLightTbl(
+				    px + plr[pnum]._pAnimWidth2 - misfiledata[MFILE_MANASHLD].mAnimWidth2[0],
+				    py,
+				    misfiledata[MFILE_MANASHLD].mAnimData[0],
+				    1,
+				    misfiledata[MFILE_MANASHLD].mAnimWidth[0],
+				    1);
+		} else {
+			l = light_table_index;
+			if (light_table_index < 5)
+				light_table_index = 0;
+			else
+				light_table_index -= 5;
+			Cl2DrawLight(px, py, pCelBuff, nCel, nWidth);
+			if (plr[pnum].pManaShield)
+				Cl2DrawLight(
+				    px + plr[pnum]._pAnimWidth2 - misfiledata[MFILE_MANASHLD].mAnimWidth2[0],
+				    py,
+				    misfiledata[MFILE_MANASHLD].mAnimData[0],
+				    1,
+				    misfiledata[MFILE_MANASHLD].mAnimWidth[0]);
+			light_table_index = l;
+		}*/
+	}
+}
+
 /**
  * @brief Render a player sprite
  * @param x dPiece coordinate
@@ -455,7 +523,11 @@ void DrawDeadPlayer(int x, int y, int sx, int sy)
 			dFlags[x][y] |= BFLAG_DEAD_PLAYER;
 			px = sx + p->_pxoff - p->_pAnimWidth2;
 			py = sy + p->_pyoff;
-			DrawPlayer(i, x, y, px, py, p->_pAnimData, p->_pAnimFrame, p->_pAnimWidth);
+			if (testvar % 2) {
+				DrawPlayerPNG(i, x, y, px, py, p->_pAnimData_png, p->_pAnimFrame, p->_pAnimWidth);
+			} else {
+				DrawPlayer(i, x, y, px, py, p->_pAnimData, p->_pAnimFrame, p->_pAnimWidth);
+			}
 		}
 	}
 }
@@ -709,7 +781,11 @@ static void DrawPlayerHelper(int x, int y, int oy, int sx, int sy)
 	int px = sx + pPlayer->_pxoff - pPlayer->_pAnimWidth2;
 	int py = sy + pPlayer->_pyoff;
 
-	DrawPlayer(p, x, y + oy, px, py, pPlayer->_pAnimData, pPlayer->_pAnimFrame, pPlayer->_pAnimWidth);
+	if (testvar % 2) {
+		DrawPlayerPNG(p, x, y + oy, px, py, pPlayer->_pAnimData_png, pPlayer->_pAnimFrame, pPlayer->_pAnimWidth);
+	} else {
+		DrawPlayer(p, x, y + oy, px, py, pPlayer->_pAnimData, pPlayer->_pAnimFrame, pPlayer->_pAnimWidth);
+	}
 }
 
 /**

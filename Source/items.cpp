@@ -586,6 +586,7 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 
 		assert(plr[p]._pNAnim[d]);
 		plr[p]._pAnimData = plr[p]._pNAnim[d];
+		plr[p]._pAnimData_png = *plr[p]._pNAnim_png[d];
 
 		plr[p]._pAnimLen = plr[p]._pNFrames;
 		plr[p]._pAnimFrame = 1;

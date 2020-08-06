@@ -16,6 +16,7 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 std::vector<SDL_Surface *> safePNGLoadVector(std::string path, std::string pal = "", std::string separator = "_");
+std::vector<SDL_Surface *> safePNGLoadVectorCL2(std::string path, std::string pal = "", std::string separator = "_");
 
 extern SDL_Surface *test_surface;
 extern std::string png_path;
@@ -110,6 +111,7 @@ BYTE *LoadFileInMem(char *pszName, DWORD *pdwFileLen);
 DWORD LoadFileWithMem(const char *pszName, BYTE *p);
 void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel);
 void Cl2Draw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
+void Cl2DrawPNG(int sx, int sy, std::vector<SDL_Surface *> pCelBuff, int nCel, int nWidth);
 void Cl2DrawOutline(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
 void Cl2DrawLightTbl(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char light);
 void Cl2DrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);

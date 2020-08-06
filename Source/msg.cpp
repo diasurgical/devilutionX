@@ -2365,6 +2365,7 @@ DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 					LoadPlrGFX(pnum, PFILE_DEATH);
 					plr[pnum]._pmode = PM_DEATH;
 					NewPlrAnim(pnum, plr[pnum]._pDAnim[0], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
+					NewPlrAnimPNG(pnum, plr[pnum]._pDAnim_png[0], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
 					plr[pnum]._pAnimFrame = plr[pnum]._pAnimLen - 1;
 					plr[pnum]._pVar8 = plr[pnum]._pAnimLen << 1;
 					dFlags[plr[pnum]._px][plr[pnum]._py] |= BFLAG_DEAD_PLAYER;
