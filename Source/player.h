@@ -31,7 +31,7 @@ void InitPlrGFXMem(int pnum);
 DWORD GetPlrGFXSize(char *szCel);
 void FreePlayerGFX(int pnum);
 void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width);
-void NewPlrAnimPNG(int pnum, std::vector<SDL_Surface *> *Peq, int numFrames, int Delay, int width);
+void NewPlrAnimPNG(int pnum, std::vector<SDL_Surface *> Peq, int numFrames, int Delay, int width);
 void ClearPlrPVars(int pnum);
 void SetPlrAnims(int pnum);
 void ClearPlrRVars(PlayerStruct *p);

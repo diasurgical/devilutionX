@@ -141,8 +141,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 	char *cs;
 	BYTE *pData, *pAnim;
 	DWORD i;
-	std::vector<SDL_Surface *> **pData_png;
-	std::vector<SDL_Surface *> **pAnim_png;
+	int v = -1;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("LoadPlrGFX: illegal player %d", pnum);
@@ -165,8 +164,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 			}
 			pData = p->_pNData;
 			pAnim = (BYTE *)p->_pNAnim;
-			pData_png = p->_pNData_png;
-			pAnim_png = p->_pNAnim_png;
+			v = 1;
 			break;
 		case PFILE_WALK:
 			szCel = "AW";
@@ -175,8 +173,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 			}
 			pData = p->_pWData;
 			pAnim = (BYTE *)p->_pWAnim;
-			pData_png = p->_pWData_png;
-			pAnim_png = p->_pWAnim_png;
+			v = 2;
 			break;
 		case PFILE_ATTACK:
 			if (leveltype == DTYPE_TOWN) {
@@ -185,8 +182,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 			szCel = "AT";
 			pData = p->_pAData;
 			pAnim = (BYTE *)p->_pAAnim;
-			pData_png = p->_pAData_png;
-			pAnim_png = p->_pAAnim_png;
+			v = 3;
 			break;
 		case PFILE_HIT:
 			if (leveltype == DTYPE_TOWN) {
@@ -195,8 +191,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 			szCel = "HT";
 			pData = p->_pHData;
 			pAnim = (BYTE *)p->_pHAnim;
-			pData_png = p->_pHData_png;
-			pAnim_png = p->_pHAnim_png;
+			v = 4;
 			break;
 		case PFILE_LIGHTNING:
 			if (leveltype == DTYPE_TOWN) {
@@ -205,8 +200,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 			szCel = "LM";
 			pData = p->_pLData;
 			pAnim = (BYTE *)p->_pLAnim;
-			pData_png = p->_pLData_png;
-			pAnim_png = p->_pLAnim_png;
+			v = 5;
 			break;
 		case PFILE_FIRE:
 			if (leveltype == DTYPE_TOWN) {
@@ -215,8 +209,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 			szCel = "FM";
 			pData = p->_pFData;
 			pAnim = (BYTE *)p->_pFAnim;
-			pData_png = p->_pFData_png;
-			pAnim_png = p->_pFAnim_png;
+			v = 6;
 			break;
 		case PFILE_MAGIC:
 			if (leveltype == DTYPE_TOWN) {
@@ -225,8 +218,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 			szCel = "QM";
 			pData = p->_pTData;
 			pAnim = (BYTE *)p->_pTAnim;
-			pData_png = p->_pTData_png;
-			pAnim_png = p->_pTAnim_png;
+			v = 7;
 			break;
 		case PFILE_DEATH:
 			if (p->_pgfxnum & 0xF) {
@@ -235,8 +227,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 			szCel = "DT";
 			pData = p->_pDData;
 			pAnim = (BYTE *)p->_pDAnim;
-			pData_png = p->_pDData_png;
-			pAnim_png = p->_pDAnim_png;
+			v = 8;
 			break;
 		case PFILE_BLOCK:
 			if (leveltype == DTYPE_TOWN) {
@@ -249,8 +240,7 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 			szCel = "BL";
 			pData = p->_pBData;
 			pAnim = (BYTE *)p->_pBAnim;
-			pData_png = p->_pBData_png;
-			pAnim_png = p->_pBAnim_png;
+			v = 9;
 			break;
 		default:
 			app_fatal("PLR:2");
@@ -264,8 +254,44 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 		for (int j = 0; j < 8; j++) {
 			sprintf(pszName_png, "PlrGFX\\%s\\%s\\%s%s\\%s%s_%d.CL2", cs, prefix, prefix, szCel, prefix, szCel, j);
 			std::string tmp(pszName_png);
-			pData_png[i] = &safePNGLoadVectorCL2(tmp);
-			pAnim_png[i] = pData_png[i];
+			switch (v){
+			case 1: {
+				p->_pNAnim_png[j] = safePNGLoadVectorCL2(tmp);
+				break;
+				}
+			case 2: {
+				p->_pWAnim_png[j] = safePNGLoadVectorCL2(tmp);
+				break;
+			}
+			case 3: {
+				p->_pAAnim_png[j] = safePNGLoadVectorCL2(tmp);
+				break;
+			}
+			case 4: {
+				p->_pHAnim_png[j] = safePNGLoadVectorCL2(tmp);
+				break;
+			}
+			case 5: {
+				p->_pLAnim_png[j] = safePNGLoadVectorCL2(tmp);
+				break;
+			}
+			case 6: {
+				p->_pFAnim_png[j] = safePNGLoadVectorCL2(tmp);
+				break;
+			}
+			case 7: {
+				p->_pTAnim_png[j] = safePNGLoadVectorCL2(tmp);
+				break;
+			}
+			case 8: {
+				p->_pDAnim_png[j] = safePNGLoadVectorCL2(tmp);
+				break;
+			}
+			case 9: {
+				p->_pBAnim_png[j] = safePNGLoadVectorCL2(tmp);
+				break;
+			}
+			}
 		}
 		p->_pGFXLoad |= i;
 	}
@@ -434,13 +460,13 @@ void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width)
 	plr[pnum]._pAnimWidth2 = (width - 64) >> 1;
 }
 
-void NewPlrAnimPNG(int pnum, std::vector<SDL_Surface *> *Peq, int numFrames, int Delay, int width)
+void NewPlrAnimPNG(int pnum, std::vector<SDL_Surface *> Peq, int numFrames, int Delay, int width)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("NewPlrAnim: illegal player %d", pnum);
 	}
 
-	plr[pnum]._pAnimData_png = *Peq;
+	plr[pnum]._pAnimData_png = Peq;
 	plr[pnum]._pAnimLen = numFrames;
 	plr[pnum]._pAnimFrame = 1;
 	plr[pnum]._pAnimCnt = 0;
@@ -915,7 +941,7 @@ void InitPlayer(int pnum, BOOL FirstTime)
 		if (plr[pnum]._pHitPoints >> 6 > 0) {
 			plr[pnum]._pmode = PM_STAND;
 			NewPlrAnim(pnum, plr[pnum]._pNAnim[DIR_S], plr[pnum]._pNFrames, 3, plr[pnum]._pNWidth);
-	//test		NewPlrAnimPNG(pnum, plr[pnum]._pNAnim_png[DIR_S], plr[pnum]._pNFrames, 3, plr[pnum]._pNWidth);
+			NewPlrAnimPNG(pnum, plr[pnum]._pNAnim_png[DIR_S], plr[pnum]._pNFrames, 3, plr[pnum]._pNWidth);
 			plr[pnum]._pAnimFrame = random_(2, plr[pnum]._pNFrames - 1) + 1;
 			plr[pnum]._pAnimCnt = random_(2, 3);
 		} else {
@@ -3754,25 +3780,25 @@ void SyncPlrAnim(int pnum)
 	switch (plr[pnum]._pmode) {
 	case PM_STAND:
 		plr[pnum]._pAnimData = plr[pnum]._pNAnim[dir];
-		plr[pnum]._pAnimData_png = *plr[pnum]._pNAnim_png[dir];
+		plr[pnum]._pAnimData_png = plr[pnum]._pNAnim_png[dir];
 		break;
 	case PM_WALK:
 	case PM_WALK2:
 	case PM_WALK3:
 		plr[pnum]._pAnimData = plr[pnum]._pWAnim[dir];
-		plr[pnum]._pAnimData_png = *plr[pnum]._pWAnim_png[dir];
+		plr[pnum]._pAnimData_png = plr[pnum]._pWAnim_png[dir];
 		break;
 	case PM_ATTACK:
 		plr[pnum]._pAnimData = plr[pnum]._pAAnim[dir];
-		plr[pnum]._pAnimData_png = *plr[pnum]._pAAnim_png[dir];
+		plr[pnum]._pAnimData_png = plr[pnum]._pAAnim_png[dir];
 		break;
 	case PM_RATTACK:
 		plr[pnum]._pAnimData = plr[pnum]._pAAnim[dir];
-		plr[pnum]._pAnimData_png = *plr[pnum]._pAAnim_png[dir];
+		plr[pnum]._pAnimData_png = plr[pnum]._pAAnim_png[dir];
 		break;
 	case PM_BLOCK:
 		plr[pnum]._pAnimData = plr[pnum]._pBAnim[dir];
-		plr[pnum]._pAnimData_png = *plr[pnum]._pBAnim_png[dir];
+		plr[pnum]._pAnimData_png = plr[pnum]._pBAnim_png[dir];
 		break;
 	case PM_SPELL:
 		if (pnum == myplr)
@@ -3781,32 +3807,32 @@ void SyncPlrAnim(int pnum)
 			sType = STYPE_FIRE;
 		if (sType == STYPE_FIRE) {
 			plr[pnum]._pAnimData = plr[pnum]._pFAnim[dir];
-			plr[pnum]._pAnimData_png = *plr[pnum]._pFAnim_png[dir];
+			plr[pnum]._pAnimData_png = plr[pnum]._pFAnim_png[dir];
 		}
 		if (sType == STYPE_LIGHTNING) {
 			plr[pnum]._pAnimData = plr[pnum]._pLAnim[dir];
-			plr[pnum]._pAnimData_png = *plr[pnum]._pLAnim_png[dir];
+			plr[pnum]._pAnimData_png = plr[pnum]._pLAnim_png[dir];
 		}
 		if (sType == STYPE_MAGIC) {
 			plr[pnum]._pAnimData = plr[pnum]._pTAnim[dir];
-			plr[pnum]._pAnimData_png = *plr[pnum]._pTAnim_png[dir];
+			plr[pnum]._pAnimData_png = plr[pnum]._pTAnim_png[dir];
 		}
 		break;
 	case PM_GOTHIT:
 		plr[pnum]._pAnimData = plr[pnum]._pHAnim[dir];
-		plr[pnum]._pAnimData_png = *plr[pnum]._pHAnim_png[dir];
+		plr[pnum]._pAnimData_png = plr[pnum]._pHAnim_png[dir];
 		break;
 	case PM_NEWLVL:
 		plr[pnum]._pAnimData = plr[pnum]._pNAnim[dir];
-		plr[pnum]._pAnimData_png = *plr[pnum]._pNAnim_png[dir];
+		plr[pnum]._pAnimData_png = plr[pnum]._pNAnim_png[dir];
 		break;
 	case PM_DEATH:
 		plr[pnum]._pAnimData = plr[pnum]._pDAnim[dir];
-		plr[pnum]._pAnimData_png = *plr[pnum]._pDAnim_png[dir];
+		plr[pnum]._pAnimData_png = plr[pnum]._pDAnim_png[dir];
 		break;
 	case PM_QUIT:
 		plr[pnum]._pAnimData = plr[pnum]._pNAnim[dir];
-		plr[pnum]._pAnimData_png = *plr[pnum]._pNAnim_png[dir];
+		plr[pnum]._pAnimData_png = plr[pnum]._pNAnim_png[dir];
 		break;
 	default:
 		app_fatal("SyncPlrAnim");

@@ -317,15 +317,15 @@ typedef struct PlayerStruct {
 
 
 
-	std::vector<SDL_Surface*> *_pNAnim_png[8];
-	std::vector<SDL_Surface*> *_pWAnim_png[8];
-	std::vector<SDL_Surface*> *_pAAnim_png[8];
-	std::vector<SDL_Surface*> *_pLAnim_png[8];
-	std::vector<SDL_Surface*> *_pFAnim_png[8];
-	std::vector<SDL_Surface*> *_pTAnim_png[8];
-	std::vector<SDL_Surface*> *_pHAnim_png[8];
-	std::vector<SDL_Surface*> *_pDAnim_png[8];
-	std::vector<SDL_Surface*> *_pBAnim_png[8];
+	std::vector<SDL_Surface*> _pNAnim_png[8];
+	std::vector<SDL_Surface*> _pWAnim_png[8];
+	std::vector<SDL_Surface*> _pAAnim_png[8];
+	std::vector<SDL_Surface*> _pLAnim_png[8];
+	std::vector<SDL_Surface*> _pFAnim_png[8];
+	std::vector<SDL_Surface*> _pTAnim_png[8];
+	std::vector<SDL_Surface*> _pHAnim_png[8];
+	std::vector<SDL_Surface*> _pDAnim_png[8];
+	std::vector<SDL_Surface*> _pBAnim_png[8];
 
 
 	ItemStruct InvBody[NUM_INVLOC];
@@ -371,16 +371,6 @@ typedef struct PlayerStruct {
 	unsigned char *_pHData;
 	unsigned char *_pDData;
 	unsigned char *_pBData;
-
-	std::vector<SDL_Surface *> *_pNData_png[8];
-	std::vector<SDL_Surface *> *_pWData_png[8];
-	std::vector<SDL_Surface *> *_pAData_png[8];
-	std::vector<SDL_Surface *> *_pLData_png[8];
-	std::vector<SDL_Surface *> *_pFData_png[8];
-	std::vector<SDL_Surface *> *_pTData_png[8];
-	std::vector<SDL_Surface *> *_pHData_png[8];
-	std::vector<SDL_Surface *> *_pDData_png[8];
-	std::vector<SDL_Surface *> *_pBData_png[8];
 	void *pReserved;
 } PlayerStruct;
 
