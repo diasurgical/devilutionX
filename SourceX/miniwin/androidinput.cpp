@@ -228,8 +228,8 @@ SDL_Rect AngelMana     ={PANEL_LEFT + 466, PANEL_TOP       ,85 ,130};
 	SDL_Rect DemonHealth   ={PANEL_LEFT + 100, PANEL_TOP       ,85 ,130};
 	SDL_Rect AngelMana     ={PANEL_LEFT + 466, PANEL_TOP       ,85 ,130};
 
-	SDL_Rect Arect         ={SCREEN_WIDTH - 150  ,SCREEN_HEIGHT - 225   ,100,95};
-	SDL_Rect Crect         ={SCREEN_WIDTH - 80  ,SCREEN_HEIGHT - 280   ,90,90};
+	SDL_Rect Arect         ={SCREEN_WIDTH - 150  ,SCREEN_HEIGHT - 225   ,100,90};
+	SDL_Rect Crect         ={SCREEN_WIDTH - 90  ,SCREEN_HEIGHT - 280   ,100,90};
 	SDL_Rect Shiftrect     ={SCREEN_WIDTH - 50   ,SCREEN_HEIGHT - 150   ,40,40};
 	SDL_Rect Jrect         ={1,180,170,170}; // Joystick circle
 

@@ -470,7 +470,6 @@ initalx  39, initaly 312
 		int fingernum = SDL_GetNumTouchFingers(e.tfinger.touchId);
 
 
-
 		if (fingernum >= 2) {
 			if (invflag) {
 				UseInvItem(myplr, pcursinvitem);
@@ -500,13 +499,8 @@ initalx  39, initaly 312
 					ShiftButtonPressed = 1;
 				    // sprintf(tempstr, "Shift Activated: Click on screen to Attack" );
 					// DrawInvMsg(tempstr);
-
-
 				}
 				time(&Sstart_t);
-
-				
-
 			} else {
 				time(&Send_t);
 				Sdiff_t = difftime(Send_t, Sstart_t);
@@ -520,15 +514,7 @@ initalx  39, initaly 312
 				time(&Sstart_t);
 			}
 
-
-
-
-
-
 		}
-
-
-
 
 		//If Change_controlsRect pressed
 		if (Xclick > Change_controlsRect.x && Xclick < Change_controlsRect.x+Change_controlsRect.w && Yclick > Change_controlsRect.y && Yclick < Change_controlsRect.y+Change_controlsRect.h) {
@@ -544,24 +530,7 @@ initalx  39, initaly 312
 				//int DemoModeEnabled = 0 ? 1 : 0;
 				if (DemoModeEnabled == 0){DemoModeEnabled = 1; }else{DemoModeEnabled = 0;}
 				//Enable JoyStick
-
-
-
-
-
-
-
-
-
 		}
-
-
-
-
-
-
-
-
 
 		if (!sbookflag && !invflag && !stextflag && Xclick > Arect.x && Xclick < Arect.x + Arect.w && Yclick > Arect.y && Yclick < Arect.y + Arect.h) {
 			AttackButtonPressed = true;
