@@ -86,8 +86,8 @@ void InitQTextMsg(int m)
 
 void DrawQTextBack()
 {
-	CelDraw(PANEL_X + 24, 487, pTextBoxCels, 1, 591);
-	trans_rect(PANEL_LEFT + 27, 28, 585, 297);
+	CelDraw(PANEL_X + 24, (SCREEN_Y + 327 + MAINMENU_BACKGROUND_Y), pTextBoxCels, 1, 591);  //487  0.683
+	trans_rect(PANEL_LEFT + 27, (MAINMENU_BACKGROUND_Y + 28), 585, 297);
 }
 
 void PrintQTextChr(int sx, int sy, BYTE *pCelBuff, int nCel)
