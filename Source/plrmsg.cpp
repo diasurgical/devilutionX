@@ -84,13 +84,13 @@ void InitPlrMsg()
 void DrawPlrMsg()
 {
 	int i;
-	DWORD x = 74;
-	DWORD y = 230;
+	DWORD x = (10 + SCREEN_X);
+	DWORD y = (70 + SCREEN_Y);
 	DWORD width = SCREEN_WIDTH - 20;
 	_plrmsg *pMsg;
 
 	if (chrflag || questlog) {
-		x = 394;
+		x = (330 + SCREEN_X);
 		width -= 300;
 	}
 	if (invflag || sbookflag)

@@ -2026,7 +2026,7 @@ void DrawTalkPan()
 	DrawPanelBox(170, sgbPlrTalkTbl + 80, 310, 55, PANEL_X + 170, PANEL_Y + 64);
 	msg = sgszTalkMsg;
 	for (i = 0; i < 39; i += 13) {
-		x = 0 + PANEL_LEFT;
+		x = (-64 + SCREEN_X) + PANEL_LEFT;
 		msg = control_print_talk_msg(msg, &x, i, 0);
 		if (!msg)
 			break;
@@ -2059,7 +2059,7 @@ void DrawTalkPan()
 			CelDraw(172 + PANEL_X, 84 + 18 * talk_btn + PANEL_Y, pTalkBtns, nCel, 61);
 		}
 		if (plr[i].plractive) {
-			x = 46 + PANEL_LEFT;
+			x = (-18 + SCREEN_X) + PANEL_LEFT;
 			control_print_talk_msg(plr[i]._pName, &x, 60 + talk_btn * 18, color);
 		}
 
@@ -2078,7 +2078,7 @@ char *control_print_talk_msg(char *msg, int *x, int y, int color)
 
 		c = fontframe[gbFontTransTbl[(BYTE)*msg]];
 		width += fontkern[c] + 1;
-		if (width > 514 + PANEL_LEFT)
+		if (width > (450 + SCREEN_X) + PANEL_LEFT)
 			return msg;
 		msg++;
 		if (c != 0) {
@@ -2121,7 +2121,8 @@ void control_release_talk_btn()
 	if (talkflag) {
 		for (i = 0; i < sizeof(talkbtndown) / sizeof(talkbtndown[0]); i++)
 			talkbtndown[i] = FALSE;
-		if (MouseX >= 172 + PANEL_LEFT && MouseY >= 421 + PANEL_LEFT && MouseX <= -119 + PANEL_TOP && MouseY <= 123 + PANEL_TOP) {
+		//if (MouseX >= 172 + PANEL_LEFT && MouseY >= 421 + PANEL_LEFT && MouseX <= -119 + PANEL_TOP && MouseY <= 123 + PANEL_TOP) {
+		if (MouseX >= 172 + PANEL_LEFT && MouseY >= 69 + PANEL_TOP && MouseX <= 233 + PANEL_LEFT && MouseY <= 123 + PANEL_TOP) {
 			off = (MouseY - (69 + PANEL_TOP)) / 18;
 
 			for (p = 0; p < MAX_PLRS && off != -1; p++) {
