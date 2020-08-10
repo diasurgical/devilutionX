@@ -183,13 +183,13 @@ void DrawSLine(int y)
 
 	sy = y * 12;
 	if (stextsize) {
-		xy = SCREENXY(PANEL_LEFT + 26, 25);
-		yy = BUFFER_WIDTH * (sy + 198) + 26 + PANEL_X;
+		xy = SCREENXY(PANEL_LEFT + 26, 25 + UI_OFFSET_Y);
+		yy = BUFFER_WIDTH * (sy + (38 + SCREEN_Y + UI_OFFSET_Y)) + 26 + PANEL_X;
 		width = 586 / 4;
 		line = BUFFER_WIDTH - 586;
 	} else {
-		xy = SCREENXY(PANEL_LEFT + 346, 25);
-		yy = BUFFER_WIDTH * (sy + 198) + 346 + PANEL_X;
+		xy = SCREENXY(PANEL_LEFT + 346, 25 + UI_OFFSET_Y);
+		yy = BUFFER_WIDTH * (sy + (38 + SCREEN_Y + UI_OFFSET_Y)) + 346 + PANEL_X;
 		width = 266 / 4;
 		line = BUFFER_WIDTH - 266;
 	}
