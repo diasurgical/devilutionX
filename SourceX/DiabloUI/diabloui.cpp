@@ -596,13 +596,13 @@ void LoadBackgroundArt(const char *pszFile)
 
 void UiAddBackground(std::vector<UiItemBase *> *vecDialog)
 {
-	SDL_Rect rect = { PANEL_LEFT, 0, 640, 480 };
+	SDL_Rect rect = { PANEL_LEFT, UI_OFFSET_Y, 640, 480 };
 	vecDialog->push_back(new UiImage(&ArtBackground, rect));
 }
 
 void UiAddLogo(std::vector<UiItemBase *> *vecDialog, int size, int height)
 {
-	SDL_Rect rect = { 0, height, 0, 0 };
+	SDL_Rect rect = { 0, UI_OFFSET_Y + height, 0, 0 };
 	vecDialog->push_back(new UiImage(&ArtLogos[size], /*animated=*/true, /*frame=*/0, rect, UIS_CENTER));
 }
 
