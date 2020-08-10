@@ -16,7 +16,7 @@ namespace dvl {
 
 namespace {
 
-const SDL_Rect VIEWPORT = { 0, (MAINMENU_BACKGROUND_Y + 114), SCREEN_WIDTH, 251 };
+const SDL_Rect VIEWPORT = { 0, (UI_OFFSET_Y + 114), SCREEN_WIDTH, 251 };
 const int SHADOW_OFFSET_X = 2;
 const int SHADOW_OFFSET_Y = 2;
 const int LINE_H = 22;
@@ -145,7 +145,7 @@ void CreditsRenderer::Render()
 	prev_offset_y_ = offset_y;
 
 	SDL_FillRect(GetOutputSurface(), NULL, 0x000000);
-	DrawArt(PANEL_LEFT + 0, MAINMENU_BACKGROUND_Y, &ArtBackground);
+	DrawArt(PANEL_LEFT + 0, UI_OFFSET_Y, &ArtBackground);
 	if (font == NULL)
 		return;
 

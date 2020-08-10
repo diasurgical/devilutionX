@@ -46,6 +46,28 @@ void selok_Esc()
 	selok_endMenu = true;
 }
 
+<<<<<<< HEAD
+=======
+UiListItem SELOK_DIALOG_ITEMS[] = {
+	{ "OK", 0 }
+};
+
+UiItem SELOK_DIALOG[] = {
+	MAINMENU_BACKGROUND,
+	MAINMENU_LOGO,
+	UiArtText(selok_title, { PANEL_LEFT + 24, (UI_OFFSET_Y + 161), 590, 35 }, UIS_CENTER | UIS_BIG),
+	UiArtText(dialogText, { PANEL_LEFT + 140, (UI_OFFSET_Y + 210), 560, 168 }, UIS_MED),
+	UiList(SELOK_DIALOG_ITEMS, PANEL_LEFT + 230, (UI_OFFSET_Y + 390), 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD)
+};
+
+UiItem SPAWNERR_DIALOG[] = {
+	MAINMENU_BACKGROUND,
+	MAINMENU_LOGO,
+	UiArtText(dialogText, { PANEL_LEFT + 140, (UI_OFFSET_Y + 197), 560, 168 }, UIS_MED),
+	UiList(SELOK_DIALOG_ITEMS, PANEL_LEFT + 230, (UI_OFFSET_Y + 390), 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD)
+};
+
+>>>>>>> Formatted the store menus.
 void UiSelOkDialog(const char *title, const char *body, bool background)
 {
 	if (!background) {

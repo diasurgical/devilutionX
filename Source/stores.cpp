@@ -118,8 +118,8 @@ void FreeStoreMem()
 
 void DrawSTextBack()
 {
-	CelDraw(PANEL_X + 344, 487, pSTextBoxCels, 1, 271);
-	trans_rect(PANEL_LEFT + 347, 28, 265, 297);
+	CelDraw(PANEL_X + 344, (327 + SCREEN_Y + UI_OFFSET_Y), pSTextBoxCels, 1, 271);
+	trans_rect(PANEL_LEFT + 347, (UI_OFFSET_Y + 28), 265, 297);
 }
 
 void PrintSString(int x, int y, BOOL cjustflag, char *str, char col, int val)
@@ -135,7 +135,7 @@ void PrintSString(int x, int y, BOOL cjustflag, char *str, char col, int val)
 	else
 		xx = PANEL_X + 352;
 	sx = xx + x;
-	sy = s + 204;
+	sy = s + (44 + SCREEN_Y + UI_OFFSET_Y);
 	len = strlen(str);
 	if (stextsize)
 		yy = 577;
@@ -151,7 +151,7 @@ void PrintSString(int x, int y, BOOL cjustflag, char *str, char col, int val)
 		sx += k;
 	}
 	if (stextsel == y) {
-		CelDraw(cjustflag ? xx + x + k - 20 : xx + x - 20, s + 205, pSPentSpn2Cels, PentSpn2Frame, 12);
+		CelDraw(cjustflag ? xx + x + k - 20 : xx + x - 20, s + (45 + SCREEN_Y + UI_OFFSET_Y), pSPentSpn2Cels, PentSpn2Frame, 12);
 	}
 	for (i = 0; i < len; i++) {
 		c = fontframe[gbFontTransTbl[(BYTE)str[i]]];
@@ -173,7 +173,7 @@ void PrintSString(int x, int y, BOOL cjustflag, char *str, char col, int val)
 		}
 	}
 	if (stextsel == y) {
-		CelDraw(cjustflag ? (xx + x + k + 4) : (PANEL_X + 596 - x), s + 205, pSPentSpn2Cels, PentSpn2Frame, 12);
+		CelDraw(cjustflag ? (xx + x + k + 4) : (PANEL_X + 596 - x), s + (45 + SCREEN_Y + UI_OFFSET_Y), pSPentSpn2Cels, PentSpn2Frame, 12);
 	}
 }
 
@@ -210,8 +210,8 @@ void DrawSSlider(int y1, int y2)
 {
 	int yd1, yd2, yd3;
 
-	yd1 = y1 * 12 + 204;
-	yd2 = y2 * 12 + 204;
+	yd1 = y1 * 12 + (44 + SCREEN_Y + UI_OFFSET_Y);
+	yd2 = y2 * 12 + (44 + SCREEN_Y + UI_OFFSET_Y);
 	if (stextscrlubtn != -1)
 		CelDraw(PANEL_X + 601, yd1, pSTextSlidCels, 12, 12);
 	else
@@ -232,7 +232,7 @@ void DrawSSlider(int y1, int y2)
 		yd3 = 1000 * (stextsval + ((yd3 - stextup) >> 2)) / (storenumh - 1) * (y2 * 12 - y1 * 12 - 24) / 1000;
 	else
 		yd3 = 0;
-	CelDraw(PANEL_X + 601, (y1 + 1) * 12 + 204 + yd3, pSTextSlidCels, 13, 12);
+	CelDraw(PANEL_X + 601, (y1 + 1) * 12 + (44 + SCREEN_Y + UI_OFFSET_Y) + yd3, pSTextSlidCels, 13, 12);
 }
 
 void DrawSTextHelp()
@@ -2728,7 +2728,7 @@ void CheckStoreBtn()
 		qtextflag = FALSE;
 		if (leveltype == DTYPE_TOWN)
 			stream_stop();
-	} else if (stextsel != -1 && MouseY >= 32 && MouseY <= 320) {
+	} else if (stextsel != -1 && MouseY >= (32 + UI_OFFSET_Y) && MouseY <= (320 + UI_OFFSET_Y)) {
 		if (!stextsize) {
 			if (MouseX < 344 + PANEL_LEFT || MouseX > 616 + PANEL_LEFT)
 				return;
@@ -2736,7 +2736,7 @@ void CheckStoreBtn()
 			if (MouseX < 24 + PANEL_LEFT || MouseX > 616 + PANEL_LEFT)
 				return;
 		}
-		y = (MouseY - 32) / 12;
+		y = (MouseY - (32 + UI_OFFSET_Y)) / 12;
 		if (stextscrl && MouseX > 600 + PANEL_LEFT) {
 			if (y == 4) {
 				if (stextscrlubtn <= 0) {

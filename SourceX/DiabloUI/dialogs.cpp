@@ -27,8 +27,25 @@ void DialogActionOK()
 	dialogEnd = true;
 }
 
+<<<<<<< HEAD
 std::vector<UiItemBase *> vecNULL;
 std::vector<UiItemBase *> vecOkDialog;
+=======
+const auto DIALOG_ART_L = UiImage(&dialogArt, { PANEL_LEFT + 127, (UI_OFFSET_Y + 100), 385, 280 });
+
+UiItem OK_DIALOG[] = {
+	UiImage(&dialogArt, { PANEL_LEFT + 180, (UI_OFFSET_Y + 168), 280, 144 }),
+	UiText(dialogText, { PANEL_LEFT + 200, (UI_OFFSET_Y + 211), 240, 80 }, UIS_CENTER),
+	MakeSmlButton("OK", &DialogActionOK, PANEL_LEFT + 265, (UI_OFFSET_Y + 265)),
+};
+
+UiItem OK_DIALOG_WITH_CAPTION[] = {
+	DIALOG_ART_L,
+	UiText(dialogText, SDL_Color{ 255, 255, 0, 0 }, { PANEL_LEFT + 147, (UI_OFFSET_Y + 110), 345, 20 }, UIS_CENTER),
+	UiText(dialogCaption, { PANEL_LEFT + 147, (UI_OFFSET_Y + 141), 345, 190 }, UIS_CENTER),
+	MakeSmlButton("OK", &DialogActionOK, PANEL_LEFT + 264, (UI_OFFSET_Y + 335)),
+};
+>>>>>>> Formatted the store menus.
 
 // clang-format off
 #define BLANKCOLOR { 0, 0xFF, 0, 0 }

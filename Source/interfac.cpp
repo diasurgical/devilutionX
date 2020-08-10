@@ -14,7 +14,7 @@ int progress_id;
 /** The colour used for the progress bar as an index into the palette. */
 const BYTE BarColor[3] = { 138, 43, 254 };
 /** The screen position of the top left corner of the progress bar. */
-const int BarPos[3][2] = { { 53, (MAINMENU_BACKGROUND_Y + 37) }, { 53, (MAINMENU_BACKGROUND_Y + 421) }, { 53, (MAINMENU_BACKGROUND_Y + 37) } };
+const int BarPos[3][2] = { { 53, (UI_OFFSET_Y + 37) }, { 53, (UI_OFFSET_Y + 421) }, { 53, (UI_OFFSET_Y + 37) } };
 
 void interface_msg_pump()
 {
@@ -44,7 +44,7 @@ void DrawCutscene()
 	DWORD i;
 
 	lock_buf(1);
-	CelDraw(PANEL_X, (480 + SCREEN_Y - 1) + MAINMENU_BACKGROUND_Y, sgpBackCel, 1, 640); //
+	CelDraw(PANEL_X, (480 + SCREEN_Y - 1) + UI_OFFSET_Y, sgpBackCel, 1, 640); //
 
 	for (i = 0; i < sgdwProgress; i++) {
 		DrawProgress(

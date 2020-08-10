@@ -18,8 +18,12 @@ _SNETVERSIONDATA *selconn_FileInfo;
 
 int provider;
 
+<<<<<<< HEAD
 std::vector<UiListItem *> vecConnItems;
 std::vector<UiItemBase *> vecSelConnDlg;
+=======
+UiArtText SELCONNECT_DIALOG_DESCRIPTION(selconn_Description, { PANEL_LEFT + 35, (UI_OFFSET_Y + 275), 205, 66 });
+>>>>>>> Formatted the store menus.
 
 #define DESCRIPTION_WIDTH 205
 
@@ -34,7 +38,28 @@ void selconn_Load()
 	vecConnItems.push_back(new UiListItem("Peer-to-Peer (UDP)", SELCONN_UDP));
 #endif
 #endif
+<<<<<<< HEAD
 	vecConnItems.push_back(new UiListItem("Loopback", SELCONN_LOOPBACK));
+=======
+	{ "Loopback", SELCONN_LOOPBACK },
+};
+
+UiItem SELCONNECT_DIALOG[] = {
+	MAINMENU_BACKGROUND,
+	MAINMENU_LOGO,
+	UiArtText("Multi Player Game", { PANEL_LEFT + 24, (UI_OFFSET_Y + 161), 590, 35 }, UIS_CENTER | UIS_BIG),
+	UiArtText(selconn_MaxPlayers, { PANEL_LEFT + 35, (UI_OFFSET_Y + 218), 205, 21 }),
+	UiArtText("Requirements:", { PANEL_LEFT + 35, (UI_OFFSET_Y + 256), 205, 21 }),
+	SELCONNECT_DIALOG_DESCRIPTION,
+	UiArtText("no gateway needed", { PANEL_LEFT + 30, (UI_OFFSET_Y + 356), 220, 31 }, UIS_CENTER | UIS_MED),
+	UiArtText(selconn_Gateway, { PANEL_LEFT + 35, (UI_OFFSET_Y + 393), 205, 21 }, UIS_CENTER),
+	UiArtText("Select Connection", { PANEL_LEFT + 300, (UI_OFFSET_Y + 211), 295, 33 }, UIS_CENTER | UIS_BIG),
+	UiArtTextButton("Change Gateway", NULL, { PANEL_LEFT + 16, (UI_OFFSET_Y + 427), 250, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD | UIS_HIDDEN),
+	UiList(SELCONN_DIALOG_ITEMS, PANEL_LEFT + 305, (UI_OFFSET_Y + 256), 285, 26, UIS_CENTER | UIS_VCENTER | UIS_GOLD),
+	UiArtTextButton("OK", &UiFocusNavigationSelect, { PANEL_LEFT + 299, (UI_OFFSET_Y + 427), 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD),
+	UiArtTextButton("Cancel", &UiFocusNavigationEsc, { PANEL_LEFT + 454, (UI_OFFSET_Y + 427), 140, 35 }, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD)
+};
+>>>>>>> Formatted the store menus.
 
 	UiAddBackground(&vecSelConnDlg);
 	UiAddLogo(&vecSelConnDlg);

@@ -9,11 +9,29 @@ namespace dvl {
 bool selyesno_endMenu;
 bool selyesno_value;
 char selyesno_confirmationMessage[256];
+<<<<<<< HEAD
 
 std::vector<UiListItem *> vecSelYesNoDialogItems;
 std::vector<UiItemBase *> vecSelYesNoDialog;
 
 #define MESSAGE_WIDTH 280
+=======
+char selyesno_title[32];
+
+UiListItem SELYESNO_DIALOG_ITEMS[] = {
+	{ "Yes", 0 },
+	{ "No", 1 }
+};
+
+UiItem SELYESNO_DIALOG[] = {
+	MAINMENU_BACKGROUND,
+	MAINMENU_LOGO,
+	UiArtText(selyesno_title, { PANEL_LEFT + 24, (UI_OFFSET_Y + 161), 590, 35 }, UIS_CENTER | UIS_BIG),
+	UiArtText(selyesno_confirmationMessage, { PANEL_LEFT + 120, (UI_OFFSET_Y + 236), 280, 168 }, UIS_MED),
+	UiList(SELYESNO_DIALOG_ITEMS, PANEL_LEFT + 230, (UI_OFFSET_Y + 390), 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD)
+};
+UiArtText *SELYESNO_DIALOG_CONFIRMATION_MESSAGE = &SELYESNO_DIALOG[3].art_text;
+>>>>>>> Formatted the store menus.
 
 void selyesno_Free()
 {
