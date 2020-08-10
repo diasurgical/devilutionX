@@ -1788,18 +1788,18 @@ void DrawSpellBook()
 
 	spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
 
-	yp = 215;
+	yp = (55 + SCREEN_Y);
 	for (i = 1; i < 8; i++) {
 		sn = SpellPages[sbooktab][i - 1];
 		if (sn != -1 && spl & (__int64)1 << (sn - 1)) {
 			st = GetSBookTrans(sn, TRUE);
 			SetSpellTrans(st);
-			DrawSpellCel(RIGHT_PANEL + 75, yp, pSBkIconCels, SpellITbl[sn], 37);
+			DrawSpellCel(RIGHT_PANEL + (11 + SCREEN_X), yp, pSBkIconCels, SpellITbl[sn], 37);
 			if (sn == plr[myplr]._pRSpell && st == plr[myplr]._pRSplType) {
 				SetSpellTrans(RSPLTYPE_SKILL);
-				DrawSpellCel(RIGHT_PANEL + 75, yp, pSBkIconCels, SPLICONLAST, 37);
+				DrawSpellCel(RIGHT_PANEL + (11 + SCREEN_X), yp, pSBkIconCels, SPLICONLAST, 37);
 			}
-			PrintSBookStr(10, yp - 23, FALSE, spelldata[sn].sNameText, COL_WHITE);
+			PrintSBookStr(-54 + SCREEN_X, yp - 23, FALSE, spelldata[sn].sNameText, COL_WHITE);
 			switch (GetSBookTrans(sn, FALSE)) {
 			case RSPLTYPE_SKILL:
 				strcpy(tempstr, "Skill");
@@ -1818,7 +1818,7 @@ void DrawSpellBook()
 				if (sn == SPL_BONESPIRIT) {
 					sprintf(tempstr, "Mana: %i  Dam: 1/3 tgt hp", mana);
 				}
-				PrintSBookStr(10, yp - 1, FALSE, tempstr, COL_WHITE);
+				PrintSBookStr(-54 + SCREEN_X, yp - 1, FALSE, tempstr, COL_WHITE);
 				lvl = plr[myplr]._pSplLvl[sn] + plr[myplr]._pISplLvlAdd;
 				if (lvl < 0) {
 					lvl = 0;
@@ -1830,7 +1830,7 @@ void DrawSpellBook()
 				}
 				break;
 			}
-			PrintSBookStr(10, yp - 12, FALSE, tempstr, COL_WHITE);
+			PrintSBookStr(-54 + SCREEN_X, yp - 12, FALSE, tempstr, COL_WHITE);
 		}
 		yp += 43;
 	}
