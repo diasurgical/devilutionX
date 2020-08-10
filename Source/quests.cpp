@@ -702,8 +702,8 @@ void PrintQLString(int x, int y, BOOL cjustflag, char *str, int col)
 	int len, width, i, k, sx, sy;
 	BYTE c;
 
-	sx = x + 96;
-	sy = y * 12 + 204;
+	sx = x + (32 + SCREEN_X);
+	sy = y * 12 + (44 + SCREEN_Y);
 	len = strlen(str);
 	k = 0;
 	if (cjustflag) {
@@ -715,7 +715,7 @@ void PrintQLString(int x, int y, BOOL cjustflag, char *str, int col)
 		sx += k;
 	}
 	if (qline == y) {
-		CelDraw(cjustflag ? x + k + 76 : x + 76, sy + 1, pSPentSpn2Cels, PentSpn2Frame, 12);
+		CelDraw(cjustflag ? x + k + (12 + SCREEN_X) : x + (12 + SCREEN_X), sy + 1, pSPentSpn2Cels, PentSpn2Frame, 12);
 	}
 	for (i = 0; i < len; i++) {
 		c = fontframe[gbFontTransTbl[(BYTE)str[i]]];
@@ -726,7 +726,7 @@ void PrintQLString(int x, int y, BOOL cjustflag, char *str, int col)
 		sx += fontkern[c] + 1;
 	}
 	if (qline == y) {
-		CelDraw(cjustflag ? x + k + 100 : 340 - x, sy + 1, pSPentSpn2Cels, PentSpn2Frame, 12);
+		CelDraw(cjustflag ? x + k + (36 + SCREEN_X) : (276 + SCREEN_X) - x, sy + 1, pSPentSpn2Cels, PentSpn2Frame, 12);
 	}
 }
 
