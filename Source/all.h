@@ -18,6 +18,8 @@
 
 #include "../types.h"
 
+#include "../SourceX/display_fwd.h"
+
 #include "appfat.h"
 #include "automap.h"
 #include "capture.h"

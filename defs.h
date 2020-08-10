@@ -4,6 +4,8 @@
  * Global definitions and Macros.
  */
 
+#include "SourceX/display_fwd.h"
+
 #define DIABOOL					BOOL
 #define GAME_NAME				"DIABLO"
 #define APP_NAME				"Diablo"
@@ -108,8 +110,8 @@
 #define PAL16_RED		224
 #define PAL16_GRAY		240
 
-#define SCREEN_WIDTH	640
-#define SCREEN_HEIGHT	480
+#define SCREEN_WIDTH	disp::GetScreenWidth()
+#define SCREEN_HEIGHT	disp::GetScreenHeight()
 
 // If defined, use 32-bit colors instead of 8-bit [Default -> Undefined]
 //#define RGBMODE
@@ -120,10 +122,10 @@
 #define SCREEN_BPP		32
 #endif
 
-#define BORDER_LEFT		64
-#define BORDER_TOP		160
-#define BORDER_RIGHT	64
-#define BORDER_BOTTOM	16
+#define BORDER_LEFT		(SCREEN_WIDTH / 10)
+#define BORDER_TOP		(SCREEN_HEIGHT / 3)
+#define BORDER_RIGHT	(SCREEN_WIDTH / 10)
+#define BORDER_BOTTOM	(SCREEN_HEIGHT / 30)
 
 #define SCREEN_X		BORDER_LEFT
 #define SCREEN_Y		BORDER_TOP
@@ -134,8 +136,8 @@
 #define TILE_WIDTH		64
 #define TILE_HEIGHT		32
 
-#define PANEL_WIDTH     640
-#define PANEL_HEIGHT    128
+#define PANEL_WIDTH		640
+#define PANEL_HEIGHT	128
 #define PANEL_TOP		(SCREEN_HEIGHT - PANEL_HEIGHT)
 #define PANEL_LEFT		(SCREEN_WIDTH - PANEL_WIDTH) / 2
 #define PANEL_X			(SCREEN_X + PANEL_LEFT)
@@ -143,16 +145,12 @@
 
 #define SPANEL_WIDTH	 320
 #define SPANEL_HEIGHT	 352
-#define PANELS_COVER (SCREEN_WIDTH <= PANEL_WIDTH && SCREEN_HEIGHT <= SPANEL_HEIGHT + PANEL_HEIGHT)
+#define PANELS_COVER	(SCREEN_WIDTH <= PANEL_WIDTH && SCREEN_HEIGHT <= SPANEL_HEIGHT + PANEL_HEIGHT)
 
 #define RIGHT_PANEL		(SCREEN_WIDTH - SPANEL_WIDTH)
 #define RIGHT_PANEL_X	(SCREEN_X + RIGHT_PANEL)
 
-#if SCREEN_WIDTH <= PANEL_WIDTH
-#define VIEWPORT_HEIGHT	(SCREEN_HEIGHT - PANEL_HEIGHT)
-#else
-#define VIEWPORT_HEIGHT	SCREEN_HEIGHT
-#endif
+#define VIEWPORT_HEIGHT disp::GetViewportHeight()
 
 #define DIALOG_TOP		((SCREEN_HEIGHT - PANEL_HEIGHT) / 2 - 18)
 #define DIALOG_Y		(SCREEN_Y + DIALOG_TOP)
@@ -187,7 +185,7 @@
 #define SwapLE32 SDL_SwapLE32
 #define SwapLE16 SDL_SwapLE16
 
-#define ErrSdl() ErrDlg("SDL Error", SDL_GetError(), __FILE__, __LINE__)
+#define ErrSdl() dvl::ErrDlg("SDL Error", SDL_GetError(), __FILE__, __LINE__)
 
 #ifdef _MSC_VER
 #define strcasecmp _stricmp

@@ -6,6 +6,8 @@
 #include <SDL.h>
 #include <type_traits>
 
+#include "display_fwd.h"
+
 namespace dvl {
 
 extern int vsyncEnabled;
