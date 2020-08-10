@@ -161,8 +161,8 @@ void gmenu_draw()
 	if (sgpCurrentMenu) {
 		if (dword_63447C)
 			dword_63447C(sgpCurrentMenu);
-		CelDraw((SCREEN_WIDTH - 296) / 2 + SCREEN_X, 102 + SCREEN_Y, sgpLogo, 1, 296);
-		y = 160 + SCREEN_Y;
+		CelDraw((SCREEN_WIDTH - 296) / 2 + SCREEN_X, 102 + SCREEN_Y + UI_OFFSET_Y, sgpLogo, 1, 296);
+		y = 160 + SCREEN_Y + UI_OFFSET_Y;
 		i = sgpCurrentMenu;
 		if (sgpCurrentMenu->fnMenu) {
 			while (i->fnMenu) {
@@ -342,10 +342,10 @@ BOOL gmenu_left_mouse(BOOL isDown)
 	if (MouseY >= PANEL_TOP) {
 		return FALSE;
 	}
-	if (MouseY - 117 < 0) {
+	if (MouseY - (115 + UI_OFFSET_Y) < 0) {
 		return TRUE;
 	}
-	i = (MouseY - 117) / 45;
+	i = (MouseY - (115 + UI_OFFSET_Y)) / 45;
 	if (i >= sgCurrentMenuIdx) {
 		return TRUE;
 	}
