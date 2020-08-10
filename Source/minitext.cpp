@@ -73,7 +73,7 @@ void InitQTextMsg(int m)
 		questlog = FALSE;
 		qtextptr = alltext[m].txtstr;
 		qtextflag = TRUE;
-		qtexty = 500;
+		qtexty = (340 + SCREEN_Y + MAINMENU_BACKGROUND_Y); //500;
 		qtextSpd = qscroll_spd_tbl[alltext[m].txtspd - 1];
 		if (qtextSpd <= 0)
 			scrolltexty = 50 / -(qtextSpd - 1);
@@ -96,9 +96,9 @@ void PrintQTextChr(int sx, int sy, BYTE *pCelBuff, int nCel)
 
 	/// ASSERT: assert(gpBuffer);
 	pStart = gpBufStart;
-	gpBufStart = &gpBuffer[BUFFER_WIDTH * (49 + SCREEN_Y)];
+	gpBufStart = &gpBuffer[BUFFER_WIDTH * (49 + SCREEN_Y + MAINMENU_BACKGROUND_Y)];
 	pEnd = gpBufEnd;
-	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (309 + SCREEN_Y)];
+	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (309 + SCREEN_Y + MAINMENU_BACKGROUND_Y)];
 	CelDraw(sx, sy, pCelBuff, nCel, 22);
 
 	gpBufStart = pStart;
@@ -163,14 +163,14 @@ void DrawQText()
 		}
 		tx = 48 + PANEL_X;
 		ty += 38;
-		if (ty > 501) {
+		if (ty > (341 + SCREEN_Y + MAINMENU_BACKGROUND_Y)) {
 			doneflag = TRUE;
 		}
 	}
 
 	for (currTime = SDL_GetTicks(); qtextSpd + scrolltexty < currTime; qtextSpd += scrolltexty) {
 		qtexty--;
-		if (qtexty <= 209) {
+		if (qtexty <= (49 + SCREEN_Y + MAINMENU_BACKGROUND_Y)) {
 			qtexty += 38;
 			qtextptr = pnl;
 			if (*pnl == '|') {
