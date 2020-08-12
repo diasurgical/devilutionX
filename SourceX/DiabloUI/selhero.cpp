@@ -324,7 +324,7 @@ void selhero_Load_Select(int value)
 	selhero_result = (value == 0 ? SELHERO_CONTINUE : 0);
 	if (!selhero_isMultiPlayer) {
 		selhero_Free();
-		selgame_Diff_SP_Init();
+		selgame_Diff_SP_Init(&selhero_heroInfo);
 		selhero_sp_checkForDiff = true;
 	} else {
 		selhero_endMenu = true;

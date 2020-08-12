@@ -188,7 +188,7 @@ bool IsDifficultyAllowed(int value, bool isSP)
 	char *diffType = (value == 1 ? "Nightmare" : "Hell");
 
 	char buffer[128];
-	sprintf(buffer, "Your character must reach level %s before you can enter a %s game of %s difficulty.", levelReq, gameType, diffType);
+	sprintf_s(buffer, "Your character must reach level %s before you can enter a %s game of %s difficulty.", levelReq, gameType, diffType);
 	UiSelOkDialog(title, buffer, false);
 
 	if (!isSP) {
@@ -198,17 +198,25 @@ bool IsDifficultyAllowed(int value, bool isSP)
 	return false;
 }
 
-void selgame_Diff_SP_Init()
+void selgame_Diff_SP_InitList()
 {
 	LoadBackgroundArt("ui_art\\selgame.pcx");
 	selgame_Diff_SP_finished = false;
 	UiInitList(0, NUM_DIFFICULTIES - 1, selgame_Diff_Focus, selgame_Diff_SP_Select, selgame_Diff_SP_Esc, SELDIFF_DIALOG, size(SELDIFF_DIALOG));
 }
 
+void selgame_Diff_SP_Init(_uiheroinfo *pInfo)
+{
+	strcpy(title, "Choose Difficulty");
+	SStrCopy(gszHero, pInfo->name, sizeof(gszHero));
+	UpdateHeroLevel(pInfo);
+	selgame_Diff_SP_InitList();
+}
+
 void selgame_Diff_SP_Select(int value)
 {
 	if (!IsDifficultyAllowed(value, true)) {
-		selgame_Diff_SP_Init();
+		selgame_Diff_SP_InitList();
 		return;
 	}
 
