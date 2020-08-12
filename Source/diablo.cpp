@@ -1211,7 +1211,13 @@ void PressChar(int vkey)
 		}
 		return;
 	case 'v':
-		NetSendCmdString(1 << myplr, gszProductName);
+		char *difficulties[3];
+		char pszStr[120];
+		difficulties[0] = "Normal";
+		difficulties[1] = "Nightmare";
+		difficulties[2] = "Hell";
+		sprintf(pszStr, "%s, mode = %s", gszProductName, difficulties[gnDifficulty]);
+		NetSendCmdString(1 << myplr, pszStr);
 		return;
 	case 'V':
 		NetSendCmdString(1 << myplr, gszVersionNumber);

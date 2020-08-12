@@ -11,6 +11,7 @@
 #include "DiabloUI/scrollbar.h"
 #include "DiabloUI/selyesno.h"
 #include "DiabloUI/selok.h"
+#include "DiabloUI/selgame.h"
 
 namespace dvl {
 
@@ -131,6 +132,50 @@ void selhero_ScrollIntoView(std::size_t index)
 }
 
 } // namespace
+
+void selhero_Init()
+{
+	LoadBackgroundArt("ui_art\\selhero.pcx");
+	UiAddBackground(&vecSelHeroDialog);
+	UiAddLogo(&vecSelHeroDialog);
+	LoadScrollBar();
+
+	selhero_FreeDlgItems();
+	SDL_Rect rect1 = { PANEL_LEFT + 24, 161, 590, 35 };
+	vecSelHeroDialog.push_back(new UiArtText(title, rect1, UIS_CENTER | UIS_BIG));
+
+	SDL_Rect rect2 = { PANEL_LEFT + 30, 211, 180, 76 };
+	SELHERO_DIALOG_HERO_IMG = new UiImage(&ArtHero, UI_NUM_CLASSES, rect2);
+	vecSelHeroDialog.push_back(SELHERO_DIALOG_HERO_IMG);
+
+	SDL_Rect rect3 = { PANEL_LEFT + 39, 323, 110, 21 };
+	vecSelHeroDialog.push_back(new UiArtText("Level:", rect3, UIS_RIGHT));
+
+	SDL_Rect rect4 = { PANEL_LEFT + 39, 323, 110, 21 };
+	vecSelHeroDialog.push_back(new UiArtText("Level:", rect4, UIS_RIGHT));
+	SDL_Rect rect5 = { PANEL_LEFT + 159, 323, 40, 21 };
+	vecSelHeroDialog.push_back(new UiArtText(textStats[0], rect5, UIS_CENTER));
+
+	SDL_Rect rect6 = { PANEL_LEFT + 39, 358, 110, 21 };
+	vecSelHeroDialog.push_back(new UiArtText("Strength:", rect6, UIS_RIGHT));
+	SDL_Rect rect7 = { PANEL_LEFT + 159, 358, 40, 21 };
+	vecSelHeroDialog.push_back(new UiArtText(textStats[1], rect7, UIS_CENTER));
+
+	SDL_Rect rect8 = { PANEL_LEFT + 39, 380, 110, 21 };
+	vecSelHeroDialog.push_back(new UiArtText("Magic:", rect8, UIS_RIGHT));
+	SDL_Rect rect9 = { PANEL_LEFT + 159, 380, 40, 21 };
+	vecSelHeroDialog.push_back(new UiArtText(textStats[2], rect9, UIS_CENTER));
+
+	SDL_Rect rect10 = { PANEL_LEFT + 39, 401, 110, 21 };
+	vecSelHeroDialog.push_back(new UiArtText("Dexterity:", rect10, UIS_RIGHT));
+	SDL_Rect rect11 = { PANEL_LEFT + 159, 401, 40, 21 };
+	vecSelHeroDialog.push_back(new UiArtText(textStats[3], rect11, UIS_CENTER));
+
+	SDL_Rect rect12 = { PANEL_LEFT + 39, 422, 110, 21 };
+	vecSelHeroDialog.push_back(new UiArtText("Vitality:", rect12, UIS_RIGHT));
+	SDL_Rect rect13 = { PANEL_LEFT + 159, 422, 40, 21 };
+	vecSelHeroDialog.push_back(new UiArtText(textStats[4], rect13, UIS_CENTER));
+}
 
 void selhero_List_Init()
 {
@@ -253,8 +298,7 @@ void selhero_List_Select(int value)
 		return;
 	}
 
-	UiInitList_clear();
-	selhero_endMenu = true;
+	selhero_Load_Select(1);
 }
 
 void selhero_List_Esc()
@@ -349,8 +393,7 @@ void selhero_Name_Select(int value)
 
 		if (overwrite) {
 			if (gfnHeroCreate(&selhero_heroInfo)) {
-				UiInitList_clear();
-				selhero_endMenu = true;
+				selhero_Load_Select(1);
 				return;
 			} else {
 				UiErrorOkDialog("Unable to create character.", vecSelDlgItems);
@@ -381,6 +424,11 @@ void selhero_Load_Select(int value)
 	if (value == 0) {
 		selhero_result = SELHERO_CONTINUE;
 		return;
+	} else if (!selhero_isMultiPlayer) {
+		selhero_endMenu = false;
+		selhero_Free();
+		LoadBackgroundArt("ui_art\\selgame.pcx");
+		selgame_GameSelection_Select(0);
 	}
 
 	selhero_result = 0;
@@ -405,46 +453,7 @@ BOOL UiSelHeroDialog(
 	bUIElementsLoaded = true;
 
 	do {
-		LoadBackgroundArt("ui_art\\selhero.pcx");
-		UiAddBackground(&vecSelHeroDialog);
-		UiAddLogo(&vecSelHeroDialog);
-		LoadScrollBar();
-
-		selhero_FreeDlgItems();
-		SDL_Rect rect1 = { PANEL_LEFT + 24, 161, 590, 35 };
-		vecSelHeroDialog.push_back(new UiArtText(title, rect1, UIS_CENTER | UIS_BIG));
-
-		SDL_Rect rect2 = { PANEL_LEFT + 30, 211, 180, 76 };
-		SELHERO_DIALOG_HERO_IMG = new UiImage(&ArtHero, UI_NUM_CLASSES, rect2);
-		vecSelHeroDialog.push_back(SELHERO_DIALOG_HERO_IMG);
-
-		SDL_Rect rect3 = { PANEL_LEFT + 39, 323, 110, 21 };
-		vecSelHeroDialog.push_back(new UiArtText("Level:", rect3, UIS_RIGHT));
-
-		SDL_Rect rect4 = { PANEL_LEFT + 39, 323, 110, 21 };
-		vecSelHeroDialog.push_back(new UiArtText("Level:", rect4, UIS_RIGHT));
-		SDL_Rect rect5 = { PANEL_LEFT + 159, 323, 40, 21 };
-		vecSelHeroDialog.push_back(new UiArtText(textStats[0], rect5, UIS_CENTER));
-
-		SDL_Rect rect6 = { PANEL_LEFT + 39, 358, 110, 21 };
-		vecSelHeroDialog.push_back(new UiArtText("Strength:", rect6, UIS_RIGHT));
-		SDL_Rect rect7 = { PANEL_LEFT + 159, 358, 40, 21 };
-		vecSelHeroDialog.push_back(new UiArtText(textStats[1], rect7, UIS_CENTER));
-
-		SDL_Rect rect8 = { PANEL_LEFT + 39, 380, 110, 21 };
-		vecSelHeroDialog.push_back(new UiArtText("Magic:", rect8, UIS_RIGHT));
-		SDL_Rect rect9 = { PANEL_LEFT + 159, 380, 40, 21 };
-		vecSelHeroDialog.push_back(new UiArtText(textStats[2], rect9, UIS_CENTER));
-
-		SDL_Rect rect10 = { PANEL_LEFT + 39, 401, 110, 21 };
-		vecSelHeroDialog.push_back(new UiArtText("Dexterity:", rect10, UIS_RIGHT));
-		SDL_Rect rect11 = { PANEL_LEFT + 159, 401, 40, 21 };
-		vecSelHeroDialog.push_back(new UiArtText(textStats[3], rect11, UIS_CENTER));
-
-		SDL_Rect rect12 = { PANEL_LEFT + 39, 422, 110, 21 };
-		vecSelHeroDialog.push_back(new UiArtText("Vitality:", rect12, UIS_RIGHT));
-		SDL_Rect rect13 = { PANEL_LEFT + 159, 422, 40, 21 };
-		vecSelHeroDialog.push_back(new UiArtText(textStats[4], rect13, UIS_CENTER));
+		selhero_Init();
 
 		gfnHeroInfo = fninfo;
 		gfnHeroCreate = fncreate;
@@ -503,7 +512,9 @@ BOOL UiSelHeroSingDialog(
     int *difficulty)
 {
 	selhero_isMultiPlayer = false;
-	return UiSelHeroDialog(fninfo, fncreate, fnstats, fnremove, dlgresult, name);
+	BOOL success = UiSelHeroDialog(fninfo, fncreate, fnstats, fnremove, dlgresult, name);
+	*difficulty = gbDifficulty;
+	return success;
 }
 
 BOOL UiSelHeroMultDialog(

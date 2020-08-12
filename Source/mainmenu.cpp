@@ -56,6 +56,7 @@ BOOL mainmenu_select_hero_dialog(
 		        gszHero,
 		        &gnDifficulty))
 			app_fatal("Unable to display SelHeroSing");
+		client_info->initdata->bDiff = gnDifficulty;
 
 		if (dlgresult == SELHERO_CONTINUE)
 			gbLoadGame = TRUE;

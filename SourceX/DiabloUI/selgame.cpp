@@ -6,6 +6,7 @@
 #include "DiabloUI/text.h"
 #include "DiabloUI/dialogs.h"
 #include "DiabloUI/selok.h"
+#include "DiabloUI/selhero.h"
 
 namespace dvl {
 
@@ -235,12 +236,17 @@ bool IsDifficultyAllowed(int value)
 
 void selgame_Diff_Select(int value)
 {
-	if (!IsDifficultyAllowed(value)) {
+	if (selhero_isMultiPlayer && !IsDifficultyAllowed(value)) {
 		selgame_GameSelection_Select(0);
 		return;
 	}
 
 	gbDifficulty = value;
+
+	if (!selhero_isMultiPlayer) {
+		selhero_endMenu = true;
+		return;
+	}
 
 	if (provider == SELCONN_LOOPBACK) {
 		selgame_Password_Select(0);
@@ -252,6 +258,14 @@ void selgame_Diff_Select(int value)
 
 void selgame_Diff_Esc()
 {
+	if (!selhero_isMultiPlayer) {
+		selgame_Free();
+
+		selhero_Init();
+		selhero_List_Init();
+		return;
+	}
+
 	if (provider == SELCONN_LOOPBACK) {
 		selgame_GameSelection_Esc();
 		return;

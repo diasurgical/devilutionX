@@ -46,6 +46,10 @@ void LoadGame(BOOL firstflag)
 
 	LoadPlayer(myplr);
 
+	gnDifficulty = plr[myplr].pDifficulty;
+	if (gnDifficulty < DIFF_NORMAL || gnDifficulty > DIFF_HELL)
+		gnDifficulty = DIFF_NORMAL;
+
 	for (i = 0; i < MAXQUESTS; i++)
 		LoadQuest(i);
 	for (i = 0; i < MAXPORTAL; i++)
@@ -276,6 +280,7 @@ void CopyInt64(const void *src, void *dst)
 void LoadPlayer(int i)
 {
 	PlayerStruct *pPlayer = &plr[i];
+	char tempChar;
 
 	CopyInt(tbuff, &pPlayer->_pmode);
 	CopyBytes(tbuff, MAX_PATH_LENGTH, pPlayer->walkpath);
@@ -443,7 +448,9 @@ void LoadPlayer(int i)
 	CopyInt(tbuff, &pPlayer->_pIGetHit);
 	CopyChar(tbuff, &pPlayer->_pISplLvlAdd);
 	CopyChar(tbuff, &pPlayer->_pISplCost);
-	tbuff += 2; // Alignment
+	CopyChar(tbuff, &tempChar);
+	pPlayer->pDifficulty = tempChar & 3; // Use 2 alignment bits for difficulty
+	tbuff += 1; // Alignment
 	CopyInt(tbuff, &pPlayer->_pISplDur);
 	CopyInt(tbuff, &pPlayer->_pIEnAc);
 	CopyInt(tbuff, &pPlayer->_pIFMinDam);
@@ -857,6 +864,7 @@ void SaveGame()
 		WSave(gnLevelTypeTbl[i]);
 	}
 
+	plr[myplr].pDifficulty = gnDifficulty;
 	SavePlayer(myplr);
 
 	for (i = 0; i < MAXQUESTS; i++)
@@ -1004,6 +1012,7 @@ void OSave(BOOL v)
 void SavePlayer(int i)
 {
 	PlayerStruct *pPlayer = &plr[i];
+	char tempChar;
 
 	CopyInt(&pPlayer->_pmode, tbuff);
 	CopyBytes(&pPlayer->walkpath, MAX_PATH_LENGTH, tbuff);
@@ -1169,7 +1178,9 @@ void SavePlayer(int i)
 
 	CopyChar(&pPlayer->_pISplLvlAdd, tbuff);
 	CopyChar(&pPlayer->_pISplCost, tbuff);
-	tbuff += 2; // Alignment
+	tempChar = pPlayer->pDifficulty & 3; // Use 2 alignment bits for difficulty
+	CopyChar(&tempChar, tbuff);
+	tbuff += 1; // Alignment
 	CopyInt(&pPlayer->_pISplDur, tbuff);
 	CopyInt(&pPlayer->_pIEnAc, tbuff);
 	CopyInt(&pPlayer->_pIFMinDam, tbuff);

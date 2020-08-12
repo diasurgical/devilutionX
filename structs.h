@@ -345,6 +345,7 @@ typedef struct PlayerStruct {
 	char bReserved[3];
 	short wReserved[8];
 	DWORD pDiabloKillLevel;
+	int pDifficulty;
 	int dwReserved[7];
 	unsigned char *_pNData;
 	unsigned char *_pWData;

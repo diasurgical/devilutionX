@@ -4,6 +4,10 @@
 
 namespace dvl {
 
+extern bool selhero_isMultiPlayer;
+extern bool selhero_endMenu;
+
+void selhero_Init();
 void selhero_List_Init();
 void selhero_List_Focus(int value);
 void selhero_List_Select(int value);
