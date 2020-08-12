@@ -11,6 +11,7 @@
 #include "DiabloUI/scrollbar.h"
 #include "DiabloUI/selyesno.h"
 #include "DiabloUI/selok.h"
+#include "DiabloUI/selgame.h"
 
 namespace dvl {
 
@@ -25,6 +26,7 @@ char selhero_Lable[32];
 char selhero_Description[256];
 int selhero_result;
 bool selhero_endMenu;
+bool selhero_sp_checkForDiff;
 bool selhero_isMultiPlayer;
 bool selhero_navigateYesNo;
 bool selhero_deleteEnabled;
@@ -318,14 +320,15 @@ void selhero_Load_Focus(int value)
 
 void selhero_Load_Select(int value)
 {
-	UiInitList(0, 0, NULL, NULL, NULL, NULL, 0);
-	selhero_endMenu = true;
-	if (value == 0) {
-		selhero_result = SELHERO_CONTINUE;
-		return;
+	//UiInitList(0, 0, NULL, NULL, NULL, NULL, 0);
+	selhero_result = (value == 0 ? SELHERO_CONTINUE : 0);
+	if (!selhero_isMultiPlayer) {
+		selhero_Free();
+		selgame_Diff_SP_Init();
+		selhero_sp_checkForDiff = true;
+	} else {
+		selhero_endMenu = true;
 	}
-
-	selhero_result = 0;
 }
 
 BOOL SelHero_GetHeroInfo(_uiheroinfo *pInfo)
@@ -366,10 +369,15 @@ BOOL UiSelHeroDialog(
 		}
 
 		selhero_endMenu = false;
+		selhero_sp_checkForDiff = false;
 		while (!selhero_endMenu && !selhero_navigateYesNo) {
 			UiClearScreen();
 			UiRenderItems(SELHERO_DIALOG, size(SELHERO_DIALOG));
 			UiPollAndRender();
+
+			if (selhero_sp_checkForDiff) {
+				selhero_endMenu = IsSPDifficultyChosen() || (selhero_result == SELHERO_PREVIOUS);
+			}
 		}
 		selhero_Free();
 

@@ -6,6 +6,7 @@
 #include "DiabloUI/text.h"
 #include "DiabloUI/dialogs.h"
 #include "DiabloUI/selok.h"
+#include "DiabloUI/selhero.h"
 
 namespace dvl {
 
@@ -16,6 +17,7 @@ char selgame_Description[256];
 bool selgame_enteringGame;
 int selgame_selectedGame;
 bool selgame_endMenu;
+bool selgame_Diff_SP_finished;
 int *gdwPlayerId;
 int gbDifficulty;
 int heroLevel;
@@ -167,6 +169,63 @@ void selgame_GameSelection_Esc()
 	selgame_endMenu = true;
 }
 
+bool IsSPDifficultyChosen()
+{
+	return selgame_Diff_SP_finished;
+}
+
+bool IsDifficultyAllowed(int value, bool isSP)
+{
+	if (value == 0 || (value == 1 && heroLevel >= 20) || (value == 2 && heroLevel >= 30)) {
+		return true;
+	}
+
+	selgame_Free();
+
+	char *msg = NULL;
+	char *gameType = (isSP ? "single-player" : "multiplayer");
+	char *levelReq = (value == 1 ? "20" : "30");
+	char *diffType = (value == 1 ? "Nightmare" : "Hell");
+
+	char buffer[128];
+	sprintf(buffer, "Your character must reach level %s before you can enter a %s game of %s difficulty.", levelReq, gameType, diffType);
+	UiSelOkDialog(title, buffer, false);
+
+	if (!isSP) {
+		LoadBackgroundArt("ui_art\\selgame.pcx");
+	}
+
+	return false;
+}
+
+void selgame_Diff_SP_Init()
+{
+	LoadBackgroundArt("ui_art\\selgame.pcx");
+	selgame_Diff_SP_finished = false;
+	UiInitList(0, NUM_DIFFICULTIES - 1, selgame_Diff_Focus, selgame_Diff_SP_Select, selgame_Diff_SP_Esc, SELDIFF_DIALOG, size(SELDIFF_DIALOG));
+}
+
+void selgame_Diff_SP_Select(int value)
+{
+	if (!IsDifficultyAllowed(value, true)) {
+		selgame_Diff_SP_Init();
+		return;
+	}
+
+	gbDifficulty = value;
+	selgame_Free();
+	selgame_Diff_SP_finished = true;
+}
+
+void selgame_Diff_SP_Esc()
+{
+	selgame_Free();
+	//selgame_Diff_SP_finished = true;
+
+	LoadBackgroundArt("ui_art\\selhero.pcx");
+	selhero_List_Init();
+}
+
 void selgame_Diff_Focus(int value)
 {
 	switch (value) {
@@ -186,27 +245,9 @@ void selgame_Diff_Focus(int value)
 	WordWrapArtStr(selgame_Description, SELGAME_DESCRIPTION.rect.w);
 }
 
-bool IsDifficultyAllowed(int value)
-{
-	if (value == 0 || (value == 1 && heroLevel >= 20) || (value == 2 && heroLevel >= 30)) {
-		return true;
-	}
-
-	selgame_Free();
-
-	if (value == 1)
-		UiSelOkDialog(title, "Your character must reach level 20 before you can enter a multiplayer game of Nightmare difficulty.", false);
-	if (value == 2)
-		UiSelOkDialog(title, "Your character must reach level 30 before you can enter a multiplayer game of Hell difficulty.", false);
-
-	LoadBackgroundArt("ui_art\\selgame.pcx");
-
-	return false;
-}
-
 void selgame_Diff_Select(int value)
 {
-	if (!IsDifficultyAllowed(value)) {
+	if (!IsDifficultyAllowed(value, false)) {
 		selgame_GameSelection_Select(0);
 		return;
 	}
@@ -242,7 +283,7 @@ void selgame_Password_Select(int value)
 	if (selgame_selectedGame) {
 		setIniValue("Phone Book", "Entry1", selgame_Ip);
 		if (SNetJoinGame(selgame_selectedGame, selgame_Ip, selgame_Password, NULL, NULL, gdwPlayerId)) {
-			if (!IsDifficultyAllowed(m_client_info->initdata->bDiff)) {
+			if (!IsDifficultyAllowed(m_client_info->initdata->bDiff, false)) {
 				selgame_GameSelection_Select(1);
 				return;
 			}
