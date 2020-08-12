@@ -1100,7 +1100,7 @@ void AddBarrel(int i, int t)
 {
 	object[i]._oVar1 = 0;
 	object[i]._oRndSeed = GetRndSeed();
-	object[i]._oVar2 = random_(149, 10);
+	object[i]._oVar2 = (t == OBJ_BARRELEX) ? 0 : random_(149, 10);
 	object[i]._oVar3 = random_(149, 3);
 
 	if (object[i]._oVar2 >= 8)
