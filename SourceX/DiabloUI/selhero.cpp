@@ -320,7 +320,6 @@ void selhero_Load_Focus(int value)
 
 void selhero_Load_Select(int value)
 {
-	//UiInitList(0, 0, NULL, NULL, NULL, NULL, 0);
 	selhero_result = (value == 0 ? SELHERO_CONTINUE : 0);
 	if (!selhero_isMultiPlayer) {
 		selhero_Free();

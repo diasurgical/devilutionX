@@ -228,7 +228,6 @@ void selgame_Diff_SP_Select(int value)
 void selgame_Diff_SP_Esc()
 {
 	selgame_Free();
-	//selgame_Diff_SP_finished = true;
 
 	LoadBackgroundArt("ui_art\\selhero.pcx");
 	selhero_List_Init();
