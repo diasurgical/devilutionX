@@ -221,7 +221,6 @@ void selgame_Diff_SP_Select(int value)
 	}
 
 	gbDifficulty = value;
-	selgame_Free();
 	selgame_Diff_SP_finished = true;
 }
 
