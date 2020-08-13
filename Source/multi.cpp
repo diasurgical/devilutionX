@@ -718,7 +718,9 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		NetClose();
 		gbSelectProvider = FALSE;
 	}
-	gnDifficulty = sgGameInitInfo.bDiff;
+	if (!bSinglePlayer) {
+		gnDifficulty = sgGameInitInfo.bDiff;
+	}
 	SetRndSeed(sgGameInitInfo.dwSeed);
 
 	for (i = 0; i < NUMLEVELS; i++) {

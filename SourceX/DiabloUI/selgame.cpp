@@ -220,7 +220,7 @@ void selgame_Diff_SP_Select(int value)
 		return;
 	}
 
-	gbDifficulty = value;
+	gnDifficulty = value;
 	selgame_Diff_SP_finished = true;
 }
 
