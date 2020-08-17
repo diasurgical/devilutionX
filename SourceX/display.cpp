@@ -17,6 +17,113 @@
 #endif
 #endif
 
+<<<<<<< HEAD
+=======
+namespace {
+
+int screenWidth = -1;
+int screenHeight = -1;
+
+int viewportHeight = -1;
+
+void ForceScreenResInit()
+{
+	bool videoInitialized = SDL_WasInit(SDL_INIT_VIDEO);
+
+	if (!videoInitialized) {
+		SDL_Init(SDL_INIT_VIDEO);
+	}
+	disp::InitDesiredScreenRes();
+	if (!videoInitialized) {
+		SDL_Quit();
+	}
+}
+
+void ForceViewportHeightInit()
+{
+	if (screenWidth == -1) {
+		ForceScreenResInit();
+	}
+
+	disp::InitViewportHeight();
+}
+
+} // anonymous namespace
+
+namespace disp {
+
+void InitDisplayElementSizes()
+{
+	if (screenWidth == -1) {
+		InitDesiredScreenRes();
+	}
+
+	if (viewportHeight == -1) {
+		InitViewportHeight();
+	}
+}
+
+void InitDesiredScreenRes()
+{
+	SDL_DisplayMode mode;
+
+	if (SDL_GetDesktopDisplayMode(0, &mode) != 0) {
+		ErrSdl();
+	}
+
+	screenWidth = mode.w;
+	dvl::DvlIntSetting("screen width", &screenWidth);
+	if (screenWidth < 640) {
+		screenWidth = 640;
+	}
+
+	screenHeight = mode.h;
+	dvl::DvlIntSetting("screen height", &screenHeight);
+	if (screenHeight < 480) {
+		screenHeight = 480;
+	}
+}
+
+void InitViewportHeight()
+{
+	if (screenWidth == -1) {
+		ForceScreenResInit();
+	}
+
+	if (screenWidth <= PANEL_WIDTH) {
+		viewportHeight = (screenHeight - PANEL_HEIGHT);
+	} else {
+		viewportHeight = screenHeight;
+	}
+}
+
+const int GetScreenWidth()
+{
+	if (screenWidth == -1) {
+		ForceScreenResInit();
+	}
+	return screenWidth;
+}
+
+const int GetScreenHeight()
+{
+	if (screenHeight == -1) {
+		ForceScreenResInit();
+	}
+	return screenHeight;
+}
+
+const int GetViewportHeight()
+{
+	if (viewportHeight == -1) {
+		ForceViewportHeightInit();
+	}
+	return viewportHeight;
+}
+
+} // namespace disp
+
+>>>>>>> Fixed a bug caused by using resolutions lower than 640x480.
 namespace dvl {
 
 extern BOOL was_window_init; /** defined in dx.cpp */
