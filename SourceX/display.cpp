@@ -126,6 +126,12 @@ bool SpawnWindow(const char *lpWindowName, int nWidth, int nHeight)
 			ErrSdl();
 		}
 
+		int integerScalingEnabled = 0;
+		DvlIntSetting("integer scaling", &integerScalingEnabled);
+		if (integerScalingEnabled && SDL_RenderSetIntegerScale(renderer, SDL_TRUE) < 0) {
+			ErrSdl();
+		}
+
 		if (SDL_RenderSetLogicalSize(renderer, nWidth, nHeight) <= -1) {
 			ErrSdl();
 		}
