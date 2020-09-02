@@ -118,7 +118,7 @@ bool SpawnWindow(const char *lpWindowName, int nWidth, int nHeight)
 #else
 		Uint32 rendererFlags = SDL_RENDERER_ACCELERATED;
 
-		int vsyncEnabled = 1;
+		vsyncEnabled = 1;
 		DvlIntSetting("vsync", &vsyncEnabled);
 		if (vsyncEnabled) {
 			rendererFlags |= SDL_RENDERER_PRESENTVSYNC;
