@@ -78,7 +78,7 @@ jobs:
       - store_artifacts: {path: ./build/devilutionx.exe, destination: devilutionx_x86.exe}
   switch:
     docker:
-      - image: devkitpro/devkita64:latest
+      - image: devkitpro/devkita64:20200528
     working_directory: ~/repo
     steps:
       - checkout
