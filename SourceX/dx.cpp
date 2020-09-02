@@ -17,6 +17,7 @@ int locktbl[256];
 #endif
 static CCritSect sgMemCrit;
 
+int vsyncEnabled;
 int refreshDelay;
 SDL_Renderer *renderer;
 SDL_Texture *texture;
@@ -280,6 +281,10 @@ void RenderPresent()
 			ErrSdl();
 		}
 		SDL_RenderPresent(renderer);
+
+		if (!vsyncEnabled) {
+			LimitFrameRate();
+		}
 	} else {
 		if (SDL_UpdateWindowSurface(ghMainWnd) <= -1) {
 			ErrSdl();
