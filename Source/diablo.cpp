@@ -897,7 +897,7 @@ void PressKey(int vkey)
 			diablo_hotkey_msg(3);
 		}
 		if (vkey == DVL_VK_RETURN) {
-			if (GetAsyncKeyState(VK_MENU) & 0x8000)
+			if (GetAsyncKeyState(DVL_VK_MENU) & 0x8000)
 				dx_reinit();
 			else
 				control_type_message();
@@ -922,7 +922,7 @@ void PressKey(int vkey)
 		return;
 	}
 	if (PauseMode == 2) {
-		if ((vkey == VK_RETURN) && (GetAsyncKeyState(VK_MENU) & 0x8000))
+		if ((vkey == DVL_VK_RETURN) && (GetAsyncKeyState(DVL_VK_MENU) & 0x8000))
 			dx_reinit();
 		return;
 	}
