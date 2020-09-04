@@ -296,6 +296,7 @@ set(devilutionx_SRCS
   SourceX/DiabloUI/title.cpp
   SourceX/DiabloUI/ttf_render_wrapped.cpp
   SourceX/main.cpp
+  SourceX/devilutionx.exe.manifest
   Packaging/macOS/AppIcon.icns
   Packaging/resources/CharisSILB.ttf
   Packaging/windows/devilutionx.rc)
