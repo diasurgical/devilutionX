@@ -87,7 +87,16 @@ void pfile_get_save_path(char *pszBuf, DWORD dwBufSize, DWORD save_num)
 #endif
 
 	GetPrefPath(path, MAX_PATH);
+
+#ifdef _XBOX
+	std::string strTmp(path);
+	strTmp += "saves\\";
+	CreateDirectory(strTmp.c_str(), NULL);
+
+	snprintf(pszBuf, MAX_PATH, fmt, strTmp.c_str(), save_num);
+#else
 	snprintf(pszBuf, MAX_PATH, fmt, path, save_num);
+#endif
 }
 
 void pfile_flush(BOOL is_single_player, DWORD save_num)

@@ -1,7 +1,9 @@
 #include "controls/plrctrls.h"
 
+#ifndef _XBOX
 #include <cstdint>
 #include <algorithm>
+#endif
 #include <list>
 
 #include "controls/controller.h"
@@ -98,7 +100,11 @@ int GetDistanceRanged(int dx, int dy)
 	int a = plr[myplr]._pfutx - dx;
 	int b = plr[myplr]._pfuty - dy;
 
+#ifdef _XBOX
+	return sqrt(static_cast<double>(a * a + b * b));
+#else
 	return sqrt(a * a + b * b);
+#endif
 }
 
 void FindItemOrObject()
@@ -224,6 +230,23 @@ void FindRangedTarget()
 	}
 }
 
+struct SearchNode {
+	SearchNode()
+	{
+		x = y = steps = 0;
+	}
+
+	SearchNode(int iX, int iY, int iSteps)
+	{
+		x = iX;
+		y = iY;
+		steps = iSteps;
+	}
+
+	int x, y;
+	int steps;
+};
+
 void FindMeleeTarget()
 {
 	bool visited[MAXDUNX][MAXDUNY] = { { 0 } };
@@ -231,17 +254,15 @@ void FindMeleeTarget()
 	int rotations;
 	bool canTalk;
 
-	struct SearchNode {
-		int x, y;
-		int steps;
-	};
 	std::list<SearchNode> queue;
 
 	{
 		const int start_x = plr[myplr]._pfutx;
 		const int start_y = plr[myplr]._pfuty;
 		visited[start_x][start_y] = true;
-		queue.push_back({ start_x, start_y, 0 });
+
+		SearchNode sTmp(start_x, start_y, 0);
+		queue.push_back(sTmp);
 	}
 
 	while (!queue.empty()) {
@@ -288,7 +309,8 @@ void FindMeleeTarget()
 			pPath.y = node.y;
 
 			if (path_solid_pieces(&pPath, dx, dy)) {
-				queue.push_back({ dx, dy, node.steps + 1 });
+				SearchNode sTmp(dx, dy, node.steps + 1);
+				queue.push_back(sTmp);
 				visited[dx][dy] = true;
 			}
 		}

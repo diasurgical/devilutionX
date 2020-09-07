@@ -1,8 +1,10 @@
 #include "controls/controller_motion.h"
 
-#include "controls/devices/game_controller.h"
 #include "controls/devices/joystick.h"
+#ifndef _XBOX
+#include "controls/devices/game_controller.h"
 #include "controls/devices/kbcontroller.h"
+#endif
 #include "controls/controller.h"
 
 namespace dvl {

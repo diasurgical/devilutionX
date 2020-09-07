@@ -12,6 +12,14 @@
 #include "StormLib.h"
 #include "StormCommon.h"
 
+  #ifndef _countof
+    #define _countof(x)  (sizeof(x) / sizeof(x[0]))
+  #endif
+
+#ifdef _DEBUG
+void assert_fail(int nLineNo, const char *pszFile, const char *pszFail);
+#endif
+
 /*****************************************************************************/
 /* Local functions                                                           */
 /*****************************************************************************/

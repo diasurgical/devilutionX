@@ -1669,6 +1669,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, int flgs, BOOL onlygood)
 	int l[256];
 	char istr[128];
 	BYTE goe;
+	nl = 0;
 
 	pre = random_(23, 4);
 	post = random_(23, 3);

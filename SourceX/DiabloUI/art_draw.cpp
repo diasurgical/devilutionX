@@ -11,12 +11,12 @@ void DrawArt(int screenX, int screenY, Art *art, int nFrame, Uint16 srcW, Uint16
 	if (screenY >= SCREEN_HEIGHT || screenX >= SCREEN_WIDTH || art->surface == NULL)
 		return;
 
-	SDL_Rect src_rect = {
-		0,
-		static_cast<Sint16>(nFrame * art->h()),
-		static_cast<Uint16>(art->w()),
-		static_cast<Uint16>(art->h())
-	};
+	SDL_Rect src_rect;
+	src_rect.x = 0;
+	src_rect.y = static_cast<Sint16>(nFrame * art->h());
+	src_rect.w = static_cast<Uint16>(art->w());
+	src_rect.h = static_cast<Uint16>(art->h());
+
 	ScaleOutputRect(&src_rect);
 
 	if (srcW && srcW < src_rect.w)

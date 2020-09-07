@@ -6,7 +6,9 @@
 #include "all.h"
 
 #include <cstddef>
+#ifndef _XBOX
 #include <cstdint>
+#endif
 
 DEVILUTION_BEGIN_NAMESPACE
 

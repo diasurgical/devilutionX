@@ -22,7 +22,7 @@ bool loopback::SNetReceiveMessage(int *sender, char **data, int *size)
 	message_queue.pop();
 	*sender = plr_single;
 	*size = message_last.size();
-	*data = reinterpret_cast<char *>(message_last.data());
+	*data = reinterpret_cast<char *>(&message_last.front());
 	return true;
 }
 

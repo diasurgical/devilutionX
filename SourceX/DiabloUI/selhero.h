@@ -1,6 +1,8 @@
 #pragma once
 
+#ifndef _XBOX
 #include <cstdint>
+#endif
 
 namespace dvl {
 
@@ -17,6 +19,5 @@ void selhero_Name_Select(int value);
 void selhero_Name_Esc();
 void selhero_Load_Focus(int value);
 void selhero_Load_Select(int value);
-const char *selhero_GenerateName(std::uint8_t hero_class);
 
 } // namespace dvl

@@ -6,7 +6,7 @@
 
 namespace dvl {
 
-static std::unique_ptr<net::abstract_net> dvlnet_inst;
+net::abstract_net *dvlnet_inst; // TODO: CleanUp
 static char gpszGameName[128] = {};
 static char gpszGamePassword[128] = {};
 
@@ -114,10 +114,9 @@ BOOL SNetCreateGame(const char *pszGameName, const char *pszGamePassword, const 
 	if (GameTemplateSize != 8)
 		ABORT();
 	net::buffer_t game_init_info(GameTemplateData, GameTemplateData + GameTemplateSize);
-	dvlnet_inst->setup_gameinfo(std::move(game_init_info));
+	dvlnet_inst->setup_gameinfo(game_init_info);
 
 	char addrstr[129] = "0.0.0.0";
-	getIniValue("dvlnet", "bindaddr", addrstr, 128);
 	strncpy(gpszGameName, addrstr, sizeof(gpszGameName) - 1);
 	if (pszGamePassword)
 		strncpy(gpszGamePassword, pszGamePassword, sizeof(gpszGamePassword) - 1);
