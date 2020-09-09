@@ -26,18 +26,20 @@ const int LINE_H = 22;
 // a line is leaving the screen while another one is entering.
 #define MAX_VISIBLE_LINES ((VIEWPORT.h - 1) / LINE_H + 2)
 
-struct SurfaceDeleter {
-	void operator()(SDL_Surface *surface)
-	{
-		SDL_FreeSurface(surface);
-	}
-};
-
 struct CachedLine {
+
+	CachedLine()
+	{
+		m_index = 0;
+		m_surface = NULL;
+		palette_version = pal_surface_palette_version;
+	}
+
 	CachedLine(std::size_t index, SDL_Surface *surface)
 	{
 		m_index = index;
 		m_surface = surface;
+		palette_version = pal_surface_palette_version;
 	}
 
 	std::size_t m_index;
@@ -94,79 +96,14 @@ CachedLine PrepareLine(std::size_t index)
 		ScaleSurfaceToOutput(&surface_ptr);
 		surface = surface_ptr;
 	}
-
+	SDL_FreeSurface(text);
 	return CachedLine(index, surface);
 }
-
-/**
- * Similar to std::deque<CachedLine> but simpler and backed by a single vector.
- */
-class LinesBuffer {
-public:
-	LinesBuffer(std::size_t capacity)
-	{
-		data_.reserve(capacity);
-		for (std::size_t i = 0; i < capacity; ++i)
-			data_.push_back(CachedLine(0, NULL));
-
-		start_ = 0;
-		end_ = 0;
-		empty_ = true;
-	}
-
-	bool empty() const
-	{
-		return empty_;
-	}
-
-	CachedLine &front()
-	{
-		return data_[start_];
-	}
-
-	CachedLine &back()
-	{
-		return data_[end_];
-	}
-
-	CachedLine &operator[](std::size_t i)
-	{
-		return data_[(start_ + i) % data_.size()];
-	}
-
-	std::size_t size() const
-	{
-		if (empty_)
-			return 0;
-		return start_ < end_ ? end_ - start_ : data_.size();
-	}
-
-	void pop_front()
-	{
-		start_ = (start_ + 1) % data_.size();
-		if (start_ == end_)
-			empty_ = true;
-	}
-
-	void push_back(CachedLine line)
-	{
-		end_ = (end_ + 1) % data_.size();
-		data_[end_] = line;
-		empty_ = false;
-	}
-
-private:
-	std::size_t start_;
-	std::size_t end_;
-	bool empty_;
-	std::vector<CachedLine> data_;
-};
 
 class CreditsRenderer {
 
 public:
 	CreditsRenderer()
-	    : lines_(MAX_VISIBLE_LINES)
 	{
 		LoadBackgroundArt("ui_art\\credits.pcx");
 		LoadTtfFont();
@@ -179,6 +116,11 @@ public:
 	{
 		ArtBackground.Unload();
 		UnloadTtfFont();
+
+		for (int x = 0; x < lines_.size(); x++) {
+			if (lines_[x].m_surface)
+				SDL_FreeSurface(lines_[x].m_surface);
+		}
 	}
 
 	void Render();
@@ -189,7 +131,7 @@ public:
 	}
 
 private:
-	LinesBuffer lines_;
+	std::vector<CachedLine> lines_;
 	bool finished_;
 	Uint32 ticks_begin_;
 	int prev_offset_y_;
@@ -216,12 +158,8 @@ void CreditsRenderer::Render()
 		return;
 	}
 
-	while (!lines_.empty() && lines_.front().m_index != lines_begin)
-		lines_.pop_front();
-	if (lines_.empty())
-		lines_.push_back(PrepareLine(lines_begin));
-	while (lines_.back().m_index + 1 != lines_end)
-		lines_.push_back(PrepareLine(lines_.back().m_index + 1));
+	while (lines_end > lines_.size())
+		lines_.push_back(PrepareLine(lines_.size()));
 
 	SDL_Rect viewport = VIEWPORT;
 	ScaleOutputRect(&viewport);
@@ -229,14 +167,16 @@ void CreditsRenderer::Render()
 
 	// We use unscaled coordinates for calculation throughout.
 	Sint16 dest_y = VIEWPORT.y - (offset_y - lines_begin * LINE_H);
-	for (std::size_t i = 0; i < lines_.size(); ++i, dest_y += LINE_H) {
+	for (std::size_t i = lines_begin; i < lines_end; ++i, dest_y += LINE_H) {
 		CachedLine &line = lines_[i];
 		if (line.m_surface == NULL)
 			continue;
 
 		// Still fading in: the cached line was drawn with a different fade level.
-		if (line.palette_version != pal_surface_palette_version)
+		if (line.palette_version != pal_surface_palette_version) {
+			SDL_FreeSurface(line.m_surface);
 			line = PrepareLine(line.m_index);
+		}
 
 		Sint16 dest_x = PANEL_LEFT + VIEWPORT.x + 31;
 		if (CREDITS_LINES[line.m_index][0] == '\t')
