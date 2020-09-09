@@ -8,7 +8,7 @@ export DEB_BUILD_MAINT_OPTIONS = hardening=-all
 export DEB_CFLAGS_MAINT_APPEND  = -Wno-error 
 export DEB_LDFLAGS_MAINT_APPEND = -Wno-error
 DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
-GIT_VERSION_DEVILUTIONX ?= $(shell pwd | tail -c 22 | cut -c-5)
+GIT_VERSION_DEVILUTIONX ?= $(shell pwd | tail -c 23 | cut -c-5)
 GIT_COMMIT_DEVILUTIONX := $(shell pwd | tail -c 8)
 
 %:
