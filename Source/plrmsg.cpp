@@ -99,9 +99,6 @@ void DrawPlrMsg()
 	if (width < 300)
 		return;
 
-	if (width > 620)
-		width = 620;
-
 	pMsg = plr_msgs;
 	for (i = 0; i < 8; i++) {
 		if (pMsg->str[0])

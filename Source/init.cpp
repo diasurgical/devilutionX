@@ -49,7 +49,7 @@ void init_cleanup()
 
 void init_create_window()
 {
-	if (!SpawnWindow(PROJECT_NAME))
+	if (!SpawnWindow(PROJECT_NAME, SCREEN_WIDTH, SCREEN_HEIGHT))
 		app_fatal("Unable to create main window");
 	dx_init(NULL);
 	was_window_init = true;

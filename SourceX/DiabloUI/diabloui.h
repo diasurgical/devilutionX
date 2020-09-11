@@ -29,18 +29,6 @@ extern Art ArtCursor;
 extern Art ArtHero;
 extern bool gbSpawned;
 
-<<<<<<< HEAD
-=======
-const auto MAINMENU_BACKGROUND = UiImage(&ArtBackground, { PANEL_LEFT, UI_OFFSET_Y, 640, 480 });
-constexpr auto MAINMENU_LOGO = UiImage(&ArtLogos[LOGO_MED], /*animated=*/true, /*frame=*/0, { 0, 0, 0, 0 }, UIS_CENTER);
-
-template <class T, size_t N>
-constexpr size_t size(T (&)[N])
-{
-	return N;
-}
-
->>>>>>> Formatted the store menus.
 extern void (*gfnSoundFunction)(char *file);
 extern BOOL (*gfnHeroInfo)(BOOL (*fninfofunc)(_uiheroinfo *));
 

@@ -596,7 +596,7 @@ void LoadBackgroundArt(const char *pszFile)
 
 void UiAddBackground(std::vector<UiItemBase *> *vecDialog)
 {
-	SDL_Rect rect = { PANEL_LEFT, 0, 640, 480 };
+	SDL_Rect rect = { PANEL_LEFT, UI_OFFSET_Y, 640, 480 };
 	vecDialog->push_back(new UiImage(&ArtBackground, rect));
 }
 
