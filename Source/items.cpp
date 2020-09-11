@@ -625,12 +625,13 @@ void CalcPlrScrolls(int p)
 				plr[p]._pScrlSpells |= (__int64)1 << (plr[p].SpdList[j]._iSpell - 1);
 		}
 	}
-	if (plr[p]._pRSplType == RSPLTYPE_SCROLL) {
-		if (!(plr[p]._pScrlSpells & 1 << (plr[p]._pRSpell - 1))) {
-			plr[p]._pRSpell = SPL_INVALID;
-			plr[p]._pRSplType = RSPLTYPE_INVALID;
-			force_redraw = 255;
-		}
+
+	// check if the current RSplType is a valid/allowed spell
+	if (plr[p]._pRSplType == RSPLTYPE_SCROLL
+		&& !(plr[p]._pScrlSpells & ((unsigned __int64)1 << (plr[p]._pRSpell - 1)))) {
+		plr[p]._pRSpell = SPL_INVALID;
+		plr[p]._pRSplType = RSPLTYPE_INVALID;
+		force_redraw = 255;
 	}
 }
 
