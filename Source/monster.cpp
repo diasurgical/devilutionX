@@ -4976,7 +4976,7 @@ void PrintMonstHistory(int mt)
 {
 	int minHP, maxHP, res;
 
-	sprintf(tempstr, "Total kills : %i", monstkills[mt]);
+	sprintf(tempstr, "Total kills: %i", monstkills[mt]);
 	AddPanelString(tempstr, TRUE);
 	if (monstkills[mt] >= 30) {
 		minHP = monsterdata[mt].mMinHP;
@@ -4997,7 +4997,7 @@ void PrintMonstHistory(int mt)
 			minHP = 4 * minHP + 3;
 			maxHP = 4 * maxHP + 3;
 		}
-		sprintf(tempstr, "Hit Points : %i-%i", minHP, maxHP);
+		sprintf(tempstr, "Hit Points: %i-%i", minHP, maxHP);
 		AddPanelString(tempstr, TRUE);
 	}
 	if (monstkills[mt] >= 15) {
@@ -5011,7 +5011,7 @@ void PrintMonstHistory(int mt)
 			AddPanelString(tempstr, TRUE);
 		} else {
 			if (res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING)) {
-				strcpy(tempstr, "Resists : ");
+				strcpy(tempstr, "Resists: ");
 				if (res & RESIST_MAGIC)
 					strcat(tempstr, "Magic ");
 				if (res & RESIST_FIRE)
@@ -5022,7 +5022,7 @@ void PrintMonstHistory(int mt)
 				AddPanelString(tempstr, TRUE);
 			}
 			if (res & (IMUNE_MAGIC | IMUNE_FIRE | IMUNE_LIGHTNING)) {
-				strcpy(tempstr, "Immune : ");
+				strcpy(tempstr, "Immune: ");
 				if (res & IMUNE_MAGIC)
 					strcat(tempstr, "Magic ");
 				if (res & IMUNE_FIRE)
