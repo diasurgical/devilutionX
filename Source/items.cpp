@@ -3017,15 +3017,15 @@ void PrintItemMisc(ItemStruct *x)
 	}
 	if (x->_iMiscId >= IMISC_USEFIRST && x->_iMiscId <= IMISC_USELAST) {
 		PrintItemOil(x->_iMiscId);
-		strcpy(tempstr, "Right click to use");
+		strcpy(tempstr, "Right-click to use");
 		AddPanelString(tempstr, TRUE);
 	}
 	if (x->_iMiscId == IMISC_BOOK) {
-		strcpy(tempstr, "Right click to read");
+		strcpy(tempstr, "Right-click to read");
 		AddPanelString(tempstr, TRUE);
 	}
 	if (x->_iMiscId == IMISC_MAPOFDOOM) {
-		strcpy(tempstr, "Right click to view");
+		strcpy(tempstr, "Right-click to view");
 		AddPanelString(tempstr, TRUE);
 	}
 	if (x->_iMiscId == IMISC_EAR) {
