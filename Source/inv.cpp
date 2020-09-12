@@ -58,44 +58,44 @@ const InvXY InvRect[] = {
 	{ RIGHT_PANEL + 160, 160 }, // chest
 	{ RIGHT_PANEL + 17,  250 }, // inv row 1
 	{ RIGHT_PANEL + 46,  250 }, // inv row 1
-	{ RIGHT_PANEL + 74,  250 }, // inv row 1
-	{ RIGHT_PANEL + 103, 250 }, // inv row 1
-	{ RIGHT_PANEL + 131, 250 }, // inv row 1
-	{ RIGHT_PANEL + 160, 250 }, // inv row 1
-	{ RIGHT_PANEL + 189, 250 }, // inv row 1
-	{ RIGHT_PANEL + 218, 250 }, // inv row 1
-	{ RIGHT_PANEL + 247, 250 }, // inv row 1
-	{ RIGHT_PANEL + 276, 250 }, // inv row 1
+	{ RIGHT_PANEL + 75,  250 }, // inv row 1
+	{ RIGHT_PANEL + 104, 250 }, // inv row 1
+	{ RIGHT_PANEL + 133, 250 }, // inv row 1
+	{ RIGHT_PANEL + 162, 250 }, // inv row 1
+	{ RIGHT_PANEL + 191, 250 }, // inv row 1
+	{ RIGHT_PANEL + 220, 250 }, // inv row 1
+	{ RIGHT_PANEL + 249, 250 }, // inv row 1
+	{ RIGHT_PANEL + 278, 250 }, // inv row 1
 	{ RIGHT_PANEL + 17,  279 }, // inv row 2
 	{ RIGHT_PANEL + 46,  279 }, // inv row 2
-	{ RIGHT_PANEL + 74,  279 }, // inv row 2
-	{ RIGHT_PANEL + 103, 279 }, // inv row 2
-	{ RIGHT_PANEL + 131, 279 }, // inv row 2
-	{ RIGHT_PANEL + 160, 279 }, // inv row 2
-	{ RIGHT_PANEL + 189, 279 }, // inv row 2
-	{ RIGHT_PANEL + 218, 279 }, // inv row 2
-	{ RIGHT_PANEL + 247, 279 }, // inv row 2
-	{ RIGHT_PANEL + 276, 279 }, // inv row 2
+	{ RIGHT_PANEL + 75,  279 }, // inv row 2
+	{ RIGHT_PANEL + 104, 279 }, // inv row 2
+	{ RIGHT_PANEL + 133, 279 }, // inv row 2
+	{ RIGHT_PANEL + 162, 279 }, // inv row 2
+	{ RIGHT_PANEL + 191, 279 }, // inv row 2
+	{ RIGHT_PANEL + 220, 279 }, // inv row 2
+	{ RIGHT_PANEL + 249, 279 }, // inv row 2
+	{ RIGHT_PANEL + 278, 279 }, // inv row 2
 	{ RIGHT_PANEL + 17,  308 }, // inv row 3
 	{ RIGHT_PANEL + 46,  308 }, // inv row 3
-	{ RIGHT_PANEL + 74,  308 }, // inv row 3
-	{ RIGHT_PANEL + 103, 308 }, // inv row 3
-	{ RIGHT_PANEL + 131, 308 }, // inv row 3
-	{ RIGHT_PANEL + 160, 308 }, // inv row 3
-	{ RIGHT_PANEL + 189, 308 }, // inv row 3
-	{ RIGHT_PANEL + 218, 308 }, // inv row 3
-	{ RIGHT_PANEL + 247, 308 }, // inv row 3
-	{ RIGHT_PANEL + 276, 308 }, // inv row 3
-	{ RIGHT_PANEL + 17,  336 }, // inv row 4
-	{ RIGHT_PANEL + 46,  336 }, // inv row 4
-	{ RIGHT_PANEL + 74,  336 }, // inv row 4
-	{ RIGHT_PANEL + 103, 336 }, // inv row 4
-	{ RIGHT_PANEL + 131, 336 }, // inv row 4
-	{ RIGHT_PANEL + 160, 336 }, // inv row 4
-	{ RIGHT_PANEL + 189, 336 }, // inv row 4
-	{ RIGHT_PANEL + 218, 336 }, // inv row 4
-	{ RIGHT_PANEL + 247, 336 }, // inv row 4
-	{ RIGHT_PANEL + 276, 336 }, // inv row 4
+	{ RIGHT_PANEL + 75,  308 }, // inv row 3
+	{ RIGHT_PANEL + 104, 308 }, // inv row 3
+	{ RIGHT_PANEL + 133, 308 }, // inv row 3
+	{ RIGHT_PANEL + 162, 308 }, // inv row 3
+	{ RIGHT_PANEL + 191, 308 }, // inv row 3
+	{ RIGHT_PANEL + 220, 308 }, // inv row 3
+	{ RIGHT_PANEL + 249, 308 }, // inv row 3
+	{ RIGHT_PANEL + 278, 308 }, // inv row 3
+	{ RIGHT_PANEL + 17,  337 }, // inv row 4
+	{ RIGHT_PANEL + 46,  337 }, // inv row 4
+	{ RIGHT_PANEL + 75,  337 }, // inv row 4
+	{ RIGHT_PANEL + 104, 337 }, // inv row 4
+	{ RIGHT_PANEL + 133, 337 }, // inv row 4
+	{ RIGHT_PANEL + 162, 337 }, // inv row 4
+	{ RIGHT_PANEL + 191, 337 }, // inv row 4
+	{ RIGHT_PANEL + 220, 337 }, // inv row 4
+	{ RIGHT_PANEL + 249, 337 }, // inv row 4
+	{ RIGHT_PANEL + 278, 337 }, // inv row 4
 	{ PANEL_LEFT + 205, PANEL_TOP + 33 }, // belt
 	{ PANEL_LEFT + 234, PANEL_TOP + 33 }, // belt
 	{ PANEL_LEFT + 263, PANEL_TOP + 33 }, // belt
