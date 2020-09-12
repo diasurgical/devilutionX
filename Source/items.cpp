@@ -3318,11 +3318,11 @@ void PrintItemOil(char IDidx)
 		AddPanelString(tempstr);
 		break;
 	case IMISC_FULLHEAL:
-		strcpy(tempstr, _("fully recover life"));
+		strcpy(tempstr, _("restore all life"));
 		AddPanelString(tempstr);
 		break;
 	case IMISC_HEAL:
-		strcpy(tempstr, _("recover partial life"));
+		strcpy(tempstr, _("restore some life"));
 		AddPanelString(tempstr);
 		break;
 	case IMISC_OLDHEAL:
@@ -3334,11 +3334,11 @@ void PrintItemOil(char IDidx)
 		AddPanelString(tempstr);
 		break;
 	case IMISC_MANA:
-		strcpy(tempstr, _("recover mana"));
+		strcpy(tempstr, _("restore some mana"));
 		AddPanelString(tempstr);
 		break;
 	case IMISC_FULLMANA:
-		strcpy(tempstr, _("fully recover mana"));
+		strcpy(tempstr, _("restore all mana"));
 		AddPanelString(tempstr);
 		break;
 	case IMISC_ELIXSTR:
@@ -3374,11 +3374,11 @@ void PrintItemOil(char IDidx)
 		AddPanelString(tempstr);
 		break;
 	case IMISC_REJUV:
-		strcpy(tempstr, _("recover life and mana"));
+		strcpy(tempstr, _("restore some life and mana"));
 		AddPanelString(tempstr);
 		break;
 	case IMISC_FULLREJUV:
-		strcpy(tempstr, _("fully recover life and mana"));
+		strcpy(tempstr, _("restore all life and mana"));
 		AddPanelString(tempstr);
 		break;
 	}
