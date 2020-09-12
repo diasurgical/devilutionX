@@ -17,8 +17,6 @@
 #endif
 #endif
 
-<<<<<<< HEAD
-=======
 namespace {
 
 int screenWidth = -1;
@@ -129,7 +127,6 @@ const int GetViewportHeight()
 
 } // namespace disp
 
->>>>>>> Fixed a bug caused by using resolutions lower than 640x480.
 namespace dvl {
 
 extern BOOL was_window_init; /** defined in dx.cpp */
