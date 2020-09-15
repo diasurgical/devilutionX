@@ -1041,7 +1041,7 @@ void CheckPanelInfo()
 					strcpy(infostr, "Player attack");
 			}
 			if (PanBtnHotKey[i] != NULL) {
-				sprintf(tempstr, "Hotkey : %s", PanBtnHotKey[i]);
+				sprintf(tempstr, "Hotkey: %s", PanBtnHotKey[i]);
 				AddPanelString(tempstr, TRUE);
 			}
 			infoclr = COL_WHITE;
@@ -1054,7 +1054,7 @@ void CheckPanelInfo()
 		infoclr = COL_WHITE;
 		panelflag = TRUE;
 		pinfoflag = TRUE;
-		strcpy(tempstr, "Hotkey : 's'");
+		strcpy(tempstr, "Hotkey: 's'");
 		AddPanelString(tempstr, TRUE);
 		v = plr[myplr]._pRSpell;
 		if (v != SPL_INVALID) {
