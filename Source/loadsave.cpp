@@ -1200,7 +1200,7 @@ void SavePlayer(int i)
 void SaveMonster(int i)
 {
 	MonsterStruct *pMonster = &monster[i];
-	char tempChar
+	char tempChar;
 
 	CopyInt(&pMonster->_mMTidx, tbuff);
 	CopyInt(&pMonster->_mmode, tbuff);

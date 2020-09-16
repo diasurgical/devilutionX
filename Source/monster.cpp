@@ -459,11 +459,9 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 		monster[i]._mhitpoints = monster[i]._mmaxhp;
 		monster[i].mLevel += 15;
 		monster[i].mExp = 2 * (monster[i].mExp + 1000);
-
 		monster[i].mHit += NIGHTMARE_TO_HIT_BONUS;
 		monster[i].mMinDamage = 2 * (monster[i].mMinDamage + 2);
 		monster[i].mMaxDamage = 2 * (monster[i].mMaxDamage + 2);
-
 		monster[i].mHit2 += NIGHTMARE_TO_HIT_BONUS;
 		monster[i].mMinDamage2 = 2 * (monster[i].mMinDamage2 + 2);
 		monster[i].mMaxDamage2 = 2 * (monster[i].mMaxDamage2 + 2);
@@ -475,11 +473,9 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 		monster[i]._mhitpoints = monster[i]._mmaxhp;
 		monster[i].mLevel += 30;
 		monster[i].mExp = 4 * (monster[i].mExp + 1000);
-
 		monster[i].mHit += HELL_TO_HIT_BONUS;
 		monster[i].mMinDamage = 4 * monster[i].mMinDamage + 6;
 		monster[i].mMaxDamage = 4 * monster[i].mMaxDamage + 6;
-
 		monster[i].mHit2 += HELL_TO_HIT_BONUS;
 		monster[i].mMinDamage2 = 4 * monster[i].mMinDamage2 + 6;
 		monster[i].mMaxDamage2 = 4 * monster[i].mMaxDamage2 + 6;
