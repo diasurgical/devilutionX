@@ -3,6 +3,8 @@
  *
  * Implementation of player functionality, leveling, actions, creation, loading, etc.
  */
+#include <algorithm>
+
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
@@ -410,21 +412,15 @@ void InitPlrGFXMem(int pnum)
 
 	if (!(plr_gfx_flag & 0x1)) { //STAND
 		plr_gfx_flag |= 0x1;
-		if (GetPlrGFXSize("ST") > GetPlrGFXSize("AS")) {
-			plr_sframe_size = GetPlrGFXSize("ST"); //TOWN
-		} else {
-			plr_sframe_size = GetPlrGFXSize("AS"); //DUNGEON
-		}
+		// ST: TOWN, AS: DUNGEON
+		plr_sframe_size = std::max(GetPlrGFXSize("ST"), GetPlrGFXSize("AS"));
 	}
 	plr[pnum]._pNData = DiabloAllocPtr(plr_sframe_size);
 
 	if (!(plr_gfx_flag & 0x2)) { //WALK
 		plr_gfx_flag |= 0x2;
-		if (GetPlrGFXSize("WL") > GetPlrGFXSize("AW")) {
-			plr_wframe_size = GetPlrGFXSize("WL"); //TOWN
-		} else {
-			plr_wframe_size = GetPlrGFXSize("AW"); //DUNGEON
-		}
+		// WL: TOWN, AW: DUNGEON
+		plr_wframe_size = std::max(GetPlrGFXSize("WL"), GetPlrGFXSize("AW"));
 	}
 	plr[pnum]._pWData = DiabloAllocPtr(plr_wframe_size);
 

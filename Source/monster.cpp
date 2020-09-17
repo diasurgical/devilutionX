@@ -3,6 +3,8 @@
  *
  * Implementation of monster functionality, AI, actions, spawning, loading, etc.
  */
+#include <algorithm>
+
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
@@ -1315,11 +1317,7 @@ void M_Enemy(int i)
 			    || ((plr[pnum]._pHitPoints >> 6) == 0) && gbIsMultiplayer)
 				continue;
 			sameroom = (dTransVal[Monst->_mx][Monst->_my] == dTransVal[plr[pnum]._px][plr[pnum]._py]);
-			if (abs(Monst->_mx - plr[pnum]._px) > abs(Monst->_my - plr[pnum]._py))
-				dist = Monst->_mx - plr[pnum]._px;
-			else
-				dist = Monst->_my - plr[pnum]._py;
-			dist = abs(dist);
+			dist = std::max(abs(Monst->_mx - plr[pnum]._px), abs(Monst->_my - plr[pnum]._py));
 			if ((sameroom && !bestsameroom)
 			    || ((sameroom || !bestsameroom) && dist < best_dist)
 			    || (_menemy == -1)) {
@@ -1342,9 +1340,10 @@ void M_Enemy(int i)
 			continue;
 		if (M_Talker(mi) && monster[mi].mtalkmsg)
 			continue;
+		dist = std::max(abs(monster[mi]._mx - Monst->_mx), abs(monster[mi]._my - Monst->_my));
 		if ((!(Monst->_mFlags & MFLAG_GOLEM)
 		        && !(Monst->_mFlags & MFLAG_BERSERK)
-		        && (abs(monster[mi]._mx - Monst->_mx) >= 2 || abs(monster[mi]._my - Monst->_my) >= 2)
+		        && dist >= 2
 		        && !M_Ranged(i))
 		    || (!(Monst->_mFlags & MFLAG_GOLEM)
 		        && !(Monst->_mFlags & MFLAG_BERSERK)
@@ -1352,11 +1351,6 @@ void M_Enemy(int i)
 			continue;
 		}
 		sameroom = dTransVal[Monst->_mx][Monst->_my] == dTransVal[monster[mi]._mx][monster[mi]._my];
-		if (abs(Monst->_mx - monster[mi]._mx) > abs(Monst->_my - monster[mi]._my))
-			dist = Monst->_mx - monster[mi]._mx;
-		else
-			dist = Monst->_my - monster[mi]._my;
-		dist = abs(dist);
 		if ((sameroom && !bestsameroom)
 		    || ((sameroom || !bestsameroom) && dist < best_dist)
 		    || (_menemy == -1)) {
@@ -1689,7 +1683,7 @@ void M_DiabloDeath(int i, BOOL sendmsg)
 	gbProcessPlayers = FALSE;
 	for (j = 0; j < nummonsters; j++) {
 		k = monstactive[j];
-		if (k == i || monster[i]._msquelch == 0)
+		if (k == i || Monst->_msquelch == 0)
 			continue;
 
 		NewMonsterAnim(k, &monster[k].MType->Anims[MA_DEATH], monster[k]._mdir);
@@ -1699,19 +1693,14 @@ void M_DiabloDeath(int i, BOOL sendmsg)
 		monster[k]._mVar1 = 0;
 		monster[k]._mx = monster[k]._moldx;
 		monster[k]._my = monster[k]._moldy;
-		monster[k]._mfuty = monster[k]._mx;
-		monster[k]._mfutx = monster[k]._my;
-		monster[k]._moldx = monster[k]._mx; // CODEFIX: useless assignment
-		monster[k]._moldy = monster[k]._my; // CODEFIX: useless assignment
+		monster[k]._mfutx = monster[k]._mx;
+		monster[k]._mfuty = monster[k]._my;
 		M_ClearSquares(k);
 		dMonster[monster[k]._mx][monster[k]._my] = k + 1;
 	}
 	AddLight(Monst->_mx, Monst->_my, 8);
 	DoVision(Monst->_mx, Monst->_my, 8, FALSE, TRUE);
-	if (abs(ViewX - Monst->_mx) > abs(ViewY - Monst->_my))
-		dist = abs(ViewX - Monst->_mx);
-	else
-		dist = abs(ViewY - Monst->_my);
+	dist = std::max(abs(ViewX - Monst->_mx), abs(ViewY - Monst->_my));
 	if (dist > 20)
 		dist = 20;
 	Monst->_mVar3 = ViewX << 16;
@@ -2989,8 +2978,7 @@ BOOL M_RoundWalk(int i, int md, int *dir)
 void MAI_Zombie(int i)
 {
 	MonsterStruct *Monst;
-	int mx, my;
-	int md, v;
+	int mx, my, md;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
 
@@ -3005,13 +2993,11 @@ void MAI_Zombie(int i)
 		return;
 	}
 
-	mx = mx - Monst->_menemyx;
-	my = my - Monst->_menemyy;
-	md = Monst->_mdir;
-	v = random_(103, 100);
-	if (abs(mx) >= 2 || abs(my) >= 2) {
-		if (v < 2 * Monst->_mint + 10) {
-			if (abs(mx) >= 2 * Monst->_mint + 4 || abs(my) >= 2 * Monst->_mint + 4) {
+	if (random_(103, 100) < 2 * Monst->_mint + 10) {
+		md = std::max(abs(mx - Monst->_menemyx), abs(my - Monst->_menemyy));
+		if (md >= 2) {
+			if (md >= 2 * Monst->_mint + 4) {
+				md = Monst->_mdir;
 				if (random_(104, 100) < 2 * Monst->_mint + 20) {
 					md = random_(104, 8);
 				}
@@ -3020,9 +3006,9 @@ void MAI_Zombie(int i)
 				md = M_GetDir(i);
 				M_CallWalk(i, md);
 			}
+		} else {
+			M_StartAttack(i);
 		}
-	} else if (v < 2 * Monst->_mint + 10) {
-		M_StartAttack(i);
 	}
 
 	if (Monst->_mmode == MM_STAND)
@@ -3858,18 +3844,14 @@ void MAI_RoundRanged(int i, int missile_type, BOOL checkdoors, int dam, int less
 		if (checkdoors && Monst->_msquelch < UCHAR_MAX)
 			MonstCheckDoors(i);
 		v = random_(121, 10000);
-		if ((abs(mx) >= 2 || abs(my) >= 2) && Monst->_msquelch == UCHAR_MAX && dTransVal[Monst->_mx][Monst->_my] == dTransVal[fx][fy]) {
-			if (Monst->_mgoal == MGOAL_MOVE || ((abs(mx) >= 3 || abs(my) >= 3) && random_(122, 4 << lessmissiles) == 0)) {
+		dist = std::max(abs(mx), abs(my));
+		if (dist >= 2 && Monst->_msquelch == UCHAR_MAX && dTransVal[Monst->_mx][Monst->_my] == dTransVal[fx][fy]) {
+			if (Monst->_mgoal == MGOAL_MOVE || (dist >= 3 && random_(122, 4 << lessmissiles) == 0)) {
 				if (Monst->_mgoal != MGOAL_MOVE) {
 					Monst->_mgoalvar1 = 0;
 					Monst->_mgoalvar2 = random_(123, 2);
 				}
 				Monst->_mgoal = MGOAL_MOVE;
-				if (abs(mx) > abs(my)) {
-					dist = abs(mx);
-				} else {
-					dist = abs(my);
-				}
 				if (Monst->_mgoalvar1++ >= 2 * dist && DirOK(i, md)) {
 					Monst->_mgoal = MGOAL_NORMAL;
 				} else if (v < (500 * (Monst->_mint + 1) >> lessmissiles)
@@ -3883,11 +3865,11 @@ void MAI_RoundRanged(int i, int missile_type, BOOL checkdoors, int dam, int less
 			Monst->_mgoal = MGOAL_NORMAL;
 		}
 		if (Monst->_mgoal == MGOAL_NORMAL) {
-			if (((abs(mx) >= 3 || abs(my) >= 3) && v < ((500 * (Monst->_mint + 2)) >> lessmissiles)
+			if ((dist >= 3 && v < ((500 * (Monst->_mint + 2)) >> lessmissiles)
 			        || v < ((500 * (Monst->_mint + 1)) >> lessmissiles))
 			    && LineClear(Monst->_mx, Monst->_my, fx, fy)) {
 				M_StartRSpAttack(i, missile_type, dam);
-			} else if (abs(mx) >= 2 || abs(my) >= 2) {
+			} else if (dist >= 2) {
 				v = random_(124, 100);
 				if (v < 1000 * (Monst->_mint + 5)
 				    || (Monst->_mVar1 == MM_WALK || Monst->_mVar1 == MM_WALK2 || Monst->_mVar1 == MM_WALK3) && Monst->_mVar2 == 0 && v < 1000 * (Monst->_mint + 8)) {
@@ -3954,19 +3936,15 @@ void MAI_RR2(int i, int mistype, int dam)
 		if (Monst->_msquelch < UCHAR_MAX)
 			MonstCheckDoors(i);
 		v = random_(121, 100);
-		if ((abs(mx) >= 2 || abs(my) >= 2) && Monst->_msquelch == UCHAR_MAX && dTransVal[Monst->_mx][Monst->_my] == dTransVal[fx][fy]) {
-			if (Monst->_mgoal == MGOAL_MOVE || (abs(mx) >= 3 || abs(my) >= 3)) {
+		dist = std::max(abs(mx), abs(my));
+		if (dist >= 2 && Monst->_msquelch == UCHAR_MAX && dTransVal[Monst->_mx][Monst->_my] == dTransVal[fx][fy]) {
+			if (Monst->_mgoal == MGOAL_MOVE || dist >= 3) {
 				if (Monst->_mgoal != MGOAL_MOVE) {
 					Monst->_mgoalvar1 = 0;
 					Monst->_mgoalvar2 = random_(123, 2);
 				}
 				Monst->_mgoal = MGOAL_MOVE;
 				Monst->_mgoalvar3 = 4;
-				if (abs(mx) > abs(my)) {
-					dist = abs(mx);
-				} else {
-					dist = abs(my);
-				}
 				if (Monst->_mgoalvar1++ < 2 * dist || !DirOK(i, md)) {
 					if (v < 5 * (Monst->_mint + 16))
 						M_RoundWalk(i, md, &Monst->_mgoalvar2);
@@ -3976,9 +3954,9 @@ void MAI_RR2(int i, int mistype, int dam)
 		} else
 			Monst->_mgoal = MGOAL_NORMAL;
 		if (Monst->_mgoal == MGOAL_NORMAL) {
-			if (((abs(mx) >= 3 || abs(my) >= 3) && v < 5 * (Monst->_mint + 2) || v < 5 * (Monst->_mint + 1) || Monst->_mgoalvar3 == 4) && LineClear(Monst->_mx, Monst->_my, fx, fy)) {
+			if ((dist >= 3 && v < 5 * (Monst->_mint + 2) || v < 5 * (Monst->_mint + 1) || Monst->_mgoalvar3 == 4) && LineClear(Monst->_mx, Monst->_my, fx, fy)) {
 				M_StartRSpAttack(i, mistype, dam);
-			} else if (abs(mx) >= 2 || abs(my) >= 2) {
+			} else if (dist >= 2) {
 				v = random_(124, 100);
 				if (v < 2 * (5 * Monst->_mint + 25)
 				    || (Monst->_mVar1 == MM_WALK || Monst->_mVar1 == MM_WALK2 || Monst->_mVar1 == MM_WALK3)
@@ -4102,18 +4080,14 @@ void MAI_SkelKing(int i)
 		if (Monst->_msquelch < UCHAR_MAX)
 			MonstCheckDoors(i);
 		v = random_(126, 100);
-		if ((abs(mx) >= 2 || abs(my) >= 2) && Monst->_msquelch == UCHAR_MAX && dTransVal[Monst->_mx][Monst->_my] == dTransVal[fx][fy]) {
+		dist = std::max(abs(mx), abs(my));
+		if (dist >= 2 && Monst->_msquelch == UCHAR_MAX && dTransVal[Monst->_mx][Monst->_my] == dTransVal[fx][fy]) {
 			if (Monst->_mgoal == MGOAL_MOVE || (abs(mx) >= 3 || abs(my) >= 3) && random_(127, 4) == 0) {
 				if (Monst->_mgoal != MGOAL_MOVE) {
 					Monst->_mgoalvar1 = 0;
 					Monst->_mgoalvar2 = random_(128, 2);
 				}
 				Monst->_mgoal = MGOAL_MOVE;
-				if (abs(mx) > abs(my)) {
-					dist = abs(mx);
-				} else {
-					dist = abs(my);
-				}
 				if (Monst->_mgoalvar1++ >= 2 * dist && DirOK(i, md) || dTransVal[Monst->_mx][Monst->_my] != dTransVal[fx][fy]) {
 					Monst->_mgoal = MGOAL_NORMAL;
 				} else if (!M_RoundWalk(i, md, &Monst->_mgoalvar2)) {
@@ -4124,7 +4098,7 @@ void MAI_SkelKing(int i)
 			Monst->_mgoal = MGOAL_NORMAL;
 		if (Monst->_mgoal == MGOAL_NORMAL) {
 			if (!gbIsMultiplayer
-			    && ((abs(mx) >= 3 || abs(my) >= 3) && v < 4 * Monst->_mint + 35 || v < 6)
+			    && (dist >= 3 && v < 4 * Monst->_mint + 35 || v < 6)
 			    && LineClear(Monst->_mx, Monst->_my, fx, fy)) {
 				nx = Monst->_mx + offset_x[md];
 				ny = Monst->_my + offset_y[md];
@@ -4133,7 +4107,7 @@ void MAI_SkelKing(int i)
 					M_StartSpStand(i, md);
 				}
 			} else {
-				if (abs(mx) >= 2 || abs(my) >= 2) {
+				if (dist >= 2) {
 					v = random_(129, 100);
 					if (v >= Monst->_mint + 25
 					    && (Monst->_mVar1 != MM_WALK && Monst->_mVar1 != MM_WALK2 && Monst->_mVar1 != MM_WALK3 || Monst->_mVar2 != 0 || (v >= Monst->_mint + 75))) {
@@ -4169,18 +4143,14 @@ void MAI_Rhino(int i)
 		if (Monst->_msquelch < UCHAR_MAX)
 			MonstCheckDoors(i);
 		v = random_(131, 100);
-		if (abs(mx) >= 2 || abs(my) >= 2) {
-			if (Monst->_mgoal == MGOAL_MOVE || (abs(mx) >= 5 || abs(my) >= 5) && random_(132, 4) != 0) {
+		dist = std::max(abs(mx), abs(my));
+		if (dist >= 2) {
+			if (Monst->_mgoal == MGOAL_MOVE || dist >= 5 && random_(132, 4) != 0) {
 				if (Monst->_mgoal != MGOAL_MOVE) {
 					Monst->_mgoalvar1 = 0;
 					Monst->_mgoalvar2 = random_(133, 2);
 				}
 				Monst->_mgoal = MGOAL_MOVE;
-				if (abs(mx) > abs(my)) {
-					dist = abs(mx);
-				} else {
-					dist = abs(my);
-				}
 				if (Monst->_mgoalvar1++ >= 2 * dist || dTransVal[Monst->_mx][Monst->_my] != dTransVal[fx][fy]) {
 					Monst->_mgoal = MGOAL_NORMAL;
 				} else if (!M_RoundWalk(i, md, &Monst->_mgoalvar2)) {
@@ -4190,17 +4160,19 @@ void MAI_Rhino(int i)
 		} else
 			Monst->_mgoal = MGOAL_NORMAL;
 		if (Monst->_mgoal == MGOAL_NORMAL) {
-			if ((abs(mx) >= 5 || abs(my) >= 5)
-			    && v < 2 * Monst->_mint + 43
-			    && LineClearF1(PosOkMonst, i, Monst->_mx, Monst->_my, fx, fy)) {
-				if (AddMissile(Monst->_mx, Monst->_my, fx, fy, md, MIS_RHINO, Monst->_menemy, i, 0, 0) != -1) {
-					if (Monst->MData->snd_special)
-						PlayEffect(i, 3);
-					dMonster[Monst->_mx][Monst->_my] = -(i + 1);
-					Monst->_mmode = MM_CHARGE;
+			if (dist >= 5)
+				&& v < 2 * Monst->_mint + 43
+			    && LineClearF1(PosOkMonst, i, Monst->_mx, Monst->_my, fx, fy))
+				{
+					if (AddMissile(Monst->_mx, Monst->_my, fx, fy, md, MIS_RHINO, Monst->_menemy, i, 0, 0) != -1) {
+						if (Monst->MData->snd_special)
+							PlayEffect(i, 3);
+						dMonster[Monst->_mx][Monst->_my] = -(i + 1);
+						Monst->_mmode = MM_CHARGE;
+					}
 				}
-			} else {
-				if (abs(mx) >= 2 || abs(my) >= 2) {
+			else {
+				if (dist >= 2) {
 					v = random_(134, 100);
 					if (v >= 2 * Monst->_mint + 33
 					    && (Monst->_mVar1 != MM_WALK && Monst->_mVar1 != MM_WALK2 && Monst->_mVar1 != MM_WALK3
@@ -4299,8 +4271,9 @@ void MAI_Counselor(int i)
 	MonsterStruct *Monst;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
-	if (monster[i]._mmode == MM_STAND && monster[i]._msquelch != 0) {
-		Monst = &monster[i];
+
+	Monst = &monster[i];
+	if (Monst->_mmode == MM_STAND && Monst->_msquelch != 0) {
 		fx = Monst->_menemyx;
 		fy = Monst->_menemyy;
 		mx = Monst->_mx - fx;
@@ -4317,11 +4290,8 @@ void MAI_Counselor(int i)
 				M_StartFadein(i, md, TRUE);
 			}
 		} else if (Monst->_mgoal == MGOAL_MOVE) {
-			if (abs(mx) > abs(my))
-				dist = abs(mx);
-			else
-				dist = abs(my);
-			if ((abs(mx) >= 2 || abs(my) >= 2) && Monst->_msquelch == UCHAR_MAX && dTransVal[Monst->_mx][Monst->_my] == dTransVal[fx][fy]) {
+			dist = std::max(abs(mx), abs(my));
+			if (dist >= 2 && Monst->_msquelch == UCHAR_MAX && dTransVal[Monst->_mx][Monst->_my] == dTransVal[fx][fy]) {
 				if (Monst->_mgoalvar1++ < 2 * dist || !DirOK(i, md)) {
 					M_RoundWalk(i, md, &Monst->_mgoalvar2);
 				} else {
