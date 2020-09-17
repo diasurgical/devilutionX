@@ -4160,18 +4160,16 @@ void MAI_Rhino(int i)
 		} else
 			Monst->_mgoal = MGOAL_NORMAL;
 		if (Monst->_mgoal == MGOAL_NORMAL) {
-			if (dist >= 5)
-				&& v < 2 * Monst->_mint + 43
-			    && LineClearF1(PosOkMonst, i, Monst->_mx, Monst->_my, fx, fy))
-				{
-					if (AddMissile(Monst->_mx, Monst->_my, fx, fy, md, MIS_RHINO, Monst->_menemy, i, 0, 0) != -1) {
-						if (Monst->MData->snd_special)
-							PlayEffect(i, 3);
-						dMonster[Monst->_mx][Monst->_my] = -(i + 1);
-						Monst->_mmode = MM_CHARGE;
-					}
+			if (dist >= 5
+			    && v < 2 * Monst->_mint + 43
+			    && LineClearF1(PosOkMonst, i, Monst->_mx, Monst->_my, fx, fy)) {
+				if (AddMissile(Monst->_mx, Monst->_my, fx, fy, md, MIS_RHINO, Monst->_menemy, i, 0, 0) != -1) {
+					if (Monst->MData->snd_special)
+						PlayEffect(i, 3);
+					dMonster[Monst->_mx][Monst->_my] = -(i + 1);
+					Monst->_mmode = MM_CHARGE;
 				}
-			else {
+			} else {
 				if (dist >= 2) {
 					v = random_(134, 100);
 					if (v >= 2 * Monst->_mint + 33
@@ -5138,9 +5136,9 @@ void M_FallenFear(int x, int y)
 			continue;
 		}
 		if (m->_mAi == AI_FALLEN
-			&& abs(x - m->_mx) < 5
-			&& abs(y - m->_my) < 5
-			&& m->_mhitpoints >> 6 > 0) {
+		    && abs(x - m->_mx) < 5
+		    && abs(y - m->_my) < 5
+		    && m->_mhitpoints >> 6 > 0) {
 			m->_mgoal = MGOAL_RETREAT;
 			m->_mgoalvar1 = rundist;
 			m->_mdir = GetDirection(x, y, m->_mx, m->_my);
