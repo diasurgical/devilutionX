@@ -354,15 +354,13 @@ void InitRndBarrels()
 			t = 0;
 			found = FALSE;
 			while (TRUE) {
-				if (t >= 3)
-					break;
 				dir = random_(143, 8);
 				xp += bxadd[dir];
 				yp += byadd[dir];
 				found = RndLocOk(xp, yp);
-				t++;
-				if (found)
+				if (found || t > 1)
 					break;
+				t++;
 			}
 			if (found) {
 				o = (random_(143, 5) != 0) ? OBJ_BARREL : OBJ_BARRELEX;
@@ -1002,27 +1000,15 @@ void AddChest(int i, int t)
 	switch (t) {
 	case OBJ_CHEST1:
 	case OBJ_TCHEST1:
-		if (setlevel) {
-			object[i]._oVar1 = 1;
-			break;
-		}
-		object[i]._oVar1 = random_(147, 2);
+		object[i]._oVar1 = setlevel ? 1 : random_(147, 2);
 		break;
 	case OBJ_TCHEST2:
 	case OBJ_CHEST2:
-		if (setlevel) {
-			object[i]._oVar1 = 2;
-			break;
-		}
-		object[i]._oVar1 = random_(147, 3);
+		object[i]._oVar1 = setlevel ? 2 : random_(147, 3);
 		break;
 	case OBJ_TCHEST3:
 	case OBJ_CHEST3:
-		if (setlevel) {
-			object[i]._oVar1 = 3;
-			break;
-		}
-		object[i]._oVar1 = random_(147, 4);
+		object[i]._oVar1 = setlevel ? 3 : random_(147, 4);
 		break;
 	}
 	object[i]._oVar2 = random_(147, 8);
@@ -1109,28 +1095,25 @@ void AddBarrel(int i, int t)
 
 void AddShrine(int i)
 {
-	int val, j;
-	BOOL slist[NUM_SHRINETYPE];
+	// begin FindValidShrine (except for the SHRINE_THAUMATURGIC check)
+	int rv, excl, j;
+	int slist[NUM_SHRINETYPE];
+	excl = gbMaxPlayers != 1 ? 1 : 2;
+	rv = 0;
+	for (j = 0; j < NUM_SHRINETYPE; j++) {
+		if (shrineavail[j] == excl || currlevel < shrinemin[j] || currlevel > shrinemax[j])
+			continue;
+		slist[rv] = j;
+		rv++;
+	}
+	if (rv == 0)
+		// report the failure?
+		return;
+	rv = slist[random_(150, rv)];
+	// end FindValidShrine
 
 	object[i]._oPreFlag = TRUE;
-	for (j = 0; j < NUM_SHRINETYPE; j++) {
-		if (currlevel < shrinemin[j] || currlevel > shrinemax[j]) {
-			slist[j] = 0;
-		} else {
-			slist[j] = 1;
-		}
-		if (gbMaxPlayers != 1 && shrineavail[j] == 1) {
-			slist[j] = 0;
-		}
-		if (gbMaxPlayers == 1 && shrineavail[j] == 2) {
-			slist[j] = 0;
-		}
-	}
-	do {
-		val = random_(150, NUM_SHRINETYPE);
-	} while (!slist[val]);
-
-	object[i]._oVar1 = val;
+	object[i]._oVar1 = rv;
 	if (random_(150, 2)) {
 		object[i]._oAnimFrame = 12;
 		object[i]._oAnimLen = 22;
@@ -2113,7 +2096,7 @@ void OperateL2RDoor(int pnum, int oi, BOOL sendflag)
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(TRUE, CMD_OPENDOOR, oi);
 		if (!deltaload)
-			PlaySfxLoc(IS_DOOROPEN, object[oi]._ox, object[oi]._oy);
+			PlaySfxLoc(IS_DOOROPEN, xp, yp);
 		ObjSetMicro(xp, yp, 17);
 		object[oi]._oAnimFrame += 2;
 		object[oi]._oPreFlag = TRUE;
@@ -2875,49 +2858,42 @@ void OperateShrine(int pnum, int i, int sType)
 		InitDiabloMsg(EMSG_SHRINE_MYSTERIOUS);
 		break;
 	case SHRINE_HIDDEN:
-		cnt = 0;
 		if (deltaload)
 			return;
 		if (pnum != myplr)
 			return;
+		cnt = 0;
 		for (j = 0; j < NUM_INVLOC; j++) {
-			if (plr[pnum].InvBody[j]._itype != ITYPE_NONE)
+			if (plr[pnum].InvBody[j]._itype == ITYPE_NONE
+				&& plr[pnum].InvBody[j]._iMaxDur != DUR_INDESTRUCTIBLE
+				&& plr[pnum].InvBody[j]._iMaxDur != 0)
 				cnt++;
 		}
-		if (cnt > 0) {
+		if (cnt != 0) {
+			r = random_(0, cnt);
 			for (j = 0; j < NUM_INVLOC; j++) {
 				if (plr[pnum].InvBody[j]._itype != ITYPE_NONE
-				    && plr[pnum].InvBody[j]._iMaxDur != DUR_INDESTRUCTIBLE
-				    && plr[pnum].InvBody[j]._iMaxDur != 0) {
-					plr[pnum].InvBody[j]._iDurability += 10;
-					plr[pnum].InvBody[j]._iMaxDur += 10;
-					if (plr[pnum].InvBody[j]._iDurability > plr[pnum].InvBody[j]._iMaxDur)
-						plr[pnum].InvBody[j]._iDurability = plr[pnum].InvBody[j]._iMaxDur;
-				}
-			}
-			while (TRUE) {
-				cnt = 0;
-				for (j = 0; j < NUM_INVLOC; j++) {
-					if (plr[pnum].InvBody[j]._itype != ITYPE_NONE
-					    && plr[pnum].InvBody[j]._iMaxDur != DUR_INDESTRUCTIBLE
-					    && plr[pnum].InvBody[j]._iMaxDur != 0)
-						cnt++;
-				}
-				if (cnt == 0)
-					break;
-				r = random_(0, NUM_INVLOC);
-				if (plr[pnum].InvBody[r]._itype == ITYPE_NONE || plr[pnum].InvBody[r]._iMaxDur == DUR_INDESTRUCTIBLE || plr[pnum].InvBody[r]._iMaxDur == 0)
-					continue;
+					&& plr[pnum].InvBody[j]._iMaxDur != DUR_INDESTRUCTIBLE
+					&& plr[pnum].InvBody[j]._iMaxDur != 0) {
 
-				plr[pnum].InvBody[r]._iDurability -= 20;
-				plr[pnum].InvBody[r]._iMaxDur -= 20;
-				if (plr[pnum].InvBody[r]._iDurability <= 0)
-					plr[pnum].InvBody[r]._iDurability = 1;
-				if (plr[pnum].InvBody[r]._iMaxDur <= 0)
-					plr[pnum].InvBody[r]._iMaxDur = 1;
-				break;
+					if (r == 0) {
+						plr[pnum].InvBody[r]._iDurability -= 10;
+						plr[pnum].InvBody[r]._iMaxDur -= 10;
+						if (plr[pnum].InvBody[r]._iDurability <= 0)
+							plr[pnum].InvBody[r]._iDurability = 1;
+						if (plr[pnum].InvBody[r]._iMaxDur <= 0)
+							plr[pnum].InvBody[r]._iMaxDur = 1;
+					} else {
+						plr[pnum].InvBody[j]._iDurability += 10;
+						plr[pnum].InvBody[j]._iMaxDur += 10;
+						if (plr[pnum].InvBody[j]._iDurability > plr[pnum].InvBody[j]._iMaxDur)
+							plr[pnum].InvBody[j]._iDurability = plr[pnum].InvBody[j]._iMaxDur;
+					}
+					r--;
+				}
 			}
 		}
+
 		InitDiabloMsg(EMSG_SHRINE_HIDDEN);
 		break;
 	case SHRINE_GLOOMY:
@@ -3061,20 +3037,20 @@ void OperateShrine(int pnum, int i, int sType)
 		}
 		if (cnt > 1) {
 			spell = 1;
-			for (j = 1; j <= MAX_SPELLS; j++) {
-				if (plr[pnum]._pMemSpells & spell) {
-					if (plr[pnum]._pSplLvl[j] < 15)
-						plr[pnum]._pSplLvl[j]++;
+			r = random_(0, cnt);
+			for (j = 0; j < MAX_SPELLS; j++) {
+				if (spells & spell) {
+					if (r == 0) {
+						if (plr[pnum]._pSplLvl[j] > 0)
+							plr[pnum]._pSplLvl[j]--;
+					} else {
+						if (plr[pnum]._pSplLvl[j] < 15)
+							plr[pnum]._pSplLvl[j]++;
+					}
+					r--;
 				}
 				spell <<= 1;
 			}
-			do {
-				r = random_(0, 37);
-			} while (!(plr[pnum]._pMemSpells & ((__int64)1 << r)));
-			if (plr[pnum]._pSplLvl[r] >= 2)
-				plr[pnum]._pSplLvl[r] -= 2;
-			else
-				plr[pnum]._pSplLvl[r] = 0;
 		}
 		InitDiabloMsg(EMSG_SHRINE_ENCHANTED);
 		break;
@@ -3506,29 +3482,21 @@ void OperateArmorStand(int pnum, int i, BOOL sendmsg)
 
 int FindValidShrine(int i)
 {
-	BOOL done;
-	int rv;
-
-	while (1) {
-		done = FALSE;
-		while (!done) {
-			rv = random_(0, NUM_SHRINETYPE);
-			if (currlevel >= shrinemin[rv] && currlevel <= shrinemax[rv] && rv != 8)
-				done = TRUE;
-		}
-
-		if (gbMaxPlayers != 1) {
-			if (shrineavail[rv] != 1) {
-				break;
-			}
-		} else {
-			if (shrineavail[rv] != 2) {
-				break;
-			}
-		}
+	int rv, excl, j;
+	int slist[NUM_SHRINETYPE];
+	excl = gbMaxPlayers != 1 ? 1 : 2;
+	rv = 0;
+	for (j = 0; j < NUM_SHRINETYPE; j++) {
+		if (shrineavail[j] == excl || currlevel < shrinemin[j] || currlevel > shrinemax[j]
+			|| j == SHRINE_THAUMATURGIC)
+			continue;
+		slist[rv] = j;
+		rv++;
 	}
-
-	return rv;
+	if (rv == 0)
+		// report the failure?
+		return -1;
+	return slist[random_(150, rv)];
 }
 
 void OperateGoatShrine(int pnum, int i, int sType)
@@ -3552,8 +3520,8 @@ void OperateCauldron(int pnum, int i, int sType)
 
 BOOL OperateFountains(int pnum, int i)
 {
-	int prev, add, rnd, cnt;
-	BOOL applied, done;
+	int add, rnd;
+	BOOL applied;
 
 	applied = FALSE;
 	SetRndSeed(object[i]._oRndSeed);
@@ -3564,8 +3532,8 @@ BOOL OperateFountains(int pnum, int i)
 		if (pnum != myplr)
 			return FALSE;
 
+		PlaySfxLoc(LS_FOUNTAIN, object[i]._ox, object[i]._oy);
 		if (plr[pnum]._pHitPoints < plr[pnum]._pMaxHP) {
-			PlaySfxLoc(LS_FOUNTAIN, object[i]._ox, object[i]._oy);
 			plr[pnum]._pHitPoints += 64;
 			plr[pnum]._pHPBase += 64;
 			if (plr[pnum]._pHitPoints > plr[pnum]._pMaxHP) {
@@ -3573,8 +3541,7 @@ BOOL OperateFountains(int pnum, int i)
 				plr[pnum]._pHPBase = plr[pnum]._pMaxHPBase;
 			}
 			applied = TRUE;
-		} else
-			PlaySfxLoc(LS_FOUNTAIN, object[i]._ox, object[i]._oy);
+		}
 		break;
 	case OBJ_PURIFYINGFTN:
 		if (deltaload)
@@ -3582,28 +3549,24 @@ BOOL OperateFountains(int pnum, int i)
 		if (pnum != myplr)
 			return FALSE;
 
+		PlaySfxLoc(LS_FOUNTAIN, object[i]._ox, object[i]._oy);
 		if (plr[pnum]._pMana < plr[pnum]._pMaxMana) {
-			PlaySfxLoc(LS_FOUNTAIN, object[i]._ox, object[i]._oy);
-
 			plr[pnum]._pMana += 64;
 			plr[pnum]._pManaBase += 64;
 			if (plr[pnum]._pMana > plr[pnum]._pMaxMana) {
 				plr[pnum]._pMana = plr[pnum]._pMaxMana;
 				plr[pnum]._pManaBase = plr[pnum]._pMaxManaBase;
 			}
-
 			applied = TRUE;
-		} else
-			PlaySfxLoc(LS_FOUNTAIN, object[i]._ox, object[i]._oy);
+		}
 		break;
 	case OBJ_MURKYFTN:
 		if (object[i]._oSelFlag == 0)
 			break;
-		if (!deltaload)
-			PlaySfxLoc(LS_FOUNTAIN, object[i]._ox, object[i]._oy);
 		object[i]._oSelFlag = 0;
 		if (deltaload)
 			return FALSE;
+		PlaySfxLoc(LS_FOUNTAIN, object[i]._ox, object[i]._oy);
 		AddMissile(
 		    plr[pnum]._px,
 		    plr[pnum]._py,
@@ -3622,42 +3585,42 @@ BOOL OperateFountains(int pnum, int i)
 	case OBJ_TEARFTN:
 		if (object[i]._oSelFlag == 0)
 			break;
-		prev = -1;
-		add = -1;
-		done = FALSE;
-		cnt = 0;
-		if (!deltaload)
-			PlaySfxLoc(LS_FOUNTAIN, object[i]._ox, object[i]._oy);
 		object[i]._oSelFlag = 0;
 		if (deltaload)
 			return FALSE;
+		PlaySfxLoc(LS_FOUNTAIN, object[i]._ox, object[i]._oy);
 		if (pnum != myplr)
 			return FALSE;
-		while (!done) {
-			rnd = random_(0, 4);
-			if (rnd != prev) {
-				switch (rnd) {
-				case 0:
-					ModifyPlrStr(pnum, add);
-					break;
-				case 1:
-					ModifyPlrMag(pnum, add);
-					break;
-				case 2:
-					ModifyPlrDex(pnum, add);
-					break;
-				case 3:
-					ModifyPlrVit(pnum, add);
-					break;
-				}
-				prev = rnd;
-				add = 1;
-				cnt++;
-			}
-			if (cnt <= 1)
-				continue;
 
-			done = TRUE;
+		rnd = random_(0, 4);
+		add = (rnd + 1 + random_(0, 3)) % 4;
+		switch (rnd) {
+		case 0:
+			ModifyPlrStr(pnum, -1);
+			break;
+		case 1:
+			ModifyPlrMag(pnum, -1);
+			break;
+		case 2:
+			ModifyPlrDex(pnum, -1);
+			break;
+		default:
+			ModifyPlrVit(pnum, -1);
+			break;
+		}
+		switch (add) {
+		case 0:
+			ModifyPlrStr(pnum, 1);
+			break;
+		case 1:
+			ModifyPlrMag(pnum, 1);
+			break;
+		case 2:
+			ModifyPlrDex(pnum, 1);
+			break;
+		default:
+			ModifyPlrVit(pnum, 1);
+			break;
 		}
 		CheckStats(pnum);
 		applied = TRUE;
