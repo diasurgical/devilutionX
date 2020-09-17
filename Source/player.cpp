@@ -542,30 +542,18 @@ void CreatePlayer(int pnum, char c)
 	plr[pnum]._pClass = c;
 
 	val = StrengthTbl[c];
-	if (val < 0) {
-		val = 0;
-	}
 	plr[pnum]._pStrength = val;
 	plr[pnum]._pBaseStr = val;
 
 	val = MagicTbl[c];
-	if (val < 0) {
-		val = 0;
-	}
 	plr[pnum]._pMagic = val;
 	plr[pnum]._pBaseMag = val;
 
 	val = DexterityTbl[c];
-	if (val < 0) {
-		val = 0;
-	}
 	plr[pnum]._pDexterity = val;
 	plr[pnum]._pBaseDex = val;
 
 	val = VitalityTbl[c];
-	if (val < 0) {
-		val = 0;
-	}
 	plr[pnum]._pVitality = val;
 	plr[pnum]._pBaseVit = val;
 
