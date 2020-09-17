@@ -2107,7 +2107,7 @@ BOOL UseInvItem(int pnum, int cii)
 		return TRUE;
 	if (stextflag != STORE_NONE)
 		return TRUE;
-	if (cii <= INVITEM_HAND_RIGHT)
+	if (cii < INVITEM_INV_FIRST)
 		return FALSE;
 
 	if (cii <= INVITEM_INV_LAST) {
