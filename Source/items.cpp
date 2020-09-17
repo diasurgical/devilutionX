@@ -426,23 +426,23 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 	}
 
 	plr[p]._pStrength = sadd + plr[p]._pBaseStr;
-	if (plr[myplr]._pStrength <= 0) {
-		plr[myplr]._pStrength = 0;
+	if (plr[p]._pStrength < 0) {
+		plr[p]._pStrength = 0;
 	}
 
 	plr[p]._pMagic = madd + plr[p]._pBaseMag;
-	if (plr[myplr]._pMagic <= 0) {
-		plr[myplr]._pMagic = 0;
+	if (plr[p]._pMagic < 0) {
+		plr[p]._pMagic = 0;
 	}
 
 	plr[p]._pDexterity = dadd + plr[p]._pBaseDex;
-	if (plr[myplr]._pDexterity <= 0) {
-		plr[myplr]._pDexterity = 0;
+	if (plr[p]._pDexterity < 0) {
+		plr[p]._pDexterity = 0;
 	}
 
 	plr[p]._pVitality = vadd + plr[p]._pBaseVit;
-	if (plr[myplr]._pVitality <= 0) {
-		plr[myplr]._pVitality = 0;
+	if (plr[p]._pVitality < 0) {
+		plr[p]._pVitality = 0;
 	}
 
 	if (plr[p]._pClass == PC_ROGUE) {
