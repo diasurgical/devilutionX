@@ -653,9 +653,9 @@ void AddHookedBodies(int freq)
 {
 	int i, j, ii, jj;
 
-	for (j = 0; j < 40; j++) {
+	for (j = 0; j < DMAXY; j++) {
 		jj = 16 + j * 2;
-		for (i = 0; i < 40; i++) {
+		for (i = 0; i < DMAXX; i++) {
 			ii = 16 + i * 2;
 			if (dungeon[i][j] != 1 && dungeon[i][j] != 2)
 				continue;
@@ -3671,36 +3671,19 @@ BOOL OperateFountains(int pnum, int i)
 
 void OperateWeaponRack(int pnum, int i, BOOL sendmsg)
 {
-	int weaponType;
-
 	if (object[i]._oSelFlag == 0)
 		return;
 	SetRndSeed(object[i]._oRndSeed);
-
-	switch (random_(0, 4) + 1) {
-	case ITYPE_SWORD:
-		weaponType = ITYPE_SWORD;
-		break;
-	case ITYPE_AXE:
-		weaponType = ITYPE_AXE;
-		break;
-	case ITYPE_BOW:
-		weaponType = ITYPE_BOW;
-		break;
-	case ITYPE_MACE:
-		weaponType = ITYPE_MACE;
-		break;
-	}
 
 	object[i]._oSelFlag = 0;
 	object[i]._oAnimFrame++;
 	if (deltaload)
 		return;
 
-	if (leveltype > 1)
-		CreateTypeItem(object[i]._ox, object[i]._oy, TRUE, weaponType, IMISC_NONE, sendmsg, FALSE);
-	else
-		CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, weaponType, IMISC_NONE, sendmsg, FALSE);
+	CreateTypeItem(object[i]._ox, object[i]._oy,
+		leveltype > 1,
+		random_(0, 4) + ITYPE_SWORD,
+		IMISC_NONE, sendmsg, FALSE);
 	if (pnum == myplr)
 		NetSendCmdParam1(FALSE, CMD_OPERATEOBJ, i);
 }

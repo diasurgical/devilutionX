@@ -1947,7 +1947,7 @@ int CheckUnique(int i, int lvl, int uper, BOOL recreate)
 	BOOLEAN uok[128];
 
 	if (random_(28, 100) > uper)
-		return -1;
+		return UITYPE_INVALID;
 
 	numu = 0;
 	memset(uok, 0, sizeof(uok));
@@ -1961,7 +1961,7 @@ int CheckUnique(int i, int lvl, int uper, BOOL recreate)
 	}
 
 	if (numu == 0)
-		return -1;
+		return UITYPE_INVALID;
 
 	random_(29, 10); /// BUGFIX: unused, last unique in array always gets chosen
 	idata = 0;

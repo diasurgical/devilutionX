@@ -750,15 +750,15 @@ void multi_send_pinfo(int pnum, char cmd)
 int InitLevelType(int l)
 {
 	if (l == 0)
-		return 0;
+		return DTYPE_TOWN;
 	if (l >= 1 && l <= 4)
-		return 1;
+		return DTYPE_CATHEDRAL;
 	if (l >= 5 && l <= 8)
-		return 2;
+		return DTYPE_CATACOMBS;
 	if (l >= 9 && l <= 12)
-		return 3;
+		return DTYPE_CAVES;
 
-	return 4;
+	return DTYPE_HELL;
 }
 
 void SetupLocalCoords()
