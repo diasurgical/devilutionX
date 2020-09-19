@@ -1370,10 +1370,18 @@ void AddObject(int ot, int ox, int oy)
 	case OBJ_CHEST1:
 	case OBJ_CHEST2:
 	case OBJ_CHEST3:
+		AddChest(oi, ot);
+		break;
 	case OBJ_TCHEST1:
 	case OBJ_TCHEST2:
 	case OBJ_TCHEST3:
 		AddChest(oi, ot);
+		object[oi]._oTrapFlag = TRUE;
+		if (leveltype == DTYPE_CATACOMBS) {
+			object[oi]._oVar4 = random_(0, 2);
+		} else {
+			object[oi]._oVar4 = random_(0, 3);
+		}
 		break;
 	case OBJ_SARC:
 		AddSarc(oi);
