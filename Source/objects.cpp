@@ -1622,6 +1622,18 @@ void Obj_FlameTrap(int i)
 		if (object[i]._oVar4)
 			ActivateTrapLine(object[i]._otype, object[i]._oVar1);
 	} else {
+		int damage[4] = { 6, 8, 10, 12 };
+
+		int mindam = damage[leveltype - 1];
+		int maxdam = mindam * 2;
+
+		x = object[i]._ox;
+		y = object[i]._oy;
+		if (dMonster[x][y] > 0)
+			MonsterTrapHit(dMonster[x][y] - 1, mindam / 2, maxdam / 2, 0, MIS_FIREWALLC, FALSE);
+		if (dPlayer[x][y] > 0)
+			PlayerMHit(dPlayer[x][y] - 1, -1, 0, mindam, maxdam, MIS_FIREWALLC, FALSE, 0);
+
 		if (object[i]._oAnimFrame == object[i]._oAnimLen)
 			object[i]._oAnimFrame = 11;
 		if (object[i]._oAnimFrame <= 5)
@@ -2671,6 +2683,9 @@ void OperateTrapLvr(int i)
 
 	frame = object[i]._oAnimFrame;
 	j = 0;
+
+	if (!deltaload)
+		PlaySfxLoc(IS_LEVER, object[i]._ox, object[i]._oy);
 
 	if (frame == 1) {
 		object[i]._oAnimFrame = 2;
