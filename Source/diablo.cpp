@@ -51,6 +51,7 @@ WORD game_speed;
  * screen, as needed for efficient rendering in fullscreen mode.
  */
 BOOL fullscreen = TRUE;
+int display_id = 0;
 int showintrodebug = 1;
 #ifdef _DEBUG
 int questdebug = -1;
@@ -354,6 +355,7 @@ static void print_help_and_exit()
 	printf("    %-20s %-30s\n", "--version", "Print the version and exit");
 	printf("    %-20s %-30s\n", "--data-dir", "Specify the folder of diabdat.mpq");
 	printf("    %-20s %-30s\n", "--save-dir", "Specify the folder of save files");
+	printf("    %-20s %-30s\n", "--disp", "Display to run the game");
 	printf("    %-20s %-30s\n", "-n", "Skip startup videos");
 	printf("    %-20s %-30s\n", "-f", "Display frames per second");
 	printf("    %-20s %-30s\n", "-x", "Run in windowed mode");
@@ -403,6 +405,8 @@ void diablo_parse_flags(int argc, char **argv)
 			if (prefPath.back() != '/')
 				prefPath += '/';
 #endif
+		} else if (strcasecmp("--disp", argv[i]) == 0) {
+			display_id = strtol(argv[++i], NULL, 10);
 		} else if (strcasecmp("-n", argv[i]) == 0) {
 			showintrodebug = FALSE;
 		} else if (strcasecmp("-f", argv[i]) == 0) {
