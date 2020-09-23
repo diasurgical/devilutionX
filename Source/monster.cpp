@@ -4949,13 +4949,13 @@ void SyncMonsterAnim(int i)
 
 void M_FallenFear(int x, int y)
 {
-	int i, mi, rundist, aitype;
+	MonsterStruct *m;
+	int i, rundist;
 
 	for (i = 0; i < nummonsters; i++) {
-		rundist = 0;
-		mi = monstactive[i];
+		m = &monster[monstactive[i]];
 
-		switch (monster[mi].MType->mtype) {
+		switch (m->MType->mtype) {
 		case MT_RFALLSP:
 		case MT_RFALLSD:
 			rundist = 7;
@@ -4972,16 +4972,16 @@ void M_FallenFear(int x, int y)
 		case MT_BFALLSD:
 			rundist = 2;
 			break;
+		default:
+			continue;
 		}
-		aitype = monster[mi]._mAi;
-		if (aitype == AI_FALLEN
-		    && rundist
-		    && abs(x - monster[mi]._mx) < 5
-		    && abs(y - monster[mi]._my) < 5
-		    && monster[mi]._mhitpoints >> 6 > 0) {
-			monster[mi]._mgoal = MGOAL_RETREAT;
-			monster[mi]._mgoalvar1 = rundist;
-			monster[mi]._mdir = GetDirection(x, y, monster[i]._mx, monster[i]._my);
+		if (m->_mAi == AI_FALLEN
+			&& abs(x - m->_mx) < 5
+			&& abs(y - m->_my) < 5
+			&& m->_mhitpoints >> 6 > 0) {
+			m->_mgoal = MGOAL_RETREAT;
+			m->_mgoalvar1 = rundist;
+			m->_mdir = GetDirection(x, y, m->_mx, m->_my);
 		}
 	}
 }
