@@ -1566,7 +1566,7 @@ void M2MStartHit(int mid, int i, int dam)
 	}
 
 	if (i >= 0)
-		monster[i].mWhoHit |= 1 << i;
+		monster[mid].mWhoHit |= 1 << i;
 
 	delta_monster_hp(mid, monster[mid]._mhitpoints, currlevel);
 	NetSendCmdParam2(FALSE, CMD_MONSTDAMAGE, mid, dam);
@@ -1608,22 +1608,24 @@ void MonstStartKill(int i, int pnum, BOOL sendmsg)
 	if ((DWORD)i >= MAXMONSTERS) {
 		app_fatal("MonstStartKill: Invalid monster %d", i);
 	}
-	if (!monster[i].MType) {
-		app_fatal("MonstStartKill: Monster %d \"%s\" MType NULL", i, monster[i].mName);
+	Monst = &monster[i];
+	if (!Monst->MType) {
+		app_fatal("MonstStartKill: Monster %d \"%s\" MType NULL", i, Monst->mName);
 	}
 
-	Monst = &monster[i];
 	if (pnum >= 0)
 		Monst->mWhoHit |= 1 << pnum;
-	if (pnum < MAX_PLRS && i > MAX_PLRS)
-		AddPlrMonstExper(Monst->mLevel, Monst->mExp, Monst->mWhoHit);
 	monstkills[Monst->MType->mtype]++;
 	Monst->_mhitpoints = 0;
-	SetRndSeed(Monst->_mRndSeed);
-	if (QuestStatus(Q_GARBUD) && Monst->mName == UniqMonst[UMT_GARBUD].mName) {
-		CreateTypeItem(Monst->_mx + 1, Monst->_my + 1, TRUE, ITYPE_MACE, IMISC_NONE, TRUE, FALSE);
-	} else if (i > MAX_PLRS - 1) { // Golems should not spawn items
-		SpawnItem(i, Monst->_mx, Monst->_my, sendmsg);
+	if (i >= MAX_PLRS) { // golems should not spawn items or give xp
+		if (pnum < MAX_PLRS)
+			AddPlrMonstExper(Monst->mLevel, Monst->mExp, Monst->mWhoHit);
+		SetRndSeed(Monst->_mRndSeed);
+		if (QuestStatus(Q_GARBUD) && Monst->mName == UniqMonst[UMT_GARBUD].mName) {
+			CreateTypeItem(Monst->_mx + 1, Monst->_my + 1, TRUE, ITYPE_MACE, IMISC_NONE, TRUE, FALSE);
+		} else {
+			SpawnItem(i, Monst->_mx, Monst->_my, sendmsg);
+		}
 	}
 	if (Monst->MType->mtype == MT_DIABLO)
 		M_DiabloDeath(i, TRUE);
@@ -1659,25 +1661,26 @@ void M2MStartKill(int i, int mid)
 	if ((DWORD)i >= MAXMONSTERS) {
 		app_fatal("M2MStartKill: Invalid monster (attacker) %d", i);
 	}
-	if ((DWORD)i >= MAXMONSTERS) { /// BUGFIX: should check `mid`
+	if ((DWORD)mid >= MAXMONSTERS) {
 		app_fatal("M2MStartKill: Invalid monster (killed) %d", mid);
 	}
-	if (!monster[i].MType)
+	if (!monster[mid].MType)
 		app_fatal("M2MStartKill: Monster %d \"%s\" MType NULL", mid, monster[mid].mName);
 
 	delta_kill_monster(mid, monster[mid]._mx, monster[mid]._my, currlevel);
 	NetSendCmdLocParam1(FALSE, CMD_MONSTDEATH, monster[mid]._mx, monster[mid]._my, mid);
 
-	monster[mid].mWhoHit |= 1 << i;
 	if (i < MAX_PLRS)
-		AddPlrMonstExper(monster[mid].mLevel, monster[mid].mExp, monster[mid].mWhoHit);
-
+		monster[mid].mWhoHit |= 1 << i;
 	monstkills[monster[mid].MType->mtype]++;
 	monster[mid]._mhitpoints = 0;
-	SetRndSeed(monster[mid]._mRndSeed);
-
-	if (mid >= MAX_PLRS)
+	if (mid >= MAX_PLRS) { // golems should not spawn items or give xp
+		if (i < MAX_PLRS)
+			AddPlrMonstExper(monster[mid].mLevel, monster[mid].mExp, monster[mid].mWhoHit);
+		SetRndSeed(monster[mid]._mRndSeed);
+		// BUGFIX: what about Q_GARBUD like in MonstStartKill
 		SpawnItem(mid, monster[mid]._mx, monster[mid]._my, TRUE);
+	}
 
 	if (monster[mid].MType->mtype == MT_DIABLO)
 		M_DiabloDeath(mid, TRUE);
