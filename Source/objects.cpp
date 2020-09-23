@@ -2450,26 +2450,26 @@ void OperateBook(int pnum, int i)
 		return;
 
 	if (setlvlnum == SL_BONECHAMB) {
-		plr[myplr]._pMemSpells |= ((__int64)1 << (SPL_GUARDIAN - 1));
+		plr[pnum]._pMemSpells |= ((__int64)1 << (SPL_GUARDIAN - 1));
 		if (plr[pnum]._pSplLvl[SPL_GUARDIAN] < 15)
-			plr[myplr]._pSplLvl[SPL_GUARDIAN]++;
+			plr[pnum]._pSplLvl[SPL_GUARDIAN]++;
 		quests[Q_SCHAMB]._qactive = QUEST_DONE;
 		if (!deltaload)
 			PlaySfxLoc(IS_QUESTDN, object[i]._ox, object[i]._oy);
 		InitDiabloMsg(EMSG_BONECHAMB);
 		AddMissile(
-		    plr[myplr]._px,
-		    plr[myplr]._py,
+		    plr[pnum]._px,
+		    plr[pnum]._py,
 		    object[i]._ox - 2,
 		    object[i]._oy - 4,
-		    plr[myplr]._pdir,
+		    plr[pnum]._pdir,
 		    MIS_GUARDIAN,
 		    0,
-		    myplr,
+		    pnum,
 		    0,
 		    0);
 	}
-	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
+	if (setlvlnum == SL_VILEBETRAYER) {
 		ObjChangeMapResync(
 		    object[i]._oVar1,
 		    object[i]._oVar2,
