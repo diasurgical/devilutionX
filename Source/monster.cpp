@@ -1795,12 +1795,13 @@ void MonstStartKill(int i, int pnum, BOOL sendmsg)
 	MonsterStruct *Monst;
 
 	assurance((DWORD)i < MAXMONSTERS, i);
-	assurance(monster[i].MType != NULL, i);
 
 	Monst = &monster[i];
+	assurance(Monst->MType != NULL, i);
+
 	if (pnum >= 0)
 		Monst->mWhoHit |= 1 << pnum;
-	if (pnum < MAX_PLRS && i > MAX_PLRS) /// BUGFIX: i >= MAX_PLRS
+	if (pnum < MAX_PLRS && i >= MAX_PLRS) /// BUGFIX: i >= MAX_PLRS (fixed)
 		AddPlrMonstExper(Monst->mLevel, Monst->mExp, Monst->mWhoHit);
 	monstkills[Monst->MType->mtype]++;
 	Monst->_mhitpoints = 0;
@@ -1847,7 +1848,8 @@ void M2MStartKill(int i, int mid)
 
 	if (i < MAX_PLRS) {
 		monster[mid].mWhoHit |= 1 << i;
-		AddPlrMonstExper(monster[mid].mLevel, monster[mid].mExp, monster[mid].mWhoHit);
+		if (mid >= MAX_PLRS)
+			AddPlrMonstExper(monster[mid].mLevel, monster[mid].mExp, monster[mid].mWhoHit);
 	}
 
 	monstkills[monster[mid].MType->mtype]++;
