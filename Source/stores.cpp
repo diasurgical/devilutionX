@@ -583,6 +583,8 @@ BOOL SmithSellOk(int i)
 		return FALSE;
 	if (plr[myplr].InvList[i]._itype == ITYPE_STAFF)
 		return FALSE;
+	if (plr[myplr].InvList[i] >= IDI_FIRSTQUEST && plr[myplr].InvList[i] <= IDI_LASTQUEST)
+		return FALSE;
 	if (plr[myplr].InvList[i].IDidx == IDI_LAZSTAFF)
 		return FALSE;
 
