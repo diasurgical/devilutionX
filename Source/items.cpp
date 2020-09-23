@@ -4431,12 +4431,14 @@ void UseItem(int p, int Mid, int spl)
 		plr[p]._pMemSpells |= SPELLBIT(spl);
 		if (plr[p]._pSplLvl[spl] < MAX_SPELL_LEVEL)
 			plr[p]._pSplLvl[spl]++;
-		plr[p]._pMana += spelldata[spl].sManaCost << 6;
-		if (plr[p]._pMana > plr[p]._pMaxMana)
-			plr[p]._pMana = plr[p]._pMaxMana;
-		plr[p]._pManaBase += spelldata[spl].sManaCost << 6;
-		if (plr[p]._pManaBase > plr[p]._pMaxManaBase)
-			plr[p]._pManaBase = plr[p]._pMaxManaBase;
+		if (!(plr[p]._pIFlags & ISPL_NOMANA)) {
+			plr[p]._pMana += spelldata[spl].sManaCost << 6;
+			if (plr[p]._pMana > plr[p]._pMaxMana)
+				plr[p]._pMana = plr[p]._pMaxMana;
+			plr[p]._pManaBase += spelldata[spl].sManaCost << 6;
+			if (plr[p]._pManaBase > plr[p]._pMaxManaBase)
+				plr[p]._pManaBase = plr[p]._pMaxManaBase;
+		}
 		if (p == myplr)
 			CalcPlrBookVals(p);
 		drawmanaflag = TRUE;
