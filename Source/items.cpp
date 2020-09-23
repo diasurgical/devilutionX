@@ -230,12 +230,10 @@ void AddInitItems()
 		i = itemavail[0];
 		itemavail[0] = itemavail[MAXITEMS - numitems - 1];
 		itemactive[numitems] = i;
-		x = random_(12, 80) + 16;
-		y = random_(12, 80) + 16;
-		while (!ItemPlace(x, y)) {
+		do {
 			x = random_(12, 80) + 16;
 			y = random_(12, 80) + 16;
-		}
+		} while (!ItemPlace(x, y));
 		item[i]._ix = x;
 		item[i]._iy = y;
 		dItem[x][y] = i + 1;

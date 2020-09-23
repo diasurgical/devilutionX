@@ -610,91 +610,91 @@ static void L4AddWall()
 			if (dflags[i][j] != 0) {
 				continue;
 			}
-			if (dungeon[i][j] == 10 && random_(0, 100) < 100) {
+			if (dungeon[i][j] == 10) {
 				x = L4HWallOk(i, j);
 				if (x != -1) {
 					L4HorizWall(i, j, x);
 				}
 			}
-			if (dungeon[i][j] == 12 && random_(0, 100) < 100) {
+			if (dungeon[i][j] == 12) {
 				x = L4HWallOk(i, j);
 				if (x != -1) {
 					L4HorizWall(i, j, x);
 				}
 			}
-			if (dungeon[i][j] == 13 && random_(0, 100) < 100) {
+			if (dungeon[i][j] == 13) {
 				x = L4HWallOk(i, j);
 				if (x != -1) {
 					L4HorizWall(i, j, x);
 				}
 			}
-			if (dungeon[i][j] == 15 && random_(0, 100) < 100) {
+			if (dungeon[i][j] == 15) {
 				x = L4HWallOk(i, j);
 				if (x != -1) {
 					L4HorizWall(i, j, x);
 				}
 			}
-			if (dungeon[i][j] == 16 && random_(0, 100) < 100) {
+			if (dungeon[i][j] == 16) {
 				x = L4HWallOk(i, j);
 				if (x != -1) {
 					L4HorizWall(i, j, x);
 				}
 			}
-			if (dungeon[i][j] == 21 && random_(0, 100) < 100) {
+			if (dungeon[i][j] == 21) {
 				x = L4HWallOk(i, j);
 				if (x != -1) {
 					L4HorizWall(i, j, x);
 				}
 			}
-			if (dungeon[i][j] == 22 && random_(0, 100) < 100) {
+			if (dungeon[i][j] == 22) {
 				x = L4HWallOk(i, j);
 				if (x != -1) {
 					L4HorizWall(i, j, x);
 				}
 			}
-			if (dungeon[i][j] == 8 && random_(0, 100) < 100) {
+			if (dungeon[i][j] == 8) {
 				y = L4VWallOk(i, j);
 				if (y != -1) {
 					L4VertWall(i, j, y);
 				}
 			}
-			if (dungeon[i][j] == 9 && random_(0, 100) < 100) {
+			if (dungeon[i][j] == 9) {
 				y = L4VWallOk(i, j);
 				if (y != -1) {
 					L4VertWall(i, j, y);
 				}
 			}
-			if (dungeon[i][j] == 11 && random_(0, 100) < 100) {
+			if (dungeon[i][j] == 11) {
 				y = L4VWallOk(i, j);
 				if (y != -1) {
 					L4VertWall(i, j, y);
 				}
 			}
-			if (dungeon[i][j] == 14 && random_(0, 100) < 100) {
+			if (dungeon[i][j] == 14) {
 				y = L4VWallOk(i, j);
 				if (y != -1) {
 					L4VertWall(i, j, y);
 				}
 			}
-			if (dungeon[i][j] == 15 && random_(0, 100) < 100) {
+			if (dungeon[i][j] == 15) {
 				y = L4VWallOk(i, j);
 				if (y != -1) {
 					L4VertWall(i, j, y);
 				}
 			}
-			if (dungeon[i][j] == 16 && random_(0, 100) < 100) {
+			if (dungeon[i][j] == 16) {
 				y = L4VWallOk(i, j);
 				if (y != -1) {
 					L4VertWall(i, j, y);
 				}
 			}
-			if (dungeon[i][j] == 21 && random_(0, 100) < 100) {
+			if (dungeon[i][j] == 21) {
 				y = L4VWallOk(i, j);
 				if (y != -1) {
 					L4VertWall(i, j, y);
 				}
 			}
-			if (dungeon[i][j] == 23 && random_(0, 100) < 100) {
+			if (dungeon[i][j] == 23) {
 				y = L4VWallOk(i, j);
 				if (y != -1) {
 					L4VertWall(i, j, y);
