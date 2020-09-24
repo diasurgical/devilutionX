@@ -4,6 +4,7 @@
  * Implementation of the in-game menu functions.
  */
 #include "all.h"
+#include "../3rdParty/Storm/Source/storm.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -36,7 +37,8 @@ TMenuItem sgOptionsMenu[] = {
 	{ GMENU_ENABLED | GMENU_SLIDER, NULL,            &gamemenu_music_volume  },
 	{ GMENU_ENABLED | GMENU_SLIDER, NULL,            &gamemenu_sound_volume  },
 	{ GMENU_ENABLED | GMENU_SLIDER, "Gamma",         &gamemenu_gamma         },
-	{ GMENU_ENABLED               , NULL,            &gamemenu_color_cycling },
+//	{ GMENU_ENABLED               , NULL,            &gamemenu_color_cycling },
+	{ GMENU_ENABLED | GMENU_SLIDER, "Speed",         &gamemenu_speed         },
 	{ GMENU_ENABLED               , "Previous Menu", &gamemenu_previous      },
 	{ GMENU_ENABLED               , NULL,            NULL                    },
 	// clang-format on
@@ -177,7 +179,8 @@ void gamemenu_options(BOOL bActivate)
 	gamemenu_get_music();
 	gamemenu_get_sound();
 	gamemenu_get_gamma();
-	gamemenu_get_color_cycling();
+	gamemenu_get_speed();
+	//gamemenu_get_color_cycling();
 	gmenu_set_items(sgOptionsMenu, NULL);
 }
 
@@ -300,6 +303,44 @@ void gamemenu_gamma(BOOL bActivate)
 int gamemenu_slider_gamma()
 {
 	return gmenu_slider_get(&sgOptionsMenu[2], 30, 100);
+}
+
+void gamemenu_get_speed()
+{
+	if (gbMaxPlayers != 1) {
+		sgOptionsMenu[3].dwFlags &= ~(GMENU_ENABLED | GMENU_SLIDER);
+		if (ticks_per_sec >= 50)
+			sgOptionsMenu[3].pszStr = "Speed: Fastest";
+		if (ticks_per_sec >= 40)
+			sgOptionsMenu[3].pszStr = "Speed: Faster";
+		if (ticks_per_sec >= 30)
+			sgOptionsMenu[3].pszStr = "Speed: Fast";
+		else if (ticks_per_sec == 20)
+			sgOptionsMenu[3].pszStr = "Speed: Normal";
+		return;
+	}
+
+	sgOptionsMenu[3].dwFlags |= GMENU_ENABLED | GMENU_SLIDER;
+
+	sgOptionsMenu[3].pszStr = "Speed";
+	gmenu_slider_steps(&sgOptionsMenu[3], 46);
+	gmenu_slider_set(&sgOptionsMenu[3], 20, 50, ticks_per_sec);
+}
+
+void gamemenu_speed(BOOL bActivate)
+{
+	if (bActivate) {
+		if (ticks_per_sec != 20)
+			ticks_per_sec = 20;
+		else
+			ticks_per_sec = 50;
+		gmenu_slider_set(&sgOptionsMenu[3], 20, 50, ticks_per_sec);
+	} else {
+		ticks_per_sec = gmenu_slider_get(&sgOptionsMenu[3], 20, 50);
+	}
+
+	SRegSaveValue("devilutionx", "game speed", 0, ticks_per_sec);
+	game_speed = 1000 / ticks_per_sec;
 }
 
 void gamemenu_color_cycling(BOOL bActivate)
