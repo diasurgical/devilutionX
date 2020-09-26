@@ -9,25 +9,28 @@ namespace dvl {
 bool selyesno_endMenu;
 bool selyesno_value;
 char selyesno_confirmationMessage[256];
-char selyesno_title[32];
 
-UiListItem SELYESNO_DIALOG_ITEMS[] = {
-	{ "Yes", 0 },
-	{ "No", 1 }
-};
+std::vector<UiListItem *> vecSelYesNoDialogItems;
+std::vector<UiItemBase *> vecSelYesNoDialog;
 
-UiItem SELYESNO_DIALOG[] = {
-	MAINMENU_BACKGROUND,
-	MAINMENU_LOGO,
-	UiArtText(selyesno_title, { PANEL_LEFT + 24, 161, 590, 35 }, UIS_CENTER | UIS_BIG),
-	UiArtText(selyesno_confirmationMessage, { PANEL_LEFT + 120, 236, 280, 168 }, UIS_MED),
-	UiList(SELYESNO_DIALOG_ITEMS, PANEL_LEFT + 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD)
-};
-UiArtText *SELYESNO_DIALOG_CONFIRMATION_MESSAGE = &SELYESNO_DIALOG[3].art_text;
+#define MESSAGE_WIDTH 280
 
 void selyesno_Free()
 {
 	ArtBackground.Unload();
+
+	for (std::size_t i = 0; i < vecSelYesNoDialogItems.size(); i++) {
+		UiListItem *pUIListItem = vecSelYesNoDialogItems[i];
+		if (pUIListItem)
+			delete pUIListItem;
+	}
+	vecSelYesNoDialogItems.clear();
+
+	for (std::size_t i = 0; i < vecSelYesNoDialog.size(); i++) {
+		UiItemBase *pUIItem = vecSelYesNoDialog[i];
+		delete pUIItem;
+	}
+	vecSelYesNoDialog.clear();
 }
 
 void selyesno_Select(int value)
@@ -45,18 +48,29 @@ void selyesno_Esc()
 bool UiSelHeroYesNoDialog(const char *title, const char *body)
 {
 	LoadBackgroundArt("ui_art\\black.pcx");
+	UiAddBackground(&vecSelYesNoDialog);
+	UiAddLogo(&vecSelYesNoDialog);
 
-	strcpy(selyesno_title, title);
-	strcpy(selyesno_confirmationMessage, body);
-	WordWrapArtStr(selyesno_confirmationMessage, SELYESNO_DIALOG_CONFIRMATION_MESSAGE->rect.w);
+	SDL_Rect rect1 = { PANEL_LEFT + 24, 161, 590, 35 };
+	vecSelYesNoDialog.push_back(new UiArtText(title, rect1, UIS_CENTER | UIS_BIG));
 
-	UiInitList(0, 1, NULL, selyesno_Select, selyesno_Esc, SELYESNO_DIALOG, size(SELYESNO_DIALOG), true, NULL);
+	SDL_Rect rect2 = { PANEL_LEFT + 120, 236, MESSAGE_WIDTH, 168 };
+	vecSelYesNoDialog.push_back(new UiArtText(selyesno_confirmationMessage, rect2, UIS_MED));
+
+	vecSelYesNoDialogItems.push_back(new UiListItem("Yes", 0));
+	vecSelYesNoDialogItems.push_back(new UiListItem("No", 1));
+	vecSelYesNoDialog.push_back(new UiList(vecSelYesNoDialogItems, PANEL_LEFT + 230, 390, 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD));
+
+	strncpy(selyesno_confirmationMessage, body, sizeof(selyesno_confirmationMessage) - 1);
+	WordWrapArtStr(selyesno_confirmationMessage, MESSAGE_WIDTH);
+
+	UiInitList(0, 1, NULL, selyesno_Select, selyesno_Esc, vecSelYesNoDialog, true, NULL);
 
 	selyesno_value = true;
 	selyesno_endMenu = false;
 	while (!selyesno_endMenu) {
 		UiClearScreen();
-		UiRenderItems(SELYESNO_DIALOG, size(SELYESNO_DIALOG));
+		UiRenderItems(vecSelYesNoDialog);
 		UiPollAndRender();
 	}
 
@@ -64,4 +78,4 @@ bool UiSelHeroYesNoDialog(const char *title, const char *body)
 
 	return selyesno_value;
 }
-}
+} // namespace dvl

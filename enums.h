@@ -2427,7 +2427,7 @@ typedef enum _object_id {
 	OBJ_LAZSTAND     = 0x5F,
 	OBJ_SLAINHERO    = 0x60,
 	OBJ_SIGNCHEST    = 0x61,
-	OBJ_NULL_98      = 0x62,
+	OBJ_BOOKSHELFR   = 0x62,
 } _object_id;
 
 typedef enum item_misc_id {

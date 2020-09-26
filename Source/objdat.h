@@ -9,7 +9,7 @@ extern "C" {
 #endif
 
 extern int ObjTypeConv[];
-extern ObjDataStruct AllObjects[99];
+extern ObjDataStruct AllObjects[];
 extern char *ObjMasterLoadList[56];
 
 #ifdef __cplusplus

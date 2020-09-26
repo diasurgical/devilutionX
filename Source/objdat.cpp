@@ -127,12 +127,8 @@ int ObjTypeConv[] = {
 	OBJ_BOOKSHELF,
 	OBJ_BOOKCASEL,
 	OBJ_BOOKCASER,
-	OBJ_ARMORSTAND,
 	OBJ_ARMORSTANDN,
-	OBJ_WEAPONRACK,
 	OBJ_WEAPONRACKN,
-	OBJ_SLAINHERO,
-	OBJ_WATER,
 	OBJ_BLOODFTN,
 	OBJ_PURIFYINGFTN,
 	OBJ_SHRINEL,
@@ -141,21 +137,16 @@ int ObjTypeConv[] = {
 	OBJ_MURKYFTN,
 	OBJ_TEARFTN,
 	OBJ_DECAP,
+	OBJ_TCHEST1,
 	OBJ_TCHEST2,
-	OBJ_STORYBOOK,
-	OBJ_L1LDOOR,
-	OBJ_L1RDOOR,
-	OBJ_L2LDOOR,
-	OBJ_L2RDOOR,
-	OBJ_L3LDOOR,
-	OBJ_L3RDOOR,
-	OBJ_BLINDBOOK,
-	OBJ_BLOODBOOK,
+	OBJ_TCHEST3,
 	OBJ_LAZSTAND,
+	OBJ_BOOKSTAND,
+	OBJ_BOOKSHELFR,
 };
 
 /** Contains the data related to each object ID. */
-ObjDataStruct AllObjects[99] = {
+ObjDataStruct AllObjects[] = {
 	// clang-format off
 	// oload, ofindex,   ominlvl, omaxlvl, olvltype,        otheme,                  oquest,     oAnimFlag, oAnimDelay, oAnimLen, oAnimWidth, oSolidFlag, oMissFlag, oLightFlag, oBreak, oSelFlag, oTrapFlag
 	{      1, OFILE_L1BRAZ,    1,       4, DTYPE_CATHEDRAL, THEME_NONE,              -1,                 1,          1,       26,         64, TRUE,       TRUE,      FALSE,           0,        0, FALSE     },
@@ -172,7 +163,7 @@ ObjDataStruct AllObjects[99] = {
 	{      3, OFILE_BANNER,    0,       0, DTYPE_TOWN,      THEME_SKELROOM,          -1,                 0,          2,        0,         96, TRUE,       TRUE,      TRUE,            0,        0, FALSE     },
 	{      3, OFILE_BANNER,    0,       0, DTYPE_TOWN,      THEME_SKELROOM,          -1,                 0,          1,        0,         96, TRUE,       TRUE,      TRUE,            0,        0, FALSE     },
 	{      3, OFILE_BANNER,    0,       0, DTYPE_TOWN,      THEME_SKELROOM,          -1,                 0,          3,        0,         96, TRUE,       TRUE,      TRUE,            0,        0, FALSE     },
-	{      2, OFILE_SKULPILE,  1,       4, DTYPE_TOWN,      THEME_NONE,              -1,                 0,          0,        1,         96, TRUE,       TRUE,      TRUE,            0,        0, FALSE     },
+	{      2, OFILE_SKULPILE,  1,       4, DTYPE_TOWN,      THEME_NONE,              -1,                 0,          1,        1,         96, TRUE,       TRUE,      TRUE,            0,        0, FALSE     },
 	{      2, OFILE_L1BRAZ,    0,       0, DTYPE_TOWN,      THEME_NONE,              -1,                 0,          0,        0,          0, FALSE,      FALSE,     FALSE,           0,        0, FALSE     },
 	{      2, OFILE_L1BRAZ,    0,       0, DTYPE_TOWN,      THEME_NONE,              -1,                 0,          0,        0,          0, FALSE,      FALSE,     FALSE,           0,        0, FALSE     },
 	{      2, OFILE_L1BRAZ,    0,       0, DTYPE_TOWN,      THEME_NONE,              -1,                 0,          0,        0,          0, FALSE,      FALSE,     FALSE,           0,        0, FALSE     },
@@ -256,6 +247,7 @@ ObjDataStruct AllObjects[99] = {
 	{      2, OFILE_LZSTAND,   0,       0, DTYPE_TOWN,      THEME_NONE,              Q_BETRAYER,         0,          1,        0,        128, TRUE,       FALSE,     TRUE,            0,        3, FALSE     },
 	{      1, OFILE_DECAP,     9,       9, DTYPE_CAVES,     THEME_NONE,              -1,                 0,          2,        0,         96, TRUE,       TRUE,      TRUE,            0,        1, FALSE     },
 	{      2, OFILE_CHEST3,    0,       0, DTYPE_TOWN,      THEME_NONE,              -1,                 0,          1,        0,         96, TRUE,       TRUE,      TRUE,            0,        1, TRUE      },
+	{      2, OFILE_BCASE,     0,       0, 0,               THEME_NONE,              -1,                 0,          2,        0,         96, TRUE,       FALSE,     TRUE,            0,        0, FALSE     },
 	{     -1, 0,               0,       0, -1,              THEME_NONE,              -1,                 0,          0,        0,          0, FALSE,      FALSE,     FALSE,           0,        0, FALSE     }
 	// clang-format on
 };

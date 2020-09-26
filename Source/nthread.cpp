@@ -79,7 +79,7 @@ BOOL nthread_recv_turns(BOOL *pfSendAsync)
 	*pfSendAsync = FALSE;
 	sgbPacketCountdown--;
 	if (sgbPacketCountdown) {
-		last_tick += 50;
+		last_tick += game_speed;
 		return TRUE;
 	}
 	sgbSyncCountdown--;
@@ -87,7 +87,7 @@ BOOL nthread_recv_turns(BOOL *pfSendAsync)
 	if (sgbSyncCountdown != 0) {
 
 		*pfSendAsync = TRUE;
-		last_tick += 50;
+		last_tick += game_speed;
 		return TRUE;
 	}
 #if defined(__3DS__)
@@ -108,7 +108,7 @@ BOOL nthread_recv_turns(BOOL *pfSendAsync)
 		sgbSyncCountdown = 4;
 		multi_msg_countdown();
 		*pfSendAsync = TRUE;
-		last_tick += 50;
+		last_tick += game_speed;
 		return TRUE;
 	}
 #endif
@@ -188,7 +188,7 @@ unsigned int nthread_handler(void *data)
 			if (nthread_recv_turns(&received))
 				delta = last_tick - SDL_GetTicks();
 			else
-				delta = 50;
+				delta = game_speed;
 			sgMemCrit.Leave();
 			if (delta > 0)
 				SDL_Delay(delta);

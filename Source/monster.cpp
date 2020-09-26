@@ -459,13 +459,13 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 		monster[i]._mhitpoints = monster[i]._mmaxhp;
 		monster[i].mLevel += 15;
 		monster[i].mExp = 2 * (monster[i].mExp + 1000);
-		monster[i].mHit += 85;
+		monster[i].mHit += NIGHTMARE_TO_HIT_BONUS;
 		monster[i].mMinDamage = 2 * (monster[i].mMinDamage + 2);
 		monster[i].mMaxDamage = 2 * (monster[i].mMaxDamage + 2);
-		monster[i].mHit2 += 85;
+		monster[i].mHit2 += NIGHTMARE_TO_HIT_BONUS;
 		monster[i].mMinDamage2 = 2 * (monster[i].mMinDamage2 + 2);
 		monster[i].mMaxDamage2 = 2 * (monster[i].mMaxDamage2 + 2);
-		monster[i].mArmorClass += 50;
+		monster[i].mArmorClass += NIGHTMARE_AC_BONUS;
 	}
 
 	if (gnDifficulty == DIFF_HELL) {
@@ -473,13 +473,13 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 		monster[i]._mhitpoints = monster[i]._mmaxhp;
 		monster[i].mLevel += 30;
 		monster[i].mExp = 4 * (monster[i].mExp + 1000);
-		monster[i].mHit += 120;
+		monster[i].mHit += HELL_TO_HIT_BONUS;
 		monster[i].mMinDamage = 4 * monster[i].mMinDamage + 6;
 		monster[i].mMaxDamage = 4 * monster[i].mMaxDamage + 6;
-		monster[i].mHit2 += 120;
+		monster[i].mHit2 += HELL_TO_HIT_BONUS;
 		monster[i].mMinDamage2 = 4 * monster[i].mMinDamage2 + 6;
 		monster[i].mMaxDamage2 = 4 * monster[i].mMaxDamage2 + 6;
-		monster[i].mArmorClass += 80;
+		monster[i].mArmorClass += HELL_AC_BONUS;
 		monster[i].mMagicRes = monst->MData->mMagicRes2;
 	}
 }
@@ -735,9 +735,23 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int unpackfilesize)
 	if (Uniq->mUnqAttr & 4) {
 		Monst->mHit = Uniq->mUnqVar1;
 		Monst->mHit2 = Uniq->mUnqVar1;
+
+		if (gnDifficulty == DIFF_NIGHTMARE) {
+			Monst->mHit += NIGHTMARE_TO_HIT_BONUS;
+			Monst->mHit2 += NIGHTMARE_TO_HIT_BONUS;
+		} else if (gnDifficulty == DIFF_HELL) {
+			Monst->mHit += HELL_TO_HIT_BONUS;
+			Monst->mHit2 += HELL_TO_HIT_BONUS;
+		}
 	}
 	if (Uniq->mUnqAttr & 8) {
 		Monst->mArmorClass = Uniq->mUnqVar1;
+
+		if (gnDifficulty == DIFF_NIGHTMARE) {
+			Monst->mArmorClass += NIGHTMARE_AC_BONUS;
+		} else if (gnDifficulty == DIFF_HELL) {
+			Monst->mArmorClass += HELL_AC_BONUS;
+		}
 	}
 
 	nummonsters++;
@@ -4976,7 +4990,7 @@ void PrintMonstHistory(int mt)
 {
 	int minHP, maxHP, res;
 
-	sprintf(tempstr, "Total kills : %i", monstkills[mt]);
+	sprintf(tempstr, "Total kills: %i", monstkills[mt]);
 	AddPanelString(tempstr, TRUE);
 	if (monstkills[mt] >= 30) {
 		minHP = monsterdata[mt].mMinHP;
@@ -4997,7 +5011,7 @@ void PrintMonstHistory(int mt)
 			minHP = 4 * minHP + 3;
 			maxHP = 4 * maxHP + 3;
 		}
-		sprintf(tempstr, "Hit Points : %i-%i", minHP, maxHP);
+		sprintf(tempstr, "Hit Points: %i-%i", minHP, maxHP);
 		AddPanelString(tempstr, TRUE);
 	}
 	if (monstkills[mt] >= 15) {
@@ -5011,7 +5025,7 @@ void PrintMonstHistory(int mt)
 			AddPanelString(tempstr, TRUE);
 		} else {
 			if (res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING)) {
-				strcpy(tempstr, "Resists : ");
+				strcpy(tempstr, "Resists: ");
 				if (res & RESIST_MAGIC)
 					strcat(tempstr, "Magic ");
 				if (res & RESIST_FIRE)
@@ -5022,7 +5036,7 @@ void PrintMonstHistory(int mt)
 				AddPanelString(tempstr, TRUE);
 			}
 			if (res & (IMUNE_MAGIC | IMUNE_FIRE | IMUNE_LIGHTNING)) {
-				strcpy(tempstr, "Immune : ");
+				strcpy(tempstr, "Immune: ");
 				if (res & IMUNE_MAGIC)
 					strcat(tempstr, "Magic ");
 				if (res & IMUNE_FIRE)

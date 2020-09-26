@@ -8,6 +8,7 @@
 
 namespace dvl {
 
+extern int vsyncEnabled;
 extern int refreshDelay; // Screen refresh rate in nanoseconds
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;

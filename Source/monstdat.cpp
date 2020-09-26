@@ -257,33 +257,32 @@ BYTE MonstConvTbl[] = {
 	MT_NZOMBIE,
 	MT_BIGFALL,
 	MT_DARKMAGE,
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
+	0, // Hellfire: Hellboar
+	0, // Hellfire: Stinger
+	0, // Hellfire: Psychorb
+	0, // Hellfire: Arachnon
+	0, // Hellfire: Felltwin
+	0, // Hellfire: Hork Spawn
+	0, // Hellfire: Stinger (duplicate)
+	0, // Hellfire: Psychorb (duplicate)
+	0, // Hellfire: Arachnon (duplicate)
+	0, // Hellfire: Lashworm
+	0, // Hellfire: Torchant
+	0, // Hellfire: Hork Demon
+	0, // Hellfire: Hell Bug
+	0, // Hellfire: Gravedigger
+	0, // Hellfire: Tomb Rat
+	0, // Hellfire: Firebat
+	0, // Hellfire: Skullwing
+	0, // Hellfire: Lich
+	0, // Hellfire: Crypt Demon
+	0, // Hellfire: Firebat (duplicate)
+	0, // Hellfire: Skullwing (duplicate)
+	0, // Hellfire: Lich (duplicate)
+	0, // Hellfire: Biclops
+	0, // Hellfire: Flesh Thing
+	0, // Hellfire: Reaper
+	0, // Hellfire: Na-Krul
 	MT_CLEAVER,
 	MT_INVILORD,
 	MT_LRDSAYTR,

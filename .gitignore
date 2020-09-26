@@ -143,6 +143,9 @@ ipch/
 *.VC.db
 *.VC.VC.opendb
 
+# Vim swap files
+*.swp
+
 # Visual Studio profiler
 *.psess
 *.vsp

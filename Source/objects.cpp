@@ -1100,7 +1100,7 @@ void AddBarrel(int i, int t)
 {
 	object[i]._oVar1 = 0;
 	object[i]._oRndSeed = GetRndSeed();
-	object[i]._oVar2 = random_(149, 10);
+	object[i]._oVar2 = (t == OBJ_BARRELEX) ? 0 : random_(149, 10);
 	object[i]._oVar3 = random_(149, 3);
 
 	if (object[i]._oVar2 >= 8)
@@ -1370,10 +1370,18 @@ void AddObject(int ot, int ox, int oy)
 	case OBJ_CHEST1:
 	case OBJ_CHEST2:
 	case OBJ_CHEST3:
+		AddChest(oi, ot);
+		break;
 	case OBJ_TCHEST1:
 	case OBJ_TCHEST2:
 	case OBJ_TCHEST3:
 		AddChest(oi, ot);
+		object[oi]._oTrapFlag = TRUE;
+		if (leveltype == DTYPE_CATACOMBS) {
+			object[oi]._oVar4 = random_(0, 2);
+		} else {
+			object[oi]._oVar4 = random_(0, 3);
+		}
 		break;
 	case OBJ_SARC:
 		AddSarc(oi);
@@ -1622,6 +1630,18 @@ void Obj_FlameTrap(int i)
 		if (object[i]._oVar4)
 			ActivateTrapLine(object[i]._otype, object[i]._oVar1);
 	} else {
+		int damage[4] = { 6, 8, 10, 12 };
+
+		int mindam = damage[leveltype - 1];
+		int maxdam = mindam * 2;
+
+		x = object[i]._ox;
+		y = object[i]._oy;
+		if (dMonster[x][y] > 0)
+			MonsterTrapHit(dMonster[x][y] - 1, mindam / 2, maxdam / 2, 0, MIS_FIREWALLC, FALSE);
+		if (dPlayer[x][y] > 0)
+			PlayerMHit(dPlayer[x][y] - 1, -1, 0, mindam, maxdam, MIS_FIREWALLC, FALSE, 0);
+
 		if (object[i]._oAnimFrame == object[i]._oAnimLen)
 			object[i]._oAnimFrame = 11;
 		if (object[i]._oAnimFrame <= 5)
@@ -2671,6 +2691,9 @@ void OperateTrapLvr(int i)
 
 	frame = object[i]._oAnimFrame;
 	j = 0;
+
+	if (!deltaload)
+		PlaySfxLoc(IS_LEVER, object[i]._ox, object[i]._oy);
 
 	if (frame == 1) {
 		object[i]._oAnimFrame = 2;

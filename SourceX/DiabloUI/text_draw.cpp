@@ -42,7 +42,7 @@ void DrawTTF(const char *text, const SDL_Rect &rectIn, int flags,
 		return;
 	if (*render_cache == NULL) {
 		*render_cache = new TtfSurfaceCache();
-		const TextAlignment x_align = XAlignmentFromFlags(flags);
+		const auto x_align = XAlignmentFromFlags(flags);
 		(*render_cache)->text = RenderUTF8_Solid_Wrapped(font, text, text_color, rect.w, x_align);
 		ScaleSurfaceToOutput(&(*render_cache)->text);
 		(*render_cache)->shadow = RenderUTF8_Solid_Wrapped(font, text, shadow_color, rect.w, x_align);

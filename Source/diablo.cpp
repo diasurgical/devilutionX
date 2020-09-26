@@ -42,6 +42,7 @@ int PauseMode;
 int sgnTimeoutCurs;
 char sgbMouseDown;
 int color_cycle_timer;
+WORD game_speed;
 
 /* rdata */
 
@@ -897,7 +898,10 @@ void PressKey(int vkey)
 			diablo_hotkey_msg(3);
 		}
 		if (vkey == DVL_VK_RETURN) {
-			control_type_message();
+			if (GetAsyncKeyState(DVL_VK_MENU) & 0x8000)
+				dx_reinit();
+			else
+				control_type_message();
 		}
 		if (vkey != DVL_VK_ESCAPE) {
 			return;
@@ -919,6 +923,8 @@ void PressKey(int vkey)
 		return;
 	}
 	if (PauseMode == 2) {
+		if ((vkey == DVL_VK_RETURN) && (GetAsyncKeyState(DVL_VK_MENU) & 0x8000))
+			dx_reinit();
 		return;
 	}
 
@@ -1205,7 +1211,13 @@ void PressChar(int vkey)
 		}
 		return;
 	case 'v':
-		NetSendCmdString(1 << myplr, gszProductName);
+		char *difficulties[3];
+		char pszStr[120];
+		difficulties[0] = "Normal";
+		difficulties[1] = "Nightmare";
+		difficulties[2] = "Hell";
+		sprintf(pszStr, "%s, mode = %s", gszProductName, difficulties[gnDifficulty]);
+		NetSendCmdString(1 << myplr, pszStr);
 		return;
 	case 'V':
 		NetSendCmdString(1 << myplr, gszVersionNumber);

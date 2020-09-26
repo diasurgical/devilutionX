@@ -11,12 +11,12 @@ void DrawArt(int screenX, int screenY, Art *art, int nFrame, Uint16 srcW, Uint16
 	if (screenY >= SCREEN_HEIGHT || screenX >= SCREEN_WIDTH || art->surface == NULL)
 		return;
 
-	SDL_Rect src_rect = {
-		0,
-		static_cast<Sint16>(nFrame * art->h()),
-		static_cast<Uint16>(art->w()),
-		static_cast<Uint16>(art->h())
-	};
+	SDL_Rect src_rect;
+	src_rect.x = 0;
+	src_rect.y = nFrame * art->h();
+	src_rect.w = art->w();
+	src_rect.h = art->h();
+
 	ScaleOutputRect(&src_rect);
 
 	if (srcW && srcW < src_rect.w)
@@ -36,7 +36,8 @@ void DrawArt(int screenX, int screenY, Art *art, int nFrame, Uint16 srcW, Uint16
 		ErrSdl();
 }
 
-void DrawAnimatedArt(Art *art, int screenX, int screenY) {
+void DrawAnimatedArt(Art *art, int screenX, int screenY)
+{
 	DrawArt(screenX, screenY, art, GetAnimationFrame(art->frames));
 }
 

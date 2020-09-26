@@ -8,7 +8,7 @@ Nightly builds | Platform
 [![Build Status](https://travis-ci.org/diasurgical/devilutionX.svg?branch=master)](https://travis-ci.org/diasurgical/devilutionX) | macOS 64bit, Linux ppc64le
 [![Build status](https://ci.appveyor.com/api/projects/status/1a0jus2372qvksht?svg=true)](https://ci.appveyor.com/project/AJenbo/devilutionx) | Windows 64bit (MSVC)
 
-![Discord Channel](https://avatars3.githubusercontent.com/u/1965106?s=16&v=4) [Discord Chat Channel](https://discord.gg/aQBQdDe)
+![Discord Channel](https://avatars3.githubusercontent.com/u/1965106?s=16&v=4) [Discord Chat Channel](https://discord.gg/YQKCAYQ)
 
 # How To Play:
  - Download [the latest DevilutionX release](https://github.com/diasurgical/devilutionX/releases), or build from source
@@ -325,7 +325,7 @@ variable (see
 # F.A.Q.
 > Wow, does this mean I can download and play Diablo for free now?
 
-No, you'll need access to the data from the original game. If you don't have an original CD then you can [buy Diablo from GoG.com](https://www.gog.com/game/diablo). Alternately you can use `spawn.mpq` from the [http://ftp.blizzard.com/pub/demos/diablosw.exe](shareware) version and compile the with the SPAWN flag defined.
+No, you'll need access to the data from the original game. If you don't have an original CD then you can [buy Diablo from GoG.com](https://www.gog.com/game/diablo). Alternately you can use `spawn.mpq` from the [http://ftp.blizzard.com/pub/demos/diablosw.exe](shareware) version and compile with the SPAWN flag defined.
 > What game changes does DevilutionX provide
 
 DevilutionX's main focus is to make the game work on multiple platforms. An additional goal is to make the engine mod friendly. As such, there are no changes to gameplay, but we will be making some enhancments to the engine itself. For example, the engine now has upscaling, unlocked fps, controller support, and multiplayer via TCP.

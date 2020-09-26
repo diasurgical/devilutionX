@@ -69,8 +69,8 @@ jobs:
       - run: tar -xzf SDL2_ttf-devel-2.0.15-mingw.tar.gz
       - run: wget https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-devel-2.0.4-mingw.tar.gz
       - run: tar -xzf SDL2_mixer-devel-2.0.4-mingw.tar.gz
-      - run: wget https://download.libsodium.org/libsodium/releases/libsodium-1.0.17-mingw.tar.gz
-      - run: tar -xzf libsodium-1.0.17-mingw.tar.gz --no-same-owner
+      - run: wget https://github.com/jedisct1/libsodium/releases/download/1.0.18-RELEASE/libsodium-1.0.18-mingw.tar.gz
+      - run: tar -xzf libsodium-1.0.18-mingw.tar.gz --no-same-owner
       - run: cp -r libsodium-win32/* /usr/i686-w64-mingw32
       - run: cp -r SDL2*/i686-w64-mingw32 /usr
       - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake
@@ -79,7 +79,7 @@ jobs:
 
   switch:
     docker:
-      - image: devkitpro/devkita64:latest
+      - image: devkitpro/devkita64:20200528
     working_directory: ~/repo
     steps:
       - checkout

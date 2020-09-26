@@ -56,6 +56,7 @@ BOOL mainmenu_select_hero_dialog(
 		        gszHero,
 		        &gnDifficulty))
 			app_fatal("Unable to display SelHeroSing");
+		client_info->initdata->bDiff = gnDifficulty;
 
 		if (dlgresult == SELHERO_CONTINUE)
 			gbLoadGame = TRUE;
@@ -136,6 +137,13 @@ void mainmenu_loop()
 BOOL mainmenu_single_player()
 {
 	gbMaxPlayers = 1;
+
+	int tps = 20;
+	if (!SRegLoadValue("devilutionx", "game speed", 0, &tps)) {
+		SRegSaveValue("devilutionx", "game speed", 0, tps);
+	}
+	game_speed = 1000 / tps;
+
 	return mainmenu_init_menu(SELHERO_NEW_DUNGEON);
 }
 
@@ -158,6 +166,7 @@ BOOL mainmenu_init_menu(int type)
 BOOL mainmenu_multi_player()
 {
 	gbMaxPlayers = MAX_PLRS;
+	game_speed = 50;
 	return mainmenu_init_menu(SELHERO_CONNECT);
 }
 
