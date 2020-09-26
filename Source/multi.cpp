@@ -609,6 +609,7 @@ void multi_handle_events(_SNETEVENT *pEvt)
 		gameData = (_gamedata *)pEvt->data;
 		sgGameInitInfo.dwSeed = gameData->dwSeed;
 		sgGameInitInfo.bDiff = gameData->bDiff;
+		sgGameInitInfo.bRate = gameData->bRate;
 		sgbPlayerTurnBitTbl[pEvt->playerid] = TRUE;
 		break;
 	case EVENT_TYPE_PLAYER_LEAVE_GAME:
@@ -647,6 +648,7 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		SetRndSeed(0);
 		sgGameInitInfo.dwSeed = time(NULL);
 		sgGameInitInfo.bDiff = gnDifficulty;
+		sgGameInitInfo.bRate = ticks_per_sec;
 		memset(&ProgramData, 0, sizeof(ProgramData));
 		ProgramData.size = sizeof(ProgramData);
 #ifdef SPAWN
@@ -720,6 +722,8 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		gbSelectProvider = FALSE;
 	}
 	gnDifficulty = sgGameInitInfo.bDiff;
+	ticks_per_sec = sgGameInitInfo.bRate;
+	tick_delay = 1000 / ticks_per_sec;
 	SetRndSeed(sgGameInitInfo.dwSeed);
 
 	for (i = 0; i < NUMLEVELS; i++) {

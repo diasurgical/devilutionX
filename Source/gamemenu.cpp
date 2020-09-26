@@ -340,7 +340,7 @@ void gamemenu_speed(BOOL bActivate)
 	}
 
 	SRegSaveValue("devilutionx", "game speed", 0, ticks_per_sec);
-	game_speed = 1000 / ticks_per_sec;
+	tick_delay = 1000 / ticks_per_sec;
 }
 
 void gamemenu_color_cycling(BOOL bActivate)

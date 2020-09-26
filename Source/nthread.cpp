@@ -79,7 +79,7 @@ BOOL nthread_recv_turns(BOOL *pfSendAsync)
 	*pfSendAsync = FALSE;
 	sgbPacketCountdown--;
 	if (sgbPacketCountdown) {
-		last_tick += game_speed;
+		last_tick += tick_delay;
 		return TRUE;
 	}
 	sgbSyncCountdown--;
@@ -87,7 +87,7 @@ BOOL nthread_recv_turns(BOOL *pfSendAsync)
 	if (sgbSyncCountdown != 0) {
 
 		*pfSendAsync = TRUE;
-		last_tick += game_speed;
+		last_tick += tick_delay;
 		return TRUE;
 	}
 	if (!SNetReceiveTurns(0, MAX_PLRS, (char **)glpMsgTbl, gdwMsgLenTbl, (LPDWORD)player_state)) {
@@ -105,7 +105,7 @@ BOOL nthread_recv_turns(BOOL *pfSendAsync)
 		sgbSyncCountdown = 4;
 		multi_msg_countdown();
 		*pfSendAsync = TRUE;
-		last_tick += game_speed;
+		last_tick += tick_delay;
 		return TRUE;
 	}
 }
@@ -184,7 +184,7 @@ unsigned int nthread_handler(void *data)
 			if (nthread_recv_turns(&received))
 				delta = last_tick - SDL_GetTicks();
 			else
-				delta = game_speed;
+				delta = tick_delay;
 			sgMemCrit.Leave();
 			if (delta > 0)
 				SDL_Delay(delta);

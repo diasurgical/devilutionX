@@ -1213,6 +1213,7 @@ typedef struct DeadStruct {
 typedef struct _gamedata {
 	int dwSeed;
 	BYTE bDiff;
+	BYTE bRate;
 } _gamedata;
 
 typedef struct _uidefaultstats {
