@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file wave.h
+ *
+ * Interface of functionality for loading fies and processing wave files.
+ */
 #ifndef __WAVE_H__
 #define __WAVE_H__
 

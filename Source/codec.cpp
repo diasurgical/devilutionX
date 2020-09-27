@@ -66,7 +66,7 @@ error:
 void codec_init_key(int unused, char *pszPassword)
 {
 	char key[136]; // last 64 bytes are the SHA1
-	std::uint32_t rand_state = 0x7058;
+	uint32_t rand_state = 0x7058;
 	for (std::size_t i = 0; i < sizeof(key); ++i) {
 		rand_state = rand_state * 214013 + 2531011;
 		key[i] = rand_state >> 16; // Downcasting to char keeps the 2 least-significant bytes
@@ -90,7 +90,7 @@ void codec_init_key(int unused, char *pszPassword)
 	memset(digest, 0, sizeof(digest));
 	for (int n = 0; n < 3; ++n) {
 		SHA1Reset(n);
-		SHA1Calculate(n, &key[72], nullptr);
+		SHA1Calculate(n, &key[72], NULL);
 	}
 	memset(key, 0, sizeof(key));
 }

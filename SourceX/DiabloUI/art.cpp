@@ -35,7 +35,7 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 	        art_surface->pitch * art_surface->format->BytesPerPixel * height, 0, 0, 0)) {
 		SDL_Log("Failed to load image");
 		SDL_FreeSurface(art_surface);
-		art->surface = nullptr;
+		art->surface = NULL;
 		return;
 	}
 
@@ -49,7 +49,7 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 void LoadMaskedArt(const char *pszFile, Art *art, int frames, int mask)
 {
 	LoadArt(pszFile, art, frames);
-	if (art->surface != nullptr)
+	if (art->surface != NULL)
 		SDLC_SetColorKey(art->surface, mask);
 }
 

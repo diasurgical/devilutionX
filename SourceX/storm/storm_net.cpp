@@ -86,7 +86,7 @@ BOOL SNetGetGameInfo(int type, void *dst, unsigned int length, unsigned int *byt
 
 BOOL SNetLeaveGame(int type)
 {
-	if (dvlnet_inst == nullptr)
+	if (dvlnet_inst == NULL)
 		return true;
 	return dvlnet_inst->SNetLeaveGame(type);
 }

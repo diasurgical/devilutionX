@@ -1,3 +1,8 @@
+/**
+ * @file pfile.cpp
+ *
+ * Implementation of the save game encoding functionality.
+ */
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
@@ -189,9 +194,7 @@ BYTE game_2_ui_class(const PlayerStruct *p)
 
 BOOL pfile_ui_set_hero_infos(BOOL(*ui_add_hero_info)(_uiheroinfo *))
 {
-	DWORD i, save_num;
-	char FileName[MAX_PATH];
-	char NewFileName[MAX_PATH];
+	DWORD i;
 	BOOL showFixedMsg;
 
 	memset(hero_names, 0, sizeof(hero_names));

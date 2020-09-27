@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file towners.h
+ *
+ * Interface of functionality for loading and spawning towners.
+ */
 #ifndef __TOWNERS_H__
 #define __TOWNERS_H__
 
@@ -8,7 +12,7 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
-extern TownerStruct towner[16];
+extern TownerStruct towner[NUM_TOWNERS];
 
 int GetActiveTowner(int t);
 void SetTownerGPtrs(BYTE *pData, BYTE **pAnim);

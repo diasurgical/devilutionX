@@ -5,6 +5,7 @@
 namespace dvl {
 
 extern std::string basePath;
+extern std::string prefPath;
 
 // Note to self: Linker error => forgot a return value in cpp
 
@@ -42,6 +43,20 @@ struct CCritSect {
 	}
 };
 #endif
+
+// Game states
+#define GAMESTATE_PRIVATE 0x01
+#define GAMESTATE_FULL    0x02
+#define GAMESTATE_ACTIVE  0x04
+#define GAMESTATE_STARTED 0x08
+#define GAMESTATE_REPLAY  0x80
+
+#define PS_CONNECTED 0x10000
+#define PS_TURN_ARRIVED 0x20000
+#define PS_ACTIVE 0x40000
+
+#define LEAVE_ENDING 0x40000004
+#define LEAVE_DROP 0x40000006
 
 #if defined(__GNUC__) || defined(__cplusplus)
 extern "C" {

@@ -4,19 +4,19 @@
 
 namespace dvl {
 
-enum class MenuAction {
-	NONE = 0,
-	SELECT,
-	BACK,
-	DELETE,
+enum MenuAction {
+	MenuAction_NONE = 0,
+	MenuAction_SELECT,
+	MenuAction_BACK,
+	MenuAction_DELETE,
 
-	UP,
-	DOWN,
-	LEFT,
-	RIGHT,
+	MenuAction_UP,
+	MenuAction_DOWN,
+	MenuAction_LEFT,
+	MenuAction_RIGHT,
 
-	PAGE_UP,
-	PAGE_DOWN,
+	MenuAction_PAGE_UP,
+	MenuAction_PAGE_DOWN,
 };
 
 MenuAction GetMenuAction(const SDL_Event &event);

@@ -11,73 +11,484 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+/** This will be true if a lava pool has been generated for the level */
 BOOLEAN lavapool;
+/** unused */
 int abyssx;
 int lockoutcnt;
 BOOLEAN lockout[DMAXX][DMAXY];
 
+/**
+ * A lookup table for the 16 possible patterns of a 2x2 area,
+ * where each cell either contains a SW wall or it doesn't.
+ */
 const BYTE L3ConvTbl[16] = { 8, 11, 3, 10, 1, 9, 12, 12, 6, 13, 4, 13, 2, 14, 5, 7 };
-const BYTE L3UP[20] = { 3, 3, 8, 8, 0, 10, 10, 0, 7, 7, 0, 51, 50, 0, 48, 49, 0, 0, 0, 0 };
-const BYTE L3DOWN[20] = { 3, 3, 8, 9, 7, 8, 9, 7, 0, 0, 0, 0, 47, 0, 0, 46, 0, 0, 0, 0 };
-const BYTE L3HOLDWARP[20] = { 3, 3, 8, 8, 0, 10, 10, 0, 7, 7, 0, 125, 125, 0, 125, 125, 0, 0, 0, 0 };
-const BYTE L3TITE1[34] = { 4, 4, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 57, 58, 0, 0, 56, 55, 0, 0, 0, 0, 0 };
-const BYTE L3TITE2[34] = { 4, 4, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 61, 62, 0, 0, 60, 59, 0, 0, 0, 0, 0 };
-const BYTE L3TITE3[34] = { 4, 4, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 65, 66, 0, 0, 64, 63, 0, 0, 0, 0, 0 };
-const BYTE L3TITE6[42] = { 5, 4, 7, 7, 7, 7, 7, 7, 7, 7, 0, 7, 7, 7, 7, 0, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 0, 77, 78, 0, 0, 0, 76, 74, 75, 0, 0, 0, 0, 0, 0 };
-const BYTE L3TITE7[42] = { 4, 5, 7, 7, 7, 7, 7, 7, 0, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 0, 83, 0, 0, 0, 82, 80, 0, 0, 81, 79, 0, 0, 0, 0, 0 };
-const BYTE L3TITE8[20] = { 3, 3, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 52, 0, 0, 0, 0 };
-const BYTE L3TITE9[20] = { 3, 3, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 53, 0, 0, 0, 0 };
-const BYTE L3TITE10[20] = { 3, 3, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 54, 0, 0, 0, 0 };
-const BYTE L3TITE11[20] = { 3, 3, 7, 7, 7, 7, 7, 7, 7, 7, 7, 0, 0, 0, 0, 67, 0, 0, 0, 0 };
-const BYTE L3TITE12[6] = { 2, 1, 9, 7, 68, 0 };
-const BYTE L3TITE13[6] = { 1, 2, 10, 7, 69, 0 };
-const BYTE L3CREV1[6] = { 2, 1, 8, 7, 84, 85 };
-const BYTE L3CREV2[6] = { 2, 1, 8, 11, 86, 87 };
-const BYTE L3CREV3[6] = { 1, 2, 8, 10, 89, 88 };
-const BYTE L3CREV4[6] = { 2, 1, 8, 7, 90, 91 };
-const BYTE L3CREV5[6] = { 1, 2, 8, 11, 92, 93 };
-const BYTE L3CREV6[6] = { 1, 2, 8, 10, 95, 94 };
-const BYTE L3CREV7[6] = { 2, 1, 8, 7, 96, 101 };
-const BYTE L3CREV8[6] = { 1, 2, 2, 8, 102, 97 };
-const BYTE L3CREV9[6] = { 2, 1, 3, 8, 103, 98 };
-const BYTE L3CREV10[6] = { 2, 1, 4, 8, 104, 99 };
-const BYTE L3CREV11[6] = { 1, 2, 6, 8, 105, 100 };
-const BYTE L3ISLE1[14] = { 2, 3, 5, 14, 4, 9, 13, 12, 7, 7, 7, 7, 7, 7 };
-const BYTE L3ISLE2[14] = { 3, 2, 5, 2, 14, 13, 10, 12, 7, 7, 7, 7, 7, 7 };
-const BYTE L3ISLE3[14] = { 2, 3, 5, 14, 4, 9, 13, 12, 29, 30, 25, 28, 31, 32 };
-const BYTE L3ISLE4[14] = { 3, 2, 5, 2, 14, 13, 10, 12, 29, 26, 30, 31, 27, 32 };
-const BYTE L3ISLE5[10] = { 2, 2, 5, 14, 13, 12, 7, 7, 7, 7 };
-const BYTE L3XTRA1[4] = { 1, 1, 7, 106 };
-const BYTE L3XTRA2[4] = { 1, 1, 7, 107 };
-const BYTE L3XTRA3[4] = { 1, 1, 7, 108 };
-const BYTE L3XTRA4[4] = { 1, 1, 9, 109 };
-const BYTE L3XTRA5[4] = { 1, 1, 10, 110 };
-const BYTE L3ANVIL[244] = {
-	11, 11, 7, 7, 7, 7, 7, 7, 7, 7,
-	7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-	7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-	7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-	7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-	7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-	7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-	7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-	7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-	7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-	7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-	7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-	7, 7, 7, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 29, 26, 26, 26,
-	26, 26, 30, 0, 0, 0, 29, 34, 33, 33,
-	37, 36, 33, 35, 30, 0, 0, 25, 33, 37,
-	27, 32, 31, 36, 33, 28, 0, 0, 25, 37,
-	32, 7, 7, 7, 31, 27, 32, 0, 0, 25,
-	28, 7, 7, 7, 7, 2, 2, 2, 0, 0,
-	25, 35, 30, 7, 7, 7, 29, 26, 30, 0,
-	0, 25, 33, 35, 26, 30, 29, 34, 33, 28,
-	0, 0, 31, 36, 33, 33, 35, 34, 33, 37,
-	32, 0, 0, 0, 31, 27, 27, 27, 27, 27,
-	32, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0
+/** Miniset: Stairs up. */
+const BYTE L3UP[] = {
+	// clang-format off
+	3, 3, // width, height
+
+	 8,  8, 0, // search
+	10, 10, 0,
+	 7,  7, 0,
+
+	51, 50, 0, // replace
+	48, 49, 0,
+	 0,  0, 0,
+	// clang-format on
+};
+/** Miniset: Stairs down. */
+const BYTE L3DOWN[] = {
+	// clang-format off
+	3, 3, // width, height
+
+	8, 9, 7, // search
+	8, 9, 7,
+	0, 0, 0,
+
+	0, 47, 0, // replace
+	0, 46, 0,
+	0,  0, 0,
+	// clang-format on
+};
+/** Miniset: Stairs up to town. */
+const BYTE L3HOLDWARP[] = {
+	// clang-format off
+	3, 3, // width, height
+
+	 8,  8, 0, // search
+	10, 10, 0,
+	 7,  7, 0,
+
+	125, 125, 0, // replace
+	125, 125, 0,
+	  0,   0, 0,
+	// clang-format on
+};
+/** Miniset: Stalagmite white stalactite 1. */
+const BYTE L3TITE1[] = {
+	// clang-format off
+	4, 4, // width, height
+
+	7, 7, 7, 7, // search
+	7, 7, 7, 7,
+	7, 7, 7, 7,
+	7, 7, 7, 7,
+
+	0,  0,  0, 0, // replace
+	0, 57, 58, 0,
+	0, 56, 55, 0,
+	0,  0,  0, 0,
+	// clang-format on
+};
+/** Miniset: Stalagmite white stalactite 2. */
+const BYTE L3TITE2[] = {
+	// clang-format off
+	4, 4, // width, height
+
+	7, 7, 7, 7, // search
+	7, 7, 7, 7,
+	7, 7, 7, 7,
+	7, 7, 7, 7,
+
+	0,  0,  0, 0, // replace
+	0, 61, 62, 0,
+	0, 60, 59, 0,
+	0,  0,  0, 0,
+	// clang-format on
+};
+/** Miniset: Stalagmite white stalactite 3. */
+const BYTE L3TITE3[] = {
+	// clang-format off
+	4, 4, // width, height
+
+	7, 7, 7, 7, // search
+	7, 7, 7, 7,
+	7, 7, 7, 7,
+	7, 7, 7, 7,
+
+	0,  0,  0, 0, // replace
+	0, 65, 66, 0,
+	0, 64, 63, 0,
+	0,  0,  0, 0,
+	// clang-format on
+};
+/** Miniset: Stalagmite white stalactite horizontal. */
+const BYTE L3TITE6[] = {
+	// clang-format off
+	5, 4, // width, height
+
+	7, 7, 7, 7, 7, // search
+	7, 7, 7, 0, 7,
+	7, 7, 7, 0, 7,
+	7, 7, 7, 7, 7,
+
+	0,  0,  0,  0, 0, // replace
+	0, 77, 78,  0, 0,
+	0, 76, 74, 75, 0,
+	0,  0,  0,  0, 0,
+	// clang-format on
+};
+/** Miniset: Stalagmite white stalactite vertical. */
+const BYTE L3TITE7[] = {
+	// clang-format off
+	4, 5, // width, height
+
+	7, 7, 7, 7, // search
+	7, 7, 0, 7,
+	7, 7, 7, 7,
+	7, 7, 7, 7,
+	7, 7, 7, 7,
+
+	0,  0,  0, 0, // replace
+	0, 83,  0, 0,
+	0, 82, 80, 0,
+	0, 81, 79, 0,
+	0,  0,  0, 0,
+	// clang-format on
+};
+/** Miniset: Stalagmite 1. */
+const BYTE L3TITE8[] = {
+	// clang-format off
+	3, 3, // width, height
+
+	7, 7, 7, // search
+	7, 7, 7,
+	7, 7, 7,
+
+	0,  0, 0, // replace
+	0, 52, 0,
+	0,  0, 0,
+	// clang-format on
+};
+/** Miniset: Stalagmite 2. */
+const BYTE L3TITE9[] = {
+	// clang-format off
+	3, 3, // width, height
+
+	7, 7, 7, // search
+	7, 7, 7,
+	7, 7, 7,
+
+	0,  0, 0, // replace
+	0, 53, 0,
+	0,  0, 0,
+	// clang-format on
+};
+/** Miniset: Stalagmite 3. */
+const BYTE L3TITE10[] = {
+	// clang-format off
+	3, 3, // width, height
+
+	7, 7, 7, // search
+	7, 7, 7,
+	7, 7, 7,
+
+	0,  0, 0, // replace
+	0, 54, 0,
+	0,  0, 0,
+	// clang-format on
+};
+/** Miniset: Stalagmite 4. */
+const BYTE L3TITE11[] = {
+	// clang-format off
+	3, 3, // width, height
+
+	7, 7, 7, // search
+	7, 7, 7,
+	7, 7, 7,
+
+	0,  0, 0, // replace
+	0, 67, 0,
+	0,  0, 0,
+	// clang-format on
+};
+/** Miniset: Stalagmite on vertical wall. */
+const BYTE L3TITE12[] = {
+	// clang-format off
+	2, 1, // width, height
+
+	9, 7, // search
+
+	68, 0, // replace
+	// clang-format on
+};
+/** Miniset: Stalagmite on horizontal wall. */
+const BYTE L3TITE13[] = {
+	// clang-format off
+	1, 2, // width, height
+
+	10, // search
+	 7,
+
+	69, // replace
+	 0,
+	// clang-format on
+};
+/** Miniset: Cracked vertical wall 1. */
+const BYTE L3CREV1[] = {
+	// clang-format off
+	2, 1, // width, height
+
+	8, 7, // search
+
+	84, 85, // replace
+	// clang-format on
+};
+/** Miniset: Cracked vertical wall - north corner. */
+const BYTE L3CREV2[] = {
+	// clang-format off
+	2, 1, // width, height
+
+	8, 11, // search
+
+	86, 87, // replace
+	// clang-format on
+};
+/** Miniset: Cracked horizontal wall 1. */
+const BYTE L3CREV3[] = {
+	// clang-format off
+	1, 2, // width, height
+
+	 8, // search
+	10,
+
+	89, // replace
+	88,
+	// clang-format on
+};
+/** Miniset: Cracked vertical wall 2. */
+const BYTE L3CREV4[] = {
+	// clang-format off
+	2, 1, // width, height
+
+	8, 7, // search
+
+	90, 91, // replace
+	// clang-format on
+};
+/** Miniset: Cracked horizontal wall - north corner. */
+const BYTE L3CREV5[] = {
+	// clang-format off
+	1, 2, // width, height
+
+	 8, // search
+	11,
+
+	92, // replace
+	93,
+	// clang-format on
+};
+/** Miniset: Cracked horizontal wall 2. */
+const BYTE L3CREV6[] = {
+	// clang-format off
+	1, 2, // width, height
+
+	 8, // search
+	10,
+
+	95, // replace
+	94,
+	// clang-format on
+};
+/** Miniset: Cracked vertical wall - west corner. */
+const BYTE L3CREV7[] = {
+	// clang-format off
+	2, 1, // width, height
+
+	8, 7, // search
+
+	96, 101, // replace
+	// clang-format on
+};
+/** Miniset: Cracked horizontal wall - north. */
+const BYTE L3CREV8[] = {
+	// clang-format off
+	1, 2, // width, height
+
+	2, // search
+	8,
+
+	102, // replace
+	 97,
+	// clang-format on
+};
+/** Miniset: Cracked vertical wall - east corner. */
+const BYTE L3CREV9[] = {
+	// clang-format off
+	2, 1, // width, height
+
+	3, 8, // search
+
+	103, 98, // replace
+	// clang-format on
+};
+/** Miniset: Cracked vertical wall - west. */
+const BYTE L3CREV10[] = {
+	// clang-format off
+	2, 1, // width, height
+
+	4, 8, // search
+
+	104, 99, // replace
+	// clang-format on
+};
+/** Miniset: Cracked horizontal wall - south corner. */
+const BYTE L3CREV11[] = {
+	// clang-format off
+	1, 2, // width, height
+
+	6, // search
+	8,
+
+	105, // replace
+	100,
+	// clang-format on
+};
+/** Miniset: Replace broken wall with floor 1. */
+const BYTE L3ISLE1[] = {
+	// clang-format off
+	2, 3, // width, height
+
+	5, 14, // search
+	4,  9,
+	3, 12,
+
+	7, 7, // replace
+	7, 7,
+	7, 7,
+	// clang-format on
+};
+/** Miniset: Replace small wall with floor 2. */
+const BYTE L3ISLE2[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	 5,  2, 14, // search
+	13, 10, 12,
+
+	7, 7, 7, // replace
+	7, 7, 7,
+	// clang-format on
+};
+/** Miniset: Replace small wall with lava 1. */
+const BYTE L3ISLE3[] = {
+	// clang-format off
+	2, 3, // width, height
+
+	 5, 14, // search
+	 4,  9,
+	13, 12,
+
+	29, 30, // replace
+	25, 28,
+	31, 32,
+	// clang-format on
+};/** Miniset: Replace small wall with lava 2. */
+
+const BYTE L3ISLE4[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	 5,  2, 14, // search
+	13, 10, 12,
+
+	29, 26, 30, // replace
+	31, 27, 32,
+	// clang-format on
+};
+/** Miniset: Replace small wall with floor 3. */
+const BYTE L3ISLE5[] = {
+	// clang-format off
+	2, 2, // width, height
+
+	 5, 14, // search
+	13, 12,
+
+	7, 7, // replace
+	7, 7,
+	// clang-format on
+};
+/** Miniset: Use random floor tile 1. */
+const BYTE L3XTRA1[] = {
+	// clang-format off
+	1, 1, // width, height
+
+	7, // search
+
+	106, // replace
+	// clang-format on
+};
+/** Miniset: Use random floor tile 2. */
+const BYTE L3XTRA2[] = {
+	// clang-format off
+	1, 1, // width, height
+
+	7, // search
+
+	107, // replace
+	// clang-format on
+};
+/** Miniset: Use random floor tile 3. */
+const BYTE L3XTRA3[] = {
+	// clang-format off
+	1, 1, // width, height
+
+	7, // search
+
+	108, // replace
+	// clang-format on
+};
+/** Miniset: Use random horizontal wall tile. */
+const BYTE L3XTRA4[] = {
+	// clang-format off
+	1, 1, // width, height
+
+	9, // search
+
+	109, // replace
+	// clang-format on
+};
+/** Miniset: Use random vertical wall tile. */
+const BYTE L3XTRA5[] = {
+	// clang-format off
+	1, 1, // width, height
+
+	10, // search
+
+	110, // replace
+	// clang-format on
+};
+
+/** Miniset: Anvil of Fury island. */
+const BYTE L3ANVIL[] = {
+	// clang-format on
+	11, 11, // width, height
+
+	7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, // search
+	7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+	7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+	7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+	7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+	7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+	7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+	7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+	7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+	7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+	7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
+
+	0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0, // replace
+	0,  0, 29, 26, 26, 26, 26, 26, 30,  0, 0,
+	0, 29, 34, 33, 33, 37, 36, 33, 35, 30, 0,
+	0, 25, 33, 37, 27, 32, 31, 36, 33, 28, 0,
+	0, 25, 37, 32,  7,  7,  7, 31, 27, 32, 0,
+	0, 25, 28,  7,  7,  7,  7,  2,  2,  2, 0,
+	0, 25, 35, 30,  7,  7,  7, 29, 26, 30, 0,
+	0, 25, 33, 35, 26, 30, 29, 34, 33, 28, 0,
+	0, 31, 36, 33, 33, 35, 34, 33, 37, 32, 0,
+	0,  0, 31, 27, 27, 27, 27, 27, 32,  0, 0,
+	0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0,
+	// clang-format on
 };
 
 static void InitL3Dungeon()

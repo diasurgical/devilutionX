@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file scrollrt.h
+ *
+ * Interface of functionality for rendering the dungeons, monsters and calling other render routines.
+ */
 #ifndef __SCROLLRT_H__
 #define __SCROLLRT_H__
 
@@ -22,6 +26,10 @@ extern void (*DrawPlrProc)(int, int, int, int, int, BYTE *, int, int, int, int);
 void ClearCursor();
 void DrawMissile(int x, int y, int sx, int sy, BOOL pre);
 void DrawDeadPlayer(int x, int y, int sx, int sy);
+void ShiftGrid(int *x, int *y, int horizontal, int vertical);
+int RowsCoveredByPanel();
+void CalcTileOffset(int *offsetX, int *offsetY);
+void TilesInView(int *columns, int *rows);
 void DrawView(int StartX, int StartY);
 void ClearScreenBuffer();
 #ifdef _DEBUG

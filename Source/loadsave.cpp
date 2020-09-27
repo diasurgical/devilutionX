@@ -9,6 +9,10 @@ DEVILUTION_BEGIN_NAMESPACE
 
 BYTE *tbuff;
 
+/**
+ * @brief Load game state
+ * @param firstflag Can be set to false if we are simply reloading the current game
+ */
 void LoadGame(BOOL firstflag)
 {
 	int i, j;
@@ -45,6 +49,10 @@ void LoadGame(BOOL firstflag)
 	}
 
 	LoadPlayer(myplr);
+
+	gnDifficulty = plr[myplr].pDifficulty;
+	if (gnDifficulty < DIFF_NORMAL || gnDifficulty > DIFF_HELL)
+		gnDifficulty = DIFF_NORMAL;
 
 	for (i = 0; i < MAXQUESTS; i++)
 		LoadQuest(i);
@@ -235,8 +243,8 @@ void CopyShort(const void *src, void *dst)
 
 void CopyShorts(const void *src, const int n, void *dst)
 {
-	const auto *s = reinterpret_cast<const unsigned short *>(src);
-	auto *d = reinterpret_cast<unsigned short *>(dst);
+	const unsigned short *s = reinterpret_cast<const unsigned short *>(src);
+	unsigned short *d = reinterpret_cast<unsigned short *>(dst);
 	for (int i = 0; i < n; i++) {
 		CopyShort(s, d);
 		++d;
@@ -255,10 +263,10 @@ void CopyInt(const void *src, void *dst)
 
 void CopyInts(const void *src, const int n, void *dst)
 {
-	const auto *s = reinterpret_cast<const unsigned int *>(src);
-	auto *d = reinterpret_cast<unsigned int *>(dst);
+	const unsigned int *s = reinterpret_cast<const unsigned int *>(src);
+	const unsigned int *d = reinterpret_cast<unsigned int *>(dst);
 	for (int i = 0; i < n; i++) {
-		CopyInt(s, d);
+		CopyInt(s, (void*)d);
 		++d;
 		++s;
 	}
@@ -276,6 +284,7 @@ void CopyInt64(const void *src, void *dst)
 void LoadPlayer(int i)
 {
 	PlayerStruct *pPlayer = &plr[i];
+	char tempChar;
 
 	CopyInt(tbuff, &pPlayer->_pmode);
 	CopyBytes(tbuff, MAX_PATH_LENGTH, pPlayer->walkpath);
@@ -357,6 +366,9 @@ void LoadPlayer(int i)
 	CopyInt(tbuff, &pPlayer->_pStatPts);
 	CopyInt(tbuff, &pPlayer->_pDamageMod);
 	CopyInt(tbuff, &pPlayer->_pBaseToBlk);
+	if (pPlayer->_pBaseToBlk == 0) {
+		pPlayer->_pBaseToBlk = ToBlkTbl[pPlayer->_pClass];
+	}
 	CopyInt(tbuff, &pPlayer->_pHPBase);
 	CopyInt(tbuff, &pPlayer->_pMaxHPBase);
 	CopyInt(tbuff, &pPlayer->_pHitPoints);
@@ -440,7 +452,9 @@ void LoadPlayer(int i)
 	CopyInt(tbuff, &pPlayer->_pIGetHit);
 	CopyChar(tbuff, &pPlayer->_pISplLvlAdd);
 	CopyChar(tbuff, &pPlayer->_pISplCost);
-	tbuff += 2; // Alignment
+	CopyChar(tbuff, &tempChar);
+	pPlayer->pDifficulty = tempChar & 3; // Use 2 alignment bits for difficulty
+	tbuff += 1; // Alignment
 	CopyInt(tbuff, &pPlayer->_pISplDur);
 	CopyInt(tbuff, &pPlayer->_pIEnAc);
 	CopyInt(tbuff, &pPlayer->_pIFMinDam);
@@ -541,10 +555,10 @@ void LoadMonster(int i)
 	tbuff += 1; // Alignment
 	CopyShort(tbuff, &pMonster->mExp);
 
-	CopyChar(tbuff, &pMonster->mHit);
+	tbuff += 1; // Skip mHit as it's already initialized
 	CopyChar(tbuff, &pMonster->mMinDamage);
 	CopyChar(tbuff, &pMonster->mMaxDamage);
-	CopyChar(tbuff, &pMonster->mHit2);
+	tbuff += 1; // Skip mHit2 as it's already initialized
 	CopyChar(tbuff, &pMonster->mMinDamage2);
 	CopyChar(tbuff, &pMonster->mMaxDamage2);
 	CopyChar(tbuff, &pMonster->mArmorClass);
@@ -854,6 +868,7 @@ void SaveGame()
 		WSave(gnLevelTypeTbl[i]);
 	}
 
+	plr[myplr].pDifficulty = gnDifficulty;
 	SavePlayer(myplr);
 
 	for (i = 0; i < MAXQUESTS; i++)
@@ -1001,6 +1016,7 @@ void OSave(BOOL v)
 void SavePlayer(int i)
 {
 	PlayerStruct *pPlayer = &plr[i];
+	char tempChar;
 
 	CopyInt(&pPlayer->_pmode, tbuff);
 	CopyBytes(&pPlayer->walkpath, MAX_PATH_LENGTH, tbuff);
@@ -1166,7 +1182,9 @@ void SavePlayer(int i)
 
 	CopyChar(&pPlayer->_pISplLvlAdd, tbuff);
 	CopyChar(&pPlayer->_pISplCost, tbuff);
-	tbuff += 2; // Alignment
+	tempChar = pPlayer->pDifficulty & 3; // Use 2 alignment bits for difficulty
+	CopyChar(&tempChar, tbuff);
+	tbuff += 1; // Alignment
 	CopyInt(&pPlayer->_pISplDur, tbuff);
 	CopyInt(&pPlayer->_pIEnAc, tbuff);
 	CopyInt(&pPlayer->_pIFMinDam, tbuff);
@@ -1200,6 +1218,7 @@ void SavePlayer(int i)
 void SaveMonster(int i)
 {
 	MonsterStruct *pMonster = &monster[i];
+	char tempChar;
 
 	CopyInt(&pMonster->_mMTidx, tbuff);
 	CopyInt(&pMonster->_mmode, tbuff);
@@ -1267,10 +1286,14 @@ void SaveMonster(int i)
 	tbuff += 1; // Alignment
 	CopyShort(&pMonster->mExp, tbuff);
 
-	CopyChar(&pMonster->mHit, tbuff);
+	// Wtite mHit for backwards compatabiliyt
+	tempChar = pMonster->mHit < SCHAR_MAX ? pMonster->mHit : SCHAR_MAX;
+	CopyChar(&tempChar, tbuff);
 	CopyChar(&pMonster->mMinDamage, tbuff);
 	CopyChar(&pMonster->mMaxDamage, tbuff);
-	CopyChar(&pMonster->mHit2, tbuff);
+	// Wtite mHit2 for backwards compatabiliyt
+	tempChar = pMonster->mHit2 < SCHAR_MAX ? pMonster->mHit2 : SCHAR_MAX;
+	CopyChar(&tempChar, tbuff);
 	CopyChar(&pMonster->mMinDamage2, tbuff);
 	CopyChar(&pMonster->mMaxDamage2, tbuff);
 	CopyChar(&pMonster->mArmorClass, tbuff);

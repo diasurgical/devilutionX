@@ -30,8 +30,8 @@ inline bool FileExists(const char *path)
 #if _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)
 	return ::access(path, F_OK) == 0;
 #else
-	auto *file = std::fopen(path, "rb");
-	if (file == nullptr) return false;
+	FILE *file = std::fopen(path, "rb");
+	if (file == NULL) return false;
 	std::fclose(file);
 	return true;
 #endif
@@ -41,8 +41,8 @@ inline bool GetFileSize(const char *path, std::uintmax_t *size)
 {
 #if defined(_WIN64) || defined(_WIN32)
 	WIN32_FILE_ATTRIBUTE_DATA attr;
-	int path_utf16_size = MultiByteToWideChar(CP_UTF8, 0, path, -1, nullptr, 0);
-	auto path_utf16 = new wchar_t[path_utf16_size];
+	int path_utf16_size = MultiByteToWideChar(CP_UTF8, 0, path, -1, NULL, 0);
+	wchar_t* path_utf16 = new wchar_t[path_utf16_size];
 	if (MultiByteToWideChar(CP_UTF8, 0, path, -1, path_utf16, path_utf16_size) != path_utf16_size) {
 		delete[] path_utf16;
 		return false;
@@ -71,8 +71,8 @@ inline bool ResizeFile(const char *path, std::uintmax_t size)
 	if (lisize.QuadPart < 0) {
 		return false;
 	}
-	int path_utf16_size = MultiByteToWideChar(CP_UTF8, 0, path, -1, nullptr, 0);
-	auto path_utf16 = new wchar_t[path_utf16_size];
+	int path_utf16_size = MultiByteToWideChar(CP_UTF8, 0, path, -1, NULL, 0);
+	wchar_t *path_utf16 = new wchar_t[path_utf16_size];
 	if (MultiByteToWideChar(CP_UTF8, 0, path, -1, path_utf16, path_utf16_size) != path_utf16_size) {
 		delete[] path_utf16;
 		return false;

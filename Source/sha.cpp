@@ -1,3 +1,8 @@
+/**
+ * @file sha.cpp
+ *
+ * Implementation of functionality for calculating X-SHA-1 (a flawed implementation of SHA-1).
+ */
 #include "all.h"
 
 #include <cstdint>
@@ -9,10 +14,10 @@ DEVILUTION_BEGIN_NAMESPACE
 
 namespace {
 
-/*
+/**
  * Diablo-"SHA1" circular left shift, portable version.
  */
-std::uint32_t SHA1CircularShift(std::uint32_t bits, std::uint32_t word) {
+uint32_t SHA1CircularShift(uint32_t bits, uint32_t word) {
 	assert(bits < 32);
 	assert(bits > 0);
 

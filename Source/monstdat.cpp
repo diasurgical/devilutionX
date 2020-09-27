@@ -7,6 +7,7 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+/** Contains the data related to each monster ID. */
 MonsterData monsterdata[] = {
 	// clang-format off
 	// width, mImage, GraphicType,                       has_special, sndfile,                             snd_special, has_trans, TransFile,                         Frames[6],                  Rate[6],              mName,               mMinDLvl, mMaxDLvl, mLevel, mMinHP, mMaxHP, mAi,         mFlags,                                                              mInt, mHit, mAFNum, mMinDamage, mMaxDamage, mHit2, mAFNum2, mMinDamage2, mMaxDamage2, mArmorClass, mMonstClass, mMagicRes                                                    , mMagicRes2                                                   , mTreasure, mSelFlag,  mExp
@@ -198,18 +199,18 @@ BYTE MonstConvTbl[] = {
 	MT_REDDTH,
 	MT_LTCHDMN,
 	MT_UDEDBLRG,
-	MT_NZOMBIE,
-	MT_NZOMBIE,
-	MT_NZOMBIE,
-	MT_NZOMBIE,
+	0,
+	0,
+	0,
+	0,
 	MT_INCIN,
 	MT_FLAMLRD,
 	MT_DOOMFIRE,
 	MT_HELLBURN,
-	MT_NZOMBIE,
-	MT_NZOMBIE,
-	MT_NZOMBIE,
-	MT_NZOMBIE,
+	0,
+	0,
+	0,
+	0,
 	MT_RSTORM,
 	MT_STORM,
 	MT_STORML,
@@ -242,48 +243,47 @@ BYTE MonstConvTbl[] = {
 	MT_MAGISTR,
 	MT_CABALIST,
 	MT_ADVOCATE,
-	MT_NZOMBIE,
+	0,
 	MT_DIABLO,
-	MT_NZOMBIE,
+	0,
 	MT_GOLEM,
-	MT_NZOMBIE,
-	MT_NZOMBIE,
-	MT_NZOMBIE,
-	MT_NZOMBIE,
-	MT_NZOMBIE,
-	MT_NZOMBIE,
-	MT_NZOMBIE,
-	MT_NZOMBIE,
-	MT_NZOMBIE,
+	0,
+	0,
+	0, // Monster from blood1.dun and blood2.dun
+	0,
+	0,
+	0,
+	0, // Snotspill from banner2.dun
+	0,
+	0,
 	MT_BIGFALL,
 	MT_DARKMAGE,
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
-	0, // Reserved for Hellfire
+	0, // Hellfire: Hellboar
+	0, // Hellfire: Stinger
+	0, // Hellfire: Psychorb
+	0, // Hellfire: Arachnon
+	0, // Hellfire: Felltwin
+	0, // Hellfire: Hork Spawn
+	0, // Hellfire: Stinger (duplicate)
+	0, // Hellfire: Psychorb (duplicate)
+	0, // Hellfire: Arachnon (duplicate)
+	0, // Hellfire: Lashworm
+	0, // Hellfire: Torchant
+	0, // Hellfire: Hork Demon
+	0, // Hellfire: Hell Bug
+	0, // Hellfire: Gravedigger
+	0, // Hellfire: Tomb Rat
+	0, // Hellfire: Firebat
+	0, // Hellfire: Skullwing
+	0, // Hellfire: Lich
+	0, // Hellfire: Crypt Demon
+	0, // Hellfire: Firebat (duplicate)
+	0, // Hellfire: Skullwing (duplicate)
+	0, // Hellfire: Lich (duplicate)
+	0, // Hellfire: Biclops
+	0, // Hellfire: Flesh Thing
+	0, // Hellfire: Reaper
+	0, // Hellfire: Na-Krul
 	MT_CLEAVER,
 	MT_INVILORD,
 	MT_LRDSAYTR,
@@ -409,7 +409,7 @@ BYTE MonstAvailTbl[] = {
 	MAT_NEVER,  // The Dark Lord
 	MAT_NEVER,  // The Arch-Litch Malignus
 };
-
+/** Contains the data related to each unique monster ID. */
 UniqMonstStruct UniqMonst[] = {
 	// clang-format off
 	// mtype,       mName,                   mTrnName, mlevel, mmaxhp, mAi,      mint, mMinDamage, mMaxDamage, mMagicRes,                                                     mUnqAttr, mUnqVar1, mUnqVar2, mtalkmsg

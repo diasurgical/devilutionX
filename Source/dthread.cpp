@@ -118,7 +118,6 @@ unsigned int dthread_handler(void *data)
 
 void dthread_cleanup()
 {
-	const char *error_buf;
 	TMegaPkt *tmp;
 
 	if (sghWorkToDoEvent == NULL) {

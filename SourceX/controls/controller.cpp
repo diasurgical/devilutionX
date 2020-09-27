@@ -8,7 +8,7 @@ namespace dvl {
 
 ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event)
 {
-	ControllerButtonEvent result{ ControllerButton::NONE, false };
+	ControllerButtonEvent result{ ControllerButton_NONE, false };
 	switch (event.type) {
 #ifndef USE_SDL1
 	case SDL_CONTROLLERBUTTONUP:
@@ -23,13 +23,13 @@ ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event)
 
 #if HAS_KBCTRL == 1
 	result.button = KbCtrlToControllerButton(event);
-	if (result.button != ControllerButton::NONE)
+	if (result.button != ControllerButton_NONE)
 		return result;
 #endif
 
 #ifndef USE_SDL1
 	result.button = GameControllerToControllerButton(event);
-	if (result.button != ControllerButton::NONE)
+	if (result.button != ControllerButton_NONE)
 		return result;
 #endif
 

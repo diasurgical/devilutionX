@@ -1,3 +1,8 @@
+/**
+ * @file track.cpp
+ *
+ * Implementation of functionality tracking what the mouse cursor is pointing at.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -35,7 +40,7 @@ void track_repeat_walk(BOOL rep)
 
 	sgbIsWalking = rep;
 	if (rep) {
-		sgbIsScrolling = 0;
+		sgbIsScrolling = FALSE;
 		sgdwLastWalk = SDL_GetTicks() - 50;
 		NetSendCmdLoc(TRUE, CMD_WALKXY, cursmx, cursmy);
 	} else if (sgbIsScrolling) {

@@ -1311,8 +1311,7 @@ typedef enum missile_graphic_id {
 	MFILE_SCUBMISD,
 	MFILE_SCBSEXPD,
 	MFILE_NULL,
-	MFILE_INVALID,
-	MFILE_NONE = 0xFF,
+	MFILE_NONE = 0xFF, // BUGFIX: should be `MFILE_NONE = MFILE_SCBSEXPD+1`, i.e. MFILE_NULL, since there would otherwise be an out-of-bounds in SetMissAnim when accessing misfiledata for any of the missiles that have MFILE_NONE as mFileNum in missiledata.
 } missile_graphic_id;
 
 typedef enum _mai_id {
@@ -1887,6 +1886,39 @@ typedef enum dflag {
 	BFLAG_EXPLORED    = 0x80,
 } dflag;
 
+ /*
+ First 5 bits store level
+ 6th bit stores onlygood flag
+ 7th bit stores uper15 flag - uper means unique percent, this flag is true for unique monsters and loot from them has 15% to become unique
+ 8th bit stores uper1 flag - this is loot from normal monsters, which has 1% to become unique
+ 9th bit stores info if item is unique
+ 10th bit stores info if item is a basic one from griswold
+ 11th bit stores info if item is a premium one from griswold
+ 12th bit stores info if item is from wirt
+ 13th bit stores info if item is from adria
+ 14th bit stores info if item is from pepin
+ 15th bit stores pregen flag
+
+ combining CF_UPER15 and CF_UPER1 flags (CF_USEFUL) is used to mark potions and town portal scrolls created on the ground
+ CF_TOWN is combining all store flags and indicates if item has been bought from a NPC
+ */
+typedef enum icreateinfo_flag {
+	CF_LEVEL        = (1 << 6) - 1,
+	CF_ONLYGOOD     = 1 << 6,
+	CF_UPER15       = 1 << 7,
+	CF_UPER1        = 1 << 8,
+	CF_UNIQUE       = 1 << 9,
+	CF_SMITH        = 1 << 10,
+	CF_SMITHPREMIUM = 1 << 11,
+	CF_BOY          = 1 << 12,
+	CF_WITCH        = 1 << 13,
+	CF_HEALER       = 1 << 14,
+	CF_PREGEN       = 1 << 15,
+
+	CF_USEFUL = CF_UPER15 | CF_UPER1,
+	CF_TOWN   = CF_SMITH | CF_SMITHPREMIUM | CF_BOY | CF_WITCH | CF_HEALER,
+} icreateinfo_flag;
+
 typedef enum dungeon_message {
 	DMSG_CATHEDRAL = 1 << 0,
 	DMSG_CATACOMBS = 1 << 1,
@@ -2427,7 +2459,7 @@ typedef enum _object_id {
 	OBJ_LAZSTAND     = 0x5F,
 	OBJ_SLAINHERO    = 0x60,
 	OBJ_SIGNCHEST    = 0x61,
-	OBJ_NULL_98      = 0x62,
+	OBJ_BOOKSHELFR   = 0x62,
 } _object_id;
 
 typedef enum item_misc_id {

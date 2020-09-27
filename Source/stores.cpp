@@ -1,3 +1,8 @@
+/**
+ * @file stores.cpp
+ *
+ * Implementation of functionality for stores and towner dialogs.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -76,7 +81,7 @@ void InitStores()
 void PentSpn2Spin()
 {
 	DWORD ticks = SDL_GetTicks();
-	if (ticks - PentSpn2Tick > 50) {
+	if (ticks - PentSpn2Tick > game_speed) {
 		PentSpn2Frame = (PentSpn2Frame & 7) + 1;
 		PentSpn2Tick = ticks;
 	}
@@ -118,7 +123,7 @@ void FreeStoreMem()
 
 void DrawSTextBack()
 {
-	CelDraw(PANEL_X + 344, 487, pSTextBoxCels, 1, 271);
+	CelDraw(PANEL_X + 344, 327 + SCREEN_Y, pSTextBoxCels, 1, 271);
 	trans_rect(PANEL_LEFT + 347, 28, 265, 297);
 }
 
@@ -135,7 +140,7 @@ void PrintSString(int x, int y, BOOL cjustflag, char *str, char col, int val)
 	else
 		xx = PANEL_X + 352;
 	sx = xx + x;
-	sy = s + 204;
+	sy = s + 44 + SCREEN_Y;
 	len = strlen(str);
 	if (stextsize)
 		yy = 577;
@@ -151,7 +156,7 @@ void PrintSString(int x, int y, BOOL cjustflag, char *str, char col, int val)
 		sx += k;
 	}
 	if (stextsel == y) {
-		CelDraw(cjustflag ? xx + x + k - 20 : xx + x - 20, s + 205, pSPentSpn2Cels, PentSpn2Frame, 12);
+		CelDraw(cjustflag ? xx + x + k - 20 : xx + x - 20, s + 45 + SCREEN_Y, pSPentSpn2Cels, PentSpn2Frame, 12);
 	}
 	for (i = 0; i < len; i++) {
 		c = fontframe[gbFontTransTbl[(BYTE)str[i]]];
@@ -173,7 +178,7 @@ void PrintSString(int x, int y, BOOL cjustflag, char *str, char col, int val)
 		}
 	}
 	if (stextsel == y) {
-		CelDraw(cjustflag ? (xx + x + k + 4) : (PANEL_X + 596 - x), s + 205, pSPentSpn2Cels, PentSpn2Frame, 12);
+		CelDraw(cjustflag ? (xx + x + k + 4) : (PANEL_X + 596 - x), s + 45 + SCREEN_Y, pSPentSpn2Cels, PentSpn2Frame, 12);
 	}
 }
 
@@ -184,14 +189,14 @@ void DrawSLine(int y)
 	sy = y * 12;
 	if (stextsize) {
 		xy = SCREENXY(PANEL_LEFT + 26, 25);
-		yy = BUFFER_WIDTH * (sy + 198) + 26 + PANEL_X;
-		width = 586 / 4;
-		line = BUFFER_WIDTH - 586;
+		yy = BUFFER_WIDTH * (sy + 38 + SCREEN_Y) + 26 + PANEL_X;
+		width = 586 / 4;           // BUGFIX: should be 587, not 586
+		line = BUFFER_WIDTH - 586; // BUGFIX: should be 587, not 586
 	} else {
 		xy = SCREENXY(PANEL_LEFT + 346, 25);
-		yy = BUFFER_WIDTH * (sy + 198) + 346 + PANEL_X;
-		width = 266 / 4;
-		line = BUFFER_WIDTH - 266;
+		yy = BUFFER_WIDTH * (sy + 38 + SCREEN_Y) + 346 + PANEL_X;
+		width = 266 / 4;           // BUGFIX: should be 267, not 266
+		line = BUFFER_WIDTH - 266; // BUGFIX: should be 267, not 266
 	}
 
 	/// ASSERT: assert(gpBuffer);
@@ -210,8 +215,8 @@ void DrawSSlider(int y1, int y2)
 {
 	int yd1, yd2, yd3;
 
-	yd1 = y1 * 12 + 204;
-	yd2 = y2 * 12 + 204;
+	yd1 = y1 * 12 + 44 + SCREEN_Y;
+	yd2 = y2 * 12 + 44 + SCREEN_Y;
 	if (stextscrlubtn != -1)
 		CelDraw(PANEL_X + 601, yd1, pSTextSlidCels, 12, 12);
 	else
@@ -232,7 +237,7 @@ void DrawSSlider(int y1, int y2)
 		yd3 = 1000 * (stextsval + ((yd3 - stextup) >> 2)) / (storenumh - 1) * (y2 * 12 - y1 * 12 - 24) / 1000;
 	else
 		yd3 = 0;
-	CelDraw(PANEL_X + 601, (y1 + 1) * 12 + 204 + yd3, pSTextSlidCels, 13, 12);
+	CelDraw(PANEL_X + 601, (y1 + 1) * 12 + 44 + SCREEN_Y + yd3, pSTextSlidCels, 13, 12);
 }
 
 void DrawSTextHelp()

@@ -1,3 +1,8 @@
+/**
+ * @file setmaps.cpp
+ *
+ * Implementation of functionality the special quest dungeons.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -132,6 +137,9 @@ void DRLG_SetMapTrans(char *sFileName)
 	mem_free_dbg(pLevelMap);
 }
 
+/**
+ * @brief Load a quest map, the given map is specified via the global setlvlnum
+ */
 void LoadSetMap()
 {
 	switch (setlvlnum) {

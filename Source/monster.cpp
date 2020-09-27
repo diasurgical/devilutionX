@@ -12,6 +12,7 @@ DEVILUTION_BEGIN_NAMESPACE
 int MissileFileFlag;
 
 // BUGFIX: replace monstkills[MAXMONSTERS] with monstkills[NUM_MTYPES].
+/** Tracks the total number of monsters killed per monster_id. */
 int monstkills[MAXMONSTERS];
 int monstactive[MAXMONSTERS];
 int nummonsters;
@@ -24,11 +25,14 @@ int monstimgtot;
 int uniquetrans;
 int nummtypes;
 
+/** Maps from walking path step to facing direction. */
 const char plr2monst[9] = { 0, 5, 3, 7, 1, 4, 6, 0, 2 };
+/** Maps from monster intelligence factor to missile type. */
 const BYTE counsmiss[4] = { MIS_FIREBOLT, MIS_CBOLT, MIS_LIGHTCTRL, MIS_FIREBALL };
 
 /* data */
 
+/** Maps from monster walk animation frame num to monster velocity. */
 int MWVel[24][3] = {
 	{ 256, 512, 1024 },
 	{ 128, 256, 512 },
@@ -55,11 +59,17 @@ int MWVel[24][3] = {
 	{ 11, 22, 44 },
 	{ 10, 21, 42 }
 };
+/** Maps from monster action to monster animation letter. */
 char animletter[7] = "nwahds";
+/** Maps from direction to a left turn from the direction. */
 int left[8] = { 7, 0, 1, 2, 3, 4, 5, 6 };
+/** Maps from direction to a right turn from the direction. */
 int right[8] = { 1, 2, 3, 4, 5, 6, 7, 0 };
+/** Maps from direction to the opposite direction. */
 int opposite[8] = { 4, 5, 6, 7, 0, 1, 2, 3 };
+/** Maps from direction to delta X-offset. */
 int offset_x[8] = { 1, 0, -1, -1, -1, 0, 1, 1 };
+/** Maps from direction to delta Y-offset. */
 int offset_y[8] = { 1, 1, 1, 0, -1, -1, -1, 0 };
 
 /** unused */
@@ -68,6 +78,7 @@ int rnd10[4] = { 10, 15, 20, 30 };
 int rnd20[4] = { 20, 30, 40, 50 };
 int rnd60[4] = { 60, 70, 80, 90 };
 
+/** Maps from monster AI ID to monster AI function. */
 void (*AiProc[])(int i) = {
 	&MAI_Zombie,
 	&MAI_Fat,
@@ -459,13 +470,13 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 		monster[i]._mhitpoints = monster[i]._mmaxhp;
 		monster[i].mLevel += 15;
 		monster[i].mExp = 2 * (monster[i].mExp + 1000);
-		monster[i].mHit += 85;
+		monster[i].mHit += NIGHTMARE_TO_HIT_BONUS;
 		monster[i].mMinDamage = 2 * (monster[i].mMinDamage + 2);
 		monster[i].mMaxDamage = 2 * (monster[i].mMaxDamage + 2);
-		monster[i].mHit2 += 85;
+		monster[i].mHit2 += NIGHTMARE_TO_HIT_BONUS;
 		monster[i].mMinDamage2 = 2 * (monster[i].mMinDamage2 + 2);
 		monster[i].mMaxDamage2 = 2 * (monster[i].mMaxDamage2 + 2);
-		monster[i].mArmorClass += 50;
+		monster[i].mArmorClass += NIGHTMARE_AC_BONUS;
 	}
 
 	if (gnDifficulty == DIFF_HELL) {
@@ -473,13 +484,13 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 		monster[i]._mhitpoints = monster[i]._mmaxhp;
 		monster[i].mLevel += 30;
 		monster[i].mExp = 4 * (monster[i].mExp + 1000);
-		monster[i].mHit += 120;
+		monster[i].mHit += HELL_TO_HIT_BONUS;
 		monster[i].mMinDamage = 4 * monster[i].mMinDamage + 6;
 		monster[i].mMaxDamage = 4 * monster[i].mMaxDamage + 6;
-		monster[i].mHit2 += 120;
+		monster[i].mHit2 += HELL_TO_HIT_BONUS;
 		monster[i].mMinDamage2 = 4 * monster[i].mMinDamage2 + 6;
 		monster[i].mMaxDamage2 = 4 * monster[i].mMaxDamage2 + 6;
-		monster[i].mArmorClass += 80;
+		monster[i].mArmorClass += HELL_AC_BONUS;
 		monster[i].mMagicRes = monst->MData->mMagicRes2;
 	}
 }
@@ -735,9 +746,23 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int unpackfilesize)
 	if (Uniq->mUnqAttr & 4) {
 		Monst->mHit = Uniq->mUnqVar1;
 		Monst->mHit2 = Uniq->mUnqVar1;
+
+		if (gnDifficulty == DIFF_NIGHTMARE) {
+			Monst->mHit += NIGHTMARE_TO_HIT_BONUS;
+			Monst->mHit2 += NIGHTMARE_TO_HIT_BONUS;
+		} else if (gnDifficulty == DIFF_HELL) {
+			Monst->mHit += HELL_TO_HIT_BONUS;
+			Monst->mHit2 += HELL_TO_HIT_BONUS;
+		}
 	}
 	if (Uniq->mUnqAttr & 8) {
 		Monst->mArmorClass = Uniq->mUnqVar1;
+
+		if (gnDifficulty == DIFF_NIGHTMARE) {
+			Monst->mArmorClass += NIGHTMARE_AC_BONUS;
+		} else if (gnDifficulty == DIFF_HELL) {
+			Monst->mArmorClass += HELL_AC_BONUS;
+		}
 	}
 
 	nummonsters++;
@@ -1601,7 +1626,7 @@ void MonstStartKill(int i, int pnum, BOOL sendmsg)
 	Monst = &monster[i];
 	if (pnum >= 0)
 		Monst->mWhoHit |= 1 << pnum;
-	if (pnum < MAX_PLRS && i > MAX_PLRS)
+	if (pnum < MAX_PLRS && i > MAX_PLRS) /// BUGFIX: i >= MAX_PLRS
 		AddPlrMonstExper(Monst->mLevel, Monst->mExp, Monst->mWhoHit);
 	monstkills[Monst->MType->mtype]++;
 	Monst->_mhitpoints = 0;
@@ -2479,7 +2504,7 @@ void DoEnding()
 	int musicVolume;
 
 	if (gbMaxPlayers > 1) {
-		SNetLeaveGame(0x40000004);
+		SNetLeaveGame(LEAVE_ENDING);
 	}
 
 	music_stop();
@@ -3897,7 +3922,7 @@ void MAI_Golum(int i)
 				for (k = 0; k < 5; k++) {
 					_menemy = dMonster[monster[i]._mx + k - 2][monster[i]._my + j - 2];
 					if (_menemy > 0)
-						monster[_menemy]._msquelch = UCHAR_MAX;
+						monster[_menemy]._msquelch = UCHAR_MAX; // BUGFIX: should be `monster[_menemy-1]`, not monster[_menemy].
 				}
 			}
 		}
@@ -4675,6 +4700,7 @@ BOOL DirOK(int i, int mdir)
 				mi = -mi;
 			if (mi != 0)
 				mi--;
+			// BUGFIX: should only run pack member check if mi was non-zero prior to executing the body of the above if-statement.
 			if (monster[mi].leaderflag == 1
 			    && monster[mi].leader == i
 			    && monster[mi]._mfutx == x
@@ -4976,7 +5002,7 @@ void PrintMonstHistory(int mt)
 {
 	int minHP, maxHP, res;
 
-	sprintf(tempstr, "Total kills : %i", monstkills[mt]);
+	sprintf(tempstr, "Total kills: %i", monstkills[mt]);
 	AddPanelString(tempstr, TRUE);
 	if (monstkills[mt] >= 30) {
 		minHP = monsterdata[mt].mMinHP;
@@ -4997,7 +5023,7 @@ void PrintMonstHistory(int mt)
 			minHP = 4 * minHP + 3;
 			maxHP = 4 * maxHP + 3;
 		}
-		sprintf(tempstr, "Hit Points : %i-%i", minHP, maxHP);
+		sprintf(tempstr, "Hit Points: %i-%i", minHP, maxHP);
 		AddPanelString(tempstr, TRUE);
 	}
 	if (monstkills[mt] >= 15) {
@@ -5011,7 +5037,7 @@ void PrintMonstHistory(int mt)
 			AddPanelString(tempstr, TRUE);
 		} else {
 			if (res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING)) {
-				strcpy(tempstr, "Resists : ");
+				strcpy(tempstr, "Resists: ");
 				if (res & RESIST_MAGIC)
 					strcat(tempstr, "Magic ");
 				if (res & RESIST_FIRE)
@@ -5022,7 +5048,7 @@ void PrintMonstHistory(int mt)
 				AddPanelString(tempstr, TRUE);
 			}
 			if (res & (IMUNE_MAGIC | IMUNE_FIRE | IMUNE_LIGHTNING)) {
-				strcpy(tempstr, "Immune : ");
+				strcpy(tempstr, "Immune: ");
 				if (res & IMUNE_MAGIC)
 					strcat(tempstr, "Magic ");
 				if (res & IMUNE_FIRE)

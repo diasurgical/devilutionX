@@ -8,10 +8,11 @@ jobs:
       - checkout
       - run: echo deb http://deb.debian.org/debian stretch-backports-sloppy main >> /etc/apt/sources.list.d/debian-backports.list
       - run: apt-get update -y
-      - run: apt-get install -y g++ libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev git
+      - run: apt-get install -y g++ libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev git rpm
       - run: apt-get install -y -t 'stretch-backports*' cmake libsodium-dev
       - run: cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON
       - run: cmake --build build -j $(nproc)
+      - run: cmake --build build --target package
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64}
   linux_x86_64_test:
     docker:
@@ -33,10 +34,11 @@ jobs:
       - checkout
       - run: echo deb http://deb.debian.org/debian stretch-backports-sloppy main >> /etc/apt/sources.list.d/debian-backports.list
       - run: apt-get update -y
-      - run: apt-get install -y g++ libsdl-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev git
+      - run: apt-get install -y g++ libsdl-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev git rpm
       - run: apt-get install -y -t 'stretch-backports*' cmake libsodium-dev
       - run: cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON -DUSE_SDL1=ON
       - run: cmake --build build -j $(nproc)
+      - run: cmake --build build --target package
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64_sdl1}
   linux_x86:
     docker:
@@ -47,10 +49,11 @@ jobs:
       - run: echo deb http://deb.debian.org/debian stretch-backports-sloppy main >> /etc/apt/sources.list.d/debian-backports.list
       - run: dpkg --add-architecture i386
       - run: apt-get update -y
-      - run: apt-get install -y g++-multilib libsdl2-dev:i386 libsdl2-mixer-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev git
+      - run: apt-get install -y g++-multilib libsdl2-dev:i386 libsdl2-mixer-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev git rpm
       - run: apt-get install -y -t 'stretch-backports*' cmake libsodium-dev:i386
       - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake
       - run: cmake --build build -j $(nproc)
+      - run: cmake --build build --target package
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86}
   windows_x86:
     docker:
@@ -66,8 +69,8 @@ jobs:
       - run: tar -xzf SDL2_ttf-devel-2.0.15-mingw.tar.gz
       - run: wget https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-devel-2.0.4-mingw.tar.gz
       - run: tar -xzf SDL2_mixer-devel-2.0.4-mingw.tar.gz
-      - run: wget https://download.libsodium.org/libsodium/releases/libsodium-1.0.17-mingw.tar.gz
-      - run: tar -xzf libsodium-1.0.17-mingw.tar.gz --no-same-owner
+      - run: wget https://github.com/jedisct1/libsodium/releases/download/1.0.18-RELEASE/libsodium-1.0.18-mingw.tar.gz
+      - run: tar -xzf libsodium-1.0.18-mingw.tar.gz --no-same-owner
       - run: cp -r libsodium-win32/* /usr/i686-w64-mingw32
       - run: cp -r SDL2*/i686-w64-mingw32 /usr
       - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake
@@ -75,7 +78,7 @@ jobs:
       - store_artifacts: {path: ./build/devilutionx.exe, destination: devilutionx_x86.exe}
   switch:
     docker:
-      - image: devkitpro/devkita64:latest
+      - image: devkitpro/devkita64:20200528
     working_directory: ~/repo
     steps:
       - checkout

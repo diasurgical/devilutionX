@@ -266,7 +266,7 @@ inline void SDLBackport_PixelformatToMask(int pixelformat, Uint32 *flags, Uint32
  */
 inline bool SDLBackport_PixelFormatFormatEq(const SDL_PixelFormat *a, const SDL_PixelFormat *b)
 {
-	return a->BitsPerPixel == b->BitsPerPixel && (a->palette != nullptr) == (b->palette != nullptr)
+	return a->BitsPerPixel == b->BitsPerPixel && (a->palette != NULL) == (b->palette != NULL)
 	    && a->Rmask == b->Rmask && a->Gmask == b->Gmask && a->Bmask == b->Bmask;
 }
 
@@ -275,7 +275,7 @@ inline bool SDLBackport_PixelFormatFormatEq(const SDL_PixelFormat *a, const SDL_
  */
 inline bool SDLBackport_IsPixelFormatIndexed(const SDL_PixelFormat *pf)
 {
-	return pf->BitsPerPixel == 8 && pf->palette != nullptr;
+	return pf->BitsPerPixel == 8 && pf->palette != NULL;
 }
 
 //= Surface creation

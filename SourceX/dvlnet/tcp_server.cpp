@@ -202,7 +202,7 @@ void tcp_server::drop_connection(scc con)
 	if (con->plr != PLR_BROADCAST) {
 		auto pkt = pktfty.make_packet<PT_DISCONNECT>(PLR_MASTER, PLR_BROADCAST,
 		    con->plr, LEAVE_DROP);
-		connections[con->plr] = nullptr;
+		connections[con->plr] = NULL;
 		send_packet(*pkt);
 		// TODO: investigate if it is really ok for the server to
 		//       drop a client directly.

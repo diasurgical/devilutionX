@@ -659,7 +659,7 @@ void DrawLifeFlask()
 		filled = 11;
 	filled += 2;
 
-	DrawFlask(pLifeBuff, 88, 277, gpBuffer, SCREENXY(PANEL_LEFT + 109, PANEL_TOP - 13), filled);
+	DrawFlask(pLifeBuff, 88, 88 * 3 + 13, gpBuffer, SCREENXY(PANEL_LEFT + 109, PANEL_TOP - 13), filled);
 	if (filled != 13)
 		DrawFlask(pBtmBuff, PANEL_WIDTH, PANEL_WIDTH * (filled + 3) + 109, gpBuffer, SCREENXY(PANEL_LEFT + 109, PANEL_TOP - 13 + filled), 13 - filled);
 }
@@ -697,7 +697,7 @@ void DrawManaFlask()
 		filled = 11;
 	filled += 2;
 
-	DrawFlask(pManaBuff, 88, 277, gpBuffer, SCREENXY(PANEL_LEFT + 475, PANEL_TOP - 13), filled);
+	DrawFlask(pManaBuff, 88, 88 * 3 + 13, gpBuffer, SCREENXY(PANEL_LEFT + 475, PANEL_TOP - 13), filled);
 	if (filled != 13)
 		DrawFlask(pBtmBuff, PANEL_WIDTH, PANEL_WIDTH * (filled + 3) + 475, gpBuffer, SCREENXY(PANEL_LEFT + 475, PANEL_TOP - 13 + filled), 13 - filled);
 }
@@ -743,9 +743,9 @@ void UpdateManaFlask()
 	if (filled > 69)
 		filled = 69;
 	if (filled != 69)
-		SetFlaskHeight(pManaBuff, 16, 85 - filled, 96 + PANEL_X + 368, PANEL_Y);
+		SetFlaskHeight(pManaBuff, 16, 85 - filled, PANEL_X + 464, PANEL_Y);
 	if (filled != 0)
-		DrawPanelBox(96 + 368, 85 - filled, 88, filled, 96 + PANEL_X + 368, PANEL_Y + 69 - filled);
+		DrawPanelBox(464, 85 - filled, 88, filled, PANEL_X + 464, PANEL_Y + 69 - filled);
 
 	DrawSpell();
 }
@@ -1788,16 +1788,16 @@ void DrawSpellBook()
 
 	spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
 
-	yp = 215;
+	yp = 55 + SCREEN_Y;
 	for (i = 1; i < 8; i++) {
 		sn = SpellPages[sbooktab][i - 1];
 		if (sn != -1 && spl & (__int64)1 << (sn - 1)) {
 			st = GetSBookTrans(sn, TRUE);
 			SetSpellTrans(st);
-			DrawSpellCel(RIGHT_PANEL + 75, yp, pSBkIconCels, SpellITbl[sn], 37);
+			DrawSpellCel(RIGHT_PANEL_X + 11, yp, pSBkIconCels, SpellITbl[sn], 37);
 			if (sn == plr[myplr]._pRSpell && st == plr[myplr]._pRSplType) {
 				SetSpellTrans(RSPLTYPE_SKILL);
-				DrawSpellCel(RIGHT_PANEL + 75, yp, pSBkIconCels, SPLICONLAST, 37);
+				DrawSpellCel(RIGHT_PANEL_X + 11, yp, pSBkIconCels, SPLICONLAST, 37);
 			}
 			PrintSBookStr(10, yp - 23, FALSE, spelldata[sn].sNameText, COL_WHITE);
 			switch (GetSBookTrans(sn, FALSE)) {
@@ -1941,14 +1941,14 @@ void control_drop_gold(char vkey)
 
 	memset(input, 0, sizeof(input));
 	snprintf(input, sizeof(input), "%d", dropGoldValue);
-	if (vkey == VK_RETURN) {
+	if (vkey == DVL_VK_RETURN) {
 		if (dropGoldValue > 0)
 			control_remove_gold(myplr, initialDropGoldIndex);
 		dropGoldFlag = FALSE;
-	} else if (vkey == VK_ESCAPE) {
+	} else if (vkey == DVL_VK_ESCAPE) {
 		dropGoldFlag = FALSE;
 		dropGoldValue = 0;
-	} else if (vkey == VK_BACK) {
+	} else if (vkey == DVL_VK_BACK) {
 		input[strlen(input) - 1] = '\0';
 		dropGoldValue = atoi(input);
 	} else if (vkey - '0' >= 0 && vkey - '0' <= 9) {
@@ -2078,7 +2078,7 @@ char *control_print_talk_msg(char *msg, int *x, int y, int color)
 
 		c = fontframe[gbFontTransTbl[(BYTE)*msg]];
 		width += fontkern[c] + 1;
-		if (width > 514 + PANEL_LEFT)
+		if (width > 450 + PANEL_X)
 			return msg;
 		msg++;
 		if (c != 0) {
@@ -2121,7 +2121,7 @@ void control_release_talk_btn()
 	if (talkflag) {
 		for (i = 0; i < sizeof(talkbtndown) / sizeof(talkbtndown[0]); i++)
 			talkbtndown[i] = FALSE;
-		if (MouseX >= 172 + PANEL_LEFT && MouseY >= 421 + PANEL_LEFT && MouseX <= -119 + PANEL_TOP && MouseY <= 123 + PANEL_TOP) {
+		if (MouseX >= 172 + PANEL_LEFT && MouseY >= 69 + PANEL_TOP && MouseX <= 233 + PANEL_LEFT && MouseY <= 123 + PANEL_TOP) {
 			off = (MouseY - (69 + PANEL_TOP)) / 18;
 
 			for (p = 0; p < MAX_PLRS && off != -1; p++) {
@@ -2182,7 +2182,7 @@ BOOL control_talk_last_key(int vkey)
 	if (!talkflag)
 		return FALSE;
 
-	if ((DWORD)vkey < VK_SPACE)
+	if ((DWORD)vkey < DVL_VK_SPACE)
 		return FALSE;
 
 	result = strlen(sgszTalkMsg);
@@ -2202,18 +2202,18 @@ BOOL control_presskeys(int vkey)
 		if (!talkflag) {
 			ret = FALSE;
 		} else {
-			if (vkey == VK_SPACE) {
-			} else if (vkey == VK_ESCAPE) {
+			if (vkey == DVL_VK_SPACE) {
+			} else if (vkey == DVL_VK_ESCAPE) {
 				control_reset_talk();
-			} else if (vkey == VK_RETURN) {
+			} else if (vkey == DVL_VK_RETURN) {
 				control_press_enter();
-			} else if (vkey == VK_BACK) {
+			} else if (vkey == DVL_VK_BACK) {
 				len = strlen(sgszTalkMsg);
 				if (len > 0)
 					sgszTalkMsg[len - 1] = '\0';
-			} else if (vkey == VK_DOWN) {
+			} else if (vkey == DVL_VK_DOWN) {
 				control_up_down(1);
-			} else if (vkey == VK_UP) {
+			} else if (vkey == DVL_VK_UP) {
 				control_up_down(-1);
 			} else {
 				return FALSE;

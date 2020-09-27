@@ -1,3 +1,8 @@
+/**
+ * @file portal.cpp
+ *
+ * Implementation of functionality for handling town portals.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -111,7 +116,7 @@ void RemovePortalMissile(int id)
 			dFlags[missile[mi]._mix][missile[mi]._miy] &= ~BFLAG_MISSILE;
 			dMissile[missile[mi]._mix][missile[mi]._miy] = 0;
 
-			if (portal[id].level)
+			if (portal[id].level != 0)
 				AddUnLight(missile[mi]._mlid);
 
 			DeleteMissile(mi, i);

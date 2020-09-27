@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file portal.h
+ *
+ * Interface of functionality for handling town portals.
+ */
 #ifndef __PORTAL_H__
 #define __PORTAL_H__
 

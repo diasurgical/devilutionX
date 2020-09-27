@@ -2,6 +2,8 @@
 
 namespace dvl {
 
+extern int gbDifficulty;
+
 void selgame_GameSelection_Init();
 void selgame_GameSelection_Focus(int value);
 void selgame_GameSelection_Select(int value);
