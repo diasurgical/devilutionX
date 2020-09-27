@@ -434,3 +434,9 @@ exefs/main
 /out/isenseconfig/CPI-Debug
 
 /docs/html/
+
+# MPQ files
+*.mpq
+
+# ddraw wrapper configuration file
+ddraw_settings.ini

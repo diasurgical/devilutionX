@@ -1,3 +1,8 @@
+/**
+ * @file render.cpp
+ *
+ * Implementation of functionality for rendering the level tiles.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -13,6 +18,7 @@ enum {
 	RT_RTRAPEZOID
 };
 
+/** Specifies the draw masks used to render transparency of the right side of tiles. */
 static DWORD RightMask[TILE_HEIGHT] = {
 	0xEAAAAAAA, 0xF5555555,
 	0xFEAAAAAA, 0xFF555555,
@@ -31,7 +37,7 @@ static DWORD RightMask[TILE_HEIGHT] = {
 	0xFFFFFFFF, 0xFFFFFFFF,
 	0xFFFFFFFF, 0xFFFFFFFF
 };
-
+/** Specifies the draw masks used to render transparency of the left side of tiles. */
 static DWORD LeftMask[TILE_HEIGHT] = {
 	0xAAAAAAAB, 0x5555555F,
 	0xAAAAAABF, 0x555555FF,
@@ -50,7 +56,7 @@ static DWORD LeftMask[TILE_HEIGHT] = {
 	0xFFFFFFFF, 0xFFFFFFFF,
 	0xFFFFFFFF, 0xFFFFFFFF
 };
-
+/** Specifies the draw masks used to render transparency of wall tiles. */
 static DWORD WallMask[TILE_HEIGHT] = {
 	0xAAAAAAAA, 0x55555555,
 	0xAAAAAAAA, 0x55555555,

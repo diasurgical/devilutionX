@@ -73,7 +73,7 @@ void InitQTextMsg(int m)
 		questlog = FALSE;
 		qtextptr = alltext[m].txtstr;
 		qtextflag = TRUE;
-		qtexty = 500;
+		qtexty = 340 + SCREEN_Y;
 		qtextSpd = qscroll_spd_tbl[alltext[m].txtspd - 1];
 		if (qtextSpd <= 0)
 			scrolltexty = 50 / -(qtextSpd - 1);
@@ -86,7 +86,7 @@ void InitQTextMsg(int m)
 
 void DrawQTextBack()
 {
-	CelDraw(PANEL_X + 24, 487, pTextBoxCels, 1, 591);
+	CelDraw(PANEL_X + 24, SCREEN_Y + 327, pTextBoxCels, 1, 591);
 	trans_rect(PANEL_LEFT + 27, 28, 585, 297);
 }
 
@@ -163,14 +163,14 @@ void DrawQText()
 		}
 		tx = 48 + PANEL_X;
 		ty += 38;
-		if (ty > 501) {
+		if (ty > 341 + SCREEN_Y) {
 			doneflag = TRUE;
 		}
 	}
 
 	for (currTime = SDL_GetTicks(); qtextSpd + scrolltexty < currTime; qtextSpd += scrolltexty) {
 		qtexty--;
-		if (qtexty <= 209) {
+		if (qtexty <= 49 + SCREEN_Y) {
 			qtexty += 38;
 			qtextptr = pnl;
 			if (*pnl == '|') {

@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file palette.h
+ *
+ * Interface of functions for handling the engines color palette.
+ */
 #ifndef __PALETTE_H__
 #define __PALETTE_H__
 

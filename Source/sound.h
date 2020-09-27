@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file sound.h
+ *
+ * Interface of functions setting up the audio pipeline.
+ */
 #ifndef __SOUND_H__
 #define __SOUND_H__
 

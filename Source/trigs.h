@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file trigs.h
+ *
+ * Interface of functionality for triggering events when the player enters an area.
+ */
 #ifndef __TRIGS_H__
 #define __TRIGS_H__
 

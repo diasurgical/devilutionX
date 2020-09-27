@@ -38,6 +38,12 @@ static BOOL CaptureHdr(short width, short height, std::ofstream *out)
 	return !out->fail();
 }
 
+/**
+ * @brief Write the current ingame palette to the PCX file
+ * @param palette Current palette
+ * @param out File stream for the PCX file.
+ * @return True if successful, else false
+ */
 static BOOL CapturePal(SDL_Color *palette, std::ofstream *out)
 {
 	BYTE pcx_palette[1 + 256 * 3];
@@ -54,6 +60,14 @@ static BOOL CapturePal(SDL_Color *palette, std::ofstream *out)
 	return !out->fail();
 }
 
+/**
+ * @brief RLE compress the pixel data
+ * @param src Raw pixel buffer
+ * @param dst Output buffer
+ * @param width Width of pixel buffer
+
+ * @return Output buffer
+ */
 static BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
 {
 	int rleLength;
@@ -88,6 +102,14 @@ static BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
 	return dst;
 }
 
+/**
+ * @brief Write the pixel data to the PCX file
+ * @param width Image width
+ * @param height Image height
+ * @param stride Buffer width
+ * @param pixels Raw pixel buffer
+ * @return True if successful, else false
+ */
 static bool CapturePix(WORD width, WORD height, WORD stride, BYTE *pixels, std::ofstream *out)
 {
 	int writeSize;
@@ -124,7 +146,7 @@ static std::ofstream *CaptureFile(char *dst_path)
 }
 
 /**
- * @brief remove green and blue from the current palette
+ * @brief Make a red version of the given palette and apply it to the screen.
  */
 static void RedPalette()
 {
@@ -143,6 +165,10 @@ static void RedPalette()
 	RenderPresent();
 }
 
+/**
+ * @brief Save the current screen to a screen??.PCX (00-99) in file if available, then make the screen red for 200ms.
+
+ */
 void CaptureScreen()
 {
 	SDL_Color palette[256];

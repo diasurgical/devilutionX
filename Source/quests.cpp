@@ -1,3 +1,8 @@
+/**
+ * @file quests.cpp
+ *
+ * Implementation of functionality for handling quests.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -5,6 +10,7 @@ DEVILUTION_BEGIN_NAMESPACE
 int qtopline;
 BOOL questlog;
 BYTE *pQLogCel;
+/** Contains the quests of the current game. */
 QuestStruct quests[MAXQUESTS];
 int qline;
 int qlist[MAXQUESTS];
@@ -15,6 +21,7 @@ int ReturnLvlY;
 int ReturnLvlT;
 int ReturnLvl;
 
+/** Contains the data related to each quest_id. */
 QuestData questlist[MAXQUESTS] = {
 	// clang-format off
 	// _qdlvl, _qdmultlvl, _qlvlt,          _qdtype,   _qdrnd, _qslvl, _qflags, _qdmsg,         _qlstr
@@ -36,7 +43,15 @@ QuestData questlist[MAXQUESTS] = {
 	{      15,         15, DTYPE_CATHEDRAL, Q_BETRAYER,     100,      5,       1, TEXT_VILE1,    "Archbishop Lazarus"       },
 	// clang-format on
 };
+/**
+ * Specifies a delta in X-coordinates from the quest entrance for
+ * which the hover text of the cursor will be visible.
+ */
 char questxoff[7] = { 0, -1, 0, -1, -2, -1, -2 };
+/**
+ * Specifies a delta in Y-coordinates from the quest entrance for
+ * which the hover text of the cursor will be visible.
+ */
 char questyoff[7] = { 0, 0, -1, -1, -1, -2, -2 };
 char *questtrigstr[5] = {
 	"King Leoric's Tomb",
@@ -45,9 +60,29 @@ char *questtrigstr[5] = {
 	"A Dark Passage",
 	"Unholy Altar"
 };
+/**
+ * A quest group containing the three quests the Butcher,
+ * Ogden's Sign and Gharbad the Weak, which ensures that exactly
+ * two of these three quests appear in any single player game.
+ */
 int QuestGroup1[3] = { Q_BUTCHER, Q_LTBANNER, Q_GARBUD };
+/**
+ * A quest group containing the three quests Halls of the Blind,
+ * the Magic Rock and Valor, which ensures that exactly two of
+ * these three quests appear in any single player game.
+ */
 int QuestGroup2[3] = { Q_BLIND, Q_ROCK, Q_BLOOD };
+/**
+ * A quest group containing the three quests Black Mushroom,
+ * Zhar the Mad and Anvil of Fury, which ensures that exactly
+ * two of these three quests appear in any single player game.
+ */
 int QuestGroup3[3] = { Q_MUSHROOM, Q_ZHAR, Q_ANVIL };
+/**
+ * A quest group containing the two quests Lachdanan and Warlord
+ * of Blood, which ensures that exactly one of these two quests
+ * appears in any single player game.
+ */
 int QuestGroup4[2] = { Q_VEIL, Q_WARLORD };
 
 void InitQuests()
@@ -702,8 +737,8 @@ void PrintQLString(int x, int y, BOOL cjustflag, char *str, int col)
 	int len, width, i, k, sx, sy;
 	BYTE c;
 
-	sx = x + 96;
-	sy = y * 12 + 204;
+	sx = x + 32 + SCREEN_X;
+	sy = y * 12 + 44 + SCREEN_Y;
 	len = strlen(str);
 	k = 0;
 	if (cjustflag) {
@@ -715,7 +750,7 @@ void PrintQLString(int x, int y, BOOL cjustflag, char *str, int col)
 		sx += k;
 	}
 	if (qline == y) {
-		CelDraw(cjustflag ? x + k + 76 : x + 76, sy + 1, pSPentSpn2Cels, PentSpn2Frame, 12);
+		CelDraw(cjustflag ? x + k + 12 + SCREEN_X : x + 12 + SCREEN_X, sy + 1, pSPentSpn2Cels, PentSpn2Frame, 12);
 	}
 	for (i = 0; i < len; i++) {
 		c = fontframe[gbFontTransTbl[(BYTE)str[i]]];
@@ -726,7 +761,7 @@ void PrintQLString(int x, int y, BOOL cjustflag, char *str, int col)
 		sx += fontkern[c] + 1;
 	}
 	if (qline == y) {
-		CelDraw(cjustflag ? x + k + 100 : 340 - x, sy + 1, pSPentSpn2Cels, PentSpn2Frame, 12);
+		CelDraw(cjustflag ? x + k + 36 + SCREEN_X : 276 + SCREEN_X - x, sy + 1, pSPentSpn2Cels, PentSpn2Frame, 12);
 	}
 }
 

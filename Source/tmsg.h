@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file tmsg.h
+ *
+ * Interface of functionality transmitting chat messages.
+ */
 #ifndef __TMSG_H__
 #define __TMSG_H__
 

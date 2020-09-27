@@ -13,13 +13,21 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 _SNETVERSIONDATA fileinfo;
+/** True if the game is the current active window */
 int gbActive;
+/** Specifies the path to diablo.exe. */
 char diablo_exe_path[MAX_PATH];
+/** A handle to an unused MPQ archive. */
 HANDLE hellfire_mpq;
+/** Specifies the path to patch_rt.mpq. */
 char patch_rt_mpq_path[MAX_PATH];
+/** The current input handler function */
 WNDPROC CurrentProc;
-HANDLE diabdat_mpq = NULL;
+/** A handle to the diabdat.mpq archive. */
+HANDLE diabdat_mpq;
+/** Specifies the path to diabdat.mpq. */
 char diabdat_mpq_path[MAX_PATH];
+/** A handle to the patch_rt.mpq archive. */
 HANDLE patch_rt_mpq;
 
 /* data */

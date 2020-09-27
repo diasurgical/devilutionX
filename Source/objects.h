@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file objects.h
+ *
+ * Interface of object functionality, interaction, spawning, loading, etc.
+ */
 #ifndef __OBJECTS_H__
 #define __OBJECTS_H__
 

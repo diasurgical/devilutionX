@@ -1,3 +1,8 @@
+/**
+ * @file portal.cpp
+ *
+ * Implementation of functionality for handling town portals.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE

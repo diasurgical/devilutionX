@@ -15,7 +15,8 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-char gbPixelCol;  // automap pixel color 8-bit (palette entry)
+/** automap pixel color 8-bit (palette entry) */
+char gbPixelCol;
 BOOL gbRotateMap; // flip - if y < x
 int orgseed;
 /** Width of sprite being blitted */
@@ -23,6 +24,7 @@ int sgnWidth;
 /** Current game seed */
 int sglGameSeed;
 static CCritSect sgMemCrit;
+/** Number of times the current seed has been fetched */
 int SeedCount;
 BOOL gbNotInView; // valid - if x/y are in bounds
 
@@ -1078,6 +1080,7 @@ void Cl2BlitOutlineSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWi
 							dst[-1] = col;
 							dst[1] = col;
 							dst[-BUFFER_WIDTH] = col;
+							// BUGFIX: only set `if (dst+BUFFER_WIDTH < gpBufEnd)`
 							dst[BUFFER_WIDTH] = col;
 						}
 						dst++;

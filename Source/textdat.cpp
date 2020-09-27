@@ -1,3 +1,8 @@
+/**
+ * @file textdat.cpp
+ *
+ * Implementation of all dialog texts.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE

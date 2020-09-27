@@ -1,3 +1,8 @@
+/**
+ * @file trigs.cpp
+ *
+ * Implementation of functionality for triggering events when the player enters an area.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -8,19 +13,33 @@ int numtrigs;
 TriggerStruct trigs[MAXTRIGGERS];
 int TWarpFrom;
 
+/** Specifies the dungeon piece IDs which constitute stairways leading down to the cathedral from town. */
 int TownDownList[] = { 716, 715, 719, 720, 721, 723, 724, 725, 726, 727, -1 };
+/** Specifies the dungeon piece IDs which constitute stairways leading down to the catacombs from town. */
 int TownWarp1List[] = { 1171, 1172, 1173, 1174, 1175, 1176, 1177, 1178, 1179, 1181, 1183, 1185, -1 };
+/** Specifies the dungeon piece IDs which constitute stairways leading up from the cathedral. */
 int L1UpList[] = { 127, 129, 130, 131, 132, 133, 135, 137, 138, 139, 140, -1 };
+/** Specifies the dungeon piece IDs which constitute stairways leading down from the cathedral. */
 int L1DownList[] = { 106, 107, 108, 109, 110, 112, 114, 115, 118, -1 };
+/** Specifies the dungeon piece IDs which constitute stairways leading up from the catacombs. */
 int L2UpList[] = { 266, 267, -1 };
+/** Specifies the dungeon piece IDs which constitute stairways leading down from the catacombs. */
 int L2DownList[] = { 269, 270, 271, 272, -1 };
+/** Specifies the dungeon piece IDs which constitute stairways leading up to town from the catacombs. */
 int L2TWarpUpList[] = { 558, 559, -1 };
+/** Specifies the dungeon piece IDs which constitute stairways leading up from the caves. */
 int L3UpList[] = { 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, -1 };
+/** Specifies the dungeon piece IDs which constitute stairways leading down from the caves. */
 int L3DownList[] = { 162, 163, 164, 165, 166, 167, 168, 169, -1 };
+/** Specifies the dungeon piece IDs which constitute stairways leading up to town from the caves. */
 int L3TWarpUpList[] = { 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, 560, -1 };
+/** Specifies the dungeon piece IDs which constitute stairways leading up from hell. */
 int L4UpList[] = { 82, 83, 90, -1 };
+/** Specifies the dungeon piece IDs which constitute stairways leading down from hell. */
 int L4DownList[] = { 120, 130, 131, 132, 133, -1 };
+/** Specifies the dungeon piece IDs which constitute stairways leading up to town from hell. */
 int L4TWarpUpList[] = { 421, 422, 429, -1 };
+/** Specifies the dungeon piece IDs which constitute stairways leading down to Diablo from hell. */
 int L4PentaList[] = { 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383, 384, -1 };
 
 #ifndef SPAWN

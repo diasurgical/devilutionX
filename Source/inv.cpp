@@ -157,6 +157,9 @@ void InvDrawSlotBack(int X, int Y, int W, int H)
 	}
 }
 
+/**
+ * @brief Render the inventory panel to the back buffer
+ */
 void DrawInv()
 {
 	BOOL invtest[NUM_INV_GRID_ELEM];
@@ -1481,7 +1484,7 @@ void InvGetItem(int pnum, int ii)
 	if (dItem[item[ii]._ix][item[ii]._iy] != 0) {
 		if (myplr == pnum && pcurs >= CURSOR_FIRSTITEM)
 			NetSendCmdPItem(TRUE, CMD_SYNCPUTITEM, plr[myplr]._px, plr[myplr]._py);
-		item[ii]._iCreateInfo &= ~0x8000;
+		item[ii]._iCreateInfo &= ~CF_PREGEN;
 		plr[pnum].HoldItem = item[ii];
 		CheckQuestItem(pnum);
 		CheckBookLevel(pnum);
@@ -1521,7 +1524,7 @@ void AutoGetItem(int pnum, int ii)
 			return;
 	}
 
-	item[ii]._iCreateInfo &= 0x7FFF;
+	item[ii]._iCreateInfo &= ~CF_PREGEN;
 	plr[pnum].HoldItem = item[ii]; /// BUGFIX: overwrites cursor item, allowing for belt dupe bug
 	CheckQuestItem(pnum);
 	CheckBookLevel(pnum);
