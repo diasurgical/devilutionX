@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file setmaps.cpp
+ *
+ * Interface of functionality the special quest dungeons.
+ */
 #ifndef __SETMAPS_H__
 #define __SETMAPS_H__
 

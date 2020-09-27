@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file plrmsg.h
+ *
+ * Interface of functionality for printing the ingame chat messages.
+ */
 #ifndef __PLRMSG_H__
 #define __PLRMSG_H__
 

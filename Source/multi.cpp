@@ -180,7 +180,7 @@ void multi_msg_countdown()
 	int i;
 
 	for (i = 0; i < MAX_PLRS; i++) {
-		if (player_state[i] & 0x20000) {
+		if (player_state[i] & PS_TURN_ARRIVED) {
 			if (gdwMsgLenTbl[i] == 4)
 				multi_parse_turn(i, *(DWORD *)glpMsgTbl[i]);
 		}
@@ -207,7 +207,7 @@ void multi_handle_turn_upper_bit(int pnum)
 	int i;
 
 	for (i = 0; i < MAX_PLRS; i++) {
-		if (player_state[i] & 0x10000 && i != pnum)
+		if (player_state[i] & PS_CONNECTED && i != pnum)
 			break;
 	}
 
@@ -255,11 +255,11 @@ void multi_player_left_msg(int pnum, int left)
 		if (left) {
 			pszFmt = "Player '%s' just left the game";
 			switch (sgdwPlayerLeftReasonTbl[pnum]) {
-			case 0x40000004:
+			case LEAVE_ENDING:
 				pszFmt = "Player '%s' killed Diablo and left the game!";
 				gbSomebodyWonGameKludge = TRUE;
 				break;
-			case 0x40000006:
+			case LEAVE_DROP:
 				pszFmt = "Player '%s' dropped due to timeout";
 				break;
 			}
@@ -362,11 +362,11 @@ void multi_begin_timeout()
 	bGroupCount = 0;
 	for (i = 0; i < MAX_PLRS; i++) {
 		nState = player_state[i];
-		if (nState & 0x10000) {
+		if (nState & PS_CONNECTED) {
 			if (nLowestPlayer == -1) {
 				nLowestPlayer = i;
 			}
-			if (nState & 0x40000) {
+			if (nState & PS_ACTIVE) {
 				bGroupPlayers++;
 				if (nLowestActive == -1) {
 					nLowestActive = i;
@@ -399,8 +399,8 @@ void multi_check_drop_player()
 	int i;
 
 	for (i = 0; i < MAX_PLRS; i++) {
-		if (!(player_state[i] & 0x40000) && player_state[i] & 0x10000) {
-			SNetDropPlayer(i, 0x40000006);
+		if (!(player_state[i] & PS_ACTIVE) && player_state[i] & PS_CONNECTED) {
+			SNetDropPlayer(i, LEAVE_DROP);
 		}
 	}
 }
@@ -602,25 +602,26 @@ void multi_event_handler(BOOL add)
 void multi_handle_events(_SNETEVENT *pEvt)
 {
 	DWORD LeftReason;
-	DWORD *data;
+	_gamedata *gameData;
 
 	switch (pEvt->eventid) {
 	case EVENT_TYPE_PLAYER_CREATE_GAME:
-		data = (DWORD *)pEvt->data;
-		sgGameInitInfo.dwSeed = data[0];
-		sgGameInitInfo.bDiff = data[1];
+		gameData = (_gamedata *)pEvt->data;
+		sgGameInitInfo.dwSeed = gameData->dwSeed;
+		sgGameInitInfo.bDiff = gameData->bDiff;
 		sgbPlayerTurnBitTbl[pEvt->playerid] = TRUE;
 		break;
 	case EVENT_TYPE_PLAYER_LEAVE_GAME:
 		sgbPlayerLeftGameTbl[pEvt->playerid] = TRUE;
 		sgbPlayerTurnBitTbl[pEvt->playerid] = FALSE;
+
 		LeftReason = 0;
-		data = (DWORD *)pEvt->data;
-		if (data && (DWORD)pEvt->databytes >= 4)
-			LeftReason = data[0];
+		if (pEvt->data && pEvt->databytes >= sizeof(DWORD))
+			LeftReason = *(DWORD *)pEvt->data;
 		sgdwPlayerLeftReasonTbl[pEvt->playerid] = LeftReason;
-		if (LeftReason == 0x40000004)
+		if (LeftReason == LEAVE_ENDING)
 			gbSomebodyWonGameKludge = TRUE;
+
 		sgbSendDeltaTbl[pEvt->playerid] = FALSE;
 		dthread_remove_player(pEvt->playerid);
 
@@ -803,7 +804,7 @@ BOOL multi_init_single(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info
 	}
 
 	unused = 0;
-	if (!SNetCreateGame("local", "local", "local", 0, (char *)&sgGameInitInfo.dwSeed, 8, 1, "local", "local", &unused)) {
+	if (!SNetCreateGame("local", "local", "local", 0, (char *)&sgGameInitInfo, sizeof(sgGameInitInfo), 1, "local", "local", &unused)) {
 		app_fatal("SNetCreateGame1:\n%s", TraceLastError());
 	}
 
@@ -928,7 +929,7 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv)
 			plr[pnum]._pgfxnum = 0;
 			LoadPlrGFX(pnum, PFILE_DEATH);
 			plr[pnum]._pmode = PM_DEATH;
-			NewPlrAnim(pnum, plr[pnum]._pDAnim[0], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
+			NewPlrAnim(pnum, plr[pnum]._pDAnim[DIR_S], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
 			plr[pnum]._pAnimFrame = plr[pnum]._pAnimLen - 1;
 			plr[pnum]._pVar8 = 2 * plr[pnum]._pAnimLen;
 			dFlags[plr[pnum]._px][plr[pnum]._py] |= BFLAG_DEAD_PLAYER;

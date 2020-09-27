@@ -1,3 +1,8 @@
+/**
+ * @file plrmsg.cpp
+ *
+ * Implementation of functionality for rendering the dungeons, monsters and calling other render routines.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE

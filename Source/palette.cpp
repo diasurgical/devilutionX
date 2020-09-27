@@ -1,3 +1,8 @@
+/**
+ * @file palette.cpp
+ *
+ * Implementation of functions for handling the engines color palette.
+ */
 #include "all.h"
 #include "../SourceX/display.h"
 #include "../3rdParty/Storm/Source/storm.h"
@@ -10,8 +15,11 @@ SDL_Color orig_palette[256];
 
 /* data */
 
+/** Specifies the gamma correction level. */
 int gamma_correction = 100;
+/** Specifies whether colour cycling is enabled. */
 BOOL color_cycling_enabled = TRUE;
+/** Specifies whether the palette has max brightness. */
 BOOLEAN sgbFadedIn = TRUE;
 
 void palette_update()

@@ -1,3 +1,8 @@
+/**
+ * @file objects.cpp
+ *
+ * Implementation of object functionality, interaction, spawning, loading, etc.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -7,6 +12,7 @@ int trapdir;
 BYTE *pObjCels[40];
 char ObjFileList[40];
 int objectactive[MAXOBJECTS];
+/** Specifies the number of active objects. */
 int nobjects;
 int leverid;
 int objectavail[MAXOBJECTS];
@@ -14,8 +20,11 @@ ObjectStruct object[MAXOBJECTS];
 BOOL InitObjFlag;
 int numobjfiles;
 
+/** Specifies the X-coordinate delta between barrels. */
 int bxadd[8] = { -1, 0, 1, -1, 1, -1, 0, 1 };
+/** Specifies the Y-coordinate delta between barrels. */
 int byadd[8] = { -1, -1, -1, 0, 0, 1, 1, 1 };
+/** Maps from shrine_id to shrine name. */
 char *shrinestrs[NUM_SHRINETYPE] = {
 	"Mysterious",
 	"Hidden",
@@ -44,22 +53,30 @@ char *shrinestrs[NUM_SHRINETYPE] = {
 	"Glimmering",
 	"Tainted"
 };
+/** Specifies the minimum dungeon level on which each shrine will appear. */
 char shrinemin[NUM_SHRINETYPE] = {
 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 	1, 1, 1, 1, 1, 1
 };
+/** Specifies the maximum dungeon level on which each shrine will appear. */
 char shrinemax[NUM_SHRINETYPE] = {
 	16, 16, 16, 16, 16, 16, 16, 8, 16, 16,
 	16, 16, 16, 16, 16, 16, 16, 16, 16, 16,
 	16, 16, 16, 16, 16, 16
 };
-/** 0 - sp+mp, 1 - sp only, 2 - mp only */
+/**
+ * Specifies the game type for which each shrine may appear.
+ * 0 - sp & mp
+ * 1 - sp only
+ * 2 - mp only
+ */
 BYTE shrineavail[NUM_SHRINETYPE] = {
 	0, 0, 1, 1, 0, 0, 0, 0, 1, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 2, 0,
 	0, 0, 0, 0, 0, 2
 };
+/** Maps from book_id to book name. */
 char *StoryBookName[9] = {
 	"The Great Conflict",
 	"The Wages of Sin are War",
@@ -71,6 +88,7 @@ char *StoryBookName[9] = {
 	"Tale of the Three",
 	"The Black King"
 };
+/** Specifies the speech IDs of each dungeon type narrator book, for each player class. */
 int StoryText[3][3] = {
 	{ TEXT_BOOK11, TEXT_BOOK12, TEXT_BOOK13 },
 	{ TEXT_BOOK21, TEXT_BOOK22, TEXT_BOOK23 },
@@ -529,7 +547,7 @@ void AddChestTraps()
 			if (dObject[i][j] > 0) {
 				oi = dObject[i][j] - 1;
 				if (object[oi]._otype >= OBJ_CHEST1 && object[oi]._otype <= OBJ_CHEST3 && !object[oi]._oTrapFlag && random_(0, 100) < 10) {
-					object[oi]._otype += OBJ_BOOKCASER;
+					object[oi]._otype += OBJ_TCHEST1 - OBJ_CHEST1;
 					object[oi]._oTrapFlag = TRUE;
 					if (leveltype == DTYPE_CATACOMBS) {
 						object[oi]._oVar4 = random_(0, 2);
@@ -4097,9 +4115,9 @@ void BreakBarrel(int pnum, int i, int dam, BOOL forcebreak, BOOL sendmsg)
 		for (yp = object[i]._oy - 1; yp <= object[i]._oy + 1; yp++) {
 			for (xp = object[i]._ox - 1; xp <= object[i]._ox + 1; xp++) {
 				if (dMonster[xp][yp] > 0)
-					MonsterTrapHit(dMonster[xp][yp] - 1, 1, 4, 0, 1, FALSE);
+					MonsterTrapHit(dMonster[xp][yp] - 1, 1, 4, 0, MIS_FIREBOLT, FALSE);
 				if (dPlayer[xp][yp] > 0)
-					PlayerMHit(dPlayer[xp][yp] - 1, -1, 0, 8, 16, 1, FALSE, 0);
+					PlayerMHit(dPlayer[xp][yp] - 1, -1, 0, 8, 16, MIS_FIREBOLT, FALSE, 0);
 				if (dObject[xp][yp] > 0) {
 					oi = dObject[xp][yp] - 1;
 					if (object[oi]._otype == OBJ_BARRELEX && object[oi]._oBreak != -1)

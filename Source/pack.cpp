@@ -1,3 +1,8 @@
+/**
+ * @file pack.cpp
+ *
+ * Implementation of functions for minifying player data structure.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE

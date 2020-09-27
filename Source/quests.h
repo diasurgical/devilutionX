@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file quests.cpp
+ *
+ * Interface of functionality for handling quests.
+ */
 #ifndef __QUESTS_H__
 #define __QUESTS_H__
 

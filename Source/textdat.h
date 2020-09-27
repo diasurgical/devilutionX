@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file textdat.h
+ *
+ * Interface of all dialog texts.
+ */
 #ifndef __TEXTDAT_H__
 #define __TEXTDAT_H__
 

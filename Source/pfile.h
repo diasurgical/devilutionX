@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file pfile.h
+ *
+ * Interface of the save game encoding functionality.
+ */
 #ifndef __PFILE_H__
 #define __PFILE_H__
 

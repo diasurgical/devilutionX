@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file sha.cpp
+ *
+ * Interface of functionality for calculating X-SHA-1 (a flawed implementation of SHA-1).
+ */
 #ifndef __SHA_H__
 #define __SHA_H__
 

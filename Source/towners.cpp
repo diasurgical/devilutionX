@@ -1,3 +1,8 @@
+/**
+ * @file towners.cpp
+ *
+ * Implementation of functionality for loading and spawning towners.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -13,6 +18,13 @@ BYTE *pCowCels;
 TownerStruct towner[NUM_TOWNERS];
 
 #ifndef SPAWN
+/**
+ * Maps from active cow sound effect index and player class to sound
+ * effect ID for interacting with cows in Tristram.
+ *
+ * ref: enum _sfx_id
+ * ref: enum plr_class
+ */
 const int snSFX[3][NUM_CLASSES] = {
 	{ PS_WARR52, PS_ROGUE52, PS_MAGE52 },
 	{ PS_WARR49, PS_ROGUE49, PS_MAGE49 },
@@ -21,7 +33,7 @@ const int snSFX[3][NUM_CLASSES] = {
 #endif
 
 /* data */
-
+/** Specifies the animation frame sequence of a given NPC. */
 char AnimOrder[6][148] = {
 	{ 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
 	    14, 13, 12, 11, 10, 9, 8, 7, 6, 5,
@@ -88,11 +100,23 @@ char AnimOrder[6][148] = {
 	    1, 2, 1, 19, 18, 19, 1, 2, 1, 2,
 	    3, -1 }
 };
+/** Specifies the start X-coordinates of the cows in Tristram. */
 int TownCowX[] = { 58, 56, 59 };
+/** Specifies the start Y-coordinates of the cows in Tristram. */
 int TownCowY[] = { 16, 14, 20 };
+/** Specifies the start directions of the cows in Tristram. */
 int TownCowDir[] = { DIR_SW, DIR_NW, DIR_N };
+/** Maps from direction to X-coordinate delta, which is used when
+ * placing cows in Tristram. A single cow may require space of up
+ * to three tiles when being placed on the map.
+ */
 int cowoffx[8] = { -1, 0, -1, -1, -1, 0, -1, -1 };
+/** Maps from direction to Y-coordinate delta, which is used when
+ * placing cows in Tristram. A single cow may require space of up
+ * to three tiles when being placed on the map.
+ */
 int cowoffy[8] = { -1, -1, -1, 0, -1, -1, -1, 0 };
+/** Contains the data related to quest gossip for each towner ID. */
 QuestTalkData Qtalklist[] = {
 	// clang-format off
 	// _qinfra,      _qblkm,       _qgarb,      _qzhar,      _qveil,      _qmod,       _qbutch,      _qbol,         _qblind,      _qblood,      _qanvil,      _qwarlrd,      _qking,       _qpw,           _qbone,      _qvb
@@ -109,6 +133,7 @@ QuestTalkData Qtalklist[] = {
 	{ TEXT_KING1,   TEXT_KING1,  TEXT_KING1, TEXT_KING1, TEXT_KING1, TEXT_KING1, TEXT_KING1,  TEXT_KING1,   TEXT_KING1,  TEXT_KING1,  TEXT_KING1,  TEXT_KING1,   TEXT_KING1,  TEXT_KING1,    TEXT_KING1, TEXT_KING1  }
 	// clang-format on
 };
+/** Specifies the active sound effect ID for interacting with cows. */
 int CowPlaying = -1;
 
 int GetActiveTowner(int t)
@@ -176,6 +201,10 @@ void InitQstSnds(int i)
 	}
 }
 
+/**
+ * @brief Load Griswold into the game
+
+ */
 void InitSmith()
 {
 	int i;

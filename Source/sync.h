@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file sync.h
+ *
+ * Interface of functionality for syncing game state with other players.
+ */
 #ifndef __SYNC_H__
 #define __SYNC_H__
 

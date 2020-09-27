@@ -1788,16 +1788,16 @@ void DrawSpellBook()
 
 	spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
 
-	yp = 215;
+	yp = 55 + SCREEN_Y;
 	for (i = 1; i < 8; i++) {
 		sn = SpellPages[sbooktab][i - 1];
 		if (sn != -1 && spl & (__int64)1 << (sn - 1)) {
 			st = GetSBookTrans(sn, TRUE);
 			SetSpellTrans(st);
-			DrawSpellCel(RIGHT_PANEL + 75, yp, pSBkIconCels, SpellITbl[sn], 37);
+			DrawSpellCel(RIGHT_PANEL_X + 11, yp, pSBkIconCels, SpellITbl[sn], 37);
 			if (sn == plr[myplr]._pRSpell && st == plr[myplr]._pRSplType) {
 				SetSpellTrans(RSPLTYPE_SKILL);
-				DrawSpellCel(RIGHT_PANEL + 75, yp, pSBkIconCels, SPLICONLAST, 37);
+				DrawSpellCel(RIGHT_PANEL_X + 11, yp, pSBkIconCels, SPLICONLAST, 37);
 			}
 			PrintSBookStr(10, yp - 23, FALSE, spelldata[sn].sNameText, COL_WHITE);
 			switch (GetSBookTrans(sn, FALSE)) {
@@ -2078,7 +2078,7 @@ char *control_print_talk_msg(char *msg, int *x, int y, int color)
 
 		c = fontframe[gbFontTransTbl[(BYTE)*msg]];
 		width += fontkern[c] + 1;
-		if (width > 514 + PANEL_LEFT)
+		if (width > 450 + PANEL_X)
 			return msg;
 		msg++;
 		if (c != 0) {
@@ -2121,7 +2121,7 @@ void control_release_talk_btn()
 	if (talkflag) {
 		for (i = 0; i < sizeof(talkbtndown) / sizeof(talkbtndown[0]); i++)
 			talkbtndown[i] = FALSE;
-		if (MouseX >= 172 + PANEL_LEFT && MouseY >= 421 + PANEL_LEFT && MouseX <= -119 + PANEL_TOP && MouseY <= 123 + PANEL_TOP) {
+		if (MouseX >= 172 + PANEL_LEFT && MouseY >= 69 + PANEL_TOP && MouseX <= 233 + PANEL_LEFT && MouseY <= 123 + PANEL_TOP) {
 			off = (MouseY - (69 + PANEL_TOP)) / 18;
 
 			for (p = 0; p < MAX_PLRS && off != -1; p++) {

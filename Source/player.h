@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file player.h
+ *
+ * Interface of player functionality, leveling, actions, creation, loading, etc.
+ */
 #ifndef __PLAYER_H__
 #define __PLAYER_H__
 
