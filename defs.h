@@ -108,8 +108,8 @@
 #define PAL16_RED		224
 #define PAL16_GRAY		240
 
-#define SCREEN_WIDTH	640
-#define SCREEN_HEIGHT	480
+#define SCREEN_WIDTH	dvl::screenWidth
+#define SCREEN_HEIGHT	dvl::screenHeight
 
 // If defined, use 32-bit colors instead of 8-bit [Default -> Undefined]
 //#define RGBMODE
@@ -122,7 +122,7 @@
 
 #define BORDER_LEFT		64
 #define BORDER_TOP		160
-#define BORDER_RIGHT	64
+#define BORDER_RIGHT	dvl::borderRight
 #define BORDER_BOTTOM	16
 
 #define SCREEN_X		BORDER_LEFT
@@ -150,11 +150,7 @@
 #define RIGHT_PANEL		(SCREEN_WIDTH - SPANEL_WIDTH)
 #define RIGHT_PANEL_X	(SCREEN_X + RIGHT_PANEL)
 
-#if SCREEN_WIDTH <= PANEL_WIDTH
-#define VIEWPORT_HEIGHT	(SCREEN_HEIGHT - PANEL_HEIGHT)
-#else
-#define VIEWPORT_HEIGHT	SCREEN_HEIGHT
-#endif
+#define VIEWPORT_HEIGHT dvl::viewportHeight
 
 #define DIALOG_TOP		((SCREEN_HEIGHT - PANEL_HEIGHT) / 2 - 18)
 #define DIALOG_Y		(SCREEN_Y + DIALOG_TOP)

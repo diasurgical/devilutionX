@@ -21,7 +21,7 @@ extern unsigned int pal_surface_palette_version;
 #ifdef USE_SDL1
 void SetVideoMode(int width, int height, int bpp, uint32_t flags);
 bool IsFullScreen();
-void SetVideoModeToPrimary(bool fullscreen = IsFullScreen());
+void SetVideoModeToPrimary(bool fullscreen, int width, int height);
 #endif
 
 // Returns:
