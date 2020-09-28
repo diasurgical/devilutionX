@@ -311,9 +311,9 @@ void gamemenu_get_speed()
 		sgOptionsMenu[3].dwFlags &= ~(GMENU_ENABLED | GMENU_SLIDER);
 		if (ticks_per_sec >= 50)
 			sgOptionsMenu[3].pszStr = "Speed: Fastest";
-		if (ticks_per_sec >= 40)
+		else if (ticks_per_sec >= 40)
 			sgOptionsMenu[3].pszStr = "Speed: Faster";
-		if (ticks_per_sec >= 30)
+		else if (ticks_per_sec >= 30)
 			sgOptionsMenu[3].pszStr = "Speed: Fast";
 		else if (ticks_per_sec == 20)
 			sgOptionsMenu[3].pszStr = "Speed: Normal";

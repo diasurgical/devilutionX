@@ -324,8 +324,8 @@ void selgame_Speed_Focus(int value)
 		strncpy(selgame_Description, "Faster Speed\nMost monsters of the dungeon will seek you out quicker than ever before. Only an experienced champion should try their luck at this speed.", sizeof(selgame_Description) - 1);
 		break;
 	case 3:
-		strncpy(selgame_Label, "Faster", sizeof(selgame_Label) - 1);
-		strncpy(selgame_Description, "Fastest Speed\nThe minions of the underworld will rush to attack with out hesitation. Only a true speed deamon should enter at this pace.", sizeof(selgame_Description) - 1);
+		strncpy(selgame_Label, "Fastest", sizeof(selgame_Label) - 1);
+		strncpy(selgame_Description, "Fastest Speed\nThe minions of the underworld will rush to attack without hesitation. Only a true speed demon should enter at this pace.", sizeof(selgame_Description) - 1);
 		break;
 	}
 	WordWrapArtStr(selgame_Description, DESCRIPTION_WIDTH);
