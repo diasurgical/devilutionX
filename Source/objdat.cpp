@@ -5,6 +5,7 @@
  */
 #include "all.h"
 
+
 DEVILUTION_BEGIN_NAMESPACE
 
 /** Maps from dun_object_id to object_id. */
@@ -168,7 +169,7 @@ ObjDataStruct AllObjects[] = {
 	{      3, OFILE_BANNER,    0,       0, 0,               THEME_SKELROOM,          -1,                 0,          2,        0,         96, TRUE,       TRUE,      TRUE,            0,        0, FALSE     },
 	{      3, OFILE_BANNER,    0,       0, 0,               THEME_SKELROOM,          -1,                 0,          1,        0,         96, TRUE,       TRUE,      TRUE,            0,        0, FALSE     },
 	{      3, OFILE_BANNER,    0,       0, 0,               THEME_SKELROOM,          -1,                 0,          3,        0,         96, TRUE,       TRUE,      TRUE,            0,        0, FALSE     },
-	{      2, OFILE_SKULPILE,  1,       4, 0,               THEME_NONE,              -1,                 0,          0,        1,         96, TRUE,       TRUE,      TRUE,            0,        0, FALSE     },
+	{      2, OFILE_SKULPILE,  1,       4, 0,               THEME_NONE,              -1,                 0,          1,        1,         96, TRUE,       TRUE,      TRUE,            0,        0, FALSE     },
 	{      2, OFILE_L1BRAZ,    0,       0, 0,               THEME_NONE,              -1,                 0,          0,        0,          0, FALSE,      FALSE,     FALSE,           0,        0, FALSE     },
 	{      2, OFILE_L1BRAZ,    0,       0, 0,               THEME_NONE,              -1,                 0,          0,        0,          0, FALSE,      FALSE,     FALSE,           0,        0, FALSE     },
 	{      2, OFILE_L1BRAZ,    0,       0, 0,               THEME_NONE,              -1,                 0,          0,        0,          0, FALSE,      FALSE,     FALSE,           0,        0, FALSE     },
