@@ -1724,7 +1724,7 @@ int DrawDurIcon4Item(ItemStruct *pItem, int x, int c)
 	if (pItem->_iDurability > 2)
 		c += 8;
 	CelDraw(x, -17 + PANEL_Y, pDurIcons, c, 32);
-	return x - 32 + 8;
+	return x - 32 - 8;
 }
 
 void RedBack()
