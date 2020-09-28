@@ -688,7 +688,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 	sx = icursW28;
 	sy = icursH28;
 	done = FALSE;
-	for (r = 0; r < sizeof(InvRect) / sizeof(InvRect[0]) && !done; r++) {
+	for (r = 0; (DWORD)r < NUM_XY_SLOTS && !done; r++) {
 		if (i >= InvRect[r].X && i < InvRect[r].X + INV_SLOT_SIZE_PX) {
 			if (j >= InvRect[r].Y - INV_SLOT_SIZE_PX - 1 && j < InvRect[r].Y) {
 				done = TRUE;
@@ -1740,7 +1740,7 @@ BOOL TryInvPut()
 {
 	int dir;
 
-	if (numitems >= 127)
+	if (numitems >= MAXITEMS)
 		return FALSE;
 
 	dir = GetDirection(plr[myplr]._px, plr[myplr]._py, cursmx, cursmy);
@@ -1780,7 +1780,7 @@ int InvPutItem(int pnum, int x, int y)
 	int xx, yy;
 	int xp, yp;
 
-	if (numitems >= 127)
+	if (numitems >= MAXITEMS)
 		return -1;
 
 	if (FindGetItem(plr[pnum].HoldItem.IDidx, plr[pnum].HoldItem._iCreateInfo, plr[pnum].HoldItem._iSeed) != -1) {
@@ -1849,7 +1849,7 @@ int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, in
 	int xx, yy;
 	int xp, yp;
 
-	if (numitems >= 127)
+	if (numitems >= MAXITEMS)
 		return -1;
 
 	if (FindGetItem(idx, icreateinfo, iseed) != -1) {
@@ -1926,7 +1926,7 @@ char CheckInvHLight()
 	PlayerStruct *p;
 	char rv;
 
-	for (r = 0; (DWORD)r < 73; r++) {
+	for (r = 0; (DWORD)r < NUM_XY_SLOTS; r++) {
 		if (MouseX >= InvRect[r].X
 		    && MouseX < InvRect[r].X + 29
 		    && MouseY >= InvRect[r].Y - 29
@@ -1935,7 +1935,7 @@ char CheckInvHLight()
 		}
 	}
 
-	if ((DWORD)r >= 73)
+	if ((DWORD)r >= NUM_XY_SLOTS)
 		return -1;
 
 	rv = -1;

@@ -95,11 +95,11 @@ void DrawPlrMsg()
 	_plrmsg *pMsg;
 
 	if (chrflag || questlog) {
-		x = 330 + SCREEN_X;
-		width -= 300;
+		x += SPANEL_WIDTH;
+		width -= SPANEL_WIDTH;
 	}
 	if (invflag || sbookflag)
-		width -= 300;
+		width -= SPANEL_WIDTH;
 
 	if (width < 300)
 		return;

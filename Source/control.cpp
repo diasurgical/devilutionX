@@ -1669,18 +1669,20 @@ void ReleaseChrBtns()
 void DrawDurIcon()
 {
 	PlayerStruct *p;
-	int x1, x2, x3, x4;
+	int x;
 
-	if (!chrflag && !questlog || !invflag && !sbookflag) {
-		x1 = 272 + RIGHT_PANEL_X;
-		if (invflag || sbookflag)
-			x1 = 272 + PANEL_X;
-		p = &plr[myplr];
-		x2 = DrawDurIcon4Item(&p->InvBody[INVLOC_HEAD], x1, 4);
-		x3 = DrawDurIcon4Item(&p->InvBody[INVLOC_CHEST], x2, 3);
-		x4 = DrawDurIcon4Item(&p->InvBody[INVLOC_HAND_LEFT], x3, 0);
-		DrawDurIcon4Item(&p->InvBody[INVLOC_HAND_RIGHT], x4, 0);
-	}
+	if ((chrflag || questlog) && (invflag || sbookflag))
+		return;
+
+	x = PANEL_X + PANEL_WIDTH - 32 - 16;
+	if (invflag || sbookflag)
+		x -= SPANEL_WIDTH;
+
+	p = &plr[myplr];
+	x = DrawDurIcon4Item(&p->InvBody[INVLOC_HEAD], x, 4);
+	x = DrawDurIcon4Item(&p->InvBody[INVLOC_CHEST], x, 3);
+	x = DrawDurIcon4Item(&p->InvBody[INVLOC_HAND_LEFT], x, 0);
+	DrawDurIcon4Item(&p->InvBody[INVLOC_HAND_RIGHT], x, 0);
 }
 
 int DrawDurIcon4Item(ItemStruct *pItem, int x, int c)
@@ -1715,7 +1717,7 @@ int DrawDurIcon4Item(ItemStruct *pItem, int x, int c)
 	if (pItem->_iDurability > 2)
 		c += 8;
 	CelDraw(x, -17 + PANEL_Y, pDurIcons, c, 32);
-	return x - 40;
+	return x - 32 + 8;
 }
 
 void RedBack()
@@ -1842,7 +1844,7 @@ void PrintSBookStr(int x, int y, BOOL cjustflag, char *pszStr, char col)
 	char *tmp;
 	int screen_x, line, sx;
 
-	sx = x + RIGHT_PANEL + 120;
+	sx = x + RIGHT_PANEL_X + SPLICONLENGTH;
 	line = 0;
 	if (cjustflag) {
 		screen_x = 0;
@@ -2072,7 +2074,8 @@ char *control_print_talk_msg(char *msg, int *x, int y, int color)
 	BYTE c;
 	int width;
 
-	*x += 264;
+	*x += 200 + SCREEN_X;
+	y += 22 + PANEL_Y;
 	width = *x;
 	while (*msg) {
 
@@ -2082,7 +2085,7 @@ char *control_print_talk_msg(char *msg, int *x, int y, int color)
 			return msg;
 		msg++;
 		if (c != 0) {
-			PrintChar(*x, y + 22 + PANEL_Y, c, color);
+			PrintChar(*x, y, c, color);
 		}
 		*x += fontkern[c] + 1;
 	}
