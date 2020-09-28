@@ -81,7 +81,7 @@ void InitStores()
 void PentSpn2Spin()
 {
 	DWORD ticks = SDL_GetTicks();
-	if (ticks - PentSpn2Tick > tick_delay) {
+	if (ticks - PentSpn2Tick > 50) {
 		PentSpn2Frame = (PentSpn2Frame & 7) + 1;
 		PentSpn2Tick = ticks;
 	}
