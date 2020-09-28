@@ -104,9 +104,6 @@ void DrawPlrMsg()
 	if (width < 300)
 		return;
 
-	if (width > SCREEN_WIDTH - 20)
-		width = SCREEN_WIDTH - 20;
-
 	pMsg = plr_msgs;
 	for (i = 0; i < 8; i++) {
 		if (pMsg->str[0])
