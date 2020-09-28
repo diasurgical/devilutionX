@@ -786,6 +786,10 @@ bool HandleMouseEventArtTextButton(const SDL_Event &event, const UiArtTextButton
 	return true;
 }
 
+#ifdef USE_SDL1
+int dbClickTimer;
+#endif
+
 bool HandleMouseEventList(const SDL_Event &event, UiList *ui_list)
 {
 	if (event.type != SDL_MOUSEBUTTONDOWN || event.button.button != SDL_BUTTON_LEFT)
@@ -796,12 +800,17 @@ bool HandleMouseEventList(const SDL_Event &event, UiList *ui_list)
 	if (gfnListFocus != NULL && SelectedItem != list_item->m_value) {
 		UiFocus(list_item->m_value);
 #ifdef USE_SDL1
-	} else if (gfnListFocus == NULL) {
+		dbClickTimer = SDL_GetTicks();
+	} else if (gfnListFocus == NULL || dbClickTimer + 500 >= SDL_GetTicks()) {
 #else
 	} else if (gfnListFocus == NULL || event.button.clicks >= 2) {
 #endif
 		SelectedItem = list_item->m_value;
 		UiFocusNavigationSelect();
+#ifdef USE_SDL1
+	} else {
+		dbClickTimer = SDL_GetTicks();
+#endif
 	}
 
 	return true;
