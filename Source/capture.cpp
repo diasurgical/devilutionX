@@ -199,7 +199,7 @@ void CaptureScreen()
 		SDL_Log("Screenshot saved at %s", FileName);
 	}
 	SDL_Delay(300);
-	for (int i = 0; i < 255; i++) {
+	for (int i = 0; i < 256; i++) {
 		system_palette[i] = palette[i];
 	}
 	palette_update();

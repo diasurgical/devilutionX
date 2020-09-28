@@ -39,11 +39,9 @@ void ApplyGamma(SDL_Color *dst, const SDL_Color *src, int n)
 	g = gamma_correction / 100.0;
 
 	for (i = 0; i < n; i++) {
-		dst->r = pow(src->r / 256.0, g) * 256.0;
-		dst->g = pow(src->g / 256.0, g) * 256.0;
-		dst->b = pow(src->b / 256.0, g) * 256.0;
-		dst++;
-		src++;
+		dst[i].r = pow(src[i].r / 256.0, g) * 256.0;
+		dst[i].g = pow(src[i].g / 256.0, g) * 256.0;
+		dst[i].b = pow(src[i].b / 256.0, g) * 256.0;
 	}
 	force_redraw = 255;
 }
@@ -158,7 +156,7 @@ void SetFadeLevel(DWORD fadeval)
 {
 	int i;
 
-	for (i = 0; i < 255; i++) {
+	for (i = 0; i < 256; i++) {
 		system_palette[i].r = (fadeval * logical_palette[i].r) >> 8;
 		system_palette[i].g = (fadeval * logical_palette[i].g) >> 8;
 		system_palette[i].b = (fadeval * logical_palette[i].b) >> 8;
