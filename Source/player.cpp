@@ -422,7 +422,7 @@ void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width)
 	plr[pnum]._pAnimData = Peq;
 	plr[pnum]._pAnimLen = numFrames;
 	plr[pnum]._pAnimFrame = 1;
-	plr[pnum]._pAnimCnt = 0;
+	plr[pnum]._pAnimCnt = -1;
 	plr[pnum]._pAnimDelay = Delay;
 	plr[pnum]._pAnimWidth = width;
 	plr[pnum]._pAnimWidth2 = (width - 64) >> 1;
