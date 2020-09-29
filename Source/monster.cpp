@@ -1116,7 +1116,7 @@ void NewMonsterAnim(int i, AnimStruct *anim, int md)
 	MonsterStruct *Monst = monster + i;
 	Monst->_mAnimData = anim->Data[md];
 	Monst->_mAnimLen = anim->Frames;
-	Monst->_mAnimCnt = 0;
+	Monst->_mAnimCnt = -2;
 	Monst->_mAnimFrame = 1;
 	Monst->_mAnimDelay = anim->Rate;
 	Monst->_mFlags &= ~(MFLAG_LOCK_ANIMATION | MFLAG_ALLOW_SPECIAL);
