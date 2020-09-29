@@ -65,7 +65,7 @@ BYTE SkelChamTrans3[] = {
 char *quest_level_names[] = {
 	"",
 	"Skeleton King's Lair",
-	"Bone Chamber",
+	"Chamber of Bone",
 	"Maze",
 	"Poisoned Water Supply",
 	"Archbishop Lazarus' Lair",
