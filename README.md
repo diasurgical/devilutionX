@@ -349,8 +349,10 @@ Battle.net is a service provided by Blizzard. We are not associated with them, s
 [From the beginning until release](docs/CHANGELOG.md)
 
 # Legal
-DevilutionX is released to the Public Domain. The documentation and functionality provided by Devilution may only be utilized with assets provided by ownership of Diablo.
+DevilutionX is released to the Public Domain. The documentation and functionality provided by DevilutionX may only be utilized with assets provided by ownership of Diablo.
+
+The source code in this repository is for non-commerical use only. If you use the source code you may not charge others for access to it or any derivative work thereof.
 
 Diablo® - Copyright © 1996 Blizzard Entertainment, Inc. All rights reserved. Diablo and Blizzard Entertainment are trademarks or registered trademarks of Blizzard Entertainment, Inc. in the U.S. and/or other countries.
 
-Devilution and any of its maintainers are in no way associated with or endorsed by Blizzard Entertainment®.
+DevilutionX and any of its maintainers are in no way associated with or endorsed by Blizzard Entertainment®.
