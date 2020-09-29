@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file town.h
+ *
+ * Interface of functionality for rendering the town, towners and calling other render routines.
+ */
 #ifndef __TOWN_H__
 #define __TOWN_H__
 

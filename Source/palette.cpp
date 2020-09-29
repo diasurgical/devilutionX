@@ -1,3 +1,8 @@
+/**
+ * @file palette.cpp
+ *
+ * Implementation of functions for handling the engines color palette.
+ */
 #include "all.h"
 #include "../SourceX/display.h"
 #include "../3rdParty/Storm/Source/storm.h"
@@ -10,8 +15,11 @@ SDL_Color orig_palette[256];
 
 /* data */
 
+/** Specifies the gamma correction level. */
 int gamma_correction = 100;
+/** Specifies whether colour cycling is enabled. */
 BOOL color_cycling_enabled = TRUE;
+/** Specifies whether the palette has max brightness. */
 BOOLEAN sgbFadedIn = TRUE;
 
 void palette_update()
@@ -31,11 +39,9 @@ void ApplyGamma(SDL_Color *dst, const SDL_Color *src, int n)
 	g = gamma_correction / 100.0;
 
 	for (i = 0; i < n; i++) {
-		dst->r = pow(src->r / 256.0, g) * 256.0;
-		dst->g = pow(src->g / 256.0, g) * 256.0;
-		dst->b = pow(src->b / 256.0, g) * 256.0;
-		dst++;
-		src++;
+		dst[i].r = pow(src[i].r / 256.0, g) * 256.0;
+		dst[i].g = pow(src[i].g / 256.0, g) * 256.0;
+		dst[i].b = pow(src[i].b / 256.0, g) * 256.0;
 	}
 	force_redraw = 255;
 }
@@ -150,7 +156,7 @@ void SetFadeLevel(DWORD fadeval)
 {
 	int i;
 
-	for (i = 0; i < 255; i++) {
+	for (i = 0; i < 256; i++) {
 		system_palette[i].r = (fadeval * logical_palette[i].r) >> 8;
 		system_palette[i].g = (fadeval * logical_palette[i].g) >> 8;
 		system_palette[i].b = (fadeval * logical_palette[i].b) >> 8;

@@ -20,7 +20,7 @@ extern int HelpTop;
 
 void InitHelp();
 void DrawHelp();
-void DrawHelpLine(int always_0, int help_line_nr, char *text, char color);
+void DrawHelpLine(int x, int y, char *text, char color);
 void DisplayHelp();
 void HelpScrollUp();
 void HelpScrollDown();

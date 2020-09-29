@@ -7,17 +7,27 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+/** Represents a tile ID map of twice the size, repeating each tile of the original map in blocks of 4. */
 BYTE L5dungeon[80][80];
 BYTE L5dflags[DMAXX][DMAXY];
+/** Specifies whether a single player quest DUN has been loaded. */
 BOOL L5setloadflag;
+/** Specifies whether to generate a horizontal room at position 1 in the Cathedral. */
 int HR1;
+/** Specifies whether to generate a horizontal room at position 2 in the Cathedral. */
 int HR2;
+/** Specifies whether to generate a horizontal room at position 3 in the Cathedral. */
 int HR3;
+/** Specifies whether to generate a vertical room at position 1 in the Cathedral. */
 int VR1;
+/** Specifies whether to generate a vertical room at position 2 in the Cathedral. */
 int VR2;
+/** Specifies whether to generate a vertical room at position 3 in the Cathedral. */
 int VR3;
+/** Contains the contents of the single player quest DUN file. */
 BYTE *L5pSetPiece;
 
+/** Contains shadows for 2x2 blocks of base tile IDs in the Cathedral. */
 const ShadowStruct SPATS[37] = {
 	// clang-format off
 	// strig, s1, s2, s3, nv1, nv2, nv3
@@ -62,6 +72,7 @@ const ShadowStruct SPATS[37] = {
 };
 
 // BUGFIX: This array should contain an additional 0 (207 elements).
+/** Maps tile IDs to their corresponding base tile ID. */
 const BYTE BSTYPES[] = {
 	0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
 	10, 11, 12, 13, 14, 15, 16, 17, 0, 0,
@@ -86,7 +97,8 @@ const BYTE BSTYPES[] = {
 	0, 0, 0, 0, 0, 0, 0
 };
 
-// BUGFIX: This array should contain an additional 0 (207 elements).
+// BUGFIX: This array should contain an additional 0 (207 elements) (fixed).
+/** Maps tile IDs to their corresponding undecorated tile ID. */
 const BYTE L5BTYPES[] = {
 	0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
 	10, 11, 12, 13, 14, 15, 16, 17, 0, 0,
@@ -110,13 +122,91 @@ const BYTE L5BTYPES[] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0
 };
-const BYTE STAIRSUP[] = { 4, 4, 13, 13, 13, 13, 2, 2, 2, 2, 13, 13, 13, 13, 13, 13, 13, 13, 0, 66, 6, 0, 63, 64, 65, 0, 0, 67, 68, 0, 0, 0, 0, 0 };
-const BYTE L5STAIRSUP[] = { 4, 4, 22, 22, 22, 22, 2, 2, 2, 2, 13, 13, 13, 13, 13, 13, 13, 13, 0, 66, 23, 0, 63, 64, 65, 0, 0, 67, 68, 0, 0, 0, 0, 0 };
-const BYTE STAIRSDOWN[] = { 4, 3, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 62, 57, 58, 0, 61, 59, 60, 0, 0, 0, 0, 0 };
-const BYTE LAMPS[] = { 2, 2, 13, 0, 13, 13, 129, 0, 130, 128 };
-const BYTE PWATERIN[] = { 6, 6, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 0, 0, 0, 0, 0, 0, 0, 202, 200, 200, 84, 0, 0, 199, 203, 203, 83, 0, 0, 85, 206, 80, 81, 0, 0, 0, 134, 135, 0, 0, 0, 0, 0, 0, 0, 0 };
+/** Miniset: stairs up on a corner wall. */
+const BYTE STAIRSUP[] = {
+	// clang-format off
+	4, 4, // width, height
+
+	13, 13, 13, 13, // search
+	 2,  2,  2,  2,
+	13, 13, 13, 13,
+	13, 13, 13, 13,
+
+	 0, 66,  6,  0, // replace
+	63, 64, 65,  0,
+	 0, 67, 68,  0,
+	 0,  0,  0,  0,
+	// clang-format on
+};
+/** Miniset: stairs up. */
+const BYTE L5STAIRSUP[] = {
+	// clang-format off
+	4, 4, // width, height
+
+	22, 22, 22, 22, // search
+	 2,  2,  2,  2,
+	13, 13, 13, 13,
+	13, 13, 13, 13,
+
+	 0, 66, 23,  0, // replace
+	63, 64, 65,  0,
+	 0, 67, 68,  0,
+	 0,  0,  0,  0,
+	// clang-format on
+};
+/** Miniset: stairs down. */
+const BYTE STAIRSDOWN[] = {
+	// clang-format off
+	4, 3, // width, height
+
+	13, 13, 13, 13, // search
+	13, 13, 13, 13,
+	13, 13, 13, 13,
+
+	62, 57, 58,  0, // replace
+	61, 59, 60,  0,
+	 0,  0,  0,  0,
+	// clang-format on
+};
+/** Miniset: candlestick. */
+const BYTE LAMPS[] = {
+	// clang-format off
+	2, 2, // width, height
+
+	13,  0, // search
+	13, 13,
+
+	129,   0, // replace
+	130, 128,
+	// clang-format on
+};
+/** Miniset: Poisoned Water Supply entrance. */
+const BYTE PWATERIN[] = {
+	// clang-format off
+	6, 6, // width, height
+
+	13, 13, 13, 13, 13, 13, // search
+	13, 13, 13, 13, 13, 13,
+	13, 13, 13, 13, 13, 13,
+	13, 13, 13, 13, 13, 13,
+	13, 13, 13, 13, 13, 13,
+	13, 13, 13, 13, 13, 13,
+
+	 0,   0,   0,   0,   0, 0, // replace
+	 0, 202, 200, 200,  84, 0,
+	 0, 199, 203, 203,  83, 0,
+	 0,  85, 206,  80,  81, 0,
+	 0,   0, 134, 135,   0, 0,
+	 0,   0,   0,   0,   0, 0,
+	// clang-format on
+};
 
 /* data */
+
+/**
+ * A lookup table for the 16 possible patterns of a 2x2 area,
+ * where each cell either contains a SW wall or it doesn't.
+ */
 BYTE L5ConvTbl[16] = { 22, 13, 1, 13, 2, 13, 13, 13, 4, 13, 1, 13, 2, 13, 16, 13 };
 
 static void DRLG_PlaceDoor(int x, int y)
@@ -1637,20 +1727,20 @@ static void DRLG_L5(int entry)
 
 		if (QuestStatus(Q_PWATER)) {
 			if (entry == 0) {
-				if (DRLG_PlaceMiniSet(PWATERIN, 1, 1, 0, 0, 1, -1, 0) < 0)
+				if (DRLG_PlaceMiniSet(PWATERIN, 1, 1, 0, 0, TRUE, -1, 0) < 0)
 					doneflag = FALSE;
 			} else {
-				if (DRLG_PlaceMiniSet(PWATERIN, 1, 1, 0, 0, 0, -1, 0) < 0)
+				if (DRLG_PlaceMiniSet(PWATERIN, 1, 1, 0, 0, FALSE, -1, 0) < 0)
 					doneflag = FALSE;
 				ViewY--;
 			}
 		}
 		if (QuestStatus(Q_LTBANNER)) {
 			if (entry == 0) {
-				if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, 1, -1, 0) < 0)
+				if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, TRUE, -1, 0) < 0)
 					doneflag = FALSE;
 			} else {
-				if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, 0, -1, 0) < 0)
+				if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, FALSE, -1, 0) < 0)
 					doneflag = FALSE;
 				if (entry == 1) {
 					ViewX = 2 * setpc_x + 20;
@@ -1660,14 +1750,14 @@ static void DRLG_L5(int entry)
 				}
 			}
 		} else if (entry == 0) {
-			if (DRLG_PlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, 1, -1, 0) < 0)
+			if (DRLG_PlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, TRUE, -1, 0) < 0)
 				doneflag = FALSE;
-			else if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, 0, -1, 1) < 0)
+			else if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
 				doneflag = FALSE;
 		} else {
-			if (DRLG_PlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, 0, -1, 0) < 0)
+			if (DRLG_PlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, FALSE, -1, 0) < 0)
 				doneflag = FALSE;
-			else if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, 1, -1, 1) < 0)
+			else if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, TRUE, -1, 1) < 0)
 				doneflag = FALSE;
 			ViewY--;
 		}
@@ -1697,7 +1787,7 @@ static void DRLG_L5(int entry)
 
 	DRLG_L5Subs();
 	DRLG_L1Shadows();
-	DRLG_PlaceMiniSet(LAMPS, 5, 10, 0, 0, 0, -1, 4);
+	DRLG_PlaceMiniSet(LAMPS, 5, 10, 0, 0, FALSE, -1, 4);
 	DRLG_L1Floor();
 
 	for (j = 0; j < DMAXY; j++) {

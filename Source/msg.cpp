@@ -1137,7 +1137,7 @@ DWORD ParseCmd(int pnum, TCmd *pCmd)
 	}
 
 	if (pCmd->bCmd < CMD_DLEVEL_0 || pCmd->bCmd > CMD_DLEVEL_END) {
-		SNetDropPlayer(pnum, 0x40000006);
+		SNetDropPlayer(pnum, LEAVE_DROP);
 		return 0;
 	}
 
@@ -2364,7 +2364,7 @@ DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 					plr[pnum]._pgfxnum = 0;
 					LoadPlrGFX(pnum, PFILE_DEATH);
 					plr[pnum]._pmode = PM_DEATH;
-					NewPlrAnim(pnum, plr[pnum]._pDAnim[0], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
+					NewPlrAnim(pnum, plr[pnum]._pDAnim[DIR_S], plr[pnum]._pDFrames, 1, plr[pnum]._pDWidth);
 					plr[pnum]._pAnimFrame = plr[pnum]._pAnimLen - 1;
 					plr[pnum]._pVar8 = plr[pnum]._pAnimLen << 1;
 					dFlags[plr[pnum]._px][plr[pnum]._py] |= BFLAG_DEAD_PLAYER;

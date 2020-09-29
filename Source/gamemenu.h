@@ -36,6 +36,9 @@ void gamemenu_gamma(BOOL bActivate);
 int gamemenu_slider_gamma();
 void gamemenu_color_cycling(BOOL bActivate);
 
+void gamemenu_get_speed();
+void gamemenu_speed(BOOL bActivate);
+
 /* rdata */
 extern char *music_toggle_names[];
 extern char *sound_toggle_names[];

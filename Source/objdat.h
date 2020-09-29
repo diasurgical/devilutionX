@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file objdat.h
+ *
+ * Interface of all object data.
+ */
 #ifndef __OBJDAT_H__
 #define __OBJDAT_H__
 

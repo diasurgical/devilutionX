@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file stores.h
+ *
+ * Interface of functionality for stores and towner dialogs.
+ */
 #ifndef __STORES_H__
 #define __STORES_H__
 

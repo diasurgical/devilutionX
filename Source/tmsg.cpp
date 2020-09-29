@@ -1,3 +1,8 @@
+/**
+ * @file tmsg.cpp
+ *
+ * Implementation of functionality transmitting chat messages.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE

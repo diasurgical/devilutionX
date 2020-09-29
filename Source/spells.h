@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file spells.h
+ *
+ * Interface of functionality for casting player spells.
+ */
 #ifndef __SPELLS_H__
 #define __SPELLS_H__
 

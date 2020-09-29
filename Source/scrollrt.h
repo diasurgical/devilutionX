@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file scrollrt.h
+ *
+ * Interface of functionality for rendering the dungeons, monsters and calling other render routines.
+ */
 #ifndef __SCROLLRT_H__
 #define __SCROLLRT_H__
 

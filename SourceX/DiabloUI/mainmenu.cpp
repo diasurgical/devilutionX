@@ -44,9 +44,9 @@ void mainmenu_Load(char *name, void (*fnSound)(char *file))
 	UiAddBackground(&vecMainMenuDialog);
 	UiAddLogo(&vecMainMenuDialog);
 
-	vecMainMenuDialog.push_back(new UiList(vecMenuItems, PANEL_LEFT + 64, 192, 510, 43, UIS_HUGE | UIS_GOLD | UIS_CENTER));
+	vecMainMenuDialog.push_back(new UiList(vecMenuItems, PANEL_LEFT + 64, (UI_OFFSET_Y + 192), 510, 43, UIS_HUGE | UIS_GOLD | UIS_CENTER));
 
-	SDL_Rect rect = { 17, 444, 605, 21 };
+	SDL_Rect rect = { 17, (SCREEN_HEIGHT - 36), 605, 21 };
 	vecMainMenuDialog.push_back(new UiArtText(name, rect, UIS_SMALL));
 
 	if (!gbSpawned) {

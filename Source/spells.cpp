@@ -1,3 +1,8 @@
+/**
+ * @file spells.cpp
+ *
+ * Implementation of functionality for casting player spells.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE

@@ -27,119 +27,1502 @@ int Dir_Xadd[5] = { 0, 0, 1, 0, -1 };
 int Dir_Yadd[5] = { 0, -1, 0, 1, 0 };
 ShadowStruct SPATSL2[2] = { { 6, 3, 0, 3, 48, 0, 50 }, { 9, 3, 0, 3, 48, 0, 50 } };
 //short word_48489A = 0;
+
 BYTE BTYPESL2[161] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0, 0, 0, 0, 0, 0, 17, 18, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 2, 2, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 BYTE BSTYPESL2[161] = { 0, 1, 2, 3, 0, 0, 6, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 6, 6, 6, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 2, 2, 2, 0, 0, 0, 1, 1, 1, 1, 6, 2, 2, 2, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 2, 2, 3, 3, 3, 3, 1, 1, 2, 2, 3, 3, 3, 3, 1, 1, 3, 3, 2, 2, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-BYTE VARCH1[] = { 2, 4, 3, 0, 3, 1, 3, 4, 0, 7, 48, 0, 51, 39, 47, 44, 0, 0 };
-BYTE VARCH2[] = { 2, 4, 3, 0, 3, 1, 3, 4, 0, 8, 48, 0, 51, 39, 47, 44, 0, 0 };
-BYTE VARCH3[] = { 2, 4, 3, 0, 3, 1, 3, 4, 0, 6, 48, 0, 51, 39, 47, 44, 0, 0 };
-BYTE VARCH4[] = { 2, 4, 3, 0, 3, 1, 3, 4, 0, 9, 48, 0, 51, 39, 47, 44, 0, 0 };
-BYTE VARCH5[] = { 2, 4, 3, 0, 3, 1, 3, 4, 0, 14, 48, 0, 51, 39, 47, 44, 0, 0 };
-BYTE VARCH6[] = { 2, 4, 3, 0, 3, 1, 3, 4, 0, 13, 48, 0, 51, 39, 47, 44, 0, 0 };
-BYTE VARCH7[] = { 2, 4, 3, 0, 3, 1, 3, 4, 0, 16, 48, 0, 51, 39, 47, 44, 0, 0 };
-BYTE VARCH8[] = { 2, 4, 3, 0, 3, 1, 3, 4, 0, 15, 48, 0, 51, 39, 47, 44, 0, 0 };
-BYTE VARCH9[] = { 2, 4, 3, 0, 3, 8, 3, 4, 0, 7, 48, 0, 51, 42, 47, 44, 0, 0 };
-BYTE VARCH10[] = { 2, 4, 3, 0, 3, 8, 3, 4, 0, 8, 48, 0, 51, 42, 47, 44, 0, 0 };
-BYTE VARCH11[] = { 2, 4, 3, 0, 3, 8, 3, 4, 0, 6, 48, 0, 51, 42, 47, 44, 0, 0 };
-BYTE VARCH12[] = { 2, 4, 3, 0, 3, 8, 3, 4, 0, 9, 48, 0, 51, 42, 47, 44, 0, 0 };
-BYTE VARCH13[] = { 2, 4, 3, 0, 3, 8, 3, 4, 0, 14, 48, 0, 51, 42, 47, 44, 0, 0 };
-BYTE VARCH14[] = { 2, 4, 3, 0, 3, 8, 3, 4, 0, 13, 48, 0, 51, 42, 47, 44, 0, 0 };
-BYTE VARCH15[] = { 2, 4, 3, 0, 3, 8, 3, 4, 0, 16, 48, 0, 51, 42, 47, 44, 0, 0 };
-BYTE VARCH16[] = { 2, 4, 3, 0, 3, 8, 3, 4, 0, 15, 48, 0, 51, 42, 47, 44, 0, 0 };
-BYTE VARCH17[] = { 2, 3, 2, 7, 3, 4, 0, 7, 141, 39, 47, 44, 0, 0 };
-BYTE VARCH18[] = { 2, 3, 2, 7, 3, 4, 0, 8, 141, 39, 47, 44, 0, 0 };
-BYTE VARCH19[] = { 2, 3, 2, 7, 3, 4, 0, 6, 141, 39, 47, 44, 0, 0 };
-BYTE VARCH20[] = { 2, 3, 2, 7, 3, 4, 0, 9, 141, 39, 47, 44, 0, 0 };
-BYTE VARCH21[] = { 2, 3, 2, 7, 3, 4, 0, 14, 141, 39, 47, 44, 0, 0 };
-BYTE VARCH22[] = { 2, 3, 2, 7, 3, 4, 0, 13, 141, 39, 47, 44, 0, 0 };
-BYTE VARCH23[] = { 2, 3, 2, 7, 3, 4, 0, 16, 141, 39, 47, 44, 0, 0 };
-BYTE VARCH24[] = { 2, 3, 2, 7, 3, 4, 0, 15, 141, 39, 47, 44, 0, 0 };
-BYTE VARCH25[] = { 2, 4, 3, 0, 3, 4, 3, 1, 0, 7, 48, 0, 51, 39, 47, 44, 0, 0 };
-BYTE VARCH26[] = { 2, 4, 3, 0, 3, 4, 3, 1, 0, 8, 48, 0, 51, 39, 47, 44, 0, 0 };
-BYTE VARCH27[] = { 2, 4, 3, 0, 3, 4, 3, 1, 0, 6, 48, 0, 51, 39, 47, 44, 0, 0 };
-BYTE VARCH28[] = { 2, 4, 3, 0, 3, 4, 3, 1, 0, 9, 48, 0, 51, 39, 47, 44, 0, 0 };
-BYTE VARCH29[] = { 2, 4, 3, 0, 3, 4, 3, 1, 0, 14, 48, 0, 51, 39, 47, 44, 0, 0 };
-BYTE VARCH30[] = { 2, 4, 3, 0, 3, 4, 3, 1, 0, 13, 48, 0, 51, 39, 47, 44, 0, 0 };
-BYTE VARCH31[] = { 2, 4, 3, 0, 3, 4, 3, 1, 0, 16, 48, 0, 51, 39, 47, 44, 0, 0 };
-BYTE VARCH32[] = { 2, 4, 3, 0, 3, 4, 3, 1, 0, 15, 48, 0, 51, 39, 47, 44, 0, 0 };
-BYTE VARCH33[] = { 2, 4, 2, 0, 3, 8, 3, 4, 0, 7, 142, 0, 51, 42, 47, 44, 0, 0 };
-BYTE VARCH34[] = { 2, 4, 2, 0, 3, 8, 3, 4, 0, 8, 142, 0, 51, 42, 47, 44, 0, 0 };
-BYTE VARCH35[] = { 2, 4, 2, 0, 3, 8, 3, 4, 0, 6, 142, 0, 51, 42, 47, 44, 0, 0 };
-BYTE VARCH36[] = { 2, 4, 2, 0, 3, 8, 3, 4, 0, 9, 142, 0, 51, 42, 47, 44, 0, 0 };
-BYTE VARCH37[] = { 2, 4, 2, 0, 3, 8, 3, 4, 0, 14, 142, 0, 51, 42, 47, 44, 0, 0 };
-BYTE VARCH38[] = { 2, 4, 2, 0, 3, 8, 3, 4, 0, 13, 142, 0, 51, 42, 47, 44, 0, 0 };
-BYTE VARCH39[] = { 2, 4, 2, 0, 3, 8, 3, 4, 0, 16, 142, 0, 51, 42, 47, 44, 0, 0 };
-BYTE VARCH40[] = { 2, 4, 2, 0, 3, 8, 3, 4, 0, 15, 142, 0, 51, 42, 47, 44, 0, 0 };
-BYTE HARCH1[] = { 3, 2, 3, 3, 0, 2, 5, 9, 49, 46, 0, 40, 45, 0 };
-BYTE HARCH2[] = { 3, 2, 3, 3, 0, 2, 5, 6, 49, 46, 0, 40, 45, 0 };
-BYTE HARCH3[] = { 3, 2, 3, 3, 0, 2, 5, 8, 49, 46, 0, 40, 45, 0 };
-BYTE HARCH4[] = { 3, 2, 3, 3, 0, 2, 5, 7, 49, 46, 0, 40, 45, 0 };
-BYTE HARCH5[] = { 3, 2, 3, 3, 0, 2, 5, 15, 49, 46, 0, 40, 45, 0 };
-BYTE HARCH6[] = { 3, 2, 3, 3, 0, 2, 5, 16, 49, 46, 0, 40, 45, 0 };
-BYTE HARCH7[] = { 3, 2, 3, 3, 0, 2, 5, 13, 49, 46, 0, 40, 45, 0 };
-BYTE HARCH8[] = { 3, 2, 3, 3, 0, 2, 5, 14, 49, 46, 0, 40, 45, 0 };
-BYTE HARCH9[] = { 3, 2, 3, 3, 0, 8, 5, 9, 49, 46, 0, 43, 45, 0 };
-BYTE HARCH10[] = { 3, 2, 3, 3, 0, 8, 5, 6, 49, 46, 0, 43, 45, 0 };
-BYTE HARCH11[] = { 3, 2, 3, 3, 0, 8, 5, 8, 49, 46, 0, 43, 45, 0 };
-BYTE HARCH12[] = { 3, 2, 3, 3, 0, 8, 5, 7, 49, 46, 0, 43, 45, 0 };
-BYTE HARCH13[] = { 3, 2, 3, 3, 0, 8, 5, 15, 49, 46, 0, 43, 45, 0 };
-BYTE HARCH14[] = { 3, 2, 3, 3, 0, 8, 5, 16, 49, 46, 0, 43, 45, 0 };
-BYTE HARCH15[] = { 3, 2, 3, 3, 0, 8, 5, 13, 49, 46, 0, 43, 45, 0 };
-BYTE HARCH16[] = { 3, 2, 3, 3, 0, 8, 5, 14, 49, 46, 0, 43, 45, 0 };
-BYTE HARCH17[] = { 3, 2, 1, 3, 0, 8, 5, 9, 140, 46, 0, 43, 45, 0 };
-BYTE HARCH18[] = { 3, 2, 1, 3, 0, 8, 5, 6, 140, 46, 0, 43, 45, 0 };
-BYTE HARCH19[] = { 3, 2, 1, 3, 0, 8, 5, 8, 140, 46, 0, 43, 45, 0 };
-BYTE HARCH20[] = { 3, 2, 1, 3, 0, 8, 5, 7, 140, 46, 0, 43, 45, 0 };
-BYTE HARCH21[] = { 3, 2, 1, 3, 0, 8, 5, 15, 140, 46, 0, 43, 45, 0 };
-BYTE HARCH22[] = { 3, 2, 1, 3, 0, 8, 5, 16, 140, 46, 0, 43, 45, 0 };
-BYTE HARCH23[] = { 3, 2, 1, 3, 0, 8, 5, 13, 140, 46, 0, 43, 45, 0 };
-BYTE HARCH24[] = { 3, 2, 1, 3, 0, 8, 5, 14, 140, 46, 0, 43, 45, 0 };
-BYTE HARCH25[] = { 3, 2, 3, 3, 0, 5, 2, 9, 49, 46, 0, 40, 45, 0 };
-BYTE HARCH26[] = { 3, 2, 3, 3, 0, 5, 2, 6, 49, 46, 0, 40, 45, 0 };
-BYTE HARCH27[] = { 3, 2, 3, 3, 0, 5, 2, 8, 49, 46, 0, 40, 45, 0 };
-BYTE HARCH28[] = { 3, 2, 3, 3, 0, 5, 2, 7, 49, 46, 0, 40, 45, 0 };
-BYTE HARCH29[] = { 3, 2, 3, 3, 0, 5, 2, 15, 49, 46, 0, 40, 45, 0 };
-BYTE HARCH30[] = { 3, 2, 3, 3, 0, 5, 2, 16, 49, 46, 0, 40, 45, 0 };
-BYTE HARCH31[] = { 3, 2, 3, 3, 0, 5, 2, 13, 49, 46, 0, 40, 45, 0 };
-BYTE HARCH32[] = { 3, 2, 3, 3, 0, 5, 2, 14, 49, 46, 0, 40, 45, 0 };
-BYTE HARCH33[] = { 3, 2, 1, 3, 0, 9, 5, 9, 140, 46, 0, 40, 45, 0 };
-BYTE HARCH34[] = { 3, 2, 1, 3, 0, 9, 5, 6, 140, 46, 0, 40, 45, 0 };
-BYTE HARCH35[] = { 3, 2, 1, 3, 0, 9, 5, 8, 140, 46, 0, 40, 45, 0 };
-BYTE HARCH36[] = { 3, 2, 1, 3, 0, 9, 5, 7, 140, 46, 0, 40, 45, 0 };
-BYTE HARCH37[] = { 3, 2, 1, 3, 0, 9, 5, 15, 140, 46, 0, 40, 45, 0 };
-BYTE HARCH38[] = { 3, 2, 1, 3, 0, 9, 5, 16, 140, 46, 0, 40, 45, 0 };
-BYTE HARCH39[] = { 3, 2, 1, 3, 0, 9, 5, 13, 140, 46, 0, 40, 45, 0 };
-BYTE HARCH40[] = { 3, 2, 1, 3, 0, 9, 5, 14, 140, 46, 0, 40, 45, 0 };
-BYTE USTAIRS[] = { 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 72, 77, 0, 0, 76, 0, 0, 0, 0, 0, 0 };
-BYTE DSTAIRS[] = { 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 48, 71, 0, 0, 50, 78, 0, 0, 0, 0, 0 };
-BYTE WARPSTAIRS[] = { 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 158, 160, 0, 0, 159, 0, 0, 0, 0, 0, 0 };
-BYTE CRUSHCOL[] = { 3, 3, 3, 1, 3, 2, 6, 3, 3, 3, 3, 0, 0, 0, 0, 83, 0, 0, 0, 0 };
-BYTE BIG1[] = { 2, 2, 3, 3, 3, 3, 113, 0, 112, 0 };
-BYTE BIG2[] = { 2, 2, 3, 3, 3, 3, 114, 115, 0, 0 };
-BYTE BIG3[] = { 1, 2, 1, 1, 117, 116 };
-BYTE BIG4[] = { 2, 1, 2, 2, 118, 119 };
-BYTE BIG5[] = { 2, 2, 3, 3, 3, 3, 120, 122, 121, 123 };
-BYTE BIG6[] = { 1, 2, 1, 1, 125, 124 };
-BYTE BIG7[] = { 2, 1, 2, 2, 126, 127 };
-BYTE BIG8[] = { 2, 2, 3, 3, 3, 3, 128, 130, 129, 131 };
-BYTE BIG9[] = { 2, 2, 1, 3, 1, 3, 133, 135, 132, 134 };
-BYTE BIG10[] = { 2, 2, 2, 2, 3, 3, 136, 137, 3, 3 };
-BYTE RUINS1[] = { 1, 1, 1, 80 };
-BYTE RUINS2[] = { 1, 1, 1, 81 };
-BYTE RUINS3[] = { 1, 1, 1, 82 };
-BYTE RUINS4[] = { 1, 1, 2, 84 };
-BYTE RUINS5[] = { 1, 1, 2, 85 };
-BYTE RUINS6[] = { 1, 1, 2, 86 };
-BYTE RUINS7[] = { 1, 1, 8, 87 };
-BYTE PANCREAS1[] = { 5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 108, 0, 0, 0, 0, 0, 0, 0 };
-BYTE PANCREAS2[] = { 5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 110, 0, 0, 0, 0, 0, 0, 0 };
-BYTE CTRDOOR1[] = { 3, 3, 3, 1, 3, 0, 4, 0, 0, 9, 0, 0, 4, 0, 0, 1, 0, 0, 0, 0 };
-BYTE CTRDOOR2[] = { 3, 3, 3, 1, 3, 0, 4, 0, 0, 8, 0, 0, 4, 0, 0, 1, 0, 0, 0, 0 };
-BYTE CTRDOOR3[] = { 3, 3, 3, 1, 3, 0, 4, 0, 0, 6, 0, 0, 4, 0, 0, 1, 0, 0, 0, 0 };
-BYTE CTRDOOR4[] = { 3, 3, 3, 1, 3, 0, 4, 0, 0, 7, 0, 0, 4, 0, 0, 1, 0, 0, 0, 0 };
-BYTE CTRDOOR5[] = { 3, 3, 3, 1, 3, 0, 4, 0, 0, 15, 0, 0, 4, 0, 0, 1, 0, 0, 0, 0 };
-BYTE CTRDOOR6[] = { 3, 3, 3, 1, 3, 0, 4, 0, 0, 13, 0, 0, 4, 0, 0, 1, 0, 0, 0, 0 };
-BYTE CTRDOOR7[] = { 3, 3, 3, 1, 3, 0, 4, 0, 0, 16, 0, 0, 4, 0, 0, 1, 0, 0, 0, 0 };
-BYTE CTRDOOR8[] = { 3, 3, 3, 1, 3, 0, 4, 0, 0, 14, 0, 0, 4, 0, 0, 1, 0, 0, 0, 0 };
+
+/** Miniset: Arch vertical. */
+BYTE VARCH1[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	3, 0, // search
+	3, 1,
+	3, 4,
+	0, 7,
+
+	48,  0, // replace
+	51, 39,
+	47, 44,
+	 0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical. */
+BYTE VARCH2[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	3, 0, // search
+	3, 1,
+	3, 4,
+	0, 8,
+
+	48,  0, // replace
+	51, 39,
+	47, 44,
+	 0,  0,
+	// clang-format on
+ };
+/** Miniset: Arch vertical. */
+BYTE VARCH3[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	3, 0, // search
+	3, 1,
+	3, 4,
+	0, 6,
+
+	48,  0, // replace
+	51, 39,
+	47, 44,
+	 0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical. */
+BYTE VARCH4[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	3, 0, // search
+	3, 1,
+	3, 4,
+	0, 9,
+
+	48,  0, // replace
+	51, 39,
+	47, 44,
+	 0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical. */
+BYTE VARCH5[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	3, 0, // search
+	3, 1,
+	3, 4,
+	0, 14,
+
+	48,  0, // replace
+	51, 39,
+	47, 44,
+	 0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical. */
+BYTE VARCH6[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	3, 0, // search
+	3, 1,
+	3, 4,
+	0, 13,
+
+	48,  0, // replace
+	51, 39,
+	47, 44,
+	 0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical. */
+BYTE VARCH7[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	3, 0, // search
+	3, 1,
+	3, 4,
+	0, 16,
+
+	48,  0, // replace
+	51, 39,
+	47, 44,
+	 0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical. */
+BYTE VARCH8[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	3, 0, // search
+	3, 1,
+	3, 4,
+	0, 15,
+
+	48,  0, // replace
+	51, 39,
+	47, 44,
+	 0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical - corner. */
+BYTE VARCH9[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	3, 0, // search
+	3, 8,
+	3, 4,
+	0, 7,
+
+	48,  0, // replace
+	51, 42,
+	47, 44,
+	 0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical - corner. */
+BYTE VARCH10[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	3, 0, // search
+	3, 8,
+	3, 4,
+	0, 8,
+
+	48,  0, // replace
+	51, 42,
+	47, 44,
+	 0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical - corner. */
+BYTE VARCH11[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	3, 0, // search
+	3, 8,
+	3, 4,
+	0, 6,
+
+	48,  0, // replace
+	51, 42,
+	47, 44,
+	 0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical - corner. */
+BYTE VARCH12[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	3, 0, // search
+	3, 8,
+	3, 4,
+	0, 9,
+
+	48,  0, // replace
+	51, 42,
+	47, 44,
+	 0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical - corner. */
+BYTE VARCH13[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	3,  0, // search
+	3,  8,
+	3,  4,
+	0, 14,
+
+	48,  0, // replace
+	51, 42,
+	47, 44,
+	 0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical - corner. */
+BYTE VARCH14[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	3,  0, // search
+	3,  8,
+	3,  4,
+	0, 13,
+
+	48,  0, // replace
+	51, 42,
+	47, 44,
+	 0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical - corner. */
+BYTE VARCH15[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	3,  0, // search
+	3,  8,
+	3,  4,
+	0, 16,
+
+	48,  0, // replace
+	51, 42,
+	47, 44,
+	 0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical - corner. */
+BYTE VARCH16[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	3,  0, // search
+	3,  8,
+	3,  4,
+	0, 15,
+
+	48,  0, // replace
+	51, 42,
+	47, 44,
+	 0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical - open wall. */
+BYTE VARCH17[] = {
+	// clang-format off
+	2, 3, // width, height
+
+	2, 7, // search
+	3, 4,
+	0, 7,
+
+	141, 39, // replace
+	 47, 44,
+	  0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical - open wall. */
+BYTE VARCH18[] = {
+	// clang-format off
+	2, 3, // width, height
+
+	2, 7, // search
+	3, 4,
+	0, 8,
+
+	141, 39, // replace
+	 47, 44,
+	  0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical - open wall. */
+BYTE VARCH19[] = {
+	// clang-format off
+	2, 3, // width, height
+
+	2, 7, // search
+	3, 4,
+	0, 6,
+
+	141, 39, // replace
+	 47, 44,
+	  0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical - open wall. */
+BYTE VARCH20[] = {
+	// clang-format off
+	2, 3, // width, height
+
+	2, 7, // search
+	3, 4,
+	0, 9,
+
+	141, 39, // replace
+	 47, 44,
+	  0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical - open wall. */
+BYTE VARCH21[] = {
+	// clang-format off
+	2, 3, // width, height
+
+	2,  7, // search
+	3,  4,
+	0, 14,
+
+	141, 39, // replace
+	 47, 44,
+	  0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical - open wall. */
+BYTE VARCH22[] = {
+	2, 3, // width, height
+
+	2,  7, // search
+	3,  4,
+	0, 13,
+
+	141, 39, // replace
+	 47, 44,
+	  0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical - open wall. */
+BYTE VARCH23[] = {
+	// clang-format off
+	2, 3, // width, height
+
+	2,  7, // search
+	3,  4,
+	0, 16,
+
+	141, 39, // replace
+	 47, 44,
+	  0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical - open wall. */
+BYTE VARCH24[] = {
+	// clang-format off
+	2, 3, // width, height
+
+	2,  7, // search
+	3,  4,
+	0, 15,
+
+	141, 39, // replace
+	 47, 44,
+	  0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical. */
+BYTE VARCH25[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	3, 0, // search
+	3, 4,
+	3, 1,
+	0, 7,
+
+	48,  0, // replace
+	51, 39,
+	47, 44,
+	 0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical. */
+BYTE VARCH26[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	3, 0, // search
+	3, 4,
+	3, 1,
+	0, 8,
+
+	48,  0, // replace
+	51, 39,
+	47, 44,
+	 0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical. */
+BYTE VARCH27[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	3, 0, // search
+	3, 4,
+	3, 1,
+	0, 6,
+
+	48,  0, // replace
+	51, 39,
+	47, 44,
+	 0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical. */
+BYTE VARCH28[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	3, 0, // search
+	3, 4,
+	3, 1,
+	0, 9,
+
+	48,  0, // replace
+	51, 39,
+	47, 44,
+	 0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical. */
+BYTE VARCH29[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	3,  0, // search
+	3,  4,
+	3,  1,
+	0, 14,
+
+	48,  0, // replace
+	51, 39,
+	47, 44,
+	 0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical. */
+BYTE VARCH30[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	3,  0, // search
+	3,  4,
+	3,  1,
+	0, 13,
+
+	48,  0, // replace
+	51, 39,
+	47, 44,
+	 0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical. */
+BYTE VARCH31[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	3,  0, // search
+	3,  4,
+	3,  1,
+	0, 16,
+
+	48,  0, // replace
+	51, 39,
+	47, 44,
+	 0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical. */
+BYTE VARCH32[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	3,  0, // search
+	3,  4,
+	3,  1,
+	0, 15,
+
+	48,  0, // replace
+	51, 39,
+	47, 44,
+	 0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical - room west entrance. */
+BYTE VARCH33[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	2, 0, // search
+	3, 8,
+	3, 4,
+	0, 7,
+
+	142,  0, // replace
+	 51, 42,
+	 47, 44,
+	  0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical - room west entrance. */
+BYTE VARCH34[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	2, 0, // search
+	3, 8,
+	3, 4,
+	0, 8,
+
+	142,  0, // replace
+	 51, 42,
+	 47, 44,
+	  0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical - room west entrance. */
+BYTE VARCH35[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	2, 0, // search
+	3, 8,
+	3, 4,
+	0, 6,
+
+	142,  0, // replace
+	 51, 42,
+	 47, 44,
+	  0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical - room west entrance. */
+BYTE VARCH36[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	2, 0, // search
+	3, 8,
+	3, 4,
+	0, 9,
+
+	142,  0, // replace
+	 51, 42,
+	 47, 44,
+	  0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical - room west entrance. */
+BYTE VARCH37[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	2,  0, // search
+	3,  8,
+	3,  4,
+	0, 14,
+
+	142,  0, // replace
+	 51, 42,
+	 47, 44,
+	  0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical - room west entrance. */
+BYTE VARCH38[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	2,  0, // search
+	3,  8,
+	3,  4,
+	0, 13,
+
+	142,  0, // replace
+	 51, 42,
+	 47, 44,
+	  0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical - room west entrance. */
+BYTE VARCH39[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	2,  0, // search
+	3,  8,
+	3,  4,
+	0, 16,
+
+	142,  0, // replace
+	 51, 42,
+	 47, 44,
+	  0,  0,
+	// clang-format on
+};
+/** Miniset: Arch vertical - room west entrance. */
+BYTE VARCH40[] = {
+	// clang-format off
+	2, 4, // width, height
+
+	2,  0, // search
+	3,  8,
+	3,  4,
+	0, 15,
+
+	142,  0, // replace
+	 51, 42,
+	 47, 44,
+	  0,  0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal. */
+BYTE HARCH1[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	3, 3, 0, // search
+	2, 5, 9,
+
+	49, 46, 0, // replace
+	40, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal. */
+BYTE HARCH2[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	3, 3, 0, // search
+	2, 5, 6,
+
+	49, 46, 0, // replace
+	40, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal. */
+BYTE HARCH3[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	3, 3, 0, // search
+	2, 5, 8,
+
+	49, 46, 0, // replace
+	40, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal. */
+BYTE HARCH4[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	3, 3, 0, // search
+	2, 5, 7,
+
+	49, 46, 0, // replace
+	40, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal. */
+BYTE HARCH5[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	3, 3,  0, // search
+	2, 5, 15,
+
+	49, 46, 0, // replace
+	40, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal. */
+BYTE HARCH6[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	3, 3,  0, // search
+	2, 5, 16,
+
+	49, 46, 0, // replace
+	40, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal. */
+BYTE HARCH7[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	3, 3,  0, // search
+	2, 5, 13,
+
+	49, 46, 0, // replace
+	40, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal. */
+BYTE HARCH8[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	3, 3,  0, // search
+	2, 5, 14,
+
+	49, 46, 0, // replace
+	40, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal - north corner. */
+BYTE HARCH9[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	3, 3, 0, // search
+	8, 5, 9,
+
+	49, 46, 0, // replace
+	43, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal - north corner. */
+BYTE HARCH10[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	3, 3, 0, // search
+	8, 5, 6,
+
+	49, 46, 0, // replace
+	43, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal - north corner. */
+BYTE HARCH11[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	3, 3, 0, // search
+	8, 5, 8,
+
+	49, 46, 0, // replace
+	43, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal - north corner. */
+BYTE HARCH12[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	3, 3, 0, // search
+	8, 5, 7,
+
+	49, 46, 0, // replace
+	43, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal - north corner. */
+BYTE HARCH13[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	3, 3,  0, // search
+	8, 5, 15,
+
+	49, 46, 0, // replace
+	43, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal - north corner. */
+BYTE HARCH14[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	3, 3,  0, // search
+	8, 5, 16,
+
+	49, 46, 0, // replace
+	43, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal - north corner. */
+BYTE HARCH15[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	3, 3,  0, // search
+	8, 5, 13,
+
+	49, 46, 0, // replace
+	43, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal - north corner. */
+BYTE HARCH16[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	3, 3,  0, // search
+	8, 5, 14,
+
+	49, 46, 0, // replace
+	43, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal - wall. */
+BYTE HARCH17[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	1, 3, 0, // search
+	8, 5, 9,
+
+	140, 46, 0, // replace
+	 43, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal - wall. */
+BYTE HARCH18[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	1, 3, 0, // search
+	8, 5, 6,
+
+	140, 46, 0, // Replace
+	 43, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal - wall. */
+BYTE HARCH19[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	1, 3, 0, // search
+	8, 5, 8,
+
+	140, 46, 0, // replace
+	 43, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal - wall. */
+BYTE HARCH20[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	1, 3, 0, // search
+	8, 5, 7,
+
+	140, 46, 0, // replace
+	 43, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal - wall. */
+BYTE HARCH21[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	1, 3, 0, // search
+	8, 5, 15,
+
+	140, 46, 0, // replace
+	 43, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal - wall. */
+BYTE HARCH22[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	1, 3, 0, // search
+	8, 5, 16,
+
+	140, 46, 0, // replace
+	 43, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal - wall. */
+BYTE HARCH23[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	1, 3, 0, // search
+	8, 5, 13,
+
+	140, 46, 0, // replace
+	 43, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal - wall. */
+BYTE HARCH24[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	1, 3, 0, // search
+	8, 5, 14,
+
+	140, 46, 0, // replace
+	 43, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal. */
+BYTE HARCH25[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	3, 3, 0, // search
+	5, 2, 9,
+
+	49, 46, 0, // replace
+	40, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal. */
+BYTE HARCH26[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	3, 3, 0, // search
+	5, 2, 6,
+
+	49, 46, 0, // replace
+	40, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal. */
+BYTE HARCH27[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	3, 3, 0, // search
+	5, 2, 8,
+
+	49, 46, 0, // replace
+	40, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal. */
+BYTE HARCH28[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	3, 3, 0, // search
+	5, 2, 7,
+
+	49, 46, 0, // replace
+	40, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal. */
+BYTE HARCH29[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	3, 3,  0, // search
+	5, 2, 15,
+
+	49, 46, 0, // replace
+	40, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal. */
+BYTE HARCH30[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	3, 3,  0, // search
+	5, 2, 16,
+
+	49, 46, 0, // replace
+	40, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal. */
+BYTE HARCH31[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	3, 3,  0, // search
+	5, 2, 13,
+
+	49, 46, 0, // replace
+	40, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal. */
+BYTE HARCH32[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	3, 3,  0, // search
+	5, 2, 14,
+
+	49, 46, 0, // replace
+	40, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal - west corner. */
+BYTE HARCH33[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	1, 3, 0, // search
+	9, 5, 9,
+
+	140, 46, 0, // replace
+	 40, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal - west corner. */
+BYTE HARCH34[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	1, 3, 0, // search
+	9, 5, 6,
+
+	140, 46, 0, // replace
+	 40, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal - west corner. */
+BYTE HARCH35[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	1, 3, 0, // search
+	9, 5, 8,
+
+	140, 46, 0, // replace
+	 40, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal - west corner. */
+BYTE HARCH36[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	1, 3, 0, // search
+	9, 5, 7,
+
+	140, 46, 0, // replace
+	 40, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal - west corner. */
+BYTE HARCH37[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	1, 3, 0, // search
+	9, 5, 15,
+
+	140, 46, 0, // replace
+	 40, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal - west corner. */
+BYTE HARCH38[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	1, 3,  0, // search
+	9, 5, 16,
+
+	140, 46, 0, // replace
+	 40, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal - west corner. */
+BYTE HARCH39[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	1, 3,  0, // search
+	9, 5, 13,
+
+	140, 46, 0, // replace
+	 40, 45, 0,
+	// clang-format on
+};
+/** Miniset: Arch horizontal - west corner. */
+BYTE HARCH40[] = {
+	// clang-format off
+	3, 2, // width, height
+
+	1, 3,  0, // search
+	9, 5, 14,
+
+	140, 46, 0, // replace
+	 40, 45, 0,
+	// clang-format on
+};
+/** Miniset: Stairs up. */
+BYTE USTAIRS[] = {
+	// clang-format off
+	4, 4, // width, height
+
+	3, 3, 3, 3, // search
+	3, 3, 3, 3,
+	3, 3, 3, 3,
+	3, 3, 3, 3,
+
+	0,  0,  0, 0, // replace
+	0, 72, 77, 0,
+	0, 76,  0, 0,
+	0,  0,  0, 0,
+	// clang-format on
+};
+/** Miniset: Stairs down. */
+BYTE DSTAIRS[] = {
+	// clang-format off
+	4, 4, // width, height
+
+	3, 3, 3, 3, // search
+	3, 3, 3, 3,
+	3, 3, 3, 3,
+	3, 3, 3, 3,
+
+	0,  0,  0, 0, // replace
+	0, 48, 71, 0,
+	0, 50, 78, 0,
+	0,  0,  0, 0,
+	// clang-format on
+};
+/** Miniset: Stairs to town. */
+BYTE WARPSTAIRS[] = {
+	// clang-format off
+	4, 4, // width, height
+
+	3, 3, 3, 3, // search
+	3, 3, 3, 3,
+	3, 3, 3, 3,
+	3, 3, 3, 3,
+
+	0,   0,   0, 0, // replace
+	0, 158, 160, 0,
+	0, 159,   0, 0,
+	0,   0,   0, 0,
+	// clang-format on
+};
+/** Miniset: Crumbled south pillar. */
+BYTE CRUSHCOL[] = {
+	// clang-format off
+	3, 3, // width, height
+
+	3, 1, 3, // search
+	2, 6, 3,
+	3, 3, 3,
+
+	0,  0, 0, // replace
+	0, 83, 0,
+	0,  0, 0,
+	// clang-format on
+};
+/** Miniset: Vertical oil spill. */
+BYTE BIG1[] = {
+	// clang-format off
+	2, 2, // width, height
+
+	3, 3, // search
+	3, 3,
+
+	113, 0, // replace
+	112, 0,
+	// clang-format on
+};
+/** Miniset: Horizontal oil spill. */
+BYTE BIG2[] = {
+	// clang-format off
+	2, 2, // width, height
+
+	3, 3, // search
+	3, 3,
+
+	114, 115, // replace
+	  0,   0,
+	// clang-format on
+};
+/** Miniset: Horizontal platform. */
+BYTE BIG3[] = {
+	// clang-format off
+	1, 2, // width, height
+
+	1, // search
+	1,
+
+	117, // replace
+	116,
+	// clang-format on
+};
+/** Miniset: Vertical platform. */
+BYTE BIG4[] = {
+	// clang-format off
+	2, 1, // width, height
+
+	2, 2, // search
+
+	118, 119, // replace
+	// clang-format on
+};
+/** Miniset: Large oil spill. */
+BYTE BIG5[] = {
+	// clang-format off
+	2, 2, // width, height
+
+	3, 3, // search
+	3, 3,
+
+	120, 122, // replace
+	121, 123,
+	// clang-format on
+};
+/** Miniset: Vertical wall with debris. */
+BYTE BIG6[] = {
+	// clang-format off
+	1, 2, // width, height
+
+	1, // search
+	1,
+
+	125, // replace
+	124,
+	// clang-format on
+};
+/** Miniset: Horizontal wall with debris. */
+BYTE BIG7[] = {
+	// clang-format off
+	2, 1, // width, height
+
+	2, 2, // search
+
+	126, 127, // replace
+	// clang-format on
+};
+/** Miniset: Rock pile. */
+BYTE BIG8[] = {
+	// clang-format off
+	2, 2, // width, height
+
+	3, 3, // search
+	3, 3,
+
+	128, 130, // replace
+	129, 131,
+	// clang-format on
+};
+/** Miniset: Vertical wall collapsed. */
+BYTE BIG9[] = {
+	// clang-format off
+	2, 2, // width, height
+
+	1, 3, // search
+	1, 3,
+
+	133, 135, // replace
+	132, 134,
+	// clang-format on
+};
+/** Miniset: Horizontal wall collapsed. */
+BYTE BIG10[] = {
+	// clang-format off
+	2, 2, // width, height
+
+	2, 2, // search
+	3, 3,
+
+	136, 137, // replace
+	  3,   3,
+	// clang-format on
+};
+/** Miniset: Crumbled vertical wall 1. */
+BYTE RUINS1[] = {
+	// clang-format off
+	1, 1, // width, height
+
+	1, // search
+
+	80, // replace
+	// clang-format on
+};
+/** Miniset: Crumbled vertical wall 2. */
+BYTE RUINS2[] = {
+	// clang-format off
+	1, 1, // width, height
+
+	1, // search
+
+	81, // replace
+	// clang-format on
+};
+/** Miniset: Crumbled vertical wall 3. */
+BYTE RUINS3[] = {
+	// clang-format off
+	1, 1, // width, height
+
+	1, // search
+
+	82, // replace
+	// clang-format on
+};
+/** Miniset: Crumbled horizontal wall 1. */
+BYTE RUINS4[] = {
+	// clang-format off
+	1, 1, // width, height
+
+	2, // search
+
+	84, // replace
+	// clang-format on
+};
+/** Miniset: Crumbled horizontal wall 2. */
+BYTE RUINS5[] = {
+	// clang-format off
+	1, 1, // width, height
+
+	2, // search
+
+	85, // replace
+	// clang-format on
+};
+/** Miniset: Crumbled horizontal wall 3. */
+BYTE RUINS6[] = {
+	// clang-format off
+	1, 1, // width, height
+
+	2, // search
+
+	86, // replace
+	// clang-format on
+};
+/** Miniset: Crumbled north pillar. */
+BYTE RUINS7[] = {
+	// clang-format off
+	1, 1, // width, height
+
+	8, // search
+
+	87, // replace
+	// clang-format on
+};
+/** Miniset: Bloody gib 1. */
+BYTE PANCREAS1[] = {
+	// clang-format off
+	5, 3, // width, height
+
+	3, 3, 3, 3, 3, // search
+	3, 3, 3, 3, 3,
+	3, 3, 3, 3, 3,
+
+	0, 0,   0, 0, 0, // replace
+	0, 0, 108, 0, 0,
+	0, 0,   0, 0, 0,
+	// clang-format on
+};
+/** Miniset: Bloody gib 2. */
+BYTE PANCREAS2[] = {
+	// clang-format off
+	5, 3, // width, height
+
+	3, 3, 3, 3, 3, // search
+	3, 3, 3, 3, 3,
+	3, 3, 3, 3, 3,
+
+	0, 0,   0, 0, 0, // replace
+	0, 0, 110, 0, 0,
+	0, 0,   0, 0, 0,
+	// clang-format on
+};
+/** Miniset: Move vertical doors away from west pillar 1. */
+BYTE CTRDOOR1[] = {
+	// clang-format off
+	3, 3, // width, height
+
+	3, 1, 3,  // search
+	0, 4, 0,
+	0, 9, 0,
+
+	0, 4, 0, // replace
+	0, 1, 0,
+	0, 0, 0,
+	// clang-format on
+};
+/** Miniset: Move vertical doors away from west pillar 2. */
+BYTE CTRDOOR2[] = {
+	// clang-format off
+	3, 3, // width, height
+
+	3, 1, 3, // search
+	0, 4, 0,
+	0, 8, 0,
+
+	0, 4, 0, // replace
+	0, 1, 0,
+	0, 0, 0,
+	// clang-format on
+};
+/** Miniset: Move vertical doors away from west pillar 3. */
+BYTE CTRDOOR3[] = {
+	// clang-format off
+	3, 3, // width, height
+
+	3, 1, 3, // search
+	0, 4, 0,
+	0, 6, 0,
+
+	0, 4, 0, // replace
+	0, 1, 0,
+	0, 0, 0,
+	// clang-format on
+};
+/** Miniset: Move vertical doors away from west pillar 4. */
+BYTE CTRDOOR4[] = {
+	// clang-format off
+	3, 3, // width, height
+
+	3, 1, 3, // search
+	0, 4, 0,
+	0, 7, 0,
+
+	0, 4, 0, // replace
+	0, 1, 0,
+	0, 0, 0,
+	// clang-format on
+};
+/** Miniset: Move vertical doors away from west pillar 5. */
+BYTE CTRDOOR5[] = {
+	// clang-format off
+	3, 3, // width, height
+
+	3,  1, 3, // search
+	0,  4, 0,
+	0, 15, 0,
+
+	0, 4, 0, // replace
+	0, 1, 0,
+	0, 0, 0,
+	// clang-format on
+};
+/** Miniset: Move vertical doors away from west pillar 6. */
+BYTE CTRDOOR6[] = {
+	// clang-format off
+	3, 3, // width, height
+
+	3,  1, 3, // search
+	0,  4, 0,
+	0, 13, 0,
+
+	0, 4, 0, // replace
+	0, 1, 0,
+	0, 0, 0,
+	// clang-format on
+};
+/** Miniset: Move vertical doors away from west pillar 7. */
+BYTE CTRDOOR7[] = {
+	// clang-format off
+	3, 3, // width, height
+
+	3,  1, 3, // search
+	0,  4, 0,
+	0, 16, 0,
+
+	0, 4, 0, // replace
+	0, 1, 0,
+	0, 0, 0,
+	// clang-format on
+};
+/** Miniset: Move vertical doors away from west pillar 8. */
+BYTE CTRDOOR8[] = {
+	// clang-format off
+	3, 3, // width, height
+
+	3,  1, 3, // search
+	0,  4, 0,
+	0, 14, 0,
+
+	0, 4, 0, // replace
+	0, 1, 0,
+	0, 0, 0,
+	// clang-format on
+};
+
 int Patterns[100][10] = {
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 3 },
 	{ 0, 0, 0, 0, 2, 0, 0, 0, 0, 3 },
@@ -1750,29 +3133,29 @@ static void DRLG_L2(int entry)
 		DRLG_L2FloodTVal();
 		DRLG_L2TransFix();
 		if (entry == 0) {
-			doneflag = DRLG_L2PlaceMiniSet(USTAIRS, 1, 1, -1, -1, 1, 0);
+			doneflag = DRLG_L2PlaceMiniSet(USTAIRS, 1, 1, -1, -1, TRUE, 0);
 			if (doneflag) {
-				doneflag = DRLG_L2PlaceMiniSet(DSTAIRS, 1, 1, -1, -1, 0, 1);
+				doneflag = DRLG_L2PlaceMiniSet(DSTAIRS, 1, 1, -1, -1, FALSE, 1);
 				if (doneflag && currlevel == 5) {
-					doneflag = DRLG_L2PlaceMiniSet(WARPSTAIRS, 1, 1, -1, -1, 0, 6);
+					doneflag = DRLG_L2PlaceMiniSet(WARPSTAIRS, 1, 1, -1, -1, FALSE, 6);
 				}
 			}
 			ViewY -= 2;
 		} else if (entry == 1) {
-			doneflag = DRLG_L2PlaceMiniSet(USTAIRS, 1, 1, -1, -1, 0, 0);
+			doneflag = DRLG_L2PlaceMiniSet(USTAIRS, 1, 1, -1, -1, FALSE, 0);
 			if (doneflag) {
-				doneflag = DRLG_L2PlaceMiniSet(DSTAIRS, 1, 1, -1, -1, 1, 1);
+				doneflag = DRLG_L2PlaceMiniSet(DSTAIRS, 1, 1, -1, -1, TRUE, 1);
 				if (doneflag && currlevel == 5) {
-					doneflag = DRLG_L2PlaceMiniSet(WARPSTAIRS, 1, 1, -1, -1, 0, 6);
+					doneflag = DRLG_L2PlaceMiniSet(WARPSTAIRS, 1, 1, -1, -1, FALSE, 6);
 				}
 			}
 			ViewX--;
 		} else {
-			doneflag = DRLG_L2PlaceMiniSet(USTAIRS, 1, 1, -1, -1, 0, 0);
+			doneflag = DRLG_L2PlaceMiniSet(USTAIRS, 1, 1, -1, -1, FALSE, 0);
 			if (doneflag) {
-				doneflag = DRLG_L2PlaceMiniSet(DSTAIRS, 1, 1, -1, -1, 0, 1);
+				doneflag = DRLG_L2PlaceMiniSet(DSTAIRS, 1, 1, -1, -1, FALSE, 1);
 				if (doneflag && currlevel == 5) {
-					doneflag = DRLG_L2PlaceMiniSet(WARPSTAIRS, 1, 1, -1, -1, 1, 6);
+					doneflag = DRLG_L2PlaceMiniSet(WARPSTAIRS, 1, 1, -1, -1, TRUE, 6);
 				}
 			}
 			ViewY -= 2;

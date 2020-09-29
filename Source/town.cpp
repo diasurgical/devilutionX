@@ -1,3 +1,8 @@
+/**
+ * @file town.h
+ *
+ * Implementation of functionality for rendering the town, towners and calling other render routines.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE

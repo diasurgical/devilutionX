@@ -12,6 +12,7 @@ BOOL uitemflag;
 int itemavail[MAXITEMS];
 ItemStruct curruitem;
 ItemGetRecordStruct itemrecord[MAXITEMS];
+/** Contains the items on ground in the current game. */
 ItemStruct item[MAXITEMS + 1];
 BOOL itemhold[3][3];
 BYTE *itemanims[ITEMTYPES];
@@ -21,6 +22,7 @@ int gnNumGetRecords;
 
 /* data */
 
+/** Maps from item_cursor_graphic to in-memory item type. */
 BYTE ItemCAnimTbl[] = {
 	20, 16, 16, 16, 4, 4, 4, 12, 12, 12,
 	12, 12, 12, 12, 12, 21, 21, 25, 12, 28,
@@ -40,6 +42,7 @@ BYTE ItemCAnimTbl[] = {
 	14, 17, 17, 17, 0, 34, 1, 0, 3, 17,
 	8, 8, 6, 1, 3, 3, 11, 3, 4
 };
+/** Map of item type .cel file names. */
 char *ItemDropNames[] = {
 	"Armor2",
 	"Axe",
@@ -77,6 +80,7 @@ char *ItemDropNames[] = {
 	"Fanvil",
 	"FLazStaf",
 };
+/** Maps of item drop animation length. */
 BYTE ItemAnimLs[] = {
 	15,
 	13,
@@ -114,6 +118,7 @@ BYTE ItemAnimLs[] = {
 	13,
 	8,
 };
+/** Maps of drop sounds effect of dropping the item on ground. */
 int ItemDropSnds[] = {
 	IS_FHARM,
 	IS_FAXE,
@@ -151,6 +156,7 @@ int ItemDropSnds[] = {
 	IS_FANVL,
 	IS_FSTAF,
 };
+/** Maps of drop sounds effect of placing the item in the inventory. */
 int ItemInvSnds[] = {
 	IS_IHARM,
 	IS_IAXE,
@@ -188,7 +194,9 @@ int ItemInvSnds[] = {
 	IS_IANVL,
 	IS_ISTAF,
 };
+/** Specifies the current Y-coordinate used for validation of items on ground. */
 int idoppely = 16;
+/** Maps from Griswold premium item number to a quality level delta as added to the base quality level. */
 int premiumlvladd[6] = { -1, -1, 0, 0, 1, 2 };
 
 void InitItemGFX()
@@ -245,7 +253,7 @@ void AddInitItems()
 			GetItemAttrs(i, IDI_HEAL, currlevel);
 		else
 			GetItemAttrs(i, IDI_MANA, currlevel);
-		item[i]._iCreateInfo = currlevel - 0x8000;
+		item[i]._iCreateInfo = currlevel - CF_PREGEN;
 		SetupItem(i);
 		item[i]._iAnimFrame = item[i]._iAnimLen;
 		item[i]._iAnimFlag = FALSE;
@@ -2002,7 +2010,7 @@ void GetUniqueItem(int i, int uid)
 
 	item[i]._iUid = uid;
 	item[i]._iMagical = ITEM_QUALITY_UNIQUE;
-	item[i]._iCreateInfo |= 0x0200;
+	item[i]._iCreateInfo |= CF_UNIQUE;
 }
 
 void SpawnUnique(int uid, int x, int y)
@@ -2044,14 +2052,14 @@ void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, int onlygood, 
 	item[ii]._iCreateInfo = lvl;
 
 	if (pregen)
-		item[ii]._iCreateInfo = lvl | 0x8000;
+		item[ii]._iCreateInfo = lvl | CF_PREGEN;
 	if (onlygood)
-		item[ii]._iCreateInfo |= 0x40;
+		item[ii]._iCreateInfo |= CF_ONLYGOOD;
 
 	if (uper == 15)
-		item[ii]._iCreateInfo |= 0x80;
+		item[ii]._iCreateInfo |= CF_UPER15;
 	else if (uper == 1)
-		item[ii]._iCreateInfo |= 0x0100;
+		item[ii]._iCreateInfo |= CF_UPER1;
 
 	if (item[ii]._iMiscId != IMISC_UNIQUE) {
 		iblvl = -1;
@@ -2077,7 +2085,7 @@ void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, int onlygood, 
 				GetItemBonus(ii, idx, iblvl >> 1, iblvl, onlygood);
 			} else {
 				GetUniqueItem(ii, uid);
-				item[ii]._iCreateInfo |= 0x0200;
+				item[ii]._iCreateInfo |= CF_UNIQUE;
 			}
 		}
 		if (item[ii]._iMagical != ITEM_QUALITY_UNIQUE)
@@ -2199,7 +2207,7 @@ void SetupAllUseful(int ii, int iseed, int lvl)
 		idx = IDI_PORTAL;
 
 	GetItemAttrs(ii, idx, lvl);
-	item[ii]._iCreateInfo = lvl + 384;
+	item[ii]._iCreateInfo = lvl + CF_USEFUL;
 	SetupItem(ii);
 }
 
@@ -2266,26 +2274,26 @@ void RecreateItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue)
 			SetPlrHandItem(&item[ii], idx);
 			SetPlrHandSeed(&item[ii], iseed);
 		} else {
-			if (icreateinfo & 0x7C00) {
+			if (icreateinfo & CF_TOWN) {
 				RecreateTownItem(ii, idx, icreateinfo, iseed, ivalue);
-			} else if ((icreateinfo & 0x0180) == 0x0180) {
-				SetupAllUseful(ii, iseed, icreateinfo & 0x3F);
+			} else if ((icreateinfo & CF_USEFUL) == CF_USEFUL) {
+				SetupAllUseful(ii, iseed, icreateinfo & CF_LEVEL);
 			} else {
 				uper = 0;
 				onlygood = 0;
 				recreate = 0;
 				pregen = FALSE;
-				if (icreateinfo & 0x0100)
+				if (icreateinfo & CF_UPER1)
 					uper = 1;
-				if (icreateinfo & 0x80)
+				if (icreateinfo & CF_UPER15)
 					uper = 15;
-				if (icreateinfo & 0x40)
+				if (icreateinfo & CF_ONLYGOOD)
 					onlygood = 1;
-				if (icreateinfo & 0x0200)
+				if (icreateinfo & CF_UNIQUE)
 					recreate = 1;
-				if (icreateinfo & 0x8000)
+				if (icreateinfo & CF_PREGEN)
 					pregen = TRUE;
-				SetupAllItems(ii, idx, iseed, icreateinfo & 0x3F, uper, onlygood, recreate, pregen);
+				SetupAllItems(ii, idx, iseed, icreateinfo & CF_LEVEL, uper, onlygood, recreate, pregen);
 			}
 		}
 	}
@@ -2931,8 +2939,8 @@ void PrintUString(int x, int y, BOOL cjustflag, char *str, int col)
 	int len, width, sx, sy, i, k;
 	BYTE c;
 
-	sx = x + 96;
-	sy = y * 12 + 204;
+	sx = x + 32 + SCREEN_X;
+	sy = y * 12 + 44 + SCREEN_Y;
 	len = strlen(str);
 	k = 0;
 	if (cjustflag) {
@@ -2962,10 +2970,10 @@ void DrawULine(int y)
 	BYTE *src, *dst;
 
 	src = &gpBuffer[SCREENXY(26 + RIGHT_PANEL - SPANEL_WIDTH, 25)];
-	dst = &gpBuffer[BUFFER_WIDTH * (y * 12 + 198) + 26 + RIGHT_PANEL_X - SPANEL_WIDTH];
+	dst = &gpBuffer[BUFFER_WIDTH * (y * 12 + 38 + SCREEN_Y) + 26 + RIGHT_PANEL_X - SPANEL_WIDTH];
 
 	for (i = 0; i < 3; i++, src += BUFFER_WIDTH, dst += BUFFER_WIDTH)
-		memcpy(dst, src, 266);
+		memcpy(dst, src, 266); // BUGFIX: should be 267
 }
 
 void DrawUniqueInfo()
@@ -3389,7 +3397,7 @@ void SpawnSmith(int lvl)
 			GetItemAttrs(0, idata, lvl);
 		} while (item[0]._iIvalue > SMITH_MAX_VALUE);
 		smithitem[i] = item[0];
-		smithitem[i]._iCreateInfo = lvl | 0x400;
+		smithitem[i]._iCreateInfo = lvl | CF_SMITH;
 		smithitem[i]._iIdentified = TRUE;
 		smithitem[i]._iStatFlag = StoreStatOk(&smithitem[i]);
 	}
@@ -3461,7 +3469,7 @@ void SpawnOnePremium(int i, int plvl)
 		GetItemBonus(0, itype, plvl >> 1, plvl, TRUE);
 	} while (item[0]._iIvalue > SMITH_MAX_PREMIUM_VALUE);
 	premiumitem[i] = item[0];
-	premiumitem[i]._iCreateInfo = plvl | 0x800;
+	premiumitem[i]._iCreateInfo = plvl | CF_SMITHPREMIUM;
 	premiumitem[i]._iIdentified = TRUE;
 	premiumitem[i]._iStatFlag = StoreStatOk(&premiumitem[i]);
 	item[0] = holditem;
@@ -3607,7 +3615,7 @@ void SpawnWitch(int lvl)
 				GetItemBonus(0, idata, maxlvl >> 1, maxlvl, TRUE);
 		} while (item[0]._iIvalue > 140000);
 		witchitem[i] = item[0];
-		witchitem[i]._iCreateInfo = lvl | 0x2000;
+		witchitem[i]._iCreateInfo = lvl | CF_WITCH;
 		witchitem[i]._iIdentified = TRUE;
 		WitchBookLevel(i);
 		witchitem[i]._iStatFlag = StoreStatOk(&witchitem[i]);
@@ -3648,7 +3656,7 @@ void SpawnBoy(int lvl)
 			GetItemBonus(0, itype, lvl, 2 * lvl, TRUE);
 		} while (item[0]._iIvalue > 90000);
 		boyitem = item[0];
-		boyitem._iCreateInfo = lvl | 0x1000;
+		boyitem._iCreateInfo = lvl | CF_BOY;
 		boyitem._iIdentified = TRUE;
 		boyitem._iStatFlag = StoreStatOk(&boyitem);
 		boylevel = lvl >> 1;
@@ -3770,7 +3778,7 @@ void SpawnHealer(int lvl)
 		itype = RndHealerItem(lvl) - 1;
 		GetItemAttrs(0, itype, lvl);
 		healitem[i] = item[0];
-		healitem[i]._iCreateInfo = lvl | 0x4000;
+		healitem[i]._iCreateInfo = lvl | CF_HEALER;
 		healitem[i]._iIdentified = TRUE;
 		healitem[i]._iStatFlag = StoreStatOk(&healitem[i]);
 	}
@@ -3796,7 +3804,7 @@ void RecreateSmithItem(int ii, int idx, int lvl, int iseed)
 	GetItemAttrs(ii, itype, lvl);
 
 	item[ii]._iSeed = iseed;
-	item[ii]._iCreateInfo = lvl | 0x400;
+	item[ii]._iCreateInfo = lvl | CF_SMITH;
 	item[ii]._iIdentified = TRUE;
 }
 
@@ -3810,7 +3818,7 @@ void RecreatePremiumItem(int ii, int idx, int plvl, int iseed)
 	GetItemBonus(ii, itype, plvl >> 1, plvl, TRUE);
 
 	item[ii]._iSeed = iseed;
-	item[ii]._iCreateInfo = plvl | 0x800;
+	item[ii]._iCreateInfo = plvl | CF_SMITHPREMIUM;
 	item[ii]._iIdentified = TRUE;
 }
 
@@ -3823,7 +3831,7 @@ void RecreateBoyItem(int ii, int idx, int lvl, int iseed)
 	GetItemAttrs(ii, itype, lvl);
 	GetItemBonus(ii, itype, lvl, 2 * lvl, TRUE);
 	item[ii]._iSeed = iseed;
-	item[ii]._iCreateInfo = lvl | 0x1000;
+	item[ii]._iCreateInfo = lvl | CF_BOY;
 	item[ii]._iIdentified = TRUE;
 }
 
@@ -3847,7 +3855,7 @@ void RecreateWitchItem(int ii, int idx, int lvl, int iseed)
 	}
 
 	item[ii]._iSeed = iseed;
-	item[ii]._iCreateInfo = lvl | 0x2000;
+	item[ii]._iCreateInfo = lvl | CF_WITCH;
 	item[ii]._iIdentified = TRUE;
 }
 
@@ -3864,22 +3872,22 @@ void RecreateHealerItem(int ii, int idx, int lvl, int iseed)
 	}
 
 	item[ii]._iSeed = iseed;
-	item[ii]._iCreateInfo = lvl | 0x4000;
+	item[ii]._iCreateInfo = lvl | CF_HEALER;
 	item[ii]._iIdentified = TRUE;
 }
 
 void RecreateTownItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue)
 {
-	if (icreateinfo & 0x400)
-		RecreateSmithItem(ii, idx, icreateinfo & 0x3F, iseed);
-	else if (icreateinfo & 0x800)
-		RecreatePremiumItem(ii, idx, icreateinfo & 0x3F, iseed);
-	else if (icreateinfo & 0x1000)
-		RecreateBoyItem(ii, idx, icreateinfo & 0x3F, iseed);
-	else if (icreateinfo & 0x2000)
-		RecreateWitchItem(ii, idx, icreateinfo & 0x3F, iseed);
-	else if (icreateinfo & 0x4000)
-		RecreateHealerItem(ii, idx, icreateinfo & 0x3F, iseed);
+	if (icreateinfo & CF_SMITH)
+		RecreateSmithItem(ii, idx, icreateinfo & CF_LEVEL, iseed);
+	else if (icreateinfo & CF_SMITHPREMIUM)
+		RecreatePremiumItem(ii, idx, icreateinfo & CF_LEVEL, iseed);
+	else if (icreateinfo & CF_BOY)
+		RecreateBoyItem(ii, idx, icreateinfo & CF_LEVEL, iseed);
+	else if (icreateinfo & CF_WITCH)
+		RecreateWitchItem(ii, idx, icreateinfo & CF_LEVEL, iseed);
+	else if (icreateinfo & CF_HEALER)
+		RecreateHealerItem(ii, idx, icreateinfo & CF_LEVEL, iseed);
 }
 
 void RecalcStoreStats()

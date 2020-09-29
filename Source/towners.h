@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file towners.h
+ *
+ * Interface of functionality for loading and spawning towners.
+ */
 #ifndef __TOWNERS_H__
 #define __TOWNERS_H__
 

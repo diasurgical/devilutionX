@@ -1,3 +1,8 @@
+/**
+ * @file player.cpp
+ *
+ * Implementation of player functionality, leveling, actions, creation, loading, etc.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -18,8 +23,11 @@ int plr_sframe_size;
 int deathdelay;
 int plr_dframe_size;
 
+/** Maps from armor animation to letter used in graphic files. */
 const char ArmourChar[4] = { 'L', 'M', 'H', 0 };
+/** Maps from weapon animation to letter used in graphic files. */
 const char WepChar[10] = { 'N', 'U', 'S', 'D', 'B', 'A', 'M', 'H', 'T', 0 };
+/** Maps from player class to letter used in graphic files. */
 const char CharChar[] = {
 	'W',
 	'R',
@@ -29,15 +37,21 @@ const char CharChar[] = {
 
 /* data */
 
+/** Specifies the X-coordinate delta from the player start location in Tristram. */
 int plrxoff[9] = { 0, 2, 0, 2, 1, 0, 1, 2, 1 };
+/** Specifies the Y-coordinate delta from the player start location in Tristram. */
 int plryoff[9] = { 0, 2, 2, 0, 1, 1, 0, 1, 2 };
+/** Specifies the X-coordinate delta from a player, used for instanced when casting resurrect. */
 int plrxoff2[9] = { 0, 1, 0, 1, 2, 0, 1, 2, 2 };
+/** Specifies the Y-coordinate delta from a player, used for instanced when casting resurrect. */
 int plryoff2[9] = { 0, 0, 1, 1, 0, 2, 2, 1, 2 };
+/** Specifies the frame of each animation for which an action is triggered, for each player class. */
 char PlrGFXAnimLens[][11] = {
 	{ 10, 16, 8, 2, 20, 20, 6, 20, 8, 9, 14 },
 	{ 8, 18, 8, 4, 20, 16, 7, 20, 8, 10, 12 },
 	{ 8, 16, 8, 6, 20, 12, 8, 20, 8, 12, 8 },
 };
+/** Maps from player class to player velocity. */
 int PWVel[3][3] = {
 	{ 2048, 1024, 512 },
 	{ 2048, 1024, 512 },
@@ -47,21 +61,28 @@ int PWVel[3][3] = {
 int AnimLenFromClass[3] = {
 	8, 8, 8
 };
+/** Maps from player_class to starting stat in strength. */
 int StrengthTbl[3] = { 30, 20, 15 };
+/** Maps from player_class to starting stat in magic. */
 int MagicTbl[3] = { 10, 15, 35 };
+/** Maps from player_class to starting stat in dexterity. */
 int DexterityTbl[3] = { 20, 30, 15 };
+/** Maps from player_class to starting stat in vitality. */
 int VitalityTbl[3] = { 25, 20, 20 };
+/** Specifies the chance to block bonus of each player class.*/
 int ToBlkTbl[3] = { 30, 20, 10 };
 char *ClassStrTblOld[] = {
 	"Warrior",
 	"Rogue",
 	"Sorceror",
 };
+/** Maps from player_class to maximum stats. */
 int MaxStats[3][4] = {
 	{ 250, 50, 60, 100 },
 	{ 55, 70, 250, 80 },
 	{ 45, 250, 85, 80 }
 };
+/** Specifies the experience point limit of each level. */
 int ExpLvlsTbl[MAXCHARLEVEL] = {
 	0,
 	2000,
@@ -120,7 +141,8 @@ char *ClassStrTbl[] = {
 	"Rogue",
 	"Sorceror",
 };
-BYTE fix[9] = { 0, 0, 3, 3, 3, 6, 6, 6, 8 }; /* PM_ChangeLightOff local type */
+/** Unused local of PM_ChangeLightOff, originally for computing light radius. */
+BYTE fix[9] = { 0, 0, 3, 3, 3, 6, 6, 6, 8 };
 
 void SetPlayerGPtrs(BYTE *pData, BYTE **pAnim)
 {

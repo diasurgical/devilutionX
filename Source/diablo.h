@@ -47,7 +47,8 @@ extern int debugmonsttypes;
 extern int PauseMode;
 extern char sgbMouseDown;
 extern int color_cycle_timer;
-extern WORD game_speed;
+extern int ticks_per_sec;
+extern WORD tick_delay;
 
 void FreeGameMem();
 BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer);
