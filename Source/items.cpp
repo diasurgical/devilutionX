@@ -1812,7 +1812,7 @@ void SetupItem(int i)
 	item[i]._iPostDraw = FALSE;
 
 	if (!plr[myplr].pLvlLoad) {
-		item[i]._iAnimFrame = 1;
+		item[i]._iAnimFrame = 0;
 		item[i]._iAnimFlag = TRUE;
 		item[i]._iSelFlag = 0;
 	} else {
@@ -2410,7 +2410,7 @@ void RespawnItem(int i, BOOL FlipFlag)
 	item[i]._iPostDraw = FALSE;
 	item[i]._iRequest = FALSE;
 	if (FlipFlag) {
-		item[i]._iAnimFrame = 1;
+		item[i]._iAnimFrame = 0;
 		item[i]._iAnimFlag = TRUE;
 		item[i]._iSelFlag = 0;
 	} else {
