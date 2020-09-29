@@ -600,9 +600,9 @@ void UiAddBackground(std::vector<UiItemBase *> *vecDialog)
 	vecDialog->push_back(new UiImage(&ArtBackground, rect));
 }
 
-void UiAddLogo(std::vector<UiItemBase *> *vecDialog, int size, int height)
+void UiAddLogo(std::vector<UiItemBase *> *vecDialog, int size, int y)
 {
-	SDL_Rect rect = { 0, UI_OFFSET_Y + height, 0, 0 };
+	SDL_Rect rect = { 0, UI_OFFSET_Y + y, 0, 0 };
 	vecDialog->push_back(new UiImage(&ArtLogos[size], /*animated=*/true, /*frame=*/0, rect, UIS_CENTER));
 }
 

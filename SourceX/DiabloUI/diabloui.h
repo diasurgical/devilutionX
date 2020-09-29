@@ -40,7 +40,7 @@ void LoadPalInMem(const SDL_Color *pPal);
 void DrawMouse();
 void LoadBackgroundArt(const char *pszFile);
 void UiAddBackground(std::vector<UiItemBase *> *vecDialog);
-void UiAddLogo(std::vector<UiItemBase *> *vecDialog, int size = LOGO_MED, int height = 0);
+void UiAddLogo(std::vector<UiItemBase *> *vecDialog, int size = LOGO_MED, int y = 0);
 void UiFocusNavigationSelect();
 void UiFocusNavigationEsc();
 void UiFocusNavigationYesNo();
