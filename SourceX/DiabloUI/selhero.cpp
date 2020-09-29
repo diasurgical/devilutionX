@@ -496,7 +496,7 @@ BOOL UiSelHeroDialog(
 	} while (selhero_navigateYesNo);
 
 	*dlgresult = selhero_result;
-	strncpy(name, selhero_heroInfo.name, 16);
+	strncpy(name, selhero_heroInfo.name, 16 - 1);
 
 	UnloadScrollBar();
 	return true;
