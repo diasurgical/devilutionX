@@ -21,7 +21,7 @@ void InitInv();
 void DrawInv();
 void DrawInvBelt();
 BOOL AutoPlace(int pnum, int ii, int sx, int sy, BOOL saveflag);
-BOOL SpecialAutoPlace(int pnum, int ii, int sx, int sy, BOOL saveflag);
+BOOL SpecialAutoPlace(int pnum, int ii, int sx, int sy);
 BOOL GoldAutoPlace(int pnum);
 int SwapItem(ItemStruct *a, ItemStruct *b);
 void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, BOOL bId);
