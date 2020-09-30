@@ -626,11 +626,13 @@ bool CanBePlacedOnBelt(const ItemStruct &item)
 /**
  * @brief Checks whether the given item can be placed on the specified player's belt. Returns 'True' when the item can be placed
  * on belt slots and the player has at least one empty slot in his belt.
+ * If 'persistItem' is 'True', the item is also placed in the belt.
  * @param playerNumber The player number on whose belt will be checked.
  * @param item The item to be checked.
+ * @param persistItem Pass 'True' to actually place the item in the belt. The default is 'False'.
  * @return 'True' in case the item can be placed on the player's belt and 'False' otherwise.
  */
-bool CanBePlacedOnBelt(int playerNumber, const ItemStruct &item)
+bool AutoPlaceItemInBelt(int playerNumber, const ItemStruct &item, bool persistItem = false)
 {
 	if (!CanBePlacedOnBelt(item)) {
 		return false;
@@ -638,6 +640,12 @@ bool CanBePlacedOnBelt(int playerNumber, const ItemStruct &item)
 
 	for (int i = 0; i < MAXBELTITEMS; i++) {
 		if (plr[playerNumber].SpdList[i].isEmpty()) {
+			if (persistItem) {
+				plr[playerNumber].SpdList[i] = item;
+				CalcPlrScrolls(playerNumber);
+				drawsbarflag = TRUE;
+			}
+
 			return true;
 		}
 	}
@@ -921,7 +929,7 @@ BOOL SpecialAutoPlace(int pnum, int ii, const ItemStruct &item)
 		yy += 10;
 	}
 	if (!done) {
-		done = CanBePlacedOnBelt(pnum, item);
+		done = AutoPlaceItemInBelt(pnum, item);
 	}
 
 	return done;
@@ -1982,17 +1990,8 @@ void AutoGetItem(int pnum, int ii)
 			w = icursW28;
 			h = icursH28;
 			if (w == 1 && h == 1) {
-				idx = plr[pnum].HoldItem.IDidx;
-				if (plr[pnum].HoldItem._iStatFlag && AllItemsList[idx].iUsable) {
-					for (i = 0; i < MAXBELTITEMS && !done; i++) {
-						if (plr[pnum].SpdList[i].isEmpty()) {
-							plr[pnum].SpdList[i] = plr[pnum].HoldItem;
-							CalcPlrScrolls(pnum);
-							drawsbarflag = TRUE;
-							done = TRUE;
-						}
-					}
-				}
+				done = AutoPlaceItemInBelt(pnum, plr[pnum].HoldItem, true);
+
 				for (i = 30; i <= 39 && !done; i++) {
 					done = AutoPlace(pnum, i, w, h, TRUE);
 				}
