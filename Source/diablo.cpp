@@ -751,6 +751,8 @@ static BOOL LeftMouseDown(int wParam)
 		return FALSE;
 	}
 
+	bool isShiftHeld = wParam & DVL_MK_SHIFT;
+
 	if (MouseY < PANEL_TOP || MouseX < PANEL_LEFT || MouseX >= PANEL_LEFT + PANEL_WIDTH) {
 		if (!gmenu_is_active() && !TryIconCurs()) {
 			if (questlog && MouseX > 32 && MouseX < 288 && MouseY > 32 && MouseY < 308) {
@@ -762,7 +764,7 @@ static BOOL LeftMouseDown(int wParam)
 				CheckChrBtns();
 			} else if (invflag && MouseX > RIGHT_PANEL && MouseY < SPANEL_HEIGHT) {
 				if (!dropGoldFlag)
-					CheckInvItem();
+					CheckInvItem(isShiftHeld);
 			} else if (sbookflag && MouseX > RIGHT_PANEL && MouseY < SPANEL_HEIGHT) {
 				CheckSBook();
 			} else if (pcurs >= CURSOR_FIRSTITEM) {
@@ -774,7 +776,7 @@ static BOOL LeftMouseDown(int wParam)
 				if (plr[myplr]._pStatPts != 0 && !spselflag)
 					CheckLvlBtn();
 				if (!lvlbtndown)
-					return LeftMouseCmd(wParam == DVL_MK_SHIFT + DVL_MK_LBUTTON);
+					return LeftMouseCmd(isShiftHeld);
 			}
 		}
 	} else {
