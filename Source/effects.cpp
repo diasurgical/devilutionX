@@ -1277,9 +1277,12 @@ static int RndSFX(int psfx)
 	return psfx + random_(165, nRand);
 }
 
-void PlaySFX(int psfx)
+void PlaySFX(int psfx, bool randomizeByCategory)
 {
-	psfx = RndSFX(psfx);
+	if (randomizeByCategory) {
+		psfx = RndSFX(psfx);
+	}
+
 	PlaySFX_priv(&sgSFX[psfx], FALSE, 0, 0);
 }
 
