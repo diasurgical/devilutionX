@@ -1537,7 +1537,7 @@ void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, BOOL bId)
 	CalcPlrInv(pnum, TRUE);
 }
 
-void CheckInvCut(int pnum, int mx, int my)
+void CheckInvCut(int pnum, int mx, int my, bool moveToBelt)
 {
 	int r;
 	BOOL done;
@@ -1584,62 +1584,77 @@ void CheckInvCut(int pnum, int mx, int my)
 	    r >= SLOTXY_HEAD_FIRST
 	    && r <= SLOTXY_HEAD_LAST
 	    && !plr[pnum].InvBody[INVLOC_HEAD].isEmpty()) {
-		NetSendCmdDelItem(FALSE, INVLOC_HEAD);
 		plr[pnum].HoldItem = plr[pnum].InvBody[INVLOC_HEAD];
-		plr[pnum].InvBody[INVLOC_HEAD]._itype = ITYPE_NONE;
+		if (!moveToBelt) {
+			NetSendCmdDelItem(FALSE, INVLOC_HEAD);
+			plr[pnum].InvBody[INVLOC_HEAD]._itype = ITYPE_NONE;
+		}
 	}
 
 	if (
 	    r == SLOTXY_RING_LEFT
 	    && !plr[pnum].InvBody[INVLOC_RING_LEFT].isEmpty()) {
-		NetSendCmdDelItem(FALSE, INVLOC_RING_LEFT);
 		plr[pnum].HoldItem = plr[pnum].InvBody[INVLOC_RING_LEFT];
-		plr[pnum].InvBody[INVLOC_RING_LEFT]._itype = ITYPE_NONE;
+		if (!moveToBelt) {
+			NetSendCmdDelItem(FALSE, INVLOC_RING_LEFT);
+			plr[pnum].InvBody[INVLOC_RING_LEFT]._itype = ITYPE_NONE;
+		}
 	}
 
 	if (
 	    r == SLOTXY_RING_RIGHT
 	    && !plr[pnum].InvBody[INVLOC_RING_RIGHT].isEmpty()) {
-		NetSendCmdDelItem(FALSE, INVLOC_RING_RIGHT);
 		plr[pnum].HoldItem = plr[pnum].InvBody[INVLOC_RING_RIGHT];
-		plr[pnum].InvBody[INVLOC_RING_RIGHT]._itype = ITYPE_NONE;
+		if (!moveToBelt) {
+			NetSendCmdDelItem(FALSE, INVLOC_RING_RIGHT);
+			plr[pnum].InvBody[INVLOC_RING_RIGHT]._itype = ITYPE_NONE;
+		}
 	}
 
 	if (
 	    r == SLOTXY_AMULET
 	    && !plr[pnum].InvBody[INVLOC_AMULET].isEmpty()) {
-		NetSendCmdDelItem(FALSE, INVLOC_AMULET);
 		plr[pnum].HoldItem = plr[pnum].InvBody[INVLOC_AMULET];
-		plr[pnum].InvBody[INVLOC_AMULET]._itype = ITYPE_NONE;
+		if (!moveToBelt) {
+			NetSendCmdDelItem(FALSE, INVLOC_AMULET);
+			plr[pnum].InvBody[INVLOC_AMULET]._itype = ITYPE_NONE;
+		}
 	}
 
 	if (
 	    r >= SLOTXY_HAND_LEFT_FIRST
 	    && r <= SLOTXY_HAND_LEFT_LAST
 	    && !plr[pnum].InvBody[INVLOC_HAND_LEFT].isEmpty()) {
-		NetSendCmdDelItem(FALSE, INVLOC_HAND_LEFT);
 		plr[pnum].HoldItem = plr[pnum].InvBody[INVLOC_HAND_LEFT];
-		plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype = ITYPE_NONE;
+		if (!moveToBelt) {
+			NetSendCmdDelItem(FALSE, INVLOC_HAND_LEFT);
+			plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype = ITYPE_NONE;
+		}
 	}
 
 	if (
 	    r >= SLOTXY_HAND_RIGHT_FIRST
 	    && r <= SLOTXY_HAND_RIGHT_LAST
 	    && !plr[pnum].InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
-		NetSendCmdDelItem(FALSE, INVLOC_HAND_RIGHT);
 		plr[pnum].HoldItem = plr[pnum].InvBody[INVLOC_HAND_RIGHT];
-		plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype = ITYPE_NONE;
+		if (!moveToBelt) {
+			NetSendCmdDelItem(FALSE, INVLOC_HAND_RIGHT);
+			plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype = ITYPE_NONE;
+		}
 	}
 
 	if (
 	    r >= SLOTXY_CHEST_FIRST
 	    && r <= SLOTXY_CHEST_LAST
 	    && !plr[pnum].InvBody[INVLOC_CHEST].isEmpty()) {
-		NetSendCmdDelItem(FALSE, INVLOC_CHEST);
 		plr[pnum].HoldItem = plr[pnum].InvBody[INVLOC_CHEST];
-		plr[pnum].InvBody[INVLOC_CHEST]._itype = ITYPE_NONE;
+		if (!moveToBelt) {
+			NetSendCmdDelItem(FALSE, INVLOC_CHEST);
+			plr[pnum].InvBody[INVLOC_CHEST]._itype = ITYPE_NONE;
+		}
 	}
 
+	bool movedToBelt = false;
 	if (r >= SLOTXY_INV_FIRST && r <= SLOTXY_INV_LAST) {
 		ig = r - SLOTXY_INV_FIRST;
 		ii = plr[pnum].InvGrid[ig];
@@ -1649,26 +1664,32 @@ void CheckInvCut(int pnum, int mx, int my)
 				iv = -ii;
 			}
 
-			for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
-				if (plr[pnum].InvGrid[i] == iv || plr[pnum].InvGrid[i] == -iv) {
-					plr[pnum].InvGrid[i] = 0;
-				}
+			plr[pnum].HoldItem = plr[pnum].InvList[iv - 1];
+			if (moveToBelt && CanBePlacedOnBelt(plr[pnum].HoldItem)) {
+				movedToBelt = AutoPlaceItemInBelt(pnum, plr[pnum].HoldItem, true);
 			}
 
-			iv--;
-
-			plr[pnum].HoldItem = plr[pnum].InvList[iv];
-			plr[pnum]._pNumInv--;
-
-			if (plr[pnum]._pNumInv > 0 && plr[pnum]._pNumInv != iv) {
-				plr[pnum].InvList[iv] = plr[pnum].InvList[plr[pnum]._pNumInv];
-
-				for (j = 0; j < NUM_INV_GRID_ELEM; j++) {
-					if (plr[pnum].InvGrid[j] == plr[pnum]._pNumInv + 1) {
-						plr[pnum].InvGrid[j] = iv + 1;
+			if (!moveToBelt || movedToBelt) {
+				for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
+					if (plr[pnum].InvGrid[i] == iv || plr[pnum].InvGrid[i] == -iv) {
+						plr[pnum].InvGrid[i] = 0;
 					}
-					if (plr[pnum].InvGrid[j] == -(plr[pnum]._pNumInv + 1)) {
-						plr[pnum].InvGrid[j] = -iv - 1;
+				}
+
+				iv--;
+
+				plr[pnum]._pNumInv--;
+
+				if (plr[pnum]._pNumInv > 0 && plr[pnum]._pNumInv != iv) {
+					plr[pnum].InvList[iv] = plr[pnum].InvList[plr[pnum]._pNumInv];
+
+					for (j = 0; j < NUM_INV_GRID_ELEM; j++) {
+						if (plr[pnum].InvGrid[j] == plr[pnum]._pNumInv + 1) {
+							plr[pnum].InvGrid[j] = iv + 1;
+						}
+						if (plr[pnum].InvGrid[j] == -(plr[pnum]._pNumInv + 1)) {
+							plr[pnum].InvGrid[j] = -iv - 1;
+						}
 					}
 				}
 			}
@@ -1693,9 +1714,60 @@ void CheckInvCut(int pnum, int mx, int my)
 		CheckItemStats(pnum);
 
 		if (pnum == myplr) {
-			PlaySFX(IS_IGRAB);
-			SetCursor_(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
-			SetCursorPos(mx - (cursW >> 1), MouseY - (cursH >> 1));
+			if (!moveToBelt || movedToBelt) {
+				PlaySFX(IS_IGRAB);
+			}
+
+			if (moveToBelt) {
+				if (!movedToBelt) {
+					if (CanBePlacedOnBelt(plr[pnum].HoldItem)) {
+						switch (plr[pnum]._pClass) {
+						case PC_WARRIOR:
+						case PC_BARBARIAN:
+							PlaySFX(PS_WARR15, false);
+							break;
+
+						case PC_ROGUE:
+						case PC_BARD:
+							PlaySFX(PS_ROGUE15, false);
+							break;
+
+						case PC_SORCERER:
+							PlaySFX(PS_MAGE15, false);
+							break;
+
+						case PC_MONK:
+							PlaySFX(PS_MONK15, false);
+							break;
+						}
+					} else {
+						switch (plr[pnum]._pClass) {
+						case PC_WARRIOR:
+						case PC_BARBARIAN:
+							PlaySFX(PS_WARR37, false);
+							break;
+
+						case PC_ROGUE:
+						case PC_BARD:
+							PlaySFX(PS_ROGUE37, false);
+							break;
+
+						case PC_SORCERER:
+							PlaySFX(PS_MAGE37, false);
+							break;
+
+						case PC_MONK:
+							PlaySFX(PS_MONK37, false);
+							break;
+						}
+					}
+				}
+
+				plr[pnum].HoldItem._itype = ITYPE_NONE;
+			} else {
+				SetCursor_(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
+				SetCursorPos(mx - (cursW >> 1), MouseY - (cursH >> 1));
+			}
 		}
 	}
 }
@@ -1752,12 +1824,12 @@ void RemoveSpdBarItem(int pnum, int iv)
 	force_redraw = 255;
 }
 
-void CheckInvItem()
+void CheckInvItem(bool isShiftHeld)
 {
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		CheckInvPaste(myplr, MouseX, MouseY);
 	} else {
-		CheckInvCut(myplr, MouseX, MouseY);
+		CheckInvCut(myplr, MouseX, MouseY, isShiftHeld);
 	}
 }
 
