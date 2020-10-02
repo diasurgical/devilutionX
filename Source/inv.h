@@ -43,7 +43,7 @@ void inv_update_rem_item(int pnum, BYTE iv);
 void RemoveInvItem(int pnum, int iv);
 void RemoveSpdBarItem(int pnum, int iv);
 void CheckInvItem(bool isShiftHeld = false);
-void CheckInvScrn();
+void CheckInvScrn(bool isShiftHeld);
 void CheckItemStats(int pnum);
 void InvGetItem(int pnum, int ii);
 void AutoGetItem(int pnum, int ii);
