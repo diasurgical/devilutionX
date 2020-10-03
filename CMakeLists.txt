@@ -299,6 +299,11 @@ set(devilutionx_SRCS
   Packaging/resources/CharisSILB.ttf
   Packaging/windows/devilutionx.rc)
 
+if(USE_SDL1)
+  list(APPEND devilutionx_SRCS
+    SourceS/sdl2_to_1_2_backports.cpp)
+endif()
+
 if(NOT NONET)
   list(APPEND devilutionx_SRCS
     SourceX/dvlnet/tcp_client.cpp
