@@ -254,7 +254,7 @@ void CheckCursMove()
 	// Center player tile on screen
 	TilesInView(&columns, &rows);
 	ShiftGrid(&mx, &my, -columns / 2, -(rows - RowsCoveredByPanel()) / 4);
-	if ((columns % 2) != 0) {
+	if ((columns & 1) != 0) {
 		my++;
 	}
 

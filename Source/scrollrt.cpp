@@ -982,11 +982,11 @@ void TilesInView(int *rcolumns, int *rrows)
 
 	if (!zoomflag) {
 		// Half the number of tiles, rounded up
-		if (columns % 2) {
+		if (columns & 1) {
 			columns++;
 		}
 		columns /= 2;
-		if (rows % 2) {
+		if (rows & 1) {
 			rows++;
 		}
 		rows /= 2;
@@ -1020,7 +1020,7 @@ static void DrawGame(int x, int y)
 	// Center player tile on screen
 	TilesInView(&columns, &rows);
 	ShiftGrid(&x, &y, -columns / 2, -(rows - RowsCoveredByPanel()) / 4);
-	if ((columns % 2) == 0) {
+	if ((columns & 1) == 0) {
 		y--;
 	}
 
