@@ -145,8 +145,8 @@ bool SpawnWindow(const char *lpWindowName)
 
 	if (upscale && !oar) {
 		CalculatePreferdWindowSize(width, height, integerScalingEnabled);
-		AdjustToScreenGeometry(width, height);
 	}
+	AdjustToScreenGeometry(width, height);
 
 #ifdef USE_SDL1
 	if (upscale) {
