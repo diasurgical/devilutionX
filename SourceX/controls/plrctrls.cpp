@@ -8,6 +8,8 @@
 #include "controls/controller_motion.h"
 #include "controls/game_controls.h"
 
+#define SPLICONLENGTH 56
+
 namespace dvl {
 
 bool sgbControllerActive = false;
@@ -15,7 +17,9 @@ coords speedspellscoords[50];
 const int repeatRate = 100;
 int speedspellcount = 0;
 
-// Native game menu, controlled by simulating a keyboard.
+/**
+ * Native game menu, controlled by simulating a keyboard.
+ */
 bool InGameMenu()
 {
 	return stextflag > 0
@@ -30,9 +34,7 @@ bool InGameMenu()
 namespace {
 
 DWORD invmove = 0;
-int hsr[3] = { 0, 0, 0 }; // hot spell row counts
 int slot = SLOTXY_INV_FIRST;
-int spbslot = 0;
 
 /**
  * Number of angles to turn to face the coordinate
@@ -442,8 +444,10 @@ void Interact()
 
 void AttrIncBtnSnap(MoveDirectionY dir)
 {
-	if (dir == MoveDirectionY_NONE)
+	if (dir == MoveDirectionY_NONE) {
+		invmove = 0;
 		return;
+	}
 
 	if (chrbtnactive && plr[myplr]._pStatPts <= 0)
 		return;
@@ -480,11 +484,18 @@ void AttrIncBtnSnap(MoveDirectionY dir)
 	SetCursorPos(x, y);
 }
 
-// move the cursor around in our inventory
-// if mouse coords are at SLOTXY_CHEST_LAST, consider this center of equipment
-// small inventory squares are 29x29 (roughly)
+/**
+ * Move the cursor around in our inventory
+ * If mouse coords are at SLOTXY_CHEST_LAST, consider this center of equipment
+ * small inventory squares are 29x29 (roughly)
+ */
 void InvMove(MoveDirection dir)
 {
+	if (dir.x == MoveDirectionX_NONE && dir.y == MoveDirectionY_NONE) {
+		invmove = 0;
+		return;
+	}
+
 	DWORD ticks = SDL_GetTicks();
 	if (ticks - invmove < repeatRate) {
 		return;
@@ -657,11 +668,17 @@ void InvMove(MoveDirection dir)
 	SetCursorPos(x, y);
 }
 
-// check if hot spell at X Y exists
+/**
+ * check if hot spell at X Y exists
+ */
 bool HSExists(int x, int y)
 {
-	for (int r = 0; r < speedspellcount; r++) { // speedbook cells are 56x56
-		if (MouseX >= speedspellscoords[r].x - 28 && MouseX < speedspellscoords[r].x + (28) && MouseY >= speedspellscoords[r].y - (28) && MouseY < speedspellscoords[r].y + 28) {
+	for (int r = 0; r < speedspellcount; r++) {
+		if (x >= speedspellscoords[r].x - SPLICONLENGTH / 2
+			&& x < speedspellscoords[r].x + SPLICONLENGTH / 2
+			&& y >= speedspellscoords[r].y - SPLICONLENGTH / 2
+			&& y < speedspellscoords[r].y + SPLICONLENGTH / 2
+		) {
 			return true;
 		}
 	}
@@ -670,8 +687,10 @@ bool HSExists(int x, int y)
 
 void HotSpellMove(MoveDirection dir)
 {
-	int x = 0;
-	int y = 0;
+	if (dir.x == MoveDirectionX_NONE && dir.y == MoveDirectionY_NONE) {
+		invmove = 0;
+		return;
+	}
 
 	DWORD ticks = SDL_GetTicks();
 	if (ticks - invmove < repeatRate) {
@@ -679,67 +698,55 @@ void HotSpellMove(MoveDirection dir)
 	}
 	invmove = ticks;
 
-	for (int r = 0; r < speedspellcount; r++) { // speedbook cells are 56x56
-		// our 3 rows by y axis
-		if (speedspellscoords[r].y == 307)
-			hsr[0]++;
-		if (speedspellscoords[r].y == 251)
-			hsr[1]++;
-		if (speedspellscoords[r].y == 195)
-			hsr[2]++;
-		if (MouseX >= speedspellscoords[r].x - 28 && MouseX < speedspellscoords[r].x + (28) && MouseY >= speedspellscoords[r].y - (28) && MouseY < speedspellscoords[r].y + 28) {
+	int spbslot = plr[myplr]._pRSpell;
+	for (int r = 0; r < speedspellcount; r++) {
+		if (MouseX >= speedspellscoords[r].x - SPLICONLENGTH / 2
+			&& MouseX < speedspellscoords[r].x + SPLICONLENGTH / 2
+			&& MouseY >= speedspellscoords[r].y - SPLICONLENGTH / 2
+			&& MouseY < speedspellscoords[r].y + SPLICONLENGTH / 2
+		) {
 			spbslot = r;
-			//sprintf(tempstr, "IN HOT SPELL CELL NUM:%i", r);
-			//NetSendCmdString(1 << myplr, tempstr);
+			break;
+		}
+	}
+
+	int x = speedspellscoords[spbslot].x;
+	int y = speedspellscoords[spbslot].y;
+
+	if (dir.x == MoveDirectionX_LEFT) {
+		if (spbslot < speedspellcount - 1) {
+			x = speedspellscoords[spbslot + 1].x;
+			y = speedspellscoords[spbslot + 1].y;
+		}
+	} else if (dir.x == MoveDirectionX_RIGHT) {
+		if (spbslot > 0) {
+			x = speedspellscoords[spbslot - 1].x;
+			y = speedspellscoords[spbslot - 1].y;
 		}
 	}
 
 	if (dir.y == MoveDirectionY_UP) {
-		if (speedspellscoords[spbslot].y == 307 && hsr[1] > 0) { // we're in row 1, check if row 2 has spells
-			if (HSExists(MouseX, 251)) {
-				x = MouseX;
-				y = 251;
-			}
-		} else if (speedspellscoords[spbslot].y == 251 && hsr[2] > 0) { // we're in row 2, check if row 3 has spells
-			if (HSExists(MouseX, 195)) {
-				x = MouseX;
-				y = 195;
-			}
+		if (HSExists(x, y - SPLICONLENGTH)) {
+			y -= SPLICONLENGTH;
 		}
 	} else if (dir.y == MoveDirectionY_DOWN) {
-		if (speedspellscoords[spbslot].y == 251) { // we're in row 2
-			if (HSExists(MouseX, 307)) {
-				x = MouseX;
-				y = 307;
-			}
-		} else if (speedspellscoords[spbslot].y == 195) { // we're in row 3
-			if (HSExists(MouseX, 251)) {
-				x = MouseX;
-				y = 251;
-			}
+		if (HSExists(x, y + SPLICONLENGTH)) {
+			y += SPLICONLENGTH;
 		}
 	}
-	if (dir.x == MoveDirectionX_LEFT) {
-		if (spbslot >= speedspellcount - 1)
-			return;
-		spbslot++;
-		x = speedspellscoords[spbslot].x;
-		y = speedspellscoords[spbslot].y;
-	} else if (dir.x == MoveDirectionX_RIGHT) {
-		if (spbslot <= 0)
-			return;
-		spbslot--;
-		x = speedspellscoords[spbslot].x;
-		y = speedspellscoords[spbslot].y;
-	}
 
-	if (x > 0 && y > 0) {
+	if (x != MouseX || y != MouseY) {
 		SetCursorPos(x, y);
 	}
 }
 
 void SpellBookMove(MoveDirection dir)
 {
+	if (dir.x == MoveDirectionX_NONE && dir.y == MoveDirectionY_NONE) {
+		invmove = 0;
+		return;
+	}
+
 	DWORD ticks = SDL_GetTicks();
 	if (ticks - invmove < repeatRate) {
 		return;
@@ -898,6 +905,54 @@ struct RightStickAccumulator {
 };
 
 } // namespace
+
+void StoreSpellCoords()
+{
+	const int START_X = PANEL_LEFT + 12 + SPLICONLENGTH / 2;
+	const int END_X = START_X + SPLICONLENGTH * 10;
+	const int END_Y = PANEL_TOP - 17 - SPLICONLENGTH / 2;
+	speedspellcount = 0;
+	int xo = END_X;
+	int yo = END_Y;
+	for (int i = 0; i < 4; i++) {
+		std::uint64_t spells;
+		switch (i) {
+		case RSPLTYPE_SKILL:
+			spells = plr[myplr]._pAblSpells;
+			break;
+		case RSPLTYPE_SPELL:
+			spells = plr[myplr]._pMemSpells;
+			break;
+		case RSPLTYPE_SCROLL:
+			spells = plr[myplr]._pScrlSpells;
+			break;
+		case RSPLTYPE_CHARGES:
+			spells = plr[myplr]._pISpells;
+			break;
+		default:
+			continue;
+		}
+		std::uint64_t spell = 1;
+		for (int j = 1; j < MAX_SPELLS; j++) {
+			if ((spell & spells)) {
+				speedspellscoords[speedspellcount] = { xo, yo };
+				++speedspellcount;
+				xo -= SPLICONLENGTH;
+				if (xo < START_X) {
+					xo = END_X;
+					yo -= SPLICONLENGTH;
+				}
+			}
+			spell <<= 1;
+		}
+		if (spells && xo != END_X)
+			xo -= SPLICONLENGTH;
+		if (xo < START_X) {
+			xo = END_X;
+			yo -= SPLICONLENGTH;
+		}
+	}
+}
 
 bool IsAutomapActive()
 {
