@@ -1019,9 +1019,17 @@ static void DrawGame(int x, int y)
 
 	// Center player tile on screen
 	TilesInView(&columns, &rows);
-	ShiftGrid(&x, &y, -columns / 2, -(rows - RowsCoveredByPanel()) / 4);
+	// Shift player row to one that can be centered with out pixel offset
 	if ((columns & 1) == 0) {
 		y--;
+	}
+	ShiftGrid(&x, &y, -columns / 2, -(rows - RowsCoveredByPanel()) / 4);
+
+	// When both columns and rows are even or odd vertical alignment must be done using a screen offset
+	if (zoomflag && (columns & 1) == (rows & 1)) {
+		ShiftGrid(&x, &y, 0, -1);
+		rows += 2;
+		sy -= TILE_HEIGHT / 2;
 	}
 
 	// Skip rendering parts covered by the panels

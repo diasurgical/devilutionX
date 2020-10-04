@@ -244,19 +244,26 @@ void CheckCursMove()
 		sy -= fy;
 	}
 
+	TilesInView(&columns, &rows);
+
+	// When both columns and rows are even or odd vertical alignment must be done using a screen offset
+	if (zoomflag && (columns & 1) == (rows & 1)) {
+		sy -= TILE_HEIGHT / 2;
+	}
+
 	// Convert to tile grid
 	mx = ViewX;
 	my = ViewY;
 	tx = sx / TILE_WIDTH;
 	ty = sy / TILE_HEIGHT;
 	ShiftGrid(&mx, &my, tx, ty);
-
-	// Center player tile on screen
-	TilesInView(&columns, &rows);
-	ShiftGrid(&mx, &my, -columns / 2, -(rows - RowsCoveredByPanel()) / 4);
+	// Shift player row to one that can be centered with out pixel offset
 	if ((columns & 1) != 0) {
 		my++;
 	}
+
+	// Center player tile on screen
+	ShiftGrid(&mx, &my, -columns / 2, -(rows - RowsCoveredByPanel()) / 4);
 
 	// Shift position to match diamond grid aligment
 	px = sx % TILE_WIDTH;
