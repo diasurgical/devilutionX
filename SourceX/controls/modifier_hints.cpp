@@ -106,7 +106,7 @@ void DrawCircleMenuHint(const CircleMenuHint &hint, int x, int y)
 }
 
 const int kCircleMarginX = 16;
-const int kCirclesTop = PANEL_TOP - 76;
+const int kCirclesTop = 76;
 
 void DrawStartModifierMenu()
 {
@@ -114,8 +114,8 @@ void DrawStartModifierMenu()
 		return;
 	static const CircleMenuHint kDpad(/*is_dpad=*/true, /*top=*/"Menu", /*right=*/"Inv", /*bottom=*/"Map", /*left=*/"Char");
 	static const CircleMenuHint kButtons(/*is_dpad=*/false, /*top=*/"", /*right=*/"", /*bottom=*/"Spells", /*left=*/"Quests");
-	DrawCircleMenuHint(kDpad, kCircleMarginX, kCirclesTop);
-	DrawCircleMenuHint(kButtons, SCREEN_WIDTH - kButtons.width() - kCircleMarginX, kCirclesTop);
+	DrawCircleMenuHint(kDpad, PANEL_LEFT + kCircleMarginX, PANEL_TOP - kCirclesTop);
+	DrawCircleMenuHint(kButtons, PANEL_LEFT + PANEL_WIDTH - kButtons.width() - kCircleMarginX, PANEL_TOP - kCirclesTop);
 }
 
 void DrawSelectModifierMenu()
@@ -123,7 +123,7 @@ void DrawSelectModifierMenu()
 	if (!select_modifier_active)
 		return;
 	static const CircleMenuHint kSpells(/*is_dpad=*/false, "F6", "F8", "F7", "F5");
-	DrawCircleMenuHint(kSpells, SCREEN_WIDTH - kSpells.width() - kCircleMarginX, kCirclesTop);
+	DrawCircleMenuHint(kSpells, PANEL_LEFT + PANEL_WIDTH - kSpells.width() - kCircleMarginX, PANEL_TOP - kCirclesTop);
 }
 
 } // namespace
