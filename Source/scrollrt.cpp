@@ -551,7 +551,7 @@ static void drawCell(int x, int y, int sx, int sy)
 }
 
 /**
- * @brief Render a floor tiles
+ * @brief Render a floor tile
  * @param x dPiece coordinate
  * @param y dPiece coordinate
  * @param sx Back buffer coordinate
@@ -604,7 +604,7 @@ static void DrawItem(int x, int y, int sx, int sy, BOOL pre)
 }
 
 /**
- * @brief Check if and how a mosnter should be rendered
+ * @brief Check if and how a monster should be rendered
  * @param y dPiece coordinate
  * @param x dPiece coordinate
  * @param oy dPiece Y offset
@@ -819,13 +819,13 @@ static void scrollrt_drawFloor(int x, int y, int sx, int sy, int rows, int colum
 #define IsWalkable(x, y) (dPiece[x][y] != 0 && !nSolidTable[dPiece[x][y]])
 
 /**
- * @brief Render a row of tile
+ * @brief Render a row of tiles
  * @param x dPiece coordinate
  * @param y dPiece coordinate
  * @param sx Back buffer coordinate
  * @param sy Back buffer coordinate
  * @param rows Number of rows
- * @param columns Tile in a row
+ * @param columns Tiles in a row
  */
 static void scrollrt_draw(int x, int y, int sx, int sy, int rows, int columns)
 {
@@ -841,7 +841,7 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int rows, int columns)
 				if (x + 1 < MAXDUNX && y - 1 >= 0 && sx + TILE_WIDTH <= SCREEN_X + SCREEN_WIDTH) {
 					// Render objects behind walls first to prevent sprites, that are moving
 					// between tiles, from poking through the walls as they exceed the tile bounds.
-					// A proper fix for this would probably be to layout the sceen and render by
+					// A proper fix for this would probably be to layout the screen and render by
 					// sprite screen position rather than tile position.
 					if (IsWall(x, y) && (IsWall(x + 1, y) || (x > 0 && IsWall(x - 1, y)))) { // Part of a wall aligned on the x-axis
 						if (IsWalkable(x + 1, y - 1) && IsWalkable(x, y - 1) ) { // Has walkable area behind it
@@ -1334,10 +1334,10 @@ static void DoBlitScreen(DWORD dwX, DWORD dwY, DWORD dwWdt, DWORD dwHgt)
 }
 
 /**
- * @brief Check render pipline and blit indivudal screen parts
+ * @brief Check render pipeline and blit individual screen parts
  * @param dwHgt Section of screen to update from top to bottom
  * @param draw_desc Render info box
- * @param draw_hp Render halth bar
+ * @param draw_hp Render health bar
  * @param draw_mana Render mana bar
  * @param draw_sbar Render belt
  * @param draw_btn Render panel buttons

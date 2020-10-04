@@ -1,7 +1,7 @@
 /**
  * @file multi.h
  *
- * Interface of functions for keeping multiplaye games in sync.
+ * Interface of functions for keeping multiplayer games in sync.
  */
 #ifndef __MULTI_H__
 #define __MULTI_H__
