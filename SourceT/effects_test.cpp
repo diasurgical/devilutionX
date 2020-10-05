@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "all.h"
 
-TEST(Drlg_l4, calc_snd_position_center)
+TEST(Effects, calc_snd_position_center)
 {
 	dvl::plr[dvl::myplr]._px = 50;
 	dvl::plr[dvl::myplr]._py = 50;
@@ -12,7 +12,7 @@ TEST(Drlg_l4, calc_snd_position_center)
 	EXPECT_EQ(plPan, 0);
 }
 
-TEST(Drlg_l4, calc_snd_position_near)
+TEST(Effects, calc_snd_position_near)
 {
 	dvl::plr[dvl::myplr]._px = 50;
 	dvl::plr[dvl::myplr]._py = 50;
@@ -23,7 +23,7 @@ TEST(Drlg_l4, calc_snd_position_near)
 	EXPECT_EQ(plPan, 1280);
 }
 
-TEST(Drlg_l4, calc_snd_position_out_of_range)
+TEST(Effects, calc_snd_position_out_of_range)
 {
 	dvl::plr[dvl::myplr]._px = 12;
 	dvl::plr[dvl::myplr]._py = 12;
@@ -34,7 +34,7 @@ TEST(Drlg_l4, calc_snd_position_out_of_range)
 	EXPECT_EQ(plPan, 0);
 }
 
-TEST(Drlg_l4, calc_snd_position_extream_right)
+TEST(Effects, calc_snd_position_extream_right)
 {
 	dvl::plr[dvl::myplr]._px = 50;
 	dvl::plr[dvl::myplr]._py = 50;
@@ -45,7 +45,7 @@ TEST(Drlg_l4, calc_snd_position_extream_right)
 	EXPECT_GT(plPan, 6400);
 }
 
-TEST(Drlg_l4, calc_snd_position_extream_left)
+TEST(Effects, calc_snd_position_extream_left)
 {
 	dvl::plr[dvl::myplr]._px = 50;
 	dvl::plr[dvl::myplr]._py = 50;
