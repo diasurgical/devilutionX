@@ -6,7 +6,8 @@ DEVILUTION_BEGIN_NAMESPACE
 
 char sz_error_buf[256];
 BOOL terminating;
-int cleanup_thread_id;
+/** Thread id of the last callee to FreeDlg(). */
+SDL_threadID cleanup_thread_id;
 
 void app_fatal(const char *pszFmt, ...)
 {
