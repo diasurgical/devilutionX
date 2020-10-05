@@ -14,7 +14,7 @@ char sz_error_buf[256];
 /** Set to true when a fatal error is encountered and the application should shut down. */
 BOOL terminating;
 /** Thread id of the last callee to FreeDlg(). */
-int cleanup_thread_id;
+SDL_threadID cleanup_thread_id;
 
 /**
  * @brief Terminates the game and displays an error message box.

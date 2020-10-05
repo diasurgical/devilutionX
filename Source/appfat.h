@@ -14,7 +14,6 @@ extern "C" {
 
 extern char sz_error_buf[256];
 extern BOOL terminating;
-extern int cleanup_thread_id;
 
 void TriggerBreak();
 char *GetErrorStr(DWORD error_code);
