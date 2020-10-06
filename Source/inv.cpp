@@ -1563,7 +1563,7 @@ void AutoGetItem(int pnum, int ii)
 			if (w == 1 && h == 1) {
 				idx = plr[pnum].HoldItem.IDidx;
 				if (plr[pnum].HoldItem._iStatFlag && AllItemsList[idx].iUsable) {
-					for (i = 0; i < 8 && !done; i++) {
+					for (i = 0; i < MAXBELTITEMS && !done; i++) {
 						if (plr[pnum].SpdList[i]._itype == ITYPE_NONE) {
 							plr[pnum].SpdList[i] = plr[pnum].HoldItem;
 							CalcPlrScrolls(pnum);

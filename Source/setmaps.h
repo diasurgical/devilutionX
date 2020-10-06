@@ -1,7 +1,7 @@
 /**
  * @file setmaps.cpp
  *
- * Interface of functionality the special quest dungeons.
+ * Interface of functionality for the special quest dungeons.
  */
 #ifndef __SETMAPS_H__
 #define __SETMAPS_H__

@@ -352,7 +352,7 @@ const BYTE L3ISLE1[] = {
 
 	5, 14, // search
 	4,  9,
-	3, 12,
+	13, 12,
 
 	7, 7, // replace
 	7, 7,
@@ -384,8 +384,8 @@ const BYTE L3ISLE3[] = {
 	25, 28,
 	31, 32,
 	// clang-format on
-};/** Miniset: Replace small wall with lava 2. */
-
+};
+/** Miniset: Replace small wall with lava 2. */
 const BYTE L3ISLE4[] = {
 	// clang-format off
 	3, 2, // width, height
