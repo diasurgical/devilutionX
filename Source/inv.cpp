@@ -1586,10 +1586,19 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 	ItemStruct &holdItem = player.HoldItem;
 	holdItem._itype = ITYPE_NONE;
 
+	bool automaticallyMoved = false;
+	bool automaticallyEquipped = false;
+	bool automaticallyUnequip = false;
+
 	ItemStruct &headItem = player.InvBody[INVLOC_HEAD];
 	if (r >= SLOTXY_HEAD_FIRST && r <= SLOTXY_HEAD_LAST && !headItem.isEmpty()) {
 		holdItem = headItem;
-		if (!automaticMove) {
+		if (automaticMove) {
+			automaticallyUnequip = true;
+			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(pnum, holdItem, true);
+		}
+
+		if (!automaticMove || automaticallyMoved) {
 			NetSendCmdDelItem(FALSE, INVLOC_HEAD);
 			headItem._itype = ITYPE_NONE;
 		}
@@ -1598,7 +1607,12 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 	ItemStruct &leftRingItem = player.InvBody[INVLOC_RING_LEFT];
 	if (r == SLOTXY_RING_LEFT && !leftRingItem.isEmpty()) {
 		holdItem = leftRingItem;
-		if (!automaticMove) {
+		if (automaticMove) {
+			automaticallyUnequip = true;
+			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(pnum, holdItem, true);
+		}
+
+		if (!automaticMove || automaticallyMoved) {
 			NetSendCmdDelItem(FALSE, INVLOC_RING_LEFT);
 			leftRingItem._itype = ITYPE_NONE;
 		}
@@ -1607,7 +1621,12 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 	ItemStruct &rightRingItem = player.InvBody[INVLOC_RING_RIGHT];
 	if (r == SLOTXY_RING_RIGHT && !rightRingItem.isEmpty()) {
 		holdItem = rightRingItem;
-		if (!automaticMove) {
+		if (automaticMove) {
+			automaticallyUnequip = true;
+			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(pnum, holdItem, true);
+		}
+
+		if (!automaticMove || automaticallyMoved) {
 			NetSendCmdDelItem(FALSE, INVLOC_RING_RIGHT);
 			rightRingItem._itype = ITYPE_NONE;
 		}
@@ -1616,7 +1635,12 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 	ItemStruct &amuletItem = player.InvBody[INVLOC_AMULET];
 	if (r == SLOTXY_AMULET && !amuletItem.isEmpty()) {
 		holdItem = amuletItem;
-		if (!automaticMove) {
+		if (automaticMove) {
+			automaticallyUnequip = true;
+			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(pnum, holdItem, true);
+		}
+
+		if (!automaticMove || automaticallyMoved) {
 			NetSendCmdDelItem(FALSE, INVLOC_AMULET);
 			amuletItem._itype = ITYPE_NONE;
 		}
@@ -1625,7 +1649,12 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 	ItemStruct &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
 	if (r >= SLOTXY_HAND_LEFT_FIRST && r <= SLOTXY_HAND_LEFT_LAST && !leftHandItem.isEmpty()) {
 		holdItem = leftHandItem;
-		if (!automaticMove) {
+		if (automaticMove) {
+			automaticallyUnequip = true;
+			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(pnum, holdItem, true);
+		}
+
+		if (!automaticMove || automaticallyMoved) {
 			NetSendCmdDelItem(FALSE, INVLOC_HAND_LEFT);
 			leftHandItem._itype = ITYPE_NONE;
 		}
@@ -1634,7 +1663,12 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 	ItemStruct &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
 	if (r >= SLOTXY_HAND_RIGHT_FIRST && r <= SLOTXY_HAND_RIGHT_LAST && !rightHandItem.isEmpty()) {
 		holdItem = rightHandItem;
-		if (!automaticMove) {
+		if (automaticMove) {
+			automaticallyUnequip = true;
+			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(pnum, holdItem, true);
+		}
+
+		if (!automaticMove || automaticallyMoved) {
 			NetSendCmdDelItem(FALSE, INVLOC_HAND_RIGHT);
 			rightHandItem._itype = ITYPE_NONE;
 		}
@@ -1643,13 +1677,17 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 	ItemStruct &chestItem = player.InvBody[INVLOC_CHEST];
 	if (r >= SLOTXY_CHEST_FIRST && r <= SLOTXY_CHEST_LAST && !chestItem.isEmpty()) {
 		holdItem = chestItem;
-		if (!automaticMove) {
+		if (automaticMove) {
+			automaticallyUnequip = true;
+			automaticallyMoved = automaticallyEquipped = AutoPlaceItemInInventory(pnum, holdItem, true);
+		}
+
+		if (!automaticMove || automaticallyMoved) {
 			NetSendCmdDelItem(FALSE, INVLOC_CHEST);
 			chestItem._itype = ITYPE_NONE;
 		}
 	}
 
-	bool automaticallyMoved = false;
 	if (r >= SLOTXY_INV_FIRST && r <= SLOTXY_INV_LAST) {
 		ig = r - SLOTXY_INV_FIRST;
 		ii = player.InvGrid[ig];
@@ -1660,8 +1698,12 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 			}
 
 			holdItem = player.InvList[iv - 1];
-			if (automaticMove && CanBePlacedOnBelt(holdItem)) {
-				automaticallyMoved = AutoPlaceItemInBelt(pnum, holdItem, true);
+			if (automaticMove) {
+				if (CanBePlacedOnBelt(holdItem)) {
+					automaticallyMoved = AutoPlaceItemInBelt(pnum, holdItem, true);
+				} else {
+					automaticallyMoved = automaticallyEquipped = AutoEquip(pnum, holdItem);
+				}
 			}
 
 			if (!automaticMove || automaticallyMoved) {
@@ -1715,13 +1757,15 @@ void CheckInvCut(int pnum, int mx, int my, bool automaticMove)
 		CheckItemStats(pnum);
 
 		if (pnum == myplr) {
-			if (!automaticMove || automaticallyMoved) {
+			if (automaticallyEquipped) {
+				PlaySFX(ItemInvSnds[ItemCAnimTbl[holdItem._iCurs]]);
+			} else if (!automaticMove || automaticallyMoved) {
 				PlaySFX(IS_IGRAB);
 			}
 
 			if (automaticMove) {
 				if (!automaticallyMoved) {
-					if (CanBePlacedOnBelt(holdItem)) {
+					if (CanBePlacedOnBelt(holdItem) || automaticallyUnequip) {
 						switch (player._pClass) {
 						case PC_WARRIOR:
 						case PC_BARBARIAN:
