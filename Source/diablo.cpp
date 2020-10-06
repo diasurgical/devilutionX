@@ -237,6 +237,7 @@ void run_game_loop(unsigned int uMsg)
 void start_game(unsigned int uMsg)
 {
 	zoomflag = TRUE;
+	CalcViewportGeometry();
 	cineflag = FALSE;
 	InitCursor();
 	InitLightTable();
@@ -1179,6 +1180,7 @@ void PressChar(int vkey)
 	case 'Z':
 	case 'z':
 		zoomflag = !zoomflag;
+		CalcViewportGeometry();
 		return;
 	case 'S':
 	case 's':

@@ -23,6 +23,11 @@ extern int cel_foliage_active;
 extern int level_piece_id;
 extern void (*DrawPlrProc)(int, int, int, int, int, BYTE *, int, int, int, int);
 
+extern int tileOffsetX;
+extern int tileOffsetY;
+extern int tileShiftX;
+extern int tileShiftY;
+
 void ClearCursor();
 void DrawMissile(int x, int y, int sx, int sy, BOOL pre);
 void DrawDeadPlayer(int x, int y, int sx, int sy);
@@ -30,6 +35,7 @@ void ShiftGrid(int *x, int *y, int horizontal, int vertical);
 int RowsCoveredByPanel();
 void CalcTileOffset(int *offsetX, int *offsetY);
 void TilesInView(int *columns, int *rows);
+void CalcViewportGeometry();
 void DrawView(int StartX, int StartY);
 void ClearScreenBuffer();
 #ifdef _DEBUG

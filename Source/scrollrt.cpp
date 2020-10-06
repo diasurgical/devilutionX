@@ -930,7 +930,7 @@ int RowsCoveredByPanel()
 		return 0;
 	}
 
-	int rows = PANEL_HEIGHT / TILE_HEIGHT * 2;
+	int rows = PANEL_HEIGHT / TILE_HEIGHT;
 	if (!zoomflag) {
 		rows /= 2;
 	}
@@ -952,7 +952,7 @@ void CalcTileOffset(int *offsetX, int *offsetY)
 		y = VIEWPORT_HEIGHT % TILE_HEIGHT;
 	} else {
 		x = (SCREEN_WIDTH / 2) % TILE_WIDTH;
-		y = (VIEWPORT_HEIGHT / 2 + TILE_HEIGHT / 2) % TILE_HEIGHT;
+		y = (VIEWPORT_HEIGHT / 2) % TILE_HEIGHT;
 	}
 
 	if (x)
@@ -975,8 +975,8 @@ void TilesInView(int *rcolumns, int *rrows)
 	if (SCREEN_WIDTH % TILE_WIDTH) {
 		columns++;
 	}
-	int rows = VIEWPORT_HEIGHT / (TILE_HEIGHT / 2);
-	if (VIEWPORT_HEIGHT % (TILE_HEIGHT / 2)) {
+	int rows = VIEWPORT_HEIGHT / TILE_HEIGHT;
+	if (VIEWPORT_HEIGHT % TILE_HEIGHT) {
 		rows++;
 	}
 
@@ -991,10 +991,60 @@ void TilesInView(int *rcolumns, int *rrows)
 		}
 		rows /= 2;
 	}
-	rows++; // Cover lower edge saw tooth, right edge accounted for in scrollrt_draw()
 
 	*rcolumns = columns;
 	*rrows = rows;
+}
+
+int tileOffsetX;
+int tileOffsetY;
+int tileShiftX;
+int tileShiftY;
+int tileColums;
+int tileRows;
+
+void CalcViewportGeometry()
+{
+	int xo, yo;
+	tileShiftX = 0;
+	tileShiftY = 0;
+
+	// Adjust by player offset and tile grid alignment
+	CalcTileOffset(&xo, &yo);
+	tileOffsetX = 0 - xo;
+	tileOffsetY = 0 - yo - 1 + TILE_HEIGHT / 2;
+
+	TilesInView(&tileColums, &tileRows);
+	int lrow = tileRows - RowsCoveredByPanel();
+
+	// Center player tile on screen
+	ShiftGrid(&tileShiftX, &tileShiftY, -tileColums / 2, -lrow / 2);
+
+	tileRows *= 2;
+
+	// Align grid
+	if ((tileColums & 1) == 0) {
+		tileShiftY--; // Shift player row to one that can be centered with out pixel offset
+		if ((lrow & 1) == 0) {
+			// Offset tile to vertically align the player when both rows and colums are even
+			tileRows++;
+			tileOffsetY -= TILE_HEIGHT / 2;
+		}
+	} else if (tileColums & 1 && lrow & 1) {
+		// Offset tile to vertically align the player when both rows and colums are odd
+		ShiftGrid(&tileShiftX, &tileShiftY, 0, -1);
+		tileRows++;
+		tileOffsetY -= TILE_HEIGHT / 2;
+	}
+
+	// Slightly lower the zoomed view
+	if (!zoomflag) {
+		tileOffsetY += TILE_HEIGHT / 4;
+		if (yo < TILE_HEIGHT / 4)
+			tileRows++;
+	}
+
+	tileRows++; // Cover lower edge saw tooth, right edge accounted for in scrollrt_draw()
 }
 
 /**
@@ -1004,7 +1054,7 @@ void TilesInView(int *rcolumns, int *rrows)
  */
 static void DrawGame(int x, int y)
 {
-	int i, sx, sy, columns, rows, xo, yo;
+	int sx, sy, columns, rows;
 
 	// Limit rendering to the view area
 	if (zoomflag)
@@ -1013,24 +1063,14 @@ static void DrawGame(int x, int y)
 		gpBufEnd = &gpBuffer[BUFFER_WIDTH * (VIEWPORT_HEIGHT / 2 + SCREEN_Y)];
 
 	// Adjust by player offset and tile grid alignment
-	CalcTileOffset(&xo, &yo);
-	sx = ScrollInfo._sxoff - xo + SCREEN_X;
-	sy = ScrollInfo._syoff - yo + SCREEN_Y + (TILE_HEIGHT / 2 - 1);
+	sx = ScrollInfo._sxoff + tileOffsetX + SCREEN_X;
+	sy = ScrollInfo._syoff + tileOffsetY + SCREEN_Y;
 
-	// Center player tile on screen
-	TilesInView(&columns, &rows);
-	// Shift player row to one that can be centered with out pixel offset
-	if ((columns & 1) == 0) {
-		y--;
-	}
-	ShiftGrid(&x, &y, -columns / 2, -(rows - RowsCoveredByPanel()) / 4);
+	columns = tileColums;
+	rows = tileRows;
 
-	// When both columns and rows are even or odd vertical alignment must be done using a screen offset
-	if (zoomflag && (columns & 1) == (rows & 1)) {
-		ShiftGrid(&x, &y, 0, -1);
-		rows += 2;
-		sy -= TILE_HEIGHT / 2;
-	}
+	x += tileShiftX;
+	y += tileShiftY;
 
 	// Skip rendering parts covered by the panels
 	if (PANELS_COVER) {
