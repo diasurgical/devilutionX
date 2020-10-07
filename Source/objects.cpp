@@ -2877,12 +2877,12 @@ void OperateShrine(int pnum, int i, int sType)
 					&& plr[pnum].InvBody[j]._iMaxDur != 0) {
 
 					if (r == 0) {
-						plr[pnum].InvBody[r]._iDurability -= 10;
-						plr[pnum].InvBody[r]._iMaxDur -= 10;
-						if (plr[pnum].InvBody[r]._iDurability <= 0)
-							plr[pnum].InvBody[r]._iDurability = 1;
-						if (plr[pnum].InvBody[r]._iMaxDur <= 0)
-							plr[pnum].InvBody[r]._iMaxDur = 1;
+						plr[pnum].InvBody[j]._iDurability -= 10;
+						plr[pnum].InvBody[j]._iMaxDur -= 10;
+						if (plr[pnum].InvBody[j]._iDurability <= 0)
+							plr[pnum].InvBody[j]._iDurability = 1;
+						if (plr[pnum].InvBody[j]._iMaxDur <= 0)
+							plr[pnum].InvBody[j]._iMaxDur = 1;
 					} else {
 						plr[pnum].InvBody[j]._iDurability += 10;
 						plr[pnum].InvBody[j]._iMaxDur += 10;
