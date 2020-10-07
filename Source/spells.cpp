@@ -16,12 +16,14 @@ int GetManaAmount(int id, int sn)
 		sl = 0;
 	}
 
+	if (sl > 0) {
+		adj = sl * spelldata[sn].sManaAdj;
+	}
 	if (sn == SPL_FIREBOLT) {
 		adj >>= 1;
-	} else if (sn == SPL_RESURRECT && sl > 0) {
+	}
+	if (sn == SPL_RESURRECT && sl > 0) {
 		adj = sl * (spelldata[SPL_RESURRECT].sManaCost / 8);
-	} else if (sl > 0) {
-		adj = sl * spelldata[sn].sManaAdj;
 	}
 
 	if (sn == SPL_HEAL || sn == SPL_HEALOTHER) {
