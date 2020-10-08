@@ -3188,23 +3188,7 @@ BOOL PM_DoSpell(int pnum)
 		    plr[pnum]._pVar4);
 
 		if (!plr[pnum]._pSplFrom) {
-			if (plr[pnum]._pRSplType == RSPLTYPE_SCROLL) {
-				if (!(plr[pnum]._pScrlSpells
-				        & 1ULL << (plr[pnum]._pRSpell - 1))) {
-					plr[pnum]._pRSpell = SPL_INVALID;
-					plr[pnum]._pRSplType = RSPLTYPE_INVALID;
-					force_redraw = 255;
-				}
-			}
-
-			if (plr[pnum]._pRSplType == RSPLTYPE_CHARGES) {
-				if (!(plr[pnum]._pISpells
-				        & 1ULL << (plr[pnum]._pRSpell - 1))) {
-					plr[pnum]._pRSpell = SPL_INVALID;
-					plr[pnum]._pRSplType = RSPLTYPE_INVALID;
-					force_redraw = 255;
-				}
-			}
+			EnsureValidReadiedSpell(plr[pnum]);
 		}
 	}
 
