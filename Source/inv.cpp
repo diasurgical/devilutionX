@@ -1673,11 +1673,9 @@ void RemoveInvItem(int pnum, int iv)
 
 	if (plr[pnum]._pRSplType == RSPLTYPE_SCROLL) {
 		if (plr[pnum]._pRSpell != SPL_INVALID) {
-			// BUGFIX: Cast the literal `1` to `unsigned __int64` to make that bitshift 64bit
-			// this causes the last 4 skills to not reset correctly after use
 			if (!(
 			        plr[pnum]._pScrlSpells
-			        & (1 << (plr[pnum]._pRSpell - 1)))) {
+			        & (1ULL << (plr[pnum]._pRSpell - 1)))) {
 				plr[pnum]._pRSpell = SPL_INVALID;
 			}
 
@@ -1737,11 +1735,9 @@ void RemoveSpdBarItem(int pnum, int iv)
 
 	if (plr[pnum]._pRSplType == RSPLTYPE_SCROLL) {
 		if (plr[pnum]._pRSpell != SPL_INVALID) {
-			// BUGFIX: Cast the literal `1` to `unsigned __int64` to make that bitshift 64bit
-			// this causes the last 4 skills to not reset correctly after use
 			if (!(
 			        plr[pnum]._pScrlSpells
-			        & (1 << (plr[pnum]._pRSpell - 1)))) {
+			        & (1ULL << (plr[pnum]._pRSpell - 1)))) {
 				plr[pnum]._pRSpell = SPL_INVALID;
 			}
 		}
