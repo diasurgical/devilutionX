@@ -17,6 +17,14 @@
 #include <switch.h>
 #endif
 
+/* mouse clipping */
+short diff_x, diff_y;
+static short mx, my;
+static short old_x, old_y;
+int warp_direction_x;
+int warp_direction_y;
+/* mouse clipping */
+
 /** @file
  * *
  * Windows message handling and keyboard event conversion for SDL.
@@ -32,6 +40,18 @@ int mouseWarpingY;
 
 void SetCursorPos(int X, int Y)
 {
+	/* mouse clipping - adjust mouse warping */
+    	warp_direction_x = 1;
+    	warp_direction_y = 1;
+    	if( MouseX > X ) warp_direction_x = 1;
+    	if( MouseX < X ) warp_direction_x = -1;
+    	if( MouseY > Y ) warp_direction_y = 1;
+    	if( MouseY < Y ) warp_direction_y = -1;
+    	if(warp_direction_x == -1) X = old_x + (cursW >> 1);
+    	if(warp_direction_x == 1) X = old_x - (cursW >> 1);
+    	if(warp_direction_y == -1) Y = old_y + (cursH >> 1);
+    	if(warp_direction_y == 1) Y = old_y - (cursH >> 1);
+	/* mouse clipping - adjust mouse warping */
 	mouseWarpingX = X;
 	mouseWarpingY = Y;
 	mouseWarping = true;
@@ -246,6 +266,24 @@ namespace {
 
 LPARAM position_for_mouse(short x, short y)
 {
+	/* mouse clipping */
+	diff_x = x - old_x;
+	diff_y = y - old_y;
+
+	old_x = x;
+	old_y = y;
+
+	mx += diff_x;
+	my += diff_y;
+
+        if(mx < 0) mx = 0;
+		if(mx > 640-1) mx = 640-1;
+		if(my < 0) my = 0;
+		if(my > 480-1) my = 480-1;
+
+        x=mx;
+        y=my;
+	/* mouse clipping */
 	return (((uint16_t)(y & 0xFFFF)) << 16) | (uint16_t)(x & 0xFFFF);
 }
 

@@ -6,7 +6,7 @@ include(CMake/genex.cmake)
 DEBUG_OPTION(ASAN "Enable address sanitizer")
 DEBUG_OPTION(UBSAN "Enable undefined behaviour sanitizer")
 DEBUG_OPTION(DEBUG "Enable debug mode in engine")
-option(DISABLE_LTO "Disable link-time optimization (by default enabled in release mode)" OFF)
+option(DISABLE_LTO "Disable link-time optimization (by default enabled in release mode)" ON)
 option(PIE "Generate position-independent code" OFF)
 option(SPAWN "Build the shareware version" OFF)
 option(DIST "Dynamically link only glibc and SDL2" OFF)
@@ -37,9 +37,14 @@ if(NOT VERSION_NUM)
   endif()
 endif()
 
-project(DevilutionX
-  VERSION ${VERSION_NUM}
-  LANGUAGES C CXX)
+if(VERSION_NUM MATCHES untagged)
+  project(DevilutionX
+    LANGUAGES C CXX)
+else()
+  project(DevilutionX
+    VERSION ${VERSION_NUM}
+    LANGUAGES C CXX)
+endif()
 
 # Not a genexp because CMake doesn't support it
 # https://gitlab.kitware.com/cmake/cmake/-/issues/20546
@@ -232,6 +237,7 @@ add_library(devilution STATIC
   Source/wave.cpp)
 
 set(devilutionx_SRCS
+  SourceX/filters/xbrz/xbrz.cpp
   SourceX/dx.cpp
   SourceX/controls/devices/game_controller.cpp
   SourceX/controls/devices/joystick.cpp

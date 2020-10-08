@@ -111,7 +111,7 @@ void RemovePortalMissile(int id)
 			dFlags[missile[mi]._mix][missile[mi]._miy] &= ~BFLAG_MISSILE;
 			dMissile[missile[mi]._mix][missile[mi]._miy] = 0;
 
-			if (portal[id].level)
+			if (portal[id].level != 0)
 				AddUnLight(missile[mi]._mlid);
 
 			DeleteMissile(mi, i);

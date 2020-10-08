@@ -60,7 +60,7 @@ void LoadTtfFont() {
 		was_fonts_init = true;
 	}
 
-	font = TTF_OpenFont(TTF_FONT_PATH, 17);
+	font = TTF_OpenFont(TTF_FONT_PATH, 13);
 	if (font == NULL) {
 		SDL_Log("TTF_OpenFont: %s", TTF_GetError());
 		return;

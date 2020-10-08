@@ -204,9 +204,9 @@ private:
 void CreditsRenderer::Render()
 {
 	const int offset_y = -VIEWPORT.h + (SDL_GetTicks() - ticks_begin_) / 40;
-	if (offset_y == prev_offset_y_)
+	/*if (offset_y == prev_offset_y_)
 		return;
-	prev_offset_y_ = offset_y;
+	prev_offset_y_ = offset_y;*/
 
 	DrawArt(0, 0, &ArtBackground);
 	if (font == nullptr)
@@ -215,11 +215,11 @@ void CreditsRenderer::Render()
 	const std::size_t lines_begin = std::max(offset_y / LINE_H, 0);
 	const std::size_t lines_end = std::min(lines_begin + MAX_VISIBLE_LINES, CREDITS_LINES_SIZE);
 
-	if (lines_begin >= lines_end) {
+	/*if (lines_begin >= lines_end) {
 		if (lines_end == CREDITS_LINES_SIZE)
 			finished_ = true;
 		return;
-	}
+	}*/
 
 	while (!lines_.empty() && lines_.front().index != lines_begin)
 		lines_.pop_front();
@@ -243,9 +243,9 @@ void CreditsRenderer::Render()
 		if (line.palette_version != pal_surface_palette_version)
 			line = PrepareLine(line.index);
 
-		decltype(SDL_Rect().x) dest_x = VIEWPORT.x + 31;
+		decltype(SDL_Rect().x) dest_x = VIEWPORT.x + 16/*31*/;
 		if (CREDITS_LINES[line.index][0] == '\t')
-			dest_x += 40;
+			dest_x += 16/*40*/;
 
 		SDL_Rect dst_rect = { dest_x, dest_y, 0, 0 };
 		ScaleOutputRect(&dst_rect);
@@ -255,6 +255,9 @@ void CreditsRenderer::Render()
 			ErrSdl();
 	}
 	SDL_SetClipRect(GetOutputSurface(), nullptr);
+
+    if(lines_end==CREDITS_LINES_SIZE) finished_ = true;
+
 }
 
 } // namespace

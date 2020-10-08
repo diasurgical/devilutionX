@@ -589,11 +589,11 @@ void SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HA
 #ifndef USE_SDL1
 	if (renderer) {
 		SDL_DestroyTexture(texture);
-		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, SVidWidth, SVidHeight);
+		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, SVidWidth*2, SVidHeight*2); /* hardcoding for cutscenes */
 		if (texture == NULL) {
 			ErrSdl();
 		}
-		if (SDL_RenderSetLogicalSize(renderer, SVidWidth, SVidHeight) <= -1) {
+		if (SDL_RenderSetLogicalSize(renderer, 1920/*SVidWidth*/, ((1080*SVidHeight)/180)/*SVidHeight*/) <= -1) { /* hardcoding for cutscenes */
 			ErrSdl();
 		}
 	}
@@ -792,11 +792,11 @@ void SVidPlayEnd(HANDLE video)
 #ifndef USE_SDL1
 	if (renderer) {
 		SDL_DestroyTexture(texture);
-		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
+		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, 1280/*SCREEN_WIDTH*/, 960/*SCREEN_HEIGHT*/);
 		if (texture == NULL) {
 			ErrSdl();
 		}
-		if (renderer && SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT) <= -1) {
+		if (renderer && SDL_RenderSetLogicalSize(renderer, 1280/*SCREEN_WIDTH*/, 960/*SCREEN_HEIGHT*/) <= -1) {
 			ErrSdl();
 		}
 	}

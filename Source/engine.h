@@ -13,6 +13,12 @@
 #ifndef __ENGINE_H__
 #define __ENGINE_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 //offset 0
 //pCelBuff->pFrameTable[0]
 
@@ -97,5 +103,11 @@ void PlayInGameMovie(char *pszMovie);
 
 extern const int RndInc;
 extern const int RndMult;
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __ENGINE_H__ */

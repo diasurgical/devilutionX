@@ -7,6 +7,10 @@
 #include "../3rdParty/Storm/Source/storm.h"
 #include "display.h"
 #include <SDL.h>
+#include "filters/xbrz/xbrz.h" // header needed for xrbz
+#include <pthread.h> // header needed for multithreading
+
+extern int processors; /* defined in display.cpp */
 
 namespace dvl {
 
@@ -28,13 +32,88 @@ unsigned int pal_surface_palette_version = 0;
 
 /** 24-bit renderer texture surface */
 SDL_Surface *renderer_texture_surface = nullptr;
-
+SDL_Surface *scale_renderer_texture_surface = nullptr; /* renderer texture surface for scaled picture */
 /** 8-bit surface wrapper around #gpBuffer */
 SDL_Surface *pal_surface;
 
 /** To know if surfaces have been initialized or not */
 BOOL was_window_init = false;
 
+/* definitions, functions needed for multithreading and xbrz */
+#define TASKS 480 /* maximum number of simultaneous tasks. In this case 480 lines of a picture */
+
+int num_threads;
+
+struct thread_info
+{
+	int		id;
+	pthread_t	thread;
+    unsigned int *unscaled_picture;
+    unsigned int *scale_pixels;
+    unsigned int *pixels;
+};
+
+static void *thread_function(void *arg)
+{
+	struct thread_info *thread = (struct thread_info *)arg;
+
+    int yFirst;
+    int yLast;
+
+    yFirst = (480/num_threads)*thread->id;
+    yLast = (480/num_threads)*thread->id+(480/num_threads);
+
+    /*prepare unscaled copy of picture for applying xbrz*/
+    for(int y=yFirst; y<yLast;y++) memcpy(&thread->unscaled_picture[y*640], &thread->pixels[y*640*2], 640*4);
+    /*prepare unscaled copy of picture for applying xbrz*/
+
+    /*apply xbrz*/
+        xbrz::scale(2, thread->unscaled_picture, thread->scale_pixels, 640, 480, xbrz::ColorFormat::RGB, xbrz::ScalerCfg(), yFirst, yLast);
+    /*apply xbrz*/
+
+	return NULL;
+}
+
+int run_threads(int tasks, unsigned int *unscaled_picture, unsigned int *scale_pixels, unsigned int *pixels)
+{
+	int	i;
+
+	if(tasks < processors)
+		num_threads = tasks;
+	else
+		num_threads = processors;
+
+	struct thread_info *mythreads = (struct thread_info*)malloc(sizeof(struct thread_info) * num_threads);
+    //struct thread_info *mythreads = malloc(sizeof(struct thread_info) * num_threads);
+
+	for(i = 0; i < num_threads; i++)
+	{
+		mythreads[i].id = i;
+        mythreads[i].unscaled_picture = unscaled_picture;
+        mythreads[i].scale_pixels = scale_pixels;
+        mythreads[i].pixels = pixels;
+
+		if(pthread_create(&mythreads[i].thread, NULL, thread_function, (void *) &mythreads[i]))
+		{
+			printf("ERROR in pthread_create %d\n", i);
+			return 1;
+		}
+	}
+
+	for(i = 0; i < num_threads; i++)
+	{
+		if(pthread_join(mythreads[i].thread, NULL))
+		{
+			printf("ERROR in pthread_join %d\n", i);
+			return 1;
+		}
+	}
+
+	free(mythreads);
+	return 0;
+}
+/* definitions, functions needed for multithreading and xbrz */
+	
 static void dx_create_back_buffer()
 {
 	pal_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);
@@ -66,7 +145,8 @@ static void dx_create_primary_surface()
 		Uint32 format;
 		if (SDL_QueryTexture(texture, &format, nullptr, nullptr, nullptr) < 0)
 			ErrSdl();
-		renderer_texture_surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, SDL_BITSPERPIXEL(format), format);
+	renderer_texture_surface = SDL_CreateRGBSurfaceWithFormat(0, /*width*/1280, /*height*/960, SDL_BITSPERPIXEL(format), format); // increase buffer size by 2x
+	scale_renderer_texture_surface = SDL_CreateRGBSurfaceWithFormat(0, 1280, 960, SDL_BITSPERPIXEL(format), format); // create surface for filter
 	}
 #endif
 	if (GetOutputSurface() == nullptr) {
@@ -143,6 +223,7 @@ void dx_cleanup()
 	pal_surface = nullptr;
 	SDL_FreePalette(palette);
 	SDL_FreeSurface(renderer_texture_surface);
+	SDL_FreeSurface(scale_renderer_texture_surface);
 	SDL_DestroyTexture(texture);
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(ghMainWnd);
@@ -255,6 +336,20 @@ void LimitFrameRate()
 void RenderPresent()
 {
 	SDL_Surface *surface = GetOutputSurface();
+	
+	/*scaling operation start*/
+    	unsigned int *pixels = (unsigned int*)renderer_texture_surface->pixels; /* source picture. left top position. */
+	unsigned int *scale_pixels = (unsigned int*)scale_renderer_texture_surface->pixels; /* destination buffer for scaled picture */
+    	unsigned int *unscaled_picture = (unsigned int*)malloc(640*480*4); /* buffer for copy of unscaled picture */
+
+    	run_threads(TASKS, unscaled_picture, scale_pixels, pixels); /*apply multithreaded xbrz filter*/
+
+   	 /* copy back the scaled surface to renderer_texture_surface */
+    	memcpy(pixels, scale_pixels, sizeof(*pixels)*640*480*2*2);
+    	/* copy back the scaled surface to renderer_texture_surface */
+    	free(unscaled_picture);
+    	/*scaling operation end*/
+	
 	assert(!SDL_MUSTLOCK(surface));
 
 	if (!gbActive) {

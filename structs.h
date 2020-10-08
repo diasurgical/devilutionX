@@ -4,6 +4,8 @@
  * Various global structures.
  */
 
+DEVILUTION_BEGIN_NAMESPACE
+
 //////////////////////////////////////////////////
 // control
 //////////////////////////////////////////////////
@@ -1585,3 +1587,5 @@ typedef struct TDataInfo {
 	DWORD destOffset;
 	DWORD size;
 } TDataInfo;
+
+DEVILUTION_END_NAMESPACE

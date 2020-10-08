@@ -6,6 +6,12 @@
 #ifndef __ITEMS_H__
 #define __ITEMS_H__
 
+DEVILUTION_BEGIN_NAMESPACE
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern int itemactive[MAXITEMS];
 extern BOOL uitemflag;
 extern int itemavail[MAXITEMS];
@@ -139,5 +145,11 @@ extern int ItemDropSnds[];
 extern int ItemInvSnds[];
 extern int idoppely;
 extern int premiumlvladd[6];
+
+#ifdef __cplusplus
+}
+#endif
+
+DEVILUTION_END_NAMESPACE
 
 #endif /* __ITEMS_H__ */
