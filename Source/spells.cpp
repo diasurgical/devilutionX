@@ -93,6 +93,85 @@ void UseMana(int id, int sn)
 	}
 }
 
+/**
+ * @brief Gets a value that represents the specified spellID in 64bit bitmask format.
+ * For example:
+ *  - spell ID  1: 0000.0000.0000.0000.0000.0000.0000.0000.0000.0000.0000.0000.0000.0000.0000.0001
+ *  - spell ID 43: 0000.0000.0000.0000.0000.0100.0000.0000.0000.0000.0000.0000.0000.0000.0000.0000
+ * @param spellId The id of the spell to get a bitmask for.
+ * @return A 64bit bitmask representation for the specified spell.
+ */
+unsigned long long GetSpellBitmask(int spellId)
+{
+	return 1ULL << (spellId - 1);
+}
+
+/**
+ * @brief Gets a value indicating whether the player's current readied spell is a valid spell. Readied spells can be
+ * invalidaded in a few scenarios where the spell comes from items, for example (like dropping the only scroll that
+ * provided the spell).
+ * @param player The player whose readied spell is to be checked.
+ * @return 'true' when the readied spell is currently valid, and 'false' otherwise.
+ */
+bool IsReadiedSpellValid(const PlayerStruct &player)
+{
+	switch (player._pRSplType) {
+	case RSPLTYPE_SKILL:
+	case RSPLTYPE_SPELL:
+	case RSPLTYPE_INVALID:
+		return true;
+
+	case RSPLTYPE_CHARGES:
+		return player._pISpells & GetSpellBitmask(player._pRSpell);
+
+	case RSPLTYPE_SCROLL:
+		return player._pScrlSpells & GetSpellBitmask(player._pRSpell);
+
+	default:
+		return false;
+	}
+}
+
+/**
+ * @brief Clears the current player's readied spell selection.
+ * @note Will force a UI redraw in case the values actually change, so that the new spell reflects on the bottom panel.
+ * @param player The player whose readied spell is to be cleared.
+ */
+void ClearReadiedSpell(PlayerStruct &player)
+{
+	bool needsRedraw = false;
+
+	int &readiedSpell = player._pRSpell;
+	if (readiedSpell != SPL_INVALID) {
+		readiedSpell = SPL_INVALID;
+		needsRedraw = true;
+	}
+
+	char &readiedSpellType = player._pRSplType;
+	if (readiedSpellType != RSPLTYPE_INVALID) {
+		readiedSpellType = RSPLTYPE_INVALID;
+		needsRedraw = true;
+	}
+
+	if (needsRedraw) {
+		force_redraw = 255;
+	}
+}
+
+/**
+ * @brief Ensures the player's current readied spell is a valid selection for the character. If the current selection is
+ * incompatible with the player's items and spell (for example, if the player does not currently have access to the spell),
+ * the selection is cleared.
+ * @note Will force a UI redraw in case the values actually change, so that the new spell reflects on the bottom panel.
+ * @param player The player whose readied spell is to be checked.
+ */
+void EnsureValidReadiedSpell(PlayerStruct &player)
+{
+	if (!IsReadiedSpellValid(player)) {
+		ClearReadiedSpell(player);
+	}
+}
+
 BOOL CheckSpell(int id, int sn, char st, BOOL manaonly)
 {
 	BOOL result;
