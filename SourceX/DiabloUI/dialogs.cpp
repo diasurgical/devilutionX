@@ -20,7 +20,6 @@ Art dialogArt;
 char dialogText[256];
 char dialogCaption[1024];
 bool fontWasLoaded;
-bool textInputWasActive;
 
 UiItem *dialogItems;
 std::size_t dialogItemsSize;
@@ -203,8 +202,6 @@ void Init(const char *text, const char *caption, bool error, bool render_behind)
 	fontWasLoaded = font != nullptr;
 	if (!fontWasLoaded)
 		LoadTtfFont();
-	textInputWasActive = SDL_IsTextInputActive();
-	SDL_StopTextInput();
 }
 
 void Deinit()
@@ -213,8 +210,6 @@ void Deinit()
 	UnloadSmlButtonArt();
 	if (!fontWasLoaded)
 		UnloadTtfFont();
-	if (textInputWasActive)
-		SDL_StartTextInput();
 	for (std::size_t i = 0; i < dialogItemsSize; ++i) {
 		dialogItems[i].FreeCache();
 	}

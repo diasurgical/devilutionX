@@ -9,6 +9,7 @@
 namespace dvl {
 
 extern int SelectedItem;
+extern bool textInputActive;
 
 typedef enum _artFocus {
 	FOCUS_SMALL,

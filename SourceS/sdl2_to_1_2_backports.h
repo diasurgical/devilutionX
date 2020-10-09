@@ -59,20 +59,12 @@ inline void SDL_Log(const char *fmt, ...)
 	puts("");
 }
 
-extern SDL_bool SDLBackport_IsTextInputActive;
-
-inline SDL_bool SDL_IsTextInputActive()
-{
-	return SDLBackport_IsTextInputActive;
-}
-
 inline void SDL_StartTextInput()
 {
-	SDLBackport_IsTextInputActive = SDL_TRUE;
 }
-inline void SDL_StopTextInput()
+
+inline void SDL_SetTextInputRect(const SDL_Rect *r)
 {
-	SDLBackport_IsTextInputActive = SDL_FALSE;
 }
 
 //== Graphics helpers

@@ -1,6 +1,7 @@
 #include "controls/menu_controls.h"
 
 #include "controls/controller.h"
+#include "DiabloUI/diabloui.h"
 
 namespace dvl {
 
@@ -68,7 +69,7 @@ MenuAction GetMenuAction(const SDL_Event &event)
 		case SDLK_KP_ENTER:
 			return MenuAction::SELECT;
 		case SDLK_SPACE:
-			if (!SDL_IsTextInputActive()) {
+			if (!textInputActive) {
 				return MenuAction::SELECT;
 			}
 			break;
