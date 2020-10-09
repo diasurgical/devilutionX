@@ -63,6 +63,10 @@ inline void SDL_StartTextInput()
 {
 }
 
+inline void SDL_StopTextInput()
+{
+}
+
 inline void SDL_SetTextInputRect(const SDL_Rect *r)
 {
 }
