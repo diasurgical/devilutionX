@@ -150,7 +150,7 @@ void selgame_GameSelection_Select(int value)
 	switch (value) {
 	case 0:
 		strcpy(title, "Create Game");
-		UiInitList(0, NUM_DIFFICULTIES - 1, selgame_Diff_Focus, selgame_Diff_Select, selgame_Diff_Esc, SELDIFF_DIALOG, size(SELDIFF_DIALOG));
+		UiInitList(0, NUM_DIFFICULTIES - 1, selgame_Diff_Focus, selgame_Diff_Select, selgame_Diff_Esc, SELDIFF_DIALOG, size(SELDIFF_DIALOG), true);
 		break;
 	case 1:
 		strcpy(title, "Join TCP Games");
