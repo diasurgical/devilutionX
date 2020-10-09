@@ -620,16 +620,8 @@ if(CPACK)
         "${PROJECT_SOURCE_DIR}/Packaging/nix/README.txt"
       DESTINATION "share/diasurgical/${project_name}"
     )
-    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/16.png"
-      DESTINATION "share/icons/hicolor/16x16/apps"
-      RENAME "${project_name}.png"
-    )
-    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/Diablo_32.png"
-      DESTINATION "share/icons/hicolor/32x32/apps"
-      RENAME "${project_name}.png"
-    )
-    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/Diablo_48.png"
-      DESTINATION "share/icons/hicolor/48x48/apps"
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/icon.png"
+      DESTINATION "share/icons/hicolor/512x512/apps"
       RENAME "${project_name}.png"
     )
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
@@ -637,7 +629,7 @@ if(CPACK)
     )
 
     # -G DEB
-    set(CPACK_PACKAGE_CONTACT "kai@gnukai.com")
+    set(CPACK_PACKAGE_CONTACT "anders@jenbo.dk")
     set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
     set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
 
