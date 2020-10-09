@@ -46,6 +46,7 @@ std::vector<UiItemBase *> gUiItems;
 bool UiItemsWraps;
 char *UiTextInput;
 int UiTextInputLen;
+bool textInputActive = true;
 
 int SelectedItem = 0;
 
@@ -89,15 +90,20 @@ void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(i
 	if (fnFocus)
 		fnFocus(min);
 
+#ifndef __SWITCH__
 	SDL_StopTextInput(); // input is enabled by default
+#endif
+	textInputActive = false;
 	for (std::size_t i = 0; i < items.size(); i++) {
 		if (items[i]->m_type == UI_EDIT) {
 			UiEdit *pItemUIEdit = (UiEdit *)items[i];
+			SDL_SetTextInputRect(&items[i]->m_rect);
+			textInputActive = true;
 #ifdef __SWITCH__
 			switch_start_text_input("", pItemUIEdit->m_value, pItemUIEdit->m_max_length, /*multiline=*/0);
-#endif
-
+#else
 			SDL_StartTextInput();
+#endif
 			UiTextInput = pItemUIEdit->m_value;
 			UiTextInputLen = pItemUIEdit->m_max_length;
 		}
@@ -272,7 +278,7 @@ void UiFocusNavigation(SDL_Event *event)
 	}
 #endif
 
-	if (SDL_IsTextInputActive()) {
+	if (textInputActive) {
 		switch (event->type) {
 		case SDL_KEYDOWN: {
 			switch (event->key.keysym.sym) {
@@ -314,7 +320,9 @@ void UiFocusNavigation(SDL_Event *event)
 		}
 #ifndef USE_SDL1
 		case SDL_TEXTINPUT:
-			selhero_CatToName(event->text.text, UiTextInput, UiTextInputLen);
+			if (textInputActive) {
+				selhero_CatToName(event->text.text, UiTextInput, UiTextInputLen);
+			}
 			return;
 #endif
 		default:
@@ -368,11 +376,13 @@ void UiHandleEvents(SDL_Event *event)
 void UiFocusNavigationSelect()
 {
 	UiPlaySelectSound();
-	if (SDL_IsTextInputActive()) {
+	if (textInputActive) {
 		if (strlen(UiTextInput) == 0) {
 			return;
 		}
+#ifndef __SWITCH__
 		SDL_StopTextInput();
+#endif
 		UiTextInput = NULL;
 		UiTextInputLen = 0;
 	}
@@ -383,8 +393,10 @@ void UiFocusNavigationSelect()
 void UiFocusNavigationEsc()
 {
 	UiPlaySelectSound();
-	if (SDL_IsTextInputActive()) {
+	if (textInputActive) {
+#ifndef __SWITCH__
 		SDL_StopTextInput();
+#endif
 		UiTextInput = NULL;
 		UiTextInputLen = 0;
 	}
