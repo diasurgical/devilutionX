@@ -92,6 +92,7 @@ void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(i
 	textInputActive = false;
 	for (int i = 0; i < itemCnt; i++) {
 		if (items[i].type == UI_EDIT) {
+			textInputActive = true;
 #ifdef __SWITCH__
 			switch_start_text_input(items[i - 1].art_text.text, items[i].edit.value, /*multiline=*/0);
 #else
