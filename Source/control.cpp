@@ -869,7 +869,7 @@ void DrawCtrlBtns()
  */
 void DoSpeedBook()
 {
-	unsigned __int64 spells, spell;
+	unsigned __int64 spell, spells;
 	int xo, yo, X, Y, i, j;
 
 	spselflag = TRUE;
@@ -928,8 +928,10 @@ void DoPanBtn()
 	int i;
 
 	for (i = 0; i < numpanbtns; i++) {
-		if (MouseX >= PanBtnPos[i][0] + PANEL_LEFT && MouseX <= PanBtnPos[i][0] + PANEL_LEFT + PanBtnPos[i][2]) {
-			if (MouseY >= PanBtnPos[i][1] + PANEL_TOP && MouseY <= PanBtnPos[i][1] + PANEL_TOP + PanBtnPos[i][3]) {
+		int x = PanBtnPos[i][0] + PANEL_LEFT + PanBtnPos[i][2];
+		int y = PanBtnPos[i][1] + PANEL_TOP + PanBtnPos[i][3];
+		if (MouseX >= PanBtnPos[i][0] + PANEL_LEFT && MouseX <= x) {
+			if (MouseY >= PanBtnPos[i][1] + PANEL_TOP && MouseY <= y) {
 				panbtn[i] = TRUE;
 				drawbtnflag = TRUE;
 				panbtndown = TRUE;
@@ -951,16 +953,22 @@ void control_set_button_down(int btn_id)
 
 void control_check_btn_press()
 {
+	int x, y;
+
+	x = PanBtnPos[3][0] + PANEL_LEFT + PanBtnPos[3][2];
+	y = PanBtnPos[3][1] + PANEL_TOP + PanBtnPos[3][3];
 	if (MouseX >= PanBtnPos[3][0] + PANEL_LEFT
-	    && MouseX <= PanBtnPos[3][0] + PANEL_LEFT + PanBtnPos[3][2]
+	    && MouseX <= x
 	    && MouseY >= PanBtnPos[3][1] + PANEL_TOP
-	    && MouseY <= PanBtnPos[3][1] + PANEL_TOP + PanBtnPos[3][3]) {
+	    && MouseY <= y) {
 		control_set_button_down(3);
 	}
+	x = PanBtnPos[6][0] + PANEL_LEFT + PanBtnPos[6][2];
+	y = PanBtnPos[6][1] + PANEL_TOP + PanBtnPos[6][3];
 	if (MouseX >= PanBtnPos[6][0] + PANEL_LEFT
-	    && MouseX <= PanBtnPos[6][0] + PANEL_LEFT + PanBtnPos[6][2]
+	    && MouseX <= x
 	    && MouseY >= PanBtnPos[6][1] + PANEL_TOP
-	    && MouseY <= PanBtnPos[6][1] + PANEL_TOP + PanBtnPos[6][3]) {
+	    && MouseY <= y) {
 		control_set_button_down(6);
 	}
 }
@@ -1410,7 +1418,10 @@ void DrawChr()
 	else
 		MY_PlrStringXY(258, 239, 301, chrstr, col, 0);
 
-	col = plr[myplr]._pMagResist == 0 ? COL_WHITE : COL_BLUE;
+	if (plr[myplr]._pMagResist == 0)
+		col = COL_WHITE;
+	else
+		col = COL_BLUE;
 	if (plr[myplr]._pMagResist < MAXRESIST) {
 		sprintf(chrstr, "%i%%", plr[myplr]._pMagResist);
 	} else {
@@ -1419,7 +1430,10 @@ void DrawChr()
 	}
 	ADD_PlrStringXY(257, 276, 300, chrstr, col);
 
-	col = plr[myplr]._pFireResist == 0 ? COL_WHITE : COL_BLUE;
+	if (plr[myplr]._pFireResist == 0)
+		col = COL_WHITE;
+	else
+		col = COL_BLUE;
 	if (plr[myplr]._pFireResist < MAXRESIST) {
 		sprintf(chrstr, "%i%%", plr[myplr]._pFireResist);
 	} else {
@@ -1428,7 +1442,10 @@ void DrawChr()
 	}
 	ADD_PlrStringXY(257, 304, 300, chrstr, col);
 
-	col = plr[myplr]._pLghtResist == 0 ? COL_WHITE : COL_BLUE;
+	if (plr[myplr]._pLghtResist == 0)
+		col = COL_WHITE;
+	else
+		col = COL_BLUE;
 	if (plr[myplr]._pLghtResist < MAXRESIST) {
 		sprintf(chrstr, "%i%%", plr[myplr]._pLghtResist);
 	} else {
@@ -1512,7 +1529,10 @@ void DrawChr()
 			CelDraw(137 + SCREEN_X, 244 + SCREEN_Y, pChrButtons, chrbtn[ATTRIB_VIT] + 8, 41);
 	}
 
-	col = plr[myplr]._pMaxHP <= plr[myplr]._pMaxHPBase ? COL_WHITE : COL_BLUE;
+	if (plr[myplr]._pMaxHP > plr[myplr]._pMaxHPBase)
+		col = COL_BLUE;
+	else
+		col = COL_WHITE;
 	sprintf(chrstr, "%i", plr[myplr]._pMaxHP >> 6);
 	ADD_PlrStringXY(95, 304, 126, chrstr, col);
 	if (plr[myplr]._pHitPoints != plr[myplr]._pMaxHP)
@@ -1520,7 +1540,10 @@ void DrawChr()
 	sprintf(chrstr, "%i", plr[myplr]._pHitPoints >> 6);
 	ADD_PlrStringXY(143, 304, 174, chrstr, col);
 
-	col = plr[myplr]._pMaxMana <= plr[myplr]._pMaxManaBase ? COL_WHITE : COL_BLUE;
+	if (plr[myplr]._pMaxMana > plr[myplr]._pMaxManaBase)
+		col = COL_BLUE;
+	else
+		col = COL_WHITE;
 	sprintf(chrstr, "%i", plr[myplr]._pMaxMana >> 6);
 	ADD_PlrStringXY(95, 332, 126, chrstr, col);
 	if (plr[myplr]._pMana != plr[myplr]._pMaxMana)
@@ -1595,7 +1618,7 @@ void DrawLevelUpIcon()
 
 void CheckChrBtns()
 {
-	int pc, i;
+	int pc, i, x, y;
 
 	if (!chrbtnactive && plr[myplr]._pStatPts) {
 		pc = plr[myplr]._pClass;
@@ -1620,10 +1643,12 @@ void CheckChrBtns()
 			default:
 				continue;
 			}
+			x = ChrBtnsRect[i].x + ChrBtnsRect[i].w;
+			y = ChrBtnsRect[i].y + ChrBtnsRect[i].h;
 			if (MouseX >= ChrBtnsRect[i].x
-			    && MouseX <= ChrBtnsRect[i].x + ChrBtnsRect[i].w
+			    && MouseX <= x
 			    && MouseY >= ChrBtnsRect[i].y
-			    && MouseY <= ChrBtnsRect[i].y + ChrBtnsRect[i].h) {
+			    && MouseY <= y) {
 				chrbtn[i] = TRUE;
 				chrbtnactive = TRUE;
 			}
@@ -1883,8 +1908,8 @@ void CheckSBook()
 	unsigned __int64 spl;
 
 	if (MouseX >= RIGHT_PANEL + 11 && MouseX < RIGHT_PANEL + 48 && MouseY >= 18 && MouseY < 314) {
-		spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
 		sn = SpellPages[sbooktab][(MouseY - 18) / 43];
+		spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
 		if (sn != -1 && spl & (__int64)1 << (sn - 1)) {
 			st = RSPLTYPE_SPELL;
 			if (plr[myplr]._pISpells & (__int64)1 << (sn - 1)) {
@@ -1927,8 +1952,11 @@ void DrawGoldSplit(int amount)
 	if (amount > 0) {
 		sprintf(tempstr, "%u", amount);
 		PrintGameStr(388, 140, tempstr, COL_WHITE);
+	}
+	if (amount > 0) {
 		for (i = 0; i < tempstr[i]; i++) {
-			screen_x += fontkern[fontframe[gbFontTransTbl[(BYTE)tempstr[i]]]] + 1;
+			BYTE c = fontframe[gbFontTransTbl[(BYTE)tempstr[i]]];
+			screen_x += fontkern[c] + 1;
 		}
 		screen_x += 452;
 	} else {
@@ -2086,7 +2114,8 @@ char *control_print_talk_msg(char *msg, int *x, int y, int color)
 	width = *x;
 	while (*msg) {
 
-		c = fontframe[gbFontTransTbl[(BYTE)*msg]];
+		c = gbFontTransTbl[(BYTE)*msg];
+		c = fontframe[c];
 		width += fontkern[c] + 1;
 		if (width > 450 + PANEL_X)
 			return msg;

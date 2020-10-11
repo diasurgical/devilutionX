@@ -46,38 +46,38 @@ int plrxoff2[9] = { 0, 1, 0, 1, 2, 0, 1, 2, 2 };
 /** Specifies the Y-coordinate delta from a player, used for instanced when casting resurrect. */
 int plryoff2[9] = { 0, 0, 1, 1, 0, 2, 2, 1, 2 };
 /** Specifies the frame of each animation for which an action is triggered, for each player class. */
-char PlrGFXAnimLens[][11] = {
+char PlrGFXAnimLens[NUM_CLASSES][11] = {
 	{ 10, 16, 8, 2, 20, 20, 6, 20, 8, 9, 14 },
 	{ 8, 18, 8, 4, 20, 16, 7, 20, 8, 10, 12 },
 	{ 8, 16, 8, 6, 20, 12, 8, 20, 8, 12, 8 },
 };
 /** Maps from player class to player velocity. */
-int PWVel[3][3] = {
+int PWVel[NUM_CLASSES][3] = {
 	{ 2048, 1024, 512 },
 	{ 2048, 1024, 512 },
 	{ 2048, 1024, 512 }
 };
 /** Total number of frames in walk animation. */
-int AnimLenFromClass[3] = {
+int AnimLenFromClass[NUM_CLASSES] = {
 	8, 8, 8
 };
 /** Maps from player_class to starting stat in strength. */
-int StrengthTbl[3] = { 30, 20, 15 };
+int StrengthTbl[NUM_CLASSES] = { 30, 20, 15 };
 /** Maps from player_class to starting stat in magic. */
-int MagicTbl[3] = { 10, 15, 35 };
+int MagicTbl[NUM_CLASSES] = { 10, 15, 35 };
 /** Maps from player_class to starting stat in dexterity. */
-int DexterityTbl[3] = { 20, 30, 15 };
+int DexterityTbl[NUM_CLASSES] = { 20, 30, 15 };
 /** Maps from player_class to starting stat in vitality. */
-int VitalityTbl[3] = { 25, 20, 20 };
+int VitalityTbl[NUM_CLASSES] = { 25, 20, 20 };
 /** Specifies the chance to block bonus of each player class.*/
-int ToBlkTbl[3] = { 30, 20, 10 };
+int ToBlkTbl[NUM_CLASSES] = { 30, 20, 10 };
 char *ClassStrTblOld[] = {
 	"Warrior",
 	"Rogue",
 	"Sorceror",
 };
 /** Maps from player_class to maximum stats. */
-int MaxStats[3][4] = {
+int MaxStats[NUM_CLASSES][4] = {
 	{ 250, 50, 60, 100 },
 	{ 55, 70, 250, 80 },
 	{ 45, 250, 85, 80 }
@@ -136,7 +136,7 @@ int ExpLvlsTbl[MAXCHARLEVEL] = {
 	1310707109,
 	1583495809
 };
-char *ClassStrTbl[] = {
+char *ClassStrTbl[NUM_CLASSES] = {
 	"Warrior",
 	"Rogue",
 	"Sorceror",
@@ -352,7 +352,7 @@ void InitPlrGFXMem(int pnum)
 
 DWORD GetPlrGFXSize(char *szCel)
 {
-	int c;
+	DWORD c;
 	const char *a, *w;
 	DWORD dwSize, dwMaxSize;
 	HANDLE hsFile;
@@ -361,7 +361,7 @@ DWORD GetPlrGFXSize(char *szCel)
 
 	dwMaxSize = 0;
 
-	for (c = 0; c < sizeof(ClassStrTbl) / sizeof(*ClassStrTbl); c++) {
+	for (c = 0; c < NUM_CLASSES; c++) {
 #ifdef SPAWN
 		if (c != 0)
 			continue;

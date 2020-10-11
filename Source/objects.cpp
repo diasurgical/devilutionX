@@ -671,9 +671,9 @@ void AddHookedBodies(int freq)
 {
 	int i, j, ii, jj;
 
-	for (j = 0; j < 40; j++) {
+	for (j = 0; j < DMAXY; j++) {
 		jj = 16 + j * 2;
-		for (i = 0; i < 40; i++) {
+		for (i = 0; i < DMAXX; i++) {
 			ii = 16 + i * 2;
 			if (dungeon[i][j] != 1 && dungeon[i][j] != 2)
 				continue;
@@ -3413,7 +3413,7 @@ void OperateShrine(int pnum, int i, int sType)
 			if (plr[pnum].InvList[j]._iMagical && !plr[pnum].InvList[j]._iIdentified)
 				plr[pnum].InvList[j]._iIdentified = TRUE;
 		}
-		for (j = 0; j < 8; j++) {
+		for (j = 0; j < MAXBELTITEMS; j++) {
 			if (plr[pnum].SpdList[j]._iMagical && !plr[pnum].SpdList[j]._iIdentified)
 				plr[pnum].SpdList[j]._iIdentified = TRUE; // belt items can't be magical?
 		}
@@ -3718,7 +3718,7 @@ void OperateWeaponRack(int pnum, int i, BOOL sendmsg)
 		return;
 	SetRndSeed(object[i]._oRndSeed);
 
-	switch (random_(0, 4) + 1) {
+	switch (random_(0, 4) + ITYPE_SWORD) {
 	case ITYPE_SWORD:
 		weaponType = ITYPE_SWORD;
 		break;

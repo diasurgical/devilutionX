@@ -567,11 +567,11 @@ BOOL MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, BOOLEAN shif
 			if (resist) {
 				PlayEffect(m, 1);
 			} else if (monster[m]._mmode == MM_STONE) {
-				if (m > 3)
+				if (m > MAX_PLRS - 1)
 					M_StartHit(m, -1, dam);
 				monster[m]._mmode = MM_STONE;
 			} else {
-				if (m > 3)
+				if (m > MAX_PLRS - 1)
 					M_StartHit(m, -1, dam);
 			}
 		}
@@ -589,7 +589,7 @@ BOOL MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, BOOLE
 	resist = FALSE;
 	if (monster[m].mtalkmsg
 	    || monster[m]._mhitpoints >> 6 <= 0
-	    || t == MIS_HBOLT && monster[m].MType->mtype != MT_DIABLO && monster[m].MData->mMonstClass) {
+	    || t == MIS_HBOLT && monster[m].MType->mtype != MT_DIABLO && monster[m].MData->mMonstClass != MC_UNDEAD) {
 		return FALSE;
 	}
 	if (monster[m].MType->mtype == MT_ILLWEAV && monster[m]._mgoal == MGOAL_RETREAT)
@@ -676,14 +676,14 @@ BOOL MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, BOOLE
 		if (resist) {
 			PlayEffect(m, 1);
 		} else if (monster[m]._mmode == MM_STONE) {
-			if (m > 3)
+			if (m > MAX_PLRS - 1)
 				M_StartHit(m, pnum, dam);
 			monster[m]._mmode = MM_STONE;
 		} else {
 			if (!missiledata[t].mType && plr[pnum]._pIFlags & ISPL_KNOCKBACK) {
 				M_GetKnockback(m);
 			}
-			if (m > 3)
+			if (m > MAX_PLRS - 1)
 				M_StartHit(m, pnum, dam);
 		}
 	}
@@ -1940,7 +1940,7 @@ void AddStone(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, i
 			if (tx > 0 && tx < MAXDUNX && ty > 0 && ty < MAXDUNY) {
 				mid = dMonster[tx][ty];
 				mid = mid > 0 ? mid - 1 : -1 - mid;
-				if (mid > 3 && monster[mid]._mAi != AI_DIABLO) {
+				if (mid > MAX_PLRS - 1 && monster[mid]._mAi != AI_DIABLO) {
 					if (monster[mid]._mmode != MM_FADEIN && monster[mid]._mmode != MM_FADEOUT && monster[mid]._mmode != MM_CHARGE) {
 						j = -99;
 						i = 6;
@@ -2544,7 +2544,7 @@ int Sentfire(int i, int sx, int sy)
 
 	ex = 0;
 	if (LineClear(missile[i]._mix, missile[i]._miy, sx, sy)) {
-		if (dMonster[sx][sy] > 0 && monster[dMonster[sx][sy] - 1]._mhitpoints >> 6 > 0 && dMonster[sx][sy] - 1 > 3) {
+		if (dMonster[sx][sy] > 0 && monster[dMonster[sx][sy] - 1]._mhitpoints >> 6 > 0 && dMonster[sx][sy] - 1 > MAX_PLRS - 1) {
 			dir = GetDirection(missile[i]._mix, missile[i]._miy, sx, sy);
 			missile[i]._miVar3 = missileavail[0];
 			AddMissile(missile[i]._mix, missile[i]._miy, sx, sy, dir, MIS_FIREBOLT, 0, missile[i]._misource, missile[i]._midam, GetSpellLevel(missile[i]._misource, SPL_FIREBOLT));
@@ -3684,7 +3684,7 @@ void MI_Apoca(int i)
 	exit = FALSE;
 	for (j = missile[i]._miVar2; j < missile[i]._miVar3 && !exit; j++) {
 		for (k = missile[i]._miVar4; k < missile[i]._miVar5 && !exit; k++) {
-			if (dMonster[k][j] > 3 && !nSolidTable[dPiece[k][j]]) {
+			if (dMonster[k][j] > MAX_PLRS - 1 && !nSolidTable[dPiece[k][j]]) {
 				AddMissile(k, j, k, j, plr[id]._pdir, MIS_BOOM, 0, id, missile[i]._midam, 0);
 				exit = TRUE;
 			}

@@ -65,7 +65,7 @@ int CheckUnique(int i, int lvl, int uper, BOOL recreate);
 void GetUniqueItem(int i, int uid);
 void SpawnUnique(int uid, int x, int y);
 void ItemRndDur(int ii);
-void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, int onlygood, BOOL recreate, BOOL pregen);
+void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, BOOL onlygood, BOOL recreate, BOOL pregen);
 void SpawnItem(int m, int x, int y, BOOL sendmsg);
 void CreateItem(int uid, int x, int y);
 void CreateRndItem(int x, int y, BOOL onlygood, BOOL sendmsg, BOOL delta);

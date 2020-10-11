@@ -84,7 +84,7 @@ void InitTownTriggers()
 		numtrigs++;
 	} else {
 #endif
-		for (i = 0; i < MAX_PLRS - 1; i++) {
+		for (i = 0; i < sizeof(townwarps) / sizeof(townwarps[0]); i++) {
 			townwarps[i] = FALSE;
 		}
 #ifndef SPAWN

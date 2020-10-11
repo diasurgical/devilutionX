@@ -637,7 +637,7 @@ void SetAutomapView(int x, int y)
 	maptype = GetAutomapType(xx, yy, FALSE);
 	solid = maptype & 0x4000;
 
-	switch (maptype & 0xF) {
+	switch (maptype & MAPFLAG_TYPE) {
 	case 2:
 		if (solid) {
 			if (GetAutomapType(xx, yy + 1, FALSE) == 0x4007)

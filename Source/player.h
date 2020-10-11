@@ -131,18 +131,18 @@ extern int plrxoff[9];
 extern int plryoff[9];
 extern int plrxoff2[9];
 extern int plryoff2[9];
-extern char PlrGFXAnimLens[][11];
-extern int PWVel[3][3];
-extern int AnimLenFromClass[3];
-extern int StrengthTbl[3];
-extern int MagicTbl[3];
-extern int DexterityTbl[3];
-extern int VitalityTbl[3];
-extern int ToBlkTbl[3];
+extern char PlrGFXAnimLens[NUM_CLASSES][11];
+extern int PWVel[NUM_CLASSES][3];
+extern int AnimLenFromClass[NUM_CLASSES];
+extern int StrengthTbl[NUM_CLASSES];
+extern int MagicTbl[NUM_CLASSES];
+extern int DexterityTbl[NUM_CLASSES];
+extern int VitalityTbl[NUM_CLASSES];
+extern int ToBlkTbl[NUM_CLASSES];
 extern char *ClassStrTblOld[];
-extern int MaxStats[3][4];
+extern int MaxStats[NUM_CLASSES][4];
 extern int ExpLvlsTbl[MAXCHARLEVEL];
-extern char *ClassStrTbl[];
+extern char *ClassStrTbl[NUM_CLASSES];
 extern BYTE fix[9];
 
 #ifdef __cplusplus
