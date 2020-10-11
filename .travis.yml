@@ -21,6 +21,7 @@ addons:
     - libsdl2-mixer-dev
     - libsdl2-ttf-dev
   homebrew:
+    update: true 
     brewfile: true
 
 git:
