@@ -92,7 +92,7 @@ elseif(TARGET_PLATFORM STREQUAL "cpigamesh")
   include(cpigamesh_defs)
 endif()
 
-if(${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD OR ${CMAKE_SYSTEM_NAME} STREQUAL OpenBSD)
+if(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD|OpenBSD|DragonFly")
   set(ASAN OFF)
   set(UBSAN OFF)
   add_definitions(-D_BSD_SOURCE)
