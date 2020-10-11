@@ -440,3 +440,4 @@ exefs/main
 
 # ddraw wrapper configuration file
 ddraw_settings.ini
+Brewfile.lock.json
