@@ -2,7 +2,7 @@ language: cpp
 jobs:
   include:
     - os: osx
-      osx_image: xcode8.3
+      osx_image: xcode9.2
       script:
         - cmake -S. -Bbuild -DBINARY_RELEASE=ON
         - sudo cmake --build build --target package --config Release -j $(sysctl -n hw.physicalcpu)
