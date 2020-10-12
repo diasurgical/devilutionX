@@ -44,7 +44,7 @@ make -j$(nproc)
 Make sure you have [Homebrew](https://brew.sh/) installed, then run:
 
 ```
-brew bundle
+brew bundle install
 cd build
 cmake ..
 cmake --build . -j $(sysctl -n hw.physicalcpu)
