@@ -1486,12 +1486,14 @@ typedef struct PkPlayerStruct {
 	char pLvlLoad;
 	char pBattleNet;
 	BOOLEAN pManaShield;
-	char bReserved[4];
 #ifdef HELLFIRE
+	char bReserved[4];
 	unsigned char pDungMsgs2;
 	short wReflection;
 	int pDifficulty;
 	int pDamAcFlags;
+#else
+	char bReserved[3];
 #endif
 	short wReserved[8];
 	int pDiabloKillLevel;
