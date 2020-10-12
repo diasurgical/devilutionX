@@ -656,7 +656,9 @@ void DoUnLight(int nXPos, int nYPos, int nRadius)
 
 	for (y = min_y; y < max_y; y++) {
 		for (x = min_x; x < max_x; x++) {
+#ifndef HELLFIRE
 			if (x >= 0 && x < MAXDUNX && y >= 0 && y < MAXDUNY)
+#endif
 				dLight[x][y] = dPreLight[x][y];
 		}
 	}
@@ -982,7 +984,7 @@ void ToggleLighting()
 
 	lightflag ^= TRUE;
 
-	if (lightflag != 0) {
+	if (lightflag) {
 		memset(dLight, 0, sizeof(dLight));
 	} else {
 		memcpy(dLight, dPreLight, sizeof(dLight));
@@ -1021,7 +1023,7 @@ int AddLight(int x, int y, int r)
 {
 	int lid;
 
-	if (lightflag != 0) {
+	if (lightflag) {
 		return -1;
 	}
 
@@ -1117,7 +1119,7 @@ void ProcessLightList()
 	int i, j;
 	BYTE temp;
 
-	if (lightflag != 0) {
+	if (lightflag) {
 		return;
 	}
 

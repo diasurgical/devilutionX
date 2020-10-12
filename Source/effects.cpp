@@ -42,10 +42,20 @@ TSFX sgSFX[] = {
 	{ sfx_MISC,                  "Sfx\\Misc\\Swing.wav",        NULL },
 	{ sfx_MISC,                  "Sfx\\Misc\\Swing2.wav",       NULL },
 	{ sfx_MISC,                  "Sfx\\Misc\\Dead.wav",         NULL },
+#ifdef HELLFIRE
+	{ sfx_MISC,                  "Sfx\\Misc\\Sting1.wav",       NULL },
+	{ sfx_MISC,                  "Sfx\\Misc\\FBallBow.wav",     NULL },
+#endif
 	{ sfx_STREAM,                "Sfx\\Misc\\Questdon.wav",     NULL },
 	{ sfx_MISC,                  "Sfx\\Items\\Armrfkd.wav",     NULL },
 	{ sfx_MISC,                  "Sfx\\Items\\Barlfire.wav",    NULL },
 	{ sfx_MISC,                  "Sfx\\Items\\Barrel.wav",      NULL },
+#ifdef HELLFIRE
+	{ sfx_MISC,                  "Sfx\\Items\\PodPop8.wav",     NULL },
+	{ sfx_MISC,                  "Sfx\\Items\\PodPop5.wav",     NULL },
+	{ sfx_MISC,                  "Sfx\\Items\\UrnPop3.wav",     NULL },
+	{ sfx_MISC,                  "Sfx\\Items\\UrnPop2.wav",     NULL },
+#endif
 	{ sfx_MISC,                  "Sfx\\Items\\Bhit.wav",        NULL },
 	{ sfx_MISC,                  "Sfx\\Items\\Bhit1.wav",       NULL },
 	{ sfx_MISC,                  "Sfx\\Items\\Chest.wav",       NULL },
@@ -153,6 +163,9 @@ TSFX sgSFX[] = {
 	{ sfx_MISC,                  "Sfx\\Misc\\Lning1.wav",       NULL },
 	{ sfx_MISC,                  "Sfx\\Misc\\Ltning.wav",       NULL },
 	{ sfx_MISC,                  "Sfx\\Misc\\Mshield.wav",      NULL },
+#ifdef HELLFIRE
+	{ sfx_MISC,                  "Sfx\\Misc\\NestXpld.wav",     NULL },
+#endif
 	{ sfx_MISC,                  "Sfx\\Misc\\Nova.wav",         NULL },
 	{ sfx_MISC,                  "Sfx\\Misc\\Portal.wav",       NULL },
 	{ sfx_MISC,                  "Sfx\\Misc\\Puddle.wav",       NULL },
@@ -170,6 +183,9 @@ TSFX sgSFX[] = {
 	{ sfx_MISC,                  "Sfx\\Misc\\Vtheft.wav",       NULL },
 	{ sfx_MISC,                  "Sfx\\Misc\\Wallloop.wav",     NULL },
 	{ sfx_MISC,                  "Sfx\\Misc\\Wallstrt.wav",     NULL },
+#ifdef HELLFIRE
+	{ sfx_MISC,                  "Sfx\\Misc\\LMag.wav",         NULL },
+#endif
 #ifndef SPAWN
 	{ sfx_STREAM,                "Sfx\\Towners\\Bmaid01.wav",   NULL },
 	{ sfx_STREAM,                "Sfx\\Towners\\Bmaid02.wav",   NULL },
@@ -274,6 +290,10 @@ TSFX sgSFX[] = {
 #endif
 	{ 0,                         "Sfx\\Towners\\Cow1.wav",      NULL },
 	{ 0,                         "Sfx\\Towners\\Cow2.wav",      NULL },
+#ifdef HELLFIRE
+	{ 0,                         "Sfx\\Towners\\Cow7.wav",      NULL },
+	{ 0,                         "Sfx\\Towners\\Cow8.wav",      NULL },
+#endif
 #ifndef SPAWN
 	{ sfx_STREAM,                "Sfx\\Towners\\Deadguy2.wav",  NULL },
 	{ sfx_STREAM,                "Sfx\\Towners\\Drunk01.wav",   NULL },
@@ -883,6 +903,113 @@ TSFX sgSFX[] = {
 	{ sfx_STREAM | sfx_WARRIOR,  "Sfx\\Warrior\\Wario100.wav",  NULL },
 	{ sfx_STREAM | sfx_WARRIOR,  "Sfx\\Warrior\\Wario101.wav",  NULL },
 	{ sfx_STREAM | sfx_WARRIOR,  "Sfx\\Warrior\\Wario102.wav",  NULL },
+#endif
+#ifdef HELLFIRE
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Monk\\Monk01.wav",       NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Monk\\Monk08.wav",       NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Monk\\Monk09.wav",       NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Monk\\Monk10.wav",       NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Monk\\Monk11.wav",       NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Monk\\Monk12.wav",       NULL },
+	{ sfx_MONK,                  "Sfx\\Monk\\Monk13.wav",       NULL },
+	{ sfx_MONK,                  "Sfx\\Monk\\Monk14.wav",       NULL },
+	{ sfx_MONK,                  "Sfx\\Monk\\Monk15.wav",       NULL },
+	{ sfx_MONK,                  "Sfx\\Monk\\Monk16.wav",       NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Monk\\Monk24.wav",       NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Monk\\Monk27.wav",       NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Monk\\Monk29.wav",       NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Monk\\Monk34.wav",       NULL },
+	{ sfx_MONK,                  "Sfx\\Monk\\Monk35.wav",       NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Monk\\Monk43.wav",       NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Monk\\Monk46.wav",       NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Monk\\Monk49.wav",       NULL },
+	{ sfx_MONK,                  "Sfx\\Monk\\Monk50.wav",       NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Monk\\Monk52.wav",       NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Monk\\Monk54.wav",       NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Monk\\Monk55.wav",       NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Monk\\Monk56.wav",       NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Monk\\Monk61.wav",       NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Monk\\Monk62.wav",       NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Monk\\Monk68.wav",       NULL },
+	{ sfx_MONK,                  "Sfx\\Monk\\Monk69.wav",       NULL },
+	{ sfx_MONK,                  "Sfx\\Monk\\Monk69b.wav",      NULL },
+	{ sfx_MONK,                  "Sfx\\Monk\\Monk70.wav",       NULL },
+	{ sfx_MONK,                  "Sfx\\Monk\\Monk71.wav",       NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_MONK,                  "Sfx\\Monk\\Monk79.wav",       NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Monk\\Monk80.wav",       NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Monk\\Monk82.wav",       NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Monk\\Monk83.wav",       NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Monk\\Monk87.wav",       NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Monk\\Monk88.wav",       NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Monk\\Monk89.wav",       NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Monk\\Monk91.wav",       NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Monk\\Monk92.wav",       NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Monk\\Monk94.wav",       NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Monk\\Monk95.wav",       NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Monk\\Monk96.wav",       NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Monk\\Monk97.wav",       NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Monk\\Monk98.wav",       NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Monk\\Monk99.wav",       NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Misc\\blank.wav",        NULL },
+	{ sfx_STREAM | sfx_MONK,     "Sfx\\Misc\\blank.wav",        NULL },
+#endif
+#ifndef SPAWN
 	{ sfx_STREAM,                "Sfx\\Narrator\\Nar01.wav",    NULL },
 	{ sfx_STREAM,                "Sfx\\Narrator\\Nar02.wav",    NULL },
 	{ sfx_STREAM,                "Sfx\\Narrator\\Nar03.wav",    NULL },
@@ -914,10 +1041,67 @@ TSFX sgSFX[] = {
 	{ sfx_STREAM,                "Sfx\\Monsters\\Zhar02.wav",   NULL },
 	{ sfx_STREAM,                "Sfx\\Monsters\\DiabloD.wav",  NULL },
 #endif
+#ifdef HELLFIRE
+	{ sfx_STREAM,                "Sfx\\Hellfire\\Farmer1.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\Farmer2.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\Farmer2A.wav", NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\Farmer3.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\Farmer4.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\Farmer5.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\Farmer6.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\Farmer7.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\Farmer8.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\Farmer9.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\TEDDYBR1.wav", NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\TEDDYBR2.wav", NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\TEDDYBR3.wav", NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\TEDDYBR4.wav", NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\DEFILER1.wav", NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\DEFILER2.wav", NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\DEFILER3.wav", NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\DEFILER4.wav", NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\DEFILER8.wav", NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\DEFILER6.wav", NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\DEFILER7.wav", NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\NAKRUL1.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\NAKRUL2.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\NAKRUL3.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\NAKRUL4.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\NAKRUL5.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\NAKRUL6.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\NARATR3.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\COWSUT1.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\COWSUT2.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\COWSUT3.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\COWSUT4.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\COWSUT4A.wav", NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\COWSUT5.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\COWSUT6.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\COWSUT7.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\COWSUT8.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\COWSUT9.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\COWSUT10.wav", NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\COWSUT11.wav", NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\COWSUT12.wav", NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\Skljrn1.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\Naratr6.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\Naratr7.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\Naratr8.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\Naratr5.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\Naratr9.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\Naratr4.wav",  NULL },
+	{ sfx_STREAM,                "Sfx\\Hellfire\\TRADER1.wav",  NULL },
+	{ sfx_MISC,                  "Sfx\\Items\\Cropen.wav",      NULL },
+	{ sfx_MISC,                  "Sfx\\Items\\Crclos.wav",      NULL },
+#endif
 	// clang-format on
 };
 
+#ifdef HELLFIRE
+#define PLRSFXS (sfx_WARRIOR | sfx_ROGUE | sfx_SORCEROR | sfx_MONK)
+#else
 #define PLRSFXS (sfx_WARRIOR | sfx_ROGUE | sfx_SORCEROR)
+#endif
 
 BOOL effect_is_playing(int nSFX)
 {
@@ -1123,6 +1307,10 @@ int RndSFX(int psfx)
 	else if (psfx == PS_ROGUE69)
 		nRand = 2;
 #endif
+#ifdef HELLFIRE
+	else if (psfx == PS_MONK69)
+		nRand = 2;
+#endif
 	else if (psfx == PS_SWING)
 		nRand = 2;
 	else if (psfx == LS_ACID)
@@ -1205,6 +1393,14 @@ void sound_init()
 		mask = sfx_ROGUE;
 	} else if (plr[myplr]._pClass == PC_SORCERER) {
 		mask = sfx_SORCEROR;
+#ifdef HELLFIRE
+	} else if (plr[myplr]._pClass == PC_MONK) {
+		mask = sfx_MONK;
+	} else if (plr[myplr]._pClass == PC_BARD) {
+		mask = sfx_ROGUE;
+	} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+		mask = sfx_WARRIOR;
+#endif
 	} else {
 		app_fatal("effects:1");
 	}

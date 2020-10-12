@@ -15,6 +15,10 @@ extern "C" {
 void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield);
 void VerifyGoldSeeds(PlayerStruct *pPlayer);
 void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL killok);
+#ifdef HELLFIRE
+void PackItem(PkItemStruct *id, ItemStruct *is);
+void UnPackItem(PkItemStruct *is, ItemStruct *id);
+#endif
 
 /* rdata */
 #ifdef __cplusplus

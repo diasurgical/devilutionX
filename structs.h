@@ -171,6 +171,9 @@ typedef struct ItemStruct {
 	BOOL _iStatFlag;
 	int IDidx;
 	int offs016C; // _oldlight or _iInvalid
+#ifdef HELLFIRE
+	int _iDamAcFlags;
+#endif
 } ItemStruct;
 
 //////////////////////////////////////////////////
@@ -342,7 +345,12 @@ typedef struct PlayerStruct {
 	unsigned char pLvlLoad;
 	unsigned char pBattleNet;
 	BOOLEAN pManaShield;
-	char bReserved[3];
+	char bReserved[4];
+#ifdef HELLFIRE
+	unsigned char pDungMsgs2;
+	short wReflection;
+	int pDamAcFlags;
+#endif
 	short wReserved[8];
 	DWORD pDiabloKillLevel;
 	int pDifficulty;
@@ -519,15 +527,24 @@ typedef struct MonsterData {
 } MonsterData;
 
 typedef struct CMonster {
+#ifdef HELLFIRE
+	int mtype;
+#else
 	unsigned char mtype;
+#endif
 	// TODO: Add enum for place flags
 	unsigned char mPlaceFlags;
 	AnimStruct Anims[6];
 	TSnd *Snds[4][2];
 	int width;
 	int width2;
+#ifdef HELLFIRE
+	int mMinHP;
+	int mMaxHP;
+#else
 	unsigned char mMinHP;
 	unsigned char mMaxHP;
+#endif
 	BOOL has_special;
 	unsigned char mAFNum;
 	char mdeadval;
@@ -615,7 +632,11 @@ typedef struct MonsterStruct { // note: missing field _mAFNum
 } MonsterStruct;
 
 typedef struct UniqMonstStruct {
+#ifdef HELLFIRE
+	int mtype;
+#else
 	char mtype;
+#endif
 	char *mName;
 	char *mTrnName;
 	unsigned char mlevel;
@@ -795,6 +816,14 @@ typedef struct TCmdGItem {
 	WORD wValue;
 	DWORD dwBuff;
 	int dwTime;
+#ifdef HELLFIRE
+	WORD wToHit;
+	WORD wMaxDam;
+	BYTE bMinStr;
+	BYTE bMinMag;
+	BYTE bMinDex;
+	BYTE bAC;
+#endif
 } TCmdGItem;
 
 typedef struct TCmdPItem {
@@ -811,6 +840,14 @@ typedef struct TCmdPItem {
 	BYTE bMCh;
 	WORD wValue;
 	DWORD dwBuff;
+#ifdef HELLFIRE
+	WORD wToHit;
+	WORD wMaxDam;
+	BYTE bMinStr;
+	BYTE bMinMag;
+	BYTE bMinDex;
+	BYTE bAC;
+#endif
 } TCmdPItem;
 
 typedef struct TCmdChItem {
@@ -832,6 +869,14 @@ typedef struct TCmdDamage {
 	BYTE bPlr;
 	DWORD dwDam;
 } TCmdDamage;
+
+#ifdef HELLFIRE
+typedef struct TCmdMonDamage {
+	BYTE bCmd;
+	WORD wMon;
+	DWORD dwDam;
+} TCmdMonDamage;
+#endif
 
 typedef struct TCmdPlrInfoHdr {
 	BYTE bCmd;
@@ -879,6 +924,14 @@ typedef struct TSyncHeader {
 	WORD wPInvCI;
 	DWORD dwPInvSeed;
 	BYTE bPInvId;
+#ifdef HELLFIRE
+	WORD wToHit;
+	WORD wMaxDam;
+	BYTE bMinStr;
+	BYTE bMinMag;
+	BYTE bMinDex;
+	BYTE bAC;
+#endif
 } TSyncHeader;
 
 typedef struct TSyncMonster {
@@ -977,10 +1030,14 @@ typedef struct QuestStruct {
 	int _qty;
 	unsigned char _qslvl;
 	unsigned char _qidx;
+#ifndef HELLFIRE
 	unsigned char _qmsg;
+#else
+	unsigned int _qmsg;
+#endif
 	unsigned char _qvar1;
 	unsigned char _qvar2;
-	int _qlog;
+	BOOL _qlog;
 } QuestStruct;
 
 typedef struct QuestData {
@@ -994,6 +1051,15 @@ typedef struct QuestData {
 	int _qdmsg;
 	char *_qlstr;
 } QuestData;
+
+#ifdef HELLFIRE
+typedef struct CornerStoneStruct {
+	int x;
+	int y;
+	BOOL activated;
+	ItemStruct item;
+} CornerStoneStruct;
+#endif
 
 //////////////////////////////////////////////////
 // gamemenu/gmenu
@@ -1097,6 +1163,16 @@ typedef struct QuestTalkData {
 	int _qpw;
 	int _qbone;
 	int _qvb;
+#ifdef HELLFIRE
+	int _qgrv;
+	int _qfarm;
+	int _qgirl;
+	int _qtrade;
+	int _qdefiler;
+	int _qnakrul;
+	int _qjersy;
+	int _qhf8;
+#endif
 } QuestTalkData;
 
 //////////////////////////////////////////////////
@@ -1410,7 +1486,13 @@ typedef struct PkPlayerStruct {
 	char pLvlLoad;
 	char pBattleNet;
 	BOOLEAN pManaShield;
-	char bReserved[3];
+	char bReserved[4];
+#ifdef HELLFIRE
+	unsigned char pDungMsgs2;
+	short wReflection;
+	int pDifficulty;
+	int pDamAcFlags;
+#endif
 	short wReserved[8];
 	int pDiabloKillLevel;
 	int dwReserved[7];

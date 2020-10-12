@@ -70,6 +70,9 @@ void RespawnDeadItem(ItemStruct *itm, int x, int y);
 void StartPlayerKill(int pnum, int earflag);
 void PlrDeadItem(int pnum, ItemStruct *itm, int xx, int yy);
 void DropHalfPlayersGold(int pnum);
+#ifdef HELLFIRE
+void StripTopGold(int pnum);
+#endif
 void SyncPlrKill(int pnum, int earflag);
 void j_StartPlayerKill(int pnum, int earflag);
 void RemovePlrMissiles(int pnum);
@@ -118,6 +121,11 @@ void SetPlrDex(int p, int v);
 void SetPlrVit(int p, int v);
 void InitDungMsgs(int pnum);
 void PlayDungMsgs();
+#ifdef HELLFIRE
+int player_45EFA1(int i);
+int player_45EFAB(int i);
+int player_45EFB5(int i);
+#endif
 
 /* rdata */
 

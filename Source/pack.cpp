@@ -21,7 +21,7 @@ static void PackItem(PkItemStruct *id, ItemStruct *is)
 			id->bMDur = is->_iName[15];
 			id->bCh = is->_iName[16];
 			id->bMCh = is->_iName[17];
-			id->wValue = SwapLE16(is->_ivalue | (is->_iName[18] << 8) | ((is->_iCurs - 19) << 6));
+			id->wValue = SwapLE16(is->_ivalue | (is->_iName[18] << 8) | ((is->_iCurs - ICURS_EAR_SORCEROR) << 6));
 			id->dwBuff = SwapLE32(is->_iName[22] | ((is->_iName[21] | ((is->_iName[20] | (is->_iName[19] << 8)) << 8)) << 8));
 		} else {
 			id->iSeed = SwapLE32(is->_iSeed);
@@ -104,6 +104,11 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield)
 		pi++;
 	}
 
+#ifdef HELLFIRE
+	pPack->wReflection = pPlayer->wReflection;
+	pPack->pDifficulty = pPlayer->pDifficulty;
+	pPack->pDamAcFlags = pPlayer->pDamAcFlags;
+#endif
 	pPack->pDiabloKillLevel = SwapLE32(pPlayer->pDiabloKillLevel);
 
 	if (gbMaxPlayers == 1 || manashield)
@@ -120,7 +125,10 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield)
  * @param is The source packed item
  * @param id The distination item
  */
-static void UnPackItem(PkItemStruct *is, ItemStruct *id)
+#ifndef HELLFIRE
+static
+#endif
+void UnPackItem(PkItemStruct *is, ItemStruct *id)
 {
 	WORD idx = SwapLE16(is->idx);
 
@@ -259,6 +267,11 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL killok)
 	pPlayer->pTownWarps = 0;
 	pPlayer->pDungMsgs = 0;
 	pPlayer->pLvlLoad = 0;
+#ifdef HELLFIRE
+	pPlayer->wReflection = pPack->wReflection;
+	pPlayer->pDifficulty = pPack->pDifficulty;
+	pPlayer->pDamAcFlags = pPack->pDamAcFlags;
+#endif
 	pPlayer->pDiabloKillLevel = SwapLE32(pPack->pDiabloKillLevel);
 	pPlayer->pBattleNet = pPack->pBattleNet;
 	pPlayer->pManaShield = SwapLE32(pPack->pManaShield);

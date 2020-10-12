@@ -60,6 +60,9 @@ void NetSendCmdChItem(BOOL bHiPri, BYTE bLoc);
 void NetSendCmdDelItem(BOOL bHiPri, BYTE bLoc);
 void NetSendCmdDItem(BOOL bHiPri, int ii);
 void NetSendCmdDamage(BOOL bHiPri, BYTE bPlr, DWORD dwDam);
+#ifdef HELLFIRE
+void NetSendCmdMonDmg(BOOL bHiPri, WORD bMon, DWORD dwDam);
+#endif
 void NetSendCmdString(int pmask, const char *pszStr);
 void delta_close_portal(int pnum);
 DWORD ParseCmd(int pnum, TCmd *pCmd);
@@ -148,9 +151,16 @@ DWORD On_ENDSHIELD(TCmd *pCmd, int pnum);
 DWORD On_CHEAT_EXPERIENCE(TCmd *pCmd, int pnum);
 DWORD On_CHEAT_SPELL_LEVEL(TCmd *pCmd, int pnum);
 DWORD On_DEBUG(TCmd *pCmd, int pnum);
+#ifndef HELLFIRE
 DWORD On_NOVA(TCmd *pCmd, int pnum);
 DWORD On_SETSHIELD(TCmd *pCmd, int pnum);
 DWORD On_REMSHIELD(TCmd *pCmd, int pnum);
+#else
+DWORD On_REFLECT(TCmd *pCmd, int pnum);
+DWORD On_NAKRUL(TCmd *pCmd, int pnum);
+DWORD On_OPENHIVE(TCmd *pCmd, int pnum);
+DWORD On_OPENCRYPT(TCmd *pCmd, int pnum);
+#endif
 
 #ifdef __cplusplus
 }

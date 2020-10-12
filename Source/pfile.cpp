@@ -186,6 +186,14 @@ BYTE game_2_ui_class(const PlayerStruct *p)
 		uiclass = UI_WARRIOR;
 	else if (p->_pClass == PC_ROGUE)
 		uiclass = UI_ROGUE;
+#ifdef HELLFIRE
+	else if (p->_pClass == PC_MONK)
+		uiclass = UI_MONK;
+	else if (p->_pClass == PC_BARD)
+		uiclass = UI_BARD;
+	else if (p->_pClass == PC_BARBARIAN)
+		uiclass = UI_BARBARIAN;
+#endif
 	else
 		uiclass = UI_SORCERER;
 
@@ -306,6 +314,14 @@ char pfile_get_player_class(unsigned int player_class_nr)
 		pc_class = PC_WARRIOR;
 	else if (player_class_nr == UI_ROGUE)
 		pc_class = PC_ROGUE;
+#ifdef HELLFIRE
+	else if (player_class_nr == 3)
+		pc_class = PC_MONK;
+	else if (player_class_nr == 4)
+		pc_class = PC_BARD;
+	else if (player_class_nr == 5)
+		pc_class = PC_BARBARIAN;
+#endif
 	else
 		pc_class = PC_SORCERER;
 	return pc_class;
