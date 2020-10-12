@@ -584,21 +584,18 @@ void Theme_MonstPit(int t)
 	r = random_(0, 100) + 1;
 	ixp = 0;
 	iyp = 0;
-	if (r > 0) {
-		while (TRUE) {
-			if (dTransVal[ixp][iyp] == themes[t].ttval && !nSolidTable[dPiece[ixp][iyp]]) {
-				--r;
-			}
-			if (r <= 0) {
-				break;
-			}
-			ixp++;
-			if (ixp == MAXDUNX) {
-				ixp = 0;
-				iyp++;
-				if (iyp == MAXDUNY) {
-					iyp = 0;
-				}
+	while (r > 0) {
+		if (dTransVal[ixp][iyp] == themes[t].ttval && !nSolidTable[dPiece[ixp][iyp]]) {
+			--r;
+		}
+		if (r <= 0)
+			continue;
+		ixp++;
+		if (ixp == MAXDUNX) {
+			ixp = 0;
+			iyp++;
+			if (iyp == MAXDUNY) {
+				iyp = 0;
 			}
 		}
 	}

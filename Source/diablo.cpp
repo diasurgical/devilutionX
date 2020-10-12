@@ -884,10 +884,14 @@ void RightMouseDown()
 		} else if (stextflag == STORE_NONE) {
 			if (spselflag) {
 				SetSpell();
+#ifdef HELLFIRE
+			} else if ((!sbookflag || MouseX <= RIGHT_PANEL) && (MouseY >= SPANEL_HEIGHT || (!TryIconCurs() && (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem))))) {
+#else
 			} else if (MouseY >= SPANEL_HEIGHT
 			    || (!sbookflag || MouseX <= RIGHT_PANEL)
 			        && !TryIconCurs()
 			        && (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem))) {
+#endif
 				if (pcurs == CURSOR_HAND) {
 					if (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem))
 						CheckPlrSpell();

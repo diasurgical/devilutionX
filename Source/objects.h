@@ -186,7 +186,7 @@ extern char *shrinestrs[NUM_SHRINETYPE];
 extern char shrinemin[NUM_SHRINETYPE];
 extern char shrinemax[NUM_SHRINETYPE];
 extern BYTE shrineavail[NUM_SHRINETYPE];
-extern char *StoryBookName[9];
+extern char *StoryBookName[];
 extern int StoryText[3][3];
 
 #ifdef __cplusplus

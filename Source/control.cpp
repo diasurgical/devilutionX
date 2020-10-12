@@ -338,9 +338,9 @@ void DrawSpell()
 		st = RSPLTYPE_INVALID;
 	SetSpellTrans(st);
 	if (spl != SPL_INVALID)
-		DrawSpellCel(PANEL_X + 565, PANEL_Y + 119, pSpellCels, SpellITbl[spl], 56);
+		DrawSpellCel(PANEL_X + 565, PANEL_Y + 119, pSpellCels, SpellITbl[spl], SPLICONLENGTH);
 	else
-		DrawSpellCel(PANEL_X + 565, PANEL_Y + 119, pSpellCels, 27, 56);
+		DrawSpellCel(PANEL_X + 565, PANEL_Y + 119, pSpellCels, 27, SPLICONLENGTH);
 }
 
 void DrawSpellList()
@@ -357,22 +357,22 @@ void DrawSpellList()
 		switch ((spell_type)i) {
 		case RSPLTYPE_SKILL:
 			SetSpellTrans(RSPLTYPE_SKILL);
-			c = SPLICONLAST + 3;
 			mask = plr[myplr]._pAblSpells;
+			c = SPLICONLAST + 3;
 			break;
 		case RSPLTYPE_SPELL:
-			c = SPLICONLAST + 4;
 			mask = plr[myplr]._pMemSpells;
+			c = SPLICONLAST + 4;
 			break;
 		case RSPLTYPE_SCROLL:
 			SetSpellTrans(RSPLTYPE_SCROLL);
-			c = SPLICONLAST + 1;
 			mask = plr[myplr]._pScrlSpells;
+			c = SPLICONLAST + 1;
 			break;
 		case RSPLTYPE_CHARGES:
 			SetSpellTrans(RSPLTYPE_CHARGES);
-			c = SPLICONLAST + 2;
 			mask = plr[myplr]._pISpells;
+			c = SPLICONLAST + 2;
 			break;
 		}
 		for (spl = 1, j = 1; j < MAX_SPELLS; spl <<= 1, j++) {
@@ -398,10 +398,14 @@ void DrawSpellList()
 				pSplType = i;
 #ifdef HELLFIRE
 				if (plr[myplr]._pClass == PC_MONK && j == SPL_SEARCH)
-					i = RSPLTYPE_SKILL;
+					pSplType = RSPLTYPE_SKILL;
 #endif
 				DrawSpellCel(x, y, pSpellCels, c, SPLICONLENGTH);
+#ifdef HELLFIRE
+				switch (pSplType) {
+#else
 				switch (i) {
+#endif
 				case RSPLTYPE_SKILL:
 					sprintf(infostr, "%s Skill", spelldata[pSpell].sSkillText);
 					break;
@@ -1414,6 +1418,9 @@ void DrawChr()
 	CelDraw(SCREEN_X, 351 + SCREEN_Y, pChrPanel, 1, SPANEL_WIDTH);
 	ADD_PlrStringXY(20, 32, 151, plr[myplr]._pName, COL_WHITE);
 
+#ifdef HELLFIRE
+	ADD_PlrStringXY(168, 32, 299, ClassStrTbl[plr[myplr]._pClass], COL_WHITE);
+#else
 	if (plr[myplr]._pClass == PC_WARRIOR) {
 		ADD_PlrStringXY(168, 32, 299, "Warrior", COL_WHITE);
 #ifndef SPAWN
@@ -1423,6 +1430,7 @@ void DrawChr()
 		ADD_PlrStringXY(168, 32, 299, "Sorceror", COL_WHITE);
 #endif
 	}
+#endif
 
 	sprintf(chrstr, "%i", plr[myplr]._pLevel);
 	ADD_PlrStringXY(66, 69, 109, chrstr, COL_WHITE);
