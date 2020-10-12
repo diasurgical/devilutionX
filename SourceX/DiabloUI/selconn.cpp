@@ -100,7 +100,7 @@ void selconn_Esc()
 void selconn_Focus(int value)
 {
 	int players = MAX_PLRS;
-	switch (value) {
+	switch (vecConnItems[value]->m_value) {
 	case SELCONN_TCP:
 		strncpy(selconn_Description, "All computers must be connected to a TCP-compatible network.", sizeof(selconn_Description) - 1);
 		players = MAX_PLRS;
