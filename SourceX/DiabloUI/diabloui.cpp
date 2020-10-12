@@ -75,11 +75,11 @@ void UiDestroy()
 	UnloadArtFonts();
 }
 
-void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), std::vector<UiItemBase *> items, bool itemsWraps, bool (*fnYesNo)())
+void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), std::vector<UiItemBase *> items, bool itemsWraps, bool (*fnYesNo)())
 {
-	SelectedItem = min;
-	SelectedItemMin = min;
-	SelectedItemMax = max;
+	SelectedItem = 0;
+	SelectedItemMin = 0;
+	SelectedItemMax = std::max(count - 1, 0);
 	ListViewportSize = SelectedItemMax - SelectedItemMin + 1;
 	gfnListFocus = fnFocus;
 	gfnListSelect = fnSelect;
@@ -88,7 +88,7 @@ void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(i
 	gUiItems = items;
 	UiItemsWraps = itemsWraps;
 	if (fnFocus)
-		fnFocus(min);
+		fnFocus(0);
 
 #ifndef __SWITCH__
 	SDL_StopTextInput(); // input is enabled by default
@@ -421,12 +421,20 @@ bool IsInsideRect(const SDL_Event &event, const SDL_Rect &rect)
 
 void LoadUiGFX()
 {
+#ifdef HELLFIRE
+	LoadMaskedArt("ui_art\\hf_logo2.pcx", &ArtLogos[LOGO_MED], 16);
+#else
 	LoadMaskedArt("ui_art\\smlogo.pcx", &ArtLogos[LOGO_MED], 15);
+#endif
 	LoadMaskedArt("ui_art\\focus16.pcx", &ArtFocus[FOCUS_SMALL], 8);
 	LoadMaskedArt("ui_art\\focus.pcx", &ArtFocus[FOCUS_MED], 8);
 	LoadMaskedArt("ui_art\\focus42.pcx", &ArtFocus[FOCUS_BIG], 8);
 	LoadMaskedArt("ui_art\\cursor.pcx", &ArtCursor, 1, 0);
+#ifdef HELLFIRE
+	LoadArt("ui_art\\heros.pcx", &ArtHero, 6);
+#else
 	LoadArt("ui_art\\heros.pcx", &ArtHero, 4);
+#endif
 }
 
 void UiInitialize()
@@ -589,10 +597,10 @@ int GetCenterOffset(int w, int bw)
 	return (bw - w) / 2;
 }
 
-void LoadBackgroundArt(const char *pszFile)
+void LoadBackgroundArt(const char *pszFile, int frames)
 {
 	SDL_Color pPal[256];
-	LoadArt(pszFile, &ArtBackground, 1, pPal);
+	LoadArt(pszFile, &ArtBackground, frames, pPal);
 	if (ArtBackground.surface == NULL)
 		return;
 
@@ -709,7 +717,7 @@ void Render(const UiList *ui_list)
 	for (std::size_t i = 0; i < ui_list->m_vecItems.size(); ++i) {
 		SDL_Rect rect = ui_list->itemRect(i);
 		const UiListItem *item = ui_list->GetItem(i);
-		if (item->m_value == SelectedItem)
+		if (i == SelectedItem)
 			DrawSelector(rect);
 		DrawArtStr(item->m_text, rect, ui_list->m_iFlags);
 	}
@@ -807,17 +815,17 @@ bool HandleMouseEventList(const SDL_Event &event, UiList *ui_list)
 	if (event.type != SDL_MOUSEBUTTONDOWN || event.button.button != SDL_BUTTON_LEFT)
 		return false;
 
-	const UiListItem *list_item = ui_list->itemAt(event.button.y);
+	const int index = ui_list->indexAt(event.button.y);
 
-	if (gfnListFocus != NULL && SelectedItem != list_item->m_value) {
-		UiFocus(list_item->m_value);
+	if (gfnListFocus != NULL && SelectedItem != index) {
+		UiFocus(index);
 #ifdef USE_SDL1
 		dbClickTimer = SDL_GetTicks();
 	} else if (gfnListFocus == NULL || dbClickTimer + 500 >= SDL_GetTicks()) {
 #else
 	} else if (gfnListFocus == NULL || event.button.clicks >= 2) {
 #endif
-		SelectedItem = list_item->m_value;
+		SelectedItem = index;
 		UiFocusNavigationSelect();
 #ifdef USE_SDL1
 	} else {

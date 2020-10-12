@@ -14,15 +14,15 @@ int MainMenuResult;
 
 void UiMainMenuSelect(int value)
 {
-	MainMenuResult = value;
+	MainMenuResult = vecMenuItems[value]->m_value;
 }
 
 void mainmenu_Esc()
 {
-	if (SelectedItem == MAINMENU_EXIT_DIABLO) {
-		UiMainMenuSelect(MAINMENU_EXIT_DIABLO);
+	if (SelectedItem == 4) {
+		UiMainMenuSelect(4);
 	} else {
-		SelectedItem = MAINMENU_EXIT_DIABLO;
+		SelectedItem = 4;
 	}
 }
 
@@ -38,8 +38,14 @@ void mainmenu_Load(char *name, void (*fnSound)(char *file))
 	vecMenuItems.push_back(new UiListItem("Single Player", MAINMENU_SINGLE_PLAYER));
 	vecMenuItems.push_back(new UiListItem("Multi Player", MAINMENU_MULTIPLAYER));
 	vecMenuItems.push_back(new UiListItem("Replay Intro", MAINMENU_REPLAY_INTRO));
+#ifdef HELLFIRE
+	vecMenuItems.push_back(new UiListItem("Support", MAINMENU_SHOW_CREDITS));
+	vecMenuItems.push_back(new UiListItem("Credits", MAINMENU_SHOW_CREDITS));
+	vecMenuItems.push_back(new UiListItem("Exit Hellfire", MAINMENU_EXIT_DIABLO));
+#else
 	vecMenuItems.push_back(new UiListItem("Show Credits", MAINMENU_SHOW_CREDITS));
 	vecMenuItems.push_back(new UiListItem("Exit Diablo", MAINMENU_EXIT_DIABLO));
+#endif
 
 	UiAddBackground(&vecMainMenuDialog);
 	UiAddLogo(&vecMainMenuDialog);
@@ -55,7 +61,7 @@ void mainmenu_Load(char *name, void (*fnSound)(char *file))
 		LoadBackgroundArt("ui_art\\swmmenu.pcx");
 	}
 
-	UiInitList(MAINMENU_SINGLE_PLAYER, MAINMENU_EXIT_DIABLO, NULL, UiMainMenuSelect, mainmenu_Esc, vecMainMenuDialog, true);
+	UiInitList(vecMenuItems.size(), NULL, UiMainMenuSelect, mainmenu_Esc, vecMainMenuDialog, true);
 }
 
 void mainmenu_Free()

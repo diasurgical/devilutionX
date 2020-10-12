@@ -99,12 +99,12 @@ void selgame_GameSelection_Init()
 	SDL_Rect rect6 = { PANEL_LEFT + 449, (UI_OFFSET_Y + 427), 140, 35 };
 	vecSelGameDialog.push_back(new UiArtTextButton("CANCEL", &UiFocusNavigationEsc, rect6, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
 
-	UiInitList(0, 1, selgame_GameSelection_Focus, selgame_GameSelection_Select, selgame_GameSelection_Esc, vecSelGameDialog);
+	UiInitList(vecSelGameDlgItems.size(), selgame_GameSelection_Focus, selgame_GameSelection_Select, selgame_GameSelection_Esc, vecSelGameDialog);
 }
 
 void selgame_GameSelection_Focus(int value)
 {
-	switch (value) {
+	switch (vecSelGameDlgItems[value]->m_value) {
 	case 0:
 		strncpy(selgame_Description, "Create a new game with a difficulty setting of your choice.", sizeof(selgame_Description) - 1);
 		break;
@@ -168,7 +168,7 @@ void selgame_GameSelection_Select(int value)
 		SDL_Rect rect6 = { PANEL_LEFT + 449, (UI_OFFSET_Y + 427), 140, 35 };
 		vecSelGameDialog.push_back(new UiArtTextButton("CANCEL", &UiFocusNavigationEsc, rect6, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
 
-		UiInitList(0, NUM_DIFFICULTIES - 1, selgame_Diff_Focus, selgame_Diff_Select, selgame_Diff_Esc, vecSelGameDialog, true);
+		UiInitList(vecSelGameDlgItems.size(), selgame_Diff_Focus, selgame_Diff_Select, selgame_Diff_Esc, vecSelGameDialog, true);
 		break;
 	}
 	case 1: {
@@ -186,7 +186,7 @@ void selgame_GameSelection_Select(int value)
 		SDL_Rect rect7 = { PANEL_LEFT + 449, (UI_OFFSET_Y + 427), 140, 35 };
 		vecSelGameDialog.push_back(new UiArtTextButton("CANCEL", &UiFocusNavigationEsc, rect7, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
 
-		UiInitList(0, 0, NULL, selgame_Password_Init, selgame_GameSelection_Init, vecSelGameDialog);
+		UiInitList(0, NULL, selgame_Password_Init, selgame_GameSelection_Init, vecSelGameDialog);
 		break;
 	}
 	}
@@ -201,7 +201,7 @@ void selgame_GameSelection_Esc()
 
 void selgame_Diff_Focus(int value)
 {
-	switch (value) {
+	switch (vecSelGameDlgItems[value]->m_value) {
 	case DIFF_NORMAL:
 		strncpy(selgame_Label, "Normal", sizeof(selgame_Label) - 1);
 		strncpy(selgame_Description, "Normal Difficulty\nThis is where a starting character should begin the quest to defeat Diablo.", sizeof(selgame_Description) - 1);
@@ -238,7 +238,7 @@ bool IsDifficultyAllowed(int value)
 
 void selgame_Diff_Select(int value)
 {
-	if (selhero_isMultiPlayer && !IsDifficultyAllowed(value)) {
+	if (selhero_isMultiPlayer && !IsDifficultyAllowed(vecSelGameDlgItems[value]->m_value)) {
 		selgame_GameSelection_Select(0);
 		return;
 	}
@@ -292,10 +292,10 @@ void selgame_GameSpeedSelection()
 	SDL_Rect rect4 = { PANEL_LEFT + 299, (UI_OFFSET_Y + 211), 295, 35 };
 	vecSelGameDialog.push_back(new UiArtText("Select Game Speed", rect4, UIS_CENTER | UIS_BIG));
 
-	vecSelGameDlgItems.push_back(new UiListItem("Normal", 0));
-	vecSelGameDlgItems.push_back(new UiListItem("Fast", 1));
-	vecSelGameDlgItems.push_back(new UiListItem("Faster", 2));
-	vecSelGameDlgItems.push_back(new UiListItem("Fastest", 3));
+	vecSelGameDlgItems.push_back(new UiListItem("Normal", 20));
+	vecSelGameDlgItems.push_back(new UiListItem("Fast", 30));
+	vecSelGameDlgItems.push_back(new UiListItem("Faster", 40));
+	vecSelGameDlgItems.push_back(new UiListItem("Fastest", 50));
 
 	vecSelGameDialog.push_back(new UiList(vecSelGameDlgItems, PANEL_LEFT + 300, (UI_OFFSET_Y + 279), 295, 26, UIS_CENTER | UIS_MED | UIS_GOLD));
 
@@ -305,25 +305,25 @@ void selgame_GameSpeedSelection()
 	SDL_Rect rect6 = { PANEL_LEFT + 449, (UI_OFFSET_Y + 427), 140, 35 };
 	vecSelGameDialog.push_back(new UiArtTextButton("CANCEL", &UiFocusNavigationEsc, rect6, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
 
-	UiInitList(0, 3, selgame_Speed_Focus, selgame_Speed_Select, selgame_Speed_Esc, vecSelGameDialog, true);
+	UiInitList(vecSelGameDlgItems.size(), selgame_Speed_Focus, selgame_Speed_Select, selgame_Speed_Esc, vecSelGameDialog, true);
 }
 
 void selgame_Speed_Focus(int value)
 {
-	switch (value) {
-	case 0:
+	switch (vecSelGameDlgItems[value]->m_value) {
+	case 20:
 		strncpy(selgame_Label, "Normal", sizeof(selgame_Label) - 1);
 		strncpy(selgame_Description, "Normal Speed\nThis is where a starting character should begin the quest to defeat Diablo.", sizeof(selgame_Description) - 1);
 		break;
-	case 1:
+	case 30:
 		strncpy(selgame_Label, "Fast", sizeof(selgame_Label) - 1);
 		strncpy(selgame_Description, "Fast Speed\nThe denizens of the Labyrinth have been hastened and will prove to be a greater challenge. This is recommended for experienced characters only.", sizeof(selgame_Description) - 1);
 		break;
-	case 2:
+	case 40:
 		strncpy(selgame_Label, "Faster", sizeof(selgame_Label) - 1);
 		strncpy(selgame_Description, "Faster Speed\nMost monsters of the dungeon will seek you out quicker than ever before. Only an experienced champion should try their luck at this speed.", sizeof(selgame_Description) - 1);
 		break;
-	case 3:
+	case 50:
 		strncpy(selgame_Label, "Fastest", sizeof(selgame_Label) - 1);
 		strncpy(selgame_Description, "Fastest Speed\nThe minions of the underworld will rush to attack without hesitation. Only a true speed demon should enter at this pace.", sizeof(selgame_Description) - 1);
 		break;
@@ -338,7 +338,7 @@ void selgame_Speed_Esc()
 
 void selgame_Speed_Select(int value)
 {
-	gbTickRate = 20 + 10 * value;
+	gbTickRate = vecSelGameDlgItems[value]->m_value;
 
 	if (provider == SELCONN_LOOPBACK) {
 		selgame_Password_Select(0);
@@ -378,7 +378,7 @@ void selgame_Password_Init(int value)
 	SDL_Rect rect7 = { PANEL_LEFT + 449, (UI_OFFSET_Y + 427), 140, 35 };
 	vecSelGameDialog.push_back(new UiArtTextButton("CANCEL", &UiFocusNavigationEsc, rect7, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
 
-	UiInitList(0, 0, NULL, selgame_Password_Select, selgame_Password_Esc, vecSelGameDialog);
+	UiInitList(0, NULL, selgame_Password_Select, selgame_Password_Esc, vecSelGameDialog);
 }
 
 void selgame_Password_Select(int value)

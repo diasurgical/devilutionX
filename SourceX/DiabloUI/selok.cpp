@@ -81,7 +81,7 @@ void UiSelOkDialog(const char *title, const char *body, bool background)
 	strncpy(dialogText, body, sizeof(dialogText) - 1);
 	WordWrapArtStr(dialogText, MESSAGE_WIDTH);
 
-	UiInitList(0, 0, NULL, selok_Select, selok_Esc, vecSelOkDialog, false, NULL);
+	UiInitList(0, NULL, selok_Select, selok_Esc, vecSelOkDialog, false, NULL);
 
 	selok_endMenu = false;
 	while (!selok_endMenu) {
