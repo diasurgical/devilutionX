@@ -15,6 +15,7 @@ option(NIGHTLY_BUILD "Enable options for nightly build" OFF)
 option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network" OFF)
 option(RUN_TESTS "Build and run tests" OFF)
+option(HELLFIRE "Build hellfire version" OFF)
 RELEASE_OPTION(CPACK "Configure CPack")
 
 
@@ -335,6 +336,10 @@ if(RUN_TESTS)
     SourceT/effects_test.cpp
     SourceT/file_util_test.cpp
     SourceT/scrollrt_test.cpp)
+endif()
+
+if(HELLFIRE)
+  add_definitions(-DHELLFIRE)
 endif()
 
 add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionx_SRCS})
