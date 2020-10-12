@@ -271,94 +271,130 @@ int GetSpellLevel(int id, int sn)
 	return result;
 }
 
+/**
+ * @brief Returns the direction a vector from p1(x1, y1) to p2(x2, y2) is pointing to.
+ *
+ *      W    SW     S
+ *            ^
+ *            |
+ *     NW ----+---> SE
+ *            |
+ *            |
+ *      N    NE     E
+ *
+ * @param x1 the x coordinate of p1
+ * @param y1 the y coordinate of p1
+ * @param x2 the x coordinate of p2
+ * @param y2 the y coordinate of p2
+ * @return the direction of the p1->p2 vector
+*/
 int GetDirection8(int x1, int y1, int x2, int y2)
 {
-	BYTE Dirs[16][16] = {
-		{ 99, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-		{ 2, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-		{ 2, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-		{ 2, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0 },
-		{ 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0 },
-		{ 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0 },
-		{ 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-		{ 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-		{ 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-		{ 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-		{ 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-		{ 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-		{ 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-		{ 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-		{ 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-		{ 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
-	};
 	int mx, my, md;
-	ALIGN_BY_1 BYTE urtoll[] = { 3, 4, 5 },
-	                ultolr[] = { 3, 2, 1 },
-	                lrtoul[] = { 7, 6, 5 },
-	                lltour[] = { 7, 0, 1 };
 
-	mx = abs(x2 - x1);
-	if (mx > 15)
-		mx = 15;
-	my = abs(y2 - y1);
-	if (my > 15)
-		my = 15;
-	md = Dirs[my][mx]; // BUGFIX: 0x0 causes OOB (99)
-	if (x1 > x2) {
-		if (y1 > y2)
-			md = urtoll[md];
-		else
-			md = ultolr[md];
-	} else if (y1 > y2)
-		md = lrtoul[md];
-	else
-		md = lltour[md];
+	mx = x2 - x1;
+	my = y2 - y1;
+	if (mx >= 0) {
+		if (my >= 0) {
+			if (5 * mx <= (my << 1)) // mx/my <= 0.4, approximation of tan(22.5)
+				return 1;            // DIR_SW
+			md = 0;                  // DIR_S
+		} else {
+			my = -my;
+			if (5 * mx <= (my << 1))
+				return 5; // DIR_NE
+			md = 6;       // DIR_E
+		}
+		if (5 * my <= (mx << 1)) // my/mx <= 0.4
+			md = 7;              // DIR_SE
+	} else {
+		mx = -mx;
+		if (my >= 0) {
+			if (5 * mx <= (my << 1))
+				return 1; // DIR_SW
+			md = 2;       // DIR_W
+		} else {
+			my = -my;
+			if (5 * mx <= (my << 1))
+				return 5; // DIR_NE
+			md = 4;       // DIR_N
+		}
+		if (5 * my <= (mx << 1))
+			md = 3; // DIR_NW
+	}
 	return md;
 }
 
+/**
+ * @brief Returns the direction a vector from p1(x1, y1) to p2(x2, y2) is pointing to.
+ *
+ *      W  sW  SW   Sw  S
+ *              ^
+ *     nW       |       Se
+ *              |
+ *     NW ------+-----> SE
+ *              |
+ *     Nw       |       sE
+ *              |
+ *      N  Ne  NE   nE  E
+ *
+ * @param x1 the x coordinate of p1
+ * @param y1 the y coordinate of p1
+ * @param x2 the x coordinate of p2
+ * @param y2 the y coordinate of p2
+ * @return the direction of the p1->p2 vector
+*/
 int GetDirection16(int x1, int y1, int x2, int y2)
 {
-	BYTE Dirs[16][16] = {
-		{ 99, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-		{ 4, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-		{ 4, 3, 2, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
-		{ 4, 3, 3, 2, 2, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0 },
-		{ 4, 4, 3, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }, // BUGFIX: should be `{ 4, 4, 3, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },` (fixed)
-		{ 4, 4, 3, 3, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-		{ 4, 4, 3, 3, 3, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1 }, // BUGFIX: should be `{ 4, 4, 3, 3, 3, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1 },` (fixed)
-		{ 4, 4, 3, 3, 3, 3, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1 },
-		{ 4, 4, 4, 3, 3, 3, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1 },
-		{ 4, 4, 4, 3, 3, 3, 3, 2, 2, 2, 2, 2, 1, 1, 1, 1 },
-		{ 4, 4, 4, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 1, 1 },
-		{ 4, 4, 4, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 1 },
-		{ 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2 },
-		{ 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2 },
-		{ 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2 },
-		{ 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2 }
-	};
-
-	BYTE urtoll[5] = { 6, 7, 8, 9, 10 };
-	BYTE ultolr[5] = { 6, 5, 4, 3, 2 };
-	BYTE lltour[5] = { 14, 13, 12, 11, 10 };
-	BYTE lrtoul[5] = { 14, 15, 0, 1, 2 };
 	int mx, my, md;
 
-	mx = abs(x2 - x1);
-	if (mx > 15)
-		mx = 15;
-	my = abs(y2 - y1);
-	if (my > 15)
-		my = 15;
-	md = Dirs[my][mx]; // BUGFIX, md can be 99, leading to an OOB read
-	if (x1 > x2) {
-		if (y1 > y2)
-			md = urtoll[md];
-		else
-			md = ultolr[md];
-	} else if (y1 > y2) {
-		md = lltour[md];
+	mx = x2 - x1;
+	my = y2 - y1;
+	if (mx >= 0) {
+		if (my >= 0) {
+			if (3 * mx <= (my << 1)) { // mx/my <= 2/3, approximation of tan(33.75)
+				if (5 * mx < my)       // mx/my < 0.2, approximation of tan(11.25)
+					return 2;          // DIR_SW;
+				return 1;              // DIR_Sw;
+			}
+			md = 0; // DIR_S;
+		} else {
+			my = -my;
+			if (3 * mx <= (my << 1)) {
+				if (5 * mx < my)
+					return 10; // DIR_NE;
+				return 11;     // DIR_nE;
+			}
+			md = 12; // DIR_E;
+		}
+		if (3 * my <= (mx << 1)) {    // my/mx <= 2/3
+			if (5 * my < mx)          // my/mx < 0.2
+				return 14;            // DIR_SE;
+			return md == 0 ? 15 : 13; // DIR_S ? DIR_Se : DIR_sE;
+		}
 	} else {
-		md = lrtoul[md];
+		mx = -mx;
+		if (my >= 0) {
+			if (3 * mx <= (my << 1)) {
+				if (5 * mx < my)
+					return 2; // DIR_SW;
+				return 3;     // DIR_sW;
+			}
+			md = 4; // DIR_W;
+		} else {
+			my = -my;
+			if (3 * mx <= (my << 1)) {
+				if (5 * mx < my)
+					return 10; // DIR_NE;
+				return 9;      // DIR_Ne;
+			}
+			md = 8; // DIR_N;
+		}
+		if (3 * my <= (mx << 1)) {
+			if (5 * my < mx)
+				return 6;           // DIR_NW;
+			return md == 4 ? 5 : 7; // DIR_W ? DIR_nW : DIR_Nw;
+		}
 	}
 	return md;
 }

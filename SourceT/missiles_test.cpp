@@ -47,7 +47,7 @@ TEST(Missiles, GetDirection16)
 	EXPECT_EQ(15, dvl::GetDirection16(0, 0, 15, 8));
 	EXPECT_EQ(15, dvl::GetDirection16(0, 0, 15, 7));
 	EXPECT_EQ(15, dvl::GetDirection16(0, 0, 11, 7));
-	EXPECT_EQ(1, dvl::GetDirection16(0, 0, 8, 11));
+	EXPECT_EQ(0, dvl::GetDirection16(0, 0, 8, 11));
 	EXPECT_EQ(8, dvl::GetDirection16(15, 15, 0, 0));
 	EXPECT_EQ(10, dvl::GetDirection16(0, 15, 0, 0));
 	EXPECT_EQ(9, dvl::GetDirection16(8, 15, 0, 0));
@@ -55,7 +55,7 @@ TEST(Missiles, GetDirection16)
 	EXPECT_EQ(7, dvl::GetDirection16(15, 8, 0, 0));
 	EXPECT_EQ(7, dvl::GetDirection16(15, 7, 0, 0));
 	EXPECT_EQ(7, dvl::GetDirection16(11, 7, 0, 0));
-	EXPECT_EQ(9, dvl::GetDirection16(8, 11, 0, 0));
+	EXPECT_EQ(8, dvl::GetDirection16(8, 11, 0, 0));
 	EXPECT_EQ(12, dvl::GetDirection16(0, 15, 15, 0));
 	EXPECT_EQ(14, dvl::GetDirection16(0, 0, 15, 0));
 	EXPECT_EQ(13, dvl::GetDirection16(0, 8, 15, 0));
@@ -63,7 +63,7 @@ TEST(Missiles, GetDirection16)
 	EXPECT_EQ(11, dvl::GetDirection16(0, 15, 8, 0));
 	EXPECT_EQ(11, dvl::GetDirection16(0, 15, 7, 0));
 	EXPECT_EQ(11, dvl::GetDirection16(0, 11, 7, 0));
-	EXPECT_EQ(13, dvl::GetDirection16(0, 8, 11, 0));
+	EXPECT_EQ(12, dvl::GetDirection16(0, 8, 11, 0));
 
 	EXPECT_EQ(0, dvl::GetDirection16(2, 2, 3, 3));
 	EXPECT_EQ(1, dvl::GetDirection16(2, 2, 3, 4));
