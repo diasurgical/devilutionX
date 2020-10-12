@@ -1117,10 +1117,10 @@ void GetBookSpell(int i, int lvl)
 	if (lvl == 0)
 		lvl = 1;
 	rv = random_(14, MAX_SPELLS) + 1;
-#ifdef SPAWN
+if(!FullGame){
 	if (lvl > 5)
 		lvl = 5;
-#endif
+}
 	s = SPL_FIREBOLT;
 	while (rv > 0) {
 		if (spelldata[s].sBookLvl != -1 && lvl >= spelldata[s].sBookLvl) {

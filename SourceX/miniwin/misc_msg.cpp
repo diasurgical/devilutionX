@@ -39,6 +39,217 @@ time_t Send_t = 0;
 double Sdiff_t;
 
 
+time_t Fstart_t = 0;
+time_t Fend_t = 0;
+double Fdiff_t;
+
+
+//JNI CALL BACK CODE
+#include <string.h>
+#include <inttypes.h>
+#include <pthread.h>
+#include <jni.h>
+#include <android/log.h>
+#include <assert.h>
+
+
+typedef struct tick_context {
+    JavaVM  *javaVM;
+	jclass   jniHelperClz;
+	jobject  jniHelperObj;
+	jclass   mainActivityClz;
+	jobject  mainActivityObj;
+	pthread_mutex_t  lock;
+	int      done;
+} TickContext;
+TickContext g_ctx;
+//org/diasurgical/devilutionx/DevilutionXSDLActivity
+jstring
+org_diasurgical_devilutionx_DevilutionXSDLActivity_stringFromJNI( JNIEnv* env, jobject thiz ){
+
+ return env->NewStringUTF("Hello from JNI !  Compiled with ABI");
+
+
+}
+
+
+
+
+
+
+
+//onNativeTouch
+
+// void*  UpdateTicks(void* context) {
+
+//     SDL_Log("DEBUG -- UPDATE TICKS IS CALLED");
+//     TickContext *pctx = (TickContext*) context;
+//     JavaVM *javaVM = pctx->javaVM;
+//     JNIEnv *env;
+
+//     jint res = javaVM->GetEnv((void**)&env, JNI_VERSION_1_6);
+//     if (res != JNI_OK) {
+//         res = javaVM->AttachCurrentThread(&env, NULL);
+//         if (JNI_OK != res) {
+//             //LOGE("Failed to AttachCurrentThread, ErrorCode = %d", res);
+
+//             SDL_Log("FAILED TO ATTACH THREAD");
+//             return NULL;
+//         }
+//     }
+
+//     jmethodID statusId = env->GetMethodID(pctx->jniHelperClz, "updateStatus", "(Ljava/lang/String;)V");
+//     //sendJavaMsg(env, pctx->jniHelperObj, statusId, "TickerThread status: initializing...");
+
+//     // get mainActivity updateTimer function
+//     jmethodID timerId = env->GetMethodID(pctx->mainActivityClz, "updateTimer", "()V");
+
+//     struct timeval beginTime, curTime, usedTime, leftTime;
+//     const struct timeval kOneSecond = {
+//             (__kernel_time_t)1,
+//             (__kernel_suseconds_t) 0
+//     };
+
+//     //sendJavaMsg(env, pctx->jniHelperObj, statusId, "TickerThread status: start ticking ...");
+//     while(1) {
+//         gettimeofday(&beginTime, NULL);
+//         pthread_mutex_lock(&pctx->lock);
+//         int done = pctx->done;
+//         if (pctx->done) {
+//             pctx->done = 0;
+//         }
+//         pthread_mutex_unlock(&pctx->lock);
+//         if (done) {
+//             break;
+//         }
+//         env->CallVoidMethod(pctx->mainActivityObj, timerId);
+
+//         gettimeofday(&curTime, NULL);
+//         timersub(&curTime, &beginTime, &usedTime);
+//         timersub(&kOneSecond, &usedTime, &leftTime);
+//         struct timespec sleepTime;
+//         sleepTime.tv_sec = leftTime.tv_sec;
+//         sleepTime.tv_nsec = leftTime.tv_usec * 1000;
+
+//         if (sleepTime.tv_sec <= 1) {
+//             nanosleep(&sleepTime, NULL);
+//         } else {
+//             //sendJavaMsg(env, pctx->jniHelperObj, statusId, "TickerThread error: processing too long!");
+//         }
+//     }
+
+//     //sendJavaMsg(env, pctx->jniHelperObj, statusId, "TickerThread status: ticking stopped");
+//     javaVM->DetachCurrentThread();
+//     return context;
+// }
+
+
+
+
+
+// extern "C" JNIEXPORT
+// void JNICALL InvokeFunction(JNIEnv *env, jobject instance) {
+//     SDL_Log("JNI CALL START TICKET");
+//     pthread_t       threadInfo_;
+//     pthread_attr_t  threadAttr_;
+
+//     pthread_attr_init(&threadAttr_);
+//     pthread_attr_setdetachstate(&threadAttr_, PTHREAD_CREATE_DETACHED);
+
+//     pthread_mutex_init(&g_ctx.lock, NULL);
+
+//     jclass clz = env->GetObjectClass(instance);
+//     g_ctx.mainActivityClz = (jclass)env->NewGlobalRef(clz); // hack
+//     g_ctx.mainActivityObj = env->NewGlobalRef(instance);
+
+//     int result  = pthread_create( &threadInfo_, &threadAttr_, UpdateTicks, &g_ctx);
+//     assert(result == 0);
+
+//     pthread_attr_destroy(&threadAttr_);
+
+//     (void)result;
+// }
+
+
+// void queryRuntimeInfo(JNIEnv *env, jobject instance) {
+//     SDL_Log("DEBUG QUERYRUNTIME INTO");
+//     // Find out which OS we are running on. It does not matter for this app
+//     // just to demo how to call static functions.
+//     // Our java JniHelper class id and instance are initialized when this
+//     // shared lib got loaded, we just directly use them
+//     //    static function does not need instance, so we just need to feed
+//     //    class and method id to JNI
+//     jmethodID versionFunc = env->GetStaticMethodID(g_ctx.jniHelperClz, "getBuildVersion", "()Ljava/lang/String;"); // This returns null.
+//     if (!versionFunc) {
+//         SDL_Log("DEBUG versionFunc INTO");
+//         //LOGE("Failed to retrieve getBuildVersion() methodID @ line %d",__LINE__);
+//         return;
+//     }
+//     SDL_Log("DEBUG BUILD VERSION INTO");
+//     jstring buildVersion = (jstring)env->CallStaticObjectMethod(g_ctx.jniHelperClz, versionFunc); // hack
+//     const char *version = env->GetStringUTFChars(buildVersion, NULL);
+
+//     if (!version) {
+//         SDL_Log("DEBUG buildVersion INTO");
+//         //LOGE("Unable to get version string @ line %d", __LINE__);
+//         return;
+//     }
+//     //LOGI("Android Version - %s", version);
+//     SDL_Log("DEBUG ANDROID VERSION %s", version);
+//     env->ReleaseStringUTFChars(buildVersion, version);
+
+//     // we are called from JNI_OnLoad, so got to release LocalRef to avoid leaking
+//     env->DeleteLocalRef(buildVersion);
+
+//     // Query available memory size from a non-static public function
+//     // we need use an instance of JniHelper class to call JNI
+//     jmethodID memFunc = env->GetMethodID(g_ctx.jniHelperClz, "getRuntimeMemorySize", "()J");
+//     if (!memFunc) {
+//         //LOGE("Failed to retrieve getRuntimeMemorySize() methodID @ line %d",__LINE__);
+//         SDL_Log("DEBUG Failed to retrieve memory size");
+//         return;
+//     }
+//     jlong result = env->CallLongMethod(instance, memFunc);
+//     //LOGI("Runtime free memory size: %" PRId64, result);
+//     SDL_Log("DEBUG RUN TIME FREE MEMORY SIZE");
+//     (void)result;  // silence the compiler warning
+// }
+
+
+
+
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
+	JNIEnv* env;
+	memset(&g_ctx, 0, sizeof(g_ctx));
+
+	SDL_Log(" DEBUG  -- JNI INIT!!!");
+	g_ctx.javaVM = vm;
+	if (vm->GetEnv((void**)&env, JNI_VERSION_1_6) != JNI_OK) {
+		return JNI_ERR; // JNI version not supported.
+	}
+
+
+	jclass  clz = env->FindClass("org/diasurgical/devilutionx/DevilutionXSDLActivity");
+	g_ctx.jniHelperClz = (jclass)env->NewGlobalRef(clz); // hack
+
+	jmethodID  jniHelperCtor = env->GetMethodID(g_ctx.jniHelperClz,"<init>", "()V");
+	jobject    handler = env->NewObject(g_ctx.jniHelperClz, jniHelperCtor);
+	g_ctx.jniHelperObj = env->NewGlobalRef(handler);
+	//queryRuntimeInfo(env, g_ctx.jniHelperObj);
+
+	g_ctx.done = 0;
+	g_ctx.mainActivityObj = NULL;
+	return  JNI_VERSION_1_6;
+}
+
+
+
+
+
+
+
+
+//END JNI CODE
 #endif
 
 
@@ -608,6 +819,23 @@ if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT) && (!invflag && 
 }
 
 	case SDL_FINGERDOWN: {
+		if(invflag){
+
+		//SDL_Log("DEBUG FINGERDOW!! ");
+		time(&Fend_t);
+		Fdiff_t = difftime(Fend_t, Fstart_t);
+	    if(Fdiff_t > 0.8){ // This can be better .
+
+		   //SDL_Log("DEBUG DELAY MET!!! ");
+		   //NetSendCmdLocParam1(true, pcurs == CURSOR_DISARM ? CMD_DISARMXY : CMD_OPOBJXY,  object[closest]._ox, object[closest]._oy, pcursobj);
+		    //if (invflag) {
+				UseInvItem(myplr, pcursinvitem);
+			//}
+			}
+			time(&Fstart_t);
+		}
+
+
 		int Xclick = e.tfinger.x * SCREEN_WIDTH;
 		int Yclick = e.tfinger.y * SCREEN_HEIGHT;
 			SDL_GetMouseState(&MouseX, &MouseY);

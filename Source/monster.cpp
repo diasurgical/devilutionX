@@ -191,11 +191,11 @@ void GetLevelMTypes()
 
 	int nt; // number of types
 
-#ifdef SPAWN
+if(!FullGame){
 	mamask = 1; // monster availability mask
-#else
+}else{
 	mamask = 3; // monster availability mask
-#endif
+}
 
 	AddMonsterType(MT_GOLEM, 2);
 	if (currlevel == 16) {
@@ -556,6 +556,8 @@ void PlaceMonster(int i, int mtype, int x, int y)
 #ifndef SPAWN
 void PlaceUniqueMonst(int uniqindex, int miniontype, int unpackfilesize)
 {
+
+	if(FullGame) {
 	int xp, yp, x, y, i;
 	int uniqtype;
 	int count2;
@@ -752,6 +754,14 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int unpackfilesize)
 		Monst->_mFlags &= ~MFLAG_ALLOW_SPECIAL;
 		Monst->_mmode = MM_STAND;
 	}
+
+
+
+
+	}
+
+
+
 }
 
 void PlaceQuestMonsters()
@@ -935,10 +945,10 @@ void InitMonsters()
 		AddMonster(1, 0, 0, 0, FALSE);
 		AddMonster(1, 0, 0, 0, FALSE);
 	}
-#ifndef SPAWN
+if(FullGame){
 	if (!setlevel && currlevel == 16)
 		LoadDiabMonsts();
-#endif
+}
 	nt = numtrigs;
 	if (currlevel == 15)
 		nt = 1;
@@ -948,13 +958,13 @@ void InitMonsters()
 				DoVision(s + trigs[i]._tx, t + trigs[i]._ty, 15, FALSE, FALSE);
 		}
 	}
-#ifndef SPAWN
+if(FullGame){
 	PlaceQuestMonsters();
-#endif
+}
 	if (!setlevel) {
-#ifndef SPAWN
+if(FullGame){
 		PlaceUniques();
-#endif
+}
 		na = 0;
 		for (s = 16; s < 96; s++)
 			for (t = 16; t < 96; t++)

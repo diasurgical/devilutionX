@@ -139,7 +139,11 @@ void InsertCDDlg(const char *fileName)
 	    1024,
 	    "Unable to open %s.\n"
 	    "\n"
-	    "Make sure that it is in the game folder and that the file name is in all lowercase.",
+		#ifdef ANDROID
+	    "Make sure that it is in the game folder /devilutionx/ and that the file name is in all lowercase.\n If the folder doesnt exist please create it." ,
+		#else
+		"Make sure that it is in the game folder and that the file name is in all lowercase.",
+		#endif
 	    fileName);
 
 	UiErrorOkDialog("Data File Error", text);

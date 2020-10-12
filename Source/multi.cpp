@@ -648,11 +648,11 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		sgGameInitInfo.bDiff = gnDifficulty;
 		memset(&ProgramData, 0, sizeof(ProgramData));
 		ProgramData.size = sizeof(ProgramData);
-#ifdef SPAWN
+if(!FullGame){
 		ProgramData.programname = "Diablo Shareware";
-#else
+}else{
 		ProgramData.programname = "Diablo Retail";
-#endif
+}
 		ProgramData.programdescription = gszVersionNumber;
 		ProgramData.programid = 'DRTL';
 		ProgramData.versionid = 42;

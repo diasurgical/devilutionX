@@ -278,9 +278,9 @@ void diablo_init()
 	was_archives_init = true;
 
 	UiInitialize();
-#ifdef SPAWN
+if(!FullGame){
 	UiSetSpawned(TRUE);
-#endif
+}
 	was_ui_init = true;
 
 	ReadOnlyTest();
@@ -302,12 +302,12 @@ void diablo_splash()
 		return;
 
 	play_movie("gendata\\logo.smk", TRUE);
-#ifndef SPAWN
+if(FullGame){
 	if (getIniBool("Diablo", "Intro", true)) {
 		play_movie("gendata\\diablo1.smk", TRUE);
 		setIniValue("Diablo", "Intro", "0");
 	}
-#endif
+}
 	UiTitleDialog();
 }
 

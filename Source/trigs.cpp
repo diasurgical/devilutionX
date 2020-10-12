@@ -670,6 +670,17 @@ void CheckTriggers()
 				InitDiabloMsg(EMSG_NOT_IN_SHAREWARE);
 			} else {
 #endif
+if(!FullGame){
+	if (currlevel >= 2) {
+		NetSendCmdLoc(TRUE, CMD_WALKXY, plr[myplr]._px, plr[myplr]._py + 1);
+		PlaySFX(PS_WARR18);
+		InitDiabloMsg(EMSG_NOT_IN_SHAREWARE);
+		break;
+
+  }
+}
+
+
 				if (pcurs >= CURSOR_FIRSTITEM && DropItemBeforeTrig())
 					return;
 				StartNewLvl(myplr, trigs[i]._tmsg, currlevel + 1);

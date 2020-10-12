@@ -20,3 +20,7 @@
 #include "structs.h"
 
 #endif
+
+#ifdef ANDROID
+extern bool FullGame;
+#endif

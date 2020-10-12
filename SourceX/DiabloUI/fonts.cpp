@@ -68,8 +68,12 @@ void LoadTtfFont() {
 	}
 #ifdef __linux__
 	if (!FileExists(ttf_font_path))
-	{
+	{	
+		#ifndef ANDROID 
 		ttf_font_path = "/usr/share/fonts/truetype/" TTF_FONT_NAME;
+		#else
+		ttf_font_path =  TTF_FONT_NAME;
+		#endif
 	}
 #endif
 	font = TTF_OpenFont(ttf_font_path, 17);

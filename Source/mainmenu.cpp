@@ -114,12 +114,12 @@ void mainmenu_loop()
 			break;
 		case MAINMENU_REPLAY_INTRO:
 		case MAINMENU_ATTRACT_MODE:
-#ifdef SPAWN
+if(!FullGame){
 			done = FALSE;
-#else
+}else{
 			if (gbActive)
 				mainmenu_play_intro();
-#endif
+}
 			break;
 		case MAINMENU_SHOW_CREDITS:
 			UiCreditsDialog(16);

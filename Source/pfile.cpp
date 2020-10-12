@@ -167,11 +167,11 @@ void game_2_ui_player(const PlayerStruct *p, _uiheroinfo *heroinfo, BOOL bHasSav
 	heroinfo->gold = p->_pGold;
 	heroinfo->hassaved = bHasSaveFile;
 	heroinfo->herorank = p->pDiabloKillLevel;
-#ifdef SPAWN
+if(!FullGame){
 	heroinfo->spawned = TRUE;
-#else
+}else{
 	heroinfo->spawned = FALSE;
-#endif
+  }
 }
 
 BYTE game_2_ui_class(const PlayerStruct *p)

@@ -117,11 +117,11 @@ void InitQuests()
 		quests[questdebug]._qactive = QUEST_ACTIVE;
 #endif
 
-#ifdef SPAWN
+if(!FullGame){
 	for (z = 0; z < MAXQUESTS; z++) {
 		quests[z]._qactive = QUEST_NOTAVAIL;
 	}
-#endif
+}
 
 	if (!quests[Q_SKELKING]._qactive)
 		quests[Q_SKELKING]._qvar2 = 2;

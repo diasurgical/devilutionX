@@ -10,6 +10,17 @@
 #include <SDL.h>
 #include <config.h>
 
+#include <iostream>
+#include <stdio.h>
+#include <string.h>
+
+#include <cstdio>    // fopen, fclose, fread, fwrite, BUFSIZ
+//#include <ctime>
+
+#ifdef  ANDROID
+ bool FullGame = 0;
+#endif
+
 DEVILUTION_BEGIN_NAMESPACE
 
 _SNETVERSIONDATA fileinfo;
@@ -58,10 +69,56 @@ void init_create_window()
 	gpBufEnd = (BYTE *)(BUFFER_WIDTH * (SCREEN_HEIGHT + SCREEN_Y));
 	SDL_DisableScreenSaver();
 }
+#ifdef ANDROID
+inline bool exists_test (const std::string& name) {
+    if (FILE *file = fopen(name.c_str(), "r")) {
+        fclose(file);
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+
+void CopySpawn(std::string Directory){
+	SDL_RWops  *mpq = SDL_RWFromFile("spawn.mpq", "rb");
+	SDL_RWops *dest = SDL_RWFromFile( Directory.c_str(), "wb+");
+
+
+	Sint64 size = SDL_RWsize(mpq);
+	SDL_Log("SIZE %d", size);
+	char* res = (char*)malloc(size + 1);
+	char* buf = res;
+
+	Sint64 nb_read_total = 0, nb_read = 1;
+	while (nb_read_total < size && nb_read != 0) {
+		nb_read = SDL_RWread(mpq, buf, 1, (size - nb_read_total));
+		nb_read_total += nb_read;
+		buf += nb_read;
+	}
+
+	for( int i = 0; i < size; ++i )
+	{
+		SDL_RWwrite( dest, &res[ i ], sizeof(char), 1 );
+	}
+	SDL_RWclose( mpq );
+	SDL_RWclose( dest );
+}
+
+#endif
+#include <string.h>
+#include <stdio.h>
+#include <jni.h>
+
+
+
+
 
 void init_archives()
 {
 	HANDLE fh;
+
 	memset(&fileinfo, 0, sizeof(fileinfo));
 	fileinfo.size = sizeof(fileinfo);
 	fileinfo.versionstring = gszVersionNumber;
@@ -69,23 +126,52 @@ void init_archives()
 	fileinfo.originalarchivefile = diabdat_mpq_path;
 	fileinfo.patcharchivefile = patch_rt_mpq_path;
 	init_get_file_info();
-#ifdef SPAWN
-		diabdat_mpq = init_test_access(diabdat_mpq_path, "spawn.mpq", "DiabloSpawn", 1000, FS_PC);
+
+#ifdef ANDROID
+
+
+// if ( !exists_test("/sdcard/devilutionx/diabdat.mpq") ){
+// 		FullGame = false;
+// 		SDL_Log("DEBUG Diabdat.mpq Not Found!");
+// 	}
+
+	// if ( !exists_test("/sdcard/devilutionx/diabdat.mpq") ){
+	// 	FullGame = false;
+	// 	SDL_Log("DEBUG Diabdat.mpq Not Found!");
+
+	// }
+	if (exists_test("/sdcard/devilutionx/diabdat.mpq")){
+		FullGame = true;
+		SDL_Log("DEBUG diabdat.mpq Found!");
+		diabdat_mpq = init_test_access(diabdat_mpq_path, "/sdcard/devilutionx/diabdat.mpq", "DiabloCD", 1000, FS_CD);
+
+	}else{
+		FullGame = false;
+		if(!exists_test("/sdcard/devilutionx/spawn.mpq")){CopySpawn("/sdcard/devilutionx/spawn.mpq");}else{SDL_Log("DEBUG SPAWN Exists!");}
+		diabdat_mpq = init_test_access(diabdat_mpq_path, "/sdcard/devilutionx/spawn.mpq", "DiabloSpawn", 1000, FS_PC);
+		if(exists_test("/sdcard/devilutionx/spawn.mpq")){SDL_Log("DEBUG SPAWN Exists");}else{SDL_Log("DEBUG SPAWN Not Found!"); }
+	}
+
+
+#endif
+#ifdef SPAWN && ifndef ANDROID
+	diabdat_mpq = init_test_access(diabdat_mpq_path, "spawn.mpq", "DiabloSpawn", 1000, FS_PC);
 #else
-	diabdat_mpq = init_test_access(diabdat_mpq_path, "/sdcard/devilutionx/diabdat.mpq", "DiabloCD", 1000, FS_CD);
+	//diabdat_mpq = init_test_access(diabdat_mpq_path, "/sdcard/devilutionx/diabdat.mpq", "DiabloCD", 1000, FS_CD);
 #endif
 	if (!SFileOpenFile("ui_art\\title.pcx", &fh))
-#ifdef SPAWN
+if(!FullGame){
 		InsertCDDlg("spawn.mpq");
-#else
+}else{
 		InsertCDDlg("diabdat.mpq");
-#endif
+}
 	SFileCloseFile(fh);
-#ifdef SPAWN
+if(!FullGame){
 	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "patch_sh.mpq", "DiabloSpawn", 2000, FS_PC);
-#else
+}else{
 	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "patch_rt.mpq", "DiabloInstall", 2000, FS_PC);
-#endif
+ }
+
 }
 
 HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int dwPriority, int fs)

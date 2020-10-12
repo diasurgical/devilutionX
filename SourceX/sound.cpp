@@ -31,7 +31,7 @@ char *sgszMusicTracks[NUM_MUSIC] = {
 	"Music\\sintro.wav",
 #else
 	"Music\\DTowne.wav",
-	"Music\\DLvlA.wav",
+	"Music\\DLvlA.wav", // I don't think these will ever load
 	"Music\\DLvlB.wav",
 	"Music\\DLvlC.wav",
 	"Music\\DLvlD.wav",

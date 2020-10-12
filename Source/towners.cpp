@@ -929,14 +929,14 @@ void CowSFX(int pnum)
 {
 	if (CowPlaying == -1 || !effect_is_playing(CowPlaying)) {
 		sgdwCowClicks++;
-#ifdef SPAWN
+if(!FullGame){
 		if (sgdwCowClicks == 4) {
 			sgdwCowClicks = 0;
 			CowPlaying = TSFX_COW2;
 		} else {
 			CowPlaying = TSFX_COW1;
 		}
-#else
+}else{
 		if (sgdwCowClicks >= 8) {
 			PlaySfxLoc(TSFX_COW1, plr[pnum]._px, plr[pnum]._py + 5);
 			sgdwCowClicks = 4;
@@ -947,7 +947,7 @@ void CowSFX(int pnum)
 		} else {
 			CowPlaying = sgdwCowClicks == 4 ? TSFX_COW2 : TSFX_COW1;
 		}
-#endif
+  }
 		PlaySfxLoc(CowPlaying, plr[pnum]._px, plr[pnum]._py);
 	}
 }

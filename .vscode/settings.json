@@ -38,6 +38,7 @@
         "typeinfo": "cpp",
         "bit": "cpp",
         "string": "cpp",
-        "numeric": "cpp"
+        "numeric": "cpp",
+        "iostream": "cpp"
     }
 }

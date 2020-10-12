@@ -340,15 +340,15 @@ DWORD GetPlrGFXSize(char *szCel)
 	dwMaxSize = 0;
 
 	for (c = 0; c < sizeof(ClassStrTbl) / sizeof(*ClassStrTbl); c++) {
-#ifdef SPAWN
+if(!FullGame){
 		if (c != 0)
 			continue;
-#endif
+}
 		for (a = &ArmourChar[0]; *a; a++) {
-#ifdef SPAWN
+if(!FullGame){
 			if (a != &ArmourChar[0])
 				break;
-#endif
+}
 			for (w = &WepChar[0]; *w; w++) {
 				if (szCel[0] == 'D' && szCel[1] == 'T' && *w != 'N') {
 					continue; //Death has no weapon
@@ -621,8 +621,15 @@ void CreatePlayer(int pnum, char c)
 	plr[pnum]._pLightRad = 10;
 	plr[pnum]._pInfraFlag = FALSE;
 
-	if (c == PC_WARRIOR) {
+    #ifdef ANDROID
+	if (c == PC_WARRIOR && FullGame == true) { // Android
 		plr[pnum]._pAblSpells = (__int64)1 << (SPL_REPAIR - 1);
+	#else
+	if (c == PC_WARRIOR) { // Android
+		plr[pnum]._pAblSpells = (__int64)1 << (SPL_REPAIR - 1);
+	#endif
+
+
 #ifndef SPAWN
 	} else if (c == PC_ROGUE) {
 		plr[pnum]._pAblSpells = (__int64)1 << (SPL_DISARM - 1);

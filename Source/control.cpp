@@ -816,8 +816,14 @@ void InitControlPan()
 	pSBkIconCels = LoadFileInMem("Data\\SpellI2.CEL", NULL);
 	sbooktab = 0;
 	sbookflag = FALSE;
+	#ifdef ANDROID
+	if (plr[myplr]._pClass == PC_WARRIOR && FullGame == true) {
+		SpellPages[0][0] = SPL_REPAIR;
+	#else
 	if (plr[myplr]._pClass == PC_WARRIOR) {
 		SpellPages[0][0] = SPL_REPAIR;
+
+	#endif	
 #ifndef SPAWN
 	} else if (plr[myplr]._pClass == PC_ROGUE) {
 		SpellPages[0][0] = SPL_DISARM;
@@ -869,6 +875,8 @@ void DrawCtrlBtns()
  */
 void DoSpeedBook()
 {
+
+	if(FullGame){ // ANDROID
 	unsigned __int64 spells, spell;
 	int xo, yo, X, Y, i, j;
 
@@ -918,6 +926,8 @@ void DoSpeedBook()
 	}
 
 	SetCursorPos(X, Y);
+
+	}
 }
 
 /**
