@@ -22,6 +22,9 @@ extern int cel_transparency_active;
 extern int cel_foliage_active;
 extern int level_piece_id;
 extern void (*DrawPlrProc)(int, int, int, int, int, BYTE *, int, int, int, int);
+#ifdef HELLFIRE
+extern BOOLEAN AutoMapShowItems;
+#endif
 
 extern int tileOffsetX;
 extern int tileOffsetY;

@@ -203,6 +203,33 @@ BOOL SFileOpenFile(const char *filename, HANDLE *phFile)
 		snprintf(directPath, MAX_PATH, "%s%s", SBasePath, tmpPath);
 		result = SFileOpenFileEx((HANDLE)0, directPath, 0xFFFFFFFF, phFile);
 	}
+
+#ifdef HELLFIRE
+	if (!result) {
+		result = SFileOpenFileEx((HANDLE)hfopt2_mpq, filename, 0, phFile);
+	}
+	if (!result) {
+		result = SFileOpenFileEx((HANDLE)hfopt1_mpq, filename, 0, phFile);
+	}
+	if (!result) {
+		result = SFileOpenFileEx((HANDLE)hfvoice_mpq, filename, 0, phFile);
+	}
+	if (!result) {
+		result = SFileOpenFileEx((HANDLE)hfmusic_mpq, filename, 0, phFile);
+	}
+	if (!result) {
+		result = SFileOpenFileEx((HANDLE)hfbarb_mpq, filename, 0, phFile);
+	}
+	if (!result) {
+		result = SFileOpenFileEx((HANDLE)hfbard_mpq, filename, 0, phFile);
+	}
+	if (!result) {
+		result = SFileOpenFileEx((HANDLE)hfmonk_mpq, filename, 0, phFile);
+	}
+	if (!result) {
+		result = SFileOpenFileEx((HANDLE)hellfire_mpq, filename, 0, phFile);
+	}
+#endif
 	if (!result && patch_rt_mpq) {
 		result = SFileOpenFileEx((HANDLE)patch_rt_mpq, filename, 0, phFile);
 	}

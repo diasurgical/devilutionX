@@ -494,7 +494,11 @@ void HoldThemeRooms()
 void PlaceThemeMonsts(int t, int f)
 {
 	int xp, yp;
+#ifdef HELLFIRE
+	int scattertypes[138];
+#else
 	int scattertypes[111];
+#endif
 	int numscattypes, mtype, i;
 
 	numscattypes = 0;

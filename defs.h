@@ -4,9 +4,16 @@
  * Global definitions and Macros.
  */
 
+#ifdef HELLFIRE
+#define DIABOOL					BOOLEAN
+#define GAME_NAME				"HELLFIRE"
+#define APP_NAME				"Hellfire"
+#else
 #define DIABOOL					BOOL
 #define GAME_NAME				"DIABLO"
 #define APP_NAME				"Diablo"
+#endif
+
 
 #define DMAXX					40
 #define DMAXY					40
@@ -20,10 +27,18 @@
 #define MAX_PLRS				4
 
 #define MAX_CHARACTERS			10
+#ifdef HELLFIRE
+#define MAX_LVLMTYPES			24
+#else
 #define MAX_LVLMTYPES			16
+#endif
 // #define MAX_PATH				260
 #define MAX_SEND_STR_LEN		80
+#ifdef HELLFIRE
+#define MAX_SPELLS				52
+#else
 #define MAX_SPELLS				37
+#endif
 
 #define MAXDEAD					31
 #define MAXDUNX					112
@@ -36,15 +51,27 @@
 #define MAXMULTIQUESTS			4
 #define MAXOBJECTS				127
 #define MAXPORTAL				4
+#ifdef HELLFIRE
+#define MAXQUESTS				24
+#else
 #define MAXQUESTS				16
+#endif
 #define MAXTHEMES				50
 #define MAXTILES				2048
+#ifdef HELLFIRE
+#define MAXTRIGGERS				7
+#else
 #define MAXTRIGGERS				5
+#endif
 #define MAXVISION				32
 #define MDMAXX					40
 #define MDMAXY					40
 #define MAXCHARLEVEL			51
+#ifdef HELLFIRE
+#define ITEMTYPES				43
+#else
 #define ITEMTYPES				35
+#endif
 
 // number of inventory grid cells
 #define NUM_INV_GRID_ELEM		40
@@ -59,11 +86,19 @@
 #define NUM_TOWNERS				16
 
 // todo: enums
+#ifdef HELLFIRE
+#define NUMLEVELS				25
+#define SMITH_ITEMS				25
+#define SMITH_PREMIUM_ITEMS		15
+#define SMITH_MAX_VALUE			200000
+#define SMITH_MAX_PREMIUM_VALUE 200000
+#else
 #define NUMLEVELS				17
 #define SMITH_ITEMS				20
 #define SMITH_PREMIUM_ITEMS		6
 #define SMITH_MAX_VALUE			140000
 #define SMITH_MAX_PREMIUM_VALUE 140000
+#endif
 
 // from diablo 2 beta
 #define MAXEXP					2000000000

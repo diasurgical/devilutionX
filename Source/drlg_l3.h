@@ -25,6 +25,9 @@ void FixL3HallofHeroes();
 void DRLG_L3LockRec(int x, int y);
 BOOL DRLG_L3Lockout();
 void CreateL3Dungeon(DWORD rseed, int entry);
+#ifdef HELLFIRE
+BOOLEAN drlg_l3_hive_rnd_piece(const BYTE *miniset, int rndper);
+#endif
 void LoadL3Dungeon(char *sFileName, int vx, int vy);
 void LoadPreL3Dungeon(char *sFileName, int vx, int vy);
 

@@ -22,6 +22,23 @@ extern HANDLE diabdat_mpq;
 extern char diabdat_mpq_path[MAX_PATH];
 extern HANDLE patch_rt_mpq;
 extern BOOLEAN screensaver_enabled_prev;
+#ifdef HELLFIRE
+extern char hellfire_mpq_path[MAX_PATH];
+extern char hfmonk_mpq_path[MAX_PATH];
+extern char hfbard_mpq_path[MAX_PATH];
+extern char hfbarb_mpq_path[MAX_PATH];
+extern char hfmusic_mpq_path[MAX_PATH];
+extern char hfvoice_mpq_path[MAX_PATH];
+extern char hfopt1_mpq_path[MAX_PATH];
+extern char hfopt2_mpq_path[MAX_PATH];
+extern HANDLE hfmonk_mpq;
+extern HANDLE hfbard_mpq;
+extern HANDLE hfbarb_mpq;
+extern HANDLE hfmusic_mpq;
+extern HANDLE hfvoice_mpq;
+extern HANDLE hfopt1_mpq;
+extern HANDLE hfopt2_mpq;
+#endif
 
 void init_cleanup();
 void init_disable_screensaver(BOOLEAN disable);

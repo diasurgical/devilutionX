@@ -26,9 +26,15 @@ TownerStruct towner[NUM_TOWNERS];
  * ref: enum plr_class
  */
 const int snSFX[3][NUM_CLASSES] = {
+#ifdef HELLFIRE
+	{ PS_WARR52, PS_ROGUE52, PS_MAGE52, PS_MONK52, 0 }, // BUGFIX: add warrior sounds for barbarian instead of 0 - walk sound
+	{ PS_WARR49, PS_ROGUE49, PS_MAGE49, PS_MONK49, 0 },
+	{ PS_WARR50, PS_ROGUE50, PS_MAGE50, PS_MONK50, 0 },
+#else
 	{ PS_WARR52, PS_ROGUE52, PS_MAGE52 },
 	{ PS_WARR49, PS_ROGUE49, PS_MAGE49 },
 	{ PS_WARR50, PS_ROGUE50, PS_MAGE50 },
+#endif
 };
 #endif
 
@@ -118,7 +124,24 @@ int cowoffx[8] = { -1, 0, -1, -1, -1, 0, -1, -1 };
 int cowoffy[8] = { -1, -1, -1, 0, -1, -1, -1, 0 };
 /** Contains the data related to quest gossip for each towner ID. */
 QuestTalkData Qtalklist[] = {
-	// clang-format off
+// clang-format off
+#ifdef HELLFIRE
+	// _qinfra,      _qblkm,       _qgarb,      _qzhar,      _qveil,      _qmod,       _qbutch,      _qbol,         _qblind,      _qblood,      _qanvil,      _qwarlrd,      _qking,       _qpw,           _qbone,      _qvb,         _qgrv,        _qfarm, _qgirl, _qtrade, _qdefiler, _qnakrul, _qjersy, _qhf8
+	{ TEXT_INFRA6,  TEXT_MUSH6,  -1,          -1,          TEXT_VEIL5, -1,          TEXT_BUTCH5, TEXT_BANNER6, TEXT_BLIND5, TEXT_BLOOD5, TEXT_ANVIL6, TEXT_WARLRD5, TEXT_KING7,  TEXT_POISON7,  TEXT_BONE5, TEXT_VILE9,  TEXT_GRAVE2, -1,     -1,     -1,      -1,        -1,       -1,      -1 },
+	{ TEXT_INFRA3,  -1,           -1,          -1,          TEXT_VEIL3, -1,          TEXT_BUTCH3, TEXT_BANNER4, TEXT_BLIND3, TEXT_BLOOD3, TEXT_ANVIL3, TEXT_WARLRD3, TEXT_KING5,  TEXT_POISON4,  TEXT_BONE3, TEXT_VILE7,  TEXT_GRAVE3, -1,     -1,     -1,      -1,        -1,       -1,      -1 },
+	{ -1,            -1,           -1,          -1,          -1,          -1,          -1,           -1,            -1,           -1,           -1,           -1,            -1,           -1,             -1,          -1,           -1,           -1,     -1,     -1,      -1,        -1,       -1,      -1 },
+	{ TEXT_INFRA2,  TEXT_MUSH2,  -1,          -1,          TEXT_VEIL2, -1,          TEXT_BUTCH2, -1,            TEXT_BLIND2, TEXT_BLOOD2, TEXT_ANVIL2, TEXT_WARLRD2, TEXT_KING3,  TEXT_POISON2,  TEXT_BONE2, TEXT_VILE4,  TEXT_GRAVE5, -1,     -1,     -1,      -1,        -1,       -1,      -1 },
+	{ TEXT_INFRA1,  TEXT_MUSH1,  -1,          -1,          TEXT_VEIL1, TEXT_VILE3, TEXT_BUTCH1, TEXT_BANNER1, TEXT_BLIND1, TEXT_BLOOD1, TEXT_ANVIL1, TEXT_WARLRD1, TEXT_KING1,  TEXT_POISON1,  TEXT_BONE1, TEXT_VILE2,  TEXT_GRAVE6, -1,     -1,     -1,      -1,        -1,       -1,      -1 },
+	{ TEXT_INFRA8,  TEXT_MUSH7,  -1,          -1,          TEXT_VEIL6, -1,          TEXT_BUTCH6, TEXT_BANNER7, TEXT_BLIND6, TEXT_BLOOD6, TEXT_ANVIL8, TEXT_WARLRD6, TEXT_KING8,  TEXT_POISON8,  TEXT_BONE6, TEXT_VILE10, TEXT_GRAVE7, -1,     -1,     -1,      -1,        -1,       -1,      -1 },
+	{ TEXT_INFRA9,  TEXT_MUSH9,  -1,          -1,          TEXT_VEIL7, -1,          TEXT_BUTCH7, TEXT_BANNER8, TEXT_BLIND7, TEXT_BLOOD7, TEXT_ANVIL9, TEXT_WARLRD7, TEXT_KING9,  TEXT_POISON9,  TEXT_BONE7, TEXT_VILE11, TEXT_GRAVE1, -1,     -1,     -1,      -1,        -1,       -1,      -1 },
+	{ TEXT_INFRA4,  TEXT_MUSH5,  -1,          -1,          TEXT_VEIL4, -1,          TEXT_BUTCH4, TEXT_BANNER5, TEXT_BLIND4, TEXT_BLOOD4, TEXT_ANVIL4, TEXT_WARLRD4, TEXT_KING6,  TEXT_POISON6,  TEXT_BONE4, TEXT_VILE8,  TEXT_GRAVE8, -1,     -1,     -1,      -1,        -1,       -1,      -1 },
+	{ TEXT_INFRA10, TEXT_MUSH13, -1,          -1,          TEXT_VEIL8, -1,          TEXT_BUTCH8, TEXT_BANNER9, TEXT_BLIND8, TEXT_BLOOD8, TEXT_ANVIL10,TEXT_WARLRD8, TEXT_KING10, TEXT_POISON10, TEXT_BONE8, TEXT_VILE12, TEXT_GRAVE9, -1,     -1,     -1,      -1,        -1,       -1,      -1 },
+	{ -1,            -1,           -1,          -1,          -1,          -1,          -1,           -1,            -1,           -1,           -1,           -1,            -1,           -1,             -1,          -1,           -1,           -1,     -1,     -1,      -1,        -1,       -1,      -1 },
+	{ -1,            -1,           -1,          -1,          -1,          -1,          -1,           -1,            -1,           -1,           -1,           -1,            -1,           -1,             -1,          -1,           -1,           -1,     -1,     -1,      -1,        -1,       -1,      -1 },
+	{ -1,            -1,           -1,          -1,          -1,          -1,          -1,           -1,            -1,           -1,           -1,           -1,            -1,           -1,             -1,          -1,           -1,           -1,     -1,     -1,      -1,        -1,       -1,      -1 },
+	{ -1,            -1,           -1,          -1,          -1,          -1,          -1,           -1,            -1,           -1,           -1,           -1,            -1,           -1,             -1,          -1,           -1,           -1,     -1,     -1,      -1,        -1,       -1,      -1 },
+	{ -1,            -1,           -1,          -1,          -1,          -1,          -1,           -1,            -1,           -1,           -1,           -1,            -1,           -1,             -1,          -1,           -1,           -1,     -1,     -1,      -1,        -1,       -1,      -1 },
+#else
 	// _qinfra,      _qblkm,       _qgarb,      _qzhar,      _qveil,      _qmod,       _qbutch,      _qbol,         _qblind,      _qblood,      _qanvil,      _qwarlrd,      _qking,       _qpw,           _qbone,      _qvb
 	{ TEXT_INFRA6,  TEXT_MUSH6,  -1,          -1,          TEXT_VEIL5, -1,          TEXT_BUTCH5, TEXT_BANNER6, TEXT_BLIND5, TEXT_BLOOD5, TEXT_ANVIL6, TEXT_WARLRD5, TEXT_KING7,  TEXT_POISON7,  TEXT_BONE5, TEXT_VILE9  },
 	{ TEXT_INFRA3,  -1,           -1,          -1,          TEXT_VEIL3, -1,          TEXT_BUTCH3, TEXT_BANNER4, TEXT_BLIND3, TEXT_BLOOD3, TEXT_ANVIL3, TEXT_WARLRD3, TEXT_KING5,  TEXT_POISON4,  TEXT_BONE3, TEXT_VILE7  },
@@ -131,6 +154,7 @@ QuestTalkData Qtalklist[] = {
 	{ TEXT_INFRA10, TEXT_MUSH13, -1,          -1,          TEXT_VEIL8, -1,          TEXT_BUTCH8, TEXT_BANNER9, TEXT_BLIND8, TEXT_BLOOD8, TEXT_ANVIL10,TEXT_WARLRD8, TEXT_KING10, TEXT_POISON10, TEXT_BONE8, TEXT_VILE12 },
 	{ -1,            -1,           -1,          -1,          -1,          -1,          -1,           -1,            -1,           -1,           -1,           -1,            -1,           -1,             -1,          -1           },
 	{ TEXT_KING1,   TEXT_KING1,  TEXT_KING1, TEXT_KING1, TEXT_KING1, TEXT_KING1, TEXT_KING1,  TEXT_KING1,   TEXT_KING1,  TEXT_KING1,  TEXT_KING1,  TEXT_KING1,   TEXT_KING1,  TEXT_KING1,    TEXT_KING1, TEXT_KING1  }
+#endif
 	// clang-format on
 };
 /** Specifies the active sound effect ID for interacting with cows. */
@@ -385,6 +409,64 @@ void InitCows()
 	}
 }
 
+#ifdef HELLFIRE
+void InitFarmer()
+{
+	int i;
+
+	InitTownerInfo(numtowners, 96, 1, TOWN_FARMER, 62, 16, -1, 10);
+	InitQstSnds(numtowners);
+	towner[numtowners]._tNData = LoadFileInMem("Towners\\Farmer\\Farmrn2.CEL", NULL);
+	for (i = 0; i < 8; i++) {
+		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
+	}
+	towner[numtowners]._tNFrames = 15;
+	NewTownerAnim(numtowners, towner[numtowners]._tNAnim[DIR_S], towner[numtowners]._tNFrames, 3);
+	strcpy(towner[numtowners]._tName, "Lester the farmer");
+	numtowners++;
+}
+
+void InitCowFarmer()
+{
+	int i;
+
+	InitTownerInfo(numtowners, 96, 1, TOWN_COWFARM, 61, 22, -1, 10);
+	InitQstSnds(numtowners);
+	if (quests[Q_JERSEY]._qactive != 3) {
+		towner[numtowners]._tNData = LoadFileInMem("Towners\\Farmer\\cfrmrn2.CEL", NULL);
+	} else {
+		towner[numtowners]._tNData = LoadFileInMem("Towners\\Farmer\\mfrmrn2.CEL", NULL);
+	}
+	for (i = 0; i < 8; i++) {
+		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
+	}
+	towner[numtowners]._tNFrames = 15;
+	NewTownerAnim(numtowners, towner[numtowners]._tNAnim[DIR_SW], towner[numtowners]._tNFrames, 3);
+	strcpy(towner[numtowners]._tName, "Complete Nut");
+	numtowners++;
+}
+
+void InitGirl()
+{
+	int i;
+
+	InitTownerInfo(numtowners, 96, 1, TOWN_GIRL, 77, 43, -1, 10);
+	InitQstSnds(numtowners);
+	if (quests[Q_GIRL]._qactive != 3) {
+		towner[numtowners]._tNData = LoadFileInMem("Towners\\Girl\\Girlw1.CEL", NULL);
+	} else {
+		towner[numtowners]._tNData = LoadFileInMem("Towners\\Girl\\Girls1.CEL", NULL);
+	}
+	for (i = 0; i < 8; i++) {
+		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
+	}
+	towner[numtowners]._tNFrames = 20;
+	NewTownerAnim(numtowners, towner[numtowners]._tNAnim[DIR_S], towner[numtowners]._tNFrames, 6);
+	strcpy(towner[numtowners]._tName, "Celia");
+	numtowners++;
+}
+#endif
+
 void InitTowners()
 {
 	numtowners = 0;
@@ -400,6 +482,16 @@ void InitTowners()
 	InitBarmaid();
 	InitBoy();
 	InitCows();
+#ifdef HELLFIRE
+	if (UseCowFarmer) {
+		InitCowFarmer();
+	} else if (quests[Q_FARMER]._qactive != 10) {
+		InitFarmer();
+	}
+	if (UseTheoQuest && plr->_pLvlVisited[17]) {
+		InitGirl();
+	}
+#endif
 }
 
 void FreeTownerGFX()
@@ -426,9 +518,8 @@ void TownCtrlMsg(int i)
 		p = towner[i]._tVar1;
 		dx = abs(towner[i]._tx - plr[p]._px);
 		dy = abs(towner[i]._ty - plr[p]._py);
-		if (dx >= 2 || dy >= 2)
+		if (dx >= 2 || dy >= 2) {
 			towner[i]._tbtcnt = 0;
-		if (!towner[i]._tbtcnt) {
 			qtextflag = FALSE;
 			stream_stop();
 		}
@@ -458,7 +549,7 @@ void TownDead()
 	tidx = GetActiveTowner(TOWN_DEADGUY);
 	TownCtrlMsg(tidx);
 	if (!qtextflag) {
-		if (quests[Q_BUTCHER]._qactive == QUEST_ACTIVE && quests[Q_BUTCHER]._qlog == 0) {
+		if (quests[Q_BUTCHER]._qactive == QUEST_ACTIVE && !quests[Q_BUTCHER]._qlog) {
 			return;
 		}
 		if (quests[Q_BUTCHER]._qactive != QUEST_INIT) {
@@ -527,6 +618,32 @@ void TownCow()
 	TownCtrlMsg(i);
 }
 
+#ifdef HELLFIRE
+void TownFarmer()
+{
+	int i;
+
+	i = GetActiveTowner(TOWN_FARMER);
+	TownCtrlMsg(i);
+}
+
+void TownCowFarmer()
+{
+	int i;
+
+	i = GetActiveTowner(TOWN_COWFARM);
+	TownCtrlMsg(i);
+}
+
+void TownGirl()
+{
+	int i;
+
+	i = GetActiveTowner(TOWN_GIRL);
+	TownCtrlMsg(i);
+}
+#endif
+
 void ProcessTowners()
 {
 	int i, ao;
@@ -563,6 +680,17 @@ void ProcessTowners()
 		case TOWN_COW:
 			TownCow();
 			break;
+#ifdef HELLFIRE
+		case TOWN_FARMER:
+			TownFarmer();
+			break;
+		case TOWN_GIRL:
+			TownGirl();
+			break;
+		case TOWN_COWFARM:
+			TownCowFarmer();
+			break;
+#endif
 		}
 
 		towner[i]._tAnimCnt++;
@@ -607,6 +735,9 @@ void TalkToTowner(int p, int t)
 {
 	int i, dx, dy, rv1, rv2, rv3;
 	ItemStruct *Item;
+#ifdef HELLFIRE
+	int qt, t2;
+#endif
 
 	rv1 = random_(6, 3); /* unused */
 	rv2 = random_(6, 4); /* unused */
@@ -679,7 +810,9 @@ void TalkToTowner(int p, int t)
 				towner[t]._tMsgSaid = TRUE;
 			}
 			if (quests[Q_LTBANNER]._qvar2 == 1 && PlrHasItem(p, IDI_BANNER, &i) != NULL) {
+#ifndef HELLFIRE
 				if (!towner[t]._tMsgSaid) {
+#endif
 					quests[Q_LTBANNER]._qactive = QUEST_DONE;
 					quests[Q_LTBANNER]._qvar1 = 3;
 					RemoveInvItem(p, i);
@@ -688,7 +821,9 @@ void TalkToTowner(int p, int t)
 					towner[t]._tVar1 = p;
 					InitQTextMsg(TEXT_BANNER3);
 					towner[t]._tMsgSaid = TRUE;
+#ifndef HELLFIRE
 				}
+#endif
 			}
 		}
 		if (!qtextflag) {
@@ -709,6 +844,14 @@ void TalkToTowner(int p, int t)
 				PlaySFX(PS_ROGUE8);
 			} else if (plr[p]._pClass == PC_SORCERER && !effect_is_playing(PS_MAGE8)) {
 				PlaySFX(PS_MAGE8);
+#ifdef HELLFIRE
+			} else if (plr[p]._pClass == PC_MONK && !effect_is_playing(PS_MONK8)) {
+				PlaySFX(PS_MONK8);
+			} else if (plr[p]._pClass == PC_BARD && !effect_is_playing(PS_ROGUE8)) {
+				PlaySFX(PS_ROGUE8);
+			} else if (plr[p]._pClass == PC_BARBARIAN && !effect_is_playing(PS_WARR8)) {
+				PlaySFX(PS_WARR8);
+#endif
 			}
 #endif
 			towner[t]._tMsgSaid = TRUE;
@@ -745,7 +888,9 @@ void TalkToTowner(int p, int t)
 					towner[t]._tMsgSaid = TRUE;
 				}
 				if (quests[Q_ROCK]._qvar2 == 1 && PlrHasItem(p, IDI_ROCK, &i) != NULL) {
+#ifndef HELLFIRE
 					if (!towner[t]._tMsgSaid) {
+#endif
 						quests[Q_ROCK]._qactive = QUEST_DONE;
 						quests[Q_ROCK]._qvar2 = 2;
 						quests[Q_ROCK]._qvar1 = 2;
@@ -755,7 +900,9 @@ void TalkToTowner(int p, int t)
 						towner[t]._tVar1 = p;
 						InitQTextMsg(TEXT_INFRA7);
 						towner[t]._tMsgSaid = TRUE;
+#ifndef HELLFIRE
 					}
+#endif
 				}
 			}
 			if (plr[p]._pLvlVisited[9] && quests[Q_ANVIL]._qactive != QUEST_NOTAVAIL) {
@@ -774,7 +921,9 @@ void TalkToTowner(int p, int t)
 					}
 				}
 				if (quests[Q_ANVIL]._qvar2 == 1 && PlrHasItem(p, IDI_ANVIL, &i) != NULL) {
+#ifndef HELLFIRE
 					if (!towner[t]._tMsgSaid) {
+#endif
 						quests[Q_ANVIL]._qactive = QUEST_DONE;
 						quests[Q_ANVIL]._qvar2 = 2;
 						quests[Q_ANVIL]._qvar1 = 2;
@@ -784,7 +933,9 @@ void TalkToTowner(int p, int t)
 						towner[t]._tVar1 = p;
 						InitQTextMsg(TEXT_ANVIL7);
 						towner[t]._tMsgSaid = TRUE;
+#ifndef HELLFIRE
 					}
+#endif
 				}
 			}
 		}
@@ -848,6 +999,15 @@ void TalkToTowner(int p, int t)
 			}
 		}
 	} else if (t == GetActiveTowner(TOWN_BMAID)) {
+#ifdef HELLFIRE
+		if (plr[p]._pLvlVisited[21] == false && PlrHasItem(p, IDI_MAPOFDOOM, &i)) {
+			quests[Q_GRAVE]._qactive = 2;
+			quests[Q_GRAVE]._qlog = 1;
+			quests[Q_GRAVE]._qmsg = TEXT_GRAVE8;
+			InitQTextMsg(Q_GRAVE);
+			towner[t]._tMsgSaid = TRUE;
+		}
+#endif
 		if (!qtextflag) {
 			TownerTalk(TEXT_GILLIAN1, t);
 			if (storeflag) {
@@ -863,7 +1023,11 @@ void TalkToTowner(int p, int t)
 		}
 	} else if (t == GetActiveTowner(TOWN_HEALER)) {
 		if (gbMaxPlayers == 1) {
+#ifdef HELLFIRE
+			if ((plr[p]._pLvlVisited[1] || plr[p]._pLvlVisited[5]) && !towner[t]._tMsgSaid) {
+#else
 			if (plr[p]._pLvlVisited[1] && !towner[t]._tMsgSaid) {
+#endif
 				if (quests[Q_PWATER]._qactive == QUEST_INIT) {
 					quests[Q_PWATER]._qactive = QUEST_ACTIVE;
 					quests[Q_PWATER]._qlog = TRUE;
@@ -951,6 +1115,209 @@ void TalkToTowner(int p, int t)
 	} else if (towner[t]._ttype == TOWN_COW) {
 		if (!qtextflag)
 			CowSFX(p);
+#ifdef HELLFIRE
+	} else if (towner[t]._ttype == TOWN_FARMER) {
+		if (!qtextflag) {
+			switch (quests[Q_FARMER]._qactive) {
+			case 0:
+				if (PlrHasItem(p, IDI_RUNEBOMB, &i)) {
+					qt = TEXT_FARMER2;
+					quests[Q_FARMER]._qactive = 2;
+					quests[Q_FARMER]._qvar1 = 1;
+					quests[Q_FARMER]._qlog = 1;
+					quests[Q_FARMER]._qmsg = TEXT_FARMER1;
+				} else if (!plr[myplr]._pLvlVisited[9] && plr[myplr]._pLevel < 15) {
+					qt = !PlrHasItem(p, IDI_RUNEBOMB, &i) ? TEXT_FARMER3 : TEXT_FARMER2;
+				} else {
+					qt = TEXT_FARMER1;
+					quests[Q_FARMER]._qactive = 2;
+					quests[Q_FARMER]._qvar1 = 1;
+					quests[Q_FARMER]._qlog = 1;
+					quests[Q_FARMER]._qmsg = TEXT_FARMER1;
+					SpawnRuneBomb(towner[t]._tx + 1, towner[t]._ty);
+				}
+				break;
+			case 1:
+				if (PlrHasItem(p, IDI_RUNEBOMB, &i)) {
+					qt = TEXT_FARMER2;
+					quests[Q_FARMER]._qactive = 2;
+					quests[Q_FARMER]._qvar1 = 1;
+					quests[Q_FARMER]._qmsg = TEXT_FARMER1;
+					quests[Q_FARMER]._qlog = 1;
+				} else if (!plr[myplr]._pLvlVisited[9] && plr[myplr]._pLevel < 15) {
+					qt = TEXT_FARMER8;
+					if (plr[myplr]._pLvlVisited[2]) {
+						qt = TEXT_FARMER5;
+					}
+					if (plr[myplr]._pLvlVisited[5]) {
+						qt = TEXT_FARMER7;
+					}
+					if (plr[myplr]._pLvlVisited[7]) {
+						qt = TEXT_FARMER9;
+					}
+				} else {
+					qt = TEXT_FARMER1;
+					quests[Q_FARMER]._qactive = 2;
+					quests[Q_FARMER]._qvar1 = 1;
+					quests[Q_FARMER]._qlog = 1;
+					quests[Q_FARMER]._qmsg = TEXT_FARMER1;
+					SpawnRuneBomb(towner[t]._tx + 1, towner[t]._ty);
+				}
+				break;
+			case 2:
+				qt = !PlrHasItem(p, IDI_RUNEBOMB, &i) ? TEXT_FARMER3 : TEXT_FARMER2;
+				break;
+			case 3:
+				qt = TEXT_FARMER4;
+				SpawnRewardItem(IDI_AURIC, towner[t]._tx + 1, towner[t]._ty);
+				quests[Q_FARMER]._qactive = 10;
+				quests[Q_FARMER]._qlog = 0;
+				break;
+			case 10:
+				qt = -1;
+				break;
+			default:
+				quests[Q_FARMER]._qactive = 0;
+				qt = TEXT_FARMER4;
+				break;
+			}
+			if (qt != -1) {
+				InitQTextMsg(qt);
+			}
+			if (gbMaxPlayers != 1) {
+				NetSendCmdQuest(TRUE, Q_FARMER);
+			}
+		}
+	} else if (towner[t]._ttype == TOWN_COWFARM) {
+		if (!qtextflag) {
+			if (PlrHasItem(p, IDI_GREYSUIT, &i)) {
+				qt = TEXT_JERSEY7;
+				RemoveInvItem(p, i);
+			} else if (PlrHasItem(p, IDI_BROWNSUIT, &i)) {
+				CreateItem(UITEM_BOVINE, towner[t]._tx + 1, towner[t]._ty);
+				RemoveInvItem(p, i);
+				qt = TEXT_JERSEY8;
+				quests[Q_JERSEY]._qactive = 3;
+			} else if (PlrHasItem(p, IDI_RUNEBOMB, &i)) {
+				qt = TEXT_JERSEY5;
+				quests[Q_JERSEY]._qactive = 2;
+				quests[Q_JERSEY]._qvar1 = 1;
+				quests[Q_JERSEY]._qmsg = TEXT_JERSEY4;
+				quests[Q_JERSEY]._qlog = 1;
+			} else {
+				switch (quests[Q_JERSEY]._qactive) {
+				case 0:
+					qt = TEXT_JERSEY1;
+					quests[Q_JERSEY]._qactive = 7;
+					break;
+				case 1:
+					qt = TEXT_JERSEY5;
+					break;
+				case 2:
+					qt = TEXT_JERSEY1;
+					break;
+				case 3:
+					qt = TEXT_JERSEY5;
+					break;
+				case 7:
+					qt = TEXT_JERSEY2;
+					quests[Q_JERSEY]._qactive = 8;
+					break;
+				case 8:
+					qt = TEXT_JERSEY3;
+					quests[Q_JERSEY]._qactive = 9;
+					break;
+				case 9:
+					if (!plr[myplr]._pLvlVisited[9] && plr[myplr]._pLevel < 15) {
+						switch (random_(0, 4)) {
+						case 0:
+							qt = TEXT_JERSEY9;
+							break;
+						case 1:
+							qt = TEXT_JERSEY10;
+							break;
+						case 2:
+							qt = TEXT_JERSEY11;
+							break;
+						default:
+							qt = TEXT_JERSEY12;
+							break;
+						}
+					} else {
+						qt = TEXT_JERSEY4;
+						quests[Q_JERSEY]._qactive = 2;
+						quests[Q_JERSEY]._qvar1 = 1;
+						quests[Q_JERSEY]._qmsg = TEXT_JERSEY4;
+						quests[Q_JERSEY]._qlog = 1;
+						SpawnRuneBomb(towner[t]._tx + 1, towner[t]._ty);
+					}
+					break;
+				default:
+					qt = TEXT_JERSEY5;
+					quests[Q_JERSEY]._qactive = 0;
+					break;
+				}
+			}
+			if (qt != -1) {
+				InitQTextMsg(qt);
+			}
+			if (gbMaxPlayers != 1) {
+				NetSendCmdQuest(TRUE, Q_JERSEY);
+			}
+		}
+	} else if (towner[t]._ttype == TOWN_GIRL) {
+		if (!qtextflag) {
+			t2 = 0;
+			if (!PlrHasItem(p, IDI_THEODORE, &i) || quests[Q_GIRL]._qactive == 3) {
+				switch (quests[Q_FARMER]._qactive) {
+				case 0:
+					qt = TEXT_GIRL2;
+					quests[Q_GIRL]._qactive = 2;
+					quests[Q_GIRL]._qvar1 = 1;
+					quests[Q_GIRL]._qlog = 1;
+					quests[Q_GIRL]._qmsg = TEXT_GIRL2;
+					t2 = 1;
+					break;
+				case 1:
+					qt = TEXT_GIRL2;
+					quests[Q_GIRL]._qvar1 = 1;
+					quests[Q_GIRL]._qlog = 1;
+					quests[Q_GIRL]._qmsg = TEXT_GIRL2;
+					quests[Q_GIRL]._qactive = 2;
+					t2 = 1;
+					break;
+				case 2:
+					qt = TEXT_GIRL3;
+					t2 = 1;
+					break;
+				case 3:
+					qt = -1;
+					break;
+				default:
+					quests[Q_GIRL]._qactive = 0;
+					qt = TEXT_GIRL1;
+					break;
+				}
+			} else {
+				qt = TEXT_GIRL4;
+				RemoveInvItem(p, i);
+				CreateAmulet(towner[t]._tx, towner[t]._ty, 13, 0, 1);
+				quests[Q_GIRL]._qlog = 0;
+				quests[Q_GIRL]._qactive = 3;
+				t2 = 1;
+			}
+			if (qt != -1) {
+				if (t2 != 0) {
+					InitQTextMsg(qt);
+				} else {
+					PlaySFX(alltext[qt].sfxnr);
+				}
+			}
+			if (gbMaxPlayers != 1) {
+				NetSendCmdQuest(TRUE, Q_GIRL);
+			}
+		}
+#endif
 	}
 }
 

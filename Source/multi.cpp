@@ -84,7 +84,7 @@ void multi_send_packet(void *packet, BYTE dwSize)
 	TPkt pkt;
 
 	NetRecvPlrData(&pkt);
-	pkt.hdr.wLen = dwSize + 19;
+	pkt.hdr.wLen = dwSize + sizeof(pkt.hdr);
 	memcpy(pkt.body, packet, dwSize);
 	if (!SNetSendMessage(myplr, &pkt.hdr, pkt.hdr.wLen))
 		nthread_terminate_game("SNetSendMessage0");
@@ -162,7 +162,7 @@ void multi_send_msg_packet(int pmask, BYTE *src, BYTE len)
 	TPkt pkt;
 
 	NetRecvPlrData(&pkt);
-	t = len + 19;
+	t = len + sizeof(pkt.hdr);
 	pkt.hdr.wLen = t;
 	memcpy(pkt.body, src, len);
 	for (v = 1, p = 0; p < MAX_PLRS; p++, v <<= 1) {
@@ -763,7 +763,18 @@ int InitLevelType(int l)
 	if (l >= 9 && l <= 12)
 		return DTYPE_CAVES;
 
+#ifdef HELLFIRE
+	if (l >= 13 && l <= 16)
+		return DTYPE_HELL;
+	if (l >= 21 && l <= 24)
+		return DTYPE_CATHEDRAL; // Crypt
+	if (l >= 17 && l <= 20)
+		return DTYPE_CAVES; // Hive
+
+	return DTYPE_CATHEDRAL;
+#else
 	return DTYPE_HELL;
+#endif
 }
 
 void SetupLocalCoords()

@@ -27,7 +27,11 @@ void LoadGame(BOOL firstflag)
 	LoadBuff = pfile_read(szName, &dwLen);
 	tbuff = LoadBuff;
 
+#ifdef HELLFIRE
+	if (ILoad() != 'HELF')
+#else
 	if (ILoad() != 'RETL')
+#endif
 		app_fatal("Invalid save file");
 
 	setlevel = OLoad();
@@ -849,7 +853,11 @@ void SaveGame()
 	BYTE *SaveBuff = DiabloAllocPtr(dwLen);
 	tbuff = SaveBuff;
 
+#ifdef HELLFIRE
+	ISave('HELF');
+#else
 	ISave('RETL');
+#endif
 	OSave(setlevel);
 	WSave(setlvlnum);
 	WSave(currlevel);

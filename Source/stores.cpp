@@ -18,11 +18,14 @@ int premiumlevel;
 int talker;
 STextStruct stext[24];
 char stextsize;
-
 int stextsmax;
 ItemStruct storehold[48];
 int gossipstart;
+#ifdef HELLFIRE
+ItemStruct witchitem[25];
+#else
 ItemStruct witchitem[20];
+#endif
 BOOL stextscrl;
 int numpremium;
 ItemStruct healitem[20];
@@ -63,7 +66,11 @@ void InitStores()
 	pSTextBoxCels = LoadFileInMem("Data\\TextBox2.CEL", NULL);
 	pSPentSpn2Cels = LoadFileInMem("Data\\PentSpn2.CEL", NULL);
 	pSTextSlidCels = LoadFileInMem("Data\\TextSlid.CEL", NULL);
+#ifdef HELLFIRE
+	ClearSText(0, 104);
+#else
 	ClearSText(0, 24);
+#endif
 	stextflag = STORE_NONE;
 	PentSpn2Frame = 1;
 	stextsize = FALSE;
@@ -111,7 +118,11 @@ void SetupTownStores()
 	SpawnWitch(l);
 	SpawnHealer(l);
 	SpawnBoy(plr[myplr]._pLevel);
+#ifdef HELLFIRE
+	SpawnPremium(myplr);
+#else
 	SpawnPremium(plr[myplr]._pLevel);
+#endif
 }
 
 void FreeStoreMem()
@@ -464,7 +475,7 @@ void PrintStoreItem(ItemStruct *x, int l, char iclr)
 	str = x->_iMinStr;
 	dex = x->_iMinDex;
 	mag = x->_iMinMag;
-	if (!(str + mag + dex)) {
+	if ((str + mag + dex) == 0) {
 		strcat(sstr, "No required attributes");
 	} else {
 		strcpy(tempstr, "Required:");
@@ -647,9 +658,32 @@ void S_StartSSell()
 		storehold[i]._itype = ITYPE_NONE;
 
 	for (i = 0; i < plr[myplr]._pNumInv; i++) {
+#ifdef HELLFIRE
+		if (storenumh >= 48)
+			break;
+#endif
 		if (SmithSellOk(i)) {
 			sellok = TRUE;
 			storehold[storenumh] = plr[myplr].InvList[i];
+
+			if (storehold[storenumh]._iMagical != ITEM_QUALITY_NORMAL && storehold[storenumh]._iIdentified)
+				storehold[storenumh]._ivalue = storehold[storenumh]._iIvalue;
+
+			if ((storehold[storenumh]._ivalue >>= 2) == 0)
+				storehold[storenumh]._ivalue = 1;
+
+			storehold[storenumh]._iIvalue = storehold[storenumh]._ivalue;
+			storehidx[storenumh++] = i;
+		}
+	}
+#ifdef HELLFIRE
+
+	for (i = 0; i < MAXBELTITEMS; i++) {
+		if (storenumh >= 48)
+			break;
+		if (SmithSellOk(-(i + 1))) {
+			storehold[storenumh] = plr[myplr].SpdList[i];
+			sellok = TRUE;
 
 			if (storehold[storenumh]._iMagical != ITEM_QUALITY_NORMAL && storehold[storenumh]._iIdentified)
 				storehold[storenumh]._ivalue = storehold[storenumh]._iIvalue;
@@ -658,9 +692,10 @@ void S_StartSSell()
 				storehold[storenumh]._ivalue = 1;
 
 			storehold[storenumh]._iIvalue = storehold[storenumh]._ivalue;
-			storehidx[storenumh++] = i;
+			storehidx[storenumh++] = -(i + 1);
 		}
 	}
+#endif
 
 	if (!sellok) {
 		stextscrl = FALSE;
@@ -727,6 +762,10 @@ void S_StartSRepair()
 		AddStoreHoldRepair(&plr[myplr].InvBody[INVLOC_HAND_RIGHT], -4);
 	}
 	for (i = 0; i < plr[myplr]._pNumInv; i++) {
+#ifdef HELLFIRE
+		if (storenumh >= 48)
+			break;
+#endif
 		if (SmithRepairOk(i)) {
 			repairok = TRUE;
 			AddStoreHoldRepair(&plr[myplr].InvList[i], i);
@@ -891,6 +930,10 @@ void S_StartWSell()
 		storehold[i]._itype = ITYPE_NONE;
 
 	for (i = 0; i < plr[myplr]._pNumInv; i++) {
+#ifdef HELLFIRE
+		if (storenumh >= 48)
+			break;
+#endif
 		if (WitchSellOk(i)) {
 			sellok = TRUE;
 			storehold[storenumh] = plr[myplr].InvList[i];
@@ -898,7 +941,7 @@ void S_StartWSell()
 			if (storehold[storenumh]._iMagical != ITEM_QUALITY_NORMAL && storehold[storenumh]._iIdentified)
 				storehold[storenumh]._ivalue = storehold[storenumh]._iIvalue;
 
-			if (!(storehold[storenumh]._ivalue >>= 2))
+			if ((storehold[storenumh]._ivalue >>= 2) == 0)
 				storehold[storenumh]._ivalue = 1;
 
 			storehold[storenumh]._iIvalue = storehold[storenumh]._ivalue;
@@ -907,6 +950,10 @@ void S_StartWSell()
 	}
 
 	for (i = 0; i < MAXBELTITEMS; i++) {
+#ifdef HELLFIRE
+		if (storenumh >= 48)
+			break;
+#endif
 		if (plr[myplr].SpdList[i]._itype != ITYPE_NONE && WitchSellOk(-(i + 1))) {
 			sellok = TRUE;
 			storehold[storenumh] = plr[myplr].SpdList[i];
@@ -914,7 +961,7 @@ void S_StartWSell()
 			if (storehold[storenumh]._iMagical != ITEM_QUALITY_NORMAL && storehold[storenumh]._iIdentified)
 				storehold[storenumh]._ivalue = storehold[storenumh]._iIvalue;
 
-			if (!(storehold[storenumh]._ivalue >>= 2))
+			if ((storehold[storenumh]._ivalue >>= 2) == 0)
 				storehold[storenumh]._ivalue = 1;
 
 			storehold[storenumh]._iIvalue = storehold[storenumh]._ivalue;
@@ -979,13 +1026,21 @@ void S_StartWRecharge()
 		storehold[i]._itype = ITYPE_NONE;
 	}
 
+#ifdef HELLFIRE
+	if ((plr[myplr].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_STAFF || plr[myplr].InvBody[INVLOC_HAND_LEFT]._iMiscId == IMISC_UNIQUE)
+#else
 	if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_STAFF
+#endif
 	    && plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges != plr[myplr].InvBody[INVLOC_HAND_LEFT]._iMaxCharges) {
 		rechargeok = TRUE;
 		AddStoreHoldRecharge(plr[myplr].InvBody[INVLOC_HAND_LEFT], -1);
 	}
 
 	for (i = 0; i < plr[myplr]._pNumInv; i++) {
+#ifdef HELLFIRE
+		if (storenumh >= 48)
+			break;
+#endif
 		if (WitchRechargeOk(i)) {
 			rechargeok = TRUE;
 			AddStoreHoldRecharge(plr[myplr].InvList[i], i);
@@ -1137,7 +1192,11 @@ void S_StartBBoy()
 	else
 		AddSText(20, 10, FALSE, boyitem._iName, iclr, TRUE);
 
+#ifdef HELLFIRE
+	AddSTextVal(10, boyitem._iIvalue - (boyitem._iIvalue >> 2));
+#else
 	AddSTextVal(10, boyitem._iIvalue + (boyitem._iIvalue >> 1));
+#endif
 	PrintStoreItem(&boyitem, 11, iclr);
 	AddSText(0, 22, TRUE, "Leave", COL_WHITE, TRUE);
 	OffsetSTextY(22, 6);
@@ -1145,15 +1204,28 @@ void S_StartBBoy()
 
 void S_StartHealer()
 {
+#ifdef HELLFIRE
+	if (plr[myplr]._pHitPoints != plr[myplr]._pMaxHP) {
+		PlaySFX(IS_CAST8);
+	}
+	plr[myplr]._pHitPoints = plr[myplr]._pMaxHP;
+	plr[myplr]._pHPBase = plr[myplr]._pMaxHPBase;
+	drawhpflag = TRUE;
+#endif
 	stextsize = FALSE;
 	stextscrl = FALSE;
 	AddSText(0, 1, TRUE, "Welcome to the", COL_GOLD, FALSE);
 	AddSText(0, 3, TRUE, "Healer's home", COL_GOLD, FALSE);
 	AddSText(0, 9, TRUE, "Would you like to:", COL_GOLD, FALSE);
 	AddSText(0, 12, TRUE, "Talk to Pepin", COL_BLUE, TRUE);
+#ifdef HELLFIRE
+	AddSText(0, 14, TRUE, "Buy items", COL_WHITE, TRUE);
+	AddSText(0, 16, TRUE, "Leave Healer's home", COL_WHITE, TRUE);
+#else
 	AddSText(0, 14, TRUE, "Receive healing", COL_WHITE, TRUE);
 	AddSText(0, 16, TRUE, "Buy items", COL_WHITE, TRUE);
 	AddSText(0, 18, TRUE, "Leave Healer's home", COL_WHITE, TRUE);
+#endif
 	AddSLine(5);
 	storenumh = 20;
 }
@@ -1282,6 +1354,10 @@ void S_StartSIdentify()
 	}
 
 	for (i = 0; i < plr[myplr]._pNumInv; i++) {
+#ifdef HELLFIRE
+		if (storenumh >= 48)
+			break;
+#endif
 		if (IdItemOk(&plr[myplr].InvList[i])) {
 			idok = TRUE;
 			AddStoreHoldId(plr[myplr].InvList[i], i);
@@ -1922,7 +1998,11 @@ void SmithBuyPItem()
 
 	premiumitem[xx]._itype = ITYPE_NONE;
 	numpremium--;
+#ifdef HELLFIRE
+	SpawnPremium(myplr);
+#else
 	SpawnPremium(plr[myplr]._pLevel);
+#endif
 }
 
 void S_SPBuyEnter()
@@ -2362,11 +2442,19 @@ void S_BBuyEnter()
 		stextshold = STORE_BBOY;
 		stextvhold = stextsval;
 		stextlhold = 10;
+#ifdef HELLFIRE
+		if (plr[myplr]._pGold < boyitem._iIvalue - (boyitem._iIvalue >> 2)) {
+#else
 		if (plr[myplr]._pGold < boyitem._iIvalue + (boyitem._iIvalue >> 1)) {
+#endif
 			StartStore(STORE_NOMONEY);
 		} else {
 			plr[myplr].HoldItem = boyitem;
+#ifdef HELLFIRE
+			plr[myplr].HoldItem._iIvalue -= plr[myplr].HoldItem._iIvalue >> 2;
+#else
 			plr[myplr].HoldItem._iIvalue += plr[myplr].HoldItem._iIvalue >> 1;
+#endif
 			SetCursor_(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			done = FALSE;
 			for (i = 0; i < NUM_INV_GRID_ELEM && !done; i++) {

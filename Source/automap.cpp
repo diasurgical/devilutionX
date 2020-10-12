@@ -16,7 +16,7 @@ static int AutoMapX;
 static int AutoMapY;
 /** Specifies whether the automap is enabled. */
 BOOL automapflag;
-char AmShiftTab[31];
+char AmShiftTab[32];
 /** Tracks the explored areas of the map. */
 BOOLEAN automapview[DMAXX][DMAXY];
 /** Specifies the scale of the automap. */
@@ -35,6 +35,10 @@ int AmLine4;
 #define COLOR_BRIGHT PAL8_YELLOW
 /** color for dim map lines/dots */
 #define COLOR_DIM (PAL16_YELLOW + 8)
+#ifdef HELLFIRE
+// color for items on automap
+#define COLOR_ITEM (PAL8_BLUE + 1)
+#endif
 
 #define MAPFLAG_TYPE 0x000F
 /** these are in the second byte */
@@ -76,13 +80,27 @@ void InitAutomap()
 
 	switch (leveltype) {
 	case DTYPE_CATHEDRAL:
+#ifdef HELLFIRE
+		if (currlevel < 21)
+			pAFile = LoadFileInMem("Levels\\L1Data\\L1.AMP", &dwTiles);
+		else
+			pAFile = LoadFileInMem("NLevels\\L5Data\\L5.AMP", &dwTiles);
+#else
 		pAFile = LoadFileInMem("Levels\\L1Data\\L1.AMP", &dwTiles);
+#endif
 		break;
 	case DTYPE_CATACOMBS:
 		pAFile = LoadFileInMem("Levels\\L2Data\\L2.AMP", &dwTiles);
 		break;
 	case DTYPE_CAVES:
+#ifdef HELLFIRE
+		if (currlevel < 17)
+			pAFile = LoadFileInMem("Levels\\L3Data\\L3.AMP", &dwTiles);
+		else
+			pAFile = LoadFileInMem("NLevels\\L6Data\\L6.AMP", &dwTiles);
+#else
 		pAFile = LoadFileInMem("Levels\\L3Data\\L3.AMP", &dwTiles);
+#endif
 		break;
 	case DTYPE_HELL:
 		pAFile = LoadFileInMem("Levels\\L4Data\\L4.AMP", &dwTiles);
@@ -278,6 +296,10 @@ void DrawAutomap()
 		sy += AmLine32;
 	}
 	DrawAutomapPlr();
+#ifdef HELLFIRE
+	if (AutoMapShowItems)
+		SearchAutomapItem();
+#endif
 	DrawAutomapText();
 	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_Y + SCREEN_HEIGHT)];
 }
@@ -469,6 +491,85 @@ void DrawAutomapTile(int sx, int sy, WORD automap_type)
 			DrawLine(sx, sy + AmLine16, sx + AmLine32, sy, COLOR_DIM);
 	}
 }
+#ifdef HELLFIRE
+
+void SearchAutomapItem()
+{
+	int x, y;
+	int x1, y1, x2, y2;
+	int px, py;
+	int i, j;
+
+	if (plr[myplr]._pmode == PM_WALK3) {
+		x = plr[myplr]._pfutx;
+		y = plr[myplr]._pfuty;
+		if (plr[myplr]._pdir == DIR_W)
+			x++;
+		else
+			y++;
+	} else {
+		x = plr[myplr]._px;
+		y = plr[myplr]._py;
+	}
+
+	x1 = x - 8;
+	if (x1 < 0)
+		x1 = 0;
+	else if (x1 > MAXDUNX)
+		x1 = MAXDUNX;
+
+	y1 = y - 8;
+	if (y1 < 0)
+		y1 = 0;
+	else if (y1 > MAXDUNY)
+		y1 = MAXDUNY;
+
+	x2 = x + 8;
+	if (x2 < 0)
+		x2 = 0;
+	else if (x2 > MAXDUNX)
+		x2 = MAXDUNX;
+
+	y2 = y + 8;
+	if (y2 < 0)
+		y2 = 0;
+	else if (y2 > MAXDUNY)
+		y2 = MAXDUNY;
+
+	for (i = x1; i < x2; i++) {
+		for (j = y1; j < y2; j++) {
+			if (dItem[i][j] != 0){
+				px = i - 2 * AutoMapXOfs - ViewX;
+				py = j - 2 * AutoMapYOfs - ViewY;
+
+				x = (ScrollInfo._sxoff * AutoMapScale / 100 >> 1) + (px - py) * AmLine16 + 384;
+				y = (ScrollInfo._syoff * AutoMapScale / 100 >> 1) + (px + py) * AmLine8 + 336;
+
+				if (invflag || sbookflag)
+					x -= 160;
+				if (chrflag || questlog)
+					x += 160;
+				y -= AmLine8;
+				DrawAutomapItem(x, y, COLOR_ITEM);
+			}
+		}
+	}
+}
+
+void DrawAutomapItem(int x, int y, BYTE color)
+{
+	int x1, y1, x2, y2;
+
+	x1 = x - AmLine32 / 2;
+	y1 = y - AmLine16 / 2;
+	x2 = x1 + AmLine64 / 2;
+	y2 = y1 + AmLine32 / 2;
+	DrawLine(x, y1, x1, y, color);
+	DrawLine(x, y1, x2, y, color);
+	DrawLine(x, y2, x1, y, color);
+	DrawLine(x, y2, x2, y, color);
+}
+#endif
 
 /**
  * @brief Renders an arrow on the automap, centered on and facing the direction of the player.
@@ -582,8 +683,13 @@ WORD GetAutomapType(int x, int y, BOOL view)
 
 	rv = automaptype[(BYTE)dungeon[x][y]];
 	if (rv == 7) {
+#ifdef HELLFIRE
+		if ((BYTE)(GetAutomapType(x - 1, y, FALSE) >> 8) & MAPFLAG_HORZARCH) {
+			if ((BYTE)(GetAutomapType(x, y - 1, FALSE) >> 8) & MAPFLAG_VERTARCH) {
+#else
 		if ((GetAutomapType(x - 1, y, FALSE) >> 8) & MAPFLAG_HORZARCH) {
 			if ((GetAutomapType(x, y - 1, FALSE) >> 8) & MAPFLAG_VERTARCH) {
+#endif
 				rv = 1;
 			}
 		}
@@ -611,8 +717,19 @@ void DrawAutomapText()
 	}
 	if (setlevel) {
 		PrintGameStr(8, nextline, quest_level_names[(BYTE)setlvlnum], COL_GOLD);
-	} else if (currlevel) {
+	} else if (currlevel != 0) {
+#ifdef HELLFIRE
+		if (currlevel < 17 || currlevel > 20) {
+			if (currlevel < 21 || currlevel > 24)
+				sprintf(desc, "Level: %i", currlevel);
+			else
+				sprintf(desc, "Level: Crypt %i", currlevel - 20);
+		} else {
+			sprintf(desc, "Level: Nest %i", currlevel - 16);
+		}
+#else
 		sprintf(desc, "Level: %i", currlevel);
+#endif
 		PrintGameStr(8, nextline, desc, COL_GOLD);
 	}
 }

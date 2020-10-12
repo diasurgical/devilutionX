@@ -13,10 +13,17 @@ DEVILUTION_BEGIN_NAMESPACE
 SDL_Window *ghMainWnd;
 DWORD glSeedTbl[NUMLEVELS];
 int gnLevelTypeTbl[NUMLEVELS];
+#ifndef HELLFIRE
 int glEndSeed[NUMLEVELS];
 int glMid1Seed[NUMLEVELS];
 int glMid2Seed[NUMLEVELS];
 int glMid3Seed[NUMLEVELS];
+#else
+int glEndSeed[NUMLEVELS + 1];
+int glMid1Seed[NUMLEVELS + 1];
+int glMid2Seed[NUMLEVELS + 1];
+int glMid3Seed[NUMLEVELS + 1];
+#endif
 int MouseX;
 int MouseY;
 BOOL gbGameLoopStartup;
@@ -39,6 +46,14 @@ BOOL trigdebug;
 int setseed;
 int debugmonsttypes;
 int PauseMode;
+#ifdef HELLFIRE
+BOOLEAN UseTheoQuest;
+BOOLEAN UseCowFarmer;
+BOOLEAN UseNestArt;
+BOOLEAN UseBardTest;
+BOOLEAN UseBarbarianTest;
+BOOLEAN UseMultiTest;
+#endif
 int sgnTimeoutCurs;
 char sgbMouseDown;
 int color_cycle_timer;
@@ -113,7 +128,9 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
 
 	do {
 		fExitProgram = FALSE;
+#ifndef HELLFIRE
 		gbLoadGame = FALSE;
+#endif
 
 		if (!NetInit(bSinglePlayer, &fExitProgram)) {
 			gbRunGameResult = !fExitProgram;
@@ -127,16 +144,25 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
 			InitQuests();
 			InitPortals();
 			InitDungMsgs(myplr);
+#ifndef HELLFIRE
 		}
 		if (!gbValidSaveFile || !gbLoadGame) {
+#else
+			if (!gbValidSaveFile && gbLoadGame)
+				inv_diablo_to_hellfire(myplr);
+#endif
 			uMsg = WM_DIABNEWGAME;
 		} else {
 			uMsg = WM_DIABLOADGAME;
 		}
 		run_game_loop(uMsg);
 		NetClose();
+#ifndef HELLFIRE
 		pfile_create_player_description(0, 0);
 	} while (gbRunGameResult);
+#else
+	} while (gbMaxPlayers == 1 || !gbRunGameResult);
+#endif
 
 	SNetDestroy();
 	return gbRunGameResult;
@@ -307,7 +333,11 @@ void diablo_splash()
 	play_movie("gendata\\logo.smk", TRUE);
 #ifndef SPAWN
 	if (getIniBool("Diablo", "Intro", true)) {
+#ifndef HELLFIRE
 		play_movie("gendata\\diablo1.smk", TRUE);
+#else
+		play_movie("gendata\\Hellfire.smk", TRUE);
+#endif
 		setIniValue("Diablo", "Intro", "0");
 	}
 #endif
@@ -411,6 +441,20 @@ void diablo_parse_flags(int argc, char **argv)
 			EnableFrameCount();
 		} else if (strcasecmp("-x", argv[i]) == 0) {
 			fullscreen = FALSE;
+#ifdef HELLFIRE
+		} else if (strcasecmp("--Theoquest", argv[i]) == 0) {
+			UseTheoQuest = TRUE;
+		} else if (strcasecmp("--Cowquest", argv[i]) == 0) {
+			UseCowFarmer = TRUE;
+		} else if (strcasecmp("--NestArt", argv[i]) == 0) {
+			UseNestArt = TRUE;
+		} else if (strcasecmp("--Bardtest", argv[i]) == 0) {
+			UseBardTest = TRUE;
+		} else if (strcasecmp("--Multitest", argv[i]) == 0) {
+			UseMultiTest = TRUE;
+		} else if (strcasecmp("--Barbariantest", argv[i]) == 0) {
+			UseBarbarianTest = TRUE;
+#endif
 #ifdef _DEBUG
 		} else if (strcasecmp("-^", argv[i]) == 0) {
 			debug_mode_key_inverted_v = TRUE;
@@ -791,6 +835,15 @@ BOOL TryIconCurs()
 			NewCursor(CURSOR_HAND);
 		}
 		return TRUE;
+#ifdef HELLFIRE
+	} else if (pcurs == CURSOR_OIL) {
+		if (pcursinvitem != -1) {
+			DoOil(myplr, pcursinvitem);
+		} else {
+			SetCursor_(CURSOR_HAND);
+		}
+		return TRUE;
+#endif
 	} else if (pcurs == CURSOR_TELEPORT) {
 		if (pcursmonst != -1) {
 			NetSendCmdParam3(TRUE, CMD_TSPELLID, pcursmonst, plr[myplr]._pTSpell, GetSpellLevel(myplr, plr[myplr]._pTSpell));
@@ -1372,20 +1425,37 @@ void PressChar(int vkey)
 
 void LoadLvlGFX()
 {
-	assert(!pDungeonCels);
+	assert(! pDungeonCels);
 
 	switch (leveltype) {
 	case DTYPE_TOWN:
+#ifdef HELLFIRE
+		pDungeonCels = LoadFileInMem("NLevels\\TownData\\Town.CEL", NULL);
+		pMegaTiles = LoadFileInMem("NLevels\\TownData\\Town.TIL", NULL);
+		pLevelPieces = LoadFileInMem("NLevels\\TownData\\Town.MIN", NULL);
+#else
 		pDungeonCels = LoadFileInMem("Levels\\TownData\\Town.CEL", NULL);
 		pMegaTiles = LoadFileInMem("Levels\\TownData\\Town.TIL", NULL);
 		pLevelPieces = LoadFileInMem("Levels\\TownData\\Town.MIN", NULL);
+#endif
 		pSpecialCels = LoadFileInMem("Levels\\TownData\\TownS.CEL", NULL);
 		break;
 	case DTYPE_CATHEDRAL:
-		pDungeonCels = LoadFileInMem("Levels\\L1Data\\L1.CEL", NULL);
-		pMegaTiles = LoadFileInMem("Levels\\L1Data\\L1.TIL", NULL);
-		pLevelPieces = LoadFileInMem("Levels\\L1Data\\L1.MIN", NULL);
-		pSpecialCels = LoadFileInMem("Levels\\L1Data\\L1S.CEL", NULL);
+#ifdef HELLFIRE
+		if (currlevel < 21) {
+#endif
+			pDungeonCels = LoadFileInMem("Levels\\L1Data\\L1.CEL", NULL);
+			pMegaTiles = LoadFileInMem("Levels\\L1Data\\L1.TIL", NULL);
+			pLevelPieces = LoadFileInMem("Levels\\L1Data\\L1.MIN", NULL);
+			pSpecialCels = LoadFileInMem("Levels\\L1Data\\L1S.CEL", NULL);
+#ifdef HELLFIRE
+		} else {
+			pDungeonCels = LoadFileInMem("NLevels\\L5Data\\L5.CEL", NULL);
+			pMegaTiles = LoadFileInMem("NLevels\\L5Data\\L5.TIL", NULL);
+			pLevelPieces = LoadFileInMem("NLevels\\L5Data\\L5.MIN", NULL);
+			pSpecialCels = LoadFileInMem("NLevels\\L5Data\\L5S.CEL", NULL);
+		}
+#endif
 		break;
 #ifndef SPAWN
 	case DTYPE_CATACOMBS:
@@ -1395,9 +1465,19 @@ void LoadLvlGFX()
 		pSpecialCels = LoadFileInMem("Levels\\L2Data\\L2S.CEL", NULL);
 		break;
 	case DTYPE_CAVES:
-		pDungeonCels = LoadFileInMem("Levels\\L3Data\\L3.CEL", NULL);
-		pMegaTiles = LoadFileInMem("Levels\\L3Data\\L3.TIL", NULL);
-		pLevelPieces = LoadFileInMem("Levels\\L3Data\\L3.MIN", NULL);
+#ifdef HELLFIRE
+		if (currlevel < 17) {
+#endif
+			pDungeonCels = LoadFileInMem("Levels\\L3Data\\L3.CEL", NULL);
+			pMegaTiles = LoadFileInMem("Levels\\L3Data\\L3.TIL", NULL);
+			pLevelPieces = LoadFileInMem("Levels\\L3Data\\L3.MIN", NULL);
+#ifdef HELLFIRE
+		} else {
+			pDungeonCels = LoadFileInMem("NLevels\\L6Data\\L6.CEL", NULL);
+			pMegaTiles = LoadFileInMem("NLevels\\L6Data\\L6.TIL", NULL);
+			pLevelPieces = LoadFileInMem("NLevels\\L6Data\\L6.MIN", NULL);
+		}
+#endif
 		pSpecialCels = LoadFileInMem("Levels\\L1Data\\L1S.CEL", NULL);
 		break;
 	case DTYPE_HELL:
@@ -1438,7 +1518,15 @@ void CreateLevel(int lvldir)
 		CreateL5Dungeon(glSeedTbl[currlevel], lvldir);
 		InitL1Triggers();
 		Freeupstairs();
+#ifdef HELLFIRE
+		if(currlevel < 21) {
+			LoadRndLvlPal(1);
+		} else {
+			LoadRndLvlPal(5);
+		}
+#else
 		LoadRndLvlPal(1);
+#endif
 		break;
 #ifndef SPAWN
 	case DTYPE_CATACOMBS:
@@ -1451,7 +1539,15 @@ void CreateLevel(int lvldir)
 		CreateL3Dungeon(glSeedTbl[currlevel], lvldir);
 		InitL3Triggers();
 		Freeupstairs();
+#ifdef HELLFIRE
+		if(currlevel < 17) {
+			LoadRndLvlPal(3);
+		} else {
+			LoadRndLvlPal(6);
+		}
+#else
 		LoadRndLvlPal(3);
+#endif
 		break;
 	case DTYPE_HELL:
 		CreateL4Dungeon(glSeedTbl[currlevel], lvldir);
@@ -1567,7 +1663,10 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 				IncProgress();
 				InitObjects();
 				InitItems();
-				CreateThemeRooms();
+#ifdef HELLFIRE
+				if ( currlevel < 17 )
+#endif
+					CreateThemeRooms();
 				IncProgress();
 				glMid3Seed[currlevel] = GetRndSeed();
 				InitMissiles();
@@ -1682,7 +1781,28 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 		ProcessVisionList();
 	}
 
+#ifdef HELLFIRE
+	if ( currlevel >= 21 )
+	{
+		if ( currlevel == 21 )
+		{
+			items_427ABA(CornerStone.x, CornerStone.y);
+		}
+		if ( quests[Q_NAKRUL]._qactive == QUEST_DONE && currlevel == 24 )
+		{
+			objects_454BA8();
+		}
+	}
+#endif
+
+#ifdef HELLFIRE
+	if ( currlevel >= 17 )
+		music_start(currlevel > 20 ? TMUSIC_L5 : TMUSIC_L6);
+	else
+		music_start(leveltype);
+#else
 	music_start(leveltype);
+#endif
 
 	while (!IncProgress())
 		;
@@ -1780,6 +1900,12 @@ void diablo_color_cyc_logic()
 
 	if (leveltype == DTYPE_HELL) {
 		lighting_color_cycling();
+#ifdef HELLFIRE
+		} else if (currlevel >= 21) {
+			palette_update_crypt();
+		} else if (currlevel >= 17) {
+			palette_update_hive();
+#endif
 	} else if (leveltype == DTYPE_CAVES) {
 		palette_update_caves();
 	}

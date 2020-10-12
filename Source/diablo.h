@@ -15,10 +15,17 @@ extern "C" {
 extern SDL_Window *ghMainWnd;
 extern DWORD glSeedTbl[NUMLEVELS];
 extern int gnLevelTypeTbl[NUMLEVELS];
+#ifndef HELLFIRE
 extern int glEndSeed[NUMLEVELS];
 extern int glMid1Seed[NUMLEVELS];
 extern int glMid2Seed[NUMLEVELS];
 extern int glMid3Seed[NUMLEVELS];
+#else
+extern int glEndSeed[NUMLEVELS + 1];
+extern int glMid1Seed[NUMLEVELS + 1];
+extern int glMid2Seed[NUMLEVELS + 1];
+extern int glMid3Seed[NUMLEVELS + 1];
+#endif
 extern int MouseX;
 extern int MouseY;
 extern BOOL gbGameLoopStartup;
@@ -45,6 +52,14 @@ extern BOOL trigdebug;
 extern int setseed;
 extern int debugmonsttypes;
 extern int PauseMode;
+#ifdef HELLFIRE
+extern BOOLEAN UseTheoQuest;
+extern BOOLEAN UseCowFarmer;
+extern BOOLEAN UseNestArt;
+extern BOOLEAN UseBardTest;
+extern BOOLEAN UseBarbarianTest;
+extern BOOLEAN UseMultiTest;
+#endif
 extern char sgbMouseDown;
 extern int color_cycle_timer;
 extern int ticks_per_sec;

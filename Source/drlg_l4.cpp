@@ -1174,7 +1174,7 @@ static void L4firstRoom()
 	int x, y, w, h, rndx, rndy, xmin, xmax, ymin, ymax, tx, ty;
 
 	if (currlevel != 16) {
-		if (currlevel == quests[Q_WARLORD]._qlevel && quests[Q_WARLORD]._qactive) {
+		if (currlevel == quests[Q_WARLORD]._qlevel && quests[Q_WARLORD]._qactive != QUEST_NOTAVAIL) {
 			/// ASSERT: assert(gbMaxPlayers == 1);
 			w = 11;
 			h = 11;
