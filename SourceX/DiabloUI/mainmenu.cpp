@@ -19,10 +19,11 @@ void UiMainMenuSelect(int value)
 
 void mainmenu_Esc()
 {
-	if (SelectedItem == 4) {
-		UiMainMenuSelect(4);
+	int last = vecMenuItems.size() - 1;
+	if (SelectedItem == last) {
+		UiMainMenuSelect(last);
 	} else {
-		SelectedItem = 4;
+		SelectedItem = last;
 	}
 }
 
