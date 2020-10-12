@@ -273,6 +273,7 @@ select Icons -> Information in the top menu.
 - `-DSPAWN=ON` build the shareware version, using spawn.mpq from the original shareware; which can still be [downloaded](http://ftp.blizzard.com/pub/demos/diablosw.exe) for free.
 - `-DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake` generate 32bit builds on 64bit platforms (remember to use the `linux32` command if on Linux).
 - `-DCROSS_PREFIX=/path/to/prefix` set the path to the `i686-w64-mingw32` directory.
+- `-DHELLFIRE=ON` build Hellfire version
 
 ### Debug builds
 - `-DDEBUG=OFF` disable debug mode of the Diablo engine.
