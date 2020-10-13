@@ -56,11 +56,15 @@ void mainmenu_Load(char *name, void (*fnSound)(char *file))
 	SDL_Rect rect = { 17, (SCREEN_HEIGHT - 36), 605, 21 };
 	vecMainMenuDialog.push_back(new UiArtText(name, rect, UIS_SMALL));
 
+#ifndef HELLFIRE
 	if (!gbSpawned) {
+#endif
 		LoadBackgroundArt("ui_art\\mainmenu.pcx");
+#ifndef HELLFIRE
 	} else {
 		LoadBackgroundArt("ui_art\\swmmenu.pcx");
 	}
+#endif
 
 	UiInitList(vecMenuItems.size(), NULL, UiMainMenuSelect, mainmenu_Esc, vecMainMenuDialog, true);
 }
