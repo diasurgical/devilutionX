@@ -545,10 +545,12 @@ void SearchAutomapItem()
 				x = (ScrollInfo._sxoff * AutoMapScale / 100 >> 1) + (px - py) * AmLine16 + 384;
 				y = (ScrollInfo._syoff * AutoMapScale / 100 >> 1) + (px + py) * AmLine8 + 336;
 
-				if (invflag || sbookflag)
-					x -= 160;
-				if (chrflag || questlog)
-					x += 160;
+				if (PANELS_COVER) {
+					if (invflag || sbookflag)
+						x -= 160;
+					if (chrflag || questlog)
+						x += 160;
+				}
 				y -= AmLine8;
 				DrawAutomapItem(x, y, COLOR_ITEM);
 			}
