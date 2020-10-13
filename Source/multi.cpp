@@ -654,11 +654,11 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 #ifdef SPAWN
 		ProgramData.programname = "Diablo Shareware";
 #else
-		ProgramData.programname = "Diablo Retail";
+		ProgramData.programname = PROGRAM_NAME;
 #endif
 		ProgramData.programdescription = gszVersionNumber;
-		ProgramData.programid = 'DRTL';
-		ProgramData.versionid = 42;
+		ProgramData.programid = GAME_ID;
+		ProgramData.versionid = GAME_VERSION;
 		ProgramData.maxplayers = MAX_PLRS;
 		ProgramData.initdata = &sgGameInitInfo;
 		ProgramData.initdatabytes = sizeof(sgGameInitInfo);

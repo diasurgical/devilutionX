@@ -74,20 +74,68 @@ char PlrGFXAnimLens[NUM_CLASSES][11] = {
 int PWVel[NUM_CLASSES][3] = {
 	{ 2048, 1024, 512 },
 	{ 2048, 1024, 512 },
-	{ 2048, 1024, 512 }
+	{ 2048, 1024, 512 },
+#ifdef HELLFIRE
+	{ 2048, 1024, 512 },
+	{ 2048, 1024, 512 },
+	{ 2048, 1024, 512 },
+#endif
 };
 /** Total number of frames in walk animation. */
 int AnimLenFromClass[NUM_CLASSES] = {
-	8, 8, 8
+	8,
+	8,
+	8,
+#ifdef HELLFIRE
+	8,
+	8,
+	8,
+#endif
 };
 /** Maps from player_class to starting stat in strength. */
-int StrengthTbl[NUM_CLASSES] = { 30, 20, 15 };
+int StrengthTbl[NUM_CLASSES] = {
+	30,
+	20,
+	15,
+#ifdef HELLFIRE
+	25,
+	20,
+	40,
+#endif
+};
 /** Maps from player_class to starting stat in magic. */
-int MagicTbl[NUM_CLASSES] = { 10, 15, 35 };
+int MagicTbl[NUM_CLASSES] = {
+	10,
+	15,
+	35,
+#ifdef HELLFIRE
+	15,
+	20,
+	 0,
+#endif
+};
 /** Maps from player_class to starting stat in dexterity. */
-int DexterityTbl[NUM_CLASSES] = { 20, 30, 15 };
+int DexterityTbl[NUM_CLASSES] = {
+	20,
+	30,
+	15,
+#ifdef HELLFIRE
+	25,
+	25,
+	20,
+#endif
+};
 /** Maps from player_class to starting stat in vitality. */
-int VitalityTbl[NUM_CLASSES] = { 25, 20, 20 };
+int VitalityTbl[NUM_CLASSES] = {
+	25,
+	20,
+	20,
+#ifdef HELLFIRE
+	20,
+	20,
+	25,
+#endif
+};
 /** Specifies the chance to block bonus of each player class.*/
 int ToBlkTbl[NUM_CLASSES] = {
 	30,
@@ -111,9 +159,14 @@ char *ClassStrTblOld[] = {
 };
 /** Maps from player_class to maximum stats. */
 int MaxStats[NUM_CLASSES][4] = {
-	{ 250, 50, 60, 100 },
-	{ 55, 70, 250, 80 },
-	{ 45, 250, 85, 80 }
+	{ 250,  50,  60, 100 },
+	{  55,  70, 250,  80 },
+	{  45, 250,  85,  80 },
+#ifdef HELLFIRE
+	{ 150,  80, 150,  80 },
+	{ 120, 120, 120, 100 },
+	{ 255,   0,  55, 150 },
+#endif
 };
 /** Specifies the experience point limit of each level. */
 int ExpLvlsTbl[MAXCHARLEVEL] = {

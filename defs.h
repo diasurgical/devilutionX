@@ -14,6 +14,11 @@
 #define APP_NAME				"Diablo"
 #endif
 
+#ifdef HELLFIRE
+#define HFAND &&
+#else
+#define HFAND &
+#endif
 
 #define DMAXX					40
 #define DMAXY					40
@@ -28,8 +33,10 @@
 
 #define MAX_CHARACTERS			10
 #ifdef HELLFIRE
+#define MAX_LVLS				24
 #define MAX_LVLMTYPES			24
 #else
+#define MAX_LVLS				16
 #define MAX_LVLMTYPES			16
 #endif
 // #define MAX_PATH				260
@@ -121,7 +128,15 @@
 #define PMSG_COUNT				8
 
 // Diablo Retail Version Game ID
+#ifdef HELLFIRE
+#define GAME_ID					((int)'HRTL')
+#define GAME_VERSION			34
+#define PROGRAM_NAME			"Hellfire Retail"
+#else
 #define GAME_ID					((int)'DRTL')
+#define GAME_VERSION			42
+#define PROGRAM_NAME			"Diablo Retail"
+#endif
 
 // Diablo uses a 256 color palette
 // Entry 0-127 (0x00-0x7F) are level specific

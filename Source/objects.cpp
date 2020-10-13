@@ -52,19 +52,95 @@ char *shrinestrs[NUM_SHRINETYPE] = {
 	"Secluded",
 	"Ornate",
 	"Glimmering",
-	"Tainted"
+	"Tainted",
+#ifdef HELLFIRE
+	"Oily",
+	"Glowing",
+	"Mendicant's",
+	"Sparkling",
+	"Town",
+	"Shimmering",
+	"Solar",
+	"Murphy's",
+#endif
 };
 /** Specifies the minimum dungeon level on which each shrine will appear. */
 char shrinemin[NUM_SHRINETYPE] = {
-	1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-	1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-	1, 1, 1, 1, 1, 1
+	1, // Mysterious
+	1, // Hidden
+	1, // Gloomy
+	1, // Weird
+	1, // Magical
+	1, // Stone
+	1, // Religious
+	1, // Enchanted
+	1, // Thaumaturgic
+	1, // Fascinating
+	1, // Cryptic
+	1, // Magical
+	1, // Eldritch
+	1, // Eerie
+	1, // Divine
+	1, // Holy
+	1, // Sacred
+	1, // Spiritual
+	1, // Spooky
+	1, // Abandoned
+	1, // Creepy
+	1, // Quiet
+	1, // Secluded
+	1, // Ornate
+	1, // Glimmering
+	1, // Tainted
+#ifdef HELLFIRE
+	1, // Oily
+	1, // Glowing
+	1, // Mendicant's
+	1, // Sparkling
+	1, // Town
+	1, // Shimmering
+	1, // Solar,
+	1, // Murphy's
+#endif
 };
 /** Specifies the maximum dungeon level on which each shrine will appear. */
 char shrinemax[NUM_SHRINETYPE] = {
-	16, 16, 16, 16, 16, 16, 16, 8, 16, 16,
-	16, 16, 16, 16, 16, 16, 16, 16, 16, 16,
-	16, 16, 16, 16, 16, 16
+	MAX_LVLS, // Mysterious
+	MAX_LVLS, // Hidden
+	MAX_LVLS, // Gloomy
+	MAX_LVLS, // Weird
+	MAX_LVLS, // Magical
+	MAX_LVLS, // Stone
+	MAX_LVLS, // Religious
+	8,        // Enchanted
+	MAX_LVLS, // Thaumaturgic
+	MAX_LVLS, // Fascinating
+	MAX_LVLS, // Cryptic
+	MAX_LVLS, // Magical
+	MAX_LVLS, // Eldritch
+	MAX_LVLS, // Eerie
+	MAX_LVLS, // Divine
+	MAX_LVLS, // Holy
+	MAX_LVLS, // Sacred
+	MAX_LVLS, // Spiritual
+	MAX_LVLS, // Spooky
+	MAX_LVLS, // Abandoned
+	MAX_LVLS, // Creepy
+	MAX_LVLS, // Quiet
+	MAX_LVLS, // Secluded
+	MAX_LVLS, // Ornate
+	MAX_LVLS, // Glimmering
+	MAX_LVLS, // Tainted
+#ifdef HELLFIRE
+	MAX_LVLS, // Oily
+	MAX_LVLS, // Glowing
+	MAX_LVLS, // Mendicant's
+	MAX_LVLS, // Sparkling
+	MAX_LVLS, // Town
+	MAX_LVLS, // Shimmering
+	MAX_LVLS, // Solar,
+	MAX_LVLS, // Murphy's
+#endif
 };
 /**
  * Specifies the game type for which each shrine may appear.
@@ -79,7 +155,7 @@ BYTE shrineavail[NUM_SHRINETYPE] = {
 	SHRINETYPE_SINGLE, // SHRINE_GLOOMY
 	SHRINETYPE_SINGLE, // SHRINE_WEIRD
 	SHRINETYPE_ANY,    // SHRINE_MAGICAL
-	SHRINETYPE_ANY,    // SHRINE_STONE 
+	SHRINETYPE_ANY,    // SHRINE_STONE
 	SHRINETYPE_ANY,    // SHRINE_RELIGIOUS
 	SHRINETYPE_ANY,    // SHRINE_ENCHANTED
 	SHRINETYPE_SINGLE, // SHRINE_THAUMATURGIC
@@ -95,11 +171,21 @@ BYTE shrineavail[NUM_SHRINETYPE] = {
 	SHRINETYPE_MULTI,  // SHRINE_SPOOKY
 	SHRINETYPE_ANY,    // SHRINE_ABANDONED
 	SHRINETYPE_ANY,    // SHRINE_CREEPY
-	SHRINETYPE_ANY,    // SHRINE_QUIET 
+	SHRINETYPE_ANY,    // SHRINE_QUIET
 	SHRINETYPE_ANY,    // SHRINE_SECLUDED
 	SHRINETYPE_ANY,    // SHRINE_ORNATE
 	SHRINETYPE_ANY,    // SHRINE_GLIMMERING
-	SHRINETYPE_MULTI   // SHRINE_TAINTED
+	SHRINETYPE_MULTI,  // SHRINE_TAINTED
+#ifdef HELLFIRE
+	SHRINETYPE_ANY,    // SHRINE_OILY
+	SHRINETYPE_ANY,    // SHRINE_GLOWING
+	SHRINETYPE_ANY,    // SHRINE_MENDICANT
+	SHRINETYPE_ANY,    // SHRINE_SPARKLING
+	SHRINETYPE_ANY,    // SHRINE_TOWN
+	SHRINETYPE_ANY,    // SHRINE_SHIMMERING
+	SHRINETYPE_SINGLE, // SHRINE_SOLAR
+	SHRINETYPE_ANY,    // SHRINE_MURPHYS
+#endif
 };
 /** Maps from book_id to book name. */
 char *StoryBookName[] = {
@@ -1783,9 +1869,7 @@ void Obj_Light(int i, int lr)
 	int ox, oy, dx, dy, p, tr;
 	DIABOOL turnon;
 
-#ifdef HELLFIRE
 	turnon = FALSE;
-#endif
 	if (object[i]._oVar1 != -1) {
 		ox = object[i]._ox;
 		oy = object[i]._oy;
@@ -1806,7 +1890,7 @@ void Obj_Light(int i, int lr)
 			}
 		}
 		if (turnon) {
-			if (!object[i]._oVar1)
+			if (object[i]._oVar1 == 0)
 				object[i]._olid = AddLight(ox, oy, lr);
 			object[i]._oVar1 = 1;
 		} else {
@@ -1876,17 +1960,10 @@ void Obj_Door(int i)
 	} else {
 		dx = object[i]._ox;
 		dy = object[i]._oy;
-#ifdef HELLFIRE
 		dok = !dMonster[dx][dy];
-		dok = dok && !dItem[dx][dy];
-		dok = dok && !dDead[dx][dy];
-		dok = dok && !dPlayer[dx][dy];
-#else
-		dok = !dMonster[dx][dy];
-		dok = dok & !dItem[dx][dy];
-		dok = dok & !dDead[dx][dy];
-		dok = dok & !dPlayer[dx][dy];
-#endif
+		dok = dok HFAND !dItem[dx][dy];
+		dok = dok HFAND !dDead[dx][dy];
+		dok = dok HFAND !dPlayer[dx][dy];
 		object[i]._oSelFlag = 2;
 		object[i]._oVar4 = dok ? 1 : 2;
 		object[i]._oMissFlag = TRUE;
@@ -1919,8 +1996,8 @@ void Obj_FlameTrap(int i)
 	int x, y;
 	int j, k;
 
-	if (object[i]._oVar2) {
-		if (object[i]._oVar4) {
+	if (object[i]._oVar2 != 0) {
+		if (object[i]._oVar4 != 0) {
 			object[i]._oAnimFrame--;
 			if (object[i]._oAnimFrame == 1) {
 				object[i]._oVar4 = 0;
@@ -1929,7 +2006,7 @@ void Obj_FlameTrap(int i)
 				ChangeLightRadius(object[i]._olid, object[i]._oAnimFrame);
 			}
 		}
-	} else if (!object[i]._oVar4) {
+	} else if (object[i]._oVar4 == 0) {
 		if (object[i]._oVar3 == 2) {
 			x = object[i]._ox - 2;
 			y = object[i]._oy;
@@ -1947,7 +2024,7 @@ void Obj_FlameTrap(int i)
 				y++;
 			}
 		}
-		if (object[i]._oVar4)
+		if (object[i]._oVar4 != 0)
 			ActivateTrapLine(object[i]._otype, object[i]._oVar1);
 	} else {
 		int damage[4] = { 6, 8, 10, 12 };
@@ -1976,7 +2053,7 @@ void Obj_Trap(int i)
 	int sx, sy, dx, dy, x, y;
 
 	otrig = FALSE;
-	if (!object[i]._oVar4) {
+	if (object[i]._oVar4 == 0) {
 		oti = dObject[object[i]._oVar1][object[i]._oVar2] - 1;
 		switch (object[oti]._otype) {
 		case OBJ_L1LDOOR:
@@ -1985,7 +2062,7 @@ void Obj_Trap(int i)
 		case OBJ_L2RDOOR:
 		case OBJ_L3LDOOR:
 		case OBJ_L3RDOOR:
-			if (object[oti]._oVar4)
+			if (object[oti]._oVar4 != 0)
 				otrig = TRUE;
 			break;
 		case OBJ_LEVER:
@@ -2587,6 +2664,7 @@ void OperateL1LDoor(int pnum, int oi, DIABOOL sendflag)
 void OperateL2RDoor(int pnum, int oi, DIABOOL sendflag)
 {
 	int xp, yp;
+	DIABOOL dok;
 
 	if (object[oi]._oVar4 == 2) {
 		if (!deltaload)
@@ -2611,7 +2689,10 @@ void OperateL2RDoor(int pnum, int oi, DIABOOL sendflag)
 
 	if (!deltaload)
 		PlaySfxLoc(IS_DOORCLOS, object[oi]._ox, yp);
-	if (((dDead[xp][yp] != 0 ? 0 : 1) & (dMonster[xp][yp] != 0 ? 0 : 1) & (dItem[xp][yp] != 0 ? 0 : 1)) != 0) {
+	dok = !dMonster[xp][yp];
+	dok = dok HFAND !dItem[xp][yp];
+	dok = dok HFAND !dDead[xp][yp];
+	if (dok) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(TRUE, CMD_CLOSEDOOR, oi);
 		object[oi]._oVar4 = 0;
@@ -2628,6 +2709,7 @@ void OperateL2RDoor(int pnum, int oi, DIABOOL sendflag)
 void OperateL2LDoor(int pnum, int oi, BOOL sendflag)
 {
 	int xp, yp;
+	DIABOOL dok;
 
 	if (object[oi]._oVar4 == 2) {
 		if (!deltaload)
@@ -2652,7 +2734,10 @@ void OperateL2LDoor(int pnum, int oi, BOOL sendflag)
 
 	if (!deltaload)
 		PlaySfxLoc(IS_DOORCLOS, object[oi]._ox, yp);
-	if (((dDead[xp][yp] != 0 ? 0 : 1) & (dMonster[xp][yp] != 0 ? 0 : 1) & (dItem[xp][yp] != 0 ? 0 : 1)) != 0) {
+	dok = !dMonster[xp][yp];
+	dok = dok HFAND !dItem[xp][yp];
+	dok = dok HFAND !dDead[xp][yp];
+	if (dok) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(TRUE, CMD_CLOSEDOOR, oi);
 		object[oi]._oVar4 = 0;
@@ -2669,6 +2754,7 @@ void OperateL2LDoor(int pnum, int oi, BOOL sendflag)
 void OperateL3RDoor(int pnum, int oi, DIABOOL sendflag)
 {
 	int xp, yp;
+	DIABOOL dok;
 
 	if (object[oi]._oVar4 == 2) {
 		if (!deltaload)
@@ -2694,7 +2780,10 @@ void OperateL3RDoor(int pnum, int oi, DIABOOL sendflag)
 
 	if (!deltaload)
 		PlaySfxLoc(IS_DOORCLOS, object[oi]._ox, yp);
-	if (((dDead[xp][yp] != 0 ? 0 : 1) & (dMonster[xp][yp] != 0 ? 0 : 1) & (dItem[xp][yp] != 0 ? 0 : 1)) != 0) {
+	dok = !dMonster[xp][yp];
+	dok = dok HFAND !dItem[xp][yp];
+	dok = dok HFAND !dDead[xp][yp];
+	if (dok) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(TRUE, CMD_CLOSEDOOR, oi);
 		object[oi]._oVar4 = 0;
@@ -2711,6 +2800,7 @@ void OperateL3RDoor(int pnum, int oi, DIABOOL sendflag)
 void OperateL3LDoor(int pnum, int oi, DIABOOL sendflag)
 {
 	int xp, yp;
+	DIABOOL dok;
 
 	if (object[oi]._oVar4 == 2) {
 		if (!deltaload)
@@ -2736,7 +2826,10 @@ void OperateL3LDoor(int pnum, int oi, DIABOOL sendflag)
 
 	if (!deltaload)
 		PlaySfxLoc(IS_DOORCLOS, object[oi]._ox, yp);
-	if (((dDead[xp][yp] != 0 ? 0 : 1) & (dMonster[xp][yp] != 0 ? 0 : 1) & (dItem[xp][yp] != 0 ? 0 : 1)) != 0) {
+	dok = !dMonster[xp][yp];
+	dok = dok HFAND !dItem[xp][yp];
+	dok = dok HFAND !dDead[xp][yp];
+	if (dok) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(TRUE, CMD_CLOSEDOOR, oi);
 		object[oi]._oVar4 = 0;
@@ -2767,7 +2860,7 @@ void MonstCheckDoors(int m)
 	    || dObject[mx + 1][my + 1]) {
 		for (i = 0; i < nobjects; ++i) {
 			oi = objectactive[i];
-			if ((object[oi]._otype == OBJ_L1LDOOR || object[oi]._otype == OBJ_L1RDOOR) && !object[oi]._oVar4) {
+			if ((object[oi]._otype == OBJ_L1LDOOR || object[oi]._otype == OBJ_L1RDOOR) && object[oi]._oVar4 == 0) {
 				dpx = abs(object[oi]._ox - mx);
 				dpy = abs(object[oi]._oy - my);
 				if (dpx == 1 && dpy <= 1 && object[oi]._otype == OBJ_L1LDOOR)
@@ -2775,7 +2868,7 @@ void MonstCheckDoors(int m)
 				if (dpx <= 1 && dpy == 1 && object[oi]._otype == OBJ_L1RDOOR)
 					OperateL1RDoor(myplr, oi, TRUE);
 			}
-			if ((object[oi]._otype == OBJ_L2LDOOR || object[oi]._otype == OBJ_L2RDOOR) && !object[oi]._oVar4) {
+			if ((object[oi]._otype == OBJ_L2LDOOR || object[oi]._otype == OBJ_L2RDOOR) && object[oi]._oVar4 == 0) {
 				dpx = abs(object[oi]._ox - mx);
 				dpy = abs(object[oi]._oy - my);
 				if (dpx == 1 && dpy <= 1 && object[oi]._otype == OBJ_L2LDOOR)
@@ -2783,7 +2876,7 @@ void MonstCheckDoors(int m)
 				if (dpx <= 1 && dpy == 1 && object[oi]._otype == OBJ_L2RDOOR)
 					OperateL2RDoor(myplr, oi, TRUE);
 			}
-			if ((object[oi]._otype == OBJ_L3LDOOR || object[oi]._otype == OBJ_L3RDOOR) && !object[oi]._oVar4) {
+			if ((object[oi]._otype == OBJ_L3LDOOR || object[oi]._otype == OBJ_L3RDOOR) && object[oi]._oVar4 == 0) {
 				dpx = abs(object[oi]._ox - mx);
 				dpy = abs(object[oi]._oy - my);
 				if (dpx == 1 && dpy <= 1 && object[oi]._otype == OBJ_L3RDOOR)
@@ -3058,7 +3151,7 @@ void OperateChest(int pnum, int i, DIABOOL sendmsg)
 				}
 			} else {
 				for (j = 0; j < object[i]._oVar1; j++) {
-					if (object[i]._oVar2)
+					if (object[i]._oVar2 != 0)
 						CreateRndItem(object[i]._ox, object[i]._oy, FALSE, sendmsg, FALSE);
 					else
 						CreateRndUseful(pnum, object[i]._ox, object[i]._oy, sendmsg);
@@ -4835,7 +4928,7 @@ void BreakBarrel(int pnum, int i, int dam, BOOL forcebreak, BOOL sendmsg)
 		PlaySfxLoc(IS_BARREL, object[i]._ox, object[i]._oy);
 		SetRndSeed(object[i]._oRndSeed);
 		if (object[i]._oVar2 <= 1) {
-			if (!object[i]._oVar3)
+			if (object[i]._oVar3 == 0)
 				CreateRndUseful(pnum, object[i]._ox, object[i]._oy, sendmsg);
 			else
 				CreateRndItem(object[i]._ox, object[i]._oy, FALSE, sendmsg, FALSE);
