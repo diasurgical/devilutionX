@@ -343,18 +343,19 @@ typedef struct PlayerStruct {
 	unsigned char pTownWarps;
 	unsigned char pDungMsgs;
 	unsigned char pLvlLoad;
-	unsigned char pBattleNet;
-	BOOLEAN pManaShield;
-	char bReserved[4];
 #ifdef HELLFIRE
 	unsigned char pDungMsgs2;
-	short wReflection;
-	int pDamAcFlags;
+#else
+	unsigned char pBattleNet;
 #endif
-	short wReserved[8];
+	BOOLEAN pManaShield;
+	char bReserved[3];
+	short wReflection;
+	short wReserved[7];
 	DWORD pDiabloKillLevel;
 	int pDifficulty;
-	int dwReserved[7];
+	int pDamAcFlags;
+	int dwReserved[5];
 	unsigned char *_pNData;
 	unsigned char *_pWData;
 	unsigned char *_pAData;
@@ -1484,20 +1485,19 @@ typedef struct PkPlayerStruct {
 	char pTownWarps;
 	char pDungMsgs;
 	char pLvlLoad;
-	char pBattleNet;
-	BOOLEAN pManaShield;
 #ifdef HELLFIRE
-	char bReserved[4];
 	unsigned char pDungMsgs2;
+#else
+	char pBattleNet;
+#endif
+	BOOLEAN pManaShield;
+	char bReserved[3];
 	short wReflection;
+	short wReserved[7];
+	DWORD pDiabloKillLevel;
 	int pDifficulty;
 	int pDamAcFlags;
-#else
-	char bReserved[3];
-#endif
-	short wReserved[8];
-	int pDiabloKillLevel;
-	int dwReserved[7];
+	int dwReserved[5];
 } PkPlayerStruct;
 #pragma pack(pop)
 
