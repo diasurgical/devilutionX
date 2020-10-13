@@ -1472,7 +1472,7 @@ typedef struct PkPlayerStruct {
 	int pMaxHPBase;
 	int pManaBase;
 	int pMaxManaBase;
-	char pSplLvl[MAX_SPELLS];
+	char pSplLvl[37]; // Should be MAX_SPELLS but set to 37 to make save games compatible
 	uint64_t pMemSpells;
 	PkItemStruct InvBody[NUM_INVLOC];
 	PkItemStruct InvList[NUM_INV_GRID_ELEM];
@@ -1487,7 +1487,9 @@ typedef struct PkPlayerStruct {
 	unsigned char pDungMsgs2;
 	char bReserved[2];
 	short wReflection;
-	short wReserved[7];
+	short wReserved2;
+	char pSplLvl2[10]; // Hellfire spells
+	short wReserved8;
 	DWORD pDiabloKillLevel;
 	int pDifficulty;
 	int pDamAcFlags;
