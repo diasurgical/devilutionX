@@ -343,13 +343,10 @@ typedef struct PlayerStruct {
 	unsigned char pTownWarps;
 	unsigned char pDungMsgs;
 	unsigned char pLvlLoad;
-#ifdef HELLFIRE
-	unsigned char pDungMsgs2;
-#else
 	unsigned char pBattleNet;
-#endif
 	BOOLEAN pManaShield;
-	char bReserved[3];
+	unsigned char pDungMsgs2;
+	char bReserved[2];
 	short wReflection;
 	short wReserved[7];
 	DWORD pDiabloKillLevel;
@@ -1485,13 +1482,10 @@ typedef struct PkPlayerStruct {
 	char pTownWarps;
 	char pDungMsgs;
 	char pLvlLoad;
-#ifdef HELLFIRE
-	unsigned char pDungMsgs2;
-#else
 	char pBattleNet;
-#endif
 	BOOLEAN pManaShield;
-	char bReserved[3];
+	unsigned char pDungMsgs2;
+	char bReserved[2];
 	short wReflection;
 	short wReserved[7];
 	DWORD pDiabloKillLevel;

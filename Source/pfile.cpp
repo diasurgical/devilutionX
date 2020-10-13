@@ -80,15 +80,31 @@ void pfile_get_save_path(char *pszBuf, DWORD dwBufSize, DWORD save_num)
 	char path[MAX_PATH];
 
 #ifdef SPAWN
+#ifdef HELLFIRE
+	const char *fmt = "%sshare_%d.hsv";
+#else
 	const char *fmt = "%sshare_%d.sv";
+#endif
 
 	if (gbMaxPlayers <= 1)
+#ifdef HELLFIRE
+		fmt = "%sspawn%d.hsv";
+#else
 		fmt = "%sspawn%d.sv";
+#endif
+#else
+#ifdef HELLFIRE
+	const char *fmt = "%shrinfo_%d.drv";
 #else
 	const char *fmt = "%smulti_%d.sv";
+#endif
 
 	if (gbMaxPlayers <= 1)
+#ifdef HELLFIRE
+		fmt = "%ssingle_%d.hsv";
+#else
 		fmt = "%ssingle_%d.sv";
+#endif
 #endif
 
 	GetPrefPath(path, MAX_PATH);
