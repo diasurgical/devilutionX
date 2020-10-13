@@ -800,6 +800,22 @@ const TextDataStruct alltext[] = {
 	    1, 5, PS_MONK11 },
 	{ "The armories of Hell are home to the Warlord of Blood.  In his wake lay the mutilated bodies of thousands.  Angels and man alike have been cut down to fulfill his endless sacrifices to the Dark ones who scream for one thing - blood. |",
 	    1, 5, PS_MONK12 },
+#ifdef SPAWN
+	{ "Nice try... ", 0, 0, TSFX_TAVERN36 },
+	{ "Nice try... ", 0, 0, TSFX_TAVERN36 },
+	{ "Nice try... ", 0, 0, TSFX_TAVERN36 },
+	{ "Nice try... ", 0, 0, TSFX_TAVERN36 },
+	{ "Nice try... ", 0, 0, TSFX_TAVERN36 },
+	{ "Nice try... ", 0, 0, TSFX_TAVERN36 },
+	{ "Nice try... ", 0, 0, TSFX_TAVERN36 },
+	{ "Nice try... ", 0, 0, TSFX_TAVERN36 },
+	{ "Nice try... ", 0, 0, TSFX_TAVERN36 },
+	{ "Nice try... ", 0, 0, TSFX_TAVERN36 },
+	{ "Nice try... ", 0, 0, TSFX_TAVERN36 },
+	{ "Nice try... ", 0, 0, TSFX_TAVERN36 },
+	{ "Nice try... ", 0, 0, TSFX_TAVERN36 },
+	{ "Nice try... ", 0, 0, TSFX_TAVERN36 },
+#else
 	{ "Beyond the Hall of Heroes lies the Chamber of Bone.  Eternal death awaits any who would seek to steal the treasures secured within this room.  So speaks the Lord of Terror, and so it is written. |",
 	    1, 5, PS_ROGUE1 },
 	{ "...and so, locked beyond the Gateway of Blood and past the Hall of Fire, Valor awaits for the Hero of Light to awaken... |",
@@ -828,6 +844,7 @@ const TextDataStruct alltext[] = {
 	    1, 5, TSFX_PEGBOY7 },
 	{ "The once proud Iswall is trapped deep beneath the surface of this world.  His honor stripped and his visage altered.  He is trapped in immortal torment.  Charged to conceal the very thing that could free him.|",
 	    1, 5, TSFX_WITCH9 },
+#endif
 	{ "So, you're the hero everyone's been talking about. Perhaps you could help a poor, simple farmer out of a terrible mess? At the edge of my orchard, just south of here, there's a horrible thing swelling out of the ground! I can't get to my crops or my bales of hay, and my poor cows will starve. The witch gave this to me and said that it would blast that thing out of my field. If you could destroy it, I would be forever grateful. I'd do it myself, but someone has to stay here with the cows...|",
 	    1, 3, TSFX_FARMER1 },
 	{ "I knew that it couldn't be as simple as that witch made it sound. It's a sad world when you can't even trust your neighbors.|",
@@ -915,6 +932,17 @@ const TextDataStruct alltext[] = {
 	{ "In Spiritu Sanctum. |", 1, 5, PS_MONK54 },
 	{ "Praedictum Otium. |", 1, 5, PS_MONK55 },
 	{ "Efficio Obitus Ut Inimicus. |", 1, 5, PS_MONK56 },
+#ifdef SPAWN
+	{ "Nice try... ", 0, 0, TSFX_TAVERN36 },
+	{ "Nice try... ", 0, 0, TSFX_TAVERN36 },
+	{ "Nice try... ", 0, 0, TSFX_TAVERN36 },
+	{ "Nice try... ", 0, 0, TSFX_TAVERN36 },
+	{ "Nice try... ", 0, 0, TSFX_TAVERN36 },
+	{ "Nice try... ", 0, 0, TSFX_TAVERN36 },
+	{ "Nice try... ", 0, 0, TSFX_TAVERN36 },
+	{ "Nice try... ", 0, 0, TSFX_TAVERN36 },
+	{ "Nice try... ", 0, 0, TSFX_TAVERN36 },
+#else
 	{ "In Spiritu Sanctum. |", 1, 5, PS_MAGE54 },
 	{ "Praedictum Otium. |", 1, 5, PS_MAGE55 },
 	{ "Efficio Obitus Ut Inimicus. |", 1, 5, PS_MAGE56 },
@@ -924,6 +952,7 @@ const TextDataStruct alltext[] = {
 	{ "In Spiritu Sanctum. |", 1, 5, PS_ROGUE54 },
 	{ "Praedictum Otium. |", 1, 5, PS_ROGUE55 },
 	{ "Efficio Obitus Ut Inimicus. |", 1, 5, PS_ROGUE56 },
+#endif
 #endif
 };
 /** unused */

@@ -128,7 +128,11 @@ void InitInv()
 #endif
 #ifdef HELLFIRE
 	} else if (plr[myplr]._pClass == PC_MONK) {
+#ifndef SPAWN
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv_Sor.CEL", NULL);
+#else
+		pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", NULL);
+#endif
 	} else if (plr[myplr]._pClass == PC_BARD) {
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv_rog.CEL", NULL);
 	} else if (plr[myplr]._pClass == PC_BARBARIAN) {
@@ -1897,16 +1901,15 @@ void CheckQuestItem(int pnum)
 			sfxdnum = PS_ROGUE91;
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE91;
-		}
 #ifdef HELLFIRE
-		else if (plr[myplr]._pClass == PC_MONK) {
+		} else if (plr[myplr]._pClass == PC_MONK) {
 			sfxdnum = PS_MONK91;
 		} else if (plr[myplr]._pClass == PC_BARD) {
 			sfxdnum = PS_ROGUE91;
 		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 			sfxdnum = PS_WARR91;
-		}
 #endif
+		}
 #endif
 	}
 #ifdef HELLFIRE
@@ -1917,14 +1920,18 @@ void CheckQuestItem(int pnum)
 		sfxdelay = 10;
 		if (plr[myplr]._pClass == PC_WARRIOR) {
 			sfxdnum = PS_WARR79;
+#ifndef SPAWN
 		} else if (plr[myplr]._pClass == PC_ROGUE) {
 			sfxdnum = PS_ROGUE79;
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE79;
+#endif
 		} else if (plr[myplr]._pClass == PC_MONK) {
 			sfxdnum = PS_MONK79;
+#ifndef SPAWN
 		} else if (plr[myplr]._pClass == PC_BARD) {
 			sfxdnum = PS_ROGUE79;
+#endif
 		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 			sfxdnum = PS_WARR79;
 		}
@@ -1945,14 +1952,18 @@ void CheckQuestItem(int pnum)
 			sfxdelay = 10;
 			if (plr[myplr]._pClass == PC_WARRIOR) {
 				sfxdnum = PS_WARR46;
+#ifndef SPAWN
 			} else if (plr[myplr]._pClass == PC_ROGUE) {
 				sfxdnum = PS_ROGUE46;
 			} else if (plr[myplr]._pClass == PC_SORCERER) {
 				sfxdnum = PS_MAGE46;
+#endif
 			} else if (plr[myplr]._pClass == PC_MONK) {
 				sfxdnum = PS_MONK46;
+#ifndef SPAWN
 			} else if (plr[myplr]._pClass == PC_BARD) {
 				sfxdnum = PS_ROGUE46;
+#endif
 			} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 				sfxdnum = PS_WARR46;
 			}
@@ -2198,10 +2209,12 @@ void AutoGetItem(int pnum, int ii)
 				PlaySFX(random_(0, 3) + PS_MAGE14);
 #endif
 #ifdef HELLFIRE
-			} else if (plr[pnum]._pClass == PC_MONK)
+			} else if (plr[pnum]._pClass == PC_MONK) {
 				PlaySFX(random_(0, 3) + PS_MONK14);
-			else if (plr[pnum]._pClass == PC_BARD) {
+#ifndef SPAWN
+			} else if (plr[pnum]._pClass == PC_BARD) {
 				PlaySFX(random_(0, 3) + PS_ROGUE14);
+#endif
 			} else if (plr[pnum]._pClass == PC_BARBARIAN) {
 				PlaySFX(random_(0, 3) + PS_WARR14);
 #endif
@@ -2806,7 +2819,6 @@ BOOL UseInvItem(int pnum, int cii)
 		} else if (plr[pnum]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE95;
 		}
-#endif
 #ifdef HELLFIRE
 		else if (plr[pnum]._pClass == PC_MONK) {
 			sfxdnum = PS_MONK95;
@@ -2815,6 +2827,7 @@ BOOL UseInvItem(int pnum, int cii)
 		} else if (plr[pnum]._pClass == PC_BARBARIAN) {
 			sfxdnum = PS_WARR95;
 		}
+#endif
 #endif
 		return TRUE;
 	case IDI_FUNGALTM:
@@ -2831,8 +2844,10 @@ BOOL UseInvItem(int pnum, int cii)
 #ifdef HELLFIRE
 		} else if (plr[pnum]._pClass == PC_MONK) {
 			sfxdnum = PS_MONK29;
+#ifndef SPAWN
 		} else if (plr[pnum]._pClass == PC_BARD) {
 			sfxdnum = PS_ROGUE29;
+#endif
 		} else if (plr[pnum]._pClass == PC_BARBARIAN) {
 			sfxdnum = PS_WARR29;
 #endif
@@ -2855,8 +2870,10 @@ BOOL UseInvItem(int pnum, int cii)
 #ifdef HELLFIRE
 		} else if (plr[pnum]._pClass == PC_MONK) {
 			PlaySFX(PS_MONK13);
+#ifndef SPAWN
 		} else if (plr[pnum]._pClass == PC_BARD) {
 			PlaySFX(PS_ROGUE13);
+#endif
 		} else if (plr[pnum]._pClass == PC_BARBARIAN) {
 			PlaySFX(PS_WARR13);
 #endif

@@ -3125,7 +3125,21 @@ void AddBlodboil(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy
 	if (id == -1 || plr[id]._pSpellFlags & 6 || plr[id]._pHitPoints <= plr[id]._pLevel << 6) {
 		missile[mi]._miDelFlag = TRUE;
 	} else {
-		int blodboilSFX[NUM_CLASSES] = { PS_WARR70, PS_ROGUE70, PS_MAGE70, PS_MAGE70, PS_ROGUE70, PS_WARR70 }; // BUGFIX: change second PS_MAGE70 to PS_MONK70?
+		int blodboilSFX[NUM_CLASSES] = {
+			PS_WARR70,
+#ifndef SPAWN
+			PS_ROGUE70,
+			PS_MAGE70,
+			PS_MAGE70,  // BUGFIX: PS_MONK70?
+			PS_ROGUE70,
+#else
+			0,
+			0,
+			0,
+			0,
+#endif
+			PS_WARR70
+		};
 		UseMana(id, 22);
 		missile[mi]._miVar1 = id;
 		int tmp = 3 * plr[id]._pLevel;
@@ -5341,7 +5355,21 @@ void MI_Blodboil(int i)
 	if (missile[i]._mirange == 0) {
 		id = missile[i]._miVar1;
 		if ((plr[id]._pSpellFlags & 2) == 2) {
-			int blodboilSFX[NUM_CLASSES] = { PS_WARR72, PS_ROGUE72, PS_MAGE72, PS_MAGE72, PS_ROGUE72, PS_WARR72 }; // BUGFIX: change second PS_MAGE72 to PS_MONK72?
+			int blodboilSFX[NUM_CLASSES] = {
+				PS_WARR72,
+#ifndef SPAWN
+				PS_ROGUE72,
+				PS_MAGE72,
+				PS_MAGE72, // BUGFIX: should be PS_MONK72?
+				PS_ROGUE72,
+#else
+				0,
+				0,
+				0,
+				0,
+#endif
+				PS_WARR72
+			};
 			plr[id]._pSpellFlags &= ~0x2;
 			plr[id]._pSpellFlags |= 4;
 			if (2 * (id > 0))
@@ -5357,7 +5385,21 @@ void MI_Blodboil(int i)
 			force_redraw = 255;
 			PlaySfxLoc(blodboilSFX[plr[id]._pClass], plr[id]._px, plr[id]._py);
 		} else {
-			int blodboilSFX[NUM_CLASSES] = { PS_WARR72, PS_ROGUE72, PS_MAGE72, PS_MAGE72, PS_ROGUE72, PS_WARR72 }; // BUGFIX: change second PS_MAGE72 to PS_MONK72?
+			int blodboilSFX[NUM_CLASSES] = {
+				PS_WARR72,
+#ifndef SPAWN
+				PS_ROGUE72,
+				PS_MAGE72,
+				PS_MAGE72, // BUGFIX: should be PS_MONK72?
+				PS_ROGUE72,
+#else
+				0,
+				0,
+				0,
+				0,
+#endif
+				PS_WARR72
+			};
 			missile[i]._miDelFlag = TRUE;
 			plr[id]._pSpellFlags &= ~0x4;
 			hpdif = plr[id]._pMaxHP - plr[id]._pHitPoints;

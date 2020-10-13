@@ -3294,12 +3294,16 @@ void OperateSlainHero(int pnum, int i, DIABOOL sendmsg)
 			} else if (plr[pnum]._pClass == PC_MONK) {
 				CreateMagicWeapon(object[i]._ox, object[i]._oy, ITYPE_STAFF, ICURS_WAR_STAFF, FALSE, TRUE);
 				PlaySfxLoc(PS_MONK9, plr[myplr]._px, plr[myplr]._py);
+#ifndef SPAWN
 			} else if (plr[pnum]._pClass == PC_BARD) {
 				CreateMagicWeapon(object[i]._ox, object[i]._oy, ITYPE_SWORD, ICURS_BASTARD_SWORD, FALSE, TRUE);
 				PlaySfxLoc(PS_ROGUE9, plr[myplr]._px, plr[myplr]._py);
+#endif
 			} else if (plr[pnum]._pClass == PC_BARBARIAN) {
 				CreateMagicWeapon(object[i]._ox, object[i]._oy, ITYPE_AXE, ICURS_BATTLE_AXE, FALSE, TRUE);
+#ifndef SPAWN
 				PlaySfxLoc(PS_WARR9, plr[myplr]._px, plr[myplr]._py);
+#endif
 #endif
 			}
 			if (pnum == myplr)

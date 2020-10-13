@@ -980,8 +980,10 @@ void CheckTriggers()
 #ifdef HELLFIRE
 					else if (plr[myplr]._pClass == PC_MONK) {
 						PlaySFX(PS_MONK43);
+#ifndef SPAWN
 					} else if (plr[myplr]._pClass == PC_BARD) {
 						PlaySFX(PS_ROGUE43);
+#endif
 					} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 						PlaySFX(PS_WARR43);
 					}

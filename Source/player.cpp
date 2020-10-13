@@ -4634,19 +4634,25 @@ void PlayDungMsgs()
 		plr[myplr].pDungMsgs2 |= 4;
 	} else if (currlevel == 21 && !plr[myplr]._pLvlVisited[21] && gbMaxPlayers == 1 && !(plr[myplr].pDungMsgs & 32)) {
 		sfxdelay = 30;
+#ifndef SPAWN
 		if (plr[myplr]._pClass == PC_WARRIOR) {
 			sfxdnum = PS_WARR92;
 		} else if (plr[myplr]._pClass == PC_ROGUE) {
 			sfxdnum = PS_ROGUE92;
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE92;
-		} else if (plr[myplr]._pClass == PC_MONK) {
+		} else
+#endif
+		if (plr[myplr]._pClass == PC_MONK) {
 			sfxdnum = PS_MONK92;
-		} else if (plr[myplr]._pClass == PC_BARD) {
+		}
+#ifndef SPAWN
+		else if (plr[myplr]._pClass == PC_BARD) {
 			sfxdnum = PS_ROGUE92;
 		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 			sfxdnum = PS_WARR92;
 		}
+#endif
 		plr[myplr].pDungMsgs |= 32;
 #endif
 	} else {
