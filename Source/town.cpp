@@ -126,6 +126,7 @@ void town_4751C6(){
 	dPiece[86][61] = 0x18;
 	dPiece[85][62] = 0x13;
 	dPiece[84][64] = 0x118;
+	SetDungeonMicros();
 }
 
 void town_475379(){
@@ -175,6 +176,7 @@ void town_475379(){
 	dPiece[86][61] = 0x18;
 	dPiece[85][62] = 0x13;
 	dPiece[84][64] = 0x118;
+	SetDungeonMicros();
 }
 
 void town_47552C(){
@@ -188,6 +190,7 @@ void town_47552C(){
 	dPiece[37][24] = 0x532;
 	dPiece[35][21] = 0x53b;
 	dPiece[34][21] = 0x53c;
+	SetDungeonMicros();
 }
 
 void town_475595(){
@@ -201,6 +204,7 @@ void town_475595(){
 	dPiece[37][24] = 0x53a;
 	dPiece[35][21] = 0x53b;
 	dPiece[34][21] = 0x53c;
+	SetDungeonMicros();
 }
 
 /**
