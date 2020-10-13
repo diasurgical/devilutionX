@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=DevilutionX
+Comment=Diablo 1 for PocketGo 2
+Exec=devilutionx
+Terminal=false
+Type=Application
+StartupNotify=true
+Icon=icon_32
+Categories=games;
+X-OD-Manual=readme.gcw0.txt
+X-OD-NeedsDownscaling=true
+X-OD-NeedsJoystick=true

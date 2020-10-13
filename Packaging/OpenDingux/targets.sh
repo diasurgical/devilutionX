@@ -2,6 +2,7 @@ declare -ra VALID_TARGETS=(
   retrofw
   rg350
   gkd350h
+  pocketgo2
 )
 
 usage_target() {

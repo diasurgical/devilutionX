@@ -29,7 +29,7 @@ declare -rA BUILDROOT_DEFCONFIGS=(
 )
 
 declare BUILDROOT_TARGET="$TARGET"
-if [[ $TARGET == gkd350h ]]; then
+if [[ $TARGET == gkd350h ]] || [[ $TARGET == pocketgo2 ]]; then
 	# Use the rg350 buildroot for gkd350h because gkd350h buildroot is not open-source.
 	BUILDROOT_TARGET=rg350
 fi

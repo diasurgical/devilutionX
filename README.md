@@ -203,7 +203,7 @@ To build, run the following command
 Packaging/OpenDingux/build.sh <platform>
 ~~~
 
-Replace `<platform>` with one of: `retrofw`, `rg350`, or `gkd350h`.
+Replace `<platform>` with one of: `retrofw`, `rg350`, `gkd350h`, or `pocketgo2`.
 
 This prepares and uses the buildroot at `$HOME/buildroot-$PLATFORM-devilutionx`.
 
