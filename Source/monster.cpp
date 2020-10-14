@@ -5742,9 +5742,9 @@ BOOLEAN monster_posok(int i, int x, int y)
 		fire = FALSE;
 		lightning = FALSE;
 		if (mi > 0) {
-			if (missile[mi]._mitype == MIS_FIREWALL) { // BUGFIX: Change 'mi' to 'mi - 1'
+			if (missile[mi - 1]._mitype == MIS_FIREWALL) { // BUGFIX: Change 'mi' to 'mi - 1' (fixed)
 				fire = TRUE;
-			} else if (missile[mi]._mitype == MIS_LIGHTWALL) { // BUGFIX: Change 'mi' to 'mi - 1'
+			} else if (missile[mi - 1]._mitype == MIS_LIGHTWALL) { // BUGFIX: Change 'mi' to 'mi - 1' (fixed)
 				lightning = TRUE;
 			}
 		} else {
