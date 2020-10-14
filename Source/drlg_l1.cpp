@@ -1985,18 +1985,18 @@ void drlg_l1_crypt_rndset(const BYTE *miniset, int rndper)
 			}
 			kk = sw * sh + 2;
 			if (miniset[kk] >= 84 && miniset[kk] <= 100 && found == TRUE) {
-				// BUGFIX: accesses to dungeon can go out of bounds
-				// BUGFIX: Comparisons vs 100 should use same tile as comparisons vs 84.
-				if (dungeon[sx - 1][sy] >= 84 && dungeon[sx - 1][sy] <= 100) {
+				// BUGFIX: accesses to dungeon can go out of bounds (fixed)
+				// BUGFIX: Comparisons vs 100 should use same tile as comparisons vs 84 (fixed)
+				if (sx > 0 && dungeon[sx - 1][sy] >= 84 && dungeon[sx - 1][sy] <= 100) {
 					found = FALSE;
 				}
-				if (dungeon[sx + 1][sy] >= 84 && dungeon[sx - 1][sy] <= 100) {
+				if (sx < DMAXX - 1 && dungeon[sx + 1][sy] >= 84 && dungeon[sx + 1][sy] <= 100) {
 					found = FALSE;
 				}
-				if (dungeon[sx][sy + 1] >= 84 && dungeon[sx - 1][sy] <= 100) {
+				if (sy < DMAXY - 1 && dungeon[sx][sy + 1] >= 84 && dungeon[sx][sy + 1] <= 100) {
 					found = FALSE;
 				}
-				if (dungeon[sx][sy - 1] >= 84 && dungeon[sx - 1][sy] <= 100) {
+				if (sy > 0 && dungeon[sx][sy - 1] >= 84 && dungeon[sx][sy - 1] <= 100) {
 					found = FALSE;
 				}
 			}
