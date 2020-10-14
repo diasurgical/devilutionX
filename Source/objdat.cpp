@@ -164,7 +164,7 @@ ObjDataStruct AllObjects[99] = {
 	{      1, OFILE_TSOUL,    13,      16,        0, THEME_NONE,               6,         0,          5,        0,        128, TRUE,       FALSE,     TRUE,            0,        0, FALSE     },
 	{      1, OFILE_BOOK2,     6,       6,        0, THEME_NONE,              -1,         0,          4,        0,         96, TRUE,       TRUE,      TRUE,            0,        3, FALSE     },
 	{      1, OFILE_L2DOORS,   5,       8,        2, THEME_NONE,              -1,         0,          1,        0,         64, FALSE,      FALSE,     TRUE,            0,        3, TRUE      },
-	{      1, OFILE_L2DOORS,   5,       8,        2, THEME_NONE,              -1,         0,          2,        0,         64, FALSE,      FALSE,     TRUE,            0,        3, FALSE     },
+	{      1, OFILE_L2DOORS,   5,       8,        2, THEME_NONE,              -1,         0,          2,        0,         64, FALSE,      FALSE,     TRUE,            0,        3, TRUE      },
 	{      1, OFILE_WTORCH4,   5,       8,        2, THEME_NONE,              -1,         1,          1,        9,         96, FALSE,      TRUE,      FALSE,           0,        0, FALSE     },
 	{      1, OFILE_WTORCH3,   5,       8,        2, THEME_NONE,              -1,         1,          1,        9,         96, FALSE,      TRUE,      FALSE,           0,        0, FALSE     },
 	{      1, OFILE_WTORCH1,   5,       8,        2, THEME_NONE,              -1,         1,          1,        9,         96, FALSE,      TRUE,      FALSE,           0,        0, FALSE     },
