@@ -1968,8 +1968,8 @@ void drlg_l1_crypt_rndset(const BYTE *miniset, int rndper)
 	sw = miniset[0];
 	sh = miniset[1];
 
-	for (sy = 0; sy < DMAXX - sh; sy++) {
-		for (sx = 0; sx < DMAXY - sw; sx++) {
+	for (sy = 0; sy < DMAXY - sh; sy++) {
+		for (sx = 0; sx < DMAXX - sw; sx++) {
 			found = TRUE;
 			ii = 2;
 			for (yy = 0; yy < sh && found == TRUE; yy++) {

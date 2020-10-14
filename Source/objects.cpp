@@ -223,10 +223,22 @@ void InitObjectGFX()
 
 	memset(fileload, FALSE, sizeof(fileload));
 
+#ifdef HELLFIRE
+	int lvl = currlevel;
+	if (currlevel >= 17 && currlevel <= 20)
+		lvl -= 8;
+	else if (currlevel >= 21 && currlevel <= 24)
+		lvl -= 20;
+#endif
 	for (i = 0; AllObjects[i].oload != -1; i++) {
 		if (AllObjects[i].oload == 1
+#ifdef HELLFIRE
+		    && (int)lvl >= AllObjects[i].ominlvl
+		    && (int)lvl <= AllObjects[i].omaxlvl) {
+#else
 		    && (int)currlevel >= AllObjects[i].ominlvl
 		    && (int)currlevel <= AllObjects[i].omaxlvl) {
+#endif
 			fileload[AllObjects[i].ofindex] = TRUE;
 		}
 		if (AllObjects[i].otheme != THEME_NONE) {
@@ -246,6 +258,12 @@ void InitObjectGFX()
 		if (fileload[i]) {
 			ObjFileList[numobjfiles] = i;
 			sprintf(filestr, "Objects\\%s.CEL", ObjMasterLoadList[i]);
+#ifdef HELLFIRE
+			if (currlevel >= 17 && currlevel < 21)
+				sprintf(filestr, "Objects\\%s.CEL", ObjHiveLoadList[i]);
+			else if (currlevel >= 21)
+				sprintf(filestr, "Objects\\%s.CEL", ObjCryptLoadList[i]);
+#endif
 			pObjCels[numobjfiles] = LoadFileInMem(filestr, NULL);
 			numobjfiles++;
 		}
@@ -808,7 +826,7 @@ void objects_add_lv22(int s)
 				return;
 		}
 	}
-	objects_44D8C5(86, s, xp, yp);
+	objects_44D8C5(OBJ_STORYBOOK, s, xp, yp);
 	AddObject(OBJ_STORYCANDLE, xp - 2, yp + 1);
 	AddObject(OBJ_STORYCANDLE, xp - 2, yp);
 	AddObject(OBJ_STORYCANDLE, xp - 1, yp - 1);
@@ -856,7 +874,7 @@ void objects_add_lv24()
 
 void objects_454AF0(int a1, int a2, int a3)
 {
-	objects_44D8C5(86, a1, a2, a3);
+	objects_44D8C5(OBJ_STORYBOOK, a1, a2, a3);
 }
 #endif
 
@@ -4914,7 +4932,14 @@ void BreakBarrel(int pnum, int i, int dam, BOOL forcebreak, BOOL sendmsg)
 	}
 
 	if (object[i]._otype == OBJ_BARRELEX) {
-		PlaySfxLoc(IS_BARLFIRE, object[i]._ox, object[i]._oy);
+#ifdef HELLFIRE
+		if (currlevel >= 21 && currlevel <= 24)
+			PlaySfxLoc(IS_POPPOP3, object[i]._ox, object[i]._oy);
+		else if (currlevel >= 17 && currlevel <= 20)
+			PlaySfxLoc(IS_POPPOP8, object[i]._ox, object[i]._oy);
+		else
+#endif
+			PlaySfxLoc(IS_BARLFIRE, object[i]._ox, object[i]._oy);
 		for (yp = object[i]._oy - 1; yp <= object[i]._oy + 1; yp++) {
 			for (xp = object[i]._ox - 1; xp <= object[i]._ox + 1; xp++) {
 				if (dMonster[xp][yp] > 0)
@@ -4929,7 +4954,14 @@ void BreakBarrel(int pnum, int i, int dam, BOOL forcebreak, BOOL sendmsg)
 			}
 		}
 	} else {
-		PlaySfxLoc(IS_BARREL, object[i]._ox, object[i]._oy);
+#ifdef HELLFIRE
+		if (currlevel >= 21 && currlevel <= 24)
+			PlaySfxLoc(IS_POPPOP2, object[i]._ox, object[i]._oy);
+		else if (currlevel >= 17 && currlevel <= 20)
+			PlaySfxLoc(IS_POPPOP5, object[i]._ox, object[i]._oy);
+		else
+#endif
+			PlaySfxLoc(IS_BARREL, object[i]._ox, object[i]._oy);
 		SetRndSeed(object[i]._oRndSeed);
 		if (object[i]._oVar2 <= 1) {
 			if (object[i]._oVar3 == 0)
