@@ -225,10 +225,10 @@ void InitObjectGFX()
 
 #ifdef HELLFIRE
 	int lvl = currlevel;
-	if (currlevel >= 17 && currlevel <= 20)
-		lvl -= 8;
-	else if (currlevel >= 21 && currlevel <= 24)
+	if (currlevel >= 21 && currlevel <= 24)
 		lvl -= 20;
+	else if (currlevel >= 17 && currlevel <= 20)
+		lvl -= 8;
 #endif
 	for (i = 0; AllObjects[i].oload != -1; i++) {
 		if (AllObjects[i].oload == 1

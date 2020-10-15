@@ -457,7 +457,11 @@ void DrawHelp()
 
 	DrawSTextHelp();
 	DrawQTextBack();
+#ifdef HELLFIRE
+	PrintSString(0, 2, TRUE, "Hellfire Help", COL_GOLD, 0);
+#else
 	PrintSString(0, 2, TRUE, "Diablo Help", COL_GOLD, 0);
+#endif
 	DrawSLine(5);
 
 	s = &gszHelpText[0];
@@ -515,7 +519,8 @@ void DrawHelp()
 				s++;
 			}
 			tempstr[c] = *s;
-			w += fontkern[fontframe[gbFontTransTbl[(BYTE)tempstr[c]]]] + 1;
+			BYTE tc = gbFontTransTbl[(BYTE)tempstr[c]];
+			w += fontkern[fontframe[tc]] + 1;
 			c++;
 			s++;
 		}

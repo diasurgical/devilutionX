@@ -91,8 +91,8 @@ static void lock_buf_priv()
 		return;
 	}
 
-	gpBufEnd += (uintptr_t)(BYTE *)pal_surface->pixels;
 	gpBuffer = (BYTE *)pal_surface->pixels;
+	gpBufEnd += (uintptr_t)(BYTE *)pal_surface->pixels;
 	sgdwLockCount++;
 }
 

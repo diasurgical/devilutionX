@@ -272,17 +272,16 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL killok)
 	}
 
 	CalcPlrInv(pnum, FALSE);
+	pPlayer->wReflection = pPack->wReflection;
 	pPlayer->pTownWarps = 0;
 	pPlayer->pDungMsgs = 0;
+	pPlayer->pDungMsgs2 = 0;
 	pPlayer->pLvlLoad = 0;
-#ifdef HELLFIRE
-	pPlayer->wReflection = pPack->wReflection;
-	pPlayer->pDifficulty = pPack->pDifficulty;
-	pPlayer->pDamAcFlags = pPack->pDamAcFlags;
-#endif
 	pPlayer->pDiabloKillLevel = SwapLE32(pPack->pDiabloKillLevel);
 	pPlayer->pBattleNet = pPack->pBattleNet;
-	pPlayer->pManaShield = SwapLE32(pPack->pManaShield);
+	pPlayer->pManaShield = pPack->pManaShield;
+	pPlayer->pDifficulty = SwapLE32(pPack->pDifficulty);
+	pPlayer->pDamAcFlags = SwapLE32(pPack->pDamAcFlags);
 }
 
 DEVILUTION_END_NAMESPACE
