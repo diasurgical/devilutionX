@@ -389,6 +389,13 @@ static void print_help_and_exit()
 	printf("    %-20s %-30s\n", "-n", "Skip startup videos");
 	printf("    %-20s %-30s\n", "-f", "Display frames per second");
 	printf("    %-20s %-30s\n", "-x", "Run in windowed mode");
+#ifdef HELLFIRE
+	printf("    %-20s %-30s\n", "--theoquest", "Enable the Theo quest");
+	printf("    %-20s %-30s\n", "--cowquest", "Enable the Cow quest");
+	printf("    %-20s %-30s\n", "--nestart", "Use alternate nest palette");
+	printf("    %-20s %-30s\n", "--bardtest", "Enable the Bard class");
+	printf("    %-20s %-30s\n", "--barbariantest", "Enable the Barbarian class");
+#endif
 #ifdef _DEBUG
 	printf("\nDebug options:\n");
 	printf("    %-20s %-30s\n", "-d", "Increaased item drops");
@@ -442,17 +449,15 @@ void diablo_parse_flags(int argc, char **argv)
 		} else if (strcasecmp("-x", argv[i]) == 0) {
 			fullscreen = FALSE;
 #ifdef HELLFIRE
-		} else if (strcasecmp("--Theoquest", argv[i]) == 0) {
+		} else if (strcasecmp("--theoquest", argv[i]) == 0) {
 			UseTheoQuest = TRUE;
-		} else if (strcasecmp("--Cowquest", argv[i]) == 0) {
+		} else if (strcasecmp("--cowquest", argv[i]) == 0) {
 			UseCowFarmer = TRUE;
-		} else if (strcasecmp("--NestArt", argv[i]) == 0) {
+		} else if (strcasecmp("--nestart", argv[i]) == 0) {
 			UseNestArt = TRUE;
-		} else if (strcasecmp("--Bardtest", argv[i]) == 0) {
+		} else if (strcasecmp("--bardtest", argv[i]) == 0) {
 			UseBardTest = TRUE;
-		} else if (strcasecmp("--Multitest", argv[i]) == 0) {
-			UseMultiTest = TRUE;
-		} else if (strcasecmp("--Barbariantest", argv[i]) == 0) {
+		} else if (strcasecmp("--barbariantest", argv[i]) == 0) {
 			UseBarbarianTest = TRUE;
 #endif
 #ifdef _DEBUG
