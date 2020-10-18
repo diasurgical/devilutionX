@@ -96,8 +96,8 @@ void mainmenu_loop()
 	BOOL done;
 	int menu;
 
-	done = FALSE;
 	mainmenu_refresh_music();
+	done = FALSE;
 
 	do {
 		menu = 0;
@@ -113,23 +113,23 @@ void mainmenu_loop()
 			if (!mainmenu_multi_player())
 				done = TRUE;
 			break;
-		case MAINMENU_REPLAY_INTRO:
 		case MAINMENU_ATTRACT_MODE:
-#ifdef HELLFIRE
-			if (gbActive)
-				mainmenu_play_intro();
-#else
+ 		case MAINMENU_REPLAY_INTRO:
 #ifdef SPAWN
 			done = FALSE;
 #else
 			if (gbActive)
 				mainmenu_play_intro();
 #endif
-#endif
 			break;
 		case MAINMENU_SHOW_CREDITS:
 			UiCreditsDialog(16);
 			break;
+#ifdef HELLFIRE
+		case MAINMENU_SHOW_SUPPORT:
+			//UiSupportDialog(16);
+			break;
+#endif
 		case MAINMENU_EXIT_DIABLO:
 			done = TRUE;
 			break;
@@ -141,6 +141,11 @@ void mainmenu_loop()
 
 BOOL mainmenu_single_player()
 {
+#ifdef HELLFIRE
+	if (!SRegLoadValue(APP_NAME, jogging_title, 0, &jogging_opt)) {
+		jogging_opt = TRUE;
+	}
+#endif
 	gbMaxPlayers = 1;
 
 	if (!SRegLoadValue("devilutionx", "game speed", 0, &ticks_per_sec)) {

@@ -13,6 +13,7 @@ extern "C" {
 #endif
 
 #ifdef HELLFIRE
+extern char *jogging_title;
 extern BOOL jogging_opt;
 #endif
 

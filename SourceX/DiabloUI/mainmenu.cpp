@@ -40,7 +40,7 @@ void mainmenu_Load(char *name, void (*fnSound)(char *file))
 	vecMenuItems.push_back(new UiListItem("Multi Player", MAINMENU_MULTIPLAYER));
 	vecMenuItems.push_back(new UiListItem("Replay Intro", MAINMENU_REPLAY_INTRO));
 #ifdef HELLFIRE
-	vecMenuItems.push_back(new UiListItem("Support", MAINMENU_SHOW_CREDITS));
+	vecMenuItems.push_back(new UiListItem("Support", MAINMENU_SHOW_SUPPORT));
 	vecMenuItems.push_back(new UiListItem("Credits", MAINMENU_SHOW_CREDITS));
 	vecMenuItems.push_back(new UiListItem("Exit Hellfire", MAINMENU_EXIT_DIABLO));
 #else

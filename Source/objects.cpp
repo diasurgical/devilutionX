@@ -5248,6 +5248,13 @@ void GetObjectStr(int i)
 		break;
 	case OBJ_BARREL:
 	case OBJ_BARRELEX:
+#ifdef HELLFIRE
+		if (currlevel > 16 && currlevel < 21) // for hive levels
+			strcpy(infostr, "Pod"); //Then a barrel is called a pod
+		else if (currlevel > 20 && currlevel < 25) // for crypt levels
+			strcpy(infostr, "Urn"); //Then a barrel is called an urn
+		else
+#endif
 		strcpy(infostr, "Barrel");
 		break;
 	case OBJ_SKELBOOK:
