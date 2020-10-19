@@ -101,7 +101,6 @@ char *spszMsgHotKeyTbl[4] = { "F9", "F10", "F11", "F12" };
 BOOL was_archives_init = false;
 BOOL was_ui_init = false;
 BOOL was_snd_init = false;
-BOOL was_sfx_init = false;
 
 void FreeGameMem()
 {
@@ -321,8 +320,7 @@ void diablo_init()
 	snd_init(NULL);
 	was_snd_init = true;
 
-	sound_init();
-	was_sfx_init = true;
+	ui_sound_init();
 }
 
 void diablo_splash()
@@ -346,10 +344,10 @@ void diablo_splash()
 
 void diablo_deinit()
 {
-	if (was_sfx_init)
+	if (was_snd_init) {
 		effects_cleanup_sfx();
-	if (was_snd_init)
 		sound_cleanup();
+	}
 	if (was_ui_init)
 		UiDestroy();
 	if (was_archives_init)
