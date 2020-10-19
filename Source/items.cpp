@@ -3208,9 +3208,9 @@ void items_427A72()
 	if (CornerStone.activated) {
 		if (CornerStone.item.IDidx >= 0) {
 			PackItem(&id, &CornerStone.item);
-			setIniValue("Hellfire", off_4A5AC4, (BYTE *)&id, 19);
+			setIniValue("Hellfire", off_4A5AC4, (char *)&id, 19);
 		} else {
-			setIniValue("Hellfire", off_4A5AC4, (BYTE *)"", 1);
+			setIniValue("Hellfire", off_4A5AC4, (char *)"", 1);
 		}
 	}
 }
@@ -3218,7 +3218,7 @@ void items_427A72()
 void items_427ABA(int x, int y)
 {
 	int i, ii;
-	DWORD dwSize;
+	int dwSize;
 	PkItemStruct PkSItem;
 
 	if (CornerStone.activated || x == 0 || y == 0) {
@@ -3238,7 +3238,7 @@ void items_427ABA(int x, int y)
 		dItem[x][y] = 0;
 	}
 	dwSize = 0;
-	if (getIniValue("Hellfire", off_4A5AC4, (BYTE *)&PkSItem, sizeof(PkSItem), &dwSize)) {
+	if (getIniValue("Hellfire", off_4A5AC4, (char *)&PkSItem, sizeof(PkSItem), &dwSize)) {
 		if (dwSize == sizeof(PkSItem)) {
 			ii = itemavail[0];
 			dItem[x][y] = ii + 1;

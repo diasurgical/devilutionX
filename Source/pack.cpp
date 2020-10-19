@@ -7,7 +7,7 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-static void PackItem(PkItemStruct *id, ItemStruct *is)
+void PackItem(PkItemStruct *id, ItemStruct *is)
 {
 	if (is->_itype == ITYPE_NONE) {
 		id->idx = 0xFFFF;
