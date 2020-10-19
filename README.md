@@ -63,6 +63,19 @@ cmake ..
 cmake --build . -j $(sysctl -n hw.ncpu)
 ```
 </details>
+<details><summary>NetBSD</summary>
+
+### Installing dependencies
+```
+pkgin install cmake SDL2_mixer SDL2_ttf libsodium
+```
+### Compiling
+```
+cd build
+cmake ..
+cmake --build . -j $(sysctl -n hw.ncpu)
+```
+</details>
 
 <details><summary>OpenBSD</summary>
 
