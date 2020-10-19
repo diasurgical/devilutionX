@@ -24,8 +24,8 @@
 
 namespace dvl {
 
-int SelectedItemMin = 1;
-int SelectedItemMax = 1;
+std::size_t SelectedItemMin = 1;
+std::size_t SelectedItemMax = 1;
 
 std::size_t ListViewportSize = 1;
 const std::size_t *ListOffset = NULL;
@@ -48,7 +48,7 @@ char *UiTextInput;
 int UiTextInputLen;
 bool textInputActive = true;
 
-int SelectedItem = 0;
+std::size_t SelectedItem = 0;
 
 namespace {
 
@@ -147,7 +147,7 @@ void UiPlaySelectSound()
 		gfnSoundFunction("sfx\\items\\titlslct.wav");
 }
 
-void UiFocus(int itemIndex, bool wrap = false)
+void UiFocus(std::size_t itemIndex, bool wrap = false)
 {
 	if (!wrap) {
 		if (itemIndex < SelectedItemMin) {
@@ -815,7 +815,7 @@ bool HandleMouseEventList(const SDL_Event &event, UiList *ui_list)
 	if (event.type != SDL_MOUSEBUTTONDOWN || event.button.button != SDL_BUTTON_LEFT)
 		return false;
 
-	const int index = ui_list->indexAt(event.button.y);
+	const std::size_t index = ui_list->indexAt(event.button.y);
 
 	if (gfnListFocus != NULL && SelectedItem != index) {
 		UiFocus(index);
