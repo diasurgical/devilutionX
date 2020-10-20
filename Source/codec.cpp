@@ -63,7 +63,7 @@ error:
 	return 0;
 }
 
-void codec_init_key(int unused, char *pszPassword)
+void codec_init_key(int unused, const char *pszPassword)
 {
 	char key[136]; // last 64 bytes are the SHA1
 	uint32_t rand_state = 0x7058;
