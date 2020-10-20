@@ -15,7 +15,6 @@ int diabquad3x;
 int diabquad3y;
 int diabquad4x;
 int diabquad4y;
-#ifndef SPAWN
 BOOL hallok[20];
 int l4holdx;
 int l4holdy;
@@ -1878,6 +1877,5 @@ void LoadPreL4Dungeon(char *sFileName, int vx, int vy)
 	}
 	mem_free_dbg(pLevelMap);
 }
-#endif
 
 DEVILUTION_END_NAMESPACE

@@ -872,12 +872,10 @@ BOOL PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, BOOLEA
 			} else {
 				if (plr[pnum]._pClass == PC_WARRIOR) {
 					PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
-#ifndef SPAWN
 				} else if (plr[pnum]._pClass == PC_ROGUE) {
 					PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
 				} else if (plr[pnum]._pClass == PC_SORCERER) {
 					PlaySfxLoc(PS_MAGE69, plr[pnum]._px, plr[pnum]._py);
-#endif
 				}
 				drawhpflag = TRUE;
 			}
@@ -999,12 +997,10 @@ BOOL Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, B
 				NetSendCmdDamage(TRUE, p, dam - resper * dam / 100);
 			if (plr[pnum]._pClass == PC_WARRIOR) {
 				tac = PS_WARR69;
-#ifndef SPAWN
 			} else if (plr[pnum]._pClass == PC_ROGUE) {
 				tac = PS_ROGUE69;
 			} else if (plr[pnum]._pClass == PC_SORCERER) {
 				tac = PS_MAGE69;
-#endif
 			} else {
 				return TRUE;
 			}
@@ -3127,17 +3123,10 @@ void AddBlodboil(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy
 	} else {
 		int blodboilSFX[NUM_CLASSES] = {
 			PS_WARR70,
-#ifndef SPAWN
 			PS_ROGUE70,
 			PS_MAGE70,
 			PS_MAGE70,  // BUGFIX: PS_MONK70?
 			PS_ROGUE70,
-#else
-			0,
-			0,
-			0,
-			0,
-#endif
 			PS_WARR70
 		};
 		UseMana(id, 22);
@@ -5357,17 +5346,10 @@ void MI_Blodboil(int i)
 		if ((plr[id]._pSpellFlags & 2) == 2) {
 			int blodboilSFX[NUM_CLASSES] = {
 				PS_WARR72,
-#ifndef SPAWN
 				PS_ROGUE72,
 				PS_MAGE72,
 				PS_MAGE72, // BUGFIX: should be PS_MONK72?
 				PS_ROGUE72,
-#else
-				0,
-				0,
-				0,
-				0,
-#endif
 				PS_WARR72
 			};
 			plr[id]._pSpellFlags &= ~0x2;
@@ -5387,17 +5369,10 @@ void MI_Blodboil(int i)
 		} else {
 			int blodboilSFX[NUM_CLASSES] = {
 				PS_WARR72,
-#ifndef SPAWN
 				PS_ROGUE72,
 				PS_MAGE72,
 				PS_MAGE72, // BUGFIX: should be PS_MONK72?
 				PS_ROGUE72,
-#else
-				0,
-				0,
-				0,
-				0,
-#endif
 				PS_WARR72
 			};
 			missile[i]._miDelFlag = TRUE;

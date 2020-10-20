@@ -276,12 +276,10 @@ bool BlurInventory()
 		if (!TryDropItem()) {
 			if (plr[myplr]._pClass == PC_WARRIOR) {
 				PlaySFX(PS_WARR16); // "Where would I put this?"
-#ifndef SPAWN
 			} else if (plr[myplr]._pClass == PC_ROGUE) {
 				PlaySFX(PS_ROGUE16);
 			} else if (plr[myplr]._pClass == PC_SORCERER) {
 				PlaySFX(PS_MAGE16);
-#endif
 			}
 			return false;
 		}

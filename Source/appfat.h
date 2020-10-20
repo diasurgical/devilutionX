@@ -32,7 +32,7 @@ void ErrDlg(const char *title, const char *error, char *log_file_path, int log_l
 void TextDlg(HWND hDlg, char *text);
 void FileErrDlg(const char *error);
 void DiskFreeDlg(char *error);
-void InsertCDDlg(const char *fileName);
+void InsertCDDlg();
 void DirErrorDlg(char *error);
 
 #ifdef __cplusplus

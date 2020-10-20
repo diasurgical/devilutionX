@@ -54,13 +54,11 @@ int L6UpList[] = { 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, -1 };
 int L6DownList[] = { 57, 58, 59, 60, 61, 62, 63, 64, -1 };
 #endif
 
-#ifndef SPAWN
 void InitNoTriggers()
 {
 	numtrigs = 0;
 	trigflag = FALSE;
 }
-#endif
 
 void InitTownTriggers()
 {
@@ -74,8 +72,7 @@ void InitTownTriggers()
 	numtrigs++;
 
 
-#ifndef SPAWN
-	if (gbMaxPlayers == MAX_PLRS) {
+	if (!gbIsSpawn && gbMaxPlayers == MAX_PLRS) {
 		for (i = 0; i < sizeof(townwarps) / sizeof(townwarps[0]); i++) {
 			townwarps[i] = TRUE;
 		}
@@ -107,46 +104,46 @@ void InitTownTriggers()
 		numtrigs++;
 #endif
 	} else {
-#endif
 		for (i = 0; i < sizeof(townwarps) / sizeof(townwarps[0]); i++) {
 			townwarps[i] = FALSE;
 		}
-#ifndef SPAWN
+		if (!gbIsSpawn) {
 #ifdef HELLFIRE
-		if (plr[myplr].pTownWarps & 1 || plr[myplr]._pLevel >= 10) {
+			if (plr[myplr].pTownWarps & 1 || plr[myplr]._pLevel >= 10) {
 #else
-		if (plr[myplr].pTownWarps & 1) {
+			if (plr[myplr].pTownWarps & 1) {
 #endif
-			trigs[numtrigs]._tx = 49;
-			trigs[numtrigs]._ty = 21;
-			trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
-			trigs[numtrigs]._tlvl = 5;
-			numtrigs++;
-			townwarps[0] = TRUE;
-		}
+				trigs[numtrigs]._tx = 49;
+				trigs[numtrigs]._ty = 21;
+				trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
+				trigs[numtrigs]._tlvl = 5;
+				numtrigs++;
+				townwarps[0] = TRUE;
+			}
 #ifdef HELLFIRE
-		if (plr[myplr].pTownWarps & 2 || plr[myplr]._pLevel >= 15) {
+			if (plr[myplr].pTownWarps & 2 || plr[myplr]._pLevel >= 15) {
 #else
-		if (plr[myplr].pTownWarps & 2) {
+			if (plr[myplr].pTownWarps & 2) {
 #endif
-			townwarps[1] = TRUE;
-			trigs[numtrigs]._tx = 17;
-			trigs[numtrigs]._ty = 69;
-			trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
-			trigs[numtrigs]._tlvl = 9;
-			numtrigs++;
-		}
+				townwarps[1] = TRUE;
+				trigs[numtrigs]._tx = 17;
+				trigs[numtrigs]._ty = 69;
+				trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
+				trigs[numtrigs]._tlvl = 9;
+				numtrigs++;
+			}
 #ifdef HELLFIRE
-		if (plr[myplr].pTownWarps & 4 || plr[myplr]._pLevel >= 20) {
+			if (plr[myplr].pTownWarps & 4 || plr[myplr]._pLevel >= 20) {
 #else
-		if (plr[myplr].pTownWarps & 4) {
+			if (plr[myplr].pTownWarps & 4) {
 #endif
-			townwarps[2] = TRUE;
-			trigs[numtrigs]._tx = 41;
-			trigs[numtrigs]._ty = 80;
-			trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
-			trigs[numtrigs]._tlvl = 13;
-			numtrigs++;
+				townwarps[2] = TRUE;
+				trigs[numtrigs]._tx = 41;
+				trigs[numtrigs]._ty = 80;
+				trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
+				trigs[numtrigs]._tlvl = 13;
+				numtrigs++;
+			}
 		}
 #ifdef HELLFIRE
 		if (quests[Q_GRAVE]._qactive == 3) {
@@ -163,7 +160,6 @@ void InitTownTriggers()
 		numtrigs++;
 #endif
 	}
-#endif
 
 	trigflag = FALSE;
 }
@@ -222,7 +218,6 @@ void InitL1Triggers()
 	trigflag = FALSE;
 }
 
-#ifndef SPAWN
 void InitL2Triggers()
 {
 	int i, j;
@@ -399,7 +394,6 @@ void InitVPTriggers()
 	trigs[0]._ty = 32;
 	trigs[0]._tmsg = WM_DIABRTNLVL;
 }
-#endif
 
 BOOL ForceTownTrig()
 {
@@ -920,19 +914,15 @@ void CheckTriggers()
 
 		switch (trigs[i]._tmsg) {
 		case WM_DIABNEXTLVL:
-#ifdef SPAWN
-			if (currlevel >= 2) {
+			if (gbIsSpawn && currlevel >= 2) {
 				NetSendCmdLoc(TRUE, CMD_WALKXY, plr[myplr]._px, plr[myplr]._py + 1);
 				PlaySFX(PS_WARR18);
 				InitDiabloMsg(EMSG_NOT_IN_SHAREWARE);
 			} else {
-#endif
 				if (pcurs >= CURSOR_FIRSTITEM && DropItemBeforeTrig())
 					return;
 				StartNewLvl(myplr, trigs[i]._tmsg, currlevel + 1);
-#ifdef SPAWN
 			}
-#endif
 			break;
 		case WM_DIABPREVLVL:
 			if (pcurs >= CURSOR_FIRSTITEM && DropItemBeforeTrig())
@@ -970,20 +960,16 @@ void CheckTriggers()
 				if (abort) {
 					if (plr[myplr]._pClass == PC_WARRIOR) {
 						PlaySFX(PS_WARR43);
-#ifndef SPAWN
 					} else if (plr[myplr]._pClass == PC_ROGUE) {
 						PlaySFX(PS_ROGUE43);
 					} else if (plr[myplr]._pClass == PC_SORCERER) {
 						PlaySFX(PS_MAGE43);
-#endif
 					}
 #ifdef HELLFIRE
 					else if (plr[myplr]._pClass == PC_MONK) {
 						PlaySFX(PS_MONK43);
-#ifndef SPAWN
 					} else if (plr[myplr]._pClass == PC_BARD) {
 						PlaySFX(PS_ROGUE43);
-#endif
 					} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 						PlaySFX(PS_WARR43);
 					}

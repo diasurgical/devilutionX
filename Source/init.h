@@ -21,6 +21,7 @@ extern WNDPROC CurrentProc;
 extern HANDLE diabdat_mpq;
 extern char diabdat_mpq_path[MAX_PATH];
 extern HANDLE patch_rt_mpq;
+extern bool gbIsSpawn;
 extern BOOLEAN screensaver_enabled_prev;
 #ifdef HELLFIRE
 extern char hellfire_mpq_path[MAX_PATH];

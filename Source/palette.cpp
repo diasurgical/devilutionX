@@ -232,7 +232,6 @@ void palette_update_caves()
 	palette_update();
 }
 
-#ifdef HELLFIRE
 int dword_6E2D58;
 int dword_6E2D54;
 void palette_update_crypt()
@@ -312,8 +311,6 @@ void palette_update_hive()
 	}
 }
 
-#endif
-#ifndef SPAWN
 void palette_update_quest_palette(int n)
 {
 	int i;
@@ -324,7 +321,6 @@ void palette_update_quest_palette(int n)
 	ApplyGamma(system_palette, logical_palette, 32);
 	palette_update();
 }
-#endif
 
 BOOL palette_get_color_cycling()
 {

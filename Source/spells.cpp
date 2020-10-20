@@ -311,4 +311,37 @@ void DoHealOther(int pnum, int rid)
 	}
 }
 
+int GetSpellBookLevel(int s)
+{
+	if (gbIsSpawn) {
+		switch (s) {
+		case SPL_STONE:
+		case SPL_GUARDIAN:
+		case SPL_GOLEM:
+		case SPL_FLARE:
+		case SPL_BONESPIRIT:
+			return -1;
+		}
+	}
+
+	return spelldata[s].sBookLvl;
+}
+
+int GetSpellStaffLevel(int s)
+{
+	if (gbIsSpawn) {
+		switch (s) {
+		case SPL_STONE:
+		case SPL_GUARDIAN:
+		case SPL_GOLEM:
+		case SPL_APOCA:
+		case SPL_FLARE:
+		case SPL_BONESPIRIT:
+			return -1;
+		}
+	}
+
+	return spelldata[s].sStaffLvl;
+}
+
 DEVILUTION_END_NAMESPACE

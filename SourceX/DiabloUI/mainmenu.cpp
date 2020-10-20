@@ -106,10 +106,12 @@ BOOL UiMainMenuDialog(char *name, int *pdwResult, void (*fnSound)(char *file), i
 
 		mainmenu_Free();
 
+#ifndef HELLFIRE
 		if (gbSpawned && MainMenuResult == MAINMENU_REPLAY_INTRO) {
 			UiSelOkDialog(NULL, "The Diablo introduction cinematic is only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase.", true);
 			MainMenuResult = 0;
 		}
+#endif
 	}
 
 	*pdwResult = MainMenuResult;

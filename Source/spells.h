@@ -18,6 +18,8 @@ BOOL CheckSpell(int id, int sn, char st, BOOL manaonly);
 void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int caster, int spllvl);
 void DoResurrect(int pnum, int rid);
 void DoHealOther(int pnum, int rid);
+int GetSpellBookLevel(int s);
+int GetSpellStaffLevel(int s);
 
 #ifdef __cplusplus
 }

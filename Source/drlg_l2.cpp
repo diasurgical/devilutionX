@@ -3,7 +3,6 @@
  *
  * Implementation of the catacombs level generation algorithms.
  */
-#ifndef SPAWN
 
 #include <algorithm>
 
@@ -3505,4 +3504,3 @@ void CreateL2Dungeon(DWORD rseed, int entry)
 }
 
 DEVILUTION_END_NAMESPACE
-#endif

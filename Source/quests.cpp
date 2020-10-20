@@ -162,11 +162,11 @@ void InitQuests()
 		quests[questdebug]._qactive = QUEST_ACTIVE;
 #endif
 
-#ifdef SPAWN
-	for (z = 0; z < MAXQUESTS; z++) {
-		quests[z]._qactive = QUEST_NOTAVAIL;
+	if (gbIsSpawn) {
+		for (z = 0; z < MAXQUESTS; z++) {
+			quests[z]._qactive = QUEST_NOTAVAIL;
+		}
 	}
-#endif
 
 	if (quests[Q_SKELKING]._qactive == QUEST_NOTAVAIL)
 		quests[Q_SKELKING]._qvar2 = 2;
@@ -179,7 +179,9 @@ void InitQuests()
 
 void CheckQuests()
 {
-#ifndef SPAWN
+	if (gbIsSpawn)
+		return;
+
 	int i, rportx, rporty;
 
 	if (QuestStatus(Q_BETRAYER) && gbMaxPlayers != 1 && quests[Q_BETRAYER]._qvar1 == 2) {
@@ -247,13 +249,14 @@ void CheckQuests()
 			}
 		}
 	}
-#endif
 }
 
 BOOL ForceQuests()
 {
-#ifndef SPAWN
 	int i, j, qx, qy, ql;
+
+	if (gbIsSpawn)
+		return FALSE;
 
 	if (gbMaxPlayers != 1) {
 		return FALSE;
@@ -276,7 +279,6 @@ BOOL ForceQuests()
 			}
 		}
 	}
-#endif
 
 	return FALSE;
 }
@@ -296,8 +298,10 @@ BOOL QuestStatus(int i)
 
 void CheckQuestKill(int m, BOOL sendmsg)
 {
-#ifndef SPAWN
 	int i, j;
+
+	if (gbIsSpawn)
+		return;
 
 	if (monster[m].MType->mtype == MT_SKING) {
 		quests[Q_SKELKING]._qactive = QUEST_DONE;
@@ -460,7 +464,6 @@ void CheckQuestKill(int m, BOOL sendmsg)
 		}
 #endif
 	}
-#endif
 }
 
 void DrawButcher()
@@ -696,7 +699,9 @@ void GetReturnLvlPos()
 
 void ResyncMPQuests()
 {
-#ifndef SPAWN
+	if (gbIsSpawn)
+		return;
+
 	if (quests[Q_SKELKING]._qactive == QUEST_INIT
 	    && currlevel >= quests[Q_SKELKING]._qlevel - 1
 	    && currlevel <= quests[Q_SKELKING]._qlevel + 1) {
@@ -733,13 +738,14 @@ void ResyncMPQuests()
 		NetSendCmdQuest(TRUE, Q_JERSEY);
 	}
 #endif
-#endif
 }
 
 void ResyncQuests()
 {
-#ifndef SPAWN
 	int i, tren, x, y;
+
+	if (gbIsSpawn)
+		return;
 
 	if (setlevel && setlvlnum == quests[Q_PWATER]._qslvl && quests[Q_PWATER]._qactive != QUEST_INIT && leveltype == quests[Q_PWATER]._qlvltype) {
 
@@ -820,7 +826,6 @@ void ResyncQuests()
 	    && (quests[Q_BETRAYER]._qactive == QUEST_ACTIVE || quests[Q_BETRAYER]._qactive == QUEST_DONE)) {
 		quests[Q_BETRAYER]._qvar2 = 2;
 	}
-#endif
 }
 
 void PrintQLString(int x, int y, BOOL cjustflag, char *str, int col)
@@ -951,7 +956,9 @@ void QuestlogESC()
 
 void SetMultiQuest(int q, int s, int l, int v1)
 {
-#ifndef SPAWN
+	if (gbIsSpawn)
+		return;
+
 	if (quests[q]._qactive != QUEST_DONE) {
 		if (s > quests[q]._qactive)
 			quests[q]._qactive = s;
@@ -959,7 +966,6 @@ void SetMultiQuest(int q, int s, int l, int v1)
 		if (v1 > quests[q]._qvar1)
 			quests[q]._qvar1 = v1;
 	}
-#endif
 }
 
 DEVILUTION_END_NAMESPACE

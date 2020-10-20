@@ -1411,13 +1411,16 @@ void S_StartTalk()
 	sprintf(tempstr, "Talk to %s", talkname[talker]);
 	AddSText(0, 2, TRUE, tempstr, COL_GOLD, FALSE);
 	AddSLine(5);
-#ifdef SPAWN
-	sprintf(tempstr, "Talking to %s", talkname[talker]);
-	AddSText(0, 10, TRUE, tempstr, COL_WHITE, FALSE);
-	AddSText(0, 12, TRUE, "is not available", COL_WHITE, FALSE);
-	AddSText(0, 14, TRUE, "in the shareware", COL_WHITE, FALSE);
-	AddSText(0, 16, TRUE, "version", COL_WHITE, FALSE);
-#else
+	if (gbIsSpawn) {
+		sprintf(tempstr, "Talking to %s", talkname[talker]);
+		AddSText(0, 10, TRUE, tempstr, COL_WHITE, FALSE);
+		AddSText(0, 12, TRUE, "is not available", COL_WHITE, FALSE);
+		AddSText(0, 14, TRUE, "in the shareware", COL_WHITE, FALSE);
+		AddSText(0, 16, TRUE, "version", COL_WHITE, FALSE);
+		AddSText(0, 22, TRUE, "Back", COL_WHITE, TRUE);
+		return;
+	}
+
 	sn = 0;
 	for (i = 0; i < MAXQUESTS; i++) {
 		if (quests[i]._qactive == QUEST_ACTIVE && ((DWORD *)&Qtalklist[talker])[i] != -1 && quests[i]._qlog)
@@ -1441,7 +1444,6 @@ void S_StartTalk()
 		}
 	}
 	AddSText(0, sn2, TRUE, "Gossip", COL_BLUE, TRUE);
-#endif
 	AddSText(0, 22, TRUE, "Back", COL_WHITE, TRUE);
 }
 

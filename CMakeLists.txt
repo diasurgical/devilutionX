@@ -8,7 +8,6 @@ DEBUG_OPTION(UBSAN "Enable undefined behaviour sanitizer")
 DEBUG_OPTION(DEBUG "Enable debug mode in engine")
 option(DISABLE_LTO "Disable link-time optimization (by default enabled in release mode)" OFF)
 option(PIE "Generate position-independent code" OFF)
-option(SPAWN "Build the shareware version" OFF)
 option(DIST "Dynamically link only glibc and SDL2" OFF)
 option(BINARY_RELEASE "Enable options for binary release" OFF)
 option(NIGHTLY_BUILD "Enable options for nightly build" OFF)
@@ -403,7 +402,6 @@ target_compile_definitions(${BIN_TARGET} PRIVATE ASIO_STANDALONE)
 # Defines without value
 foreach(
   def_name
-  SPAWN
   NONET
   PREFILL_PLAYER_NAME
 )

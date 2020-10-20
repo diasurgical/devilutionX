@@ -883,12 +883,10 @@ void InitControlPan()
 	sbookflag = FALSE;
 	if (plr[myplr]._pClass == PC_WARRIOR) {
 		SpellPages[0][0] = SPL_REPAIR;
-#ifndef SPAWN
 	} else if (plr[myplr]._pClass == PC_ROGUE) {
 		SpellPages[0][0] = SPL_DISARM;
 	} else if (plr[myplr]._pClass == PC_SORCERER) {
 		SpellPages[0][0] = SPL_RECHARGE;
-#endif
 #ifdef HELLFIRE
 	} else if (plr[myplr]._pClass == PC_MONK) {
 		SpellPages[0][0] = SPL_SEARCH;
@@ -1423,12 +1421,10 @@ void DrawChr()
 #else
 	if (plr[myplr]._pClass == PC_WARRIOR) {
 		ADD_PlrStringXY(168, 32, 299, "Warrior", COL_WHITE);
-#ifndef SPAWN
 	} else if (plr[myplr]._pClass == PC_ROGUE) {
 		ADD_PlrStringXY(168, 32, 299, "Rogue", COL_WHITE);
 	} else if (plr[myplr]._pClass == PC_SORCERER) {
 		ADD_PlrStringXY(168, 32, 299, "Sorceror", COL_WHITE);
-#endif
 	}
 #endif
 

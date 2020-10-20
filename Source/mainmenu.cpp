@@ -19,13 +19,15 @@ int menu_music_track_id = TMUSIC_INTRO;
 void mainmenu_refresh_music()
 {
 	music_start(menu_music_track_id);
-#ifndef SPAWN
+
+	if (gbIsSpawn)
+		return;
+
 	do {
 		menu_music_track_id++;
 		if (menu_music_track_id == NUM_MUSIC)
 			menu_music_track_id = TMUSIC_TOWN;
 	} while (menu_music_track_id == TMUSIC_TOWN || menu_music_track_id == TMUSIC_L1);
-#endif
 }
 
 void mainmenu_change_name(int arg1, int arg2, int arg3, int arg4, char *name_1, char *name_2)
@@ -115,12 +117,13 @@ void mainmenu_loop()
 			break;
 		case MAINMENU_ATTRACT_MODE:
  		case MAINMENU_REPLAY_INTRO:
-#ifdef SPAWN
-			done = FALSE;
-#else
+#ifndef HELLFIRE
+			if (gbIsSpawn)
+				done = FALSE;
+			else
+#endif
 			if (gbActive)
 				mainmenu_play_intro();
-#endif
 			break;
 		case MAINMENU_SHOW_CREDITS:
 			UiCreditsDialog(16);

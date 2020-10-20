@@ -29,6 +29,8 @@ HANDLE diabdat_mpq;
 char diabdat_mpq_path[MAX_PATH];
 /** A handle to the patch_rt.mpq archive. */
 HANDLE patch_rt_mpq;
+/** Indicate if we only have access to demo data */
+bool gbIsSpawn;
 #ifdef HELLFIRE
 char hellfire_mpq_path[MAX_PATH];
 char hfmonk_mpq_path[MAX_PATH];
@@ -124,23 +126,21 @@ void init_archives()
 	fileinfo.originalarchivefile = diabdat_mpq_path;
 	fileinfo.patcharchivefile = patch_rt_mpq_path;
 	init_get_file_info();
-#ifdef SPAWN
-		diabdat_mpq = init_test_access(diabdat_mpq_path, "spawn.mpq", "DiabloSpawn", 1000, FS_PC);
-#else
+
 	diabdat_mpq = init_test_access(diabdat_mpq_path, "diabdat.mpq", "DiabloCD", 1000, FS_CD);
-#endif
-	if (!SFileOpenFile("ui_art\\title.pcx", &fh))
-#ifdef SPAWN
-		InsertCDDlg("spawn.mpq");
-#else
-		InsertCDDlg("diabdat.mpq");
-#endif
+	if (diabdat_mpq == NULL) {
+		diabdat_mpq = init_test_access(diabdat_mpq_path, "spawn.mpq", "DiabloSpawn", 1000, FS_PC);
+		if (diabdat_mpq != NULL)
+			gbIsSpawn = true;
+	}
+	if (diabdat_mpq == NULL || !SFileOpenFile("ui_art\\title.pcx", &fh))
+		InsertCDDlg();
 	SFileCloseFile(fh);
-#ifdef SPAWN
-	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "patch_sh.mpq", "DiabloSpawn", 2000, FS_PC);
-#else
+
 	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "patch_rt.mpq", "DiabloInstall", 2000, FS_PC);
-#endif
+	if (patch_rt_mpq == NULL)
+		patch_rt_mpq = init_test_access(patch_rt_mpq_path, "patch_sh.mpq", "DiabloSpawn", 2000, FS_PC);
+
 #ifdef HELLFIRE
 	hellfire_mpq = init_test_access(hellfire_mpq_path, "hellfire.mpq", "DiabloInstall", 8000, FS_PC);
 	hfmonk_mpq = init_test_access(hfmonk_mpq_path, "hfmonk.mpq", "DiabloInstall", 8100, FS_PC);

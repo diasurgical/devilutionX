@@ -144,16 +144,15 @@ void FileErrDlg(const char *error)
 /**
  * @brief Terminates the game with an insert CD error dialog.
  */
-void InsertCDDlg(const char *fileName)
+void InsertCDDlg()
 {
 	char text[1024];
 	snprintf(
 	    text,
 	    1024,
-	    "Unable to open %s.\n"
+	    "Unable to open main data archive (diabdat.mpq or spawn.mpq).\n"
 	    "\n"
-	    "Make sure that it is in the game folder and that the file name is in all lowercase.",
-	    fileName);
+	    "Make sure that it is in the game folder and that the file name is in all lowercase.");
 
 	UiErrorOkDialog("Data File Error", text);
 	app_fatal(NULL);
