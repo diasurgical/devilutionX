@@ -19,7 +19,7 @@ void UiMainMenuSelect(int value)
 
 void mainmenu_Esc()
 {
-	int last = vecMenuItems.size() - 1;
+	std::size_t last = vecMenuItems.size() - 1;
 	if (SelectedItem == last) {
 		UiMainMenuSelect(last);
 	} else {
