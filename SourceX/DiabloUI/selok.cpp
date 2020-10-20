@@ -72,9 +72,6 @@ void UiSelOkDialog(const char *title, const char *body, bool background)
 		vecSelOkDialog.push_back(new UiArtText(dialogText, rect1, UIS_MED));
 	}
 
-	SDL_Rect rect3 = { PANEL_LEFT + 140, (UI_OFFSET_Y + 210), 560, 168 };
-	vecSelOkDialog.push_back(new UiArtText(dialogText, rect3, UIS_MED));
-
 	vecSelOkDialogItems.push_back(new UiListItem("OK", 0));
 	vecSelOkDialog.push_back(new UiList(vecSelOkDialogItems, PANEL_LEFT + 230, (UI_OFFSET_Y + 390), 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD));
 
