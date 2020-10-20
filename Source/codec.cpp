@@ -19,7 +19,7 @@ typedef struct CodecSignature {
 
 #define BLOCKSIZE 64
 
-int codec_decode(BYTE *pbSrcDst, DWORD size, char *pszPassword)
+int codec_decode(BYTE *pbSrcDst, DWORD size, const char *pszPassword)
 {
 	char buf[128];
 	char dst[SHA1HashSize];
@@ -102,7 +102,7 @@ DWORD codec_get_encoded_len(DWORD dwSrcBytes)
 	return dwSrcBytes + sizeof(CodecSignature);
 }
 
-void codec_encode(BYTE *pbSrcDst, DWORD size, int size_64, char *pszPassword)
+void codec_encode(BYTE *pbSrcDst, DWORD size, int size_64, const char *pszPassword)
 {
 	char buf[128];
 	char tmp[SHA1HashSize];
