@@ -14,7 +14,7 @@ TEST(Appfat, FileErrDlg) {
 }
 
 TEST(Appfat, InsertCDDlg) {
-    EXPECT_EXIT(dvl::InsertCDDlg("devilution/image.cl2"), ::testing::ExitedWithCode(1), "devilution/image.cl2");
+    EXPECT_EXIT(dvl::InsertCDDlg(), ::testing::ExitedWithCode(1), "diabdat.mpq");
 }
 
 TEST(Appfat, DirErrorDlg) {
