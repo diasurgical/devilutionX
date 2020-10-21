@@ -83,8 +83,8 @@ std::vector<SDL_Surface *> safePNGLoadVector(std::string path, std::string pal, 
 	merged_path_single += ".png";
 	fixPath(merged_path_single);
 	SDL_Surface *loadedSurface = IMG_Load(merged_path_single.c_str());
-	if (cl2)
-	logToFile(merged_path_single);
+	//if (cl2)
+	//logToFile(merged_path_single);
 
 	if (loadedSurface != NULL) {
 		out.push_back(loadedSurface);
@@ -107,8 +107,8 @@ std::vector<SDL_Surface *> safePNGLoadVector(std::string path, std::string pal, 
 		SDL_Log("%s", merged_path.c_str());
 		fixPath(merged_path);
 		SDL_Surface *loadedSurface = IMG_Load(merged_path.c_str());
-		if (cl2)
-		logToFile(merged_path);
+		//if (cl2)
+		//logToFile(merged_path);
 		if (loadedSurface != NULL) {
 			out.push_back(loadedSurface);
 		} else {
@@ -234,7 +234,7 @@ void CelClippedDraw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 void CelClippedDrawPNG(int sx, int sy, std::vector<SDL_Surface *> &pCelBuff, int nCel, int nWidth)
 {
 	if (pCelBuff.size() < nCel) {
-		SDL_Log("INVALID SURFACE VECTOR IN CEL_CLIPPED_DRAW_PNG");
+		SDL_Log("INVALID SURFACE VECTOR IN CEL_CLIPPED_DRAW_PNG %d %d", pCelBuff.size(), nCel);
 		return;
 	}
 	CelBlitSafePNG(sx, sy, pCelBuff[nCel - 1]);
@@ -922,6 +922,7 @@ void CelBlitOutlinePNG(int col, int sx, int sy, std::vector<SDL_Surface *> &pCel
 		SDL_Log("INVALID SURFACE VECTOR IN CEL_BLIT_OUTLINE_PNG");
 		return;
 	}
+	SDL_Log("INDEX BLIT OUTLINE %d", nCel);
 	SDL_PixelFormat *pixelFormat = test_surface->format;
 	Uint32 pixelFormatEnum = pixelFormat->format;
 
@@ -932,25 +933,50 @@ void CelBlitOutlinePNG(int col, int sx, int sy, std::vector<SDL_Surface *> &pCel
 	//	ErrSdl();
 
 	int r = 0, g = 255, b = 0;
-	switch (col) {
-		case 0: {
-			r = 255;
-			break;
-		}
-	    case 1: {
-		    r = 255;
-		    g = 255;
-		    b = 255;
-		    break;
-	    }
-	}
-	Uint32 color = SDL_MapRGBA(pixelFormat, r, g, b, 255);   
+	//SDL_Log("COL %d", col);
+	r = logical_palette[col].r;
+	g = logical_palette[col].g;
+	b = logical_palette[col].b;
+	Uint32 color = SDL_MapRGBA(pixelFormat, r, g, b, 255);
+	//SDL_Log("%d %u\n", col, color);
+	//return;
 
 	Uint32 *ptr = (Uint32 *)pCelBuff[nCel - 1]->pixels;
 	Uint32 *ptr2 = (Uint32 *)tmp_surf->pixels;
+
+	///for (int ii = 0; ii < 256; ii++) {
+	//	SDL_Log("I R G B A %u %u %u %u", ii, logical_palette[ii].r, logical_palette[ii].g, logical_palette[ii].b, logical_palette[ii].a);
+	//}
+	//return;
 	int pixels_in_row = tmp_surf->pitch / sizeof(unsigned int);
-	for (int i = 0; i < tmp_surf->h * pixels_in_row; i++) {
-		if (*ptr) {
+	int mx = tmp_surf->h * pixels_in_row;
+	for (int i = 0; i < mx; i++) {
+		int alpha = (*ptr >> 24) & 0xFF;
+		int rr = (*ptr >> 16) & 0xFF;
+		int gg = (*ptr >> 8) & 0xFF;
+		int bb = (*ptr) & 0xFF;
+		if ((rr+gg+bb) != 0 && alpha > 0) {
+
+			//SDL_Log("%u %u %u %u %u", *ptr, rr, gg, bb, alpha);
+		//if (alpha != 0) {
+			int index = 0;
+			int x = i % pixels_in_row, y = i / pixels_in_row;
+
+			for (int xx = -1; xx <= 1; xx++) {
+				for (int yy = -1; yy <= 1; yy++) {
+					if (xx && yy) {
+						continue;
+					}
+					int fx = x + xx;
+					int fy = y + yy;
+					int val = fx + fy * pixels_in_row;
+					if (val < 0 || val >= mx || x < 0 || x >= pixels_in_row || y < 0 || y >= tmp_surf->h) {
+						continue;
+					}
+					ptr2[val] = color;
+				}
+			}
+			/*
 			if (i % pixels_in_row != 0) {
 				ptr2[-1] = color;
 			}
@@ -958,9 +984,10 @@ void CelBlitOutlinePNG(int col, int sx, int sy, std::vector<SDL_Surface *> &pCel
 			ptr2[1] = color;
 			ptr2[pixels_in_row] = color;
 			ptr2[-pixels_in_row] = color;
+			*/
 		}
 		ptr++;
-		ptr2++;
+		//ptr2++;
 	}
 	sx -= SCREEN_X;
 	sy -= SCREEN_Y - 1;

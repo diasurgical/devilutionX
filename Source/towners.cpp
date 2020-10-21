@@ -144,9 +144,9 @@ void NewTownerAnim(int tnum, BYTE *pAnim, int numFrames, int Delay)
 	towner[tnum]._tAnimDelay = Delay;
 }
 
-void NewTownerAnimPNG(int tnum, std::vector<SDL_Surface *> pAnim, int numFrames, int Delay)
+void NewTownerAnimPNG(int tnum, std::vector<SDL_Surface *> *pAnim, int numFrames, int Delay)
 {
-	towner[tnum]._tAnimData_png = pAnim;
+	towner[tnum]._tAnimData_png = *pAnim;
 	towner[tnum]._tAnimLen = numFrames;
 	towner[tnum]._tAnimFrame = 1;
 	towner[tnum]._tAnimCnt = 0;
@@ -199,7 +199,7 @@ void InitSmith()
 	}
 	towner[numtowners]._tNFrames = 16;
 	NewTownerAnim(numtowners, towner[numtowners]._tNAnim[DIR_SW], towner[numtowners]._tNFrames, 3);
-	NewTownerAnimPNG(numtowners, towner[numtowners]._tNAnim_png[DIR_SW], towner[numtowners]._tNFrames, 3);
+	NewTownerAnimPNG(numtowners, &towner[numtowners]._tNAnim_png[DIR_SW], towner[numtowners]._tNFrames, 3);
 	strcpy(towner[numtowners]._tName, "Griswold the Blacksmith");
 	numtowners++;
 }
@@ -219,7 +219,7 @@ void InitBarOwner()
 	}
 	towner[numtowners]._tNFrames = 16;
 	NewTownerAnim(numtowners, towner[numtowners]._tNAnim[DIR_SW], towner[numtowners]._tNFrames, 3);
-	NewTownerAnimPNG(numtowners, towner[numtowners]._tNAnim_png[DIR_SW], towner[numtowners]._tNFrames, 3);
+	NewTownerAnimPNG(numtowners, &towner[numtowners]._tNAnim_png[DIR_SW], towner[numtowners]._tNFrames, 3);
 	strcpy(towner[numtowners]._tName, "Ogden the Tavern owner");
 	numtowners++;
 }
@@ -238,7 +238,7 @@ void InitTownDead()
 	}
 	towner[numtowners]._tNFrames = 8;
 	NewTownerAnim(numtowners, towner[numtowners]._tNAnim[DIR_N], towner[numtowners]._tNFrames, 6);
-	NewTownerAnimPNG(numtowners, towner[numtowners]._tNAnim_png[DIR_N], towner[numtowners]._tNFrames, 6);
+	NewTownerAnimPNG(numtowners, &towner[numtowners]._tNAnim_png[DIR_N], towner[numtowners]._tNFrames, 6);
 	strcpy(towner[numtowners]._tName, "Wounded Townsman");
 	numtowners++;
 }
@@ -257,7 +257,7 @@ void InitWitch()
 	}
 	towner[numtowners]._tNFrames = 19;
 	NewTownerAnim(numtowners, towner[numtowners]._tNAnim[DIR_S], towner[numtowners]._tNFrames, 6);
-	NewTownerAnimPNG(numtowners, towner[numtowners]._tNAnim_png[DIR_S], towner[numtowners]._tNFrames, 6);
+	NewTownerAnimPNG(numtowners, &towner[numtowners]._tNAnim_png[DIR_S], towner[numtowners]._tNFrames, 6);
 	strcpy(towner[numtowners]._tName, "Adria the Witch");
 	numtowners++;
 }
@@ -276,7 +276,7 @@ void InitBarmaid()
 	}
 	towner[numtowners]._tNFrames = 18;
 	NewTownerAnim(numtowners, towner[numtowners]._tNAnim[DIR_S], towner[numtowners]._tNFrames, 6);
-	NewTownerAnimPNG(numtowners, towner[numtowners]._tNAnim_png[DIR_S], towner[numtowners]._tNFrames, 6);
+	NewTownerAnimPNG(numtowners, &towner[numtowners]._tNAnim_png[DIR_S], towner[numtowners]._tNFrames, 6);
 	strcpy(towner[numtowners]._tName, "Gillian the Barmaid");
 	numtowners++;
 }
@@ -296,7 +296,7 @@ void InitBoy()
 	}
 	towner[numtowners]._tNFrames = 20;
 	NewTownerAnim(numtowners, towner[numtowners]._tNAnim[DIR_S], towner[numtowners]._tNFrames, 6);
-	NewTownerAnimPNG(numtowners, towner[numtowners]._tNAnim_png[DIR_S], towner[numtowners]._tNFrames, 6);
+	NewTownerAnimPNG(numtowners, &towner[numtowners]._tNAnim_png[DIR_S], towner[numtowners]._tNFrames, 6);
 	strcpy(towner[numtowners]._tName, "Wirt the Peg-legged boy");
 	numtowners++;
 }
@@ -315,7 +315,7 @@ void InitHealer()
 	}
 	towner[numtowners]._tNFrames = 20;
 	NewTownerAnim(numtowners, towner[numtowners]._tNAnim[DIR_SE], towner[numtowners]._tNFrames, 6);
-	NewTownerAnimPNG(numtowners, towner[numtowners]._tNAnim_png[DIR_SE], towner[numtowners]._tNFrames, 6);
+	NewTownerAnimPNG(numtowners, &towner[numtowners]._tNAnim_png[DIR_SE], towner[numtowners]._tNFrames, 6);
 	strcpy(towner[numtowners]._tName, "Pepin the Healer");
 	numtowners++;
 }
@@ -334,7 +334,7 @@ void InitTeller()
 	}
 	towner[numtowners]._tNFrames = 25;
 	NewTownerAnim(numtowners, towner[numtowners]._tNAnim[DIR_S], towner[numtowners]._tNFrames, 3);
-	NewTownerAnimPNG(numtowners, towner[numtowners]._tNAnim_png[DIR_S], towner[numtowners]._tNFrames, 3);
+	NewTownerAnimPNG(numtowners, &towner[numtowners]._tNAnim_png[DIR_S], towner[numtowners]._tNFrames, 3);
 	strcpy(towner[numtowners]._tName, "Cain the Elder");
 	numtowners++;
 }
@@ -353,7 +353,7 @@ void InitDrunk()
 	}
 	towner[numtowners]._tNFrames = 18;
 	NewTownerAnim(numtowners, towner[numtowners]._tNAnim[DIR_S], towner[numtowners]._tNFrames, 3);
-	NewTownerAnimPNG(numtowners, towner[numtowners]._tNAnim_png[DIR_S], towner[numtowners]._tNFrames, 3);
+	NewTownerAnimPNG(numtowners, &towner[numtowners]._tNAnim_png[DIR_S], towner[numtowners]._tNFrames, 3);
 	strcpy(towner[numtowners]._tName, "Farnham the Drunk");
 	numtowners++;
 }

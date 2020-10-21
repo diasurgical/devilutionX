@@ -13,7 +13,7 @@ extern TownerStruct towner[NUM_TOWNERS];
 int GetActiveTowner(int t);
 void SetTownerGPtrs(BYTE *pData, BYTE **pAnim);
 void NewTownerAnim(int tnum, BYTE *pAnim, int numFrames, int Delay);
-void NewTownerAnimPNG(int tnum, std::vector<SDL_Surface *> pAnim, int numFrames, int Delay);
+void NewTownerAnimPNG(int tnum, std::vector<SDL_Surface *> *pAnim, int numFrames, int Delay);
 void InitTownerInfo(int i, int w, int sel, int t, int x, int y, int ao, int tp);
 void InitQstSnds(int i);
 void InitSmith();
