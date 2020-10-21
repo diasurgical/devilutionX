@@ -937,6 +937,10 @@ void CelBlitOutlinePNG(int col, int sx, int sy, std::vector<SDL_Surface *> &pCel
 	r = logical_palette[col].r;
 	g = logical_palette[col].g;
 	b = logical_palette[col].b;
+
+	//r = 0;
+	//g = 255;
+	//b = 0;
 	Uint32 color = SDL_MapRGBA(pixelFormat, r, g, b, 255);
 	//SDL_Log("%d %u\n", col, color);
 	//return;
@@ -970,7 +974,7 @@ void CelBlitOutlinePNG(int col, int sx, int sy, std::vector<SDL_Surface *> &pCel
 					int fx = x + xx;
 					int fy = y + yy;
 					int val = fx + fy * pixels_in_row;
-					if (val < 0 || val >= mx || x < 0 || x >= pixels_in_row || y < 0 || y >= tmp_surf->h) {
+					if (val < 0 || val >= mx || fx < 0 || fx >= pixels_in_row || fy < 0 || fy >= tmp_surf->h) {
 						continue;
 					}
 					ptr2[val] = color;
