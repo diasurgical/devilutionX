@@ -212,7 +212,10 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_HEAD]._iStatFlag) {
 				color = ICOL_RED;
 			}
-			CelBlitOutline(color, RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width);
+			if (testvar % 2) 
+				CelBlitOutlinePNG(color, RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels_png, frame, frame_width);
+			 else 
+				CelBlitOutline(color, RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width);
 		}
 		if (testvar % 2) {
 			if (plr[myplr].InvBody[INVLOC_HEAD]._iStatFlag) {
@@ -243,7 +246,11 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_RING_LEFT]._iStatFlag) {
 				color = ICOL_RED;
 			}
-			CelBlitOutline(color, RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width);
+			if (testvar % 2)
+				CelBlitOutlinePNG(color, RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels_png, frame, frame_width);
+			else
+				CelBlitOutline(color, RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width);
+			
 		}
 
 		if (testvar % 2) {
@@ -275,7 +282,10 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_RING_RIGHT]._iStatFlag) {
 				color = ICOL_RED;
 			}
-			CelBlitOutline(color, RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width);
+			if (testvar % 2)
+				CelBlitOutlinePNG(color, RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels_png, frame, frame_width);
+			else
+				CelBlitOutline(color, RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width);
 		}
 
 		if (testvar % 2) {
@@ -307,7 +317,10 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_AMULET]._iStatFlag) {
 				color = ICOL_RED;
 			}
-			CelBlitOutline(color, RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width);
+			if (testvar % 2)
+				CelBlitOutlinePNG(color, RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels_png, frame, frame_width);
+			else
+				CelBlitOutline(color, RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width);
 		}
 		if (testvar % 2) {
 			if (plr[myplr].InvBody[INVLOC_AMULET]._iStatFlag) {
@@ -341,7 +354,10 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
 				color = ICOL_RED;
 			}
-			CelBlitOutline(color, screen_x, screen_y, pCursCels, frame, frame_width);
+			if (testvar % 2)
+				CelBlitOutlinePNG(color, screen_x, screen_y, pCursCels_png, frame, frame_width);
+			else
+				CelBlitOutline(color, screen_x, screen_y, pCursCels, frame, frame_width);
 		}
 
 		if (testvar % 2) {
@@ -395,7 +411,10 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
 				color = ICOL_RED;
 			}
-			CelBlitOutline(color, screen_x, screen_y, pCursCels, frame, frame_width);
+			if (testvar % 2)
+				CelBlitOutlinePNG(color, screen_x, screen_y, pCursCels_png, frame, frame_width);
+			else
+				CelBlitOutline(color, screen_x, screen_y, pCursCels, frame, frame_width);
 		}
 
 		if (testvar % 2) {
@@ -427,7 +446,10 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_CHEST]._iStatFlag) {
 				color = ICOL_RED;
 			}
-			CelBlitOutline(color, RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width);
+			if (testvar % 2)
+				CelBlitOutlinePNG(color, RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels_png, frame, frame_width);
+			else
+				CelBlitOutline(color, RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width);
 		}
 
 		if (testvar % 2) {
@@ -474,11 +496,18 @@ void DrawInv()
 				if (!plr[myplr].InvList[ii]._iStatFlag) {
 					color = ICOL_RED;
 				}
-				CelBlitOutline(
-				    color,
-				    InvRect[j + SLOTXY_INV_FIRST].X + SCREEN_X,
-				    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
-				    pCursCels, frame, frame_width);
+				if (testvar % 2)
+					CelBlitOutlinePNG(
+					    color,
+					    InvRect[j + SLOTXY_INV_FIRST].X + SCREEN_X,
+					    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
+					    pCursCels_png, frame, frame_width);
+				else
+					CelBlitOutline(
+					    color,
+					    InvRect[j + SLOTXY_INV_FIRST].X + SCREEN_X,
+					    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
+					    pCursCels, frame, frame_width);
 			}
 
 			if (testvar % 2) {
@@ -537,12 +566,10 @@ void DrawInvBelt()
 			if (!plr[myplr].SpdList[i]._iStatFlag)
 				color = ICOL_RED;
 			if (!sgbControllerActive || invflag) {
-				if (testvar % 2) {
+				if (testvar % 2) 
 					CelBlitOutlinePNG(1, InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X, InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, pCursCels_png, frame, frame_width);
-				} else {
+				 else 
 					CelBlitOutline(color, InvRect[i + SLOTXY_BELT_FIRST].X + SCREEN_X, InvRect[i + SLOTXY_BELT_FIRST].Y + SCREEN_Y - 1, pCursCels, frame, frame_width);
-				}
-				
 			}
 		}
 		if (testvar % 2) {

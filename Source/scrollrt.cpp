@@ -201,7 +201,10 @@ static void scrollrt_draw_cursor_item()
 		if (!plr[myplr].HoldItem._iStatFlag) {
 			col = PAL16_RED + 5;
 		}
-		CelBlitOutline(col, mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW);
+		if (testvar % 2)
+			CelBlitOutlinePNG(col, mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels_png, pcurs, cursW);
+		else
+			CelBlitOutline(col, mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW);
 		if (col != PAL16_RED + 5) {
 			if (testvar % 2) {
 				CelClippedDrawSafePNG(mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels_png, pcurs, cursW);
@@ -730,7 +733,10 @@ static void DrawMonsterHelper(int x, int y, int oy, int sx, int sy)
 	if (leveltype == DTYPE_TOWN) {
 		px = sx - towner[mi]._tAnimWidth2;
 		if (mi == pcursmonst) {
-			CelBlitOutline(166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
+			if (testvar % 2)
+				CelBlitOutlinePNG(166, px, sy, towner[mi]._tAnimData_png, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
+			else
+				CelBlitOutline(166, px, sy, towner[mi]._tAnimData, towner[mi]._tAnimFrame, towner[mi]._tAnimWidth);
 		}
 		assert(towner[mi]._tAnimData);
 		if (testvar % 2) {

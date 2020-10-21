@@ -931,7 +931,7 @@ void CelBlitOutlinePNG(int col, int sx, int sy, std::vector<SDL_Surface *> &pCel
 	//if (SDL_BlitSurface(surf, NULL, tmp_surf, NULL) < 0)
 	//	ErrSdl();
 
-	int r = 0, g = 0, b = 0;
+	int r = 0, g = 255, b = 0;
 	switch (col) {
 		case 0: {
 			r = 255;
