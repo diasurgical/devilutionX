@@ -1013,7 +1013,7 @@ void PlaceQuestMonsters()
 
 			if (i1 < nummtypes) {
 				for (int i2 = 0; i2 < nummonsters; i2++) {
-					if (monster[i2]._uniqtype == 0 || monster[i2]._mMTidx == i1) {
+					if (monster[i2]._uniqtype != 0 || monster[i2]._mMTidx == i1) {
 						UberDiabloMonsterIndex = i2;
 						break;
 					}
