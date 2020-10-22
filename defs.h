@@ -35,17 +35,17 @@
 #ifdef HELLFIRE
 #define MAX_LVLS				24
 #define MAX_LVLMTYPES			24
+#define MAX_SPELLS				52
 #else
 #define MAX_LVLS				16
 #define MAX_LVLMTYPES			16
-#endif
-// #define MAX_PATH				260
-#define MAX_SEND_STR_LEN		80
-#ifdef HELLFIRE
-#define MAX_SPELLS				52
-#else
 #define MAX_SPELLS				37
 #endif
+
+#define MAX_CHUNKS				(MAX_LVLS + 5)
+
+// #define MAX_PATH				260
+#define MAX_SEND_STR_LEN		80
 
 #define MAXDEAD					31
 #define MAXDUNX					112
@@ -55,13 +55,14 @@
 #define MAXLIGHTS				32
 #define MAXMISSILES				125
 #define MAXMONSTERS				200
-#define MAXMULTIQUESTS			4
 #define MAXOBJECTS				127
 #define MAXPORTAL				4
 #ifdef HELLFIRE
 #define MAXQUESTS				24
+#define MAXMULTIQUESTS			10
 #else
 #define MAXQUESTS				16
+#define MAXMULTIQUESTS			4
 #endif
 #define MAXTHEMES				50
 #define MAXTILES				2048
@@ -95,6 +96,7 @@
 // todo: enums
 #ifdef HELLFIRE
 #define NUMLEVELS				25
+#define WITCH_ITEMS				25
 #define SMITH_ITEMS				25
 #define SMITH_PREMIUM_ITEMS		15
 #define SMITH_MAX_VALUE			200000
@@ -102,6 +104,7 @@
 #define STORE_LINES				104
 #else
 #define NUMLEVELS				17
+#define WITCH_ITEMS				20
 #define SMITH_ITEMS				20
 #define SMITH_PREMIUM_ITEMS		6
 #define SMITH_MAX_VALUE			140000

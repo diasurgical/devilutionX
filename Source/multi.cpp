@@ -438,7 +438,7 @@ void multi_process_network_packets()
 			plr[dwID]._pBaseStr = pkt->bstr;
 			plr[dwID]._pBaseMag = pkt->bmag;
 			plr[dwID]._pBaseDex = pkt->bdex;
-			if (!cond && plr[dwID].plractive && plr[dwID]._pHitPoints) {
+			if (!cond && plr[dwID].plractive && plr[dwID]._pHitPoints != 0) {
 				if (currlevel == plr[dwID].plrlevel && !plr[dwID]._pLvlChanging) {
 					dx = abs(plr[dwID]._px - pkt->px);
 					dy = abs(plr[dwID]._py - pkt->py);

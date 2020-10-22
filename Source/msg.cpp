@@ -62,7 +62,7 @@ void msg_get_next_packet()
 
 	sgpCurrPkt = (TMegaPkt *)DiabloAllocPtr(sizeof(TMegaPkt));
 	sgpCurrPkt->pNext = NULL;
-	sgpCurrPkt->dwSpaceLeft = 32000;
+	sgpCurrPkt->dwSpaceLeft = sizeof(result->data);
 
 	result = (TMegaPkt *)&sgpMegaPkt;
 	while (result->pNext) {
@@ -94,7 +94,7 @@ BOOL msg_wait_resync()
 		return FALSE;
 	}
 
-	if (sgbDeltaChunks != 21) {
+	if (sgbDeltaChunks != MAX_CHUNKS) {
 		DrawDlg("Unable to get level data");
 		msg_free_packets();
 		return FALSE;
@@ -117,7 +117,7 @@ int msg_wait_for_turns()
 	BOOL received;
 	DWORD turns;
 
-	if (!sgbDeltaChunks) {
+	if (sgbDeltaChunks == 0) {
 		nthread_send_and_recv_turn(0, 0);
 		if (!SNetGetOwnerTurnsWaiting(&turns) && SErrGetLastError() == STORM_ERROR_NOT_IN_GAME)
 			return 100;
@@ -138,11 +138,11 @@ int msg_wait_for_turns()
 		gbDeltaSender = myplr;
 		nthread_set_turn_upper_bit();
 	}
-	if (sgbDeltaChunks == 20) {
-		sgbDeltaChunks = 21;
+	if (sgbDeltaChunks == MAX_CHUNKS - 1) {
+		sgbDeltaChunks = MAX_CHUNKS;
 		return 99;
 	}
-	return 100 * sgbDeltaChunks / 21;
+	return 100 * sgbDeltaChunks / MAX_CHUNKS;
 }
 
 void run_delta_info()
@@ -163,9 +163,9 @@ void msg_pre_packet()
 	TFakeCmdPlr *cmd, *tmpCmd;
 	TFakeDropPlr *dropCmd;
 
-	pkt = sgpMegaPkt;
-	for (i = -1; pkt; pkt = pkt->pNext) {
-		spaceLeft = 32000;
+	i = -1;
+	for (pkt = sgpMegaPkt; pkt != NULL; pkt = pkt->pNext) {
+		spaceLeft = sizeof(pkt->data);
 		cmd = (TFakeCmdPlr *)pkt->data;
 		while (spaceLeft != pkt->dwSpaceLeft) {
 			if (cmd->bCmd == FAKE_CMD_SETID) {
@@ -194,7 +194,7 @@ void DeltaExportData(int pnum)
 	char src;
 
 	if (sgbDeltaChanged) {
-		dst = (BYTE *)DiabloAllocPtr(4722);
+		dst = (BYTE *)DiabloAllocPtr(sizeof(DLevel) + 1);
 		for (i = 0; i < NUMLEVELS; i++) {
 			dstEnd = dst + 1;
 			dstEnd = DeltaExportItem(dstEnd, sgLevels[i].item);
@@ -273,7 +273,7 @@ BYTE *DeltaExportJunk(BYTE *dst)
 	}
 
 	mq = sgJunk.quests;
-	for (i = 0; i < MAXMULTIQUESTS; i++) {
+	for (i = 0; i < MAXQUESTS; i++) {
 		if (questlist[i]._qflags & QUEST_ANY) {
 			mq->qlog = quests[i]._qlog;
 			mq->qstate = quests[i]._qactive;
@@ -413,9 +413,9 @@ void DeltaAddItem(int ii)
 	int i;
 	TCmdPItem *pD;
 
-	if (gbMaxPlayers == 1) {
+	if (gbMaxPlayers == 1)
 		return;
-	}
+
 	pD = sgLevels[currlevel].item;
 	for (i = 0; i < MAXITEMS; i++, pD++) {
 		if (pD->bCmd != 0xFF
@@ -430,8 +430,8 @@ void DeltaAddItem(int ii)
 	pD = sgLevels[currlevel].item;
 	for (i = 0; i < MAXITEMS; i++, pD++) {
 		if (pD->bCmd == 0xFF) {
-			pD->bCmd = CMD_STAND;
 			sgbDeltaChanged = TRUE;
+			pD->bCmd = CMD_STAND;
 			pD->x = item[ii]._ix;
 			pD->y = item[ii]._iy;
 			pD->wIndx = item[ii].IDidx;
@@ -443,6 +443,14 @@ void DeltaAddItem(int ii)
 			pD->bCh = item[ii]._iCharges;
 			pD->bMCh = item[ii]._iMaxCharges;
 			pD->wValue = item[ii]._ivalue;
+#ifdef HELLFIRE
+			pD->wToHit = item[ii]._iPLToHit;
+			pD->wMaxDam = item[ii]._iMaxDam;
+			pD->bMinStr = item[ii]._iMinStr;
+			pD->bMinMag = item[ii]._iMinMag;
+			pD->bMinDex = item[ii]._iMinDex;
+			pD->bAC = item[ii]._iAC;
+#endif
 			return;
 		}
 	}
@@ -1187,7 +1195,7 @@ DWORD On_DLEVEL(int pnum, TCmd *pCmd)
 	}
 	if (sgbRecvCmd == CMD_DLEVEL_END) {
 		if (p->bCmd == CMD_DLEVEL_END) {
-			sgbDeltaChunks = 20;
+			sgbDeltaChunks = MAX_CHUNKS - 1;
 			return p->wBytes + sizeof(*p);
 		} else if (p->bCmd == CMD_DLEVEL_0 && p->wOffset == 0) {
 			sgdwRecvOffset = 0;
@@ -1198,7 +1206,7 @@ DWORD On_DLEVEL(int pnum, TCmd *pCmd)
 	} else if (sgbRecvCmd != p->bCmd) {
 		DeltaImportData(sgbRecvCmd, sgdwRecvOffset);
 		if (p->bCmd == CMD_DLEVEL_END) {
-			sgbDeltaChunks = 20;
+			sgbDeltaChunks = MAX_CHUNKS - 1;
 			sgbRecvCmd = CMD_DLEVEL_END;
 			return p->wBytes + sizeof(*p);
 		} else {
@@ -1218,13 +1226,17 @@ void DeltaImportData(BYTE cmd, DWORD recv_offset)
 	BYTE i;
 	BYTE *src;
 
-	if (sgRecvBuf[0])
-		PkwareDecompress(&sgRecvBuf[1], recv_offset, 4721);
+	if (sgRecvBuf[0] != 0)
+		PkwareDecompress(&sgRecvBuf[1], recv_offset, (sizeof(sgRecvBuf) / sizeof(sgRecvBuf[0])) - 1);
 
 	src = &sgRecvBuf[1];
 	if (cmd == CMD_DLEVEL_JUNK) {
 		DeltaImportJunk(src);
+#ifdef HELLFIRE
+	} else if (cmd >= CMD_DLEVEL_0 && cmd <= CMD_DLEVEL_24) {
+#else
 	} else if (cmd >= CMD_DLEVEL_0 && cmd <= CMD_DLEVEL_16) {
+#endif
 		i = cmd - CMD_DLEVEL_0;
 		src = DeltaImportItem(src, sgLevels[i].item);
 		src = DeltaImportObject(src, sgLevels[i].object);
@@ -1303,7 +1315,7 @@ void DeltaImportJunk(BYTE *src)
 	}
 
 	mq = sgJunk.quests;
-	for (i = 0; i < MAXMULTIQUESTS; i++) {
+	for (i = 0; i < MAXQUESTS; i++) {
 		if (questlist[i]._qflags & QUEST_ANY) {
 			memcpy(mq, src, sizeof(MultiQuests));
 			src += sizeof(MultiQuests);
@@ -1386,7 +1398,8 @@ DWORD On_SBSPELL(TCmd *pCmd, int pnum)
 	TCmdParam1 *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1) {
-		if (currlevel != 0 || spelldata[p->wParam1].sTownSpell) {
+		int spell = p->wParam1;
+		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			plr[pnum]._pSpell = p->wParam1;
 			plr[pnum]._pSplType = plr[pnum]._pSBkSplType;
 			plr[pnum]._pSplFrom = 1;
@@ -1498,62 +1511,67 @@ DWORD On_GETITEM(TCmd *pCmd, int pnum)
 
 BOOL delta_get_item(TCmdGItem *pI, BYTE bLevel)
 {
-	BOOL result;
 	TCmdPItem *pD;
 	int i;
-	BOOL found;
 
-	result = TRUE;
-	found = FALSE;
-	if (gbMaxPlayers != 1) {
-		pD = sgLevels[bLevel].item;
-		for (i = 0; i < MAXITEMS; i++, pD++) {
-			if (pD->bCmd != 0xFF && pD->wIndx == pI->wIndx && pD->wCI == pI->wCI && pD->dwSeed == pI->dwSeed) {
-				found = TRUE;
-				break;
-			}
+	if (gbMaxPlayers == 1)
+		return TRUE;
+
+	pD = sgLevels[bLevel].item;
+	for (i = 0; i < MAXITEMS; i++, pD++) {
+		if (pD->bCmd == 0xFF || pD->wIndx != pI->wIndx || pD->wCI != pI->wCI || pD->dwSeed != pI->dwSeed)
+			continue;
+
+		if (pD->bCmd == CMD_WALKXY) {
+			return TRUE;
 		}
-		if (found) {
-			if (pD->bCmd == CMD_WALKXY) {
-				return result;
-			}
-			if (pD->bCmd == CMD_STAND) {
-				sgbDeltaChanged = 1;
-				pD->bCmd = CMD_WALKXY;
-				return result;
-			}
-			if (pD->bCmd == CMD_ACK_PLRINFO) {
-				pD->bCmd = 0xFF;
-				sgbDeltaChanged = 1;
-				return result;
-			}
-			app_fatal("delta:1");
+		if (pD->bCmd == CMD_STAND) {
+			sgbDeltaChanged = TRUE;
+			pD->bCmd = CMD_WALKXY;
+			return TRUE;
 		}
-		if (((pI->wCI >> 8) & 0x80) == 0)
-			return FALSE;
-		pD = sgLevels[bLevel].item;
-		for (i = 0; i < MAXITEMS; i++, pD++) {
-			if (pD->bCmd == 0xFF) {
-				sgbDeltaChanged = 1;
-				pD->bCmd = CMD_WALKXY;
-				pD->x = pI->x;
-				pD->y = pI->y;
-				pD->wIndx = pI->wIndx;
-				pD->wCI = pI->wCI;
-				pD->dwSeed = pI->dwSeed;
-				pD->bId = pI->bId;
-				pD->bDur = pI->bDur;
-				pD->bMDur = pI->bMDur;
-				pD->bCh = pI->bCh;
-				pD->bMCh = pI->bMCh;
-				pD->wValue = pI->wValue;
-				pD->dwBuff = pI->dwBuff;
-				result = TRUE;
-				break;
-			}
+		if (pD->bCmd == CMD_ACK_PLRINFO) {
+			sgbDeltaChanged = TRUE;
+			pD->bCmd = 0xFF;
+			return TRUE;
+		}
+
+		app_fatal("delta:1");
+		break;
+	}
+
+	if ((pI->wCI & CF_PREGEN) == 0)
+		return FALSE;
+
+	pD = sgLevels[bLevel].item;
+	for (i = 0; i < MAXITEMS; i++, pD++) {
+		if (pD->bCmd == 0xFF) {
+			sgbDeltaChanged = TRUE;
+			pD->bCmd = CMD_WALKXY;
+			pD->x = pI->x;
+			pD->y = pI->y;
+			pD->wIndx = pI->wIndx;
+			pD->wCI = pI->wCI;
+			pD->dwSeed = pI->dwSeed;
+			pD->bId = pI->bId;
+			pD->bDur = pI->bDur;
+			pD->bMDur = pI->bMDur;
+			pD->bCh = pI->bCh;
+			pD->bMCh = pI->bMCh;
+			pD->wValue = pI->wValue;
+			pD->dwBuff = pI->dwBuff;
+#ifdef HELLFIRE
+			pD->wToHit = pI->wToHit;
+			pD->wMaxDam = pI->wMaxDam;
+			pD->bMinStr = pI->bMinStr;
+			pD->bMinMag = pI->bMinMag;
+			pD->bMinDex = pI->bMinDex;
+			pD->bAC = pI->bAC;
+#endif
+			break;
 		}
 	}
-	return result;
+	return TRUE;
 }
 
 DWORD On_GOTOAGETITEM(TCmd *pCmd, int pnum)
@@ -1803,7 +1821,8 @@ DWORD On_SPELLXYD(TCmd *pCmd, int pnum)
 	TCmdLocParam3 *p = (TCmdLocParam3 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		if (currlevel != 0 || spelldata[p->wParam1].sTownSpell) {
+		int spell = p->wParam1;
+		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(pnum);
 			plr[pnum].destAction = ACTION_SPELLWALL;
 			plr[pnum].destParam1 = p->x;
@@ -1825,7 +1844,8 @@ DWORD On_SPELLXY(TCmd *pCmd, int pnum)
 	TCmdLocParam2 *p = (TCmdLocParam2 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		if (currlevel != 0 || spelldata[p->wParam1].sTownSpell) {
+		int spell = p->wParam1;
+		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(pnum);
 			plr[pnum].destAction = ACTION_SPELL;
 			plr[pnum].destParam1 = p->x;
@@ -1846,7 +1866,8 @@ DWORD On_TSPELLXY(TCmd *pCmd, int pnum)
 	TCmdLocParam2 *p = (TCmdLocParam2 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		if (currlevel != 0 || spelldata[p->wParam1].sTownSpell) {
+		int spell = p->wParam1;
+		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(pnum);
 			plr[pnum].destAction = ACTION_SPELL;
 			plr[pnum].destParam1 = p->x;
@@ -1966,7 +1987,8 @@ DWORD On_SPELLID(TCmd *pCmd, int pnum)
 	TCmdParam3 *p = (TCmdParam3 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		if (currlevel != 0 || spelldata[p->wParam2].sTownSpell) {
+		int spell = p->wParam2;
+		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(pnum);
 			plr[pnum].destAction = ACTION_SPELLMON;
 			plr[pnum].destParam1 = p->wParam1;
@@ -1986,7 +2008,8 @@ DWORD On_SPELLPID(TCmd *pCmd, int pnum)
 	TCmdParam3 *p = (TCmdParam3 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		if (currlevel != 0 || spelldata[p->wParam2].sTownSpell) {
+		int spell = p->wParam2;
+		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(pnum);
 			plr[pnum].destAction = ACTION_SPELLPLR;
 			plr[pnum].destParam1 = p->wParam1;
@@ -2006,7 +2029,8 @@ DWORD On_TSPELLID(TCmd *pCmd, int pnum)
 	TCmdParam3 *p = (TCmdParam3 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		if (currlevel != 0 || spelldata[p->wParam2].sTownSpell) {
+		int spell = p->wParam2;
+		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(pnum);
 			plr[pnum].destAction = ACTION_SPELLMON;
 			plr[pnum].destParam1 = p->wParam1;
@@ -2026,7 +2050,8 @@ DWORD On_TSPELLPID(TCmd *pCmd, int pnum)
 	TCmdParam3 *p = (TCmdParam3 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == plr[pnum].plrlevel) {
-		if (currlevel != 0 || spelldata[p->wParam2].sTownSpell) {
+		int spell = p->wParam2;
+		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(pnum);
 			plr[pnum].destAction = ACTION_SPELLPLR;
 			plr[pnum].destParam1 = p->wParam1;

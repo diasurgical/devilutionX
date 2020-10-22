@@ -2952,7 +2952,7 @@ BOOL PM_DoAttack(int pnum)
 		dx = plr[pnum]._px + offset_x[dir];
 		dy = plr[pnum]._py + offset_y[dir];
 
-		if (dMonster[dx][dy]) {
+		if (dMonster[dx][dy] != 0) {
 			if (dMonster[dx][dy] > 0) {
 				m = dMonster[dx][dy] - 1;
 			} else {
@@ -2980,7 +2980,7 @@ BOOL PM_DoAttack(int pnum)
 				m = -(dMonster[dx][dy] + 1);
 			}
 			didhit = PlrHitMonst(pnum, m);
-		} else if (dPlayer[dx][dy] && !FriendlyMode) {
+		} else if (dPlayer[dx][dy] != 0 && !FriendlyMode) {
 			BYTE p = dPlayer[dx][dy];
 			if (dPlayer[dx][dy] > 0) {
 				p = dPlayer[dx][dy] - 1;
@@ -3872,18 +3872,18 @@ BOOL PosOkPlayer(int pnum, int x, int y)
 	PosOK = FALSE;
 	if (x >= 0 && x < MAXDUNX && y >= 0 && y < MAXDUNY && !SolidLoc(x, y) && dPiece[x][y]) {
 
-		if (dPlayer[x][y]) {
+		if (dPlayer[x][y] != 0) {
 			if (dPlayer[x][y] > 0) {
 				p = dPlayer[x][y] - 1;
 			} else {
 				p = -(dPlayer[x][y] + 1);
 			}
-			if (p != pnum && p < MAX_PLRS && plr[p]._pHitPoints) {
+			if (p != pnum && p < MAX_PLRS && plr[p]._pHitPoints != 0) {
 				return FALSE;
 			}
 		}
 
-		if (dMonster[x][y]) {
+		if (dMonster[x][y] != 0) {
 			if (currlevel == 0) {
 				return FALSE;
 			}
@@ -3895,7 +3895,7 @@ BOOL PosOkPlayer(int pnum, int x, int y)
 			}
 		}
 
-		if (dObject[x][y]) {
+		if (dObject[x][y] != 0) {
 			if (dObject[x][y] > 0) {
 				bv = dObject[x][y] - 1;
 			} else {

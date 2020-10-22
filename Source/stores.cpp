@@ -2246,8 +2246,8 @@ void WitchBuyItem()
 	StoreAutoPlace();
 
 	if (idx >= 3) {
-		if (idx == 19) {
-			witchitem[19]._itype = ITYPE_NONE;
+		if (idx == WITCH_ITEMS - 1) {
+			witchitem[WITCH_ITEMS - 1]._itype = ITYPE_NONE;
 		} else {
 			for (; witchitem[idx + 1]._itype != ITYPE_NONE; idx++) {
 				witchitem[idx] = witchitem[idx + 1];
@@ -2388,20 +2388,14 @@ void BoyBuyItem()
 void HealerBuyItem()
 {
 	int idx;
-	BOOL ok;
 
 	idx = stextvhold + ((stextlhold - stextup) >> 2);
-
-	ok = FALSE;
 	if (gbMaxPlayers == 1) {
 		if (idx < 2)
-			ok = TRUE;
+			plr[myplr].HoldItem._iSeed = GetRndSeed();
 	} else {
 		if (idx < 3)
-			ok = TRUE;
-	}
-	if (ok) {
-		plr[myplr].HoldItem._iSeed = GetRndSeed();
+			plr[myplr].HoldItem._iSeed = GetRndSeed();
 	}
 
 	TakePlrsMoney(plr[myplr].HoldItem._iIvalue);
@@ -2409,26 +2403,23 @@ void HealerBuyItem()
 		plr[myplr].HoldItem._iIdentified = FALSE;
 	StoreAutoPlace();
 
-	ok = FALSE;
 	if (gbMaxPlayers == 1) {
-		if (idx >= 2)
-			ok = TRUE;
+		if (idx < 2)
+			return;
 	} else {
-		if (idx >= 3)
-			ok = TRUE;
+		if (idx < 3)
+			return;
 	}
-	if (ok) {
-		idx = stextvhold + ((stextlhold - stextup) >> 2);
-		if (idx == 19) {
-			healitem[19]._itype = ITYPE_NONE;
-		} else {
-			for (; healitem[idx + 1]._itype != ITYPE_NONE; idx++) {
-				healitem[idx] = healitem[idx + 1];
-			}
-			healitem[idx]._itype = ITYPE_NONE;
+	idx = stextvhold + ((stextlhold - stextup) >> 2);
+	if (idx == 19) {
+		healitem[19]._itype = ITYPE_NONE;
+	} else {
+		for (; healitem[idx + 1]._itype != ITYPE_NONE; idx++) {
+			healitem[idx] = healitem[idx + 1];
 		}
-		CalcPlrInv(myplr, TRUE);
+		healitem[idx]._itype = ITYPE_NONE;
 	}
+	CalcPlrInv(myplr, TRUE);
 }
 
 void S_BBuyEnter()
@@ -2550,6 +2541,14 @@ void S_HealerEnter()
 		gossipend = TEXT_PEPIN11;
 		StartStore(STORE_GOSSIP);
 		break;
+#ifdef HELLFIRE
+	case 14:
+		StartStore(STORE_HBUY);
+		break;
+	case 16:
+		stextflag = STORE_NONE;
+		break;
+#else
 	case 14:
 		if (plr[myplr]._pHitPoints != plr[myplr]._pMaxHP)
 			PlaySFX(IS_CAST8);
@@ -2563,6 +2562,7 @@ void S_HealerEnter()
 	case 18:
 		stextflag = STORE_NONE;
 		break;
+#endif
 	}
 }
 

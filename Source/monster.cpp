@@ -630,8 +630,8 @@ BOOL MonstPlace(int xp, int yp)
 
 	if (xp < 0 || xp >= MAXDUNX
 	    || yp < 0 || yp >= MAXDUNY
-	    || dMonster[xp][yp]
-	    || dPlayer[xp][yp]) {
+	    || dMonster[xp][yp] != 0
+	    || dPlayer[xp][yp] != 0) {
 		return FALSE;
 	}
 
@@ -1300,8 +1300,8 @@ void monster_43C785(int i)
 			x = mx + offset_x[d];
 			y = my + offset_y[d];
 			if (!SolidLoc(x, y)) {
-				if (!dPlayer[x][y] && !dMonster[x][y]) {
-					if (!dObject[x][y])
+				if (dPlayer[x][y] == 0 && dMonster[x][y] == 0) {
+					if (dObject[x][y] == 0)
 						break;
 					oi = dObject[x][y] > 0 ? dObject[x][y] - 1 : -(dObject[x][y] + 1);
 					if (!object[oi]._oSolidFlag)
@@ -5667,9 +5667,9 @@ BOOL PosOkMonst(int i, int x, int y)
 	int oi;
 	BOOL ret;
 
-	ret = !SolidLoc(x, y) && !dPlayer[x][y] && !dMonster[x][y];
+	ret = !SolidLoc(x, y) && dPlayer[x][y] == 0 && dMonster[x][y] == 0;
 	oi = dObject[x][y];
-	if (ret && oi) {
+	if (ret && oi != 0) {
 		oi = oi > 0 ? oi - 1 : -(oi + 1);
 		if (object[oi]._oSolidFlag)
 			ret = FALSE;
@@ -5682,8 +5682,8 @@ BOOL PosOkMonst(int i, int x, int y)
 	BOOL ret, fire;
 
 	fire = FALSE;
-	ret = !SolidLoc(x, y) && !dPlayer[x][y] && !dMonster[x][y];
-	if (ret && dObject[x][y]) {
+	ret = !SolidLoc(x, y) && dPlayer[x][y] == 0 && dMonster[x][y] == 0;
+	if (ret && dObject[x][y] != 0) {
 		oi = dObject[x][y] > 0 ? dObject[x][y] - 1 : -(dObject[x][y] + 1);
 		if (object[oi]._oSolidFlag)
 			ret = FALSE;
@@ -5758,7 +5758,7 @@ BOOL PosOkMonst2(int i, int x, int y)
 
 	oi = dObject[x][y];
 	ret = !SolidLoc(x, y);
-	if (ret && oi) {
+	if (ret && oi != 0) {
 		oi = oi > 0 ? oi - 1 : -(oi + 1);
 		if (object[oi]._oSolidFlag)
 			ret = FALSE;
@@ -5771,7 +5771,7 @@ BOOL PosOkMonst2(int i, int x, int y)
 
 	fire = FALSE;
 	ret = !SolidLoc(x, y);
-	if (ret && dObject[x][y]) {
+	if (ret && dObject[x][y] != 0) {
 		oi = dObject[x][y] > 0 ? dObject[x][y] - 1 : -(dObject[x][y] + 1);
 		if (object[oi]._oSolidFlag)
 			ret = FALSE;
