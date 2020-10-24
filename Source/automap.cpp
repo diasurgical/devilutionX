@@ -314,18 +314,17 @@ int GetTextWidth(char *s)
 	return l;
 }
 
-void local_DvlIntSetting(const char *valuename, int *value)
+BOOL GetConfigIntValue(const char *valuename, BOOL base)
 {
-	if (!SRegLoadValue("devilutionx", valuename, 0, value)) {
-		SRegSaveValue("devilutionx", valuename, 0, *value);
+	if (!SRegLoadValue("devilutionx", valuename, 0, &base)) {
+		SRegSaveValue("devilutionx", valuename, 0, base);
 	}
+	return base;
 }
 
 void DrawMonsterHealthBar(int monsterID)
 {
-	BOOL enabled = FALSE;
-	local_DvlIntSetting("monster health bar", &enabled);
-	if (!enabled)
+	if (!GetConfigIntValue("monster health bar", FALSE))
 		return;
 	if (currlevel == 0)
 		return;
@@ -334,9 +333,9 @@ void DrawMonsterHealthBar(int monsterID)
 	int currentLife = mon->_mhitpoints;
 	int maxLife = mon->_mmaxhp;
 
-	if (currentLife > maxLife) 
+	if (currentLife > maxLife)
 		maxLife = currentLife;
-	
+
 	float FilledPercent = (float)currentLife / (float)maxLife;
 	const int yPos = 180;
 	const int width = 250;
@@ -345,11 +344,11 @@ void DrawMonsterHealthBar(int monsterID)
 	const int xOffset = 0;
 	const int yOffset = 1;
 	int borderWidth = 2;
-	if (specialMonster) 
+	if (specialMonster)
 		borderWidth = 2;
 	int borderColors[] = { 242 /*undead*/, 232 /*demon*/, 182 /*beast*/ };
 	int borderColor = borderColors[mon->MData->mMonstClass]; //200; // pure golden, unique item style
-	int filledColor = 142; // optimum balance in bright red between dark and light
+	int filledColor = 142;                                   // optimum balance in bright red between dark and light
 	bool fillCorners = true;
 	int square = 10;
 	char *immuText = "IMMU: ";
@@ -427,15 +426,15 @@ void DrawMonsterHealthBar(int monsterID)
 
 	char text[166];
 	strcpy(text, mon->mName);
-	if (mon->leader > 0) 
+	if (mon->leader > 0)
 		strcat(text, " (minion)");
-	
+
 	int namecolor = COL_WHITE;
-	if (specialMonster) 
+	if (specialMonster)
 		namecolor = COL_GOLD;
 	PrintGameStr(newX - GetTextWidth(text) / 2, 30, text, namecolor);
 	PrintGameStr(newX - GetTextWidth("/") / 2, 43, "/", COL_WHITE);
-	
+
 	sprintf(text, "%d", (maxLife >> 6));
 	PrintGameStr(newX + GetTextWidth("/"), 43, text, COL_WHITE);
 
@@ -443,21 +442,19 @@ void DrawMonsterHealthBar(int monsterID)
 	PrintGameStr(newX - GetTextWidth(text) - GetTextWidth("/"), 43, text, COL_WHITE);
 
 	PrintGameStr(newX - width / 2, 59, resText, COL_GOLD);
-	
+
 	sprintf(text, "kills: %d", monstkills[mon->MType->mtype]);
 	PrintGameStr(newX - GetTextWidth("kills:") / 2 - 30, 59, text, COL_WHITE);
 
-	if (drawImmu) 
+	if (drawImmu)
 		PrintGameStr(newX - width / 2, 46, immuText, COL_GOLD);
-	
+
 	PrintGameStr(newX + width / 2 - GetTextWidth(vulnText), 59, vulnText, COL_RED);
 }
 
 void DrawXPBar()
 {
-	BOOL enabled = FALSE;
-	local_DvlIntSetting("xp bar", &enabled);
-	if (!enabled)
+	if (!GetConfigIntValue("xp bar", FALSE))
 		return;
 	int barSize = 306; // *ScreenWidth / 640;
 	int offset = 3;
@@ -522,7 +519,7 @@ public:
 	int height;
 	int color;
 	char text[64];
-	drawingQueue(int x2, int y2, int width2, int height2, int Row2, int Col2, int ItemID2, int q2, char* text2)
+	drawingQueue(int x2, int y2, int width2, int height2, int Row2, int Col2, int ItemID2, int q2, char *text2)
 	{
 		x = x2;
 		y = y2;
@@ -540,9 +537,7 @@ std::vector<drawingQueue> drawQ;
 
 void AddItemToDrawQueue(int x, int y, int id)
 {
-	BOOL enabled = FALSE;
-	local_DvlIntSetting("highlight items", &enabled);
-	if (!enabled)
+	if (!GetConfigIntValue("highlight items", FALSE))
 		return;
 	ItemStruct *it = &item[id];
 	bool error = false;
@@ -554,12 +549,11 @@ void AddItemToDrawQueue(int x, int y, int id)
 		sprintf(textOnGround, "%s", it->_iIdentified ? it->_iIName : it->_iName);
 	}
 
-
 	int centerXOffset = GetTextWidth((char *)textOnGround);
 
 	x -= centerXOffset / 2 + 20;
 	y -= 193;
-	drawQ.push_back(drawingQueue(x, y, GetTextWidth((char *)textOnGround), 13, it->_ix, it->_iy, id, 66, textOnGround));
+	drawQ.push_back(drawingQueue(x, y, GetTextWidth((char *)textOnGround), 13, it->_ix, it->_iy, id, 0, textOnGround));
 }
 
 void DrawBackground(int xPos, int yPos, int width, int height, int borderX, int borderY, BYTE backgroundColor, BYTE borderColor)
@@ -578,9 +572,7 @@ void DrawBackground(int xPos, int yPos, int width, int height, int borderX, int 
 
 void HighlightItemsNameOnMap()
 {
-	BOOL enabled = FALSE;
-	local_DvlIntSetting("highlight items", &enabled);
-	if (!enabled)
+	if (!GetConfigIntValue("highlight items", FALSE))
 		return;
 	const int borderX = 5;
 	for (unsigned int i = 0; i < drawQ.size(); ++i) {
@@ -594,13 +586,13 @@ void HighlightItemsNameOnMap()
 					int newpos = drawQ[j].x;
 					if (drawQ[j].x >= drawQ[i].x && drawQ[j].x - drawQ[i].x < drawQ[i].width + borderX) {
 						newpos -= drawQ[i].width + borderX;
-						if (backtrace.find(newpos) != backtrace.end()) 
+						if (backtrace.find(newpos) != backtrace.end())
 							newpos = drawQ[j].x + drawQ[j].width + borderX;
 					} else if (drawQ[j].x < drawQ[i].x && drawQ[i].x - drawQ[j].x < drawQ[j].width + borderX) {
 						newpos += drawQ[j].width + borderX;
-						if (backtrace.find(newpos) != backtrace.end()) 
+						if (backtrace.find(newpos) != backtrace.end())
 							newpos = drawQ[j].x - drawQ[i].width - borderX;
-					} else 
+					} else
 						continue;
 					canShow = false;
 					drawQ[i].x = newpos;
@@ -631,13 +623,19 @@ void HighlightItemsNameOnMap()
 		int CursorY = MouseY + t.height;
 
 		if (CursorX >= sx && CursorX <= sx + t.width + 1 && CursorY >= sy && CursorY <= sy + t.height) {
-			bgcolor = 134;
-			cursmx = t.Row;
-			cursmy = t.Col;
-			pcursitem = t.ItemID;
+			if ((invflag || sbookflag) && MouseX > RIGHT_PANEL && MouseY <= SPANEL_HEIGHT) {
+			} else if ((chrflag || questlog) && MouseX < SPANEL_WIDTH && MouseY <= SPANEL_HEIGHT) {
+			} else if (MouseY >= PANEL_TOP && MouseX >= PANEL_LEFT && MouseX <= PANEL_LEFT + PANEL_WIDTH) {
+			} else {
+				cursmx = t.Row;
+				cursmy = t.Col;
+				pcursitem = t.ItemID;
+			}
 		}
+		if (pcursitem == t.ItemID)
+			bgcolor = 134;
 		DrawBackground(sx2, sy2, t.width + 1, t.height, 0, 0, bgcolor, bgcolor);
-		PrintGameStr(sx, sy, &t.text[0u], t.color);
+		PrintGameStr(sx, sy, t.text, t.color);
 	}
 	drawQ.clear();
 }
@@ -876,7 +874,7 @@ void SearchAutomapItem()
 
 	for (i = x1; i < x2; i++) {
 		for (j = y1; j < y2; j++) {
-			if (dItem[i][j] != 0){
+			if (dItem[i][j] != 0) {
 				px = i - 2 * AutoMapXOfs - ViewX;
 				py = j - 2 * AutoMapYOfs - ViewY;
 
