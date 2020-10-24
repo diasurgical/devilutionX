@@ -641,10 +641,13 @@ static void DrawItem(CelOutputBuffer out, int x, int y, int sx, int sy, BOOL pre
 	}
 
 	int px = sx - pItem->_iAnimWidth2;
+	AddItemToDrawQueue(px, sy, bItem - 1);
 	if (bItem - 1 == pcursitem || AutoMapShowItems) {
 		CelBlitOutlineTo(out, 181, px, sy, pCelBuff, nCel, pItem->_iAnimWidth);
 	}
 	CelClippedDrawLightTo(out, px, sy, pCelBuff, nCel, pItem->_iAnimWidth);
+	if (pItem->_iAnimFrame == pItem->_iAnimLen)
+		AddItemToDrawQueue(sx, sy, bItem - 1);
 }
 
 /**
@@ -749,6 +752,8 @@ static void scrollrt_draw_dungeon(CelOutputBuffer out, int sx, int sy, int dx, i
 	dRendered[sx][sy] = true;
 
 	light_table_index = dLight[sx][sy];
+
+	GenerateLabelOffsets();
 
 	drawCell(sx, sy, dx, dy);
 
@@ -1240,6 +1245,8 @@ void DrawView(CelOutputBuffer out, int StartX, int StartY)
 	if (automapflag) {
 		DrawAutomap(out.subregion(0, 0, out.line_width, SCREEN_Y + gnViewportHeight));
 	}
+
+	HighlightItemsNameOnMap();
 	DrawMonsterHealthBar();
 
 	if (stextflag && !qtextflag)

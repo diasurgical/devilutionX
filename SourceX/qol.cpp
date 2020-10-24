@@ -8,6 +8,23 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+int drawMinX;
+int drawMaxX;
+/**
+ * 0 = disabled
+ * 1 = highlight when alt pressed
+ * 2 = hide when alt pressed
+ * 3 = always highlight
+ */
+int highlightItemsMode = 0;
+bool altPressed = false;
+bool generatedLabels = false;
+bool isGeneratingLabels = false;
+bool isLabelHighlighted = false;
+
+BYTE *qolbuff;
+int labelCenterOffsets[ITEMTYPES];
+
 int GetTextWidth(const char *s)
 {
 	int l = 0;
@@ -194,6 +211,157 @@ void AutoGoldPickup(int pnum)
 			}
 		}
 	}
+}
+
+void diablo_parse_config()
+{
+	//highlightItemsMode = GetConfigIntValue("highlight items", 0);
+}
+
+class drawingQueue {
+public:
+	int ItemID;
+	int Row;
+	int Col;
+	int x;
+	int y;
+	int width;
+	int height;
+	int color;
+	char text[64];
+	drawingQueue(int x2, int y2, int width2, int height2, int Row2, int Col2, int ItemID2, int q2, char *text2)
+	{
+		x = x2;
+		y = y2;
+		Row = Row2;
+		Col = Col2;
+		ItemID = ItemID2;
+		width = width2;
+		height = height2;
+		color = q2;
+		strcpy(text, text2);
+	}
+};
+
+std::vector<drawingQueue> drawQ;
+
+void UpdateLabels(BYTE *dst, int width)
+{
+	int xval = (dst - &gpBuffer[0]) % BUFFER_WIDTH;
+	if (xval < drawMinX)
+		drawMinX = xval;
+	xval += width;
+	if (xval > drawMaxX)
+		drawMaxX = xval;
+}
+
+void GenerateLabelOffsets()
+{
+	if (generatedLabels)
+		return;
+	isGeneratingLabels = true;
+	int itemTypes = gbIsHellfire ? ITEMTYPES : 35;
+	for (int i = 0; i < itemTypes; i++) {
+		drawMinX = BUFFER_WIDTH;
+		drawMaxX = 0;
+		CelClippedDraw(BUFFER_WIDTH / 2 - 16, 351, itemanims[i], ItemAnimLs[i], 96);
+		labelCenterOffsets[i] = drawMinX - BUFFER_WIDTH / 2 + (drawMaxX - drawMinX) / 2;
+	}
+	isGeneratingLabels = false;
+	generatedLabels = true;
+}
+
+void AddItemToDrawQueue(int x, int y, int id)
+{
+	if (highlightItemsMode == 0 || (highlightItemsMode == 1 && !altPressed) || (highlightItemsMode == 2 && altPressed))
+		return;
+	ItemStruct *it = &item[id];
+
+	char textOnGround[64];
+	if (it->_itype == ITYPE_GOLD) {
+		sprintf(textOnGround, "%i gold", it->_ivalue);
+	} else {
+		sprintf(textOnGround, "%s", it->_iIdentified ? it->_iIName : it->_iName);
+	}
+
+	int nameWidth = GetTextWidth((char *)textOnGround);
+	x += labelCenterOffsets[ItemCAnimTbl[it->_iCurs]];
+	x -= SCREEN_X;
+	y -= SCREEN_Y;
+	y -= TILE_HEIGHT;
+	if (!zoomflag) {
+		x <<= 1;
+		y <<= 1;
+	}
+	x -= nameWidth / 2;
+	char clr = COL_WHITE;
+	if (it->_iMagical == ITEM_QUALITY_MAGIC)
+		clr = COL_BLUE;
+	if (it->_iMagical == ITEM_QUALITY_UNIQUE)
+		clr = COL_GOLD;
+	drawQ.push_back(drawingQueue(x, y, nameWidth, 13, it->_ix, it->_iy, id, clr, textOnGround));
+}
+
+void HighlightItemsNameOnMap()
+{
+	isLabelHighlighted = false;
+	if (highlightItemsMode == 0 || (highlightItemsMode == 1 && !altPressed) || (highlightItemsMode == 2 && altPressed))
+		return;
+	const int borderX = 5;
+	for (unsigned int i = 0; i < drawQ.size(); ++i) {
+		std::map<int, bool> backtrace;
+
+		bool canShow;
+		do {
+			canShow = true;
+			for (unsigned int j = 0; j < i; ++j) {
+				if (abs(drawQ[j].y - drawQ[i].y) < drawQ[i].height + 2) {
+					int newpos = drawQ[j].x;
+					if (drawQ[j].x >= drawQ[i].x && drawQ[j].x - drawQ[i].x < drawQ[i].width + borderX) {
+						newpos -= drawQ[i].width + borderX;
+						if (backtrace.find(newpos) != backtrace.end())
+							newpos = drawQ[j].x + drawQ[j].width + borderX;
+					} else if (drawQ[j].x < drawQ[i].x && drawQ[i].x - drawQ[j].x < drawQ[j].width + borderX) {
+						newpos += drawQ[j].width + borderX;
+						if (backtrace.find(newpos) != backtrace.end())
+							newpos = drawQ[j].x - drawQ[i].width - borderX;
+					} else
+						continue;
+					canShow = false;
+					drawQ[i].x = newpos;
+					backtrace[newpos] = true;
+				}
+			}
+		} while (!canShow);
+	}
+
+	for (unsigned int i = 0; i < drawQ.size(); ++i) {
+		drawingQueue t = drawQ[i];
+
+		if (t.x < 0 || t.x >= gnScreenWidth || t.y < 0 || t.y >= gnScreenHeight) {
+			continue;
+		}
+
+		if (MouseX >= t.x && MouseX <= t.x + t.width && MouseY >= t.y - t.height && MouseY <= t.y) {
+			if ((invflag || sbookflag) && MouseX > RIGHT_PANEL && MouseY <= SPANEL_HEIGHT) {
+			} else if ((chrflag || questlog) && MouseX < SPANEL_WIDTH && MouseY <= SPANEL_HEIGHT) {
+			} else if (MouseY >= PANEL_TOP && MouseX >= PANEL_LEFT && MouseX <= PANEL_LEFT + PANEL_WIDTH) {
+			} else if (gmenu_is_active() || PauseMode != 0 || deathflag) {
+			} else {
+				isLabelHighlighted = true;
+				cursmx = t.Row;
+				cursmy = t.Col;
+				pcursitem = t.ItemID;
+			}
+		}
+		int bgcolor = 0;
+		if (pcursitem == t.ItemID)
+			bgcolor = 134;
+		FillRect(t.x, t.y - t.height, t.width + 1, t.height, bgcolor);
+		CelOutputBuffer out = GlobalBackBuffer();
+		PrintGameStr(out, t.x, t.y - 1, t.text, t.color);
+	}
+	drawQ.clear();
 }
 
 DEVILUTION_END_NAMESPACE

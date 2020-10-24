@@ -150,7 +150,16 @@ void CelBlitSafeTo(CelOutputBuffer out, int sx, int sy, BYTE *pRLEBytes, int nDa
 			if (!(width & 0x80)) {
 				i -= width;
 				if (dst < out.end && dst > out.begin) {
-					memcpy(dst, src, width);
+					if (!isGeneratingLabels)
+						memcpy(dst, src, width);
+					else
+						UpdateLabels(dst, width);
+					int xval = (dst - &gpBuffer[0]) % BUFFER_WIDTH;
+					if (xval < drawMinX)
+						drawMinX = xval;
+					xval += width;
+					if (xval > drawMaxX)
+						drawMaxX = xval;
 				}
 				src += width;
 				dst += width;
