@@ -24,6 +24,7 @@ void HighlightItemsNameOnMap();
 void SaveHotkeys();
 void RepeatClicks();
 void AutoPickGold(int pnum);
+void RepeatClicks();
 
 DEVILUTION_END_NAMESPACE
 

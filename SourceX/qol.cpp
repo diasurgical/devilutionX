@@ -364,4 +364,41 @@ void HighlightItemsNameOnMap()
 	drawQ.clear();
 }
 
+void RepeatClicks()
+{
+	switch (sgbMouseDown) {
+	case 1: {
+		if ((SDL_GetModState() & KMOD_SHIFT)) {
+			if (plr[myplr]._pwtype == WT_RANGED) {
+				NetSendCmdLoc(TRUE, CMD_RATTACKXY, cursmx, cursmy);
+			} else {
+				NetSendCmdLoc(TRUE, CMD_SATTACKXY, cursmx, cursmy);
+			}
+		} else {
+			NetSendCmdLoc(TRUE, CMD_WALKXY, cursmx, cursmy);
+		}
+		break;
+	}
+	case 2: {
+		/*
+		repeated casting disabled for spells that change cursor and ones that wouldn't benefit from casting them more than 1 time
+		it has to be done here, otherwise there is a delay between casting a spell and changing the cursor, during which more casts get queued
+		*/
+		int spl = plr[myplr]._pRSpell;
+		if (spl != SPL_TELEKINESIS
+		    && spl != SPL_RESURRECT
+		    && spl != SPL_HEALOTHER
+		    && spl != SPL_IDENTIFY
+		    && spl != SPL_RECHARGE
+		    && spl != SPL_DISARM
+		    && spl != SPL_REPAIR
+		    && spl != SPL_GOLEM
+		    && spl != SPL_INFRA
+		    && spl != SPL_TOWN)
+			CheckPlrSpell();
+		break;
+	}
+	}
+}
+
 DEVILUTION_END_NAMESPACE
