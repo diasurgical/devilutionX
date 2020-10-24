@@ -4,6 +4,7 @@
  * Implementation of the in-game map overlay.
  */
 #include "all.h"
+#include "../3rdParty/Storm/Source/storm.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -313,8 +314,19 @@ int GetTextWidth(char *s)
 	return l;
 }
 
+void local_DvlIntSetting(const char *valuename, int *value)
+{
+	if (!SRegLoadValue("devilutionx", valuename, 0, value)) {
+		SRegSaveValue("devilutionx", valuename, 0, *value);
+	}
+}
+
 void DrawMonsterHealthBar(int monsterID)
 {
+	BOOL enabled = FALSE;
+	local_DvlIntSetting("monster health bar", &enabled);
+	if (!enabled)
+		return;
 	if (currlevel == 0)
 		return;
 	MonsterStruct *mon = &monster[monsterID];
@@ -443,6 +455,10 @@ void DrawMonsterHealthBar(int monsterID)
 
 void DrawXPBar()
 {
+	BOOL enabled = FALSE;
+	local_DvlIntSetting("xp bar", &enabled);
+	if (!enabled)
+		return;
 	int barSize = 306; // *ScreenWidth / 640;
 	int offset = 3;
 	int barRows = 3; // *ScreenHeight / 480;
@@ -524,6 +540,10 @@ std::vector<drawingQueue> drawQ;
 
 void AddItemToDrawQueue(int x, int y, int id)
 {
+	BOOL enabled = FALSE;
+	local_DvlIntSetting("highlight items", &enabled);
+	if (!enabled)
+		return;
 	ItemStruct *it = &item[id];
 	bool error = false;
 
@@ -558,6 +578,10 @@ void DrawBackground(int xPos, int yPos, int width, int height, int borderX, int 
 
 void HighlightItemsNameOnMap()
 {
+	BOOL enabled = FALSE;
+	local_DvlIntSetting("highlight items", &enabled);
+	if (!enabled)
+		return;
 	const int borderX = 5;
 	for (unsigned int i = 0; i < drawQ.size(); ++i) {
 		std::map<int, bool> backtrace;
