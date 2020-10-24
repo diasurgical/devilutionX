@@ -143,6 +143,7 @@ void gamemenu_new_game(BOOL bActivate)
 #endif
 	gbRunGame = FALSE;
 	gamemenu_off();
+	SaveHotkeys();
 }
 
 void gamemenu_quit_game(BOOL bActivate)

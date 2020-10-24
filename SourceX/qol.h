@@ -14,9 +14,11 @@ extern int highlightItemsMode;
 
 void DrawMonsterHealthBar(int monsterID);
 void DrawXPBar();
-void HighlightItemsNameOnMap();
 void AddItemToDrawQueue(int x, int y, int id);
+void HighlightItemsNameOnMap();
 void diablo_parse_config();
+void SaveHotkeys();
+void LoadHotkeys();
 DEVILUTION_END_NAMESPACE
 
 #endif /* __QOL_H__ */

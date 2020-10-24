@@ -1599,8 +1599,10 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 
 	SetRndSeed(glSeedTbl[currlevel]);
 
-	if (leveltype == DTYPE_TOWN)
+	if (leveltype == DTYPE_TOWN) {
 		SetupTownStores();
+		LoadHotkeys();
+	}
 
 	IncProgress();
 	InitAutomap();

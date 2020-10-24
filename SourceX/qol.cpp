@@ -220,13 +220,6 @@ void DrawXPBar()
 	}
 }
 
-void diablo_parse_config()
-{
-	drawHPBar = GetConfigIntValue("monster health bar", 0) != 0;
-	drawXPBar = GetConfigIntValue("xp bar", 0) != 0;
-	highlightItemsMode = GetConfigIntValue("highlight items", 0);
-}
-
 class drawingQueue {
 public:
 	int ItemID;
@@ -357,6 +350,46 @@ void HighlightItemsNameOnMap()
 		PrintGameStr(sx, sy, t.text, t.color);
 	}
 	drawQ.clear();
+}
+
+void diablo_parse_config()
+{
+	drawHPBar = GetConfigIntValue("monster health bar", 0) != 0;
+	drawXPBar = GetConfigIntValue("xp bar", 0) != 0;
+	highlightItemsMode = GetConfigIntValue("highlight items", 0);
+}
+
+void SaveHotkeys()
+{
+	DWORD dwLen = codec_get_encoded_len(4 * (sizeof(int) + sizeof(char)));
+	BYTE *SaveBuff = DiabloAllocPtr(dwLen);
+	tbuff = SaveBuff;
+
+	for (int t = 0; t < 4; t++) {
+		CopyInt(&plr[myplr]._pSplHotKey[t], tbuff);
+		CopyChar(&plr[myplr]._pSplTHotKey[t], tbuff);
+	}
+	
+	dwLen = codec_get_encoded_len(tbuff - SaveBuff);
+	pfile_write_save_file("hotkeys", SaveBuff, tbuff - SaveBuff, dwLen);
+	mem_free_dbg(SaveBuff);
+}
+
+void LoadHotkeys()
+{
+	DWORD dwLen;
+	char szName[MAX_PATH];
+	BYTE *LoadBuff;
+	int mapSize;
+	LoadBuff = pfile_read("hotkeys", &dwLen);
+	if (LoadBuff != NULL) {
+		tbuff = LoadBuff;
+		for (int t = 0; t < 4; t++) {
+			CopyInt(tbuff, &plr[myplr]._pSplHotKey[t]);
+			CopyChar(tbuff, &plr[myplr]._pSplTHotKey[t]);
+		}
+		mem_free_dbg(LoadBuff);
+	}
 }
 
 DEVILUTION_END_NAMESPACE
