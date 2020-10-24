@@ -12,7 +12,7 @@ int GetTextWidth(char *s)
 {
 	int l = 0;
 	while (*s) {
-		l += fontkern[fontframe[gbFontTransTbl[*s++]]] + 1;
+		l += fontkern[fontframe[gbFontTransTbl[(BYTE)*s++]]] + 1;
 	}
 	return l;
 }
@@ -61,8 +61,8 @@ void DrawMonsterHealthBar()
 	if (specialMonster)
 		borderWidth = 2;
 	int borderColors[] = { 242 /*undead*/, 232 /*demon*/, 182 /*beast*/ };
-	int borderColor = borderColors[mon->MData->mMonstClass]; //200; // pure golden, unique item style
-	int filledColor = 142;                                   // optimum balance in bright red between dark and light
+	int borderColor = borderColors[(BYTE)mon->MData->mMonstClass]; //200; // pure golden, unique item style
+	int filledColor = 142;                                          // optimum balance in bright red between dark and light
 	bool fillCorners = true;
 	int square = 10;
 	char *immuText = "IMMU: ";
@@ -136,7 +136,7 @@ void DrawMonsterHealthBar()
 	}
 
 	int newX = xPos + BORDER_LEFT;
-	int newY = yPos + height - 3;
+	//int newY = yPos + height - 3;
 
 	char text[166];
 	strcpy(text, mon->mName);
@@ -254,7 +254,6 @@ void AddItemToDrawQueue(int x, int y, int id)
 	if (highlightItemsMode == 0 || (highlightItemsMode == 1 && !altPressed) || (highlightItemsMode == 2 && altPressed))
 		return;
 	ItemStruct *it = &item[id];
-	bool error = false;
 
 	char textOnGround[64];
 	if (it->_itype == ITYPE_GOLD) {
@@ -380,9 +379,7 @@ void SaveHotkeys()
 void LoadHotkeys()
 {
 	DWORD dwLen;
-	char szName[MAX_PATH];
 	BYTE *LoadBuff;
-	int mapSize;
 	LoadBuff = pfile_read("hotkeys", &dwLen);
 	if (LoadBuff != NULL) {
 		tbuff = LoadBuff;
@@ -391,6 +388,44 @@ void LoadHotkeys()
 			CopyChar(tbuff, &plr[myplr]._pSplTHotKey[t]);
 		}
 		mem_free_dbg(LoadBuff);
+	}
+}
+
+void RepeatClicks()
+{
+	switch (sgbMouseDown) {
+	case 1: {
+		if ((SDL_GetModState() & KMOD_SHIFT)) {
+			if (plr[myplr]._pwtype == WT_RANGED) {
+				NetSendCmdLoc(TRUE, CMD_RATTACKXY, cursmx, cursmy);
+			} else {
+				NetSendCmdLoc(TRUE, CMD_SATTACKXY, cursmx, cursmy);
+			}
+		} else {
+			NetSendCmdLoc(TRUE, CMD_WALKXY, cursmx, cursmy);
+		}
+		break;
+	}
+	case 2: {
+		/*
+		repeated casting disabled for spells that change cursor and ones that wouldn't benefit from casting them more than 1 time
+		it has to be done here, otherwise there is a delay between casting a spell and changing the cursor, during which more casts get queued
+		*/
+		int spl = plr[myplr]._pRSpell;
+		if (spl != SPL_TELEKINESIS &&
+			spl != SPL_RESURRECT &&
+			spl != SPL_HEALOTHER &&
+			spl != SPL_IDENTIFY &&
+			spl != SPL_RECHARGE &&
+			spl != SPL_DISARM &&
+			spl != SPL_REPAIR &&
+			spl != SPL_GOLEM &&
+			spl != SPL_INFRA &&
+			spl != SPL_TOWN
+			) 
+			CheckPlrSpell();
+		break;
+	}
 	}
 }
 

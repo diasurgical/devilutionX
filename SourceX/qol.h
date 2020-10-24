@@ -19,6 +19,7 @@ void HighlightItemsNameOnMap();
 void diablo_parse_config();
 void SaveHotkeys();
 void LoadHotkeys();
+void RepeatClicks();
 DEVILUTION_END_NAMESPACE
 
 #endif /* __QOL_H__ */

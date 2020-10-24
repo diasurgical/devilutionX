@@ -13,20 +13,23 @@ static BOOL sgbIsWalking;
 
 void track_process()
 {
-	if (!sgbIsWalking)
+	if (!sgbIsWalking && (sgbMouseDown == 1 && (SDL_GetModState() & KMOD_SHIFT) == 0))
 		return;
 
 	if (cursmx < 0 || cursmx >= MAXDUNX - 1 || cursmy < 0 || cursmy >= MAXDUNY - 1)
 		return;
 
+	/*
+	this check was good for walking but has to be disabled after making this function handle casts / attacks with shift
 	if (plr[myplr]._pVar8 <= 6 && plr[myplr]._pmode != PM_STAND)
 		return;
+	*/
 
 	if (cursmx != plr[myplr]._ptargx || cursmy != plr[myplr]._ptargy) {
 		DWORD tick = SDL_GetTicks();
 		if ((int)(tick - sgdwLastWalk) >= tick_delay * 6) {
 			sgdwLastWalk = tick;
-			NetSendCmdLoc(TRUE, CMD_WALKXY, cursmx, cursmy);
+			RepeatClicks();
 			if (!sgbIsScrolling)
 				sgbIsScrolling = TRUE;
 		}
@@ -42,7 +45,7 @@ void track_repeat_walk(BOOL rep)
 	if (rep) {
 		sgbIsScrolling = FALSE;
 		sgdwLastWalk = SDL_GetTicks() - tick_delay;
-		NetSendCmdLoc(TRUE, CMD_WALKXY, cursmx, cursmy);
+		RepeatClicks();
 	} else if (sgbIsScrolling) {
 		sgbIsScrolling = FALSE;
 	}
