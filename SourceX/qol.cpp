@@ -249,6 +249,27 @@ public:
 
 std::vector<drawingQueue> drawQ;
 
+void adjustCoordsToZoom(int &x, int &y)
+{
+	if (zoomflag)
+		return;
+	int distToCenterX = abs(SCREEN_WIDTH / 2 - x);
+	int distToCenterY = abs(SCREEN_HEIGHT / 2 - y);
+	if (x <= SCREEN_WIDTH / 2) {
+		x = SCREEN_WIDTH / 2 - distToCenterX * 2;
+	} else {
+		x = SCREEN_WIDTH / 2 + distToCenterX * 2;
+	}
+
+	if (y <= SCREEN_HEIGHT / 2) {
+		y = SCREEN_HEIGHT / 2 - distToCenterY * 2;
+	} else {
+		y = SCREEN_HEIGHT / 2 + distToCenterY * 2;
+	}
+	x += SCREEN_WIDTH / 2 - 20;
+	y += SCREEN_HEIGHT / 2 - 175;
+}
+
 void AddItemToDrawQueue(int x, int y, int id)
 {
 	if (highlightItemsMode == 0 || (highlightItemsMode == 1 && !altPressed) || (highlightItemsMode == 2 && altPressed))
@@ -264,9 +285,15 @@ void AddItemToDrawQueue(int x, int y, int id)
 
 	int centerXOffset = GetTextWidth((char *)textOnGround);
 
+	adjustCoordsToZoom(x, y);
 	x -= centerXOffset / 2 + 20;
 	y -= 193;
-	drawQ.push_back(drawingQueue(x, y, GetTextWidth((char *)textOnGround), 13, it->_ix, it->_iy, id, 0, textOnGround));
+	char clr = COL_WHITE;
+	if (it->_iMagical == ITEM_QUALITY_MAGIC)
+		clr = COL_BLUE;
+	if (it->_iMagical == ITEM_QUALITY_UNIQUE)
+		clr = COL_GOLD;
+	drawQ.push_back(drawingQueue(x, y, GetTextWidth((char *)textOnGround), 13, it->_ix, it->_iy, id, clr, textOnGround));
 }
 
 void DrawBackground(int xPos, int yPos, int width, int height, int borderX, int borderY, BYTE backgroundColor, BYTE borderColor)
