@@ -505,8 +505,8 @@ public:
 	int width;
 	int height;
 	int color;
-	std::string text;
-	drawingQueue(int x2, int y2, int width2, int height2, int Row2, int Col2, int ItemID2, int q2, std::string text2)
+	char text[64];
+	drawingQueue(int x2, int y2, int width2, int height2, int Row2, int Col2, int ItemID2, int q2, char* text2)
 	{
 		x = x2;
 		y = y2;
@@ -516,7 +516,7 @@ public:
 		width = width2;
 		height = height2;
 		color = q2;
-		text = text2;
+		strcpy(text, text2);
 	}
 };
 
@@ -527,7 +527,7 @@ void AddItemToDrawQueue(int x, int y, int id)
 	ItemStruct *it = &item[id];
 	bool error = false;
 
-	char textOnGround[256];
+	char textOnGround[64];
 	if (it->_itype == ITYPE_GOLD) {
 		sprintf(textOnGround, "%i gold", it->_ivalue);
 	} else {
