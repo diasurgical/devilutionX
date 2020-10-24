@@ -423,6 +423,7 @@ static void SaveOptions()
 	setIniInt("Game", "Cow Quest", sgOptions.bCowQuest);
 	setIniInt("Game", "Test Bard", sgOptions.bTestBard);
 	setIniInt("Game", "Test Barbarian", sgOptions.bTestBarbarian);
+	setIniInt("Game", "Enemy Health Bar", sgOptions.bEnemyHealthBar);
 
 	setIniValue("Network", "Bind Address", sgOptions.szBindAddress);
 }
@@ -464,6 +465,7 @@ static void LoadOptions()
 	sgOptions.bCowQuest = getIniBool("Game", "Cow Quest", false);
 	sgOptions.bTestBard = getIniBool("Game", "Test Bard", false);
 	sgOptions.bTestBarbarian = getIniBool("Game", "Test Barbarian", false);
+	sgOptions.bEnemyHealthBar = getIniBool("Game", "Enemy Health Bar", false);
 
 	getIniValue("Network", "Bind Address", sgOptions.szBindAddress, sizeof(sgOptions.szBindAddress), "0.0.0.0");
 }
