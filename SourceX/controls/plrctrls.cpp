@@ -197,8 +197,9 @@ bool CanTargetMonster(int mi)
 
 void FindRangedTarget()
 {
-	int distance, rotations;
-	bool canTalk;
+    int rotations = 0;
+    int distance = 0;
+	bool canTalk = false;
 
 	// The first MAX_PLRS monsters are reserved for players' golems.
 	for (int mi = MAX_PLRS; mi < MAXMONSTERS; mi++) {
@@ -230,8 +231,8 @@ void FindMeleeTarget()
 {
 	bool visited[MAXDUNX][MAXDUNY] = { { 0 } };
 	int maxSteps = 25; // Max steps for FindPath is 25
-	int rotations;
-	bool canTalk;
+	int rotations = 0;
+	bool canTalk = false;
 
 	struct SearchNode {
 		int x, y;
@@ -309,7 +310,9 @@ void CheckMonstersNearby()
 
 void CheckPlayerNearby()
 {
-	int distance, newDdistance, rotations;
+    int newDdistance;
+    int rotations = 0;
+    int distance = 0;
 
 	if (pcursmonst != -1)
 		return;
@@ -365,7 +368,8 @@ int pcursquest;
 
 void FindTrigger()
 {
-	int distance, rotations;
+    int rotations;
+    int distance = 0;
 
 	if (pcursitem != -1 || pcursobj != -1)
 		return; // Prefer showing items/objects over triggers (use of cursm* conflicts)
