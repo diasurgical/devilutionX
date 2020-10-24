@@ -615,6 +615,7 @@ static void DrawItem(int x, int y, int sx, int sy, BOOL pre)
 
 	assert((unsigned char)bItem <= MAXITEMS);
 	int px = sx - pItem->_iAnimWidth2;
+	AddItemToDrawQueue(px, sy, bItem - 1);
 	if (bItem - 1 == pcursitem) {
 		CelBlitOutline(181, px, sy, pItem->_iAnimData, pItem->_iAnimFrame, pItem->_iAnimWidth);
 	}
@@ -1185,6 +1186,7 @@ void DrawView(int StartX, int StartY)
 	if (automapflag) {
 		DrawAutomap();
 	}
+	HighlightItemsNameOnMap();
 	if (pcursmonst != -1) {
 		DrawMonsterHealthBar(pcursmonst);
 	}

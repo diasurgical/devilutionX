@@ -37,6 +37,8 @@ void AutomapZoomOut();
 void DrawAutomap();
 void DrawMonsterHealthBar(int monsterID);
 void DrawXPBar();
+void HighlightItemsNameOnMap();
+void AddItemToDrawQueue(int x, int y, int id);
 void DrawAutomapTile(int screen_x, int screen_y, WORD automap_type);
 #ifdef HELLFIRE
 void SearchAutomapItem();

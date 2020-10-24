@@ -495,6 +495,149 @@ void DrawXPBar()
 	}
 }
 
+class drawingQueue {
+public:
+	int ItemID;
+	int Row;
+	int Col;
+	int x;
+	int y;
+	int new_x = -1;
+	int new_y = -1;
+	int width;
+	int height;
+	int color;
+	std::string text;
+	drawingQueue(int x2, int y2, int width2, int height2, int Row2, int Col2, int ItemID2, int q2, std::string text2)
+	{
+		x = x2;
+		y = y2;
+		Row = Row2;
+		Col = Col2;
+		ItemID = ItemID2;
+		width = width2;
+		height = height2;
+		color = q2;
+		text = text2;
+	}
+};
+
+std::vector<drawingQueue> drawQ;
+
+void AddItemToDrawQueue(int x, int y, int id)
+{
+	ItemStruct *it = &item[id];
+	bool error = false;
+
+	char textOnGround[256];
+	if (it->_itype == ITYPE_GOLD) {
+		sprintf(textOnGround, "%i gold", it->_ivalue);
+	} else {
+		sprintf(textOnGround, "%s", it->_iIdentified ? it->_iIName : it->_iName);
+	}
+
+
+	int centerXOffset = GetTextWidth((char *)textOnGround);
+
+	x -= centerXOffset / 2 + 20;
+	y -= 193;
+	drawQ.push_back(drawingQueue(x, y, GetTextWidth((char *)textOnGround), 13, it->_ix, it->_iy, id, 66, textOnGround));
+}
+
+void DrawBackground(int xPos, int yPos, int width, int height, int borderX, int borderY, BYTE backgroundColor, BYTE borderColor)
+{
+	xPos += BORDER_LEFT;
+	yPos += BORDER_TOP;
+	for (int y = 0; y < height; y++) {
+		for (int x = 0; x < width; x++) {
+			if (x < borderX || x + borderX >= width || y < borderY || y + borderY >= height)
+				continue;
+			int val = ((yPos - height) + y) * BUFFER_WIDTH + xPos + x;
+			gpBuffer[val] = backgroundColor;
+		}
+	}
+}
+
+void HighlightItemsNameOnMap()
+{
+	const int borderX = 5;
+	for (unsigned int i = 0; i < drawQ.size(); ++i) {
+		if (drawQ[i].new_x == -1 && drawQ[i].new_y == -1) {
+			drawQ[i].new_x = drawQ[i].x;
+			drawQ[i].new_y = drawQ[i].y;
+		}
+		std::map<int, bool> backtrace;
+
+		while (1) {
+			bool canShow = true;
+			for (unsigned int j = 0; j < i; ++j) {
+				if (abs(drawQ[j].new_y - drawQ[i].new_y) < drawQ[i].height + 2) {
+					if (drawQ[j].new_x >= drawQ[i].new_x && drawQ[j].new_x - drawQ[i].new_x < drawQ[i].width + borderX) {
+						canShow = false;
+						int newpos = drawQ[j].new_x - drawQ[i].width - borderX;
+						if (backtrace.find(newpos) == backtrace.end()) {
+							drawQ[i].new_x = newpos;
+							backtrace[newpos] = true;
+						} else {
+							newpos = drawQ[j].new_x + drawQ[j].width + borderX;
+							drawQ[i].new_x = newpos;
+							backtrace[newpos] = true;
+						}
+					} else if (drawQ[j].new_x < drawQ[i].new_x && drawQ[i].new_x - drawQ[j].new_x < drawQ[j].width + borderX) {
+						canShow = false;
+						int newpos = drawQ[j].new_x + drawQ[j].width + borderX;
+						if (backtrace.find(newpos) == backtrace.end()) {
+							drawQ[i].new_x = newpos;
+							backtrace[newpos] = true;
+						} else {
+							newpos = drawQ[j].new_x - drawQ[i].width - borderX;
+							drawQ[i].new_x = newpos;
+							backtrace[newpos] = true;
+						}
+					}
+				}
+			}
+			if (canShow)
+				break;
+		}
+	}
+
+	for (unsigned int i = 0; i < drawQ.size(); ++i) {
+		drawingQueue t = drawQ[i];
+		if (t.new_x == -1 && t.new_y == -1) {
+			t.new_x = t.x;
+			t.new_y = t.y;
+		}
+
+		int sx = t.new_x;
+		int sy = t.new_y;
+
+		int sx2 = sx;
+		int sy2 = sy + 1;
+
+		if (sx < 0 || sx >= SCREEN_WIDTH || sy < 0 || sy >= SCREEN_HEIGHT) {
+			continue;
+		}
+		if (sx2 < 0 || sx2 >= SCREEN_WIDTH || sy2 < 0 || sy2 >= SCREEN_HEIGHT) {
+			continue;
+		}
+
+		int bgcolor = 0;
+		int CursorX = MouseX;
+		int CursorY = MouseY + t.height;
+
+		if (CursorX >= sx && CursorX <= sx + t.width + 1 && CursorY >= sy && CursorY <= sy + t.height) {
+			bgcolor = 134;
+			cursmx = t.Row;
+			cursmy = t.Col;
+			pcursitem = t.ItemID;
+		}
+		DrawBackground(sx2, sy2, t.width + 1, t.height, 0, 0, bgcolor, bgcolor);
+		PrintGameStr(sx, sy, &t.text[0u], t.color);
+	}
+	drawQ.clear();
+}
+
 /**
  * @brief Renders the given automap shape at the specified screen coordinates.
  */
