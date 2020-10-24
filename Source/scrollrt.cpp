@@ -1187,9 +1187,8 @@ void DrawView(int StartX, int StartY)
 		DrawAutomap();
 	}
 	HighlightItemsNameOnMap();
-	if (pcursmonst != -1) {
-		DrawMonsterHealthBar(pcursmonst);
-	}
+	DrawMonsterHealthBar();
+
 	if (stextflag && !qtextflag)
 		DrawSText();
 	if (invflag) {

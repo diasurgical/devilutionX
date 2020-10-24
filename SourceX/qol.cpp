@@ -34,13 +34,15 @@ bool altPressed = false;
 bool drawXPBar = false;
 bool drawHPBar = false;
 
-void DrawMonsterHealthBar(int monsterID)
+void DrawMonsterHealthBar()
 {
 	if (!drawHPBar)
 		return;
 	if (currlevel == 0)
 		return;
-	MonsterStruct *mon = &monster[monsterID];
+	if (pcursmonst == -1)
+		return;
+	MonsterStruct *mon = &monster[pcursmonst];
 	bool specialMonster = mon->_uniqtype != 0;
 	int currentLife = mon->_mhitpoints;
 	int maxLife = mon->_mmaxhp;

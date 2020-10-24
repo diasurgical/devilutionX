@@ -12,7 +12,7 @@ extern bool drawXPBar;
 extern bool drawHPBar;
 extern int highlightItemsMode;
 
-void DrawMonsterHealthBar(int monsterID);
+void DrawMonsterHealthBar();
 void DrawXPBar();
 void AddItemToDrawQueue(int x, int y, int id);
 void HighlightItemsNameOnMap();
