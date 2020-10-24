@@ -314,7 +314,7 @@ int GetTextWidth(char *s)
 	return l;
 }
 
-BOOL GetConfigIntValue(const char *valuename, BOOL base)
+int GetConfigIntValue(const char *valuename, int base)
 {
 	if (!SRegLoadValue("devilutionx", valuename, 0, &base)) {
 		SRegSaveValue("devilutionx", valuename, 0, base);
@@ -322,9 +322,18 @@ BOOL GetConfigIntValue(const char *valuename, BOOL base)
 	return base;
 }
 
+int highlightItemsMode = 0;
+// 0 = disabled
+// 1 = highlight when alt pressed
+// 2 = hide when alt pressed
+// 3 = always highlight
+bool altPressed = false;
+bool drawXPBar = false;
+bool drawHPBar = false;
+
 void DrawMonsterHealthBar(int monsterID)
 {
-	if (!GetConfigIntValue("monster health bar", FALSE))
+	if (!drawHPBar)
 		return;
 	if (currlevel == 0)
 		return;
@@ -454,7 +463,7 @@ void DrawMonsterHealthBar(int monsterID)
 
 void DrawXPBar()
 {
-	if (!GetConfigIntValue("xp bar", FALSE))
+	if (!drawXPBar)
 		return;
 	int barSize = 306; // *ScreenWidth / 640;
 	int offset = 3;
@@ -508,6 +517,13 @@ void DrawXPBar()
 	}
 }
 
+void diablo_parse_config()
+{
+	drawHPBar = GetConfigIntValue("monster health bar", 0) != 0;
+	drawXPBar = GetConfigIntValue("xp bar", 0) != 0;
+	highlightItemsMode = GetConfigIntValue("highlight items", 0);
+}
+
 class drawingQueue {
 public:
 	int ItemID;
@@ -537,7 +553,7 @@ std::vector<drawingQueue> drawQ;
 
 void AddItemToDrawQueue(int x, int y, int id)
 {
-	if (!GetConfigIntValue("highlight items", FALSE))
+	if (highlightItemsMode == 0 || (highlightItemsMode == 1 && !altPressed) || (highlightItemsMode == 2 && altPressed))
 		return;
 	ItemStruct *it = &item[id];
 	bool error = false;
@@ -572,7 +588,7 @@ void DrawBackground(int xPos, int yPos, int width, int height, int borderX, int 
 
 void HighlightItemsNameOnMap()
 {
-	if (!GetConfigIntValue("highlight items", FALSE))
+	if (highlightItemsMode == 0 || (highlightItemsMode == 1 && !altPressed) || (highlightItemsMode == 2 && altPressed))
 		return;
 	const int borderX = 5;
 	for (unsigned int i = 0; i < drawQ.size(); ++i) {
