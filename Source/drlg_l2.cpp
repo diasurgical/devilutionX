@@ -2168,8 +2168,6 @@ static void ConnectHall(int nX1, int nY1, int nX2, int nY2, int nHd)
 	nOrigY1 = nY1;
 	CreateDoorType(nX1, nY1);
 	CreateDoorType(nX2, nY2);
-	nDx = abs(nX2 - nX1); /* unused */
-	nDy = abs(nY2 - nY1); /* unused */
 	nCurrd = nHd;
 	nX2 -= Dir_Xadd[nCurrd];
 	nY2 -= Dir_Yadd[nCurrd];

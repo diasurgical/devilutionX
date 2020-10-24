@@ -246,7 +246,7 @@ BOOL pfile_ui_set_hero_infos(BOOL(*ui_add_hero_info)(_uiheroinfo *))
 BOOL pfile_read_hero(HANDLE archive, PkPlayerStruct *pPack)
 {
 	HANDLE file;
-	DWORD dwlen, nSize;
+	DWORD dwlen;
 	BYTE *buf;
 
 	if (!SFileOpenFileEx(archive, "hero", 0, &file)) {
@@ -254,7 +254,6 @@ BOOL pfile_read_hero(HANDLE archive, PkPlayerStruct *pPack)
 	} else {
 		BOOL ret = FALSE;
 		const char *password;
-		nSize = 16;
 
 		if (gbIsSpawn) {
 			password = PASSWORD_SPAWN_SINGLE;

@@ -737,10 +737,6 @@ void TalkToTowner(int p, int t)
 	int qt, t2;
 #endif
 
-	rv1 = random_(6, 3); /* unused */
-	rv2 = random_(6, 4); /* unused */
-	rv3 = random_(6, 5); /* unused */
-
 	dx = abs(plr[p]._px - towner[t]._tx);
 	dy = abs(plr[p]._py - towner[t]._ty);
 #ifdef _DEBUG
