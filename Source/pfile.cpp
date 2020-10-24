@@ -184,6 +184,7 @@ void pfile_write_hero()
 	if (pfile_open_archive(save_num)) {
 		PackPlayer(&pkplr, myplr, !gbIsMultiplayer);
 		pfile_encode_hero(&pkplr);
+		SaveHotkeys();
 		pfile_flush(!gbIsMultiplayer, save_num);
 	}
 }
@@ -546,12 +547,12 @@ BYTE *pfile_read(const char *pszName, DWORD *pdwLen)
 	save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
 	archive = pfile_open_save_archive(save_num);
 	if (archive == NULL)
-		app_fatal("Unable to open save file archive");
+		return NULL;
 
 	buf = pfile_read_archive(archive, pszName, pdwLen);
 	pfile_SFileCloseArchive(archive);
 	if (buf == NULL)
-		app_fatal("Invalid %s file", pszName);
+		return NULL;
 
 	return buf;
 }
