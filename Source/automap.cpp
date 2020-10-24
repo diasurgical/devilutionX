@@ -502,8 +502,6 @@ public:
 	int Col;
 	int x;
 	int y;
-	int new_x = -1;
-	int new_y = -1;
 	int width;
 	int height;
 	int color;
@@ -562,55 +560,37 @@ void HighlightItemsNameOnMap()
 {
 	const int borderX = 5;
 	for (unsigned int i = 0; i < drawQ.size(); ++i) {
-		if (drawQ[i].new_x == -1 && drawQ[i].new_y == -1) {
-			drawQ[i].new_x = drawQ[i].x;
-			drawQ[i].new_y = drawQ[i].y;
-		}
 		std::map<int, bool> backtrace;
 
-		while (1) {
-			bool canShow = true;
+		bool canShow;
+		do {
+			canShow = true;
 			for (unsigned int j = 0; j < i; ++j) {
-				if (abs(drawQ[j].new_y - drawQ[i].new_y) < drawQ[i].height + 2) {
-					if (drawQ[j].new_x >= drawQ[i].new_x && drawQ[j].new_x - drawQ[i].new_x < drawQ[i].width + borderX) {
-						canShow = false;
-						int newpos = drawQ[j].new_x - drawQ[i].width - borderX;
-						if (backtrace.find(newpos) == backtrace.end()) {
-							drawQ[i].new_x = newpos;
-							backtrace[newpos] = true;
-						} else {
-							newpos = drawQ[j].new_x + drawQ[j].width + borderX;
-							drawQ[i].new_x = newpos;
-							backtrace[newpos] = true;
-						}
-					} else if (drawQ[j].new_x < drawQ[i].new_x && drawQ[i].new_x - drawQ[j].new_x < drawQ[j].width + borderX) {
-						canShow = false;
-						int newpos = drawQ[j].new_x + drawQ[j].width + borderX;
-						if (backtrace.find(newpos) == backtrace.end()) {
-							drawQ[i].new_x = newpos;
-							backtrace[newpos] = true;
-						} else {
-							newpos = drawQ[j].new_x - drawQ[i].width - borderX;
-							drawQ[i].new_x = newpos;
-							backtrace[newpos] = true;
-						}
-					}
+				if (abs(drawQ[j].y - drawQ[i].y) < drawQ[i].height + 2) {
+					int newpos = drawQ[j].x;
+					if (drawQ[j].x >= drawQ[i].x && drawQ[j].x - drawQ[i].x < drawQ[i].width + borderX) {
+						newpos -= drawQ[i].width + borderX;
+						if (backtrace.find(newpos) != backtrace.end()) 
+							newpos = drawQ[j].x + drawQ[j].width + borderX;
+					} else if (drawQ[j].x < drawQ[i].x && drawQ[i].x - drawQ[j].x < drawQ[j].width + borderX) {
+						newpos += drawQ[j].width + borderX;
+						if (backtrace.find(newpos) != backtrace.end()) 
+							newpos = drawQ[j].x - drawQ[i].width - borderX;
+					} else 
+						continue;
+					canShow = false;
+					drawQ[i].x = newpos;
+					backtrace[newpos] = true;
 				}
 			}
-			if (canShow)
-				break;
-		}
+		} while (!canShow);
 	}
 
 	for (unsigned int i = 0; i < drawQ.size(); ++i) {
 		drawingQueue t = drawQ[i];
-		if (t.new_x == -1 && t.new_y == -1) {
-			t.new_x = t.x;
-			t.new_y = t.y;
-		}
 
-		int sx = t.new_x;
-		int sy = t.new_y;
+		int sx = t.x;
+		int sy = t.y;
 
 		int sx2 = sx;
 		int sy2 = sy + 1;
