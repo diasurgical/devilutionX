@@ -423,6 +423,7 @@ static void SaveOptions()
 	setIniInt("Game", "Cow Quest", sgOptions.bCowQuest);
 	setIniInt("Game", "Test Bard", sgOptions.bTestBard);
 	setIniInt("Game", "Test Barbarian", sgOptions.bTestBarbarian);
+	setIniInt("Game", "Experience Bar", sgOptions.bExperienceBar);
 	setIniInt("Game", "Enemy Health Bar", sgOptions.bEnemyHealthBar);
 
 	setIniValue("Network", "Bind Address", sgOptions.szBindAddress);
@@ -465,6 +466,7 @@ static void LoadOptions()
 	sgOptions.bCowQuest = getIniBool("Game", "Cow Quest", false);
 	sgOptions.bTestBard = getIniBool("Game", "Test Bard", false);
 	sgOptions.bTestBarbarian = getIniBool("Game", "Test Barbarian", false);
+	sgOptions.bExperienceBar = getIniBool("Game", "Experience Bar", false);
 	sgOptions.bEnemyHealthBar = getIniBool("Game", "Enemy Health Bar", false);
 
 	getIniValue("Network", "Bind Address", sgOptions.szBindAddress, sizeof(sgOptions.szBindAddress), "0.0.0.0");
@@ -849,17 +851,17 @@ static void ReleaseKey(int vkey)
 
 static void ClosePanels()
 {
-    if (PANELS_COVER) {
-        if (!chrflag && !questlog && (invflag || sbookflag) && MouseX < 480 && MouseY < PANEL_TOP) {
-            SetCursorPos(MouseX + 160, MouseY);
-        } else if (!invflag && !sbookflag && (chrflag || questlog) && MouseX > 160 && MouseY < PANEL_TOP) {
-            SetCursorPos(MouseX - 160, MouseY);
-        }
-    }
-    invflag = FALSE;
-    chrflag = FALSE;
-    sbookflag = FALSE;
-    questlog = FALSE;
+	if (PANELS_COVER) {
+		if (!chrflag && !questlog && (invflag || sbookflag) && MouseX < 480 && MouseY < PANEL_TOP) {
+			SetCursorPos(MouseX + 160, MouseY);
+		} else if (!invflag && !sbookflag && (chrflag || questlog) && MouseX > 160 && MouseY < PANEL_TOP) {
+			SetCursorPos(MouseX - 160, MouseY);
+		}
+	}
+	invflag = FALSE;
+	chrflag = FALSE;
+	sbookflag = FALSE;
+	questlog = FALSE;
 }
 
 bool PressEscKey()

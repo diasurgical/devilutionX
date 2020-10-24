@@ -9,6 +9,7 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 void DrawMonsterHealthBar();
+void DrawXPBar();
 
 DEVILUTION_END_NAMESPACE
 

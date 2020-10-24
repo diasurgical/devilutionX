@@ -43,6 +43,7 @@ typedef struct Options {
 	bool bCowQuest;       // Enable the cow quest
 	bool bTestBard;       // Enable the bard hero class
 	bool bTestBarbarian;  // Enable the babarian hero class
+	bool bExperienceBar;  // Show the current level progress
 	bool bEnemyHealthBar; // Show enemy health at the top of the screen
 
 	char szBindAddress[129]; // Optionally bind to a specific network interface
