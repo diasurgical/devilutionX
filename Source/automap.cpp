@@ -441,6 +441,60 @@ void DrawMonsterHealthBar(int monsterID)
 	PrintGameStr(newX + width / 2 - GetTextWidth(vulnText), 59, vulnText, COL_RED);
 }
 
+void DrawXPBar()
+{
+	int barSize = 306; // *ScreenWidth / 640;
+	int offset = 3;
+	int barRows = 3; // *ScreenHeight / 480;
+	int dividerHeight = 3;
+	int numDividers = 10;
+	int barColor = 242; /*242white, 142red, 200yellow, 182blue*/
+	int emptyBarColor = 0;
+	int frameColor = 242;
+	int yPos = BORDER_TOP + SCREEN_HEIGHT - 8;
+
+	PrintGameStr(145 + (SCREEN_WIDTH - 640) / 2, SCREEN_HEIGHT - 4, "XP", COL_WHITE);
+	int charLevel = plr[myplr]._pLevel;
+	if (charLevel != MAXCHARLEVEL - 1) {
+		int curXp = ExpLvlsTbl[charLevel];
+		int prevXp = ExpLvlsTbl[charLevel - 1];
+		int prevXpDelta = curXp - prevXp;
+		int prevXpDelta_1 = plr[myplr]._pExperience - prevXp;
+		if (plr[myplr]._pExperience >= prevXp) {
+			int visibleBar = barSize * (unsigned __int64)prevXpDelta_1 / prevXpDelta;
+
+			for (int i = 0; i < visibleBar; ++i) {
+				for (int j = 0; j < barRows; ++j) {
+					ENG_set_pixel((BUFFER_WIDTH - barSize) / 2 + i + offset, yPos - barRows / 2 + j, barColor);
+				}
+			}
+
+			for (int i = visibleBar; i < barSize; ++i) {
+				for (int j = 0; j < barRows; ++j) {
+					ENG_set_pixel((BUFFER_WIDTH - barSize) / 2 + i + offset, yPos - barRows / 2 + j, emptyBarColor);
+				}
+			}
+			//draw frame
+			//horizontal
+			for (int i = -1; i <= barSize; ++i) {
+				ENG_set_pixel((BUFFER_WIDTH - barSize) / 2 + i + offset, yPos - barRows / 2 - 1, frameColor);
+				ENG_set_pixel((BUFFER_WIDTH - barSize) / 2 + i + offset, yPos + barRows / 2 + 1, frameColor);
+			}
+			//vertical
+			for (int i = -dividerHeight; i < barRows + dividerHeight; ++i) {
+				if (i >= 0 && i < barRows) {
+					ENG_set_pixel((BUFFER_WIDTH - barSize) / 2 - 1 + offset, yPos - barRows / 2 + i, frameColor);
+					ENG_set_pixel((BUFFER_WIDTH - barSize) / 2 + barSize + offset, yPos - barRows / 2 + i, frameColor);
+				}
+				for (int j = 1; j < numDividers; ++j) {
+					ENG_set_pixel((BUFFER_WIDTH - barSize) / 2 - 1 + offset + (barSize * j / numDividers), yPos - barRows / 2 + i, frameColor);
+				}
+			}
+			//draw frame
+		}
+	}
+}
+
 /**
  * @brief Renders the given automap shape at the specified screen coordinates.
  */

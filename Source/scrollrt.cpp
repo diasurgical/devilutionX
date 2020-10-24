@@ -1539,6 +1539,7 @@ void DrawAndBlit()
 		DrawTalkPan();
 		hgt = SCREEN_HEIGHT;
 	}
+	DrawXPBar();
 	scrollrt_draw_cursor_item();
 
 	DrawFPS();
