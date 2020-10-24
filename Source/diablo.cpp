@@ -1823,6 +1823,7 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 					dFlags[i][j] |= BFLAG_LIT;
 			}
 
+			LoadHotkeys();
 			InitTowners();
 			InitItems();
 			InitMissiles();

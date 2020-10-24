@@ -14,6 +14,98 @@ int giNumberOfLevels;
 int giNumberQuests;
 int giNumberOfSmithPremiumItems;
 
+class LoadHelper {
+	Uint8 *m_buffer;
+	Uint32 m_bufferPtr = 0;
+	Uint32 m_bufferLen;
+
+public:
+	LoadHelper(const char *szFileName)
+	{
+		m_buffer = pfile_read(szFileName, &m_bufferLen);
+	}
+
+	bool isValid(Uint32 len = 1)
+	{
+		return m_buffer != nullptr
+		    && m_bufferLen >= (m_bufferPtr + len);
+	}
+
+	Uint8 nextByte()
+	{
+		if (!this->isValid(1))
+			return 0;
+
+		Uint8 value = m_buffer[m_bufferPtr];
+		m_bufferPtr++;
+
+		return value;
+	}
+
+	Uint32 nextLE32()
+	{
+		if (!this->isValid(4))
+			return 0;
+
+		Uint32 value;
+		memcpy(&value, &m_buffer[m_bufferPtr], 4);
+		m_bufferPtr += 4;
+
+		return SDL_SwapLE32(value);
+	}
+
+	~LoadHelper()
+	{
+		mem_free_dbg(m_buffer);
+	}
+};
+
+class SaveHelper {
+	const char *m_szFileName;
+	Uint8 *m_buffer;
+	Uint32 m_bufferPtr = 0;
+	Uint32 m_bufferLen;
+
+public:
+	SaveHelper(const char *szFileName, size_t bufferLen)
+	{
+		m_szFileName = szFileName;
+		m_bufferLen = bufferLen;
+		m_buffer = DiabloAllocPtr(codec_get_encoded_len(m_bufferLen));
+	}
+
+	bool isValid(Uint32 len = 1)
+	{
+		return m_buffer != nullptr
+		    && m_bufferLen >= (m_bufferPtr + len);
+	}
+
+	void writeByte(Uint8 value)
+	{
+		if (!this->isValid(1))
+			return;
+
+		m_buffer[m_bufferPtr] = SDL_SwapLE32(value);
+		m_bufferPtr++;
+	}
+
+	void writeLE32(Uint32 value)
+	{
+		if (!this->isValid(4))
+			return;
+
+		Uint32 temp = SDL_SwapLE32(value);
+		memcpy(&m_buffer[m_bufferPtr], &temp, 4);
+		m_bufferPtr += 4;
+	}
+
+	~SaveHelper()
+	{
+		pfile_write_save_file(m_szFileName, m_buffer, m_bufferPtr, codec_get_encoded_len(m_bufferPtr));
+		mem_free_dbg(m_buffer);
+	}
+};
+
 static char BLoad()
 {
 	return *tbuff++;
@@ -824,6 +916,36 @@ void ConvertLevels()
 	tbuff = _tbuff;
 }
 
+void LoadHotkeys()
+{
+	LoadHelper file("hotkeys");
+	if (!file.isValid())
+		return;
+
+	for (size_t i = 0; i < sizeof(plr[myplr]._pSplHotKey) / sizeof(plr[myplr]._pSplHotKey[0]); i++) {
+		plr[myplr]._pSplHotKey[i] = file.nextLE32();
+	}
+	for (size_t i = 0; i < sizeof(plr[myplr]._pSplTHotKey) / sizeof(plr[myplr]._pSplTHotKey[0]); i++) {
+		plr[myplr]._pSplTHotKey[i] = file.nextByte();
+	}
+	plr[myplr]._pRSpell = file.nextLE32();
+	plr[myplr]._pRSplType = file.nextByte();
+}
+
+void SaveHotkeys()
+{
+	SaveHelper file("hotkeys", sizeof(plr[myplr]._pSplHotKey) + sizeof(plr[myplr]._pSplTHotKey) + 5);
+
+	for (size_t i = 0; i < sizeof(plr[myplr]._pSplHotKey) / sizeof(plr[myplr]._pSplHotKey[0]); i++) {
+		file.writeLE32(plr[myplr]._pSplHotKey[i]);
+	}
+	for (size_t i = 0; i < sizeof(plr[myplr]._pSplTHotKey) / sizeof(plr[myplr]._pSplTHotKey[0]); i++) {
+		file.writeByte(plr[myplr]._pSplTHotKey[i]);
+	}
+	file.writeLE32(plr[myplr]._pRSpell);
+	file.writeByte(plr[myplr]._pRSplType);
+}
+
 /**
  * @brief Load game state
  * @param firstflag Can be set to false if we are simply reloading the current game
@@ -838,6 +960,9 @@ void LoadGame(BOOL firstflag)
 	FreeGameMem();
 	pfile_remove_temp_files();
 	LoadBuff = pfile_read("game", &dwLen);
+	if (LoadBuff == NULL)
+		app_fatal("Unable to open save file archive");
+
 	tbuff = LoadBuff;
 
 	if (!IsHeaderValid(ILoad()))
@@ -1911,6 +2036,8 @@ void LoadLevel()
 
 	GetPermLevelNames(szName);
 	LoadBuff = pfile_read(szName, &dwLen);
+	if (LoadBuff == NULL)
+		app_fatal("Unable to open save file archive");
 	tbuff = LoadBuff;
 
 	if (leveltype != DTYPE_TOWN) {
