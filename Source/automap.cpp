@@ -304,6 +304,143 @@ void DrawAutomap()
 	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_Y + SCREEN_HEIGHT)];
 }
 
+int GetTextWidth(char *s)
+{
+	int l = 0;
+	while (*s) {
+		l += fontkern[fontframe[gbFontTransTbl[*s++]]] + 1;
+	}
+	return l;
+}
+
+void DrawMonsterHealthBar(int monsterID)
+{
+	if (currlevel == 0)
+		return;
+	MonsterStruct *mon = &monster[monsterID];
+	bool specialMonster = mon->_uniqtype != 0;
+	int currentLife = mon->_mhitpoints;
+	int maxLife = mon->_mmaxhp;
+
+	if (currentLife > maxLife) 
+		maxLife = currentLife;
+	
+	float FilledPercent = (float)currentLife / (float)maxLife;
+	const int yPos = 180;
+	const int width = 250;
+	const int xPos = (SCREEN_WIDTH) / 2 - BORDER_LEFT;
+	const int height = 25;
+	const int xOffset = 0;
+	const int yOffset = 1;
+	int borderWidth = 2;
+	if (specialMonster) 
+		borderWidth = 2;
+	int borderColors[] = { 242 /*undead*/, 232 /*demon*/, 182 /*beast*/ };
+	int borderColor = borderColors[mon->MData->mMonstClass]; //200; // pure golden, unique item style
+	int filledColor = 142; // optimum balance in bright red between dark and light
+	bool fillCorners = true;
+	int square = 10;
+	char *immuText = "IMMU: ";
+	char *resText = "RES: ";
+	char *vulnText = ":VULN";
+	int resSize = 3;
+	int resistColors[] = { 148, 140, 129 }; // { 170,140,129,148,242 };// {168, 216, 200, 242, 142 }; // arcane // fire // lightning // acid
+	WORD immunes[] = { IMUNE_MAGIC, IMUNE_FIRE, IMUNE_LIGHTNING };
+	WORD resists[] = { RESIST_MAGIC, RESIST_FIRE, RESIST_LIGHTNING };
+	WORD mres = mon->mMagicRes;
+
+	int resOffset = 0 + GetTextWidth(resText);
+	for (int k = 0; k < resSize; ++k) {
+		if (!(mres & resists[k]))
+			continue;
+		for (int j = 0; j < square; j++) {
+			for (int i = 0; i < square; i++) {
+				ENG_set_pixel(xPos + i + resOffset, yPos + height + j + yOffset + borderWidth + 2, resistColors[k]);
+			}
+		}
+		resOffset += square + 2;
+	}
+
+	int vulOffset = width - square - GetTextWidth(vulnText) - 4;
+	for (int k = 0; k < resSize; ++k) {
+		if (mres & resists[k] || mres & immunes[k])
+			continue;
+		for (int j = 0; j < square; j++) {
+			for (int i = 0; i < square; i++) {
+				ENG_set_pixel(xPos + i + vulOffset, yPos + height + j + yOffset + borderWidth + 2, resistColors[k]);
+			}
+		}
+		vulOffset -= square + 2;
+	}
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < (width * FilledPercent); i++) {
+			int tmpColor = filledColor;
+			ENG_set_pixel(xPos + i, yPos + j, tmpColor);
+		}
+	}
+
+	for (int j = 0; j < borderWidth; j++) {
+		for (int i = -xOffset - (fillCorners ? borderWidth : 0); i < width + xOffset + (fillCorners ? borderWidth : 0); i++) {
+			ENG_set_pixel(xPos + i, yPos + j - yOffset - borderWidth, borderColor);
+		}
+		for (int i = -xOffset; i < width + xOffset + (fillCorners ? borderWidth : 0); i++) {
+			ENG_set_pixel(xPos + i, yPos + j + yOffset + height, borderColor);
+		}
+	}
+
+	for (int j = -yOffset; j < height + yOffset + (fillCorners ? borderWidth : 0); j++) {
+		for (int i = 0; i < borderWidth; i++) {
+			ENG_set_pixel(xPos + i - xOffset - borderWidth, yPos + j, borderColor);
+			ENG_set_pixel(xPos + i + xOffset + width, yPos + j, borderColor);
+		}
+	}
+
+	bool drawImmu = false;
+	int immuOffset = 0 + GetTextWidth(immuText) - 5;
+	for (int k = 0; k < resSize; ++k) {
+		if (mres & immunes[k]) {
+			drawImmu = true;
+			for (int j = 0; j < square; j++) {
+				for (int i = 0; i < square; i++) {
+					ENG_set_pixel(xPos + i + immuOffset, yPos + height + j + yOffset + borderWidth + 2 - 15, resistColors[k]);
+				}
+			}
+			immuOffset += square + 2;
+		}
+	}
+
+	int newX = xPos + BORDER_LEFT;
+	int newY = yPos + height - 3;
+
+	char text[166];
+	strcpy(text, mon->mName);
+	if (mon->leader > 0) 
+		strcat(text, " (minion)");
+	
+	int namecolor = COL_WHITE;
+	if (specialMonster) 
+		namecolor = COL_GOLD;
+	PrintGameStr(newX - GetTextWidth(text) / 2, 30, text, namecolor);
+	PrintGameStr(newX - GetTextWidth("/") / 2, 43, "/", COL_WHITE);
+	
+	sprintf(text, "%d", (maxLife >> 6));
+	PrintGameStr(newX + GetTextWidth("/"), 43, text, COL_WHITE);
+
+	sprintf(text, "%d", (currentLife >> 6));
+	PrintGameStr(newX - GetTextWidth(text) - GetTextWidth("/"), 43, text, COL_WHITE);
+
+	PrintGameStr(newX - width / 2, 59, resText, COL_GOLD);
+	
+	sprintf(text, "kills: %d", monstkills[mon->MType->mtype]);
+	PrintGameStr(newX - GetTextWidth("kills:") / 2 - 30, 59, text, COL_WHITE);
+
+	if (drawImmu) 
+		PrintGameStr(newX - width / 2, 46, immuText, COL_GOLD);
+	
+	PrintGameStr(newX + width / 2 - GetTextWidth(vulnText), 59, vulnText, COL_RED);
+}
+
 /**
  * @brief Renders the given automap shape at the specified screen coordinates.
  */

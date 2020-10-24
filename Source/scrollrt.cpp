@@ -1185,6 +1185,9 @@ void DrawView(int StartX, int StartY)
 	if (automapflag) {
 		DrawAutomap();
 	}
+	if (pcursmonst != -1) {
+		DrawMonsterHealthBar(pcursmonst);
+	}
 	if (stextflag && !qtextflag)
 		DrawSText();
 	if (invflag) {
