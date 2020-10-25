@@ -389,32 +389,33 @@ void diablo_parse_config()
 
 void SaveHotkeys()
 {
+	BYTE *oldtbuff = tbuff;
 	DWORD dwLen = codec_get_encoded_len(4 * (sizeof(int) + sizeof(char)));
 	BYTE *SaveBuff = DiabloAllocPtr(dwLen);
 	tbuff = SaveBuff;
 
-	for (int t = 0; t < 4; t++) {
-		CopyInt(&plr[myplr]._pSplHotKey[t], tbuff);
-		CopyChar(&plr[myplr]._pSplTHotKey[t], tbuff);
-	}
-	
+	CopyInts(&plr[myplr]._pSplHotKey, 4, tbuff);
+	CopyBytes(&plr[myplr]._pSplTHotKey, 4, tbuff);
+
 	dwLen = codec_get_encoded_len(tbuff - SaveBuff);
 	pfile_write_save_file("hotkeys", SaveBuff, tbuff - SaveBuff, dwLen);
 	mem_free_dbg(SaveBuff);
+	tbuff = oldtbuff;
 }
 
 void LoadHotkeys()
 {
+	BYTE *oldtbuff = tbuff;
 	DWORD dwLen;
-	BYTE *LoadBuff;
-	LoadBuff = pfile_read("hotkeys", &dwLen);
+	BYTE *LoadBuff = pfile_read("hotkeys", &dwLen);
 	if (LoadBuff != NULL) {
 		tbuff = LoadBuff;
-		for (int t = 0; t < 4; t++) {
-			CopyInt(tbuff, &plr[myplr]._pSplHotKey[t]);
-			CopyChar(tbuff, &plr[myplr]._pSplTHotKey[t]);
-		}
+
+		CopyInts(tbuff, 4, &plr[myplr]._pSplHotKey);
+		CopyBytes(tbuff, 4, &plr[myplr]._pSplTHotKey);
+
 		mem_free_dbg(LoadBuff);
+		tbuff = oldtbuff;
 	}
 }
 

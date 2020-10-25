@@ -14,8 +14,8 @@ extern "C" {
 
 extern BYTE *tbuff;
 
-void CopyInt(const void *src, void *dst);
-void CopyChar(const void *src, void *dst);
+void CopyInts(const void *src, const int n, void *dst);
+void CopyBytes(const void *src, const int n, void *dst);
 
 void LoadGame(BOOL firstflag);
 char BLoad();
