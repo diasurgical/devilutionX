@@ -133,7 +133,7 @@ void RechargeItem(ItemStruct *i, int r);
 void PrintItemOil(char IDidx);
 void PrintItemPower(char plidx, ItemStruct *x);
 void DrawUTextBack();
-void PrintUString(int x, int y, BOOL cjustflag, char *str, int col);
+void PrintUString(int x, int y, BOOL cjustflag, const char *str, int col);
 void DrawULine(int y);
 void DrawUniqueInfo();
 void PrintItemMisc(ItemStruct *x);
@@ -196,7 +196,7 @@ extern int MaxGold;
 #endif
 
 extern BYTE ItemCAnimTbl[];
-extern char *ItemDropNames[];
+extern const char *const ItemDropNames[];
 extern BYTE ItemAnimLs[];
 extern int ItemDropSnds[];
 extern int ItemInvSnds[];

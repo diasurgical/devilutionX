@@ -28,8 +28,8 @@ void CreateL3Dungeon(DWORD rseed, int entry);
 #ifdef HELLFIRE
 BOOLEAN drlg_l3_hive_rnd_piece(const BYTE *miniset, int rndper);
 #endif
-void LoadL3Dungeon(char *sFileName, int vx, int vy);
-void LoadPreL3Dungeon(char *sFileName, int vx, int vy);
+void LoadL3Dungeon(const char *sFileName, int vx, int vy);
+void LoadPreL3Dungeon(const char *sFileName, int vx, int vy);
 
 /* rdata */
 extern const BYTE L3ConvTbl[16];

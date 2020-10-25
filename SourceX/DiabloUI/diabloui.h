@@ -30,7 +30,7 @@ extern Art ArtCursor;
 extern Art ArtHero;
 extern bool gbSpawned;
 
-extern void (*gfnSoundFunction)(char *file);
+extern void (*gfnSoundFunction)(const char *file);
 extern BOOL (*gfnHeroInfo)(BOOL (*fninfofunc)(_uiheroinfo *));
 
 void UiFadeIn();

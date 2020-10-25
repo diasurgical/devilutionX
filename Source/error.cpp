@@ -13,7 +13,7 @@ char msgflag;
 char msgcnt;
 
 /** Maps from error_id to error message. */
-char *MsgStrings[] = {
+const char *const MsgStrings[] = {
 	"",
 	"No automap available in town",
 	"No multiplayer functions in demo",

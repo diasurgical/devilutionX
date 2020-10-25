@@ -35,7 +35,7 @@ Art ArtCursor;
 Art ArtHero;
 bool gbSpawned;
 
-void (*gfnSoundFunction)(char *file);
+void (*gfnSoundFunction)(const char *file);
 void (*gfnListFocus)(int value);
 void (*gfnListSelect)(int value);
 void (*gfnListEsc)();
@@ -475,7 +475,7 @@ void UiSetupPlayerInfo(char *infostr, _uiheroinfo *pInfo, DWORD type)
 	    pInfo->spawned);
 }
 
-BOOL UiValidPlayerName(char *name)
+BOOL UiValidPlayerName(const char *name)
 {
 	if (!strlen(name))
 		return false;
@@ -487,7 +487,7 @@ BOOL UiValidPlayerName(char *name)
 		if (*letter < 0x20 || (*letter > 0x7E && *letter < 0xC0))
 			return false;
 
-	char *reserved[] = {
+	const char *const reserved[] = {
 		"gvdl",
 		"dvou",
 		"tiju",

@@ -46,7 +46,7 @@ int FindGetItem(int idx, WORD ci, int iseed);
 void SyncGetItem(int x, int y, int idx, WORD ci, int iseed);
 BOOL CanPut(int x, int y);
 BOOL TryInvPut();
-void DrawInvMsg(char *msg);
+void DrawInvMsg(const char *msg);
 int InvPutItem(int pnum, int x, int y);
 int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff
 #ifdef HELLFIRE

@@ -32,7 +32,7 @@ void mainmenu_restart_repintro()
 	dwAttractTicks = SDL_GetTicks() + mainmenu_attract_time_out * 1000;
 }
 
-void mainmenu_Load(char *name, void (*fnSound)(char *file))
+void mainmenu_Load(const char *name, void (*fnSound)(const char *file))
 {
 	gfnSoundFunction = fnSound;
 
@@ -87,7 +87,7 @@ void mainmenu_Free()
 	vecMenuItems.clear();
 }
 
-BOOL UiMainMenuDialog(char *name, int *pdwResult, void (*fnSound)(char *file), int attractTimeOut)
+BOOL UiMainMenuDialog(const char *name, int *pdwResult, void (*fnSound)(const char *file), int attractTimeOut)
 {
 	MainMenuResult = 0;
 	while (MainMenuResult == 0) {

@@ -61,12 +61,12 @@ TMenuItem sgOptionsMenu[] = {
 // clang-format on
 };
 /** Specifies the menu names for music enabled and disabled. */
-char *music_toggle_names[] = {
+const char *const music_toggle_names[] = {
 	"Music",
 	"Music Disabled",
 };
 /** Specifies the menu names for sound enabled and disabled. */
-char *sound_toggle_names[] = {
+const char *const sound_toggle_names[] = {
 	"Sound",
 	"Sound Disabled",
 };
@@ -78,7 +78,7 @@ char *jogging_toggle_names[] = {
 char *jogging_title = "Fast Walk";
 #endif
 /** Specifies the menu names for colour cycling disabled and enabled. */
-char *color_cycling_toggle_names[] = { "Color Cycling Off", "Color Cycling On" };
+const char *const color_cycling_toggle_names[] = { "Color Cycling Off", "Color Cycling On" };
 
 void gamemenu_on()
 {
@@ -229,7 +229,7 @@ void gamemenu_get_music()
 	gamemenu_sound_music_toggle(music_toggle_names, sgOptionsMenu, sound_get_or_set_music_volume(1));
 }
 
-void gamemenu_sound_music_toggle(char **names, TMenuItem *menu_item, int volume)
+void gamemenu_sound_music_toggle(const char *const *names, TMenuItem *menu_item, int volume)
 {
 	if (gbSndInited) {
 		menu_item->dwFlags |= GMENU_ENABLED | GMENU_SLIDER;

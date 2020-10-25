@@ -24,8 +24,8 @@ extern HALLNODE *pHallList;
 void InitDungeon();
 void L2LockoutFix();
 void L2DoorFix();
-void LoadL2Dungeon(char *sFileName, int vx, int vy);
-void LoadPreL2Dungeon(char *sFileName, int vx, int vy);
+void LoadL2Dungeon(const char *sFileName, int vx, int vy);
+void LoadPreL2Dungeon(const char *sFileName, int vx, int vy);
 void CreateL2Dungeon(DWORD rseed, int entry);
 
 /* rdata */

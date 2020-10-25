@@ -74,7 +74,7 @@ void FreeDlg()
  * @param pszFmt Error message format
  * @param ... Additional parameters for message format
  */
-void DrawDlg(char *pszFmt, ...)
+void DrawDlg(const char *pszFmt, ...)
 {
 	char text[256];
 	va_list va;
@@ -102,7 +102,7 @@ void assert_fail(int nLineNo, const char *pszFile, const char *pszFail)
 /**
  * @brief Terminates the game and displays an error dialog box based on the given dialog_id.
  */
-void ErrDlg(const char *title, const char *error, char *log_file_path, int log_line_nr)
+void ErrDlg(const char *title, const char *error, const char *log_file_path, int log_line_nr)
 {
 	char text[1024];
 
@@ -161,7 +161,7 @@ void InsertCDDlg()
 /**
  * @brief Terminates the game with a read-only directory error dialog.
  */
-void DirErrorDlg(char *error)
+void DirErrorDlg(const char *error)
 {
 	char text[1024];
 

@@ -53,8 +53,8 @@ void DrawAndBlit();
 /* data */
 
 /** used in 1.00 debug */
-extern char *szMonModeAssert[18];
-extern char *szPlrModeAssert[12];
+extern const char *const szMonModeAssert[18];
+extern const char *const szPlrModeAssert[12];
 
 #ifdef __cplusplus
 }

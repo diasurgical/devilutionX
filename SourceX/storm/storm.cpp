@@ -362,13 +362,13 @@ BOOL SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 	return true;
 }
 
-void *SMemAlloc(unsigned int amount, char *logfilename, int logline, int defaultValue)
+void *SMemAlloc(unsigned int amount, const char *logfilename, int logline, int defaultValue)
 {
 	assert(amount != -1u);
 	return malloc(amount);
 }
 
-BOOL SMemFree(void *location, char *logfilename, int logline, char defaultValue)
+BOOL SMemFree(void *location, const char *logfilename, int logline, char defaultValue)
 {
 	assert(location);
 	free(location);
@@ -569,7 +569,7 @@ private:
 static AudioQueue *sVidAudioQueue = new AudioQueue();
 #endif
 
-void SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HANDLE *video)
+void SVidPlayBegin(const char *filename, int a2, int a3, int a4, int a5, int flags, HANDLE *video)
 {
 	if (flags & 0x10000 || flags & 0x20000000) {
 		return;

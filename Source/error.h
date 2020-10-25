@@ -22,7 +22,7 @@ void ClrDiabloMsg();
 void DrawDiabloMsg();
 
 /* data */
-extern char *MsgStrings[];
+extern const char *const MsgStrings[];
 
 #ifdef __cplusplus
 }

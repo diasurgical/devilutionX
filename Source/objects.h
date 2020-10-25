@@ -182,11 +182,11 @@ DIABOOL objects_lv_24_454B04(int s);
 
 extern int bxadd[8];
 extern int byadd[8];
-extern char *shrinestrs[NUM_SHRINETYPE];
+extern const char *const shrinestrs[NUM_SHRINETYPE];
 extern char shrinemin[NUM_SHRINETYPE];
 extern char shrinemax[NUM_SHRINETYPE];
 extern BYTE shrineavail[NUM_SHRINETYPE];
-extern char *StoryBookName[];
+extern const char *const StoryBookName[];
 extern int StoryText[3][3];
 
 #ifdef __cplusplus

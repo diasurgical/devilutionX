@@ -29,7 +29,7 @@ BOOLEAN gbSoundOn = true;
 /** Specifies the active background music track id. */
 int sgnMusicTrack = NUM_MUSIC;
 /** Maps from track ID to track name in spawn. */
-char *sgszSpawnMusicTracks[NUM_MUSIC] = {
+const char *const sgszSpawnMusicTracks[NUM_MUSIC] = {
 	"Music\\sTowne.wav",
 	"Music\\sLvlA.wav",
 	"Music\\sLvlA.wav",
@@ -42,7 +42,7 @@ char *sgszSpawnMusicTracks[NUM_MUSIC] = {
 	"Music\\sintro.wav",
 };
 /** Maps from track ID to track name. */
-char *sgszMusicTracks[NUM_MUSIC] = {
+const char *const sgszMusicTracks[NUM_MUSIC] = {
 	"Music\\DTowne.wav",
 	"Music\\DLvlA.wav",
 	"Music\\DLvlB.wav",
@@ -92,7 +92,7 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 	pSnd->start_tc = tc;
 }
 
-TSnd *sound_file_load(char *path)
+TSnd *sound_file_load(const char *path)
 {
 	HANDLE file;
 	BYTE *wave_file;
@@ -154,7 +154,7 @@ void snd_init(HWND hWnd)
 	gbSndInited = true;
 }
 
-void snd_get_volume(char *value_name, int *value)
+void snd_get_volume(const char *value_name, int *value)
 {
 	int v = *value;
 	if (!SRegLoadValue(APP_NAME, value_name, 0, &v)) {
@@ -181,7 +181,7 @@ void sound_cleanup()
 	}
 }
 
-void snd_set_volume(char *key, int value)
+void snd_set_volume(const char *key, int value)
 {
 	SRegSaveValue(APP_NAME, key, 0, value);
 }
@@ -203,7 +203,7 @@ void music_stop()
 void music_start(int nTrack)
 {
 	BOOL success;
-	char *trackPath;
+	const char *trackPath;
 
 	assert((DWORD)nTrack < NUM_MUSIC);
 	music_stop();

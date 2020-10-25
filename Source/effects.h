@@ -36,7 +36,7 @@ void effects_cleanup_sfx();
 void sound_init();
 void priv_sound_init(BYTE bLoadMask);
 void ui_sound_init();
-void effects_play_sound(char *snd_file);
+void effects_play_sound(const char *snd_file);
 
 /* rdata */
 

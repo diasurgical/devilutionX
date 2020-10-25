@@ -45,7 +45,7 @@ void init_cleanup();
 void init_disable_screensaver(BOOLEAN disable);
 void init_create_window();
 void init_archives();
-HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags, int fs);
+HANDLE init_test_access(char *mpq_path, const char *mpq_name, const char *reg_loc, int flags, int fs);
 void init_get_file_info();
 LRESULT MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 void init_activate_window(HWND hWnd, BOOL bActive);

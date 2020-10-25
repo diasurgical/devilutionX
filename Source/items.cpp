@@ -108,7 +108,7 @@ BYTE ItemCAnimTbl[] = {
 #endif
 };
 /** Map of item type .cel file names. */
-char *ItemDropNames[] = {
+const char *const ItemDropNames[] = {
 	"Armor2",
 	"Axe",
 	"FBttle",
@@ -4236,7 +4236,7 @@ void DrawUTextBack()
 	trans_rect(RIGHT_PANEL - SPANEL_WIDTH + 27, 28, 265, 297);
 }
 
-void PrintUString(int x, int y, BOOL cjustflag, char *str, int col)
+void PrintUString(int x, int y, BOOL cjustflag, const char *str, int col)
 {
 	int len, width, sx, sy, i, k;
 	BYTE c;

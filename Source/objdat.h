@@ -14,7 +14,7 @@ extern "C" {
 
 extern int ObjTypeConv[];
 extern ObjDataStruct AllObjects[];
-extern char *ObjMasterLoadList[];
+extern const char *const ObjMasterLoadList[];
 #ifdef HELLFIRE
 extern char *ObjCryptLoadList[];
 extern char *ObjHiveLoadList[];

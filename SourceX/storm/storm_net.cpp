@@ -108,8 +108,8 @@ int SNetInitializeProvider(unsigned long provider, struct _SNETPROGRAMDATA *clie
  * @brief Called by engine for single, called by ui for multi
  */
 BOOL SNetCreateGame(const char *pszGameName, const char *pszGamePassword, const char *pszGameStatString,
-    DWORD dwGameType, char *GameTemplateData, int GameTemplateSize, int playerCount,
-    char *creatorName, char *a11, int *playerID)
+	DWORD dwGameType, char *GameTemplateData, int GameTemplateSize, int playerCount,
+    const char *creatorName, const char *a11, int *playerID)
 {
 	if (GameTemplateSize != sizeof(_gamedata))
 		ABORT();

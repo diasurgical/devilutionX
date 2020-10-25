@@ -32,7 +32,7 @@ void SetPlayerGPtrs(BYTE *pData, BYTE **pAnim);
 void LoadPlrGFX(int pnum, player_graphic gfxflag);
 void InitPlayerGFX(int pnum);
 void InitPlrGFXMem(int pnum);
-DWORD GetPlrGFXSize(char *szCel);
+DWORD GetPlrGFXSize(const char *szCel);
 void FreePlayerGFX(int pnum);
 void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width);
 void ClearPlrPVars(int pnum);
@@ -147,10 +147,10 @@ extern int MagicTbl[NUM_CLASSES];
 extern int DexterityTbl[NUM_CLASSES];
 extern int VitalityTbl[NUM_CLASSES];
 extern int ToBlkTbl[NUM_CLASSES];
-extern char *ClassStrTblOld[];
+extern const char *const ClassStrTblOld[];
 extern int MaxStats[NUM_CLASSES][4];
 extern int ExpLvlsTbl[MAXCHARLEVEL];
-extern char *ClassStrTbl[NUM_CLASSES];
+extern const char *const ClassStrTbl[NUM_CLASSES];
 extern BYTE fix[9];
 
 #ifdef __cplusplus

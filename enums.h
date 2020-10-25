@@ -1794,11 +1794,11 @@ typedef enum monster_resistance {
 	RESIST_MAGIC     = 0x01,
 	RESIST_FIRE      = 0x02,
 	RESIST_LIGHTNING = 0x04,
-	IMUNE_MAGIC      = 0x08,
-	IMUNE_FIRE       = 0x10,
-	IMUNE_LIGHTNING  = 0x20,
-	IMUNE_NULL_40    = 0x40,
-	IMUNE_ACID       = 0x80,
+	IMMUNE_MAGIC      = 0x08,
+	IMMUNE_FIRE       = 0x10,
+	IMMUNE_LIGHTNING  = 0x20,
+	IMMUNE_NULL_40    = 0x40,
+	IMMUNE_ACID       = 0x80,
 } monster_resistance;
 
 typedef enum missile_resistance {

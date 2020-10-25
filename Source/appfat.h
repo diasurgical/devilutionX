@@ -21,19 +21,19 @@ char *GetErrorStr(DWORD error_code);
 void app_fatal(const char *pszFmt, ...);
 void MsgBox(const char *pszFmt, va_list va);
 void FreeDlg();
-void DrawDlg(char *pszFmt, ...);
+void DrawDlg(const char *pszFmt, ...);
 #ifdef _DEBUG
 void assert_fail(int nLineNo, const char *pszFile, const char *pszFail);
 #endif
-void DDErrMsg(DWORD error_code, int log_line_nr, char *log_file_path);
-void DSErrMsg(DWORD error_code, int log_line_nr, char *log_file_path);
+void DDErrMsg(DWORD error_code, int log_line_nr, const char *log_file_path);
+void DSErrMsg(DWORD error_code, int log_line_nr, const char *log_file_path);
 void center_window(HWND hDlg);
-void ErrDlg(const char *title, const char *error, char *log_file_path, int log_line_nr);
+void ErrDlg(const char *title, const char *error, const char *log_file_path, int log_line_nr);
 void TextDlg(HWND hDlg, char *text);
 void FileErrDlg(const char *error);
-void DiskFreeDlg(char *error);
+void DiskFreeDlg(const char *error);
 void InsertCDDlg();
-void DirErrorDlg(char *error);
+void DirErrorDlg(const char *error);
 
 #ifdef __cplusplus
 }

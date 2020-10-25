@@ -568,9 +568,9 @@ BOOL MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, BOOLEAN shif
 
 	mir = missiledata[t].mResist;
 	mor = monster[m].mMagicRes;
-	if (mor & IMUNE_MAGIC && mir == MISR_MAGIC
-	    || mor & IMUNE_FIRE && mir == MISR_FIRE
-	    || mor & IMUNE_LIGHTNING && mir == MISR_LIGHTNING) {
+	if (mor & IMMUNE_MAGIC && mir == MISR_MAGIC
+	    || mor & IMMUNE_FIRE && mir == MISR_FIRE
+	    || mor & IMMUNE_LIGHTNING && mir == MISR_LIGHTNING) {
 		return FALSE;
 	}
 
@@ -653,10 +653,10 @@ BOOL MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, BOOLE
 	mor = monster[m].mMagicRes;
 	mir = missiledata[t].mResist;
 
-	if (mor & IMUNE_MAGIC && mir == MISR_MAGIC
-	    || mor & IMUNE_FIRE && mir == MISR_FIRE
-	    || mor & IMUNE_LIGHTNING && mir == MISR_LIGHTNING
-	    || (mor & IMUNE_ACID) && mir == MISR_ACID)
+	if (mor & IMMUNE_MAGIC && mir == MISR_MAGIC
+	    || mor & IMMUNE_FIRE && mir == MISR_FIRE
+	    || mor & IMMUNE_LIGHTNING && mir == MISR_LIGHTNING
+	    || (mor & IMMUNE_ACID) && mir == MISR_ACID)
 		return FALSE;
 
 	if (mor & RESIST_MAGIC && mir == MISR_MAGIC
@@ -1466,7 +1466,7 @@ void missiles_berserk(int mi, int sx, int sy, int dx, int dy, int midir, char mi
 					if (dm > 3) {
 						if (!monster[dm]._uniqtype && monster[dm]._mAi != AI_DIABLO) {
 							if (monster[dm]._mmode != MM_FADEIN && monster[dm]._mmode != MM_FADEOUT) {
-								if (!(monster[dm].mMagicRes & IMUNE_MAGIC)) {
+								if (!(monster[dm].mMagicRes & IMMUNE_MAGIC)) {
 									if ((!(monster[dm].mMagicRes & RESIST_MAGIC) || (monster[dm].mMagicRes & RESIST_MAGIC) == 1 && !random_(99, 2)) && monster[dm]._mmode != MM_CHARGE) {
 										j = 6;
 										double slvl = (double)GetSpellLevel(id, SPL_BERSERK);

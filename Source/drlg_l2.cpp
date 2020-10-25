@@ -3324,7 +3324,7 @@ static void DRLG_InitL2Vals()
 	}
 }
 
-void LoadL2Dungeon(char *sFileName, int vx, int vy)
+void LoadL2Dungeon(const char *sFileName, int vx, int vy)
 {
 	int i, j, rw, rh, pc;
 	BYTE *pLevelMap, *lm;
@@ -3414,7 +3414,7 @@ void LoadL2Dungeon(char *sFileName, int vx, int vy)
 	mem_free_dbg(pLevelMap);
 }
 
-void LoadPreL2Dungeon(char *sFileName, int vx, int vy)
+void LoadPreL2Dungeon(const char *sFileName, int vx, int vy)
 {
 	int i, j, rw, rh;
 	BYTE *pLevelMap, *lm;

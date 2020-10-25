@@ -32,8 +32,8 @@ extern int VR3;
 extern BYTE *L5pSetPiece;
 
 void DRLG_Init_Globals();
-void LoadL1Dungeon(char *sFileName, int vx, int vy);
-void LoadPreL1Dungeon(char *sFileName, int vx, int vy);
+void LoadL1Dungeon(const char *sFileName, int vx, int vy);
+void LoadPreL1Dungeon(const char *sFileName, int vx, int vy);
 void CreateL5Dungeon(DWORD rseed, int entry);
 #ifdef HELLFIRE
 void DRLG_InitL5Vals();

@@ -242,9 +242,9 @@ static void L4makeDmt()
 	for (j = 0, dmty = 1; dmty <= 77; j++, dmty += 2) {
 		for (i = 0, dmtx = 1; dmtx <= 77; i++, dmtx += 2) {
 			val = 8 * L4dungeon[dmtx + 1][dmty + 1]
-			    + 4 * L4dungeon[dmtx][dmty + 1]
-			    + 2 * L4dungeon[dmtx + 1][dmty]
-			    + L4dungeon[dmtx][dmty];
+				+ 4 * L4dungeon[dmtx][dmty + 1]
+				+ 2 * L4dungeon[dmtx + 1][dmty]
+				+ L4dungeon[dmtx][dmty];
 			idx = L4ConvTbl[val];
 			dungeon[i][j] = idx;
 		}
@@ -903,8 +903,10 @@ static void DRLG_L4Subs()
 
 	for (y = 0; y < DMAXY; y++) {
 		for (x = 0; x < DMAXX; x++) {
-			if (random_(0, 3) == 0) {
-				c = L4BTYPES[dungeon[x][y]];
+			rv = random_(0, 3);
+			if (rv == 0) {
+				c = dungeon[x][y];
+				c = L4BTYPES[c];
 				if (c != 0 && dflags[x][y] == 0) {
 					rv = random_(0, 16);
 					i = -1;
@@ -924,8 +926,10 @@ static void DRLG_L4Subs()
 	}
 	for (y = 0; y < DMAXY; y++) {
 		for (x = 0; x < DMAXX; x++) {
-			if (random_(0, 10) == 0) {
-				if (L4BTYPES[dungeon[x][y]] == 6 && dflags[x][y] == 0) {
+			rv = random_(0, 10);
+			if (rv == 0) {
+				c = dungeon[x][y];
+				if (L4BTYPES[c] == 6 && dflags[x][y] == 0) {
 					dungeon[x][y] = random_(0, 3) + 95;
 				}
 			}
