@@ -183,6 +183,9 @@ add_library(PKWare STATIC
   3rdParty/PKWare/explode.cpp
   3rdParty/PKWare/implode.cpp)
 
+add_library(SourceS STATIC
+  SourceS/paths.cpp)
+
 add_library(devilution STATIC
   Source/appfat.cpp
   Source/automap.cpp
@@ -378,14 +381,19 @@ endif()
 
 target_include_directories(devilution PUBLIC Source SourceS ${CMAKE_CURRENT_BINARY_DIR})
 target_include_directories(${BIN_TARGET} PRIVATE
+  SourceS
   SourceX
   3rdParty/asio/include
   3rdParty/Radon/Radon/include
   3rdParty/libsmacker)
 
-target_link_libraries(devilution PUBLIC Threads::Threads)
+target_link_libraries(devilution PUBLIC
+  Threads::Threads
+  SourceS
+)
 target_link_libraries(${BIN_TARGET} PRIVATE
   devilution
+  SourceS
   PKWare
   StormLib
   smacker
@@ -472,7 +480,7 @@ endforeach(def_name)
 
 genex_for_option(ASAN)
 genex_for_option(UBSAN)
-foreach(target devilution ${BIN_TARGET})
+foreach(target devilution ${BIN_TARGET} SourceS)
   target_compile_options(${target} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
   target_link_libraries(${target} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
   target_compile_options(${target} PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined>)

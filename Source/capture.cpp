@@ -7,6 +7,7 @@
 
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
+#include "paths.h"
 #include "file_util.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -130,18 +131,18 @@ static bool CapturePix(WORD width, WORD height, WORD stride, BYTE *pixels, std::
 /**
  * Returns a pointer because in GCC < 5 ofstream itself is not moveable due to a bug.
  */
-static std::ofstream *CaptureFile(char *dst_path)
+static std::ofstream *CaptureFile(std::string *dst_path)
 {
-	char path[MAX_PATH];
-
-	GetPrefPath(path, MAX_PATH);
-
-	for (int i = 0; i <= 99; i++) {
-		snprintf(dst_path, MAX_PATH, "%sscreen%02d.PCX", path, i);
-		if (!FileExists(dst_path))
-			return new std::ofstream(dst_path, std::ios::binary | std::ios::trunc);
+	*dst_path = GetPrefPath() + "screen00.PCX";
+	char &d0 = (*dst_path)[dst_path->size() - 6];
+	char &d1 = (*dst_path)[dst_path->size() - 5];
+	for (int i = 0; i <= 99; ++i) {
+		d0 = '0' + (i / 10);
+		d1 = '0' + (i % 10);
+		if (!FileExists(dst_path->c_str())) {
+			return new std::ofstream(*dst_path, std::ios::binary | std::ios::trunc);
+		}
 	}
-
 	return NULL;
 }
 
@@ -172,10 +173,10 @@ static void RedPalette()
 void CaptureScreen()
 {
 	SDL_Color palette[256];
-	char FileName[MAX_PATH];
+	std::string FileName;
 	BOOL success;
 
-	std::ofstream *out = CaptureFile(FileName);
+	std::ofstream *out = CaptureFile(&FileName);
 	if (out == NULL) return;
 	DrawAndBlit();
 	PaletteGetEntries(256, palette);
@@ -193,10 +194,10 @@ void CaptureScreen()
 	out->close();
 
 	if (!success) {
-		SDL_Log("Failed to save screenshot at %s", FileName);
-		RemoveFile(FileName);
+		SDL_Log("Failed to save screenshot at %s", FileName.c_str());
+		RemoveFile(FileName.c_str());
 	} else {
-		SDL_Log("Screenshot saved at %s", FileName);
+		SDL_Log("Screenshot saved at %s", FileName.c_str());
 	}
 	SDL_Delay(300);
 	for (int i = 0; i < 256; i++) {

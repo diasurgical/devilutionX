@@ -4,6 +4,7 @@
  * Implementation of the main game initialization functions.
  */
 #include "all.h"
+#include "paths.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 #include <config.h>
@@ -429,23 +430,9 @@ void diablo_parse_flags(int argc, char **argv)
 			printf("%s v%s\n", PROJECT_NAME, PROJECT_VERSION);
 			diablo_quit(0);
 		} else if (strcasecmp("--data-dir", argv[i]) == 0) {
-			basePath = argv[++i];
-#ifdef _WIN32
-			if (basePath.back() != '\\')
-				basePath += '\\';
-#else
-			if (basePath.back() != '/')
-				basePath += '/';
-#endif
+			SetBasePath(argv[++i]);
 		} else if (strcasecmp("--save-dir", argv[i]) == 0) {
-			prefPath = argv[++i];
-#ifdef _WIN32
-			if (prefPath.back() != '\\')
-				prefPath += '\\';
-#else
-			if (prefPath.back() != '/')
-				prefPath += '/';
-#endif
+			SetPrefPath(argv[++i]);
 		} else if (strcasecmp("-n", argv[i]) == 0) {
 			showintrodebug = FALSE;
 		} else if (strcasecmp("-f", argv[i]) == 0) {

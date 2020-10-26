@@ -3,8 +3,10 @@
  *
  * Implementation of routines for initializing the environment, disable screen saver, load MPQ.
  */
-#include "all.h"
+#include <string>
 
+#include "all.h"
+#include "paths.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 #include <SDL.h>
@@ -15,31 +17,17 @@ DEVILUTION_BEGIN_NAMESPACE
 _SNETVERSIONDATA fileinfo;
 /** True if the game is the current active window */
 int gbActive;
-/** Specifies the path to diablo.exe. */
-char diablo_exe_path[MAX_PATH];
 /** A handle to an unused MPQ archive. */
 HANDLE hellfire_mpq;
-/** Specifies the path to patch_rt.mpq. */
-char patch_rt_mpq_path[MAX_PATH];
 /** The current input handler function */
 WNDPROC CurrentProc;
 /** A handle to the diabdat.mpq archive. */
 HANDLE diabdat_mpq;
-/** Specifies the path to diabdat.mpq. */
-char diabdat_mpq_path[MAX_PATH];
 /** A handle to the patch_rt.mpq archive. */
 HANDLE patch_rt_mpq;
 /** Indicate if we only have access to demo data */
 bool gbIsSpawn;
 #ifdef HELLFIRE
-char hellfire_mpq_path[MAX_PATH];
-char hfmonk_mpq_path[MAX_PATH];
-char hfbard_mpq_path[MAX_PATH];
-char hfbarb_mpq_path[MAX_PATH];
-char hfmusic_mpq_path[MAX_PATH];
-char hfvoice_mpq_path[MAX_PATH];
-char hfopt1_mpq_path[MAX_PATH];
-char hfopt2_mpq_path[MAX_PATH];
 HANDLE hfmonk_mpq;
 HANDLE hfbard_mpq;
 HANDLE hfbarb_mpq;
@@ -49,10 +37,35 @@ HANDLE hfopt1_mpq;
 HANDLE hfopt2_mpq;
 #endif
 
+namespace {
+
+HANDLE init_test_access(std::string *out_mpq_path, const char *mpq_name, const char *reg_loc, int dwPriority, int fs)
+{
+	HANDLE archive;
+	const std::string *paths[2] = {&GetBasePath(), &GetPrefPath()};
+	std::string mpq_abspath;
+	for (int i = 0; i < 2; i++) {
+		mpq_abspath = *paths[i] + mpq_name;
+#if !defined(__SWITCH__) && !defined(__AMIGA__)
+		if (SFileOpenArchive(mpq_abspath.c_str(), dwPriority, MPQ_FLAG_READ_ONLY, &archive)) {
+#else
+		if (SFileOpenArchive(mpq_abspath.c_str(), dwPriority, 0, &archive)) {
+#endif
+			SFileSetBasePath(paths[i]->c_str());
+			if (out_mpq_path != NULL) *out_mpq_path = mpq_abspath;
+			return archive;
+		}
+	}
+
+	return NULL;
+}
+
+} // namespace
+
 /* data */
 
-char gszVersionNumber[MAX_PATH] = "internal version unknown";
-char gszProductName[MAX_PATH] = "Diablo v1.09";
+char gszVersionNumber[260] = "internal version unknown";
+char gszProductName[260] = "Diablo v1.09";
 
 void init_cleanup()
 {
@@ -122,11 +135,10 @@ void init_archives()
 	memset(&fileinfo, 0, sizeof(fileinfo));
 	fileinfo.size = sizeof(fileinfo);
 	fileinfo.versionstring = gszVersionNumber;
-	fileinfo.executablefile = diablo_exe_path;
-	fileinfo.originalarchivefile = diabdat_mpq_path;
-	fileinfo.patcharchivefile = patch_rt_mpq_path;
+	fileinfo.executablefile = "";
 	init_get_file_info();
 
+	static std::string *diabdat_mpq_path = new std::string;
 	diabdat_mpq = init_test_access(diabdat_mpq_path, "diabdat.mpq", "DiabloCD", 1000, FS_CD);
 	if (diabdat_mpq == NULL) {
 		diabdat_mpq = init_test_access(diabdat_mpq_path, "spawn.mpq", "DiabloSpawn", 1000, FS_PC);
@@ -136,51 +148,30 @@ void init_archives()
 	if (diabdat_mpq == NULL || !SFileOpenFile("ui_art\\title.pcx", &fh))
 		InsertCDDlg();
 	SFileCloseFile(fh);
+	fileinfo.originalarchivefile = diabdat_mpq_path->c_str();
 
+	static std::string *patch_rt_mpq_path = new std::string;
 	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "patch_rt.mpq", "DiabloInstall", 2000, FS_PC);
 	if (patch_rt_mpq == NULL)
 		patch_rt_mpq = init_test_access(patch_rt_mpq_path, "patch_sh.mpq", "DiabloSpawn", 2000, FS_PC);
+	fileinfo.patcharchivefile = patch_rt_mpq_path->c_str();
 
 #ifdef HELLFIRE
-	hellfire_mpq = init_test_access(hellfire_mpq_path, "hellfire.mpq", "DiabloInstall", 8000, FS_PC);
-	hfmonk_mpq = init_test_access(hfmonk_mpq_path, "hfmonk.mpq", "DiabloInstall", 8100, FS_PC);
-	hfbard_mpq = init_test_access(hfbard_mpq_path, "hfbard.mpq", "DiabloInstall", 8110, FS_PC);
-	hfbarb_mpq = init_test_access(hfbarb_mpq_path, "hfbarb.mpq", "DiabloInstall", 8120, FS_PC);
-	hfmusic_mpq = init_test_access(hfmusic_mpq_path, "hfmusic.mpq", "DiabloInstall", 8200, FS_PC);
-	hfvoice_mpq = init_test_access(hfvoice_mpq_path, "hfvoice.mpq", "DiabloInstall", 8500, FS_PC);
-	hfopt1_mpq = init_test_access(hfopt1_mpq_path, "hfopt1.mpq", "DiabloInstall", 8600, FS_PC);
-	hfopt2_mpq = init_test_access(hfopt2_mpq_path, "hfopt2.mpq", "DiabloInstall", 8610, FS_PC);
+	hellfire_mpq = init_test_access(NULL, "hellfire.mpq", "DiabloInstall", 8000, FS_PC);
+	hfmonk_mpq = init_test_access(NULL, "hfmonk.mpq", "DiabloInstall", 8100, FS_PC);
+	hfbard_mpq = init_test_access(NULL, "hfbard.mpq", "DiabloInstall", 8110, FS_PC);
+	hfbarb_mpq = init_test_access(NULL, "hfbarb.mpq", "DiabloInstall", 8120, FS_PC);
+	hfmusic_mpq = init_test_access(NULL, "hfmusic.mpq", "DiabloInstall", 8200, FS_PC);
+	hfvoice_mpq = init_test_access(NULL, "hfvoice.mpq", "DiabloInstall", 8500, FS_PC);
+	hfopt1_mpq = init_test_access(NULL, "hfopt1.mpq", "DiabloInstall", 8600, FS_PC);
+	hfopt2_mpq = init_test_access(NULL, "hfopt2.mpq", "DiabloInstall", 8610, FS_PC);
 #endif
-}
-
-HANDLE init_test_access(char *mpq_path, const char *mpq_name, const char *reg_loc, int dwPriority, int fs)
-{
-	char Buffer[2][MAX_PATH];
-	HANDLE archive;
-
-	GetBasePath(Buffer[0], MAX_PATH);
-	GetPrefPath(Buffer[1], MAX_PATH);
-
-	for (int i = 0; i < 2; i++) {
-		snprintf(mpq_path, MAX_PATH, "%s%s", Buffer[i], mpq_name);
-#if !defined(__SWITCH__) && !defined(__AMIGA__)
-		if (SFileOpenArchive(mpq_path, dwPriority, MPQ_FLAG_READ_ONLY, &archive)) {
-#else
-		if (SFileOpenArchive(mpq_path, dwPriority, 0, &archive)) {
-#endif
-			SFileSetBasePath(Buffer[i]);
-			return archive;
-
-		}
-	}
-
-	return NULL;
 }
 
 void init_get_file_info()
 {
-	snprintf(gszProductName, MAX_PATH, "%s v%s", PROJECT_NAME, PROJECT_VERSION);
-	snprintf(gszVersionNumber, MAX_PATH, "version %s", PROJECT_VERSION);
+	snprintf(gszProductName, sizeof(gszProductName) / sizeof(char), "%s v%s", PROJECT_NAME, PROJECT_VERSION);
+	snprintf(gszVersionNumber, sizeof(gszVersionNumber) / sizeof(char), "version %s", PROJECT_VERSION);
 }
 
 LRESULT MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
