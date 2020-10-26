@@ -94,7 +94,7 @@ inline bool ResizeFile(const char *path, std::uintmax_t size)
 #endif
 }
 
-inline void RemoveFile(char *lpFileName)
+inline void RemoveFile(const char *lpFileName)
 {
 	std::string name = lpFileName;
 	std::replace(name.begin(), name.end(), '\\', '/');

@@ -1389,10 +1389,10 @@ typedef struct _SNETPROGRAMDATA {
 
 typedef struct _SNETVERSIONDATA {
 	int size;
-	char *versionstring;
-	char *executablefile;
-	char *originalarchivefile;
-	char *patcharchivefile;
+	const char *versionstring;
+	const char *executablefile;
+	const char *originalarchivefile;
+	const char *patcharchivefile;
 } _SNETVERSIONDATA;
 
 typedef struct _SNETUIDATA {

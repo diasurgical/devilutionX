@@ -13,6 +13,11 @@
 /* 19.11.03  1.01  Dan  Big endian handling                                  */
 /*****************************************************************************/
 
+#ifndef FULL
+#include <algorithm>
+#include <string>
+#endif
+
 #define __STORMLIB_SELF__
 #include "StormLib.h"
 #include "StormCommon.h"
@@ -177,12 +182,13 @@ bool STORMAPI SFileOpenArchive(
     dwStreamFlags |= (dwFlags & MPQ_OPEN_FORCE_MPQ_V1) ? 0 : STREAM_FLAG_USE_BITMAP;
 
 #ifndef FULL
-    char translatedName[260];
-    TranslateFileName(translatedName, sizeof(translatedName), szMpqName);
+    std::string name = szMpqName;
+    std::replace(name.begin(), name.end(), '\\', '/');
+    szMpqName = name.c_str();
 #endif
 
     // Open the MPQ archive file
-    pStream = FileStream_OpenFile(translatedName, dwStreamFlags);
+    pStream = FileStream_OpenFile(szMpqName, dwStreamFlags);
     if(pStream == NULL)
         return false;
 

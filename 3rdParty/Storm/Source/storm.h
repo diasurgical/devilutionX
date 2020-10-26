@@ -4,9 +4,6 @@
 #include <string>
 namespace dvl {
 
-extern std::string basePath;
-extern std::string prefPath;
-
 // Note to self: Linker error => forgot a return value in cpp
 
 // Storm API definition
@@ -297,8 +294,6 @@ SMemFree(
     int  logline,
     char defaultValue);
 
-void GetBasePath(char *buffer, size_t size);
-void GetPrefPath(char *buffer, size_t size);
 bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue = false);
 bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, int *dataSize = NULL);
 void setIniValue(const char *sectionName, const char *keyName, char *value, int len = 0);
@@ -355,7 +350,7 @@ SStrCopy(
     const char *src,
     int max_length);
 
-BOOL SFileSetBasePath(char *);
+BOOL SFileSetBasePath(const char *);
 BOOL SVidPlayContinue(void);
 BOOL SNetGetOwnerTurnsWaiting(DWORD *);
 BOOL SNetUnregisterEventHandler(int, SEVTHANDLER);

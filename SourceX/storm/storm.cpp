@@ -1,4 +1,8 @@
+#include <cstddef>
+#include <string>
+
 #include "all.h"
+#include "paths.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
 #if !SDL_VERSION_ATLEAST(2, 0, 4)
@@ -17,78 +21,25 @@
 
 namespace dvl {
 
-std::string basePath;
-std::string prefPath;
-
 DWORD nLastError = 0;
+
+namespace {
+
 bool directFileAccess = false;
-char SBasePath[MAX_PATH];
+std::string *SBasePath = NULL;
+
+} // namespace
 
 #ifdef USE_SDL1
 static bool IsSVidVideoMode = false;
 #endif
 
-static std::string getIniPath()
-{
-	char path[MAX_PATH];
-	GetPrefPath(path, MAX_PATH);
-	std::string result = path;
-	result.append("diablo.ini");
-	return result;
-}
-
 radon::File& getIni() {
-  static radon::File ini(getIniPath());
+  static radon::File ini(GetPrefPath() + "diablo.ini");
   return ini;
 }
 
 static Mix_Chunk *SFileChunk = NULL;
-
-void GetBasePath(char *buffer, size_t size)
-{
-	if (basePath.length()) {
-		snprintf(buffer, size, "%s", basePath.c_str());
-		return;
-	}
-
-	char *path = SDL_GetBasePath();
-	if (path == NULL) {
-		SDL_Log(SDL_GetError());
-		buffer[0] = '\0';
-		return;
-	}
-
-	snprintf(buffer, size, "%s", path);
-	SDL_free(path);
-}
-
-void GetPrefPath(char *buffer, size_t size)
-{
-	if (prefPath.length()) {
-		snprintf(buffer, size, "%s", prefPath.c_str());
-		return;
-	}
-
-	char *path = SDL_GetPrefPath("diasurgical", "devilution");
-	if (path == NULL) {
-		buffer[0] = '\0';
-		return;
-	}
-
-	snprintf(buffer, size, "%s", path);
-	SDL_free(path);
-}
-
-void TranslateFileName(char *dst, int dstLen, const char *src)
-{
-	for (int i = 0; i < dstLen; i++) {
-		char c = *src++;
-		dst[i] = c == '\\' ? '/' : c;
-		if (!c) {
-			break;
-		}
-	}
-}
 
 BOOL SFileDdaBeginEx(HANDLE hFile, DWORD flags, DWORD mask, unsigned __int32 lDistanceToMove,
     signed __int32 volume, signed int pan, int a7)
@@ -194,14 +145,11 @@ BOOL SFileOpenFile(const char *filename, HANDLE *phFile)
 {
 	bool result = false;
 
-	if (directFileAccess) {
-		char directPath[MAX_PATH] = "\0";
-		char tmpPath[MAX_PATH] = "\0";
-		for (size_t i = 0; i < strlen(filename); i++) {
-			tmpPath[i] = AsciiToLowerTable_Path[static_cast<unsigned char>(filename[i])];
-		}
-		snprintf(directPath, MAX_PATH, "%s%s", SBasePath, tmpPath);
-		result = SFileOpenFileEx((HANDLE)0, directPath, 0xFFFFFFFF, phFile);
+	if (directFileAccess && SBasePath != NULL) {
+		std::string path = *SBasePath + filename;
+		for (std::size_t i = SBasePath->size(); i < path.size(); ++i)
+			path[i] = AsciiToLowerTable_Path[static_cast<unsigned char>(path[i])];
+		result = SFileOpenFileEx((HANDLE)0, path.c_str(), 0xFFFFFFFF, phFile);
 	}
 
 #ifdef HELLFIRE
@@ -893,9 +841,10 @@ int SStrCopy(char *dest, const char *src, int max_length)
 	return strlen(dest);
 }
 
-BOOL SFileSetBasePath(char *path)
+BOOL SFileSetBasePath(const char *path)
 {
-	strncpy(SBasePath, path, MAX_PATH);
+	if (SBasePath == NULL) SBasePath = new std::string;
+	*SBasePath = path;
 	return true;
 }
 

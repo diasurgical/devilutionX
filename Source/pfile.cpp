@@ -3,7 +3,10 @@
  *
  * Implementation of the save game encoding functionality.
  */
+#include <string>
+
 #include "all.h"
+#include "paths.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 #include "file_util.h"
@@ -14,6 +17,45 @@ DEVILUTION_BEGIN_NAMESPACE
 #define PASSWORD_SPAWN_MULTI "lshbkfg1"
 #define PASSWORD_SINGLE "xrgyrkj1"
 #define PASSWORD_MULTI "szqnlsk1"
+
+namespace {
+
+std::string GetSavePath(DWORD save_num)
+{
+	std::string path = GetPrefPath();
+#ifdef HELLFIRE
+		const char *ext = ".hsv";
+#else
+		const char *ext = ".sv";
+#endif
+
+	if (gbIsSpawn) {
+		if (gbMaxPlayers <= 1) {
+			path.append("spawn");
+		} else {
+			path.append("share_");
+		}
+	} else {
+		if (gbMaxPlayers <= 1) {
+			path.append("single_");
+		} else {
+#ifdef HELLFIRE
+			path.append("hrinfo_");
+			ext = ".drv";
+#else
+			path.append("multi_");
+#endif
+		}
+	}
+
+	char save_num_str[21];
+	snprintf(save_num_str, sizeof(save_num_str) / sizeof(char), "%d", save_num);
+	path.append(save_num_str);
+	path.append(ext);
+	return path;
+}
+
+} // namespace
 
 /** List of character names for the character selection screen. */
 static char hero_names[MAX_CHARACTERS][PLR_NAME_LEN];
@@ -70,58 +112,15 @@ void pfile_encode_hero(const PkPlayerStruct *pPack)
 
 BOOL pfile_open_archive(BOOL update, DWORD save_num)
 {
-	char FileName[MAX_PATH];
-
-	pfile_get_save_path(FileName, sizeof(FileName), save_num);
-	if (OpenMPQ(FileName, save_num))
+	if (OpenMPQ(GetSavePath(save_num).c_str(), save_num))
 		return TRUE;
 
 	return FALSE;
 }
 
-void pfile_get_save_path(char *pszBuf, DWORD dwBufSize, DWORD save_num)
-{
-	char path[MAX_PATH];
-	const char *fmt;
-
-	if (gbIsSpawn) {
-#ifdef HELLFIRE
-		fmt = "%sshare_%d.hsv";
-#else
-		fmt = "%sshare_%d.sv";
-#endif
-
-		if (gbMaxPlayers <= 1)
-#ifdef HELLFIRE
-			fmt = "%sspawn%d.hsv";
-#else
-			fmt = "%sspawn%d.sv";
-#endif
-	} else {
-#ifdef HELLFIRE
-		fmt = "%shrinfo_%d.drv";
-#else
-		fmt = "%smulti_%d.sv";
-#endif
-
-		if (gbMaxPlayers <= 1)
-#ifdef HELLFIRE
-			fmt = "%ssingle_%d.hsv";
-#else
-			fmt = "%ssingle_%d.sv";
-#endif
-	}
-
-	GetPrefPath(path, MAX_PATH);
-	snprintf(pszBuf, MAX_PATH, fmt, path, save_num);
-}
-
 void pfile_flush(BOOL is_single_player, DWORD save_num)
 {
-	char FileName[MAX_PATH];
-
-	pfile_get_save_path(FileName, sizeof(FileName), save_num);
-	mpqapi_flush_and_close(FileName, is_single_player, save_num);
+	mpqapi_flush_and_close(GetSavePath(save_num).c_str(), is_single_player, save_num);
 }
 
 BOOL pfile_create_player_description(char *dst, DWORD len)
@@ -289,11 +288,9 @@ BOOL pfile_read_hero(HANDLE archive, PkPlayerStruct *pPack)
  */
 HANDLE pfile_open_save_archive(BOOL *showFixedMsg, DWORD save_num)
 {
-	char SrcStr[MAX_PATH];
 	HANDLE archive;
 
-	pfile_get_save_path(SrcStr, sizeof(SrcStr), save_num);
-	if (SFileOpenArchive(SrcStr, 0x7000, FS_PC, &archive))
+	if (SFileOpenArchive(GetSavePath(save_num).c_str(), 0x7000, FS_PC, &archive))
 		return archive;
 	return NULL;
 }
@@ -409,13 +406,11 @@ BOOL pfile_get_file_name(DWORD lvl, char *dst)
 BOOL pfile_delete_save(_uiheroinfo *hero_info)
 {
 	DWORD save_num;
-	char FileName[MAX_PATH];
 
 	save_num = pfile_get_save_num_from_name(hero_info->name);
 	if (save_num < MAX_CHARACTERS) {
 		hero_names[save_num][0] = '\0';
-		pfile_get_save_path(FileName, sizeof(FileName), save_num);
-		RemoveFile(FileName);
+		RemoveFile(GetSavePath(save_num).c_str());
 	}
 	return TRUE;
 }
@@ -549,9 +544,7 @@ BOOL GetPermSaveNames(DWORD dwIndex, char *szPerm)
 void pfile_write_save_file(const char *pszName, BYTE *pbData, DWORD dwLen, DWORD qwLen)
 {
 	DWORD save_num;
-	char FileName[MAX_PATH];
 
-	pfile_strcpy(FileName, pszName);
 	save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
 	{
 		const char *password;
@@ -569,29 +562,22 @@ void pfile_write_save_file(const char *pszName, BYTE *pbData, DWORD dwLen, DWORD
 	}
 	if (!pfile_open_archive(FALSE, save_num))
 		app_fatal("Unable to write so save file archive");
-	mpqapi_write_file(FileName, pbData, qwLen);
+	mpqapi_write_file(pszName, pbData, qwLen);
 	pfile_flush(TRUE, save_num);
-}
-
-void pfile_strcpy(char *dst, const char *src)
-{
-	strcpy(dst, src);
 }
 
 BYTE *pfile_read(const char *pszName, DWORD *pdwLen)
 {
 	DWORD save_num, nread;
-	char FileName[MAX_PATH];
 	HANDLE archive, save;
 	BYTE *buf;
 
-	pfile_strcpy(FileName, pszName);
 	save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
 	archive = pfile_open_save_archive(NULL, save_num);
 	if (archive == NULL)
 		app_fatal("Unable to open save file archive");
 
-	if (!SFileOpenFileEx(archive, FileName, 0, &save))
+	if (!SFileOpenFileEx(archive, pszName, 0, &save))
 		app_fatal("Unable to open save file");
 
 	*pdwLen = SFileGetFileSize(save, NULL);
