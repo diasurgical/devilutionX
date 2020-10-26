@@ -133,12 +133,10 @@ static bool CapturePix(WORD width, WORD height, WORD stride, BYTE *pixels, std::
  */
 static std::ofstream *CaptureFile(std::string *dst_path)
 {
-	*dst_path = GetPrefPath() + "screen00.PCX";
-	char &d0 = (*dst_path)[dst_path->size() - 6];
-	char &d1 = (*dst_path)[dst_path->size() - 5];
+	char filename[sizeof("screen00.PCX") / sizeof(char)];
 	for (int i = 0; i <= 99; ++i) {
-		d0 = '0' + (i / 10);
-		d1 = '0' + (i % 10);
+		snprintf(filename, sizeof(filename) / sizeof(char), "screen%02d.PCX", i);
+		*dst_path = GetPrefPath() + filename;
 		if (!FileExists(dst_path->c_str())) {
 			return new std::ofstream(*dst_path, std::ios::binary | std::ios::trunc);
 		}
