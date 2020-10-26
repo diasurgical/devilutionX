@@ -23,6 +23,12 @@ namespace {
 std::string GetSavePath(DWORD save_num)
 {
 	std::string path = GetPrefPath();
+#ifdef HELLFIRE
+		const char *ext = ".hsv";
+#else
+		const char *ext = ".sv";
+#endif
+
 	if (gbIsSpawn) {
 		if (gbMaxPlayers <= 1) {
 			path.append("spawn");
@@ -35,6 +41,7 @@ std::string GetSavePath(DWORD save_num)
 		} else {
 #ifdef HELLFIRE
 			path.append("hrinfo_");
+			ext = ".drv";
 #else
 			path.append("multi_");
 #endif
@@ -44,12 +51,7 @@ std::string GetSavePath(DWORD save_num)
 	char save_num_str[21];
 	snprintf(save_num_str, sizeof(save_num_str) / sizeof(char), "%d", save_num);
 	path.append(save_num_str);
-
-#ifdef HELLFIRE
-		path.append(".hsv");
-#else
-		path.append(".sv");
-#endif
+	path.append(ext);
 	return path;
 }
 
@@ -114,11 +116,6 @@ BOOL pfile_open_archive(BOOL update, DWORD save_num)
 		return TRUE;
 
 	return FALSE;
-}
-
-void pfile_get_save_path(char *pszBuf, DWORD dwBufSize, DWORD save_num)
-{
-	snprintf(pszBuf, dwBufSize, GetSavePath(save_num).c_str());
 }
 
 void pfile_flush(BOOL is_single_player, DWORD save_num)
@@ -567,11 +564,6 @@ void pfile_write_save_file(const char *pszName, BYTE *pbData, DWORD dwLen, DWORD
 		app_fatal("Unable to write so save file archive");
 	mpqapi_write_file(pszName, pbData, qwLen);
 	pfile_flush(TRUE, save_num);
-}
-
-void pfile_strcpy(char *dst, const char *src)
-{
-	strcpy(dst, src);
 }
 
 BYTE *pfile_read(const char *pszName, DWORD *pdwLen)

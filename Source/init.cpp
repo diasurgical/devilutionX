@@ -39,20 +39,19 @@ HANDLE hfopt2_mpq;
 
 namespace {
 
-HANDLE init_test_access(std::string *out_mpq_path, const char *mpq_name, const char *reg_loc, int dwPriority, int fs)
+HANDLE init_test_access(const char *mpq_name, const char *reg_loc, int dwPriority, int fs)
 {
 	HANDLE archive;
 	const std::string *paths[2] = {&GetBasePath(), &GetPrefPath()};
 	std::string mpq_abspath;
+	DWORD mpq_flags = 0;
+#if !defined(__SWITCH__) && !defined(__AMIGA__)
+	mpq_flags |= MPQ_FLAG_READ_ONLY;
+#endif
 	for (int i = 0; i < 2; i++) {
 		mpq_abspath = *paths[i] + mpq_name;
-#if !defined(__SWITCH__) && !defined(__AMIGA__)
-		if (SFileOpenArchive(mpq_abspath.c_str(), dwPriority, MPQ_FLAG_READ_ONLY, &archive)) {
-#else
-		if (SFileOpenArchive(mpq_abspath.c_str(), dwPriority, 0, &archive)) {
-#endif
+		if (SFileOpenArchive(mpq_abspath.c_str(), dwPriority, mpq_flags, &archive)) {
 			SFileSetBasePath(paths[i]->c_str());
-			if (out_mpq_path != NULL) *out_mpq_path = mpq_abspath;
 			return archive;
 		}
 	}
@@ -136,35 +135,33 @@ void init_archives()
 	fileinfo.size = sizeof(fileinfo);
 	fileinfo.versionstring = gszVersionNumber;
 	fileinfo.executablefile = "";
+	fileinfo.originalarchivefile = "";
+	fileinfo.patcharchivefile = "";
 	init_get_file_info();
 
-	static std::string *diabdat_mpq_path = new std::string;
-	diabdat_mpq = init_test_access(diabdat_mpq_path, "diabdat.mpq", "DiabloCD", 1000, FS_CD);
+	diabdat_mpq = init_test_access("diabdat.mpq", "DiabloCD", 1000, FS_CD);
 	if (diabdat_mpq == NULL) {
-		diabdat_mpq = init_test_access(diabdat_mpq_path, "spawn.mpq", "DiabloSpawn", 1000, FS_PC);
+		diabdat_mpq = init_test_access("spawn.mpq", "DiabloSpawn", 1000, FS_PC);
 		if (diabdat_mpq != NULL)
 			gbIsSpawn = true;
 	}
 	if (diabdat_mpq == NULL || !SFileOpenFile("ui_art\\title.pcx", &fh))
 		InsertCDDlg();
 	SFileCloseFile(fh);
-	fileinfo.originalarchivefile = diabdat_mpq_path->c_str();
 
-	static std::string *patch_rt_mpq_path = new std::string;
-	patch_rt_mpq = init_test_access(patch_rt_mpq_path, "patch_rt.mpq", "DiabloInstall", 2000, FS_PC);
+	patch_rt_mpq = init_test_access("patch_rt.mpq", "DiabloInstall", 2000, FS_PC);
 	if (patch_rt_mpq == NULL)
-		patch_rt_mpq = init_test_access(patch_rt_mpq_path, "patch_sh.mpq", "DiabloSpawn", 2000, FS_PC);
-	fileinfo.patcharchivefile = patch_rt_mpq_path->c_str();
+		patch_rt_mpq = init_test_access("patch_sh.mpq", "DiabloSpawn", 2000, FS_PC);
 
 #ifdef HELLFIRE
-	hellfire_mpq = init_test_access(NULL, "hellfire.mpq", "DiabloInstall", 8000, FS_PC);
-	hfmonk_mpq = init_test_access(NULL, "hfmonk.mpq", "DiabloInstall", 8100, FS_PC);
-	hfbard_mpq = init_test_access(NULL, "hfbard.mpq", "DiabloInstall", 8110, FS_PC);
-	hfbarb_mpq = init_test_access(NULL, "hfbarb.mpq", "DiabloInstall", 8120, FS_PC);
-	hfmusic_mpq = init_test_access(NULL, "hfmusic.mpq", "DiabloInstall", 8200, FS_PC);
-	hfvoice_mpq = init_test_access(NULL, "hfvoice.mpq", "DiabloInstall", 8500, FS_PC);
-	hfopt1_mpq = init_test_access(NULL, "hfopt1.mpq", "DiabloInstall", 8600, FS_PC);
-	hfopt2_mpq = init_test_access(NULL, "hfopt2.mpq", "DiabloInstall", 8610, FS_PC);
+	hellfire_mpq = init_test_access("hellfire.mpq", "DiabloInstall", 8000, FS_PC);
+	hfmonk_mpq = init_test_access("hfmonk.mpq", "DiabloInstall", 8100, FS_PC);
+	hfbard_mpq = init_test_access("hfbard.mpq", "DiabloInstall", 8110, FS_PC);
+	hfbarb_mpq = init_test_access("hfbarb.mpq", "DiabloInstall", 8120, FS_PC);
+	hfmusic_mpq = init_test_access("hfmusic.mpq", "DiabloInstall", 8200, FS_PC);
+	hfvoice_mpq = init_test_access("hfvoice.mpq", "DiabloInstall", 8500, FS_PC);
+	hfopt1_mpq = init_test_access("hfopt1.mpq", "DiabloInstall", 8600, FS_PC);
+	hfopt2_mpq = init_test_access("hfopt2.mpq", "DiabloInstall", 8610, FS_PC);
 #endif
 }
 
