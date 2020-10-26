@@ -2228,7 +2228,7 @@ void WitchBuyItem()
 	idx = stextvhold + ((stextlhold - stextup) >> 2);
 
 	if (idx < 3)
-		plr[myplr].HoldItem._iSeed = GetRndSeed();
+		plr[myplr].HoldItem._iSeed = AdvanceRndSeed();
 
 	TakePlrsMoney(plr[myplr].HoldItem._iIvalue);
 	StoreAutoPlace();
@@ -2380,10 +2380,10 @@ void HealerBuyItem()
 	idx = stextvhold + ((stextlhold - stextup) >> 2);
 	if (gbMaxPlayers == 1) {
 		if (idx < 2)
-			plr[myplr].HoldItem._iSeed = GetRndSeed();
+			plr[myplr].HoldItem._iSeed = AdvanceRndSeed();
 	} else {
 		if (idx < 3)
-			plr[myplr].HoldItem._iSeed = GetRndSeed();
+			plr[myplr].HoldItem._iSeed = AdvanceRndSeed();
 	}
 
 	TakePlrsMoney(plr[myplr].HoldItem._iIvalue);

@@ -738,13 +738,22 @@ void SetRndSeed(int s)
 }
 
 /**
+ * @brief Advance the internal RNG seed and return the new value
+ * @return RNG seed
+ */
+int AdvanceRndSeed()
+{
+	SeedCount++;
+	sglGameSeed = static_cast<unsigned int>(RndMult) * sglGameSeed + RndInc;
+	return abs(sglGameSeed);
+}
+
+/**
  * @brief Get the current RNG seed
  * @return RNG seed
  */
 int GetRndSeed()
 {
-	SeedCount++;
-	sglGameSeed = static_cast<unsigned int>(RndMult) * sglGameSeed + RndInc;
 	return abs(sglGameSeed);
 }
 
@@ -759,8 +768,8 @@ int random_(BYTE idx, int v)
 	if (v <= 0)
 		return 0;
 	if (v < 0xFFFF)
-		return (GetRndSeed() >> 16) % v;
-	return GetRndSeed() % v;
+		return (AdvanceRndSeed() >> 16) % v;
+	return AdvanceRndSeed() % v;
 }
 
 /**

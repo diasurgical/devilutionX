@@ -68,6 +68,7 @@ void engine_draw_pixel(int sx, int sy);
 void DrawLine(int x0, int y0, int x1, int y1, BYTE col);
 int GetDirection(int x1, int y1, int x2, int y2);
 void SetRndSeed(int s);
+int AdvanceRndSeed();
 int GetRndSeed();
 int random_(BYTE idx, int v);
 void engine_debug_trap(BOOL show_cursor);

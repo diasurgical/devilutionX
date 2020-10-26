@@ -818,7 +818,7 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 
 	int numberOfLevels = gbIsHellfire ? NUMLEVELS : 17;
 	for (i = 0; i < numberOfLevels; i++) {
-		glSeedTbl[i] = GetRndSeed();
+		glSeedTbl[i] = AdvanceRndSeed();
 		gnLevelTypeTbl[i] = InitLevelType(i);
 	}
 	if (!SNetGetGameInfo(GAMEINFO_NAME, szPlayerName, 128, &len))

@@ -173,7 +173,7 @@ void VerifyGoldSeeds(PlayerStruct *pPlayer)
 			for (j = 0; j < pPlayer->_pNumInv; j++) {
 				if (i != j) {
 					if (pPlayer->InvList[j].IDidx == IDI_GOLD && pPlayer->InvList[i]._iSeed == pPlayer->InvList[j]._iSeed) {
-						pPlayer->InvList[i]._iSeed = GetRndSeed();
+						pPlayer->InvList[i]._iSeed = AdvanceRndSeed();
 						j = -1;
 					}
 				}

@@ -1687,6 +1687,7 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 				IncProgress();
 				SavePreLighting();
 			} else {
+				HoldThemeRooms();
 				InitMonsters();
 				InitMissiles();
 				InitDead();

@@ -480,7 +480,7 @@ void delta_leave_sync(BYTE bLevel)
 	if (gbMaxPlayers == 1)
 		return;
 	if (currlevel == 0)
-		glSeedTbl[0] = GetRndSeed();
+		glSeedTbl[0] = AdvanceRndSeed();
 	if (currlevel <= 0)
 		return;
 

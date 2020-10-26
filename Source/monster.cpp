@@ -502,8 +502,8 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 	monster[i]._uniqtype = 0;
 	monster[i]._msquelch = 0;
 	monster[i].mlid = NO_LIGHT; // BUGFIX monsters initial light id should be -1 (fixed)
-	monster[i]._mRndSeed = GetRndSeed();
-	monster[i]._mAISeed = GetRndSeed();
+	monster[i]._mRndSeed = AdvanceRndSeed();
+	monster[i]._mAISeed = AdvanceRndSeed();
 	monster[i].mWhoHit = 0;
 	monster[i].mExp = monst->MData->mExp;
 	monster[i].mHit = monst->MData->mHit;
@@ -4742,7 +4742,7 @@ void ProcessMonsters()
 		raflag = FALSE;
 		if (gbMaxPlayers > 1) {
 			SetRndSeed(Monst->_mAISeed);
-			Monst->_mAISeed = GetRndSeed();
+			Monst->_mAISeed = AdvanceRndSeed();
 		}
 		if (!(monster[mi]._mFlags & MFLAG_NOHEAL) && Monst->_mhitpoints < Monst->_mmaxhp && Monst->_mhitpoints >> 6 > 0) {
 			if (Monst->mLevel > 1) {

@@ -1729,7 +1729,7 @@ void SaveLevel()
 	DoUnVision(plr[myplr]._px, plr[myplr]._py, plr[myplr]._pLightRad); // fix for vision staying on the level
 
 	if (currlevel == 0)
-		glSeedTbl[0] = GetRndSeed();
+		glSeedTbl[0] = AdvanceRndSeed();
 
 	dwLen = codec_get_encoded_len(FILEBUFF);
 	SaveBuff = DiabloAllocPtr(dwLen);
