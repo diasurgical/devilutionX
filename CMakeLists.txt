@@ -379,6 +379,27 @@ if(RUN_TESTS)
   gtest_add_tests(${BIN_TARGET} "" AUTO)
 endif()
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/external/cmake-modules/)
+include(ExternalProject)
+set(TINYGETTEXT_PREFIX ${CMAKE_BINARY_DIR}/tinygettext/)
+ExternalProject_Add(tinygettext
+  SOURCE_DIR "${CMAKE_SOURCE_DIR}/external/tinygettext/"
+  BUILD_BYPRODUCTS "${TINYGETTEXT_PREFIX}/lib${LIB_SUFFIX}/${CMAKE_STATIC_LIBRARY_PREFIX}tinygettext${CMAKE_STATIC_LIBRARY_SUFFIX}"
+  CMAKE_ARGS
+  -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+  -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
+  -DCMAKE_C_FLAGS=${CMAKE_C_FLAGS}
+  -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+  -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
+  -DBUILD_SHARED_LIBS=OFF
+  -DCMAKE_INSTALL_PREFIX=${TINYGETTEXT_PREFIX}
+  -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE})
+
+add_dependencies(${BIN_TARGET} tinygettext)
+add_library(tinygettext_lib STATIC IMPORTED)
+set_target_properties(tinygettext_lib PROPERTIES IMPORTED_LOCATION "${TINYGETTEXT_PREFIX}/lib${LIB_SUFFIX}/${CMAKE_STATIC_LIBRARY_PREFIX}tinygettext${CMAKE_STATIC_LIBRARY_SUFFIX}")
+include_directories(SYSTEM ${TINYGETTEXT_PREFIX}/include)
+
 target_include_directories(devilution PUBLIC Source SourceS ${CMAKE_CURRENT_BINARY_DIR})
 target_include_directories(${BIN_TARGET} PRIVATE
   SourceS
@@ -390,14 +411,16 @@ target_include_directories(${BIN_TARGET} PRIVATE
 target_link_libraries(devilution PUBLIC
   Threads::Threads
   SourceS
-)
+  tinygettext_lib)
+
 target_link_libraries(${BIN_TARGET} PRIVATE
   devilution
   SourceS
   PKWare
   StormLib
   smacker
-  Radon)
+  Radon
+  tinygettext_lib)
 
 if(NOT NONET)
   target_link_libraries(${BIN_TARGET} PRIVATE sodium)
