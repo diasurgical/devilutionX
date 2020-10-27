@@ -1554,6 +1554,19 @@ void CreateLevel(int lvldir)
 	}
 }
 
+static void UpdateMonsterLights()
+{
+	for (int i = 0; i < nummonsters; i++) {
+		MonsterStruct *mon = &monster[monstactive[i]];
+		if (mon->mlid != NO_LIGHT) {
+			LightListStruct *lid = &LightList[mon->mlid];
+			if (mon->_mx != lid->_lx || mon->_my != lid->_ly){
+				ChangeLightXY(mon->mlid, mon->_mx, mon->_my);
+			}
+		}
+	}
+}
+
 void LoadGameLevel(BOOL firstflag, int lvldir)
 {
 	int i, j;
@@ -1764,6 +1777,7 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 		InitControlPan();
 	}
 	IncProgress();
+	UpdateMonsterLights();
 	if (leveltype != DTYPE_TOWN) {
 		ProcessLightList();
 		ProcessVisionList();
