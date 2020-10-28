@@ -72,6 +72,7 @@ void start_game(unsigned int uMsg);
 void free_game();
 int DiabloMain(int argc, char **argv);
 void diablo_parse_flags(int argc, char **argv);
+void init_tinygettext();
 void diablo_init_screen();
 void diablo_reload_process(HINSTANCE hInstance);
 void diablo_quit(int exitStatus);

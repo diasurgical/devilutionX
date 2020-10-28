@@ -184,6 +184,7 @@ add_library(PKWare STATIC
   3rdParty/PKWare/implode.cpp)
 
 add_library(SourceS STATIC
+  SourceS/gettext.cpp
   SourceS/paths.cpp)
 
 add_library(devilution STATIC
@@ -392,6 +393,7 @@ ExternalProject_Add(tinygettext
   -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
   -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
   -DBUILD_SHARED_LIBS=OFF
+  -DTINYGETTEXT_WITH_SDL=ON
   -DCMAKE_INSTALL_PREFIX=${TINYGETTEXT_PREFIX}
   -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE})
 

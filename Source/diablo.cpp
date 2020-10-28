@@ -4,10 +4,12 @@
  * Implementation of the main game initialization functions.
  */
 #include "all.h"
+#include "gettext.h"
 #include "paths.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 #include <config.h>
+#include <string>
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -303,6 +305,8 @@ void diablo_init()
 {
 	init_create_window();
 
+	init_tinygettext();
+
 	SFileEnableDirectAccess(TRUE);
 	init_archives();
 	was_archives_init = true;
@@ -364,6 +368,7 @@ void diablo_deinit()
 		FontsCleanup();
 	if (SDL_WasInit(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC))
 		SDL_Quit();
+	gDictionaryManager.reset();
 }
 
 void diablo_quit(int exitStatus)
@@ -499,6 +504,18 @@ void diablo_parse_flags(int argc, char **argv)
 			print_help_and_exit();
 		}
 	}
+}
+
+void init_tinygettext()
+{
+	gDictionaryManager.reset(new tinygettext::DictionaryManager("UTF-8"));
+	gDictionaryManager->add_directory("locale");
+
+	char language[6] = "en";
+	if (!getIniValue("devilutionx", "language", language, 5, NULL))
+		setIniValue("devilutionx", "language", language);
+
+	gDictionaryManager->set_language(tinygettext::Language::from_name(language));
 }
 
 void diablo_init_screen()
@@ -1268,15 +1285,24 @@ void PressChar(int vkey)
 			AutomapZoomOut();
 		}
 		return;
-	case 'v':
-		char *difficulties[3];
+	case 'v': {
+		std::string difficulty;
+		switch (gnDifficulty) {
+		case 0:
+			difficulty = _("Normal");
+			break;
+		case 1:
+			difficulty = _("Nightmare");
+			break;
+		case 2:
+			difficulty = _("Hell");
+			break;
+		}
 		char pszStr[120];
-		difficulties[0] = "Normal";
-		difficulties[1] = "Nightmare";
-		difficulties[2] = "Hell";
-		sprintf(pszStr, "%s, mode = %s", gszProductName, difficulties[gnDifficulty]);
+		sprintf(pszStr, _("%s, mode = %s").c_str(), gszProductName, difficulty.c_str());
 		NetSendCmdString(1 << myplr, pszStr);
 		return;
+	}
 	case 'V':
 		NetSendCmdString(1 << myplr, gszVersionNumber);
 		return;
