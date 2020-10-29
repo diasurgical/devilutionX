@@ -1811,7 +1811,7 @@ void game_loop(BOOL bStartup)
 {
 	int i;
 
-	i = bStartup ? 60 : 3;
+	i = bStartup ? ticks_per_sec * 3 : 3;
 
 	while (i--) {
 		if (!multi_handle_delta()) {

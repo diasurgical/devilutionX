@@ -34,7 +34,7 @@ void tmsg_add(BYTE *pbMsg, BYTE bLen)
 
 	TMsg *msg = (TMsg *)DiabloAllocPtr(bLen + sizeof(*msg));
 	msg->hdr.pNext = NULL;
-	msg->hdr.dwTime = SDL_GetTicks() + 500;
+	msg->hdr.dwTime = SDL_GetTicks() + tick_delay * 10;
 	msg->hdr.bLen = bLen;
 	memcpy(msg->body, pbMsg, bLen);
 	for (tail = &sgpTimedMsgHead; *tail; tail = &(*tail)->hdr.pNext) {
