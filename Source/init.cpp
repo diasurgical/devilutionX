@@ -174,20 +174,13 @@ void init_get_file_info()
 void MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (Msg) {
-	case DVL_WM_ERASEBKGND:
-		return 0;
 	case DVL_WM_PAINT:
 		force_redraw = 255;
 		break;
-	case DVL_WM_CLOSE:
-		return 0;
-	case DVL_WM_QUERYNEWPALETTE:
-		return 1;
 	case DVL_WM_QUERYENDSESSION:
 		diablo_quit(0);
+		break;
 	}
-
-	return 0;
 }
 
 WNDPROC SetWindowProc(WNDPROC NewProc)
