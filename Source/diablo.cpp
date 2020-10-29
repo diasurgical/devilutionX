@@ -564,7 +564,7 @@ static void GetMousePos(LPARAM lParam)
 	MouseY = (short)((lParam >> 16) & 0xffff);
 }
 
-LRESULT DisableInputWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+void DisableInputWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg) {
 	case DVL_WM_KEYDOWN:
@@ -574,71 +574,71 @@ LRESULT DisableInputWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case DVL_WM_SYSCOMMAND:
 	case DVL_WM_MOUSEMOVE:
 		GetMousePos(lParam);
-		return 0;
+		return;
 	case DVL_WM_LBUTTONDOWN:
 		if (sgbMouseDown != 0)
-			return 0;
+			return;
 		sgbMouseDown = 1;
-		return 0;
+		return;
 	case DVL_WM_LBUTTONUP:
 		if (sgbMouseDown != 1)
-			return 0;
+			return;
 		sgbMouseDown = 0;
-		return 0;
+		return;
 	case DVL_WM_RBUTTONDOWN:
 		if (sgbMouseDown != 0)
-			return 0;
+			return;
 		sgbMouseDown = 2;
-		return 0;
+		return;
 	case DVL_WM_RBUTTONUP:
 		if (sgbMouseDown != 2)
-			return 0;
+			return;
 		sgbMouseDown = 0;
-		return 0;
+		return;
 	case DVL_WM_CAPTURECHANGED:
 		if (hWnd == (HWND)lParam)
-			return 0;
+			return;
 		sgbMouseDown = 0;
-		return 0;
+		return;
 	}
 
-	return MainWndProc(hWnd, uMsg, wParam, lParam);
+	MainWndProc(hWnd, uMsg, wParam, lParam);
 }
 
-LRESULT GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+void GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg) {
 	case DVL_WM_KEYDOWN:
 		PressKey(wParam);
-		return 0;
+		return;
 	case DVL_WM_KEYUP:
 		ReleaseKey(wParam);
-		return 0;
+		return;
 	case DVL_WM_CHAR:
 		PressChar(wParam);
-		return 0;
+		return;
 	case DVL_WM_SYSKEYDOWN:
 		if (PressSysKey(wParam))
-			return 0;
+			return;
 		break;
 	case DVL_WM_SYSCOMMAND:
 		if (wParam == DVL_SC_CLOSE) {
 			gbRunGame = FALSE;
 			gbRunGameResult = FALSE;
-			return 0;
+			return;
 		}
 		break;
 	case DVL_WM_MOUSEMOVE:
 		GetMousePos(lParam);
 		gmenu_on_mouse_move();
-		return 0;
+		return;
 	case DVL_WM_LBUTTONDOWN:
 		GetMousePos(lParam);
 		if (sgbMouseDown == 0) {
 			sgbMouseDown = 1;
 			track_repeat_walk(LeftMouseDown(wParam));
 		}
-		return 0;
+		return;
 	case DVL_WM_LBUTTONUP:
 		GetMousePos(lParam);
 		if (sgbMouseDown == 1) {
@@ -646,20 +646,20 @@ LRESULT GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			LeftMouseUp();
 			track_repeat_walk(FALSE);
 		}
-		return 0;
+		return;
 	case DVL_WM_RBUTTONDOWN:
 		GetMousePos(lParam);
 		if (sgbMouseDown == 0) {
 			sgbMouseDown = 2;
 			RightMouseDown();
 		}
-		return 0;
+		return;
 	case DVL_WM_RBUTTONUP:
 		GetMousePos(lParam);
 		if (sgbMouseDown == 2) {
 			sgbMouseDown = 0;
 		}
-		return 0;
+		return;
 	case DVL_WM_CAPTURECHANGED:
 		if (hWnd != (HWND)lParam) {
 			sgbMouseDown = 0;
@@ -689,10 +689,10 @@ LRESULT GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			PaletteFadeIn(8);
 		nthread_ignore_mutex(FALSE);
 		gbGameLoopStartup = TRUE;
-		return 0;
+		return;
 	}
 
-	return MainWndProc(hWnd, uMsg, wParam, lParam);
+	MainWndProc(hWnd, uMsg, wParam, lParam);
 }
 
 BOOL LeftMouseDown(int wParam)
