@@ -39,6 +39,15 @@ inline void FastDrawHorizLine(int x, int y, int width, BYTE col)
 	memset(&gpBuffer[SCREENXY(x,y)], col, width);
 }
 
+inline void FastDrawVertLine(int x, int y, int height, BYTE col)
+{
+	BYTE *p = &gpBuffer[SCREENXY(x, y)];
+	for (int j = 0; j < height; j++) {
+		*p = col;
+		p += BUFFER_WIDTH;
+	}
+}
+
 inline void FillRect(int x, int y, int width, int height, BYTE col)
 {
 	for (int j = 0; j < height; j++) {
@@ -146,17 +155,19 @@ void DrawXPBar()
 {
 	if (!drawXPBar)
 		return;
-	int barSize = 306; // *ScreenWidth / 640;
-	int offset = 3;
-	int barRows = 3; // *ScreenHeight / 480;
+	int barWidth = 306;
+	int barHeight = 5;
+	int yPos = SCREEN_HEIGHT - 9; // y position of xp bar
+	int xPos = (SCREEN_WIDTH - barWidth) / 2 + 5; // x position of xp bar
 	int dividerHeight = 3;
 	int numDividers = 10;
-	int barColor = 242; /*242white, 142red, 200yellow, 182blue*/
+	int barColor = 200; /*242white, 142red, 200yellow, 182blue*/
 	int emptyBarColor = 0;
 	int frameColor = 242;
-	int yPos = BORDER_TOP + SCREEN_HEIGHT - 8;
+	bool space = true; // add 1 pixel separator on top/bottom of the bar
 
-	PrintGameStr(145 + (SCREEN_WIDTH - 640) / 2, SCREEN_HEIGHT - 4, "XP", COL_WHITE);
+
+	PrintGameStr(xPos - 22, yPos + 6, "XP", COL_WHITE);
 	int charLevel = plr[myplr]._pLevel;
 	if (charLevel != MAXCHARLEVEL - 1) {
 		int curXp = ExpLvlsTbl[charLevel];
@@ -164,36 +175,15 @@ void DrawXPBar()
 		int prevXpDelta = curXp - prevXp;
 		int prevXpDelta_1 = plr[myplr]._pExperience - prevXp;
 		if (plr[myplr]._pExperience >= prevXp) {
-			int visibleBar = barSize * (unsigned __int64)prevXpDelta_1 / prevXpDelta;
-
-			for (int i = 0; i < visibleBar; ++i) {
-				for (int j = 0; j < barRows; ++j) {
-					ENG_set_pixel((BUFFER_WIDTH - barSize) / 2 + i + offset, yPos - barRows / 2 + j, barColor);
-				}
-			}
-
-			for (int i = visibleBar; i < barSize; ++i) {
-				for (int j = 0; j < barRows; ++j) {
-					ENG_set_pixel((BUFFER_WIDTH - barSize) / 2 + i + offset, yPos - barRows / 2 + j, emptyBarColor);
-				}
-			}
-			//draw frame
-			//horizontal
-			for (int i = -1; i <= barSize; ++i) {
-				ENG_set_pixel((BUFFER_WIDTH - barSize) / 2 + i + offset, yPos - barRows / 2 - 1, frameColor);
-				ENG_set_pixel((BUFFER_WIDTH - barSize) / 2 + i + offset, yPos + barRows / 2 + 1, frameColor);
-			}
-			//vertical
-			for (int i = -dividerHeight; i < barRows + dividerHeight; ++i) {
-				if (i >= 0 && i < barRows) {
-					ENG_set_pixel((BUFFER_WIDTH - barSize) / 2 - 1 + offset, yPos - barRows / 2 + i, frameColor);
-					ENG_set_pixel((BUFFER_WIDTH - barSize) / 2 + barSize + offset, yPos - barRows / 2 + i, frameColor);
-				}
-				for (int j = 1; j < numDividers; ++j) {
-					ENG_set_pixel((BUFFER_WIDTH - barSize) / 2 - 1 + offset + (barSize * j / numDividers), yPos - barRows / 2 + i, frameColor);
-				}
-			}
-			//draw frame
+			int visibleBar = barWidth * (unsigned __int64)prevXpDelta_1 / prevXpDelta;
+			FillRect(xPos, yPos, barWidth, barHeight, emptyBarColor);
+			FillRect(xPos, yPos + (space ? 1 : 0), visibleBar, barHeight - (space ? 2 : 0), barColor);
+			FastDrawHorizLine(xPos - 1, yPos - 1, barWidth + 2, frameColor);
+			FastDrawHorizLine(xPos - 1, yPos + barHeight, barWidth + 2, frameColor);
+			FastDrawVertLine(xPos - 1, yPos - 1, barHeight + 2, frameColor);
+			FastDrawVertLine(xPos + barWidth, yPos - 1, barHeight + 2, frameColor);
+			for (int i = 1; i < numDividers; i++) 
+				FastDrawVertLine(xPos - 1 + (barWidth * i / numDividers), yPos - dividerHeight - 1, barHeight + dividerHeight * 2 + 2, frameColor);
 		}
 	}
 }
