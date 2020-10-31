@@ -74,7 +74,7 @@ void DrawMonsterHealthBar()
 	char *immuText = "IMMU: ", *resText = "RES: ", *vulnText = ":VULN"; // text displayed for immunities / resistances / vulnerabilities
 	int resSize = 3; // how many damage types
 	BYTE resistColors[] = { 148, 140, 129 }; // colors for these damage types
-	WORD immunes[] = { IMUNE_MAGIC, IMUNE_FIRE, IMUNE_LIGHTNING }; // immunity flags for damage types
+	WORD immunes[] = { IMMUNE_MAGIC, IMMUNE_FIRE, IMMUNE_LIGHTNING }; // immunity flags for damage types
 	WORD resists[] = { RESIST_MAGIC, RESIST_FIRE, RESIST_LIGHTNING }; // resistance flags for damage types
 
 	MonsterStruct *mon = &monster[pcursmonst];
