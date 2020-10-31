@@ -8,7 +8,7 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 static BYTE sgbIsScrolling;
-static DWORD sgdwLastWalk;
+static int sgdwLastWalk;
 static BOOL sgbIsWalking;
 
 void track_process()
@@ -23,9 +23,8 @@ void track_process()
 		return;
 
 	if (cursmx != plr[myplr]._ptargx || cursmy != plr[myplr]._ptargy) {
-		DWORD tick = SDL_GetTicks();
-		if ((int)(tick - sgdwLastWalk) >= tick_delay * 6) {
-			sgdwLastWalk = tick;
+		if (logicTick - sgdwLastWalk >= 6) {
+			sgdwLastWalk = logicTick;
 			NetSendCmdLoc(TRUE, CMD_WALKXY, cursmx, cursmy);
 			if (!sgbIsScrolling)
 				sgbIsScrolling = TRUE;
@@ -41,7 +40,7 @@ void track_repeat_walk(BOOL rep)
 	sgbIsWalking = rep;
 	if (rep) {
 		sgbIsScrolling = FALSE;
-		sgdwLastWalk = SDL_GetTicks() - tick_delay;
+		sgdwLastWalk = logicTick;
 		NetSendCmdLoc(TRUE, CMD_WALKXY, cursmx, cursmy);
 	} else if (sgbIsScrolling) {
 		sgbIsScrolling = FALSE;

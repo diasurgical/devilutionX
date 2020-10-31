@@ -62,6 +62,7 @@ extern BOOLEAN UseMultiTest;
 #endif
 extern char sgbMouseDown;
 extern int color_cycle_timer;
+extern int logicTick;
 extern int ticks_per_sec;
 extern WORD tick_delay;
 

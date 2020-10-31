@@ -59,6 +59,7 @@ BOOLEAN UseMultiTest;
 int sgnTimeoutCurs;
 char sgbMouseDown;
 int color_cycle_timer;
+int logicTick;
 int ticks_per_sec = 20;
 WORD tick_delay = 50;
 
@@ -217,6 +218,8 @@ void run_game_loop(unsigned int uMsg)
 	gbGameLoopStartup = TRUE;
 	nthread_ignore_mutex(FALSE);
 
+	logicTick = 0;
+
 	while (gbRunGame) {
 		while (PeekMessage(&msg)) {
 			if (msg.message == DVL_WM_QUIT) {
@@ -239,6 +242,7 @@ void run_game_loop(unsigned int uMsg)
 		game_loop(gbGameLoopStartup);
 		gbGameLoopStartup = FALSE;
 		DrawAndBlit();
+		logicTick++;
 	}
 
 	if (gbMaxPlayers > 1) {
