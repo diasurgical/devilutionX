@@ -578,7 +578,7 @@ BYTE *pfile_read(const char *pszName, DWORD *pdwLen)
 		app_fatal("Unable to open save file archive");
 
 	if (!SFileOpenFileEx(archive, pszName, 0, &save)) {
-		if (strcmp(FileName, "hotkeys") == 0) {
+		if (strcmp(pszName, "hotkeys") == 0) {
 			pfile_SFileCloseArchive(archive);
 			return NULL;
 		} 
