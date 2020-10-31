@@ -34,6 +34,23 @@ bool altPressed = false;
 bool drawXPBar = false;
 bool drawHPBar = false;
 
+inline void FastDrawHorizLine(int x, int y, int width, BYTE col)
+{
+	memset(&gpBuffer[SCREENXY(x,y)], col, width);
+}
+
+inline void FillRect(int x, int y, int width, int height, BYTE col)
+{
+	for (int j = 0; j < height; j++) {
+		FastDrawHorizLine(x, y + j, width, col);
+	}
+}
+
+inline void FillSquare(int x, int y, int size, BYTE col)
+{
+	FillRect(x, y, size, size, col);
+}
+
 void DrawMonsterHealthBar()
 {
 	if (!drawHPBar)
@@ -42,128 +59,87 @@ void DrawMonsterHealthBar()
 		return;
 	if (pcursmonst == -1)
 		return;
-	MonsterStruct *mon = &monster[pcursmonst];
-	bool specialMonster = mon->_uniqtype != 0;
-	int currentLife = mon->_mhitpoints;
-	int maxLife = mon->_mmaxhp;
 
+	int width = 250;
+	int height = 25;
+	int x = 0; // x offset from the center of the screen
+	int y = 20; // y position
+	int xOffset = 0; // empty space between left/right borders and health bar
+	int yOffset = 1; // empty space between top/bottom borders and health bar
+	int borderSize = 2; // size of the border around health bar
+	BYTE borderColors[] = { 242 /*undead*/, 232 /*demon*/, 182 /*beast*/ };
+	BYTE filledColor = 142;     // filled health bar color
+	bool fillCorners = false; // true to fill border corners, false to cut them off
+	int square = 10; // resistance / immunity / vulnerability square size
+	char *immuText = "IMMU: ", *resText = "RES: ", *vulnText = ":VULN"; // text displayed for immunities / resistances / vulnerabilities
+	int resSize = 3; // how many damage types
+	BYTE resistColors[] = { 148, 140, 129 }; // colors for these damage types
+	WORD immunes[] = { IMUNE_MAGIC, IMUNE_FIRE, IMUNE_LIGHTNING }; // immunity flags for damage types
+	WORD resists[] = { RESIST_MAGIC, RESIST_FIRE, RESIST_LIGHTNING }; // resistance flags for damage types
+
+	MonsterStruct *mon = &monster[pcursmonst];
+	BYTE borderColor = borderColors[(BYTE)mon->MData->mMonstClass];
+	WORD mres = mon->mMagicRes;
+	bool drawImmu = false;
+	int xPos = (SCREEN_WIDTH - width) / 2 + x;
+	int xPos2 = xPos + width / 2;
+	int yPos = y;
+	int immuOffset = GetTextWidth(immuText) - 5;
+	int resOffset = GetTextWidth(resText);
+	int vulOffset = width - square - GetTextWidth(vulnText) - 4;
+	int corners = (fillCorners ? borderSize : 0);
+	int currentLife = mon->_mhitpoints, maxLife = mon->_mmaxhp;
 	if (currentLife > maxLife)
 		maxLife = currentLife;
+	if (mon->_uniqtype != 0)
+		borderSize <<= 1;
 
-	float FilledPercent = (float)currentLife / (float)maxLife;
-	const int yPos = 180;
-	const int width = 250;
-	const int xPos = (SCREEN_WIDTH) / 2 - BORDER_LEFT;
-	const int height = 25;
-	const int xOffset = 0;
-	const int yOffset = 1;
-	int borderWidth = 2;
-	if (specialMonster)
-		borderWidth = 2;
-	int borderColors[] = { 242 /*undead*/, 232 /*demon*/, 182 /*beast*/ };
-	int borderColor = borderColors[(BYTE)mon->MData->mMonstClass]; //200; // pure golden, unique item style
-	int filledColor = 142;                                          // optimum balance in bright red between dark and light
-	bool fillCorners = true;
-	int square = 10;
-	char *immuText = "IMMU: ";
-	char *resText = "RES: ";
-	char *vulnText = ":VULN";
-	int resSize = 3;
-	int resistColors[] = { 148, 140, 129 }; // { 170,140,129,148,242 };// {168, 216, 200, 242, 142 }; // arcane // fire // lightning // acid
-	WORD immunes[] = { IMUNE_MAGIC, IMUNE_FIRE, IMUNE_LIGHTNING };
-	WORD resists[] = { RESIST_MAGIC, RESIST_FIRE, RESIST_LIGHTNING };
-	WORD mres = mon->mMagicRes;
-
-	int resOffset = 0 + GetTextWidth(resText);
-	for (int k = 0; k < resSize; ++k) {
-		if (!(mres & resists[k]))
-			continue;
-		for (int j = 0; j < square; j++) {
-			for (int i = 0; i < square; i++) {
-				ENG_set_pixel(xPos + i + resOffset, yPos + height + j + yOffset + borderWidth + 2, resistColors[k]);
-			}
-		}
-		resOffset += square + 2;
+	FillRect(xPos, yPos, (width * currentLife) / maxLife, height, filledColor);
+	for (int j = 0; j < borderSize; j++) {
+		FastDrawHorizLine(xPos - xOffset - corners, yPos - borderSize - yOffset + j, (xOffset + corners) * 2 + width, borderColor);
+		FastDrawHorizLine(xPos - xOffset, yPos + height + yOffset + j, width + corners + xOffset * 2, borderColor);
 	}
-
-	int vulOffset = width - square - GetTextWidth(vulnText) - 4;
-	for (int k = 0; k < resSize; ++k) {
-		if (mres & resists[k] || mres & immunes[k])
-			continue;
-		for (int j = 0; j < square; j++) {
-			for (int i = 0; i < square; i++) {
-				ENG_set_pixel(xPos + i + vulOffset, yPos + height + j + yOffset + borderWidth + 2, resistColors[k]);
-			}
-		}
-		vulOffset -= square + 2;
+	for (int j = -yOffset; j < yOffset + height + corners; ++j) {
+		FastDrawHorizLine(xPos - xOffset - borderSize, yPos + j, borderSize, borderColor);
+		FastDrawHorizLine(xPos + xOffset + width, yPos + j, borderSize, borderColor);
 	}
-
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < (width * FilledPercent); i++) {
-			int tmpColor = filledColor;
-			ENG_set_pixel(xPos + i, yPos + j, tmpColor);
-		}
-	}
-
-	for (int j = 0; j < borderWidth; j++) {
-		for (int i = -xOffset - (fillCorners ? borderWidth : 0); i < width + xOffset + (fillCorners ? borderWidth : 0); i++) {
-			ENG_set_pixel(xPos + i, yPos + j - yOffset - borderWidth, borderColor);
-		}
-		for (int i = -xOffset; i < width + xOffset + (fillCorners ? borderWidth : 0); i++) {
-			ENG_set_pixel(xPos + i, yPos + j + yOffset + height, borderColor);
-		}
-	}
-
-	for (int j = -yOffset; j < height + yOffset + (fillCorners ? borderWidth : 0); j++) {
-		for (int i = 0; i < borderWidth; i++) {
-			ENG_set_pixel(xPos + i - xOffset - borderWidth, yPos + j, borderColor);
-			ENG_set_pixel(xPos + i + xOffset + width, yPos + j, borderColor);
-		}
-	}
-
-	bool drawImmu = false;
-	int immuOffset = 0 + GetTextWidth(immuText) - 5;
 	for (int k = 0; k < resSize; ++k) {
 		if (mres & immunes[k]) {
 			drawImmu = true;
-			for (int j = 0; j < square; j++) {
-				for (int i = 0; i < square; i++) {
-					ENG_set_pixel(xPos + i + immuOffset, yPos + height + j + yOffset + borderWidth + 2 - 15, resistColors[k]);
-				}
-			}
+			FillSquare(xPos + immuOffset, yPos + height - square, square, resistColors[k]);
 			immuOffset += square + 2;
+		} else if ((mres & resists[k])) {
+			FillSquare(xPos + resOffset, yPos + yOffset + height + borderSize + 2, square, resistColors[k]);
+			resOffset += square + 2;
+		} else {
+			FillSquare(xPos + vulOffset, yPos + yOffset + height + borderSize + 2, square, resistColors[k]);
+			vulOffset -= square + 2;
 		}
 	}
 
-	int newX = xPos + BORDER_LEFT;
-	//int newY = yPos + height - 3;
-
-	char text[166];
+	char text[64];
 	strcpy(text, mon->mName);
 	if (mon->leader > 0)
 		strcat(text, " (minion)");
-
-	int namecolor = COL_WHITE;
-	if (specialMonster)
-		namecolor = COL_GOLD;
-	PrintGameStr(newX - GetTextWidth(text) / 2, 30, text, namecolor);
-	PrintGameStr(newX - GetTextWidth("/") / 2, 43, "/", COL_WHITE);
+	PrintGameStr(xPos2 - GetTextWidth(text) / 2, yPos + 10, text, (mon->_uniqtype != 0 ? COL_GOLD : COL_WHITE));
 
 	sprintf(text, "%d", (maxLife >> 6));
-	PrintGameStr(newX + GetTextWidth("/"), 43, text, COL_WHITE);
+	PrintGameStr(xPos2 + GetTextWidth("/"), yPos + 23, text, COL_WHITE);
 
 	sprintf(text, "%d", (currentLife >> 6));
-	PrintGameStr(newX - GetTextWidth(text) - GetTextWidth("/"), 43, text, COL_WHITE);
+	PrintGameStr(xPos2 - GetTextWidth(text) - GetTextWidth("/"), yPos + 23, text, COL_WHITE);
 
-	PrintGameStr(newX - width / 2, 59, resText, COL_GOLD);
+	PrintGameStr(xPos2 - GetTextWidth("/") / 2, yPos + 23, "/", COL_WHITE);
 
 	sprintf(text, "kills: %d", monstkills[mon->MType->mtype]);
-	PrintGameStr(newX - GetTextWidth("kills:") / 2 - 30, 59, text, COL_WHITE);
+	PrintGameStr(xPos2 - GetTextWidth("kills:") / 2 - 30, yPos + yOffset + height + borderSize + 12, text, COL_WHITE);
+
 
 	if (drawImmu)
-		PrintGameStr(newX - width / 2, 46, immuText, COL_GOLD);
+		PrintGameStr(xPos2 - width / 2, yPos + height, immuText, COL_GOLD);
 
-	PrintGameStr(newX + width / 2 - GetTextWidth(vulnText), 59, vulnText, COL_RED);
+	PrintGameStr(xPos2 - width / 2, yPos + yOffset + height + borderSize + 12, resText, COL_GOLD);
+	PrintGameStr(xPos2 + width / 2 - GetTextWidth(vulnText), yPos + yOffset + height + borderSize + 12, vulnText, COL_RED);
 }
 
 void DrawXPBar()
