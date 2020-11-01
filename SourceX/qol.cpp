@@ -213,15 +213,6 @@ public:
 
 std::vector<drawingQueue> drawQ;
 
-void adjustCoordsToZoom(int &x, int &y)
-{
-	if (zoomflag)
-		return;
-	x = 2 * x;
-	y = 2 * y;
-	x += 60;
-}
-
 void AddItemToDrawQueue(int x, int y, int id)
 {
 	if (highlightItemsMode == 0 || (highlightItemsMode == 1 && !altPressed) || (highlightItemsMode == 2 && altPressed))
@@ -237,10 +228,14 @@ void AddItemToDrawQueue(int x, int y, int id)
 
 	int nameWidth = GetTextWidth((char *)textOnGround);
 	x -= SCREEN_X;
+	x += TILE_WIDTH / 2;
 	y -= SCREEN_Y;
-	y -= 30;
-	x -= nameWidth / 2 - 40;
-	adjustCoordsToZoom(x, y);
+	y -= TILE_HEIGHT;
+	if (!zoomflag) {
+		x <<= 1;
+		y <<= 1;
+	}
+	x -= nameWidth / 2;
 	char clr = COL_WHITE;
 	if (it->_iMagical == ITEM_QUALITY_MAGIC)
 		clr = COL_BLUE;
