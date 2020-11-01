@@ -282,7 +282,7 @@ void RenderPresent()
 		}
 		SDL_RenderPresent(renderer);
 
-		if (!vsyncEnabled) {
+		if (!vsyncEnabled && !timedemo) {
 			LimitFrameRate();
 		}
 	} else {

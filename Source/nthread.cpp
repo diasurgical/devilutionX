@@ -225,6 +225,9 @@ BOOL nthread_has_500ms_passed(BOOL unused)
 	DWORD currentTickCount;
 	int ticksElapsed;
 
+	if (timedemo)
+		return true;
+
 	currentTickCount = SDL_GetTicks();
 	ticksElapsed = currentTickCount - last_tick;
 	if (gbMaxPlayers == 1 && ticksElapsed > tick_delay * 10) {

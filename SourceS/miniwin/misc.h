@@ -1,5 +1,8 @@
 #pragma once
 
+#include <iostream>
+#include <fstream>
+
 namespace dvl {
 
 typedef uint16_t SHORT;
@@ -35,11 +38,20 @@ typedef struct _FILETIME {
 	DWORD dwHighDateTime;
 } FILETIME, *LPFILETIME;
 
+typedef struct demoMsg {
+	int tick;
+	UINT message;
+	WPARAM wParam;
+	LPARAM lParam;
+} demoMsg;
+
 typedef struct tagMSG {
 	UINT message;
 	WPARAM wParam;
 	LPARAM lParam;
 } MSG, *LPMSG;
+
+extern std::ofstream demoRecording;
 
 //
 // Everything else
@@ -50,7 +62,9 @@ void FocusOnCharInfo();
 
 SHORT GetAsyncKeyState(int vKey);
 
-bool PeekMessage(LPMSG lpMsg);
+void CreateDemoFile(int i);
+bool LoadDemoMessages(int i);
+bool PeekMessage(LPMSG lpMsg, int tick);
 
 bool TranslateMessage(const MSG *lpMsg);
 void DispatchMessage(const MSG *lpMsg);

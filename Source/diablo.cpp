@@ -71,6 +71,9 @@ WORD tick_delay = 50;
  */
 BOOL fullscreen = TRUE;
 int showintrodebug = 1;
+int recordDemo = -1;
+bool demoMode = false;
+bool timedemo = false;
 #ifdef _DEBUG
 int questdebug = -1;
 int debug_mode_key_s;
@@ -201,6 +204,7 @@ void run_game_loop(unsigned int uMsg)
 {
 	WNDPROC saveProc;
 	MSG msg;
+	int startTime;
 
 	nthread_ignore_mutex(TRUE);
 	start_game(uMsg);
@@ -220,8 +224,11 @@ void run_game_loop(unsigned int uMsg)
 
 	logicTick = 0;
 
+	if (timedemo)
+		startTime = SDL_GetTicks();
+
 	while (gbRunGame) {
-		while (PeekMessage(&msg)) {
+		while (PeekMessage(&msg, logicTick)) {
 			if (msg.message == DVL_WM_QUIT) {
 				gbRunGameResult = FALSE;
 				gbRunGame = FALSE;
@@ -243,6 +250,13 @@ void run_game_loop(unsigned int uMsg)
 		gbGameLoopStartup = FALSE;
 		DrawAndBlit();
 		logicTick++;
+	}
+
+	if (timedemo) {
+		float secounds = (SDL_GetTicks() - startTime) / 1000.0;
+		SDL_Log("%d frames, %.2f seconds: %.1f fps", logicTick, secounds, logicTick / secounds);
+		gbRunGameResult = FALSE;
+		gbRunGame = FALSE;
 	}
 
 	if (gbMaxPlayers > 1) {
@@ -354,6 +368,8 @@ void diablo_splash()
 
 void diablo_deinit()
 {
+	if (demoRecording.is_open())
+		demoRecording.close();
 	if (was_snd_init) {
 		effects_cleanup_sfx();
 		sound_cleanup();
@@ -398,6 +414,9 @@ static void print_help_and_exit()
 	printf("    %-20s %-30s\n", "-f", "Display frames per second");
 	printf("    %-20s %-30s\n", "-x", "Run in windowed mode");
 	printf("    %-20s %-30s\n", "--spawn", "Force spawn mode even if diabdat.mpq is found");
+	printf("    %-20s %-30s\n", "--record <#>", "Record a demo file");
+	printf("    %-20s %-30s\n", "--demo <#>", "Play a demo file");
+	printf("    %-20s %-30s\n", "--timedemo", "Disable all frame limiting during demo playback");
 #ifdef HELLFIRE
 	printf("    %-20s %-30s\n", "--theoquest", "Enable the Theo quest");
 	printf("    %-20s %-30s\n", "--cowquest", "Enable the Cow quest");
@@ -437,6 +456,16 @@ void diablo_parse_flags(int argc, char **argv)
 			SetBasePath(argv[++i]);
 		} else if (strcasecmp("--save-dir", argv[i]) == 0) {
 			SetPrefPath(argv[++i]);
+		} else if (strcasecmp("--demo", argv[i]) == 0) {
+			demoMode = true;
+			if (!LoadDemoMessages(SDL_atoi(argv[++i]))) {
+				SDL_Log("Unable to load demo file");
+				diablo_quit(1);
+			}
+		} else if (strcasecmp("--timedemo", argv[i]) == 0) {
+			timedemo = true;
+		} else if (strcasecmp("--record", argv[i]) == 0) {
+			recordDemo = SDL_atoi(argv[++i]);
 		} else if (strcasecmp("-n", argv[i]) == 0) {
 			showintrodebug = FALSE;
 		} else if (strcasecmp("-f", argv[i]) == 0) {

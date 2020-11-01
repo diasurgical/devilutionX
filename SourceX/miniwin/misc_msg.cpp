@@ -1,10 +1,13 @@
 #include <cstdint>
 #include <deque>
+#include <string>
+#include <sstream>
 #include <SDL.h>
 
 #include "all.h"
 #include "display.h"
 #include "stubs.h"
+#include "paths.h"
 #include "controls/controller_motion.h"
 #include "controls/game_controls.h"
 #include "controls/plrctrls.h"
@@ -12,6 +15,7 @@
 #include "controls/touch.h"
 #include "display.h"
 #include "controls/controller.h"
+#include "../3rdParty/Storm/Source/storm.h"
 
 #ifdef __SWITCH__
 #include "platform/switch/docking.h"
@@ -294,7 +298,7 @@ bool BlurInventory()
 	return true;
 }
 
-bool PeekMessage(LPMSG lpMsg)
+bool PeekMessage_Real(LPMSG lpMsg)
 {
 #ifdef __SWITCH__
 	HandleDocking();
@@ -573,6 +577,144 @@ bool PeekMessage(LPMSG lpMsg)
 		return false_avail("unknown", e.type);
 	}
 	return true;
+}
+
+std::ofstream demoRecording;
+static std::deque<demoMsg> demo_message_queue;
+
+void CreateDemoFile(int i)
+{
+	char demoFilename[16];
+	snprintf(demoFilename, 15, "demo_%d.dmo", i);
+	demoRecording.open(GetPrefPath() + demoFilename, std::fstream::trunc);
+
+	demoRecording << "0," << gszHero << "," << screenWidth << "," << screenHeight << "\n";
+}
+
+void SaveDemoMessage(LPMSG lpMsg, int tick)
+{
+	demoRecording << tick << ",0," << lpMsg->message << "," << lpMsg->wParam << "," << lpMsg->lParam << "\n";
+}
+
+void PumpDemoMessage(int tick, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	demoMsg msg;
+	msg.tick = tick;
+	msg.message = message;
+	msg.wParam = wParam;
+	msg.lParam = lParam;
+
+	demo_message_queue.push_back(msg);
+}
+
+bool LoadDemoMessages(int i)
+{
+	std::ifstream demofile;
+	char demoFilename[16];
+	snprintf(demoFilename, 15, "demo_%d.dmo", i);
+	demofile.open(GetPrefPath() + demoFilename);
+	if (!demofile.is_open()) {
+		return false;
+	}
+
+	std::string line, number;
+
+	std::getline(demofile, line);
+	std::stringstream header(line);
+
+	std::getline(header, number, ','); // Demo version
+	if (std::stoi(number) != 0) {
+		return false;
+	}
+
+	std::getline(header, number, ',');
+	sprintf(gszHero, "%s", number.c_str());
+
+	std::getline(header, number, ',');
+	dvl::DWORD width = std::stoi(number);
+	SRegSaveValue("devilutionx", "width", 0, width);
+
+	std::getline(header, number, ',');
+	dvl::DWORD height = std::stoi(number);
+	SRegSaveValue("devilutionx", "height", 0, height);
+
+	while (std::getline(demofile, line)) {
+		std::stringstream command(line);
+
+		std::getline(command, number, ',');
+		int tick = std::stoi(number);
+
+		std::getline(command, number, ',');
+		int type = std::stoi(number);
+
+		switch (type) {
+		case 0:
+			std::getline(command, number, ',');
+			UINT message = std::stoi(number);
+			std::getline(command, number, ',');
+			WPARAM wParam = std::stoi(number);
+			std::getline(command, number, ',');
+			LPARAM lParam = std::stoi(number);
+			PumpDemoMessage(tick, message, wParam, lParam);
+			break;
+		}
+	}
+
+	demofile.close();
+
+	return true;
+}
+
+bool DemoMessage(LPMSG lpMsg, int tick)
+{
+	SDL_Event e;
+	if (SDL_PollEvent(&e)) {
+		if (e.type == SDL_QUIT) {
+			lpMsg->message = DVL_WM_QUIT;
+			lpMsg->lParam = 0;
+			lpMsg->wParam = 0;
+			return true;
+		}
+		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
+			demo_message_queue.clear();
+			message_queue.clear();
+			demoMode = false;
+			timedemo = false;
+			last_tick = SDL_GetTicks();
+		}
+	}
+
+	if (!demo_message_queue.empty()) {
+		demoMsg dmsg = demo_message_queue.front();
+		if (dmsg.tick == tick) {
+			lpMsg->message = dmsg.message;
+			lpMsg->lParam = dmsg.lParam;
+			lpMsg->wParam = dmsg.wParam;
+			demo_message_queue.pop_front();
+			return true;
+		}
+	}
+
+	lpMsg->message = 0;
+	lpMsg->lParam = 0;
+	lpMsg->wParam = 0;
+
+	return false;
+}
+
+bool PeekMessage(LPMSG lpMsg, int tick)
+{
+	bool available;
+
+	if (!demoMode)
+		available = PeekMessage_Real(lpMsg);
+	else
+		available = DemoMessage(lpMsg, tick);
+
+	if (recordDemo != -1 && available && tick > -1)
+		SaveDemoMessage(lpMsg, tick);
+
+	return available;
 }
 
 bool TranslateMessage(const MSG *lpMsg)

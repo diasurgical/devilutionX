@@ -143,7 +143,7 @@ bool SpawnWindow(const char *lpWindowName)
 	BOOL oar = false;
 	DvlIntSetting("original aspect ratio", &oar);
 
-	if (upscale && !oar) {
+	if (upscale && !oar && !demoMode) {
 		CalculatePreferdWindowSize(width, height, integerScalingEnabled);
 	}
 	AdjustToScreenGeometry(width, height);
@@ -199,7 +199,7 @@ bool SpawnWindow(const char *lpWindowName)
 
 		vsyncEnabled = 1;
 		DvlIntSetting("vsync", &vsyncEnabled);
-		if (vsyncEnabled) {
+		if (vsyncEnabled && !timedemo) {
 			rendererFlags |= SDL_RENDERER_PRESENTVSYNC;
 		}
 

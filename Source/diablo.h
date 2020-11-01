@@ -106,6 +106,9 @@ void diablo_color_cyc_logic();
 
 extern BOOL fullscreen;
 extern int showintrodebug;
+extern int recordDemo;
+extern bool demoMode;
+extern bool timedemo;
 #ifdef _DEBUG
 extern int questdebug;
 extern int debug_mode_key_s;
