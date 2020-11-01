@@ -7,10 +7,13 @@
 #define __QOL_H__
 
 DEVILUTION_BEGIN_NAMESPACE
+
 extern bool altPressed;
 extern bool drawXPBar;
 extern bool drawHPBar;
 extern int highlightItemsMode;
+extern int drawMinX;
+extern int drawMaxX;
 
 void DrawMonsterHealthBar();
 void DrawXPBar();

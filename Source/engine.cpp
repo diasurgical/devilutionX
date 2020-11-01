@@ -225,6 +225,12 @@ void CelBlitSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth)
 				i -= width;
 				if (dst < gpBufEnd && dst > gpBufStart) {
 					memcpy(dst, src, width);
+					int xval = (dst - &gpBuffer[0]) % BUFFER_WIDTH;
+					if (xval < drawMinX)
+						drawMinX = xval;
+					xval += width;
+					if (xval > drawMaxX)
+						drawMaxX = xval;
 				}
 				src += width;
 				dst += width;

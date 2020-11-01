@@ -8,6 +8,17 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+int drawMinX;
+int drawMaxX;
+int highlightItemsMode = 0;
+// 0 = disabled
+// 1 = highlight when alt pressed
+// 2 = hide when alt pressed
+// 3 = always highlight
+bool altPressed = false;
+bool drawXPBar = false;
+bool drawHPBar = false;
+
 int GetTextWidth(char *s)
 {
 	int l = 0;
@@ -24,15 +35,6 @@ int GetConfigIntValue(const char *valuename, int base)
 	}
 	return base;
 }
-
-int highlightItemsMode = 0;
-// 0 = disabled
-// 1 = highlight when alt pressed
-// 2 = hide when alt pressed
-// 3 = always highlight
-bool altPressed = false;
-bool drawXPBar = false;
-bool drawHPBar = false;
 
 inline void FastDrawHorizLine(int x, int y, int width, BYTE col)
 {
@@ -227,8 +229,11 @@ void AddItemToDrawQueue(int x, int y, int id)
 	}
 
 	int nameWidth = GetTextWidth((char *)textOnGround);
+	int newx = (drawMinX + drawMaxX) / 2;
+	if (abs(newx - x) >= TILE_WIDTH) // prevents warping when the label is appearing/disappearing on the edge of the screen
+		return;
+	x = newx;
 	x -= SCREEN_X;
-	x += TILE_WIDTH / 2;
 	y -= SCREEN_Y;
 	y -= TILE_HEIGHT;
 	if (!zoomflag) {
