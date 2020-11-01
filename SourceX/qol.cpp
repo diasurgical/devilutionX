@@ -36,7 +36,7 @@ bool drawHPBar = false;
 
 inline void FastDrawHorizLine(int x, int y, int width, BYTE col)
 {
-	memset(&gpBuffer[SCREENXY(x,y)], col, width);
+	memset(&gpBuffer[SCREENXY(x, y)], col, width);
 }
 
 inline void FastDrawVertLine(int x, int y, int height, BYTE col)
@@ -71,20 +71,20 @@ void DrawMonsterHealthBar()
 
 	int width = 250;
 	int height = 25;
-	int x = 0; // x offset from the center of the screen
-	int y = 20; // y position
-	int xOffset = 0; // empty space between left/right borders and health bar
-	int yOffset = 1; // empty space between top/bottom borders and health bar
+	int x = 0;          // x offset from the center of the screen
+	int y = 20;         // y position
+	int xOffset = 0;    // empty space between left/right borders and health bar
+	int yOffset = 1;    // empty space between top/bottom borders and health bar
 	int borderSize = 2; // size of the border around health bar
 	BYTE borderColors[] = { 242 /*undead*/, 232 /*demon*/, 182 /*beast*/ };
-	BYTE filledColor = 142;     // filled health bar color
-	bool fillCorners = false; // true to fill border corners, false to cut them off
-	int square = 10; // resistance / immunity / vulnerability square size
+	BYTE filledColor = 142;                                             // filled health bar color
+	bool fillCorners = false;                                           // true to fill border corners, false to cut them off
+	int square = 10;                                                    // resistance / immunity / vulnerability square size
 	char *immuText = "IMMU: ", *resText = "RES: ", *vulnText = ":VULN"; // text displayed for immunities / resistances / vulnerabilities
-	int resSize = 3; // how many damage types
-	BYTE resistColors[] = { 148, 140, 129 }; // colors for these damage types
-	WORD immunes[] = { IMMUNE_MAGIC, IMMUNE_FIRE, IMMUNE_LIGHTNING }; // immunity flags for damage types
-	WORD resists[] = { RESIST_MAGIC, RESIST_FIRE, RESIST_LIGHTNING }; // resistance flags for damage types
+	int resSize = 3;                                                    // how many damage types
+	BYTE resistColors[] = { 148, 140, 129 };                            // colors for these damage types
+	WORD immunes[] = { IMMUNE_MAGIC, IMMUNE_FIRE, IMMUNE_LIGHTNING };   // immunity flags for damage types
+	WORD resists[] = { RESIST_MAGIC, RESIST_FIRE, RESIST_LIGHTNING };   // resistance flags for damage types
 
 	MonsterStruct *mon = &monster[pcursmonst];
 	BYTE borderColor = borderColors[(BYTE)mon->MData->mMonstClass];
@@ -143,7 +143,6 @@ void DrawMonsterHealthBar()
 	sprintf(text, "kills: %d", monstkills[mon->MType->mtype]);
 	PrintGameStr(xPos2 - GetTextWidth("kills:") / 2 - 30, yPos + yOffset + height + borderSize + 12, text, COL_WHITE);
 
-
 	if (drawImmu)
 		PrintGameStr(xPos2 - width / 2, yPos + height, immuText, COL_GOLD);
 
@@ -157,7 +156,7 @@ void DrawXPBar()
 		return;
 	int barWidth = 306;
 	int barHeight = 5;
-	int yPos = SCREEN_HEIGHT - 9; // y position of xp bar
+	int yPos = SCREEN_HEIGHT - 9;                 // y position of xp bar
 	int xPos = (SCREEN_WIDTH - barWidth) / 2 + 5; // x position of xp bar
 	int dividerHeight = 3;
 	int numDividers = 10;
@@ -165,7 +164,6 @@ void DrawXPBar()
 	int emptyBarColor = 0;
 	int frameColor = 242;
 	bool space = true; // add 1 pixel separator on top/bottom of the bar
-
 
 	PrintGameStr(xPos - 22, yPos + 6, "XP", COL_WHITE);
 	int charLevel = plr[myplr]._pLevel;
@@ -182,7 +180,7 @@ void DrawXPBar()
 			FastDrawHorizLine(xPos - 1, yPos + barHeight, barWidth + 2, frameColor);
 			FastDrawVertLine(xPos - 1, yPos - 1, barHeight + 2, frameColor);
 			FastDrawVertLine(xPos + barWidth, yPos - 1, barHeight + 2, frameColor);
-			for (int i = 1; i < numDividers; i++) 
+			for (int i = 1; i < numDividers; i++)
 				FastDrawVertLine(xPos - 1 + (barWidth * i / numDividers), yPos - dividerHeight - 1, barHeight + dividerHeight * 2 + 2, frameColor);
 		}
 	}
@@ -219,21 +217,9 @@ void adjustCoordsToZoom(int &x, int &y)
 {
 	if (zoomflag)
 		return;
-	int distToCenterX = abs(SCREEN_WIDTH / 2 - x);
-	int distToCenterY = abs(SCREEN_HEIGHT / 2 - y);
-	if (x <= SCREEN_WIDTH / 2) {
-		x = SCREEN_WIDTH / 2 - distToCenterX * 2;
-	} else {
-		x = SCREEN_WIDTH / 2 + distToCenterX * 2;
-	}
-
-	if (y <= SCREEN_HEIGHT / 2) {
-		y = SCREEN_HEIGHT / 2 - distToCenterY * 2;
-	} else {
-		y = SCREEN_HEIGHT / 2 + distToCenterY * 2;
-	}
-	x += SCREEN_WIDTH / 2 - 20;
-	y += SCREEN_HEIGHT / 2 - 175;
+	x = 2 * x;
+	y = 2 * y;
+	x += 60;
 }
 
 void AddItemToDrawQueue(int x, int y, int id)
@@ -249,31 +235,18 @@ void AddItemToDrawQueue(int x, int y, int id)
 		sprintf(textOnGround, "%s", it->_iIdentified ? it->_iIName : it->_iName);
 	}
 
-	int centerXOffset = GetTextWidth((char *)textOnGround);
-
+	int nameWidth = GetTextWidth((char *)textOnGround);
+	x -= SCREEN_X;
+	y -= SCREEN_Y;
+	y -= 30;
+	x -= nameWidth / 2 - 40;
 	adjustCoordsToZoom(x, y);
-	x -= centerXOffset / 2 + 20;
-	y -= 193;
 	char clr = COL_WHITE;
 	if (it->_iMagical == ITEM_QUALITY_MAGIC)
 		clr = COL_BLUE;
 	if (it->_iMagical == ITEM_QUALITY_UNIQUE)
 		clr = COL_GOLD;
-	drawQ.push_back(drawingQueue(x, y, GetTextWidth((char *)textOnGround), 13, it->_ix, it->_iy, id, clr, textOnGround));
-}
-
-void DrawBackground(int xPos, int yPos, int width, int height, int borderX, int borderY, BYTE backgroundColor, BYTE borderColor)
-{
-	xPos += BORDER_LEFT;
-	yPos += BORDER_TOP;
-	for (int y = 0; y < height; y++) {
-		for (int x = 0; x < width; x++) {
-			if (x < borderX || x + borderX >= width || y < borderY || y + borderY >= height)
-				continue;
-			int val = ((yPos - height) + y) * BUFFER_WIDTH + xPos + x;
-			gpBuffer[val] = backgroundColor;
-		}
-	}
+	drawQ.push_back(drawingQueue(x, y, nameWidth, 13, it->_ix, it->_iy, id, clr, textOnGround));
 }
 
 void HighlightItemsNameOnMap()
@@ -311,24 +284,11 @@ void HighlightItemsNameOnMap()
 	for (unsigned int i = 0; i < drawQ.size(); ++i) {
 		drawingQueue t = drawQ[i];
 
-		int sx = t.x;
-		int sy = t.y;
-
-		int sx2 = sx;
-		int sy2 = sy + 1;
-
-		if (sx < 0 || sx >= SCREEN_WIDTH || sy < 0 || sy >= SCREEN_HEIGHT) {
-			continue;
-		}
-		if (sx2 < 0 || sx2 >= SCREEN_WIDTH || sy2 < 0 || sy2 >= SCREEN_HEIGHT) {
+		if (t.x < 0 || t.x >= SCREEN_WIDTH || t.y < 0 || t.y >= SCREEN_HEIGHT) {
 			continue;
 		}
 
-		int bgcolor = 0;
-		int CursorX = MouseX;
-		int CursorY = MouseY + t.height;
-
-		if (CursorX >= sx && CursorX <= sx + t.width + 1 && CursorY >= sy && CursorY <= sy + t.height) {
+		if (MouseX >= t.x && MouseX <= t.x + t.width && MouseY >= t.y - t.height && MouseY <= t.y) {
 			if ((invflag || sbookflag) && MouseX > RIGHT_PANEL && MouseY <= SPANEL_HEIGHT) {
 			} else if ((chrflag || questlog) && MouseX < SPANEL_WIDTH && MouseY <= SPANEL_HEIGHT) {
 			} else if (MouseY >= PANEL_TOP && MouseX >= PANEL_LEFT && MouseX <= PANEL_LEFT + PANEL_WIDTH) {
@@ -338,10 +298,11 @@ void HighlightItemsNameOnMap()
 				pcursitem = t.ItemID;
 			}
 		}
+		int bgcolor = 0;
 		if (pcursitem == t.ItemID)
 			bgcolor = 134;
-		DrawBackground(sx2, sy2, t.width + 1, t.height, 0, 0, bgcolor, bgcolor);
-		PrintGameStr(sx, sy, t.text, t.color);
+		FillRect(t.x, t.y - t.height, t.width + 1, t.height, bgcolor);
+		PrintGameStr(t.x, t.y - 1, t.text, t.color);
 	}
 	drawQ.clear();
 }
@@ -389,7 +350,7 @@ void RepeatClicks()
 {
 	switch (sgbMouseDown) {
 	case 1: {
-		if ((SDL_GetModState() & KMOD_SHIFT)) {
+		if ((SDL_GetModState() & KMOD_SHIFT) && currlevel != 0) {
 			if (plr[myplr]._pwtype == WT_RANGED) {
 				NetSendCmdLoc(TRUE, CMD_RATTACKXY, cursmx, cursmy);
 			} else {
@@ -406,17 +367,7 @@ void RepeatClicks()
 		it has to be done here, otherwise there is a delay between casting a spell and changing the cursor, during which more casts get queued
 		*/
 		int spl = plr[myplr]._pRSpell;
-		if (spl != SPL_TELEKINESIS &&
-			spl != SPL_RESURRECT &&
-			spl != SPL_HEALOTHER &&
-			spl != SPL_IDENTIFY &&
-			spl != SPL_RECHARGE &&
-			spl != SPL_DISARM &&
-			spl != SPL_REPAIR &&
-			spl != SPL_GOLEM &&
-			spl != SPL_INFRA &&
-			spl != SPL_TOWN
-			) 
+		if (spl != SPL_TELEKINESIS && spl != SPL_RESURRECT && spl != SPL_HEALOTHER && spl != SPL_IDENTIFY && spl != SPL_RECHARGE && spl != SPL_DISARM && spl != SPL_REPAIR && spl != SPL_GOLEM && spl != SPL_INFRA && spl != SPL_TOWN)
 			CheckPlrSpell();
 		break;
 	}
