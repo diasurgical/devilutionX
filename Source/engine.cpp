@@ -298,6 +298,11 @@ void CelBlitLightSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidt
 			if (!(width & 0x80)) {
 				i -= width;
 				if (dst < gpBufEnd && dst > gpBufStart) {
+					int xval = (dst - &gpBuffer[0]) % BUFFER_WIDTH;
+					if (xval < drawMinX)
+						drawMinX = xval;
+					if (xval + width > drawMaxX)
+						drawMaxX = xval;
 					if (width & 1) {
 						dst[0] = tbl[src[0]];
 						src++;
