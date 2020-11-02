@@ -19,7 +19,7 @@ bool altPressed = false;
 bool drawXPBar = false;
 bool drawHPBar = false;
 
-int GetTextWidth(char *s)
+int GetTextWidth(const char *s)
 {
 	int l = 0;
 	while (*s) {
@@ -79,14 +79,14 @@ void DrawMonsterHealthBar()
 	int yOffset = 1;    // empty space between top/bottom borders and health bar
 	int borderSize = 2; // size of the border around health bar
 	BYTE borderColors[] = { 242 /*undead*/, 232 /*demon*/, 182 /*beast*/ };
-	BYTE filledColor = 142;                                             // filled health bar color
-	bool fillCorners = false;                                           // true to fill border corners, false to cut them off
-	int square = 10;                                                    // resistance / immunity / vulnerability square size
-	char *immuText = "IMMU: ", *resText = "RES: ", *vulnText = ":VULN"; // text displayed for immunities / resistances / vulnerabilities
-	int resSize = 3;                                                    // how many damage types
-	BYTE resistColors[] = { 148, 140, 129 };                            // colors for these damage types
-	WORD immunes[] = { IMMUNE_MAGIC, IMMUNE_FIRE, IMMUNE_LIGHTNING };   // immunity flags for damage types
-	WORD resists[] = { RESIST_MAGIC, RESIST_FIRE, RESIST_LIGHTNING };   // resistance flags for damage types
+	BYTE filledColor = 142;                                                   // filled health bar color
+	bool fillCorners = false;                                                 // true to fill border corners, false to cut them off
+	int square = 10;                                                          // resistance / immunity / vulnerability square size
+	const char *immuText = "IMMU: ", *resText = "RES: ", *vulnText = ":VULN"; // text displayed for immunities / resistances / vulnerabilities
+	int resSize = 3;                                                          // how many damage types
+	BYTE resistColors[] = { 148, 140, 129 };                                  // colors for these damage types
+	WORD immunes[] = { IMMUNE_MAGIC, IMMUNE_FIRE, IMMUNE_LIGHTNING };         // immunity flags for damage types
+	WORD resists[] = { RESIST_MAGIC, RESIST_FIRE, RESIST_LIGHTNING };         // resistance flags for damage types
 
 	MonsterStruct *mon = &monster[pcursmonst];
 	BYTE borderColor = borderColors[(BYTE)mon->MData->mMonstClass];
