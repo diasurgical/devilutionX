@@ -1,6 +1,4 @@
 #General compilation options
-set(ASAN OFF)
-set(UBSAN OFF)
 set(NONET ON)
 set(USE_SDL1 ON)
 
@@ -21,12 +19,12 @@ set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS}\ -DTTF_FONT_DIR=\\"romfs:/\\"\ -DTTF_FONT
 
 #Force scaling, for now..
 set(SDL1_VIDEO_MODE_FLAGS SDL_FULLSCREEN)
+set(SDL1_VIDEO_MODE_WIDTH 800)
+set(SDL1_VIDEO_MODE_HEIGHT 480)
 
 #SDL Joystick axis mapping (circle-pad)
 set(JOY_AXIS_LEFTX 0)
 set(JOY_AXIS_LEFTY 1)
-set(JOY_AXIS_RIGHTX 2)
-set(JOY_AXIS_RIGHTY 3)
 #SDL Joystick button mapping (A / B inverted)
 set(JOY_BUTTON_A 2)
 set(JOY_BUTTON_B 1)

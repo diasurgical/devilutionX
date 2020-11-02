@@ -324,6 +324,9 @@ if(NOT NONET)
 endif()
 
 set(BIN_TARGET devilutionx)
+if(HELLFIRE)
+  set(BIN_TARGET hellfire)
+endif()
 
 if(SWITCH)
   list(APPEND devilutionx_SRCS
@@ -337,7 +340,7 @@ if(N3DS)
   list(APPEND devilutionx_SRCS
     SourceX/platform/ctr/system.cpp
     SourceX/platform/ctr/keyboard.cpp)
-  set(BIN_TARGET devilutionx.elf)
+  set(BIN_TARGET ${BIN_TARGET}.elf)
 endif()
 
 if(RUN_TESTS)
@@ -402,12 +405,12 @@ target_include_directories(${BIN_TARGET} PRIVATE
   3rdParty/Radon/Radon/include
   3rdParty/libsmacker)
 
-if(NOT N3DS)
-target_link_libraries(devilution PUBLIC
-  Threads::Threads
+if(N3DS)
+  target_link_libraries(devilution PUBLIC
   SourceS)
-else
-target_link_libraries(devilution PUBLIC
+else()
+  target_link_libraries(devilution PUBLIC
+  Threads::Threads
   SourceS)
 endif()
 
@@ -650,7 +653,12 @@ if(N3DS)
   set(APP_RSF         "${PROJECT_SOURCE_DIR}/Packaging/ctr/template.rsf")
   set(APP_ROMFS       "${CMAKE_BINARY_DIR}/romfs")
   set(APP_ROMFS_FILES "${PROJECT_SOURCE_DIR}/Packaging/ctr/DiabloLight.ttf")
-  
+  if(HELLFIRE)
+	  set(APP_TITLE       "DevilutionX: Hellfire")
+	  set(APP_ICON        "${PROJECT_SOURCE_DIR}/Packaging/ctr/icon_hellfire.png")
+	  set(APP_BANNER      "${PROJECT_SOURCE_DIR}/Packaging/ctr/banner_hellfire.png")
+	  set(APP_RSF         "${PROJECT_SOURCE_DIR}/Packaging/ctr/template_hellfire.rsf")
+  endif()
   file(MAKE_DIRECTORY ${APP_ROMFS})
   file(COPY ${APP_ROMFS_FILES}
      DESTINATION ${APP_ROMFS})
