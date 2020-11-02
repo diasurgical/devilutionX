@@ -1627,13 +1627,13 @@ static void DRLG_L4(int entry)
 			DRLG_LoadDiabQuads(TRUE);
 		}
 		if (QuestStatus(Q_WARLORD)) {
-			if (entry == 0) {
+			if (entry == ENTRY_MAIN) {
 				doneflag = DRLG_L4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, TRUE, 0);
 				if (doneflag && currlevel == 13) {
 					doneflag = DRLG_L4PlaceMiniSet(L4TWARP, 1, 1, -1, -1, FALSE, 6);
 				}
 				ViewX++;
-			} else if (entry == 1) {
+			} else if (entry == ENTRY_PREV) {
 				doneflag = DRLG_L4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, FALSE, 0);
 				if (doneflag && currlevel == 13) {
 					doneflag = DRLG_L4PlaceMiniSet(L4TWARP, 1, 1, -1, -1, FALSE, 6);
@@ -1648,7 +1648,7 @@ static void DRLG_L4(int entry)
 				ViewX++;
 			}
 		} else if (currlevel != 15) {
-			if (entry == 0) {
+			if (entry == ENTRY_MAIN) {
 				doneflag = DRLG_L4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, TRUE, 0);
 				if (doneflag && currlevel != 16) {
 					doneflag = DRLG_L4PlaceMiniSet(L4DSTAIRS, 1, 1, -1, -1, FALSE, 1);
@@ -1657,7 +1657,7 @@ static void DRLG_L4(int entry)
 					doneflag = DRLG_L4PlaceMiniSet(L4TWARP, 1, 1, -1, -1, FALSE, 6);
 				}
 				ViewX++;
-			} else if (entry == 1) {
+			} else if (entry == ENTRY_PREV) {
 				doneflag = DRLG_L4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, FALSE, 0);
 				if (doneflag && currlevel != 16) {
 					doneflag = DRLG_L4PlaceMiniSet(L4DSTAIRS, 1, 1, -1, -1, TRUE, 1);
@@ -1677,7 +1677,7 @@ static void DRLG_L4(int entry)
 				ViewX++;
 			}
 		} else {
-			if (entry == 0) {
+			if (entry == ENTRY_MAIN) {
 				doneflag = DRLG_L4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, TRUE, 0);
 				if (doneflag) {
 					if (gbMaxPlayers == 1 && quests[Q_DIABLO]._qactive != QUEST_ACTIVE) {

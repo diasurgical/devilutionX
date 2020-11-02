@@ -18,9 +18,8 @@ typedef void *PVOID;
 
 typedef unsigned int UINT;
 
-typedef uintptr_t WPARAM;
-typedef uintptr_t LPARAM;
-typedef uintptr_t LRESULT;
+typedef int32_t WPARAM;
+typedef int32_t LPARAM;
 
 //
 // Handles
@@ -29,7 +28,7 @@ typedef void *HANDLE;
 
 typedef HANDLE HWND, HMODULE, HDC, HINSTANCE;
 
-typedef LRESULT(*WNDPROC)(HWND, UINT, WPARAM, LPARAM);
+typedef void(*WNDPROC)(HWND, UINT, WPARAM, LPARAM);
 
 typedef struct _FILETIME {
 	DWORD dwLowDateTime;
@@ -54,7 +53,7 @@ SHORT GetAsyncKeyState(int vKey);
 bool PeekMessage(LPMSG lpMsg);
 
 bool TranslateMessage(const MSG *lpMsg);
-LRESULT DispatchMessage(const MSG *lpMsg);
+void DispatchMessage(const MSG *lpMsg);
 bool PostMessage(UINT Msg, WPARAM wParam, LPARAM lParam);
 
 #ifndef TRUE
@@ -91,10 +90,7 @@ bool PostMessage(UINT Msg, WPARAM wParam, LPARAM lParam);
 #define DVL_WM_CAPTURECHANGED 0x0215
 
 #define DVL_WM_PAINT 0x000F
-#define DVL_WM_CLOSE 0x0010
 #define DVL_WM_QUERYENDSESSION 0x0011
-#define DVL_WM_ERASEBKGND 0x0014
-#define DVL_WM_QUERYNEWPALETTE 0x030F
 
 #define DVL_SC_CLOSE 0xF060
 

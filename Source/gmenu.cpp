@@ -17,7 +17,6 @@ int LogoAnim_tick;
 BYTE LogoAnim_frame;
 #endif
 int PentSpin_tick;
-BYTE PentSpin_frame;
 void (*dword_63447C)(TMenuItem *);
 TMenuItem *sgpCurrentMenu;
 BYTE *option_cel;
@@ -85,7 +84,6 @@ void FreeGMenu()
 
 void gmenu_init_menu()
 {
-	PentSpin_frame = 1;
 #ifdef HELLFIRE
 	LogoAnim_frame = 1;
 #endif
@@ -193,14 +191,6 @@ void gmenu_draw()
 				y += 45;
 			}
 		}
-
-		ticks = SDL_GetTicks();
-		if ((int)(ticks - PentSpin_tick) > 50) { // BUGFIX: thould be 50ms (Fixed)
-			PentSpin_frame++;
-			if (PentSpin_frame == 9)
-				PentSpin_frame = 1;
-			PentSpin_tick = ticks;
-		}
 	}
 }
 
@@ -234,8 +224,8 @@ void gmenu_draw_menu_item(TMenuItem *pItem, int y)
 	light_table_index = (pItem->dwFlags & GMENU_ENABLED) ? 0 : 15;
 	gmenu_print_text(x, y, pItem->pszStr);
 	if (pItem == sgpCurrItem) {
-		CelDraw(x - 54, y + 1, PentSpin_cel, PentSpin_frame, 48);
-		CelDraw(x + 4 + w, y + 1, PentSpin_cel, PentSpin_frame, 48);
+		CelDraw(x - 54, y + 1, PentSpin_cel, PentSpn2Spin(), 48);
+		CelDraw(x + 4 + w, y + 1, PentSpin_cel, PentSpn2Spin(), 48);
 	}
 }
 

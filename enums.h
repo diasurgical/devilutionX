@@ -2508,6 +2508,17 @@ typedef enum interface_mode {
 	// WM_DIAVNEWLVL = 0x40D, // psx only
 } interface_mode;
 
+typedef enum lvl_entry {
+	ENTRY_MAIN    = 0,
+	ENTRY_PREV    = 1,
+	ENTRY_SETLVL  = 2,
+	ENTRY_RTNLVL  = 3,
+	ENTRY_LOAD    = 4,
+	ENTRY_WARPLVL = 5,
+	ENTRY_TWARPDN = 6,
+	ENTRY_TWARPUP = 7,
+} lvl_entry;
+
 typedef enum game_info {
 	GAMEINFO_NAME         = 1,
 	GAMEINFO_PASSWORD     = 2,

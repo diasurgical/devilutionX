@@ -42,7 +42,6 @@ extern int stextsel;
 extern char stextscrldbtn;
 extern int gossipend;
 extern BYTE *pSPentSpn2Cels;
-extern BYTE PentSpn2Frame;
 extern int stextsval;
 extern int boylevel;
 extern ItemStruct smithitem[SMITH_ITEMS];
@@ -51,7 +50,7 @@ extern char stextscrlubtn;
 extern char stextflag;
 
 void InitStores();
-void PentSpn2Spin();
+int PentSpn2Spin();
 void SetupTownStores();
 void FreeStoreMem();
 void DrawSTextBack();

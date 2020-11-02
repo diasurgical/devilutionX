@@ -35,7 +35,7 @@ void init_disable_screensaver(BOOLEAN disable);
 void init_create_window();
 void init_archives();
 void init_get_file_info();
-LRESULT MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
+void MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 void init_activate_window(HWND hWnd, BOOL bActive);
 WNDPROC SetWindowProc(WNDPROC NewProc);
 

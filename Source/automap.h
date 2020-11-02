@@ -12,9 +12,7 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
-extern WORD automaptype[512];
 extern BOOL automapflag;
-extern char AmShiftTab[32];
 extern BOOLEAN automapview[DMAXX][DMAXY];
 extern int AutoMapScale;
 extern int AutoMapXOfs;
@@ -35,14 +33,6 @@ void AutomapRight();
 void AutomapZoomIn();
 void AutomapZoomOut();
 void DrawAutomap();
-void DrawAutomapTile(int screen_x, int screen_y, WORD automap_type);
-#ifdef HELLFIRE
-void SearchAutomapItem();
-void DrawAutomapItem(int x, int y, BYTE color);
-#endif
-void DrawAutomapPlr();
-WORD GetAutomapType(int x, int y, BOOL view);
-void DrawAutomapText();
 void SetAutomapView(int x, int y);
 void AutomapZoomReset();
 

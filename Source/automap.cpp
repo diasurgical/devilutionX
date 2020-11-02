@@ -204,110 +204,9 @@ void AutomapZoomOut()
 }
 
 /**
- * @brief Renders the automap on screen.
- */
-void DrawAutomap()
-{
-	int cells;
-	int sx, sy;
-	int i, j, d;
-	int mapx, mapy;
-
-	if (leveltype == DTYPE_TOWN) {
-		DrawAutomapText();
-		return;
-	}
-
-	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_Y + VIEWPORT_HEIGHT)];
-
-	AutoMapX = (ViewX - 16) >> 1;
-	while (AutoMapX + AutoMapXOfs < 0)
-		AutoMapXOfs++;
-	while (AutoMapX + AutoMapXOfs >= DMAXX)
-		AutoMapXOfs--;
-	AutoMapX += AutoMapXOfs;
-
-	AutoMapY = (ViewY - 16) >> 1;
-	while (AutoMapY + AutoMapYOfs < 0)
-		AutoMapYOfs++;
-	while (AutoMapY + AutoMapYOfs >= DMAXY)
-		AutoMapYOfs--;
-	AutoMapY += AutoMapYOfs;
-
-	d = (AutoMapScale << 6) / 100;
-	cells = 2 * (SCREEN_WIDTH / 2 / d) + 1;
-	if ((SCREEN_WIDTH / 2) % d)
-		cells++;
-	if ((SCREEN_WIDTH / 2) % d >= (AutoMapScale << 5) / 100)
-		cells++;
-
-	if (ScrollInfo._sxoff + ScrollInfo._syoff)
-		cells++;
-	mapx = AutoMapX - cells;
-	mapy = AutoMapY - 1;
-
-	if (cells & 1) {
-		sx = SCREEN_WIDTH / 2 + SCREEN_X - AmLine64 * ((cells - 1) >> 1);
-		sy = (SCREEN_HEIGHT - PANEL_HEIGHT) / 2 + SCREEN_Y - AmLine32 * ((cells + 1) >> 1);
-	} else {
-		sx = SCREEN_WIDTH / 2 + SCREEN_X - AmLine64 * (cells >> 1) + AmLine32;
-		sy = (SCREEN_HEIGHT - PANEL_HEIGHT) / 2 + SCREEN_Y - AmLine32 * (cells >> 1) - AmLine16;
-	}
-	if (ViewX & 1) {
-		sx -= AmLine16;
-		sy -= AmLine8;
-	}
-	if (ViewY & 1) {
-		sx += AmLine16;
-		sy -= AmLine8;
-	}
-
-	sx += AutoMapScale * ScrollInfo._sxoff / 100 >> 1;
-	sy += AutoMapScale * ScrollInfo._syoff / 100 >> 1;
-	if (PANELS_COVER) {
-		if (invflag || sbookflag) {
-			sx -= SCREEN_WIDTH / 4;
-		}
-		if (chrflag || questlog) {
-			sx += SCREEN_WIDTH / 4;
-		}
-	}
-
-	for (i = 0; i <= cells + 1; i++) {
-		int x = sx;
-		int y;
-
-		for (j = 0; j < cells; j++) {
-			WORD maptype = GetAutomapType(mapx + j, mapy - j, TRUE);
-			if (maptype != 0)
-				DrawAutomapTile(x, sy, maptype);
-			x += AmLine64;
-		}
-		mapy++;
-		x = sx - AmLine32;
-		y = sy + AmLine16;
-		for (j = 0; j <= cells; j++) {
-			WORD maptype = GetAutomapType(mapx + j, mapy - j, TRUE);
-			if (maptype != 0)
-				DrawAutomapTile(x, y, maptype);
-			x += AmLine64;
-		}
-		mapx++;
-		sy += AmLine32;
-	}
-	DrawAutomapPlr();
-#ifdef HELLFIRE
-	if (AutoMapShowItems)
-		SearchAutomapItem();
-#endif
-	DrawAutomapText();
-	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_Y + SCREEN_HEIGHT)];
-}
-
-/**
  * @brief Renders the given automap shape at the specified screen coordinates.
  */
-void DrawAutomapTile(int sx, int sy, WORD automap_type)
+static void DrawAutomapTile(int sx, int sy, WORD automap_type)
 {
 	BOOL do_vert;
 	BOOL do_horz;
@@ -491,7 +390,21 @@ void DrawAutomapTile(int sx, int sy, WORD automap_type)
 			DrawLine(sx, sy + AmLine16, sx + AmLine32, sy, COLOR_DIM);
 	}
 }
+
 #ifdef HELLFIRE
+static void DrawAutomapItem(int x, int y, BYTE color)
+{
+	int x1, y1, x2, y2;
+
+	x1 = x - AmLine32 / 2;
+	y1 = y - AmLine16 / 2;
+	x2 = x1 + AmLine64 / 2;
+	y2 = y1 + AmLine32 / 2;
+	DrawLine(x, y1, x1, y, color);
+	DrawLine(x, y1, x2, y, color);
+	DrawLine(x, y2, x1, y, color);
+	DrawLine(x, y2, x2, y, color);
+}
 
 void SearchAutomapItem()
 {
@@ -557,26 +470,12 @@ void SearchAutomapItem()
 		}
 	}
 }
-
-void DrawAutomapItem(int x, int y, BYTE color)
-{
-	int x1, y1, x2, y2;
-
-	x1 = x - AmLine32 / 2;
-	y1 = y - AmLine16 / 2;
-	x2 = x1 + AmLine64 / 2;
-	y2 = y1 + AmLine32 / 2;
-	DrawLine(x, y1, x1, y, color);
-	DrawLine(x, y1, x2, y, color);
-	DrawLine(x, y2, x1, y, color);
-	DrawLine(x, y2, x2, y, color);
-}
 #endif
 
 /**
  * @brief Renders an arrow on the automap, centered on and facing the direction of the player.
  */
-void DrawAutomapPlr()
+static void DrawAutomapPlr()
 {
 	int px, py;
 	int x, y;
@@ -653,7 +552,7 @@ void DrawAutomapPlr()
 /**
  * @brief Returns the automap shape at the given coordinate.
  */
-WORD GetAutomapType(int x, int y, BOOL view)
+static WORD GetAutomapType(int x, int y, BOOL view)
 {
 	WORD rv;
 
@@ -702,7 +601,7 @@ WORD GetAutomapType(int x, int y, BOOL view)
 /**
  * @brief Renders game info, such as the name of the current level, and in multi player the name of the game and the game password.
  */
-void DrawAutomapText()
+static void DrawAutomapText()
 {
 	char desc[256];
 	int nextline = 20;
@@ -734,6 +633,107 @@ void DrawAutomapText()
 #endif
 		PrintGameStr(8, nextline, desc, COL_GOLD);
 	}
+}
+
+/**
+ * @brief Renders the automap on screen.
+ */
+void DrawAutomap()
+{
+	int cells;
+	int sx, sy;
+	int i, j, d;
+	int mapx, mapy;
+
+	if (leveltype == DTYPE_TOWN) {
+		DrawAutomapText();
+		return;
+	}
+
+	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_Y + VIEWPORT_HEIGHT)];
+
+	AutoMapX = (ViewX - 16) >> 1;
+	while (AutoMapX + AutoMapXOfs < 0)
+		AutoMapXOfs++;
+	while (AutoMapX + AutoMapXOfs >= DMAXX)
+		AutoMapXOfs--;
+	AutoMapX += AutoMapXOfs;
+
+	AutoMapY = (ViewY - 16) >> 1;
+	while (AutoMapY + AutoMapYOfs < 0)
+		AutoMapYOfs++;
+	while (AutoMapY + AutoMapYOfs >= DMAXY)
+		AutoMapYOfs--;
+	AutoMapY += AutoMapYOfs;
+
+	d = (AutoMapScale << 6) / 100;
+	cells = 2 * (SCREEN_WIDTH / 2 / d) + 1;
+	if ((SCREEN_WIDTH / 2) % d)
+		cells++;
+	if ((SCREEN_WIDTH / 2) % d >= (AutoMapScale << 5) / 100)
+		cells++;
+
+	if (ScrollInfo._sxoff + ScrollInfo._syoff)
+		cells++;
+	mapx = AutoMapX - cells;
+	mapy = AutoMapY - 1;
+
+	if (cells & 1) {
+		sx = SCREEN_WIDTH / 2 + SCREEN_X - AmLine64 * ((cells - 1) >> 1);
+		sy = (SCREEN_HEIGHT - PANEL_HEIGHT) / 2 + SCREEN_Y - AmLine32 * ((cells + 1) >> 1);
+	} else {
+		sx = SCREEN_WIDTH / 2 + SCREEN_X - AmLine64 * (cells >> 1) + AmLine32;
+		sy = (SCREEN_HEIGHT - PANEL_HEIGHT) / 2 + SCREEN_Y - AmLine32 * (cells >> 1) - AmLine16;
+	}
+	if (ViewX & 1) {
+		sx -= AmLine16;
+		sy -= AmLine8;
+	}
+	if (ViewY & 1) {
+		sx += AmLine16;
+		sy -= AmLine8;
+	}
+
+	sx += AutoMapScale * ScrollInfo._sxoff / 100 >> 1;
+	sy += AutoMapScale * ScrollInfo._syoff / 100 >> 1;
+	if (PANELS_COVER) {
+		if (invflag || sbookflag) {
+			sx -= SCREEN_WIDTH / 4;
+		}
+		if (chrflag || questlog) {
+			sx += SCREEN_WIDTH / 4;
+		}
+	}
+
+	for (i = 0; i <= cells + 1; i++) {
+		int x = sx;
+		int y;
+
+		for (j = 0; j < cells; j++) {
+			WORD maptype = GetAutomapType(mapx + j, mapy - j, TRUE);
+			if (maptype != 0)
+				DrawAutomapTile(x, sy, maptype);
+			x += AmLine64;
+		}
+		mapy++;
+		x = sx - AmLine32;
+		y = sy + AmLine16;
+		for (j = 0; j <= cells; j++) {
+			WORD maptype = GetAutomapType(mapx + j, mapy - j, TRUE);
+			if (maptype != 0)
+				DrawAutomapTile(x, y, maptype);
+			x += AmLine64;
+		}
+		mapx++;
+		sy += AmLine32;
+	}
+	DrawAutomapPlr();
+#ifdef HELLFIRE
+	if (AutoMapShowItems)
+		SearchAutomapItem();
+#endif
+	DrawAutomapText();
+	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_Y + SCREEN_HEIGHT)];
 }
 
 /**
