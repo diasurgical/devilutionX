@@ -1944,7 +1944,7 @@ void Obj_Circle(int i)
 				quests[Q_BETRAYER]._qvar1 = 4;
 			AddMissile(plr[myplr]._px, plr[myplr]._py, 35, 46, plr[myplr]._pdir, MIS_RNDTELEPORT, 0, myplr, 0, 0);
 			track_repeat_walk(FALSE);
-			sgbMouseDown = 0;
+			sgbMouseDown = CLICK_NONE;
 			ClrPlrPath(myplr);
 			StartStand(myplr, 0);
 		}

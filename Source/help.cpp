@@ -449,6 +449,27 @@ void InitHelp()
 	displayinghelp[0] = 0;
 }
 
+static void DrawHelpLine(int x, int y, char *text, char color)
+{
+	int sx, sy, width;
+	BYTE c;
+
+	width = 0;
+	sx = x + 32 + PANEL_X;
+	sy = y * 12 + 44 + SCREEN_Y + UI_OFFSET_Y;
+	while (*text) {
+		c = gbFontTransTbl[(BYTE)*text];
+		text++;
+		c = fontframe[c];
+		width += fontkern[c] + 1;
+		if (c) {
+			if (width <= 577)
+				PrintChar(sx, sy, c, color);
+		}
+		sx += fontkern[c] + 1;
+	}
+}
+
 void DrawHelp()
 {
 	int i, c, w;
@@ -543,27 +564,6 @@ void DrawHelp()
 	}
 
 	PrintSString(0, 23, TRUE, "Press ESC to end or the arrow keys to scroll.", COL_GOLD, 0);
-}
-
-void DrawHelpLine(int x, int y, char *text, char color)
-{
-	int sx, sy, width;
-	BYTE c;
-
-	width = 0;
-	sx = x + 32 + PANEL_X;
-	sy = y * 12 + 44 + SCREEN_Y + UI_OFFSET_Y;
-	while (*text) {
-		c = gbFontTransTbl[(BYTE)*text];
-		text++;
-		c = fontframe[c];
-		width += fontkern[c] + 1;
-		if (c) {
-			if (width <= 577)
-				PrintChar(sx, sy, c, color);
-		}
-		sx += fontkern[c] + 1;
-	}
 }
 
 void DisplayHelp()

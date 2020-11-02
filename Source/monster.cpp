@@ -1804,7 +1804,8 @@ void SpawnLoot(int i, BOOL sendmsg)
 	if (QuestStatus(Q_GARBUD) && Monst->mName == UniqMonst[UMT_GARBUD].mName) {
 		CreateTypeItem(Monst->_mx + 1, Monst->_my + 1, TRUE, ITYPE_MACE, IMISC_NONE, TRUE, FALSE);
 	} else if (Monst->mName == UniqMonst[UMT_DEFILER].mName) {
-		stream_stop();
+		if (effect_is_playing(USFX_DEFILER8))
+			stream_stop();
 		quests[Q_DEFILER]._qlog = 0;
 		SpawnMapOfDoom(Monst->_mx, Monst->_my);
 	} else if (Monst->mName == UniqMonst[UMT_HORKDMN].mName) {
@@ -1815,7 +1816,11 @@ void SpawnLoot(int i, BOOL sendmsg)
 		}
 	} else if (Monst->MType->mtype == MT_HORKSPWN) {
 	} else if (Monst->MType->mtype == MT_NAKRUL) {
-		stream_stop();
+		nSFX = IsUberRoomOpened ? USFX_NAKRUL4 : USFX_NAKRUL5;
+		if (UseCowFarmer)
+			nSFX = USFX_NAKRUL6;
+		if (effect_is_playing(nSFX))
+			stream_stop();
 		quests[Q_NAKRUL]._qlog = 0;
 		UberDiabloMonsterIndex = -2;
 		CreateMagicWeapon(Monst->_mx, Monst->_my, ITYPE_SWORD, ICURS_GREAT_SWORD, FALSE, TRUE);
