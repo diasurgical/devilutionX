@@ -21,6 +21,7 @@ extern int dropGoldValue;
 extern BOOL drawmanaflag;
 extern BOOL chrbtnactive;
 extern BYTE *pPanelText;
+extern int pnumlines;
 extern BOOL pinfoflag;
 extern int pSpell;
 extern char infoclr;
