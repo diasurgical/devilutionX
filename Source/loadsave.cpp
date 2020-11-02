@@ -63,7 +63,7 @@ void LoadGame(BOOL firstflag)
 	for (i = 0; i < MAXPORTAL; i++)
 		LoadPortal(i);
 
-	LoadGameLevel(firstflag, 4);
+	LoadGameLevel(firstflag, ENTRY_LOAD);
 	SyncInitPlr(myplr);
 	SyncPlrAnim(myplr);
 

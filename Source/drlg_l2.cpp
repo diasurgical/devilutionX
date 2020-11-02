@@ -3129,7 +3129,7 @@ static void DRLG_L2(int entry)
 		}
 		DRLG_L2FloodTVal();
 		DRLG_L2TransFix();
-		if (entry == 0) {
+		if (entry == ENTRY_MAIN) {
 			doneflag = DRLG_L2PlaceMiniSet(USTAIRS, 1, 1, -1, -1, TRUE, 0);
 			if (doneflag) {
 				doneflag = DRLG_L2PlaceMiniSet(DSTAIRS, 1, 1, -1, -1, FALSE, 1);
@@ -3138,7 +3138,7 @@ static void DRLG_L2(int entry)
 				}
 			}
 			ViewY -= 2;
-		} else if (entry == 1) {
+		} else if (entry == ENTRY_PREV) {
 			doneflag = DRLG_L2PlaceMiniSet(USTAIRS, 1, 1, -1, -1, FALSE, 0);
 			if (doneflag) {
 				doneflag = DRLG_L2PlaceMiniSet(DSTAIRS, 1, 1, -1, -1, TRUE, 1);
