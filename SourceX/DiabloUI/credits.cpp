@@ -60,7 +60,7 @@ SDL_Surface *RenderText(const char *text, SDL_Color color)
 CachedLine PrepareLine(std::size_t index)
 {
 	const char *contents = CREDITS_LINES[index];
-	if (contents[0] == '\t')
+	while (contents[0] == '\t')
 		++contents;
 
 	const SDL_Color shadow_color = { 0, 0, 0, 0 };
@@ -181,7 +181,8 @@ void CreditsRenderer::Render()
 		}
 
 		Sint16 dest_x = PANEL_LEFT + VIEWPORT.x + 31;
-		if (CREDITS_LINES[line.m_index][0] == '\t')
+		int j = 0;
+		while (CREDITS_LINES[line.m_index][j++] == '\t')
 			dest_x += 40;
 
 		SDL_Rect dst_rect = { dest_x, dest_y, 0, 0 };

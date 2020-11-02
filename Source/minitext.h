@@ -13,7 +13,7 @@ extern "C" {
 #endif
 
 extern int qtexty;
-extern char *qtextptr;
+extern const char *qtextptr;
 extern BOOLEAN qtextflag;
 extern BYTE *pMedTextCels;
 extern BYTE *pTextBoxCels;
@@ -27,7 +27,7 @@ void DrawQText();
 
 /* rdata */
 
-extern const BYTE mfontframe[127];
+extern const BYTE mfontframe[128];
 extern const BYTE mfontkern[56];
 
 /* data */

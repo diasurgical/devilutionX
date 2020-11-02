@@ -27,7 +27,6 @@ void selconn_Load()
 {
 	LoadBackgroundArt("ui_art\\selconn.pcx");
 
-	// vecConnItems Should be in the same order as conn_type (See enums.h)
 #ifndef NONET
 	vecConnItems.push_back(new UiListItem("Client-Server (TCP)", SELCONN_TCP));
 #ifdef BUGGY
@@ -71,7 +70,7 @@ void selconn_Load()
 	SDL_Rect rect10 = { PANEL_LEFT + 454, (UI_OFFSET_Y + 427), 140, 35 };
 	vecSelConnDlg.push_back(new UiArtTextButton("Cancel", &UiFocusNavigationEsc, rect10, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
 
-	UiInitList(0, vecConnItems.size() - 1, selconn_Focus, selconn_Select, selconn_Esc, vecSelConnDlg);
+	UiInitList(vecConnItems.size(), selconn_Focus, selconn_Select, selconn_Esc, vecSelConnDlg);
 }
 
 void selconn_Free()
@@ -101,19 +100,15 @@ void selconn_Esc()
 void selconn_Focus(int value)
 {
 	int players = MAX_PLRS;
-	switch (value) {
-#ifndef NONET
+	switch (vecConnItems[value]->m_value) {
 	case SELCONN_TCP:
 		strncpy(selconn_Description, "All computers must be connected to a TCP-compatible network.", sizeof(selconn_Description) - 1);
 		players = MAX_PLRS;
 		break;
-#ifdef BUGGY
 	case SELCONN_UDP:
 		strncpy(selconn_Description, "All computers must be connected to a UDP-compatible network.", sizeof(selconn_Description) - 1);
 		players = MAX_PLRS;
 		break;
-#endif
-#endif
 	case SELCONN_LOOPBACK:
 		strncpy(selconn_Description, "Play by yourself with no network exposure.", sizeof(selconn_Description) - 1);
 		players = 1;
@@ -126,7 +121,7 @@ void selconn_Focus(int value)
 
 void selconn_Select(int value)
 {
-	provider = value;
+	provider = vecConnItems[value]->m_value;
 
 	selconn_Free();
 	selconn_EndMenu = SNetInitializeProvider(provider, selconn_ClientInfo, selconn_UserInfo, selconn_UiInfo, selconn_FileInfo);

@@ -15,7 +15,7 @@ package_opk() {
 	cp "Packaging/OpenDingux/${TARGET}-manual.txt" "${tmp}/readme.${ext}.txt"
 	mksquashfs "${BUILD_DIR}/devilutionx" \
 		"${tmp}/default.${ext}.desktop" "${tmp}/readme.${ext}.txt" \
-		Packaging/resources/Diablo_32.png Packaging/resources/CharisSILB.ttf \
+		Packaging/resources/icon_32.png Packaging/resources/CharisSILB.ttf \
 		"${BUILD_DIR}/devilutionx-${TARGET}.opk" \
 		-all-root -no-xattrs -noappend -no-exports -no-progress
 }

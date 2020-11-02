@@ -20,7 +20,11 @@ extern BOOLEAN sgbSaveSoundOn;
 extern MonsterStruct monster[MAXMONSTERS];
 extern int totalmonsters;
 extern CMonster Monsters[MAX_LVLMTYPES];
+#ifdef HELLFIRE
+extern int GraphicTable[NUMLEVELS][MAX_LVLMTYPES];
+#else
 extern BYTE GraphicTable[NUMLEVELS][MAX_LVLMTYPES];
+#endif
 extern int monstimgtot;
 extern int uniquetrans;
 extern int nummtypes;
@@ -34,6 +38,7 @@ void ClearMVars(int i);
 void InitMonster(int i, int rd, int mtype, int x, int y);
 void ClrAllMonsters();
 BOOL MonstPlace(int xp, int yp);
+void monster_some_crypt();
 void PlaceMonster(int i, int mtype, int x, int y);
 void PlaceUniqueMonst(int uniqindex, int miniontype, int unpackfilesize);
 void PlaceQuestMonsters();
@@ -44,6 +49,9 @@ void PlaceUniques();
 void SetMapMonsters(BYTE *pMap, int startx, int starty);
 void DeleteMonster(int i);
 int AddMonster(int x, int y, int dir, int mtype, BOOL InMap);
+#ifdef HELLFIRE
+void monster_43C785(int i);
+#endif
 void NewMonsterAnim(int i, AnimStruct *anim, int md);
 BOOL M_Ranged(int i);
 BOOL M_Talker(int i);
@@ -65,6 +73,9 @@ void M_ClearSquares(int i);
 void M_GetKnockback(int i);
 void M_StartHit(int i, int pnum, int dam);
 void M_DiabloDeath(int i, BOOL sendmsg);
+#ifdef HELLFIRE
+void SpawnLoot(int i, BOOL sendmsg);
+#endif
 void M2MStartHit(int mid, int i, int dam);
 void MonstStartKill(int i, int pnum, BOOL sendmsg);
 void M2MStartKill(int i, int mid);
@@ -120,12 +131,25 @@ void MAI_GoatMc(int i);
 void MAI_Ranged(int i, int missile_type, BOOL special);
 void MAI_GoatBow(int i);
 void MAI_Succ(int i);
+#ifdef HELLFIRE
+void mai_ranged_441649(int i);
+void mai_ranged_441654(int i);
+void mai_ranged_44165F(int i);
+void mai_ranged_44166A(int i);
+#endif
 void MAI_AcidUniq(int i);
+#ifdef HELLFIRE
+void mai_ranged_441680(int i);
+void mai_ranged_44168B(int i);
+#endif
 void MAI_Scav(int i);
 void MAI_Garg(int i);
 void MAI_RoundRanged(int i, int missile_type, BOOL checkdoors, int dam, int lessmissiles);
 void MAI_Magma(int i);
 void MAI_Storm(int i);
+#ifdef HELLFIRE
+void mai_roundranged_441EA0(int i);
+#endif
 void MAI_Acid(int i);
 void MAI_Diablo(int i);
 void MAI_RR2(int i, int mistype, int dam);
@@ -133,6 +157,9 @@ void MAI_Mega(int i);
 void MAI_Golum(int i);
 void MAI_SkelKing(int i);
 void MAI_Rhino(int i);
+#ifdef HELLFIRE
+void mai_horkdemon(int i);
+#endif
 void MAI_Counselor(int i);
 void MAI_Garbud(int i);
 void MAI_Zhar(int i);
@@ -156,6 +183,9 @@ void PrintMonstHistory(int mt);
 void PrintUniqueHistory();
 void MissToMonst(int i, int x, int y);
 BOOL PosOkMonst(int i, int x, int y);
+#ifdef HELLFIRE
+BOOLEAN monster_posok(int i, int x, int y);
+#endif
 BOOL PosOkMonst2(int i, int x, int y);
 BOOL PosOkMonst3(int i, int x, int y);
 BOOL IsSkel(int mt);

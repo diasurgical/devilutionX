@@ -19,6 +19,9 @@ int icursW28;
 int icursH28;
 /** Cursor images CEL */
 BYTE *pCursCels;
+#ifdef HELLFIRE
+BYTE *pCursCels2;
+#endif
 
 /** inv_item value */
 char pcursinvitem;
@@ -65,6 +68,14 @@ const int InvItemWidth[] = {
 	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
 	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
 	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
+#ifdef HELLFIRE
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	2 * 28, 2 * 28, 1 * 28, 1 * 28, 1 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
+	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
+	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28
+#endif
 	// clang-format on
 };
 
@@ -91,6 +102,14 @@ const int InvItemHeight[] = {
 	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
 	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
 	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
+#ifdef HELLFIRE
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	2 * 28, 2 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
+	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
+	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28
+#endif
 	// clang-format on
 };
 
@@ -98,12 +117,18 @@ void InitCursor()
 {
 	assert(!pCursCels);
 	pCursCels = LoadFileInMem("Data\\Inv\\Objcurs.CEL", NULL);
+#ifdef HELLFIRE
+	pCursCels2 = LoadFileInMem("Data\\Inv\\Objcurs2.CEL", NULL);
+#endif
 	ClearCursor();
 }
 
 void FreeCursor()
 {
 	MemFreeDbg(pCursCels);
+#ifdef HELLFIRE
+	MemFreeDbg(pCursCels2);
+#endif
 	ClearCursor();
 }
 
@@ -247,16 +272,29 @@ void CheckCursMove()
 	// Convert to tile grid
 	mx = ViewX;
 	my = ViewY;
+
+	TilesInView(&columns, &rows);
+	int lrow = rows - RowsCoveredByPanel();
+
+	// Center player tile on screen
+	ShiftGrid(&mx, &my, -columns / 2, -lrow / 2);
+
+	// Align grid
+	if ((columns & 1) == 0 && (lrow & 1) == 0) {
+		sy += TILE_HEIGHT / 2;
+	} else if (columns & 1 && lrow & 1) {
+		sx -= TILE_WIDTH / 2;
+	} else if (columns & 1 && (lrow & 1) == 0) {
+		my++;
+	}
+
+	if (!zoomflag) {
+		sy -= TILE_HEIGHT / 4;
+	}
+
 	tx = sx / TILE_WIDTH;
 	ty = sy / TILE_HEIGHT;
 	ShiftGrid(&mx, &my, tx, ty);
-
-	// Center player tile on screen
-	TilesInView(&columns, &rows);
-	ShiftGrid(&mx, &my, -columns / 2, -(rows - RowsCoveredByPanel()) / 4);
-	if ((columns % 2) != 0) {
-		my++;
-	}
 
 	// Shift position to match diamond grid aligment
 	px = sx % TILE_WIDTH;
@@ -389,9 +427,15 @@ void CheckCursMove()
 				cursmx = mx;
 				cursmy = my;
 			}
+#ifdef HELLFIRE
+			if (pcursmonst != -1 && monster[pcursmonst]._mFlags & MFLAG_GOLEM && !(monster[pcursmonst]._mFlags & MFLAG_UNUSED)) {
+				pcursmonst = -1;
+			}
+#else
 			if (pcursmonst != -1 && monster[pcursmonst]._mFlags & MFLAG_GOLEM) {
 				pcursmonst = -1;
 			}
+#endif
 			if (pcursmonst != -1) {
 				return;
 			}
@@ -457,9 +501,15 @@ void CheckCursMove()
 			cursmx = mx;
 			cursmy = my;
 		}
+#ifdef HELLFIRE
+		if (pcursmonst != -1 && monster[pcursmonst]._mFlags & MFLAG_GOLEM && !(monster[pcursmonst]._mFlags & MFLAG_UNUSED)) {
+			pcursmonst = -1;
+		}
+#else
 		if (pcursmonst != -1 && monster[pcursmonst]._mFlags & MFLAG_GOLEM) {
 			pcursmonst = -1;
 		}
+#endif
 	} else {
 		if (!flipflag && mx + 1 < MAXDUNX && dMonster[mx + 1][my] > 0) {
 			pcursmonst = dMonster[mx + 1][my] - 1;
@@ -627,9 +677,15 @@ void CheckCursMove()
 		cursmx = mx;
 		cursmy = my;
 	}
+#ifdef HELLFIRE
+	if (pcursmonst != -1 && monster[pcursmonst]._mFlags & MFLAG_GOLEM && !(monster[pcursmonst]._mFlags & MFLAG_UNUSED)) {
+		pcursmonst = -1;
+	}
+#else
 	if (pcursmonst != -1 && monster[pcursmonst]._mFlags & MFLAG_GOLEM) {
 		pcursmonst = -1;
 	}
+#endif
 }
 
 DEVILUTION_END_NAMESPACE

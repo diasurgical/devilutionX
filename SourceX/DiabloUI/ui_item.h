@@ -330,12 +330,12 @@ public:
 		return tmp;
 	}
 
-	UiListItem *itemAt(Sint16 y) const
+	int indexAt(Sint16 y) const
 	{
 		ASSERT(y >= m_rect.y);
 		const std::size_t index = (y - m_rect.y) / m_height;
 		ASSERT(index < m_vecItems.size());
-		return m_vecItems[index];
+		return index;
 	}
 
 	UiListItem *GetItem(int i) const

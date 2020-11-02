@@ -82,6 +82,7 @@ typedef enum unique_base_item {
 	UITYPE_GRISWOLD    = 0x42,
 	UITYPE_LGTFORGE    = 0x43,
 	UITYPE_LAZSTAFF    = 0x44,
+	UITYPE_BOVINE      = 0x45,
 	UITYPE_INVALID     = -1,
 } unique_base_item;
 
@@ -160,6 +161,20 @@ typedef enum item_effect_type {
 	IPL_ADDMANAAC        = 0x4D,
 	IPL_FIRERESCLVL      = 0x4E,
 	IPL_AC_CURSE         = 0x4F,
+	IPL_FIRERES_CURSE    = 0x50,
+	IPL_LIGHTRES_CURSE   = 0x51,
+	IPL_MAGICRES_CURSE   = 0x52,
+	IPL_ALLRES_CURSE     = 0x53,
+	IPL_DEVASTATION      = 0x54,
+	IPL_DECAY            = 0x55,
+	IPL_PERIL            = 0x56,
+	IPL_JESTERS          = 0x57,
+	IPL_CRYSTALLINE      = 0x58,
+	IPL_DOPPELGANGER     = 0x59,
+	IPL_ACDEMON          = 0x5A,
+	IPL_ACUNDEAD         = 0x5B,
+	IPL_MANATOLIFE       = 0x5C,
+	IPL_LIFETOMANA       = 0x5D,
 	IPL_INVALID          = -1,
 } item_effect_type;
 
@@ -188,6 +203,9 @@ typedef enum item_cursor_graphic {
 	ICURS_EAR_WARRIOR                 = 20,
 	ICURS_EAR_ROGUE                   = 21,
 	ICURS_BLOOD_STONE                 = 25,
+#ifdef HELLFIRE
+	ICURS_OIL                         = 30,
+#endif
 	ICURS_ELIXIR_OF_VITALITY          = 31,
 	ICURS_POTION_OF_HEALING           = 32,
 	ICURS_POTION_OF_FULL_REJUVENATION = 33,
@@ -279,6 +297,21 @@ typedef enum item_cursor_graphic {
 	ICURS_COMPOSITE_STAFF             = 166,
 	ICURS_SHORT_BATTLE_BOW            = 167,
 	ICURS_GOLD                        = 168,
+	ICURS_AURIC_AMULET                = 180,
+	ICURS_RUNE_BOMB                   = 187,
+	ICURS_THEODORE                    = 188,
+	ICURS_TORN_NOTE_1                 = 189,
+	ICURS_TORN_NOTE_2                 = 190,
+	ICURS_TORN_NOTE_3                 = 191,
+	ICURS_RECONSTRUCTED_NOTE          = 192,
+	ICURS_RUNE_OF_FIRE                = 193,
+	ICURS_GREATER_RUNE_OF_FIRE        = 194,
+	ICURS_RUNE_OF_LIGHTNING           = 195,
+	ICURS_GREATER_RUNE_OF_LIGHTNING   = 196,
+	ICURS_RUNE_OF_STONE               = 197,
+	ICURS_GREY_SUIT                   = 198,
+	ICURS_BROWN_SUIT                  = 199,
+	ICURS_BOVINE                      = 226,
 } item_cursor_graphic;
 
 typedef enum _sfx_id {
@@ -294,10 +327,16 @@ typedef enum _sfx_id {
 	PS_SWING,
 	PS_SWING2,
 	PS_DEAD,
+	IS_STING1,
+	IS_FBALLBOW,
 	IS_QUESTDN,
 	IS_ARMRFKD,
 	IS_BARLFIRE,
 	IS_BARREL,
+	IS_POPPOP8,
+	IS_POPPOP5,
+	IS_POPPOP3,
+	IS_POPPOP2,
 	IS_BHIT,
 	IS_BHIT1,
 	IS_CHEST,
@@ -405,6 +444,7 @@ typedef enum _sfx_id {
 	LS_LNING1,
 	LS_LTNING,
 	LS_MSHIELD,
+	LS_NESTXPLD,
 	LS_NOVA,
 	LS_PORTAL,
 	LS_PUDDLE,
@@ -422,7 +462,7 @@ typedef enum _sfx_id {
 	LS_VTHEFT,
 	LS_WALLLOOP,
 	LS_WALLSTRT,
-#ifndef SPAWN
+	LS_LMAG,
 	TSFX_BMAID1,
 	TSFX_BMAID2,
 	TSFX_BMAID3,
@@ -453,9 +493,7 @@ typedef enum _sfx_id {
 	TSFX_BMAID28,
 	TSFX_BMAID29,
 	TSFX_BMAID30,
-#endif
 	TSFX_BMAID31,
-#ifndef SPAWN
 	TSFX_BMAID32,
 	TSFX_BMAID33,
 	TSFX_BMAID34,
@@ -508,9 +546,7 @@ typedef enum _sfx_id {
 	TSFX_SMITH41,
 	TSFX_SMITH42,
 	TSFX_SMITH43,
-#endif
 	TSFX_SMITH44,
-#ifndef SPAWN
 	TSFX_SMITH45,
 	TSFX_SMITH46,
 	TSFX_SMITH47,
@@ -523,10 +559,10 @@ typedef enum _sfx_id {
 	TSFX_SMITH54,
 	TSFX_SMITH55,
 	TSFX_SMITH56,
-#endif
 	TSFX_COW1,
 	TSFX_COW2,
-#ifndef SPAWN
+	TSFX_COW7,
+	TSFX_COW8,
 	TSFX_DEADGUY,
 	TSFX_DRUNK1,
 	TSFX_DRUNK2,
@@ -554,9 +590,7 @@ typedef enum _sfx_id {
 	TSFX_DRUNK24,
 	TSFX_DRUNK25,
 	TSFX_DRUNK26,
-#endif
 	TSFX_DRUNK27,
-#ifndef SPAWN
 	TSFX_DRUNK28,
 	TSFX_DRUNK29,
 	TSFX_DRUNK30,
@@ -601,9 +635,7 @@ typedef enum _sfx_id {
 	TSFX_HEALER34,
 	TSFX_HEALER35,
 	TSFX_HEALER36,
-#endif
 	TSFX_HEALER37,
-#ifndef SPAWN
 	TSFX_HEALER38,
 	TSFX_HEALER39,
 	TSFX_HEALER40,
@@ -645,9 +677,7 @@ typedef enum _sfx_id {
 	TSFX_PEGBOY29,
 	TSFX_PEGBOY30,
 	TSFX_PEGBOY31,
-#endif
 	TSFX_PEGBOY32,
-#ifndef SPAWN
 	TSFX_PEGBOY33,
 	TSFX_PEGBOY34,
 	TSFX_PEGBOY35,
@@ -692,9 +722,7 @@ typedef enum _sfx_id {
 	TSFX_STORY22,
 	TSFX_STORY23,
 	TSFX_STORY24,
-#endif
 	TSFX_STORY25,
-#ifndef SPAWN
 	TSFX_STORY26,
 	TSFX_STORY27,
 	TSFX_STORY28,
@@ -708,9 +736,7 @@ typedef enum _sfx_id {
 	TSFX_STORY36,
 	TSFX_STORY37,
 	TSFX_STORY38,
-#endif
 	TSFX_TAVERN0,
-#ifndef SPAWN
 	TSFX_TAVERN1,
 	TSFX_TAVERN2,
 	TSFX_TAVERN3,
@@ -746,9 +772,7 @@ typedef enum _sfx_id {
 	TSFX_TAVERN33,
 	TSFX_TAVERN34,
 	TSFX_TAVERN35,
-#endif
 	TSFX_TAVERN36,
-#ifndef SPAWN
 	TSFX_TAVERN37,
 	TSFX_TAVERN38,
 	TSFX_TAVERN39,
@@ -795,9 +819,7 @@ typedef enum _sfx_id {
 	TSFX_WITCH35,
 	TSFX_WITCH36,
 	TSFX_WITCH37,
-#endif
 	TSFX_WITCH38,
-#ifndef SPAWN
 	TSFX_WITCH39,
 	TSFX_WITCH40,
 	TSFX_WITCH41,
@@ -1029,7 +1051,6 @@ typedef enum _sfx_id {
 	PS_WARR10,
 	PS_WARR11,
 	PS_WARR12,
-#endif
 	PS_WARR13,
 	PS_WARR14,
 	PS_WARR14B,
@@ -1104,7 +1125,6 @@ typedef enum _sfx_id {
 	PS_WARR77,
 	PS_WARR78,
 	PS_WARR79,
-#ifndef SPAWN
 	PS_WARR80,
 	PS_WARR81,
 	PS_WARR82,
@@ -1126,15 +1146,116 @@ typedef enum _sfx_id {
 	PS_WARR95D,
 	PS_WARR95E,
 	PS_WARR95F,
-#endif
 	PS_WARR96B,
 	PS_WARR97,
 	PS_WARR98,
 	PS_WARR99,
-#ifndef SPAWN
 	PS_WARR100,
 	PS_WARR101,
 	PS_WARR102,
+	PS_MONK1,
+	PS_MONK2,
+	PS_MONK3,
+	PS_MONK4,
+	PS_MONK5,
+	PS_MONK6,
+	PS_MONK7,
+	PS_MONK8,
+	PS_MONK9,
+	PS_MONK10,
+	PS_MONK11,
+	PS_MONK12,
+	PS_MONK13,
+	PS_MONK14,
+	PS_MONK15,
+	PS_MONK16,
+	PS_MONK17,
+	PS_MONK18,
+	PS_MONK19,
+	PS_MONK20,
+	PS_MONK21,
+	PS_MONK22,
+	PS_MONK23,
+	PS_MONK24,
+	PS_MONK25,
+	PS_MONK26,
+	PS_MONK27,
+	PS_MONK28,
+	PS_MONK29,
+	PS_MONK30,
+	PS_MONK31,
+	PS_MONK32,
+	PS_MONK33,
+	PS_MONK34,
+	PS_MONK35,
+	PS_MONK36,
+	PS_MONK37,
+	PS_MONK38,
+	PS_MONK39,
+	PS_MONK40,
+	PS_MONK41,
+	PS_MONK42,
+	PS_MONK43,
+	PS_MONK44,
+	PS_MONK45,
+	PS_MONK46,
+	PS_MONK47,
+	PS_MONK48,
+	PS_MONK49,
+	PS_MONK50,
+	PS_MONK51,
+	PS_MONK52,
+	PS_MONK53,
+	PS_MONK54,
+	PS_MONK55,
+	PS_MONK56,
+	PS_MONK57,
+	PS_MONK58,
+	PS_MONK59,
+	PS_MONK60,
+	PS_MONK61,
+	PS_MONK62,
+	PS_MONK63,
+	PS_MONK64,
+	PS_MONK65,
+	PS_MONK66,
+	PS_MONK67,
+	PS_MONK68,
+	PS_MONK69,
+	PS_MONK69B,
+	PS_MONK70,
+	PS_MONK71,
+	PS_MONK72,
+	PS_MONK73,
+	PS_MONK74,
+	PS_MONK75,
+	PS_MONK76,
+	PS_MONK77,
+	PS_MONK78,
+	PS_MONK79,
+	PS_MONK80,
+	PS_MONK81,
+	PS_MONK82,
+	PS_MONK83,
+	PS_MONK84,
+	PS_MONK85,
+	PS_MONK86,
+	PS_MONK87,
+	PS_MONK88,
+	PS_MONK89,
+	PS_MONK90,
+	PS_MONK91,
+	PS_MONK92,
+	PS_MONK93,
+	PS_MONK94,
+	PS_MONK95,
+	PS_MONK96,
+	PS_MONK97,
+	PS_MONK98,
+	PS_MONK99,
+	PS_MONK100,
+	PS_MONK101,
+	PS_MONK102,
 	PS_NAR1,
 	PS_NAR2,
 	PS_NAR3,
@@ -1165,7 +1286,57 @@ typedef enum _sfx_id {
 	USFX_ZHAR1,
 	USFX_ZHAR2,
 	USFX_DIABLOD,
-#endif
+	TSFX_FARMER1,
+	TSFX_FARMER2,
+	TSFX_FARMER2A,
+	TSFX_FARMER3,
+	TSFX_FARMER4,
+	TSFX_FARMER5,
+	TSFX_FARMER6,
+	TSFX_FARMER7,
+	TSFX_FARMER8,
+	TSFX_FARMER9,
+	TSFX_TEDDYBR1,
+	TSFX_TEDDYBR2,
+	TSFX_TEDDYBR3,
+	TSFX_TEDDYBR4,
+	USFX_DEFILER1,
+	USFX_DEFILER2,
+	USFX_DEFILER3,
+	USFX_DEFILER4,
+	USFX_DEFILER8,
+	USFX_DEFILER6,
+	USFX_DEFILER7,
+	USFX_NAKRUL1,
+	USFX_NAKRUL2,
+	USFX_NAKRUL3,
+	USFX_NAKRUL4,
+	USFX_NAKRUL5,
+	USFX_NAKRUL6,
+	PS_NARATR3,
+	TSFX_COWSUT1,
+	TSFX_COWSUT2,
+	TSFX_COWSUT3,
+	TSFX_COWSUT4,
+	TSFX_COWSUT4A,
+	TSFX_COWSUT5,
+	TSFX_COWSUT6,
+	TSFX_COWSUT7,
+	TSFX_COWSUT8,
+	TSFX_COWSUT9,
+	TSFX_COWSUT10,
+	TSFX_COWSUT11,
+	TSFX_COWSUT12,
+	USFX_SKLJRN1,
+	PS_NARATR6,
+	PS_NARATR7,
+	PS_NARATR8,
+	PS_NARATR5,
+	PS_NARATR9,
+	PS_NARATR4,
+	TSFX_TRADER1,
+	IS_CROPEN,
+	IS_CRCLOS,
 } _sfx_id;
 
 typedef enum sfx_flag {
@@ -1176,7 +1347,7 @@ typedef enum sfx_flag {
 	sfx_ROGUE    = 0x10,
 	sfx_WARRIOR  = 0x20,
 	sfx_SORCEROR = 0x40,
-	sfx_LOADED   = 0x80,
+	sfx_HELLFIRE = 0x80,
 } sfx_flag;
 
 typedef enum item_equip_type {
@@ -1261,6 +1432,46 @@ typedef enum missile_id {
 	MIS_RPORTAL       = 0x41,
 	MIS_BOOM2         = 0x42,
 	MIS_DIABAPOCA     = 0x43,
+	MIS_MANA          = 0x44,
+	MIS_MAGI          = 0x45,
+	MIS_LIGHTWALL     = 0x46,
+	MIS_LIGHTNINGWALL = 0x47,
+	MIS_IMMOLATION    = 0x48,
+	MIS_SPECARROW     = 0x49,
+	MIS_FIRENOVA      = 0x4A,
+	MIS_LIGHTARROW    = 0x4B,
+	MIS_CBOLTARROW    = 0x4C,
+	MIS_HBOLTARROW    = 0x4D,
+	MIS_WARP          = 0x4E,
+	MIS_REFLECT       = 0x4F,
+	MIS_BERSERK       = 0x50,
+	MIS_FIRERING      = 0x51,
+	MIS_STEALPOTS     = 0x52,
+	MIS_MANATRAP      = 0x53,
+	MIS_LIGHTRING     = 0x54,
+	MIS_SEARCH        = 0x55,
+	MIS_FLASHFR       = 0x56,
+	MIS_FLASHBK       = 0x57,
+	MIS_IMMOLATION2   = 0x58,
+	MIS_RUNEFIRE      = 0x59,
+	MIS_RUNELIGHT     = 0x5A,
+	MIS_RUNENOVA      = 0x5B,
+	MIS_RUNEIMMOLAT   = 0x5C,
+	MIS_RUNESTONE     = 0x5D,
+	MIS_HIVEEXP       = 0x5E,
+	MIS_HORKDMN       = 0x5F,
+	MIS_JESTER        = 0x60,
+	MIS_HIVEEXP2      = 0x61,
+	MIS_LICH          = 0x62,
+	MIS_PSYCHORB      = 0x63,
+	MIS_NECROMORB     = 0x64,
+	MIS_ARCHLICH      = 0x65,
+	MIS_BONEDEMON     = 0x66,
+	MIS_EXYEL2        = 0x67,
+	MIS_EXRED3        = 0x68,
+	MIS_EXBL2         = 0x69,
+	MIS_EXBL3         = 0x6A,
+	MIS_EXORA1        = 0x6B,
 } missile_id;
 
 typedef enum missile_graphic_id {
@@ -1310,6 +1521,21 @@ typedef enum missile_graphic_id {
 	MFILE_SCBSEXPC,
 	MFILE_SCUBMISD,
 	MFILE_SCBSEXPD,
+#ifdef HELLFIRE
+	MFILE_SPAWNS,
+	MFILE_REFLECT,
+	MFILE_LICH,
+	MFILE_MSBLA,
+	MFILE_NECROMORB,
+	MFILE_ARCHLICH,
+	MFILE_RUNE,
+	MFILE_EXYEL2,
+	MFILE_EXBL2,
+	MFILE_EXRED3,
+	MFILE_BONEDEMON,
+	MFILE_EXORA1,
+	MFILE_EXBL3,
+#endif
 	MFILE_NULL,
 	MFILE_NONE = 0xFF, // BUGFIX: should be `MFILE_NONE = MFILE_SCBSEXPD+1`, i.e. MFILE_NULL, since there would otherwise be an out-of-bounds in SetMissAnim when accessing misfiledata for any of the missiles that have MFILE_NONE as mFileNum in missiledata.
 } missile_graphic_id;
@@ -1347,6 +1573,14 @@ typedef enum _mai_id {
 	AI_LAZHELP  = 29,
 	AI_LACHDAN  = 30,
 	AI_WARLORD  = 31,
+	AI_FIREBAT   = 32,
+	AI_TORCHANT  = 33,
+	AI_HORKDMN   = 34,
+	AI_LICH      = 35,
+	AI_ARCHLICH  = 36,
+	AI_PSYCHORB  = 37,
+	AI_NECROMORB = 38,
+	AI_BONEDEMON = 39,
 } _mai_id;
 
 typedef enum _mc_id {
@@ -1484,7 +1718,33 @@ typedef enum _monster_id {
 	MT_GOLEM    = 0x6D,
 	MT_DIABLO   = 0x6E,
 	MT_DARKMAGE = 0x6F,
-	NUM_MTYPES  = 0x6F, /// BUGFIX the count is off by one
+	MT_HELLBOAR = 0x70,
+	MT_STINGER  = 0x71,
+	MT_PSYCHORB = 0x72,
+	MT_ARACHNON = 0x73,
+	MT_FELLTWIN = 0x74,
+	MT_HORKSPWN = 0x75,
+	MT_VENMTAIL = 0x76,
+	MT_NECRMORB = 0x77,
+	MT_SPIDLORD = 0x78,
+	MT_LASHWORM = 0x79,
+	MT_TORCHANT = 0x7A,
+	MT_HORKDMN  = 0x7B,
+	MT_DEFILER  = 0x7C,
+	MT_GRAVEDIG = 0x7D,
+	MT_TOMBRAT  = 0x7E,
+	MT_FIREBAT  = 0x7F,
+	MT_SKLWING  = 0x80,
+	MT_LICH     = 0x81,
+	MT_CRYPTDMN = 0x82,
+	MT_HELLBAT  = 0x83,
+	MT_BONEDEMN = 0x84,
+	MT_ARCHLICH = 0x85,
+	MT_BICLOPS  = 0x86,
+	MT_FLESTHNG = 0x87,
+	MT_REAPER   = 0x88,
+	MT_NAKRUL   = 0x89,
+	NUM_MTYPES, /// BUGFIX the count is off by one (fixed)
 } _monster_id;
 
 // this enum contains indexes from UniqMonst array for special unique monsters (usually quest related)
@@ -1499,6 +1759,9 @@ typedef enum {
 	UMT_LACHDAN   = 7,
 	UMT_WARLORD   = 8,
 	UMT_BUTCHER   = 9,
+	UMT_HORKDMN   = 10,
+	UMT_DEFILER   = 11,
+	UMT_NAKRUL    = 12,
 } _uniq_monsterid;
 
 typedef enum monster_flag {
@@ -1531,14 +1794,15 @@ typedef enum monster_resistance {
 	RESIST_MAGIC     = 0x01,
 	RESIST_FIRE      = 0x02,
 	RESIST_LIGHTNING = 0x04,
-	IMUNE_MAGIC      = 0x08,
-	IMUNE_FIRE       = 0x10,
-	IMUNE_LIGHTNING  = 0x20,
-	IMUNE_NULL_40    = 0x40,
-	IMUNE_ACID       = 0x80,
+	IMMUNE_MAGIC      = 0x08,
+	IMMUNE_FIRE       = 0x10,
+	IMMUNE_LIGHTNING  = 0x20,
+	IMMUNE_NULL_40    = 0x40,
+	IMMUNE_ACID       = 0x80,
 } monster_resistance;
 
 typedef enum missile_resistance {
+	MISR_NONE      = 0,
 	MISR_FIRE      = 1,
 	MISR_LIGHTNING = 2,
 	MISR_MAGIC     = 3,
@@ -1805,6 +2069,85 @@ typedef enum _speech_id {
 	TEXT_BOOK32     = 0x100,
 	TEXT_BOOK33     = 0x101,
 	TEXT_INTRO      = 0x102,
+	TEXT_HBONER    = 0x103,
+	TEXT_HBLOODY   = 0x104,
+	TEXT_HBLINDING = 0x105,
+	TEXT_HBLOODWAR = 0x106,
+	TEXT_BBONER     = 0x107,
+	TEXT_BBLOODY    = 0x108,
+	TEXT_BBLINDING  = 0x109,
+	TEXT_BBLOODWAR  = 0x10A,
+	TEXT_GRAVE1     = 0x10B,
+	TEXT_GRAVE2     = 0x10C,
+	TEXT_GRAVE3     = 0x10D,
+	TEXT_GRAVE4     = 0x10E,
+	TEXT_GRAVE5     = 0x10F,
+	TEXT_GRAVE6     = 0x110,
+	TEXT_GRAVE7     = 0x111,
+	TEXT_GRAVE8     = 0x112,
+	TEXT_GRAVE9     = 0x113,
+	TEXT_GRAVE10    = 0x114,
+	TEXT_FARMER1    = 0x115,
+	TEXT_FARMER2    = 0x116,
+	TEXT_FARMER3    = 0x117,
+	TEXT_FARMER4    = 0x118,
+	TEXT_FARMER5    = 0x119,
+	TEXT_GIRL1      = 0x11A,
+	TEXT_GIRL2      = 0x11B,
+	TEXT_GIRL3      = 0x11C,
+	TEXT_GIRL4      = 0x11D,
+	TEXT_DEFILER1   = 0x11E,
+	TEXT_DEFILER2   = 0x11F,
+	TEXT_DEFILER3   = 0x120,
+	TEXT_DEFILER4   = 0x121,
+	TEXT_DEFILER5   = 0x122,
+	TEXT_NAKRUL1    = 0x123,
+	TEXT_NAKRUL2    = 0x124,
+	TEXT_NAKRUL3    = 0x125,
+	TEXT_NAKRUL4    = 0x126,
+	TEXT_NAKRUL5    = 0x127,
+	TEXT_CORNSTN    = 0x128,
+	TEXT_JERSEY1    = 0x129,
+	TEXT_JERSEY2    = 0x12A,
+	TEXT_JERSEY3    = 0x12B,
+	TEXT_JERSEY4    = 0x12C,
+	TEXT_JERSEY5    = 0x12D,
+	TEXT_JERSEY6    = 0x12E,
+	TEXT_JERSEY7    = 0x12F,
+	TEXT_JERSEY8    = 0x130,
+	TEXT_JERSEY9    = 0x131,
+	TEXT_TRADER     = 0x132,
+	TEXT_FARMER6    = 0x133,
+	TEXT_FARMER7    = 0x134,
+	TEXT_FARMER8    = 0x135,
+	TEXT_FARMER9    = 0x136,
+	TEXT_FARMER10   = 0x137,
+	TEXT_JERSEY10   = 0x138,
+	TEXT_JERSEY11   = 0x139,
+	TEXT_JERSEY12   = 0x13A,
+	TEXT_JERSEY13   = 0x13B,
+	TEXT_SKLJRN     = 0x13C,
+	TEXT_BOOK4      = 0x13D,
+	TEXT_BOOK5      = 0x13E,
+	TEXT_BOOK6      = 0x13F,
+	TEXT_BOOK7      = 0x140,
+	TEXT_BOOK8      = 0x141,
+	TEXT_BOOK9      = 0x142,
+	TEXT_BOOKA      = 0x143,
+	TEXT_BOOKB      = 0x144,
+	TEXT_BOOKC      = 0x145,
+	TEXT_OBOOKA     = 0x146,
+	TEXT_OBOOKB     = 0x147,
+	TEXT_OBOOKC     = 0x148,
+	TEXT_MBOOKA     = 0x149,
+	TEXT_MBOOKB     = 0x14A,
+	TEXT_MBOOKC     = 0x14B,
+	TEXT_RBOOKA     = 0x14C,
+	TEXT_RBOOKB     = 0x14D,
+	TEXT_RBOOKC     = 0x14E,
+	TEXT_BBOOKA     = 0x14F,
+	TEXT_BBOOKB     = 0x150,
+	TEXT_BBOOKC     = 0x151,
 } _speech_id;
 
 typedef enum object_graphic_id {
@@ -1872,6 +2215,8 @@ typedef enum dungeon_type {
 	DTYPE_CATACOMBS = 0x2,
 	DTYPE_CAVES     = 0x3,
 	DTYPE_HELL      = 0x4,
+	DTYPE_NEST      = 0x5,
+	DTYPE_CRYPT     = 0x6,
 	DTYPE_NONE      = 0xFF,
 } dungeon_type;
 
@@ -1972,6 +2317,17 @@ typedef enum diablo_message {
 	EMSG_REQUIRES_LVL_13        = 41,
 	EMSG_REQUIRES_LVL_17        = 42,
 	EMSG_BONECHAMB              = 43,
+	EMSG_SHRINE_OILY            = 44,
+	EMSG_SHRINE_GLOWING         = 45,
+	EMSG_SHRINE_MENDICANT       = 46,
+	EMSG_SHRINE_SPARKLING       = 47,
+	EMSG_SHRINE_TOWN            = 48,
+	EMSG_SHRINE_SHIMMERING      = 49,
+	EMSG_SHRINE_SOLAR1          = 50,
+	EMSG_SHRINE_SOLAR2          = 51,
+	EMSG_SHRINE_SOLAR3          = 52,
+	EMSG_SHRINE_SOLAR4          = 53,
+	EMSG_SHRINE_MURPHYS         = 54,
 } diablo_message;
 
 typedef enum magic_type {
@@ -2199,6 +2555,21 @@ typedef enum spell_id {
 	SPL_HEALOTHER   = 0x22,
 	SPL_FLARE       = 0x23,
 	SPL_BONESPIRIT  = 0x24,
+	SPL_MANA        = 0x25,
+	SPL_MAGI        = 0x26,
+	SPL_JESTER      = 0x27,
+	SPL_LIGHTWALL   = 0x28,
+	SPL_IMMOLAT     = 0x29,
+	SPL_WARP        = 0x2A,
+	SPL_REFLECT     = 0x2B,
+	SPL_BERSERK     = 0x2C,
+	SPL_FIRERING    = 0x2D,
+	SPL_SEARCH      = 0x2E,
+	SPL_RUNEFIRE    = 0x2F,
+	SPL_RUNELIGHT   = 0x30,
+	SPL_RUNENOVA    = 0x31,
+	SPL_RUNEIMMOLAT = 0x32,
+	SPL_RUNESTONE   = 0x33,
 	SPL_INVALID     = -1,
 } spell_id;
 
@@ -2299,6 +2670,18 @@ typedef enum _cmd_id {
 	CMD_REMSHIELD,
 	FAKE_CMD_SETID,
 	FAKE_CMD_DROPID,
+	CMD_DLEVEL_17,
+	CMD_DLEVEL_18,
+	CMD_DLEVEL_19,
+	CMD_DLEVEL_20,
+	CMD_DLEVEL_21,
+	CMD_DLEVEL_22,
+	CMD_DLEVEL_23,
+	CMD_DLEVEL_24,
+	CMD_REFLECT,
+	CMD_NAKRUL,
+	CMD_OPENHIVE,
+	CMD_OPENCRYPT,
 	NUM_CMDS,
 } _cmd_id;
 
@@ -2313,7 +2696,13 @@ typedef enum _talker_id {
 	TOWN_BMAID   = 0x7,
 	TOWN_PEGBOY  = 0x8,
 	TOWN_COW     = 0x9,
+#ifdef HELLFIRE
+	TOWN_FARMER  = 0xA,
+	TOWN_GIRL    = 0xB,
+	TOWN_COWFARM = 0xC,
+#else
 	TOWN_PRIEST  = 0xA,
+#endif
 } _talker_id;
 
 typedef enum _music_id {
@@ -2322,17 +2711,24 @@ typedef enum _music_id {
 	TMUSIC_L2,
 	TMUSIC_L3,
 	TMUSIC_L4,
+#ifdef HELLFIRE
+	TMUSIC_L5,
+	TMUSIC_L6,
+#endif
 	TMUSIC_INTRO,
 	NUM_MUSIC,
 } _music_id;
 
 typedef enum _mainmenu_selections {
 	MAINMENU_SINGLE_PLAYER = 1,
-	MAINMENU_MULTIPLAYER   = 2,
-	MAINMENU_REPLAY_INTRO  = 3,
-	MAINMENU_SHOW_CREDITS  = 4,
-	MAINMENU_EXIT_DIABLO   = 5,
-	MAINMENU_ATTRACT_MODE  = 6,
+	MAINMENU_MULTIPLAYER,
+	MAINMENU_REPLAY_INTRO,
+#ifdef HELLFIRE
+	MAINMENU_SHOW_SUPPORT,
+#endif
+	MAINMENU_SHOW_CREDITS,
+	MAINMENU_EXIT_DIABLO,
+	MAINMENU_ATTRACT_MODE,
 } _mainmenu_selections;
 
 typedef enum _selhero_selections {
@@ -2508,6 +2904,15 @@ typedef enum item_misc_id {
 	IMISC_MAPOFDOOM = 0x2A,
 	IMISC_EAR       = 0x2B,
 	IMISC_SPECELIX  = 0x2C,
+	IMISC_RUNEFIRST = 0x2E,
+	IMISC_RUNEF     = 0x2F,
+	IMISC_RUNEL     = 0x30,
+	IMISC_GR_RUNEL  = 0x31,
+	IMISC_GR_RUNEF  = 0x32,
+	IMISC_RUNES     = 0x33,
+	IMISC_RUNELAST  = 0x34,
+	IMISC_AURIC     = 0x35,
+	IMISC_NOTE      = 0x36,
 	IMISC_INVALID   = -1,
 } item_misc_id;
 
@@ -2568,6 +2973,19 @@ typedef enum _item_indexes {
 	IDI_LGTFORGE,
 	IDI_LAZSTAFF,
 	IDI_RESURRECT,
+	IDI_OIL,
+	IDI_SHORTSTAFF,
+	IDI_SWORD,
+	IDI_DAGGER,
+	IDI_RUNEBOMB,
+	IDI_THEODORE,
+	IDI_AURIC,
+	IDI_NOTE1,
+	IDI_NOTE2,
+	IDI_NOTE3,
+	IDI_FULLNOTE,
+	IDI_BROWNSUIT,
+	IDI_GREYSUIT,
 } _item_indexes;
 
 typedef enum _setlevels {
@@ -2580,23 +2998,31 @@ typedef enum _setlevels {
 } _setlevels;
 
 typedef enum quest_id {
-	Q_ROCK     = 0x0,
-	Q_MUSHROOM = 0x1,
-	Q_GARBUD   = 0x2,
-	Q_ZHAR     = 0x3,
-	Q_VEIL     = 0x4,
-	Q_DIABLO   = 0x5,
-	Q_BUTCHER  = 0x6,
-	Q_LTBANNER = 0x7,
-	Q_BLIND    = 0x8,
-	Q_BLOOD    = 0x9,
-	Q_ANVIL    = 0xA,
-	Q_WARLORD  = 0xB,
-	Q_SKELKING = 0xC,
-	Q_PWATER   = 0xD,
-	Q_SCHAMB   = 0xE,
-	Q_BETRAYER = 0xF,
-	Q_INVALID  = -1,
+	Q_ROCK      = 0x0,
+	Q_MUSHROOM  = 0x1,
+	Q_GARBUD    = 0x2,
+	Q_ZHAR      = 0x3,
+	Q_VEIL      = 0x4,
+	Q_DIABLO    = 0x5,
+	Q_BUTCHER   = 0x6,
+	Q_LTBANNER  = 0x7,
+	Q_BLIND     = 0x8,
+	Q_BLOOD     = 0x9,
+	Q_ANVIL     = 0xA,
+	Q_WARLORD   = 0xB,
+	Q_SKELKING  = 0xC,
+	Q_PWATER    = 0xD,
+	Q_SCHAMB    = 0xE,
+	Q_BETRAYER  = 0xF,
+	Q_GRAVE   = 0x10,
+	Q_FARMER  = 0x11,
+	Q_GIRL    = 0x12,
+	Q_TRADER  = 0x13,
+	Q_DEFILER = 0x14,
+	Q_NAKRUL  = 0x15,
+	Q_CORNSTN = 0x16,
+	Q_JERSEY  = 0x17,
+	Q_INVALID = -1,
 } quest_id;
 
 typedef enum quest_state {
@@ -2605,6 +3031,12 @@ typedef enum quest_state {
 	QUEST_ACTIVE   = 2,
 	QUEST_DONE     = 3
 } quest_state;
+
+typedef enum quest_gametype {
+	QUEST_SINGLE = 0,
+	QUEST_ANY    = 1,
+	QUEST_MULTI  = 2,
+} quest_gametype;
 
 typedef enum quest_mush_state {
 	QS_INIT         = 0,
@@ -2654,7 +3086,11 @@ typedef enum _unique_items {
 	UITEM_STEELVEIL    = 0x6,
 	UITEM_ARMOFVAL     = 0x7,
 	UITEM_GRISWOLD     = 0x8,
+#ifndef HELLFIRE
 	UITEM_LGTFORGE     = 0x9,
+#else
+	UITEM_BOVINE       = 0x9,
+#endif
 	UITEM_RIFTBOW      = 0xA,
 	UITEM_NEEDLER      = 0xB,
 	UITEM_CELESTBOW    = 0xC,
@@ -2742,13 +3178,23 @@ typedef enum plr_class {
 	PC_WARRIOR  = 0x0,
 	PC_ROGUE    = 0x1,
 	PC_SORCERER = 0x2,
+#ifdef HELLFIRE
+	PC_MONK      = 0x3,
+	PC_BARD      = 0x4,
+	PC_BARBARIAN = 0x5,
+#endif
 	NUM_CLASSES
 } plr_class;
 
 typedef enum _ui_classes {
-	UI_WARRIOR  = 0x0,
-	UI_ROGUE    = 0x1,
-	UI_SORCERER = 0x2,
+	UI_WARRIOR     = 0x0,
+	UI_ROGUE       = 0x1,
+	UI_SORCERER    = 0x2,
+#ifdef HELLFIRE
+	UI_MONK        = 0x3,
+	UI_BARD        = 0x4,
+	UI_BARBARIAN   = 0x5,
+#endif
 	UI_NUM_CLASSES,
 } _ui_classes;
 
@@ -2795,7 +3241,7 @@ typedef enum item_special_effect {
 	ISPL_DRAINLIFE      = 0x00000040,
 	ISPL_UNKNOWN_1      = 0x00000080,
 	ISPL_NOHEALPLR      = 0x00000100,
-	ISPL_UNKNOWN_2      = 0x00000200,
+	ISPL_MULT_ARROWS    = 0x00000200,
 	ISPL_UNKNOWN_3      = 0x00000400,
 	ISPL_KNOCKBACK      = 0x00000800,
 	ISPL_NOHEALMON      = 0x00001000,
@@ -2901,11 +3347,15 @@ typedef enum anim_weapon_id {
 
 typedef enum anim_armor_id {
 	ANIM_ID_LIGHT_ARMOR = 0x00,
-#ifndef SPAWN
 	ANIM_ID_MEDIUM_ARMOR = 0x10,
 	ANIM_ID_HEAVY_ARMOR  = 0x20
-#endif
 } anim_armor_id;
+
+typedef enum shrine_gametype {
+	SHRINETYPE_ANY    = 0,
+	SHRINETYPE_SINGLE = 1,
+	SHRINETYPE_MULTI  = 2,
+} shrine_gametype;
 
 typedef enum shrine_type {
 	SHRINE_MYSTERIOUS   = 0,
@@ -2934,6 +3384,16 @@ typedef enum shrine_type {
 	SHRINE_ORNATE       = 23,
 	SHRINE_GLIMMERING   = 24,
 	SHRINE_TAINTED      = 25,
+#ifdef HELLFIRE
+	SHRINE_OILY         = 26,
+	SHRINE_GLOWING      = 27,
+	SHRINE_MENDICANT    = 28,
+	SHRINE_SPARKLING    = 29,
+	SHRINE_TOWN         = 30,
+	SHRINE_SHIMMERING   = 31,
+	SHRINE_SOLAR        = 32,
+	SHRINE_MURPHYS      = 33,
+#endif
 	NUM_SHRINETYPE
 } shrine_type;
 
@@ -2966,12 +3426,8 @@ typedef enum dlrg_flag {
 } dlrg_flag;
 
 typedef enum conn_type {
-#ifndef NONET
 	SELCONN_TCP,
-#ifdef BUGGY
 	SELCONN_UDP,
-#endif
-#endif
 	SELCONN_LOOPBACK,
 } conn_type;
 

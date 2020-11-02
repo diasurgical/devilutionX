@@ -27,7 +27,11 @@ void LoadGame(BOOL firstflag)
 	LoadBuff = pfile_read(szName, &dwLen);
 	tbuff = LoadBuff;
 
+#ifdef HELLFIRE
+	if (ILoad() != 'HELF')
+#else
 	if (ILoad() != 'RETL')
+#endif
 		app_fatal("Invalid save file");
 
 	setlevel = OLoad();
@@ -284,7 +288,6 @@ void CopyInt64(const void *src, void *dst)
 void LoadPlayer(int i)
 {
 	PlayerStruct *pPlayer = &plr[i];
-	char tempChar;
 
 	CopyInt(tbuff, &pPlayer->_pmode);
 	CopyBytes(tbuff, MAX_PATH_LENGTH, pPlayer->walkpath);
@@ -452,9 +455,7 @@ void LoadPlayer(int i)
 	CopyInt(tbuff, &pPlayer->_pIGetHit);
 	CopyChar(tbuff, &pPlayer->_pISplLvlAdd);
 	CopyChar(tbuff, &pPlayer->_pISplCost);
-	CopyChar(tbuff, &tempChar);
-	pPlayer->pDifficulty = tempChar & 3; // Use 2 alignment bits for difficulty
-	tbuff += 1; // Alignment
+	tbuff += 2; // Alignment
 	CopyInt(tbuff, &pPlayer->_pISplDur);
 	CopyInt(tbuff, &pPlayer->_pIEnAc);
 	CopyInt(tbuff, &pPlayer->_pIFMinDam);
@@ -465,13 +466,26 @@ void LoadPlayer(int i)
 	CopyChar(tbuff, &pPlayer->pTownWarps);
 	CopyChar(tbuff, &pPlayer->pDungMsgs);
 	CopyChar(tbuff, &pPlayer->pLvlLoad);
+#ifdef HELLFIRE
+	CopyChar(tbuff, &pPlayer->pDungMsgs2);
+	pPlayer->pBattleNet = false;
+#else
 	CopyChar(tbuff, &pPlayer->pBattleNet);
+#endif
 	CopyChar(tbuff, &pPlayer->pManaShield);
+#ifndef HELLFIRE
 	CopyBytes(tbuff, 3, &pPlayer->bReserved);
-	CopyShorts(tbuff, 8, &pPlayer->wReserved);
+#else
+	CopyChar(tbuff, &pPlayer->pDungMsgs2);
+	CopyBytes(tbuff, 2, &pPlayer->bReserved);
+#endif
+	CopyShort(tbuff, &pPlayer->wReflection);
+	CopyShorts(tbuff, 7, &pPlayer->wReserved);
 
 	CopyInt(tbuff, &pPlayer->pDiabloKillLevel);
-	CopyInts(tbuff, 7, &pPlayer->dwReserved);
+	CopyInt(tbuff, &pPlayer->pDifficulty);
+	CopyInt(tbuff, &pPlayer->pDamAcFlags);
+	CopyInts(tbuff, 5, &pPlayer->dwReserved);
 
 	// Omit pointer _pNData
 	// Omit pointer _pWData
@@ -849,7 +863,11 @@ void SaveGame()
 	BYTE *SaveBuff = DiabloAllocPtr(dwLen);
 	tbuff = SaveBuff;
 
+#ifdef HELLFIRE
+	ISave('HELF');
+#else
 	ISave('RETL');
+#endif
 	OSave(setlevel);
 	WSave(setlvlnum);
 	WSave(currlevel);
@@ -1016,7 +1034,6 @@ void OSave(BOOL v)
 void SavePlayer(int i)
 {
 	PlayerStruct *pPlayer = &plr[i];
-	char tempChar;
 
 	CopyInt(&pPlayer->_pmode, tbuff);
 	CopyBytes(&pPlayer->walkpath, MAX_PATH_LENGTH, tbuff);
@@ -1182,9 +1199,7 @@ void SavePlayer(int i)
 
 	CopyChar(&pPlayer->_pISplLvlAdd, tbuff);
 	CopyChar(&pPlayer->_pISplCost, tbuff);
-	tempChar = pPlayer->pDifficulty & 3; // Use 2 alignment bits for difficulty
-	CopyChar(&tempChar, tbuff);
-	tbuff += 1; // Alignment
+	tbuff += 2; // Alignment
 	CopyInt(&pPlayer->_pISplDur, tbuff);
 	CopyInt(&pPlayer->_pIEnAc, tbuff);
 	CopyInt(&pPlayer->_pIFMinDam, tbuff);
@@ -1195,13 +1210,21 @@ void SavePlayer(int i)
 	CopyChar(&pPlayer->pTownWarps, tbuff);
 	CopyChar(&pPlayer->pDungMsgs, tbuff);
 	CopyChar(&pPlayer->pLvlLoad, tbuff);
+#ifdef HELLFIRE
+	CopyChar(&pPlayer->pDungMsgs2, tbuff);
+#else
 	CopyChar(&pPlayer->pBattleNet, tbuff);
+#endif
 	CopyChar(&pPlayer->pManaShield, tbuff);
-	CopyBytes(&pPlayer->bReserved, 3, tbuff);
-	CopyShorts(&pPlayer->wReserved, 8, tbuff);
+	CopyChar(&pPlayer->pDungMsgs2, tbuff);
+	CopyBytes(&pPlayer->bReserved, 2, tbuff);
+	CopyShort(&pPlayer->wReflection, tbuff);
+	CopyShorts(&pPlayer->wReserved, 7, tbuff);
 
 	CopyInt(&pPlayer->pDiabloKillLevel, tbuff);
-	CopyInts(&pPlayer->dwReserved, 7, tbuff);
+	CopyInt(&pPlayer->pDifficulty, tbuff);
+	CopyInt(&pPlayer->pDamAcFlags, tbuff);
+	CopyInts(&pPlayer->dwReserved, 5, tbuff);
 
 	// Omit pointer _pNData
 	// Omit pointer _pWData

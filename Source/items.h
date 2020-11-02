@@ -19,11 +19,31 @@ extern ItemStruct curruitem;
 extern ItemGetRecordStruct itemrecord[MAXITEMS];
 extern ItemStruct item[MAXITEMS + 1];
 extern BOOL itemhold[3][3];
+#ifdef HELLFIRE
+extern CornerStoneStruct CornerStone;
+#endif
 extern BYTE *itemanims[ITEMTYPES];
 extern BOOL UniqueItemFlag[128];
+#ifdef HELLFIRE
+extern int auricGold;
+#endif
 extern int numitems;
 extern int gnNumGetRecords;
 
+#ifdef HELLFIRE
+int items_4231CA(int i);
+int items_423230(int i);
+int items_423296(int i);
+int items_4232FC(int i);
+int items_423362(int i);
+int items_4233C8(int i);
+int items_42342E(int i);
+int items_4234B2(int i);
+int items_423518(int i);
+int items_42357E(int i);
+void items_42390F();
+int items_get_currlevel();
+#endif
 void InitItemGFX();
 BOOL ItemPlace(int xp, int yp);
 void AddInitItems();
@@ -55,17 +75,25 @@ int RndPL(int param1, int param2);
 int PLVal(int pv, int p1, int p2, int minv, int maxv);
 void SaveItemPower(int i, int power, int param1, int param2, int minval, int maxval, int multval);
 void GetItemPower(int i, int minlvl, int maxlvl, int flgs, BOOL onlygood);
+#ifdef HELLFIRE
+void GetItemBonus(int i, int idata, int minlvl, int maxlvl, BOOL onlygood, BOOLEAN allowspells);
+#else
 void GetItemBonus(int i, int idata, int minlvl, int maxlvl, BOOL onlygood);
+#endif
 void SetupItem(int i);
 int RndItem(int m);
 int RndUItem(int m);
 int RndAllItems();
+#ifdef HELLFIRE
+int RndTypeItems(int itype, int imid, int lvl);
+#else
 int RndTypeItems(int itype, int imid);
+#endif
 int CheckUnique(int i, int lvl, int uper, BOOL recreate);
 void GetUniqueItem(int i, int uid);
 void SpawnUnique(int uid, int x, int y);
 void ItemRndDur(int ii);
-void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, int onlygood, BOOL recreate, BOOL pregen);
+void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, BOOL onlygood, BOOL recreate, BOOL pregen);
 void SpawnItem(int m, int x, int y, BOOL sendmsg);
 void CreateItem(int uid, int x, int y);
 void CreateRndItem(int x, int y, BOOL onlygood, BOOL sendmsg, BOOL delta);
@@ -74,8 +102,18 @@ void CreateRndUseful(int pnum, int x, int y, BOOL sendmsg);
 void CreateTypeItem(int x, int y, BOOL onlygood, int itype, int imisc, BOOL sendmsg, BOOL delta);
 void RecreateItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue);
 void RecreateEar(int ii, WORD ic, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff);
+#ifdef HELLFIRE
+void items_427A72();
+void items_427ABA(int x, int y);
+#endif
 void SpawnQuestItem(int itemid, int x, int y, int randarea, int selflag);
 void SpawnRock();
+#ifdef HELLFIRE
+void SpawnRewardItem(int itemid, int xx, int yy);
+void SpawnMapOfDoom(int xx, int yy);
+void SpawnRuneBomb(int xx, int yy);
+void SpawnTheodore(int xx, int yy);
+#endif
 void RespawnItem(int i, BOOL FlipFlag);
 void DeleteItem(int ii, int i);
 void ItemDoppel();
@@ -87,11 +125,15 @@ void CheckIdentify(int pnum, int cii);
 void DoRepair(int pnum, int cii);
 void RepairItem(ItemStruct *i, int lvl);
 void DoRecharge(int pnum, int cii);
+#ifdef HELLFIRE
+void DoOil(int pnum, int cii);
+BOOL OilItem(ItemStruct *x, PlayerStruct *p);
+#endif
 void RechargeItem(ItemStruct *i, int r);
 void PrintItemOil(char IDidx);
 void PrintItemPower(char plidx, ItemStruct *x);
 void DrawUTextBack();
-void PrintUString(int x, int y, BOOL cjustflag, char *str, int col);
+void PrintUString(int x, int y, BOOL cjustflag, const char *str, int col);
 void DrawULine(int y);
 void DrawUniqueInfo();
 void PrintItemMisc(ItemStruct *x);
@@ -107,7 +149,11 @@ void SpawnSmith(int lvl);
 BOOL PremiumItemOk(int i);
 int RndPremiumItem(int minlvl, int maxlvl);
 void SpawnOnePremium(int i, int plvl);
+#ifdef HELLFIRE
+void SpawnPremium(int pnum);
+#else
 void SpawnPremium(int lvl);
+#endif
 BOOL WitchItemOk(int i);
 int RndWitchItem(int lvl);
 void SortWitch();
@@ -130,6 +176,9 @@ void RecalcStoreStats();
 int ItemNoFlippy();
 void CreateSpellBook(int x, int y, int ispell, BOOL sendmsg, BOOL delta);
 void CreateMagicArmor(int x, int y, int imisc, int icurs, BOOL sendmsg, BOOL delta);
+#ifdef HELLFIRE
+void CreateAmulet(int x, int y, int curlv, BOOL sendmsg, BOOL delta);
+#endif
 void CreateMagicWeapon(int x, int y, int imisc, int icurs, BOOL sendmsg, BOOL delta);
 BOOL GetItemRecord(int nSeed, WORD wCI, int nIndex);
 void NextItemRecord(int i);
@@ -138,8 +187,16 @@ void PutItemRecord(int nSeed, WORD wCI, int nIndex);
 
 /* data */
 
+#ifdef HELLFIRE
+extern int OilLevels[10];
+extern int OilValues[10];
+extern int OilMagic[10];
+extern char OilNames[10][25];
+extern int MaxGold;
+#endif
+
 extern BYTE ItemCAnimTbl[];
-extern char *ItemDropNames[];
+extern const char *const ItemDropNames[];
 extern BYTE ItemAnimLs[];
 extern int ItemDropSnds[];
 extern int ItemInvSnds[];

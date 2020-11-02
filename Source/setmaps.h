@@ -1,7 +1,7 @@
 /**
  * @file setmaps.cpp
  *
- * Interface of functionality the special quest dungeons.
+ * Interface of functionality for the special quest dungeons.
  */
 #ifndef __SETMAPS_H__
 #define __SETMAPS_H__
@@ -16,7 +16,7 @@ int ObjIndex(int x, int y);
 void AddSKingObjs();
 void AddSChamObjs();
 void AddVileObjs();
-void DRLG_SetMapTrans(char *sFileName);
+void DRLG_SetMapTrans(const char *sFileName);
 void LoadSetMap();
 
 /* rdata */
@@ -27,7 +27,7 @@ extern BYTE SkelKingTrans4[28];
 extern BYTE SkelChamTrans1[20];
 extern BYTE SkelChamTrans2[8];
 extern BYTE SkelChamTrans3[36];
-extern char *quest_level_names[];
+extern const char *const quest_level_names[];
 
 #ifdef __cplusplus
 }

@@ -8,7 +8,7 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 int qtexty;
-char *qtextptr;
+const char *qtextptr;
 int qtextSpd;
 BOOLEAN qtextflag;
 int scrolltexty;
@@ -17,7 +17,7 @@ BYTE *pMedTextCels;
 BYTE *pTextBoxCels;
 
 /** Maps from font index to medtexts.cel frame number. */
-const BYTE mfontframe[127] = {
+const BYTE mfontframe[128] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -30,7 +30,7 @@ const BYTE mfontframe[127] = {
 	26, 42, 0, 43, 0, 0, 0, 1, 2, 3,
 	4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
 	14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-	24, 25, 26, 48, 0, 49, 0
+	24, 25, 26, 48, 0, 49, 0, 0
 };
 /**
  * Maps from medtexts.cel frame number to character width. Note, the
@@ -109,7 +109,7 @@ void DrawQText()
 {
 	int i, l, w, tx, ty;
 	BYTE c;
-	char *p, *pnl, *s;
+	const char *p, *pnl, *s;
 	char tempstr[128];
 	BOOL doneflag;
 	DWORD currTime;

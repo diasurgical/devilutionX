@@ -8,6 +8,8 @@
 #include "controls/controller_motion.h"
 #include "controls/game_controls.h"
 
+#define SPLICONLENGTH 56
+
 namespace dvl {
 
 bool sgbControllerActive = false;
@@ -15,7 +17,9 @@ coords speedspellscoords[50];
 const int repeatRate = 100;
 int speedspellcount = 0;
 
-// Native game menu, controlled by simulating a keyboard.
+/**
+ * Native game menu, controlled by simulating a keyboard.
+ */
 bool InGameMenu()
 {
 	return stextflag > 0
@@ -30,9 +34,7 @@ bool InGameMenu()
 namespace {
 
 DWORD invmove = 0;
-int hsr[3] = { 0, 0, 0 }; // hot spell row counts
 int slot = SLOTXY_INV_FIRST;
-int spbslot = 0;
 
 /**
  * Number of angles to turn to face the coordinate
@@ -195,8 +197,9 @@ bool CanTargetMonster(int mi)
 
 void FindRangedTarget()
 {
-	int distance, rotations;
-	bool canTalk;
+    int rotations = 0;
+    int distance = 0;
+	bool canTalk = false;
 
 	// The first MAX_PLRS monsters are reserved for players' golems.
 	for (int mi = MAX_PLRS; mi < MAXMONSTERS; mi++) {
@@ -228,8 +231,8 @@ void FindMeleeTarget()
 {
 	bool visited[MAXDUNX][MAXDUNY] = { { 0 } };
 	int maxSteps = 25; // Max steps for FindPath is 25
-	int rotations;
-	bool canTalk;
+	int rotations = 0;
+	bool canTalk = false;
 
 	struct SearchNode {
 		int x, y;
@@ -307,7 +310,9 @@ void CheckMonstersNearby()
 
 void CheckPlayerNearby()
 {
-	int distance, newDdistance, rotations;
+    int newDdistance;
+    int rotations = 0;
+    int distance = 0;
 
 	if (pcursmonst != -1)
 		return;
@@ -363,7 +368,8 @@ int pcursquest;
 
 void FindTrigger()
 {
-	int distance, rotations;
+    int rotations;
+    int distance = 0;
 
 	if (pcursitem != -1 || pcursobj != -1)
 		return; // Prefer showing items/objects over triggers (use of cursm* conflicts)
@@ -442,8 +448,10 @@ void Interact()
 
 void AttrIncBtnSnap(MoveDirectionY dir)
 {
-	if (dir == MoveDirectionY_NONE)
+	if (dir == MoveDirectionY_NONE) {
+		invmove = 0;
 		return;
+	}
 
 	if (chrbtnactive && plr[myplr]._pStatPts <= 0)
 		return;
@@ -480,11 +488,18 @@ void AttrIncBtnSnap(MoveDirectionY dir)
 	SetCursorPos(x, y);
 }
 
-// move the cursor around in our inventory
-// if mouse coords are at SLOTXY_CHEST_LAST, consider this center of equipment
-// small inventory squares are 29x29 (roughly)
+/**
+ * Move the cursor around in our inventory
+ * If mouse coords are at SLOTXY_CHEST_LAST, consider this center of equipment
+ * small inventory squares are 29x29 (roughly)
+ */
 void InvMove(MoveDirection dir)
 {
+	if (dir.x == MoveDirectionX_NONE && dir.y == MoveDirectionY_NONE) {
+		invmove = 0;
+		return;
+	}
+
 	DWORD ticks = SDL_GetTicks();
 	if (ticks - invmove < repeatRate) {
 		return;
@@ -495,7 +510,14 @@ void InvMove(MoveDirection dir)
 
 	// check which inventory rectangle the mouse is in, if any
 	for (int r = 0; (DWORD)r < NUM_XY_SLOTS; r++) {
-		if (x >= InvRect[r].X && x < InvRect[r].X + (INV_SLOT_SIZE_PX + 1) && y >= InvRect[r].Y - (INV_SLOT_SIZE_PX + 1) && y < InvRect[r].Y) {
+		int xo = RIGHT_PANEL;
+		int yo = 0;
+		if (r >= SLOTXY_BELT_FIRST) {
+			xo = PANEL_LEFT;
+			yo = PANEL_TOP;
+		}
+
+		if (x >= InvRect[r].X + xo && x < InvRect[r].X + xo + (INV_SLOT_SIZE_PX + 1) && y >= InvRect[r].Y + yo - (INV_SLOT_SIZE_PX + 1) && y < InvRect[r].Y + yo) {
 			slot = r;
 			break;
 		}
@@ -509,16 +531,16 @@ void InvMove(MoveDirection dir)
 	// when item is on cursor, this is the real cursor XY
 	if (dir.x == MoveDirectionX_LEFT) {
 		if (slot >= SLOTXY_HAND_RIGHT_FIRST && slot <= SLOTXY_HAND_RIGHT_LAST) {
-			x = InvRect[SLOTXY_CHEST_FIRST].X + (INV_SLOT_SIZE_PX / 2);
+			x = InvRect[SLOTXY_CHEST_FIRST].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_CHEST_FIRST].Y - (INV_SLOT_SIZE_PX / 2);
 		} else if (slot >= SLOTXY_CHEST_FIRST && slot <= SLOTXY_CHEST_LAST) {
-			x = InvRect[SLOTXY_HAND_LEFT_FIRST + 2].X + (INV_SLOT_SIZE_PX / 2);
+			x = InvRect[SLOTXY_HAND_LEFT_FIRST + 2].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_HAND_LEFT_FIRST + 2].Y - (INV_SLOT_SIZE_PX / 2);
 		} else if (slot == SLOTXY_AMULET) {
-			x = InvRect[SLOTXY_HEAD_FIRST].X + (INV_SLOT_SIZE_PX / 2);
+			x = InvRect[SLOTXY_HEAD_FIRST].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_HEAD_FIRST].Y - (INV_SLOT_SIZE_PX / 2);
 		} else if (slot == SLOTXY_RING_RIGHT) {
-			x = InvRect[SLOTXY_RING_LEFT].X + (INV_SLOT_SIZE_PX / 2);
+			x = InvRect[SLOTXY_RING_LEFT].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_RING_LEFT].Y - (INV_SLOT_SIZE_PX / 2);
 		} else if (slot == SLOTXY_BELT_FIRST) {
 			// do nothing
@@ -528,25 +550,29 @@ void InvMove(MoveDirection dir)
 			                                                                          // do nothing
 		} else if (slot >= SLOTXY_HEAD_FIRST && slot <= SLOTXY_HEAD_LAST) {           // head
 			                                                                          // do nothing
-		} else if (slot > SLOTXY_INV_FIRST) {                                         // general inventory
+		} else if (slot > SLOTXY_INV_FIRST && slot <= SLOTXY_INV_LAST) {              // general inventory
 			if (slot != SLOTXY_INV_FIRST && slot != 35 && slot != 45 && slot != 55) { // left bounds
 				slot -= 1;
-				x = InvRect[slot].X + (INV_SLOT_SIZE_PX / 2);
+				x = InvRect[slot].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 				y = InvRect[slot].Y - (INV_SLOT_SIZE_PX / 2);
 			}
+		} else if (slot > SLOTXY_BELT_FIRST && slot <= SLOTXY_BELT_LAST) {            // belt
+			slot -= 1;
+			x = InvRect[slot].X + PANEL_LEFT + (INV_SLOT_SIZE_PX / 2);
+			y = InvRect[slot].Y + PANEL_TOP - (INV_SLOT_SIZE_PX / 2);
 		}
 	} else if (dir.x == MoveDirectionX_RIGHT) {
 		if (slot == SLOTXY_RING_LEFT) {
-			x = InvRect[SLOTXY_RING_RIGHT].X + (INV_SLOT_SIZE_PX / 2);
+			x = InvRect[SLOTXY_RING_RIGHT].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_RING_RIGHT].Y - (INV_SLOT_SIZE_PX / 2);
 		} else if (slot >= SLOTXY_HAND_LEFT_FIRST && slot <= SLOTXY_HAND_LEFT_LAST) {
-			x = InvRect[SLOTXY_CHEST_FIRST].X + (INV_SLOT_SIZE_PX / 2);
+			x = InvRect[SLOTXY_CHEST_FIRST].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_CHEST_FIRST].Y - (INV_SLOT_SIZE_PX / 2);
 		} else if (slot >= SLOTXY_CHEST_FIRST && slot <= SLOTXY_CHEST_LAST) {
-			x = InvRect[SLOTXY_HAND_RIGHT_FIRST + 2].X + (INV_SLOT_SIZE_PX / 2);
+			x = InvRect[SLOTXY_HAND_RIGHT_FIRST + 2].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_HAND_RIGHT_FIRST + 2].Y - (INV_SLOT_SIZE_PX / 2);
 		} else if (slot >= SLOTXY_HEAD_FIRST && slot <= SLOTXY_HEAD_LAST) { // head to amulet
-			x = InvRect[SLOTXY_AMULET].X + (INV_SLOT_SIZE_PX / 2);
+			x = InvRect[SLOTXY_AMULET].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_AMULET].Y - (INV_SLOT_SIZE_PX / 2);
 		} else if (slot >= SLOTXY_HAND_RIGHT_FIRST && slot <= SLOTXY_HAND_RIGHT_LAST) { // right hand
 			                                                                            // do nothing
@@ -554,74 +580,82 @@ void InvMove(MoveDirection dir)
 			// do nothing
 		} else if (slot == SLOTXY_RING_RIGHT) {
 			// do nothing
-		} else if (slot < SLOTXY_BELT_LAST && slot >= SLOTXY_INV_FIRST) {            // general inventory
+		} else if (slot >= SLOTXY_INV_FIRST && slot <= SLOTXY_INV_LAST) {            // general inventory
 			if (slot != 34 && slot != 44 && slot != 54 && slot != SLOTXY_INV_LAST) { // right bounds
 				slot += 1;
-				x = InvRect[slot].X + (INV_SLOT_SIZE_PX / 2);
+				x = InvRect[slot].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 				y = InvRect[slot].Y - (INV_SLOT_SIZE_PX / 2);
 			}
+		} else if (slot >= SLOTXY_BELT_FIRST && slot < SLOTXY_BELT_LAST) {           // belt
+			slot += 1;
+			x = InvRect[slot].X + PANEL_LEFT + (INV_SLOT_SIZE_PX / 2);
+			y = InvRect[slot].Y + PANEL_TOP - (INV_SLOT_SIZE_PX / 2);
 		}
 	}
 	if (dir.y == MoveDirectionY_UP) {
 		if (slot > 24 && slot <= 27) { // first 3 general slots
-			x = InvRect[SLOTXY_RING_LEFT].X + (INV_SLOT_SIZE_PX / 2);
+			x = InvRect[SLOTXY_RING_LEFT].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_RING_LEFT].Y - (INV_SLOT_SIZE_PX / 2);
 		} else if (slot >= 28 && slot <= 32) { // middle 4 general slots
-			x = InvRect[SLOTXY_CHEST_FIRST].X + (INV_SLOT_SIZE_PX / 2);
+			x = InvRect[SLOTXY_CHEST_FIRST].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_CHEST_FIRST].Y - (INV_SLOT_SIZE_PX / 2);
 		} else if (slot >= 33 && slot < 35) { // last 3 general slots
-			x = InvRect[SLOTXY_RING_RIGHT].X + (INV_SLOT_SIZE_PX / 2);
+			x = InvRect[SLOTXY_RING_RIGHT].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_RING_RIGHT].Y - (INV_SLOT_SIZE_PX / 2);
 		} else if (slot >= SLOTXY_CHEST_FIRST && slot <= SLOTXY_CHEST_LAST) { // chest to head
-			x = InvRect[SLOTXY_HEAD_FIRST].X + (INV_SLOT_SIZE_PX / 2);
+			x = InvRect[SLOTXY_HEAD_FIRST].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_HEAD_FIRST].Y - (INV_SLOT_SIZE_PX / 2);
 		} else if (slot == SLOTXY_RING_LEFT) { // left ring to left hand
-			x = InvRect[SLOTXY_HAND_LEFT_FIRST + 2].X + (INV_SLOT_SIZE_PX / 2);
+			x = InvRect[SLOTXY_HAND_LEFT_FIRST + 2].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_HAND_LEFT_FIRST + 2].Y - (INV_SLOT_SIZE_PX / 2);
 		} else if (slot == SLOTXY_RING_RIGHT) { // right ring to right hand
-			x = InvRect[SLOTXY_HAND_RIGHT_FIRST + 2].X + (INV_SLOT_SIZE_PX / 2);
+			x = InvRect[SLOTXY_HAND_RIGHT_FIRST + 2].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_HAND_RIGHT_FIRST + 2].Y - (INV_SLOT_SIZE_PX / 2);
 		} else if (slot >= SLOTXY_HAND_RIGHT_FIRST && slot <= SLOTXY_HAND_RIGHT_LAST) { // right hand to amulet
-			x = InvRect[SLOTXY_AMULET].X + (INV_SLOT_SIZE_PX / 2);
+			x = InvRect[SLOTXY_AMULET].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_AMULET].Y - (INV_SLOT_SIZE_PX / 2);
 		} else if (slot >= SLOTXY_HEAD_FIRST && slot <= SLOTXY_HEAD_LAST) {
 			// do nothing
 		} else if (slot >= SLOTXY_HAND_LEFT_FIRST && slot <= SLOTXY_HAND_LEFT_LAST) { // left hand to head
-			x = InvRect[SLOTXY_HEAD_FIRST].X + (INV_SLOT_SIZE_PX / 2);
+			x = InvRect[SLOTXY_HEAD_FIRST].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_HEAD_FIRST].Y - (INV_SLOT_SIZE_PX / 2);
 		} else if (slot == SLOTXY_AMULET) {
 			// do nothing
 		} else if (slot >= (SLOTXY_INV_FIRST + 10)) { // general inventory
 			slot -= 10;
-			x = InvRect[slot].X + (INV_SLOT_SIZE_PX / 2);
+			x = InvRect[slot].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[slot].Y - (INV_SLOT_SIZE_PX / 2);
 		}
 	} else if (dir.y == MoveDirectionY_DOWN) {
 		if (slot >= SLOTXY_HEAD_FIRST && slot <= SLOTXY_HEAD_LAST) {
-			x = InvRect[SLOTXY_CHEST_FIRST].X + (INV_SLOT_SIZE_PX / 2);
+			x = InvRect[SLOTXY_CHEST_FIRST].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_CHEST_FIRST].Y - (INV_SLOT_SIZE_PX / 2);
 		} else if (slot >= SLOTXY_CHEST_FIRST && slot <= SLOTXY_CHEST_LAST) {
-			x = InvRect[30].X + (INV_SLOT_SIZE_PX / 2);
+			x = InvRect[30].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[30].Y - (INV_SLOT_SIZE_PX / 2);
 		} else if (slot >= SLOTXY_HAND_LEFT_FIRST && slot <= SLOTXY_HAND_LEFT_LAST) {
-			x = InvRect[SLOTXY_RING_LEFT].X + (INV_SLOT_SIZE_PX / 2);
+			x = InvRect[SLOTXY_RING_LEFT].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_RING_LEFT].Y - (INV_SLOT_SIZE_PX / 2);
 		} else if (slot == SLOTXY_RING_LEFT) {
-			x = InvRect[26].X + (INV_SLOT_SIZE_PX / 2);
+			x = InvRect[26].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[26].Y - (INV_SLOT_SIZE_PX / 2);
 		} else if (slot == SLOTXY_RING_RIGHT) {
-			x = InvRect[34].X + (INV_SLOT_SIZE_PX / 2);
+			x = InvRect[34].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[34].Y - (INV_SLOT_SIZE_PX / 2);
 		} else if (slot == SLOTXY_AMULET) {
-			x = InvRect[SLOTXY_HAND_RIGHT_FIRST + 2].X + (INV_SLOT_SIZE_PX / 2);
+			x = InvRect[SLOTXY_HAND_RIGHT_FIRST + 2].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_HAND_RIGHT_FIRST + 2].Y - (INV_SLOT_SIZE_PX / 2);
 		} else if (slot >= SLOTXY_HAND_RIGHT_FIRST && slot <= SLOTXY_HAND_RIGHT_LAST) {
-			x = InvRect[SLOTXY_RING_RIGHT].X + (INV_SLOT_SIZE_PX / 2);
+			x = InvRect[SLOTXY_RING_RIGHT].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[SLOTXY_RING_RIGHT].Y - (INV_SLOT_SIZE_PX / 2);
-		} else if (slot < (SLOTXY_BELT_LAST - 10)) { // general inventory
+		} else if (slot <= (SLOTXY_INV_LAST - 10)) { // general inventory
 			slot += 10;
-			x = InvRect[slot].X + (INV_SLOT_SIZE_PX / 2);
+			x = InvRect[slot].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[slot].Y - (INV_SLOT_SIZE_PX / 2);
+		} else if (slot <= (SLOTXY_BELT_LAST - 10)) { // general inventory
+			slot += 10;
+			x = InvRect[slot].X + PANEL_LEFT + (INV_SLOT_SIZE_PX / 2);
+			y = InvRect[slot].Y + PANEL_TOP - (INV_SLOT_SIZE_PX / 2);
 		}
 	}
 
@@ -638,11 +672,17 @@ void InvMove(MoveDirection dir)
 	SetCursorPos(x, y);
 }
 
-// check if hot spell at X Y exists
+/**
+ * check if hot spell at X Y exists
+ */
 bool HSExists(int x, int y)
 {
-	for (int r = 0; r < speedspellcount; r++) { // speedbook cells are 56x56
-		if (MouseX >= speedspellscoords[r].x - 28 && MouseX < speedspellscoords[r].x + (28) && MouseY >= speedspellscoords[r].y - (28) && MouseY < speedspellscoords[r].y + 28) {
+	for (int r = 0; r < speedspellcount; r++) {
+		if (x >= speedspellscoords[r].x - SPLICONLENGTH / 2
+			&& x < speedspellscoords[r].x + SPLICONLENGTH / 2
+			&& y >= speedspellscoords[r].y - SPLICONLENGTH / 2
+			&& y < speedspellscoords[r].y + SPLICONLENGTH / 2
+		) {
 			return true;
 		}
 	}
@@ -651,8 +691,10 @@ bool HSExists(int x, int y)
 
 void HotSpellMove(MoveDirection dir)
 {
-	int x = 0;
-	int y = 0;
+	if (dir.x == MoveDirectionX_NONE && dir.y == MoveDirectionY_NONE) {
+		invmove = 0;
+		return;
+	}
 
 	DWORD ticks = SDL_GetTicks();
 	if (ticks - invmove < repeatRate) {
@@ -660,67 +702,55 @@ void HotSpellMove(MoveDirection dir)
 	}
 	invmove = ticks;
 
-	for (int r = 0; r < speedspellcount; r++) { // speedbook cells are 56x56
-		// our 3 rows by y axis
-		if (speedspellscoords[r].y == 307)
-			hsr[0]++;
-		if (speedspellscoords[r].y == 251)
-			hsr[1]++;
-		if (speedspellscoords[r].y == 195)
-			hsr[2]++;
-		if (MouseX >= speedspellscoords[r].x - 28 && MouseX < speedspellscoords[r].x + (28) && MouseY >= speedspellscoords[r].y - (28) && MouseY < speedspellscoords[r].y + 28) {
+	int spbslot = plr[myplr]._pRSpell;
+	for (int r = 0; r < speedspellcount; r++) {
+		if (MouseX >= speedspellscoords[r].x - SPLICONLENGTH / 2
+			&& MouseX < speedspellscoords[r].x + SPLICONLENGTH / 2
+			&& MouseY >= speedspellscoords[r].y - SPLICONLENGTH / 2
+			&& MouseY < speedspellscoords[r].y + SPLICONLENGTH / 2
+		) {
 			spbslot = r;
-			//sprintf(tempstr, "IN HOT SPELL CELL NUM:%i", r);
-			//NetSendCmdString(1 << myplr, tempstr);
+			break;
+		}
+	}
+
+	int x = speedspellscoords[spbslot].x;
+	int y = speedspellscoords[spbslot].y;
+
+	if (dir.x == MoveDirectionX_LEFT) {
+		if (spbslot < speedspellcount - 1) {
+			x = speedspellscoords[spbslot + 1].x;
+			y = speedspellscoords[spbslot + 1].y;
+		}
+	} else if (dir.x == MoveDirectionX_RIGHT) {
+		if (spbslot > 0) {
+			x = speedspellscoords[spbslot - 1].x;
+			y = speedspellscoords[spbslot - 1].y;
 		}
 	}
 
 	if (dir.y == MoveDirectionY_UP) {
-		if (speedspellscoords[spbslot].y == 307 && hsr[1] > 0) { // we're in row 1, check if row 2 has spells
-			if (HSExists(MouseX, 251)) {
-				x = MouseX;
-				y = 251;
-			}
-		} else if (speedspellscoords[spbslot].y == 251 && hsr[2] > 0) { // we're in row 2, check if row 3 has spells
-			if (HSExists(MouseX, 195)) {
-				x = MouseX;
-				y = 195;
-			}
+		if (HSExists(x, y - SPLICONLENGTH)) {
+			y -= SPLICONLENGTH;
 		}
 	} else if (dir.y == MoveDirectionY_DOWN) {
-		if (speedspellscoords[spbslot].y == 251) { // we're in row 2
-			if (HSExists(MouseX, 307)) {
-				x = MouseX;
-				y = 307;
-			}
-		} else if (speedspellscoords[spbslot].y == 195) { // we're in row 3
-			if (HSExists(MouseX, 251)) {
-				x = MouseX;
-				y = 251;
-			}
+		if (HSExists(x, y + SPLICONLENGTH)) {
+			y += SPLICONLENGTH;
 		}
 	}
-	if (dir.x == MoveDirectionX_LEFT) {
-		if (spbslot >= speedspellcount - 1)
-			return;
-		spbslot++;
-		x = speedspellscoords[spbslot].x;
-		y = speedspellscoords[spbslot].y;
-	} else if (dir.x == MoveDirectionX_RIGHT) {
-		if (spbslot <= 0)
-			return;
-		spbslot--;
-		x = speedspellscoords[spbslot].x;
-		y = speedspellscoords[spbslot].y;
-	}
 
-	if (x > 0 && y > 0) {
+	if (x != MouseX || y != MouseY) {
 		SetCursorPos(x, y);
 	}
 }
 
 void SpellBookMove(MoveDirection dir)
 {
+	if (dir.x == MoveDirectionX_NONE && dir.y == MoveDirectionY_NONE) {
+		invmove = 0;
+		return;
+	}
+
 	DWORD ticks = SDL_GetTicks();
 	if (ticks - invmove < repeatRate) {
 		return;
@@ -880,6 +910,54 @@ struct RightStickAccumulator {
 
 } // namespace
 
+void StoreSpellCoords()
+{
+	const int START_X = PANEL_LEFT + 12 + SPLICONLENGTH / 2;
+	const int END_X = START_X + SPLICONLENGTH * 10;
+	const int END_Y = PANEL_TOP - 17 - SPLICONLENGTH / 2;
+	speedspellcount = 0;
+	int xo = END_X;
+	int yo = END_Y;
+	for (int i = 0; i < 4; i++) {
+		std::uint64_t spells;
+		switch (i) {
+		case RSPLTYPE_SKILL:
+			spells = plr[myplr]._pAblSpells;
+			break;
+		case RSPLTYPE_SPELL:
+			spells = plr[myplr]._pMemSpells;
+			break;
+		case RSPLTYPE_SCROLL:
+			spells = plr[myplr]._pScrlSpells;
+			break;
+		case RSPLTYPE_CHARGES:
+			spells = plr[myplr]._pISpells;
+			break;
+		default:
+			continue;
+		}
+		std::uint64_t spell = 1;
+		for (int j = 1; j < MAX_SPELLS; j++) {
+			if ((spell & spells)) {
+				speedspellscoords[speedspellcount] = { xo, yo };
+				++speedspellcount;
+				xo -= SPLICONLENGTH;
+				if (xo < START_X) {
+					xo = END_X;
+					yo -= SPLICONLENGTH;
+				}
+			}
+			spell <<= 1;
+		}
+		if (spells && xo != END_X)
+			xo -= SPLICONLENGTH;
+		if (xo < START_X) {
+			xo = END_X;
+			yo -= SPLICONLENGTH;
+		}
+	}
+}
+
 bool IsAutomapActive()
 {
 	return automapflag && leveltype != DTYPE_TOWN;
@@ -918,7 +996,7 @@ void HandleRightStickMotion()
  */
 void FocusOnInventory()
 {
-	SetCursorPos(InvRect[25].X + (INV_SLOT_SIZE_PX / 2), InvRect[25].Y - (INV_SLOT_SIZE_PX / 2));
+	SetCursorPos(InvRect[25].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2), InvRect[25].Y - (INV_SLOT_SIZE_PX / 2));
 }
 
 void plrctrls_after_check_curs_move()
@@ -1082,12 +1160,10 @@ void PerformSpellAction()
 	    || (pcursobj == -1 && spl == SPL_DISARM)) {
 		if (plr[myplr]._pClass == PC_WARRIOR) {
 			PlaySFX(PS_WARR27);
-#ifndef SPAWN
 		} else if (plr[myplr]._pClass == PC_ROGUE) {
 			PlaySFX(PS_ROGUE27);
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
 			PlaySFX(PS_MAGE27);
-#endif
 		}
 		return;
 	}

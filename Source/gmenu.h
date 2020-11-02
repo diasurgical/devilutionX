@@ -24,7 +24,7 @@ extern BYTE *option_cel;
 extern int sgCurrentMenuIdx;
 
 void gmenu_draw_pause();
-void gmenu_print_text(int x, int y, char *pszStr);
+void gmenu_print_text(int x, int y, const char *pszStr);
 void FreeGMenu();
 void gmenu_init_menu();
 BOOL gmenu_is_active();

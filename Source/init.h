@@ -14,20 +14,26 @@ extern "C" {
 
 extern _SNETVERSIONDATA fileinfo;
 extern int gbActive;
-extern char diablo_exe_path[MAX_PATH];
 extern HANDLE hellfire_mpq;
-extern char patch_rt_mpq_path[MAX_PATH];
 extern WNDPROC CurrentProc;
 extern HANDLE diabdat_mpq;
-extern char diabdat_mpq_path[MAX_PATH];
 extern HANDLE patch_rt_mpq;
+extern bool gbIsSpawn;
 extern BOOLEAN screensaver_enabled_prev;
+#ifdef HELLFIRE
+extern HANDLE hfmonk_mpq;
+extern HANDLE hfbard_mpq;
+extern HANDLE hfbarb_mpq;
+extern HANDLE hfmusic_mpq;
+extern HANDLE hfvoice_mpq;
+extern HANDLE hfopt1_mpq;
+extern HANDLE hfopt2_mpq;
+#endif
 
 void init_cleanup();
 void init_disable_screensaver(BOOLEAN disable);
 void init_create_window();
 void init_archives();
-HANDLE init_test_access(char *mpq_path, char *mpq_name, char *reg_loc, int flags, int fs);
 void init_get_file_info();
 LRESULT MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 void init_activate_window(HWND hWnd, BOOL bActive);
@@ -39,8 +45,8 @@ extern BOOL was_window_init;   /** defined in dx.cpp */
 
 /* data */
 
-extern char gszVersionNumber[MAX_PATH];
-extern char gszProductName[MAX_PATH];
+extern char gszVersionNumber[260];
+extern char gszProductName[260];
 
 #ifdef __cplusplus
 }

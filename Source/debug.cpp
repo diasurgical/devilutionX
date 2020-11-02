@@ -68,6 +68,7 @@ void GiveGoldCheat()
 
 void StoresCheat()
 {
+#ifndef HELLFIRE
 	int i;
 
 	numpremium = 0;
@@ -81,6 +82,7 @@ void StoresCheat()
 		witchitem[i]._itype = ITYPE_NONE;
 
 	SpawnWitch(30);
+#endif
 }
 
 void TakeGoldCheat()
@@ -107,7 +109,7 @@ void MaxSpellsCheat()
 	int i;
 
 	for (i = 1; i < MAX_SPELLS; i++) {
-		if (spelldata[i].sBookLvl != -1) {
+		if (GetSpellBookLevel(i) != -1) {
 			plr[myplr]._pMemSpells |= (__int64)1 << (i - 1);
 			plr[myplr]._pSplLvl[i] = 10;
 		}

@@ -37,7 +37,7 @@ typedef struct PLStruct {
 } PLStruct;
 
 typedef struct UItemStruct {
-	char *UIName;
+	const char *UIName;
 	char UIItemId;
 	char UIMinLvl;
 	char UINumPL;
@@ -69,8 +69,8 @@ typedef struct ItemDataStruct {
 	int iCurs;
 	char itype;
 	char iItemId;
-	char *iName;
-	char *iSName;
+	const char *iName;
+	const char *iSName;
 	char iMinMLvl;
 	int iDurability;
 	int iMinDam;
@@ -171,6 +171,9 @@ typedef struct ItemStruct {
 	BOOL _iStatFlag;
 	int IDidx;
 	int offs016C; // _oldlight or _iInvalid
+#ifdef HELLFIRE
+	int _iDamAcFlags;
+#endif
 } ItemStruct;
 
 //////////////////////////////////////////////////
@@ -342,11 +345,14 @@ typedef struct PlayerStruct {
 	unsigned char pLvlLoad;
 	unsigned char pBattleNet;
 	BOOLEAN pManaShield;
-	char bReserved[3];
-	short wReserved[8];
+	unsigned char pDungMsgs2;
+	char bReserved[2];
+	short wReflection;
+	short wReserved[7];
 	DWORD pDiabloKillLevel;
 	int pDifficulty;
-	int dwReserved[7];
+	int pDamAcFlags;
+	int dwReserved[5];
 	unsigned char *_pNData;
 	unsigned char *_pWData;
 	unsigned char *_pAData;
@@ -364,7 +370,7 @@ typedef struct PlayerStruct {
 //////////////////////////////////////////////////
 
 typedef struct TextDataStruct {
-	char *txtstr;
+	const char *txtstr;
 	int scrlltxt;
 	int txtspd;
 	int sfxnr;
@@ -392,7 +398,7 @@ typedef struct MissileData {
 typedef struct MisFileData {
 	unsigned char mAnimName;
 	unsigned char mAnimFAmt;
-	char *mName;
+	const char *mName;
 	int mFlags;
 	unsigned char *mAnimData[16];
 	unsigned char mAnimDelay[16];
@@ -459,14 +465,14 @@ typedef struct MissileStruct {
 //////////////////////////////////////////////////
 
 typedef struct TSnd {
-	char *sound_path;
+	const char *sound_path;
 	SoundSample *DSB;
 	int start_tc;
 } TSnd;
 
 typedef struct TSFX {
 	unsigned char bFlags;
-	char *pszName;
+	const char *pszName;
 	TSnd *pSnd;
 } TSFX;
 
@@ -484,15 +490,15 @@ typedef struct AnimStruct {
 typedef struct MonsterData {
 	int width;
 	int mImage;
-	char *GraphicType;
+	const char *GraphicType;
 	BOOL has_special;
-	char *sndfile;
+	const char *sndfile;
 	BOOL snd_special;
 	BOOL has_trans;
-	char *TransFile;
+	const char *TransFile;
 	int Frames[6];
 	int Rate[6];
-	char *mName;
+	const char *mName;
 	char mMinDLvl;
 	char mMaxDLvl;
 	char mLevel;
@@ -519,15 +525,24 @@ typedef struct MonsterData {
 } MonsterData;
 
 typedef struct CMonster {
+#ifdef HELLFIRE
+	int mtype;
+#else
 	unsigned char mtype;
+#endif
 	// TODO: Add enum for place flags
 	unsigned char mPlaceFlags;
 	AnimStruct Anims[6];
 	TSnd *Snds[4][2];
 	int width;
 	int width2;
+#ifdef HELLFIRE
+	int mMinHP;
+	int mMaxHP;
+#else
 	unsigned char mMinHP;
 	unsigned char mMaxHP;
+#endif
 	BOOL has_special;
 	unsigned char mAFNum;
 	char mdeadval;
@@ -609,15 +624,19 @@ typedef struct MonsterStruct { // note: missing field _mAFNum
 	unsigned char leaderflag;
 	unsigned char packsize;
 	unsigned char mlid;
-	char *mName;
+	const char *mName;
 	CMonster *MType;
 	MonsterData *MData;
 } MonsterStruct;
 
 typedef struct UniqMonstStruct {
+#ifdef HELLFIRE
+	int mtype;
+#else
 	char mtype;
-	char *mName;
-	char *mTrnName;
+#endif
+	const char *mName;
+	const char *mTrnName;
 	unsigned char mlevel;
 	unsigned short mmaxhp;
 	unsigned char mAi;
@@ -795,6 +814,14 @@ typedef struct TCmdGItem {
 	WORD wValue;
 	DWORD dwBuff;
 	int dwTime;
+#ifdef HELLFIRE
+	WORD wToHit;
+	WORD wMaxDam;
+	BYTE bMinStr;
+	BYTE bMinMag;
+	BYTE bMinDex;
+	BYTE bAC;
+#endif
 } TCmdGItem;
 
 typedef struct TCmdPItem {
@@ -811,6 +838,14 @@ typedef struct TCmdPItem {
 	BYTE bMCh;
 	WORD wValue;
 	DWORD dwBuff;
+#ifdef HELLFIRE
+	WORD wToHit;
+	WORD wMaxDam;
+	BYTE bMinStr;
+	BYTE bMinMag;
+	BYTE bMinDex;
+	BYTE bAC;
+#endif
 } TCmdPItem;
 
 typedef struct TCmdChItem {
@@ -832,6 +867,14 @@ typedef struct TCmdDamage {
 	BYTE bPlr;
 	DWORD dwDam;
 } TCmdDamage;
+
+#ifdef HELLFIRE
+typedef struct TCmdMonDamage {
+	BYTE bCmd;
+	WORD wMon;
+	DWORD dwDam;
+} TCmdMonDamage;
+#endif
 
 typedef struct TCmdPlrInfoHdr {
 	BYTE bCmd;
@@ -879,6 +922,14 @@ typedef struct TSyncHeader {
 	WORD wPInvCI;
 	DWORD dwPInvSeed;
 	BYTE bPInvId;
+#ifdef HELLFIRE
+	WORD wToHit;
+	WORD wMaxDam;
+	BYTE bMinStr;
+	BYTE bMinMag;
+	BYTE bMinDex;
+	BYTE bAC;
+#endif
 } TSyncHeader;
 
 typedef struct TSyncMonster {
@@ -977,10 +1028,14 @@ typedef struct QuestStruct {
 	int _qty;
 	unsigned char _qslvl;
 	unsigned char _qidx;
+#ifndef HELLFIRE
 	unsigned char _qmsg;
+#else
+	unsigned int _qmsg;
+#endif
 	unsigned char _qvar1;
 	unsigned char _qvar2;
-	int _qlog;
+	BOOL _qlog;
 } QuestStruct;
 
 typedef struct QuestData {
@@ -992,8 +1047,17 @@ typedef struct QuestData {
 	unsigned char _qslvl;
 	int _qflags; /* unsigned char */
 	int _qdmsg;
-	char *_qlstr;
+	const char *_qlstr;
 } QuestData;
+
+#ifdef HELLFIRE
+typedef struct CornerStoneStruct {
+	int x;
+	int y;
+	BOOL activated;
+	ItemStruct item;
+} CornerStoneStruct;
+#endif
 
 //////////////////////////////////////////////////
 // gamemenu/gmenu
@@ -1003,7 +1067,7 @@ typedef struct QuestData {
 
 typedef struct TMenuItem {
 	DWORD dwFlags;
-	char *pszStr;
+	const char *pszStr;
 	void (*fnMenu)(BOOL); /* fix, should have one arg */
 } TMenuItem;
 
@@ -1017,8 +1081,8 @@ typedef struct SpellData {
 	unsigned char sName;
 	unsigned char sManaCost;
 	unsigned char sType;
-	char *sNameText;
-	char *sSkillText;
+	const char *sNameText;
+	const char *sSkillText;
 	int sBookLvl;
 	int sStaffLvl;
 	BOOL sTargeted;
@@ -1097,6 +1161,16 @@ typedef struct QuestTalkData {
 	int _qpw;
 	int _qbone;
 	int _qvb;
+#ifdef HELLFIRE
+	int _qgrv;
+	int _qfarm;
+	int _qgirl;
+	int _qtrade;
+	int _qdefiler;
+	int _qnakrul;
+	int _qjersy;
+	int _qhf8;
+#endif
 } QuestTalkData;
 
 //////////////////////////////////////////////////
@@ -1297,8 +1371,8 @@ typedef struct _SNETPLAYERDATA {
 
 typedef struct _SNETPROGRAMDATA {
 	int size;
-	char *programname;
-	char *programdescription;
+	const char *programname;
+	const char *programdescription;
 	int programid;
 	int versionid;
 	int reserved1;
@@ -1315,10 +1389,10 @@ typedef struct _SNETPROGRAMDATA {
 
 typedef struct _SNETVERSIONDATA {
 	int size;
-	char *versionstring;
-	char *executablefile;
-	char *originalarchivefile;
-	char *patcharchivefile;
+	const char *versionstring;
+	const char *executablefile;
+	const char *originalarchivefile;
+	const char *patcharchivefile;
 } _SNETVERSIONDATA;
 
 typedef struct _SNETUIDATA {
@@ -1398,7 +1472,7 @@ typedef struct PkPlayerStruct {
 	int pMaxHPBase;
 	int pManaBase;
 	int pMaxManaBase;
-	char pSplLvl[MAX_SPELLS];
+	char pSplLvl[37]; // Should be MAX_SPELLS but set to 37 to make save games compatible
 	uint64_t pMemSpells;
 	PkItemStruct InvBody[NUM_INVLOC];
 	PkItemStruct InvList[NUM_INV_GRID_ELEM];
@@ -1410,10 +1484,16 @@ typedef struct PkPlayerStruct {
 	char pLvlLoad;
 	char pBattleNet;
 	BOOLEAN pManaShield;
-	char bReserved[3];
-	short wReserved[8];
-	int pDiabloKillLevel;
-	int dwReserved[7];
+	unsigned char pDungMsgs2;
+	char bReserved[2];
+	short wReflection;
+	short wReserved2;
+	char pSplLvl2[10]; // Hellfire spells
+	short wReserved8;
+	DWORD pDiabloKillLevel;
+	int pDifficulty;
+	int pDamAcFlags;
+	int dwReserved[5];
 } PkPlayerStruct;
 #pragma pack(pop)
 

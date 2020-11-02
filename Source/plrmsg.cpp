@@ -105,7 +105,7 @@ void DrawPlrMsg()
 		return;
 
 	pMsg = plr_msgs;
-	for (i = 0; i < 8; i++) {
+	for (i = 0; i < PMSG_COUNT; i++) {
 		if (pMsg->str[0])
 			PrintPlrMsg(x, y, width, pMsg->str, text_color_from_player_num[pMsg->player]);
 		pMsg++;

@@ -18,7 +18,6 @@ namespace {
 
 Art dialogArt;
 bool fontWasLoaded;
-bool textInputWasActive;
 
 bool dialogEnd;
 
@@ -204,8 +203,6 @@ void Init(const char *text, const char *caption, bool error, bool renderBehind)
 	fontWasLoaded = font != NULL;
 	if (!fontWasLoaded)
 		LoadTtfFont();
-	textInputWasActive = SDL_IsTextInputActive();
-	SDL_StopTextInput();
 }
 
 void Deinit()
@@ -214,8 +211,6 @@ void Deinit()
 	UnloadSmlButtonArt();
 	if (!fontWasLoaded)
 		UnloadTtfFont();
-	if (textInputWasActive)
-		SDL_StartTextInput();
 
 	for (std::size_t i = 0; i < vecOkDialog.size(); i++) {
 		UiItemBase *pUIItem = vecOkDialog[i];

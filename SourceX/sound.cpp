@@ -26,24 +26,33 @@ char *musicBuffer;
 BOOLEAN gbMusicOn = true;
 /** Specifies whether sound effects are enabled. */
 BOOLEAN gbSoundOn = true;
+/** Specifies the active background music track id. */
 int sgnMusicTrack = NUM_MUSIC;
-/** Maps from track ID to track name. */
-char *sgszMusicTracks[NUM_MUSIC] = {
-#ifdef SPAWN
+/** Maps from track ID to track name in spawn. */
+const char *const sgszSpawnMusicTracks[NUM_MUSIC] = {
 	"Music\\sTowne.wav",
 	"Music\\sLvlA.wav",
 	"Music\\sLvlA.wav",
 	"Music\\sLvlA.wav",
 	"Music\\sLvlA.wav",
+#ifdef HELLFIRE
+	"Music\\sLvlA.wav",
+	"Music\\sLvlA.wav",
+#endif
 	"Music\\sintro.wav",
-#else
+};
+/** Maps from track ID to track name. */
+const char *const sgszMusicTracks[NUM_MUSIC] = {
 	"Music\\DTowne.wav",
 	"Music\\DLvlA.wav",
 	"Music\\DLvlB.wav",
 	"Music\\DLvlC.wav",
 	"Music\\DLvlD.wav",
-	"Music\\Dintro.wav",
+#ifdef HELLFIRE
+	"Music\\DLvlE.wav",
+	"Music\\DLvlF.wav",
 #endif
+	"Music\\Dintro.wav",
 };
 
 BOOL snd_playing(TSnd *pSnd)
@@ -83,7 +92,7 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 	pSnd->start_tc = tc;
 }
 
-TSnd *sound_file_load(char *path)
+TSnd *sound_file_load(const char *path)
 {
 	HANDLE file;
 	BYTE *wave_file;
@@ -145,7 +154,7 @@ void snd_init(HWND hWnd)
 	gbSndInited = true;
 }
 
-void snd_get_volume(char *value_name, int *value)
+void snd_get_volume(const char *value_name, int *value)
 {
 	int v = *value;
 	if (!SRegLoadValue(APP_NAME, value_name, 0, &v)) {
@@ -172,7 +181,7 @@ void sound_cleanup()
 	}
 }
 
-void snd_set_volume(char *key, int value)
+void snd_set_volume(const char *key, int value)
 {
 	SRegSaveValue(APP_NAME, key, 0, value);
 }
@@ -194,11 +203,16 @@ void music_stop()
 void music_start(int nTrack)
 {
 	BOOL success;
+	const char *trackPath;
 
 	assert((DWORD)nTrack < NUM_MUSIC);
 	music_stop();
 	if (gbMusicOn) {
-		success = SFileOpenFile(sgszMusicTracks[nTrack], &sghMusic);
+		if (gbIsSpawn)
+			trackPath = sgszSpawnMusicTracks[nTrack];
+		else
+			trackPath = sgszMusicTracks[nTrack];
+		success = SFileOpenFile(trackPath, &sghMusic);
 		if (!success) {
 			sghMusic = NULL;
 		} else {

@@ -120,11 +120,20 @@ void InitInv()
 {
 	if (plr[myplr]._pClass == PC_WARRIOR) {
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", NULL);
-#ifndef SPAWN
 	} else if (plr[myplr]._pClass == PC_ROGUE) {
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv_rog.CEL", NULL);
 	} else if (plr[myplr]._pClass == PC_SORCERER) {
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv_Sor.CEL", NULL);
+#ifdef HELLFIRE
+	} else if (plr[myplr]._pClass == PC_MONK) {
+		if (gbIsSpawn)
+			pInvCels = LoadFileInMem("Data\\Inv\\Inv_Sor.CEL", NULL);
+		else
+			pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", NULL);
+	} else if (plr[myplr]._pClass == PC_BARD) {
+		pInvCels = LoadFileInMem("Data\\Inv\\Inv_rog.CEL", NULL);
+	} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+		pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", NULL);
 #endif
 	}
 
@@ -182,13 +191,37 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_HEAD]._iStatFlag) {
 				color = ICOL_RED;
 			}
+#ifdef HELLFIRE
+			if (frame <= 179) {
+#endif
 			CelBlitOutline(color, RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width);
+#ifdef HELLFIRE
+			} else {
+				CelBlitOutline(color, RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
+			}
+#endif
 		}
 
 		if (plr[myplr].InvBody[INVLOC_HEAD]._iStatFlag) {
-			CelClippedDraw(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width);
+#ifdef HELLFIRE
+			if (frame <= 179) {
+#endif
+				CelClippedDraw(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width);
+#ifdef HELLFIRE
+			} else {
+				CelClippedDraw(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
+			}
+#endif
 		} else {
+#ifdef HELLFIRE
+			if (frame <= 179) {
+#endif
 			CelDrawLightRed(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+#ifdef HELLFIRE
+			} else {
+				CelDrawLightRed(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels2, frame - 179, frame_width, 1);
+			}
+#endif
 		}
 	}
 
@@ -206,13 +239,37 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_RING_LEFT]._iStatFlag) {
 				color = ICOL_RED;
 			}
+#ifdef HELLFIRE
+			if (frame <= 179) {
+#endif
 			CelBlitOutline(color, RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width);
+#ifdef HELLFIRE
+			} else {
+				CelBlitOutline(color, RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
+			}
+#endif
 		}
 
 		if (plr[myplr].InvBody[INVLOC_RING_LEFT]._iStatFlag) {
+#ifdef HELLFIRE
+			if (frame <= 179) {
+#endif
 			CelClippedDraw(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width);
+#ifdef HELLFIRE
+			} else {
+				CelClippedDraw(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
+			}
+#endif
 		} else {
+#ifdef HELLFIRE
+			if (frame <= 179) {
+#endif
 			CelDrawLightRed(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+#ifdef HELLFIRE
+			} else {
+				CelDrawLightRed(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width, 1);
+			}
+#endif
 		}
 	}
 
@@ -230,13 +287,37 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_RING_RIGHT]._iStatFlag) {
 				color = ICOL_RED;
 			}
+#ifdef HELLFIRE
+			if (frame <= 179) {
+#endif
 			CelBlitOutline(color, RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width);
+#ifdef HELLFIRE
+			} else {
+				CelBlitOutline(color, RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
+			}
+#endif
 		}
 
 		if (plr[myplr].InvBody[INVLOC_RING_RIGHT]._iStatFlag) {
+#ifdef HELLFIRE
+			if (frame <= 179) {
+#endif
 			CelClippedDraw(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width);
+#ifdef HELLFIRE
+			} else {
+				CelClippedDraw(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
+			}
+#endif
 		} else {
+#ifdef HELLFIRE
+			if (frame <= 179) {
+#endif
 			CelDrawLightRed(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+#ifdef HELLFIRE
+			} else {
+				CelDrawLightRed(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width, 1);
+			}
+#endif
 		}
 	}
 
@@ -254,13 +335,37 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_AMULET]._iStatFlag) {
 				color = ICOL_RED;
 			}
+#ifdef HELLFIRE
+			if (frame <= 179) {
+#endif
 			CelBlitOutline(color, RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width);
+#ifdef HELLFIRE
+			} else {
+				CelBlitOutline(color, RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
+			}
+#endif
 		}
 
 		if (plr[myplr].InvBody[INVLOC_AMULET]._iStatFlag) {
+#ifdef HELLFIRE
+			if (frame <= 179) {
+#endif
 			CelClippedDraw(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width);
+#ifdef HELLFIRE
+			} else {
+				CelClippedDraw(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
+			}
+#endif
 		} else {
+#ifdef HELLFIRE
+			if (frame <= 179) {
+#endif
 			CelDrawLightRed(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+#ifdef HELLFIRE
+			} else {
+				CelDrawLightRed(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels2, frame - 179, frame_width, 1);
+			}
+#endif
 		}
 	}
 
@@ -281,26 +386,66 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
 				color = ICOL_RED;
 			}
+#ifdef HELLFIRE
+			if (frame <= 179) {
+#endif
 			CelBlitOutline(color, screen_x, screen_y, pCursCels, frame, frame_width);
+#ifdef HELLFIRE
+			} else {
+				CelBlitOutline(color, screen_x, screen_y, pCursCels2, frame - 179, frame_width);
+			}
+#endif
 		}
 
 		if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
+#ifdef HELLFIRE
+			if (frame <= 179) {
+#endif
 			CelClippedDraw(screen_x, screen_y, pCursCels, frame, frame_width);
+#ifdef HELLFIRE
+			} else {
+				CelClippedDraw(screen_x, screen_y, pCursCels2, frame - 179, frame_width);
+			}
+#endif
 		} else {
+#ifdef HELLFIRE
+			if (frame <= 179) {
+#endif
 			CelDrawLightRed(screen_x, screen_y, pCursCels, frame, frame_width, 1);
+#ifdef HELLFIRE
+			} else {
+				CelDrawLightRed(screen_x, screen_y, pCursCels2, frame - 179, frame_width, 1);
+			}
+#endif
 		}
 
 		if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND) {
-			InvDrawSlotBack(RIGHT_PANEL_X + 248, 160 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
-			light_table_index = 0;
-			cel_transparency_active = TRUE;
+#ifdef HELLFIRE
+			if (plr[myplr]._pClass != PC_BARBARIAN
+			    || plr[myplr].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_SWORD
+			        && plr[myplr].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_MACE) {
+#endif
+				InvDrawSlotBack(RIGHT_PANEL_X + 248, 160 + SCREEN_Y, 2 * INV_SLOT_SIZE_PX, 3 * INV_SLOT_SIZE_PX);
+				light_table_index = 0;
+				cel_transparency_active = TRUE;
 
-			pBuff = frame_width == INV_SLOT_SIZE_PX
-			    ? &gpBuffer[SCREENXY(RIGHT_PANEL_X + 197, SCREEN_Y)]
-			    : &gpBuffer[SCREENXY(RIGHT_PANEL_X + 183, SCREEN_Y)];
-			CelClippedBlitLightTrans(pBuff, pCursCels, frame, frame_width);
+				pBuff = frame_width == INV_SLOT_SIZE_PX
+					? &gpBuffer[SCREENXY(RIGHT_PANEL_X + 197, SCREEN_Y)]
+					: &gpBuffer[SCREENXY(RIGHT_PANEL_X + 183, SCREEN_Y)];
+#ifdef HELLFIRE
+				if (frame <= 179) {
+#endif
+					CelClippedBlitLightTrans(pBuff, pCursCels, frame, frame_width);
+#ifdef HELLFIRE
+				} else {
+					CelClippedBlitLightTrans(pBuff, pCursCels2, frame - 179, frame_width);
+				}
+#endif
 
-			cel_transparency_active = FALSE;
+				cel_transparency_active = FALSE;
+#ifdef HELLFIRE
+			}
+#endif
 		}
 	}
 	if (plr[myplr].InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_NONE) {
@@ -320,13 +465,37 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
 				color = ICOL_RED;
 			}
+#ifdef HELLFIRE
+			if (frame <= 179) {
+#endif
 			CelBlitOutline(color, screen_x, screen_y, pCursCels, frame, frame_width);
+#ifdef HELLFIRE
+			} else {
+				CelBlitOutline(color, screen_x, screen_y, pCursCels2, frame - 179, frame_width);
+			}
+#endif
 		}
 
 		if (plr[myplr].InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
+#ifdef HELLFIRE
+			if (frame <= 179) {
+#endif
 			CelClippedDraw(screen_x, screen_y, pCursCels, frame, frame_width);
+#ifdef HELLFIRE
+			} else {
+				CelClippedDraw(screen_x, screen_y, pCursCels2, frame - 179, frame_width);
+			}
+#endif
 		} else {
+#ifdef HELLFIRE
+			if (frame <= 179) {
+#endif
 			CelDrawLightRed(screen_x, screen_y, pCursCels, frame, frame_width, 1);
+#ifdef HELLFIRE
+			} else {
+				CelDrawLightRed(screen_x, screen_y, pCursCels2, frame - 179, frame_width, 1);
+			}
+#endif
 		}
 	}
 
@@ -344,13 +513,37 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_CHEST]._iStatFlag) {
 				color = ICOL_RED;
 			}
+#ifdef HELLFIRE
+			if (frame <= 179) {
+#endif
 			CelBlitOutline(color, RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width);
+#ifdef HELLFIRE
+			} else {
+				CelBlitOutline(color, RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
+			}
+#endif
 		}
 
 		if (plr[myplr].InvBody[INVLOC_CHEST]._iStatFlag) {
+#ifdef HELLFIRE
+			if (frame <= 179) {
+#endif
 			CelClippedDraw(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width);
+#ifdef HELLFIRE
+			} else {
+				CelClippedDraw(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
+			}
+#endif
 		} else {
+#ifdef HELLFIRE
+			if (frame <= 179) {
+#endif
 			CelDrawLightRed(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+#ifdef HELLFIRE
+			} else {
+				CelDrawLightRed(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels2, frame - 179, frame_width, 1);
+			}
+#endif
 		}
 	}
 
@@ -382,23 +575,57 @@ void DrawInv()
 				if (!plr[myplr].InvList[ii]._iStatFlag) {
 					color = ICOL_RED;
 				}
+#ifdef HELLFIRE
+				if (frame <= 179) {
+#endif
 				CelBlitOutline(
 				    color,
 				    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 				    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
 				    pCursCels, frame, frame_width);
+#ifdef HELLFIRE
+				} else {
+					CelBlitOutline(
+					    color,
+					    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
+					    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
+					    pCursCels2, frame - 179, frame_width);
+				}
+#endif
 			}
 
 			if (plr[myplr].InvList[ii]._iStatFlag) {
+#ifdef HELLFIRE
+				if (frame <= 179) {
+#endif
 				CelClippedDraw(
 				    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 				    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
 				    pCursCels, frame, frame_width);
+#ifdef HELLFIRE
+				} else {
+					CelClippedDraw(
+					    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
+					    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
+					    pCursCels2, frame - 179, frame_width);
+				}
+#endif
 			} else {
+#ifdef HELLFIRE
+				if (frame <= 179) {
+#endif
 				CelDrawLightRed(
 				    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 				    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
 				    pCursCels, frame, frame_width, 1);
+#ifdef HELLFIRE
+				} else {
+					CelDrawLightRed(
+					    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
+					    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
+					    pCursCels2, frame - 179, frame_width, 1);
+				}
+#endif
 			}
 		}
 	}
@@ -420,7 +647,7 @@ void DrawInvBelt()
 			continue;
 		}
 
-		InvDrawSlotBack(InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, 28, 28);
+		InvDrawSlotBack(InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, INV_SLOT_SIZE_PX, INV_SLOT_SIZE_PX);
 		frame = plr[myplr].SpdList[i]._iCurs + CURSOR_FIRSTITEM;
 		frame_width = InvItemWidth[frame];
 
@@ -430,14 +657,36 @@ void DrawInvBelt()
 				color = ICOL_BLUE;
 			if (!plr[myplr].SpdList[i]._iStatFlag)
 				color = ICOL_RED;
-			if (!sgbControllerActive || invflag)
-				CelBlitOutline(color, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels, frame, frame_width);
+			if (!sgbControllerActive || invflag) {
+#ifdef HELLFIRE
+			if (frame <= 179)
+#endif
+			CelBlitOutline(color, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels, frame, frame_width);
+#ifdef HELLFIRE
+			else
+				CelBlitOutline(color, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels2, frame - 179, frame_width);
+#endif
+			}
 		}
 
 		if (plr[myplr].SpdList[i]._iStatFlag) {
+#ifdef HELLFIRE
+			if (frame <= 179)
+#endif
 			CelClippedDraw(InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels, frame, frame_width);
+#ifdef HELLFIRE
+			else
+				CelClippedDraw(InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels2, frame - 179, frame_width);
+#endif
 		} else {
+#ifdef HELLFIRE
+			if (frame <= 179)
+#endif
 			CelDrawLightRed(InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels, frame, frame_width, 1);
+#ifdef HELLFIRE
+			else
+				CelDrawLightRed(InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels2, frame - 179, frame_width, 1);
+#endif
 		}
 
 		if (AllItemsList[plr[myplr].SpdList[i].IDidx].iUsable
@@ -445,7 +694,7 @@ void DrawInvBelt()
 		    && plr[myplr].SpdList[i]._itype != ITYPE_GOLD) {
 			fi = i + 49;
 			ff = fontframe[gbFontTransTbl[fi]];
-			PrintChar(InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X + 28 - fontkern[ff], InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, ff, 0);
+			PrintChar(InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X + INV_SLOT_SIZE_PX - fontkern[ff], InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, ff, 0);
 		}
 	}
 }
@@ -461,7 +710,7 @@ BOOL AutoPlace(int pnum, int ii, int sx, int sy, BOOL saveflag)
 		yy = 0;
 	}
 	for (j = 0; j < sy && done; j++) {
-		if (yy >= 40) {
+		if (yy >= NUM_INV_GRID_ELEM) {
 			done = FALSE;
 		}
 		xx = ii % 10;
@@ -516,7 +765,7 @@ BOOL SpecialAutoPlace(int pnum, int ii, int sx, int sy, BOOL saveflag)
 		yy = 0;
 	}
 	for (j = 0; j < sy && done; j++) {
-		if (yy >= 40) {
+		if (yy >= NUM_INV_GRID_ELEM) {
 			done = FALSE;
 		}
 		xx = ii % 10;
@@ -572,6 +821,7 @@ BOOL SpecialAutoPlace(int pnum, int ii, int sx, int sy, BOOL saveflag)
 	return done;
 }
 
+#ifndef HELLFIRE
 BOOL GoldAutoPlace(int pnum)
 {
 	BOOL done;
@@ -636,14 +886,102 @@ BOOL GoldAutoPlace(int pnum)
 
 	return done;
 }
+#else
+BOOL GoldAutoPlace(int pnum)
+{
+	int ii;
+	int xx, yy;
+	int max_gold, gold;
+	BOOL done;
+
+	done = FALSE;
+	for (int i = 0; i < plr[pnum]._pNumInv && !done; i++) {
+		if (plr[pnum].InvList[i]._itype == ITYPE_GOLD) {
+			gold = plr[pnum].InvList[i]._ivalue + plr[pnum].HoldItem._ivalue;
+			if (gold <= MaxGold) {
+				plr[pnum].InvList[i]._ivalue = gold;
+				if (gold >= GOLD_MEDIUM_LIMIT)
+					plr[pnum].InvList[i]._iCurs = ICURS_GOLD_LARGE;
+				else if (gold <= GOLD_SMALL_LIMIT)
+					plr[pnum].InvList[i]._iCurs = ICURS_GOLD_SMALL;
+				else
+					plr[pnum].InvList[i]._iCurs = ICURS_GOLD_MEDIUM;
+				plr[pnum]._pGold = CalculateGold(pnum);
+				done = TRUE;
+				plr[pnum].HoldItem._ivalue = 0;
+			} else {
+				max_gold = MaxGold;
+				if (plr[pnum].InvList[i]._ivalue < max_gold) {
+					gold = max_gold - plr[pnum].InvList[i]._ivalue;
+					plr[pnum].InvList[i]._ivalue = max_gold;
+					plr[pnum].InvList[i]._iCurs = ICURS_GOLD_LARGE;
+					plr[pnum].HoldItem._ivalue -= gold;
+					if (plr[pnum].HoldItem._ivalue < 0) {
+						plr[pnum].HoldItem._ivalue = 0;
+						done = TRUE;
+					}
+					GetPlrHandSeed(&plr[pnum].HoldItem);
+					control_set_gold_curs(pnum);
+					plr[pnum]._pGold = CalculateGold(pnum);
+				}
+			}
+		}
+	}
+	if (!done)
+		for (int i = 39; i >= 0 && !done; i--) {
+			yy = 10 * (i / 10);
+			xx = i % 10;
+			if (!plr[pnum].InvGrid[xx + yy]) {
+				ii = plr[pnum]._pNumInv;
+				plr[pnum].InvList[ii] = plr[pnum].HoldItem;
+				plr[pnum]._pNumInv = plr[pnum]._pNumInv + 1;
+				plr[pnum].InvGrid[xx + yy] = plr[pnum]._pNumInv;
+				if (plr[pnum].HoldItem._ivalue >= GOLD_MEDIUM_LIMIT)
+					plr[pnum].InvList[ii]._iCurs = ICURS_GOLD_LARGE;
+				else if (plr[pnum].HoldItem._ivalue <= GOLD_SMALL_LIMIT)
+					plr[pnum].InvList[ii]._iCurs = ICURS_GOLD_SMALL;
+				else
+					plr[pnum].InvList[ii]._iCurs = ICURS_GOLD_MEDIUM;
+
+				gold = plr[pnum].HoldItem._ivalue;
+				if (gold > MaxGold) {
+					gold -= MaxGold;
+					plr[pnum].HoldItem._ivalue = gold;
+					GetPlrHandSeed(&plr[pnum].HoldItem);
+					plr[pnum].InvList[ii]._ivalue = MaxGold;
+				} else {
+					plr[pnum].HoldItem._ivalue = 0;
+					done = TRUE;
+					plr[pnum]._pGold = CalculateGold(pnum);
+					SetCursor_(CURSOR_HAND);
+				}
+			}
+		}
+	return done;
+}
+#endif
 
 BOOL WeaponAutoPlace(int pnum)
 {
-	if (plr[pnum].HoldItem._iLoc != ILOC_TWOHAND) {
-		if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_NONE && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON)
-			return FALSE;
-		if (plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_NONE && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON)
-			return FALSE;
+#ifdef HELLFIRE
+	if (plr[pnum]._pClass == PC_MONK)
+		return FALSE;
+#endif
+	if (plr[pnum].HoldItem._iLoc != ILOC_TWOHAND
+#ifdef HELLFIRE
+	    || (plr[pnum]._pClass == PC_BARBARIAN && (plr[pnum].HoldItem._itype == ITYPE_SWORD || plr[pnum].HoldItem._itype == ITYPE_MACE))
+#endif
+	) {
+#ifdef HELLFIRE
+		if (plr[pnum]._pClass != PC_BARD)
+#endif
+		{
+			if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_NONE && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON)
+				return FALSE;
+			if (plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_NONE && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON)
+				return FALSE;
+		}
+
 		if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_NONE) {
 			NetSendCmdChItem(TRUE, INVLOC_HAND_LEFT);
 			plr[pnum].InvBody[INVLOC_HAND_LEFT] = plr[pnum].HoldItem;
@@ -702,30 +1040,30 @@ void CheckInvPaste(int pnum, int mx, int my)
 				r--;
 			}
 		}
-		if (r == 24) {
+		if (r == SLOTXY_CHEST_LAST) {
 			if ((sx & 1) == 0)
 				i -= 14;
 			if ((sy & 1) == 0) {
 				j -= 14;
 			}
 		}
-		if (r == 64 && (sy & 1) == 0)
+		if (r == SLOTXY_INV_LAST && (sy & 1) == 0)
 			j += 14;
 	}
 	if (!done)
 		return;
 	il = ILOC_UNEQUIPABLE;
-	if (r >= 0 && r <= 3)
+	if (r >= SLOTXY_HEAD_FIRST && r <= SLOTXY_HEAD_LAST)
 		il = ILOC_HELM;
-	if (r >= 4 && r <= 5)
+	if (r >= SLOTXY_RING_LEFT && r <= SLOTXY_RING_RIGHT)
 		il = ILOC_RING;
-	if (r == 6)
+	if (r == SLOTXY_AMULET)
 		il = ILOC_AMULET;
-	if (r >= 7 && r <= 18)
+	if (r >= SLOTXY_HAND_LEFT_FIRST && r <= SLOTXY_HAND_RIGHT_LAST)
 		il = ILOC_ONEHAND;
-	if (r >= 19 && r <= 24)
+	if (r >= SLOTXY_CHEST_FIRST && r <= SLOTXY_CHEST_LAST)
 		il = ILOC_ARMOR;
-	if (r >= 65 && r <= 72)
+	if (r >= SLOTXY_BELT_FIRST && r <= SLOTXY_BELT_LAST)
 		il = ILOC_BELT;
 	done = FALSE;
 	if (plr[pnum].HoldItem._iLoc == il)
@@ -749,7 +1087,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 	if (il == ILOC_UNEQUIPABLE) {
 		done = TRUE;
 		it = 0;
-		ii = r - 25;
+		ii = r - SLOTXY_INV_FIRST;
 		if (plr[pnum].HoldItem._itype == ITYPE_GOLD) {
 			yy = 10 * (ii / 10);
 			xx = ii % 10;
@@ -802,12 +1140,10 @@ void CheckInvPaste(int pnum, int mx, int my)
 		done = FALSE;
 		if (plr[pnum]._pClass == PC_WARRIOR)
 			PlaySFX(PS_WARR13);
-#ifndef SPAWN
 		else if (plr[pnum]._pClass == PC_ROGUE)
 			PlaySFX(PS_ROGUE13);
 		else if (plr[pnum]._pClass == PC_SORCERER)
 			PlaySFX(PS_MAGE13);
-#endif
 	}
 
 	if (!done)
@@ -826,7 +1162,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 			cn = SwapItem(&plr[pnum].InvBody[INVLOC_HEAD], &plr[pnum].HoldItem);
 		break;
 	case ILOC_RING:
-		if (r == 4) {
+		if (r == SLOTXY_RING_LEFT) {
 			NetSendCmdChItem(FALSE, INVLOC_RING_LEFT);
 			if (plr[pnum].InvBody[INVLOC_RING_LEFT]._itype == ITYPE_NONE)
 				plr[pnum].InvBody[INVLOC_RING_LEFT] = plr[pnum].HoldItem;
@@ -848,7 +1184,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 			cn = SwapItem(&plr[pnum].InvBody[INVLOC_AMULET], &plr[pnum].HoldItem);
 		break;
 	case ILOC_ONEHAND:
-		if (r <= 12) {
+		if (r <= SLOTXY_HAND_LEFT_LAST) {
 			if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_NONE) {
 				if (plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_NONE || plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iClass != plr[pnum].HoldItem._iClass) {
 					NetSendCmdChItem(FALSE, INVLOC_HAND_LEFT);
@@ -948,7 +1284,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 		break;
 	case ILOC_UNEQUIPABLE:
 		if (plr[pnum].HoldItem._itype == ITYPE_GOLD && it == 0) {
-			ii = r - 25;
+			ii = r - SLOTXY_INV_FIRST;
 			yy = 10 * (ii / 10);
 			xx = ii % 10;
 			if (plr[pnum].InvGrid[yy + xx] > 0) {
@@ -1013,7 +1349,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 						plr[pnum].InvGrid[i] = 0;
 				}
 			}
-			ii = r - 25;
+			ii = r - SLOTXY_INV_FIRST;
 			yy = 10 * (ii / 10 - ((sy - 1) >> 1));
 			if (yy < 0)
 				yy = 0;
@@ -1033,7 +1369,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 		}
 		break;
 	case ILOC_BELT:
-		ii = r - 65;
+		ii = r - SLOTXY_BELT_FIRST;
 		if (plr[pnum].HoldItem._itype == ITYPE_GOLD) {
 			if (plr[pnum].SpdList[ii]._itype != ITYPE_NONE) {
 				if (plr[pnum].SpdList[ii]._itype == ITYPE_GOLD) {
@@ -1082,7 +1418,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 	}
 	CalcPlrInv(pnum, TRUE);
 	if (pnum == myplr) {
-		if (cn == 1)
+		if (cn == CURSOR_HAND)
 			SetCursorPos(MouseX + (cursW >> 1), MouseY + (cursH >> 1));
 		SetCursor_(cn);
 	}
@@ -1335,6 +1671,49 @@ void RemoveInvItem(int pnum, int iv)
 	}
 }
 
+#ifdef HELLFIRE
+/**
+ * @brief This destroyes all items except gold
+ */
+BOOL inv_diablo_to_hellfire(int pnum)
+{
+	ItemStruct tmp;
+	ItemStruct *item;
+	int i, old_item_cnt, new_item_index;
+
+	if (plr[pnum]._pgfxnum != 0) {
+		plr[pnum]._pgfxnum = 0;
+		plr[pnum]._pGFXLoad = 0;
+		SetPlrAnims(pnum);
+	}
+	for (i = 0, item = plr[pnum].InvBody; i < NUM_INVLOC; i++, item++) {
+		item->_itype = ITYPE_NONE;
+	}
+	old_item_cnt = plr[pnum]._pNumInv;
+	memset(plr[pnum].InvGrid, 0, sizeof(plr[pnum].InvGrid));
+	plr[pnum]._pNumInv = 0;
+	for (i = 0; i < old_item_cnt; i++) {
+		item = &plr[pnum].InvList[i];
+		if (item->_itype == ITYPE_GOLD) {
+			new_item_index = plr[pnum]._pNumInv;
+			// BUGFIX: new_item_index may be greater or equal to NUM_INV_GRID_ELEM
+			tmp = *item;
+			item->_itype = ITYPE_NONE;
+			plr[pnum].InvList[new_item_index] = tmp;
+			plr[pnum]._pNumInv++;
+			plr[pnum].InvGrid[i] = plr[pnum]._pNumInv;
+		} else {
+			item->_itype = ITYPE_NONE;
+		}
+	};
+	for (i = 0, item = plr[pnum].SpdList; i < MAXBELTITEMS; i++, item++) {
+		item->_itype = ITYPE_NONE;
+	}
+	CalcPlrItemVals(pnum, FALSE);
+	return FALSE;
+}
+#endif
+
 void RemoveSpdBarItem(int pnum, int iv)
 {
 	plr[pnum].SpdList[iv]._itype = ITYPE_NONE;
@@ -1411,7 +1790,6 @@ void CheckQuestItem(int pnum)
 	if (plr[pnum].HoldItem.IDidx == IDI_OPTAMULET)
 		quests[Q_BLIND]._qactive = QUEST_DONE;
 	if (plr[pnum].HoldItem.IDidx == IDI_MUSHROOM && quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && quests[Q_MUSHROOM]._qvar1 == QS_MUSHSPAWNED) {
-#ifndef SPAWN
 		sfxdelay = 10;
 		if (plr[pnum]._pClass == PC_WARRIOR) { // BUGFIX: Voice for this quest might be wrong in MP
 			sfxdnum = PS_WARR95;
@@ -1419,6 +1797,14 @@ void CheckQuestItem(int pnum)
 			sfxdnum = PS_ROGUE95;
 		} else if (plr[pnum]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE95;
+		}
+#ifdef HELLFIRE
+		else if (plr[pnum]._pClass == PC_MONK) {
+			sfxdnum = PS_MONK95;
+		} else if (plr[pnum]._pClass == PC_BARD) {
+			sfxdnum = PS_ROGUE95;
+		} else if (plr[pnum]._pClass == PC_BARBARIAN) {
+			sfxdnum = PS_WARR95;
 		}
 #endif
 		quests[Q_MUSHROOM]._qvar1 = QS_MUSHPICKED;
@@ -1428,7 +1814,6 @@ void CheckQuestItem(int pnum)
 			quests[Q_ANVIL]._qactive = QUEST_ACTIVE;
 			quests[Q_ANVIL]._qvar1 = 1;
 		}
-#ifndef SPAWN
 		if (quests[Q_ANVIL]._qlog == TRUE) {
 			sfxdelay = 10;
 			if (plr[myplr]._pClass == PC_WARRIOR) {
@@ -1438,10 +1823,17 @@ void CheckQuestItem(int pnum)
 			} else if (plr[myplr]._pClass == PC_SORCERER) {
 				sfxdnum = PS_MAGE89;
 			}
-		}
+#ifdef HELLFIRE
+			else if (plr[myplr]._pClass == PC_MONK) {
+				sfxdnum = PS_MONK89;
+			} else if (plr[myplr]._pClass == PC_BARD) {
+				sfxdnum = PS_ROGUE89;
+			} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+				sfxdnum = PS_WARR89;
+			}
 #endif
+		}
 	}
-#ifndef SPAWN
 	if (plr[pnum].HoldItem.IDidx == IDI_GLDNELIX) {
 		sfxdelay = 30;
 		if (plr[myplr]._pClass == PC_WARRIOR) {
@@ -1451,14 +1843,21 @@ void CheckQuestItem(int pnum)
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE88;
 		}
-	}
+#ifdef HELLFIRE
+		else if (plr[myplr]._pClass == PC_MONK) {
+			sfxdnum = PS_MONK88;
+		} else if (plr[myplr]._pClass == PC_BARD) {
+			sfxdnum = PS_ROGUE88;
+		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+			sfxdnum = PS_WARR88;
+		}
 #endif
+	}
 	if (plr[pnum].HoldItem.IDidx == IDI_ROCK) {
 		if (quests[Q_ROCK]._qactive == QUEST_INIT) {
 			quests[Q_ROCK]._qactive = QUEST_ACTIVE;
 			quests[Q_ROCK]._qvar1 = 1;
 		}
-#ifndef SPAWN
 		if (quests[Q_ROCK]._qlog == TRUE) {
 			sfxdelay = 10;
 			if (plr[myplr]._pClass == PC_WARRIOR) {
@@ -1468,12 +1867,19 @@ void CheckQuestItem(int pnum)
 			} else if (plr[myplr]._pClass == PC_SORCERER) {
 				sfxdnum = PS_MAGE87;
 			}
-		}
+#ifdef HELLFIRE
+			else if (plr[myplr]._pClass == PC_MONK) {
+				sfxdnum = PS_MONK87;
+			} else if (plr[myplr]._pClass == PC_BARD) {
+				sfxdnum = PS_ROGUE87;
+			} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+				sfxdnum = PS_WARR87;
+			}
 #endif
+		}
 	}
 	if (plr[pnum].HoldItem.IDidx == IDI_ARMOFVAL) {
 		quests[Q_BLOOD]._qactive = QUEST_DONE;
-#ifndef SPAWN
 		sfxdelay = 20;
 		if (plr[myplr]._pClass == PC_WARRIOR) {
 			sfxdnum = PS_WARR91;
@@ -1481,14 +1887,100 @@ void CheckQuestItem(int pnum)
 			sfxdnum = PS_ROGUE91;
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE91;
-		}
+#ifdef HELLFIRE
+		} else if (plr[myplr]._pClass == PC_MONK) {
+			sfxdnum = PS_MONK91;
+		} else if (plr[myplr]._pClass == PC_BARD) {
+			sfxdnum = PS_ROGUE91;
+		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+			sfxdnum = PS_WARR91;
 #endif
+		}
 	}
+#ifdef HELLFIRE
+	if (plr[pnum].HoldItem.IDidx == IDI_MAPOFDOOM) {
+		quests[Q_GRAVE]._qlog = FALSE;
+		quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
+		quests[Q_GRAVE]._qvar1 = 1;
+		sfxdelay = 10;
+		if (plr[myplr]._pClass == PC_WARRIOR) {
+			sfxdnum = PS_WARR79;
+		} else if (plr[myplr]._pClass == PC_ROGUE) {
+			sfxdnum = PS_ROGUE79;
+		} else if (plr[myplr]._pClass == PC_SORCERER) {
+			sfxdnum = PS_MAGE79;
+		} else if (plr[myplr]._pClass == PC_MONK) {
+			sfxdnum = PS_MONK79;
+		} else if (plr[myplr]._pClass == PC_BARD) {
+			sfxdnum = PS_ROGUE79;
+		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+			sfxdnum = PS_WARR79;
+		}
+	}
+	if (plr[pnum].HoldItem.IDidx == IDI_NOTE1 || plr[pnum].HoldItem.IDidx == IDI_NOTE2 || plr[pnum].HoldItem.IDidx == IDI_NOTE3) {
+		int mask, idx, item_num;
+		int n1, n2, n3;
+		ItemStruct tmp;
+		mask = 0;
+		idx = plr[pnum].HoldItem.IDidx;
+		if (PlrHasItem(pnum, IDI_NOTE1, &n1) || idx == IDI_NOTE1)
+			mask = 1;
+		if (PlrHasItem(pnum, IDI_NOTE2, &n2) || idx == IDI_NOTE2)
+			mask |= 2;
+		if (PlrHasItem(pnum, IDI_NOTE3, &n3) || idx == IDI_NOTE3)
+			mask |= 4;
+		if (mask == 7) {
+			sfxdelay = 10;
+			if (plr[myplr]._pClass == PC_WARRIOR) {
+				sfxdnum = PS_WARR46;
+			} else if (plr[myplr]._pClass == PC_ROGUE) {
+				sfxdnum = PS_ROGUE46;
+			} else if (plr[myplr]._pClass == PC_SORCERER) {
+				sfxdnum = PS_MAGE46;
+			} else if (plr[myplr]._pClass == PC_MONK) {
+				sfxdnum = PS_MONK46;
+			} else if (plr[myplr]._pClass == PC_BARD) {
+				sfxdnum = PS_ROGUE46;
+			} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+				sfxdnum = PS_WARR46;
+			}
+			switch (idx) {
+			case IDI_NOTE1:
+				PlrHasItem(pnum, IDI_NOTE2, &n2);
+				RemoveInvItem(pnum, n2);
+				PlrHasItem(pnum, IDI_NOTE3, &n3);
+				RemoveInvItem(pnum, n3);
+				break;
+			case IDI_NOTE2:
+				PlrHasItem(pnum, IDI_NOTE1, &n1);
+				RemoveInvItem(pnum, n1);
+				PlrHasItem(pnum, IDI_NOTE3, &n3);
+				RemoveInvItem(pnum, n3);
+				break;
+			case IDI_NOTE3:
+				PlrHasItem(pnum, IDI_NOTE1, &n1);
+				RemoveInvItem(pnum, n1);
+				PlrHasItem(pnum, IDI_NOTE2, &n2);
+				RemoveInvItem(pnum, n2);
+				break;
+			}
+			item_num = itemactive[0];
+			tmp = item[item_num];
+			GetItemAttrs(item_num, IDI_FULLNOTE, 16);
+			SetupItem(item_num);
+			plr[pnum].HoldItem = item[item_num];
+			item[item_num] = tmp;
+		}
+	}
+#endif
 }
 
 void InvGetItem(int pnum, int ii)
 {
 	int i;
+#ifdef HELLFIRE
+	BOOL cursor_updated;
+#endif
 
 	if (dropGoldFlag) {
 		dropGoldFlag = FALSE;
@@ -1498,12 +1990,32 @@ void InvGetItem(int pnum, int ii)
 	if (dItem[item[ii]._ix][item[ii]._iy] != 0) {
 		if (myplr == pnum && pcurs >= CURSOR_FIRSTITEM)
 			NetSendCmdPItem(TRUE, CMD_SYNCPUTITEM, plr[myplr]._px, plr[myplr]._py);
-		item[ii]._iCreateInfo &= ~CF_PREGEN;
+#ifdef HELLFIRE
+		if (item[ii]._iUid != 0)
+#endif
+			item[ii]._iCreateInfo &= ~CF_PREGEN;
 		plr[pnum].HoldItem = item[ii];
 		CheckQuestItem(pnum);
 		CheckBookLevel(pnum);
 		CheckItemStats(pnum);
+#ifdef HELLFIRE
+		cursor_updated = FALSE;
+		if (plr[pnum].HoldItem._itype == ITYPE_GOLD && GoldAutoPlace(pnum))
+			cursor_updated = TRUE;
+#endif
 		dItem[item[ii]._ix][item[ii]._iy] = 0;
+#ifdef HELLFIRE
+		if (currlevel == 21 && item[ii]._ix == CornerStone.x && item[ii]._iy == CornerStone.y) {
+			CornerStone.item.IDidx = -1;
+			CornerStone.item._itype = ITYPE_MISC;
+			CornerStone.item._iSelFlag = FALSE;
+			CornerStone.item._ix = 0;
+			CornerStone.item._iy = 0;
+			CornerStone.item._iAnimFlag = FALSE;
+			CornerStone.item._iIdentified = FALSE;
+			CornerStone.item._iPostDraw = FALSE;
+		}
+#endif
 		i = 0;
 		while (i < numitems) {
 			if (itemactive[i] == ii) {
@@ -1514,7 +2026,10 @@ void InvGetItem(int pnum, int ii)
 			}
 		}
 		pcursitem = -1;
-		SetCursor_(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
+#ifdef HELLFIRE
+		if (!cursor_updated)
+#endif
+			SetCursor_(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 	}
 }
 
@@ -1538,7 +2053,10 @@ void AutoGetItem(int pnum, int ii)
 			return;
 	}
 
-	item[ii]._iCreateInfo &= ~CF_PREGEN;
+#ifdef HELLFIRE
+	if (item[ii]._iUid != 0)
+#endif
+		item[ii]._iCreateInfo &= ~CF_PREGEN;
 	plr[pnum].HoldItem = item[ii]; /// BUGFIX: overwrites cursor item, allowing for belt dupe bug
 	CheckQuestItem(pnum);
 	CheckBookLevel(pnum);
@@ -1546,9 +2064,18 @@ void AutoGetItem(int pnum, int ii)
 	SetICursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 	if (plr[pnum].HoldItem._itype == ITYPE_GOLD) {
 		done = GoldAutoPlace(pnum);
+#ifdef HELLFIRE
+		if (!done)
+			item[ii]._ivalue = plr[pnum].HoldItem._ivalue;
+#endif
 	} else {
 		done = FALSE;
-		if (((plr[pnum]._pgfxnum & 0xF) == ANIM_ID_UNARMED || (plr[pnum]._pgfxnum & 0xF) == ANIM_ID_UNARMED_SHIELD) && plr[pnum]._pmode <= PM_WALK3) {
+		if (((plr[pnum]._pgfxnum & 0xF) == ANIM_ID_UNARMED || (plr[pnum]._pgfxnum & 0xF) == ANIM_ID_UNARMED_SHIELD
+#ifdef HELLFIRE
+		        || plr[pnum]._pClass == PC_BARD && ((plr[pnum]._pgfxnum & 0xF) == ANIM_ID_MACE || (plr[pnum]._pgfxnum & 0xF) == ANIM_ID_SWORD)
+#endif
+		            )
+		    && plr[pnum]._pmode <= PM_WALK3) {
 			if (plr[pnum].HoldItem._iStatFlag) {
 				if (plr[pnum].HoldItem._iClass == ICLASS_WEAPON) {
 					done = WeaponAutoPlace(pnum);
@@ -1563,7 +2090,7 @@ void AutoGetItem(int pnum, int ii)
 			if (w == 1 && h == 1) {
 				idx = plr[pnum].HoldItem.IDidx;
 				if (plr[pnum].HoldItem._iStatFlag && AllItemsList[idx].iUsable) {
-					for (i = 0; i < 8 && !done; i++) {
+					for (i = 0; i < MAXBELTITEMS && !done; i++) {
 						if (plr[pnum].SpdList[i]._itype == ITYPE_NONE) {
 							plr[pnum].SpdList[i] = plr[pnum].HoldItem;
 							CalcPlrScrolls(pnum);
@@ -1627,6 +2154,18 @@ void AutoGetItem(int pnum, int ii)
 	}
 	if (done) {
 		dItem[item[ii]._ix][item[ii]._iy] = 0;
+#ifdef HELLFIRE
+		if (currlevel == 21 && item[ii]._ix == CornerStone.x && item[ii]._iy == CornerStone.y) {
+			CornerStone.item.IDidx = -1;
+			CornerStone.item._itype = ITYPE_MISC;
+			CornerStone.item._iSelFlag = FALSE;
+			CornerStone.item._ix = 0;
+			CornerStone.item._iy = 0;
+			CornerStone.item._iAnimFlag = FALSE;
+			CornerStone.item._iIdentified = FALSE;
+			CornerStone.item._iPostDraw = FALSE;
+		}
+#endif
 		i = 0;
 		while (i < numitems) {
 			if (itemactive[i] == ii) {
@@ -1640,11 +2179,17 @@ void AutoGetItem(int pnum, int ii)
 		if (pnum == myplr) {
 			if (plr[pnum]._pClass == PC_WARRIOR) {
 				PlaySFX(random_(0, 3) + PS_WARR14);
-#ifndef SPAWN
 			} else if (plr[pnum]._pClass == PC_ROGUE) {
 				PlaySFX(random_(0, 3) + PS_ROGUE14);
 			} else if (plr[pnum]._pClass == PC_SORCERER) {
 				PlaySFX(random_(0, 3) + PS_MAGE14);
+#ifdef HELLFIRE
+			} else if (plr[pnum]._pClass == PC_MONK) {
+				PlaySFX(random_(0, 3) + PS_MONK14);
+			} else if (plr[pnum]._pClass == PC_BARD) {
+				PlaySFX(random_(0, 3) + PS_ROGUE14);
+			} else if (plr[pnum]._pClass == PC_BARBARIAN) {
+				PlaySFX(random_(0, 3) + PS_WARR14);
 #endif
 			}
 		}
@@ -1652,6 +2197,9 @@ void AutoGetItem(int pnum, int ii)
 		RespawnItem(ii, TRUE);
 		NetSendCmdPItem(TRUE, CMD_RESPAWNITEM, item[ii]._ix, item[ii]._iy);
 		plr[pnum].HoldItem._itype = ITYPE_NONE;
+#ifdef HELLFIRE
+		NewCursor(CURSOR_HAND);
+#endif
 	}
 }
 
@@ -1696,13 +2244,27 @@ void SyncGetItem(int x, int y, int idx, WORD ci, int iseed)
 
 	if (ii != -1) {
 		dItem[item[ii]._ix][item[ii]._iy] = 0;
+#ifdef HELLFIRE
+		if (currlevel == 21 && item[ii]._ix == CornerStone.x && item[ii]._iy == CornerStone.y) {
+			CornerStone.item.IDidx = -1;
+			CornerStone.item._itype = ITYPE_MISC;
+			CornerStone.item._iSelFlag = FALSE;
+			CornerStone.item._ix = 0;
+			CornerStone.item._iy = 0;
+			CornerStone.item._iAnimFlag = FALSE;
+			CornerStone.item._iIdentified = FALSE;
+			CornerStone.item._iPostDraw = FALSE;
+		}
+#endif
 		i = 0;
 		while (i < numitems) {
 			if (itemactive[i] == ii) {
 				DeleteItem(itemactive[i], i);
 				FindGetItem(idx, ci, iseed);
+#ifndef HELLFIRE
 				/// ASSERT: assert(FindGetItem(idx,ci,iseed) == -1);
 				FindGetItem(idx, ci, iseed); /* todo: replace with above */
+#endif
 				i = 0;
 			} else {
 				i++;
@@ -1775,7 +2337,7 @@ BOOL TryInvPut()
 	return CanPut(plr[myplr]._px, plr[myplr]._py);
 }
 
-void DrawInvMsg(char *msg)
+void DrawInvMsg(const char *msg)
 {
 	DWORD dwTicks;
 
@@ -1838,6 +2400,29 @@ int InvPutItem(int pnum, int x, int y)
 		}
 	}
 
+#ifdef HELLFIRE
+	if (currlevel == 0) {
+		yp = cursmy;
+		xp = cursmx;
+		if (plr[pnum].HoldItem._iCurs == ICURS_RUNE_BOMB && xp >= 79 && xp <= 82 && yp >= 61 && yp <= 64) {
+			NetSendCmdLocParam2(0, CMD_OPENHIVE, plr[pnum]._px, plr[pnum]._py, xx, yy);
+			quests[Q_FARMER]._qactive = 3;
+			if (gbMaxPlayers != 1) {
+				NetSendCmdQuest(TRUE, Q_FARMER);
+				return -1;
+			}
+			return -1;
+		}
+		if (plr[pnum].HoldItem.IDidx == IDI_MAPOFDOOM && xp >= 35 && xp <= 38 && yp >= 20 && yp <= 24) {
+			NetSendCmd(FALSE, CMD_OPENCRYPT);
+			quests[Q_GRAVE]._qactive = 3;
+			if (gbMaxPlayers != 1) {
+				NetSendCmdQuest(TRUE, Q_GRAVE);
+			}
+			return -1;
+		}
+	}
+#endif
 	CanPut(x, y); //if (!CanPut(x, y)) {
 	//	assertion_failed(__LINE__, __FILE__, "CanPut(x,y)");
 	//}
@@ -1851,11 +2436,24 @@ int InvPutItem(int pnum, int x, int y)
 	item[ii]._iy = y;
 	RespawnItem(ii, TRUE);
 	numitems++;
+#ifdef HELLFIRE
+	if (currlevel == 21 && x == CornerStone.x && y == CornerStone.y) {
+		CornerStone.item = item[ii];
+		InitQTextMsg(296);
+		quests[Q_CORNSTN]._qlog = FALSE;
+		quests[Q_CORNSTN]._qactive = QUEST_DONE;
+	}
+#endif
 	NewCursor(CURSOR_HAND);
 	return ii;
 }
 
-int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff)
+int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff
+#ifdef HELLFIRE
+    ,
+    int to_hit, int max_dam, int min_str, int min_mag, int min_dex, int ac
+#endif
+)
 {
 	BOOL done;
 	int d, ii;
@@ -1924,12 +2522,28 @@ int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, in
 		item[ii]._iMaxDur = mdur;
 		item[ii]._iCharges = ch;
 		item[ii]._iMaxCharges = mch;
+#ifdef HELLFIRE
+		item[ii]._iPLToHit = to_hit;
+		item[ii]._iMaxDam = max_dam;
+		item[ii]._iMinStr = min_str;
+		item[ii]._iMinMag = min_mag;
+		item[ii]._iMinDex = min_dex;
+		item[ii]._iAC = ac;
+#endif
 	}
 
 	item[ii]._ix = x;
 	item[ii]._iy = y;
 	RespawnItem(ii, TRUE);
 	numitems++;
+#ifdef HELLFIRE
+	if (currlevel == 21 && x == CornerStone.x && y == CornerStone.y) {
+		CornerStone.item = item[ii];
+		InitQTextMsg(296);
+		quests[Q_CORNSTN]._qlog = 0;
+		quests[Q_CORNSTN]._qactive = 3;
+	}
+#endif
 	return ii;
 }
 
@@ -1949,8 +2563,8 @@ char CheckInvHLight()
 		}
 
 		if (MouseX >= InvRect[r].X + xo
-		    && MouseX < InvRect[r].X + xo + 29
-		    && MouseY >= InvRect[r].Y + yo - 29
+		    && MouseX < InvRect[r].X + xo + (INV_SLOT_SIZE_PX + 1)
+		    && MouseY >= InvRect[r].Y + yo - (INV_SLOT_SIZE_PX + 1)
 		    && MouseY < InvRect[r].Y + yo) {
 			break;
 		}
@@ -1964,46 +2578,51 @@ char CheckInvHLight()
 	pi = NULL;
 	p = &plr[myplr];
 	ClearPanel();
-	if (r >= 0 && r <= 3) {
+	if (r >= SLOTXY_HEAD_FIRST && r <= SLOTXY_HEAD_LAST) {
 		rv = INVLOC_HEAD;
 		pi = &p->InvBody[rv];
-	} else if (r == 4) {
+	} else if (r == SLOTXY_RING_LEFT) {
 		rv = INVLOC_RING_LEFT;
 		pi = &p->InvBody[rv];
-	} else if (r == 5) {
+	} else if (r == SLOTXY_RING_RIGHT) {
 		rv = INVLOC_RING_RIGHT;
 		pi = &p->InvBody[rv];
-	} else if (r == 6) {
+	} else if (r == SLOTXY_AMULET) {
 		rv = INVLOC_AMULET;
 		pi = &p->InvBody[rv];
-	} else if (r >= 7 && r <= 12) {
+	} else if (r >= SLOTXY_HAND_LEFT_FIRST && r <= SLOTXY_HAND_LEFT_LAST) {
 		rv = INVLOC_HAND_LEFT;
 		pi = &p->InvBody[rv];
-	} else if (r >= 13 && r <= 18) {
+	} else if (r >= SLOTXY_HAND_RIGHT_FIRST && r <= SLOTXY_HAND_RIGHT_LAST) {
 		pi = &p->InvBody[INVLOC_HAND_LEFT];
+#ifdef HELLFIRE
+		if (pi->_itype == ITYPE_NONE || pi->_iLoc != ILOC_TWOHAND
+		    || (p->_pClass == PC_BARBARIAN && (p->InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SWORD || p->InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_MACE))) {
+#else
 		if (pi->_itype == ITYPE_NONE || pi->_iLoc != ILOC_TWOHAND) {
+#endif
 			rv = INVLOC_HAND_RIGHT;
 			pi = &p->InvBody[rv];
 		} else {
 			rv = INVLOC_HAND_LEFT;
 		}
-	} else if (r >= 19 && r <= 24) {
+	} else if (r >= SLOTXY_CHEST_FIRST && r <= SLOTXY_CHEST_LAST) {
 		rv = INVLOC_CHEST;
 		pi = &p->InvBody[rv];
-	} else if (r >= 25 && r <= 64) {
-		r = abs(p->InvGrid[r - 25]);
+	} else if (r >= SLOTXY_INV_FIRST && r <= SLOTXY_INV_LAST) {
+		r = abs(p->InvGrid[r - SLOTXY_INV_FIRST]);
 		if (r == 0)
 			return -1;
 		ii = r - 1;
-		rv = ii + 7;
+		rv = ii + INVITEM_INV_FIRST;
 		pi = &p->InvList[ii];
-	} else if (r >= 65) {
-		r -= 65;
+	} else if (r >= SLOTXY_BELT_FIRST) {
+		r -= SLOTXY_BELT_FIRST;
 		drawsbarflag = TRUE;
 		pi = &p->SpdList[r];
 		if (pi->_itype == ITYPE_NONE)
 			return -1;
-		rv = r + 47;
+		rv = r + INVITEM_BELT_FIRST;
 	}
 
 	if (pi->_itype == ITYPE_NONE)
@@ -2037,7 +2656,11 @@ void RemoveScroll(int pnum)
 	for (i = 0; i < plr[pnum]._pNumInv; i++) {
 		if (plr[pnum].InvList[i]._itype != ITYPE_NONE
 		    && (plr[pnum].InvList[i]._iMiscId == IMISC_SCROLL || plr[pnum].InvList[i]._iMiscId == IMISC_SCROLLT)
+#ifndef HELLFIRE
 		    && plr[pnum].InvList[i]._iSpell == plr[pnum]._pRSpell) {
+#else
+		    && plr[pnum].InvList[i]._iSpell == plr[pnum]._pSpell) {
+#endif
 			RemoveInvItem(pnum, i);
 			CalcPlrScrolls(pnum);
 			return;
@@ -2046,7 +2669,11 @@ void RemoveScroll(int pnum)
 	for (i = 0; i < MAXBELTITEMS; i++) {
 		if (plr[pnum].SpdList[i]._itype != ITYPE_NONE
 		    && (plr[pnum].SpdList[i]._iMiscId == IMISC_SCROLL || plr[pnum].SpdList[i]._iMiscId == IMISC_SCROLLT)
+#ifndef HELLFIRE
 		    && plr[pnum].SpdList[i]._iSpell == plr[pnum]._pRSpell) {
+#else
+		    && plr[pnum].SpdList[i]._iSpell == plr[pnum]._pSpell) {
+#endif
 			RemoveSpdBarItem(pnum, i);
 			CalcPlrScrolls(pnum);
 			return;
@@ -2084,7 +2711,11 @@ BOOL UseScroll()
 void UseStaffCharge(int pnum)
 {
 	if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_NONE
-	    && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iMiscId == IMISC_STAFF
+	    && (plr[pnum].InvBody[INVLOC_HAND_LEFT]._iMiscId == IMISC_STAFF
+#ifdef HELLFIRE
+	           || plr[myplr].InvBody[INVLOC_HAND_LEFT]._iMiscId == IMISC_UNIQUE // BUGFIX: myplr->pnum
+#endif
+	           )
 	    && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iSpell == plr[pnum]._pRSpell
 	    && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iCharges > 0) {
 		plr[pnum].InvBody[INVLOC_HAND_LEFT]._iCharges--;
@@ -2096,7 +2727,11 @@ BOOL UseStaff()
 {
 	if (pcurs == CURSOR_HAND) {
 		if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_NONE
+#ifdef HELLFIRE
+		    && (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iMiscId == IMISC_STAFF || plr[myplr].InvBody[INVLOC_HAND_LEFT]._iMiscId == IMISC_UNIQUE)
+#else
 		    && plr[myplr].InvBody[INVLOC_HAND_LEFT]._iMiscId == IMISC_STAFF
+#endif
 		    && plr[myplr].InvBody[INVLOC_HAND_LEFT]._iSpell == plr[myplr]._pRSpell
 		    && plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges > 0) {
 			return TRUE;
@@ -2125,7 +2760,7 @@ BOOL UseInvItem(int pnum, int cii)
 	ItemStruct *Item;
 	BOOL speedlist;
 
-	if (plr[pnum]._pInvincible && !plr[pnum]._pHitPoints && pnum == myplr)
+	if (plr[pnum]._pInvincible && plr[pnum]._pHitPoints == 0 && pnum == myplr)
 		return TRUE;
 	if (pcurs != CURSOR_HAND)
 		return TRUE;
@@ -2149,13 +2784,20 @@ BOOL UseInvItem(int pnum, int cii)
 	switch (Item->IDidx) {
 	case IDI_MUSHROOM:
 		sfxdelay = 10;
-#ifndef SPAWN
 		if (plr[pnum]._pClass == PC_WARRIOR) {
 			sfxdnum = PS_WARR95;
 		} else if (plr[pnum]._pClass == PC_ROGUE) {
 			sfxdnum = PS_ROGUE95;
 		} else if (plr[pnum]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE95;
+		}
+#ifdef HELLFIRE
+		else if (plr[pnum]._pClass == PC_MONK) {
+			sfxdnum = PS_MONK95;
+		} else if (plr[pnum]._pClass == PC_BARD) {
+			sfxdnum = PS_ROGUE95;
+		} else if (plr[pnum]._pClass == PC_BARBARIAN) {
+			sfxdnum = PS_WARR95;
 		}
 #endif
 		return TRUE;
@@ -2164,11 +2806,17 @@ BOOL UseInvItem(int pnum, int cii)
 		sfxdelay = 10;
 		if (plr[pnum]._pClass == PC_WARRIOR) {
 			sfxdnum = PS_WARR29;
-#ifndef SPAWN
 		} else if (plr[pnum]._pClass == PC_ROGUE) {
 			sfxdnum = PS_ROGUE29;
 		} else if (plr[pnum]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE29;
+#ifdef HELLFIRE
+		} else if (plr[pnum]._pClass == PC_MONK) {
+			sfxdnum = PS_MONK29;
+		} else if (plr[pnum]._pClass == PC_BARD) {
+			sfxdnum = PS_ROGUE29;
+		} else if (plr[pnum]._pClass == PC_BARBARIAN) {
+			sfxdnum = PS_WARR29;
 #endif
 		}
 		return TRUE;
@@ -2180,11 +2828,17 @@ BOOL UseInvItem(int pnum, int cii)
 	if (!Item->_iStatFlag) {
 		if (plr[pnum]._pClass == PC_WARRIOR) {
 			PlaySFX(PS_WARR13);
-#ifndef SPAWN
 		} else if (plr[pnum]._pClass == PC_ROGUE) {
 			PlaySFX(PS_ROGUE13);
 		} else if (plr[pnum]._pClass == PC_SORCERER) {
 			PlaySFX(PS_MAGE13);
+#ifdef HELLFIRE
+		} else if (plr[pnum]._pClass == PC_MONK) {
+			PlaySFX(PS_MONK13);
+		} else if (plr[pnum]._pClass == PC_BARD) {
+			PlaySFX(PS_ROGUE13);
+		} else if (plr[pnum]._pClass == PC_BARBARIAN) {
+			PlaySFX(PS_WARR13);
 #endif
 		}
 		return TRUE;
@@ -2208,6 +2862,12 @@ BOOL UseInvItem(int pnum, int cii)
 		return TRUE;
 	}
 
+#ifdef HELLFIRE
+	if (Item->_iMiscId > IMISC_RUNEFIRST && Item->_iMiscId < IMISC_RUNELAST && currlevel == 0) {
+		return TRUE;
+	}
+#endif
+
 	idata = ItemCAnimTbl[Item->_iCurs];
 	if (Item->_iMiscId == IMISC_BOOK)
 		PlaySFX(IS_RBOOK);
@@ -2217,14 +2877,27 @@ BOOL UseInvItem(int pnum, int cii)
 	UseItem(pnum, Item->_iMiscId, Item->_iSpell);
 
 	if (speedlist) {
+#ifdef HELLFIRE
+		if (plr[pnum].SpdList[c]._iMiscId == IMISC_NOTE) {
+			InitQTextMsg(322);
+			invflag = FALSE;
+			return TRUE;
+		}
+#endif
 		RemoveSpdBarItem(pnum, c);
 		return TRUE;
 	} else {
 		if (plr[pnum].InvList[c]._iMiscId == IMISC_MAPOFDOOM)
 			return TRUE;
+#ifdef HELLFIRE
+		if (plr[pnum].InvList[c]._iMiscId == IMISC_NOTE) {
+			InitQTextMsg(322);
+			invflag = FALSE;
+			return TRUE;
+		}
+#endif
 		RemoveInvItem(pnum, c);
 	}
-
 	return TRUE;
 }
 

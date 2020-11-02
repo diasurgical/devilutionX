@@ -21,12 +21,16 @@ extern ItemStruct premiumitem[SMITH_PREMIUM_ITEMS];
 extern BYTE *pSTextBoxCels;
 extern int premiumlevel;
 extern int talker;
-extern STextStruct stext[24];
+extern STextStruct stext[STORE_LINES];
 extern char stextsize;
 extern int stextsmax;
 extern ItemStruct storehold[48];
 extern int gossipstart;
+#ifdef HELLFIRE
+extern ItemStruct witchitem[25];
+#else
 extern ItemStruct witchitem[20];
+#endif
 extern BOOL stextscrl;
 extern int numpremium;
 extern ItemStruct healitem[20];
@@ -51,7 +55,7 @@ void PentSpn2Spin();
 void SetupTownStores();
 void FreeStoreMem();
 void DrawSTextBack();
-void PrintSString(int x, int y, BOOL cjustflag, char *str, char col, int val);
+void PrintSString(int x, int y, BOOL cjustflag, const char *str, char col, int val);
 void DrawSLine(int y);
 void DrawSSlider(int y1, int y2);
 void DrawSTextHelp();
@@ -59,7 +63,7 @@ void ClearSText(int s, int e);
 void AddSLine(int y);
 void AddSTextVal(int y, int val);
 void OffsetSTextY(int y, int yo);
-void AddSText(int x, int y, BOOL j, char *str, char clr, BOOL sel);
+void AddSText(int x, int y, BOOL j, const char *str, char clr, BOOL sel);
 void StoreAutoPlace();
 void S_StartSmith();
 void S_ScrollSBuy(int idx);
@@ -145,7 +149,7 @@ void ReleaseStoreBtn();
 
 /* rdata */
 
-extern char *talkname[9];
+extern const char *const talkname[9];
 #ifdef __cplusplus
 }
 #endif

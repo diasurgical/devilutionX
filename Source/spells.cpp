@@ -21,12 +21,14 @@ int GetManaAmount(int id, int sn)
 		sl = 0;
 	}
 
+	if (sl > 0) {
+		adj = sl * spelldata[sn].sManaAdj;
+	}
 	if (sn == SPL_FIREBOLT) {
 		adj >>= 1;
-	} else if (sn == SPL_RESURRECT && sl > 0) {
+	}
+	if (sn == SPL_RESURRECT && sl > 0) {
 		adj = sl * (spelldata[SPL_RESURRECT].sManaCost / 8);
-	} else if (sl > 0) {
-		adj = sl * spelldata[sn].sManaAdj;
 	}
 
 	if (sn == SPL_HEAL || sn == SPL_HEALOTHER) {
@@ -41,9 +43,17 @@ int GetManaAmount(int id, int sn)
 		ma = 0;
 	ma <<= 6;
 
+#ifdef HELLFIRE
+	if (plr[id]._pClass == PC_SORCERER) {
+		ma >>= 1;
+	} else if (plr[id]._pClass == PC_ROGUE || plr[id]._pClass == PC_MONK || plr[id]._pClass == PC_BARD) {
+		ma -= ma >> 2;
+	}
+#else
 	if (plr[id]._pClass == PC_ROGUE) {
 		ma -= ma >> 2;
 	}
+#endif
 
 	if (spelldata[sn].sMinMana > ma >> 6) {
 		ma = spelldata[sn].sMinMana << 6;
@@ -123,7 +133,11 @@ void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int caster, int 
 		caster = 0;
 		dir = plr[id]._pdir;
 
+#ifdef HELLFIRE
+		if (spl == SPL_FIREWALL || spl == SPL_LIGHTWALL) {
+#else
 		if (spl == SPL_FIREWALL) {
+#endif
 			dir = plr[id]._pVar3;
 		}
 		break;
@@ -218,12 +232,16 @@ void DoResurrect(int pnum, int rid)
 		ClrPlrPath(rid);
 		plr[rid].destAction = ACTION_NONE;
 		plr[rid]._pInvincible = FALSE;
+#ifndef HELLFIRE
 		PlacePlayer(rid);
+#endif
 
 		hp = 640;
+#ifndef HELLFIRE
 		if (plr[rid]._pMaxHPBase < 640) {
 			hp = plr[rid]._pMaxHPBase;
 		}
+#endif
 		SetPlayerHitPoints(rid, hp);
 
 		plr[rid]._pHPBase = plr[rid]._pHitPoints + (plr[rid]._pMaxHPBase - plr[rid]._pMaxHP);
@@ -259,6 +277,15 @@ void DoHealOther(int pnum, int rid)
 			hp += (random_(57, 6) + 1) << 6;
 		}
 
+#ifdef HELLFIRE
+		if (plr[pnum]._pClass == PC_WARRIOR || plr[pnum]._pClass == PC_BARBARIAN) {
+			hp <<= 1;
+		} else if (plr[pnum]._pClass == PC_ROGUE || plr[pnum]._pClass == PC_BARD) {
+			hp += hp >> 1;
+		} else if (plr[pnum]._pClass == PC_MONK) {
+			hp *= 3;
+		}
+#else
 		if (plr[pnum]._pClass == PC_WARRIOR) {
 			hp <<= 1;
 		}
@@ -266,6 +293,7 @@ void DoHealOther(int pnum, int rid)
 		if (plr[pnum]._pClass == PC_ROGUE) {
 			hp += hp >> 1;
 		}
+#endif
 
 		plr[rid]._pHitPoints += hp;
 
@@ -281,6 +309,39 @@ void DoHealOther(int pnum, int rid)
 
 		drawhpflag = TRUE;
 	}
+}
+
+int GetSpellBookLevel(int s)
+{
+	if (gbIsSpawn) {
+		switch (s) {
+		case SPL_STONE:
+		case SPL_GUARDIAN:
+		case SPL_GOLEM:
+		case SPL_FLARE:
+		case SPL_BONESPIRIT:
+			return -1;
+		}
+	}
+
+	return spelldata[s].sBookLvl;
+}
+
+int GetSpellStaffLevel(int s)
+{
+	if (gbIsSpawn) {
+		switch (s) {
+		case SPL_STONE:
+		case SPL_GUARDIAN:
+		case SPL_GOLEM:
+		case SPL_APOCA:
+		case SPL_FLARE:
+		case SPL_BONESPIRIT:
+			return -1;
+		}
+	}
+
+	return spelldata[s].sStaffLvl;
 }
 
 DEVILUTION_END_NAMESPACE

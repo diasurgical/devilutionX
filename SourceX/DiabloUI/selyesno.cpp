@@ -35,7 +35,7 @@ void selyesno_Free()
 
 void selyesno_Select(int value)
 {
-	selyesno_value = value == 0;
+	selyesno_value = vecSelYesNoDialogItems[value]->m_value == 0;
 	selyesno_endMenu = true;
 }
 
@@ -64,7 +64,7 @@ bool UiSelHeroYesNoDialog(const char *title, const char *body)
 	strncpy(selyesno_confirmationMessage, body, sizeof(selyesno_confirmationMessage) - 1);
 	WordWrapArtStr(selyesno_confirmationMessage, MESSAGE_WIDTH);
 
-	UiInitList(0, 1, NULL, selyesno_Select, selyesno_Esc, vecSelYesNoDialog, true, NULL);
+	UiInitList(vecSelYesNoDialogItems.size(), NULL, selyesno_Select, selyesno_Esc, vecSelYesNoDialog, true, NULL);
 
 	selyesno_value = true;
 	selyesno_endMenu = false;

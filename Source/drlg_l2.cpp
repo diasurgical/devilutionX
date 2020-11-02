@@ -3,7 +3,6 @@
  *
  * Implementation of the catacombs level generation algorithms.
  */
-#ifndef SPAWN
 
 #include <algorithm>
 
@@ -2169,8 +2168,6 @@ static void ConnectHall(int nX1, int nY1, int nX2, int nY2, int nHd)
 	nOrigY1 = nY1;
 	CreateDoorType(nX1, nY1);
 	CreateDoorType(nX2, nY2);
-	nDx = abs(nX2 - nX1); /* unused */
-	nDy = abs(nY2 - nY1); /* unused */
 	nCurrd = nHd;
 	nX2 -= Dir_Xadd[nCurrd];
 	nY2 -= Dir_Yadd[nCurrd];
@@ -2771,21 +2768,21 @@ static BOOL CreateDungeon()
 
 	switch (currlevel) {
 	case 5:
-		if (quests[Q_BLOOD]._qactive) {
+		if (quests[Q_BLOOD]._qactive != QUEST_NOTAVAIL) {
 			ForceHW = TRUE;
 			ForceH = 20;
 			ForceW = 14;
 		}
 		break;
 	case 6:
-		if (quests[Q_SCHAMB]._qactive) {
+		if (quests[Q_SCHAMB]._qactive != QUEST_NOTAVAIL) {
 			ForceHW = TRUE;
 			ForceW = 10;
 			ForceH = 10;
 		}
 		break;
 	case 7:
-		if (quests[Q_BLIND]._qactive) {
+		if (quests[Q_BLIND]._qactive != QUEST_NOTAVAIL) {
 			ForceHW = TRUE;
 			ForceW = 15;
 			ForceH = 15;
@@ -3327,7 +3324,7 @@ static void DRLG_InitL2Vals()
 	}
 }
 
-void LoadL2Dungeon(char *sFileName, int vx, int vy)
+void LoadL2Dungeon(const char *sFileName, int vx, int vy)
 {
 	int i, j, rw, rh, pc;
 	BYTE *pLevelMap, *lm;
@@ -3417,7 +3414,7 @@ void LoadL2Dungeon(char *sFileName, int vx, int vy)
 	mem_free_dbg(pLevelMap);
 }
 
-void LoadPreL2Dungeon(char *sFileName, int vx, int vy)
+void LoadPreL2Dungeon(const char *sFileName, int vx, int vy)
 {
 	int i, j, rw, rh;
 	BYTE *pLevelMap, *lm;
@@ -3469,13 +3466,13 @@ void LoadPreL2Dungeon(char *sFileName, int vx, int vy)
 void CreateL2Dungeon(DWORD rseed, int entry)
 {
 	if (gbMaxPlayers == 1) {
-		if (currlevel == 7 && !quests[Q_BLIND]._qactive) {
+		if (currlevel == 7 && quests[Q_BLIND]._qactive == QUEST_NOTAVAIL) {
 			currlevel = 6;
 			CreateL2Dungeon(glSeedTbl[6], 4);
 			currlevel = 7;
 		}
 		if (currlevel == 8) {
-			if (!quests[Q_BLIND]._qactive) {
+			if (quests[Q_BLIND]._qactive == QUEST_NOTAVAIL) {
 				currlevel = 6;
 				CreateL2Dungeon(glSeedTbl[6], 4);
 				currlevel = 8;
@@ -3505,4 +3502,3 @@ void CreateL2Dungeon(DWORD rseed, int entry)
 }
 
 DEVILUTION_END_NAMESPACE
-#endif

@@ -79,6 +79,134 @@ void T_FillTile(BYTE *P3Tiles, int xx, int yy, int t)
 	dPiece[xx + 1][yy + 1] = v4;
 }
 
+void town_4751C6(){
+	dPiece[78][60] = 0x48a;
+	dPiece[79][60] = 0x48b;
+	dPiece[78][61] = 0x48c;
+	dPiece[79][61] = 0x50e;
+	dPiece[78][62] = 0x4ee;
+	dPiece[78][63] = 0x4f0;
+	dPiece[79][62] = 0x510;
+	dPiece[79][63] = 0x511;
+	dPiece[79][64] = 0x512;
+	dPiece[78][64] = 0x11a;
+	dPiece[78][65] = 0x11c;
+	dPiece[79][65] = 0x11d;
+	dPiece[80][60] = 0x513;
+	dPiece[80][61] = 0x515;
+	dPiece[81][61] = 0x516;
+	dPiece[82][60] = 0x517;
+	dPiece[83][60] = 0x518;
+	dPiece[82][61] = 0x519;
+	dPiece[83][61] = 0x51a;
+	dPiece[80][62] = 0x51b;
+	dPiece[81][62] = 0x51c;
+	dPiece[80][63] = 0x51d;
+	dPiece[81][63] = 0x51e;
+	dPiece[80][64] = 0x51f;
+	dPiece[81][64] = 0x520;
+	dPiece[80][65] = 0x521;
+	dPiece[81][65] = 0x522;
+	dPiece[82][64] = 0x527;
+	dPiece[83][64] = 0x528;
+	dPiece[82][65] = 0x529;
+	dPiece[83][65] = 0x52a;
+	dPiece[82][62] = 0x523;
+	dPiece[83][62] = 0x524;
+	dPiece[82][63] = 0x525;
+	dPiece[83][63] = 0x526;
+	dPiece[84][61] = 0x118;
+	dPiece[84][62] = 0x118;
+	dPiece[84][63] = 0x118;
+	dPiece[85][60] = 0x118;
+	dPiece[85][61] = 0x118;
+	dPiece[85][63] = 8;
+	dPiece[85][64] = 8;
+	dPiece[86][60] = 0xd9;
+	dPiece[86][61] = 0x18;
+	dPiece[85][62] = 0x13;
+	dPiece[84][64] = 0x118;
+	SetDungeonMicros();
+}
+
+void town_475379(){
+	dPiece[78][60] = 0x48a;
+	dPiece[79][60] = 0x4eb;
+	dPiece[78][61] = 0x4ec;
+	dPiece[79][61] = 0x4ed;
+	dPiece[78][62] = 0x4ee;
+	dPiece[79][62] = 0x4ef;
+	dPiece[78][63] = 0x4f0;
+	dPiece[79][63] = 0x4f1;
+	dPiece[78][64] = 0x4f2;
+	dPiece[79][64] = 0x4f3;
+	dPiece[78][65] = 0x4f4;
+	dPiece[80][60] = 0x4f5;
+	dPiece[81][60] = 0x4f6;
+	dPiece[80][61] = 0x4f7;
+	dPiece[81][61] = 0x4f8;
+	dPiece[82][60] = 0x4f9;
+	dPiece[83][60] = 0x4fa;
+	dPiece[82][61] = 0x4fb;
+	dPiece[83][61] = 0x4fc;
+	dPiece[80][62] = 0x4fd;
+	dPiece[81][62] = 0x4fe;
+	dPiece[80][63] = 0x4ff;
+	dPiece[81][63] = 0x500;
+	dPiece[80][64] = 0x501;
+	dPiece[81][64] = 0x502;
+	dPiece[80][65] = 0x503;
+	dPiece[81][65] = 0x504;
+	dPiece[82][64] = 0x509;
+	dPiece[83][64] = 0x50a;
+	dPiece[82][65] = 0x50b;
+	dPiece[83][65] = 0x50c;
+	dPiece[82][62] = 0x505;
+	dPiece[83][62] = 0x506;
+	dPiece[82][63] = 0x507;
+	dPiece[83][63] = 0x508;
+	dPiece[84][61] = 0x118;
+	dPiece[84][62] = 0x118;
+	dPiece[84][63] = 0x118;
+	dPiece[85][60] = 0x118;
+	dPiece[85][61] = 0x118;
+	dPiece[85][63] = 8;
+	dPiece[85][64] = 8;
+	dPiece[86][60] = 0xd9;
+	dPiece[86][61] = 0x18;
+	dPiece[85][62] = 0x13;
+	dPiece[84][64] = 0x118;
+	SetDungeonMicros();
+}
+
+void town_47552C(){
+	dPiece[36][21] = 0x52b;
+	dPiece[37][21] = 0x52c;
+	dPiece[36][22] = 0x52d;
+	dPiece[37][22] = 0x52e;
+	dPiece[36][23] = 0x52f;
+	dPiece[37][23] = 0x530;
+	dPiece[36][24] = 0x531;
+	dPiece[37][24] = 0x532;
+	dPiece[35][21] = 0x53b;
+	dPiece[34][21] = 0x53c;
+	SetDungeonMicros();
+}
+
+void town_475595(){
+	dPiece[36][21] = 0x533;
+	dPiece[37][21] = 0x534;
+	dPiece[36][22] = 0x535;
+	dPiece[37][22] = 0x536;
+	dPiece[36][23] = 0x537;
+	dPiece[37][23] = 0x538;
+	dPiece[36][24] = 0x539;
+	dPiece[37][24] = 0x53a;
+	dPiece[35][21] = 0x53b;
+	dPiece[34][21] = 0x53c;
+	SetDungeonMicros();
+}
+
 /**
  * @brief Initialize all of the levels data
  */
@@ -110,26 +238,65 @@ void T_Pass3()
 	T_FillSector(P3Tiles, pSector, 0, 0, 23, 23);
 	mem_free_dbg(pSector);
 
-#ifndef SPAWN
-	if (gbMaxPlayers == 1) {
-		if (!(plr[myplr].pTownWarps & 1)) {
-#endif
-			T_FillTile(P3Tiles, 48, 20, 320);
-#ifndef SPAWN
+	if (gbIsSpawn || gbMaxPlayers == 1) {
+#ifdef HELLFIRE
+		if(quests[Q_FARMER]._qactive == 3 || quests[Q_FARMER]._qactive == 10
+		|| quests[Q_JERSEY]._qactive == 3 || quests[Q_JERSEY]._qactive == 10)
+		{
+			town_4751C6();
 		}
-		if (!(plr[myplr].pTownWarps & 2)) {
+		else
+		{
+			town_475379();
+		}
+		if ( quests[Q_GRAVE]._qactive == 3 || plr[myplr]._pLvlVisited[21] )
+			town_475595();
+		else
+			town_47552C();
 #endif
+#ifdef HELLFIRE
+		if (gbIsSpawn || !(plr[myplr].pTownWarps & 1) && plr[myplr]._pLevel < 10)
+#else
+		if (gbIsSpawn || !(plr[myplr].pTownWarps & 1))
+#endif
+		{
+			T_FillTile(P3Tiles, 48, 20, 320);
+		}
+#ifdef HELLFIRE
+		if (gbIsSpawn || !(plr[myplr].pTownWarps & 2) && plr[myplr]._pLevel < 15)
+#else
+		if (gbIsSpawn || !(plr[myplr].pTownWarps & 2))
+#endif
+		{
 			T_FillTile(P3Tiles, 16, 68, 332);
 			T_FillTile(P3Tiles, 16, 70, 331);
-#ifndef SPAWN
 		}
-		if (!(plr[myplr].pTownWarps & 4)) {
+#ifdef HELLFIRE
+		if (gbIsSpawn || !(plr[myplr].pTownWarps & 4) && plr[myplr]._pLevel < 20) {
+#else
+		if (gbIsSpawn || !(plr[myplr].pTownWarps & 4)) {
 #endif
 			for (x = 36; x < 46; x++) {
 				T_FillTile(P3Tiles, x, 78, random_(0, 4) + 1);
 			}
-#ifndef SPAWN
 		}
+	}
+#ifdef HELLFIRE
+	else
+	{
+		if(quests[Q_FARMER]._qactive == 3 || quests[Q_FARMER]._qactive == 10
+		|| quests[Q_JERSEY]._qactive == 3 || quests[Q_JERSEY]._qactive == 10)
+		{
+			town_4751C6();
+		}
+		else
+		{
+			town_475379();
+		}
+		if ( quests[Q_GRAVE]._qactive == 3 || plr[myplr]._pLvlVisited[21] )
+			town_475595();
+		else
+			town_47552C();
 	}
 #endif
 
@@ -176,6 +343,16 @@ void CreateTown(int entry)
 			ViewX = 41;
 			ViewY = 81;
 		}
+#ifdef HELLFIRE
+		if (TWarpFrom == 21) {
+			ViewX = 36;
+			ViewY = 25;
+		}
+		if (TWarpFrom == 17) {
+			ViewX = 79;
+			ViewY = 62;
+		}
+#endif
 	}
 
 	T_Pass3();

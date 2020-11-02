@@ -558,11 +558,19 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 		max_y = 15;
 	}
 
+#ifdef HELLFIRE
+	if (currlevel < 17) {
+#else
 	if (nXPos >= 0 && nXPos < MAXDUNX && nYPos >= 0 && nYPos < MAXDUNY) {
+#endif
 		dLight[nXPos][nYPos] = 0;
+#ifdef HELLFIRE
+	} else if (dLight[nXPos][nYPos] > lightradius[nRadius][0]) {
+		dLight[nXPos][nYPos] = lightradius[nRadius][0];
+#endif
 	}
 
-	mult = xoff + 8 * yoff;
+	mult = xoff + 8*yoff;
 	for (y = 0; y < min_y; y++) {
 		for (x = 1; x < max_x; x++) {
 			radius_block = lightblock[mult][y][x];
@@ -570,11 +578,11 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 				temp_x = nXPos + x;
 				temp_y = nYPos + y;
 				v = lightradius[nRadius][radius_block];
-				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY) {
-					if (v < dLight[temp_x][temp_y]) {
+#ifndef HELLFIRE
+				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
+#endif
+					if (v < dLight[temp_x][temp_y])
 						dLight[temp_x][temp_y] = v;
-					}
-				}
 			}
 		}
 	}
@@ -587,11 +595,11 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 				temp_x = nXPos + y;
 				temp_y = nYPos - x;
 				v = lightradius[nRadius][radius_block];
-				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY) {
-					if (v < dLight[temp_x][temp_y]) {
+#ifndef HELLFIRE
+				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
+#endif
+					if (v < dLight[temp_x][temp_y])
 						dLight[temp_x][temp_y] = v;
-					}
-				}
 			}
 		}
 	}
@@ -604,11 +612,11 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 				temp_x = nXPos - x;
 				temp_y = nYPos - y;
 				v = lightradius[nRadius][radius_block];
-				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY) {
-					if (v < dLight[temp_x][temp_y]) {
+#ifndef HELLFIRE
+				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
+#endif
+					if (v < dLight[temp_x][temp_y])
 						dLight[temp_x][temp_y] = v;
-					}
-				}
 			}
 		}
 	}
@@ -621,11 +629,11 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 				temp_x = nXPos - y;
 				temp_y = nYPos + x;
 				v = lightradius[nRadius][radius_block];
-				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY) {
-					if (v < dLight[temp_x][temp_y]) {
+#ifndef HELLFIRE
+				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
+#endif
+					if (v < dLight[temp_x][temp_y])
 						dLight[temp_x][temp_y] = v;
-					}
-				}
 			}
 		}
 	}
@@ -656,7 +664,9 @@ void DoUnLight(int nXPos, int nYPos, int nRadius)
 
 	for (y = min_y; y < max_y; y++) {
 		for (x = min_x; x < max_x; x++) {
+#ifndef HELLFIRE
 			if (x >= 0 && x < MAXDUNX && y >= 0 && y < MAXDUNY)
+#endif
 				dLight[x][y] = dPreLight[x][y];
 		}
 	}
@@ -909,6 +919,21 @@ void MakeLightTable()
 		}
 		tbl += 224;
 	}
+#ifdef HELLFIRE
+	if (currlevel >= 17) {
+		tbl = pLightTbl;
+		for (i = 0; i < lights; i++) {
+			*tbl++ = 0;
+			for (j = 1; j < 16; j++)
+				*tbl++ = j;
+			tbl += 240;
+		}
+		*tbl++ = 0;
+		for (j = 1; j < 16; j++)
+			*tbl++ = 1;
+		tbl += 240;
+	}
+#endif
 
 	trn = LoadFileInMem("PlrGFX\\Infra.TRN", NULL);
 	for (i = 0; i < 256; i++) {
@@ -948,27 +973,41 @@ void MakeLightTable()
 		*tbl++ = 0;
 	}
 
-	for (k = 0; k < 16; k++) {
-		for (l = 0; l < 128; l++) {
-			if (l > (k + 1) * 8) {
-				lightradius[k][l] = 15;
+	for (j = 0; j < 16; j++) {
+		for (i = 0; i < 128; i++) {
+			if (i > (j + 1) * 8) {
+				lightradius[j][i] = 15;
 			} else {
-				lightradius[k][l] = l * 15.0 / ((k + 1) * 8.0) + 0.5;
+				fs = (double)15 * i / ((double)8 * (j + 1));
+				lightradius[j][i] = (BYTE)(fs + 0.5);
 			}
 		}
 	}
 
-	for (i = 0; i < 8; i++) {
-		for (j = 0; j < 8; j++) {
+#ifdef HELLFIRE
+	if (currlevel >= 17) {
+		for (j = 0; j < 16; j++) {
+			fa = (sqrt((double)(16 - j))) / 128;
+			fa *= fa;
+			for (i = 0; i < 128; i++) {
+				lightradius[15 - j][i] = 15 - (BYTE)(fa * (double)((128 - i) * (128 - i)));
+				if (lightradius[15 - j][i] > 15)
+					lightradius[15 - j][i] = 0;
+				lightradius[15 - j][i] = lightradius[15 - j][i] - (BYTE)((15 - j) / 2);
+				if (lightradius[15 - j][i] > 15)
+					lightradius[15 - j][i] = 0;
+			}
+		}
+	}
+#endif
+	for (j = 0; j < 8; j++) {
+		for (i = 0; i < 8; i++) {
 			for (k = 0; k < 16; k++) {
 				for (l = 0; l < 16; l++) {
 					fs = (BYTE)sqrt((double)(8 * l - j) * (8 * l - j) + (8 * k - i) * (8 * k - i));
-					if (fs < 0.0) {
-						fa = -0.5;
-					} else {
-						fa = 0.5;
-					}
-					lightblock[i * 8 + j][k][l] = fs + fa;
+					fs += fs < 0 ? -0.5 : 0.5;
+
+					lightblock[j * 8 + i][k][l] = fs;
 				}
 			}
 		}
@@ -982,7 +1021,7 @@ void ToggleLighting()
 
 	lightflag ^= TRUE;
 
-	if (lightflag != 0) {
+	if (lightflag) {
 		memset(dLight, 0, sizeof(dLight));
 	} else {
 		memcpy(dLight, dPreLight, sizeof(dLight));
@@ -1021,7 +1060,7 @@ int AddLight(int x, int y, int r)
 {
 	int lid;
 
-	if (lightflag != 0) {
+	if (lightflag) {
 		return -1;
 	}
 
@@ -1117,7 +1156,7 @@ void ProcessLightList()
 	int i, j;
 	BYTE temp;
 
-	if (lightflag != 0) {
+	if (lightflag) {
 		return;
 	}
 
@@ -1182,8 +1221,8 @@ int AddVision(int x, int y, int r, BOOL mine)
 		VisionList[numvision]._lradius = r;
 		vid = visionid++;
 		VisionList[numvision]._lid = vid;
-		VisionList[numvision]._ldel = 0;
-		VisionList[numvision]._lunflag = 0;
+		VisionList[numvision]._ldel = FALSE;
+		VisionList[numvision]._lunflag = FALSE;
 		VisionList[numvision]._lflags = mine != 0;
 		numvision++;
 		dovision = TRUE;

@@ -1,7 +1,7 @@
 %define debug_package %{nil}
 
 Name:		devilutionx
-Version:	0.5.0
+Version:	1.1.0
 Release:	1%{?dist}
 Summary:	Diablo I engine for modern operating systems
 
@@ -16,7 +16,7 @@ Requires:	SDL2_ttf SDL2_mixer libsodium
 
 %description
 Diablo I devolved - magic behind the 1996 computer game
-Note: Devilution requires an original copy of diabdat.mpq. None of the Diablo 1 game assets are provided by this package! 
+Note: Devilution requires an original copy of diabdat.mpq. None of the Diablo 1 game assets are provided by this package!
 
 %prep
 %setup -q -n devilutionX-%{version}
@@ -35,23 +35,17 @@ make INSTALL_ROOT=%{buildroot}
 cd ..
 mkdir -p %{buildroot}%{_bindir}
 
-mkdir -p %{buildroot}%{_datadir}/icons/hicolor/16x16/apps/
-mkdir -p %{buildroot}%{_datadir}/icons/hicolor/32x32/apps/
-mkdir -p %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/
-install -p -D -m644 Packaging/resources/16.png %{buildroot}%{_datadir}/icons/hicolor/16x16/apps/%{name}.png
-install -p -D -m644 Packaging/resources/Diablo_32.png %{buildroot}%{_datadir}/icons/hicolor/32x32/apps/%{name}.png
-install -p -D -m644 Packaging/resources/Diablo_48.png %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/%{name}.png
+mkdir -p %{buildroot}%{_datadir}/icons/hicolor/512x512/apps/
+install -p -D -m644 Packaging/resources/icon.png %{buildroot}%{_datadir}/icons/hicolor/512x512/apps/%{name}.png
 
 install -m 755 build/devilutionx %{buildroot}%{_bindir}/%{name}
-desktop-file-install --remove-category="Qt" --dir=%{buildroot}%{_datadir}/applications %{SOURCE1} 
+desktop-file-install --remove-category="Qt" --dir=%{buildroot}%{_datadir}/applications %{SOURCE1}
 
 %files
 %{_bindir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/fonts/truetype/CharisSILB.ttf
-%{_datadir}/icons/hicolor/16x16/apps/%{name}.png
-%{_datadir}/icons/hicolor/32x32/apps/%{name}.png
-%{_datadir}/icons/hicolor/48x48/apps/%{name}.png
+%{_datadir}/icons/hicolor/512x512/apps/%{name}.png
 
 %post
 # print info
