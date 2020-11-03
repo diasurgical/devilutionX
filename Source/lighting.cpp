@@ -510,6 +510,22 @@ void RotateRadius(int *x, int *y, int *dx, int *dy, int *lx, int *ly, int *bx, i
 	}
 }
 
+void SetLight(int x, int y, char v)
+{
+	if (InitObjFlag)
+		dPreLight[x][y] = v;
+	else
+		dLight[x][y] = v;
+}
+
+char GetLight(int x, int y)
+{
+	if (InitObjFlag)
+		return dPreLight[x][y];
+	else
+		return dLight[x][y];
+}
+
 void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 {
 	int x, y, v, xoff, yoff, mult, radius_block;
@@ -562,9 +578,9 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 
 	if (nXPos >= 0 && nXPos < MAXDUNX && nYPos >= 0 && nYPos < MAXDUNY) {
 		if (currlevel < 17) {
-			dLight[nXPos][nYPos] = 0;
-		} else if (dLight[nXPos][nYPos] > lightradius[nRadius][0]) {
-			dLight[nXPos][nYPos] = lightradius[nRadius][0];
+			SetLight(nXPos, nYPos, 0);
+		} else if (GetLight(nXPos, nYPos) > lightradius[nRadius][0]) {
+			SetLight(nXPos, nYPos, lightradius[nRadius][0]);
 		}
 	}
 
@@ -577,8 +593,8 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 				temp_y = nYPos + y;
 				v = lightradius[nRadius][radius_block];
 				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
-					if (v < dLight[temp_x][temp_y])
-						dLight[temp_x][temp_y] = v;
+					if (v < GetLight(temp_x, temp_y))
+						SetLight(temp_x, temp_y, v);
 			}
 		}
 	}
@@ -592,8 +608,8 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 				temp_y = nYPos - x;
 				v = lightradius[nRadius][radius_block];
 				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
-					if (v < dLight[temp_x][temp_y])
-						dLight[temp_x][temp_y] = v;
+					if (v < GetLight(temp_x, temp_y))
+						SetLight(temp_x, temp_y, v);
 			}
 		}
 	}
@@ -607,8 +623,8 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 				temp_y = nYPos - y;
 				v = lightradius[nRadius][radius_block];
 				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
-					if (v < dLight[temp_x][temp_y])
-						dLight[temp_x][temp_y] = v;
+					if (v < GetLight(temp_x, temp_y))
+						SetLight(temp_x, temp_y, v);
 			}
 		}
 	}
@@ -622,8 +638,8 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 				temp_y = nYPos + x;
 				v = lightradius[nRadius][radius_block];
 				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
-					if (v < dLight[temp_x][temp_y])
-						dLight[temp_x][temp_y] = v;
+					if (v < GetLight(temp_x, temp_y))
+						SetLight(temp_x, temp_y, v);
 			}
 		}
 	}
