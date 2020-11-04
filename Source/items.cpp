@@ -494,31 +494,6 @@ int items_get_currlevel()
 
 	return lvl;
 }
-
-void items_42390F()
-{
-	int x, y, id;
-
-	x = random_(12, 80) + 16;
-	y = random_(12, 80) + 16;
-	while (!ItemPlace(x, y)) {
-		x = random_(12, 80) + 16;
-		y = random_(12, 80) + 16;
-	}
-	switch (currlevel) {
-	case 22:
-		id = IDI_NOTE2;
-		break;
-	case 23:
-		id = IDI_NOTE3;
-		break;
-	default:
-		id = IDI_NOTE1;
-		break;
-	}
-	SpawnQuestItem(id, x, y, 0, 1);
-}
-
 #endif
 
 void InitItemGFX()
@@ -599,6 +574,32 @@ void AddInitItems()
 		numitems++;
 	}
 }
+
+#ifdef HELLFIRE
+static void items_42390F()
+{
+	int x, y, id;
+
+	x = random_(12, 80) + 16;
+	y = random_(12, 80) + 16;
+	while (!ItemPlace(x, y)) {
+		x = random_(12, 80) + 16;
+		y = random_(12, 80) + 16;
+	}
+	switch (currlevel) {
+	case 22:
+		id = IDI_NOTE2;
+		break;
+	case 23:
+		id = IDI_NOTE3;
+		break;
+	default:
+		id = IDI_NOTE1;
+		break;
+	}
+	SpawnQuestItem(id, x, y, 0, 1);
+}
+#endif
 
 void InitItems()
 {
@@ -1210,6 +1211,20 @@ void CalcSelfItems(int pnum)
 	} while (changeflag);
 }
 
+static BOOL ItemMinStats(PlayerStruct *p, ItemStruct *x)
+{
+	if (p->_pMagic < x->_iMinMag)
+		return FALSE;
+
+	if (p->_pStrength < x->_iMinStr)
+		return FALSE;
+
+	if (p->_pDexterity < x->_iMinDex)
+		return FALSE;
+
+	return TRUE;
+}
+
 void CalcPlrItemMin(int pnum)
 {
 	PlayerStruct *p;
@@ -1232,20 +1247,6 @@ void CalcPlrItemMin(int pnum)
 		}
 		pi++;
 	}
-}
-
-BOOL ItemMinStats(PlayerStruct *p, ItemStruct *x)
-{
-	if (p->_pMagic < x->_iMinMag)
-		return FALSE;
-
-	if (p->_pStrength < x->_iMinStr)
-		return FALSE;
-
-	if (p->_pDexterity < x->_iMinDex)
-		return FALSE;
-
-	return TRUE;
 }
 
 void CalcPlrBookVals(int p)
@@ -3517,28 +3518,7 @@ void CheckIdentify(int pnum, int cii)
 		SetCursor_(CURSOR_HAND);
 }
 
-void DoRepair(int pnum, int cii)
-{
-	PlayerStruct *p;
-	ItemStruct *pi;
-
-	p = &plr[pnum];
-	PlaySfxLoc(IS_REPAIR, p->_px, p->_py);
-
-	if (cii >= NUM_INVLOC) {
-		pi = &p->InvList[cii - NUM_INVLOC];
-	} else {
-		pi = &p->InvBody[cii];
-	}
-
-	RepairItem(pi, p->_pLevel);
-	CalcPlrInv(pnum, TRUE);
-
-	if (pnum == myplr)
-		SetCursor_(CURSOR_HAND);
-}
-
-void RepairItem(ItemStruct *i, int lvl)
+static void RepairItem(ItemStruct *i, int lvl)
 {
 	int rep, d;
 
@@ -3569,6 +3549,42 @@ void RepairItem(ItemStruct *i, int lvl)
 		i->_iDurability = i->_iMaxDur;
 }
 
+void DoRepair(int pnum, int cii)
+{
+	PlayerStruct *p;
+	ItemStruct *pi;
+
+	p = &plr[pnum];
+	PlaySfxLoc(IS_REPAIR, p->_px, p->_py);
+
+	if (cii >= NUM_INVLOC) {
+		pi = &p->InvList[cii - NUM_INVLOC];
+	} else {
+		pi = &p->InvBody[cii];
+	}
+
+	RepairItem(pi, p->_pLevel);
+	CalcPlrInv(pnum, TRUE);
+
+	if (pnum == myplr)
+		SetCursor_(CURSOR_HAND);
+}
+
+static void RechargeItem(ItemStruct *i, int r)
+{
+	if (i->_iCharges != i->_iMaxCharges) {
+		do {
+			i->_iMaxCharges--;
+			if (i->_iMaxCharges == 0) {
+				return;
+			}
+			i->_iCharges += r;
+		} while (i->_iCharges < i->_iMaxCharges);
+		if (i->_iCharges > i->_iMaxCharges)
+			i->_iCharges = i->_iMaxCharges;
+	}
+}
+
 void DoRecharge(int pnum, int cii)
 {
 	PlayerStruct *p;
@@ -3593,21 +3609,7 @@ void DoRecharge(int pnum, int cii)
 }
 
 #ifdef HELLFIRE
-void DoOil(int pnum, int cii)
-{
-	PlayerStruct *p = &plr[pnum];
-
-	if (cii >= NUM_INVLOC || cii == INVLOC_HEAD || (cii > INVLOC_AMULET && cii <= INVLOC_CHEST)) {
-		if (OilItem(&p->InvBody[cii], p)) {
-			CalcPlrInv(pnum, TRUE);
-			if (pnum == myplr) {
-				SetCursor_(CURSOR_HAND);
-			}
-		}
-	}
-}
-
-BOOL OilItem(ItemStruct *x, PlayerStruct *p)
+static BOOL OilItem(ItemStruct *x, PlayerStruct *p)
 {
 	int dur, r;
 
@@ -3727,21 +3729,20 @@ BOOL OilItem(ItemStruct *x, PlayerStruct *p)
 	return TRUE;
 }
 
-#endif
-void RechargeItem(ItemStruct *i, int r)
+void DoOil(int pnum, int cii)
 {
-	if (i->_iCharges != i->_iMaxCharges) {
-		do {
-			i->_iMaxCharges--;
-			if (i->_iMaxCharges == 0) {
-				return;
+	PlayerStruct *p = &plr[pnum];
+
+	if (cii >= NUM_INVLOC || cii == INVLOC_HEAD || (cii > INVLOC_AMULET && cii <= INVLOC_CHEST)) {
+		if (OilItem(&p->InvBody[cii], p)) {
+			CalcPlrInv(pnum, TRUE);
+			if (pnum == myplr) {
+				SetCursor_(CURSOR_HAND);
 			}
-			i->_iCharges += r;
-		} while (i->_iCharges < i->_iMaxCharges);
-		if (i->_iCharges > i->_iMaxCharges)
-			i->_iCharges = i->_iMaxCharges;
+		}
 	}
 }
+#endif
 
 void PrintItemOil(char IDidx)
 {
@@ -4902,7 +4903,7 @@ int RndPremiumItem(int minlvl, int maxlvl)
 	return ril[random_(50, ri)] + 1;
 }
 
-void SpawnOnePremium(int i, int plvl)
+static void SpawnOnePremium(int i, int plvl)
 {
 	int itype;
 	ItemStruct holditem;
@@ -5635,6 +5636,20 @@ void CreateMagicWeapon(int x, int y, int imisc, int icurs, BOOL sendmsg, BOOL de
 	}
 }
 
+static void NextItemRecord(int i)
+{
+	gnNumGetRecords--;
+
+	if (gnNumGetRecords == 0) {
+		return;
+	}
+
+	itemrecord[i].dwTimestamp = itemrecord[gnNumGetRecords].dwTimestamp;
+	itemrecord[i].nSeed = itemrecord[gnNumGetRecords].nSeed;
+	itemrecord[i].wCI = itemrecord[gnNumGetRecords].wCI;
+	itemrecord[i].nIndex = itemrecord[gnNumGetRecords].nIndex;
+}
+
 BOOL GetItemRecord(int nSeed, WORD wCI, int nIndex)
 {
 	int i;
@@ -5652,20 +5667,6 @@ BOOL GetItemRecord(int nSeed, WORD wCI, int nIndex)
 	}
 
 	return TRUE;
-}
-
-void NextItemRecord(int i)
-{
-	gnNumGetRecords--;
-
-	if (gnNumGetRecords == 0) {
-		return;
-	}
-
-	itemrecord[i].dwTimestamp = itemrecord[gnNumGetRecords].dwTimestamp;
-	itemrecord[i].nSeed = itemrecord[gnNumGetRecords].nSeed;
-	itemrecord[i].wCI = itemrecord[gnNumGetRecords].wCI;
-	itemrecord[i].nIndex = itemrecord[gnNumGetRecords].nIndex;
 }
 
 void SetItemRecord(int nSeed, WORD wCI, int nIndex)

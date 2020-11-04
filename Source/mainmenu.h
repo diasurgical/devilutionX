@@ -14,7 +14,6 @@ extern "C" {
 
 extern char gszHero[16];
 
-void mainmenu_refresh_music();
 void mainmenu_change_name(int arg1, int arg2, int arg3, int arg4, char *name_1, char *name_2);
 BOOL mainmenu_select_hero_dialog(
     const _SNETPROGRAMDATA *client_info,
@@ -26,16 +25,6 @@ BOOL mainmenu_select_hero_dialog(
     char *cdesc, DWORD cdlen, // character "description" will be copied here (used to advertise games)
     BOOL *multi);             // new character? - unsure about this
 void mainmenu_loop();
-BOOL mainmenu_single_player();
-BOOL mainmenu_init_menu(int type);
-BOOL mainmenu_multi_player();
-void mainmenu_play_intro();
-
-/* rdata */
-
-/* data */
-
-extern int menu_music_track_id;
 
 #ifdef __cplusplus
 }

@@ -347,23 +347,26 @@ bool ReadMPQHeader(Archive *archive, _FILEHEADER *hdr)
 
 } // namespace
 
-void mpqapi_remove_hash_entry(const char *pszName)
+static _BLOCKENTRY *mpqapi_new_block(int *block_index)
 {
-	_HASHENTRY *pHashTbl;
 	_BLOCKENTRY *blockEntry;
-	int hIdx, block_offset, block_size;
+	DWORD i;
 
-	hIdx = FetchHandle(pszName);
-	if (hIdx != -1) {
-		pHashTbl = &cur_archive.sgpHashTbl[hIdx];
-		blockEntry = &cur_archive.sgpBlockTbl[pHashTbl->block];
-		pHashTbl->block = -2;
-		block_offset = blockEntry->offset;
-		block_size = blockEntry->sizealloc;
-		memset(blockEntry, 0, sizeof(*blockEntry));
-		mpqapi_alloc_block(block_offset, block_size);
-		cur_archive.modified = true;
+	blockEntry = cur_archive.sgpBlockTbl;
+
+	i = 0;
+	while (blockEntry->offset || blockEntry->sizealloc || blockEntry->flags || blockEntry->sizefile) {
+		i++;
+		blockEntry++;
+		if (i >= 2048) {
+			app_fatal("Out of free block entries");
+			return NULL;
+		}
 	}
+	if (block_index)
+		*block_index = i;
+
+	return blockEntry;
 }
 
 void mpqapi_alloc_block(uint32_t block_offset, uint32_t block_size)
@@ -405,34 +408,38 @@ void mpqapi_alloc_block(uint32_t block_offset, uint32_t block_size)
 	}
 }
 
-_BLOCKENTRY *mpqapi_new_block(int *block_index)
+int mpqapi_find_free_block(uint32_t size, uint32_t *block_size)
 {
-	_BLOCKENTRY *blockEntry;
-	DWORD i;
+	_BLOCKENTRY *pBlockTbl;
+	int i, result;
 
-	blockEntry = cur_archive.sgpBlockTbl;
-
-	i = 0;
-	while (blockEntry->offset || blockEntry->sizealloc || blockEntry->flags || blockEntry->sizefile) {
-		i++;
-		blockEntry++;
-		if (i >= 2048) {
-			app_fatal("Out of free block entries");
-			return NULL;
+	pBlockTbl = cur_archive.sgpBlockTbl;
+	i = 2048;
+	while (1) {
+		i--;
+		if (pBlockTbl->offset && !pBlockTbl->flags && !pBlockTbl->sizefile && (DWORD)pBlockTbl->sizealloc >= size)
+			break;
+		pBlockTbl++;
+		if (!i) {
+			*block_size = size;
+			result = cur_archive.size;
+			cur_archive.size += size;
+			return result;
 		}
 	}
-	if (block_index)
-		*block_index = i;
 
-	return blockEntry;
+	result = pBlockTbl->offset;
+	*block_size = size;
+	pBlockTbl->offset += size;
+	pBlockTbl->sizealloc -= size;
+
+	if (!pBlockTbl->sizealloc)
+		memset(pBlockTbl, 0, sizeof(*pBlockTbl));
+
+	return result;
 }
 
-int FetchHandle(const char *pszName)
-{
-	return mpqapi_get_hash_index(Hash(pszName, 0), Hash(pszName, 1), Hash(pszName, 2), 0);
-}
-
-int mpqapi_get_hash_index(short index, int hash_a, int hash_b, int locale)
+static int mpqapi_get_hash_index(short index, int hash_a, int hash_b, int locale)
 {
 	int idx, i;
 
@@ -449,6 +456,30 @@ int mpqapi_get_hash_index(short index, int hash_a, int hash_b, int locale)
 	return -1;
 }
 
+static int FetchHandle(const char *pszName)
+{
+	return mpqapi_get_hash_index(Hash(pszName, 0), Hash(pszName, 1), Hash(pszName, 2), 0);
+}
+
+void mpqapi_remove_hash_entry(const char *pszName)
+{
+	_HASHENTRY *pHashTbl;
+	_BLOCKENTRY *blockEntry;
+	int hIdx, block_offset, block_size;
+
+	hIdx = FetchHandle(pszName);
+	if (hIdx != -1) {
+		pHashTbl = &cur_archive.sgpHashTbl[hIdx];
+		blockEntry = &cur_archive.sgpBlockTbl[pHashTbl->block];
+		pHashTbl->block = -2;
+		block_offset = blockEntry->offset;
+		block_size = blockEntry->sizealloc;
+		memset(blockEntry, 0, sizeof(*blockEntry));
+		mpqapi_alloc_block(block_offset, block_size);
+		cur_archive.modified = true;
+	}
+}
+
 void mpqapi_remove_hash_entries(BOOL (*fnGetName)(DWORD, char *))
 {
 	DWORD dwIndex, i;
@@ -460,21 +491,7 @@ void mpqapi_remove_hash_entries(BOOL (*fnGetName)(DWORD, char *))
 	}
 }
 
-BOOL mpqapi_write_file(const char *pszName, const BYTE *pbData, DWORD dwLen)
-{
-	_BLOCKENTRY *blockEntry;
-
-	cur_archive.modified = true;
-	mpqapi_remove_hash_entry(pszName);
-	blockEntry = mpqapi_add_file(pszName, 0, 0);
-	if (!mpqapi_write_file_contents(pszName, pbData, dwLen, blockEntry)) {
-		mpqapi_remove_hash_entry(pszName);
-		return FALSE;
-	}
-	return TRUE;
-}
-
-_BLOCKENTRY *mpqapi_add_file(const char *pszName, _BLOCKENTRY *pBlk, int block_index)
+static _BLOCKENTRY *mpqapi_add_file(const char *pszName, _BLOCKENTRY *pBlk, int block_index)
 {
 	DWORD h1, h2, h3;
 	int i, hIdx;
@@ -504,7 +521,7 @@ _BLOCKENTRY *mpqapi_add_file(const char *pszName, _BLOCKENTRY *pBlk, int block_i
 	return pBlk;
 }
 
-BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD dwLen, _BLOCKENTRY *pBlk)
+static BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD dwLen, _BLOCKENTRY *pBlk)
 {
 	const char *str_ptr = pszName;
 	const char *tmp;
@@ -586,35 +603,18 @@ BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD d
 	return TRUE;
 }
 
-int mpqapi_find_free_block(uint32_t size, uint32_t *block_size)
+BOOL mpqapi_write_file(const char *pszName, const BYTE *pbData, DWORD dwLen)
 {
-	_BLOCKENTRY *pBlockTbl;
-	int i, result;
+	_BLOCKENTRY *blockEntry;
 
-	pBlockTbl = cur_archive.sgpBlockTbl;
-	i = 2048;
-	while (1) {
-		i--;
-		if (pBlockTbl->offset && !pBlockTbl->flags && !pBlockTbl->sizefile && (DWORD)pBlockTbl->sizealloc >= size)
-			break;
-		pBlockTbl++;
-		if (!i) {
-			*block_size = size;
-			result = cur_archive.size;
-			cur_archive.size += size;
-			return result;
-		}
+	cur_archive.modified = true;
+	mpqapi_remove_hash_entry(pszName);
+	blockEntry = mpqapi_add_file(pszName, 0, 0);
+	if (!mpqapi_write_file_contents(pszName, pbData, dwLen, blockEntry)) {
+		mpqapi_remove_hash_entry(pszName);
+		return FALSE;
 	}
-
-	result = pBlockTbl->offset;
-	*block_size = size;
-	pBlockTbl->offset += size;
-	pBlockTbl->sizealloc -= size;
-
-	if (!pBlockTbl->sizealloc)
-		memset(pBlockTbl, 0, sizeof(*pBlockTbl));
-
-	return result;
+	return TRUE;
 }
 
 void mpqapi_rename(char *pszOld, char *pszNew)

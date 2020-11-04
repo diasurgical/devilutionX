@@ -21,14 +21,11 @@ extern BOOL dovision;
 extern int numvision;
 extern char lightmax;
 extern BOOL dolighting;
-extern BYTE lightblock[64][16][16];
 extern int visionid;
 extern BYTE *pLightTbl;
 extern BOOL lightflag;
 
-void RotateRadius(int *x, int *y, int *dx, int *dy, int *lx, int *ly, int *bx, int *by);
 void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum);
-void DoUnLight(int nXPos, int nYPos, int nRadius);
 void DoUnVision(int nXPos, int nYPos, int nRadius);
 void DoVision(int nXPos, int nYPos, int nRadius, BOOL doautomap, BOOL visible);
 void FreeLightTable();
@@ -57,10 +54,7 @@ void lighting_color_cycling();
 /* rdata */
 
 extern char CrawlTable[2749];
-extern char *pCrawlTable[19];
 extern BYTE vCrawlTable[23][30];
-extern BYTE byte_49463C[18][18];
-extern BYTE RadiusAdj[23];
 
 #ifdef __cplusplus
 }

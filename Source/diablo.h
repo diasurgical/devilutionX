@@ -54,6 +54,7 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer);
 void diablo_quit(int exitStatus);
 int DiabloMain(int argc, char **argv);
 BOOL TryIconCurs();
+void diablo_pause_game();
 BOOL PressEscKey();
 void DisableInputWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

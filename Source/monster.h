@@ -12,112 +12,48 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
-extern int MissileFileFlag;
 extern int monstkills[MAXMONSTERS];
 extern int monstactive[MAXMONSTERS];
 extern int nummonsters;
 extern BOOLEAN sgbSaveSoundOn;
 extern MonsterStruct monster[MAXMONSTERS];
-extern int totalmonsters;
 extern CMonster Monsters[MAX_LVLMTYPES];
-#ifdef HELLFIRE
-extern int GraphicTable[NUMLEVELS][MAX_LVLMTYPES];
-#else
-extern BYTE GraphicTable[NUMLEVELS][MAX_LVLMTYPES];
-#endif
-extern int monstimgtot;
-extern int uniquetrans;
 extern int nummtypes;
 
-void InitMonsterTRN(int monst, BOOL special);
 void InitLevelMonsters();
-int AddMonsterType(int type, int placeflag);
 void GetLevelMTypes();
 void InitMonsterGFX(int monst);
-void ClearMVars(int i);
 void InitMonster(int i, int rd, int mtype, int x, int y);
 void ClrAllMonsters();
-BOOL MonstPlace(int xp, int yp);
 void monster_some_crypt();
-void PlaceMonster(int i, int mtype, int x, int y);
-void PlaceUniqueMonst(int uniqindex, int miniontype, int unpackfilesize);
-void PlaceQuestMonsters();
 void PlaceGroup(int mtype, int num, int leaderf, int leader);
-void LoadDiabMonsts();
 void InitMonsters();
-void PlaceUniques();
 void SetMapMonsters(BYTE *pMap, int startx, int starty);
 void DeleteMonster(int i);
 int AddMonster(int x, int y, int dir, int mtype, BOOL InMap);
 #ifdef HELLFIRE
 void monster_43C785(int i);
 #endif
-void NewMonsterAnim(int i, AnimStruct *anim, int md);
-BOOL M_Ranged(int i);
 BOOL M_Talker(int i);
-void M_Enemy(int i);
-int M_GetDir(int i);
-void M_CheckEFlag(int i);
 void M_StartStand(int i, int md);
-void M_StartDelay(int i, int len);
-void M_StartSpStand(int i, int md);
-void M_StartWalk(int i, int xvel, int yvel, int xadd, int yadd, int EndDir);
-void M_StartWalk2(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int EndDir);
-void M_StartWalk3(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, int EndDir);
-void M_StartAttack(int i);
-void M_StartRAttack(int i, int missile_type, int dam);
-void M_StartRSpAttack(int i, int missile_type, int dam);
-void M_StartSpAttack(int i);
-void M_StartEat(int i);
 void M_ClearSquares(int i);
 void M_GetKnockback(int i);
 void M_StartHit(int i, int pnum, int dam);
-void M_DiabloDeath(int i, BOOL sendmsg);
-#ifdef HELLFIRE
-void SpawnLoot(int i, BOOL sendmsg);
-#endif
-void M2MStartHit(int mid, int i, int dam);
-void MonstStartKill(int i, int pnum, BOOL sendmsg);
-void M2MStartKill(int i, int mid);
 void M_StartKill(int i, int pnum);
 void M_SyncStartKill(int i, int x, int y, int pnum);
-void M_StartFadein(int i, int md, BOOL backwards);
-void M_StartFadeout(int i, int md, BOOL backwards);
-void M_StartHeal(int i);
-void M_ChangeLightOffset(int monst);
 BOOL M_DoStand(int i);
 BOOL M_DoWalk(int i);
 BOOL M_DoWalk2(int i);
 BOOL M_DoWalk3(int i);
-void M_TryM2MHit(int i, int mid, int hper, int mind, int maxd);
-void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam);
 BOOL M_DoAttack(int i);
-BOOL M_DoRAttack(int i);
-int M_DoRSpAttack(int i);
-BOOL M_DoSAttack(int i);
-BOOL M_DoFadein(int i);
-BOOL M_DoFadeout(int i);
-int M_DoHeal(int i);
-int M_DoTalk(int i);
 void M_Teleport(int i);
 BOOL M_DoGotHit(int i);
 void M_UpdateLeader(int i);
 void DoEnding();
 void PrepDoEnding();
-BOOL M_DoDeath(int i);
-BOOL M_DoSpStand(int i);
-BOOL M_DoDelay(int i);
-BOOL M_DoStone(int i);
 void M_WalkDir(int i, int md);
-void GroupUnity(int i);
-BOOL M_CallWalk(int i, int md);
-BOOL M_PathWalk(int i);
-BOOL M_CallWalk2(int i, int md);
-BOOL M_DumbWalk(int i, int md);
-BOOL M_RoundWalk(int i, int md, int *dir);
 void MAI_Zombie(int i);
 void MAI_SkelSd(int i);
-BOOL MAI_Path(int i);
 void MAI_Snake(int i);
 void MAI_Bat(int i);
 void MAI_SkelBow(int i);
@@ -152,7 +88,6 @@ void mai_roundranged_441EA0(int i);
 #endif
 void MAI_Acid(int i);
 void MAI_Diablo(int i);
-void MAI_RR2(int i, int mistype, int dam);
 void MAI_Mega(int i);
 void MAI_Golum(int i);
 void MAI_SkelKing(int i);
@@ -191,7 +126,6 @@ BOOL PosOkMonst3(int i, int x, int y);
 BOOL IsSkel(int mt);
 BOOL IsGoat(int mt);
 int M_SpawnSkel(int x, int y, int dir);
-void ActivateSpawn(int i, int x, int y, int dir);
 BOOL SpawnSkeleton(int ii, int x, int y);
 int PreSpawnSkeleton();
 void TalktoMonster(int i);
@@ -201,29 +135,11 @@ BOOL CheckMonsterHit(int m, BOOL *ret);
 int encode_enemy(int m);
 void decode_enemy(int m, int enemy);
 
-/* rdata */
-
-extern const char plr2monst[9];
-extern const BYTE counsmiss[4];
-
 /* data */
 
-extern int MWVel[24][3];
-extern char animletter[7];
-extern int left[8];
-extern int right[8];
 extern int opposite[8];
 extern int offset_x[8];
 extern int offset_y[8];
-
-/** unused */
-extern int rnd5[4];
-extern int rnd10[4];
-extern int rnd20[4];
-extern int rnd60[4];
-//
-
-extern void (*AiProc[])(int i);
 
 #ifdef __cplusplus
 }
