@@ -22,6 +22,20 @@ bool autoPickGold = false;
 
 BYTE *qolbuff;
 
+class SaveHelper {
+	BYTE *tmpbuff;
+
+public:
+	SaveHelper(BYTE *b)
+	{
+		tmpbuff = qolbuff = b;
+	}
+	~SaveHelper()
+	{
+		mem_free_dbg(tmpbuff);
+	}
+};
+
 static void QOLCopyBytes(const void *src, const int n, void *dst)
 {
 	memcpy(dst, src, n);
@@ -42,9 +56,7 @@ static void QOLCopyInts(const void *src, const int n, void *dst)
 	const unsigned int *s = reinterpret_cast<const unsigned int *>(src);
 	const unsigned int *d = reinterpret_cast<unsigned int *>(dst);
 	for (int i = 0; i < n; i++) {
-		QOLCopyInt(s, (void *)d);
-		++d;
-		++s;
+		QOLCopyInt(s++, (void *)d++);
 	}
 }
 
@@ -347,14 +359,13 @@ void diablo_parse_config()
 
 void SaveHotkeys()
 {
-	DWORD baseLen = 4 * (sizeof(int) + sizeof(char));
+	DWORD baseLen = sizeof(plr[myplr]._pSplHotKey) + sizeof(plr[myplr]._pSplTHotKey);
 	DWORD encodedLen = codec_get_encoded_len(baseLen);
 	BYTE *SaveBuff = DiabloAllocPtr(encodedLen);
-	qolbuff = SaveBuff;
-	QOLCopyInts(&plr[myplr]._pSplHotKey, 4, qolbuff);
-	QOLCopyBytes(&plr[myplr]._pSplTHotKey, 4, qolbuff);
+	SaveHelper q(SaveBuff);
+	QOLCopyInts(plr[myplr]._pSplHotKey, sizeof(plr[myplr]._pSplHotKey) / sizeof(plr[myplr]._pSplHotKey[0]), qolbuff);
+	QOLCopyBytes(plr[myplr]._pSplTHotKey, sizeof(plr[myplr]._pSplTHotKey) / sizeof(plr[myplr]._pSplTHotKey[0]), qolbuff);
 	pfile_write_save_file("hotkeys", SaveBuff, baseLen, encodedLen);
-	mem_free_dbg(SaveBuff);
 }
 
 void LoadHotkeys()
@@ -362,10 +373,9 @@ void LoadHotkeys()
 	DWORD dwLen;
 	BYTE *LoadBuff = pfile_read("hotkeys", &dwLen, TRUE);
 	if (LoadBuff != NULL) {
-		qolbuff = LoadBuff;
-		QOLCopyInts(qolbuff, 4, &plr[myplr]._pSplHotKey);
-		QOLCopyBytes(qolbuff, 4, &plr[myplr]._pSplTHotKey);
-		mem_free_dbg(LoadBuff);
+		SaveHelper q(LoadBuff);
+		QOLCopyInts(qolbuff, sizeof(plr[myplr]._pSplHotKey) / sizeof(plr[myplr]._pSplHotKey[0]), plr[myplr]._pSplHotKey);
+		QOLCopyBytes(qolbuff, sizeof(plr[myplr]._pSplTHotKey) / sizeof(plr[myplr]._pSplTHotKey[0]), plr[myplr]._pSplTHotKey);
 	}
 }
 
