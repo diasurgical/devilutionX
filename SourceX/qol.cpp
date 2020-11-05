@@ -293,7 +293,7 @@ void HighlightItemsNameOnMap()
 			if ((invflag || sbookflag) && MouseX > RIGHT_PANEL && MouseY <= SPANEL_HEIGHT) {
 			} else if ((chrflag || questlog) && MouseX < SPANEL_WIDTH && MouseY <= SPANEL_HEIGHT) {
 			} else if (MouseY >= PANEL_TOP && MouseX >= PANEL_LEFT && MouseX <= PANEL_LEFT + PANEL_WIDTH) {
-			} else if (gmenu_is_active() || PauseMode != 0 || deathflag) {
+			} else if (gmenu_is_active() || PauseMode != 0 || deathflag || pcursitem != -1) {
 			} else {
 				cursmx = t.Row;
 				cursmy = t.Col;
