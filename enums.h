@@ -2231,6 +2231,12 @@ typedef enum dflag {
 	BFLAG_EXPLORED    = 0x80,
 } dflag;
 
+typedef enum clicktype {
+	CLICK_NONE  = 0,
+	CLICK_LEFT  = 1,
+	CLICK_RIGHT = 2,
+} clicktype;
+
  /*
  First 5 bits store level
  6th bit stores onlygood flag
@@ -2507,6 +2513,17 @@ typedef enum interface_mode {
 	// WM_LEIGHSKIP = 0x40C, // psx only
 	// WM_DIAVNEWLVL = 0x40D, // psx only
 } interface_mode;
+
+typedef enum lvl_entry {
+	ENTRY_MAIN    = 0,
+	ENTRY_PREV    = 1,
+	ENTRY_SETLVL  = 2,
+	ENTRY_RTNLVL  = 3,
+	ENTRY_LOAD    = 4,
+	ENTRY_WARPLVL = 5,
+	ENTRY_TWARPDN = 6,
+	ENTRY_TWARPUP = 7,
+} lvl_entry;
 
 typedef enum game_info {
 	GAMEINFO_NAME         = 1,

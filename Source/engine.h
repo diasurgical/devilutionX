@@ -19,20 +19,6 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
-//offset 0
-//pCelBuff->pFrameTable[0]
-
-/** automap pixel color 8-bit (palette entry) */
-extern char gbPixelCol;
-/** flip - if y < x */
-extern BOOL gbRotateMap;
-/** Seed value before the most recent call to SetRndSeed() */
-extern int orgseed;
-/** Track number of calls to GetRndSeed() since last call to SetRndSeed() */
-extern int SeedCount;
-/** valid - if x/y are in bounds */
-extern BOOL gbNotInView;
-
 inline BYTE *CelGetFrameStart(BYTE *pCelBuff, int nCel)
 {
 	DWORD *pFrameTable;
@@ -99,10 +85,6 @@ void Cl2BlitOutlineSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWi
 void Cl2BlitLightSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE *pTable);
 void PlayInGameMovie(const char *pszMovie);
 
-/* rdata */
-
-extern const int RndInc;
-extern const int RndMult;
 
 #ifdef __cplusplus
 }

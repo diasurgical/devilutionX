@@ -17,6 +17,39 @@ BOOL terminating;
 SDL_threadID cleanup_thread_id;
 
 /**
+ * @brief Displays an error message box based on the given format string and variable argument list.
+ * @param pszFmt Error message format
+ * @param va Additional parameters for message format
+ */
+static void MsgBox(const char *pszFmt, va_list va)
+{
+	char text[256];
+
+	vsnprintf(text, 256, pszFmt, va);
+
+	UiErrorOkDialog("Error", text);
+}
+
+/**
+ * @brief Cleans up after a fatal application error.
+ */
+static void FreeDlg()
+{
+	if (terminating && cleanup_thread_id != SDL_GetThreadID(NULL))
+		SDL_Delay(20000);
+
+	terminating = TRUE;
+	cleanup_thread_id = SDL_GetThreadID(NULL);
+
+	if (gbMaxPlayers > 1) {
+		if (SNetLeaveGame(3))
+			SDL_Delay(2000);
+	}
+
+	SNetDestroy();
+}
+
+/**
  * @brief Terminates the game and displays an error message box.
  * @param pszFmt Optional error message.
  * @param ... (see printf)
@@ -34,39 +67,6 @@ void app_fatal(const char *pszFmt, ...)
 	va_end(va);
 
 	diablo_quit(1);
-}
-
-/**
- * @brief Displays an error message box based on the given format string and variable argument list.
- * @param pszFmt Error message format
- * @param va Additional parameters for message format
- */
-void MsgBox(const char *pszFmt, va_list va)
-{
-	char text[256];
-
-	vsnprintf(text, 256, pszFmt, va);
-
-	UiErrorOkDialog("Error", text);
-}
-
-/**
- * @brief Cleans up after a fatal application error.
- */
-void FreeDlg()
-{
-	if (terminating && cleanup_thread_id != SDL_GetThreadID(NULL))
-		SDL_Delay(20000);
-
-	terminating = TRUE;
-	cleanup_thread_id = SDL_GetThreadID(NULL);
-
-	if (gbMaxPlayers > 1) {
-		if (SNetLeaveGame(3))
-			SDL_Delay(2000);
-	}
-
-	SNetDestroy();
 }
 
 /**
