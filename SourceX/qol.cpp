@@ -37,7 +37,7 @@ static void QOLCopyInt(const void *src, void *dst)
 	memcpy(dst, &buf, 4);
 }
 
-static void CopyInts(const void *src, const int n, void *dst)
+static void QOLCopyInts(const void *src, const int n, void *dst)
 {
 	const unsigned int *s = reinterpret_cast<const unsigned int *>(src);
 	const unsigned int *d = reinterpret_cast<unsigned int *>(dst);
