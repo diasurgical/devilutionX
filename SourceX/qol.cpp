@@ -18,6 +18,7 @@ int highlightItemsMode = 0;
 bool altPressed = false;
 bool drawXPBar = false;
 bool drawHPBar = false;
+bool autoPickGold = false;
 
 int GetTextWidth(const char *s)
 {
@@ -292,7 +293,7 @@ void HighlightItemsNameOnMap()
 			if ((invflag || sbookflag) && MouseX > RIGHT_PANEL && MouseY <= SPANEL_HEIGHT) {
 			} else if ((chrflag || questlog) && MouseX < SPANEL_WIDTH && MouseY <= SPANEL_HEIGHT) {
 			} else if (MouseY >= PANEL_TOP && MouseX >= PANEL_LEFT && MouseX <= PANEL_LEFT + PANEL_WIDTH) {
-			} else if (gmenu_is_active() || PauseMode != 0) {
+			} else if (gmenu_is_active() || PauseMode != 0 || deathflag) {
 			} else {
 				cursmx = t.Row;
 				cursmy = t.Col;
@@ -313,6 +314,7 @@ void diablo_parse_config()
 	drawHPBar = GetConfigIntValue("monster health bar", 0) != 0;
 	drawXPBar = GetConfigIntValue("xp bar", 0) != 0;
 	highlightItemsMode = GetConfigIntValue("highlight items", 0);
+	autoPickGold = GetConfigIntValue("auto pick gold", 0) != 0;
 }
 
 void SaveHotkeys()
@@ -372,6 +374,33 @@ void RepeatClicks()
 			CheckPlrSpell();
 		break;
 	}
+	}
+}
+
+void AutoPickGold(int pnum)
+{
+	if (!autoPickGold)
+		return;
+	if (pnum != myplr)
+		return;
+	if (currlevel == 0)
+		return;
+	if (gbMaxPlayers > 1 && gbActivePlayers > 1)
+		return;
+	if (invflag)
+		return;
+
+	for (int dir = 0; dir < 8; dir++) {
+		int x = plr[pnum]._px + pathxdir[dir];
+		int y = plr[pnum]._py + pathydir[dir];
+		if (dItem[x][y] != 0) {
+			int itemIndex = dItem[x][y] - 1;
+			if (item[itemIndex]._itype == ITYPE_GOLD) {
+				NetSendCmdGItem(TRUE, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
+				item[itemIndex]._iRequest = TRUE;
+				PlaySFX(IS_GOLD);
+			}
+		}
 	}
 }
 

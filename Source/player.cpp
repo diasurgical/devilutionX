@@ -2385,6 +2385,7 @@ BOOL PM_DoWalk(int pnum)
 		rv = FALSE;
 	}
 
+	AutoPickGold(pnum);
 	return rv;
 }
 
@@ -2453,6 +2454,7 @@ BOOL PM_DoWalk2(int pnum)
 		rv = FALSE;
 	}
 
+	AutoPickGold(pnum);
 	return rv;
 }
 
@@ -2526,6 +2528,7 @@ BOOL PM_DoWalk3(int pnum)
 		rv = FALSE;
 	}
 
+	AutoPickGold(pnum);
 	return rv;
 }
 

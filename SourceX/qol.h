@@ -23,6 +23,8 @@ void diablo_parse_config();
 void SaveHotkeys();
 void LoadHotkeys();
 void RepeatClicks();
+void AutoPickGold(int pnum);
+
 DEVILUTION_END_NAMESPACE
 
 #endif /* __QOL_H__ */
