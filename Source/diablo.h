@@ -41,11 +41,12 @@ typedef struct Options {
 	bool bGrabInput;      // Do not let the mouse leave the application window
 	bool bTheoQuest;      // Enable the Theo quest
 	bool bCowQuest;       // Enable the cow quest
+	bool bFriendlyFire;   // Will players still damage other players in non-PvP mode
 	bool bTestBard;       // Enable the bard hero class
 	bool bTestBarbarian;  // Enable the babarian hero class
 	bool bExperienceBar;  // Show the current level progress
 	bool bEnemyHealthBar; // Show enemy health at the top of the screen
-	bool bFriendlyFire;   // Will players still damage other players in non-PvP mode
+	bool bAutoGoldPickup; // Automatically pick up goald when walking on to it
 
 	char szBindAddress[129]; // Optionally bind to a specific network interface
 } Options;

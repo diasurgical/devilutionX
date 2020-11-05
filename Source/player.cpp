@@ -2227,6 +2227,7 @@ bool PM_DoWalk(int pnum, int variant)
 			ChangeLightOff(plr[pnum]._plid, 0, 0);
 		}
 
+		AutoGoldPickup(pnum);
 		return true;
 	} else { //We didn't reach new tile so update player's "sub-tile" position
 		PM_ChangeOffset(pnum);

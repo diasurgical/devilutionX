@@ -174,4 +174,26 @@ void DrawXPBar()
 		FastDrawVertLine(xPos - 1 + (barWidth * i / numDividers), yPos - dividerHeight - 1, barHeight + dividerHeight * 2 + 2, frameColor);
 }
 
+void AutoGoldPickup(int pnum)
+{
+	if (!sgOptions.bAutoGoldPickup)
+		return;
+	if (pnum != myplr)
+		return;
+	if (leveltype == DTYPE_TOWN)
+		return;
+
+	for (int dir = 0; dir < 8; dir++) {
+		int x = plr[pnum]._px + pathxdir[dir];
+		int y = plr[pnum]._py + pathydir[dir];
+		if (dItem[x][y] != 0) {
+			int itemIndex = dItem[x][y] - 1;
+			if (item[itemIndex]._itype == ITYPE_GOLD) {
+				NetSendCmdGItem(TRUE, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
+				item[itemIndex]._iRequest = TRUE;
+			}
+		}
+	}
+}
+
 DEVILUTION_END_NAMESPACE

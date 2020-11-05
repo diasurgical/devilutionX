@@ -10,6 +10,7 @@ DEVILUTION_BEGIN_NAMESPACE
 
 void DrawMonsterHealthBar();
 void DrawXPBar();
+void AutoGoldPickup(int pnum);
 
 DEVILUTION_END_NAMESPACE
 

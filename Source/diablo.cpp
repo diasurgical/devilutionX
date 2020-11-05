@@ -428,6 +428,7 @@ static void SaveOptions()
 	setIniInt("Game", "Test Barbarian", sgOptions.bTestBarbarian);
 	setIniInt("Game", "Experience Bar", sgOptions.bExperienceBar);
 	setIniInt("Game", "Enemy Health Bar", sgOptions.bEnemyHealthBar);
+	setIniInt("Game", "Auto Gold Pickup", sgOptions.bAutoGoldPickup);
 
 	setIniValue("Network", "Bind Address", sgOptions.szBindAddress);
 }
@@ -472,6 +473,7 @@ static void LoadOptions()
 	sgOptions.bTestBarbarian = getIniBool("Game", "Test Barbarian", false);
 	sgOptions.bExperienceBar = getIniBool("Game", "Experience Bar", false);
 	sgOptions.bEnemyHealthBar = getIniBool("Game", "Enemy Health Bar", false);
+	sgOptions.bAutoGoldPickup = getIniBool("Game", "Auto Gold Pickup", false);
 
 	getIniValue("Network", "Bind Address", sgOptions.szBindAddress, sizeof(sgOptions.szBindAddress), "0.0.0.0");
 }
