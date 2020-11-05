@@ -566,7 +566,7 @@ void pfile_write_save_file(const char *pszName, BYTE *pbData, DWORD dwLen, DWORD
 	pfile_flush(TRUE, save_num);
 }
 
-BYTE *pfile_read(const char *pszName, DWORD *pdwLen)
+BYTE *pfile_read(const char *pszName, DWORD *pdwLen, BOOL optional /*FALSE by default*/)
 {
 	DWORD save_num, nread;
 	HANDLE archive, save;
@@ -578,7 +578,7 @@ BYTE *pfile_read(const char *pszName, DWORD *pdwLen)
 		app_fatal("Unable to open save file archive");
 
 	if (!SFileOpenFileEx(archive, pszName, 0, &save)) {
-		if (strcmp(pszName, "hotkeys") == 0) {
+		if (optional) {
 			pfile_SFileCloseArchive(archive);
 			return NULL;
 		} 

@@ -12,9 +12,6 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
-void CopyInts(const void *src, const int n, void *dst);
-void CopyBytes(const void *src, const int n, void *dst);
-
 void LoadGame(BOOL firstflag);
 void SaveGame();
 void SaveLevel();

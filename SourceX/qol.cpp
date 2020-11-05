@@ -20,6 +20,34 @@ bool drawXPBar = false;
 bool drawHPBar = false;
 bool autoPickGold = false;
 
+BYTE *qolbuff;
+
+static void QOLCopyBytes(const void *src, const int n, void *dst)
+{
+	memcpy(dst, src, n);
+	qolbuff += n;
+}
+
+static void QOLCopyInt(const void *src, void *dst)
+{
+	unsigned int buf;
+	memcpy(&buf, src, 4);
+	qolbuff += 4;
+	buf = SwapLE32(buf);
+	memcpy(dst, &buf, 4);
+}
+
+static void CopyInts(const void *src, const int n, void *dst)
+{
+	const unsigned int *s = reinterpret_cast<const unsigned int *>(src);
+	const unsigned int *d = reinterpret_cast<unsigned int *>(dst);
+	for (int i = 0; i < n; i++) {
+		QOLCopyInt(s, (void *)d);
+		++d;
+		++s;
+	}
+}
+
 int GetTextWidth(const char *s)
 {
 	int l = 0;
@@ -319,33 +347,25 @@ void diablo_parse_config()
 
 void SaveHotkeys()
 {
-	BYTE *oldtbuff = tbuff;
-	DWORD dwLen = codec_get_encoded_len(4 * (sizeof(int) + sizeof(char)));
-	BYTE *SaveBuff = DiabloAllocPtr(dwLen);
-	tbuff = SaveBuff;
-
-	CopyInts(&plr[myplr]._pSplHotKey, 4, tbuff);
-	CopyBytes(&plr[myplr]._pSplTHotKey, 4, tbuff);
-
-	dwLen = codec_get_encoded_len(tbuff - SaveBuff);
-	pfile_write_save_file("hotkeys", SaveBuff, tbuff - SaveBuff, dwLen);
+	DWORD baseLen = 4 * (sizeof(int) + sizeof(char));
+	DWORD encodedLen = codec_get_encoded_len(baseLen);
+	BYTE *SaveBuff = DiabloAllocPtr(encodedLen);
+	qolbuff = SaveBuff;
+	QOLCopyInts(&plr[myplr]._pSplHotKey, 4, qolbuff);
+	QOLCopyBytes(&plr[myplr]._pSplTHotKey, 4, qolbuff);
+	pfile_write_save_file("hotkeys", SaveBuff, baseLen, encodedLen);
 	mem_free_dbg(SaveBuff);
-	tbuff = oldtbuff;
 }
 
 void LoadHotkeys()
 {
-	BYTE *oldtbuff = tbuff;
 	DWORD dwLen;
-	BYTE *LoadBuff = pfile_read("hotkeys", &dwLen);
+	BYTE *LoadBuff = pfile_read("hotkeys", &dwLen, TRUE);
 	if (LoadBuff != NULL) {
-		tbuff = LoadBuff;
-
-		CopyInts(tbuff, 4, &plr[myplr]._pSplHotKey);
-		CopyBytes(tbuff, 4, &plr[myplr]._pSplTHotKey);
-
+		qolbuff = LoadBuff;
+		QOLCopyInts(qolbuff, 4, &plr[myplr]._pSplHotKey);
+		QOLCopyBytes(qolbuff, 4, &plr[myplr]._pSplTHotKey);
 		mem_free_dbg(LoadBuff);
-		tbuff = oldtbuff;
 	}
 }
 

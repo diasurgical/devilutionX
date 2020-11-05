@@ -46,7 +46,7 @@ BOOL GetTempSaveNames(DWORD dwIndex, char *szTemp);
 void pfile_rename_temp_to_perm();
 BOOL GetPermSaveNames(DWORD dwIndex, char *szPerm);
 void pfile_write_save_file(const char *pszName, BYTE *pbData, DWORD dwLen, DWORD qwLen);
-BYTE *pfile_read(const char *pszName, DWORD *pdwLen);
+BYTE *pfile_read(const char *pszName, DWORD *pdwLen, BOOL optional = FALSE);
 void pfile_update(BOOL force_save);
 
 /* rdata */
