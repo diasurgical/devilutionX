@@ -20,6 +20,8 @@ extern ItemStruct item[MAXITEMS + 1];
 #ifdef HELLFIRE
 extern CornerStoneStruct CornerStone;
 #endif
+extern BYTE *itemanims[ITEMTYPES];
+extern BYTE ItemAnimLs[ITEMTYPES];
 extern BOOL UniqueItemFlag[128];
 #ifdef HELLFIRE
 extern int auricGold;

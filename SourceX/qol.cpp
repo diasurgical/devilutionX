@@ -19,8 +19,12 @@ bool altPressed = false;
 bool drawXPBar = false;
 bool drawHPBar = false;
 bool autoPickGold = false;
+bool generatedLabels = false;
+bool isGeneratingLabels = false;
+bool isLabelHighlighted = false;
 
 BYTE *qolbuff;
+int labelCenterOffsets[ITEMTYPES];
 
 class SaveHelper {
 	BYTE *tmpbuff;
@@ -256,6 +260,31 @@ public:
 
 std::vector<drawingQueue> drawQ;
 
+void UpdateLabels(BYTE *dst, int width)
+{
+	int xval = (dst - &gpBuffer[0]) % BUFFER_WIDTH;
+	if (xval < drawMinX)
+		drawMinX = xval;
+	xval += width;
+	if (xval > drawMaxX)
+		drawMaxX = xval;
+}
+
+void GenerateLabelOffsets()
+{
+	if (generatedLabels)
+		return;
+	isGeneratingLabels = true;
+	for (int i = 0; i < ITEMTYPES; i++) {
+		drawMinX = BUFFER_WIDTH;
+		drawMaxX = 0;
+		CelClippedDrawLight(BUFFER_WIDTH / 2 - 16, 351, itemanims[i], ItemAnimLs[i], 96);
+		labelCenterOffsets[i] = drawMinX - BUFFER_WIDTH / 2 + (drawMaxX - drawMinX) / 2;
+	}
+	isGeneratingLabels = false;
+	generatedLabels = true;
+}
+
 void AddItemToDrawQueue(int x, int y, int id)
 {
 	if (highlightItemsMode == 0 || (highlightItemsMode == 1 && !altPressed) || (highlightItemsMode == 2 && altPressed))
@@ -270,10 +299,7 @@ void AddItemToDrawQueue(int x, int y, int id)
 	}
 
 	int nameWidth = GetTextWidth((char *)textOnGround);
-	int newx = (drawMinX + drawMaxX) / 2;
-	if (abs(newx - x) >= TILE_WIDTH) // prevents warping when the label is appearing/disappearing on the edge of the screen
-		return;
-	x = newx;
+	x += labelCenterOffsets[ItemCAnimTbl[it->_iCurs]];
 	x -= SCREEN_X;
 	y -= SCREEN_Y;
 	y -= TILE_HEIGHT;
@@ -292,6 +318,7 @@ void AddItemToDrawQueue(int x, int y, int id)
 
 void HighlightItemsNameOnMap()
 {
+	isLabelHighlighted = false;
 	if (highlightItemsMode == 0 || (highlightItemsMode == 1 && !altPressed) || (highlightItemsMode == 2 && altPressed))
 		return;
 	const int borderX = 5;
@@ -333,8 +360,9 @@ void HighlightItemsNameOnMap()
 			if ((invflag || sbookflag) && MouseX > RIGHT_PANEL && MouseY <= SPANEL_HEIGHT) {
 			} else if ((chrflag || questlog) && MouseX < SPANEL_WIDTH && MouseY <= SPANEL_HEIGHT) {
 			} else if (MouseY >= PANEL_TOP && MouseX >= PANEL_LEFT && MouseX <= PANEL_LEFT + PANEL_WIDTH) {
-			} else if (gmenu_is_active() || PauseMode != 0 || deathflag || pcursitem != -1) {
+			} else if (gmenu_is_active() || PauseMode != 0 || deathflag) {
 			} else {
+				isLabelHighlighted = true;
 				cursmx = t.Row;
 				cursmy = t.Col;
 				pcursitem = t.ItemID;
