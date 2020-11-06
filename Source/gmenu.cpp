@@ -50,17 +50,7 @@ const BYTE lfontkern[] = {
 	11, 10, 12, 11, 21, 23
 };
 
-void gmenu_draw_pause()
-{
-	if (currlevel != 0)
-		RedBack();
-	if (!sgpCurrentMenu) {
-		light_table_index = 0;
-		gmenu_print_text(316 + PANEL_LEFT, 336, "Pause");
-	}
-}
-
-void gmenu_print_text(int x, int y, const char *pszStr)
+static void gmenu_print_text(int x, int y, const char *pszStr)
 {
 	BYTE c;
 
@@ -70,6 +60,16 @@ void gmenu_print_text(int x, int y, const char *pszStr)
 		if (c != 0)
 			CelDrawLight(x, y, BigTGold_cel, c, 46, NULL);
 		x += lfontkern[c] + 2;
+	}
+}
+
+void gmenu_draw_pause()
+{
+	if (currlevel != 0)
+		RedBack();
+	if (!sgpCurrentMenu) {
+		light_table_index = 0;
+		gmenu_print_text(316 + PANEL_LEFT, 336, "Pause");
 	}
 }
 
@@ -108,30 +108,7 @@ BOOL gmenu_is_active()
 	return sgpCurrentMenu != NULL;
 }
 
-void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)(TMenuItem *))
-{
-	int i;
-
-	PauseMode = 0;
-	mouseNavigation = FALSE;
-	sgpCurrentMenu = pItem;
-	dword_63447C = gmFunc;
-	if (gmFunc) {
-		dword_63447C(sgpCurrentMenu);
-		pItem = sgpCurrentMenu;
-	}
-	sgCurrentMenuIdx = 0;
-	if (sgpCurrentMenu) {
-		for (i = 0; sgpCurrentMenu[i].fnMenu; i++) {
-			sgCurrentMenuIdx++;
-		}
-	}
-	// BUGFIX: OOB access when sgCurrentMenuIdx is 0; should be set to NULL instead. (fixed)
-	sgpCurrItem = sgCurrentMenuIdx > 0 ? &sgpCurrentMenu[sgCurrentMenuIdx - 1] : NULL;
-	gmenu_up_down(TRUE);
-}
-
-void gmenu_up_down(BOOL isDown)
+static void gmenu_up_down(BOOL isDown)
 {
 	int i;
 
@@ -161,40 +138,58 @@ void gmenu_up_down(BOOL isDown)
 	}
 }
 
-void gmenu_draw()
+void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)(TMenuItem *))
 {
-	int y;
-	TMenuItem *i;
-	DWORD ticks;
+	int i;
 
+	PauseMode = 0;
+	mouseNavigation = FALSE;
+	sgpCurrentMenu = pItem;
+	dword_63447C = gmFunc;
+	if (gmFunc) {
+		dword_63447C(sgpCurrentMenu);
+		pItem = sgpCurrentMenu;
+	}
+	sgCurrentMenuIdx = 0;
 	if (sgpCurrentMenu) {
-		if (dword_63447C)
-			dword_63447C(sgpCurrentMenu);
-#ifdef HELLFIRE
-		ticks = SDL_GetTicks();
-		if ((int)(ticks - LogoAnim_tick) > 25) {
-		    LogoAnim_frame++;
-			if (LogoAnim_frame > 16)
-				LogoAnim_frame = 1;
-			LogoAnim_tick = ticks;
+		for (i = 0; sgpCurrentMenu[i].fnMenu; i++) {
+			sgCurrentMenuIdx++;
 		}
-		CelDraw((SCREEN_WIDTH - 430) / 2 + SCREEN_X, 102 + SCREEN_Y + UI_OFFSET_Y, sgpLogo, LogoAnim_frame, 430);
-#else
-		CelDraw((SCREEN_WIDTH - 296) / 2 + SCREEN_X, 102 + SCREEN_Y + UI_OFFSET_Y, sgpLogo, 1, 296);
-#endif
-		y = 160 + SCREEN_Y + UI_OFFSET_Y;
-		i = sgpCurrentMenu;
-		if (sgpCurrentMenu->fnMenu) {
-			while (i->fnMenu) {
-				gmenu_draw_menu_item(i, y);
-				i++;
-				y += 45;
-			}
-		}
+	}
+	// BUGFIX: OOB access when sgCurrentMenuIdx is 0; should be set to NULL instead. (fixed)
+	sgpCurrItem = sgCurrentMenuIdx > 0 ? &sgpCurrentMenu[sgCurrentMenuIdx - 1] : NULL;
+	gmenu_up_down(TRUE);
+}
+
+static void gmenu_clear_buffer(int x, int y, int width, int height)
+{
+	BYTE *i;
+
+	i = gpBuffer + BUFFER_WIDTH * y + x;
+	while (height--) {
+		memset(i, 205, width);
+		i -= BUFFER_WIDTH;
 	}
 }
 
-void gmenu_draw_menu_item(TMenuItem *pItem, int y)
+static int gmenu_get_lfont(TMenuItem *pItem)
+{
+	const char *text;
+	int i;
+	BYTE c;
+
+	if (pItem->dwFlags & GMENU_SLIDER)
+		return 490;
+	text = pItem->pszStr;
+	i = 0;
+	while (*text) {
+		c = gbFontTransTbl[(BYTE)*text++];
+		i += lfontkern[lfontframe[c]] + 2;
+	}
+	return i - 2;
+}
+
+static void gmenu_draw_menu_item(TMenuItem *pItem, int y)
 {
 	DWORD w, x, nSteps, step, pos, t;
 #ifndef HELLFIRE
@@ -229,32 +224,58 @@ void gmenu_draw_menu_item(TMenuItem *pItem, int y)
 	}
 }
 
-void gmenu_clear_buffer(int x, int y, int width, int height)
+void gmenu_draw()
 {
-	BYTE *i;
+	int y;
+	TMenuItem *i;
+	DWORD ticks;
 
-	i = gpBuffer + BUFFER_WIDTH * y + x;
-	while (height--) {
-		memset(i, 205, width);
-		i -= BUFFER_WIDTH;
-	}
+	if (sgpCurrentMenu) {
+		if (dword_63447C)
+			dword_63447C(sgpCurrentMenu);
+#ifdef HELLFIRE
+		ticks = SDL_GetTicks();
+		if ((int)(ticks - LogoAnim_tick) > 25) {
+		    LogoAnim_frame++;
+			if (LogoAnim_frame > 16)
+				LogoAnim_frame = 1;
+			LogoAnim_tick = ticks;
+		}
+		CelDraw((SCREEN_WIDTH - 430) / 2 + SCREEN_X, 102 + SCREEN_Y + UI_OFFSET_Y, sgpLogo, LogoAnim_frame, 430);
+#else
+		CelDraw((SCREEN_WIDTH - 296) / 2 + SCREEN_X, 102 + SCREEN_Y + UI_OFFSET_Y, sgpLogo, 1, 296);
+#endif
+		y = 160 + SCREEN_Y + UI_OFFSET_Y;
+		i = sgpCurrentMenu;
+		if (sgpCurrentMenu->fnMenu) {
+			while (i->fnMenu) {
+				gmenu_draw_menu_item(i, y);
+				i++;
+				y += 45;
+			}
+		}
+		}
 }
 
-int gmenu_get_lfont(TMenuItem *pItem)
+static void gmenu_left_right(BOOL isRight)
 {
-	const char *text;
-	int i;
-	BYTE c;
+	int step;
 
-	if (pItem->dwFlags & GMENU_SLIDER)
-		return 490;
-	text = pItem->pszStr;
-	i = 0;
-	while (*text) {
-		c = gbFontTransTbl[(BYTE)*text++];
-		i += lfontkern[lfontframe[c]] + 2;
+	if (sgpCurrItem->dwFlags & GMENU_SLIDER) {
+		step = sgpCurrItem->dwFlags & 0xFFF;
+		if (isRight) {
+			if (step == (int)(sgpCurrItem->dwFlags & 0xFFF000) >> 12)
+				return;
+			step++;
+		} else {
+			if (!step)
+				return;
+			step--;
+		}
+		sgpCurrItem->dwFlags &= 0xFFFFF000;
+		sgpCurrItem->dwFlags |= step;
+		sgpCurrItem->fnMenu(FALSE);
 	}
-	return i - 2;
 }
 
 BOOL gmenu_presskeys(int vkey)
@@ -290,25 +311,19 @@ BOOL gmenu_presskeys(int vkey)
 	return TRUE;
 }
 
-void gmenu_left_right(BOOL isRight)
+static BOOLEAN gmenu_get_mouse_slider(int *plOffset)
 {
-	int step;
-
-	if (sgpCurrItem->dwFlags & GMENU_SLIDER) {
-		step = sgpCurrItem->dwFlags & 0xFFF;
-		if (isRight) {
-			if (step == (int)(sgpCurrItem->dwFlags & 0xFFF000) >> 12)
-				return;
-			step++;
-		} else {
-			if (!step)
-				return;
-			step--;
-		}
-		sgpCurrItem->dwFlags &= 0xFFFFF000;
-		sgpCurrItem->dwFlags |= step;
-		sgpCurrItem->fnMenu(FALSE);
+	*plOffset = 282;
+	if (MouseX < 282 + PANEL_LEFT) {
+		*plOffset = 0;
+		return FALSE;
 	}
+	if (MouseX > 538 + PANEL_LEFT) {
+		*plOffset = 256;
+		return FALSE;
+	}
+	*plOffset = MouseX - 282 - PANEL_LEFT;
+	return TRUE;
 }
 
 BOOL gmenu_on_mouse_move()
@@ -325,21 +340,6 @@ BOOL gmenu_on_mouse_move()
 	sgpCurrItem->dwFlags &= 0xFFFFF000;
 	sgpCurrItem->dwFlags |= step;
 	sgpCurrItem->fnMenu(FALSE);
-	return TRUE;
-}
-
-BOOLEAN gmenu_get_mouse_slider(int *plOffset)
-{
-	*plOffset = 282;
-	if (MouseX < 282 + PANEL_LEFT) {
-		*plOffset = 0;
-		return FALSE;
-	}
-	if (MouseX > 538 + PANEL_LEFT) {
-		*plOffset = 256;
-		return FALSE;
-	}
-	*plOffset = MouseX - 282 - PANEL_LEFT;
 	return TRUE;
 }
 

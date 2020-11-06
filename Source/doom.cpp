@@ -42,21 +42,6 @@ int doom_get_frame_from_time()
 	return DoomQuestState / 1200;
 }
 
-#ifdef HELLFIRE
-BOOLEAN doom_alloc_cel()
-#else
-void doom_alloc_cel()
-#endif
-{
-#ifdef HELLFIRE
-	doom_cleanup();
-	pDoomCel = DiabloAllocPtr(0x39000);
-	return pDoomCel ? TRUE : FALSE;
-#else
-	pDoomCel = DiabloAllocPtr(0x38000);
-#endif
-}
-
 void doom_cleanup()
 {
 #ifdef HELLFIRE
@@ -70,9 +55,24 @@ void doom_cleanup()
 }
 
 #ifdef HELLFIRE
-BOOLEAN doom_load_graphics()
+static BOOLEAN doom_alloc_cel()
 #else
-void doom_load_graphics()
+static void doom_alloc_cel()
+#endif
+{
+#ifdef HELLFIRE
+	doom_cleanup();
+	pDoomCel = DiabloAllocPtr(0x39000);
+	return pDoomCel ? TRUE : FALSE;
+#else
+	pDoomCel = DiabloAllocPtr(0x38000);
+#endif
+}
+
+#ifdef HELLFIRE
+static BOOLEAN doom_load_graphics()
+#else
+static void doom_load_graphics()
 #endif
 {
 #ifdef HELLFIRE
