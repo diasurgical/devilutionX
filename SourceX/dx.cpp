@@ -8,6 +8,10 @@
 #include "display.h"
 #include <SDL.h>
 
+#ifdef __3DS__
+#include <3ds.h>
+#endif
+
 namespace dvl {
 
 int sgdwLockCount;
@@ -292,6 +296,9 @@ void RenderPresent()
 		LimitFrameRate();
 	}
 #else
+#ifdef __3DS__
+	gspWaitForVBlank();
+#endif
 	if (SDL_Flip(surface) <= -1) {
 		ErrSdl();
 	}
