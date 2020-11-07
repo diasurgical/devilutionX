@@ -3300,6 +3300,8 @@ void SpawnQuestItem(int itemid, int x, int y, int randarea, int selflag)
 			item[i]._iAnimFrame = item[i]._iAnimLen;
 			item[i]._iAnimFlag = FALSE;
 		}
+		/*fixes a bug with the game treating all quest items as dupes - most notably 3 valor bloodstones - dropping any of them made it disappear*/
+		item[i]._iSeed = GetRndSeed(); 
 		numitems++;
 	}
 }

@@ -3396,11 +3396,11 @@ void OperatePedistal(int pnum, int i)
 	BYTE *mem;
 	int iv;
 
-	if (object[i]._oVar6 != 3) {
+	if (object[i]._oVar6 != 3 || object[i]._oAnimFrame != 4) {
 		if (PlrHasItem(pnum, IDI_BLDSTONE, &iv) != NULL) {
 			RemoveInvItem(pnum, iv);
+			object[i]._oVar6 = object[i]._oAnimFrame; // should fix broken valor quest by syncing oVar6 with the pedestal frame
 			object[i]._oAnimFrame++;
-			object[i]._oVar6++;
 		}
 		if (object[i]._oVar6 == 1) {
 			if (!deltaload)
