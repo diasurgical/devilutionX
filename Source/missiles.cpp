@@ -2116,7 +2116,7 @@ void AddRndTeleport(int mi, int sx, int sy, int dx, int dy, int midir, char mien
 		if (nTries > 500) {
 			r1 = 0;
 			r2 = 0;
-			break;
+			break; //BUGFIX: warps player to 0/0 in hellfire, change to return or use 1.09's version of the code
 		}
 		r1 = random_(58, 3) + 4;
 		r2 = random_(58, 3) + 4;

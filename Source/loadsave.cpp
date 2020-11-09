@@ -672,6 +672,25 @@ static void LoadPortal(int i)
 	CopyInt(tbuff, &pPortal->setlvl);
 }
 
+static bool IsHeaderValid(int magicNumber)
+{
+	if (gbIsSpawn) {
+		if (magicNumber != 'SHAR') {
+			return false;
+		}
+	} else {
+#ifdef HELLFIRE
+		if (magicNumber != 'HELF') {
+#else
+		if (magicNumber != 'RETL') {
+#endif
+			return false;
+		}
+	}
+
+	return true;
+}
+
 /**
  * @brief Load game state
  * @param firstflag Can be set to false if we are simply reloading the current game
@@ -690,13 +709,7 @@ void LoadGame(BOOL firstflag)
 	LoadBuff = pfile_read(szName, &dwLen);
 	tbuff = LoadBuff;
 
-#ifdef HELLFIRE
-	if (ILoad() != 'HELF')
-#elif defined(SPAWN)
-	if (ILoad() != 'SHAR')
-#else
-	if (ILoad() != 'RETL')
-#endif
+	if (!IsHeaderValid(ILoad()))
 		app_fatal("Invalid save file");
 
 	setlevel = OLoad();
@@ -1453,12 +1466,13 @@ void SaveGame()
 	BYTE *SaveBuff = DiabloAllocPtr(dwLen);
 	tbuff = SaveBuff;
 
+	if (gbIsSpawn)
+		ISave('SHAR');
+	else
 #ifdef HELLFIRE
-	ISave('HELF');
-#elif defined(SPAWN)
-	ISave('SHAR');
+		ISave('HELF');
 #else
-	ISave('RETL');
+		ISave('RETL');
 #endif
 	OSave(setlevel);
 	WSave(setlvlnum);

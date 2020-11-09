@@ -13,7 +13,6 @@ extern "C" {
 #endif
 
 void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield);
-void VerifyGoldSeeds(PlayerStruct *pPlayer);
 void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL killok);
 #ifdef HELLFIRE
 void PackItem(PkItemStruct *id, ItemStruct *is);

@@ -39,15 +39,6 @@ void palette_update_quest_palette(int n);
 BOOL palette_get_color_cycling();
 BOOL palette_set_color_cycling(BOOL enabled);
 
-/* rdata */
-
-/* data */
-
-extern int gamma_correction;
-#ifndef HELLFIRE
-extern BOOL color_cycling_enabled;
-#endif
-
 #ifdef __cplusplus
 }
 #endif
