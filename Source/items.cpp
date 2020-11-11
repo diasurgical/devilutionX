@@ -803,13 +803,7 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 
 	if (plr[p]._pLightRad != lrad && p == myplr) {
 		ChangeLightRadius(plr[p]._plid, lrad);
-
-		if (lrad < 10) {
-			ChangeVisionRadius(plr[p]._pvid, 10);
-		} else {
-			ChangeVisionRadius(plr[p]._pvid, lrad);
-		}
-
+		ChangeVisionRadius(plr[p]._pvid, lrad);
 		plr[p]._pLightRad = lrad;
 	}
 
