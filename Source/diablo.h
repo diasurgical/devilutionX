@@ -46,6 +46,8 @@ extern BOOLEAN UseBarbarianTest;
 extern BOOLEAN UseMultiTest;
 #endif
 extern char sgbMouseDown;
+extern int color_cycle_timer;
+extern int logicTick;
 extern int ticks_per_sec;
 extern WORD tick_delay;
 
@@ -66,6 +68,9 @@ void diablo_color_cyc_logic();
 
 extern BOOL fullscreen;
 extern int showintrodebug;
+extern int recordDemo;
+extern bool demoMode;
+extern bool timedemo;
 #ifdef _DEBUG
 extern int questdebug;
 extern int debug_mode_key_w;

@@ -23,6 +23,9 @@ void play_movie(const char *pszMovie, BOOL user_can_close)
 {
 	HANDLE video_stream;
 
+	if (timedemo)
+		return;
+
 	movie_playing = TRUE;
 	sound_disable_music(TRUE);
 	stream_stop();
@@ -31,7 +34,7 @@ void play_movie(const char *pszMovie, BOOL user_can_close)
 	SVidPlayBegin(pszMovie, 0, 0, 0, 0, loop_movie ? 0x100C0808 : 0x10280808, &video_stream);
 	MSG Msg;
 	while (video_stream && movie_playing) {
-		while (movie_playing && PeekMessage(&Msg)) {
+		while (movie_playing && PeekMessage(&Msg, -1)) {
 			switch (Msg.message) {
 			case DVL_WM_KEYDOWN:
 			case DVL_WM_LBUTTONDOWN:

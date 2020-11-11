@@ -372,7 +372,8 @@ void setIniValue(const char *sectionName, const char *keyName, char *value, int 
 		key->setValue(stringValue);
 	}
 
-	ini.saveToFile();
+	if (!demoMode)
+		ini.saveToFile();
 }
 
 BOOL SRegLoadValue(const char *keyname, const char *valuename, BYTE flags, int *value)
