@@ -55,6 +55,27 @@ const char *const sgszMusicTracks[NUM_MUSIC] = {
 	"Music\\Dintro.wav",
 };
 
+static void snd_get_volume(const char *value_name, int *value)
+{
+	int v = *value;
+	if (!SRegLoadValue(APP_NAME, value_name, 0, &v)) {
+		v = VOLUME_MAX;
+	}
+	*value = v;
+
+	if (*value < VOLUME_MIN) {
+		*value = VOLUME_MIN;
+	} else if (*value > VOLUME_MAX) {
+		*value = VOLUME_MAX;
+	}
+	*value -= *value % 100;
+}
+
+static void snd_set_volume(const char *key, int value)
+{
+	SRegSaveValue(APP_NAME, key, 0, value);
+}
+
 BOOL snd_playing(TSnd *pSnd)
 {
 	if (pSnd == NULL || pSnd->DSB == NULL)
@@ -154,22 +175,6 @@ void snd_init(HWND hWnd)
 	gbSndInited = true;
 }
 
-void snd_get_volume(const char *value_name, int *value)
-{
-	int v = *value;
-	if (!SRegLoadValue(APP_NAME, value_name, 0, &v)) {
-		v = VOLUME_MAX;
-	}
-	*value = v;
-
-	if (*value < VOLUME_MIN) {
-		*value = VOLUME_MIN;
-	} else if (*value > VOLUME_MAX) {
-		*value = VOLUME_MAX;
-	}
-	*value -= *value % 100;
-}
-
 void sound_cleanup()
 {
 	SFileDdaDestroy();
@@ -179,11 +184,6 @@ void sound_cleanup()
 		snd_set_volume("Sound Volume", sglSoundVolume);
 		snd_set_volume("Music Volume", sglMusicVolume);
 	}
-}
-
-void snd_set_volume(const char *key, int value)
-{
-	SRegSaveValue(APP_NAME, key, 0, value);
 }
 
 void music_stop()

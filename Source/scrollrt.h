@@ -21,7 +21,6 @@ extern char arch_draw_type;
 extern int cel_transparency_active;
 extern int cel_foliage_active;
 extern int level_piece_id;
-extern void (*DrawPlrProc)(int, int, int, int, int, BYTE *, int, int, int, int);
 #ifdef HELLFIRE
 extern BOOLEAN AutoMapShowItems;
 #endif
@@ -47,14 +46,6 @@ void ScrollView();
 void EnableFrameCount();
 void scrollrt_draw_game_screen(BOOL draw_cursor);
 void DrawAndBlit();
-
-/* rdata */
-
-/* data */
-
-/** used in 1.00 debug */
-extern const char *const szMonModeAssert[18];
-extern const char *const szPlrModeAssert[12];
 
 #ifdef __cplusplus
 }

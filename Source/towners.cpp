@@ -158,6 +158,36 @@ QuestTalkData Qtalklist[] = {
 /** Specifies the active sound effect ID for interacting with cows. */
 int CowPlaying = -1;
 
+static void CowSFX(int pnum)
+{
+	if (CowPlaying != -1 && effect_is_playing(CowPlaying))
+		return;
+
+	sgdwCowClicks++;
+
+	if (gbIsSpawn) {
+		if (sgdwCowClicks == 4) {
+			sgdwCowClicks = 0;
+			CowPlaying = TSFX_COW2;
+		} else {
+			CowPlaying = TSFX_COW1;
+		}
+	} else {
+		if (sgdwCowClicks >= 8) {
+			PlaySfxLoc(TSFX_COW1, plr[pnum]._px, plr[pnum]._py + 5);
+			sgdwCowClicks = 4;
+			CowPlaying = snSFX[sgnCowMsg][plr[pnum]._pClass]; /* snSFX is local */
+			sgnCowMsg++;
+			if (sgnCowMsg >= 3)
+				sgnCowMsg = 0;
+		} else {
+			CowPlaying = sgdwCowClicks == 4 ? TSFX_COW2 : TSFX_COW1;
+		}
+	}
+
+	PlaySfxLoc(CowPlaying, plr[pnum]._px, plr[pnum]._py);
+}
+
 int GetActiveTowner(int t)
 {
 	int i;
@@ -1352,36 +1382,6 @@ void TalkToTowner(int p, int t)
 		}
 #endif
 	}
-}
-
-void CowSFX(int pnum)
-{
-	if (CowPlaying != -1 && effect_is_playing(CowPlaying))
-		return;
-
-	sgdwCowClicks++;
-
-	if (gbIsSpawn) {
-		if (sgdwCowClicks == 4) {
-			sgdwCowClicks = 0;
-			CowPlaying = TSFX_COW2;
-		} else {
-			CowPlaying = TSFX_COW1;
-		}
-	} else {
-		if (sgdwCowClicks >= 8) {
-			PlaySfxLoc(TSFX_COW1, plr[pnum]._px, plr[pnum]._py + 5);
-			sgdwCowClicks = 4;
-			CowPlaying = snSFX[sgnCowMsg][plr[pnum]._pClass]; /* snSFX is local */
-			sgnCowMsg++;
-			if (sgnCowMsg >= 3)
-				sgnCowMsg = 0;
-		} else {
-			CowPlaying = sgdwCowClicks == 4 ? TSFX_COW2 : TSFX_COW1;
-		}
-	}
-
-	PlaySfxLoc(CowPlaying, plr[pnum]._px, plr[pnum]._py);
 }
 
 DEVILUTION_END_NAMESPACE

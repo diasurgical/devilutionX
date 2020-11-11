@@ -305,7 +305,29 @@ char *off_4A5AC4 = "SItem";
 /** Specifies the current Y-coordinate used for validation of items on ground. */
 int idoppely = 16;
 /** Maps from Griswold premium item number to a quality level delta as added to the base quality level. */
-int premiumlvladd[6] = { -1, -1, 0, 0, 1, 2 };
+int premiumlvladd[SMITH_PREMIUM_ITEMS] = {
+	-1,
+	-1,
+#ifdef HELLFIRE
+	-1,
+#endif
+	 0,
+	 0,
+#ifdef HELLFIRE
+	 0,
+	 0,
+	 1,
+	 1,
+	 1,
+#endif
+	 1,
+	 2,
+#ifdef HELLFIRE
+	 2,
+	 3,
+	 3,
+#endif
+};
 
 #ifdef HELLFIRE
 int items_4231CA(int i)
@@ -4903,7 +4925,11 @@ int RndPremiumItem(int minlvl, int maxlvl)
 	return ril[random_(50, ri)] + 1;
 }
 
+#ifdef HELLFIRE
+static void SpawnOnePremium(int i, int plvl, int myplr, bool noSpells)
+#else
 static void SpawnOnePremium(int i, int plvl)
+#endif
 {
 	int itype;
 	ItemStruct holditem;
@@ -4945,18 +4971,40 @@ void SpawnPremium(int lvl)
 	if (numpremium < SMITH_PREMIUM_ITEMS) {
 		for (i = 0; i < SMITH_PREMIUM_ITEMS; i++) {
 			if (premiumitem[i]._itype == ITYPE_NONE)
+#ifdef HELLFIRE
+				SpawnOnePremium(i, premiumlevel + premiumlvladd[i], pnum, FALSE);
+#else
 				SpawnOnePremium(i, premiumlevel + premiumlvladd[i]);
+#endif
 		}
 		numpremium = SMITH_PREMIUM_ITEMS;
 	}
 	while (premiumlevel < lvl) {
 		premiumlevel++;
+#ifdef HELLFIRE
+		premiumitem[0] = premiumitem[3];
+		premiumitem[1] = premiumitem[4];
+		premiumitem[2] = premiumitem[5];
+		premiumitem[3] = premiumitem[6];
+		premiumitem[4] = premiumitem[7];
+		premiumitem[5] = premiumitem[8];
+		premiumitem[6] = premiumitem[9];
+		premiumitem[7] = premiumitem[10];
+		premiumitem[8] = premiumitem[11];
+		premiumitem[9] = premiumitem[12];
+		SpawnOnePremium(10, premiumlevel + premiumlvladd[10], pnum, FALSE);
+		premiumitem[11] = premiumitem[13];
+		SpawnOnePremium(12, premiumlevel + premiumlvladd[12], pnum, FALSE);
+		premiumitem[13] = premiumitem[14];
+		SpawnOnePremium(14, premiumlevel + premiumlvladd[14], pnum, FALSE);
+#else
 		premiumitem[0] = premiumitem[2];
 		premiumitem[1] = premiumitem[3];
 		premiumitem[2] = premiumitem[4];
 		SpawnOnePremium(3, premiumlevel + premiumlvladd[3]);
 		premiumitem[4] = premiumitem[5];
 		SpawnOnePremium(5, premiumlevel + premiumlvladd[5]);
+#endif
 	}
 }
 

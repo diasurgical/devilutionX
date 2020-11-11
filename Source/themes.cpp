@@ -503,7 +503,7 @@ void PlaceThemeMonsts(int t, int f)
 
 	numscattypes = 0;
 	for (i = 0; i < nummtypes; i++) {
-		if (Monsters[i].mPlaceFlags & 1) {
+		if (Monsters[i].mPlaceFlags & PLACE_SCATTER) {
 			scattertypes[numscattypes] = i;
 			numscattypes++;
 		}

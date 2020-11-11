@@ -1069,7 +1069,14 @@ void CheckInvPaste(int pnum, int mx, int my)
 	if (plr[pnum].HoldItem._iLoc == il)
 		done = TRUE;
 	if (il == ILOC_ONEHAND && plr[pnum].HoldItem._iLoc == ILOC_TWOHAND) {
-		il = ILOC_TWOHAND;
+#ifdef HELLFIRE
+			if (plr[pnum]._pClass == PC_BARBARIAN
+				&& (plr[pnum].HoldItem._itype == ITYPE_SWORD || plr[pnum].HoldItem._itype == ITYPE_MACE)
+			)
+				il = ILOC_ONEHAND;
+			else
+#endif
+				il = ILOC_TWOHAND;
 		done = TRUE;
 	}
 	if (plr[pnum].HoldItem._iLoc == ILOC_UNEQUIPABLE && il == ILOC_BELT) {
@@ -1144,6 +1151,14 @@ void CheckInvPaste(int pnum, int mx, int my)
 			PlaySFX(PS_ROGUE13);
 		else if (plr[pnum]._pClass == PC_SORCERER)
 			PlaySFX(PS_MAGE13);
+#ifdef HELLFIRE
+		else if (plr[pnum]._pClass == PC_MONK)
+			PlaySFX(PS_MONK13);
+		else if (plr[pnum]._pClass == PC_BARD)
+			PlaySFX(PS_ROGUE13);
+		else if (plr[pnum]._pClass == PC_BARBARIAN)
+			PlaySFX(PS_MAGE13);
+#endif
 	}
 
 	if (!done)
