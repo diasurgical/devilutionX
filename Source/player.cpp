@@ -1234,6 +1234,8 @@ void FixPlayerLocation(int pnum, int bDir)
 		ViewX = plr[pnum]._px;
 		ViewY = plr[pnum]._py;
 	}
+	ChangeLightXY(plr[pnum]._plid, plr[pnum]._px, plr[pnum]._py);
+	ChangeVisionXY(plr[pnum]._pvid, plr[pnum]._px, plr[pnum]._py);
 }
 
 void StartStand(int pnum, int dir)
