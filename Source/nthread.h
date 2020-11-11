@@ -20,6 +20,7 @@ extern uintptr_t glpMsgTbl[MAX_PLRS];
 extern int turn_upper_bit;
 extern DWORD gdwLargestMsgSize;
 extern DWORD gdwNormalMsgSize;
+extern int last_tick;
 
 void nthread_terminate_game(const char *pszFcn);
 DWORD nthread_send_and_recv_turn(DWORD cur_turn, int turn_delta);
