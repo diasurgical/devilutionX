@@ -159,7 +159,14 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrl_event, Gam
 					*action = GameAction(GameActionType_TOGGLE_CHARACTER_INFO);
 				return true;
 			case ControllerButton_BUTTON_Y: // Top button
+#ifdef __3DS__
+				if (!ctrl_event.up) {
+					zoomflag = !zoomflag;
+					CalcViewportGeometry();
+				}
+#else
 				// Not mapped. Reserved for future use.
+#endif
 				return true;
 			case ControllerButton_BUTTON_B: // Right button
 				// Not mapped. TODO: map to attack in place.
