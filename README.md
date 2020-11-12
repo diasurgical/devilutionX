@@ -172,7 +172,7 @@ The nro-file will be generated in the build folder. Test with an emulator (RyuJi
 
 <details><summary>Nintendo 3DS</summary>
 
-### Set-up development environment: devkitPro / devkitARM
+### Installing dependencies
 
 https://devkitpro.org/wiki/Getting_Started
 
@@ -185,10 +185,10 @@ sudo (dkp-)pacman -S devkitARM general-tools 3dstools devkitpro-pkgbuild-helpers
 	libctru citro3d 3ds-sdl 3ds-sdl_ttf 3ds-sdl_mixer \
 	3ds-freetype 3ds-libogg 3ds-libvorbisidec 3ds-mikmod
 ```
-- Download [bannertool](https://github.com/Steveice10/bannertool/releases/download/1.1.0/bannertool.zip) and [makerom](https://github.com/jakcron/Project_CTR/releases/download/v0.16/makerom_016_ctrtool.zip)
-  - Extract executables to: `/opt/devkitpro/tools/'
+- Download or compile [bannertool](https://github.com/Steveice10/bannertool/releases) and [makerom](https://github.com/jakcron/Project_CTR/releases)
+  - Copy binaries to: `/opt/devkitpro/tools/bin/'
 
-- Build the project:
+### Compiling:
 ```
 cd build
 cmake .. -DNIGHLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/3ds.cmake

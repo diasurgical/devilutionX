@@ -1,4 +1,4 @@
-# DevilutionX (Diablo 1) for Nintendo 3DS*
+# DevilutionX (Diablo 1) for Nintendo 3DS
 *New3DS only
 
 ## Installation
@@ -23,13 +23,13 @@
 </details>
 <details><summary>.cia installation</summary>
 
-### Install DevilutionX: Diablo
+#### Install DevilutionX: Diablo
 1. Download [devilutionx.cia](https://github.com/MrHuu/devilutionX-3ds/releases/latest/download/devilutionx.cia).
 2. Put `devilutionx.cia` on your SD card and install with a title manager, e.g. [FBI](https://github.com/Steveice10/FBI).
 	`devilutionx.cia` can be removed after being installed.
 3. Copy `diabdat.mpq` from your Diablo CD (or GoG install folder) to `sd:/3ds/devilutionx/`.
 
-### Install DevilutionX: Diablo - Hellfire
+#### Install DevilutionX: Diablo - Hellfire
 1. Download [hellfire.cia](https://github.com/MrHuu/devilutionX-3ds/releases/latest/download/hellfire.cia).
 2. Put `hellfire.cia` on your SD card and install with a title manager, e.g. [FBI](https://github.com/Steveice10/FBI).
 	`hellfire.cia` can be removed after being installed.
@@ -38,6 +38,8 @@
 </details>
 
 ## Usage
+
+When using .3dsx:
 
 - Launch `devilutionx.3dsx` or `hellfire.3dsx` with the [Homebrew Launcher](https://github.com/fincs/new-hbmenu).
 
@@ -54,10 +56,12 @@ or, when using .cia:
 - Y: cast spell, delete character while in main menu
 - L: use health item from belt
 - R: use mana potion from belt
-- ZL: character sheet (alt: Start + L or ←)
-- ZR: inventory (alt: Start + R or →)
+- Start + ↑: game menu (alt: Start + Select)
 - Start + ↓: toggle automap
-- Start + Select: game menu (alt: Start + ↑)
+- Start + ←: character sheet (alt: ZL or Start + L)
+- Start + →: inventory (alt: ZR or Start + R)
+- Start + X: toggle zoom
+- Select + D-Pad: move automap or simulate mouse
 - Select + A/B/X/Y: Spell hotkeys
 - Select + ZL: quest log (alt: Start + Y)
 - Select + ZR: spell book (alt: Start + B)
