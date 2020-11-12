@@ -187,7 +187,7 @@ bool CanTargetMonster(int mi)
 
 	const int mx = monst._mx;
 	const int my = monst._my;
-	if (!(dFlags[mx][my] & BFLAG_LIT)) // not visable
+	if (!(dFlags[mx][my] & BFLAG_LIT)) // not visible
 		return false;
 	if (dMonster[mx][my] == 0)
 		return false;
