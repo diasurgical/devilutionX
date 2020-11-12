@@ -622,7 +622,7 @@ static void DrawItem(int x, int y, int sx, int sy, BOOL pre)
 }
 
 /**
- * @brief Check if and how a mosnter should be rendered
+ * @brief Check if and how a monster should be rendered
  * @param y dPiece coordinate
  * @param x dPiece coordinate
  * @param oy dPiece Y offset
