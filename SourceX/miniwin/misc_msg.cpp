@@ -579,90 +579,15 @@ bool PeekMessage_Real(LPMSG lpMsg)
 	return true;
 }
 
-std::ofstream demoRecording;
-static std::deque<demoMsg> demo_message_queue;
-
-void CreateDemoFile(int i)
-{
-	char demoFilename[16];
-	snprintf(demoFilename, 15, "demo_%d.dmo", i);
-	demoRecording.open(GetPrefPath() + demoFilename, std::fstream::trunc);
-
-	demoRecording << "0," << gszHero << "," << screenWidth << "," << screenHeight << "\n";
-}
-
 void SaveDemoMessage(LPMSG lpMsg, int tick)
-{
-	demoRecording << tick << ",0," << lpMsg->message << "," << lpMsg->wParam << "," << lpMsg->lParam << "\n";
-}
-
-void PumpDemoMessage(int tick, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	demoMsg msg;
 	msg.tick = tick;
-	msg.message = message;
-	msg.wParam = wParam;
-	msg.lParam = lParam;
-
-	demo_message_queue.push_back(msg);
-}
-
-bool LoadDemoMessages(int i)
-{
-	std::ifstream demofile;
-	char demoFilename[16];
-	snprintf(demoFilename, 15, "demo_%d.dmo", i);
-	demofile.open(GetPrefPath() + demoFilename);
-	if (!demofile.is_open()) {
-		return false;
-	}
-
-	std::string line, number;
-
-	std::getline(demofile, line);
-	std::stringstream header(line);
-
-	std::getline(header, number, ','); // Demo version
-	if (std::stoi(number) != 0) {
-		return false;
-	}
-
-	std::getline(header, number, ',');
-	sprintf(gszHero, "%s", number.c_str());
-
-	std::getline(header, number, ',');
-	dvl::DWORD width = std::stoi(number);
-	SRegSaveValue("devilutionx", "width", 0, width);
-
-	std::getline(header, number, ',');
-	dvl::DWORD height = std::stoi(number);
-	SRegSaveValue("devilutionx", "height", 0, height);
-
-	while (std::getline(demofile, line)) {
-		std::stringstream command(line);
-
-		std::getline(command, number, ',');
-		int tick = std::stoi(number);
-
-		std::getline(command, number, ',');
-		int type = std::stoi(number);
-
-		switch (type) {
-		case 0:
-			std::getline(command, number, ',');
-			UINT message = std::stoi(number);
-			std::getline(command, number, ',');
-			WPARAM wParam = std::stoi(number);
-			std::getline(command, number, ',');
-			LPARAM lParam = std::stoi(number);
-			PumpDemoMessage(tick, message, wParam, lParam);
-			break;
-		}
-	}
-
-	demofile.close();
-
-	return true;
+	msg.message = lpMsg->message;
+	msg.wParam = lpMsg->wParam;
+	msg.lParam = lpMsg->lParam;
+	if (!gmenu_is_active())
+		demo_message_queue.push_back(msg);
 }
 
 bool DemoMessage(LPMSG lpMsg, int tick)
@@ -675,17 +600,19 @@ bool DemoMessage(LPMSG lpMsg, int tick)
 			lpMsg->wParam = 0;
 			return true;
 		}
-		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
+		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE && demoMode) {
+			SDL_Log("SPECIAL STUFF!");
 			demo_message_queue.clear();
 			message_queue.clear();
+			gamemenu_off();
 			demoMode = false;
 			timedemo = false;
 			last_tick = SDL_GetTicks();
 		}
 	}
-
-	if (!demo_message_queue.empty()) {
+	if (!demo_message_queue.empty() && demoMode) {
 		demoMsg dmsg = demo_message_queue.front();
+		SDL_Log("COMPARING TICKS: %d %d", dmsg.tick, tick);
 		if (dmsg.tick == tick) {
 			lpMsg->message = dmsg.message;
 			lpMsg->lParam = dmsg.lParam;
@@ -693,6 +620,14 @@ bool DemoMessage(LPMSG lpMsg, int tick)
 			demo_message_queue.pop_front();
 			return true;
 		}
+	} else {
+		SDL_Log("SPECIAL STUFF2!");
+		gamemenu_off();
+		demo_message_queue.clear();
+		message_queue.clear();
+		demoMode = false;
+		timedemo = false;
+		last_tick = SDL_GetTicks();
 	}
 
 	lpMsg->message = 0;
@@ -711,7 +646,7 @@ bool PeekMessage(LPMSG lpMsg, int tick)
 	else
 		available = DemoMessage(lpMsg, tick);
 
-	if (recordDemo != -1 && available && tick > -1)
+	if (!demoMode && available && tick > -1 && gbMaxPlayers == 1)
 		SaveDemoMessage(lpMsg, tick);
 
 	return available;

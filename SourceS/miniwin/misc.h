@@ -51,8 +51,6 @@ typedef struct tagMSG {
 	LPARAM lParam;
 } MSG, *LPMSG;
 
-extern std::ofstream demoRecording;
-
 //
 // Everything else
 //
@@ -62,8 +60,6 @@ void FocusOnCharInfo();
 
 SHORT GetAsyncKeyState(int vKey);
 
-void CreateDemoFile(int i);
-bool LoadDemoMessages(int i);
 bool PeekMessage(LPMSG lpMsg, int tick);
 
 bool TranslateMessage(const MSG *lpMsg);

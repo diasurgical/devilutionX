@@ -400,6 +400,7 @@ static void LoadPlayer(int i)
 	// Omit pointer _pDData
 	// Omit pointer _pBData
 	// Omit pointer pReserved
+	LoadDemo();
 }
 
 static void LoadMonster(int i)
@@ -867,6 +868,7 @@ void LoadGame(BOOL firstflag)
 	ResetPal();
 	SetCursor_(CURSOR_HAND);
 	gbProcessPlayers = TRUE;
+	loadDemoCharCopy = false;
 }
 
 static void BSave(char v)
@@ -1188,6 +1190,7 @@ static void SavePlayer(int i)
 	// Omit pointer _pDData
 	// Omit pointer _pBData
 	// Omit pointer pReserved
+	SaveDemo();
 }
 
 static void SaveMonster(int i)
@@ -1603,9 +1606,12 @@ void SaveGame()
 	dwLen = codec_get_encoded_len(tbuff - SaveBuff);
 	pfile_write_save_file(szName, SaveBuff, tbuff - SaveBuff, dwLen);
 	mem_free_dbg(SaveBuff);
+	if (!saveDemoCharCopy)
 	gbValidSaveFile = TRUE;
 	pfile_rename_temp_to_perm();
 	pfile_write_hero();
+	if (saveDemoCharCopy)
+		saveDemoCharCopy = false;
 }
 
 void SaveLevel()

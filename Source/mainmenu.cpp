@@ -146,9 +146,6 @@ BOOL mainmenu_select_hero_dialog(
 	if (cname && clen)
 		SStrCopy(cname, gszHero, clen);
 
-	if (recordDemo != -1)
-		CreateDemoFile(recordDemo);
-
 	return TRUE;
 }
 

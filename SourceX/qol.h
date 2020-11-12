@@ -14,6 +14,12 @@ extern bool drawHPBar;
 extern bool isGeneratingLabels;
 extern bool isLabelHighlighted;
 
+extern BYTE *qolbuff;
+
+void QOLCopyBytes(const void *src, const int n, void *dst);
+void QOLCopyInt(const void *src, void *dst);
+void QOLCopyInts(const void *src, const int n, void *dst);
+
 void DrawMonsterHealthBar();
 void DrawXPBar();
 void UpdateLabels(BYTE *dst, int width);

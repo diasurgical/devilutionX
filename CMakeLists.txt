@@ -257,6 +257,7 @@ add_library(devilution STATIC
   Source/wave.cpp)
 
 set(devilutionx_SRCS
+  SourceX/demo.cpp
   SourceX/qol.cpp
   SourceX/dx.cpp
   SourceX/controls/devices/game_controller.cpp

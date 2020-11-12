@@ -177,7 +177,7 @@ void gamemenu_load_game(BOOL bActivate)
 
 void gamemenu_save_game(BOOL bActivate)
 {
-	if (pcurs != CURSOR_HAND) {
+	if (pcurs != CURSOR_HAND || demoMode) {
 		return;
 	}
 

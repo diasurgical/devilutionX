@@ -9,6 +9,7 @@
 #include <SDL.h>
 #include <map>
 #include <vector>
+#include <deque>
 
 #ifdef USE_SDL1
 #include "sdl2_to_1_2_backports.h"
@@ -21,6 +22,7 @@
 #include "../types.h"
 
 #include "../SourceX/qol.h"
+#include "../SourceX/demo.h"
 
 #include "appfat.h"
 #include "automap.h"

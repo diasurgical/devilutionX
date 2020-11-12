@@ -13,22 +13,22 @@ static BOOL sgbIsWalking;
 
 void track_process()
 {
-	if (!sgbIsWalking && (sgbMouseDown == 1 && (SDL_GetModState() & KMOD_SHIFT) == 0))
+	if (!sgbIsWalking)
+	//if (!sgbIsWalking && (sgbMouseDown == 1 && (SDL_GetModState() & KMOD_SHIFT) == 0))
 		return;
 
 	if (cursmx < 0 || cursmx >= MAXDUNX - 1 || cursmy < 0 || cursmy >= MAXDUNY - 1)
 		return;
 
-	/*
-	this check was good for walking but has to be disabled after making this function handle casts / attacks with shift
+	//this check was good for walking but has to be disabled after making this function handle casts / attacks with shift
 	if (plr[myplr]._pVar8 <= 6 && plr[myplr]._pmode != PM_STAND)
 		return;
-	*/
 
 	if (cursmx != plr[myplr]._ptargx || cursmy != plr[myplr]._ptargy) {
 		if (logicTick - sgdwLastWalk >= 6) {
 			sgdwLastWalk = logicTick;
-			RepeatClicks();
+			//RepeatClicks();
+			NetSendCmdLoc(TRUE, CMD_WALKXY, cursmx, cursmy);
 			if (!sgbIsScrolling)
 				sgbIsScrolling = TRUE;
 		}
@@ -44,7 +44,8 @@ void track_repeat_walk(BOOL rep)
 	if (rep) {
 		sgbIsScrolling = FALSE;
 		sgdwLastWalk = logicTick;
-		RepeatClicks();
+		NetSendCmdLoc(TRUE, CMD_WALKXY, cursmx, cursmy);
+		//RepeatClicks();
 	} else if (sgbIsScrolling) {
 		sgbIsScrolling = FALSE;
 	}

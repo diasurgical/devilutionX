@@ -60,6 +60,7 @@ std::string GetSavePath(DWORD save_num)
 /** List of character names for the character selection screen. */
 static char hero_names[MAX_CHARACTERS][PLR_NAME_LEN];
 BOOL gbValidSaveFile;
+BOOL gbValidDemoFile;
 
 static DWORD pfile_get_save_num_from_name(const char *name)
 {
@@ -188,7 +189,7 @@ BOOL pfile_create_player_description(char *dst, DWORD len)
 
 	myplr = 0;
 	pfile_read_player_from_save();
-	game_2_ui_player(plr, &uihero, gbValidSaveFile);
+	game_2_ui_player(plr, &uihero, gbValidSaveFile, gbValidDemoFile);
 	UiSetupPlayerInfo(gszHero, &uihero, GAME_ID);
 
 	if (dst != NULL && len) {
@@ -225,7 +226,7 @@ BOOL pfile_rename_hero(const char *name_1, const char *name_2)
 	SStrCopy(plr[i]._pName, name_2, PLR_NAME_LEN);
 	if (!strcasecmp(gszHero, name_1))
 		SStrCopy(gszHero, name_2, sizeof(gszHero));
-	game_2_ui_player(plr, &uihero, gbValidSaveFile);
+	game_2_ui_player(plr, &uihero, gbValidSaveFile, gbValidDemoFile);
 	UiSetupPlayerInfo(gszHero, &uihero, GAME_ID);
 	pfile_write_hero();
 	return TRUE;
@@ -278,7 +279,7 @@ static BYTE game_2_ui_class(const PlayerStruct *p) // game_2_ui_class
 	return uiclass;
 }
 
-void game_2_ui_player(const PlayerStruct *p, _uiheroinfo *heroinfo, BOOL bHasSaveFile)
+void game_2_ui_player(const PlayerStruct *p, _uiheroinfo *heroinfo, BOOL bHasSaveFile, BOOL bHasDemoFile)
 {
 	memset(heroinfo, 0, sizeof(*heroinfo));
 	strncpy(heroinfo->name, p->_pName, sizeof(heroinfo->name) - 1);
@@ -291,6 +292,7 @@ void game_2_ui_player(const PlayerStruct *p, _uiheroinfo *heroinfo, BOOL bHasSav
 	heroinfo->vitality = p->_pVitality;
 	heroinfo->gold = p->_pGold;
 	heroinfo->hassaved = bHasSaveFile;
+	heroinfo->hasdemo = bHasDemoFile;
 	heroinfo->herorank = p->pDiabloKillLevel;
 	heroinfo->spawned = gbIsSpawn;
 }
@@ -311,7 +313,7 @@ BOOL pfile_ui_set_hero_infos(BOOL(*ui_add_hero_info)(_uiheroinfo *))
 				_uiheroinfo uihero;
 				strcpy(hero_names[i], pkplr.pName);
 				UnPackPlayer(&pkplr, 0, FALSE);
-				game_2_ui_player(plr, &uihero, pfile_archive_contains_game(archive, i));
+				game_2_ui_player(plr, &uihero, pfile_archive_contains_game(archive, i), pfile_archive_contains_demo(archive, i));
 				ui_add_hero_info(&uihero);
 			}
 			pfile_SFileCloseArchive(archive);
@@ -329,6 +331,17 @@ BOOL pfile_archive_contains_game(HANDLE hsArchive, DWORD save_num)
 		return FALSE;
 
 	if (!SFileOpenFileEx(hsArchive, "game", 0, &file))
+		return FALSE;
+
+	SFileCloseFile(file);
+	return TRUE;
+}
+
+BOOL pfile_archive_contains_demo(HANDLE hsArchive, DWORD save_num)
+{
+	HANDLE file;
+
+	if (!SFileOpenFileEx(hsArchive, "demo", 0, &file))
 		return FALSE;
 
 	SFileCloseFile(file);
@@ -373,8 +386,11 @@ BOOL pfile_ui_save_create(_uiheroinfo *heroinfo)
 	plr[0]._pName[PLR_NAME_LEN - 1] = '\0';
 	PackPlayer(&pkplr, 0, TRUE);
 	pfile_encode_hero(&pkplr);
-	game_2_ui_player(&plr[0], heroinfo, FALSE);
+	game_2_ui_player(&plr[0], heroinfo, FALSE, FALSE);
 	pfile_flush(TRUE, save_num);
+
+	if (gbMaxPlayers == 1)
+		saveDemoCharCopy = true;
 	return TRUE;
 }
 
@@ -430,6 +446,7 @@ void pfile_read_player_from_save()
 
 	UnPackPlayer(&pkplr, myplr, FALSE);
 	gbValidSaveFile = pfile_archive_contains_game(archive, save_num);
+	gbValidDemoFile = pfile_archive_contains_demo(archive, save_num);
 	pfile_SFileCloseArchive(archive);
 }
 
@@ -467,7 +484,10 @@ void pfile_get_game_name(char *dst)
 {
 	// BUGFIX: function call with no purpose
 	pfile_get_save_num_from_name(plr[myplr]._pName);
-	strcpy(dst, "game");
+	if (saveDemoCharCopy || loadDemoCharCopy)
+		strcpy(dst, "game2");
+	else
+		strcpy(dst, "game");
 }
 
 static BOOL GetPermSaveNames(DWORD dwIndex, char *szPerm)

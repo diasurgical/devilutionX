@@ -307,6 +307,10 @@ void selhero_List_Select(int value)
 		selhero_FreeListItems();
 		vecSelHeroDlgItems.push_back(new UiListItem("Load Game", 0));
 		vecSelHeroDlgItems.push_back(new UiListItem("New Game", 1));
+		if (selhero_heroInfo.hasdemo) {
+			vecSelHeroDlgItems.push_back(new UiListItem("Watch Demo", 2));
+		}
+
 		vecSelDlgItems.push_back(new UiList(vecSelHeroDlgItems, PANEL_LEFT + 265, (UI_OFFSET_Y + 285), 320, 33, UIS_CENTER | UIS_MED | UIS_GOLD));
 
 		SDL_Rect rect2 = { PANEL_LEFT + 279, (UI_OFFSET_Y + 427), 140, 35 };
@@ -320,6 +324,7 @@ void selhero_List_Select(int value)
 		return;
 	}
 
+	SDL_Log("NEW GAME?");
 	selhero_Load_Select(1);
 }
 
@@ -446,12 +451,21 @@ void selhero_Load_Select(int value)
 	selhero_endMenu = true;
 	if (vecSelHeroDlgItems[value]->m_value == 0) {
 		selhero_result = SELHERO_CONTINUE;
+		SDL_Log("STARTING RECORDING DEMO!");
 		return;
-	} else if (!selhero_isMultiPlayer) {
+	} else if (vecSelHeroDlgItems[value]->m_value == 1 && !selhero_isMultiPlayer) {
 		selhero_endMenu = false;
 		selhero_Free();
 		LoadBackgroundArt("ui_art\\selgame.pcx");
 		selgame_GameSelection_Select(0);
+	} else if (vecSelHeroDlgItems[value]->m_value == 2) {
+		SDL_Log("WATCH DEMO LOL");
+		loadDemoCharCopy = true;
+		demoMode = true;
+		timedemo = true;
+		logicTick = 0;
+		selhero_result = SELHERO_CONTINUE;
+		return;
 	}
 
 	selhero_result = 0;

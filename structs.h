@@ -1309,6 +1309,7 @@ typedef struct _uiheroinfo {
 	WORD vitality;
 	int gold;
 	int hassaved;
+	int hasdemo;
 	BOOL spawned;
 } _uiheroinfo;
 

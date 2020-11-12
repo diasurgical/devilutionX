@@ -40,13 +40,13 @@ public:
 	}
 };
 
-static void QOLCopyBytes(const void *src, const int n, void *dst)
+void QOLCopyBytes(const void *src, const int n, void *dst)
 {
 	memcpy(dst, src, n);
 	qolbuff += n;
 }
 
-static void QOLCopyInt(const void *src, void *dst)
+void QOLCopyInt(const void *src, void *dst)
 {
 	unsigned int buf;
 	memcpy(&buf, src, 4);
@@ -55,7 +55,7 @@ static void QOLCopyInt(const void *src, void *dst)
 	memcpy(dst, &buf, 4);
 }
 
-static void QOLCopyInts(const void *src, const int n, void *dst)
+void QOLCopyInts(const void *src, const int n, void *dst)
 {
 	const unsigned int *s = reinterpret_cast<const unsigned int *>(src);
 	const unsigned int *d = reinterpret_cast<unsigned int *>(dst);
