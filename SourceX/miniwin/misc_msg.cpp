@@ -586,8 +586,8 @@ void SaveDemoMessage(LPMSG lpMsg, int tick)
 	msg.message = lpMsg->message;
 	msg.wParam = lpMsg->wParam;
 	msg.lParam = lpMsg->lParam;
-	if (!gmenu_is_active())
-		demo_message_queue.push_back(msg);
+	demo_message_queue.push_back(msg);
+
 }
 
 bool DemoMessage(LPMSG lpMsg, int tick)
@@ -601,6 +601,7 @@ bool DemoMessage(LPMSG lpMsg, int tick)
 			return true;
 		}
 		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE && demoMode) {
+			/*
 			SDL_Log("SPECIAL STUFF!");
 			demo_message_queue.clear();
 			message_queue.clear();
@@ -608,26 +609,32 @@ bool DemoMessage(LPMSG lpMsg, int tick)
 			demoMode = false;
 			timedemo = false;
 			last_tick = SDL_GetTicks();
+			*/
 		}
 	}
-	if (!demo_message_queue.empty() && demoMode) {
-		demoMsg dmsg = demo_message_queue.front();
-		SDL_Log("COMPARING TICKS: %d %d", dmsg.tick, tick);
+	if (!demo_message_queue_tmp.empty() && demoMode) {
+		demoMsg dmsg = demo_message_queue_tmp.front();
+		DWORD siz = demo_message_queue_tmp.size();
+		SDL_Log("SIZE LEFT: %d , COMPARING TICKS: %d %d", siz, dmsg.tick, tick);
 		if (dmsg.tick == tick) {
 			lpMsg->message = dmsg.message;
 			lpMsg->lParam = dmsg.lParam;
 			lpMsg->wParam = dmsg.wParam;
-			demo_message_queue.pop_front();
+			demo_message_queue_tmp.pop_front();
+			processedDemoMsg = true;
 			return true;
 		}
-	} else {
+	} else if (demo_message_queue_tmp.empty() && demoMode && processedDemoMsg) {
+		
 		SDL_Log("SPECIAL STUFF2!");
 		gamemenu_off();
-		demo_message_queue.clear();
+		processedDemoMsg = false;
+		//demo_message_queue.clear();
 		message_queue.clear();
 		demoMode = false;
 		timedemo = false;
 		last_tick = SDL_GetTicks();
+		
 	}
 
 	lpMsg->message = 0;

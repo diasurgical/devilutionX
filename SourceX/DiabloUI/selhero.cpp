@@ -461,11 +461,9 @@ void selhero_Load_Select(int value)
 	} else if (vecSelHeroDlgItems[value]->m_value == 2) {
 		SDL_Log("WATCH DEMO LOL");
 		loadDemoCharCopy = true;
-		demoMode = true;
-		timedemo = true;
-		logicTick = 0;
-		selhero_result = SELHERO_CONTINUE;
-		return;
+		setDemo = true;
+		//selhero_result = SELHERO_CONTINUE;
+		//return;
 	}
 
 	selhero_result = 0;

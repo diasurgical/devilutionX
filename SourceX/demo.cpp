@@ -9,9 +9,12 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 std::deque<demoMsg> demo_message_queue;
+std::deque<demoMsg> demo_message_queue_tmp;
 bool recordDemo = false;
 bool demoMode = false;
 bool timedemo = false;
+bool setDemo = false;
+bool processedDemoMsg = false;
 bool saveDemoCharCopy = false;
 bool loadDemoCharCopy = false;
 
@@ -41,6 +44,11 @@ void SaveDemo()
 	BYTE *SaveBuff = DiabloAllocPtr(encodedLen);
 	SaveHelper q(SaveBuff);
 
+	demoMsg first = demo_message_queue.front();
+	demoMsg last = demo_message_queue.back();
+
+	SDL_Log("SAVING TICKS BETWEEN %d - %d  : LOGICTICK: %d", first.tick, last.tick, logicTick);
+
 	QOLCopyInts(&logicTick, 1, qolbuff);
 	QOLCopyInts(&size, 1, qolbuff);
 	SDL_Log("SAVING DEMO SIZE: %d", size);
@@ -60,6 +68,7 @@ void LoadDemo()
 
 	if (LoadBuff != NULL) {
 		demo_message_queue.clear();
+		demo_message_queue_tmp.clear();
 		SaveHelper q(LoadBuff);
 		DWORD size;
 		QOLCopyInts(qolbuff, 1, &logicTick);
@@ -73,9 +82,15 @@ void LoadDemo()
 			demoMsg d;
 			QOLCopyInts(qolbuff, 4, &d);
 			demo_message_queue.push_back(d);
+			demo_message_queue_tmp.push_back(d);
 			myfile << i << " " << d.tick << " " << d.message << " " << d.wParam << " " << d.lParam << "\n";
 		}
 		myfile.close();
+
+		demoMsg first = demo_message_queue.front();
+		demoMsg last = demo_message_queue.back();
+
+		SDL_Log("LOADING TICKS BETWEEN %d - %d  : LOGICTICK: %d", first.tick, last.tick, logicTick);
 	}
 }
 

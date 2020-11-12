@@ -177,11 +177,11 @@ void gamemenu_load_game(BOOL bActivate)
 
 void gamemenu_save_game(BOOL bActivate)
 {
-	if (pcurs != CURSOR_HAND || demoMode) {
+	if (pcurs != CURSOR_HAND) {
 		return;
 	}
 
-	if (plr[myplr]._pmode == PM_DEATH || deathflag) {
+	if (plr[myplr]._pmode == PM_DEATH || deathflag || demoMode) {
 		gamemenu_off();
 		return;
 	}

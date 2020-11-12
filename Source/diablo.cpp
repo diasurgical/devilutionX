@@ -1623,6 +1623,13 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 	int i, j;
 	BOOL visited;
 
+	if (setDemo) {
+		demoMode = true;
+		timedemo = true;
+		setDemo = false;
+		SDL_Log("LOADGAMELEVEL TIMEDEMO!");
+	}
+
 	if (setseed)
 		glSeedTbl[currlevel] = setseed;
 

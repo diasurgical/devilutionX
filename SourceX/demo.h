@@ -9,9 +9,13 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 extern std::deque<demoMsg> demo_message_queue;
+extern std::deque<demoMsg> demo_message_queue_tmp;
+
 extern bool recordDemo;
 extern bool demoMode;
 extern bool timedemo;
+extern bool setDemo;
+extern bool processedDemoMsg;
 extern bool saveDemoCharCopy;
 extern bool loadDemoCharCopy;
 
