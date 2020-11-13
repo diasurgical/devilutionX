@@ -89,7 +89,7 @@ void InitDiabloMsg(char e)
 	msgcnt++;
 
 	msgflag = msgtable[0];
-	msgdelay = SDL_GetTicks();
+	msgdelay = SDL_GetTicks2();
 }
 
 void ClrDiabloMsg()
@@ -152,7 +152,7 @@ void DrawDiabloMsg()
 		sx += fontkern[c] + 1;
 	}
 
-	if (msgdelay > 0 && msgdelay <= SDL_GetTicks() - 3500) {
+	if (msgdelay > 0 && msgdelay <= SDL_GetTicks2() - 3500) {
 		msgdelay = 0;
 	}
 	if (msgdelay == 0) {
@@ -161,7 +161,7 @@ void DrawDiabloMsg()
 			msgflag = 0;
 		} else {
 			msgflag = msgtable[msgcnt];
-			msgdelay = SDL_GetTicks();
+			msgdelay = SDL_GetTicks2();
 		}
 	}
 }

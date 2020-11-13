@@ -297,7 +297,7 @@ void multi_player_left(int pnum, int reason)
 void multi_net_ping()
 {
 	sgbTimeout = TRUE;
-	sglTimeoutStart = SDL_GetTicks();
+	sglTimeoutStart = SDL_GetTicks2();
 }
 
 static void multi_check_drop_player()
@@ -325,7 +325,7 @@ static void multi_begin_timeout()
 	}
 #endif
 
-	nTicks = SDL_GetTicks() - sglTimeoutStart;
+	nTicks = SDL_GetTicks2() - sglTimeoutStart;
 	if (nTicks > 20000) {
 		gbRunGame = FALSE;
 		return;

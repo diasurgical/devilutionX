@@ -21,6 +21,7 @@ extern bool loadDemoCharCopy;
 
 void SaveDemo();
 void LoadDemo();
+int SDL_GetTicks2();
 
 DEVILUTION_END_NAMESPACE
 

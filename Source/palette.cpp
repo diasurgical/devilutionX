@@ -195,6 +195,7 @@ void PaletteFadeIn(int fr)
 		SDL_Rect SrcRect = { SCREEN_X, SCREEN_Y, SCREEN_WIDTH, SCREEN_HEIGHT };
 		BltFast(&SrcRect, NULL);
 		RenderPresent();
+		break;
 	}
 	SetFadeLevel(256);
 	memcpy(logical_palette, orig_palette, sizeof(orig_palette));
@@ -212,6 +213,7 @@ void PaletteFadeOut(int fr)
 			SDL_Rect SrcRect = { SCREEN_X, SCREEN_Y, SCREEN_WIDTH, SCREEN_HEIGHT };
 			BltFast(&SrcRect, NULL);
 			RenderPresent();
+			break;
 		}
 		SetFadeLevel(0);
 		sgbFadedIn = FALSE;

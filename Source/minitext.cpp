@@ -79,7 +79,7 @@ void InitQTextMsg(int m)
 			scrolltexty = 50 / -(qtextSpd - 1);
 		else
 			scrolltexty = ((qtextSpd + 1) * 50) / qtextSpd;
-		qtextSpd = SDL_GetTicks();
+		qtextSpd = SDL_GetTicks2();
 	}
 	PlaySFX(alltext[m].sfxnr);
 }
@@ -168,7 +168,7 @@ void DrawQText()
 		}
 	}
 
-	for (currTime = SDL_GetTicks(); qtextSpd + scrolltexty < currTime; qtextSpd += scrolltexty) {
+	for (currTime = SDL_GetTicks2(); qtextSpd + scrolltexty < currTime; qtextSpd += scrolltexty) {
 		qtexty--;
 		if (qtexty <= 49 + SCREEN_Y + UI_OFFSET_Y) {
 			qtexty += 38;

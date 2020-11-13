@@ -105,4 +105,10 @@ void LoadDemo()
 	}
 }
 
+int SDL_GetTicks2()
+{
+	return logicTick * 60;
+	//return SDL_GetTicks();
+}
+
 DEVILUTION_END_NAMESPACE

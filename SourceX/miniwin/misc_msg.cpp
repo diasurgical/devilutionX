@@ -581,8 +581,8 @@ bool PeekMessage_Real(LPMSG lpMsg)
 
 void SaveDemoMessage(LPMSG lpMsg, int tick)
 {
-	if (lpMsg->message == 512)
-		return;
+	//if (lpMsg->message == 512)
+	//	return;
 	demoMsg msg;
 	msg.tick = tick;
 	msg.message = lpMsg->message;
@@ -615,7 +615,7 @@ bool DemoMessage(LPMSG lpMsg, int tick)
 			gamemenu_off();
 			demoMode = false;
 			timedemo = false;
-			last_tick = SDL_GetTicks();
+			last_tick = SDL_GetTicks2();
 			*/
 		}
 	}
@@ -643,9 +643,12 @@ bool DemoMessage(LPMSG lpMsg, int tick)
 		processedDemoMsg = false;
 		//demo_message_queue.clear();
 		message_queue.clear();
-		demoMode = false;
-		timedemo = false;
-		last_tick = SDL_GetTicks();
+		//demoMode = false;
+		//timedemo = false;
+		lpMsg->message = DVL_WM_QUIT;
+		return true;
+
+		last_tick = SDL_GetTicks2();
 		
 	}
 

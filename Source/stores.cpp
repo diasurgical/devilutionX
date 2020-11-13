@@ -87,7 +87,7 @@ void SetupTownStores()
 {
 	int i, l;
 
-	SetRndSeed(glSeedTbl[currlevel] * SDL_GetTicks());
+	SetRndSeed(glSeedTbl[currlevel] * SDL_GetTicks2());
 	if (gbMaxPlayers == 1) {
 		l = 0;
 		for (i = 0; i < NUMLEVELS; i++) {

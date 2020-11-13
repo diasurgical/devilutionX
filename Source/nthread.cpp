@@ -99,7 +99,7 @@ BOOL nthread_recv_turns(BOOL *pfSendAsync)
 	} else {
 		if (!sgbTicsOutOfSync) {
 			sgbTicsOutOfSync = TRUE;
-			last_tick = SDL_GetTicks();
+			last_tick = SDL_GetTicks2();
 		}
 		sgbSyncCountdown = 4;
 		multi_msg_countdown();
@@ -121,7 +121,7 @@ static unsigned int nthread_handler(void *data)
 				break;
 			nthread_send_and_recv_turn(0, 0);
 			if (nthread_recv_turns(&received))
-				delta = last_tick - SDL_GetTicks();
+				delta = last_tick - SDL_GetTicks2();
 			else
 				delta = tick_delay;
 			sgMemCrit.Leave();
@@ -146,7 +146,7 @@ void nthread_start(BOOL set_turn_upper_bit)
 	DWORD largestMsgSize;
 	_SNETCAPS caps;
 
-	last_tick = SDL_GetTicks();
+	last_tick = SDL_GetTicks2();
 	sgbPacketCountdown = 1;
 	sgbSyncCountdown = 1;
 	sgbTicsOutOfSync = TRUE;
@@ -233,7 +233,7 @@ BOOL nthread_has_500ms_passed(BOOL unused)
 	if (timedemo)
 		return true;
 
-	currentTickCount = SDL_GetTicks();
+	currentTickCount = SDL_GetTicks2();
 	ticksElapsed = currentTickCount - last_tick;
 	if (gbMaxPlayers == 1 && ticksElapsed > tick_delay * 10) {
 		last_tick = currentTickCount;
