@@ -772,7 +772,7 @@ BOOL SVidPlayContinue(void)
 
 	double now = SDL_GetTicks() * 1000;
 	if (now < SVidFrameEnd) {
-		SDL_Delay((SVidFrameEnd - now) / 1000); // wait with next frame if the system is to fast
+		SDL_Delay((SVidFrameEnd - now) / 1000); // wait with next frame if the system is too fast
 	}
 
 	return SVidLoadNextFrame();
