@@ -2727,7 +2727,7 @@ void AddAcid(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, in
 		missile[mi]._mirange = 5 * (monster[id]._mint + 4);
 	else
 		missile[mi]._mirange = 1;
-	missile[mi]._mlid = -1;
+	missile[mi]._mlid = NO_LIGHT;
 	missile[mi]._miVar1 = sx;
 	missile[mi]._miVar2 = sy;
 	PutMissile(mi);
@@ -3384,7 +3384,7 @@ int AddMissile(int sx, int sy, int dx, int dy, int midir, int mitype, char micas
 	missile[mi]._midam = midam;
 	missile[mi]._miHitFlag = FALSE;
 	missile[mi]._midist = 0;
-	missile[mi]._mlid = -1;
+	missile[mi]._mlid = NO_LIGHT;
 	missile[mi]._mirnd = 0;
 
 	if (missiledata[mitype].mlSFX != -1) {

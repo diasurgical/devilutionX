@@ -8,6 +8,7 @@
 #define DMAXY					40
 
 #define LIGHTSIZE				6912 // 27 * 256
+#define NO_LIGHT				-1
 
 #define GMENU_SLIDER			0x40000000
 #define GMENU_ENABLED			0x80000000

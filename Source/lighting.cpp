@@ -1043,10 +1043,10 @@ int AddLight(int x, int y, int r)
 	int lid;
 
 	if (lightflag) {
-		return -1;
+		return NO_LIGHT;
 	}
 
-	lid = -1;
+	lid = NO_LIGHT;
 
 	if (numlights < MAXLIGHTS) {
 		lid = lightactive[numlights++];
@@ -1065,7 +1065,7 @@ int AddLight(int x, int y, int r)
 
 void AddUnLight(int i)
 {
-	if (lightflag || i == -1) {
+	if (lightflag || i == NO_LIGHT) {
 		return;
 	}
 
@@ -1075,7 +1075,7 @@ void AddUnLight(int i)
 
 void ChangeLightRadius(int i, int r)
 {
-	if (lightflag || i == -1) {
+	if (lightflag || i == NO_LIGHT) {
 		return;
 	}
 
@@ -1089,7 +1089,7 @@ void ChangeLightRadius(int i, int r)
 
 void ChangeLightXY(int i, int x, int y)
 {
-	if (lightflag || i == -1) {
+	if (lightflag || i == NO_LIGHT) {
 		return;
 	}
 
@@ -1104,7 +1104,7 @@ void ChangeLightXY(int i, int x, int y)
 
 void ChangeLightOff(int i, int x, int y)
 {
-	if (lightflag || i == -1) {
+	if (lightflag || i == NO_LIGHT) {
 		return;
 	}
 
@@ -1119,7 +1119,7 @@ void ChangeLightOff(int i, int x, int y)
 
 void ChangeLight(int i, int x, int y, int r)
 {
-	if (lightflag || i == -1) {
+	if (lightflag || i == NO_LIGHT) {
 		return;
 	}
 

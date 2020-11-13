@@ -602,7 +602,7 @@ typedef struct MonsterStruct { // note: missing field _mAFNum
 	unsigned char leader;
 	unsigned char leaderflag;
 	unsigned char packsize;
-	unsigned char mlid;
+	Sint8 mlid; // BUGFIX -1 is used when not emitting light this should be signed (fixed)
 	const char *mName;
 	CMonster *MType;
 	MonsterData *MData;

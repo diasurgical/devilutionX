@@ -501,7 +501,7 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 	monster[i]._mDelFlag = FALSE;
 	monster[i]._uniqtype = 0;
 	monster[i]._msquelch = 0;
-	monster[i].mlid = 0;
+	monster[i].mlid = NO_LIGHT; // BUGFIX monsters initial light id should be -1 (fixed)
 	monster[i]._mRndSeed = GetRndSeed();
 	monster[i]._mAISeed = GetRndSeed();
 	monster[i].mWhoHit = 0;
@@ -804,7 +804,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	Monst->mMagicRes = Uniq->mMagicRes;
 	Monst->mtalkmsg = Uniq->mtalkmsg;
 	if (uniqindex == UMT_HORKDMN)
-		Monst->mlid = 0;
+		Monst->mlid = NO_LIGHT; // BUGFIX monsters initial light id should be -1 (fixed)
 	else
 		Monst->mlid = AddLight(Monst->_mx, Monst->_my, 3);
 
