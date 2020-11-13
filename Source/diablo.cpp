@@ -59,7 +59,7 @@ BOOLEAN UseMultiTest;
 int sgnTimeoutCurs;
 char sgbMouseDown;
 int color_cycle_timer;
-int logicTick;
+int logicTick = 0;
 int ticks_per_sec = 20;
 WORD tick_delay = 50;
 
@@ -327,8 +327,6 @@ static void run_game_loop(unsigned int uMsg)
 	force_redraw = 255;
 	gbGameLoopStartup = TRUE;
 	nthread_ignore_mutex(FALSE);
-
-	logicTick = 0;
 
 	if (timedemo)
 		startTime = SDL_GetTicks();

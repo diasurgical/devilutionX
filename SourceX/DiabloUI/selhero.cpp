@@ -258,6 +258,9 @@ bool selhero_List_DeleteYesNo()
 
 void selhero_List_Select(int value)
 {
+	demo_message_queue.clear();
+	demo_message_queue_tmp.clear();
+	logicTick = 0;
 	if (static_cast<std::size_t>(value) == selhero_SaveCount) {
 		selhero_FreeDlgItems();
 
@@ -462,8 +465,8 @@ void selhero_Load_Select(int value)
 		SDL_Log("WATCH DEMO LOL");
 		loadDemoCharCopy = true;
 		setDemo = true;
-		//selhero_result = SELHERO_CONTINUE;
-		//return;
+		selhero_result = SELHERO_CONTINUE;
+		return;
 	}
 
 	selhero_result = 0;

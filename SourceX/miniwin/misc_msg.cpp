@@ -581,12 +581,19 @@ bool PeekMessage_Real(LPMSG lpMsg)
 
 void SaveDemoMessage(LPMSG lpMsg, int tick)
 {
+	if (lpMsg->message == 512)
+		return;
 	demoMsg msg;
 	msg.tick = tick;
 	msg.message = lpMsg->message;
 	msg.wParam = lpMsg->wParam;
 	msg.lParam = lpMsg->lParam;
 	demo_message_queue.push_back(msg);
+
+		std::ofstream myfile;
+	myfile.open("example.txt", std::ios::app);
+	myfile << "S: " << " " << tick << " " << lpMsg->message << " " << lpMsg->wParam << " " << lpMsg->lParam << "\n";
+	myfile.close();
 
 }
 
@@ -622,6 +629,11 @@ bool DemoMessage(LPMSG lpMsg, int tick)
 			lpMsg->wParam = dmsg.wParam;
 			demo_message_queue_tmp.pop_front();
 			processedDemoMsg = true;
+			std::ofstream myfile;
+			myfile.open("example.txt", std::ios::app);
+			myfile << "PROCESSED: "
+			       << " " << tick << " " << lpMsg->message << " " << lpMsg->wParam << " " << lpMsg->lParam << "\n";
+			myfile.close();
 			return true;
 		}
 	} else if (demo_message_queue_tmp.empty() && demoMode && processedDemoMsg) {

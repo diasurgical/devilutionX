@@ -13,6 +13,7 @@ static BOOL sgbIsWalking;
 
 void track_process()
 {
+	return;
 	if (!sgbIsWalking)
 	//if (!sgbIsWalking && (sgbMouseDown == 1 && (SDL_GetModState() & KMOD_SHIFT) == 0))
 		return;

@@ -484,10 +484,15 @@ void pfile_get_game_name(char *dst)
 {
 	// BUGFIX: function call with no purpose
 	pfile_get_save_num_from_name(plr[myplr]._pName);
-	if (saveDemoCharCopy || loadDemoCharCopy)
+	if (saveDemoCharCopy || loadDemoCharCopy) {
+		for (int i = 0; i < 15; i++)
+			SDL_Log("GAME NAME = DEMO");
 		strcpy(dst, "game2");
-	else
+	} else {
 		strcpy(dst, "game");
+		for (int i =0;i<15;i++)
+			SDL_Log("GAME NAME = NORMAL");
+	}
 }
 
 static BOOL GetPermSaveNames(DWORD dwIndex, char *szPerm)

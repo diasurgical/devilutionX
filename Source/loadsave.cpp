@@ -697,6 +697,7 @@ static bool IsHeaderValid(int magicNumber)
  */
 void LoadGame(BOOL firstflag)
 {
+	SDL_Log("LOAD GAME! %d" , firstflag);
 	int i, j;
 	DWORD dwLen;
 	char szName[MAX_PATH];
@@ -1611,8 +1612,8 @@ void SaveGame()
 	pfile_write_hero();
 	if (saveDemoCharCopy)
 		saveDemoCharCopy = false;
-
-	SaveDemo();
+	else
+		SaveDemo();
 }
 
 void SaveLevel()

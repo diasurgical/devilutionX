@@ -158,7 +158,7 @@ private:
 			SDL_Log(fmt_with_error.c_str(), args..., error_message);
 #ifdef _DEBUG
 		} else {
-			SDL_Log(fmt, args...);
+			//SDL_Log(fmt, args...);
 #endif
 		}
 		return !s_->fail();

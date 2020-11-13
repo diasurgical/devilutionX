@@ -135,6 +135,8 @@ void gamemenu_new_game(BOOL bActivate)
 		plr[i]._pInvincible = TRUE;
 	}
 
+	for (int j=0;j<15;j++)
+		SDL_Log("MENU NEW GAME!!!");
 	deathflag = FALSE;
 	force_redraw = 255;
 	scrollrt_draw_game_screen(TRUE);
