@@ -48,7 +48,7 @@ DWORD nthread_send_and_recv_turn(DWORD cur_turn, int turn_delta)
 {
 	DWORD new_cur_turn;
 	int turn, turn_tmp;
-	int curTurnsInTransit;
+	DWORD curTurnsInTransit;
 
 	new_cur_turn = cur_turn;
 	if (!SNetGetTurnsInTransit(&curTurnsInTransit)) {

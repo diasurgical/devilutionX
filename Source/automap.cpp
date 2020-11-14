@@ -72,7 +72,7 @@ void InitAutomap()
 	DWORD dwTiles;
 	int x, y;
 	BYTE *pAFile, *pTmp;
-	int i;
+	DWORD i;
 
 	memset(automaptype, 0, sizeof(automaptype));
 

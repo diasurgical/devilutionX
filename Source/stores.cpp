@@ -2428,37 +2428,37 @@ void HealerBuyItem()
 
 void S_BBuyEnter()
 {
-	BOOL done;
-	int i;
-
-	if (stextsel == 10) {
-		stextshold = STORE_BBOY;
-		stextvhold = stextsval;
-		stextlhold = 10;
-		int price = boyitem._iIvalue;
-		if (gbIsHellfire)
-			price -= boyitem._iIvalue >> 2;
-		else
-			price += boyitem._iIvalue >> 1;
-		if (plr[myplr]._pGold < price) {
-			StartStore(STORE_NOMONEY);
-		} else {
-			plr[myplr].HoldItem = boyitem;
-			plr[myplr].HoldItem._iIvalue = price;
-			SetCursor_(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
-			done = FALSE;
-			for (i = 0; i < NUM_INV_GRID_ELEM && !done; i++) {
-				done = AutoPlace(myplr, i, cursW / 28, cursH / 28, FALSE);
-			}
-			if (done)
-				StartStore(STORE_CONFIRM);
-			else
-				StartStore(STORE_NOROOM);
-			SetCursor_(CURSOR_HAND);
-		}
-	} else {
+	if (stextsel != 10) {
 		stextflag = STORE_NONE;
+		return;
 	}
+
+	stextshold = STORE_BBOY;
+	stextvhold = stextsval;
+	stextlhold = 10;
+	int price = boyitem._iIvalue;
+	if (gbIsHellfire)
+		price -= boyitem._iIvalue >> 2;
+	else
+		price += boyitem._iIvalue >> 1;
+
+	if (plr[myplr]._pGold < price) {
+		StartStore(STORE_NOMONEY);
+		return;
+	}
+
+	plr[myplr].HoldItem = boyitem;
+	plr[myplr].HoldItem._iIvalue = price;
+	SetCursor_(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
+
+	bool done = false;
+	for (int i = 0; i < NUM_INV_GRID_ELEM && !done; i++) {
+		done = AutoPlace(myplr, i, cursW / 28, cursH / 28, false);
+	}
+
+	StartStore(done ? STORE_CONFIRM : STORE_NOROOM);
+
+	SetCursor_(CURSOR_HAND);
 }
 
 void StoryIdItem()
