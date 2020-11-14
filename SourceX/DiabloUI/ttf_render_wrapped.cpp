@@ -1,8 +1,9 @@
 #include "DiabloUI/ttf_render_wrapped.h"
 
 #include <cstddef>
+#ifdef __3DS__
 #include <string.h>
-
+#endif
 namespace dvl {
 
 namespace {
@@ -41,7 +42,11 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 		int w, h;
 		char *spot, *tok, *next_tok, *end;
 		char delim;
+#ifdef __3DS__
 		size_t str_len = strlen(text);
+#else
+		size_t str_len = SDL_strlen(text);
+#endif
 
 		numLines = 0;
 
@@ -50,7 +55,11 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 			TTF_SetError("Out of memory");
 			return NULL;
 		}
+#ifdef __3DS__
 		memcpy(str, text, str_len + 1);
+#else
+		SDL_strlcpy(str, text, str_len + 1);
+#endif
 		tok = str;
 		end = str + str_len;
 		do {

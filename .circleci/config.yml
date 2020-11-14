@@ -76,7 +76,6 @@ jobs:
       - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake
       - run: cmake --build build -j $(nproc)
       - store_artifacts: {path: ./build/devilutionx.exe, destination: devilutionx_x86.exe}
-
   switch:
     docker:
       - image: devkitpro/devkita64:20200528
@@ -102,7 +101,6 @@ jobs:
       - run: PKG_CONFIG_PATH=/opt/m68k-amigaos/lib/pkgconfig/:/opt/m68k-amigaos/share/pkgconfig/ cmake -S. -Bbuild -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-s -ffast-math -O3 -noixemul -D__BIG_ENDIAN__ -D__AMIGA__ -fpermissive" ..
       - run: cd build && make -j$(nproc)
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_m68k}
-
   3ds:
     docker:
       - image: devkitpro/devkitarm:latest

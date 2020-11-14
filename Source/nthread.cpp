@@ -89,7 +89,7 @@ BOOL nthread_recv_turns(BOOL *pfSendAsync)
 		last_tick += tick_delay;
 		return TRUE;
 	}
-#if defined(__3DS__)
+#ifdef __3DS__
 	return FALSE;
 #else
 	if (!SNetReceiveTurns(0, MAX_PLRS, (char **)glpMsgTbl, gdwMsgLenTbl, (LPDWORD)player_state)) {

@@ -114,7 +114,7 @@ void CalculatePreferdWindowSize(int &width, int &height, bool useIntegerScaling)
 
 bool SpawnWindow(const char *lpWindowName)
 {
-#if defined(__3DS__)
+#ifdef __3DS__
 	if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) <= -1) {
 #else
 	if (SDL_Init(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) <= -1) {

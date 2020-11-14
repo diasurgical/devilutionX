@@ -695,7 +695,6 @@ readSymLink(const char *path)
 		retval = ptr;
 
 		rc = readlink(path, retval, len);
-
 		if (rc == -1) {
 			break; /* not a symlink, i/o error, etc. */
 		} else if (rc < len) {
@@ -757,7 +756,6 @@ inline char *SDL_GetBasePath()
 		}
 	}
 #endif
-
 #if defined(__3DS__)
 	retval = SDL_strdup("file:sdmc:/3ds/devilutionx/");
 	return retval;

@@ -324,9 +324,6 @@ if(NOT NONET)
 endif()
 
 set(BIN_TARGET devilutionx)
-if(HELLFIRE)
-  set(BIN_TARGET hellfire)
-endif()
 
 if(SWITCH)
   list(APPEND devilutionx_SRCS
@@ -340,6 +337,9 @@ if(N3DS)
   list(APPEND devilutionx_SRCS
     SourceX/platform/ctr/system.cpp
     SourceX/platform/ctr/keyboard.cpp)
+if(HELLFIRE)
+  set(BIN_TARGET hellfire)
+endif()
   set(BIN_TARGET ${BIN_TARGET}.elf)
 endif()
 

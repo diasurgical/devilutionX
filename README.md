@@ -188,7 +188,7 @@ sudo (dkp-)pacman -S devkitARM general-tools 3dstools devkitpro-pkgbuild-helpers
 - Download or compile [bannertool](https://github.com/Steveice10/bannertool/releases) and [makerom](https://github.com/jakcron/Project_CTR/releases)
   - Copy binaries to: `/opt/devkitpro/tools/bin/`
 
-### Compiling:
+### Compiling
 ```
 cd build
 cmake .. -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/3ds.cmake
