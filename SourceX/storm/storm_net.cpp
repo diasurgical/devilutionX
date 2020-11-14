@@ -143,7 +143,7 @@ BOOL SNetGetOwnerTurnsWaiting(DWORD *turns)
 	return dvlnet_inst->SNetGetOwnerTurnsWaiting(turns);
 }
 
-BOOL SNetGetTurnsInTransit(int *turns)
+BOOL SNetGetTurnsInTransit(DWORD *turns)
 {
 	return dvlnet_inst->SNetGetTurnsInTransit(turns);
 }

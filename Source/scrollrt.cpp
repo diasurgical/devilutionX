@@ -142,8 +142,9 @@ static void scrollrt_draw_cursor_back_buffer()
  */
 static void scrollrt_draw_cursor_item()
 {
-	int i, mx, my, col;
+	int i, mx, my;
 	BYTE *src, *dst;
+	BYTE col;
 
 	assert(!sgdwCursWdt);
 
@@ -1339,7 +1340,6 @@ static void DrawFPS()
 {
 	DWORD tc, frames;
 	char String[12];
-	HDC hdc;
 
 	if (frameflag && gbActive && pPanelText) {
 		frameend++;
@@ -1392,8 +1392,6 @@ static void DoBlitScreen(DWORD dwX, DWORD dwY, DWORD dwWdt, DWORD dwHgt)
 static void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BOOL draw_sbar, BOOL draw_btn)
 {
 	int ysize;
-	DWORD dwTicks;
-	BOOL retry;
 
 	ysize = dwHgt;
 

@@ -312,10 +312,11 @@ static void DeltaImportJunk(BYTE *src)
 	}
 }
 
-static int msg_comp_level(BYTE *buffer, BYTE *end)
+static DWORD msg_comp_level(BYTE *buffer, BYTE *end)
 {
-	int size = end - buffer - 1;
-	int pkSize = PkwareCompress(buffer + 1, size);
+	DWORD size = end - buffer - 1;
+	DWORD pkSize = PkwareCompress(buffer + 1, size);
+
 	*buffer = size != pkSize;
 
 	return pkSize + 1;

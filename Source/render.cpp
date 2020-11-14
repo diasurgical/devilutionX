@@ -579,7 +579,7 @@ RenderTile(BYTE *pBuff)
  */
 void world_draw_black_tile(int sx, int sy)
 {
-	int i, j, k;
+	int i, j;
 	BYTE *dst;
 
 	if (sx >= SCREEN_X + SCREEN_WIDTH || sy >= SCREEN_Y + VIEWPORT_HEIGHT + TILE_WIDTH / 2)

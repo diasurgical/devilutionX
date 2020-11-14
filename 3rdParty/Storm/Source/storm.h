@@ -109,7 +109,7 @@ SNetGetGameInfo(
 BOOL
 STORMAPI
 SNetGetTurnsInTransit(
-      int *turns);
+      DWORD *turns);
 
 // Network provider structures
 typedef struct _client_info

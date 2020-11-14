@@ -249,7 +249,7 @@ bool base::SNetGetOwnerTurnsWaiting(DWORD *turns)
 	return true;
 }
 
-bool base::SNetGetTurnsInTransit(int *turns)
+bool base::SNetGetTurnsInTransit(DWORD *turns)
 {
 	*turns = turn_queue[plr_self].size();
 	return true;

@@ -156,9 +156,8 @@ THEME_LOC themeLoc[MAXTHEMES];
 void FillSolidBlockTbls()
 {
 	BYTE bv;
-	DWORD dwTiles;
+	DWORD i, dwTiles;
 	BYTE *pSBFile, *pTmp;
-	int i;
 
 	memset(nBlockTable, 0, sizeof(nBlockTable));
 	memset(nSolidTable, 0, sizeof(nSolidTable));

@@ -616,7 +616,7 @@ void CelBlitWidth(BYTE *pBuff, int x, int y, int wdt, BYTE *pCelBuff, int nCel, 
  * @param nCel CEL frame number
  * @param nWidth Width of sprite
  */
-void CelBlitOutline(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
+void CelBlitOutline(BYTE col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	int nDataSize, w;
 	BYTE *src, *dst, *end;
@@ -1055,7 +1055,7 @@ static void Cl2BlitSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWi
  * @param nWidth Width of sprite
  * @param col Color index from current palette
  */
-static void Cl2BlitOutlineSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth, char col)
+static void Cl2BlitOutlineSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE col)
 {
 	int w;
 	char width;
@@ -1246,7 +1246,7 @@ void Cl2Draw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
  * @param nCel CL2 frame number
  * @param nWidth Width of sprite
  */
-void Cl2DrawOutline(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
+void Cl2DrawOutline(BYTE col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth)
 {
 	int nDataSize;
 	BYTE *pRLEBytes;
