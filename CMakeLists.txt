@@ -493,6 +493,9 @@ foreach(target devilution ${BIN_TARGET} SourceS)
       ${SDL_LIBRARY})
     target_compile_definitions(${target} PRIVATE USE_SDL1)
   else()
+    if(SDL2_mixerPC_VERSION VERSION_GREATER_EQUAL 2.0.2)
+      target_compile_definitions(${target} PRIVATE SDL2_MIXER_VERSION_AT_LEAST_2_0_2)
+    endif()
     target_link_libraries(${target} PRIVATE
       SDL2::SDL2main
       SDL2::SDL2_ttf

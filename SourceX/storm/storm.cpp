@@ -420,7 +420,24 @@ static bool HaveAudio()
 
 void SVidRestartMixer()
 {
-	if (Mix_OpenAudio(22050, AUDIO_S16LSB, 2, 1024) < 0) {
+	int audio_device = 0;
+	DvlIntSetting("audio device", &audio_device);
+#ifdef USE_SDL1
+	if (audio_device != 0) {
+		SDL_Log("Audio device other than default not supported with USE_SDL1");
+	}
+	int result = Mix_OpenAudio(22050, AUDIO_S16LSB, 2, 1024);
+#else
+#ifdef SDL2_MIXER_VERSION_AT_LEAST_2_0_2
+	int result = Mix_OpenAudioDevice(22050, AUDIO_S16LSB, 2, 1024, SDL_GetAudioDeviceName(audio_device, 0), SDL_AUDIO_ALLOW_ANY_CHANGE);
+#else
+	if (audio_device != 0) {
+		SDL_Log("Audio device other than default not supported with SDL2_MIXER version older than 2.0.2");
+	}
+	int result = Mix_OpenAudio(22050, AUDIO_S16LSB, 2, 1024);
+#endif
+#endif
+	if (result < 0) {
 		SDL_Log(Mix_GetError());
 	}
 	Mix_AllocateChannels(25);
@@ -559,7 +576,9 @@ void SVidPlayBegin(const char *filename, int a2, int a3, int a4, int a5, int fla
 		Mix_CloseAudio();
 
 #if SDL_VERSION_ATLEAST(2, 0, 4)
-		deviceId = SDL_OpenAudioDevice(NULL, 0, &audioFormat, NULL, 0);
+		int audio_device = 0;
+		DvlIntSetting("audio device", &audio_device);
+		deviceId = SDL_OpenAudioDevice(SDL_GetAudioDeviceName(audio_device, 0), 0, &audioFormat, NULL, 0);
 		if (deviceId == 0) {
 			ErrSdl();
 		}

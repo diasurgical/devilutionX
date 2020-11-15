@@ -6,6 +6,7 @@
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "stubs.h"
+#include "DiabloUI/diabloui.h"
 #include <SDL.h>
 #include <SDL_mixer.h>
 
@@ -165,7 +166,23 @@ void snd_init(HWND hWnd)
 	snd_get_volume("Music Volume", &sglMusicVolume);
 	gbMusicOn = sglMusicVolume > VOLUME_MIN;
 
+	int audio_device = 0;
+	DvlIntSetting("audio device", &audio_device);
+#ifdef USE_SDL1
+	if (audio_device != 0) {
+		SDL_Log("Audio device other than default not supported with USE_SDL1");
+	}
 	int result = Mix_OpenAudio(22050, AUDIO_S16LSB, 2, 1024);
+#else
+#ifdef SDL2_MIXER_VERSION_AT_LEAST_2_0_2
+	int result = Mix_OpenAudioDevice(22050, AUDIO_S16LSB, 2, 1024, SDL_GetAudioDeviceName(audio_device, 0), SDL_AUDIO_ALLOW_ANY_CHANGE);
+#else
+	if (audio_device != 0) {
+		SDL_Log("Audio device other than default not supported with SDL2_MIXER version older than 2.0.2");
+	}
+	int result = Mix_OpenAudio(22050, AUDIO_S16LSB, 2, 1024);
+#endif
+#endif
 	if (result < 0) {
 		SDL_Log(Mix_GetError());
 	}
