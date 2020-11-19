@@ -155,7 +155,8 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 		}
 	} else {
 		// The number of iterations is anyway limited by the size of the mask.
-		// So we can limit it my ANDing the mask with another mask that only keeps
+		// So we can limit it by ANDing the mask with another mask that only keeps
+
 		// iterations that are lower than n. We can now avoid testing if i < n
 		// at every loop iteration.
 		mask &= ((((DWORD)1) << n) - 1) << ((sizeof(DWORD) * CHAR_BIT) - n);
