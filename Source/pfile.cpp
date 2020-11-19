@@ -421,7 +421,13 @@ void pfile_read_player_from_save()
 	DWORD save_num;
 	PkPlayerStruct pkplr;
 
+	if (skipToGame) {
+		strcpy(gszHero, skipHeroName);
+		skipToGame = FALSE;
+	}
+
 	save_num = pfile_get_save_num_from_name(gszHero);
+	SDL_Log("SAVE NUM: %d %s", save_num, gszHero);
 	archive = pfile_open_save_archive(NULL, save_num);
 	if (archive == NULL)
 		app_fatal("Unable to open archive");

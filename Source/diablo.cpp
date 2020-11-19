@@ -48,6 +48,10 @@ int setseed;
 int debugmonsttypes;
 int PauseMode;
 bool forceSpawn;
+bool noFPSLimit;
+DWORD timeToExit = 0;
+bool skipToGame;
+char skipHeroName[64];
 #ifdef HELLFIRE
 BOOLEAN UseTheoQuest;
 BOOLEAN UseCowFarmer;
@@ -106,6 +110,11 @@ BOOL was_window_init = false;
 BOOL was_ui_init = false;
 BOOL was_snd_init = false;
 
+// printf doesn't work on windows - seems to be related to using SDL
+#if defined(_WIN32) || defined(_WIN64) || defined(WIN32)
+#define printf SDL_Log
+#endif
+
 static void print_help_and_exit()
 {
 	printf("Options:\n");
@@ -117,6 +126,9 @@ static void print_help_and_exit()
 	printf("    %-20s %-30s\n", "-f", "Display frames per second");
 	printf("    %-20s %-30s\n", "-x", "Run in windowed mode");
 	printf("    %-20s %-30s\n", "--spawn", "Force spawn mode even if diabdat.mpq is found");
+	printf("    %-20s %-30s\n", "--nofpslimit", "Disables FPS limit (use with vsync=0 in config.ini)");
+	printf("    %-20s %-30s\n", "-timer <#>", "Shuts the game down after # seconds");
+	printf("    %-20s %-30s\n", "--skipmenu <#>", "Skips intro and main menu and loads a hero named #");
 #ifdef HELLFIRE
 	printf("    %-20s %-30s\n", "--theoquest", "Enable the Theo quest");
 	printf("    %-20s %-30s\n", "--cowquest", "Enable the Cow quest");
@@ -164,6 +176,13 @@ static void diablo_parse_flags(int argc, char **argv)
 			fullscreen = FALSE;
 		} else if (strcasecmp("--spawn", argv[i]) == 0) {
 			forceSpawn = TRUE;
+		} else if (strcasecmp("--nofpslimit", argv[i]) == 0) {
+			noFPSLimit = TRUE;
+		} else if (strcasecmp("-timer", argv[i]) == 0) {
+			timeToExit = SDL_GetTicks() + SDL_atoi(argv[++i]) * 1000;
+		} else if (strcasecmp("--skipmenu", argv[i]) == 0) {
+			skipToGame = TRUE;
+			strcpy(skipHeroName, argv[++i]);
 #ifdef HELLFIRE
 		} else if (strcasecmp("--theoquest", argv[i]) == 0) {
 			UseTheoQuest = TRUE;
@@ -465,6 +484,9 @@ static void diablo_init()
 static void diablo_splash()
 {
 	if (!showintrodebug)
+		return;
+
+	if (skipToGame)
 		return;
 
 	play_movie("gendata\\logo.smk", TRUE);

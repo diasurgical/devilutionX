@@ -244,9 +244,14 @@ void LimitFrameRate()
 	uint32_t v = 0;
 	if (frameDeadline > tc) {
 		v = tc % refreshDelay;
-		SDL_Delay(v / 1000 + 1); // ceil
+		if (!noFPSLimit)
+			SDL_Delay(v / 1000 + 1); // ceil
 	}
 	frameDeadline = tc + v + refreshDelay;
+	if (timeToExit != 0){
+		if (SDL_GetTicks() >= timeToExit)
+			diablo_quit(0);
+	}
 }
 
 void RenderPresent()

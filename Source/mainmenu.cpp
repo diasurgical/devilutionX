@@ -84,6 +84,11 @@ void mainmenu_change_name(int arg1, int arg2, int arg3, int arg4, char *name_1, 
 		pfile_rename_hero(name_1, name_2);
 }
 
+BOOL Dummy_GetHeroInfo(_uiheroinfo *pInfo)
+{
+	return true;
+}
+
 BOOL mainmenu_select_hero_dialog(
     const _SNETPROGRAMDATA *client_info,
     const _SNETPLAYERDATA *user_info,
@@ -96,7 +101,10 @@ BOOL mainmenu_select_hero_dialog(
 {
 	BOOL hero_is_created = TRUE;
 	int dlgresult = 0;
-	if (gbMaxPlayers == 1) {
+	if (skipToGame) {
+		pfile_ui_set_hero_infos(Dummy_GetHeroInfo);
+		gbLoadGame = TRUE;
+	} else if (gbMaxPlayers == 1) {
 		if (!UiSelHeroSingDialog(
 		        pfile_ui_set_hero_infos,
 		        pfile_ui_save_create,
@@ -151,7 +159,9 @@ void mainmenu_loop()
 
 	do {
 		menu = 0;
-		if (!UiMainMenuDialog(gszProductName, &menu, effects_play_sound, 30))
+		if (skipToGame)
+			menu = MAINMENU_SINGLE_PLAYER;
+		else if (!UiMainMenuDialog(gszProductName, &menu, effects_play_sound, 30))
 			app_fatal("Unable to display mainmenu");
 
 		switch (menu) {

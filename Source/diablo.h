@@ -37,6 +37,10 @@ extern BOOL monstdebug;
 /** unused */
 extern int debugmonsttypes;
 extern int PauseMode;
+extern bool noFPSLimit;
+extern DWORD timeToExit;
+extern bool skipToGame;
+extern char skipHeroName[64];
 #ifdef HELLFIRE
 extern BOOLEAN UseTheoQuest;
 extern BOOLEAN UseCowFarmer;

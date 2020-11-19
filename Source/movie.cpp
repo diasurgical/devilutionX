@@ -21,6 +21,9 @@ BOOL loop_movie;
  */
 void play_movie(const char *pszMovie, BOOL user_can_close)
 {
+	if (skipToGame)
+		return;
+
 	HANDLE video_stream;
 
 	movie_playing = TRUE;
