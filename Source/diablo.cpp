@@ -110,11 +110,6 @@ BOOL was_window_init = false;
 BOOL was_ui_init = false;
 BOOL was_snd_init = false;
 
-// printf doesn't work on windows - seems to be related to using SDL
-#if defined(_WIN32) || defined(_WIN64) || defined(WIN32)
-#define printf SDL_Log
-#endif
-
 static void print_help_and_exit()
 {
 	printf("Options:\n");
