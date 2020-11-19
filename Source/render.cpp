@@ -133,10 +133,31 @@ static DWORD LeftFoliageMask[TILE_HEIGHT] = {
 	0xFFFFFFF0, 0xFFFFFFFC,
 };
 
+inline static int count_leading_zeros(DWORD mask) {
+	// Note: This assumes that the argument is not zero,
+	// which means there is at least one bit set.
+#if defined(__GNUC__) || defined(__clang__)
+	return __builtin_clz(mask);
+#else
+	int i;
+	for (i = 0; (mask & 0x80000000) == 0; i++, mask <<= 1);
+	return i;
+#endif
+}
+
+template <typename F>
+void foreach_set_bit(DWORD mask, const F& f) {
+	int i = 0;
+	while (mask != 0) {
+		int z = count_leading_zeros(mask);
+		i += z, mask <<= z;
+		for (; mask & 0x80000000; i++, mask <<= 1)
+			f(i);
+	}
+}
+
 inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD mask)
 {
-	int i;
-
 #ifdef NO_OVERDRAW
 	if (*dst < gpBufStart || *dst > gpBufEnd) {
 		goto skip;
@@ -149,40 +170,23 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 		} else if (light_table_index == 0) {
 			memcpy(*dst, *src, n);
 		} else {
-			for (i = 0; i < n; i++) {
+			for (int i = 0; i < n; i++) {
 				(*dst)[i] = tbl[(*src)[i]];
 			}
 		}
 	} else {
 		// The number of iterations is anyway limited by the size of the mask.
 		// So we can limit it by ANDing the mask with another mask that only keeps
-
 		// iterations that are lower than n. We can now avoid testing if i < n
 		// at every loop iteration.
 		mask &= ((((DWORD)1) << n) - 1) << ((sizeof(DWORD) * CHAR_BIT) - n);
 
-#if defined(__GNUC__) || defined(__clang__)
-#define SKIP_ZERO_BITS(i, mask) { int z = __builtin_clz(mask); i += z, mask <<= z; }
-#else
-#define SKIP_ZERO_BITS(i, mask) for (; (mask & 0x80000000) == 0; i++, mask <<= 1);
-#endif
-
-#define FOREACH_SET_BIT(i, mask, ...) \
-		{ \
-			i = 0; \
-			while (mask != 0) { \
-				SKIP_ZERO_BITS(i, mask) \
-				for (; mask & 0x80000000; i++, mask <<= 1) \
-					__VA_ARGS__ \
-			} \
-		}
-
 		if (light_table_index == lightmax) {
-			FOREACH_SET_BIT(i, mask, { (*dst)[i] = 0; })
+			foreach_set_bit(mask, [=] (int i) { (*dst)[i] = 0; });
 		} else if (light_table_index == 0) {
-			FOREACH_SET_BIT(i, mask, { (*dst)[i] = (*src)[i]; })
+			foreach_set_bit(mask, [=] (int i) { (*dst)[i] = (*src)[i]; });
 		} else {
-			FOREACH_SET_BIT(i, mask, { (*dst)[i] = tbl[(*src)[i]]; })
+			foreach_set_bit(mask, [=] (int i) { (*dst)[i] = tbl[(*src)[i]]; });
 		}
 	}
 
