@@ -139,48 +139,55 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 
 #ifdef NO_OVERDRAW
 	if (*dst < gpBufStart || *dst > gpBufEnd) {
-		*src += n;
-		*dst += n;
-		return;
+		goto skip;
 	}
 #endif
 
 	if (mask == 0xFFFFFFFF) {
 		if (light_table_index == lightmax) {
 			memset(*dst, 0, n);
-			(*src) += n;
-			(*dst) += n;
 		} else if (light_table_index == 0) {
 			memcpy(*dst, *src, n);
-			(*src) += n;
-			(*dst) += n;
 		} else {
-			for (i = 0; i < n; i++, (*src)++, (*dst)++) {
-				(*dst)[0] = tbl[(*src)[0]];
+			for (i = 0; i < n; i++) {
+				(*dst)[i] = tbl[(*src)[i]];
 			}
 		}
 	} else {
+		// The number of iterations is anyway limited by the size of the mask.
+		// So we can limit it my ANDing the mask with another mask that only keeps
+		// iterations that are lower than n. We can now avoid testing if i < n
+		// at every loop iteration.
+		mask &= ((((DWORD)1) << n) - 1) << ((sizeof(DWORD) * CHAR_BIT) - n);
+
+#if defined(__GNUC__) || defined(__clang__)
+#define SKIP_ZERO_BITS(i, mask) { int z = __builtin_clz(mask); i += z, mask <<= z; }
+#else
+#define SKIP_ZERO_BITS(i, mask) for (; (mask & 0x80000000) == 0; i++, mask <<= 1);
+#endif
+
+#define FOREACH_SET_BIT(i, mask, ...) \
+		{ \
+			i = 0; \
+			while (mask != 0) { \
+				SKIP_ZERO_BITS(i, mask) \
+				for (; mask & 0x80000000; i++, mask <<= 1) \
+					__VA_ARGS__ \
+			} \
+		}
+
 		if (light_table_index == lightmax) {
-			(*src) += n;
-			for (i = 0; i < n; i++, (*dst)++, mask <<= 1) {
-				if (mask & 0x80000000) {
-					(*dst)[0] = 0;
-				}
-			}
+			FOREACH_SET_BIT(i, mask, { (*dst)[i] = 0; })
 		} else if (light_table_index == 0) {
-			for (i = 0; i < n; i++, (*src)++, (*dst)++, mask <<= 1) {
-				if (mask & 0x80000000) {
-					(*dst)[0] = (*src)[0];
-				}
-			}
+			FOREACH_SET_BIT(i, mask, { (*dst)[i] = (*src)[i]; })
 		} else {
-			for (i = 0; i < n; i++, (*src)++, (*dst)++, mask <<= 1) {
-				if (mask & 0x80000000) {
-					(*dst)[0] = tbl[(*src)[0]];
-				}
-			}
+			FOREACH_SET_BIT(i, mask, { (*dst)[i] = tbl[(*src)[i]]; })
 		}
 	}
+
+skip:
+	(*src) += n;
+	(*dst) += n;
 }
 
 #if defined(__clang__) || defined(__GNUC__)
