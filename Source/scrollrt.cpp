@@ -774,8 +774,8 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy)
 			CelClippedBlitLightTrans(&gpBuffer[dx + BUFFER_WIDTH * dy], pSpecialCels, bArch, 64);
 		}
 	} else {
-		// Tree leafs should always cover player when entering or leaving the tile,
-		// So delay the rendering untill after the next row is being drawn.
+		// Tree leaves should always cover player when entering or leaving the tile,
+		// So delay the rendering until after the next row is being drawn.
 		// This could probably have been better solved by sprites in screen space.
 		if (sx > 0 && sy > 0 && dy > TILE_HEIGHT + SCREEN_Y) {
 			bArch = dSpecial[sx - 1][sy - 1];
