@@ -589,7 +589,7 @@ void AddPanelString(const char *str, BOOL just)
 	strcpy(panelstr[pnumlines], str);
 	pstrjust[pnumlines] = just;
 
-	if (pnumlines < 4)
+	if (pnumlines < 5)
 		pnumlines++;
 }
 
