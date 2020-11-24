@@ -113,6 +113,7 @@ static void print_help_and_exit()
 	printf("    %-20s %-30s\n", "--version", "Print the version and exit");
 	printf("    %-20s %-30s\n", "--data-dir", "Specify the folder of diabdat.mpq");
 	printf("    %-20s %-30s\n", "--save-dir", "Specify the folder of save files");
+	printf("    %-20s %-30s\n", "--config-dir", "Specify the location of diablo.ini");
 	printf("    %-20s %-30s\n", "-n", "Skip startup videos");
 	printf("    %-20s %-30s\n", "-f", "Display frames per second");
 	printf("    %-20s %-30s\n", "-x", "Run in windowed mode");
@@ -156,6 +157,8 @@ static void diablo_parse_flags(int argc, char **argv)
 			SetBasePath(argv[++i]);
 		} else if (strcasecmp("--save-dir", argv[i]) == 0) {
 			SetPrefPath(argv[++i]);
+		} else if (strcasecmp("--config-dir", argv[i]) == 0) {
+			SetConfigPath(argv[++i]);
 		} else if (strcasecmp("-n", argv[i]) == 0) {
 			showintrodebug = FALSE;
 		} else if (strcasecmp("-f", argv[i]) == 0) {
