@@ -30,16 +30,14 @@ void plrmsg_delay(BOOL delay)
 		pMsg->time += plrmsg_ticks;
 }
 
-char *ErrorPlrMsg(const char *pszMsg)
+void ErrorPlrMsg(const char *pszMsg)
 {
-	char *result;
 	_plrmsg *pMsg = &plr_msgs[plr_msg_slot];
 	plr_msg_slot = (plr_msg_slot + 1) & (PMSG_COUNT - 1);
 	pMsg->player = MAX_PLRS;
 	pMsg->time = SDL_GetTicks();
-	result = strncpy(pMsg->str, pszMsg, sizeof(pMsg->str));
+	strncpy(pMsg->str, pszMsg, sizeof(pMsg->str));
 	pMsg->str[sizeof(pMsg->str) - 1] = '\0';
-	return result;
 }
 
 size_t EventPlrMsg(const char *pszFmt, ...)

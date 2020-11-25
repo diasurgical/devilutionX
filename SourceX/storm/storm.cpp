@@ -288,7 +288,7 @@ bool getIniValue(const char *sectionName, const char *keyName, char *string, int
 	if (dataSize)
 		*dataSize = value.length();
 
-	if (string)
+	if (string != NULL)
 		strncpy(string, value.c_str(), stringSize);
 
 	return true;
@@ -777,10 +777,9 @@ void SErrSetLastError(DWORD dwErrCode)
 	nLastError = dwErrCode;
 }
 
-int SStrCopy(char *dest, const char *src, int max_length)
+void SStrCopy(char *dest, const char *src, int max_length)
 {
 	strncpy(dest, src, max_length);
-	return strlen(dest);
 }
 
 BOOL SFileSetBasePath(const char *path)
