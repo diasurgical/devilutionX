@@ -106,7 +106,7 @@ BOOL mainmenu_select_hero_dialog(
 		        pfile_delete_save,
 		        pfile_ui_set_class_stats,
 		        &dlgresult,
-		        gszHero,
+		        &gszHero,
 		        &gnDifficulty))
 			app_fatal("Unable to display SelHeroSing");
 		client_info->initdata->bDiff = gnDifficulty;
@@ -123,7 +123,7 @@ BOOL mainmenu_select_hero_dialog(
 	               pfile_ui_set_class_stats,
 	               &dlgresult,
 	               &hero_is_created,
-	               gszHero)) {
+	               &gszHero)) {
 		app_fatal("Can't load multiplayer dialog");
 	}
 	if (dlgresult == SELHERO_PREVIOUS) {

@@ -449,14 +449,14 @@ char connect_plrinfostr[128];
 char connect_categorystr[128];
 void UiSetupPlayerInfo(char *infostr, _uiheroinfo *pInfo, DWORD type)
 {
-	SStrCopy(connect_plrinfostr, infostr, 128);
+	SStrCopy(connect_plrinfostr, infostr, sizeof(connect_plrinfostr));
 	char format[32] = "";
-	strncpy(format, (char *)&type, 4);
-	strcat(format, " %d %d %d %d %d %d %d %d %d");
+	*(DWORD *)format = type;
+	strcpy(&format[sizeof(DWORD)], " %d %d %d %d %d %d %d %d %d");
 
 	snprintf(
 	    connect_categorystr,
-	    128,
+	    sizeof(connect_categorystr),
 	    format,
 	    pInfo->level,
 	    pInfo->heroclass,
@@ -557,15 +557,15 @@ BOOL UiArtCallback(int game_type, unsigned int art_code, SDL_Color *pPalette, BY
 	UNIMPLEMENTED();
 }
 
-BOOL UiCreatePlayerDescription(_uiheroinfo *info, DWORD mode, char *desc)
+BOOL UiCreatePlayerDescription(_uiheroinfo *info, DWORD mode, char (*desc)[128])
 {
 	char format[32] = "";
-	strncpy(format, (char *)&mode, 4);
-	strcat(format, " %d %d %d %d %d %d %d %d %d");
+	*(DWORD *)format = mode;
+	strcpy(&format[sizeof(DWORD)], " %d %d %d %d %d %d %d %d %d");
 
 	snprintf(
-	    desc,
-	    128,
+	    *desc,
+	    sizeof(*desc),
 	    format,
 	    info->level,
 	    info->heroclass,

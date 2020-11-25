@@ -202,7 +202,7 @@ BOOL pfile_create_player_description(char *dst, DWORD len)
 	UiSetupPlayerInfo(gszHero, &uihero, GAME_ID);
 
 	if (dst != NULL && len) {
-		if (UiCreatePlayerDescription(&uihero, GAME_ID, desc) == 0)
+		if (UiCreatePlayerDescription(&uihero, GAME_ID, &desc) == 0)
 			return FALSE;
 		SStrCopy(dst, desc, len);
 	}

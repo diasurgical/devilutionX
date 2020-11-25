@@ -463,13 +463,13 @@ BOOL SelHero_GetHeroInfo(_uiheroinfo *pInfo)
 	return true;
 }
 
-BOOL UiSelHeroDialog(
+static BOOL UiSelHeroDialog(
     BOOL (*fninfo)(BOOL (*fninfofunc)(_uiheroinfo *)),
     BOOL (*fncreate)(_uiheroinfo *),
     void (*fnstats)(unsigned int, _uidefaultstats *),
     BOOL (*fnremove)(_uiheroinfo *),
     int *dlgresult,
-    char *name)
+    char (*name)[16])
 {
 	bUIElementsLoaded = true;
 
@@ -517,7 +517,7 @@ BOOL UiSelHeroDialog(
 	} while (selhero_navigateYesNo);
 
 	*dlgresult = selhero_result;
-	strncpy(name, selhero_heroInfo.name, 16 - 1);
+	snprintf(*name, sizeof(*name), selhero_heroInfo.name);
 
 	UnloadScrollBar();
 	return true;
@@ -529,7 +529,7 @@ BOOL UiSelHeroSingDialog(
     BOOL (*fnremove)(_uiheroinfo *),
     void (*fnstats)(unsigned int, _uidefaultstats *),
     int *dlgresult,
-    char *name,
+    char (*name)[16],
     int *difficulty)
 {
 	selhero_isMultiPlayer = false;
@@ -545,7 +545,7 @@ BOOL UiSelHeroMultDialog(
     void (*fnstats)(unsigned int, _uidefaultstats *),
     int *dlgresult,
     BOOL *hero_is_created,
-    char *name)
+    char (*name)[16])
 {
 	selhero_isMultiPlayer = true;
 	return UiSelHeroDialog(fninfo, fncreate, fnstats, fnremove, dlgresult, name);
