@@ -128,7 +128,7 @@ bool SpawnWindow(const char *lpWindowName)
 	// Always try to initialize the first joystick.
 	Joystick::Add(0);
 #ifdef __SWITCH__
-	// TODO: Is this really needed on the Switch?
+	// TODO: There is a bug in SDL2 on Switch where it does not repport controllers on startup (Jan 1, 2020)
 	GameController::Add(0);
 #endif
 #endif
