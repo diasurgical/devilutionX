@@ -56,10 +56,9 @@ void ScaleJoystickAxes(float *x, float *y, float deadzone)
 }
 
 // SELECT + D-Pad to simulate right stick movement.
-bool SimulateRightStickWithDpad(const SDL_Event &event)
+bool SimulateRightStickWithDpad(const SDL_Event &event, ControllerButtonEvent ctrl_event)
 {
 	static bool simulating = false;
-	const ControllerButtonEvent ctrl_event = ToControllerButtonEvent(event);
 	if (ctrl_event.button == ControllerButton_BUTTON_BACK) {
 		if (ctrl_event.up && simulating) {
 			rightStickX = rightStickY = 0;
@@ -121,7 +120,7 @@ void ScaleJoysticks()
 } // namespace
 
 // Updates motion state for mouse and joystick sticks.
-bool ProcessControllerMotion(const SDL_Event &event)
+bool ProcessControllerMotion(const SDL_Event &event, ControllerButtonEvent ctrl_event)
 {
 #ifndef USE_SDL1
 	if (ProcessGameControllerAxisMotion(event)) {
@@ -137,7 +136,7 @@ bool ProcessControllerMotion(const SDL_Event &event)
 	if (ProcessKbCtrlAxisMotion(event))
 		return true;
 #endif
-	return SimulateRightStickWithDpad(event);
+	return SimulateRightStickWithDpad(event, ctrl_event);
 }
 
 } // namespace dvl

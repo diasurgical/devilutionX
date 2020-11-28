@@ -88,9 +88,8 @@ bool HandleStartAndSelect(const ControllerButtonEvent &ctrl_event, GameAction *a
 
 } // namespace
 
-bool GetGameAction(const SDL_Event &event, GameAction *action)
+bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrl_event, GameAction *action)
 {
-	const ControllerButtonEvent ctrl_event = ToControllerButtonEvent(event);
 	const bool in_game_menu = InGameMenu();
 
 	if (HandleStartAndSelect(ctrl_event, action))
