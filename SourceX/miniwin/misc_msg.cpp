@@ -337,10 +337,7 @@ bool PeekMessage(LPMSG lpMsg)
 		return true;
 	}
 
-	if (ProcessControllerMotion(e)) {
-		ScaleJoysticks();
-		return true;
-	}
+	if (ProcessControllerMotion(e)) return true;
 
 	GameAction action;
 	if (GetGameAction(e, &action)) {

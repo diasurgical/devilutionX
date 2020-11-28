@@ -12,7 +12,10 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+// Defined in SourceX/controls/plctrls.cpp
 extern bool sgbControllerActive;
+extern bool IsMovingMouseCursorWithController();
+
 extern int light_table_index;
 extern BYTE *gpBufStart;
 extern BYTE *gpBufEnd;
