@@ -38,7 +38,7 @@ void SaveDemo()
 		return;
 
 	DWORD size = demo_message_queue.size();
-	DWORD baseLen = size * sizeof(int) * 4 + sizeof(int) * 2;
+	DWORD baseLen = size * sizeof(int) * 4 + sizeof(int) * 3;
 	DWORD encodedLen = codec_get_encoded_len(baseLen);
 	BYTE *SaveBuff = DiabloAllocPtr(encodedLen);
 	SaveHelper q(SaveBuff);
@@ -50,8 +50,9 @@ void SaveDemo()
 	myfile.open("example.txt", std::ios::app);
 	myfile << "SAVING DEMO size: " << size << " - SAVING TICKS BETWEEN " << first.tick << " - " << last.tick << " : LOGICTICK : " << logicTick  << "\n";
 
-	SDL_Log("SAVING TICKS BETWEEN %d - %d  : LOGICTICK: %d", first.tick, last.tick, logicTick);
+	SDL_Log("SAVING TICKS BETWEEN %d - %d  : LOGICTICK: %d  LASTTICK: %d", first.tick, last.tick, logicTick, last_tick);
 
+	QOLCopyInts(&last_tick, 1, qolbuff);
 	QOLCopyInts(&logicTick, 1, qolbuff);
 	QOLCopyInts(&size, 1, qolbuff);
 	SDL_Log("SAVING DEMO SIZE: %d", size);
@@ -75,9 +76,10 @@ void LoadDemo()
 		demo_message_queue_tmp.clear();
 		SaveHelper q(LoadBuff);
 		DWORD size;
+		QOLCopyInts(qolbuff, 1, &last_tick);
 		QOLCopyInts(qolbuff, 1, &logicTick);
 		QOLCopyInts(qolbuff, 1, &size);
-		SDL_Log("LOADED DEMO SIZE: %d AND RESTORED LOGIC TICK %d", size, logicTick);
+		SDL_Log("LOADED DEMO SIZE: %d AND RESTORED LOGIC TICK %d AND LAST TICK %d", size, logicTick, last_tick);
 		if (demoMode) {
 			SDL_Log("RESETTING LOGICTICK TO 0 BECAUSE REPLAYING A DEMO!");
 			logicTick = 0;
@@ -107,7 +109,7 @@ void LoadDemo()
 
 int SDL_GetTicks2()
 {
-	return logicTick * 60;
+	return logicTick * tick_delay;
 	//return SDL_GetTicks();
 }
 

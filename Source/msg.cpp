@@ -121,7 +121,7 @@ static int msg_wait_for_turns()
 		nthread_send_and_recv_turn(0, 0);
 		if (!SNetGetOwnerTurnsWaiting(&turns) && SErrGetLastError() == STORM_ERROR_NOT_IN_GAME)
 			return 100;
-		if (SDL_GetTicks2() - sgdwOwnerWait <= 2000 && turns < gdwTurnsInTransit)
+		if (SDL_GetTicks() - sgdwOwnerWait <= 2000 && turns < gdwTurnsInTransit)
 			return 0;
 		sgbDeltaChunks++;
 	}
@@ -154,7 +154,7 @@ BOOL msg_wait_resync()
 	sgnCurrMegaPlayer = -1;
 	sgbRecvCmd = CMD_DLEVEL_END;
 	gbBufferMsgs = 1;
-	sgdwOwnerWait = SDL_GetTicks2();
+	sgdwOwnerWait = SDL_GetTicks();
 	success = UiProgressDialog("Waiting for game data...", 1, msg_wait_for_turns, 20);
 	gbBufferMsgs = 0;
 	if (!success) {
@@ -1112,7 +1112,7 @@ void NetSendCmdGItem2(BOOL usonly, BYTE bCmd, BYTE mast, BYTE pnum, TCmdGItem *p
 		return;
 	}
 
-	ticks = SDL_GetTicks2();
+	ticks = SDL_GetTicks();
 	if (!cmd.dwTime) {
 		cmd.dwTime = ticks;
 	} else if (ticks - cmd.dwTime > 5000) {
@@ -1136,7 +1136,7 @@ BOOL NetSendCmdReq2(BYTE bCmd, BYTE mast, BYTE pnum, TCmdGItem *p)
 	cmd.bPnum = pnum;
 	cmd.bMaster = mast;
 
-	ticks = SDL_GetTicks2();
+	ticks = SDL_GetTicks();
 	if (!cmd.dwTime) {
 		cmd.dwTime = ticks;
 	} else if (ticks - cmd.dwTime > 5000) {
@@ -1374,7 +1374,7 @@ static void msg_errorf(const char *pszFmt, ...)
 	va_list va;
 
 	va_start(va, pszFmt);
-	ticks = SDL_GetTicks2();
+	ticks = SDL_GetTicks();
 	if (ticks - msg_err_timer >= 5000) {
 		msg_err_timer = ticks;
 		vsprintf(msg, pszFmt, va);

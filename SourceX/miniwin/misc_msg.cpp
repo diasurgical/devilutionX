@@ -643,12 +643,12 @@ bool DemoMessage(LPMSG lpMsg, int tick)
 		processedDemoMsg = false;
 		//demo_message_queue.clear();
 		message_queue.clear();
-		//demoMode = false;
-		//timedemo = false;
-		lpMsg->message = DVL_WM_QUIT;
+		demoMode = false;
+		timedemo = false;
+		//lpMsg->message = DVL_WM_QUIT;
+		last_tick = SDL_GetTicks2();
 		return true;
 
-		last_tick = SDL_GetTicks2();
 		
 	}
 

@@ -183,7 +183,7 @@ void gamemenu_save_game(BOOL bActivate)
 		return;
 	}
 
-	if (plr[myplr]._pmode == PM_DEATH || deathflag || demoMode) {
+	if (plr[myplr]._pmode == PM_DEATH || deathflag) {
 		gamemenu_off();
 		return;
 	}
@@ -194,7 +194,8 @@ void gamemenu_save_game(BOOL bActivate)
 	InitDiabloMsg(EMSG_SAVING);
 	force_redraw = 255;
 	DrawAndBlit();
-	SaveGame();
+	if (!demoMode)
+		SaveGame();
 	ClrDiabloMsg();
 	force_redraw = 255;
 	SetCursor_(CURSOR_HAND);
