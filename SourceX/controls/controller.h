@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SDL.h>
+
 #include "controls/controller_buttons.h"
 
 namespace dvl {
@@ -15,6 +17,6 @@ ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event);
 
 bool IsControllerButtonPressed(ControllerButton button);
 
-void InitController();
+bool HandleControllerAddedOrRemovedEvent(const SDL_Event &event);
 
 } // namespace dvl

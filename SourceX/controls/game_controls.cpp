@@ -272,9 +272,10 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrl_event, Gam
 	}
 
 #ifndef USE_SDL1
-	// Ignore unhandled joystick events if gamepad is active.
-	// We receive the same events as gamepad events.
-	if (CurrentGameController() != NULL && event.type >= SDL_JOYAXISMOTION && event.type <= SDL_JOYBUTTONUP) {
+	// Ignore unhandled joystick events where a GameController is open for this joystick.
+	// This is because SDL sends both game controller and joystick events in this case.
+	const Joystick *const joystick = Joystick::Get(event);
+	if (joystick != NULL && GameController::Get(joystick->instance_id()) != NULL) {
 		return true;
 	}
 	if (event.type == SDL_CONTROLLERAXISMOTION) {
