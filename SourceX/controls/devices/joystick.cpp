@@ -1,12 +1,16 @@
 
 #include "controls/devices/joystick.h"
 
+#include <cstddef>
+
 #include "controls/controller_motion.h"
 #include "stubs.h"
 
 namespace dvl {
 
-ControllerButton JoyButtonToControllerButton(const SDL_Event &event)
+std::vector<Joystick> *const Joystick::joysticks_ = new std::vector<Joystick>;
+
+ControllerButton Joystick::ToControllerButton(const SDL_Event &event) const
 {
 	switch (event.type) {
 	case SDL_JOYBUTTONDOWN:
@@ -105,9 +109,7 @@ ControllerButton JoyButtonToControllerButton(const SDL_Event &event)
 	return ControllerButton_NONE;
 }
 
-namespace {
-
-int JoyButtonToControllerButton(ControllerButton button)
+int Joystick::ToSdlJoyButton(ControllerButton button) const
 {
 	if (button == ControllerButton_AXIS_TRIGGERLEFT || button == ControllerButton_AXIS_TRIGGERRIGHT)
 		UNIMPLEMENTED();
@@ -173,43 +175,41 @@ int JoyButtonToControllerButton(ControllerButton button)
 	}
 }
 
-bool IsJoystickHatButtonPressed(ControllerButton button)
+bool Joystick::IsHatButtonPressed(ControllerButton button) const
 {
 	switch (button) {
 #if defined(JOY_HAT_DPAD_UP_HAT) && defined(JOY_HAT_DPAD_UP)
 	case ControllerButton_BUTTON_DPAD_UP:
-		return (SDL_JoystickGetHat(CurrentJoystick(), JOY_HAT_DPAD_UP_HAT) & JOY_HAT_DPAD_UP) != 0;
+		return (SDL_JoystickGetHat(sdl_joystick_, JOY_HAT_DPAD_UP_HAT) & JOY_HAT_DPAD_UP) != 0;
 #endif
 #if defined(JOY_HAT_DPAD_DOWN_HAT) && defined(JOY_HAT_DPAD_DOWN)
 	case ControllerButton_BUTTON_DPAD_DOWN:
-		return (SDL_JoystickGetHat(CurrentJoystick(), JOY_HAT_DPAD_DOWN_HAT) & JOY_HAT_DPAD_DOWN) != 0;
+		return (SDL_JoystickGetHat(sdl_joystick_, JOY_HAT_DPAD_DOWN_HAT) & JOY_HAT_DPAD_DOWN) != 0;
 #endif
 #if defined(JOY_HAT_DPAD_LEFT_HAT) && defined(JOY_HAT_DPAD_LEFT)
 	case ControllerButton_BUTTON_DPAD_LEFT:
-		return (SDL_JoystickGetHat(CurrentJoystick(), JOY_HAT_DPAD_LEFT_HAT) & JOY_HAT_DPAD_LEFT) != 0;
+		return (SDL_JoystickGetHat(sdl_joystick_, JOY_HAT_DPAD_LEFT_HAT) & JOY_HAT_DPAD_LEFT) != 0;
 #endif
 #if defined(JOY_HAT_DPAD_RIGHT_HAT) && defined(JOY_HAT_DPAD_RIGHT)
 	case ControllerButton_BUTTON_DPAD_RIGHT:
-		return (SDL_JoystickGetHat(CurrentJoystick(), JOY_HAT_DPAD_RIGHT_HAT) & JOY_HAT_DPAD_RIGHT) != 0;
+		return (SDL_JoystickGetHat(sdl_joystick_, JOY_HAT_DPAD_RIGHT_HAT) & JOY_HAT_DPAD_RIGHT) != 0;
 #endif
 	default:
 		return false;
 	}
 }
 
-} // namespace
-
-bool IsJoystickButtonPressed(ControllerButton button)
+bool Joystick::IsPressed(ControllerButton button) const
 {
-	if (CurrentJoystick() == NULL)
+	if (sdl_joystick_ == NULL)
 		return false;
-	if (IsJoystickHatButtonPressed(button))
+	if (IsHatButtonPressed(button))
 		return true;
-	const int joy_button = JoyButtonToControllerButton(button);
-	return joy_button != -1 && SDL_JoystickGetButton(CurrentJoystick(), joy_button);
+	const int joy_button = ToSdlJoyButton(button);
+	return joy_button != -1 && SDL_JoystickGetButton(sdl_joystick_, joy_button);
 }
 
-bool ProcessJoystickAxisMotion(const SDL_Event &event)
+bool Joystick::ProcessAxisMotion(const SDL_Event &event)
 {
 	if (event.type != SDL_JOYAXISMOTION)
 		return false;
@@ -244,50 +244,92 @@ bool ProcessJoystickAxisMotion(const SDL_Event &event)
 	return true;
 }
 
-static SDL_Joystick *current_joystick = NULL;
-
-SDL_Joystick *CurrentJoystick()
+void Joystick::Add(int device_index)
 {
-	return current_joystick;
-}
-
-static int current_joystick_index = -1;
-
-int CurrentJoystickIndex()
-{
-	return current_joystick_index;
-}
-
-void InitJoystick()
-{
-#if HAS_KBCTRL == 1
-	sgbControllerActive = true;
-#endif
-
-	if (SDL_NumJoysticks() == 0) {
-		current_joystick_index = -1;
-#if HAS_KBCTRL == 0
-		sgbControllerActive = false;
-#endif
+	if (SDL_NumJoysticks() <= device_index)
+		return;
+	Joystick result;
+	SDL_Log("Adding joystick %d: %s", device_index,
+	    SDL_JoystickNameForIndex(device_index));
+	result.sdl_joystick_ = SDL_JoystickOpen(device_index);
+	if (result.sdl_joystick_ == NULL) {
+		SDL_Log(SDL_GetError());
+		SDL_ClearError();
 		return;
 	}
-
-	// Get the first available controller.
-	for (int i = 0; i < SDL_NumJoysticks(); ++i) {
 #ifndef USE_SDL1
-		if (!SDL_IsGameController(i))
-			continue;
+	result.instance_id_ = SDL_JoystickInstanceID(result.sdl_joystick_);
 #endif
-		SDL_Log("Initializing joystick %d: %s", i, SDL_JoystickNameForIndex(i));
-		current_joystick = SDL_JoystickOpen(i);
-		if (current_joystick == NULL) {
-			SDL_Log(SDL_GetError());
+	joysticks_->push_back(result);
+	sgbControllerActive = true;
+}
+
+void Joystick::Remove(SDL_JoystickID instance_id)
+{
+#ifndef USE_SDL1
+	SDL_Log("Removing joystick (instance id: %d)", instance_id);
+	for (std::size_t i = 0; i < joysticks_->size(); ++i) {
+		const Joystick &joystick = (*joysticks_)[i];
+		if (joystick.instance_id_ != instance_id)
 			continue;
-		}
-		current_joystick_index = i;
-		sgbControllerActive = true;
-		break;
+		joysticks_->erase(joysticks_->begin() + i);
+		sgbControllerActive = !joysticks_->empty();
+		return;
 	}
+	SDL_Log("Joystick not found with instance id: %d", instance_id);
+#endif
+}
+
+const std::vector<Joystick> &Joystick::All()
+{
+	return *joysticks_;
+}
+
+Joystick *Joystick::Get(SDL_JoystickID instance_id)
+{
+	for (std::size_t i = 0; i < joysticks_->size(); ++i) {
+		Joystick &joystick = (*joysticks_)[i];
+		if (joystick.instance_id_ == instance_id)
+			return &joystick;
+	}
+	return NULL;
+}
+
+Joystick *Joystick::Get(const SDL_Event &event)
+{
+	switch (event.type) {
+#ifndef USE_SDL1
+		case SDL_JOYAXISMOTION:
+			return Get(event.jaxis.which);
+		case SDL_JOYBALLMOTION:
+			return Get(event.jball.which);
+		case SDL_JOYHATMOTION:
+			return Get(event.jhat.which);
+		case SDL_JOYBUTTONDOWN:
+		case SDL_JOYBUTTONUP:
+			return Get(event.jbutton.which);
+			return Get(event.jbutton.which);
+		default:
+			return NULL;
+#else
+		case SDL_JOYAXISMOTION:
+		case SDL_JOYBALLMOTION:
+		case SDL_JOYHATMOTION:
+		case SDL_JOYBUTTONDOWN:
+		case SDL_JOYBUTTONUP:
+			return joysticks_->empty() ? NULL : &(*joysticks_)[0];
+		default:
+			return NULL;
+#endif
+	}
+}
+
+bool Joystick::IsPressedOnAnyJoystick(ControllerButton button)
+{
+	for (std::size_t i = 0; i < joysticks_->size(); ++i)
+		if ((*joysticks_)[i].IsPressed(button))
+			return true;
+	return false;
 }
 
 } // namespace dvl

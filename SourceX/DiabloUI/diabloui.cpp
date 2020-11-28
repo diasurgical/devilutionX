@@ -357,10 +357,7 @@ void UiHandleEvents(SDL_Event *event)
 		diablo_quit(0);
 
 #ifndef USE_SDL1
-	if (event->type == SDL_JOYDEVICEADDED || event->type == SDL_JOYDEVICEREMOVED) {
-		InitController();
-		return;
-	}
+	HandleControllerAddedOrRemovedEvent(*event);
 
 	if (event->type == SDL_WINDOWEVENT) {
 		if (event->window.event == SDL_WINDOWEVENT_SHOWN)

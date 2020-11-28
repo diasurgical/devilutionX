@@ -1,6 +1,8 @@
 #include "display.h"
 #include "DiabloUI/diabloui.h"
 #include "controls/controller.h"
+#include "controls/devices/game_controller.h"
+#include "controls/devices/joystick.h"
 
 #ifdef USE_SDL1
 #ifndef SDL1_VIDEO_MODE_BPP
@@ -121,8 +123,14 @@ bool SpawnWindow(const char *lpWindowName)
 #ifdef USE_SDL1
 	SDL_EnableUNICODE(1);
 #endif
-#if defined(USE_SDL1) || defined(__SWITCH__)
-	InitController();
+#ifdef USE_SDL1
+	// On SDL 1, there are no ADDED/REMOVED events.
+	// Always try to initialize the first joystick.
+	Joystick::Add(0);
+#ifdef __SWITCH__
+	// TODO: Is this really needed on the Switch?
+	GameController::Add(0);
+#endif
 #endif
 
 	int width = DEFAULT_WIDTH;
