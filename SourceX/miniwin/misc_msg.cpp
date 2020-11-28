@@ -337,10 +337,12 @@ bool PeekMessage(LPMSG lpMsg)
 		return true;
 	}
 
-	if (ProcessControllerMotion(e)) return true;
+	const ControllerButtonEvent ctrl_event = ToControllerButtonEvent(e);
+	if (ProcessControllerMotion(e, ctrl_event))
+		return true;
 
 	GameAction action;
-	if (GetGameAction(e, &action)) {
+	if (GetGameAction(e, ctrl_event, &action)) {
 		if (action.type != GameActionType_NONE) {
 			sgbControllerActive = true;
 

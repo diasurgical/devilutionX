@@ -1,6 +1,7 @@
 #pragma once
 
 #include "all.h"
+#include "controls/controller.h"
 
 namespace dvl {
 
@@ -65,7 +66,7 @@ struct GameAction {
 	};
 };
 
-bool GetGameAction(const SDL_Event &event, GameAction *action);
+bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrl_event, GameAction *action);
 
 enum MoveDirectionX {
 	MoveDirectionX_NONE = 0,
