@@ -963,6 +963,11 @@ bool IsAutomapActive()
 	return automapflag && leveltype != DTYPE_TOWN;
 }
 
+bool IsMovingMouseCursorWithController()
+{
+	return rightStickX != 0 || rightStickY != 0;
+}
+
 void HandleRightStickMotion()
 {
 	static RightStickAccumulator acc;
