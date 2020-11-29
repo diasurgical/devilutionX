@@ -3,7 +3,7 @@
 
 namespace dvl {
 
-void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
+void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette, int frame_height)
 {
 	if (art == NULL || art->surface != NULL)
 		return;
@@ -41,7 +41,10 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 
 	art->surface = art_surface;
 	art->logical_width = art_surface->w;
-	art->frame_height = height / frames;
+	if (frame_height == 0)
+		art->frame_height = height / frames;
+	else
+		art->frame_height = frame_height;
 
 	ScaleSurfaceToOutput(&art->surface);
 }

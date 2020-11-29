@@ -426,9 +426,9 @@ void LoadUiGFX()
 	LoadMaskedArt("ui_art\\focus42.pcx", &ArtFocus[FOCUS_BIG], 8);
 	LoadMaskedArt("ui_art\\cursor.pcx", &ArtCursor, 1, 0);
 #ifdef HELLFIRE
-	LoadArt("ui_art\\heros.pcx", &ArtHero, 6);
+	LoadArt("ui_art\\heros.pcx", &ArtHero, 6, NULL, 76);
 #else
-	LoadArt("ui_art\\heros.pcx", &ArtHero, 4);
+	LoadArt("ui_art\\heros.pcx", &ArtHero, 4, NULL, 76);
 #endif
 }
 
