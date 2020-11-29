@@ -2285,11 +2285,16 @@ void S_WitchEnter()
 	}
 }
 
-void WitchBuyItem()
+/**
+ * @brief Purchases an item from the witch and returns the index into the vendors inventory where the item was purchased from.
+ * @return A zero-based index into the vendor's inventory where the purchased item was.
+ */
+int WitchBuyItem()
 {
 	int idx;
 
 	idx = stextvhold + ((stextlhold - stextup) >> 2);
+	int purchasedItemIndex = idx;
 
 	if (idx < 3)
 		plr[myplr].HoldItem._iSeed = GetRndSeed();
@@ -2309,6 +2314,8 @@ void WitchBuyItem()
 	}
 
 	CalcPlrInv(myplr, TRUE);
+
+	return purchasedItemIndex;
 }
 
 void S_WBuyEnter()
@@ -2563,7 +2570,7 @@ void S_ConfirmEnter()
 			SmithRepairItem();
 			break;
 		case STORE_WBUY:
-			WitchBuyItem();
+			itemIndex = WitchBuyItem();
 			break;
 		case STORE_WRECHARGE:
 			WitchRechargeItem();
