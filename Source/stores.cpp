@@ -1962,7 +1962,11 @@ void TakePlrsMoney(int cost)
 	}
 }
 
-void SmithBuyItem()
+/**
+ * @brief Purchases an item from the smith and returns the index into the vendors inventory where the item was purchased from.
+ * @return A zero-based index into the vendor's inventory where the purchased item was.
+ */
+int SmithBuyItem()
 {
 	int idx;
 
@@ -1971,6 +1975,7 @@ void SmithBuyItem()
 		plr[myplr].HoldItem._iIdentified = FALSE;
 	StoreAutoPlace();
 	idx = stextvhold + ((stextlhold - stextup) >> 2);
+	int purchasedItemIndex = idx;
 	if (idx == SMITH_ITEMS - 1) {
 		smithitem[SMITH_ITEMS - 1]._itype = ITYPE_NONE;
 	} else {
@@ -1980,6 +1985,8 @@ void SmithBuyItem()
 		smithitem[idx]._itype = ITYPE_NONE;
 	}
 	CalcPlrInv(myplr, TRUE);
+
+	return purchasedItemIndex;
 }
 
 void S_SBuyEnter()
@@ -2014,7 +2021,11 @@ void S_SBuyEnter()
 	}
 }
 
-void SmithBuyPItem()
+/**
+ * @brief Purchases a premium item from the smith and returns the index into the vendors inventory where the item was purchased from.
+ * @return A zero-based index into the vendor's inventory where the purchased item was.
+ */
+int SmithBuyPItem()
 {
 	int i, xx, idx;
 
@@ -2024,6 +2035,7 @@ void SmithBuyPItem()
 	StoreAutoPlace();
 
 	idx = stextvhold + ((stextlhold - stextup) >> 2);
+	int purchasedItemIndex = idx;
 	xx = 0;
 	for (i = 0; idx >= 0; i++) {
 		if (premiumitem[i]._itype != ITYPE_NONE) {
@@ -2039,6 +2051,8 @@ void SmithBuyPItem()
 #else
 	SpawnPremium(plr[myplr]._pLevel);
 #endif
+
+	return purchasedItemIndex;
 }
 
 void S_SPBuyEnter()
@@ -2539,7 +2553,7 @@ void S_ConfirmEnter()
 		int itemIndex = 0;
 		switch (stextshold) {
 		case STORE_SBUY:
-			SmithBuyItem();
+			itemIndex = SmithBuyItem();
 			break;
 		case STORE_SSELL:
 		case STORE_WSELL:
@@ -2565,7 +2579,7 @@ void S_ConfirmEnter()
 			StartStore(STORE_IDSHOW);
 			return;
 		case STORE_SPBUY:
-			SmithBuyPItem();
+			itemIndex = SmithBuyPItem();
 			break;
 		}
 		StartStore(stextshold);
