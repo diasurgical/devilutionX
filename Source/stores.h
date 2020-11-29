@@ -44,7 +44,7 @@ void StartStore(char s);
 void DrawSText();
 void STextESC();
 void STextUp();
-void STextDown();
+void STextDown(bool playSound = true);
 void STextPrior();
 void STextNext();
 void SetGoldCurs(int pnum, int i);

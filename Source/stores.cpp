@@ -1776,9 +1776,12 @@ void STextUp()
 	}
 }
 
-void STextDown()
+void STextDown(bool playSound)
 {
-	PlaySFX(IS_TITLEMOV);
+	if (playSound) {
+		PlaySFX(IS_TITLEMOV);
+	}
+
 	if (stextsel == -1) {
 		return;
 	}
@@ -2420,7 +2423,11 @@ void BoyBuyItem()
 	CalcPlrInv(myplr, TRUE);
 }
 
-void HealerBuyItem()
+/**
+ * @brief Purchases an item from the healer and returns the index into the vendors inventory where the item was purchased from.
+ * @return A zero-based index into the vendor's inventory where the purchased item was.
+ */
+int HealerBuyItem()
 {
 	int idx;
 
@@ -2438,12 +2445,13 @@ void HealerBuyItem()
 		plr[myplr].HoldItem._iIdentified = FALSE;
 	StoreAutoPlace();
 
+	int purchasedItemIndex = idx;
 	if (gbMaxPlayers == 1) {
 		if (idx < 2)
-			return;
+			return purchasedItemIndex;
 	} else {
 		if (idx < 3)
-			return;
+			return purchasedItemIndex;
 	}
 	idx = stextvhold + ((stextlhold - stextup) >> 2);
 	if (idx == 19) {
@@ -2455,6 +2463,8 @@ void HealerBuyItem()
 		healitem[idx]._itype = ITYPE_NONE;
 	}
 	CalcPlrInv(myplr, TRUE);
+
+	return purchasedItemIndex;
 }
 
 void S_BBuyEnter()
@@ -2526,6 +2536,7 @@ void StoryIdItem()
 void S_ConfirmEnter()
 {
 	if (stextsel == 18) {
+		int itemIndex = 0;
 		switch (stextshold) {
 		case STORE_SBUY:
 			SmithBuyItem();
@@ -2547,7 +2558,7 @@ void S_ConfirmEnter()
 			BoyBuyItem();
 			break;
 		case STORE_HBUY:
-			HealerBuyItem();
+			itemIndex = HealerBuyItem();
 			break;
 		case STORE_SIDENTIFY:
 			StoryIdItem();
@@ -2558,6 +2569,9 @@ void S_ConfirmEnter()
 			break;
 		}
 		StartStore(stextshold);
+		for (int i = 0; i < itemIndex; i++) {
+			STextDown(false);
+		}
 	} else {
 		StartStore(stextshold);
 		stextsel = stextlhold;
