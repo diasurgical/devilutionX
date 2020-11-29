@@ -2387,7 +2387,12 @@ void S_WSellEnter()
 	}
 }
 
-void WitchRechargeItem()
+/**
+ * @brief Recharges an item in the player's inventory or body in the witch and returns the index into the vendors inventory where
+ * the item was recharged from.
+ * @return A zero-based index into the vendor's inventory where the recharged item was.
+ */
+int WitchRechargeItem()
 {
 	int i, idx;
 
@@ -2403,6 +2408,8 @@ void WitchRechargeItem()
 		plr[myplr].InvList[i]._iCharges = plr[myplr].InvList[i]._iMaxCharges;
 
 	CalcPlrInv(myplr, TRUE);
+
+	return idx;
 }
 
 void S_WRechargeEnter()
@@ -2587,7 +2594,7 @@ void S_ConfirmEnter()
 			itemIndex = WitchBuyItem();
 			break;
 		case STORE_WRECHARGE:
-			WitchRechargeItem();
+			itemIndex = WitchRechargeItem();
 			break;
 		case STORE_BBOY:
 			BoyBuyItem();
