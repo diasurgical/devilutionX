@@ -2153,11 +2153,16 @@ void PlaceStoreGold(int v)
 	}
 }
 
-void StoreSellItem()
+/**
+ * @brief Sells an item from the player's inventory or belt and returns the index into the vendors inventory where the item was sold from.
+ * @return A zero-based index into the vendor's inventory where the sold item was.
+ */
+int StoreSellItem()
 {
 	int i, idx, cost;
 
 	idx = stextvhold + ((stextlhold - stextup) >> 2);
+	int soldItemIndex = idx;
 	if (storehidx[idx] >= 0)
 		RemoveInvItem(myplr, storehidx[idx]);
 	else
@@ -2192,6 +2197,8 @@ void StoreSellItem()
 		}
 		PlaceStoreGold(cost);
 	}
+
+	return soldItemIndex;
 }
 
 void S_SSellEnter()
@@ -2564,7 +2571,7 @@ void S_ConfirmEnter()
 			break;
 		case STORE_SSELL:
 		case STORE_WSELL:
-			StoreSellItem();
+			itemIndex = StoreSellItem();
 			break;
 		case STORE_SREPAIR:
 			SmithRepairItem();
