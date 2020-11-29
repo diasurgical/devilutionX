@@ -2222,7 +2222,12 @@ void S_SSellEnter()
 	}
 }
 
-void SmithRepairItem()
+/**
+ * @brief Repairs an item in the player's inventory or body in the smith and returns the index into the vendors inventory where
+ * the item was repaired from.
+ * @return A zero-based index into the vendor's inventory where the repaired item was.
+ */
+int SmithRepairItem()
 {
 	int i, idx;
 
@@ -2244,6 +2249,8 @@ void SmithRepairItem()
 	} else {
 		plr[myplr].InvList[i]._iDurability = plr[myplr].InvList[i]._iMaxDur;
 	}
+
+	return idx;
 }
 
 void S_SRepairEnter()
@@ -2574,7 +2581,7 @@ void S_ConfirmEnter()
 			itemIndex = StoreSellItem();
 			break;
 		case STORE_SREPAIR:
-			SmithRepairItem();
+			itemIndex = SmithRepairItem();
 			break;
 		case STORE_WBUY:
 			itemIndex = WitchBuyItem();
