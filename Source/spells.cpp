@@ -139,21 +139,15 @@ bool IsReadiedSpellValid(const PlayerStruct &player)
  */
 void ClearReadiedSpell(PlayerStruct &player)
 {
-	bool needsRedraw = false;
-
 	int &readiedSpell = player._pRSpell;
 	if (readiedSpell != SPL_INVALID) {
 		readiedSpell = SPL_INVALID;
-		needsRedraw = true;
+		force_redraw = 255;
 	}
 
 	char &readiedSpellType = player._pRSplType;
 	if (readiedSpellType != RSPLTYPE_INVALID) {
 		readiedSpellType = RSPLTYPE_INVALID;
-		needsRedraw = true;
-	}
-
-	if (needsRedraw) {
 		force_redraw = 255;
 	}
 }
