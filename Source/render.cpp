@@ -134,14 +134,22 @@ static DWORD LeftFoliageMask[TILE_HEIGHT] = {
 };
 
 inline static int count_leading_zeros(DWORD mask) {
-	// Note: This assumes that the argument is not zero,
+	// Note: This function assumes that the argument is not zero,
 	// which means there is at least one bit set.
+	static_assert(
+		sizeof(DWORD) == sizeof(uint32_t),
+		"count_leading_zeros: DWORD must be 32bits");
 #if defined(__GNUC__) || defined(__clang__)
 	return __builtin_clz(mask);
 #else
-	int i;
-	for (i = 0; (mask & 0x80000000) == 0; i++, mask <<= 1);
-	return i;
+	// Count the number of leading zeros using binary search.
+	int n = 0;
+	if ((mask & 0xFFFF0000) == 0) n += 16, mask <<= 16;
+	if ((mask & 0xFF000000) == 0) n +=  8, mask <<=  8;
+	if ((mask & 0xF0000000) == 0) n +=  4, mask <<=  4;
+	if ((mask & 0xC0000000) == 0) n +=  2, mask <<=  2;
+	if ((mask & 0x80000000) == 0) n +=  1;
+	return n;
 #endif
 }
 
@@ -179,7 +187,8 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 		// So we can limit it by ANDing the mask with another mask that only keeps
 		// iterations that are lower than n. We can now avoid testing if i < n
 		// at every loop iteration.
-		mask &= ((((DWORD)1) << n) - 1) << ((sizeof(DWORD) * CHAR_BIT) - n);
+		assert(n != 0 && n <= sizeof(DWORD) * CHAR_BIT);
+		mask &= DWORD(-1) << ((sizeof(DWORD) * CHAR_BIT) - n);
 
 		if (light_table_index == lightmax) {
 			foreach_set_bit(mask, [=] (int i) { (*dst)[i] = 0; });
