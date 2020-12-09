@@ -179,7 +179,8 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 		// So we can limit it by ANDing the mask with another mask that only keeps
 		// iterations that are lower than n. We can now avoid testing if i < n
 		// at every loop iteration.
-		mask &= ((((DWORD)1) << n) - 1) << ((sizeof(DWORD) * CHAR_BIT) - n);
+		assert(n != 0 && n <= sizeof(DWORD) * CHAR_BIT);
+		k &= DWORD(-1) << ((sizeof(DWORD) * CHAR_BIT) - n);
 
 		if (light_table_index == lightmax) {
 			foreach_set_bit(mask, [=] (int i) { (*dst)[i] = 0; });
