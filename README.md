@@ -15,11 +15,7 @@ make
 # Multiplayer
  - Not supported yet
 
-# Controlls
-
-DevilutionX supports gamepad controls.
-
-Default controller mappings (A/B/X/Y as in Nintendo layout, so the rightmost button is attack; A ○, B ×, X △, Y □):
+# Controls
 
 - Left analog or D-Pad: move hero
 - ○: attack nearby enemies, talk to townspeople and merchants, pickup/place items in the inventory, OK while in main menu
