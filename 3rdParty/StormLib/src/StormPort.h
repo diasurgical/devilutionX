@@ -181,7 +181,9 @@
 
   #include <sys/types.h>
   #include <sys/stat.h>
+  #ifndef __vita__
   #include <sys/mman.h>
+  #endif
   #include <fcntl.h>
   #include <unistd.h>
   #include <stdint.h>
@@ -275,7 +277,7 @@
 #endif // !PLATFORM_WINDOWS
 
 // 64-bit calls are supplied by "normal" calls on Mac
-#if defined(PLATFORM_MAC) || defined(PLATFORM_HAIKU) || defined(PLATFORM_AMIGA) || defined(PLATFORM_SWITCH)
+#if defined(__vita__) || defined(PLATFORM_MAC) || defined(PLATFORM_HAIKU) || defined(PLATFORM_AMIGA) || defined(PLATFORM_SWITCH)
   #define stat64  stat
   #define fstat64 fstat
   #define lseek64 lseek
