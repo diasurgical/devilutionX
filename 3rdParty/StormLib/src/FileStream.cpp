@@ -18,6 +18,16 @@
 #include "StormCommon.h"
 #include "FileStream.h"
 
+#ifdef __vita__
+#include <psp2/rtc.h>
+#define mmap(ptr, size, c, d, e, f) malloc(size)
+#define munmap(ptr, size) free(ptr)
+#define PROT_READ 0
+#define MAP_PRIVATE 0
+#endif
+
+
+
 #ifdef _MSC_VER
 #pragma comment(lib, "wininet.lib")             // Internet functions for HTTP stream
 #pragma warning(disable: 4800)                  // 'BOOL' : forcing value to bool 'true' or 'false' (performance warning)

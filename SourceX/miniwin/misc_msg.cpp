@@ -260,7 +260,9 @@ WPARAM keystate_for_mouse(WPARAM ret)
 
 bool false_avail(const char *name, int value)
 {
+#ifndef __vita__
 	SDL_Log("Unhandled SDL event: %s %d", name, value);
+#endif
 	return true;
 }
 
