@@ -12,6 +12,12 @@
 #include <SDL.h>
 #include <config.h>
 
+
+#ifdef __vita__
+// increase default allowed heap size on Vita
+int _newlib_heap_size_user = 100 * 1024 * 1024;
+#endif
+
 DEVILUTION_BEGIN_NAMESPACE
 
 _SNETVERSIONDATA fileinfo;
@@ -48,7 +54,7 @@ HANDLE init_test_access(const char *mpq_name, const char *reg_loc, int dwPriorit
 	const std::string *paths[2] = { &GetBasePath(), &GetPrefPath() };
 	std::string mpq_abspath;
 	DWORD mpq_flags = 0;
-#if !defined(__SWITCH__) && !defined(__AMIGA__)
+#if !defined(__SWITCH__) && !defined(__AMIGA__) && !defined(__vita__)
 	mpq_flags |= MPQ_FLAG_READ_ONLY;
 #endif
 	for (int i = 0; i < 2; i++) {

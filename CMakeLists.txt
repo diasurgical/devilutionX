@@ -1,5 +1,14 @@
 cmake_minimum_required(VERSION 3.10) # CMP0083 NEW
 
+if(VITA)
+  if(DEFINED ENV{DOLCESDK})
+    set(CMAKE_TOOLCHAIN_FILE "$ENV{DOLCESDK}/share/dolce.toolchain.cmake" CACHE PATH "toolchain file")
+  else()
+    message(FATAL_ERROR "Please define DOLCESDK to point to your SDK path!")
+  endif()
+  include("$ENV{DOLCESDK}/share/dolce.cmake" REQUIRED)
+endif()
+
 include(CMake/out_of_tree.cmake)
 include(CMake/genex.cmake)
 
@@ -35,6 +44,9 @@ endif()
 if(NOT VERSION_NUM)
   include(CMake/git.cmake)
   get_git_tag(VERSION_NUM)
+  if (NOT "${VERSION_NUM}" STREQUAL "")
+    string(REGEX MATCH "([0-9]+\.[0-9]+\.[0-9]+)" VERSION_NUM ${VERSION_NUM} )
+  endif()
   get_git_commit_hash(GIT_COMMIT_HASH)
   if(NOT VERSION_SUFFIX)
     set(VERSION_SUFFIX "$<$<NOT:$<CONFIG:Release>>:-${GIT_COMMIT_HASH}>")
@@ -78,6 +90,10 @@ if(SWITCH)
   list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/switch")
   find_package(LIBNX REQUIRED)
   include(switch_defs)
+endif()
+
+if(VITA)
+  include(vita_defs)
 endif()
 
 set(TARGET_PLATFORM host CACHE STRING "Target platform")
@@ -518,6 +534,7 @@ foreach(target devilution ${BIN_TARGET} SourceS)
     target_compile_definitions(${target} PRIVATE USE_SDL1)
   else()
     target_link_libraries(${target} PRIVATE
+      SDL2::SDL2
       SDL2::SDL2main
       SDL2::SDL2_ttf
       SDL2::SDL2_mixer)
@@ -537,6 +554,44 @@ foreach(target devilution ${BIN_TARGET} SourceS)
     endif()
   endif()
 
+  if (VITA)
+    target_link_libraries(${target} PRIVATE
+          pib
+          SceDisplay_stub
+          SceCtrl_stub
+          SceAppMgr_stub
+          SceAudio_stub
+          SceSysmodule_stub
+          SceSharedFb_stub
+          SceDisplay_stub
+          SceDisplayUser_stub
+          SceCtrl_stub
+          SceAppMgr_stub
+          SceAppMgrUser_stub
+          SceAudio_stub
+          SceIofilemgr_stub
+          SceSysmodule_stub
+          SceGxm_stub
+          SceGxmInternalForVsh_stub
+          SceCommonDialog_stub
+          SceTouch_stub
+          SceHid_stub
+          SceMotion_stub
+          ScePower_stub
+          freetype
+          png
+          m
+          z
+          FLAC
+          vorbisfile
+          vorbis
+          ogg
+          mikmod
+          mpg123
+    )
+    target_compile_definitions(${target} PRIVATE VITA)
+  endif()
+
   if(N3DS)
     target_link_libraries(${target} PRIVATE ${TREMOR_LIBRARIES})
     target_include_directories(${target} PRIVATE ${TREMOR_INCLUDE_DIRS})
@@ -547,7 +602,7 @@ foreach(target devilution ${BIN_TARGET} SourceS)
   target_compile_definitions(${target} PRIVATE ${def_list})
 endforeach(target)
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT HAIKU)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT HAIKU AND NOT VITA)
   target_link_libraries(${BIN_TARGET} PUBLIC "$<$<NOT:$<CONFIG:Debug>>:-static-libgcc;-static-libstdc++>")
 endif()
 
@@ -642,6 +697,26 @@ if(SWITCH)
   set(APP_VERSION ${PROJECT_VERSION})
   include(nx-utils)
   build_switch_binaries(${BIN_TARGET})
+endif()
+
+if(VITA)
+  set(VITA_APP_NAME "devilutionX")
+  set(VITA_TITLEID  "DVLX00001")
+  set(VITA_VERSION  "01.00")
+  set(DOLCE_MKSFOEX_FLAGS "${DOLCE_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1")
+  set(DOLCE_MKSFOEX_FLAGS "${DOLCE_MKSFOEX_FLAGS} -d ATTRIBUTE2=12")
+  dolce_create_self(devilutionx.self devilutionx UNSAFE)
+  dolce_create_vpk(devilutionx.vpk ${VITA_TITLEID} devilutionx.self
+    VERSION ${VITA_VERSION}
+    NAME ${VITA_APP_NAME}
+    FILE Packaging/vita/sce_sys/icon0.png sce_sys/icon0.png
+    FILE Packaging/vita/sce_sys/pic0.png sce_sys/pic0.png
+    FILE Packaging/vita/sce_sys/livearea/contents/bg.png sce_sys/livearea/contents/bg.png
+    FILE Packaging/vita/sce_sys/livearea/contents/startup.png sce_sys/livearea/contents/startup.png
+    FILE Packaging/vita/sce_sys/livearea/contents/logo0.png sce_sys/livearea/contents/logo0.png
+    FILE Packaging/vita/sce_sys/livearea/contents/template.xml sce_sys/livearea/contents/template.xml
+    FILE Packaging/resources/CharisSILB.ttf CharisSILB.ttf
+  )
 endif()
 
 if(N3DS)
