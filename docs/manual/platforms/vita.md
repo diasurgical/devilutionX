@@ -39,16 +39,16 @@ make
 
 ## Options
 
-There's special vita section in diablo.ini file, that allows you to adjust controls:
+There's special section `controls` in diablo.ini file, that allows you to adjust controls:
 ```
-[vita]
-dpad_hotkeys=0
+[controls]
 switch_potions_and_clicks=0
-back_touch=0
-gamepad_mapping=y:b0,b:b1,a:b2,x:b3,leftshoulder:b4,rightshoulder:b5,dpdown:b6,dpleft:b7,dpup:b8,dpright:b9,back:b10,start:b11,leftx:a0,lefty:a1,rightx:a2,righty:a3,
+dpad_hotkeys=0
+enable_second_touchscreen=1
+sdl2_controller_mapping=50535669746120436f6e74726f6c6c65,PSVita Controller,y:b0,b:b1,a:b2,x:b3,leftshoulder:b4,rightshoulder:b5,dpdown:b6,dpleft:b7,dpup:b8,dpright:b9,back:b10,start:b11,leftx:a0,lefty:a1,rightx:a2,righty:a3,
 ```
 
 - **dpad_hotkeys:** dpad works as hotkeys without holding Start button
 - **switch_potions_and_clicks:** L1/R1 works as left/right mouse clicks by debault, and as health/mana potion while holding Select
-- **gamepad_mapping:** allows you to remap controls. It uses https://github.com/gabomdq/SDL_GameControllerDB syntax (but without controller GUID/Name)
-- **back_touch:** enable/disable back touch mapping to L2/R2
+- **sdl2_controller_mapping:** allows you to remap controls. It uses https://github.com/gabomdq/SDL_GameControllerDB syntax
+- **enable_second_touchscreen:** enable/disable back touch mapping to L2/R2
