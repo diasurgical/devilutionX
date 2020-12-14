@@ -2,6 +2,9 @@
 
 #include <cstdint>
 
+#ifdef __vita__
+#include "../3rdParty/Storm/Source/storm.h"
+#endif
 #include "controls/controller.h"
 #include "controls/controller_motion.h"
 #include "controls/devices/game_controller.h"
@@ -98,14 +101,22 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrl_event, Gam
 	if (!in_game_menu) {
 		switch (ctrl_event.button) {
 		case ControllerButton_BUTTON_LEFTSHOULDER:
+#ifdef __vita__
+			if ((select_modifier_active && !getIniBool("vita","switch_potions_and_clicks")) || (getIniBool("vita","switch_potions_and_clicks") && !select_modifier_active) ) {
+#else
 			if (select_modifier_active) {
+#endif
 				if (!IsAutomapActive())
 					*action = GameActionSendMouseClick{ GameActionSendMouseClick::LEFT, ctrl_event.up };
 				return true;
 			}
 			break;
 		case ControllerButton_BUTTON_RIGHTSHOULDER:
+#ifdef __vita__
+			if ((select_modifier_active && !getIniBool("vita","switch_potions_and_clicks")) || (getIniBool("vita","switch_potions_and_clicks") && !select_modifier_active) ) {
+#else
 			if (select_modifier_active) {
+#endif
 				if (!IsAutomapActive())
 					*action = GameActionSendMouseClick{ GameActionSendMouseClick::RIGHT, ctrl_event.up };
 				return true;
@@ -142,6 +153,28 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrl_event, Gam
 		default:
 			break;
 		}
+#ifdef __vita__
+		if (getIniBool("vita","dpad_hotkeys")) {
+			switch (ctrl_event.button) {
+			case ControllerButton_BUTTON_DPAD_UP:
+				*action = GameActionSendKey{ DVL_VK_ESCAPE, ctrl_event.up };
+				return true;
+			case ControllerButton_BUTTON_DPAD_RIGHT:
+				if (!ctrl_event.up)
+					*action = GameAction(GameActionType_TOGGLE_INVENTORY);
+				return true;
+			case ControllerButton_BUTTON_DPAD_DOWN:
+				*action = GameActionSendKey{ DVL_VK_TAB, ctrl_event.up };
+				return true;
+			case ControllerButton_BUTTON_DPAD_LEFT:
+				if (!ctrl_event.up)
+					*action = GameAction(GameActionType_TOGGLE_CHARACTER_INFO);
+				return true;
+			default:
+				break;
+			}
+		}
+#endif
 		if (start_modifier_active) {
 			switch (ctrl_event.button) {
 			case ControllerButton_BUTTON_DPAD_UP:
@@ -290,8 +323,24 @@ MoveDirection GetMoveDirection()
 {
 	const float stickX = leftStickX;
 	const float stickY = leftStickY;
+
 	MoveDirection result{ MoveDirectionX_NONE, MoveDirectionY_NONE };
 
+#ifdef __vita__
+	const bool hotkeys = getIniBool("vita","dpad_hotkeys");
+
+	if (stickY >= 0.5 || (!hotkeys && IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_UP))) {
+		result.y = MoveDirectionY_UP;
+	} else if (stickY <= -0.5 || (!hotkeys && IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_DOWN))) {
+		result.y = MoveDirectionY_DOWN;
+	}
+
+	if (stickX <= -0.5 || (!hotkeys && IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_LEFT))) {
+		result.x = MoveDirectionX_LEFT;
+	} else if (stickX >= 0.5 || (!hotkeys && IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_RIGHT))) {
+		result.x = MoveDirectionX_RIGHT;
+	}
+#else
 	if (stickY >= 0.5 || IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_UP)) {
 		result.y = MoveDirectionY_UP;
 	} else if (stickY <= -0.5 || IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_DOWN)) {
@@ -303,6 +352,7 @@ MoveDirection GetMoveDirection()
 	} else if (stickX >= 0.5 || IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_RIGHT)) {
 		result.x = MoveDirectionX_RIGHT;
 	}
+#endif
 
 	return result;
 }
