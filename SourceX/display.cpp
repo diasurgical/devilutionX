@@ -116,6 +116,7 @@ void CalculatePreferdWindowSize(int &width, int &height, bool useIntegerScaling)
 
 bool SpawnWindow(const char *lpWindowName)
 {
+	SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
 	if (SDL_Init(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) <= -1) {
 		ErrSdl();
 	}
