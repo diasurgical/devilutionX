@@ -116,11 +116,15 @@ void CalculatePreferdWindowSize(int &width, int &height, bool useIntegerScaling)
 
 bool SpawnWindow(const char *lpWindowName)
 {
-#ifdef __3DS__
-	if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) <= -1) {
-#else
-	if (SDL_Init(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) <= -1) {
+#if SDL_VERSION_ATLEAST(2,0,6)
+	SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
 #endif
+
+	int initFlags = SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC;
+#ifdef __3DS__
+	initFlags = SDL_INIT_TIMER | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK;
+#endif
+	if (SDL_Init(initFlags) <= -1) {
 		ErrSdl();
 	}
 
