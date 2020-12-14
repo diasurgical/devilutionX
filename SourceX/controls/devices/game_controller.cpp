@@ -4,6 +4,9 @@
 
 #include <cstddef>
 
+#ifdef __vita__
+#include "../3rdParty/Storm/Source/storm.h"
+#endif
 #include "controls/controller_motion.h"
 #include "controls/devices/joystick.h"
 #include "stubs.h"
@@ -150,6 +153,19 @@ bool GameController::ProcessAxisMotion(const SDL_Event &event)
 
 void GameController::Add(int joystick_index)
 {
+#ifdef __vita__
+    char mapping[256];
+    char full_mapping[1024];
+    memset(mapping, 0, 256);
+    memset(full_mapping, 0, 1024);
+    getIniValue("vita","gamepad_mapping", mapping, 256);
+    if (mapping[0] != '\0') {
+        strncat(full_mapping, "50535669746120436f6e74726f6c6c65,PSVita Controller,", 1023);
+        strncat(full_mapping, mapping, 1023);
+        SDL_Log("Adding custom mapping: %s", full_mapping);
+        SDL_GameControllerAddMapping(full_mapping);
+    }
+#endif
 	SDL_Log("Opening game controller for joystick at index %d", joystick_index);
 	GameController result;
 	result.sdl_game_controller_ = SDL_GameControllerOpen(joystick_index);
