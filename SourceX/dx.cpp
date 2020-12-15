@@ -266,6 +266,7 @@ void RenderPresent()
 		}
 
 		// Clear buffer to avoid artifacts in case the window was resized
+#ifndef __vita__
 		if (SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255) <= -1) { // TODO only do this if window was resized
 			ErrSdl();
 		}
@@ -273,7 +274,7 @@ void RenderPresent()
 		if (SDL_RenderClear(renderer) <= -1) {
 			ErrSdl();
 		}
-
+#endif
 		if (SDL_RenderCopy(renderer, texture, NULL, NULL) <= -1) {
 			ErrSdl();
 		}

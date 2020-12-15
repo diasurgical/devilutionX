@@ -4,6 +4,11 @@
 #include "controls/devices/game_controller.h"
 #include "controls/devices/joystick.h"
 
+#ifdef __vita__
+#include <psp2/power.h>
+#endif
+
+
 #ifdef USE_SDL1
 #ifndef SDL1_VIDEO_MODE_BPP
 #define SDL1_VIDEO_MODE_BPP 0
@@ -116,6 +121,11 @@ void CalculatePreferdWindowSize(int &width, int &height, bool useIntegerScaling)
 
 bool SpawnWindow(const char *lpWindowName)
 {
+
+#ifdef __vita__
+scePowerSetArmClockFrequency(444);
+#endif
+
 	SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
 	if (SDL_Init(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) <= -1) {
 		ErrSdl();
@@ -135,9 +145,11 @@ bool SpawnWindow(const char *lpWindowName)
 #endif
 
 	int width = DEFAULT_WIDTH;
-	DvlIntSetting("width", &width);
 	int height = DEFAULT_HEIGHT;
+#ifndef __vita__
+	DvlIntSetting("width", &width);
 	DvlIntSetting("height", &height);
+#endif
 	BOOL integerScalingEnabled = false;
 	DvlIntSetting("integer scaling", &integerScalingEnabled);
 
@@ -147,8 +159,12 @@ bool SpawnWindow(const char *lpWindowName)
 	int grabInput = 0;
 	DvlIntSetting("grab input", &grabInput);
 
+#ifdef __vita__
+	BOOL upscale = false;
+#else
 	BOOL upscale = true;
 	DvlIntSetting("upscale", &upscale);
+#endif
 	BOOL oar = false;
 	DvlIntSetting("original aspect ratio", &oar);
 
@@ -179,6 +195,9 @@ bool SpawnWindow(const char *lpWindowName)
 		DvlStringSetting("scaling quality", scaleQuality, 2);
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, scaleQuality);
 	} else if (fullscreen) {
+#ifdef __vita__
+		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, 0);
+#endif
 		flags |= SDL_WINDOW_FULLSCREEN;
 	}
 
@@ -207,7 +226,9 @@ bool SpawnWindow(const char *lpWindowName)
 		Uint32 rendererFlags = SDL_RENDERER_ACCELERATED;
 
 		vsyncEnabled = 1;
+#ifndef __vita__
 		DvlIntSetting("vsync", &vsyncEnabled);
+#endif
 		if (vsyncEnabled) {
 			rendererFlags |= SDL_RENDERER_PRESENTVSYNC;
 		}
