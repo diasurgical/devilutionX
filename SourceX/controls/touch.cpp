@@ -4,6 +4,11 @@
 #include "../../defs.h"
 #include <math.h>
 
+#ifdef __vita__
+#include "../3rdParty/Storm/Source/storm.h"
+static bool back_touch = false;
+#endif
+
 static int visible_width;
 static int visible_height;
 static int x_borderwidth;
@@ -88,6 +93,9 @@ static void init_touch(void)
 	visible_width = (current.h * SCREEN_WIDTH) / SCREEN_HEIGHT;
 	x_borderwidth = (current.w - visible_width) / 2;
 	y_borderwidth = (current.h - visible_height) / 2;
+#ifdef __vita__
+	back_touch = dvl::getIniBool("vita","back_touch", true);
+#endif
 }
 
 static void preprocess_events(SDL_Event *event)
@@ -106,13 +114,15 @@ static void preprocess_events(SDL_Event *event)
 	SDL_TouchID port = event->tfinger.touchId;
 	if (port != 0) {
 #ifdef __vita__
-		switch (event->type) {
-			case SDL_FINGERDOWN:
-			preprocess_back_finger_down(event);
-			break;
-		case SDL_FINGERUP:
-			preprocess_back_finger_up(event);
-			break;
+		if(back_touch) {
+			switch (event->type) {
+				case SDL_FINGERDOWN:
+				preprocess_back_finger_down(event);
+				break;
+			case SDL_FINGERUP:
+				preprocess_back_finger_up(event);
+				break;
+			}
 		}
 #endif
 		return;
@@ -176,8 +186,6 @@ static void preprocess_back_finger_down(SDL_Event *event)
 {
 	// front (0) or back (1) panel
 	SDL_TouchID port = event->tfinger.touchId;
-	// id (for multitouch)
-	SDL_FingerID id = event->tfinger.fingerId;
 
 	if (port != 1) return;
 
@@ -195,8 +203,6 @@ static void preprocess_back_finger_up(SDL_Event *event)
 {
 	// front (0) or back (1) panel
 	SDL_TouchID port = event->tfinger.touchId;
-	// id (for multitouch)
-	SDL_FingerID id = event->tfinger.fingerId;
 
 	if (port != 1) return;
 

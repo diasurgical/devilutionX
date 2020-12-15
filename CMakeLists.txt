@@ -522,6 +522,7 @@ foreach(target devilution ${BIN_TARGET} SourceS)
           SceTouch_stub
           SceHid_stub
           SceMotion_stub
+          ScePower_stub
           freetype
           png
           m
