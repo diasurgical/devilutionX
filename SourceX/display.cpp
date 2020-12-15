@@ -4,6 +4,11 @@
 #include "controls/devices/game_controller.h"
 #include "controls/devices/joystick.h"
 
+#ifdef __vita__
+#include <psp2/power.h>
+#endif
+
+
 #ifdef USE_SDL1
 #ifndef SDL1_VIDEO_MODE_BPP
 #define SDL1_VIDEO_MODE_BPP 0
@@ -116,6 +121,10 @@ void CalculatePreferdWindowSize(int &width, int &height, bool useIntegerScaling)
 
 bool SpawnWindow(const char *lpWindowName)
 {
+#ifdef __vita__
+scePowerSetArmClockFrequency(444);
+#endif
+
 #if SDL_VERSION_ATLEAST(2,0,6)
 	SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
 #endif
@@ -142,9 +151,11 @@ bool SpawnWindow(const char *lpWindowName)
 #endif
 
 	int width = DEFAULT_WIDTH;
-	DvlIntSetting("width", &width);
 	int height = DEFAULT_HEIGHT;
+#ifndef __vita__
+	DvlIntSetting("width", &width);
 	DvlIntSetting("height", &height);
+#endif
 	BOOL integerScalingEnabled = false;
 	DvlIntSetting("integer scaling", &integerScalingEnabled);
 
@@ -154,8 +165,12 @@ bool SpawnWindow(const char *lpWindowName)
 	int grabInput = 0;
 	DvlIntSetting("grab input", &grabInput);
 
+#ifdef __vita__
+	BOOL upscale = false;
+#else
 	BOOL upscale = true;
 	DvlIntSetting("upscale", &upscale);
+#endif
 	BOOL oar = false;
 	DvlIntSetting("original aspect ratio", &oar);
 
