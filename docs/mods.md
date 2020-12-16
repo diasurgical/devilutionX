@@ -23,6 +23,7 @@ Repo: https://github.com/MrHuu/devilutionX-3ds
 ## PSP Vita
 
 Repo: https://github.com/gokuhs/devilutionX
+Repo: https://github.com/isage/devilutionX (updated 2020)
 
 ## Android
 
