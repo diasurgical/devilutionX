@@ -33,9 +33,7 @@ DWORD sgdwCursHgt;
 DWORD level_cel_block;
 DWORD sgdwCursXOld;
 DWORD sgdwCursYOld;
-#ifdef HELLFIRE
 BOOLEAN AutoMapShowItems;
-#endif
 /**
  * Specifies the type of arches to render.
  */
@@ -375,7 +373,7 @@ static void DrawPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, i
 {
 	int l, frames;
 
-	if (dFlags[x][y] & BFLAG_LIT || plr[myplr]._pInfraFlag || !setlevel && !currlevel) {
+	if (dFlags[x][y] & BFLAG_LIT || plr[myplr]._pInfraFlag || !setlevel && currlevel == 0) {
 		if (!pCelBuff) {
 			// app_fatal("Drawing player %d \"%s\": NULL Cel Buffer", pnum, plr[pnum]._pName);
 			return;
@@ -448,26 +446,14 @@ static void DrawPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, i
  */
 void DrawDeadPlayer(int x, int y, int sx, int sy)
 {
-	int i, px, py, nCel, frames;
+	int i, px, py;
 	PlayerStruct *p;
-	BYTE *pCelBuff;
 
 	dFlags[x][y] &= ~BFLAG_DEAD_PLAYER;
 
 	for (i = 0; i < MAX_PLRS; i++) {
 		p = &plr[i];
 		if (p->plractive && p->_pHitPoints == 0 && p->plrlevel == (BYTE)currlevel && p->_px == x && p->_py == y) {
-			pCelBuff = p->_pAnimData;
-			if (!pCelBuff) {
-				// app_fatal("Drawing dead player %d \"%s\": NULL Cel Buffer", i, p->_pName);
-				break;
-			}
-			nCel = p->_pAnimFrame;
-			frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
-			if (nCel < 1 || frames > 50 || nCel > frames) {
-				// app_fatal("Drawing dead player %d \"%s\": facing %d, frame %d of %d", i, p->_pName, p->_pdir, nCel, frame);
-				break;
-			}
 			dFlags[x][y] |= BFLAG_DEAD_PLAYER;
 			px = sx + p->_pxoff - p->_pAnimWidth2;
 			py = sy + p->_pyoff;
@@ -552,7 +538,7 @@ static void drawCell(int x, int y, int sx, int sy)
 	level_piece_id = dPiece[x][y];
 	cel_transparency_active = (BYTE)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
 	cel_foliage_active = !nSolidTable[level_piece_id];
-	for (int i = 0; i<MicroTileLen>> 1; i++) {
+	for (int i = 0; i < (MicroTileLen >> 1); i++) {
 		level_cel_block = pMap->mt[2 * i];
 		if (level_cel_block != 0) {
 			arch_draw_type = i == 0 ? 1 : 0;
@@ -603,22 +589,37 @@ static void drawFloor(int x, int y, int sx, int sy)
  */
 static void DrawItem(int x, int y, int sx, int sy, BOOL pre)
 {
+	int nCel;
 	char bItem = dItem[x][y];
 	ItemStruct *pItem;
+	BYTE *pCelBuff;
+	DWORD *pFrameTable;
 
-	if (bItem == 0)
+	assert((unsigned char)bItem <= MAXITEMS);
+
+	if (bItem > MAXITEMS || bItem <= 0)
 		return;
 
 	pItem = &item[bItem - 1];
 	if (pItem->_iPostDraw == pre)
 		return;
 
-	assert((unsigned char)bItem <= MAXITEMS);
-	int px = sx - pItem->_iAnimWidth2;
-	if (bItem - 1 == pcursitem) {
-		CelBlitOutline(181, px, sy, pItem->_iAnimData, pItem->_iAnimFrame, pItem->_iAnimWidth);
+	pCelBuff = pItem->_iAnimData;
+	if (pCelBuff == NULL) {
+		// app_fatal("Draw Item \"%s\" 1: NULL Cel Buffer", pItem->_iIName);
+		return;
 	}
-	CelClippedDrawLight(px, sy, pItem->_iAnimData, pItem->_iAnimFrame, pItem->_iAnimWidth);
+	pFrameTable = (DWORD *)pCelBuff;
+	nCel = pItem->_iAnimFrame;
+	if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
+		// app_fatal("Draw \"%s\" Item 1: frame %d of %d, item type==%d", pItem->_iIName, nCel, pFrameTable[0], pItem->_itype);
+		return;
+	}
+	int px = sx - pItem->_iAnimWidth2;
+	if (bItem - 1 == pcursitem || AutoMapShowItems) {
+		CelBlitOutline(181, px, sy, pCelBuff, nCel, pItem->_iAnimWidth);
+	}
+	CelClippedDrawLight(px, sy, pCelBuff, nCel, pItem->_iAnimWidth);
 }
 
 /**
@@ -652,6 +653,7 @@ static void DrawMonsterHelper(int x, int y, int oy, int sx, int sy)
 
 	if ((DWORD)mi >= MAXMONSTERS) {
 		// app_fatal("Draw Monster: tried to draw illegal monster %d", mi);
+		return;
 	}
 
 	pMonster = &monster[mi];
@@ -659,8 +661,9 @@ static void DrawMonsterHelper(int x, int y, int oy, int sx, int sy)
 		return;
 	}
 
-	if (pMonster->MType != NULL) {
+	if (pMonster->MType == NULL) {
 		// app_fatal("Draw Monster \"%s\": uninitialized monster", pMonster->mName);
+		return;
 	}
 
 	px = sx + pMonster->_mxoff - pMonster->MType->width2;
@@ -683,6 +686,12 @@ static void DrawPlayerHelper(int x, int y, int oy, int sx, int sy)
 {
 	int p = dPlayer[x][y + oy];
 	p = p > 0 ? p - 1 : -(p + 1);
+
+	if ((DWORD)p >= MAX_PLRS) {
+		// app_fatal("draw player: tried to draw illegal player %d", p);
+		return;
+	}
+
 	PlayerStruct *pPlayer = &plr[p];
 	int px = sx + pPlayer->_pxoff - pPlayer->_pAnimWidth2;
 	int py = sy + pPlayer->_pyoff;
@@ -703,6 +712,7 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy)
 	char bFlag, bDead, bObj, bItem, bPlr, bArch, bMap, negPlr, dd;
 	DeadStruct *pDeadGuy;
 	BYTE *pCelBuff;
+	DWORD *pFrameTable;
 
 	assert((DWORD)sx < MAXDUNX);
 	assert((DWORD)sy < MAXDUNY);
@@ -732,18 +742,26 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy)
 	}
 
 	if (light_table_index < lightmax && bDead != 0) {
-		pDeadGuy = &dead[(bDead & 0x1F) - 1];
-		dd = (bDead >> 5) & 7;
-		px = dx - pDeadGuy->_deadWidth2;
-		pCelBuff = pDeadGuy->_deadData[dd];
-		assert(pDeadGuy->_deadData[dd] != NULL);
-		if (pCelBuff != NULL) {
-			if (pDeadGuy->_deadtrans != 0) {
-				Cl2DrawLightTbl(px, dy, pCelBuff, pDeadGuy->_deadFrame, pDeadGuy->_deadWidth, pDeadGuy->_deadtrans);
-			} else {
-				Cl2DrawLight(px, dy, pCelBuff, pDeadGuy->_deadFrame, pDeadGuy->_deadWidth);
+		do {
+			pDeadGuy = &dead[(bDead & 0x1F) - 1];
+			dd = (bDead >> 5) & 7;
+			px = dx - pDeadGuy->_deadWidth2;
+			pCelBuff = pDeadGuy->_deadData[dd];
+			assert(pCelBuff != NULL);
+			if (pCelBuff == NULL)
+				break;
+			pFrameTable = (DWORD *)pCelBuff;
+			nCel = pDeadGuy->_deadFrame;
+			if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
+				// app_fatal("Unclipped dead: frame %d of %d, deadnum==%d", nCel, pFrameTable[0], (bDead & 0x1F) - 1);
+				break;
 			}
-		}
+			if (pDeadGuy->_deadtrans != 0) {
+				Cl2DrawLightTbl(px, dy, pCelBuff, nCel, pDeadGuy->_deadWidth, pDeadGuy->_deadtrans);
+			} else {
+				Cl2DrawLight(px, dy, pCelBuff, nCel, pDeadGuy->_deadWidth);
+			}
+		} while (0);
 	}
 	DrawObject(sx, sy, dx, dy, 1);
 	DrawItem(sx, sy, dx, dy, 1);
@@ -854,7 +872,7 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int rows, int columns)
 	memset(dRendered, 0, sizeof(dRendered));
 
 	for (int i = 0; i < rows; i++) {
-		for (int j = 0; j < columns ; j++) {
+		for (int j = 0; j < columns; j++) {
 			if (x >= 0 && x < MAXDUNX && y >= 0 && y < MAXDUNY) {
 				if (x + 1 < MAXDUNX && y - 1 >= 0 && sx + TILE_WIDTH <= SCREEN_X + SCREEN_WIDTH) {
 					// Render objects behind walls first to prevent sprites, that are moving
@@ -862,7 +880,7 @@ static void scrollrt_draw(int x, int y, int sx, int sy, int rows, int columns)
 					// A proper fix for this would probably be to layout the sceen and render by
 					// sprite screen position rather than tile position.
 					if (IsWall(x, y) && (IsWall(x + 1, y) || (x > 0 && IsWall(x - 1, y)))) { // Part of a wall aligned on the x-axis
-						if (IsWalkable(x + 1, y - 1) && IsWalkable(x, y - 1) ) { // Has walkable area behind it
+						if (IsWalkable(x + 1, y - 1) && IsWalkable(x, y - 1)) {              // Has walkable area behind it
 							scrollrt_draw_dungeon(x + 1, y - 1, sx + TILE_WIDTH, sy);
 						}
 					}
@@ -1117,8 +1135,8 @@ static void DrawGame(int x, int y)
 		}
 	}
 
- 	// Draw areas moving in and out of the screen
- 	switch (ScrollInfo._sdir) {
+	// Draw areas moving in and out of the screen
+	switch (ScrollInfo._sdir) {
 	case SDIR_N:
 		sy -= TILE_HEIGHT;
 		ShiftGrid(&x, &y, 0, -1);

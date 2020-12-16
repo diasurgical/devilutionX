@@ -49,9 +49,9 @@ static BOOL mainmenu_init_menu(int type)
 static BOOL mainmenu_single_player()
 {
 #ifdef HELLFIRE
-		if (!SRegLoadValue(APP_NAME, jogging_title, 0, &jogging_opt)) {
-			jogging_opt = TRUE;
-		}
+	if (!SRegLoadValue(APP_NAME, jogging_title, 0, &jogging_opt)) {
+		jogging_opt = TRUE;
+	}
 #endif
 	gbMaxPlayers = 1;
 
@@ -164,13 +164,13 @@ void mainmenu_loop()
 				done = TRUE;
 			break;
 		case MAINMENU_ATTRACT_MODE:
- 		case MAINMENU_REPLAY_INTRO:
+		case MAINMENU_REPLAY_INTRO:
 #ifndef HELLFIRE
 			if (gbIsSpawn)
 				done = FALSE;
 			else
 #endif
-			if (gbActive)
+			    if (gbActive)
 				mainmenu_play_intro();
 			break;
 		case MAINMENU_SHOW_CREDITS:

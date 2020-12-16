@@ -17,8 +17,8 @@ extern MonsterData monsterdata[];
 extern int MonstConvTbl[];
 extern int MonstAvailTbl[];
 #else
-extern BYTE MonstConvTbl[];
-extern BYTE MonstAvailTbl[];
+extern char MonstConvTbl[];
+extern char MonstAvailTbl[];
 #endif
 extern UniqMonstStruct UniqMonst[];
 

@@ -24,9 +24,9 @@ std::string GetSavePath(DWORD save_num)
 {
 	std::string path = GetPrefPath();
 #ifdef HELLFIRE
-		const char *ext = ".hsv";
+	const char *ext = ".hsv";
 #else
-		const char *ext = ".sv";
+	const char *ext = ".sv";
 #endif
 
 	if (gbIsSpawn) {
@@ -295,7 +295,7 @@ void game_2_ui_player(const PlayerStruct *p, _uiheroinfo *heroinfo, BOOL bHasSav
 	heroinfo->spawned = gbIsSpawn;
 }
 
-BOOL pfile_ui_set_hero_infos(BOOL(*ui_add_hero_info)(_uiheroinfo *))
+BOOL pfile_ui_set_hero_infos(BOOL (*ui_add_hero_info)(_uiheroinfo *))
 {
 	DWORD i;
 	BOOL showFixedMsg;
@@ -474,10 +474,10 @@ static BOOL GetPermSaveNames(DWORD dwIndex, char *szPerm)
 {
 	const char *fmt;
 
-	if (dwIndex < 17)
+	if (dwIndex < NUMLEVELS)
 		fmt = "perml%02d";
-	else if (dwIndex < 34) {
-		dwIndex -= 17;
+	else if (dwIndex < NUMLEVELS * 2) {
+		dwIndex -= NUMLEVELS;
 		fmt = "perms%02d";
 	} else
 		return FALSE;
@@ -490,10 +490,10 @@ static BOOL GetTempSaveNames(DWORD dwIndex, char *szTemp)
 {
 	const char *fmt;
 
-	if (dwIndex < 17)
+	if (dwIndex < NUMLEVELS)
 		fmt = "templ%02d";
-	else if (dwIndex < 34) {
-		dwIndex -= 17;
+	else if (dwIndex < NUMLEVELS * 2) {
+		dwIndex -= NUMLEVELS;
 		fmt = "temps%02d";
 	} else
 		return FALSE;
@@ -537,7 +537,7 @@ void pfile_rename_temp_to_perm()
 			mpqapi_rename(szTemp, szPerm);
 		}
 	}
-	assert(! GetPermSaveNames(dwIndex,szPerm));
+	assert(!GetPermSaveNames(dwIndex, szPerm));
 	pfile_flush(TRUE, dwChar);
 }
 

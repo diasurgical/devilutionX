@@ -19,7 +19,7 @@ int TownDownList[] = { 716, 715, 719, 720, 721, 723, 724, 725, 726, 727, -1 };
 int TownWarp1List[] = { 1171, 1172, 1173, 1174, 1175, 1176, 1177, 1178, 1179, 1181, 1183, 1185, -1 };
 #ifdef HELLFIRE
 int TownCryptList[] = { 1331, 1332, 1333, 1334, 1335, 1336, 1337, 1338, -1 };
-int TownHiveList[] = { 1307,1308,1309,1310, -1};
+int TownHiveList[] = { 1307, 1308, 1309, 1310, -1 };
 #endif
 /** Specifies the dungeon piece IDs which constitute stairways leading up from the cathedral. */
 int L1UpList[] = { 127, 129, 130, 131, 132, 133, 135, 137, 138, 139, 140, -1 };
@@ -70,7 +70,6 @@ void InitTownTriggers()
 	trigs[numtrigs]._ty = 29;
 	trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
 	numtrigs++;
-
 
 	if (!gbIsSpawn && gbMaxPlayers == MAX_PLRS) {
 		for (i = 0; i < sizeof(townwarps) / sizeof(townwarps[0]); i++) {

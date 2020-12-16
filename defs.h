@@ -41,6 +41,8 @@
 #define MAX_LVLMTYPES			16
 #define MAX_SPELLS				37
 #endif
+#define MAX_SPELL_LEVEL			15
+#define SPELLBIT(s) ((__int64)1 << (s - 1))
 
 #define MAX_CHUNKS				(MAX_LVLS + 5)
 
@@ -128,7 +130,7 @@
 
 // 256 kilobytes + 3 bytes (demo leftover) for file magic (262147)
 // final game uses 4-byte magic instead of 3
-#define FILEBUFF				((256*1024)+3)
+#define FILEBUFF				((256 * 1024) + 3)
 
 #define PMSG_COUNT				8
 
@@ -210,7 +212,7 @@
 #define DIALOG_TOP		((SCREEN_HEIGHT - PANEL_HEIGHT) / 2 - 18)
 #define DIALOG_Y		(SCREEN_Y + DIALOG_TOP)
 
-#define SCREENXY(x, y)	((x) + SCREEN_X + ((y) + SCREEN_Y) * BUFFER_WIDTH)
+#define SCREENXY(x, y) ((x) + SCREEN_X + ((y) + SCREEN_Y) * BUFFER_WIDTH)
 
 #define NIGHTMARE_TO_HIT_BONUS  85
 #define HELL_TO_HIT_BONUS      120
@@ -218,20 +220,20 @@
 #define NIGHTMARE_AC_BONUS 50
 #define HELL_AC_BONUS      80
 
-#define MemFreeDbg(p)	\
-{						\
-	void *p__p;			\
-	p__p = p;			\
-	p = NULL;			\
-	mem_free_dbg(p__p);	\
-}
+#define MemFreeDbg(p)       \
+	{                       \
+		void *p__p;         \
+		p__p = p;           \
+		p = NULL;           \
+		mem_free_dbg(p__p); \
+	}
 
 #undef assert
 
 #ifndef _DEBUG
 #define assert(exp) ((void)0)
 #else
-#define assert(exp) (void)( (exp) || (assert_fail(__LINE__, __FILE__, #exp), 0) )
+#define assert(exp) (void)((exp) || (assert_fail(__LINE__, __FILE__, #exp), 0))
 #endif
 
 #define ERR_DLG(title, text) ErrDlg(title, text, __FILE__, __LINE__)

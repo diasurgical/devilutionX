@@ -99,7 +99,6 @@ extern const BYTE gbFontTransTbl[256];
 
 extern RECT32 ChrBtnsRect[4];
 
-
 #ifdef __cplusplus
 }
 #endif

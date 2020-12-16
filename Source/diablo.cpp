@@ -413,10 +413,11 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
 		NetClose();
 #ifndef HELLFIRE
 		pfile_create_player_description(0, 0);
-	} while (gbRunGameResult);
 #else
-	} while (gbMaxPlayers == 1 || !gbRunGameResult);
+		if (gbMaxPlayers == 1)
+			break;
 #endif
+	} while (gbRunGameResult);
 
 	SNetDestroy();
 	return gbRunGameResult;
@@ -475,14 +476,14 @@ static void diablo_splash()
 #ifndef HELLFIRE
 	if (!gbIsSpawn)
 #endif
-	if (getIniBool(APP_NAME, "Intro", true)) {
+		if (getIniBool(APP_NAME, "Intro", true)) {
 #ifndef HELLFIRE
-		play_movie("gendata\\diablo1.smk", TRUE);
+			play_movie("gendata\\diablo1.smk", TRUE);
 #else
 		play_movie("gendata\\Hellfire.smk", TRUE);
 #endif
-		setIniValue(APP_NAME, "Intro", "0");
-	}
+			setIniValue(APP_NAME, "Intro", "0");
+		}
 
 	UiTitleDialog();
 }
@@ -623,7 +624,7 @@ BOOL TryIconCurs()
 		if (pcursinvitem != -1)
 			DoOil(myplr, pcursinvitem);
 		else
-			SetCursor_(CURSOR_HAND);
+			NewCursor(CURSOR_HAND);
 		return TRUE;
 	}
 
@@ -714,7 +715,6 @@ static BOOL LeftMouseDown(int wParam)
 		if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM)
 			NewCursor(CURSOR_HAND);
 	}
-
 
 	return FALSE;
 }
@@ -1060,7 +1060,7 @@ static void PressKey(int vkey)
 /**
  * @internal `return` must be used instead of `break` to be bin exact as C++
  */
-static void PressChar(int vkey)
+static void PressChar(WPARAM vkey)
 {
 	if (gmenu_is_active() || control_talk_last_key(vkey) || sgnTimeoutCurs != CURSOR_NONE || deathflag) {
 		return;
@@ -1465,7 +1465,7 @@ void GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 void LoadLvlGFX()
 {
-	assert(! pDungeonCels);
+	assert(!pDungeonCels);
 
 	switch (leveltype) {
 	case DTYPE_TOWN:
@@ -1557,7 +1557,7 @@ void CreateLevel(int lvldir)
 		InitL1Triggers();
 		Freeupstairs();
 #ifdef HELLFIRE
-		if(currlevel < 21) {
+		if (currlevel < 21) {
 			LoadRndLvlPal(1);
 		} else {
 			LoadRndLvlPal(5);
@@ -1577,7 +1577,7 @@ void CreateLevel(int lvldir)
 		InitL3Triggers();
 		Freeupstairs();
 #ifdef HELLFIRE
-		if(currlevel < 17) {
+		if (currlevel < 17) {
 			LoadRndLvlPal(3);
 		} else {
 			LoadRndLvlPal(6);
@@ -1700,7 +1700,7 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 				InitObjects();
 				InitItems();
 #ifdef HELLFIRE
-				if ( currlevel < 17 )
+				if (currlevel < 17)
 #endif
 					CreateThemeRooms();
 				IncProgress();
@@ -1816,21 +1816,18 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 	}
 
 #ifdef HELLFIRE
-	if ( currlevel >= 21 )
-	{
-		if ( currlevel == 21 )
-		{
+	if (currlevel >= 21) {
+		if (currlevel == 21) {
 			items_427ABA(CornerStone.x, CornerStone.y);
 		}
-		if ( quests[Q_NAKRUL]._qactive == QUEST_DONE && currlevel == 24 )
-		{
+		if (quests[Q_NAKRUL]._qactive == QUEST_DONE && currlevel == 24) {
 			objects_454BA8();
 		}
 	}
 #endif
 
 #ifdef HELLFIRE
-	if ( currlevel >= 17 )
+	if (currlevel >= 17)
 		music_start(currlevel > 20 ? TMUSIC_L5 : TMUSIC_L6);
 	else
 		music_start(leveltype);
@@ -1933,10 +1930,10 @@ void diablo_color_cyc_logic()
 	if (leveltype == DTYPE_HELL) {
 		lighting_color_cycling();
 #ifdef HELLFIRE
-		} else if (currlevel >= 21) {
-			palette_update_crypt();
-		} else if (currlevel >= 17) {
-			palette_update_hive();
+	} else if (currlevel >= 21) {
+		palette_update_crypt();
+	} else if (currlevel >= 17) {
+		palette_update_hive();
 #endif
 	} else if (leveltype == DTYPE_CAVES) {
 		palette_update_caves();

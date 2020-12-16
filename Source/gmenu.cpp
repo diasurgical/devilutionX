@@ -236,7 +236,7 @@ void gmenu_draw()
 #ifdef HELLFIRE
 		ticks = SDL_GetTicks();
 		if ((int)(ticks - LogoAnim_tick) > 25) {
-		    LogoAnim_frame++;
+			LogoAnim_frame++;
 			if (LogoAnim_frame > 16)
 				LogoAnim_frame = 1;
 			LogoAnim_tick = ticks;
@@ -254,28 +254,30 @@ void gmenu_draw()
 				y += 45;
 			}
 		}
-		}
+	}
 }
 
 static void gmenu_left_right(BOOL isRight)
 {
-	int step;
+	int step, steps;
 
-	if (sgpCurrItem->dwFlags & GMENU_SLIDER) {
-		step = sgpCurrItem->dwFlags & 0xFFF;
-		if (isRight) {
-			if (step == (int)(sgpCurrItem->dwFlags & 0xFFF000) >> 12)
-				return;
-			step++;
-		} else {
-			if (!step)
-				return;
-			step--;
-		}
-		sgpCurrItem->dwFlags &= 0xFFFFF000;
-		sgpCurrItem->dwFlags |= step;
-		sgpCurrItem->fnMenu(FALSE);
+	if (!(sgpCurrItem->dwFlags & GMENU_SLIDER))
+		return;
+
+	step = sgpCurrItem->dwFlags & 0xFFF;
+	steps = (int)(sgpCurrItem->dwFlags & 0xFFF000) >> 12;
+	if (isRight) {
+		if (step == steps)
+			return;
+		step++;
+	} else {
+		if (step == 0)
+			return;
+		step--;
 	}
+	sgpCurrItem->dwFlags &= 0xFFFFF000;
+	sgpCurrItem->dwFlags |= step;
+	sgpCurrItem->fnMenu(FALSE);
 }
 
 BOOL gmenu_presskeys(int vkey)

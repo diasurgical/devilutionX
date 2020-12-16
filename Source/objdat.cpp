@@ -5,7 +5,6 @@
  */
 #include "all.h"
 
-
 DEVILUTION_BEGIN_NAMESPACE
 
 /** Maps from dun_object_id to object_id. */

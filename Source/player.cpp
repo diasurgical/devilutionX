@@ -105,6 +105,7 @@ int StrengthTbl[NUM_CLASSES] = {
 };
 /** Maps from player_class to starting stat in magic. */
 int MagicTbl[NUM_CLASSES] = {
+	// clang-format off
 	10,
 	15,
 	35,
@@ -113,6 +114,7 @@ int MagicTbl[NUM_CLASSES] = {
 	20,
 	 0,
 #endif
+	// clang-format on
 };
 /** Maps from player_class to starting stat in dexterity. */
 int DexterityTbl[NUM_CLASSES] = {
@@ -159,6 +161,7 @@ const char *const ClassStrTblOld[] = {
 };
 /** Maps from player_class to maximum stats. */
 int MaxStats[NUM_CLASSES][4] = {
+	// clang-format off
 	{ 250,  50,  60, 100 },
 	{  55,  70, 250,  80 },
 	{  45, 250,  85,  80 },
@@ -167,6 +170,7 @@ int MaxStats[NUM_CLASSES][4] = {
 	{ 120, 120, 120, 100 },
 	{ 255,   0,  55, 150 },
 #endif
+	// clang-format on
 };
 /** Specifies the experience point limit of each level. */
 int ExpLvlsTbl[MAXCHARLEVEL] = {
@@ -805,15 +809,15 @@ void CreatePlayer(int pnum, char c)
 	plr[pnum]._pInfraFlag = FALSE;
 
 	if (c == PC_WARRIOR) {
-		plr[pnum]._pAblSpells = (__int64)1 << (SPL_REPAIR - 1);
+		plr[pnum]._pAblSpells = SPELLBIT(SPL_REPAIR);
 	} else if (c == PC_ROGUE) {
-		plr[pnum]._pAblSpells = (__int64)1 << (SPL_DISARM - 1);
+		plr[pnum]._pAblSpells = SPELLBIT(SPL_DISARM);
 	} else if (c == PC_SORCERER) {
-		plr[pnum]._pAblSpells = (__int64)1 << (SPL_RECHARGE - 1);
+		plr[pnum]._pAblSpells = SPELLBIT(SPL_RECHARGE);
 	}
 
 	if (c == PC_SORCERER) {
-		plr[pnum]._pMemSpells = 1;
+		plr[pnum]._pMemSpells = SPELLBIT(SPL_FIREBOLT);
 	} else {
 		plr[pnum]._pMemSpells = 0;
 	}
@@ -1103,18 +1107,18 @@ void InitPlayer(int pnum, BOOL FirstTime)
 	}
 
 	if (plr[pnum]._pClass == PC_WARRIOR) {
-		plr[pnum]._pAblSpells = 1 << (SPL_REPAIR - 1);
+		plr[pnum]._pAblSpells = SPELLBIT(SPL_REPAIR);
 	} else if (plr[pnum]._pClass == PC_ROGUE) {
-		plr[pnum]._pAblSpells = 1 << (SPL_DISARM - 1);
+		plr[pnum]._pAblSpells = SPELLBIT(SPL_DISARM);
 	} else if (plr[pnum]._pClass == PC_SORCERER) {
-		plr[pnum]._pAblSpells = 1 << (SPL_RECHARGE - 1);
+		plr[pnum]._pAblSpells = SPELLBIT(SPL_RECHARGE);
 #ifdef HELLFIRE
 	} else if (plr[pnum]._pClass == PC_MONK) {
-		plr[pnum]._pAblSpells = (unsigned __int64)1 << (SPL_SEARCH - 1);
+		plr[pnum]._pAblSpells = SPELLBIT(SPL_SEARCH);
 	} else if (plr[pnum]._pClass == PC_BARD) {
-		plr[pnum]._pAblSpells = 1 << (SPL_IDENTIFY - 1);
+		plr[pnum]._pAblSpells = SPELLBIT(SPL_IDENTIFY);
 	} else if (plr[pnum]._pClass == PC_BARBARIAN) {
-		plr[pnum]._pAblSpells = 1 << (SPL_BLODBOIL - 1);
+		plr[pnum]._pAblSpells = SPELLBIT(SPL_BLODBOIL);
 #endif
 	}
 
@@ -2000,9 +2004,9 @@ void DropHalfPlayersGold(int pnum)
 	for (i = 0; i < MAXBELTITEMS && hGold > 0; i++) {
 		if (plr[pnum].SpdList[i]._itype == ITYPE_GOLD &&
 #ifndef HELLFIRE
-			plr[pnum].SpdList[i]._ivalue != GOLD_MAX_LIMIT) {
+		    plr[pnum].SpdList[i]._ivalue != GOLD_MAX_LIMIT) {
 #else
-			plr[pnum].SpdList[i]._ivalue != MaxGold) {
+		    plr[pnum].SpdList[i]._ivalue != MaxGold) {
 #endif
 			if (hGold < plr[pnum].SpdList[i]._ivalue) {
 				plr[pnum].SpdList[i]._ivalue -= hGold;
@@ -2055,9 +2059,9 @@ void DropHalfPlayersGold(int pnum)
 		for (i = 0; i < plr[pnum]._pNumInv && hGold > 0; i++) {
 			if (plr[pnum].InvList[i]._itype == ITYPE_GOLD &&
 #ifndef HELLFIRE
-				plr[pnum].InvList[i]._ivalue != GOLD_MAX_LIMIT) {
+			    plr[pnum].InvList[i]._ivalue != GOLD_MAX_LIMIT) {
 #else
-				plr[pnum].InvList[i]._ivalue != MaxGold) {
+			    plr[pnum].InvList[i]._ivalue != MaxGold) {
 #endif
 				if (hGold < plr[pnum].InvList[i]._ivalue) {
 					plr[pnum].InvList[i]._ivalue -= hGold;
@@ -2332,7 +2336,7 @@ BOOL PM_DoWalk(int pnum)
 		PlaySfxLoc(PS_WALK1, plr[pnum]._px, plr[pnum]._py);
 	}
 #else
-	if (!currlevel && jogging_opt) {
+	if (currlevel == 0 && jogging_opt) {
 		if (plr[pnum]._pAnimFrame % 2 == 0) {
 			plr[pnum]._pAnimFrame++;
 			plr[pnum]._pVar8++;
@@ -2404,7 +2408,7 @@ BOOL PM_DoWalk2(int pnum)
 		PlaySfxLoc(PS_WALK1, plr[pnum]._px, plr[pnum]._py);
 	}
 #else
-	if (!currlevel && jogging_opt) {
+	if (currlevel == 0 && jogging_opt) {
 		if (plr[pnum]._pAnimFrame % 2 == 0) {
 			plr[pnum]._pAnimFrame++;
 			plr[pnum]._pVar8++;
@@ -2472,7 +2476,7 @@ BOOL PM_DoWalk3(int pnum)
 		PlaySfxLoc(PS_WALK1, plr[pnum]._px, plr[pnum]._py);
 	}
 #else
-	if (!currlevel && jogging_opt) {
+	if (currlevel == 0 && jogging_opt) {
 		if (plr[pnum]._pAnimFrame % 2 == 0) {
 			plr[pnum]._pAnimFrame++;
 			plr[pnum]._pVar8++;
@@ -2965,10 +2969,10 @@ BOOL PM_DoAttack(int pnum)
 		}
 
 		if (plr[pnum]._pIFlags & ISPL_FIREDAM) {
-			AddMissile(dx, dy, 1, 0, 0, MIS_WEAPEXP, 0, pnum, 0, 0);
+			AddMissile(dx, dy, 1, 0, 0, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
 		}
 		if (plr[pnum]._pIFlags & ISPL_LIGHTDAM) {
-			AddMissile(dx, dy, 2, 0, 0, MIS_WEAPEXP, 0, pnum, 0, 0);
+			AddMissile(dx, dy, 2, 0, 0, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
 		}
 
 		didhit = FALSE;
@@ -3039,7 +3043,7 @@ BOOL PM_DoRangeAttack(int pnum)
 		    plr[pnum]._pVar2,
 		    plr[pnum]._pdir,
 		    mistype,
-		    0,
+		    TARGET_MONSTERS,
 		    pnum,
 		    4,
 		    0);
@@ -3111,7 +3115,7 @@ BOOL PM_DoBlock(int pnum)
 		StartStand(pnum, plr[pnum]._pdir);
 		ClearPlrPVars(pnum);
 
-		if (!random_(3, 10)) {
+		if (random_(3, 10) == 0) {
 			ShieldDur(pnum);
 		}
 		return TRUE;
@@ -3187,7 +3191,7 @@ BOOL PM_DoSpell(int pnum)
 		    0,
 		    plr[pnum]._pVar4);
 
-		if (!plr[pnum]._pSplFrom) {
+		if (plr[pnum]._pSplFrom == 0) {
 			EnsureValidReadiedSpell(plr[pnum]);
 		}
 	}
@@ -3248,7 +3252,7 @@ BOOL PM_DoGotHit(int pnum)
 #endif
 		StartStand(pnum, plr[pnum]._pdir);
 		ClearPlrPVars(pnum);
-		if (random_(3, 4)) {
+		if (random_(3, 4) != 0) {
 			ArmorDur(pnum);
 		}
 
@@ -3685,9 +3689,9 @@ void ValidatePlayer()
 
 	for (b = 1; b < MAX_SPELLS; b++) {
 		if (GetSpellBookLevel(b) != -1) {
-			msk |= (__int64)1 << (b - 1);
-			if (plr[myplr]._pSplLvl[b] > 15)
-				plr[myplr]._pSplLvl[b] = 15;
+			msk |= SPELLBIT(b);
+			if (plr[myplr]._pSplLvl[b] > MAX_SPELL_LEVEL)
+				plr[myplr]._pSplLvl[b] = MAX_SPELL_LEVEL;
 		}
 	}
 
@@ -3753,7 +3757,7 @@ void ProcessPlayers()
 				break;
 			default:
 #endif
-			PlaySFX(sfxdnum);
+				PlaySFX(sfxdnum);
 #ifdef HELLFIRE
 			}
 #endif

@@ -578,6 +578,34 @@ BOOL S_StartSPBuy()
 
 BOOL SmithSellOk(int i)
 {
+#ifdef HELLFIRE
+	ItemStruct *pI;
+
+	if (i >= 0) {
+		pI = &plr[myplr].InvList[i];
+	} else {
+		pI = &plr[myplr].SpdList[-(i + 1)];
+	}
+
+	if (pI->_itype == ITYPE_NONE)
+		return FALSE;
+
+	if (pI->_iMiscId > IMISC_OILFIRST && pI->_iMiscId < IMISC_OILLAST)
+		return TRUE;
+
+	if (pI->_itype == ITYPE_MISC)
+		return FALSE;
+	if (pI->_itype == ITYPE_GOLD)
+		return FALSE;
+	if (pI->_itype == ITYPE_MEAT)
+		return FALSE;
+	if (pI->_itype == ITYPE_STAFF && pI->_iSpell != SPL_NULL)
+		return FALSE;
+	if (pI->_iClass == ICLASS_QUEST)
+		return FALSE;
+	if (pI->IDidx == IDI_LAZSTAFF)
+		return FALSE;
+#else
 	if (plr[myplr].InvList[i]._itype == ITYPE_NONE)
 		return FALSE;
 	if (plr[myplr].InvList[i]._itype == ITYPE_MISC)
@@ -590,6 +618,7 @@ BOOL SmithSellOk(int i)
 		return FALSE;
 	if (plr[myplr].InvList[i].IDidx == IDI_LAZSTAFF)
 		return FALSE;
+#endif
 
 	return TRUE;
 }
@@ -2038,7 +2067,7 @@ BOOL StoreGoldFit(int idx)
 
 	cost = storehold[idx]._iIvalue;
 	sz = cost / GOLD_MAX_LIMIT;
-	if (cost % GOLD_MAX_LIMIT)
+	if (cost % GOLD_MAX_LIMIT != 0)
 		sz++;
 
 	SetCursor_(storehold[idx]._iCurs + CURSOR_FIRSTITEM);
@@ -2049,7 +2078,7 @@ BOOL StoreGoldFit(int idx)
 		return TRUE;
 
 	for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
-		if (!plr[myplr].InvGrid[i])
+		if (plr[myplr].InvGrid[i] == 0)
 			numsqrs++;
 	}
 
@@ -2079,7 +2108,7 @@ void PlaceStoreGold(int v)
 	for (i = 0; i < NUM_INV_GRID_ELEM && !done; i++) {
 		yy = 10 * (i / 10);
 		xx = i % 10;
-		if (!plr[myplr].InvGrid[xx + yy]) {
+		if (plr[myplr].InvGrid[xx + yy] == 0) {
 			ii = plr[myplr]._pNumInv;
 			GetGoldSeed(myplr, &golditem);
 			plr[myplr].InvList[ii] = golditem;

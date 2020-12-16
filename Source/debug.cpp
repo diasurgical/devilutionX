@@ -54,7 +54,7 @@ void GiveGoldCheat()
 	int i, ni;
 
 	for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
-		if (!plr[myplr].InvGrid[i]) {
+		if (plr[myplr].InvGrid[i] == 0) {
 			ni = plr[myplr]._pNumInv++;
 			SetPlrHandItem(&plr[myplr].InvList[ni], IDI_GOLD);
 			GetPlrHandSeed(&plr[myplr].InvList[ni]);
@@ -110,7 +110,7 @@ void MaxSpellsCheat()
 
 	for (i = 1; i < MAX_SPELLS; i++) {
 		if (GetSpellBookLevel(i) != -1) {
-			plr[myplr]._pMemSpells |= (__int64)1 << (i - 1);
+			plr[myplr]._pMemSpells |= SPELLBIT(i);
 			plr[myplr]._pSplLvl[i] = 10;
 		}
 	}
@@ -118,7 +118,7 @@ void MaxSpellsCheat()
 
 void SetSpellLevelCheat(char spl, int spllvl)
 {
-	plr[myplr]._pMemSpells |= (__int64)1 << (spl - 1);
+	plr[myplr]._pMemSpells |= SPELLBIT(spl);
 	plr[myplr]._pSplLvl[spl] = spllvl;
 }
 

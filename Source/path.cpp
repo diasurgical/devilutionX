@@ -5,7 +5,6 @@
  */
 #include "all.h"
 
-
 DEVILUTION_BEGIN_NAMESPACE
 /** Notes visisted by the path finding algorithm. */
 PATHNODE path_nodes[MAXPATHNODES];

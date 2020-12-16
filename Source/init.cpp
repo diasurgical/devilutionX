@@ -42,7 +42,7 @@ namespace {
 HANDLE init_test_access(const char *mpq_name, const char *reg_loc, int dwPriority, int fs)
 {
 	HANDLE archive;
-	const std::string *paths[2] = {&GetBasePath(), &GetPrefPath()};
+	const std::string *paths[2] = { &GetBasePath(), &GetPrefPath() };
 	std::string mpq_abspath;
 	DWORD mpq_flags = 0;
 #if !defined(__SWITCH__) && !defined(__AMIGA__)

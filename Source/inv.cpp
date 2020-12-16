@@ -194,7 +194,7 @@ void DrawInv()
 #ifdef HELLFIRE
 			if (frame <= 179) {
 #endif
-			CelBlitOutline(color, RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width);
+				CelBlitOutline(color, RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width);
 #ifdef HELLFIRE
 			} else {
 				CelBlitOutline(color, RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
@@ -216,7 +216,7 @@ void DrawInv()
 #ifdef HELLFIRE
 			if (frame <= 179) {
 #endif
-			CelDrawLightRed(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+				CelDrawLightRed(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width, 1);
 #ifdef HELLFIRE
 			} else {
 				CelDrawLightRed(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels2, frame - 179, frame_width, 1);
@@ -242,7 +242,7 @@ void DrawInv()
 #ifdef HELLFIRE
 			if (frame <= 179) {
 #endif
-			CelBlitOutline(color, RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width);
+				CelBlitOutline(color, RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width);
 #ifdef HELLFIRE
 			} else {
 				CelBlitOutline(color, RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
@@ -254,7 +254,7 @@ void DrawInv()
 #ifdef HELLFIRE
 			if (frame <= 179) {
 #endif
-			CelClippedDraw(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width);
+				CelClippedDraw(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width);
 #ifdef HELLFIRE
 			} else {
 				CelClippedDraw(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
@@ -264,7 +264,7 @@ void DrawInv()
 #ifdef HELLFIRE
 			if (frame <= 179) {
 #endif
-			CelDrawLightRed(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+				CelDrawLightRed(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width, 1);
 #ifdef HELLFIRE
 			} else {
 				CelDrawLightRed(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width, 1);
@@ -290,7 +290,7 @@ void DrawInv()
 #ifdef HELLFIRE
 			if (frame <= 179) {
 #endif
-			CelBlitOutline(color, RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width);
+				CelBlitOutline(color, RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width);
 #ifdef HELLFIRE
 			} else {
 				CelBlitOutline(color, RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
@@ -302,7 +302,7 @@ void DrawInv()
 #ifdef HELLFIRE
 			if (frame <= 179) {
 #endif
-			CelClippedDraw(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width);
+				CelClippedDraw(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width);
 #ifdef HELLFIRE
 			} else {
 				CelClippedDraw(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
@@ -312,7 +312,7 @@ void DrawInv()
 #ifdef HELLFIRE
 			if (frame <= 179) {
 #endif
-			CelDrawLightRed(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+				CelDrawLightRed(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width, 1);
 #ifdef HELLFIRE
 			} else {
 				CelDrawLightRed(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width, 1);
@@ -338,7 +338,7 @@ void DrawInv()
 #ifdef HELLFIRE
 			if (frame <= 179) {
 #endif
-			CelBlitOutline(color, RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width);
+				CelBlitOutline(color, RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width);
 #ifdef HELLFIRE
 			} else {
 				CelBlitOutline(color, RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
@@ -350,7 +350,7 @@ void DrawInv()
 #ifdef HELLFIRE
 			if (frame <= 179) {
 #endif
-			CelClippedDraw(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width);
+				CelClippedDraw(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width);
 #ifdef HELLFIRE
 			} else {
 				CelClippedDraw(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
@@ -360,7 +360,7 @@ void DrawInv()
 #ifdef HELLFIRE
 			if (frame <= 179) {
 #endif
-			CelDrawLightRed(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+				CelDrawLightRed(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width, 1);
 #ifdef HELLFIRE
 			} else {
 				CelDrawLightRed(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels2, frame - 179, frame_width, 1);
@@ -389,7 +389,7 @@ void DrawInv()
 #ifdef HELLFIRE
 			if (frame <= 179) {
 #endif
-			CelBlitOutline(color, screen_x, screen_y, pCursCels, frame, frame_width);
+				CelBlitOutline(color, screen_x, screen_y, pCursCels, frame, frame_width);
 #ifdef HELLFIRE
 			} else {
 				CelBlitOutline(color, screen_x, screen_y, pCursCels2, frame - 179, frame_width);
@@ -401,7 +401,7 @@ void DrawInv()
 #ifdef HELLFIRE
 			if (frame <= 179) {
 #endif
-			CelClippedDraw(screen_x, screen_y, pCursCels, frame, frame_width);
+				CelClippedDraw(screen_x, screen_y, pCursCels, frame, frame_width);
 #ifdef HELLFIRE
 			} else {
 				CelClippedDraw(screen_x, screen_y, pCursCels2, frame - 179, frame_width);
@@ -411,7 +411,7 @@ void DrawInv()
 #ifdef HELLFIRE
 			if (frame <= 179) {
 #endif
-			CelDrawLightRed(screen_x, screen_y, pCursCels, frame, frame_width, 1);
+				CelDrawLightRed(screen_x, screen_y, pCursCels, frame, frame_width, 1);
 #ifdef HELLFIRE
 			} else {
 				CelDrawLightRed(screen_x, screen_y, pCursCels2, frame - 179, frame_width, 1);
@@ -430,8 +430,8 @@ void DrawInv()
 				cel_transparency_active = TRUE;
 
 				pBuff = frame_width == INV_SLOT_SIZE_PX
-					? &gpBuffer[SCREENXY(RIGHT_PANEL_X + 197, SCREEN_Y)]
-					: &gpBuffer[SCREENXY(RIGHT_PANEL_X + 183, SCREEN_Y)];
+				    ? &gpBuffer[SCREENXY(RIGHT_PANEL_X + 197, SCREEN_Y)]
+				    : &gpBuffer[SCREENXY(RIGHT_PANEL_X + 183, SCREEN_Y)];
 #ifdef HELLFIRE
 				if (frame <= 179) {
 #endif
@@ -468,7 +468,7 @@ void DrawInv()
 #ifdef HELLFIRE
 			if (frame <= 179) {
 #endif
-			CelBlitOutline(color, screen_x, screen_y, pCursCels, frame, frame_width);
+				CelBlitOutline(color, screen_x, screen_y, pCursCels, frame, frame_width);
 #ifdef HELLFIRE
 			} else {
 				CelBlitOutline(color, screen_x, screen_y, pCursCels2, frame - 179, frame_width);
@@ -480,7 +480,7 @@ void DrawInv()
 #ifdef HELLFIRE
 			if (frame <= 179) {
 #endif
-			CelClippedDraw(screen_x, screen_y, pCursCels, frame, frame_width);
+				CelClippedDraw(screen_x, screen_y, pCursCels, frame, frame_width);
 #ifdef HELLFIRE
 			} else {
 				CelClippedDraw(screen_x, screen_y, pCursCels2, frame - 179, frame_width);
@@ -490,7 +490,7 @@ void DrawInv()
 #ifdef HELLFIRE
 			if (frame <= 179) {
 #endif
-			CelDrawLightRed(screen_x, screen_y, pCursCels, frame, frame_width, 1);
+				CelDrawLightRed(screen_x, screen_y, pCursCels, frame, frame_width, 1);
 #ifdef HELLFIRE
 			} else {
 				CelDrawLightRed(screen_x, screen_y, pCursCels2, frame - 179, frame_width, 1);
@@ -516,7 +516,7 @@ void DrawInv()
 #ifdef HELLFIRE
 			if (frame <= 179) {
 #endif
-			CelBlitOutline(color, RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width);
+				CelBlitOutline(color, RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width);
 #ifdef HELLFIRE
 			} else {
 				CelBlitOutline(color, RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
@@ -528,7 +528,7 @@ void DrawInv()
 #ifdef HELLFIRE
 			if (frame <= 179) {
 #endif
-			CelClippedDraw(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width);
+				CelClippedDraw(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width);
 #ifdef HELLFIRE
 			} else {
 				CelClippedDraw(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
@@ -538,7 +538,7 @@ void DrawInv()
 #ifdef HELLFIRE
 			if (frame <= 179) {
 #endif
-			CelDrawLightRed(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width, 1);
+				CelDrawLightRed(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width, 1);
 #ifdef HELLFIRE
 			} else {
 				CelDrawLightRed(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels2, frame - 179, frame_width, 1);
@@ -578,11 +578,11 @@ void DrawInv()
 #ifdef HELLFIRE
 				if (frame <= 179) {
 #endif
-				CelBlitOutline(
-				    color,
-				    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
-				    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
-				    pCursCels, frame, frame_width);
+					CelBlitOutline(
+					    color,
+					    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
+					    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
+					    pCursCels, frame, frame_width);
 #ifdef HELLFIRE
 				} else {
 					CelBlitOutline(
@@ -598,10 +598,10 @@ void DrawInv()
 #ifdef HELLFIRE
 				if (frame <= 179) {
 #endif
-				CelClippedDraw(
-				    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
-				    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
-				    pCursCels, frame, frame_width);
+					CelClippedDraw(
+					    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
+					    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
+					    pCursCels, frame, frame_width);
 #ifdef HELLFIRE
 				} else {
 					CelClippedDraw(
@@ -614,10 +614,10 @@ void DrawInv()
 #ifdef HELLFIRE
 				if (frame <= 179) {
 #endif
-				CelDrawLightRed(
-				    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
-				    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
-				    pCursCels, frame, frame_width, 1);
+					CelDrawLightRed(
+					    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
+					    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
+					    pCursCels, frame, frame_width, 1);
 #ifdef HELLFIRE
 				} else {
 					CelDrawLightRed(
@@ -659,12 +659,12 @@ void DrawInvBelt()
 				color = ICOL_RED;
 			if (!sgbControllerActive || invflag) {
 #ifdef HELLFIRE
-			if (frame <= 179)
+				if (frame <= 179)
 #endif
-			CelBlitOutline(color, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels, frame, frame_width);
+					CelBlitOutline(color, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels, frame, frame_width);
 #ifdef HELLFIRE
-			else
-				CelBlitOutline(color, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels2, frame - 179, frame_width);
+				else
+					CelBlitOutline(color, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels2, frame - 179, frame_width);
 #endif
 			}
 		}
@@ -673,7 +673,7 @@ void DrawInvBelt()
 #ifdef HELLFIRE
 			if (frame <= 179)
 #endif
-			CelClippedDraw(InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels, frame, frame_width);
+				CelClippedDraw(InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels, frame, frame_width);
 #ifdef HELLFIRE
 			else
 				CelClippedDraw(InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels2, frame - 179, frame_width);
@@ -682,7 +682,7 @@ void DrawInvBelt()
 #ifdef HELLFIRE
 			if (frame <= 179)
 #endif
-			CelDrawLightRed(InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels, frame, frame_width, 1);
+				CelDrawLightRed(InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels, frame, frame_width, 1);
 #ifdef HELLFIRE
 			else
 				CelDrawLightRed(InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels2, frame - 179, frame_width, 1);
@@ -868,7 +868,7 @@ BOOL GoldAutoPlace(int pnum)
 	for (i = 39; i >= 0 && !done; i--) {
 		yy = 10 * (i / 10);
 		xx = i % 10;
-		if (!plr[pnum].InvGrid[xx + yy]) {
+		if (plr[pnum].InvGrid[xx + yy] == 0) {
 			ii = plr[pnum]._pNumInv;
 			plr[pnum].InvList[ii] = plr[pnum].HoldItem;
 			plr[pnum]._pNumInv = plr[pnum]._pNumInv + 1;
@@ -931,7 +931,7 @@ BOOL GoldAutoPlace(int pnum)
 		for (int i = 39; i >= 0 && !done; i--) {
 			yy = 10 * (i / 10);
 			xx = i % 10;
-			if (!plr[pnum].InvGrid[xx + yy]) {
+			if (plr[pnum].InvGrid[xx + yy] == 0) {
 				ii = plr[pnum]._pNumInv;
 				plr[pnum].InvList[ii] = plr[pnum].HoldItem;
 				plr[pnum]._pNumInv = plr[pnum]._pNumInv + 1;
@@ -1043,9 +1043,8 @@ void CheckInvPaste(int pnum, int mx, int my)
 		if (r == SLOTXY_CHEST_LAST) {
 			if ((sx & 1) == 0)
 				i -= 14;
-			if ((sy & 1) == 0) {
+			if ((sy & 1) == 0)
 				j -= 14;
-			}
 		}
 		if (r == SLOTXY_INV_LAST && (sy & 1) == 0)
 			j += 14;
@@ -1070,13 +1069,12 @@ void CheckInvPaste(int pnum, int mx, int my)
 		done = TRUE;
 	if (il == ILOC_ONEHAND && plr[pnum].HoldItem._iLoc == ILOC_TWOHAND) {
 #ifdef HELLFIRE
-			if (plr[pnum]._pClass == PC_BARBARIAN
-				&& (plr[pnum].HoldItem._itype == ITYPE_SWORD || plr[pnum].HoldItem._itype == ITYPE_MACE)
-			)
-				il = ILOC_ONEHAND;
-			else
+		if (plr[pnum]._pClass == PC_BARBARIAN
+		    && (plr[pnum].HoldItem._itype == ITYPE_SWORD || plr[pnum].HoldItem._itype == ITYPE_MACE))
+			il = ILOC_ONEHAND;
+		else
 #endif
-				il = ILOC_TWOHAND;
+			il = ILOC_TWOHAND;
 		done = TRUE;
 	}
 	if (plr[pnum].HoldItem._iLoc == ILOC_UNEQUIPABLE && il == ILOC_BELT) {
@@ -1201,7 +1199,11 @@ void CheckInvPaste(int pnum, int mx, int my)
 	case ILOC_ONEHAND:
 		if (r <= SLOTXY_HAND_LEFT_LAST) {
 			if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_NONE) {
-				if (plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_NONE || plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iClass != plr[pnum].HoldItem._iClass) {
+				if ((plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_NONE || plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iClass != plr[pnum].HoldItem._iClass)
+#ifdef HELLFIRE
+				    || (plr[pnum]._pClass == PC_BARD && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON && plr[pnum].HoldItem._iClass == ICLASS_WEAPON)
+#endif
+				) {
 					NetSendCmdChItem(FALSE, INVLOC_HAND_LEFT);
 					plr[pnum].InvBody[INVLOC_HAND_LEFT] = plr[pnum].HoldItem;
 				} else {
@@ -1210,7 +1212,11 @@ void CheckInvPaste(int pnum, int mx, int my)
 				}
 				break;
 			}
-			if (plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_NONE || plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iClass != plr[pnum].HoldItem._iClass) {
+			if ((plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_NONE || plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iClass != plr[pnum].HoldItem._iClass)
+#ifdef HELLFIRE
+			    || (plr[pnum]._pClass == PC_BARD && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON && plr[pnum].HoldItem._iClass == ICLASS_WEAPON)
+#endif
+			) {
 				NetSendCmdChItem(FALSE, INVLOC_HAND_LEFT);
 				cn = SwapItem(&plr[pnum].InvBody[INVLOC_HAND_LEFT], &plr[pnum].HoldItem);
 				break;
@@ -1221,8 +1227,16 @@ void CheckInvPaste(int pnum, int mx, int my)
 			break;
 		}
 		if (plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_NONE) {
-			if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_NONE || plr[pnum].InvBody[INVLOC_HAND_LEFT]._iLoc != ILOC_TWOHAND) {
-				if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_NONE || plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass != plr[pnum].HoldItem._iClass) {
+			if ((plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_NONE || plr[pnum].InvBody[INVLOC_HAND_LEFT]._iLoc != ILOC_TWOHAND)
+#ifdef HELLFIRE
+			    || (plr[pnum]._pClass == PC_BARBARIAN && (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SWORD || plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_MACE))
+#endif
+			) {
+				if ((plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_NONE || plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass != plr[pnum].HoldItem._iClass)
+#ifdef HELLFIRE
+				    || (plr[pnum]._pClass == PC_BARD && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON && plr[pnum].HoldItem._iClass == ICLASS_WEAPON)
+#endif
+				) {
 					NetSendCmdChItem(FALSE, INVLOC_HAND_RIGHT);
 					plr[pnum].InvBody[INVLOC_HAND_RIGHT] = plr[pnum].HoldItem;
 					break;
@@ -1231,14 +1245,22 @@ void CheckInvPaste(int pnum, int mx, int my)
 				cn = SwapItem(&plr[pnum].InvBody[INVLOC_HAND_LEFT], &plr[pnum].HoldItem);
 				break;
 			}
+#ifdef HELLFIRE
+			NetSendCmdChItem(FALSE, INVLOC_HAND_LEFT);
+#else
 			NetSendCmdDelItem(FALSE, INVLOC_HAND_LEFT);
 			NetSendCmdChItem(FALSE, INVLOC_HAND_RIGHT);
+#endif
 			SwapItem(&plr[pnum].InvBody[INVLOC_HAND_RIGHT], &plr[pnum].InvBody[INVLOC_HAND_LEFT]);
 			cn = SwapItem(&plr[pnum].InvBody[INVLOC_HAND_RIGHT], &plr[pnum].HoldItem);
 			break;
 		}
 
-		if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_NONE && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass == plr[pnum].HoldItem._iClass) {
+		if ((plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_NONE && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass == plr[pnum].HoldItem._iClass)
+#ifdef HELLFIRE
+		    && !(plr[pnum]._pClass == PC_BARD && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON && plr[pnum].HoldItem._iClass == ICLASS_WEAPON)
+#endif
+		) {
 			NetSendCmdChItem(FALSE, INVLOC_HAND_LEFT);
 			cn = SwapItem(&plr[pnum].InvBody[INVLOC_HAND_LEFT], &plr[pnum].HoldItem);
 			break;
@@ -1284,7 +1306,7 @@ void CheckInvPaste(int pnum, int mx, int my)
 			NetSendCmdChItem(FALSE, INVLOC_HAND_LEFT);
 			plr[pnum].InvBody[INVLOC_HAND_LEFT] = plr[pnum].HoldItem;
 		}
-		if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_STAFF && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iSpell != 0 && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iCharges > 0) {
+		if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_STAFF && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iSpell != SPL_NULL && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iCharges > 0) {
 			plr[pnum]._pRSpell = plr[pnum].InvBody[INVLOC_HAND_LEFT]._iSpell;
 			plr[pnum]._pRSplType = RSPLTYPE_CHARGES;
 			force_redraw = 255;
@@ -1324,11 +1346,11 @@ void CheckInvPaste(int pnum, int mx, int my)
 					plr[pnum].InvList[il]._iCurs = ICURS_GOLD_LARGE;
 					// BUGFIX: incorrect values here are leftover from beta
 					if (plr[pnum].HoldItem._ivalue >= GOLD_MEDIUM_LIMIT)
-						cn = 18;
+						cn = ICURS_GOLD_LARGE + CURSOR_FIRSTITEM;
 					else if (plr[pnum].HoldItem._ivalue <= GOLD_SMALL_LIMIT)
-						cn = 16;
+						cn = ICURS_GOLD_SMALL + CURSOR_FIRSTITEM;
 					else
-						cn = 17;
+						cn = ICURS_GOLD_MEDIUM + CURSOR_FIRSTITEM;
 				}
 			} else {
 				il = plr[pnum]._pNumInv;
@@ -1343,6 +1365,10 @@ void CheckInvPaste(int pnum, int mx, int my)
 						plr[pnum].InvList[il]._iCurs = ICURS_GOLD_SMALL;
 					else
 						plr[pnum].InvList[il]._iCurs = ICURS_GOLD_MEDIUM;
+#ifdef HELLFIRE
+				} else {
+					plr[pnum].InvList[ii]._iCurs = ICURS_GOLD_LARGE;
+#endif
 				}
 			}
 		} else {
@@ -1407,11 +1433,11 @@ void CheckInvPaste(int pnum, int mx, int my)
 
 						// BUGFIX: incorrect values here are leftover from beta
 						if (plr[pnum].HoldItem._ivalue >= GOLD_MEDIUM_LIMIT)
-							cn = 18;
+							cn = ICURS_GOLD_LARGE + CURSOR_FIRSTITEM;
 						else if (plr[pnum].HoldItem._ivalue <= GOLD_SMALL_LIMIT)
-							cn = 16;
+							cn = ICURS_GOLD_SMALL + CURSOR_FIRSTITEM;
 						else
-							cn = 17;
+							cn = ICURS_GOLD_MEDIUM + CURSOR_FIRSTITEM;
 					}
 				} else {
 					plr[pnum]._pGold += plr[pnum].HoldItem._ivalue;
@@ -2702,9 +2728,9 @@ void UseStaffCharge(int pnum)
 	if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_NONE
 	    && (plr[pnum].InvBody[INVLOC_HAND_LEFT]._iMiscId == IMISC_STAFF
 #ifdef HELLFIRE
-	           || plr[myplr].InvBody[INVLOC_HAND_LEFT]._iMiscId == IMISC_UNIQUE // BUGFIX: myplr->pnum
+	        || plr[myplr].InvBody[INVLOC_HAND_LEFT]._iMiscId == IMISC_UNIQUE // BUGFIX: myplr->pnum
 #endif
-	           )
+	        )
 	    && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iSpell == plr[pnum]._pRSpell
 	    && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iCharges > 0) {
 		plr[pnum].InvBody[INVLOC_HAND_LEFT]._iCharges--;

@@ -208,7 +208,7 @@ static void sync_monster(int pnum, const TSyncMonster *p)
 		return;
 	}
 
-	for (i = 0; i < nummonsters; i++) {
+	for (i = 0; i < nummonsters; i++) { // CODEFIX: this loop does nothing
 		if (monstactive[i] == ndx) {
 			break;
 		}

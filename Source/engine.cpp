@@ -887,10 +887,9 @@ void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel)
 				} else {
 					nDataSize -= width;
 					assert(nDataSize >= 0);
-					while (width) {
+					while (width--) {
 						*dst = ttbl[*dst];
 						dst++;
-						width--;
 					}
 				}
 			}

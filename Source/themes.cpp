@@ -193,7 +193,7 @@ BOOL CheckThemeObj3(int xp, int yp, int t, int f)
 			return FALSE;
 		if (dObject[xp + trm3x[i]][yp + trm3y[i]])
 			return FALSE;
-		if (f != -1 && !random_(0, f))
+		if (f != -1 && random_(0, f) == 0)
 			return FALSE;
 	}
 

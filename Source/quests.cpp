@@ -119,34 +119,34 @@ void InitQuests()
 	for (z = 0; z < MAXQUESTS; z++) {
 		if (gbMaxPlayers > 1 && !(questlist[z]._qflags & QUEST_ANY))
 			continue;
-			quests[z]._qtype = questlist[z]._qdtype;
-			if (gbMaxPlayers > 1) {
-				quests[z]._qlevel = questlist[z]._qdmultlvl;
-				if (!delta_quest_inited(initiatedQuests)) {
-					quests[z]._qactive = QUEST_INIT;
-					quests[z]._qvar1 = 0;
-					quests[z]._qlog = FALSE;
-				}
-				initiatedQuests++;
-			} else {
+		quests[z]._qtype = questlist[z]._qdtype;
+		if (gbMaxPlayers > 1) {
+			quests[z]._qlevel = questlist[z]._qdmultlvl;
+			if (!delta_quest_inited(initiatedQuests)) {
 				quests[z]._qactive = QUEST_INIT;
-				quests[z]._qlevel = questlist[z]._qdlvl;
 				quests[z]._qvar1 = 0;
 				quests[z]._qlog = FALSE;
 			}
+			initiatedQuests++;
+		} else {
+			quests[z]._qactive = QUEST_INIT;
+			quests[z]._qlevel = questlist[z]._qdlvl;
+			quests[z]._qvar1 = 0;
+			quests[z]._qlog = FALSE;
+		}
 
-			quests[z]._qslvl = questlist[z]._qslvl;
-			quests[z]._qtx = 0;
-			quests[z]._qty = 0;
-			quests[z]._qidx = z;
-			quests[z]._qlvltype = questlist[z]._qlvlt;
-			quests[z]._qvar2 = 0;
-			quests[z]._qmsg = questlist[z]._qdmsg;
+		quests[z]._qslvl = questlist[z]._qslvl;
+		quests[z]._qtx = 0;
+		quests[z]._qty = 0;
+		quests[z]._qidx = z;
+		quests[z]._qlvltype = questlist[z]._qlvlt;
+		quests[z]._qvar2 = 0;
+		quests[z]._qmsg = questlist[z]._qdmsg;
 	}
 
 	if (gbMaxPlayers == 1) {
 		SetRndSeed(glSeedTbl[15]);
-		if (random_(0, 2))
+		if (random_(0, 2) != 0)
 			quests[Q_PWATER]._qactive = QUEST_NOTAVAIL;
 		else
 			quests[Q_SKELKING]._qactive = QUEST_NOTAVAIL;
@@ -202,7 +202,7 @@ void CheckQuests()
 		quests[Q_BETRAYER]._qty = 2 * quests[Q_BETRAYER]._qty + 16;
 		rportx = quests[Q_BETRAYER]._qtx;
 		rporty = quests[Q_BETRAYER]._qty;
-		AddMissile(rportx, rporty, rportx, rporty, 0, MIS_RPORTAL, 0, myplr, 0, 0);
+		AddMissile(rportx, rporty, rportx, rporty, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
 		quests[Q_BETRAYER]._qvar2 = 1;
 		if (quests[Q_BETRAYER]._qactive == QUEST_ACTIVE) {
 			quests[Q_BETRAYER]._qvar1 = 3;
@@ -215,7 +215,7 @@ void CheckQuests()
 	    && quests[Q_BETRAYER]._qvar2 == 4) {
 		rportx = 35;
 		rporty = 32;
-		AddMissile(rportx, rporty, rportx, rporty, 0, MIS_RPORTAL, 0, myplr, 0, 0);
+		AddMissile(rportx, rporty, rportx, rporty, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
 		quests[Q_BETRAYER]._qvar2 = 3;
 	}
 
@@ -426,7 +426,7 @@ void CheckQuestKill(int m, BOOL sendmsg)
 		quests[Q_BETRAYER]._qvar1 = 7;
 		quests[Q_BETRAYER]._qvar2 = 4;
 		quests[Q_DIABLO]._qactive = QUEST_ACTIVE;
-		AddMissile(35, 32, 35, 32, 0, MIS_RPORTAL, 0, myplr, 0, 0);
+		AddMissile(35, 32, 35, 32, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
 		if (plr[myplr]._pClass == PC_WARRIOR) {
 			sfxdnum = PS_WARR83;
 		} else if (plr[myplr]._pClass == PC_ROGUE) {

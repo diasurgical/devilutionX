@@ -197,7 +197,7 @@ MonsterData monsterdata[] = {
 #ifdef HELLFIRE
 int MonstConvTbl[] = {
 #else
-BYTE MonstConvTbl[] = {
+char MonstConvTbl[] = {
 #endif
 	MT_NZOMBIE,
 	MT_BZOMBIE,
@@ -367,7 +367,7 @@ BYTE MonstConvTbl[] = {
 #ifdef HELLFIRE
 int MonstAvailTbl[] = {
 #else
-BYTE MonstAvailTbl[] = {
+char MonstAvailTbl[] = {
 #endif
 	MAT_ALWAYS, // Zombie
 	MAT_ALWAYS, // Ghoul
@@ -405,7 +405,7 @@ BYTE MonstAvailTbl[] = {
 #ifdef HELLFIRE
 	MAT_RETAIL, // Satyr Lord
 #else
-	MAT_NEVER,  // Lord Sayter
+	MAT_NEVER, // Lord Sayter
 #endif
 	MAT_RETAIL, // Flesh Clan
 	MAT_RETAIL, // Stone Clan
@@ -456,7 +456,7 @@ BYTE MonstAvailTbl[] = {
 #ifdef HELLFIRE
 	MAT_RETAIL, // Devil Kin Brute
 #else
-	MAT_NEVER,  // Devil Kin Brute
+	MAT_NEVER, // Devil Kin Brute
 #endif
 	MAT_RETAIL, // Winged-Demon
 	MAT_RETAIL, // Gargoyle
@@ -477,7 +477,7 @@ BYTE MonstAvailTbl[] = {
 #ifdef HELLFIRE
 	MAT_RETAIL, // The Shredded
 #else
-	MAT_NEVER,  // Unraveler
+	MAT_NEVER, // Unraveler
 #endif
 	MAT_NEVER,  // Hollow One
 	MAT_NEVER,  // Pain Master
