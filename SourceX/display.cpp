@@ -132,12 +132,14 @@ scePowerSetArmClockFrequency(444);
 		ErrSdl();
 	}
 
+#ifndef USE_SDL1
 	char mapping[1024];
 	memset(mapping, 0, 1024);
 	getIniValue("controls","sdl2_controller_mapping", mapping, 1024);
 	if (mapping[0] != '\0') {
 		SDL_GameControllerAddMapping(mapping);
 	}
+#endif
 
 #ifdef USE_SDL1
 	SDL_EnableUNICODE(1);
