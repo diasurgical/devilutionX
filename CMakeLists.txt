@@ -572,9 +572,9 @@ foreach(target devilution ${BIN_TARGET} SourceS)
   target_compile_definitions(${target} PRIVATE ${def_list})
 endforeach(target)
 
-#if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT HAIKU)
-#  target_link_libraries(${BIN_TARGET} PUBLIC "$<$<NOT:$<CONFIG:Debug>>:-static-libgcc;-static-libstdc++>")
-#endif()
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT HAIKU AND NOT VITA)
+  target_link_libraries(${BIN_TARGET} PUBLIC "$<$<NOT:$<CONFIG:Debug>>:-static-libgcc;-static-libstdc++>")
+endif()
 
 if(WIN32)
   target_link_libraries(${BIN_TARGET} PRIVATE wsock32 ws2_32 wininet)
