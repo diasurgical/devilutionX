@@ -499,6 +499,41 @@ genex_for_option(ASAN)
 genex_for_option(UBSAN)
 
 foreach(target devilution ${BIN_TARGET} SourceS)
+
+  target_compile_options(${target} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
+  target_link_libraries(${target} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
+  target_compile_options(${target} PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined>)
+  target_link_libraries(${target} PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined>)
+
+  if(USE_SDL1)
+    target_link_libraries(${target} PRIVATE
+      ${SDL_TTF_LIBRARY}
+      ${SDL_MIXER_LIBRARY}
+      ${SDL_LIBRARY})
+    target_compile_definitions(${target} PRIVATE USE_SDL1)
+  else()
+    target_link_libraries(${target} PRIVATE
+      SDL2::SDL2
+      SDL2::SDL2main
+      SDL2::SDL2_ttf
+      SDL2::SDL2_mixer)
+  endif()
+
+  if(SWITCH)
+    target_link_libraries(${target} PRIVATE switch::libnx
+      -lfreetype -lvorbisfile -lvorbis -logg -lmodplug -lmpg123 -lSDL2 -lopusfile -lopus -lEGL -lglapi -ldrm_nouveau -lpng -lbz2 -lz -lnx)
+  endif()
+
+  if(AMIGA)
+    target_link_libraries(${target} PRIVATE
+      ${FREETYPE_LIBRARY}
+      ${ZLIB_LIBRARY})
+    if(NOT WARPOS)
+      target_link_libraries(${target} PRIVATE -ldebug)
+    endif()
+  endif()
+
+
   if (VITA)
     target_link_libraries(${target} PRIVATE
           pib
@@ -535,38 +570,6 @@ foreach(target devilution ${BIN_TARGET} SourceS)
           mpg123
     )
     target_compile_definitions(${target} PRIVATE VITA)
-  endif()
-
-  target_compile_options(${target} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
-  target_link_libraries(${target} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
-  target_compile_options(${target} PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined>)
-  target_link_libraries(${target} PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined>)
-
-  if(USE_SDL1)
-    target_link_libraries(${target} PRIVATE
-      ${SDL_TTF_LIBRARY}
-      ${SDL_MIXER_LIBRARY}
-      ${SDL_LIBRARY})
-    target_compile_definitions(${target} PRIVATE USE_SDL1)
-  else()
-    target_link_libraries(${target} PRIVATE
-      SDL2::SDL2main
-      SDL2::SDL2_ttf
-      SDL2::SDL2_mixer)
-  endif()
-
-  if(SWITCH)
-    target_link_libraries(${target} PRIVATE switch::libnx
-      -lfreetype -lvorbisfile -lvorbis -logg -lmodplug -lmpg123 -lSDL2 -lopusfile -lopus -lEGL -lglapi -ldrm_nouveau -lpng -lbz2 -lz -lnx)
-  endif()
-
-  if(AMIGA)
-    target_link_libraries(${target} PRIVATE
-      ${FREETYPE_LIBRARY}
-      ${ZLIB_LIBRARY})
-    if(NOT WARPOS)
-      target_link_libraries(${target} PRIVATE -ldebug)
-    endif()
   endif()
 
   target_compile_definitions(${target} PRIVATE ${def_list})
