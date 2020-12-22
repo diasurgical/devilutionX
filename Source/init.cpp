@@ -13,7 +13,10 @@
 #include <config.h>
 
 
+#ifdef __vita__
+// increase default allowed heap size on Vita
 int _newlib_heap_size_user = 100 * 1024 * 1024;
+#endif
 
 DEVILUTION_BEGIN_NAMESPACE
 
