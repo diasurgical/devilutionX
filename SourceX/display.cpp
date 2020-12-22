@@ -227,9 +227,7 @@ scePowerSetArmClockFrequency(444);
 		Uint32 rendererFlags = SDL_RENDERER_ACCELERATED;
 
 		vsyncEnabled = 1;
-#ifndef __vita__
 		DvlIntSetting("vsync", &vsyncEnabled);
-#endif
 		if (vsyncEnabled) {
 			rendererFlags |= SDL_RENDERER_PRESENTVSYNC;
 		}
