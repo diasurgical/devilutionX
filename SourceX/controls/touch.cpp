@@ -94,7 +94,7 @@ static void init_touch(void)
 	x_borderwidth = (current.w - visible_width) / 2;
 	y_borderwidth = (current.h - visible_height) / 2;
 #ifdef __vita__
-	back_touch = dvl::getIniBool("vita","back_touch", true);
+	back_touch = dvl::getIniBool("controls","enable_second_touchscreen", true);
 #endif
 }
 

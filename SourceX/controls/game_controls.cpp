@@ -102,7 +102,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrl_event, Gam
 		switch (ctrl_event.button) {
 		case ControllerButton_BUTTON_LEFTSHOULDER:
 #ifdef __vita__
-			if ((select_modifier_active && !getIniBool("vita","switch_potions_and_clicks")) || (getIniBool("vita","switch_potions_and_clicks") && !select_modifier_active) ) {
+			if ((select_modifier_active && !getIniBool("controls","switch_potions_and_clicks")) || (getIniBool("controls","switch_potions_and_clicks") && !select_modifier_active) ) {
 #else
 			if (select_modifier_active) {
 #endif
@@ -113,7 +113,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrl_event, Gam
 			break;
 		case ControllerButton_BUTTON_RIGHTSHOULDER:
 #ifdef __vita__
-			if ((select_modifier_active && !getIniBool("vita","switch_potions_and_clicks")) || (getIniBool("vita","switch_potions_and_clicks") && !select_modifier_active) ) {
+			if ((select_modifier_active && !getIniBool("controls","switch_potions_and_clicks")) || (getIniBool("controls","switch_potions_and_clicks") && !select_modifier_active) ) {
 #else
 			if (select_modifier_active) {
 #endif
@@ -154,7 +154,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrl_event, Gam
 			break;
 		}
 #ifdef __vita__
-		if (getIniBool("vita","dpad_hotkeys")) {
+		if (getIniBool("controls","dpad_hotkeys")) {
 			switch (ctrl_event.button) {
 			case ControllerButton_BUTTON_DPAD_UP:
 				*action = GameActionSendKey{ DVL_VK_ESCAPE, ctrl_event.up };
@@ -327,7 +327,7 @@ MoveDirection GetMoveDirection()
 	MoveDirection result{ MoveDirectionX_NONE, MoveDirectionY_NONE };
 
 #ifdef __vita__
-	const bool hotkeys = getIniBool("vita","dpad_hotkeys");
+	const bool hotkeys = getIniBool("controls","dpad_hotkeys");
 
 	if (stickY >= 0.5 || (!hotkeys && IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_UP))) {
 		result.y = MoveDirectionY_UP;
