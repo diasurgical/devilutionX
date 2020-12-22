@@ -196,9 +196,6 @@ scePowerSetArmClockFrequency(444);
 		DvlStringSetting("scaling quality", scaleQuality, 2);
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, scaleQuality);
 	} else if (fullscreen) {
-#ifdef __vita__
-		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, 0);
-#endif
 		flags |= SDL_WINDOW_FULLSCREEN;
 	}
 
