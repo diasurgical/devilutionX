@@ -213,8 +213,6 @@ const char *const ClassStrTbl[] = {
 	"Rogue",
 	"Warrior",
 };
-/** Unused local of PM_ChangeLightOff, originally for computing light radius. */
-BYTE fix[9] = { 0, 0, 3, 3, 3, 6, 6, 6, 8 };
 
 void SetPlayerGPtrs(BYTE *pData, BYTE **pAnim)
 {

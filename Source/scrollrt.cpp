@@ -57,44 +57,13 @@ DWORD sgdwCursHgtOld;
 
 bool dRendered[MAXDUNX][MAXDUNY];
 
+int frames;
+BOOL frameflag;
+int frameend;
+int framerate;
+int framestart;
+
 /* data */
-
-/* used in 1.00 debug */
-const char *const szMonModeAssert[18] = {
-	"standing",
-	"walking (1)",
-	"walking (2)",
-	"walking (3)",
-	"attacking",
-	"getting hit",
-	"dying",
-	"attacking (special)",
-	"fading in",
-	"fading out",
-	"attacking (ranged)",
-	"standing (special)",
-	"attacking (special ranged)",
-	"delaying",
-	"charging",
-	"stoned",
-	"healing",
-	"talking"
-};
-
-const char *const szPlrModeAssert[12] = {
-	"standing",
-	"walking (1)",
-	"walking (2)",
-	"walking (3)",
-	"attacking (melee)",
-	"attacking (ranged)",
-	"blocking",
-	"getting hit",
-	"dying",
-	"casting a spell",
-	"changing levels",
-	"quitting"
-};
 
 /**
  * @brief Clear cursor state
@@ -374,7 +343,7 @@ static void DrawManaShild(int pnum, int x, int y, bool lighting)
  */
 static void DrawPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, int nCel, int nWidth)
 {
-	int l, frames;
+	int l;
 
 	if ((dFlags[x][y] & BFLAG_LIT) == 0 && !plr[myplr]._pInfraFlag && leveltype != DTYPE_TOWN) {
 		return;
@@ -688,9 +657,11 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy)
 	if (sy > 0) // check for OOB
 		negMon = dMonster[sx][sy - 1];
 
+#ifdef _DEBUG
 	if (visiondebug && bFlag & BFLAG_LIT) {
 		CelClippedDraw(dx, dy, pSquareCel, 1, 64);
 	}
+#endif
 
 	if (MissilePreFlag) {
 		DrawMissile(sx, sy, dx, dy, TRUE);

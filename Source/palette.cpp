@@ -47,7 +47,7 @@ void ApplyGamma(SDL_Color *dst, const SDL_Color *src, int n)
 	force_redraw = 255;
 }
 
-void SaveGamma()
+static void SaveGamma()
 {
 	SRegSaveValue("Diablo", "Gamma Correction", 0, gamma_correction);
 	SRegSaveValue("Diablo", "Color Cycling", FALSE, color_cycling_enabled);

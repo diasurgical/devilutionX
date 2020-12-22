@@ -619,7 +619,6 @@ static void items_42390F()
 void InitItems()
 {
 	int i;
-	long s;
 
 	GetItemAttrs(0, IDI_GOLD, 1);
 	golditem = item[0];
@@ -642,7 +641,7 @@ void InitItems()
 	}
 
 	if (!setlevel) {
-		s = AdvanceRndSeed(); /* unused */
+		AdvanceRndSeed(); /* unused */
 		if (QuestStatus(Q_ROCK))
 			SpawnRock();
 		if (QuestStatus(Q_ANVIL))

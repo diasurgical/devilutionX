@@ -28,19 +28,10 @@ BOOL zoomflag;
 /** Enable updating of player character, set to false once Diablo dies */
 BOOL gbProcessPlayers;
 BOOL gbLoadGame;
-int DebugMonsters[10];
 BOOLEAN cineflag;
 int force_redraw;
-BOOL visiondebug;
-/** unused */
-BOOL scrollflag;
 BOOL light4flag;
-BOOL leveldebug;
-BOOL monstdebug;
-/** unused */
-BOOL trigdebug;
 int setseed;
-int debugmonsttypes;
 int PauseMode;
 bool forceSpawn;
 bool forceDiablo;
@@ -65,8 +56,13 @@ Options sgOptions;
  * screen, as needed for efficient rendering in fullscreen mode.
  */
 BOOL fullscreen = TRUE;
-int showintrodebug = 1;
+bool gbShowIntro = true;
 #ifdef _DEBUG
+BOOL monstdebug;
+int DebugMonsters[10];
+int debugmonsttypes;
+BOOL visiondebug;
+BOOL leveldebug;
 int questdebug = -1;
 int debug_mode_key_s;
 int debug_mode_key_w;
@@ -79,10 +75,6 @@ int dbgqst;
 int dbgmon;
 int arrowdebug;
 #endif
-int frameflag;
-int frameend;
-int framerate;
-int framestart;
 /** Specifies whether players are in non-PvP mode. */
 BOOL FriendlyMode = TRUE;
 /** Default quick messages */
@@ -157,7 +149,7 @@ static void diablo_parse_flags(int argc, char **argv)
 		} else if (strcasecmp("--config-dir", argv[i]) == 0) {
 			SetConfigPath(argv[++i]);
 		} else if (strcasecmp("-n", argv[i]) == 0) {
-			showintrodebug = FALSE;
+			gbShowIntro = false;
 		} else if (strcasecmp("-f", argv[i]) == 0) {
 			EnableFrameCount();
 		} else if (strcasecmp("-x", argv[i]) == 0) {
@@ -340,7 +332,7 @@ static void run_game_loop(unsigned int uMsg)
 		}
 		if (!gbRunGame)
 			break;
-		if (!nthread_has_500ms_passed(FALSE)) {
+		if (!nthread_has_500ms_passed()) {
 			ProcessInput();
 			DrawAndBlit();
 			continue;
@@ -476,7 +468,7 @@ static void diablo_init()
 
 static void diablo_splash()
 {
-	if (!showintrodebug)
+	if (!gbShowIntro)
 		return;
 
 	play_movie("gendata\\logo.smk", TRUE);
@@ -1914,7 +1906,7 @@ void game_loop(BOOL bStartup)
 			timeout_cursor(FALSE);
 			game_logic();
 		}
-		if (!gbRunGame || !gbIsMultiplayer || !nthread_has_500ms_passed(TRUE))
+		if (!gbRunGame || !gbIsMultiplayer || !nthread_has_500ms_passed())
 			break;
 	}
 }

@@ -16,7 +16,6 @@ extern BYTE movie_playing;
 extern BOOL loop_movie;
 
 void play_movie(const char *pszMovie, BOOL user_can_close);
-void MovieWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 
 #ifdef __cplusplus
 }

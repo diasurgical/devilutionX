@@ -45,8 +45,6 @@ extern BYTE *pSpecialCels;
 extern BYTE *pMegaTiles;
 extern BYTE *pLevelPieces;
 extern BYTE *pDungeonCels;
-extern BYTE *pSpeedCels;
-extern int SpeedFrameTbl[128][16];
 extern char block_lvid[MAXTILES + 1];
 extern BOOLEAN nBlockTable[MAXTILES + 1];
 extern BOOLEAN nSolidTable[MAXTILES + 1];

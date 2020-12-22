@@ -7,8 +7,6 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-/** unused, this was probably for blood boil/burn */
-int spurtndx;
 DeadStruct dead[MAXDEAD];
 int stonendx;
 
@@ -42,7 +40,6 @@ void InitDead()
 	dead[nd]._deadWidth = 128;
 	dead[nd]._deadWidth2 = 32;
 	dead[nd]._deadtrans = 0;
-	spurtndx = nd + 1;
 	nd++;
 
 	for (d = 0; d < 8; d++)

@@ -11,8 +11,6 @@ BOOL storeflag;
 int sgnCowMsg;
 int numtowners;
 DWORD sgdwCowClicks;
-/** unused 0x6AAC28 */
-BOOL bannerflag;
 BOOL boyloadflag;
 BYTE *pCowCels;
 TownerStruct towner[NUM_TOWNERS];
@@ -254,13 +252,10 @@ void InitSmith()
 
 void InitBarOwner()
 {
-	int i;
-
-	bannerflag = FALSE; // unused
 	InitTownerInfo(numtowners, 96, TRUE, TOWN_TAVERN, 55, 62, 3, 10);
 	InitQstSnds(numtowners);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\TwnF\\TwnFN.CEL", NULL);
-	for (i = 0; i < 8; i++) {
+	for (int i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
 	}
 	towner[numtowners]._tNFrames = 16;

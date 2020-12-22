@@ -21,7 +21,6 @@ typedef struct RECT32 {
 
 extern BOOL drawhpflag;
 extern BOOL dropGoldFlag;
-extern BOOL panbtn[8];
 extern BOOL chrbtn[4];
 extern BOOL lvlbtndown;
 extern int dropGoldValue;
@@ -33,7 +32,6 @@ extern BOOL pinfoflag;
 extern int pSpell;
 extern char infoclr;
 extern char tempstr[256];
-extern BOOLEAN whisper[MAX_PLRS];
 extern int sbooktab;
 extern int pSplType;
 extern int initialDropGoldIndex;
@@ -42,7 +40,6 @@ extern BOOL sbookflag;
 extern BOOL chrflag;
 extern BOOL drawbtnflag;
 extern char infostr[256];
-extern char panelstr[4][64];
 extern BOOL panelflag;
 extern int initialDropGoldValue;
 extern BOOL panbtndown;

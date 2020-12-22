@@ -27,20 +27,12 @@ extern BOOL gbRunGameResult;
 extern BOOL zoomflag;
 extern BOOL gbProcessPlayers;
 extern BOOL gbLoadGame;
-extern HINSTANCE ghInst;
-extern int DebugMonsters[10];
 extern BOOLEAN cineflag;
 extern int force_redraw;
-extern BOOL visiondebug;
 /* These are defined in fonts.h */
 extern BOOL was_fonts_init;
 extern void FontsCleanup();
-/** unused */
 extern BOOL light4flag;
-extern BOOL leveldebug;
-extern BOOL monstdebug;
-/** unused */
-extern int debugmonsttypes;
 extern int PauseMode;
 extern BOOLEAN UseTheoQuest;
 extern BOOLEAN UseCowFarmer;
@@ -70,8 +62,12 @@ void LoadOptions();
 /* rdata */
 
 extern BOOL fullscreen;
-extern int showintrodebug;
 #ifdef _DEBUG
+extern BOOL monstdebug;
+extern int debugmonsttypes;
+extern int DebugMonsters[10];
+extern BOOL visiondebug;
+extern BOOL leveldebug;
 extern int questdebug;
 extern int debug_mode_key_w;
 extern int debug_mode_key_inverted_v;
@@ -82,10 +78,6 @@ extern int dbgplr;
 extern int dbgqst;
 extern int dbgmon;
 #endif
-extern int frameflag;
-extern int frameend;
-extern int framerate;
-extern int framestart;
 extern BOOL FriendlyMode;
 
 #ifdef __cplusplus

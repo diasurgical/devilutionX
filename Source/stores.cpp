@@ -2580,20 +2580,23 @@ void S_HBuyEnter()
 		stextvhold = stextsval;
 		stextshold = STORE_HBUY;
 		idx = stextsval + ((stextsel - stextup) >> 2);
+
 		if (plr[myplr]._pGold < healitem[idx]._iIvalue) {
 			StartStore(STORE_NOMONEY);
 		} else {
 			plr[myplr].HoldItem = healitem[idx];
 			SetCursor_(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			done = FALSE;
-			i = 0;
+
 			for (i = 0; i < NUM_INV_GRID_ELEM && !done; i++) {
 				done = SpecialAutoPlace(myplr, i, cursW / 28, cursH / 28);
 			}
+
 			if (done)
 				StartStore(STORE_CONFIRM);
 			else
 				StartStore(STORE_NOROOM);
+
 			SetCursor_(CURSOR_HAND);
 		}
 	}
