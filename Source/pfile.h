@@ -14,7 +14,6 @@ extern "C" {
 
 extern BOOL gbValidSaveFile;
 
-void pfile_init_save_directory();
 void pfile_write_hero();
 BOOL pfile_create_player_description(char *dst, DWORD len);
 BOOL pfile_rename_hero(const char *name_1, const char *name_2);

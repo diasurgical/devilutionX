@@ -12,7 +12,6 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
-extern void (*dword_63447C)(TMenuItem *);
 extern TMenuItem *sgpCurrentMenu;
 
 void gmenu_draw_pause();

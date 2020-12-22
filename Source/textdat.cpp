@@ -646,7 +646,5 @@ const TextDataStruct alltext[] = {
 	{ "Praedictum Otium. |", 1, 5, PS_ROGUE55 },
 	{ "Efficio Obitus Ut Inimicus. |", 1, 5, PS_ROGUE56 },
 };
-/** unused */
-const DWORD gdwAllTextEntries = 259;
 
 DEVILUTION_END_NAMESPACE

@@ -23,7 +23,6 @@ PATHNODE *pnode_ptr;
 PATHNODE *pnode_tblptr[MAXPATHNODES];
 /** A linked list of the A* frontier, sorted by distance */
 PATHNODE *path_2_nodes;
-PATHNODE path_unusednodes[MAXPATHNODES];
 
 /** For iterating over the 8 possible movement directions */
 const char pathxdir[8] = { -1, -1, 1, 1, -1, 0, 1, 0 };

@@ -22,23 +22,12 @@ typedef struct CornerStoneStruct {
 extern int itemactive[MAXITEMS];
 extern BOOL uitemflag;
 extern int itemavail[MAXITEMS];
-extern ItemGetRecordStruct itemrecord[MAXITEMS];
 extern ItemStruct item[MAXITEMS + 1];
 extern CornerStoneStruct CornerStone;
 extern BOOL UniqueItemFlag[128];
 extern int auricGold;
 extern int numitems;
 
-int get_ring_max_value(int i);
-int get_bow_max_value(int i);
-int get_staff_max_value(int i);
-int get_sword_max_value(int i);
-int get_helm_max_value(int i);
-int get_shield_max_value(int i);
-int get_armor_max_value(int i);
-int get_mace_max_value(int i);
-int get_amulet_max_value(int i);
-int get_axe_max_value(int i);
 void InitItemGFX();
 void InitItems();
 void CalcPlrItemVals(int p, BOOL Loadgfx);

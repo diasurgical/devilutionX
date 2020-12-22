@@ -16,7 +16,6 @@ static int AutoMapX;
 static int AutoMapY;
 /** Specifies whether the automap is enabled. */
 BOOL automapflag;
-char AmShiftTab[32];
 /** Tracks the explored areas of the map. */
 BOOLEAN automapview[DMAXX][DMAXY];
 /** Specifies the scale of the automap. */

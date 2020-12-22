@@ -17,10 +17,10 @@ BOOL MissilePreFlag;
 int numchains;
 
 /** Maps from direction to X-offset. */
-int XDirAdd[8] = { 1, 0, -1, -1, -1, 0, 1, 1 };
+const int XDirAdd[8] = { 1, 0, -1, -1, -1, 0, 1, 1 };
 /** Maps from direction to Y-offset. */
-int YDirAdd[8] = { 1, 1, 1, 0, -1, -1, -1, 0 };
-int CrawlNum[19] = { 0, 3, 12, 45, 94, 159, 240, 337, 450, 579, 724, 885, 1062, 1255, 1464, 1689, 1930, 2187, 2460 };
+const int YDirAdd[8] = { 1, 1, 1, 0, -1, -1, -1, 0 };
+const int CrawlNum[19] = { 0, 3, 12, 45, 94, 159, 240, 337, 450, 579, 724, 885, 1062, 1255, 1464, 1689, 1930, 2187, 2460 };
 
 void GetDamageAmt(int i, int *mind, int *maxd)
 {
@@ -3426,7 +3426,7 @@ void MI_Dummy(int i)
 void MI_Golem(int i)
 {
 	int tx, ty, dp, l, m, src, k, tid;
-	char *ct;
+	const char *ct;
 
 	src = missile[i]._misource;
 	if (monster[src]._mx == 1 && !monster[src]._my) {

@@ -17,7 +17,7 @@ DEVILUTION_BEGIN_NAMESPACE
 _SNETVERSIONDATA fileinfo;
 /** True if the game is the current active window */
 int gbActive;
-/** A handle to an unused MPQ archive. */
+/** A handle to an hellfire.mpq archive. */
 HANDLE hellfire_mpq;
 /** The current input handler function */
 WNDPROC CurrentProc;
