@@ -1,5 +1,6 @@
 #include "display.h"
 #include "DiabloUI/diabloui.h"
+#include "controls/game_controls.h"
 #include "controls/controller.h"
 #include "controls/devices/game_controller.h"
 #include "controls/devices/joystick.h"
@@ -140,6 +141,10 @@ scePowerSetArmClockFrequency(444);
 		SDL_GameControllerAddMapping(mapping);
 	}
 #endif
+
+	dpad_hotkeys = getIniBool("controls","dpad_hotkeys");
+	switch_potions_and_clicks = getIniBool("controls","switch_potions_and_clicks");
+
 
 #ifdef USE_SDL1
 	SDL_EnableUNICODE(1);
