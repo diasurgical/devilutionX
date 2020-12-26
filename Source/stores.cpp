@@ -43,6 +43,7 @@ ItemStruct smithitem[SMITH_ITEMS];
 int stextdown;
 char stextscrlubtn;
 char stextflag;
+BOOL forceSelection = FALSE;
 
 /** Maps from towner IDs to NPC names. */
 const char *const talkname[9] = {
@@ -427,6 +428,7 @@ void StoreAutoPlace()
 			done = AutoPlace(myplr, i, w, h, TRUE);
 		}
 	}
+	forceSelection = TRUE;
 }
 
 void S_StartSmith()
@@ -1726,7 +1728,8 @@ void STextESC()
 
 void STextUp()
 {
-	PlaySFX(IS_TITLEMOV);
+	if (!forceSelection) // disables playing the sound when adjusting selection to stay in the same position
+		PlaySFX(IS_TITLEMOV);
 	if (stextsel == -1) {
 		return;
 	}
@@ -1763,7 +1766,8 @@ void STextUp()
 
 void STextDown()
 {
-	PlaySFX(IS_TITLEMOV);
+	if (!forceSelection) // disables playing the sound when adjusting selection to stay in the same position
+		PlaySFX(IS_TITLEMOV);
 	if (stextsel == -1) {
 		return;
 	}
@@ -2543,6 +2547,18 @@ void S_ConfirmEnter()
 			break;
 		}
 		StartStore(stextshold);
+		if (forceSelection) {
+			stextsel = stextlhold;
+			stextsval = stextvhold; //making the selection stay after buying an item
+			if (stextsval >= 1) {
+				// this trick is the best way to use existing mechanics and make sure the selection is still valid
+				for (int i = 0; i < 4; i++) // replace 4 with number of lines shown in stores at the same time
+					STextUp();
+				for (int i = 0; i < 4; i++)
+					STextDown();
+			}
+			forceSelection = FALSE;
+		}
 	} else {
 		StartStore(stextshold);
 		stextsel = stextlhold;
