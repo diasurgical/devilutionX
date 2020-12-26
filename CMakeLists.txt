@@ -682,7 +682,7 @@ if(VITA)
   set(DOLCE_MKSFOEX_FLAGS "${DOLCE_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1")
   set(DOLCE_MKSFOEX_FLAGS "${DOLCE_MKSFOEX_FLAGS} -d ATTRIBUTE2=12")
   dolce_create_self(devilutionx.self devilutionx UNSAFE)
-  dolce_create_vpk(devilutionx-${PROJECT_VERSION}.vpk ${VITA_TITLEID} devilutionx.self
+  dolce_create_vpk(devilutionx.vpk ${VITA_TITLEID} devilutionx.self
     VERSION ${VITA_VERSION}
     NAME ${VITA_APP_NAME}
     FILE Packaging/vita/sce_sys/icon0.png sce_sys/icon0.png
