@@ -1688,7 +1688,7 @@ void CheckChrBtns()
 	}
 }
 
-void ReleaseChrBtns()
+void ReleaseChrBtns(bool addAllStatPoints)
 {
 	int i;
 
@@ -1700,22 +1700,23 @@ void ReleaseChrBtns()
 			    && MouseX <= ChrBtnsRect[i].x + ChrBtnsRect[i].w
 			    && MouseY >= ChrBtnsRect[i].y
 			    && MouseY <= ChrBtnsRect[i].y + ChrBtnsRect[i].h) {
+				int statPointsToAdd = addAllStatPoints ? plr[myplr]._pStatPts : 1;
 				switch (i) {
 				case 0:
-					NetSendCmdParam1(TRUE, CMD_ADDSTR, 1);
-					plr[myplr]._pStatPts--;
+					NetSendCmdParam1(TRUE, CMD_ADDSTR, statPointsToAdd);
+					plr[myplr]._pStatPts -= statPointsToAdd;
 					break;
 				case 1:
-					NetSendCmdParam1(TRUE, CMD_ADDMAG, 1);
-					plr[myplr]._pStatPts--;
+					NetSendCmdParam1(TRUE, CMD_ADDMAG, statPointsToAdd);
+					plr[myplr]._pStatPts -= statPointsToAdd;
 					break;
 				case 2:
-					NetSendCmdParam1(TRUE, CMD_ADDDEX, 1);
-					plr[myplr]._pStatPts--;
+					NetSendCmdParam1(TRUE, CMD_ADDDEX, statPointsToAdd);
+					plr[myplr]._pStatPts -= statPointsToAdd;
 					break;
 				case 3:
-					NetSendCmdParam1(TRUE, CMD_ADDVIT, 1);
-					plr[myplr]._pStatPts--;
+					NetSendCmdParam1(TRUE, CMD_ADDVIT, statPointsToAdd);
+					plr[myplr]._pStatPts -= statPointsToAdd;
 					break;
 				}
 			}

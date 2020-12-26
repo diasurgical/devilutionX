@@ -700,14 +700,15 @@ static BOOL LeftMouseDown(int wParam)
 	return FALSE;
 }
 
-static void LeftMouseUp()
+static void LeftMouseUp(int wParam)
 {
 	gmenu_left_mouse(FALSE);
 	control_release_talk_btn();
+	bool isShiftHeld = wParam & (DVL_MK_SHIFT | DVL_MK_LBUTTON);
 	if (panbtndown)
 		CheckBtnUp();
 	if (chrbtnactive)
-		ReleaseChrBtns();
+		ReleaseChrBtns(isShiftHeld);
 	if (lvlbtndown)
 		ReleaseLvlBtn();
 	if (stextflag != STORE_NONE)
@@ -1383,7 +1384,7 @@ void GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		GetMousePos(lParam);
 		if (sgbMouseDown == CLICK_LEFT) {
 			sgbMouseDown = CLICK_NONE;
-			LeftMouseUp();
+			LeftMouseUp(wParam);
 			track_repeat_walk(FALSE);
 		}
 		return;

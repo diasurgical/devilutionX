@@ -1075,7 +1075,7 @@ void PerformPrimaryAction()
 			    && MouseY <= ChrBtnsRect[i].h + ChrBtnsRect[i].y) {
 				chrbtn[i] = 1;
 				chrbtnactive = true;
-				ReleaseChrBtns();
+				ReleaseChrBtns(false);
 			}
 		}
 		return;
