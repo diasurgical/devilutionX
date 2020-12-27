@@ -102,16 +102,6 @@ jobs:
       - run: cmake -S. -Bbuild .. -DBINARY_RELEASE=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/switch/devkita64-libnx.cmake
       - run: cmake --build build -j $(nproc)
       - store_artifacts: {path: ./build/devilutionx.nro, destination: devilutionx.nro}
-  amigaos-m68k:
-    docker:
-      - image: amigadev/crosstools:m68k-amigaos
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: Packaging/amiga/prep.sh
-      - run: PKG_CONFIG_PATH=/opt/m68k-amigaos/lib/pkgconfig/:/opt/m68k-amigaos/share/pkgconfig/ cmake -S. -Bbuild -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-s -ffast-math -O3 -noixemul -D__BIG_ENDIAN__ -D__AMIGA__ -fpermissive" ..
-      - run: cd build && make -j$(nproc)
-      - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_m68k}
   3ds:
     docker:
       - image: devkitpro/devkitarm:latest
@@ -132,6 +122,25 @@ jobs:
       - run: cd build && cmake --build . -j $(nproc)
       - store_artifacts: {path: ./build/devilutionx.3dsx, destination: devilutionx.3dsx}
       - store_artifacts: {path: ./build/devilutionx.cia, destination: devilutionx.cia}
+  amigaos-m68k:
+    docker:
+      - image: amigadev/crosstools:m68k-amigaos
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: Packaging/amiga/prep.sh
+      - run: PKG_CONFIG_PATH=/opt/m68k-amigaos/lib/pkgconfig/:/opt/m68k-amigaos/share/pkgconfig/ cmake -S. -Bbuild -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-s -ffast-math -O3 -noixemul -D__BIG_ENDIAN__ -D__AMIGA__ -fpermissive" ..
+      - run: cd build && make -j$(nproc)
+      - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_m68k}
+  vita:
+    docker:
+      - image: sarcasticat/dolcesdk:latest
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: cmake -S. -Bbuild -GNinja .. -DBINARY_RELEASE=ON -DVITA=1
+      - run: cmake --build build -j $(nproc)
+      - store_artifacts: {path: ./build/devilutionx.vpk, destination: devilutionx.vpk}
 
 workflows:
   version: 2
@@ -146,3 +155,4 @@ workflows:
       - switch
       - 3ds
       - amigaos-m68k
+      - vita
