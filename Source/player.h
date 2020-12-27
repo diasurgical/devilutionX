@@ -373,6 +373,13 @@ struct PlayerStruct {
 	 * @brief Play a player speach file, with out random variants.
 	 */
 	void PlaySpecificSpeach(int speachId) const;
+
+	/**
+	 * @brief Attempts to stop the player from performing any queued up action. If the player is currently walking, his walking will
+	 * stop as soon as he reaches the next tile. If any action was queued with the previous command (like targeting a monster,
+	 * opening a chest, picking an item up, etc) this action will also be cancelled.
+	 */
+	void Stop();
 };
 
 extern int myplr;

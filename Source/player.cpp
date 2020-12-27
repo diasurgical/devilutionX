@@ -285,6 +285,12 @@ void PlayerStruct::PlaySpeach(int speachId, int delay) const
 	sfxdnum = herosounds[static_cast<size_t>(_pClass)][speachId - 1];
 }
 
+void PlayerStruct::Stop()
+{
+	ClrPlrPath(this);
+	destAction = ACTION_NONE;
+}
+
 void SetPlayerGPtrs(BYTE *pData, BYTE **pAnim)
 {
 	int i;
