@@ -129,20 +129,20 @@ void DrawSTextBack()
 
 void PrintSString(int x, int y, BOOL cjustflag, const char *str, char col, int val)
 {
-	int xx, yy;
 	int len, width, sx, sy, i, k, s;
+	int xx, yy;
 	BYTE c;
 	char valstr[32];
 
 	s = y * 12 + stext[y]._syoff;
-	if (stextsize)
+	if (stextsize != 0)
 		xx = PANEL_X + 32;
 	else
 		xx = PANEL_X + 352;
 	sx = xx + x;
 	sy = s + 44 + SCREEN_Y + UI_OFFSET_Y;
 	len = strlen(str);
-	if (stextsize)
+	if (stextsize != 0)
 		yy = 577;
 	else
 		yy = 257;
@@ -161,7 +161,7 @@ void PrintSString(int x, int y, BOOL cjustflag, const char *str, char col, int v
 	for (i = 0; i < len; i++) {
 		c = fontframe[gbFontTransTbl[(BYTE)str[i]]];
 		k += fontkern[c] + 1;
-		if (c && k <= yy) {
+		if (c != 0 && k <= yy) {
 			PrintChar(sx, sy, c, col);
 		}
 		sx += fontkern[c] + 1;
@@ -169,10 +169,11 @@ void PrintSString(int x, int y, BOOL cjustflag, const char *str, char col, int v
 	if (!cjustflag && val >= 0) {
 		sprintf(valstr, "%i", val);
 		sx = PANEL_X + 592 - x;
-		for (i = strlen(valstr) - 1; i >= 0; i--) {
+		len = strlen(valstr);
+		for (i = len - 1; i >= 0; i--) {
 			c = fontframe[gbFontTransTbl[(BYTE)valstr[i]]];
 			sx -= fontkern[c] + 1;
-			if (c) {
+			if (c != 0) {
 				PrintChar(sx, sy, c, col);
 			}
 		}
@@ -926,7 +927,15 @@ BOOL WitchSellOk(int i)
 
 	if (pI->_itype == ITYPE_MISC)
 		rv = TRUE;
+#ifdef HELLFIRE
+	if (pI->_iMiscId > 29 && pI->_iMiscId < 41)
+		rv = FALSE;
+	if (pI->_iClass == ICLASS_QUEST)
+		rv = FALSE;
+	if (pI->_itype == ITYPE_STAFF && pI->_iSpell != SPL_NULL)
+#else
 	if (pI->_itype == ITYPE_STAFF)
+#endif
 		rv = TRUE;
 	if (pI->IDidx >= IDI_FIRSTQUEST && pI->IDidx <= IDI_LASTQUEST)
 		rv = FALSE;
@@ -1018,6 +1027,12 @@ BOOL WitchRechargeOk(int i)
 	    && plr[myplr].InvList[i]._iCharges != plr[myplr].InvList[i]._iMaxCharges) {
 		rv = TRUE;
 	}
+#ifdef HELLFIRE
+	if ((plr[myplr].InvList[i]._iMiscId == IMISC_UNIQUE || plr[myplr].InvList[i]._iMiscId == IMISC_STAFF)
+	    && plr[myplr].InvList[i]._iCharges < plr[myplr].InvList[i]._iMaxCharges) {
+		rv = TRUE;
+	}
+#endif
 	return rv;
 }
 

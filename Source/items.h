@@ -27,16 +27,16 @@ extern int auricGold;
 extern int numitems;
 
 #ifdef HELLFIRE
-int items_4231CA(int i);
-int items_423230(int i);
-int items_423296(int i);
-int items_4232FC(int i);
-int items_423362(int i);
-int items_4233C8(int i);
-int items_42342E(int i);
-int items_4234B2(int i);
-int items_423518(int i);
-int items_42357E(int i);
+int get_ring_max_value(int i);
+int get_bow_max_value(int i);
+int get_staff_max_value(int i);
+int get_sword_max_value(int i);
+int get_helm_max_value(int i);
+int get_shield_max_value(int i);
+int get_armor_max_value(int i);
+int get_mace_max_value(int i);
+int get_amulet_max_value(int i);
+int get_axe_max_value(int i);
 #endif
 void InitItemGFX();
 void InitItems();

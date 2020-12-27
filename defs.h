@@ -98,7 +98,9 @@
 // todo: enums
 #ifdef HELLFIRE
 #define NUMLEVELS				25
+#define BOY_MAX_VALUE			200000
 #define WITCH_ITEMS				25
+#define WITCH_MAX_VALUE			200000
 #define SMITH_ITEMS				25
 #define SMITH_PREMIUM_ITEMS		15
 #define SMITH_MAX_VALUE			200000
@@ -106,7 +108,9 @@
 #define STORE_LINES				104
 #else
 #define NUMLEVELS				17
+#define BOY_MAX_VALUE			90000
 #define WITCH_ITEMS				20
+#define WITCH_MAX_VALUE			140000
 #define SMITH_ITEMS				20
 #define SMITH_PREMIUM_ITEMS		6
 #define SMITH_MAX_VALUE			140000

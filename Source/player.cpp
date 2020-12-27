@@ -1450,7 +1450,8 @@ void StartWalk(int pnum, int xvel, int yvel, int xadd, int yadd, int EndDir, int
 #if defined(__clang__) || defined(__GNUC__)
 __attribute__((no_sanitize("shift-base")))
 #endif
-void StartWalk2(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int EndDir, int sdir)
+void
+StartWalk2(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int EndDir, int sdir)
 {
 	int px, py;
 
@@ -1526,7 +1527,8 @@ void StartWalk2(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int 
 #if defined(__clang__) || defined(__GNUC__)
 __attribute__((no_sanitize("shift-base")))
 #endif
-void StartWalk3(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, int EndDir, int sdir)
+void
+StartWalk3(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, int EndDir, int sdir)
 {
 	int px, py, x, y;
 
@@ -1868,7 +1870,8 @@ static void PlrDeadItem(int pnum, ItemStruct *itm, int xx, int yy)
 #if defined(__clang__) || defined(__GNUC__)
 __attribute__((no_sanitize("shift-base")))
 #endif
-void StartPlayerKill(int pnum, int earflag)
+void
+StartPlayerKill(int pnum, int earflag)
 {
 	BOOL diablolevel;
 	int i, pdd;
@@ -2231,7 +2234,8 @@ void InitLevelChange(int pnum)
 #if defined(__clang__) || defined(__GNUC__)
 __attribute__((no_sanitize("shift-base")))
 #endif
-void StartNewLvl(int pnum, int fom, int lvl)
+void
+StartNewLvl(int pnum, int fom, int lvl)
 {
 	InitLevelChange(pnum);
 
@@ -4611,17 +4615,17 @@ void PlayDungMsgs()
 }
 
 #ifdef HELLFIRE
-int player_45EFA1(int i)
+int get_max_strength(int i)
 {
 	return MaxStats[i][ATTRIB_STR];
 }
 
-int player_45EFAB(int i)
+int get_max_magic(int i)
 {
 	return MaxStats[i][ATTRIB_MAG];
 }
 
-int player_45EFB5(int i)
+int get_max_dexterity(int i)
 {
 	return MaxStats[i][ATTRIB_DEX];
 }
