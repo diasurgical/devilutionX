@@ -122,4 +122,4 @@ workflows:
       - linux_x86_64_sdl1
       - switch
       - amigaos-m68k
-      - switch
+      - vita
