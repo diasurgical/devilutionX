@@ -129,11 +129,7 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield)
  * @param is The source packed item
  * @param id The distination item
  */
-#ifndef HELLFIRE
-static
-#endif
-    void
-    UnPackItem(PkItemStruct *is, ItemStruct *id)
+void UnPackItem(PkItemStruct *is, ItemStruct *id)
 {
 	WORD idx = SwapLE16(is->idx);
 
