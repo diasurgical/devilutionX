@@ -4,9 +4,7 @@
  * Implementation of item functionality.
  */
 #include "all.h"
-#ifdef HELLFIRE
 #include "../3rdParty/Storm/Source/storm.h"
-#endif
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -18,20 +16,15 @@ ItemGetRecordStruct itemrecord[MAXITEMS];
 /** Contains the items on ground in the current game. */
 ItemStruct item[MAXITEMS + 1];
 BOOL itemhold[3][3];
-#ifdef HELLFIRE
 CornerStoneStruct CornerStone;
-#endif
 BYTE *itemanims[ITEMTYPES];
 BOOL UniqueItemFlag[128];
-#ifdef HELLFIRE
 int auricGold = 10000;
-#endif
 int numitems;
 int gnNumGetRecords;
 
 /* data */
 
-#ifdef HELLFIRE
 int OilLevels[] = { 1, 10, 1, 10, 4, 1, 5, 17, 1, 10 };
 int OilValues[] = { 500, 2500, 500, 2500, 1500, 100, 2500, 15000, 500, 2500 };
 int OilMagic[] = {
@@ -59,7 +52,6 @@ char OilNames[10][25] = {
 	"Oil of Imperviousness"
 };
 int MaxGold = GOLD_MAX_LIMIT;
-#endif
 
 /** Maps from item_cursor_graphic to in-memory item type. */
 BYTE ItemCAnimTbl[] = {
@@ -299,9 +291,7 @@ int ItemInvSnds[] = {
 	IS_ILARM,
 #endif
 };
-#ifdef HELLFIRE
 char *off_4A5AC4 = "SItem";
-#endif
 /** Specifies the current Y-coordinate used for validation of items on ground. */
 int idoppely = 16;
 /** Maps from Griswold premium item number to a quality level delta as added to the base quality level. */
@@ -331,7 +321,6 @@ int premiumlvladd[SMITH_PREMIUM_ITEMS] = {
 	// clang-format on
 };
 
-#ifdef HELLFIRE
 int get_ring_max_value(int i)
 {
 	int j, res;
@@ -518,7 +507,6 @@ int items_get_currlevel()
 
 	return lvl;
 }
-#endif
 
 void InitItemGFX()
 {
@@ -599,7 +587,6 @@ void AddInitItems()
 	}
 }
 
-#ifdef HELLFIRE
 static void items_42390F()
 {
 	int x, y, id;
@@ -623,7 +610,6 @@ static void items_42390F()
 	}
 	SpawnQuestItem(id, x, y, 0, 1);
 }
-#endif
 
 void InitItems()
 {
@@ -785,8 +771,8 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 
 #ifdef HELLFIRE
 		if (plr[p]._pClass == PC_MONK) {
-			mind = max(mind, plr[p]._pLevel >> 1);
-			maxd = max(maxd, plr[p]._pLevel);
+			mind = std::max(mind, plr[p]._pLevel >> 1);
+			maxd = std::max(maxd, (int)plr[p]._pLevel);
 		}
 #endif
 	}
@@ -1865,7 +1851,6 @@ void GetStaffSpell(int i, int lvl, BOOL onlygood)
 	}
 }
 
-#ifdef HELLFIRE
 void GetOilType(int i, int max_lvl)
 {
 	int cnt, t, j, r;
@@ -1894,7 +1879,6 @@ void GetOilType(int i, int max_lvl)
 	item[i]._ivalue = OilValues[t];
 	item[i]._iIvalue = OilValues[t];
 }
-#endif
 
 void GetItemAttrs(int i, int idata, int lvl)
 {
@@ -3232,7 +3216,6 @@ void RecreateEar(int ii, WORD ic, int iseed, int Id, int dur, int mdur, int ch, 
 	item[ii]._iSeed = iseed;
 }
 
-#ifdef HELLFIRE
 void items_427A72()
 {
 	PkItemStruct id;
@@ -3284,7 +3267,6 @@ void items_427ABA(int x, int y)
 		}
 	}
 }
-#endif
 
 void SpawnQuestItem(int itemid, int x, int y, int randarea, int selflag)
 {
@@ -3372,7 +3354,6 @@ void SpawnRock()
 	}
 }
 
-#ifdef HELLFIRE
 void SpawnRewardItem(int itemid, int xx, int yy)
 {
 	int i;
@@ -3408,7 +3389,6 @@ void SpawnTheodore(int xx, int yy)
 {
 	SpawnRewardItem(IDI_THEODORE, xx, yy);
 }
-#endif
 
 void RespawnItem(int i, BOOL FlipFlag)
 {
@@ -3498,13 +3478,7 @@ void ProcessItems()
 
 void FreeItemGFX()
 {
-#ifdef HELLFIRE
-	DWORD i;
-#else
-	int i;
-#endif
-
-	for (i = 0; i < ITEMTYPES; i++) {
+	for (int i = 0; i < ITEMTYPES; i++) {
 		MemFreeDbg(itemanims[i]);
 	}
 }
@@ -3640,7 +3614,6 @@ void DoRecharge(int pnum, int cii)
 		SetCursor_(CURSOR_HAND);
 }
 
-#ifdef HELLFIRE
 static BOOL OilItem(ItemStruct *x, PlayerStruct *p)
 {
 	int dur, r;
@@ -3774,7 +3747,6 @@ void DoOil(int pnum, int cii)
 		}
 	}
 }
-#endif
 
 void PrintItemOil(char IDidx)
 {

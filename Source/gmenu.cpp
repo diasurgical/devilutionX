@@ -12,10 +12,8 @@ BOOLEAN mouseNavigation;
 BYTE *PentSpin_cel;
 TMenuItem *sgpCurrItem;
 BYTE *BigTGold_cel;
-#ifdef HELLFIRE
 int LogoAnim_tick;
 BYTE LogoAnim_frame;
-#endif
 int PentSpin_tick;
 void (*dword_63447C)(TMenuItem *);
 TMenuItem *sgpCurrentMenu;

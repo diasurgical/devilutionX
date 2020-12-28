@@ -1698,7 +1698,6 @@ void RemoveInvItem(int pnum, int iv)
 	CalcPlrScrolls(pnum);
 }
 
-#ifdef HELLFIRE
 /**
  * @brief This destroyes all items except gold
  */
@@ -1739,7 +1738,6 @@ BOOL inv_diablo_to_hellfire(int pnum)
 	CalcPlrItemVals(pnum, FALSE);
 	return FALSE;
 }
-#endif
 
 void RemoveSpdBarItem(int pnum, int iv)
 {

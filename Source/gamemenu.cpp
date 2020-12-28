@@ -9,9 +9,7 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-#ifdef HELLFIRE
 BOOL jogging_opt = TRUE;
-#endif
 
 /** Contains the game menu items of the single player menu. */
 TMenuItem sgSingleMenu[] = {
@@ -70,13 +68,11 @@ const char *const sound_toggle_names[] = {
 	"Sound",
 	"Sound Disabled",
 };
-#ifdef HELLFIRE
 char *jogging_toggle_names[] = {
 	"Jog",
 	"Walk",
 };
 char *jogging_title = "Fast Walk";
-#endif
 /** Specifies the menu names for colour cycling disabled and enabled. */
 const char *const color_cycling_toggle_names[] = { "Color Cycling Off", "Color Cycling On" };
 
@@ -238,14 +234,12 @@ static void gamemenu_get_sound()
 	gamemenu_sound_music_toggle(sound_toggle_names, &sgOptionsMenu[1], sound_get_or_set_sound_volume(1));
 }
 
-#ifdef HELLFIRE
 static void gamemenu_jogging()
 {
 	gmenu_slider_steps(&sgOptionsMenu[3], 2);
 	gmenu_slider_set(&sgOptionsMenu[3], 0, 1, jogging_opt);
 	sgOptionsMenu[3].pszStr = jogging_toggle_names[!jogging_opt ? 1 : 0];
 }
-#endif
 
 static void gamemenu_get_gamma()
 {
@@ -382,7 +376,6 @@ void gamemenu_sound_volume(BOOL bActivate)
 	gamemenu_get_sound();
 }
 
-#ifdef HELLFIRE
 void gamemenu_loadjog(BOOL bActivate)
 {
 	if (gbMaxPlayers == 1) {
@@ -392,7 +385,6 @@ void gamemenu_loadjog(BOOL bActivate)
 		gamemenu_jogging();
 	}
 }
-#endif
 
 void gamemenu_gamma(BOOL bActivate)
 {

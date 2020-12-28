@@ -320,7 +320,6 @@ const char *const ObjMasterLoadList[] = {
 	"Mushptch",
 	"LzStand"
 };
-#ifdef HELLFIRE
 /** Maps from object_graphic_id to object CEL name (Hellfire Crypt overwrite). */
 char *ObjCryptLoadList[] = {
 	"L1Braz",
@@ -439,6 +438,5 @@ char *ObjHiveLoadList[] = {
 	"Mushptch",
 	"LzStand",
 };
-#endif
 
 DEVILUTION_END_NAMESPACE

@@ -686,22 +686,16 @@ void DrawLifeFlask()
 	double p;
 	int filled;
 
-#ifdef HELLFIRE
-	if (plr[myplr]._pMaxHP <= 0) {
-		p = 0.0;
-	} else {
+	p = 0.0;
+	if (plr[myplr]._pMaxHP > 0) {
 		p = (double)plr[myplr]._pHitPoints / (double)plr[myplr]._pMaxHP * 80.0;
 	}
-#else
-	p = (double)plr[myplr]._pHitPoints / (double)plr[myplr]._pMaxHP * 80.0;
-#endif
 	plr[myplr]._pHPPer = p;
 	filled = plr[myplr]._pHPPer;
 
-#ifndef HELLFIRE
 	if (filled > 80)
 		filled = 80;
-#endif
+
 	filled = 80 - filled;
 	if (filled > 11)
 		filled = 11;
@@ -722,24 +716,17 @@ void UpdateLifeFlask()
 	double p;
 	int filled;
 
-#ifdef HELLFIRE
-	if (plr[myplr]._pMaxHP <= 0) {
-		p = 0.0;
-	} else {
+	p = 0.0;
+	if (plr[myplr]._pMaxHP > 0) {
 		p = (double)plr[myplr]._pHitPoints / (double)plr[myplr]._pMaxHP * 80.0;
 	}
-#else
-	p = (double)plr[myplr]._pHitPoints / (double)plr[myplr]._pMaxHP * 80.0;
-#endif
 	filled = p;
 	plr[myplr]._pHPPer = filled;
 
 	if (filled > 69)
 		filled = 69;
-#ifndef HELLFIRE
 	else if (filled < 0)
 		filled = 0;
-#endif
 	if (filled != 69)
 		SetFlaskHeight(pLifeBuff, 16, 85 - filled, 96 + PANEL_X, PANEL_Y);
 	if (filled != 0)
@@ -749,10 +736,8 @@ void UpdateLifeFlask()
 void DrawManaFlask()
 {
 	int filled = plr[myplr]._pManaPer;
-#ifndef HELLFIRE
 	if (filled > 80)
 		filled = 80;
-#endif
 	filled = 80 - filled;
 	if (filled > 11)
 		filled = 11;
@@ -2010,15 +1995,13 @@ void CheckSBook()
 			force_redraw = 255;
 		}
 	}
+	if (MouseX >= RIGHT_PANEL + 7 && MouseX < RIGHT_PANEL + 311 && MouseY >= SPANEL_WIDTH && MouseY < 349) {
 #ifdef HELLFIRE
-	if (MouseX >= RIGHT_PANEL + 7 && MouseX < RIGHT_PANEL + 312 && MouseY >= 320 && MouseY < 349) {
 		sbooktab = (MouseX - (RIGHT_PANEL + 7)) / 61;
-	}
 #else
-	if (MouseX >= RIGHT_PANEL + 7 && MouseX < RIGHT_PANEL + 311 && MouseY >= SPANEL_WIDTH && MouseY < 349) { /// BUGFIX: change `< 313` to `< 311` (fixed)
 		sbooktab = (MouseX - (RIGHT_PANEL + 7)) / 76;
-	}
 #endif
+	}
 }
 
 const char *get_pieces_str(int nGold)

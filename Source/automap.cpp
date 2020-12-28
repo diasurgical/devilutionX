@@ -78,27 +78,19 @@ void InitAutomap()
 
 	switch (leveltype) {
 	case DTYPE_CATHEDRAL:
-#ifdef HELLFIRE
 		if (currlevel < 21)
 			pAFile = LoadFileInMem("Levels\\L1Data\\L1.AMP", &dwTiles);
 		else
 			pAFile = LoadFileInMem("NLevels\\L5Data\\L5.AMP", &dwTiles);
-#else
-		pAFile = LoadFileInMem("Levels\\L1Data\\L1.AMP", &dwTiles);
-#endif
 		break;
 	case DTYPE_CATACOMBS:
 		pAFile = LoadFileInMem("Levels\\L2Data\\L2.AMP", &dwTiles);
 		break;
 	case DTYPE_CAVES:
-#ifdef HELLFIRE
 		if (currlevel < 17)
 			pAFile = LoadFileInMem("Levels\\L3Data\\L3.AMP", &dwTiles);
 		else
 			pAFile = LoadFileInMem("NLevels\\L6Data\\L6.AMP", &dwTiles);
-#else
-		pAFile = LoadFileInMem("Levels\\L3Data\\L3.AMP", &dwTiles);
-#endif
 		break;
 	case DTYPE_HELL:
 		pAFile = LoadFileInMem("Levels\\L4Data\\L4.AMP", &dwTiles);
@@ -615,7 +607,6 @@ static void DrawAutomapText()
 	if (setlevel) {
 		PrintGameStr(8, nextline, quest_level_names[(BYTE)setlvlnum], COL_GOLD);
 	} else if (currlevel != 0) {
-#ifdef HELLFIRE
 		if (currlevel < 17 || currlevel > 20) {
 			if (currlevel < 21 || currlevel > 24)
 				sprintf(desc, "Level: %i", currlevel);
@@ -624,9 +615,6 @@ static void DrawAutomapText()
 		} else {
 			sprintf(desc, "Level: Nest %i", currlevel - 16);
 		}
-#else
-		sprintf(desc, "Level: %i", currlevel);
-#endif
 		PrintGameStr(8, nextline, desc, COL_GOLD);
 	}
 }

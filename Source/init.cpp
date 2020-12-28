@@ -27,7 +27,6 @@ HANDLE diabdat_mpq;
 HANDLE patch_rt_mpq;
 /** Indicate if we only have access to demo data */
 bool gbIsSpawn;
-#ifdef HELLFIRE
 HANDLE hfmonk_mpq;
 HANDLE hfbard_mpq;
 HANDLE hfbarb_mpq;
@@ -35,7 +34,6 @@ HANDLE hfmusic_mpq;
 HANDLE hfvoice_mpq;
 HANDLE hfopt1_mpq;
 HANDLE hfopt2_mpq;
-#endif
 
 namespace {
 
@@ -82,7 +80,6 @@ void init_cleanup()
 		SFileCloseArchive(hellfire_mpq);
 		hellfire_mpq = NULL;
 	}
-#ifdef HELLFIRE
 	if (hfmonk_mpq) {
 		SFileCloseArchive(hfmonk_mpq);
 		hfmonk_mpq = NULL;
@@ -111,7 +108,6 @@ void init_cleanup()
 		SFileCloseArchive(hfopt2_mpq);
 		hfopt2_mpq = NULL;
 	}
-#endif
 
 	NetClose();
 }

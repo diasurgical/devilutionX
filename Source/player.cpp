@@ -4614,7 +4614,6 @@ void PlayDungMsgs()
 	}
 }
 
-#ifdef HELLFIRE
 int get_max_strength(int i)
 {
 	return MaxStats[i][ATTRIB_STR];
@@ -4629,6 +4628,5 @@ int get_max_dexterity(int i)
 {
 	return MaxStats[i][ATTRIB_DEX];
 }
-#endif
 
 DEVILUTION_END_NAMESPACE

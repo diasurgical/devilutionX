@@ -919,7 +919,6 @@ void MakeLightTable()
 		}
 		tbl += 224;
 	}
-#ifdef HELLFIRE
 	if (currlevel >= 17) {
 		tbl = pLightTbl;
 		for (i = 0; i < lights; i++) {
@@ -933,7 +932,6 @@ void MakeLightTable()
 			*tbl++ = 1;
 		tbl += 240;
 	}
-#endif
 
 	trn = LoadFileInMem("PlrGFX\\Infra.TRN", NULL);
 	for (i = 0; i < 256; i++) {
@@ -984,7 +982,6 @@ void MakeLightTable()
 		}
 	}
 
-#ifdef HELLFIRE
 	if (currlevel >= 17) {
 		for (j = 0; j < 16; j++) {
 			fa = (sqrt((double)(16 - j))) / 128;
@@ -999,7 +996,6 @@ void MakeLightTable()
 			}
 		}
 	}
-#endif
 	for (j = 0; j < 8; j++) {
 		for (i = 0; i < 8; i++) {
 			for (k = 0; k < 16; k++) {

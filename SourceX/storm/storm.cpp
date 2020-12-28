@@ -152,7 +152,6 @@ BOOL SFileOpenFile(const char *filename, HANDLE *phFile)
 		result = SFileOpenFileEx((HANDLE)0, path.c_str(), 0xFFFFFFFF, phFile);
 	}
 
-#ifdef HELLFIRE
 	if (!result) {
 		result = SFileOpenFileEx((HANDLE)hfopt2_mpq, filename, 0, phFile);
 	}
@@ -177,7 +176,6 @@ BOOL SFileOpenFile(const char *filename, HANDLE *phFile)
 	if (!result) {
 		result = SFileOpenFileEx((HANDLE)hellfire_mpq, filename, 0, phFile);
 	}
-#endif
 	if (!result && patch_rt_mpq) {
 		result = SFileOpenFileEx((HANDLE)patch_rt_mpq, filename, 0, phFile);
 	}

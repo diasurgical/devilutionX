@@ -36,7 +36,6 @@ const BYTE L3UP[] = {
 	 0,  0, 0,
 	// clang-format on
 };
-#ifdef HELLFIRE
 const BYTE L6UP[] = {
 	// clang-format off
 	3, 3, // width, height
@@ -50,7 +49,6 @@ const BYTE L6UP[] = {
 	 0,  0, 0,
 	// clang-format on
 };
-#endif
 /** Miniset: Stairs down. */
 const BYTE L3DOWN[] = {
 	// clang-format off
@@ -65,7 +63,6 @@ const BYTE L3DOWN[] = {
 	0,  0, 0,
 	// clang-format on
 };
-#ifdef HELLFIRE
 const BYTE L6DOWN[] = {
 	// clang-format off
 	3, 3, // width, height
@@ -79,7 +76,6 @@ const BYTE L6DOWN[] = {
 	0,  0, 0,
 	// clang-format on
 };
-#endif
 /** Miniset: Stairs up to town. */
 const BYTE L3HOLDWARP[] = {
 	// clang-format off
@@ -94,7 +90,6 @@ const BYTE L3HOLDWARP[] = {
 	  0,   0, 0,
 	// clang-format on
 };
-#ifdef HELLFIRE
 const BYTE L6HOLDWARP[] = {
 	// clang-format off
 	3, 3, // width, height
@@ -108,7 +103,6 @@ const BYTE L6HOLDWARP[] = {
 	 0,  0, 0,
 	// clang-format on
 };
-#endif
 /** Miniset: Stalagmite white stalactite 1. */
 const BYTE L3TITE1[] = {
 	// clang-format off
@@ -534,7 +528,6 @@ const BYTE L3ANVIL[] = {
 	0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0,
 	// clang-format on
 };
-#ifdef HELLFIRE
 const BYTE byte_48A76C[] = { 1, 1, 8, 25 };
 const BYTE byte_48A770[] = { 1, 1, 8, 26 };
 const BYTE byte_48A774[] = { 1, 1, 8, 27 };
@@ -840,7 +833,6 @@ const BYTE byte_48A9C8[] = {
 	7,   7,   7, 7,
 	// clang-format on
 };
-#endif
 
 static void InitL3Dungeon()
 {
@@ -1749,7 +1741,6 @@ static void DRLG_L3PlaceRndSet(const BYTE *miniset, int rndper)
 	}
 }
 
-#ifdef HELLFIRE
 BOOLEAN drlg_l3_hive_rnd_piece(const BYTE *miniset, int rndper)
 {
 	int sx, sy, sw, sh, xx, yy, ii, kk;
@@ -1808,7 +1799,6 @@ BOOLEAN drlg_l3_hive_rnd_piece(const BYTE *miniset, int rndper)
 
 	return placed;
 }
-#endif
 
 static BOOL WoodVertU(int i, int y)
 {
@@ -2359,54 +2349,39 @@ static void DRLG_L3(int entry)
 			} while (!found);
 			DRLG_L3MakeMegas();
 			if (entry == ENTRY_MAIN) {
-#ifdef HELLFIRE
 				if (currlevel < 17) {
-#endif
 					genok = DRLG_L3PlaceMiniSet(L3UP, 1, 1, -1, -1, TRUE, 0);
-#ifdef HELLFIRE
 				} else {
 					if (currlevel != 17)
 						genok = DRLG_L3PlaceMiniSet(L6UP, 1, 1, -1, -1, TRUE, 0);
 					else
 						genok = DRLG_L3PlaceMiniSet(L6HOLDWARP, 1, 1, -1, -1, TRUE, 6);
 				}
-#endif
 				if (!genok) {
-#ifdef HELLFIRE
 					if (currlevel < 17) {
-#endif
 						genok = DRLG_L3PlaceMiniSet(L3DOWN, 1, 1, -1, -1, FALSE, 1);
-#ifdef HELLFIRE
 					} else {
 						if (currlevel != 20)
 							genok = DRLG_L3PlaceMiniSet(L6DOWN, 1, 1, -1, -1, FALSE, 1);
 					}
-#endif
 					if (!genok && currlevel == 9) {
 						genok = DRLG_L3PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, FALSE, 6);
 					}
 				}
 			} else if (entry == ENTRY_PREV) {
-#ifdef HELLFIRE
 				if (currlevel < 17) {
-#endif
 					genok = DRLG_L3PlaceMiniSet(L3UP, 1, 1, -1, -1, FALSE, 0);
-#ifdef HELLFIRE
 				} else {
 					if (currlevel != 17)
 						genok = DRLG_L3PlaceMiniSet(L6UP, 1, 1, -1, -1, FALSE, 0);
 					else
 						genok = DRLG_L3PlaceMiniSet(L6HOLDWARP, 1, 1, -1, -1, FALSE, 6);
 				}
-#endif
 				if (!genok) {
-#ifdef HELLFIRE
 					if (currlevel < 17) {
-#endif
 						genok = DRLG_L3PlaceMiniSet(L3DOWN, 1, 1, -1, -1, TRUE, 1);
 						ViewX += 2;
 						ViewY -= 2;
-#ifdef HELLFIRE
 					} else {
 						if (currlevel != 20) {
 							genok = DRLG_L3PlaceMiniSet(L6DOWN, 1, 1, -1, -1, TRUE, 1);
@@ -2414,35 +2389,26 @@ static void DRLG_L3(int entry)
 							ViewY -= 2;
 						}
 					}
-#endif
 					if (!genok && currlevel == 9) {
 						genok = DRLG_L3PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, FALSE, 6);
 					}
 				}
 			} else {
-#ifdef HELLFIRE
 				if (currlevel < 17) {
-#endif
 					genok = DRLG_L3PlaceMiniSet(L3UP, 1, 1, -1, -1, FALSE, 0);
-#ifdef HELLFIRE
 				} else {
 					if (currlevel != 17)
 						genok = DRLG_L3PlaceMiniSet(L6UP, 1, 1, -1, -1, FALSE, 0);
 					else
 						genok = DRLG_L3PlaceMiniSet(L6HOLDWARP, 1, 1, -1, -1, TRUE, 6);
 				}
-#endif
 				if (!genok) {
-#ifdef HELLFIRE
 					if (currlevel < 17) {
-#endif
 						genok = DRLG_L3PlaceMiniSet(L3DOWN, 1, 1, -1, -1, FALSE, 1);
-#ifdef HELLFIRE
 					} else {
 						if (currlevel != 20)
 							genok = DRLG_L3PlaceMiniSet(L6DOWN, 1, 1, -1, -1, FALSE, 1);
 					}
-#endif
 					if (!genok && currlevel == 9) {
 						genok = DRLG_L3PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, TRUE, 6);
 					}
@@ -2452,11 +2418,8 @@ static void DRLG_L3(int entry)
 				genok = DRLG_L3Anvil();
 			}
 		} while (genok == TRUE);
-#ifdef HELLFIRE
 		if (currlevel < 17) {
-#endif
 			DRLG_L3Pool();
-#ifdef HELLFIRE
 		} else {
 			lavapool += drlg_l3_hive_rnd_piece(byte_48A998, 30);
 			lavapool += drlg_l3_hive_rnd_piece(byte_48A9C8, 40);
@@ -2465,21 +2428,14 @@ static void DRLG_L3(int entry)
 			if (lavapool < 3)
 				lavapool = FALSE;
 		}
-#endif
 	} while (!lavapool);
 
-#ifdef HELLFIRE
 	if (currlevel < 17)
-#endif
 		DRLG_L3PoolFix();
-#ifdef HELLFIRE
 	if (currlevel < 17)
-#endif
 		FixL3Warp();
 
-#ifdef HELLFIRE
 	if (currlevel < 17) {
-#endif
 		DRLG_L3PlaceRndSet(L3ISLE1, 70);
 		DRLG_L3PlaceRndSet(L3ISLE2, 70);
 		DRLG_L3PlaceRndSet(L3ISLE3, 30);
@@ -2487,7 +2443,6 @@ static void DRLG_L3(int entry)
 		DRLG_L3PlaceRndSet(L3ISLE1, 100);
 		DRLG_L3PlaceRndSet(L3ISLE2, 100);
 		DRLG_L3PlaceRndSet(L3ISLE5, 90);
-#ifdef HELLFIRE
 	} else {
 		DRLG_L3PlaceRndSet(L6ISLE1, 70);
 		DRLG_L3PlaceRndSet(L6ISLE2, 70);
@@ -2497,15 +2452,10 @@ static void DRLG_L3(int entry)
 		DRLG_L3PlaceRndSet(L6ISLE2, 100);
 		DRLG_L3PlaceRndSet(L6ISLE5, 90);
 	}
-#endif
 
-#ifdef HELLFIRE
 	if (currlevel < 17)
-#endif
 		FixL3HallofHeroes();
-#ifdef HELLFIRE
 	if (currlevel < 17)
-#endif
 		DRLG_L3River();
 
 	if (QuestStatus(Q_ANVIL)) {
@@ -2517,14 +2467,10 @@ static void DRLG_L3(int entry)
 		}
 	}
 
-#ifdef HELLFIRE
 	if (currlevel < 17)
-#endif
 		DRLG_PlaceThemeRooms(5, 10, 7, 0, 0);
 
-#ifdef HELLFIRE
 	if (currlevel < 17) {
-#endif
 		DRLG_L3Wood();
 		DRLG_L3PlaceRndSet(L3TITE1, 10);
 		DRLG_L3PlaceRndSet(L3TITE2, 10);
@@ -2553,7 +2499,6 @@ static void DRLG_L3(int entry)
 		DRLG_L3PlaceRndSet(L3XTRA3, 25);
 		DRLG_L3PlaceRndSet(L3XTRA4, 25);
 		DRLG_L3PlaceRndSet(L3XTRA5, 25);
-#ifdef HELLFIRE
 	} else {
 		DRLG_L3PlaceRndSet(byte_48A76C, 20);
 		DRLG_L3PlaceRndSet(byte_48A770, 20);
@@ -2604,7 +2549,6 @@ static void DRLG_L3(int entry)
 		DRLG_L3PlaceRndSet(byte_48A7FC, 25);
 		DRLG_L3PlaceRndSet(byte_48A800, 25);
 	}
-#endif
 
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
@@ -2679,9 +2623,7 @@ void CreateL3Dungeon(DWORD rseed, int entry)
 	DRLG_L3(entry);
 	DRLG_L3Pass3();
 
-#ifdef HELLFIRE
 	if (currlevel < 17) {
-#endif
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++) {
 				if (dPiece[i][j] >= 56 && dPiece[i][j] <= 147) {
@@ -2695,7 +2637,6 @@ void CreateL3Dungeon(DWORD rseed, int entry)
 				}
 			}
 		}
-#ifdef HELLFIRE
 	} else {
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++) {
@@ -2705,7 +2646,6 @@ void CreateL3Dungeon(DWORD rseed, int entry)
 			}
 		}
 	}
-#endif
 
 	DRLG_SetPC();
 }

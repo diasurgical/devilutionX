@@ -115,7 +115,6 @@ void LoadRndLvlPal(int l)
 	} else {
 		rv = random_(0, 4) + 1;
 		sprintf(szFileName, "Levels\\L%iData\\L%i_%i.PAL", l, l, rv);
-#ifdef HELLFIRE
 		if (l == 5) {
 			sprintf(szFileName, "NLevels\\L5Data\\L5Base.PAL");
 		}
@@ -125,7 +124,6 @@ void LoadRndLvlPal(int l)
 			}
 			sprintf(szFileName, "NLevels\\L%iData\\L%iBase%i.PAL", 6, 6, rv);
 		}
-#endif
 		LoadPalette(szFileName);
 	}
 }
