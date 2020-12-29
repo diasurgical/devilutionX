@@ -261,26 +261,53 @@ void NewHWCursor(SDL_Surface *surf)
 
 #else
 
-static SDL_Surface *cursor_surface = NULL;
+static SDL_Surface *cursor_surface = NULL, *cursor_realsurface = NULL;
 static SDL_Cursor *cursor = NULL;
+static int cursor_width, cursor_height;
 static int cursor_surface_palette_version = -1;
 
 void NewHWCursor(SDL_Surface *surf)
 {
-	if (cursor_surface == surf && cursor_surface_palette_version == pal_surface_palette_version)
+	int scaled_w = surf->w, scaled_h = surf->h;
+
+	if (renderer) {
+		// upscale
+		int ww, wh;
+
+		SDL_GetWindowSize(ghMainWnd, &ww, &wh);
+
+		scaled_w = scaled_w * ww / SCREEN_WIDTH;
+		scaled_h = scaled_h * ww / SCREEN_WIDTH;
+	}
+
+	if (cursor_surface == surf && cursor_surface_palette_version == pal_surface_palette_version &&
+		cursor_width == scaled_w && cursor_height == scaled_h)
 		return;
 
 	if (SDLC_SetSurfaceColors(surf, pal_surface->format->palette) <= -1)
 		ErrSdl();
 
 	SDL_Cursor *old_cursor = cursor;
+	SDL_Surface *old_cursor_realsurface = cursor_realsurface;
 
-	cursor = SDL_CreateColorCursor(surf, 0, 0);
+	SDL_Surface *argbsurf = SDL_ConvertSurfaceFormat(surf, SDL_PIXELFORMAT_ARGB8888, 0);
+
+	if (scaled_w != surf->w || scaled_h != surf->h) {
+		SDL_Surface *temp = SDL_CreateRGBSurfaceWithFormat(SDL_SWSURFACE, scaled_w, scaled_h, 32, SDL_PIXELFORMAT_ARGB8888);
+		SDL_BlitScaled(argbsurf, NULL, temp, NULL);
+		SDL_FreeSurface(argbsurf);
+		argbsurf = temp;
+	}
+
+	cursor = SDL_CreateColorCursor(argbsurf, 0, 0);
 	cursor_surface = surf;
 	cursor_surface_palette_version = pal_surface_palette_version;
+	cursor_width = surf->w;
+	cursor_height = surf->h;
 
 	SDL_SetCursor(cursor);
 	SDL_FreeCursor(old_cursor);
+	SDL_FreeSurface(old_cursor_realsurface);
 }
 
 #endif
