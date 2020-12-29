@@ -227,7 +227,7 @@ static void scrollrt_draw_cursor_item()
 	if (1) { // hwcursor
 		dst = &gpBuffer[SCREENXY(sgdwCursX, sgdwCursY)];
 		for (i = sgdwCursHgt; i != 0; i--, dst += BUFFER_WIDTH) {
-			memset(dst, 250, sgdwCursWdt);
+			memset(dst, 255, sgdwCursWdt);
 		}
 	}
 
@@ -286,7 +286,7 @@ static void scrollrt_draw_cursor_item()
 		if (cgCursorPaletteVersion != pal_surface_palette_version || memcmp(sgCursorBitmap, sgCursorBitmapBack, sizeof(sgCursorBitmap))) {
 			// new cursor!
 			SDL_Surface *surf = SDL_CreateRGBSurfaceWithFormat(SDL_SWSURFACE, sgdwCursWdt, sgdwCursHgt, 8, SDL_PIXELFORMAT_INDEX8);
-			SDLC_SetColorKey(surf, 250);
+			SDLC_SetColorKey(surf, 255);
 
 			src = sgCursorBitmap;
 			dst = (BYTE *)surf->pixels;
