@@ -53,6 +53,9 @@ int level_piece_id;
 DWORD sgdwCursWdt;
 void (*DrawPlrProc)(int, int, int, int, int, BYTE *, int, int, int, int);
 BYTE sgSaveBack[8192];
+static BYTE sgCursorBitmap[8192], sgCursorBitmapBack[8192];
+static SDL_Surface *sgCursorSurface;
+static int cgCursorPaletteVersion;
 DWORD sgdwCursHgtOld;
 
 bool dRendered[MAXDUNX][MAXDUNY];
@@ -142,6 +145,9 @@ static void scrollrt_draw_cursor_back_buffer()
 	sgdwCursWdt = 0;
 }
 
+void NewHWCursor(SDL_Surface *surf);
+extern unsigned int pal_surface_palette_version;
+
 /**
  * @brief Draw the cursor on the back buffer
  */
@@ -154,20 +160,37 @@ static void scrollrt_draw_cursor_item()
 	assert(!sgdwCursWdt);
 
 	if (pcurs <= CURSOR_NONE || cursW == 0 || cursH == 0) {
+		if (1) { // hwcursor
+			if (SDL_ShowCursor(SDL_DISABLE) <= -1) {
+				SDL_Log(SDL_GetError());
+			}
+		}
 		return;
 	}
 
 	if (sgbControllerActive && !IsMovingMouseCursorWithController() && pcurs != CURSOR_TELEPORT && !invflag && (!chrflag || plr[myplr]._pStatPts <= 0)) {
+		if (1) { // hwcursor
+			if (SDL_ShowCursor(SDL_DISABLE) <= -1) {
+				SDL_Log(SDL_GetError());
+			}
+		}
 		return;
 	}
 
 	mx = MouseX - 1;
+	if (1) { // hwcursor
+		mx = 0;
+	}
+
 	if (mx < 0 - cursW - 1) {
 		return;
 	} else if (mx > SCREEN_WIDTH - 1) {
 		return;
 	}
 	my = MouseY - 1;
+	if (1) { // hwcursor
+		my = 0;
+	}
 	if (my < 0 - cursH - 1) {
 		return;
 	} else if (my > SCREEN_HEIGHT - 1) {
@@ -201,6 +224,13 @@ static void scrollrt_draw_cursor_item()
 		memcpy(dst, src, sgdwCursWdt);
 	}
 
+	if (1) { // hwcursor
+		dst = &gpBuffer[SCREENXY(sgdwCursX, sgdwCursY)];
+		for (i = sgdwCursHgt; i != 0; i--, dst += BUFFER_WIDTH) {
+			memset(dst, 250, sgdwCursWdt);
+		}
+	}
+
 	mx++;
 	my++;
 	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_HEIGHT + SCREEN_Y) - cursW - 2];
@@ -230,6 +260,48 @@ static void scrollrt_draw_cursor_item()
 		}
 	} else {
 		CelClippedDrawSafe(mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW);
+	}
+
+	if (1) { // hwcursor
+		src = &gpBuffer[SCREENXY(sgdwCursX, sgdwCursY)];
+		dst = sgCursorBitmap;
+		for (i = sgdwCursHgt; i != 0; i--, src += BUFFER_WIDTH, dst += sgdwCursWdt) {
+			memcpy(dst, src, sgdwCursWdt);
+		}
+	}
+
+	if (1) { // hwcursor
+		src = sgSaveBack;
+		dst = &gpBuffer[SCREENXY(sgdwCursX, sgdwCursY)];
+		for (i = sgdwCursHgt; i != 0; i--, src += sgdwCursWdt, dst += BUFFER_WIDTH) {
+			memcpy(dst, src, sgdwCursWdt);
+		}
+	}
+
+	if (1) { // hwcursor
+		if (SDL_ShowCursor(SDL_ENABLE) <= -1) {
+			SDL_Log(SDL_GetError());
+		}
+
+		if (cgCursorPaletteVersion != pal_surface_palette_version || memcmp(sgCursorBitmap, sgCursorBitmapBack, sizeof(sgCursorBitmap))) {
+			// new cursor!
+			SDL_Surface *surf = SDL_CreateRGBSurfaceWithFormat(SDL_SWSURFACE, sgdwCursWdt, sgdwCursHgt, 8, SDL_PIXELFORMAT_INDEX8);
+			SDLC_SetColorKey(surf, 250);
+
+			src = sgCursorBitmap;
+			dst = (BYTE *)surf->pixels;
+
+			for (i = sgdwCursHgt; i != 0; i--, src += sgdwCursWdt, dst += sgdwCursWdt) {
+				memcpy(dst, src, sgdwCursWdt);
+			}
+
+			NewHWCursor(surf);
+
+			SDL_FreeSurface(sgCursorSurface);
+			sgCursorSurface = surf;
+			memcpy(sgCursorBitmapBack, sgCursorBitmap, sizeof(sgCursorBitmap));
+			cgCursorPaletteVersion = pal_surface_palette_version;
+		}
 	}
 }
 
@@ -1515,6 +1587,12 @@ void scrollrt_draw_game_screen(BOOL draw_cursor)
 		hgt = SCREEN_HEIGHT;
 	} else {
 		hgt = 0;
+	}
+
+	if (1) { // hwcursor
+		if (SDL_ShowCursor(draw_cursor ? SDL_ENABLE : SDL_DISABLE) <= -1) {
+			SDL_Log(SDL_GetError());
+		}
 	}
 
 	if (draw_cursor) {

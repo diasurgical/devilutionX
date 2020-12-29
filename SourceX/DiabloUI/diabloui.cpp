@@ -47,6 +47,8 @@ char *UiTextInput;
 int UiTextInputLen;
 bool textInputActive = true;
 
+static bool prevSgbControllerActive = false;
+
 std::size_t SelectedItem = 0;
 
 namespace {
@@ -438,6 +440,8 @@ void UiInitialize()
 			ErrSdl();
 		}
 	}
+
+	prevSgbControllerActive = !sgbControllerActive;
 }
 
 const char **UiProfileGetString()
@@ -877,8 +881,22 @@ bool UiItemMouseEvents(SDL_Event *event, std::vector<UiItemBase *> items)
 	return handled;
 }
 
+void NewHWCursor(SDL_Surface *surf);
+
 void DrawMouse()
 {
+	if (1) { // hwcursor
+		NewHWCursor(ArtCursor.surface);
+
+		if (prevSgbControllerActive == sgbControllerActive) {
+			return;
+		}
+		if (SDL_ShowCursor(sgbControllerActive ? SDL_DISABLE : SDL_ENABLE) <= -1) {
+			ErrSdl();
+		}
+		prevSgbControllerActive = sgbControllerActive;
+	}
+
 	if (sgbControllerActive)
 		return;
 

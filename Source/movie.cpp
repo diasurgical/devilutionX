@@ -23,6 +23,11 @@ void play_movie(const char *pszMovie, BOOL user_can_close)
 {
 	HANDLE video_stream;
 
+	int cursor_shown = SDL_ShowCursor(SDL_DISABLE);
+	if (cursor_shown <= -1) {
+		SDL_Log(SDL_GetError());
+	}
+
 	movie_playing = TRUE;
 	sound_disable_music(TRUE);
 	stream_stop();
@@ -48,12 +53,18 @@ void play_movie(const char *pszMovie, BOOL user_can_close)
 		if (!SVidPlayContinue())
 			break;
 	}
+
 	if (video_stream)
 		SVidPlayEnd(video_stream);
 	sound_disable_music(FALSE);
 	movie_playing = FALSE;
 	SDL_GetMouseState(&MouseX, &MouseY);
 	OutputToLogical(&MouseX, &MouseY);
+
+	if (cursor_shown != -1) {
+		if (SDL_ShowCursor(cursor_shown ? SDL_ENABLE : SDL_DISABLE) == -1)
+			SDL_Log(SDL_GetError());
+	}
 }
 
 DEVILUTION_END_NAMESPACE

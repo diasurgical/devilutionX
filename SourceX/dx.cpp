@@ -253,6 +253,38 @@ void LimitFrameRate()
 	frameDeadline = tc + v + refreshDelay;
 }
 
+#ifdef USE_SDL1
+
+void NewHWCursor(SDL_Surface *surf)
+{
+}
+
+#else
+
+static SDL_Surface *cursor_surface = NULL;
+static SDL_Cursor *cursor = NULL;
+static int cursor_surface_palette_version = -1;
+
+void NewHWCursor(SDL_Surface *surf)
+{
+	if (cursor_surface == surf && cursor_surface_palette_version == pal_surface_palette_version)
+		return;
+
+	if (SDLC_SetSurfaceColors(surf, pal_surface->format->palette) <= -1)
+		ErrSdl();
+
+	SDL_Cursor *old_cursor = cursor;
+
+	cursor = SDL_CreateColorCursor(surf, 0, 0);
+	cursor_surface = surf;
+	cursor_surface_palette_version = pal_surface_palette_version;
+
+	SDL_SetCursor(cursor);
+	SDL_FreeCursor(old_cursor);
+}
+
+#endif
+
 void RenderPresent()
 {
 	SDL_Surface *surface = GetOutputSurface();
