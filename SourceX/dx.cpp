@@ -155,7 +155,7 @@ void dx_reinit()
 #else
 	Uint32 flags = 0;
 	if (!fullscreen) {
-		flags = renderer ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_FULLSCREEN;
+		flags = SDL_WINDOW_FULLSCREEN_DESKTOP;
 	}
 	if (SDL_SetWindowFullscreen(ghMainWnd, flags)) {
 		ErrSdl();

@@ -178,7 +178,7 @@ bool SpawnWindow(const char *lpWindowName)
 		DvlStringSetting("scaling quality", scaleQuality, 2);
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, scaleQuality);
 	} else if (fullscreen) {
-		flags |= SDL_WINDOW_FULLSCREEN;
+		flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 	}
 
 	if (grabInput) {
