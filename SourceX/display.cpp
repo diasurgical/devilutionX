@@ -190,6 +190,9 @@ bool SpawnWindow(const char *lpWindowName)
 
 	if (hwcursor)
 		DvlIntSetting("hwcursor", &hwcursor);
+#ifdef USE_SDL1
+	hwcursor = FALSE;
+#endif
 
 	if (upscale && !oar) {
 		CalculatePreferdWindowSize(width, height, integerScalingEnabled);
