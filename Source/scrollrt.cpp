@@ -223,16 +223,22 @@ static void scrollrt_draw_cursor_item()
 		memcpy(dst, src, sgdwCursWdt);
 	}
 
-	if (hwcursor) {
-		dst = &gpBuffer[SCREENXY(sgdwCursX, sgdwCursY)];
-		for (i = sgdwCursHgt; i != 0; i--, dst += BUFFER_WIDTH) {
-			memset(dst, 255, sgdwCursWdt);
-		}
-	}
-
 	mx++;
 	my++;
 	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_HEIGHT + SCREEN_Y) - cursW - 2];
+
+	int ckey = 255;
+	int pass = 0;
+
+blit:
+	pass++;
+
+	if (hwcursor) {
+		dst = &gpBuffer[SCREENXY(sgdwCursX, sgdwCursY)];
+		for (i = sgdwCursHgt; i != 0; i--, dst += BUFFER_WIDTH) {
+			memset(dst, ckey, sgdwCursWdt);
+		}
+	}
 
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		col = PAL16_YELLOW + 5;
@@ -281,15 +287,36 @@ static void scrollrt_draw_cursor_item()
 
 	// update system cursor if the bitmap has changed
 	if (hwcursor) {
+		// find the actual transparency mask value, fallback to 255
+		if (pass == 1) {
+			char pal[256];
+
+			memset(pal, 0, sizeof(pal));
+
+			src = sgCursorBitmap;
+			for (i = sgdwCursHgt; i != 0; i--, src += sgdwCursWdt) {
+				for (int j = 0; j < sgdwCursWdt; j++) {
+					pal[src[j]] = 1;
+				}
+			}
+
+			for (int j = 0; j < 255; j++) {
+				if (!pal[j]) {
+					ckey = j;
+					goto blit;
+				}
+			}
+		}
+
 		if (SDL_ShowCursor(SDL_ENABLE) <= -1) {
 			//SDL_Log(SDL_GetError());
 		}
 
 		if (sgCursorPaletteVersion != pal_surface_palette_version || sgCursorWindowsResVer != windowResVer || 
 			memcmp(sgCursorBitmap, sgCursorBitmapBack, sizeof(sgCursorBitmap))) {
-			// new cursor!
+
 			SDL_Surface *surf = SDL_CreateRGBSurfaceWithFormat(SDL_SWSURFACE, sgdwCursWdt, sgdwCursHgt, 8, SDL_PIXELFORMAT_INDEX8);
-			SDLC_SetColorKey(surf, 255);
+			SDLC_SetColorKey(surf, ckey);
 
 			src = sgCursorBitmap;
 			dst = (BYTE *)surf->pixels;
