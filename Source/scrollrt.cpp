@@ -160,35 +160,34 @@ static void scrollrt_draw_cursor_item()
 	assert(!sgdwCursWdt);
 
 	if (pcurs <= CURSOR_NONE || cursW == 0 || cursH == 0) {
-		if (1) { // hwcursor
+		if (hwcursor) {
 			if (SDL_ShowCursor(SDL_DISABLE) <= -1) {
-				SDL_Log(SDL_GetError());
+				//SDL_Log(SDL_GetError());
 			}
 		}
 		return;
 	}
 
 	if (sgbControllerActive && !IsMovingMouseCursorWithController() && pcurs != CURSOR_TELEPORT && !invflag && (!chrflag || plr[myplr]._pStatPts <= 0)) {
-		if (1) { // hwcursor
+		if (hwcursor) {
 			if (SDL_ShowCursor(SDL_DISABLE) <= -1) {
-				SDL_Log(SDL_GetError());
+				//SDL_Log(SDL_GetError());
 			}
 		}
 		return;
 	}
 
 	mx = MouseX - 1;
-	if (1) { // hwcursor
+	if (hwcursor) {
 		mx = 0;
 	}
-
 	if (mx < 0 - cursW - 1) {
 		return;
 	} else if (mx > SCREEN_WIDTH - 1) {
 		return;
 	}
 	my = MouseY - 1;
-	if (1) { // hwcursor
+	if (hwcursor) {
 		my = 0;
 	}
 	if (my < 0 - cursH - 1) {
@@ -224,7 +223,7 @@ static void scrollrt_draw_cursor_item()
 		memcpy(dst, src, sgdwCursWdt);
 	}
 
-	if (1) { // hwcursor
+	if (hwcursor) {
 		dst = &gpBuffer[SCREENXY(sgdwCursX, sgdwCursY)];
 		for (i = sgdwCursHgt; i != 0; i--, dst += BUFFER_WIDTH) {
 			memset(dst, 255, sgdwCursWdt);
@@ -262,7 +261,8 @@ static void scrollrt_draw_cursor_item()
 		CelClippedDrawSafe(mx + SCREEN_X, my + cursH + SCREEN_Y - 1, pCursCels, pcurs, cursW);
 	}
 
-	if (1) { // hwcursor
+	// copy cursor from back buffer to a separate bitmap
+	if (hwcursor) {
 		src = &gpBuffer[SCREENXY(sgdwCursX, sgdwCursY)];
 		dst = sgCursorBitmap;
 		for (i = sgdwCursHgt; i != 0; i--, src += BUFFER_WIDTH, dst += sgdwCursWdt) {
@@ -270,7 +270,8 @@ static void scrollrt_draw_cursor_item()
 		}
 	}
 
-	if (1) { // hwcursor
+	// remove cursor from the back buffer
+	if (hwcursor) {
 		src = sgSaveBack;
 		dst = &gpBuffer[SCREENXY(sgdwCursX, sgdwCursY)];
 		for (i = sgdwCursHgt; i != 0; i--, src += sgdwCursWdt, dst += BUFFER_WIDTH) {
@@ -278,9 +279,10 @@ static void scrollrt_draw_cursor_item()
 		}
 	}
 
-	if (1) { // hwcursor
+	// update system cursor if the bitmap has changed
+	if (hwcursor) {
 		if (SDL_ShowCursor(SDL_ENABLE) <= -1) {
-			SDL_Log(SDL_GetError());
+			//SDL_Log(SDL_GetError());
 		}
 
 		if (cgCursorPaletteVersion != pal_surface_palette_version || memcmp(sgCursorBitmap, sgCursorBitmapBack, sizeof(sgCursorBitmap))) {
@@ -1589,9 +1591,9 @@ void scrollrt_draw_game_screen(BOOL draw_cursor)
 		hgt = 0;
 	}
 
-	if (1) { // hwcursor
+	if (hwcursor) {
 		if (SDL_ShowCursor(draw_cursor ? SDL_ENABLE : SDL_DISABLE) <= -1) {
-			SDL_Log(SDL_GetError());
+			//SDL_Log(SDL_GetError());
 		}
 	}
 

@@ -188,6 +188,9 @@ bool SpawnWindow(const char *lpWindowName)
 	BOOL oar = false;
 	DvlIntSetting("original aspect ratio", &oar);
 
+	if (hwcursor)
+		DvlIntSetting("hwcursor", &hwcursor);
+
 	if (upscale && !oar) {
 		CalculatePreferdWindowSize(width, height, integerScalingEnabled);
 	}

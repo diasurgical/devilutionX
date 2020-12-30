@@ -58,6 +58,8 @@ Options sgOptions;
 BOOL fullscreen = TRUE;
 bool gbShowIntro = true;
 BOOL leveldebug;
+BOOL hwcursor = TRUE;
+int showintrodebug = 1;
 #ifdef _DEBUG
 BOOL monstdebug;
 int DebugMonsters[10];

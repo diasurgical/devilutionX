@@ -885,16 +885,12 @@ void NewHWCursor(SDL_Surface *surf);
 
 void DrawMouse()
 {
-	if (1) { // hwcursor
-		NewHWCursor(ArtCursor.surface);
-
-		if (prevSgbControllerActive == sgbControllerActive) {
-			return;
-		}
+	if (hwcursor) {
 		if (SDL_ShowCursor(sgbControllerActive ? SDL_DISABLE : SDL_ENABLE) <= -1) {
-			ErrSdl();
+			//ErrSdl();
 		}
-		prevSgbControllerActive = sgbControllerActive;
+		NewHWCursor(ArtCursor.surface);
+		return;
 	}
 
 	if (sgbControllerActive)

@@ -62,6 +62,8 @@ void diablo_color_cyc_logic();
 
 extern BOOL fullscreen;
 extern BOOL leveldebug;
+extern BOOL hwcursor;
+extern int showintrodebug;
 #ifdef _DEBUG
 extern BOOL monstdebug;
 extern int debugmonsttypes;
