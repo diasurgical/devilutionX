@@ -4,6 +4,54 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## DevilutionX 1.1.0
+### Features
+- Proper widescreen (and other aspects) support
+- Select difficulty in single player (remembered in the save game)
+- Adjustable game speed in-game
+- V-sync can now be disabled in the ini
+- Better line drawing function used for the automap
+- Support for loading custom Hell level maps
+- Make all objects and monsters available to custom maps
+- Added support for joining a game via hostname instead of IP
+
+### Bugfixes
+- You can now enter and exit fullscreen also when the game is paused
+- [Amiga] Fix double-clicking in menu
+
+### Original Diablo bugs
+- Fix some monsters AC and to-hit values on Nightmare/Hell ending up as 0
+- Fix player base block resetting to 0 after loading a save game
+- Correctly render trees in front of the player
+- Fully render sprites that are larger than the floor tiles
+- Fix objects disappearing when walking on the opposite wall
+- Duping via belt has been fixed
+- Correctly detect if the mouse is clicking the world or UI in some areas
+- Minor typography corrections
+- Corrected name of Chamber of Bone in automap
+- Correctly align the inventory slots
+
+## DevilutionX 1.0.3
+### Bugfixes
+- Fix keyboard input in the menu
+
+## DevilutionX 1.0.2
+### Features
+- Support for integer scaling
+- Controller: Map Start + L1/R1 to char/inventory
+- Added `--save-dir` to allow for specifying the save game folder
+- Correctly scale the game on systems with a non-standard DPI setting
+
+### Bugfixes
+- Some cave levels were generated with an incorrect layout
+- Firebolt mana cost is now correct
+- Allow players to join Nightmare/Hell games without first creating a game
+- Correctly load the full white color
+- Correct navigation in the difficulty select screen
+- The window can now be resized after exiting fullscreen mode
+- Fix memory leak in audio code
+- Fix hanging for 20 sec on the error screen
+
 ## DevilutionX 1.0.1
 ### Features
 - Toggle fullscreen at any point by hitting alt+enter (mouse grab can be disabled in diablo.ini)
