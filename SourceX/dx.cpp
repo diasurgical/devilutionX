@@ -167,6 +167,7 @@ void dx_reinit()
 #endif
 	fullscreen = !fullscreen;
 	force_redraw = 255;
+	windowResVer++;
 }
 
 void InitPalette()
@@ -265,6 +266,7 @@ static SDL_Surface *cursor_surface = NULL, *cursor_realsurface = NULL;
 static SDL_Cursor *cursor = NULL;
 static int cursor_width, cursor_height;
 static int cursor_surface_palette_version = -1;
+static int cursow_window_res_version = -1;
 
 void NewHWCursor(SDL_Surface *surf)
 {
@@ -281,7 +283,7 @@ void NewHWCursor(SDL_Surface *surf)
 	}
 
 	if (cursor_surface == surf && cursor_surface_palette_version == pal_surface_palette_version &&
-		cursor_width == scaled_w && cursor_height == scaled_h)
+		cursor_width == scaled_w && cursor_height == scaled_h && cursow_window_res_version == windowResVer)
 		return;
 
 	if (SDLC_SetSurfaceColors(surf, pal_surface->format->palette) <= -1)
@@ -304,6 +306,7 @@ void NewHWCursor(SDL_Surface *surf)
 	cursor_surface_palette_version = pal_surface_palette_version;
 	cursor_width = surf->w;
 	cursor_height = surf->h;
+	cursow_window_res_version = windowResVer;
 
 	SDL_SetCursor(cursor);
 	SDL_FreeCursor(old_cursor);

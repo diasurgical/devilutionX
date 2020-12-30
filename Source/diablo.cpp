@@ -59,6 +59,7 @@ BOOL fullscreen = TRUE;
 bool gbShowIntro = true;
 BOOL leveldebug;
 BOOL hwcursor = TRUE;
+int windowResVer = 1;
 int showintrodebug = 1;
 #ifdef _DEBUG
 BOOL monstdebug;

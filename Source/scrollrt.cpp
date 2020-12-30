@@ -55,7 +55,7 @@ void (*DrawPlrProc)(int, int, int, int, int, BYTE *, int, int, int, int);
 BYTE sgSaveBack[8192];
 static BYTE sgCursorBitmap[8192], sgCursorBitmapBack[8192];
 static SDL_Surface *sgCursorSurface;
-static int cgCursorPaletteVersion;
+static int sgCursorPaletteVersion, sgCursorWindowsResVer = -1;
 DWORD sgdwCursHgtOld;
 
 bool dRendered[MAXDUNX][MAXDUNY];
@@ -285,7 +285,8 @@ static void scrollrt_draw_cursor_item()
 			//SDL_Log(SDL_GetError());
 		}
 
-		if (cgCursorPaletteVersion != pal_surface_palette_version || memcmp(sgCursorBitmap, sgCursorBitmapBack, sizeof(sgCursorBitmap))) {
+		if (sgCursorPaletteVersion != pal_surface_palette_version || sgCursorWindowsResVer != windowResVer || 
+			memcmp(sgCursorBitmap, sgCursorBitmapBack, sizeof(sgCursorBitmap))) {
 			// new cursor!
 			SDL_Surface *surf = SDL_CreateRGBSurfaceWithFormat(SDL_SWSURFACE, sgdwCursWdt, sgdwCursHgt, 8, SDL_PIXELFORMAT_INDEX8);
 			SDLC_SetColorKey(surf, 255);
@@ -302,7 +303,8 @@ static void scrollrt_draw_cursor_item()
 			SDL_FreeSurface(sgCursorSurface);
 			sgCursorSurface = surf;
 			memcpy(sgCursorBitmapBack, sgCursorBitmap, sizeof(sgCursorBitmap));
-			cgCursorPaletteVersion = pal_surface_palette_version;
+			sgCursorPaletteVersion = pal_surface_palette_version;
+			sgCursorWindowsResVer = windowResVer;
 		}
 	}
 }
