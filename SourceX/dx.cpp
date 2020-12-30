@@ -267,6 +267,7 @@ static SDL_Cursor *cursor = NULL;
 static int cursor_width, cursor_height;
 static int cursor_surface_palette_version = -1;
 static int cursow_window_res_version = -1;
+extern BOOL oar;
 
 void NewHWCursor(SDL_Surface *surf)
 {
@@ -278,8 +279,16 @@ void NewHWCursor(SDL_Surface *surf)
 
 		SDL_GetWindowSize(ghMainWnd, &ww, &wh);
 
-		scaled_w = scaled_w * ww / SCREEN_WIDTH;
-		scaled_h = scaled_h * ww / SCREEN_WIDTH;
+		float hFactor = float(wh) / SCREEN_HEIGHT;
+		float wFactor = float(ww) / SCREEN_WIDTH;
+
+		if (wFactor > hFactor) {
+			scaled_w = int(scaled_w * hFactor);
+			scaled_h = int(scaled_h * hFactor);
+		} else {
+			scaled_w = int(scaled_w * wFactor);
+			scaled_h = int(scaled_h * wFactor);
+		}
 	}
 
 	if (cursor_surface == surf && cursor_surface_palette_version == pal_surface_palette_version &&
