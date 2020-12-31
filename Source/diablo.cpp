@@ -11,7 +11,7 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-BOOL allquests;
+bool allquests;
 SDL_Window *ghMainWnd;
 DWORD glSeedTbl[NUMLEVELS];
 int gnLevelTypeTbl[NUMLEVELS];
@@ -220,7 +220,7 @@ static void diablo_parse_flags(int argc, char **argv)
 		} else if (strcasecmp("-w", argv[i]) == 0) {
 			debug_mode_key_w = TRUE;
 		} else if (strcasecmp("--allquests", argv[i]) == 0) {
-			allquests = 1;
+			allquests = true;
 #endif
 		} else {
 			printf("unrecognized option '%s'\n", argv[i]);
