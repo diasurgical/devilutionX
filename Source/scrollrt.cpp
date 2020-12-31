@@ -53,9 +53,10 @@ int level_piece_id;
 DWORD sgdwCursWdt;
 void (*DrawPlrProc)(int, int, int, int, int, BYTE *, int, int, int, int);
 BYTE sgSaveBack[8192];
-static BYTE sgCursorBitmap[8192], sgCursorBitmapBack[8192];
+static BYTE sgCursorBitmap[8192];
 static SDL_Surface *sgCursorSurface;
 static int sgCursorPaletteVersion, sgCursorWindowsResVer = -1;
+static int sgCursorCel = -1, sgCursorCol = -1;
 DWORD sgdwCursHgtOld;
 
 bool dRendered[MAXDUNX][MAXDUNY];
@@ -240,6 +241,7 @@ blit:
 		}
 	}
 
+	col = 0;
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		col = PAL16_YELLOW + 5;
 		if (plr[myplr].HoldItem._iMagical != 0) {
@@ -287,51 +289,43 @@ blit:
 
 	// update system cursor if the bitmap has changed
 	if (hwcursor) {
-		// find the actual transparency mask value, fallback to 255
-		if (pass == 1) {
-			char pal[256];
+		if (sgCursorCel != pcurs || sgCursorCol != col || sgCursorPaletteVersion != pal_surface_palette_version || sgCursorWindowsResVer != windowResVer) { 
+			// find the actual transparency mask value, fallback to 255
+			if (pass == 1) {
+				char pal[256];
 
-			memset(pal, 0, sizeof(pal));
+				memset(pal, 0, sizeof(pal));
 
-			src = sgCursorBitmap;
-			for (i = sgdwCursHgt; i != 0; i--, src += sgdwCursWdt) {
-				for (int j = 0; j < sgdwCursWdt; j++) {
-					pal[src[j]] = 1;
+				src = sgCursorBitmap;
+				for (i = sgdwCursHgt; i != 0; i--, src += sgdwCursWdt) {
+					for (int j = 0; j < sgdwCursWdt; j++) {
+						pal[src[j]] = 1;
+					}
+				}
+
+				for (int j = 0; j < 255; j++) {
+					if (!pal[j]) {
+						ckey = j;
+						goto blit;
+					}
 				}
 			}
 
-			for (int j = 0; j < 255; j++) {
-				if (!pal[j]) {
-					ckey = j;
-					goto blit;
-				}
+			if (SDL_ShowCursor(SDL_ENABLE) <= -1) {
+				//SDL_Log(SDL_GetError());
 			}
-		}
 
-		if (SDL_ShowCursor(SDL_ENABLE) <= -1) {
-			//SDL_Log(SDL_GetError());
-		}
-
-		if (sgCursorPaletteVersion != pal_surface_palette_version || sgCursorWindowsResVer != windowResVer || 
-			memcmp(sgCursorBitmap, sgCursorBitmapBack, sizeof(sgCursorBitmap))) {
-
-			SDL_Surface *surf = SDL_CreateRGBSurfaceWithFormat(SDL_SWSURFACE, sgdwCursWdt, sgdwCursHgt, 8, SDL_PIXELFORMAT_INDEX8);
+			SDL_Surface *surf = SDL_CreateRGBSurfaceWithFormatFrom(sgCursorBitmap, sgdwCursWdt, sgdwCursHgt, 8, sgdwCursWdt, SDL_PIXELFORMAT_INDEX8);
 			SDLC_SetColorKey(surf, ckey);
-
-			src = sgCursorBitmap;
-			dst = (BYTE *)surf->pixels;
-
-			for (i = sgdwCursHgt; i != 0; i--, src += sgdwCursWdt, dst += sgdwCursWdt) {
-				memcpy(dst, src, sgdwCursWdt);
-			}
 
 			NewHWCursor(surf);
 
 			SDL_FreeSurface(sgCursorSurface);
 			sgCursorSurface = surf;
-			memcpy(sgCursorBitmapBack, sgCursorBitmap, sizeof(sgCursorBitmap));
 			sgCursorPaletteVersion = pal_surface_palette_version;
 			sgCursorWindowsResVer = windowResVer;
+			sgCursorCel = pcurs;
+			sgCursorCol = col;
 		}
 	}
 }
