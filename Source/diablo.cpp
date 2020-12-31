@@ -11,6 +11,7 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+bool allquests;
 SDL_Window *ghMainWnd;
 DWORD glSeedTbl[NUMLEVELS];
 int gnLevelTypeTbl[NUMLEVELS];
@@ -138,6 +139,7 @@ static void print_help_and_exit()
 	printf("    %-20s %-30s\n", "-q <#>", "Force a certain quest");
 	printf("    %-20s %-30s\n", "-r <##########>", "Set map seed");
 	printf("    %-20s %-30s\n", "-t <##>", "Set current quest level");
+	printf("    %-20s %-30s\n", "--allquests", "Force all quests to generate in a singleplayer game");
 #endif
 	printf("\nReport bugs at https://github.com/diasurgical/devilutionX/\n");
 	diablo_quit(0);
@@ -217,6 +219,8 @@ static void diablo_parse_flags(int argc, char **argv)
 			visiondebug = TRUE;
 		} else if (strcasecmp("-w", argv[i]) == 0) {
 			debug_mode_key_w = TRUE;
+		} else if (strcasecmp("--allquests", argv[i]) == 0) {
+			allquests = true;
 #endif
 		} else {
 			printf("unrecognized option '%s'\n", argv[i]);
