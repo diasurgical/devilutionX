@@ -12,6 +12,7 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+extern int allquests;
 extern BOOL questlog;
 extern BYTE *pQLogCel;
 extern QuestStruct quests[MAXQUESTS];
