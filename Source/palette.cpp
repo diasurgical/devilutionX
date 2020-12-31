@@ -48,9 +48,9 @@ void ApplyGamma(SDL_Color *dst, const SDL_Color *src, int n)
 
 void SaveGamma()
 {
-	SRegSaveValue(APP_NAME, "Gamma Correction", 0, gamma_correction);
+	SRegSaveValue("Diablo", "Gamma Correction", 0, gamma_correction);
 #ifndef HELLFIRE
-	SRegSaveValue(APP_NAME, "Color Cycling", FALSE, color_cycling_enabled);
+	SRegSaveValue("Diablo", "Color Cycling", FALSE, color_cycling_enabled);
 #endif
 }
 
@@ -60,7 +60,7 @@ static void LoadGamma()
 	int value;
 
 	value = gamma_correction;
-	if (!SRegLoadValue(APP_NAME, "Gamma Correction", 0, &value))
+	if (!SRegLoadValue("Diablo", "Gamma Correction", 0, &value))
 		value = 100;
 	gamma_value = value;
 	if (value < 30) {
@@ -70,7 +70,7 @@ static void LoadGamma()
 	}
 	gamma_correction = gamma_value - gamma_value % 5;
 #ifndef HELLFIRE
-	if (!SRegLoadValue(APP_NAME, "Color Cycling", 0, &value))
+	if (!SRegLoadValue("Diablo", "Color Cycling", 0, &value))
 		value = 1;
 	color_cycling_enabled = value;
 #endif
