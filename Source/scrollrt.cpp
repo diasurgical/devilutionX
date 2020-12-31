@@ -161,20 +161,14 @@ static void scrollrt_draw_cursor_item()
 	assert(!sgdwCursWdt);
 
 	if (pcurs <= CURSOR_NONE || cursW == 0 || cursH == 0) {
-		if (hwcursor) {
-			if (SDL_ShowCursor(SDL_DISABLE) <= -1) {
-				//SDL_Log(SDL_GetError());
-			}
-		}
+		if (hwcursor)
+			SDL_ShowCursor(SDL_DISABLE);
 		return;
 	}
 
 	if (sgbControllerActive && !IsMovingMouseCursorWithController() && pcurs != CURSOR_TELEPORT && !invflag && (!chrflag || plr[myplr]._pStatPts <= 0)) {
-		if (hwcursor) {
-			if (SDL_ShowCursor(SDL_DISABLE) <= -1) {
-				//SDL_Log(SDL_GetError());
-			}
-		}
+		if (hwcursor)
+			SDL_ShowCursor(SDL_DISABLE);
 		return;
 	}
 
@@ -289,7 +283,8 @@ blit:
 
 	// update system cursor if the bitmap has changed
 	if (hwcursor) {
-		if (sgCursorCel != pcurs || sgCursorCol != col || sgCursorPaletteVersion != pal_surface_palette_version || sgCursorWindowsResVer != windowResVer) { 
+		if (sgCursorCel != pcurs || sgCursorCol != col ||
+			sgCursorPaletteVersion != pal_surface_palette_version || sgCursorWindowsResVer != windowResVer) { 
 			// find the actual transparency mask value, fallback to 255
 			if (pass == 1) {
 				char pal[256];
@@ -303,30 +298,31 @@ blit:
 					}
 				}
 
-				for (int j = 0; j < 255; j++) {
-					if (!pal[j]) {
-						ckey = j;
+				for (i = 0; i < 255; i++) {
+					if (!pal[i]) {
+						ckey = i;
 						goto blit;
 					}
 				}
 			}
 
-			if (SDL_ShowCursor(SDL_ENABLE) <= -1) {
-				//SDL_Log(SDL_GetError());
-			}
+			SDL_Surface *surf = SDL_CreateRGBSurfaceWithFormatFrom(sgCursorBitmap, sgdwCursWdt, sgdwCursHgt,
+				8, sgdwCursWdt, SDL_PIXELFORMAT_INDEX8);
 
-			SDL_Surface *surf = SDL_CreateRGBSurfaceWithFormatFrom(sgCursorBitmap, sgdwCursWdt, sgdwCursHgt, 8, sgdwCursWdt, SDL_PIXELFORMAT_INDEX8);
 			SDLC_SetColorKey(surf, ckey);
 
 			NewHWCursor(surf);
 
 			SDL_FreeSurface(sgCursorSurface);
+
 			sgCursorSurface = surf;
 			sgCursorPaletteVersion = pal_surface_palette_version;
 			sgCursorWindowsResVer = windowResVer;
 			sgCursorCel = pcurs;
 			sgCursorCol = col;
 		}
+
+		SDL_ShowCursor(SDL_ENABLE);
 	}
 }
 
