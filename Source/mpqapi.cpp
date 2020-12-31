@@ -349,24 +349,26 @@ bool ReadMPQHeader(Archive *archive, _FILEHEADER *hdr)
 
 static _BLOCKENTRY *mpqapi_new_block(int *block_index)
 {
-	_BLOCKENTRY *blockEntry;
-	DWORD i;
+	_BLOCKENTRY *blockEntry = cur_archive.sgpBlockTbl;
 
-	blockEntry = cur_archive.sgpBlockTbl;
+	for (DWORD i = 0; i < 2048; i++, blockEntry++) {
+		if (blockEntry->offset != 0)
+			continue;
+		if (blockEntry->sizealloc != 0)
+			continue;
+		if (blockEntry->flags != 0)
+			continue;
+		if (blockEntry->sizefile != 0)
+			continue;
 
-	i = 0;
-	while (blockEntry->offset || blockEntry->sizealloc || blockEntry->flags || blockEntry->sizefile) {
-		i++;
-		blockEntry++;
-		if (i >= 2048) {
-			app_fatal("Out of free block entries");
-			return NULL;
-		}
+		if (block_index)
+			*block_index = i;
+
+		return blockEntry;
 	}
-	if (block_index)
-		*block_index = i;
 
-	return blockEntry;
+	app_fatal("Out of free block entries");
+	return NULL;
 }
 
 void mpqapi_alloc_block(uint32_t block_offset, uint32_t block_size)
@@ -410,47 +412,54 @@ void mpqapi_alloc_block(uint32_t block_offset, uint32_t block_size)
 
 int mpqapi_find_free_block(uint32_t size, uint32_t *block_size)
 {
-	_BLOCKENTRY *pBlockTbl;
-	int i, result;
+	int result;
 
-	pBlockTbl = cur_archive.sgpBlockTbl;
-	i = 2048;
-	while (1) {
-		i--;
-		if (pBlockTbl->offset && !pBlockTbl->flags && !pBlockTbl->sizefile && (DWORD)pBlockTbl->sizealloc >= size)
-			break;
-		pBlockTbl++;
-		if (!i) {
-			*block_size = size;
-			result = cur_archive.size;
-			cur_archive.size += size;
-			return result;
-		}
+	_BLOCKENTRY *pBlockTbl = cur_archive.sgpBlockTbl;
+	for (int i = 2048; i--; pBlockTbl++) {
+		if (pBlockTbl->offset == 0)
+			continue;
+		if (pBlockTbl->flags != 0)
+			continue;
+		if (pBlockTbl->sizefile != 0)
+			continue;
+		if ((DWORD)pBlockTbl->sizealloc < size)
+			continue;
+
+		result = pBlockTbl->offset;
+		*block_size = size;
+		pBlockTbl->offset += size;
+		pBlockTbl->sizealloc -= size;
+
+		if (pBlockTbl->sizealloc == 0)
+			memset(pBlockTbl, 0, sizeof(*pBlockTbl));
+
+		return result;
 	}
 
-	result = pBlockTbl->offset;
 	*block_size = size;
-	pBlockTbl->offset += size;
-	pBlockTbl->sizealloc -= size;
-
-	if (!pBlockTbl->sizealloc)
-		memset(pBlockTbl, 0, sizeof(*pBlockTbl));
-
+	result = cur_archive.size;
+	cur_archive.size += size;
 	return result;
 }
 
-static int mpqapi_get_hash_index(short index, int hash_a, int hash_b, int locale)
+static int mpqapi_get_hash_index(int index, int hash_a, int hash_b, int locale)
 {
-	int idx, i;
+	DWORD idx, i;
 
 	i = 2048;
 	for (idx = index & 0x7FF; cur_archive.sgpHashTbl[idx].block != -1; idx = (idx + 1) & 0x7FF) {
-		if (!i--)
+		if (i-- == 0)
 			break;
-		if (cur_archive.sgpHashTbl[idx].hashcheck[0] == hash_a && cur_archive.sgpHashTbl[idx].hashcheck[1] == hash_b
-		    && cur_archive.sgpHashTbl[idx].lcid == locale
-		    && cur_archive.sgpHashTbl[idx].block != -2)
-			return idx;
+		if (cur_archive.sgpHashTbl[idx].hashcheck[0] != hash_a)
+			continue;
+		if (cur_archive.sgpHashTbl[idx].hashcheck[1] != hash_b)
+			continue;
+		if (cur_archive.sgpHashTbl[idx].lcid != locale)
+			continue;
+		if (cur_archive.sgpHashTbl[idx].block == -2)
+			continue;
+
+		return idx;
 	}
 
 	return -1;
@@ -523,13 +532,12 @@ static _BLOCKENTRY *mpqapi_add_file(const char *pszName, _BLOCKENTRY *pBlk, int 
 
 static BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD dwLen, _BLOCKENTRY *pBlk)
 {
-	const char *str_ptr = pszName;
 	const char *tmp;
-	while ((tmp = strchr(str_ptr, ':')))
-		str_ptr = tmp + 1;
-	while ((tmp = strchr(str_ptr, '\\')))
-		str_ptr = tmp + 1;
-	Hash(str_ptr, 3);
+	while ((tmp = strchr(pszName, ':')))
+		pszName = tmp + 1;
+	while ((tmp = strchr(pszName, '\\')))
+		pszName = tmp + 1;
+	Hash(pszName, 3);
 
 	constexpr uint32_t kSectorSize = 4096;
 	const uint32_t num_sectors = (dwLen + (kSectorSize - 1)) / kSectorSize;
@@ -566,14 +574,13 @@ static BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, 
 	}
 #endif
 
-	const BYTE *src = pbData;
 	uint32_t destsize = offset_table_bytesize;
 	BYTE mpq_buf[kSectorSize];
 	std::size_t cur_sector = 0;
 	while (true) {
 		uint32_t len = std::min(dwLen, kSectorSize);
-		memcpy(mpq_buf, src, len);
-		src += len;
+		memcpy(mpq_buf, pbData, len);
+		pbData += len;
 		len = PkwareCompress(mpq_buf, len);
 		if (!cur_archive.stream.write((char *)mpq_buf, len))
 			return FALSE;
