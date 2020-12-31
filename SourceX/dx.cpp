@@ -312,6 +312,7 @@ void NewHWCursor(SDL_Surface *surf)
 
 	cursor = SDL_CreateColorCursor(argbsurf, 0, 0);
 	cursor_surface = surf;
+	cursor_realsurface = argbsurf;
 	cursor_surface_palette_version = pal_surface_palette_version;
 	cursor_width = surf->w;
 	cursor_height = surf->h;
