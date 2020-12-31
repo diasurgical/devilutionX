@@ -144,7 +144,7 @@ void InitQuests()
 		quests[z]._qmsg = questlist[z]._qdmsg;
 	}
 
-	if (gbMaxPlayers == 1, allquests == 0) {
+	if (gbMaxPlayers == 1 && allquests == 0) {
 		SetRndSeed(glSeedTbl[15]);
 		if (random_(0, 2) != 0)
 			quests[Q_PWATER]._qactive = QUEST_NOTAVAIL;

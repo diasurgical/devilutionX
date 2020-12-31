@@ -11,7 +11,7 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-int allquests;
+BOOL allquests;
 SDL_Window *ghMainWnd;
 DWORD glSeedTbl[NUMLEVELS];
 int gnLevelTypeTbl[NUMLEVELS];
