@@ -2434,7 +2434,7 @@ void AddFirewall(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy
 	int i;
 
 #ifdef HELLFIRE
-	missile[mi]._midam = (random_(53, 10) + random_(53, 10) + 2 + (id > 0) ? plr[id]._pLevel : currlevel); // BUGFIX: missing parenthesis around ternary
+	missile[mi]._midam = (random_(53, 10) + random_(53, 10) + 2 + ((id > 0) ? plr[id]._pLevel : currlevel)); // BUGFIX: missing parenthesis around ternary (fixed)
 #else
 	missile[mi]._midam = (random_(53, 10) + random_(53, 10) + 2 + plr[id]._pLevel);
 #endif
