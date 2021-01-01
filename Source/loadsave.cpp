@@ -179,6 +179,9 @@ static void LoadItemData(ItemStruct *pItem)
 	CopyInt(tbuff, &pItem->_iStatFlag);
 	CopyInt(tbuff, &pItem->IDidx);
 	CopyInt(tbuff, &pItem->offs016C);
+#ifdef HELLFIRE
+	CopyInt(tbuff, &pItem->_iDamAcFlags);
+#endif
 }
 
 static void LoadItems(const int n, ItemStruct *pItem)
@@ -376,12 +379,7 @@ static void LoadPlayer(int i)
 	CopyChar(tbuff, &pPlayer->pBattleNet);
 #endif
 	CopyChar(tbuff, &pPlayer->pManaShield);
-#ifndef HELLFIRE
 	CopyBytes(tbuff, 3, &pPlayer->bReserved);
-#else
-	CopyChar(tbuff, &pPlayer->pDungMsgs2);
-	CopyBytes(tbuff, 2, &pPlayer->bReserved);
-#endif
 	CopyShort(tbuff, &pPlayer->wReflection);
 	CopyShorts(tbuff, 7, &pPlayer->wReserved);
 
@@ -609,10 +607,19 @@ static void LoadQuest(int i)
 	CopyInt(tbuff, &pQuest->_qty);
 	CopyChar(tbuff, &pQuest->_qslvl);
 	CopyChar(tbuff, &pQuest->_qidx);
+#ifdef HELLFIRE
+	tbuff += 2; // Alignment
+	CopyInt(tbuff, &pQuest->_qmsg);
+#else
 	CopyChar(tbuff, &pQuest->_qmsg);
+#endif
 	CopyChar(tbuff, &pQuest->_qvar1);
 	CopyChar(tbuff, &pQuest->_qvar2);
+#ifdef HELLFIRE
+	tbuff += 2; // Alignment
+#else
 	tbuff += 3; // Alignment
+#endif
 	CopyInt(tbuff, &pQuest->_qlog);
 
 	ReturnLvlX = WLoad();
@@ -974,6 +981,9 @@ static void SaveItem(ItemStruct *pItem)
 	CopyInt(&pItem->_iStatFlag, tbuff);
 	CopyInt(&pItem->IDidx, tbuff);
 	CopyInt(&pItem->offs016C, tbuff);
+#ifdef HELLFIRE
+	CopyInt(&pItem->_iDamAcFlags, tbuff);
+#endif
 }
 
 static void SaveItems(ItemStruct *pItem, const int n)
@@ -1394,10 +1404,19 @@ static void SaveQuest(int i)
 	CopyInt(&pQuest->_qty, tbuff);
 	CopyChar(&pQuest->_qslvl, tbuff);
 	CopyChar(&pQuest->_qidx, tbuff);
+#ifdef HELLFIRE
+	tbuff += 2; // Alignment
+	CopyInt(&pQuest->_qmsg, tbuff);
+#else
 	CopyChar(&pQuest->_qmsg, tbuff);
+#endif
 	CopyChar(&pQuest->_qvar1, tbuff);
 	CopyChar(&pQuest->_qvar2, tbuff);
+#ifdef HELLFIRE
+	tbuff += 2; // Alignment
+#else
 	tbuff += 3; // Alignment
+#endif
 	CopyInt(&pQuest->_qlog, tbuff);
 
 	WSave(ReturnLvlX);
