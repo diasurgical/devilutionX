@@ -2689,7 +2689,7 @@ BOOL M_DoRSpAttack(int i)
 		    monster[i]._mVar3,
 		    0);
 #ifdef HELLFIRE
-		if (Monsters[i].Snds[3][0] != 0)
+		if (Monsters[i].Snds[3][0] != 0) // BUGFIX `Monsters[i].` should be `monster[i].MType->`
 #endif
 			PlayEffect(i, 3);
 	}

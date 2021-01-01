@@ -717,14 +717,15 @@ void AddChestTraps()
 
 void LoadMapObjects(BYTE *pMap, int startx, int starty, int x1, int y1, int w, int h, int leveridx)
 {
-	int rw, rh, i, j, oi;
+	int rw, rh, i, j, oi, type;
 	BYTE *lm;
 	long mapoff;
 
 	InitObjFlag = TRUE;
 
-	lm = pMap + 2;
-	rw = pMap[0];
+	lm = pMap;
+	rw = lm[0];
+	lm += 2;
 	rh = *lm;
 	mapoff = (rw * rh + 1) * 2;
 	rw <<= 1;
@@ -735,7 +736,8 @@ void LoadMapObjects(BYTE *pMap, int startx, int starty, int x1, int y1, int w, i
 	for (j = 0; j < rh; j++) {
 		for (i = 0; i < rw; i++) {
 			if (*lm) {
-				AddObject(ObjTypeConv[*lm], startx + 16 + i, starty + 16 + j);
+				type = lm[0];
+				AddObject(ObjTypeConv[type], startx + 16 + i, starty + 16 + j);
 				oi = ObjIndex(startx + 16 + i, starty + 16 + j);
 				SetObjMapRange(oi, x1, y1, x1 + w, y1 + h, leveridx);
 			}
