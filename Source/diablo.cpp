@@ -251,7 +251,7 @@ bool LeftMouseCmd(bool bShift)
 				NetSendCmdLoc(MyPlayerId, true, CMD_RATTACKXY, { cursmx, cursmy });
 			} else if (pcursmonst != -1) {
 				if (CanTalkToMonst(pcursmonst)) {
-					NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
+					NetSendCmdParam2(true, CMD_ATTACKID, pcursmonst, false);
 				} else {
 					NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
 				}
@@ -262,15 +262,15 @@ bool LeftMouseCmd(bool bShift)
 			if (bShift) {
 				if (pcursmonst != -1) {
 					if (CanTalkToMonst(pcursmonst)) {
-						NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
+						NetSendCmdParam2(true, CMD_ATTACKID, pcursmonst, false);
 					} else {
-						NetSendCmdLoc(MyPlayerId, true, CMD_SATTACKXY, { cursmx, cursmy });
+						NetSendCmdParam2(true, CMD_ATTACKID, pcursmonst, true);
 					}
 				} else {
 					NetSendCmdLoc(MyPlayerId, true, CMD_SATTACKXY, { cursmx, cursmy });
 				}
 			} else if (pcursmonst != -1) {
-				NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
+				NetSendCmdParam2(true, CMD_ATTACKID, pcursmonst, false);
 			} else if (pcursplr != -1 && !gbFriendlyMode) {
 				NetSendCmdParam1(true, CMD_ATTACKPID, pcursplr);
 			}

@@ -2960,7 +2960,9 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 	int y = 0;
 
 	int i = -1;
-	if (player.destAction == ACTION_ATTACKMON) {
+
+	bool holdPosition = Players[pnum].destParam2;
+	if (player.destAction == ACTION_ATTACKMON && !holdPosition) {
 		i = player.destParam1;
 		MakePlrPath(pnum, Monsters[i].position.future, false);
 	}
@@ -3062,7 +3064,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 		case ACTION_ATTACKMON:
 			x = abs(player.position.tile.x - Monsters[i].position.future.x);
 			y = abs(player.position.tile.y - Monsters[i].position.future.y);
-			if (x <= 1 && y <= 1) {
+			if ((x <= 1 && y <= 1) || holdPosition) {
 				d = GetDirection(player.position.future, Monsters[i].position.future);
 				if (Monsters[i].mtalkmsg != TEXT_NONE && Monsters[i].mtalkmsg != TEXT_VILE14) {
 					TalktoMonster(i);
@@ -3206,7 +3208,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			i = player.destParam1;
 			x = abs(player.position.tile.x - Monsters[i].position.future.x);
 			y = abs(player.position.tile.y - Monsters[i].position.future.y);
-			if (x <= 1 && y <= 1) {
+			if ((x <= 1 && y <= 1) || holdPosition) {
 				d = GetDirection(player.position.future, Monsters[i].position.future);
 				StartAttack(pnum, d);
 			}
