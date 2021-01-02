@@ -365,13 +365,12 @@ void DrawInv()
 				light_table_index = 0;
 				cel_transparency_active = TRUE;
 
-				pBuff = frame_width == INV_SLOT_SIZE_PX
-				    ? &gpBuffer[SCREENXY(RIGHT_PANEL_X + 197, SCREEN_Y)]
-				    : &gpBuffer[SCREENXY(RIGHT_PANEL_X + 183, SCREEN_Y)];
+				const int dst_x = SCREEN_X + RIGHT_PANEL_X + (frame_width == INV_SLOT_SIZE_PX ? 197 : 183);
+				const int dst_y = SCREEN_Y;
 				if (frame <= 179) {
-					CelClippedBlitLightTrans(pBuff, pCursCels, frame, frame_width);
+					CelClippedBlitLightTrans(dst_x, dst_y, pCursCels, frame, frame_width);
 				} else {
-					CelClippedBlitLightTrans(pBuff, pCursCels2, frame - 179, frame_width);
+					CelClippedBlitLightTrans(dst_x, dst_y, pCursCels2, frame - 179, frame_width);
 				}
 
 				cel_transparency_active = FALSE;
