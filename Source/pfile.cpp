@@ -326,56 +326,14 @@ BOOL pfile_archive_contains_game(HANDLE hsArchive, DWORD save_num)
 {
 	HANDLE file;
 
-#ifdef HELLFIRE
-	DWORD read, size;
-	BOOL ret = FALSE;
-	gbLoadGame = FALSE;
-#endif
-
 	if (gbMaxPlayers != 1)
 		return FALSE;
 
 	if (!SFileOpenFileEx(hsArchive, "game", 0, &file))
 		return FALSE;
 
-#ifdef HELLFIRE
-	DWORD dwlen = SFileGetFileSize(file, NULL);
-	if (!dwlen)
-		app_fatal("Invalid save file");
-
-	BYTE *ptr = DiabloAllocPtr(dwlen + 8);
-	BYTE *buf = ptr + 4;
-
-	if (SFileReadFile(file, buf, dwlen, &read, NULL)) {
-		if (read == dwlen) {
-			const char *password;
-			password = PASSWORD_SINGLE;
-			if (gbMaxPlayers > 1)
-				password = PASSWORD_MULTI;
-			gbLoadGame = TRUE;
-			if (codec_decode(buf, dwlen, password)) {
-				int magic = *buf << 24;
-				buf++;
-				magic |= *buf << 16;
-				buf++;
-				magic |= *buf << 8;
-				buf++;
-				magic |= *buf;
-				if (magic == 'HELF') {
-					ret = TRUE;
-				}
-			}
-		}
-	}
-
-	if (ptr)
-		mem_free_dbg(ptr);
-	SFileCloseFile(file);
-	return ret;
-#else
 	SFileCloseFile(file);
 	return TRUE;
-#endif
 }
 
 BOOL pfile_ui_set_class_stats(unsigned int player_class_nr, _uidefaultstats *class_stats)
@@ -486,8 +444,6 @@ void pfile_read_player_from_save()
 
 void GetTempLevelNames(char *szTemp)
 {
-	// BUGFIX: function call has no purpose
-	pfile_get_save_num_from_name(plr[myplr]._pName);
 	if (setlevel)
 		sprintf(szTemp, "temps%02d", setlvlnum);
 	else
@@ -516,8 +472,6 @@ void GetPermLevelNames(char *szPerm)
 
 void pfile_get_game_name(char *dst)
 {
-	// BUGFIX: function call with no purpose
-	pfile_get_save_num_from_name(plr[myplr]._pName);
 	strcpy(dst, "game");
 }
 
@@ -664,11 +618,11 @@ BYTE *pfile_read(const char *pszName, DWORD *pdwLen)
 
 void pfile_update(BOOL force_save)
 {
-	// BUGFIX: these tick values should be treated as unsigned to handle overflows correctly
-	static int save_prev_tc;
+	// BUGFIX: these tick values should be treated as unsigned to handle overflows correctly (fixed)
+	static DWORD save_prev_tc;
 
 	if (gbMaxPlayers != 1) {
-		int tick = SDL_GetTicks();
+		DWORD tick = SDL_GetTicks();
 		if (force_save || tick - save_prev_tc > 60000) {
 			save_prev_tc = tick;
 			pfile_write_hero();
