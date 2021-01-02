@@ -144,17 +144,10 @@ int CalcTextSpeed(int nSFX)
  */
 void PrintQTextChr(int sx, int sy, Uint8 *pCelBuff, int nCel)
 {
-	Uint8 *pStart, *pEnd;
-
-	assert(gpBuffer);
-	pStart = gpBufStart;
-	gpBufStart = &gpBuffer[BUFFER_WIDTH * (49 + SCREEN_Y + UI_OFFSET_Y)];
-	pEnd = gpBufEnd;
-	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (309 + SCREEN_Y + UI_OFFSET_Y)];
-	CelDraw(sx, sy, pCelBuff, nCel, 22);
-
-	gpBufStart = pStart;
-	gpBufEnd = pEnd;
+	CelOutputBuffer buf = GlobalBackBuffer();
+	const int start_y = 49 + SCREEN_Y + UI_OFFSET_Y;
+	buf = buf.subregion(0, start_y, buf.line_width, 309 + SCREEN_Y + UI_OFFSET_Y);
+	CelDrawTo(buf, sx, sy - start_y, pCelBuff, nCel, 22);
 }
 
 /**

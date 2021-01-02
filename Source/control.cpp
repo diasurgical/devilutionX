@@ -5,6 +5,8 @@
  */
 #include "all.h"
 
+#include <cstddef>
+
 DEVILUTION_BEGIN_NAMESPACE
 
 BYTE sgbNextTalkSave;
@@ -775,22 +777,20 @@ void UpdateManaFlask()
 	DrawSpell();
 }
 
+static CelOutputBuffer AllocCelOutputBuffer(BYTE **raw, size_t width, size_t height) {
+	const std::size_t size = width * height;
+	*raw = DiabloAllocPtr(size);
+	memset(*raw, 0, size);
+	return CelOutputBuffer{*raw, *raw + size, static_cast<int>(width)};
+}
+
 void InitControlPan()
 {
 	int i;
-	BYTE *tBuff;
+	const CelOutputBuffer btm_buf = AllocCelOutputBuffer(&pBtmBuff, PANEL_WIDTH, (PANEL_HEIGHT + 16) * (gbIsMultiplayer ? 2 : 1));
+	const CelOutputBuffer mana_buf = AllocCelOutputBuffer(&pManaBuff, 88, 88);
+	const CelOutputBuffer life_buf = AllocCelOutputBuffer(&pLifeBuff, 88, 88);
 
-	if (!gbIsMultiplayer) {
-		pBtmBuff = DiabloAllocPtr((PANEL_HEIGHT + 16) * PANEL_WIDTH);
-		memset(pBtmBuff, 0, (PANEL_HEIGHT + 16) * PANEL_WIDTH);
-	} else {
-		pBtmBuff = DiabloAllocPtr((PANEL_HEIGHT + 16) * 2 * PANEL_WIDTH);
-		memset(pBtmBuff, 0, (PANEL_HEIGHT + 16) * 2 * PANEL_WIDTH);
-	}
-	pManaBuff = DiabloAllocPtr(88 * 88);
-	memset(pManaBuff, 0, 88 * 88);
-	pLifeBuff = DiabloAllocPtr(88 * 88);
-	memset(pLifeBuff, 0, 88 * 88);
 	pPanelText = LoadFileInMem("CtrlPan\\SmalText.CEL", NULL);
 	pChrPanel = LoadFileInMem("Data\\Char.CEL", NULL);
 	if (!gbIsHellfire)
@@ -798,18 +798,18 @@ void InitControlPan()
 	else
 		pSpellCels = LoadFileInMem("Data\\SpelIcon.CEL", NULL);
 	SetSpellTrans(RSPLTYPE_SKILL);
-	tBuff = LoadFileInMem("CtrlPan\\Panel8.CEL", NULL);
-	CelBlitWidth(pBtmBuff, 0, (PANEL_HEIGHT + 16) - 1, PANEL_WIDTH, tBuff, 1, PANEL_WIDTH);
-	MemFreeDbg(tBuff);
-	tBuff = LoadFileInMem("CtrlPan\\P8Bulbs.CEL", NULL);
-	CelBlitWidth(pLifeBuff, 0, 87, 88, tBuff, 1, 88);
-	CelBlitWidth(pManaBuff, 0, 87, 88, tBuff, 2, 88);
-	MemFreeDbg(tBuff);
+	BYTE *pStatusPanel = LoadFileInMem("CtrlPan\\Panel8.CEL", NULL);
+	CelDrawUnsafeTo(btm_buf, 0, (PANEL_HEIGHT + 16) - 1, pStatusPanel, 1, PANEL_WIDTH);
+	MemFreeDbg(pStatusPanel);
+	pStatusPanel = LoadFileInMem("CtrlPan\\P8Bulbs.CEL", NULL);
+	CelDrawUnsafeTo(life_buf, 0, 87, pStatusPanel, 1, 88);
+	CelDrawUnsafeTo(mana_buf, 0, 87, pStatusPanel, 2, 88);
+	MemFreeDbg(pStatusPanel);
 	talkflag = FALSE;
 	if (gbIsMultiplayer) {
-		tBuff = LoadFileInMem("CtrlPan\\TalkPanl.CEL", NULL);
-		CelBlitWidth(pBtmBuff, 0, (PANEL_HEIGHT + 16) * 2 - 1, PANEL_WIDTH, tBuff, 1, PANEL_WIDTH);
-		MemFreeDbg(tBuff);
+		BYTE * pTalkPanel = LoadFileInMem("CtrlPan\\TalkPanl.CEL", NULL);
+		CelDrawUnsafeTo(btm_buf, 0, (PANEL_HEIGHT + 16) * 2 - 1, pTalkPanel, 1, PANEL_WIDTH);
+		MemFreeDbg(pTalkPanel);
 		pMultiBtns = LoadFileInMem("CtrlPan\\P8But2.CEL", NULL);
 		pTalkBtns = LoadFileInMem("CtrlPan\\TalkButt.CEL", NULL);
 		sgbPlrTalkTbl = 0;
