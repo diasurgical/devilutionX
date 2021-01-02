@@ -23,11 +23,9 @@ namespace {
 std::string GetSavePath(DWORD save_num)
 {
 	std::string path = GetPrefPath();
-#ifdef HELLFIRE
-	const char *ext = ".hsv";
-#else
 	const char *ext = ".sv";
-#endif
+	if (gbIsHellfire)
+		ext = ".hsv";
 
 	if (gbIsSpawn) {
 		if (gbMaxPlayers <= 1) {
@@ -39,12 +37,7 @@ std::string GetSavePath(DWORD save_num)
 		if (gbMaxPlayers <= 1) {
 			path.append("single_");
 		} else {
-#ifdef HELLFIRE
-			path.append("hrinfo_");
-			ext = ".drv";
-#else
 			path.append("multi_");
-#endif
 		}
 	}
 

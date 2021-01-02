@@ -27,7 +27,6 @@ int SwapItem(ItemStruct *a, ItemStruct *b);
 void CheckInvSwap(int pnum, BYTE bLoc, int idx, WORD wCI, int seed, BOOL bId);
 void inv_update_rem_item(int pnum, BYTE iv);
 void RemoveInvItem(int pnum, int iv);
-BOOL inv_diablo_to_hellfire(int pnum);
 void RemoveSpdBarItem(int pnum, int iv);
 void CheckInvItem();
 void CheckInvScrn();

@@ -27,6 +27,8 @@ HANDLE diabdat_mpq;
 HANDLE patch_rt_mpq;
 /** Indicate if we only have access to demo data */
 bool gbIsSpawn;
+/** Indicate if we have loaded the Hellfire expansion data */
+bool gbIsHellfire;
 HANDLE hfmonk_mpq;
 HANDLE hfbard_mpq;
 HANDLE hfbarb_mpq;
@@ -145,6 +147,8 @@ void init_archives()
 
 #ifdef HELLFIRE
 	hellfire_mpq = init_test_access("hellfire.mpq", "DiabloInstall", 8000, FS_PC);
+	if (hellfire_mpq != NULL)
+		gbIsHellfire = true;
 	hfmonk_mpq = init_test_access("hfmonk.mpq", "DiabloInstall", 8100, FS_PC);
 	hfbard_mpq = init_test_access("hfbard.mpq", "DiabloInstall", 8110, FS_PC);
 	hfbarb_mpq = init_test_access("hfbarb.mpq", "DiabloInstall", 8120, FS_PC);

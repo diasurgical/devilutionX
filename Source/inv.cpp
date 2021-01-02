@@ -1698,47 +1698,6 @@ void RemoveInvItem(int pnum, int iv)
 	CalcPlrScrolls(pnum);
 }
 
-/**
- * @brief This destroyes all items except gold
- */
-BOOL inv_diablo_to_hellfire(int pnum)
-{
-	ItemStruct tmp;
-	ItemStruct *item;
-	int i, old_item_cnt, new_item_index;
-
-	if (plr[pnum]._pgfxnum != 0) {
-		plr[pnum]._pgfxnum = 0;
-		plr[pnum]._pGFXLoad = 0;
-		SetPlrAnims(pnum);
-	}
-	for (i = 0, item = plr[pnum].InvBody; i < NUM_INVLOC; i++, item++) {
-		item->_itype = ITYPE_NONE;
-	}
-	old_item_cnt = plr[pnum]._pNumInv;
-	memset(plr[pnum].InvGrid, 0, sizeof(plr[pnum].InvGrid));
-	plr[pnum]._pNumInv = 0;
-	for (i = 0; i < old_item_cnt; i++) {
-		item = &plr[pnum].InvList[i];
-		if (item->_itype == ITYPE_GOLD) {
-			new_item_index = plr[pnum]._pNumInv;
-			// BUGFIX: new_item_index may be greater or equal to NUM_INV_GRID_ELEM
-			tmp = *item;
-			item->_itype = ITYPE_NONE;
-			plr[pnum].InvList[new_item_index] = tmp;
-			plr[pnum]._pNumInv++;
-			plr[pnum].InvGrid[i] = plr[pnum]._pNumInv;
-		} else {
-			item->_itype = ITYPE_NONE;
-		}
-	};
-	for (i = 0, item = plr[pnum].SpdList; i < MAXBELTITEMS; i++, item++) {
-		item->_itype = ITYPE_NONE;
-	}
-	CalcPlrItemVals(pnum, FALSE);
-	return FALSE;
-}
-
 void RemoveSpdBarItem(int pnum, int iv)
 {
 	plr[pnum].SpdList[iv]._itype = ITYPE_NONE;

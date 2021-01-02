@@ -49,6 +49,7 @@ int setseed;
 int debugmonsttypes;
 int PauseMode;
 bool forceSpawn;
+bool forceDiablo;
 BOOLEAN UseTheoQuest;
 BOOLEAN UseCowFarmer;
 BOOLEAN UseNestArt;
@@ -118,6 +119,8 @@ static void print_help_and_exit()
 	printf("    %-20s %-30s\n", "-x", "Run in windowed mode");
 	printf("    %-20s %-30s\n", "--spawn", "Force spawn mode even if diabdat.mpq is found");
 #ifdef HELLFIRE
+	printf("\nHellfire options:\n");
+	printf("    %-20s %-30s\n", "--diablo", "Force diablo mode even if hellfire.mpq is found");
 	printf("    %-20s %-30s\n", "--theoquest", "Enable the Theo quest");
 	printf("    %-20s %-30s\n", "--cowquest", "Enable the Cow quest");
 	printf("    %-20s %-30s\n", "--nestart", "Use alternate nest palette");
@@ -168,6 +171,8 @@ static void diablo_parse_flags(int argc, char **argv)
 		} else if (strcasecmp("--spawn", argv[i]) == 0) {
 			forceSpawn = TRUE;
 #ifdef HELLFIRE
+		} else if (strcasecmp("--diablo", argv[i]) == 0) {
+			forceDiablo = TRUE;
 		} else if (strcasecmp("--theoquest", argv[i]) == 0) {
 			UseTheoQuest = TRUE;
 		} else if (strcasecmp("--cowquest", argv[i]) == 0) {
@@ -384,9 +389,7 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
 
 	do {
 		fExitProgram = FALSE;
-#ifndef HELLFIRE
 		gbLoadGame = FALSE;
-#endif
 
 		if (!NetInit(bSinglePlayer, &fExitProgram)) {
 			gbRunGameResult = !fExitProgram;
@@ -400,25 +403,15 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
 			InitQuests();
 			InitPortals();
 			InitDungMsgs(myplr);
-#ifndef HELLFIRE
 		}
 		if (!gbValidSaveFile || !gbLoadGame) {
-#else
-			if (!gbValidSaveFile && gbLoadGame)
-				inv_diablo_to_hellfire(myplr);
-#endif
 			uMsg = WM_DIABNEWGAME;
 		} else {
 			uMsg = WM_DIABLOADGAME;
 		}
 		run_game_loop(uMsg);
 		NetClose();
-#ifndef HELLFIRE
 		pfile_create_player_description(0, 0);
-#else
-		if (gbMaxPlayers == 1)
-			break;
-#endif
 	} while (gbRunGameResult);
 
 	SNetDestroy();
@@ -451,6 +444,8 @@ static void diablo_init()
 
 	if (forceSpawn)
 		gbIsSpawn = true;
+	if (forceDiablo)
+		gbIsHellfire = false;
 
 	UiInitialize();
 	UiSetSpawned(gbIsSpawn);
@@ -475,17 +470,13 @@ static void diablo_splash()
 
 	play_movie("gendata\\logo.smk", TRUE);
 
-#ifndef HELLFIRE
-	if (!gbIsSpawn)
-#endif
-		if (getIniBool(APP_NAME, "Intro", true)) {
-#ifndef HELLFIRE
-			play_movie("gendata\\diablo1.smk", TRUE);
-#else
+	if (gbIsHellfire && getIniBool("Hellfire", "Intro", true)) {
 		play_movie("gendata\\Hellfire.smk", TRUE);
-#endif
-			setIniValue(APP_NAME, "Intro", "0");
-		}
+		setIniValue("Hellfire", "Intro", "0");
+	} else if (!gbIsSpawn && getIniBool("Diablo", "Intro", true)) {
+		play_movie("gendata\\diablo1.smk", TRUE);
+		setIniValue("Diablo", "Intro", "0");
+	}
 
 	UiTitleDialog();
 }
