@@ -6,17 +6,9 @@
 
 #ifdef HELLFIRE
 #define DIABOOL					BOOLEAN
-#define GAME_NAME				"HELLFIRE"
-#define APP_NAME				"Hellfire"
-#else
-#define DIABOOL					BOOL
-#define GAME_NAME				"DIABLO"
-#define APP_NAME				"Diablo"
-#endif
-
-#ifdef HELLFIRE
 #define HFAND &&
 #else
+#define DIABOOL					BOOL
 #define HFAND &
 #endif
 
@@ -59,6 +51,7 @@
 #define MAXMONSTERS				200
 #define MAXOBJECTS				127
 #define MAXPORTAL				4
+
 #ifdef HELLFIRE
 #define MAXQUESTS				24
 #define MAXMULTIQUESTS			10
@@ -66,13 +59,16 @@
 #define MAXQUESTS				16
 #define MAXMULTIQUESTS			4
 #endif
+
 #define MAXTHEMES				50
 #define MAXTILES				2048
+
 #ifdef HELLFIRE
 #define MAXTRIGGERS				7
 #else
 #define MAXTRIGGERS				5
 #endif
+
 #define MAXVISION				32
 #define MDMAXX					40
 #define MDMAXY					40

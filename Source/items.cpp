@@ -1940,6 +1940,7 @@ void GetItemAttrs(int i, int idata, int lvl)
 	item[i]._iPLHP = 0;
 	item[i]._iPrePower = -1;
 	item[i]._iSufPower = -1;
+	item[i]._iDamAcFlags = 0;
 
 #ifndef HELLFIRE
 	if (item[i]._iMiscId == IMISC_BOOK)
@@ -1954,7 +1955,6 @@ void GetItemAttrs(int i, int idata, int lvl)
 			rndv = 5 * (currlevel + 32) + random_(21, 10 * (currlevel + 32));
 #else
 	item[i]._iFlags = 0;
-	item[i]._iDamAcFlags = 0;
 
 	if (item[i]._iMiscId == IMISC_BOOK)
 		GetBookSpell(i, lvl);

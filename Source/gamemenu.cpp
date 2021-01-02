@@ -380,7 +380,7 @@ void gamemenu_loadjog(BOOL bActivate)
 {
 	if (gbMaxPlayers == 1) {
 		jogging_opt = !jogging_opt;
-		SRegSaveValue(APP_NAME, jogging_title, FALSE, jogging_opt);
+		SRegSaveValue("Hellfire", jogging_title, FALSE, jogging_opt);
 		PlaySFX(IS_TITLEMOV);
 		gamemenu_jogging();
 	}

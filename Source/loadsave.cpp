@@ -9,6 +9,11 @@ DEVILUTION_BEGIN_NAMESPACE
 
 BYTE *tbuff;
 
+bool gbIsHellfireSaveGame;
+int giNumberOfLevels;
+int giNumberQuests;
+int giNumberOfSmitPremiumItems;
+
 static char BLoad()
 {
 	return *tbuff++;
@@ -179,9 +184,10 @@ static void LoadItemData(ItemStruct *pItem)
 	CopyInt(tbuff, &pItem->_iStatFlag);
 	CopyInt(tbuff, &pItem->IDidx);
 	CopyInt(tbuff, &pItem->offs016C);
-#ifdef HELLFIRE
-	CopyInt(tbuff, &pItem->_iDamAcFlags);
-#endif
+	if (gbIsHellfireSaveGame)
+		CopyInt(tbuff, &pItem->_iDamAcFlags);
+	else
+		pItem->_iDamAcFlags = 0;
 }
 
 static void LoadItems(const int n, ItemStruct *pItem)
@@ -309,8 +315,8 @@ static void LoadPlayer(int i)
 	CopyInt(tbuff, &pPlayer->_pVar6);
 	CopyInt(tbuff, &pPlayer->_pVar7);
 	CopyInt(tbuff, &pPlayer->_pVar8);
-	CopyBytes(tbuff, NUMLEVELS, &pPlayer->_pLvlVisited);
-	CopyBytes(tbuff, NUMLEVELS, &pPlayer->_pSLvlVisited);
+	CopyBytes(tbuff, giNumberOfLevels, &pPlayer->_pSLvlVisited);
+	CopyBytes(tbuff, giNumberOfLevels, &pPlayer->_pLvlVisited);
 	tbuff += 2; // Alignment
 
 	CopyInt(tbuff, &pPlayer->_pGFXLoad);
@@ -372,12 +378,14 @@ static void LoadPlayer(int i)
 	CopyChar(tbuff, &pPlayer->pTownWarps);
 	CopyChar(tbuff, &pPlayer->pDungMsgs);
 	CopyChar(tbuff, &pPlayer->pLvlLoad);
-#ifdef HELLFIRE
-	CopyChar(tbuff, &pPlayer->pDungMsgs2);
-	pPlayer->pBattleNet = false;
-#else
-	CopyChar(tbuff, &pPlayer->pBattleNet);
-#endif
+
+	if (gbIsHellfireSaveGame) {
+		CopyChar(tbuff, &pPlayer->pDungMsgs2);
+		pPlayer->pBattleNet = false;
+	} else {
+		pPlayer->pDungMsgs2 = 0;
+		CopyChar(tbuff, &pPlayer->pBattleNet);
+	}
 	CopyChar(tbuff, &pPlayer->pManaShield);
 	CopyBytes(tbuff, 3, &pPlayer->bReserved);
 	CopyShort(tbuff, &pPlayer->wReflection);
@@ -607,19 +615,19 @@ static void LoadQuest(int i)
 	CopyInt(tbuff, &pQuest->_qty);
 	CopyChar(tbuff, &pQuest->_qslvl);
 	CopyChar(tbuff, &pQuest->_qidx);
-#ifdef HELLFIRE
-	tbuff += 2; // Alignment
-	CopyInt(tbuff, &pQuest->_qmsg);
-#else
-	CopyChar(tbuff, &pQuest->_qmsg);
-#endif
+	if (gbIsHellfireSaveGame) {
+		tbuff += 2; // Alignment
+		CopyInt(tbuff, &pQuest->_qmsg);
+	} else {
+		BYTE tmp;
+		CopyChar(tbuff, &tmp);
+		pQuest->_qmsg = tmp;
+	}
 	CopyChar(tbuff, &pQuest->_qvar1);
 	CopyChar(tbuff, &pQuest->_qvar2);
-#ifdef HELLFIRE
 	tbuff += 2; // Alignment
-#else
-	tbuff += 3; // Alignment
-#endif
+	if (!gbIsHellfireSaveGame)
+		tbuff += 1; // Alignment
 	CopyInt(tbuff, &pQuest->_qlog);
 
 	ReturnLvlX = WLoad();
@@ -681,21 +689,20 @@ static void LoadPortal(int i)
 
 static bool IsHeaderValid(int magicNumber)
 {
-	if (gbIsSpawn) {
-		if (magicNumber != 'SHAR') {
-			return false;
-		}
-	} else {
-#ifdef HELLFIRE
-		if (magicNumber != 'HELF') {
-#else
-		if (magicNumber != 'RETL') {
-#endif
-			return false;
-		}
+	gbIsHellfireSaveGame = false;
+	if (magicNumber == 'SHAR') {
+		return true;
+	} else if (gbIsHellfire && magicNumber == 'SHLF') {
+		gbIsHellfireSaveGame = true;
+		return true;
+	} else if (!gbIsSpawn && magicNumber == 'RETL') {
+		return true;
+	} else if (!gbIsSpawn && gbIsHellfire && magicNumber == 'HELF') {
+		gbIsHellfireSaveGame = true;
+		return true;
 	}
 
-	return true;
+	return false;
 }
 
 /**
@@ -719,6 +726,17 @@ void LoadGame(BOOL firstflag)
 	if (!IsHeaderValid(ILoad()))
 		app_fatal("Invalid save file");
 
+	if (gbIsHellfireSaveGame) {
+		giNumberOfLevels = 25;
+		giNumberQuests = 24;
+		giNumberOfSmitPremiumItems = 15;
+	} else {
+		// Todo initialize additional levels and quests if we are running Hellfire
+		giNumberOfLevels = 17;
+		giNumberQuests = 16;
+		giNumberOfSmitPremiumItems = 6;
+	}
+
 	setlevel = OLoad();
 	setlvlnum = WLoad();
 	currlevel = WLoad();
@@ -732,7 +750,7 @@ void LoadGame(BOOL firstflag)
 	_nummissiles = WLoad();
 	_nobjects = WLoad();
 
-	for (i = 0; i < NUMLEVELS; i++) {
+	for (i = 0; i < giNumberOfLevels; i++) {
 		glSeedTbl[i] = ILoad();
 		gnLevelTypeTbl[i] = WLoad();
 	}
@@ -743,7 +761,7 @@ void LoadGame(BOOL firstflag)
 	if (gnDifficulty < DIFF_NORMAL || gnDifficulty > DIFF_HELL)
 		gnDifficulty = DIFF_NORMAL;
 
-	for (i = 0; i < MAXQUESTS; i++)
+	for (i = 0; i < giNumberQuests; i++)
 		LoadQuest(i);
 	for (i = 0; i < MAXPORTAL; i++)
 		LoadPortal(i);
@@ -856,8 +874,10 @@ void LoadGame(BOOL firstflag)
 	numpremium = WLoad();
 	premiumlevel = WLoad();
 
-	for (i = 0; i < SMITH_PREMIUM_ITEMS; i++)
+	for (i = 0; i < giNumberOfSmitPremiumItems; i++)
 		LoadPremium(i);
+	if (gbIsHellfire && !gbIsHellfireSaveGame)
+		SpawnPremium(myplr);
 
 	automapflag = OLoad();
 	AutoMapScale = WLoad();
@@ -981,9 +1001,8 @@ static void SaveItem(ItemStruct *pItem)
 	CopyInt(&pItem->_iStatFlag, tbuff);
 	CopyInt(&pItem->IDidx, tbuff);
 	CopyInt(&pItem->offs016C, tbuff);
-#ifdef HELLFIRE
-	CopyInt(&pItem->_iDamAcFlags, tbuff);
-#endif
+	if (gbIsHellfire)
+		CopyInt(&pItem->_iDamAcFlags, tbuff);
 }
 
 static void SaveItems(ItemStruct *pItem, const int n)
@@ -1172,11 +1191,10 @@ static void SavePlayer(int i)
 	CopyChar(&pPlayer->pTownWarps, tbuff);
 	CopyChar(&pPlayer->pDungMsgs, tbuff);
 	CopyChar(&pPlayer->pLvlLoad, tbuff);
-#ifdef HELLFIRE
-	CopyChar(&pPlayer->pDungMsgs2, tbuff);
-#else
-	CopyChar(&pPlayer->pBattleNet, tbuff);
-#endif
+	if (gbIsHellfire)
+		CopyChar(&pPlayer->pDungMsgs2, tbuff);
+	else
+		CopyChar(&pPlayer->pBattleNet, tbuff);
 	CopyChar(&pPlayer->pManaShield, tbuff);
 	CopyChar(&pPlayer->pDungMsgs2, tbuff);
 	CopyBytes(&pPlayer->bReserved, 2, tbuff);
@@ -1404,19 +1422,18 @@ static void SaveQuest(int i)
 	CopyInt(&pQuest->_qty, tbuff);
 	CopyChar(&pQuest->_qslvl, tbuff);
 	CopyChar(&pQuest->_qidx, tbuff);
-#ifdef HELLFIRE
-	tbuff += 2; // Alignment
-	CopyInt(&pQuest->_qmsg, tbuff);
-#else
-	CopyChar(&pQuest->_qmsg, tbuff);
-#endif
+	if (gbIsHellfire) {
+		tbuff += 2; // Alignment
+		CopyInt(&pQuest->_qmsg, tbuff);
+	} else {
+		char tmp = pQuest->_qmsg;
+		CopyChar(&tmp, tbuff);
+	}
 	CopyChar(&pQuest->_qvar1, tbuff);
 	CopyChar(&pQuest->_qvar2, tbuff);
-#ifdef HELLFIRE
 	tbuff += 2; // Alignment
-#else
-	tbuff += 3; // Alignment
-#endif
+	if (!gbIsHellfire)
+		tbuff += 1; // Alignment
 	CopyInt(&pQuest->_qlog, tbuff);
 
 	WSave(ReturnLvlX);
@@ -1485,14 +1502,17 @@ void SaveGame()
 	BYTE *SaveBuff = DiabloAllocPtr(dwLen);
 	tbuff = SaveBuff;
 
-	if (gbIsSpawn)
+	if (gbIsSpawn && !gbIsHellfire)
 		ISave('SHAR');
-	else
-#ifdef HELLFIRE
+	else if (gbIsSpawn && gbIsHellfire)
+		ISave('SHLF');
+	else if (!gbIsSpawn && gbIsHellfire)
 		ISave('HELF');
-#else
+	else if (!gbIsSpawn && !gbIsHellfire)
 		ISave('RETL');
-#endif
+	else
+		app_fatal("Invalid game state");
+
 	OSave(setlevel);
 	WSave(setlvlnum);
 	WSave(currlevel);
