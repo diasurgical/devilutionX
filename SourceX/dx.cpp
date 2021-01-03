@@ -61,6 +61,7 @@ static void dx_create_back_buffer()
 #endif
 
 	pal_surface_palette_version = 1;
+	cursor_type = eCursorType::Unknown;
 	ForceCursorUpdate();
 }
 
@@ -152,7 +153,11 @@ void dx_cleanup()
 	SDL_FreeSurface(renderer_texture_surface);
 	SDL_DestroyTexture(texture);
 	SDL_DestroyRenderer(renderer);
+	SDL_FreeCursor(cursor);
+	SDL_FreeSurface(cursor_surface);
 	SDL_DestroyWindow(ghMainWnd);
+	cursor = NULL;
+	cursor_surface = NULL;
 }
 
 void dx_reinit()

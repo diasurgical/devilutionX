@@ -15,6 +15,7 @@ extern "C" {
 extern BYTE *gpBuffer;
 
 enum class eCursorType {
+	Unknown,
 	UserInterFace,
 	GamePlay,
 };
