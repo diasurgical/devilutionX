@@ -269,15 +269,6 @@ blit:
 		}
 	}
 
-	// remove cursor from the back buffer
-	if (hwcursor) {
-		src = sgSaveBack;
-		dst = &gpBuffer[SCREENXY(sgdwCursX, sgdwCursY)];
-		for (i = sgdwCursHgt; i != 0; i--, src += sgdwCursWdt, dst += BUFFER_WIDTH) {
-			memcpy(dst, src, sgdwCursWdt);
-		}
-	}
-
 	// update system cursor if the bitmap has changed
 	if (hwcursor) {
 		if (sgCursorCelFrame != pcurs || sgCursorColor != col || CurrentCursorType() != eCursorType::GamePlay || CursorUpdatePending()) { 
@@ -316,6 +307,15 @@ blit:
 		}
 
 		SDL_ShowCursor(SDL_ENABLE);
+	}
+
+	// remove cursor from the back buffer
+	if (hwcursor) {
+		src = sgSaveBack;
+		dst = &gpBuffer[SCREENXY(sgdwCursX, sgdwCursY)];
+		for (i = sgdwCursHgt; i != 0; i--, src += sgdwCursWdt, dst += BUFFER_WIDTH) {
+			memcpy(dst, src, sgdwCursWdt);
+		}
 	}
 }
 
