@@ -543,7 +543,7 @@ bool PeekMessage(LPMSG lpMsg)
 		case SDL_WINDOWEVENT_MOVED:
 		case SDL_WINDOWEVENT_RESIZED:
 		case SDL_WINDOWEVENT_SIZE_CHANGED:
-			windowResVer++;
+			ForceCursorUpdate();
 			break;
 		case SDL_WINDOWEVENT_MOVED:
 		case SDL_WINDOWEVENT_MINIMIZED:

@@ -14,6 +14,11 @@ extern "C" {
 
 extern BYTE *gpBuffer;
 
+enum class eCursorType {
+	UserInterFace,
+	GamePlay,
+};
+
 void dx_init();
 void lock_buf(BYTE idx);
 void unlock_buf(BYTE idx);
@@ -24,6 +29,10 @@ void BltFast(SDL_Rect *src_rect, SDL_Rect *dst_rect);
 void Blit(SDL_Surface *src, SDL_Rect *src_rect, SDL_Rect *dst_rect);
 void RenderPresent();
 void PaletteGetEntries(DWORD dwNumEntries, SDL_Color *lpEntries);
+void ForceCursorUpdate();
+bool CursorUpdatePending();
+eCursorType CurrentCursorType();
+void SetCursor(eCursorType type, SDL_Surface *surf);
 
 #ifdef __cplusplus
 }

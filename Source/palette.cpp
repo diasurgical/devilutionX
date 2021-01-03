@@ -30,6 +30,7 @@ void palette_update()
 		ErrSdl();
 	}
 	pal_surface_palette_version++;
+	ForceCursorUpdate();
 }
 
 void ApplyGamma(SDL_Color *dst, const SDL_Color *src, int n)

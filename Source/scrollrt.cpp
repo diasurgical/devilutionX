@@ -54,9 +54,7 @@ DWORD sgdwCursWdt;
 void (*DrawPlrProc)(int, int, int, int, int, BYTE *, int, int, int, int);
 BYTE sgSaveBack[8192];
 static BYTE sgCursorBitmap[8192];
-static SDL_Surface *sgCursorSurface;
-static int sgCursorPaletteVersion, sgCursorWindowsResVer = -1;
-static int sgCursorCel = -1, sgCursorCol = -1;
+static int sgCursorCelFrame = -1, sgCursorColor = -1;
 DWORD sgdwCursHgtOld;
 
 bool dRendered[MAXDUNX][MAXDUNY];
@@ -146,9 +144,6 @@ static void scrollrt_draw_cursor_back_buffer()
 	sgdwCursWdt = 0;
 }
 
-void NewHWCursor(SDL_Surface *surf);
-extern unsigned int pal_surface_palette_version;
-
 /**
  * @brief Draw the cursor on the back buffer
  */
@@ -222,7 +217,9 @@ static void scrollrt_draw_cursor_item()
 	my++;
 	gpBufEnd = &gpBuffer[BUFFER_WIDTH * (SCREEN_HEIGHT + SCREEN_Y) - cursW - 2];
 
-	int ckey = 255;
+	// 255 seems like a good initial fit for transparency color index
+	// the actual value will be determined later before the second pass
+	int colorKey = 255;
 	int pass = 0;
 
 blit:
@@ -231,7 +228,7 @@ blit:
 	if (hwcursor) {
 		dst = &gpBuffer[SCREENXY(sgdwCursX, sgdwCursY)];
 		for (i = sgdwCursHgt; i != 0; i--, dst += BUFFER_WIDTH) {
-			memset(dst, ckey, sgdwCursWdt);
+			memset(dst, colorKey, sgdwCursWdt);
 		}
 	}
 
@@ -283,8 +280,7 @@ blit:
 
 	// update system cursor if the bitmap has changed
 	if (hwcursor) {
-		if (sgCursorCel != pcurs || sgCursorCol != col ||
-			sgCursorPaletteVersion != pal_surface_palette_version || sgCursorWindowsResVer != windowResVer) { 
+		if (sgCursorCelFrame != pcurs || sgCursorColor != col || CurrentCursorType() != eCursorType::GamePlay || CursorUpdatePending()) { 
 			// find the actual transparency mask value, fallback to 255
 			if (pass == 1) {
 				char pal[256];
@@ -300,7 +296,7 @@ blit:
 
 				for (i = 0; i < 255; i++) {
 					if (!pal[i]) {
-						ckey = i;
+						colorKey = i;
 						goto blit;
 					}
 				}
@@ -309,17 +305,14 @@ blit:
 			SDL_Surface *surf = SDL_CreateRGBSurfaceWithFormatFrom(sgCursorBitmap, sgdwCursWdt, sgdwCursHgt,
 				8, sgdwCursWdt, SDL_PIXELFORMAT_INDEX8);
 
-			SDLC_SetColorKey(surf, ckey);
+			SDLC_SetColorKey(surf, colorKey);
 
-			NewHWCursor(surf);
+			SetCursor(eCursorType::GamePlay, surf);
 
-			SDL_FreeSurface(sgCursorSurface);
+			SDL_FreeSurface(surf);
 
-			sgCursorSurface = surf;
-			sgCursorPaletteVersion = pal_surface_palette_version;
-			sgCursorWindowsResVer = windowResVer;
-			sgCursorCel = pcurs;
-			sgCursorCol = col;
+			sgCursorCelFrame = pcurs;
+			sgCursorColor = col;
 		}
 
 		SDL_ShowCursor(SDL_ENABLE);

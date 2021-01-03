@@ -881,15 +881,13 @@ bool UiItemMouseEvents(SDL_Event *event, std::vector<UiItemBase *> items)
 	return handled;
 }
 
-void NewHWCursor(SDL_Surface *surf);
-
 void DrawMouse()
 {
 	if (hwcursor) {
-		if (SDL_ShowCursor(sgbControllerActive ? SDL_DISABLE : SDL_ENABLE) <= -1) {
-			//ErrSdl();
-		}
-		NewHWCursor(ArtCursor.surface);
+		SDL_ShowCursor(sgbControllerActive ? SDL_DISABLE : SDL_ENABLE);
+
+		if (CurrentCursorType() != eCursorType::UserInterFace || CursorUpdatePending())
+			SetCursor(eCursorType::UserInterFace, ArtCursor.surface);
 		return;
 	}
 

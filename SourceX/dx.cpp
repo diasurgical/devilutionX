@@ -36,6 +36,11 @@ SDL_Surface *renderer_texture_surface = NULL;
 /** 8-bit surface wrapper around #gpBuffer */
 SDL_Surface *pal_surface;
 
+static SDL_Surface *cursor_surface = NULL;
+static SDL_Cursor *cursor = NULL;
+static bool cursow_update_pending = true;
+static eCursorType cursor_type;
+
 static void dx_create_back_buffer()
 {
 	pal_surface = SDL_CreateRGBSurfaceWithFormat(0, BUFFER_WIDTH, BUFFER_HEIGHT, 8, SDL_PIXELFORMAT_INDEX8);
@@ -56,6 +61,7 @@ static void dx_create_back_buffer()
 #endif
 
 	pal_surface_palette_version = 1;
+	ForceCursorUpdate();
 }
 
 static void dx_create_primary_surface()
@@ -167,7 +173,7 @@ void dx_reinit()
 #endif
 	fullscreen = !fullscreen;
 	force_redraw = 255;
-	windowResVer++;
+	ForceCursorUpdate();
 }
 
 void InitPalette()
@@ -254,23 +260,24 @@ void LimitFrameRate()
 	frameDeadline = tc + v + refreshDelay;
 }
 
-#ifdef USE_SDL1
-
-void NewHWCursor(SDL_Surface *surf)
+void ForceCursorUpdate()
 {
+	cursow_update_pending = true;
 }
 
-#else
-
-static SDL_Surface *cursor_surface = NULL, *cursor_realsurface = NULL;
-static SDL_Cursor *cursor = NULL;
-static int cursor_width, cursor_height;
-static int cursor_surface_palette_version = -1;
-static int cursow_window_res_version = -1;
-extern BOOL oar;
-
-void NewHWCursor(SDL_Surface *surf)
+bool CursorUpdatePending()
 {
+	return cursow_update_pending;
+}
+
+eCursorType CurrentCursorType()
+{
+	return cursor_type;
+}
+
+void SetCursor(eCursorType type, SDL_Surface *surf)
+{
+#ifndef USE_SDL1
 	int scaled_w = surf->w, scaled_h = surf->h;
 
 	if (renderer) {
@@ -291,15 +298,11 @@ void NewHWCursor(SDL_Surface *surf)
 		}
 	}
 
-	if (cursor_surface == surf && cursor_surface_palette_version == pal_surface_palette_version &&
-		cursor_width == scaled_w && cursor_height == scaled_h && cursow_window_res_version == windowResVer)
-		return;
-
 	if (SDLC_SetSurfaceColors(surf, pal_surface->format->palette) <= -1)
 		ErrSdl();
 
 	SDL_Cursor *old_cursor = cursor;
-	SDL_Surface *old_cursor_realsurface = cursor_realsurface;
+	SDL_Surface *old_cursor_surface = cursor_surface;
 
 	SDL_Surface *argbsurf = SDL_ConvertSurfaceFormat(surf, SDL_PIXELFORMAT_ARGB8888, 0);
 
@@ -311,19 +314,16 @@ void NewHWCursor(SDL_Surface *surf)
 	}
 
 	cursor = SDL_CreateColorCursor(argbsurf, 0, 0);
-	cursor_surface = surf;
-	cursor_realsurface = argbsurf;
-	cursor_surface_palette_version = pal_surface_palette_version;
-	cursor_width = surf->w;
-	cursor_height = surf->h;
-	cursow_window_res_version = windowResVer;
+	cursor_surface = argbsurf;
+	cursow_update_pending = false;
+	cursor_type = type;
 
 	SDL_SetCursor(cursor);
-	SDL_FreeCursor(old_cursor);
-	SDL_FreeSurface(old_cursor_realsurface);
-}
 
+	SDL_FreeCursor(old_cursor);
+	SDL_FreeSurface(old_cursor_surface);
 #endif
+}
 
 void RenderPresent()
 {
