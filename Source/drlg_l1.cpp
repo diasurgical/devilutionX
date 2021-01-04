@@ -196,7 +196,6 @@ const BYTE STAIRSDOWN[] = {
 	 0,  0,  0,  0,
 	// clang-format on
 };
-#ifdef HELLFIRE
 const BYTE L5STAIRSDOWN[] = {
 	// clang-format off
 	4, 5, // width, height
@@ -231,7 +230,6 @@ const BYTE L5STAIRSTOWN[] = {
 	 0,  0,  0,  0,
 	// clang-format on
 };
-#endif
 /** Miniset: candlestick. */
 const BYTE LAMPS[] = {
 	// clang-format off
@@ -264,7 +262,6 @@ const BYTE PWATERIN[] = {
 	 0,   0,   0,   0,   0, 0,
 	// clang-format on
 };
-#ifdef HELLFIRE
 const BYTE byte_48A1B4[4] = { 1, 1, 11, 95 };
 const BYTE byte_48A1B8[8] = { 1, 1, 12, 96 };
 const BYTE byte_48A1C0[8] = {
@@ -468,21 +465,17 @@ const BYTE byte_48A3C8[4] = { 1, 1, 1, 199 };
 const BYTE byte_48A3CC[4] = { 1, 1, 1, 201 };
 const BYTE byte_48A3D0[4] = { 1, 1, 2, 200 };
 const BYTE byte_48A3D4[4] = { 1, 1, 2, 202 };
-#endif
 
 /* data */
 
-#ifdef HELLFIRE
 BYTE UberRoomPattern[32] = { 4, 6, 115, 130, 6, 13, 129, 108, 1, 13, 1, 107, 103, 13, 146, 106, 102, 13, 129, 168, 1, 13, 7, 2, 3, 13, 0, 0, 0, 0, 0, 0 };
 BYTE CornerstoneRoomPattern[32] = { 5, 5, 4, 2, 2, 2, 6, 1, 111, 172, 0, 1, 1, 172, 0, 0, 25, 1, 0, 0, 0, 1, 7, 2, 2, 2, 3, 0, 0, 0, 0, 0 };
-#endif
 /**
  * A lookup table for the 16 possible patterns of a 2x2 area,
  * where each cell either contains a SW wall or it doesn't.
  */
 BYTE L5ConvTbl[16] = { 22, 13, 1, 13, 2, 13, 13, 13, 4, 13, 1, 13, 2, 13, 16, 13 };
 
-#ifdef HELLFIRE
 void DRLG_InitL5Vals()
 {
 	int i, j, pc;
@@ -500,7 +493,6 @@ void DRLG_InitL5Vals()
 		}
 	}
 }
-#endif
 
 static void DRLG_PlaceDoor(int x, int y)
 {
@@ -561,7 +553,6 @@ static void DRLG_PlaceDoor(int x, int y)
 	L5dflags[x][y] = DLRG_PROTECTED;
 }
 
-#ifdef HELLFIRE
 void drlg_l1_crypt_lavafloor()
 {
 	int i, j;
@@ -851,7 +842,6 @@ void drlg_l1_crypt_lavafloor()
 		}
 	}
 }
-#endif
 
 static void DRLG_L1Shadows()
 {
@@ -1253,9 +1243,7 @@ void LoadL1Dungeon(const char *sFileName, int vx, int vy)
 	ViewY = vy;
 	DRLG_L1Pass3();
 	DRLG_Init_Globals();
-#ifdef HELLFIRE
 	if (currlevel < 17)
-#endif
 		DRLG_InitL1Vals();
 	SetMapMonsters(pLevelMap, 0, 0);
 	SetMapObjects(pLevelMap, 0, 0);
@@ -1953,7 +1941,6 @@ static void L5tileFix()
 	}
 }
 
-#ifdef HELLFIRE
 void drlg_l1_crypt_rndset(const BYTE *miniset, int rndper)
 {
 	int sx, sy, sw, sh, xx, yy, ii, kk;
@@ -2007,7 +1994,6 @@ void drlg_l1_crypt_rndset(const BYTE *miniset, int rndper)
 		}
 	}
 }
-#endif
 
 static void DRLG_L5Subs()
 {
@@ -2127,7 +2113,6 @@ static void L5FillChambers()
 	if (VR1 && !VR2 && VR3)
 		DRLG_L5GHall(18, 12, 18, 28);
 
-#ifdef HELLFIRE
 	if (currlevel == 24) {
 		if (VR1 || VR2 || VR3) {
 			c = 1;
@@ -2246,7 +2231,6 @@ static void L5FillChambers()
 			}
 		}
 	}
-#endif
 	if (L5setloadflag) {
 		if (VR1 || VR2 || VR3) {
 			c = 1;
@@ -2308,7 +2292,6 @@ static void L5FillChambers()
 	}
 }
 
-#ifdef HELLFIRE
 void drlg_l1_set_crypt_room(int rx1, int ry1)
 {
 	int rw, rh, i, j, sp;
@@ -2367,7 +2350,6 @@ void drlg_l1_set_corner_room(int rx1, int ry1)
 		}
 	}
 }
-#endif
 
 static void DRLG_L5FTVR(int i, int j, int x, int y, int d)
 {
@@ -2559,15 +2541,9 @@ static void DRLG_L5(int entry)
 	case 2:
 		minarea = 693;
 		break;
-	case 3:
-	case 4:
-		minarea = 761;
-		break;
-#ifdef HELLFIRE
 	default:
 		minarea = 761;
 		break;
-#endif
 	}
 
 	do {
@@ -2767,18 +2743,11 @@ static void DRLG_L5(int entry)
 	DRLG_L5Subs();
 #endif
 
-#ifdef HELLFIRE
-	if (currlevel < 21)
-#endif
+	if (currlevel < 21) {
 		DRLG_L1Shadows();
-#ifdef HELLFIRE
-	if (currlevel < 21)
-#endif
 		DRLG_PlaceMiniSet(LAMPS, 5, 10, 0, 0, FALSE, -1, 4);
-#ifdef HELLFIRE
-	if (currlevel < 21)
-#endif
 		DRLG_L1Floor();
+	}
 
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
@@ -2803,7 +2772,6 @@ void CreateL5Dungeon(DWORD rseed, int entry)
 	dmaxx = 96;
 	dmaxy = 96;
 
-#ifdef HELLFIRE
 	UberRow = 0;
 	UberCol = 0;
 	IsUberRoomOpened = 0;
@@ -2812,7 +2780,6 @@ void CreateL5Dungeon(DWORD rseed, int entry)
 	UberLeverCol = 0;
 	IsUberLeverActivated = 0;
 	UberDiabloMonsterIndex = 0;
-#endif
 
 	DRLG_InitTrans();
 	DRLG_InitSetPC();
@@ -2847,7 +2814,6 @@ void CreateL5Dungeon(DWORD rseed, int entry)
 #endif
 }
 
-#ifdef HELLFIRE
 void drlg_l1_crypt_pattern1(int rndper)
 {
 	drlg_l1_crypt_rndset(byte_48A3C8, rndper);
@@ -2970,6 +2936,5 @@ void drlg_l1_crypt_pattern7(int rndper)
 	drlg_l1_crypt_rndset(byte_48A1D8, rndper);
 	drlg_l1_crypt_rndset(byte_48A1DC, rndper);
 }
-#endif
 
 DEVILUTION_END_NAMESPACE

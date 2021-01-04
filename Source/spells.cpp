@@ -350,7 +350,6 @@ void DoHealOther(int pnum, int rid)
 			hp += (random_(57, 6) + 1) << 6;
 		}
 
-#ifdef HELLFIRE
 		if (plr[pnum]._pClass == PC_WARRIOR || plr[pnum]._pClass == PC_BARBARIAN) {
 			hp <<= 1;
 		} else if (plr[pnum]._pClass == PC_ROGUE || plr[pnum]._pClass == PC_BARD) {
@@ -358,15 +357,6 @@ void DoHealOther(int pnum, int rid)
 		} else if (plr[pnum]._pClass == PC_MONK) {
 			hp *= 3;
 		}
-#else
-		if (plr[pnum]._pClass == PC_WARRIOR) {
-			hp <<= 1;
-		}
-
-		if (plr[pnum]._pClass == PC_ROGUE) {
-			hp += hp >> 1;
-		}
-#endif
 
 		plr[rid]._pHitPoints += hp;
 
@@ -397,6 +387,21 @@ int GetSpellBookLevel(int s)
 		}
 	}
 
+	if (!gbIsHellfire) {
+		switch (s) {
+		case SPL_NOVA:
+		case SPL_APOCA:
+			return -1;
+		}
+	}
+
+	if (gbIsHellfire) {
+		switch (s) {
+		case SPL_ELEMENT:
+			return -1;
+		}
+	}
+
 	return spelldata[s].sBookLvl;
 }
 
@@ -410,6 +415,13 @@ int GetSpellStaffLevel(int s)
 		case SPL_APOCA:
 		case SPL_FLARE:
 		case SPL_BONESPIRIT:
+			return -1;
+		}
+	}
+
+	if (gbIsHellfire) {
+		switch (s) {
+		case SPL_ELEMENT:
 			return -1;
 		}
 	}

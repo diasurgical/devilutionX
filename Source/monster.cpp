@@ -3008,18 +3008,12 @@ void DoEnding()
 	if (gbIsSpawn)
 		return;
 
-#ifdef HELLFIRE
 	if (plr[myplr]._pClass == PC_WARRIOR || plr[myplr]._pClass == PC_BARBARIAN) {
-#else
-	if (plr[myplr]._pClass == PC_WARRIOR) {
-#endif
 		play_movie("gendata\\DiabVic2.smk", FALSE);
 	} else if (plr[myplr]._pClass == PC_SORCERER) {
 		play_movie("gendata\\DiabVic1.smk", FALSE);
-#ifdef HELLFIRE
 	} else if (plr[myplr]._pClass == PC_MONK) {
 		play_movie("gendata\\DiabVic1.smk", FALSE);
-#endif
 	} else {
 		play_movie("gendata\\DiabVic3.smk", FALSE);
 	}

@@ -769,12 +769,10 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 			maxd = 3;
 		}
 
-#ifdef HELLFIRE
 		if (plr[p]._pClass == PC_MONK) {
 			mind = std::max(mind, plr[p]._pLevel >> 1);
 			maxd = std::max(maxd, (int)plr[p]._pLevel);
 		}
-#endif
 	}
 
 #ifdef HELLFIRE
@@ -844,9 +842,7 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 
 	if (plr[p]._pClass == PC_ROGUE) {
 		plr[p]._pDamageMod = plr[p]._pLevel * (plr[p]._pStrength + plr[p]._pDexterity) / 200;
-	}
-#ifdef HELLFIRE
-	else if (plr[p]._pClass == PC_MONK) {
+	} else if (plr[p]._pClass == PC_MONK) {
 		if (plr[p].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_STAFF) {
 			if (plr[p].InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_STAFF && (plr[p].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_NONE || plr[p].InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_NONE)) {
 				plr[p]._pDamageMod = plr[p]._pLevel * (plr[p]._pStrength + plr[p]._pDexterity) / 300;
@@ -885,9 +881,7 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 			plr[p]._pDamageMod += plr[p]._pLevel * plr[p]._pVitality / 100;
 		}
 		plr[p]._pIAC += plr[p]._pLevel / 4;
-	}
-#endif
-	else {
+	} else {
 		plr[p]._pDamageMod = plr[p]._pLevel * plr[p]._pStrength / 100;
 	}
 
@@ -898,13 +892,13 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 	plr[p]._pISplLvlAdd = spllvladd;
 	plr[p]._pIEnAc = enac;
 
-#ifdef HELLFIRE
 	if (plr[p]._pClass == PC_BARBARIAN) {
 		mr += plr[p]._pLevel;
 		fr += plr[p]._pLevel;
 		lr += plr[p]._pLevel;
 	}
 
+#ifdef HELLFIRE
 	if ((plr[p]._pSpellFlags & 4) == 4) {
 		mr -= plr[p]._pLevel;
 		fr -= plr[p]._pLevel;
@@ -929,31 +923,22 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 
 	if (fr > MAXRESIST)
 		fr = MAXRESIST;
-#ifdef HELLFIRE
 	else if (fr < 0)
 		fr = 0;
-#endif
 	plr[p]._pFireResist = fr;
 
 	if (lr > MAXRESIST)
 		lr = MAXRESIST;
-#ifdef HELLFIRE
 	else if (lr < 0)
 		lr = 0;
-#endif
 	plr[p]._pLghtResist = lr;
 
 	if (plr[p]._pClass == PC_WARRIOR) {
 		vadd <<= 1;
-	}
-#ifdef HELLFIRE
-	else if (plr[p]._pClass == PC_BARBARIAN) {
+	} else if (plr[p]._pClass == PC_BARBARIAN) {
 		vadd += vadd;
 		vadd += (vadd >> 2);
 	} else if (plr[p]._pClass == PC_ROGUE || plr[p]._pClass == PC_MONK || plr[p]._pClass == PC_BARD) {
-#else
-	if (plr[p]._pClass == PC_ROGUE) {
-#endif
 		vadd += vadd >> 1;
 	}
 	ihp += (vadd << 6);
@@ -961,26 +946,17 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 	if (plr[p]._pClass == PC_SORCERER) {
 		madd <<= 1;
 	}
-#ifdef HELLFIRE
 	if (plr[p]._pClass == PC_ROGUE || plr[p]._pClass == PC_MONK) {
-#else
-	if (plr[p]._pClass == PC_ROGUE) {
-#endif
 		madd += madd >> 1;
-	}
-#ifdef HELLFIRE
-	else if (plr[p]._pClass == PC_BARD) {
+	} else if (plr[p]._pClass == PC_BARD) {
 		madd += (madd >> 2) + (madd >> 1);
 	}
-#endif
 	imana += (madd << 6);
 
 	plr[p]._pHitPoints = ihp + plr[p]._pHPBase;
 	plr[p]._pMaxHP = ihp + plr[p]._pMaxHPBase;
-#ifdef HELLFIRE
 	if (plr[p]._pHitPoints > plr[p]._pMaxHP)
 		plr[p]._pHitPoints = plr[p]._pMaxHP;
-#endif
 
 	if (p == myplr && (plr[p]._pHitPoints >> 6) <= 0) {
 		SetPlayerHitPoints(p, 0);
@@ -988,10 +964,8 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 
 	plr[p]._pMana = imana + plr[p]._pManaBase;
 	plr[p]._pMaxMana = imana + plr[p]._pMaxManaBase;
-#ifdef HELLFIRE
 	if (plr[p]._pMana > plr[p]._pMaxMana)
 		plr[p]._pMana = plr[p]._pMaxMana;
-#endif
 
 	plr[p]._pIFMinDam = fmin;
 	plr[p]._pIFMaxDam = fmax;
@@ -1005,7 +979,6 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 	}
 
 	plr[p]._pBlockFlag = FALSE;
-#ifdef HELLFIRE
 	if (plr[p]._pClass == PC_MONK) {
 		if (plr[p].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_STAFF && plr[p].InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
 			plr[p]._pBlockFlag = TRUE;
@@ -1022,7 +995,6 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 		if (plr[p].InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON && plr[p].InvBody[INVLOC_HAND_RIGHT]._iLoc != ILOC_TWOHAND && plr[p].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_NONE)
 			plr[p]._pBlockFlag = TRUE;
 	}
-#endif
 	plr[p]._pwtype = WT_MELEE;
 
 	g = 0;
@@ -1067,7 +1039,6 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 		g++;
 	}
 
-#ifdef HELLFIRE
 	if (plr[p].InvBody[INVLOC_CHEST]._itype == ITYPE_HARMOR && plr[p].InvBody[INVLOC_CHEST]._iStatFlag) {
 		if (plr[p]._pClass == PC_MONK && plr[p].InvBody[INVLOC_CHEST]._iMagical == ITEM_QUALITY_UNIQUE)
 			plr[p]._pIAC += plr[p]._pLevel >> 1;
@@ -1083,14 +1054,6 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 	} else if (plr[p]._pClass == PC_MONK) {
 		plr[p]._pIAC += plr[p]._pLevel << 1;
 	}
-#else
-	if (plr[p].InvBody[INVLOC_CHEST]._itype == ITYPE_MARMOR && plr[p].InvBody[INVLOC_CHEST]._iStatFlag) {
-		g += ANIM_ID_MEDIUM_ARMOR;
-	}
-	if (plr[p].InvBody[INVLOC_CHEST]._itype == ITYPE_HARMOR && plr[p].InvBody[INVLOC_CHEST]._iStatFlag) {
-		g += ANIM_ID_HEAVY_ARMOR;
-	}
-#endif
 
 	if (plr[p]._pgfxnum != g && Loadgfx) {
 		plr[p]._pgfxnum = g;
@@ -1457,22 +1420,13 @@ void CreatePlrItems(int p)
 		SetPlrHandItem(&plr[p].InvBody[INVLOC_HAND_LEFT], IDI_SORCEROR);
 		GetPlrHandSeed(&plr[p].InvBody[INVLOC_HAND_LEFT]);
 
-#ifdef HELLFIRE
-		SetPlrHandItem(&plr[p].SpdList[0], IDI_HEAL);
+		SetPlrHandItem(&plr[p].SpdList[0], gbIsHellfire ? IDI_HEAL : IDI_MANA);
 		GetPlrHandSeed(&plr[p].SpdList[0]);
 
-		SetPlrHandItem(&plr[p].SpdList[1], IDI_HEAL);
+		SetPlrHandItem(&plr[p].SpdList[1], gbIsHellfire ? IDI_HEAL : IDI_MANA);
 		GetPlrHandSeed(&plr[p].SpdList[1]);
-#else
-		SetPlrHandItem(&plr[p].SpdList[0], IDI_MANA);
-		GetPlrHandSeed(&plr[p].SpdList[0]);
-
-		SetPlrHandItem(&plr[p].SpdList[1], IDI_MANA);
-		GetPlrHandSeed(&plr[p].SpdList[1]);
-#endif
 		break;
 
-#ifdef HELLFIRE
 	case PC_MONK:
 		SetPlrHandItem(&plr[p].InvBody[INVLOC_HAND_LEFT], IDI_SHORTSTAFF);
 		GetPlrHandSeed(&plr[p].InvBody[INVLOC_HAND_LEFT]);
@@ -1506,7 +1460,6 @@ void CreatePlrItems(int p)
 		SetPlrHandItem(&plr[p].SpdList[1], IDI_HEAL);
 		GetPlrHandSeed(&plr[p].SpdList[1]);
 		break;
-#endif
 	}
 
 	SetPlrHandItem(&plr[p].HoldItem, IDI_GOLD);
@@ -4519,17 +4472,9 @@ void UseItem(int p, int Mid, int spl)
 	case IMISC_MEAT:
 		j = plr[p]._pMaxHP >> 8;
 		l = ((j >> 1) + random_(39, j)) << 6;
-#ifdef HELLFIRE
 		if (plr[p]._pClass == PC_WARRIOR || plr[p]._pClass == PC_BARBARIAN)
-#else
-		if (plr[p]._pClass == PC_WARRIOR)
-#endif
 			l <<= 1;
-#ifdef HELLFIRE
 		if (plr[p]._pClass == PC_ROGUE || plr[p]._pClass == PC_MONK || plr[p]._pClass == PC_BARD)
-#else
-		if (plr[p]._pClass == PC_ROGUE)
-#endif
 			l += l >> 1;
 		plr[p]._pHitPoints += l;
 		if (plr[p]._pHitPoints > plr[p]._pMaxHP)
@@ -4549,11 +4494,7 @@ void UseItem(int p, int Mid, int spl)
 		l = ((j >> 1) + random_(40, j)) << 6;
 		if (plr[p]._pClass == PC_SORCERER)
 			l <<= 1;
-#ifdef HELLFIRE
 		if (plr[p]._pClass == PC_ROGUE || plr[p]._pClass == PC_MONK || plr[p]._pClass == PC_BARD)
-#else
-		if (plr[p]._pClass == PC_ROGUE)
-#endif
 			l += l >> 1;
 		if (!(plr[p]._pIFlags & ISPL_NOMANA)) {
 			plr[p]._pMana += l;

@@ -58,11 +58,7 @@ MissileData missiledata[] = {
 	{  MIS_IDENTIFY,      &AddIdentify,               &MI_Dummy,          FALSE,     1, MISR_NONE,      MFILE_NONE,      -1,          -1          },
 	{  MIS_WAVE,          &AddWave,                   &MI_Wave,           TRUE,      1, MISR_FIRE,      MFILE_FIREWAL,   LS_FLAMWAVE, -1          },
 	{  MIS_NOVA,          &AddNova,                   &MI_Nova,           TRUE,      1, MISR_LIGHTNING, MFILE_LGHNING,   LS_NOVA,     -1          },
-#ifdef HELLFIRE
-	{  MIS_BLODBOIL,      &miss_null_1F,              &MI_Blodboil,       FALSE,     1, MISR_NONE,      MFILE_NONE,      -1,          -1          },
-#else
 	{  MIS_BLODBOIL,      &AddBlodboil,               &MI_Blodboil,       TRUE,      1, MISR_NONE,      MFILE_NONE,      -1,          LS_BLODBOIL },
-#endif
 	{  MIS_APOCA,         &AddApoca,                  &MI_Apoca,          TRUE,      1, MISR_MAGIC,     MFILE_NEWEXP,    LS_APOC,     -1          },
 	{  MIS_REPAIR,        &AddRepair,                 &MI_Dummy,          FALSE,     2, MISR_NONE,      MFILE_NONE,      -1,          -1          },
 	{  MIS_RECHARGE,      &AddRecharge,               &MI_Dummy,          FALSE,     2, MISR_NONE,      MFILE_NONE,      -1,          -1          },

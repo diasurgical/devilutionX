@@ -82,14 +82,8 @@ void doom_init()
 
 void doom_close()
 {
-#ifndef HELLFIRE
-	if (doomflag) {
-#endif
-		doomflag = FALSE;
-		doom_cleanup();
-#ifndef HELLFIRE
-	}
-#endif
+	doomflag = FALSE;
+	doom_cleanup();
 }
 
 void doom_draw()
@@ -97,19 +91,6 @@ void doom_draw()
 	if (!doomflag) {
 		return;
 	}
-#ifndef HELLFIRE
-	if (doom_quest_time != 31) {
-		doom_stars_drawn++;
-		if (doom_stars_drawn >= 5) {
-			doom_stars_drawn = 0;
-			doom_quest_time++;
-			if (doom_quest_time > doom_get_frame_from_time()) {
-				doom_quest_time = 0;
-			}
-			doom_load_graphics();
-		}
-	}
-#endif
 
 	CelDraw(PANEL_X, PANEL_Y - 1, pDoomCel, 1, 640);
 }

@@ -1370,23 +1370,20 @@ void sound_init()
 		mask |= sfx_WARRIOR;
 		if (!gbIsSpawn)
 			mask |= (sfx_ROGUE | sfx_SORCEROR);
-#ifdef HELLFIRE
-		mask |= sfx_MONK;
-#endif
+		if (gbIsHellfire)
+			mask |= sfx_MONK;
 	} else if (plr[myplr]._pClass == PC_WARRIOR) {
 		mask |= sfx_WARRIOR;
 	} else if (plr[myplr]._pClass == PC_ROGUE) {
 		mask |= sfx_ROGUE;
 	} else if (plr[myplr]._pClass == PC_SORCERER) {
 		mask |= sfx_SORCEROR;
-#ifdef HELLFIRE
 	} else if (plr[myplr]._pClass == PC_MONK) {
 		mask |= sfx_MONK;
 	} else if (plr[myplr]._pClass == PC_BARD) {
 		mask |= sfx_ROGUE;
 	} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 		mask |= sfx_WARRIOR;
-#endif
 	} else {
 		app_fatal("effects:1");
 	}

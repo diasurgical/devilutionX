@@ -46,20 +46,15 @@
 
 #ifdef HELLFIRE
 #define MAXQUESTS				24
-#define MAXMULTIQUESTS			10
 #else
 #define MAXQUESTS				16
-#define MAXMULTIQUESTS			4
 #endif
+#define MAXMULTIQUESTS			10
 
 #define MAXTHEMES				50
 #define MAXTILES				2048
 
-#ifdef HELLFIRE
 #define MAXTRIGGERS				7
-#else
-#define MAXTRIGGERS				5
-#endif
 
 #define MAXVISION				32
 #define MDMAXX					40

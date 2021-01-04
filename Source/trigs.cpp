@@ -17,10 +17,8 @@ int TWarpFrom;
 int TownDownList[] = { 716, 715, 719, 720, 721, 723, 724, 725, 726, 727, -1 };
 /** Specifies the dungeon piece IDs which constitute stairways leading down to the catacombs from town. */
 int TownWarp1List[] = { 1171, 1172, 1173, 1174, 1175, 1176, 1177, 1178, 1179, 1181, 1183, 1185, -1 };
-#ifdef HELLFIRE
 int TownCryptList[] = { 1331, 1332, 1333, 1334, 1335, 1336, 1337, 1338, -1 };
 int TownHiveList[] = { 1307, 1308, 1309, 1310, -1 };
-#endif
 /** Specifies the dungeon piece IDs which constitute stairways leading up from the cathedral. */
 int L1UpList[] = { 127, 129, 130, 131, 132, 133, 135, 137, 138, 139, 140, -1 };
 /** Specifies the dungeon piece IDs which constitute stairways leading down from the cathedral. */
@@ -45,14 +43,12 @@ int L4DownList[] = { 120, 130, 131, 132, 133, -1 };
 int L4TWarpUpList[] = { 421, 422, 429, -1 };
 /** Specifies the dungeon piece IDs which constitute stairways leading down to Diablo from hell. */
 int L4PentaList[] = { 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 380, 381, 382, 383, 384, -1 };
-#ifdef HELLFIRE
 int L5TWarpUpList[] = { 172, 173, 174, 175, 176, 177, 178, 179, 184, -1 };
 int L5UpList[] = { 149, 150, 151, 152, 153, 154, 155, 157, 158, 159, -1 };
 int L5DownList[] = { 125, 126, 129, 131, 132, 135, 136, 140, 142, -1 };
 int L6TWarpUpList[] = { 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, -1 };
 int L6UpList[] = { 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, -1 };
 int L6DownList[] = { 57, 58, 59, 60, 61, 62, 63, 64, -1 };
-#endif
 
 void InitNoTriggers()
 {
@@ -168,9 +164,7 @@ void InitL1Triggers()
 	int i, j;
 
 	numtrigs = 0;
-#ifdef HELLFIRE
 	if (currlevel < 17) {
-#endif
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++) {
 				if (dPiece[i][j] == 129) {
@@ -187,7 +181,6 @@ void InitL1Triggers()
 				}
 			}
 		}
-#ifdef HELLFIRE
 	} else {
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++) {
@@ -213,7 +206,6 @@ void InitL1Triggers()
 			}
 		}
 	}
-#endif
 	trigflag = FALSE;
 }
 
@@ -254,9 +246,7 @@ void InitL3Triggers()
 {
 	int i, j;
 
-#ifdef HELLFIRE
 	if (currlevel < 17) {
-#endif
 		numtrigs = 0;
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++) {
@@ -282,7 +272,6 @@ void InitL3Triggers()
 				}
 			}
 		}
-#ifdef HELLFIRE
 	} else {
 		numtrigs = 0;
 		for (j = 0; j < MAXDUNY; j++) {
@@ -310,7 +299,6 @@ void InitL3Triggers()
 			}
 		}
 	}
-#endif
 	trigflag = FALSE;
 }
 
@@ -465,13 +453,9 @@ BOOL ForceTownTrig()
 BOOL ForceL1Trig()
 {
 	int i, j;
-#ifdef HELLFIRE
 	int dx, dy;
-#endif
 
-#ifdef HELLFIRE
 	if (currlevel < 17) {
-#endif
 		for (i = 0; L1UpList[i] != -1; i++) {
 			if (dPiece[cursmx][cursmy] == L1UpList[i]) {
 				if (currlevel > 1)
@@ -499,7 +483,6 @@ BOOL ForceL1Trig()
 				}
 			}
 		}
-#ifdef HELLFIRE
 	} else {
 		for (i = 0; L5UpList[i] != -1; i++) {
 			if (dPiece[cursmx][cursmy] == L5UpList[i]) {
@@ -548,7 +531,6 @@ BOOL ForceL1Trig()
 			}
 		}
 	}
-#endif
 
 	return FALSE;
 }
@@ -613,9 +595,7 @@ BOOL ForceL3Trig()
 {
 	int i, j, dx, dy;
 
-#ifdef HELLFIRE
 	if (currlevel < 17) {
-#endif
 		for (i = 0; L3UpList[i] != -1; ++i) {
 			if (dPiece[cursmx][cursmy] == L3UpList[i]) {
 				sprintf(infostr, "Up to level %i", currlevel - 1);
@@ -642,7 +622,6 @@ BOOL ForceL3Trig()
 				}
 			}
 		}
-#ifdef HELLFIRE
 	} else {
 		for (i = 0; L6UpList[i] != -1; ++i) {
 			if (dPiece[cursmx][cursmy] == L6UpList[i]) {
@@ -671,7 +650,6 @@ BOOL ForceL3Trig()
 			}
 		}
 	}
-#endif
 
 	if (currlevel == 9) {
 		for (i = 0; L3TWarpUpList[i] != -1; i++) {
@@ -691,7 +669,6 @@ BOOL ForceL3Trig()
 			}
 		}
 	}
-#ifdef HELLFIRE
 	if (currlevel == 17) {
 		for (i = 0; L6TWarpUpList[i] != -1; i++) {
 			if (dPiece[cursmx][cursmy] == L6TWarpUpList[i]) {
@@ -710,7 +687,6 @@ BOOL ForceL3Trig()
 			}
 		}
 	}
-#endif
 
 	return FALSE;
 }
@@ -963,16 +939,13 @@ void CheckTriggers()
 						PlaySFX(PS_ROGUE43);
 					} else if (plr[myplr]._pClass == PC_SORCERER) {
 						PlaySFX(PS_MAGE43);
-					}
-#ifdef HELLFIRE
-					else if (plr[myplr]._pClass == PC_MONK) {
+					} else if (plr[myplr]._pClass == PC_MONK) {
 						PlaySFX(PS_MONK43);
 					} else if (plr[myplr]._pClass == PC_BARD) {
 						PlaySFX(PS_ROGUE43);
 					} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 						PlaySFX(PS_WARR43);
 					}
-#endif
 
 					InitDiabloMsg(abortflag);
 					NetSendCmdLoc(TRUE, CMD_WALKXY, x, y);

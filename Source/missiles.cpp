@@ -933,14 +933,12 @@ BOOL PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, BOOLEA
 					PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
 				} else if (plr[pnum]._pClass == PC_SORCERER) {
 					PlaySfxLoc(PS_MAGE69, plr[pnum]._px, plr[pnum]._py);
-#ifdef HELLFIRE
 				} else if (plr[pnum]._pClass == PC_MONK) {
 					PlaySfxLoc(PS_MONK69, plr[pnum]._px, plr[pnum]._py);
 				} else if (plr[pnum]._pClass == PC_BARD) {
 					PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
 				} else if (plr[pnum]._pClass == PC_BARBARIAN) {
 					PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
-#endif
 				}
 				drawhpflag = TRUE;
 			}
@@ -1081,14 +1079,12 @@ BOOL Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, B
 				PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
 			} else if (plr[pnum]._pClass == PC_SORCERER) {
 				PlaySfxLoc(PS_MAGE69, plr[pnum]._px, plr[pnum]._py);
-#ifdef HELLFIRE
 			} else if (plr[pnum]._pClass == PC_MONK) {
 				PlaySfxLoc(PS_MONK69, plr[pnum]._px, plr[pnum]._py);
 			} else if (plr[pnum]._pClass == PC_BARD) {
 				PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
 			} else if (plr[pnum]._pClass == PC_BARBARIAN) {
 				PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
-#endif
 			}
 			return TRUE;
 		} else {
@@ -3285,7 +3281,6 @@ void AddNova(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, in
 
 void AddBlodboil(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam)
 {
-#ifdef HELLFIRE
 	int lvl;
 
 	if (id == -1 || plr[id]._pSpellFlags & 6 || plr[id]._pHitPoints <= plr[id]._pLevel << 6) {
@@ -3314,9 +3309,6 @@ void AddBlodboil(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy
 		force_redraw = 255;
 		PlaySfxLoc(blodboilSFX[plr[id]._pClass], plr[id]._px, plr[id]._py);
 	}
-#else
-	missile[mi]._miDelFlag = 1;
-#endif
 }
 
 void AddRepair(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam)
@@ -5514,7 +5506,6 @@ void MI_Nova(int i)
 		missile[i]._miDelFlag = TRUE;
 }
 
-#ifdef HELLFIRE
 void MI_Blodboil(int i)
 {
 	int lvl, id, hpdif;
@@ -5566,12 +5557,6 @@ void MI_Blodboil(int i)
 		}
 	}
 }
-#else
-void MI_Blodboil(int i)
-{
-	missile[i]._miDelFlag = TRUE;
-}
-#endif
 
 void MI_Flame(int i)
 {

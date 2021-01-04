@@ -25,15 +25,9 @@ TownerStruct towner[NUM_TOWNERS];
  * ref: enum plr_class
  */
 const int snSFX[3][NUM_CLASSES] = {
-#ifdef HELLFIRE
 	{ PS_WARR52, PS_ROGUE52, PS_MAGE52, PS_MONK52, 0 }, // BUGFIX: add warrior sounds for barbarian instead of 0 - walk sound
 	{ PS_WARR49, PS_ROGUE49, PS_MAGE49, PS_MONK49, 0 },
 	{ PS_WARR50, PS_ROGUE50, PS_MAGE50, PS_MONK50, 0 },
-#else
-	{ PS_WARR52, PS_ROGUE52, PS_MAGE52 },
-	{ PS_WARR49, PS_ROGUE49, PS_MAGE49 },
-	{ PS_WARR50, PS_ROGUE50, PS_MAGE50 },
-#endif
 };
 
 /* data */

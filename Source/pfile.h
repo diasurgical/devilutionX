@@ -22,7 +22,7 @@ void pfile_flush_W();
 void game_2_ui_player(const PlayerStruct *p, _uiheroinfo *heroinfo, BOOL bHasSaveFile);
 BOOL pfile_ui_set_hero_infos(BOOL (*ui_add_hero_info)(_uiheroinfo *));
 BOOL pfile_archive_contains_game(HANDLE hsArchive, DWORD save_num);
-BOOL pfile_ui_set_class_stats(unsigned int player_class_nr, _uidefaultstats *class_stats);
+void pfile_ui_set_class_stats(unsigned int player_class_nr, _uidefaultstats *class_stats);
 BOOL pfile_ui_save_create(_uiheroinfo *heroinfo);
 BOOL pfile_get_file_name(DWORD lvl, char *dst);
 BOOL pfile_delete_save(_uiheroinfo *hero_info);

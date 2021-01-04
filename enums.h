@@ -3113,11 +3113,7 @@ typedef enum _unique_items {
 	UITEM_STEELVEIL    = 0x6,
 	UITEM_ARMOFVAL     = 0x7,
 	UITEM_GRISWOLD     = 0x8,
-#ifndef HELLFIRE
-	UITEM_LGTFORGE     = 0x9,
-#else
 	UITEM_BOVINE       = 0x9,
-#endif
 	UITEM_RIFTBOW      = 0xA,
 	UITEM_NEEDLER      = 0xB,
 	UITEM_CELESTBOW    = 0xC,
@@ -3202,28 +3198,14 @@ typedef enum _unique_items {
 } _unique_items;
 
 typedef enum plr_class {
-	PC_WARRIOR  = 0x0,
-	PC_ROGUE    = 0x1,
-	PC_SORCERER = 0x2,
-#ifdef HELLFIRE
+	PC_WARRIOR   = 0x0,
+	PC_ROGUE     = 0x1,
+	PC_SORCERER  = 0x2,
 	PC_MONK      = 0x3,
 	PC_BARD      = 0x4,
 	PC_BARBARIAN = 0x5,
-#endif
 	NUM_CLASSES
 } plr_class;
-
-typedef enum _ui_classes {
-	UI_WARRIOR     = 0x0,
-	UI_ROGUE       = 0x1,
-	UI_SORCERER    = 0x2,
-#ifdef HELLFIRE
-	UI_MONK        = 0x3,
-	UI_BARD        = 0x4,
-	UI_BARBARIAN   = 0x5,
-#endif
-	UI_NUM_CLASSES,
-} _ui_classes;
 
 typedef enum _walk_path {
 	WALK_NE   = 0x1,

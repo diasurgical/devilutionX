@@ -396,10 +396,8 @@ void DrawSpellList()
 			if (MouseX >= lx && MouseX < lx + SPLICONLENGTH && MouseY >= ly && MouseY < ly + SPLICONLENGTH) {
 				pSpell = j;
 				pSplType = i;
-#ifdef HELLFIRE
 				if (plr[myplr]._pClass == PC_MONK && j == SPL_SEARCH)
 					pSplType = RSPLTYPE_SKILL;
-#endif
 				DrawSpellCel(x, y, pSpellCels, c, SPLICONLENGTH);
 				switch (pSplType) {
 				case RSPLTYPE_SKILL:
@@ -867,14 +865,12 @@ void InitControlPan()
 		SpellPages[0][0] = SPL_DISARM;
 	} else if (plr[myplr]._pClass == PC_SORCERER) {
 		SpellPages[0][0] = SPL_RECHARGE;
-#ifdef HELLFIRE
 	} else if (plr[myplr]._pClass == PC_MONK) {
 		SpellPages[0][0] = SPL_SEARCH;
 	} else if (plr[myplr]._pClass == PC_BARD) {
 		SpellPages[0][0] = SPL_IDENTIFY;
 	} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 		SpellPages[0][0] = SPL_BLODBOIL;
-#endif
 	}
 	pQLogCel = LoadFileInMem("Data\\Quest.CEL", NULL);
 	pGBoxBuff = LoadFileInMem("CtrlPan\\Golddrop.cel", NULL);
@@ -1864,10 +1860,8 @@ char GetSBookTrans(int ii, BOOL townok)
 {
 	char st;
 
-#ifdef HELLFIRE
 	if ((plr[myplr]._pClass == PC_MONK) && (ii == SPL_SEARCH))
 		return RSPLTYPE_SKILL;
-#endif
 	st = RSPLTYPE_SPELL;
 	if (plr[myplr]._pISpells & SPELLBIT(ii)) {
 		st = RSPLTYPE_CHARGES;

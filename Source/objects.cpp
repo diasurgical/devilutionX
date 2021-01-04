@@ -1042,14 +1042,12 @@ void InitObjects()
 					sp_id = TEXT_RBLINDING;
 				} else if (plr[myplr]._pClass == PC_SORCERER) {
 					sp_id = TEXT_MBLINDING;
-#ifdef HELLFIRE
 				} else if (plr[myplr]._pClass == PC_MONK) {
 					sp_id = TEXT_HBLINDING;
 				} else if (plr[myplr]._pClass == PC_BARD) {
 					sp_id = TEXT_BBLINDING;
 				} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 					sp_id = TEXT_BLINDING;
-#endif
 				}
 				quests[Q_BLIND]._qmsg = sp_id;
 				AddBookLever(0, 0, MAXDUNX, MAXDUNY, setpc_x, setpc_y, setpc_w + setpc_x + 1, setpc_h + setpc_y + 1, sp_id);
@@ -1064,14 +1062,12 @@ void InitObjects()
 					sp_id = TEXT_RBLOODY;
 				} else if (plr[myplr]._pClass == PC_SORCERER) {
 					sp_id = TEXT_MBLOODY;
-#ifdef HELLFIRE
 				} else if (plr[myplr]._pClass == PC_MONK) {
 					sp_id = TEXT_HBLOODY;
 				} else if (plr[myplr]._pClass == PC_BARD) {
 					sp_id = TEXT_BBLOODY;
 				} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 					sp_id = TEXT_BLOODY;
-#endif
 				}
 				quests[Q_BLOOD]._qmsg = sp_id;
 				AddBookLever(0, 0, MAXDUNX, MAXDUNY, setpc_x, setpc_y + 3, setpc_x + 2, setpc_y + 7, sp_id);
@@ -1091,14 +1087,12 @@ void InitObjects()
 					sp_id = TEXT_RBLOODWAR;
 				} else if (plr[myplr]._pClass == PC_SORCERER) {
 					sp_id = TEXT_MBLOODWAR;
-#ifdef HELLFIRE
 				} else if (plr[myplr]._pClass == PC_MONK) {
 					sp_id = TEXT_HBLOODWAR;
 				} else if (plr[myplr]._pClass == PC_BARD) {
 					sp_id = TEXT_BBLOODWAR;
 				} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 					sp_id = TEXT_BLOODWAR;
-#endif
 				}
 				quests[Q_WARLORD]._qmsg = sp_id;
 				AddBookLever(0, 0, MAXDUNX, MAXDUNY, setpc_x, setpc_y, setpc_x + setpc_w, setpc_y + setpc_h, sp_id);
@@ -2096,14 +2090,12 @@ void Obj_BCrossDamage(int i)
 			PlaySfxLoc(PS_ROGUE68, plr[myplr]._px, plr[myplr]._py);
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
 			PlaySfxLoc(PS_MAGE68, plr[myplr]._px, plr[myplr]._py);
-#ifdef HELLFIRE
 		} else if (plr[myplr]._pClass == PC_MONK) {
 			PlaySfxLoc(PS_MONK68, plr[myplr]._px, plr[myplr]._py);
 		} else if (plr[myplr]._pClass == PC_BARD) {
 			PlaySfxLoc(PS_ROGUE68, plr[myplr]._px, plr[myplr]._py);
 		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 			PlaySfxLoc(PS_WARR68, plr[myplr]._px, plr[myplr]._py);
-#endif
 		}
 	}
 	drawhpflag = TRUE;
@@ -2469,7 +2461,7 @@ void OperateL1RDoor(int pnum, int oi, bool sendflag)
 	if (dok) {
 #else
 	if (!deltaload)
-	if (((dDead[xp][yp] != 0 ? 0 : 1) & (dMonster[xp][yp] != 0 ? 0 : 1) & (dItem[xp][yp] != 0 ? 0 : 1)) != 0) {
+		if (((dDead[xp][yp] != 0 ? 0 : 1) & (dMonster[xp][yp] != 0 ? 0 : 1) & (dItem[xp][yp] != 0 ? 0 : 1)) != 0) {
 #endif
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(TRUE, CMD_CLOSEDOOR, oi);
@@ -3041,14 +3033,12 @@ void OperateSChambBk(int pnum, int i)
 			textdef = TEXT_RBONER;
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
 			textdef = TEXT_MBONER;
-#ifdef HELLFIRE
 		} else if (plr[myplr]._pClass == PC_MONK) {
 			textdef = TEXT_HBONER;
 		} else if (plr[myplr]._pClass == PC_BARD) {
 			textdef = TEXT_BBONER;
 		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 			textdef = TEXT_BONER;
-#endif
 		}
 		quests[Q_SCHAMB]._qmsg = textdef;
 		InitQTextMsg(textdef);
@@ -3124,14 +3114,12 @@ void OperateMushPatch(int pnum, int i)
 				PlaySFX(PS_ROGUE13);
 			} else if (plr[myplr]._pClass == PC_SORCERER) {
 				PlaySFX(PS_MAGE13);
-#ifdef HELLFIRE
 			} else if (plr[myplr]._pClass == PC_MONK) {
 				PlaySFX(PS_MONK13);
 			} else if (plr[myplr]._pClass == PC_BARD) {
 				PlaySFX(PS_ROGUE13);
 			} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 				PlaySFX(PS_WARR13);
-#endif
 			}
 		}
 	} else {
@@ -3161,14 +3149,12 @@ void OperateInnSignChest(int pnum, int i)
 				PlaySFX(PS_ROGUE24);
 			} else if (plr[myplr]._pClass == PC_SORCERER) {
 				PlaySFX(PS_MAGE24);
-#ifdef HELLFIRE
 			} else if (plr[myplr]._pClass == PC_MONK) {
 				PlaySFX(PS_MONK24);
 			} else if (plr[myplr]._pClass == PC_BARD) {
 				PlaySFX(PS_ROGUE24);
 			} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 				PlaySFX(PS_WARR24);
-#endif
 			}
 		}
 	} else {
@@ -3199,7 +3185,6 @@ void OperateSlainHero(int pnum, int i, bool sendmsg)
 			} else if (plr[pnum]._pClass == PC_SORCERER) {
 				CreateSpellBook(object[i]._ox, object[i]._oy, SPL_LIGHTNING, FALSE, TRUE);
 				PlaySfxLoc(PS_MAGE9, plr[myplr]._px, plr[myplr]._py);
-#ifdef HELLFIRE
 			} else if (plr[pnum]._pClass == PC_MONK) {
 				CreateMagicWeapon(object[i]._ox, object[i]._oy, ITYPE_STAFF, ICURS_WAR_STAFF, FALSE, TRUE);
 				PlaySfxLoc(PS_MONK9, plr[myplr]._px, plr[myplr]._py);
@@ -3209,7 +3194,6 @@ void OperateSlainHero(int pnum, int i, bool sendmsg)
 			} else if (plr[pnum]._pClass == PC_BARBARIAN) {
 				CreateMagicWeapon(object[i]._ox, object[i]._oy, ITYPE_AXE, ICURS_BATTLE_AXE, FALSE, TRUE);
 				PlaySfxLoc(PS_WARR9, plr[myplr]._px, plr[myplr]._py);
-#endif
 			}
 			if (pnum == myplr)
 				NetSendCmdParam1(FALSE, CMD_OPERATEOBJ, i);

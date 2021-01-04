@@ -124,7 +124,6 @@ void InitInv()
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv_rog.CEL", NULL);
 	} else if (plr[myplr]._pClass == PC_SORCERER) {
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv_Sor.CEL", NULL);
-#ifdef HELLFIRE
 	} else if (plr[myplr]._pClass == PC_MONK) {
 		if (gbIsSpawn)
 			pInvCels = LoadFileInMem("Data\\Inv\\Inv_Sor.CEL", NULL);
@@ -134,7 +133,6 @@ void InitInv()
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv_rog.CEL", NULL);
 	} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 		pInvCels = LoadFileInMem("Data\\Inv\\Inv.CEL", NULL);
-#endif
 	}
 
 	invflag = FALSE;
@@ -191,37 +189,25 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_HEAD]._iStatFlag) {
 				color = ICOL_RED;
 			}
-#ifdef HELLFIRE
 			if (frame <= 179) {
-#endif
 				CelBlitOutline(color, RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width);
-#ifdef HELLFIRE
 			} else {
 				CelBlitOutline(color, RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
 			}
-#endif
 		}
 
 		if (plr[myplr].InvBody[INVLOC_HEAD]._iStatFlag) {
-#ifdef HELLFIRE
 			if (frame <= 179) {
-#endif
 				CelClippedDraw(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width);
-#ifdef HELLFIRE
 			} else {
 				CelClippedDraw(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
 			}
-#endif
 		} else {
-#ifdef HELLFIRE
 			if (frame <= 179) {
-#endif
 				CelDrawLightRed(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels, frame, frame_width, 1);
-#ifdef HELLFIRE
 			} else {
 				CelDrawLightRed(RIGHT_PANEL_X + 133, 59 + SCREEN_Y, pCursCels2, frame - 179, frame_width, 1);
 			}
-#endif
 		}
 	}
 
@@ -239,37 +225,25 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_RING_LEFT]._iStatFlag) {
 				color = ICOL_RED;
 			}
-#ifdef HELLFIRE
 			if (frame <= 179) {
-#endif
 				CelBlitOutline(color, RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width);
-#ifdef HELLFIRE
 			} else {
 				CelBlitOutline(color, RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
 			}
-#endif
 		}
 
 		if (plr[myplr].InvBody[INVLOC_RING_LEFT]._iStatFlag) {
-#ifdef HELLFIRE
 			if (frame <= 179) {
-#endif
 				CelClippedDraw(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width);
-#ifdef HELLFIRE
 			} else {
 				CelClippedDraw(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
 			}
-#endif
 		} else {
-#ifdef HELLFIRE
 			if (frame <= 179) {
-#endif
 				CelDrawLightRed(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels, frame, frame_width, 1);
-#ifdef HELLFIRE
 			} else {
 				CelDrawLightRed(RIGHT_PANEL_X + 48, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width, 1);
 			}
-#endif
 		}
 	}
 
@@ -287,37 +261,25 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_RING_RIGHT]._iStatFlag) {
 				color = ICOL_RED;
 			}
-#ifdef HELLFIRE
 			if (frame <= 179) {
-#endif
 				CelBlitOutline(color, RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width);
-#ifdef HELLFIRE
 			} else {
 				CelBlitOutline(color, RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
 			}
-#endif
 		}
 
 		if (plr[myplr].InvBody[INVLOC_RING_RIGHT]._iStatFlag) {
-#ifdef HELLFIRE
 			if (frame <= 179) {
-#endif
 				CelClippedDraw(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width);
-#ifdef HELLFIRE
 			} else {
 				CelClippedDraw(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
 			}
-#endif
 		} else {
-#ifdef HELLFIRE
 			if (frame <= 179) {
-#endif
 				CelDrawLightRed(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels, frame, frame_width, 1);
-#ifdef HELLFIRE
 			} else {
 				CelDrawLightRed(RIGHT_PANEL_X + 249, 205 + SCREEN_Y, pCursCels2, frame - 179, frame_width, 1);
 			}
-#endif
 		}
 	}
 
@@ -335,37 +297,25 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_AMULET]._iStatFlag) {
 				color = ICOL_RED;
 			}
-#ifdef HELLFIRE
 			if (frame <= 179) {
-#endif
 				CelBlitOutline(color, RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width);
-#ifdef HELLFIRE
 			} else {
 				CelBlitOutline(color, RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
 			}
-#endif
 		}
 
 		if (plr[myplr].InvBody[INVLOC_AMULET]._iStatFlag) {
-#ifdef HELLFIRE
 			if (frame <= 179) {
-#endif
 				CelClippedDraw(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width);
-#ifdef HELLFIRE
 			} else {
 				CelClippedDraw(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
 			}
-#endif
 		} else {
-#ifdef HELLFIRE
 			if (frame <= 179) {
-#endif
 				CelDrawLightRed(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels, frame, frame_width, 1);
-#ifdef HELLFIRE
 			} else {
 				CelDrawLightRed(RIGHT_PANEL_X + 205, 60 + SCREEN_Y, pCursCels2, frame - 179, frame_width, 1);
 			}
-#endif
 		}
 	}
 
@@ -386,37 +336,25 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
 				color = ICOL_RED;
 			}
-#ifdef HELLFIRE
 			if (frame <= 179) {
-#endif
 				CelBlitOutline(color, screen_x, screen_y, pCursCels, frame, frame_width);
-#ifdef HELLFIRE
 			} else {
 				CelBlitOutline(color, screen_x, screen_y, pCursCels2, frame - 179, frame_width);
 			}
-#endif
 		}
 
 		if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
-#ifdef HELLFIRE
 			if (frame <= 179) {
-#endif
 				CelClippedDraw(screen_x, screen_y, pCursCels, frame, frame_width);
-#ifdef HELLFIRE
 			} else {
 				CelClippedDraw(screen_x, screen_y, pCursCels2, frame - 179, frame_width);
 			}
-#endif
 		} else {
-#ifdef HELLFIRE
 			if (frame <= 179) {
-#endif
 				CelDrawLightRed(screen_x, screen_y, pCursCels, frame, frame_width, 1);
-#ifdef HELLFIRE
 			} else {
 				CelDrawLightRed(screen_x, screen_y, pCursCels2, frame - 179, frame_width, 1);
 			}
-#endif
 		}
 
 		if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND) {
@@ -432,15 +370,11 @@ void DrawInv()
 				pBuff = frame_width == INV_SLOT_SIZE_PX
 				    ? &gpBuffer[SCREENXY(RIGHT_PANEL_X + 197, SCREEN_Y)]
 				    : &gpBuffer[SCREENXY(RIGHT_PANEL_X + 183, SCREEN_Y)];
-#ifdef HELLFIRE
 				if (frame <= 179) {
-#endif
 					CelClippedBlitLightTrans(pBuff, pCursCels, frame, frame_width);
-#ifdef HELLFIRE
 				} else {
 					CelClippedBlitLightTrans(pBuff, pCursCels2, frame - 179, frame_width);
 				}
-#endif
 
 				cel_transparency_active = FALSE;
 #ifdef HELLFIRE
@@ -465,37 +399,25 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
 				color = ICOL_RED;
 			}
-#ifdef HELLFIRE
 			if (frame <= 179) {
-#endif
 				CelBlitOutline(color, screen_x, screen_y, pCursCels, frame, frame_width);
-#ifdef HELLFIRE
 			} else {
 				CelBlitOutline(color, screen_x, screen_y, pCursCels2, frame - 179, frame_width);
 			}
-#endif
 		}
 
 		if (plr[myplr].InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
-#ifdef HELLFIRE
 			if (frame <= 179) {
-#endif
 				CelClippedDraw(screen_x, screen_y, pCursCels, frame, frame_width);
-#ifdef HELLFIRE
 			} else {
 				CelClippedDraw(screen_x, screen_y, pCursCels2, frame - 179, frame_width);
 			}
-#endif
 		} else {
-#ifdef HELLFIRE
 			if (frame <= 179) {
-#endif
 				CelDrawLightRed(screen_x, screen_y, pCursCels, frame, frame_width, 1);
-#ifdef HELLFIRE
 			} else {
 				CelDrawLightRed(screen_x, screen_y, pCursCels2, frame - 179, frame_width, 1);
 			}
-#endif
 		}
 	}
 
@@ -513,37 +435,25 @@ void DrawInv()
 			if (!plr[myplr].InvBody[INVLOC_CHEST]._iStatFlag) {
 				color = ICOL_RED;
 			}
-#ifdef HELLFIRE
 			if (frame <= 179) {
-#endif
 				CelBlitOutline(color, RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width);
-#ifdef HELLFIRE
 			} else {
 				CelBlitOutline(color, RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
 			}
-#endif
 		}
 
 		if (plr[myplr].InvBody[INVLOC_CHEST]._iStatFlag) {
-#ifdef HELLFIRE
 			if (frame <= 179) {
-#endif
 				CelClippedDraw(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width);
-#ifdef HELLFIRE
 			} else {
 				CelClippedDraw(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels2, frame - 179, frame_width);
 			}
-#endif
 		} else {
-#ifdef HELLFIRE
 			if (frame <= 179) {
-#endif
 				CelDrawLightRed(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels, frame, frame_width, 1);
-#ifdef HELLFIRE
 			} else {
 				CelDrawLightRed(RIGHT_PANEL_X + 133, 160 + SCREEN_Y, pCursCels2, frame - 179, frame_width, 1);
 			}
-#endif
 		}
 	}
 
@@ -575,15 +485,12 @@ void DrawInv()
 				if (!plr[myplr].InvList[ii]._iStatFlag) {
 					color = ICOL_RED;
 				}
-#ifdef HELLFIRE
 				if (frame <= 179) {
-#endif
 					CelBlitOutline(
 					    color,
 					    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 					    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
 					    pCursCels, frame, frame_width);
-#ifdef HELLFIRE
 				} else {
 					CelBlitOutline(
 					    color,
@@ -591,41 +498,32 @@ void DrawInv()
 					    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
 					    pCursCels2, frame - 179, frame_width);
 				}
-#endif
 			}
 
 			if (plr[myplr].InvList[ii]._iStatFlag) {
-#ifdef HELLFIRE
 				if (frame <= 179) {
-#endif
 					CelClippedDraw(
 					    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 					    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
 					    pCursCels, frame, frame_width);
-#ifdef HELLFIRE
 				} else {
 					CelClippedDraw(
 					    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 					    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
 					    pCursCels2, frame - 179, frame_width);
 				}
-#endif
 			} else {
-#ifdef HELLFIRE
 				if (frame <= 179) {
-#endif
 					CelDrawLightRed(
 					    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 					    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
 					    pCursCels, frame, frame_width, 1);
-#ifdef HELLFIRE
 				} else {
 					CelDrawLightRed(
 					    InvRect[j + SLOTXY_INV_FIRST].X + RIGHT_PANEL_X,
 					    InvRect[j + SLOTXY_INV_FIRST].Y + SCREEN_Y - 1,
 					    pCursCels2, frame - 179, frame_width, 1);
 				}
-#endif
 			}
 		}
 	}
@@ -658,35 +556,23 @@ void DrawInvBelt()
 			if (!plr[myplr].SpdList[i]._iStatFlag)
 				color = ICOL_RED;
 			if (!sgbControllerActive || invflag) {
-#ifdef HELLFIRE
 				if (frame <= 179)
-#endif
 					CelBlitOutline(color, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels, frame, frame_width);
-#ifdef HELLFIRE
 				else
 					CelBlitOutline(color, InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels2, frame - 179, frame_width);
-#endif
 			}
 		}
 
 		if (plr[myplr].SpdList[i]._iStatFlag) {
-#ifdef HELLFIRE
 			if (frame <= 179)
-#endif
 				CelClippedDraw(InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels, frame, frame_width);
-#ifdef HELLFIRE
 			else
 				CelClippedDraw(InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels2, frame - 179, frame_width);
-#endif
 		} else {
-#ifdef HELLFIRE
 			if (frame <= 179)
-#endif
 				CelDrawLightRed(InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels, frame, frame_width, 1);
-#ifdef HELLFIRE
 			else
 				CelDrawLightRed(InvRect[i + SLOTXY_BELT_FIRST].X + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].Y + PANEL_Y - 1, pCursCels2, frame - 179, frame_width, 1);
-#endif
 		}
 
 		if (AllItemsList[plr[myplr].SpdList[i].IDidx].iUsable
@@ -963,19 +849,11 @@ BOOL GoldAutoPlace(int pnum)
 
 BOOL WeaponAutoPlace(int pnum)
 {
-#ifdef HELLFIRE
 	if (plr[pnum]._pClass == PC_MONK)
 		return FALSE;
-#endif
 	if (plr[pnum].HoldItem._iLoc != ILOC_TWOHAND
-#ifdef HELLFIRE
-	    || (plr[pnum]._pClass == PC_BARBARIAN && (plr[pnum].HoldItem._itype == ITYPE_SWORD || plr[pnum].HoldItem._itype == ITYPE_MACE))
-#endif
-	) {
-#ifdef HELLFIRE
-		if (plr[pnum]._pClass != PC_BARD)
-#endif
-		{
+	    || (plr[pnum]._pClass == PC_BARBARIAN && (plr[pnum].HoldItem._itype == ITYPE_SWORD || plr[pnum].HoldItem._itype == ITYPE_MACE))) {
+		if (plr[pnum]._pClass != PC_BARD) {
 			if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_NONE && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON)
 				return FALSE;
 			if (plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_NONE && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON)
@@ -1068,12 +946,10 @@ void CheckInvPaste(int pnum, int mx, int my)
 	if (plr[pnum].HoldItem._iLoc == il)
 		done = TRUE;
 	if (il == ILOC_ONEHAND && plr[pnum].HoldItem._iLoc == ILOC_TWOHAND) {
-#ifdef HELLFIRE
 		if (plr[pnum]._pClass == PC_BARBARIAN
 		    && (plr[pnum].HoldItem._itype == ITYPE_SWORD || plr[pnum].HoldItem._itype == ITYPE_MACE))
 			il = ILOC_ONEHAND;
 		else
-#endif
 			il = ILOC_TWOHAND;
 		done = TRUE;
 	}
@@ -1149,14 +1025,12 @@ void CheckInvPaste(int pnum, int mx, int my)
 			PlaySFX(PS_ROGUE13);
 		else if (plr[pnum]._pClass == PC_SORCERER)
 			PlaySFX(PS_MAGE13);
-#ifdef HELLFIRE
 		else if (plr[pnum]._pClass == PC_MONK)
 			PlaySFX(PS_MONK13);
 		else if (plr[pnum]._pClass == PC_BARD)
 			PlaySFX(PS_ROGUE13);
 		else if (plr[pnum]._pClass == PC_BARBARIAN)
 			PlaySFX(PS_MAGE13);
-#endif
 	}
 
 	if (!done)
@@ -1228,15 +1102,9 @@ void CheckInvPaste(int pnum, int mx, int my)
 		}
 		if (plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_NONE) {
 			if ((plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_NONE || plr[pnum].InvBody[INVLOC_HAND_LEFT]._iLoc != ILOC_TWOHAND)
-#ifdef HELLFIRE
-			    || (plr[pnum]._pClass == PC_BARBARIAN && (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SWORD || plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_MACE))
-#endif
-			) {
+			    || (plr[pnum]._pClass == PC_BARBARIAN && (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SWORD || plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_MACE))) {
 				if ((plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_NONE || plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass != plr[pnum].HoldItem._iClass)
-#ifdef HELLFIRE
-				    || (plr[pnum]._pClass == PC_BARD && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON && plr[pnum].HoldItem._iClass == ICLASS_WEAPON)
-#endif
-				) {
+				    || (plr[pnum]._pClass == PC_BARD && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON && plr[pnum].HoldItem._iClass == ICLASS_WEAPON)) {
 					NetSendCmdChItem(FALSE, INVLOC_HAND_RIGHT);
 					plr[pnum].InvBody[INVLOC_HAND_RIGHT] = plr[pnum].HoldItem;
 					break;
@@ -1365,10 +1233,8 @@ void CheckInvPaste(int pnum, int mx, int my)
 						plr[pnum].InvList[il]._iCurs = ICURS_GOLD_SMALL;
 					else
 						plr[pnum].InvList[il]._iCurs = ICURS_GOLD_MEDIUM;
-#ifdef HELLFIRE
 				} else {
 					plr[pnum].InvList[ii]._iCurs = ICURS_GOLD_LARGE;
-#endif
 				}
 			}
 		} else {
@@ -1769,16 +1635,13 @@ void CheckQuestItem(int pnum)
 			sfxdnum = PS_ROGUE95;
 		} else if (plr[pnum]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE95;
-		}
-#ifdef HELLFIRE
-		else if (plr[pnum]._pClass == PC_MONK) {
+		} else if (plr[pnum]._pClass == PC_MONK) {
 			sfxdnum = PS_MONK95;
 		} else if (plr[pnum]._pClass == PC_BARD) {
 			sfxdnum = PS_ROGUE95;
 		} else if (plr[pnum]._pClass == PC_BARBARIAN) {
 			sfxdnum = PS_WARR95;
 		}
-#endif
 		quests[Q_MUSHROOM]._qvar1 = QS_MUSHPICKED;
 	}
 	if (plr[pnum].HoldItem.IDidx == IDI_ANVIL) {
@@ -1794,16 +1657,13 @@ void CheckQuestItem(int pnum)
 				sfxdnum = PS_ROGUE89;
 			} else if (plr[myplr]._pClass == PC_SORCERER) {
 				sfxdnum = PS_MAGE89;
-			}
-#ifdef HELLFIRE
-			else if (plr[myplr]._pClass == PC_MONK) {
+			} else if (plr[myplr]._pClass == PC_MONK) {
 				sfxdnum = PS_MONK89;
 			} else if (plr[myplr]._pClass == PC_BARD) {
 				sfxdnum = PS_ROGUE89;
 			} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 				sfxdnum = PS_WARR89;
 			}
-#endif
 		}
 	}
 	if (plr[pnum].HoldItem.IDidx == IDI_GLDNELIX) {
@@ -1814,16 +1674,13 @@ void CheckQuestItem(int pnum)
 			sfxdnum = PS_ROGUE88;
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE88;
-		}
-#ifdef HELLFIRE
-		else if (plr[myplr]._pClass == PC_MONK) {
+		} else if (plr[myplr]._pClass == PC_MONK) {
 			sfxdnum = PS_MONK88;
 		} else if (plr[myplr]._pClass == PC_BARD) {
 			sfxdnum = PS_ROGUE88;
 		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 			sfxdnum = PS_WARR88;
 		}
-#endif
 	}
 	if (plr[pnum].HoldItem.IDidx == IDI_ROCK) {
 		if (quests[Q_ROCK]._qactive == QUEST_INIT) {
@@ -1838,16 +1695,13 @@ void CheckQuestItem(int pnum)
 				sfxdnum = PS_ROGUE87;
 			} else if (plr[myplr]._pClass == PC_SORCERER) {
 				sfxdnum = PS_MAGE87;
-			}
-#ifdef HELLFIRE
-			else if (plr[myplr]._pClass == PC_MONK) {
+			} else if (plr[myplr]._pClass == PC_MONK) {
 				sfxdnum = PS_MONK87;
 			} else if (plr[myplr]._pClass == PC_BARD) {
 				sfxdnum = PS_ROGUE87;
 			} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 				sfxdnum = PS_WARR87;
 			}
-#endif
 		}
 	}
 	if (plr[pnum].HoldItem.IDidx == IDI_ARMOFVAL) {
@@ -1859,17 +1713,14 @@ void CheckQuestItem(int pnum)
 			sfxdnum = PS_ROGUE91;
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE91;
-#ifdef HELLFIRE
 		} else if (plr[myplr]._pClass == PC_MONK) {
 			sfxdnum = PS_MONK91;
 		} else if (plr[myplr]._pClass == PC_BARD) {
 			sfxdnum = PS_ROGUE91;
 		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 			sfxdnum = PS_WARR91;
-#endif
 		}
 	}
-#ifdef HELLFIRE
 	if (plr[pnum].HoldItem.IDidx == IDI_MAPOFDOOM) {
 		quests[Q_GRAVE]._qlog = FALSE;
 		quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
@@ -1944,7 +1795,6 @@ void CheckQuestItem(int pnum)
 			item[item_num] = tmp;
 		}
 	}
-#endif
 }
 
 void InvGetItem(int pnum, int ii)
@@ -2126,7 +1976,6 @@ void AutoGetItem(int pnum, int ii)
 	}
 	if (done) {
 		dItem[item[ii]._ix][item[ii]._iy] = 0;
-#ifdef HELLFIRE
 		if (currlevel == 21 && item[ii]._ix == CornerStone.x && item[ii]._iy == CornerStone.y) {
 			CornerStone.item.IDidx = -1;
 			CornerStone.item._itype = ITYPE_MISC;
@@ -2137,7 +1986,6 @@ void AutoGetItem(int pnum, int ii)
 			CornerStone.item._iIdentified = FALSE;
 			CornerStone.item._iPostDraw = FALSE;
 		}
-#endif
 		i = 0;
 		while (i < numitems) {
 			if (itemactive[i] == ii) {
@@ -2155,14 +2003,12 @@ void AutoGetItem(int pnum, int ii)
 				PlaySFX(random_(0, 3) + PS_ROGUE14);
 			} else if (plr[pnum]._pClass == PC_SORCERER) {
 				PlaySFX(random_(0, 3) + PS_MAGE14);
-#ifdef HELLFIRE
 			} else if (plr[pnum]._pClass == PC_MONK) {
 				PlaySFX(random_(0, 3) + PS_MONK14);
 			} else if (plr[pnum]._pClass == PC_BARD) {
 				PlaySFX(random_(0, 3) + PS_ROGUE14);
 			} else if (plr[pnum]._pClass == PC_BARBARIAN) {
 				PlaySFX(random_(0, 3) + PS_WARR14);
-#endif
 			}
 		}
 		plr[pnum].HoldItem = item[ii];
@@ -2216,7 +2062,6 @@ void SyncGetItem(int x, int y, int idx, WORD ci, int iseed)
 
 	if (ii != -1) {
 		dItem[item[ii]._ix][item[ii]._iy] = 0;
-#ifdef HELLFIRE
 		if (currlevel == 21 && item[ii]._ix == CornerStone.x && item[ii]._iy == CornerStone.y) {
 			CornerStone.item.IDidx = -1;
 			CornerStone.item._itype = ITYPE_MISC;
@@ -2227,7 +2072,6 @@ void SyncGetItem(int x, int y, int idx, WORD ci, int iseed)
 			CornerStone.item._iIdentified = FALSE;
 			CornerStone.item._iPostDraw = FALSE;
 		}
-#endif
 		i = 0;
 		while (i < numitems) {
 			if (itemactive[i] == ii) {
@@ -2372,8 +2216,7 @@ int InvPutItem(int pnum, int x, int y)
 		}
 	}
 
-#ifdef HELLFIRE
-	if (currlevel == 0) {
+	if (gbIsHellfire && currlevel == 0) {
 		yp = cursmy;
 		xp = cursmx;
 		if (plr[pnum].HoldItem._iCurs == ICURS_RUNE_BOMB && xp >= 79 && xp <= 82 && yp >= 61 && yp <= 64) {
@@ -2394,7 +2237,6 @@ int InvPutItem(int pnum, int x, int y)
 			return -1;
 		}
 	}
-#endif
 	CanPut(x, y); //if (!CanPut(x, y)) {
 	//	assertion_failed(__LINE__, __FILE__, "CanPut(x,y)");
 	//}
@@ -2408,14 +2250,14 @@ int InvPutItem(int pnum, int x, int y)
 	item[ii]._iy = y;
 	RespawnItem(ii, TRUE);
 	numitems++;
-#ifdef HELLFIRE
+
 	if (currlevel == 21 && x == CornerStone.x && y == CornerStone.y) {
 		CornerStone.item = item[ii];
 		InitQTextMsg(296);
 		quests[Q_CORNSTN]._qlog = FALSE;
 		quests[Q_CORNSTN]._qactive = QUEST_DONE;
 	}
-#endif
+
 	NewCursor(CURSOR_HAND);
 	return ii;
 }
@@ -2508,14 +2350,12 @@ int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, in
 	item[ii]._iy = y;
 	RespawnItem(ii, TRUE);
 	numitems++;
-#ifdef HELLFIRE
 	if (currlevel == 21 && x == CornerStone.x && y == CornerStone.y) {
 		CornerStone.item = item[ii];
 		InitQTextMsg(296);
 		quests[Q_CORNSTN]._qlog = 0;
 		quests[Q_CORNSTN]._qactive = 3;
 	}
-#endif
 	return ii;
 }
 
@@ -2762,16 +2602,13 @@ BOOL UseInvItem(int pnum, int cii)
 			sfxdnum = PS_ROGUE95;
 		} else if (plr[pnum]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE95;
-		}
-#ifdef HELLFIRE
-		else if (plr[pnum]._pClass == PC_MONK) {
+		} else if (plr[pnum]._pClass == PC_MONK) {
 			sfxdnum = PS_MONK95;
 		} else if (plr[pnum]._pClass == PC_BARD) {
 			sfxdnum = PS_ROGUE95;
 		} else if (plr[pnum]._pClass == PC_BARBARIAN) {
 			sfxdnum = PS_WARR95;
 		}
-#endif
 		return TRUE;
 	case IDI_FUNGALTM:
 		PlaySFX(IS_IBOOK);
@@ -2782,14 +2619,12 @@ BOOL UseInvItem(int pnum, int cii)
 			sfxdnum = PS_ROGUE29;
 		} else if (plr[pnum]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE29;
-#ifdef HELLFIRE
 		} else if (plr[pnum]._pClass == PC_MONK) {
 			sfxdnum = PS_MONK29;
 		} else if (plr[pnum]._pClass == PC_BARD) {
 			sfxdnum = PS_ROGUE29;
 		} else if (plr[pnum]._pClass == PC_BARBARIAN) {
 			sfxdnum = PS_WARR29;
-#endif
 		}
 		return TRUE;
 	}
@@ -2804,14 +2639,12 @@ BOOL UseInvItem(int pnum, int cii)
 			PlaySFX(PS_ROGUE13);
 		} else if (plr[pnum]._pClass == PC_SORCERER) {
 			PlaySFX(PS_MAGE13);
-#ifdef HELLFIRE
 		} else if (plr[pnum]._pClass == PC_MONK) {
 			PlaySFX(PS_MONK13);
 		} else if (plr[pnum]._pClass == PC_BARD) {
 			PlaySFX(PS_ROGUE13);
 		} else if (plr[pnum]._pClass == PC_BARBARIAN) {
 			PlaySFX(PS_WARR13);
-#endif
 		}
 		return TRUE;
 	}
@@ -2834,11 +2667,9 @@ BOOL UseInvItem(int pnum, int cii)
 		return TRUE;
 	}
 
-#ifdef HELLFIRE
 	if (Item->_iMiscId > IMISC_RUNEFIRST && Item->_iMiscId < IMISC_RUNELAST && currlevel == 0) {
 		return TRUE;
 	}
-#endif
 
 	idata = ItemCAnimTbl[Item->_iCurs];
 	if (Item->_iMiscId == IMISC_BOOK)
@@ -2849,25 +2680,21 @@ BOOL UseInvItem(int pnum, int cii)
 	UseItem(pnum, Item->_iMiscId, Item->_iSpell);
 
 	if (speedlist) {
-#ifdef HELLFIRE
 		if (plr[pnum].SpdList[c]._iMiscId == IMISC_NOTE) {
 			InitQTextMsg(322);
 			invflag = FALSE;
 			return TRUE;
 		}
-#endif
 		RemoveSpdBarItem(pnum, c);
 		return TRUE;
 	} else {
 		if (plr[pnum].InvList[c]._iMiscId == IMISC_MAPOFDOOM)
 			return TRUE;
-#ifdef HELLFIRE
 		if (plr[pnum].InvList[c]._iMiscId == IMISC_NOTE) {
 			InitQTextMsg(322);
 			invflag = FALSE;
 			return TRUE;
 		}
-#endif
 		RemoveInvItem(pnum, c);
 	}
 	return TRUE;

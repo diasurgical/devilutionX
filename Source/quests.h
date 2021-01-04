@@ -40,7 +40,7 @@ void QuestlogESC();
 void SetMultiQuest(int q, int s, int l, int v1);
 
 /* rdata */
-extern QuestData questlist[MAXQUESTS];
+extern QuestData questlist[];
 
 #ifdef __cplusplus
 }
