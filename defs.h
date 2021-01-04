@@ -4,14 +4,6 @@
  * Global definitions and Macros.
  */
 
-#ifdef HELLFIRE
-#define DIABOOL					BOOLEAN
-#define HFAND &&
-#else
-#define DIABOOL					BOOL
-#define HFAND &
-#endif
-
 #define DMAXX					40
 #define DMAXY					40
 

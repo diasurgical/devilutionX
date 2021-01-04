@@ -6043,7 +6043,7 @@ BOOL PosOkMonst3(int i, int x, int y)
 	int j, oi, objtype, mi;
 #ifdef HELLFIRE
 	BOOL ret;
-	DIABOOL isdoor;
+	bool isdoor;
 
 	ret = TRUE;
 	isdoor = FALSE;

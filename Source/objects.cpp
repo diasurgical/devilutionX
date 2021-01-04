@@ -269,7 +269,7 @@ void FreeObjectGFX()
 	numobjfiles = 0;
 }
 
-DIABOOL RndLocOk(int xp, int yp)
+bool RndLocOk(int xp, int yp)
 {
 	if (dMonster[xp][yp] != 0)
 		return FALSE;
@@ -286,7 +286,7 @@ DIABOOL RndLocOk(int xp, int yp)
 	return FALSE;
 }
 
-static DIABOOL WallTrapLocOkK(int xp, int yp)
+static bool WallTrapLocOkK(int xp, int yp)
 {
 	if (dFlags[xp][yp] & BFLAG_POPULATED)
 		return FALSE;
@@ -353,7 +353,7 @@ void InitRndLocBigObj(int min, int max, int objtype)
 
 void InitRndLocObj5x5(int min, int max, int objtype)
 {
-	DIABOOL exit;
+	bool exit;
 	int xp, yp, numobjs, i, cnt, m, n;
 
 	numobjs = min + random_(139, max - min);
@@ -384,34 +384,12 @@ void ClrAllObjects()
 {
 	int i;
 
-#ifdef HELLFIRE
 	memset(object, 0, sizeof(object));
-#else
-	for (i = 0; i < MAXOBJECTS; i++) {
-		object[i]._ox = 0;
-		object[i]._oy = 0;
-		object[i]._oAnimData = 0;
-		object[i]._oAnimDelay = 0;
-		object[i]._oAnimCnt = 0;
-		object[i]._oAnimLen = 0;
-		object[i]._oAnimFrame = 0;
-		object[i]._oDelFlag = FALSE;
-		object[i]._oVar1 = 0;
-		object[i]._oVar2 = 0;
-		object[i]._oVar3 = 0;
-		object[i]._oVar4 = 0;
-	}
-#endif
 	nobjects = 0;
 	for (i = 0; i < MAXOBJECTS; i++) {
 		objectavail[i] = i;
-#ifndef HELLFIRE
-		objectactive[i] = 0;
-#endif
 	}
-#ifdef HELLFIRE
 	memset(objectactive, 0, sizeof(objectactive));
-#endif
 	trapdir = 0;
 	trapid = 1;
 	leverid = 1;
@@ -454,7 +432,7 @@ void AddCandles()
 
 void AddBookLever(int lx1, int ly1, int lx2, int ly2, int x1, int y1, int x2, int y2, int msg)
 {
-	DIABOOL exit;
+	bool exit;
 	int xp, yp, ob, cnt, m, n;
 
 	cnt = 0;
@@ -497,7 +475,7 @@ void InitRndBarrels()
 	int numobjs; // number of groups of barrels to generate
 	int xp, yp;
 	_object_id o;
-	DIABOOL found;
+	bool found;
 	int p; // regulates chance to stop placing barrels in current group
 	int dir;
 	int t; // number of tries of placing next barrel in current group
@@ -601,7 +579,7 @@ void AddL3Objs(int x1, int y1, int x2, int y2)
 	}
 }
 
-DIABOOL TorchLocOK(int xp, int yp)
+bool TorchLocOK(int xp, int yp)
 {
 	if (dFlags[xp][yp] & BFLAG_POPULATED)
 		return FALSE;
@@ -794,7 +772,7 @@ void AddDiabObjs()
 #ifdef HELLFIRE
 void objects_add_lv22(int s)
 {
-	DIABOOL exit;
+	bool exit;
 	int xp, yp, cnt, m, n;
 
 	cnt = 0;
@@ -871,7 +849,7 @@ void AddStoryBooks()
 {
 	int xp, yp, xx, yy;
 	int cnt;
-	DIABOOL done;
+	bool done;
 
 	cnt = 0;
 	done = FALSE;
@@ -960,7 +938,7 @@ void AddLazStand()
 {
 	int xp, yp, xx, yy;
 	int cnt;
-	DIABOOL found;
+	bool found;
 
 	cnt = 0;
 	found = FALSE;
@@ -1044,11 +1022,9 @@ void InitObjects()
 			if (QuestStatus(Q_LTBANNER))
 				AddObject(OBJ_SIGNCHEST, 2 * setpc_x + 26, 2 * setpc_y + 19);
 			InitRndLocBigObj(10, 15, OBJ_SARC);
-#ifdef HELLFIRE
 			if (currlevel >= 21)
 				add_crypt_objs(0, 0, MAXDUNX, MAXDUNY);
 			else
-#endif
 				AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
 			InitRndBarrels();
 		}
@@ -1375,14 +1351,12 @@ void AddTrap(int i, int ot)
 	int mt;
 
 	mt = currlevel / 3 + 1;
-#ifdef HELLFIRE
 	if (currlevel > 16) {
 		mt = (currlevel - 4) / 3 + 1;
 	}
 	if (currlevel > 20) {
 		mt = (currlevel - 8) / 3 + 1;
 	}
-#endif
 	mt = random_(148, mt);
 	if (mt == 0)
 		object[i]._oVar3 = MIS_ARROW;
@@ -1417,7 +1391,7 @@ void AddBarrel(int i, int t)
 void AddShrine(int i)
 {
 	int val;
-	DIABOOL slist[NUM_SHRINETYPE];
+	bool slist[NUM_SHRINETYPE];
 	int j;
 	object[i]._oPreFlag = TRUE;
 	for (j = 0; j < NUM_SHRINETYPE; j++) {
@@ -1578,7 +1552,7 @@ void AddTorturedBody(int i)
 
 void GetRndObjLoc(int randarea, int *xx, int *yy)
 {
-	DIABOOL failed;
+	bool failed;
 	int i, j, tries;
 
 	if (randarea == 0)
@@ -1865,16 +1839,13 @@ void AddObject(int ot, int ox, int oy)
 void Obj_Light(int i, int lr)
 {
 	int ox, oy, dx, dy, p, tr;
-	DIABOOL turnon;
+	bool turnon;
 
 	turnon = FALSE;
 	if (object[i]._oVar1 != -1) {
 		ox = object[i]._ox;
 		oy = object[i]._oy;
 		tr = lr + 10;
-#ifndef HELLFIRE
-		turnon = FALSE;
-#endif
 		if (!lightflag) {
 			for (p = 0; p < MAX_PLRS && !turnon; p++) {
 				if (plr[p].plractive) {
@@ -1950,7 +1921,7 @@ void Obj_StopAnim(int i)
 void Obj_Door(int i)
 {
 	int dx, dy;
-	DIABOOL dok;
+	bool dok;
 
 	if (object[i]._oVar4 == 0) {
 		object[i]._oSelFlag = 3;
@@ -1959,9 +1930,9 @@ void Obj_Door(int i)
 		dx = object[i]._ox;
 		dy = object[i]._oy;
 		dok = dMonster[dx][dy] == 0;
-		dok = dok HFAND(dItem[dx][dy] == 0);
-		dok = dok HFAND(dDead[dx][dy] == 0);
-		dok = dok HFAND(dPlayer[dx][dy] == 0);
+		dok = dok && dItem[dx][dy] == 0;
+		dok = dok && dDead[dx][dy] == 0;
+		dok = dok && dPlayer[dx][dy] == 0;
 		object[i]._oSelFlag = 2;
 		object[i]._oVar4 = dok ? 1 : 2;
 		object[i]._oMissFlag = TRUE;
@@ -2365,9 +2336,7 @@ void DoorSet(int oi, int dx, int dy)
 	int pn;
 
 	pn = dPiece[dx][dy];
-#ifdef HELLFIRE
 	if (currlevel < 17) {
-#endif
 		if (pn == 43)
 			ObjSetMicro(dx, dy, 392);
 		if (pn == 45)
@@ -2402,7 +2371,6 @@ void DoorSet(int oi, int dx, int dy)
 			ObjSetMicro(dx, dy, 396);
 		if (pn == 412)
 			ObjSetMicro(dx, dy, 396);
-#ifdef HELLFIRE
 	} else {
 		if (pn == 75)
 			ObjSetMicro(dx, dy, 204);
@@ -2435,7 +2403,6 @@ void DoorSet(int oi, int dx, int dy)
 		if (pn == 234)
 			ObjSetMicro(dx, dy, 212);
 	}
-#endif
 }
 
 void RedoPlayerVision()
@@ -2449,7 +2416,7 @@ void RedoPlayerVision()
 	}
 }
 
-void OperateL1RDoor(int pnum, int oi, DIABOOL sendflag)
+void OperateL1RDoor(int pnum, int oi, bool sendflag)
 {
 	int xp, yp;
 
@@ -2464,17 +2431,13 @@ void OperateL1RDoor(int pnum, int oi, DIABOOL sendflag)
 	if (object[oi]._oVar4 == 0) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(TRUE, CMD_OPENDOOR, oi);
-#ifdef HELLFIRE
 		if (currlevel < 21) {
 			if (!deltaload)
 				PlaySfxLoc(IS_DOOROPEN, object[oi]._ox, object[oi]._oy);
+			ObjSetMicro(xp, yp, 395);
 		} else {
 			if (!deltaload)
 				PlaySfxLoc(IS_CROPEN, object[oi]._ox, object[oi]._oy);
-		}
-		if (currlevel < 21) {
-			ObjSetMicro(xp, yp, 395);
-		} else {
 			ObjSetMicro(xp, yp, 209);
 		}
 		if (currlevel < 17) {
@@ -2482,12 +2445,6 @@ void OperateL1RDoor(int pnum, int oi, DIABOOL sendflag)
 		} else {
 			dSpecial[xp][yp] = 2;
 		}
-#else
-		if (!deltaload)
-			PlaySfxLoc(IS_DOOROPEN, object[oi]._ox, object[oi]._oy);
-		ObjSetMicro(xp, yp, 395);
-		dSpecial[xp][yp] = 8;
-#endif
 		objects_set_door_piece(xp, yp - 1);
 		object[oi]._oAnimFrame += 2;
 		object[oi]._oPreFlag = TRUE;
@@ -2498,7 +2455,6 @@ void OperateL1RDoor(int pnum, int oi, DIABOOL sendflag)
 		return;
 	}
 
-#ifdef HELLFIRE
 	if (currlevel < 21) {
 		if (!deltaload)
 			PlaySfxLoc(IS_DOORCLOS, xp, object[oi]._oy);
@@ -2506,13 +2462,13 @@ void OperateL1RDoor(int pnum, int oi, DIABOOL sendflag)
 		if (!deltaload)
 			PlaySfxLoc(IS_CRCLOS, xp, object[oi]._oy);
 	}
+#ifdef HELLFIRE
 	BOOLEAN dok = dMonster[xp][yp] == 0;
 	dok = dok && dItem[xp][yp] == 0;
 	dok = dok && dDead[xp][yp] == 0;
 	if (dok) {
 #else
 	if (!deltaload)
-		PlaySfxLoc(IS_DOORCLOS, xp, object[oi]._oy);
 	if (((dDead[xp][yp] != 0 ? 0 : 1) & (dMonster[xp][yp] != 0 ? 0 : 1) & (dItem[xp][yp] != 0 ? 0 : 1)) != 0) {
 #endif
 		if (pnum == myplr && sendflag)
@@ -2520,9 +2476,7 @@ void OperateL1RDoor(int pnum, int oi, DIABOOL sendflag)
 		object[oi]._oVar4 = 0;
 		object[oi]._oSelFlag = 3;
 		ObjSetMicro(xp, yp, object[oi]._oVar1);
-#ifdef HELLFIRE
 		if (currlevel < 17) {
-#endif
 			if (object[oi]._oVar2 != 50) {
 				ObjSetMicro(xp - 1, yp, object[oi]._oVar2);
 			} else {
@@ -2531,7 +2485,6 @@ void OperateL1RDoor(int pnum, int oi, DIABOOL sendflag)
 				else
 					ObjSetMicro(xp - 1, yp, 50);
 			}
-#ifdef HELLFIRE
 		} else {
 			if (object[oi]._oVar2 != 86) {
 				ObjSetMicro(xp - 1, yp, object[oi]._oVar2);
@@ -2542,7 +2495,6 @@ void OperateL1RDoor(int pnum, int oi, DIABOOL sendflag)
 					ObjSetMicro(xp - 1, yp, 86);
 			}
 		}
-#endif
 		object[oi]._oAnimFrame -= 2;
 		object[oi]._oPreFlag = FALSE;
 		RedoPlayerVision();
@@ -2551,7 +2503,7 @@ void OperateL1RDoor(int pnum, int oi, DIABOOL sendflag)
 	}
 }
 
-void OperateL1LDoor(int pnum, int oi, DIABOOL sendflag)
+void OperateL1LDoor(int pnum, int oi, bool sendflag)
 {
 	int xp, yp;
 
@@ -2566,20 +2518,16 @@ void OperateL1LDoor(int pnum, int oi, DIABOOL sendflag)
 	if (object[oi]._oVar4 == 0) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(TRUE, CMD_OPENDOOR, oi);
-#ifdef HELLFIRE
 		if (currlevel < 21) {
 			if (!deltaload)
 				PlaySfxLoc(IS_DOOROPEN, object[oi]._ox, object[oi]._oy);
-		} else {
-			if (!deltaload)
-				PlaySfxLoc(IS_CROPEN, object[oi]._ox, object[oi]._oy);
-		}
-		if (currlevel < 21) {
 			if (object[oi]._oVar1 == 214)
 				ObjSetMicro(xp, yp, 408);
 			else
 				ObjSetMicro(xp, yp, 393);
 		} else {
+			if (!deltaload)
+				PlaySfxLoc(IS_CROPEN, object[oi]._ox, object[oi]._oy);
 			ObjSetMicro(xp, yp, 206);
 		}
 		if (currlevel < 17) {
@@ -2587,15 +2535,6 @@ void OperateL1LDoor(int pnum, int oi, DIABOOL sendflag)
 		} else {
 			dSpecial[xp][yp] = 1;
 		}
-#else
-		if (!deltaload)
-			PlaySfxLoc(IS_DOOROPEN, object[oi]._ox, object[oi]._oy);
-		if (object[oi]._oVar1 == 214)
-			ObjSetMicro(xp, yp, 408);
-		else
-			ObjSetMicro(xp, yp, 393);
-		dSpecial[xp][yp] = 7;
-#endif
 		objects_set_door_piece(xp - 1, yp);
 		object[oi]._oAnimFrame += 2;
 		object[oi]._oPreFlag = TRUE;
@@ -2606,7 +2545,6 @@ void OperateL1LDoor(int pnum, int oi, DIABOOL sendflag)
 		return;
 	}
 
-#ifdef HELLFIRE
 	if (currlevel < 21) {
 		if (!deltaload)
 			PlaySfxLoc(IS_DOORCLOS, xp, object[oi]._oy);
@@ -2614,13 +2552,12 @@ void OperateL1LDoor(int pnum, int oi, DIABOOL sendflag)
 		if (!deltaload)
 			PlaySfxLoc(IS_CRCLOS, xp, object[oi]._oy);
 	}
+#ifdef HELLFIRE
 	BOOLEAN dok = dMonster[xp][yp] == 0;
 	dok = dok && dItem[xp][yp] == 0;
 	dok = dok && dDead[xp][yp] == 0;
 	if (dok) {
 #else
-	if (!deltaload)
-		PlaySfxLoc(IS_DOORCLOS, xp, object[oi]._oy);
 	if (((dDead[xp][yp] != 0 ? 0 : 1) & (dMonster[xp][yp] != 0 ? 0 : 1) & (dItem[xp][yp] != 0 ? 0 : 1)) != 0) {
 #endif
 		if (pnum == myplr && sendflag)
@@ -2628,9 +2565,7 @@ void OperateL1LDoor(int pnum, int oi, DIABOOL sendflag)
 		object[oi]._oVar4 = 0;
 		object[oi]._oSelFlag = 3;
 		ObjSetMicro(xp, yp, object[oi]._oVar1);
-#ifdef HELLFIRE
 		if (currlevel < 17) {
-#endif
 			if (object[oi]._oVar2 != 50) {
 				ObjSetMicro(xp, yp - 1, object[oi]._oVar2);
 			} else {
@@ -2639,7 +2574,6 @@ void OperateL1LDoor(int pnum, int oi, DIABOOL sendflag)
 				else
 					ObjSetMicro(xp, yp - 1, 50);
 			}
-#ifdef HELLFIRE
 		} else {
 			if (object[oi]._oVar2 != 86) {
 				ObjSetMicro(xp, yp - 1, object[oi]._oVar2);
@@ -2650,7 +2584,6 @@ void OperateL1LDoor(int pnum, int oi, DIABOOL sendflag)
 					ObjSetMicro(xp, yp - 1, 86);
 			}
 		}
-#endif
 		object[oi]._oAnimFrame -= 2;
 		object[oi]._oPreFlag = FALSE;
 		RedoPlayerVision();
@@ -2659,10 +2592,10 @@ void OperateL1LDoor(int pnum, int oi, DIABOOL sendflag)
 	}
 }
 
-void OperateL2RDoor(int pnum, int oi, DIABOOL sendflag)
+void OperateL2RDoor(int pnum, int oi, bool sendflag)
 {
 	int xp, yp;
-	DIABOOL dok;
+	bool dok;
 
 	if (object[oi]._oVar4 == 2) {
 		if (!deltaload)
@@ -2688,8 +2621,8 @@ void OperateL2RDoor(int pnum, int oi, DIABOOL sendflag)
 	if (!deltaload)
 		PlaySfxLoc(IS_DOORCLOS, object[oi]._ox, yp);
 	dok = dMonster[xp][yp] == 0;
-	dok = dok HFAND(dItem[xp][yp] == 0);
-	dok = dok HFAND(dDead[xp][yp] == 0);
+	dok = dok && dItem[xp][yp] == 0;
+	dok = dok && dDead[xp][yp] == 0;
 	if (dok) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(TRUE, CMD_CLOSEDOOR, oi);
@@ -2707,7 +2640,7 @@ void OperateL2RDoor(int pnum, int oi, DIABOOL sendflag)
 void OperateL2LDoor(int pnum, int oi, BOOL sendflag)
 {
 	int xp, yp;
-	DIABOOL dok;
+	bool dok;
 
 	if (object[oi]._oVar4 == 2) {
 		if (!deltaload)
@@ -2733,8 +2666,8 @@ void OperateL2LDoor(int pnum, int oi, BOOL sendflag)
 	if (!deltaload)
 		PlaySfxLoc(IS_DOORCLOS, object[oi]._ox, yp);
 	dok = dMonster[xp][yp] == 0;
-	dok = dok HFAND(dItem[xp][yp] == 0);
-	dok = dok HFAND(dDead[xp][yp] == 0);
+	dok = dok && dItem[xp][yp] == 0;
+	dok = dok && dDead[xp][yp] == 0;
 	if (dok) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(TRUE, CMD_CLOSEDOOR, oi);
@@ -2749,10 +2682,10 @@ void OperateL2LDoor(int pnum, int oi, BOOL sendflag)
 	}
 }
 
-void OperateL3RDoor(int pnum, int oi, DIABOOL sendflag)
+void OperateL3RDoor(int pnum, int oi, bool sendflag)
 {
 	int xp, yp;
-	DIABOOL dok;
+	bool dok;
 
 	if (object[oi]._oVar4 == 2) {
 		if (!deltaload)
@@ -2779,8 +2712,8 @@ void OperateL3RDoor(int pnum, int oi, DIABOOL sendflag)
 	if (!deltaload)
 		PlaySfxLoc(IS_DOORCLOS, object[oi]._ox, yp);
 	dok = dMonster[xp][yp] == 0;
-	dok = dok HFAND(dItem[xp][yp] == 0);
-	dok = dok HFAND(dDead[xp][yp] == 0);
+	dok = dok && dItem[xp][yp] == 0;
+	dok = dok && dDead[xp][yp] == 0;
 	if (dok) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(TRUE, CMD_CLOSEDOOR, oi);
@@ -2795,10 +2728,10 @@ void OperateL3RDoor(int pnum, int oi, DIABOOL sendflag)
 	}
 }
 
-void OperateL3LDoor(int pnum, int oi, DIABOOL sendflag)
+void OperateL3LDoor(int pnum, int oi, bool sendflag)
 {
 	int xp, yp;
-	DIABOOL dok;
+	bool dok;
 
 	if (object[oi]._oVar4 == 2) {
 		if (!deltaload)
@@ -2825,8 +2758,8 @@ void OperateL3LDoor(int pnum, int oi, DIABOOL sendflag)
 	if (!deltaload)
 		PlaySfxLoc(IS_DOORCLOS, object[oi]._ox, yp);
 	dok = dMonster[xp][yp] == 0;
-	dok = dok HFAND(dItem[xp][yp] == 0);
-	dok = dok HFAND(dDead[xp][yp] == 0);
+	dok = dok && dItem[xp][yp] == 0;
+	dok = dok && dDead[xp][yp] == 0;
 	if (dok) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(TRUE, CMD_CLOSEDOOR, oi);
@@ -2896,11 +2829,7 @@ void ObjChangeMap(int x1, int y1, int x2, int y2)
 			dungeon[i][j] = pdungeon[i][j];
 		}
 	}
-#ifdef HELLFIRE
 	if (leveltype == DTYPE_CATHEDRAL && currlevel < 17) {
-#else
-	if (leveltype == DTYPE_CATHEDRAL) {
-#endif
 		ObjL1Special(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
 		AddL1Objs(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
 	}
@@ -2920,11 +2849,7 @@ void ObjChangeMapResync(int x1, int y1, int x2, int y2)
 			dungeon[i][j] = pdungeon[i][j];
 		}
 	}
-#ifdef HELLFIRE
 	if (leveltype == DTYPE_CATHEDRAL && currlevel < 17) {
-#else
-	if (leveltype == DTYPE_CATHEDRAL) {
-#endif
 		ObjL1Special(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
 	}
 	if (leveltype == DTYPE_CATACOMBS) {
@@ -2932,7 +2857,7 @@ void ObjChangeMapResync(int x1, int y1, int x2, int y2)
 	}
 }
 
-void OperateL1Door(int pnum, int i, DIABOOL sendflag)
+void OperateL1Door(int pnum, int i, bool sendflag)
 {
 	int dpx, dpy;
 
@@ -2947,7 +2872,7 @@ void OperateL1Door(int pnum, int i, DIABOOL sendflag)
 void OperateLever(int pnum, int i)
 {
 	int j, oi;
-	DIABOOL mapflag;
+	bool mapflag;
 
 	if (object[i]._oSelFlag != 0) {
 		if (!deltaload)
@@ -2983,7 +2908,7 @@ void OperateBook(int pnum, int i)
 	int j, oi;
 	int dx, dy;
 	int otype;
-	DIABOOL do_add_missile, missile_added;
+	bool do_add_missile, missile_added;
 
 	if (object[i]._oSelFlag == 0)
 		return;
@@ -3130,7 +3055,7 @@ void OperateSChambBk(int pnum, int i)
 	}
 }
 
-void OperateChest(int pnum, int i, DIABOOL sendmsg)
+void OperateChest(int pnum, int i, bool sendmsg)
 {
 	int j, mdir, mtype;
 
@@ -3165,7 +3090,6 @@ void OperateChest(int pnum, int i, DIABOOL sendmsg)
 				case 2:
 					mtype = MIS_NOVA;
 					break;
-#ifdef HELLFIRE
 				case 3:
 					mtype = MIS_FIRERING;
 					break;
@@ -3177,7 +3101,6 @@ void OperateChest(int pnum, int i, DIABOOL sendmsg)
 					break;
 				default:
 					mtype = MIS_ARROW;
-#endif
 				}
 				AddMissile(object[i]._ox, object[i]._oy, plr[pnum]._px, plr[pnum]._py, mdir, mtype, TARGET_PLAYERS, -1, 0, 0);
 				object[i]._oTrapFlag = FALSE;
@@ -3262,7 +3185,7 @@ void OperateInnSignChest(int pnum, int i)
 	}
 }
 
-void OperateSlainHero(int pnum, int i, DIABOOL sendmsg)
+void OperateSlainHero(int pnum, int i, bool sendmsg)
 {
 	if (object[i]._oSelFlag != 0) {
 		object[i]._oSelFlag = 0;
@@ -3327,7 +3250,7 @@ void OperateTrapLvr(int i)
 	}
 }
 
-void OperateSarc(int pnum, int i, DIABOOL sendmsg)
+void OperateSarc(int pnum, int i, bool sendmsg)
 {
 	if (object[i]._oSelFlag != 0) {
 		if (!deltaload)
@@ -3349,7 +3272,7 @@ void OperateSarc(int pnum, int i, DIABOOL sendmsg)
 	}
 }
 
-void OperateL2Door(int pnum, int i, DIABOOL sendflag)
+void OperateL2Door(int pnum, int i, bool sendflag)
 {
 	int dpx, dpy;
 
@@ -3361,7 +3284,7 @@ void OperateL2Door(int pnum, int i, DIABOOL sendflag)
 		OperateL2RDoor(pnum, i, sendflag);
 }
 
-void OperateL3Door(int pnum, int i, DIABOOL sendflag)
+void OperateL3Door(int pnum, int i, bool sendflag)
 {
 	int dpx, dpy;
 
@@ -3410,7 +3333,7 @@ void OperatePedistal(int pnum, int i)
 void TryDisarm(int pnum, int i)
 {
 	int j, oi, oti, trapdisper;
-	DIABOOL checkflag;
+	bool checkflag;
 
 	if (pnum == myplr)
 		SetCursor_(CURSOR_HAND);
@@ -4226,7 +4149,7 @@ void OperateShrine(int pnum, int i, int sType)
 		NetSendCmdParam2(FALSE, CMD_PLROPOBJ, pnum, i);
 }
 
-void OperateSkelBook(int pnum, int i, DIABOOL sendmsg)
+void OperateSkelBook(int pnum, int i, bool sendmsg)
 {
 	if (object[i]._oSelFlag != 0) {
 		if (!deltaload)
@@ -4245,7 +4168,7 @@ void OperateSkelBook(int pnum, int i, DIABOOL sendmsg)
 	}
 }
 
-void OperateBookCase(int pnum, int i, DIABOOL sendmsg)
+void OperateBookCase(int pnum, int i, bool sendmsg)
 {
 	if (object[i]._oSelFlag != 0) {
 		if (!deltaload)
@@ -4270,7 +4193,7 @@ void OperateBookCase(int pnum, int i, DIABOOL sendmsg)
 	}
 }
 
-void OperateDecap(int pnum, int i, DIABOOL sendmsg)
+void OperateDecap(int pnum, int i, bool sendmsg)
 {
 	if (object[i]._oSelFlag != 0) {
 		object[i]._oSelFlag = 0;
@@ -4283,7 +4206,7 @@ void OperateDecap(int pnum, int i, DIABOOL sendmsg)
 	}
 }
 
-void OperateArmorStand(int pnum, int i, DIABOOL sendmsg)
+void OperateArmorStand(int pnum, int i, bool sendmsg)
 {
 	BOOL uniqueRnd;
 
@@ -4301,10 +4224,8 @@ void OperateArmorStand(int pnum, int i, DIABOOL sendmsg)
 				CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, ITYPE_HARMOR, IMISC_NONE, sendmsg, FALSE);
 			} else if (currlevel >= 13 && currlevel <= 16) {
 				CreateTypeItem(object[i]._ox, object[i]._oy, TRUE, ITYPE_HARMOR, IMISC_NONE, sendmsg, FALSE);
-#ifdef HELLFIRE
 			} else if (currlevel >= 17) {
 				CreateTypeItem(object[i]._ox, object[i]._oy, TRUE, ITYPE_HARMOR, IMISC_NONE, sendmsg, FALSE);
-#endif
 			}
 			if (pnum == myplr)
 				NetSendCmdParam1(FALSE, CMD_OPERATEOBJ, i);
@@ -4316,7 +4237,7 @@ void OperateArmorStand(int pnum, int i, DIABOOL sendmsg)
 int FindValidShrine(int i)
 {
 	int rv;
-	DIABOOL done;
+	bool done;
 
 	done = FALSE;
 	do {
@@ -4362,10 +4283,10 @@ void OperateCauldron(int pnum, int i, int sType)
 	force_redraw = 255;
 }
 
-DIABOOL OperateFountains(int pnum, int i)
+bool OperateFountains(int pnum, int i)
 {
 	int prev, add, rnd, cnt;
-	DIABOOL applied;
+	bool applied;
 	BOOL done;
 
 	applied = FALSE;
@@ -4482,7 +4403,7 @@ DIABOOL OperateFountains(int pnum, int i)
 	return applied;
 }
 
-void OperateWeaponRack(int pnum, int i, DIABOOL sendmsg)
+void OperateWeaponRack(int pnum, int i, bool sendmsg)
 {
 	int weaponType;
 
@@ -4681,7 +4602,7 @@ void OperateObject(int pnum, int i, BOOL TeleFlag)
 
 void SyncOpL1Door(int pnum, int cmd, int i)
 {
-	DIABOOL do_sync;
+	bool do_sync;
 
 	if (pnum == myplr)
 		return;
@@ -4702,7 +4623,7 @@ void SyncOpL1Door(int pnum, int cmd, int i)
 
 void SyncOpL2Door(int pnum, int cmd, int i)
 {
-	DIABOOL do_sync;
+	bool do_sync;
 
 	if (pnum == myplr)
 		return;
@@ -4723,7 +4644,7 @@ void SyncOpL2Door(int pnum, int cmd, int i)
 
 void SyncOpL3Door(int pnum, int cmd, int i)
 {
-	DIABOOL do_sync;
+	bool do_sync;
 
 	if (pnum == myplr)
 		return;
@@ -4831,7 +4752,7 @@ void SyncOpObject(int pnum, int cmd, int i)
 void BreakCrux(int i)
 {
 	int j, oi;
-	DIABOOL triggered;
+	bool triggered;
 
 	object[i]._oAnimFlag = 1;
 	object[i]._oAnimFrame = 1;
@@ -4895,13 +4816,11 @@ void BreakBarrel(int pnum, int i, int dam, BOOL forcebreak, BOOL sendmsg)
 	}
 
 	if (object[i]._otype == OBJ_BARRELEX) {
-#ifdef HELLFIRE
 		if (currlevel >= 21 && currlevel <= 24)
 			PlaySfxLoc(IS_POPPOP3, object[i]._ox, object[i]._oy);
 		else if (currlevel >= 17 && currlevel <= 20)
 			PlaySfxLoc(IS_POPPOP8, object[i]._ox, object[i]._oy);
 		else
-#endif
 			PlaySfxLoc(IS_BARLFIRE, object[i]._ox, object[i]._oy);
 		for (yp = object[i]._oy - 1; yp <= object[i]._oy + 1; yp++) {
 			for (xp = object[i]._ox - 1; xp <= object[i]._ox + 1; xp++) {
@@ -4918,13 +4837,11 @@ void BreakBarrel(int pnum, int i, int dam, BOOL forcebreak, BOOL sendmsg)
 			}
 		}
 	} else {
-#ifdef HELLFIRE
 		if (currlevel >= 21 && currlevel <= 24)
 			PlaySfxLoc(IS_POPPOP2, object[i]._ox, object[i]._oy);
 		else if (currlevel >= 17 && currlevel <= 20)
 			PlaySfxLoc(IS_POPPOP5, object[i]._ox, object[i]._oy);
 		else
-#endif
 			PlaySfxLoc(IS_BARREL, object[i]._ox, object[i]._oy);
 		SetRndSeed(object[i]._oRndSeed);
 		if (object[i]._oVar2 <= 1) {
@@ -4987,9 +4904,7 @@ void SyncL1Doors(int i)
 	x = object[i]._ox;
 	y = object[i]._oy;
 	object[i]._oSelFlag = 2;
-#ifdef HELLFIRE
 	if (currlevel < 17) {
-#endif
 		if (object[i]._otype == OBJ_L1LDOOR) {
 			if (object[i]._oVar1 == 214)
 				ObjSetMicro(x, y, 408);
@@ -5000,14 +4915,11 @@ void SyncL1Doors(int i)
 			y--;
 		} else {
 			ObjSetMicro(x, y, 395);
-#ifdef HELLFIRE
 			if (currlevel < 17)
-#endif
 				dSpecial[x][y] = 8;
 			objects_set_door_piece(x, y - 1);
 			x--;
 		}
-#ifdef HELLFIRE
 	} else {
 		if (object[i]._otype == OBJ_L1LDOOR) {
 			ObjSetMicro(x, y, 206);
@@ -5021,13 +4933,12 @@ void SyncL1Doors(int i)
 			x--;
 		}
 	}
-#endif
 	DoorSet(i, x, y);
 }
 
 void SyncCrux(int i)
 {
-	DIABOOL found;
+	bool found;
 	int j, oi, type;
 
 	found = TRUE;
@@ -5364,7 +5275,7 @@ void objects_rnd_454BEA()
 	AddObject(OBJ_LEVER, UberRow + 3, UberCol - 1);
 }
 
-DIABOOL objects_lv_24_454B04(int s)
+bool objects_lv_24_454B04(int s)
 {
 	switch (s) {
 	case 6:

@@ -572,13 +572,8 @@ static WORD GetAutomapType(int x, int y, BOOL view)
 
 	rv = automaptype[(BYTE)dungeon[x][y]];
 	if (rv == 7) {
-#ifdef HELLFIRE
-		if ((BYTE)(GetAutomapType(x - 1, y, FALSE) >> 8) & MAPFLAG_HORZARCH) {
-			if ((BYTE)(GetAutomapType(x, y - 1, FALSE) >> 8) & MAPFLAG_VERTARCH) {
-#else
 		if ((GetAutomapType(x - 1, y, FALSE) >> 8) & MAPFLAG_HORZARCH) {
 			if ((GetAutomapType(x, y - 1, FALSE) >> 8) & MAPFLAG_VERTARCH) {
-#endif
 				rv = 1;
 			}
 		}

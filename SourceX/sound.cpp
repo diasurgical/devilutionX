@@ -35,10 +35,8 @@ const char *const sgszSpawnMusicTracks[NUM_MUSIC] = {
 	"Music\\sLvlA.wav",
 	"Music\\sLvlA.wav",
 	"Music\\sLvlA.wav",
-#ifdef HELLFIRE
-	"Music\\sLvlA.wav",
-	"Music\\sLvlA.wav",
-#endif
+	"Music\\DLvlE.wav",
+	"Music\\DLvlF.wav",
 	"Music\\sintro.wav",
 };
 /** Maps from track ID to track name. */
@@ -48,10 +46,8 @@ const char *const sgszMusicTracks[NUM_MUSIC] = {
 	"Music\\DLvlB.wav",
 	"Music\\DLvlC.wav",
 	"Music\\DLvlD.wav",
-#ifdef HELLFIRE
 	"Music\\DLvlE.wav",
 	"Music\\DLvlF.wav",
-#endif
 	"Music\\Dintro.wav",
 };
 

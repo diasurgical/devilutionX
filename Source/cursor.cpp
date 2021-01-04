@@ -111,9 +111,8 @@ void InitCursor()
 {
 	assert(!pCursCels);
 	pCursCels = LoadFileInMem("Data\\Inv\\Objcurs.CEL", NULL);
-#ifdef HELLFIRE
-	pCursCels2 = LoadFileInMem("Data\\Inv\\Objcurs2.CEL", NULL);
-#endif
+	if (gbIsHellfire)
+		pCursCels2 = LoadFileInMem("Data\\Inv\\Objcurs2.CEL", NULL);
 	ClearCursor();
 }
 

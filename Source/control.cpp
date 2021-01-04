@@ -401,11 +401,7 @@ void DrawSpellList()
 					pSplType = RSPLTYPE_SKILL;
 #endif
 				DrawSpellCel(x, y, pSpellCels, c, SPLICONLENGTH);
-#ifdef HELLFIRE
 				switch (pSplType) {
-#else
-				switch (i) {
-#endif
 				case RSPLTYPE_SKILL:
 					sprintf(infostr, "%s Skill", spelldata[pSpell].sSkillText);
 					break;
@@ -813,11 +809,10 @@ void InitControlPan()
 	memset(pLifeBuff, 0, 88 * 88);
 	pPanelText = LoadFileInMem("CtrlPan\\SmalText.CEL", NULL);
 	pChrPanel = LoadFileInMem("Data\\Char.CEL", NULL);
-#ifndef HELLFIRE
-	pSpellCels = LoadFileInMem("CtrlPan\\SpelIcon.CEL", NULL);
-#else
-	pSpellCels = LoadFileInMem("Data\\SpelIcon.CEL", NULL);
-#endif
+	if (!gbIsHellfire)
+		pSpellCels = LoadFileInMem("CtrlPan\\SpelIcon.CEL", NULL);
+	else
+		pSpellCels = LoadFileInMem("Data\\SpelIcon.CEL", NULL);
 	SetSpellTrans(RSPLTYPE_SKILL);
 	pStatusPanel = LoadFileInMem("CtrlPan\\Panel8.CEL", NULL);
 	CelBlitWidth(pBtmBuff, 0, (PANEL_HEIGHT + 16) - 1, PANEL_WIDTH, pStatusPanel, 1, PANEL_WIDTH);
@@ -1362,11 +1357,7 @@ void DrawInfoBox()
 			infoclr = COL_GOLD;
 			strcpy(infostr, plr[pcursplr]._pName);
 			ClearPanel();
-#ifdef HELLFIRE
 			sprintf(tempstr, "%s, Level : %i", ClassStrTbl[plr[pcursplr]._pClass], plr[pcursplr]._pLevel);
-#else
-			sprintf(tempstr, "Level : %i", plr[pcursplr]._pLevel);
-#endif
 			AddPanelString(tempstr, TRUE);
 			sprintf(tempstr, "Hit Points %i of %i", plr[pcursplr]._pHitPoints >> 6, plr[pcursplr]._pMaxHP >> 6);
 			AddPanelString(tempstr, TRUE);
@@ -1442,17 +1433,7 @@ void DrawChr()
 	CelDraw(SCREEN_X, 351 + SCREEN_Y, pChrPanel, 1, SPANEL_WIDTH);
 	ADD_PlrStringXY(20, 32, 151, plr[myplr]._pName, COL_WHITE);
 
-#ifdef HELLFIRE
 	ADD_PlrStringXY(168, 32, 299, ClassStrTbl[plr[myplr]._pClass], COL_WHITE);
-#else
-	if (plr[myplr]._pClass == PC_WARRIOR) {
-		ADD_PlrStringXY(168, 32, 299, "Warrior", COL_WHITE);
-	} else if (plr[myplr]._pClass == PC_ROGUE) {
-		ADD_PlrStringXY(168, 32, 299, "Rogue", COL_WHITE);
-	} else if (plr[myplr]._pClass == PC_SORCERER) {
-		ADD_PlrStringXY(168, 32, 299, "Sorceror", COL_WHITE);
-	}
-#endif
 
 	sprintf(chrstr, "%i", plr[myplr]._pLevel);
 	ADD_PlrStringXY(66, 69, 109, chrstr, COL_WHITE);
@@ -1996,11 +1977,7 @@ void CheckSBook()
 		}
 	}
 	if (MouseX >= RIGHT_PANEL + 7 && MouseX < RIGHT_PANEL + 311 && MouseY >= SPANEL_WIDTH && MouseY < 349) {
-#ifdef HELLFIRE
-		sbooktab = (MouseX - (RIGHT_PANEL + 7)) / 61;
-#else
-		sbooktab = (MouseX - (RIGHT_PANEL + 7)) / 76;
-#endif
+		sbooktab = (MouseX - (RIGHT_PANEL + 7)) / (gbIsHellfire ? 61 : 76);
 	}
 }
 
@@ -2247,7 +2224,6 @@ void control_release_talk_btn()
 	}
 }
 
-#ifndef HELLFIRE
 void control_reset_talk_msg(char *msg)
 {
 	int i, pmask;
@@ -2259,7 +2235,6 @@ void control_reset_talk_msg(char *msg)
 	}
 	NetSendCmdString(pmask, sgszTalkMsg);
 }
-#endif
 
 void control_type_message()
 {
