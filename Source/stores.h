@@ -17,11 +17,7 @@ extern ItemStruct premiumitem[SMITH_PREMIUM_ITEMS];
 extern BYTE *pSTextBoxCels;
 extern int premiumlevel;
 extern int talker;
-#ifdef HELLFIRE
-extern ItemStruct witchitem[25];
-#else
-extern ItemStruct witchitem[20];
-#endif
+extern ItemStruct witchitem[WITCH_ITEMS];
 extern int numpremium;
 extern ItemStruct healitem[20];
 extern ItemStruct golditem;

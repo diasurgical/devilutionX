@@ -17,6 +17,8 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+#define INDEX_ENTRIES 2048
+
 // Amiga cannot seekp beyond EOF.
 // See https://github.com/bebbo/libnix/issues/30
 #ifndef __AMIGA__
@@ -167,8 +169,8 @@ private:
 	std::unique_ptr<std::fstream> s_;
 };
 
-constexpr std::size_t kBlockEntrySize = 0x8000;
-constexpr std::size_t kHashEntrySize = 0x8000;
+constexpr std::size_t kBlockEntrySize = INDEX_ENTRIES * sizeof(_BLOCKENTRY);
+constexpr std::size_t kHashEntrySize = INDEX_ENTRIES * sizeof(_HASHENTRY);
 constexpr std::ios::off_type kMpqBlockEntryOffset = sizeof(_FILEHEADER);
 constexpr std::ios::off_type kMpqHashEntryOffset = kMpqBlockEntryOffset + kBlockEntrySize;
 
@@ -267,8 +269,8 @@ private:
 		fhdr.sectorsizeid = SDL_SwapLE16(3);
 		fhdr.hashoffset = SDL_SwapLE32(static_cast<uint32_t>(kMpqHashEntryOffset));
 		fhdr.blockoffset = SDL_SwapLE32(static_cast<uint32_t>(kMpqBlockEntryOffset));
-		fhdr.hashcount = SDL_SwapLE32(2048);
-		fhdr.blockcount = SDL_SwapLE32(2048);
+		fhdr.hashcount = SDL_SwapLE32(INDEX_ENTRIES);
+		fhdr.blockcount = SDL_SwapLE32(INDEX_ENTRIES);
 
 		if (!stream.write(reinterpret_cast<const char *>(&fhdr), sizeof(fhdr)))
 			return false;
@@ -327,8 +329,8 @@ bool IsValidMPQHeader(const Archive &archive, _FILEHEADER *hdr)
 	    && hdr->filesize == archive.size
 	    && hdr->hashoffset == kMpqHashEntryOffset
 	    && hdr->blockoffset == sizeof(_FILEHEADER)
-	    && hdr->hashcount == 2048
-	    && hdr->blockcount == 2048;
+	    && hdr->hashcount == INDEX_ENTRIES
+	    && hdr->blockcount == INDEX_ENTRIES;
 }
 
 bool ReadMPQHeader(Archive *archive, _FILEHEADER *hdr)
@@ -351,7 +353,7 @@ static _BLOCKENTRY *mpqapi_new_block(int *block_index)
 {
 	_BLOCKENTRY *blockEntry = cur_archive.sgpBlockTbl;
 
-	for (DWORD i = 0; i < 2048; i++, blockEntry++) {
+	for (DWORD i = 0; i < INDEX_ENTRIES; i++, blockEntry++) {
 		if (blockEntry->offset != 0)
 			continue;
 		if (blockEntry->sizealloc != 0)
@@ -377,7 +379,7 @@ void mpqapi_alloc_block(uint32_t block_offset, uint32_t block_size)
 	int i;
 
 	block = cur_archive.sgpBlockTbl;
-	i = 2048;
+	i = INDEX_ENTRIES;
 	while (i-- != 0) {
 		if (block->offset && !block->flags && !block->sizefile) {
 			if (block->offset + block->sizealloc == block_offset) {
@@ -415,7 +417,7 @@ int mpqapi_find_free_block(uint32_t size, uint32_t *block_size)
 	int result;
 
 	_BLOCKENTRY *pBlockTbl = cur_archive.sgpBlockTbl;
-	for (int i = 2048; i--; pBlockTbl++) {
+	for (int i = INDEX_ENTRIES; i--; pBlockTbl++) {
 		if (pBlockTbl->offset == 0)
 			continue;
 		if (pBlockTbl->flags != 0)
@@ -446,7 +448,7 @@ static int mpqapi_get_hash_index(int index, int hash_a, int hash_b, int locale)
 {
 	DWORD idx, i;
 
-	i = 2048;
+	i = INDEX_ENTRIES;
 	for (idx = index & 0x7FF; cur_archive.sgpHashTbl[idx].block != -1; idx = (idx + 1) & 0x7FF) {
 		if (i-- == 0)
 			break;
@@ -511,7 +513,7 @@ static _BLOCKENTRY *mpqapi_add_file(const char *pszName, _BLOCKENTRY *pBlk, int 
 	if (mpqapi_get_hash_index(h1, h2, h3, 0) != -1)
 		app_fatal("Hash collision between \"%s\" and existing file\n", pszName);
 	hIdx = h1 & 0x7FF;
-	i = 2048;
+	i = INDEX_ENTRIES;
 	while (i--) {
 		if (cur_archive.sgpHashTbl[hIdx].block == -1 || cur_archive.sgpHashTbl[hIdx].block == -2)
 			break;

@@ -21,11 +21,7 @@ char stextsize;
 int stextsmax;
 ItemStruct storehold[48];
 int gossipstart;
-#ifdef HELLFIRE
-ItemStruct witchitem[25];
-#else
-ItemStruct witchitem[20];
-#endif
+ItemStruct witchitem[WITCH_ITEMS];
 BOOL stextscrl;
 int numpremium;
 ItemStruct healitem[20];
@@ -71,7 +67,7 @@ void InitStores()
 	numpremium = 0;
 	premiumlevel = 1;
 
-	for (i = 0; i < 6; i++)
+	for (i = 0; i < SMITH_PREMIUM_ITEMS; i++)
 		premiumitem[i]._itype = ITYPE_NONE;
 
 	boyitem._itype = ITYPE_NONE;
@@ -547,7 +543,7 @@ BOOL S_StartSPBuy()
 	int i;
 
 	storenumh = 0;
-	for (i = 0; i < 6; i++) {
+	for (i = 0; i < SMITH_PREMIUM_ITEMS; i++) {
 		if (premiumitem[i]._itype != ITYPE_NONE)
 			storenumh++;
 	}

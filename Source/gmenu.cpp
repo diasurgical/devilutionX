@@ -15,7 +15,7 @@ BYTE *BigTGold_cel;
 int LogoAnim_tick;
 BYTE LogoAnim_frame;
 int PentSpin_tick;
-void (*dword_63447C)(TMenuItem *);
+void (*gmenu_current_option)(TMenuItem *);
 TMenuItem *sgpCurrentMenu;
 BYTE *option_cel;
 BYTE *sgpLogo;
@@ -87,7 +87,7 @@ void gmenu_init_menu()
 #endif
 	sgpCurrentMenu = NULL;
 	sgpCurrItem = NULL;
-	dword_63447C = NULL;
+	gmenu_current_option = NULL;
 	sgCurrentMenuIdx = 0;
 	mouseNavigation = FALSE;
 #ifdef HELLFIRE
@@ -143,9 +143,9 @@ void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)(TMenuItem *))
 	PauseMode = 0;
 	mouseNavigation = FALSE;
 	sgpCurrentMenu = pItem;
-	dword_63447C = gmFunc;
+	gmenu_current_option = gmFunc;
 	if (gmFunc) {
-		dword_63447C(sgpCurrentMenu);
+		gmenu_current_option(sgpCurrentMenu);
 		pItem = sgpCurrentMenu;
 	}
 	sgCurrentMenuIdx = 0;
@@ -229,8 +229,8 @@ void gmenu_draw()
 	DWORD ticks;
 
 	if (sgpCurrentMenu) {
-		if (dword_63447C)
-			dword_63447C(sgpCurrentMenu);
+		if (gmenu_current_option)
+			gmenu_current_option(sgpCurrentMenu);
 #ifdef HELLFIRE
 		ticks = SDL_GetTicks();
 		if ((int)(ticks - LogoAnim_tick) > 25) {

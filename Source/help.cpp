@@ -8,7 +8,7 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 int help_select_line;
-int dword_634494;
+int unused_help;
 BOOL helpflag;
 int displayinghelp[22]; /* check, does nothing? */
 int HelpTop;
@@ -445,7 +445,7 @@ const char gszHelpText[] = {
 void InitHelp()
 {
 	helpflag = FALSE;
-	dword_634494 = 0;
+	unused_help = 0;
 	displayinghelp[0] = 0;
 }
 

@@ -411,7 +411,7 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
 		}
 		run_game_loop(uMsg);
 		NetClose();
-		pfile_create_player_description(0, 0);
+		pfile_create_player_description(NULL, 0);
 	} while (gbRunGameResult);
 
 	SNetDestroy();
