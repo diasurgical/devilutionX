@@ -315,8 +315,8 @@ static void LoadPlayer(int i)
 	CopyInt(tbuff, &pPlayer->_pVar6);
 	CopyInt(tbuff, &pPlayer->_pVar7);
 	CopyInt(tbuff, &pPlayer->_pVar8);
-	CopyBytes(tbuff, giNumberOfLevels, &pPlayer->_pSLvlVisited);
 	CopyBytes(tbuff, giNumberOfLevels, &pPlayer->_pLvlVisited);
+	CopyBytes(tbuff, giNumberOfLevels, &pPlayer->_pSLvlVisited);
 	tbuff += 2; // Alignment
 
 	CopyInt(tbuff, &pPlayer->_pGFXLoad);
