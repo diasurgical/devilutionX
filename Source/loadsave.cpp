@@ -12,7 +12,7 @@ BYTE *tbuff;
 bool gbIsHellfireSaveGame;
 int giNumberOfLevels;
 int giNumberQuests;
-int giNumberOfSmitPremiumItems;
+int giNumberOfSmithPremiumItems;
 
 static char BLoad()
 {
@@ -729,12 +729,12 @@ void LoadGame(BOOL firstflag)
 	if (gbIsHellfireSaveGame) {
 		giNumberOfLevels = 25;
 		giNumberQuests = 24;
-		giNumberOfSmitPremiumItems = 15;
+		giNumberOfSmithPremiumItems = 15;
 	} else {
 		// Todo initialize additional levels and quests if we are running Hellfire
 		giNumberOfLevels = 17;
 		giNumberQuests = 16;
-		giNumberOfSmitPremiumItems = 6;
+		giNumberOfSmithPremiumItems = 6;
 	}
 
 	setlevel = OLoad();
@@ -874,7 +874,7 @@ void LoadGame(BOOL firstflag)
 	numpremium = WLoad();
 	premiumlevel = WLoad();
 
-	for (i = 0; i < giNumberOfSmitPremiumItems; i++)
+	for (i = 0; i < giNumberOfSmithPremiumItems; i++)
 		LoadPremium(i);
 	if (gbIsHellfire && !gbIsHellfireSaveGame)
 		SpawnPremium(myplr);
@@ -1289,12 +1289,12 @@ static void SaveMonster(int i)
 	tbuff += 1; // Alignment
 	CopyShort(&pMonster->mExp, tbuff);
 
-	// Wtite mHit for backwards compatabiliyt
+	// Write mHit for backwards compatibility
 	tempChar = pMonster->mHit < SCHAR_MAX ? pMonster->mHit : SCHAR_MAX;
 	CopyChar(&tempChar, tbuff);
 	CopyChar(&pMonster->mMinDamage, tbuff);
 	CopyChar(&pMonster->mMaxDamage, tbuff);
-	// Wtite mHit2 for backwards compatabiliyt
+	// Write mHit2 for backwards compatibility
 	tempChar = pMonster->mHit2 < SCHAR_MAX ? pMonster->mHit2 : SCHAR_MAX;
 	CopyChar(&tempChar, tbuff);
 	CopyChar(&pMonster->mMinDamage2, tbuff);
