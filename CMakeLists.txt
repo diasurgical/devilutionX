@@ -15,6 +15,7 @@ option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network" OFF)
 option(RUN_TESTS "Build and run tests" OFF)
 option(HELLFIRE "Build hellfire version" OFF)
+option(DISCORD_INTEGRATION "Build with Discord SDK for rich presence support (Only Windows supported atm)" OFF)
 RELEASE_OPTION(CPACK "Configure CPack")
 
 
@@ -186,6 +187,24 @@ add_library(PKWare STATIC
 add_library(SourceS STATIC
   SourceS/paths.cpp)
 
+if(DISCORD_INTEGRATION AND WIN32)
+  add_library(discord STATIC
+    3rdParty/Discord/cpp/achievement_manager.cpp
+    3rdParty/Discord/cpp/activity_manager.cpp
+    3rdParty/Discord/cpp/application_manager.cpp
+    3rdParty/Discord/cpp/core.cpp
+    3rdParty/Discord/cpp/image_manager.cpp
+    3rdParty/Discord/cpp/lobby_manager.cpp
+    3rdParty/Discord/cpp/network_manager.cpp
+    3rdParty/Discord/cpp/overlay_manager.cpp
+    3rdParty/Discord/cpp/relationship_manager.cpp
+    3rdParty/Discord/cpp/storage_manager.cpp
+    3rdParty/Discord/cpp/store_manager.cpp
+    3rdParty/Discord/cpp/types.cpp
+    3rdParty/Discord/cpp/user_manager.cpp
+    3rdParty/Discord/cpp/voice_manager.cpp)
+endif()
+
 add_library(devilution STATIC
   Source/appfat.cpp
   Source/automap.cpp
@@ -315,6 +334,11 @@ if(NOT NONET)
     SourceX/dvlnet/udp_p2p.cpp)
 endif()
 
+if(DISCORD_INTEGRATION AND WIN32)
+  list(APPEND devilutionx_SRCS
+    SourceX/discord/discord.cpp)
+endif()
+
 set(BIN_TARGET devilutionx)
 
 if(SWITCH)
@@ -346,6 +370,10 @@ endif()
 
 if(HELLFIRE)
   add_definitions(-DHELLFIRE)
+endif()
+
+if(DISCORD_INTEGRATION AND WIN32)
+  add_definitions(-DDISCORD)
 endif()
 
 add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionx_SRCS})
@@ -386,6 +414,17 @@ target_include_directories(${BIN_TARGET} PRIVATE
   3rdParty/asio/include
   3rdParty/Radon/Radon/include
   3rdParty/libsmacker)
+
+if(DISCORD_INTEGRATION AND WIN32)
+  target_include_directories(${BIN_TARGET} PRIVATE 3rdParty)
+
+  set(DISCORD_LIB_DIR "3rdParty/Discord/lib/x86_64")
+
+  find_library(DISCORD_LIB discord_game_sdk.dll ${DISCORD_LIB_DIR})
+  target_link_libraries(discord PRIVATE ${DISCORD_LIB})
+  target_link_libraries(${BIN_TARGET} PRIVATE discord)
+  file(COPY "${DISCORD_LIB_DIR}/discord_game_sdk.dll" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+endif()
 
 target_link_libraries(devilution PUBLIC
   Threads::Threads

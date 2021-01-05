@@ -6,8 +6,10 @@
 #include "all.h"
 #include "paths.h"
 #include "../3rdParty/Storm/Source/storm.h"
+#include "../SourceX/discord/discord.h"
 #include "../DiabloUI/diabloui.h"
 #include <config.h>
+
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -61,6 +63,10 @@ char sgbMouseDown;
 int color_cycle_timer;
 int ticks_per_sec = 20;
 WORD tick_delay = 50;
+
+#ifdef DISCORD
+DiscordManager discord;
+#endif
 
 /* rdata */
 
@@ -336,6 +342,10 @@ static void run_game_loop(unsigned int uMsg)
 	gbGameLoopStartup = TRUE;
 	nthread_ignore_mutex(FALSE);
 
+	#ifdef DISCORD
+	discord.startGame(gnDifficulty, gbMaxPlayers, plr[myplr]._pClass, plr[myplr]._pName);
+	#endif
+
 	while (gbRunGame) {
 		while (PeekMessage(&msg)) {
 			if (msg.message == DVL_WM_QUIT) {
@@ -358,7 +368,15 @@ static void run_game_loop(unsigned int uMsg)
 		game_loop(gbGameLoopStartup);
 		gbGameLoopStartup = FALSE;
 		DrawAndBlit();
+
+		#ifdef DISCORD
+		discord.updateGame(gbActivePlayers, plr[myplr]._pLevel, leveltype, currlevel);
+		#endif
 	}
+
+	#ifdef DISCORD
+	discord.setInMenuActivity();
+	#endif
 
 	if (gbMaxPlayers > 1) {
 		pfile_write_hero();
@@ -415,6 +433,7 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
 	} while (gbRunGameResult);
 
 	SNetDestroy();
+
 	return gbRunGameResult;
 }
 
@@ -431,6 +450,10 @@ static void diablo_init_screen()
 	ScrollInfo._sdir = SDIR_NONE;
 
 	ClrDiabloMsg();
+
+	#ifdef DISCORD
+	discord.setInMenuActivity();
+	#endif
 }
 
 static void diablo_init()
