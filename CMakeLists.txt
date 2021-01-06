@@ -1,7 +1,8 @@
-cmake_minimum_required(VERSION 3.10) # CMP0083 NEW
+cmake_minimum_required(VERSION 3.11) # CMP0083 NEW
 
 include(CMake/out_of_tree.cmake)
 include(CMake/genex.cmake)
+include(FetchContent)
 
 DEBUG_OPTION(ASAN "Enable address sanitizer")
 DEBUG_OPTION(UBSAN "Enable undefined behaviour sanitizer")
@@ -188,21 +189,33 @@ add_library(SourceS STATIC
   SourceS/paths.cpp)
 
 if(DISCORD_INTEGRATION AND WIN32)
+  FetchContent_Declare(discordsrc
+    URL https://dl-game-sdk.discordapp.net/2.5.6/discord_game_sdk.zip
+    URL_HASH MD5=f86f15957cc9fbf04e3db10462027d58
+    SOURCE_DIR 3rdParty/Discord
+  )
+
+  FetchContent_Populate(discordsrc)
+
+  if(NOT discordsrc_POPULATED)
+    message(FATAL_ERROR "Failed to retrieve Discord SDK.")
+  endif()
+
   add_library(discord STATIC
-    3rdParty/Discord/cpp/achievement_manager.cpp
-    3rdParty/Discord/cpp/activity_manager.cpp
-    3rdParty/Discord/cpp/application_manager.cpp
-    3rdParty/Discord/cpp/core.cpp
-    3rdParty/Discord/cpp/image_manager.cpp
-    3rdParty/Discord/cpp/lobby_manager.cpp
-    3rdParty/Discord/cpp/network_manager.cpp
-    3rdParty/Discord/cpp/overlay_manager.cpp
-    3rdParty/Discord/cpp/relationship_manager.cpp
-    3rdParty/Discord/cpp/storage_manager.cpp
-    3rdParty/Discord/cpp/store_manager.cpp
-    3rdParty/Discord/cpp/types.cpp
-    3rdParty/Discord/cpp/user_manager.cpp
-    3rdParty/Discord/cpp/voice_manager.cpp)
+    ${discordsrc_SOURCE_DIR}/cpp/achievement_manager.cpp
+    ${discordsrc_SOURCE_DIR}/cpp/activity_manager.cpp
+    ${discordsrc_SOURCE_DIR}/cpp/application_manager.cpp
+    ${discordsrc_SOURCE_DIR}/cpp/core.cpp
+    ${discordsrc_SOURCE_DIR}/cpp/image_manager.cpp
+    ${discordsrc_SOURCE_DIR}/cpp/lobby_manager.cpp
+    ${discordsrc_SOURCE_DIR}/cpp/network_manager.cpp
+    ${discordsrc_SOURCE_DIR}/cpp/overlay_manager.cpp
+    ${discordsrc_SOURCE_DIR}/cpp/relationship_manager.cpp
+    ${discordsrc_SOURCE_DIR}/cpp/storage_manager.cpp
+    ${discordsrc_SOURCE_DIR}/cpp/store_manager.cpp
+    ${discordsrc_SOURCE_DIR}/cpp/types.cpp
+    ${discordsrc_SOURCE_DIR}/cpp/user_manager.cpp
+    ${discordsrc_SOURCE_DIR}/cpp/voice_manager.cpp)
 endif()
 
 add_library(devilution STATIC
@@ -416,12 +429,11 @@ target_include_directories(${BIN_TARGET} PRIVATE
   3rdParty/libsmacker)
 
 if(DISCORD_INTEGRATION AND WIN32)
-  target_include_directories(${BIN_TARGET} PRIVATE 3rdParty)
+  target_include_directories(${BIN_TARGET} PRIVATE "${discordsrc_SOURCE_DIR}/..")
 
-  set(DISCORD_LIB_DIR "3rdParty/Discord/lib/x86_64")
+  set(DISCORD_LIB_DIR "${discordsrc_SOURCE_DIR}/lib/x86_64")
 
-  find_library(DISCORD_LIB discord_game_sdk.dll ${DISCORD_LIB_DIR})
-  target_link_libraries(discord PRIVATE ${DISCORD_LIB})
+  target_link_libraries(discord PRIVATE "${DISCORD_LIB_DIR}/discord_game_sdk.dll.lib")
   target_link_libraries(${BIN_TARGET} PRIVATE discord)
   file(COPY "${DISCORD_LIB_DIR}/discord_game_sdk.dll" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 endif()
