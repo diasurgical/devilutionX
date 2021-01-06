@@ -6,13 +6,11 @@ if(VITA)
   else()
     message(FATAL_ERROR "Please define DOLCESDK to point to your SDK path!")
   endif()
-
   include("$ENV{DOLCESDK}/share/dolce.cmake" REQUIRED)
 endif()
 
 include(CMake/out_of_tree.cmake)
 include(CMake/genex.cmake)
-
 
 DEBUG_OPTION(ASAN "Enable address sanitizer")
 DEBUG_OPTION(UBSAN "Enable undefined behaviour sanitizer")
@@ -498,9 +496,7 @@ endforeach(def_name)
 
 genex_for_option(ASAN)
 genex_for_option(UBSAN)
-
 foreach(target devilution ${BIN_TARGET} SourceS)
-
   target_compile_options(${target} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
   target_link_libraries(${target} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
   target_compile_options(${target} PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined>)
@@ -533,7 +529,6 @@ foreach(target devilution ${BIN_TARGET} SourceS)
       target_link_libraries(${target} PRIVATE -ldebug)
     endif()
   endif()
-
 
   if (VITA)
     target_link_libraries(${target} PRIVATE
@@ -672,7 +667,6 @@ if(SWITCH)
   include(nx-utils)
   build_switch_binaries(${BIN_TARGET})
 endif()
-
 
 if(VITA)
   set(VITA_APP_NAME "devilutionX")
