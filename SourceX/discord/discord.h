@@ -4,9 +4,6 @@
 
 #include <string>
 
-#define DISCORD_DIABLO_APPID 496571953147150354
-#define DISCORD_DEVIX_APPID 795760213524742205
-
 namespace discord {
 class Core;
 }
@@ -23,8 +20,8 @@ public:
 	void setInMenuActivity();
 
 private:
-	std::string getPlayerInfoString();
 	std::string getLocationString();
+	std::string getCharacterString();
 	std::string getDetailString();
 	std::string getStateString();
 
@@ -38,10 +35,13 @@ private:
 	int difficulty = 0;
 	int dungeonType = 0;
 	int dungeonLevel = 0;
+	int plyrGfx = 0;
 
 	std::string characterName = "";
 
 	int64_t startTime = 0;
+	std::string gameId;
+	std::string gamePassword;
 };
 
 }
