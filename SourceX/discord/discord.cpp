@@ -6,6 +6,7 @@
 #include <sstream>
 
 #include "../types.h"
+#include "../Source/player.h"
 
 namespace dvl {
 
@@ -22,12 +23,11 @@ const char *DifficultyToStr(int difficulty)
 	return difficulties[difficulty];
 }
 
-const char *playerClasses[] = { "Warrior", "Rogue", "Sorcerer", "Monk", "Bard", "Barbarian" };
 const char *PlayerClassToStr(int plyrClass)
 {
 	if (plyrClass < 0 || plyrClass >= NUM_CLASSES)
 		return "Unknown";
-	return playerClasses[plyrClass];
+	return ClassStrTbl[plyrClass];
 }
 
 const char *dungeonTypes[] = { "Town", "Cathedral", "Catacombs", "Caves", "Hell", "Nest", "Crypt" };
