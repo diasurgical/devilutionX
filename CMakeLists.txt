@@ -343,7 +343,6 @@ if(SWITCH)
   set(BIN_TARGET devilutionx.elf)
 endif()
 
-
 if(RUN_TESTS)
   list(APPEND devilutionx_SRCS
     SourceT/appfat_test.cpp
