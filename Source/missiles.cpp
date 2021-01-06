@@ -3290,7 +3290,7 @@ void AddBlodboil(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy
 			PS_WARR70,
 			PS_ROGUE70,
 			PS_MAGE70,
-			PS_MAGE70, // BUGFIX: PS_MONK70?
+			PS_MONK70, // BUGFIX: PS_MONK70? (fixed)
 			PS_ROGUE70,
 			PS_WARR70
 		};
