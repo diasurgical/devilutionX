@@ -71,9 +71,9 @@ std::string DiscordManager::GetStateString()
 std::string DiscordManager::GenerateId(int length)
 {
 	static constexpr char chars[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-	static const std::mt19937 rng(std::random_device {}());
-	static const std::uniform_int_distribution<> dist(0, sizeof(chars)-1);
-	static const auto generator = []() { return chars[dist(rng)]; };
+	static std::mt19937 rng(std::random_device {}());
+	static std::uniform_int_distribution<> dist(0, sizeof(chars)-1);
+	static auto generator = []() { return chars[dist(rng)]; };
 
 	std::string result(length, '\0');
 	std::generate_n(result.begin(), length, generator);

@@ -188,7 +188,8 @@ add_library(PKWare STATIC
 add_library(SourceS STATIC
   SourceS/paths.cpp)
 
-if(DISCORD_INTEGRATION AND WIN32)
+if(DISCORD_INTEGRATION)
+  message("Retrieving Discord SDK")
   FetchContent_Declare(discordsrc
     URL https://dl-game-sdk.discordapp.net/2.5.6/discord_game_sdk.zip
     URL_HASH MD5=f86f15957cc9fbf04e3db10462027d58
@@ -334,7 +335,7 @@ if(NOT NONET)
     SourceX/dvlnet/udp_p2p.cpp)
 endif()
 
-if(DISCORD_INTEGRATION AND WIN32)
+if(DISCORD_INTEGRATION)
   list(APPEND devilutionx_SRCS
     SourceX/discord/discord.cpp)
 endif()
@@ -372,7 +373,7 @@ if(HELLFIRE)
   add_definitions(-DHELLFIRE)
 endif()
 
-if(DISCORD_INTEGRATION AND WIN32)
+if(DISCORD_INTEGRATION)
   add_definitions(-DDISCORD)
 endif()
 
@@ -415,12 +416,16 @@ target_include_directories(${BIN_TARGET} PRIVATE
   3rdParty/Radon/Radon/include
   3rdParty/libsmacker)
 
-if(DISCORD_INTEGRATION AND WIN32)
+if(DISCORD_INTEGRATION)
   target_include_directories(${BIN_TARGET} PRIVATE "${discordsrc_SOURCE_DIR}/..")
 
-  set(DISCORD_LIB_DIR "${discordsrc_SOURCE_DIR}/lib/x86_64")
+  if (CMAKE_SIZEOF_VOID_P EQUAL 4)
+    set(DISCORD_LIB_DIR "${discordsrc_SOURCE_DIR}/lib/x86")
+  else()
+    set(DISCORD_LIB_DIR "${discordsrc_SOURCE_DIR}/lib/x86_64")
+  endif()
 
-  target_link_libraries(discord PRIVATE "${DISCORD_LIB_DIR}/discord_game_sdk.dll.lib")
+  target_link_libraries(discord PRIVATE "${DISCORD_LIB_DIR}/discord_game_sdk${CMAKE_SHARED_LIBRARY_SUFFIX}${CMAKE_LINK_LIBRARY_SUFFIX}")
   target_link_libraries(${BIN_TARGET} PRIVATE discord)
   file(COPY "${DISCORD_LIB_DIR}/discord_game_sdk${CMAKE_SHARED_LIBRARY_SUFFIX}" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 endif()
