@@ -404,7 +404,6 @@ static void DrawPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, i
 				    misfiledata[MFILE_MANASHLD].mAnimWidth[0]);
 		} else if (!(dFlags[x][y] & BFLAG_LIT) || plr[myplr]._pInfraFlag && light_table_index > 8) {
 			Cl2DrawLightTbl(px, py, pCelBuff, nCel, nWidth, 1);
-#ifndef HELLFIRE
 			if (plr[pnum].pManaShield)
 				Cl2DrawLightTbl(
 				    px + plr[pnum]._pAnimWidth2 - misfiledata[MFILE_MANASHLD].mAnimWidth2[0],
@@ -413,7 +412,6 @@ static void DrawPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, i
 				    1,
 				    misfiledata[MFILE_MANASHLD].mAnimWidth[0],
 				    1);
-#endif
 		} else {
 			l = light_table_index;
 			if (light_table_index < 5)

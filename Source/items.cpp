@@ -136,7 +136,6 @@ const char *const ItemDropNames[] = {
 	"Bldstn",
 	"Fanvil",
 	"FLazStaf",
-#ifdef HELLFIRE
 	"bombs1",
 	"halfps1",
 	"wholeps1",
@@ -145,7 +144,6 @@ const char *const ItemDropNames[] = {
 	"cows1",
 	"donkys1",
 	"mooses1",
-#endif
 };
 /** Maps of item drop animation length. */
 BYTE ItemAnimLs[] = {
@@ -184,7 +182,6 @@ BYTE ItemAnimLs[] = {
 	13,
 	13,
 	8,
-#ifdef HELLFIRE
 	10,
 	16,
 	16,
@@ -193,7 +190,6 @@ BYTE ItemAnimLs[] = {
 	15,
 	15,
 	15,
-#endif
 };
 /** Maps of drop sounds effect of dropping the item on ground. */
 int ItemDropSnds[] = {
@@ -232,7 +228,6 @@ int ItemDropSnds[] = {
 	IS_FBLST,
 	IS_FANVL,
 	IS_FSTAF,
-#ifdef HELLFIRE
 	IS_FROCK,
 	IS_FSCRL,
 	IS_FSCRL,
@@ -241,7 +236,6 @@ int ItemDropSnds[] = {
 	IS_FHARM,
 	IS_FLARM,
 	IS_FLARM,
-#endif
 };
 /** Maps of drop sounds effect of placing the item in the inventory. */
 int ItemInvSnds[] = {
@@ -280,7 +274,6 @@ int ItemInvSnds[] = {
 	IS_IBLST,
 	IS_IANVL,
 	IS_ISTAF,
-#ifdef HELLFIRE
 	IS_IROCK,
 	IS_ISCROL,
 	IS_ISCROL,
@@ -289,7 +282,6 @@ int ItemInvSnds[] = {
 	IS_IHARM,
 	IS_ILARM,
 	IS_ILARM,
-#endif
 };
 char *off_4A5AC4 = "SItem";
 /** Specifies the current Y-coordinate used for validation of items on ground. */
@@ -510,14 +502,9 @@ int items_get_currlevel()
 
 void InitItemGFX()
 {
-#ifdef HELLFIRE
-	DWORD i;
-#else
-	int i;
-#endif
 	char arglist[64];
 
-	for (i = 0; i < ITEMTYPES; i++) {
+	for (int i = 0; i < ITEMTYPES; i++) {
 		sprintf(arglist, "Items\\%s.CEL", ItemDropNames[i]);
 		itemanims[i] = LoadFileInMem(arglist, NULL);
 	}
@@ -546,9 +533,7 @@ void AddInitItems()
 {
 	int x, y, i, j, rnd;
 
-#ifdef HELLFIRE
 	int curlv = items_get_currlevel();
-#endif
 	rnd = random_(11, 3) + 3;
 	for (j = 0; j < rnd; j++) {
 		i = itemavail[0];
@@ -565,19 +550,11 @@ void AddInitItems()
 		dItem[x][y] = i + 1;
 		item[i]._iSeed = GetRndSeed();
 		SetRndSeed(item[i]._iSeed);
-#ifdef HELLFIRE
 		if (random_(12, 2) != 0)
 			GetItemAttrs(i, IDI_HEAL, curlv);
 		else
 			GetItemAttrs(i, IDI_MANA, curlv);
 		item[i]._iCreateInfo = curlv - CF_PREGEN;
-#else
-		if (random_(12, 2) != 0)
-			GetItemAttrs(i, IDI_HEAL, currlevel);
-		else
-			GetItemAttrs(i, IDI_MANA, currlevel);
-		item[i]._iCreateInfo = currlevel - CF_PREGEN;
-#endif
 		SetupItem(i);
 		item[i]._iAnimFrame = item[i]._iAnimLen;
 		item[i]._iAnimFlag = FALSE;
@@ -642,18 +619,14 @@ void InitItems()
 			SpawnRock();
 		if (QuestStatus(Q_ANVIL))
 			SpawnQuestItem(IDI_ANVIL, 2 * setpc_x + 27, 2 * setpc_y + 27, 0, 1);
-#ifdef HELLFIRE
 		if (UseCowFarmer && currlevel == 20)
 			SpawnQuestItem(IDI_BROWNSUIT, 25, 25, 3, 1);
 		if (UseCowFarmer && currlevel == 19)
 			SpawnQuestItem(IDI_GREYSUIT, 25, 25, 3, 1);
-#endif
 		if (currlevel > 0 && currlevel < 16)
 			AddInitItems();
-#ifdef HELLFIRE
 		if (currlevel >= 21 && currlevel <= 23)
 			items_42390F();
-#endif
 	}
 
 	uitemflag = FALSE;
@@ -677,9 +650,7 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 
 	int iflgs = ISPL_NONE; // item_special_effect flags
 
-#ifdef HELLFIRE
 	int pDamAcFlags = 0;
-#endif
 
 	int sadd = 0; // added strength
 	int madd = 0; // added magic
@@ -732,9 +703,7 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 					bac += tmpac;
 				}
 				iflgs |= itm->_iFlags;
-#ifdef HELLFIRE
 				pDamAcFlags |= itm->_iDamAcFlags;
-#endif
 				sadd += itm->_iPLStr;
 				madd += itm->_iPLMag;
 				dadd += itm->_iPLDex;
@@ -795,9 +764,7 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 	plr[p]._pIBonusToHit = btohit;
 	plr[p]._pIBonusAC = bac;
 	plr[p]._pIFlags = iflgs;
-#ifdef HELLFIRE
 	plr[p].pDamAcFlags = pDamAcFlags;
-#endif
 	plr[p]._pIBonusDamMod = dmod;
 	plr[p]._pIGetHit = ghit;
 
@@ -915,10 +882,8 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 
 	if (mr > MAXRESIST)
 		mr = MAXRESIST;
-#ifdef HELLFIRE
 	else if (mr < 0)
 		mr = 0;
-#endif
 	plr[p]._pMagResist = mr;
 
 	if (fr > MAXRESIST)
@@ -1081,9 +1046,7 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 		if (missile[mi]._mitype == MIS_MANASHIELD && missile[mi]._misource == p) {
 			missile[mi]._miVar1 = plr[p]._pHitPoints;
 			missile[mi]._miVar2 = plr[p]._pHPBase;
-#ifdef HELLFIRE
 			break;
-#endif
 		}
 	}
 #ifdef HELLFIRE
@@ -1652,9 +1615,7 @@ void GetBookSpell(int i, int lvl)
 		lvl = 5;
 
 	s = SPL_FIREBOLT;
-#ifdef HELLFIRE
 	bs = SPL_FIREBOLT;
-#endif
 	while (rv > 0) {
 		int sLevel = GetSpellBookLevel(s);
 		if (sLevel != -1 && lvl >= sLevel) {
@@ -1681,15 +1642,9 @@ void GetBookSpell(int i, int lvl)
 	item[i]._iIvalue += spelldata[bs].sBookCost;
 	if (spelldata[bs].sType == STYPE_FIRE)
 		item[i]._iCurs = ICURS_BOOK_RED;
-#ifdef HELLFIRE
-	else
-#endif
-	    if (spelldata[bs].sType == STYPE_LIGHTNING)
+	else if (spelldata[bs].sType == STYPE_LIGHTNING)
 		item[i]._iCurs = ICURS_BOOK_BLUE;
-#ifdef HELLFIRE
-	else
-#endif
-	    if (spelldata[bs].sType == STYPE_MAGIC)
+	else if (spelldata[bs].sType == STYPE_MAGIC)
 		item[i]._iCurs = ICURS_BOOK_GREY;
 }
 
@@ -1970,11 +1925,9 @@ void SaveItemPower(int i, int power, int param1, int param2, int minval, int max
 	case IPL_DAMP_CURSE:
 		item[i]._iPLDam -= r;
 		break;
-#ifdef HELLFIRE
 	case IPL_DOPPELGANGER:
 		item[i]._iDamAcFlags |= 16;
 		// no break
-#endif
 	case IPL_TOHIT_DAMP:
 		r = RndPL(param1, param2);
 		item[i]._iPLDam += r;
@@ -2139,11 +2092,9 @@ void SaveItemPower(int i, int power, int param1, int param2, int minval, int max
 		item[i]._iMaxDur += r2;
 		item[i]._iDurability += r2;
 		break;
-#ifdef HELLFIRE
 	case IPL_CRYSTALLINE:
 		item[i]._iPLDam += 140 + r * 2;
 		// no break
-#endif
 	case IPL_DUR_CURSE:
 		item[i]._iMaxDur -= r * item[i]._iMaxDur / 100;
 		if (item[i]._iMaxDur < 1)
@@ -2160,11 +2111,9 @@ void SaveItemPower(int i, int power, int param1, int param2, int minval, int max
 	case IPL_LIGHT_CURSE:
 		item[i]._iPLLight -= param1;
 		break;
-#ifdef HELLFIRE
 	case IPL_MULT_ARROWS:
 		item[i]._iFlags |= ISPL_MULT_ARROWS;
 		break;
-#endif
 	case IPL_FIRE_ARROWS:
 		item[i]._iFlags |= ISPL_FIRE_ARROWS;
 #ifdef HELLFIRE
@@ -2327,7 +2276,6 @@ void SaveItemPower(int i, int power, int param1, int param2, int minval, int max
 		if (item[i]._iPLFR < 0)
 			item[i]._iPLFR = 0;
 		break;
-#ifdef HELLFIRE
 	case IPL_FIRERES_CURSE:
 		item[i]._iPLFR -= r;
 		break;
@@ -2371,7 +2319,6 @@ void SaveItemPower(int i, int power, int param1, int param2, int minval, int max
 		item[i]._iPLHP -= (r2 << 6);
 		item[i]._iPLMana += (r2 << 6);
 		break;
-#endif
 	}
 	if (item[i]._iVAdd1 || item[i]._iVMult1) {
 		item[i]._iVAdd2 = PLVal(r, param1, param2, minval, maxval);
@@ -2461,15 +2408,11 @@ void GetItemPower(int i, int minlvl, int maxlvl, int flgs, BOOL onlygood)
 		}
 	}
 	if (!control_WriteStringToBuffer((BYTE *)item[i]._iIName)) {
-#ifdef HELLFIRE
 		int aii = item[i].IDidx;
 		if (AllItemsList[aii].iSName)
 			strcpy(item[i]._iIName, AllItemsList[aii].iSName);
 		else
 			item[i]._iName[0] = 0;
-#else
-		strcpy(item[i]._iIName, AllItemsList[item[i].IDidx].iSName);
-#endif
 
 		if (preidx != -1) {
 			sprintf(istr, "%s %s", PL_Prefix[preidx].PLName, item[i]._iIName);
@@ -2607,9 +2550,7 @@ int RndUItem(int m)
 	if (m != -1 && (monster[m].MData->mTreasure & 0x8000) != 0 && gbMaxPlayers == 1)
 		return -1 - (monster[m].MData->mTreasure & 0xFFF);
 
-#ifdef HELLFIRE
 	int curlv = items_get_currlevel();
-#endif
 	ri = 0;
 	for (i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
 		okflag = TRUE;
@@ -2619,11 +2560,7 @@ int RndUItem(int m)
 			if (monster[m].mLevel < AllItemsList[i].iMinMLvl)
 				okflag = FALSE;
 		} else {
-#ifdef HELLFIRE
 			if (2 * curlv < AllItemsList[i].iMinMLvl)
-#else
-			if (2 * currlevel < AllItemsList[i].iMinMLvl)
-#endif
 				okflag = FALSE;
 		}
 		if (AllItemsList[i].itype == ITYPE_MISC)
@@ -2659,16 +2596,10 @@ int RndAllItems()
 	if (random_(26, 100) > 25)
 		return 0;
 
-#ifdef HELLFIRE
 	int curlv = items_get_currlevel();
-#endif
 	ri = 0;
 	for (i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
-#ifdef HELLFIRE
 		if (AllItemsList[i].iRnd != IDROP_NEVER && 2 * curlv >= AllItemsList[i].iMinMLvl && ri < 512) {
-#else
-		if (AllItemsList[i].iRnd != IDROP_NEVER && 2 * currlevel >= AllItemsList[i].iMinMLvl) {
-#endif
 			ril[ri] = i;
 			ri++;
 		}
@@ -2681,11 +2612,7 @@ int RndAllItems()
 	return ril[random_(26, ri)];
 }
 
-#ifdef HELLFIRE
 int RndTypeItems(int itype, int imid, int lvl)
-#else
-int RndTypeItems(int itype, int imid)
-#endif
 {
 	int i, ri;
 	BOOL okflag;
@@ -2696,21 +2623,13 @@ int RndTypeItems(int itype, int imid)
 		okflag = TRUE;
 		if (AllItemsList[i].iRnd == IDROP_NEVER)
 			okflag = FALSE;
-#ifdef HELLFIRE
 		if (lvl << 1 < AllItemsList[i].iMinMLvl)
-#else
-		if (currlevel << 1 < AllItemsList[i].iMinMLvl)
-#endif
 			okflag = FALSE;
 		if (AllItemsList[i].itype != itype)
 			okflag = FALSE;
 		if (imid != -1 && AllItemsList[i].iMiscId != imid)
 			okflag = FALSE;
-#ifdef HELLFIRE
 		if (okflag && ri < 512) {
-#else
-		if (okflag) {
-#endif
 			ril[ri] = i;
 			ri++;
 		}
@@ -2787,9 +2706,7 @@ void SpawnUnique(int uid, int x, int y)
 {
 	int ii, itype;
 
-#ifdef HELLFIRE
 	int curlv = items_get_currlevel();
-#endif
 	if (numitems >= MAXITEMS)
 		return;
 
@@ -2803,11 +2720,7 @@ void SpawnUnique(int uid, int x, int y)
 		itype++;
 	}
 
-#ifdef HELLFIRE
 	GetItemAttrs(ii, itype, curlv);
-#else
-	GetItemAttrs(ii, itype, currlevel);
-#endif
 	GetUniqueItem(ii, uid);
 	SetupItem(ii);
 	numitems++;
@@ -2931,9 +2844,7 @@ void CreateItem(int uid, int x, int y)
 {
 	int ii, idx;
 
-#ifdef HELLFIRE
 	int curlv = items_get_currlevel();
-#endif
 	if (numitems < MAXITEMS) {
 		ii = itemavail[0];
 		GetSuperItemSpace(x, y, ii);
@@ -2945,11 +2856,7 @@ void CreateItem(int uid, int x, int y)
 			idx++;
 		}
 
-#ifdef HELLFIRE
 		GetItemAttrs(ii, idx, curlv);
-#else
-		GetItemAttrs(ii, idx, currlevel);
-#endif
 		GetUniqueItem(ii, uid);
 		SetupItem(ii);
 		item[ii]._iMagical = ITEM_QUALITY_UNIQUE;
@@ -2961,9 +2868,7 @@ void CreateRndItem(int x, int y, BOOL onlygood, BOOL sendmsg, BOOL delta)
 {
 	int idx, ii;
 
-#ifdef HELLFIRE
 	int curlv = items_get_currlevel();
-#endif
 	if (onlygood)
 		idx = RndUItem(-1);
 	else
@@ -2974,11 +2879,7 @@ void CreateRndItem(int x, int y, BOOL onlygood, BOOL sendmsg, BOOL delta)
 		GetSuperItemSpace(x, y, ii);
 		itemavail[0] = itemavail[MAXITEMS - numitems - 1];
 		itemactive[numitems] = ii;
-#ifdef HELLFIRE
 		SetupAllItems(ii, idx, GetRndSeed(), 2 * curlv, 1, onlygood, FALSE, delta);
-#else
-		SetupAllItems(ii, idx, GetRndSeed(), 2 * currlevel, 1, onlygood, FALSE, delta);
-#endif
 		if (sendmsg)
 			NetSendCmdDItem(FALSE, ii);
 		if (delta)
@@ -3041,19 +2942,13 @@ void CreateRndUseful(int pnum, int x, int y, BOOL sendmsg)
 {
 	int ii;
 
-#ifdef HELLFIRE
 	int curlv = items_get_currlevel();
-#endif
 	if (numitems < MAXITEMS) {
 		ii = itemavail[0];
 		GetSuperItemSpace(x, y, ii);
 		itemavail[0] = itemavail[MAXITEMS - numitems - 1];
 		itemactive[numitems] = ii;
-#ifdef HELLFIRE
 		SetupAllUseful(ii, GetRndSeed(), curlv);
-#else
-		SetupAllUseful(ii, GetRndSeed(), currlevel);
-#endif
 		if (sendmsg) {
 			NetSendCmdDItem(FALSE, ii);
 		}
@@ -3065,14 +2960,9 @@ void CreateTypeItem(int x, int y, BOOL onlygood, int itype, int imisc, BOOL send
 {
 	int idx, ii;
 
-#ifdef HELLFIRE
 	int curlv = items_get_currlevel();
 	if (itype != ITYPE_GOLD)
 		idx = RndTypeItems(itype, imisc, curlv);
-#else
-	if (itype != ITYPE_GOLD)
-		idx = RndTypeItems(itype, imisc);
-#endif
 	else
 		idx = 0;
 
@@ -3081,11 +2971,7 @@ void CreateTypeItem(int x, int y, BOOL onlygood, int itype, int imisc, BOOL send
 		GetSuperItemSpace(x, y, ii);
 		itemavail[0] = itemavail[MAXITEMS - numitems - 1];
 		itemactive[numitems] = ii;
-#ifdef HELLFIRE
 		SetupAllItems(ii, idx, GetRndSeed(), 2 * curlv, 1, onlygood, FALSE, delta);
-#else
-		SetupAllItems(ii, idx, GetRndSeed(), 2 * currlevel, 1, onlygood, FALSE, delta);
-#endif
 
 		if (sendmsg)
 			NetSendCmdDItem(FALSE, ii);
@@ -3226,9 +3112,7 @@ void SpawnQuestItem(int itemid, int x, int y, int randarea, int selflag)
 	BOOL failed;
 	int i, j, tries;
 
-#ifdef HELLFIRE
 	int curlv = items_get_currlevel();
-#endif
 	if (randarea) {
 		tries = 0;
 		while (1) {
@@ -3255,11 +3139,7 @@ void SpawnQuestItem(int itemid, int x, int y, int randarea, int selflag)
 		item[i]._ix = x;
 		item[i]._iy = y;
 		dItem[x][y] = i + 1;
-#ifdef HELLFIRE
 		GetItemAttrs(i, itemid, curlv);
-#else
-		GetItemAttrs(i, itemid, currlevel);
-#endif
 		SetupItem(i);
 		item[i]._iPostDraw = TRUE;
 		if (selflag) {
@@ -3282,9 +3162,7 @@ void SpawnRock()
 		ii = objectactive[i];
 		ostand = object[ii]._otype == OBJ_STAND;
 	}
-#ifdef HELLFIRE
 	int curlv = items_get_currlevel();
-#endif
 	if (ostand) {
 		i = itemavail[0];
 		itemavail[0] = itemavail[127 - numitems - 1];
@@ -3294,11 +3172,7 @@ void SpawnRock()
 		item[i]._ix = xx;
 		item[i]._iy = yy;
 		dItem[xx][item[i]._iy] = i + 1;
-#ifdef HELLFIRE
 		GetItemAttrs(i, IDI_ROCK, curlv);
-#else
-		GetItemAttrs(i, IDI_ROCK, currlevel);
-#endif
 		SetupItem(i);
 		item[i]._iSelFlag = 2;
 		item[i]._iPostDraw = TRUE;
@@ -5698,26 +5572,21 @@ void CreateSpellBook(int x, int y, int ispell, BOOL sendmsg, BOOL delta)
 	BOOL done;
 
 	done = FALSE;
-#ifdef HELLFIRE
-	int lvl = GetSpellBookLevel(ispell) + 1;
-	if (lvl < 1) {
-		return;
+	int lvl = currlevel;
+	if (gbIsHellfire) {
+		lvl = GetSpellBookLevel(ispell) + 1;
+		if (lvl < 1) {
+			return;
+		}
 	}
 	idx = RndTypeItems(ITYPE_MISC, IMISC_BOOK, lvl);
-#else
-	idx = RndTypeItems(ITYPE_MISC, IMISC_BOOK);
-#endif
 	if (numitems < MAXITEMS) {
 		ii = itemavail[0];
 		GetSuperItemSpace(x, y, ii);
 		itemavail[0] = itemavail[MAXITEMS - numitems - 1];
 		itemactive[numitems] = ii;
 		while (!done) {
-#ifdef HELLFIRE
 			SetupAllItems(ii, idx, GetRndSeed(), 2 * lvl, 1, TRUE, FALSE, delta);
-#else
-			SetupAllItems(ii, idx, GetRndSeed(), 2 * currlevel, 1, TRUE, FALSE, delta);
-#endif
 			if (item[ii]._iMiscId == IMISC_BOOK && item[ii]._iSpell == ispell)
 				done = TRUE;
 		}
@@ -5735,33 +5604,19 @@ void CreateMagicArmor(int x, int y, int imisc, int icurs, BOOL sendmsg, BOOL del
 	BOOL done;
 
 	done = FALSE;
-#ifdef HELLFIRE
 	int curlv = items_get_currlevel();
-#endif
 	if (numitems < MAXITEMS) {
 		ii = itemavail[0];
 		GetSuperItemSpace(x, y, ii);
 		itemavail[0] = itemavail[MAXITEMS - numitems - 1];
 		itemactive[numitems] = ii;
-#ifdef HELLFIRE
 		idx = RndTypeItems(imisc, IMISC_NONE, curlv);
-#else
-		idx = RndTypeItems(imisc, IMISC_NONE);
-#endif
 		while (!done) {
-#ifdef HELLFIRE
 			SetupAllItems(ii, idx, GetRndSeed(), 2 * curlv, 1, TRUE, FALSE, delta);
-#else
-			SetupAllItems(ii, idx, GetRndSeed(), 2 * currlevel, 1, TRUE, FALSE, delta);
-#endif
 			if (item[ii]._iCurs == icurs)
 				done = TRUE;
 			else
-#ifdef HELLFIRE
 				idx = RndTypeItems(imisc, IMISC_NONE, curlv);
-#else
-				idx = RndTypeItems(imisc, IMISC_NONE);
-#endif
 		}
 		if (sendmsg)
 			NetSendCmdDItem(FALSE, ii);
@@ -5771,7 +5626,6 @@ void CreateMagicArmor(int x, int y, int imisc, int icurs, BOOL sendmsg, BOOL del
 	}
 }
 
-#ifdef HELLFIRE
 void CreateAmulet(int x, int y, int curlv, BOOL sendmsg, BOOL delta)
 {
 	int ii, idx;
@@ -5799,46 +5653,30 @@ void CreateAmulet(int x, int y, int curlv, BOOL sendmsg, BOOL delta)
 		numitems++;
 	}
 }
-#endif
 
 void CreateMagicWeapon(int x, int y, int imisc, int icurs, BOOL sendmsg, BOOL delta)
 {
 	int ii, idx;
 	BOOL done;
 
-	done = FALSE;
-#ifdef HELLFIRE
 	int imid;
 	if (imisc == ITYPE_STAFF)
 		imid = IMISC_STAFF;
 	else
 		imid = IMISC_NONE;
 	int curlv = items_get_currlevel();
-#endif
 	if (numitems < MAXITEMS) {
 		ii = itemavail[0];
 		GetSuperItemSpace(x, y, ii);
 		itemavail[0] = itemavail[MAXITEMS - numitems - 1];
 		itemactive[numitems] = ii;
-#ifdef HELLFIRE
 		idx = RndTypeItems(imisc, imid, curlv);
-#else
-		idx = RndTypeItems(imisc, IMISC_NONE);
-#endif
 		while (!done) {
-#ifdef HELLFIRE
 			SetupAllItems(ii, idx, GetRndSeed(), 2 * curlv, 1, TRUE, FALSE, delta);
-#else
-			SetupAllItems(ii, idx, GetRndSeed(), 2 * currlevel, 1, TRUE, FALSE, delta);
-#endif
 			if (item[ii]._iCurs == icurs)
 				done = TRUE;
 			else
-#ifdef HELLFIRE
 				idx = RndTypeItems(imisc, imid, curlv);
-#else
-				idx = RndTypeItems(imisc, IMISC_NONE);
-#endif
 		}
 		if (sendmsg)
 			NetSendCmdDItem(FALSE, ii);

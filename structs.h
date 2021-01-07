@@ -1146,7 +1146,6 @@ typedef struct QuestTalkData {
 	int _qpw;
 	int _qbone;
 	int _qvb;
-#ifdef HELLFIRE
 	int _qgrv;
 	int _qfarm;
 	int _qgirl;
@@ -1155,7 +1154,6 @@ typedef struct QuestTalkData {
 	int _qnakrul;
 	int _qjersy;
 	int _qhf8;
-#endif
 } QuestTalkData;
 
 //////////////////////////////////////////////////

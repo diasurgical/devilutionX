@@ -135,11 +135,9 @@ const char *const ClassStrTblOld[] = {
 	"Warrior",
 	"Rogue",
 	"Sorceror",
-#ifdef HELLFIRE
 	"Monk",
 	"Bard",
 	"Barbarian",
-#endif
 };
 /** Maps from player_class to maximum stats. */
 int MaxStats[NUM_CLASSES][4] = {
@@ -599,7 +597,6 @@ void SetPlrAnims(int pnum)
 			plr[pnum]._pAFrames = 24;
 			plr[pnum]._pAFNum = 16;
 		}
-#ifdef HELLFIRE
 	} else if (pc == PC_MONK) {
 		plr[pnum]._pNWidth = 112;
 		plr[pnum]._pWWidth = 112;
@@ -657,7 +654,6 @@ void SetPlrAnims(int pnum)
 		} else if (gn == ANIM_ID_MACE || gn == ANIM_ID_MACE_SHIELD) {
 			plr[pnum]._pAFNum = 8;
 		}
-#endif
 	}
 }
 
@@ -889,10 +885,8 @@ void NextPlrLevel(int pnum)
 
 	if (plr[pnum]._pClass == PC_WARRIOR)
 		mana = 64;
-#ifdef HELLFIRE
 	else if (plr[pnum]._pClass == PC_BARBARIAN)
 		mana = 0;
-#endif
 	else
 		mana = 128;
 

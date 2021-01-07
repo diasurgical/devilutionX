@@ -140,7 +140,6 @@ void InitTownTriggers()
 				numtrigs++;
 			}
 		}
-#ifdef HELLFIRE
 		if (quests[Q_GRAVE]._qactive == 3) {
 			trigs[numtrigs]._tx = 36;
 			trigs[numtrigs]._ty = 24;
@@ -148,6 +147,7 @@ void InitTownTriggers()
 			trigs[numtrigs]._tlvl = 21;
 			numtrigs++;
 		}
+#ifdef HELLFIRE
 		trigs[numtrigs]._tx = 80;
 		trigs[numtrigs]._ty = 62;
 		trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;

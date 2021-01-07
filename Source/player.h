@@ -45,9 +45,7 @@ void RemovePlrFromMap(int pnum);
 void StartPlrHit(int pnum, int dam, BOOL forcehit);
 void StartPlayerKill(int pnum, int earflag);
 void DropHalfPlayersGold(int pnum);
-#ifdef HELLFIRE
 void StripTopGold(int pnum);
-#endif
 void SyncPlrKill(int pnum, int earflag);
 void RemovePlrMissiles(int pnum);
 void StartNewLvl(int pnum, int fom, int lvl);
@@ -73,11 +71,9 @@ void SetPlrDex(int p, int v);
 void SetPlrVit(int p, int v);
 void InitDungMsgs(int pnum);
 void PlayDungMsgs();
-#ifdef HELLFIRE
 int get_max_strength(int i);
 int get_max_magic(int i);
 int get_max_dexterity(int i);
-#endif
 
 /* data */
 

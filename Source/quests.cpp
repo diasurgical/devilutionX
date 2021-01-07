@@ -115,6 +115,8 @@ void InitQuests()
 	initiatedQuests = 0;
 
 	for (z = 0; z < MAXQUESTS; z++) {
+		if (!gbIsHellfire && z >= 16)
+			break;
 		if (gbMaxPlayers > 1 && !(questlist[z]._qflags & QUEST_ANY))
 			continue;
 		quests[z]._qtype = questlist[z]._qdtype;
@@ -696,7 +698,6 @@ void ResyncMPQuests()
 	}
 	if (QuestStatus(Q_BETRAYER))
 		AddObject(OBJ_ALTBOY, 2 * setpc_x + 20, 2 * setpc_y + 22);
-#ifdef HELLFIRE
 	if (quests[Q_GRAVE]._qactive == 1 && currlevel == quests[Q_GRAVE]._qlevel - 1) {
 		quests[Q_GRAVE]._qactive = 2;
 		NetSendCmdQuest(TRUE, Q_GRAVE);
@@ -713,7 +714,6 @@ void ResyncMPQuests()
 		quests[Q_JERSEY]._qactive = 2;
 		NetSendCmdQuest(TRUE, Q_JERSEY);
 	}
-#endif
 }
 
 void ResyncQuests()

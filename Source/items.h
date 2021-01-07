@@ -98,9 +98,7 @@ void RecalcStoreStats();
 int ItemNoFlippy();
 void CreateSpellBook(int x, int y, int ispell, BOOL sendmsg, BOOL delta);
 void CreateMagicArmor(int x, int y, int imisc, int icurs, BOOL sendmsg, BOOL delta);
-#ifdef HELLFIRE
 void CreateAmulet(int x, int y, int curlv, BOOL sendmsg, BOOL delta);
-#endif
 void CreateMagicWeapon(int x, int y, int imisc, int icurs, BOOL sendmsg, BOOL delta);
 BOOL GetItemRecord(int nSeed, WORD wCI, int nIndex);
 void SetItemRecord(int nSeed, WORD wCI, int nIndex);
