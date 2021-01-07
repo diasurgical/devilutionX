@@ -341,7 +341,7 @@ int GetDirection8(int x1, int y1, int x2, int y2)
 	my = abs(y2 - y1);
 	if (my > 15)
 		my = 15;
-	md = Dirs[my][mx];
+	md = Dirs[my][mx]; // BUGFIX: 0x0 causes OOB (99)
 	if (x1 > x2) {
 		if (y1 > y2)
 			md = urtoll[md];
@@ -387,7 +387,7 @@ int GetDirection16(int x1, int y1, int x2, int y2)
 	my = abs(y2 - y1);
 	if (my > 15)
 		my = 15;
-	md = Dirs[my][mx];
+	md = Dirs[my][mx]; // BUGFIX: 0x0 causes OOB (99)
 	if (x1 > x2) {
 		if (y1 > y2)
 			md = urtoll[md];
@@ -831,7 +831,7 @@ BOOL PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, BOOLEA
 	if (mtype == MIS_ACIDPUD)
 		blk = 100;
 	if (m != -1)
-		blkper = plr[pnum]._pBaseToBlk + plr[pnum]._pDexterity - ((monster[m].mLevel - plr[pnum]._pLevel) << 1);
+		blkper = plr[pnum]._pBaseToBlk + plr[pnum]._pDexterity - ((monster[m].mLevel - plr[pnum]._pLevel) * 2);
 	else
 		blkper = plr[pnum]._pBaseToBlk + plr[pnum]._pDexterity;
 	if (blkper < 0)
@@ -4358,8 +4358,8 @@ void mi_flashfr(int i)
 	if (missile[i]._micaster == TARGET_MONSTERS && src != -1) {
 		missile[i]._mix = plr[src]._px;
 		missile[i]._miy = plr[src]._py;
-		missile[i]._mitxoff = plr[src]._pxoff << 16;
-		missile[i]._mityoff = plr[src]._pyoff << 16;
+		missile[i]._mitxoff = plr[src]._pxoff * 65536;
+		missile[i]._mityoff = plr[src]._pyoff * 65536;
 	}
 	missile[i]._mirange--;
 	if (missile[i]._mirange == 0) {
@@ -4392,8 +4392,8 @@ void mi_reflect(int i)
 	int src;
 
 	src = missile[i]._misource;
-	missile[i]._mitxoff = plr[src]._pxoff << 16;
-	missile[i]._mityoff = plr[src]._pyoff << 16;
+	missile[i]._mitxoff = plr[src]._pxoff * 65536;
+	missile[i]._mityoff = plr[src]._pyoff * 65536;
 	if (plr[src]._pmode == PM_WALK3) {
 		missile[i]._misx = plr[src]._pfutx + 2;
 		missile[i]._misy = plr[src]._pfuty - 1;
@@ -4799,8 +4799,8 @@ void MI_Manashield(int i)
 	id = missile[i]._misource;
 	missile[i]._mix = plr[id]._px;
 	missile[i]._miy = plr[id]._py;
-	missile[i]._mitxoff = plr[id]._pxoff << 16;
-	missile[i]._mityoff = plr[id]._pyoff << 16;
+	missile[i]._mitxoff = plr[id]._pxoff * 65536;
+	missile[i]._mityoff = plr[id]._pyoff * 65536;
 	if (plr[id]._pmode == PM_WALK3) {
 		missile[i]._misx = plr[id]._pfutx;
 		missile[i]._misy = plr[id]._pfuty;
@@ -4891,8 +4891,8 @@ void MI_Etherealize(int i)
 	src = missile[i]._misource;
 	missile[i]._mix = plr[src]._px;
 	missile[i]._miy = plr[src]._py;
-	missile[i]._mitxoff = plr[src]._pxoff << 16;
-	missile[i]._mityoff = plr[src]._pyoff << 16;
+	missile[i]._mitxoff = plr[src]._pxoff * 65536;
+	missile[i]._mityoff = plr[src]._pyoff * 65536;
 	if (plr[src]._pmode == PM_WALK3) {
 		missile[i]._misx = plr[src]._pfutx;
 		missile[i]._misy = plr[src]._pfuty;

@@ -907,7 +907,7 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 	} else if (plr[p]._pClass == PC_ROGUE || plr[p]._pClass == PC_MONK || plr[p]._pClass == PC_BARD) {
 		vadd += vadd >> 1;
 	}
-	ihp += (vadd << 6);
+	ihp += (vadd << 6); // BUGFIX: blood boil can cause negative shifts here (see line 757)
 
 	if (plr[p]._pClass == PC_SORCERER) {
 		madd <<= 1;
