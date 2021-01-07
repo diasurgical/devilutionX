@@ -2,6 +2,7 @@
 
 #include <Discord/cpp/discord.h>
 #include <algorithm>
+#include <array>
 #include <chrono>
 #include <random>
 #include <sstream>
@@ -17,48 +18,33 @@
 
 namespace dvl {
 
+namespace {
+constexpr int NUM_HELLFIRE_CLASSES = 6;
+
+constexpr std::array<const char *, NUM_DIFFICULTIES> DIFFICULTIES = { "Normal", "Nightmare", "Hell" };
+constexpr std::array<const char *, NUM_HELLFIRE_CLASSES> CLASSES = { "Warrior", "Rogue", "Sorcerer", "Monk", "Bard", "Barbarian" };
+constexpr std::array<const char *, DTYPE_CRYPT + 1> DUNGEONS = { "Town", "Cathedral", "Catacombs", "Caves", "Hell", "Nest", "Crypt" };
+} // namespace
+
 DiscordManager::DiscordManager()
 {
 	discord::Core::Create(DISCORD_DEVIX_APPID, DiscordCreateFlags_NoRequireDiscord, &core);
 	//core->ActivityManager().RegisterCommand(...); // TODO: Add path to .exe here to allow launch after first run
 }
 
-const char *difficulties[] = { "Normal", "Nightmare", "Hell" };
-const char *DifficultyToStr(int difficulty)
-{
-	if (difficulty < 0 || difficulty > NUM_DIFFICULTIES)
-		return "Unknown";
-	return difficulties[difficulty];
-}
-
-const char *playerClasses[] = { "Warrior", "Rogue", "Sorcerer", "Monk", "Bard", "Barbarian" };
-const char *PlayerClassToStr(int plyrClass)
-{
-	if (plyrClass < 0 || plyrClass >= NUM_CLASSES)
-		return "Unknown";
-	return playerClasses[plyrClass];
-}
-
-const char *dungeonTypes[] = { "Town", "Cathedral", "Catacombs", "Caves", "Hell", "Nest", "Crypt" };
-const char *DungeonTypeToStr(int dungeonType)
-{
-	if (dungeonType == DTYPE_NONE)
-		return "None";
-	if (dungeonType < 0 || dungeonType > DTYPE_CRYPT)
-		return "Unknown";
-	return dungeonTypes[dungeonType];
-}
-
-std::string DiscordManager::getLocationString()
+std::string DiscordManager::GetLocationString()
 {
 	std::ostringstream result;
-	result << DungeonTypeToStr(dungeonType);
+	if (dungeon_type == DTYPE_NONE)
+		result << "None";
+	else
+		result << DUNGEONS.at(dungeon_type);
 
-	if (dungeonLevel > 0) {
-		int level = dungeonLevel;
-		if (dungeonType == DTYPE_NEST)
+	if (dungeon_level > 0) {
+		int level = dungeon_level;
+		if (dungeon_type == DTYPE_NEST)
 			level -= 16;
-		else if (dungeonType == DTYPE_CRYPT)
+		else if (dungeon_type == DTYPE_CRYPT)
 			level -= 20;
 
 		result << " " << level;
@@ -67,105 +53,100 @@ std::string DiscordManager::getLocationString()
 	return result.str();
 }
 
-std::string DiscordManager::getCharacterString()
+std::string DiscordManager::GetCharacterString()
 {
-	return std::string("Lv ") + std::to_string(playerLevel) + " " + PlayerClassToStr(playerClass);
+	return std::string("Lv ") + std::to_string(player_level) + " " + CLASSES.at(player_class);
 }
 
-std::string DiscordManager::getDetailString()
+std::string DiscordManager::GetDetailString()
 {
-	return getCharacterString() + " - " + getLocationString();
+	return GetCharacterString() + " - " + GetLocationString();
 }
 
-std::string DiscordManager::getStateString()
+std::string DiscordManager::GetStateString()
 {
-	return std::string(DifficultyToStr(difficulty)) + " difficulty";
+	return std::string(DIFFICULTIES.at(difficulty)) + " difficulty";
 }
 
-std::string GenerateId(int length = 32)
+std::string DiscordManager::GenerateId(int length)
 {
 	static constexpr char chars[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-	static std::random_device device;
-	static std::mt19937 rng(device());
-	static std::uniform_int_distribution<> dist(0, sizeof(chars)-1);
+	static const std::mt19937 rng(std::random_device {}());
+	static const std::uniform_int_distribution<> dist(0, sizeof(chars)-1);
+	static const auto generator = []() { return chars[dist(rng)]; };
 
 	std::string result(length, '\0');
-	std::generate_n(result.begin(), length, []() { return chars[dist(rng)]; });
+	std::generate_n(result.begin(), length, generator);
 	return result;
 }
 
-std::string GetGamePassword()
+std::string DiscordManager::GetPlayerAssetString()
 {
-	char gamePassword[128];
-	unsigned int written;
-	SNetGetGameInfo(GAMEINFO_PASSWORD, gamePassword, sizeof(gamePassword), &written);
-	gamePassword[sizeof(gamePassword) - 1] = '\0';
-	return std::string(gamePassword);
+	return std::string {
+		"wrsmrw"[player_class],
+		"lmh"[player_gfx >> 4],			// armour class
+		"nusdbamht"[player_gfx & 0xF],	// weapon configuration
+		'a', 's', '\0'
+	};
 }
 
-void DiscordManager::updateGame(int newNumPlayers, int newPlayerLevel, int newDungeonType, int newDungeonLevel)
+void DiscordManager::UpdateGame(int new_num_players, int new_player_level, int new_dungeon_type, int new_dungeon_level)
 {
 	if (core == nullptr)
 		return;
 
-	auto newData = std::make_tuple(newNumPlayers, newPlayerLevel, newDungeonType, newDungeonLevel, plr[myplr]._pgfxnum);
-	auto trackedData = std::tie(numPlayers, playerLevel, dungeonType, dungeonLevel, plyrGfx);
-	if (newData != trackedData)
+	auto new_data = std::make_tuple(new_num_players, new_player_level, new_dungeon_type, new_dungeon_level, plr[myplr]._pgfxnum);
+	auto tracked_data = std::tie(num_players, player_level, dungeon_type, dungeon_level, player_gfx);
+	if (new_data != tracked_data)
 	{
-		trackedData = newData;
+		tracked_data = new_data;
 
 		// Update status strings
-		std::string details = getDetailString();
-		std::string state = getStateString();
-
 		discord::Activity activity = {};
-		activity.SetState(state.c_str());
-		activity.SetDetails(details.c_str());
+		activity.SetState(GetStateString().c_str());
+		activity.SetDetails(GetDetailString().c_str());
 		activity.SetInstance(true);
 
 		// Set party info (whether others can be invited to the game)
-		if (maxPlayers > 1) {
+		if (max_players > 1) {
 			discord::PartySize &party = activity.GetParty().GetSize();
-			party.SetCurrentSize(numPlayers);
-			party.SetMaxSize(maxPlayers);
+			party.SetCurrentSize(num_players);
+			party.SetMaxSize(max_players);
 
-			activity.GetParty().SetId(gameId.c_str());
-			activity.GetSecrets().SetJoin(gamePassword.c_str());
+			activity.GetParty().SetId(game_id.c_str());
+			activity.GetSecrets().SetJoin(game_password);
 		}
 
-		activity.GetTimestamps().SetStart(startTime);
+		activity.GetTimestamps().SetStart(start_time);
 
 		// Set image assets
-		const char charImg[] = {
-			"wrsmrw"[playerClass],
-			"lmh"[plr[myplr]._pgfxnum >> 4],
-			"nusdbamht"[plr[myplr]._pgfxnum & 0xF],
-			'a', 's', '\0'
-		};
-
-		std::string assetTooltip = characterName + " - " + getCharacterString();
-		activity.GetAssets().SetLargeImage(charImg);
-		activity.GetAssets().SetLargeText(assetTooltip.c_str());
+		std::string asset_tooltip = character_name + " - " + GetCharacterString();
+		activity.GetAssets().SetLargeImage(GetPlayerAssetString().c_str());
+		activity.GetAssets().SetLargeText(asset_tooltip.c_str());
 
 		core->ActivityManager().UpdateActivity(activity, [](discord::Result result) {});
 	}
 	core->RunCallbacks();
 }
 
-void DiscordManager::startGame(int difficulty, int maxPlayers, int plyrClass, const char *charName)
+void DiscordManager::StartGame(int difficulty, int max_players, int plyr_class, const char *char_name)
 {
 	this->difficulty = difficulty;
-	this->maxPlayers = maxPlayers;
-	this->playerClass = plyrClass;
-	this->characterName = charName;
+	this->max_players = max_players;
+	this->player_class = plyr_class;
+	this->character_name = char_name;
 
-	gameId = GenerateId();
-	gamePassword = GetGamePassword();
+	game_id = GenerateId();
 
-	startTime = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+	// TODO: Generate for discord lobby API instead
+	unsigned int written;
+	SNetGetGameInfo(GAMEINFO_PASSWORD, game_password, sizeof(game_password), &written);
+	game_password[sizeof(game_password) - 1] = '\0';
+
+	start_time = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 }
 
-void DiscordManager::setInMenuActivity()
+void DiscordManager::UpdateMenu()
 {
 	if (core == nullptr)
 		return;

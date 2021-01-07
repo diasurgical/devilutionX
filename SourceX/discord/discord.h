@@ -15,34 +15,37 @@ class DiscordManager {
 public:
 	DiscordManager();
 
-	void updateGame(int newNumPlayers, int newPlayerLevel, int newDungeonType, int newDungeonLevel);
-	void startGame(int difficulty, int maxPlayers, int plyrClass, const char *charName);
+	void UpdateGame(int new_num_players, int new_player_level, int new_dungeon_type, int new_dungeon_level);
+	void StartGame(int difficulty, int max_players, int plyr_class, const char *char_name);
 
-	void setInMenuActivity();
+	void UpdateMenu();
 
 private:
-	std::string getLocationString();
-	std::string getCharacterString();
-	std::string getDetailString();
-	std::string getStateString();
+	std::string GetPlayerAssetString();
+	std::string GetLocationString();
+	std::string GetCharacterString();
+	std::string GetDetailString();
+	std::string GetStateString();
+
+	static std::string GenerateId(int length = 32);
 
 private:
 	discord::Core *core = nullptr;
 
-	int numPlayers = 0;
-	int maxPlayers = 0;
-	int playerClass = 0;
-	int playerLevel = 0;
+	int num_players = 0;
+	int max_players = 0;
+	int player_class = 0;
+	int player_level = 0;
 	int difficulty = 0;
-	int dungeonType = 0;
-	int dungeonLevel = 0;
-	int plyrGfx = 0;
+	int dungeon_type = 0;
+	int dungeon_level = 0;
+	int player_gfx = 0;
 
-	std::string characterName;
+	std::string character_name;
 
-	std::int64_t startTime = 0;
-	std::string gameId;
-	std::string gamePassword;
+	std::int64_t start_time = 0;
+	std::string game_id;
+	char game_password[128];
 };
 
 }

@@ -343,7 +343,7 @@ static void run_game_loop(unsigned int uMsg)
 	nthread_ignore_mutex(FALSE);
 
 	#ifdef DISCORD
-	discord.startGame(gnDifficulty, gbMaxPlayers, plr[myplr]._pClass, plr[myplr]._pName);
+	discord.StartGame(gnDifficulty, gbMaxPlayers, plr[myplr]._pClass, plr[myplr]._pName);
 	#endif
 
 	while (gbRunGame) {
@@ -370,12 +370,12 @@ static void run_game_loop(unsigned int uMsg)
 		DrawAndBlit();
 
 		#ifdef DISCORD
-		discord.updateGame(gbActivePlayers, plr[myplr]._pLevel, leveltype, currlevel);
+		discord.UpdateGame(gbActivePlayers, plr[myplr]._pLevel, leveltype, currlevel);
 		#endif
 	}
 
 	#ifdef DISCORD
-	discord.setInMenuActivity();
+	discord.UpdateMenu();
 	#endif
 
 	if (gbMaxPlayers > 1) {
@@ -452,7 +452,7 @@ static void diablo_init_screen()
 	ClrDiabloMsg();
 
 	#ifdef DISCORD
-	discord.setInMenuActivity();
+	discord.UpdateMenu();
 	#endif
 }
 
