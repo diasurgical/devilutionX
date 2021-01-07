@@ -201,21 +201,8 @@ if(DISCORD_INTEGRATION AND WIN32)
     message(FATAL_ERROR "Failed to retrieve Discord SDK.")
   endif()
 
-  add_library(discord STATIC
-    ${discordsrc_SOURCE_DIR}/cpp/achievement_manager.cpp
-    ${discordsrc_SOURCE_DIR}/cpp/activity_manager.cpp
-    ${discordsrc_SOURCE_DIR}/cpp/application_manager.cpp
-    ${discordsrc_SOURCE_DIR}/cpp/core.cpp
-    ${discordsrc_SOURCE_DIR}/cpp/image_manager.cpp
-    ${discordsrc_SOURCE_DIR}/cpp/lobby_manager.cpp
-    ${discordsrc_SOURCE_DIR}/cpp/network_manager.cpp
-    ${discordsrc_SOURCE_DIR}/cpp/overlay_manager.cpp
-    ${discordsrc_SOURCE_DIR}/cpp/relationship_manager.cpp
-    ${discordsrc_SOURCE_DIR}/cpp/storage_manager.cpp
-    ${discordsrc_SOURCE_DIR}/cpp/store_manager.cpp
-    ${discordsrc_SOURCE_DIR}/cpp/types.cpp
-    ${discordsrc_SOURCE_DIR}/cpp/user_manager.cpp
-    ${discordsrc_SOURCE_DIR}/cpp/voice_manager.cpp)
+  file(GLOB discord_SRCS ${discordsrc_SOURCE_DIR}/cpp/*.cpp)
+  add_library(discord STATIC ${discord_SRCS})
 endif()
 
 add_library(devilution STATIC
@@ -435,7 +422,7 @@ if(DISCORD_INTEGRATION AND WIN32)
 
   target_link_libraries(discord PRIVATE "${DISCORD_LIB_DIR}/discord_game_sdk.dll.lib")
   target_link_libraries(${BIN_TARGET} PRIVATE discord)
-  file(COPY "${DISCORD_LIB_DIR}/discord_game_sdk.dll" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+  file(COPY "${DISCORD_LIB_DIR}/discord_game_sdk${CMAKE_SHARED_LIBRARY_SUFFIX}" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 endif()
 
 target_link_libraries(devilution PUBLIC

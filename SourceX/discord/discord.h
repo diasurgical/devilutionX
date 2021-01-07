@@ -2,6 +2,7 @@
 
 #ifdef DISCORD
 
+#include <cstdint>
 #include <string>
 
 namespace discord {
@@ -37,9 +38,9 @@ private:
 	int dungeonLevel = 0;
 	int plyrGfx = 0;
 
-	std::string characterName = "";
+	std::string characterName;
 
-	int64_t startTime = 0;
+	std::int64_t startTime = 0;
 	std::string gameId;
 	std::string gamePassword;
 };
