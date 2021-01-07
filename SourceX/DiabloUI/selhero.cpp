@@ -35,7 +35,7 @@ BOOL(*gfnHeroInfo)
 (BOOL (*fninfofunc)(_uiheroinfo *));
 BOOL(*gfnHeroCreate)
 (_uiheroinfo *);
-BOOL(*gfnHeroStats)
+void(*gfnHeroStats)
 (unsigned int, _uidefaultstats *);
 
 namespace {
@@ -467,7 +467,7 @@ BOOL SelHero_GetHeroInfo(_uiheroinfo *pInfo)
 BOOL UiSelHeroDialog(
     BOOL (*fninfo)(BOOL (*fninfofunc)(_uiheroinfo *)),
     BOOL (*fncreate)(_uiheroinfo *),
-    BOOL (*fnstats)(unsigned int, _uidefaultstats *),
+    void (*fnstats)(unsigned int, _uidefaultstats *),
     BOOL (*fnremove)(_uiheroinfo *),
     int *dlgresult,
     char *name)
@@ -528,7 +528,7 @@ BOOL UiSelHeroSingDialog(
     BOOL (*fninfo)(BOOL (*fninfofunc)(_uiheroinfo *)),
     BOOL (*fncreate)(_uiheroinfo *),
     BOOL (*fnremove)(_uiheroinfo *),
-    BOOL (*fnstats)(unsigned int, _uidefaultstats *),
+    void (*fnstats)(unsigned int, _uidefaultstats *),
     int *dlgresult,
     char *name,
     int *difficulty)
@@ -543,7 +543,7 @@ BOOL UiSelHeroMultDialog(
     BOOL (*fninfo)(BOOL (*fninfofunc)(_uiheroinfo *)),
     BOOL (*fncreate)(_uiheroinfo *),
     BOOL (*fnremove)(_uiheroinfo *),
-    BOOL (*fnstats)(unsigned int, _uidefaultstats *),
+    void (*fnstats)(unsigned int, _uidefaultstats *),
     int *dlgresult,
     BOOL *hero_is_created,
     char *name)
