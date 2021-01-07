@@ -425,8 +425,14 @@ if(DISCORD_INTEGRATION)
     set(DISCORD_LIB_DIR "${discordsrc_SOURCE_DIR}/lib/x86_64")
   endif()
 
-  target_link_libraries(discord PRIVATE "${DISCORD_LIB_DIR}/discord_game_sdk${CMAKE_SHARED_LIBRARY_SUFFIX}${CMAKE_LINK_LIBRARY_SUFFIX}")
-  target_link_libraries(${BIN_TARGET} PRIVATE discord)
+  find_library(DISCORD_LIB
+    NAMES discord_game_sdk${CMAKE_SHARED_LIBRARY_SUFFIX}
+    HINTS ${DISCORD_LIB_DIR})
+
+  add_library(discord_game_sdk STATIC IMPORTED)
+  set_property(TARGET discord_game_sdk PROPERTY IMPORTED_LOCATION ${DISCORD_LIB})
+  target_link_libraries(${BIN_TARGET} PRIVATE discord discord_game_sdk)
+
   file(COPY "${DISCORD_LIB_DIR}/discord_game_sdk${CMAKE_SHARED_LIBRARY_SUFFIX}" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 endif()
 
