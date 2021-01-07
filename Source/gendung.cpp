@@ -170,11 +170,10 @@ void FillSolidBlockTbls()
 
 	switch (leveltype) {
 	case DTYPE_TOWN:
-#ifdef HELLFIRE
-		pSBFile = LoadFileInMem("NLevels\\TownData\\Town.SOL", &dwTiles);
-#else
-		pSBFile = LoadFileInMem("Levels\\TownData\\Town.SOL", &dwTiles);
-#endif
+		if (gbIsHellfire)
+			pSBFile = LoadFileInMem("NLevels\\TownData\\Town.SOL", &dwTiles);
+		else
+			pSBFile = LoadFileInMem("Levels\\TownData\\Town.SOL", &dwTiles);
 		break;
 	case DTYPE_CATHEDRAL:
 		if (currlevel < 17)

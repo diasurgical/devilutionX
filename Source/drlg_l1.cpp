@@ -2689,7 +2689,6 @@ static void DRLG_L5(int entry)
 		}
 	}
 
-#ifdef HELLFIRE
 	if (currlevel < 21) {
 		DRLG_L5Subs();
 	} else {
@@ -2739,9 +2738,6 @@ static void DRLG_L5(int entry)
 			break;
 		}
 	}
-#else
-	DRLG_L5Subs();
-#endif
 
 	if (currlevel < 21) {
 		DRLG_L1Shadows();
@@ -2788,7 +2784,6 @@ void CreateL5Dungeon(DWORD rseed, int entry)
 	DRLG_L1Pass3();
 	DRLG_FreeL1SP();
 
-#ifdef HELLFIRE
 	if (currlevel < 17)
 		DRLG_InitL1Vals();
 	else
@@ -2796,6 +2791,7 @@ void CreateL5Dungeon(DWORD rseed, int entry)
 
 	DRLG_SetPC();
 
+#ifdef HELLFIRE
 	for (j = dminy; j < dmaxy; j++) {
 		for (i = dminx; i < dmaxx; i++) {
 			if (dPiece[i][j] == 290) {
@@ -2808,9 +2804,6 @@ void CreateL5Dungeon(DWORD rseed, int entry)
 			}
 		}
 	}
-#else
-	DRLG_InitL1Vals();
-	DRLG_SetPC();
 #endif
 }
 

@@ -49,9 +49,7 @@ void ApplyGamma(SDL_Color *dst, const SDL_Color *src, int n)
 void SaveGamma()
 {
 	SRegSaveValue("Diablo", "Gamma Correction", 0, gamma_correction);
-#ifndef HELLFIRE
 	SRegSaveValue("Diablo", "Color Cycling", FALSE, color_cycling_enabled);
-#endif
 }
 
 static void LoadGamma()
@@ -69,11 +67,9 @@ static void LoadGamma()
 		gamma_value = 100;
 	}
 	gamma_correction = gamma_value - gamma_value % 5;
-#ifndef HELLFIRE
 	if (!SRegLoadValue("Diablo", "Color Cycling", 0, &value))
 		value = 1;
 	color_cycling_enabled = value;
-#endif
 }
 
 void palette_init()

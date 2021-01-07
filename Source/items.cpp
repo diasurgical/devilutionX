@@ -3579,7 +3579,6 @@ void DoOil(int pnum, int cii)
 void PrintItemOil(char IDidx)
 {
 	switch (IDidx) {
-#ifdef HELLFIRE
 	case IMISC_OILACC:
 		strcpy(tempstr, "increases a weapon's");
 		AddPanelString(tempstr, TRUE);
@@ -3658,7 +3657,6 @@ void PrintItemOil(char IDidx)
 		strcpy(tempstr, "sets petrification trap");
 		AddPanelString(tempstr, TRUE);
 		break;
-#endif
 	case IMISC_FULLHEAL:
 		strcpy(tempstr, "fully recover life");
 		AddPanelString(tempstr, TRUE);
@@ -3752,48 +3750,28 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		sprintf(tempstr, "armor class: %i", x->_iAC);
 		break;
 	case IPL_FIRERES:
-#ifdef HELLFIRE
 	case IPL_FIRERES_CURSE:
-#endif
 		if (x->_iPLFR < 75)
 			sprintf(tempstr, "Resist Fire : %+i%%", x->_iPLFR);
-#ifdef HELLFIRE
 		else
-#else
-		if (x->_iPLFR >= 75)
-#endif
 			sprintf(tempstr, "Resist Fire : 75%% MAX");
 		break;
 	case IPL_LIGHTRES:
-#ifdef HELLFIRE
 	case IPL_LIGHTRES_CURSE:
-#endif
 		if (x->_iPLLR < 75)
 			sprintf(tempstr, "Resist Lightning : %+i%%", x->_iPLLR);
-#ifdef HELLFIRE
 		else
-#else
-		if (x->_iPLLR >= 75)
-#endif
 			sprintf(tempstr, "Resist Lightning : 75%% MAX");
 		break;
 	case IPL_MAGICRES:
-#ifdef HELLFIRE
 	case IPL_MAGICRES_CURSE:
-#endif
 		if (x->_iPLMR < 75)
 			sprintf(tempstr, "Resist Magic : %+i%%", x->_iPLMR);
-#ifdef HELLFIRE
 		else
-#else
-		if (x->_iPLMR >= 75)
-#endif
 			sprintf(tempstr, "Resist Magic : 75%% MAX");
 		break;
 	case IPL_ALLRES:
-#ifdef HELLFIRE
 	case IPL_ALLRES_CURSE:
-#endif
 		if (x->_iPLFR < 75)
 			sprintf(tempstr, "Resist All : %+i%%", x->_iPLFR);
 		if (x->_iPLFR >= 75)
@@ -3802,22 +3780,14 @@ void PrintItemPower(char plidx, ItemStruct *x)
 	case IPL_SPLLVLADD:
 		if (x->_iSplLvlAdd == 1)
 			strcpy(tempstr, "spells are increased 1 level");
-#ifdef HELLFIRE
 		else if (x->_iSplLvlAdd > 1)
 			sprintf(tempstr, "spells are increased %i levels", x->_iSplLvlAdd);
 		else if (x->_iSplLvlAdd == -1)
-#else
-		if (x->_iSplLvlAdd == 2)
-			strcpy(tempstr, "spells are increased 2 levels");
-		if (x->_iSplLvlAdd < 1)
-#endif
 			strcpy(tempstr, "spells are decreased 1 level");
-#ifdef HELLFIRE
 		else if (x->_iSplLvlAdd < -1)
 			sprintf(tempstr, "spells are decreased %i levels", -x->_iSplLvlAdd);
 		else if (x->_iSplLvlAdd == 0)
 			strcpy(tempstr, "spell levels unchanged (?)");
-#endif
 		break;
 	case IPL_CHARGES:
 		strcpy(tempstr, "Extra charges");
@@ -3826,19 +3796,15 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		sprintf(tempstr, "%i %s charges", x->_iMaxCharges, spelldata[x->_iSpell].sNameText);
 		break;
 	case IPL_FIREDAM:
-#ifdef HELLFIRE
 		if (x->_iFMinDam == x->_iFMaxDam)
 			sprintf(tempstr, "Fire hit damage: %i", x->_iFMinDam);
 		else
-#endif
 			sprintf(tempstr, "Fire hit damage: %i-%i", x->_iFMinDam, x->_iFMaxDam);
 		break;
 	case IPL_LIGHTDAM:
-#ifdef HELLFIRE
 		if (x->_iLMinDam == x->_iLMaxDam)
 			sprintf(tempstr, "Lightning hit damage: %i", x->_iLMinDam);
 		else
-#endif
 			sprintf(tempstr, "Lightning hit damage: %i-%i", x->_iLMinDam, x->_iLMaxDam);
 		break;
 	case IPL_STR:
@@ -3888,35 +3854,27 @@ void PrintItemPower(char plidx, ItemStruct *x)
 	case IPL_LIGHT_CURSE:
 		sprintf(tempstr, "-%i%% light radius", -10 * x->_iPLLight);
 		break;
-#ifdef HELLFIRE
 	case IPL_MULT_ARROWS:
 		sprintf(tempstr, "multiple arrows per shot");
 		break;
-#endif
 	case IPL_FIRE_ARROWS:
-#ifdef HELLFIRE
 		if (x->_iFMinDam == x->_iFMaxDam)
 			sprintf(tempstr, "fire arrows damage: %i", x->_iFMinDam);
 		else
-#endif
 			sprintf(tempstr, "fire arrows damage: %i-%i", x->_iFMinDam, x->_iFMaxDam);
 		break;
 	case IPL_LIGHT_ARROWS:
-#ifdef HELLFIRE
 		if (x->_iLMinDam == x->_iLMaxDam)
 			sprintf(tempstr, "lightning arrows damage %i", x->_iLMinDam);
 		else
-#endif
 			sprintf(tempstr, "lightning arrows damage %i-%i", x->_iLMinDam, x->_iLMaxDam);
 		break;
-#ifdef HELLFIRE
 	case IPL_FIREBALL:
 		if (x->_iFMinDam == x->_iFMaxDam)
 			sprintf(tempstr, "fireball damage: %i", x->_iFMinDam);
 		else
 			sprintf(tempstr, "fireball damage: %i-%i", x->_iFMinDam, x->_iFMaxDam);
 		break;
-#endif
 	case IPL_THORNS:
 		strcpy(tempstr, "attacker takes 1-3 damage");
 		break;
@@ -4037,7 +3995,6 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		else if (x->_iPLFR >= 1)
 			sprintf(tempstr, "Resist Fire : %+i%%", x->_iPLFR);
 		break;
-#ifdef HELLFIRE
 	case IPL_DEVASTATION:
 		strcpy(tempstr, "occasional triple damage");
 		break;
@@ -4068,7 +4025,6 @@ void PrintItemPower(char plidx, ItemStruct *x)
 	case IPL_LIFETOMANA:
 		sprintf(tempstr, "40%% Health moved to Mana");
 		break;
-#endif
 	default:
 		strcpy(tempstr, "Another ability (NW)");
 		break;
@@ -4175,7 +4131,6 @@ void PrintItemMisc(ItemStruct *x)
 		strcpy(tempstr, "Right-click to use");
 		AddPanelString(tempstr, TRUE);
 	}
-#ifdef HELLFIRE
 	if (x->_iMiscId > IMISC_OILFIRST && x->_iMiscId < IMISC_OILLAST) {
 		PrintItemOil(x->_iMiscId);
 		strcpy(tempstr, "Right click to use");
@@ -4186,17 +4141,14 @@ void PrintItemMisc(ItemStruct *x)
 		strcpy(tempstr, "Right click to use");
 		AddPanelString(tempstr, TRUE);
 	}
-#endif
 	if (x->_iMiscId == IMISC_BOOK) {
 		strcpy(tempstr, "Right-click to read");
 		AddPanelString(tempstr, TRUE);
 	}
-#ifdef HELLFIRE
 	if (x->_iMiscId == IMISC_NOTE) {
 		strcpy(tempstr, "Right click to read");
 		AddPanelString(tempstr, TRUE);
 	}
-#endif
 	if (x->_iMiscId == IMISC_MAPOFDOOM) {
 		strcpy(tempstr, "Right-click to view");
 		AddPanelString(tempstr, TRUE);
@@ -4205,12 +4157,10 @@ void PrintItemMisc(ItemStruct *x)
 		sprintf(tempstr, "Level : %i", x->_ivalue);
 		AddPanelString(tempstr, TRUE);
 	}
-#ifdef HELLFIRE
 	if (x->_iMiscId == IMISC_AURIC) {
 		sprintf(tempstr, "Doubles gold capacity");
 		AddPanelString(tempstr, TRUE);
 	}
-#endif
 }
 
 void PrintItemDetails(ItemStruct *x)
@@ -4413,11 +4363,7 @@ void UseItem(int p, int Mid, int spl)
 	case IMISC_REJUV:
 		j = plr[p]._pMaxHP >> 8;
 		l = ((j >> 1) + random_(39, j)) << 6;
-#ifdef HELLFIRE
 		if (plr[p]._pClass == PC_WARRIOR || plr[p]._pClass == PC_BARBARIAN)
-#else
-		if (plr[p]._pClass == PC_WARRIOR)
-#endif
 			l <<= 1;
 		if (plr[p]._pClass == PC_ROGUE)
 			l += l >> 1;
@@ -4507,7 +4453,6 @@ void UseItem(int p, int Mid, int spl)
 	case IMISC_MAPOFDOOM:
 		doom_init();
 		break;
-#ifdef HELLFIRE
 	case IMISC_OILACC:
 	case IMISC_OILMAST:
 	case IMISC_OILSHARP:
@@ -4530,14 +4475,12 @@ void UseItem(int p, int Mid, int spl)
 		}
 		NewCursor(CURSOR_OIL);
 		break;
-#endif
 	case IMISC_SPECELIX:
 		ModifyPlrStr(p, 3);
 		ModifyPlrMag(p, 3);
 		ModifyPlrDex(p, 3);
 		ModifyPlrVit(p, 3);
 		break;
-#ifdef HELLFIRE
 	case IMISC_RUNEF:
 		plr[p]._pTSpell = SPL_RUNEFIRE;
 		plr[p]._pTSplType = RSPLTYPE_INVALID;
@@ -4568,7 +4511,6 @@ void UseItem(int p, int Mid, int spl)
 		if (p == myplr)
 			NewCursor(CURSOR_TELEPORT);
 		break;
-#endif
 	}
 }
 
@@ -4620,17 +4562,11 @@ int RndSmithItem(int lvl)
 	ri = 0;
 	for (i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
 		if (AllItemsList[i].iRnd != IDROP_NEVER && SmithItemOk(i) && lvl >= AllItemsList[i].iMinMLvl
-#ifdef HELLFIRE
-		    && ri < 512
-#endif
-		) {
+		    && ri < 512) {
 			ril[ri] = i;
 			ri++;
 			if (AllItemsList[i].iRnd == IDROP_DOUBLE
-#ifdef HELLFIRE
-			    && ri < 512
-#endif
-			) {
+			    && ri < 512) {
 				ril[ri] = i;
 				ri++;
 			}
@@ -4745,11 +4681,7 @@ int RndPremiumItem(int minlvl, int maxlvl)
 	for (i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
 		if (AllItemsList[i].iRnd != IDROP_NEVER) {
 			if (PremiumItemOk(i)) {
-#ifdef HELLFIRE
 				if (AllItemsList[i].iMinMLvl >= minlvl && AllItemsList[i].iMinMLvl <= maxlvl && ri < 512) {
-#else
-				if (AllItemsList[i].iMinMLvl >= minlvl && AllItemsList[i].iMinMLvl <= maxlvl) {
-#endif
 					ril[ri] = i;
 					ri++;
 				}
@@ -4966,10 +4898,7 @@ int RndWitchItem(int lvl)
 	ri = 0;
 	for (i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
 		if (AllItemsList[i].iRnd != IDROP_NEVER && WitchItemOk(i) && lvl >= AllItemsList[i].iMinMLvl
-#ifdef HELLFIRE
-		    && ri < 512
-#endif
-		) {
+		    && ri < 512) {
 
 			ril[ri] = i;
 			ri++;
@@ -5106,10 +5035,7 @@ int RndBoyItem(int lvl)
 	ri = 0;
 	for (i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
 		if (AllItemsList[i].iRnd != IDROP_NEVER && PremiumItemOk(i) && lvl >= AllItemsList[i].iMinMLvl
-#ifdef HELLFIRE
-		    && ri < 512
-#endif
-		) {
+		    && ri < 512) {
 			ril[ri] = i;
 			ri++;
 		}
@@ -5325,10 +5251,7 @@ int RndHealerItem(int lvl)
 	ri = 0;
 	for (i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
 		if (AllItemsList[i].iRnd != IDROP_NEVER && HealerItemOk(i) && lvl >= AllItemsList[i].iMinMLvl
-#ifdef HELLFIRE
-		    && ri < 512
-#endif
-		) {
+		    && ri < 512) {
 			ril[ri] = i;
 			ri++;
 		}

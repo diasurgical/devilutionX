@@ -20,11 +20,6 @@ BOOLEAN sgbSaveSoundOn;
 MonsterStruct monster[MAXMONSTERS];
 int totalmonsters;
 CMonster Monsters[MAX_LVLMTYPES];
-#ifdef HELLFIRE
-int GraphicTable[NUMLEVELS][MAX_LVLMTYPES];
-#else
-BYTE GraphicTable[NUMLEVELS][MAX_LVLMTYPES];
-#endif
 int monstimgtot;
 int uniquetrans;
 int nummtypes;
@@ -76,10 +71,8 @@ int offset_x[8] = { 1, 0, -1, -1, -1, 0, 1, 1 };
 /** Maps from direction to delta Y-offset. */
 int offset_y[8] = { 1, 1, 1, 0, -1, -1, -1, 0 };
 
-#ifdef HELLFIRE
 int HorkXAdd[8] = { 1, 0, -1, -1, -1, 0, 1, 1 }; // CODEFIX: same values as offset_x, remove it and use offset_x instead
 int HorkYAdd[8] = { 1, 1, 1, 0, -1, -1, -1, 0 }; // CODEFIX: same values as offset_y, remove it and use offset_y instead
-#endif
 
 /** unused */
 int rnd5[4] = { 5, 10, 15, 20 };
@@ -121,7 +114,6 @@ void (*AiProc[])(int i) = {
 	&MAI_Lazhelp,
 	&MAI_Lachdanan,
 	&MAI_Warlord,
-#ifdef HELLFIRE
 	&mai_ranged_441680,
 	&mai_ranged_44168B,
 	&mai_horkdemon,
@@ -130,7 +122,6 @@ void (*AiProc[])(int i) = {
 	&mai_ranged_44165F,
 	&mai_ranged_44166A,
 	&mai_roundranged_441EA0
-#endif
 };
 
 void InitMonsterTRN(int monst, BOOL special)
@@ -234,7 +225,6 @@ void GetLevelMTypes()
 		return;
 	}
 
-#ifdef HELLFIRE
 	if (currlevel == 18)
 		AddMonsterType(MT_HORKSPWN, PLACE_SCATTER);
 	if (currlevel == 19) {
@@ -247,7 +237,6 @@ void GetLevelMTypes()
 		AddMonsterType(MT_ARCHLICH, PLACE_SCATTER);
 		AddMonsterType(MT_NAKRUL, PLACE_SPECIAL);
 	}
-#endif
 
 	if (!setlevel) {
 		if (QuestStatus(Q_BUTCHER))
@@ -386,11 +375,11 @@ void InitMonsterGFX(int monst)
 		LoadMissileGFX(MFILE_FLAREEXP);
 #endif
 	}
-#ifdef HELLFIRE
 	if (mtype >= MT_INCIN && mtype <= MT_HELLBURN && !(MissileFileFlag & 8)) {
 		MissileFileFlag |= 8;
 		LoadMissileGFX(MFILE_KRULL);
 	}
+#ifdef HELLFIRE
 	if ((mtype >= MT_NACID && mtype <= MT_XACID || mtype == MT_SPIDLORD) && !(MissileFileFlag & 0x10)) {
 		MissileFileFlag |= 0x10;
 		LoadMissileGFX(MFILE_ACIDBF);
@@ -413,11 +402,11 @@ void InitMonsterGFX(int monst)
 		LoadMissileGFX(MFILE_SCUBMISC);
 		LoadMissileGFX(MFILE_SCBSEXPC);
 	}
-#ifndef HELLFIRE
 	if (mtype >= MT_INCIN && mtype <= MT_HELLBURN && !(MissileFileFlag & 8)) {
 		MissileFileFlag |= 8;
 		LoadMissileGFX(MFILE_KRULL);
 	}
+#ifndef HELLFIRE
 	if (mtype >= MT_NACID && mtype <= MT_XACID && !(MissileFileFlag & 0x10)) {
 		MissileFileFlag |= 0x10;
 		LoadMissileGFX(MFILE_ACIDBF);
@@ -493,11 +482,7 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 	monster[i]._mAnimFrame = random_(88, monster[i]._mAnimLen - 1) + 1;
 
 	if (monst->mtype == MT_DIABLO) {
-#ifdef HELLFIRE
-		monster[i]._mmaxhp = (random_(88, 1) + 3333) << 6;
-#else
-		monster[i]._mmaxhp = (random_(88, 1) + 1666) << 6;
-#endif
+		monster[i]._mmaxhp = (random_(88, 1) + (gbIsHellfire ? 3333 : 1666)) << 6;
 	} else {
 		monster[i]._mmaxhp = (monst->mMinHP + random_(88, monst->mMaxHP - monst->mMinHP + 1)) << 6;
 	}
@@ -521,9 +506,7 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 	monster[i]._mDelFlag = FALSE;
 	monster[i]._uniqtype = 0;
 	monster[i]._msquelch = 0;
-#ifdef HELLFIRE
 	monster[i].mlid = 0;
-#endif
 	monster[i]._mRndSeed = GetRndSeed();
 	monster[i]._mAISeed = GetRndSeed();
 	monster[i].mWhoHit = 0;
@@ -550,11 +533,11 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 	}
 
 	if (gnDifficulty == DIFF_NIGHTMARE) {
-#ifdef HELLFIRE
-		monster[i]._mmaxhp = 3 * monster[i]._mmaxhp + ((gbMaxPlayers != 1 ? 100 : 50) << 6);
-#else
-		monster[i]._mmaxhp = 3 * monster[i]._mmaxhp + 64;
-#endif
+		monster[i]._mmaxhp = 3 * monster[i]._mmaxhp;
+		if (gbIsHellfire)
+			monster[i]._mmaxhp += (gbMaxPlayers != 1 ? 100 : 50) << 6;
+		else
+			monster[i]._mmaxhp += 64;
 		monster[i]._mhitpoints = monster[i]._mmaxhp;
 		monster[i].mLevel += 15;
 		monster[i].mExp = 2 * (monster[i].mExp + 1000);
@@ -565,17 +548,12 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 		monster[i].mMinDamage2 = 2 * (monster[i].mMinDamage2 + 2);
 		monster[i].mMaxDamage2 = 2 * (monster[i].mMaxDamage2 + 2);
 		monster[i].mArmorClass += NIGHTMARE_AC_BONUS;
-	}
-
-#ifdef HELLFIRE
-	else
-#endif
-	    if (gnDifficulty == DIFF_HELL) {
-#ifdef HELLFIRE
-		monster[i]._mmaxhp = 4 * monster[i]._mmaxhp + ((gbMaxPlayers != 1 ? 200 : 100) << 6);
-#else
-		monster[i]._mmaxhp = 4 * monster[i]._mmaxhp + 192;
-#endif
+	} else if (gnDifficulty == DIFF_HELL) {
+		monster[i]._mmaxhp = 4 * monster[i]._mmaxhp;
+		if (gbIsHellfire)
+			monster[i]._mmaxhp += (gbMaxPlayers != 1 ? 200 : 100) << 6;
+		else
+			monster[i]._mmaxhp += 192;
 		monster[i]._mhitpoints = monster[i]._mmaxhp;
 		monster[i].mLevel += 30;
 		monster[i].mExp = 4 * (monster[i].mExp + 1000);
@@ -670,7 +648,6 @@ void PlaceMonster(int i, int mtype, int x, int y)
 {
 	int rd;
 
-#ifdef HELLFIRE
 	if (Monsters[mtype].mtype == MT_NAKRUL) {
 		for (int j = 0; j < nummonsters; j++) {
 			if (monster[j]._mMTidx == mtype) {
@@ -681,7 +658,6 @@ void PlaceMonster(int i, int mtype, int x, int y)
 			}
 		}
 	}
-#endif
 	dMonster[x][y] = i + 1;
 
 	rd = random_(90, 8);
@@ -795,7 +771,6 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 		}
 	}
 
-#ifdef HELLFIRE
 	if (uniqindex == UMT_NAKRUL) {
 		if (UberRow == 0 || UberCol == 0) {
 			UberDiabloMonsterIndex = -1;
@@ -805,7 +780,6 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 		yp = UberCol;
 		UberDiabloMonsterIndex = nummonsters;
 	}
-#endif
 	PlaceMonster(nummonsters, uniqtype, xp, yp);
 	Monst->_uniqtype = uniqindex + 1;
 
@@ -835,11 +809,9 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	Monst->mMaxDamage2 = Uniq->mMaxDamage;
 	Monst->mMagicRes = Uniq->mMagicRes;
 	Monst->mtalkmsg = Uniq->mtalkmsg;
-#ifdef HELLFIRE
 	if (uniqindex == UMT_HORKDMN)
 		Monst->mlid = 0;
 	else
-#endif
 		Monst->mlid = AddLight(Monst->_mx, Monst->_my, 3);
 
 	if (gbMaxPlayers != 1) {
@@ -863,11 +835,11 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 		Monst->_mgoal = MGOAL_INQUIRING;
 
 	if (gnDifficulty == DIFF_NIGHTMARE) {
-#ifdef HELLFIRE
-		Monst->_mmaxhp = 3 * Monst->_mmaxhp + ((gbMaxPlayers != 1 ? 100 : 50) << 6);
-#else
-		Monst->_mmaxhp = 3 * Monst->_mmaxhp + 64;
-#endif
+		Monst->_mmaxhp = 3 * Monst->_mmaxhp;
+		if (gbIsHellfire)
+			Monst->_mmaxhp += (gbMaxPlayers != 1 ? 100 : 50) << 6;
+		else
+			Monst->_mmaxhp += 64;
 		Monst->mLevel += 15;
 		Monst->_mhitpoints = Monst->_mmaxhp;
 		Monst->mExp = 2 * (Monst->mExp + 1000);
@@ -875,18 +847,12 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 		Monst->mMaxDamage = 2 * (Monst->mMaxDamage + 2);
 		Monst->mMinDamage2 = 2 * (Monst->mMinDamage2 + 2);
 		Monst->mMaxDamage2 = 2 * (Monst->mMaxDamage2 + 2);
-	}
-
-#ifdef HELLFIRE
-	else if (gnDifficulty == DIFF_HELL) {
-#else
-	if (gnDifficulty == DIFF_HELL) {
-#endif
-#ifdef HELLFIRE
-		Monst->_mmaxhp = 4 * Monst->_mmaxhp + ((gbMaxPlayers != 1 ? 200 : 100) << 6);
-#else
-		Monst->_mmaxhp = 4 * Monst->_mmaxhp + 192;
-#endif
+	} else if (gnDifficulty == DIFF_HELL) {
+		Monst->_mmaxhp = 4 * Monst->_mmaxhp;
+		if (gbIsHellfire)
+			Monst->_mmaxhp += (gbMaxPlayers != 1 ? 200 : 100) << 6;
+		else
+			Monst->_mmaxhp += 192;
 		Monst->mLevel += 30;
 		Monst->_mhitpoints = Monst->_mmaxhp;
 		Monst->mExp = 4 * (Monst->mExp + 1000);
@@ -1032,7 +998,6 @@ void PlaceQuestMonsters()
 			SetMapMonsters(setp, 2 * setpc_x, 2 * setpc_y);
 			mem_free_dbg(setp);
 		}
-#ifdef HELLFIRE
 
 		if (currlevel == 24) {
 			UberDiabloMonsterIndex = -1;
@@ -1053,7 +1018,6 @@ void PlaceQuestMonsters()
 			if (UberDiabloMonsterIndex == -1)
 				PlaceUniqueMonst(UMT_NAKRUL, 0, 0);
 		}
-#endif
 	} else if (setlvlnum == SL_SKELKING) {
 		PlaceUniqueMonst(UMT_SKELKING, 0, 0);
 	}
@@ -1206,11 +1170,7 @@ void InitMonsters()
 			mtype = scattertypes[random_(95, numscattypes)];
 			if (currlevel == 1 || random_(95, 2) == 0)
 				na = 1;
-#ifdef HELLFIRE
 			else if (currlevel == 2 || currlevel >= 21 && currlevel <= 24)
-#else
-			else if (currlevel == 2)
-#endif
 				na = random_(95, 2) + 2;
 			else
 				na = random_(95, 3) + 3;
@@ -1288,7 +1248,6 @@ int AddMonster(int x, int y, int dir, int mtype, BOOL InMap)
 	return -1;
 }
 
-#ifdef HELLFIRE
 void monster_43C785(int i)
 {
 	int x, y, d, j, oi, dir, mx, my;
@@ -1320,7 +1279,6 @@ void monster_43C785(int i)
 		}
 	}
 }
-#endif
 
 void NewMonsterAnim(int i, AnimStruct *anim, int md)
 {
@@ -1793,7 +1751,6 @@ void M_DiabloDeath(int i, BOOL sendmsg)
 	Monst->_mVar6 = (int)((Monst->_mVar4 - (Monst->_my << 16)) / (double)dist);
 }
 
-#ifdef HELLFIRE
 void SpawnLoot(int i, BOOL sendmsg)
 {
 	int nSFX;
@@ -1830,7 +1787,6 @@ void SpawnLoot(int i, BOOL sendmsg)
 		SpawnItem(i, Monst->_mx, Monst->_my, sendmsg);
 	}
 }
-#endif
 
 void M2MStartHit(int mid, int i, int dam)
 {
@@ -1905,15 +1861,7 @@ void MonstStartKill(int i, int pnum, BOOL sendmsg)
 	monstkills[Monst->MType->mtype]++;
 	Monst->_mhitpoints = 0;
 	SetRndSeed(Monst->_mRndSeed);
-#ifdef HELLFIRE
 	SpawnLoot(i, sendmsg);
-#else
-	if (QuestStatus(Q_GARBUD) && Monst->mName == UniqMonst[UMT_GARBUD].mName) {
-		CreateTypeItem(Monst->_mx + 1, Monst->_my + 1, TRUE, ITYPE_MACE, IMISC_NONE, TRUE, FALSE);
-	} else if (i > MAX_PLRS - 1) { // Golems should not spawn items
-		SpawnItem(i, Monst->_mx, Monst->_my, sendmsg);
-	}
-#endif
 	if (Monst->MType->mtype == MT_DIABLO)
 		M_DiabloDeath(i, TRUE);
 	else
@@ -1940,11 +1888,7 @@ void MonstStartKill(int i, int pnum, BOOL sendmsg)
 	dMonster[Monst->_mx][Monst->_my] = i + 1;
 	CheckQuestKill(i, sendmsg);
 	M_FallenFear(Monst->_mx, Monst->_my);
-#ifdef HELLFIRE
 	if (Monst->MType->mtype >= MT_NACID && Monst->MType->mtype <= MT_XACID || Monst->MType->mtype == MT_SPIDLORD)
-#else
-	if (Monst->MType->mtype >= MT_NACID && Monst->MType->mtype <= MT_XACID)
-#endif
 		AddMissile(Monst->_mx, Monst->_my, 0, 0, 0, MIS_ACIDPUD, TARGET_PLAYERS, i, Monst->_mint + 1, 0);
 }
 
@@ -4155,7 +4099,6 @@ void MAI_Succ(int i)
 	MAI_Ranged(i, MIS_FLARE, FALSE);
 }
 
-#ifdef HELLFIRE
 void mai_ranged_441649(int i)
 {
 	MAI_Ranged(i, MIS_LICH, FALSE);
@@ -4175,14 +4118,12 @@ void mai_ranged_44166A(int i)
 {
 	MAI_Ranged(i, MIS_NECROMORB, FALSE);
 }
-#endif
 
 void MAI_AcidUniq(int i)
 {
 	MAI_Ranged(i, MIS_ACID, TRUE);
 }
 
-#ifdef HELLFIRE
 void mai_ranged_441680(int i)
 {
 	MAI_Ranged(i, MIS_FIREBOLT, FALSE);
@@ -4192,7 +4133,6 @@ void mai_ranged_44168B(int i)
 {
 	MAI_Ranged(i, MIS_FIREBALL, FALSE);
 }
-#endif
 
 void MAI_Scav(int i)
 {
@@ -4404,12 +4344,10 @@ void MAI_Storm(int i)
 	MAI_RoundRanged(i, MIS_LIGHTCTRL2, TRUE, 4, 0);
 }
 
-#ifdef HELLFIRE
 void mai_roundranged_441EA0(int i)
 {
 	MAI_RoundRanged(i, MIS_BONEDEMON, TRUE, 4, 0);
 }
-#endif
 
 void MAI_Acid(int i)
 {
@@ -4718,7 +4656,6 @@ void MAI_Rhino(int i)
 	}
 }
 
-#ifdef HELLFIRE
 void mai_horkdemon(int i)
 {
 	MonsterStruct *Monst;
@@ -4789,7 +4726,6 @@ void mai_horkdemon(int i)
 		Monst->_mAnimData = Monst->MType->Anims[MA_STAND].Data[Monst->_mdir];
 	}
 }
-#endif
 
 void MAI_Counselor(int i)
 {
@@ -5229,7 +5165,6 @@ void ProcessMonsters()
 			if (Monst->MType->mtype == MT_CLEAVER) {
 				PlaySFX(USFX_CLEAVER);
 			}
-#ifdef HELLFIRE
 			if (Monst->MType->mtype == MT_NAKRUL) {
 				if (UseCowFarmer) {
 					PlaySFX(USFX_NAKRUL6);
@@ -5243,7 +5178,6 @@ void ProcessMonsters()
 			if (Monst->MType->mtype == MT_DEFILER)
 				PlaySFX(USFX_DEFILER8);
 			M_Enemy(mi);
-#endif
 		}
 
 		if (Monst->_mFlags & MFLAG_TARGETS_MONSTER) {
@@ -5944,7 +5878,6 @@ BOOL PosOkMonst(int i, int x, int y)
 	return ret;
 }
 
-#ifdef HELLFIRE
 BOOLEAN monster_posok(int i, int x, int y)
 {
 	int mi, j;
@@ -5983,7 +5916,6 @@ BOOLEAN monster_posok(int i, int x, int y)
 	}
 	return ret;
 }
-#endif
 
 BOOL PosOkMonst2(int i, int x, int y)
 {

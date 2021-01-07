@@ -70,11 +70,10 @@ static BOOL mainmenu_multi_player()
 static void mainmenu_play_intro()
 {
 	music_stop();
-#ifdef HELLFIRE
-	play_movie("gendata\\Hellfire.smk", TRUE);
-#else
-	play_movie("gendata\\diablo1.smk", TRUE);
-#endif
+	if (gbIsHellfire)
+		play_movie("gendata\\Hellfire.smk", TRUE);
+	else
+		play_movie("gendata\\diablo1.smk", TRUE);
 	mainmenu_refresh_music();
 }
 void mainmenu_change_name(int arg1, int arg2, int arg3, int arg4, char *name_1, char *name_2)
@@ -164,12 +163,9 @@ void mainmenu_loop()
 			break;
 		case MAINMENU_ATTRACT_MODE:
 		case MAINMENU_REPLAY_INTRO:
-#ifndef HELLFIRE
-			if (gbIsSpawn)
+			if (gbIsSpawn && !gbIsHellfire)
 				done = FALSE;
-			else
-#endif
-			    if (gbActive)
+			else if (gbActive)
 				mainmenu_play_intro();
 			break;
 		case MAINMENU_SHOW_CREDITS:

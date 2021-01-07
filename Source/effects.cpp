@@ -1262,10 +1262,8 @@ static int RndSFX(int psfx)
 		nRand = 2;
 	else if (psfx == PS_ROGUE69)
 		nRand = 2;
-#ifdef HELLFIRE
 	else if (psfx == PS_MONK69)
 		nRand = 2;
-#endif
 	else if (psfx == PS_SWING)
 		nRand = 2;
 	else if (psfx == LS_ACID)
@@ -1353,11 +1351,9 @@ static void priv_sound_init(BYTE bLoadMask)
 			continue;
 		}
 
-#ifndef HELLFIRE
-		if (sgSFX[i].bFlags & sfx_HELLFIRE) {
+		if (!gbIsHellfire && sgSFX[i].bFlags & sfx_HELLFIRE) {
 			continue;
 		}
-#endif
 
 		sgSFX[i].pSnd = sound_file_load(sgSFX[i].pszName);
 	}

@@ -589,8 +589,6 @@ static int InitLevelType(int l)
 		return DTYPE_CATACOMBS;
 	if (l >= 9 && l <= 12)
 		return DTYPE_CAVES;
-
-#ifdef HELLFIRE
 	if (l >= 13 && l <= 16)
 		return DTYPE_HELL;
 	if (l >= 21 && l <= 24)
@@ -599,9 +597,6 @@ static int InitLevelType(int l)
 		return DTYPE_CAVES; // Hive
 
 	return DTYPE_CATHEDRAL;
-#else
-	return DTYPE_HELL;
-#endif
 }
 
 static void SetupLocalCoords()

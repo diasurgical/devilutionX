@@ -301,20 +301,12 @@ BOOL pfile_ui_save_create(_uiheroinfo *heroinfo)
 	PkPlayerStruct pkplr;
 
 	save_num = pfile_get_save_num_from_name(heroinfo->name);
-#ifdef HELLFIRE
 	if (save_num >= MAX_CHARACTERS) {
-#else
-	if (save_num == MAX_CHARACTERS) {
-#endif
 		for (save_num = 0; save_num < MAX_CHARACTERS; save_num++) {
 			if (!hero_names[save_num][0])
 				break;
 		}
-#ifdef HELLFIRE
 		if (save_num >= MAX_CHARACTERS)
-#else
-		if (save_num == MAX_CHARACTERS)
-#endif
 			return FALSE;
 	}
 	if (!pfile_open_archive(FALSE, save_num))

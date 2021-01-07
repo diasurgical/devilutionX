@@ -26,7 +26,7 @@ int bxadd[8] = { -1, 0, 1, -1, 1, -1, 0, 1 };
 /** Specifies the Y-coordinate delta between barrels. */
 int byadd[8] = { -1, -1, -1, 0, 0, 1, 1, 1 };
 /** Maps from shrine_id to shrine name. */
-const char *const shrinestrs[NUM_SHRINETYPE] = {
+const char *const shrinestrs[] = {
 	"Mysterious",
 	"Hidden",
 	"Gloomy",
@@ -53,7 +53,6 @@ const char *const shrinestrs[NUM_SHRINETYPE] = {
 	"Ornate",
 	"Glimmering",
 	"Tainted",
-#ifdef HELLFIRE
 	"Oily",
 	"Glowing",
 	"Mendicant's",
@@ -62,10 +61,9 @@ const char *const shrinestrs[NUM_SHRINETYPE] = {
 	"Shimmering",
 	"Solar",
 	"Murphy's",
-#endif
 };
 /** Specifies the minimum dungeon level on which each shrine will appear. */
-char shrinemin[NUM_SHRINETYPE] = {
+char shrinemin[] = {
 	1, // Mysterious
 	1, // Hidden
 	1, // Gloomy
@@ -92,7 +90,6 @@ char shrinemin[NUM_SHRINETYPE] = {
 	1, // Ornate
 	1, // Glimmering
 	1, // Tainted
-#ifdef HELLFIRE
 	1, // Oily
 	1, // Glowing
 	1, // Mendicant's
@@ -101,10 +98,9 @@ char shrinemin[NUM_SHRINETYPE] = {
 	1, // Shimmering
 	1, // Solar,
 	1, // Murphy's
-#endif
 };
 /** Specifies the maximum dungeon level on which each shrine will appear. */
-char shrinemax[NUM_SHRINETYPE] = {
+char shrinemax[] = {
 	MAX_LVLS, // Mysterious
 	MAX_LVLS, // Hidden
 	MAX_LVLS, // Gloomy
@@ -131,7 +127,6 @@ char shrinemax[NUM_SHRINETYPE] = {
 	MAX_LVLS, // Ornate
 	MAX_LVLS, // Glimmering
 	MAX_LVLS, // Tainted
-#ifdef HELLFIRE
 	MAX_LVLS, // Oily
 	MAX_LVLS, // Glowing
 	MAX_LVLS, // Mendicant's
@@ -140,7 +135,6 @@ char shrinemax[NUM_SHRINETYPE] = {
 	MAX_LVLS, // Shimmering
 	MAX_LVLS, // Solar,
 	MAX_LVLS, // Murphy's
-#endif
 };
 /**
  * Specifies the game type for which each shrine may appear.
@@ -149,7 +143,7 @@ char shrinemax[NUM_SHRINETYPE] = {
  * SHRINETYPE_MULTI - 2 - mp only
  */
 
-BYTE shrineavail[NUM_SHRINETYPE] = {
+BYTE shrineavail[] = {
 	SHRINETYPE_ANY,    // SHRINE_MYSTERIOUS
 	SHRINETYPE_ANY,    // SHRINE_HIDDEN
 	SHRINETYPE_SINGLE, // SHRINE_GLOOMY
@@ -176,7 +170,6 @@ BYTE shrineavail[NUM_SHRINETYPE] = {
 	SHRINETYPE_ANY,    // SHRINE_ORNATE
 	SHRINETYPE_ANY,    // SHRINE_GLIMMERING
 	SHRINETYPE_MULTI,  // SHRINE_TAINTED
-#ifdef HELLFIRE
 	SHRINETYPE_ANY,    // SHRINE_OILY
 	SHRINETYPE_ANY,    // SHRINE_GLOWING
 	SHRINETYPE_ANY,    // SHRINE_MENDICANT
@@ -185,7 +178,6 @@ BYTE shrineavail[NUM_SHRINETYPE] = {
 	SHRINETYPE_ANY,    // SHRINE_SHIMMERING
 	SHRINETYPE_SINGLE, // SHRINE_SOLAR
 	SHRINETYPE_ANY,    // SHRINE_MURPHYS
-#endif
 };
 /** Maps from book_id to book name. */
 const char *const StoryBookName[] = {
@@ -769,7 +761,6 @@ void AddDiabObjs()
 	mem_free_dbg(lpSetPiece);
 }
 
-#ifdef HELLFIRE
 void objects_add_lv22(int s)
 {
 	bool exit;
@@ -843,7 +834,6 @@ void objects_454AF0(int a1, int a2, int a3)
 {
 	objects_44D8C5(OBJ_STORYBOOK, a1, a2, a3);
 }
-#endif
 
 void AddStoryBooks()
 {
@@ -978,9 +968,7 @@ void InitObjects()
 	BYTE *mem;
 
 	ClrAllObjects();
-#ifdef HELLFIRE
 	dword_6DE0E0 = 0;
-#endif
 	if (currlevel == 16) {
 		AddDiabObjs();
 	} else {
@@ -991,7 +979,6 @@ void InitObjects()
 		if (currlevel == quests[Q_MUSHROOM]._qlevel && quests[Q_MUSHROOM]._qactive == QUEST_INIT)
 			AddMushPatch();
 
-#ifdef HELLFIRE
 		if (currlevel == 4 || currlevel == 8 || currlevel == 12)
 			AddStoryBooks();
 		if (currlevel == 21) {
@@ -1006,14 +993,6 @@ void InitObjects()
 		if (currlevel == 24) {
 			objects_add_lv24();
 		}
-#else
-		if (currlevel == 4)
-			AddStoryBooks();
-		if (currlevel == 8)
-			AddStoryBooks();
-		if (currlevel == 12)
-			AddStoryBooks();
-#endif
 		if (leveltype == DTYPE_CATHEDRAL) {
 			if (QuestStatus(Q_BUTCHER))
 				AddTortures();
@@ -1593,7 +1572,6 @@ void AddSlainHero()
 	AddObject(OBJ_SLAINHERO, x + 2, y + 2);
 }
 
-#ifdef HELLFIRE
 void objects_44D8C5(int ot, int v2, int ox, int oy)
 {
 	int oi;
@@ -1679,7 +1657,6 @@ void objects_44DA68(int i, int a2)
 		object[i]._oVar8 = 0;
 	}
 }
-#endif
 
 void AddObject(int ot, int ox, int oy)
 {
@@ -4428,7 +4405,6 @@ void OperateStoryBook(int pnum, int i)
 	if (object[i]._oSelFlag != 0 && !deltaload && !qtextflag && pnum == myplr) {
 		object[i]._oAnimFrame = object[i]._oVar4;
 		PlaySfxLoc(IS_ISCROL, object[i]._ox, object[i]._oy);
-#ifdef HELLFIRE
 		if (object[i]._oVar8 != 0 && currlevel == 24) {
 			if (IsUberLeverActivated != 1 && quests[Q_NAKRUL]._qactive != 3 && objects_lv_24_454B04(object[i]._oVar8)) {
 				NetSendCmd(FALSE, CMD_NAKRUL);
@@ -4439,7 +4415,6 @@ void OperateStoryBook(int pnum, int i)
 			quests[Q_NAKRUL]._qlog = 1;
 			quests[Q_NAKRUL]._qmsg = object[i]._oVar2;
 		}
-#endif
 		InitQTextMsg(object[i]._oVar2);
 		NetSendCmdParam1(FALSE, CMD_OPERATEOBJ, i);
 	}
@@ -4880,10 +4855,8 @@ void SyncL1Doors(int i)
 		object[i]._oMissFlag = FALSE;
 		return;
 	}
-#ifdef HELLFIRE
-	else
-#endif
-		object[i]._oMissFlag = TRUE;
+
+	object[i]._oMissFlag = TRUE;
 
 	x = object[i]._ox;
 	y = object[i]._oy;

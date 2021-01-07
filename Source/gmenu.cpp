@@ -90,11 +90,10 @@ void gmenu_init_menu()
 	gmenu_current_option = NULL;
 	sgCurrentMenuIdx = 0;
 	mouseNavigation = FALSE;
-#ifdef HELLFIRE
-	sgpLogo = LoadFileInMem("Data\\hf_logo3.CEL", NULL);
-#else
-	sgpLogo = LoadFileInMem("Data\\Diabsmal.CEL", NULL);
-#endif
+	if (gbIsHellfire)
+		sgpLogo = LoadFileInMem("Data\\hf_logo3.CEL", NULL);
+	else
+		sgpLogo = LoadFileInMem("Data\\Diabsmal.CEL", NULL);
 	BigTGold_cel = LoadFileInMem("Data\\BigTGold.CEL", NULL);
 	PentSpin_cel = LoadFileInMem("Data\\PentSpin.CEL", NULL);
 	option_cel = LoadFileInMem("Data\\option.CEL", NULL);

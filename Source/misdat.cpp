@@ -24,11 +24,7 @@ MissileData missiledata[] = {
 	{  MIS_TOWN,          &AddTown,                   &MI_Town,           TRUE,      1, MISR_MAGIC,     MFILE_PORTAL,    LS_SENTINEL, LS_ELEMENTL },
 	{  MIS_FLASH,         &AddFlash,                  &MI_Flash,          TRUE,      1, MISR_MAGIC,     MFILE_BLUEXFR,   LS_NOVA,     LS_ELECIMP1 },
 	{  MIS_FLASH2,        &AddFlash2,                 &MI_Flash2,         TRUE,      1, MISR_MAGIC,     MFILE_BLUEXBK,   -1,          -1          },
-#ifdef HELLFIRE
-	{  MIS_MANASHIELD,    &AddManashield,             &MI_SetManashield,  TRUE,      1, MISR_MAGIC,     MFILE_MANASHLD,  LS_MSHIELD,  -1          },
-#else
 	{  MIS_MANASHIELD,    &AddManashield,             &MI_SetManashield,  FALSE,     1, MISR_MAGIC,     MFILE_MANASHLD,  LS_MSHIELD,  -1          },
-#endif
 	{  MIS_FIREMOVE,      &AddFiremove,               &MI_Firemove,       TRUE,      1, MISR_FIRE,      MFILE_FIREWAL,   -1,          -1          },
 	{  MIS_CHAIN,         &AddChain,                  &MI_Chain,          TRUE,      1, MISR_LIGHTNING, MFILE_LGHNING,   LS_LNING1,   LS_ELECIMP1 },
 	{  MIS_SENTINAL,      NULL,                       NULL,               TRUE,      1, MISR_LIGHTNING, MFILE_LGHNING,   -1,          -1          },
@@ -83,7 +79,6 @@ MissileData missiledata[] = {
 	{  MIS_RPORTAL,       &AddRportal,                &MI_Rportal,        TRUE,      2, MISR_NONE,      MFILE_RPORTAL,   LS_SENTINEL, LS_ELEMENTL },
 	{  MIS_BOOM2,         &AddBoom,                   &MI_Boom,           TRUE,      2, MISR_NONE,      MFILE_FIREPLAR,  -1,          -1          },
 	{  MIS_DIABAPOCA,     &AddDiabApoca,              &MI_Dummy,          FALSE,     2, MISR_NONE,      MFILE_NONE,      -1,          -1          },
-#ifdef HELLFIRE
 	{  MIS_MANA,          &missiles_rech_mana,        &MI_Dummy,          FALSE,     1, MISR_NONE,      MFILE_NONE,      -1,          -1          },
 	{  MIS_MAGI,          &missiles_magi,             &MI_Dummy,          FALSE,     1, MISR_NONE,      MFILE_NONE,      -1,          -1          },
 	{  MIS_LIGHTWALL,     &missiles_light_wall,       &mi_light_wall,     TRUE,      1, MISR_LIGHTNING, MFILE_LGHNING,   LS_LMAG,     LS_ELECIMP1 },
@@ -124,7 +119,6 @@ MissileData missiledata[] = {
 	{  MIS_EXBL2,         &AddMisexp,                 &MI_Misexp,         TRUE,      2, MISR_NONE,      MFILE_EXBL2,     LS_FIRIMP2,  -1          },
 	{  MIS_EXBL3,         &AddMisexp,                 &MI_Misexp,         TRUE,      2, MISR_NONE,      MFILE_EXBL3,     LS_FIRIMP2,  -1          },
 	{  MIS_EXORA1,        &AddMisexp,                 &MI_Misexp,         TRUE,      2, MISR_NONE,      MFILE_EXORA1,    LS_FIRIMP2,  -1          },
-#endif
 	// clang-format on
 };
 

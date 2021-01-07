@@ -240,11 +240,7 @@ ObjDataStruct AllObjects[] = {
 	{      1, OFILE_ALTBOY,    0,       0, DTYPE_CATHEDRAL, THEME_NONE,              Q_BETRAYER,         0,          1,        0,        128, TRUE,       TRUE,      TRUE,            0,        0, FALSE     },
 	{      1, OFILE_MCIRL,     0,       0, DTYPE_CATHEDRAL, THEME_NONE,              Q_BETRAYER,         0,          1,        0,         96, FALSE,      TRUE,      TRUE,            0,        0, FALSE     },
 	{      1, OFILE_MCIRL,     0,       0, DTYPE_CATHEDRAL, THEME_NONE,              Q_BETRAYER,         0,          1,        0,         96, FALSE,      TRUE,      TRUE,            0,        0, FALSE     },
-#ifdef HELLFIRE
-	{      1, OFILE_BKSLBRNT,  1,      24, 0,               THEME_NONE,              -1,                 0,          1,        0,         96, TRUE,       TRUE,      TRUE,            0,        3, FALSE     }, // BUGFIX should only be loaded on level 1-12 (crypt masks as 1-4)
-#else
-	{      1, OFILE_BKSLBRNT,  4,      12, 0,               THEME_NONE,              -1,                 0,          1,        0,         96, TRUE,       TRUE,      TRUE,            0,        3, FALSE     },
-#endif
+	{      1, OFILE_BKSLBRNT,  1,      12, 0,               THEME_NONE,              -1,                 0,          1,        0,         96, TRUE,       TRUE,      TRUE,            0,        3, FALSE     }, // BUGFIX should only be loaded on level 1-12 (crypt masks as 1-4) (fixed)
 	{      1, OFILE_CANDLE2,   2,      12, 0,               THEME_NONE,              Q_BETRAYER,         1,          2,        4,         96, TRUE,       TRUE,      TRUE,            0,        0, FALSE     },
 	{      1, OFILE_BOOK1,    13,      13, DTYPE_HELL,      THEME_NONE,              Q_WARLORD,          0,          4,        0,         96, TRUE,       TRUE,      TRUE,            0,        3, FALSE     },
 	{      1, OFILE_ARMSTAND, 13,      13, 0,               THEME_NONE,              Q_WARLORD,          0,          1,        0,         96, TRUE,       FALSE,     TRUE,            0,        3, FALSE     },
