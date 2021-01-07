@@ -70,7 +70,7 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield)
 	pPack->pMaxManaBase = SwapLE32(pPlayer->_pMaxManaBase);
 	pPack->pMemSpells = SDL_SwapLE64(pPlayer->_pMemSpells);
 
-	for (i = 0; i <= 36; i++) // Should be MAX_SPELLS-1 but set to 36 to make save games compatible	
+	for (i = 0; i <= 36; i++) // Should be MAX_SPELLS-1 but set to 36 to make save games compatible
 		pPack->pSplLvl[i] = pPlayer->_pSplLvl[i];
 	for (i = 37; i < 47; i++)
 		pPack->pSplLvl2[i - 37] = pPlayer->_pSplLvl[i];
@@ -106,11 +106,9 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield)
 		pi++;
 	}
 
-#ifdef HELLFIRE
-	pPack->wReflection = pPlayer->wReflection;
-	pPack->pDifficulty = pPlayer->pDifficulty;
-	pPack->pDamAcFlags = pPlayer->pDamAcFlags;
-#endif
+	pPack->wReflection = SwapLE16(pPlayer->wReflection);
+	pPack->pDifficulty = SwapLE32(pPlayer->pDifficulty);
+	pPack->pDamAcFlags = SwapLE32(pPlayer->pDamAcFlags);
 	pPack->pDiabloKillLevel = SwapLE32(pPlayer->pDiabloKillLevel);
 
 	if (gbMaxPlayers == 1 || manashield)
@@ -265,14 +263,14 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL killok)
 	}
 
 	CalcPlrInv(pnum, FALSE);
-	pPlayer->wReflection = pPack->wReflection;
+	pPlayer->wReflection = SwapLE16(pPack->wReflection);
 	pPlayer->pTownWarps = 0;
 	pPlayer->pDungMsgs = 0;
 	pPlayer->pDungMsgs2 = 0;
 	pPlayer->pLvlLoad = 0;
 	pPlayer->pDiabloKillLevel = SwapLE32(pPack->pDiabloKillLevel);
 	pPlayer->pBattleNet = pPack->pBattleNet;
-	pPlayer->pManaShield = pPack->pManaShield;
+	pPlayer->pManaShield = SwapLE32(pPack->pManaShield);
 	pPlayer->pDifficulty = SwapLE32(pPack->pDifficulty);
 	pPlayer->pDamAcFlags = SwapLE32(pPack->pDamAcFlags);
 }
