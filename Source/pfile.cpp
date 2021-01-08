@@ -333,14 +333,14 @@ BOOL pfile_get_file_name(DWORD lvl, char *dst)
 			return FALSE;
 		fmt = "hero";
 	} else {
-		if (lvl < NUMLEVELS)
+		if (lvl < giNumberOfLevels)
 			fmt = "perml%02d";
-		else if (lvl < NUMLEVELS * 2) {
-			lvl -= NUMLEVELS;
+		else if (lvl < giNumberOfLevels * 2) {
+			lvl -= giNumberOfLevels;
 			fmt = "perms%02d";
-		} else if (lvl == NUMLEVELS * 2)
+		} else if (lvl == giNumberOfLevels * 2)
 			fmt = "game";
-		else if (lvl == NUMLEVELS * 2 + 1)
+		else if (lvl == giNumberOfLevels * 2 + 1)
 			fmt = "hero";
 		else
 			return FALSE;
@@ -416,10 +416,10 @@ static BOOL GetPermSaveNames(DWORD dwIndex, char *szPerm)
 {
 	const char *fmt;
 
-	if (dwIndex < NUMLEVELS)
+	if (dwIndex < giNumberOfLevels)
 		fmt = "perml%02d";
-	else if (dwIndex < NUMLEVELS * 2) {
-		dwIndex -= NUMLEVELS;
+	else if (dwIndex < giNumberOfLevels * 2) {
+		dwIndex -= giNumberOfLevels;
 		fmt = "perms%02d";
 	} else
 		return FALSE;
@@ -432,10 +432,10 @@ static BOOL GetTempSaveNames(DWORD dwIndex, char *szTemp)
 {
 	const char *fmt;
 
-	if (dwIndex < NUMLEVELS)
+	if (dwIndex < giNumberOfLevels)
 		fmt = "templ%02d";
-	else if (dwIndex < NUMLEVELS * 2) {
-		dwIndex -= NUMLEVELS;
+	else if (dwIndex < giNumberOfLevels * 2) {
+		dwIndex -= giNumberOfLevels;
 		fmt = "temps%02d";
 	} else
 		return FALSE;

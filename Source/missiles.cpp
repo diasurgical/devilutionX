@@ -1205,8 +1205,8 @@ void SetMissAnim(int mi, int animtype)
 {
 	int dir = missile[mi]._mimfnum;
 
-	if (animtype > MFILE_NULL) {
-		animtype = MFILE_NULL;
+	if (animtype > MFILE_NONE) {
+		animtype = MFILE_NONE;
 	}
 
 	missile[mi]._miAnimType = animtype;
@@ -1259,6 +1259,8 @@ void InitMissileGFX()
 	int mi;
 
 	for (mi = 0; misfiledata[mi].mAnimFAmt; mi++) {
+        if (!gbIsHellfire && mi > MFILE_SCBSEXPD)
+            break;
 		if (!(misfiledata[mi].mFlags & MFLAG_HIDDEN))
 			LoadMissileGFX(mi);
 	}

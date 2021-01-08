@@ -1532,8 +1532,7 @@ typedef enum missile_graphic_id {
 	MFILE_BONEDEMON,
 	MFILE_EXORA1,
 	MFILE_EXBL3,
-	MFILE_NULL,
-	MFILE_NONE = 0xFF, // BUGFIX: should be `MFILE_NONE = MFILE_SCBSEXPD+1`, i.e. MFILE_NULL, since there would otherwise be an out-of-bounds in SetMissAnim when accessing misfiledata for any of the missiles that have MFILE_NONE as mFileNum in missiledata.
+	MFILE_NONE, // BUGFIX: should be `MFILE_NONE = MFILE_SCBSEXPD+1`, i.e. MFILE_NULL, since there would otherwise be an out-of-bounds in SetMissAnim when accessing misfiledata for any of the missiles that have MFILE_NONE as mFileNum in missiledata. (fixed)
 } missile_graphic_id;
 
 typedef enum _mai_id {
@@ -3393,7 +3392,6 @@ typedef enum shrine_type {
 	SHRINE_ORNATE       = 23,
 	SHRINE_GLIMMERING   = 24,
 	SHRINE_TAINTED      = 25,
-#ifdef HELLFIRE
 	SHRINE_OILY         = 26,
 	SHRINE_GLOWING      = 27,
 	SHRINE_MENDICANT    = 28,
@@ -3402,7 +3400,6 @@ typedef enum shrine_type {
 	SHRINE_SHIMMERING   = 31,
 	SHRINE_SOLAR        = 32,
 	SHRINE_MURPHYS      = 33,
-#endif
 	NUM_SHRINETYPE
 } shrine_type;
 

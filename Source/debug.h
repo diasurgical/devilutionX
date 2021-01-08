@@ -19,7 +19,6 @@ void FreeDebugGFX();
 void CheckDungeonClear();
 #ifdef _DEBUG
 void GiveGoldCheat();
-void StoresCheat();
 void TakeGoldCheat();
 void MaxSpellsCheat();
 void SetAllSpellsCheat();

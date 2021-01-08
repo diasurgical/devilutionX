@@ -66,25 +66,6 @@ void GiveGoldCheat()
 	}
 }
 
-void StoresCheat()
-{
-#ifndef HELLFIRE
-	int i;
-
-	numpremium = 0;
-
-	for (i = 0; i < SMITH_PREMIUM_ITEMS; i++)
-		premiumitem[i]._itype = ITYPE_NONE;
-
-	SpawnPremium(30);
-
-	for (i = 0; i < 20; i++)
-		witchitem[i]._itype = ITYPE_NONE;
-
-	SpawnWitch(30);
-#endif
-}
-
 void TakeGoldCheat()
 {
 	int i;
@@ -108,7 +89,9 @@ void MaxSpellsCheat()
 {
 	int i;
 
-	for (i = 1; i < MAX_SPELLS; i++) {
+	int maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
+
+	for (i = 1; i < maxSpells; i++) {
 		if (GetSpellBookLevel(i) != -1) {
 			plr[myplr]._pMemSpells |= SPELLBIT(i);
 			plr[myplr]._pSplLvl[i] = 10;

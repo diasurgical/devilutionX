@@ -83,11 +83,7 @@ void PrintItemDur(ItemStruct *x);
 void UseItem(int p, int Mid, int spl);
 BOOL StoreStatOk(ItemStruct *h);
 void SpawnSmith(int lvl);
-#ifdef HELLFIRE
 void SpawnPremium(int pnum);
-#else
-void SpawnPremium(int lvl);
-#endif
 void WitchBookLevel(int ii);
 void SpawnWitch(int lvl);
 void SpawnBoy(int lvl);

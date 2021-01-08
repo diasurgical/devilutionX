@@ -12,6 +12,8 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+extern int giNumberOfLevels;
+
 void LoadGame(BOOL firstflag);
 void SaveGame();
 void SaveLevel();

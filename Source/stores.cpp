@@ -103,11 +103,7 @@ void SetupTownStores()
 	SpawnWitch(l);
 	SpawnHealer(l);
 	SpawnBoy(plr[myplr]._pLevel);
-#ifdef HELLFIRE
 	SpawnPremium(myplr);
-#else
-	SpawnPremium(plr[myplr]._pLevel);
-#endif
 }
 
 void FreeStoreMem()
@@ -1993,11 +1989,7 @@ void SmithBuyPItem()
 
 	premiumitem[xx]._itype = ITYPE_NONE;
 	numpremium--;
-#ifdef HELLFIRE
 	SpawnPremium(myplr);
-#else
-	SpawnPremium(plr[myplr]._pLevel);
-#endif
 }
 
 void S_SPBuyEnter()

@@ -127,12 +127,8 @@ const BYTE gbFontTransTbl[256] = {
 /* data */
 
 /** Maps from spell_id to spelicon.cel frame number. */
-char SpellITbl[MAX_SPELLS] = {
-#ifdef HELLFIRE
+char SpellITbl[] = {
 	27,
-#else
-	1,
-#endif
 	1,
 	2,
 	3,
@@ -169,7 +165,6 @@ char SpellITbl[MAX_SPELLS] = {
 	10,
 	36,
 	30,
-#ifdef HELLFIRE
 	51,
 	51,
 	50,
@@ -185,7 +180,6 @@ char SpellITbl[MAX_SPELLS] = {
 	35,
 	35,
 	35,
-#endif
 };
 /** Maps from panel_button_id to the position and dimensions of a panel button. */
 int PanBtnPos[8][5] = {
@@ -353,6 +347,9 @@ void DrawSpellList()
 	x = PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS;
 	y = PANEL_Y - 17;
 	ClearPanel();
+
+    int maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
+
 	for (i = 0; i < 4; i++) {
 		switch ((spell_type)i) {
 		case RSPLTYPE_SKILL:
@@ -375,7 +372,7 @@ void DrawSpellList()
 			c = SPLICONLAST + 2;
 			break;
 		}
-		for (spl = 1, j = 1; j < MAX_SPELLS; spl <<= 1, j++) {
+		for (spl = 1, j = 1; j < maxSpells; spl <<= 1, j++) {
 			if (!(mask & spl))
 				continue;
 			if (i == RSPLTYPE_SPELL) {
@@ -923,6 +920,9 @@ void DoSpeedBook()
 	yo = PANEL_Y - 17;
 	X = xo - (BORDER_LEFT - SPLICONLENGTH / 2);
 	Y = yo - (BORDER_TOP + SPLICONLENGTH / 2);
+
+    int maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
+
 	if (plr[myplr]._pRSpell != SPL_INVALID) {
 		for (i = 0; i < 4; i++) {
 			switch (i) {
@@ -940,7 +940,7 @@ void DoSpeedBook()
 				break;
 			}
 			spell = (__int64)1;
-			for (j = 1; j < MAX_SPELLS; j++) {
+			for (j = 1; j < maxSpells; j++) {
 				if (spell & spells) {
 					if (j == plr[myplr]._pRSpell && i == plr[myplr]._pRSplType) {
 						X = xo - (BORDER_LEFT - SPLICONLENGTH / 2);

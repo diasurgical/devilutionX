@@ -3626,7 +3626,8 @@ void ValidatePlayer()
 		plr[myplr]._pBaseVit = MaxStats[pc][ATTRIB_VIT];
 	}
 
-	for (b = 1; b < MAX_SPELLS; b++) {
+	int maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
+	for (b = 1; b < maxSpells; b++) {
 		if (GetSpellBookLevel(b) != -1) {
 			msk |= SPELLBIT(b);
 			if (plr[myplr]._pSplLvl[b] > MAX_SPELL_LEVEL)
@@ -4150,8 +4151,7 @@ void CheckStats(int p)
 		c = PC_ROGUE;
 	} else if (plr[p]._pClass == PC_SORCERER) {
 		c = PC_SORCERER;
-	}
-	else if (plr[p]._pClass == PC_MONK) {
+	} else if (plr[p]._pClass == PC_MONK) {
 		c = PC_MONK;
 	} else if (plr[p]._pClass == PC_BARD) {
 		c = PC_BARD;
@@ -4243,8 +4243,7 @@ void ModifyPlrMag(int p, int l)
 	ms = l << 6;
 	if (plr[p]._pClass == PC_SORCERER) {
 		ms <<= 1;
-	}
-	else if (plr[p]._pClass == PC_BARD) {
+	} else if (plr[p]._pClass == PC_BARD) {
 		ms += ms >> 1;
 	}
 
@@ -4418,8 +4417,7 @@ void SetPlrVit(int p, int v)
 	hp = v << 6;
 	if (plr[p]._pClass == PC_WARRIOR) {
 		hp <<= 1;
-	}
-	else if (plr[p]._pClass == PC_BARBARIAN) {
+	} else if (plr[p]._pClass == PC_BARBARIAN) {
 		hp <<= 1;
 	}
 

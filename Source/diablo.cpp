@@ -1297,11 +1297,6 @@ static void PressChar(WPARAM vkey)
 			GiveGoldCheat();
 		}
 		return;
-	case '~':
-		if (currlevel == 0 && debug_mode_key_w) {
-			StoresCheat();
-		}
-		return;
 #endif
 	}
 }

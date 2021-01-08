@@ -6,6 +6,7 @@
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
+#include <config.h>
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -740,9 +741,7 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		memset(&ProgramData, 0, sizeof(ProgramData));
 		ProgramData.size = sizeof(ProgramData);
 
-		ProgramData.programname = PROGRAM_NAME;
-		if (gbIsSpawn)
-			ProgramData.programname = "Diablo Shareware";
+		ProgramData.programname = PROJECT_NAME;
 
 		ProgramData.programdescription = gszVersionNumber;
 		ProgramData.programid = GAME_ID;
@@ -814,7 +813,8 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 	tick_delay = 1000 / ticks_per_sec;
 	SetRndSeed(sgGameInitInfo.dwSeed);
 
-	for (i = 0; i < NUMLEVELS; i++) {
+	int numberOfLevels = gbIsHellfire ? NUMLEVELS : 17;
+	for (i = 0; i < numberOfLevels; i++) {
 		glSeedTbl[i] = GetRndSeed();
 		gnLevelTypeTbl[i] = InitLevelType(i);
 	}

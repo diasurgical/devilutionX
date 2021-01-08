@@ -1367,7 +1367,10 @@ void AddShrine(int i)
 	bool slist[NUM_SHRINETYPE];
 	int j;
 	object[i]._oPreFlag = TRUE;
-	for (j = 0; j < NUM_SHRINETYPE; j++) {
+
+	int shrines = gbIsHellfire ? NUM_SHRINETYPE : 26;
+
+	for (j = 0; j < shrines; j++) {
 		if (currlevel < shrinemin[j] || currlevel > shrinemax[j]) {
 			slist[j] = 0;
 		} else {
@@ -1381,7 +1384,7 @@ void AddShrine(int i)
 		}
 	}
 	do {
-		val = random_(150, NUM_SHRINETYPE);
+		val = random_(150, shrines);
 	} while (!slist[val]);
 
 	object[i]._oVar1 = val;
@@ -3566,21 +3569,22 @@ void OperateShrine(int pnum, int i, int sType)
 			plr[pnum].SpdList[j]._iDurability = plr[pnum].SpdList[j]._iMaxDur; // belt items don't have durability?
 		InitDiabloMsg(EMSG_SHRINE_RELIGIOUS);
 		break;
-	case SHRINE_ENCHANTED:
+	case SHRINE_ENCHANTED: {
 		if (deltaload)
 			return;
 		if (pnum != myplr)
 			return;
 		cnt = 0;
 		spell = 1;
-		for (j = 0; j < MAX_SPELLS; j++) {
+		int maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
+		for (j = 0; j < maxSpells; j++) {
 			if (spell & plr[pnum]._pMemSpells)
 				cnt++;
 			spell <<= 1;
 		}
 		if (cnt > 1) {
 			spell = 1;
-			for (j = SPL_FIREBOLT; j <= MAX_SPELLS; j++) { // BUGFIX: < MAX_SPELLS, there is no spell with MAX_SPELLS index
+			for (j = SPL_FIREBOLT; j <= maxSpells; j++) { // BUGFIX: < MAX_SPELLS, there is no spell with MAX_SPELLS index
 				if (plr[pnum]._pMemSpells & spell) {
 					if (plr[pnum]._pSplLvl[j] < MAX_SPELL_LEVEL)
 						plr[pnum]._pSplLvl[j]++;
@@ -3588,7 +3592,7 @@ void OperateShrine(int pnum, int i, int sType)
 				spell <<= 1;
 			}
 			do {
-				r = random_(0, MAX_SPELLS);
+				r = random_(0, maxSpells);
 			} while (!(plr[pnum]._pMemSpells & SPELLBIT(r + 1)));
 			if (plr[pnum]._pSplLvl[r + 1] >= 2)
 				plr[pnum]._pSplLvl[r + 1] -= 2;
@@ -3597,6 +3601,7 @@ void OperateShrine(int pnum, int i, int sType)
 		}
 		InitDiabloMsg(EMSG_SHRINE_ENCHANTED);
 		break;
+	}
 	case SHRINE_THAUMATURGIC:
 		for (j = 0; j < nobjects; j++) {
 			v1 = objectactive[j];
@@ -4202,7 +4207,7 @@ int FindValidShrine(int i)
 
 	done = FALSE;
 	do {
-		rv = random_(0, NUM_SHRINETYPE);
+		rv = random_(0, gbIsHellfire ? NUM_SHRINETYPE : 26);
 		if (currlevel >= shrinemin[rv] && currlevel <= shrinemax[rv] && rv != SHRINE_THAUMATURGIC) {
 			done = TRUE;
 		}
