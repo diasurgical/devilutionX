@@ -221,21 +221,13 @@ int SpellPages[6][7] = {
 	{ SPL_RESURRECT, SPL_FIREWALL, SPL_TELEKINESIS, SPL_LIGHTNING, SPL_TOWN, SPL_FLASH, SPL_STONE },
 	{ SPL_RNDTELEPORT, SPL_MANASHIELD, SPL_ELEMENT, SPL_FIREBALL, SPL_WAVE, SPL_CHAIN, SPL_GUARDIAN },
 	{ SPL_NOVA, SPL_GOLEM, SPL_TELEPORT, SPL_APOCA, SPL_BONESPIRIT, SPL_FLARE, SPL_ETHEREALIZE },
-#ifndef HELLFIRE
-	{ -1, -1, -1, -1, -1, -1, -1 },
-#else
 	{ SPL_LIGHTWALL, SPL_IMMOLAT, SPL_WARP, SPL_REFLECT, SPL_BERSERK, SPL_FIRERING, SPL_SEARCH },
-#endif
 	{ -1, -1, -1, -1, -1, -1, -1 }
 };
 
 #define SPLICONLENGTH 56
 #define SPLROWICONLS 10
-#ifdef HELLFIRE
-#define SPLICONLAST 52
-#else
-#define SPLICONLAST 43
-#endif
+#define SPLICONLAST (gbIsHellfire ? 52 : 43)
 
 /**
  * Draw spell cell onto the back buffer.
@@ -348,7 +340,7 @@ void DrawSpellList()
 	y = PANEL_Y - 17;
 	ClearPanel();
 
-    int maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
+	int maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
 
 	for (i = 0; i < 4; i++) {
 		switch ((spell_type)i) {
@@ -921,7 +913,7 @@ void DoSpeedBook()
 	X = xo - (BORDER_LEFT - SPLICONLENGTH / 2);
 	Y = yo - (BORDER_TOP + SPLICONLENGTH / 2);
 
-    int maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
+	int maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
 
 	if (plr[myplr]._pRSpell != SPL_INVALID) {
 		for (i = 0; i < 4; i++) {
@@ -1891,12 +1883,10 @@ void DrawSpellBook()
 	unsigned __int64 spl;
 
 	CelDraw(RIGHT_PANEL_X, 351 + SCREEN_Y, pSpellBkCel, 1, SPANEL_WIDTH);
-#ifdef HELLFIRE
-	if (sbooktab < 5)
+	if (gbIsHellfire && sbooktab < 5)
 		CelDraw(RIGHT_PANEL_X + 61 * sbooktab + 7, 348 + SCREEN_Y, pSBkBtnCel, sbooktab + 1, 61);
-#else
-	CelDraw(RIGHT_PANEL_X + 76 * sbooktab + 7, 348 + SCREEN_Y, pSBkBtnCel, sbooktab + 1, 76);
-#endif
+	else if (gbIsHellfire && sbooktab < 4)
+		CelDraw(RIGHT_PANEL_X + 76 * sbooktab + 7, 348 + SCREEN_Y, pSBkBtnCel, sbooktab + 1, 76);
 
 	spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
 
@@ -2261,18 +2251,7 @@ static void control_press_enter()
 	BYTE talk_save;
 
 	if (sgszTalkMsg[0] != 0) {
-#ifdef HELLFIRE
-		int pmask;
-		pmask = 0;
-
-		for (i = 0; i < MAX_PLRS; i++) {
-			if (whisper[i])
-				pmask |= 1 << i;
-		}
-		NetSendCmdString(pmask, sgszTalkMsg);
-#else
 		control_reset_talk_msg(sgszTalkMsg);
-#endif
 		for (i = 0; i < 8; i++) {
 			if (!strcmp(sgszTalkSave[i], sgszTalkMsg))
 				break;

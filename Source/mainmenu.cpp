@@ -171,11 +171,9 @@ void mainmenu_loop()
 		case MAINMENU_SHOW_CREDITS:
 			UiCreditsDialog(16);
 			break;
-#ifdef HELLFIRE
 		case MAINMENU_SHOW_SUPPORT:
 			//UiSupportDialog(16);
 			break;
-#endif
 		case MAINMENU_EXIT_DIABLO:
 			done = TRUE;
 			break;

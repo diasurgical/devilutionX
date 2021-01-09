@@ -2457,7 +2457,6 @@ static void DRLG_L5DirtFix()
 {
 	int i, j;
 
-#ifdef HELLFIRE
 	if (currlevel < 21) {
 		for (j = 0; j < DMAXY - 1; j++) {
 			for (i = 0; i < DMAXX - 1; i++) {
@@ -2491,24 +2490,6 @@ static void DRLG_L5DirtFix()
 			}
 		}
 	}
-#else
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
-			if (dungeon[i][j] == 21 && dungeon[i + 1][j] != 19)
-				dungeon[i][j] = 202;
-			if (dungeon[i][j] == 19 && dungeon[i + 1][j] != 19)
-				dungeon[i][j] = 200;
-			if (dungeon[i][j] == 24 && dungeon[i + 1][j] != 19)
-				dungeon[i][j] = 205;
-			if (dungeon[i][j] == 18 && dungeon[i][j + 1] != 18)
-				dungeon[i][j] = 199;
-			if (dungeon[i][j] == 21 && dungeon[i][j + 1] != 18)
-				dungeon[i][j] = 202;
-			if (dungeon[i][j] == 23 && dungeon[i][j + 1] != 18)
-				dungeon[i][j] = 204;
-		}
-	}
-#endif
 }
 
 static void DRLG_L5CornerFix()
@@ -2757,9 +2738,7 @@ static void DRLG_L5(int entry)
 
 void CreateL5Dungeon(DWORD rseed, int entry)
 {
-#ifdef HELLFIRE
 	int i, j;
-#endif
 
 	SetRndSeed(rseed);
 
@@ -2791,7 +2770,6 @@ void CreateL5Dungeon(DWORD rseed, int entry)
 
 	DRLG_SetPC();
 
-#ifdef HELLFIRE
 	for (j = dminy; j < dmaxy; j++) {
 		for (i = dminx; i < dmaxx; i++) {
 			if (dPiece[i][j] == 290) {
@@ -2804,7 +2782,6 @@ void CreateL5Dungeon(DWORD rseed, int entry)
 			}
 		}
 	}
-#endif
 }
 
 void drlg_l1_crypt_pattern1(int rndper)

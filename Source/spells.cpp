@@ -43,17 +43,11 @@ int GetManaAmount(int id, int sn)
 		ma = 0;
 	ma <<= 6;
 
-#ifdef HELLFIRE
 	if (plr[id]._pClass == PC_SORCERER) {
 		ma >>= 1;
 	} else if (plr[id]._pClass == PC_ROGUE || plr[id]._pClass == PC_MONK || plr[id]._pClass == PC_BARD) {
 		ma -= ma >> 2;
 	}
-#else
-	if (plr[id]._pClass == PC_ROGUE) {
-		ma -= ma >> 2;
-	}
-#endif
 
 	if (spelldata[sn].sMinMana > ma >> 6) {
 		ma = spelldata[sn].sMinMana << 6;
@@ -206,11 +200,7 @@ void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int caster, int 
 		caster = TARGET_MONSTERS;
 		dir = plr[id]._pdir;
 
-#ifdef HELLFIRE
 		if (spl == SPL_FIREWALL || spl == SPL_LIGHTWALL) {
-#else
-		if (spl == SPL_FIREWALL) {
-#endif
 			dir = plr[id]._pVar3;
 		}
 		break;
@@ -305,16 +295,12 @@ void DoResurrect(int pnum, int rid)
 		ClrPlrPath(rid);
 		plr[rid].destAction = ACTION_NONE;
 		plr[rid]._pInvincible = FALSE;
-#ifndef HELLFIRE
 		PlacePlayer(rid);
-#endif
 
 		hp = 10 << 6;
-#ifndef HELLFIRE
 		if (plr[rid]._pMaxHPBase < (10 << 6)) {
 			hp = plr[rid]._pMaxHPBase;
 		}
-#endif
 		SetPlayerHitPoints(rid, hp);
 
 		plr[rid]._pHPBase = plr[rid]._pHitPoints + (plr[rid]._pMaxHPBase - plr[rid]._pMaxHP);

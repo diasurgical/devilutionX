@@ -82,9 +82,7 @@ void FreeGMenu()
 
 void gmenu_init_menu()
 {
-#ifdef HELLFIRE
 	LogoAnim_frame = 1;
-#endif
 	sgpCurrentMenu = NULL;
 	sgpCurrItem = NULL;
 	gmenu_current_option = NULL;
@@ -188,28 +186,17 @@ static int gmenu_get_lfont(TMenuItem *pItem)
 
 static void gmenu_draw_menu_item(TMenuItem *pItem, int y)
 {
-	DWORD w, x, nSteps, step, pos, t;
-#ifndef HELLFIRE
-	t = y - 2;
-#endif
+	DWORD w, x, nSteps, step, pos;
 	w = gmenu_get_lfont(pItem);
 	if (pItem->dwFlags & GMENU_SLIDER) {
 		x = 16 + w / 2 + SCREEN_X;
-#ifdef HELLFIRE
 		CelDraw(x + PANEL_LEFT, y - 10, optbar_cel, 1, 287);
-#else
-		CelDraw(x + PANEL_LEFT, t - 8, optbar_cel, 1, 287);
-#endif
 		step = pItem->dwFlags & 0xFFF;
 		nSteps = (pItem->dwFlags & 0xFFF000) >> 12;
 		if (nSteps < 2)
 			nSteps = 2;
 		pos = step * 256 / nSteps;
-#ifdef HELLFIRE
 		gmenu_clear_buffer(x + 2 + PANEL_LEFT, y - 12, pos + 13, 28);
-#else
-		gmenu_clear_buffer(x + 2 + PANEL_LEFT, t - 10, pos + 13, 28);
-#endif
 		CelDraw(x + 2 + pos + PANEL_LEFT, y - 12, option_cel, 1, 27);
 	}
 	x = SCREEN_WIDTH / 2 - w / 2 + SCREEN_X;
@@ -230,18 +217,18 @@ void gmenu_draw()
 	if (sgpCurrentMenu) {
 		if (gmenu_current_option)
 			gmenu_current_option(sgpCurrentMenu);
-#ifdef HELLFIRE
-		ticks = SDL_GetTicks();
-		if ((int)(ticks - LogoAnim_tick) > 25) {
-			LogoAnim_frame++;
-			if (LogoAnim_frame > 16)
-				LogoAnim_frame = 1;
-			LogoAnim_tick = ticks;
+		if (gbIsHellfire) {
+			ticks = SDL_GetTicks();
+			if ((int)(ticks - LogoAnim_tick) > 25) {
+				LogoAnim_frame++;
+				if (LogoAnim_frame > 16)
+					LogoAnim_frame = 1;
+				LogoAnim_tick = ticks;
+			}
+			CelDraw((SCREEN_WIDTH - 430) / 2 + SCREEN_X, 102 + SCREEN_Y + UI_OFFSET_Y, sgpLogo, LogoAnim_frame, 430);
+		} else {
+			CelDraw((SCREEN_WIDTH - 296) / 2 + SCREEN_X, 102 + SCREEN_Y + UI_OFFSET_Y, sgpLogo, 1, 296);
 		}
-		CelDraw((SCREEN_WIDTH - 430) / 2 + SCREEN_X, 102 + SCREEN_Y + UI_OFFSET_Y, sgpLogo, LogoAnim_frame, 430);
-#else
-		CelDraw((SCREEN_WIDTH - 296) / 2 + SCREEN_X, 102 + SCREEN_Y + UI_OFFSET_Y, sgpLogo, 1, 296);
-#endif
 		y = 160 + SCREEN_Y + UI_OFFSET_Y;
 		i = sgpCurrentMenu;
 		if (sgpCurrentMenu->fnMenu) {
