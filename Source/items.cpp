@@ -4543,6 +4543,7 @@ void SpawnSmith(int lvl)
 	int maxValue, maxItems;
 
 	ItemStruct holditem;
+	holditem = item[0];
 
 	if (gbIsHellfire) {
 		maxValue = 200000;
@@ -4555,12 +4556,12 @@ void SpawnSmith(int lvl)
 	iCnt = random_(50, maxItems - 10) + 10;
 	for (i = 0; i < iCnt; i++) {
 		do {
-			holditem._iSeed = GetRndSeed();
-			SetRndSeed(holditem._iSeed);
+			item[0]._iSeed = GetRndSeed();
+			SetRndSeed(item[0]._iSeed);
 			idata = RndSmithItem(lvl) - 1;
 			GetItemAttrs(0, idata, lvl);
-		} while (holditem._iIvalue > maxValue);
-		smithitem[i] = holditem;
+		} while (item[0]._iIvalue > maxValue);
+		smithitem[i] = item[0];
 		smithitem[i]._iCreateInfo = lvl | CF_SMITH;
 		smithitem[i]._iIdentified = TRUE;
 		smithitem[i]._iStatFlag = StoreStatOk(&smithitem[i]);
@@ -4569,6 +4570,7 @@ void SpawnSmith(int lvl)
 		smithitem[i]._itype = ITYPE_NONE;
 
 	SortSmith();
+	item[0] = holditem;
 }
 
 BOOL PremiumItemOk(int i)
