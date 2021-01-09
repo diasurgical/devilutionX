@@ -3593,13 +3593,9 @@ void ValidatePlayer()
 	gt = 0;
 	for (i = 0; i < plr[myplr]._pNumInv; i++) {
 		if (plr[myplr].InvList[i]._itype == ITYPE_GOLD) {
-#ifdef HELLFIRE
-			if (plr[myplr].InvList[i]._ivalue > auricGold) {
-				plr[myplr].InvList[i]._ivalue = auricGold;
-#else
-			if (plr[myplr].InvList[i]._ivalue > GOLD_MAX_LIMIT) {
-				plr[myplr].InvList[i]._ivalue = GOLD_MAX_LIMIT;
-#endif
+            int maxGold = gbIsHellfire ? auricGold : GOLD_MAX_LIMIT;
+            if (plr[myplr].InvList[i]._ivalue > maxGold) {
+				plr[myplr].InvList[i]._ivalue = maxGold;
 			}
 			gt += plr[myplr].InvList[i]._ivalue;
 		}
@@ -4204,13 +4200,11 @@ void ModifyPlrStr(int p, int l)
 	plr[p]._pStrength += l;
 	plr[p]._pBaseStr += l;
 
-#ifndef HELLFIRE
 	if (plr[p]._pClass == PC_ROGUE) {
 		plr[p]._pDamageMod = plr[p]._pLevel * (plr[p]._pStrength + plr[p]._pDexterity) / 200;
 	} else {
 		plr[p]._pDamageMod = plr[p]._pLevel * plr[p]._pStrength / 100;
 	}
-#endif
 
 	CalcPlrInv(p, TRUE);
 
@@ -4273,11 +4267,9 @@ void ModifyPlrDex(int p, int l)
 	plr[p]._pBaseDex += l;
 	CalcPlrInv(p, TRUE);
 
-#ifndef HELLFIRE
 	if (plr[p]._pClass == PC_ROGUE) {
 		plr[p]._pDamageMod = plr[p]._pLevel * (plr[p]._pDexterity + plr[p]._pStrength) / 200;
 	}
-#endif
 
 	if (p == myplr) {
 		NetSendCmdParam1(FALSE, CMD_SETDEX, plr[p]._pBaseDex);
@@ -4344,7 +4336,6 @@ void SetPlrStr(int p, int v)
 	plr[p]._pBaseStr = v;
 	CalcPlrInv(p, TRUE);
 
-#ifndef HELLFIRE
 	if (plr[p]._pClass == PC_ROGUE) {
 		dm = plr[p]._pLevel * (plr[p]._pStrength + plr[p]._pDexterity) / 200;
 	} else {
@@ -4352,7 +4343,6 @@ void SetPlrStr(int p, int v)
 	}
 
 	plr[p]._pDamageMod = dm;
-#endif
 }
 
 void SetPlrMag(int p, int v)
@@ -4388,7 +4378,6 @@ void SetPlrDex(int p, int v)
 	plr[p]._pBaseDex = v;
 	CalcPlrInv(p, TRUE);
 
-#ifndef HELLFIRE
 	if (plr[p]._pClass == PC_ROGUE) {
 		dm = plr[p]._pLevel * (plr[p]._pStrength + plr[p]._pDexterity) / 200;
 	} else {
@@ -4396,7 +4385,6 @@ void SetPlrDex(int p, int v)
 	}
 
 	plr[p]._pDamageMod = dm;
-#endif
 }
 
 void SetPlrVit(int p, int v)

@@ -4276,22 +4276,22 @@ void UseItem(int p, int Mid, int spl)
 		break;
 	case IMISC_ELIXMAG:
 		ModifyPlrMag(p, 1);
-#ifdef HELLFIRE
-		plr[p]._pMana = plr[p]._pMaxMana;
-		plr[p]._pManaBase = plr[p]._pMaxManaBase;
-		drawmanaflag = TRUE;
-#endif
+		if (gbIsHellfire) {
+			plr[p]._pMana = plr[p]._pMaxMana;
+			plr[p]._pManaBase = plr[p]._pMaxManaBase;
+			drawmanaflag = TRUE;
+		}
 		break;
 	case IMISC_ELIXDEX:
 		ModifyPlrDex(p, 1);
 		break;
 	case IMISC_ELIXVIT:
 		ModifyPlrVit(p, 1);
-#ifdef HELLFIRE
-		plr[p]._pHitPoints = plr[p]._pMaxHP;
-		plr[p]._pHPBase = plr[p]._pMaxHPBase;
-		drawhpflag = TRUE;
-#endif
+		if (gbIsHellfire) {
+			plr[p]._pHitPoints = plr[p]._pMaxHP;
+			plr[p]._pHPBase = plr[p]._pMaxHPBase;
+			drawhpflag = TRUE;
+		}
 		break;
 	case IMISC_REJUV:
 		j = plr[p]._pMaxHP >> 8;
@@ -4347,10 +4347,8 @@ void UseItem(int p, int Mid, int spl)
 			plr[p].destAction = ACTION_SPELL;
 			plr[p].destParam1 = cursmx;
 			plr[p].destParam2 = cursmy;
-#ifndef HELLFIRE
 			if (p == myplr && spl == SPL_NOVA)
 				NetSendCmdLoc(TRUE, CMD_NOVA, cursmx, cursmy);
-#endif
 		}
 		break;
 	case IMISC_SCROLLT:
@@ -4578,31 +4576,23 @@ BOOL PremiumItemOk(int i)
 	BOOL rv;
 
 	rv = TRUE;
-#ifdef HELLFIRE
-	if (AllItemsList[i].itype == ITYPE_MISC || AllItemsList[i].itype == ITYPE_GOLD || AllItemsList[i].itype == ITYPE_FOOD)
-		rv = FALSE;
-
-	if (gbMaxPlayers != 1) {
-		if (AllItemsList[i].iMiscId == IMISC_OILOF || AllItemsList[i].itype == ITYPE_RING || AllItemsList[i].itype == ITYPE_AMULET)
-			rv = FALSE;
-	}
-#else
 	if (AllItemsList[i].itype == ITYPE_MISC)
 		rv = FALSE;
 	if (AllItemsList[i].itype == ITYPE_GOLD)
 		rv = FALSE;
 	if (AllItemsList[i].itype == ITYPE_FOOD)
 		rv = FALSE;
-	if (AllItemsList[i].itype == ITYPE_STAFF)
+	if (!gbIsHellfire && AllItemsList[i].itype == ITYPE_STAFF)
 		rv = FALSE;
 
 	if (gbMaxPlayers != 1) {
+		if (AllItemsList[i].iMiscId == IMISC_OILOF)
+			rv = FALSE;
 		if (AllItemsList[i].itype == ITYPE_RING)
 			rv = FALSE;
 		if (AllItemsList[i].itype == ITYPE_AMULET)
 			rv = FALSE;
 	}
-#endif
 
 	return rv;
 }

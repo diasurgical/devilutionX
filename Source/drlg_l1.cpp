@@ -146,8 +146,7 @@ const BYTE STAIRSUP[] = {
 	 0,  0,  0,  0,
 	// clang-format on
 };
-#ifdef HELLFIRE
-const BYTE L5STAIRSUP[] = {
+const BYTE L5STAIRSUPHF[] = {
 	// clang-format off
 	4, 5, // width, height
 
@@ -164,7 +163,6 @@ const BYTE L5STAIRSUP[] = {
 	 0,  0,  0,  0
 	// clang-format on
 };
-#else
 /** Miniset: stairs up. */
 const BYTE L5STAIRSUP[] = {
 	// clang-format off
@@ -181,7 +179,6 @@ const BYTE L5STAIRSUP[] = {
 	 0,  0,  0,  0,
 	// clang-format on
 };
-#endif
 /** Miniset: stairs down. */
 const BYTE STAIRSDOWN[] = {
 	// clang-format off
@@ -2569,13 +2566,19 @@ static void DRLG_L5(int entry)
 					ViewY--;
 				}
 			}
-#ifdef HELLFIRE
-		} else if (entry == 0) {
+		} else if (entry == ENTRY_MAIN) {
 			if (currlevel < 21) {
-				if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, TRUE, -1, 0) < 0)
-					doneflag = FALSE;
-				if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
-					doneflag = FALSE;
+				if (gbIsHellfire) {
+					if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, TRUE, -1, 0) < 0)
+						doneflag = FALSE;
+					if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
+						doneflag = FALSE;
+				} else {
+					if (DRLG_PlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, TRUE, -1, 0) < 0)
+						doneflag = FALSE;
+					else if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
+						doneflag = FALSE;
+				}
 			} else if (currlevel == 21) {
 				if (DRLG_PlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, FALSE, -1, 6) < 0)
 					doneflag = FALSE;
@@ -2583,7 +2586,7 @@ static void DRLG_L5(int entry)
 					doneflag = FALSE;
 				ViewY++;
 			} else {
-				if (DRLG_PlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, TRUE, -1, 0) < 0)
+				if (DRLG_PlaceMiniSet(L5STAIRSUPHF, 1, 1, 0, 0, TRUE, -1, 0) < 0)
 					doneflag = FALSE;
 				if (currlevel != 24) {
 					if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
@@ -2591,7 +2594,7 @@ static void DRLG_L5(int entry)
 				}
 				ViewY++;
 			}
-		} else if (entry == 1) {
+		} else if (gbIsHellfire && entry == 1) {
 			if (currlevel < 21) {
 				if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, FALSE, -1, 0) < 0)
 					doneflag = FALSE;
@@ -2605,7 +2608,7 @@ static void DRLG_L5(int entry)
 					doneflag = FALSE;
 				ViewY += 3;
 			} else {
-				if (DRLG_PlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, TRUE, -1, 0) < 0)
+				if (DRLG_PlaceMiniSet(L5STAIRSUPHF, 1, 1, 0, 0, TRUE, -1, 0) < 0)
 					doneflag = FALSE;
 				if (currlevel != 24) {
 					if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, TRUE, -1, 1) < 0)
@@ -2615,36 +2618,31 @@ static void DRLG_L5(int entry)
 			}
 		} else {
 			if (currlevel < 21) {
-				if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, FALSE, -1, 0) < 0)
-					doneflag = FALSE;
-				if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
-					doneflag = FALSE;
+				if (gbIsHellfire) {
+					if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, FALSE, -1, 0) < 0)
+						doneflag = FALSE;
+					if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
+						doneflag = FALSE;
+				} else {
+					if (DRLG_PlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, FALSE, -1, 0) < 0)
+						doneflag = FALSE;
+					else if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, TRUE, -1, 1) < 0)
+						doneflag = FALSE;
+					ViewY--;
+				}
 			} else if (currlevel == 21) {
 				if (DRLG_PlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, TRUE, -1, 6) < 0)
 					doneflag = FALSE;
 				if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
 					doneflag = FALSE;
 			} else {
-				if (DRLG_PlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, TRUE, -1, 0) < 0)
+				if (DRLG_PlaceMiniSet(L5STAIRSUPHF, 1, 1, 0, 0, TRUE, -1, 0) < 0)
 					doneflag = FALSE;
 				if (currlevel != 24) {
 					if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
 						doneflag = FALSE;
 				}
 			}
-#else
-		} else if (entry == ENTRY_MAIN) {
-			if (DRLG_PlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, TRUE, -1, 0) < 0)
-				doneflag = FALSE;
-			else if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
-				doneflag = FALSE;
-		} else {
-			if (DRLG_PlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, FALSE, -1, 0) < 0)
-				doneflag = FALSE;
-			else if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, TRUE, -1, 1) < 0)
-				doneflag = FALSE;
-			ViewY--;
-#endif
 		}
 	} while (doneflag == FALSE);
 
