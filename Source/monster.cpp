@@ -1783,7 +1783,7 @@ void SpawnLoot(int i, BOOL sendmsg)
 		CreateMagicWeapon(Monst->_mx, Monst->_my, ITYPE_STAFF, ICURS_WAR_STAFF, FALSE, TRUE);
 		CreateMagicWeapon(Monst->_mx, Monst->_my, ITYPE_BOW, ICURS_LONG_WAR_BOW, FALSE, TRUE);
 		CreateSpellBook(Monst->_mx, Monst->_my, SPL_APOCA, FALSE, TRUE);
-	} else if (i > 3) {
+	} else if (i > MAX_PLRS - 1) { // Golems should not spawn loot
 		SpawnItem(i, Monst->_mx, Monst->_my, sendmsg);
 	}
 }
@@ -1845,7 +1845,7 @@ void MonstStartKill(int i, int pnum, BOOL sendmsg)
 		app_fatal("MonstStartKill: Invalid monster %d", i);
 #endif
 	}
-	if (!monster[i].MType) {
+	if (monster[i].MType == NULL) {
 #ifdef HELLFIRE
 		return;
 #else
@@ -1902,7 +1902,7 @@ void M2MStartKill(int i, int mid)
 	if ((DWORD)i >= MAXMONSTERS) { /// BUGFIX: should check `mid`
 		app_fatal("M2MStartKill: Invalid monster (killed) %d", mid);
 	}
-	if (!monster[i].MType)
+	if (monster[i].MType == NULL)
 		app_fatal("M2MStartKill: Monster %d \"%s\" MType NULL", mid, monster[mid].mName);
 
 	delta_kill_monster(mid, monster[mid]._mx, monster[mid]._my, currlevel);
@@ -3870,7 +3870,7 @@ void MAI_Fallen(int i)
 	MonsterStruct *Monst;
 
 	if ((DWORD)i >= MAXMONSTERS) {
-#if HELLFIRE
+#ifdef HELLFIRE
 		return;
 #else
 		app_fatal("MAI_Fallen: Invalid monster %d", i);

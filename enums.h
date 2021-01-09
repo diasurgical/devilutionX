@@ -2913,7 +2913,7 @@ typedef enum item_misc_id {
 	IMISC_RING      = 0x19,
 	IMISC_AMULET    = 0x1A,
 	IMISC_UNIQUE    = 0x1B,
-	IMISC_MEAT      = 0x1C, /* from demo/PSX */
+	IMISC_FOOD      = 0x1C, /* from demo/PSX */
 	IMISC_OILFIRST  = 0x1D,
 	IMISC_OILOF     = 0x1E, /* oils are beta or hellfire only */
 	IMISC_OILACC    = 0x1F,
@@ -2957,7 +2957,7 @@ typedef enum item_type {
 	ITYPE_GOLD   = 0xB,
 	ITYPE_RING   = 0xC,
 	ITYPE_AMULET = 0xD,
-	ITYPE_MEAT   = 0xE, /* used in demo, might be generic for 'food' */
+	ITYPE_FOOD   = 0xE, /* used in demo */
 	ITYPE_NONE   = -1,
 } item_type;
 

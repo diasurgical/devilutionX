@@ -2572,64 +2572,64 @@ static void DRLG_L5(int entry)
 #ifdef HELLFIRE
 		} else if (entry == 0) {
 			if (currlevel < 21) {
-				if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, 1, -1, 0) < 0)
-					doneflag = 0;
-				if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, 0, -1, 1) < 0)
-					doneflag = 0;
+				if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, TRUE, -1, 0) < 0)
+					doneflag = FALSE;
+				if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
+					doneflag = FALSE;
 			} else if (currlevel == 21) {
-				if (DRLG_PlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, 0, -1, 6) < 0)
-					doneflag = 0;
-				if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, 0, -1, 1) < 0)
-					doneflag = 0;
+				if (DRLG_PlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, FALSE, -1, 6) < 0)
+					doneflag = FALSE;
+				if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
+					doneflag = FALSE;
 				ViewY++;
 			} else {
-				if (DRLG_PlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, 1, -1, 0) < 0)
-					doneflag = 0;
+				if (DRLG_PlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, TRUE, -1, 0) < 0)
+					doneflag = FALSE;
 				if (currlevel != 24) {
-					if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, 0, -1, 1) < 0)
-						doneflag = 0;
+					if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
+						doneflag = FALSE;
 				}
 				ViewY++;
 			}
 		} else if (entry == 1) {
 			if (currlevel < 21) {
-				if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, 0, -1, 0) < 0)
-					doneflag = 0;
-				if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, 1, -1, 1) < 0)
-					doneflag = 0;
+				if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, FALSE, -1, 0) < 0)
+					doneflag = FALSE;
+				if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, TRUE, -1, 1) < 0)
+					doneflag = FALSE;
 				ViewY--;
 			} else if (currlevel == 21) {
-				if (DRLG_PlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, 0, -1, 6) < 0)
-					doneflag = 0;
-				if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, 1, -1, 1) < 0)
-					doneflag = 0;
+				if (DRLG_PlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, FALSE, -1, 6) < 0)
+					doneflag = FALSE;
+				if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, TRUE, -1, 1) < 0)
+					doneflag = FALSE;
 				ViewY += 3;
 			} else {
-				if (DRLG_PlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, 1, -1, 0) < 0)
-					doneflag = 0;
+				if (DRLG_PlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, TRUE, -1, 0) < 0)
+					doneflag = FALSE;
 				if (currlevel != 24) {
-					if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, 1, -1, 1) < 0)
-						doneflag = 0;
+					if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, TRUE, -1, 1) < 0)
+						doneflag = FALSE;
 				}
 				ViewY += 3;
 			}
 		} else {
 			if (currlevel < 21) {
-				if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, 0, -1, 0) < 0)
-					doneflag = 0;
-				if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, 0, -1, 1) < 0)
-					doneflag = 0;
+				if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, FALSE, -1, 0) < 0)
+					doneflag = FALSE;
+				if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
+					doneflag = FALSE;
 			} else if (currlevel == 21) {
-				if (DRLG_PlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, 1, -1, 6) < 0)
-					doneflag = 0;
-				if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, 0, -1, 1) < 0)
-					doneflag = 0;
+				if (DRLG_PlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, TRUE, -1, 6) < 0)
+					doneflag = FALSE;
+				if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
+					doneflag = FALSE;
 			} else {
-				if (DRLG_PlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, 1, -1, 0) < 0)
-					doneflag = 0;
+				if (DRLG_PlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, TRUE, -1, 0) < 0)
+					doneflag = FALSE;
 				if (currlevel != 24) {
-					if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, 0, -1, 1) < 0)
-						doneflag = 0;
+					if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
+						doneflag = FALSE;
 				}
 			}
 #else

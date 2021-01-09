@@ -3327,7 +3327,7 @@ void OperateShrine(int pnum, int i, int sType)
 	DWORD lv, t;
 	int xx, yy;
 	int v1, v2, v3, v4;
-	unsigned __int64 spell;
+	unsigned __int64 spell, spells;
 
 	if (dropGoldFlag) {
 		dropGoldFlag = FALSE;
@@ -3557,8 +3557,9 @@ void OperateShrine(int pnum, int i, int sType)
 		cnt = 0;
 		spell = 1;
 		int maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
+		spells = plr[pnum]._pMemSpells;
 		for (j = 0; j < maxSpells; j++) {
-			if (spell & plr[pnum]._pMemSpells)
+			if (spell & spells)
 				cnt++;
 			spell <<= 1;
 		}

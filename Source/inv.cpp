@@ -703,84 +703,21 @@ BOOL SpecialAutoPlace(int pnum, int ii, int sx, int sy, BOOL saveflag)
 	return done;
 }
 
-#ifndef HELLFIRE
-BOOL GoldAutoPlace(int pnum)
-{
-	BOOL done;
-	int i, ii;
-	int xx, yy;
-
-	done = FALSE;
-	for (i = 0; i < plr[pnum]._pNumInv && !done; i++) {
-		if (plr[pnum].InvList[i]._itype == ITYPE_GOLD) {
-			if (plr[pnum].HoldItem._ivalue + plr[pnum].InvList[i]._ivalue <= GOLD_MAX_LIMIT) {
-				plr[pnum].InvList[i]._ivalue = plr[pnum].HoldItem._ivalue + plr[pnum].InvList[i]._ivalue;
-				if (plr[pnum].InvList[i]._ivalue >= GOLD_MEDIUM_LIMIT)
-					plr[pnum].InvList[i]._iCurs = ICURS_GOLD_LARGE;
-				else if (plr[pnum].InvList[i]._ivalue <= GOLD_SMALL_LIMIT)
-					plr[pnum].InvList[i]._iCurs = ICURS_GOLD_SMALL;
-				else
-					plr[pnum].InvList[i]._iCurs = ICURS_GOLD_MEDIUM;
-				plr[pnum]._pGold = CalculateGold(pnum);
-				done = TRUE;
-			}
-		}
-	}
-	if (done)
-		return done;
-
-	for (i = 0; i < plr[pnum]._pNumInv && !done; i++) {
-		if (plr[pnum].InvList[i]._itype == ITYPE_GOLD && plr[pnum].InvList[i]._ivalue < GOLD_MAX_LIMIT) {
-			if (plr[pnum].HoldItem._ivalue + plr[pnum].InvList[i]._ivalue <= GOLD_MAX_LIMIT) {
-				plr[pnum].InvList[i]._ivalue = plr[pnum].HoldItem._ivalue + plr[pnum].InvList[i]._ivalue;
-				if (plr[pnum].InvList[i]._ivalue >= GOLD_MEDIUM_LIMIT)
-					plr[pnum].InvList[i]._iCurs = ICURS_GOLD_LARGE;
-				else if (plr[pnum].InvList[i]._ivalue <= GOLD_SMALL_LIMIT)
-					plr[pnum].InvList[i]._iCurs = ICURS_GOLD_SMALL;
-				else
-					plr[pnum].InvList[i]._iCurs = ICURS_GOLD_MEDIUM;
-				plr[pnum]._pGold = CalculateGold(pnum);
-				done = TRUE;
-			}
-		}
-	}
-	if (done)
-		return done;
-
-	for (i = 39; i >= 0 && !done; i--) {
-		yy = 10 * (i / 10);
-		xx = i % 10;
-		if (plr[pnum].InvGrid[xx + yy] == 0) {
-			ii = plr[pnum]._pNumInv;
-			plr[pnum].InvList[ii] = plr[pnum].HoldItem;
-			plr[pnum]._pNumInv = plr[pnum]._pNumInv + 1;
-			plr[pnum].InvGrid[xx + yy] = plr[pnum]._pNumInv;
-			if (plr[pnum].HoldItem._ivalue >= GOLD_MEDIUM_LIMIT)
-				plr[pnum].InvList[ii]._iCurs = ICURS_GOLD_LARGE;
-			else if (plr[pnum].HoldItem._ivalue <= GOLD_SMALL_LIMIT)
-				plr[pnum].InvList[ii]._iCurs = ICURS_GOLD_SMALL;
-			else
-				plr[pnum].InvList[ii]._iCurs = ICURS_GOLD_MEDIUM;
-			plr[pnum]._pGold = CalculateGold(pnum);
-			done = TRUE;
-		}
-	}
-
-	return done;
-}
-#else
 BOOL GoldAutoPlace(int pnum)
 {
 	int ii;
 	int xx, yy;
-	int max_gold, gold;
 	BOOL done;
 
 	done = FALSE;
 	for (int i = 0; i < plr[pnum]._pNumInv && !done; i++) {
 		if (plr[pnum].InvList[i]._itype == ITYPE_GOLD) {
-			gold = plr[pnum].InvList[i]._ivalue + plr[pnum].HoldItem._ivalue;
+			int gold = plr[pnum].InvList[i]._ivalue + plr[pnum].HoldItem._ivalue;
+#ifdef HELLFIRE
 			if (gold <= MaxGold) {
+#else
+			if (plr[pnum].HoldItem._ivalue + plr[pnum].InvList[i]._ivalue <= GOLD_MAX_LIMIT) {
+#endif
 				plr[pnum].InvList[i]._ivalue = gold;
 				if (gold >= GOLD_MEDIUM_LIMIT)
 					plr[pnum].InvList[i]._iCurs = ICURS_GOLD_LARGE;
@@ -790,11 +727,12 @@ BOOL GoldAutoPlace(int pnum)
 					plr[pnum].InvList[i]._iCurs = ICURS_GOLD_MEDIUM;
 				plr[pnum]._pGold = CalculateGold(pnum);
 				done = TRUE;
+#ifdef HELLFIRE
 				plr[pnum].HoldItem._ivalue = 0;
 			} else {
-				max_gold = MaxGold;
+				int max_gold = MaxGold;
 				if (plr[pnum].InvList[i]._ivalue < max_gold) {
-					gold = max_gold - plr[pnum].InvList[i]._ivalue;
+					int gold = max_gold - plr[pnum].InvList[i]._ivalue;
 					plr[pnum].InvList[i]._ivalue = max_gold;
 					plr[pnum].InvList[i]._iCurs = ICURS_GOLD_LARGE;
 					plr[pnum].HoldItem._ivalue -= gold;
@@ -806,9 +744,30 @@ BOOL GoldAutoPlace(int pnum)
 					control_set_gold_curs(pnum);
 					plr[pnum]._pGold = CalculateGold(pnum);
 				}
+#endif
 			}
 		}
 	}
+
+#ifndef HELLFIRE
+	if (!done)
+		for (int i = 0; i < plr[pnum]._pNumInv && !done; i++) {
+			if (plr[pnum].InvList[i]._itype == ITYPE_GOLD && plr[pnum].InvList[i]._ivalue < GOLD_MAX_LIMIT) {
+				if (plr[pnum].HoldItem._ivalue + plr[pnum].InvList[i]._ivalue <= GOLD_MAX_LIMIT) {
+					plr[pnum].InvList[i]._ivalue = plr[pnum].HoldItem._ivalue + plr[pnum].InvList[i]._ivalue;
+					if (plr[pnum].InvList[i]._ivalue >= GOLD_MEDIUM_LIMIT)
+						plr[pnum].InvList[i]._iCurs = ICURS_GOLD_LARGE;
+					else if (plr[pnum].InvList[i]._ivalue <= GOLD_SMALL_LIMIT)
+						plr[pnum].InvList[i]._iCurs = ICURS_GOLD_SMALL;
+					else
+						plr[pnum].InvList[i]._iCurs = ICURS_GOLD_MEDIUM;
+					plr[pnum]._pGold = CalculateGold(pnum);
+					done = TRUE;
+				}
+			}
+		}
+#endif
+
 	if (!done)
 		for (int i = 39; i >= 0 && !done; i--) {
 			yy = 10 * (i / 10);
@@ -824,8 +783,8 @@ BOOL GoldAutoPlace(int pnum)
 					plr[pnum].InvList[ii]._iCurs = ICURS_GOLD_SMALL;
 				else
 					plr[pnum].InvList[ii]._iCurs = ICURS_GOLD_MEDIUM;
-
-				gold = plr[pnum].HoldItem._ivalue;
+#ifdef HELLFIRE
+				int gold = plr[pnum].HoldItem._ivalue;
 				if (gold > MaxGold) {
 					gold -= MaxGold;
 					plr[pnum].HoldItem._ivalue = gold;
@@ -837,11 +796,15 @@ BOOL GoldAutoPlace(int pnum)
 					plr[pnum]._pGold = CalculateGold(pnum);
 					SetCursor_(CURSOR_HAND);
 				}
+#else
+				plr[pnum]._pGold = CalculateGold(pnum);
+				done = TRUE;
+#endif
 			}
 		}
+
 	return done;
 }
-#endif
 
 BOOL WeaponAutoPlace(int pnum)
 {

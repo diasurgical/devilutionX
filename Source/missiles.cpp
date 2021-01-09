@@ -342,7 +342,7 @@ int GetDirection16(int x1, int y1, int x2, int y2)
 	my = abs(y2 - y1);
 	if (my > 15)
 		my = 15;
-	md = Dirs[my][mx]; // BUGFIX: 0x0 causes OOB (99)
+	md = Dirs[my][mx]; // BUGFIX, md can be 99, leading to an OOB read
 	if (x1 > x2) {
 		if (y1 > y2)
 			md = urtoll[md];
@@ -5366,7 +5366,7 @@ void MI_Blodboil(int i)
 				PS_WARR72,
 				PS_ROGUE72,
 				PS_MAGE72,
-				PS_MAGE72, // BUGFIX: should be PS_MONK72?
+				PS_MAGE72,
 				PS_ROGUE72,
 				PS_WARR72
 			};
@@ -5389,7 +5389,7 @@ void MI_Blodboil(int i)
 				PS_WARR72,
 				PS_ROGUE72,
 				PS_MAGE72,
-				PS_MAGE72, // BUGFIX: should be PS_MONK72?
+				PS_MAGE72,
 				PS_ROGUE72,
 				PS_WARR72
 			};
