@@ -4774,6 +4774,10 @@ BOOL WitchItemOk(int i)
 	BOOL rv;
 
 	rv = FALSE;
+	if (AllItemsList[i].itype == ITYPE_MISC)
+		rv = TRUE;
+	if (AllItemsList[i].itype == ITYPE_STAFF)
+		rv = TRUE;
 	if (AllItemsList[i].iMiscId == IMISC_MANA)
 		rv = FALSE;
 	if (AllItemsList[i].iMiscId == IMISC_FULLMANA)
