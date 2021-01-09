@@ -1,7 +1,8 @@
-cmake_minimum_required(VERSION 3.10) # CMP0083 NEW
+cmake_minimum_required(VERSION 3.11) # CMP0083 NEW
 
 include(CMake/out_of_tree.cmake)
 include(CMake/genex.cmake)
+include(FetchContent)
 
 DEBUG_OPTION(ASAN "Enable address sanitizer")
 DEBUG_OPTION(UBSAN "Enable undefined behaviour sanitizer")
@@ -15,6 +16,7 @@ option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network" OFF)
 option(RUN_TESTS "Build and run tests" OFF)
 option(HELLFIRE "Build hellfire version" OFF)
+option(DISCORD_INTEGRATION "Build with Discord SDK for rich presence support (Only Windows supported atm)" OFF)
 RELEASE_OPTION(CPACK "Configure CPack")
 
 
@@ -186,6 +188,24 @@ add_library(PKWare STATIC
 add_library(SourceS STATIC
   SourceS/paths.cpp)
 
+if(DISCORD_INTEGRATION)
+  message("Retrieving Discord SDK")
+  FetchContent_Declare(discordsrc
+    URL https://dl-game-sdk.discordapp.net/2.5.6/discord_game_sdk.zip
+    URL_HASH MD5=f86f15957cc9fbf04e3db10462027d58
+    SOURCE_DIR 3rdParty/Discord
+  )
+
+  FetchContent_Populate(discordsrc)
+
+  if(NOT discordsrc_POPULATED)
+    message(FATAL_ERROR "Failed to retrieve Discord SDK.")
+  endif()
+
+  file(GLOB discord_SRCS ${discordsrc_SOURCE_DIR}/cpp/*.cpp)
+  add_library(discord STATIC ${discord_SRCS})
+endif()
+
 add_library(devilution STATIC
   Source/appfat.cpp
   Source/automap.cpp
@@ -315,6 +335,11 @@ if(NOT NONET)
     SourceX/dvlnet/udp_p2p.cpp)
 endif()
 
+if(DISCORD_INTEGRATION)
+  list(APPEND devilutionx_SRCS
+    SourceX/discord/discord.cpp)
+endif()
+
 set(BIN_TARGET devilutionx)
 
 if(SWITCH)
@@ -346,6 +371,10 @@ endif()
 
 if(HELLFIRE)
   add_definitions(-DHELLFIRE)
+endif()
+
+if(DISCORD_INTEGRATION)
+  add_definitions(-DDISCORD)
 endif()
 
 add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionx_SRCS})
@@ -386,6 +415,26 @@ target_include_directories(${BIN_TARGET} PRIVATE
   3rdParty/asio/include
   3rdParty/Radon/Radon/include
   3rdParty/libsmacker)
+
+if(DISCORD_INTEGRATION)
+  target_include_directories(${BIN_TARGET} PRIVATE "${discordsrc_SOURCE_DIR}/..")
+
+  if (CMAKE_SIZEOF_VOID_P EQUAL 4)
+    set(DISCORD_LIB_DIR "${discordsrc_SOURCE_DIR}/lib/x86")
+  else()
+    set(DISCORD_LIB_DIR "${discordsrc_SOURCE_DIR}/lib/x86_64")
+  endif()
+
+  find_library(DISCORD_LIB
+    NAMES discord_game_sdk${CMAKE_SHARED_LIBRARY_SUFFIX}
+    HINTS ${DISCORD_LIB_DIR})
+
+  add_library(discord_game_sdk STATIC IMPORTED)
+  set_property(TARGET discord_game_sdk PROPERTY IMPORTED_LOCATION ${DISCORD_LIB})
+  target_link_libraries(${BIN_TARGET} PRIVATE discord discord_game_sdk)
+
+  file(COPY "${DISCORD_LIB_DIR}/discord_game_sdk${CMAKE_SHARED_LIBRARY_SUFFIX}" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+endif()
 
 target_link_libraries(devilution PUBLIC
   Threads::Threads

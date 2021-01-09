@@ -1970,7 +1970,7 @@ void FenceDoorFix()
 
 static void DRLG_L3Wood()
 {
-	int i, j, x, y, xx, yy, rt, rp, x1, y1, x2, y2;
+	volatile int i, j, x, y, xx, yy, rt, rp, x1, y1, x2, y2;
 	BOOL skip;
 
 	for (j = 1; j < DMAXY - 1; j++) {     // BUGFIX: Change '0' to '1' (fixed)
