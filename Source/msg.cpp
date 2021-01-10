@@ -394,7 +394,7 @@ static void DeltaImportData(BYTE cmd, DWORD recv_offset)
 		src = DeltaImportObject(src, sgLevels[i].object);
 		DeltaImportMonster(src, sgLevels[i].monster);
 	} else {
-		app_fatal("msg:1");
+		app_fatal("Unkown network message type: %d", cmd);
 	}
 
 	sgbDeltaChunks++;
