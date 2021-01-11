@@ -801,8 +801,8 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		nthread_send_and_recv_turn(0, 0);
 		SetupLocalCoords();
 		multi_send_pinfo(-2, CMD_SEND_PLRINFO);
-		gbActivePlayers = 1;
 		plr[myplr].plractive = TRUE;
+		gbActivePlayers = 1;
 		if (sgbPlayerTurnBitTbl[myplr] == FALSE || msg_wait_resync())
 			break;
 		NetClose();

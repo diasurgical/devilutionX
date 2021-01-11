@@ -687,6 +687,9 @@ void CreatePlayer(int pnum, char c)
 	int hp, mana;
 	int i;
 
+#ifdef HELLFIRE
+	memset(&plr[pnum], 0, sizeof(PlayerStruct));
+#endif
 	ClearPlrRVars(&plr[pnum]);
 	SetRndSeed(SDL_GetTicks());
 
@@ -726,10 +729,22 @@ void CreatePlayer(int pnum, char c)
 	plr[pnum]._pStatPts = 0;
 	plr[pnum].pTownWarps = 0;
 	plr[pnum].pDungMsgs = 0;
+#ifdef HELLFIRE
+	plr[pnum].pDungMsgs2 = 0;
+#endif
 	plr[pnum].pLvlLoad = 0;
 	plr[pnum].pDiabloKillLevel = 0;
+#ifdef HELLFIRE
+	plr[pnum].pDifficulty = DIFF_NORMAL;
+#endif
 
-	if (c == PC_ROGUE) {
+#ifdef HELLFIRE
+	if (plr[pnum]._pClass == PC_MONK) {
+		plr[pnum]._pDamageMod = (plr[pnum]._pStrength + plr[pnum]._pDexterity) * plr[pnum]._pLevel / 150;
+	} else if (plr[pnum]._pClass == PC_ROGUE || plr[pnum]._pClass == PC_BARD) {
+#else
+	if (plr[pnum]._pClass == PC_ROGUE) {
+#endif
 		plr[pnum]._pDamageMod = plr[pnum]._pLevel * (plr[pnum]._pStrength + plr[pnum]._pDexterity) / 200;
 	} else {
 		plr[pnum]._pDamageMod = plr[pnum]._pStrength * plr[pnum]._pLevel / 100;
@@ -737,41 +752,64 @@ void CreatePlayer(int pnum, char c)
 
 	plr[pnum]._pBaseToBlk = ToBlkTbl[c];
 
-	plr[pnum]._pHitPoints = (val + 10) << 6;
-	if (c == PC_WARRIOR) {
-		plr[pnum]._pHitPoints *= 2;
+	plr[pnum]._pHitPoints = (plr[pnum]._pVitality + 10) << 6;
+	if (plr[pnum]._pClass == PC_WARRIOR
+#ifdef HELLFIRE
+	    || plr[pnum]._pClass == PC_BARBARIAN
+#endif
+	) {
+		plr[pnum]._pHitPoints <<= 1;
+#ifdef HELLFIRE
+	} else if (plr[pnum]._pClass == PC_ROGUE || plr[pnum]._pClass == PC_MONK || plr[pnum]._pClass == PC_BARD) {
+#else
 	}
-	if (c == PC_ROGUE) {
+	if (plr[pnum]._pClass == PC_ROGUE == PC_ROGUE) {
+#endif
 		plr[pnum]._pHitPoints += plr[pnum]._pHitPoints >> 1;
 	}
 
-	hp = plr[pnum]._pHitPoints;
-	plr[pnum]._pMaxHP = hp;
-	plr[pnum]._pHPBase = hp;
-	plr[pnum]._pMaxHPBase = hp;
+	plr[pnum]._pMaxHP = plr[pnum]._pHitPoints;
+	plr[pnum]._pHPBase = plr[pnum]._pHitPoints;
+	plr[pnum]._pMaxHPBase = plr[pnum]._pHitPoints;
 
 	plr[pnum]._pMana = plr[pnum]._pMagic << 6;
-	if (c == PC_SORCERER) {
-		plr[pnum]._pMana *= 2;
+	if (plr[pnum]._pClass == PC_SORCERER) {
+		plr[pnum]._pMana <<= 1;
+#ifdef HELLFIRE
+	} else if (plr[pnum]._pClass == PC_BARD) {
+		plr[pnum]._pMana += plr[pnum]._pMana * 3 / 4;
+	} else if (plr[pnum]._pClass == PC_ROGUE
+	    || plr[pnum]._pClass == PC_MONK) {
+#else
 	}
-	if (c == PC_ROGUE) {
+	if (plr[pnum]._pClass == PC_ROGUE) {
+#endif
 		plr[pnum]._pMana += plr[pnum]._pMana >> 1;
 	}
 
-	mana = plr[pnum]._pMana;
-	plr[pnum]._pMaxMana = mana;
-	plr[pnum]._pManaBase = mana;
-	plr[pnum]._pMaxManaBase = mana;
+	plr[pnum]._pMaxMana = plr[pnum]._pMana;
+	plr[pnum]._pManaBase = plr[pnum]._pMana;
+	plr[pnum]._pMaxManaBase = plr[pnum]._pMana;
 
 	plr[pnum]._pLevel = 1;
-	plr[pnum]._pMaxLvl = 1;
+	plr[pnum]._pMaxLvl = plr[pnum]._pLevel;
 	plr[pnum]._pExperience = 0;
-	plr[pnum]._pMaxExp = 0;
+	plr[pnum]._pMaxExp = plr[pnum]._pExperience;
 	plr[pnum]._pNextExper = ExpLvlsTbl[1];
 	plr[pnum]._pArmorClass = 0;
-	plr[pnum]._pMagResist = 0;
-	plr[pnum]._pFireResist = 0;
-	plr[pnum]._pLghtResist = 0;
+#ifdef HELLFIRE
+	if (plr[pnum]._pClass == PC_BARBARIAN) {
+		plr[pnum]._pMagResist = 1;
+		plr[pnum]._pFireResist = 1;
+		plr[pnum]._pLghtResist = 1;
+	} else {
+#endif
+		plr[pnum]._pMagResist = 0;
+		plr[pnum]._pFireResist = 0;
+		plr[pnum]._pLghtResist = 0;
+#ifdef HELLFIRE
+	}
+#endif
 	plr[pnum]._pLightRad = 10;
 	plr[pnum]._pInfraFlag = FALSE;
 
@@ -781,6 +819,12 @@ void CreatePlayer(int pnum, char c)
 		plr[pnum]._pAblSpells = SPELLBIT(SPL_DISARM);
 	} else if (c == PC_SORCERER) {
 		plr[pnum]._pAblSpells = SPELLBIT(SPL_RECHARGE);
+	} else if (c == PC_MONK) {
+		plr[pnum]._pAblSpells = SPELLBIT(SPL_SEARCH);
+	} else if (c == PC_BARD) {
+		plr[pnum]._pAblSpells = SPELLBIT(SPL_IDENTIFY);
+	} else if (c == PC_BARBARIAN) {
+		plr[pnum]._pAblSpells = SPELLBIT(SPL_BLODBOIL);
 	}
 
 	if (c == PC_SORCERER) {
@@ -811,6 +855,12 @@ void CreatePlayer(int pnum, char c)
 		plr[pnum]._pgfxnum = ANIM_ID_BOW;
 	} else if (c == PC_SORCERER) {
 		plr[pnum]._pgfxnum = ANIM_ID_STAFF;
+	} else if (c == PC_MONK) {
+		plr[pnum]._pgfxnum = ANIM_ID_STAFF;
+	} else if (c == PC_BARD) {
+		plr[pnum]._pgfxnum = ANIM_ID_SWORD_SHIELD;
+	} else if (c == PC_BARBARIAN) {
+		plr[pnum]._pgfxnum = ANIM_ID_SWORD_SHIELD;
 	}
 
 	for (i = 0; i < NUMLEVELS; i++) {
@@ -826,6 +876,8 @@ void CreatePlayer(int pnum, char c)
 	plr[pnum].pLvlLoad = 0;
 	plr[pnum].pBattleNet = FALSE;
 	plr[pnum].pManaShield = FALSE;
+	plr[pnum].pDamAcFlags = 0;
+	plr[pnum].wReflection = 0;
 
 	InitDungMsgs(pnum);
 	CreatePlrItems(pnum);
@@ -1746,24 +1798,39 @@ void StartPlrHit(int pnum, int dam, BOOL forcehit)
 		PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
 	} else if (plr[pnum]._pClass == PC_SORCERER) {
 		PlaySfxLoc(PS_MAGE69, plr[pnum]._px, plr[pnum]._py);
+	} else if (plr[pnum]._pClass == PC_MONK) {
+		PlaySfxLoc(PS_MONK69, plr[pnum]._px, plr[pnum]._py);
+	} else if (plr[pnum]._pClass == PC_BARD) {
+		PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
+	} else if (plr[pnum]._pClass == PC_BARBARIAN) {
+		PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
 	}
 
 	drawhpflag = TRUE;
-	if (dam >> 6 >= plr[pnum]._pLevel || forcehit) {
-		pd = plr[pnum]._pdir;
-
-		if (!(plr[pnum]._pGFXLoad & PFILE_HIT)) {
-			LoadPlrGFX(pnum, PFILE_HIT);
+#ifdef HELLFIRE
+	if (plr[pnum]._pClass == PC_BARBARIAN) {
+		if (dam >> 6 < plr[pnum]._pLevel + plr[pnum]._pLevel / 4 && !forcehit) {
+			return;
 		}
-		NewPlrAnim(pnum, plr[pnum]._pHAnim[pd], plr[pnum]._pHFrames, 0, plr[pnum]._pHWidth);
-
-		plr[pnum]._pmode = PM_GOTHIT;
-		FixPlayerLocation(pnum, pd);
-		plr[pnum]._pVar8 = 1;
-		FixPlrWalkTags(pnum);
-		dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
-		SetPlayerOld(pnum);
+	} else
+#endif
+	    if (dam >> 6 < plr[pnum]._pLevel && !forcehit) {
+		return;
 	}
+
+	pd = plr[pnum]._pdir;
+
+	if (!(plr[pnum]._pGFXLoad & PFILE_HIT)) {
+		LoadPlrGFX(pnum, PFILE_HIT);
+	}
+	NewPlrAnim(pnum, plr[pnum]._pHAnim[pd], plr[pnum]._pHFrames, 0, plr[pnum]._pHWidth);
+
+	plr[pnum]._pmode = PM_GOTHIT;
+	FixPlayerLocation(pnum, pd);
+	plr[pnum]._pVar8 = 1;
+	FixPlrWalkTags(pnum);
+	dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
+	SetPlayerOld(pnum);
 }
 
 void RespawnDeadItem(ItemStruct *itm, int x, int y)
@@ -2572,6 +2639,11 @@ BOOL PlrHitMonst(int pnum, int m)
 {
 	BOOL rv, ret;
 	int hit, hper, mind, maxd, ddp, dam, skdam, phanditype, tmac;
+	hper = 0;
+#ifdef HELLFIRE
+	ret = FALSE;
+	BOOL adjacentDamage = FALSE;
+#endif
 
 	if ((DWORD)m >= MAXMONSTERS) {
 		app_fatal("PlrHitMonst: illegal monster %d", m);
@@ -2589,6 +2661,17 @@ BOOL PlrHitMonst(int pnum, int m)
 		return FALSE;
 	}
 
+#ifdef HELLFIRE
+	if (pnum < 0) {
+		adjacentDamage = TRUE;
+		pnum = -pnum;
+		if (plr[pnum]._pLevel > 20)
+			hper -= 30;
+		else
+			hper -= (35 - plr[pnum]._pLevel) * 2;
+	}
+#endif
+
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PlrHitMonst: illegal player %d", pnum);
 	}
@@ -2600,8 +2683,27 @@ BOOL PlrHitMonst(int pnum, int m)
 		hit = 0;
 	}
 
-	tmac = monster[m].mArmorClass - plr[pnum]._pIEnAc;
-	hper = (plr[pnum]._pDexterity >> 1) + plr[pnum]._pLevel + 50 - tmac;
+	tmac = monster[m].mArmorClass;
+#ifdef HELLFIRE
+	if (plr[pnum]._pIEnAc > 0) {
+		int _pIEnAc = plr[pnum]._pIEnAc - 1;
+		if (_pIEnAc > 0)
+			tmac >>= _pIEnAc;
+		else
+			tmac -= tmac >> 2;
+
+		if (plr[pnum]._pClass == PC_BARBARIAN) {
+			tmac -= monster[m].mArmorClass / 8;
+		}
+
+		if (tmac < 0)
+			tmac = 0;
+	}
+#else
+	tmac -= plr[pnum]._pIEnAc;
+#endif
+
+	hper += (plr[pnum]._pDexterity >> 1) + plr[pnum]._pLevel + 50 - tmac;
 	if (plr[pnum]._pClass == PC_WARRIOR) {
 		hper += 20;
 	}
@@ -2621,15 +2723,29 @@ BOOL PlrHitMonst(int pnum, int m)
 #else
 	if (hit < hper) {
 #endif
+#ifdef HELLFIRE
+		if (plr[pnum]._pIFlags & ISPL_FIREDAM && plr[pnum]._pIFlags & ISPL_LIGHTDAM) {
+			int midam = plr[pnum]._pIFMinDam + random_(3, plr[pnum]._pIFMaxDam - plr[pnum]._pIFMinDam);
+			AddMissile(plr[pnum]._px, plr[pnum]._py, plr[pnum]._pVar1, plr[pnum]._pVar2, plr[pnum]._pdir, MIS_SPECARROW, TARGET_MONSTERS, pnum, midam, 0);
+		}
+#endif
 		mind = plr[pnum]._pIMinDam;
 		maxd = plr[pnum]._pIMaxDam;
 		dam = random_(5, maxd - mind + 1) + mind;
 		dam += dam * plr[pnum]._pIBonusDam / 100;
-		dam += plr[pnum]._pDamageMod + plr[pnum]._pIBonusDamMod;
-		if (plr[pnum]._pClass == PC_WARRIOR) {
+		dam += plr[pnum]._pIBonusDamMod;
+#ifdef HELLFIRE
+		int dam2 = dam << 6;
+#endif
+		dam += plr[pnum]._pDamageMod;
+		if (plr[pnum]._pClass == PC_WARRIOR
+#ifdef HELLFIRE
+		    || plr[pnum]._pClass == PC_BARBARIAN
+#endif
+		) {
 			ddp = plr[pnum]._pLevel;
 			if (random_(6, 100) < ddp) {
-				dam *= 2;
+				dam <<= 1;
 			}
 		}
 
@@ -2646,7 +2762,10 @@ BOOL PlrHitMonst(int pnum, int m)
 			if (phanditype == ITYPE_SWORD) {
 				dam -= dam >> 1;
 			}
-			if (phanditype == ITYPE_MACE) {
+#ifdef HELLFIRE
+			else
+#endif
+			    if (phanditype == ITYPE_MACE) {
 				dam += dam >> 1;
 			}
 			break;
@@ -2654,7 +2773,10 @@ BOOL PlrHitMonst(int pnum, int m)
 			if (phanditype == ITYPE_MACE) {
 				dam -= dam >> 1;
 			}
-			if (phanditype == ITYPE_SWORD) {
+#ifdef HELLFIRE
+			else
+#endif
+			    if (phanditype == ITYPE_SWORD) {
 				dam += dam >> 1;
 			}
 			break;
@@ -2664,8 +2786,46 @@ BOOL PlrHitMonst(int pnum, int m)
 			dam *= 3;
 		}
 
+#ifdef HELLFIRE
+		if (plr[pnum].pDamAcFlags & 0x01 && random_(6, 100) < 5) {
+			dam *= 3;
+		}
+
+		if (plr[pnum].pDamAcFlags & 0x10 && monster[m].MType->mtype != MT_DIABLO && monster[m]._uniqtype == 0 && random_(6, 100) < 10) {
+			monster_43C785(m);
+		}
+#endif
+
 		dam <<= 6;
+#ifdef HELLFIRE
+		if (plr[pnum].pDamAcFlags & 0x08) {
+			int r = random_(6, 201);
+			if (r >= 100)
+				r = 100 + (r - 100) * 5;
+			dam = dam * r / 100;
+		}
+
+		if (adjacentDamage)
+			dam >>= 2;
+#endif
+
 		if (pnum == myplr) {
+#ifdef HELLFIRE
+			if (plr[pnum].pDamAcFlags & 0x04) {
+				dam2 += plr[pnum]._pIGetHit << 6;
+				if (dam2 >= 0) {
+					if (plr[pnum]._pHitPoints > dam2) {
+						plr[pnum]._pHitPoints -= dam2;
+						plr[pnum]._pHPBase -= dam2;
+					} else {
+						dam2 = (1 << 6);
+						plr[pnum]._pHPBase -= plr[pnum]._pHitPoints - dam2;
+						plr[pnum]._pHitPoints = dam2;
+					}
+				}
+				dam <<= 1;
+			}
+#endif
 			monster[m]._mhitpoints -= dam;
 		}
 
@@ -2810,7 +2970,11 @@ BOOL PlrHitPlr(int pnum, char p)
 			dam += (dam * plr[pnum]._pIBonusDam) / 100;
 			dam += plr[pnum]._pIBonusDamMod + plr[pnum]._pDamageMod;
 
-			if (plr[pnum]._pClass == PC_WARRIOR) {
+			if (plr[pnum]._pClass == PC_WARRIOR
+#ifdef HELLFIRE
+			    || plr[pnum]._pClass == PC_BARBARIAN
+#endif
+			) {
 				lvl = plr[pnum]._pLevel;
 				if (random_(6, 100) < lvl) {
 					dam <<= 1;
@@ -2862,7 +3026,7 @@ BOOL PlrHitObj(int pnum, int mx, int my)
 BOOL PM_DoAttack(int pnum)
 {
 	int frame, dir, dx, dy, m;
-	BOOL didhit;
+	BOOL didhit = FALSE;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PM_DoAttack: illegal player %d", pnum);
@@ -2886,9 +3050,8 @@ BOOL PM_DoAttack(int pnum)
 	}
 
 	if (plr[pnum]._pAnimFrame == plr[pnum]._pAFNum) {
-		dir = plr[pnum]._pdir;
-		dx = plr[pnum]._px + offset_x[dir];
-		dy = plr[pnum]._py + offset_y[dir];
+		dx = plr[pnum]._px + offset_x[plr[pnum]._pdir];
+		dy = plr[pnum]._py + offset_y[plr[pnum]._pdir];
 
 		if (dMonster[dx][dy] != 0) {
 			if (dMonster[dx][dy] > 0) {
@@ -2902,14 +3065,19 @@ BOOL PM_DoAttack(int pnum)
 			}
 		}
 
-		if (plr[pnum]._pIFlags & ISPL_FIREDAM) {
-			AddMissile(dx, dy, 1, 0, 0, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
-		}
-		if (plr[pnum]._pIFlags & ISPL_LIGHTDAM) {
-			AddMissile(dx, dy, 2, 0, 0, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
-		}
+#ifdef HELLFIRE
+		if (!(plr[pnum]._pIFlags & ISPL_FIREDAM) || !(plr[pnum]._pIFlags & ISPL_LIGHTDAM))
+#endif
+			if (plr[pnum]._pIFlags & ISPL_FIREDAM) {
+				AddMissile(dx, dy, 1, 0, 0, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
+			}
+#ifdef HELLFIRE
+			else
+#endif
+			    if (plr[pnum]._pIFlags & ISPL_LIGHTDAM) {
+				AddMissile(dx, dy, 2, 0, 0, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
+			}
 
-		didhit = FALSE;
 		if (dMonster[dx][dy]) {
 			m = dMonster[dx][dy];
 			if (dMonster[dx][dy] > 0) {
@@ -2929,6 +3097,34 @@ BOOL PM_DoAttack(int pnum)
 		} else if (dObject[dx][dy] > 0) {
 			didhit = PlrHitObj(pnum, dx, dy);
 		}
+#ifdef HELLFIRE
+		if ((plr[pnum]._pClass == PC_MONK
+		        && (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_STAFF || plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_STAFF))
+		    || (plr[pnum]._pClass == PC_BARD
+		        && plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SWORD && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SWORD)
+		    || (plr[pnum]._pClass == PC_BARBARIAN
+		        && (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_AXE || plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_AXE
+		            || (((plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_MACE && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND)
+		                    || (plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_MACE && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iLoc == ILOC_TWOHAND)
+		                    || (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SWORD && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND)
+		                    || (plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SWORD && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iLoc == ILOC_TWOHAND))
+		                && !(plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SHIELD || plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SHIELD))))) {
+			dx = plr[pnum]._px + offset_x[(plr[pnum]._pdir + 1) % 8];
+			dy = plr[pnum]._py + offset_y[(plr[pnum]._pdir + 1) % 8];
+			m = ((dMonster[dx][dy] > 0) ? dMonster[dx][dy] : -dMonster[dx][dy]) - 1;
+			if (dMonster[dx][dy] != 0 && !CanTalkToMonst(m) && monster[m]._moldx == dx && monster[m]._moldy == dy) {
+				if (PlrHitMonst(-pnum, m))
+					didhit = TRUE;
+			}
+			dx = plr[pnum]._px + offset_x[(plr[pnum]._pdir + 7) % 8];
+			dy = plr[pnum]._py + offset_y[(plr[pnum]._pdir + 7) % 8];
+			m = ((dMonster[dx][dy] > 0) ? dMonster[dx][dy] : -dMonster[dx][dy]) - 1;
+			if (dMonster[dx][dy] != 0 && !CanTalkToMonst(m) && monster[m]._moldx == dx && monster[m]._moldy == dy) {
+				if (PlrHitMonst(-pnum, m))
+					didhit = TRUE;
+			}
+		}
+#endif
 
 		if (didhit && WeaponDur(pnum, 30)) {
 			StartStand(pnum, plr[pnum]._pdir);
@@ -3784,16 +3980,26 @@ BOOL PosOkPlayer(int pnum, int x, int y)
 	DWORD p;
 	char bv;
 
+#ifndef HELLFIRE
 	PosOK = FALSE;
-	if (x >= 0 && x < MAXDUNX && y >= 0 && y < MAXDUNY && !SolidLoc(x, y) && dPiece[x][y]) {
-
+	if (x >= 0 && x < MAXDUNX && y >= 0 && y < MAXDUNY && !SolidLoc(x, y) && dPiece[x][y] != 0) {
+#else
+	if (dPiece[x][y] == 0)
+		return FALSE;
+	if (SolidLoc(x, y))
+		return FALSE;
+#endif
 		if (dPlayer[x][y] != 0) {
 			if (dPlayer[x][y] > 0) {
 				p = dPlayer[x][y] - 1;
 			} else {
 				p = -(dPlayer[x][y] + 1);
 			}
-			if (p != pnum && p < MAX_PLRS && plr[p]._pHitPoints != 0) {
+			if (p != pnum
+#ifndef HELLFIRE
+			    && p < MAX_PLRS
+#endif
+			    && plr[p]._pHitPoints != 0) {
 				return FALSE;
 			}
 		}
@@ -3821,11 +4027,13 @@ BOOL PosOkPlayer(int pnum, int x, int y)
 			}
 		}
 
+#ifndef HELLFIRE
 		PosOK = TRUE;
 	}
 
 	if (!PosOK)
 		return FALSE;
+#endif
 	return TRUE;
 }
 

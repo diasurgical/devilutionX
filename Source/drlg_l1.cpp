@@ -2594,7 +2594,7 @@ static void DRLG_L5(int entry)
 				}
 				ViewY++;
 			}
-		} else if (gbIsHellfire && entry == 1) {
+		} else if (gbIsHellfire && entry == ENTRY_PREV) {
 			if (currlevel < 21) {
 				if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, FALSE, -1, 0) < 0)
 					doneflag = FALSE;
