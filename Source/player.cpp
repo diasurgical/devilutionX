@@ -729,22 +729,14 @@ void CreatePlayer(int pnum, char c)
 	plr[pnum]._pStatPts = 0;
 	plr[pnum].pTownWarps = 0;
 	plr[pnum].pDungMsgs = 0;
-#ifdef HELLFIRE
 	plr[pnum].pDungMsgs2 = 0;
-#endif
 	plr[pnum].pLvlLoad = 0;
 	plr[pnum].pDiabloKillLevel = 0;
-#ifdef HELLFIRE
 	plr[pnum].pDifficulty = DIFF_NORMAL;
-#endif
 
-#ifdef HELLFIRE
 	if (plr[pnum]._pClass == PC_MONK) {
 		plr[pnum]._pDamageMod = (plr[pnum]._pStrength + plr[pnum]._pDexterity) * plr[pnum]._pLevel / 150;
 	} else if (plr[pnum]._pClass == PC_ROGUE || plr[pnum]._pClass == PC_BARD) {
-#else
-	if (plr[pnum]._pClass == PC_ROGUE) {
-#endif
 		plr[pnum]._pDamageMod = plr[pnum]._pLevel * (plr[pnum]._pStrength + plr[pnum]._pDexterity) / 200;
 	} else {
 		plr[pnum]._pDamageMod = plr[pnum]._pStrength * plr[pnum]._pLevel / 100;
@@ -753,18 +745,9 @@ void CreatePlayer(int pnum, char c)
 	plr[pnum]._pBaseToBlk = ToBlkTbl[c];
 
 	plr[pnum]._pHitPoints = (plr[pnum]._pVitality + 10) << 6;
-	if (plr[pnum]._pClass == PC_WARRIOR
-#ifdef HELLFIRE
-	    || plr[pnum]._pClass == PC_BARBARIAN
-#endif
-	) {
+	if (plr[pnum]._pClass == PC_WARRIOR || plr[pnum]._pClass == PC_BARBARIAN) {
 		plr[pnum]._pHitPoints <<= 1;
-#ifdef HELLFIRE
 	} else if (plr[pnum]._pClass == PC_ROGUE || plr[pnum]._pClass == PC_MONK || plr[pnum]._pClass == PC_BARD) {
-#else
-	}
-	if (plr[pnum]._pClass == PC_ROGUE == PC_ROGUE) {
-#endif
 		plr[pnum]._pHitPoints += plr[pnum]._pHitPoints >> 1;
 	}
 
@@ -775,15 +758,9 @@ void CreatePlayer(int pnum, char c)
 	plr[pnum]._pMana = plr[pnum]._pMagic << 6;
 	if (plr[pnum]._pClass == PC_SORCERER) {
 		plr[pnum]._pMana <<= 1;
-#ifdef HELLFIRE
 	} else if (plr[pnum]._pClass == PC_BARD) {
 		plr[pnum]._pMana += plr[pnum]._pMana * 3 / 4;
-	} else if (plr[pnum]._pClass == PC_ROGUE
-	    || plr[pnum]._pClass == PC_MONK) {
-#else
-	}
-	if (plr[pnum]._pClass == PC_ROGUE) {
-#endif
+	} else if (plr[pnum]._pClass == PC_ROGUE || plr[pnum]._pClass == PC_MONK) {
 		plr[pnum]._pMana += plr[pnum]._pMana >> 1;
 	}
 
@@ -797,19 +774,15 @@ void CreatePlayer(int pnum, char c)
 	plr[pnum]._pMaxExp = plr[pnum]._pExperience;
 	plr[pnum]._pNextExper = ExpLvlsTbl[1];
 	plr[pnum]._pArmorClass = 0;
-#ifdef HELLFIRE
 	if (plr[pnum]._pClass == PC_BARBARIAN) {
 		plr[pnum]._pMagResist = 1;
 		plr[pnum]._pFireResist = 1;
 		plr[pnum]._pLghtResist = 1;
 	} else {
-#endif
 		plr[pnum]._pMagResist = 0;
 		plr[pnum]._pFireResist = 0;
 		plr[pnum]._pLghtResist = 0;
-#ifdef HELLFIRE
 	}
-#endif
 	plr[pnum]._pLightRad = 10;
 	plr[pnum]._pInfraFlag = FALSE;
 
@@ -1807,14 +1780,11 @@ void StartPlrHit(int pnum, int dam, BOOL forcehit)
 	}
 
 	drawhpflag = TRUE;
-#ifdef HELLFIRE
 	if (plr[pnum]._pClass == PC_BARBARIAN) {
 		if (dam >> 6 < plr[pnum]._pLevel + plr[pnum]._pLevel / 4 && !forcehit) {
 			return;
 		}
-	} else
-#endif
-	    if (dam >> 6 < plr[pnum]._pLevel && !forcehit) {
+	} else if (dam >> 6 < plr[pnum]._pLevel && !forcehit) {
 		return;
 	}
 
@@ -2014,9 +1984,7 @@ StartPlayerKill(int pnum, int earflag)
 			}
 		}
 	}
-#ifndef HELLFIRE
 	SetPlayerHitPoints(pnum, 0);
-#endif
 }
 
 void DropHalfPlayersGold(int pnum)
@@ -2079,12 +2047,7 @@ void DropHalfPlayersGold(int pnum)
 	force_redraw = 255;
 	if (hGold > 0) {
 		for (i = 0; i < plr[pnum]._pNumInv && hGold > 0; i++) {
-			if (plr[pnum].InvList[i]._itype == ITYPE_GOLD &&
-#ifndef HELLFIRE
-			    plr[pnum].InvList[i]._ivalue != GOLD_MAX_LIMIT) {
-#else
-			    plr[pnum].InvList[i]._ivalue != MaxGold) {
-#endif
+			if (plr[pnum].InvList[i]._itype == ITYPE_GOLD && plr[pnum].InvList[i]._ivalue != MaxGold) {
 				if (hGold < plr[pnum].InvList[i]._ivalue) {
 					plr[pnum].InvList[i]._ivalue -= hGold;
 					SetGoldCurs(pnum, i);
@@ -2640,10 +2603,8 @@ BOOL PlrHitMonst(int pnum, int m)
 	BOOL rv, ret;
 	int hit, hper, mind, maxd, ddp, dam, skdam, phanditype, tmac;
 	hper = 0;
-#ifdef HELLFIRE
 	ret = FALSE;
 	BOOL adjacentDamage = FALSE;
-#endif
 
 	if ((DWORD)m >= MAXMONSTERS) {
 		app_fatal("PlrHitMonst: illegal monster %d", m);
@@ -2661,7 +2622,6 @@ BOOL PlrHitMonst(int pnum, int m)
 		return FALSE;
 	}
 
-#ifdef HELLFIRE
 	if (pnum < 0) {
 		adjacentDamage = TRUE;
 		pnum = -pnum;
@@ -2670,7 +2630,6 @@ BOOL PlrHitMonst(int pnum, int m)
 		else
 			hper -= (35 - plr[pnum]._pLevel) * 2;
 	}
-#endif
 
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PlrHitMonst: illegal player %d", pnum);
@@ -2684,8 +2643,7 @@ BOOL PlrHitMonst(int pnum, int m)
 	}
 
 	tmac = monster[m].mArmorClass;
-#ifdef HELLFIRE
-	if (plr[pnum]._pIEnAc > 0) {
+	if (gbIsHellfire && plr[pnum]._pIEnAc > 0) {
 		int _pIEnAc = plr[pnum]._pIEnAc - 1;
 		if (_pIEnAc > 0)
 			tmac >>= _pIEnAc;
@@ -2698,10 +2656,9 @@ BOOL PlrHitMonst(int pnum, int m)
 
 		if (tmac < 0)
 			tmac = 0;
+	} else {
+		tmac -= plr[pnum]._pIEnAc;
 	}
-#else
-	tmac -= plr[pnum]._pIEnAc;
-#endif
 
 	hper += (plr[pnum]._pDexterity >> 1) + plr[pnum]._pLevel + 50 - tmac;
 	if (plr[pnum]._pClass == PC_WARRIOR) {
@@ -2734,15 +2691,9 @@ BOOL PlrHitMonst(int pnum, int m)
 		dam = random_(5, maxd - mind + 1) + mind;
 		dam += dam * plr[pnum]._pIBonusDam / 100;
 		dam += plr[pnum]._pIBonusDamMod;
-#ifdef HELLFIRE
 		int dam2 = dam << 6;
-#endif
 		dam += plr[pnum]._pDamageMod;
-		if (plr[pnum]._pClass == PC_WARRIOR
-#ifdef HELLFIRE
-		    || plr[pnum]._pClass == PC_BARBARIAN
-#endif
-		) {
+		if (plr[pnum]._pClass == PC_WARRIOR || plr[pnum]._pClass == PC_BARBARIAN) {
 			ddp = plr[pnum]._pLevel;
 			if (random_(6, 100) < ddp) {
 				dam <<= 1;
@@ -2761,22 +2712,14 @@ BOOL PlrHitMonst(int pnum, int m)
 		case MC_UNDEAD:
 			if (phanditype == ITYPE_SWORD) {
 				dam -= dam >> 1;
-			}
-#ifdef HELLFIRE
-			else
-#endif
-			    if (phanditype == ITYPE_MACE) {
+			} else if (phanditype == ITYPE_MACE) {
 				dam += dam >> 1;
 			}
 			break;
 		case MC_ANIMAL:
 			if (phanditype == ITYPE_MACE) {
 				dam -= dam >> 1;
-			}
-#ifdef HELLFIRE
-			else
-#endif
-			    if (phanditype == ITYPE_SWORD) {
+			} else if (phanditype == ITYPE_SWORD) {
 				dam += dam >> 1;
 			}
 			break;
@@ -2786,7 +2729,6 @@ BOOL PlrHitMonst(int pnum, int m)
 			dam *= 3;
 		}
 
-#ifdef HELLFIRE
 		if (plr[pnum].pDamAcFlags & 0x01 && random_(6, 100) < 5) {
 			dam *= 3;
 		}
@@ -2794,10 +2736,8 @@ BOOL PlrHitMonst(int pnum, int m)
 		if (plr[pnum].pDamAcFlags & 0x10 && monster[m].MType->mtype != MT_DIABLO && monster[m]._uniqtype == 0 && random_(6, 100) < 10) {
 			monster_43C785(m);
 		}
-#endif
 
 		dam <<= 6;
-#ifdef HELLFIRE
 		if (plr[pnum].pDamAcFlags & 0x08) {
 			int r = random_(6, 201);
 			if (r >= 100)
@@ -2807,10 +2747,8 @@ BOOL PlrHitMonst(int pnum, int m)
 
 		if (adjacentDamage)
 			dam >>= 2;
-#endif
 
 		if (pnum == myplr) {
-#ifdef HELLFIRE
 			if (plr[pnum].pDamAcFlags & 0x04) {
 				dam2 += plr[pnum]._pIGetHit << 6;
 				if (dam2 >= 0) {
@@ -2825,7 +2763,6 @@ BOOL PlrHitMonst(int pnum, int m)
 				}
 				dam <<= 1;
 			}
-#endif
 			monster[m]._mhitpoints -= dam;
 		}
 
@@ -2970,11 +2907,7 @@ BOOL PlrHitPlr(int pnum, char p)
 			dam += (dam * plr[pnum]._pIBonusDam) / 100;
 			dam += plr[pnum]._pIBonusDamMod + plr[pnum]._pDamageMod;
 
-			if (plr[pnum]._pClass == PC_WARRIOR
-#ifdef HELLFIRE
-			    || plr[pnum]._pClass == PC_BARBARIAN
-#endif
-			) {
+			if (plr[pnum]._pClass == PC_WARRIOR || plr[pnum]._pClass == PC_BARBARIAN) {
 				lvl = plr[pnum]._pLevel;
 				if (random_(6, 100) < lvl) {
 					dam <<= 1;
@@ -3097,7 +3030,6 @@ BOOL PM_DoAttack(int pnum)
 		} else if (dObject[dx][dy] > 0) {
 			didhit = PlrHitObj(pnum, dx, dy);
 		}
-#ifdef HELLFIRE
 		if ((plr[pnum]._pClass == PC_MONK
 		        && (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_STAFF || plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_STAFF))
 		    || (plr[pnum]._pClass == PC_BARD
@@ -3124,7 +3056,6 @@ BOOL PM_DoAttack(int pnum)
 					didhit = TRUE;
 			}
 		}
-#endif
 
 		if (didhit && WeaponDur(pnum, 30)) {
 			StartStand(pnum, plr[pnum]._pdir);
@@ -3789,8 +3720,8 @@ void ValidatePlayer()
 	gt = 0;
 	for (i = 0; i < plr[myplr]._pNumInv; i++) {
 		if (plr[myplr].InvList[i]._itype == ITYPE_GOLD) {
-            int maxGold = gbIsHellfire ? auricGold : GOLD_MAX_LIMIT;
-            if (plr[myplr].InvList[i]._ivalue > maxGold) {
+			int maxGold = gbIsHellfire ? auricGold : GOLD_MAX_LIMIT;
+			if (plr[myplr].InvList[i]._ivalue > maxGold) {
 				plr[myplr].InvList[i]._ivalue = maxGold;
 			}
 			gt += plr[myplr].InvList[i]._ivalue;
@@ -3976,64 +3907,51 @@ void ClrPlrPath(int pnum)
 
 BOOL PosOkPlayer(int pnum, int x, int y)
 {
-	BOOL PosOK;
 	DWORD p;
 	char bv;
 
-#ifndef HELLFIRE
-	PosOK = FALSE;
-	if (x >= 0 && x < MAXDUNX && y >= 0 && y < MAXDUNY && !SolidLoc(x, y) && dPiece[x][y] != 0) {
-#else
+	if (x < 0 || x >= MAXDUNX || y < 0 || y >= MAXDUNY)
+		return FALSE;
 	if (dPiece[x][y] == 0)
 		return FALSE;
 	if (SolidLoc(x, y))
 		return FALSE;
-#endif
-		if (dPlayer[x][y] != 0) {
-			if (dPlayer[x][y] > 0) {
-				p = dPlayer[x][y] - 1;
-			} else {
-				p = -(dPlayer[x][y] + 1);
-			}
-			if (p != pnum
-#ifndef HELLFIRE
-			    && p < MAX_PLRS
-#endif
-			    && plr[p]._pHitPoints != 0) {
-				return FALSE;
-			}
+	if (dPlayer[x][y] != 0) {
+		if (dPlayer[x][y] > 0) {
+			p = dPlayer[x][y] - 1;
+		} else {
+			p = -(dPlayer[x][y] + 1);
 		}
-
-		if (dMonster[x][y] != 0) {
-			if (currlevel == 0) {
-				return FALSE;
-			}
-			if (dMonster[x][y] <= 0) {
-				return FALSE;
-			}
-			if ((monster[dMonster[x][y] - 1]._mhitpoints >> 6) > 0) {
-				return FALSE;
-			}
+		if (p != pnum
+		    && p < MAX_PLRS
+		    && plr[p]._pHitPoints != 0) {
+			return FALSE;
 		}
-
-		if (dObject[x][y] != 0) {
-			if (dObject[x][y] > 0) {
-				bv = dObject[x][y] - 1;
-			} else {
-				bv = -(dObject[x][y] + 1);
-			}
-			if (object[bv]._oSolidFlag) {
-				return FALSE;
-			}
-		}
-
-#ifndef HELLFIRE
-		PosOK = TRUE;
 	}
 
-	if (!PosOK)
-		return FALSE;
-#endif
+	if (dMonster[x][y] != 0) {
+		if (currlevel == 0) {
+			return FALSE;
+		}
+		if (dMonster[x][y] <= 0) {
+			return FALSE;
+		}
+		if ((monster[dMonster[x][y] - 1]._mhitpoints >> 6) > 0) {
+			return FALSE;
+		}
+	}
+
+	if (dObject[x][y] != 0) {
+		if (dObject[x][y] > 0) {
+			bv = dObject[x][y] - 1;
+		} else {
+			bv = -(dObject[x][y] + 1);
+		}
+		if (object[bv]._oSolidFlag) {
+			return FALSE;
+		}
+	}
+
 	return TRUE;
 }
 
@@ -4291,11 +4209,6 @@ void SyncInitPlrPos(int pnum)
 		}
 	}
 
-#ifdef HELLFIRE
-	plr[pnum]._px += plrxoff2[i];
-	plr[pnum]._py += plryoff2[i];
-	dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
-#else
 	if (!PosOkPlayer(pnum, x, y)) {
 		posOk = FALSE;
 		for (range = 1; range < 50 && !posOk; range++) {
@@ -4323,7 +4236,6 @@ void SyncInitPlrPos(int pnum)
 		ViewX = x;
 		ViewY = y;
 	}
-#endif
 }
 
 void SyncInitPlr(int pnum)
