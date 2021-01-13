@@ -1671,7 +1671,7 @@ void M_StartHit(int i, int pnum, int dam)
 		monster[i].mWhoHit |= 1 << pnum;
 	if (pnum == myplr) {
 		delta_monster_hp(i, monster[i]._mhitpoints, currlevel);
-		NetSendCmdParam2(FALSE, CMD_MONSTDAMAGE, i, dam);
+		NetSendCmdMonDmg(FALSE, i, dam);
 	}
 	PlayEffect(i, 1);
 	if (monster[i].MType->mtype >= MT_SNEAK && monster[i].MType->mtype <= MT_ILLWEAV || dam >> 6 >= monster[i].mLevel + 3) {
@@ -1802,7 +1802,7 @@ void M2MStartHit(int mid, int i, int dam)
 		monster[i].mWhoHit |= 1 << i;
 
 	delta_monster_hp(mid, monster[mid]._mhitpoints, currlevel);
-	NetSendCmdParam2(FALSE, CMD_MONSTDAMAGE, mid, dam);
+	NetSendCmdMonDmg(FALSE, mid, dam);
 	PlayEffect(mid, 1);
 
 	if (monster[mid].MType->mtype >= MT_SNEAK && monster[mid].MType->mtype <= MT_ILLWEAV || dam >> 6 >= monster[mid].mLevel + 3) {
