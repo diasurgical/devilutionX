@@ -314,6 +314,7 @@ void ShowProgress(unsigned int uMsg)
 		IncProgress();
 		break;
 	case WM_DIABNEWGAME:
+		plr[myplr].pOriginalCathedral = !gbIsHellfire;
 		IncProgress();
 		FreeGameMem();
 		IncProgress();

@@ -425,7 +425,7 @@ void LoadUiGFX()
 	LoadMaskedArt("ui_art\\focus.pcx", &ArtFocus[FOCUS_MED], 8);
 	LoadMaskedArt("ui_art\\focus42.pcx", &ArtFocus[FOCUS_BIG], 8);
 	LoadMaskedArt("ui_art\\cursor.pcx", &ArtCursor, 1, 0);
-	LoadArt("ui_art\\heros.pcx", &ArtHero, hellfire_mpq ? 6 : 4);
+	LoadArt("ui_art\\heros.pcx", &ArtHero, gbIsHellfire ? 6 : 4);
 }
 
 void UiInitialize()

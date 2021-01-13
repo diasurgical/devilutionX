@@ -913,6 +913,7 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv)
 	sgwPackPlrOffsetTbl[pnum] = 0;
 	multi_player_left_msg(pnum, 0);
 	plr[pnum]._pGFXLoad = 0;
+	gbIsHellfireSaveGame = gbIsHellfire;
 	UnPackPlayer(&netplr[pnum], pnum, TRUE);
 
 	if (!recv) {

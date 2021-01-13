@@ -19,15 +19,7 @@ static char BLoad()
 	return *tbuff++;
 }
 
-static int WLoad()
-{
-	int rv = *tbuff++ << 24;
-	rv |= *tbuff++ << 16;
-	rv |= *tbuff++ << 8;
-	rv |= *tbuff++;
-
-	return rv;
-}
+#define WLoad ILoad
 
 static int ILoad()
 {
@@ -183,6 +175,9 @@ static void LoadItemData(ItemStruct *pItem)
 	tbuff += 1; // Alignment
 	CopyInt(tbuff, &pItem->_iStatFlag);
 	CopyInt(tbuff, &pItem->IDidx);
+	if (!gbIsHellfireSaveGame) {
+		pItem->IDidx = RemapItemIdxFromDiablo(pItem->IDidx);
+	}
 	CopyInt(tbuff, &pItem->offs016C);
 	if (gbIsHellfireSaveGame)
 		CopyInt(tbuff, &pItem->_iDamAcFlags);
@@ -387,7 +382,13 @@ static void LoadPlayer(int i)
 		CopyChar(tbuff, &pPlayer->pBattleNet);
 	}
 	CopyChar(tbuff, &pPlayer->pManaShield);
-	CopyBytes(tbuff, 3, &pPlayer->bReserved);
+	if (gbIsHellfireSaveGame) {
+        CopyChar(tbuff, &pPlayer->pOriginalCathedral);
+	} else {
+        tbuff += 1;
+		pPlayer->pOriginalCathedral = true;
+	}
+	CopyBytes(tbuff, 2, &pPlayer->bReserved);
 	CopyShort(tbuff, &pPlayer->wReflection);
 	CopyShorts(tbuff, 7, &pPlayer->wReserved);
 
@@ -687,17 +688,53 @@ static void LoadPortal(int i)
 	CopyInt(tbuff, &pPortal->setlvl);
 }
 
-static bool IsHeaderValid(int magicNumber)
+int RemapItemIdxFromDiablo(int i)
+{
+	if (i == IDI_SORCEROR) {
+		return 166;
+	}
+	if (i >= 156) {
+		i += 5; // Hellfire exclusive items
+	}
+	if (i >= 88) {
+		i += 1; // Scroll of Search
+	}
+	if (i >= 83) {
+		i += 4; // Oils
+	}
+
+	return i;
+}
+
+int RemapItemIdxToDiablo(int i)
+{
+	if (i == 166) {
+		return IDI_SORCEROR;
+	}
+	if ((i >= 83 && i <= 86) || i == 92 || i >= 161) {
+		return -1; // Hellfire exclusive items
+	}
+	if (i >= 93) {
+		i -= 1; // Scroll of Search
+	}
+	if (i >= 87) {
+		i -= 4; // Oils
+	}
+
+	return i;
+}
+
+bool IsHeaderValid(int magicNumber)
 {
 	gbIsHellfireSaveGame = false;
 	if (magicNumber == 'SHAR') {
 		return true;
-	} else if (gbIsHellfire && magicNumber == 'SHLF') {
+	} else if (magicNumber == 'SHLF') {
 		gbIsHellfireSaveGame = true;
 		return true;
 	} else if (!gbIsSpawn && magicNumber == 'RETL') {
 		return true;
-	} else if (!gbIsSpawn && gbIsHellfire && magicNumber == 'HELF') {
+	} else if (!gbIsSpawn && magicNumber == 'HELF') {
 		gbIsHellfireSaveGame = true;
 		return true;
 	}
@@ -713,14 +750,12 @@ void LoadGame(BOOL firstflag)
 {
 	int i, j;
 	DWORD dwLen;
-	char szName[MAX_PATH];
 	BYTE *LoadBuff;
 	int _ViewX, _ViewY, _nummonsters, _numitems, _nummissiles, _nobjects;
 
 	FreeGameMem();
 	pfile_remove_temp_files();
-	pfile_get_game_name(szName);
-	LoadBuff = pfile_read(szName, &dwLen);
+	LoadBuff = pfile_read("game", &dwLen);
 	tbuff = LoadBuff;
 
 	if (!IsHeaderValid(ILoad()))
@@ -927,10 +962,19 @@ static void OSave(BOOL v)
 
 static void SaveItem(ItemStruct *pItem)
 {
+	int idx = RemapItemIdxToDiablo(pItem->IDidx);
+	int iType = pItem->_itype;
+	if (idx != -1) {
+		idx = 0;
+		iType = ITYPE_NONE;
+	}
+
 	CopyInt(&pItem->_iSeed, tbuff);
 	CopyShort(&pItem->_iCreateInfo, tbuff);
 	tbuff += 2; // Alignment
-	CopyInt(&pItem->_itype, tbuff);
+
+	CopyInt(&iType, tbuff);
+
 	CopyInt(&pItem->_ix, tbuff);
 	CopyInt(&pItem->_iy, tbuff);
 	CopyInt(&pItem->_iAnimFlag, tbuff);
@@ -999,7 +1043,7 @@ static void SaveItem(ItemStruct *pItem)
 	CopyChar(&pItem->_iMinDex, tbuff);
 	tbuff += 1; // Alignment
 	CopyInt(&pItem->_iStatFlag, tbuff);
-	CopyInt(&pItem->IDidx, tbuff);
+	CopyInt(&idx, tbuff);
 	CopyInt(&pItem->offs016C, tbuff);
 	if (gbIsHellfire)
 		CopyInt(&pItem->_iDamAcFlags, tbuff);
@@ -1196,7 +1240,7 @@ static void SavePlayer(int i)
 	else
 		CopyChar(&pPlayer->pBattleNet, tbuff);
 	CopyChar(&pPlayer->pManaShield, tbuff);
-	CopyChar(&pPlayer->pDungMsgs2, tbuff);
+	CopyChar(&pPlayer->pOriginalCathedral, tbuff);
 	CopyBytes(&pPlayer->bReserved, 2, tbuff);
 	CopyShort(&pPlayer->wReflection, tbuff);
 	CopyShorts(&pPlayer->wReserved, 7, tbuff);
@@ -1496,7 +1540,6 @@ static void SavePortal(int i)
 void SaveGame()
 {
 	int i, j;
-	char szName[MAX_PATH];
 
 	DWORD dwLen = codec_get_encoded_len(FILEBUFF);
 	BYTE *SaveBuff = DiabloAllocPtr(dwLen);
@@ -1648,9 +1691,8 @@ void SaveGame()
 
 	OSave(automapflag);
 	WSave(AutoMapScale);
-	pfile_get_game_name(szName);
 	dwLen = codec_get_encoded_len(tbuff - SaveBuff);
-	pfile_write_save_file(szName, SaveBuff, tbuff - SaveBuff, dwLen);
+	pfile_write_save_file("game", SaveBuff, tbuff - SaveBuff, dwLen);
 	mem_free_dbg(SaveBuff);
 	gbValidSaveFile = TRUE;
 	pfile_rename_temp_to_perm();

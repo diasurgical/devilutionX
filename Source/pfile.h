@@ -29,7 +29,6 @@ BOOL pfile_delete_save(_uiheroinfo *hero_info);
 void pfile_read_player_from_save();
 void GetTempLevelNames(char *szTemp);
 void GetPermLevelNames(char *szPerm);
-void pfile_get_game_name(char *dst);
 void pfile_remove_temp_files();
 void pfile_rename_temp_to_perm();
 void pfile_write_save_file(const char *pszName, BYTE *pbData, DWORD dwLen, DWORD qwLen);

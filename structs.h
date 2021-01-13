@@ -344,6 +344,7 @@ typedef struct PlayerStruct {
 	unsigned char pBattleNet;
 	BOOLEAN pManaShield;
 	unsigned char pDungMsgs2;
+	BOOLEAN pOriginalCathedral;
 	char bReserved[2];
 	short wReflection;
 	short wReserved[7];

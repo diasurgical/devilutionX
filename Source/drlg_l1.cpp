@@ -2568,7 +2568,7 @@ static void DRLG_L5(int entry)
 			}
 		} else if (entry == ENTRY_MAIN) {
 			if (currlevel < 21) {
-				if (gbIsHellfire) {
+				if (!plr[myplr].pOriginalCathedral) {
 					if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, TRUE, -1, 0) < 0)
 						doneflag = FALSE;
 					if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
@@ -2594,7 +2594,7 @@ static void DRLG_L5(int entry)
 				}
 				ViewY++;
 			}
-		} else if (gbIsHellfire && entry == ENTRY_PREV) {
+		} else if (!plr[myplr].pOriginalCathedral && entry == ENTRY_PREV) {
 			if (currlevel < 21) {
 				if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, FALSE, -1, 0) < 0)
 					doneflag = FALSE;
@@ -2618,7 +2618,7 @@ static void DRLG_L5(int entry)
 			}
 		} else {
 			if (currlevel < 21) {
-				if (gbIsHellfire) {
+				if (!plr[myplr].pOriginalCathedral) {
 					if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, FALSE, -1, 0) < 0)
 						doneflag = FALSE;
 					if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)

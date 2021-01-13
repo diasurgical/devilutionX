@@ -66,18 +66,27 @@ static DWORD pfile_get_save_num_from_name(const char *name)
 	return i;
 }
 
-static BOOL pfile_read_hero(HANDLE archive, PkPlayerStruct *pPack)
+static BYTE *pfile_read_archive(HANDLE archive, const char *pszName, DWORD *pdwLen)
 {
+	DWORD nread;
 	HANDLE file;
-	DWORD dwlen;
 	BYTE *buf;
 
-	if (!SFileOpenFileEx(archive, "hero", 0, &file)) {
-		return FALSE;
-	} else {
-		buf = NULL;
-		BOOL ret = FALSE;
+	if (!SFileOpenFileEx(archive, pszName, 0, &file))
+		return NULL;
+
+	*pdwLen = SFileGetFileSize(file, NULL);
+	if (*pdwLen == 0)
+		return NULL;
+
+	buf = DiabloAllocPtr(*pdwLen);
+	if (!SFileReadFile(file, buf, *pdwLen, &nread, NULL))
+		return NULL;
+	SFileCloseFile(file);
+
+	{
 		const char *password;
+		DWORD nSize = 16;
 
 		if (gbIsSpawn) {
 			password = PASSWORD_SPAWN_SINGLE;
@@ -89,23 +98,30 @@ static BOOL pfile_read_hero(HANDLE archive, PkPlayerStruct *pPack)
 				password = PASSWORD_MULTI;
 		}
 
-		dwlen = SFileGetFileSize(file, NULL);
-		if (dwlen) {
-			DWORD read;
-			buf = DiabloAllocPtr(dwlen);
-			if (SFileReadFile(file, buf, dwlen, &read, NULL)) {
-				read = codec_decode(buf, dwlen, password);
-				if (read == sizeof(*pPack)) {
-					memcpy(pPack, buf, sizeof(*pPack));
-					ret = TRUE;
-				}
-			}
-		}
-		if (buf)
-			mem_free_dbg(buf);
-		SFileCloseFile(file);
-		return ret;
+		*pdwLen = codec_decode(buf, *pdwLen, password);
+		if (*pdwLen == 0)
+			return NULL;
 	}
+	return buf;
+}
+
+static BOOL pfile_read_hero(HANDLE archive, PkPlayerStruct *pPack)
+{
+	DWORD read;
+	BYTE *buf;
+
+	buf = pfile_read_archive(archive, "hero", &read);
+	if (buf == NULL)
+		return FALSE;
+
+	BOOL ret = FALSE;
+	if (read == sizeof(*pPack)) {
+		memcpy(pPack, buf, sizeof(*pPack));
+		ret = TRUE;
+	}
+
+	mem_free_dbg(buf);
+	return ret;
 }
 
 static void pfile_encode_hero(const PkPlayerStruct *pPack)
@@ -262,8 +278,9 @@ BOOL pfile_ui_set_hero_infos(BOOL (*ui_add_hero_info)(_uiheroinfo *))
 			if (pfile_read_hero(archive, &pkplr)) {
 				_uiheroinfo uihero;
 				strcpy(hero_names[i], pkplr.pName);
+				bool hasSaveGame = pfile_archive_contains_game(archive, i);
 				UnPackPlayer(&pkplr, 0, FALSE);
-				game_2_ui_player(plr, &uihero, pfile_archive_contains_game(archive, i));
+				game_2_ui_player(plr, &uihero, hasSaveGame);
 				ui_add_hero_info(&uihero);
 			}
 			pfile_SFileCloseArchive(archive);
@@ -275,16 +292,18 @@ BOOL pfile_ui_set_hero_infos(BOOL (*ui_add_hero_info)(_uiheroinfo *))
 
 BOOL pfile_archive_contains_game(HANDLE hsArchive, DWORD save_num)
 {
-	HANDLE file;
-
 	if (gbMaxPlayers != 1)
 		return FALSE;
 
-	if (!SFileOpenFileEx(hsArchive, "game", 0, &file))
+	DWORD dwLen;
+	BYTE *gameData = pfile_read_archive(hsArchive, "game", &dwLen);
+	if (gameData == NULL)
 		return FALSE;
 
-	SFileCloseFile(file);
-	return TRUE;
+	int hdr = (gameData[0] << 24) | (gameData[1] << 16) | (gameData[2] << 8) | gameData[3];
+	mem_free_dbg(gameData);
+
+	return IsHeaderValid(hdr);
 }
 
 void pfile_ui_set_class_stats(unsigned int player_class_nr, _uidefaultstats *class_stats)
@@ -374,8 +393,8 @@ void pfile_read_player_from_save()
 	if (!pfile_read_hero(archive, &pkplr))
 		app_fatal("Unable to load character");
 
-	UnPackPlayer(&pkplr, myplr, FALSE);
 	gbValidSaveFile = pfile_archive_contains_game(archive, save_num);
+	UnPackPlayer(&pkplr, myplr, FALSE);
 	pfile_SFileCloseArchive(archive);
 }
 
@@ -405,11 +424,6 @@ void GetPermLevelNames(char *szPerm)
 		else
 			sprintf(szPerm, "perml%02d", currlevel);
 	}
-}
-
-void pfile_get_game_name(char *dst)
-{
-	strcpy(dst, "game");
 }
 
 static BOOL GetPermSaveNames(DWORD dwIndex, char *szPerm)
@@ -510,8 +524,8 @@ void pfile_write_save_file(const char *pszName, BYTE *pbData, DWORD dwLen, DWORD
 
 BYTE *pfile_read(const char *pszName, DWORD *pdwLen)
 {
-	DWORD save_num, nread;
-	HANDLE archive, save;
+	DWORD save_num;
+	HANDLE archive;
 	BYTE *buf;
 
 	save_num = pfile_get_save_num_from_name(plr[myplr]._pName);
@@ -519,37 +533,11 @@ BYTE *pfile_read(const char *pszName, DWORD *pdwLen)
 	if (archive == NULL)
 		app_fatal("Unable to open save file archive");
 
-	if (!SFileOpenFileEx(archive, pszName, 0, &save))
-		app_fatal("Unable to open save file");
-
-	*pdwLen = SFileGetFileSize(save, NULL);
-	if (*pdwLen == 0)
-		app_fatal("Invalid save file");
-
-	buf = DiabloAllocPtr(*pdwLen);
-	if (!SFileReadFile(save, buf, *pdwLen, &nread, NULL))
-		app_fatal("Unable to read save file");
-	SFileCloseFile(save);
+	buf = pfile_read_archive(archive, pszName, pdwLen);
 	pfile_SFileCloseArchive(archive);
+	if (buf == NULL)
+		app_fatal("Invalid %s file", pszName);
 
-	{
-		const char *password;
-		DWORD nSize = 16;
-
-		if (gbIsSpawn) {
-			password = PASSWORD_SPAWN_SINGLE;
-			if (gbMaxPlayers > 1)
-				password = PASSWORD_SPAWN_MULTI;
-		} else {
-			password = PASSWORD_SINGLE;
-			if (gbMaxPlayers > 1)
-				password = PASSWORD_MULTI;
-		}
-
-		*pdwLen = codec_decode(buf, *pdwLen, password);
-		if (*pdwLen == 0)
-			app_fatal("Invalid save file");
-	}
 	return buf;
 }
 

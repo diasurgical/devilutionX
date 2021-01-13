@@ -12,7 +12,11 @@ void PackItem(PkItemStruct *id, ItemStruct *is)
 	if (is->_itype == ITYPE_NONE) {
 		id->idx = 0xFFFF;
 	} else {
-		id->idx = SwapLE16(is->IDidx);
+		int idx = is->IDidx;
+		if (!gbIsHellfire) {
+			idx = RemapItemIdxToDiablo(idx);
+		}
+		id->idx = SwapLE16(idx);
 		if (is->IDidx == IDI_EAR) {
 			id->iCreateInfo = is->_iName[8] | (is->_iName[7] << 8);
 			id->iSeed = SwapLE32(is->_iName[12] | ((is->_iName[11] | ((is->_iName[10] | (is->_iName[9] << 8)) << 8)) << 8));
@@ -132,6 +136,9 @@ void UnPackItem(PkItemStruct *is, ItemStruct *id)
 	if (idx == 0xFFFF) {
 		id->_itype = ITYPE_NONE;
 	} else {
+		if (!gbIsHellfireSaveGame) {
+			idx = RemapItemIdxFromDiablo(idx);
+		}
 		if (idx == IDI_EAR) {
 			RecreateEar(
 			    MAXITEMS,

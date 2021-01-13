@@ -319,6 +319,18 @@ int premiumLvlAddHellfire[] = {
 	// clang-format on
 };
 
+bool ShouldSkipItem(int i)
+{
+	if (!gbIsHellfire) {
+		return (i >= 35 && i <= 47)    // Hellfire exclusive items
+		    || (i >= 83 && i <= 86)    // Oils
+		    || i == 92                 // Scroll of Search
+		    || (i >= 161 && i <= 165); // Runes
+	}
+
+	return false;
+}
+
 int get_ring_max_value(int i)
 {
 	int j, res;
@@ -1353,14 +1365,13 @@ void CreatePlrItems(int p)
 		GetPlrHandSeed(&plr[p].InvBody[INVLOC_HAND_RIGHT]);
 
 #ifdef _DEBUG
-		if (!debug_mode_key_w) {
+		if (!debug_mode_key_w)
 #endif
+		{
 			SetPlrHandItem(&plr[p].HoldItem, IDI_WARRCLUB);
 			GetPlrHandSeed(&plr[p].HoldItem);
 			AutoPlace(p, 0, 1, 3, TRUE);
-#ifdef _DEBUG
 		}
-#endif
 
 		SetPlrHandItem(&plr[p].SpdList[0], IDI_HEAL);
 		GetPlrHandSeed(&plr[p].SpdList[0]);
@@ -1379,7 +1390,7 @@ void CreatePlrItems(int p)
 		GetPlrHandSeed(&plr[p].SpdList[1]);
 		break;
 	case PC_SORCERER:
-		SetPlrHandItem(&plr[p].InvBody[INVLOC_HAND_LEFT], IDI_SORCEROR);
+		SetPlrHandItem(&plr[p].InvBody[INVLOC_HAND_LEFT], gbIsHellfire ? IDI_SORCEROR : 166);
 		GetPlrHandSeed(&plr[p].InvBody[INVLOC_HAND_LEFT]);
 
 		SetPlrHandItem(&plr[p].SpdList[0], gbIsHellfire ? IDI_HEAL : IDI_MANA);
@@ -2478,6 +2489,9 @@ int RndItem(int m)
 
 	ri = 0;
 	for (i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
+		if (ShouldSkipItem(i))
+			continue;
+
 		if (AllItemsList[i].iRnd == IDROP_DOUBLE && monster[m].mLevel >= AllItemsList[i].iMinMLvl
 		    && ri < 512) {
 			ril[ri] = i;
@@ -2510,6 +2524,9 @@ int RndUItem(int m)
 	int curlv = items_get_currlevel();
 	ri = 0;
 	for (i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
+		if (ShouldSkipItem(i))
+			continue;
+
 		okflag = TRUE;
 		if (AllItemsList[i].iRnd == IDROP_NEVER)
 			okflag = FALSE;
@@ -2552,6 +2569,9 @@ int RndAllItems()
 	int curlv = items_get_currlevel();
 	ri = 0;
 	for (i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
+		if (ShouldSkipItem(i))
+			continue;
+
 		if (AllItemsList[i].iRnd != IDROP_NEVER && 2 * curlv >= AllItemsList[i].iMinMLvl && ri < 512) {
 			ril[ri] = i;
 			ri++;
@@ -2573,6 +2593,9 @@ int RndTypeItems(int itype, int imid, int lvl)
 
 	ri = 0;
 	for (i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
+		if (ShouldSkipItem(i))
+			continue;
+
 		okflag = TRUE;
 		if (AllItemsList[i].iRnd == IDROP_NEVER)
 			okflag = FALSE;
@@ -2602,6 +2625,8 @@ int CheckUnique(int i, int lvl, int uper, BOOL recreate)
 	numu = 0;
 	memset(uok, 0, sizeof(uok));
 	for (j = 0; UniqueItemList[j].UIItemId != UITYPE_INVALID; j++) {
+		if (!gbIsHellfire && j > 89)
+			break;
 		if (UniqueItemList[j].UIItemId == AllItemsList[item[i].IDidx].iItemId
 		    && lvl >= UniqueItemList[j].UIMinLvl
 		    && (recreate || !UniqueItemFlag[j] || gbMaxPlayers != 1)) {
@@ -4488,6 +4513,9 @@ int RndSmithItem(int lvl)
 
 	ri = 0;
 	for (i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
+		if (ShouldSkipItem(i))
+			continue;
+
 		if (AllItemsList[i].iRnd != IDROP_NEVER && SmithItemOk(i) && lvl >= AllItemsList[i].iMinMLvl
 		    && ri < 512) {
 			ril[ri] = i;
@@ -4604,6 +4632,9 @@ int RndPremiumItem(int minlvl, int maxlvl)
 
 	ri = 0;
 	for (i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
+		if (ShouldSkipItem(i))
+			continue;
+
 		if (AllItemsList[i].iRnd != IDROP_NEVER) {
 			if (PremiumItemOk(i)) {
 				if (AllItemsList[i].iMinMLvl >= minlvl && AllItemsList[i].iMinMLvl <= maxlvl && ri < 512) {
@@ -4797,6 +4828,9 @@ int RndWitchItem(int lvl)
 
 	ri = 0;
 	for (i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
+		if (ShouldSkipItem(i))
+			continue;
+
 		if (AllItemsList[i].iRnd != IDROP_NEVER && WitchItemOk(i) && lvl >= AllItemsList[i].iMinMLvl
 		    && ri < 512) {
 
@@ -4931,6 +4965,9 @@ int RndBoyItem(int lvl)
 
 	ri = 0;
 	for (i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
+		if (ShouldSkipItem(i))
+			continue;
+
 		if (AllItemsList[i].iRnd != IDROP_NEVER && PremiumItemOk(i) && lvl >= AllItemsList[i].iMinMLvl
 		    && ri < 512) {
 			ril[ri] = i;
@@ -5147,6 +5184,9 @@ int RndHealerItem(int lvl)
 
 	ri = 0;
 	for (i = 1; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
+		if (ShouldSkipItem(i))
+			continue;
+
 		if (AllItemsList[i].iRnd != IDROP_NEVER && HealerItemOk(i) && lvl >= AllItemsList[i].iMinMLvl
 		    && ri < 512) {
 			ril[ri] = i;
