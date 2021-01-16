@@ -1259,8 +1259,8 @@ void InitMissileGFX()
 	int mi;
 
 	for (mi = 0; misfiledata[mi].mAnimFAmt; mi++) {
-        if (!gbIsHellfire && mi > MFILE_SCBSEXPD)
-            break;
+		if (!gbIsHellfire && mi > MFILE_SCBSEXPD)
+			break;
 		if (!(misfiledata[mi].mFlags & MFLAG_HIDDEN))
 			LoadMissileGFX(mi);
 	}
@@ -1362,7 +1362,7 @@ void InitMissiles()
 		}
 	}
 #ifdef HELLFIRE
-	plr[myplr].wReflection = FALSE;
+	plr[myplr].wReflections = 0;
 #endif
 }
 
@@ -1503,7 +1503,7 @@ void missiles_reflection(int mi, int sx, int sy, int dx, int dy, int midir, char
 			lvl = missile[mi]._mispllvl;
 		else
 			lvl = 2;
-		plr[id].wReflection += lvl * plr[id]._pLevel;
+		plr[id].wReflections += lvl * plr[id]._pLevel;
 		UseMana(id, SPL_REFLECT);
 	}
 	missile[mi]._mirange = 0;
@@ -4285,7 +4285,7 @@ void mi_reflect(int i)
 	}
 	if (src != myplr && currlevel != plr[src].plrlevel)
 		missile[i]._miDelFlag = TRUE;
-	if ((WORD)plr[src].wReflection <= 0) {
+	if (plr[src].wReflections <= 0) {
 		missile[i]._miDelFlag = TRUE;
 		NetSendCmd(TRUE, CMD_REFLECT);
 	}

@@ -383,13 +383,13 @@ static void LoadPlayer(int i)
 	}
 	CopyChar(tbuff, &pPlayer->pManaShield);
 	if (gbIsHellfireSaveGame) {
-        CopyChar(tbuff, &pPlayer->pOriginalCathedral);
+		CopyChar(tbuff, &pPlayer->pOriginalCathedral);
 	} else {
-        tbuff += 1;
+		tbuff += 1;
 		pPlayer->pOriginalCathedral = true;
 	}
 	CopyBytes(tbuff, 2, &pPlayer->bReserved);
-	CopyShort(tbuff, &pPlayer->wReflection);
+	CopyShort(tbuff, &pPlayer->wReflections);
 	CopyShorts(tbuff, 7, &pPlayer->wReserved);
 
 	CopyInt(tbuff, &pPlayer->pDiabloKillLevel);
@@ -1242,7 +1242,7 @@ static void SavePlayer(int i)
 	CopyChar(&pPlayer->pManaShield, tbuff);
 	CopyChar(&pPlayer->pOriginalCathedral, tbuff);
 	CopyBytes(&pPlayer->bReserved, 2, tbuff);
-	CopyShort(&pPlayer->wReflection, tbuff);
+	CopyShort(&pPlayer->wReflections, tbuff);
 	CopyShorts(&pPlayer->wReserved, 7, tbuff);
 
 	CopyInt(&pPlayer->pDiabloKillLevel, tbuff);

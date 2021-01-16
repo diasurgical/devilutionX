@@ -74,7 +74,7 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield)
 	pPack->pMaxManaBase = SwapLE32(pPlayer->_pMaxManaBase);
 	pPack->pMemSpells = SDL_SwapLE64(pPlayer->_pMemSpells);
 
-	for (i = 0; i < 37; i++) // Should be MAX_SPELLS but set to 36 to make save games compatible
+	for (i = 0; i < 37; i++) // Should be MAX_SPELLS but set to 37 to make save games compatible
 		pPack->pSplLvl[i] = pPlayer->_pSplLvl[i];
 	for (i = 37; i < 47; i++)
 		pPack->pSplLvl2[i - 37] = pPlayer->_pSplLvl[i];
@@ -110,7 +110,7 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield)
 		pi++;
 	}
 
-	pPack->wReflection = SwapLE16(pPlayer->wReflection);
+	pPack->wReflections = SwapLE16(pPlayer->wReflections);
 	pPack->pDifficulty = SwapLE32(pPlayer->pDifficulty);
 	pPack->pDamAcFlags = SwapLE32(pPlayer->pDamAcFlags);
 	pPack->pDiabloKillLevel = SwapLE32(pPlayer->pDiabloKillLevel);
@@ -270,7 +270,7 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL killok)
 	}
 
 	CalcPlrInv(pnum, FALSE);
-	pPlayer->wReflection = SwapLE16(pPack->wReflection);
+	pPlayer->wReflections = SwapLE16(pPack->wReflections);
 	pPlayer->pTownWarps = 0;
 	pPlayer->pDungMsgs = 0;
 	pPlayer->pDungMsgs2 = 0;

@@ -850,7 +850,7 @@ void CreatePlayer(int pnum, char c)
 	plr[pnum].pBattleNet = FALSE;
 	plr[pnum].pManaShield = FALSE;
 	plr[pnum].pDamAcFlags = 0;
-	plr[pnum].wReflection = 0;
+	plr[pnum].wReflections = 0;
 
 	InitDungMsgs(pnum);
 	CreatePlrItems(pnum);
