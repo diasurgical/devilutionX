@@ -1316,7 +1316,7 @@ void M_Enemy(int i)
 	int mi, pnum;
 	int dist, best_dist;
 	int _menemy;
-	DIABOOL sameroom, bestsameroom;
+	bool sameroom, bestsameroom;
 	MonsterStruct *Monst;
 	BYTE enemyx, enemyy;
 
