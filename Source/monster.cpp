@@ -1325,10 +1325,7 @@ void M_Enemy(int i)
 	bestsameroom = 0;
 	Monst = &monster[i];
 	if (
-#ifdef HELLFIRE
-	    Monst->_mFlags & MFLAG_BERSERK ||
-#endif
-	    !(Monst->_mFlags & MFLAG_GOLEM)) {
+	    Monst->_mFlags & MFLAG_BERSERK || !(Monst->_mFlags & MFLAG_GOLEM)) {
 		for (pnum = 0; pnum < MAX_PLRS; pnum++) {
 			if (!plr[pnum].plractive || currlevel != plr[pnum].plrlevel || plr[pnum]._pLvlChanging
 #ifdef HELLFIRE
@@ -1376,15 +1373,11 @@ void M_Enemy(int i)
 		if (M_Talker(mi) && monster[mi].mtalkmsg)
 			continue;
 		if ((!(Monst->_mFlags & MFLAG_GOLEM)
-#ifdef HELLFIRE
 		        && !(Monst->_mFlags & MFLAG_BERSERK)
-#endif
 		        && (abs(monster[mi]._mx - Monst->_mx) >= 2 || abs(monster[mi]._my - Monst->_my) >= 2)
 		        && !M_Ranged(i))
 		    || (!(Monst->_mFlags & MFLAG_GOLEM)
-#ifdef HELLFIRE
 		        && !(Monst->_mFlags & MFLAG_BERSERK)
-#endif
 		        && !(monster[mi]._mFlags & MFLAG_GOLEM))) {
 			continue;
 		}
@@ -1711,10 +1704,7 @@ void M_StartHit(int i, int pnum, int dam)
 		if (monster[i].MType->mtype == MT_BLINK) {
 			M_Teleport(i);
 		} else if ((monster[i].MType->mtype >= MT_NSCAV && monster[i].MType->mtype <= MT_YSCAV)
-#ifdef HELLFIRE
-		    || monster[i].MType->mtype == MT_GRAVEDIG
-#endif
-		) {
+		    || monster[i].MType->mtype == MT_GRAVEDIG) {
 			monster[i]._mgoal = MGOAL_NORMAL;
 #ifdef HELLFIRE
 			monster[i]._mgoalvar1 = 0;
@@ -1854,10 +1844,7 @@ void M2MStartHit(int mid, int i, int dam)
 		if (monster[mid].MType->mtype == MT_BLINK) {
 			M_Teleport(mid);
 		} else if (monster[mid].MType->mtype >= MT_NSCAV && monster[mid].MType->mtype <= MT_YSCAV
-#ifdef HELLFIRE
-		    || monster[mid].MType->mtype == MT_GRAVEDIG
-#endif
-		) {
+		    || monster[mid].MType->mtype == MT_GRAVEDIG) {
 			monster[mid]._mgoal = MGOAL_NORMAL;
 #ifdef HELLFIRE
 			monster[mid]._mgoalvar1 = 0;
@@ -2312,10 +2299,8 @@ BOOL M_DoWalk2(int i)
 		rv = TRUE;
 	} else {
 		if (monster[i]._mAnimCnt == 0) {
-#ifdef HELLFIRE
 			if (monster[i]._mVar8 == 0 && monster[i].MType->mtype == MT_FLESTHNG)
 				PlayEffect(i, 3);
-#endif
 			monster[i]._mVar8++;
 			monster[i]._mVar6 += monster[i]._mxvel;
 			monster[i]._mVar7 += monster[i]._myvel;
@@ -2367,10 +2352,8 @@ BOOL M_DoWalk3(int i)
 		rv = TRUE;
 	} else {
 		if (monster[i]._mAnimCnt == 0) {
-#ifdef HELLFIRE
 			if (monster[i]._mVar8 == 0 && monster[i].MType->mtype == MT_FLESTHNG)
 				PlayEffect(i, 3);
-#endif
 			monster[i]._mVar8++;
 			monster[i]._mVar6 += monster[i]._mxvel;
 			monster[i]._mVar7 += monster[i]._myvel;
@@ -2470,12 +2453,10 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 		hper = 1000;
 #endif
 	ac = plr[pnum]._pIBonusAC + plr[pnum]._pIAC;
-#ifdef HELLFIRE
 	if (plr[pnum].pDamAcFlags & 0x20 && monster[i].MData->mMonstClass == MC_DEMON)
 		ac += 40;
 	if (plr[pnum].pDamAcFlags & 0x40 && monster[i].MData->mMonstClass == MC_UNDEAD)
 		ac += 20;
-#endif
 	hit = Hit
 	    + 2 * (monster[i].mLevel - plr[pnum]._pLevel)
 	    + 30
@@ -2507,7 +2488,6 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 	if (blkper < blk) {
 		dir = GetDirection(plr[pnum]._px, plr[pnum]._py, monster[i]._mx, monster[i]._my);
 		StartPlrBlock(pnum, dir);
-#ifdef HELLFIRE
 		if (pnum == myplr && plr[pnum].wReflections > 0) {
 			plr[pnum].wReflections--;
 			dam = random_(99, (MaxDam - MinDam + 1) << 6) + (MinDam << 6);
@@ -2524,7 +2504,6 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 			else
 				M_StartHit(i, pnum, mdam);
 		}
-#endif
 		return;
 	}
 	if (monster[i].MType->mtype == MT_YZOMBIE && pnum == myplr) {
@@ -2564,7 +2543,6 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 	if (dam < 64)
 		dam = 64;
 	if (pnum == myplr) {
-#ifdef HELLFIRE
 		if (plr[pnum].wReflections > 0) {
 			plr[pnum].wReflections--;
 			mdam = dam * (0.01 * (random_(100, 10) + 20));
@@ -2577,7 +2555,6 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 			else
 				M_StartHit(i, pnum, mdam);
 		}
-#endif
 		plr[pnum]._pHitPoints -= dam;
 		plr[pnum]._pHPBase -= dam;
 	}
@@ -5865,24 +5842,20 @@ void PrintMonstHistory(int mt)
 			minHP = 1;
 		if (maxHP < 1)
 			maxHP = 1;
-#ifdef HELLFIRE
+
+		int hpBonusNightmare = 1;
+		int hpBonusHell = 3;
+		if (gbIsHellfire) {
+			hpBonusNightmare = (gbMaxPlayers == 1 ? 50 : 100);
+			hpBonusHell = (gbMaxPlayers == 1 ? 100 : 200);
+		}
 		if (gnDifficulty == DIFF_NIGHTMARE) {
-			minHP = 3 * minHP + (gbMaxPlayers == 1 ? 50 : 100);
-			maxHP = 3 * maxHP + (gbMaxPlayers == 1 ? 50 : 100);
+			minHP = 3 * minHP + hpBonusNightmare;
+			maxHP = 3 * maxHP + hpBonusNightmare;
 		} else if (gnDifficulty == DIFF_HELL) {
-			minHP = 4 * minHP + (gbMaxPlayers == 1 ? 100 : 200);
-			maxHP = 4 * maxHP + (gbMaxPlayers == 1 ? 100 : 200);
+			minHP = 4 * minHP + hpBonusHell;
+			maxHP = 4 * maxHP + hpBonusHell;
 		}
-#else
-		if (gnDifficulty == DIFF_NIGHTMARE) {
-			minHP = 3 * minHP + 1;
-			maxHP = 3 * maxHP + 1;
-		}
-		if (gnDifficulty == DIFF_HELL) {
-			minHP = 4 * minHP + 3;
-			maxHP = 4 * maxHP + 3;
-		}
-#endif
 		sprintf(tempstr, "Hit Points: %i-%i", minHP, maxHP);
 		AddPanelString(tempstr, TRUE);
 	}
