@@ -1860,11 +1860,7 @@ void M2MStartKill(int i, int mid)
 	if (monster[mid].MType->mtype == MT_DIABLO)
 		M_DiabloDeath(mid, TRUE);
 	else
-#ifndef HELLFIRE
-		PlayEffect(i, 2);
-
-#endif
-	PlayEffect(mid, 2);
+		PlayEffect(mid, 2);
 
 	md = (monster[i]._mdir - 4) & 7;
 	if (monster[mid].MType->mtype == MT_GOLEM)
@@ -5443,7 +5439,7 @@ BOOLEAN monster_posok(int i, int x, int y)
 	ret = TRUE;
 	mi = dMissile[x][y];
 	if (mi != 0 && i >= 0) {
-        fire = FALSE;
+		fire = FALSE;
 		lightning = FALSE;
 #ifdef HELLFIRE
 		if (mi > 0) {
