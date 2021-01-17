@@ -182,7 +182,10 @@ BOOL SFileOpenFile(const char *filename, HANDLE *phFile)
 	if (!result && patch_rt_mpq) {
 		result = SFileOpenFileEx((HANDLE)patch_rt_mpq, filename, 0, phFile);
 	}
-	if (!result) {
+	if (!result && spawn_mpq) {
+		result = SFileOpenFileEx((HANDLE)spawn_mpq, filename, 0, phFile);
+	}
+	if (!result && diabdat_mpq) {
 		result = SFileOpenFileEx((HANDLE)diabdat_mpq, filename, 0, phFile);
 	}
 

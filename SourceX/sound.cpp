@@ -204,7 +204,7 @@ void music_start(int nTrack)
 	assert((DWORD)nTrack < NUM_MUSIC);
 	music_stop();
 	if (gbMusicOn) {
-		if (gbIsSpawn)
+		if (spawn_mpq)
 			trackPath = sgszSpawnMusicTracks[nTrack];
 		else
 			trackPath = sgszMusicTracks[nTrack];

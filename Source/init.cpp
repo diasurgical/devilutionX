@@ -21,6 +21,8 @@ int gbActive;
 HANDLE hellfire_mpq;
 /** The current input handler function */
 WNDPROC CurrentProc;
+/** A handle to the spawn.mpq archive. */
+HANDLE spawn_mpq;
 /** A handle to the diabdat.mpq archive. */
 HANDLE diabdat_mpq;
 /** A handle to the patch_rt.mpq archive. */
@@ -70,6 +72,10 @@ void init_cleanup()
 {
 	pfile_flush_W();
 
+	if (spawn_mpq) {
+		SFileCloseArchive(spawn_mpq);
+		spawn_mpq = NULL;
+	}
 	if (diabdat_mpq) {
 		SFileCloseArchive(diabdat_mpq);
 		diabdat_mpq = NULL;
@@ -133,11 +139,11 @@ void init_archives()
 
 	diabdat_mpq = init_test_access("diabdat.mpq", "DiabloCD", 1000, FS_CD);
 	if (diabdat_mpq == NULL) {
-		diabdat_mpq = init_test_access("spawn.mpq", "DiabloSpawn", 1000, FS_PC);
-		if (diabdat_mpq != NULL)
+		spawn_mpq = init_test_access("spawn.mpq", "DiabloSpawn", 1000, FS_PC);
+		if (spawn_mpq != NULL)
 			gbIsSpawn = true;
 	}
-	if (diabdat_mpq == NULL || !SFileOpenFile("ui_art\\title.pcx", &fh))
+	if (!SFileOpenFile("ui_art\\title.pcx", &fh))
 		InsertCDDlg();
 	SFileCloseFile(fh);
 

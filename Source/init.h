@@ -16,6 +16,7 @@ extern _SNETVERSIONDATA fileinfo;
 extern int gbActive;
 extern HANDLE hellfire_mpq;
 extern WNDPROC CurrentProc;
+extern HANDLE spawn_mpq;
 extern HANDLE diabdat_mpq;
 extern bool gbIsSpawn;
 extern bool gbIsHellfire;

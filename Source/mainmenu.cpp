@@ -20,12 +20,16 @@ void mainmenu_refresh_music()
 {
 	music_start(menu_music_track_id);
 
+	if (gbIsSpawn && !gbIsHellfire) {
+		return;
+	}
+
 	do {
 		menu_music_track_id++;
+		if (menu_music_track_id == NUM_MUSIC || (!gbIsHellfire && menu_music_track_id > TMUSIC_L4))
+			menu_music_track_id = TMUSIC_L2;
 		if (gbIsSpawn && menu_music_track_id > TMUSIC_L1)
 			menu_music_track_id = TMUSIC_L5;
-		if (menu_music_track_id == NUM_MUSIC || (!gbIsHellfire && menu_music_track_id > TMUSIC_L4))
-			menu_music_track_id = TMUSIC_TOWN;
 	} while (menu_music_track_id == TMUSIC_TOWN || menu_music_track_id == TMUSIC_L1);
 }
 
