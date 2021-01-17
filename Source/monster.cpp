@@ -661,7 +661,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 
 	Monst = &monster[nummonsters];
 	count = 0;
-	Uniq = UniqMonst + uniqindex;
+	Uniq = &UniqMonst[uniqindex];
 
 	if ((uniquetrans + 19) << 8 >= LIGHTSIZE) {
 		return;
@@ -1842,7 +1842,7 @@ void M2MStartKill(int i, int mid)
 
 	assurance((DWORD)i < MAXMONSTERS, i);
 	assurance((DWORD)mid < MAXMONSTERS, mid);
-	assurance(monster[mid].MType != NULL, mid);
+	assurance(monster[mid].MType != NULL, mid); /// BUGFIX: should check `mid` (fixed)
 
 	delta_kill_monster(mid, monster[mid]._mx, monster[mid]._my, currlevel);
 	NetSendCmdLocParam1(FALSE, CMD_MONSTDEATH, monster[mid]._mx, monster[mid]._my, mid);
@@ -3788,7 +3788,7 @@ void MAI_Scav(int i)
 			M_StartEat(i);
 			if (!(Monst->_mFlags & MFLAG_NOHEAL)) {
 #ifdef HELLFIRE
-				int mMaxHP = Monst->MType->mMaxHP << 6;
+				int mMaxHP = Monst->MType->mMaxHP << 6; // BUGFIX use _mmaxhp or we loose health when difficulty isn't normal
 				if (gbMaxPlayers == 1)
 					mMaxHP >>= 1;
 				Monst->_mhitpoints += mMaxHP >> 3;

@@ -1678,7 +1678,7 @@ void GetStaffPower(int i, int lvl, int bs, BOOL onlygood)
 	preidx = -1;
 	if (tmp == 0 || onlygood) {
 		nl = 0;
-		for (j = 0; PL_Prefix[j].PLPower != -1; j++) {
+		for (j = 0; PL_Prefix[j].PLPower != IPL_INVALID; j++) {
 			if (!gbIsHellfire && j >= 83)
 				break;
 			if (IsPrefixValidForItemType(j, PLT_STAFF) && PL_Prefix[j].PLMinLvl <= lvl) {
@@ -2332,7 +2332,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, int flgs, BOOL onlygood)
 		onlygood = TRUE;
 	if (pre == 0) {
 		nt = 0;
-		for (j = 0; PL_Prefix[j].PLPower != -1; j++) {
+		for (j = 0; PL_Prefix[j].PLPower != IPL_INVALID; j++) {
 			if (!gbIsHellfire && j >= 83)
 				break;
 			if (IsPrefixValidForItemType(j, flgs)) {
@@ -2365,7 +2365,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, int flgs, BOOL onlygood)
 	}
 	if (post != 0) {
 		nl = 0;
-		for (j = 0; PL_Suffix[j].PLPower != -1; j++) {
+		for (j = 0; PL_Suffix[j].PLPower != IPL_INVALID; j++) {
 			if (!gbIsHellfire && j >= 94)
 				break;
 			if (IsSuffixValidForItemType(j, flgs)
