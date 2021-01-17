@@ -3783,20 +3783,16 @@ void MAI_Scav(int i)
 		if (dDead[Monst->_mx][Monst->_my] != 0) {
 			M_StartEat(i);
 			if (!(Monst->_mFlags & MFLAG_NOHEAL)) {
-#ifdef HELLFIRE
-				int mMaxHP = Monst->MType->mMaxHP << 6; // BUGFIX use _mmaxhp or we loose health when difficulty isn't normal
-				if (gbMaxPlayers == 1)
-					mMaxHP >>= 1;
-				Monst->_mhitpoints += mMaxHP >> 3;
-				if (Monst->_mhitpoints > mMaxHP)
-					Monst->_mhitpoints = mMaxHP;
-				if (Monst->_mmaxhp < Monst->_mhitpoints)
-					Monst->_mmaxhp = Monst->_mhitpoints;
-				if (Monst->_mgoalvar3 <= 0 || Monst->_mhitpoints == mMaxHP)
-					dDead[Monst->_mx][Monst->_my] = 0;
-#else
-				Monst->_mhitpoints += 64;
-#endif
+				if (gbIsHellfire) {
+					int mMaxHP = Monst->_mmaxhp; // BUGFIX use _mmaxhp or we loose health when difficulty isn't normal (fixed)
+					Monst->_mhitpoints += mMaxHP >> 3;
+					if (Monst->_mhitpoints > Monst->_mmaxhp)
+						Monst->_mhitpoints = Monst->_mmaxhp;
+					if (Monst->_mgoalvar3 <= 0 || Monst->_mhitpoints == Monst->_mmaxhp)
+						dDead[Monst->_mx][Monst->_my] = 0;
+				} else {
+					Monst->_mhitpoints += 64;
+				}
 			}
 			int targetHealth = Monst->_mmaxhp;
 			if (!gbIsHellfire)

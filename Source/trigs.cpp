@@ -67,7 +67,7 @@ void InitTownTriggers()
 	trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
 	numtrigs++;
 
-	bool isMultiplayer = gbMaxPlayers == MAX_PLRS;
+	bool isMultiplayer = gbMaxPlayers != 1;
 
 	for (i = 0; i < sizeof(townwarps) / sizeof(townwarps[0]); i++) {
 		townwarps[i] = isMultiplayer && !gbIsSpawn;
