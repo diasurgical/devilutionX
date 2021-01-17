@@ -145,7 +145,6 @@ void init_archives()
 	if (patch_rt_mpq == NULL)
 		patch_rt_mpq = init_test_access("patch_sh.mpq", "DiabloSpawn", 2000, FS_PC);
 
-#ifdef HELLFIRE
 	hellfire_mpq = init_test_access("hellfire.mpq", "DiabloInstall", 8000, FS_PC);
 	if (hellfire_mpq != NULL)
 		gbIsHellfire = true;
@@ -156,7 +155,6 @@ void init_archives()
 	hfvoice_mpq = init_test_access("hfvoice.mpq", "DiabloInstall", 8500, FS_PC);
 	hfopt1_mpq = init_test_access("hfopt1.mpq", "DiabloInstall", 8600, FS_PC);
 	hfopt2_mpq = init_test_access("hfopt2.mpq", "DiabloInstall", 8610, FS_PC);
-#endif
 }
 
 void init_create_window()

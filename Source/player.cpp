@@ -687,9 +687,7 @@ void CreatePlayer(int pnum, char c)
 	int hp, mana;
 	int i;
 
-#ifdef HELLFIRE
 	memset(&plr[pnum], 0, sizeof(PlayerStruct));
-#endif
 	ClearPlrRVars(&plr[pnum]);
 	SetRndSeed(SDL_GetTicks());
 
@@ -883,9 +881,7 @@ void NextPlrLevel(int pnum)
 	plr[pnum]._pLevel++;
 	plr[pnum]._pMaxLvl++;
 
-#ifdef HELLFIRE
 	CalcPlrInv(pnum, TRUE);
-#endif
 
 	if (CalcStatDiff(pnum) < 5) {
 		plr[pnum]._pStatPts = CalcStatDiff(pnum);
@@ -927,10 +923,7 @@ void NextPlrLevel(int pnum)
 	}
 
 	if (pnum == myplr) {
-#ifdef HELLFIRE
-		if (plr[pnum]._pMana > 0)
-#endif
-			drawmanaflag = TRUE;
+		drawmanaflag = TRUE;
 	}
 
 	if (sgbControllerActive)
@@ -1344,12 +1337,10 @@ void PM_ChangeOffset(int pnum)
 	plr[pnum]._pVar6 += plr[pnum]._pxvel;
 	plr[pnum]._pVar7 += plr[pnum]._pyvel;
 
-#ifdef HELLFIRE
-	if (currlevel == 0 && jogging_opt) {
+	if (gbIsHellfire && currlevel == 0 && jogging_opt) {
 		plr[pnum]._pVar6 += plr[pnum]._pxvel;
 		plr[pnum]._pVar7 += plr[pnum]._pyvel;
 	}
-#endif
 
 	plr[pnum]._pxoff = plr[pnum]._pVar6 >> 8;
 	plr[pnum]._pyoff = plr[pnum]._pVar7 >> 8;
@@ -2309,14 +2300,14 @@ BOOL PM_DoWalk(int pnum)
 		app_fatal("PM_DoWalk: illegal player %d", pnum);
 	}
 
-#ifndef HELLFIRE
-	if (plr[pnum]._pAnimFrame == 3
-	    || (plr[pnum]._pWFrames == 8 && plr[pnum]._pAnimFrame == 7)
-	    || (plr[pnum]._pWFrames != 8 && plr[pnum]._pAnimFrame == 4)) {
-		PlaySfxLoc(PS_WALK1, plr[pnum]._px, plr[pnum]._py);
+	if (!gbIsHellfire) {
+		if (plr[pnum]._pAnimFrame == 3
+		    || (plr[pnum]._pWFrames == 8 && plr[pnum]._pAnimFrame == 7)
+		    || (plr[pnum]._pWFrames != 8 && plr[pnum]._pAnimFrame == 4)) {
+			PlaySfxLoc(PS_WALK1, plr[pnum]._px, plr[pnum]._py);
+		}
 	}
-#else
-	if (currlevel == 0 && jogging_opt) {
+	if (gbIsHellfire && currlevel == 0 && jogging_opt) {
 		if (plr[pnum]._pAnimFrame % 2 == 0) {
 			plr[pnum]._pAnimFrame++;
 			plr[pnum]._pVar8++;
@@ -2325,7 +2316,6 @@ BOOL PM_DoWalk(int pnum)
 			plr[pnum]._pAnimFrame = 0;
 		}
 	}
-#endif
 
 	anim_len = 8;
 	if (currlevel != 0) {
@@ -2377,14 +2367,14 @@ BOOL PM_DoWalk2(int pnum)
 		app_fatal("PM_DoWalk2: illegal player %d", pnum);
 	}
 
-#ifndef HELLFIRE
-	if (plr[pnum]._pAnimFrame == 3
-	    || (plr[pnum]._pWFrames == 8 && plr[pnum]._pAnimFrame == 7)
-	    || (plr[pnum]._pWFrames != 8 && plr[pnum]._pAnimFrame == 4)) {
-		PlaySfxLoc(PS_WALK1, plr[pnum]._px, plr[pnum]._py);
+	if (!gbIsHellfire) {
+		if (plr[pnum]._pAnimFrame == 3
+		    || (plr[pnum]._pWFrames == 8 && plr[pnum]._pAnimFrame == 7)
+		    || (plr[pnum]._pWFrames != 8 && plr[pnum]._pAnimFrame == 4)) {
+			PlaySfxLoc(PS_WALK1, plr[pnum]._px, plr[pnum]._py);
+		}
 	}
-#else
-	if (currlevel == 0 && jogging_opt) {
+	if (gbIsHellfire && currlevel == 0 && jogging_opt) {
 		if (plr[pnum]._pAnimFrame % 2 == 0) {
 			plr[pnum]._pAnimFrame++;
 			plr[pnum]._pVar8++;
@@ -2393,7 +2383,6 @@ BOOL PM_DoWalk2(int pnum)
 			plr[pnum]._pAnimFrame = 0;
 		}
 	}
-#endif
 
 	anim_len = 8;
 	if (currlevel != 0) {
@@ -2441,14 +2430,14 @@ BOOL PM_DoWalk3(int pnum)
 		app_fatal("PM_DoWalk3: illegal player %d", pnum);
 	}
 
-#ifndef HELLFIRE
-	if (plr[pnum]._pAnimFrame == 3
-	    || (plr[pnum]._pWFrames == 8 && plr[pnum]._pAnimFrame == 7)
-	    || (plr[pnum]._pWFrames != 8 && plr[pnum]._pAnimFrame == 4)) {
-		PlaySfxLoc(PS_WALK1, plr[pnum]._px, plr[pnum]._py);
+	if (!gbIsHellfire) {
+		if (plr[pnum]._pAnimFrame == 3
+		    || (plr[pnum]._pWFrames == 8 && plr[pnum]._pAnimFrame == 7)
+		    || (plr[pnum]._pWFrames != 8 && plr[pnum]._pAnimFrame == 4)) {
+			PlaySfxLoc(PS_WALK1, plr[pnum]._px, plr[pnum]._py);
+		}
 	}
-#else
-	if (currlevel == 0 && jogging_opt) {
+	if (gbIsHellfire && currlevel == 0 && jogging_opt) {
 		if (plr[pnum]._pAnimFrame % 2 == 0) {
 			plr[pnum]._pAnimFrame++;
 			plr[pnum]._pVar8++;
@@ -2457,7 +2446,6 @@ BOOL PM_DoWalk3(int pnum)
 			plr[pnum]._pAnimFrame = 0;
 		}
 	}
-#endif
 
 	anim_len = 8;
 	if (currlevel != 0) {
@@ -2680,12 +2668,10 @@ BOOL PlrHitMonst(int pnum, int m)
 #else
 	if (hit < hper) {
 #endif
-#ifdef HELLFIRE
 		if (plr[pnum]._pIFlags & ISPL_FIREDAM && plr[pnum]._pIFlags & ISPL_LIGHTDAM) {
 			int midam = plr[pnum]._pIFMinDam + random_(3, plr[pnum]._pIFMaxDam - plr[pnum]._pIFMinDam);
 			AddMissile(plr[pnum]._px, plr[pnum]._py, plr[pnum]._pVar1, plr[pnum]._pVar2, plr[pnum]._pdir, MIS_SPECARROW, TARGET_MONSTERS, pnum, midam, 0);
 		}
-#endif
 		mind = plr[pnum]._pIMinDam;
 		maxd = plr[pnum]._pIMaxDam;
 		dam = random_(5, maxd - mind + 1) + mind;
@@ -2998,18 +2984,13 @@ BOOL PM_DoAttack(int pnum)
 			}
 		}
 
-#ifdef HELLFIRE
-		if (!(plr[pnum]._pIFlags & ISPL_FIREDAM) || !(plr[pnum]._pIFlags & ISPL_LIGHTDAM))
-#endif
+		if (!(plr[pnum]._pIFlags & ISPL_FIREDAM) || !(plr[pnum]._pIFlags & ISPL_LIGHTDAM)) {
 			if (plr[pnum]._pIFlags & ISPL_FIREDAM) {
 				AddMissile(dx, dy, 1, 0, 0, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
-			}
-#ifdef HELLFIRE
-			else
-#endif
-			    if (plr[pnum]._pIFlags & ISPL_LIGHTDAM) {
+			} else if (plr[pnum]._pIFlags & ISPL_LIGHTDAM) {
 				AddMissile(dx, dy, 2, 0, 0, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
 			}
+		}
 
 		if (dMonster[dx][dy]) {
 			m = dMonster[dx][dy];
@@ -4093,11 +4074,7 @@ void CheckPlrSpell()
 	}
 
 	if (addflag) {
-		if (plr[myplr]._pRSpell == SPL_FIREWALL
-#ifdef HELLFIRE
-		    || plr[myplr]._pRSpell == SPL_LIGHTWALL
-#endif
-		) {
+		if (plr[myplr]._pRSpell == SPL_FIREWALL || plr[myplr]._pRSpell == SPL_LIGHTWALL) {
 			sd = GetDirection(plr[myplr]._px, plr[myplr]._py, cursmx, cursmy);
 			sl = GetSpellLevel(myplr, plr[myplr]._pRSpell);
 			NetSendCmdLocParam3(TRUE, CMD_SPELLXYD, cursmx, cursmy, plr[myplr]._pRSpell, sd, sl);

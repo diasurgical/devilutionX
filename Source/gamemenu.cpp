@@ -19,11 +19,7 @@ TMenuItem sgSingleMenu[] = {
 	{ GMENU_ENABLED, "Options",       &gamemenu_options    },
 	{ GMENU_ENABLED, "New Game",      &gamemenu_new_game   },
 	{ GMENU_ENABLED, "Load Game",     &gamemenu_load_game  },
-#ifndef HELLFIRE
-	{ GMENU_ENABLED, "Quit Diablo",   &gamemenu_quit_game  },
-#else
-	{ GMENU_ENABLED, "Quit Hellfire", &gamemenu_quit_game  },
-#endif
+	{ GMENU_ENABLED, "Quit Game",     &gamemenu_quit_game  },
 	{ GMENU_ENABLED, NULL,            NULL }
 	// clang-format on
 };
@@ -34,11 +30,7 @@ TMenuItem sgMultiMenu[] = {
 	{ GMENU_ENABLED, "Options",         &gamemenu_options      },
 	{ GMENU_ENABLED, "New Game",        &gamemenu_new_game     },
 	{ GMENU_ENABLED, "Restart In Town", &gamemenu_restart_town },
-#ifndef HELLFIRE
-	{ GMENU_ENABLED, "Quit Diablo",     &gamemenu_quit_game    },
-#else
-	{ GMENU_ENABLED, "Quit Hellfire",   &gamemenu_quit_game    },
-#endif
+	{ GMENU_ENABLED, "Quit Game",       &gamemenu_quit_game    },
 	{ GMENU_ENABLED, NULL,              NULL                   },
 	// clang-format on
 };
@@ -48,12 +40,9 @@ TMenuItem sgOptionsMenu[] = {
 	{ GMENU_ENABLED | GMENU_SLIDER, NULL,            &gamemenu_music_volume  },
 	{ GMENU_ENABLED | GMENU_SLIDER, NULL,            &gamemenu_sound_volume  },
 	{ GMENU_ENABLED | GMENU_SLIDER, "Gamma",         &gamemenu_gamma         },
-#ifndef HELLFIRE
 //	{ GMENU_ENABLED               , NULL,            &gamemenu_color_cycling },
 	{ GMENU_ENABLED | GMENU_SLIDER, "Speed",         &gamemenu_speed         },
-#else
-	{ GMENU_ENABLED | GMENU_SLIDER, NULL,            &gamemenu_loadjog       },
-#endif
+//	{ GMENU_ENABLED | GMENU_SLIDER, NULL,            &gamemenu_loadjog       },
 	{ GMENU_ENABLED               , "Previous Menu", &gamemenu_previous      },
 	{ GMENU_ENABLED               , NULL,            NULL                    },
 	// clang-format on
@@ -277,14 +266,10 @@ void gamemenu_options(BOOL bActivate)
 {
 	gamemenu_get_music();
 	gamemenu_get_sound();
-#ifdef HELLFIRE
-	gamemenu_jogging();
-#endif
+	//gamemenu_jogging();
 	gamemenu_get_gamma();
-#ifndef HELLFIRE
 	gamemenu_get_speed();
 	//gamemenu_get_color_cycling();
-#endif
 	gmenu_set_items(sgOptionsMenu, NULL);
 }
 

@@ -361,7 +361,7 @@ const char gszSpawnHelpText[] = {
 	"adjust your music and sound effects settings as well as "
 	"the gamma level of the screen.|"
 	"|"
-	"Quit Diablo: This exits the program. Please note that this "
+	"Quit Game: This exits the program. Please note that this "
 	"automatically saves your character.|"
 	"|"
 	"$Auto-map:|"

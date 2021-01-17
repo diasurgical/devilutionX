@@ -929,6 +929,8 @@ void LoadGame(BOOL firstflag)
 	ResetPal();
 	SetCursor_(CURSOR_HAND);
 	gbProcessPlayers = TRUE;
+
+    gbIsHellfireSaveGame = gbIsHellfire;
 }
 
 static void BSave(char v)

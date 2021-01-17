@@ -2008,27 +2008,19 @@ void SaveItemPower(int i, int power, int param1, int param2, int minval, int max
 		break;
 	case IPL_FIREDAM:
 		item[i]._iFlags |= ISPL_FIREDAM;
-#ifdef HELLFIRE
 		item[i]._iFlags &= ~ISPL_LIGHTDAM;
-#endif
 		item[i]._iFMinDam = param1;
 		item[i]._iFMaxDam = param2;
-#ifdef HELLFIRE
 		item[i]._iLMinDam = 0;
 		item[i]._iLMaxDam = 0;
-#endif
 		break;
 	case IPL_LIGHTDAM:
 		item[i]._iFlags |= ISPL_LIGHTDAM;
-#ifdef HELLFIRE
 		item[i]._iFlags &= ~ISPL_FIREDAM;
-#endif
 		item[i]._iLMinDam = param1;
 		item[i]._iLMaxDam = param2;
-#ifdef HELLFIRE
 		item[i]._iFMinDam = 0;
 		item[i]._iFMaxDam = 0;
-#endif
 		break;
 	case IPL_STR:
 		item[i]._iPLStr += r;
