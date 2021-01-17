@@ -5437,7 +5437,6 @@ BOOLEAN monster_posok(int i, int x, int y)
 	if (mi != 0 && i >= 0) {
 		fire = FALSE;
 		lightning = FALSE;
-#ifdef HELLFIRE
 		if (mi > 0) {
 			if (missile[mi - 1]._mitype == MIS_FIREWALL) { // BUGFIX: Change 'mi' to 'mi - 1' (fixed)
 				fire = TRUE;
@@ -5459,18 +5458,6 @@ BOOLEAN monster_posok(int i, int x, int y)
 				}
 			}
 		}
-#else
-		if (mi > 0) {
-			if (missile[mi - 1]._mitype == MIS_FIREWALL) { // BUGFIX: Change 'mi' to 'mi - 1' (fixed)
-				fire = TRUE;
-			} else {
-				for (j = 0; j < nummissiles; j++) {
-					if (missile[missileactive[j]]._mitype == MIS_FIREWALL)
-						fire = TRUE;
-				}
-			}
-		}
-#endif
 		if (fire && (!(monster[i].mMagicRes & IMMUNE_FIRE) || monster[i].MType->mtype == MT_DIABLO))
 			ret = FALSE;
 		if (lightning && (!(monster[i].mMagicRes & IMMUNE_LIGHTNING) || monster[i].MType->mtype == MT_DIABLO))
