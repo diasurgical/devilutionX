@@ -111,15 +111,13 @@ static void print_help_and_exit()
 	printf("    %-20s %-30s\n", "-f", "Display frames per second");
 	printf("    %-20s %-30s\n", "-x", "Run in windowed mode");
 	printf("    %-20s %-30s\n", "--spawn", "Force spawn mode even if diabdat.mpq is found");
-#ifdef HELLFIRE
+	printf("    %-20s %-30s\n", "--bardtest", "Enable the Bard class");
+	printf("    %-20s %-30s\n", "--barbariantest", "Enable the Barbarian class");
 	printf("\nHellfire options:\n");
 	printf("    %-20s %-30s\n", "--diablo", "Force diablo mode even if hellfire.mpq is found");
 	printf("    %-20s %-30s\n", "--theoquest", "Enable the Theo quest");
 	printf("    %-20s %-30s\n", "--cowquest", "Enable the Cow quest");
 	printf("    %-20s %-30s\n", "--nestart", "Use alternate nest palette");
-	printf("    %-20s %-30s\n", "--bardtest", "Enable the Bard class");
-	printf("    %-20s %-30s\n", "--barbariantest", "Enable the Barbarian class");
-#endif
 #ifdef _DEBUG
 	printf("\nDebug options:\n");
 	printf("    %-20s %-30s\n", "-d", "Increaased item drops");
@@ -163,7 +161,6 @@ static void diablo_parse_flags(int argc, char **argv)
 			fullscreen = FALSE;
 		} else if (strcasecmp("--spawn", argv[i]) == 0) {
 			forceSpawn = TRUE;
-#ifdef HELLFIRE
 		} else if (strcasecmp("--diablo", argv[i]) == 0) {
 			forceDiablo = TRUE;
 		} else if (strcasecmp("--theoquest", argv[i]) == 0) {
@@ -176,7 +173,6 @@ static void diablo_parse_flags(int argc, char **argv)
 			UseBardTest = TRUE;
 		} else if (strcasecmp("--barbariantest", argv[i]) == 0) {
 			UseBarbarianTest = TRUE;
-#endif
 #ifdef _DEBUG
 		} else if (strcasecmp("-^", argv[i]) == 0) {
 			debug_mode_key_inverted_v = TRUE;

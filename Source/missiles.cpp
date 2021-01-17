@@ -1323,7 +1323,6 @@ void InitMissiles()
 		}
 	}
 
-#ifdef HELLFIRE
 	if ((plr[myplr]._pSpellFlags & 2) == 2 || (plr[myplr]._pSpellFlags & 4) == 4) {
 		plr[myplr]._pSpellFlags &= ~0x2;
 		plr[myplr]._pSpellFlags &= ~0x4;
@@ -1341,7 +1340,6 @@ void InitMissiles()
 			}
 		}
 	}
-#endif
 
 	nummissiles = 0;
 	for (i = 0; i < MAXMISSILES; i++) {

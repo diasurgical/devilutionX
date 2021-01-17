@@ -198,7 +198,6 @@ const PLStruct PL_Prefix[] = {
 	{ "Meteoric",       IPL_TOHIT,             61,       80,       23,                       PLT_WEAP |             PLT_BOW           ,  GOE_ANY,  TRUE,     TRUE,      6100,    10000,        15 },
 	{ "Weird",          IPL_TOHIT,             81,      100,       35,                       PLT_WEAP |             PLT_BOW           ,  GOE_ANY,  TRUE,     TRUE,     10100,    14000,        17 },
 	{ "Strange",        IPL_TOHIT,            101,      150,       60,                       PLT_WEAP |             PLT_BOW           ,  GOE_ANY,  TRUE,     TRUE,     14100,    20000,        20 },
-#ifdef HELLFIRE
 	{ "Useless",        IPL_DAMP_CURSE,       100,      100,        5,                       PLT_WEAP | PLT_STAFF | PLT_BOW           ,  GOE_ANY,  TRUE,     FALSE,        0,        0,        -8 },
 	{ "Bent",           IPL_DAMP_CURSE,        50,       75,        3,                       PLT_WEAP | PLT_STAFF | PLT_BOW           ,  GOE_ANY,  TRUE,     FALSE,        0,        0,        -4 },
 	{ "Weak",           IPL_DAMP_CURSE,        25,       45,        1,                       PLT_WEAP | PLT_STAFF | PLT_BOW           ,  GOE_ANY,  TRUE,     FALSE,        0,        0,        -3 },
@@ -208,17 +207,6 @@ const PLStruct PL_Prefix[] = {
 	{ "Vicious",        IPL_DAMP,              66,       80,       12,                       PLT_WEAP | PLT_STAFF | PLT_BOW           ,  GOE_EVIL, TRUE,     TRUE,      1000,     1450,         8 },
 	{ "Brutal",         IPL_DAMP,              81,       95,       16,                       PLT_WEAP | PLT_STAFF | PLT_BOW           ,  GOE_ANY,  TRUE,     TRUE,      1500,     1950,        10 },
 	{ "Massive",        IPL_DAMP,              96,      110,       20,                       PLT_WEAP | PLT_STAFF | PLT_BOW           ,  GOE_ANY,  TRUE,     TRUE,      2000,     2450,        13 },
-#else
-	{ "Useless",        IPL_DAMP_CURSE,       100,      100,        5,                       PLT_WEAP |             PLT_BOW           ,  GOE_ANY,  TRUE,     FALSE,        0,        0,        -8 },
-	{ "Bent",           IPL_DAMP_CURSE,        50,       75,        3,                       PLT_WEAP |             PLT_BOW           ,  GOE_ANY,  TRUE,     FALSE,        0,        0,        -4 },
-	{ "Weak",           IPL_DAMP_CURSE,        25,       45,        1,                       PLT_WEAP |             PLT_BOW           ,  GOE_ANY,  TRUE,     FALSE,        0,        0,        -3 },
-	{ "Jagged",         IPL_DAMP,              20,       35,        4,                       PLT_WEAP |             PLT_BOW           ,  GOE_ANY,  TRUE,     TRUE,       250,      450,         3 },
-	{ "Deadly",         IPL_DAMP,              36,       50,        6,                       PLT_WEAP |             PLT_BOW           ,  GOE_ANY,  TRUE,     TRUE,       500,      700,         4 },
-	{ "Heavy",          IPL_DAMP,              51,       65,        9,                       PLT_WEAP |             PLT_BOW           ,  GOE_ANY,  TRUE,     TRUE,       750,      950,         5 },
-	{ "Vicious",        IPL_DAMP,              66,       80,       12,                       PLT_WEAP |             PLT_BOW           ,  GOE_EVIL, TRUE,     TRUE,      1000,     1450,         8 },
-	{ "Brutal",         IPL_DAMP,              81,       95,       16,                       PLT_WEAP |             PLT_BOW           ,  GOE_ANY,  TRUE,     TRUE,      1500,     1950,        10 },
-	{ "Massive",        IPL_DAMP,              96,      110,       20,                       PLT_WEAP |             PLT_BOW           ,  GOE_ANY,  TRUE,     TRUE,      2000,     2450,        13 },
-#endif
 	{ "Savage",         IPL_DAMP,             111,      125,       23,                       PLT_WEAP |             PLT_BOW           ,  GOE_ANY,  TRUE,     TRUE,      2500,     3000,        15 },
 	{ "Ruthless",       IPL_DAMP,             126,      150,       35,                       PLT_WEAP |             PLT_BOW           ,  GOE_ANY,  TRUE,     TRUE,     10100,    15000,        17 },
 	{ "Merciless",      IPL_DAMP,             151,      175,       60,                       PLT_WEAP |             PLT_BOW           ,  GOE_ANY,  TRUE,     TRUE,     15000,    20000,        20 },
@@ -281,11 +269,9 @@ const PLStruct PL_Prefix[] = {
 	{ "Bountiful",      IPL_CHARGES,            3,        3,        9,                                  PLT_STAFF                     ,  GOE_ANY,  FALSE,    TRUE,      3000,     3000,         3 },
 	{ "Flaming",        IPL_FIREDAM,            1,       10,        7,                       PLT_WEAP | PLT_STAFF                     ,  GOE_ANY,  FALSE,    TRUE,      5000,     5000,         2 },
 	{ "Lightning",      IPL_LIGHTDAM,           2,       20,       18,                       PLT_WEAP | PLT_STAFF                     ,  GOE_ANY,  FALSE,    TRUE,     10000,    10000,         2 },
-#ifdef HELLFIRE
 	{ "Jester's",       IPL_JESTERS,            1,        1,        7,                       PLT_WEAP                                 ,  GOE_ANY,  FALSE,    TRUE,      1200,     1200,         3 },
 	{ "Crystalline",    IPL_CRYSTALLINE,       30,       70,        5,                       PLT_WEAP                                 ,  GOE_ANY,  FALSE,    TRUE,      1000,     3000,         3 },
 	{ "Doppelganger's", IPL_DOPPELGANGER,      81,       95,       11,                       PLT_WEAP | PLT_STAFF                     ,  GOE_ANY,  FALSE,    TRUE,      2000,     2400,        10 },
-#endif
 	{ "",               IPL_INVALID,            0,        0,        0, 0                                                              ,  GOE_ANY,  FALSE,    FALSE,        0,        0,         0 },
 	// clang-format on
 };
@@ -294,13 +280,8 @@ const PLStruct PL_Prefix[] = {
 const PLStruct PL_Suffix[] = {
 // clang-format off
 	// PLName,          PLPower,       PLParam1, PLParam2, PLMinLvl, PLIType,                                                             PLGOE,    PLDouble, PLOk,  PLMinVal, PLMaxVal, PLMultVal
-#ifdef HELLFIRE
 	{  "quality",       IPL_DAMMOD,           1,        2,        2,                       PLT_WEAP | PLT_STAFF | PLT_BOW           ,     GOE_ANY,  FALSE,    TRUE,       100,      200,         2 },
 	{  "maiming",       IPL_DAMMOD,           3,        5,        7,                       PLT_WEAP | PLT_STAFF | PLT_BOW           ,     GOE_ANY,  FALSE,    TRUE,      1300,     1500,         3 },
-#else
-	{  "quality",       IPL_DAMMOD,           1,        2,        2,                       PLT_WEAP |             PLT_BOW           ,     GOE_ANY,  FALSE,    TRUE,       100,      200,         2 },
-	{  "maiming",       IPL_DAMMOD,           3,        5,        7,                       PLT_WEAP |             PLT_BOW           ,     GOE_ANY,  FALSE,    TRUE,      1300,     1500,         3 },
-#endif
 	{  "slaying",       IPL_DAMMOD,           6,        8,       15,                       PLT_WEAP                                 ,     GOE_ANY,  FALSE,    TRUE,      2600,     3000,         5 },
 	{  "gore",          IPL_DAMMOD,           9,       12,       25,                       PLT_WEAP                                 ,     GOE_ANY,  FALSE,    TRUE,      4100,     5000,         8 },
 	{  "carnage",       IPL_DAMMOD,          13,       16,       35,                       PLT_WEAP                                 ,     GOE_ANY,  FALSE,    TRUE,      5100,    10000,        10 },
@@ -313,25 +294,15 @@ const PLStruct PL_Suffix[] = {
 	{  "deflection",    IPL_GETHIT,           4,        4,       20, PLT_ARMO                                                       ,     GOE_GOOD, FALSE,    TRUE,      2500,     6500,        15 },
 	{  "osmosis",       IPL_GETHIT,           5,        6,       50, PLT_ARMO                                                       ,     GOE_GOOD, FALSE,    TRUE,      7500,    10000,        20 },
 	{  "frailty",       IPL_STR_CURSE,        6,       10,        3, PLT_ARMO | PLT_SHLD | PLT_WEAP |             PLT_BOW | PLT_MISC,     GOE_EVIL, FALSE,    FALSE,        0,        0,        -3 },
-#ifdef HELLFIRE
 	{  "weakness",      IPL_STR_CURSE,        1,        5,        1, PLT_ARMO | PLT_SHLD | PLT_WEAP | PLT_STAFF | PLT_BOW | PLT_MISC,     GOE_EVIL, FALSE,    FALSE,        0,        0,        -2 },
 	{  "strength",      IPL_STR,              1,        5,        1, PLT_ARMO | PLT_SHLD | PLT_WEAP | PLT_STAFF | PLT_BOW | PLT_MISC,     GOE_ANY,  FALSE,    TRUE,       200,     1000,         2 },
-#else
-	{  "weakness",      IPL_STR_CURSE,        1,        5,        1, PLT_ARMO | PLT_SHLD | PLT_WEAP |             PLT_BOW | PLT_MISC,     GOE_EVIL, FALSE,    FALSE,        0,        0,        -2 },
-	{  "strength",      IPL_STR,              1,        5,        1, PLT_ARMO | PLT_SHLD | PLT_WEAP |             PLT_BOW | PLT_MISC,     GOE_ANY,  FALSE,    TRUE,       200,     1000,         2 },
-#endif
 	{  "might",         IPL_STR,              6,       10,        5, PLT_ARMO | PLT_SHLD | PLT_WEAP |             PLT_BOW | PLT_MISC,     GOE_ANY,  FALSE,    TRUE,      1200,     2000,         3 },
 	{  "power",         IPL_STR,             11,       15,       11, PLT_ARMO | PLT_SHLD | PLT_WEAP |             PLT_BOW | PLT_MISC,     GOE_ANY,  FALSE,    TRUE,      2200,     3000,         4 },
 	{  "giants",        IPL_STR,             16,       20,       17, PLT_ARMO |            PLT_WEAP |             PLT_BOW | PLT_MISC,     GOE_ANY,  FALSE,    TRUE,      3200,     5000,         7 },
 	{  "titans",        IPL_STR,             21,       30,       23,                       PLT_WEAP |                       PLT_MISC,     GOE_ANY,  FALSE,    TRUE,      5200,    10000,        10 },
 	{  "paralysis",     IPL_DEX_CURSE,        6,       10,        3, PLT_ARMO | PLT_SHLD | PLT_WEAP |             PLT_BOW | PLT_MISC,     GOE_EVIL, FALSE,    FALSE,        0,        0,        -3 },
-#ifdef HELLFIRE
 	{  "atrophy",       IPL_DEX_CURSE,        1,        5,        1, PLT_ARMO | PLT_SHLD | PLT_WEAP | PLT_STAFF | PLT_BOW | PLT_MISC,     GOE_EVIL, FALSE,    FALSE,        0,        0,        -2 },
 	{  "dexterity",     IPL_DEX,              1,        5,        1, PLT_ARMO | PLT_SHLD | PLT_WEAP | PLT_STAFF | PLT_BOW | PLT_MISC,     GOE_ANY,  FALSE,    TRUE,       200,     1000,         2 },
-#else
-	{  "atrophy",       IPL_DEX_CURSE,        1,        5,        1, PLT_ARMO | PLT_SHLD | PLT_WEAP |             PLT_BOW | PLT_MISC,     GOE_EVIL, FALSE,    FALSE,        0,        0,        -2 },
-	{  "dexterity",     IPL_DEX,              1,        5,        1, PLT_ARMO | PLT_SHLD | PLT_WEAP |             PLT_BOW | PLT_MISC,     GOE_ANY,  FALSE,    TRUE,       200,     1000,         2 },
-#endif
 	{  "skill",         IPL_DEX,              6,       10,        5, PLT_ARMO | PLT_SHLD | PLT_WEAP |             PLT_BOW | PLT_MISC,     GOE_ANY,  FALSE,    TRUE,      1200,     2000,         3 },
 	{  "accuracy",      IPL_DEX,             11,       15,       11, PLT_ARMO | PLT_SHLD | PLT_WEAP |             PLT_BOW | PLT_MISC,     GOE_ANY,  FALSE,    TRUE,      2200,     3000,         4 },
 	{  "precision",     IPL_DEX,             16,       20,       17, PLT_ARMO |            PLT_WEAP |             PLT_BOW | PLT_MISC,     GOE_ANY,  FALSE,    TRUE,      3200,     5000,         7 },
@@ -343,30 +314,17 @@ const PLStruct PL_Suffix[] = {
 	{  "brilliance",    IPL_MAG,             11,       15,       11, PLT_ARMO | PLT_SHLD | PLT_WEAP | PLT_STAFF | PLT_BOW | PLT_MISC,     GOE_ANY,  FALSE,    TRUE,      2200,     3000,         4 },
 	{  "sorcery",       IPL_MAG,             16,       20,       17, PLT_ARMO |            PLT_WEAP | PLT_STAFF | PLT_BOW | PLT_MISC,     GOE_ANY,  FALSE,    TRUE,      3200,     5000,         7 },
 	{  "wizardry",      IPL_MAG,             21,       30,       23,                                  PLT_STAFF |           PLT_MISC,     GOE_ANY,  FALSE,    TRUE,      5200,    10000,        10 },
-#ifdef HELLFIRE
 	{  "illness",       IPL_VIT_CURSE,        6,       10,        3, PLT_ARMO | PLT_SHLD | PLT_WEAP | PLT_STAFF | PLT_BOW | PLT_MISC,     GOE_EVIL, FALSE,    FALSE,        0,        0,        -3 },
 	{  "disease",       IPL_VIT_CURSE,        1,        5,        1, PLT_ARMO | PLT_SHLD | PLT_WEAP | PLT_STAFF | PLT_BOW | PLT_MISC,     GOE_EVIL, FALSE,    FALSE,        0,        0,        -2 },
 	{  "vitality",      IPL_VIT,              1,        5,        1, PLT_ARMO | PLT_SHLD | PLT_WEAP | PLT_STAFF | PLT_BOW | PLT_MISC,     GOE_GOOD, FALSE,    TRUE,       200,     1000,         2 },
-#else
-	{  "illness",       IPL_VIT_CURSE,        6,       10,        3, PLT_ARMO | PLT_SHLD | PLT_WEAP |             PLT_BOW | PLT_MISC,     GOE_EVIL, FALSE,    FALSE,        0,        0,        -3 },
-	{  "disease",       IPL_VIT_CURSE,        1,        5,        1, PLT_ARMO | PLT_SHLD | PLT_WEAP |             PLT_BOW | PLT_MISC,     GOE_EVIL, FALSE,    FALSE,        0,        0,        -2 },
-	{  "vitality",      IPL_VIT,              1,        5,        1, PLT_ARMO | PLT_SHLD | PLT_WEAP |             PLT_BOW | PLT_MISC,     GOE_GOOD, FALSE,    TRUE,       200,     1000,         2 },
-#endif
 	{  "zest",          IPL_VIT,              6,       10,        5, PLT_ARMO | PLT_SHLD | PLT_WEAP |             PLT_BOW | PLT_MISC,     GOE_GOOD, FALSE,    TRUE,      1200,     2000,         3 },
 	{  "vim",           IPL_VIT,             11,       15,       11, PLT_ARMO | PLT_SHLD | PLT_WEAP |             PLT_BOW | PLT_MISC,     GOE_GOOD, FALSE,    TRUE,      2200,     3000,         4 },
 	{  "vigor",         IPL_VIT,             16,       20,       17, PLT_ARMO | PLT_WEAP |                        PLT_BOW | PLT_MISC,     GOE_GOOD, FALSE,    TRUE,      3200,     5000,         7 },
 	{  "life",          IPL_VIT,             21,       30,       23,                                                        PLT_MISC,     GOE_GOOD, FALSE,    TRUE,      5200,    10000,        10 },
-#ifdef HELLFIRE
 	{  "trouble",       IPL_ATTRIBS_CURSE,    6,       10,       12, PLT_ARMO | PLT_SHLD | PLT_WEAP | PLT_STAFF | PLT_BOW | PLT_MISC,     GOE_EVIL, FALSE,    FALSE,        0,        0,       -10 },
 	{  "the pit",       IPL_ATTRIBS_CURSE,    1,        5,        5, PLT_ARMO | PLT_SHLD | PLT_WEAP | PLT_STAFF | PLT_BOW | PLT_MISC,     GOE_EVIL, FALSE,    FALSE,        0,        0,        -5 },
 	{  "the sky",       IPL_ATTRIBS,          1,        3,        5, PLT_ARMO | PLT_SHLD | PLT_WEAP | PLT_STAFF | PLT_BOW | PLT_MISC,     GOE_ANY,  FALSE,    TRUE,       800,     4000,         5 },
 	{  "the moon",      IPL_ATTRIBS,          4,        7,       11, PLT_ARMO | PLT_SHLD | PLT_WEAP | PLT_STAFF | PLT_BOW | PLT_MISC,     GOE_ANY,  FALSE,    TRUE,      4800,     8000,        10 },
-#else
-	{  "trouble",       IPL_ATTRIBS_CURSE,    6,       10,       12, PLT_ARMO | PLT_SHLD | PLT_WEAP |             PLT_BOW | PLT_MISC,     GOE_EVIL, FALSE,    FALSE,        0,        0,       -10 },
-	{  "the pit",       IPL_ATTRIBS_CURSE,    1,        5,        5, PLT_ARMO | PLT_SHLD | PLT_WEAP |             PLT_BOW | PLT_MISC,     GOE_EVIL, FALSE,    FALSE,        0,        0,        -5 },
-	{  "the sky",       IPL_ATTRIBS,          1,        3,        5, PLT_ARMO | PLT_SHLD | PLT_WEAP |             PLT_BOW | PLT_MISC,     GOE_ANY,  FALSE,    TRUE,       800,     4000,         5 },
-	{  "the moon",      IPL_ATTRIBS,          4,        7,       11, PLT_ARMO | PLT_SHLD | PLT_WEAP |             PLT_BOW | PLT_MISC,     GOE_ANY,  FALSE,    TRUE,      4800,     8000,        10 },
-#endif
 	{  "the stars",     IPL_ATTRIBS,          8,       11,       17, PLT_ARMO |            PLT_WEAP |             PLT_BOW | PLT_MISC,     GOE_ANY,  FALSE,    TRUE,      8800,    12000,        15 },
 	{  "the heavens",   IPL_ATTRIBS,         12,       15,       25,                       PLT_WEAP |             PLT_BOW | PLT_MISC,     GOE_ANY,  FALSE,    TRUE,     12800,    20000,        20 },
 	{  "the zodiac",    IPL_ATTRIBS,         16,       20,       30,                                                        PLT_MISC,     GOE_ANY,  FALSE,    TRUE,     20800,    40000,        30 },
@@ -382,17 +340,10 @@ const PLStruct PL_Suffix[] = {
 	{  "the whale",     IPL_LIFE,            81,      100,       60, PLT_ARMO                                                       ,     GOE_ANY,  FALSE,    TRUE,     19100,    30000,        13 },
 	{  "fragility",     IPL_DUR_CURSE,      100,      100,        3, PLT_ARMO | PLT_SHLD | PLT_WEAP                                 ,     GOE_EVIL, FALSE,    FALSE,        0,        0,        -4 },
 	{  "brittleness",   IPL_DUR_CURSE,       26,       75,        1, PLT_ARMO | PLT_SHLD | PLT_WEAP                                 ,     GOE_EVIL, FALSE,    FALSE,        0,        0,        -2 },
-#ifdef HELLFIRE
 	{  "sturdiness",    IPL_DUR,             26,       75,        1, PLT_ARMO | PLT_SHLD | PLT_WEAP | PLT_STAFF                     ,     GOE_ANY,  FALSE,    TRUE,       100,      100,         2 },
 	{  "craftsmanship", IPL_DUR,             51,      100,        6, PLT_ARMO | PLT_SHLD | PLT_WEAP | PLT_STAFF                     ,     GOE_ANY,  FALSE,    TRUE,       200,      200,         2 },
 	{  "structure",     IPL_DUR,            101,      200,       12, PLT_ARMO | PLT_SHLD | PLT_WEAP | PLT_STAFF                     ,     GOE_ANY,  FALSE,    TRUE,       300,      300,         2 },
 	{  "the ages",      IPL_INDESTRUCTIBLE,   0,        0,       25, PLT_ARMO | PLT_SHLD | PLT_WEAP | PLT_STAFF                     ,     GOE_ANY,  FALSE,    TRUE,       600,      600,         5 },
-#else
-	{  "sturdiness",    IPL_DUR,             26,       75,        1, PLT_ARMO | PLT_SHLD | PLT_WEAP                                 ,     GOE_ANY,  FALSE,    TRUE,       100,      100,         2 },
-	{  "craftsmanship", IPL_DUR,             51,      100,        6, PLT_ARMO | PLT_SHLD | PLT_WEAP                                 ,     GOE_ANY,  FALSE,    TRUE,       200,      200,         2 },
-	{  "structure",     IPL_DUR,            101,      200,       12, PLT_ARMO | PLT_SHLD | PLT_WEAP                                 ,     GOE_ANY,  FALSE,    TRUE,       300,      300,         2 },
-	{  "the ages",      IPL_INDESTRUCTIBLE,   0,        0,       25, PLT_ARMO | PLT_SHLD | PLT_WEAP                                 ,     GOE_ANY,  FALSE,    TRUE,       600,      600,         5 },
-#endif
 	{  "the dark",      IPL_LIGHT_CURSE,      4,        4,        6, PLT_ARMO |            PLT_WEAP |                       PLT_MISC,     GOE_EVIL, FALSE,    FALSE,        0,        0,        -3 },
 	{  "the night",     IPL_LIGHT_CURSE,      2,        2,        3, PLT_ARMO |            PLT_WEAP |                       PLT_MISC,     GOE_EVIL, FALSE,    FALSE,        0,        0,        -2 },
 	{  "light",         IPL_LIGHT,            2,        2,        4, PLT_ARMO |            PLT_WEAP |                       PLT_MISC,     GOE_GOOD, FALSE,    TRUE,       750,      750,         2 },
@@ -430,11 +381,9 @@ const PLStruct PL_Suffix[] = {
 	{  "stability",     IPL_FASTRECOVER,      2,        2,       10, PLT_ARMO |                                             PLT_MISC,     GOE_ANY,  FALSE,    TRUE,      4000,     4000,         4 },
 	{  "harmony",       IPL_FASTRECOVER,      3,        3,       20, PLT_ARMO |                                             PLT_MISC,     GOE_ANY,  FALSE,    TRUE,      8000,     8000,         8 },
 	{  "blocking",      IPL_FASTBLOCK,        1,        1,        5,            PLT_SHLD                                            ,     GOE_ANY,  FALSE,    TRUE,      4000,     4000,         4 },
-#ifdef HELLFIRE
 	{  "devastation",   IPL_DEVASTATION,      1,        1,        1,                       PLT_WEAP | PLT_STAFF | PLT_BOW           ,     GOE_ANY,  FALSE,    TRUE,      1200,     1200,         3 },
 	{  "decay",         IPL_DECAY,          150,      250,        1,                       PLT_WEAP | PLT_STAFF | PLT_BOW           ,     GOE_ANY,  FALSE,    TRUE,       200,      200,         2 },
 	{  "peril",         IPL_PERIL,            1,        1,        5,                       PLT_WEAP | PLT_STAFF | PLT_BOW           ,     GOE_ANY,  FALSE,    TRUE,       500,      500,         1 },
-#endif
 	{  "",              IPL_INVALID,          0,        0,        0, 0                                                              ,     GOE_ANY,  FALSE,    FALSE,        0,        0,         0 },
 	// clang-format on
 };

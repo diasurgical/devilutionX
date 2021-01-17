@@ -56,25 +56,6 @@ int MaxGold = GOLD_MAX_LIMIT;
 
 /** Maps from item_cursor_graphic to in-memory item type. */
 BYTE ItemCAnimTbl[] = {
-#ifndef HELLFIRE
-	20, 16, 16, 16, 4, 4, 4, 12, 12, 12,
-	12, 12, 12, 12, 12, 21, 21, 25, 12, 28,
-	28, 28, 0, 0, 0, 32, 0, 0, 0, 24,
-	24, 26, 2, 25, 22, 23, 24, 25, 27, 27,
-	29, 0, 0, 0, 12, 12, 12, 12, 12, 0,
-	8, 8, 0, 8, 8, 8, 8, 8, 8, 6,
-	8, 8, 8, 6, 8, 8, 6, 8, 8, 6,
-	6, 6, 8, 8, 8, 5, 9, 13, 13, 13,
-	5, 5, 5, 15, 5, 5, 18, 18, 18, 30,
-	5, 5, 14, 5, 14, 13, 16, 18, 5, 5,
-	7, 1, 3, 17, 1, 15, 10, 14, 3, 11,
-	8, 0, 1, 7, 0, 7, 15, 7, 3, 3,
-	3, 6, 6, 11, 11, 11, 31, 14, 14, 14,
-	6, 6, 7, 3, 8, 14, 0, 14, 14, 0,
-	33, 1, 1, 1, 1, 1, 7, 7, 7, 14,
-	14, 17, 17, 17, 0, 34, 1, 0, 3, 17,
-	8, 8, 6, 1, 3, 3, 11, 3, 4
-#else
 	20, 16, 16, 16, 4, 4, 4, 12, 12, 12,
 	12, 12, 12, 12, 12, 21, 21, 25, 12, 28,
 	28, 28, 38, 38, 38, 32, 38, 38, 38, 24,
@@ -98,7 +79,6 @@ BYTE ItemCAnimTbl[] = {
 	8, 8, 8, 17, 0, 6, 8, 11, 11, 3,
 	3, 1, 6, 6, 6, 1, 8, 6, 11, 3,
 	6, 8, 1, 6, 6, 17, 40, 0, 0
-#endif
 };
 /** Map of item type .cel file names. */
 const char *const ItemDropNames[] = {
@@ -329,6 +309,35 @@ bool ShouldSkipItem(int i)
 	}
 
 	return false;
+}
+
+static bool IsPrefixValidForItemType(int i, int flgs)
+{
+	int PLIType = PL_Prefix[i].PLIType;
+
+	if (!gbIsHellfire) {
+		if (i >= 12 && i <= 20)
+			PLIType &= ~PLT_STAFF;
+	}
+
+	return flgs & PLIType != 0;
+}
+
+static bool IsSuffixValidForItemType(int i, int flgs)
+{
+	int PLIType = PL_Suffix[i].PLIType;
+
+	if (!gbIsHellfire) {
+		if ((i >= 0 && i <= 1)
+		    || (i >= 14 && i <= 15)
+		    || (i >= 21 && i <= 22)
+		    || (i >= 34 && i <= 36)
+		    || (i >= 41 && i <= 44)
+		    || (i >= 60 && i <= 63))
+			PLIType &= ~PLT_STAFF;
+	}
+
+	return flgs & PLIType != 0;
 }
 
 int get_ring_max_value(int i)
@@ -763,7 +772,6 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 		}
 	}
 
-#ifdef HELLFIRE
 	if ((plr[p]._pSpellFlags & 2) == 2) {
 		sadd += 2 * plr[p]._pLevel;
 		dadd += plr[p]._pLevel + plr[p]._pLevel / 2;
@@ -774,7 +782,6 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 		dadd -= plr[p]._pLevel + plr[p]._pLevel / 2;
 		vadd -= 2 * plr[p]._pLevel;
 	}
-#endif
 
 	plr[p]._pIMinDam = mind;
 	plr[p]._pIMaxDam = maxd;
@@ -884,13 +891,11 @@ void CalcPlrItemVals(int p, BOOL Loadgfx)
 		lr += plr[p]._pLevel;
 	}
 
-#ifdef HELLFIRE
 	if ((plr[p]._pSpellFlags & 4) == 4) {
 		mr -= plr[p]._pLevel;
 		fr -= plr[p]._pLevel;
 		lr -= plr[p]._pLevel;
 	}
-#endif
 
 	if (iflgs & ISPL_ALLRESZERO) {
 		// reset resistances to zero if the respective special effect is active
@@ -1674,7 +1679,9 @@ void GetStaffPower(int i, int lvl, int bs, BOOL onlygood)
 	if (tmp == 0 || onlygood) {
 		nl = 0;
 		for (j = 0; PL_Prefix[j].PLPower != -1; j++) {
-			if (PL_Prefix[j].PLIType & PLT_STAFF && PL_Prefix[j].PLMinLvl <= lvl) {
+			if (!gbIsHellfire && j >= 83)
+				break;
+			if (IsPrefixValidForItemType(j, PLT_STAFF) && PL_Prefix[j].PLMinLvl <= lvl) {
 				addok = TRUE;
 				if (onlygood && !PL_Prefix[j].PLOk)
 					addok = FALSE;
@@ -2334,7 +2341,9 @@ void GetItemPower(int i, int minlvl, int maxlvl, int flgs, BOOL onlygood)
 	if (pre == 0) {
 		nt = 0;
 		for (j = 0; PL_Prefix[j].PLPower != -1; j++) {
-			if (flgs & PL_Prefix[j].PLIType) {
+			if (!gbIsHellfire && j >= 83)
+				break;
+			if (IsPrefixValidForItemType(j, flgs)) {
 				if (PL_Prefix[j].PLMinLvl >= minlvl && PL_Prefix[j].PLMinLvl <= maxlvl && (!onlygood || PL_Prefix[j].PLOk) && (flgs != PLT_STAFF || PL_Prefix[j].PLPower != IPL_CHARGES)) {
 					l[nt] = j;
 					nt++;
@@ -2365,7 +2374,9 @@ void GetItemPower(int i, int minlvl, int maxlvl, int flgs, BOOL onlygood)
 	if (post != 0) {
 		nl = 0;
 		for (j = 0; PL_Suffix[j].PLPower != -1; j++) {
-			if (PL_Suffix[j].PLIType & flgs
+			if (!gbIsHellfire && j >= 94)
+				break;
+			if (IsSuffixValidForItemType(j, flgs)
 			    && PL_Suffix[j].PLMinLvl >= minlvl && PL_Suffix[j].PLMinLvl <= maxlvl
 			    && (goe | PL_Suffix[j].PLGOE) != (GOE_GOOD | GOE_EVIL)
 			    && (!onlygood || PL_Suffix[j].PLOk)) {

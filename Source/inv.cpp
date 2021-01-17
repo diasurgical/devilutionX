@@ -713,11 +713,7 @@ BOOL GoldAutoPlace(int pnum)
 	for (int i = 0; i < plr[pnum]._pNumInv && !done; i++) {
 		if (plr[pnum].InvList[i]._itype == ITYPE_GOLD) {
 			int gold = plr[pnum].InvList[i]._ivalue + plr[pnum].HoldItem._ivalue;
-#ifdef HELLFIRE
 			if (gold <= MaxGold) {
-#else
-			if (plr[pnum].HoldItem._ivalue + plr[pnum].InvList[i]._ivalue <= GOLD_MAX_LIMIT) {
-#endif
 				plr[pnum].InvList[i]._ivalue = gold;
 				if (gold >= GOLD_MEDIUM_LIMIT)
 					plr[pnum].InvList[i]._iCurs = ICURS_GOLD_LARGE;

@@ -180,9 +180,13 @@
 #undef assert
 
 #ifndef _DEBUG
-#define assert(exp) ((void)0)
+#define assert(exp)
+#define assurance(exp, value) if (exp) return
+#define commitment(exp, value) if (exp) return false
 #else
 #define assert(exp) (void)((exp) || (assert_fail(__LINE__, __FILE__, #exp), 0))
+#define assurance(exp, value) (void)((exp) || (app_fatal("%s: %s was %i", __func__, #exp, value), 0))
+#define commitment(exp, value) (void)((exp) || (app_fatal("%s: %s was %i", __func__, #exp, value), 0))
 #endif
 
 #define ERR_DLG(title, text) ErrDlg(title, text, __FILE__, __LINE__)

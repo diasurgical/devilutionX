@@ -86,7 +86,8 @@ extern int MagicTbl[NUM_CLASSES];
 extern int DexterityTbl[NUM_CLASSES];
 extern int VitalityTbl[NUM_CLASSES];
 extern int MaxStats[NUM_CLASSES][4];
-extern const char *const ClassStrTbl[NUM_CLASSES];
+extern const char *const ClassStrTblOld[];
+extern const char *const ClassStrTbl[];
 
 #ifdef __cplusplus
 }
