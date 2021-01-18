@@ -1765,10 +1765,8 @@ void InvGetItem(int pnum, int ii)
 		CheckBookLevel(pnum);
 		CheckItemStats(pnum);
 		cursor_updated = FALSE;
-#ifdef HELLFIRE
-		if (plr[pnum].HoldItem._itype == ITYPE_GOLD && GoldAutoPlace(pnum))
+		if (gbIsHellfire && plr[pnum].HoldItem._itype == ITYPE_GOLD && GoldAutoPlace(pnum))
 			cursor_updated = TRUE;
-#endif
 		dItem[item[ii]._ix][item[ii]._iy] = 0;
 		if (currlevel == 21 && item[ii]._ix == CornerStone.x && item[ii]._iy == CornerStone.y) {
 			CornerStone.item.IDidx = -1;
@@ -1953,9 +1951,6 @@ void AutoGetItem(int pnum, int ii)
 		RespawnItem(ii, TRUE);
 		NetSendCmdPItem(TRUE, CMD_RESPAWNITEM, item[ii]._ix, item[ii]._iy);
 		plr[pnum].HoldItem._itype = ITYPE_NONE;
-#ifdef HELLFIRE
-		NewCursor(CURSOR_HAND);
-#endif
 	}
 }
 

@@ -1180,11 +1180,10 @@ void S_StartBBoy()
 	else
 		AddSText(20, 10, FALSE, boyitem._iName, iclr, TRUE);
 
-#ifdef HELLFIRE
-	AddSTextVal(10, boyitem._iIvalue - (boyitem._iIvalue >> 2));
-#else
-	AddSTextVal(10, boyitem._iIvalue + (boyitem._iIvalue >> 1));
-#endif
+	if (gbIsHellfire)
+		AddSTextVal(10, boyitem._iIvalue - (boyitem._iIvalue >> 2));
+	else
+		AddSTextVal(10, boyitem._iIvalue + (boyitem._iIvalue >> 1));
 	PrintStoreItem(&boyitem, 11, iclr);
 	AddSText(0, 22, TRUE, "Leave", COL_WHITE, TRUE);
 	OffsetSTextY(22, 6);
@@ -2420,19 +2419,16 @@ void S_BBuyEnter()
 		stextshold = STORE_BBOY;
 		stextvhold = stextsval;
 		stextlhold = 10;
-#ifdef HELLFIRE
-		if (plr[myplr]._pGold < boyitem._iIvalue - (boyitem._iIvalue >> 2)) {
-#else
-		if (plr[myplr]._pGold < boyitem._iIvalue + (boyitem._iIvalue >> 1)) {
-#endif
+		int price = boyitem._iIvalue;
+		if (gbIsHellfire)
+			price -= boyitem._iIvalue >> 2;
+		else
+			price += boyitem._iIvalue >> 1;
+		if (plr[myplr]._pGold < price) {
 			StartStore(STORE_NOMONEY);
 		} else {
 			plr[myplr].HoldItem = boyitem;
-#ifdef HELLFIRE
-			plr[myplr].HoldItem._iIvalue -= plr[myplr].HoldItem._iIvalue >> 2;
-#else
-			plr[myplr].HoldItem._iIvalue += plr[myplr].HoldItem._iIvalue >> 1;
-#endif
+			plr[myplr].HoldItem._iIvalue = price;
 			SetCursor_(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
 			done = FALSE;
 			for (i = 0; i < NUM_INV_GRID_ELEM && !done; i++) {

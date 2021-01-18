@@ -2019,11 +2019,7 @@ static DWORD On_MONSTDAMAGE(TCmd *pCmd, int pnum)
 	else if (pnum != myplr) {
 		if (currlevel == plr[pnum].plrlevel) {
 			monster[p->wMon].mWhoHit |= 1 << pnum;
-#ifdef HELLFIRE
-			if (monster[p->wMon]._mhitpoints >= 0) {
-#else
-			if (monster[p->wMon]._mhitpoints != 0) {
-#endif
+			if (monster[p->wMon]._mhitpoints > 0) {
 				monster[p->wMon]._mhitpoints -= p->dwDam;
 				if ((monster[p->wMon]._mhitpoints >> 6) < 1)
 					monster[p->wMon]._mhitpoints = 1 << 6;
