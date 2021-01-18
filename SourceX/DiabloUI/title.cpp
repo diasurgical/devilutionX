@@ -10,6 +10,7 @@ void title_Load()
 {
 	if (gbIsHellfire) {
 		LoadBackgroundArt("ui_art\\hf_logo1.pcx", 16);
+		LoadArt("ui_art\\hf_titlew.pcx", &ArtBackgroundWidescreen);
 	} else {
 		LoadBackgroundArt("ui_art\\title.pcx");
 		LoadMaskedArt("ui_art\\logo.pcx", &ArtLogos[LOGO_BIG], 15);
@@ -19,6 +20,7 @@ void title_Load()
 void title_Free()
 {
 	ArtBackground.Unload();
+	ArtBackgroundWidescreen.Unload();
 	ArtLogos[LOGO_BIG].Unload();
 
 	for (std::size_t i = 0; i < vecTitleScreen.size(); i++) {
@@ -32,6 +34,7 @@ void UiTitleDialog()
 {
 	if (gbIsHellfire) {
 		SDL_Rect rect = { 0, UI_OFFSET_Y, 0, 0 };
+		vecTitleScreen.push_back(new UiImage(&ArtBackgroundWidescreen, /*animated=*/true, /*frame=*/0, rect, UIS_CENTER));
 		vecTitleScreen.push_back(new UiImage(&ArtBackground, /*animated=*/true, /*frame=*/0, rect, UIS_CENTER));
 	} else {
 		UiAddBackground(&vecTitleScreen);

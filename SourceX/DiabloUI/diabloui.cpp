@@ -30,6 +30,7 @@ const std::size_t *ListOffset = NULL;
 
 Art ArtLogos[3];
 Art ArtFocus[3];
+Art ArtBackgroundWidescreen;
 Art ArtBackground;
 Art ArtCursor;
 Art ArtHero;
@@ -607,8 +608,13 @@ void LoadBackgroundArt(const char *pszFile, int frames)
 
 void UiAddBackground(std::vector<UiItemBase *> *vecDialog)
 {
-	SDL_Rect rect = { PANEL_LEFT, UI_OFFSET_Y, 640, 480 };
-	vecDialog->push_back(new UiImage(&ArtBackground, rect));
+	if (ArtBackgroundWidescreen.surface != NULL) {
+		SDL_Rect rectw = { 0, UI_OFFSET_Y, 0, 0 };
+		vecDialog->push_back(new UiImage(&ArtBackgroundWidescreen, /*animated=*/false, /*frame=*/0, rectw, UIS_CENTER));
+	}
+
+	SDL_Rect rect = { 0, UI_OFFSET_Y, 0, 0 };
+	vecDialog->push_back(new UiImage(&ArtBackground, /*animated=*/false, /*frame=*/0, rect, UIS_CENTER));
 }
 
 void UiAddLogo(std::vector<UiItemBase *> *vecDialog, int size, int y)

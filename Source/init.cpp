@@ -38,6 +38,7 @@ HANDLE hfmusic_mpq;
 HANDLE hfvoice_mpq;
 HANDLE hfopt1_mpq;
 HANDLE hfopt2_mpq;
+HANDLE devilutionx_mpq;
 
 namespace {
 
@@ -116,6 +117,10 @@ void init_cleanup()
 		SFileCloseArchive(hfopt2_mpq);
 		hfopt2_mpq = NULL;
 	}
+	if (devilutionx_mpq) {
+		SFileCloseArchive(patch_rt_mpq);
+		patch_rt_mpq = NULL;
+	}
 
 	NetClose();
 }
@@ -161,6 +166,7 @@ void init_archives()
 	hfvoice_mpq = init_test_access("hfvoice.mpq", "DiabloInstall", 8500, FS_PC);
 	hfopt1_mpq = init_test_access("hfopt1.mpq", "DiabloInstall", 8600, FS_PC);
 	hfopt2_mpq = init_test_access("hfopt2.mpq", "DiabloInstall", 8610, FS_PC);
+	devilutionx_mpq = init_test_access("devilutionx.mpq", "DiabloInstall", 9000, FS_PC);
 }
 
 void init_create_window()

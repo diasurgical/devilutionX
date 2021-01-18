@@ -153,6 +153,9 @@ BOOL SFileOpenFile(const char *filename, HANDLE *phFile)
 		result = SFileOpenFileEx((HANDLE)0, path.c_str(), 0xFFFFFFFF, phFile);
 	}
 
+	if (!result) {
+		result = SFileOpenFileEx((HANDLE)devilutionx_mpq, filename, 0, phFile);
+	}
 	if (gbIsHellfire) {
 		if (!result) {
 			result = SFileOpenFileEx((HANDLE)hfopt2_mpq, filename, 0, phFile);
