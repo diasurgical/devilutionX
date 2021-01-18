@@ -2489,36 +2489,32 @@ BOOL PM_DoWalk3(int pnum)
 	return rv;
 }
 
+bool WeaponDurDecay(int pnum, int ii)
+{
+	if (plr[pnum].InvBody[ii]._itype != ITYPE_NONE && plr[pnum].InvBody[ii]._iClass == ICLASS_WEAPON && plr[pnum].InvBody[ii]._iDamAcFlags & 2) {
+		plr[pnum].InvBody[ii]._iPLDam -= 5;
+		if (plr[pnum].InvBody[ii]._iPLDam <= -100) {
+			NetSendCmdDelItem(TRUE, ii);
+			plr[pnum].InvBody[ii]._itype = ITYPE_NONE;
+			CalcPlrInv(pnum, TRUE);
+			return true;
+		}
+		CalcPlrInv(pnum, TRUE);
+	}
+	return false
+}
+
 BOOL WeaponDur(int pnum, int durrnd)
 {
 	if (pnum != myplr) {
 		return FALSE;
 	}
 
-#ifdef HELLFIRE
-	if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_NONE && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iDamAcFlags & 2) {
-		plr[pnum].InvBody[INVLOC_HAND_LEFT]._iPLDam -= 5;
-		if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._iPLDam <= -100) {
-			NetSendCmdDelItem(TRUE, INVLOC_HAND_LEFT);
-			plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype = ITYPE_NONE;
-			CalcPlrInv(pnum, TRUE);
-			return TRUE;
-		}
-		CalcPlrInv(pnum, TRUE);
-	}
+	if (WeaponDurDecay(pnum, INVLOC_HAND_LEFT))
+		return TRUE;
+	if (WeaponDurDecay(pnum, INVLOC_HAND_RIGHT))
+		return TRUE;
 
-	if (plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_NONE && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iDamAcFlags & 2) {
-		plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iPLDam -= 5;
-		if (plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iPLDam <= -100) {
-			NetSendCmdDelItem(TRUE, INVLOC_HAND_LEFT); // BUGFIX: INVLOC_HAND_RIGHT
-			plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype = ITYPE_NONE;
-			CalcPlrInv(pnum, TRUE);
-			return TRUE;
-		}
-		CalcPlrInv(pnum, TRUE);
-	}
-
-#endif
 	if (random_(3, durrnd) != 0) {
 		return FALSE;
 	}
