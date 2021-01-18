@@ -2489,7 +2489,7 @@ BOOL PM_DoWalk3(int pnum)
 	return rv;
 }
 
-bool WeaponDurDecay(int pnum, int ii)
+static bool WeaponDurDecay(int pnum, int ii)
 {
 	if (plr[pnum].InvBody[ii]._itype != ITYPE_NONE && plr[pnum].InvBody[ii]._iClass == ICLASS_WEAPON && plr[pnum].InvBody[ii]._iDamAcFlags & 2) {
 		plr[pnum].InvBody[ii]._iPLDam -= 5;
@@ -2501,7 +2501,7 @@ bool WeaponDurDecay(int pnum, int ii)
 		}
 		CalcPlrInv(pnum, TRUE);
 	}
-	return false
+	return false;
 }
 
 BOOL WeaponDur(int pnum, int durrnd)
