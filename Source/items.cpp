@@ -320,7 +320,7 @@ static bool IsPrefixValidForItemType(int i, int flgs)
 			PLIType &= ~PLT_STAFF;
 	}
 
-	return flgs & PLIType != 0;
+	return (flgs & PLIType) != 0;
 }
 
 static bool IsSuffixValidForItemType(int i, int flgs)
@@ -337,7 +337,7 @@ static bool IsSuffixValidForItemType(int i, int flgs)
 			PLIType &= ~PLT_STAFF;
 	}
 
-	return flgs & PLIType != 0;
+	return (flgs & PLIType) != 0;
 }
 
 int get_ring_max_value(int i)
@@ -2300,7 +2300,7 @@ void SaveItemPower(int i, int power, int param1, int param2, int minval, int max
 static void SaveItemSuffix(int i, int sufidx)
 {
 	int param1 = PL_Suffix[sufidx].PLParam1;
-	int param2 = PL_Suffix[sufidx].PLParam1;
+	int param2 = PL_Suffix[sufidx].PLParam2;
 
 	if (!gbIsHellfire) {
 		if (sufidx >= 84 && sufidx <= 86) {
