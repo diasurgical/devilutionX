@@ -600,9 +600,7 @@ BOOL MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, BOOLE
 		resist = TRUE;
 
 	hit = random_(69, 100);
-#ifdef HELLFIRE
 	if (pnum != -1) {
-#endif
 		if (missiledata[t].mType == 0) {
 			hper = plr[pnum]._pDexterity;
 			hper += plr[pnum]._pIBonusToHit;
@@ -627,11 +625,9 @@ BOOL MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, BOOLE
 			else if (plr[pnum]._pClass == PC_BARD)
 				hper += 10;
 		}
-#ifdef HELLFIRE
 	} else {
 		hper = random_(71, 75) - monster[m].mLevel * 2;
 	}
-#endif
 
 	if (hper < 5)
 		hper = 5;
@@ -1018,7 +1014,6 @@ void CheckMissileCol(int i, int mindam, int maxdam, BOOL shift, int mx, int my, 
 {
 	int oi;
 	BOOLEAN blocked;
-#ifdef HELLFIRE
 	int dir, mAnimFAmt;
 
 	if (i >= MAXMISSILES || i < 0)
@@ -1027,6 +1022,7 @@ void CheckMissileCol(int i, int mindam, int maxdam, BOOL shift, int mx, int my, 
 		return;
 	if (my >= MAXDUNY || my < 0)
 		return;
+#ifdef HELLFIRE
 	if (missile[i]._micaster != TARGET_BOTH && missile[i]._misource != -1) {
 #else
 	if (missile[i]._miAnimType != MFILE_FIREWAL && missile[i]._misource != -1) {
@@ -2181,28 +2177,18 @@ void AddRndTeleport(int mi, int sx, int sy, int dx, int dy, int midir, char mien
 		if (random_(58, 2) == 1)
 			r2 = -r2;
 
-#ifdef HELLFIRE
 		r1 += sx;
 		r2 += sy;
-		if (r1 <= MAXDUNX && r1 >= 0 && r2 <= MAXDUNY && r2 >= 0) { ///BUGFIX: < MAXDUNX / < MAXDUNY
+		if (r1 < MAXDUNX && r1 >= 0 && r2 < MAXDUNY && r2 >= 0) { ///BUGFIX: < MAXDUNX / < MAXDUNY (fixed)
 			pn = dPiece[r1][r2];
 		}
 	} while (nSolidTable[pn] || dObject[r1][r2] != 0 || dMonster[r1][r2] != 0);
-#else
-		pn = dPiece[r1 + sx][sy + r2];
-	} while (nSolidTable[pn] || dObject[r1 + sx][sy + r2] != 0 || dMonster[r1 + sx][sy + r2] != 0);
-#endif
 
 	missile[mi]._mirange = 2;
 	missile[mi]._miVar1 = 0;
 	if (!setlevel || setlvlnum != SL_VILEBETRAYER) {
-#ifdef HELLFIRE
 		missile[mi]._mix = r1;
 		missile[mi]._miy = r2;
-#else
-		missile[mi]._mix = sx + r1;
-		missile[mi]._miy = sy + r2;
-#endif
 		if (mienemy == TARGET_MONSTERS)
 			UseMana(id, SPL_RNDTELEPORT);
 	} else {
@@ -3416,11 +3402,7 @@ int AddMissile(int sx, int sy, int dx, int dy, int midir, int mitype, char micas
 {
 	int i, mi;
 
-#ifdef HELLFIRE
 	if (nummissiles >= MAXMISSILES - 1)
-#else
-	if (nummissiles >= MAXMISSILES)
-#endif
 		return -1;
 
 	if (mitype == MIS_MANASHIELD && plr[id].pManaShield == TRUE) {
@@ -3440,9 +3422,7 @@ int AddMissile(int sx, int sy, int dx, int dy, int midir, int mitype, char micas
 	missileactive[nummissiles] = mi;
 	nummissiles++;
 
-#ifdef HELLFIRE
 	memset(&missile[mi], 0, sizeof(*missile));
-#endif
 
 	missile[mi]._mitype = mitype;
 	missile[mi]._micaster = micaster;
@@ -4820,10 +4800,8 @@ void MI_Guardian(int i)
 
 	assert((DWORD)i < MAXMISSILES);
 
-#ifndef HELLFIRE
 	sx1 = 0;
 	sy1 = 0;
-#endif
 	missile[i]._mirange--;
 
 	if (missile[i]._miVar2 > 0) {
