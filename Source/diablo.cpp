@@ -25,6 +25,7 @@ BOOL gbGameLoopStartup;
 BOOL gbRunGame;
 BOOL gbRunGameResult;
 BOOL zoomflag;
+/** Enable updating of player character, set to false once Diablo dies */
 BOOL gbProcessPlayers;
 BOOL gbLoadGame;
 int DebugMonsters[10];
@@ -1850,6 +1851,9 @@ static void timeout_cursor(BOOL bTimeout)
 	}
 }
 
+/**
+ * @param bStartup Process additional ticks before returning
+ */
 void game_loop(BOOL bStartup)
 {
 	int i;
