@@ -189,7 +189,8 @@ SNetSendMessage(
 #define SNPLAYER_OTHERS -2
 
 #define MPQ_FLAG_READ_ONLY 1
-
+#define SFILE_OPEN_FROM_MPQ 0
+#define SFILE_OPEN_LOCAL_FILE 0xFFFFFFFF
 
 /*  SNetSendTurn @ 128
  *
