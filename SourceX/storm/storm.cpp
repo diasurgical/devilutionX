@@ -84,46 +84,46 @@ BOOL SFileOpenFile(const char *filename, HANDLE *phFile)
 		std::string path = *SBasePath + filename;
 		for (std::size_t i = SBasePath->size(); i < path.size(); ++i)
 			path[i] = AsciiToLowerTable_Path[static_cast<unsigned char>(path[i])];
-		result = SFileOpenFileEx((HANDLE)0, path.c_str(), 0xFFFFFFFF, phFile);
+		result = SFileOpenFileEx((HANDLE)0, path.c_str(), SFILE_OPEN_LOCAL_FILE, phFile);
 	}
 
-	if (!result) {
-		result = SFileOpenFileEx((HANDLE)devilutionx_mpq, filename, 0, phFile);
+	if (!result && devilutionx_mpq != NULL) {
+		result = SFileOpenFileEx((HANDLE)devilutionx_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 	}
 	if (gbIsHellfire) {
-		if (!result) {
-			result = SFileOpenFileEx((HANDLE)hfopt2_mpq, filename, 0, phFile);
+		if (!result && hfopt2_mpq != NULL) {
+			result = SFileOpenFileEx((HANDLE)hfopt2_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
+		}
+		if (!result && hfopt1_mpq != NULL) {
+			result = SFileOpenFileEx((HANDLE)hfopt1_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
+		}
+		if (!result && hfvoice_mpq != NULL) {
+			result = SFileOpenFileEx((HANDLE)hfvoice_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
+		}
+		if (!result && hfmusic_mpq != NULL) {
+			result = SFileOpenFileEx((HANDLE)hfmusic_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
+		}
+		if (!result && hfbarb_mpq != NULL) {
+			result = SFileOpenFileEx((HANDLE)hfbarb_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
+		}
+		if (!result && hfbard_mpq != NULL) {
+			result = SFileOpenFileEx((HANDLE)hfbard_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
+		}
+		if (!result && hfmonk_mpq != NULL) {
+			result = SFileOpenFileEx((HANDLE)hfmonk_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
 		if (!result) {
-			result = SFileOpenFileEx((HANDLE)hfopt1_mpq, filename, 0, phFile);
-		}
-		if (!result) {
-			result = SFileOpenFileEx((HANDLE)hfvoice_mpq, filename, 0, phFile);
-		}
-		if (!result) {
-			result = SFileOpenFileEx((HANDLE)hfmusic_mpq, filename, 0, phFile);
-		}
-		if (!result) {
-			result = SFileOpenFileEx((HANDLE)hfbarb_mpq, filename, 0, phFile);
-		}
-		if (!result) {
-			result = SFileOpenFileEx((HANDLE)hfbard_mpq, filename, 0, phFile);
-		}
-		if (!result) {
-			result = SFileOpenFileEx((HANDLE)hfmonk_mpq, filename, 0, phFile);
-		}
-		if (!result) {
-			result = SFileOpenFileEx((HANDLE)hellfire_mpq, filename, 0, phFile);
+			result = SFileOpenFileEx((HANDLE)hellfire_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
 	}
-	if (!result && patch_rt_mpq) {
-		result = SFileOpenFileEx((HANDLE)patch_rt_mpq, filename, 0, phFile);
+	if (!result && patch_rt_mpq != NULL) {
+		result = SFileOpenFileEx((HANDLE)patch_rt_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 	}
-	if (!result && spawn_mpq) {
-		result = SFileOpenFileEx((HANDLE)spawn_mpq, filename, 0, phFile);
+	if (!result && spawn_mpq != NULL) {
+		result = SFileOpenFileEx((HANDLE)spawn_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 	}
-	if (!result && diabdat_mpq) {
-		result = SFileOpenFileEx((HANDLE)diabdat_mpq, filename, 0, phFile);
+	if (!result && diabdat_mpq != NULL) {
+		result = SFileOpenFileEx((HANDLE)diabdat_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 	}
 
 	if (!result || !*phFile) {
