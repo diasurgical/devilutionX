@@ -1295,6 +1295,14 @@ static void PressChar(WPARAM vkey)
 		}
 		return;
 #endif
+	case 'W':
+	case 'w':
+		if (plr[myplr]._pmode == PM_STAND || plr[myplr]._pmode == PM_WALK
+		    || plr[myplr]._pmode == PM_WALK2 || plr[myplr]._pmode == PM_WALK3
+		    || plr[myplr]._pmode == PM_GOTHIT || plr[myplr]._pmode == PM_BLOCK) {
+			SwitchWeapons();
+		}
+		return;
 	}
 }
 

@@ -50,6 +50,11 @@ void DoTelekinesis();
 int CalculateGold(int pnum);
 BOOL DropItemBeforeTrig();
 
+int GetInvIndex(int iseed);
+BOOL HoldItemToInv();
+BOOL InvListToBodySwap(int ii, int INVLOC);
+BOOL InitAltItem(int INVLOC);
+BOOL SwitchWeapons();
 /* data */
 
 extern int AP2x2Tbl[10];

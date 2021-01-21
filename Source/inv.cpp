@@ -2656,4 +2656,160 @@ BOOL DropItemBeforeTrig()
 	return FALSE;
 }
 
+int GetInvIndex(int iseed)
+{ //Find index il and ir of left and right hand AltItems in inventory list
+	int ii = -1;
+	for (int i = 0; i < plr[myplr]._pNumInv && iseed != 0 && ii != i; i++) {
+		if (plr[myplr].InvList[i]._iSeed == iseed)
+			ii = i;
+	}
+
+	return ii;
+}
+
+BOOL HoldItemToInv()
+{ //Moves HoldItem to inventory. Returns true if successful, else false.
+	BOOL done = plr[myplr].HoldItem._itype == ITYPE_NONE;
+
+	if (!done) {
+		SetCursor_(plr[myplr].HoldItem._iCurs + CURSOR_FIRSTITEM);
+		for (int i = 0; i < NUM_INV_GRID_ELEM && !done; i++)
+			done = AutoPlace(myplr, i, icursW28, icursH28, TRUE);
+		if (done) {
+			plr[myplr].HoldItem._itype = ITYPE_NONE;
+			SetCursor_(CURSOR_HAND);
+		}
+	}
+	CalcPlrInv(myplr, TRUE);
+
+	return done;
+}
+
+BOOL InvListToBodySwap(int ii, int INVLOC)
+{
+	ItemStruct tempitem = plr[myplr].InvBody[INVLOC];
+	plr[myplr].HoldItem = plr[myplr].InvList[ii];
+	PlaySFX(ItemInvSnds[ItemCAnimTbl[plr[myplr].HoldItem._iCurs]]);
+
+	NetSendCmdChItem(TRUE, INVLOC);
+	plr[myplr].InvBody[INVLOC] = plr[myplr].HoldItem;
+
+	RemoveInvItem(myplr, ii);
+	plr[myplr].HoldItem = tempitem;
+
+	CalcPlrInv(myplr, TRUE);
+
+	return HoldItemToInv();
+}
+
+BOOL InitAltItem(int INVLOC)
+{
+	if (plr[myplr].InvBody[INVLOC]._itype != ITYPE_NONE) {
+		plr[myplr].HoldItem = plr[myplr].InvBody[INVLOC];
+		PlaySFX(ItemInvSnds[ItemCAnimTbl[plr[myplr].HoldItem._iCurs]]);
+		NetSendCmdDelItem(TRUE, INVLOC);
+		plr[myplr].InvBody[INVLOC]._itype = ITYPE_NONE;
+		CalcPlrInv(myplr, TRUE);
+		return HoldItemToInv();
+	}
+	return true;
+}
+
+BOOL SwitchWeapons()
+{
+	int il = -1;
+	int ir = -1;
+	BOOL done = TRUE;
+
+	if (stextflag != STORE_NONE)
+		return TRUE;
+
+	if (pcurs != CURSOR_HAND && !HoldItemToInv())
+		return FALSE;
+
+	//Ensure shield is on the right.
+	if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SHIELD)
+		SwapItem(&plr[myplr].InvBody[INVLOC_HAND_LEFT], &plr[myplr].InvBody[INVLOC_HAND_RIGHT]);
+
+	//Remember current alternate item seeds
+	int altIseed_L = plr[myplr].AltItemSeed[INVLOC_HAND_LEFT];
+	int altIseed_R = plr[myplr].AltItemSeed[INVLOC_HAND_RIGHT];
+	//Initialize current equipped left item as AltItem
+	if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_NONE)
+		plr[myplr].AltItemSeed[INVLOC_HAND_LEFT] = 0;
+	else
+		plr[myplr].AltItemSeed[INVLOC_HAND_LEFT] = plr[myplr].InvBody[INVLOC_HAND_LEFT]._iSeed;
+	//Initialize current equipped right item as AltItem
+	if (plr[myplr].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_NONE)
+		plr[myplr].AltItemSeed[INVLOC_HAND_RIGHT] = 0;
+	else
+		plr[myplr].AltItemSeed[INVLOC_HAND_RIGHT] = plr[myplr].InvBody[INVLOC_HAND_RIGHT]._iSeed;
+
+	//Find InvList index of left alt item
+	il = GetInvIndex(altIseed_L);
+
+	if (il == -1) {
+		//altitem not found in inventory. Check if we are currently holding it. If not, initialize current item as altitem.
+		if (altIseed_L != plr[myplr].InvBody[INVLOC_HAND_LEFT]._iSeed && plr[myplr].InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_NONE)
+			done = InitAltItem(INVLOC_HAND_LEFT);
+	} else if (il != -1 && plr[myplr].InvList[il]._iLoc == ILOC_ONEHAND) {
+		done = InvListToBodySwap(il, INVLOC_HAND_LEFT);
+	} else if (il != -1 && plr[myplr].InvList[il]._iLoc == ILOC_TWOHAND) {
+		//move left Altitem (2 hand weapon) to tempitem to make space for the right hand item.
+		ItemStruct tempitem = plr[myplr].InvList[il];
+		RemoveInvItem(myplr, il);
+		//After removing a 2-hand weapon from inv there will always be enough space for the right hand item.
+		plr[myplr].HoldItem = plr[myplr].InvBody[INVLOC_HAND_RIGHT];
+		NetSendCmdDelItem(TRUE, INVLOC_HAND_RIGHT);
+		plr[myplr].InvBody[INVLOC_HAND_RIGHT]._itype = ITYPE_NONE;
+		HoldItemToInv();
+
+		plr[myplr].HoldItem = tempitem;
+		PlaySFX(ItemInvSnds[ItemCAnimTbl[plr[myplr].HoldItem._iCurs]]);
+		//now holding the 2-hand weapon, swap with whatever was is in the left hand.
+		NetSendCmdChItem(TRUE, INVLOC_HAND_LEFT);
+		SwapItem(&plr[myplr].HoldItem, &plr[myplr].InvBody[INVLOC_HAND_LEFT]);
+		//try to place former left hand item in inventory
+		done = HoldItemToInv();
+		//check if we are holding a staff now and set spell
+		if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_STAFF
+		    && plr[myplr].InvBody[INVLOC_HAND_LEFT]._iSpell != 0
+		    && plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges > 0) {
+			plr[myplr]._pRSpell = plr[myplr].InvBody[INVLOC_HAND_LEFT]._iSpell;
+			plr[myplr]._pRSplType = RSPLTYPE_CHARGES;
+		}
+	}
+
+	if (done) {
+		//check for right hand item
+		ir = GetInvIndex(altIseed_R);
+		if (ir == -1) {
+			if (altIseed_R != plr[myplr].InvBody[INVLOC_HAND_RIGHT]._iSeed && plr[myplr].InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_NONE)
+				done = InitAltItem(INVLOC_HAND_RIGHT);
+		} else
+			done = InvListToBodySwap(ir, INVLOC_HAND_RIGHT);
+	}
+
+	if (!done) {
+		//unable to place all items in inventory. Now holding 1 item in Holditem.
+		if (plr[myplr]._pClass == PC_WARRIOR) {
+			PlaySFX(random_(0, 3) + PS_WARR14);
+		} else if (plr[myplr]._pClass == PC_ROGUE) {
+			PlaySFX(random_(0, 3) + PS_ROGUE14);
+		} else if (plr[myplr]._pClass == PC_SORCERER) {
+			PlaySFX(random_(0, 3) + PS_MAGE14);
+		} else if (plr[myplr]._pClass == PC_MONK) {
+			PlaySFX(random_(0, 3) + PS_MONK14);
+		} else if (plr[myplr]._pClass == PC_BARD) {
+			PlaySFX(random_(0, 3) + PS_ROGUE14);
+		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+			PlaySFX(random_(0, 3) + PS_WARR14);
+		}
+		//open inventory tab
+		sbookflag = FALSE;
+		invflag = TRUE;
+	}
+	return done;
+}
+
 DEVILUTION_END_NAMESPACE
