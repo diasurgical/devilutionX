@@ -320,7 +320,11 @@ void InitMonsterGFX(int monst)
 	mtype = Monsters[monst].mtype;
 
 	for (anim = 0; anim < 6; anim++) {
-		if ((animletter[anim] != 's' || monsterdata[mtype].has_special) && monsterdata[mtype].Frames[anim] > 0) {
+		int frames = monsterdata[mtype].Frames[anim];
+		if (!gbIsHellfire && mtype == MT_DIABLO && anim == 3)
+			frames = 6;
+
+		if ((animletter[anim] != 's' || monsterdata[mtype].has_special) && frames > 0) {
 			sprintf(strBuff, monsterdata[mtype].GraphicType, animletter[anim]);
 
 			celBuf = LoadFileInMem(strBuff, NULL);
@@ -339,7 +343,7 @@ void InitMonsterGFX(int monst)
 		}
 
 		// TODO: either the AnimStruct members have wrong naming or the MonsterData ones it seems
-		Monsters[monst].Anims[anim].Frames = monsterdata[mtype].Frames[anim];
+		Monsters[monst].Anims[anim].Frames = frames;
 		Monsters[monst].Anims[anim].Rate = monsterdata[mtype].Rate[anim];
 	}
 
@@ -347,6 +351,10 @@ void InitMonsterGFX(int monst)
 	Monsters[monst].width2 = (monsterdata[mtype].width - 64) >> 1;
 	Monsters[monst].mMinHP = monsterdata[mtype].mMinHP;
 	Monsters[monst].mMaxHP = monsterdata[mtype].mMaxHP;
+	if (!gbIsHellfire && mtype == MT_DIABLO) {
+		Monsters[monst].mMinHP -= 2000;
+		Monsters[monst].mMaxHP -= 2000;
+	}
 	Monsters[monst].has_special = monsterdata[mtype].has_special;
 	Monsters[monst].mAFNum = monsterdata[mtype].mAFNum;
 	Monsters[monst].MData = &monsterdata[mtype];
@@ -465,8 +473,11 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 	monster[i]._mAnimLen = monst->Anims[MA_STAND].Frames;
 	monster[i]._mAnimFrame = random_(88, monster[i]._mAnimLen - 1) + 1;
 
+	monster[i].mLevel = monst->MData->mLevel;
 	if (monst->mtype == MT_DIABLO) {
 		monster[i]._mmaxhp = (random_(88, 1) + (gbIsHellfire ? 3333 : 1666)) << 6;
+		if (!gbIsHellfire)
+			monster[i].mLevel -= 15;
 	} else {
 		monster[i]._mmaxhp = (monst->mMinHP + random_(88, monst->mMaxHP - monst->mMinHP + 1)) << 6;
 	}
@@ -494,7 +505,6 @@ void InitMonster(int i, int rd, int mtype, int x, int y)
 	monster[i]._mRndSeed = GetRndSeed();
 	monster[i]._mAISeed = GetRndSeed();
 	monster[i].mWhoHit = 0;
-	monster[i].mLevel = monst->MData->mLevel;
 	monster[i].mExp = monst->MData->mExp;
 	monster[i].mHit = monst->MData->mHit;
 	monster[i].mMinDamage = monst->MData->mMinDamage;
@@ -5247,9 +5257,13 @@ void PrintMonstHistory(int mt)
 	if (monstkills[mt] >= 30) {
 		minHP = monsterdata[mt].mMinHP;
 		maxHP = monsterdata[mt].mMaxHP;
+		if (!gbIsHellfire && mt == MT_DIABLO) {
+			minHP -= 2000;
+			maxHP -= 2000;
+		}
 		if (gbMaxPlayers == 1) {
-			minHP = monsterdata[mt].mMinHP >> 1;
-			maxHP = monsterdata[mt].mMaxHP >> 1;
+			minHP >>= 1;
+			maxHP >>= 1;
 		}
 		if (minHP < 1)
 			minHP = 1;

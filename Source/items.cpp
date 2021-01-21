@@ -2808,10 +2808,13 @@ void SpawnItem(int m, int x, int y, BOOL sendmsg)
 		GetSuperItemSpace(x, y, ii);
 		itemavail[0] = itemavail[MAXITEMS - numitems - 1];
 		itemactive[numitems] = ii;
+		int mLevel = monster[m].MData->mLevel;
+		if (!gbIsHellfire && monster[m].MType->mtype == MT_DIABLO)
+			mLevel -= 15;
 		if (monster[m]._uniqtype) {
-			SetupAllItems(ii, idx, GetRndSeed(), monster[m].MData->mLevel, 15, onlygood, FALSE, FALSE);
+			SetupAllItems(ii, idx, GetRndSeed(), mLevel, 15, onlygood, FALSE, FALSE);
 		} else {
-			SetupAllItems(ii, idx, GetRndSeed(), monster[m].MData->mLevel, 1, onlygood, FALSE, FALSE);
+			SetupAllItems(ii, idx, GetRndSeed(), mLevel, 1, onlygood, FALSE, FALSE);
 		}
 		numitems++;
 		if (sendmsg)
