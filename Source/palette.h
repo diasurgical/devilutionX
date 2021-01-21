@@ -15,6 +15,7 @@ extern "C" {
 extern SDL_Color logical_palette[256];
 extern SDL_Color system_palette[256];
 extern SDL_Color orig_palette[256];
+extern BYTE palette_transparency_lookup[256][256];
 
 void palette_update();
 void SaveGamma();

@@ -200,13 +200,13 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 		if (light_table_index == lightmax) {
 			foreach_set_bit(mask, [=](int i) { (*dst)[i] = 0; });
 		} else if (light_table_index == 0) {
-			foreach_set_bit(mask, [=](int i) { (*dst)[i] = (*src)[i]; });
-		} else {
-			foreach_set_bit(mask, [=](int i) { (*dst)[i] = tbl[(*src)[i]]; });
-		}
-	}
+			for (i = 0; i < n; i++, (*src)++, (*dst)++, mask <<= 1) {
+				if (mask & 0x80000000) {
+					(*dst)[0] = (*src)[0];
+				}
+			}
 
-skip:
+			}
 	(*src) += n;
 	(*dst) += n;
 }

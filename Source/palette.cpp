@@ -12,6 +12,7 @@ DEVILUTION_BEGIN_NAMESPACE
 SDL_Color logical_palette[256];
 SDL_Color system_palette[256];
 SDL_Color orig_palette[256];
+BYTE palette_transparency_lookup[256][256]; //Fluffy
 
 /* data */
 
@@ -98,6 +99,38 @@ void LoadPalette(const char *pszFileName)
 #ifndef USE_SDL1
 		orig_palette[i].a = SDL_ALPHA_OPAQUE;
 #endif
+	}
+
+	/* Fluffy: Generate lookup table for transparency
+	*
+	* Explanation for how this works: To mimic 50% transparency we figure out what colours in the existing palette are the best match for the combination of any 2 colours.
+	* We save this info in a lookup table we use during rendering for whenever we want this kind of transparency.
+	* 
+	*/
+	for (int i = 0; i < 256; i++) {
+		for (int j = 0; j < 256; j++) {
+			if (i == j) {
+				palette_transparency_lookup[i][j] = j;
+				continue;
+			}
+
+			Uint8 r = ((int)orig_palette[i].r + (int)orig_palette[j].r) / 2;
+			Uint8 g = ((int)orig_palette[i].g + (int)orig_palette[j].g) / 2;
+			Uint8 b = ((int)orig_palette[i].b + (int)orig_palette[j].b) / 2;
+			BYTE best;
+			int bestDiff = 255 * 3;
+			for (int k = 0; k < 256; k++) {
+				int diff = 0;
+				diff += r > orig_palette[k].r ? r - orig_palette[k].r : orig_palette[k].r - r;
+				diff += g > orig_palette[k].g ? g - orig_palette[k].g : orig_palette[k].g - g;
+				diff += b > orig_palette[k].b ? b - orig_palette[k].b : orig_palette[k].b - b;
+				if (k == 0 || bestDiff > diff) {
+					best = k;
+					bestDiff = diff;
+				}
+			}
+			palette_transparency_lookup[i][j] = best;
+		}
 	}
 }
 
