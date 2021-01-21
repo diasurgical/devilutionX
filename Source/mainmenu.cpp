@@ -60,9 +60,7 @@ static BOOL mainmenu_single_player()
 
 	gbIsMultiplayer = false;
 
-	if (!SRegLoadValue("devilutionx", "game speed", 0, &ticks_per_sec)) {
-		SRegSaveValue("devilutionx", "game speed", 0, ticks_per_sec);
-	}
+	ticks_per_sec = sgOptions.ticksPerSecound;
 
 	return mainmenu_init_menu(SELHERO_NEW_DUNGEON);
 }

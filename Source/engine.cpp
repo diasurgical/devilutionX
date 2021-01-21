@@ -330,13 +330,13 @@ void CelBlitLightSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidt
 }
 
 /**
- * @brief Same as CelBlitLightSafe, with transparancy applied
+ * @brief Same as CelBlitLightSafe, with stippled transparancy applied
  * @param pDecodeTo The output buffer
  * @param pRLEBytes CEL pixel stream (run-length encoded)
  * @param nDataSize Size of CEL in bytes
  * @param nWidth Width of sprite
  */
-void CelBlitLightTransSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth)
+static void CelBlitLightTransSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth)
 {
 	int w;
 	BOOL shift;
@@ -420,7 +420,71 @@ void CelBlitLightTransSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int 
 }
 
 /**
- * @brief Same as CelBlitLightTransSafe
+ * @brief Same as CelBlitLightSafe, with blended transparancy applied
+ * @param pDecodeTo The output buffer
+ * @param pRLEBytes CEL pixel stream (run-length encoded)
+ * @param nDataSize Size of CEL in bytes
+ * @param nWidth Width of sprite
+ * @param tbl Palette translation table
+ */
+static void CelBlitLightBlendedSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE *tbl)
+{
+	int i, w;
+	BYTE width;
+	BYTE *src, *dst;
+
+	assert(pDecodeTo != NULL);
+	assert(pRLEBytes != NULL);
+	assert(gpBuffer);
+
+	src = pRLEBytes;
+	dst = pDecodeTo;
+	if (tbl == NULL)
+		tbl = &pLightTbl[light_table_index * 256];
+	w = nWidth;
+
+	for (; src != &pRLEBytes[nDataSize]; dst -= BUFFER_WIDTH + w) {
+		for (i = w; i;) {
+			width = *src++;
+			if (!(width & 0x80)) {
+				i -= width;
+				if (dst < gpBufEnd && dst > gpBufStart) {
+					if (width & 1) {
+						dst[0] = paletteTransparencyLookup[dst[0]][tbl[src[0]]];
+						src++;
+						dst++;
+					}
+					width >>= 1;
+					if (width & 1) {
+						dst[0] = paletteTransparencyLookup[dst[0]][tbl[src[0]]];
+						dst[1] = paletteTransparencyLookup[dst[1]][tbl[src[1]]];
+						src += 2;
+						dst += 2;
+					}
+					width >>= 1;
+					for (; width; width--) {
+						dst[0] = paletteTransparencyLookup[dst[0]][tbl[src[0]]];
+						dst[1] = paletteTransparencyLookup[dst[1]][tbl[src[1]]];
+						dst[2] = paletteTransparencyLookup[dst[2]][tbl[src[2]]];
+						dst[3] = paletteTransparencyLookup[dst[3]][tbl[src[3]]];
+						src += 4;
+						dst += 4;
+					}
+				} else {
+					src += width;
+					dst += width;
+				}
+			} else {
+				width = -(char)width;
+				dst += width;
+				i -= width;
+			}
+		}
+	}
+}
+
+/**
+ * @brief Same as CelBlitLightSafe, with stippled transparancy applied
  * @param pBuff Target buffer
  * @param pCelBuff Cel data
  * @param nCel CEL frame number
@@ -435,9 +499,12 @@ void CelClippedBlitLightTrans(BYTE *pBuff, BYTE *pCelBuff, int nCel, int nWidth)
 
 	pRLEBytes = CelGetFrameClipped(pCelBuff, nCel, &nDataSize);
 
-	if (cel_transparency_active)
-		CelBlitLightTransSafe(pBuff, pRLEBytes, nDataSize, nWidth);
-	else if (light_table_index)
+	if (cel_transparency_active) {
+		if (sgOptions.blendedTransparancy)
+			CelBlitLightBlendedSafe(pBuff, pRLEBytes, nDataSize, nWidth, NULL);
+		else
+			CelBlitLightTransSafe(pBuff, pRLEBytes, nDataSize, nWidth);
+	} else if (light_table_index)
 		CelBlitLightSafe(pBuff, pRLEBytes, nDataSize, nWidth, NULL);
 	else
 		CelBlitSafe(pBuff, pRLEBytes, nDataSize, nWidth);

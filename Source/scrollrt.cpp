@@ -742,7 +742,17 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy)
 		bArch = dSpecial[sx][sy];
 		if (bArch != 0) {
 			cel_transparency_active = TransList[bMap];
+#ifdef _DEBUG
+			if (GetAsyncKeyState(DVL_VK_MENU) & 0x8000) {
+				cel_transparency_active = 0; // Turn transparency off here for debugging
+			}
+#endif
 			CelClippedBlitLightTrans(&gpBuffer[dx + BUFFER_WIDTH * dy], pSpecialCels, bArch, 64);
+#ifdef _DEBUG
+			if (GetAsyncKeyState(DVL_VK_MENU) & 0x8000) {
+				cel_transparency_active = TransList[bMap]; // Turn transparency back to its normal state
+			}
+#endif
 		}
 	} else {
 		// Tree leaves should always cover player when entering or leaving the tile,

@@ -12,6 +12,7 @@ DEVILUTION_BEGIN_NAMESPACE
 SDL_Color logical_palette[256];
 SDL_Color system_palette[256];
 SDL_Color orig_palette[256];
+Uint8 paletteTransparencyLookup[256][256]; //Lookup table for transparency
 
 /* data */
 
@@ -79,6 +80,48 @@ void palette_init()
 	InitPalette();
 }
 
+/**
+ * Generate lookup table for transparency
+ *
+ * This is based of the same technique found in Quake2.
+ *
+ * To mimic 50% transparency we figure out what colours in the existing palette are the best match for the combination of any 2 colours.
+ * We save this into a lookup table for use during rendering.
+ */
+void GenerateBlendedLookupTable()
+{
+	for (int i = 0; i < 256; i++) {
+		for (int j = 0; j < 256; j++) {
+			if (i == j) { // No need to calculate transparency between 2 identical colours
+				paletteTransparencyLookup[i][j] = j;
+				continue;
+			}
+			if (i > j) { // Half the blends will be mirror identical ([i][j] is the same as [j][i]), so simply copy the existing combination.
+				paletteTransparencyLookup[i][j] = paletteTransparencyLookup[j][i];
+				continue;
+			}
+
+			Uint8 r = ((int)orig_palette[i].r + (int)orig_palette[j].r) / 2;
+			Uint8 g = ((int)orig_palette[i].g + (int)orig_palette[j].g) / 2;
+			Uint8 b = ((int)orig_palette[i].b + (int)orig_palette[j].b) / 2;
+			Uint8 best;
+			Uint32 bestDiff = SDL_MAX_UINT32;
+			for (int k = 0; k < 256; k++) {
+				int diffr = orig_palette[k].r - r;
+				int diffg = orig_palette[k].g - g;
+				int diffb = orig_palette[k].b - b;
+				int diff = diffr * diffr + diffg * diffg + diffb * diffb;
+
+				if (bestDiff > diff) {
+					best = k;
+					bestDiff = diff;
+				}
+			}
+			paletteTransparencyLookup[i][j] = best;
+		}
+	}
+}
+
 void LoadPalette(const char *pszFileName)
 {
 	int i;
@@ -98,6 +141,10 @@ void LoadPalette(const char *pszFileName)
 #ifndef USE_SDL1
 		orig_palette[i].a = SDL_ALPHA_OPAQUE;
 #endif
+	}
+
+	if (sgOptions.blendedTransparancy) {
+		GenerateBlendedLookupTable();
 	}
 }
 

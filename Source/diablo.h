@@ -12,6 +12,11 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+typedef struct Options {
+	bool blendedTransparancy; // Use blended transparency rather than stippled
+	int ticksPerSecound;      // Game play ticks per secound
+} Options;
+
 extern SDL_Window *ghMainWnd;
 extern DWORD glSeedTbl[NUMLEVELS];
 extern int gnLevelTypeTbl[NUMLEVELS];
@@ -46,6 +51,7 @@ extern BOOLEAN UseMultiTest;
 extern char sgbMouseDown;
 extern int ticks_per_sec;
 extern WORD tick_delay;
+extern Options sgOptions;
 
 void FreeGameMem();
 BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer);
@@ -59,6 +65,7 @@ void GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void LoadGameLevel(BOOL firstflag, int lvldir);
 void game_loop(BOOL bStartup);
 void diablo_color_cyc_logic();
+void LoadOptions();
 
 /* rdata */
 

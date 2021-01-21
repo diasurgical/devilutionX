@@ -55,6 +55,8 @@ char sgbMouseDown;
 int color_cycle_timer;
 int ticks_per_sec = 20;
 WORD tick_delay = 50;
+/** Game options */
+Options sgOptions;
 
 /* rdata */
 
@@ -408,6 +410,25 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
 	return gbRunGameResult;
 }
 
+/**
+ * @brief Save game configurations to ini file
+ */
+static void SaveOptions()
+{
+	SRegSaveValue("devilutionx", "game speed", 0, sgOptions.ticksPerSecound);
+	SRegSaveValue("devilutionx", "blended transparency", 0, sgOptions.blendedTransparancy);
+}
+
+/**
+ * @brief Load game configurations from ini file
+ */
+static void LoadOptions()
+{
+	sgOptions.ticksPerSecound = ticks_per_sec;
+	SRegLoadValue("devilutionx", "game speed", 0, &sgOptions.ticksPerSecound);
+	sgOptions.blendedTransparancy = getIniBool("devilutionx", "blended transparency", true);
+}
+
 static void diablo_init_screen()
 {
 	MouseX = SCREEN_WIDTH / 2;
@@ -498,9 +519,11 @@ void diablo_quit(int exitStatus)
 int DiabloMain(int argc, char **argv)
 {
 	diablo_parse_flags(argc, argv);
+	LoadOptions();
 	diablo_init();
 	diablo_splash();
 	mainmenu_loop();
+	SaveOptions();
 	diablo_deinit();
 
 	return 0;
