@@ -2526,10 +2526,8 @@ BOOL M_DoHeal(int i)
 	commitment((DWORD)i < MAXMONSTERS, i);
 	Monst = &monster[i];
 	if (monster[i]._mFlags & MFLAG_NOHEAL) {
-#ifndef HELLFIRE
 		Monst->_mFlags &= ~MFLAG_ALLOW_SPECIAL;
 		Monst->_mmode = MM_SATTACK;
-#endif
 		return FALSE;
 	}
 
@@ -3896,9 +3894,7 @@ void MAI_Garg(int i)
 	}
 
 	if (Monst->_mhitpoints < (Monst->_mmaxhp >> 1))
-#ifndef HELLFIRE
 		if (!(Monst->_mFlags & MFLAG_NOHEAL))
-#endif
 			Monst->_mgoal = MGOAL_RETREAT;
 	if (Monst->_mgoal == MGOAL_RETREAT) {
 		if (abs(dx) >= Monst->_mint + 2 || abs(dy) >= Monst->_mint + 2) {
