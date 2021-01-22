@@ -120,10 +120,11 @@ void LoadPalette(const char *pszFileName)
 			BYTE best;
 			int bestDiff = 255 * 3;
 			for (int k = 0; k < 256; k++) {
-				int diff = 0;
-				diff += r > orig_palette[k].r ? r - orig_palette[k].r : orig_palette[k].r - r;
-				diff += g > orig_palette[k].g ? g - orig_palette[k].g : orig_palette[k].g - g;
-				diff += b > orig_palette[k].b ? b - orig_palette[k].b : orig_palette[k].b - b;
+				int diffr = orig_palette[k].r - r;
+				int diffg = orig_palette[k].g - g;
+				int diffb = orig_palette[k].b - b;
+				int diff = diffr * diffr + diffg * diffg + diffb * diffb;
+
 				if (k == 0 || bestDiff > diff) {
 					best = k;
 					bestDiff = diff;
