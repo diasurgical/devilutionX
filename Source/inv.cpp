@@ -2508,6 +2508,16 @@ BOOL UseInvItem(int pnum, int cii)
 		speedlist = TRUE;
 	}
 
+	//If selected speedlist item exists in InvList, use the InvList item.
+	for (int i = 0; i < plr[pnum]._pNumInv && plr[pnum].autoRefillBelt; i++) {
+		if (plr[myplr].InvList[i]._iMiscId == Item->_iMiscId && plr[myplr].InvList[i]._iSpell ==Item->_iSpell){
+            c = i;
+            Item = &plr[pnum].InvList[c];
+            speedlist = FALSE;
+            break;
+        }
+	}
+
 	switch (Item->IDidx) {
 	case IDI_MUSHROOM:
 		sfxdelay = 10;

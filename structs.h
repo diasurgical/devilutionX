@@ -362,6 +362,7 @@ typedef struct PlayerStruct {
 	unsigned char *_pDData;
 	unsigned char *_pBData;
 	void *pReserved;
+	BOOLEAN autoRefillBelt = false;
 } PlayerStruct;
 
 //////////////////////////////////////////////////
