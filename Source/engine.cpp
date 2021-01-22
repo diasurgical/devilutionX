@@ -329,6 +329,63 @@ void CelBlitLightSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidt
 	}
 }
 
+//Fluffy: Same as CelBlitLightSafe but with proper transparency (not dithered)
+void CelBlitLightSafe_RealTransparency(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE *tbl)
+{
+	int i, w;
+	BYTE width;
+	BYTE *src, *dst;
+
+	assert(pDecodeTo != NULL);
+	assert(pRLEBytes != NULL);
+	assert(gpBuffer);
+
+	src = pRLEBytes;
+	dst = pDecodeTo;
+	if (tbl == NULL)
+		tbl = &pLightTbl[light_table_index * 256];
+	w = nWidth;
+
+	for (; src != &pRLEBytes[nDataSize]; dst -= BUFFER_WIDTH + w) {
+		for (i = w; i;) {
+			width = *src++;
+			if (!(width & 0x80)) {
+				i -= width;
+				if (dst < gpBufEnd && dst > gpBufStart) {
+					if (width & 1) {
+						dst[0] = palette_transparency_lookup[dst[0]][tbl[src[0]]];
+						src++;
+						dst++;
+					}
+					width >>= 1;
+					if (width & 1) {
+						dst[0] = palette_transparency_lookup[dst[0]][tbl[src[0]]];
+						dst[1] = palette_transparency_lookup[dst[1]][tbl[src[1]]];
+						src += 2;
+						dst += 2;
+					}
+					width >>= 1;
+					for (; width; width--) {
+						dst[0] = palette_transparency_lookup[dst[0]][tbl[src[0]]];
+						dst[1] = palette_transparency_lookup[dst[1]][tbl[src[1]]];
+						dst[2] = palette_transparency_lookup[dst[2]][tbl[src[2]]];
+						dst[3] = palette_transparency_lookup[dst[3]][tbl[src[3]]];
+						src += 4;
+						dst += 4;
+					}
+				} else {
+					src += width;
+					dst += width;
+				}
+			} else {
+				width = -(char)width;
+				dst += width;
+				i -= width;
+			}
+		}
+	}
+}
+
 /**
  * @brief Same as CelBlitLightSafe, with transparancy applied
  * @param pDecodeTo The output buffer
@@ -435,8 +492,12 @@ void CelClippedBlitLightTrans(BYTE *pBuff, BYTE *pCelBuff, int nCel, int nWidth)
 
 	pRLEBytes = CelGetFrameClipped(pCelBuff, nCel, &nDataSize);
 
-	if (cel_transparency_active)
-		CelBlitLightTransSafe(pBuff, pRLEBytes, nDataSize, nWidth);
+	if (cel_transparency_active) {
+		if (options_transparency)
+			CelBlitLightSafe_RealTransparency(pBuff, pRLEBytes, nDataSize, nWidth, NULL); //Fluffy: Variant of below which renders proper transparency
+		else
+			CelBlitLightTransSafe(pBuff, pRLEBytes, nDataSize, nWidth);
+	}
 	else if (light_table_index)
 		CelBlitLightSafe(pBuff, pRLEBytes, nDataSize, nWidth, NULL);
 	else

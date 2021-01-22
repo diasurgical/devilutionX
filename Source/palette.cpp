@@ -107,30 +107,35 @@ void LoadPalette(const char *pszFileName)
 	* We save this info in a lookup table we use during rendering for whenever we want this kind of transparency.
 	* 
 	*/
-	for (int i = 0; i < 256; i++) {
-		for (int j = 0; j < 256; j++) {
-			if (i == j) {
-				palette_transparency_lookup[i][j] = j;
-				continue;
-			}
-
-			Uint8 r = ((int)orig_palette[i].r + (int)orig_palette[j].r) / 2;
-			Uint8 g = ((int)orig_palette[i].g + (int)orig_palette[j].g) / 2;
-			Uint8 b = ((int)orig_palette[i].b + (int)orig_palette[j].b) / 2;
-			BYTE best;
-			int bestDiff = 255 * 3;
-			for (int k = 0; k < 256; k++) {
-				int diffr = orig_palette[k].r - r;
-				int diffg = orig_palette[k].g - g;
-				int diffb = orig_palette[k].b - b;
-				int diff = diffr * diffr + diffg * diffg + diffb * diffb;
-
-				if (k == 0 || bestDiff > diff) {
-					best = k;
-					bestDiff = diff;
+	if (options_transparency == 1) {
+		for (int i = 0; i < 256; i++) {
+			for (int j = 0; j < 256; j++) {
+				if (i == j) { //No need to calculate transparency between 2 identical colours
+					palette_transparency_lookup[i][j] = j;
+					continue;
+				} else if (i > j) { //Since there's a lot of redundancy ([i][j] will always have the same value as [j][i]), we skip calculating combinations which have already been calculated
+					palette_transparency_lookup[i][j] = palette_transparency_lookup[j][i];
+					continue;
 				}
+
+				Uint8 r = ((int)orig_palette[i].r + (int)orig_palette[j].r) / 2;
+				Uint8 g = ((int)orig_palette[i].g + (int)orig_palette[j].g) / 2;
+				Uint8 b = ((int)orig_palette[i].b + (int)orig_palette[j].b) / 2;
+				BYTE best;
+				int bestDiff = 255 * 3;
+				for (int k = 0; k < 256; k++) {
+					int diffr = orig_palette[k].r - r;
+					int diffg = orig_palette[k].g - g;
+					int diffb = orig_palette[k].b - b;
+					int diff = diffr * diffr + diffg * diffg + diffb * diffb;
+
+					if (k == 0 || bestDiff > diff) {
+						best = k;
+						bestDiff = diff;
+					}
+				}
+				palette_transparency_lookup[i][j] = best;
 			}
-			palette_transparency_lookup[i][j] = best;
 		}
 	}
 }

@@ -8,6 +8,7 @@
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 #include <config.h>
+#include "misc\config.h" //Fluffy: For reading options from config during startup
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -498,6 +499,7 @@ void diablo_quit(int exitStatus)
 int DiabloMain(int argc, char **argv)
 {
 	diablo_parse_flags(argc, argv);
+	LoadOptionsFromConfig(); //Fluffy: Read options from config here
 	diablo_init();
 	diablo_splash();
 	mainmenu_loop();
