@@ -1410,6 +1410,19 @@ void effects_play_sound(const char *snd_file)
 	}
 }
 
+typedef struct waveformat_tag {
+	WORD	wFormatTag;
+	WORD	nChannels;
+	DWORD	nSamplesPerSec;
+	DWORD	nAvgBytesPerSec;
+	WORD	nBlockAlign;
+} WAVEFORMAT;
+
+typedef struct pcmwaveformat_tag {
+	WAVEFORMAT	wf;
+	WORD		wBitsPerSample;
+} PCMWAVEFORMAT;
+
 DWORD GetSoundFrames(int n)
 {
 	HANDLE hFile;
