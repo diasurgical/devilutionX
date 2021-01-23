@@ -264,10 +264,10 @@ BOOL SBmpLoadImage(const char *pszFileName, SDL_Color *pPalette, BYTE *pBuffer, 
 		*pdwBpp = pcxhdr.BitsPerPixel;
 
 	if (!pBuffer) {
-		SFileSetFilePointer(hFile, 0, 0, 2);
+		SFileSetFilePointer(hFile, 0, 0, DVL_FILE_END);
 		fileBuffer = NULL;
 	} else {
-		size = SFileGetFileSize(hFile, 0) - SFileSetFilePointer(hFile, 0, 0, 1);
+		size = SFileGetFileSize(hFile, 0) - SFileSetFilePointer(hFile, 0, 0, DVL_FILE_CURRENT);
 		fileBuffer = (BYTE *)malloc(size);
 	}
 

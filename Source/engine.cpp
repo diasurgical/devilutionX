@@ -809,8 +809,8 @@ BYTE *LoadFileInMem(const char *pszName, DWORD *pdwFileLen)
 	BYTE *buf;
 	int fileLen;
 
-	WOpenFile(pszName, &file, FALSE);
-	fileLen = WGetFileSize(file, NULL, pszName);
+	SFileOpenFile(pszName, &file);
+	fileLen = SFileGetFileSize(file, NULL);
 
 	if (pdwFileLen)
 		*pdwFileLen = fileLen;
@@ -820,8 +820,8 @@ BYTE *LoadFileInMem(const char *pszName, DWORD *pdwFileLen)
 
 	buf = (BYTE *)DiabloAllocPtr(fileLen);
 
-	WReadFile(file, buf, fileLen, pszName);
-	WCloseFile(file);
+	SFileReadFile(file, buf, fileLen, NULL, NULL);
+	SFileCloseFile(file);
 
 	return buf;
 }
@@ -842,15 +842,15 @@ DWORD LoadFileWithMem(const char *pszName, BYTE *p)
 		app_fatal("LoadFileWithMem(NULL):\n%s", pszName);
 	}
 
-	WOpenFile(pszName, &hsFile, FALSE);
+	SFileOpenFile(pszName, &hsFile);
 
-	dwFileLen = WGetFileSize(hsFile, NULL, pszName);
+	dwFileLen = SFileGetFileSize(hsFile, NULL);
 	if (dwFileLen == 0) {
 		app_fatal("Zero length SFILE:\n%s", pszName);
 	}
 
-	WReadFile(hsFile, p, dwFileLen, pszName);
-	WCloseFile(hsFile);
+	SFileReadFile(hsFile, p, dwFileLen, NULL, NULL);
+	SFileCloseFile(hsFile);
 
 	return dwFileLen;
 }

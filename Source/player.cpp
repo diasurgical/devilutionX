@@ -4,6 +4,7 @@
  * Implementation of player functionality, leveling, actions, creation, loading, etc.
  */
 #include "all.h"
+#include "../3rdParty/Storm/Source/storm.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -388,10 +389,10 @@ static DWORD GetPlrGFXSize(const char *szCel)
 					sprintf(Type, "%c%c%c", CharCharHF[c], *a, *w);
 					sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", ClassStrTblOld[c], Type, Type, szCel);
 				}
-				if (WOpenFile(pszName, &hsFile, TRUE)) {
+				if (SFileOpenFile(pszName, &hsFile)) {
 					/// ASSERT: assert(hsFile);
-					dwSize = WGetFileSize(hsFile, NULL, pszName);
-					WCloseFile(hsFile);
+					dwSize = SFileGetFileSize(hsFile, NULL);
+					SFileCloseFile(hsFile);
 					if (dwMaxSize <= dwSize) {
 						dwMaxSize = dwSize;
 					}

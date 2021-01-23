@@ -117,7 +117,7 @@ TSnd *sound_file_load(const char *path)
 	DWORD dwBytes;
 	int error;
 
-	WOpenFile(path, &file, false);
+	SFileOpenFile(path, &file);
 	pSnd = (TSnd *)DiabloAllocPtr(sizeof(TSnd));
 	memset(pSnd, 0, sizeof(TSnd));
 	pSnd->sound_path = path;
@@ -129,7 +129,7 @@ TSnd *sound_file_load(const char *path)
 
 	pSnd->DSB = new SoundSample();
 	error = pSnd->DSB->SetChunk(wave_file, dwBytes);
-	WCloseFile(file);
+	SFileCloseFile(file);
 	mem_free_dbg(wave_file);
 	if (error != 0) {
 		ErrSdl();
