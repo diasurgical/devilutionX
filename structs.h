@@ -371,7 +371,7 @@ typedef struct PlayerStruct {
 typedef struct TextDataStruct {
 	const char *txtstr;
 	int scrlltxt;
-	int txtspd;
+	int txtspd; /* calculated dynamically, 01/23/21 */
 	int sfxnr;
 } TextDataStruct;
 

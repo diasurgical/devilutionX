@@ -1410,4 +1410,24 @@ void effects_play_sound(const char *snd_file)
 	}
 }
 
+DWORD GetSoundFrames(int n)
+{
+	HANDLE hFile;
+	BYTE temp[64];
+
+	WOpenFile(sgSFX[n].pszName, &hFile, FALSE);
+	WReadFile(hFile, temp, sizeof(temp), sgSFX[n].pszName);
+	WCloseFile(hFile);
+
+	/* lazy hack: read the size of the wave file */
+	PCMWAVEFORMAT *pcm = (PCMWAVEFORMAT *)((BYTE *)&temp[0x14]);
+	DWORD size = *(DWORD *)((BYTE *)&temp[0x28]);
+	/* compute seconds based on size */
+	float seconds = (float)size;
+	seconds /= pcm->wf.nSamplesPerSec * pcm->wf.nChannels * pcm->wBitsPerSample / 8;
+
+	/* return number of frames this wave lasts */
+	return (DWORD)(seconds * 20);
+}
+
 DEVILUTION_END_NAMESPACE
