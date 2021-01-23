@@ -1099,13 +1099,13 @@ void TalkToTowner(int p, int t)
 					quests[Q_FARMER]._qlog = 1;
 					quests[Q_FARMER]._qmsg = TEXT_FARMER1;
 					break;
-				} else if (!plr[myplr]._pLvlVisited[9] && plr[myplr]._pLevel < 15) {
+				} else if (!plr[p]._pLvlVisited[9] && plr[p]._pLevel < 15) {
 					qt = 309;
-					if (plr[myplr]._pLvlVisited[2])
+					if (plr[p]._pLvlVisited[2])
 						qt = 281;
-					if (plr[myplr]._pLvlVisited[5])
+					if (plr[p]._pLvlVisited[5])
 						qt = 308;
-					if (plr[myplr]._pLvlVisited[7])
+					if (plr[p]._pLvlVisited[7])
 						qt = 310;
 				} else {
 					qt = TEXT_FARMER1;
@@ -1130,15 +1130,15 @@ void TalkToTowner(int p, int t)
 					quests[Q_FARMER]._qvar1 = 1;
 					quests[Q_FARMER]._qmsg = TEXT_FARMER1;
 					quests[Q_FARMER]._qlog = 1;
-				} else if (!plr[myplr]._pLvlVisited[9] && plr[myplr]._pLevel < 15) {
+				} else if (!plr[p]._pLvlVisited[9] && plr[p]._pLevel < 15) {
 					qt = TEXT_FARMER8;
-					if (plr[myplr]._pLvlVisited[2]) {
+					if (plr[p]._pLvlVisited[2]) {
 						qt = TEXT_FARMER5;
 					}
-					if (plr[myplr]._pLvlVisited[5]) {
+					if (plr[p]._pLvlVisited[5]) {
 						qt = TEXT_FARMER7;
 					}
-					if (plr[myplr]._pLvlVisited[7]) {
+					if (plr[p]._pLvlVisited[7]) {
 						qt = TEXT_FARMER9;
 					}
 				} else {
@@ -1219,7 +1219,7 @@ void TalkToTowner(int p, int t)
 					quests[Q_JERSEY]._qactive = 9;
 					break;
 				case 9:
-					if (!plr[myplr]._pLvlVisited[9] && plr[myplr]._pLevel < 15) {
+					if (!plr[p]._pLvlVisited[9] && plr[p]._pLevel < 15) {
 						switch (random_(0, 4) + 9) {
 						case 9:
 							qt = TEXT_JERSEY9;

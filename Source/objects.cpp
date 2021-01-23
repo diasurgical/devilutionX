@@ -3955,7 +3955,7 @@ void OperateShrine(int pnum, int i, int sType)
 		    plr[myplr]._pdir,
 		    MIS_FIREWALL,
 		    TARGET_PLAYERS,
-		    0,
+		    -1,
 		    2 * currlevel + 2,
 		    0);
 		break;
@@ -4006,7 +4006,7 @@ void OperateShrine(int pnum, int i, int sType)
 		    plr[myplr]._pdir,
 		    MIS_FLASH,
 		    TARGET_PLAYERS,
-		    0,
+		    -1,
 		    3 * currlevel + 2,
 		    0);
 		CheckStats(pnum);
@@ -4025,7 +4025,7 @@ void OperateShrine(int pnum, int i, int sType)
 		    plr[myplr]._pdir,
 		    MIS_TOWN,
 		    TARGET_PLAYERS,
-		    0,
+		    pnum,
 		    0,
 		    0);
 		break;
