@@ -185,39 +185,24 @@ BOOL CheckSpell(int id, int sn, char st, BOOL manaonly)
 	return result;
 }
 
-void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int caster, int spllvl)
+void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl)
 {
-	int i;
-	int dir; // missile direction
-
-	switch (caster) {
-	case TARGET_PLAYERS:
-		dir = monster[id]._mdir;
-		break;
-	case TARGET_MONSTERS:
-		// caster must be 0 already in this case, but oh well,
-		// it's needed to generate the right code
-		caster = TARGET_MONSTERS;
-		dir = plr[id]._pdir;
-
-		if (spl == SPL_FIREWALL || spl == SPL_LIGHTWALL) {
-			dir = plr[id]._pVar3;
-		}
-		break;
+	int dir = plr[id]._pdir;
+	if (spl == SPL_FIREWALL || spl == SPL_LIGHTWALL) {
+		dir = plr[id]._pVar3;
 	}
 
-	for (i = 0; spelldata[spl].sMissiles[i] != MIS_ARROW && i < 3; i++) {
-		AddMissile(sx, sy, dx, dy, dir, spelldata[spl].sMissiles[i], caster, id, 0, spllvl);
+	for (int i = 0; spelldata[spl].sMissiles[i] != 0 && i < 3; i++) {
+		AddMissile(sx, sy, dx, dy, dir, spelldata[spl].sMissiles[i], TARGET_MONSTERS, id, 0, spllvl);
 	}
 
-	if (spelldata[spl].sMissiles[0] == MIS_TOWN) {
+	if (spl == SPL_TOWN) {
 		UseMana(id, SPL_TOWN);
-	}
-	if (spelldata[spl].sMissiles[0] == MIS_CBOLT) {
+	} else if (spl == SPL_CBOLT) {
 		UseMana(id, SPL_CBOLT);
 
-		for (i = (spllvl >> 1) + 3; i > 0; i--) {
-			AddMissile(sx, sy, dx, dy, dir, MIS_CBOLT, caster, id, 0, spllvl);
+		for (int i = (spllvl >> 1) + 3; i > 0; i--) {
+			AddMissile(sx, sy, dx, dy, dir, MIS_CBOLT, TARGET_MONSTERS, id, 0, spllvl);
 		}
 	}
 }

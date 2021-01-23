@@ -3244,7 +3244,6 @@ BOOL PM_DoSpell(int pnum)
 		    plr[pnum]._py,
 		    plr[pnum]._pVar1,
 		    plr[pnum]._pVar2,
-		    0,
 		    plr[pnum]._pVar4);
 
 		if (plr[pnum]._pSplFrom == 0) {
