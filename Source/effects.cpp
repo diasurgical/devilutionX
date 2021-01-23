@@ -1410,19 +1410,6 @@ void effects_play_sound(const char *snd_file)
 	}
 }
 
-typedef struct waveformat_tag {
-	WORD	wFormatTag;
-	WORD	nChannels;
-	DWORD	nSamplesPerSec;
-	DWORD	nAvgBytesPerSec;
-	WORD	nBlockAlign;
-} WAVEFORMAT;
-
-typedef struct pcmwaveformat_tag {
-	WAVEFORMAT	wf;
-	WORD		wBitsPerSample;
-} PCMWAVEFORMAT;
-
 DWORD GetSoundFrames(int n)
 {
 	HANDLE hFile;
@@ -1433,11 +1420,11 @@ DWORD GetSoundFrames(int n)
 	WCloseFile(hFile);
 
 	/* lazy hack: read the size of the wave file */
-	PCMWAVEFORMAT *pcm = (PCMWAVEFORMAT *)((BYTE *)&temp[0x14]);
+	WAVEFORMATEX *pcm = (WAVEFORMATEX *)((BYTE *)&temp[0x14]);
 	DWORD size = *(DWORD *)((BYTE *)&temp[0x28]);
 	/* compute seconds based on size */
 	float seconds = (float)size;
-	seconds /= pcm->wf.nSamplesPerSec * pcm->wf.nChannels * pcm->wBitsPerSample / 8;
+	seconds /= pcm->nSamplesPerSec * pcm->nChannels * pcm->wBitsPerSample / 8;
 
 	/* return number of frames this wave lasts */
 	return (DWORD)(seconds * 20);

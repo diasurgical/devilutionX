@@ -116,6 +116,7 @@ void CalcTextSpeed(int n)
 	DWORD SfxFrames, TextHeight;
 
 	SfxFrames = GetSoundFrames(n);
+	assert(SfxFrames != 0);
 
 	TextHeight = GetWrap(qtextptr);
 	TextHeight *= MQTEXTNL;
