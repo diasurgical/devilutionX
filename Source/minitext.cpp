@@ -132,15 +132,6 @@ static int CalcTextSpeed(int nSFX)
 }
 
 /**
- * @brief Draw the quest dialog window decoration and background
- */
-static void DrawQTextBack()
-{
-	CelDraw(PANEL_X + 24, SCREEN_Y + 327 + UI_OFFSET_Y, pTextBoxCels, 1, 591);
-	trans_rect(PANEL_LEFT + 27, UI_OFFSET_Y + 28, 585, 297);
-}
-
-/**
  * @brief Print a character
  * @param sx Back buffer coordinate
  * @param sy Back buffer coordinate
@@ -255,6 +246,15 @@ void InitQTextMsg(int m)
 		sgLastScroll = SDL_GetTicks();
 	}
 	PlaySFX(alltext[m].sfxnr);
+}
+
+/**
+ * @brief Draw the quest dialog window decoration and background
+ */
+void DrawQTextBack()
+{
+	CelDraw(PANEL_X + 24, SCREEN_Y + 327 + UI_OFFSET_Y, pTextBoxCels, 1, 591);
+	trans_rect(PANEL_LEFT + 27, UI_OFFSET_Y + 28, 585, 297);
 }
 
 /**
