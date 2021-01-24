@@ -173,8 +173,6 @@ void snd_init(HWND hWnd)
 
 void sound_cleanup()
 {
-	SFileDdaDestroy();
-
 	if (gbSndInited) {
 		gbSndInited = false;
 		snd_set_volume("Sound Volume", sglSoundVolume);
