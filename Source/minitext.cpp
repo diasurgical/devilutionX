@@ -10,21 +10,23 @@ DEVILUTION_BEGIN_NAMESPACE
 /** Specify if the quest dialog window is being shown */
 bool qtextflag;
 
+namespace {
+
 /** Current y position of text in px */
-static int qtexty;
+int qtexty;
 /** Pointer to the current text being displayed */
-static const char *qtextptr;
+const char *qtextptr;
 /** Vertical speed of the scrolling text in ms/px */
-static int qtextSpd;
+int qtextSpd;
 /** Time of last rendering of the text */
-static Uint32 sgLastScroll;
+Uint32 sgLastScroll;
 /** Graphics for the medium size font */
-static Uint8 *pMedTextCels;
+Uint8 *pMedTextCels;
 /** Graphics for the window border */
-static Uint8 *pTextBoxCels;
+Uint8 *pTextBoxCels;
 
 /** Maps from font index to medtexts.cel frame number. */
-static const Uint8 mfontframe[128] = {
+const Uint8 mfontframe[128] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -44,7 +46,7 @@ static const Uint8 mfontframe[128] = {
  * character width may be distinct from the frame width, which is 22 for every
  * medtexts.cel frame.
  */
-static const Uint8 mfontkern[56] = {
+const Uint8 mfontkern[56] = {
 	5, 15, 10, 13, 14, 10, 9, 13, 11, 5,
 	5, 11, 10, 16, 13, 16, 10, 15, 12, 10,
 	14, 17, 17, 22, 17, 16, 11, 5, 11, 11,
@@ -54,7 +56,7 @@ static const Uint8 mfontkern[56] = {
 };
 
 /** Pixels for a line of text and the empty space under it. */
-static const int lineHeight = 38;
+const int lineHeight = 38;
 
 /**
  * @brief Build a single line of text from the given text stream
@@ -62,7 +64,7 @@ static const int lineHeight = 38;
  * @param line The buffer to insert the line in to
  * @return Indicate that the end of the text was reached
  */
-static bool BuildLine(const char *text, char line[128])
+bool BuildLine(const char *text, char line[128])
 {
 	int lineWidth = 0;
 	int l = 0;
@@ -98,7 +100,7 @@ static bool BuildLine(const char *text, char line[128])
  * @brief Calculate the number of line required by the given text
  * @return Number of lines
  */
-static int GetLinesInText(const char *text)
+int GetLinesInText(const char *text)
 {
 	char line[128];
 	int lines = 0;
@@ -118,7 +120,7 @@ static int GetLinesInText(const char *text)
  * @param nSFX The index of the sound in the sgSFX table
  * @return ms/px
  */
-static int CalcTextSpeed(int nSFX)
+int CalcTextSpeed(int nSFX)
 {
 	Uint32 SfxFrames, TextHeight;
 
@@ -138,7 +140,7 @@ static int CalcTextSpeed(int nSFX)
  * @param pCelBuff Cel data
  * @param nCel CEL frame number
  */
-static void PrintQTextChr(int sx, int sy, Uint8 *pCelBuff, int nCel)
+void PrintQTextChr(int sx, int sy, Uint8 *pCelBuff, int nCel)
 {
 	Uint8 *pStart, *pEnd;
 
@@ -157,7 +159,7 @@ static void PrintQTextChr(int sx, int sy, Uint8 *pCelBuff, int nCel)
  * @brief Draw the current text in the quest dialog window
  * @return the start of the text currently being rendered
  */
-static void ScrollQTextContent(const char *pnl)
+void ScrollQTextContent(const char *pnl)
 {
 	for (Uint32 currTime = SDL_GetTicks(); sgLastScroll + qtextSpd < currTime; sgLastScroll += qtextSpd) {
 		qtexty--;
@@ -175,7 +177,7 @@ static void ScrollQTextContent(const char *pnl)
 /**
  * @brief Draw the current text in the quest dialog window
  */
-static void DrawQTextContent()
+void DrawQTextContent()
 {
 	const char *text, *pnl;
 	char line[128];
@@ -211,6 +213,8 @@ static void DrawQTextContent()
 
 	ScrollQTextContent(pnl);
 }
+
+} // namespace
 
 /**
  * @brief Free the resouces used by the quest dialog window
