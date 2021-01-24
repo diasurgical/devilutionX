@@ -11,8 +11,7 @@ int qtexty;
 const char *qtextptr;
 int qtextSpd;
 BOOLEAN qtextflag;
-int scrolltexty;
-int sgLastScroll;
+DWORD sgLastScroll;
 BYTE *pMedTextCels;
 BYTE *pTextBoxCels;
 
@@ -48,11 +47,8 @@ const BYTE mfontkern[56] = {
 
 /* data */
 
-/**
- * Text scroll speeds. Positive numbers will delay scrolling 1 out of n frames,
- * negative numbers will scroll 1+(-n) pixels.
- */
-int qscroll_spd_tbl[9] = { 2, 4, 6, 8, 0, -1, -2, -3, -4 };
+/** Pixels for a line of text and the empty space under it. */
+#define MQTEXTNL 38
 
 void FreeQuestText()
 {
@@ -67,6 +63,66 @@ void InitQuestText()
 	qtextflag = FALSE;
 }
 
+static int GetLinesInText(const char *p)
+{
+	char tempstr[128];
+	int l, i, w;
+	BOOL doneflag;
+	BYTE c;
+
+	int lines = 0;
+
+	doneflag = FALSE;
+	while (!doneflag) {
+		w = 0;
+		const char *s = p;
+		l = 0;
+		while (*s != '\n' && *s != '|' && w < 543) {
+			c = gbFontTransTbl[(BYTE)*s];
+			s++;
+			if (c != '\0') {
+				tempstr[l] = c;
+				w += mfontkern[mfontframe[c]] + 2;
+			} else {
+				l--;
+			}
+			l++;
+		}
+		tempstr[l] = '\0';
+		if (*s == '|') {
+			tempstr[l] = '\0';
+			doneflag = TRUE;
+		} else if (*s != '\n') {
+			while (tempstr[l] != ' ' && l > 0) {
+				tempstr[l] = '\0';
+				l--;
+			}
+		}
+		for (i = 0; tempstr[i]; i++) {
+			p++;
+			if (*p == '\n') {
+				p++;
+			}
+		}
+		lines++;
+	}
+
+	return lines;
+}
+
+static int CalcTextSpeed(int nSFX)
+{
+	DWORD SfxFrames, TextHeight;
+
+	SfxFrames = GetSFXLength(nSFX);
+	assert(SfxFrames != 0);
+
+	TextHeight = MQTEXTNL * GetLinesInText(qtextptr);
+	TextHeight += MQTEXTNL * 5; // adjust so when speaker is done two line are left
+
+	return SfxFrames / TextHeight;
+}
+
 void InitQTextMsg(int m)
 {
 	if (alltext[m].scrlltxt) {
@@ -74,12 +130,8 @@ void InitQTextMsg(int m)
 		qtextptr = alltext[m].txtstr;
 		qtextflag = TRUE;
 		qtexty = 340 + SCREEN_Y + UI_OFFSET_Y;
-		qtextSpd = qscroll_spd_tbl[alltext[m].txtspd - 1];
-		if (qtextSpd <= 0)
-			scrolltexty = 50 / -(qtextSpd - 1);
-		else
-			scrolltexty = ((qtextSpd + 1) * 50) / qtextSpd;
-		qtextSpd = SDL_GetTicks();
+		qtextSpd = CalcTextSpeed(alltext[m].sfxnr);
+		sgLastScroll = SDL_GetTicks();
 	}
 	PlaySFX(alltext[m].sfxnr);
 }
@@ -162,13 +214,13 @@ void DrawQText()
 			pnl = p;
 		}
 		tx = 48 + PANEL_X;
-		ty += 38;
+		ty += MQTEXTNL;
 		if (ty > 341 + SCREEN_Y + UI_OFFSET_Y) {
 			doneflag = TRUE;
 		}
 	}
 
-	for (currTime = SDL_GetTicks(); qtextSpd + scrolltexty < currTime; qtextSpd += scrolltexty) {
+	for (currTime = SDL_GetTicks(); sgLastScroll + qtextSpd < currTime; sgLastScroll += qtextSpd) {
 		qtexty--;
 		if (qtexty <= 49 + SCREEN_Y + UI_OFFSET_Y) {
 			qtexty += 38;
