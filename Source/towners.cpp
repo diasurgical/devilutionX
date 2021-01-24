@@ -735,7 +735,6 @@ void TownerTalk(int first, int t)
 void TalkToTowner(int p, int t)
 {
 	int i, dx, dy, rv1, rv2, rv3;
-	ItemStruct *Item;
 	int qt, t2;
 
 	dx = abs(plr[p]._px - towner[t]._tx);
@@ -950,14 +949,15 @@ void TalkToTowner(int p, int t)
 					towner[t]._tMsgSaid = TRUE;
 				}
 			} else {
-				Item = PlrHasItem(p, IDI_SPECELIX, &i);
-				if (Item != NULL) {
+				if (PlrHasItem(p, IDI_SPECELIX, &i) != NULL) {
 					towner[t]._tbtcnt = 150;
 					towner[t]._tVar1 = p;
 					InitQTextMsg(TEXT_MUSH12);
 					quests[Q_MUSHROOM]._qactive = QUEST_DONE;
 					towner[t]._tMsgSaid = TRUE;
-					AllItemsList[Item->IDidx].iUsable = TRUE;
+					// replace elixir with usable version
+					SetPlrHandItem(&plr[p].InvList[i], IDI_SPECELIX2);
+					CalcPlrInv(p, TRUE);
 				} else if (PlrHasItem(p, IDI_BRAIN, &i) != NULL && quests[Q_MUSHROOM]._qvar2 != TEXT_MUSH11) {
 					towner[t]._tbtcnt = 150;
 					towner[t]._tVar1 = p;

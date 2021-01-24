@@ -12,7 +12,7 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
-extern ItemDataStruct AllItemsList[];
+extern const ItemDataStruct AllItemsList[];
 extern const PLStruct PL_Prefix[];
 extern const PLStruct PL_Suffix[];
 extern const UItemStruct UniqueItemList[];

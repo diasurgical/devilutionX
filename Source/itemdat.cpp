@@ -8,7 +8,7 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 /** Contains the data related to each item ID. */
-ItemDataStruct AllItemsList[] = {
+const ItemDataStruct AllItemsList[] = {
 	// clang-format off
 //_item_indexes        iRnd,          iClass,        iLoc,             iCurs,                             itype,        iItemId,            iName,                         iSName, iMinMLvl, iDurability, iMinDam, iMaxDam, iMinAC, iMaxAC, iMinStr, iMinMag, iMinDex, iFlags,            iMiscId,         iSpell,          iUsable, iValue, iMaxValue
 /*IDI_GOLD       */ {  IDROP_REGULAR, ICLASS_GOLD,   ILOC_UNEQUIPABLE, ICURS_GOLD,                        ITYPE_GOLD,   UITYPE_NONE,        "Gold",                        NULL,          1,           0,       0,       0,      0,      0,       0,       0,       0, ISPL_NONE,         IMISC_NONE,      SPL_NULL,        TRUE,         0,         0 },
@@ -32,6 +32,7 @@ ItemDataStruct AllItemsList[] = {
 /*IDI_BRAIN      */ {  IDROP_NEVER,   ICLASS_QUEST,  ILOC_UNEQUIPABLE, ICURS_BRAIN,                       ITYPE_MISC,   UITYPE_NONE,        "Brain",                       NULL,          0,           0,       0,       0,      0,      0,       0,       0,       0, ISPL_NONE,         IMISC_NONE,      SPL_NULL,        FALSE,        0,         0 },
 /*IDI_FUNGALTM   */ {  IDROP_NEVER,   ICLASS_QUEST,  ILOC_UNEQUIPABLE, ICURS_FUNGAL_TOME,                 ITYPE_MISC,   UITYPE_NONE,        "Fungal Tome",                 NULL,          0,           0,       0,       0,      0,      0,       0,       0,       0, ISPL_NONE,         IMISC_NONE,      SPL_NULL,        FALSE,        0,         0 },
 /*IDI_SPECELIX   */ {  IDROP_NEVER,   ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SPECTRAL_ELIXIR,             ITYPE_MISC,   UITYPE_ELIXIR,      "Spectral Elixir",             NULL,         15,           0,       0,       0,      0,      0,       0,       0,       0, ISPL_NONE,         IMISC_SPECELIX,  SPL_NULL,        FALSE,        0,         0 },
+/*IDI_SPECELIX2  */ {  IDROP_NEVER,   ICLASS_MISC,   ILOC_UNEQUIPABLE, ICURS_SPECTRAL_ELIXIR,             ITYPE_MISC,   UITYPE_ELIXIR,      "Spectral Elixir",             NULL,         15,           0,       0,       0,      0,      0,       0,       0,       0, ISPL_NONE,         IMISC_SPECELIX,  SPL_NULL,        TRUE,         0,         0 },
 /*IDI_BLDSTONE   */ {  IDROP_NEVER,   ICLASS_QUEST,  ILOC_UNEQUIPABLE, ICURS_BLOOD_STONE,                 ITYPE_MISC,   UITYPE_NONE,        "Blood Stone",                 NULL,          0,           0,       0,       0,      0,      0,       0,       0,       0, ISPL_NONE,         IMISC_NONE,      SPL_NULL,        FALSE,        0,         0 },
 /*IDI_MAPOFDOOM  */ {  IDROP_NEVER,   ICLASS_QUEST,  ILOC_UNEQUIPABLE, ICURS_MAP_OF_THE_STARS,            ITYPE_MISC,   UITYPE_MAPOFDOOM,   "Cathedral Map",               NULL,          0,           0,       0,       0,      0,      0,       0,       0,       0, ISPL_NONE,         IMISC_MAPOFDOOM, SPL_NULL,        TRUE,         0,         0 },
 /*IDI_EAR        */ {  IDROP_NEVER,   ICLASS_QUEST,  ILOC_UNEQUIPABLE, ICURS_EAR_SORCEROR,                ITYPE_MISC,   UITYPE_NONE,        "Heart",                       NULL,          0,           0,       0,       0,      0,      0,       0,       0,       0, ISPL_NONE,         IMISC_EAR,       SPL_NULL,        FALSE,        0,         0 },
