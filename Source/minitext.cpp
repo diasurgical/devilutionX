@@ -10,13 +10,13 @@ DEVILUTION_BEGIN_NAMESPACE
 int qtexty;
 const char *qtextptr;
 int qtextSpd;
-BOOLEAN qtextflag;
-DWORD sgLastScroll;
-BYTE *pMedTextCels;
-BYTE *pTextBoxCels;
+bool qtextflag;
+Uint32 sgLastScroll;
+Uint8 *pMedTextCels;
+Uint8 *pTextBoxCels;
 
 /** Maps from font index to medtexts.cel frame number. */
-const BYTE mfontframe[128] = {
+const Uint8 mfontframe[128] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -36,7 +36,7 @@ const BYTE mfontframe[128] = {
  * character width may be distinct from the frame width, which is 22 for every
  * medtexts.cel frame.
  */
-const BYTE mfontkern[56] = {
+const Uint8 mfontkern[56] = {
 	5, 15, 10, 13, 14, 10, 9, 13, 11, 5,
 	5, 11, 10, 16, 13, 16, 10, 15, 12, 10,
 	14, 17, 17, 22, 17, 16, 11, 5, 11, 11,
@@ -60,50 +60,50 @@ void InitQuestText()
 {
 	pMedTextCels = LoadFileInMem("Data\\MedTextS.CEL", NULL);
 	pTextBoxCels = LoadFileInMem("Data\\TextBox.CEL", NULL);
-	qtextflag = FALSE;
+	qtextflag = false;
 }
 
-static int GetLinesInText(const char *p)
+static bool BuildLine(const char *text, char line[128])
 {
-	char tempstr[128];
-	int l, i, w;
-	BOOL doneflag;
-	BYTE c;
+	int lineWidth = 0;
+	int l = 0;
 
+	while (*text != '\n' && *text != '|' && lineWidth < 543) {
+		Uint8 c = gbFontTransTbl[(Uint8)*text];
+		text++;
+		if (c != '\0') {
+			line[l] = c;
+			lineWidth += mfontkern[mfontframe[c]] + 2;
+		} else {
+			l--;
+		}
+		l++;
+	}
+	line[l] = '\0';
+	if (*text == '|') {
+		line[l] = '\0';
+		return true;
+	}
+
+	if (*text != '\n') {
+		while (line[l] != ' ' && l > 0) {
+			line[l] = '\0';
+			l--;
+		}
+	}
+
+	return false;
+}
+
+static int GetLinesInText(const char *text)
+{
+	char line[128];
 	int lines = 0;
 
-	doneflag = FALSE;
+	bool doneflag = false;
 	while (!doneflag) {
-		w = 0;
-		const char *s = p;
-		l = 0;
-		while (*s != '\n' && *s != '|' && w < 543) {
-			c = gbFontTransTbl[(BYTE)*s];
-			s++;
-			if (c != '\0') {
-				tempstr[l] = c;
-				w += mfontkern[mfontframe[c]] + 2;
-			} else {
-				l--;
-			}
-			l++;
-		}
-		tempstr[l] = '\0';
-		if (*s == '|') {
-			tempstr[l] = '\0';
-			doneflag = TRUE;
-		} else if (*s != '\n') {
-			while (tempstr[l] != ' ' && l > 0) {
-				tempstr[l] = '\0';
-				l--;
-			}
-		}
-		for (i = 0; tempstr[i]; i++) {
-			p++;
-			if (*p == '\n') {
-				p++;
-			}
-		}
+		doneflag = BuildLine(text, line);
+		text += strlen(line);
 		lines++;
 	}
 
@@ -112,7 +112,7 @@ static int GetLinesInText(const char *p)
 
 static int CalcTextSpeed(int nSFX)
 {
-	DWORD SfxFrames, TextHeight;
+	Uint32 SfxFrames, TextHeight;
 
 	SfxFrames = GetSFXLength(nSFX);
 	assert(SfxFrames != 0);
@@ -142,11 +142,11 @@ void DrawQTextBack()
 	trans_rect(PANEL_LEFT + 27, UI_OFFSET_Y + 28, 585, 297);
 }
 
-void PrintQTextChr(int sx, int sy, BYTE *pCelBuff, int nCel)
+void PrintQTextChr(int sx, int sy, Uint8 *pCelBuff, int nCel)
 {
-	BYTE *pStart, *pEnd;
+	Uint8 *pStart, *pEnd;
 
-	/// ASSERT: assert(gpBuffer);
+	assert(gpBuffer);
 	pStart = gpBufStart;
 	gpBufStart = &gpBuffer[BUFFER_WIDTH * (49 + SCREEN_Y + UI_OFFSET_Y)];
 	pEnd = gpBufEnd;
@@ -159,68 +159,41 @@ void PrintQTextChr(int sx, int sy, BYTE *pCelBuff, int nCel)
 
 void DrawQText()
 {
-	int i, l, w, tx, ty;
-	BYTE c;
-	const char *p, *pnl, *s;
-	char tempstr[128];
-	BOOL doneflag;
-	DWORD currTime;
+	const char *text, *pnl;
+	char line[128];
 
 	DrawQTextBack();
 
-	p = qtextptr;
-	pnl = NULL;
-	tx = 48 + PANEL_X;
-	ty = qtexty;
+	text = qtextptr;
+	pnl = nullptr;
+	int tx = 48 + PANEL_X;
+	int ty = qtexty;
 
-	doneflag = FALSE;
+	bool doneflag = false;
 	while (!doneflag) {
-		w = 0;
-		s = p;
-		l = 0;
-		while (*s != '\n' && *s != '|' && w < 543) {
-			c = gbFontTransTbl[(BYTE)*s];
-			s++;
-			if (c != '\0') {
-				tempstr[l] = c;
-				w += mfontkern[mfontframe[c]] + 2;
-			} else {
-				l--;
-			}
-			l++;
-		}
-		tempstr[l] = '\0';
-		if (*s == '|') {
-			tempstr[l] = '\0';
-			doneflag = TRUE;
-		} else if (*s != '\n') {
-			while (tempstr[l] != ' ' && l > 0) {
-				tempstr[l] = '\0';
-				l--;
-			}
-		}
-		for (i = 0; tempstr[i]; i++) {
-			p++;
-			c = mfontframe[gbFontTransTbl[(BYTE)tempstr[i]]];
-			if (*p == '\n') {
-				p++;
+		doneflag = BuildLine(text, line);
+		for (int i = 0; line[i]; i++) {
+			text++;
+			Uint8 c = mfontframe[gbFontTransTbl[(Uint8)line[i]]];
+			if (*text == '\n') {
+				text++;
 			}
 			if (c != 0) {
 				PrintQTextChr(tx, ty, pMedTextCels, c);
 			}
 			tx += mfontkern[c] + 2;
 		}
-		if (pnl == NULL) {
-			pnl = p;
+		if (pnl == nullptr) {
+			pnl = text;
 		}
 		tx = 48 + PANEL_X;
 		ty += MQTEXTNL;
 		if (ty > 341 + SCREEN_Y + UI_OFFSET_Y) {
-			doneflag = TRUE;
+			doneflag = true;
 		}
 	}
 
-	for (currTime = SDL_GetTicks(); sgLastScroll + qtextSpd < currTime; sgLastScroll += qtextSpd) {
+	for (Uint32 currTime = SDL_GetTicks(); sgLastScroll + qtextSpd < currTime; sgLastScroll += qtextSpd) {
 		qtexty--;
 		if (qtexty <= 49 + SCREEN_Y + UI_OFFSET_Y) {
 			qtexty += 38;
