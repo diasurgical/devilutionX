@@ -8,7 +8,7 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 int qtopline;
-BOOL questlog;
+bool questlog;
 BYTE *pQLogCel;
 /** Contains the quests of the current game. */
 QuestStruct quests[MAXQUESTS];

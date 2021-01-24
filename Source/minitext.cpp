@@ -7,16 +7,24 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-int qtexty;
-const char *qtextptr;
-int qtextSpd;
+/** Specify if the quest dialog window is being shown */
 bool qtextflag;
-Uint32 sgLastScroll;
-Uint8 *pMedTextCels;
-Uint8 *pTextBoxCels;
+
+/** Current y position of text in px */
+static int qtexty;
+/** Pointer to the current text being displayed */
+static const char *qtextptr;
+/** Vertical speed of the scrolling text in ms/px */
+static int qtextSpd;
+/** Time of last rendering of the text */
+static Uint32 sgLastScroll;
+/** Graphics for the medium size font */
+static Uint8 *pMedTextCels;
+/** Graphics for the window border */
+static Uint8 *pTextBoxCels;
 
 /** Maps from font index to medtexts.cel frame number. */
-const Uint8 mfontframe[128] = {
+static const Uint8 mfontframe[128] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -36,7 +44,7 @@ const Uint8 mfontframe[128] = {
  * character width may be distinct from the frame width, which is 22 for every
  * medtexts.cel frame.
  */
-const Uint8 mfontkern[56] = {
+static const Uint8 mfontkern[56] = {
 	5, 15, 10, 13, 14, 10, 9, 13, 11, 5,
 	5, 11, 10, 16, 13, 16, 10, 15, 12, 10,
 	14, 17, 17, 22, 17, 16, 11, 5, 11, 11,
@@ -45,24 +53,15 @@ const Uint8 mfontkern[56] = {
 	5, 5, 5, 5, 11, 12
 };
 
-/* data */
-
 /** Pixels for a line of text and the empty space under it. */
-#define MQTEXTNL 38
+static const int lineHeight = 38;
 
-void FreeQuestText()
-{
-	MemFreeDbg(pMedTextCels);
-	MemFreeDbg(pTextBoxCels);
-}
-
-void InitQuestText()
-{
-	pMedTextCels = LoadFileInMem("Data\\MedTextS.CEL", NULL);
-	pTextBoxCels = LoadFileInMem("Data\\TextBox.CEL", NULL);
-	qtextflag = false;
-}
-
+/**
+ * @brief Build a single line of text from the given text stream
+ * @param text The original text
+ * @param line The buffer to insert the line in to
+ * @return Indicate that the end of the text was reached
+ */
 static bool BuildLine(const char *text, char line[128])
 {
 	int lineWidth = 0;
@@ -95,6 +94,10 @@ static bool BuildLine(const char *text, char line[128])
 	return false;
 }
 
+/**
+ * @brief Calculate the number of line required by the given text
+ * @return Number of lines
+ */
 static int GetLinesInText(const char *text)
 {
 	char line[128];
@@ -110,6 +113,11 @@ static int GetLinesInText(const char *text)
 	return lines;
 }
 
+/**
+ * @brief Calculate the speed the current text should scroll to match the given audio
+ * @param nSFX The index of the sound in the sgSFX table
+ * @return ms/px
+ */
 static int CalcTextSpeed(int nSFX)
 {
 	Uint32 SfxFrames, TextHeight;
@@ -117,32 +125,29 @@ static int CalcTextSpeed(int nSFX)
 	SfxFrames = GetSFXLength(nSFX);
 	assert(SfxFrames != 0);
 
-	TextHeight = MQTEXTNL * GetLinesInText(qtextptr);
-	TextHeight += MQTEXTNL * 5; // adjust so when speaker is done two line are left
+	TextHeight = lineHeight * GetLinesInText(qtextptr);
+	TextHeight += lineHeight * 5; // adjust so when speaker is done two line are left
 
 	return SfxFrames / TextHeight;
 }
 
-void InitQTextMsg(int m)
-{
-	if (alltext[m].scrlltxt) {
-		questlog = FALSE;
-		qtextptr = alltext[m].txtstr;
-		qtextflag = TRUE;
-		qtexty = 340 + SCREEN_Y + UI_OFFSET_Y;
-		qtextSpd = CalcTextSpeed(alltext[m].sfxnr);
-		sgLastScroll = SDL_GetTicks();
-	}
-	PlaySFX(alltext[m].sfxnr);
-}
-
-void DrawQTextBack()
+/**
+ * @brief Draw the quest dialog window decoration and background
+ */
+static void DrawQTextBack()
 {
 	CelDraw(PANEL_X + 24, SCREEN_Y + 327 + UI_OFFSET_Y, pTextBoxCels, 1, 591);
 	trans_rect(PANEL_LEFT + 27, UI_OFFSET_Y + 28, 585, 297);
 }
 
-void PrintQTextChr(int sx, int sy, Uint8 *pCelBuff, int nCel)
+/**
+ * @brief Print a character
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
+ * @param pCelBuff Cel data
+ * @param nCel CEL frame number
+ */
+static void PrintQTextChr(int sx, int sy, Uint8 *pCelBuff, int nCel)
 {
 	Uint8 *pStart, *pEnd;
 
@@ -157,12 +162,32 @@ void PrintQTextChr(int sx, int sy, Uint8 *pCelBuff, int nCel)
 	gpBufEnd = pEnd;
 }
 
-void DrawQText()
+/**
+ * @brief Draw the current text in the quest dialog window
+ * @return the start of the text currently being rendered
+ */
+static void ScrollQTextContent(const char *pnl)
+{
+	for (Uint32 currTime = SDL_GetTicks(); sgLastScroll + qtextSpd < currTime; sgLastScroll += qtextSpd) {
+		qtexty--;
+		if (qtexty <= 49 + SCREEN_Y + UI_OFFSET_Y) {
+			qtexty += 38;
+			qtextptr = pnl;
+			if (*pnl == '|') {
+				qtextflag = false;
+			}
+			break;
+		}
+	}
+}
+
+/**
+ * @brief Draw the current text in the quest dialog window
+ */
+static void DrawQTextContent()
 {
 	const char *text, *pnl;
 	char line[128];
-
-	DrawQTextBack();
 
 	text = qtextptr;
 	pnl = nullptr;
@@ -187,23 +212,58 @@ void DrawQText()
 			pnl = text;
 		}
 		tx = 48 + PANEL_X;
-		ty += MQTEXTNL;
+		ty += lineHeight;
 		if (ty > 341 + SCREEN_Y + UI_OFFSET_Y) {
 			doneflag = true;
 		}
 	}
 
-	for (Uint32 currTime = SDL_GetTicks(); sgLastScroll + qtextSpd < currTime; sgLastScroll += qtextSpd) {
-		qtexty--;
-		if (qtexty <= 49 + SCREEN_Y + UI_OFFSET_Y) {
-			qtexty += 38;
-			qtextptr = pnl;
-			if (*pnl == '|') {
-				qtextflag = FALSE;
-			}
-			break;
-		}
+	ScrollQTextContent(pnl);
+}
+
+/**
+ * @brief Free the resouces used by the quest dialog window
+ */
+void FreeQuestText()
+{
+	MemFreeDbg(pMedTextCels);
+	MemFreeDbg(pTextBoxCels);
+}
+
+/**
+ * @brief Load the resouces used by the quest dialog window, and initialize it's state
+ */
+void InitQuestText()
+{
+	pMedTextCels = LoadFileInMem("Data\\MedTextS.CEL", nullptr);
+	pTextBoxCels = LoadFileInMem("Data\\TextBox.CEL", nullptr);
+	qtextflag = false;
+}
+
+/**
+ * @brief Start the given naration
+ * @param m Index of narration from the alltext table
+ */
+void InitQTextMsg(int m)
+{
+	if (alltext[m].scrlltxt) {
+		questlog = false;
+		qtextptr = alltext[m].txtstr;
+		qtextflag = true;
+		qtexty = 340 + SCREEN_Y + UI_OFFSET_Y;
+		qtextSpd = CalcTextSpeed(alltext[m].sfxnr);
+		sgLastScroll = SDL_GetTicks();
 	}
+	PlaySFX(alltext[m].sfxnr);
+}
+
+/**
+ * @brief Draw the quest dialog window decoration and background
+ */
+void DrawQText()
+{
+	DrawQTextBack();
+	DrawQTextContent();
 }
 
 DEVILUTION_END_NAMESPACE

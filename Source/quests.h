@@ -13,7 +13,7 @@ extern "C" {
 #endif
 
 extern bool allquests;
-extern BOOL questlog;
+extern bool questlog;
 extern BYTE *pQLogCel;
 extern QuestStruct quests[MAXQUESTS];
 extern int ReturnLvlX;
