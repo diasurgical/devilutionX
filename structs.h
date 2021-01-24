@@ -475,16 +475,6 @@ typedef struct TSFX {
 	TSnd *pSnd;
 } TSFX;
 
-typedef struct tWAVEFORMATEX {
-	WORD wFormatTag;
-	WORD nChannels;
-	DWORD nSamplesPerSec;
-	DWORD nAvgBytesPerSec;
-	WORD nBlockAlign;
-	WORD wBitsPerSample;
-	WORD cbSize;
-} WAVEFORMATEX;
-
 //////////////////////////////////////////////////
 // monster
 //////////////////////////////////////////////////
