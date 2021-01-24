@@ -1252,9 +1252,7 @@ void CalcPlrInv(int p, BOOL Loadgfx)
 
 void SetPlrHandItem(ItemStruct *h, int idata)
 {
-	ItemDataStruct *pAllItem;
-
-	pAllItem = &AllItemsList[idata];
+	const ItemDataStruct *pAllItem = &AllItemsList[idata];
 
 	// zero-initialize struct
 	memset(h, 0, sizeof(*h));
