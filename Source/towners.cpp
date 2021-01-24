@@ -957,6 +957,7 @@ void TalkToTowner(int p, int t)
 					towner[t]._tMsgSaid = TRUE;
 					// replace elixir with usable version
 					SetPlrHandItem(&plr[p].InvList[i], IDI_SPECELIX2);
+					GetPlrHandSeed(&plr[p].InvList[i]);
 					CalcPlrInv(p, TRUE);
 				} else if (PlrHasItem(p, IDI_BRAIN, &i) != NULL && quests[Q_MUSHROOM]._qvar2 != TEXT_MUSH11) {
 					towner[t]._tbtcnt = 150;
