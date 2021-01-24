@@ -607,11 +607,7 @@ BOOL MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, BOOLE
 			hper += plr[pnum]._pLevel;
 			hper -= monster[m].mArmorClass;
 			hper -= (dist * dist) >> 1;
-#ifdef HELLFIRE
-			hper -= plr[pnum]._pIEnAc;
-#else
 			hper += plr[pnum]._pIEnAc;
-#endif
 			hper += 50;
 			if (plr[pnum]._pClass == PC_ROGUE)
 				hper += 20;
@@ -659,11 +655,7 @@ BOOL MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, BOOLE
 			dam >>= 2;
 		if (pnum == myplr)
 			monster[m]._mhitpoints -= dam;
-#ifdef HELLFIRE
-		if (plr[pnum]._pIFlags & ISPL_NOHEALMON)
-#else
-		if (plr[pnum]._pIFlags & ISPL_FIRE_ARROWS)
-#endif
+		if ((gbIsHellfire && plr[pnum]._pIFlags & ISPL_NOHEALMON) || (!gbIsHellfire && plr[pnum]._pIFlags & ISPL_FIRE_ARROWS))
 			monster[m]._mFlags |= MFLAG_NOHEAL;
 
 		if (monster[m]._mhitpoints >> 6 <= 0) {
@@ -2721,11 +2713,10 @@ void AddFlare(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, i
 				SetMissAnim(mi, MFILE_SCUBMISC);
 		}
 	}
-#ifdef HELLFIRE
+
 	if (misfiledata[missile[mi]._miAnimType].mAnimFAmt == 16) {
 		SetMissDir(mi, GetDirection16(sx, sy, dx, dy));
 	}
-#endif
 }
 
 void AddAcid(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam)
