@@ -115,7 +115,7 @@ void CalcTextSpeed(int n)
 {
 	DWORD SfxFrames, TextHeight;
 
-	SfxFrames = GetSoundFrames(n);
+	SfxFrames = GetSFXLength(n) * 20 / 1000;
 	assert(SfxFrames != 0);
 
 	TextHeight = GetWrap(qtextptr);
