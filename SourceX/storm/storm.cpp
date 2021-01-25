@@ -294,7 +294,7 @@ bool getIniValue(const char *sectionName, const char *keyName, char *string, int
 	return true;
 }
 
-void setIniValue(const char *sectionName, const char *keyName, char *value, int len)
+void setIniValue(const char *sectionName, const char *keyName, const char *value, int len)
 {
 	radon::File &ini = getIni();
 

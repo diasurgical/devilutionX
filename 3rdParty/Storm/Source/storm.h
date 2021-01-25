@@ -290,7 +290,7 @@ SMemFree(
 
 bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue = false);
 bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, int *dataSize = NULL);
-void setIniValue(const char *sectionName, const char *keyName, char *value, int len = 0);
+void setIniValue(const char *sectionName, const char *keyName, const char *value, int len = 0);
 BOOL STORMAPI SRegLoadValue(const char *keyname, const char *valuename, BYTE flags, int *value);
 BOOL STORMAPI SRegSaveValue(const char *keyname, const char *valuename, BYTE flags, DWORD result);
 
