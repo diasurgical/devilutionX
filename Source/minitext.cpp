@@ -109,6 +109,8 @@ int GetLinesInText(const char *text)
 	while (!doneflag) {
 		doneflag = BuildLine(text, line);
 		text += strlen(line);
+		if (*text == '\n')
+			text++;
 		lines++;
 	}
 
