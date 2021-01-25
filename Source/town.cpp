@@ -7,6 +7,8 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+namespace {
+
 /**
  * @brief Load level data into dPiece
  * @param P3Tiles Tile set
@@ -16,23 +18,23 @@ DEVILUTION_BEGIN_NAMESPACE
  * @param w width of sector
  * @param h height of sector
  */
-void T_FillSector(BYTE *P3Tiles, BYTE *pSector, int xi, int yi, int w, int h)
+void T_FillSector(Uint8 *P3Tiles, Uint8 *pSector, int xi, int yi, int w, int h)
 {
 	int i, j, xx, yy, nMap;
-	long v1, v2, v3, v4, ii;
-	WORD *Sector;
+	Sint16 v1, v2, v3, v4, ii;
+	Uint16 *Sector;
 
 	ii = 4;
 	yy = yi;
 	for (j = 0; j < h; j++) {
 		xx = xi;
 		for (i = 0; i < w; i++) {
-			WORD *Map;
+			Uint16 *Map;
 
-			Map = (WORD *)&pSector[ii];
+			Map = (Uint16 *)&pSector[ii];
 			nMap = SDL_SwapLE16(*Map);
 			if (nMap) {
-				Sector = (((WORD *)&P3Tiles[(nMap - 1) * 8]));
+				Sector = (((Uint16 *)&P3Tiles[(nMap - 1) * 8]));
 				v1 = SDL_SwapLE16(*(Sector + 0)) + 1;
 				v2 = SDL_SwapLE16(*(Sector + 1)) + 1;
 				v3 = SDL_SwapLE16(*(Sector + 2)) + 1;
@@ -62,12 +64,12 @@ void T_FillSector(BYTE *P3Tiles, BYTE *pSector, int xi, int yi, int w, int h)
  * @param yy upper left destination
  * @param t tile id
  */
-void T_FillTile(BYTE *P3Tiles, int xx, int yy, int t)
+void T_FillTile(Uint8 *P3Tiles, int xx, int yy, int t)
 {
 	long v1, v2, v3, v4;
-	WORD *Tiles;
+	Uint16 *Tiles;
 
-	Tiles = ((WORD *)&P3Tiles[(t - 1) * 8]);
+	Tiles = ((Uint16 *)&P3Tiles[(t - 1) * 8]);
 	v1 = SDL_SwapLE16(*(Tiles + 0)) + 1;
 	v2 = SDL_SwapLE16(*(Tiles + 1)) + 1;
 	v3 = SDL_SwapLE16(*(Tiles + 2)) + 1;
@@ -79,58 +81,10 @@ void T_FillTile(BYTE *P3Tiles, int xx, int yy, int t)
 	dPiece[xx + 1][yy + 1] = v4;
 }
 
-void town_4751C6()
-{
-	dPiece[78][60] = 0x48a;
-	dPiece[79][60] = 0x48b;
-	dPiece[78][61] = 0x48c;
-	dPiece[79][61] = 0x50e;
-	dPiece[78][62] = 0x4ee;
-	dPiece[78][63] = 0x4f0;
-	dPiece[79][62] = 0x510;
-	dPiece[79][63] = 0x511;
-	dPiece[79][64] = 0x512;
-	dPiece[78][64] = 0x11a;
-	dPiece[78][65] = 0x11c;
-	dPiece[79][65] = 0x11d;
-	dPiece[80][60] = 0x513;
-	dPiece[80][61] = 0x515;
-	dPiece[81][61] = 0x516;
-	dPiece[82][60] = 0x517;
-	dPiece[83][60] = 0x518;
-	dPiece[82][61] = 0x519;
-	dPiece[83][61] = 0x51a;
-	dPiece[80][62] = 0x51b;
-	dPiece[81][62] = 0x51c;
-	dPiece[80][63] = 0x51d;
-	dPiece[81][63] = 0x51e;
-	dPiece[80][64] = 0x51f;
-	dPiece[81][64] = 0x520;
-	dPiece[80][65] = 0x521;
-	dPiece[81][65] = 0x522;
-	dPiece[82][64] = 0x527;
-	dPiece[83][64] = 0x528;
-	dPiece[82][65] = 0x529;
-	dPiece[83][65] = 0x52a;
-	dPiece[82][62] = 0x523;
-	dPiece[83][62] = 0x524;
-	dPiece[82][63] = 0x525;
-	dPiece[83][63] = 0x526;
-	dPiece[84][61] = 0x118;
-	dPiece[84][62] = 0x118;
-	dPiece[84][63] = 0x118;
-	dPiece[85][60] = 0x118;
-	dPiece[85][61] = 0x118;
-	dPiece[85][63] = 8;
-	dPiece[85][64] = 8;
-	dPiece[86][60] = 0xd9;
-	dPiece[86][61] = 0x18;
-	dPiece[85][62] = 0x13;
-	dPiece[84][64] = 0x118;
-	SetDungeonMicros();
-}
-
-void town_475379()
+/**
+ * @brief Update the map to show the closed hive
+ */
+void TownCloseHive()
 {
 	dPiece[78][60] = 0x48a;
 	dPiece[79][60] = 0x4eb;
@@ -181,7 +135,10 @@ void town_475379()
 	SetDungeonMicros();
 }
 
-void town_47552C()
+/**
+ * @brief Update the map to show the closed grave
+ */
+void TownCloseGrave()
 {
 	dPiece[36][21] = 0x52b;
 	dPiece[37][21] = 0x52c;
@@ -196,28 +153,13 @@ void town_47552C()
 	SetDungeonMicros();
 }
 
-void town_475595()
-{
-	dPiece[36][21] = 0x533;
-	dPiece[37][21] = 0x534;
-	dPiece[36][22] = 0x535;
-	dPiece[37][22] = 0x536;
-	dPiece[36][23] = 0x537;
-	dPiece[37][23] = 0x538;
-	dPiece[36][24] = 0x539;
-	dPiece[37][24] = 0x53a;
-	dPiece[35][21] = 0x53b;
-	dPiece[34][21] = 0x53c;
-	SetDungeonMicros();
-}
-
 /**
  * @brief Initialize all of the levels data
  */
 void T_Pass3()
 {
 	int xx, yy, x;
-	BYTE *P3Tiles, *pSector;
+	Uint8 *P3Tiles, *pSector;
 
 	for (yy = 0; yy < MAXDUNY; yy += 2) {
 		for (xx = 0; xx < MAXDUNX; xx += 2) {
@@ -228,17 +170,17 @@ void T_Pass3()
 		}
 	}
 
-	P3Tiles = LoadFileInMem("Levels\\TownData\\Town.TIL", NULL);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector1s.DUN", NULL);
+	P3Tiles = LoadFileInMem("Levels\\TownData\\Town.TIL", nullptr);
+	pSector = LoadFileInMem("Levels\\TownData\\Sector1s.DUN", nullptr);
 	T_FillSector(P3Tiles, pSector, 46, 46, 25, 25);
 	mem_free_dbg(pSector);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector2s.DUN", NULL);
+	pSector = LoadFileInMem("Levels\\TownData\\Sector2s.DUN", nullptr);
 	T_FillSector(P3Tiles, pSector, 46, 0, 25, 23);
 	mem_free_dbg(pSector);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector3s.DUN", NULL);
+	pSector = LoadFileInMem("Levels\\TownData\\Sector3s.DUN", nullptr);
 	T_FillSector(P3Tiles, pSector, 0, 46, 23, 25);
 	mem_free_dbg(pSector);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector4s.DUN", NULL);
+	pSector = LoadFileInMem("Levels\\TownData\\Sector4s.DUN", nullptr);
 	T_FillSector(P3Tiles, pSector, 0, 0, 23, 23);
 	mem_free_dbg(pSector);
 
@@ -259,14 +201,14 @@ void T_Pass3()
 	if (gbIsHellfire) {
 		if (quests[Q_FARMER]._qactive == 3 || quests[Q_FARMER]._qactive == 10
 		    || quests[Q_JERSEY]._qactive == 3 || quests[Q_JERSEY]._qactive == 10) {
-			town_4751C6();
+			TownOpenHive();
 		} else {
-			town_475379();
+			TownCloseHive();
 		}
 		if (quests[Q_GRAVE]._qactive == 3 || plr[myplr]._pLvlVisited[21])
-			town_475595();
+			TownOpenGrave();
 		else
-			town_47552C();
+			TownCloseGrave();
 	}
 
 	if (quests[Q_PWATER]._qactive != QUEST_DONE && quests[Q_PWATER]._qactive) {
@@ -276,6 +218,80 @@ void T_Pass3()
 	}
 
 	mem_free_dbg(P3Tiles);
+}
+
+}
+
+/**
+ * @brief Update the map to show the open hive
+ */
+void TownOpenHive()
+{
+	dPiece[78][60] = 0x48a;
+	dPiece[79][60] = 0x48b;
+	dPiece[78][61] = 0x48c;
+	dPiece[79][61] = 0x50e;
+	dPiece[78][62] = 0x4ee;
+	dPiece[78][63] = 0x4f0;
+	dPiece[79][62] = 0x510;
+	dPiece[79][63] = 0x511;
+	dPiece[79][64] = 0x512;
+	dPiece[78][64] = 0x11a;
+	dPiece[78][65] = 0x11c;
+	dPiece[79][65] = 0x11d;
+	dPiece[80][60] = 0x513;
+	dPiece[80][61] = 0x515;
+	dPiece[81][61] = 0x516;
+	dPiece[82][60] = 0x517;
+	dPiece[83][60] = 0x518;
+	dPiece[82][61] = 0x519;
+	dPiece[83][61] = 0x51a;
+	dPiece[80][62] = 0x51b;
+	dPiece[81][62] = 0x51c;
+	dPiece[80][63] = 0x51d;
+	dPiece[81][63] = 0x51e;
+	dPiece[80][64] = 0x51f;
+	dPiece[81][64] = 0x520;
+	dPiece[80][65] = 0x521;
+	dPiece[81][65] = 0x522;
+	dPiece[82][64] = 0x527;
+	dPiece[83][64] = 0x528;
+	dPiece[82][65] = 0x529;
+	dPiece[83][65] = 0x52a;
+	dPiece[82][62] = 0x523;
+	dPiece[83][62] = 0x524;
+	dPiece[82][63] = 0x525;
+	dPiece[83][63] = 0x526;
+	dPiece[84][61] = 0x118;
+	dPiece[84][62] = 0x118;
+	dPiece[84][63] = 0x118;
+	dPiece[85][60] = 0x118;
+	dPiece[85][61] = 0x118;
+	dPiece[85][63] = 8;
+	dPiece[85][64] = 8;
+	dPiece[86][60] = 0xd9;
+	dPiece[86][61] = 0x18;
+	dPiece[85][62] = 0x13;
+	dPiece[84][64] = 0x118;
+	SetDungeonMicros();
+}
+
+/**
+ * @brief Update the map to show the open grave
+ */
+void TownOpenGrave()
+{
+	dPiece[36][21] = 0x533;
+	dPiece[37][21] = 0x534;
+	dPiece[36][22] = 0x535;
+	dPiece[37][22] = 0x536;
+	dPiece[36][23] = 0x537;
+	dPiece[37][23] = 0x538;
+	dPiece[36][24] = 0x539;
+	dPiece[37][24] = 0x53a;
+	dPiece[35][21] = 0x53b;
+	dPiece[34][21] = 0x53c;
+	SetDungeonMicros();
 }
 
 /**
