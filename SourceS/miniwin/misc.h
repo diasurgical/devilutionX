@@ -30,11 +30,6 @@ typedef HANDLE HWND, HMODULE, HDC, HINSTANCE;
 
 typedef void(*WNDPROC)(HWND, UINT, WPARAM, LPARAM);
 
-typedef struct _FILETIME {
-	DWORD dwLowDateTime;
-	DWORD dwHighDateTime;
-} FILETIME, *LPFILETIME;
-
 typedef struct tagMSG {
 	UINT message;
 	WPARAM wParam;

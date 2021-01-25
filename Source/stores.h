@@ -12,6 +12,17 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+typedef struct STextStruct {
+	int _sx;
+	int _syoff;
+	char _sstr[128];
+	bool _sjust;
+	char _sclr;
+	int _sline;
+	bool _ssel;
+	int _sval;
+} STextStruct;
+
 extern ItemStruct boyitem;
 extern ItemStruct premiumitem[SMITH_PREMIUM_ITEMS];
 extern BYTE *pSTextBoxCels;

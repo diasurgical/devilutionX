@@ -12,6 +12,13 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+typedef struct CornerStoneStruct {
+	int x;
+	int y;
+	bool activated;
+	ItemStruct item;
+} CornerStoneStruct;
+
 extern int itemactive[MAXITEMS];
 extern BOOL uitemflag;
 extern int itemavail[MAXITEMS];

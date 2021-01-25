@@ -118,8 +118,6 @@ BOOLEAN TransList[256];
 int dPiece[MAXDUNX][MAXDUNY];
 /** Specifies the dungeon piece information for a given coordinate and block number. */
 MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
-/** Specifies the dungeon piece information for a given coordinate and block number, optimized for diagonal access. */
-MICROS dpiece_defs_map_1[MAXDUNX * MAXDUNY];
 /** Specifies the transparency at each coordinate of the map. */
 char dTransVal[MAXDUNX][MAXDUNY];
 char dLight[MAXDUNX][MAXDUNY];

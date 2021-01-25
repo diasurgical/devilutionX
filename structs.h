@@ -7,17 +7,6 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 //////////////////////////////////////////////////
-// control
-//////////////////////////////////////////////////
-
-typedef struct RECT32 {
-	int x;
-	int y;
-	int w;
-	int h;
-} RECT32;
-
-//////////////////////////////////////////////////
 // items
 //////////////////////////////////////////////////
 
@@ -836,7 +825,7 @@ typedef struct TCmdChItem {
 	WORD wIndx;
 	WORD wCI;
 	int dwSeed;
-	BOOLEAN bId;
+	Uint8 bId;
 } TCmdChItem;
 
 typedef struct TCmdDelItem {
@@ -994,44 +983,6 @@ typedef struct TBuffer {
 } TBuffer;
 
 //////////////////////////////////////////////////
-// quests
-//////////////////////////////////////////////////
-
-typedef struct QuestStruct {
-	unsigned char _qlevel;
-	unsigned char _qtype;
-	unsigned char _qactive;
-	unsigned char _qlvltype;
-	int _qtx;
-	int _qty;
-	unsigned char _qslvl;
-	unsigned char _qidx;
-	unsigned int _qmsg;
-	unsigned char _qvar1;
-	unsigned char _qvar2;
-	BOOL _qlog;
-} QuestStruct;
-
-typedef struct QuestData {
-	unsigned char _qdlvl;
-	char _qdmultlvl;
-	unsigned char _qlvlt;
-	unsigned char _qdtype;
-	unsigned char _qdrnd;
-	unsigned char _qslvl;
-	int _qflags; /* unsigned char */
-	int _qdmsg;
-	const char *_qlstr;
-} QuestData;
-
-typedef struct CornerStoneStruct {
-	int x;
-	int y;
-	BOOL activated;
-	ItemStruct item;
-} CornerStoneStruct;
-
-//////////////////////////////////////////////////
 // gamemenu/gmenu
 //////////////////////////////////////////////////
 
@@ -1069,103 +1020,6 @@ typedef struct SpellData {
 	int sBookCost;
 	int sStaffCost;
 } SpellData;
-
-//////////////////////////////////////////////////
-// towners
-//////////////////////////////////////////////////
-
-typedef struct TNQ {
-	unsigned char _qsttype;
-	unsigned char _qstmsg;
-	BOOLEAN _qstmsgact;
-} TNQ;
-
-typedef struct TownerStruct {
-	int _tmode;
-	int _ttype;
-	int _tx;    // Tile X-position of NPC
-	int _ty;    // Tile Y-position of NPC
-	int _txoff; // Sprite X-offset (unused)
-	int _tyoff; // Sprite Y-offset (unused)
-	int _txvel; // X-velocity during movement (unused)
-	int _tyvel; // Y-velocity during movement (unused)
-	int _tdir;  // Facing of NPC (unused)
-	unsigned char *_tAnimData;
-	int _tAnimDelay; // Tick length of each frame in the current animation
-	int _tAnimCnt;   // Increases by one each game tick, counting how close we are to _pAnimDelay
-	int _tAnimLen;   // Number of frames in current animation
-	int _tAnimFrame; // Current frame of animation.
-	int _tAnimFrameCnt;
-	char _tAnimOrder;
-	int _tAnimWidth;
-	int _tAnimWidth2;
-	int _tTenPer;
-	int _teflag;
-	int _tbtcnt;
-	int _tSelFlag;
-	BOOL _tMsgSaid;
-	TNQ qsts[MAXQUESTS];
-	int _tSeed;
-	int _tVar1;
-	int _tVar2;
-	int _tVar3;
-	int _tVar4;
-	char _tName[PLR_NAME_LEN];
-	unsigned char *_tNAnim[8];
-	int _tNFrames;
-	unsigned char *_tNData;
-} TownerStruct;
-
-typedef struct QuestTalkData {
-	int _qinfra;
-	int _qblkm;
-	int _qgarb;
-	int _qzhar;
-	int _qveil;
-	int _qmod;
-	int _qbutch;
-	int _qbol;
-	int _qblind;
-	int _qblood;
-	int _qanvil;
-	int _qwarlrd;
-	int _qking;
-	int _qpw;
-	int _qbone;
-	int _qvb;
-	int _qgrv;
-	int _qfarm;
-	int _qgirl;
-	int _qtrade;
-	int _qdefiler;
-	int _qnakrul;
-	int _qjersy;
-	int _qhf8;
-} QuestTalkData;
-
-//////////////////////////////////////////////////
-// gendung
-//////////////////////////////////////////////////
-
-typedef struct ScrollStruct {
-	int _sxoff; // X-offset of camera position. This usually corresponds to a negative version of plr[myplr]._pxoff
-	int _syoff; // Y-offset of camera position. This usually corresponds to a negative version of plr[myplr]._pyoff
-	int _sdx;
-	int _sdy;
-	int _sdir;
-} ScrollStruct;
-
-typedef struct THEME_LOC {
-	int x;
-	int y;
-	int ttval;
-	int width;
-	int height;
-} THEME_LOC;
-
-typedef struct MICROS {
-	WORD mt[16];
-} MICROS;
 
 //////////////////////////////////////////////////
 // drlg
@@ -1215,38 +1069,6 @@ typedef struct InvXY {
 	int X;
 	int Y;
 } InvXY;
-
-//////////////////////////////////////////////////
-// lighting
-//////////////////////////////////////////////////
-
-typedef struct LightListStruct {
-	int _lx;
-	int _ly;
-	int _lradius;
-	int _lid;
-	int _ldel;
-	int _lunflag;
-	int field_18;
-	int _lunx;
-	int _luny;
-	int _lunr;
-	int _xoff;
-	int _yoff;
-	int _lflags;
-} LightListStruct;
-
-//////////////////////////////////////////////////
-// dead
-//////////////////////////////////////////////////
-
-typedef struct DeadStruct {
-	unsigned char *_deadData[8];
-	int _deadFrame;
-	int _deadWidth;
-	int _deadWidth2;
-	char _deadtrans;
-} DeadStruct;
 
 //////////////////////////////////////////////////
 // diabloui
@@ -1401,102 +1223,6 @@ typedef struct _SNETUIDATA {
 // TPDEF PTR FCN UCHAR SNETSPIQUERY
 
 //////////////////////////////////////////////////
-// pack
-//////////////////////////////////////////////////
-
-#pragma pack(push, 1)
-typedef struct PkItemStruct {
-	DWORD iSeed;
-	WORD iCreateInfo;
-	WORD idx;
-	BYTE bId;
-	BYTE bDur;
-	BYTE bMDur;
-	BYTE bCh;
-	BYTE bMCh;
-	WORD wValue;
-	DWORD dwBuff;
-} PkItemStruct;
-
-typedef struct PkPlayerStruct {
-	FILETIME archiveTime;
-	char destAction;
-	char destParam1;
-	char destParam2;
-	BYTE plrlevel;
-	BYTE px;
-	BYTE py;
-	BYTE targx;
-	BYTE targy;
-	char pName[PLR_NAME_LEN];
-	char pClass;
-	BYTE pBaseStr;
-	BYTE pBaseMag;
-	BYTE pBaseDex;
-	BYTE pBaseVit;
-	char pLevel;
-	BYTE pStatPts;
-	int pExperience;
-	int pGold;
-	int pHPBase;
-	int pMaxHPBase;
-	int pManaBase;
-	int pMaxManaBase;
-	char pSplLvl[37]; // Should be MAX_SPELLS but set to 37 to make save games compatible
-	uint64_t pMemSpells;
-	PkItemStruct InvBody[NUM_INVLOC];
-	PkItemStruct InvList[NUM_INV_GRID_ELEM];
-	char InvGrid[NUM_INV_GRID_ELEM];
-	BYTE _pNumInv;
-	PkItemStruct SpdList[MAXBELTITEMS];
-	char pTownWarps;
-	char pDungMsgs;
-	char pLvlLoad;
-	char pBattleNet;
-	BOOLEAN pManaShield;
-	unsigned char pDungMsgs2;
-	char bReserved[2];
-	WORD wReflections;
-	short wReserved2;
-	char pSplLvl2[10]; // Hellfire spells
-	short wReserved8;
-	DWORD pDiabloKillLevel;
-	int pDifficulty;
-	int pDamAcFlags;
-	int dwReserved[5];
-} PkPlayerStruct;
-#pragma pack(pop)
-
-//////////////////////////////////////////////////
-// path
-//////////////////////////////////////////////////
-
-typedef struct PATHNODE {
-	char f;
-	char h;
-	char g;
-	int x;
-	int y;
-	struct PATHNODE *Parent;
-	struct PATHNODE *Child[8];
-	struct PATHNODE *NextNode;
-} PATHNODE;
-
-// TPDEF PTR FCN UCHAR CHECKFUNC1
-
-// TPDEF PTR FCN UCHAR CHECKFUNC
-
-//////////////////////////////////////////////////
-// sha
-//////////////////////////////////////////////////
-
-typedef struct SHA1Context {
-	DWORD state[5];
-	DWORD count[2];
-	char buffer[64];
-} SHA1Context;
-
-//////////////////////////////////////////////////
 // tmsg
 //////////////////////////////////////////////////
 
@@ -1516,90 +1242,6 @@ typedef struct TMsg {
 	unsigned char body[3];
 } TMsg;
 #pragma pack(pop)
-
-//////////////////////////////////////////////////
-// mpqapi
-//////////////////////////////////////////////////
-
-typedef struct _FILEHEADER {
-	int signature;
-	int headersize;
-	int filesize;
-	WORD version;
-	short sectorsizeid;
-	int hashoffset;
-	int blockoffset;
-	int hashcount;
-	int blockcount;
-	char pad[72];
-} _FILEHEADER;
-
-typedef struct _HASHENTRY {
-	uint32_t hashcheck[2];
-	uint32_t lcid;
-	uint32_t block;
-} _HASHENTRY;
-
-typedef struct _BLOCKENTRY {
-	uint32_t offset;
-	uint32_t sizealloc;
-	uint32_t sizefile;
-	uint32_t flags;
-} _BLOCKENTRY;
-
-// TPDEF PTR FCN UCHAR TGetNameFcn
-
-// TPDEF PTR FCN VOID TCrypt
-
-//////////////////////////////////////////////////
-// trigs
-//////////////////////////////////////////////////
-
-typedef struct TriggerStruct {
-	int _tx;
-	int _ty;
-	int _tmsg;
-	int _tlvl;
-} TriggerStruct;
-
-//////////////////////////////////////////////////
-// stores
-//////////////////////////////////////////////////
-
-typedef struct STextStruct {
-	int _sx;
-	int _syoff;
-	char _sstr[128];
-	BOOL _sjust;
-	char _sclr;
-	int _sline;
-	BOOL _ssel;
-	int _sval;
-} STextStruct;
-
-//////////////////////////////////////////////////
-// wave
-//////////////////////////////////////////////////
-
-typedef struct MEMFILE {
-	DWORD end;
-	LONG offset;
-	DWORD buf_len;
-	DWORD dist;
-	DWORD bytes_to_read;
-	BYTE *buf;
-	HANDLE file;
-} MEMFILE;
-
-//////////////////////////////////////////////////
-// plrmsg
-//////////////////////////////////////////////////
-
-typedef struct _plrmsg {
-	DWORD time;
-	unsigned char player;
-	char str[144];
-} _plrmsg;
 
 //////////////////////////////////////////////////
 // capture
@@ -1625,17 +1267,5 @@ typedef struct _PcxHeader {
 	WORD VscreenSize;
 	BYTE Filler[54];
 } PCXHEADER;
-
-//////////////////////////////////////////////////
-// encrypt
-//////////////////////////////////////////////////
-
-typedef struct TDataInfo {
-	BYTE *srcData;
-	DWORD srcOffset;
-	BYTE *destData;
-	DWORD destOffset;
-	DWORD size;
-} TDataInfo;
 
 DEVILUTION_END_NAMESPACE

@@ -31,12 +31,20 @@ static int ILoad()
 	return rv;
 }
 
-static BOOL OLoad()
+static bool LoadBool8()
 {
 	if (*tbuff++ == TRUE)
 		return TRUE;
 	else
 		return FALSE;
+}
+
+static bool LoadBool32()
+{
+	Uint32 buf;
+	memcpy(&buf, tbuff, 4);
+	tbuff += 4;
+	return buf != 0;
 }
 
 static void CopyBytes(const void *src, const int n, void *dst)
@@ -55,9 +63,9 @@ static void CopyShort(const void *src, void *dst)
 {
 	unsigned short buf;
 	memcpy(&buf, src, 2);
-	tbuff += 2;
 	buf = SwapLE16(buf);
 	memcpy(dst, &buf, 2);
+	tbuff += 2;
 }
 
 static void CopyShorts(const void *src, const int n, void *dst)
@@ -75,9 +83,9 @@ static void CopyInt(const void *src, void *dst)
 {
 	unsigned int buf;
 	memcpy(&buf, src, 4);
-	tbuff += 4;
 	buf = SwapLE32(buf);
 	memcpy(dst, &buf, 4);
+	tbuff += 4;
 }
 
 static void CopyInts(const void *src, const int n, void *dst)
@@ -95,9 +103,9 @@ static void CopyInt64(const void *src, void *dst)
 {
 	unsigned long long buf;
 	memcpy(&buf, src, 8);
-	tbuff += 8;
 	buf = SDL_SwapLE64(buf);
 	memcpy(dst, &buf, 8);
+	tbuff += 8;
 }
 
 static void LoadItemData(ItemStruct *pItem)
@@ -620,7 +628,7 @@ static void LoadQuest(int i)
 		tbuff += 2; // Alignment
 		CopyInt(tbuff, &pQuest->_qmsg);
 	} else {
-		BYTE tmp;
+		Uint8 tmp;
 		CopyChar(tbuff, &tmp);
 		pQuest->_qmsg = tmp;
 	}
@@ -629,7 +637,7 @@ static void LoadQuest(int i)
 	tbuff += 2; // Alignment
 	if (!gbIsHellfireSaveGame)
 		tbuff += 1; // Alignment
-	CopyInt(tbuff, &pQuest->_qlog);
+	pQuest->_qlog = LoadBool32();
 
 	ReturnLvlX = WLoad();
 	ReturnLvlY = WLoad();
@@ -772,14 +780,14 @@ void LoadGame(BOOL firstflag)
 		giNumberOfSmithPremiumItems = 6;
 	}
 
-	setlevel = OLoad();
+	setlevel = LoadBool8();
 	setlvlnum = WLoad();
 	currlevel = WLoad();
 	leveltype = WLoad();
 	_ViewX = WLoad();
 	_ViewY = WLoad();
-	invflag = OLoad();
-	chrflag = OLoad();
+	invflag = LoadBool8();
+	chrflag = LoadBool8();
 	_nummonsters = WLoad();
 	_numitems = WLoad();
 	_nummissiles = WLoad();
@@ -856,7 +864,7 @@ void LoadGame(BOOL firstflag)
 	for (i = 0; i < numitems; i++)
 		LoadItem(itemactive[i]);
 	for (i = 0; i < 128; i++)
-		UniqueItemFlag[i] = OLoad();
+		UniqueItemFlag[i] = LoadBool8();
 
 	for (j = 0; j < MAXDUNY; j++) {
 		for (i = 0; i < MAXDUNX; i++)
@@ -898,7 +906,7 @@ void LoadGame(BOOL firstflag)
 		}
 		for (j = 0; j < DMAXY; j++) {
 			for (i = 0; i < DMAXX; i++)
-				automapview[i][j] = OLoad();
+				automapview[i][j] = LoadBool8();
 		}
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++)
@@ -914,7 +922,7 @@ void LoadGame(BOOL firstflag)
 	if (gbIsHellfire && !gbIsHellfireSaveGame)
 		SpawnPremium(myplr);
 
-	automapflag = OLoad();
+	automapflag = LoadBool8();
 	AutoMapScale = WLoad();
 	mem_free_dbg(LoadBuff);
 	AutomapZoomReset();
@@ -954,12 +962,20 @@ static void ISave(int v)
 	*tbuff++ = v;
 }
 
-static void OSave(BOOL v)
+static void SaveBool8(bool v)
 {
-	if (v != FALSE)
-		*tbuff++ = TRUE;
+	if (v != false)
+		*tbuff++ = 1;
 	else
-		*tbuff++ = FALSE;
+		*tbuff++ = 0;
+}
+
+static void SaveBool32(bool value)
+{
+	Uint32 buf = value ? 1 : 0;
+	buf = SwapLE32(buf);
+	memcpy(tbuff, &buf, 4);
+	tbuff += 4;
 }
 
 static void SaveItem(ItemStruct *pItem)
@@ -1472,7 +1488,7 @@ static void SaveQuest(int i)
 		tbuff += 2; // Alignment
 		CopyInt(&pQuest->_qmsg, tbuff);
 	} else {
-		char tmp = pQuest->_qmsg;
+		Uint8 tmp = pQuest->_qmsg;
 		CopyChar(&tmp, tbuff);
 	}
 	CopyChar(&pQuest->_qvar1, tbuff);
@@ -1480,7 +1496,7 @@ static void SaveQuest(int i)
 	tbuff += 2; // Alignment
 	if (!gbIsHellfire)
 		tbuff += 1; // Alignment
-	CopyInt(&pQuest->_qlog, tbuff);
+	SaveBool32(pQuest->_qlog);
 
 	WSave(ReturnLvlX);
 	WSave(ReturnLvlY);
@@ -1568,14 +1584,14 @@ void SaveGame()
 		giNumberOfSmithPremiumItems = 6;
 	}
 
-	OSave(setlevel);
+	SaveBool8(setlevel);
 	WSave(setlvlnum);
 	WSave(currlevel);
 	WSave(leveltype);
 	WSave(ViewX);
 	WSave(ViewY);
-	OSave(invflag);
-	OSave(chrflag);
+	SaveBool8(invflag);
+	SaveBool8(chrflag);
 	WSave(nummonsters);
 	WSave(numitems);
 	WSave(nummissiles);
@@ -1635,7 +1651,7 @@ void SaveGame()
 	for (i = 0; i < numitems; i++)
 		SaveItem(&item[itemactive[i]]);
 	for (i = 0; i < 128; i++)
-		OSave(UniqueItemFlag[i]);
+		SaveBool8(UniqueItemFlag[i]);
 
 	for (j = 0; j < MAXDUNY; j++) {
 		for (i = 0; i < MAXDUNX; i++)
@@ -1677,7 +1693,7 @@ void SaveGame()
 		}
 		for (j = 0; j < DMAXY; j++) {
 			for (i = 0; i < DMAXX; i++)
-				OSave(automapview[i][j]);
+				SaveBool8(automapview[i][j]);
 		}
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++)
@@ -1691,7 +1707,7 @@ void SaveGame()
 	for (i = 0; i < giNumberOfSmithPremiumItems; i++)
 		SavePremium(i);
 
-	OSave(automapflag);
+	SaveBool8(automapflag);
 	WSave(AutoMapScale);
 	dwLen = codec_get_encoded_len(tbuff - SaveBuff);
 	pfile_write_save_file("game", SaveBuff, tbuff - SaveBuff, dwLen);
@@ -1774,7 +1790,7 @@ void SaveLevel()
 		}
 		for (j = 0; j < DMAXY; j++) {
 			for (i = 0; i < DMAXX; i++)
-				OSave(automapview[i][j]);
+				SaveBool8(automapview[i][j]);
 		}
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++)
@@ -1866,7 +1882,7 @@ void LoadLevel()
 		}
 		for (j = 0; j < DMAXY; j++) {
 			for (i = 0; i < DMAXX; i++)
-				automapview[i][j] = OLoad();
+				automapview[i][j] = LoadBool8();
 		}
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++)
