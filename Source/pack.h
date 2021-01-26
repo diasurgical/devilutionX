@@ -37,7 +37,7 @@ typedef struct PkPlayerStruct {
 	Uint8 py;
 	Uint8 targx;
 	Uint8 targy;
-	Sint8 pName[PLR_NAME_LEN];
+	char pName[PLR_NAME_LEN];
 	Sint8 pClass;
 	Uint8 pBaseStr;
 	Uint8 pBaseMag;
