@@ -3844,11 +3844,8 @@ void MAI_Scav(int i)
 			}
 		}
 	}
-#ifdef HELLFIRE
-	else
-#else
+
 	if (Monst->_mmode == MM_STAND)
-#endif
 		MAI_SkelSd(i);
 }
 
