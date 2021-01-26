@@ -2257,14 +2257,12 @@ int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, in
 		item[ii]._iMaxDur = mdur;
 		item[ii]._iCharges = ch;
 		item[ii]._iMaxCharges = mch;
-#ifdef HELLFIRE
 		item[ii]._iPLToHit = to_hit;
 		item[ii]._iMaxDam = max_dam;
 		item[ii]._iMinStr = min_str;
 		item[ii]._iMinMag = min_mag;
 		item[ii]._iMinDex = min_dex;
 		item[ii]._iAC = ac;
-#endif
 	}
 
 	item[ii]._ix = x;

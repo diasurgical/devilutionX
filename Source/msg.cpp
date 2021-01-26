@@ -559,14 +559,12 @@ static BOOL delta_get_item(TCmdGItem *pI, BYTE bLevel)
 			pD->bMCh = pI->bMCh;
 			pD->wValue = pI->wValue;
 			pD->dwBuff = pI->dwBuff;
-#ifdef HELLFIRE
 			pD->wToHit = pI->wToHit;
 			pD->wMaxDam = pI->wMaxDam;
 			pD->bMinStr = pI->bMinStr;
 			pD->bMinMag = pI->bMinMag;
 			pD->bMinDex = pI->bMinDex;
 			pD->bAC = pI->bAC;
-#endif
 			break;
 		}
 	}
@@ -650,14 +648,12 @@ void DeltaAddItem(int ii)
 			pD->bCh = item[ii]._iCharges;
 			pD->bMCh = item[ii]._iMaxCharges;
 			pD->wValue = item[ii]._ivalue;
-#ifdef HELLFIRE
 			pD->wToHit = item[ii]._iPLToHit;
 			pD->wMaxDam = item[ii]._iMaxDam;
 			pD->bMinStr = item[ii]._iMinStr;
 			pD->bMinMag = item[ii]._iMinMag;
 			pD->bMinDex = item[ii]._iMinDex;
 			pD->bAC = item[ii]._iAC;
-#endif
 			return;
 		}
 	}
@@ -773,14 +769,12 @@ void DeltaLoadLevel()
 					item[ii]._iMaxDur = sgLevels[currlevel].item[i].bMDur;
 					item[ii]._iCharges = sgLevels[currlevel].item[i].bCh;
 					item[ii]._iMaxCharges = sgLevels[currlevel].item[i].bMCh;
-#ifdef HELLFIRE
 					item[ii]._iPLToHit = sgLevels[currlevel].item[i].wToHit;
 					item[ii]._iMaxDam = sgLevels[currlevel].item[i].wMaxDam;
 					item[ii]._iMinStr = sgLevels[currlevel].item[i].bMinStr;
 					item[ii]._iMinMag = sgLevels[currlevel].item[i].bMinMag;
 					item[ii]._iMinDex = sgLevels[currlevel].item[i].bMinDex;
 					item[ii]._iAC = sgLevels[currlevel].item[i].bAC;
-#endif
 				}
 				x = sgLevels[currlevel].item[i].x;
 				y = sgLevels[currlevel].item[i].y;
@@ -1100,14 +1094,12 @@ void NetSendCmdPItem(BOOL bHiPri, BYTE bCmd, BYTE x, BYTE y)
 		cmd.bCh = plr[myplr].HoldItem._iCharges;
 		cmd.bMCh = plr[myplr].HoldItem._iMaxCharges;
 		cmd.wValue = plr[myplr].HoldItem._ivalue;
-#ifdef HELLFIRE
 		cmd.wToHit = plr[myplr].HoldItem._iPLToHit;
 		cmd.wMaxDam = plr[myplr].HoldItem._iMaxDam;
 		cmd.bMinStr = plr[myplr].HoldItem._iMinStr;
 		cmd.bMinMag = plr[myplr].HoldItem._iMinMag;
 		cmd.bMinDex = plr[myplr].HoldItem._iMinDex;
 		cmd.bAC = plr[myplr].HoldItem._iAC;
-#endif
 	}
 
 	if (bHiPri)
@@ -1173,14 +1165,12 @@ void NetSendCmdDItem(BOOL bHiPri, int ii)
 		cmd.bCh = item[ii]._iCharges;
 		cmd.bMCh = item[ii]._iMaxCharges;
 		cmd.wValue = item[ii]._ivalue;
-#ifdef HELLFIRE
 		cmd.wToHit = item[ii]._iPLToHit;
 		cmd.wMaxDam = item[ii]._iMaxDam;
 		cmd.bMinStr = item[ii]._iMinStr;
 		cmd.bMinMag = item[ii]._iMinMag;
 		cmd.bMinDex = item[ii]._iMinDex;
 		cmd.bAC = item[ii]._iAC;
-#endif
 	}
 
 	if (bHiPri)
