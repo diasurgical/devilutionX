@@ -1763,7 +1763,7 @@ void M2MStartHit(int mid, int i, int dam)
 	assurance((DWORD)mid < MAXMONSTERS, mid);
 	assurance(monster[mid].MType != NULL, mid);
 
-	if (i >= 0 && i <= MAX_PLRS)
+	if (i >= 0 && i < MAX_PLRS)
 		monster[mid].mWhoHit |= 1 << i;
 
 	delta_monster_hp(mid, monster[mid]._mhitpoints, currlevel);
