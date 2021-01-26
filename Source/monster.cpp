@@ -2392,13 +2392,8 @@ BOOL M_DoRAttack(int i)
 				multimissiles = 1;
 			for (mi = 0; mi < multimissiles; mi++) {
 				AddMissile(
-#ifdef HELLFIRE
-				    monster[i]._mx + offset_x[monster[i]._mdir],
-				    monster[i]._my + offset_y[monster[i]._mdir],
-#else
-				    monster[i]._mx,
-				    monster[i]._my,
-#endif
+				    monster[i]._mx + (gbIsHellfire ? offset_x[monster[i]._mdir] : 0),
+				    monster[i]._my + (gbIsHellfire ? offset_y[monster[i]._mdir] : 0),
 				    monster[i]._menemyx,
 				    monster[i]._menemyy,
 				    monster[i]._mdir,
@@ -2428,13 +2423,8 @@ BOOL M_DoRSpAttack(int i)
 
 	if (monster[i]._mAnimFrame == monster[i].MData->mAFNum2 && monster[i]._mAnimCnt == 0) {
 		AddMissile(
-#ifdef HELLFIRE
-		    monster[i]._mx + offset_x[monster[i]._mdir],
-		    monster[i]._my + offset_y[monster[i]._mdir],
-#else
-		    monster[i]._mx,
-		    monster[i]._my,
-#endif
+		    monster[i]._mx + (gbIsHellfire ? offset_x[monster[i]._mdir] : 0),
+		    monster[i]._my + (gbIsHellfire ? offset_y[monster[i]._mdir] : 0),
 		    monster[i]._menemyx,
 		    monster[i]._menemyy,
 		    monster[i]._mdir,
