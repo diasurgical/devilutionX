@@ -30,6 +30,7 @@ const std::size_t *ListOffset = NULL;
 
 Art ArtLogos[3];
 Art ArtFocus[3];
+Art ArtBackgroundWidescreen;
 Art ArtBackground;
 Art ArtCursor;
 Art ArtHero;
@@ -416,21 +417,17 @@ bool IsInsideRect(const SDL_Event &event, const SDL_Rect &rect)
 
 void LoadUiGFX()
 {
-#ifdef HELLFIRE
-	LoadMaskedArt("ui_art\\hf_logo2.pcx", &ArtLogos[LOGO_MED], 16);
-#else
-	LoadMaskedArt("ui_art\\smlogo.pcx", &ArtLogos[LOGO_MED], 15);
-#endif
+	if (gbIsHellfire) {
+		LoadMaskedArt("ui_art\\hf_logo2.pcx", &ArtLogos[LOGO_MED], 16);
+	} else {
+		LoadMaskedArt("ui_art\\smlogo.pcx", &ArtLogos[LOGO_MED], 15);
+	}
 	LoadMaskedArt("ui_art\\focus16.pcx", &ArtFocus[FOCUS_SMALL], 8);
 	LoadMaskedArt("ui_art\\focus.pcx", &ArtFocus[FOCUS_MED], 8);
 	LoadMaskedArt("ui_art\\focus42.pcx", &ArtFocus[FOCUS_BIG], 8);
 	LoadMaskedArt("ui_art\\cursor.pcx", &ArtCursor, 1, 0);
 	// Frame height hardcoded to 76 to make it work properly when there's a custom mpq that modifies heros.pcx and changes total height
-#ifdef HELLFIRE
-	LoadArt("ui_art\\heros.pcx", &ArtHero, 6, NULL, 76);
-#else
-	LoadArt("ui_art\\heros.pcx", &ArtHero, 4, NULL, 76);
-#endif
+	LoadArt("ui_art\\heros.pcx", &ArtHero, gbIsHellfire ? 6 : 4, NULL, 76);
 }
 
 void UiInitialize()
@@ -612,8 +609,13 @@ void LoadBackgroundArt(const char *pszFile, int frames)
 
 void UiAddBackground(std::vector<UiItemBase *> *vecDialog)
 {
-	SDL_Rect rect = { PANEL_LEFT, UI_OFFSET_Y, 640, 480 };
-	vecDialog->push_back(new UiImage(&ArtBackground, rect));
+	if (ArtBackgroundWidescreen.surface != NULL) {
+		SDL_Rect rectw = { 0, UI_OFFSET_Y, 0, 0 };
+		vecDialog->push_back(new UiImage(&ArtBackgroundWidescreen, /*animated=*/false, /*frame=*/0, rectw, UIS_CENTER));
+	}
+
+	SDL_Rect rect = { 0, UI_OFFSET_Y, 0, 0 };
+	vecDialog->push_back(new UiImage(&ArtBackground, /*animated=*/false, /*frame=*/0, rect, UIS_CENTER));
 }
 
 void UiAddLogo(std::vector<UiItemBase *> *vecDialog, int size, int y)

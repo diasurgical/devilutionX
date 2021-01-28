@@ -12,7 +12,7 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
-extern DIABOOL doomflag;
+extern bool doomflag;
 extern int DoomQuestState;
 
 int doom_get_frame_from_time();

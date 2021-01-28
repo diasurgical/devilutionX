@@ -12,6 +12,13 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+typedef struct TriggerStruct {
+	int _tx;
+	int _ty;
+	int _tmsg;
+	int _tlvl;
+} TriggerStruct;
+
 extern BOOL trigflag;
 extern int numtrigs;
 extern TriggerStruct trigs[MAXTRIGGERS];

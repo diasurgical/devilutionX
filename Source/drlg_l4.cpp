@@ -242,9 +242,9 @@ static void L4makeDmt()
 	for (j = 0, dmty = 1; dmty <= 77; j++, dmty += 2) {
 		for (i = 0, dmtx = 1; dmtx <= 77; i++, dmtx += 2) {
 			val = 8 * L4dungeon[dmtx + 1][dmty + 1]
-				+ 4 * L4dungeon[dmtx][dmty + 1]
-				+ 2 * L4dungeon[dmtx + 1][dmty]
-				+ L4dungeon[dmtx][dmty];
+			    + 4 * L4dungeon[dmtx][dmty + 1]
+			    + 2 * L4dungeon[dmtx + 1][dmty]
+			    + L4dungeon[dmtx][dmty];
 			idx = L4ConvTbl[val];
 			dungeon[i][j] = idx;
 		}
@@ -1383,7 +1383,7 @@ static BOOL DRLG_L4PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx,
 		}
 	}
 
-	if (currlevel == 15) {
+	if (currlevel == 15 && quests[Q_BETRAYER]._qactive >= QUEST_ACTIVE) { /// Lazarus staff skip bug fixed
 		quests[Q_BETRAYER]._qtx = sx + 1;
 		quests[Q_BETRAYER]._qty = sy + 1;
 	}
@@ -1818,7 +1818,6 @@ void LoadL4Dungeon(char *sFileName, int vx, int vy)
 	DRLG_InitTrans();
 	InitL4Dungeon();
 	pLevelMap = LoadFileInMem(sFileName, NULL);
-
 
 	lm = pLevelMap;
 	rw = *lm;

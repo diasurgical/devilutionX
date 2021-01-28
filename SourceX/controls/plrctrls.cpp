@@ -197,8 +197,8 @@ bool CanTargetMonster(int mi)
 
 void FindRangedTarget()
 {
-    int rotations = 0;
-    int distance = 0;
+	int rotations = 0;
+	int distance = 0;
 	bool canTalk = false;
 
 	// The first MAX_PLRS monsters are reserved for players' golems.
@@ -310,9 +310,9 @@ void CheckMonstersNearby()
 
 void CheckPlayerNearby()
 {
-    int newDdistance;
-    int rotations = 0;
-    int distance = 0;
+	int newDdistance;
+	int rotations = 0;
+	int distance = 0;
 
 	if (pcursmonst != -1)
 		return;
@@ -368,8 +368,8 @@ int pcursquest;
 
 void FindTrigger()
 {
-    int rotations;
-    int distance = 0;
+	int rotations;
+	int distance = 0;
 
 	if (pcursitem != -1 || pcursobj != -1)
 		return; // Prefer showing items/objects over triggers (use of cursm* conflicts)
@@ -556,7 +556,7 @@ void InvMove(MoveDirection dir)
 				x = InvRect[slot].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 				y = InvRect[slot].Y - (INV_SLOT_SIZE_PX / 2);
 			}
-		} else if (slot > SLOTXY_BELT_FIRST && slot <= SLOTXY_BELT_LAST) {            // belt
+		} else if (slot > SLOTXY_BELT_FIRST && slot <= SLOTXY_BELT_LAST) { // belt
 			slot -= 1;
 			x = InvRect[slot].X + PANEL_LEFT + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[slot].Y + PANEL_TOP - (INV_SLOT_SIZE_PX / 2);
@@ -586,7 +586,7 @@ void InvMove(MoveDirection dir)
 				x = InvRect[slot].X + RIGHT_PANEL + (INV_SLOT_SIZE_PX / 2);
 				y = InvRect[slot].Y - (INV_SLOT_SIZE_PX / 2);
 			}
-		} else if (slot >= SLOTXY_BELT_FIRST && slot < SLOTXY_BELT_LAST) {           // belt
+		} else if (slot >= SLOTXY_BELT_FIRST && slot < SLOTXY_BELT_LAST) { // belt
 			slot += 1;
 			x = InvRect[slot].X + PANEL_LEFT + (INV_SLOT_SIZE_PX / 2);
 			y = InvRect[slot].Y + PANEL_TOP - (INV_SLOT_SIZE_PX / 2);
@@ -679,10 +679,9 @@ bool HSExists(int x, int y)
 {
 	for (int r = 0; r < speedspellcount; r++) {
 		if (x >= speedspellscoords[r].x - SPLICONLENGTH / 2
-			&& x < speedspellscoords[r].x + SPLICONLENGTH / 2
-			&& y >= speedspellscoords[r].y - SPLICONLENGTH / 2
-			&& y < speedspellscoords[r].y + SPLICONLENGTH / 2
-		) {
+		    && x < speedspellscoords[r].x + SPLICONLENGTH / 2
+		    && y >= speedspellscoords[r].y - SPLICONLENGTH / 2
+		    && y < speedspellscoords[r].y + SPLICONLENGTH / 2) {
 			return true;
 		}
 	}
@@ -705,10 +704,9 @@ void HotSpellMove(MoveDirection dir)
 	int spbslot = plr[myplr]._pRSpell;
 	for (int r = 0; r < speedspellcount; r++) {
 		if (MouseX >= speedspellscoords[r].x - SPLICONLENGTH / 2
-			&& MouseX < speedspellscoords[r].x + SPLICONLENGTH / 2
-			&& MouseY >= speedspellscoords[r].y - SPLICONLENGTH / 2
-			&& MouseY < speedspellscoords[r].y + SPLICONLENGTH / 2
-		) {
+		    && MouseX < speedspellscoords[r].x + SPLICONLENGTH / 2
+		    && MouseY >= speedspellscoords[r].y - SPLICONLENGTH / 2
+		    && MouseY < speedspellscoords[r].y + SPLICONLENGTH / 2) {
 			spbslot = r;
 			break;
 		}
@@ -761,7 +759,7 @@ void SpellBookMove(MoveDirection dir)
 		if (sbooktab > 0)
 			sbooktab--;
 	} else if (dir.x == MoveDirectionX_RIGHT) {
-		if (sbooktab < 3)
+		if ((gbIsHellfire && sbooktab < 4) || (!gbIsHellfire && sbooktab < 3))
 			sbooktab++;
 	}
 }

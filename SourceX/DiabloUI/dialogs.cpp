@@ -11,9 +11,6 @@
 
 namespace dvl {
 
-extern HANDLE diabdat_mpq;
-extern SDL_Surface *pal_surface;
-
 namespace {
 
 Art dialogArt;

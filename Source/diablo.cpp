@@ -11,26 +11,21 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+bool allquests;
 SDL_Window *ghMainWnd;
 DWORD glSeedTbl[NUMLEVELS];
 int gnLevelTypeTbl[NUMLEVELS];
-#ifndef HELLFIRE
 int glEndSeed[NUMLEVELS];
 int glMid1Seed[NUMLEVELS];
 int glMid2Seed[NUMLEVELS];
 int glMid3Seed[NUMLEVELS];
-#else
-int glEndSeed[NUMLEVELS + 1];
-int glMid1Seed[NUMLEVELS + 1];
-int glMid2Seed[NUMLEVELS + 1];
-int glMid3Seed[NUMLEVELS + 1];
-#endif
 int MouseX;
 int MouseY;
 BOOL gbGameLoopStartup;
 BOOL gbRunGame;
 BOOL gbRunGameResult;
 BOOL zoomflag;
+/** Enable updating of player character, set to false once Diablo dies */
 BOOL gbProcessPlayers;
 BOOL gbLoadGame;
 int DebugMonsters[10];
@@ -48,14 +43,13 @@ int setseed;
 int debugmonsttypes;
 int PauseMode;
 bool forceSpawn;
-#ifdef HELLFIRE
+bool forceDiablo;
 BOOLEAN UseTheoQuest;
 BOOLEAN UseCowFarmer;
 BOOLEAN UseNestArt;
 BOOLEAN UseBardTest;
 BOOLEAN UseBarbarianTest;
 BOOLEAN UseMultiTest;
-#endif
 int sgnTimeoutCurs;
 char sgbMouseDown;
 int color_cycle_timer;
@@ -118,13 +112,13 @@ static void print_help_and_exit()
 	printf("    %-20s %-30s\n", "-f", "Display frames per second");
 	printf("    %-20s %-30s\n", "-x", "Run in windowed mode");
 	printf("    %-20s %-30s\n", "--spawn", "Force spawn mode even if diabdat.mpq is found");
-#ifdef HELLFIRE
+	printf("    %-20s %-30s\n", "--bardtest", "Enable the Bard class");
+	printf("    %-20s %-30s\n", "--barbariantest", "Enable the Barbarian class");
+	printf("\nHellfire options:\n");
+	printf("    %-20s %-30s\n", "--diablo", "Force diablo mode even if hellfire.mpq is found");
 	printf("    %-20s %-30s\n", "--theoquest", "Enable the Theo quest");
 	printf("    %-20s %-30s\n", "--cowquest", "Enable the Cow quest");
 	printf("    %-20s %-30s\n", "--nestart", "Use alternate nest palette");
-	printf("    %-20s %-30s\n", "--bardtest", "Enable the Bard class");
-	printf("    %-20s %-30s\n", "--barbariantest", "Enable the Barbarian class");
-#endif
 #ifdef _DEBUG
 	printf("\nDebug options:\n");
 	printf("    %-20s %-30s\n", "-d", "Increaased item drops");
@@ -140,6 +134,7 @@ static void print_help_and_exit()
 	printf("    %-20s %-30s\n", "-q <#>", "Force a certain quest");
 	printf("    %-20s %-30s\n", "-r <##########>", "Set map seed");
 	printf("    %-20s %-30s\n", "-t <##>", "Set current quest level");
+	printf("    %-20s %-30s\n", "--allquests", "Force all quests to generate in a singleplayer game");
 #endif
 	printf("\nReport bugs at https://github.com/diasurgical/devilutionX/\n");
 	diablo_quit(0);
@@ -167,7 +162,8 @@ static void diablo_parse_flags(int argc, char **argv)
 			fullscreen = FALSE;
 		} else if (strcasecmp("--spawn", argv[i]) == 0) {
 			forceSpawn = TRUE;
-#ifdef HELLFIRE
+		} else if (strcasecmp("--diablo", argv[i]) == 0) {
+			forceDiablo = TRUE;
 		} else if (strcasecmp("--theoquest", argv[i]) == 0) {
 			UseTheoQuest = TRUE;
 		} else if (strcasecmp("--cowquest", argv[i]) == 0) {
@@ -178,7 +174,6 @@ static void diablo_parse_flags(int argc, char **argv)
 			UseBardTest = TRUE;
 		} else if (strcasecmp("--barbariantest", argv[i]) == 0) {
 			UseBarbarianTest = TRUE;
-#endif
 #ifdef _DEBUG
 		} else if (strcasecmp("-^", argv[i]) == 0) {
 			debug_mode_key_inverted_v = TRUE;
@@ -219,6 +214,8 @@ static void diablo_parse_flags(int argc, char **argv)
 			visiondebug = TRUE;
 		} else if (strcasecmp("-w", argv[i]) == 0) {
 			debug_mode_key_w = TRUE;
+		} else if (strcasecmp("--allquests", argv[i]) == 0) {
+			allquests = true;
 #endif
 		} else {
 			printf("unrecognized option '%s'\n", argv[i]);
@@ -382,9 +379,7 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
 
 	do {
 		fExitProgram = FALSE;
-#ifndef HELLFIRE
 		gbLoadGame = FALSE;
-#endif
 
 		if (!NetInit(bSinglePlayer, &fExitProgram)) {
 			gbRunGameResult = !fExitProgram;
@@ -398,25 +393,16 @@ BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer)
 			InitQuests();
 			InitPortals();
 			InitDungMsgs(myplr);
-#ifndef HELLFIRE
 		}
 		if (!gbValidSaveFile || !gbLoadGame) {
-#else
-			if (!gbValidSaveFile && gbLoadGame)
-				inv_diablo_to_hellfire(myplr);
-#endif
 			uMsg = WM_DIABNEWGAME;
 		} else {
 			uMsg = WM_DIABLOADGAME;
 		}
 		run_game_loop(uMsg);
 		NetClose();
-#ifndef HELLFIRE
-		pfile_create_player_description(0, 0);
+		pfile_create_player_description(NULL, 0);
 	} while (gbRunGameResult);
-#else
-	} while (gbMaxPlayers == 1 || !gbRunGameResult);
-#endif
 
 	SNetDestroy();
 	return gbRunGameResult;
@@ -448,6 +434,8 @@ static void diablo_init()
 
 	if (forceSpawn)
 		gbIsSpawn = true;
+	if (forceDiablo)
+		gbIsHellfire = false;
 
 	UiInitialize();
 	UiSetSpawned(gbIsSpawn);
@@ -472,16 +460,12 @@ static void diablo_splash()
 
 	play_movie("gendata\\logo.smk", TRUE);
 
-#ifndef HELLFIRE
-	if (!gbIsSpawn)
-#endif
-	if (getIniBool(APP_NAME, "Intro", true)) {
-#ifndef HELLFIRE
-		play_movie("gendata\\diablo1.smk", TRUE);
-#else
+	if (gbIsHellfire && getIniBool("Hellfire", "Intro", true)) {
 		play_movie("gendata\\Hellfire.smk", TRUE);
-#endif
-		setIniValue(APP_NAME, "Intro", "0");
+		setIniValue("Hellfire", "Intro", "0");
+	} else if (!gbIsSpawn && getIniBool("Diablo", "Intro", true)) {
+		play_movie("gendata\\diablo1.smk", TRUE);
+		setIniValue("Diablo", "Intro", "0");
 	}
 
 	UiTitleDialog();
@@ -618,16 +602,14 @@ BOOL TryIconCurs()
 		return TRUE;
 	}
 
-#ifdef HELLFIRE
 	if (pcurs == CURSOR_OIL) {
 		if (pcursinvitem != -1)
 			DoOil(myplr, pcursinvitem);
 		else
-			SetCursor_(CURSOR_HAND);
+			NewCursor(CURSOR_HAND);
 		return TRUE;
 	}
 
-#endif
 	if (pcurs == CURSOR_TELEPORT) {
 		if (pcursmonst != -1)
 			NetSendCmdParam3(TRUE, CMD_TSPELLID, pcursmonst, plr[myplr]._pTSpell, GetSpellLevel(myplr, plr[myplr]._pTSpell));
@@ -715,7 +697,6 @@ static BOOL LeftMouseDown(int wParam)
 			NewCursor(CURSOR_HAND);
 	}
 
-
 	return FALSE;
 }
 
@@ -741,14 +722,10 @@ static void RightMouseDown()
 		} else if (stextflag == STORE_NONE) {
 			if (spselflag) {
 				SetSpell();
-#ifdef HELLFIRE
-			} else if ((!sbookflag || MouseX <= RIGHT_PANEL) && (MouseY >= SPANEL_HEIGHT || (!TryIconCurs() && (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem))))) {
-#else
 			} else if (MouseY >= SPANEL_HEIGHT
 			    || (!sbookflag || MouseX <= RIGHT_PANEL)
 			        && !TryIconCurs()
 			        && (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem))) {
-#endif
 				if (pcurs == CURSOR_HAND) {
 					if (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem))
 						CheckPlrSpell();
@@ -1060,7 +1037,7 @@ static void PressKey(int vkey)
 /**
  * @internal `return` must be used instead of `break` to be bin exact as C++
  */
-static void PressChar(int vkey)
+static void PressChar(WPARAM vkey)
 {
 	if (gmenu_is_active() || control_talk_last_key(vkey) || sgnTimeoutCurs != CURSOR_NONE || deathflag) {
 		return;
@@ -1317,11 +1294,6 @@ static void PressChar(int vkey)
 			GiveGoldCheat();
 		}
 		return;
-	case '~':
-		if (currlevel == 0 && debug_mode_key_w) {
-			StoresCheat();
-		}
-		return;
 #endif
 	}
 }
@@ -1465,37 +1437,33 @@ void GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 void LoadLvlGFX()
 {
-	assert(! pDungeonCels);
+	assert(!pDungeonCels);
 
 	switch (leveltype) {
 	case DTYPE_TOWN:
-#ifdef HELLFIRE
-		pDungeonCels = LoadFileInMem("NLevels\\TownData\\Town.CEL", NULL);
-		pMegaTiles = LoadFileInMem("NLevels\\TownData\\Town.TIL", NULL);
-		pLevelPieces = LoadFileInMem("NLevels\\TownData\\Town.MIN", NULL);
-#else
-		pDungeonCels = LoadFileInMem("Levels\\TownData\\Town.CEL", NULL);
-		pMegaTiles = LoadFileInMem("Levels\\TownData\\Town.TIL", NULL);
-		pLevelPieces = LoadFileInMem("Levels\\TownData\\Town.MIN", NULL);
-#endif
+		if (gbIsHellfire) {
+			pDungeonCels = LoadFileInMem("NLevels\\TownData\\Town.CEL", NULL);
+			pMegaTiles = LoadFileInMem("NLevels\\TownData\\Town.TIL", NULL);
+			pLevelPieces = LoadFileInMem("NLevels\\TownData\\Town.MIN", NULL);
+		} else {
+			pDungeonCels = LoadFileInMem("Levels\\TownData\\Town.CEL", NULL);
+			pMegaTiles = LoadFileInMem("Levels\\TownData\\Town.TIL", NULL);
+			pLevelPieces = LoadFileInMem("Levels\\TownData\\Town.MIN", NULL);
+		}
 		pSpecialCels = LoadFileInMem("Levels\\TownData\\TownS.CEL", NULL);
 		break;
 	case DTYPE_CATHEDRAL:
-#ifdef HELLFIRE
 		if (currlevel < 21) {
-#endif
 			pDungeonCels = LoadFileInMem("Levels\\L1Data\\L1.CEL", NULL);
 			pMegaTiles = LoadFileInMem("Levels\\L1Data\\L1.TIL", NULL);
 			pLevelPieces = LoadFileInMem("Levels\\L1Data\\L1.MIN", NULL);
 			pSpecialCels = LoadFileInMem("Levels\\L1Data\\L1S.CEL", NULL);
-#ifdef HELLFIRE
 		} else {
 			pDungeonCels = LoadFileInMem("NLevels\\L5Data\\L5.CEL", NULL);
 			pMegaTiles = LoadFileInMem("NLevels\\L5Data\\L5.TIL", NULL);
 			pLevelPieces = LoadFileInMem("NLevels\\L5Data\\L5.MIN", NULL);
 			pSpecialCels = LoadFileInMem("NLevels\\L5Data\\L5S.CEL", NULL);
 		}
-#endif
 		break;
 	case DTYPE_CATACOMBS:
 		pDungeonCels = LoadFileInMem("Levels\\L2Data\\L2.CEL", NULL);
@@ -1504,19 +1472,15 @@ void LoadLvlGFX()
 		pSpecialCels = LoadFileInMem("Levels\\L2Data\\L2S.CEL", NULL);
 		break;
 	case DTYPE_CAVES:
-#ifdef HELLFIRE
 		if (currlevel < 17) {
-#endif
 			pDungeonCels = LoadFileInMem("Levels\\L3Data\\L3.CEL", NULL);
 			pMegaTiles = LoadFileInMem("Levels\\L3Data\\L3.TIL", NULL);
 			pLevelPieces = LoadFileInMem("Levels\\L3Data\\L3.MIN", NULL);
-#ifdef HELLFIRE
 		} else {
 			pDungeonCels = LoadFileInMem("NLevels\\L6Data\\L6.CEL", NULL);
 			pMegaTiles = LoadFileInMem("NLevels\\L6Data\\L6.TIL", NULL);
 			pLevelPieces = LoadFileInMem("NLevels\\L6Data\\L6.MIN", NULL);
 		}
-#endif
 		pSpecialCels = LoadFileInMem("Levels\\L1Data\\L1S.CEL", NULL);
 		break;
 	case DTYPE_HELL:
@@ -1556,15 +1520,11 @@ void CreateLevel(int lvldir)
 		CreateL5Dungeon(glSeedTbl[currlevel], lvldir);
 		InitL1Triggers();
 		Freeupstairs();
-#ifdef HELLFIRE
-		if(currlevel < 21) {
+		if (currlevel < 21) {
 			LoadRndLvlPal(1);
 		} else {
 			LoadRndLvlPal(5);
 		}
-#else
-		LoadRndLvlPal(1);
-#endif
 		break;
 	case DTYPE_CATACOMBS:
 		CreateL2Dungeon(glSeedTbl[currlevel], lvldir);
@@ -1576,15 +1536,11 @@ void CreateLevel(int lvldir)
 		CreateL3Dungeon(glSeedTbl[currlevel], lvldir);
 		InitL3Triggers();
 		Freeupstairs();
-#ifdef HELLFIRE
-		if(currlevel < 17) {
+		if (currlevel < 17) {
 			LoadRndLvlPal(3);
 		} else {
 			LoadRndLvlPal(6);
 		}
-#else
-		LoadRndLvlPal(3);
-#endif
 		break;
 	case DTYPE_HELL:
 		CreateL4Dungeon(glSeedTbl[currlevel], lvldir);
@@ -1699,9 +1655,7 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 				IncProgress();
 				InitObjects();
 				InitItems();
-#ifdef HELLFIRE
-				if ( currlevel < 17 )
-#endif
+				if (currlevel < 17)
 					CreateThemeRooms();
 				IncProgress();
 				glMid3Seed[currlevel] = GetRndSeed();
@@ -1815,28 +1769,19 @@ void LoadGameLevel(BOOL firstflag, int lvldir)
 		ProcessVisionList();
 	}
 
-#ifdef HELLFIRE
-	if ( currlevel >= 21 )
-	{
-		if ( currlevel == 21 )
-		{
+	if (currlevel >= 21) {
+		if (currlevel == 21) {
 			items_427ABA(CornerStone.x, CornerStone.y);
 		}
-		if ( quests[Q_NAKRUL]._qactive == QUEST_DONE && currlevel == 24 )
-		{
+		if (quests[Q_NAKRUL]._qactive == QUEST_DONE && currlevel == 24) {
 			objects_454BA8();
 		}
 	}
-#endif
 
-#ifdef HELLFIRE
-	if ( currlevel >= 17 )
+	if (currlevel >= 17)
 		music_start(currlevel > 20 ? TMUSIC_L5 : TMUSIC_L6);
 	else
 		music_start(leveltype);
-#else
-	music_start(leveltype);
-#endif
 
 	while (!IncProgress())
 		;
@@ -1906,6 +1851,9 @@ static void timeout_cursor(BOOL bTimeout)
 	}
 }
 
+/**
+ * @param bStartup Process additional ticks before returning
+ */
 void game_loop(BOOL bStartup)
 {
 	int i;
@@ -1932,12 +1880,10 @@ void diablo_color_cyc_logic()
 
 	if (leveltype == DTYPE_HELL) {
 		lighting_color_cycling();
-#ifdef HELLFIRE
-		} else if (currlevel >= 21) {
-			palette_update_crypt();
-		} else if (currlevel >= 17) {
-			palette_update_hive();
-#endif
+	} else if (currlevel >= 21) {
+		palette_update_crypt();
+	} else if (currlevel >= 17) {
+		palette_update_hive();
 	} else if (leveltype == DTYPE_CAVES) {
 		palette_update_caves();
 	}

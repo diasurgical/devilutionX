@@ -6,6 +6,7 @@
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
+#include <config.h>
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -372,6 +373,9 @@ static void multi_begin_timeout()
 	}
 }
 
+/**
+ * @return Always true for singleplayer
+ */
 int multi_handle_delta()
 {
 	int i;
@@ -589,8 +593,6 @@ static int InitLevelType(int l)
 		return DTYPE_CATACOMBS;
 	if (l >= 9 && l <= 12)
 		return DTYPE_CAVES;
-
-#ifdef HELLFIRE
 	if (l >= 13 && l <= 16)
 		return DTYPE_HELL;
 	if (l >= 21 && l <= 24)
@@ -599,9 +601,6 @@ static int InitLevelType(int l)
 		return DTYPE_CAVES; // Hive
 
 	return DTYPE_CATHEDRAL;
-#else
-	return DTYPE_HELL;
-#endif
 }
 
 static void SetupLocalCoords()
@@ -745,9 +744,7 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		memset(&ProgramData, 0, sizeof(ProgramData));
 		ProgramData.size = sizeof(ProgramData);
 
-		ProgramData.programname = PROGRAM_NAME;
-		if (gbIsSpawn)
-			ProgramData.programname = "Diablo Shareware";
+		ProgramData.programname = PROJECT_NAME;
 
 		ProgramData.programdescription = gszVersionNumber;
 		ProgramData.programid = GAME_ID;
@@ -807,8 +804,8 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		nthread_send_and_recv_turn(0, 0);
 		SetupLocalCoords();
 		multi_send_pinfo(-2, CMD_SEND_PLRINFO);
-		gbActivePlayers = 1;
 		plr[myplr].plractive = TRUE;
+		gbActivePlayers = 1;
 		if (sgbPlayerTurnBitTbl[myplr] == FALSE || msg_wait_resync())
 			break;
 		NetClose();
@@ -819,7 +816,8 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 	tick_delay = 1000 / ticks_per_sec;
 	SetRndSeed(sgGameInitInfo.dwSeed);
 
-	for (i = 0; i < NUMLEVELS; i++) {
+	int numberOfLevels = gbIsHellfire ? NUMLEVELS : 17;
+	for (i = 0; i < numberOfLevels; i++) {
 		glSeedTbl[i] = GetRndSeed();
 		gnLevelTypeTbl[i] = InitLevelType(i);
 	}
@@ -918,6 +916,7 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv)
 	sgwPackPlrOffsetTbl[pnum] = 0;
 	multi_player_left_msg(pnum, 0);
 	plr[pnum]._pGFXLoad = 0;
+	gbIsHellfireSaveGame = gbIsHellfire;
 	UnPackPlayer(&netplr[pnum], pnum, TRUE);
 
 	if (!recv) {

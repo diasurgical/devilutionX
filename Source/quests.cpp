@@ -8,7 +8,7 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 int qtopline;
-BOOL questlog;
+bool questlog;
 BYTE *pQLogCel;
 /** Contains the quests of the current game. */
 QuestStruct quests[MAXQUESTS];
@@ -22,7 +22,7 @@ int ReturnLvlT;
 int ReturnLvl;
 
 /** Contains the data related to each quest_id. */
-QuestData questlist[MAXQUESTS] = {
+QuestData questlist[] = {
 	// clang-format off
 	// _qdlvl,  _qdmultlvl, _qlvlt,          _qdtype,     _qdrnd,  _qslvl,  _qflags,       _qdmsg,        _qlstr
 	{       5,         -1, DTYPE_NONE,      Q_ROCK,      100,      0,       QUEST_SINGLE,  TEXT_INFRA5,   "The Magic Rock"           },
@@ -41,7 +41,6 @@ QuestData questlist[MAXQUESTS] = {
 	{       2,         -1, DTYPE_CAVES,     Q_PWATER,    100,      4,       QUEST_SINGLE,  TEXT_POISON3,  "Poisoned Water Supply"    },
 	{       6,         -1, DTYPE_CATACOMBS, Q_SCHAMB,    100,      2,       QUEST_SINGLE,  TEXT_BONER,    "The Chamber of Bone"      },
 	{      15,         15, DTYPE_CATHEDRAL, Q_BETRAYER,  100,      5,       QUEST_ANY,     TEXT_VILE1,    "Archbishop Lazarus"       },
-#ifdef HELLFIRE
 	{      17,         17, DTYPE_NONE,      Q_GRAVE,     100,      0,       QUEST_ANY,     TEXT_GRAVE7,   "Grave Matters"            },
 	{      9,           9, DTYPE_NONE,      Q_FARMER,    100,      0,       QUEST_ANY,     TEXT_FARMER1,  "Farmer's Orchard"         },
 	{      17,         -1, DTYPE_NONE,      Q_GIRL,      100,      0,       QUEST_SINGLE,  TEXT_GIRL2,    "Little Girl"              },
@@ -50,7 +49,6 @@ QuestData questlist[MAXQUESTS] = {
 	{      21,         21, DTYPE_NONE,      Q_NAKRUL,    100,      0,       QUEST_ANY,     TEXT_NAKRUL1,  "Na-Krul"                  },
 	{      21,         -1, DTYPE_NONE,      Q_CORNSTN,   100,      0,       QUEST_SINGLE,  TEXT_CORNSTN,  "Cornerstone of the World" },
 	{       9,          9, DTYPE_NONE,      Q_JERSEY,    100,      0,       QUEST_ANY,     TEXT_JERSEY4,  "The Jersey's Jersey"      },
-#endif
 	// clang-format on
 };
 /**
@@ -117,36 +115,38 @@ void InitQuests()
 	initiatedQuests = 0;
 
 	for (z = 0; z < MAXQUESTS; z++) {
+		if (!gbIsHellfire && z > 15)
+			break;
 		if (gbMaxPlayers > 1 && !(questlist[z]._qflags & QUEST_ANY))
 			continue;
-			quests[z]._qtype = questlist[z]._qdtype;
-			if (gbMaxPlayers > 1) {
-				quests[z]._qlevel = questlist[z]._qdmultlvl;
-				if (!delta_quest_inited(initiatedQuests)) {
-					quests[z]._qactive = QUEST_INIT;
-					quests[z]._qvar1 = 0;
-					quests[z]._qlog = FALSE;
-				}
-				initiatedQuests++;
-			} else {
+		quests[z]._qtype = questlist[z]._qdtype;
+		if (gbMaxPlayers > 1) {
+			quests[z]._qlevel = questlist[z]._qdmultlvl;
+			if (!delta_quest_inited(initiatedQuests)) {
 				quests[z]._qactive = QUEST_INIT;
-				quests[z]._qlevel = questlist[z]._qdlvl;
 				quests[z]._qvar1 = 0;
 				quests[z]._qlog = FALSE;
 			}
+			initiatedQuests++;
+		} else {
+			quests[z]._qactive = QUEST_INIT;
+			quests[z]._qlevel = questlist[z]._qdlvl;
+			quests[z]._qvar1 = 0;
+			quests[z]._qlog = FALSE;
+		}
 
-			quests[z]._qslvl = questlist[z]._qslvl;
-			quests[z]._qtx = 0;
-			quests[z]._qty = 0;
-			quests[z]._qidx = z;
-			quests[z]._qlvltype = questlist[z]._qlvlt;
-			quests[z]._qvar2 = 0;
-			quests[z]._qmsg = questlist[z]._qdmsg;
+		quests[z]._qslvl = questlist[z]._qslvl;
+		quests[z]._qtx = 0;
+		quests[z]._qty = 0;
+		quests[z]._qidx = z;
+		quests[z]._qlvltype = questlist[z]._qlvlt;
+		quests[z]._qvar2 = 0;
+		quests[z]._qmsg = questlist[z]._qdmsg;
 	}
 
-	if (gbMaxPlayers == 1) {
+	if (gbMaxPlayers == 1 && !allquests) {
 		SetRndSeed(glSeedTbl[15]);
-		if (random_(0, 2))
+		if (random_(0, 2) != 0)
 			quests[Q_PWATER]._qactive = QUEST_NOTAVAIL;
 		else
 			quests[Q_SKELKING]._qactive = QUEST_NOTAVAIL;
@@ -202,7 +202,7 @@ void CheckQuests()
 		quests[Q_BETRAYER]._qty = 2 * quests[Q_BETRAYER]._qty + 16;
 		rportx = quests[Q_BETRAYER]._qtx;
 		rporty = quests[Q_BETRAYER]._qty;
-		AddMissile(rportx, rporty, rportx, rporty, 0, MIS_RPORTAL, 0, myplr, 0, 0);
+		AddMissile(rportx, rporty, rportx, rporty, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
 		quests[Q_BETRAYER]._qvar2 = 1;
 		if (quests[Q_BETRAYER]._qactive == QUEST_ACTIVE) {
 			quests[Q_BETRAYER]._qvar1 = 3;
@@ -215,7 +215,7 @@ void CheckQuests()
 	    && quests[Q_BETRAYER]._qvar2 == 4) {
 		rportx = 35;
 		rporty = 32;
-		AddMissile(rportx, rporty, rportx, rporty, 0, MIS_RPORTAL, 0, myplr, 0, 0);
+		AddMissile(rportx, rporty, rportx, rporty, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
 		quests[Q_BETRAYER]._qvar2 = 3;
 	}
 
@@ -311,16 +311,13 @@ void CheckQuestKill(int m, BOOL sendmsg)
 			sfxdnum = PS_ROGUE82;
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE82;
-		}
-#ifdef HELLFIRE
-		else if (plr[myplr]._pClass == PC_MONK) {
+		} else if (plr[myplr]._pClass == PC_MONK) {
 			sfxdnum = PS_MONK82;
 		} else if (plr[myplr]._pClass == PC_BARD) {
 			sfxdnum = PS_ROGUE82;
 		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 			sfxdnum = PS_WARR82;
 		}
-#endif
 		if (sendmsg)
 			NetSendCmdQuest(TRUE, Q_SKELKING);
 
@@ -333,16 +330,13 @@ void CheckQuestKill(int m, BOOL sendmsg)
 			sfxdnum = PS_ROGUE80;
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE80;
-		}
-#ifdef HELLFIRE
-		else if (plr[myplr]._pClass == PC_MONK) {
+		} else if (plr[myplr]._pClass == PC_MONK) {
 			sfxdnum = PS_MONK80;
 		} else if (plr[myplr]._pClass == PC_BARD) {
 			sfxdnum = PS_ROGUE80;
 		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 			sfxdnum = PS_WARR80;
 		}
-#endif
 		if (sendmsg)
 			NetSendCmdQuest(TRUE, Q_BUTCHER);
 	} else if (monster[m].mName == UniqMonst[UMT_GARBUD].mName) { //"Gharbad the Weak"
@@ -354,16 +348,13 @@ void CheckQuestKill(int m, BOOL sendmsg)
 			sfxdnum = PS_ROGUE61;
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE61;
-		}
-#ifdef HELLFIRE
-		else if (plr[myplr]._pClass == PC_MONK) {
+		} else if (plr[myplr]._pClass == PC_MONK) {
 			sfxdnum = PS_MONK61;
 		} else if (plr[myplr]._pClass == PC_BARD) {
 			sfxdnum = PS_ROGUE61;
 		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 			sfxdnum = PS_WARR61;
 		}
-#endif
 	} else if (monster[m].mName == UniqMonst[UMT_ZHAR].mName) { //"Zhar the Mad"
 		quests[Q_ZHAR]._qactive = QUEST_DONE;
 		sfxdelay = 30;
@@ -373,16 +364,13 @@ void CheckQuestKill(int m, BOOL sendmsg)
 			sfxdnum = PS_ROGUE62;
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE62;
-		}
-#ifdef HELLFIRE
-		else if (plr[myplr]._pClass == PC_MONK) {
+		} else if (plr[myplr]._pClass == PC_MONK) {
 			sfxdnum = PS_MONK62;
 		} else if (plr[myplr]._pClass == PC_BARD) {
 			sfxdnum = PS_ROGUE62;
 		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 			sfxdnum = PS_WARR62;
 		}
-#endif
 	} else if (monster[m].mName == UniqMonst[UMT_LAZURUS].mName && gbMaxPlayers != 1) { //"Arch-Bishop Lazarus"
 		quests[Q_BETRAYER]._qactive = QUEST_DONE;
 		quests[Q_BETRAYER]._qvar1 = 7;
@@ -405,16 +393,13 @@ void CheckQuestKill(int m, BOOL sendmsg)
 			sfxdnum = PS_ROGUE83;
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE83;
-		}
-#ifdef HELLFIRE
-		else if (plr[myplr]._pClass == PC_MONK) {
+		} else if (plr[myplr]._pClass == PC_MONK) {
 			sfxdnum = PS_MONK83;
 		} else if (plr[myplr]._pClass == PC_BARD) {
 			sfxdnum = PS_ROGUE83;
 		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 			sfxdnum = PS_WARR83;
 		}
-#endif
 		if (sendmsg) {
 			NetSendCmdQuest(TRUE, Q_BETRAYER);
 			NetSendCmdQuest(TRUE, Q_DIABLO);
@@ -426,23 +411,20 @@ void CheckQuestKill(int m, BOOL sendmsg)
 		quests[Q_BETRAYER]._qvar1 = 7;
 		quests[Q_BETRAYER]._qvar2 = 4;
 		quests[Q_DIABLO]._qactive = QUEST_ACTIVE;
-		AddMissile(35, 32, 35, 32, 0, MIS_RPORTAL, 0, myplr, 0, 0);
+		AddMissile(35, 32, 35, 32, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
 		if (plr[myplr]._pClass == PC_WARRIOR) {
 			sfxdnum = PS_WARR83;
 		} else if (plr[myplr]._pClass == PC_ROGUE) {
 			sfxdnum = PS_ROGUE83;
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE83;
-		}
-#ifdef HELLFIRE
-		else if (plr[myplr]._pClass == PC_MONK) {
+		} else if (plr[myplr]._pClass == PC_MONK) {
 			sfxdnum = PS_MONK83;
 		} else if (plr[myplr]._pClass == PC_BARD) {
 			sfxdnum = PS_ROGUE83;
 		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 			sfxdnum = PS_WARR83;
 		}
-#endif
 	} else if (monster[m].mName == UniqMonst[UMT_WARLORD].mName) { //"Warlord of Blood"
 		quests[Q_WARLORD]._qactive = QUEST_DONE;
 		sfxdelay = 30;
@@ -452,16 +434,13 @@ void CheckQuestKill(int m, BOOL sendmsg)
 			sfxdnum = PS_ROGUE94;
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE94;
-		}
-#ifdef HELLFIRE
-		else if (plr[myplr]._pClass == PC_MONK) {
+		} else if (plr[myplr]._pClass == PC_MONK) {
 			sfxdnum = PS_MONK94;
 		} else if (plr[myplr]._pClass == PC_BARD) {
 			sfxdnum = PS_ROGUE94;
 		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 			sfxdnum = PS_WARR94;
 		}
-#endif
 	}
 }
 
@@ -719,7 +698,6 @@ void ResyncMPQuests()
 	}
 	if (QuestStatus(Q_BETRAYER))
 		AddObject(OBJ_ALTBOY, 2 * setpc_x + 20, 2 * setpc_y + 22);
-#ifdef HELLFIRE
 	if (quests[Q_GRAVE]._qactive == 1 && currlevel == quests[Q_GRAVE]._qlevel - 1) {
 		quests[Q_GRAVE]._qactive = 2;
 		NetSendCmdQuest(TRUE, Q_GRAVE);
@@ -736,7 +714,6 @@ void ResyncMPQuests()
 		quests[Q_JERSEY]._qactive = 2;
 		NetSendCmdQuest(TRUE, Q_JERSEY);
 	}
-#endif
 }
 
 void ResyncQuests()

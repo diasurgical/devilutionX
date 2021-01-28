@@ -45,9 +45,7 @@ void RemovePlrFromMap(int pnum);
 void StartPlrHit(int pnum, int dam, BOOL forcehit);
 void StartPlayerKill(int pnum, int earflag);
 void DropHalfPlayersGold(int pnum);
-#ifdef HELLFIRE
 void StripTopGold(int pnum);
-#endif
 void SyncPlrKill(int pnum, int earflag);
 void RemovePlrMissiles(int pnum);
 void StartNewLvl(int pnum, int fom, int lvl);
@@ -73,11 +71,9 @@ void SetPlrDex(int p, int v);
 void SetPlrVit(int p, int v);
 void InitDungMsgs(int pnum);
 void PlayDungMsgs();
-#ifdef HELLFIRE
-int player_45EFA1(int i);
-int player_45EFAB(int i);
-int player_45EFB5(int i);
-#endif
+int get_max_strength(int i);
+int get_max_magic(int i);
+int get_max_dexterity(int i);
 
 /* data */
 
@@ -90,7 +86,8 @@ extern int MagicTbl[NUM_CLASSES];
 extern int DexterityTbl[NUM_CLASSES];
 extern int VitalityTbl[NUM_CLASSES];
 extern int MaxStats[NUM_CLASSES][4];
-extern const char *const ClassStrTbl[NUM_CLASSES];
+extern const char *const ClassStrTblOld[];
+extern const char *const ClassStrTbl[];
 
 #ifdef __cplusplus
 }

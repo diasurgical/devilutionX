@@ -31,9 +31,7 @@ void InitMonsters();
 void SetMapMonsters(BYTE *pMap, int startx, int starty);
 void DeleteMonster(int i);
 int AddMonster(int x, int y, int dir, int mtype, BOOL InMap);
-#ifdef HELLFIRE
 void monster_43C785(int i);
-#endif
 BOOL M_Talker(int i);
 void M_StartStand(int i, int md);
 void M_ClearSquares(int i);
@@ -67,34 +65,26 @@ void MAI_GoatMc(int i);
 void MAI_Ranged(int i, int missile_type, BOOL special);
 void MAI_GoatBow(int i);
 void MAI_Succ(int i);
-#ifdef HELLFIRE
-void mai_ranged_441649(int i);
-void mai_ranged_441654(int i);
-void mai_ranged_44165F(int i);
-void mai_ranged_44166A(int i);
-#endif
+void MAI_Lich(int i);
+void MAI_ArchLich(int i);
+void MAI_Psychorb(int i);
+void MAI_Necromorb(int i);
 void MAI_AcidUniq(int i);
-#ifdef HELLFIRE
-void mai_ranged_441680(int i);
-void mai_ranged_44168B(int i);
-#endif
+void MAI_Firebat(int i);
+void MAI_Torchant(int i);
 void MAI_Scav(int i);
 void MAI_Garg(int i);
 void MAI_RoundRanged(int i, int missile_type, BOOL checkdoors, int dam, int lessmissiles);
 void MAI_Magma(int i);
 void MAI_Storm(int i);
-#ifdef HELLFIRE
-void mai_roundranged_441EA0(int i);
-#endif
+void MAI_BoneDemon(int i);
 void MAI_Acid(int i);
 void MAI_Diablo(int i);
 void MAI_Mega(int i);
 void MAI_Golum(int i);
 void MAI_SkelKing(int i);
 void MAI_Rhino(int i);
-#ifdef HELLFIRE
-void mai_horkdemon(int i);
-#endif
+void MAI_HorkDemon(int i);
 void MAI_Counselor(int i);
 void MAI_Garbud(int i);
 void MAI_Zhar(int i);
@@ -118,9 +108,7 @@ void PrintMonstHistory(int mt);
 void PrintUniqueHistory();
 void MissToMonst(int i, int x, int y);
 BOOL PosOkMonst(int i, int x, int y);
-#ifdef HELLFIRE
 BOOLEAN monster_posok(int i, int x, int y);
-#endif
 BOOL PosOkMonst2(int i, int x, int y);
 BOOL PosOkMonst3(int i, int x, int y);
 BOOL IsSkel(int mt);

@@ -12,6 +12,22 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+typedef struct LightListStruct {
+	int _lx;
+	int _ly;
+	int _lradius;
+	int _lid;
+	int _ldel;
+	int _lunflag;
+	int field_18;
+	int _lunx;
+	int _luny;
+	int _lunr;
+	int _xoff;
+	int _yoff;
+	int _lflags;
+} LightListStruct;
+
 extern LightListStruct VisionList[MAXVISION];
 extern BYTE lightactive[MAXLIGHTS];
 extern LightListStruct LightList[MAXLIGHTS];

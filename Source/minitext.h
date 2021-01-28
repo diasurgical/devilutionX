@@ -12,7 +12,7 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
-extern BOOLEAN qtextflag;
+extern bool qtextflag;
 
 void FreeQuestText();
 void InitQuestText();

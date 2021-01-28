@@ -35,10 +35,8 @@ const char *const sgszSpawnMusicTracks[NUM_MUSIC] = {
 	"Music\\sLvlA.wav",
 	"Music\\sLvlA.wav",
 	"Music\\sLvlA.wav",
-#ifdef HELLFIRE
-	"Music\\sLvlA.wav",
-	"Music\\sLvlA.wav",
-#endif
+	"Music\\DLvlE.wav",
+	"Music\\DLvlF.wav",
 	"Music\\sintro.wav",
 };
 /** Maps from track ID to track name. */
@@ -48,17 +46,15 @@ const char *const sgszMusicTracks[NUM_MUSIC] = {
 	"Music\\DLvlB.wav",
 	"Music\\DLvlC.wav",
 	"Music\\DLvlD.wav",
-#ifdef HELLFIRE
 	"Music\\DLvlE.wav",
 	"Music\\DLvlF.wav",
-#endif
 	"Music\\Dintro.wav",
 };
 
 static void snd_get_volume(const char *value_name, int *value)
 {
 	int v = *value;
-	if (!SRegLoadValue(APP_NAME, value_name, 0, &v)) {
+	if (!SRegLoadValue("Diablo", value_name, 0, &v)) {
 		v = VOLUME_MAX;
 	}
 	*value = v;
@@ -73,7 +69,7 @@ static void snd_get_volume(const char *value_name, int *value)
 
 static void snd_set_volume(const char *key, int value)
 {
-	SRegSaveValue(APP_NAME, key, 0, value);
+	SRegSaveValue("Diablo", key, 0, value);
 }
 
 BOOL snd_playing(TSnd *pSnd)
@@ -121,7 +117,7 @@ TSnd *sound_file_load(const char *path)
 	DWORD dwBytes;
 	int error;
 
-	WOpenFile(path, &file, false);
+	SFileOpenFile(path, &file);
 	pSnd = (TSnd *)DiabloAllocPtr(sizeof(TSnd));
 	memset(pSnd, 0, sizeof(TSnd));
 	pSnd->sound_path = path;
@@ -133,7 +129,7 @@ TSnd *sound_file_load(const char *path)
 
 	pSnd->DSB = new SoundSample();
 	error = pSnd->DSB->SetChunk(wave_file, dwBytes);
-	WCloseFile(file);
+	SFileCloseFile(file);
 	mem_free_dbg(wave_file);
 	if (error != 0) {
 		ErrSdl();
@@ -177,8 +173,6 @@ void snd_init(HWND hWnd)
 
 void sound_cleanup()
 {
-	SFileDdaDestroy();
-
 	if (gbSndInited) {
 		gbSndInited = false;
 		snd_set_volume("Sound Volume", sglSoundVolume);
@@ -208,7 +202,7 @@ void music_start(int nTrack)
 	assert((DWORD)nTrack < NUM_MUSIC);
 	music_stop();
 	if (gbMusicOn) {
-		if (gbIsSpawn)
+		if (spawn_mpq)
 			trackPath = sgszSpawnMusicTracks[nTrack];
 		else
 			trackPath = sgszMusicTracks[nTrack];

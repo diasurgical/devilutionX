@@ -24,9 +24,7 @@ extern char arch_draw_type;
 extern int cel_transparency_active;
 extern int cel_foliage_active;
 extern int level_piece_id;
-#ifdef HELLFIRE
 extern BOOLEAN AutoMapShowItems;
-#endif
 
 extern int tileOffsetX;
 extern int tileOffsetY;

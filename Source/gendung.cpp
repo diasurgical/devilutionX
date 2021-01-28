@@ -118,8 +118,6 @@ BOOLEAN TransList[256];
 int dPiece[MAXDUNX][MAXDUNY];
 /** Specifies the dungeon piece information for a given coordinate and block number. */
 MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
-/** Specifies the dungeon piece information for a given coordinate and block number, optimized for diagonal access. */
-MICROS dpiece_defs_map_1[MAXDUNX * MAXDUNY];
 /** Specifies the transparency at each coordinate of the map. */
 char dTransVal[MAXDUNX][MAXDUNY];
 char dLight[MAXDUNX][MAXDUNY];
@@ -170,34 +168,25 @@ void FillSolidBlockTbls()
 
 	switch (leveltype) {
 	case DTYPE_TOWN:
-#ifdef HELLFIRE
-		pSBFile = LoadFileInMem("NLevels\\TownData\\Town.SOL", &dwTiles);
-#else
-		pSBFile = LoadFileInMem("Levels\\TownData\\Town.SOL", &dwTiles);
-#endif
+		if (gbIsHellfire)
+			pSBFile = LoadFileInMem("NLevels\\TownData\\Town.SOL", &dwTiles);
+		else
+			pSBFile = LoadFileInMem("Levels\\TownData\\Town.SOL", &dwTiles);
 		break;
 	case DTYPE_CATHEDRAL:
-#ifdef HELLFIRE
-		if ( currlevel < 17 )
+		if (currlevel < 17)
 			pSBFile = LoadFileInMem("Levels\\L1Data\\L1.SOL", &dwTiles);
 		else
 			pSBFile = LoadFileInMem("NLevels\\L5Data\\L5.SOL", &dwTiles);
-#else
-		pSBFile = LoadFileInMem("Levels\\L1Data\\L1.SOL", &dwTiles);
-#endif
 		break;
 	case DTYPE_CATACOMBS:
 		pSBFile = LoadFileInMem("Levels\\L2Data\\L2.SOL", &dwTiles);
 		break;
 	case DTYPE_CAVES:
-#ifdef HELLFIRE
-		if ( currlevel < 17 )
+		if (currlevel < 17)
 			pSBFile = LoadFileInMem("Levels\\L3Data\\L3.SOL", &dwTiles);
 		else
 			pSBFile = LoadFileInMem("NLevels\\L6Data\\L6.SOL", &dwTiles);
-#else
-		pSBFile = LoadFileInMem("Levels\\L3Data\\L3.SOL", &dwTiles);
-#endif
 		break;
 	case DTYPE_HELL:
 		pSBFile = LoadFileInMem("Levels\\L4Data\\L4.SOL", &dwTiles);

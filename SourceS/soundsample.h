@@ -5,11 +5,12 @@ namespace dvl {
 
 typedef struct SoundSample final {
 public:
-	void Release() ;
-	bool IsPlaying() ;
-	void Play(int lVolume, int lPan) ;
-	void Stop() ;
-	int SetChunk(BYTE *fileData, DWORD dwBytes) ;
+	void Release();
+	bool IsPlaying();
+	void Play(int lVolume, int lPan, int channel = -1);
+	void Stop();
+	int SetChunk(BYTE *fileData, DWORD dwBytes);
+	int GetLength();
 
 private:
 	Mix_Chunk *chunk;

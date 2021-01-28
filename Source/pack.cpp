@@ -12,7 +12,11 @@ void PackItem(PkItemStruct *id, ItemStruct *is)
 	if (is->_itype == ITYPE_NONE) {
 		id->idx = 0xFFFF;
 	} else {
-		id->idx = SwapLE16(is->IDidx);
+		int idx = is->IDidx;
+		if (!gbIsHellfire) {
+			idx = RemapItemIdxToDiablo(idx);
+		}
+		id->idx = SwapLE16(idx);
 		if (is->IDidx == IDI_EAR) {
 			id->iCreateInfo = is->_iName[8] | (is->_iName[7] << 8);
 			id->iSeed = SwapLE32(is->_iName[12] | ((is->_iName[11] | ((is->_iName[10] | (is->_iName[9] << 8)) << 8)) << 8));
@@ -72,10 +76,8 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield)
 
 	for (i = 0; i < 37; i++) // Should be MAX_SPELLS but set to 37 to make save games compatible
 		pPack->pSplLvl[i] = pPlayer->_pSplLvl[i];
-#ifdef HELLFIRE
 	for (i = 37; i < 47; i++)
 		pPack->pSplLvl2[i - 37] = pPlayer->_pSplLvl[i];
-#endif
 
 	pki = &pPack->InvBody[0];
 	pi = &pPlayer->InvBody[0];
@@ -108,11 +110,9 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield)
 		pi++;
 	}
 
-#ifdef HELLFIRE
-	pPack->wReflection = pPlayer->wReflection;
-	pPack->pDifficulty = pPlayer->pDifficulty;
-	pPack->pDamAcFlags = pPlayer->pDamAcFlags;
-#endif
+	pPack->wReflections = SwapLE16(pPlayer->wReflections);
+	pPack->pDifficulty = SwapLE32(pPlayer->pDifficulty);
+	pPack->pDamAcFlags = SwapLE32(pPlayer->pDamAcFlags);
 	pPack->pDiabloKillLevel = SwapLE32(pPlayer->pDiabloKillLevel);
 
 	if (gbMaxPlayers == 1 || manashield)
@@ -129,9 +129,6 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield)
  * @param is The source packed item
  * @param id The distination item
  */
-#ifndef HELLFIRE
-static
-#endif
 void UnPackItem(PkItemStruct *is, ItemStruct *id)
 {
 	WORD idx = SwapLE16(is->idx);
@@ -139,6 +136,9 @@ void UnPackItem(PkItemStruct *is, ItemStruct *id)
 	if (idx == 0xFFFF) {
 		id->_itype = ITYPE_NONE;
 	} else {
+		if (!gbIsHellfireSaveGame) {
+			idx = RemapItemIdxFromDiablo(idx);
+		}
 		if (idx == IDI_EAR) {
 			RecreateEar(
 			    MAXITEMS,
@@ -226,12 +226,10 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL killok)
 	pPlayer->_pManaBase = SwapLE32(pPack->pManaBase);
 	pPlayer->_pMemSpells = SDL_SwapLE64(pPack->pMemSpells);
 
-	for (i = 0; i < 37; i++) // Should be MAX_SPELLS but set to 37 to make save games compatible
+	for (i = 0; i < 37; i++) // Should be MAX_SPELLS but set to 36 to make save games compatible
 		pPlayer->_pSplLvl[i] = pPack->pSplLvl[i];
-#ifdef HELLFIRE
 	for (i = 37; i < 47; i++)
 		pPlayer->_pSplLvl[i] = pPack->pSplLvl2[i - 37];
-#endif
 
 	pki = &pPack->InvBody[0];
 	pi = &pPlayer->InvBody[0];
@@ -272,14 +270,14 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL killok)
 	}
 
 	CalcPlrInv(pnum, FALSE);
-	pPlayer->wReflection = pPack->wReflection;
+	pPlayer->wReflections = SwapLE16(pPack->wReflections);
 	pPlayer->pTownWarps = 0;
 	pPlayer->pDungMsgs = 0;
 	pPlayer->pDungMsgs2 = 0;
 	pPlayer->pLvlLoad = 0;
 	pPlayer->pDiabloKillLevel = SwapLE32(pPack->pDiabloKillLevel);
 	pPlayer->pBattleNet = pPack->pBattleNet;
-	pPlayer->pManaShield = pPack->pManaShield;
+	pPlayer->pManaShield = SwapLE32(pPack->pManaShield);
 	pPlayer->pDifficulty = SwapLE32(pPack->pDifficulty);
 	pPlayer->pDamAcFlags = SwapLE32(pPack->pDamAcFlags);
 }

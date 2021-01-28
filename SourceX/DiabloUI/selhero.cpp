@@ -35,7 +35,7 @@ BOOL(*gfnHeroInfo)
 (BOOL (*fninfofunc)(_uiheroinfo *));
 BOOL(*gfnHeroCreate)
 (_uiheroinfo *);
-BOOL(*gfnHeroStats)
+void(*gfnHeroStats)
 (unsigned int, _uidefaultstats *);
 
 namespace {
@@ -92,10 +92,9 @@ void selhero_Free()
 void selhero_SetStats()
 {
 	int heroclass = selhero_heroInfo.heroclass;
-#ifdef HELLFIRE
-	if (heroclass == UI_BARBARIAN)
-		heroclass = UI_WARRIOR;
-#endif
+	if (heroclass == PC_BARBARIAN) {
+		heroclass = PC_WARRIOR; // The graphics is missing from heros.pcx
+	}
 	SELHERO_DIALOG_HERO_IMG->m_frame = heroclass;
 	snprintf(textStats[0], sizeof(textStats[0]), "%d", selhero_heroInfo.level);
 	snprintf(textStats[1], sizeof(textStats[1]), "%d", selhero_heroInfo.strength);
@@ -150,7 +149,11 @@ void selhero_Init()
 	vecSelHeroDialog.push_back(new UiArtText(title, rect1, UIS_CENTER | UIS_BIG));
 
 	SDL_Rect rect2 = { PANEL_LEFT + 30, (UI_OFFSET_Y + 211), 180, 76 };
-	SELHERO_DIALOG_HERO_IMG = new UiImage(&ArtHero, UI_NUM_CLASSES, rect2);
+	if (hellfire_mpq) {
+		SELHERO_DIALOG_HERO_IMG = new UiImage(&ArtHero, 5, rect2);
+	} else {
+		SELHERO_DIALOG_HERO_IMG = new UiImage(&ArtHero, 3, rect2);
+	}
 	vecSelHeroDialog.push_back(SELHERO_DIALOG_HERO_IMG);
 
 	SDL_Rect rect3 = { PANEL_LEFT + 39, (UI_OFFSET_Y + 323), 110, 21 };
@@ -235,11 +238,7 @@ void selhero_List_Focus(int value)
 		return;
 	}
 
-#ifdef HELLFIRE
-	SELHERO_DIALOG_HERO_IMG->m_frame = 5;
-#else
-	SELHERO_DIALOG_HERO_IMG->m_frame = UI_NUM_CLASSES;
-#endif
+	SELHERO_DIALOG_HERO_IMG->m_frame = hellfire_mpq ? 5 : 3;
 	strncpy(textStats[0], "--", sizeof(textStats[0]) - 1);
 	strncpy(textStats[1], "--", sizeof(textStats[1]) - 1);
 	strncpy(textStats[2], "--", sizeof(textStats[2]) - 1);
@@ -266,20 +265,20 @@ void selhero_List_Select(int value)
 
 		selhero_FreeListItems();
 		int itemH = 33;
-		vecSelHeroDlgItems.push_back(new UiListItem("Warrior", UI_WARRIOR));
-		vecSelHeroDlgItems.push_back(new UiListItem("Rogue", UI_ROGUE));
-		vecSelHeroDlgItems.push_back(new UiListItem("Sorcerer", UI_SORCERER));
-#ifdef HELLFIRE
-		vecSelHeroDlgItems.push_back(new UiListItem("Monk", UI_MONK));
+		vecSelHeroDlgItems.push_back(new UiListItem("Warrior", PC_WARRIOR));
+		vecSelHeroDlgItems.push_back(new UiListItem("Rogue", PC_ROGUE));
+		vecSelHeroDlgItems.push_back(new UiListItem("Sorcerer", PC_SORCERER));
+		if (gbIsHellfire) {
+			vecSelHeroDlgItems.push_back(new UiListItem("Monk", PC_MONK));
+		}
 		if (UseBardTest) {
-			vecSelHeroDlgItems.push_back(new UiListItem("Bard", UI_BARD));
+			vecSelHeroDlgItems.push_back(new UiListItem("Bard", PC_BARD));
 		}
 		if (UseBarbarianTest) {
-			vecSelHeroDlgItems.push_back(new UiListItem("Barbarian", UI_BARBARIAN));
+			vecSelHeroDlgItems.push_back(new UiListItem("Barbarian", PC_BARBARIAN));
 		}
 		if (vecSelHeroDlgItems.size() > 4)
 			itemH = 26;
-#endif
 		int itemY = 246 + (176 - vecSelHeroDlgItems.size() * itemH) / 2;
 		vecSelDlgItems.push_back(new UiList(vecSelHeroDlgItems, PANEL_LEFT + 264, (UI_OFFSET_Y + itemY), 320, itemH, UIS_CENTER | UIS_MED | UIS_GOLD));
 
@@ -349,7 +348,7 @@ void selhero_ClassSelector_Focus(int value)
 void selhero_ClassSelector_Select(int value)
 {
 	int hClass = vecSelHeroDlgItems[value]->m_value;
-	if (gbSpawned && (hClass == UI_ROGUE || hClass == UI_SORCERER)) {
+	if (gbSpawned && (hClass == PC_ROGUE || hClass == PC_SORCERER || hClass == PC_BARD)) {
 		ArtBackground.Unload();
 		UiSelOkDialog(NULL, "The Rogue and Sorcerer are only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase.", false);
 		LoadBackgroundArt("ui_art\\selhero.pcx");
@@ -468,7 +467,7 @@ BOOL SelHero_GetHeroInfo(_uiheroinfo *pInfo)
 BOOL UiSelHeroDialog(
     BOOL (*fninfo)(BOOL (*fninfofunc)(_uiheroinfo *)),
     BOOL (*fncreate)(_uiheroinfo *),
-    BOOL (*fnstats)(unsigned int, _uidefaultstats *),
+    void (*fnstats)(unsigned int, _uidefaultstats *),
     BOOL (*fnremove)(_uiheroinfo *),
     int *dlgresult,
     char *name)
@@ -529,7 +528,7 @@ BOOL UiSelHeroSingDialog(
     BOOL (*fninfo)(BOOL (*fninfofunc)(_uiheroinfo *)),
     BOOL (*fncreate)(_uiheroinfo *),
     BOOL (*fnremove)(_uiheroinfo *),
-    BOOL (*fnstats)(unsigned int, _uidefaultstats *),
+    void (*fnstats)(unsigned int, _uidefaultstats *),
     int *dlgresult,
     char *name,
     int *difficulty)
@@ -544,7 +543,7 @@ BOOL UiSelHeroMultDialog(
     BOOL (*fninfo)(BOOL (*fninfofunc)(_uiheroinfo *)),
     BOOL (*fncreate)(_uiheroinfo *),
     BOOL (*fnremove)(_uiheroinfo *),
-    BOOL (*fnstats)(unsigned int, _uidefaultstats *),
+    void (*fnstats)(unsigned int, _uidefaultstats *),
     int *dlgresult,
     BOOL *hero_is_created,
     char *name)

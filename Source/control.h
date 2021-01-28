@@ -12,6 +12,13 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+typedef struct RECT32 {
+	int x;
+	int y;
+	int w;
+	int h;
+} RECT32;
+
 extern BOOL drawhpflag;
 extern BOOL dropGoldFlag;
 extern BOOL panbtn[8];
@@ -98,7 +105,6 @@ extern const BYTE gbFontTransTbl[256];
 /* data */
 
 extern RECT32 ChrBtnsRect[4];
-
 
 #ifdef __cplusplus
 }

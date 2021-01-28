@@ -12,6 +12,12 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+extern bool gbIsHellfireSaveGame;
+extern int giNumberOfLevels;
+
+int RemapItemIdxFromDiablo(int i);
+int RemapItemIdxToDiablo(int i);
+bool IsHeaderValid(int magicNumber);
 void LoadGame(BOOL firstflag);
 void SaveGame();
 void SaveLevel();

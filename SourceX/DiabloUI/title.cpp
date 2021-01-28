@@ -8,17 +8,19 @@ std::vector<UiItemBase *> vecTitleScreen;
 
 void title_Load()
 {
-#ifdef HELLFIRE
-	LoadBackgroundArt("ui_art\\hf_logo1.pcx", 16);
-#else
-	LoadBackgroundArt("ui_art\\title.pcx");
-	LoadMaskedArt("ui_art\\logo.pcx", &ArtLogos[LOGO_BIG], 15);
-#endif
+	if (gbIsHellfire) {
+		LoadBackgroundArt("ui_art\\hf_logo1.pcx", 16);
+		LoadArt("ui_art\\hf_titlew.pcx", &ArtBackgroundWidescreen);
+	} else {
+		LoadBackgroundArt("ui_art\\title.pcx");
+		LoadMaskedArt("ui_art\\logo.pcx", &ArtLogos[LOGO_BIG], 15);
+	}
 }
 
 void title_Free()
 {
 	ArtBackground.Unload();
+	ArtBackgroundWidescreen.Unload();
 	ArtLogos[LOGO_BIG].Unload();
 
 	for (std::size_t i = 0; i < vecTitleScreen.size(); i++) {
@@ -30,17 +32,17 @@ void title_Free()
 
 void UiTitleDialog()
 {
-#ifdef HELLFIRE
-	SDL_Rect rect = { 0, UI_OFFSET_Y, 0, 0 };
-	vecTitleScreen.push_back(new UiImage(&ArtBackground, /*animated=*/true, /*frame=*/0, rect, UIS_CENTER));
-#else
-	UiAddBackground(&vecTitleScreen);
-	UiAddLogo(&vecTitleScreen, LOGO_BIG, 182);
+	if (gbIsHellfire) {
+		SDL_Rect rect = { 0, UI_OFFSET_Y, 0, 0 };
+		vecTitleScreen.push_back(new UiImage(&ArtBackgroundWidescreen, /*animated=*/true, /*frame=*/0, rect, UIS_CENTER));
+		vecTitleScreen.push_back(new UiImage(&ArtBackground, /*animated=*/true, /*frame=*/0, rect, UIS_CENTER));
+	} else {
+		UiAddBackground(&vecTitleScreen);
+		UiAddLogo(&vecTitleScreen, LOGO_BIG, 182);
 
-	SDL_Rect rect = { PANEL_LEFT + 49, (UI_OFFSET_Y + 410), 550, 26 };
-	vecTitleScreen.push_back(new UiArtText("Copyright \xA9 1996-2001 Blizzard Entertainment", rect, UIS_MED | UIS_CENTER));
-#endif
-
+		SDL_Rect rect = { PANEL_LEFT + 49, (UI_OFFSET_Y + 410), 550, 26 };
+		vecTitleScreen.push_back(new UiArtText("Copyright \xA9 1996-2001 Blizzard Entertainment", rect, UIS_MED | UIS_CENTER));
+	}
 	title_Load();
 
 	bool endMenu = false;
