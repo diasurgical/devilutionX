@@ -193,7 +193,7 @@ BOOL CheckThemeObj3(int xp, int yp, int t, int f)
 			return FALSE;
 		if (dObject[xp + trm3x[i]][yp + trm3y[i]])
 			return FALSE;
-		if (f != -1 && !random_(0, f))
+		if (f != -1 && random_(0, f) == 0)
 			return FALSE;
 	}
 
@@ -494,16 +494,12 @@ void HoldThemeRooms()
 void PlaceThemeMonsts(int t, int f)
 {
 	int xp, yp;
-#ifdef HELLFIRE
 	int scattertypes[138];
-#else
-	int scattertypes[111];
-#endif
 	int numscattypes, mtype, i;
 
 	numscattypes = 0;
 	for (i = 0; i < nummtypes; i++) {
-		if (Monsters[i].mPlaceFlags & 1) {
+		if (Monsters[i].mPlaceFlags & PLACE_SCATTER) {
 			scattertypes[numscattypes] = i;
 			numscattypes++;
 		}

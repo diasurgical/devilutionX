@@ -48,6 +48,7 @@
 // For now we only process ASCII input when using SDL1.
 #define SDL_TEXTINPUTEVENT_TEXT_SIZE 2
 
+#define SDL_JoystickID Sint32
 #define SDL_JoystickNameForIndex SDL_JoystickName
 
 inline void SDL_Log(const char *fmt, ...)

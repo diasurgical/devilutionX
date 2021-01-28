@@ -558,19 +558,15 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 		max_y = 15;
 	}
 
-#ifdef HELLFIRE
-	if (currlevel < 17) {
-#else
 	if (nXPos >= 0 && nXPos < MAXDUNX && nYPos >= 0 && nYPos < MAXDUNY) {
-#endif
-		dLight[nXPos][nYPos] = 0;
-#ifdef HELLFIRE
-	} else if (dLight[nXPos][nYPos] > lightradius[nRadius][0]) {
-		dLight[nXPos][nYPos] = lightradius[nRadius][0];
-#endif
+		if (currlevel < 17) {
+			dLight[nXPos][nYPos] = 0;
+		} else if (dLight[nXPos][nYPos] > lightradius[nRadius][0]) {
+			dLight[nXPos][nYPos] = lightradius[nRadius][0];
+		}
 	}
 
-	mult = xoff + 8*yoff;
+	mult = xoff + 8 * yoff;
 	for (y = 0; y < min_y; y++) {
 		for (x = 1; x < max_x; x++) {
 			radius_block = lightblock[mult][y][x];
@@ -578,9 +574,7 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 				temp_x = nXPos + x;
 				temp_y = nYPos + y;
 				v = lightradius[nRadius][radius_block];
-#ifndef HELLFIRE
 				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
-#endif
 					if (v < dLight[temp_x][temp_y])
 						dLight[temp_x][temp_y] = v;
 			}
@@ -595,9 +589,7 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 				temp_x = nXPos + y;
 				temp_y = nYPos - x;
 				v = lightradius[nRadius][radius_block];
-#ifndef HELLFIRE
 				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
-#endif
 					if (v < dLight[temp_x][temp_y])
 						dLight[temp_x][temp_y] = v;
 			}
@@ -612,9 +604,7 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 				temp_x = nXPos - x;
 				temp_y = nYPos - y;
 				v = lightradius[nRadius][radius_block];
-#ifndef HELLFIRE
 				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
-#endif
 					if (v < dLight[temp_x][temp_y])
 						dLight[temp_x][temp_y] = v;
 			}
@@ -629,9 +619,7 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 				temp_x = nXPos - y;
 				temp_y = nYPos + x;
 				v = lightradius[nRadius][radius_block];
-#ifndef HELLFIRE
 				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
-#endif
 					if (v < dLight[temp_x][temp_y])
 						dLight[temp_x][temp_y] = v;
 			}
@@ -664,9 +652,7 @@ void DoUnLight(int nXPos, int nYPos, int nRadius)
 
 	for (y = min_y; y < max_y; y++) {
 		for (x = min_x; x < max_x; x++) {
-#ifndef HELLFIRE
 			if (x >= 0 && x < MAXDUNX && y >= 0 && y < MAXDUNY)
-#endif
 				dLight[x][y] = dPreLight[x][y];
 		}
 	}
@@ -769,7 +755,7 @@ void DoVision(int nXPos, int nYPos, int nRadius, BOOL doautomap, BOOL visible)
 					if ((x1adj + nCrawlX >= 0 && x1adj + nCrawlX < MAXDUNX && y1adj + nCrawlY >= 0 && y1adj + nCrawlY < MAXDUNY
 					        && !nBlockTable[dPiece[x1adj + nCrawlX][y1adj + nCrawlY]])
 					    || (x2adj + nCrawlX >= 0 && x2adj + nCrawlX < MAXDUNX && y2adj + nCrawlY >= 0 && y2adj + nCrawlY < MAXDUNY
-					           && !nBlockTable[dPiece[x2adj + nCrawlX][y2adj + nCrawlY]])) {
+					        && !nBlockTable[dPiece[x2adj + nCrawlX][y2adj + nCrawlY]])) {
 						if (doautomap) {
 							if (dFlags[nCrawlX][nCrawlY] >= 0) {
 								SetAutomapView(nCrawlX, nCrawlY);
@@ -919,7 +905,6 @@ void MakeLightTable()
 		}
 		tbl += 224;
 	}
-#ifdef HELLFIRE
 	if (currlevel >= 17) {
 		tbl = pLightTbl;
 		for (i = 0; i < lights; i++) {
@@ -933,7 +918,6 @@ void MakeLightTable()
 			*tbl++ = 1;
 		tbl += 240;
 	}
-#endif
 
 	trn = LoadFileInMem("PlrGFX\\Infra.TRN", NULL);
 	for (i = 0; i < 256; i++) {
@@ -984,7 +968,6 @@ void MakeLightTable()
 		}
 	}
 
-#ifdef HELLFIRE
 	if (currlevel >= 17) {
 		for (j = 0; j < 16; j++) {
 			fa = (sqrt((double)(16 - j))) / 128;
@@ -999,7 +982,6 @@ void MakeLightTable()
 			}
 		}
 	}
-#endif
 	for (j = 0; j < 8; j++) {
 		for (i = 0; i < 8; i++) {
 			for (k = 0; k < 16; k++) {

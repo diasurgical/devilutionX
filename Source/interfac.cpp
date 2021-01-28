@@ -34,19 +34,15 @@ static void InitCutscene(unsigned int uMsg)
 			progress_id = 1;
 			break;
 		case DTYPE_CATHEDRAL:
-#ifdef HELLFIRE
 			if (currlevel < 17) {
-#endif
 				sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", NULL);
 				LoadPalette("Gendata\\Cutl1d.pal");
 				progress_id = 0;
-#ifdef HELLFIRE
 			} else {
 				sgpBackCel = LoadFileInMem("Nlevels\\cutl5.CEL", NULL);
 				LoadPalette("Nlevels\\cutl5.pal");
 				progress_id = 1;
 			}
-#endif
 			break;
 		case DTYPE_CATACOMBS:
 			sgpBackCel = LoadFileInMem("Gendata\\Cut2.CEL", NULL);
@@ -54,19 +50,15 @@ static void InitCutscene(unsigned int uMsg)
 			progress_id = 2;
 			break;
 		case DTYPE_CAVES:
-#ifdef HELLFIRE
 			if (currlevel < 17) {
-#endif
 				sgpBackCel = LoadFileInMem("Gendata\\Cut3.CEL", NULL);
 				LoadPalette("Gendata\\Cut3.pal");
 				progress_id = 1;
-#ifdef HELLFIRE
 			} else {
 				sgpBackCel = LoadFileInMem("Nlevels\\cutl6.CEL", NULL);
 				LoadPalette("Nlevels\\cutl6.pal");
 				progress_id = 1;
 			}
-#endif
 			break;
 		case DTYPE_HELL:
 			if (currlevel < 15) {
@@ -99,19 +91,15 @@ static void InitCutscene(unsigned int uMsg)
 				progress_id = 1;
 				break;
 			case DTYPE_CATHEDRAL:
-#ifdef HELLFIRE
 				if (currlevel < 17) {
-#endif
 					sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", NULL);
 					LoadPalette("Gendata\\Cutl1d.pal");
 					progress_id = 0;
-#ifdef HELLFIRE
 				} else {
 					sgpBackCel = LoadFileInMem("Nlevels\\cutl5.CEL", NULL);
 					LoadPalette("Nlevels\\cutl5.pal");
 					progress_id = 1;
 				}
-#endif
 				break;
 			case DTYPE_CATACOMBS:
 				sgpBackCel = LoadFileInMem("Gendata\\Cut2.CEL", NULL);
@@ -119,19 +107,15 @@ static void InitCutscene(unsigned int uMsg)
 				progress_id = 2;
 				break;
 			case DTYPE_CAVES:
-#ifdef HELLFIRE
 				if (currlevel < 17) {
-#endif
 					sgpBackCel = LoadFileInMem("Gendata\\Cut3.CEL", NULL);
 					LoadPalette("Gendata\\Cut3.pal");
 					progress_id = 1;
-#ifdef HELLFIRE
 				} else {
 					sgpBackCel = LoadFileInMem("Nlevels\\cutl6.CEL", NULL);
 					LoadPalette("Nlevels\\cutl6.pal");
 					progress_id = 1;
 				}
-#endif
 				break;
 			case DTYPE_HELL:
 				sgpBackCel = LoadFileInMem("Gendata\\Cut4.CEL", NULL);
@@ -199,7 +183,6 @@ static void InitCutscene(unsigned int uMsg)
 			LoadPalette("Gendata\\Cuttt.pal");
 			progress_id = 1;
 			break;
-#ifdef HELLFIRE
 		case DTYPE_CATHEDRAL:
 			if (plr[myplr].plrlevel < 17) {
 				sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", NULL);
@@ -211,26 +194,21 @@ static void InitCutscene(unsigned int uMsg)
 				progress_id = 1;
 			}
 			break;
-#endif
 		case DTYPE_CATACOMBS:
 			sgpBackCel = LoadFileInMem("Gendata\\Cut2.CEL", NULL);
 			LoadPalette("Gendata\\Cut2.pal");
 			progress_id = 2;
 			break;
 		case DTYPE_CAVES:
-#ifdef HELLFIRE
 			if (plr[myplr].plrlevel < 17) {
-#endif
 				sgpBackCel = LoadFileInMem("Gendata\\Cut3.CEL", NULL);
 				LoadPalette("Gendata\\Cut3.pal");
 				progress_id = 1;
-#ifdef HELLFIRE
 			} else {
 				sgpBackCel = LoadFileInMem("Nlevels\\Cutl6.CEL", NULL);
 				LoadPalette("Nlevels\\Cutl6.pal");
 				progress_id = 1;
 			}
-#endif
 			break;
 		case DTYPE_HELL:
 			sgpBackCel = LoadFileInMem("Gendata\\Cut4.CEL", NULL);
@@ -336,6 +314,7 @@ void ShowProgress(unsigned int uMsg)
 		IncProgress();
 		break;
 	case WM_DIABNEWGAME:
+		plr[myplr].pOriginalCathedral = !gbIsHellfire;
 		IncProgress();
 		FreeGameMem();
 		IncProgress();

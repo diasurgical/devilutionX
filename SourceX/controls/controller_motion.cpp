@@ -55,11 +55,47 @@ void ScaleJoystickAxes(float *x, float *y, float deadzone)
 	}
 }
 
+// SELECT + D-Pad to simulate right stick movement.
+bool SimulateRightStickWithDpad(const SDL_Event &event, ControllerButtonEvent ctrl_event)
+{
+	static bool simulating = false;
+	if (ctrl_event.button == ControllerButton_BUTTON_BACK) {
+		if (ctrl_event.up && simulating) {
+			rightStickX = rightStickY = 0;
+			simulating = false;
+		}
+		return false;
+	}
+	if (!IsControllerButtonPressed(ControllerButton_BUTTON_BACK))
+		return false;
+	switch (ctrl_event.button) {
+	case ControllerButton_BUTTON_DPAD_LEFT:
+		rightStickX = ctrl_event.up ? 0 : -1;
+		break;
+	case ControllerButton_BUTTON_DPAD_RIGHT:
+		rightStickX = ctrl_event.up ? 0 : 1;
+		break;
+	case ControllerButton_BUTTON_DPAD_UP:
+		rightStickY = ctrl_event.up ? 0 : 1;
+		break;
+	case ControllerButton_BUTTON_DPAD_DOWN:
+		rightStickY = ctrl_event.up ? 0 : -1;
+		break;
+	default:
+		return false;
+	}
+	simulating = !(rightStickX == 0 && rightStickY == 0);
+
+	return true;
+}
+
 } // namespace
 
 float leftStickX, leftStickY, rightStickX, rightStickY;
 float leftStickXUnscaled, leftStickYUnscaled, rightStickXUnscaled, rightStickYUnscaled;
 bool leftStickNeedsScaling, rightStickNeedsScaling;
+
+namespace {
 
 void ScaleJoysticks()
 {
@@ -81,45 +117,28 @@ void ScaleJoysticks()
 	}
 }
 
+} // namespace
+
 // Updates motion state for mouse and joystick sticks.
-bool ProcessControllerMotion(const SDL_Event &event)
+bool ProcessControllerMotion(const SDL_Event &event, ControllerButtonEvent ctrl_event)
 {
 #ifndef USE_SDL1
-	if (ProcessGameControllerAxisMotion(event))
+	GameController *const controller = GameController::Get(event);
+	if (controller != NULL && controller->ProcessAxisMotion(event)) {
+		ScaleJoysticks();
 		return true;
+	}
 #endif
-	if (ProcessJoystickAxisMotion(event))
+	Joystick *const joystick = Joystick::Get(event);
+	if (joystick != NULL && joystick->ProcessAxisMotion(event)) {
+		ScaleJoysticks();
 		return true;
+	}
 #if HAS_KBCTRL == 1
 	if (ProcessKbCtrlAxisMotion(event))
 		return true;
 #endif
-
-	// SELECT + D-Pad simulating mouse movement.
-	if (!IsControllerButtonPressed(ControllerButton_BUTTON_BACK)) {
-		rightStickX = 0;
-		rightStickY = 0;
-		return false;
-	}
-
-	const ControllerButtonEvent ctrl_event = ToControllerButtonEvent(event);
-	if (!IsDPadButton(ctrl_event.button))
-		return false;
-	if (IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_LEFT)) {
-		rightStickX = -1;
-	} else if (IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_RIGHT)) {
-		rightStickX = 1;
-	} else {
-		rightStickX = 0;
-	}
-	if (IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_UP)) {
-		rightStickY = 1;
-	} else if (IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_DOWN)) {
-		rightStickY = -1;
-	} else {
-		rightStickY = 0;
-	}
-	return true;
+	return SimulateRightStickWithDpad(event, ctrl_event);
 }
 
 } // namespace dvl

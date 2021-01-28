@@ -4,22 +4,6 @@
  * Global definitions and Macros.
  */
 
-#ifdef HELLFIRE
-#define DIABOOL					BOOLEAN
-#define GAME_NAME				"HELLFIRE"
-#define APP_NAME				"Hellfire"
-#else
-#define DIABOOL					BOOL
-#define GAME_NAME				"DIABLO"
-#define APP_NAME				"Diablo"
-#endif
-
-#ifdef HELLFIRE
-#define HFAND &&
-#else
-#define HFAND &
-#endif
-
 #define DMAXX					40
 #define DMAXY					40
 
@@ -32,15 +16,11 @@
 #define MAX_PLRS				4
 
 #define MAX_CHARACTERS			10
-#ifdef HELLFIRE
 #define MAX_LVLS				24
 #define MAX_LVLMTYPES			24
 #define MAX_SPELLS				52
-#else
-#define MAX_LVLS				16
-#define MAX_LVLMTYPES			16
-#define MAX_SPELLS				37
-#endif
+#define MAX_SPELL_LEVEL			15
+#define SPELLBIT(s) ((__int64)1 << (s - 1))
 
 #define MAX_CHUNKS				(MAX_LVLS + 5)
 
@@ -57,29 +37,20 @@
 #define MAXMONSTERS				200
 #define MAXOBJECTS				127
 #define MAXPORTAL				4
-#ifdef HELLFIRE
+
 #define MAXQUESTS				24
 #define MAXMULTIQUESTS			10
-#else
-#define MAXQUESTS				16
-#define MAXMULTIQUESTS			4
-#endif
+
 #define MAXTHEMES				50
 #define MAXTILES				2048
-#ifdef HELLFIRE
+
 #define MAXTRIGGERS				7
-#else
-#define MAXTRIGGERS				5
-#endif
+
 #define MAXVISION				32
 #define MDMAXX					40
 #define MDMAXY					40
 #define MAXCHARLEVEL			51
-#ifdef HELLFIRE
 #define ITEMTYPES				43
-#else
-#define ITEMTYPES				35
-#endif
 
 // number of inventory grid cells
 #define NUM_INV_GRID_ELEM		40
@@ -94,23 +65,11 @@
 #define NUM_TOWNERS				16
 
 // todo: enums
-#ifdef HELLFIRE
 #define NUMLEVELS				25
 #define WITCH_ITEMS				25
 #define SMITH_ITEMS				25
 #define SMITH_PREMIUM_ITEMS		15
-#define SMITH_MAX_VALUE			200000
-#define SMITH_MAX_PREMIUM_VALUE 200000
 #define STORE_LINES				104
-#else
-#define NUMLEVELS				17
-#define WITCH_ITEMS				20
-#define SMITH_ITEMS				20
-#define SMITH_PREMIUM_ITEMS		6
-#define SMITH_MAX_VALUE			140000
-#define SMITH_MAX_PREMIUM_VALUE 140000
-#define STORE_LINES				24
-#endif
 
 // from diablo 2 beta
 #define MAXEXP					2000000000
@@ -128,20 +87,12 @@
 
 // 256 kilobytes + 3 bytes (demo leftover) for file magic (262147)
 // final game uses 4-byte magic instead of 3
-#define FILEBUFF				((256*1024)+3)
+#define FILEBUFF				((256 * 1024) + 3)
 
 #define PMSG_COUNT				8
 
-// Diablo Retail Version Game ID
-#ifdef HELLFIRE
-#define GAME_ID					((int)'HRTL')
-#define GAME_VERSION			34
-#define PROGRAM_NAME			"Hellfire Retail"
-#else
-#define GAME_ID					((int)'DRTL')
-#define GAME_VERSION			42
-#define PROGRAM_NAME			"Diablo Retail"
-#endif
+#define GAME_ID					(gbIsHellfire ? (gbIsSpawn ? 'HSHR' : 'HRTL') : (gbIsSpawn ? 'DSHR' : 'DRTL'))
+#define GAME_VERSION			50
 
 // Diablo uses a 256 color palette
 // Entry 0-127 (0x00-0x7F) are level specific
@@ -210,7 +161,7 @@
 #define DIALOG_TOP		((SCREEN_HEIGHT - PANEL_HEIGHT) / 2 - 18)
 #define DIALOG_Y		(SCREEN_Y + DIALOG_TOP)
 
-#define SCREENXY(x, y)	((x) + SCREEN_X + ((y) + SCREEN_Y) * BUFFER_WIDTH)
+#define SCREENXY(x, y) ((x) + SCREEN_X + ((y) + SCREEN_Y) * BUFFER_WIDTH)
 
 #define NIGHTMARE_TO_HIT_BONUS  85
 #define HELL_TO_HIT_BONUS      120
@@ -218,20 +169,24 @@
 #define NIGHTMARE_AC_BONUS 50
 #define HELL_AC_BONUS      80
 
-#define MemFreeDbg(p)	\
-{						\
-	void *p__p;			\
-	p__p = p;			\
-	p = NULL;			\
-	mem_free_dbg(p__p);	\
-}
+#define MemFreeDbg(p)       \
+	{                       \
+		void *p__p;         \
+		p__p = p;           \
+		p = NULL;           \
+		mem_free_dbg(p__p); \
+	}
 
 #undef assert
 
 #ifndef _DEBUG
-#define assert(exp) ((void)0)
+#define assert(exp)
+#define assurance(exp, value) if (!(exp)) return
+#define commitment(exp, value) if (!(exp)) return false
 #else
-#define assert(exp) (void)( (exp) || (assert_fail(__LINE__, __FILE__, #exp), 0) )
+#define assert(exp) (void)((exp) || (assert_fail(__LINE__, __FILE__, #exp), 0))
+#define assurance(exp, value) (void)((exp) || (app_fatal("%s: %s was %i", __func__, #exp, value), 0))
+#define commitment(exp, value) (void)((exp) || (app_fatal("%s: %s was %i", __func__, #exp, value), 0))
 #endif
 
 #define ERR_DLG(title, text) ErrDlg(title, text, __FILE__, __LINE__)

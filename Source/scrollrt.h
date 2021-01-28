@@ -12,7 +12,10 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+// Defined in SourceX/controls/plctrls.cpp
 extern bool sgbControllerActive;
+extern bool IsMovingMouseCursorWithController();
+
 extern int light_table_index;
 extern BYTE *gpBufStart;
 extern BYTE *gpBufEnd;
@@ -21,10 +24,7 @@ extern char arch_draw_type;
 extern int cel_transparency_active;
 extern int cel_foliage_active;
 extern int level_piece_id;
-extern void (*DrawPlrProc)(int, int, int, int, int, BYTE *, int, int, int, int);
-#ifdef HELLFIRE
 extern BOOLEAN AutoMapShowItems;
-#endif
 
 extern int tileOffsetX;
 extern int tileOffsetY;
@@ -47,14 +47,6 @@ void ScrollView();
 void EnableFrameCount();
 void scrollrt_draw_game_screen(BOOL draw_cursor);
 void DrawAndBlit();
-
-/* rdata */
-
-/* data */
-
-/** used in 1.00 debug */
-extern const char *const szMonModeAssert[18];
-extern const char *const szPlrModeAssert[12];
 
 #ifdef __cplusplus
 }

@@ -24,11 +24,7 @@ MissileData missiledata[] = {
 	{  MIS_TOWN,          &AddTown,                   &MI_Town,           TRUE,      1, MISR_MAGIC,     MFILE_PORTAL,    LS_SENTINEL, LS_ELEMENTL },
 	{  MIS_FLASH,         &AddFlash,                  &MI_Flash,          TRUE,      1, MISR_MAGIC,     MFILE_BLUEXFR,   LS_NOVA,     LS_ELECIMP1 },
 	{  MIS_FLASH2,        &AddFlash2,                 &MI_Flash2,         TRUE,      1, MISR_MAGIC,     MFILE_BLUEXBK,   -1,          -1          },
-#ifdef HELLFIRE
-	{  MIS_MANASHIELD,    &AddManashield,             &MI_SetManashield,  TRUE,      1, MISR_MAGIC,     MFILE_MANASHLD,  LS_MSHIELD,  -1          },
-#else
 	{  MIS_MANASHIELD,    &AddManashield,             &MI_SetManashield,  FALSE,     1, MISR_MAGIC,     MFILE_MANASHLD,  LS_MSHIELD,  -1          },
-#endif
 	{  MIS_FIREMOVE,      &AddFiremove,               &MI_Firemove,       TRUE,      1, MISR_FIRE,      MFILE_FIREWAL,   -1,          -1          },
 	{  MIS_CHAIN,         &AddChain,                  &MI_Chain,          TRUE,      1, MISR_LIGHTNING, MFILE_LGHNING,   LS_LNING1,   LS_ELECIMP1 },
 	{  MIS_SENTINAL,      NULL,                       NULL,               TRUE,      1, MISR_LIGHTNING, MFILE_LGHNING,   -1,          -1          },
@@ -58,11 +54,7 @@ MissileData missiledata[] = {
 	{  MIS_IDENTIFY,      &AddIdentify,               &MI_Dummy,          FALSE,     1, MISR_NONE,      MFILE_NONE,      -1,          -1          },
 	{  MIS_WAVE,          &AddWave,                   &MI_Wave,           TRUE,      1, MISR_FIRE,      MFILE_FIREWAL,   LS_FLAMWAVE, -1          },
 	{  MIS_NOVA,          &AddNova,                   &MI_Nova,           TRUE,      1, MISR_LIGHTNING, MFILE_LGHNING,   LS_NOVA,     -1          },
-#ifdef HELLFIRE
-	{  MIS_BLODBOIL,      &miss_null_1F,              &MI_Blodboil,       FALSE,     1, MISR_NONE,      MFILE_NONE,      -1,          -1          },
-#else
 	{  MIS_BLODBOIL,      &AddBlodboil,               &MI_Blodboil,       TRUE,      1, MISR_NONE,      MFILE_NONE,      -1,          LS_BLODBOIL },
-#endif
 	{  MIS_APOCA,         &AddApoca,                  &MI_Apoca,          TRUE,      1, MISR_MAGIC,     MFILE_NEWEXP,    LS_APOC,     -1          },
 	{  MIS_REPAIR,        &AddRepair,                 &MI_Dummy,          FALSE,     2, MISR_NONE,      MFILE_NONE,      -1,          -1          },
 	{  MIS_RECHARGE,      &AddRecharge,               &MI_Dummy,          FALSE,     2, MISR_NONE,      MFILE_NONE,      -1,          -1          },
@@ -87,7 +79,6 @@ MissileData missiledata[] = {
 	{  MIS_RPORTAL,       &AddRportal,                &MI_Rportal,        TRUE,      2, MISR_NONE,      MFILE_RPORTAL,   LS_SENTINEL, LS_ELEMENTL },
 	{  MIS_BOOM2,         &AddBoom,                   &MI_Boom,           TRUE,      2, MISR_NONE,      MFILE_FIREPLAR,  -1,          -1          },
 	{  MIS_DIABAPOCA,     &AddDiabApoca,              &MI_Dummy,          FALSE,     2, MISR_NONE,      MFILE_NONE,      -1,          -1          },
-#ifdef HELLFIRE
 	{  MIS_MANA,          &missiles_rech_mana,        &MI_Dummy,          FALSE,     1, MISR_NONE,      MFILE_NONE,      -1,          -1          },
 	{  MIS_MAGI,          &missiles_magi,             &MI_Dummy,          FALSE,     1, MISR_NONE,      MFILE_NONE,      -1,          -1          },
 	{  MIS_LIGHTWALL,     &missiles_light_wall,       &mi_light_wall,     TRUE,      1, MISR_LIGHTNING, MFILE_LGHNING,   LS_LMAG,     LS_ELECIMP1 },
@@ -115,7 +106,7 @@ MissileData missiledata[] = {
 	{  MIS_RUNEIMMOLAT,   &missiles_immolation_rune,  &MI_Rune,           TRUE,      1, MISR_NONE,      MFILE_RUNE,      -1,          -1          },
 	{  MIS_RUNESTONE,     &missiles_stone_rune,       &MI_Rune,           TRUE,      1, MISR_NONE,      MFILE_RUNE,      -1,          -1          },
 	{  MIS_HIVEEXP,       &missiles_rune_explosion,   &mi_hive_explode,   TRUE,      1, MISR_FIRE,      MFILE_BIGEXP,    LS_NESTXPLD, LS_NESTXPLD },
-	{  MIS_HORKDMN,       &missiles_430624,           &missiles_4359A0,   TRUE,      2, MISR_NONE,      MFILE_NULL,      -1,          -1          },
+	{  MIS_HORKDMN,       &missiles_430624,           &missiles_4359A0,   TRUE,      2, MISR_NONE,      MFILE_NONE,      -1,          -1          },
 	{  MIS_JESTER,        &missiles_jester,           &MI_Dummy,          FALSE,     2, MISR_NONE,      MFILE_NONE,      -1,          -1          },
 	{  MIS_HIVEEXP2,      &missiles_hive_explosion,   &MI_Dummy,          FALSE,     2, MISR_NONE,      MFILE_NONE,      -1,          -1          },
 	{  MIS_LICH,          &AddFlare,                  &MI_Firebolt,       TRUE,      1, MISR_MAGIC,     MFILE_LICH,      -1,          -1          },
@@ -128,7 +119,6 @@ MissileData missiledata[] = {
 	{  MIS_EXBL2,         &AddMisexp,                 &MI_Misexp,         TRUE,      2, MISR_NONE,      MFILE_EXBL2,     LS_FIRIMP2,  -1          },
 	{  MIS_EXBL3,         &AddMisexp,                 &MI_Misexp,         TRUE,      2, MISR_NONE,      MFILE_EXBL3,     LS_FIRIMP2,  -1          },
 	{  MIS_EXORA1,        &AddMisexp,                 &MI_Misexp,         TRUE,      2, MISR_NONE,      MFILE_EXORA1,    LS_FIRIMP2,  -1          },
-#endif
 	// clang-format on
 };
 
@@ -182,7 +172,6 @@ MisFileData misfiledata[] = {
 	{  MFILE_SCBSEXPC,    1, "Scbsexpc", 1, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 128,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  32,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
 	{  MFILE_SCUBMISD,    1, "Scubmisd", 1, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
 	{  MFILE_SCBSEXPD,    1, "Scbsexpd", 1, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 128,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  32,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-#ifdef HELLFIRE
 	{  MFILE_SPAWNS,      8, "spawns",   1, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  9,  9,  9,  9,  9,  9,  9,  9,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,  96,  96,  96,  96,  96,  96,  96,  0,  0,  0,  0,  0,  0,  0,  0 }, {  16, 16, 16, 16, 16, 16, 16, 16,  0,  0,  0,  0,  0,  0,  0,  0 } },
 	{  MFILE_REFLECT,     1, "reflect",  2, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 160,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 160,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
 	{  MFILE_LICH,       16, "ms_ora",   1, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15 }, {  96,  96,  96,  96,  96,  96,  96,  96, 96, 96, 96, 96, 96, 96, 96, 96 }, {   8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8 } },
@@ -196,7 +185,6 @@ MisFileData misfiledata[] = {
 	{  MFILE_BONEDEMON,  16, "ms_blb",   1, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15 }, {  96,  96,  96,  96,  96,  96,  96,  96, 96, 96, 96, 96, 96, 96, 96, 96 }, {   8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8 } },
 	{  MFILE_EXORA1,      1, "ex_ora1",  1, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 13,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, { -12,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
 	{  MFILE_EXBL3,       1, "ex_blu3",  1, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  7,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 292,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 114,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-#endif
 	{  MFILE_NONE,        0, "",         0, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {   0,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
 	// clang-format on
 };

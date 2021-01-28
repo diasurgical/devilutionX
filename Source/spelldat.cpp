@@ -29,34 +29,18 @@ SpellData spelldata[] = {
 	{ SPL_WAVE,         35, STYPE_FIRE,      "Flame Wave",         NULL,              9,         8, TRUE,      FALSE,           54, IS_CAST2, { MIS_WAVE,          0,          0 },        3,       20,        20,        40,     10000,        650 },
 	{ SPL_DOOMSERP,      0, STYPE_LIGHTNING, "Doom Serpents",      NULL,             -1,        -1, FALSE,     FALSE,            0, IS_CAST2, { 0,                 0,          0 },        0,        0,        40,        80,         0,          0 },
 	{ SPL_BLODRIT,       0, STYPE_MAGIC,     "Blood Ritual",       NULL,             -1,        -1, FALSE,     FALSE,            0, IS_CAST2, { 0,                 0,          0 },        0,        0,        40,        80,         0,          0 },
-#ifndef HELLFIRE
-	{ SPL_NOVA,         60, STYPE_MAGIC,     "Nova",               NULL,             -1,        10, FALSE,     FALSE,           87, IS_CAST4, { MIS_NOVA,          0,          0 },        3,       35,        16,        32,     21000,       1300 },
-#else
 	{ SPL_NOVA,         60, STYPE_MAGIC,     "Nova",               NULL,             14,        10, FALSE,     FALSE,           87, IS_CAST4, { MIS_NOVA,          0,          0 },        3,       35,        16,        32,     21000,       1300 },
-#endif
 	{ SPL_INVISIBIL,     0, STYPE_MAGIC,     "Invisibility",       NULL,             -1,        -1, FALSE,     FALSE,            0, IS_CAST2, { 0,                 0,          0 },        0,        0,        40,        80,         0,          0 },
 	{ SPL_FLAME,        11, STYPE_FIRE,      "Inferno",            NULL,              3,         2, TRUE,      FALSE,           20, IS_CAST2, { MIS_FLAMEC,        0,          0 },        1,        6,        20,        40,      2000,        100 },
 	{ SPL_GOLEM,       100, STYPE_FIRE,      "Golem",              NULL,             11,         9, FALSE,     FALSE,           81, IS_CAST2, { MIS_GOLEM,         0,          0 },        6,       60,        16,        32,     18000,       1100 },
-#ifndef HELLFIRE
-	{ SPL_BLODBOIL,      0, STYPE_LIGHTNING, "Blood Boil",         NULL,             -1,        -1, TRUE,      FALSE,            0, IS_CAST8, { 0,                 0,          0 },        0,        0,         0,         0,         0,          0 },
-#else
 	{ SPL_BLODBOIL,     15, STYPE_MAGIC,     "Rage",               "Rage",           -1,        -1, FALSE,     FALSE,            0, IS_CAST8, { MIS_BLODBOIL,      0,          0 },        1,        1,         0,         0,         0,          0 },
-#endif
 	{ SPL_TELEPORT,     35, STYPE_MAGIC,     "Teleport",           NULL,             14,        12, TRUE,      FALSE,          105, IS_CAST6, { MIS_TELEPORT,      0,          0 },        3,       15,        16,        32,     20000,       1250 },
-#ifndef HELLFIRE
-	{ SPL_APOCA,       150, STYPE_FIRE,      "Apocalypse",         NULL,             -1,        15, FALSE,     FALSE,          149, IS_CAST2, { MIS_APOCA,         0,          0 },        6,       90,         8,        12,     30000,       2000 },
-#else
 	{ SPL_APOCA,       150, STYPE_FIRE,      "Apocalypse",         NULL,             19,        15, FALSE,     FALSE,          149, IS_CAST2, { MIS_APOCA,         0,          0 },        6,       90,         8,        12,     30000,       2000 },
-#endif
 	{ SPL_ETHEREALIZE, 100, STYPE_MAGIC,     "Etherealize",        NULL,             -1,        -1, FALSE,     FALSE,           93, IS_CAST2, { MIS_ETHEREALIZE,   0,          0 },        0,      100,         2,         6,     26000,       1600 },
 	{ SPL_REPAIR,        0, STYPE_MAGIC,     "Item Repair",        "Item Repair",    -1,        -1, FALSE,     TRUE,            -1, IS_CAST6, { MIS_REPAIR,        0,          0 },        0,        0,        40,        80,         0,          0 },
 	{ SPL_RECHARGE,      0, STYPE_MAGIC,     "Staff Recharge",     "Staff Recharge", -1,        -1, FALSE,     TRUE,            -1, IS_CAST6, { MIS_RECHARGE,      0,          0 },        0,        0,        40,        80,         0,          0 },
 	{ SPL_DISARM,        0, STYPE_MAGIC,     "Trap Disarm",        "Trap Disarm",    -1,        -1, FALSE,     FALSE,           -1, IS_CAST6, { MIS_DISARM,        0,          0 },        0,        0,        40,        80,         0,          0 },
-#ifndef HELLFIRE
 	{ SPL_ELEMENT,      35, STYPE_FIRE,      "Elemental",          NULL,              8,         6, FALSE,     FALSE,           68, IS_CAST2, { MIS_ELEMENT,       0,          0 },        2,       20,        20,        60,     10500,        700 },
-#else
-	{ SPL_ELEMENT,      35, STYPE_FIRE,      "Elemental",          NULL,             -1,        -1, FALSE,     FALSE,           68, IS_CAST2, { MIS_ELEMENT,       0,          0 },        2,       20,        20,        60,     10500,        700 },
-#endif
 	{ SPL_CBOLT,         6, STYPE_LIGHTNING, "Charged Bolt",       NULL,              1,         1, TRUE,      FALSE,           25, IS_CAST2, { MIS_CBOLT,         0,          0 },        1,        6,        40,        80,      1000,         50 },
 	{ SPL_HBOLT,         7, STYPE_MAGIC,     "Holy Bolt",          NULL,              1,         1, TRUE,      FALSE,           20, IS_CAST2, { MIS_HBOLT,         0,          0 },        1,        3,        40,        80,      1000,         50 },
 	{ SPL_RESURRECT,    20, STYPE_MAGIC,     "Resurrect",          NULL,             -1,         5, FALSE,     TRUE,            30, IS_CAST8, { MIS_RESURRECT,     0,          0 },        0,       20,         4,        10,      4000,        250 },
@@ -64,7 +48,6 @@ SpellData spelldata[] = {
 	{ SPL_HEALOTHER,     5, STYPE_MAGIC,     "Heal Other",         NULL,              1,         1, FALSE,     TRUE,            17, IS_CAST8, { MIS_HEALOTHER,     0,          0 },        3,        1,        20,        40,      1000,         50 },
 	{ SPL_FLARE,        25, STYPE_MAGIC,     "Blood Star",         NULL,             14,        13, FALSE,     FALSE,           70, IS_CAST2, { MIS_FLARE,         0,          0 },        2,       14,        20,        60,     27500,       1800 },
 	{ SPL_BONESPIRIT,   24, STYPE_MAGIC,     "Bone Spirit",        NULL,              9,         7, FALSE,     FALSE,           34, IS_CAST2, { MIS_BONESPIRIT,    0,          0 },        1,       12,        20,        60,     11500,        800 },
-#ifdef HELLFIRE
 	{ SPL_MANA,        255, STYPE_MAGIC,     "Mana",               NULL,             -1,         5, FALSE,     TRUE,            17, IS_CAST8, { MIS_MANA,          0,          0 },        3,        1,        12,        24,      1000,         50 },
 	{ SPL_MAGI,        255, STYPE_MAGIC,     "the Magi",           NULL,             -1,        20, FALSE,     TRUE,            45, IS_CAST8, { MIS_MAGI,          0,          0 },        3,        1,        15,        30,    100000,        200 },
 	{ SPL_JESTER,      255, STYPE_MAGIC,     "the Jester",         NULL,             -1,         4, TRUE,      FALSE,           30, IS_CAST8, { MIS_JESTER,        0,          0 },        3,        1,        15,        30,    100000,        200 },
@@ -80,7 +63,6 @@ SpellData spelldata[] = {
 	{ SPL_RUNENOVA,    255, STYPE_MAGIC,     "Rune of Nova",       NULL,             -1,        -1, TRUE,      FALSE,           48, IS_CAST8, { MIS_RUNENOVA,      0,          0 },        1,       10,        40,        80,      8000,        300 },
 	{ SPL_RUNEIMMOLAT, 255, STYPE_MAGIC,     "Rune of Immolation", NULL,             -1,        -1, TRUE,      FALSE,           48, IS_CAST8, { MIS_RUNEIMMOLAT,   0,          0 },        1,       10,        40,        80,      8000,        300 },
 	{ SPL_RUNESTONE,   255, STYPE_MAGIC,     "Rune of Stone",      NULL,             -1,        -1, TRUE,      FALSE,           48, IS_CAST8, { MIS_RUNESTONE,     0,          0 },        1,       10,        40,        80,      8000,        300 },
-#endif
 	// clang-format on
 };
 

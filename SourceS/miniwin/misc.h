@@ -30,11 +30,6 @@ typedef HANDLE HWND, HMODULE, HDC, HINSTANCE;
 
 typedef void(*WNDPROC)(HWND, UINT, WPARAM, LPARAM);
 
-typedef struct _FILETIME {
-	DWORD dwLowDateTime;
-	DWORD dwHighDateTime;
-} FILETIME, *LPFILETIME;
-
 typedef struct tagMSG {
 	UINT message;
 	WPARAM wParam;
@@ -68,6 +63,7 @@ bool PostMessage(UINT Msg, WPARAM wParam, LPARAM lParam);
 //
 
 #define  DVL_FILE_CURRENT 1
+#define  DVL_FILE_END 2
 
 #define  DVL_WM_QUIT 0x0012
 
