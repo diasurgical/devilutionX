@@ -11,8 +11,10 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 	art->frames = frames;
 
 	DWORD width, height, bpp;
-	if (!SBmpLoadImage(pszFile, 0, 0, 0, &width, &height, &bpp))
+	if (!SBmpLoadImage(pszFile, 0, 0, 0, &width, &height, &bpp)) {
+		SDL_Log("Failed to load image meta");
 		return;
+	}
 
 	Uint32 format;
 	switch (bpp) {
@@ -57,7 +59,7 @@ void LoadArt(Art *art, const BYTE *artData, int w, int h, int frames)
 {
 	art->frames = frames;
 	art->surface = SDL_CreateRGBSurfaceWithFormatFrom(
-		const_cast<BYTE *>(artData), w, h, 8, w, SDL_PIXELFORMAT_INDEX8);
+	    const_cast<BYTE *>(artData), w, h, 8, w, SDL_PIXELFORMAT_INDEX8);
 	art->logical_width = w;
 	art->frame_height = h / frames;
 	ScaleSurfaceToOutput(&art->surface);

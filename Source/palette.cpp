@@ -48,10 +48,8 @@ void ApplyGamma(SDL_Color *dst, const SDL_Color *src, int n)
 
 void SaveGamma()
 {
-	SRegSaveValue(APP_NAME, "Gamma Correction", 0, gamma_correction);
-#ifndef HELLFIRE
-	SRegSaveValue(APP_NAME, "Color Cycling", FALSE, color_cycling_enabled);
-#endif
+	SRegSaveValue("Diablo", "Gamma Correction", 0, gamma_correction);
+	SRegSaveValue("Diablo", "Color Cycling", FALSE, color_cycling_enabled);
 }
 
 static void LoadGamma()
@@ -60,7 +58,7 @@ static void LoadGamma()
 	int value;
 
 	value = gamma_correction;
-	if (!SRegLoadValue(APP_NAME, "Gamma Correction", 0, &value))
+	if (!SRegLoadValue("Diablo", "Gamma Correction", 0, &value))
 		value = 100;
 	gamma_value = value;
 	if (value < 30) {
@@ -69,11 +67,9 @@ static void LoadGamma()
 		gamma_value = 100;
 	}
 	gamma_correction = gamma_value - gamma_value % 5;
-#ifndef HELLFIRE
-	if (!SRegLoadValue(APP_NAME, "Color Cycling", 0, &value))
+	if (!SRegLoadValue("Diablo", "Color Cycling", 0, &value))
 		value = 1;
 	color_cycling_enabled = value;
-#endif
 }
 
 void palette_init()
@@ -91,9 +87,9 @@ void LoadPalette(const char *pszFileName)
 
 	assert(pszFileName);
 
-	WOpenFile(pszFileName, &pBuf, FALSE);
-	WReadFile(pBuf, (char *)PalData, sizeof(PalData), pszFileName);
-	WCloseFile(pBuf);
+	SFileOpenFile(pszFileName, &pBuf);
+	SFileReadFile(pBuf, (char *)PalData, sizeof(PalData), NULL, NULL);
+	SFileCloseFile(pBuf);
 
 	for (i = 0; i < 256; i++) {
 		orig_palette[i].r = PalData[i][0];
@@ -115,7 +111,6 @@ void LoadRndLvlPal(int l)
 	} else {
 		rv = random_(0, 4) + 1;
 		sprintf(szFileName, "Levels\\L%iData\\L%i_%i.PAL", l, l, rv);
-#ifdef HELLFIRE
 		if (l == 5) {
 			sprintf(szFileName, "NLevels\\L5Data\\L5Base.PAL");
 		}
@@ -125,7 +120,6 @@ void LoadRndLvlPal(int l)
 			}
 			sprintf(szFileName, "NLevels\\L%iData\\L%iBase%i.PAL", 6, 6, rv);
 		}
-#endif
 		LoadPalette(szFileName);
 	}
 }
@@ -249,8 +243,6 @@ void palette_update_crypt()
 		system_palette[i].r = col.r;
 		system_palette[i].g = col.g;
 		system_palette[i].b = col.b;
-
-
 
 		dword_6E2D58 = 0;
 	} else {

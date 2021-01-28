@@ -41,14 +41,12 @@ extern bool noFPSLimit;
 extern DWORD timeToExit;
 extern bool skipToGame;
 extern char skipHeroName[64];
-#ifdef HELLFIRE
 extern BOOLEAN UseTheoQuest;
 extern BOOLEAN UseCowFarmer;
 extern BOOLEAN UseNestArt;
 extern BOOLEAN UseBardTest;
 extern BOOLEAN UseBarbarianTest;
 extern BOOLEAN UseMultiTest;
-#endif
 extern char sgbMouseDown;
 extern int ticks_per_sec;
 extern WORD tick_delay;

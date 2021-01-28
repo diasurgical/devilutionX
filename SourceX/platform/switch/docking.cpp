@@ -17,7 +17,7 @@ void HandleDocking()
 		case AppletOperationMode_Handheld:
 			docked = 0;
 			break;
-		case AppletOperationMode_Docked:
+		case AppletOperationMode_Console:
 			docked = 1;
 			break;
 		default:

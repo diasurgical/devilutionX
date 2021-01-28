@@ -203,9 +203,7 @@ typedef enum item_cursor_graphic {
 	ICURS_EAR_WARRIOR                 = 20,
 	ICURS_EAR_ROGUE                   = 21,
 	ICURS_BLOOD_STONE                 = 25,
-#ifdef HELLFIRE
 	ICURS_OIL                         = 30,
-#endif
 	ICURS_ELIXIR_OF_VITALITY          = 31,
 	ICURS_POTION_OF_HEALING           = 32,
 	ICURS_POTION_OF_FULL_REJUVENATION = 33,
@@ -1521,7 +1519,6 @@ typedef enum missile_graphic_id {
 	MFILE_SCBSEXPC,
 	MFILE_SCUBMISD,
 	MFILE_SCBSEXPD,
-#ifdef HELLFIRE
 	MFILE_SPAWNS,
 	MFILE_REFLECT,
 	MFILE_LICH,
@@ -1535,44 +1532,42 @@ typedef enum missile_graphic_id {
 	MFILE_BONEDEMON,
 	MFILE_EXORA1,
 	MFILE_EXBL3,
-#endif
-	MFILE_NULL,
-	MFILE_NONE = 0xFF, // BUGFIX: should be `MFILE_NONE = MFILE_SCBSEXPD+1`, i.e. MFILE_NULL, since there would otherwise be an out-of-bounds in SetMissAnim when accessing misfiledata for any of the missiles that have MFILE_NONE as mFileNum in missiledata.
+	MFILE_NONE, // BUGFIX: should be `MFILE_NONE = MFILE_SCBSEXPD+1`, i.e. MFILE_NULL, since there would otherwise be an out-of-bounds in SetMissAnim when accessing misfiledata for any of the missiles that have MFILE_NONE as mFileNum in missiledata. (fixed)
 } missile_graphic_id;
 
 typedef enum _mai_id {
-	AI_ZOMBIE   = 0,
-	AI_FAT      = 1,
-	AI_SKELSD   = 2,
-	AI_SKELBOW  = 3,
-	AI_SCAV     = 4,
-	AI_RHINO    = 5,
-	AI_GOATMC   = 6,
-	AI_GOATBOW  = 7,
-	AI_FALLEN   = 8,
-	AI_MAGMA    = 9,
-	AI_SKELKING = 10,
-	AI_BAT      = 11,
-	AI_GARG     = 12,
-	AI_CLEAVER  = 13,
-	AI_SUCC     = 14,
-	AI_SNEAK    = 15,
-	AI_STORM    = 16,
-	AI_FIREMAN  = 17,
-	AI_GARBUD   = 18,
-	AI_ACID     = 19,
-	AI_ACIDUNIQ = 20,
-	AI_GOLUM    = 21,
-	AI_ZHAR     = 22,
-	AI_SNOTSPIL = 23,
-	AI_SNAKE    = 24,
-	AI_COUNSLR  = 25,
-	AI_MEGA     = 26,
-	AI_DIABLO   = 27,
-	AI_LAZURUS  = 28,
-	AI_LAZHELP  = 29,
-	AI_LACHDAN  = 30,
-	AI_WARLORD  = 31,
+	AI_ZOMBIE    = 0,
+	AI_FAT       = 1,
+	AI_SKELSD    = 2,
+	AI_SKELBOW   = 3,
+	AI_SCAV      = 4,
+	AI_RHINO     = 5,
+	AI_GOATMC    = 6,
+	AI_GOATBOW   = 7,
+	AI_FALLEN    = 8,
+	AI_MAGMA     = 9,
+	AI_SKELKING  = 10,
+	AI_BAT       = 11,
+	AI_GARG      = 12,
+	AI_CLEAVER   = 13,
+	AI_SUCC      = 14,
+	AI_SNEAK     = 15,
+	AI_STORM     = 16,
+	AI_FIREMAN   = 17,
+	AI_GARBUD    = 18,
+	AI_ACID      = 19,
+	AI_ACIDUNIQ  = 20,
+	AI_GOLUM     = 21,
+	AI_ZHAR      = 22,
+	AI_SNOTSPIL  = 23,
+	AI_SNAKE     = 24,
+	AI_COUNSLR   = 25,
+	AI_MEGA      = 26,
+	AI_DIABLO    = 27,
+	AI_LAZURUS   = 28,
+	AI_LAZHELP   = 29,
+	AI_LACHDAN   = 30,
+	AI_WARLORD   = 31,
 	AI_FIREBAT   = 32,
 	AI_TORCHANT  = 33,
 	AI_HORKDMN   = 34,
@@ -1776,7 +1771,7 @@ typedef enum monster_flag {
 	MFLAG_SEARCH          = 0x100,
 	MFLAG_CAN_OPEN_DOOR   = 0x200,
 	MFLAG_NO_ENEMY        = 0x400,
-	MFLAG_UNUSED          = 0x800,
+	MFLAG_BERSERK         = 0x800,
 	MFLAG_NOLIFESTEAL     = 0x1000
 } monster_flag;
 
@@ -1794,11 +1789,11 @@ typedef enum monster_resistance {
 	RESIST_MAGIC     = 0x01,
 	RESIST_FIRE      = 0x02,
 	RESIST_LIGHTNING = 0x04,
-	IMMUNE_MAGIC      = 0x08,
-	IMMUNE_FIRE       = 0x10,
-	IMMUNE_LIGHTNING  = 0x20,
-	IMMUNE_NULL_40    = 0x40,
-	IMMUNE_ACID       = 0x80,
+	IMMUNE_MAGIC     = 0x08,
+	IMMUNE_FIRE      = 0x10,
+	IMMUNE_LIGHTNING = 0x20,
+	IMMUNE_NULL_40   = 0x40,
+	IMMUNE_ACID      = 0x80,
 } monster_resistance;
 
 typedef enum missile_resistance {
@@ -2069,10 +2064,10 @@ typedef enum _speech_id {
 	TEXT_BOOK32     = 0x100,
 	TEXT_BOOK33     = 0x101,
 	TEXT_INTRO      = 0x102,
-	TEXT_HBONER    = 0x103,
-	TEXT_HBLOODY   = 0x104,
-	TEXT_HBLINDING = 0x105,
-	TEXT_HBLOODWAR = 0x106,
+	TEXT_HBONER     = 0x103,
+	TEXT_HBLOODY    = 0x104,
+	TEXT_HBLINDING  = 0x105,
+	TEXT_HBLOODWAR  = 0x106,
 	TEXT_BBONER     = 0x107,
 	TEXT_BBLOODY    = 0x108,
 	TEXT_BBLINDING  = 0x109,
@@ -2243,7 +2238,22 @@ typedef enum placeflag {
 	PLACE_UNIQUE  = 4,
 } placeflag;
 
- /*
+typedef enum mienemy_type {
+	TARGET_MONSTERS = 0,
+	TARGET_PLAYERS  = 1,
+	TARGET_BOTH     = 2,
+} mienemy_type;
+
+/*
+Looks like someone treated hex values as binary, so 0x10 came after 0x01, that's why we have 1 and 16, they did the same thing with affix_item_type
+*/
+typedef enum goodorevil {
+	GOE_ANY  = 0x00,
+	GOE_EVIL = 0x01,
+	GOE_GOOD = 0x10,
+} goodorevil;
+
+/*
  First 5 bits store level
  6th bit stores onlygood flag
  7th bit stores uper15 flag - uper means unique percent, this flag is true for unique monsters and loot from them has 15% to become unique
@@ -2672,6 +2682,14 @@ typedef enum _cmd_id {
 	CMD_DLEVEL_14,
 	CMD_DLEVEL_15,
 	CMD_DLEVEL_16,
+	CMD_DLEVEL_17,
+	CMD_DLEVEL_18,
+	CMD_DLEVEL_19,
+	CMD_DLEVEL_20,
+	CMD_DLEVEL_21,
+	CMD_DLEVEL_22,
+	CMD_DLEVEL_23,
+	CMD_DLEVEL_24,
 	CMD_DLEVEL_JUNK,
 	CMD_DLEVEL_END,
 	CMD_HEALOTHER,
@@ -2691,20 +2709,12 @@ typedef enum _cmd_id {
 	CMD_NOVA,
 	CMD_SETSHIELD,
 	CMD_REMSHIELD,
-	FAKE_CMD_SETID,
-	FAKE_CMD_DROPID,
-	CMD_DLEVEL_17,
-	CMD_DLEVEL_18,
-	CMD_DLEVEL_19,
-	CMD_DLEVEL_20,
-	CMD_DLEVEL_21,
-	CMD_DLEVEL_22,
-	CMD_DLEVEL_23,
-	CMD_DLEVEL_24,
 	CMD_REFLECT,
 	CMD_NAKRUL,
 	CMD_OPENHIVE,
 	CMD_OPENCRYPT,
+	FAKE_CMD_SETID,
+	FAKE_CMD_DROPID,
 	NUM_CMDS,
 } _cmd_id;
 
@@ -2719,13 +2729,10 @@ typedef enum _talker_id {
 	TOWN_BMAID   = 0x7,
 	TOWN_PEGBOY  = 0x8,
 	TOWN_COW     = 0x9,
-#ifdef HELLFIRE
 	TOWN_FARMER  = 0xA,
 	TOWN_GIRL    = 0xB,
 	TOWN_COWFARM = 0xC,
-#else
-	TOWN_PRIEST  = 0xA,
-#endif
+	TOWN_PRIEST,
 } _talker_id;
 
 typedef enum _music_id {
@@ -2734,10 +2741,8 @@ typedef enum _music_id {
 	TMUSIC_L2,
 	TMUSIC_L3,
 	TMUSIC_L4,
-#ifdef HELLFIRE
 	TMUSIC_L5,
 	TMUSIC_L6,
-#endif
 	TMUSIC_INTRO,
 	NUM_MUSIC,
 } _music_id;
@@ -2746,9 +2751,7 @@ typedef enum _mainmenu_selections {
 	MAINMENU_SINGLE_PLAYER = 1,
 	MAINMENU_MULTIPLAYER,
 	MAINMENU_REPLAY_INTRO,
-#ifdef HELLFIRE
 	MAINMENU_SHOW_SUPPORT,
-#endif
 	MAINMENU_SHOW_CREDITS,
 	MAINMENU_EXIT_DIABLO,
 	MAINMENU_ATTRACT_MODE,
@@ -2910,7 +2913,7 @@ typedef enum item_misc_id {
 	IMISC_RING      = 0x19,
 	IMISC_AMULET    = 0x1A,
 	IMISC_UNIQUE    = 0x1B,
-	IMISC_MEAT      = 0x1C, /* from demo/PSX */
+	IMISC_FOOD      = 0x1C, /* from demo/PSX */
 	IMISC_OILFIRST  = 0x1D,
 	IMISC_OILOF     = 0x1E, /* oils are beta or hellfire only */
 	IMISC_OILACC    = 0x1F,
@@ -2954,7 +2957,7 @@ typedef enum item_type {
 	ITYPE_GOLD   = 0xB,
 	ITYPE_RING   = 0xC,
 	ITYPE_AMULET = 0xD,
-	ITYPE_MEAT   = 0xE, /* used in demo, might be generic for 'food' */
+	ITYPE_FOOD   = 0xE, /* used in demo */
 	ITYPE_NONE   = -1,
 } item_type;
 
@@ -2998,8 +3001,8 @@ typedef enum _item_indexes {
 	IDI_RESURRECT,
 	IDI_OIL,
 	IDI_SHORTSTAFF,
-	IDI_SWORD,
-	IDI_DAGGER,
+	IDI_BARDSWORD,
+	IDI_BARDDAGGER,
 	IDI_RUNEBOMB,
 	IDI_THEODORE,
 	IDI_AURIC,
@@ -3021,31 +3024,31 @@ typedef enum _setlevels {
 } _setlevels;
 
 typedef enum quest_id {
-	Q_ROCK      = 0x0,
-	Q_MUSHROOM  = 0x1,
-	Q_GARBUD    = 0x2,
-	Q_ZHAR      = 0x3,
-	Q_VEIL      = 0x4,
-	Q_DIABLO    = 0x5,
-	Q_BUTCHER   = 0x6,
-	Q_LTBANNER  = 0x7,
-	Q_BLIND     = 0x8,
-	Q_BLOOD     = 0x9,
-	Q_ANVIL     = 0xA,
-	Q_WARLORD   = 0xB,
-	Q_SKELKING  = 0xC,
-	Q_PWATER    = 0xD,
-	Q_SCHAMB    = 0xE,
-	Q_BETRAYER  = 0xF,
-	Q_GRAVE   = 0x10,
-	Q_FARMER  = 0x11,
-	Q_GIRL    = 0x12,
-	Q_TRADER  = 0x13,
-	Q_DEFILER = 0x14,
-	Q_NAKRUL  = 0x15,
-	Q_CORNSTN = 0x16,
-	Q_JERSEY  = 0x17,
-	Q_INVALID = -1,
+	Q_ROCK     = 0x00,
+	Q_MUSHROOM = 0x01,
+	Q_GARBUD   = 0x02,
+	Q_ZHAR     = 0x03,
+	Q_VEIL     = 0x04,
+	Q_DIABLO   = 0x05,
+	Q_BUTCHER  = 0x06,
+	Q_LTBANNER = 0x07,
+	Q_BLIND    = 0x08,
+	Q_BLOOD    = 0x09,
+	Q_ANVIL    = 0x0A,
+	Q_WARLORD  = 0x0B,
+	Q_SKELKING = 0x0C,
+	Q_PWATER   = 0x0D,
+	Q_SCHAMB   = 0x0E,
+	Q_BETRAYER = 0x0F,
+	Q_GRAVE    = 0x10,
+	Q_FARMER   = 0x11,
+	Q_GIRL     = 0x12,
+	Q_TRADER   = 0x13,
+	Q_DEFILER  = 0x14,
+	Q_NAKRUL   = 0x15,
+	Q_CORNSTN  = 0x16,
+	Q_JERSEY   = 0x17,
+	Q_INVALID  = -1,
 } quest_id;
 
 typedef enum quest_state {
@@ -3109,11 +3112,7 @@ typedef enum _unique_items {
 	UITEM_STEELVEIL    = 0x6,
 	UITEM_ARMOFVAL     = 0x7,
 	UITEM_GRISWOLD     = 0x8,
-#ifndef HELLFIRE
-	UITEM_LGTFORGE     = 0x9,
-#else
 	UITEM_BOVINE       = 0x9,
-#endif
 	UITEM_RIFTBOW      = 0xA,
 	UITEM_NEEDLER      = 0xB,
 	UITEM_CELESTBOW    = 0xC,
@@ -3198,28 +3197,14 @@ typedef enum _unique_items {
 } _unique_items;
 
 typedef enum plr_class {
-	PC_WARRIOR  = 0x0,
-	PC_ROGUE    = 0x1,
-	PC_SORCERER = 0x2,
-#ifdef HELLFIRE
+	PC_WARRIOR   = 0x0,
+	PC_ROGUE     = 0x1,
+	PC_SORCERER  = 0x2,
 	PC_MONK      = 0x3,
 	PC_BARD      = 0x4,
 	PC_BARBARIAN = 0x5,
-#endif
 	NUM_CLASSES
 } plr_class;
-
-typedef enum _ui_classes {
-	UI_WARRIOR     = 0x0,
-	UI_ROGUE       = 0x1,
-	UI_SORCERER    = 0x2,
-#ifdef HELLFIRE
-	UI_MONK        = 0x3,
-	UI_BARD        = 0x4,
-	UI_BARBARIAN   = 0x5,
-#endif
-	UI_NUM_CLASSES,
-} _ui_classes;
 
 typedef enum _walk_path {
 	WALK_NE   = 0x1,
@@ -3369,7 +3354,7 @@ typedef enum anim_weapon_id {
 } anim_weapon_id;
 
 typedef enum anim_armor_id {
-	ANIM_ID_LIGHT_ARMOR = 0x00,
+	ANIM_ID_LIGHT_ARMOR  = 0x00,
 	ANIM_ID_MEDIUM_ARMOR = 0x10,
 	ANIM_ID_HEAVY_ARMOR  = 0x20
 } anim_armor_id;
@@ -3407,7 +3392,6 @@ typedef enum shrine_type {
 	SHRINE_ORNATE       = 23,
 	SHRINE_GLIMMERING   = 24,
 	SHRINE_TAINTED      = 25,
-#ifdef HELLFIRE
 	SHRINE_OILY         = 26,
 	SHRINE_GLOWING      = 27,
 	SHRINE_MENDICANT    = 28,
@@ -3416,7 +3400,6 @@ typedef enum shrine_type {
 	SHRINE_SHIMMERING   = 31,
 	SHRINE_SOLAR        = 32,
 	SHRINE_MURPHYS      = 33,
-#endif
 	NUM_SHRINETYPE
 } shrine_type;
 

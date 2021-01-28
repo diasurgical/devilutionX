@@ -39,14 +39,22 @@ void mainmenu_Load(const char *name, void (*fnSound)(const char *file))
 	vecMenuItems.push_back(new UiListItem("Single Player", MAINMENU_SINGLE_PLAYER));
 	vecMenuItems.push_back(new UiListItem("Multi Player", MAINMENU_MULTIPLAYER));
 	vecMenuItems.push_back(new UiListItem("Replay Intro", MAINMENU_REPLAY_INTRO));
-#ifdef HELLFIRE
-	vecMenuItems.push_back(new UiListItem("Support", MAINMENU_SHOW_SUPPORT));
-	vecMenuItems.push_back(new UiListItem("Credits", MAINMENU_SHOW_CREDITS));
-	vecMenuItems.push_back(new UiListItem("Exit Hellfire", MAINMENU_EXIT_DIABLO));
-#else
-	vecMenuItems.push_back(new UiListItem("Show Credits", MAINMENU_SHOW_CREDITS));
-	vecMenuItems.push_back(new UiListItem("Exit Diablo", MAINMENU_EXIT_DIABLO));
-#endif
+	if (gbIsHellfire) {
+		vecMenuItems.push_back(new UiListItem("Support", MAINMENU_SHOW_SUPPORT));
+		vecMenuItems.push_back(new UiListItem("Credits", MAINMENU_SHOW_CREDITS));
+		vecMenuItems.push_back(new UiListItem("Exit Hellfire", MAINMENU_EXIT_DIABLO));
+	} else {
+		vecMenuItems.push_back(new UiListItem("Show Credits", MAINMENU_SHOW_CREDITS));
+		vecMenuItems.push_back(new UiListItem("Exit Diablo", MAINMENU_EXIT_DIABLO));
+	}
+
+	if (!gbSpawned || gbIsHellfire) {
+		if (gbIsHellfire)
+			LoadArt("ui_art\\mainmenuw.pcx", &ArtBackgroundWidescreen);
+		LoadBackgroundArt("ui_art\\mainmenu.pcx");
+	} else {
+		LoadBackgroundArt("ui_art\\swmmenu.pcx");
+	}
 
 	UiAddBackground(&vecMainMenuDialog);
 	UiAddLogo(&vecMainMenuDialog);
@@ -56,21 +64,12 @@ void mainmenu_Load(const char *name, void (*fnSound)(const char *file))
 	SDL_Rect rect = { 17, (SCREEN_HEIGHT - 36), 605, 21 };
 	vecMainMenuDialog.push_back(new UiArtText(name, rect, UIS_SMALL));
 
-#ifndef HELLFIRE
-	if (!gbSpawned) {
-#endif
-		LoadBackgroundArt("ui_art\\mainmenu.pcx");
-#ifndef HELLFIRE
-	} else {
-		LoadBackgroundArt("ui_art\\swmmenu.pcx");
-	}
-#endif
-
 	UiInitList(vecMenuItems.size(), NULL, UiMainMenuSelect, mainmenu_Esc, vecMainMenuDialog, true);
 }
 
 void mainmenu_Free()
 {
+	ArtBackgroundWidescreen.Unload();
 	ArtBackground.Unload();
 
 	for (std::size_t i = 0; i < vecMainMenuDialog.size(); i++) {
@@ -106,12 +105,10 @@ BOOL UiMainMenuDialog(const char *name, int *pdwResult, void (*fnSound)(const ch
 
 		mainmenu_Free();
 
-#ifndef HELLFIRE
-		if (gbSpawned && MainMenuResult == MAINMENU_REPLAY_INTRO) {
+		if (gbSpawned && !gbIsHellfire && MainMenuResult == MAINMENU_REPLAY_INTRO) {
 			UiSelOkDialog(NULL, "The Diablo introduction cinematic is only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase.", true);
 			MainMenuResult = 0;
 		}
-#endif
 	}
 
 	*pdwResult = MainMenuResult;

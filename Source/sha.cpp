@@ -17,12 +17,15 @@ namespace {
 /**
  * Diablo-"SHA1" circular left shift, portable version.
  */
-uint32_t SHA1CircularShift(uint32_t bits, uint32_t word) {
+uint32_t SHA1CircularShift(uint32_t bits, uint32_t word)
+{
 	assert(bits < 32);
 	assert(bits > 0);
 
-	if(word >> 31) {
-		return (word << bits) | (~((~word) >> (32 - bits)));
+	if (word >> 31) {
+		//moving this part to a separate volatile variable fixes saves in x64-release build in visual studio 2017
+		volatile uint32_t tmp = ((~word) >> (32 - bits));
+		return (word << bits) | (~tmp);
 	} else {
 		return (word << bits) | (word >> (32 - bits));
 	}
@@ -52,7 +55,6 @@ static void SHA1ProcessMessageBlock(SHA1Context *context)
 	DWORD *buf = (DWORD *)context->buffer;
 	for (i = 0; i < 16; i++)
 		W[i] = SwapLE32(buf[i]);
-
 
 	for (i = 16; i < 80; i++) {
 		W[i] = W[i - 16] ^ W[i - 14] ^ W[i - 8] ^ W[i - 3];

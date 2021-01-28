@@ -82,7 +82,6 @@ void Cl2DrawLightTbl(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char 
 void Cl2DrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
 void PlayInGameMovie(const char *pszMovie);
 
-
 #ifdef __cplusplus
 }
 #endif

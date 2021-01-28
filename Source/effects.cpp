@@ -11,10 +11,8 @@ DEVILUTION_BEGIN_NAMESPACE
 
 int sfxdelay;
 int sfxdnum;
-/** A handle to the current sound effect playing. */
-HANDLE sghStream;
 /** Specifies the sound file and the playback state of the current sound effect. */
-TSFX *sgpStreamSFX;
+static TSFX *sgpStreamSFX = NULL;
 
 /**
  * Monster sound type prefix
@@ -1069,11 +1067,10 @@ BOOL effect_is_playing(int nSFX)
 
 void stream_stop()
 {
-	if (sghStream) {
-		SFileDdaEnd(sghStream);
-		SFileCloseFile(sghStream);
-		SFileFreeChunk();
-		sghStream = NULL;
+	if (sgpStreamSFX != NULL) {
+		sgpStreamSFX->pSnd->DSB->Stop();
+		sound_file_cleanup(sgpStreamSFX->pSnd);
+		sgpStreamSFX->pSnd = NULL;
 		sgpStreamSFX = NULL;
 	}
 }
@@ -1089,23 +1086,16 @@ static void stream_play(TSFX *pSFX, int lVolume, int lPan)
 	if (lVolume >= VOLUME_MIN) {
 		if (lVolume > VOLUME_MAX)
 			lVolume = VOLUME_MAX;
-		success = SFileOpenFile(pSFX->pszName, &sghStream);
-		if (!success) {
-			sghStream = NULL;
-		} else {
-			if (!SFileDdaBeginEx(sghStream, 0x40000, 0, 0, lVolume, lPan, 0))
-				stream_stop();
-			else
-				sgpStreamSFX = pSFX;
-		}
+		if (pSFX->pSnd == NULL)
+			pSFX->pSnd = sound_file_load(pSFX->pszName);
+		pSFX->pSnd->DSB->Play(lVolume, lPan, 0);
+		sgpStreamSFX = pSFX;
 	}
 }
 
 static void stream_update()
 {
-	DWORD current, end;
-
-	if (sghStream != NULL && SFileDdaGetPos(sghStream, &current, &end) && current >= end) {
+	if (sgpStreamSFX != NULL && !sgpStreamSFX->pSnd->DSB->IsPlaying()) {
 		stream_stop();
 	}
 }
@@ -1262,10 +1252,8 @@ static int RndSFX(int psfx)
 		nRand = 2;
 	else if (psfx == PS_ROGUE69)
 		nRand = 2;
-#ifdef HELLFIRE
 	else if (psfx == PS_MONK69)
 		nRand = 2;
-#endif
 	else if (psfx == PS_SWING)
 		nRand = 2;
 	else if (psfx == LS_ACID)
@@ -1353,11 +1341,9 @@ static void priv_sound_init(BYTE bLoadMask)
 			continue;
 		}
 
-#ifndef HELLFIRE
-		if (sgSFX[i].bFlags & sfx_HELLFIRE) {
+		if (!gbIsHellfire && sgSFX[i].bFlags & sfx_HELLFIRE) {
 			continue;
 		}
-#endif
 
 		sgSFX[i].pSnd = sound_file_load(sgSFX[i].pszName);
 	}
@@ -1370,23 +1356,20 @@ void sound_init()
 		mask |= sfx_WARRIOR;
 		if (!gbIsSpawn)
 			mask |= (sfx_ROGUE | sfx_SORCEROR);
-#ifdef HELLFIRE
-		mask |= sfx_MONK;
-#endif
+		if (gbIsHellfire)
+			mask |= sfx_MONK;
 	} else if (plr[myplr]._pClass == PC_WARRIOR) {
 		mask |= sfx_WARRIOR;
 	} else if (plr[myplr]._pClass == PC_ROGUE) {
 		mask |= sfx_ROGUE;
 	} else if (plr[myplr]._pClass == PC_SORCERER) {
 		mask |= sfx_SORCEROR;
-#ifdef HELLFIRE
 	} else if (plr[myplr]._pClass == PC_MONK) {
 		mask |= sfx_MONK;
 	} else if (plr[myplr]._pClass == PC_BARD) {
 		mask |= sfx_ROGUE;
 	} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 		mask |= sfx_WARRIOR;
-#endif
 	} else {
 		app_fatal("effects:1");
 	}
@@ -1415,6 +1398,13 @@ void effects_play_sound(const char *snd_file)
 			return;
 		}
 	}
+}
+
+int GetSFXLength(int nSFX)
+{
+	if (sgSFX[nSFX].pSnd == NULL)
+		sgSFX[nSFX].pSnd = sound_file_load(sgSFX[nSFX].pszName);
+	return sgSFX[nSFX].pSnd->DSB->GetLength();
 }
 
 DEVILUTION_END_NAMESPACE

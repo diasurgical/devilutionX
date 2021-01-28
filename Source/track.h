@@ -13,8 +13,8 @@ extern "C" {
 #endif
 
 void track_process();
-void track_repeat_walk(BOOL rep);
-BOOL track_isscrolling();
+void track_repeat_walk(bool rep);
+bool track_isscrolling();
 
 #ifdef __cplusplus
 }
