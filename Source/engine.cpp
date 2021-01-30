@@ -329,7 +329,7 @@ void CelBlitLightSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidt
 	}
 }
 
-//Fluffy: Same as CelBlitLightSafe but with proper transparency (not dithered)
+//Same as CelBlitLightSafe but with proper transparency (not dithered)
 void CelBlitLightSafe_RealTransparency(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE *tbl)
 {
 	int i, w;
@@ -494,7 +494,7 @@ void CelClippedBlitLightTrans(BYTE *pBuff, BYTE *pCelBuff, int nCel, int nWidth)
 
 	if (cel_transparency_active) {
 		if (options_transparency)
-			CelBlitLightSafe_RealTransparency(pBuff, pRLEBytes, nDataSize, nWidth, NULL); //Fluffy: Variant of below which renders proper transparency
+			CelBlitLightSafe_RealTransparency(pBuff, pRLEBytes, nDataSize, nWidth, NULL); //Variant of below which renders proper transparency
 		else
 			CelBlitLightTransSafe(pBuff, pRLEBytes, nDataSize, nWidth);
 	}

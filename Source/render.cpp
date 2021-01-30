@@ -18,7 +18,7 @@ enum {
 	RT_RTRAPEZOID
 };
 
-/** Fluffy: Fully transparent variant of WallMask. */
+/** Fully transparent variant of WallMask. */
 static DWORD WallMask_FullyTrasparent[TILE_HEIGHT] = {
 	0x00000000, 0x00000000,
 	0x00000000, 0x00000000,
@@ -38,7 +38,7 @@ static DWORD WallMask_FullyTrasparent[TILE_HEIGHT] = {
 	0x00000000, 0x00000000
 };
 
-/** Fluffy: Transparent variant of RightMask. */
+/** Transparent variant of RightMask. */
 static DWORD RightMask_Transparent[TILE_HEIGHT] = {
 	0xE0000000, 0xF0000000,
 	0xFE000000, 0xFF000000,
@@ -57,7 +57,7 @@ static DWORD RightMask_Transparent[TILE_HEIGHT] = {
 	0xFFFFFFFF, 0xFFFFFFFF,
 	0xFFFFFFFF, 0xFFFFFFFF
 };
-/** Fluffy: Transparent variant of LeftMask. */
+/** Transparent variant of LeftMask. */
 static DWORD LeftMask_Transparent[TILE_HEIGHT] = {
 	0x00000003, 0x0000000F,
 	0x0000003F, 0x000000FF,
@@ -256,7 +256,7 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 		assert(n != 0 && n <= sizeof(DWORD) * CHAR_BIT);
 		mask &= DWORD(-1) << ((sizeof(DWORD) * CHAR_BIT) - n);
 
-		if (options_transparency) { //Fluffy: Render transparent pixels in the mask with actual transparent, and the rest as opaque pixels
+		if (options_transparency) { //Render transparent pixels in the mask with actual transparent, and the rest as opaque pixels
 			if (light_table_index == lightmax) { //Complete darkness
 				for (int i = 0; i < n; i++, mask <<= 1) {
 					if (mask & 0x80000000)
@@ -321,7 +321,7 @@ void RenderTile(BYTE *pBuff)
 
 	if (cel_transparency_active) {
 		if (arch_draw_type == 0) {
-			if (options_transparency == true) //Fluffy: Use a fully transparent mask
+			if (options_transparency == true) //Use a fully transparent mask
 				mask = &WallMask_FullyTrasparent[TILE_HEIGHT - 1];
 			else
 				mask = &WallMask[TILE_HEIGHT - 1];
@@ -329,7 +329,7 @@ void RenderTile(BYTE *pBuff)
 		if (arch_draw_type == 1 && tile != RT_LTRIANGLE) {
 			c = block_lvid[level_piece_id];
 			if (c == 1 || c == 3) {
-				if (options_transparency == true) //Fluffy: Use a fully transparent mask
+				if (options_transparency == true) //Use a fully transparent mask
 					mask = &LeftMask_Transparent[TILE_HEIGHT - 1];
 				else
 					mask = &LeftMask[TILE_HEIGHT - 1];
@@ -338,7 +338,7 @@ void RenderTile(BYTE *pBuff)
 		if (arch_draw_type == 2 && tile != RT_RTRIANGLE) {
 			c = block_lvid[level_piece_id];
 			if (c == 2 || c == 3) {
-				if (options_transparency == true) //Fluffy: Use a fully transparent mask
+				if (options_transparency == true) //Use a fully transparent mask
 					mask = &RightMask_Transparent[TILE_HEIGHT - 1];
 				else
 					mask = &RightMask[TILE_HEIGHT - 1];
@@ -473,9 +473,9 @@ void trans_rect(int sx, int sy, int width, int height)
 	BYTE *pix = &gpBuffer[SCREENXY(sx, sy)];
 	for (row = 0; row < height; row++) {
 		for (col = 0; col < width; col++) {
-			if (options_transparency == 1) //Fluffy
+			if (options_transparency == 1) //Transparency
 				*pix = palette_transparency_lookup[0][*pix];
-			else if ((row & 1 && col & 1) || (!(row & 1) && !(col & 1)))
+			else if ((row & 1 && col & 1) || (!(row & 1) && !(col & 1))) //Dithering
 				*pix = 0;
 			pix++;
 		}

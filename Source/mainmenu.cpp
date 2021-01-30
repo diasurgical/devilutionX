@@ -6,7 +6,7 @@
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
-#include "misc\config.h" //Fluffy: For re-reading options from config
+#include "misc\config.h" //For re-reading options from config
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -61,7 +61,7 @@ static BOOL mainmenu_single_player()
 
 	gbMaxPlayers = 1;
 
-	LoadOptionsFromConfig(); //Fluffy: In case we are changing from multiplayer to singleplayer, we re-read various options from config here
+	LoadOptionsFromConfig(); //In case we are changing from multiplayer to singleplayer, we re-read various options from config here
 
 	return mainmenu_init_menu(SELHERO_NEW_DUNGEON);
 }

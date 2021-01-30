@@ -785,13 +785,13 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy)
 			cel_transparency_active = TransList[bMap];
 #ifdef _DEBUG
 			if (GetAsyncKeyState(DVL_VK_MENU) & 0x8000) {
-				cel_transparency_active = 0; //Fluffy: Turn transparency off here for debugging
+				cel_transparency_active = 0; //Turn transparency off here for debugging
 			}
 #endif
 			CelClippedBlitLightTrans(&gpBuffer[dx + BUFFER_WIDTH * dy], pSpecialCels, bArch, 64);
 #ifdef _DEBUG
 			if (GetAsyncKeyState(DVL_VK_MENU) & 0x8000) {
-				cel_transparency_active = TransList[bMap]; //Fluffy: Turn transparency back to its normal state
+				cel_transparency_active = TransList[bMap]; //Turn transparency back to its normal state
 			}
 #endif
 		}

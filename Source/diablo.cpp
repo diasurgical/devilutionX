@@ -8,7 +8,7 @@
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 #include <config.h>
-#include "misc\config.h" //Fluffy: For reading options from config during startup
+#include "misc\config.h" //For reading options from config during startup
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -56,7 +56,7 @@ char sgbMouseDown;
 int color_cycle_timer;
 int ticks_per_sec = 20;
 WORD tick_delay = 50;
-BOOL options_transparency = false; //Fluffy: If true, we apply proper transparency rather than dithering
+BOOL options_transparency = false; //If true, we apply proper transparency rather than dithering
 
 /* rdata */
 
@@ -500,7 +500,7 @@ void diablo_quit(int exitStatus)
 int DiabloMain(int argc, char **argv)
 {
 	diablo_parse_flags(argc, argv);
-	LoadOptionsFromConfig(); //Fluffy: Read options from config here
+	LoadOptionsFromConfig(); //Read options from config here
 	diablo_init();
 	diablo_splash();
 	mainmenu_loop();

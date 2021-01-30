@@ -1,4 +1,4 @@
-//Fluffy: For loading various options from the game's config file
+//For loading various options from the game's config file
 
 #include "../all.h"
 #include "../../3rdParty/Storm/Source/storm.h"
@@ -22,7 +22,7 @@ void LoadOptionsFromConfig()
 		SRegSaveValue("devilutionx", "game speed", 0, ticks_per_sec);
 	}
 
-	//Fluffy: Load game setup from config here when booting up singleplayer (if we fail to load it, then we save its default to the config)
+	//Load game setup from config here when booting up singleplayer (if we fail to load it, then we save its default to the config)
 	LoadGameSetupVariableFromConfig("Transparency", &options_transparency);
 }
 

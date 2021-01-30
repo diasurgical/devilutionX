@@ -12,7 +12,7 @@ DEVILUTION_BEGIN_NAMESPACE
 SDL_Color logical_palette[256];
 SDL_Color system_palette[256];
 SDL_Color orig_palette[256];
-BYTE palette_transparency_lookup[256][256]; //Fluffy
+BYTE palette_transparency_lookup[256][256]; //Lookup table for transparency
 
 /* data */
 
@@ -101,7 +101,7 @@ void LoadPalette(const char *pszFileName)
 #endif
 	}
 
-	/* Fluffy: Generate lookup table for transparency
+	/* Generate lookup table for transparency
 	*
 	* Explanation for how this works: To mimic 50% transparency we figure out what colours in the existing palette are the best match for the combination of any 2 colours.
 	* We save this info in a lookup table we use during rendering for whenever we want this kind of transparency.
