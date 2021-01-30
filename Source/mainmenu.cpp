@@ -61,10 +61,6 @@ static BOOL mainmenu_single_player()
 
 	gbMaxPlayers = 1;
 
-	if (!SRegLoadValue("devilutionx", "game speed", 0, &ticks_per_sec)) {
-		SRegSaveValue("devilutionx", "game speed", 0, ticks_per_sec);
-	}
-
 	LoadOptionsFromConfig(); //Fluffy: In case we are changing from multiplayer to singleplayer, we re-read various options from config here
 
 	return mainmenu_init_menu(SELHERO_NEW_DUNGEON);
