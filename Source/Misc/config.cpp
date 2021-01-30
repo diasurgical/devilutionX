@@ -1,6 +1,6 @@
 //Fluffy: For loading various options from the game's config file
 
-#include "..\all.h"
+#include "../all.h"
 #include "../../3rdParty/Storm/Source/storm.h"
 
 //TODO: We could create a struct which contains all general options which can be defined in the config file to make them tidier
