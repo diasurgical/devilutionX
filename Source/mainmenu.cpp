@@ -6,7 +6,7 @@
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
-#include "misc\config.h" //For re-reading options from config
+#include "misc/config.h" //For re-reading options from config
 
 DEVILUTION_BEGIN_NAMESPACE
 
