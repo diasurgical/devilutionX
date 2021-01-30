@@ -107,7 +107,7 @@ void LoadPalette(const char *pszFileName)
 	* We save this info in a lookup table we use during rendering for whenever we want this kind of transparency.
 	* 
 	*/
-	if (options_transparency == 1) {
+	if (options_transparency == true) {
 		for (int i = 0; i < 256; i++) {
 			for (int j = 0; j < 256; j++) {
 				if (i == j) { //No need to calculate transparency between 2 identical colours

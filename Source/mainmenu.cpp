@@ -65,6 +65,8 @@ static BOOL mainmenu_single_player()
 		SRegSaveValue("devilutionx", "game speed", 0, ticks_per_sec);
 	}
 
+	LoadOptionsFromConfig(); //Fluffy: In case we are changing from multiplayer to singleplayer, we re-read various options from config here
+
 	return mainmenu_init_menu(SELHERO_NEW_DUNGEON);
 }
 

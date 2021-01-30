@@ -238,12 +238,12 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 	}
 #endif
 
-	if (mask == 0xFFFFFFFF) {
-		if (light_table_index == lightmax) {
+	if (mask == 0xFFFFFFFF) { //Opaque line
+		if (light_table_index == lightmax) { //Complete darkness
 			memset(*dst, 0, n);
-		} else if (light_table_index == 0) {
+		} else if (light_table_index == 0) { //Fully lit
 			memcpy(*dst, *src, n);
-		} else {
+		} else { //Partially lit
 			for (int i = 0; i < n; i++) {
 				(*dst)[i] = tbl[(*src)[i]];
 			}
@@ -256,16 +256,41 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 		assert(n != 0 && n <= sizeof(DWORD) * CHAR_BIT);
 		mask &= DWORD(-1) << ((sizeof(DWORD) * CHAR_BIT) - n);
 
-		if (light_table_index == lightmax) {
-			foreach_set_bit(mask, [=](int i) { (*dst)[i] = 0; });
-		} else if (light_table_index == 0) {
-			for (i = 0; i < n; i++, (*src)++, (*dst)++, mask <<= 1) {
-				if (mask & 0x80000000) {
-					(*dst)[0] = (*src)[0];
+		if (options_transparency) { //Fluffy: Render transparent pixels in the mask with actual transparent, and the rest as opaque pixels
+			if (light_table_index == lightmax) { //Complete darkness
+				for (int i = 0; i < n; i++, mask <<= 1) {
+					if (mask & 0x80000000)
+						(*dst)[i] = 0;
+					else
+						(*dst)[i] = palette_transparency_lookup[0][(*dst)[i]];
+				}
+			} else if (light_table_index == 0) { //Fully lit
+				for (int i = 0; i < n; i++, mask <<= 1) {
+					if (mask & 0x80000000)
+						(*dst)[i] = (*src)[i];
+					else
+						(*dst)[i] = palette_transparency_lookup[(*dst)[i]][(*src)[i]];
+				}
+			} else { //Partially lit
+				for (int i = 0; i < n; i++, mask <<= 1) {
+					if (mask & 0x80000000)
+						(*dst)[i] = tbl[(*src)[i]];
+					else
+						(*dst)[i] = palette_transparency_lookup[(*dst)[i]][tbl[(*src)[i]]];
 				}
 			}
-
+		} else { //Default Diablo 1 rendering where transparent pixels are skipped
+			if (light_table_index == lightmax) { //Complete darkness
+				foreach_set_bit(mask, [=](int i) { (*dst)[i] = 0; });
+			} else if (light_table_index == 0) { //Fully lit
+				foreach_set_bit(mask, [=](int i) { (*dst)[i] = (*src)[i]; });
+			} else { //Partially lit
+				foreach_set_bit(mask, [=](int i) { (*dst)[i] = tbl[(*src)[i]]; });
 			}
+		}
+	}
+
+skip:
 	(*src) += n;
 	(*dst) += n;
 }
@@ -296,7 +321,7 @@ void RenderTile(BYTE *pBuff)
 
 	if (cel_transparency_active) {
 		if (arch_draw_type == 0) {
-			if (options_transparency == 1) //Fluffy
+			if (options_transparency == true) //Fluffy: Use a fully transparent mask
 				mask = &WallMask_FullyTrasparent[TILE_HEIGHT - 1];
 			else
 				mask = &WallMask[TILE_HEIGHT - 1];
@@ -304,7 +329,7 @@ void RenderTile(BYTE *pBuff)
 		if (arch_draw_type == 1 && tile != RT_LTRIANGLE) {
 			c = block_lvid[level_piece_id];
 			if (c == 1 || c == 3) {
-				if (options_transparency == 1) //Fluffy
+				if (options_transparency == true) //Fluffy: Use a fully transparent mask
 					mask = &LeftMask_Transparent[TILE_HEIGHT - 1];
 				else
 					mask = &LeftMask[TILE_HEIGHT - 1];
@@ -313,7 +338,7 @@ void RenderTile(BYTE *pBuff)
 		if (arch_draw_type == 2 && tile != RT_RTRIANGLE) {
 			c = block_lvid[level_piece_id];
 			if (c == 2 || c == 3) {
-				if (options_transparency == 1) //Fluffy
+				if (options_transparency == true) //Fluffy: Use a fully transparent mask
 					mask = &RightMask_Transparent[TILE_HEIGHT - 1];
 				else
 					mask = &RightMask[TILE_HEIGHT - 1];

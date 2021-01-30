@@ -46,6 +46,7 @@ extern BOOLEAN UseMultiTest;
 extern char sgbMouseDown;
 extern int ticks_per_sec;
 extern WORD tick_delay;
+extern BOOL options_transparency;
 
 void FreeGameMem();
 BOOL StartGame(BOOL bNewGame, BOOL bSinglePlayer);

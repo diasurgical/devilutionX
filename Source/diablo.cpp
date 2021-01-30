@@ -56,6 +56,7 @@ char sgbMouseDown;
 int color_cycle_timer;
 int ticks_per_sec = 20;
 WORD tick_delay = 50;
+BOOL options_transparency = false; //Fluffy: If true, we apply proper transparency rather than dithering
 
 /* rdata */
 
