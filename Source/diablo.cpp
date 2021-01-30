@@ -8,7 +8,8 @@
 #include "../3rdParty/Storm/Source/storm.h"
 #include "../DiabloUI/diabloui.h"
 #include <config.h>
-#include "misc\config.h" //For reading options from config during startup
+#include "misc/config.h" //For reading options from config during startup
+
 
 DEVILUTION_BEGIN_NAMESPACE
 
