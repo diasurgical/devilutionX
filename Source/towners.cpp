@@ -519,6 +519,9 @@ void TownCtrlMsg(int i)
 	int p;
 	int dx, dy;
 
+    if (i == -1)
+        return;
+
 	if (towner[i]._tbtcnt != 0) {
 		p = towner[i]._tVar1;
 		dx = abs(towner[i]._tx - plr[p]._px);
