@@ -2548,9 +2548,10 @@ BOOL M_DoTalk(int i)
 		return FALSE;
 	InitQTextMsg(monster[i].mtalkmsg);
 	if (monster[i].mName == UniqMonst[UMT_GARBUD].mName) {
-		if (monster[i].mtalkmsg == TEXT_GARBUD1)
+		if (monster[i].mtalkmsg == TEXT_GARBUD1) {
 			quests[Q_GARBUD]._qactive = QUEST_ACTIVE;
-		quests[Q_GARBUD]._qlog = TRUE; // BUGFIX: (?) for other quests qactive and qlog go together, maybe this should actually go into the if above
+			quests[Q_GARBUD]._qlog = TRUE; // BUGFIX: (?) for other quests qactive and qlog go together, maybe this should actually go into the if above (fixed)
+		}
 		if (monster[i].mtalkmsg == TEXT_GARBUD2 && !(monster[i]._mFlags & MFLAG_QUEST_COMPLETE)) {
 			SpawnItem(i, monster[i]._mx + 1, monster[i]._my + 1, TRUE);
 			monster[i]._mFlags |= MFLAG_QUEST_COMPLETE;
@@ -3404,10 +3405,10 @@ void MAI_Sneak(int i)
 				}
 			}
 			if (Monst->_mgoal == MGOAL_RETREAT && !(Monst->_mFlags & MFLAG_NO_ENEMY)) {
-					if (Monst->_mFlags & MFLAG_TARGETS_MONSTER)
-						md = GetDirection(Monst->_mx, Monst->_my, monster[Monst->_menemy]._mx, monster[Monst->_menemy]._my);
-					else
-						md = GetDirection(Monst->_mx, Monst->_my, plr[Monst->_menemy]._pownerx, plr[Monst->_menemy]._pownery);
+				if (Monst->_mFlags & MFLAG_TARGETS_MONSTER)
+					md = GetDirection(Monst->_mx, Monst->_my, monster[Monst->_menemy]._mx, monster[Monst->_menemy]._my);
+				else
+					md = GetDirection(Monst->_mx, Monst->_my, plr[Monst->_menemy]._pownerx, plr[Monst->_menemy]._pownery);
 				md = opposite[md];
 				if (Monst->MType->mtype == MT_UNSEEN) {
 					if (random_(112, 2) != 0)
