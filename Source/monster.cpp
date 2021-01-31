@@ -4581,6 +4581,11 @@ void MAI_Lazurus(int i)
 	}
 
 	if (Monst->_mgoal == MGOAL_NORMAL || Monst->_mgoal == MGOAL_RETREAT || Monst->_mgoal == MGOAL_MOVE) {
+		if (gbMaxPlayers == 1 && quests[Q_BETRAYER]._qvar1 == 4 && Monst->mtalkmsg == 0) { // Fix save games affected by teleport bug
+			ObjChangeMapResync(1, 18, 20, 24);
+			RedoPlayerVision();
+			quests[Q_BETRAYER]._qvar1 = 6;
+		}
 		Monst->mtalkmsg = 0;
 		MAI_Counselor(i);
 	}

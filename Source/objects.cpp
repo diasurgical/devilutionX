@@ -1866,7 +1866,7 @@ void Obj_Circle(int i)
 		if (ox == 35 && oy == 36 && object[i]._oVar5 == 3) {
 			object[i]._oVar6 = 4;
 			ObjChangeMapResync(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
-			if (quests[Q_BETRAYER]._qactive == QUEST_ACTIVE)
+			if (quests[Q_BETRAYER]._qactive == QUEST_ACTIVE && quests[Q_BETRAYER]._qvar1 <= 4) // BUGFIX stepping on the circle again will break the quest state (fixed)
 				quests[Q_BETRAYER]._qvar1 = 4;
 			AddMissile(plr[myplr]._px, plr[myplr]._py, 35, 46, plr[myplr]._pdir, MIS_RNDTELEPORT, TARGET_MONSTERS, myplr, 0, 0);
 			track_repeat_walk(FALSE);
