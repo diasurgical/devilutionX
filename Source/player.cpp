@@ -1084,6 +1084,7 @@ void InitPlayer(int pnum, BOOL FirstTime)
 
 		if (pnum == myplr) {
 			plr[pnum]._plid = AddLight(plr[pnum]._px, plr[pnum]._py, plr[pnum]._pLightRad);
+			ChangeLightXY(plr[myplr]._plid, plr[myplr]._px, plr[myplr]._py); // fix for a bug where old light is still visible at the entrance after reentering level
 		} else {
 			plr[pnum]._plid = NO_LIGHT;
 		}

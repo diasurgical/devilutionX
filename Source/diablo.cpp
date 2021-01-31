@@ -1559,15 +1559,17 @@ static void UpdateMonsterLights()
 	for (int i = 0; i < nummonsters; i++) {
 		MonsterStruct *mon = &monster[monstactive[i]];
 		if (mon->mlid != NO_LIGHT) {
+			if (mon->mlid == plr[myplr]._plid) { // Fix old save games where some monsters hade 0 instea of NO_LIGHT
+				mon->mlid = NO_LIGHT;
+				continue;
+			}
+
 			LightListStruct *lid = &LightList[mon->mlid];
 			if (mon->_mx != lid->_lx || mon->_my != lid->_ly) {
 				ChangeLightXY(mon->mlid, mon->_mx, mon->_my);
 			}
 		}
 	}
-
-	// Handle save games where monster and player both hand lid = 0
-	ChangeLightXY(plr[myplr]._plid, plr[myplr]._px, plr[myplr]._py);
 }
 
 void LoadGameLevel(BOOL firstflag, int lvldir)
