@@ -34,7 +34,7 @@ typedef struct TownerStruct {
 	int _tAnimLen;   // Number of frames in current animation
 	int _tAnimFrame; // Current frame of animation.
 	int _tAnimFrameCnt;
-	char _tAnimOrder;
+	Sint8 _tAnimOrder;
 	int _tAnimWidth;
 	int _tAnimWidth2;
 	int _tTenPer;
