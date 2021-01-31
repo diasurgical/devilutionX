@@ -18,6 +18,7 @@ int leverid;
 int objectavail[MAXOBJECTS];
 ObjectStruct object[MAXOBJECTS];
 BOOL InitObjFlag;
+BOOL LoadMapObjsFlag;
 int numobjfiles;
 int dword_6DE0E0;
 
@@ -690,6 +691,7 @@ void LoadMapObjects(BYTE *pMap, int startx, int starty, int x1, int y1, int w, i
 	BYTE *lm;
 	long mapoff;
 
+	LoadMapObjsFlag = TRUE;
 	InitObjFlag = TRUE;
 
 	lm = pMap;
@@ -714,6 +716,7 @@ void LoadMapObjects(BYTE *pMap, int startx, int starty, int x1, int y1, int w, i
 		}
 	}
 	InitObjFlag = FALSE;
+	LoadMapObjsFlag = FALSE;
 }
 
 void LoadMapObjs(BYTE *pMap, int startx, int starty)
@@ -723,6 +726,7 @@ void LoadMapObjs(BYTE *pMap, int startx, int starty)
 	BYTE *lm;
 	long mapoff;
 
+	LoadMapObjsFlag = TRUE;
 	InitObjFlag = TRUE;
 	lm = pMap;
 	rw = *lm;
@@ -743,6 +747,7 @@ void LoadMapObjs(BYTE *pMap, int startx, int starty)
 		}
 	}
 	InitObjFlag = FALSE;
+	LoadMapObjsFlag = FALSE;
 }
 
 void AddDiabObjs()

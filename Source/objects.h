@@ -17,6 +17,7 @@ extern int nobjects;
 extern int objectavail[MAXOBJECTS];
 extern ObjectStruct object[MAXOBJECTS];
 extern BOOL InitObjFlag;
+extern BOOL LoadMapObjsFlag;
 
 void InitObjectGFX();
 void FreeObjectGFX();
