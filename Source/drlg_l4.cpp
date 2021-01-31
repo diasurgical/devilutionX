@@ -1086,9 +1086,9 @@ static void L4drawRoom(int x, int y, int width, int height)
 {
 	int i, j;
 
-	for (j = 0; j < height; j++) {
-		for (i = 0; i < width; i++) {
-			dung[i + x][j + y] = 1;
+	for (j = 0; j < height && j + y < 20; j++) {
+		for (i = 0; i < width && i + x < 20; i++) {
+            dung[i + x][j + y] = 1;
 		}
 	}
 }
