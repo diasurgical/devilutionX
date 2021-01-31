@@ -3642,20 +3642,20 @@ void MI_Firebolt(int i)
 				AddMissile(missile[i]._mix, missile[i]._miy, i, 0, missile[i]._mimfnum, MIS_EXBL3, missile[i]._micaster, missile[i]._misource, 0, 0);
 				break;
 			}
-			if (missile[i]._mlid >= 0)
+			if (missile[i]._mlid != NO_LIGHT)
 				AddUnLight(missile[i]._mlid);
 			PutMissile(i);
 		} else {
 			if (missile[i]._mix != missile[i]._miVar1 || missile[i]._miy != missile[i]._miVar2) {
 				missile[i]._miVar1 = missile[i]._mix;
 				missile[i]._miVar2 = missile[i]._miy;
-				if (missile[i]._mlid >= 0)
+				if (missile[i]._mlid != NO_LIGHT)
 					ChangeLight(missile[i]._mlid, missile[i]._miVar1, missile[i]._miVar2, 8);
 			}
 			PutMissile(i);
 		}
 	} else if (missile[i]._mirange == 0) {
-		if (missile[i]._mlid >= 0)
+		if (missile[i]._mlid != NO_LIGHT)
 			AddUnLight(missile[i]._mlid);
 		missile[i]._miDelFlag = TRUE;
 		PlaySfxLoc(LS_BSIMPCT, missile[i]._mix, missile[i]._miy);

@@ -1085,7 +1085,7 @@ void InitPlayer(int pnum, BOOL FirstTime)
 		if (pnum == myplr) {
 			plr[pnum]._plid = AddLight(plr[pnum]._px, plr[pnum]._py, plr[pnum]._pLightRad);
 		} else {
-			plr[pnum]._plid = -1;
+			plr[pnum]._plid = NO_LIGHT;
 		}
 		plr[pnum]._pvid = AddVision(plr[pnum]._px, plr[pnum]._py, plr[pnum]._pLightRad, pnum == myplr);
 	}
@@ -1290,8 +1290,7 @@ void PM_ChangeLightOff(int pnum)
 		app_fatal("PM_ChangeLightOff: illegal player %d", pnum);
 	}
 
-	// check if issue is upstream
-	if (plr[pnum]._plid == -1)
+	if (plr[pnum]._plid == NO_LIGHT)
 		return;
 
 	l = &LightList[plr[pnum]._plid];

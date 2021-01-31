@@ -1560,11 +1560,14 @@ static void UpdateMonsterLights()
 		MonsterStruct *mon = &monster[monstactive[i]];
 		if (mon->mlid != NO_LIGHT) {
 			LightListStruct *lid = &LightList[mon->mlid];
-			if (mon->_mx != lid->_lx || mon->_my != lid->_ly){
+			if (mon->_mx != lid->_lx || mon->_my != lid->_ly) {
 				ChangeLightXY(mon->mlid, mon->_mx, mon->_my);
 			}
 		}
 	}
+
+	// Handle save games where monster and player both hand lid = 0
+	ChangeLightXY(plr[myplr]._plid, plr[myplr]._px, plr[myplr]._py);
 }
 
 void LoadGameLevel(BOOL firstflag, int lvldir)

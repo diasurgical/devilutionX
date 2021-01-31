@@ -1467,7 +1467,7 @@ void M_StartWalk2(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	monster[i]._mfutx = fx;
 	monster[i]._mfuty = fy;
 	dMonster[fx][fy] = i + 1;
-	if ((!gbIsHellfire || !(monster[i]._mFlags & MFLAG_HIDDEN)) && monster[i].mlid != 0)
+	if ((!gbIsHellfire || !(monster[i]._mFlags & MFLAG_HIDDEN)) && monster[i].mlid != NO_LIGHT)
 		ChangeLightXY(monster[i].mlid, monster[i]._mx, monster[i]._my);
 	monster[i]._mxoff = xoff;
 	monster[i]._myoff = yoff;
@@ -1489,7 +1489,7 @@ void M_StartWalk3(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	int x = mapx + monster[i]._mx;
 	int y = mapy + monster[i]._my;
 
-	if ((!gbIsHellfire || !(monster[i]._mFlags & MFLAG_HIDDEN)) && monster[i].mlid != 0)
+	if ((!gbIsHellfire || !(monster[i]._mFlags & MFLAG_HIDDEN)) && monster[i].mlid != NO_LIGHT)
 		ChangeLightXY(monster[i].mlid, x, y);
 
 	dMonster[monster[i]._mx][monster[i]._my] = -(i + 1);
@@ -2019,7 +2019,7 @@ void M_ChangeLightOffset(int monst)
 	}
 
 	_myoff *= (ly >> 3);
-	if (monster[monst].mlid)
+	if (monster[monst].mlid != NO_LIGHT)
 		ChangeLightOff(monster[monst].mlid, _mxoff, _myoff);
 }
 
@@ -2056,7 +2056,7 @@ BOOL M_DoWalk(int i)
 		monster[i]._mx += monster[i]._mVar1;
 		monster[i]._my += monster[i]._mVar2;
 		dMonster[monster[i]._mx][monster[i]._my] = i + 1;
-		if ((!gbIsHellfire || !(monster[i]._mFlags & MFLAG_HIDDEN)) && monster[i].mlid != 0)
+		if ((!gbIsHellfire || !(monster[i]._mFlags & MFLAG_HIDDEN)) && monster[i].mlid != NO_LIGHT)
 			ChangeLightXY(monster[i].mlid, monster[i]._mx, monster[i]._my);
 		M_StartStand(i, monster[i]._mdir);
 		rv = TRUE;
@@ -2073,7 +2073,7 @@ BOOL M_DoWalk(int i)
 		rv = FALSE;
 	}
 
-	if ((!gbIsHellfire || !(monster[i]._mFlags & MFLAG_HIDDEN)) && monster[i].mlid != 0)
+	if ((!gbIsHellfire || !(monster[i]._mFlags & MFLAG_HIDDEN)) && monster[i].mlid != NO_LIGHT)
 		M_ChangeLightOffset(i);
 
 	return rv;
@@ -2088,7 +2088,7 @@ BOOL M_DoWalk2(int i)
 
 	if (monster[i]._mVar8 == monster[i].MType->Anims[MA_WALK].Frames) {
 		dMonster[monster[i]._mVar1][monster[i]._mVar2] = 0;
-		if ((!gbIsHellfire || !(monster[i]._mFlags & MFLAG_HIDDEN)) && monster[i].mlid != 0)
+		if ((!gbIsHellfire || !(monster[i]._mFlags & MFLAG_HIDDEN)) && monster[i].mlid != NO_LIGHT)
 			ChangeLightXY(monster[i].mlid, monster[i]._mx, monster[i]._my);
 		M_StartStand(i, monster[i]._mdir);
 		rv = TRUE;
@@ -2104,7 +2104,7 @@ BOOL M_DoWalk2(int i)
 		}
 		rv = FALSE;
 	}
-	if ((!gbIsHellfire || !(monster[i]._mFlags & MFLAG_HIDDEN)) && monster[i].mlid != 0)
+	if ((!gbIsHellfire || !(monster[i]._mFlags & MFLAG_HIDDEN)) && monster[i].mlid != NO_LIGHT)
 		M_ChangeLightOffset(i);
 
 	return rv;
@@ -2123,7 +2123,7 @@ BOOL M_DoWalk3(int i)
 		monster[i]._my = monster[i]._mVar2;
 		dFlags[monster[i]._mVar4][monster[i]._mVar5] &= ~BFLAG_MONSTLR;
 		dMonster[monster[i]._mx][monster[i]._my] = i + 1;
-		if ((!gbIsHellfire || !(monster[i]._mFlags & MFLAG_HIDDEN)) && monster[i].mlid != 0)
+		if ((!gbIsHellfire || !(monster[i]._mFlags & MFLAG_HIDDEN)) && monster[i].mlid != NO_LIGHT)
 			ChangeLightXY(monster[i].mlid, monster[i]._mx, monster[i]._my);
 		M_StartStand(i, monster[i]._mdir);
 		rv = TRUE;
@@ -2139,7 +2139,7 @@ BOOL M_DoWalk3(int i)
 		}
 		rv = FALSE;
 	}
-	if (monster[i].mlid != 0 && (!gbIsHellfire || !(monster[i]._mFlags & MFLAG_HIDDEN))) // BUGFIX: change uniqtype check to mlid check like it is in all other places (fixed)
+	if (monster[i].mlid != NO_LIGHT && (!gbIsHellfire || !(monster[i]._mFlags & MFLAG_HIDDEN))) // BUGFIX: change uniqtype check to mlid check like it is in all other places (fixed)
 		M_ChangeLightOffset(i);
 
 	return rv;

@@ -2232,7 +2232,7 @@ static DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 				}
 
 				plr[pnum]._pvid = AddVision(plr[pnum]._px, plr[pnum]._py, plr[pnum]._pLightRad, pnum == myplr);
-				plr[pnum]._plid = -1;
+				plr[pnum]._plid = NO_LIGHT;
 			}
 		}
 	}
