@@ -503,6 +503,8 @@ static void LoadMonster(int i)
 	CopyChar(tbuff, &pMonster->leaderflag);
 	CopyChar(tbuff, &pMonster->packsize);
 	CopyChar(tbuff, &pMonster->mlid);
+	if (pMonster->mlid == plr[myplr]._plid)
+		pMonster->mlid = NO_LIGHT; // Correct incorect values in old saves
 
 	// Omit pointer mName;
 	// Omit pointer MType;
