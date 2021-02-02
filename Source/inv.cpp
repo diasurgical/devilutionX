@@ -1567,7 +1567,7 @@ void CheckBookLevel(int pnum)
 
 void CheckQuestItem(int pnum)
 {
-	if (plr[pnum].HoldItem.IDidx == IDI_OPTAMULET)
+	if (plr[pnum].HoldItem.IDidx == IDI_OPTAMULET && quests[Q_BLIND]._qactive == QUEST_ACTIVE)
 		quests[Q_BLIND]._qactive = QUEST_DONE;
 	if (plr[pnum].HoldItem.IDidx == IDI_MUSHROOM && quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && quests[Q_MUSHROOM]._qvar1 == QS_MUSHSPAWNED) {
 		sfxdelay = 10;
@@ -1586,7 +1586,7 @@ void CheckQuestItem(int pnum)
 		}
 		quests[Q_MUSHROOM]._qvar1 = QS_MUSHPICKED;
 	}
-	if (plr[pnum].HoldItem.IDidx == IDI_ANVIL) {
+	if (plr[pnum].HoldItem.IDidx == IDI_ANVIL && quests[Q_ANVIL]._qactive != QUEST_NOTAVAIL) {
 		if (quests[Q_ANVIL]._qactive == QUEST_INIT) {
 			quests[Q_ANVIL]._qactive = QUEST_ACTIVE;
 			quests[Q_ANVIL]._qvar1 = 1;
@@ -1608,7 +1608,7 @@ void CheckQuestItem(int pnum)
 			}
 		}
 	}
-	if (plr[pnum].HoldItem.IDidx == IDI_GLDNELIX) {
+	if (plr[pnum].HoldItem.IDidx == IDI_GLDNELIX && quests[Q_VEIL]._qactive != QUEST_NOTAVAIL) {
 		sfxdelay = 30;
 		if (plr[myplr]._pClass == PC_WARRIOR) {
 			sfxdnum = PS_WARR88;
@@ -1624,7 +1624,7 @@ void CheckQuestItem(int pnum)
 			sfxdnum = PS_WARR88;
 		}
 	}
-	if (plr[pnum].HoldItem.IDidx == IDI_ROCK) {
+	if (plr[pnum].HoldItem.IDidx == IDI_ROCK && quests[Q_ROCK]._qactive != QUEST_NOTAVAIL) {
 		if (quests[Q_ROCK]._qactive == QUEST_INIT) {
 			quests[Q_ROCK]._qactive = QUEST_ACTIVE;
 			quests[Q_ROCK]._qvar1 = 1;
@@ -1646,7 +1646,7 @@ void CheckQuestItem(int pnum)
 			}
 		}
 	}
-	if (plr[pnum].HoldItem.IDidx == IDI_ARMOFVAL) {
+	if (plr[pnum].HoldItem.IDidx == IDI_ARMOFVAL && quests[Q_BLOOD]._qactive == QUEST_ACTIVE) {
 		quests[Q_BLOOD]._qactive = QUEST_DONE;
 		sfxdelay = 20;
 		if (plr[myplr]._pClass == PC_WARRIOR) {

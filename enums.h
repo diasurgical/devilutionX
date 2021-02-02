@@ -3052,10 +3052,10 @@ typedef enum quest_id {
 } quest_id;
 
 typedef enum quest_state {
-	QUEST_NOTAVAIL = 0,
-	QUEST_INIT     = 1,
-	QUEST_ACTIVE   = 2,
-	QUEST_DONE     = 3
+	QUEST_NOTAVAIL = 0, // quest did not spawn this game
+	QUEST_INIT     = 1, // quest has spawned, waiting to trigger
+	QUEST_ACTIVE   = 2, // quest is currently in progress
+	QUEST_DONE     = 3  // quest log closed and finished
 } quest_state;
 
 typedef enum quest_gametype {
