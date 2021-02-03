@@ -2303,17 +2303,15 @@ BOOL PM_DoStand(int pnum)
 }
 
 /**
- * @brief Movement towards NW, N, and NE
+ * @brief Continue movement towards new tile
  */
-BOOL PM_DoWalk(int pnum)
+bool PM_DoWalk(int pnum, int variant)
 {
-	int anim_len;
-	BOOL rv;
-
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PM_DoWalk: illegal player %d", pnum);
 	}
 
+	//Play walking sound effect on certain animation frames
 	if (!gbIsHellfire) {
 		if (plr[pnum]._pAnimFrame == 3
 		    || (plr[pnum]._pWFrames == 8 && plr[pnum]._pAnimFrame == 7)
@@ -2321,6 +2319,8 @@ BOOL PM_DoWalk(int pnum)
 			PlaySfxLoc(PS_WALK1, plr[pnum]._px, plr[pnum]._py);
 		}
 	}
+
+	//"Jog" in town which works by doubling movement speed and skipping every other animation frame
 	if (gbIsHellfire && currlevel == 0 && jogging_opt) {
 		if (plr[pnum]._pAnimFrame % 2 == 0) {
 			plr[pnum]._pAnimFrame++;
@@ -2331,22 +2331,42 @@ BOOL PM_DoWalk(int pnum)
 		}
 	}
 
-	anim_len = 8;
+	//Acquire length of walk animation length (this is 8 for every class, so the AnimLenFromClass array is redundant right now)
+	int anim_len = 8;
 	if (currlevel != 0) {
 		anim_len = AnimLenFromClass[plr[pnum]._pClass];
 	}
 
+	//Check if we reached new tile
 	if (plr[pnum]._pVar8 >= anim_len) {
-		dPlayer[plr[pnum]._px][plr[pnum]._py] = 0;
-		plr[pnum]._px += plr[pnum]._pVar1;
-		plr[pnum]._py += plr[pnum]._pVar2;
-		dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
 
+		//Update the player's tile position
+		switch (variant) {
+		case WALK_UP:
+			dPlayer[plr[pnum]._px][plr[pnum]._py] = 0;
+			plr[pnum]._px += plr[pnum]._pVar1;
+			plr[pnum]._py += plr[pnum]._pVar2;
+			dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
+			break;
+		case WALK_DOWN:
+			dPlayer[plr[pnum]._pVar1][plr[pnum]._pVar2] = 0;
+			break;
+		case WALK_HORIZONTAL:
+			dPlayer[plr[pnum]._px][plr[pnum]._py] = 0;
+			dFlags[plr[pnum]._pVar4][plr[pnum]._pVar5] &= ~BFLAG_PLAYERLR;
+			plr[pnum]._px = plr[pnum]._pVar1;
+			plr[pnum]._py = plr[pnum]._pVar2;
+			dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
+			break;
+		}
+
+		//Update the coordinates for lighting and vision entries for the player
 		if (leveltype != DTYPE_TOWN) {
 			ChangeLightXY(plr[pnum]._plid, plr[pnum]._px, plr[pnum]._py);
 			ChangeVisionXY(plr[pnum]._pvid, plr[pnum]._px, plr[pnum]._py);
 		}
 
+		//Update the "camera" tile position
 		if (pnum == myplr && ScrollInfo._sdir) {
 			ViewX = plr[pnum]._px - ScrollInfo._sdx;
 			ViewY = plr[pnum]._py - ScrollInfo._sdy;
@@ -2360,153 +2380,16 @@ BOOL PM_DoWalk(int pnum)
 
 		ClearPlrPVars(pnum);
 
+		//Reset the "sub-tile" position of the player's light entry to 0
 		if (leveltype != DTYPE_TOWN) {
 			ChangeLightOff(plr[pnum]._plid, 0, 0);
 		}
-		rv = TRUE;
-	} else {
+
+		return true;
+	} else { //We didn't reach new tile so update player's "sub-tile" position
 		PM_ChangeOffset(pnum);
-		rv = FALSE;
+		return false;
 	}
-
-	return rv;
-}
-
-/**
- * @brief Movement towards SW, S, and SE
- */
-BOOL PM_DoWalk2(int pnum)
-{
-	int anim_len;
-	BOOL rv;
-
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PM_DoWalk2: illegal player %d", pnum);
-	}
-
-	if (!gbIsHellfire) {
-		if (plr[pnum]._pAnimFrame == 3
-		    || (plr[pnum]._pWFrames == 8 && plr[pnum]._pAnimFrame == 7)
-		    || (plr[pnum]._pWFrames != 8 && plr[pnum]._pAnimFrame == 4)) {
-			PlaySfxLoc(PS_WALK1, plr[pnum]._px, plr[pnum]._py);
-		}
-	}
-	if (gbIsHellfire && currlevel == 0 && jogging_opt) {
-		if (plr[pnum]._pAnimFrame % 2 == 0) {
-			plr[pnum]._pAnimFrame++;
-			plr[pnum]._pVar8++;
-		}
-		if (plr[pnum]._pAnimFrame >= plr[pnum]._pWFrames) {
-			plr[pnum]._pAnimFrame = 0;
-		}
-	}
-
-	anim_len = 8;
-	if (currlevel != 0) {
-		anim_len = AnimLenFromClass[plr[pnum]._pClass];
-	}
-
-	if (plr[pnum]._pVar8 >= anim_len) {
-		dPlayer[plr[pnum]._pVar1][plr[pnum]._pVar2] = 0;
-
-		if (leveltype != DTYPE_TOWN) {
-			ChangeLightXY(plr[pnum]._plid, plr[pnum]._px, plr[pnum]._py);
-			ChangeVisionXY(plr[pnum]._pvid, plr[pnum]._px, plr[pnum]._py);
-		}
-
-		if (pnum == myplr && ScrollInfo._sdir) {
-			ViewX = plr[pnum]._px - ScrollInfo._sdx;
-			ViewY = plr[pnum]._py - ScrollInfo._sdy;
-		}
-
-		if (plr[pnum].walkpath[0] != WALK_NONE) {
-			StartWalkStand(pnum);
-		} else {
-			StartStand(pnum, plr[pnum]._pVar3);
-		}
-
-		ClearPlrPVars(pnum);
-		if (leveltype != DTYPE_TOWN) {
-			ChangeLightOff(plr[pnum]._plid, 0, 0);
-		}
-		rv = TRUE;
-	} else {
-		PM_ChangeOffset(pnum);
-		rv = FALSE;
-	}
-
-	return rv;
-}
-
-/**
- * @brief Movement towards W and E
- */
-BOOL PM_DoWalk3(int pnum)
-{
-	int anim_len;
-	BOOL rv;
-
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PM_DoWalk3: illegal player %d", pnum);
-	}
-
-	if (!gbIsHellfire) {
-		if (plr[pnum]._pAnimFrame == 3
-		    || (plr[pnum]._pWFrames == 8 && plr[pnum]._pAnimFrame == 7)
-		    || (plr[pnum]._pWFrames != 8 && plr[pnum]._pAnimFrame == 4)) {
-			PlaySfxLoc(PS_WALK1, plr[pnum]._px, plr[pnum]._py);
-		}
-	}
-	if (gbIsHellfire && currlevel == 0 && jogging_opt) {
-		if (plr[pnum]._pAnimFrame % 2 == 0) {
-			plr[pnum]._pAnimFrame++;
-			plr[pnum]._pVar8++;
-		}
-		if (plr[pnum]._pAnimFrame >= plr[pnum]._pWFrames) {
-			plr[pnum]._pAnimFrame = 0;
-		}
-	}
-
-	anim_len = 8;
-	if (currlevel != 0) {
-		anim_len = AnimLenFromClass[plr[pnum]._pClass];
-	}
-
-	if (plr[pnum]._pVar8 >= anim_len) {
-		dPlayer[plr[pnum]._px][plr[pnum]._py] = 0;
-		dFlags[plr[pnum]._pVar4][plr[pnum]._pVar5] &= ~BFLAG_PLAYERLR;
-		plr[pnum]._px = plr[pnum]._pVar1;
-		plr[pnum]._py = plr[pnum]._pVar2;
-		dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
-
-		if (leveltype != DTYPE_TOWN) {
-			ChangeLightXY(plr[pnum]._plid, plr[pnum]._px, plr[pnum]._py);
-			ChangeVisionXY(plr[pnum]._pvid, plr[pnum]._px, plr[pnum]._py);
-		}
-
-		if (pnum == myplr && ScrollInfo._sdir) {
-			ViewX = plr[pnum]._px - ScrollInfo._sdx;
-			ViewY = plr[pnum]._py - ScrollInfo._sdy;
-		}
-
-		if (plr[pnum].walkpath[0] != WALK_NONE) {
-			StartWalkStand(pnum);
-		} else {
-			StartStand(pnum, plr[pnum]._pVar3);
-		}
-
-		ClearPlrPVars(pnum);
-
-		if (leveltype != DTYPE_TOWN) {
-			ChangeLightOff(plr[pnum]._plid, 0, 0);
-		}
-		rv = TRUE;
-	} else {
-		PM_ChangeOffset(pnum);
-		rv = FALSE;
-	}
-
-	return rv;
 }
 
 static bool WeaponDurDecay(int pnum, int ii)
@@ -3828,13 +3711,13 @@ void ProcessPlayers()
 					tplayer = PM_DoStand(pnum);
 					break;
 				case PM_WALK:
-					tplayer = PM_DoWalk(pnum);
+					tplayer = PM_DoWalk(pnum, WALK_UP);
 					break;
 				case PM_WALK2:
-					tplayer = PM_DoWalk2(pnum);
+					tplayer = PM_DoWalk(pnum, WALK_DOWN);
 					break;
 				case PM_WALK3:
-					tplayer = PM_DoWalk3(pnum);
+					tplayer = PM_DoWalk(pnum, WALK_HORIZONTAL);
 					break;
 				case PM_ATTACK:
 					tplayer = PM_DoAttack(pnum);

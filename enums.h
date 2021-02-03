@@ -3437,4 +3437,11 @@ typedef enum conn_type {
 	SELCONN_LOOPBACK,
 } conn_type;
 
+//This is referenced in movement code for players and monsters
+typedef enum walk_enum {
+	WALK_UP, //Movement towards N, NW, or NE
+	WALK_DOWN, //Movement towards S, SW, or SE
+	WALK_HORIZONTAL, //Movement towards W or E
+} walk_enum;
+
 DEVILUTION_END_NAMESPACE
