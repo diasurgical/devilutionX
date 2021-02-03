@@ -2454,9 +2454,9 @@ typedef enum MON_ANIM {
 
 typedef enum PLR_MODE {
 	PM_STAND   = 0,
-	PM_WALK    = 1,
-	PM_WALK2   = 2,
-	PM_WALK3   = 3,
+	PM_WALK    = 1, //Movement towards N, NW, or NE
+	PM_WALK2   = 2, //Movement towards S, SW, or SE
+	PM_WALK3   = 3, //Movement towards W or E
 	PM_ATTACK  = 4,
 	PM_RATTACK = 5,
 	PM_BLOCK   = 6,
@@ -3436,12 +3436,5 @@ typedef enum conn_type {
 	SELCONN_UDP,
 	SELCONN_LOOPBACK,
 } conn_type;
-
-//This is referenced in movement code for players and monsters
-typedef enum walk_enum {
-	WALK_UP, //Movement towards N, NW, or NE
-	WALK_DOWN, //Movement towards S, SW, or SE
-	WALK_HORIZONTAL, //Movement towards W or E
-} walk_enum;
 
 DEVILUTION_END_NAMESPACE

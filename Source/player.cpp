@@ -1360,12 +1360,10 @@ void PM_ChangeOffset(int pnum)
 }
 
 /**
- * @brief Starting a move action towards NW, N, or NE
+ * @brief Start moving a player to a new tile
  */
-void StartWalk(int pnum, int xvel, int yvel, int xadd, int yadd, int EndDir, int sdir)
+void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, int EndDir, int sdir, int variant)
 {
-	int px, py;
-
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartWalk: illegal player %d", pnum);
 	}
@@ -1377,202 +1375,91 @@ void StartWalk(int pnum, int xvel, int yvel, int xadd, int yadd, int EndDir, int
 
 	SetPlayerOld(pnum);
 
-	px = xadd + plr[pnum]._px;
-	py = yadd + plr[pnum]._py;
-
 	if (!PlrDirOK(pnum, EndDir)) {
 		return;
 	}
 
+	//The player's tile position after finishing this movement action
+	int px = xadd + plr[pnum]._px;
+	int py = yadd + plr[pnum]._py;
 	plr[pnum]._pfutx = px;
 	plr[pnum]._pfuty = py;
 
+	//If this is the local player then update the camera offset position
 	if (pnum == myplr) {
 		ScrollInfo._sdx = plr[pnum]._px - ViewX;
 		ScrollInfo._sdy = plr[pnum]._py - ViewY;
 	}
 
-	dPlayer[px][py] = -(pnum + 1);
-	plr[pnum]._pmode = PM_WALK;
-	plr[pnum]._pxvel = xvel;
-	plr[pnum]._pyvel = yvel;
-	plr[pnum]._pxoff = 0;
-	plr[pnum]._pyoff = 0;
-	plr[pnum]._pVar1 = xadd;
-	plr[pnum]._pVar2 = yadd;
-	plr[pnum]._pVar3 = EndDir;
+	switch (variant) {
+	case PM_WALK:
+		dPlayer[px][py] = -(pnum + 1);
+		plr[pnum]._pmode = PM_WALK;
+		plr[pnum]._pxvel = xvel;
+		plr[pnum]._pyvel = yvel;
+		plr[pnum]._pxoff = 0;
+		plr[pnum]._pyoff = 0;
+		plr[pnum]._pVar1 = xadd;
+		plr[pnum]._pVar2 = yadd;
+		plr[pnum]._pVar3 = EndDir;
 
-	if (!(plr[pnum]._pGFXLoad & PFILE_WALK)) {
-		LoadPlrGFX(pnum, PFILE_WALK);
-	}
+		plr[pnum]._pVar6 = 0;
+		plr[pnum]._pVar7 = 0;
+		break;
+	case PM_WALK2:
+		dPlayer[plr[pnum]._px][plr[pnum]._py] = -1 - pnum;
+		plr[pnum]._pVar1 = plr[pnum]._px;
+		plr[pnum]._pVar2 = plr[pnum]._py;
+		plr[pnum]._px = px; // Move player to the next tile to maintain correct render order
+		plr[pnum]._py = py;
+		dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
+		plr[pnum]._pxoff = xoff; // Offset player sprite to align with their previous tile position
+		plr[pnum]._pyoff = yoff;
 
-	NewPlrAnim(pnum, plr[pnum]._pWAnim[EndDir], plr[pnum]._pWFrames, 0, plr[pnum]._pWWidth);
-
-	plr[pnum]._pdir = EndDir;
-	plr[pnum]._pVar6 = 0;
-	plr[pnum]._pVar7 = 0;
-	plr[pnum]._pVar8 = 0;
-
-	if (pnum != myplr) {
-		return;
-	}
-
-	if (zoomflag) {
-		if (abs(ScrollInfo._sdx) >= 3 || abs(ScrollInfo._sdy) >= 3) {
-			ScrollInfo._sdir = SDIR_NONE;
-		} else {
-			ScrollInfo._sdir = sdir;
-		}
-	} else if (abs(ScrollInfo._sdx) >= 2 || abs(ScrollInfo._sdy) >= 2) {
-		ScrollInfo._sdir = SDIR_NONE;
-	} else {
-		ScrollInfo._sdir = sdir;
-	}
-}
-
-/**
- * @brief Starting a move action towards SW, S, or SE
- */
-#if defined(__clang__) || defined(__GNUC__)
-__attribute__((no_sanitize("shift-base")))
-#endif
-void
-StartWalk2(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int EndDir, int sdir)
-{
-	int px, py;
-
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("StartWalk2: illegal player %d", pnum);
-	}
-
-	if (plr[pnum]._pInvincible && plr[pnum]._pHitPoints == 0 && pnum == myplr) {
-		SyncPlrKill(pnum, -1);
-		return;
-	}
-
-	SetPlayerOld(pnum);
-	px = xadd + plr[pnum]._px;
-	py = yadd + plr[pnum]._py;
-
-	if (!PlrDirOK(pnum, EndDir)) {
-		return;
-	}
-
-	plr[pnum]._pfutx = px;
-	plr[pnum]._pfuty = py;
-
-	if (pnum == myplr) {
-		ScrollInfo._sdx = plr[pnum]._px - ViewX;
-		ScrollInfo._sdy = plr[pnum]._py - ViewY;
-	}
-
-	dPlayer[plr[pnum]._px][plr[pnum]._py] = -1 - pnum;
-	plr[pnum]._pVar1 = plr[pnum]._px;
-	plr[pnum]._pVar2 = plr[pnum]._py;
-	plr[pnum]._px = px; // Move player to the next tile to maintain correct render order
-	plr[pnum]._py = py;
-	dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
-	plr[pnum]._pxoff = xoff; // Offset player sprite to align with their previous tile position
-	plr[pnum]._pyoff = yoff;
-
-	ChangeLightXY(plr[pnum]._plid, plr[pnum]._px, plr[pnum]._py);
-	PM_ChangeLightOff(pnum);
-
-	plr[pnum]._pmode = PM_WALK2;
-	plr[pnum]._pxvel = xvel;
-	plr[pnum]._pyvel = yvel;
-	plr[pnum]._pVar6 = xoff * 256;
-	plr[pnum]._pVar7 = yoff * 256;
-	plr[pnum]._pVar3 = EndDir;
-
-	if (!(plr[pnum]._pGFXLoad & PFILE_WALK)) {
-		LoadPlrGFX(pnum, PFILE_WALK);
-	}
-	NewPlrAnim(pnum, plr[pnum]._pWAnim[EndDir], plr[pnum]._pWFrames, 0, plr[pnum]._pWWidth);
-
-	plr[pnum]._pdir = EndDir;
-	plr[pnum]._pVar8 = 0;
-
-	if (pnum != myplr) {
-		return;
-	}
-
-	if (zoomflag) {
-		if (abs(ScrollInfo._sdx) >= 3 || abs(ScrollInfo._sdy) >= 3) {
-			ScrollInfo._sdir = SDIR_NONE;
-		} else {
-			ScrollInfo._sdir = sdir;
-		}
-	} else if (abs(ScrollInfo._sdx) >= 2 || abs(ScrollInfo._sdy) >= 2) {
-		ScrollInfo._sdir = SDIR_NONE;
-	} else {
-		ScrollInfo._sdir = sdir;
-	}
-}
-
-/**
- * @brief Starting a move action towards W or E
- */
-#if defined(__clang__) || defined(__GNUC__)
-__attribute__((no_sanitize("shift-base")))
-#endif
-void
-StartWalk3(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, int EndDir, int sdir)
-{
-	int px, py, x, y;
-
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("StartWalk3: illegal player %d", pnum);
-	}
-
-	if (plr[pnum]._pInvincible && plr[pnum]._pHitPoints == 0 && pnum == myplr) {
-		SyncPlrKill(pnum, -1);
-		return;
-	}
-
-	SetPlayerOld(pnum);
-	px = xadd + plr[pnum]._px;
-	py = yadd + plr[pnum]._py;
-	x = mapx + plr[pnum]._px;
-	y = mapy + plr[pnum]._py;
-
-	if (!PlrDirOK(pnum, EndDir)) {
-		return;
-	}
-
-	plr[pnum]._pfutx = px;
-	plr[pnum]._pfuty = py;
-
-	if (pnum == myplr) {
-		ScrollInfo._sdx = plr[pnum]._px - ViewX;
-		ScrollInfo._sdy = plr[pnum]._py - ViewY;
-	}
-
-	dPlayer[plr[pnum]._px][plr[pnum]._py] = -1 - pnum;
-	dPlayer[px][py] = -1 - pnum;
-	plr[pnum]._pVar4 = x;
-	plr[pnum]._pVar5 = y;
-	dFlags[x][y] |= BFLAG_PLAYERLR;
-	plr[pnum]._pxoff = xoff; // Offset player sprite to align with their previous tile position
-	plr[pnum]._pyoff = yoff;
-
-	if (leveltype != DTYPE_TOWN) {
-		ChangeLightXY(plr[pnum]._plid, x, y);
+		ChangeLightXY(plr[pnum]._plid, plr[pnum]._px, plr[pnum]._py);
 		PM_ChangeLightOff(pnum);
+
+		plr[pnum]._pmode = PM_WALK2;
+		plr[pnum]._pxvel = xvel;
+		plr[pnum]._pyvel = yvel;
+		plr[pnum]._pVar6 = xoff * 256;
+		plr[pnum]._pVar7 = yoff * 256;
+		plr[pnum]._pVar3 = EndDir;
+		break;
+	case PM_WALK3:
+		int x = mapx + plr[pnum]._px;
+		int y = mapy + plr[pnum]._py;
+
+		dPlayer[plr[pnum]._px][plr[pnum]._py] = -1 - pnum;
+		dPlayer[px][py] = -1 - pnum;
+		plr[pnum]._pVar4 = x;
+		plr[pnum]._pVar5 = y;
+		dFlags[x][y] |= BFLAG_PLAYERLR;
+		plr[pnum]._pxoff = xoff; // Offset player sprite to align with their previous tile position
+		plr[pnum]._pyoff = yoff;
+
+		if (leveltype != DTYPE_TOWN) {
+			ChangeLightXY(plr[pnum]._plid, x, y);
+			PM_ChangeLightOff(pnum);
+		}
+
+		plr[pnum]._pmode = PM_WALK3;
+		plr[pnum]._pxvel = xvel;
+		plr[pnum]._pyvel = yvel;
+		plr[pnum]._pVar1 = px;
+		plr[pnum]._pVar2 = py;
+		plr[pnum]._pVar6 = xoff * 256;
+		plr[pnum]._pVar7 = yoff * 256;
+		plr[pnum]._pVar3 = EndDir;
+		break;
 	}
 
-	plr[pnum]._pmode = PM_WALK3;
-	plr[pnum]._pxvel = xvel;
-	plr[pnum]._pyvel = yvel;
-	plr[pnum]._pVar1 = px;
-	plr[pnum]._pVar2 = py;
-	plr[pnum]._pVar6 = xoff * 256;
-	plr[pnum]._pVar7 = yoff * 256;
-	plr[pnum]._pVar3 = EndDir;
-
+	//Load walk animation in case it's not loaded yet
 	if (!(plr[pnum]._pGFXLoad & PFILE_WALK)) {
 		LoadPlrGFX(pnum, PFILE_WALK);
 	}
+
+	//Start walk animation
 	NewPlrAnim(pnum, plr[pnum]._pWAnim[EndDir], plr[pnum]._pWFrames, 0, plr[pnum]._pWWidth);
 
 	plr[pnum]._pdir = EndDir;
@@ -2342,16 +2229,16 @@ bool PM_DoWalk(int pnum, int variant)
 
 		//Update the player's tile position
 		switch (variant) {
-		case WALK_UP:
+		case PM_WALK:
 			dPlayer[plr[pnum]._px][plr[pnum]._py] = 0;
 			plr[pnum]._px += plr[pnum]._pVar1;
 			plr[pnum]._py += plr[pnum]._pVar2;
 			dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
 			break;
-		case WALK_DOWN:
+		case PM_WALK2:
 			dPlayer[plr[pnum]._pVar1][plr[pnum]._pVar2] = 0;
 			break;
-		case WALK_HORIZONTAL:
+		case PM_WALK3:
 			dPlayer[plr[pnum]._px][plr[pnum]._py] = 0;
 			dFlags[plr[pnum]._pVar4][plr[pnum]._pVar5] &= ~BFLAG_PLAYERLR;
 			plr[pnum]._px = plr[pnum]._pVar1;
@@ -3279,28 +3166,28 @@ void CheckNewPath(int pnum)
 
 			switch (plr[pnum].walkpath[0]) {
 			case WALK_N:
-				StartWalk(pnum, 0, -xvel, -1, -1, DIR_N, SDIR_N);
+				StartWalk(pnum, 0, -xvel, 0, 0, -1, -1, 0, 0, DIR_N, SDIR_N, PM_WALK);
 				break;
 			case WALK_NE:
-				StartWalk(pnum, xvel, -yvel, 0, -1, DIR_NE, SDIR_NE);
+				StartWalk(pnum, xvel, -yvel, 0, 0, 0, -1, 0, 0, DIR_NE, SDIR_NE, PM_WALK);
 				break;
 			case WALK_E:
-				StartWalk3(pnum, xvel3, 0, -32, -16, 1, -1, 1, 0, DIR_E, SDIR_E);
+				StartWalk(pnum, xvel3, 0, -32, -16, 1, -1, 1, 0, DIR_E, SDIR_E, PM_WALK3);
 				break;
 			case WALK_SE:
-				StartWalk2(pnum, xvel, yvel, -32, -16, 1, 0, DIR_SE, SDIR_SE);
+				StartWalk(pnum, xvel, yvel, -32, -16, 1, 0, 0, 0, DIR_SE, SDIR_SE, PM_WALK2);
 				break;
 			case WALK_S:
-				StartWalk2(pnum, 0, xvel, 0, -32, 1, 1, DIR_S, SDIR_S);
+				StartWalk(pnum, 0, xvel, 0, -32, 1, 1, 0, 0, DIR_S, SDIR_S, PM_WALK2);
 				break;
 			case WALK_SW:
-				StartWalk2(pnum, -xvel, yvel, 32, -16, 0, 1, DIR_SW, SDIR_SW);
+				StartWalk(pnum, -xvel, yvel, 32, -16, 0, 1, 0, 0, DIR_SW, SDIR_SW, PM_WALK2);
 				break;
 			case WALK_W:
-				StartWalk3(pnum, -xvel3, 0, 32, -16, -1, 1, 0, 1, DIR_W, SDIR_W);
+				StartWalk(pnum, -xvel3, 0, 32, -16, -1, 1, 0, 1, DIR_W, SDIR_W, PM_WALK3);
 				break;
 			case WALK_NW:
-				StartWalk(pnum, -xvel, -yvel, -1, 0, DIR_NW, SDIR_NW);
+				StartWalk(pnum, -xvel, -yvel, 0, 0, -1, 0, 0, 0, DIR_NW, SDIR_NW, PM_WALK);
 				break;
 			}
 
@@ -3711,13 +3598,9 @@ void ProcessPlayers()
 					tplayer = PM_DoStand(pnum);
 					break;
 				case PM_WALK:
-					tplayer = PM_DoWalk(pnum, WALK_UP);
-					break;
 				case PM_WALK2:
-					tplayer = PM_DoWalk(pnum, WALK_DOWN);
-					break;
 				case PM_WALK3:
-					tplayer = PM_DoWalk(pnum, WALK_HORIZONTAL);
+					tplayer = PM_DoWalk(pnum, plr[pnum]._pmode);
 					break;
 				case PM_ATTACK:
 					tplayer = PM_DoAttack(pnum);
