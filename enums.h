@@ -2424,9 +2424,9 @@ typedef enum _difficulty {
 
 typedef enum MON_MODE {
 	MM_STAND     = 0,
-	MM_WALK      = 1,
-	MM_WALK2     = 2,
-	MM_WALK3     = 3,
+	MM_WALK      = 1, //Movement towards N, NW, or NE
+	MM_WALK2     = 2, //Movement towards S, SW, or SE
+	MM_WALK3     = 3, //Movement towards W or E
 	MM_ATTACK    = 4,
 	MM_GOTHIT    = 5,
 	MM_DEATH     = 6,
