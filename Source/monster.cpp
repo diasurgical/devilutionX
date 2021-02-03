@@ -2044,23 +2044,41 @@ BOOL M_DoStand(int i)
 	return FALSE;
 }
 
-BOOL M_DoWalk(int i)
+/**
+ * @brief Continue movement towards new tile
+ */
+bool M_DoWalk(int i, int variant)
 {
-	BOOL rv;
+	bool returnValue;
 
 	commitment((DWORD)i < MAXMONSTERS, i);
 	commitment(monster[i].MType != NULL, i);
 
+	//Check if we reached new tile
 	if (monster[i]._mVar8 == monster[i].MType->Anims[MA_WALK].Frames) {
-		dMonster[monster[i]._mx][monster[i]._my] = 0;
-		monster[i]._mx += monster[i]._mVar1;
-		monster[i]._my += monster[i]._mVar2;
-		dMonster[monster[i]._mx][monster[i]._my] = i + 1;
+		switch (variant) {
+		case MM_WALK:
+			dMonster[monster[i]._mx][monster[i]._my] = 0;
+			monster[i]._mx += monster[i]._mVar1;
+			monster[i]._my += monster[i]._mVar2;
+			dMonster[monster[i]._mx][monster[i]._my] = i + 1;
+			break;
+		case MM_WALK2:
+			dMonster[monster[i]._mVar1][monster[i]._mVar2] = 0;
+			break;
+		case MM_WALK3:
+			dMonster[monster[i]._mx][monster[i]._my] = 0;
+			monster[i]._mx = monster[i]._mVar1;
+			monster[i]._my = monster[i]._mVar2;
+			dFlags[monster[i]._mVar4][monster[i]._mVar5] &= ~BFLAG_MONSTLR;
+			dMonster[monster[i]._mx][monster[i]._my] = i + 1;
+			break;
+		}
 		if (monster[i].mlid != NO_LIGHT)
 			ChangeLightXY(monster[i].mlid, monster[i]._mx, monster[i]._my);
 		M_StartStand(i, monster[i]._mdir);
-		rv = TRUE;
-	} else {
+		returnValue = TRUE;
+	} else { //We didn't reach new tile so update monster's "sub-tile" position
 		if (monster[i]._mAnimCnt == 0) {
 			if (monster[i]._mVar8 == 0 && monster[i].MType->mtype == MT_FLESTHNG)
 				PlayEffect(i, 3);
@@ -2070,79 +2088,13 @@ BOOL M_DoWalk(int i)
 			monster[i]._mxoff = monster[i]._mVar6 >> 4;
 			monster[i]._myoff = monster[i]._mVar7 >> 4;
 		}
-		rv = FALSE;
+		returnValue = FALSE;
 	}
 
-	if (monster[i].mlid != NO_LIGHT)
-		M_ChangeLightOffset(i);
-
-	return rv;
-}
-
-BOOL M_DoWalk2(int i)
-{
-	BOOL rv;
-
-	commitment((DWORD)i < MAXMONSTERS, i);
-	commitment(monster[i].MType != NULL, i);
-
-	if (monster[i]._mVar8 == monster[i].MType->Anims[MA_WALK].Frames) {
-		dMonster[monster[i]._mVar1][monster[i]._mVar2] = 0;
-		if (monster[i].mlid != NO_LIGHT)
-			ChangeLightXY(monster[i].mlid, monster[i]._mx, monster[i]._my);
-		M_StartStand(i, monster[i]._mdir);
-		rv = TRUE;
-	} else {
-		if (monster[i]._mAnimCnt == 0) {
-			if (monster[i]._mVar8 == 0 && monster[i].MType->mtype == MT_FLESTHNG)
-				PlayEffect(i, 3);
-			monster[i]._mVar8++;
-			monster[i]._mVar6 += monster[i]._mxvel;
-			monster[i]._mVar7 += monster[i]._myvel;
-			monster[i]._mxoff = monster[i]._mVar6 >> 4;
-			monster[i]._myoff = monster[i]._mVar7 >> 4;
-		}
-		rv = FALSE;
-	}
-	if (monster[i].mlid != NO_LIGHT)
-		M_ChangeLightOffset(i);
-
-	return rv;
-}
-
-BOOL M_DoWalk3(int i)
-{
-	BOOL rv;
-
-	commitment((DWORD)i < MAXMONSTERS, i);
-	commitment(monster[i].MType != NULL, i);
-
-	if (monster[i]._mVar8 == monster[i].MType->Anims[MA_WALK].Frames) {
-		dMonster[monster[i]._mx][monster[i]._my] = 0;
-		monster[i]._mx = monster[i]._mVar1;
-		monster[i]._my = monster[i]._mVar2;
-		dFlags[monster[i]._mVar4][monster[i]._mVar5] &= ~BFLAG_MONSTLR;
-		dMonster[monster[i]._mx][monster[i]._my] = i + 1;
-		if (monster[i].mlid != NO_LIGHT)
-			ChangeLightXY(monster[i].mlid, monster[i]._mx, monster[i]._my);
-		M_StartStand(i, monster[i]._mdir);
-		rv = TRUE;
-	} else {
-		if (monster[i]._mAnimCnt == 0) {
-			if (monster[i]._mVar8 == 0 && monster[i].MType->mtype == MT_FLESTHNG)
-				PlayEffect(i, 3);
-			monster[i]._mVar8++;
-			monster[i]._mVar6 += monster[i]._mxvel;
-			monster[i]._mVar7 += monster[i]._myvel;
-			monster[i]._mxoff = monster[i]._mVar6 >> 4;
-			monster[i]._myoff = monster[i]._mVar7 >> 4;
-		}
-		rv = FALSE;
-	}
 	if (monster[i].mlid != NO_LIGHT) // BUGFIX: change uniqtype check to mlid check like it is in all other places (fixed)
 		M_ChangeLightOffset(i);
 
-	return rv;
+	return returnValue;
 }
 
 void M_TryM2MHit(int i, int mid, int hper, int mind, int maxd)
@@ -4804,13 +4756,9 @@ void ProcessMonsters()
 				raflag = M_DoStand(mi);
 				break;
 			case MM_WALK:
-				raflag = M_DoWalk(mi);
-				break;
 			case MM_WALK2:
-				raflag = M_DoWalk2(mi);
-				break;
 			case MM_WALK3:
-				raflag = M_DoWalk3(mi);
+				raflag = M_DoWalk(mi, Monst->_mmode);
 				break;
 			case MM_ATTACK:
 				raflag = M_DoAttack(mi);
