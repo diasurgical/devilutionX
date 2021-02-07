@@ -741,7 +741,7 @@ static void AddStoreHoldRepair(ItemStruct *itm, int i)
 	storehold[storenumh] = *itm;
 	if (item->_iMagical != ITEM_QUALITY_NORMAL && item->_iIdentified)
 		item->_ivalue = 30 * item->_iIvalue / 100;
-	v = item->_ivalue * (100 * (item->_iMaxDur - item->_iDurability) / item->_iMaxDur) / 100;
+	v = item->_ivalue * (100 * (1) / item->_iMaxDur) / 100;
 	if (!v) {
 		if (item->_iMagical != ITEM_QUALITY_NORMAL && item->_iIdentified)
 			return;
@@ -749,6 +749,7 @@ static void AddStoreHoldRepair(ItemStruct *itm, int i)
 	}
 	if (v > 1)
 		v >>= 1;
+	v *= item->_iMaxDur - item->_iDurability;
 	item->_iIvalue = v;
 	item->_ivalue = v;
 	storehidx[storenumh] = i;
@@ -1006,7 +1007,8 @@ void AddStoreHoldRecharge(ItemStruct itm, int i)
 {
 	storehold[storenumh] = itm;
 	storehold[storenumh]._ivalue += spelldata[itm._iSpell].sStaffCost;
-	storehold[storenumh]._ivalue = storehold[storenumh]._ivalue * (100 * (storehold[storenumh]._iMaxCharges - storehold[storenumh]._iCharges) / storehold[storenumh]._iMaxCharges) / 100 >> 1;
+	storehold[storenumh]._ivalue = storehold[storenumh]._ivalue * (100 * (1) / storehold[storenumh]._iMaxCharges) / 100 >> 1;
+	storehold[storenumh]._ivalue *= storehold[storenumh]._iMaxCharges - storehold[storenumh]._iCharges;
 	storehold[storenumh]._iIvalue = storehold[storenumh]._ivalue;
 	storehidx[storenumh] = i;
 	storenumh++;
