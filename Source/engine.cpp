@@ -26,8 +26,6 @@ int sgnWidth;
 /** Current game seed */
 int sglGameSeed;
 static CCritSect sgMemCrit;
-/** Number of times the current seed has been fetched */
-int SeedCount;
 /** valid - if x/y are in bounds */
 BOOL gbNotInView;
 
@@ -799,7 +797,6 @@ int GetDirection(int x1, int y1, int x2, int y2)
  */
 void SetRndSeed(int s)
 {
-	SeedCount = 0;
 	sglGameSeed = s;
 	orgseed = s;
 }
@@ -810,7 +807,6 @@ void SetRndSeed(int s)
  */
 int AdvanceRndSeed()
 {
-	SeedCount++;
 	sglGameSeed = static_cast<unsigned int>(RndMult) * sglGameSeed + RndInc;
 	return abs(sglGameSeed);
 }
