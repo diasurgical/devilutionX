@@ -241,6 +241,8 @@ void CheckQuests()
 			    && quests[i]._qactive != QUEST_NOTAVAIL
 			    && plr[myplr]._px == quests[i]._qtx
 			    && plr[myplr]._py == quests[i]._qty) {
+				if (pcurs >= CURSOR_FIRSTITEM && !DropItemBeforeTrig())
+					continue;
 				if (quests[i]._qlvltype != DTYPE_NONE) {
 					setlvltype = quests[i]._qlvltype;
 				}

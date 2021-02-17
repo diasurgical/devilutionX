@@ -1935,10 +1935,6 @@ static DWORD On_WARP(TCmd *pCmd, int pnum)
 		msg_send_packet(pnum, p, sizeof(*p));
 	else {
 		StartWarpLvl(pnum, p->wParam1);
-		if (pnum == myplr && pcurs >= CURSOR_FIRSTITEM) {
-			item[MAXITEMS] = plr[myplr].HoldItem;
-			AutoGetItem(myplr, MAXITEMS);
-		}
 	}
 
 	return sizeof(*p);

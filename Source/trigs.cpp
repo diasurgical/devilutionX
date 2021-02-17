@@ -844,6 +844,9 @@ void CheckTriggers()
 			continue;
 		}
 
+		if (pcurs >= CURSOR_FIRSTITEM && !DropItemBeforeTrig())
+			return;
+
 		switch (trigs[i]._tmsg) {
 		case WM_DIABNEXTLVL:
 			if (gbIsSpawn && currlevel >= 2) {
@@ -851,14 +854,10 @@ void CheckTriggers()
 				PlaySFX(PS_WARR18);
 				InitDiabloMsg(EMSG_NOT_IN_SHAREWARE);
 			} else {
-				if (pcurs >= CURSOR_FIRSTITEM && DropItemBeforeTrig())
-					return;
 				StartNewLvl(myplr, trigs[i]._tmsg, currlevel + 1);
 			}
 			break;
 		case WM_DIABPREVLVL:
-			if (pcurs >= CURSOR_FIRSTITEM && DropItemBeforeTrig())
-				return;
 			StartNewLvl(myplr, trigs[i]._tmsg, currlevel - 1);
 			break;
 		case WM_DIABRTNLVL:

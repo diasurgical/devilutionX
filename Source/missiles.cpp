@@ -4504,6 +4504,8 @@ void MI_Town(int i)
 		if (plr[p].plractive && currlevel == plr[p].plrlevel && !plr[p]._pLvlChanging && plr[p]._pmode == PM_STAND && plr[p]._px == missile[i]._mix && plr[p]._py == missile[i]._miy) {
 			ClrPlrPath(p);
 			if (p == myplr) {
+				if (!DropItemBeforeTrig())
+					break;
 				NetSendCmdParam1(TRUE, CMD_WARP, missile[i]._misource);
 				plr[p]._pmode = PM_NEWLVL;
 			}
