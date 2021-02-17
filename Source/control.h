@@ -79,7 +79,7 @@ void CheckLvlBtn();
 void ReleaseLvlBtn();
 void DrawLevelUpIcon();
 void CheckChrBtns();
-void ReleaseChrBtns();
+void ReleaseChrBtns(bool addAllStatPoints);
 void DrawDurIcon();
 void RedBack();
 void DrawSpellBook();
