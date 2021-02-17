@@ -1781,10 +1781,8 @@ void AutoGetItem(int pnum, int ii)
 		dropGoldValue = 0;
 	}
 
-	if (ii != MAXITEMS) {
-		if (dItem[item[ii]._ix][item[ii]._iy] == 0)
-			return;
-	}
+	if (dItem[item[ii]._ix][item[ii]._iy] == 0)
+		return;
 
 #ifdef HELLFIRE
 	if (item[ii]._iUid != 0)
@@ -2606,17 +2604,6 @@ int CalculateGold(int pnum)
 	}
 
 	return gold;
-}
-
-BOOL DropItemBeforeTrig()
-{
-	if (TryInvPut()) {
-		NetSendCmdPItem(TRUE, CMD_PUTITEM, cursmx, cursmy);
-		NewCursor(CURSOR_HAND);
-		return TRUE;
-	}
-
-	return FALSE;
 }
 
 DEVILUTION_END_NAMESPACE
