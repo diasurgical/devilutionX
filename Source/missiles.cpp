@@ -2494,7 +2494,7 @@ void AddFlash2(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, 
 		if (id != -1) {
 			missile[mi]._midam = 0;
 			for (i = 0; i <= plr[id]._pLevel; i++) {
-				missile[mi]._midam += random_(56, 2) + 1;
+				missile[mi]._midam += random_(56, 20) + 1;
 			}
 			for (i = missile[mi]._mispllvl; i > 0; i--) {
 				missile[mi]._midam += missile[mi]._midam >> 3;
