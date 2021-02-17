@@ -2,6 +2,7 @@
 
 #include "controls/controller.h"
 #include "controls/remap_keyboard.h"
+#include "DiabloUI/diabloui.h"
 
 namespace dvl {
 
@@ -71,7 +72,7 @@ MenuAction GetMenuAction(const SDL_Event &event)
 		case SDLK_KP_ENTER:
 			return MenuAction_SELECT;
 		case SDLK_SPACE:
-			if (!SDL_IsTextInputActive()) {
+			if (!textInputActive) {
 				return MenuAction_SELECT;
 			}
 			break;

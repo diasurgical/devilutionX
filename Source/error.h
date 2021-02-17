@@ -12,17 +12,12 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
-extern char msgtable[MAX_SEND_STR_LEN];
 extern DWORD msgdelay;
 extern char msgflag;
-extern char msgcnt;
 
 void InitDiabloMsg(char e);
 void ClrDiabloMsg();
 void DrawDiabloMsg();
-
-/* data */
-extern char *MsgStrings[];
 
 #ifdef __cplusplus
 }

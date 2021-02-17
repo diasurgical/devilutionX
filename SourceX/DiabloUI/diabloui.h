@@ -8,7 +8,8 @@
 
 namespace dvl {
 
-extern int SelectedItem;
+extern std::size_t SelectedItem;
+extern bool textInputActive;
 
 typedef enum _artFocus {
 	FOCUS_SMALL,
@@ -25,11 +26,12 @@ typedef enum _artLogo {
 extern Art ArtLogos[3];
 extern Art ArtFocus[3];
 extern Art ArtBackground;
+extern Art ArtBackgroundWidescreen;
 extern Art ArtCursor;
 extern Art ArtHero;
 extern bool gbSpawned;
 
-extern void (*gfnSoundFunction)(char *file);
+extern void (*gfnSoundFunction)(const char *file);
 extern BOOL (*gfnHeroInfo)(BOOL (*fninfofunc)(_uiheroinfo *));
 
 void UiFadeIn();
@@ -38,13 +40,13 @@ bool UiItemMouseEvents(SDL_Event *event, std::vector<UiItemBase *> items);
 int GetCenterOffset(int w, int bw = 0);
 void LoadPalInMem(const SDL_Color *pPal);
 void DrawMouse();
-void LoadBackgroundArt(const char *pszFile);
+void LoadBackgroundArt(const char *pszFile, int frames = 1);
 void UiAddBackground(std::vector<UiItemBase *> *vecDialog);
-void UiAddLogo(std::vector<UiItemBase *> *vecDialog, int size = LOGO_MED, int height = 0);
+void UiAddLogo(std::vector<UiItemBase *> *vecDialog, int size = LOGO_MED, int y = 0);
 void UiFocusNavigationSelect();
 void UiFocusNavigationEsc();
 void UiFocusNavigationYesNo();
-void UiInitList(int min, int max, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), std::vector<UiItemBase *> items, bool wraps = false, bool (*fnYesNo)() = NULL);
+void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), std::vector<UiItemBase *> items, bool wraps = false, bool (*fnYesNo)() = NULL);
 void UiInitScrollBar(UiScrollBar *ui_sb, std::size_t viewport_size, const std::size_t *current_offset);
 void UiClearScreen();
 void UiPollAndRender();

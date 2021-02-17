@@ -1,4 +1,8 @@
-//HEADER_GOES_HERE
+/**
+ * @file objdat.h
+ *
+ * Interface of all object data.
+ */
 #ifndef __OBJDAT_H__
 #define __OBJDAT_H__
 
@@ -10,7 +14,9 @@ extern "C" {
 
 extern int ObjTypeConv[];
 extern ObjDataStruct AllObjects[];
-extern char *ObjMasterLoadList[56];
+extern const char *const ObjMasterLoadList[];
+extern char *ObjCryptLoadList[];
+extern char *ObjHiveLoadList[];
 
 #ifdef __cplusplus
 }

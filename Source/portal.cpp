@@ -1,3 +1,8 @@
+/**
+ * @file portal.cpp
+ *
+ * Implementation of functionality for handling town portals.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -38,7 +43,7 @@ void AddWarpMissile(int i, int x, int y)
 
 	missiledata[MIS_TOWN].mlSFX = -1;
 	dMissile[x][y] = 0;
-	mi = AddMissile(0, 0, x, y, 0, MIS_TOWN, 0, i, 0, 0);
+	mi = AddMissile(0, 0, x, y, 0, MIS_TOWN, TARGET_MONSTERS, i, 0, 0);
 
 	if (mi != -1) {
 		SetMissDir(mi, 1);
@@ -126,7 +131,7 @@ void SetCurrentPortal(int p)
 
 void GetPortalLevel()
 {
-	if (currlevel) {
+	if (currlevel != 0) {
 		setlevel = FALSE;
 		currlevel = 0;
 		plr[myplr].plrlevel = 0;

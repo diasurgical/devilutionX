@@ -7,23 +7,39 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+/** Pixel width of the current cursor image */
 int cursW;
+/** Pixel height of the current cursor image */
 int cursH;
+/** Current highlighted monster */
 int pcursmonst = -1;
+/** Width of current cursor in inventory cells */
 int icursW28;
+/** Height of current cursor in inventory cells */
 int icursH28;
+/** Cursor images CEL */
 BYTE *pCursCels;
+BYTE *pCursCels2;
 
 /** inv_item value */
 char pcursinvitem;
+/** Pixel width of the current cursor image */
 int icursW;
+/** Pixel height of the current cursor image */
 int icursH;
+/** Current highlighted item */
 char pcursitem;
+/** Current highlighted object */
 char pcursobj;
+/** Current highlighted player */
 char pcursplr;
+/** Current highlighted tile row */
 int cursmx;
+/** Current highlighted tile column */
 int cursmy;
+/** Previously highlighted monster */
 int pcurstemp;
+/** Index of current cursor image */
 int pcurs;
 
 /* rdata */
@@ -50,6 +66,12 @@ const int InvItemWidth[] = {
 	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
 	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
 	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	2 * 28, 2 * 28, 1 * 28, 1 * 28, 1 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
+	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28,
+	2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28, 2 * 28
 	// clang-format on
 };
 
@@ -76,6 +98,12 @@ const int InvItemHeight[] = {
 	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
 	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
 	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28, 1 * 28,
+	2 * 28, 2 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
+	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28,
+	3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28, 3 * 28
 	// clang-format on
 };
 
@@ -83,12 +111,15 @@ void InitCursor()
 {
 	assert(!pCursCels);
 	pCursCels = LoadFileInMem("Data\\Inv\\Objcurs.CEL", NULL);
+	if (gbIsHellfire)
+		pCursCels2 = LoadFileInMem("Data\\Inv\\Objcurs2.CEL", NULL);
 	ClearCursor();
 }
 
 void FreeCursor()
 {
 	MemFreeDbg(pCursCels);
+	MemFreeDbg(pCursCels2);
 	ClearCursor();
 }
 
@@ -232,16 +263,29 @@ void CheckCursMove()
 	// Convert to tile grid
 	mx = ViewX;
 	my = ViewY;
+
+	TilesInView(&columns, &rows);
+	int lrow = rows - RowsCoveredByPanel();
+
+	// Center player tile on screen
+	ShiftGrid(&mx, &my, -columns / 2, -lrow / 2);
+
+	// Align grid
+	if ((columns & 1) == 0 && (lrow & 1) == 0) {
+		sy += TILE_HEIGHT / 2;
+	} else if (columns & 1 && lrow & 1) {
+		sx -= TILE_WIDTH / 2;
+	} else if (columns & 1 && (lrow & 1) == 0) {
+		my++;
+	}
+
+	if (!zoomflag) {
+		sy -= TILE_HEIGHT / 4;
+	}
+
 	tx = sx / TILE_WIDTH;
 	ty = sy / TILE_HEIGHT;
 	ShiftGrid(&mx, &my, tx, ty);
-
-	// Center player tile on screen
-	TilesInView(&columns, &rows);
-	ShiftGrid(&mx, &my, -columns / 2, -(rows - RowsCoveredByPanel()) / 4);
-	if ((columns % 2) != 0) {
-		my++;
-	}
 
 	// Shift position to match diamond grid aligment
 	px = sx % TILE_WIDTH;
@@ -374,7 +418,7 @@ void CheckCursMove()
 				cursmx = mx;
 				cursmy = my;
 			}
-			if (pcursmonst != -1 && monster[pcursmonst]._mFlags & MFLAG_GOLEM) {
+			if (pcursmonst != -1 && monster[pcursmonst]._mFlags & MFLAG_GOLEM && !(monster[pcursmonst]._mFlags & MFLAG_BERSERK)) {
 				pcursmonst = -1;
 			}
 			if (pcursmonst != -1) {
@@ -442,7 +486,7 @@ void CheckCursMove()
 			cursmx = mx;
 			cursmy = my;
 		}
-		if (pcursmonst != -1 && monster[pcursmonst]._mFlags & MFLAG_GOLEM) {
+		if (pcursmonst != -1 && monster[pcursmonst]._mFlags & MFLAG_GOLEM && !(monster[pcursmonst]._mFlags & MFLAG_BERSERK)) {
 			pcursmonst = -1;
 		}
 	} else {
@@ -612,7 +656,7 @@ void CheckCursMove()
 		cursmx = mx;
 		cursmy = my;
 	}
-	if (pcursmonst != -1 && monster[pcursmonst]._mFlags & MFLAG_GOLEM) {
+	if (pcursmonst != -1 && monster[pcursmonst]._mFlags & MFLAG_GOLEM && !(monster[pcursmonst]._mFlags & MFLAG_BERSERK)) {
 		pcursmonst = -1;
 	}
 }

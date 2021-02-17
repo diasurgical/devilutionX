@@ -1,6 +1,8 @@
 #include "display.h"
 #include "DiabloUI/diabloui.h"
 #include "controls/controller.h"
+#include "controls/devices/game_controller.h"
+#include "controls/devices/joystick.h"
 
 #ifdef USE_SDL1
 #ifndef SDL1_VIDEO_MODE_BPP
@@ -9,19 +11,29 @@
 #ifndef SDL1_VIDEO_MODE_FLAGS
 #define SDL1_VIDEO_MODE_FLAGS SDL_SWSURFACE
 #endif
-#ifndef SDL1_VIDEO_MODE_WIDTH
-#define SDL1_VIDEO_MODE_WIDTH SCREEN_WIDTH
+#ifdef SDL1_VIDEO_MODE_WIDTH
+#define DEFAULT_WIDTH SDL1_VIDEO_MODE_WIDTH
 #endif
-#ifndef SDL1_VIDEO_MODE_HEIGHT
-#define SDL1_VIDEO_MODE_HEIGHT SCREEN_HEIGHT
+#ifdef SDL1_VIDEO_MODE_HEIGHT
+#define DEFAULT_HEIGHT SDL1_VIDEO_MODE_HEIGHT
 #endif
+#endif
+
+#ifndef DEFAULT_WIDTH
+#define DEFAULT_WIDTH 640
+#endif
+#ifndef DEFAULT_HEIGHT
+#define DEFAULT_HEIGHT 480
 #endif
 
 namespace dvl {
 
-extern BOOL was_window_init; /** defined in dx.cpp */
-
 extern SDL_Surface *renderer_texture_surface; /** defined in dx.cpp */
+
+int screenWidth;
+int screenHeight;
+int viewportHeight;
+int borderRight;
 
 #ifdef USE_SDL1
 void SetVideoMode(int width, int height, int bpp, uint32_t flags) {
@@ -33,11 +45,11 @@ void SetVideoMode(int width, int height, int bpp, uint32_t flags) {
 	ghMainWnd = SDL_GetVideoSurface();
 }
 
-void SetVideoModeToPrimary(bool fullscreen) {
+void SetVideoModeToPrimary(bool fullscreen, int width, int height) {
 	int flags = SDL1_VIDEO_MODE_FLAGS | SDL_HWPALETTE;
 	if (fullscreen)
 		flags |= SDL_FULLSCREEN;
-	SetVideoMode(SDL1_VIDEO_MODE_WIDTH, SDL1_VIDEO_MODE_HEIGHT, SDL1_VIDEO_MODE_BPP, flags);
+	SetVideoMode(width, height, SDL1_VIDEO_MODE_BPP, flags);
 	if (OutputRequiresScaling())
 		SDL_Log("Using software scaling");
 }
@@ -47,7 +59,62 @@ bool IsFullScreen() {
 }
 #endif
 
-bool SpawnWindow(const char *lpWindowName, int nWidth, int nHeight)
+void AdjustToScreenGeometry(int width, int height)
+{
+	screenWidth = width;
+	screenHeight = height;
+
+	borderRight = 64;
+	if (screenWidth % 4) {
+		// The buffer needs to be devisable by 4 for the engine to blit correctly
+		borderRight += 4 - screenWidth % 4;
+	}
+
+	viewportHeight = screenHeight;
+	if (screenWidth <= PANEL_WIDTH) {
+		// Part of the screen is fully obscured by the UI
+		viewportHeight -= PANEL_HEIGHT;
+	}
+}
+
+void CalculatePreferdWindowSize(int &width, int &height, bool useIntegerScaling)
+{
+#ifdef USE_SDL1
+	const SDL_VideoInfo &best = *SDL_GetVideoInfo();
+	SDL_Log("Best video mode reported as: %dx%d bpp=%d hw_available=%u",
+	    best.current_w, best.current_h, best.vfmt->BitsPerPixel, best.hw_available);
+#else
+	SDL_DisplayMode mode;
+	if (SDL_GetDesktopDisplayMode(0, &mode) != 0) {
+		ErrSdl();
+	}
+
+	if (!useIntegerScaling) {
+		float wFactor = (float)mode.w / width;
+		float hFactor = (float)mode.h / height;
+
+		if (wFactor > hFactor) {
+			width = mode.w * height / mode.h;
+		} else {
+			height = mode.h * width / mode.w;
+		}
+		return;
+	}
+
+	int wFactor = mode.w / width;
+	int hFactor = mode.h / height;
+
+	if (wFactor > hFactor) {
+		width = mode.w / hFactor;
+		height = mode.h / hFactor;
+	} else {
+		width = mode.w / wFactor;
+		height = mode.h / wFactor;
+	}
+#endif
+}
+
+bool SpawnWindow(const char *lpWindowName)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) <= -1) {
 		ErrSdl();
@@ -56,24 +123,46 @@ bool SpawnWindow(const char *lpWindowName, int nWidth, int nHeight)
 #ifdef USE_SDL1
 	SDL_EnableUNICODE(1);
 #endif
-#if defined(USE_SDL1) || defined(__SWITCH__)
-	InitController();
+#ifdef USE_SDL1
+	// On SDL 1, there are no ADDED/REMOVED events.
+	// Always try to initialize the first joystick.
+	Joystick::Add(0);
+#ifdef __SWITCH__
+	// TODO: There is a bug in SDL2 on Switch where it does not repport controllers on startup (Jan 1, 2020)
+	GameController::Add(0);
+#endif
 #endif
 
-	int upscale = 1;
-	DvlIntSetting("upscale", &upscale);
-	if (fullscreen)
-		DvlIntSetting("fullscreen", (int *)&fullscreen);
+	int width = DEFAULT_WIDTH;
+	DvlIntSetting("width", &width);
+	int height = DEFAULT_HEIGHT;
+	DvlIntSetting("height", &height);
+	BOOL integerScalingEnabled = false;
+	DvlIntSetting("integer scaling", &integerScalingEnabled);
 
-	int grabInput = 1;
+	if (fullscreen)
+		DvlIntSetting("fullscreen", &fullscreen);
+
+	int grabInput = 0;
 	DvlIntSetting("grab input", &grabInput);
 
+	BOOL upscale = true;
+	DvlIntSetting("upscale", &upscale);
+	BOOL oar = false;
+	DvlIntSetting("original aspect ratio", &oar);
+
+	if (upscale && !oar) {
+		CalculatePreferdWindowSize(width, height, integerScalingEnabled);
+	}
+	AdjustToScreenGeometry(width, height);
+
 #ifdef USE_SDL1
+	if (upscale) {
+		upscale = false;
+		SDL_Log("upscaling not supported with USE_SDL1");
+	}
 	SDL_WM_SetCaption(lpWindowName, WINDOW_ICON_NAME);
-	const SDL_VideoInfo &best = *SDL_GetVideoInfo();
-	SDL_Log("Best video mode reported as: %dx%d bpp=%d hw_available=%u",
-	    best.current_w, best.current_h, best.vfmt->BitsPerPixel, best.hw_available);
-	SetVideoModeToPrimary(fullscreen);
+	SetVideoModeToPrimary(fullscreen, width, height);
 	if (grabInput)
 		SDL_WM_GrabInput(SDL_GRAB_ON);
 	atexit(SDL_VideoQuit); // Without this video mode is not restored after fullscreen.
@@ -96,7 +185,7 @@ bool SpawnWindow(const char *lpWindowName, int nWidth, int nHeight)
 		flags |= SDL_WINDOW_INPUT_GRABBED;
 	}
 
-	ghMainWnd = SDL_CreateWindow(lpWindowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, nWidth, nHeight, flags);
+	ghMainWnd = SDL_CreateWindow(lpWindowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
 #endif
 	if (ghMainWnd == NULL) {
 		ErrSdl();
@@ -113,9 +202,7 @@ bool SpawnWindow(const char *lpWindowName, int nWidth, int nHeight)
 	refreshDelay = 1000000 / refreshRate;
 
 	if (upscale) {
-#ifdef USE_SDL1
-		SDL_Log("upscaling not supported with USE_SDL1");
-#else
+#ifndef USE_SDL1
 		Uint32 rendererFlags = SDL_RENDERER_ACCELERATED;
 
 		vsyncEnabled = 1;
@@ -129,21 +216,28 @@ bool SpawnWindow(const char *lpWindowName, int nWidth, int nHeight)
 			ErrSdl();
 		}
 
-		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, nWidth, nHeight);
+		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, width, height);
 		if (texture == NULL) {
 			ErrSdl();
 		}
 
-		int integerScalingEnabled = 0;
-		DvlIntSetting("integer scaling", &integerScalingEnabled);
 		if (integerScalingEnabled && SDL_RenderSetIntegerScale(renderer, SDL_TRUE) < 0) {
 			ErrSdl();
 		}
 
-		if (SDL_RenderSetLogicalSize(renderer, nWidth, nHeight) <= -1) {
+		if (SDL_RenderSetLogicalSize(renderer, width, height) <= -1) {
 			ErrSdl();
 		}
 #endif
+	} else {
+#ifdef USE_SDL1
+		const SDL_VideoInfo &current = *SDL_GetVideoInfo();
+		width = current.current_w;
+		height = current.current_h;
+#else
+		SDL_GetWindowSize(ghMainWnd, &width, &height);
+#endif
+		AdjustToScreenGeometry(width, height);
 	}
 
 	return ghMainWnd != NULL;

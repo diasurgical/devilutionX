@@ -14,7 +14,12 @@ BYTE movie_playing;
 /** Should the movie play in a loop. */
 BOOL loop_movie;
 
-void play_movie(char *pszMovie, BOOL user_can_close)
+/**
+ * @brief Start playback of a given video.
+ * @param pszMovie The file name of the video
+ * @param user_can_close Set to false to make the video unskippable.
+ */
+void play_movie(const char *pszMovie, BOOL user_can_close)
 {
 	HANDLE video_stream;
 

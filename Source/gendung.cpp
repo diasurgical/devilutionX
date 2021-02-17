@@ -7,29 +7,61 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
+/** Contains the tile IDs of the map. */
 BYTE dungeon[DMAXX][DMAXY];
+/** Contains a backup of the tile IDs of the map. */
 BYTE pdungeon[DMAXX][DMAXY];
 char dflags[DMAXX][DMAXY];
+/** Specifies the active set level X-coordinate of the map. */
 int setpc_x;
+/** Specifies the active set level Y-coordinate of the map. */
 int setpc_y;
+/** Specifies the width of the active set level of the map. */
 int setpc_w;
+/** Specifies the height of the active set level of the map. */
 int setpc_h;
+/** Contains the contents of the single player quest DUN file. */
 BYTE *pSetPiece;
+/** Specifies whether a single player quest DUN has been loaded. */
 BOOL setloadflag;
 BYTE *pSpecialCels;
+/** Specifies the tile definitions of the active dungeon type; (e.g. levels/l1data/l1.til). */
 BYTE *pMegaTiles;
 BYTE *pLevelPieces;
 BYTE *pDungeonCels;
 BYTE *pSpeedCels;
+/**
+ * Returns the frame number of the speed CEL, an in memory decoding
+ * of level CEL frames, based on original frame number and light index.
+ * Note, given light index 0, the original frame number is returned.
+ */
 int SpeedFrameTbl[128][16];
 /**
  * List of transparancy masks to use for dPieces
  */
 char block_lvid[MAXTILES + 1];
+/** Specifies the CEL frame occurrence for each frame of the level CEL (e.g. "levels/l1data/l1.cel"). */
 int level_frame_count[MAXTILES];
 int tile_defs[MAXTILES];
+/**
+ * Secifies the CEL frame decoder type for each frame of the
+ * level CEL (e.g. "levels/l1data/l1.cel"), Indexed by frame numbers starting at 1.
+ * The decoder type may be one of the following.
+ *  0x0000 - cel.decodeType0
+ *  0x1000 - cel.decodeType1
+ *  0x2000 - cel.decodeType2
+ *  0x3000 - cel.decodeType3
+ *  0x4000 - cel.decodeType4
+ *  0x5000 - cel.decodeType5
+ *  0x6000 - cel.decodeType6
+ */
 WORD level_frame_types[MAXTILES];
+/**
+ * Specifies the size of each frame of the level cel (e.g.
+ * "levels/l1data/l1.cel"). Indexed by frame numbers starting at 1.
+ */
 int level_frame_sizes[MAXTILES];
+/** Specifies the number of frames in the level cel (e.g. "levels/l1data/l1.cel"). */
 int nlevel_frames;
 /**
  * List of light blocking dPieces
@@ -48,41 +80,75 @@ BOOLEAN nTransTable[MAXTILES + 1];
  */
 BOOLEAN nMissileTable[MAXTILES + 1];
 BOOLEAN nTrapTable[MAXTILES + 1];
+/** Specifies the minimum X-coordinate of the map. */
 int dminx;
+/** Specifies the minimum Y-coordinate of the map. */
 int dminy;
+/** Specifies the maximum X-coordinate of the map. */
 int dmaxx;
+/** Specifies the maximum Y-coordinate of the map. */
 int dmaxy;
 int gnDifficulty;
+/** Specifies the active dungeon type of the current game. */
 BYTE leveltype;
+/** Specifies the active dungeon level of the current game. */
 BYTE currlevel;
 BOOLEAN setlevel;
+/** Specifies the active quest level of the current game. */
 BYTE setlvlnum;
 char setlvltype;
+/** Specifies the player viewpoint X-coordinate of the map. */
 int ViewX;
+/** Specifies the player viewpoint Y-coordinate of the map. */
 int ViewY;
 int ViewBX;
 int ViewBY;
 int ViewDX;
 int ViewDY;
 ScrollStruct ScrollInfo;
+/** Specifies the level viewpoint X-coordinate of the map. */
 int LvlViewX;
+/** Specifies the level viewpoint Y-coordinate of the map. */
 int LvlViewY;
 int MicroTileLen;
 char TransVal;
+/** Specifies the active transparency indices. */
 BOOLEAN TransList[256];
+/** Contains the piece IDs of each tile on the map. */
 int dPiece[MAXDUNX][MAXDUNY];
+/** Specifies the dungeon piece information for a given coordinate and block number. */
 MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
-MICROS dpiece_defs_map_1[MAXDUNX * MAXDUNY];
+/** Specifies the transparency at each coordinate of the map. */
 char dTransVal[MAXDUNX][MAXDUNY];
 char dLight[MAXDUNX][MAXDUNY];
 char dPreLight[MAXDUNX][MAXDUNY];
 char dFlags[MAXDUNX][MAXDUNY];
+/** Contains the player numbers (players array indices) of the map. */
 char dPlayer[MAXDUNX][MAXDUNY];
+/**
+ * Contains the NPC numbers of the map. The NPC number represents a
+ * towner number (towners array index) in Tristram and a monster number
+ * (monsters array index) in the dungeon.
+ */
 int dMonster[MAXDUNX][MAXDUNY];
+/**
+ * Contains the dead numbers (deads array indices) and dead direction of
+ * the map, encoded as specified by the pseudo-code below.
+ * dDead[x][y] & 0x1F - index of dead
+ * dDead[x][y] >> 0x5 - direction
+ */
 char dDead[MAXDUNX][MAXDUNY];
+/** Contains the object numbers (objects array indices) of the map. */
 char dObject[MAXDUNX][MAXDUNY];
+/** Contains the item numbers (items array indices) of the map. */
 char dItem[MAXDUNX][MAXDUNY];
+/** Contains the missile numbers (missiles array indices) of the map. */
 char dMissile[MAXDUNX][MAXDUNY];
+/**
+ * Contains the arch frame numbers of the map from the special tileset
+ * (e.g. "levels/l1data/l1s.cel"). Note, the special tileset of Tristram (i.e.
+ * "levels/towndata/towns.cel") contains trees rather than arches.
+ */
 char dSpecial[MAXDUNX][MAXDUNY];
 int themeCount;
 THEME_LOC themeLoc[MAXTHEMES];
@@ -102,16 +168,25 @@ void FillSolidBlockTbls()
 
 	switch (leveltype) {
 	case DTYPE_TOWN:
-		pSBFile = LoadFileInMem("Levels\\TownData\\Town.SOL", &dwTiles);
+		if (gbIsHellfire)
+			pSBFile = LoadFileInMem("NLevels\\TownData\\Town.SOL", &dwTiles);
+		else
+			pSBFile = LoadFileInMem("Levels\\TownData\\Town.SOL", &dwTiles);
 		break;
 	case DTYPE_CATHEDRAL:
-		pSBFile = LoadFileInMem("Levels\\L1Data\\L1.SOL", &dwTiles);
+		if (currlevel < 17)
+			pSBFile = LoadFileInMem("Levels\\L1Data\\L1.SOL", &dwTiles);
+		else
+			pSBFile = LoadFileInMem("NLevels\\L5Data\\L5.SOL", &dwTiles);
 		break;
 	case DTYPE_CATACOMBS:
 		pSBFile = LoadFileInMem("Levels\\L2Data\\L2.SOL", &dwTiles);
 		break;
 	case DTYPE_CAVES:
-		pSBFile = LoadFileInMem("Levels\\L3Data\\L3.SOL", &dwTiles);
+		if (currlevel < 17)
+			pSBFile = LoadFileInMem("Levels\\L3Data\\L3.SOL", &dwTiles);
+		else
+			pSBFile = LoadFileInMem("NLevels\\L6Data\\L6.SOL", &dwTiles);
 		break;
 	case DTYPE_HELL:
 		pSBFile = LoadFileInMem("Levels\\L4Data\\L4.SOL", &dwTiles);
@@ -219,7 +294,6 @@ void DRLG_CopyTrans(int sx, int sy, int dx, int dy)
 	dTransVal[dx][dy] = dTransVal[sx][sy];
 }
 
-#ifndef SPAWN
 void DRLG_ListTrans(int num, BYTE *List)
 {
 	int i;
@@ -249,7 +323,6 @@ void DRLG_AreaTrans(int num, BYTE *List)
 	}
 	TransVal++;
 }
-#endif
 
 void DRLG_InitSetPC()
 {
@@ -275,7 +348,6 @@ void DRLG_SetPC()
 	}
 }
 
-#ifndef SPAWN
 void Make_SetPC(int x, int y, int w, int h)
 {
 	int i, j, dx, dy, dh, dw;
@@ -517,7 +589,6 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, int rnd
 		}
 	}
 }
-#endif
 
 void DRLG_HoldThemeRooms()
 {

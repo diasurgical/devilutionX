@@ -1,3 +1,8 @@
+/**
+ * @file setmaps.cpp
+ *
+ * Implementation of functionality the special quest dungeons.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -57,10 +62,10 @@ BYTE SkelChamTrans3[] = {
 };
 
 /** Maps from quest level to quest level names. */
-char *quest_level_names[] = {
+const char *const quest_level_names[] = {
 	"",
 	"Skeleton King's Lair",
-	"Bone Chamber",
+	"Chamber of Bone",
 	"Maze",
 	"Poisoned Water Supply",
 	"Archbishop Lazarus' Lair",
@@ -80,7 +85,6 @@ int ObjIndex(int x, int y)
 	return -1;
 }
 
-#ifndef SPAWN
 void AddSKingObjs()
 {
 	SetObjMapRange(ObjIndex(64, 34), 20, 7, 23, 10, 1);
@@ -104,7 +108,7 @@ void AddVileObjs()
 	SetObjMapRange(ObjIndex(35, 36), 7, 11, 13, 18, 3);
 }
 
-void DRLG_SetMapTrans(char *sFileName)
+void DRLG_SetMapTrans(const char *sFileName)
 {
 	int x, y;
 	int i, j;
@@ -131,6 +135,9 @@ void DRLG_SetMapTrans(char *sFileName)
 	mem_free_dbg(pLevelMap);
 }
 
+/**
+ * @brief Load a quest map, the given map is specified via the global setlvlnum
+ */
 void LoadSetMap()
 {
 	switch (setlvlnum) {
@@ -192,6 +199,5 @@ void LoadSetMap()
 		break;
 	}
 }
-#endif
 
 DEVILUTION_END_NAMESPACE

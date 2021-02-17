@@ -1,3 +1,8 @@
+/**
+ * @file spells.cpp
+ *
+ * Implementation of functionality for casting player spells.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -16,12 +21,14 @@ int GetManaAmount(int id, int sn)
 		sl = 0;
 	}
 
+	if (sl > 0) {
+		adj = sl * spelldata[sn].sManaAdj;
+	}
 	if (sn == SPL_FIREBOLT) {
 		adj >>= 1;
-	} else if (sn == SPL_RESURRECT && sl > 0) {
+	}
+	if (sn == SPL_RESURRECT && sl > 0) {
 		adj = sl * (spelldata[SPL_RESURRECT].sManaCost / 8);
-	} else if (sl > 0) {
-		adj = sl * spelldata[sn].sManaAdj;
 	}
 
 	if (sn == SPL_HEAL || sn == SPL_HEALOTHER) {
@@ -36,7 +43,9 @@ int GetManaAmount(int id, int sn)
 		ma = 0;
 	ma <<= 6;
 
-	if (plr[id]._pClass == PC_ROGUE) {
+	if (plr[id]._pClass == PC_SORCERER) {
+		ma >>= 1;
+	} else if (plr[id]._pClass == PC_ROGUE || plr[id]._pClass == PC_MONK || plr[id]._pClass == PC_BARD) {
 		ma -= ma >> 2;
 	}
 
@@ -78,6 +87,79 @@ void UseMana(int id, int sn)
 	}
 }
 
+/**
+ * @brief Gets a value that represents the specified spellID in 64bit bitmask format.
+ * For example:
+ *  - spell ID  1: 0000.0000.0000.0000.0000.0000.0000.0000.0000.0000.0000.0000.0000.0000.0000.0001
+ *  - spell ID 43: 0000.0000.0000.0000.0000.0100.0000.0000.0000.0000.0000.0000.0000.0000.0000.0000
+ * @param spellId The id of the spell to get a bitmask for.
+ * @return A 64bit bitmask representation for the specified spell.
+ */
+unsigned long long GetSpellBitmask(int spellId)
+{
+	return 1ULL << (spellId - 1);
+}
+
+/**
+ * @brief Gets a value indicating whether the player's current readied spell is a valid spell. Readied spells can be
+ * invalidaded in a few scenarios where the spell comes from items, for example (like dropping the only scroll that
+ * provided the spell).
+ * @param player The player whose readied spell is to be checked.
+ * @return 'true' when the readied spell is currently valid, and 'false' otherwise.
+ */
+bool IsReadiedSpellValid(const PlayerStruct &player)
+{
+	switch (player._pRSplType) {
+	case RSPLTYPE_SKILL:
+	case RSPLTYPE_SPELL:
+	case RSPLTYPE_INVALID:
+		return true;
+
+	case RSPLTYPE_CHARGES:
+		return player._pISpells & GetSpellBitmask(player._pRSpell);
+
+	case RSPLTYPE_SCROLL:
+		return player._pScrlSpells & GetSpellBitmask(player._pRSpell);
+
+	default:
+		return false;
+	}
+}
+
+/**
+ * @brief Clears the current player's readied spell selection.
+ * @note Will force a UI redraw in case the values actually change, so that the new spell reflects on the bottom panel.
+ * @param player The player whose readied spell is to be cleared.
+ */
+void ClearReadiedSpell(PlayerStruct &player)
+{
+	int &readiedSpell = player._pRSpell;
+	if (readiedSpell != SPL_INVALID) {
+		readiedSpell = SPL_INVALID;
+		force_redraw = 255;
+	}
+
+	char &readiedSpellType = player._pRSplType;
+	if (readiedSpellType != RSPLTYPE_INVALID) {
+		readiedSpellType = RSPLTYPE_INVALID;
+		force_redraw = 255;
+	}
+}
+
+/**
+ * @brief Ensures the player's current readied spell is a valid selection for the character. If the current selection is
+ * incompatible with the player's items and spell (for example, if the player does not currently have access to the spell),
+ * the selection is cleared.
+ * @note Will force a UI redraw in case the values actually change, so that the new spell reflects on the bottom panel.
+ * @param player The player whose readied spell is to be checked.
+ */
+void EnsureValidReadiedSpell(PlayerStruct &player)
+{
+	if (!IsReadiedSpellValid(player)) {
+		ClearReadiedSpell(player);
+	}
+}
+
 BOOL CheckSpell(int id, int sn, char st, BOOL manaonly)
 {
 	BOOL result;
@@ -103,39 +185,24 @@ BOOL CheckSpell(int id, int sn, char st, BOOL manaonly)
 	return result;
 }
 
-void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int caster, int spllvl)
+void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl)
 {
-	int i;
-	int dir; // missile direction
-
-	switch (caster) {
-	case 1:
-		dir = monster[id]._mdir;
-		break;
-	case 0:
-		// caster must be 0 already in this case, but oh well,
-		// it's needed to generate the right code
-		caster = 0;
-		dir = plr[id]._pdir;
-
-		if (spl == SPL_FIREWALL) {
-			dir = plr[id]._pVar3;
-		}
-		break;
+	int dir = plr[id]._pdir;
+	if (spl == SPL_FIREWALL || spl == SPL_LIGHTWALL) {
+		dir = plr[id]._pVar3;
 	}
 
-	for (i = 0; spelldata[spl].sMissiles[i] != MIS_ARROW && i < 3; i++) {
-		AddMissile(sx, sy, dx, dy, dir, spelldata[spl].sMissiles[i], caster, id, 0, spllvl);
+	for (int i = 0; spelldata[spl].sMissiles[i] != 0 && i < 3; i++) {
+		AddMissile(sx, sy, dx, dy, dir, spelldata[spl].sMissiles[i], TARGET_MONSTERS, id, 0, spllvl);
 	}
 
-	if (spelldata[spl].sMissiles[0] == MIS_TOWN) {
+	if (spl == SPL_TOWN) {
 		UseMana(id, SPL_TOWN);
-	}
-	if (spelldata[spl].sMissiles[0] == MIS_CBOLT) {
+	} else if (spl == SPL_CBOLT) {
 		UseMana(id, SPL_CBOLT);
 
-		for (i = (spllvl >> 1) + 3; i > 0; i--) {
-			AddMissile(sx, sy, dx, dy, dir, MIS_CBOLT, caster, id, 0, spllvl);
+		for (int i = (spllvl >> 1) + 3; i > 0; i--) {
+			AddMissile(sx, sy, dx, dy, dir, MIS_CBOLT, TARGET_MONSTERS, id, 0, spllvl);
 		}
 	}
 }
@@ -195,7 +262,7 @@ void DoResurrect(int pnum, int rid)
 	int hp;
 
 	if ((char)rid != -1) {
-		AddMissile(plr[rid]._px, plr[rid]._py, plr[rid]._px, plr[rid]._py, 0, MIS_RESURRECTBEAM, 0, pnum, 0, 0);
+		AddMissile(plr[rid]._px, plr[rid]._py, plr[rid]._px, plr[rid]._py, 0, MIS_RESURRECTBEAM, TARGET_MONSTERS, pnum, 0, 0);
 	}
 
 	if (pnum == myplr) {
@@ -215,8 +282,8 @@ void DoResurrect(int pnum, int rid)
 		plr[rid]._pInvincible = FALSE;
 		PlacePlayer(rid);
 
-		hp = 640;
-		if (plr[rid]._pMaxHPBase < 640) {
+		hp = 10 << 6;
+		if (plr[rid]._pMaxHPBase < (10 << 6)) {
 			hp = plr[rid]._pMaxHPBase;
 		}
 		SetPlayerHitPoints(rid, hp);
@@ -254,12 +321,12 @@ void DoHealOther(int pnum, int rid)
 			hp += (random_(57, 6) + 1) << 6;
 		}
 
-		if (plr[pnum]._pClass == PC_WARRIOR) {
+		if (plr[pnum]._pClass == PC_WARRIOR || plr[pnum]._pClass == PC_BARBARIAN) {
 			hp <<= 1;
-		}
-
-		if (plr[pnum]._pClass == PC_ROGUE) {
+		} else if (plr[pnum]._pClass == PC_ROGUE || plr[pnum]._pClass == PC_BARD) {
 			hp += hp >> 1;
+		} else if (plr[pnum]._pClass == PC_MONK) {
+			hp *= 3;
 		}
 
 		plr[rid]._pHitPoints += hp;
@@ -276,6 +343,61 @@ void DoHealOther(int pnum, int rid)
 
 		drawhpflag = TRUE;
 	}
+}
+
+int GetSpellBookLevel(int s)
+{
+	if (gbIsSpawn) {
+		switch (s) {
+		case SPL_STONE:
+		case SPL_GUARDIAN:
+		case SPL_GOLEM:
+		case SPL_FLARE:
+		case SPL_BONESPIRIT:
+			return -1;
+		}
+	}
+
+	if (!gbIsHellfire) {
+		switch (s) {
+		case SPL_NOVA:
+		case SPL_APOCA:
+			return -1;
+		}
+	}
+
+	if (gbIsHellfire) {
+		switch (s) {
+		case SPL_ELEMENT:
+			return -1;
+		}
+	}
+
+	return spelldata[s].sBookLvl;
+}
+
+int GetSpellStaffLevel(int s)
+{
+	if (gbIsSpawn) {
+		switch (s) {
+		case SPL_STONE:
+		case SPL_GUARDIAN:
+		case SPL_GOLEM:
+		case SPL_APOCA:
+		case SPL_FLARE:
+		case SPL_BONESPIRIT:
+			return -1;
+		}
+	}
+
+	if (gbIsHellfire) {
+		switch (s) {
+		case SPL_ELEMENT:
+			return -1;
+		}
+	}
+
+	return spelldata[s].sStaffLvl;
 }
 
 DEVILUTION_END_NAMESPACE

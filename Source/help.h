@@ -12,21 +12,13 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
-extern int help_select_line;
-extern int dword_634494;
 extern BOOL helpflag;
-extern int displayinghelp[22];
-extern int HelpTop;
 
 void InitHelp();
 void DrawHelp();
-void DrawHelpLine(int always_0, int help_line_nr, char *text, char color);
 void DisplayHelp();
 void HelpScrollUp();
 void HelpScrollDown();
-
-/* rdata */
-extern const char gszHelpText[];
 
 #ifdef __cplusplus
 }

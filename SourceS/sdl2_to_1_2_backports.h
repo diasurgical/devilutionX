@@ -48,6 +48,7 @@
 // For now we only process ASCII input when using SDL1.
 #define SDL_TEXTINPUTEVENT_TEXT_SIZE 2
 
+#define SDL_JoystickID Sint32
 #define SDL_JoystickNameForIndex SDL_JoystickName
 
 inline void SDL_Log(const char *fmt, ...)
@@ -59,20 +60,16 @@ inline void SDL_Log(const char *fmt, ...)
 	puts("");
 }
 
-static SDL_bool SDLBackport_IsTextInputActive = SDL_FALSE;
-
-inline SDL_bool SDL_IsTextInputActive()
-{
-	return SDLBackport_IsTextInputActive;
-}
-
 inline void SDL_StartTextInput()
 {
-	SDLBackport_IsTextInputActive = SDL_TRUE;
 }
+
 inline void SDL_StopTextInput()
 {
-	SDLBackport_IsTextInputActive = SDL_FALSE;
+}
+
+inline void SDL_SetTextInputRect(const SDL_Rect *r)
+{
 }
 
 //== Graphics helpers

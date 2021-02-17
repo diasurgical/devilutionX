@@ -27,6 +27,9 @@ bool InGameMenu();
 // Whether the automap is being displayed.
 bool IsAutomapActive();
 
+// Whether the mouse cursor is being moved with the controller.
+bool IsMovingMouseCursorWithController();
+
 void UseBeltItem(int type);
 
 // Talk to towners, click on inv items, attack, etc.
@@ -37,12 +40,12 @@ void PerformSecondaryAction();
 bool TryDropItem();
 void FocusOnInventory();
 void PerformSpellAction();
+void StoreSpellCoords();
 
 typedef struct coords {
 	int x;
 	int y;
 } coords;
-extern coords speedspellscoords[50];
 extern int speedspellcount;
 
 } // namespace dvl

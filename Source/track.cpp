@@ -1,10 +1,19 @@
+/**
+ * @file track.cpp
+ *
+ * Implementation of functionality tracking what the mouse cursor is pointing at.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
-static BYTE sgbIsScrolling;
-static DWORD sgdwLastWalk;
-static BOOL sgbIsWalking;
+namespace {
+
+BYTE sgbIsScrolling;
+Uint32 sgdwLastWalk;
+bool sgbIsWalking;
+
+}
 
 void track_process()
 {
@@ -18,32 +27,32 @@ void track_process()
 		return;
 
 	if (cursmx != plr[myplr]._ptargx || cursmy != plr[myplr]._ptargy) {
-		DWORD tick = SDL_GetTicks();
-		if ((int)(tick - sgdwLastWalk) >= 300) {
+		Uint32 tick = SDL_GetTicks();
+		if ((int)(tick - sgdwLastWalk) >= tick_delay * 6) {
 			sgdwLastWalk = tick;
-			NetSendCmdLoc(TRUE, CMD_WALKXY, cursmx, cursmy);
+			NetSendCmdLoc(true, CMD_WALKXY, cursmx, cursmy);
 			if (!sgbIsScrolling)
-				sgbIsScrolling = TRUE;
+				sgbIsScrolling = true;
 		}
 	}
 }
 
-void track_repeat_walk(BOOL rep)
+void track_repeat_walk(bool rep)
 {
 	if (sgbIsWalking == rep)
 		return;
 
 	sgbIsWalking = rep;
 	if (rep) {
-		sgbIsScrolling = FALSE;
-		sgdwLastWalk = SDL_GetTicks() - 50;
-		NetSendCmdLoc(TRUE, CMD_WALKXY, cursmx, cursmy);
+		sgbIsScrolling = false;
+		sgdwLastWalk = SDL_GetTicks() - tick_delay;
+		NetSendCmdLoc(true, CMD_WALKXY, cursmx, cursmy);
 	} else if (sgbIsScrolling) {
-		sgbIsScrolling = FALSE;
+		sgbIsScrolling = false;
 	}
 }
 
-BOOL track_isscrolling()
+bool track_isscrolling()
 {
 	return sgbIsScrolling;
 }

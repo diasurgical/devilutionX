@@ -4,9 +4,6 @@
 #include <string>
 namespace dvl {
 
-extern std::string basePath;
-extern std::string prefPath;
-
 // Note to self: Linker error => forgot a return value in cpp
 
 // Storm API definition
@@ -44,11 +41,25 @@ struct CCritSect {
 };
 #endif
 
+// Game states
+#define GAMESTATE_PRIVATE 0x01
+#define GAMESTATE_FULL    0x02
+#define GAMESTATE_ACTIVE  0x04
+#define GAMESTATE_STARTED 0x08
+#define GAMESTATE_REPLAY  0x80
+
+#define PS_CONNECTED 0x10000
+#define PS_TURN_ARRIVED 0x20000
+#define PS_ACTIVE 0x40000
+
+#define LEAVE_ENDING 0x40000004
+#define LEAVE_DROP 0x40000006
+
 #if defined(__GNUC__) || defined(__cplusplus)
 extern "C" {
 #endif
 
-BOOL STORMAPI SNetCreateGame(const char *pszGameName, const char *pszGamePassword, const char *pszGameStatString, DWORD dwGameType, char *GameTemplateData, int GameTemplateSize, int playerCount, char *creatorName, char *a11, int *playerID);
+BOOL STORMAPI SNetCreateGame(const char *pszGameName, const char *pszGamePassword, const char *pszGameStatString, DWORD dwGameType, char *GameTemplateData, int GameTemplateSize, int playerCount, const char *creatorName, const char *a11, int *playerID);
 BOOL STORMAPI SNetDestroy();
 
 /*  SNetDropPlayer @ 106
@@ -200,12 +211,6 @@ SNetSendTurn(
 BOOL STORMAPI SFileCloseArchive(HANDLE hArchive);
 BOOL STORMAPI SFileCloseFile(HANDLE hFile);
 
-BOOL STORMAPI SFileDdaBeginEx(HANDLE hFile, DWORD flags, DWORD mask, unsigned __int32 lDistanceToMove, signed __int32 volume, signed int pan, int a7);
-void SFileFreeChunk();
-BOOL STORMAPI SFileDdaDestroy();
-BOOL STORMAPI SFileDdaEnd(HANDLE hFile);
-BOOL STORMAPI SFileDdaGetPos(HANDLE hFile, DWORD *current, DWORD *end);
-
 BOOL STORMAPI SFileDdaSetVolume(HANDLE hFile, signed int bigvolume, signed int volume);
 
 LONG STORMAPI SFileGetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh);
@@ -259,7 +264,7 @@ void *
     STORMAPI
     SMemAlloc(
         unsigned int amount,
-        char *logfilename,
+        const char *logfilename,
         int logline,
         int defaultValue);
 
@@ -279,19 +284,17 @@ BOOL
 STORMAPI
 SMemFree(
     void *location,
-    char *logfilename,
+    const char *logfilename,
     int  logline,
     char defaultValue);
 
-void GetBasePath(char *buffer, size_t size);
-void GetPrefPath(char *buffer, size_t size);
 bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue = false);
 bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, int *dataSize = NULL);
-void setIniValue(const char *sectionName, const char *keyName, char *value, int len = 0);
+void setIniValue(const char *sectionName, const char *keyName, const char *value, int len = 0);
 BOOL STORMAPI SRegLoadValue(const char *keyname, const char *valuename, BYTE flags, int *value);
 BOOL STORMAPI SRegSaveValue(const char *keyname, const char *valuename, BYTE flags, DWORD result);
 
-void SVidPlayBegin(char *filename, int a2, int a3, int a4, int a5, int flags, HANDLE *video);
+void SVidPlayBegin(const char *filename, int a2, int a3, int a4, int a5, int flags, HANDLE *video);
 void SVidPlayEnd(HANDLE video);
 
 /*  SErrGetLastError @ 463
@@ -341,7 +344,7 @@ SStrCopy(
     const char *src,
     int max_length);
 
-BOOL SFileSetBasePath(char *);
+BOOL SFileSetBasePath(const char *);
 BOOL SVidPlayContinue(void);
 BOOL SNetGetOwnerTurnsWaiting(DWORD *);
 BOOL SNetUnregisterEventHandler(int, SEVTHANDLER);

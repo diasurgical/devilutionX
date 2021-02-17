@@ -19,20 +19,6 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
-//offset 0
-//pCelBuff->pFrameTable[0]
-
-/** automap pixel color 8-bit (palette entry) */
-extern char gbPixelCol;
-/** flip - if y < x */
-extern BOOL gbRotateMap;
-/** Seed value before the most recent call to SetRndSeed() */
-extern int orgseed;
-/** Track number of calls to GetRndSeed() since last call to SetRndSeed() */
-extern int SeedCount;
-/** valid - if x/y are in bounds */
-extern BOOL gbNotInView;
-
 inline BYTE *CelGetFrameStart(BYTE *pCelBuff, int nCel)
 {
 	DWORD *pFrameTable;
@@ -82,27 +68,20 @@ void engine_draw_pixel(int sx, int sy);
 void DrawLine(int x0, int y0, int x1, int y1, BYTE col);
 int GetDirection(int x1, int y1, int x2, int y2);
 void SetRndSeed(int s);
+int AdvanceRndSeed();
 int GetRndSeed();
 int random_(BYTE idx, int v);
 void engine_debug_trap(BOOL show_cursor);
 BYTE *DiabloAllocPtr(DWORD dwBytes);
 void mem_free_dbg(void *p);
-BYTE *LoadFileInMem(char *pszName, DWORD *pdwFileLen);
+BYTE *LoadFileInMem(const char *pszName, DWORD *pdwFileLen);
 DWORD LoadFileWithMem(const char *pszName, BYTE *p);
 void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel);
 void Cl2Draw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
 void Cl2DrawOutline(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
 void Cl2DrawLightTbl(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char light);
 void Cl2DrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
-void Cl2BlitSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth);
-void Cl2BlitOutlineSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth, char col);
-void Cl2BlitLightSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE *pTable);
-void PlayInGameMovie(char *pszMovie);
-
-/* rdata */
-
-extern const int RndInc;
-extern const int RndMult;
+void PlayInGameMovie(const char *pszMovie);
 
 #ifdef __cplusplus
 }

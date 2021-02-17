@@ -264,54 +264,6 @@ bool false_avail(const char *name, int value)
 	return true;
 }
 
-void StoreSpellCoords()
-{
-	const int START_X = 20;
-	const int END_X = 636;
-	const int END_Y = 495;
-	const int BOX_SIZE = 56;
-	speedspellcount = 0;
-	int xo = END_X, yo = END_Y;
-	for (int i = 0; i < 4; i++) {
-		std::uint64_t spells;
-		switch (i) {
-		case RSPLTYPE_SKILL:
-			spells = plr[myplr]._pAblSpells;
-			break;
-		case RSPLTYPE_SPELL:
-			spells = plr[myplr]._pMemSpells;
-			break;
-		case RSPLTYPE_SCROLL:
-			spells = plr[myplr]._pScrlSpells;
-			break;
-		case RSPLTYPE_CHARGES:
-			spells = plr[myplr]._pISpells;
-			break;
-		default:
-			continue;
-		}
-		std::uint64_t spell = 1;
-		for (int j = 1; j < MAX_SPELLS; j++) {
-			if ((spell & spells)) {
-				speedspellscoords[speedspellcount] = { xo - 36, yo - 188 };
-				++speedspellcount;
-				xo -= BOX_SIZE;
-				if (xo == START_X) {
-					xo = END_X;
-					yo -= BOX_SIZE;
-				}
-			}
-			spell <<= 1;
-		}
-		if (spells && xo != END_X)
-			xo -= BOX_SIZE;
-		if (xo == START_X) {
-			xo = END_X;
-			yo -= BOX_SIZE;
-		}
-	}
-}
-
 } // namespace
 
 /**
@@ -324,12 +276,10 @@ bool BlurInventory()
 		if (!TryDropItem()) {
 			if (plr[myplr]._pClass == PC_WARRIOR) {
 				PlaySFX(PS_WARR16); // "Where would I put this?"
-#ifndef SPAWN
 			} else if (plr[myplr]._pClass == PC_ROGUE) {
 				PlaySFX(PS_ROGUE16);
 			} else if (plr[myplr]._pClass == PC_SORCERER) {
 				PlaySFX(PS_MAGE16);
-#endif
 			}
 			return false;
 		}
@@ -387,13 +337,15 @@ bool PeekMessage(LPMSG lpMsg)
 		return true;
 	}
 
-	if (ProcessControllerMotion(e)) {
-		ScaleJoysticks();
+	if (HandleControllerAddedOrRemovedEvent(e))
 		return true;
-	}
+
+	const ControllerButtonEvent ctrl_event = ToControllerButtonEvent(e);
+	if (ProcessControllerMotion(e, ctrl_event))
+		return true;
 
 	GameAction action;
-	if (GetGameAction(e, &action)) {
+	if (GetGameAction(e, ctrl_event, &action)) {
 		if (action.type != GameActionType_NONE) {
 			sgbControllerActive = true;
 
@@ -499,15 +451,6 @@ bool PeekMessage(LPMSG lpMsg)
 	}
 
 	switch (e.type) {
-#ifndef USE_SDL1
-	case SDL_CONTROLLERDEVICEADDED:
-	case SDL_CONTROLLERDEVICEREMOVED:
-		break;
-	case SDL_JOYDEVICEADDED:
-	case SDL_JOYDEVICEREMOVED:
-		InitController();
-		break;
-#endif
 	case SDL_QUIT:
 		lpMsg->message = DVL_WM_QUIT;
 		break;
@@ -758,11 +701,11 @@ SHORT GetAsyncKeyState(int vKey)
 	}
 }
 
-LRESULT DispatchMessage(const MSG *lpMsg)
+void DispatchMessage(const MSG *lpMsg)
 {
 	assert(CurrentProc);
 
-	return CurrentProc(NULL, lpMsg->message, lpMsg->wParam, lpMsg->lParam);
+	CurrentProc(NULL, lpMsg->message, lpMsg->wParam, lpMsg->lParam);
 }
 
 bool PostMessage(UINT Msg, WPARAM wParam, LPARAM lParam)

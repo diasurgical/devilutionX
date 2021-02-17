@@ -18,6 +18,7 @@ extern int pcursmonst;
 extern int icursW28;
 extern int icursH28;
 extern BYTE *pCursCels;
+extern BYTE *pCursCels2;
 extern int icursH;
 extern char pcursinvitem;
 extern int icursW;
@@ -26,7 +27,6 @@ extern char pcursobj;
 extern char pcursplr;
 extern int cursmx;
 extern int cursmy;
-extern int pcurstemp;
 extern int pcurs;
 
 void InitCursor();
@@ -35,8 +35,8 @@ void SetICursor(int i);
 void SetCursor_(int i);
 void NewCursor(int i);
 void InitLevelCursor();
-void CheckTown();
 void CheckRportal();
+void CheckTown();
 void CheckCursMove();
 
 /* rdata */

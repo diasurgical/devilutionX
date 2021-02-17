@@ -54,7 +54,7 @@ void GiveGoldCheat()
 	int i, ni;
 
 	for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
-		if (!plr[myplr].InvGrid[i]) {
+		if (plr[myplr].InvGrid[i] == 0) {
 			ni = plr[myplr]._pNumInv++;
 			SetPlrHandItem(&plr[myplr].InvList[ni], IDI_GOLD);
 			GetPlrHandSeed(&plr[myplr].InvList[ni]);
@@ -64,23 +64,6 @@ void GiveGoldCheat()
 			plr[myplr].InvGrid[i] = plr[myplr]._pNumInv;
 		}
 	}
-}
-
-void StoresCheat()
-{
-	int i;
-
-	numpremium = 0;
-
-	for (i = 0; i < SMITH_PREMIUM_ITEMS; i++)
-		premiumitem[i]._itype = ITYPE_NONE;
-
-	SpawnPremium(30);
-
-	for (i = 0; i < 20; i++)
-		witchitem[i]._itype = ITYPE_NONE;
-
-	SpawnWitch(30);
 }
 
 void TakeGoldCheat()
@@ -106,9 +89,11 @@ void MaxSpellsCheat()
 {
 	int i;
 
-	for (i = 1; i < MAX_SPELLS; i++) {
-		if (spelldata[i].sBookLvl != -1) {
-			plr[myplr]._pMemSpells |= (__int64)1 << (i - 1);
+	int maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
+
+	for (i = 1; i < maxSpells; i++) {
+		if (GetSpellBookLevel(i) != -1) {
+			plr[myplr]._pMemSpells |= SPELLBIT(i);
 			plr[myplr]._pSplLvl[i] = 10;
 		}
 	}
@@ -116,7 +101,7 @@ void MaxSpellsCheat()
 
 void SetSpellLevelCheat(char spl, int spllvl)
 {
-	plr[myplr]._pMemSpells |= (__int64)1 << (spl - 1);
+	plr[myplr]._pMemSpells |= SPELLBIT(spl);
 	plr[myplr]._pSplLvl[spl] = spllvl;
 }
 

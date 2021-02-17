@@ -13,8 +13,8 @@ extern "C" {
 #endif
 
 extern MonsterData monsterdata[];
-extern BYTE MonstConvTbl[];
-extern BYTE MonstAvailTbl[];
+extern char MonstConvTbl[];
+extern char MonstAvailTbl[];
 extern UniqMonstStruct UniqMonst[];
 
 #ifdef __cplusplus

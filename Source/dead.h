@@ -12,7 +12,14 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
-extern int spurtndx;
+typedef struct DeadStruct {
+	Uint8 *_deadData[8];
+	int _deadFrame;
+	int _deadWidth;
+	int _deadWidth2;
+	Uint8 _deadtrans;
+} DeadStruct;
+
 extern DeadStruct dead[MAXDEAD];
 extern int stonendx;
 

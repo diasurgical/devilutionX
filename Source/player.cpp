@@ -1,4 +1,10 @@
+/**
+ * @file player.cpp
+ *
+ * Implementation of player functionality, leveling, actions, creation, loading, etc.
+ */
 #include "all.h"
+#include "../3rdParty/Storm/Source/storm.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -18,50 +24,134 @@ int plr_sframe_size;
 int deathdelay;
 int plr_dframe_size;
 
+/** Maps from armor animation to letter used in graphic files. */
 const char ArmourChar[4] = { 'L', 'M', 'H', 0 };
+/** Maps from weapon animation to letter used in graphic files. */
 const char WepChar[10] = { 'N', 'U', 'S', 'D', 'B', 'A', 'M', 'H', 'T', 0 };
+/** Maps from player class to letter used in graphic files. */
 const char CharChar[] = {
 	'W',
 	'R',
 	'S',
+	'M',
+	'R',
+	'W',
+	0
+};
+const char CharCharHF[] = {
+	'W',
+	'R',
+	'S',
+	'M',
+	'B',
+	'C',
 	0
 };
 
 /* data */
 
+/** Specifies the X-coordinate delta from the player start location in Tristram. */
 int plrxoff[9] = { 0, 2, 0, 2, 1, 0, 1, 2, 1 };
+/** Specifies the Y-coordinate delta from the player start location in Tristram. */
 int plryoff[9] = { 0, 2, 2, 0, 1, 1, 0, 1, 2 };
+/** Specifies the X-coordinate delta from a player, used for instanced when casting resurrect. */
 int plrxoff2[9] = { 0, 1, 0, 1, 2, 0, 1, 2, 2 };
+/** Specifies the Y-coordinate delta from a player, used for instanced when casting resurrect. */
 int plryoff2[9] = { 0, 0, 1, 1, 0, 2, 2, 1, 2 };
-char PlrGFXAnimLens[][11] = {
+/** Specifies the frame of each animation for which an action is triggered, for each player class. */
+char PlrGFXAnimLens[NUM_CLASSES][11] = {
 	{ 10, 16, 8, 2, 20, 20, 6, 20, 8, 9, 14 },
 	{ 8, 18, 8, 4, 20, 16, 7, 20, 8, 10, 12 },
 	{ 8, 16, 8, 6, 20, 12, 8, 20, 8, 12, 8 },
+	{ 8, 16, 8, 3, 20, 18, 6, 20, 8, 12, 13 },
+	{ 8, 18, 8, 4, 20, 16, 7, 20, 8, 10, 12 },
+	{ 10, 16, 8, 2, 20, 20, 6, 20, 8, 9, 14 },
 };
-int PWVel[3][3] = {
+/** Maps from player class to player velocity. */
+int PWVel[NUM_CLASSES][3] = {
 	{ 2048, 1024, 512 },
 	{ 2048, 1024, 512 },
-	{ 2048, 1024, 512 }
+	{ 2048, 1024, 512 },
+	{ 2048, 1024, 512 },
+	{ 2048, 1024, 512 },
+	{ 2048, 1024, 512 },
 };
 /** Total number of frames in walk animation. */
-int AnimLenFromClass[3] = {
-	8, 8, 8
+int AnimLenFromClass[NUM_CLASSES] = {
+	8,
+	8,
+	8,
+	8,
+	8,
+	8,
 };
-int StrengthTbl[3] = { 30, 20, 15 };
-int MagicTbl[3] = { 10, 15, 35 };
-int DexterityTbl[3] = { 20, 30, 15 };
-int VitalityTbl[3] = { 25, 20, 20 };
-int ToBlkTbl[3] = { 30, 20, 10 };
-char *ClassStrTblOld[] = {
+/** Maps from player_class to starting stat in strength. */
+int StrengthTbl[NUM_CLASSES] = {
+	30,
+	20,
+	15,
+	25,
+	20,
+	40,
+};
+/** Maps from player_class to starting stat in magic. */
+int MagicTbl[NUM_CLASSES] = {
+	// clang-format off
+	10,
+	15,
+	35,
+	15,
+	20,
+	 0,
+	// clang-format on
+};
+/** Maps from player_class to starting stat in dexterity. */
+int DexterityTbl[NUM_CLASSES] = {
+	20,
+	30,
+	15,
+	25,
+	25,
+	20,
+};
+/** Maps from player_class to starting stat in vitality. */
+int VitalityTbl[NUM_CLASSES] = {
+	25,
+	20,
+	20,
+	20,
+	20,
+	25,
+};
+/** Specifies the chance to block bonus of each player class.*/
+int ToBlkTbl[NUM_CLASSES] = {
+	30,
+	20,
+	10,
+	25,
+	25,
+	30,
+};
+const char *const ClassStrTblOld[] = {
 	"Warrior",
 	"Rogue",
 	"Sorceror",
+	"Monk",
+	"Bard",
+	"Barbarian",
 };
-int MaxStats[3][4] = {
-	{ 250, 50, 60, 100 },
-	{ 55, 70, 250, 80 },
-	{ 45, 250, 85, 80 }
+/** Maps from player_class to maximum stats. */
+int MaxStats[NUM_CLASSES][4] = {
+	// clang-format off
+	{ 250,  50,  60, 100 },
+	{  55,  70, 250,  80 },
+	{  45, 250,  85,  80 },
+	{ 150,  80, 150,  80 },
+	{ 120, 120, 120, 100 },
+	{ 255,   0,  55, 150 },
+	// clang-format on
 };
+/** Specifies the experience point limit of each level. */
 int ExpLvlsTbl[MAXCHARLEVEL] = {
 	0,
 	2000,
@@ -115,12 +205,16 @@ int ExpLvlsTbl[MAXCHARLEVEL] = {
 	1310707109,
 	1583495809
 };
-char *ClassStrTbl[] = {
+const char *const ClassStrTbl[] = {
 	"Warrior",
 	"Rogue",
 	"Sorceror",
+	"Monk",
+	"Rogue",
+	"Warrior",
 };
-BYTE fix[9] = { 0, 0, 3, 3, 3, 6, 6, 6, 8 }; /* PM_ChangeLightOff local type */
+/** Unused local of PM_ChangeLightOff, originally for computing light radius. */
+BYTE fix[9] = { 0, 0, 3, 3, 3, 6, 6, 6, 8 };
 
 void SetPlayerGPtrs(BYTE *pData, BYTE **pAnim)
 {
@@ -135,9 +229,9 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 {
 	char prefix[16];
 	char pszName[256];
-	char *szCel;
+	const char *szCel;
 	PlayerStruct *p;
-	char *cs;
+	const char *cs;
 	BYTE *pData, *pAnim;
 	DWORD i;
 
@@ -146,8 +240,13 @@ void LoadPlrGFX(int pnum, player_graphic gfxflag)
 	}
 
 	p = &plr[pnum];
-	sprintf(prefix, "%c%c%c", CharChar[p->_pClass], ArmourChar[p->_pgfxnum >> 4], WepChar[p->_pgfxnum & 0xF]);
-	cs = ClassStrTbl[p->_pClass];
+	if ((p->_pClass != PC_BARD || hfbard_mpq == NULL) && (p->_pClass != PC_BARBARIAN || hfbarb_mpq == NULL)) {
+		sprintf(prefix, "%c%c%c", CharChar[p->_pClass], ArmourChar[p->_pgfxnum >> 4], WepChar[p->_pgfxnum & 0xF]);
+		cs = ClassStrTbl[p->_pClass];
+	} else {
+		sprintf(prefix, "%c%c%c", CharCharHF[p->_pClass], ArmourChar[p->_pgfxnum >> 4], WepChar[p->_pgfxnum & 0xF]);
+		cs = ClassStrTblOld[p->_pClass];
+	}
 
 	for (i = 1; i <= PFILE_NONDEATH; i <<= 1) {
 		if (!(i & gfxflag)) {
@@ -257,6 +356,54 @@ void InitPlayerGFX(int pnum)
 	}
 }
 
+static DWORD GetPlrGFXSize(const char *szCel)
+{
+	DWORD c;
+	const char *a, *w;
+	DWORD dwSize, dwMaxSize;
+	HANDLE hsFile;
+	char pszName[256];
+	char Type[16];
+
+	dwMaxSize = 0;
+
+	int classesToLoad = gbIsHellfire ? NUM_CLASSES : 3;
+
+	for (c = 0; c < classesToLoad; c++) {
+		if (gbIsSpawn && c != 0)
+			continue;
+		for (a = &ArmourChar[0]; *a; a++) {
+			if (gbIsSpawn && a != &ArmourChar[0])
+				break;
+			for (w = &WepChar[0]; *w; w++) { // BUGFIX loads non-existing animagions; DT is only for N, BT is only for U, D & H (fixed)
+				if (szCel[0] == 'D' && szCel[1] == 'T' && *w != 'N') {
+					continue; //Death has no weapon
+				}
+				if (szCel[0] == 'B' && szCel[1] == 'L' && (*w != 'U' && *w != 'D' && *w != 'H')) {
+					continue; //No block without weapon
+				}
+				if ((c == PC_BARD && hfbard_mpq == NULL) || (c == PC_BARBARIAN && hfbarb_mpq == NULL)) {
+					sprintf(Type, "%c%c%c", CharChar[c], *a, *w);
+					sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", ClassStrTbl[c], Type, Type, szCel);
+				} else {
+					sprintf(Type, "%c%c%c", CharCharHF[c], *a, *w);
+					sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", ClassStrTblOld[c], Type, Type, szCel);
+				}
+				if (SFileOpenFile(pszName, &hsFile)) {
+					/// ASSERT: assert(hsFile);
+					dwSize = SFileGetFileSize(hsFile, NULL);
+					SFileCloseFile(hsFile);
+					if (dwMaxSize <= dwSize) {
+						dwMaxSize = dwSize;
+					}
+				}
+			}
+		}
+	}
+
+	return dwMaxSize;
+}
+
 void InitPlrGFXMem(int pnum)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
@@ -326,51 +473,6 @@ void InitPlrGFXMem(int pnum)
 	plr[pnum]._pBData = DiabloAllocPtr(plr_bframe_size);
 
 	plr[pnum]._pGFXLoad = 0;
-}
-
-DWORD GetPlrGFXSize(char *szCel)
-{
-	int c;
-	const char *a, *w;
-	DWORD dwSize, dwMaxSize;
-	HANDLE hsFile;
-	char pszName[256];
-	char Type[16];
-
-	dwMaxSize = 0;
-
-	for (c = 0; c < sizeof(ClassStrTbl) / sizeof(*ClassStrTbl); c++) {
-#ifdef SPAWN
-		if (c != 0)
-			continue;
-#endif
-		for (a = &ArmourChar[0]; *a; a++) {
-#ifdef SPAWN
-			if (a != &ArmourChar[0])
-				break;
-#endif
-			for (w = &WepChar[0]; *w; w++) {
-				if (szCel[0] == 'D' && szCel[1] == 'T' && *w != 'N') {
-					continue; //Death has no weapon
-				}
-				if (szCel[0] == 'B' && szCel[1] == 'L' && (*w != 'U' && *w != 'D' && *w != 'H')) {
-					continue; //No block without weapon
-				}
-				sprintf(Type, "%c%c%c", CharChar[c], *a, *w);
-				sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", ClassStrTbl[c], Type, Type, szCel);
-				if (WOpenFile(pszName, &hsFile, TRUE)) {
-					/// ASSERT: assert(hsFile);
-					dwSize = WGetFileSize(hsFile, NULL, pszName);
-					WCloseFile(hsFile);
-					if (dwMaxSize <= dwSize) {
-						dwMaxSize = dwSize;
-					}
-				}
-			}
-		}
-	}
-
-	return dwMaxSize;
 }
 
 void FreePlayerGFX(int pnum)
@@ -472,7 +574,6 @@ void SetPlrAnims(int pnum)
 			plr[pnum]._pAFrames = 16;
 			plr[pnum]._pAFNum = 11;
 		}
-#ifndef SPAWN
 	} else if (pc == PC_ROGUE) {
 		if (gn == ANIM_ID_AXE) {
 			plr[pnum]._pAFrames = 22;
@@ -497,7 +598,63 @@ void SetPlrAnims(int pnum)
 			plr[pnum]._pAFrames = 24;
 			plr[pnum]._pAFNum = 16;
 		}
-#endif
+	} else if (pc == PC_MONK) {
+		plr[pnum]._pNWidth = 112;
+		plr[pnum]._pWWidth = 112;
+		plr[pnum]._pAWidth = 130;
+		plr[pnum]._pHWidth = 98;
+		plr[pnum]._pSWidth = 114;
+		plr[pnum]._pDWidth = 160;
+		plr[pnum]._pBWidth = 98;
+
+		switch (gn) {
+		case ANIM_ID_UNARMED:
+		case ANIM_ID_UNARMED_SHIELD:
+			plr[pnum]._pAFrames = 12;
+			plr[pnum]._pAFNum = 7;
+			break;
+		case ANIM_ID_BOW:
+			plr[pnum]._pAFrames = 20;
+			plr[pnum]._pAFNum = 14;
+			break;
+		case ANIM_ID_AXE:
+			plr[pnum]._pAFrames = 23;
+			plr[pnum]._pAFNum = 14;
+			break;
+		case ANIM_ID_STAFF:
+			plr[pnum]._pAFrames = 13;
+			plr[pnum]._pAFNum = 8;
+			break;
+		}
+	} else if (pc == PC_BARD) {
+		if (gn == ANIM_ID_AXE) {
+			plr[pnum]._pAFrames = 22;
+			plr[pnum]._pAFNum = 13;
+		} else if (gn == ANIM_ID_BOW) {
+			plr[pnum]._pAFrames = 12;
+			plr[pnum]._pAFNum = 11;
+		} else if (gn == ANIM_ID_STAFF) {
+			plr[pnum]._pAFrames = 16;
+			plr[pnum]._pAFNum = 11;
+		} else if (gn == ANIM_ID_SWORD_SHIELD || gn == ANIM_ID_SWORD) {
+			plr[pnum]._pAFrames = 10;
+		}
+	} else if (pc == PC_BARBARIAN) {
+		if (gn == ANIM_ID_AXE) {
+			plr[pnum]._pAFrames = 20;
+			plr[pnum]._pAFNum = 8;
+		} else if (gn == ANIM_ID_BOW) {
+			if (leveltype != DTYPE_TOWN) {
+				plr[pnum]._pNFrames = 8;
+			}
+			plr[pnum]._pAWidth = 96;
+			plr[pnum]._pAFNum = 11;
+		} else if (gn == ANIM_ID_STAFF) {
+			plr[pnum]._pAFrames = 16;
+			plr[pnum]._pAFNum = 11;
+		} else if (gn == ANIM_ID_MACE || gn == ANIM_ID_MACE_SHIELD) {
+			plr[pnum]._pAFNum = 8;
+		}
 	}
 }
 
@@ -506,7 +663,7 @@ void ClearPlrRVars(PlayerStruct *p)
 	// TODO: Missing debug assert p != NULL
 	p->bReserved[0] = 0;
 	p->bReserved[1] = 0;
-	p->bReserved[2] = 0;
+
 	p->wReserved[0] = 0;
 	p->wReserved[1] = 0;
 	p->wReserved[2] = 0;
@@ -514,14 +671,12 @@ void ClearPlrRVars(PlayerStruct *p)
 	p->wReserved[4] = 0;
 	p->wReserved[5] = 0;
 	p->wReserved[6] = 0;
-	p->wReserved[7] = 0;
+
 	p->dwReserved[0] = 0;
 	p->dwReserved[1] = 0;
 	p->dwReserved[2] = 0;
 	p->dwReserved[3] = 0;
 	p->dwReserved[4] = 0;
-	p->dwReserved[5] = 0;
-	p->dwReserved[6] = 0;
 }
 
 /**
@@ -533,6 +688,7 @@ void CreatePlayer(int pnum, char c)
 	int hp, mana;
 	int i;
 
+	memset(&plr[pnum], 0, sizeof(PlayerStruct));
 	ClearPlrRVars(&plr[pnum]);
 	SetRndSeed(SDL_GetTicks());
 
@@ -572,10 +728,14 @@ void CreatePlayer(int pnum, char c)
 	plr[pnum]._pStatPts = 0;
 	plr[pnum].pTownWarps = 0;
 	plr[pnum].pDungMsgs = 0;
+	plr[pnum].pDungMsgs2 = 0;
 	plr[pnum].pLvlLoad = 0;
 	plr[pnum].pDiabloKillLevel = 0;
+	plr[pnum].pDifficulty = DIFF_NORMAL;
 
-	if (c == PC_ROGUE) {
+	if (plr[pnum]._pClass == PC_MONK) {
+		plr[pnum]._pDamageMod = (plr[pnum]._pStrength + plr[pnum]._pDexterity) * plr[pnum]._pLevel / 150;
+	} else if (plr[pnum]._pClass == PC_ROGUE || plr[pnum]._pClass == PC_BARD) {
 		plr[pnum]._pDamageMod = plr[pnum]._pLevel * (plr[pnum]._pStrength + plr[pnum]._pDexterity) / 200;
 	} else {
 		plr[pnum]._pDamageMod = plr[pnum]._pStrength * plr[pnum]._pLevel / 100;
@@ -583,56 +743,64 @@ void CreatePlayer(int pnum, char c)
 
 	plr[pnum]._pBaseToBlk = ToBlkTbl[c];
 
-	plr[pnum]._pHitPoints = (val + 10) << 6;
-	if (c == PC_WARRIOR) {
-		plr[pnum]._pHitPoints *= 2;
-	}
-	if (c == PC_ROGUE) {
+	plr[pnum]._pHitPoints = (plr[pnum]._pVitality + 10) << 6;
+	if (plr[pnum]._pClass == PC_WARRIOR || plr[pnum]._pClass == PC_BARBARIAN) {
+		plr[pnum]._pHitPoints <<= 1;
+	} else if (plr[pnum]._pClass == PC_ROGUE || plr[pnum]._pClass == PC_MONK || plr[pnum]._pClass == PC_BARD) {
 		plr[pnum]._pHitPoints += plr[pnum]._pHitPoints >> 1;
 	}
 
-	hp = plr[pnum]._pHitPoints;
-	plr[pnum]._pMaxHP = hp;
-	plr[pnum]._pHPBase = hp;
-	plr[pnum]._pMaxHPBase = hp;
+	plr[pnum]._pMaxHP = plr[pnum]._pHitPoints;
+	plr[pnum]._pHPBase = plr[pnum]._pHitPoints;
+	plr[pnum]._pMaxHPBase = plr[pnum]._pHitPoints;
 
 	plr[pnum]._pMana = plr[pnum]._pMagic << 6;
-	if (c == PC_SORCERER) {
-		plr[pnum]._pMana *= 2;
-	}
-	if (c == PC_ROGUE) {
+	if (plr[pnum]._pClass == PC_SORCERER) {
+		plr[pnum]._pMana <<= 1;
+	} else if (plr[pnum]._pClass == PC_BARD) {
+		plr[pnum]._pMana += plr[pnum]._pMana * 3 / 4;
+	} else if (plr[pnum]._pClass == PC_ROGUE || plr[pnum]._pClass == PC_MONK) {
 		plr[pnum]._pMana += plr[pnum]._pMana >> 1;
 	}
 
-	mana = plr[pnum]._pMana;
-	plr[pnum]._pMaxMana = mana;
-	plr[pnum]._pManaBase = mana;
-	plr[pnum]._pMaxManaBase = mana;
+	plr[pnum]._pMaxMana = plr[pnum]._pMana;
+	plr[pnum]._pManaBase = plr[pnum]._pMana;
+	plr[pnum]._pMaxManaBase = plr[pnum]._pMana;
 
 	plr[pnum]._pLevel = 1;
-	plr[pnum]._pMaxLvl = 1;
+	plr[pnum]._pMaxLvl = plr[pnum]._pLevel;
 	plr[pnum]._pExperience = 0;
-	plr[pnum]._pMaxExp = 0;
+	plr[pnum]._pMaxExp = plr[pnum]._pExperience;
 	plr[pnum]._pNextExper = ExpLvlsTbl[1];
 	plr[pnum]._pArmorClass = 0;
-	plr[pnum]._pMagResist = 0;
-	plr[pnum]._pFireResist = 0;
-	plr[pnum]._pLghtResist = 0;
+	if (plr[pnum]._pClass == PC_BARBARIAN) {
+		plr[pnum]._pMagResist = 1;
+		plr[pnum]._pFireResist = 1;
+		plr[pnum]._pLghtResist = 1;
+	} else {
+		plr[pnum]._pMagResist = 0;
+		plr[pnum]._pFireResist = 0;
+		plr[pnum]._pLghtResist = 0;
+	}
 	plr[pnum]._pLightRad = 10;
 	plr[pnum]._pInfraFlag = FALSE;
 
 	if (c == PC_WARRIOR) {
-		plr[pnum]._pAblSpells = (__int64)1 << (SPL_REPAIR - 1);
-#ifndef SPAWN
+		plr[pnum]._pAblSpells = SPELLBIT(SPL_REPAIR);
 	} else if (c == PC_ROGUE) {
-		plr[pnum]._pAblSpells = (__int64)1 << (SPL_DISARM - 1);
+		plr[pnum]._pAblSpells = SPELLBIT(SPL_DISARM);
 	} else if (c == PC_SORCERER) {
-		plr[pnum]._pAblSpells = (__int64)1 << (SPL_RECHARGE - 1);
-#endif
+		plr[pnum]._pAblSpells = SPELLBIT(SPL_RECHARGE);
+	} else if (c == PC_MONK) {
+		plr[pnum]._pAblSpells = SPELLBIT(SPL_SEARCH);
+	} else if (c == PC_BARD) {
+		plr[pnum]._pAblSpells = SPELLBIT(SPL_IDENTIFY);
+	} else if (c == PC_BARBARIAN) {
+		plr[pnum]._pAblSpells = SPELLBIT(SPL_BLODBOIL);
 	}
 
 	if (c == PC_SORCERER) {
-		plr[pnum]._pMemSpells = 1;
+		plr[pnum]._pMemSpells = SPELLBIT(SPL_FIREBOLT);
 	} else {
 		plr[pnum]._pMemSpells = 0;
 	}
@@ -655,12 +823,16 @@ void CreatePlayer(int pnum, char c)
 
 	if (c == PC_WARRIOR) {
 		plr[pnum]._pgfxnum = ANIM_ID_SWORD_SHIELD;
-#ifndef SPAWN
 	} else if (c == PC_ROGUE) {
 		plr[pnum]._pgfxnum = ANIM_ID_BOW;
 	} else if (c == PC_SORCERER) {
 		plr[pnum]._pgfxnum = ANIM_ID_STAFF;
-#endif
+	} else if (c == PC_MONK) {
+		plr[pnum]._pgfxnum = ANIM_ID_STAFF;
+	} else if (c == PC_BARD) {
+		plr[pnum]._pgfxnum = ANIM_ID_SWORD_SHIELD;
+	} else if (c == PC_BARBARIAN) {
+		plr[pnum]._pgfxnum = ANIM_ID_SWORD_SHIELD;
 	}
 
 	for (i = 0; i < NUMLEVELS; i++) {
@@ -676,6 +848,8 @@ void CreatePlayer(int pnum, char c)
 	plr[pnum].pLvlLoad = 0;
 	plr[pnum].pBattleNet = FALSE;
 	plr[pnum].pManaShield = FALSE;
+	plr[pnum].pDamAcFlags = 0;
+	plr[pnum].wReflections = 0;
 
 	InitDungMsgs(pnum);
 	CreatePlrItems(pnum);
@@ -708,6 +882,8 @@ void NextPlrLevel(int pnum)
 	plr[pnum]._pLevel++;
 	plr[pnum]._pMaxLvl++;
 
+	CalcPlrInv(pnum, TRUE);
+
 	if (CalcStatDiff(pnum) < 5) {
 		plr[pnum]._pStatPts = CalcStatDiff(pnum);
 	} else {
@@ -731,6 +907,8 @@ void NextPlrLevel(int pnum)
 
 	if (plr[pnum]._pClass == PC_WARRIOR)
 		mana = 64;
+	else if (plr[pnum]._pClass == PC_BARBARIAN)
+		mana = 0;
 	else
 		mana = 128;
 
@@ -751,6 +929,7 @@ void NextPlrLevel(int pnum)
 
 	if (sgbControllerActive)
 		FocusOnCharInfo();
+		CalcPlrInv(pnum, TRUE);
 }
 
 void AddPlrExperience(int pnum, int lvl, int exp)
@@ -906,20 +1085,25 @@ void InitPlayer(int pnum, BOOL FirstTime)
 
 		if (pnum == myplr) {
 			plr[pnum]._plid = AddLight(plr[pnum]._px, plr[pnum]._py, plr[pnum]._pLightRad);
+			ChangeLightXY(plr[myplr]._plid, plr[myplr]._px, plr[myplr]._py); // fix for a bug where old light is still visible at the entrance after reentering level
 		} else {
-			plr[pnum]._plid = -1;
+			plr[pnum]._plid = NO_LIGHT;
 		}
 		plr[pnum]._pvid = AddVision(plr[pnum]._px, plr[pnum]._py, plr[pnum]._pLightRad, pnum == myplr);
 	}
 
 	if (plr[pnum]._pClass == PC_WARRIOR) {
-		plr[pnum]._pAblSpells = 1 << (SPL_REPAIR - 1);
-#ifndef SPAWN
+		plr[pnum]._pAblSpells = SPELLBIT(SPL_REPAIR);
 	} else if (plr[pnum]._pClass == PC_ROGUE) {
-		plr[pnum]._pAblSpells = 1 << (SPL_DISARM - 1);
+		plr[pnum]._pAblSpells = SPELLBIT(SPL_DISARM);
 	} else if (plr[pnum]._pClass == PC_SORCERER) {
-		plr[pnum]._pAblSpells = 1 << (SPL_RECHARGE - 1);
-#endif
+		plr[pnum]._pAblSpells = SPELLBIT(SPL_RECHARGE);
+	} else if (plr[pnum]._pClass == PC_MONK) {
+		plr[pnum]._pAblSpells = SPELLBIT(SPL_SEARCH);
+	} else if (plr[pnum]._pClass == PC_BARD) {
+		plr[pnum]._pAblSpells = SPELLBIT(SPL_IDENTIFY);
+	} else if (plr[pnum]._pClass == PC_BARBARIAN) {
+		plr[pnum]._pAblSpells = SPELLBIT(SPL_BLODBOIL);
 	}
 
 #ifdef _DEBUG
@@ -1051,6 +1235,8 @@ void FixPlayerLocation(int pnum, int bDir)
 		ViewX = plr[pnum]._px;
 		ViewY = plr[pnum]._py;
 	}
+	ChangeLightXY(plr[pnum]._plid, plr[pnum]._px, plr[pnum]._py);
+	ChangeVisionXY(plr[pnum]._pvid, plr[pnum]._px, plr[pnum]._py);
 }
 
 void StartStand(int pnum, int dir)
@@ -1059,7 +1245,7 @@ void StartStand(int pnum, int dir)
 		app_fatal("StartStand: illegal player %d", pnum);
 	}
 
-	if (!plr[pnum]._pInvincible || plr[pnum]._pHitPoints || pnum != myplr) {
+	if (!plr[pnum]._pInvincible || plr[pnum]._pHitPoints != 0 || pnum != myplr) {
 		if (!(plr[pnum]._pGFXLoad & PFILE_STAND)) {
 			LoadPlrGFX(pnum, PFILE_STAND);
 		}
@@ -1108,8 +1294,7 @@ void PM_ChangeLightOff(int pnum)
 		app_fatal("PM_ChangeLightOff: illegal player %d", pnum);
 	}
 
-	// check if issue is upstream
-	if (plr[pnum]._plid == -1)
+	if (plr[pnum]._plid == NO_LIGHT)
 		return;
 
 	l = &LightList[plr[pnum]._plid];
@@ -1155,8 +1340,14 @@ void PM_ChangeOffset(int pnum)
 
 	plr[pnum]._pVar6 += plr[pnum]._pxvel;
 	plr[pnum]._pVar7 += plr[pnum]._pyvel;
-	plr[pnum]._pxoff = plr[pnum]._pVar6 / 256;
-	plr[pnum]._pyoff = plr[pnum]._pVar7 / 256;
+
+	if (gbIsHellfire && currlevel == 0 && jogging_opt) {
+		plr[pnum]._pVar6 += plr[pnum]._pxvel;
+		plr[pnum]._pVar7 += plr[pnum]._pyvel;
+	}
+
+	plr[pnum]._pxoff = plr[pnum]._pVar6 >> 8;
+	plr[pnum]._pyoff = plr[pnum]._pVar7 >> 8;
 
 	px -= plr[pnum]._pVar6 >> 8;
 	py -= plr[pnum]._pVar7 >> 8;
@@ -1169,209 +1360,107 @@ void PM_ChangeOffset(int pnum)
 	PM_ChangeLightOff(pnum);
 }
 
-void StartWalk(int pnum, int xvel, int yvel, int xadd, int yadd, int EndDir, int sdir)
+/**
+ * @brief Start moving a player to a new tile
+ */
+void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, int EndDir, int sdir, int variant)
 {
-	int px, py;
-
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartWalk: illegal player %d", pnum);
 	}
 
-	if (plr[pnum]._pInvincible && !plr[pnum]._pHitPoints && pnum == myplr) {
+	if (plr[pnum]._pInvincible && plr[pnum]._pHitPoints == 0 && pnum == myplr) {
 		SyncPlrKill(pnum, -1);
 		return;
 	}
 
 	SetPlayerOld(pnum);
 
-	px = xadd + plr[pnum]._px;
-	py = yadd + plr[pnum]._py;
-
 	if (!PlrDirOK(pnum, EndDir)) {
 		return;
 	}
 
+	//The player's tile position after finishing this movement action
+	int px = xadd + plr[pnum]._px;
+	int py = yadd + plr[pnum]._py;
 	plr[pnum]._pfutx = px;
 	plr[pnum]._pfuty = py;
 
+	//If this is the local player then update the camera offset position
 	if (pnum == myplr) {
 		ScrollInfo._sdx = plr[pnum]._px - ViewX;
 		ScrollInfo._sdy = plr[pnum]._py - ViewY;
 	}
 
-	dPlayer[px][py] = -(pnum + 1);
-	plr[pnum]._pmode = PM_WALK;
-	plr[pnum]._pxvel = xvel;
-	plr[pnum]._pyvel = yvel;
-	plr[pnum]._pxoff = 0;
-	plr[pnum]._pyoff = 0;
-	plr[pnum]._pVar1 = xadd;
-	plr[pnum]._pVar2 = yadd;
-	plr[pnum]._pVar3 = EndDir;
+	switch (variant) {
+	case PM_WALK:
+		dPlayer[px][py] = -(pnum + 1);
+		plr[pnum]._pmode = PM_WALK;
+		plr[pnum]._pxvel = xvel;
+		plr[pnum]._pyvel = yvel;
+		plr[pnum]._pxoff = 0;
+		plr[pnum]._pyoff = 0;
+		plr[pnum]._pVar1 = xadd;
+		plr[pnum]._pVar2 = yadd;
+		plr[pnum]._pVar3 = EndDir;
 
-	if (!(plr[pnum]._pGFXLoad & PFILE_WALK)) {
-		LoadPlrGFX(pnum, PFILE_WALK);
-	}
+		plr[pnum]._pVar6 = 0;
+		plr[pnum]._pVar7 = 0;
+		break;
+	case PM_WALK2:
+		dPlayer[plr[pnum]._px][plr[pnum]._py] = -1 - pnum;
+		plr[pnum]._pVar1 = plr[pnum]._px;
+		plr[pnum]._pVar2 = plr[pnum]._py;
+		plr[pnum]._px = px; // Move player to the next tile to maintain correct render order
+		plr[pnum]._py = py;
+		dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
+		plr[pnum]._pxoff = xoff; // Offset player sprite to align with their previous tile position
+		plr[pnum]._pyoff = yoff;
 
-	NewPlrAnim(pnum, plr[pnum]._pWAnim[EndDir], plr[pnum]._pWFrames, 0, plr[pnum]._pWWidth);
-
-	plr[pnum]._pdir = EndDir;
-	plr[pnum]._pVar6 = 0;
-	plr[pnum]._pVar7 = 0;
-	plr[pnum]._pVar8 = 0;
-
-	if (pnum != myplr) {
-		return;
-	}
-
-	if (zoomflag) {
-		if (abs(ScrollInfo._sdx) >= 3 || abs(ScrollInfo._sdy) >= 3) {
-			ScrollInfo._sdir = SDIR_NONE;
-		} else {
-			ScrollInfo._sdir = sdir;
-		}
-	} else if (abs(ScrollInfo._sdx) >= 2 || abs(ScrollInfo._sdy) >= 2) {
-		ScrollInfo._sdir = SDIR_NONE;
-	} else {
-		ScrollInfo._sdir = sdir;
-	}
-}
-
-#if defined(__clang__) || defined(__GNUC__)
-__attribute__((no_sanitize("shift-base")))
-#endif
-void StartWalk2(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int EndDir, int sdir)
-{
-	int px, py;
-
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("StartWalk2: illegal player %d", pnum);
-	}
-
-	if (plr[pnum]._pInvincible && !plr[pnum]._pHitPoints && pnum == myplr) {
-		SyncPlrKill(pnum, -1);
-		return;
-	}
-
-	SetPlayerOld(pnum);
-	px = xadd + plr[pnum]._px;
-	py = yadd + plr[pnum]._py;
-
-	if (!PlrDirOK(pnum, EndDir)) {
-		return;
-	}
-
-	plr[pnum]._pfutx = px;
-	plr[pnum]._pfuty = py;
-
-	if (pnum == myplr) {
-		ScrollInfo._sdx = plr[pnum]._px - ViewX;
-		ScrollInfo._sdy = plr[pnum]._py - ViewY;
-	}
-
-	dPlayer[plr[pnum]._px][plr[pnum]._py] = -1 - pnum;
-	plr[pnum]._pVar1 = plr[pnum]._px;
-	plr[pnum]._pVar2 = plr[pnum]._py;
-	plr[pnum]._px = px;
-	plr[pnum]._py = py;
-	dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
-	plr[pnum]._pxoff = xoff;
-	plr[pnum]._pyoff = yoff;
-
-	ChangeLightXY(plr[pnum]._plid, plr[pnum]._px, plr[pnum]._py);
-	PM_ChangeLightOff(pnum);
-
-	plr[pnum]._pmode = PM_WALK2;
-	plr[pnum]._pxvel = xvel;
-	plr[pnum]._pyvel = yvel;
-	plr[pnum]._pVar6 = xoff * 256;
-	plr[pnum]._pVar7 = yoff * 256;
-	plr[pnum]._pVar3 = EndDir;
-
-	if (!(plr[pnum]._pGFXLoad & PFILE_WALK)) {
-		LoadPlrGFX(pnum, PFILE_WALK);
-	}
-	NewPlrAnim(pnum, plr[pnum]._pWAnim[EndDir], plr[pnum]._pWFrames, 0, plr[pnum]._pWWidth);
-
-	plr[pnum]._pdir = EndDir;
-	plr[pnum]._pVar8 = 0;
-
-	if (pnum != myplr) {
-		return;
-	}
-
-	if (zoomflag) {
-		if (abs(ScrollInfo._sdx) >= 3 || abs(ScrollInfo._sdy) >= 3) {
-			ScrollInfo._sdir = SDIR_NONE;
-		} else {
-			ScrollInfo._sdir = sdir;
-		}
-	} else if (abs(ScrollInfo._sdx) >= 2 || abs(ScrollInfo._sdy) >= 2) {
-		ScrollInfo._sdir = SDIR_NONE;
-	} else {
-		ScrollInfo._sdir = sdir;
-	}
-}
-
-#if defined(__clang__) || defined(__GNUC__)
-__attribute__((no_sanitize("shift-base")))
-#endif
-void StartWalk3(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, int EndDir, int sdir)
-{
-	int px, py, x, y;
-
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("StartWalk3: illegal player %d", pnum);
-	}
-
-	if (plr[pnum]._pInvincible && !plr[pnum]._pHitPoints && pnum == myplr) {
-		SyncPlrKill(pnum, -1);
-		return;
-	}
-
-	SetPlayerOld(pnum);
-	px = xadd + plr[pnum]._px;
-	py = yadd + plr[pnum]._py;
-	x = mapx + plr[pnum]._px;
-	y = mapy + plr[pnum]._py;
-
-	if (!PlrDirOK(pnum, EndDir)) {
-		return;
-	}
-
-	plr[pnum]._pfutx = px;
-	plr[pnum]._pfuty = py;
-
-	if (pnum == myplr) {
-		ScrollInfo._sdx = plr[pnum]._px - ViewX;
-		ScrollInfo._sdy = plr[pnum]._py - ViewY;
-	}
-
-	dPlayer[plr[pnum]._px][plr[pnum]._py] = -1 - pnum;
-	dPlayer[px][py] = -1 - pnum;
-	plr[pnum]._pVar4 = x;
-	plr[pnum]._pVar5 = y;
-	dFlags[x][y] |= BFLAG_PLAYERLR;
-	plr[pnum]._pxoff = xoff;
-	plr[pnum]._pyoff = yoff;
-
-	if (leveltype != DTYPE_TOWN) {
-		ChangeLightXY(plr[pnum]._plid, x, y);
+		ChangeLightXY(plr[pnum]._plid, plr[pnum]._px, plr[pnum]._py);
 		PM_ChangeLightOff(pnum);
+
+		plr[pnum]._pmode = PM_WALK2;
+		plr[pnum]._pxvel = xvel;
+		plr[pnum]._pyvel = yvel;
+		plr[pnum]._pVar6 = xoff * 256;
+		plr[pnum]._pVar7 = yoff * 256;
+		plr[pnum]._pVar3 = EndDir;
+		break;
+	case PM_WALK3:
+		int x = mapx + plr[pnum]._px;
+		int y = mapy + plr[pnum]._py;
+
+		dPlayer[plr[pnum]._px][plr[pnum]._py] = -1 - pnum;
+		dPlayer[px][py] = -1 - pnum;
+		plr[pnum]._pVar4 = x;
+		plr[pnum]._pVar5 = y;
+		dFlags[x][y] |= BFLAG_PLAYERLR;
+		plr[pnum]._pxoff = xoff; // Offset player sprite to align with their previous tile position
+		plr[pnum]._pyoff = yoff;
+
+		if (leveltype != DTYPE_TOWN) {
+			ChangeLightXY(plr[pnum]._plid, x, y);
+			PM_ChangeLightOff(pnum);
+		}
+
+		plr[pnum]._pmode = PM_WALK3;
+		plr[pnum]._pxvel = xvel;
+		plr[pnum]._pyvel = yvel;
+		plr[pnum]._pVar1 = px;
+		plr[pnum]._pVar2 = py;
+		plr[pnum]._pVar6 = xoff * 256;
+		plr[pnum]._pVar7 = yoff * 256;
+		plr[pnum]._pVar3 = EndDir;
+		break;
 	}
 
-	plr[pnum]._pmode = PM_WALK3;
-	plr[pnum]._pxvel = xvel;
-	plr[pnum]._pyvel = yvel;
-	plr[pnum]._pVar1 = px;
-	plr[pnum]._pVar2 = py;
-	plr[pnum]._pVar6 = xoff * 256;
-	plr[pnum]._pVar7 = yoff * 256;
-	plr[pnum]._pVar3 = EndDir;
-
+	//Load walk animation in case it's not loaded yet
 	if (!(plr[pnum]._pGFXLoad & PFILE_WALK)) {
 		LoadPlrGFX(pnum, PFILE_WALK);
 	}
+
+	//Start walk animation
 	NewPlrAnim(pnum, plr[pnum]._pWAnim[EndDir], plr[pnum]._pWFrames, 0, plr[pnum]._pWWidth);
 
 	plr[pnum]._pdir = EndDir;
@@ -1400,7 +1489,7 @@ void StartAttack(int pnum, int d)
 		app_fatal("StartAttack: illegal player %d", pnum);
 	}
 
-	if (plr[pnum]._pInvincible && !plr[pnum]._pHitPoints && pnum == myplr) {
+	if (plr[pnum]._pInvincible && plr[pnum]._pHitPoints == 0 && pnum == myplr) {
 		SyncPlrKill(pnum, -1);
 		return;
 	}
@@ -1421,7 +1510,7 @@ void StartRangeAttack(int pnum, int d, int cx, int cy)
 		app_fatal("StartRangeAttack: illegal player %d", pnum);
 	}
 
-	if (plr[pnum]._pInvincible && !plr[pnum]._pHitPoints && pnum == myplr) {
+	if (plr[pnum]._pInvincible && plr[pnum]._pHitPoints == 0 && pnum == myplr) {
 		SyncPlrKill(pnum, -1);
 		return;
 	}
@@ -1444,7 +1533,7 @@ void StartPlrBlock(int pnum, int dir)
 		app_fatal("StartPlrBlock: illegal player %d", pnum);
 	}
 
-	if (plr[pnum]._pInvincible && !plr[pnum]._pHitPoints && pnum == myplr) {
+	if (plr[pnum]._pInvincible && plr[pnum]._pHitPoints == 0 && pnum == myplr) {
 		SyncPlrKill(pnum, -1);
 		return;
 	}
@@ -1466,7 +1555,7 @@ void StartSpell(int pnum, int d, int cx, int cy)
 	if ((DWORD)pnum >= MAX_PLRS)
 		app_fatal("StartSpell: illegal player %d", pnum);
 
-	if (plr[pnum]._pInvincible && !plr[pnum]._pHitPoints && pnum == myplr) {
+	if (plr[pnum]._pInvincible && plr[pnum]._pHitPoints == 0 && pnum == myplr) {
 		SyncPlrKill(pnum, -1);
 		return;
 	}
@@ -1562,37 +1651,46 @@ void StartPlrHit(int pnum, int dam, BOOL forcehit)
 		app_fatal("StartPlrHit: illegal player %d", pnum);
 	}
 
-	if (plr[pnum]._pInvincible && !plr[pnum]._pHitPoints && pnum == myplr) {
+	if (plr[pnum]._pInvincible && plr[pnum]._pHitPoints == 0 && pnum == myplr) {
 		SyncPlrKill(pnum, -1);
 		return;
 	}
 
 	if (plr[pnum]._pClass == PC_WARRIOR) {
 		PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
-#ifndef SPAWN
 	} else if (plr[pnum]._pClass == PC_ROGUE) {
 		PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
 	} else if (plr[pnum]._pClass == PC_SORCERER) {
 		PlaySfxLoc(PS_MAGE69, plr[pnum]._px, plr[pnum]._py);
-#endif
+	} else if (plr[pnum]._pClass == PC_MONK) {
+		PlaySfxLoc(PS_MONK69, plr[pnum]._px, plr[pnum]._py);
+	} else if (plr[pnum]._pClass == PC_BARD) {
+		PlaySfxLoc(PS_ROGUE69, plr[pnum]._px, plr[pnum]._py);
+	} else if (plr[pnum]._pClass == PC_BARBARIAN) {
+		PlaySfxLoc(PS_WARR69, plr[pnum]._px, plr[pnum]._py);
 	}
 
 	drawhpflag = TRUE;
-	if (dam >> 6 >= plr[pnum]._pLevel || forcehit) {
-		pd = plr[pnum]._pdir;
-
-		if (!(plr[pnum]._pGFXLoad & PFILE_HIT)) {
-			LoadPlrGFX(pnum, PFILE_HIT);
+	if (plr[pnum]._pClass == PC_BARBARIAN) {
+		if (dam >> 6 < plr[pnum]._pLevel + plr[pnum]._pLevel / 4 && !forcehit) {
+			return;
 		}
-		NewPlrAnim(pnum, plr[pnum]._pHAnim[pd], plr[pnum]._pHFrames, 0, plr[pnum]._pHWidth);
-
-		plr[pnum]._pmode = PM_GOTHIT;
-		FixPlayerLocation(pnum, pd);
-		plr[pnum]._pVar8 = 1;
-		FixPlrWalkTags(pnum);
-		dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
-		SetPlayerOld(pnum);
+	} else if (dam >> 6 < plr[pnum]._pLevel && !forcehit) {
+		return;
 	}
+
+	pd = plr[pnum]._pdir;
+
+	if (!(plr[pnum]._pGFXLoad & PFILE_HIT)) {
+		LoadPlrGFX(pnum, PFILE_HIT);
+	}
+	NewPlrAnim(pnum, plr[pnum]._pHAnim[pd], plr[pnum]._pHFrames, 0, plr[pnum]._pHWidth);
+
+	plr[pnum]._pmode = PM_GOTHIT;
+	FixPlayerLocation(pnum, pd);
+	FixPlrWalkTags(pnum);
+	dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
+	SetPlayerOld(pnum);
 }
 
 void RespawnDeadItem(ItemStruct *itm, int x, int y)
@@ -1620,10 +1718,48 @@ void RespawnDeadItem(ItemStruct *itm, int x, int y)
 	itm->_itype = ITYPE_NONE;
 }
 
+static void PlrDeadItem(int pnum, ItemStruct *itm, int xx, int yy)
+{
+	int x, y;
+	int i, j, k;
+
+	if (itm->_itype == ITYPE_NONE)
+		return;
+
+	if ((DWORD)pnum >= MAX_PLRS) {
+		app_fatal("PlrDeadItem: illegal player %d", pnum);
+	}
+
+	x = xx + plr[pnum]._px;
+	y = yy + plr[pnum]._py;
+	if ((xx || yy) && ItemSpaceOk(x, y)) {
+		RespawnDeadItem(itm, x, y);
+		plr[pnum].HoldItem = *itm;
+		NetSendCmdPItem(FALSE, CMD_RESPAWNITEM, x, y);
+		return;
+	}
+
+	for (k = 1; k < 50; k++) {
+		for (j = -k; j <= k; j++) {
+			y = j + plr[pnum]._py;
+			for (i = -k; i <= k; i++) {
+				x = i + plr[pnum]._px;
+				if (ItemSpaceOk(x, y)) {
+					RespawnDeadItem(itm, x, y);
+					plr[pnum].HoldItem = *itm;
+					NetSendCmdPItem(FALSE, CMD_RESPAWNITEM, x, y);
+					return;
+				}
+			}
+		}
+	}
+}
+
 #if defined(__clang__) || defined(__GNUC__)
 __attribute__((no_sanitize("shift-base")))
 #endif
-void StartPlayerKill(int pnum, int earflag)
+void
+StartPlayerKill(int pnum, int earflag)
 {
 	BOOL diablolevel;
 	int i, pdd;
@@ -1648,12 +1784,16 @@ void StartPlayerKill(int pnum, int earflag)
 
 	if (plr[pnum]._pClass == PC_WARRIOR) {
 		PlaySfxLoc(PS_DEAD, p->_px, p->_py); // BUGFIX: should use `PS_WARR71` like other classes
-#ifndef SPAWN
 	} else if (plr[pnum]._pClass == PC_ROGUE) {
 		PlaySfxLoc(PS_ROGUE71, p->_px, p->_py);
 	} else if (plr[pnum]._pClass == PC_SORCERER) {
 		PlaySfxLoc(PS_MAGE71, p->_px, p->_py);
-#endif
+	} else if (plr[pnum]._pClass == PC_MONK) {
+		PlaySfxLoc(PS_MONK71, p->_px, p->_py);
+	} else if (plr[pnum]._pClass == PC_BARD) {
+		PlaySfxLoc(PS_ROGUE71, p->_px, p->_py);
+	} else if (plr[pnum]._pClass == PC_BARBARIAN) {
+		PlaySfxLoc(PS_WARR71, p->_px, p->_py);
 	}
 
 	if (p->_pgfxnum) {
@@ -1708,6 +1848,8 @@ void StartPlayerKill(int pnum, int earflag)
 							ear._iCurs = ICURS_EAR_WARRIOR;
 						} else if (plr[pnum]._pClass == PC_ROGUE) {
 							ear._iCurs = ICURS_EAR_ROGUE;
+						} else if (plr[pnum]._pClass == PC_MONK || plr[pnum]._pClass == PC_BARD || plr[pnum]._pClass == PC_BARBARIAN) {
+							ear._iCurs = ICURS_EAR_ROGUE;
 						}
 
 						ear._iCreateInfo = plr[pnum]._pName[0] << 8 | plr[pnum]._pName[1];
@@ -1735,43 +1877,6 @@ void StartPlayerKill(int pnum, int earflag)
 	SetPlayerHitPoints(pnum, 0);
 }
 
-void PlrDeadItem(int pnum, ItemStruct *itm, int xx, int yy)
-{
-	int x, y;
-	int i, j, k;
-
-	if (itm->_itype == ITYPE_NONE)
-		return;
-
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PlrDeadItem: illegal player %d", pnum);
-	}
-
-	x = xx + plr[pnum]._px;
-	y = yy + plr[pnum]._py;
-	if ((xx || yy) && ItemSpaceOk(x, y)) {
-		RespawnDeadItem(itm, x, y);
-		plr[pnum].HoldItem = *itm;
-		NetSendCmdPItem(FALSE, CMD_RESPAWNITEM, x, y);
-		return;
-	}
-
-	for (k = 1; k < 50; k++) {
-		for (j = -k; j <= k; j++) {
-			y = j + plr[pnum]._py;
-			for (i = -k; i <= k; i++) {
-				x = i + plr[pnum]._px;
-				if (ItemSpaceOk(x, y)) {
-					RespawnDeadItem(itm, x, y);
-					plr[pnum].HoldItem = *itm;
-					NetSendCmdPItem(FALSE, CMD_RESPAWNITEM, x, y);
-					return;
-				}
-			}
-		}
-	}
-}
-
 void DropHalfPlayersGold(int pnum)
 {
 	int i, hGold;
@@ -1782,7 +1887,7 @@ void DropHalfPlayersGold(int pnum)
 
 	hGold = plr[pnum]._pGold >> 1;
 	for (i = 0; i < MAXBELTITEMS && hGold > 0; i++) {
-		if (plr[pnum].SpdList[i]._itype == ITYPE_GOLD && plr[pnum].SpdList[i]._ivalue != GOLD_MAX_LIMIT) {
+		if (plr[pnum].SpdList[i]._itype == ITYPE_GOLD && plr[pnum].SpdList[i]._ivalue != MaxGold) {
 			if (hGold < plr[pnum].SpdList[i]._ivalue) {
 				plr[pnum].SpdList[i]._ivalue -= hGold;
 				SetSpdbarGoldCurs(pnum, i);
@@ -1832,7 +1937,7 @@ void DropHalfPlayersGold(int pnum)
 	force_redraw = 255;
 	if (hGold > 0) {
 		for (i = 0; i < plr[pnum]._pNumInv && hGold > 0; i++) {
-			if (plr[pnum].InvList[i]._itype == ITYPE_GOLD && plr[pnum].InvList[i]._ivalue != GOLD_MAX_LIMIT) {
+			if (plr[pnum].InvList[i]._itype == ITYPE_GOLD && plr[pnum].InvList[i]._ivalue != MaxGold) {
 				if (hGold < plr[pnum].InvList[i]._ivalue) {
 					plr[pnum].InvList[i]._ivalue -= hGold;
 					SetGoldCurs(pnum, i);
@@ -1883,11 +1988,40 @@ void DropHalfPlayersGold(int pnum)
 	plr[pnum]._pGold = CalculateGold(pnum);
 }
 
+void StripTopGold(int pnum)
+{
+	ItemStruct tmpItem;
+	int i, val;
+
+	if ((DWORD)pnum >= MAX_PLRS) {
+		app_fatal("StripTopGold: illegal player %d", pnum);
+	}
+	tmpItem = plr[pnum].HoldItem;
+
+	for (i = 0; i < plr[pnum]._pNumInv; i++) {
+		if (plr[pnum].InvList[i]._itype == ITYPE_GOLD) {
+			if (plr[pnum].InvList[i]._ivalue > MaxGold) {
+				val = plr[pnum].InvList[i]._ivalue - MaxGold;
+				plr[pnum].InvList[i]._ivalue = MaxGold;
+				SetGoldCurs(pnum, i);
+				SetPlrHandItem(&plr[pnum].HoldItem, 0);
+				GetGoldSeed(pnum, &plr[pnum].HoldItem);
+				SetPlrHandGoldCurs(&plr[pnum].HoldItem);
+				plr[pnum].HoldItem._ivalue = val;
+				if (!GoldAutoPlace(pnum))
+					PlrDeadItem(pnum, &plr[pnum].HoldItem, 0, 0);
+			}
+		}
+	}
+	plr[pnum]._pGold = CalculateGold(pnum);
+	plr[pnum].HoldItem = tmpItem;
+}
+
 void SyncPlrKill(int pnum, int earflag)
 {
 	int ma, i;
 
-	if (plr[pnum]._pHitPoints == 0 && currlevel == 0) {
+	if (plr[pnum]._pHitPoints <= 0 && currlevel == 0) {
 		SetPlayerHitPoints(pnum, 64);
 		return;
 	}
@@ -1966,7 +2100,8 @@ void InitLevelChange(int pnum)
 #if defined(__clang__) || defined(__GNUC__)
 __attribute__((no_sanitize("shift-base")))
 #endif
-void StartNewLvl(int pnum, int fom, int lvl)
+void
+StartNewLvl(int pnum, int fom, int lvl)
 {
 	InitLevelChange(pnum);
 
@@ -2055,37 +2190,71 @@ BOOL PM_DoStand(int pnum)
 	return FALSE;
 }
 
-BOOL PM_DoWalk(int pnum)
+/**
+ * @brief Continue movement towards new tile
+ */
+bool PM_DoWalk(int pnum, int variant)
 {
-	int anim_len;
-	BOOL rv;
-
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PM_DoWalk: illegal player %d", pnum);
 	}
 
-	if (plr[pnum]._pAnimFrame == 3
-	    || (plr[pnum]._pWFrames == 8 && plr[pnum]._pAnimFrame == 7)
-	    || (plr[pnum]._pWFrames != 8 && plr[pnum]._pAnimFrame == 4)) {
-		PlaySfxLoc(PS_WALK1, plr[pnum]._px, plr[pnum]._py);
+	//Play walking sound effect on certain animation frames
+	if (!gbIsHellfire) {
+		if (plr[pnum]._pAnimFrame == 3
+		    || (plr[pnum]._pWFrames == 8 && plr[pnum]._pAnimFrame == 7)
+		    || (plr[pnum]._pWFrames != 8 && plr[pnum]._pAnimFrame == 4)) {
+			PlaySfxLoc(PS_WALK1, plr[pnum]._px, plr[pnum]._py);
+		}
 	}
 
-	anim_len = 8;
+	//"Jog" in town which works by doubling movement speed and skipping every other animation frame
+	if (gbIsHellfire && currlevel == 0 && jogging_opt) {
+		if (plr[pnum]._pAnimFrame % 2 == 0) {
+			plr[pnum]._pAnimFrame++;
+			plr[pnum]._pVar8++;
+		}
+		if (plr[pnum]._pAnimFrame >= plr[pnum]._pWFrames) {
+			plr[pnum]._pAnimFrame = 0;
+		}
+	}
+
+	//Acquire length of walk animation length (this is 8 for every class, so the AnimLenFromClass array is redundant right now)
+	int anim_len = 8;
 	if (currlevel != 0) {
 		anim_len = AnimLenFromClass[plr[pnum]._pClass];
 	}
 
-	if (plr[pnum]._pVar8 == anim_len) {
-		dPlayer[plr[pnum]._px][plr[pnum]._py] = 0;
-		plr[pnum]._px += plr[pnum]._pVar1;
-		plr[pnum]._py += plr[pnum]._pVar2;
-		dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
+	//Check if we reached new tile
+	if (plr[pnum]._pVar8 >= anim_len) {
 
+		//Update the player's tile position
+		switch (variant) {
+		case PM_WALK:
+			dPlayer[plr[pnum]._px][plr[pnum]._py] = 0;
+			plr[pnum]._px += plr[pnum]._pVar1;
+			plr[pnum]._py += plr[pnum]._pVar2;
+			dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
+			break;
+		case PM_WALK2:
+			dPlayer[plr[pnum]._pVar1][plr[pnum]._pVar2] = 0;
+			break;
+		case PM_WALK3:
+			dPlayer[plr[pnum]._px][plr[pnum]._py] = 0;
+			dFlags[plr[pnum]._pVar4][plr[pnum]._pVar5] &= ~BFLAG_PLAYERLR;
+			plr[pnum]._px = plr[pnum]._pVar1;
+			plr[pnum]._py = plr[pnum]._pVar2;
+			dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
+			break;
+		}
+
+		//Update the coordinates for lighting and vision entries for the player
 		if (leveltype != DTYPE_TOWN) {
 			ChangeLightXY(plr[pnum]._plid, plr[pnum]._px, plr[pnum]._py);
 			ChangeVisionXY(plr[pnum]._pvid, plr[pnum]._px, plr[pnum]._py);
 		}
 
+		//Update the "camera" tile position
 		if (pnum == myplr && ScrollInfo._sdir) {
 			ViewX = plr[pnum]._px - ScrollInfo._sdx;
 			ViewY = plr[pnum]._py - ScrollInfo._sdy;
@@ -2099,125 +2268,31 @@ BOOL PM_DoWalk(int pnum)
 
 		ClearPlrPVars(pnum);
 
+		//Reset the "sub-tile" position of the player's light entry to 0
 		if (leveltype != DTYPE_TOWN) {
 			ChangeLightOff(plr[pnum]._plid, 0, 0);
 		}
-		rv = TRUE;
-	} else {
-		PM_ChangeOffset(pnum);
-		rv = FALSE;
-	}
 
-	return rv;
+		return true;
+	} else { //We didn't reach new tile so update player's "sub-tile" position
+		PM_ChangeOffset(pnum);
+		return false;
+	}
 }
 
-BOOL PM_DoWalk2(int pnum)
+static bool WeaponDurDecay(int pnum, int ii)
 {
-	int anim_len;
-	BOOL rv;
-
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PM_DoWalk2: illegal player %d", pnum);
-	}
-
-	if (plr[pnum]._pAnimFrame == 3
-	    || (plr[pnum]._pWFrames == 8 && plr[pnum]._pAnimFrame == 7)
-	    || (plr[pnum]._pWFrames != 8 && plr[pnum]._pAnimFrame == 4)) {
-		PlaySfxLoc(PS_WALK1, plr[pnum]._px, plr[pnum]._py);
-	}
-
-	anim_len = 8;
-	if (currlevel != 0) {
-		anim_len = AnimLenFromClass[plr[pnum]._pClass];
-	}
-
-	if (plr[pnum]._pVar8 == anim_len) {
-		dPlayer[plr[pnum]._pVar1][plr[pnum]._pVar2] = 0;
-
-		if (leveltype != DTYPE_TOWN) {
-			ChangeLightXY(plr[pnum]._plid, plr[pnum]._px, plr[pnum]._py);
-			ChangeVisionXY(plr[pnum]._pvid, plr[pnum]._px, plr[pnum]._py);
+	if (plr[pnum].InvBody[ii]._itype != ITYPE_NONE && plr[pnum].InvBody[ii]._iClass == ICLASS_WEAPON && plr[pnum].InvBody[ii]._iDamAcFlags & 2) {
+		plr[pnum].InvBody[ii]._iPLDam -= 5;
+		if (plr[pnum].InvBody[ii]._iPLDam <= -100) {
+			NetSendCmdDelItem(TRUE, ii);
+			plr[pnum].InvBody[ii]._itype = ITYPE_NONE;
+			CalcPlrInv(pnum, TRUE);
+			return true;
 		}
-
-		if (pnum == myplr && ScrollInfo._sdir) {
-			ViewX = plr[pnum]._px - ScrollInfo._sdx;
-			ViewY = plr[pnum]._py - ScrollInfo._sdy;
-		}
-
-		if (plr[pnum].walkpath[0] != WALK_NONE) {
-			StartWalkStand(pnum);
-		} else {
-			StartStand(pnum, plr[pnum]._pVar3);
-		}
-
-		ClearPlrPVars(pnum);
-		if (leveltype != DTYPE_TOWN) {
-			ChangeLightOff(plr[pnum]._plid, 0, 0);
-		}
-		rv = TRUE;
-	} else {
-		PM_ChangeOffset(pnum);
-		rv = FALSE;
+		CalcPlrInv(pnum, TRUE);
 	}
-
-	return rv;
-}
-
-BOOL PM_DoWalk3(int pnum)
-{
-	int anim_len;
-	BOOL rv;
-
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PM_DoWalk3: illegal player %d", pnum);
-	}
-
-	if (plr[pnum]._pAnimFrame == 3
-	    || (plr[pnum]._pWFrames == 8 && plr[pnum]._pAnimFrame == 7)
-	    || (plr[pnum]._pWFrames != 8 && plr[pnum]._pAnimFrame == 4)) {
-		PlaySfxLoc(PS_WALK1, plr[pnum]._px, plr[pnum]._py);
-	}
-
-	anim_len = 8;
-	if (currlevel != 0) {
-		anim_len = AnimLenFromClass[plr[pnum]._pClass];
-	}
-
-	if (plr[pnum]._pVar8 == anim_len) {
-		dPlayer[plr[pnum]._px][plr[pnum]._py] = 0;
-		dFlags[plr[pnum]._pVar4][plr[pnum]._pVar5] &= ~BFLAG_PLAYERLR;
-		plr[pnum]._px = plr[pnum]._pVar1;
-		plr[pnum]._py = plr[pnum]._pVar2;
-		dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
-
-		if (leveltype != DTYPE_TOWN) {
-			ChangeLightXY(plr[pnum]._plid, plr[pnum]._px, plr[pnum]._py);
-			ChangeVisionXY(plr[pnum]._pvid, plr[pnum]._px, plr[pnum]._py);
-		}
-
-		if (pnum == myplr && ScrollInfo._sdir) {
-			ViewX = plr[pnum]._px - ScrollInfo._sdx;
-			ViewY = plr[pnum]._py - ScrollInfo._sdy;
-		}
-
-		if (plr[pnum].walkpath[0] != WALK_NONE) {
-			StartWalkStand(pnum);
-		} else {
-			StartStand(pnum, plr[pnum]._pVar3);
-		}
-
-		ClearPlrPVars(pnum);
-
-		if (leveltype != DTYPE_TOWN) {
-			ChangeLightOff(plr[pnum]._plid, 0, 0);
-		}
-		rv = TRUE;
-	} else {
-		PM_ChangeOffset(pnum);
-		rv = FALSE;
-	}
-
-	return rv;
+	return false;
 }
 
 BOOL WeaponDur(int pnum, int durrnd)
@@ -2225,6 +2300,11 @@ BOOL WeaponDur(int pnum, int durrnd)
 	if (pnum != myplr) {
 		return FALSE;
 	}
+
+	if (WeaponDurDecay(pnum, INVLOC_HAND_LEFT))
+		return TRUE;
+	if (WeaponDurDecay(pnum, INVLOC_HAND_RIGHT))
+		return TRUE;
 
 	if (random_(3, durrnd) != 0) {
 		return FALSE;
@@ -2240,7 +2320,7 @@ BOOL WeaponDur(int pnum, int durrnd)
 		}
 
 		plr[pnum].InvBody[INVLOC_HAND_LEFT]._iDurability--;
-		if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._iDurability == 0) {
+		if (plr[pnum].InvBody[INVLOC_HAND_LEFT]._iDurability <= 0) {
 			NetSendCmdDelItem(TRUE, INVLOC_HAND_LEFT);
 			plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype = ITYPE_NONE;
 			CalcPlrInv(pnum, TRUE);
@@ -2297,6 +2377,9 @@ BOOL PlrHitMonst(int pnum, int m)
 {
 	BOOL rv, ret;
 	int hit, hper, mind, maxd, ddp, dam, skdam, phanditype, tmac;
+	hper = 0;
+	ret = FALSE;
+	BOOL adjacentDamage = FALSE;
 
 	if ((DWORD)m >= MAXMONSTERS) {
 		app_fatal("PlrHitMonst: illegal monster %d", m);
@@ -2314,6 +2397,15 @@ BOOL PlrHitMonst(int pnum, int m)
 		return FALSE;
 	}
 
+	if (pnum < 0) {
+		adjacentDamage = TRUE;
+		pnum = -pnum;
+		if (plr[pnum]._pLevel > 20)
+			hper -= 30;
+		else
+			hper -= (35 - plr[pnum]._pLevel) * 2;
+	}
+
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PlrHitMonst: illegal player %d", pnum);
 	}
@@ -2325,8 +2417,25 @@ BOOL PlrHitMonst(int pnum, int m)
 		hit = 0;
 	}
 
-	tmac = monster[m].mArmorClass - plr[pnum]._pIEnAc;
-	hper = (plr[pnum]._pDexterity >> 1) + plr[pnum]._pLevel + 50 - tmac;
+	tmac = monster[m].mArmorClass;
+	if (gbIsHellfire && plr[pnum]._pIEnAc > 0) {
+		int _pIEnAc = plr[pnum]._pIEnAc - 1;
+		if (_pIEnAc > 0)
+			tmac >>= _pIEnAc;
+		else
+			tmac -= tmac >> 2;
+
+		if (plr[pnum]._pClass == PC_BARBARIAN) {
+			tmac -= monster[m].mArmorClass / 8;
+		}
+
+		if (tmac < 0)
+			tmac = 0;
+	} else {
+		tmac -= plr[pnum]._pIEnAc;
+	}
+
+	hper += (plr[pnum]._pDexterity >> 1) + plr[pnum]._pLevel + 50 - tmac;
 	if (plr[pnum]._pClass == PC_WARRIOR) {
 		hper += 20;
 	}
@@ -2346,15 +2455,21 @@ BOOL PlrHitMonst(int pnum, int m)
 #else
 	if (hit < hper) {
 #endif
+		if (plr[pnum]._pIFlags & ISPL_FIREDAM && plr[pnum]._pIFlags & ISPL_LIGHTDAM) {
+			int midam = plr[pnum]._pIFMinDam + random_(3, plr[pnum]._pIFMaxDam - plr[pnum]._pIFMinDam);
+			AddMissile(plr[pnum]._px, plr[pnum]._py, plr[pnum]._pVar1, plr[pnum]._pVar2, plr[pnum]._pdir, MIS_SPECARROW, TARGET_MONSTERS, pnum, midam, 0);
+		}
 		mind = plr[pnum]._pIMinDam;
 		maxd = plr[pnum]._pIMaxDam;
 		dam = random_(5, maxd - mind + 1) + mind;
 		dam += dam * plr[pnum]._pIBonusDam / 100;
-		dam += plr[pnum]._pDamageMod + plr[pnum]._pIBonusDamMod;
-		if (plr[pnum]._pClass == PC_WARRIOR) {
+		dam += plr[pnum]._pIBonusDamMod;
+		int dam2 = dam << 6;
+		dam += plr[pnum]._pDamageMod;
+		if (plr[pnum]._pClass == PC_WARRIOR || plr[pnum]._pClass == PC_BARBARIAN) {
 			ddp = plr[pnum]._pLevel;
 			if (random_(6, 100) < ddp) {
-				dam *= 2;
+				dam <<= 1;
 			}
 		}
 
@@ -2370,16 +2485,14 @@ BOOL PlrHitMonst(int pnum, int m)
 		case MC_UNDEAD:
 			if (phanditype == ITYPE_SWORD) {
 				dam -= dam >> 1;
-			}
-			if (phanditype == ITYPE_MACE) {
+			} else if (phanditype == ITYPE_MACE) {
 				dam += dam >> 1;
 			}
 			break;
 		case MC_ANIMAL:
 			if (phanditype == ITYPE_MACE) {
 				dam -= dam >> 1;
-			}
-			if (phanditype == ITYPE_SWORD) {
+			} else if (phanditype == ITYPE_SWORD) {
 				dam += dam >> 1;
 			}
 			break;
@@ -2389,8 +2502,40 @@ BOOL PlrHitMonst(int pnum, int m)
 			dam *= 3;
 		}
 
+		if (plr[pnum].pDamAcFlags & 0x01 && random_(6, 100) < 5) {
+			dam *= 3;
+		}
+
+		if (plr[pnum].pDamAcFlags & 0x10 && monster[m].MType->mtype != MT_DIABLO && monster[m]._uniqtype == 0 && random_(6, 100) < 10) {
+			monster_43C785(m);
+		}
+
 		dam <<= 6;
+		if (plr[pnum].pDamAcFlags & 0x08) {
+			int r = random_(6, 201);
+			if (r >= 100)
+				r = 100 + (r - 100) * 5;
+			dam = dam * r / 100;
+		}
+
+		if (adjacentDamage)
+			dam >>= 2;
+
 		if (pnum == myplr) {
+			if (plr[pnum].pDamAcFlags & 0x04) {
+				dam2 += plr[pnum]._pIGetHit << 6;
+				if (dam2 >= 0) {
+					if (plr[pnum]._pHitPoints > dam2) {
+						plr[pnum]._pHitPoints -= dam2;
+						plr[pnum]._pHPBase -= dam2;
+					} else {
+						dam2 = (1 << 6);
+						plr[pnum]._pHPBase -= plr[pnum]._pHitPoints - dam2;
+						plr[pnum]._pHitPoints = dam2;
+					}
+				}
+				dam <<= 1;
+			}
 			monster[m]._mhitpoints -= dam;
 		}
 
@@ -2530,14 +2675,15 @@ BOOL PlrHitPlr(int pnum, char p)
 			StartPlrBlock(p, dir);
 		} else {
 			mind = plr[pnum]._pIMinDam;
-			maxd = random_(5, plr[pnum]._pIMaxDam - mind + 1);
-			dam = maxd + mind;
-			dam += plr[pnum]._pDamageMod + plr[pnum]._pIBonusDamMod + dam * plr[pnum]._pIBonusDam / 100;
+			maxd = plr[pnum]._pIMaxDam;
+			dam = random_(5, maxd - mind + 1) + mind;
+			dam += (dam * plr[pnum]._pIBonusDam) / 100;
+			dam += plr[pnum]._pIBonusDamMod + plr[pnum]._pDamageMod;
 
-			if (plr[pnum]._pClass == PC_WARRIOR) {
+			if (plr[pnum]._pClass == PC_WARRIOR || plr[pnum]._pClass == PC_BARBARIAN) {
 				lvl = plr[pnum]._pLevel;
 				if (random_(6, 100) < lvl) {
-					dam *= 2;
+					dam <<= 1;
 				}
 			}
 			skdam = dam << 6;
@@ -2586,7 +2732,7 @@ BOOL PlrHitObj(int pnum, int mx, int my)
 BOOL PM_DoAttack(int pnum)
 {
 	int frame, dir, dx, dy, m;
-	BOOL didhit;
+	BOOL didhit = FALSE;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PM_DoAttack: illegal player %d", pnum);
@@ -2610,11 +2756,10 @@ BOOL PM_DoAttack(int pnum)
 	}
 
 	if (plr[pnum]._pAnimFrame == plr[pnum]._pAFNum) {
-		dir = plr[pnum]._pdir;
-		dx = plr[pnum]._px + offset_x[dir];
-		dy = plr[pnum]._py + offset_y[dir];
+		dx = plr[pnum]._px + offset_x[plr[pnum]._pdir];
+		dy = plr[pnum]._py + offset_y[plr[pnum]._pdir];
 
-		if (dMonster[dx][dy]) {
+		if (dMonster[dx][dy] != 0) {
 			if (dMonster[dx][dy] > 0) {
 				m = dMonster[dx][dy] - 1;
 			} else {
@@ -2626,14 +2771,14 @@ BOOL PM_DoAttack(int pnum)
 			}
 		}
 
-		if (plr[pnum]._pIFlags & ISPL_FIREDAM) {
-			AddMissile(dx, dy, 1, 0, 0, MIS_WEAPEXP, 0, pnum, 0, 0);
-		}
-		if (plr[pnum]._pIFlags & ISPL_LIGHTDAM) {
-			AddMissile(dx, dy, 2, 0, 0, MIS_WEAPEXP, 0, pnum, 0, 0);
+		if (!(plr[pnum]._pIFlags & ISPL_FIREDAM) || !(plr[pnum]._pIFlags & ISPL_LIGHTDAM)) {
+			if (plr[pnum]._pIFlags & ISPL_FIREDAM) {
+				AddMissile(dx, dy, 1, 0, 0, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
+			} else if (plr[pnum]._pIFlags & ISPL_LIGHTDAM) {
+				AddMissile(dx, dy, 2, 0, 0, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
+			}
 		}
 
-		didhit = FALSE;
 		if (dMonster[dx][dy]) {
 			m = dMonster[dx][dy];
 			if (dMonster[dx][dy] > 0) {
@@ -2642,7 +2787,7 @@ BOOL PM_DoAttack(int pnum)
 				m = -(dMonster[dx][dy] + 1);
 			}
 			didhit = PlrHitMonst(pnum, m);
-		} else if (dPlayer[dx][dy] && !FriendlyMode) {
+		} else if (dPlayer[dx][dy] != 0 && !FriendlyMode) {
 			BYTE p = dPlayer[dx][dy];
 			if (dPlayer[dx][dy] > 0) {
 				p = dPlayer[dx][dy] - 1;
@@ -2652,6 +2797,32 @@ BOOL PM_DoAttack(int pnum)
 			didhit = PlrHitPlr(pnum, p);
 		} else if (dObject[dx][dy] > 0) {
 			didhit = PlrHitObj(pnum, dx, dy);
+		}
+		if ((plr[pnum]._pClass == PC_MONK
+		        && (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_STAFF || plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_STAFF))
+		    || (plr[pnum]._pClass == PC_BARD
+		        && plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SWORD && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SWORD)
+		    || (plr[pnum]._pClass == PC_BARBARIAN
+		        && (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_AXE || plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_AXE
+		            || (((plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_MACE && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND)
+		                    || (plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_MACE && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iLoc == ILOC_TWOHAND)
+		                    || (plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SWORD && plr[pnum].InvBody[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND)
+		                    || (plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SWORD && plr[pnum].InvBody[INVLOC_HAND_RIGHT]._iLoc == ILOC_TWOHAND))
+		                && !(plr[pnum].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SHIELD || plr[pnum].InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SHIELD))))) {
+			dx = plr[pnum]._px + offset_x[(plr[pnum]._pdir + 1) % 8];
+			dy = plr[pnum]._py + offset_y[(plr[pnum]._pdir + 1) % 8];
+			m = ((dMonster[dx][dy] > 0) ? dMonster[dx][dy] : -dMonster[dx][dy]) - 1;
+			if (dMonster[dx][dy] != 0 && !CanTalkToMonst(m) && monster[m]._moldx == dx && monster[m]._moldy == dy) {
+				if (PlrHitMonst(-pnum, m))
+					didhit = TRUE;
+			}
+			dx = plr[pnum]._px + offset_x[(plr[pnum]._pdir + 7) % 8];
+			dy = plr[pnum]._py + offset_y[(plr[pnum]._pdir + 7) % 8];
+			m = ((dMonster[dx][dy] > 0) ? dMonster[dx][dy] : -dMonster[dx][dy]) - 1;
+			if (dMonster[dx][dy] != 0 && !CanTalkToMonst(m) && monster[m]._moldx == dx && monster[m]._moldy == dy) {
+				if (PlrHitMonst(-pnum, m))
+					didhit = TRUE;
+			}
 		}
 
 		if (didhit && WeaponDur(pnum, 30)) {
@@ -2701,7 +2872,7 @@ BOOL PM_DoRangeAttack(int pnum)
 		    plr[pnum]._pVar2,
 		    plr[pnum]._pdir,
 		    mistype,
-		    0,
+		    TARGET_MONSTERS,
 		    pnum,
 		    4,
 		    0);
@@ -2773,7 +2944,7 @@ BOOL PM_DoBlock(int pnum)
 		StartStand(pnum, plr[pnum]._pdir);
 		ClearPlrPVars(pnum);
 
-		if (!random_(3, 10)) {
+		if (random_(3, 10) == 0) {
 			ShieldDur(pnum);
 		}
 		return TRUE;
@@ -2782,94 +2953,7 @@ BOOL PM_DoBlock(int pnum)
 	return FALSE;
 }
 
-BOOL PM_DoSpell(int pnum)
-{
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PM_DoSpell: illegal player %d", pnum);
-	}
-
-	if (plr[pnum]._pVar8 == plr[pnum]._pSFNum) {
-		CastSpell(
-		    pnum,
-		    plr[pnum]._pSpell,
-		    plr[pnum]._px,
-		    plr[pnum]._py,
-		    plr[pnum]._pVar1,
-		    plr[pnum]._pVar2,
-		    0,
-		    plr[pnum]._pVar4);
-
-		if (!plr[pnum]._pSplFrom) {
-			if (plr[pnum]._pRSplType == RSPLTYPE_SCROLL) {
-				if (!(plr[pnum]._pScrlSpells
-				        & (unsigned __int64)1 << (plr[pnum]._pRSpell - 1))) {
-					plr[pnum]._pRSpell = SPL_INVALID;
-					plr[pnum]._pRSplType = RSPLTYPE_INVALID;
-					force_redraw = 255;
-				}
-			}
-
-			if (plr[pnum]._pRSplType == RSPLTYPE_CHARGES) {
-				if (!(plr[pnum]._pISpells
-				        & (unsigned __int64)1 << (plr[pnum]._pRSpell - 1))) {
-					plr[pnum]._pRSpell = SPL_INVALID;
-					plr[pnum]._pRSplType = RSPLTYPE_INVALID;
-					force_redraw = 255;
-				}
-			}
-		}
-	}
-
-	plr[pnum]._pVar8++;
-
-	if (leveltype == DTYPE_TOWN) {
-		if (plr[pnum]._pVar8 > plr[pnum]._pSFrames) {
-			StartWalkStand(pnum);
-			ClearPlrPVars(pnum);
-			return TRUE;
-		}
-	} else if (plr[pnum]._pAnimFrame == plr[pnum]._pSFrames) {
-		StartStand(pnum, plr[pnum]._pdir);
-		ClearPlrPVars(pnum);
-		return TRUE;
-	}
-
-	return FALSE;
-}
-
-BOOL PM_DoGotHit(int pnum)
-{
-	int frame;
-
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PM_DoGotHit: illegal player %d", pnum);
-	}
-
-	frame = plr[pnum]._pAnimFrame;
-	if (plr[pnum]._pIFlags & ISPL_FASTRECOVER && frame == 3) {
-		plr[pnum]._pAnimFrame++;
-	}
-	if (plr[pnum]._pIFlags & ISPL_FASTERRECOVER && (frame == 3 || frame == 5)) {
-		plr[pnum]._pAnimFrame++;
-	}
-	if (plr[pnum]._pIFlags & ISPL_FASTESTRECOVER && (frame == 1 || frame == 3 || frame == 5)) {
-		plr[pnum]._pAnimFrame++;
-	}
-
-	if (plr[pnum]._pAnimFrame >= plr[pnum]._pHFrames) {
-		StartStand(pnum, plr[pnum]._pdir);
-		ClearPlrPVars(pnum);
-		if (random_(3, 4)) {
-			ArmorDur(pnum);
-		}
-
-		return TRUE;
-	}
-
-	return FALSE;
-}
-
-void ArmorDur(int pnum)
+static void ArmorDur(int pnum)
 {
 	int a;
 	ItemStruct *pi;
@@ -2919,6 +3003,77 @@ void ArmorDur(int pnum)
 	CalcPlrInv(pnum, TRUE);
 }
 
+BOOL PM_DoSpell(int pnum)
+{
+	if ((DWORD)pnum >= MAX_PLRS) {
+		app_fatal("PM_DoSpell: illegal player %d", pnum);
+	}
+
+	if (plr[pnum]._pVar8 == plr[pnum]._pSFNum) {
+		CastSpell(
+		    pnum,
+		    plr[pnum]._pSpell,
+		    plr[pnum]._px,
+		    plr[pnum]._py,
+		    plr[pnum]._pVar1,
+		    plr[pnum]._pVar2,
+		    plr[pnum]._pVar4);
+
+		if (plr[pnum]._pSplFrom == 0) {
+			EnsureValidReadiedSpell(plr[pnum]);
+		}
+	}
+
+	plr[pnum]._pVar8++;
+
+	if (leveltype == DTYPE_TOWN) {
+		if (plr[pnum]._pVar8 > plr[pnum]._pSFrames) {
+			StartWalkStand(pnum);
+			ClearPlrPVars(pnum);
+			return TRUE;
+		}
+	} else if (plr[pnum]._pAnimFrame == plr[pnum]._pSFrames) {
+		StartStand(pnum, plr[pnum]._pdir);
+		ClearPlrPVars(pnum);
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+BOOL PM_DoGotHit(int pnum)
+{
+	int frame;
+
+	if ((DWORD)pnum >= MAX_PLRS) {
+		app_fatal("PM_DoGotHit: illegal player %d", pnum);
+	}
+
+	frame = plr[pnum]._pAnimFrame;
+	if (plr[pnum]._pIFlags & ISPL_FASTRECOVER && frame == 3) {
+		plr[pnum]._pAnimFrame++;
+	}
+	if (plr[pnum]._pIFlags & ISPL_FASTERRECOVER && (frame == 3 || frame == 5)) {
+		if (!gbIsHellfire || !(plr[pnum]._pIFlags & ISPL_FASTESTRECOVER))
+			plr[pnum]._pAnimFrame++;
+	}
+	if (plr[pnum]._pIFlags & ISPL_FASTESTRECOVER && (frame == 1 || frame == 3 || frame == 5)) {
+		plr[pnum]._pAnimFrame++;
+	}
+
+	if (plr[pnum]._pAnimFrame >= plr[pnum]._pHFrames) {
+		StartStand(pnum, plr[pnum]._pdir);
+		ClearPlrPVars(pnum);
+		if (random_(3, 4) != 0) {
+			ArmorDur(pnum);
+		}
+
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
 BOOL PM_DoDeath(int pnum)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
@@ -2963,11 +3118,13 @@ void CheckNewPath(int pnum)
 	}
 
 	if (plr[pnum].destAction == ACTION_ATTACKMON) {
-		MakePlrPath(pnum, monster[plr[pnum].destParam1]._mfutx, monster[plr[pnum].destParam1]._mfuty, FALSE);
+		i = plr[pnum].destParam1;
+		MakePlrPath(pnum, monster[i]._mfutx, monster[i]._mfuty, FALSE);
 	}
 
 	if (plr[pnum].destAction == ACTION_ATTACKPLR) {
-		MakePlrPath(pnum, plr[plr[pnum].destParam1]._pfutx, plr[plr[pnum].destParam1]._pfuty, FALSE);
+		i = plr[pnum].destParam1;
+		MakePlrPath(pnum, plr[i]._pfutx, plr[i]._pfuty, FALSE);
 	}
 
 	if (plr[pnum].walkpath[0] != WALK_NONE) {
@@ -3010,28 +3167,28 @@ void CheckNewPath(int pnum)
 
 			switch (plr[pnum].walkpath[0]) {
 			case WALK_N:
-				StartWalk(pnum, 0, -xvel, -1, -1, DIR_N, SDIR_N);
+				StartWalk(pnum, 0, -xvel, 0, 0, -1, -1, 0, 0, DIR_N, SDIR_N, PM_WALK);
 				break;
 			case WALK_NE:
-				StartWalk(pnum, xvel, -yvel, 0, -1, DIR_NE, SDIR_NE);
+				StartWalk(pnum, xvel, -yvel, 0, 0, 0, -1, 0, 0, DIR_NE, SDIR_NE, PM_WALK);
 				break;
 			case WALK_E:
-				StartWalk3(pnum, xvel3, 0, -32, -16, 1, -1, 1, 0, DIR_E, SDIR_E);
+				StartWalk(pnum, xvel3, 0, -32, -16, 1, -1, 1, 0, DIR_E, SDIR_E, PM_WALK3);
 				break;
 			case WALK_SE:
-				StartWalk2(pnum, xvel, yvel, -32, -16, 1, 0, DIR_SE, SDIR_SE);
+				StartWalk(pnum, xvel, yvel, -32, -16, 1, 0, 0, 0, DIR_SE, SDIR_SE, PM_WALK2);
 				break;
 			case WALK_S:
-				StartWalk2(pnum, 0, xvel, 0, -32, 1, 1, DIR_S, SDIR_S);
+				StartWalk(pnum, 0, xvel, 0, -32, 1, 1, 0, 0, DIR_S, SDIR_S, PM_WALK2);
 				break;
 			case WALK_SW:
-				StartWalk2(pnum, -xvel, yvel, 32, -16, 0, 1, DIR_SW, SDIR_SW);
+				StartWalk(pnum, -xvel, yvel, 32, -16, 0, 1, 0, 0, DIR_SW, SDIR_SW, PM_WALK2);
 				break;
 			case WALK_W:
-				StartWalk3(pnum, -xvel3, 0, 32, -16, -1, 1, 0, 1, DIR_W, SDIR_W);
+				StartWalk(pnum, -xvel3, 0, 32, -16, -1, 1, 0, 1, DIR_W, SDIR_W, PM_WALK3);
 				break;
 			case WALK_NW:
-				StartWalk(pnum, -xvel, -yvel, -1, 0, DIR_NW, SDIR_NW);
+				StartWalk(pnum, -xvel, -yvel, 0, 0, -1, 0, 0, 0, DIR_NW, SDIR_NW, PM_WALK);
 				break;
 			}
 
@@ -3311,8 +3468,9 @@ void ValidatePlayer()
 	gt = 0;
 	for (i = 0; i < plr[myplr]._pNumInv; i++) {
 		if (plr[myplr].InvList[i]._itype == ITYPE_GOLD) {
-			if (plr[myplr].InvList[i]._ivalue > GOLD_MAX_LIMIT) {
-				plr[myplr].InvList[i]._ivalue = GOLD_MAX_LIMIT;
+			int maxGold = gbIsHellfire ? auricGold : GOLD_MAX_LIMIT;
+			if (plr[myplr].InvList[i]._ivalue > maxGold) {
+				plr[myplr].InvList[i]._ivalue = maxGold;
 			}
 			gt += plr[myplr].InvList[i]._ivalue;
 		}
@@ -3334,15 +3492,43 @@ void ValidatePlayer()
 		plr[myplr]._pBaseVit = MaxStats[pc][ATTRIB_VIT];
 	}
 
-	for (b = 1; b < MAX_SPELLS; b++) {
-		if (spelldata[b].sBookLvl != -1) {
-			msk |= (__int64)1 << (b - 1);
-			if (plr[myplr]._pSplLvl[b] > 15)
-				plr[myplr]._pSplLvl[b] = 15;
+	int maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
+	for (b = 1; b < maxSpells; b++) {
+		if (GetSpellBookLevel(b) != -1) {
+			msk |= SPELLBIT(b);
+			if (plr[myplr]._pSplLvl[b] > MAX_SPELL_LEVEL)
+				plr[myplr]._pSplLvl[b] = MAX_SPELL_LEVEL;
 		}
 	}
 
 	plr[myplr]._pMemSpells &= msk;
+}
+
+static void CheckCheatStats(int pnum)
+{
+	if (plr[pnum]._pStrength > 750) {
+		plr[pnum]._pStrength = 750;
+	}
+
+	if (plr[pnum]._pDexterity > 750) {
+		plr[pnum]._pDexterity = 750;
+	}
+
+	if (plr[pnum]._pMagic > 750) {
+		plr[pnum]._pMagic = 750;
+	}
+
+	if (plr[pnum]._pVitality > 750) {
+		plr[pnum]._pVitality = 750;
+	}
+
+	if (plr[pnum]._pHitPoints > 128000) {
+		plr[pnum]._pHitPoints = 128000;
+	}
+
+	if (plr[pnum]._pMana > 128000) {
+		plr[pnum]._pMana = 128000;
+	}
 }
 
 void ProcessPlayers()
@@ -3361,7 +3547,22 @@ void ProcessPlayers()
 	if (sfxdelay > 0) {
 		sfxdelay--;
 		if (sfxdelay == 0) {
-			PlaySFX(sfxdnum);
+			switch (sfxdnum) {
+			case USFX_DEFILER1:
+				InitQTextMsg(286);
+				break;
+			case USFX_DEFILER2:
+				InitQTextMsg(287);
+				break;
+			case USFX_DEFILER3:
+				InitQTextMsg(288);
+				break;
+			case USFX_DEFILER4:
+				InitQTextMsg(289);
+				break;
+			default:
+				PlaySFX(sfxdnum);
+			}
 		}
 	}
 
@@ -3398,13 +3599,9 @@ void ProcessPlayers()
 					tplayer = PM_DoStand(pnum);
 					break;
 				case PM_WALK:
-					tplayer = PM_DoWalk(pnum);
-					break;
 				case PM_WALK2:
-					tplayer = PM_DoWalk2(pnum);
-					break;
 				case PM_WALK3:
-					tplayer = PM_DoWalk3(pnum);
+					tplayer = PM_DoWalk(pnum, plr[pnum]._pmode);
 					break;
 				case PM_ATTACK:
 					tplayer = PM_DoAttack(pnum);
@@ -3443,33 +3640,6 @@ void ProcessPlayers()
 	}
 }
 
-void CheckCheatStats(int pnum)
-{
-	if (plr[pnum]._pStrength > 750) {
-		plr[pnum]._pStrength = 750;
-	}
-
-	if (plr[pnum]._pDexterity > 750) {
-		plr[pnum]._pDexterity = 750;
-	}
-
-	if (plr[pnum]._pMagic > 750) {
-		plr[pnum]._pMagic = 750;
-	}
-
-	if (plr[pnum]._pVitality > 750) {
-		plr[pnum]._pVitality = 750;
-	}
-
-	if (plr[pnum]._pHitPoints > 128000) {
-		plr[pnum]._pHitPoints = 128000;
-	}
-
-	if (plr[pnum]._pMana > 128000) {
-		plr[pnum]._pMana = 128000;
-	}
-}
-
 void ClrPlrPath(int pnum)
 {
 	if ((DWORD)pnum >= MAX_PLRS) {
@@ -3481,52 +3651,51 @@ void ClrPlrPath(int pnum)
 
 BOOL PosOkPlayer(int pnum, int x, int y)
 {
-	BOOL PosOK;
 	DWORD p;
 	char bv;
 
-	PosOK = FALSE;
-	if (x >= 0 && x < MAXDUNX && y >= 0 && y < MAXDUNY && !SolidLoc(x, y) && dPiece[x][y]) {
-
-		if (dPlayer[x][y]) {
-			if (dPlayer[x][y] > 0) {
-				p = dPlayer[x][y] - 1;
-			} else {
-				p = -(dPlayer[x][y] + 1);
-			}
-			if (p != pnum && p < MAX_PLRS && plr[p]._pHitPoints) {
-				return FALSE;
-			}
+	if (x < 0 || x >= MAXDUNX || y < 0 || y >= MAXDUNY)
+		return FALSE;
+	if (dPiece[x][y] == 0)
+		return FALSE;
+	if (SolidLoc(x, y))
+		return FALSE;
+	if (dPlayer[x][y] != 0) {
+		if (dPlayer[x][y] > 0) {
+			p = dPlayer[x][y] - 1;
+		} else {
+			p = -(dPlayer[x][y] + 1);
 		}
-
-		if (dMonster[x][y]) {
-			if (currlevel == 0) {
-				return FALSE;
-			}
-			if (dMonster[x][y] <= 0) {
-				return FALSE;
-			}
-			if ((monster[dMonster[x][y] - 1]._mhitpoints >> 6) > 0) {
-				return FALSE;
-			}
+		if (p != pnum
+		    && p < MAX_PLRS
+		    && plr[p]._pHitPoints != 0) {
+			return FALSE;
 		}
-
-		if (dObject[x][y]) {
-			if (dObject[x][y] > 0) {
-				bv = dObject[x][y] - 1;
-			} else {
-				bv = -(dObject[x][y] + 1);
-			}
-			if (object[bv]._oSolidFlag) {
-				return FALSE;
-			}
-		}
-
-		PosOK = TRUE;
 	}
 
-	if (!PosOK)
-		return FALSE;
+	if (dMonster[x][y] != 0) {
+		if (currlevel == 0) {
+			return FALSE;
+		}
+		if (dMonster[x][y] <= 0) {
+			return FALSE;
+		}
+		if ((monster[dMonster[x][y] - 1]._mhitpoints >> 6) > 0) {
+			return FALSE;
+		}
+	}
+
+	if (dObject[x][y] != 0) {
+		if (dObject[x][y] > 0) {
+			bv = dObject[x][y] - 1;
+		} else {
+			bv = -(dObject[x][y] + 1);
+		}
+		if (object[bv]._oSolidFlag) {
+			return FALSE;
+		}
+	}
+
 	return TRUE;
 }
 
@@ -3592,7 +3761,7 @@ void MakePlrPath(int pnum, int xx, int yy, BOOL endspace)
 
 void CheckPlrSpell()
 {
-	BOOL addflag;
+	BOOL addflag = FALSE;
 	int rspell, sd, sl;
 
 	if ((DWORD)myplr >= MAX_PLRS) {
@@ -3603,12 +3772,16 @@ void CheckPlrSpell()
 	if (rspell == SPL_INVALID) {
 		if (plr[myplr]._pClass == PC_WARRIOR) {
 			PlaySFX(PS_WARR34);
-#ifndef SPAWN
 		} else if (plr[myplr]._pClass == PC_ROGUE) {
 			PlaySFX(PS_ROGUE34);
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
 			PlaySFX(PS_MAGE34);
-#endif
+		} else if (plr[myplr]._pClass == PC_MONK) {
+			PlaySFX(PS_MONK34);
+		} else if (plr[myplr]._pClass == PC_BARD) {
+			PlaySFX(PS_ROGUE34);
+		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+			PlaySFX(PS_WARR34);
 		}
 		return;
 	}
@@ -3616,31 +3789,40 @@ void CheckPlrSpell()
 	if (leveltype == DTYPE_TOWN && !spelldata[rspell].sTownSpell) {
 		if (plr[myplr]._pClass == PC_WARRIOR) {
 			PlaySFX(PS_WARR27);
-#ifndef SPAWN
 		} else if (plr[myplr]._pClass == PC_ROGUE) {
 			PlaySFX(PS_ROGUE27);
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
 			PlaySFX(PS_MAGE27);
-#endif
+		} else if (plr[myplr]._pClass == PC_MONK) {
+			PlaySFX(PS_MONK27);
+		} else if (plr[myplr]._pClass == PC_BARD) {
+			PlaySFX(PS_ROGUE27);
+		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+			PlaySFX(PS_WARR27);
 		}
 		return;
 	}
 
 	if (!sgbControllerActive) {
-		if (pcurs != CURSOR_HAND
-		    || (MouseY >= PANEL_TOP && MouseX >= PANEL_LEFT && MouseX <= RIGHT_PANEL)     // inside main panel
-		    || ((chrflag || questlog) && MouseX < SPANEL_WIDTH && MouseY < SPANEL_HEIGHT) // inside left panel
-		    || ((invflag || sbookflag) && MouseX > RIGHT_PANEL && MouseY < SPANEL_HEIGHT) // inside right panel
-		        && rspell != SPL_HEAL
-		        && rspell != SPL_IDENTIFY
-		        && rspell != SPL_REPAIR
-		        && rspell != SPL_INFRA
-		        && rspell != SPL_RECHARGE) {
+		if (pcurs != CURSOR_HAND)
 			return;
+
+		if (MouseY >= PANEL_TOP && MouseX >= PANEL_LEFT && MouseX <= RIGHT_PANEL) // inside main panel
+			return;
+
+		if (
+		    ((chrflag || questlog) && MouseX < SPANEL_WIDTH && MouseY < SPANEL_HEIGHT)    // inside left panel
+		    || ((invflag || sbookflag) && MouseX > RIGHT_PANEL && MouseY < SPANEL_HEIGHT) // inside right panel
+		) {
+			if (rspell != SPL_HEAL
+			    && rspell != SPL_IDENTIFY
+			    && rspell != SPL_REPAIR
+			    && rspell != SPL_INFRA
+			    && rspell != SPL_RECHARGE)
+				return;
 		}
 	}
 
-	addflag = FALSE;
 	switch (plr[myplr]._pRSplType) {
 	case RSPLTYPE_SKILL:
 	case RSPLTYPE_SPELL:
@@ -3655,7 +3837,7 @@ void CheckPlrSpell()
 	}
 
 	if (addflag) {
-		if (plr[myplr]._pRSpell == SPL_FIREWALL) {
+		if (plr[myplr]._pRSpell == SPL_FIREWALL || plr[myplr]._pRSpell == SPL_LIGHTWALL) {
 			sd = GetDirection(plr[myplr]._px, plr[myplr]._py, cursmx, cursmy);
 			sl = GetSpellLevel(myplr, plr[myplr]._pRSpell);
 			NetSendCmdLocParam3(TRUE, CMD_SPELLXYD, cursmx, cursmy, plr[myplr]._pRSpell, sd, sl);
@@ -3675,12 +3857,16 @@ void CheckPlrSpell()
 	if (plr[myplr]._pRSplType == RSPLTYPE_SPELL) {
 		if (plr[myplr]._pClass == PC_WARRIOR) {
 			PlaySFX(PS_WARR35);
-#ifndef SPAWN
 		} else if (plr[myplr]._pClass == PC_ROGUE) {
 			PlaySFX(PS_ROGUE35);
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
 			PlaySFX(PS_MAGE35);
-#endif
+		} else if (plr[myplr]._pClass == PC_MONK) {
+			PlaySFX(PS_MONK35);
+		} else if (plr[myplr]._pClass == PC_BARD) {
+			PlaySFX(PS_ROGUE35);
+		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+			PlaySFX(PS_WARR35);
 		}
 	}
 }
@@ -3816,6 +4002,12 @@ void CheckStats(int p)
 		c = PC_ROGUE;
 	} else if (plr[p]._pClass == PC_SORCERER) {
 		c = PC_SORCERER;
+	} else if (plr[p]._pClass == PC_MONK) {
+		c = PC_MONK;
+	} else if (plr[p]._pClass == PC_BARD) {
+		c = PC_BARD;
+	} else if (plr[p]._pClass == PC_BARBARIAN) {
+		c = PC_BARBARIAN;
 	}
 
 	for (i = 0; i < 4; i++) {
@@ -3877,7 +4069,7 @@ void ModifyPlrStr(int p, int l)
 	CalcPlrInv(p, TRUE);
 
 	if (p == myplr) {
-		NetSendCmdParam1(FALSE, CMD_SETSTR, plr[p]._pBaseStr); //60
+		NetSendCmdParam1(FALSE, CMD_SETSTR, plr[p]._pBaseStr);
 	}
 }
 
@@ -3900,6 +4092,8 @@ void ModifyPlrMag(int p, int l)
 	ms = l << 6;
 	if (plr[p]._pClass == PC_SORCERER) {
 		ms <<= 1;
+	} else if (plr[p]._pClass == PC_BARD) {
+		ms += ms >> 1;
 	}
 
 	plr[p]._pMaxManaBase += ms;
@@ -3960,6 +4154,8 @@ void ModifyPlrVit(int p, int l)
 
 	ms = l << 6;
 	if (plr[p]._pClass == PC_WARRIOR) {
+		ms <<= 1;
+	} else if (plr[p]._pClass == PC_BARBARIAN) {
 		ms <<= 1;
 	}
 
@@ -4022,6 +4218,8 @@ void SetPlrMag(int p, int v)
 	m = v << 6;
 	if (plr[p]._pClass == PC_SORCERER) {
 		m <<= 1;
+	} else if (plr[p]._pClass == PC_BARD) {
+		m += m >> 1;
 	}
 
 	plr[p]._pMaxManaBase = m;
@@ -4062,6 +4260,8 @@ void SetPlrVit(int p, int v)
 	hp = v << 6;
 	if (plr[p]._pClass == PC_WARRIOR) {
 		hp <<= 1;
+	} else if (plr[p]._pClass == PC_BARBARIAN) {
+		hp <<= 1;
 	}
 
 	plr[p]._pHPBase = hp;
@@ -4076,6 +4276,7 @@ void InitDungMsgs(int pnum)
 	}
 
 	plr[pnum].pDungMsgs = 0;
+	plr[pnum].pDungMsgs2 = 0;
 }
 
 void PlayDungMsgs()
@@ -4088,61 +4289,117 @@ void PlayDungMsgs()
 		sfxdelay = 40;
 		if (plr[myplr]._pClass == PC_WARRIOR) {
 			sfxdnum = PS_WARR97;
-#ifndef SPAWN
 		} else if (plr[myplr]._pClass == PC_ROGUE) {
 			sfxdnum = PS_ROGUE97;
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE97;
-#endif
+		} else if (plr[myplr]._pClass == PC_MONK) {
+			sfxdnum = PS_MONK97;
+		} else if (plr[myplr]._pClass == PC_BARD) {
+			sfxdnum = PS_ROGUE97;
+		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+			sfxdnum = PS_WARR97;
 		}
 		plr[myplr].pDungMsgs = plr[myplr].pDungMsgs | DMSG_CATHEDRAL;
 	} else if (currlevel == 5 && !plr[myplr]._pLvlVisited[5] && gbMaxPlayers == 1 && !(plr[myplr].pDungMsgs & DMSG_CATACOMBS)) {
 		sfxdelay = 40;
 		if (plr[myplr]._pClass == PC_WARRIOR) {
 			sfxdnum = PS_WARR96B;
-#ifndef SPAWN
 		} else if (plr[myplr]._pClass == PC_ROGUE) {
 			sfxdnum = PS_ROGUE96;
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE96;
-#endif
+		} else if (plr[myplr]._pClass == PC_MONK) {
+			sfxdnum = PS_MONK96;
+		} else if (plr[myplr]._pClass == PC_BARD) {
+			sfxdnum = PS_ROGUE96;
+		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+			sfxdnum = PS_WARR96B;
 		}
 		plr[myplr].pDungMsgs |= DMSG_CATACOMBS;
 	} else if (currlevel == 9 && !plr[myplr]._pLvlVisited[9] && gbMaxPlayers == 1 && !(plr[myplr].pDungMsgs & DMSG_CAVES)) {
 		sfxdelay = 40;
 		if (plr[myplr]._pClass == PC_WARRIOR) {
 			sfxdnum = PS_WARR98;
-#ifndef SPAWN
 		} else if (plr[myplr]._pClass == PC_ROGUE) {
 			sfxdnum = PS_ROGUE98;
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE98;
-#endif
+		} else if (plr[myplr]._pClass == PC_MONK) {
+			sfxdnum = PS_MONK98;
+		} else if (plr[myplr]._pClass == PC_BARD) {
+			sfxdnum = PS_ROGUE98;
+		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+			sfxdnum = PS_WARR98;
 		}
 		plr[myplr].pDungMsgs |= DMSG_CAVES;
 	} else if (currlevel == 13 && !plr[myplr]._pLvlVisited[13] && gbMaxPlayers == 1 && !(plr[myplr].pDungMsgs & DMSG_HELL)) {
 		sfxdelay = 40;
 		if (plr[myplr]._pClass == PC_WARRIOR) {
 			sfxdnum = PS_WARR99;
-#ifndef SPAWN
 		} else if (plr[myplr]._pClass == PC_ROGUE) {
 			sfxdnum = PS_ROGUE99;
 		} else if (plr[myplr]._pClass == PC_SORCERER) {
 			sfxdnum = PS_MAGE99;
-#endif
+		} else if (plr[myplr]._pClass == PC_MONK) {
+			sfxdnum = PS_MONK99;
+		} else if (plr[myplr]._pClass == PC_BARD) {
+			sfxdnum = PS_ROGUE99;
+		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+			sfxdnum = PS_WARR99;
 		}
 		plr[myplr].pDungMsgs |= DMSG_HELL;
 	} else if (currlevel == 16 && !plr[myplr]._pLvlVisited[15] && gbMaxPlayers == 1 && !(plr[myplr].pDungMsgs & DMSG_DIABLO)) { // BUGFIX: _pLvlVisited should check 16 or this message will never play
 		sfxdelay = 40;
-#ifndef SPAWN
-		if (plr[myplr]._pClass == PC_WARRIOR || plr[myplr]._pClass == PC_ROGUE || plr[myplr]._pClass == PC_SORCERER) {
+		if (plr[myplr]._pClass == PC_WARRIOR || plr[myplr]._pClass == PC_ROGUE || plr[myplr]._pClass == PC_SORCERER || plr[myplr]._pClass == PC_MONK || plr[myplr]._pClass == PC_BARD || plr[myplr]._pClass == PC_BARBARIAN) {
 			sfxdnum = PS_DIABLVLINT;
 		}
-#endif
 		plr[myplr].pDungMsgs |= DMSG_DIABLO;
+	} else if (currlevel == 17 && !plr[myplr]._pLvlVisited[17] && gbMaxPlayers == 1 && !(plr[myplr].pDungMsgs2 & 1)) {
+		sfxdelay = 10;
+		sfxdnum = USFX_DEFILER1;
+		quests[Q_DEFILER]._qactive = 2;
+		quests[Q_DEFILER]._qlog = 1;
+		quests[Q_DEFILER]._qmsg = 286;
+		plr[myplr].pDungMsgs2 |= 1;
+	} else if (currlevel == 19 && !plr[myplr]._pLvlVisited[19] && gbMaxPlayers == 1 && !(plr[myplr].pDungMsgs2 & 4)) {
+		sfxdelay = 10;
+		sfxdnum = USFX_DEFILER3;
+		plr[myplr].pDungMsgs2 |= 4;
+	} else if (currlevel == 21 && !plr[myplr]._pLvlVisited[21] && gbMaxPlayers == 1 && !(plr[myplr].pDungMsgs & 32)) {
+		sfxdelay = 30;
+		if (plr[myplr]._pClass == PC_WARRIOR) {
+			sfxdnum = PS_WARR92;
+		} else if (plr[myplr]._pClass == PC_ROGUE) {
+			sfxdnum = PS_ROGUE92;
+		} else if (plr[myplr]._pClass == PC_SORCERER) {
+			sfxdnum = PS_MAGE92;
+		} else if (plr[myplr]._pClass == PC_MONK) {
+			sfxdnum = PS_MONK92;
+		} else if (plr[myplr]._pClass == PC_BARD) {
+			sfxdnum = PS_ROGUE92;
+		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+			sfxdnum = PS_WARR92;
+		}
+		plr[myplr].pDungMsgs |= 32;
 	} else {
 		sfxdelay = 0;
 	}
+}
+
+int get_max_strength(int i)
+{
+	return MaxStats[i][ATTRIB_STR];
+}
+
+int get_max_magic(int i)
+{
+	return MaxStats[i][ATTRIB_MAG];
+}
+
+int get_max_dexterity(int i)
+{
+	return MaxStats[i][ATTRIB_DEX];
 }
 
 DEVILUTION_END_NAMESPACE

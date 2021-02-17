@@ -55,8 +55,7 @@ DWORD nthread_send_and_recv_turn(DWORD cur_turn, int turn_delta)
 		nthread_terminate_game("SNetGetTurnsInTransit");
 		return 0;
 	}
-	while (curTurnsInTransit < gdwTurnsInTransit) {
-		curTurnsInTransit++;
+	while (curTurnsInTransit++ < gdwTurnsInTransit) {
 
 		turn_tmp = turn_upper_bit | new_cur_turn & 0x7FFFFFFF;
 		turn_upper_bit = 0;
@@ -79,7 +78,7 @@ BOOL nthread_recv_turns(BOOL *pfSendAsync)
 	*pfSendAsync = FALSE;
 	sgbPacketCountdown--;
 	if (sgbPacketCountdown) {
-		last_tick += game_speed;
+		last_tick += tick_delay;
 		return TRUE;
 	}
 	sgbSyncCountdown--;
@@ -87,7 +86,7 @@ BOOL nthread_recv_turns(BOOL *pfSendAsync)
 	if (sgbSyncCountdown != 0) {
 
 		*pfSendAsync = TRUE;
-		last_tick += game_speed;
+		last_tick += tick_delay;
 		return TRUE;
 	}
 	if (!SNetReceiveTurns(0, MAX_PLRS, (char **)glpMsgTbl, gdwMsgLenTbl, (LPDWORD)player_state)) {
@@ -105,9 +104,35 @@ BOOL nthread_recv_turns(BOOL *pfSendAsync)
 		sgbSyncCountdown = 4;
 		multi_msg_countdown();
 		*pfSendAsync = TRUE;
-		last_tick += game_speed;
+		last_tick += tick_delay;
 		return TRUE;
 	}
+}
+
+static unsigned int nthread_handler(void *data)
+{
+	int delta;
+	BOOL received;
+
+	if (nthread_should_run) {
+		while (1) {
+			sgMemCrit.Enter();
+			if (!nthread_should_run)
+				break;
+			nthread_send_and_recv_turn(0, 0);
+			if (nthread_recv_turns(&received))
+				delta = last_tick - SDL_GetTicks();
+			else
+				delta = tick_delay;
+			sgMemCrit.Leave();
+			if (delta > 0)
+				SDL_Delay(delta);
+			if (!nthread_should_run)
+				return 0;
+		}
+		sgMemCrit.Leave();
+	}
+	return 0;
 }
 
 void nthread_set_turn_upper_bit()
@@ -170,32 +195,6 @@ void nthread_start(BOOL set_turn_upper_bit)
 	}
 }
 
-unsigned int nthread_handler(void *data)
-{
-	int delta;
-	BOOL received;
-
-	if (nthread_should_run) {
-		while (1) {
-			sgMemCrit.Enter();
-			if (!nthread_should_run)
-				break;
-			nthread_send_and_recv_turn(0, 0);
-			if (nthread_recv_turns(&received))
-				delta = last_tick - SDL_GetTicks();
-			else
-				delta = game_speed;
-			sgMemCrit.Leave();
-			if (delta > 0)
-				SDL_Delay(delta);
-			if (!nthread_should_run)
-				return 0;
-		}
-		sgMemCrit.Leave();
-	}
-	return 0;
-}
-
 void nthread_cleanup()
 {
 	nthread_should_run = FALSE;
@@ -221,6 +220,11 @@ void nthread_ignore_mutex(BOOL bStart)
 	}
 }
 
+/**
+ * @brief Checks if it's time for the logic to advance
+ * @param unused
+ * @return True if the engine should tick
+ */
 BOOL nthread_has_500ms_passed(BOOL unused)
 {
 	DWORD currentTickCount;
@@ -228,7 +232,7 @@ BOOL nthread_has_500ms_passed(BOOL unused)
 
 	currentTickCount = SDL_GetTicks();
 	ticksElapsed = currentTickCount - last_tick;
-	if (gbMaxPlayers == 1 && ticksElapsed > 500) {
+	if (gbMaxPlayers == 1 && ticksElapsed > tick_delay * 10) {
 		last_tick = currentTickCount;
 		ticksElapsed = 0;
 	}

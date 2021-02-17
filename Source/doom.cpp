@@ -10,7 +10,7 @@ DEVILUTION_BEGIN_NAMESPACE
 int doom_quest_time;
 int doom_stars_drawn;
 BYTE *pDoomCel;
-BOOL doomflag;
+bool doomflag;
 int DoomQuestState;
 
 /*
@@ -42,42 +42,48 @@ int doom_get_frame_from_time()
 	return DoomQuestState / 1200;
 }
 
-void doom_alloc_cel()
-{
-	pDoomCel = DiabloAllocPtr(0x38000);
-}
-
 void doom_cleanup()
 {
-	MemFreeDbg(pDoomCel);
+	if (pDoomCel != NULL) {
+		MemFreeDbg(pDoomCel);
+		pDoomCel = NULL;
+	}
 }
 
-void doom_load_graphics()
+static BOOLEAN doom_alloc_cel()
 {
-	if (doom_quest_time == 31) {
-		strcpy(tempstr, "Items\\Map\\MapZDoom.CEL");
-	} else if (doom_quest_time < 10) {
-		sprintf(tempstr, "Items\\Map\\MapZ000%i.CEL", doom_quest_time);
-	} else {
-		sprintf(tempstr, "Items\\Map\\MapZ00%i.CEL", doom_quest_time);
-	}
-	LoadFileWithMem(tempstr, pDoomCel);
+	doom_cleanup();
+	pDoomCel = DiabloAllocPtr(0x39000);
+	return pDoomCel ? TRUE : FALSE;
+}
+
+static BOOLEAN doom_load_graphics()
+{
+	BOOLEAN ret;
+
+	ret = FALSE;
+	strcpy(tempstr, "Items\\Map\\MapZtown.CEL");
+	if (LoadFileWithMem(tempstr, pDoomCel))
+		ret = TRUE;
+	return ret;
 }
 
 void doom_init()
 {
-	doomflag = TRUE;
-	doom_alloc_cel();
-	doom_quest_time = doom_get_frame_from_time() == 31 ? 31 : 0;
-	doom_load_graphics();
+	if (doom_alloc_cel()) {
+		doom_quest_time = doom_get_frame_from_time() == 31 ? 31 : 0;
+		if (doom_load_graphics()) {
+			doomflag = TRUE;
+		} else {
+			doom_close();
+		}
+	}
 }
 
 void doom_close()
 {
-	if (doomflag) {
-		doomflag = FALSE;
-		doom_cleanup();
-	}
+	doomflag = FALSE;
+	doom_cleanup();
 }
 
 void doom_draw()
@@ -86,19 +92,7 @@ void doom_draw()
 		return;
 	}
 
-	if (doom_quest_time != 31) {
-		doom_stars_drawn++;
-		if (doom_stars_drawn >= 5) {
-			doom_stars_drawn = 0;
-			doom_quest_time++;
-			if (doom_quest_time > doom_get_frame_from_time()) {
-				doom_quest_time = 0;
-			}
-			doom_load_graphics();
-		}
-	}
-
-	CelDraw(SCREEN_X, PANEL_Y - 1, pDoomCel, 1, SCREEN_WIDTH);
+	CelDraw(PANEL_X, PANEL_Y - 1, pDoomCel, 1, 640);
 }
 
 DEVILUTION_END_NAMESPACE

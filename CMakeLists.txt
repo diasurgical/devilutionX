@@ -8,13 +8,13 @@ DEBUG_OPTION(UBSAN "Enable undefined behaviour sanitizer")
 DEBUG_OPTION(DEBUG "Enable debug mode in engine")
 option(DISABLE_LTO "Disable link-time optimization (by default enabled in release mode)" OFF)
 option(PIE "Generate position-independent code" OFF)
-option(SPAWN "Build the shareware version" OFF)
 option(DIST "Dynamically link only glibc and SDL2" OFF)
 option(BINARY_RELEASE "Enable options for binary release" OFF)
 option(NIGHTLY_BUILD "Enable options for nightly build" OFF)
 option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network" OFF)
 option(RUN_TESTS "Build and run tests" OFF)
+option(HELLFIRE "Build hellfire version" OFF)
 RELEASE_OPTION(CPACK "Configure CPack")
 
 
@@ -92,10 +92,14 @@ elseif(TARGET_PLATFORM STREQUAL "cpigamesh")
   include(cpigamesh_defs)
 endif()
 
-if(${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD OR ${CMAKE_SYSTEM_NAME} STREQUAL OpenBSD)
+if(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD|NetBSD|OpenBSD|DragonFly")
+  if(${CMAKE_SYSTEM_NAME} MATCHES "NetBSD")
+    add_definitions(-D_NETBSD_SOURCE)
+  else()
+    add_definitions(-D_BSD_SOURCE)
+    set(UBSAN OFF)
+  endif()
   set(ASAN OFF)
-  set(UBSAN OFF)
-  add_definitions(-D_BSD_SOURCE)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DO_LARGEFILE=0 -Dstat64=stat -Dlstat64=lstat -Dlseek64=lseek -Doff64_t=off_t -Dfstat64=fstat -Dftruncate64=ftruncate")
 endif()
 
@@ -142,7 +146,7 @@ else()
   if(SWITCH)
     find_package(SDL2_STATIC CONFIG QUIET)
   else()
-    find_package(SDL2 CONFIG QUIET)
+    find_package(SDL2 MODULE QUIET)
   endif()
   if (NOT SDL2_FOUND)
     find_package(SDL2 REQUIRED)
@@ -178,6 +182,9 @@ add_library(StormLib STATIC
 add_library(PKWare STATIC
   3rdParty/PKWare/explode.cpp
   3rdParty/PKWare/implode.cpp)
+
+add_library(SourceS STATIC
+  SourceS/paths.cpp)
 
 add_library(devilution STATIC
   Source/appfat.cpp
@@ -246,8 +253,7 @@ add_library(devilution STATIC
   Source/town.cpp
   Source/towners.cpp
   Source/track.cpp
-  Source/trigs.cpp
-  Source/wave.cpp)
+  Source/trigs.cpp)
 
 set(devilutionx_SRCS
   SourceX/dx.cpp
@@ -333,7 +339,14 @@ if(RUN_TESTS)
     SourceT/drlg_l3_test.cpp
     SourceT/drlg_l4_test.cpp
     SourceT/effects_test.cpp
-    SourceT/file_util_test.cpp)
+    SourceT/file_util_test.cpp
+    SourceT/player_test.cpp
+    SourceT/scrollrt_test.cpp
+    SourceT/stores_test.cpp)
+endif()
+
+if(HELLFIRE)
+  add_definitions(-DHELLFIRE)
 endif()
 
 add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionx_SRCS})
@@ -369,14 +382,19 @@ endif()
 
 target_include_directories(devilution PUBLIC Source SourceS ${CMAKE_CURRENT_BINARY_DIR})
 target_include_directories(${BIN_TARGET} PRIVATE
+  SourceS
   SourceX
   3rdParty/asio/include
   3rdParty/Radon/Radon/include
   3rdParty/libsmacker)
 
-target_link_libraries(devilution PUBLIC Threads::Threads)
+target_link_libraries(devilution PUBLIC
+  Threads::Threads
+  SourceS
+)
 target_link_libraries(${BIN_TARGET} PRIVATE
   devilution
+  SourceS
   PKWare
   StormLib
   smacker
@@ -393,7 +411,6 @@ target_compile_definitions(${BIN_TARGET} PRIVATE ASIO_STANDALONE)
 # Defines without value
 foreach(
   def_name
-  SPAWN
   NONET
   PREFILL_PLAYER_NAME
 )
@@ -464,7 +481,7 @@ endforeach(def_name)
 
 genex_for_option(ASAN)
 genex_for_option(UBSAN)
-foreach(target devilution ${BIN_TARGET})
+foreach(target devilution ${BIN_TARGET} SourceS)
   target_compile_options(${target} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
   target_link_libraries(${target} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
   target_compile_options(${target} PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined>)
@@ -512,7 +529,7 @@ if(WIN32)
   endif()
 endif()
 
-if(NOT WIN32 AND NOT APPLE)
+if(NOT WIN32 AND NOT APPLE AND NOT ${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
   # Enable POSIX extensions such as `readlink` and `ftruncate`.
   add_definitions(-D_POSIX_C_SOURCE=200809L)
 endif()
@@ -540,7 +557,7 @@ if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   target_compile_options(devilution PRIVATE -fpermissive -w)
 
   # Warnings for devilutionX
-  target_compile_options(${BIN_TARGET} PRIVATE -Wall -Wextra -Wno-write-strings -Wno-unused-parameter -Wno-missing-field-initializers -Wno-format-security)
+  target_compile_options(${BIN_TARGET} PRIVATE -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wno-format-security)
 
   # For ARM and other default unsigned char platforms
   target_compile_options(devilution PRIVATE -fsigned-char)
@@ -570,6 +587,7 @@ if(APPLE)
   set(MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION})
   set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION})
   set(MACOSX_BUNDLE_LONG_VERSION_STRING "Version ${PROJECT_VERSION}")
+  set(CMAKE_OSX_DEPLOYMENT_TARGET "10.12.0")
   set_target_properties(${BIN_TARGET} PROPERTIES MACOSX_BUNDLE_ICON_FILE "AppIcon")
   set_target_properties(${BIN_TARGET} PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/macOS/Info.plist")
 
@@ -619,16 +637,8 @@ if(CPACK)
         "${PROJECT_SOURCE_DIR}/Packaging/nix/README.txt"
       DESTINATION "share/diasurgical/${project_name}"
     )
-    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/16.png"
-      DESTINATION "share/icons/hicolor/16x16/apps"
-      RENAME "${project_name}.png"
-    )
-    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/Diablo_32.png"
-      DESTINATION "share/icons/hicolor/32x32/apps"
-      RENAME "${project_name}.png"
-    )
-    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/Diablo_48.png"
-      DESTINATION "share/icons/hicolor/48x48/apps"
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/icon.png"
+      DESTINATION "share/icons/hicolor/512x512/apps"
       RENAME "${project_name}.png"
     )
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
@@ -636,7 +646,7 @@ if(CPACK)
     )
 
     # -G DEB
-    set(CPACK_PACKAGE_CONTACT "kai@gnukai.com")
+    set(CPACK_PACKAGE_CONTACT "anders@jenbo.dk")
     set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
     set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
 

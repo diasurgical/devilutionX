@@ -13,7 +13,7 @@ char msgflag;
 char msgcnt;
 
 /** Maps from error_id to error message. */
-char *MsgStrings[] = {
+const char *const MsgStrings[] = {
 	"",
 	"No automap available in town",
 	"No multiplayer functions in demo",
@@ -58,6 +58,17 @@ char *MsgStrings[] = {
 	"You must be at least level 13 to use this.",
 	"You must be at least level 17 to use this.",
 	"Arcane knowledge gained!",
+	"That which does not kill you...",
+	"Knowledge is power.",
+	"Give and you shall receive.",
+	"Some experience is gained by touch.",
+	"There's no place like home.",
+	"Spirtual energy is restored.",
+	"You feel more agile.",
+	"You feel stronger.",
+	"You feel wiser.",
+	"You feel refreshed.",
+	"That which can break will.",
 };
 
 void InitDiabloMsg(char e)
@@ -72,7 +83,7 @@ void InitDiabloMsg(char e)
 			return;
 	}
 
-	msgtable[msgcnt] = e;
+	msgtable[msgcnt] = e; // BUGFIX: missing out-of-bounds check (fixed)
 	msgcnt++;
 
 	msgflag = msgtable[0];

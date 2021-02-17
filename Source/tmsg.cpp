@@ -1,10 +1,19 @@
+/**
+ * @file tmsg.cpp
+ *
+ * Implementation of functionality transmitting chat messages.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
-static TMsg *sgpTimedMsgHead;
+namespace {
 
-int tmsg_get(BYTE *pbMsg, DWORD dwMaxLen)
+TMsg *sgpTimedMsgHead;
+
+}
+
+int tmsg_get(Uint8 *pbMsg, Uint32 dwMaxLen)
 {
 	int len;
 	TMsg *head;
@@ -23,13 +32,13 @@ int tmsg_get(BYTE *pbMsg, DWORD dwMaxLen)
 	return len;
 }
 
-void tmsg_add(BYTE *pbMsg, BYTE bLen)
+void tmsg_add(Uint8 *pbMsg, Uint8 bLen)
 {
 	TMsg **tail;
 
 	TMsg *msg = (TMsg *)DiabloAllocPtr(bLen + sizeof(*msg));
-	msg->hdr.pNext = NULL;
-	msg->hdr.dwTime = SDL_GetTicks() + 500;
+	msg->hdr.pNext = nullptr;
+	msg->hdr.dwTime = SDL_GetTicks() + tick_delay * 10;
 	msg->hdr.bLen = bLen;
 	memcpy(msg->body, pbMsg, bLen);
 	for (tail = &sgpTimedMsgHead; *tail; tail = &(*tail)->hdr.pNext) {

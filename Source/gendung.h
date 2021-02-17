@@ -12,6 +12,26 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+typedef struct ScrollStruct {
+	int _sxoff; // X-offset of camera position. This usually corresponds to a negative version of plr[myplr]._pxoff
+	int _syoff; // Y-offset of camera position. This usually corresponds to a negative version of plr[myplr]._pyoff
+	int _sdx;
+	int _sdy;
+	int _sdir;
+} ScrollStruct;
+
+typedef struct THEME_LOC {
+	int x;
+	int y;
+	int ttval;
+	int width;
+	int height;
+} THEME_LOC;
+
+typedef struct MICROS {
+	Uint16 mt[16];
+} MICROS;
+
 extern BYTE dungeon[DMAXX][DMAXY];
 extern BYTE pdungeon[DMAXX][DMAXY];
 extern char dflags[DMAXX][DMAXY];
@@ -28,11 +48,6 @@ extern BYTE *pDungeonCels;
 extern BYTE *pSpeedCels;
 extern int SpeedFrameTbl[128][16];
 extern char block_lvid[MAXTILES + 1];
-extern int level_frame_count[MAXTILES];
-extern int tile_defs[MAXTILES];
-extern WORD level_frame_types[MAXTILES];
-extern int level_frame_sizes[MAXTILES];
-extern int nlevel_frames;
 extern BOOLEAN nBlockTable[MAXTILES + 1];
 extern BOOLEAN nSolidTable[MAXTILES + 1];
 extern BOOLEAN nTransTable[MAXTILES + 1];
@@ -62,7 +77,6 @@ extern char TransVal;
 extern BOOLEAN TransList[256];
 extern int dPiece[MAXDUNX][MAXDUNY];
 extern MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
-extern MICROS dpiece_defs_map_1[MAXDUNX * MAXDUNY];
 extern char dTransVal[MAXDUNX][MAXDUNY];
 extern char dLight[MAXDUNX][MAXDUNY];
 extern char dPreLight[MAXDUNX][MAXDUNY];
@@ -88,8 +102,6 @@ void DRLG_AreaTrans(int num, BYTE *List);
 void DRLG_InitSetPC();
 void DRLG_SetPC();
 void Make_SetPC(int x, int y, int w, int h);
-BOOL DRLG_WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, int *width, int *height);
-void DRLG_CreateThemeRoom(int themeIndex);
 void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, int rndSize);
 void DRLG_HoldThemeRooms();
 BOOL SkipThemeRoom(int x, int y);

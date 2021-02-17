@@ -7,6 +7,7 @@
 
 #include "all.h"
 #include "../3rdParty/Storm/Source/storm.h"
+#include "paths.h"
 #include "file_util.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -34,10 +35,16 @@ static BOOL CaptureHdr(short width, short height, std::ofstream *out)
 	Buffer.NPlanes = 1;
 	Buffer.BytesPerLine = SDL_SwapLE16(width);
 
-	out->write(reinterpret_cast<const char*>(&Buffer), sizeof(Buffer));
+	out->write(reinterpret_cast<const char *>(&Buffer), sizeof(Buffer));
 	return !out->fail();
 }
 
+/**
+ * @brief Write the current ingame palette to the PCX file
+ * @param palette Current palette
+ * @param out File stream for the PCX file.
+ * @return True if successful, else false
+ */
 static BOOL CapturePal(SDL_Color *palette, std::ofstream *out)
 {
 	BYTE pcx_palette[1 + 256 * 3];
@@ -54,6 +61,14 @@ static BOOL CapturePal(SDL_Color *palette, std::ofstream *out)
 	return !out->fail();
 }
 
+/**
+ * @brief RLE compress the pixel data
+ * @param src Raw pixel buffer
+ * @param dst Output buffer
+ * @param width Width of pixel buffer
+
+ * @return Output buffer
+ */
 static BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
 {
 	int rleLength;
@@ -88,6 +103,14 @@ static BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
 	return dst;
 }
 
+/**
+ * @brief Write the pixel data to the PCX file
+ * @param width Image width
+ * @param height Image height
+ * @param stride Buffer width
+ * @param pixels Raw pixel buffer
+ * @return True if successful, else false
+ */
 static bool CapturePix(WORD width, WORD height, WORD stride, BYTE *pixels, std::ofstream *out)
 {
 	int writeSize;
@@ -99,7 +122,8 @@ static bool CapturePix(WORD width, WORD height, WORD stride, BYTE *pixels, std::
 		pixels += stride;
 		writeSize = pBufferEnd - pBuffer;
 		out->write(reinterpret_cast<const char *>(pBuffer), writeSize);
-		if (out->fail()) return false;
+		if (out->fail())
+			return false;
 	}
 	mem_free_dbg(pBuffer);
 	return true;
@@ -108,23 +132,21 @@ static bool CapturePix(WORD width, WORD height, WORD stride, BYTE *pixels, std::
 /**
  * Returns a pointer because in GCC < 5 ofstream itself is not moveable due to a bug.
  */
-static std::ofstream *CaptureFile(char *dst_path)
+static std::ofstream *CaptureFile(std::string *dst_path)
 {
-	char path[MAX_PATH];
-
-	GetPrefPath(path, MAX_PATH);
-
-	for (int i = 0; i <= 99; i++) {
-		snprintf(dst_path, MAX_PATH, "%sscreen%02d.PCX", path, i);
-		if (!FileExists(dst_path))
-			return new std::ofstream(dst_path, std::ios::binary | std::ios::trunc);
+	char filename[sizeof("screen00.PCX") / sizeof(char)];
+	for (int i = 0; i <= 99; ++i) {
+		snprintf(filename, sizeof(filename) / sizeof(char), "screen%02d.PCX", i);
+		*dst_path = GetPrefPath() + filename;
+		if (!FileExists(dst_path->c_str())) {
+			return new std::ofstream(*dst_path, std::ios::binary | std::ios::trunc);
+		}
 	}
-
 	return NULL;
 }
 
 /**
- * @brief remove green and blue from the current palette
+ * @brief Make a red version of the given palette and apply it to the screen.
  */
 static void RedPalette()
 {
@@ -143,14 +165,19 @@ static void RedPalette()
 	RenderPresent();
 }
 
+/**
+ * @brief Save the current screen to a screen??.PCX (00-99) in file if available, then make the screen red for 200ms.
+
+ */
 void CaptureScreen()
 {
 	SDL_Color palette[256];
-	char FileName[MAX_PATH];
+	std::string FileName;
 	BOOL success;
 
-	std::ofstream *out = CaptureFile(FileName);
-	if (out == NULL) return;
+	std::ofstream *out = CaptureFile(&FileName);
+	if (out == NULL)
+		return;
 	DrawAndBlit();
 	PaletteGetEntries(256, palette);
 	RedPalette();
@@ -167,13 +194,13 @@ void CaptureScreen()
 	out->close();
 
 	if (!success) {
-		SDL_Log("Failed to save screenshot at %s", FileName);
-		RemoveFile(FileName);
+		SDL_Log("Failed to save screenshot at %s", FileName.c_str());
+		RemoveFile(FileName.c_str());
 	} else {
-		SDL_Log("Screenshot saved at %s", FileName);
+		SDL_Log("Screenshot saved at %s", FileName.c_str());
 	}
 	SDL_Delay(300);
-	for (int i = 0; i < 255; i++) {
+	for (int i = 0; i < 256; i++) {
 		system_palette[i] = palette[i];
 	}
 	palette_update();

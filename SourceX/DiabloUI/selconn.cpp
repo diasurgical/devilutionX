@@ -27,7 +27,6 @@ void selconn_Load()
 {
 	LoadBackgroundArt("ui_art\\selconn.pcx");
 
-	// vecConnItems Should be in the same order as conn_type (See enums.h)
 #ifndef NONET
 	vecConnItems.push_back(new UiListItem("Client-Server (TCP)", SELCONN_TCP));
 #ifdef BUGGY
@@ -39,39 +38,39 @@ void selconn_Load()
 	UiAddBackground(&vecSelConnDlg);
 	UiAddLogo(&vecSelConnDlg);
 
-	SDL_Rect rect1 = { PANEL_LEFT + 24, 161, 590, 35 };
+	SDL_Rect rect1 = { PANEL_LEFT + 24, (UI_OFFSET_Y + 161), 590, 35 };
 	vecSelConnDlg.push_back(new UiArtText("Multi Player Game", rect1, UIS_CENTER | UIS_BIG));
 
-	SDL_Rect rect2 = { PANEL_LEFT + 35, 218, DESCRIPTION_WIDTH, 21 };
+	SDL_Rect rect2 = { PANEL_LEFT + 35, (UI_OFFSET_Y + 218), DESCRIPTION_WIDTH, 21 };
 	vecSelConnDlg.push_back(new UiArtText(selconn_MaxPlayers, rect2));
 
-	SDL_Rect rect3 = { PANEL_LEFT + 35, 256, DESCRIPTION_WIDTH, 21 };
+	SDL_Rect rect3 = { PANEL_LEFT + 35, (UI_OFFSET_Y + 256), DESCRIPTION_WIDTH, 21 };
 	vecSelConnDlg.push_back(new UiArtText("Requirements:", rect3));
 
-	SDL_Rect rect4 = { PANEL_LEFT + 35, 275, DESCRIPTION_WIDTH, 66 };
+	SDL_Rect rect4 = { PANEL_LEFT + 35, (UI_OFFSET_Y + 275), DESCRIPTION_WIDTH, 66 };
 	vecSelConnDlg.push_back(new UiArtText(selconn_Description, rect4));
 
-	SDL_Rect rect5 = { PANEL_LEFT + 30, 356, 220, 31 };
+	SDL_Rect rect5 = { PANEL_LEFT + 30, (UI_OFFSET_Y + 356), 220, 31 };
 	vecSelConnDlg.push_back(new UiArtText("no gateway needed", rect5, UIS_CENTER | UIS_MED));
 
-	SDL_Rect rect6 = { PANEL_LEFT + 35, 393, DESCRIPTION_WIDTH, 21 };
+	SDL_Rect rect6 = { PANEL_LEFT + 35, (UI_OFFSET_Y + 393), DESCRIPTION_WIDTH, 21 };
 	vecSelConnDlg.push_back(new UiArtText(selconn_Gateway, rect6, UIS_CENTER));
 
-	SDL_Rect rect7 = { PANEL_LEFT + 300, 211, 295, 33 };
+	SDL_Rect rect7 = { PANEL_LEFT + 300, (UI_OFFSET_Y + 211), 295, 33 };
 	vecSelConnDlg.push_back(new UiArtText("Select Connection", rect7, UIS_CENTER | UIS_BIG));
 
-	SDL_Rect rect8 = { PANEL_LEFT + 16, 427, 250, 35 };
+	SDL_Rect rect8 = { PANEL_LEFT + 16, (UI_OFFSET_Y + 427), 250, 35 };
 	vecSelConnDlg.push_back(new UiArtTextButton("Change Gateway", NULL, rect8, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD | UIS_HIDDEN));
 
-	vecSelConnDlg.push_back(new UiList(vecConnItems, PANEL_LEFT + 305, 256, 285, 26, UIS_CENTER | UIS_VCENTER | UIS_GOLD));
+	vecSelConnDlg.push_back(new UiList(vecConnItems, PANEL_LEFT + 305, (UI_OFFSET_Y + 256), 285, 26, UIS_CENTER | UIS_VCENTER | UIS_GOLD));
 
-	SDL_Rect rect9 = { PANEL_LEFT + 299, 427, 140, 35 };
+	SDL_Rect rect9 = { PANEL_LEFT + 299, (UI_OFFSET_Y + 427), 140, 35 };
 	vecSelConnDlg.push_back(new UiArtTextButton("OK", &UiFocusNavigationSelect, rect9, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
 
-	SDL_Rect rect10 = { PANEL_LEFT + 454, 427, 140, 35 };
+	SDL_Rect rect10 = { PANEL_LEFT + 454, (UI_OFFSET_Y + 427), 140, 35 };
 	vecSelConnDlg.push_back(new UiArtTextButton("Cancel", &UiFocusNavigationEsc, rect10, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
 
-	UiInitList(0, vecConnItems.size() - 1, selconn_Focus, selconn_Select, selconn_Esc, vecSelConnDlg);
+	UiInitList(vecConnItems.size(), selconn_Focus, selconn_Select, selconn_Esc, vecSelConnDlg);
 }
 
 void selconn_Free()
@@ -101,19 +100,15 @@ void selconn_Esc()
 void selconn_Focus(int value)
 {
 	int players = MAX_PLRS;
-	switch (value) {
-#ifndef NONET
+	switch (vecConnItems[value]->m_value) {
 	case SELCONN_TCP:
 		strncpy(selconn_Description, "All computers must be connected to a TCP-compatible network.", sizeof(selconn_Description) - 1);
 		players = MAX_PLRS;
 		break;
-#ifdef BUGGY
 	case SELCONN_UDP:
 		strncpy(selconn_Description, "All computers must be connected to a UDP-compatible network.", sizeof(selconn_Description) - 1);
 		players = MAX_PLRS;
 		break;
-#endif
-#endif
 	case SELCONN_LOOPBACK:
 		strncpy(selconn_Description, "Play by yourself with no network exposure.", sizeof(selconn_Description) - 1);
 		players = 1;
@@ -126,7 +121,7 @@ void selconn_Focus(int value)
 
 void selconn_Select(int value)
 {
-	provider = value;
+	provider = vecConnItems[value]->m_value;
 
 	selconn_Free();
 	selconn_EndMenu = SNetInitializeProvider(provider, selconn_ClientInfo, selconn_UserInfo, selconn_UiInfo, selconn_FileInfo);

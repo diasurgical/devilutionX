@@ -62,17 +62,8 @@ jobs:
     steps:
       - checkout
       - run: apt-get update -y
-      - run: apt-get install -y cmake gcc-mingw-w64-i686 g++-mingw-w64-i686 wget git
-      - run: wget https://www.libsdl.org/release/SDL2-devel-2.0.9-mingw.tar.gz
-      - run: tar -xzf SDL2-devel-2.0.9-mingw.tar.gz
-      - run: wget https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-devel-2.0.15-mingw.tar.gz
-      - run: tar -xzf SDL2_ttf-devel-2.0.15-mingw.tar.gz
-      - run: wget https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-devel-2.0.4-mingw.tar.gz
-      - run: tar -xzf SDL2_mixer-devel-2.0.4-mingw.tar.gz
-      - run: wget https://github.com/jedisct1/libsodium/releases/download/1.0.18-RELEASE/libsodium-1.0.18-mingw.tar.gz
-      - run: tar -xzf libsodium-1.0.18-mingw.tar.gz --no-same-owner
-      - run: cp -r libsodium-win32/* /usr/i686-w64-mingw32
-      - run: cp -r SDL2*/i686-w64-mingw32 /usr
+      - run: apt-get install -y cmake gcc-mingw-w64-i686 g++-mingw-w64-i686 wget git sudo
+      - run: Packaging/windows/mingw-prep.sh
       - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake
       - run: cmake --build build -j $(nproc)
       - store_artifacts: {path: ./build/devilutionx.exe, destination: devilutionx_x86.exe}

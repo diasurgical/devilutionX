@@ -14,23 +14,41 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+typedef struct _FILEHEADER {
+	int signature;
+	int headersize;
+	int filesize;
+	Uint16 version;
+	Sint16 sectorsizeid;
+	int hashoffset;
+	int blockoffset;
+	int hashcount;
+	int blockcount;
+	Uint8 pad[72];
+} _FILEHEADER;
+
+typedef struct _HASHENTRY {
+	Uint32 hashcheck[2];
+	Uint32 lcid;
+	Uint32 block;
+} _HASHENTRY;
+
+typedef struct _BLOCKENTRY {
+	Uint32 offset;
+	Uint32 sizealloc;
+	Uint32 sizefile;
+	Uint32 flags;
+} _BLOCKENTRY;
+
+
 void mpqapi_remove_hash_entry(const char *pszName);
-void mpqapi_alloc_block(uint32_t block_offset, uint32_t block_size);
-_BLOCKENTRY *mpqapi_new_block(int *block_index);
-int FetchHandle(const char *pszName);
-int mpqapi_get_hash_index(short index, int hash_a, int hash_b, int locale);
 void mpqapi_remove_hash_entries(BOOL (*fnGetName)(DWORD, char *));
 BOOL mpqapi_write_file(const char *pszName, const BYTE *pbData, DWORD dwLen);
-_BLOCKENTRY *mpqapi_add_file(const char *pszName, _BLOCKENTRY *pBlk, int block_index);
-BOOL mpqapi_write_file_contents(const char *pszName, const BYTE *pbData, DWORD dwLen, _BLOCKENTRY *pBlk);
-int mpqapi_find_free_block(uint32_t size, uint32_t *block_size);
 void mpqapi_rename(char *pszOld, char *pszNew);
 BOOL mpqapi_has_file(const char *pszName);
 BOOL OpenMPQ(const char *pszArchive, DWORD dwChar);
 BOOL mpqapi_flush_and_close(const char *pszArchive, BOOL bFree, DWORD dwChar);
-/* rdata */
 
-/* data */
 #ifdef __cplusplus
 }
 #endif

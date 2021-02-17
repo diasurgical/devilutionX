@@ -8,12 +8,12 @@ void UiDestroy();
 void UiTitleDialog();
 void UiSetSpawned(BOOL bSpawned);
 void UiInitialize();
-BOOL UiValidPlayerName(char *name); /* check */
-BOOL UiSelHeroMultDialog(BOOL(*fninfo)(BOOL(*fninfofunc)(_uiheroinfo *)), BOOL(*fncreate)(_uiheroinfo *), BOOL(*fnremove)(_uiheroinfo *), BOOL(*fnstats)(unsigned int, _uidefaultstats *), int *dlgresult, BOOL *hero_is_created, char *name);
-BOOL UiSelHeroSingDialog(BOOL(*fninfo)(BOOL(*fninfofunc)(_uiheroinfo *)), BOOL(*fncreate)(_uiheroinfo *), BOOL(*fnremove)(_uiheroinfo *), BOOL(*fnstats)(unsigned int, _uidefaultstats *), int *dlgresult, char *name, int *difficulty);
+BOOL UiValidPlayerName(const char *name); /* check */
+BOOL UiSelHeroMultDialog(BOOL(*fninfo)(BOOL(*fninfofunc)(_uiheroinfo *)), BOOL(*fncreate)(_uiheroinfo *), BOOL(*fnremove)(_uiheroinfo *), void(*fnstats)(unsigned int, _uidefaultstats *), int *dlgresult, BOOL *hero_is_created, char *name);
+BOOL UiSelHeroSingDialog(BOOL(*fninfo)(BOOL(*fninfofunc)(_uiheroinfo *)), BOOL(*fncreate)(_uiheroinfo *), BOOL(*fnremove)(_uiheroinfo *), void(*fnstats)(unsigned int, _uidefaultstats *), int *dlgresult, char *name, int *difficulty);
 BOOL UiCreditsDialog(int a1);
-BOOL UiMainMenuDialog(char *name, int *pdwResult, void(*fnSound)(char *file), int attractTimeOut);
-BOOL UiProgressDialog(char *msg, int enable, int(*fnfunc)(), int rate);
+BOOL UiMainMenuDialog(const char *name, int *pdwResult, void(*fnSound)(const char *file), int attractTimeOut);
+BOOL UiProgressDialog(const char *msg, int enable, int(*fnfunc)(), int rate);
 const char **UiProfileGetString();
 void UiProfileCallback();
 void UiProfileDraw();

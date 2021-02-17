@@ -1,3 +1,8 @@
+/**
+ * @file plrmsg.cpp
+ *
+ * Implementation of functionality for printing the ingame chat messages.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
@@ -84,26 +89,23 @@ void InitPlrMsg()
 void DrawPlrMsg()
 {
 	int i;
-	DWORD x = 74;
-	DWORD y = 230;
+	DWORD x = 10 + SCREEN_X;
+	DWORD y = 70 + SCREEN_Y;
 	DWORD width = SCREEN_WIDTH - 20;
 	_plrmsg *pMsg;
 
 	if (chrflag || questlog) {
-		x = 394;
-		width -= 300;
+		x += SPANEL_WIDTH;
+		width -= SPANEL_WIDTH;
 	}
 	if (invflag || sbookflag)
-		width -= 300;
+		width -= SPANEL_WIDTH;
 
 	if (width < 300)
 		return;
 
-	if (width > 620)
-		width = 620;
-
 	pMsg = plr_msgs;
-	for (i = 0; i < 8; i++) {
+	for (i = 0; i < PMSG_COUNT; i++) {
 		if (pMsg->str[0])
 			PrintPlrMsg(x, y, width, pMsg->str, text_color_from_player_num[pMsg->player]);
 		pMsg++;

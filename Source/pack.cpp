@@ -1,13 +1,22 @@
+/**
+ * @file pack.cpp
+ *
+ * Implementation of functions for minifying player data structure.
+ */
 #include "all.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
-static void PackItem(PkItemStruct *id, ItemStruct *is)
+void PackItem(PkItemStruct *id, ItemStruct *is)
 {
 	if (is->_itype == ITYPE_NONE) {
 		id->idx = 0xFFFF;
 	} else {
-		id->idx = SwapLE16(is->IDidx);
+		int idx = is->IDidx;
+		if (!gbIsHellfire) {
+			idx = RemapItemIdxToDiablo(idx);
+		}
+		id->idx = SwapLE16(idx);
 		if (is->IDidx == IDI_EAR) {
 			id->iCreateInfo = is->_iName[8] | (is->_iName[7] << 8);
 			id->iSeed = SwapLE32(is->_iName[12] | ((is->_iName[11] | ((is->_iName[10] | (is->_iName[9] << 8)) << 8)) << 8));
@@ -16,7 +25,7 @@ static void PackItem(PkItemStruct *id, ItemStruct *is)
 			id->bMDur = is->_iName[15];
 			id->bCh = is->_iName[16];
 			id->bMCh = is->_iName[17];
-			id->wValue = SwapLE16(is->_ivalue | (is->_iName[18] << 8) | ((is->_iCurs - 19) << 6));
+			id->wValue = SwapLE16(is->_ivalue | (is->_iName[18] << 8) | ((is->_iCurs - ICURS_EAR_SORCEROR) << 6));
 			id->dwBuff = SwapLE32(is->_iName[22] | ((is->_iName[21] | ((is->_iName[20] | (is->_iName[19] << 8)) << 8)) << 8));
 		} else {
 			id->iSeed = SwapLE32(is->_iSeed);
@@ -65,8 +74,10 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield)
 	pPack->pMaxManaBase = SwapLE32(pPlayer->_pMaxManaBase);
 	pPack->pMemSpells = SDL_SwapLE64(pPlayer->_pMemSpells);
 
-	for (i = 0; i < MAX_SPELLS; i++)
+	for (i = 0; i < 37; i++) // Should be MAX_SPELLS but set to 37 to make save games compatible
 		pPack->pSplLvl[i] = pPlayer->_pSplLvl[i];
+	for (i = 37; i < 47; i++)
+		pPack->pSplLvl2[i - 37] = pPlayer->_pSplLvl[i];
 
 	pki = &pPack->InvBody[0];
 	pi = &pPlayer->InvBody[0];
@@ -99,6 +110,9 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield)
 		pi++;
 	}
 
+	pPack->wReflections = SwapLE16(pPlayer->wReflections);
+	pPack->pDifficulty = SwapLE32(pPlayer->pDifficulty);
+	pPack->pDamAcFlags = SwapLE32(pPlayer->pDamAcFlags);
 	pPack->pDiabloKillLevel = SwapLE32(pPlayer->pDiabloKillLevel);
 
 	if (gbMaxPlayers == 1 || manashield)
@@ -115,13 +129,16 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield)
  * @param is The source packed item
  * @param id The distination item
  */
-static void UnPackItem(PkItemStruct *is, ItemStruct *id)
+void UnPackItem(PkItemStruct *is, ItemStruct *id)
 {
 	WORD idx = SwapLE16(is->idx);
 
 	if (idx == 0xFFFF) {
 		id->_itype = ITYPE_NONE;
 	} else {
+		if (!gbIsHellfireSaveGame) {
+			idx = RemapItemIdxFromDiablo(idx);
+		}
 		if (idx == IDI_EAR) {
 			RecreateEar(
 			    MAXITEMS,
@@ -156,7 +173,7 @@ void VerifyGoldSeeds(PlayerStruct *pPlayer)
 			for (j = 0; j < pPlayer->_pNumInv; j++) {
 				if (i != j) {
 					if (pPlayer->InvList[j].IDidx == IDI_GOLD && pPlayer->InvList[i]._iSeed == pPlayer->InvList[j]._iSeed) {
-						pPlayer->InvList[i]._iSeed = GetRndSeed();
+						pPlayer->InvList[i]._iSeed = AdvanceRndSeed();
 						j = -1;
 					}
 				}
@@ -209,8 +226,10 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL killok)
 	pPlayer->_pManaBase = SwapLE32(pPack->pManaBase);
 	pPlayer->_pMemSpells = SDL_SwapLE64(pPack->pMemSpells);
 
-	for (i = 0; i < MAX_SPELLS; i++)
+	for (i = 0; i < 37; i++) // Should be MAX_SPELLS but set to 36 to make save games compatible
 		pPlayer->_pSplLvl[i] = pPack->pSplLvl[i];
+	for (i = 37; i < 47; i++)
+		pPlayer->_pSplLvl[i] = pPack->pSplLvl2[i - 37];
 
 	pki = &pPack->InvBody[0];
 	pi = &pPlayer->InvBody[0];
@@ -251,12 +270,16 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL killok)
 	}
 
 	CalcPlrInv(pnum, FALSE);
+	pPlayer->wReflections = SwapLE16(pPack->wReflections);
 	pPlayer->pTownWarps = 0;
 	pPlayer->pDungMsgs = 0;
+	pPlayer->pDungMsgs2 = 0;
 	pPlayer->pLvlLoad = 0;
 	pPlayer->pDiabloKillLevel = SwapLE32(pPack->pDiabloKillLevel);
 	pPlayer->pBattleNet = pPack->pBattleNet;
 	pPlayer->pManaShield = SwapLE32(pPack->pManaShield);
+	pPlayer->pDifficulty = SwapLE32(pPack->pDifficulty);
+	pPlayer->pDamAcFlags = SwapLE32(pPack->pDamAcFlags);
 }
 
 DEVILUTION_END_NAMESPACE

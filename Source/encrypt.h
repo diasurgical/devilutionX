@@ -12,15 +12,19 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
-extern DWORD hashtable[5][256];
+typedef struct TDataInfo {
+	Uint8 *srcData;
+	Uint32 srcOffset;
+	Uint8 *destData;
+	Uint32 destOffset;
+	Uint32 size;
+} TDataInfo;
 
 void Decrypt(DWORD *castBlock, DWORD size, DWORD key);
 void Encrypt(DWORD *castBlock, DWORD size, DWORD key);
 DWORD Hash(const char *s, int type);
 void InitHash();
 int PkwareCompress(BYTE *srcData, int size);
-unsigned int PkwareBufferRead(char *buf, unsigned int *size, void *param);
-void PkwareBufferWrite(char *buf, unsigned int *size, void *param);
 void PkwareDecompress(BYTE *pbInBuff, int recv_size, int dwMaxBytes);
 
 #ifdef __cplusplus

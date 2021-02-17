@@ -24,8 +24,9 @@ BOOL pFountainFlag;
 BOOL bFountainFlag;
 BOOL bCrossFlag;
 
+/** Specifies the set of special theme IDs from which one will be selected at random. */
 int ThemeGood[4] = { THEME_GOATSHRINE, THEME_SHRINE, THEME_SKELROOM, THEME_LIBRARY };
-
+/** Specifies a 5x5 area to fit theme objects. */
 int trm5x[] = {
 	-2, -1, 0, 1, 2,
 	-2, -1, 0, 1, 2,
@@ -33,7 +34,7 @@ int trm5x[] = {
 	-2, -1, 0, 1, 2,
 	-2, -1, 0, 1, 2
 };
-
+/** Specifies a 5x5 area to fit theme objects. */
 int trm5y[] = {
 	-2, -2, -2, -2, -2,
 	-1, -1, -1, -1, -1,
@@ -41,13 +42,13 @@ int trm5y[] = {
 	1, 1, 1, 1, 1,
 	2, 2, 2, 2, 2
 };
-
+/** Specifies a 3x3 area to fit theme objects. */
 int trm3x[] = {
 	-1, 0, 1,
 	-1, 0, 1,
 	-1, 0, 1
 };
-
+/** Specifies a 3x3 area to fit theme objects. */
 int trm3y[] = {
 	-1, -1, -1,
 	0, 0, 0,
@@ -192,7 +193,7 @@ BOOL CheckThemeObj3(int xp, int yp, int t, int f)
 			return FALSE;
 		if (dObject[xp + trm3x[i]][yp + trm3y[i]])
 			return FALSE;
-		if (f != -1 && !random_(0, f))
+		if (f != -1 && random_(0, f) == 0)
 			return FALSE;
 	}
 
@@ -493,12 +494,12 @@ void HoldThemeRooms()
 void PlaceThemeMonsts(int t, int f)
 {
 	int xp, yp;
-	int scattertypes[111];
+	int scattertypes[138];
 	int numscattypes, mtype, i;
 
 	numscattypes = 0;
 	for (i = 0; i < nummtypes; i++) {
-		if (Monsters[i].mPlaceFlags & 1) {
+		if (Monsters[i].mPlaceFlags & PLACE_SCATTER) {
 			scattertypes[numscattypes] = i;
 			numscattypes++;
 		}
@@ -579,21 +580,18 @@ void Theme_MonstPit(int t)
 	r = random_(0, 100) + 1;
 	ixp = 0;
 	iyp = 0;
-	if (r > 0) {
-		while (TRUE) {
-			if (dTransVal[ixp][iyp] == themes[t].ttval && !nSolidTable[dPiece[ixp][iyp]]) {
-				--r;
-			}
-			if (r <= 0) {
-				break;
-			}
-			ixp++;
-			if (ixp == MAXDUNX) {
-				ixp = 0;
-				iyp++;
-				if (iyp == MAXDUNY) {
-					iyp = 0;
-				}
+	while (r > 0) {
+		if (dTransVal[ixp][iyp] == themes[t].ttval && !nSolidTable[dPiece[ixp][iyp]]) {
+			--r;
+		}
+		if (r <= 0)
+			continue;
+		ixp++;
+		if (ixp == MAXDUNX) {
+			ixp = 0;
+			iyp++;
+			if (iyp == MAXDUNY) {
+				iyp = 0;
 			}
 		}
 	}
@@ -684,7 +682,7 @@ void Theme_Treasure(int t)
 	char treasrnd[4] = { 4, 9, 7, 10 };
 	char monstrnd[4] = { 6, 8, 3, 7 };
 
-	GetRndSeed();
+	AdvanceRndSeed();
 	for (yp = 0; yp < MAXDUNY; yp++) {
 		for (xp = 0; xp < MAXDUNX; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && !nSolidTable[dPiece[xp][yp]]) {

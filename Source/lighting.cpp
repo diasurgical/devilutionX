@@ -432,29 +432,31 @@ char *pCrawlTable[19] = {
 };
 /** vCrawlTable specifies the X- Y-coordinate offsets of lighting visions. */
 BYTE vCrawlTable[23][30] = {
-	{ 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 0, 9, 0, 10, 0, 11, 0, 12, 0, 13, 0, 14, 0, 15, 0 },
-	{ 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 1, 9, 1, 10, 1, 11, 1, 12, 1, 13, 1, 14, 1, 15, 1 },
-	{ 1, 0, 2, 0, 3, 0, 4, 1, 5, 1, 6, 1, 7, 1, 8, 1, 9, 1, 10, 1, 11, 1, 12, 2, 13, 2, 14, 2, 15, 2 },
-	{ 1, 0, 2, 0, 3, 1, 4, 1, 5, 1, 6, 1, 7, 1, 8, 2, 9, 2, 10, 2, 11, 2, 12, 2, 13, 3, 14, 3, 15, 3 },
-	{ 1, 0, 2, 1, 3, 1, 4, 1, 5, 1, 6, 2, 7, 2, 8, 2, 9, 3, 10, 3, 11, 3, 12, 3, 13, 4, 14, 4, 0, 0 },
-	{ 1, 0, 2, 1, 3, 1, 4, 1, 5, 2, 6, 2, 7, 3, 8, 3, 9, 3, 10, 4, 11, 4, 12, 4, 13, 5, 14, 5, 0, 0 },
-	{ 1, 0, 2, 1, 3, 1, 4, 2, 5, 2, 6, 3, 7, 3, 8, 3, 9, 4, 10, 4, 11, 5, 12, 5, 13, 6, 14, 6, 0, 0 },
-	{ 1, 1, 2, 1, 3, 2, 4, 2, 5, 3, 6, 3, 7, 4, 8, 4, 9, 5, 10, 5, 11, 6, 12, 6, 13, 7, 0, 0, 0, 0 },
-	{ 1, 1, 2, 1, 3, 2, 4, 2, 5, 3, 6, 4, 7, 4, 8, 5, 9, 6, 10, 6, 11, 7, 12, 7, 12, 8, 13, 8, 0, 0 },
-	{ 1, 1, 2, 2, 3, 2, 4, 3, 5, 4, 6, 5, 7, 5, 8, 6, 9, 7, 10, 7, 10, 8, 11, 8, 12, 9, 0, 0, 0, 0 },
-	{ 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 5, 7, 6, 8, 7, 9, 8, 10, 9, 11, 9, 11, 10, 0, 0, 0, 0, 0, 0 },
-	{ 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 9, 11, 10, 11, 0, 0, 0, 0, 0, 0 },
-	{ 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 5, 6, 5, 7, 6, 8, 7, 9, 7, 10, 8, 10, 8, 11, 9, 12, 0, 0, 0, 0 },
-	{ 1, 1, 1, 2, 2, 3, 2, 4, 3, 5, 4, 6, 4, 7, 5, 8, 6, 9, 6, 10, 7, 11, 7, 12, 8, 12, 8, 13, 0, 0 },
-	{ 1, 1, 1, 2, 2, 3, 2, 4, 3, 5, 3, 6, 4, 7, 4, 8, 5, 9, 5, 10, 6, 11, 6, 12, 7, 13, 0, 0, 0, 0 },
-	{ 0, 1, 1, 2, 1, 3, 2, 4, 2, 5, 3, 6, 3, 7, 3, 8, 4, 9, 4, 10, 5, 11, 5, 12, 6, 13, 6, 14, 0, 0 },
-	{ 0, 1, 1, 2, 1, 3, 1, 4, 2, 5, 2, 6, 3, 7, 3, 8, 3, 9, 4, 10, 4, 11, 4, 12, 5, 13, 5, 14, 0, 0 },
-	{ 0, 1, 1, 2, 1, 3, 1, 4, 1, 5, 2, 6, 2, 7, 2, 8, 3, 9, 3, 10, 3, 11, 3, 12, 4, 13, 4, 14, 0, 0 },
-	{ 0, 1, 0, 2, 1, 3, 1, 4, 1, 5, 1, 6, 1, 7, 2, 8, 2, 9, 2, 10, 2, 11, 2, 12, 3, 13, 3, 14, 3, 15 },
-	{ 0, 1, 0, 2, 0, 3, 1, 4, 1, 5, 1, 6, 1, 7, 1, 8, 1, 9, 1, 10, 1, 11, 2, 12, 2, 13, 2, 14, 2, 15 },
-	{ 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 1, 8, 1, 9, 1, 10, 1, 11, 1, 12, 1, 13, 1, 14, 1, 15 },
-	{ 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 0, 9, 0, 10, 0, 11, 0, 12, 0, 13, 0, 14, 0, 15 }
+	// clang-format off
+	{ 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 0, 9, 0, 10,  0, 11,  0, 12,  0, 13,  0, 14,  0, 15,  0 },
+	{ 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 1, 9, 1, 10,  1, 11,  1, 12,  1, 13,  1, 14,  1, 15,  1 },
+	{ 1, 0, 2, 0, 3, 0, 4, 1, 5, 1, 6, 1, 7, 1, 8, 1, 9, 1, 10,  1, 11,  1, 12,  2, 13,  2, 14,  2, 15,  2 },
+	{ 1, 0, 2, 0, 3, 1, 4, 1, 5, 1, 6, 1, 7, 1, 8, 2, 9, 2, 10,  2, 11,  2, 12,  2, 13,  3, 14,  3, 15,  3 },
+	{ 1, 0, 2, 1, 3, 1, 4, 1, 5, 1, 6, 2, 7, 2, 8, 2, 9, 3, 10,  3, 11,  3, 12,  3, 13,  4, 14,  4,  0,  0 },
+	{ 1, 0, 2, 1, 3, 1, 4, 1, 5, 2, 6, 2, 7, 3, 8, 3, 9, 3, 10,  4, 11,  4, 12,  4, 13,  5, 14,  5,  0,  0 },
+	{ 1, 0, 2, 1, 3, 1, 4, 2, 5, 2, 6, 3, 7, 3, 8, 3, 9, 4, 10,  4, 11,  5, 12,  5, 13,  6, 14,  6,  0,  0 },
+	{ 1, 1, 2, 1, 3, 2, 4, 2, 5, 3, 6, 3, 7, 4, 8, 4, 9, 5, 10,  5, 11,  6, 12,  6, 13,  7,  0,  0,  0,  0 },
+	{ 1, 1, 2, 1, 3, 2, 4, 2, 5, 3, 6, 4, 7, 4, 8, 5, 9, 6, 10,  6, 11,  7, 12,  7, 12,  8, 13,  8,  0,  0 },
+	{ 1, 1, 2, 2, 3, 2, 4, 3, 5, 4, 6, 5, 7, 5, 8, 6, 9, 7, 10,  7, 10,  8, 11,  8, 12,  9,  0,  0,  0,  0 },
+	{ 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 5, 7, 6, 8, 7, 9, 8, 10,  9, 11,  9, 11, 10,  0,  0,  0,  0,  0,  0 },
+	{ 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11,  0,  0,  0,  0,  0,  0,  0,  0 },
+	{ 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 5, 6, 6, 7, 7, 8, 8, 9,  9, 10,  9, 11, 10, 11,  0,  0,  0,  0,  0,  0 },
+	{ 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 5, 6, 5, 7, 6, 8, 7, 9,  7, 10,  8, 10,  8, 11,  9, 12,  0,  0,  0,  0 },
+	{ 1, 1, 1, 2, 2, 3, 2, 4, 3, 5, 4, 6, 4, 7, 5, 8, 6, 9,  6, 10,  7, 11,  7, 12,  8, 12,  8, 13,  0,  0 },
+	{ 1, 1, 1, 2, 2, 3, 2, 4, 3, 5, 3, 6, 4, 7, 4, 8, 5, 9,  5, 10,  6, 11,  6, 12,  7, 13,  0,  0,  0,  0 },
+	{ 0, 1, 1, 2, 1, 3, 2, 4, 2, 5, 3, 6, 3, 7, 3, 8, 4, 9,  4, 10,  5, 11,  5, 12,  6, 13,  6, 14,  0,  0 },
+	{ 0, 1, 1, 2, 1, 3, 1, 4, 2, 5, 2, 6, 3, 7, 3, 8, 3, 9,  4, 10,  4, 11,  4, 12,  5, 13,  5, 14,  0,  0 },
+	{ 0, 1, 1, 2, 1, 3, 1, 4, 1, 5, 2, 6, 2, 7, 2, 8, 3, 9,  3, 10,  3, 11,  3, 12,  4, 13,  4, 14,  0,  0 },
+	{ 0, 1, 0, 2, 1, 3, 1, 4, 1, 5, 1, 6, 1, 7, 2, 8, 2, 9,  2, 10,  2, 11,  2, 12,  3, 13,  3, 14,  3, 15 },
+	{ 0, 1, 0, 2, 0, 3, 1, 4, 1, 5, 1, 6, 1, 7, 1, 8, 1, 9,  1, 10,  1, 11,  2, 12,  2, 13,  2, 14,  2, 15 },
+	{ 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 1, 8, 1, 9,  1, 10,  1, 11,  1, 12,  1, 13,  1, 14,  1, 15 },
+	{ 0, 1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 0, 9,  0, 10,  0, 11,  0, 12,  0, 13,  0, 14,  0, 15 },
+	// clang-format on
 };
 /** unused */
 BYTE byte_49463C[18][18] = {
@@ -508,6 +510,22 @@ void RotateRadius(int *x, int *y, int *dx, int *dy, int *lx, int *ly, int *bx, i
 	}
 }
 
+void SetLight(int x, int y, char v)
+{
+	if (LoadMapObjsFlag)
+		dPreLight[x][y] = v;
+	else
+		dLight[x][y] = v;
+}
+
+char GetLight(int x, int y)
+{
+	if (LoadMapObjsFlag)
+		return dPreLight[x][y];
+	else
+		return dLight[x][y];
+}
+
 void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 {
 	int x, y, v, xoff, yoff, mult, radius_block;
@@ -559,7 +577,11 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 	}
 
 	if (nXPos >= 0 && nXPos < MAXDUNX && nYPos >= 0 && nYPos < MAXDUNY) {
-		dLight[nXPos][nYPos] = 0;
+		if (currlevel < 17) {
+			SetLight(nXPos, nYPos, 0);
+		} else if (GetLight(nXPos, nYPos) > lightradius[nRadius][0]) {
+			SetLight(nXPos, nYPos, lightradius[nRadius][0]);
+		}
 	}
 
 	mult = xoff + 8 * yoff;
@@ -570,11 +592,9 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 				temp_x = nXPos + x;
 				temp_y = nYPos + y;
 				v = lightradius[nRadius][radius_block];
-				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY) {
-					if (v < dLight[temp_x][temp_y]) {
-						dLight[temp_x][temp_y] = v;
-					}
-				}
+				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
+					if (v < GetLight(temp_x, temp_y))
+						SetLight(temp_x, temp_y, v);
 			}
 		}
 	}
@@ -587,11 +607,9 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 				temp_x = nXPos + y;
 				temp_y = nYPos - x;
 				v = lightradius[nRadius][radius_block];
-				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY) {
-					if (v < dLight[temp_x][temp_y]) {
-						dLight[temp_x][temp_y] = v;
-					}
-				}
+				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
+					if (v < GetLight(temp_x, temp_y))
+						SetLight(temp_x, temp_y, v);
 			}
 		}
 	}
@@ -604,11 +622,9 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 				temp_x = nXPos - x;
 				temp_y = nYPos - y;
 				v = lightradius[nRadius][radius_block];
-				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY) {
-					if (v < dLight[temp_x][temp_y]) {
-						dLight[temp_x][temp_y] = v;
-					}
-				}
+				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
+					if (v < GetLight(temp_x, temp_y))
+						SetLight(temp_x, temp_y, v);
 			}
 		}
 	}
@@ -621,11 +637,9 @@ void DoLighting(int nXPos, int nYPos, int nRadius, int Lnum)
 				temp_x = nXPos - y;
 				temp_y = nYPos + x;
 				v = lightradius[nRadius][radius_block];
-				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY) {
-					if (v < dLight[temp_x][temp_y]) {
-						dLight[temp_x][temp_y] = v;
-					}
-				}
+				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
+					if (v < GetLight(temp_x, temp_y))
+						SetLight(temp_x, temp_y, v);
 			}
 		}
 	}
@@ -759,7 +773,7 @@ void DoVision(int nXPos, int nYPos, int nRadius, BOOL doautomap, BOOL visible)
 					if ((x1adj + nCrawlX >= 0 && x1adj + nCrawlX < MAXDUNX && y1adj + nCrawlY >= 0 && y1adj + nCrawlY < MAXDUNY
 					        && !nBlockTable[dPiece[x1adj + nCrawlX][y1adj + nCrawlY]])
 					    || (x2adj + nCrawlX >= 0 && x2adj + nCrawlX < MAXDUNX && y2adj + nCrawlY >= 0 && y2adj + nCrawlY < MAXDUNY
-					           && !nBlockTable[dPiece[x2adj + nCrawlX][y2adj + nCrawlY]])) {
+					        && !nBlockTable[dPiece[x2adj + nCrawlX][y2adj + nCrawlY]])) {
 						if (doautomap) {
 							if (dFlags[nCrawlX][nCrawlY] >= 0) {
 								SetAutomapView(nCrawlX, nCrawlY);
@@ -909,6 +923,19 @@ void MakeLightTable()
 		}
 		tbl += 224;
 	}
+	if (currlevel >= 17) {
+		tbl = pLightTbl;
+		for (i = 0; i < lights; i++) {
+			*tbl++ = 0;
+			for (j = 1; j < 16; j++)
+				*tbl++ = j;
+			tbl += 240;
+		}
+		*tbl++ = 0;
+		for (j = 1; j < 16; j++)
+			*tbl++ = 1;
+		tbl += 240;
+	}
 
 	trn = LoadFileInMem("PlrGFX\\Infra.TRN", NULL);
 	for (i = 0; i < 256; i++) {
@@ -948,27 +975,39 @@ void MakeLightTable()
 		*tbl++ = 0;
 	}
 
-	for (k = 0; k < 16; k++) {
-		for (l = 0; l < 128; l++) {
-			if (l > (k + 1) * 8) {
-				lightradius[k][l] = 15;
+	for (j = 0; j < 16; j++) {
+		for (i = 0; i < 128; i++) {
+			if (i > (j + 1) * 8) {
+				lightradius[j][i] = 15;
 			} else {
-				lightradius[k][l] = l * 15.0 / ((k + 1) * 8.0) + 0.5;
+				fs = (double)15 * i / ((double)8 * (j + 1));
+				lightradius[j][i] = (BYTE)(fs + 0.5);
 			}
 		}
 	}
 
-	for (i = 0; i < 8; i++) {
-		for (j = 0; j < 8; j++) {
+	if (currlevel >= 17) {
+		for (j = 0; j < 16; j++) {
+			fa = (sqrt((double)(16 - j))) / 128;
+			fa *= fa;
+			for (i = 0; i < 128; i++) {
+				lightradius[15 - j][i] = 15 - (BYTE)(fa * (double)((128 - i) * (128 - i)));
+				if (lightradius[15 - j][i] > 15)
+					lightradius[15 - j][i] = 0;
+				lightradius[15 - j][i] = lightradius[15 - j][i] - (BYTE)((15 - j) / 2);
+				if (lightradius[15 - j][i] > 15)
+					lightradius[15 - j][i] = 0;
+			}
+		}
+	}
+	for (j = 0; j < 8; j++) {
+		for (i = 0; i < 8; i++) {
 			for (k = 0; k < 16; k++) {
 				for (l = 0; l < 16; l++) {
 					fs = (BYTE)sqrt((double)(8 * l - j) * (8 * l - j) + (8 * k - i) * (8 * k - i));
-					if (fs < 0.0) {
-						fa = -0.5;
-					} else {
-						fa = 0.5;
-					}
-					lightblock[i * 8 + j][k][l] = fs + fa;
+					fs += fs < 0 ? -0.5 : 0.5;
+
+					lightblock[j * 8 + i][k][l] = fs;
 				}
 			}
 		}
@@ -982,7 +1021,7 @@ void ToggleLighting()
 
 	lightflag ^= TRUE;
 
-	if (lightflag != 0) {
+	if (lightflag) {
 		memset(dLight, 0, sizeof(dLight));
 	} else {
 		memcpy(dLight, dPreLight, sizeof(dLight));
@@ -1021,11 +1060,11 @@ int AddLight(int x, int y, int r)
 {
 	int lid;
 
-	if (lightflag != 0) {
-		return -1;
+	if (lightflag) {
+		return NO_LIGHT;
 	}
 
-	lid = -1;
+	lid = NO_LIGHT;
 
 	if (numlights < MAXLIGHTS) {
 		lid = lightactive[numlights++];
@@ -1044,7 +1083,7 @@ int AddLight(int x, int y, int r)
 
 void AddUnLight(int i)
 {
-	if (lightflag || i == -1) {
+	if (lightflag || i == NO_LIGHT) {
 		return;
 	}
 
@@ -1054,7 +1093,7 @@ void AddUnLight(int i)
 
 void ChangeLightRadius(int i, int r)
 {
-	if (lightflag || i == -1) {
+	if (lightflag || i == NO_LIGHT) {
 		return;
 	}
 
@@ -1068,7 +1107,7 @@ void ChangeLightRadius(int i, int r)
 
 void ChangeLightXY(int i, int x, int y)
 {
-	if (lightflag || i == -1) {
+	if (lightflag || i == NO_LIGHT) {
 		return;
 	}
 
@@ -1083,7 +1122,7 @@ void ChangeLightXY(int i, int x, int y)
 
 void ChangeLightOff(int i, int x, int y)
 {
-	if (lightflag || i == -1) {
+	if (lightflag || i == NO_LIGHT) {
 		return;
 	}
 
@@ -1098,7 +1137,7 @@ void ChangeLightOff(int i, int x, int y)
 
 void ChangeLight(int i, int x, int y, int r)
 {
-	if (lightflag || i == -1) {
+	if (lightflag || i == NO_LIGHT) {
 		return;
 	}
 
@@ -1117,7 +1156,7 @@ void ProcessLightList()
 	int i, j;
 	BYTE temp;
 
-	if (lightflag != 0) {
+	if (lightflag) {
 		return;
 	}
 
@@ -1182,8 +1221,8 @@ int AddVision(int x, int y, int r, BOOL mine)
 		VisionList[numvision]._lradius = r;
 		vid = visionid++;
 		VisionList[numvision]._lid = vid;
-		VisionList[numvision]._ldel = 0;
-		VisionList[numvision]._lunflag = 0;
+		VisionList[numvision]._ldel = FALSE;
+		VisionList[numvision]._lunflag = FALSE;
 		VisionList[numvision]._lflags = mine != 0;
 		numvision++;
 		dovision = TRUE;
