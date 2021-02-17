@@ -2606,4 +2606,15 @@ int CalculateGold(int pnum)
 	return gold;
 }
 
+BOOL DropItemBeforeTrig()
+{
+	if (TryInvPut()) {
+		NetSendCmdPItem(TRUE, CMD_PUTITEM, cursmx, cursmy);
+		NewCursor(CURSOR_HAND);
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
 DEVILUTION_END_NAMESPACE
