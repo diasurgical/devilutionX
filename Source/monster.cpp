@@ -3648,7 +3648,10 @@ void MAI_Ranged(int i, int missile_type, BOOL special)
 				else
 					M_StartRAttack(i, missile_type, 4);
 			} else {
-				Monst->_mAnimData = Monst->MType->Anims[MA_STAND].Data[md];
+				fx = Monst->_lastx;
+				fy = Monst->_lasty;
+				md = GetDirection(Monst->_mx, Monst->_my, fx, fy);
+				M_CallWalk(i, md);
 			}
 		}
 	} else if (Monst->_msquelch != 0) {
@@ -4912,83 +4915,50 @@ BOOL CheckNoSolid(int x, int y)
 
 BOOL LineClearF(BOOL (*Clear)(int, int), int x1, int y1, int x2, int y2)
 {
-	int xorg, yorg;
-	int dx, dy;
-	int d;
-	int xincD, yincD, dincD, dincH;
-	int tmp;
-	BOOL done = FALSE;
+	int dx = x2 - x1;
+	int dy = y2 - y1;
+	int steps;
+	BOOL done = false;
 
-	xorg = x1;
-	yorg = y1;
-	dx = x2 - x1;
-	dy = y2 - y1;
-	if (abs(dx) > abs(dy)) {
-		if (dx < 0) {
-			tmp = x1;
-			x1 = x2;
-			x2 = tmp;
-			tmp = y1;
-			y1 = y2;
-			y2 = tmp;
-			dx = -dx;
-			dy = -dy;
-		}
-		if (dy > 0) {
-			d = 2 * dy - dx;
-			dincD = 2 * dy;
-			dincH = 2 * (dy - dx);
-			yincD = 1;
+	if (abs(dx) > abs(dy))
+		steps = abs(dx);
+	else
+		steps = abs(dy);
+
+	if (steps == 0)
+		return false;
+
+	float Xinc = (float)dx / steps;
+	float Yinc = (float)dy / steps;
+
+	float x = x1;
+	float y = y1;
+
+	int dunX = 0;
+	int dunY = 0;
+
+	for (int i = 0; i <= steps; i++) {
+		x += Xinc;
+		y += Yinc;
+		if (abs(Xinc) < 1) {
+			dunY = (int)y;
+			if (Xinc < 0)
+				dunX = ceil(x);
+			else
+				dunX = floor(x);
 		} else {
-			d = 2 * dy + dx;
-			dincD = 2 * dy;
-			dincH = 2 * (dx + dy);
-			yincD = -1;
+			dunX = (int)x;
+			if (Yinc < 0)
+				dunY = ceil(y);
+			else
+				dunY = floor(y);
 		}
-		while (!done && (x1 != x2 || y1 != y2)) {
-			if ((d <= 0) ^ (yincD < 0)) {
-				d += dincD;
-			} else {
-				d += dincH;
-				y1 += yincD;
-			}
-			x1++;
-			done = ((x1 != xorg || y1 != yorg) && !Clear(x1, y1));
-		}
-	} else {
-		if (dy < 0) {
-			tmp = y1;
-			y1 = y2;
-			y2 = tmp;
-			tmp = x1;
-			x1 = x2;
-			x2 = tmp;
-			dy = -dy;
-			dx = -dx;
-		}
-		if (dx > 0) {
-			d = 2 * dx - dy;
-			dincD = 2 * dx;
-			dincH = 2 * (dx - dy);
-			xincD = 1;
-		} else {
-			d = 2 * dx + dy;
-			dincD = 2 * dx;
-			dincH = 2 * (dy + dx);
-			xincD = -1;
-		}
-		while (!done && (y1 != y2 || x1 != x2)) {
-			if ((d <= 0) ^ (xincD < 0)) {
-				d += dincD;
-			} else {
-				d += dincH;
-				x1 += xincD;
-			}
-			y1++;
-			done = ((y1 != yorg || x1 != xorg) && !Clear(x1, y1));
-		}
+		if (!Clear(dunX, dunY))
+			return false;
+		if (dunX == x2 && dunY == y2)
+			return true;
 	}
-	return x1 == x2 && y1 == y2;
+	return false;
 }
 
 BOOL LineClear(int x1, int y1, int x2, int y2)
@@ -4998,83 +4968,50 @@ BOOL LineClear(int x1, int y1, int x2, int y2)
 
 BOOL LineClearF1(BOOL (*Clear)(int, int, int), int monst, int x1, int y1, int x2, int y2)
 {
-	int dx, dy;
-	int d;
-	int xorg, yorg;
-	int xincD, yincD, dincD, dincH;
-	int tmp;
-	BOOL done = FALSE;
+	int dx = x2 - x1;
+	int dy = y2 - y1;
+	int steps;
+	BOOL done = false;
 
-	xorg = x1;
-	yorg = y1;
-	dx = x2 - x1;
-	dy = y2 - y1;
-	if (abs(dx) > abs(dy)) {
-		if (dx < 0) {
-			tmp = x1;
-			x1 = x2;
-			x2 = tmp;
-			tmp = y1;
-			y1 = y2;
-			y2 = tmp;
-			dx = -dx;
-			dy = -dy;
-		}
-		if (dy > 0) {
-			d = 2 * dy - dx;
-			dincD = 2 * dy;
-			dincH = 2 * (dy - dx);
-			yincD = 1;
+	if (abs(dx) > abs(dy))
+		steps = abs(dx);
+	else
+		steps = abs(dy);
+
+	if (steps == 0)
+		return false;
+
+		float Xinc = (float)dx / steps;
+	float Yinc = (float)dy / steps;
+
+	float x = x1;
+	float y = y1;
+
+	int dunX = 0;
+	int dunY = 0;
+
+	for (int i = 0; i <= steps; i++) {
+		x += Xinc;
+		y += Yinc;
+		if (abs(Xinc) < 1) {
+			dunY = (int)y;
+			if (Xinc < 0)
+				dunX = ceil(x);
+			else
+				dunX = floor(x);
 		} else {
-			d = 2 * dy + dx;
-			dincD = 2 * dy;
-			dincH = 2 * (dx + dy);
-			yincD = -1;
+			dunX = (int)x;
+			if (Yinc < 0)
+				dunY = ceil(y);
+			else
+				dunY = floor(y);
 		}
-		while (!done && (x1 != x2 || y1 != y2)) {
-			if ((d <= 0) ^ (yincD < 0)) {
-				d += dincD;
-			} else {
-				d += dincH;
-				y1 += yincD;
-			}
-			x1++;
-			done = ((x1 != xorg || y1 != yorg) && !Clear(monst, x1, y1));
-		}
-	} else {
-		if (dy < 0) {
-			tmp = y1;
-			y1 = y2;
-			y2 = tmp;
-			tmp = x1;
-			x1 = x2;
-			x2 = tmp;
-			dy = -dy;
-			dx = -dx;
-		}
-		if (dx > 0) {
-			d = 2 * dx - dy;
-			dincD = 2 * dx;
-			dincH = 2 * (dx - dy);
-			xincD = 1;
-		} else {
-			d = 2 * dx + dy;
-			dincD = 2 * dx;
-			dincH = 2 * (dy + dx);
-			xincD = -1;
-		}
-		while (!done && (y1 != y2 || x1 != x2)) {
-			if ((d <= 0) ^ (xincD < 0)) {
-				d += dincD;
-			} else {
-				d += dincH;
-				x1 += xincD;
-			}
-			y1++;
-			done = ((y1 != yorg || x1 != xorg) && !Clear(monst, x1, y1));
-		}
+		if (!Clear(monst, dunX, dunY))
+			return false;
+		if (dunX == x2 && dunY == y2)
+			return true;
 	}
-	return x1 == x2 && y1 == y2;
+	return false;
 }
 
 void SyncMonsterAnim(int i)
