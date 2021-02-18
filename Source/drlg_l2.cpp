@@ -3466,7 +3466,7 @@ void LoadPreL2Dungeon(const char *sFileName, int vx, int vy)
 
 void CreateL2Dungeon(DWORD rseed, int entry)
 {
-	if (gbMaxPlayers == 1) {
+	if (!gbIsMultiplayer) {
 		if (currlevel == 7 && quests[Q_BLIND]._qactive == QUEST_NOTAVAIL) {
 			currlevel = 6;
 			CreateL2Dungeon(glSeedTbl[6], 4);

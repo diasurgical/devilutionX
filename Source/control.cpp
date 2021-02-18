@@ -783,7 +783,7 @@ void InitControlPan()
 {
 	int i;
 
-	if (gbMaxPlayers == 1) {
+	if (!gbIsMultiplayer) {
 		pBtmBuff = DiabloAllocPtr((PANEL_HEIGHT + 16) * PANEL_WIDTH);
 		memset(pBtmBuff, 0, (PANEL_HEIGHT + 16) * PANEL_WIDTH);
 	} else {
@@ -809,7 +809,7 @@ void InitControlPan()
 	CelBlitWidth(pManaBuff, 0, 87, 88, pStatusPanel, 2, 88);
 	MemFreeDbg(pStatusPanel);
 	talkflag = FALSE;
-	if (gbMaxPlayers != 1) {
+	if (gbIsMultiplayer) {
 		pTalkPanel = LoadFileInMem("CtrlPan\\TalkPanl.CEL", NULL);
 		CelBlitWidth(pBtmBuff, 0, (PANEL_HEIGHT + 16) * 2 - 1, PANEL_WIDTH, pTalkPanel, 1, PANEL_WIDTH);
 		MemFreeDbg(pTalkPanel);
@@ -828,7 +828,7 @@ void InitControlPan()
 	for (i = 0; i < sizeof(panbtn) / sizeof(panbtn[0]); i++)
 		panbtn[i] = FALSE;
 	panbtndown = FALSE;
-	if (gbMaxPlayers == 1)
+	if (!gbIsMultiplayer)
 		numpanbtns = 6;
 	else
 		numpanbtns = 8;
@@ -1013,7 +1013,7 @@ void control_check_btn_press()
 
 void DoAutoMap()
 {
-	if (currlevel != 0 || gbMaxPlayers != 1) {
+	if (currlevel != 0 || gbIsMultiplayer) {
 		if (!automapflag)
 			StartAutomap();
 		else
@@ -2227,7 +2227,7 @@ void control_type_message()
 {
 	int i;
 
-	if (gbMaxPlayers == 1) {
+	if (!gbIsMultiplayer) {
 		return;
 	}
 
@@ -2281,7 +2281,7 @@ BOOL control_talk_last_key(int vkey)
 {
 	int result;
 
-	if (gbMaxPlayers == 1)
+	if (!gbIsMultiplayer)
 		return FALSE;
 
 	if (!talkflag)
@@ -2316,7 +2316,7 @@ BOOL control_presskeys(int vkey)
 	int len;
 	BOOL ret;
 
-	if (gbMaxPlayers != 1) {
+	if (gbIsMultiplayer) {
 		if (!talkflag) {
 			ret = FALSE;
 		} else {

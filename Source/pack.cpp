@@ -115,7 +115,7 @@ void PackPlayer(PkPlayerStruct *pPack, int pnum, BOOL manashield)
 	pPack->pDamAcFlags = SwapLE32(pPlayer->pDamAcFlags);
 	pPack->pDiabloKillLevel = SwapLE32(pPlayer->pDiabloKillLevel);
 
-	if (gbMaxPlayers == 1 || manashield)
+	if (!gbIsMultiplayer || manashield)
 		pPack->pManaShield = SwapLE32(pPlayer->pManaShield);
 	else
 		pPack->pManaShield = FALSE;

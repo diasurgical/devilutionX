@@ -358,7 +358,7 @@ void FindActor()
 	else
 		CheckTownersNearby();
 
-	if (gbMaxPlayers != 1)
+	if (gbIsMultiplayer)
 		CheckPlayerNearby();
 }
 

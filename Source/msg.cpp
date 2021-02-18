@@ -172,7 +172,7 @@ BOOL msg_wait_resync()
 
 void run_delta_info()
 {
-	if (gbMaxPlayers == 1)
+	if (!gbIsMultiplayer)
 		return;
 
 	gbBufferMsgs = 2;
@@ -419,7 +419,7 @@ void delta_init()
 
 void delta_kill_monster(int mi, BYTE x, BYTE y, BYTE bLevel)
 {
-	if (gbMaxPlayers == 1)
+	if (!gbIsMultiplayer)
 		return;
 
 	sgbDeltaChanged = TRUE;
@@ -432,7 +432,7 @@ void delta_kill_monster(int mi, BYTE x, BYTE y, BYTE bLevel)
 
 void delta_monster_hp(int mi, int hp, BYTE bLevel)
 {
-	if (gbMaxPlayers == 1)
+	if (!gbIsMultiplayer)
 		return;
 
 	sgbDeltaChanged = TRUE;
@@ -443,7 +443,7 @@ void delta_monster_hp(int mi, int hp, BYTE bLevel)
 
 void delta_sync_monster(const TSyncMonster *pSync, BYTE bLevel)
 {
-	if (gbMaxPlayers == 1)
+	if (!gbIsMultiplayer)
 		return;
 
 	/// ASSERT: assert(pSync != NULL);
@@ -462,7 +462,7 @@ void delta_sync_monster(const TSyncMonster *pSync, BYTE bLevel)
 
 void delta_sync_golem(TCmdGolem *pG, int pnum, BYTE bLevel)
 {
-	if (gbMaxPlayers == 1)
+	if (!gbIsMultiplayer)
 		return;
 
 	sgbDeltaChanged = TRUE;
@@ -477,7 +477,7 @@ void delta_sync_golem(TCmdGolem *pG, int pnum, BYTE bLevel)
 
 void delta_leave_sync(BYTE bLevel)
 {
-	if (gbMaxPlayers == 1)
+	if (!gbIsMultiplayer)
 		return;
 	if (currlevel == 0)
 		glSeedTbl[0] = AdvanceRndSeed();
@@ -502,7 +502,7 @@ void delta_leave_sync(BYTE bLevel)
 
 static void delta_sync_object(int oi, BYTE bCmd, BYTE bLevel)
 {
-	if (gbMaxPlayers == 1)
+	if (!gbIsMultiplayer)
 		return;
 
 	sgbDeltaChanged = TRUE;
@@ -513,7 +513,7 @@ static BOOL delta_get_item(TCmdGItem *pI, BYTE bLevel)
 {
 	int i;
 
-	if (gbMaxPlayers == 1)
+	if (!gbIsMultiplayer)
 		return TRUE;
 
 	TCmdPItem *pD = sgLevels[bLevel].item;
@@ -575,7 +575,7 @@ static void delta_put_item(TCmdPItem *pI, int x, int y, BYTE bLevel)
 {
 	int i;
 
-	if (gbMaxPlayers == 1)
+	if (!gbIsMultiplayer)
 		return;
 
 	TCmdPItem *pD = sgLevels[bLevel].item;
@@ -618,7 +618,7 @@ void DeltaAddItem(int ii)
 {
 	int i;
 
-	if (gbMaxPlayers == 1)
+	if (!gbIsMultiplayer)
 		return;
 
 	TCmdPItem *pD = sgLevels[currlevel].item;
@@ -661,7 +661,7 @@ void DeltaAddItem(int ii)
 
 void DeltaSaveLevel()
 {
-	if (gbMaxPlayers == 1)
+	if (!gbIsMultiplayer)
 		return;
 
 	for (int i = 0; i < MAX_PLRS; i++) {
@@ -679,7 +679,7 @@ void DeltaLoadLevel()
 	int x, y, xx, yy;
 	BOOL done;
 
-	if (gbMaxPlayers == 1)
+	if (!gbIsMultiplayer)
 		return;
 
 	deltaload = TRUE;
@@ -1263,7 +1263,7 @@ void delta_close_portal(int pnum)
 
 static void check_update_plr(int pnum)
 {
-	if (gbMaxPlayers != 1 && pnum == myplr)
+	if (gbIsMultiplayer && pnum == myplr)
 		pfile_update(TRUE);
 }
 

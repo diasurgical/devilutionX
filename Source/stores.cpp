@@ -89,7 +89,7 @@ void SetupTownStores()
 	int i, l;
 
 	SetRndSeed(glSeedTbl[currlevel] * SDL_GetTicks());
-	if (gbMaxPlayers == 1) {
+	if (!gbIsMultiplayer) {
 		l = 0;
 		for (i = 0; i < NUMLEVELS; i++) {
 			if (plr[myplr]._pLvlVisited[i])
@@ -2394,7 +2394,7 @@ void HealerBuyItem()
 	int idx;
 
 	idx = stextvhold + ((stextlhold - stextup) >> 2);
-	if (gbMaxPlayers == 1) {
+	if (!gbIsMultiplayer) {
 		if (idx < 2)
 			plr[myplr].HoldItem._iSeed = AdvanceRndSeed();
 	} else {
@@ -2407,7 +2407,7 @@ void HealerBuyItem()
 		plr[myplr].HoldItem._iIdentified = FALSE;
 	StoreAutoPlace();
 
-	if (gbMaxPlayers == 1) {
+	if (!gbIsMultiplayer) {
 		if (idx < 2)
 			return;
 	} else {

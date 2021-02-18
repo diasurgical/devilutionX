@@ -184,7 +184,7 @@ void T_Pass3()
 	T_FillSector(P3Tiles, pSector, 0, 0, 23, 23);
 	mem_free_dbg(pSector);
 
-	if (gbIsSpawn || gbMaxPlayers == 1) {
+	if (gbIsSpawn || !gbIsMultiplayer) {
 		if (gbIsSpawn || !(plr[myplr].pTownWarps & 1) && (!gbIsHellfire || plr[myplr]._pLevel < 10)) {
 			T_FillTile(P3Tiles, 48, 20, 320);
 		}

@@ -1113,7 +1113,7 @@ static void DRLG_LoadL1SP()
 		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\rnd6.DUN", NULL);
 		L5setloadflag = TRUE;
 	}
-	if (QuestStatus(Q_SKELKING) && gbMaxPlayers == 1) {
+	if (QuestStatus(Q_SKELKING) && !gbIsMultiplayer) {
 		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\SKngDO.DUN", NULL);
 		L5setloadflag = TRUE;
 	}
