@@ -1317,14 +1317,24 @@ void SetPlrHandSeed(ItemStruct *h, int iseed)
 	h->_iSeed = iseed;
 }
 
+int GetGoldCursor(int value)
+{
+	if (value >= GOLD_MEDIUM_LIMIT)
+		return ICURS_GOLD_LARGE;
+
+	if (value <= GOLD_SMALL_LIMIT)
+		return ICURS_GOLD_SMALL;
+
+	return ICURS_GOLD_MEDIUM;
+}
+
+/**
+ * @brief Update the gold cursor on the given gold item
+ * @param h The item to update
+ */
 void SetPlrHandGoldCurs(ItemStruct *h)
 {
-	if (h->_ivalue >= GOLD_MEDIUM_LIMIT)
-		h->_iCurs = ICURS_GOLD_LARGE;
-	else if (h->_ivalue <= GOLD_SMALL_LIMIT)
-		h->_iCurs = ICURS_GOLD_SMALL;
-	else
-		h->_iCurs = ICURS_GOLD_MEDIUM;
+	h->_iCurs = GetGoldCursor(h->_ivalue);
 }
 
 void CreatePlrItems(int p)
@@ -2965,12 +2975,7 @@ void RecreateItem(int ii, int idx, WORD icreateinfo, int iseed, int ivalue)
 		item[ii]._iSeed = iseed;
 		item[ii]._iCreateInfo = icreateinfo;
 		item[ii]._ivalue = ivalue;
-		if (ivalue >= GOLD_MEDIUM_LIMIT)
-			item[ii]._iCurs = ICURS_GOLD_LARGE;
-		else if (ivalue <= GOLD_SMALL_LIMIT)
-			item[ii]._iCurs = ICURS_GOLD_SMALL;
-		else
-			item[ii]._iCurs = ICURS_GOLD_MEDIUM;
+		SetPlrHandGoldCurs(&item[ii]);
 	} else {
 		if (!icreateinfo) {
 			SetPlrHandItem(&item[ii], idx);
