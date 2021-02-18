@@ -68,7 +68,7 @@ void SyncPortals()
 			int lvl = currlevel;
 			if (setlevel)
 				lvl = setlvlnum;
-			if (portal[i].level == lvl)
+			if (portal[i].level == lvl && portal[i].setlvl == setlevel)
 				AddWarpMissile(i, portal[i].x, portal[i].y);
 		}
 	}
