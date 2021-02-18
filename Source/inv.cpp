@@ -676,7 +676,7 @@ BOOL SpecialAutoPlace(int pnum, int ii, int sx, int sy)
 			}
 		}
 	}
-	
+
 	return done;
 }
 
@@ -2125,7 +2125,7 @@ int InvPutItem(int pnum, int x, int y)
 		if (plr[pnum].HoldItem._iCurs == ICURS_RUNE_BOMB && xp >= 79 && xp <= 82 && yp >= 61 && yp <= 64) {
 			NetSendCmdLocParam2(0, CMD_OPENHIVE, plr[pnum]._px, plr[pnum]._py, xx, yy);
 			quests[Q_FARMER]._qactive = 3;
-			if (gbMaxPlayers != 1) {
+			if (gbIsMultiplayer) {
 				NetSendCmdQuest(TRUE, Q_FARMER);
 				return -1;
 			}
@@ -2134,7 +2134,7 @@ int InvPutItem(int pnum, int x, int y)
 		if (plr[pnum].HoldItem.IDidx == IDI_MAPOFDOOM && xp >= 35 && xp <= 38 && yp >= 20 && yp <= 24) {
 			NetSendCmd(FALSE, CMD_OPENCRYPT);
 			quests[Q_GRAVE]._qactive = 3;
-			if (gbMaxPlayers != 1) {
+			if (gbIsMultiplayer) {
 				NetSendCmdQuest(TRUE, Q_GRAVE);
 			}
 			return -1;

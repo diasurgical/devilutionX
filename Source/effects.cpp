@@ -1181,7 +1181,7 @@ static void PlaySFX_priv(TSFX *pSFX, BOOL loc, int x, int y)
 {
 	int lPan, lVolume;
 
-	if (plr[myplr].pLvlLoad && gbMaxPlayers != 1) {
+	if (plr[myplr].pLvlLoad && gbIsMultiplayer) {
 		return;
 	}
 	if (!gbSndInited || !gbSoundOn || gbBufferMsgs) {
@@ -1352,7 +1352,7 @@ static void priv_sound_init(BYTE bLoadMask)
 void sound_init()
 {
 	BYTE mask = sfx_MISC;
-	if (gbMaxPlayers > 1) {
+	if (gbIsMultiplayer) {
 		mask |= sfx_WARRIOR;
 		if (!gbIsSpawn)
 			mask |= (sfx_ROGUE | sfx_SORCEROR);

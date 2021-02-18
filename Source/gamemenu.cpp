@@ -85,7 +85,7 @@ static void gamemenu_update_multi(TMenuItem *pMenuItems)
 
 void gamemenu_on()
 {
-	if (gbMaxPlayers == 1) {
+	if (!gbIsMultiplayer) {
 		gmenu_set_items(sgSingleMenu, gamemenu_update_single);
 	} else {
 		gmenu_set_items(sgMultiMenu, gamemenu_update_multi);
@@ -232,7 +232,7 @@ static void gamemenu_get_gamma()
 
 static void gamemenu_get_speed()
 {
-	if (gbMaxPlayers != 1) {
+	if (gbIsMultiplayer) {
 		sgOptionsMenu[3].dwFlags &= ~(GMENU_ENABLED | GMENU_SLIDER);
 		if (ticks_per_sec >= 50)
 			sgOptionsMenu[3].pszStr = "Speed: Fastest";
@@ -349,7 +349,7 @@ void gamemenu_sound_volume(BOOL bActivate)
 
 void gamemenu_loadjog(BOOL bActivate)
 {
-	if (gbMaxPlayers == 1) {
+	if (!gbIsMultiplayer) {
 		jogging_opt = !jogging_opt;
 		SRegSaveValue("Hellfire", jogging_title, FALSE, jogging_opt);
 		PlaySFX(IS_TITLEMOV);

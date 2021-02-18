@@ -183,7 +183,7 @@ void nthread_start(BOOL set_turn_upper_bit)
 	}
 	if (gdwNormalMsgSize > largestMsgSize)
 		gdwNormalMsgSize = largestMsgSize;
-	if (gbMaxPlayers > 1) {
+	if (gbIsMultiplayer) {
 		sgbThreadIsRunning = FALSE;
 		sgMemCrit.Enter();
 		nthread_should_run = TRUE;
@@ -232,7 +232,7 @@ BOOL nthread_has_500ms_passed(BOOL unused)
 
 	currentTickCount = SDL_GetTicks();
 	ticksElapsed = currentTickCount - last_tick;
-	if (gbMaxPlayers == 1 && ticksElapsed > tick_delay * 10) {
+	if (!gbIsMultiplayer && ticksElapsed > tick_delay * 10) {
 		last_tick = currentTickCount;
 		ticksElapsed = 0;
 	}

@@ -592,7 +592,7 @@ static void DrawAutomapText()
 	char desc[256];
 	int nextline = 20;
 
-	if (gbMaxPlayers > 1) {
+	if (gbIsMultiplayer) {
 		strcat(strcpy(desc, "game: "), szPlayerName);
 		PrintGameStr(8, 20, desc, COL_GOLD);
 		nextline = 35;

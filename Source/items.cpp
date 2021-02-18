@@ -1635,11 +1635,11 @@ void GetBookSpell(int i, int lvl)
 			bs = s;
 		}
 		s++;
-		if (gbMaxPlayers == 1) {
+		if (!gbIsMultiplayer) {
 			if (s == SPL_RESURRECT)
 				s = SPL_TELEKINESIS;
 		}
-		if (gbMaxPlayers == 1) {
+		if (!gbIsMultiplayer) {
 			if (s == SPL_HEALOTHER)
 				s = SPL_FLARE;
 		}
@@ -1744,9 +1744,9 @@ void GetStaffSpell(int i, int lvl, BOOL onlygood)
 				bs = s;
 			}
 			s++;
-			if (gbMaxPlayers == 1 && s == SPL_RESURRECT)
+			if (!gbIsMultiplayer && s == SPL_RESURRECT)
 				s = SPL_TELEKINESIS;
-			if (gbMaxPlayers == 1 && s == SPL_HEALOTHER)
+			if (!gbIsMultiplayer && s == SPL_HEALOTHER)
 				s = SPL_FLARE;
 			if (s == maxSpells)
 				s = SPL_FIREBOLT;
@@ -1776,7 +1776,7 @@ void GetOilType(int i, int max_lvl)
 	int cnt, t, j, r;
 	char rnd[32];
 
-	if (gbMaxPlayers == 1) {
+	if (!gbIsMultiplayer) {
 		if (max_lvl == 0)
 			max_lvl = 1;
 		cnt = 0;
@@ -2501,9 +2501,9 @@ int RndItem(int m)
 			ril[ri] = i;
 			ri++;
 		}
-		if (AllItemsList[i].iSpell == SPL_RESURRECT && gbMaxPlayers == 1)
+		if (AllItemsList[i].iSpell == SPL_RESURRECT && !gbIsMultiplayer)
 			ri--;
-		if (AllItemsList[i].iSpell == SPL_HEALOTHER && gbMaxPlayers == 1)
+		if (AllItemsList[i].iSpell == SPL_HEALOTHER && !gbIsMultiplayer)
 			ri--;
 	}
 
@@ -2517,7 +2517,7 @@ int RndUItem(int m)
 	int ril[512];
 	BOOL okflag;
 
-	if (m != -1 && (monster[m].MData->mTreasure & 0x8000) != 0 && gbMaxPlayers == 1)
+	if (m != -1 && (monster[m].MData->mTreasure & 0x8000) != 0 && !gbIsMultiplayer)
 		return -1 - (monster[m].MData->mTreasure & 0xFFF);
 
 	int curlv = items_get_currlevel();
@@ -2544,9 +2544,9 @@ int RndUItem(int m)
 			okflag = FALSE;
 		if (AllItemsList[i].iMiscId == IMISC_BOOK)
 			okflag = TRUE;
-		if (AllItemsList[i].iSpell == SPL_RESURRECT && gbMaxPlayers == 1)
+		if (AllItemsList[i].iSpell == SPL_RESURRECT && !gbIsMultiplayer)
 			okflag = FALSE;
-		if (AllItemsList[i].iSpell == SPL_HEALOTHER && gbMaxPlayers == 1)
+		if (AllItemsList[i].iSpell == SPL_HEALOTHER && !gbIsMultiplayer)
 			okflag = FALSE;
 		if (okflag && ri < 512) {
 			ril[ri] = i;
@@ -2575,9 +2575,9 @@ int RndAllItems()
 			ril[ri] = i;
 			ri++;
 		}
-		if (AllItemsList[i].iSpell == SPL_RESURRECT && gbMaxPlayers == 1)
+		if (AllItemsList[i].iSpell == SPL_RESURRECT && !gbIsMultiplayer)
 			ri--;
-		if (AllItemsList[i].iSpell == SPL_HEALOTHER && gbMaxPlayers == 1)
+		if (AllItemsList[i].iSpell == SPL_HEALOTHER && !gbIsMultiplayer)
 			ri--;
 	}
 
@@ -2628,7 +2628,7 @@ int CheckUnique(int i, int lvl, int uper, BOOL recreate)
 			break;
 		if (UniqueItemList[j].UIItemId == AllItemsList[item[i].IDidx].iItemId
 		    && lvl >= UniqueItemList[j].UIMinLvl
-		    && (recreate || !UniqueItemFlag[j] || gbMaxPlayers != 1)) {
+		    && (recreate || !UniqueItemFlag[j] || gbIsMultiplayer)) {
 			uok[j] = TRUE;
 			numu++;
 		}
@@ -2774,7 +2774,7 @@ void SpawnItem(int m, int x, int y, BOOL sendmsg)
 	int ii, idx;
 	BOOL onlygood;
 
-	if (monster[m]._uniqtype || ((monster[m].MData->mTreasure & 0x8000) && gbMaxPlayers != 1)) {
+	if (monster[m]._uniqtype || ((monster[m].MData->mTreasure & 0x8000) && gbIsMultiplayer)) {
 		idx = RndUItem(m);
 		if (idx < 0) {
 			SpawnUnique(-(idx + 1), x, y);
@@ -3261,7 +3261,7 @@ void ItemDoppel()
 	int idoppelx;
 	ItemStruct *i;
 
-	if (gbMaxPlayers != 1) {
+	if (gbIsMultiplayer) {
 		for (idoppelx = 16; idoppelx < 96; idoppelx++) {
 			if (dItem[idoppelx][idoppely]) {
 				i = &item[dItem[idoppelx][idoppely] - 1];
@@ -4638,7 +4638,7 @@ BOOL PremiumItemOk(int i)
 	if (!gbIsHellfire && AllItemsList[i].itype == ITYPE_STAFF)
 		rv = FALSE;
 
-	if (gbMaxPlayers != 1) {
+	if (gbIsMultiplayer) {
 		if (AllItemsList[i].iMiscId == IMISC_OILOF)
 			rv = FALSE;
 		if (AllItemsList[i].itype == ITYPE_RING)
@@ -4836,9 +4836,9 @@ BOOL WitchItemOk(int i)
 		rv = FALSE;
 	if (AllItemsList[i].iMiscId > IMISC_OILFIRST && AllItemsList[i].iMiscId < IMISC_OILLAST)
 		rv = FALSE;
-	if (AllItemsList[i].iSpell == SPL_RESURRECT && gbMaxPlayers == 1)
+	if (AllItemsList[i].iSpell == SPL_RESURRECT && !gbIsMultiplayer)
 		rv = FALSE;
-	if (AllItemsList[i].iSpell == SPL_HEALOTHER && gbMaxPlayers == 1)
+	if (AllItemsList[i].iSpell == SPL_HEALOTHER && !gbIsMultiplayer)
 		rv = FALSE;
 
 	return rv;
@@ -5134,9 +5134,9 @@ BOOL HealerItemOk(int i)
 	if (AllItemsList[i].iMiscId == IMISC_SCROLL)
 		return AllItemsList[i].iSpell == SPL_HEAL;
 	if (AllItemsList[i].iMiscId == IMISC_SCROLLT)
-		return AllItemsList[i].iSpell == SPL_HEALOTHER && gbMaxPlayers != 1;
+		return AllItemsList[i].iSpell == SPL_HEALOTHER && gbIsMultiplayer;
 
-	if (gbMaxPlayers == 1) {
+	if (!gbIsMultiplayer) {
 		if (AllItemsList[i].iMiscId == IMISC_ELIXSTR)
 			return !gbIsHellfire || plr[myplr]._pBaseStr < MaxStats[plr[myplr]._pClass][ATTRIB_STR];
 		if (AllItemsList[i].iMiscId == IMISC_ELIXMAG)
@@ -5212,7 +5212,7 @@ void SpawnHealer(int lvl)
 	healitem[1]._iCreateInfo = lvl;
 	healitem[1]._iStatFlag = TRUE;
 
-	if (gbMaxPlayers != 1) {
+	if (gbIsMultiplayer) {
 		GetItemAttrs(0, IDI_RESURRECT, 1);
 		healitem[2] = item[0];
 		healitem[2]._iCreateInfo = lvl;

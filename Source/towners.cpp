@@ -519,8 +519,8 @@ void TownCtrlMsg(int i)
 	int p;
 	int dx, dy;
 
-    if (i == -1)
-        return;
+	if (i == -1)
+		return;
 
 	if (towner[i]._tbtcnt != 0) {
 		p = towner[i]._tVar1;
@@ -792,7 +792,7 @@ void TalkToTowner(int p, int t)
 				NetSendCmdQuest(TRUE, Q_SKELKING);
 			}
 		}
-		if (gbMaxPlayers == 1) {
+		if (!gbIsMultiplayer) {
 			if (plr[p]._pLvlVisited[3] && quests[Q_LTBANNER]._qactive != QUEST_NOTAVAIL) {
 				if ((quests[Q_LTBANNER]._qactive == QUEST_INIT || quests[Q_LTBANNER]._qactive == QUEST_ACTIVE) && quests[Q_LTBANNER]._qvar2 == 0 && !towner[t]._tMsgSaid) {
 					quests[Q_LTBANNER]._qvar2 = 1;
@@ -861,7 +861,7 @@ void TalkToTowner(int p, int t)
 			NetSendCmdQuest(TRUE, Q_BUTCHER);
 		}
 	} else if (t == GetActiveTowner(TOWN_SMITH)) {
-		if (gbMaxPlayers == 1) {
+		if (!gbIsMultiplayer) {
 			if (plr[p]._pLvlVisited[4] && quests[Q_ROCK]._qactive != QUEST_NOTAVAIL) {
 				if (quests[Q_ROCK]._qvar2 == 0) {
 					quests[Q_ROCK]._qvar2 = 1;
@@ -998,7 +998,7 @@ void TalkToTowner(int p, int t)
 			}
 		}
 	} else if (t == GetActiveTowner(TOWN_HEALER)) {
-		if (gbMaxPlayers == 1) {
+		if (!gbIsMultiplayer) {
 			if (plr[p]._pLvlVisited[1] || (gbIsHellfire && plr[p]._pLvlVisited[5])) {
 				if (!towner[t]._tMsgSaid) {
 					if (quests[Q_PWATER]._qactive == QUEST_INIT) {
@@ -1042,7 +1042,7 @@ void TalkToTowner(int p, int t)
 			}
 		}
 	} else if (t == GetActiveTowner(TOWN_STORY)) {
-		if (gbMaxPlayers == 1) {
+		if (!gbIsMultiplayer) {
 			if (quests[Q_BETRAYER]._qactive == QUEST_INIT && PlrHasItem(p, IDI_LAZSTAFF, &i) != NULL) {
 				RemoveInvItem(p, i);
 				quests[Q_BETRAYER]._qvar1 = 2;
@@ -1061,7 +1061,7 @@ void TalkToTowner(int p, int t)
 				quests[Q_DIABLO]._qlog = TRUE;
 			}
 		}
-		if (gbMaxPlayers != 1) {
+		if (gbIsMultiplayer) {
 			if (quests[Q_BETRAYER]._qactive == QUEST_ACTIVE && !quests[Q_BETRAYER]._qlog) {
 				towner[t]._tbtcnt = 150;
 				towner[t]._tVar1 = p;
@@ -1175,7 +1175,7 @@ void TalkToTowner(int p, int t)
 				else
 					PlaySFX(alltext[qt].sfxnr);
 			}
-			if (gbMaxPlayers != 1) {
+			if (gbIsMultiplayer) {
 				NetSendCmdQuest(TRUE, Q_FARMER);
 			}
 		}
@@ -1259,7 +1259,7 @@ void TalkToTowner(int p, int t)
 				else
 					PlaySFX(alltext[qt].sfxnr);
 			}
-			if (gbMaxPlayers != 1) {
+			if (gbIsMultiplayer) {
 				NetSendCmdQuest(TRUE, Q_JERSEY);
 			}
 		}
@@ -1312,7 +1312,7 @@ void TalkToTowner(int p, int t)
 					PlaySFX(alltext[qt].sfxnr);
 				}
 			}
-			if (gbMaxPlayers != 1) {
+			if (gbIsMultiplayer) {
 				NetSendCmdQuest(TRUE, Q_GIRL);
 			}
 		}

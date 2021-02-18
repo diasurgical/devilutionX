@@ -98,7 +98,7 @@ void InitQuests()
 	int i, initiatedQuests;
 	DWORD z;
 
-	if (gbMaxPlayers == 1) {
+	if (!gbIsMultiplayer) {
 		for (i = 0; i < MAXQUESTS; i++) {
 			quests[i]._qactive = QUEST_NOTAVAIL;
 		}
@@ -117,10 +117,10 @@ void InitQuests()
 	for (z = 0; z < MAXQUESTS; z++) {
 		if (!gbIsHellfire && z > 15)
 			break;
-		if (gbMaxPlayers > 1 && !(questlist[z]._qflags & QUEST_ANY))
+		if (gbIsMultiplayer && !(questlist[z]._qflags & QUEST_ANY))
 			continue;
 		quests[z]._qtype = questlist[z]._qdtype;
-		if (gbMaxPlayers > 1) {
+		if (gbIsMultiplayer) {
 			quests[z]._qlevel = questlist[z]._qdmultlvl;
 			if (!delta_quest_inited(initiatedQuests)) {
 				quests[z]._qactive = QUEST_INIT;
@@ -144,7 +144,7 @@ void InitQuests()
 		quests[z]._qmsg = questlist[z]._qdmsg;
 	}
 
-	if (gbMaxPlayers == 1 && !allquests) {
+	if (!gbIsMultiplayer && !allquests) {
 		SetRndSeed(glSeedTbl[15]);
 		if (random_(0, 2) != 0)
 			quests[Q_PWATER]._qactive = QUEST_NOTAVAIL;
@@ -172,7 +172,7 @@ void InitQuests()
 	if (quests[Q_ROCK]._qactive == QUEST_NOTAVAIL)
 		quests[Q_ROCK]._qvar2 = 2;
 	quests[Q_LTBANNER]._qvar1 = 1;
-	if (gbMaxPlayers != 1)
+	if (gbIsMultiplayer)
 		quests[Q_BETRAYER]._qvar1 = 2;
 }
 
@@ -183,13 +183,13 @@ void CheckQuests()
 
 	int i, rportx, rporty;
 
-	if (QuestStatus(Q_BETRAYER) && gbMaxPlayers != 1 && quests[Q_BETRAYER]._qvar1 == 2) {
+	if (QuestStatus(Q_BETRAYER) && gbIsMultiplayer && quests[Q_BETRAYER]._qvar1 == 2) {
 		AddObject(OBJ_ALTBOY, 2 * setpc_x + 20, 2 * setpc_y + 22);
 		quests[Q_BETRAYER]._qvar1 = 3;
 		NetSendCmdQuest(TRUE, Q_BETRAYER);
 	}
 
-	if (gbMaxPlayers != 1) {
+	if (gbIsMultiplayer) {
 		return;
 	}
 
@@ -257,7 +257,7 @@ BOOL ForceQuests()
 	if (gbIsSpawn)
 		return FALSE;
 
-	if (gbMaxPlayers != 1) {
+	if (gbIsMultiplayer) {
 		return FALSE;
 	}
 
@@ -290,7 +290,7 @@ BOOL QuestStatus(int i)
 		return FALSE;
 	if (quests[i]._qactive == QUEST_NOTAVAIL)
 		return FALSE;
-	if (gbMaxPlayers != 1 && !(questlist[i]._qflags & QUEST_ANY))
+	if (gbIsMultiplayer && !(questlist[i]._qflags & QUEST_ANY))
 		return FALSE;
 	return TRUE;
 }
@@ -371,7 +371,7 @@ void CheckQuestKill(int m, BOOL sendmsg)
 		} else if (plr[myplr]._pClass == PC_BARBARIAN) {
 			sfxdnum = PS_WARR62;
 		}
-	} else if (monster[m].mName == UniqMonst[UMT_LAZURUS].mName && gbMaxPlayers != 1) { //"Arch-Bishop Lazarus"
+	} else if (monster[m].mName == UniqMonst[UMT_LAZURUS].mName && gbIsMultiplayer) { //"Arch-Bishop Lazarus"
 		quests[Q_BETRAYER]._qactive = QUEST_DONE;
 		quests[Q_BETRAYER]._qvar1 = 7;
 		sfxdelay = 30;
@@ -404,7 +404,7 @@ void CheckQuestKill(int m, BOOL sendmsg)
 			NetSendCmdQuest(TRUE, Q_BETRAYER);
 			NetSendCmdQuest(TRUE, Q_DIABLO);
 		}
-	} else if (monster[m].mName == UniqMonst[UMT_LAZURUS].mName && gbMaxPlayers == 1) { //"Arch-Bishop Lazarus"
+	} else if (monster[m].mName == UniqMonst[UMT_LAZURUS].mName && !gbIsMultiplayer) { //"Arch-Bishop Lazarus"
 		quests[Q_BETRAYER]._qactive = QUEST_DONE;
 		sfxdelay = 30;
 		InitVPTriggers();

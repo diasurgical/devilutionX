@@ -1108,15 +1108,15 @@ void CheckMissileCol(int i, int mindam, int maxdam, BOOL shift, int mx, int my, 
 		}
 		if (dPlayer[mx][my] > 0) {
 			if (PlayerMHit(
-				dPlayer[mx][my] - 1,
-				-1,
-				missile[i]._midist,
-				mindam,
-				maxdam,
-				missile[i]._mitype,
-				shift,
-				missile[i]._miAnimType == MFILE_FIREWAL || missile[i]._miAnimType == MFILE_LGHNING,
-				&blocked)) {
+			        dPlayer[mx][my] - 1,
+			        -1,
+			        missile[i]._midist,
+			        mindam,
+			        maxdam,
+			        missile[i]._mitype,
+			        shift,
+			        missile[i]._miAnimType == MFILE_FIREWAL || missile[i]._miAnimType == MFILE_LGHNING,
+			        &blocked)) {
 				if (gbIsHellfire && blocked) {
 					dir = missile[i]._mimfnum + (random_(10, 2) ? 1 : -1);
 					mAnimFAmt = misfiledata[missile[i]._miAnimType].mAnimFAmt;
@@ -3319,7 +3319,8 @@ void AddDiabApoca(int mi, int sx, int sy, int dx, int dy, int midir, char mienem
 {
 	int pnum;
 
-	for (pnum = 0; pnum < gbMaxPlayers; pnum++) {
+	int players = gbIsMultiplayer ? MAX_PLRS : 1;
+	for (pnum = 0; pnum < players; pnum++) {
 		if (plr[pnum].plractive) {
 			if (LineClear(sx, sy, plr[pnum]._pfutx, plr[pnum]._pfuty)) {
 				AddMissile(0, 0, plr[pnum]._pfutx, plr[pnum]._pfuty, 0, MIS_BOOM2, mienemy, id, dam, 0);

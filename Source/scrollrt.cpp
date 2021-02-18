@@ -1454,7 +1454,7 @@ static void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BO
 		if (draw_btn) {
 			DoBlitScreen(PANEL_LEFT + 8, PANEL_TOP + 5, 72, 119);
 			DoBlitScreen(PANEL_LEFT + 556, PANEL_TOP + 5, 72, 48);
-			if (gbMaxPlayers > 1) {
+			if (gbIsMultiplayer) {
 				DoBlitScreen(PANEL_LEFT + 84, PANEL_TOP + 91, 36, 32);
 				DoBlitScreen(PANEL_LEFT + 524, PANEL_TOP + 91, 36, 32);
 			}

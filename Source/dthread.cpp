@@ -72,7 +72,7 @@ void dthread_send_delta(int pnum, char cmd, void *pbSrc, int dwLen)
 	TMegaPkt *pkt;
 	TMegaPkt *p;
 
-	if (gbMaxPlayers == 1) {
+	if (!gbIsMultiplayer) {
 		return;
 	}
 
@@ -97,7 +97,7 @@ void dthread_start()
 {
 	const char *error_buf;
 
-	if (gbMaxPlayers == 1) {
+	if (!gbIsMultiplayer) {
 		return;
 	}
 

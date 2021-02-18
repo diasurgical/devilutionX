@@ -978,7 +978,7 @@ void InitObjects()
 	} else {
 		InitObjFlag = TRUE;
 		AdvanceRndSeed();
-		if (currlevel == 9 && gbMaxPlayers == 1)
+		if (currlevel == 9 && !gbIsMultiplayer)
 			AddSlainHero();
 		if (currlevel == quests[Q_MUSHROOM]._qlevel && quests[Q_MUSHROOM]._qactive == QUEST_INIT)
 			AddMushPatch();
@@ -1083,7 +1083,7 @@ void InitObjects()
 				LoadMapObjs(mem, 2 * setpc_x, 2 * setpc_y);
 				mem_free_dbg(mem);
 			}
-			if (QuestStatus(Q_BETRAYER) && gbMaxPlayers == 1)
+			if (QuestStatus(Q_BETRAYER) && !gbIsMultiplayer)
 				AddLazStand();
 			InitRndBarrels();
 			AddL4Goodies();
@@ -1380,10 +1380,10 @@ void AddShrine(int i)
 		} else {
 			slist[j] = 1;
 		}
-		if (gbMaxPlayers != 1 && shrineavail[j] == 1) {
+		if (gbIsMultiplayer && shrineavail[j] == 1) {
 			slist[j] = 0;
 		}
-		if (gbMaxPlayers == 1 && shrineavail[j] == 2) {
+		if (!gbIsMultiplayer && shrineavail[j] == 2) {
 			slist[j] = 0;
 		}
 	}
@@ -4210,13 +4210,13 @@ int FindValidShrine(int i)
 			done = TRUE;
 		}
 		if (done) {
-			if (gbMaxPlayers != 1) {
+			if (gbIsMultiplayer) {
 				if (shrineavail[rv] == 1) {
 					done = FALSE;
 					continue;
 				}
 			}
-			if (gbMaxPlayers == 1) {
+			if (!gbIsMultiplayer) {
 				if (shrineavail[rv] == 2) {
 					done = FALSE;
 					continue;
