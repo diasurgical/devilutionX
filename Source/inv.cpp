@@ -1947,8 +1947,7 @@ void SyncGetItem(int x, int y, int idx, WORD ci, int iseed)
 				i++;
 			}
 		}
-		/// ASSERT: assert(FindGetItem(idx, ci, iseed) == -1);
-		FindGetItem(idx, ci, iseed); /* todo: replace with above */
+		assert(FindGetItem(idx, ci, iseed) == -1);
 	}
 }
 
@@ -2035,11 +2034,6 @@ int InvPutItem(int pnum, int x, int y)
 
 	if (numitems >= MAXITEMS)
 		return -1;
-
-	if (FindGetItem(plr[pnum].HoldItem.IDidx, plr[pnum].HoldItem._iCreateInfo, plr[pnum].HoldItem._iSeed) != -1) {
-		DrawInvMsg("A duplicate item has been detected.  Destroying duplicate...");
-		SyncGetItem(x, y, plr[pnum].HoldItem.IDidx, plr[pnum].HoldItem._iCreateInfo, plr[pnum].HoldItem._iSeed);
-	}
 
 	d = GetDirection(plr[pnum]._px, plr[pnum]._py, x, y);
 	xx = x - plr[pnum]._px;
@@ -2133,11 +2127,6 @@ int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, in
 
 	if (numitems >= MAXITEMS)
 		return -1;
-
-	if (FindGetItem(idx, icreateinfo, iseed) != -1) {
-		DrawInvMsg("A duplicate item has been detected from another player.");
-		SyncGetItem(x, y, idx, icreateinfo, iseed);
-	}
 
 	d = GetDirection(plr[pnum]._px, plr[pnum]._py, x, y);
 	xx = x - plr[pnum]._px;
