@@ -48,6 +48,7 @@ void CalcPlrInv(int p, BOOL Loadgfx);
 void SetPlrHandItem(ItemStruct *h, int idata);
 void GetPlrHandSeed(ItemStruct *h);
 void GetGoldSeed(int pnum, ItemStruct *h);
+int GetGoldCursor(int value);
 void SetPlrHandGoldCurs(ItemStruct *h);
 void CreatePlrItems(int p);
 BOOL ItemSpaceOk(int i, int j);
