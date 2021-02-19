@@ -13,7 +13,6 @@ extern "C" {
 #endif
 
 extern const TextDataStruct alltext[];
-extern const DWORD gdwAllTextEntries;
 
 #ifdef __cplusplus
 }

@@ -36,7 +36,6 @@ const BYTE L3UP[] = {
 	 0,  0, 0,
 	// clang-format on
 };
-#ifdef HELLFIRE
 const BYTE L6UP[] = {
 	// clang-format off
 	3, 3, // width, height
@@ -50,7 +49,6 @@ const BYTE L6UP[] = {
 	 0,  0, 0,
 	// clang-format on
 };
-#endif
 /** Miniset: Stairs down. */
 const BYTE L3DOWN[] = {
 	// clang-format off
@@ -65,7 +63,6 @@ const BYTE L3DOWN[] = {
 	0,  0, 0,
 	// clang-format on
 };
-#ifdef HELLFIRE
 const BYTE L6DOWN[] = {
 	// clang-format off
 	3, 3, // width, height
@@ -79,7 +76,6 @@ const BYTE L6DOWN[] = {
 	0,  0, 0,
 	// clang-format on
 };
-#endif
 /** Miniset: Stairs up to town. */
 const BYTE L3HOLDWARP[] = {
 	// clang-format off
@@ -94,7 +90,6 @@ const BYTE L3HOLDWARP[] = {
 	  0,   0, 0,
 	// clang-format on
 };
-#ifdef HELLFIRE
 const BYTE L6HOLDWARP[] = {
 	// clang-format off
 	3, 3, // width, height
@@ -108,7 +103,6 @@ const BYTE L6HOLDWARP[] = {
 	 0,  0, 0,
 	// clang-format on
 };
-#endif
 /** Miniset: Stalagmite white stalactite 1. */
 const BYTE L3TITE1[] = {
 	// clang-format off
@@ -506,7 +500,7 @@ const BYTE L3XTRA5[] = {
 
 /** Miniset: Anvil of Fury island. */
 const BYTE L3ANVIL[] = {
-	// clang-format on
+	// clang-format off
 	11, 11, // width, height
 
 	7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, // search
@@ -534,7 +528,6 @@ const BYTE L3ANVIL[] = {
 	0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0,
 	// clang-format on
 };
-#ifdef HELLFIRE
 const BYTE byte_48A76C[] = { 1, 1, 8, 25 };
 const BYTE byte_48A770[] = { 1, 1, 8, 26 };
 const BYTE byte_48A774[] = { 1, 1, 8, 27 };
@@ -544,7 +537,7 @@ const BYTE byte_48A780[] = { 1, 1, 7, 30 };
 const BYTE byte_48A784[] = { 1, 1, 7, 31 };
 const BYTE byte_48A788[] = { 1, 1, 7, 32 };
 const BYTE byte_48A790[] = {
-	// clang-format on
+	// clang-format off
 	3, 3, // width, height
 
 	7, 7, 7, // search
@@ -557,7 +550,7 @@ const BYTE byte_48A790[] = {
 	// clang-format on
 };
 const BYTE byte_48A7A8[] = {
-	// clang-format on
+	// clang-format off
 	3, 3, // width, height
 
 	7, 7, 7, // search
@@ -588,7 +581,7 @@ const BYTE byte_48A7F8[] = { 1, 1, 10, 48 };
 const BYTE byte_48A7FC[] = { 1, 1, 11, 49 };
 const BYTE byte_48A800[] = { 1, 1, 11, 50 };
 const BYTE byte_48A808[] = {
-	// clang-format on
+	// clang-format off
 	3, 3, // width, height
 
 	7, 7, 7, // search
@@ -601,7 +594,7 @@ const BYTE byte_48A808[] = {
 	// clang-format on
 };
 const BYTE byte_48A820[] = {
-	// clang-format on
+	// clang-format off
 	3, 3, // width, height
 
 	7, 7, 7, // search
@@ -614,7 +607,7 @@ const BYTE byte_48A820[] = {
 	// clang-format on
 };
 const BYTE byte_48A838[] = {
-	// clang-format on
+	// clang-format off
 	3, 3, // width, height
 
 	7, 7, 7, // search
@@ -627,7 +620,7 @@ const BYTE byte_48A838[] = {
 	// clang-format on
 };
 const BYTE byte_48A850[] = {
-	// clang-format on
+	// clang-format off
 	3, 3, // width, height
 
 	7, 7, 7, // search
@@ -640,7 +633,7 @@ const BYTE byte_48A850[] = {
 	// clang-format on
 };
 const BYTE byte_48A868[] = {
-	// clang-format on
+	// clang-format off
 	3, 3, // width, height
 
 	7, 7, 7, // search
@@ -653,7 +646,7 @@ const BYTE byte_48A868[] = {
 	// clang-format on
 };
 const BYTE byte_48A880[] = {
-	// clang-format on
+	// clang-format off
 	3, 3, // width, height
 
 	7, 7, 7, // search
@@ -666,7 +659,7 @@ const BYTE byte_48A880[] = {
 	// clang-format on
 };
 const BYTE byte_48A898[] = {
-	// clang-format on
+	// clang-format off
 	3, 3, // width, height
 
 	7, 7, 7, // search
@@ -679,7 +672,7 @@ const BYTE byte_48A898[] = {
 	// clang-format on
 };
 const BYTE byte_48A8B0[] = {
-	// clang-format on
+	// clang-format off
 	3, 3, // width, height
 
 	7, 7, 7, // search
@@ -692,7 +685,7 @@ const BYTE byte_48A8B0[] = {
 	// clang-format on
 };
 const BYTE byte_48A8C8[] = {
-	// clang-format on
+	// clang-format off
 	3, 3, // width, height
 
 	7, 7, 7, // search
@@ -705,7 +698,7 @@ const BYTE byte_48A8C8[] = {
 	// clang-format on
 };
 const BYTE byte_48A8E0[] = {
-	// clang-format on
+	// clang-format off
 	3, 3, // width, height
 
 	7, 7, 7, // search
@@ -718,7 +711,7 @@ const BYTE byte_48A8E0[] = {
 	// clang-format on
 };
 const BYTE L6ISLE1[] = {
-	// clang-format on
+	// clang-format off
 	2, 3, // width, height
 
 	 5, 14, // search
@@ -731,7 +724,7 @@ const BYTE L6ISLE1[] = {
 	// clang-format on
 };
 const BYTE L6ISLE2[] = {
-	// clang-format on
+	// clang-format off
 	3, 2, // width, height
 
 	 5,  2, 14, // search
@@ -742,7 +735,7 @@ const BYTE L6ISLE2[] = {
 	// clang-format on
 };
 const BYTE L6ISLE3[] = {
-	// clang-format on
+	// clang-format off
 	2, 3, // width, height
 
 	 5, 14, // search
@@ -755,7 +748,7 @@ const BYTE L6ISLE3[] = {
 	// clang-format on
 };
 const BYTE L6ISLE4[] = {
-	// clang-format on
+	// clang-format off
 	3, 2, // width, height
 
 	 5,  2, 14, // search
@@ -766,7 +759,7 @@ const BYTE L6ISLE4[] = {
 	// clang-format on
 };
 const BYTE L6ISLE5[] = {
-	// clang-format on
+	// clang-format off
 	2, 2, // width, height
 
 	 5, 14, // search
@@ -777,7 +770,7 @@ const BYTE L6ISLE5[] = {
 	// clang-format on
 };
 const BYTE byte_48A948[] = {
-	// clang-format on
+	// clang-format off
 	4, 4, // width, height
 
 	7, 7, 7, 7, // search
@@ -792,7 +785,7 @@ const BYTE byte_48A948[] = {
 	// clang-format on
 };
 const BYTE byte_48A970[] = {
-	// clang-format on
+	// clang-format off
 	4, 4, // width, height
 
 	7, 7, 7, 7, // search
@@ -807,7 +800,7 @@ const BYTE byte_48A970[] = {
 	// clang-format on
 };
 const BYTE byte_48A998[] = {
-	// clang-format on
+	// clang-format off
 	4, 5, // width, height
 
 	7, 7, 7, 7, // search
@@ -824,7 +817,7 @@ const BYTE byte_48A998[] = {
 	// clang-format on
 };
 const BYTE byte_48A9C8[] = {
-	// clang-format on
+	// clang-format off
 	4, 5, // width, height
 
 	7, 7, 7, 7, // search
@@ -840,7 +833,6 @@ const BYTE byte_48A9C8[] = {
 	7,   7,   7, 7,
 	// clang-format on
 };
-#endif
 
 static void InitL3Dungeon()
 {
@@ -903,7 +895,7 @@ static BOOL DRLG_L3FillRoom(int x1, int y1, int x2, int y2)
 static void DRLG_L3CreateBlock(int x, int y, int obs, int dir)
 {
 	int blksizex, blksizey, x1, y1, x2, y2;
-	BOOL contflag;
+	int contflag;
 
 	blksizex = random_(0, 2) + 3;
 	blksizey = random_(0, 2) + 3;
@@ -967,16 +959,16 @@ static void DRLG_L3CreateBlock(int x, int y, int obs, int dir)
 
 	if (DRLG_L3FillRoom(x1, y1, x2, y2) == TRUE) {
 		contflag = random_(0, 4);
-		if (contflag && dir != 2) {
+		if (contflag != 0 && dir != 2) {
 			DRLG_L3CreateBlock(x1, y1, blksizey, 0);
 		}
-		if (contflag && dir != 3) {
+		if (contflag != 0 && dir != 3) {
 			DRLG_L3CreateBlock(x2, y1, blksizex, 1);
 		}
-		if (contflag && dir != 0) {
+		if (contflag != 0 && dir != 0) {
 			DRLG_L3CreateBlock(x1, y2, blksizey, 2);
 		}
-		if (contflag && dir != 1) {
+		if (contflag != 0 && dir != 1) {
 			DRLG_L3CreateBlock(x1, y1, blksizex, 3);
 		}
 	}
@@ -1749,7 +1741,6 @@ static void DRLG_L3PlaceRndSet(const BYTE *miniset, int rndper)
 	}
 }
 
-#ifdef HELLFIRE
 BOOLEAN drlg_l3_hive_rnd_piece(const BYTE *miniset, int rndper)
 {
 	int sx, sy, sw, sh, xx, yy, ii, kk;
@@ -1808,7 +1799,6 @@ BOOLEAN drlg_l3_hive_rnd_piece(const BYTE *miniset, int rndper)
 
 	return placed;
 }
-#endif
 
 static BOOL WoodVertU(int i, int y)
 {
@@ -1980,6 +1970,10 @@ void FenceDoorFix()
 
 static void DRLG_L3Wood()
 {
+#if (_MSC_VER >= 1920)
+	volatile // visual studio 2019 throws internal compiler error without it, see #708
+
+#endif
 	int i, j, x, y, xx, yy, rt, rp, x1, y1, x2, y2;
 	BOOL skip;
 
@@ -2359,91 +2353,66 @@ static void DRLG_L3(int entry)
 			} while (!found);
 			DRLG_L3MakeMegas();
 			if (entry == ENTRY_MAIN) {
-#ifdef HELLFIRE
 				if (currlevel < 17) {
-#endif
 					genok = DRLG_L3PlaceMiniSet(L3UP, 1, 1, -1, -1, TRUE, 0);
-#ifdef HELLFIRE
 				} else {
-					if ( currlevel != 17 )
+					if (currlevel != 17)
 						genok = DRLG_L3PlaceMiniSet(L6UP, 1, 1, -1, -1, TRUE, 0);
 					else
 						genok = DRLG_L3PlaceMiniSet(L6HOLDWARP, 1, 1, -1, -1, TRUE, 6);
 				}
-#endif
 				if (!genok) {
-#ifdef HELLFIRE
 					if (currlevel < 17) {
-#endif
 						genok = DRLG_L3PlaceMiniSet(L3DOWN, 1, 1, -1, -1, FALSE, 1);
-#ifdef HELLFIRE
 					} else {
-						if ( currlevel != 20 )
+						if (currlevel != 20)
 							genok = DRLG_L3PlaceMiniSet(L6DOWN, 1, 1, -1, -1, FALSE, 1);
 					}
-#endif
 					if (!genok && currlevel == 9) {
 						genok = DRLG_L3PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, FALSE, 6);
 					}
 				}
 			} else if (entry == ENTRY_PREV) {
-#ifdef HELLFIRE
 				if (currlevel < 17) {
-#endif
 					genok = DRLG_L3PlaceMiniSet(L3UP, 1, 1, -1, -1, FALSE, 0);
-#ifdef HELLFIRE
 				} else {
-					if ( currlevel != 17 )
+					if (currlevel != 17)
 						genok = DRLG_L3PlaceMiniSet(L6UP, 1, 1, -1, -1, FALSE, 0);
 					else
 						genok = DRLG_L3PlaceMiniSet(L6HOLDWARP, 1, 1, -1, -1, FALSE, 6);
 				}
-#endif
 				if (!genok) {
-#ifdef HELLFIRE
 					if (currlevel < 17) {
-#endif
 						genok = DRLG_L3PlaceMiniSet(L3DOWN, 1, 1, -1, -1, TRUE, 1);
 						ViewX += 2;
 						ViewY -= 2;
-#ifdef HELLFIRE
 					} else {
-						if ( currlevel != 20 )
-						{
+						if (currlevel != 20) {
 							genok = DRLG_L3PlaceMiniSet(L6DOWN, 1, 1, -1, -1, TRUE, 1);
 							ViewX += 2;
 							ViewY -= 2;
 						}
 					}
-#endif
 					if (!genok && currlevel == 9) {
 						genok = DRLG_L3PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, FALSE, 6);
 					}
 				}
 			} else {
-#ifdef HELLFIRE
 				if (currlevel < 17) {
-#endif
 					genok = DRLG_L3PlaceMiniSet(L3UP, 1, 1, -1, -1, FALSE, 0);
-#ifdef HELLFIRE
 				} else {
-					if ( currlevel != 17 )
+					if (currlevel != 17)
 						genok = DRLG_L3PlaceMiniSet(L6UP, 1, 1, -1, -1, FALSE, 0);
 					else
 						genok = DRLG_L3PlaceMiniSet(L6HOLDWARP, 1, 1, -1, -1, TRUE, 6);
 				}
-#endif
 				if (!genok) {
-#ifdef HELLFIRE
 					if (currlevel < 17) {
-#endif
 						genok = DRLG_L3PlaceMiniSet(L3DOWN, 1, 1, -1, -1, FALSE, 1);
-#ifdef HELLFIRE
 					} else {
-						if ( currlevel != 20 )
+						if (currlevel != 20)
 							genok = DRLG_L3PlaceMiniSet(L6DOWN, 1, 1, -1, -1, FALSE, 1);
 					}
-#endif
 					if (!genok && currlevel == 9) {
 						genok = DRLG_L3PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, TRUE, 6);
 					}
@@ -2453,34 +2422,24 @@ static void DRLG_L3(int entry)
 				genok = DRLG_L3Anvil();
 			}
 		} while (genok == TRUE);
-#ifdef HELLFIRE
 		if (currlevel < 17) {
-#endif
 			DRLG_L3Pool();
-#ifdef HELLFIRE
 		} else {
 			lavapool += drlg_l3_hive_rnd_piece(byte_48A998, 30);
 			lavapool += drlg_l3_hive_rnd_piece(byte_48A9C8, 40);
 			lavapool += drlg_l3_hive_rnd_piece(byte_48A948, 50);
 			lavapool += drlg_l3_hive_rnd_piece(byte_48A970, 60);
-			if ( lavapool < 3 )
+			if (lavapool < 3)
 				lavapool = FALSE;
 		}
-#endif
 	} while (!lavapool);
 
-#ifdef HELLFIRE
 	if (currlevel < 17)
-#endif
 		DRLG_L3PoolFix();
-#ifdef HELLFIRE
 	if (currlevel < 17)
-#endif
 		FixL3Warp();
 
-#ifdef HELLFIRE
 	if (currlevel < 17) {
-#endif
 		DRLG_L3PlaceRndSet(L3ISLE1, 70);
 		DRLG_L3PlaceRndSet(L3ISLE2, 70);
 		DRLG_L3PlaceRndSet(L3ISLE3, 30);
@@ -2488,7 +2447,6 @@ static void DRLG_L3(int entry)
 		DRLG_L3PlaceRndSet(L3ISLE1, 100);
 		DRLG_L3PlaceRndSet(L3ISLE2, 100);
 		DRLG_L3PlaceRndSet(L3ISLE5, 90);
-#ifdef HELLFIRE
 	} else {
 		DRLG_L3PlaceRndSet(L6ISLE1, 70);
 		DRLG_L3PlaceRndSet(L6ISLE2, 70);
@@ -2498,15 +2456,10 @@ static void DRLG_L3(int entry)
 		DRLG_L3PlaceRndSet(L6ISLE2, 100);
 		DRLG_L3PlaceRndSet(L6ISLE5, 90);
 	}
-#endif
 
-#ifdef HELLFIRE
 	if (currlevel < 17)
-#endif
 		FixL3HallofHeroes();
-#ifdef HELLFIRE
 	if (currlevel < 17)
-#endif
 		DRLG_L3River();
 
 	if (QuestStatus(Q_ANVIL)) {
@@ -2518,14 +2471,10 @@ static void DRLG_L3(int entry)
 		}
 	}
 
-#ifdef HELLFIRE
 	if (currlevel < 17)
-#endif
 		DRLG_PlaceThemeRooms(5, 10, 7, 0, 0);
 
-#ifdef HELLFIRE
 	if (currlevel < 17) {
-#endif
 		DRLG_L3Wood();
 		DRLG_L3PlaceRndSet(L3TITE1, 10);
 		DRLG_L3PlaceRndSet(L3TITE2, 10);
@@ -2554,7 +2503,6 @@ static void DRLG_L3(int entry)
 		DRLG_L3PlaceRndSet(L3XTRA3, 25);
 		DRLG_L3PlaceRndSet(L3XTRA4, 25);
 		DRLG_L3PlaceRndSet(L3XTRA5, 25);
-#ifdef HELLFIRE
 	} else {
 		DRLG_L3PlaceRndSet(byte_48A76C, 20);
 		DRLG_L3PlaceRndSet(byte_48A770, 20);
@@ -2605,7 +2553,6 @@ static void DRLG_L3(int entry)
 		DRLG_L3PlaceRndSet(byte_48A7FC, 25);
 		DRLG_L3PlaceRndSet(byte_48A800, 25);
 	}
-#endif
 
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
@@ -2630,8 +2577,7 @@ static void DRLG_L3Pass3()
 	v3 = SDL_SwapLE16(*(MegaTiles + 2)) + 1;
 	v4 = SDL_SwapLE16(*(MegaTiles + 3)) + 1;
 
-	for (j = 0; j < MAXDUNY; j += 2)
-	{
+	for (j = 0; j < MAXDUNY; j += 2) {
 		for (i = 0; i < MAXDUNX; i += 2) {
 			dPiece[i][j] = v1;
 			dPiece[i + 1][j] = v2;
@@ -2681,9 +2627,7 @@ void CreateL3Dungeon(DWORD rseed, int entry)
 	DRLG_L3(entry);
 	DRLG_L3Pass3();
 
-#ifdef HELLFIRE
 	if (currlevel < 17) {
-#endif
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++) {
 				if (dPiece[i][j] >= 56 && dPiece[i][j] <= 147) {
@@ -2697,7 +2641,6 @@ void CreateL3Dungeon(DWORD rseed, int entry)
 				}
 			}
 		}
-#ifdef HELLFIRE
 	} else {
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++) {
@@ -2707,7 +2650,6 @@ void CreateL3Dungeon(DWORD rseed, int entry)
 			}
 		}
 	}
-#endif
 
 	DRLG_SetPC();
 }

@@ -3,6 +3,7 @@
 // Processes and stores mouse and joystick motion.
 
 #include "all.h"
+#include "controls/controller.h"
 
 namespace dvl {
 
@@ -15,9 +16,7 @@ extern float leftStickX, leftStickY, rightStickX, rightStickY;
 // Whether stick positions have been updated and need rescaling.
 extern bool leftStickNeedsScaling, rightStickNeedsScaling;
 
-void ScaleJoysticks();
-
 // Updates motion state for mouse and joystick sticks.
-bool ProcessControllerMotion(const SDL_Event &event);
+bool ProcessControllerMotion(const SDL_Event &event, ControllerButtonEvent ctrl_event);
 
 } // namespace dvl

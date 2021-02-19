@@ -12,6 +12,7 @@ DEVILUTION_BEGIN_NAMESPACE
 SDL_Color logical_palette[256];
 SDL_Color system_palette[256];
 SDL_Color orig_palette[256];
+Uint8 paletteTransparencyLookup[256][256]; //Lookup table for transparency
 
 /* data */
 
@@ -48,10 +49,8 @@ void ApplyGamma(SDL_Color *dst, const SDL_Color *src, int n)
 
 void SaveGamma()
 {
-	SRegSaveValue(APP_NAME, "Gamma Correction", 0, gamma_correction);
-#ifndef HELLFIRE
-	SRegSaveValue(APP_NAME, "Color Cycling", FALSE, color_cycling_enabled);
-#endif
+	SRegSaveValue("Diablo", "Gamma Correction", 0, gamma_correction);
+	SRegSaveValue("Diablo", "Color Cycling", FALSE, color_cycling_enabled);
 }
 
 static void LoadGamma()
@@ -60,7 +59,7 @@ static void LoadGamma()
 	int value;
 
 	value = gamma_correction;
-	if (!SRegLoadValue(APP_NAME, "Gamma Correction", 0, &value))
+	if (!SRegLoadValue("Diablo", "Gamma Correction", 0, &value))
 		value = 100;
 	gamma_value = value;
 	if (value < 30) {
@@ -69,11 +68,9 @@ static void LoadGamma()
 		gamma_value = 100;
 	}
 	gamma_correction = gamma_value - gamma_value % 5;
-#ifndef HELLFIRE
-	if (!SRegLoadValue(APP_NAME, "Color Cycling", 0, &value))
+	if (!SRegLoadValue("Diablo", "Color Cycling", 0, &value))
 		value = 1;
 	color_cycling_enabled = value;
-#endif
 }
 
 void palette_init()
@@ -81,6 +78,48 @@ void palette_init()
 	LoadGamma();
 	memcpy(system_palette, orig_palette, sizeof(orig_palette));
 	InitPalette();
+}
+
+/**
+ * Generate lookup table for transparency
+ *
+ * This is based of the same technique found in Quake2.
+ *
+ * To mimic 50% transparency we figure out what colours in the existing palette are the best match for the combination of any 2 colours.
+ * We save this into a lookup table for use during rendering.
+ */
+void GenerateBlendedLookupTable()
+{
+	for (int i = 0; i < 256; i++) {
+		for (int j = 0; j < 256; j++) {
+			if (i == j) { // No need to calculate transparency between 2 identical colours
+				paletteTransparencyLookup[i][j] = j;
+				continue;
+			}
+			if (i > j) { // Half the blends will be mirror identical ([i][j] is the same as [j][i]), so simply copy the existing combination.
+				paletteTransparencyLookup[i][j] = paletteTransparencyLookup[j][i];
+				continue;
+			}
+
+			Uint8 r = ((int)orig_palette[i].r + (int)orig_palette[j].r) / 2;
+			Uint8 g = ((int)orig_palette[i].g + (int)orig_palette[j].g) / 2;
+			Uint8 b = ((int)orig_palette[i].b + (int)orig_palette[j].b) / 2;
+			Uint8 best;
+			Uint32 bestDiff = SDL_MAX_UINT32;
+			for (int k = 0; k < 256; k++) {
+				int diffr = orig_palette[k].r - r;
+				int diffg = orig_palette[k].g - g;
+				int diffb = orig_palette[k].b - b;
+				int diff = diffr * diffr + diffg * diffg + diffb * diffb;
+
+				if (bestDiff > diff) {
+					best = k;
+					bestDiff = diff;
+				}
+			}
+			paletteTransparencyLookup[i][j] = best;
+		}
+	}
 }
 
 void LoadPalette(const char *pszFileName)
@@ -91,9 +130,9 @@ void LoadPalette(const char *pszFileName)
 
 	assert(pszFileName);
 
-	WOpenFile(pszFileName, &pBuf, FALSE);
-	WReadFile(pBuf, (char *)PalData, sizeof(PalData), pszFileName);
-	WCloseFile(pBuf);
+	SFileOpenFile(pszFileName, &pBuf);
+	SFileReadFile(pBuf, (char *)PalData, sizeof(PalData), NULL, NULL);
+	SFileCloseFile(pBuf);
 
 	for (i = 0; i < 256; i++) {
 		orig_palette[i].r = PalData[i][0];
@@ -102,6 +141,10 @@ void LoadPalette(const char *pszFileName)
 #ifndef USE_SDL1
 		orig_palette[i].a = SDL_ALPHA_OPAQUE;
 #endif
+	}
+
+	if (sgOptions.blendedTransparancy) {
+		GenerateBlendedLookupTable();
 	}
 }
 
@@ -115,7 +158,6 @@ void LoadRndLvlPal(int l)
 	} else {
 		rv = random_(0, 4) + 1;
 		sprintf(szFileName, "Levels\\L%iData\\L%i_%i.PAL", l, l, rv);
-#ifdef HELLFIRE
 		if (l == 5) {
 			sprintf(szFileName, "NLevels\\L5Data\\L5Base.PAL");
 		}
@@ -125,7 +167,6 @@ void LoadRndLvlPal(int l)
 			}
 			sprintf(szFileName, "NLevels\\L%iData\\L%iBase%i.PAL", 6, 6, rv);
 		}
-#endif
 		LoadPalette(szFileName);
 	}
 }
@@ -249,8 +290,6 @@ void palette_update_crypt()
 		system_palette[i].r = col.r;
 		system_palette[i].g = col.g;
 		system_palette[i].b = col.b;
-
-
 
 		dword_6E2D58 = 0;
 	} else {

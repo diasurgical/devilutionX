@@ -7,6 +7,9 @@ assignees: ''
 
 ---
 
+**Important information**
+Operating system / DevilutionX version / did you download a release or did you compile yourself?
+
 **Describe**
 A clear and concise description of what the bug is.
 

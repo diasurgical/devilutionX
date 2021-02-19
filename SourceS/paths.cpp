@@ -12,6 +12,7 @@ namespace {
 
 std::string *basePath = NULL;
 std::string *prefPath = NULL;
+std::string *configPath = NULL;
 
 void AddTrailingSlash(std::string *path) {
 #ifdef _WIN32
@@ -48,6 +49,13 @@ const std::string &GetPrefPath()
 	return *prefPath;
 }
 
+const std::string &GetConfigPath()
+{
+	if (configPath == NULL)
+		configPath = FromSDL(SDL_GetPrefPath("diasurgical", "devilution"));
+	return *configPath;
+}
+
 void SetBasePath(const char *path)
 {
 	if (basePath == NULL) basePath = new std::string;
@@ -60,6 +68,14 @@ void SetPrefPath(const char *path)
 	if (prefPath == NULL) prefPath = new std::string;
 	*prefPath = path;
 	AddTrailingSlash(prefPath);
+}
+
+void SetConfigPath(const char *path)
+{
+	if (configPath == NULL)
+		configPath = new std::string;
+	*configPath = path;
+	AddTrailingSlash(configPath);
 }
 
 } // namespace dvl

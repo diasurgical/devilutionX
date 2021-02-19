@@ -59,7 +59,6 @@ void CelDrawLightRed(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char 
 void CelBlitSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth);
 void CelClippedDrawSafe(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
 void CelBlitLightSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE *tbl);
-void CelBlitLightTransSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth);
 void CelDrawLightRedSafe(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char light);
 void CelBlitWidth(BYTE *pBuff, int x, int y, int wdt, BYTE *pCelBuff, int nCel, int nWidth);
 void CelBlitOutline(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
@@ -68,6 +67,7 @@ void engine_draw_pixel(int sx, int sy);
 void DrawLine(int x0, int y0, int x1, int y1, BYTE col);
 int GetDirection(int x1, int y1, int x2, int y2);
 void SetRndSeed(int s);
+int AdvanceRndSeed();
 int GetRndSeed();
 int random_(BYTE idx, int v);
 void engine_debug_trap(BOOL show_cursor);
@@ -80,11 +80,7 @@ void Cl2Draw(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
 void Cl2DrawOutline(char col, int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
 void Cl2DrawLightTbl(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth, char light);
 void Cl2DrawLight(int sx, int sy, BYTE *pCelBuff, int nCel, int nWidth);
-void Cl2BlitSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth);
-void Cl2BlitOutlineSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth, char col);
-void Cl2BlitLightSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE *pTable);
 void PlayInGameMovie(const char *pszMovie);
-
 
 #ifdef __cplusplus
 }

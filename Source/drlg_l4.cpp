@@ -196,7 +196,7 @@ void DRLG_LoadL4SP()
 		pSetPiece = LoadFileInMem("Levels\\L4Data\\Warlord.DUN", NULL);
 		setloadflag = TRUE;
 	}
-	if (currlevel == 15 && gbMaxPlayers != 1) {
+	if (currlevel == 15 && gbIsMultiplayer) {
 		pSetPiece = LoadFileInMem("Levels\\L4Data\\Vile1.DUN", NULL);
 		setloadflag = TRUE;
 	}
@@ -242,9 +242,9 @@ static void L4makeDmt()
 	for (j = 0, dmty = 1; dmty <= 77; j++, dmty += 2) {
 		for (i = 0, dmtx = 1; dmtx <= 77; i++, dmtx += 2) {
 			val = 8 * L4dungeon[dmtx + 1][dmty + 1]
-				+ 4 * L4dungeon[dmtx][dmty + 1]
-				+ 2 * L4dungeon[dmtx + 1][dmty]
-				+ L4dungeon[dmtx][dmty];
+			    + 4 * L4dungeon[dmtx][dmty + 1]
+			    + 2 * L4dungeon[dmtx + 1][dmty]
+			    + L4dungeon[dmtx][dmty];
 			idx = L4ConvTbl[val];
 			dungeon[i][j] = idx;
 		}
@@ -1086,8 +1086,8 @@ static void L4drawRoom(int x, int y, int width, int height)
 {
 	int i, j;
 
-	for (j = 0; j < height; j++) {
-		for (i = 0; i < width; i++) {
+	for (j = 0; j < height && j + y < 20; j++) {
+		for (i = 0; i < width && i + x < 20; i++) {
 			dung[i + x][j + y] = 1;
 		}
 	}
@@ -1178,10 +1178,10 @@ static void L4firstRoom()
 
 	if (currlevel != 16) {
 		if (currlevel == quests[Q_WARLORD]._qlevel && quests[Q_WARLORD]._qactive != QUEST_NOTAVAIL) {
-			/// ASSERT: assert(gbMaxPlayers == 1);
+			assert(!gbIsMultiplayer);
 			w = 11;
 			h = 11;
-		} else if (currlevel == quests[Q_BETRAYER]._qlevel && gbMaxPlayers != 1) {
+		} else if (currlevel == quests[Q_BETRAYER]._qlevel && gbIsMultiplayer) {
 			w = 11;
 			h = 11;
 		} else {
@@ -1216,7 +1216,7 @@ static void L4firstRoom()
 		l4holdx = x;
 		l4holdy = y;
 	}
-	if (QuestStatus(Q_WARLORD) || currlevel == quests[Q_BETRAYER]._qlevel && gbMaxPlayers != 1) {
+	if (QuestStatus(Q_WARLORD) || currlevel == quests[Q_BETRAYER]._qlevel && gbIsMultiplayer) {
 		SP4x1 = x + 1;
 		SP4y1 = y + 1;
 		SP4x2 = SP4x1 + w;
@@ -1383,7 +1383,7 @@ static BOOL DRLG_L4PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx,
 		}
 	}
 
-	if (currlevel == 15) {
+	if (currlevel == 15 && quests[Q_BETRAYER]._qactive >= QUEST_ACTIVE) { /// Lazarus staff skip bug fixed
 		quests[Q_BETRAYER]._qtx = sx + 1;
 		quests[Q_BETRAYER]._qty = sy + 1;
 	}
@@ -1610,7 +1610,7 @@ static void DRLG_L4(int entry)
 		if (currlevel == 16) {
 			L4SaveQuads();
 		}
-		if (QuestStatus(Q_WARLORD) || currlevel == quests[Q_BETRAYER]._qlevel && gbMaxPlayers != 1) {
+		if (QuestStatus(Q_WARLORD) || currlevel == quests[Q_BETRAYER]._qlevel && gbIsMultiplayer) {
 			for (spi = SP4x1; spi < SP4x2; spi++) {
 				for (spj = SP4y1; spj < SP4y2; spj++) {
 					dflags[spi][spj] = 1;
@@ -1680,7 +1680,7 @@ static void DRLG_L4(int entry)
 			if (entry == ENTRY_MAIN) {
 				doneflag = DRLG_L4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, TRUE, 0);
 				if (doneflag) {
-					if (gbMaxPlayers == 1 && quests[Q_DIABLO]._qactive != QUEST_ACTIVE) {
+					if (!gbIsMultiplayer && quests[Q_DIABLO]._qactive != QUEST_ACTIVE) {
 						doneflag = DRLG_L4PlaceMiniSet(L4PENTA, 1, 1, -1, -1, FALSE, 1);
 					} else {
 						doneflag = DRLG_L4PlaceMiniSet(L4PENTA2, 1, 1, -1, -1, FALSE, 1);
@@ -1690,7 +1690,7 @@ static void DRLG_L4(int entry)
 			} else {
 				doneflag = DRLG_L4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, FALSE, 0);
 				if (doneflag) {
-					if (gbMaxPlayers == 1 && quests[Q_DIABLO]._qactive != QUEST_ACTIVE) {
+					if (!gbIsMultiplayer && quests[Q_DIABLO]._qactive != QUEST_ACTIVE) {
 						doneflag = DRLG_L4PlaceMiniSet(L4PENTA, 1, 1, -1, -1, TRUE, 1);
 					} else {
 						doneflag = DRLG_L4PlaceMiniSet(L4PENTA2, 1, 1, -1, -1, TRUE, 1);
@@ -1827,7 +1827,6 @@ void LoadL4Dungeon(char *sFileName, int vx, int vy)
 	DRLG_InitTrans();
 	InitL4Dungeon();
 	pLevelMap = LoadFileInMem(sFileName, NULL);
-
 
 	lm = pLevelMap;
 	rw = *lm;

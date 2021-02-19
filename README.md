@@ -5,7 +5,7 @@
 Nightly builds | Platform
 ---:| ---
 [![CircleCI](https://circleci.com/gh/diasurgical/devilutionX.svg?style=svg)](https://circleci.com/gh/diasurgical/devilutionX) | Linux 32bit & 64bit, Windows 32bit, Nintendo Switch, SDL1, Amiga
-[![Build Status](https://travis-ci.org/diasurgical/devilutionX.svg?branch=master)](https://travis-ci.org/diasurgical/devilutionX) | macOS 64bit, Linux ppc64le
+[![Build Status](https://www.travis-ci.com/diasurgical/devilutionX.svg?branch=master)](https://www.travis-ci.com/diasurgical/devilutionX) | macOS 64bit, Linux ppc64le
 [![Build status](https://ci.appveyor.com/api/projects/status/1a0jus2372qvksht?svg=true)](https://ci.appveyor.com/project/AJenbo/devilutionx) | Windows 64bit (MSVC)
 
 ![Discord Channel](https://avatars3.githubusercontent.com/u/1965106?s=16&v=4) [Discord Chat Channel](https://discord.gg/YQKCAYQ)
@@ -95,16 +95,38 @@ cmake --build . -j $(sysctl -n hw.ncpuonline)
 
 ### Installing dependencies on WSL, Debian and Ubuntu
 
-Download and place the 32bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/), [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/) and [Libsodium](https://github.com/jedisct1/libsodium/releases) in `/usr/i686-w64-mingw32`.
+### 32-bit
+
+Download and place the 32bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/), [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/) and [Libsodium](https://github.com/jedisct1/libsodium/releases) in `/usr/i686-w64-mingw32`. This can be done automatically by running `Packaging/windows/mingw-prep.sh`.
 NOTE: SDL2 2.0.12 appears to not compile correctly.
 
 ```
 sudo apt-get install cmake gcc-mingw-w64-i686 g++-mingw-w64-i686
 ```
+
+### 64-bit
+
+Download and place the 64bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/), [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/) and [Libsodium](https://github.com/jedisct1/libsodium/releases) in `/usr/x86_64-w64-mingw32`. This can be done automatically by running `Packaging/windows/mingw-prep64.sh`.
+NOTE: SDL2 2.0.12 appears to not compile correctly.
+
+```
+sudo apt-get install cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
+```
 ### Compiling
+
+### 32-bit
+
 ```
 cd build
 cmake -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake ..
+make -j$(nproc)
+```
+
+### 64-bit
+
+```
+cd build
+cmake -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc64.cmake ..
 make -j$(nproc)
 ```
 </details>

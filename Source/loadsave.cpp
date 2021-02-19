@@ -9,20 +9,17 @@ DEVILUTION_BEGIN_NAMESPACE
 
 BYTE *tbuff;
 
+bool gbIsHellfireSaveGame;
+int giNumberOfLevels;
+int giNumberQuests;
+int giNumberOfSmithPremiumItems;
+
 static char BLoad()
 {
 	return *tbuff++;
 }
 
-static int WLoad()
-{
-	int rv = *tbuff++ << 24;
-	rv |= *tbuff++ << 16;
-	rv |= *tbuff++ << 8;
-	rv |= *tbuff++;
-
-	return rv;
-}
+#define WLoad ILoad
 
 static int ILoad()
 {
@@ -34,12 +31,20 @@ static int ILoad()
 	return rv;
 }
 
-static BOOL OLoad()
+static bool LoadBool8()
 {
 	if (*tbuff++ == TRUE)
 		return TRUE;
 	else
 		return FALSE;
+}
+
+static bool LoadBool32()
+{
+	Uint32 buf;
+	memcpy(&buf, tbuff, 4);
+	tbuff += 4;
+	return buf != 0;
 }
 
 static void CopyBytes(const void *src, const int n, void *dst)
@@ -58,9 +63,9 @@ static void CopyShort(const void *src, void *dst)
 {
 	unsigned short buf;
 	memcpy(&buf, src, 2);
-	tbuff += 2;
 	buf = SwapLE16(buf);
 	memcpy(dst, &buf, 2);
+	tbuff += 2;
 }
 
 static void CopyShorts(const void *src, const int n, void *dst)
@@ -78,9 +83,9 @@ static void CopyInt(const void *src, void *dst)
 {
 	unsigned int buf;
 	memcpy(&buf, src, 4);
-	tbuff += 4;
 	buf = SwapLE32(buf);
 	memcpy(dst, &buf, 4);
+	tbuff += 4;
 }
 
 static void CopyInts(const void *src, const int n, void *dst)
@@ -88,7 +93,7 @@ static void CopyInts(const void *src, const int n, void *dst)
 	const unsigned int *s = reinterpret_cast<const unsigned int *>(src);
 	const unsigned int *d = reinterpret_cast<unsigned int *>(dst);
 	for (int i = 0; i < n; i++) {
-		CopyInt(s, (void*)d);
+		CopyInt(s, (void *)d);
 		++d;
 		++s;
 	}
@@ -98,9 +103,9 @@ static void CopyInt64(const void *src, void *dst)
 {
 	unsigned long long buf;
 	memcpy(&buf, src, 8);
-	tbuff += 8;
 	buf = SDL_SwapLE64(buf);
 	memcpy(dst, &buf, 8);
+	tbuff += 8;
 }
 
 static void LoadItemData(ItemStruct *pItem)
@@ -178,7 +183,14 @@ static void LoadItemData(ItemStruct *pItem)
 	tbuff += 1; // Alignment
 	CopyInt(tbuff, &pItem->_iStatFlag);
 	CopyInt(tbuff, &pItem->IDidx);
+	if (!gbIsHellfireSaveGame) {
+		pItem->IDidx = RemapItemIdxFromDiablo(pItem->IDidx);
+	}
 	CopyInt(tbuff, &pItem->offs016C);
+	if (gbIsHellfireSaveGame)
+		CopyInt(tbuff, &pItem->_iDamAcFlags);
+	else
+		pItem->_iDamAcFlags = 0;
 }
 
 static void LoadItems(const int n, ItemStruct *pItem)
@@ -306,8 +318,8 @@ static void LoadPlayer(int i)
 	CopyInt(tbuff, &pPlayer->_pVar6);
 	CopyInt(tbuff, &pPlayer->_pVar7);
 	CopyInt(tbuff, &pPlayer->_pVar8);
-	CopyBytes(tbuff, NUMLEVELS, &pPlayer->_pLvlVisited);
-	CopyBytes(tbuff, NUMLEVELS, &pPlayer->_pSLvlVisited);
+	CopyBytes(tbuff, giNumberOfLevels, &pPlayer->_pLvlVisited);
+	CopyBytes(tbuff, giNumberOfLevels, &pPlayer->_pSLvlVisited);
 	tbuff += 2; // Alignment
 
 	CopyInt(tbuff, &pPlayer->_pGFXLoad);
@@ -369,20 +381,23 @@ static void LoadPlayer(int i)
 	CopyChar(tbuff, &pPlayer->pTownWarps);
 	CopyChar(tbuff, &pPlayer->pDungMsgs);
 	CopyChar(tbuff, &pPlayer->pLvlLoad);
-#ifdef HELLFIRE
-	CopyChar(tbuff, &pPlayer->pDungMsgs2);
-	pPlayer->pBattleNet = false;
-#else
-	CopyChar(tbuff, &pPlayer->pBattleNet);
-#endif
+
+	if (gbIsHellfireSaveGame) {
+		CopyChar(tbuff, &pPlayer->pDungMsgs2);
+		pPlayer->pBattleNet = false;
+	} else {
+		pPlayer->pDungMsgs2 = 0;
+		CopyChar(tbuff, &pPlayer->pBattleNet);
+	}
 	CopyChar(tbuff, &pPlayer->pManaShield);
-#ifndef HELLFIRE
-	CopyBytes(tbuff, 3, &pPlayer->bReserved);
-#else
-	CopyChar(tbuff, &pPlayer->pDungMsgs2);
+	if (gbIsHellfireSaveGame) {
+		CopyChar(tbuff, &pPlayer->pOriginalCathedral);
+	} else {
+		tbuff += 1;
+		pPlayer->pOriginalCathedral = true;
+	}
 	CopyBytes(tbuff, 2, &pPlayer->bReserved);
-#endif
-	CopyShort(tbuff, &pPlayer->wReflection);
+	CopyShort(tbuff, &pPlayer->wReflections);
 	CopyShorts(tbuff, 7, &pPlayer->wReserved);
 
 	CopyInt(tbuff, &pPlayer->pDiabloKillLevel);
@@ -488,6 +503,8 @@ static void LoadMonster(int i)
 	CopyChar(tbuff, &pMonster->leaderflag);
 	CopyChar(tbuff, &pMonster->packsize);
 	CopyChar(tbuff, &pMonster->mlid);
+	if (pMonster->mlid == plr[myplr]._plid)
+		pMonster->mlid = NO_LIGHT; // Correct incorect values in old saves
 
 	// Omit pointer mName;
 	// Omit pointer MType;
@@ -609,11 +626,20 @@ static void LoadQuest(int i)
 	CopyInt(tbuff, &pQuest->_qty);
 	CopyChar(tbuff, &pQuest->_qslvl);
 	CopyChar(tbuff, &pQuest->_qidx);
-	CopyChar(tbuff, &pQuest->_qmsg);
+	if (gbIsHellfireSaveGame) {
+		tbuff += 2; // Alignment
+		CopyInt(tbuff, &pQuest->_qmsg);
+	} else {
+		Uint8 tmp;
+		CopyChar(tbuff, &tmp);
+		pQuest->_qmsg = tmp;
+	}
 	CopyChar(tbuff, &pQuest->_qvar1);
 	CopyChar(tbuff, &pQuest->_qvar2);
-	tbuff += 3; // Alignment
-	CopyInt(tbuff, &pQuest->_qlog);
+	tbuff += 2; // Alignment
+	if (!gbIsHellfireSaveGame)
+		tbuff += 1; // Alignment
+	pQuest->_qlog = LoadBool32();
 
 	ReturnLvlX = WLoad();
 	ReturnLvlY = WLoad();
@@ -672,6 +698,60 @@ static void LoadPortal(int i)
 	CopyInt(tbuff, &pPortal->setlvl);
 }
 
+int RemapItemIdxFromDiablo(int i)
+{
+	if (i == IDI_SORCEROR) {
+		return 166;
+	}
+	if (i >= 156) {
+		i += 5; // Hellfire exclusive items
+	}
+	if (i >= 88) {
+		i += 1; // Scroll of Search
+	}
+	if (i >= 83) {
+		i += 4; // Oils
+	}
+
+	return i;
+}
+
+int RemapItemIdxToDiablo(int i)
+{
+	if (i == 166) {
+		return IDI_SORCEROR;
+	}
+	if ((i >= 83 && i <= 86) || i == 92 || i >= 161) {
+		return -1; // Hellfire exclusive items
+	}
+	if (i >= 93) {
+		i -= 1; // Scroll of Search
+	}
+	if (i >= 87) {
+		i -= 4; // Oils
+	}
+
+	return i;
+}
+
+bool IsHeaderValid(int magicNumber)
+{
+	gbIsHellfireSaveGame = false;
+	if (magicNumber == 'SHAR') {
+		return true;
+	} else if (magicNumber == 'SHLF') {
+		gbIsHellfireSaveGame = true;
+		return true;
+	} else if (!gbIsSpawn && magicNumber == 'RETL') {
+		return true;
+	} else if (!gbIsSpawn && magicNumber == 'HELF') {
+		gbIsHellfireSaveGame = true;
+		return true;
+	}
+
+	return false;
+}
+
 /**
  * @brief Load game state
  * @param firstflag Can be set to false if we are simply reloading the current game
@@ -680,39 +760,42 @@ void LoadGame(BOOL firstflag)
 {
 	int i, j;
 	DWORD dwLen;
-	char szName[MAX_PATH];
 	BYTE *LoadBuff;
 	int _ViewX, _ViewY, _nummonsters, _numitems, _nummissiles, _nobjects;
 
 	FreeGameMem();
 	pfile_remove_temp_files();
-	pfile_get_game_name(szName);
-	LoadBuff = pfile_read(szName, &dwLen);
+	LoadBuff = pfile_read("game", &dwLen);
 	tbuff = LoadBuff;
 
-#ifdef HELLFIRE
-	if (ILoad() != 'HELF')
-#elif defined(SPAWN)
-	if (ILoad() != 'SHAR')
-#else
-	if (ILoad() != 'RETL')
-#endif
+	if (!IsHeaderValid(ILoad()))
 		app_fatal("Invalid save file");
 
-	setlevel = OLoad();
+	if (gbIsHellfireSaveGame) {
+		giNumberOfLevels = 25;
+		giNumberQuests = 24;
+		giNumberOfSmithPremiumItems = 15;
+	} else {
+		// Todo initialize additional levels and quests if we are running Hellfire
+		giNumberOfLevels = 17;
+		giNumberQuests = 16;
+		giNumberOfSmithPremiumItems = 6;
+	}
+
+	setlevel = LoadBool8();
 	setlvlnum = WLoad();
 	currlevel = WLoad();
 	leveltype = WLoad();
 	_ViewX = WLoad();
 	_ViewY = WLoad();
-	invflag = OLoad();
-	chrflag = OLoad();
+	invflag = LoadBool8();
+	chrflag = LoadBool8();
 	_nummonsters = WLoad();
 	_numitems = WLoad();
 	_nummissiles = WLoad();
 	_nobjects = WLoad();
 
-	for (i = 0; i < NUMLEVELS; i++) {
+	for (i = 0; i < giNumberOfLevels; i++) {
 		glSeedTbl[i] = ILoad();
 		gnLevelTypeTbl[i] = WLoad();
 	}
@@ -723,7 +806,7 @@ void LoadGame(BOOL firstflag)
 	if (gnDifficulty < DIFF_NORMAL || gnDifficulty > DIFF_HELL)
 		gnDifficulty = DIFF_NORMAL;
 
-	for (i = 0; i < MAXQUESTS; i++)
+	for (i = 0; i < giNumberQuests; i++)
 		LoadQuest(i);
 	for (i = 0; i < MAXPORTAL; i++)
 		LoadPortal(i);
@@ -783,7 +866,7 @@ void LoadGame(BOOL firstflag)
 	for (i = 0; i < numitems; i++)
 		LoadItem(itemactive[i]);
 	for (i = 0; i < 128; i++)
-		UniqueItemFlag[i] = OLoad();
+		UniqueItemFlag[i] = LoadBool8();
 
 	for (j = 0; j < MAXDUNY; j++) {
 		for (i = 0; i < MAXDUNX; i++)
@@ -825,7 +908,7 @@ void LoadGame(BOOL firstflag)
 		}
 		for (j = 0; j < DMAXY; j++) {
 			for (i = 0; i < DMAXX; i++)
-				automapview[i][j] = OLoad();
+				automapview[i][j] = LoadBool8();
 		}
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++)
@@ -836,10 +919,12 @@ void LoadGame(BOOL firstflag)
 	numpremium = WLoad();
 	premiumlevel = WLoad();
 
-	for (i = 0; i < SMITH_PREMIUM_ITEMS; i++)
+	for (i = 0; i < giNumberOfSmithPremiumItems; i++)
 		LoadPremium(i);
+	if (gbIsHellfire && !gbIsHellfireSaveGame)
+		SpawnPremium(myplr);
 
-	automapflag = OLoad();
+	automapflag = LoadBool8();
 	AutoMapScale = WLoad();
 	mem_free_dbg(LoadBuff);
 	AutomapZoomReset();
@@ -854,6 +939,8 @@ void LoadGame(BOOL firstflag)
 	ResetPal();
 	SetCursor_(CURSOR_HAND);
 	gbProcessPlayers = TRUE;
+
+    gbIsHellfireSaveGame = gbIsHellfire;
 }
 
 static void BSave(char v)
@@ -877,20 +964,37 @@ static void ISave(int v)
 	*tbuff++ = v;
 }
 
-static void OSave(BOOL v)
+static void SaveBool8(bool v)
 {
-	if (v != FALSE)
-		*tbuff++ = TRUE;
+	if (v != false)
+		*tbuff++ = 1;
 	else
-		*tbuff++ = FALSE;
+		*tbuff++ = 0;
+}
+
+static void SaveBool32(bool value)
+{
+	Uint32 buf = value ? 1 : 0;
+	buf = SwapLE32(buf);
+	memcpy(tbuff, &buf, 4);
+	tbuff += 4;
 }
 
 static void SaveItem(ItemStruct *pItem)
 {
+	int idx = RemapItemIdxToDiablo(pItem->IDidx);
+	int iType = pItem->_itype;
+	if (idx == -1) {
+		idx = 0;
+		iType = ITYPE_NONE;
+	}
+
 	CopyInt(&pItem->_iSeed, tbuff);
 	CopyShort(&pItem->_iCreateInfo, tbuff);
 	tbuff += 2; // Alignment
-	CopyInt(&pItem->_itype, tbuff);
+
+	CopyInt(&iType, tbuff);
+
 	CopyInt(&pItem->_ix, tbuff);
 	CopyInt(&pItem->_iy, tbuff);
 	CopyInt(&pItem->_iAnimFlag, tbuff);
@@ -959,8 +1063,10 @@ static void SaveItem(ItemStruct *pItem)
 	CopyChar(&pItem->_iMinDex, tbuff);
 	tbuff += 1; // Alignment
 	CopyInt(&pItem->_iStatFlag, tbuff);
-	CopyInt(&pItem->IDidx, tbuff);
+	CopyInt(&idx, tbuff);
 	CopyInt(&pItem->offs016C, tbuff);
+	if (gbIsHellfire)
+		CopyInt(&pItem->_iDamAcFlags, tbuff);
 }
 
 static void SaveItems(ItemStruct *pItem, const int n)
@@ -1085,9 +1191,9 @@ static void SavePlayer(int i)
 	CopyInt(&pPlayer->_pVar6, tbuff);
 	CopyInt(&pPlayer->_pVar7, tbuff);
 	CopyInt(&pPlayer->_pVar8, tbuff);
-	CopyBytes(&pPlayer->_pLvlVisited, NUMLEVELS, tbuff);
-	CopyBytes(&pPlayer->_pSLvlVisited, NUMLEVELS, tbuff); // only 10 used
-	tbuff += 2;                                           // Alignment
+	CopyBytes(&pPlayer->_pLvlVisited, giNumberOfLevels, tbuff);
+	CopyBytes(&pPlayer->_pSLvlVisited, giNumberOfLevels, tbuff); // only 10 used
+	tbuff += 2;                                                  // Alignment
 
 	CopyInt(&pPlayer->_pGFXLoad, tbuff);
 	tbuff += 4 * 8; // Skip pointers _pNAnim
@@ -1149,15 +1255,14 @@ static void SavePlayer(int i)
 	CopyChar(&pPlayer->pTownWarps, tbuff);
 	CopyChar(&pPlayer->pDungMsgs, tbuff);
 	CopyChar(&pPlayer->pLvlLoad, tbuff);
-#ifdef HELLFIRE
-	CopyChar(&pPlayer->pDungMsgs2, tbuff);
-#else
-	CopyChar(&pPlayer->pBattleNet, tbuff);
-#endif
+	if (gbIsHellfire)
+		CopyChar(&pPlayer->pDungMsgs2, tbuff);
+	else
+		CopyChar(&pPlayer->pBattleNet, tbuff);
 	CopyChar(&pPlayer->pManaShield, tbuff);
-	CopyChar(&pPlayer->pDungMsgs2, tbuff);
+	CopyChar(&pPlayer->pOriginalCathedral, tbuff);
 	CopyBytes(&pPlayer->bReserved, 2, tbuff);
-	CopyShort(&pPlayer->wReflection, tbuff);
+	CopyShort(&pPlayer->wReflections, tbuff);
 	CopyShorts(&pPlayer->wReserved, 7, tbuff);
 
 	CopyInt(&pPlayer->pDiabloKillLevel, tbuff);
@@ -1248,12 +1353,12 @@ static void SaveMonster(int i)
 	tbuff += 1; // Alignment
 	CopyShort(&pMonster->mExp, tbuff);
 
-	// Wtite mHit for backwards compatabiliyt
+	// Write mHit for backwards compatibility
 	tempChar = pMonster->mHit < SCHAR_MAX ? pMonster->mHit : SCHAR_MAX;
 	CopyChar(&tempChar, tbuff);
 	CopyChar(&pMonster->mMinDamage, tbuff);
 	CopyChar(&pMonster->mMaxDamage, tbuff);
-	// Wtite mHit2 for backwards compatabiliyt
+	// Write mHit2 for backwards compatibility
 	tempChar = pMonster->mHit2 < SCHAR_MAX ? pMonster->mHit2 : SCHAR_MAX;
 	CopyChar(&tempChar, tbuff);
 	CopyChar(&pMonster->mMinDamage2, tbuff);
@@ -1381,11 +1486,19 @@ static void SaveQuest(int i)
 	CopyInt(&pQuest->_qty, tbuff);
 	CopyChar(&pQuest->_qslvl, tbuff);
 	CopyChar(&pQuest->_qidx, tbuff);
-	CopyChar(&pQuest->_qmsg, tbuff);
+	if (gbIsHellfire) {
+		tbuff += 2; // Alignment
+		CopyInt(&pQuest->_qmsg, tbuff);
+	} else {
+		Uint8 tmp = pQuest->_qmsg;
+		CopyChar(&tmp, tbuff);
+	}
 	CopyChar(&pQuest->_qvar1, tbuff);
 	CopyChar(&pQuest->_qvar2, tbuff);
-	tbuff += 3; // Alignment
-	CopyInt(&pQuest->_qlog, tbuff);
+	tbuff += 2; // Alignment
+	if (!gbIsHellfire)
+		tbuff += 1; // Alignment
+	SaveBool32(pQuest->_qlog);
 
 	WSave(ReturnLvlX);
 	WSave(ReturnLvlY);
@@ -1447,33 +1560,46 @@ static void SavePortal(int i)
 void SaveGame()
 {
 	int i, j;
-	char szName[MAX_PATH];
 
 	DWORD dwLen = codec_get_encoded_len(FILEBUFF);
 	BYTE *SaveBuff = DiabloAllocPtr(dwLen);
 	tbuff = SaveBuff;
 
-#ifdef HELLFIRE
-	ISave('HELF');
-#elif defined(SPAWN)
-	ISave('SHAR');
-#else
-	ISave('RETL');
-#endif
-	OSave(setlevel);
+	if (gbIsSpawn && !gbIsHellfire)
+		ISave('SHAR');
+	else if (gbIsSpawn && gbIsHellfire)
+		ISave('SHLF');
+	else if (!gbIsSpawn && gbIsHellfire)
+		ISave('HELF');
+	else if (!gbIsSpawn && !gbIsHellfire)
+		ISave('RETL');
+	else
+		app_fatal("Invalid game state");
+
+	if (gbIsHellfire) {
+		giNumberOfLevels = 25;
+		giNumberQuests = 24;
+		giNumberOfSmithPremiumItems = 15;
+	} else {
+		giNumberOfLevels = 17;
+		giNumberQuests = 16;
+		giNumberOfSmithPremiumItems = 6;
+	}
+
+	SaveBool8(setlevel);
 	WSave(setlvlnum);
 	WSave(currlevel);
 	WSave(leveltype);
 	WSave(ViewX);
 	WSave(ViewY);
-	OSave(invflag);
-	OSave(chrflag);
+	SaveBool8(invflag);
+	SaveBool8(chrflag);
 	WSave(nummonsters);
 	WSave(numitems);
 	WSave(nummissiles);
 	WSave(nobjects);
 
-	for (i = 0; i < NUMLEVELS; i++) {
+	for (i = 0; i < giNumberOfLevels; i++) {
 		ISave(glSeedTbl[i]);
 		WSave(gnLevelTypeTbl[i]);
 	}
@@ -1481,7 +1607,7 @@ void SaveGame()
 	plr[myplr].pDifficulty = gnDifficulty;
 	SavePlayer(myplr);
 
-	for (i = 0; i < MAXQUESTS; i++)
+	for (i = 0; i < giNumberQuests; i++)
 		SaveQuest(i);
 	for (i = 0; i < MAXPORTAL; i++)
 		SavePortal(i);
@@ -1527,7 +1653,7 @@ void SaveGame()
 	for (i = 0; i < numitems; i++)
 		SaveItem(&item[itemactive[i]]);
 	for (i = 0; i < 128; i++)
-		OSave(UniqueItemFlag[i]);
+		SaveBool8(UniqueItemFlag[i]);
 
 	for (j = 0; j < MAXDUNY; j++) {
 		for (i = 0; i < MAXDUNX; i++)
@@ -1569,7 +1695,7 @@ void SaveGame()
 		}
 		for (j = 0; j < DMAXY; j++) {
 			for (i = 0; i < DMAXX; i++)
-				OSave(automapview[i][j]);
+				SaveBool8(automapview[i][j]);
 		}
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++)
@@ -1580,14 +1706,13 @@ void SaveGame()
 	WSave(numpremium);
 	WSave(premiumlevel);
 
-	for (i = 0; i < SMITH_PREMIUM_ITEMS; i++)
+	for (i = 0; i < giNumberOfSmithPremiumItems; i++)
 		SavePremium(i);
 
-	OSave(automapflag);
+	SaveBool8(automapflag);
 	WSave(AutoMapScale);
-	pfile_get_game_name(szName);
 	dwLen = codec_get_encoded_len(tbuff - SaveBuff);
-	pfile_write_save_file(szName, SaveBuff, tbuff - SaveBuff, dwLen);
+	pfile_write_save_file("game", SaveBuff, tbuff - SaveBuff, dwLen);
 	mem_free_dbg(SaveBuff);
 	gbValidSaveFile = TRUE;
 	pfile_rename_temp_to_perm();
@@ -1601,8 +1726,10 @@ void SaveLevel()
 	int dwLen;
 	BYTE *SaveBuff;
 
+	DoUnVision(plr[myplr]._px, plr[myplr]._py, plr[myplr]._pLightRad); // fix for vision staying on the level
+
 	if (currlevel == 0)
-		glSeedTbl[0] = GetRndSeed();
+		glSeedTbl[0] = AdvanceRndSeed();
 
 	dwLen = codec_get_encoded_len(FILEBUFF);
 	SaveBuff = DiabloAllocPtr(dwLen);
@@ -1667,7 +1794,7 @@ void SaveLevel()
 		}
 		for (j = 0; j < DMAXY; j++) {
 			for (i = 0; i < DMAXX; i++)
-				OSave(automapview[i][j]);
+				SaveBool8(automapview[i][j]);
 		}
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++)
@@ -1759,7 +1886,7 @@ void LoadLevel()
 		}
 		for (j = 0; j < DMAXY; j++) {
 			for (i = 0; i < DMAXX; i++)
-				automapview[i][j] = OLoad();
+				automapview[i][j] = LoadBool8();
 		}
 		for (j = 0; j < MAXDUNY; j++) {
 			for (i = 0; i < MAXDUNX; i++)

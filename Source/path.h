@@ -12,18 +12,19 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
-extern PATHNODE path_nodes[MAXPATHNODES];
-extern int gdwCurPathStep;
-extern int gdwCurNodes;
-extern int pnode_vals[MAX_PATH_LENGTH];
-extern PATHNODE *pnode_ptr;
-extern PATHNODE *pnode_tblptr[MAXPATHNODES];
-extern PATHNODE *path_2_nodes;
-extern PATHNODE path_unusednodes[MAXPATHNODES];
+typedef struct PATHNODE {
+	Uint8 f;
+	Uint8 h;
+	Uint8 g;
+	int x;
+	int y;
+	struct PATHNODE *Parent;
+	struct PATHNODE *Child[8];
+	struct PATHNODE *NextNode;
+} PATHNODE;
 
 int FindPath(BOOL (*PosOk)(int, int, int), int PosOkArg, int sx, int sy, int dx, int dy, char *path);
 int path_get_h_cost(int sx, int sy, int dx, int dy);
-int path_check_equal(PATHNODE *pPath, int dx, int dy);
 PATHNODE *GetNextPath();
 BOOL path_solid_pieces(PATHNODE *pPath, int dx, int dy);
 BOOL path_get_path(BOOL (*PosOk)(int, int, int), int PosOkArg, PATHNODE *pPath, int x, int y);
@@ -40,10 +41,6 @@ PATHNODE *path_new_step();
 
 extern const char pathxdir[8];
 extern const char pathydir[8];
-
-/* data */
-extern char path_directions[9];
-
 #ifdef __cplusplus
 }
 #endif

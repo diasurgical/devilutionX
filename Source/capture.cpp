@@ -35,7 +35,7 @@ static BOOL CaptureHdr(short width, short height, std::ofstream *out)
 	Buffer.NPlanes = 1;
 	Buffer.BytesPerLine = SDL_SwapLE16(width);
 
-	out->write(reinterpret_cast<const char*>(&Buffer), sizeof(Buffer));
+	out->write(reinterpret_cast<const char *>(&Buffer), sizeof(Buffer));
 	return !out->fail();
 }
 
@@ -122,7 +122,8 @@ static bool CapturePix(WORD width, WORD height, WORD stride, BYTE *pixels, std::
 		pixels += stride;
 		writeSize = pBufferEnd - pBuffer;
 		out->write(reinterpret_cast<const char *>(pBuffer), writeSize);
-		if (out->fail()) return false;
+		if (out->fail())
+			return false;
 	}
 	mem_free_dbg(pBuffer);
 	return true;
@@ -175,7 +176,8 @@ void CaptureScreen()
 	BOOL success;
 
 	std::ofstream *out = CaptureFile(&FileName);
-	if (out == NULL) return;
+	if (out == NULL)
+		return;
 	DrawAndBlit();
 	PaletteGetEntries(256, palette);
 	RedPalette();

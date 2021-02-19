@@ -12,7 +12,11 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
-extern _plrmsg plr_msgs[PMSG_COUNT];
+typedef struct _plrmsg {
+	Uint32 time;
+	Uint8 player;
+	char str[144];
+} _plrmsg;
 
 void plrmsg_delay(BOOL delay);
 char *ErrorPlrMsg(const char *pszMsg);
@@ -22,10 +26,6 @@ void ClearPlrMsg();
 void InitPlrMsg();
 void DrawPlrMsg();
 void PrintPlrMsg(DWORD x, DWORD y, DWORD width, const char *str, BYTE col);
-
-/* rdata */
-
-extern const char text_color_from_player_num[MAX_PLRS + 1];
 
 #ifdef __cplusplus
 }

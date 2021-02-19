@@ -27,6 +27,9 @@ bool InGameMenu();
 // Whether the automap is being displayed.
 bool IsAutomapActive();
 
+// Whether the mouse cursor is being moved with the controller.
+bool IsMovingMouseCursorWithController();
+
 void UseBeltItem(int type);
 
 // Talk to towners, click on inv items, attack, etc.

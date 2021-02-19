@@ -58,7 +58,6 @@ const char *const MsgStrings[] = {
 	"You must be at least level 13 to use this.",
 	"You must be at least level 17 to use this.",
 	"Arcane knowledge gained!",
-#ifdef HELLFIRE
 	"That which does not kill you...",
 	"Knowledge is power.",
 	"Give and you shall receive.",
@@ -70,7 +69,6 @@ const char *const MsgStrings[] = {
 	"You feel wiser.",
 	"You feel refreshed.",
 	"That which can break will.",
-#endif
 };
 
 void InitDiabloMsg(char e)
@@ -85,7 +83,7 @@ void InitDiabloMsg(char e)
 			return;
 	}
 
-	msgtable[msgcnt] = e;
+	msgtable[msgcnt] = e; // BUGFIX: missing out-of-bounds check (fixed)
 	msgcnt++;
 
 	msgflag = msgtable[0];

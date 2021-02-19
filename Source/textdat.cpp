@@ -473,7 +473,7 @@ const TextDataStruct alltext[] = {
 	    1, 6, PS_WARR10 },
 	{ "I can see what you see not.\nVision milky then eyes rot.\nWhen you turn they will be gone,\nWhispering their hidden song.\nThen you see what cannot be,\nShadows move where light should be.\nOut of darkness, out of mind,\nCast down into the Halls of the Blind. |\n",
 	    1, 5, PS_WARR11 },
-	{ "The armories of Hell are home to the Warlord of Blood. In his wake lay the mutilated bodies of thousands. Angels and man alike have been cut down to fulfill his endless sacrifices to the Dark ones who scream for one thing - blood. |",
+	{ "The armories of Hell are home to the Warlord of Blood. In his wake lay the mutilated bodies of thousands. Angels and men alike have been cut down to fulfill his endless sacrifices to the Dark ones who scream for one thing - blood. |",
 	    1, 5, PS_WARR12 },
 	{ "Beyond the Hall of Heroes lies the Chamber of Bone. Eternal death awaits any who would seek to steal the treasures secured within this room. So speaks the Lord of Terror, and so it is written. |",
 	    1, 5, PS_MAGE1 },
@@ -481,7 +481,7 @@ const TextDataStruct alltext[] = {
 	    1, 6, PS_MAGE10 },
 	{ "I can see what you see not.\nVision milky then eyes rot.\nWhen you turn they will be gone,\nWhispering their hidden song.\nThen you see what cannot be,\nShadows move where light should be.\nOut of darkness, out of mind,\nCast down into the Halls of the Blind. |\n",
 	    1, 4, PS_MAGE11 },
-	{ "The armories of Hell are home to the Warlord of Blood. In his wake lay the mutilated bodies of thousands. Angels and man alike have been cut down to fulfill his endless sacrifices to the Dark ones who scream for one thing - blood. |",
+	{ "The armories of Hell are home to the Warlord of Blood. In his wake lay the mutilated bodies of thousands. Angels and men alike have been cut down to fulfill his endless sacrifices to the Dark ones who scream for one thing - blood. |",
 	    1, 5, PS_MAGE12 },
 	{ "Beyond the Hall of Heroes lies the Chamber of Bone. Eternal death awaits any who would seek to steal the treasures secured within this room. So speaks the Lord of Terror, and so it is written. |",
 	    1, 5, PS_ROGUE1 },
@@ -489,7 +489,7 @@ const TextDataStruct alltext[] = {
 	    1, 5, PS_ROGUE10 },
 	{ "I can see what you see not.\nVision milky then eyes rot.\nWhen you turn they will be gone,\nWhispering their hidden song.\nThen you see what cannot be,\nShadows move where light should be.\nOut of darkness, out of mind,\nCast down into the Halls of the Blind. |\n",
 	    1, 5, PS_ROGUE11 },
-	{ "The armories of Hell are home to the Warlord of Blood. In his wake lay the mutilated bodies of thousands. Angels and man alike have been cut down to fulfill his endless sacrifices to the Dark ones who scream for one thing - blood. |",
+	{ "The armories of Hell are home to the Warlord of Blood. In his wake lay the mutilated bodies of thousands. Angels and men alike have been cut down to fulfill his endless sacrifices to the Dark ones who scream for one thing - blood. |",
 	    1, 5, PS_ROGUE12 },
 	{ " |", 0, 5, TSFX_COW1 },
 	{ " |", 0, 5, TSFX_COW2 },
@@ -513,7 +513,6 @@ const TextDataStruct alltext[] = {
 	    1, 3, PS_NAR9 },
 	{ "Thank goodness you've returned!\nMuch has changed since you lived here, my friend. All was peaceful until the dark riders came and destroyed our village. Many were cut down where they stood, and those who took up arms were slain or dragged away to become slaves - or worse. The church at the edge of town has been desecrated and is being used for dark rituals. The screams that echo in the night are inhuman, but some of our townsfolk may yet survive. Follow the path that lies between my tavern and the blacksmith shop to find the church and save who you can. \n \nPerhaps I can tell you more if we speak again. Good luck.|",
 	    1, 5, TSFX_TAVERN0 },
-#ifdef HELLFIRE
 	{ "Beyond the Hall of Heroes lies the Chamber of Bone.  Eternal death awaits any who would seek to steal the treasures secured within this room.  So speaks the Lord of Terror, and so it is written. |",
 	    1, 5, PS_MONK1 },
 	{ "...and so, locked beyond the Gateway of Blood and past the Hall of Fire, Valor awaits for the Hero of Light to awaken... |",
@@ -646,7 +645,6 @@ const TextDataStruct alltext[] = {
 	{ "In Spiritu Sanctum. |", 1, 5, PS_ROGUE54 },
 	{ "Praedictum Otium. |", 1, 5, PS_ROGUE55 },
 	{ "Efficio Obitus Ut Inimicus. |", 1, 5, PS_ROGUE56 },
-#endif
 };
 /** unused */
 const DWORD gdwAllTextEntries = 259;

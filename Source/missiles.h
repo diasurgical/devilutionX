@@ -22,7 +22,7 @@ void GetDamageAmt(int i, int *mind, int *maxd);
 int GetSpellLevel(int id, int sn);
 void DeleteMissile(int mi, int i);
 BOOL MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, BOOLEAN shift);
-BOOL PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, BOOLEAN shift, int earflag);
+BOOL PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, BOOLEAN shift, int earflag, BOOLEAN *blocked);
 void SetMissAnim(int mi, int animtype);
 void SetMissDir(int mi, int dir);
 void LoadMissileGFX(BYTE mi);
@@ -30,7 +30,6 @@ void InitMissileGFX();
 void FreeMissiles();
 void FreeMissiles2();
 void InitMissiles();
-#ifdef HELLFIRE
 void missiles_hive_explosion(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam);
 void missiles_fire_rune(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam);
 void missiles_light_rune(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam);
@@ -58,8 +57,6 @@ void missiles_ring(int mi, int sx, int sy, int dx, int dy, int midir, char miene
 void missiles_search(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam);
 void missiles_cbolt_arrow(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam);
 void missiles_hbolt_arrow(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam);
-void AddBlodboil(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam);
-#endif
 void AddLArrow(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam);
 void AddArrow(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam);
 void AddRndTeleport(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, int id, int dam);
@@ -131,7 +128,6 @@ void mi_null_33(int i);
 void MI_Acidpud(int i);
 void MI_Firewall(int i);
 void MI_Fireball(int i);
-#ifdef HELLFIRE
 void missiles_4359A0(int i);
 void MI_Rune(int i);
 void mi_light_wall(int i);
@@ -147,7 +143,6 @@ void mi_search(int i);
 void mi_lightning_wall(int i);
 void mi_fire_nova(int i);
 void mi_spec_arrow(int i);
-#endif
 void MI_Lightctrl(int i);
 void MI_Lightning(int i);
 void MI_Town(int i);

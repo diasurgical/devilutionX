@@ -330,13 +330,13 @@ void CelBlitLightSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidt
 }
 
 /**
- * @brief Same as CelBlitLightSafe, with transparancy applied
+ * @brief Same as CelBlitLightSafe, with stippled transparancy applied
  * @param pDecodeTo The output buffer
  * @param pRLEBytes CEL pixel stream (run-length encoded)
  * @param nDataSize Size of CEL in bytes
  * @param nWidth Width of sprite
  */
-void CelBlitLightTransSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth)
+static void CelBlitLightTransSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth)
 {
 	int w;
 	BOOL shift;
@@ -420,7 +420,71 @@ void CelBlitLightTransSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int 
 }
 
 /**
- * @brief Same as CelBlitLightTransSafe
+ * @brief Same as CelBlitLightSafe, with blended transparancy applied
+ * @param pDecodeTo The output buffer
+ * @param pRLEBytes CEL pixel stream (run-length encoded)
+ * @param nDataSize Size of CEL in bytes
+ * @param nWidth Width of sprite
+ * @param tbl Palette translation table
+ */
+static void CelBlitLightBlendedSafe(BYTE *pDecodeTo, BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE *tbl)
+{
+	int i, w;
+	BYTE width;
+	BYTE *src, *dst;
+
+	assert(pDecodeTo != NULL);
+	assert(pRLEBytes != NULL);
+	assert(gpBuffer);
+
+	src = pRLEBytes;
+	dst = pDecodeTo;
+	if (tbl == NULL)
+		tbl = &pLightTbl[light_table_index * 256];
+	w = nWidth;
+
+	for (; src != &pRLEBytes[nDataSize]; dst -= BUFFER_WIDTH + w) {
+		for (i = w; i;) {
+			width = *src++;
+			if (!(width & 0x80)) {
+				i -= width;
+				if (dst < gpBufEnd && dst > gpBufStart) {
+					if (width & 1) {
+						dst[0] = paletteTransparencyLookup[dst[0]][tbl[src[0]]];
+						src++;
+						dst++;
+					}
+					width >>= 1;
+					if (width & 1) {
+						dst[0] = paletteTransparencyLookup[dst[0]][tbl[src[0]]];
+						dst[1] = paletteTransparencyLookup[dst[1]][tbl[src[1]]];
+						src += 2;
+						dst += 2;
+					}
+					width >>= 1;
+					for (; width; width--) {
+						dst[0] = paletteTransparencyLookup[dst[0]][tbl[src[0]]];
+						dst[1] = paletteTransparencyLookup[dst[1]][tbl[src[1]]];
+						dst[2] = paletteTransparencyLookup[dst[2]][tbl[src[2]]];
+						dst[3] = paletteTransparencyLookup[dst[3]][tbl[src[3]]];
+						src += 4;
+						dst += 4;
+					}
+				} else {
+					src += width;
+					dst += width;
+				}
+			} else {
+				width = -(char)width;
+				dst += width;
+				i -= width;
+			}
+		}
+	}
+}
+
+/**
+ * @brief Same as CelBlitLightSafe, with stippled transparancy applied
  * @param pBuff Target buffer
  * @param pCelBuff Cel data
  * @param nCel CEL frame number
@@ -435,9 +499,12 @@ void CelClippedBlitLightTrans(BYTE *pBuff, BYTE *pCelBuff, int nCel, int nWidth)
 
 	pRLEBytes = CelGetFrameClipped(pCelBuff, nCel, &nDataSize);
 
-	if (cel_transparency_active)
-		CelBlitLightTransSafe(pBuff, pRLEBytes, nDataSize, nWidth);
-	else if (light_table_index)
+	if (cel_transparency_active) {
+		if (sgOptions.blendedTransparancy)
+			CelBlitLightBlendedSafe(pBuff, pRLEBytes, nDataSize, nWidth, NULL);
+		else
+			CelBlitLightTransSafe(pBuff, pRLEBytes, nDataSize, nWidth);
+	} else if (light_table_index)
 		CelBlitLightSafe(pBuff, pRLEBytes, nDataSize, nWidth, NULL);
 	else
 		CelBlitSafe(pBuff, pRLEBytes, nDataSize, nWidth);
@@ -738,13 +805,22 @@ void SetRndSeed(int s)
 }
 
 /**
+ * @brief Advance the internal RNG seed and return the new value
+ * @return RNG seed
+ */
+int AdvanceRndSeed()
+{
+	SeedCount++;
+	sglGameSeed = static_cast<unsigned int>(RndMult) * sglGameSeed + RndInc;
+	return abs(sglGameSeed);
+}
+
+/**
  * @brief Get the current RNG seed
  * @return RNG seed
  */
 int GetRndSeed()
 {
-	SeedCount++;
-	sglGameSeed = static_cast<unsigned int>(RndMult) * sglGameSeed + RndInc;
 	return abs(sglGameSeed);
 }
 
@@ -759,8 +835,8 @@ int random_(BYTE idx, int v)
 	if (v <= 0)
 		return 0;
 	if (v < 0xFFFF)
-		return (GetRndSeed() >> 16) % v;
-	return GetRndSeed() % v;
+		return (AdvanceRndSeed() >> 16) % v;
+	return AdvanceRndSeed() % v;
 }
 
 /**
@@ -809,8 +885,8 @@ BYTE *LoadFileInMem(const char *pszName, DWORD *pdwFileLen)
 	BYTE *buf;
 	int fileLen;
 
-	WOpenFile(pszName, &file, FALSE);
-	fileLen = WGetFileSize(file, NULL, pszName);
+	SFileOpenFile(pszName, &file);
+	fileLen = SFileGetFileSize(file, NULL);
 
 	if (pdwFileLen)
 		*pdwFileLen = fileLen;
@@ -820,8 +896,8 @@ BYTE *LoadFileInMem(const char *pszName, DWORD *pdwFileLen)
 
 	buf = (BYTE *)DiabloAllocPtr(fileLen);
 
-	WReadFile(file, buf, fileLen, pszName);
-	WCloseFile(file);
+	SFileReadFile(file, buf, fileLen, NULL, NULL);
+	SFileCloseFile(file);
 
 	return buf;
 }
@@ -842,15 +918,15 @@ DWORD LoadFileWithMem(const char *pszName, BYTE *p)
 		app_fatal("LoadFileWithMem(NULL):\n%s", pszName);
 	}
 
-	WOpenFile(pszName, &hsFile, FALSE);
+	SFileOpenFile(pszName, &hsFile);
 
-	dwFileLen = WGetFileSize(hsFile, NULL, pszName);
+	dwFileLen = SFileGetFileSize(hsFile, NULL);
 	if (dwFileLen == 0) {
 		app_fatal("Zero length SFILE:\n%s", pszName);
 	}
 
-	WReadFile(hsFile, p, dwFileLen, pszName);
-	WCloseFile(hsFile);
+	SFileReadFile(hsFile, p, dwFileLen, NULL, NULL);
+	SFileCloseFile(hsFile);
 
 	return dwFileLen;
 }
@@ -887,10 +963,9 @@ void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel)
 				} else {
 					nDataSize -= width;
 					assert(nDataSize >= 0);
-					while (width) {
+					while (width--) {
 						*dst = ttbl[*dst];
 						dst++;
-						width--;
 					}
 				}
 			}

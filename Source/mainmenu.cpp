@@ -20,13 +20,16 @@ void mainmenu_refresh_music()
 {
 	music_start(menu_music_track_id);
 
-	if (gbIsSpawn)
+	if (gbIsSpawn && !gbIsHellfire) {
 		return;
+	}
 
 	do {
 		menu_music_track_id++;
-		if (menu_music_track_id == NUM_MUSIC)
-			menu_music_track_id = TMUSIC_TOWN;
+		if (menu_music_track_id == NUM_MUSIC || (!gbIsHellfire && menu_music_track_id > TMUSIC_L4))
+			menu_music_track_id = TMUSIC_L2;
+		if (gbIsSpawn && menu_music_track_id > TMUSIC_L1)
+			menu_music_track_id = TMUSIC_L5;
 	} while (menu_music_track_id == TMUSIC_TOWN || menu_music_track_id == TMUSIC_L1);
 }
 
@@ -48,34 +51,34 @@ static BOOL mainmenu_init_menu(int type)
 
 static BOOL mainmenu_single_player()
 {
-#ifdef HELLFIRE
-		if (!SRegLoadValue(APP_NAME, jogging_title, 0, &jogging_opt)) {
-			jogging_opt = TRUE;
-		}
-#endif
-	gbMaxPlayers = 1;
-
-	if (!SRegLoadValue("devilutionx", "game speed", 0, &ticks_per_sec)) {
-		SRegSaveValue("devilutionx", "game speed", 0, ticks_per_sec);
+	if (!SRegLoadValue("Hellfire", jogging_title, 0, &jogging_opt)) {
+		jogging_opt = TRUE;
 	}
+	if (!gbIsHellfire) {
+		jogging_opt = FALSE;
+	}
+
+	gbIsMultiplayer = false;
+
+	ticks_per_sec = sgOptions.ticksPerSecound;
 
 	return mainmenu_init_menu(SELHERO_NEW_DUNGEON);
 }
 
 static BOOL mainmenu_multi_player()
 {
-	gbMaxPlayers = MAX_PLRS;
+	jogging_opt = FALSE;
+	gbIsMultiplayer = true;
 	return mainmenu_init_menu(SELHERO_CONNECT);
 }
 
 static void mainmenu_play_intro()
 {
 	music_stop();
-#ifdef HELLFIRE
-	play_movie("gendata\\Hellfire.smk", TRUE);
-#else
-	play_movie("gendata\\diablo1.smk", TRUE);
-#endif
+	if (gbIsHellfire)
+		play_movie("gendata\\Hellfire.smk", TRUE);
+	else
+		play_movie("gendata\\diablo1.smk", TRUE);
 	mainmenu_refresh_music();
 }
 void mainmenu_change_name(int arg1, int arg2, int arg3, int arg4, char *name_1, char *name_2)
@@ -96,7 +99,7 @@ BOOL mainmenu_select_hero_dialog(
 {
 	BOOL hero_is_created = TRUE;
 	int dlgresult = 0;
-	if (gbMaxPlayers == 1) {
+	if (!gbIsMultiplayer) {
 		if (!UiSelHeroSingDialog(
 		        pfile_ui_set_hero_infos,
 		        pfile_ui_save_create,
@@ -164,23 +167,18 @@ void mainmenu_loop()
 				done = TRUE;
 			break;
 		case MAINMENU_ATTRACT_MODE:
- 		case MAINMENU_REPLAY_INTRO:
-#ifndef HELLFIRE
-			if (gbIsSpawn)
+		case MAINMENU_REPLAY_INTRO:
+			if (gbIsSpawn && !gbIsHellfire)
 				done = FALSE;
-			else
-#endif
-			if (gbActive)
+			else if (gbActive)
 				mainmenu_play_intro();
 			break;
 		case MAINMENU_SHOW_CREDITS:
 			UiCreditsDialog(16);
 			break;
-#ifdef HELLFIRE
 		case MAINMENU_SHOW_SUPPORT:
 			//UiSupportDialog(16);
 			break;
-#endif
 		case MAINMENU_EXIT_DIABLO:
 			done = TRUE;
 			break;

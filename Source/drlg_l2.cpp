@@ -61,7 +61,7 @@ BYTE VARCH2[] = {
 	47, 44,
 	 0,  0,
 	// clang-format on
- };
+};
 /** Miniset: Arch vertical. */
 BYTE VARCH3[] = {
 	// clang-format off
@@ -358,6 +358,7 @@ BYTE VARCH21[] = {
 };
 /** Miniset: Arch vertical - open wall. */
 BYTE VARCH22[] = {
+	// clang-format off
 	2, 3, // width, height
 
 	2,  7, // search
@@ -3465,7 +3466,7 @@ void LoadPreL2Dungeon(const char *sFileName, int vx, int vy)
 
 void CreateL2Dungeon(DWORD rseed, int entry)
 {
-	if (gbMaxPlayers == 1) {
+	if (!gbIsMultiplayer) {
 		if (currlevel == 7 && quests[Q_BLIND]._qactive == QUEST_NOTAVAIL) {
 			currlevel = 6;
 			CreateL2Dungeon(glSeedTbl[6], 4);

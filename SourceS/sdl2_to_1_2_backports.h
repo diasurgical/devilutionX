@@ -19,6 +19,8 @@
 #define SDL_InvalidParamError(param) SDL_SetError("Parameter '%s' is invalid", (param))
 #define SDL_floor floor
 
+#define SDL_MAX_UINT32 ((Uint32)0xFFFFFFFFu)
+
 //== Events handling
 
 #define SDL_threadID Uint32
@@ -48,6 +50,7 @@
 // For now we only process ASCII input when using SDL1.
 #define SDL_TEXTINPUTEVENT_TEXT_SIZE 2
 
+#define SDL_JoystickID Sint32
 #define SDL_JoystickNameForIndex SDL_JoystickName
 
 inline void SDL_Log(const char *fmt, ...)

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SDL.h>
+
 #include "controls/controller_buttons.h"
 
 namespace dvl {
@@ -9,10 +11,12 @@ struct ControllerButtonEvent {
 	bool up;
 };
 
+// NOTE: Not idempotent because of how it handles axis triggers.
+// Must be called exactly once per SDL input event.
 ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event);
 
 bool IsControllerButtonPressed(ControllerButton button);
 
-void InitController();
+bool HandleControllerAddedOrRemovedEvent(const SDL_Event &event);
 
 } // namespace dvl
