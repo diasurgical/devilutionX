@@ -592,11 +592,14 @@ BOOL SkipThemeRoom(int x, int y)
 
 void InitLevels()
 {
-	if (!leveldebug) {
-		currlevel = 0;
-		leveltype = DTYPE_TOWN;
-		setlevel = FALSE;
-	}
+#ifdef _DEBUG
+	if (leveldebug)
+		return;
+#endif
+
+	currlevel = 0;
+	leveltype = DTYPE_TOWN;
+	setlevel = FALSE;
 }
 
 DEVILUTION_END_NAMESPACE

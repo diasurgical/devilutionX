@@ -14,9 +14,7 @@ int numlights;
 BYTE lightradius[16][128];
 BOOL dovision;
 int numvision;
-#ifdef _DEBUG
 char lightmax;
-#endif
 BOOL dolighting;
 BYTE lightblock[64][16][16];
 int visionid;
