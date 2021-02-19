@@ -1930,7 +1930,7 @@ BOOL CanPut(int x, int y)
 		return FALSE;
 
 	if (dObject[x][y] != 0) {
-		if (object[dObject[x][y] > 0 ? dObject[x][y] - 1 : -1 - dObject[x][y]]._oSolidFlag)
+		if (object[dObject[x][y] > 0 ? dObject[x][y] - 1 : -(dObject[x][y] + 1)]._oSolidFlag)
 			return FALSE;
 	}
 

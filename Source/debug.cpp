@@ -203,7 +203,7 @@ void GetDebugMonster()
 		if (mi2 != 0) {
 			mi1 = mi2 - 1;
 			if (mi2 <= 0)
-				mi1 = -1 - mi2;
+				mi1 = -(mi2 + 1);
 		} else {
 			mi1 = dbgmon;
 		}

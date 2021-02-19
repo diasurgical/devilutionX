@@ -1420,9 +1420,9 @@ void AddPurifyingFountain(int i)
 
 	ox = object[i]._ox;
 	oy = object[i]._oy;
-	dObject[ox][oy - 1] = -1 - i;
-	dObject[ox - 1][oy] = -1 - i;
-	dObject[ox - 1][oy - 1] = -1 - i;
+	dObject[ox][oy - 1] = -(i + 1);
+	dObject[ox - 1][oy] = -(i + 1);
+	dObject[ox - 1][oy - 1] = -(i + 1);
 	object[i]._oRndSeed = AdvanceRndSeed();
 }
 
@@ -1452,9 +1452,9 @@ void AddMurkyFountain(int i)
 
 	ox = object[i]._ox;
 	oy = object[i]._oy;
-	dObject[ox][oy - 1] = -1 - i;
-	dObject[ox - 1][oy] = -1 - i;
-	dObject[ox - 1][oy - 1] = -1 - i;
+	dObject[ox][oy - 1] = -(i + 1);
+	dObject[ox - 1][oy] = -(i + 1);
+	dObject[ox - 1][oy - 1] = -(i + 1);
 	object[i]._oRndSeed = AdvanceRndSeed();
 }
 
@@ -1565,9 +1565,9 @@ void AddMushPatch()
 	if (nobjects < MAXOBJECTS) {
 		i = objectavail[0];
 		GetRndObjLoc(5, &x, &y);
-		dObject[x + 1][y + 1] = -1 - i;
-		dObject[x + 2][y + 1] = -1 - i;
-		dObject[x + 1][y + 2] = -1 - i;
+		dObject[x + 1][y + 1] = -(i + 1);
+		dObject[x + 2][y + 1] = -(i + 1);
+		dObject[x + 1][y + 2] = -(i + 1);
 		AddObject(OBJ_MUSHPATCH, x + 2, y + 2);
 	}
 }

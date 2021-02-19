@@ -1397,7 +1397,7 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 		plr[pnum]._pVar7 = 0;
 		break;
 	case PM_WALK2:
-		dPlayer[plr[pnum]._px][plr[pnum]._py] = -1 - pnum;
+		dPlayer[plr[pnum]._px][plr[pnum]._py] = -(pnum + 1);
 		plr[pnum]._pVar1 = plr[pnum]._px;
 		plr[pnum]._pVar2 = plr[pnum]._py;
 		plr[pnum]._px = px; // Move player to the next tile to maintain correct render order
@@ -1420,8 +1420,8 @@ void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 		int x = mapx + plr[pnum]._px;
 		int y = mapy + plr[pnum]._py;
 
-		dPlayer[plr[pnum]._px][plr[pnum]._py] = -1 - pnum;
-		dPlayer[px][py] = -1 - pnum;
+		dPlayer[plr[pnum]._px][plr[pnum]._py] = -(pnum + 1);
+		dPlayer[px][py] = -(pnum + 1);
 		plr[pnum]._pVar4 = x;
 		plr[pnum]._pVar5 = y;
 		dFlags[x][y] |= BFLAG_PLAYERLR;
@@ -3266,7 +3266,7 @@ void CheckNewPath(int pnum)
 			i = plr[pnum].destParam1;
 			x = abs(plr[pnum]._px - object[i]._ox);
 			y = abs(plr[pnum]._py - object[i]._oy);
-			if (y > 1 && dObject[object[i]._ox][object[i]._oy - 1] == -1 - i) {
+			if (y > 1 && dObject[object[i]._ox][object[i]._oy - 1] == -(i + 1)) {
 				y = abs(plr[pnum]._py - object[i]._oy + 1);
 			}
 			if (x <= 1 && y <= 1) {
@@ -3282,7 +3282,7 @@ void CheckNewPath(int pnum)
 			i = plr[pnum].destParam1;
 			x = abs(plr[pnum]._px - object[i]._ox);
 			y = abs(plr[pnum]._py - object[i]._oy);
-			if (y > 1 && dObject[object[i]._ox][object[i]._oy - 1] == -1 - i) {
+			if (y > 1 && dObject[object[i]._ox][object[i]._oy - 1] == -(i + 1)) {
 				y = abs(plr[pnum]._py - object[i]._oy + 1);
 			}
 			if (x <= 1 && y <= 1) {
@@ -3362,7 +3362,7 @@ void CheckNewPath(int pnum)
 			i = plr[pnum].destParam1;
 			x = abs(plr[pnum]._px - object[i]._ox);
 			y = abs(plr[pnum]._py - object[i]._oy);
-			if (y > 1 && dObject[object[i]._ox][object[i]._oy - 1] == -1 - i) {
+			if (y > 1 && dObject[object[i]._ox][object[i]._oy - 1] == -(i + 1)) {
 				y = abs(plr[pnum]._py - object[i]._oy + 1);
 			}
 			if (x <= 1 && y <= 1) {

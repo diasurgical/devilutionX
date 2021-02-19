@@ -339,6 +339,7 @@ void CreateTown(int entry)
 	}
 
 	T_Pass3();
+	memset(dFlags, 0, sizeof(dFlags));
 	memset(dLight, 0, sizeof(dLight));
 	memset(dFlags, 0, sizeof(dFlags));
 	memset(dPlayer, 0, sizeof(dPlayer));
