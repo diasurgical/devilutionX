@@ -2770,7 +2770,7 @@ void AddStone(int mi, int sx, int sy, int dx, int dy, int midir, char mienemy, i
 			ty = dy + CrawlTable[l];
 			if (tx > 0 && tx < MAXDUNX && ty > 0 && ty < MAXDUNY) {
 				mid = dMonster[tx][ty];
-				mid = mid > 0 ? mid - 1 : -1 - mid;
+				mid = mid > 0 ? mid - 1 : -(mid + 1);
 				if (mid > MAX_PLRS - 1 && monster[mid]._mAi != AI_DIABLO && monster[mid].MType->mtype != MT_NAKRUL) {
 					if (monster[mid]._mmode != MM_FADEIN && monster[mid]._mmode != MM_FADEOUT && monster[mid]._mmode != MM_CHARGE) {
 						j = -99;
@@ -3685,7 +3685,7 @@ void MI_Lightball(int i)
 		if (obj > 0) {
 			oi = obj - 1;
 		} else {
-			oi = -1 - obj;
+			oi = -(obj + 1);
 		}
 		if (object[oi]._otype == OBJ_SHRINEL || object[oi]._otype == OBJ_SHRINER)
 			missile[i]._mirange = j;
@@ -5003,7 +5003,7 @@ void MI_Rhino(int i)
 	}
 	monster[monst]._mfutx = omx;
 	monster[monst]._moldx = omx;
-	dMonster[omx][omy] = -1 - monst;
+	dMonster[omx][omy] = -(monst + 1);
 	monster[monst]._mx = omx;
 	monster[monst]._mfuty = omy;
 	monster[monst]._moldy = omy;

@@ -2485,7 +2485,7 @@ int RndItem(int m)
 	int ril[512];
 
 	if ((monster[m].MData->mTreasure & 0x8000) != 0)
-		return -1 - (monster[m].MData->mTreasure & 0xFFF);
+		return -((monster[m].MData->mTreasure & 0xFFF) + 1);
 
 	if (monster[m].MData->mTreasure & 0x4000)
 		return 0;
@@ -2528,7 +2528,7 @@ int RndUItem(int m)
 	BOOL okflag;
 
 	if (m != -1 && (monster[m].MData->mTreasure & 0x8000) != 0 && !gbIsMultiplayer)
-		return -1 - (monster[m].MData->mTreasure & 0xFFF);
+		return -((monster[m].MData->mTreasure & 0xFFF) + 1);
 
 	int curlv = items_get_currlevel();
 	ri = 0;

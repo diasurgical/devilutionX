@@ -1595,7 +1595,7 @@ void M_ClearSquares(int i)
 
 	mx = monster[i]._moldx;
 	my = monster[i]._moldy;
-	m1 = -1 - i;
+	m1 = -(i + 1);
 	m2 = i + 1;
 
 	for (y = my - 1; y <= my + 1; y++) {
@@ -4197,7 +4197,7 @@ void MAI_Rhino(int i)
 				if (AddMissile(Monst->_mx, Monst->_my, fx, fy, md, MIS_RHINO, Monst->_menemy, i, 0, 0) != -1) {
 					if (Monst->MData->snd_special)
 						PlayEffect(i, 3);
-					dMonster[Monst->_mx][Monst->_my] = -1 - i;
+					dMonster[Monst->_mx][Monst->_my] = -(i + 1);
 					Monst->_mmode = MM_CHARGE;
 				}
 			} else {
