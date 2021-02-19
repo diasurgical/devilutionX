@@ -65,6 +65,42 @@ int framestart;
 
 /* data */
 
+const char *const szMonModeAssert[] = {
+	"standing",
+	"walking (1)",
+	"walking (2)",
+	"walking (3)",
+	"attacking",
+	"getting hit",
+	"dying",
+	"attacking (special)",
+	"fading in",
+	"fading out",
+	"attacking (ranged)",
+	"standing (special)",
+	"attacking (special ranged)",
+	"delaying",
+	"charging",
+	"stoned",
+	"healing",
+	"talking"
+};
+
+const char *const szPlrModeAssert[] = {
+	"standing",
+	"walking (1)",
+	"walking (2)",
+	"walking (3)",
+	"attacking (melee)",
+	"attacking (ranged)",
+	"blocking",
+	"getting hit",
+	"dying",
+	"casting a spell",
+	"changing levels",
+	"quitting"
+};
+
 /**
  * @brief Clear cursor state
  */
@@ -213,12 +249,16 @@ void DrawMissilePrivate(MissileStruct *m, int sx, int sy, BOOL pre)
 		return;
 
 	pCelBuff = m->_miAnimData;
-	assurance(pCelBuff != NULL, m->_mitype);
-
+	if (pCelBuff == NULL) {
+		SDL_Log("Draw Missile 2 type %d: NULL Cel Buffer", m->_mitype);
+		return;
+	}
 	nCel = m->_miAnimFrame;
 	frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
-	assurance(nCel >= 1 && frames <= 50 && nCel <= frames, nCel);
-
+	if (nCel < 1 || frames > 50 || nCel > frames) {
+		SDL_Log("Draw Missile 2: frame %d of %d, missile type==%d", nCel, frames, m->_mitype);
+		return;
+	}
 	mx = sx + m->_mixoff - m->_miAnimWidth2;
 	my = sy + m->_miyoff;
 	if (m->_miUniqTrans)
@@ -274,14 +314,32 @@ static void DrawMonster(int x, int y, int mx, int my, int m)
 	char trans;
 	BYTE *pCelBuff;
 
-	assurance(m >= 0 && m < MAXMONSTERS, m);
+	if (m < 0 || m >= MAXMONSTERS) {
+		SDL_Log("Draw Monster: tried to draw illegal monster %d", m);
+		return;
+	}
 
 	pCelBuff = monster[m]._mAnimData;
-	assurance(pCelBuff != NULL, m);
+	if (pCelBuff == NULL) {
+		SDL_Log("Draw Monster \"%s\": NULL Cel Buffer", monster[m].mName);
+		return;
+	}
 
 	nCel = monster[m]._mAnimFrame;
 	frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
-	assurance(nCel >= 1 && frames <= 50 && nCel <= frames, nCel);
+	if (nCel < 1 || frames > 50 || nCel > frames) {
+		const char *szMode = "unknown action";
+		if (monster[m]._mmode <= 17)
+			szMode = szMonModeAssert[monster[m]._mmode];
+		SDL_Log(
+		    "Draw Monster \"%s\" %s: facing %d, frame %d of %d",
+		    monster[m].mName,
+		    szMode,
+		    monster[m]._mdir,
+		    nCel,
+		    frames);
+		return;
+	}
 
 	if (!(dFlags[x][y] & BFLAG_LIT)) {
 		Cl2DrawLightTbl(mx, my, monster[m]._mAnimData, monster[m]._mAnimFrame, monster[m].MType->width, 1);
@@ -349,10 +407,26 @@ static void DrawPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, i
 		return;
 	}
 
-	assurance(pCelBuff != NULL, pnum);
+	if (pCelBuff == NULL) {
+		SDL_Log("Drawing player %d \"%s\": NULL Cel Buffer", pnum, plr[pnum]._pName);
+		return;
+	}
 
 	frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
-	assurance(nCel >= 1 && frames <= 50 && nCel <= frames, nCel);
+	if (nCel < 1 || frames > 50 || nCel > frames) {
+		const char *szMode = "unknown action";
+		if (plr[pnum]._pmode <= PM_QUIT)
+			szMode = szPlrModeAssert[plr[pnum]._pmode];
+		SDL_Log(
+		    "Drawing player %d \"%s\" %s: facing %d, frame %d of %d",
+		    pnum,
+		    plr[pnum]._pName,
+		    szMode,
+		    plr[pnum]._pdir,
+		    nCel,
+		    frames);
+		return;
+	}
 
 	if (pnum == pcursplr)
 		Cl2DrawOutline(165, px, py, pCelBuff, nCel, nWidth);
@@ -439,14 +513,20 @@ static void DrawObject(int x, int y, int ox, int oy, BOOL pre)
 		sy = oy + (yy << 4) + (xx << 4);
 	}
 
-	assert((unsigned char)bv < MAXOBJECTS);
+	assert(bv >= 0 && bv < MAXOBJECTS);
 
 	pCelBuff = object[bv]._oAnimData;
-	assurance(pCelBuff != NULL, object[bv]._otype);
+	if (pCelBuff == NULL) {
+		SDL_Log("Draw Object type %d: NULL Cel Buffer", object[bv]._otype);
+		return;
+	}
 
 	nCel = object[bv]._oAnimFrame;
 	frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
-	assurance(nCel >= 1 && frames <= 50 && nCel <= frames, nCel);
+	if (nCel < 1 || frames > 50 || nCel > frames) {
+		SDL_Log("Draw Object: frame %d of %d, object type==%d", nCel, frames, object[bv]._otype);
+		return;
+	}
 
 	if (bv == pcursobj)
 		CelBlitOutline(194, sx, sy, object[bv]._oAnimData, object[bv]._oAnimFrame, object[bv]._oAnimWidth);
@@ -543,11 +623,17 @@ static void DrawItem(int x, int y, int sx, int sy, BOOL pre)
 		return;
 
 	pCelBuff = pItem->_iAnimData;
-	assurance(pCelBuff != NULL, bItem);
+	if (pCelBuff == NULL) {
+		SDL_Log("Draw Item \"%s\" 1: NULL Cel Buffer", pItem->_iIName);
+		return;
+	}
 
 	nCel = pItem->_iAnimFrame;
 	pFrameTable = (DWORD *)pCelBuff;
-	assurance(nCel >= 1 && pFrameTable[0] <= 50 && nCel <= pFrameTable[0], nCel);
+	if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
+		SDL_Log("Draw \"%s\" Item 1: frame %d of %d, item type==%d", pItem->_iIName, nCel, pFrameTable[0], pItem->_itype);
+		return;
+	}
 
 	int px = sx - pItem->_iAnimWidth2;
 	if (bItem - 1 == pcursitem || AutoMapShowItems) {
@@ -585,14 +671,20 @@ static void DrawMonsterHelper(int x, int y, int oy, int sx, int sy)
 	if (!(dFlags[x][y] & BFLAG_LIT) && !plr[myplr]._pInfraFlag)
 		return;
 
-	assurance(mi >= 0 && mi < MAXMONSTERS, mi);
+	if (mi < 0 || mi >= MAXMONSTERS) {
+		SDL_Log("Draw Monster: tried to draw illegal monster %d", mi);
+		return;
+	}
 
 	pMonster = &monster[mi];
 	if (pMonster->_mFlags & MFLAG_HIDDEN) {
 		return;
 	}
 
-	assurance(pMonster->MType != NULL, mi);
+	if (pMonster->MType == NULL) {
+		SDL_Log("Draw Monster \"%s\": uninitialized monster", pMonster->mName);
+		return;
+	}
 
 	px = sx + pMonster->_mxoff - pMonster->MType->width2;
 	py = sy + pMonster->_myoff;
@@ -614,7 +706,10 @@ static void DrawPlayerHelper(int x, int y, int sx, int sy)
 	int p = dPlayer[x][y];
 	p = p > 0 ? p - 1 : -(p + 1);
 
-	assurance(p >= 0 && p < MAX_PLRS, p);
+	if (p < 0 || p >= MAX_PLRS) {
+		SDL_Log("draw player: tried to draw illegal player %d", p);
+		return;
+	}
 
 	PlayerStruct *pPlayer = &plr[p];
 	int px = sx + pPlayer->_pxoff - pPlayer->_pAnimWidth2;
@@ -679,7 +774,8 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy)
 			pFrameTable = (DWORD *)pCelBuff;
 			nCel = pDeadGuy->_deadFrame;
 			if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
-				app_fatal("Unclipped dead: frame %d of %d, deadnum==%d", nCel, pFrameTable[0], (bDead & 0x1F) - 1);
+				SDL_Log("Unclipped dead: frame %d of %d, deadnum==%d", nCel, pFrameTable[0], (bDead & 0x1F) - 1);
+				break;
 			}
 			if (pDeadGuy->_deadtrans != 0) {
 				Cl2DrawLightTbl(px, dy, pCelBuff, nCel, pDeadGuy->_deadWidth, pDeadGuy->_deadtrans);
