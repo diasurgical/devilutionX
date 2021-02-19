@@ -1106,8 +1106,10 @@ void InitMonsters()
 	int scattertypes[NUM_MTYPES];
 
 	numscattypes = 0;
+#ifdef _DEBUG
 	if (gbIsMultiplayer)
 		CheckDungeonClear();
+#endif
 	if (!setlevel) {
 		AddMonster(1, 0, 0, 0, FALSE);
 		AddMonster(1, 0, 0, 0, FALSE);

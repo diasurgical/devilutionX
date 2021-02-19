@@ -25,7 +25,9 @@
 #include "control.h"
 #include "cursor.h"
 #include "dead.h"
+#ifdef _DEBUG
 #include "debug.h"
+#endif
 #include "diablo.h"
 #include "doom.h"
 #include "drlg_l1.h"

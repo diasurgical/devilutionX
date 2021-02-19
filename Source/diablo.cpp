@@ -57,12 +57,12 @@ Options sgOptions;
  */
 BOOL fullscreen = TRUE;
 bool gbShowIntro = true;
+BOOL leveldebug;
 #ifdef _DEBUG
 BOOL monstdebug;
 int DebugMonsters[10];
 int debugmonsttypes;
 BOOL visiondebug;
-BOOL leveldebug;
 int questdebug = -1;
 int debug_mode_key_s;
 int debug_mode_key_w;
@@ -241,7 +241,9 @@ static void start_game(unsigned int uMsg)
 	cineflag = FALSE;
 	InitCursor();
 	InitLightTable();
+#ifdef _DEBUG
 	LoadDebugGFX();
+#endif
 	assert(ghMainWnd);
 	music_stop();
 	ShowProgress(uMsg);
@@ -268,7 +270,9 @@ static void free_game()
 	FreeItemGFX();
 	FreeCursor();
 	FreeLightTable();
+#ifdef _DEBUG
 	FreeDebugGFX();
+#endif
 	FreeGameMem();
 }
 

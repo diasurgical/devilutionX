@@ -62,12 +62,12 @@ void LoadOptions();
 /* rdata */
 
 extern BOOL fullscreen;
+extern BOOL leveldebug;
 #ifdef _DEBUG
 extern BOOL monstdebug;
 extern int debugmonsttypes;
 extern int DebugMonsters[10];
 extern BOOL visiondebug;
-extern BOOL leveldebug;
 extern int questdebug;
 extern int debug_mode_key_w;
 extern int debug_mode_key_inverted_v;
