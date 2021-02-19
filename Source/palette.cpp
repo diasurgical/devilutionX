@@ -7,10 +7,6 @@
 #include "../SourceX/display.h"
 #include "../3rdParty/Storm/Source/storm.h"
 
-#ifdef USE_SDL1
-#include "sdl2_to_1_2_backports.h"
-#endif
-
 DEVILUTION_BEGIN_NAMESPACE
 
 SDL_Color logical_palette[256];
