@@ -682,84 +682,53 @@ BOOL SpecialAutoPlace(int pnum, int ii, int sx, int sy)
 
 BOOL GoldAutoPlace(int pnum)
 {
-	int ii;
-	int xx, yy;
-	BOOL done;
+	bool done = false;
 
-	done = FALSE;
 	for (int i = 0; i < plr[pnum]._pNumInv && !done; i++) {
-		if (plr[pnum].InvList[i]._itype == ITYPE_GOLD) {
-			int gold = plr[pnum].InvList[i]._ivalue + plr[pnum].HoldItem._ivalue;
-			if (gold <= MaxGold) {
-				plr[pnum].InvList[i]._ivalue = gold;
-				SetPlrHandGoldCurs(&plr[pnum].InvList[i]);
-				plr[pnum]._pGold = CalculateGold(pnum);
-				done = TRUE;
-#ifdef HELLFIRE
-				plr[pnum].HoldItem._ivalue = 0;
+		if (plr[pnum].InvList[i]._itype != ITYPE_GOLD)
+			continue;
+		if (plr[pnum].InvList[i]._ivalue >= MaxGold)
+			continue;
+
+		plr[pnum].InvList[i]._ivalue += plr[pnum].HoldItem._ivalue;
+		if (plr[pnum].InvList[i]._ivalue > MaxGold) {
+			plr[pnum].HoldItem._ivalue = plr[pnum].InvList[i]._ivalue - MaxGold;
+			SetPlrHandGoldCurs(&plr[pnum].HoldItem);
+			plr[pnum].InvList[i]._ivalue = MaxGold;
+			if (gbIsHellfire)
+				GetPlrHandSeed(&plr[pnum].HoldItem);
+		} else {
+			plr[pnum].HoldItem._ivalue = 0;
+			done = true;
+		}
+
+		SetPlrHandGoldCurs(&plr[pnum].InvList[i]);
+		plr[pnum]._pGold = CalculateGold(pnum);
+	}
+
+	for (int i = 39; i >= 0 && !done; i--) {
+		int yy = 10 * (i / 10);
+		int xx = i % 10;
+		if (plr[pnum].InvGrid[xx + yy] == 0) {
+			int ii = plr[pnum]._pNumInv;
+			plr[pnum].InvList[ii] = plr[pnum].HoldItem;
+			plr[pnum]._pNumInv = plr[pnum]._pNumInv + 1;
+			plr[pnum].InvGrid[xx + yy] = plr[pnum]._pNumInv;
+			GetPlrHandSeed(&plr[pnum].InvList[ii]);
+			int gold = plr[pnum].HoldItem._ivalue;
+			if (gold > MaxGold) {
+				gold -= MaxGold;
+				plr[pnum].HoldItem._ivalue = gold;
+				GetPlrHandSeed(&plr[pnum].HoldItem);
+				plr[pnum].InvList[ii]._ivalue = MaxGold;
 			} else {
-				int max_gold = MaxGold;
-				if (plr[pnum].InvList[i]._ivalue < max_gold) {
-					int gold = max_gold - plr[pnum].InvList[i]._ivalue;
-					plr[pnum].InvList[i]._ivalue = max_gold;
-					plr[pnum].InvList[i]._iCurs = ICURS_GOLD_LARGE;
-					plr[pnum].HoldItem._ivalue -= gold;
-					if (plr[pnum].HoldItem._ivalue < 0) {
-						plr[pnum].HoldItem._ivalue = 0;
-						done = TRUE;
-					}
-					GetPlrHandSeed(&plr[pnum].HoldItem);
-					control_set_gold_curs(pnum);
-					plr[pnum]._pGold = CalculateGold(pnum);
-				}
-#endif
+				plr[pnum].HoldItem._ivalue = 0;
+				done = true;
+				plr[pnum]._pGold = CalculateGold(pnum);
+				SetCursor_(CURSOR_HAND);
 			}
 		}
 	}
-
-#ifndef HELLFIRE
-	if (!done)
-		for (int i = 0; i < plr[pnum]._pNumInv && !done; i++) {
-			if (plr[pnum].InvList[i]._itype == ITYPE_GOLD && plr[pnum].InvList[i]._ivalue < GOLD_MAX_LIMIT) {
-				if (plr[pnum].HoldItem._ivalue + plr[pnum].InvList[i]._ivalue <= GOLD_MAX_LIMIT) {
-					plr[pnum].InvList[i]._ivalue = plr[pnum].HoldItem._ivalue + plr[pnum].InvList[i]._ivalue;
-					SetPlrHandGoldCurs(&plr[pnum].InvList[i]);
-					plr[pnum]._pGold = CalculateGold(pnum);
-					done = TRUE;
-				}
-			}
-		}
-#endif
-
-	if (!done)
-		for (int i = 39; i >= 0 && !done; i--) {
-			yy = 10 * (i / 10);
-			xx = i % 10;
-			if (plr[pnum].InvGrid[xx + yy] == 0) {
-				ii = plr[pnum]._pNumInv;
-				plr[pnum].InvList[ii] = plr[pnum].HoldItem;
-				plr[pnum]._pNumInv = plr[pnum]._pNumInv + 1;
-				plr[pnum].InvGrid[xx + yy] = plr[pnum]._pNumInv;
-				GetPlrHandSeed(&plr[pnum].InvList[ii]);
-#ifdef HELLFIRE
-				int gold = plr[pnum].HoldItem._ivalue;
-				if (gold > MaxGold) {
-					gold -= MaxGold;
-					plr[pnum].HoldItem._ivalue = gold;
-					GetPlrHandSeed(&plr[pnum].HoldItem);
-					plr[pnum].InvList[ii]._ivalue = MaxGold;
-				} else {
-					plr[pnum].HoldItem._ivalue = 0;
-					done = TRUE;
-					plr[pnum]._pGold = CalculateGold(pnum);
-					SetCursor_(CURSOR_HAND);
-				}
-#else
-				plr[pnum]._pGold = CalculateGold(pnum);
-				done = TRUE;
-#endif
-			}
-		}
 
 	return done;
 }
@@ -1755,10 +1724,10 @@ void AutoGetItem(int pnum, int ii)
 	SetICursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 	if (plr[pnum].HoldItem._itype == ITYPE_GOLD) {
 		done = GoldAutoPlace(pnum);
-#ifdef HELLFIRE
-		if (!done)
+		if (!done) {
 			item[ii]._ivalue = plr[pnum].HoldItem._ivalue;
-#endif
+			SetPlrHandGoldCurs(&item[ii]);
+		}
 	} else {
 		done = FALSE;
 		if (((plr[pnum]._pgfxnum & 0xF) == ANIM_ID_UNARMED
