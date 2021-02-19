@@ -67,6 +67,18 @@ jobs:
       - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake
       - run: cmake --build build -j $(nproc)
       - store_artifacts: {path: ./build/devilutionx.exe, destination: devilutionx_x86.exe}
+  windows_x64:
+    docker:
+      - image: debian:stable
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: apt-get update -y
+      - run: apt-get install -y cmake gcc-mingw-w64 g++-mingw-w64 wget git sudo
+      - run: Packaging/windows/mingw-prep64.sh
+      - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc64.cmake
+      - run: cmake --build build -j $(nproc)
+      - store_artifacts: {path: ./build/devilutionx.exe, destination: devilutionx_x64.exe}
   switch:
     docker:
       - image: devkitpro/devkita64:20200528
@@ -101,6 +113,7 @@ workflows:
       - linux_x86_64_test
       - linux_x86
       - windows_x86
+      - windows_x64
       - linux_x86_64_sdl1
       - switch
       - amigaos-m68k
