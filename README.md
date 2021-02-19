@@ -112,7 +112,7 @@ Download and place the 64bit MinGW Development Libraries of [SDL2](https://www.l
 NOTE: SDL2 2.0.12 appears to not compile correctly.
 
 ```
-sudo apt-get install cmake gcc-mingw-w64 g++-mingw-w64
+sudo apt-get install cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
 ```
 ### Compiling
 

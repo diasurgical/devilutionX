@@ -69,12 +69,16 @@ jobs:
       - store_artifacts: {path: ./build/devilutionx.exe, destination: devilutionx_x86.exe}
   windows_x64:
     docker:
-      - image: debian:stable
+      - image: ubuntu:20.04
+        environment:
+           TZ: "America/Los_Angeles"
     working_directory: ~/repo
+    environment:
+      TZ: "America/Los_Angeles"
     steps:
       - checkout
       - run: apt-get update -y
-      - run: apt-get install -y cmake gcc-mingw-w64 g++-mingw-w64 wget git sudo
+      - run: DEBIAN_FRONTEND="noninteractive" TZ="America/Los_Angeles" apt-get install -y cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 wget git sudo
       - run: Packaging/windows/mingw-prep64.sh
       - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc64.cmake
       - run: cmake --build build -j $(nproc)
