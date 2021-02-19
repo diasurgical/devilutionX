@@ -3162,6 +3162,9 @@ void SpawnRock()
 	int xx, yy;
 	int ostand;
 
+	if (numitems >= MAXITEMS)
+		return;
+
 	ostand = FALSE;
 	for (i = 0; i < nobjects && !ostand; i++) {
 		ii = objectactive[i];
@@ -3189,6 +3192,9 @@ void SpawnRock()
 void SpawnRewardItem(int itemid, int xx, int yy)
 {
 	int i;
+
+	if (numitems >= MAXITEMS)
+		return;
 
 	i = itemavail[0];
 	int curlv = items_get_currlevel();
