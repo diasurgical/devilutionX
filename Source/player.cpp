@@ -1990,8 +1990,8 @@ void StripTopGold(int pnum)
 				SetGoldCurs(pnum, i);
 				SetPlrHandItem(&plr[pnum].HoldItem, 0);
 				GetGoldSeed(pnum, &plr[pnum].HoldItem);
-				SetPlrHandGoldCurs(&plr[pnum].HoldItem);
 				plr[pnum].HoldItem._ivalue = val;
+				SetPlrHandGoldCurs(&plr[pnum].HoldItem);
 				if (!GoldAutoPlace(pnum))
 					PlrDeadItem(pnum, &plr[pnum].HoldItem, 0, 0);
 			}
