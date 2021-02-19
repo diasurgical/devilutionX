@@ -455,8 +455,12 @@ static void diablo_init()
 
 	if (forceSpawn)
 		gbIsSpawn = true;
+#if defined(__3DS__) && !defined HELLFIRE
+	gbIsHellfire = false;
+#else
 	if (forceDiablo)
 		gbIsHellfire = false;
+#endif
 
 	UiInitialize();
 	UiSetSpawned(gbIsSpawn);
