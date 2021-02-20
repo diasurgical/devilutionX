@@ -57,7 +57,6 @@ void GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void LoadGameLevel(BOOL firstflag, int lvldir);
 void game_loop(BOOL bStartup);
 void diablo_color_cyc_logic();
-void LoadOptions();
 
 /* rdata */
 
