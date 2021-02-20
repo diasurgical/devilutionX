@@ -66,7 +66,9 @@ jobs:
       - run: Packaging/windows/mingw-prep.sh
       - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake
       - run: cmake --build build -j $(nproc)
+      - run: cmake --build build --target package
       - store_artifacts: {path: ./build/devilutionx.exe, destination: devilutionx_x86.exe}
+      - store_artifacts: {path: ./build/devilutionx.zip, destination: devilutionx_x86.zip}
   windows_x64:
     docker:
       - image: ubuntu:20.04
@@ -82,7 +84,9 @@ jobs:
       - run: Packaging/windows/mingw-prep64.sh
       - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc64.cmake
       - run: cmake --build build -j $(nproc)
+      - run: cmake --build build --target package
       - store_artifacts: {path: ./build/devilutionx.exe, destination: devilutionx_x64.exe}
+      - store_artifacts: {path: ./build/devilutionx.zip, destination: devilutionx_x64.zip}
   switch:
     docker:
       - image: devkitpro/devkita64:20200528

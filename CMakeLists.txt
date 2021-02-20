@@ -615,7 +615,81 @@ if(SWITCH)
 endif()
 
 if(CPACK)
-  if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  if(NOT SYSTEM_BITS MATCHES x64 AND WIN32)
+    set(CPACK_PACKAGE_FILE_NAME "devilutionx")
+    set(CPACK_PACKAGE_NAME ${project_name})
+    set(CPACK_GENERATOR "ZIP")
+    set(CPACK_STRIP_FILES TRUE)
+    install(TARGETS ${BIN_TARGET} DESTINATION .)
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/windows/README.txt"
+      DESTINATION "."
+    )
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
+      DESTINATION "."
+    )
+    install(FILES "~/repo/SDL2_ttf-2.0.15/i686-w64-mingw32/bin/libfreetype-6.dll"
+      DESTINATION "."
+    )
+    install(FILES "~/repo/SDL2-2.0.9/i686-w64-mingw32/bin/SDL2.dll"
+      DESTINATION "."
+    )
+    install(FILES "~/repo/SDL2_mixer-2.0.4/i686-w64-mingw32/bin/SDL2_mixer.dll"
+      DESTINATION "."
+    )
+    install(FILES "~/repo/SDL2_ttf-2.0.15/i686-w64-mingw32/bin/SDL2_ttf.dll"
+      DESTINATION "."
+    )
+    install(FILES "~/repo/SDL2_ttf-2.0.15/i686-w64-mingw32/bin/zlib1.dll"
+      DESTINATION "."
+    )
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/LICENSE.CharisSILB.txt"
+      DESTINATION "LICENSE"
+    )
+    install(FILES "~/repo/SDL2_ttf-2.0.15/i686-w64-mingw32/bin/LICENSE.freetype.txt"
+      DESTINATION "LICENSE"
+    )
+    install(FILES "~/repo/SDL2-2.0.9/README-SDL.txt"
+      DESTINATION "LICENSE"
+    )
+
+  elseif(SYSTEM_BITS MATCHES x64 AND WIN32)
+    set(CPACK_PACKAGE_FILE_NAME "devilutionx")
+    set(CPACK_PACKAGE_NAME ${project_name})
+    set(CPACK_GENERATOR "ZIP")
+    set(CPACK_STRIP_FILES TRUE)
+    install(TARGETS ${BIN_TARGET} DESTINATION .)
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/windows/README.txt"
+      DESTINATION "."
+    )
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
+      DESTINATION "."
+    )
+    install(FILES "~/repo/SDL2_ttf-2.0.15/x86_64-w64-mingw32/bin/libfreetype-6.dll"
+      DESTINATION "."
+    )
+    install(FILES "~/repo/SDL2-2.0.9/x86_64-w64-mingw32/bin/SDL2.dll"
+      DESTINATION "."
+    )
+    install(FILES "~/repo/SDL2_mixer-2.0.4/x86_64-w64-mingw32/bin/SDL2_mixer.dll"
+      DESTINATION "."
+    )
+    install(FILES "~/repo/SDL2_ttf-2.0.15/x86_64-w64-mingw32/bin/SDL2_ttf.dll"
+      DESTINATION "."
+    )
+    install(FILES "~/repo/SDL2_ttf-2.0.15/x86_64-w64-mingw32/bin/zlib1.dll"
+      DESTINATION "."
+    )
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/LICENSE.CharisSILB.txt"
+      DESTINATION "LICENSE"
+    )
+    install(FILES "~/repo/SDL2_ttf-2.0.15/x86_64-w64-mingw32/bin/LICENSE.freetype.txt"
+      DESTINATION "LICENSE"
+    )
+    install(FILES "~/repo/SDL2-2.0.9/README-SDL.txt"
+      DESTINATION "LICENSE"
+    )
+
+  elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     string(TOLOWER ${PROJECT_NAME} project_name)
     set(CPACK_PACKAGE_NAME ${project_name})
     set(CPACK_GENERATOR "7Z")
