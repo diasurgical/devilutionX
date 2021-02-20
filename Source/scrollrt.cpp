@@ -359,13 +359,13 @@ static void DrawMonster(int x, int y, int mx, int my, int m)
 }
 
 /**
- * @brief Helper for rendering player a Mana Shild
+ * @brief Helper for rendering player a Mana Shield
  * @param pnum Player id
  * @param sx Back buffer coordinate
  * @param sy Back buffer coordinate
  * @param lighting Should lighting be applied
  */
-static void DrawManaShild(int pnum, int x, int y, bool lighting)
+static void DrawManaShield(int pnum, int x, int y, bool lighting)
 {
 	if (!plr[pnum].pManaShield)
 		return;
@@ -433,13 +433,13 @@ static void DrawPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, i
 
 	if (pnum == myplr) {
 		Cl2Draw(px, py, pCelBuff, nCel, nWidth);
-		DrawManaShild(pnum, px, py, true);
+		DrawManaShield(pnum, px, py, true);
 		return;
 	}
 
 	if (!(dFlags[x][y] & BFLAG_LIT) || plr[myplr]._pInfraFlag && light_table_index > 8) {
 		Cl2DrawLightTbl(px, py, pCelBuff, nCel, nWidth, 1);
-		DrawManaShild(pnum, px, py, true);
+		DrawManaShield(pnum, px, py, true);
 		return;
 	}
 
@@ -450,7 +450,7 @@ static void DrawPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, i
 		light_table_index -= 5;
 
 	Cl2DrawLight(px, py, pCelBuff, nCel, nWidth);
-	DrawManaShild(pnum, px, py, false);
+	DrawManaShield(pnum, px, py, false);
 
 	light_table_index = l;
 }
