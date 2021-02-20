@@ -118,16 +118,16 @@ bool PostMessage(UINT Msg, WPARAM wParam, LPARAM lParam);
 // DVL_VK_A through DVL_VK_Z correspond to 'A' - 'Z'
 #define DVL_VK_LWIN 0x5B       // Left Windows key (Natural keyboard)
 #define DVL_VK_RWIN 0x5C       // Right Windows key (Natural keyboard)
-#define DVL_VK_NUMPAD0 0x60    // Numeric keypad 0 key
-#define DVL_VK_NUMPAD1 0x61    // Numeric keypad 1 key
-#define DVL_VK_NUMPAD2 0x62    // Numeric keypad 2 key
-#define DVL_VK_NUMPAD3 0x63    // Numeric keypad 3 key
-#define DVL_VK_NUMPAD4 0x64    // Numeric keypad 4 key
-#define DVL_VK_NUMPAD5 0x65    // Numeric keypad 5 key
-#define DVL_VK_NUMPAD6 0x66    // Numeric keypad 6 key
-#define DVL_VK_NUMPAD7 0x67    // Numeric keypad 7 key
-#define DVL_VK_NUMPAD8 0x68    // Numeric keypad 8 key
-#define DVL_VK_NUMPAD9 0x69    // Numeric keypad 9 key
+#define DVL_VK_NUMPAD0 '0'     // Numeric keypad 0 key
+#define DVL_VK_NUMPAD1 '1'     // Numeric keypad 1 key
+#define DVL_VK_NUMPAD2 '2'     // Numeric keypad 2 key
+#define DVL_VK_NUMPAD3 '3'     // Numeric keypad 3 key
+#define DVL_VK_NUMPAD4 '4'     // Numeric keypad 4 key
+#define DVL_VK_NUMPAD5 '5'     // Numeric keypad 5 key
+#define DVL_VK_NUMPAD6 '6'     // Numeric keypad 6 key
+#define DVL_VK_NUMPAD7 '7'     // Numeric keypad 7 key
+#define DVL_VK_NUMPAD8 '8'     // Numeric keypad 8 key
+#define DVL_VK_NUMPAD9 '9'     // Numeric keypad 9 key
 #define DVL_VK_MULTIPLY 0x6A   // Multiply key
 #define DVL_VK_ADD 0x6B        // Add key
 #define DVL_VK_SUBTRACT 0x6D   // Subtract key

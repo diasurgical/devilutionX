@@ -205,6 +205,8 @@ static int translate_sdl_key(SDL_Keysym key)
 		return DVL_VK_NUMPAD8;
 	case SDLK_KP_9:
 		return DVL_VK_NUMPAD9;
+	case SDLK_KP_000:
+	case SDLK_KP_00:
 	case SDLK_KP_0:
 		return DVL_VK_NUMPAD0;
 	case SDLK_KP_PERIOD:
