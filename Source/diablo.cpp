@@ -338,6 +338,7 @@ static void run_game_loop(unsigned int uMsg)
 			break;
 		if (!nthread_has_500ms_passed()) {
 			ProcessInput();
+			force_redraw |= 1;
 			DrawAndBlit();
 			continue;
 		}
