@@ -940,7 +940,7 @@ void LoadGame(BOOL firstflag)
 	SetCursor_(CURSOR_HAND);
 	gbProcessPlayers = TRUE;
 
-    gbIsHellfireSaveGame = gbIsHellfire;
+	gbIsHellfireSaveGame = gbIsHellfire;
 }
 
 static void BSave(char v)
@@ -982,7 +982,9 @@ static void SaveBool32(bool value)
 
 static void SaveItem(ItemStruct *pItem)
 {
-	int idx = RemapItemIdxToDiablo(pItem->IDidx);
+	int idx = pItem->IDidx;
+	if (!gbIsHellfire)
+		idx = RemapItemIdxToDiablo(idx);
 	int iType = pItem->_itype;
 	if (idx == -1) {
 		idx = 0;
