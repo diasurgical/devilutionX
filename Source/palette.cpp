@@ -81,14 +81,19 @@ void palette_init()
 }
 
 /**
- * Generate lookup table for transparency
+ * @brief Generate lookup table for transparency
  *
  * This is based of the same technique found in Quake2.
  *
  * To mimic 50% transparency we figure out what colours in the existing palette are the best match for the combination of any 2 colours.
  * We save this into a lookup table for use during rendering.
+ *
+ * @param palette The colors to operate on
+ * @param skipFrom Do not use colors between this index and skipTo
+ * @param skipTo Do not use colors between skipFrom and this index
+ * @param toUpdate Only update the first n colors
  */
-void GenerateBlendedLookupTable()
+static void GenerateBlendedLookupTable(SDL_Color *palette, int skipFrom, int skipTo, int toUpdate = 256)
 {
 	for (int i = 0; i < 256; i++) {
 		for (int j = 0; j < 256; j++) {
@@ -100,16 +105,21 @@ void GenerateBlendedLookupTable()
 				paletteTransparencyLookup[i][j] = paletteTransparencyLookup[j][i];
 				continue;
 			}
+			if (i > toUpdate && j > toUpdate) {
+				continue;
+			}
 
-			Uint8 r = ((int)orig_palette[i].r + (int)orig_palette[j].r) / 2;
-			Uint8 g = ((int)orig_palette[i].g + (int)orig_palette[j].g) / 2;
-			Uint8 b = ((int)orig_palette[i].b + (int)orig_palette[j].b) / 2;
+			Uint8 r = ((int)palette[i].r + (int)palette[j].r) / 2;
+			Uint8 g = ((int)palette[i].g + (int)palette[j].g) / 2;
+			Uint8 b = ((int)palette[i].b + (int)palette[j].b) / 2;
 			Uint8 best;
 			Uint32 bestDiff = SDL_MAX_UINT32;
 			for (int k = 0; k < 256; k++) {
-				int diffr = orig_palette[k].r - r;
-				int diffg = orig_palette[k].g - g;
-				int diffb = orig_palette[k].b - b;
+				if (k >= skipFrom && k <= skipTo)
+					continue;
+				int diffr = palette[k].r - r;
+				int diffg = palette[k].g - g;
+				int diffb = palette[k].b - b;
 				int diff = diffr * diffr + diffg * diffg + diffb * diffb;
 
 				if (bestDiff > diff) {
@@ -144,7 +154,13 @@ void LoadPalette(const char *pszFileName)
 	}
 
 	if (sgOptions.blendedTransparancy) {
-		GenerateBlendedLookupTable();
+		if (leveltype == DTYPE_CAVES || leveltype == DTYPE_CRYPT) {
+			GenerateBlendedLookupTable(orig_palette, 1, 31);
+		} else if (leveltype == DTYPE_NEST) {
+			GenerateBlendedLookupTable(orig_palette, 1, 15);
+		} else {
+			GenerateBlendedLookupTable(orig_palette, -1, -1);
+		}
 	}
 }
 
@@ -259,17 +275,73 @@ void PaletteFadeOut(int fr)
 	}
 }
 
-void palette_update_caves()
+/**
+ * @brief Cycle the given range of colors in the palette
+ * @param from First color index of the range
+ * @param to First color index of the range
+ */
+static void CycleColors(int from, int to)
 {
-	int i;
-	SDL_Color col;
-
-	col = system_palette[1];
-	for (i = 1; i < 31; i++) {
+	SDL_Color col = system_palette[from];
+	for (int i = from; i < to; i++) {
 		system_palette[i] = system_palette[i + 1];
 	}
-	system_palette[i] = col;
+	system_palette[to] = col;
 
+	if (!sgOptions.blendedTransparancy)
+		return;
+
+	for (int i = 0; i < 256; i++) {
+		Uint8 col = paletteTransparencyLookup[i][from];
+		for (int j = from; j < to; j++) {
+			paletteTransparencyLookup[i][j] = paletteTransparencyLookup[i][j + 1];
+		}
+		paletteTransparencyLookup[i][to] = col;
+	}
+
+	Uint8 colRow[256];
+	memcpy(colRow, &paletteTransparencyLookup[from], sizeof(*paletteTransparencyLookup));
+	for (int i = from; i < to; i++) {
+		memcpy(&paletteTransparencyLookup[i], &paletteTransparencyLookup[i + 1], sizeof(*paletteTransparencyLookup));
+	}
+	memcpy(&paletteTransparencyLookup[to], colRow, sizeof(colRow));
+}
+
+/**
+ * @brief Cycle the given range of colors in the palette in reverse direction
+ * @param from First color index of the range
+ * @param to First color index of the range
+ */
+static void CycleColorsReverse(int from, int to)
+{
+	SDL_Color col = system_palette[to];
+	for (int i = to; i > from; i--) {
+		system_palette[i] = system_palette[i - 1];
+	}
+	system_palette[from] = col;
+
+	if (!sgOptions.blendedTransparancy)
+		return;
+
+	for (int i = 0; i < 256; i++) {
+		Uint8 col = paletteTransparencyLookup[i][to];
+		for (int j = to; j > from; j--) {
+			paletteTransparencyLookup[i][j] = paletteTransparencyLookup[i][j - 1];
+		}
+		paletteTransparencyLookup[i][from] = col;
+	}
+
+	Uint8 colRow[256];
+	memcpy(colRow, &paletteTransparencyLookup[to], sizeof(*paletteTransparencyLookup));
+    for (int i = to; i > from; i--) {
+		memcpy(&paletteTransparencyLookup[i], &paletteTransparencyLookup[i - 1], sizeof(*paletteTransparencyLookup));
+    }
+	memcpy(&paletteTransparencyLookup[from], colRow, sizeof(colRow));
+}
+
+void palette_update_caves()
+{
+	CycleColors(1, 31);
 	palette_update();
 }
 
@@ -281,30 +353,13 @@ void palette_update_crypt()
 	SDL_Color col;
 
 	if (dword_6E2D58 > 1) {
-		col = system_palette[15];
-		for (i = 15; i > 1; i--) {
-			system_palette[i].r = system_palette[i - 1].r;
-			system_palette[i].g = system_palette[i - 1].g;
-			system_palette[i].b = system_palette[i - 1].b;
-		}
-		system_palette[i].r = col.r;
-		system_palette[i].g = col.g;
-		system_palette[i].b = col.b;
-
+		CycleColorsReverse(1, 15);
 		dword_6E2D58 = 0;
 	} else {
 		dword_6E2D58++;
 	}
 	if (dword_6E2D54 > 0) {
-		col = system_palette[31];
-		for (i = 31; i > 16; i--) {
-			system_palette[i].r = system_palette[i - 1].r;
-			system_palette[i].g = system_palette[i - 1].g;
-			system_palette[i].b = system_palette[i - 1].b;
-		}
-		system_palette[i].r = col.r;
-		system_palette[i].g = col.g;
-		system_palette[i].b = col.b;
+		CycleColorsReverse(16, 31);
 		palette_update();
 		dword_6E2D54++;
 	} else {
@@ -320,29 +375,13 @@ void palette_update_hive()
 	SDL_Color col;
 
 	if (dword_6E2D60 == 2) {
-		col = system_palette[8];
-		for (i = 8; i > 1; i--) {
-			system_palette[i].r = system_palette[i - 1].r;
-			system_palette[i].g = system_palette[i - 1].g;
-			system_palette[i].b = system_palette[i - 1].b;
-		}
-		system_palette[i].r = col.r;
-		system_palette[i].g = col.g;
-		system_palette[i].b = col.b;
+		CycleColorsReverse(1, 8);
 		dword_6E2D60 = 0;
 	} else {
 		dword_6E2D60++;
 	}
 	if (dword_6E2D5C == 2) {
-		col = system_palette[15];
-		for (i = 15; i > 9; i--) {
-			system_palette[i].r = system_palette[i - 1].r;
-			system_palette[i].g = system_palette[i - 1].g;
-			system_palette[i].b = system_palette[i - 1].b;
-		}
-		system_palette[i].r = col.r;
-		system_palette[i].g = col.g;
-		system_palette[i].b = col.b;
+		CycleColorsReverse(9, 15);
 		palette_update();
 		dword_6E2D5C = 0;
 	} else {
@@ -359,6 +398,8 @@ void palette_update_quest_palette(int n)
 	}
 	ApplyGamma(system_palette, logical_palette, 32);
 	palette_update();
+	GenerateBlendedLookupTable(logical_palette, 1, 31, 32 - n); // Possible optimization would be to only update color 0 as only the UI can overlap with transparency in this quest
+
 }
 
 BOOL palette_get_color_cycling()
