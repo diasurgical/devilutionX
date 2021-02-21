@@ -221,7 +221,8 @@ The output-files will be generated in the build folder.
 [Nintendo 3DS manual](docs/manual/platforms/n3ds.md)
 </details>
 
-<details><summary>PS Vita</summary>
+<details><summary>PlayStation Vita</summary>
+
 ### Compiling
 ```
 cd build
