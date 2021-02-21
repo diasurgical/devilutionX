@@ -5488,7 +5488,7 @@ void CreateAmulet(int x, int y, int curlv, BOOL sendmsg, BOOL delta)
 void CreateMagicWeapon(int x, int y, int imisc, int icurs, BOOL sendmsg, BOOL delta)
 {
 	int ii, idx;
-	BOOL done;
+	BOOL done = FALSE;
 
 	int imid;
 	if (imisc == ITYPE_STAFF)
