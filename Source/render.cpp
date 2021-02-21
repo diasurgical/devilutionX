@@ -398,8 +398,8 @@ inline static void RenderLine(BYTE **dst, BYTE **src, int n, BYTE *tbl, DWORD ma
 		assert(n != 0 && n <= sizeof(DWORD) * CHAR_BIT);
 		mask &= DWORD(-1) << ((sizeof(DWORD) * CHAR_BIT) - n);
 
-		if (sgOptions.blendedTransparancy && !cel_foliage_active) { // Blended transparancy
-			if (light_table_index == lightmax) {                    // Complete darkness
+		if (sgOptions.blendedTransparancy) {     // Blended transparancy
+			if (light_table_index == lightmax) { // Complete darkness
 				for (int i = 0; i < n; i++, mask <<= 1) {
 					if (mask & 0x80000000)
 						(*dst)[i] = 0;
