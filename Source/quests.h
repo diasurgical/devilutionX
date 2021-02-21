@@ -56,6 +56,7 @@ void CheckQuestKill(int m, BOOL sendmsg);
 void DRLG_CheckQuests(int x, int y);
 void SetReturnLvlPos();
 void GetReturnLvlPos();
+void LoadPWaterPalette();
 void ResyncMPQuests();
 void ResyncQuests();
 void DrawQuestLog();

@@ -149,6 +149,7 @@ void gamemenu_load_game(BOOL bActivate)
 	deathflag = FALSE;
 	force_redraw = 255;
 	DrawAndBlit();
+	LoadPWaterPalette();
 	PaletteFadeIn(8);
 	SetCursor_(CURSOR_HAND);
 	interface_msg_pump();
