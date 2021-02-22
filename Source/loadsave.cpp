@@ -183,7 +183,7 @@ static void LoadItemData(ItemStruct *pItem)
 	tbuff += 1; // Alignment
 	CopyInt(tbuff, &pItem->_iStatFlag);
 	CopyInt(tbuff, &pItem->IDidx);
-	if (!gbIsHellfireSaveGame && gbIsHellfire) {
+	if (!gbIsHellfireSaveGame) {
 		pItem->IDidx = RemapItemIdxFromDiablo(pItem->IDidx);
 	}
 	CopyInt(tbuff, &pItem->offs016C);
