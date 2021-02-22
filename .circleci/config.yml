@@ -134,11 +134,12 @@ jobs:
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_m68k}
   vita:
     docker:
-      - image: sarcasticat/dolcesdk:latest
+      - image: vitasdk/vitasdk:latest
     working_directory: ~/repo
     steps:
       - checkout
-      - run: cmake -S. -Bbuild -GNinja .. -DBINARY_RELEASE=ON -DVITA=1
+      - run: apk --no-cache add cmake ninja
+      - run: cmake -S. -Bbuild -GNinja -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake -DNIGHTLY_BUILD=ON
       - run: cmake --build build -j $(nproc)
       - store_artifacts: {path: ./build/devilutionx.vpk, destination: devilutionx.vpk}
 

@@ -123,7 +123,7 @@ void CalculatePreferdWindowSize(int &width, int &height, bool useIntegerScaling)
 bool SpawnWindow(const char *lpWindowName)
 {
 #ifdef __vita__
-scePowerSetArmClockFrequency(444);
+	scePowerSetArmClockFrequency(444);
 #endif
 
 #if SDL_VERSION_ATLEAST(2,0,6)

@@ -226,9 +226,10 @@ The output-files will be generated in the build folder.
 ### Compiling
 ```
 cd build
-cmake -DCMAKE_BUILD_TYPE=Release -DVITA=1 ..
+cmake -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release ..
 make
 ```
+[PlayStation Vita manual](docs/manual/platforms/vita.md)
 </details>
 
 
