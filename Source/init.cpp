@@ -12,7 +12,6 @@
 #include <SDL.h>
 #include <config.h>
 
-
 #ifdef __vita__
 // increase default allowed heap size on Vita
 int _newlib_heap_size_user = 100 * 1024 * 1024;
@@ -72,8 +71,8 @@ HANDLE init_test_access(const char *mpq_name, const char *reg_loc, int dwPriorit
 
 /* data */
 
-char gszVersionNumber[260] = "internal version unknown";
-char gszProductName[260] = "Diablo v1.09";
+char gszVersionNumber[64] = "internal version unknown";
+char gszProductName[64] = "Diablo v1.09";
 
 void init_cleanup()
 {
@@ -179,14 +178,14 @@ void init_create_window()
 {
 	if (!SpawnWindow(PROJECT_NAME))
 		app_fatal("Unable to create main window");
-	dx_init(NULL);
+	dx_init();
 	gbActive = true;
 	gpBufStart = &gpBuffer[BUFFER_WIDTH * SCREEN_Y];
 	gpBufEnd = (BYTE *)(BUFFER_WIDTH * (SCREEN_HEIGHT + SCREEN_Y));
 	SDL_DisableScreenSaver();
 }
 
-void MainWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
+void MainWndProc(UINT Msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (Msg) {
 	case DVL_WM_PAINT:

@@ -12,10 +12,10 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
-extern MonsterData monsterdata[];
-extern char MonstConvTbl[];
-extern char MonstAvailTbl[];
-extern UniqMonstStruct UniqMonst[];
+extern const MonsterData monsterdata[];
+extern const int MonstConvTbl[];
+extern const char MonstAvailTbl[];
+extern const UniqMonstStruct UniqMonst[];
 
 #ifdef __cplusplus
 }

@@ -39,7 +39,7 @@ extern BOOL talkflag;
 extern BOOL sbookflag;
 extern BOOL chrflag;
 extern BOOL drawbtnflag;
-extern char infostr[256];
+extern char infostr[64];
 extern BOOL panelflag;
 extern int initialDropGoldValue;
 extern BOOL panbtndown;

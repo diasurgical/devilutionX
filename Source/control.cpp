@@ -49,7 +49,7 @@ BOOL sbookflag;
 BOOL chrflag;
 BOOL drawbtnflag;
 BYTE *pSpellBkCel;
-char infostr[256];
+char infostr[64];
 int numpanbtns;
 char panelstr[4][64];
 BOOL panelflag;
@@ -1425,14 +1425,14 @@ void DrawChr()
 	sprintf(chrstr, "%i", plr[myplr]._pLevel);
 	ADD_PlrStringXY(66, 69, 109, chrstr, COL_WHITE);
 
-	sprintf(chrstr, "%li", plr[myplr]._pExperience);
+	sprintf(chrstr, "%i", plr[myplr]._pExperience);
 	ADD_PlrStringXY(216, 69, 300, chrstr, COL_WHITE);
 
 	if (plr[myplr]._pLevel == MAXCHARLEVEL - 1) {
 		strcpy(chrstr, "None");
 		col = COL_GOLD;
 	} else {
-		sprintf(chrstr, "%li", plr[myplr]._pNextExper);
+		sprintf(chrstr, "%i", plr[myplr]._pNextExper);
 		col = COL_WHITE;
 	}
 	ADD_PlrStringXY(216, 97, 300, chrstr, col);

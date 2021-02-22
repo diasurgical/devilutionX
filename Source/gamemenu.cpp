@@ -57,11 +57,11 @@ const char *const sound_toggle_names[] = {
 	"Sound",
 	"Sound Disabled",
 };
-char *jogging_toggle_names[] = {
+const char *jogging_toggle_names[] = {
 	"Jog",
 	"Walk",
 };
-char *jogging_title = "Fast Walk";
+const char *jogging_title = "Fast Walk";
 /** Specifies the menu names for colour cycling disabled and enabled. */
 const char *const color_cycling_toggle_names[] = { "Color Cycling Off", "Color Cycling On" };
 

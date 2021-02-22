@@ -466,7 +466,7 @@ static void diablo_init()
 
 	diablo_init_screen();
 
-	snd_init(NULL);
+	snd_init();
 	was_snd_init = true;
 
 	ui_sound_init();
@@ -1328,7 +1328,7 @@ static void GetMousePos(LPARAM lParam)
 	MouseY = (short)((lParam >> 16) & 0xffff);
 }
 
-void DisableInputWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+void DisableInputWndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg) {
 	case DVL_WM_KEYDOWN:
@@ -1364,10 +1364,10 @@ void DisableInputWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return;
 	}
 
-	MainWndProc(hWnd, uMsg, wParam, lParam);
+	MainWndProc(uMsg, wParam, lParam);
 }
 
-void GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+void GM_Game(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg) {
 	case DVL_WM_KEYDOWN:
@@ -1453,7 +1453,7 @@ void GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return;
 	}
 
-	MainWndProc(hWnd, uMsg, wParam, lParam);
+	MainWndProc(uMsg, wParam, lParam);
 }
 
 void LoadLvlGFX()

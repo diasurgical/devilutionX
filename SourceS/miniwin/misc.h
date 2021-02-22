@@ -26,9 +26,9 @@ typedef int32_t LPARAM;
 //
 typedef void *HANDLE;
 
-typedef HANDLE HWND, HMODULE, HDC, HINSTANCE;
+typedef HANDLE HMODULE, HDC, HINSTANCE;
 
-typedef void(*WNDPROC)(HWND, UINT, WPARAM, LPARAM);
+typedef void (*WNDPROC)(UINT, WPARAM, LPARAM);
 
 typedef struct tagMSG {
 	UINT message;
@@ -62,10 +62,10 @@ bool PostMessage(UINT Msg, WPARAM wParam, LPARAM lParam);
 // MSCVRT emulation
 //
 
-#define  DVL_FILE_CURRENT 1
-#define  DVL_FILE_END 2
+#define DVL_FILE_CURRENT 1
+#define DVL_FILE_END 2
 
-#define  DVL_WM_QUIT 0x0012
+#define DVL_WM_QUIT 0x0012
 
 //
 // Events

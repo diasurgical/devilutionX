@@ -339,13 +339,12 @@ static void PrintStoreItem(ItemStruct *x, int l, char iclr)
 	if ((str + mag + dex) == 0) {
 		strcat(sstr, "No required attributes");
 	} else {
-		strcpy(tempstr, "Required:");
 		if (x->_iMinStr)
-			sprintf(tempstr, "%s %i Str", tempstr, x->_iMinStr);
+			sprintf(tempstr, "Required: %i Str", x->_iMinStr);
 		if (x->_iMinMag)
-			sprintf(tempstr, "%s %i Mag", tempstr, x->_iMinMag);
+			sprintf(tempstr, "Required: %i Mag", x->_iMinMag);
 		if (x->_iMinDex)
-			sprintf(tempstr, "%s %i Dex", tempstr, x->_iMinDex);
+			sprintf(tempstr, "Required: %i Dex", x->_iMinDex);
 		strcat(sstr, tempstr);
 	}
 	AddSText(40, l++, FALSE, sstr, iclr, FALSE);

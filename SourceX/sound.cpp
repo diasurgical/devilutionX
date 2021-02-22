@@ -152,7 +152,7 @@ void sound_file_cleanup(TSnd *sound_file)
 	}
 }
 
-void snd_init(HWND hWnd)
+void snd_init()
 {
 	snd_get_volume("Sound Volume", &sglSoundVolume);
 	gbSoundOn = sglSoundVolume > VOLUME_MIN;
