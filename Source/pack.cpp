@@ -136,7 +136,7 @@ void UnPackItem(PkItemStruct *is, ItemStruct *id)
 	if (idx == 0xFFFF) {
 		id->_itype = ITYPE_NONE;
 	} else {
-		if (!gbIsHellfireSaveGame) {
+		if (gbIsHellfireSaveGame && !gbIsHellfire) {
 			idx = RemapItemIdxFromDiablo(idx);
 		}
 		if (idx == IDI_EAR) {

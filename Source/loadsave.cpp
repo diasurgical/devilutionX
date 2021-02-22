@@ -183,7 +183,7 @@ static void LoadItemData(ItemStruct *pItem)
 	tbuff += 1; // Alignment
 	CopyInt(tbuff, &pItem->_iStatFlag);
 	CopyInt(tbuff, &pItem->IDidx);
-	if (!gbIsHellfireSaveGame) {
+	if (!gbIsHellfireSaveGame && gbIsHellfire) {
 		pItem->IDidx = RemapItemIdxFromDiablo(pItem->IDidx);
 	}
 	CopyInt(tbuff, &pItem->offs016C);
@@ -701,7 +701,7 @@ static void LoadPortal(int i)
 int RemapItemIdxFromDiablo(int i)
 {
 	if (i == IDI_SORCEROR) {
-		return 166;
+		return IDI_SORCEROR_HF;
 	}
 	if (i >= 156) {
 		i += 5; // Hellfire exclusive items
@@ -718,7 +718,7 @@ int RemapItemIdxFromDiablo(int i)
 
 int RemapItemIdxToDiablo(int i)
 {
-	if (i == 166) {
+	if (i == IDI_SORCEROR_HF) {
 		return IDI_SORCEROR;
 	}
 	if ((i >= 83 && i <= 86) || i == 92 || i >= 161) {

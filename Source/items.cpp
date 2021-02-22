@@ -1264,7 +1264,7 @@ void SetPlrHandItem(ItemStruct *h, int idata)
 	h->_iMiscId = pAllItem->iMiscId;
 	h->_iSpell = pAllItem->iSpell;
 
-	if (pAllItem->iMiscId == IMISC_STAFF) {
+	if (pAllItem->iMiscId == IMISC_STAFF && (idata == IDI_SORCEROR || idata == IDI_SORCEROR_HF)) {
 		h->_iCharges = gbIsHellfire ? 18 : 40;
 	}
 
@@ -1398,7 +1398,7 @@ void CreatePlrItems(int p)
 		GetPlrHandSeed(&plr[p].SpdList[1]);
 		break;
 	case PC_SORCERER:
-		SetPlrHandItem(&plr[p].InvBody[INVLOC_HAND_LEFT], gbIsHellfire ? IDI_SORCEROR : 166);
+		SetPlrHandItem(&plr[p].InvBody[INVLOC_HAND_LEFT], gbIsHellfire ? IDI_SORCEROR_HF : IDI_SORCEROR);
 		GetPlrHandSeed(&plr[p].InvBody[INVLOC_HAND_LEFT]);
 
 		SetPlrHandItem(&plr[p].SpdList[0], gbIsHellfire ? IDI_HEAL : IDI_MANA);

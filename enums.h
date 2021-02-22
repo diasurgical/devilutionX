@@ -3012,6 +3012,8 @@ typedef enum _item_indexes {
 	IDI_FULLNOTE,
 	IDI_BROWNSUIT,
 	IDI_GREYSUIT,
+
+	IDI_SORCEROR_HF = 166,
 } _item_indexes;
 
 typedef enum _setlevels {
