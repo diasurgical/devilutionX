@@ -333,7 +333,7 @@
 #endif
 
 // Platform-specific error codes for UNIX-based platforms
-#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU) || defined(PLATFORM_AMIGA) || defined(PLATFORM_SWITCH) || defined(PLATFORM_CTR) || defined(PLATFORM_VITA)
+#if defined(PLATFORM_MAC) || defined(PLATFORM_LINUX) || defined(PLATFORM_HAIKU) || defined(PLATFORM_AMIGA) || defined(PLATFORM_SWITCH) || defined(PLATFORM_CTR) || defined(PLATFORM_VITA)
   #define ERROR_SUCCESS                  0
   #define ERROR_FILE_NOT_FOUND           ENOENT
   #define ERROR_ACCESS_DENIED            EPERM
