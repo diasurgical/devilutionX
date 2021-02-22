@@ -638,12 +638,12 @@ if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   # Note: For Valgrind support.
   genex_for_option(DEBUG)
   target_compile_options(devilution PUBLIC $<${DEBUG_GENEX}:-fno-omit-frame-pointer>)
-  # Ignore serious warnings due to "quality" of decompiled code
-  # Currently, disable ignore all warnings (-w), to be removed later
-  target_compile_options(devilution PRIVATE -fpermissive -w)
+
+  # Warnings for devilution
+  target_compile_options(devilution PRIVATE -Wall -Wno-multichar -Wno-int-to-pointer-cast)
 
   # Warnings for devilutionX
-  target_compile_options(${BIN_TARGET} PRIVATE -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wno-format-security)
+  target_compile_options(${BIN_TARGET} PRIVATE -Wall -Wextra -Wno-unused-parameter -Wno-format-security)
 
   # For ARM and other default unsigned char platforms
   target_compile_options(devilution PRIVATE -fsigned-char)

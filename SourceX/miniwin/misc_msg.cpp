@@ -714,7 +714,7 @@ void DispatchMessage(const MSG *lpMsg)
 {
 	assert(CurrentProc);
 
-	CurrentProc(NULL, lpMsg->message, lpMsg->wParam, lpMsg->lParam);
+	CurrentProc(lpMsg->message, lpMsg->wParam, lpMsg->lParam);
 }
 
 bool PostMessage(UINT Msg, WPARAM wParam, LPARAM lParam)

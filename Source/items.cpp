@@ -264,7 +264,7 @@ int ItemInvSnds[] = {
 	IS_ILARM,
 	IS_ILARM,
 };
-char *off_4A5AC4 = "SItem";
+const char *off_4A5AC4 = "SItem";
 /** Specifies the current Y-coordinate used for validation of items on ground. */
 int idoppely = 16;
 /** Maps from Griswold premium item number to a quality level delta as added to the base quality level. */
@@ -1731,7 +1731,7 @@ void GetStaffPower(int i, int lvl, int bs, BOOL onlygood)
 void GetStaffSpell(int i, int lvl, BOOL onlygood)
 {
 	int l, rv, s, minc, maxc, v, bs;
-	char istr[64];
+	char istr[68];
 
 	if (!gbIsHellfire && random_(17, 4) == 0) {
 		GetItemPower(i, lvl >> 1, lvl, PLT_STAFF, onlygood);
@@ -4212,13 +4212,12 @@ void PrintItemDetails(ItemStruct *x)
 	dex = x->_iMinDex;
 	str = x->_iMinStr;
 	if (mag + dex + str) {
-		strcpy(tempstr, "Required:");
 		if (x->_iMinStr)
-			sprintf(tempstr, "%s %i Str", tempstr, x->_iMinStr);
+			sprintf(tempstr, "Required: %i Str", x->_iMinStr);
 		if (x->_iMinMag)
-			sprintf(tempstr, "%s %i Mag", tempstr, x->_iMinMag);
+			sprintf(tempstr, "Required: %i Mag", x->_iMinMag);
 		if (x->_iMinDex)
-			sprintf(tempstr, "%s %i Dex", tempstr, x->_iMinDex);
+			sprintf(tempstr, "Required: %i Dex", x->_iMinDex);
 		AddPanelString(tempstr, TRUE);
 	}
 	pinfoflag = TRUE;
@@ -4269,13 +4268,12 @@ void PrintItemDur(ItemStruct *x)
 	mag = x->_iMinMag;
 	dex = x->_iMinDex;
 	if (str + mag + dex) {
-		strcpy(tempstr, "Required:");
 		if (x->_iMinStr)
-			sprintf(tempstr, "%s %i Str", tempstr, x->_iMinStr);
+			sprintf(tempstr, "Required: %i Str", x->_iMinStr);
 		if (x->_iMinMag)
-			sprintf(tempstr, "%s %i Mag", tempstr, x->_iMinMag);
+			sprintf(tempstr, "Required: %i Mag", x->_iMinMag);
 		if (x->_iMinDex)
-			sprintf(tempstr, "%s %i Dex", tempstr, x->_iMinDex);
+			sprintf(tempstr, "Required: %i Dex", x->_iMinDex);
 		AddPanelString(tempstr, TRUE);
 	}
 	pinfoflag = TRUE;

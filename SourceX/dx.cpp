@@ -75,7 +75,7 @@ static void dx_create_primary_surface()
 	}
 }
 
-void dx_init(HWND hWnd)
+void dx_init()
 {
 	SDL_RaiseWindow(ghMainWnd);
 	SDL_ShowWindow(ghMainWnd);

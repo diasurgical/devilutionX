@@ -759,7 +759,6 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		UiData.artcallback = (void (*)())UiArtCallback;
 		UiData.createcallback = (void (*)())UiCreateGameCallback;
 		UiData.drawdesccallback = (void (*)())UiDrawDescCallback;
-		UiData.messageboxcallback = (void (*)())UiMessageBoxCallback;
 		UiData.soundcallback = (void (*)())UiSoundCallback;
 		UiData.authcallback = (void (*)())UiAuthCallback;
 		UiData.getdatacallback = (void (*)())UiGetDataCallback;

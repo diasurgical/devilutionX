@@ -1429,7 +1429,7 @@ static void DrawFPS()
  * @param dwWdt Back buffer coordinate
  * @param dwHgt Back buffer coordinate
  */
-static void DoBlitScreen(DWORD dwX, DWORD dwY, DWORD dwWdt, DWORD dwHgt)
+static void DoBlitScreen(int dwX, int dwY, int dwWdt, int dwHgt)
 {
 	SDL_Rect SrcRect = {
 		dwX + SCREEN_X,
