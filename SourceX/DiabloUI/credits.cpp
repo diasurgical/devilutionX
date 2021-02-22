@@ -8,6 +8,7 @@
 
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/credits_lines.h"
+#include "DiabloUI/support_lines.h"
 #include "DiabloUI/art.h"
 #include "DiabloUI/art_draw.h"
 #include "DiabloUI/fonts.h"
@@ -20,6 +21,9 @@ const SDL_Rect VIEWPORT = { 0, 114, 640, 251 };
 const int SHADOW_OFFSET_X = 2;
 const int SHADOW_OFFSET_Y = 2;
 const int LINE_H = 22;
+
+char const *const *text;
+std::size_t textLines;
 
 // The maximum number of visible lines is the number of whole lines
 // (VIEWPORT.h / LINE_H) rounded up, plus one extra line for when
@@ -59,7 +63,7 @@ SDL_Surface *RenderText(const char *text, SDL_Color color)
 
 CachedLine PrepareLine(std::size_t index)
 {
-	const char *contents = CREDITS_LINES[index];
+	const char *contents = text[index];
 	while (contents[0] == '\t')
 		++contents;
 
@@ -105,8 +109,6 @@ class CreditsRenderer {
 public:
 	CreditsRenderer()
 	{
-		LoadArt("ui_art\\creditsw.pcx", &ArtBackgroundWidescreen);
-		LoadBackgroundArt("ui_art\\credits.pcx");
 		LoadTtfFont();
 		ticks_begin_ = SDL_GetTicks();
 		prev_offset_y_ = 0;
@@ -153,10 +155,10 @@ void CreditsRenderer::Render()
 		return;
 
 	const std::size_t lines_begin = std::max(offset_y / LINE_H, 0);
-	const std::size_t lines_end = std::min(lines_begin + MAX_VISIBLE_LINES, CREDITS_LINES_SIZE);
+	const std::size_t lines_end = std::min(lines_begin + MAX_VISIBLE_LINES, textLines);
 
 	if (lines_begin >= lines_end) {
-		if (lines_end == CREDITS_LINES_SIZE)
+		if (lines_end == textLines)
 			finished_ = true;
 		return;
 	}
@@ -185,7 +187,7 @@ void CreditsRenderer::Render()
 
 		Sint16 dest_x = PANEL_LEFT + VIEWPORT.x + 31;
 		int j = 0;
-		while (CREDITS_LINES[line.m_index][j++] == '\t')
+		while (text[line.m_index][j++] == '\t')
 			dest_x += 40;
 
 		SDL_Rect dst_rect = { dest_x, dest_y, 0, 0 };
@@ -198,9 +200,7 @@ void CreditsRenderer::Render()
 	SDL_SetClipRect(GetOutputSurface(), NULL);
 }
 
-} // namespace
-
-BOOL UiCreditsDialog(int a1)
+BOOL TextDialog()
 {
 	CreditsRenderer credits_renderer;
 	bool endMenu = false;
@@ -230,6 +230,35 @@ BOOL UiCreditsDialog(int a1)
 	} while (!endMenu && !credits_renderer.Finished());
 
 	return true;
+}
+
+} // namespace
+
+BOOL UiCreditsDialog()
+{
+	text = CREDITS_LINES;
+	textLines = CREDITS_LINES_SIZE;
+
+	LoadArt("ui_art\\creditsw.pcx", &ArtBackgroundWidescreen);
+	LoadBackgroundArt("ui_art\\credits.pcx");
+
+	return TextDialog();
+}
+
+BOOL UiSupportDialog()
+{
+	text = SUPPORT_LINES;
+	textLines = SUPPORT_LINES_SIZE;
+
+	if (gbIsHellfire) {
+		LoadArt("ui_art\\supportw.pcx", &ArtBackgroundWidescreen);
+		LoadBackgroundArt("ui_art\\support.pcx");
+	} else {
+		LoadArt("ui_art\\creditsw.pcx", &ArtBackgroundWidescreen);
+		LoadBackgroundArt("ui_art\\credits.pcx");
+	}
+
+	return TextDialog();
 }
 
 } // namespace dvl

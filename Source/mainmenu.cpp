@@ -174,10 +174,10 @@ void mainmenu_loop()
 				mainmenu_play_intro();
 			break;
 		case MAINMENU_SHOW_CREDITS:
-			UiCreditsDialog(16);
+			UiCreditsDialog();
 			break;
 		case MAINMENU_SHOW_SUPPORT:
-			//UiSupportDialog(16);
+			UiSupportDialog();
 			break;
 		case MAINMENU_EXIT_DIABLO:
 			done = TRUE;
