@@ -1360,8 +1360,6 @@ void DisableInputWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		sgbMouseDown = CLICK_NONE;
 		return;
 	case DVL_WM_CAPTURECHANGED:
-		if (hWnd == (HWND)lParam)
-			return;
 		sgbMouseDown = CLICK_NONE;
 		return;
 	}
@@ -1425,10 +1423,8 @@ void GM_Game(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		return;
 	case DVL_WM_CAPTURECHANGED:
-		if (hWnd != (HWND)lParam) {
-			sgbMouseDown = CLICK_NONE;
-			track_repeat_walk(FALSE);
-		}
+		sgbMouseDown = CLICK_NONE;
+		track_repeat_walk(FALSE);
 		break;
 	case WM_DIABNEXTLVL:
 	case WM_DIABPREVLVL:
