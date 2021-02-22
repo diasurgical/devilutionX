@@ -1168,15 +1168,17 @@ static void PressChar(WPARAM vkey)
 			AutomapZoomOut();
 		}
 		return;
-	case 'v':
-		char *difficulties[3];
+	case 'v': {
 		char pszStr[120];
-		difficulties[0] = "Normal";
-		difficulties[1] = "Nightmare";
-		difficulties[2] = "Hell";
+		const char *difficulties[3] = {
+			"Normal",
+			"Nightmare",
+			"Hell",
+		};
 		sprintf(pszStr, "%s, mode = %s", gszProductName, difficulties[gnDifficulty]);
 		NetSendCmdString(1 << myplr, pszStr);
 		return;
+	}
 	case 'V':
 		NetSendCmdString(1 << myplr, gszVersionNumber);
 		return;
