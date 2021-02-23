@@ -622,7 +622,7 @@ if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   target_compile_options(devilution PUBLIC $<${DEBUG_GENEX}:-fno-omit-frame-pointer>)
 
   # Warnings for devilution
-  target_compile_options(devilution PRIVATE -Wall -Wno-multichar -Wno-int-to-pointer-cast)
+  target_compile_options(devilution PRIVATE -Wno-multichar -Wno-int-to-pointer-cast)
 
   # Warnings for devilutionX
   target_compile_options(${BIN_TARGET} PRIVATE -Wall -Wextra -Wno-unused-parameter -Wno-format-security)
