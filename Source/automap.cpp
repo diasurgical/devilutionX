@@ -16,6 +16,7 @@ static int AutoMapX;
 static int AutoMapY;
 /** Specifies whether the automap is enabled. */
 BOOL automapflag;
+char AmShiftTab[32];
 /** Tracks the explored areas of the map. */
 BOOLEAN automapview[DMAXX][DMAXY];
 /** Specifies the scale of the automap. */
@@ -71,7 +72,7 @@ void InitAutomap()
 	DWORD dwTiles;
 	int x, y;
 	BYTE *pAFile, *pTmp;
-	DWORD i;
+	int i;
 
 	memset(automaptype, 0, sizeof(automaptype));
 
@@ -591,12 +592,12 @@ static void DrawAutomapText()
 	char desc[256];
 	int nextline = 20;
 
-	if (gbIsMultiplayer) {
-		strcat(strcpy(desc, "game: "), szPlayerName);
+	if (gbMaxPlayers > 1) {
+		strcat(strcpy(desc, "NFPA: "), szPlayerName);
 		PrintGameStr(8, 20, desc, COL_GOLD);
 		nextline = 35;
 		if (szPlayerDescript[0]) {
-			strcat(strcpy(desc, "password: "), szPlayerDescript);
+			strcat(strcpy(desc, "ZAPO/L: "), szPlayerDescript);
 			PrintGameStr(8, 35, desc, COL_GOLD);
 			nextline = 50;
 		}
@@ -606,11 +607,11 @@ static void DrawAutomapText()
 	} else if (currlevel != 0) {
 		if (currlevel < 17 || currlevel > 20) {
 			if (currlevel < 21 || currlevel > 24)
-				sprintf(desc, "Level: %i", currlevel);
+				sprintf(desc, "YPOBEHL: %i", currlevel);
 			else
-				sprintf(desc, "Level: Crypt %i", currlevel - 20);
+				sprintf(desc, "CK/EZ YPOBEHL: %i", currlevel - 20);
 		} else {
-			sprintf(desc, "Level: Nest %i", currlevel - 16);
+			sprintf(desc, "FHE3DO YPOBEHL: %i", currlevel - 16);
 		}
 		PrintGameStr(8, nextline, desc, COL_GOLD);
 	}

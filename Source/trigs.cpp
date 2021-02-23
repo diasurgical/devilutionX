@@ -67,11 +67,13 @@ void InitTownTriggers()
 	trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
 	numtrigs++;
 
+	bool isMultiplayer = gbMaxPlayers == MAX_PLRS;
+
 	for (i = 0; i < sizeof(townwarps) / sizeof(townwarps[0]); i++) {
-		townwarps[i] = gbIsMultiplayer && !gbIsSpawn;
+		townwarps[i] = isMultiplayer && !gbIsSpawn;
 	}
 	if (!gbIsSpawn) {
-		if (gbIsMultiplayer || plr[myplr].pTownWarps & 1 || (gbIsHellfire && plr[myplr]._pLevel >= 10)) {
+		if (isMultiplayer || plr[myplr].pTownWarps & 1 || (gbIsHellfire && plr[myplr]._pLevel >= 10)) {
 			townwarps[0] = TRUE;
 			trigs[numtrigs]._tx = 49;
 			trigs[numtrigs]._ty = 21;
@@ -79,7 +81,7 @@ void InitTownTriggers()
 			trigs[numtrigs]._tlvl = 5;
 			numtrigs++;
 		}
-		if (gbIsMultiplayer || plr[myplr].pTownWarps & 2 || (gbIsHellfire && plr[myplr]._pLevel >= 15)) {
+		if (isMultiplayer || plr[myplr].pTownWarps & 2 || (gbIsHellfire && plr[myplr]._pLevel >= 15)) {
 			townwarps[1] = TRUE;
 			trigs[numtrigs]._tx = 17;
 			trigs[numtrigs]._ty = 69;
@@ -87,7 +89,7 @@ void InitTownTriggers()
 			trigs[numtrigs]._tlvl = 9;
 			numtrigs++;
 		}
-		if (gbIsMultiplayer || plr[myplr].pTownWarps & 4 || (gbIsHellfire && plr[myplr]._pLevel >= 20)) {
+		if (isMultiplayer || plr[myplr].pTownWarps & 4 || (gbIsHellfire && plr[myplr]._pLevel >= 20)) {
 			townwarps[2] = TRUE;
 			trigs[numtrigs]._tx = 41;
 			trigs[numtrigs]._ty = 80;
@@ -102,7 +104,7 @@ void InitTownTriggers()
 		trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
 		trigs[numtrigs]._tlvl = 17;
 		numtrigs++;
-		if (gbIsMultiplayer || quests[Q_GRAVE]._qactive == 3) {
+		if (isMultiplayer || quests[Q_GRAVE]._qactive == 3) {
 			trigs[numtrigs]._tx = 36;
 			trigs[numtrigs]._ty = 24;
 			trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
@@ -343,7 +345,7 @@ BOOL ForceTownTrig()
 
 	for (i = 0; TownDownList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == TownDownList[i]) {
-			strcpy(infostr, "Down to dungeon");
+			strcpy(infostr, "BHN3 B ZODBA/LI");
 			cursmx = 25;
 			cursmy = 29;
 			return TRUE;
@@ -353,7 +355,7 @@ BOOL ForceTownTrig()
 	if (townwarps[0]) {
 		for (j = 0; TownWarp1List[j] != -1; j++) {
 			if (dPiece[cursmx][cursmy] == TownWarp1List[j]) {
-				strcpy(infostr, "Down to catacombs");
+				strcpy(infostr, "BHN3 B KATAKOM#LI");
 				cursmx = 49;
 				cursmy = 21;
 				return TRUE;
@@ -364,7 +366,7 @@ BOOL ForceTownTrig()
 	if (townwarps[1]) {
 		for (k = 1199; k <= 1220; k++) {
 			if (dPiece[cursmx][cursmy] == k) {
-				strcpy(infostr, "Down to caves");
+				strcpy(infostr, "BHN3 B ZEVEPLI");
 				cursmx = 17;
 				cursmy = 69;
 				return TRUE;
@@ -375,7 +377,7 @@ BOOL ForceTownTrig()
 	if (townwarps[2]) {
 		for (l = 1240; l <= 1255; l++) {
 			if (dPiece[cursmx][cursmy] == l) {
-				strcpy(infostr, "Down to hell");
+				strcpy(infostr, "B AD");
 				cursmx = 41;
 				cursmy = 80;
 				return TRUE;
@@ -386,7 +388,7 @@ BOOL ForceTownTrig()
 	if (gbIsHellfire) {
 		for (i = 0; TownCryptList[i] != -1; i++) {
 			if (dPiece[cursmx][cursmy] == TownCryptList[i]) {
-				strcpy(infostr, "Down to Crypt");
+				strcpy(infostr, "B CK/EZ");
 				cursmx = 36;
 				cursmy = 24;
 				return TRUE;
@@ -394,7 +396,7 @@ BOOL ForceTownTrig()
 		}
 		for (i = 0; TownHiveList[i] != -1; i++) {
 			if (dPiece[cursmx][cursmy] == TownHiveList[i]) {
-				strcpy(infostr, "Down to Hive");
+				strcpy(infostr, "B FHE3DO");
 				cursmx = 80;
 				cursmy = 62;
 				return TRUE;
@@ -414,9 +416,9 @@ BOOL ForceL1Trig()
 		for (i = 0; L1UpList[i] != -1; i++) {
 			if (dPiece[cursmx][cursmy] == L1UpList[i]) {
 				if (currlevel > 1)
-					sprintf(infostr, "Up to level %i", currlevel - 1);
+					sprintf(infostr, "BBEPX HA YPOBEHL %i", currlevel - 1);
 				else
-					strcpy(infostr, "Up to town");
+					strcpy(infostr, "B FOPOD");
 				for (j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABPREVLVL) {
 						cursmx = trigs[j]._tx;
@@ -428,7 +430,7 @@ BOOL ForceL1Trig()
 		}
 		for (i = 0; L1DownList[i] != -1; i++) {
 			if (dPiece[cursmx][cursmy] == L1DownList[i]) {
-				sprintf(infostr, "Down to level %i", currlevel + 1);
+				sprintf(infostr, "BHN3 HA YPOBEHL %i", currlevel + 1);
 				for (j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 						cursmx = trigs[j]._tx;
@@ -441,7 +443,7 @@ BOOL ForceL1Trig()
 	} else {
 		for (i = 0; L5UpList[i] != -1; i++) {
 			if (dPiece[cursmx][cursmy] == L5UpList[i]) {
-				sprintf(infostr, "Up to Crypt level %i", currlevel - 21);
+				sprintf(infostr, "BHN3 HA YPOBEHL %i", currlevel - 21);
 				for (j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABPREVLVL) {
 						cursmx = trigs[j]._tx;
@@ -452,12 +454,12 @@ BOOL ForceL1Trig()
 			}
 		}
 		if (dPiece[cursmx][cursmy] == 317) {
-			strcpy(infostr, "Cornerstone of the World");
+			strcpy(infostr, "KPAEYFO/LHLI& KAMEHL MNPA");
 			return TRUE;
 		}
 		for (i = 0; L5DownList[i] != -1; i++) {
 			if (dPiece[cursmx][cursmy] == L5DownList[i]) {
-				sprintf(infostr, "Down to Crypt level %i", currlevel - 19);
+				sprintf(infostr, "BHN3 HA YPOBEHL %i", currlevel - 19);
 				for (j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 						cursmx = trigs[j]._tx;
@@ -475,7 +477,7 @@ BOOL ForceL1Trig()
 							dx = abs(trigs[j]._tx - cursmx);
 							dy = abs(trigs[j]._ty - cursmy);
 							if (dx < 4 && dy < 4) {
-								strcpy(infostr, "Up to town");
+								strcpy(infostr, "B FOPOD");
 								cursmx = trigs[j]._tx;
 								cursmy = trigs[j]._ty;
 								return TRUE;
@@ -501,7 +503,7 @@ BOOL ForceL2Trig()
 					dx = abs(trigs[j]._tx - cursmx);
 					dy = abs(trigs[j]._ty - cursmy);
 					if (dx < 4 && dy < 4) {
-						sprintf(infostr, "Up to level %i", currlevel - 1);
+						sprintf(infostr, "BBEPX HA YPOBEHL %i", currlevel - 1);
 						cursmx = trigs[j]._tx;
 						cursmy = trigs[j]._ty;
 						return TRUE;
@@ -513,7 +515,7 @@ BOOL ForceL2Trig()
 
 	for (i = 0; L2DownList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == L2DownList[i]) {
-			sprintf(infostr, "Down to level %i", currlevel + 1);
+			sprintf(infostr, "BHN3 HA YPOBEHL %i", currlevel + 1);
 			for (j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 					cursmx = trigs[j]._tx;
@@ -532,7 +534,7 @@ BOOL ForceL2Trig()
 						dx = abs(trigs[j]._tx - cursmx);
 						dy = abs(trigs[j]._ty - cursmy);
 						if (dx < 4 && dy < 4) {
-							strcpy(infostr, "Up to town");
+							strcpy(infostr, "B FOPOD");
 							cursmx = trigs[j]._tx;
 							cursmy = trigs[j]._ty;
 							return TRUE;
@@ -553,7 +555,7 @@ BOOL ForceL3Trig()
 	if (currlevel < 17) {
 		for (i = 0; L3UpList[i] != -1; ++i) {
 			if (dPiece[cursmx][cursmy] == L3UpList[i]) {
-				sprintf(infostr, "Up to level %i", currlevel - 1);
+				sprintf(infostr, "BBEPX HA YPOBEHL %i", currlevel - 1);
 				for (j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABPREVLVL) {
 						cursmx = trigs[j]._tx;
@@ -567,7 +569,7 @@ BOOL ForceL3Trig()
 			if (dPiece[cursmx][cursmy] == L3DownList[i]
 			    || dPiece[cursmx + 1][cursmy] == L3DownList[i]
 			    || dPiece[cursmx + 2][cursmy] == L3DownList[i]) {
-				sprintf(infostr, "Down to level %i", currlevel + 1);
+				sprintf(infostr, "BHN3 HA YPOBEHL %i", currlevel + 1);
 				for (j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 						cursmx = trigs[j]._tx;
@@ -580,7 +582,7 @@ BOOL ForceL3Trig()
 	} else {
 		for (i = 0; L6UpList[i] != -1; ++i) {
 			if (dPiece[cursmx][cursmy] == L6UpList[i]) {
-				sprintf(infostr, "Up to Nest level %i", currlevel - 17);
+				sprintf(infostr, "BBEPX HA YPOBEHL %i", currlevel - 17);
 				for (j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABPREVLVL) {
 						cursmx = trigs[j]._tx;
@@ -594,7 +596,7 @@ BOOL ForceL3Trig()
 			if (dPiece[cursmx][cursmy] == L6DownList[i]
 			    || dPiece[cursmx + 1][cursmy] == L6DownList[i]
 			    || dPiece[cursmx + 2][cursmy] == L6DownList[i]) {
-				sprintf(infostr, "Down to level %i", currlevel - 15);
+				sprintf(infostr, "BHN3 HA YPOBEHL %i", currlevel - 15);
 				for (j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 						cursmx = trigs[j]._tx;
@@ -614,7 +616,7 @@ BOOL ForceL3Trig()
 						dx = abs(trigs[j]._tx - cursmx);
 						dy = abs(trigs[j]._ty - cursmy);
 						if (dx < 4 && dy < 4) {
-							strcpy(infostr, "Up to town");
+							strcpy(infostr, "B FOPOD");
 							cursmx = trigs[j]._tx;
 							cursmy = trigs[j]._ty;
 							return TRUE;
@@ -632,7 +634,7 @@ BOOL ForceL3Trig()
 						dx = abs(trigs[j]._tx - cursmx);
 						dy = abs(trigs[j]._ty - cursmy);
 						if (dx < 4 && dy < 4) {
-							strcpy(infostr, "Up to town");
+							strcpy(infostr, "B FOPOD");
 							cursmx = trigs[j]._tx;
 							cursmy = trigs[j]._ty;
 							return TRUE;
@@ -652,7 +654,7 @@ BOOL ForceL4Trig()
 
 	for (i = 0; L4UpList[i] != -1; ++i) {
 		if (dPiece[cursmx][cursmy] == L4UpList[i]) {
-			sprintf(infostr, "Up to level %i", currlevel - 1);
+			sprintf(infostr, "BBEPX HA YPOBEHL %i", currlevel - 1);
 			for (j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABPREVLVL) {
 					cursmx = trigs[j]._tx;
@@ -665,7 +667,7 @@ BOOL ForceL4Trig()
 
 	for (i = 0; L4DownList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == L4DownList[i]) {
-			sprintf(infostr, "Down to level %i", currlevel + 1);
+			sprintf(infostr, "BHN3 HA YPOBEHL %i", currlevel + 1);
 			for (j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 					cursmx = trigs[j]._tx;
@@ -684,7 +686,7 @@ BOOL ForceL4Trig()
 						dx = abs(trigs[j]._tx - cursmx);
 						dy = abs(trigs[j]._ty - cursmy);
 						if (dx < 4 && dy < 4) {
-							strcpy(infostr, "Up to town");
+							strcpy(infostr, "B FOPOD");
 							cursmx = trigs[j]._tx;
 							cursmy = trigs[j]._ty;
 							return TRUE;
@@ -698,7 +700,7 @@ BOOL ForceL4Trig()
 	if (currlevel == 15) {
 		for (i = 0; L4PentaList[i] != -1; i++) {
 			if (dPiece[cursmx][cursmy] == L4PentaList[i]) {
-				strcpy(infostr, "Down to Diablo");
+				strcpy(infostr, "BHN3 BO B/ADEHNR Y)KACA");
 				for (j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 						cursmx = trigs[j]._tx;
@@ -735,7 +737,7 @@ BOOL ForceSKingTrig()
 
 	for (i = 0; L1UpList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == L1UpList[i]) {
-			sprintf(infostr, "Back to Level %i", quests[Q_SKELKING]._qlevel);
+			sprintf(infostr, "HA3AD HA YPOBEHL %i", quests[Q_SKELKING]._qlevel);
 			cursmx = trigs[0]._tx;
 			cursmy = trigs[0]._ty;
 
@@ -752,7 +754,7 @@ BOOL ForceSChambTrig()
 
 	for (i = 0; L2DownList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == L2DownList[i]) {
-			sprintf(infostr, "Back to Level %i", quests[Q_SCHAMB]._qlevel);
+			sprintf(infostr, "HA3AD HA YPOBEHL %i", quests[Q_SCHAMB]._qlevel);
 			cursmx = trigs[0]._tx;
 			cursmy = trigs[0]._ty;
 
@@ -769,7 +771,7 @@ BOOL ForcePWaterTrig()
 
 	for (i = 0; L3DownList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == L3DownList[i]) {
-			sprintf(infostr, "Back to Level %i", quests[Q_PWATER]._qlevel);
+			sprintf(infostr, "HA3AD HA YPOBEHL %i", quests[Q_PWATER]._qlevel);
 			cursmx = trigs[0]._tx;
 			cursmy = trigs[0]._ty;
 
@@ -863,7 +865,7 @@ void CheckTriggers()
 			StartNewLvl(myplr, trigs[i]._tmsg, ReturnLvl);
 			break;
 		case WM_DIABTOWNWARP:
-			if (gbIsMultiplayer) {
+			if (gbMaxPlayers != 1) {
 				abort = FALSE;
 
 				if (trigs[i]._tlvl == 5 && plr[myplr]._pLevel < 8) {

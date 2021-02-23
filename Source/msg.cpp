@@ -120,7 +120,7 @@ static int msg_wait_for_turns()
 	}
 	multi_process_network_packets();
 	nthread_send_and_recv_turn(0, 0);
-	if (nthread_has_500ms_passed())
+	if (nthread_has_500ms_passed(FALSE))
 		nthread_recv_turns(&received);
 
 	if (gbGameDestroyed)
@@ -172,7 +172,7 @@ BOOL msg_wait_resync()
 
 void run_delta_info()
 {
-	if (!gbIsMultiplayer)
+	if (gbMaxPlayers == 1)
 		return;
 
 	gbBufferMsgs = 2;
@@ -312,11 +312,10 @@ static void DeltaImportJunk(BYTE *src)
 	}
 }
 
-static DWORD msg_comp_level(BYTE *buffer, BYTE *end)
+static int msg_comp_level(BYTE *buffer, BYTE *end)
 {
-	DWORD size = end - buffer - 1;
-	DWORD pkSize = PkwareCompress(buffer + 1, size);
-
+	int size = end - buffer - 1;
+	int pkSize = PkwareCompress(buffer + 1, size);
 	*buffer = size != pkSize;
 
 	return pkSize + 1;
@@ -420,7 +419,7 @@ void delta_init()
 
 void delta_kill_monster(int mi, BYTE x, BYTE y, BYTE bLevel)
 {
-	if (!gbIsMultiplayer)
+	if (gbMaxPlayers == 1)
 		return;
 
 	sgbDeltaChanged = TRUE;
@@ -433,7 +432,7 @@ void delta_kill_monster(int mi, BYTE x, BYTE y, BYTE bLevel)
 
 void delta_monster_hp(int mi, int hp, BYTE bLevel)
 {
-	if (!gbIsMultiplayer)
+	if (gbMaxPlayers == 1)
 		return;
 
 	sgbDeltaChanged = TRUE;
@@ -444,7 +443,7 @@ void delta_monster_hp(int mi, int hp, BYTE bLevel)
 
 void delta_sync_monster(const TSyncMonster *pSync, BYTE bLevel)
 {
-	if (!gbIsMultiplayer)
+	if (gbMaxPlayers == 1)
 		return;
 
 	/// ASSERT: assert(pSync != NULL);
@@ -463,7 +462,7 @@ void delta_sync_monster(const TSyncMonster *pSync, BYTE bLevel)
 
 void delta_sync_golem(TCmdGolem *pG, int pnum, BYTE bLevel)
 {
-	if (!gbIsMultiplayer)
+	if (gbMaxPlayers == 1)
 		return;
 
 	sgbDeltaChanged = TRUE;
@@ -478,10 +477,10 @@ void delta_sync_golem(TCmdGolem *pG, int pnum, BYTE bLevel)
 
 void delta_leave_sync(BYTE bLevel)
 {
-	if (!gbIsMultiplayer)
+	if (gbMaxPlayers == 1)
 		return;
 	if (currlevel == 0)
-		glSeedTbl[0] = AdvanceRndSeed();
+		glSeedTbl[0] = GetRndSeed();
 	if (currlevel <= 0)
 		return;
 
@@ -503,7 +502,7 @@ void delta_leave_sync(BYTE bLevel)
 
 static void delta_sync_object(int oi, BYTE bCmd, BYTE bLevel)
 {
-	if (!gbIsMultiplayer)
+	if (gbMaxPlayers == 1)
 		return;
 
 	sgbDeltaChanged = TRUE;
@@ -514,7 +513,7 @@ static BOOL delta_get_item(TCmdGItem *pI, BYTE bLevel)
 {
 	int i;
 
-	if (!gbIsMultiplayer)
+	if (gbMaxPlayers == 1)
 		return TRUE;
 
 	TCmdPItem *pD = sgLevels[bLevel].item;
@@ -560,12 +559,14 @@ static BOOL delta_get_item(TCmdGItem *pI, BYTE bLevel)
 			pD->bMCh = pI->bMCh;
 			pD->wValue = pI->wValue;
 			pD->dwBuff = pI->dwBuff;
+#ifdef HELLFIRE
 			pD->wToHit = pI->wToHit;
 			pD->wMaxDam = pI->wMaxDam;
 			pD->bMinStr = pI->bMinStr;
 			pD->bMinMag = pI->bMinMag;
 			pD->bMinDex = pI->bMinDex;
 			pD->bAC = pI->bAC;
+#endif
 			break;
 		}
 	}
@@ -576,7 +577,7 @@ static void delta_put_item(TCmdPItem *pI, int x, int y, BYTE bLevel)
 {
 	int i;
 
-	if (!gbIsMultiplayer)
+	if (gbMaxPlayers == 1)
 		return;
 
 	TCmdPItem *pD = sgLevels[bLevel].item;
@@ -619,7 +620,7 @@ void DeltaAddItem(int ii)
 {
 	int i;
 
-	if (!gbIsMultiplayer)
+	if (gbMaxPlayers == 1)
 		return;
 
 	TCmdPItem *pD = sgLevels[currlevel].item;
@@ -649,12 +650,14 @@ void DeltaAddItem(int ii)
 			pD->bCh = item[ii]._iCharges;
 			pD->bMCh = item[ii]._iMaxCharges;
 			pD->wValue = item[ii]._ivalue;
+#ifdef HELLFIRE
 			pD->wToHit = item[ii]._iPLToHit;
 			pD->wMaxDam = item[ii]._iMaxDam;
 			pD->bMinStr = item[ii]._iMinStr;
 			pD->bMinMag = item[ii]._iMinMag;
 			pD->bMinDex = item[ii]._iMinDex;
 			pD->bAC = item[ii]._iAC;
+#endif
 			return;
 		}
 	}
@@ -662,7 +665,7 @@ void DeltaAddItem(int ii)
 
 void DeltaSaveLevel()
 {
-	if (!gbIsMultiplayer)
+	if (gbMaxPlayers == 1)
 		return;
 
 	for (int i = 0; i < MAX_PLRS; i++) {
@@ -680,7 +683,7 @@ void DeltaLoadLevel()
 	int x, y, xx, yy;
 	BOOL done;
 
-	if (!gbIsMultiplayer)
+	if (gbMaxPlayers == 1)
 		return;
 
 	deltaload = TRUE;
@@ -770,12 +773,14 @@ void DeltaLoadLevel()
 					item[ii]._iMaxDur = sgLevels[currlevel].item[i].bMDur;
 					item[ii]._iCharges = sgLevels[currlevel].item[i].bCh;
 					item[ii]._iMaxCharges = sgLevels[currlevel].item[i].bMCh;
+#ifdef HELLFIRE
 					item[ii]._iPLToHit = sgLevels[currlevel].item[i].wToHit;
 					item[ii]._iMaxDam = sgLevels[currlevel].item[i].wMaxDam;
 					item[ii]._iMinStr = sgLevels[currlevel].item[i].bMinStr;
 					item[ii]._iMinMag = sgLevels[currlevel].item[i].bMinMag;
 					item[ii]._iMinDex = sgLevels[currlevel].item[i].bMinDex;
 					item[ii]._iAC = sgLevels[currlevel].item[i].bAC;
+#endif
 				}
 				x = sgLevels[currlevel].item[i].x;
 				y = sgLevels[currlevel].item[i].y;
@@ -1095,12 +1100,14 @@ void NetSendCmdPItem(BOOL bHiPri, BYTE bCmd, BYTE x, BYTE y)
 		cmd.bCh = plr[myplr].HoldItem._iCharges;
 		cmd.bMCh = plr[myplr].HoldItem._iMaxCharges;
 		cmd.wValue = plr[myplr].HoldItem._ivalue;
+#ifdef HELLFIRE
 		cmd.wToHit = plr[myplr].HoldItem._iPLToHit;
 		cmd.wMaxDam = plr[myplr].HoldItem._iMaxDam;
 		cmd.bMinStr = plr[myplr].HoldItem._iMinStr;
 		cmd.bMinMag = plr[myplr].HoldItem._iMinMag;
 		cmd.bMinDex = plr[myplr].HoldItem._iMinDex;
 		cmd.bAC = plr[myplr].HoldItem._iAC;
+#endif
 	}
 
 	if (bHiPri)
@@ -1166,12 +1173,14 @@ void NetSendCmdDItem(BOOL bHiPri, int ii)
 		cmd.bCh = item[ii]._iCharges;
 		cmd.bMCh = item[ii]._iMaxCharges;
 		cmd.wValue = item[ii]._ivalue;
+#ifdef HELLFIRE
 		cmd.wToHit = item[ii]._iPLToHit;
 		cmd.wMaxDam = item[ii]._iMaxDam;
 		cmd.bMinStr = item[ii]._iMinStr;
 		cmd.bMinMag = item[ii]._iMinMag;
 		cmd.bMinDex = item[ii]._iMinDex;
 		cmd.bAC = item[ii]._iAC;
+#endif
 	}
 
 	if (bHiPri)
@@ -1264,7 +1273,7 @@ void delta_close_portal(int pnum)
 
 static void check_update_plr(int pnum)
 {
-	if (gbIsMultiplayer && pnum == myplr)
+	if (gbMaxPlayers != 1 && pnum == myplr)
 		pfile_update(TRUE);
 }
 
@@ -2233,7 +2242,7 @@ static DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 				}
 
 				plr[pnum]._pvid = AddVision(plr[pnum]._px, plr[pnum]._py, plr[pnum]._pLightRad, pnum == myplr);
-				plr[pnum]._plid = NO_LIGHT;
+				plr[pnum]._plid = -1;
 			}
 		}
 	}
@@ -2492,7 +2501,7 @@ static DWORD On_OPENHIVE(TCmd *pCmd, int pnum)
 	TCmdLocParam2 *p = (TCmdLocParam2 *)pCmd;
 	if (gbBufferMsgs != 1) {
 		AddMissile(p->x, p->y, p->wParam1, p->wParam2, 0, MIS_HIVEEXP2, TARGET_MONSTERS, pnum, 0, 0);
-		TownOpenHive();
+		town_4751C6();
 	}
 	return sizeof(*p);
 }
@@ -2500,7 +2509,7 @@ static DWORD On_OPENHIVE(TCmd *pCmd, int pnum)
 static DWORD On_OPENCRYPT(TCmd *pCmd, int pnum)
 {
 	if (gbBufferMsgs != 1) {
-		TownOpenGrave();
+		town_475595();
 		InitTownTriggers();
 		if (currlevel == 0)
 			PlaySFX(IS_SARC);
