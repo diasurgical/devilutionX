@@ -4160,11 +4160,27 @@ void PrintItemMisc(ItemStruct *x)
 	}
 }
 
+static void PrintItemInfo(ItemStruct *x)
+{
+	PrintItemMisc(x);
+	Uint8 str = x->_iMinStr;
+	Uint8 dex = x->_iMinDex;
+	Uint8 mag = x->_iMinMag;
+	if (str || mag || dex) {
+		strcpy(tempstr, "Required:");
+		if (str)
+			sprintf(tempstr + strlen(tempstr), " %i Str", str);
+		if (mag)
+			sprintf(tempstr + strlen(tempstr), " %i Mag", mag);
+		if (dex)
+			sprintf(tempstr + strlen(tempstr), " %i Dex", dex);
+		AddPanelString(tempstr, TRUE);
+	}
+	pinfoflag = TRUE;
+}
+
 void PrintItemDetails(ItemStruct *x)
 {
-	char str, dex;
-	BYTE mag;
-
 	if (x->_iClass == ICLASS_WEAPON) {
 		if (x->_iMinDam == x->_iMaxDam) {
 			if (x->_iMaxDur == DUR_INDESTRUCTIBLE)
@@ -4207,27 +4223,11 @@ void PrintItemDetails(ItemStruct *x)
 		uitemflag = TRUE;
 		curruitem = *x;
 	}
-	PrintItemMisc(x);
-	mag = x->_iMinMag;
-	dex = x->_iMinDex;
-	str = x->_iMinStr;
-	if (mag + dex + str) {
-		if (x->_iMinStr)
-			sprintf(tempstr, "Required: %i Str", x->_iMinStr);
-		if (x->_iMinMag)
-			sprintf(tempstr, "Required: %i Mag", x->_iMinMag);
-		if (x->_iMinDex)
-			sprintf(tempstr, "Required: %i Dex", x->_iMinDex);
-		AddPanelString(tempstr, TRUE);
-	}
-	pinfoflag = TRUE;
+	PrintItemInfo(x);
 }
 
 void PrintItemDur(ItemStruct *x)
 {
-	char str, dex;
-	BYTE mag;
-
 	if (x->_iClass == ICLASS_WEAPON) {
 		if (x->_iMinDam == x->_iMaxDam) {
 			if (x->_iMaxDur == DUR_INDESTRUCTIBLE)
@@ -4263,20 +4263,7 @@ void PrintItemDur(ItemStruct *x)
 	}
 	if (x->_itype == ITYPE_RING || x->_itype == ITYPE_AMULET)
 		AddPanelString("Not Identified", TRUE);
-	PrintItemMisc(x);
-	str = x->_iMinStr;
-	mag = x->_iMinMag;
-	dex = x->_iMinDex;
-	if (str + mag + dex) {
-		if (x->_iMinStr)
-			sprintf(tempstr, "Required: %i Str", x->_iMinStr);
-		if (x->_iMinMag)
-			sprintf(tempstr, "Required: %i Mag", x->_iMinMag);
-		if (x->_iMinDex)
-			sprintf(tempstr, "Required: %i Dex", x->_iMinDex);
-		AddPanelString(tempstr, TRUE);
-	}
-	pinfoflag = TRUE;
+	PrintItemInfo(x);
 }
 
 void UseItem(int p, int Mid, int spl)
