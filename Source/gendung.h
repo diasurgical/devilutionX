@@ -12,6 +12,26 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+typedef struct ScrollStruct {
+	int _sxoff; // X-offset of camera position. This usually corresponds to a negative version of plr[myplr]._pxoff
+	int _syoff; // Y-offset of camera position. This usually corresponds to a negative version of plr[myplr]._pyoff
+	int _sdx;
+	int _sdy;
+	int _sdir;
+} ScrollStruct;
+
+typedef struct THEME_LOC {
+	int x;
+	int y;
+	int ttval;
+	int width;
+	int height;
+} THEME_LOC;
+
+typedef struct MICROS {
+	Uint16 mt[16];
+} MICROS;
+
 extern BYTE dungeon[DMAXX][DMAXY];
 extern BYTE pdungeon[DMAXX][DMAXY];
 extern char dflags[DMAXX][DMAXY];
@@ -25,8 +45,6 @@ extern BYTE *pSpecialCels;
 extern BYTE *pMegaTiles;
 extern BYTE *pLevelPieces;
 extern BYTE *pDungeonCels;
-extern BYTE *pSpeedCels;
-extern int SpeedFrameTbl[128][16];
 extern char block_lvid[MAXTILES + 1];
 extern BOOLEAN nBlockTable[MAXTILES + 1];
 extern BOOLEAN nSolidTable[MAXTILES + 1];
@@ -57,7 +75,6 @@ extern char TransVal;
 extern BOOLEAN TransList[256];
 extern int dPiece[MAXDUNX][MAXDUNY];
 extern MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
-extern MICROS dpiece_defs_map_1[MAXDUNX * MAXDUNY];
 extern char dTransVal[MAXDUNX][MAXDUNY];
 extern char dLight[MAXDUNX][MAXDUNY];
 extern char dPreLight[MAXDUNX][MAXDUNY];

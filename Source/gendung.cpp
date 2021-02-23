@@ -29,40 +29,10 @@ BYTE *pSpecialCels;
 BYTE *pMegaTiles;
 BYTE *pLevelPieces;
 BYTE *pDungeonCels;
-BYTE *pSpeedCels;
-/**
- * Returns the frame number of the speed CEL, an in memory decoding
- * of level CEL frames, based on original frame number and light index.
- * Note, given light index 0, the original frame number is returned.
- */
-int SpeedFrameTbl[128][16];
 /**
  * List of transparancy masks to use for dPieces
  */
 char block_lvid[MAXTILES + 1];
-/** Specifies the CEL frame occurrence for each frame of the level CEL (e.g. "levels/l1data/l1.cel"). */
-int level_frame_count[MAXTILES];
-int tile_defs[MAXTILES];
-/**
- * Secifies the CEL frame decoder type for each frame of the
- * level CEL (e.g. "levels/l1data/l1.cel"), Indexed by frame numbers starting at 1.
- * The decoder type may be one of the following.
- *  0x0000 - cel.decodeType0
- *  0x1000 - cel.decodeType1
- *  0x2000 - cel.decodeType2
- *  0x3000 - cel.decodeType3
- *  0x4000 - cel.decodeType4
- *  0x5000 - cel.decodeType5
- *  0x6000 - cel.decodeType6
- */
-WORD level_frame_types[MAXTILES];
-/**
- * Specifies the size of each frame of the level cel (e.g.
- * "levels/l1data/l1.cel"). Indexed by frame numbers starting at 1.
- */
-int level_frame_sizes[MAXTILES];
-/** Specifies the number of frames in the level cel (e.g. "levels/l1data/l1.cel"). */
-int nlevel_frames;
 /**
  * List of light blocking dPieces
  */
@@ -118,8 +88,6 @@ BOOLEAN TransList[256];
 int dPiece[MAXDUNX][MAXDUNY];
 /** Specifies the dungeon piece information for a given coordinate and block number. */
 MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
-/** Specifies the dungeon piece information for a given coordinate and block number, optimized for diagonal access. */
-MICROS dpiece_defs_map_1[MAXDUNX * MAXDUNY];
 /** Specifies the transparency at each coordinate of the map. */
 char dTransVal[MAXDUNX][MAXDUNY];
 char dLight[MAXDUNX][MAXDUNY];
@@ -158,9 +126,8 @@ THEME_LOC themeLoc[MAXTHEMES];
 void FillSolidBlockTbls()
 {
 	BYTE bv;
-	DWORD dwTiles;
+	DWORD i, dwTiles;
 	BYTE *pSBFile, *pTmp;
-	int i;
 
 	memset(nBlockTable, 0, sizeof(nBlockTable));
 	memset(nSolidTable, 0, sizeof(nSolidTable));
@@ -625,11 +592,14 @@ BOOL SkipThemeRoom(int x, int y)
 
 void InitLevels()
 {
-	if (!leveldebug) {
-		currlevel = 0;
-		leveltype = DTYPE_TOWN;
-		setlevel = FALSE;
-	}
+#ifdef _DEBUG
+	if (leveldebug)
+		return;
+#endif
+
+	currlevel = 0;
+	leveltype = DTYPE_TOWN;
+	setlevel = FALSE;
 }
 
 DEVILUTION_END_NAMESPACE

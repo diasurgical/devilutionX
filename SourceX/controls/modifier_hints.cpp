@@ -122,6 +122,11 @@ void DrawSelectModifierMenu()
 {
 	if (!select_modifier_active)
 		return;
+	if (dpad_hotkeys)
+	{
+		static const CircleMenuHint kDpad(/*is_dpad=*/true, /*top=*/"F6", /*right=*/"F8", /*bottom=*/"F7", /*left=*/"F5");
+		DrawCircleMenuHint(kDpad, PANEL_LEFT + kCircleMarginX, PANEL_TOP - kCirclesTop);
+	}
 	static const CircleMenuHint kSpells(/*is_dpad=*/false, "F6", "F8", "F7", "F5");
 	DrawCircleMenuHint(kSpells, PANEL_LEFT + PANEL_WIDTH - kSpells.width() - kCircleMarginX, PANEL_TOP - kCirclesTop);
 }

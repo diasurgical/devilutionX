@@ -39,7 +39,7 @@ public:
 	virtual bool SNetLeaveGame(int type);
 	virtual bool SNetDropPlayer(int playerid, DWORD flags);
 	virtual bool SNetGetOwnerTurnsWaiting(DWORD *turns);
-	virtual bool SNetGetTurnsInTransit(int *turns);
+	virtual bool SNetGetTurnsInTransit(DWORD *turns);
 	virtual void setup_gameinfo(buffer_t info);
 
 	virtual ~cdwrap() = default;
@@ -146,7 +146,7 @@ bool cdwrap<T>::SNetGetOwnerTurnsWaiting(DWORD *turns)
 }
 
 template <class T>
-bool cdwrap<T>::SNetGetTurnsInTransit(int *turns)
+bool cdwrap<T>::SNetGetTurnsInTransit(DWORD *turns)
 {
 	return dvlnet_wrap->SNetGetTurnsInTransit(turns);
 }

@@ -3,6 +3,10 @@
 
 #include <SDL.h>
 
+#ifndef SDL_MAX_UINT32
+#define SDL_MAX_UINT32 ((Uint32)0xFFFFFFFFu)
+#endif
+
 #if !SDL_VERSION_ATLEAST(2, 0, 4)
 inline SDL_bool SDL_PointInRect(const SDL_Point *p, const SDL_Rect *r)
 {

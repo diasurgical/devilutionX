@@ -682,7 +682,7 @@ void Theme_Treasure(int t)
 	char treasrnd[4] = { 4, 9, 7, 10 };
 	char monstrnd[4] = { 6, 8, 3, 7 };
 
-	GetRndSeed();
+	AdvanceRndSeed();
 	for (yp = 0; yp < MAXDUNY; yp++) {
 		for (xp = 0; xp < MAXDUNX; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && !nSolidTable[dPiece[xp][yp]]) {

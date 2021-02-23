@@ -104,7 +104,7 @@ static void PkwareBufferWrite(char *buf, unsigned int *size, void *param)
 	pInfo->destOffset += *size;
 }
 
-int PkwareCompress(BYTE *srcData, int size)
+DWORD PkwareCompress(BYTE *srcData, DWORD size)
 {
 	BYTE *destData;
 	char *ptr;

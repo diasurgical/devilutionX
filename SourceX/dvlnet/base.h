@@ -32,7 +32,7 @@ public:
 	virtual bool SNetLeaveGame(int type);
 	virtual bool SNetDropPlayer(int playerid, DWORD flags);
 	virtual bool SNetGetOwnerTurnsWaiting(DWORD *turns);
-	virtual bool SNetGetTurnsInTransit(int *turns);
+	virtual bool SNetGetTurnsInTransit(DWORD *turns);
 
 	virtual void poll() = 0;
 	virtual void send(packet &pkt) = 0;

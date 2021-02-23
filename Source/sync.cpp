@@ -7,9 +7,11 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-WORD sync_word_6AA708[MAXMONSTERS];
+namespace {
+
+Uint16 sync_word_6AA708[MAXMONSTERS];
 int sgnMonsters;
-WORD sgwLRU[MAXMONSTERS];
+Uint16 sgwLRU[MAXMONSTERS];
 int sgnSyncItem;
 int sgnSyncPInv;
 
@@ -40,10 +42,10 @@ static void sync_monster_pos(TSyncMonster *p, int ndx)
 	sgwLRU[ndx] = monster[ndx]._msquelch == 0 ? 0xFFFF : 0xFFFE;
 }
 
-static BOOL sync_monster_active(TSyncMonster *p)
+static bool sync_monster_active(TSyncMonster *p)
 {
 	int i, m, ndx;
-	DWORD lru;
+	Uint32 lru;
 
 	ndx = -1;
 	lru = 0xFFFFFFFF;
@@ -57,17 +59,17 @@ static BOOL sync_monster_active(TSyncMonster *p)
 	}
 
 	if (ndx == -1) {
-		return FALSE;
+		return false;
 	}
 
 	sync_monster_pos(p, ndx);
-	return TRUE;
+	return true;
 }
 
-static BOOL sync_monster_active2(TSyncMonster *p)
+static bool sync_monster_active2(TSyncMonster *p)
 {
 	int i, m, ndx;
-	DWORD lru;
+	Uint32 lru;
 
 	ndx = -1;
 	lru = 0xFFFE;
@@ -85,11 +87,11 @@ static BOOL sync_monster_active2(TSyncMonster *p)
 	}
 
 	if (ndx == -1) {
-		return FALSE;
+		return false;
 	}
 
 	sync_monster_pos(p, ndx);
-	return TRUE;
+	return true;
 }
 
 static void SyncPlrInv(TSyncHeader *pHdr)
@@ -132,7 +134,7 @@ static void SyncPlrInv(TSyncHeader *pHdr)
 		pHdr->bItemI = -1;
 	}
 
-	assert((DWORD)sgnSyncPInv < NUM_INVLOC);
+	assert(sgnSyncPInv > -1 && sgnSyncPInv < NUM_INVLOC);
 	pItem = &plr[myplr].InvBody[sgnSyncPInv];
 	if (pItem->_itype != ITYPE_NONE) {
 		pHdr->bPInvLoc = sgnSyncPInv;
@@ -150,11 +152,13 @@ static void SyncPlrInv(TSyncHeader *pHdr)
 	}
 }
 
-DWORD sync_all_monsters(const BYTE *pbBuf, DWORD dwMaxLen)
+}
+
+Uint32 sync_all_monsters(const Uint8 *pbBuf, Uint32 dwMaxLen)
 {
 	TSyncHeader *pHdr;
 	int i;
-	BOOL sync;
+	bool sync;
 
 	if (nummonsters < 1) {
 		return dwMaxLen;
@@ -175,7 +179,7 @@ DWORD sync_all_monsters(const BYTE *pbBuf, DWORD dwMaxLen)
 	sync_one_monster();
 
 	for (i = 0; i < nummonsters && dwMaxLen >= sizeof(TSyncMonster); i++) {
-		sync = FALSE;
+		sync = false;
 		if (i < 2) {
 			sync = sync_monster_active2((TSyncMonster *)pbBuf);
 		}
@@ -195,19 +199,13 @@ DWORD sync_all_monsters(const BYTE *pbBuf, DWORD dwMaxLen)
 
 static void sync_monster(int pnum, const TSyncMonster *p)
 {
-	int i, ndx, md, mdx, mdy;
-	DWORD delta;
+	int ndx, md, mdx, mdy;
+	Uint32 delta;
 
 	ndx = p->_mndx;
 
 	if (monster[ndx]._mhitpoints <= 0) {
 		return;
-	}
-
-	for (i = 0; i < nummonsters; i++) { // CODEFIX: this loop does nothing
-		if (monstactive[i] == ndx) {
-			break;
-		}
 	}
 
 	delta = abs(plr[myplr]._px - monster[ndx]._mx) + abs(plr[myplr]._py - monster[ndx]._my);
@@ -251,10 +249,10 @@ static void sync_monster(int pnum, const TSyncMonster *p)
 	decode_enemy(ndx, p->_menemy);
 }
 
-DWORD sync_update(int pnum, const BYTE *pbBuf)
+Uint32 sync_update(int pnum, const Uint8 *pbBuf)
 {
 	TSyncHeader *pHdr;
-	WORD wLen;
+	Uint16 wLen;
 
 	pHdr = (TSyncHeader *)pbBuf;
 	pbBuf += sizeof(*pHdr);

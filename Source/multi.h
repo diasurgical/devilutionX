@@ -18,7 +18,7 @@ extern WORD sgwPackPlrOffsetTbl[MAX_PLRS];
 extern BYTE gbActivePlayers;
 extern BOOLEAN gbGameDestroyed;
 extern BOOLEAN gbSelectProvider;
-extern BYTE gbMaxPlayers;
+extern bool gbIsMultiplayer;
 extern char szPlayerName[128];
 extern BYTE gbDeltaSender;
 extern int player_state[MAX_PLRS];

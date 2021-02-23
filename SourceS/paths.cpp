@@ -39,7 +39,11 @@ std::string *FromSDL(char *s) {
 
 const std::string &GetBasePath()
 {
+#ifdef __vita__
+	if (basePath == NULL) basePath = new std::string(GetPrefPath());
+#else
 	if (basePath == NULL) basePath = FromSDL(SDL_GetBasePath());
+#endif
 	return *basePath;
 }
 

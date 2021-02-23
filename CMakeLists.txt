@@ -35,6 +35,9 @@ endif()
 if(NOT VERSION_NUM)
   include(CMake/git.cmake)
   get_git_tag(VERSION_NUM)
+  if (NOT "${VERSION_NUM}" STREQUAL "")
+    string(REGEX MATCH "([0-9]+\.[0-9]+\.[0-9]+)" VERSION_NUM ${VERSION_NUM} )
+  endif()
   get_git_commit_hash(GIT_COMMIT_HASH)
   if(NOT VERSION_SUFFIX)
     set(VERSION_SUFFIX "$<$<NOT:$<CONFIG:Release>>:-${GIT_COMMIT_HASH}>")
@@ -80,6 +83,11 @@ if(SWITCH)
   include(switch_defs)
 endif()
 
+if(VITA)
+  include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
+  include(vita_defs)
+endif()
+
 set(TARGET_PLATFORM host CACHE STRING "Target platform")
 set_property(CACHE TARGET_PLATFORM PROPERTY STRINGS host retrofw rg350 gkd350h cpigamesh)
 if(TARGET_PLATFORM STREQUAL "retrofw")
@@ -118,6 +126,11 @@ if(AMIGA)
   include(amiga_defs)
 endif()
 
+if(N3DS)
+  list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/ctr")
+  include(n3ds_defs)
+endif()
+
 if(DIST)
   set(sodium_USE_STATIC_LIBS ON)
 endif()
@@ -132,7 +145,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_THREAD_PREFER_PTHREAD ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
-find_package(Threads REQUIRED)
+if(NOT N3DS)
+  find_package(Threads REQUIRED)
+endif()
+
 if(NOT NONET)
   find_package(sodium REQUIRED)
 endif()
@@ -253,8 +269,7 @@ add_library(devilution STATIC
   Source/town.cpp
   Source/towners.cpp
   Source/track.cpp
-  Source/trigs.cpp
-  Source/wave.cpp)
+  Source/trigs.cpp)
 
 set(devilutionx_SRCS
   SourceX/dx.cpp
@@ -287,6 +302,7 @@ set(devilutionx_SRCS
   SourceX/DiabloUI/button.cpp
   SourceX/DiabloUI/credits.cpp
   SourceX/DiabloUI/credits_lines.cpp
+  SourceX/DiabloUI/support_lines.cpp
   SourceX/DiabloUI/diabloui.cpp
   SourceX/DiabloUI/dialogs.cpp
   SourceX/DiabloUI/fonts.cpp
@@ -325,6 +341,16 @@ if(SWITCH)
   set(BIN_TARGET devilutionx.elf)
 endif()
 
+if(N3DS)
+  list(APPEND devilutionx_SRCS
+    SourceX/platform/ctr/system.cpp
+    SourceX/platform/ctr/keyboard.cpp)
+if(HELLFIRE)
+  set(BIN_TARGET hellfire)
+endif()
+  set(BIN_TARGET ${BIN_TARGET}.elf)
+endif()
+
 if(RUN_TESTS)
   list(APPEND devilutionx_SRCS
     SourceT/appfat_test.cpp
@@ -341,7 +367,9 @@ if(RUN_TESTS)
     SourceT/drlg_l4_test.cpp
     SourceT/effects_test.cpp
     SourceT/file_util_test.cpp
-    SourceT/scrollrt_test.cpp)
+    SourceT/player_test.cpp
+    SourceT/scrollrt_test.cpp
+    SourceT/stores_test.cpp)
 endif()
 
 if(HELLFIRE)
@@ -387,10 +415,15 @@ target_include_directories(${BIN_TARGET} PRIVATE
   3rdParty/Radon/Radon/include
   3rdParty/libsmacker)
 
-target_link_libraries(devilution PUBLIC
+if(N3DS)
+  target_link_libraries(devilution PUBLIC
+  SourceS)
+else()
+  target_link_libraries(devilution PUBLIC
   Threads::Threads
-  SourceS
-)
+  SourceS)
+endif()
+
 target_link_libraries(${BIN_TARGET} PRIVATE
   devilution
   SourceS
@@ -494,6 +527,7 @@ foreach(target devilution ${BIN_TARGET} SourceS)
     target_compile_definitions(${target} PRIVATE USE_SDL1)
   else()
     target_link_libraries(${target} PRIVATE
+      SDL2::SDL2
       SDL2::SDL2main
       SDL2::SDL2_ttf
       SDL2::SDL2_mixer)
@@ -513,10 +547,45 @@ foreach(target devilution ${BIN_TARGET} SourceS)
     endif()
   endif()
 
+  if (VITA)
+    target_link_libraries(${target} PRIVATE
+          SceAppMgr_stub
+          SceAudio_stub
+          SceCommonDialog_stub
+          SceCtrl_stub
+          SceDisplay_stub
+          SceGxm_stub
+          SceHid_stub
+          SceIofilemgr_stub
+          SceMotion_stub
+          ScePower_stub
+          SceSysmodule_stub
+          SceTouch_stub
+          freetype
+          png
+          m
+          z
+          FLAC
+          vorbisfile
+          vorbis
+          ogg
+          mikmod
+          mpg123
+    )
+    target_compile_definitions(${target} PRIVATE VITA)
+  endif()
+
+  if(N3DS)
+    target_link_libraries(${target} PRIVATE ${TREMOR_LIBRARIES})
+    target_include_directories(${target} PRIVATE ${TREMOR_INCLUDE_DIRS})
+    target_link_libraries(${target} PRIVATE 3ds::ogg 3ds::mikmod 3ds::mad 3ds::freetype 3ds::bzip2 3ds::png)
+    target_link_libraries(${target} PRIVATE 3ds::citro3d 3ds::ctrulib)
+  endif()
+
   target_compile_definitions(${target} PRIVATE ${def_list})
 endforeach(target)
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT HAIKU)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT HAIKU AND NOT VITA)
   target_link_libraries(${BIN_TARGET} PUBLIC "$<$<NOT:$<CONFIG:Debug>>:-static-libgcc;-static-libstdc++>")
 endif()
 
@@ -551,12 +620,12 @@ if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   # Note: For Valgrind support.
   genex_for_option(DEBUG)
   target_compile_options(devilution PUBLIC $<${DEBUG_GENEX}:-fno-omit-frame-pointer>)
-  # Ignore serious warnings due to "quality" of decompiled code
-  # Currently, disable ignore all warnings (-w), to be removed later
-  target_compile_options(devilution PRIVATE -fpermissive -w)
+
+  # Warnings for devilution
+  target_compile_options(devilution PRIVATE -Wall -Wno-multichar -Wno-int-to-pointer-cast)
 
   # Warnings for devilutionX
-  target_compile_options(${BIN_TARGET} PRIVATE -Wall -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wno-format-security)
+  target_compile_options(${BIN_TARGET} PRIVATE -Wall -Wextra -Wno-unused-parameter -Wno-format-security)
 
   # For ARM and other default unsigned char platforms
   target_compile_options(devilution PRIVATE -fsigned-char)
@@ -613,8 +682,127 @@ if(SWITCH)
   build_switch_binaries(${BIN_TARGET})
 endif()
 
+if(VITA)
+  set(VITA_APP_NAME "devilutionX")
+  set(VITA_TITLEID  "DVLX00001")
+  set(VITA_VERSION  "01.00")
+  set(VITA_MKSFOEX_FLAGS "${DOLCE_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1")
+  set(VITA_MKSFOEX_FLAGS "${DOLCE_MKSFOEX_FLAGS} -d ATTRIBUTE2=12")
+  vita_create_self(devilutionx.self devilutionx UNSAFE)
+  vita_create_vpk(devilutionx.vpk ${VITA_TITLEID} devilutionx.self
+    VERSION ${VITA_VERSION}
+    NAME ${VITA_APP_NAME}
+    FILE Packaging/vita/sce_sys/icon0.png sce_sys/icon0.png
+    FILE Packaging/vita/sce_sys/pic0.png sce_sys/pic0.png
+    FILE Packaging/vita/sce_sys/livearea/contents/bg.png sce_sys/livearea/contents/bg.png
+    FILE Packaging/vita/sce_sys/livearea/contents/startup.png sce_sys/livearea/contents/startup.png
+    FILE Packaging/vita/sce_sys/livearea/contents/logo0.png sce_sys/livearea/contents/logo0.png
+    FILE Packaging/vita/sce_sys/livearea/contents/template.xml sce_sys/livearea/contents/template.xml
+    FILE Packaging/resources/CharisSILB.ttf CharisSILB.ttf
+  )
+endif()
+
+if(N3DS)
+  set(APP_TITLE       "DevilutionX")
+  set(APP_DESCRIPTION "DevilutionX port for 3DS")
+  set(APP_AUTHOR      "Diasurgical Team")
+  set(APP_ICON        "${PROJECT_SOURCE_DIR}/Packaging/ctr/icon.png")
+  set(APP_BANNER      "${PROJECT_SOURCE_DIR}/Packaging/ctr/banner.png")
+  set(APP_AUDIO       "${PROJECT_SOURCE_DIR}/Packaging/ctr/audio_silent.wav")
+  set(APP_RSF         "${PROJECT_SOURCE_DIR}/Packaging/ctr/template.rsf")
+  set(APP_ROMFS       "${CMAKE_BINARY_DIR}/romfs")
+  set(APP_ROMFS_FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf")
+  if(HELLFIRE)
+	  set(APP_TITLE       "DevilutionX: Hellfire")
+	  set(APP_ICON        "${PROJECT_SOURCE_DIR}/Packaging/ctr/icon_hellfire.png")
+	  set(APP_BANNER      "${PROJECT_SOURCE_DIR}/Packaging/ctr/banner_hellfire.png")
+	  set(APP_RSF         "${PROJECT_SOURCE_DIR}/Packaging/ctr/template_hellfire.rsf")
+  endif()
+  file(MAKE_DIRECTORY ${APP_ROMFS})
+  file(COPY ${APP_ROMFS_FILES}
+     DESTINATION ${APP_ROMFS})
+  set(APP_VERSION ${PROJECT_VERSION})
+  include(Tools3DS)
+  add_3dsx_target(${BIN_TARGET})
+  add_cia_target(${BIN_TARGET} ${APP_RSF} ${APP_BANNER} ${APP_AUDIO} ${APP_ROMFS})
+endif()
+
 if(CPACK)
-  if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  if(NOT SYSTEM_BITS MATCHES x64 AND WIN32)
+    set(CPACK_PACKAGE_FILE_NAME "devilutionx")
+    set(CPACK_PACKAGE_NAME ${project_name})
+    set(CPACK_GENERATOR "ZIP")
+    set(CPACK_STRIP_FILES TRUE)
+    install(TARGETS ${BIN_TARGET} DESTINATION .)
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/windows/README.txt"
+      DESTINATION "."
+    )
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
+      DESTINATION "."
+    )
+    install(FILES "~/repo/SDL2_ttf-2.0.15/i686-w64-mingw32/bin/libfreetype-6.dll"
+      DESTINATION "."
+    )
+    install(FILES "~/repo/SDL2-2.0.9/i686-w64-mingw32/bin/SDL2.dll"
+      DESTINATION "."
+    )
+    install(FILES "~/repo/SDL2_mixer-2.0.4/i686-w64-mingw32/bin/SDL2_mixer.dll"
+      DESTINATION "."
+    )
+    install(FILES "~/repo/SDL2_ttf-2.0.15/i686-w64-mingw32/bin/SDL2_ttf.dll"
+      DESTINATION "."
+    )
+    install(FILES "~/repo/SDL2_ttf-2.0.15/i686-w64-mingw32/bin/zlib1.dll"
+      DESTINATION "."
+    )
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/LICENSE.CharisSILB.txt"
+      DESTINATION "LICENSE"
+    )
+    install(FILES "~/repo/SDL2_ttf-2.0.15/i686-w64-mingw32/bin/LICENSE.freetype.txt"
+      DESTINATION "LICENSE"
+    )
+    install(FILES "~/repo/SDL2-2.0.9/README-SDL.txt"
+      DESTINATION "LICENSE"
+    )
+
+  elseif(SYSTEM_BITS MATCHES x64 AND WIN32)
+    set(CPACK_PACKAGE_FILE_NAME "devilutionx")
+    set(CPACK_PACKAGE_NAME ${project_name})
+    set(CPACK_GENERATOR "ZIP")
+    set(CPACK_STRIP_FILES TRUE)
+    install(TARGETS ${BIN_TARGET} DESTINATION .)
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/windows/README.txt"
+      DESTINATION "."
+    )
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
+      DESTINATION "."
+    )
+    install(FILES "~/repo/SDL2_ttf-2.0.15/x86_64-w64-mingw32/bin/libfreetype-6.dll"
+      DESTINATION "."
+    )
+    install(FILES "~/repo/SDL2-2.0.9/x86_64-w64-mingw32/bin/SDL2.dll"
+      DESTINATION "."
+    )
+    install(FILES "~/repo/SDL2_mixer-2.0.4/x86_64-w64-mingw32/bin/SDL2_mixer.dll"
+      DESTINATION "."
+    )
+    install(FILES "~/repo/SDL2_ttf-2.0.15/x86_64-w64-mingw32/bin/SDL2_ttf.dll"
+      DESTINATION "."
+    )
+    install(FILES "~/repo/SDL2_ttf-2.0.15/x86_64-w64-mingw32/bin/zlib1.dll"
+      DESTINATION "."
+    )
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/LICENSE.CharisSILB.txt"
+      DESTINATION "LICENSE"
+    )
+    install(FILES "~/repo/SDL2_ttf-2.0.15/x86_64-w64-mingw32/bin/LICENSE.freetype.txt"
+      DESTINATION "LICENSE"
+    )
+    install(FILES "~/repo/SDL2-2.0.9/README-SDL.txt"
+      DESTINATION "LICENSE"
+    )
+
+  elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     string(TOLOWER ${PROJECT_NAME} project_name)
     set(CPACK_PACKAGE_NAME ${project_name})
     set(CPACK_GENERATOR "7Z")

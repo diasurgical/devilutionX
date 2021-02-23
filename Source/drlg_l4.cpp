@@ -196,7 +196,7 @@ void DRLG_LoadL4SP()
 		pSetPiece = LoadFileInMem("Levels\\L4Data\\Warlord.DUN", NULL);
 		setloadflag = TRUE;
 	}
-	if (currlevel == 15 && gbMaxPlayers != 1) {
+	if (currlevel == 15 && gbIsMultiplayer) {
 		pSetPiece = LoadFileInMem("Levels\\L4Data\\Vile1.DUN", NULL);
 		setloadflag = TRUE;
 	}
@@ -1086,8 +1086,8 @@ static void L4drawRoom(int x, int y, int width, int height)
 {
 	int i, j;
 
-	for (j = 0; j < height; j++) {
-		for (i = 0; i < width; i++) {
+	for (j = 0; j < height && j + y < 20; j++) {
+		for (i = 0; i < width && i + x < 20; i++) {
 			dung[i + x][j + y] = 1;
 		}
 	}
@@ -1178,10 +1178,10 @@ static void L4firstRoom()
 
 	if (currlevel != 16) {
 		if (currlevel == quests[Q_WARLORD]._qlevel && quests[Q_WARLORD]._qactive != QUEST_NOTAVAIL) {
-			/// ASSERT: assert(gbMaxPlayers == 1);
+			assert(!gbIsMultiplayer);
 			w = 11;
 			h = 11;
-		} else if (currlevel == quests[Q_BETRAYER]._qlevel && gbMaxPlayers != 1) {
+		} else if (currlevel == quests[Q_BETRAYER]._qlevel && gbIsMultiplayer) {
 			w = 11;
 			h = 11;
 		} else {
@@ -1216,7 +1216,7 @@ static void L4firstRoom()
 		l4holdx = x;
 		l4holdy = y;
 	}
-	if (QuestStatus(Q_WARLORD) || currlevel == quests[Q_BETRAYER]._qlevel && gbMaxPlayers != 1) {
+	if (QuestStatus(Q_WARLORD) || currlevel == quests[Q_BETRAYER]._qlevel && gbIsMultiplayer) {
 		SP4x1 = x + 1;
 		SP4y1 = y + 1;
 		SP4x2 = SP4x1 + w;
@@ -1399,6 +1399,11 @@ static BOOL DRLG_L4PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx,
 	return TRUE;
 }
 
+#if defined(__3DS__)
+#pragma GCC push_options
+#pragma GCC optimize ("O0")
+#endif
+
 static void DRLG_L4FTVR(int i, int j, int x, int y, int d)
 {
 	if (dTransVal[x][y] != 0 || dungeon[i][j] != 6) {
@@ -1463,6 +1468,10 @@ static void DRLG_L4FloodTVal()
 		yy += 2;
 	}
 }
+
+#if defined(__3DS__)
+#pragma GCC pop_options
+#endif
 
 BOOL IsDURWall(char d)
 {
@@ -1601,7 +1610,7 @@ static void DRLG_L4(int entry)
 		if (currlevel == 16) {
 			L4SaveQuads();
 		}
-		if (QuestStatus(Q_WARLORD) || currlevel == quests[Q_BETRAYER]._qlevel && gbMaxPlayers != 1) {
+		if (QuestStatus(Q_WARLORD) || currlevel == quests[Q_BETRAYER]._qlevel && gbIsMultiplayer) {
 			for (spi = SP4x1; spi < SP4x2; spi++) {
 				for (spj = SP4y1; spj < SP4y2; spj++) {
 					dflags[spi][spj] = 1;
@@ -1671,7 +1680,7 @@ static void DRLG_L4(int entry)
 			if (entry == ENTRY_MAIN) {
 				doneflag = DRLG_L4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, TRUE, 0);
 				if (doneflag) {
-					if (gbMaxPlayers == 1 && quests[Q_DIABLO]._qactive != QUEST_ACTIVE) {
+					if (!gbIsMultiplayer && quests[Q_DIABLO]._qactive != QUEST_ACTIVE) {
 						doneflag = DRLG_L4PlaceMiniSet(L4PENTA, 1, 1, -1, -1, FALSE, 1);
 					} else {
 						doneflag = DRLG_L4PlaceMiniSet(L4PENTA2, 1, 1, -1, -1, FALSE, 1);
@@ -1681,7 +1690,7 @@ static void DRLG_L4(int entry)
 			} else {
 				doneflag = DRLG_L4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, FALSE, 0);
 				if (doneflag) {
-					if (gbMaxPlayers == 1 && quests[Q_DIABLO]._qactive != QUEST_ACTIVE) {
+					if (!gbIsMultiplayer && quests[Q_DIABLO]._qactive != QUEST_ACTIVE) {
 						doneflag = DRLG_L4PlaceMiniSet(L4PENTA, 1, 1, -1, -1, TRUE, 1);
 					} else {
 						doneflag = DRLG_L4PlaceMiniSet(L4PENTA2, 1, 1, -1, -1, TRUE, 1);
