@@ -25,6 +25,7 @@ BOOL gbGameLoopStartup;
 BOOL gbRunGame;
 BOOL gbRunGameResult;
 BOOL zoomflag;
+/** Enable updating of player character, set to false once Diablo dies */
 BOOL gbProcessPlayers;
 BOOL gbLoadGame;
 int DebugMonsters[10];
@@ -84,10 +85,10 @@ int framestart;
 BOOL FriendlyMode = TRUE;
 /** Default quick messages */
 const char *const spszMsgTbl[4] = {
-	"I need help! Come Here!",
-	"Follow me.",
-	"Here's something for you.",
-	"Now you DIE!"
+	"MHE HY)KHA ZOMOVL!",
+	"NDN 3A MHO&.",
+	"3DECL KOE-4TO D/R TE#R.",
+	"CE&4AC TLI YMPEUL!"
 };
 /** INI files variable names for quick message keys */
 const char *const spszMsgHotKeyTbl[4] = { "F9", "F10", "F11", "F12" };
@@ -1148,9 +1149,9 @@ static void PressChar(WPARAM vkey)
 	case 'v':
 		char *difficulties[3];
 		char pszStr[120];
-		difficulties[0] = "Normal";
-		difficulties[1] = "Nightmare";
-		difficulties[2] = "Hell";
+		difficulties[0] = "HOPMA";
+		difficulties[1] = "KOUMAP";
+		difficulties[2] = "AD";
 		sprintf(pszStr, "%s, mode = %s", gszProductName, difficulties[gnDifficulty]);
 		NetSendCmdString(1 << myplr, pszStr);
 		return;
@@ -1850,6 +1851,9 @@ static void timeout_cursor(BOOL bTimeout)
 	}
 }
 
+/**
+ * @param bStartup Process additional ticks before returning
+ */
 void game_loop(BOOL bStartup)
 {
 	int i;

@@ -15,11 +15,11 @@ BOOL jogging_opt = TRUE;
 TMenuItem sgSingleMenu[] = {
 	// clang-format off
 //	  dwFlags,       pszStr,         fnMenu
-	{ GMENU_ENABLED, "Save Game",     &gamemenu_save_game  },
-	{ GMENU_ENABLED, "Options",       &gamemenu_options    },
-	{ GMENU_ENABLED, "New Game",      &gamemenu_new_game   },
-	{ GMENU_ENABLED, "Load Game",     &gamemenu_load_game  },
-	{ GMENU_ENABLED, "Quit Game",     &gamemenu_quit_game  },
+	{ GMENU_ENABLED, "COXPAHNTL NFPY",     &gamemenu_save_game  },
+	{ GMENU_ENABLED, "HACTPO&KN",       &gamemenu_options    },
+	{ GMENU_ENABLED, "HOBAR NFPA",      &gamemenu_new_game   },
+	{ GMENU_ENABLED, "3AFPY3NTL NFPY",     &gamemenu_load_game  },
+	{ GMENU_ENABLED, "BLIXOD",     &gamemenu_quit_game  },
 	{ GMENU_ENABLED, NULL,            NULL }
 	// clang-format on
 };
@@ -27,10 +27,10 @@ TMenuItem sgSingleMenu[] = {
 TMenuItem sgMultiMenu[] = {
 	// clang-format off
 //	  dwFlags,       pszStr,            fnMenu
-	{ GMENU_ENABLED, "Options",         &gamemenu_options      },
-	{ GMENU_ENABLED, "New Game",        &gamemenu_new_game     },
-	{ GMENU_ENABLED, "Restart In Town", &gamemenu_restart_town },
-	{ GMENU_ENABLED, "Quit Game",       &gamemenu_quit_game    },
+	{ GMENU_ENABLED, "HACTPO&KN",         &gamemenu_options      },
+	{ GMENU_ENABLED, "HOBAR NFPA",        &gamemenu_new_game     },
+	{ GMENU_ENABLED, "HA4ATL B FOPODE", &gamemenu_restart_town },
+	{ GMENU_ENABLED, "BLIXOD",       &gamemenu_quit_game    },
 	{ GMENU_ENABLED, NULL,              NULL                   },
 	// clang-format on
 };
@@ -39,31 +39,31 @@ TMenuItem sgOptionsMenu[] = {
 //	  dwFlags,                      pszStr,          fnMenu
 	{ GMENU_ENABLED | GMENU_SLIDER, NULL,            &gamemenu_music_volume  },
 	{ GMENU_ENABLED | GMENU_SLIDER, NULL,            &gamemenu_sound_volume  },
-	{ GMENU_ENABLED | GMENU_SLIDER, "Gamma",         &gamemenu_gamma         },
+	{ GMENU_ENABLED | GMENU_SLIDER, "FAMMA",         &gamemenu_gamma         },
 //	{ GMENU_ENABLED               , NULL,            &gamemenu_color_cycling },
-	{ GMENU_ENABLED | GMENU_SLIDER, "Speed",         &gamemenu_speed         },
+	{ GMENU_ENABLED | GMENU_SLIDER, "CKOP.",         &gamemenu_speed         },
 //	{ GMENU_ENABLED | GMENU_SLIDER, NULL,            &gamemenu_loadjog       },
-	{ GMENU_ENABLED               , "Previous Menu", &gamemenu_previous      },
+	{ GMENU_ENABLED               , "HA3AD", &gamemenu_previous      },
 	{ GMENU_ENABLED               , NULL,            NULL                    },
 	// clang-format on
 };
 /** Specifies the menu names for music enabled and disabled. */
 const char *const music_toggle_names[] = {
-	"Music",
-	"Music Disabled",
+	"MY3LIKA",
+	"MY3LIKA BLIK/.",
 };
 /** Specifies the menu names for sound enabled and disabled. */
 const char *const sound_toggle_names[] = {
-	"Sound",
-	"Sound Disabled",
+	"3BYK",
+	"3BYK BLIK/.",
 };
 char *jogging_toggle_names[] = {
-	"Jog",
-	"Walk",
+	"#EF",
+	"XODL#A",
 };
 char *jogging_title = "Fast Walk";
 /** Specifies the menu names for colour cycling disabled and enabled. */
-const char *const color_cycling_toggle_names[] = { "Color Cycling Off", "Color Cycling On" };
+const char *const color_cycling_toggle_names[] = { "QNK/. QBETA BLIK/.", "QNK/. QBETA BK/." };
 
 static void gamemenu_update_single(TMenuItem *pMenuItems)
 {
@@ -235,19 +235,19 @@ static void gamemenu_get_speed()
 	if (gbMaxPlayers != 1) {
 		sgOptionsMenu[3].dwFlags &= ~(GMENU_ENABLED | GMENU_SLIDER);
 		if (ticks_per_sec >= 50)
-			sgOptionsMenu[3].pszStr = "Speed: Fastest";
+			sgOptionsMenu[3].pszStr = "O4EHL #LICTPO";
 		else if (ticks_per_sec >= 40)
-			sgOptionsMenu[3].pszStr = "Speed: Faster";
+			sgOptionsMenu[3].pszStr = "EVE #LICTPEE";
 		else if (ticks_per_sec >= 30)
-			sgOptionsMenu[3].pszStr = "Speed: Fast";
+			sgOptionsMenu[3].pszStr = "#LICTPO";
 		else if (ticks_per_sec == 20)
-			sgOptionsMenu[3].pszStr = "Speed: Normal";
+			sgOptionsMenu[3].pszStr = "HOPMA/LHO";
 		return;
 	}
 
 	sgOptionsMenu[3].dwFlags |= GMENU_ENABLED | GMENU_SLIDER;
 
-	sgOptionsMenu[3].pszStr = "Speed";
+	sgOptionsMenu[3].pszStr = "CKOP.";
 	gmenu_slider_steps(&sgOptionsMenu[3], 46);
 	gmenu_slider_set(&sgOptionsMenu[3], 20, 50, ticks_per_sec);
 }

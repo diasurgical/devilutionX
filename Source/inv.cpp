@@ -2106,7 +2106,7 @@ int InvPutItem(int pnum, int x, int y)
 		return -1;
 
 	if (FindGetItem(plr[pnum].HoldItem.IDidx, plr[pnum].HoldItem._iCreateInfo, plr[pnum].HoldItem._iSeed) != -1) {
-		DrawInvMsg("A duplicate item has been detected.  Destroying duplicate...");
+		DrawInvMsg("O#HAPY)KEH DY#/NKAT ZPEDMETA. YHN4TO)KEHNE DY#/NKATA...");
 		SyncGetItem(x, y, plr[pnum].HoldItem.IDidx, plr[pnum].HoldItem._iCreateInfo, plr[pnum].HoldItem._iSeed);
 	}
 
@@ -2204,7 +2204,7 @@ int SyncPutItem(int pnum, int x, int y, int idx, WORD icreateinfo, int iseed, in
 		return -1;
 
 	if (FindGetItem(idx, icreateinfo, iseed) != -1) {
-		DrawInvMsg("A duplicate item has been detected from another player.");
+		DrawInvMsg("DY#/NKAT ZPEDMETA O#HAPY)KEH Y DPYFOFO NFPOKA.");
 		SyncGetItem(x, y, idx, icreateinfo, iseed);
 	}
 
@@ -2363,7 +2363,7 @@ char CheckInvHLight()
 
 	if (pi->_itype == ITYPE_GOLD) {
 		nGold = pi->_ivalue;
-		sprintf(infostr, "%i gold %s", nGold, get_pieces_str(nGold));
+		sprintf(infostr, "%i 3O/OTLIX %s", nGold, get_pieces_str(nGold));
 	} else {
 		if (pi->_iMagical == ITEM_QUALITY_MAGIC) {
 			infoclr = COL_BLUE;

@@ -64,11 +64,11 @@ BYTE SkelChamTrans3[] = {
 /** Maps from quest level to quest level names. */
 const char *const quest_level_names[] = {
 	"",
-	"Skeleton King's Lair",
-	"Chamber of Bone",
-	"Maze",
-	"Poisoned Water Supply",
-	"Archbishop Lazarus' Lair",
+	"/OFOBO KOPO/R CKE/ETOB",
+	"3A/ KOCTE&",
+	"/A#NPNHT",
+	"OTPAB/EHHLI& NCTO4HNK",
+	"/OFOBO APXNEZNCKOZA /A3APR ",
 };
 
 int ObjIndex(int x, int y)

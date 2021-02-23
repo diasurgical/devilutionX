@@ -5242,7 +5242,7 @@ void PrintMonstHistory(int mt)
 {
 	int minHP, maxHP, res;
 
-	sprintf(tempstr, "Total kills: %i", monstkills[mt]);
+	sprintf(tempstr, "BCEFO Y#NTO: %i", monstkills[mt]);
 	AddPanelString(tempstr, TRUE);
 	if (monstkills[mt] >= 30) {
 		minHP = monsterdata[mt].mMinHP;
@@ -5269,7 +5269,7 @@ void PrintMonstHistory(int mt)
 			minHP = 4 * minHP + hpBonusHell;
 			maxHP = 4 * maxHP + hpBonusHell;
 		}
-		sprintf(tempstr, "Hit Points: %i-%i", minHP, maxHP);
+		sprintf(tempstr, ")KN3HN: %i-%i", minHP, maxHP);
 		AddPanelString(tempstr, TRUE);
 	}
 	if (monstkills[mt] >= 15) {
@@ -5279,29 +5279,29 @@ void PrintMonstHistory(int mt)
 			res = monsterdata[mt].mMagicRes2;
 		res = res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING);
 		if (!res) {
-			strcpy(tempstr, "No magic resistance");
+			strcpy(tempstr, "#E3 COZPOTNB/REMOCTN");
 			AddPanelString(tempstr, TRUE);
 		} else {
 			if (res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING)) {
-				strcpy(tempstr, "Resists: ");
+				strcpy(tempstr, "COZPOTNB/.: ");
 				if (res & RESIST_MAGIC)
-					strcat(tempstr, "Magic ");
+					strcat(tempstr, "MAFNR ");
 				if (res & RESIST_FIRE)
-					strcat(tempstr, "Fire ");
+					strcat(tempstr, "OFOHL ");
 				if (res & RESIST_LIGHTNING)
-					strcat(tempstr, "Lightning ");
-				tempstr[strlen(tempstr) - 1] = '\0';
+					strcat(tempstr, "MO/HNR ");
+				tempstr[strlen(tempstr) - 1] = ' ';
 				AddPanelString(tempstr, TRUE);
 			}
 			if (res & (IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) {
-				strcpy(tempstr, "Immune: ");
+				strcpy(tempstr, "HEBOCZPNNM.: ");
 				if (res & IMMUNE_MAGIC)
-					strcat(tempstr, "Magic ");
+					strcat(tempstr, "MAFNR ");
 				if (res & IMMUNE_FIRE)
-					strcat(tempstr, "Fire ");
+					strcat(tempstr, "OFOHL ");
 				if (res & IMMUNE_LIGHTNING)
-					strcat(tempstr, "Lightning ");
-				tempstr[strlen(tempstr) - 1] = '\0';
+					strcat(tempstr, "MO/HNR ");
+				tempstr[strlen(tempstr) - 1] = ' ';
 				AddPanelString(tempstr, TRUE);
 			}
 		}
@@ -5315,19 +5315,19 @@ void PrintUniqueHistory()
 
 	res = monster[pcursmonst].mMagicRes & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING);
 	if (!res) {
-		strcpy(tempstr, "No resistances");
+		strcpy(tempstr, "#E3 COZPOTNB/REMOCTN");
 		AddPanelString(tempstr, TRUE);
-		strcpy(tempstr, "No Immunities");
+		strcpy(tempstr, "#E3 HEBOCZPNNM4NBOCTN");
 	} else {
 		if (res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING))
-			strcpy(tempstr, "Some Magic Resistances");
+			strcpy(tempstr, "HEKOTOPAR COZPOTNB/REMOCTL");
 		else
-			strcpy(tempstr, "No resistances");
+			strcpy(tempstr, "#E3 COZPOTNB/REMOCTN");
 		AddPanelString(tempstr, TRUE);
 		if (res & (IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) {
-			strcpy(tempstr, "Some Magic Immunities");
+			strcpy(tempstr, "HEKOTOPAR HEBOCZPNNM4NBOCTL");
 		} else {
-			strcpy(tempstr, "No Immunities");
+			strcpy(tempstr, "#E3 HEBOCZPNNM4NBOCTN");
 		}
 	}
 	AddPanelString(tempstr, TRUE);
