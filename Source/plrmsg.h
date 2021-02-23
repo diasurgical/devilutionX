@@ -12,8 +12,14 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+typedef struct _plrmsg {
+	Uint32 time;
+	Uint8 player;
+	char str[144];
+} _plrmsg;
+
 void plrmsg_delay(BOOL delay);
-char *ErrorPlrMsg(const char *pszMsg);
+void ErrorPlrMsg(const char *pszMsg);
 size_t EventPlrMsg(const char *pszFmt, ...);
 void SendPlrMsg(int pnum, const char *pszStr);
 void ClearPlrMsg();

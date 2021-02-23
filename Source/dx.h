@@ -14,7 +14,7 @@ extern "C" {
 
 extern BYTE *gpBuffer;
 
-void dx_init(HWND hWnd);
+void dx_init();
 void lock_buf(BYTE idx);
 void unlock_buf(BYTE idx);
 void dx_cleanup();

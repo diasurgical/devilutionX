@@ -358,7 +358,7 @@ void FindActor()
 	else
 		CheckTownersNearby();
 
-	if (gbMaxPlayers != 1)
+	if (gbIsMultiplayer)
 		CheckPlayerNearby();
 }
 
@@ -1075,7 +1075,7 @@ void PerformPrimaryAction()
 			    && MouseY <= ChrBtnsRect[i].h + ChrBtnsRect[i].y) {
 				chrbtn[i] = 1;
 				chrbtnactive = true;
-				ReleaseChrBtns();
+				ReleaseChrBtns(false);
 			}
 		}
 		return;

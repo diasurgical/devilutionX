@@ -68,16 +68,14 @@ BOOL SNetDropPlayer(int playerid, DWORD flags)
 	return dvlnet_inst->SNetDropPlayer(playerid, flags);
 }
 
-BOOL SNetGetGameInfo(int type, void *dst, unsigned int length, unsigned int *byteswritten)
+BOOL SNetGetGameInfo(int type, void *dst, unsigned int length)
 {
 	switch (type) {
 	case GAMEINFO_NAME:
 		strncpy((char *)dst, gpszGameName, length);
-		*byteswritten = strlen(gpszGameName) + 1;
 		break;
 	case GAMEINFO_PASSWORD:
 		strncpy((char *)dst, gpszGamePassword, length);
-		*byteswritten = strlen(gpszGamePassword) + 1;
 		break;
 	}
 
@@ -143,7 +141,7 @@ BOOL SNetGetOwnerTurnsWaiting(DWORD *turns)
 	return dvlnet_inst->SNetGetOwnerTurnsWaiting(turns);
 }
 
-BOOL SNetGetTurnsInTransit(int *turns)
+BOOL SNetGetTurnsInTransit(DWORD *turns)
 {
 	return dvlnet_inst->SNetGetTurnsInTransit(turns);
 }

@@ -1,8 +1,14 @@
 #include "display.h"
 #include "DiabloUI/diabloui.h"
+#include "controls/game_controls.h"
 #include "controls/controller.h"
 #include "controls/devices/game_controller.h"
 #include "controls/devices/joystick.h"
+
+#ifdef __vita__
+#include <psp2/power.h>
+#endif
+
 
 #ifdef USE_SDL1
 #ifndef SDL1_VIDEO_MODE_BPP
@@ -116,9 +122,34 @@ void CalculatePreferdWindowSize(int &width, int &height, bool useIntegerScaling)
 
 bool SpawnWindow(const char *lpWindowName)
 {
-	if (SDL_Init(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) <= -1) {
+#ifdef __vita__
+	scePowerSetArmClockFrequency(444);
+#endif
+
+#if SDL_VERSION_ATLEAST(2,0,6)
+	SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
+#endif
+
+	int initFlags = SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC;
+#ifdef __3DS__
+	initFlags = SDL_INIT_TIMER | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK;
+#endif
+	if (SDL_Init(initFlags) <= -1) {
 		ErrSdl();
 	}
+
+#ifndef USE_SDL1
+	char mapping[1024];
+	memset(mapping, 0, 1024);
+	getIniValue("controls","sdl2_controller_mapping", mapping, 1024);
+	if (mapping[0] != '\0') {
+		SDL_GameControllerAddMapping(mapping);
+	}
+#endif
+
+	dpad_hotkeys = getIniBool("controls","dpad_hotkeys");
+	switch_potions_and_clicks = getIniBool("controls","switch_potions_and_clicks");
+
 
 #ifdef USE_SDL1
 	SDL_EnableUNICODE(1);
@@ -134,9 +165,11 @@ bool SpawnWindow(const char *lpWindowName)
 #endif
 
 	int width = DEFAULT_WIDTH;
-	DvlIntSetting("width", &width);
 	int height = DEFAULT_HEIGHT;
+#ifndef __vita__
+	DvlIntSetting("width", &width);
 	DvlIntSetting("height", &height);
+#endif
 	BOOL integerScalingEnabled = false;
 	DvlIntSetting("integer scaling", &integerScalingEnabled);
 
@@ -146,8 +179,12 @@ bool SpawnWindow(const char *lpWindowName)
 	int grabInput = 0;
 	DvlIntSetting("grab input", &grabInput);
 
+#ifdef __vita__
+	BOOL upscale = false;
+#else
 	BOOL upscale = true;
 	DvlIntSetting("upscale", &upscale);
+#endif
 	BOOL oar = false;
 	DvlIntSetting("original aspect ratio", &oar);
 

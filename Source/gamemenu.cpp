@@ -57,11 +57,11 @@ const char *const sound_toggle_names[] = {
 	"Sound",
 	"Sound Disabled",
 };
-char *jogging_toggle_names[] = {
+const char *jogging_toggle_names[] = {
 	"Jog",
 	"Walk",
 };
-char *jogging_title = "Fast Walk";
+const char *jogging_title = "Fast Walk";
 /** Specifies the menu names for colour cycling disabled and enabled. */
 const char *const color_cycling_toggle_names[] = { "Color Cycling Off", "Color Cycling On" };
 
@@ -85,7 +85,7 @@ static void gamemenu_update_multi(TMenuItem *pMenuItems)
 
 void gamemenu_on()
 {
-	if (gbMaxPlayers == 1) {
+	if (!gbIsMultiplayer) {
 		gmenu_set_items(sgSingleMenu, gamemenu_update_single);
 	} else {
 		gmenu_set_items(sgMultiMenu, gamemenu_update_multi);
@@ -149,6 +149,7 @@ void gamemenu_load_game(BOOL bActivate)
 	deathflag = FALSE;
 	force_redraw = 255;
 	DrawAndBlit();
+	LoadPWaterPalette();
 	PaletteFadeIn(8);
 	SetCursor_(CURSOR_HAND);
 	interface_msg_pump();
@@ -232,7 +233,7 @@ static void gamemenu_get_gamma()
 
 static void gamemenu_get_speed()
 {
-	if (gbMaxPlayers != 1) {
+	if (gbIsMultiplayer) {
 		sgOptionsMenu[3].dwFlags &= ~(GMENU_ENABLED | GMENU_SLIDER);
 		if (ticks_per_sec >= 50)
 			sgOptionsMenu[3].pszStr = "Speed: Fastest";
@@ -349,7 +350,7 @@ void gamemenu_sound_volume(BOOL bActivate)
 
 void gamemenu_loadjog(BOOL bActivate)
 {
-	if (gbMaxPlayers == 1) {
+	if (!gbIsMultiplayer) {
 		jogging_opt = !jogging_opt;
 		SRegSaveValue("Hellfire", jogging_title, FALSE, jogging_opt);
 		PlaySFX(IS_TITLEMOV);

@@ -12,6 +12,17 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+typedef struct PATHNODE {
+	Uint8 f;
+	Uint8 h;
+	Uint8 g;
+	int x;
+	int y;
+	struct PATHNODE *Parent;
+	struct PATHNODE *Child[8];
+	struct PATHNODE *NextNode;
+} PATHNODE;
+
 int FindPath(BOOL (*PosOk)(int, int, int), int PosOkArg, int sx, int sy, int dx, int dy, char *path);
 int path_get_h_cost(int sx, int sy, int dx, int dy);
 PATHNODE *GetNextPath();

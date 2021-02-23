@@ -20,11 +20,10 @@ int HR2;
 int HR3;
 int UberRow;
 int UberCol;
-int dword_577368;
-int IsUberRoomOpened;
+bool IsUberRoomOpened;
 int UberLeverRow;
 int UberLeverCol;
-int IsUberLeverActivated;
+bool IsUberLeverActivated;
 int UberDiabloMonsterIndex;
 /** Specifies whether to generate a vertical room at position 1 in the Cathedral. */
 BOOL VR1;
@@ -1113,7 +1112,7 @@ static void DRLG_LoadL1SP()
 		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\rnd6.DUN", NULL);
 		L5setloadflag = TRUE;
 	}
-	if (QuestStatus(Q_SKELKING) && gbMaxPlayers == 1) {
+	if (QuestStatus(Q_SKELKING) && !gbIsMultiplayer) {
 		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\SKngDO.DUN", NULL);
 		L5setloadflag = TRUE;
 	}
@@ -2302,9 +2301,8 @@ void drlg_l1_set_crypt_room(int rx1, int ry1)
 	setpc_y = ry1;
 	setpc_w = rw;
 	setpc_h = rh;
-	IsUberRoomOpened = 0;
-	dword_577368 = 0;
-	IsUberLeverActivated = 0;
+	IsUberRoomOpened = false;
+	IsUberLeverActivated = false;
 
 	sp = 2;
 
@@ -2747,11 +2745,10 @@ void CreateL5Dungeon(DWORD rseed, int entry)
 
 	UberRow = 0;
 	UberCol = 0;
-	IsUberRoomOpened = 0;
-	dword_577368 = 0;
+	IsUberRoomOpened = false;
 	UberLeverRow = 0;
 	UberLeverCol = 0;
-	IsUberLeverActivated = 0;
+	IsUberLeverActivated = false;
 	UberDiabloMonsterIndex = 0;
 
 	DRLG_InitTrans();

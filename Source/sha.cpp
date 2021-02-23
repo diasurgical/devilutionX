@@ -109,9 +109,9 @@ static void SHA1ProcessMessageBlock(SHA1Context *context)
 	context->state[4] += E;
 }
 
-static void SHA1Input(SHA1Context *context, const char *message_array, int len)
+static void SHA1Input(SHA1Context *context, const char *message_array, DWORD len)
 {
-	int i, count;
+	DWORD i, count;
 
 	count = context->count[0] + 8 * len;
 	if (count < context->count[0])

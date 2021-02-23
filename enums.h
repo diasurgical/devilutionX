@@ -2424,9 +2424,9 @@ typedef enum _difficulty {
 
 typedef enum MON_MODE {
 	MM_STAND     = 0,
-	MM_WALK      = 1,
-	MM_WALK2     = 2,
-	MM_WALK3     = 3,
+	MM_WALK      = 1, //Movement towards N, NW, or NE
+	MM_WALK2     = 2, //Movement towards S, SW, or SE
+	MM_WALK3     = 3, //Movement towards W or E
 	MM_ATTACK    = 4,
 	MM_GOTHIT    = 5,
 	MM_DEATH     = 6,
@@ -2454,9 +2454,9 @@ typedef enum MON_ANIM {
 
 typedef enum PLR_MODE {
 	PM_STAND   = 0,
-	PM_WALK    = 1,
-	PM_WALK2   = 2,
-	PM_WALK3   = 3,
+	PM_WALK    = 1, //Movement towards N, NW, or NE
+	PM_WALK2   = 2, //Movement towards S, SW, or SE
+	PM_WALK3   = 3, //Movement towards W or E
 	PM_ATTACK  = 4,
 	PM_RATTACK = 5,
 	PM_BLOCK   = 6,
@@ -3052,10 +3052,10 @@ typedef enum quest_id {
 } quest_id;
 
 typedef enum quest_state {
-	QUEST_NOTAVAIL = 0,
-	QUEST_INIT     = 1,
-	QUEST_ACTIVE   = 2,
-	QUEST_DONE     = 3
+	QUEST_NOTAVAIL = 0, // quest did not spawn this game
+	QUEST_INIT     = 1, // quest has spawned, waiting to trigger
+	QUEST_ACTIVE   = 2, // quest is currently in progress
+	QUEST_DONE     = 3  // quest log closed and finished
 } quest_state;
 
 typedef enum quest_gametype {

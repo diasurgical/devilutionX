@@ -48,7 +48,7 @@ DWORD nthread_send_and_recv_turn(DWORD cur_turn, int turn_delta)
 {
 	DWORD new_cur_turn;
 	int turn, turn_tmp;
-	int curTurnsInTransit;
+	DWORD curTurnsInTransit;
 
 	new_cur_turn = cur_turn;
 	if (!SNetGetTurnsInTransit(&curTurnsInTransit)) {
@@ -89,6 +89,9 @@ BOOL nthread_recv_turns(BOOL *pfSendAsync)
 		last_tick += tick_delay;
 		return TRUE;
 	}
+#ifdef __3DS__
+	return FALSE;
+#else
 	if (!SNetReceiveTurns(0, MAX_PLRS, (char **)glpMsgTbl, gdwMsgLenTbl, (LPDWORD)player_state)) {
 		if (SErrGetLastError() != STORM_ERROR_NO_MESSAGES_WAITING)
 			nthread_terminate_game("SNetReceiveTurns");
@@ -107,6 +110,7 @@ BOOL nthread_recv_turns(BOOL *pfSendAsync)
 		last_tick += tick_delay;
 		return TRUE;
 	}
+#endif
 }
 
 static unsigned int nthread_handler(void *data)
@@ -183,7 +187,7 @@ void nthread_start(BOOL set_turn_upper_bit)
 	}
 	if (gdwNormalMsgSize > largestMsgSize)
 		gdwNormalMsgSize = largestMsgSize;
-	if (gbMaxPlayers > 1) {
+	if (gbIsMultiplayer) {
 		sgbThreadIsRunning = FALSE;
 		sgMemCrit.Enter();
 		nthread_should_run = TRUE;
@@ -222,17 +226,16 @@ void nthread_ignore_mutex(BOOL bStart)
 
 /**
  * @brief Checks if it's time for the logic to advance
- * @param unused
  * @return True if the engine should tick
  */
-BOOL nthread_has_500ms_passed(BOOL unused)
+BOOL nthread_has_500ms_passed()
 {
 	DWORD currentTickCount;
 	int ticksElapsed;
 
 	currentTickCount = SDL_GetTicks();
 	ticksElapsed = currentTickCount - last_tick;
-	if (gbMaxPlayers == 1 && ticksElapsed > tick_delay * 10) {
+	if (!gbIsMultiplayer && ticksElapsed > tick_delay * 10) {
 		last_tick = currentTickCount;
 		ticksElapsed = 0;
 	}

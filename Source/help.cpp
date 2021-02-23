@@ -8,9 +8,7 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 int help_select_line;
-int unused_help;
 BOOL helpflag;
-int displayinghelp[22]; /* check, does nothing? */
 int HelpTop;
 
 const char gszSpawnHelpText[] = {
@@ -34,8 +32,9 @@ const char gszSpawnHelpText[] = {
 	"G:  Increases the brightness of the screen|"
 	"Q:  Opens the Quest log (non-functional in the Shareware version)|"
 	"1 - 8:  Use that item from your Belt|"
-	"F5, F6, F7, F8:  Sets a hot key for a selected skill or spell|"
+	"F5, F6, F7, F8:  Sets a hotkey for a selected skill or spell|"
 	"Shift + Left Click: Use any weapon without moving|"
+	"Shift + Left Click (on character screen): Assign all stat points|"
 	"|"
 	"|"
 	"$Movement:|"
@@ -288,9 +287,9 @@ const char gszSpawnHelpText[] = {
 	"health to your character while diminishing his available mana "
 	"and requires no targeting.|"
 	"|"
-	"You can also set a spell or scroll as a Hot Key position for "
+	"You can also set a spell or scroll as a Hotkey position for "
 	"instant selection.  Start by opening the pop-up menu as described "
-	"in the skill section above.  Assign Hot Keys by hitting the "
+	"in the skill section above.  Assign Hotkeys by hitting the "
 	"F5, F6, F7 or F8 keys on your keyboard after scrolling through "
 	"the available spells and highlighting the one you wish to assign. |"
 	"|"
@@ -390,8 +389,14 @@ const char gszHelpText[] = {
 	"Z: Zoom Game Screen|"
 	"+ / -: Zoom Automap|"
 	"1 - 8: Use Belt item|"
+<<<<<<< HEAD
 	"F5, F6, F7, F8:     Set hot key for skill or spell|"
 	"Shift + Left Click: Attack without moving|"
+=======
+	"F5, F6, F7, F8:     Set hotkey for skill or spell|"
+	"Shift + Left Click: Attack without moving|"
+	"Shift + Left Click (on character screen): Assign all stat points|"
+>>>>>>> f49b55cbe1e56744faf616cdde64b3a8202b1024
 	"|"
 	"$Movement:|"
 	"If you hold the mouse button down while moving, the character "
@@ -432,7 +437,7 @@ const char gszHelpText[] = {
 	"area.|"
 	"|"
 	"$Setting Spell Hotkeys|"
-	"You can assign up to four Hot Keys for skills, spells or scrolls.  "
+	"You can assign up to four Hotkeys for skills, spells or scrolls.  "
 	"Start by opening the 'speedbook' as described in the section above. "
 	"Press the F5, F6, F7 or F8 keys after highlighting the spell you "
 	"wish to assign.|"
@@ -453,8 +458,6 @@ const char gszHelpText[] = {
 void InitHelp()
 {
 	helpflag = FALSE;
-	unused_help = 0;
-	displayinghelp[0] = 0;
 }
 
 static void DrawHelpLine(int x, int y, char *text, char color)

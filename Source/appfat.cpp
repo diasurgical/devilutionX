@@ -9,8 +9,6 @@
 
 DEVILUTION_BEGIN_NAMESPACE
 
-/** Buffer used by GetErrorStr for its return value */
-char sz_error_buf[256];
 /** Set to true when a fatal error is encountered and the application should shut down. */
 BOOL terminating;
 /** Thread id of the last callee to FreeDlg(). */
@@ -41,7 +39,7 @@ static void FreeDlg()
 	terminating = TRUE;
 	cleanup_thread_id = SDL_GetThreadID(NULL);
 
-	if (gbMaxPlayers > 1) {
+	if (gbIsMultiplayer) {
 		if (SNetLeaveGame(3))
 			SDL_Delay(2000);
 	}

@@ -49,16 +49,14 @@ BOOL sbookflag;
 BOOL chrflag;
 BOOL drawbtnflag;
 BYTE *pSpellBkCel;
-char infostr[256];
+char infostr[64];
 int numpanbtns;
-BYTE *pStatusPanel;
 char panelstr[4][64];
 BOOL panelflag;
 BYTE SplTransTbl[256];
 int initialDropGoldValue;
 BYTE *pSpellCels;
 BOOL panbtndown;
-BYTE *pTalkPanel;
 BOOL spselflag;
 
 /** Maps from font index to smaltext.cel frame number. */
@@ -439,7 +437,7 @@ void DrawSpellList()
 				for (t = 0; t < 4; t++) {
 					if (plr[myplr]._pSplHotKey[t] == pSpell && plr[myplr]._pSplTHotKey[t] == pSplType) {
 						DrawSpellCel(x, y, pSpellCels, t + SPLICONLAST + 5, SPLICONLENGTH);
-						sprintf(tempstr, "Spell Hot Key #F%i", t + 5);
+						sprintf(tempstr, "Spell Hotkey #F%i", t + 5);
 						AddPanelString(tempstr, TRUE);
 					}
 				}
@@ -782,8 +780,9 @@ void UpdateManaFlask()
 void InitControlPan()
 {
 	int i;
+	BYTE *tBuff;
 
-	if (gbMaxPlayers == 1) {
+	if (!gbIsMultiplayer) {
 		pBtmBuff = DiabloAllocPtr((PANEL_HEIGHT + 16) * PANEL_WIDTH);
 		memset(pBtmBuff, 0, (PANEL_HEIGHT + 16) * PANEL_WIDTH);
 	} else {
@@ -801,18 +800,18 @@ void InitControlPan()
 	else
 		pSpellCels = LoadFileInMem("Data\\SpelIcon.CEL", NULL);
 	SetSpellTrans(RSPLTYPE_SKILL);
-	pStatusPanel = LoadFileInMem("CtrlPan\\Panel8.CEL", NULL);
-	CelBlitWidth(pBtmBuff, 0, (PANEL_HEIGHT + 16) - 1, PANEL_WIDTH, pStatusPanel, 1, PANEL_WIDTH);
-	MemFreeDbg(pStatusPanel);
-	pStatusPanel = LoadFileInMem("CtrlPan\\P8Bulbs.CEL", NULL);
-	CelBlitWidth(pLifeBuff, 0, 87, 88, pStatusPanel, 1, 88);
-	CelBlitWidth(pManaBuff, 0, 87, 88, pStatusPanel, 2, 88);
-	MemFreeDbg(pStatusPanel);
+	tBuff = LoadFileInMem("CtrlPan\\Panel8.CEL", NULL);
+	CelBlitWidth(pBtmBuff, 0, (PANEL_HEIGHT + 16) - 1, PANEL_WIDTH, tBuff, 1, PANEL_WIDTH);
+	MemFreeDbg(tBuff);
+	tBuff = LoadFileInMem("CtrlPan\\P8Bulbs.CEL", NULL);
+	CelBlitWidth(pLifeBuff, 0, 87, 88, tBuff, 1, 88);
+	CelBlitWidth(pManaBuff, 0, 87, 88, tBuff, 2, 88);
+	MemFreeDbg(tBuff);
 	talkflag = FALSE;
-	if (gbMaxPlayers != 1) {
-		pTalkPanel = LoadFileInMem("CtrlPan\\TalkPanl.CEL", NULL);
-		CelBlitWidth(pBtmBuff, 0, (PANEL_HEIGHT + 16) * 2 - 1, PANEL_WIDTH, pTalkPanel, 1, PANEL_WIDTH);
-		MemFreeDbg(pTalkPanel);
+	if (gbIsMultiplayer) {
+		tBuff = LoadFileInMem("CtrlPan\\TalkPanl.CEL", NULL);
+		CelBlitWidth(pBtmBuff, 0, (PANEL_HEIGHT + 16) * 2 - 1, PANEL_WIDTH, tBuff, 1, PANEL_WIDTH);
+		MemFreeDbg(tBuff);
 		pMultiBtns = LoadFileInMem("CtrlPan\\P8But2.CEL", NULL);
 		pTalkBtns = LoadFileInMem("CtrlPan\\TalkButt.CEL", NULL);
 		sgbPlrTalkTbl = 0;
@@ -828,7 +827,7 @@ void InitControlPan()
 	for (i = 0; i < sizeof(panbtn) / sizeof(panbtn[0]); i++)
 		panbtn[i] = FALSE;
 	panbtndown = FALSE;
-	if (gbMaxPlayers == 1)
+	if (!gbIsMultiplayer)
 		numpanbtns = 6;
 	else
 		numpanbtns = 8;
@@ -1013,7 +1012,7 @@ void control_check_btn_press()
 
 void DoAutoMap()
 {
-	if (currlevel != 0 || gbMaxPlayers != 1) {
+	if (currlevel != 0 || gbIsMultiplayer) {
 		if (!automapflag)
 			StartAutomap();
 		else
@@ -1426,14 +1425,14 @@ void DrawChr()
 	sprintf(chrstr, "%i", plr[myplr]._pLevel);
 	ADD_PlrStringXY(66, 69, 109, chrstr, COL_WHITE);
 
-	sprintf(chrstr, "%li", plr[myplr]._pExperience);
+	sprintf(chrstr, "%i", plr[myplr]._pExperience);
 	ADD_PlrStringXY(216, 69, 300, chrstr, COL_WHITE);
 
 	if (plr[myplr]._pLevel == MAXCHARLEVEL - 1) {
 		strcpy(chrstr, "None");
 		col = COL_GOLD;
 	} else {
-		sprintf(chrstr, "%li", plr[myplr]._pNextExper);
+		sprintf(chrstr, "%i", plr[myplr]._pNextExper);
 		col = COL_WHITE;
 	}
 	ADD_PlrStringXY(216, 97, 300, chrstr, col);
@@ -1688,7 +1687,7 @@ void CheckChrBtns()
 	}
 }
 
-void ReleaseChrBtns()
+void ReleaseChrBtns(bool addAllStatPoints)
 {
 	int i;
 
@@ -1700,22 +1699,23 @@ void ReleaseChrBtns()
 			    && MouseX <= ChrBtnsRect[i].x + ChrBtnsRect[i].w
 			    && MouseY >= ChrBtnsRect[i].y
 			    && MouseY <= ChrBtnsRect[i].y + ChrBtnsRect[i].h) {
+				int statPointsToAdd = addAllStatPoints ? plr[myplr]._pStatPts : 1;
 				switch (i) {
 				case 0:
-					NetSendCmdParam1(TRUE, CMD_ADDSTR, 1);
-					plr[myplr]._pStatPts--;
+					NetSendCmdParam1(TRUE, CMD_ADDSTR, statPointsToAdd);
+					plr[myplr]._pStatPts -= statPointsToAdd;
 					break;
 				case 1:
-					NetSendCmdParam1(TRUE, CMD_ADDMAG, 1);
-					plr[myplr]._pStatPts--;
+					NetSendCmdParam1(TRUE, CMD_ADDMAG, statPointsToAdd);
+					plr[myplr]._pStatPts -= statPointsToAdd;
 					break;
 				case 2:
-					NetSendCmdParam1(TRUE, CMD_ADDDEX, 1);
-					plr[myplr]._pStatPts--;
+					NetSendCmdParam1(TRUE, CMD_ADDDEX, statPointsToAdd);
+					plr[myplr]._pStatPts -= statPointsToAdd;
 					break;
 				case 3:
-					NetSendCmdParam1(TRUE, CMD_ADDVIT, 1);
-					plr[myplr]._pStatPts--;
+					NetSendCmdParam1(TRUE, CMD_ADDVIT, statPointsToAdd);
+					plr[myplr]._pStatPts -= statPointsToAdd;
 					break;
 				}
 			}
@@ -2076,13 +2076,7 @@ void control_remove_gold(int pnum, int gold_index)
 
 void control_set_gold_curs(int pnum)
 {
-	if (plr[pnum].HoldItem._ivalue >= GOLD_MEDIUM_LIMIT)
-		plr[pnum].HoldItem._iCurs = ICURS_GOLD_LARGE;
-	else if (plr[pnum].HoldItem._ivalue <= GOLD_SMALL_LIMIT)
-		plr[pnum].HoldItem._iCurs = ICURS_GOLD_SMALL;
-	else
-		plr[pnum].HoldItem._iCurs = ICURS_GOLD_MEDIUM;
-
+	SetPlrHandGoldCurs(&plr[pnum].HoldItem);
 	NewCursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
 }
 
@@ -2232,7 +2226,7 @@ void control_type_message()
 {
 	int i;
 
-	if (gbMaxPlayers == 1) {
+	if (!gbIsMultiplayer) {
 		return;
 	}
 
@@ -2286,7 +2280,7 @@ BOOL control_talk_last_key(int vkey)
 {
 	int result;
 
-	if (gbMaxPlayers == 1)
+	if (!gbIsMultiplayer)
 		return FALSE;
 
 	if (!talkflag)
@@ -2321,7 +2315,7 @@ BOOL control_presskeys(int vkey)
 	int len;
 	BOOL ret;
 
-	if (gbMaxPlayers != 1) {
+	if (gbIsMultiplayer) {
 		if (!talkflag) {
 			ret = FALSE;
 		} else {

@@ -57,10 +57,15 @@ DWORD sgdwCursHgtOld;
 
 bool dRendered[MAXDUNX][MAXDUNY];
 
+int frames;
+BOOL frameflag;
+int frameend;
+int framerate;
+int framestart;
+
 /* data */
 
-/* used in 1.00 debug */
-const char *const szMonModeAssert[18] = {
+const char *const szMonModeAssert[] = {
 	"standing",
 	"walking (1)",
 	"walking (2)",
@@ -81,7 +86,7 @@ const char *const szMonModeAssert[18] = {
 	"talking"
 };
 
-const char *const szPlrModeAssert[12] = {
+const char *const szPlrModeAssert[] = {
 	"standing",
 	"walking (1)",
 	"walking (2)",
@@ -142,8 +147,9 @@ static void scrollrt_draw_cursor_back_buffer()
  */
 static void scrollrt_draw_cursor_item()
 {
-	int i, mx, my, col;
+	int i, mx, my;
 	BYTE *src, *dst;
+	BYTE col;
 
 	assert(!sgdwCursWdt);
 
@@ -243,14 +249,14 @@ void DrawMissilePrivate(MissileStruct *m, int sx, int sy, BOOL pre)
 		return;
 
 	pCelBuff = m->_miAnimData;
-	if (!pCelBuff) {
-		// app_fatal("Draw Missile 2 type %d: NULL Cel Buffer", m->_mitype);
+	if (pCelBuff == NULL) {
+		SDL_Log("Draw Missile 2 type %d: NULL Cel Buffer", m->_mitype);
 		return;
 	}
 	nCel = m->_miAnimFrame;
 	frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
-		// app_fatal("Draw Missile 2: frame %d of %d, missile type==%d", nCel, frames, m->_mitype);
+		SDL_Log("Draw Missile 2: frame %d of %d, missile type==%d", nCel, frames, m->_mitype);
 		return;
 	}
 	mx = sx + m->_mixoff - m->_miAnimWidth2;
@@ -308,32 +314,30 @@ static void DrawMonster(int x, int y, int mx, int my, int m)
 	char trans;
 	BYTE *pCelBuff;
 
-	if ((DWORD)m >= MAXMONSTERS) {
-		// app_fatal("Draw Monster: tried to draw illegal monster %d", m);
+	if (m < 0 || m >= MAXMONSTERS) {
+		SDL_Log("Draw Monster: tried to draw illegal monster %d", m);
 		return;
 	}
 
 	pCelBuff = monster[m]._mAnimData;
-	if (!pCelBuff) {
-		// app_fatal("Draw Monster \"%s\": NULL Cel Buffer", monster[m].mName);
+	if (pCelBuff == NULL) {
+		SDL_Log("Draw Monster \"%s\": NULL Cel Buffer", monster[m].mName);
 		return;
 	}
 
 	nCel = monster[m]._mAnimFrame;
 	frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
-		/*
 		const char *szMode = "unknown action";
-		if(monster[m]._mmode <= 17)
+		if (monster[m]._mmode <= 17)
 			szMode = szMonModeAssert[monster[m]._mmode];
-		app_fatal(
-			"Draw Monster \"%s\" %s: facing %d, frame %d of %d",
-			monster[m].mName,
-			szMode,
-			monster[m]._mdir,
-			nCel,
-			frames);
-		*/
+		SDL_Log(
+		    "Draw Monster \"%s\" %s: facing %d, frame %d of %d",
+		    monster[m].mName,
+		    szMode,
+		    monster[m]._mdir,
+		    nCel,
+		    frames);
 		return;
 	}
 
@@ -355,6 +359,36 @@ static void DrawMonster(int x, int y, int mx, int my, int m)
 }
 
 /**
+ * @brief Helper for rendering player a Mana Shield
+ * @param pnum Player id
+ * @param sx Back buffer coordinate
+ * @param sy Back buffer coordinate
+ * @param lighting Should lighting be applied
+ */
+static void DrawManaShield(int pnum, int x, int y, bool lighting)
+{
+	if (!plr[pnum].pManaShield)
+		return;
+
+	x += plr[pnum]._pAnimWidth2 - misfiledata[MFILE_MANASHLD].mAnimWidth2[0];
+
+	int width = misfiledata[MFILE_MANASHLD].mAnimWidth[0];
+	BYTE *pCelBuff = misfiledata[MFILE_MANASHLD].mAnimData[0];
+
+	if (pnum == myplr) {
+		Cl2Draw(x, y, pCelBuff, 1, width);
+		return;
+	}
+
+	if (lighting) {
+		Cl2DrawLightTbl(x, y, pCelBuff, 1, width, 1);
+		return;
+	}
+
+	Cl2DrawLight(x, y, pCelBuff, 1, width);
+}
+
+/**
  * @brief Render a player sprite
  * @param pnum Player id
  * @param x dPiece coordinate
@@ -367,68 +401,58 @@ static void DrawMonster(int x, int y, int mx, int my, int m)
  */
 static void DrawPlayer(int pnum, int x, int y, int px, int py, BYTE *pCelBuff, int nCel, int nWidth)
 {
-	int l, frames;
+	int l;
 
-	if (dFlags[x][y] & BFLAG_LIT || plr[myplr]._pInfraFlag || !setlevel && currlevel == 0) {
-		if (!pCelBuff) {
-			// app_fatal("Drawing player %d \"%s\": NULL Cel Buffer", pnum, plr[pnum]._pName);
-			return;
-		}
-		frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
-		if (nCel < 1 || frames > 50 || nCel > frames) {
-			/*
-			const char *szMode = "unknown action";
-			if(plr[pnum]._pmode <= PM_QUIT)
-				szMode = szPlrModeAssert[plr[pnum]._pmode];
-			app_fatal(
-				"Drawing player %d \"%s\" %s: facing %d, frame %d of %d",
-				pnum,
-				plr[pnum]._pName,
-				szMode,
-				plr[pnum]._pdir,
-				nCel,
-				frames);
-			*/
-			return;
-		}
-		if (pnum == pcursplr)
-			Cl2DrawOutline(165, px, py, pCelBuff, nCel, nWidth);
-		if (pnum == myplr) {
-			Cl2Draw(px, py, pCelBuff, nCel, nWidth);
-			if (plr[pnum].pManaShield)
-				Cl2Draw(
-				    px + plr[pnum]._pAnimWidth2 - misfiledata[MFILE_MANASHLD].mAnimWidth2[0],
-				    py,
-				    misfiledata[MFILE_MANASHLD].mAnimData[0],
-				    1,
-				    misfiledata[MFILE_MANASHLD].mAnimWidth[0]);
-		} else if (!(dFlags[x][y] & BFLAG_LIT) || plr[myplr]._pInfraFlag && light_table_index > 8) {
-			Cl2DrawLightTbl(px, py, pCelBuff, nCel, nWidth, 1);
-			if (plr[pnum].pManaShield)
-				Cl2DrawLightTbl(
-				    px + plr[pnum]._pAnimWidth2 - misfiledata[MFILE_MANASHLD].mAnimWidth2[0],
-				    py,
-				    misfiledata[MFILE_MANASHLD].mAnimData[0],
-				    1,
-				    misfiledata[MFILE_MANASHLD].mAnimWidth[0],
-				    1);
-		} else {
-			l = light_table_index;
-			if (light_table_index < 5)
-				light_table_index = 0;
-			else
-				light_table_index -= 5;
-			Cl2DrawLight(px, py, pCelBuff, nCel, nWidth);
-			if (plr[pnum].pManaShield)
-				Cl2DrawLight(
-				    px + plr[pnum]._pAnimWidth2 - misfiledata[MFILE_MANASHLD].mAnimWidth2[0],
-				    py,
-				    misfiledata[MFILE_MANASHLD].mAnimData[0],
-				    1,
-				    misfiledata[MFILE_MANASHLD].mAnimWidth[0]);
-			light_table_index = l;
-		}
+	if ((dFlags[x][y] & BFLAG_LIT) == 0 && !plr[myplr]._pInfraFlag && leveltype != DTYPE_TOWN) {
+		return;
 	}
+
+	if (pCelBuff == NULL) {
+		SDL_Log("Drawing player %d \"%s\": NULL Cel Buffer", pnum, plr[pnum]._pName);
+		return;
+	}
+
+	frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
+	if (nCel < 1 || frames > 50 || nCel > frames) {
+		const char *szMode = "unknown action";
+		if (plr[pnum]._pmode <= PM_QUIT)
+			szMode = szPlrModeAssert[plr[pnum]._pmode];
+		SDL_Log(
+		    "Drawing player %d \"%s\" %s: facing %d, frame %d of %d",
+		    pnum,
+		    plr[pnum]._pName,
+		    szMode,
+		    plr[pnum]._pdir,
+		    nCel,
+		    frames);
+		return;
+	}
+
+	if (pnum == pcursplr)
+		Cl2DrawOutline(165, px, py, pCelBuff, nCel, nWidth);
+
+	if (pnum == myplr) {
+		Cl2Draw(px, py, pCelBuff, nCel, nWidth);
+		DrawManaShield(pnum, px, py, true);
+		return;
+	}
+
+	if (!(dFlags[x][y] & BFLAG_LIT) || plr[myplr]._pInfraFlag && light_table_index > 8) {
+		Cl2DrawLightTbl(px, py, pCelBuff, nCel, nWidth, 1);
+		DrawManaShield(pnum, px, py, true);
+		return;
+	}
+
+	l = light_table_index;
+	if (light_table_index < 5)
+		light_table_index = 0;
+	else
+		light_table_index -= 5;
+
+	Cl2DrawLight(px, py, pCelBuff, nCel, nWidth);
+	DrawManaShield(pnum, px, py, false);
+
+	light_table_index = l;
 }
 
 /**
@@ -489,18 +513,18 @@ static void DrawObject(int x, int y, int ox, int oy, BOOL pre)
 		sy = oy + (yy << 4) + (xx << 4);
 	}
 
-	assert((unsigned char)bv < MAXOBJECTS);
+	assert(bv >= 0 && bv < MAXOBJECTS);
 
 	pCelBuff = object[bv]._oAnimData;
-	if (!pCelBuff) {
-		// app_fatal("Draw Object type %d: NULL Cel Buffer", object[bv]._otype);
+	if (pCelBuff == NULL) {
+		SDL_Log("Draw Object type %d: NULL Cel Buffer", object[bv]._otype);
 		return;
 	}
 
 	nCel = object[bv]._oAnimFrame;
 	frames = SDL_SwapLE32(*(DWORD *)pCelBuff);
-	if (nCel < 1 || frames > 50 || nCel > (int)frames) {
-		// app_fatal("Draw Object: frame %d of %d, object type==%d", nCel, frames, object[bv]._otype);
+	if (nCel < 1 || frames > 50 || nCel > frames) {
+		SDL_Log("Draw Object: frame %d of %d, object type==%d", nCel, frames, object[bv]._otype);
 		return;
 	}
 
@@ -600,15 +624,17 @@ static void DrawItem(int x, int y, int sx, int sy, BOOL pre)
 
 	pCelBuff = pItem->_iAnimData;
 	if (pCelBuff == NULL) {
-		// app_fatal("Draw Item \"%s\" 1: NULL Cel Buffer", pItem->_iIName);
+		SDL_Log("Draw Item \"%s\" 1: NULL Cel Buffer", pItem->_iIName);
 		return;
 	}
-	pFrameTable = (DWORD *)pCelBuff;
+
 	nCel = pItem->_iAnimFrame;
+	pFrameTable = (DWORD *)pCelBuff;
 	if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
-		// app_fatal("Draw \"%s\" Item 1: frame %d of %d, item type==%d", pItem->_iIName, nCel, pFrameTable[0], pItem->_itype);
+		SDL_Log("Draw \"%s\" Item 1: frame %d of %d, item type==%d", pItem->_iIName, nCel, pFrameTable[0], pItem->_itype);
 		return;
 	}
+
 	int px = sx - pItem->_iAnimWidth2;
 	if (bItem - 1 == pcursitem || AutoMapShowItems) {
 		CelBlitOutline(181, px, sy, pCelBuff, nCel, pItem->_iAnimWidth);
@@ -645,8 +671,8 @@ static void DrawMonsterHelper(int x, int y, int oy, int sx, int sy)
 	if (!(dFlags[x][y] & BFLAG_LIT) && !plr[myplr]._pInfraFlag)
 		return;
 
-	if ((DWORD)mi >= MAXMONSTERS) {
-		// app_fatal("Draw Monster: tried to draw illegal monster %d", mi);
+	if (mi < 0 || mi >= MAXMONSTERS) {
+		SDL_Log("Draw Monster: tried to draw illegal monster %d", mi);
 		return;
 	}
 
@@ -656,7 +682,7 @@ static void DrawMonsterHelper(int x, int y, int oy, int sx, int sy)
 	}
 
 	if (pMonster->MType == NULL) {
-		// app_fatal("Draw Monster \"%s\": uninitialized monster", pMonster->mName);
+		SDL_Log("Draw Monster \"%s\": uninitialized monster", pMonster->mName);
 		return;
 	}
 
@@ -672,17 +698,16 @@ static void DrawMonsterHelper(int x, int y, int oy, int sx, int sy)
  * @brief Check if and how a player should be rendered
  * @param y dPiece coordinate
  * @param x dPiece coordinate
- * @param oy dPiece Y offset
  * @param sx Back buffer coordinate
  * @param sy Back buffer coordinate
  */
-static void DrawPlayerHelper(int x, int y, int oy, int sx, int sy)
+static void DrawPlayerHelper(int x, int y, int sx, int sy)
 {
-	int p = dPlayer[x][y + oy];
+	int p = dPlayer[x][y];
 	p = p > 0 ? p - 1 : -(p + 1);
 
-	if ((DWORD)p >= MAX_PLRS) {
-		// app_fatal("draw player: tried to draw illegal player %d", p);
+	if (p < 0 || p >= MAX_PLRS) {
+		SDL_Log("draw player: tried to draw illegal player %d", p);
 		return;
 	}
 
@@ -690,7 +715,7 @@ static void DrawPlayerHelper(int x, int y, int oy, int sx, int sy)
 	int px = sx + pPlayer->_pxoff - pPlayer->_pAnimWidth2;
 	int py = sy + pPlayer->_pyoff;
 
-	DrawPlayer(p, x, y + oy, px, py, pPlayer->_pAnimData, pPlayer->_pAnimFrame, pPlayer->_pAnimWidth);
+	DrawPlayer(p, x, y, px, py, pPlayer->_pAnimData, pPlayer->_pAnimFrame, pPlayer->_pAnimWidth);
 }
 
 /**
@@ -727,9 +752,11 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy)
 	if (sy > 0) // check for OOB
 		negMon = dMonster[sx][sy - 1];
 
+#ifdef _DEBUG
 	if (visiondebug && bFlag & BFLAG_LIT) {
 		CelClippedDraw(dx, dy, pSquareCel, 1, 64);
 	}
+#endif
 
 	if (MissilePreFlag) {
 		DrawMissile(sx, sy, dx, dy, TRUE);
@@ -747,7 +774,7 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy)
 			pFrameTable = (DWORD *)pCelBuff;
 			nCel = pDeadGuy->_deadFrame;
 			if (nCel < 1 || pFrameTable[0] > 50 || nCel > (int)pFrameTable[0]) {
-				// app_fatal("Unclipped dead: frame %d of %d, deadnum==%d", nCel, pFrameTable[0], (bDead & 0x1F) - 1);
+				SDL_Log("Unclipped dead: frame %d of %d, deadnum==%d", nCel, pFrameTable[0], (bDead & 0x1F) - 1);
 				break;
 			}
 			if (pDeadGuy->_deadtrans != 0) {
@@ -761,7 +788,7 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy)
 	DrawItem(sx, sy, dx, dy, 1);
 	if (bFlag & BFLAG_PLAYERLR) {
 		assert((DWORD)(sy - 1) < MAXDUNY);
-		DrawPlayerHelper(sx, sy, -1, dx, dy);
+		DrawPlayerHelper(sx, sy - 1, dx, dy);
 	}
 	if (bFlag & BFLAG_MONSTLR && negMon < 0) {
 		DrawMonsterHelper(sx, sy, -1, dx, dy);
@@ -770,7 +797,7 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy)
 		DrawDeadPlayer(sx, sy, dx, dy);
 	}
 	if (dPlayer[sx][sy] > 0) {
-		DrawPlayerHelper(sx, sy, 0, dx, dy);
+		DrawPlayerHelper(sx, sy, dx, dy);
 	}
 	if (dMonster[sx][sy] > 0) {
 		DrawMonsterHelper(sx, sy, 0, dx, dy);
@@ -783,7 +810,17 @@ static void scrollrt_draw_dungeon(int sx, int sy, int dx, int dy)
 		bArch = dSpecial[sx][sy];
 		if (bArch != 0) {
 			cel_transparency_active = TransList[bMap];
+#ifdef _DEBUG
+			if (GetAsyncKeyState(DVL_VK_MENU) & 0x8000) {
+				cel_transparency_active = 0; // Turn transparency off here for debugging
+			}
+#endif
 			CelClippedBlitLightTrans(&gpBuffer[dx + BUFFER_WIDTH * dy], pSpecialCels, bArch, 64);
+#ifdef _DEBUG
+			if (GetAsyncKeyState(DVL_VK_MENU) & 0x8000) {
+				cel_transparency_active = TransList[bMap]; // Turn transparency back to its normal state
+			}
+#endif
 		}
 	} else {
 		// Tree leaves should always cover player when entering or leaving the tile,
@@ -1370,7 +1407,6 @@ static void DrawFPS()
 {
 	DWORD tc, frames;
 	char String[12];
-	HDC hdc;
 
 	if (frameflag && gbActive && pPanelText) {
 		frameend++;
@@ -1393,7 +1429,7 @@ static void DrawFPS()
  * @param dwWdt Back buffer coordinate
  * @param dwHgt Back buffer coordinate
  */
-static void DoBlitScreen(DWORD dwX, DWORD dwY, DWORD dwWdt, DWORD dwHgt)
+static void DoBlitScreen(int dwX, int dwY, int dwWdt, int dwHgt)
 {
 	SDL_Rect SrcRect = {
 		dwX + SCREEN_X,
@@ -1423,8 +1459,6 @@ static void DoBlitScreen(DWORD dwX, DWORD dwY, DWORD dwWdt, DWORD dwHgt)
 static void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BOOL draw_sbar, BOOL draw_btn)
 {
 	int ysize;
-	DWORD dwTicks;
-	BOOL retry;
 
 	ysize = dwHgt;
 
@@ -1454,7 +1488,7 @@ static void DrawMain(int dwHgt, BOOL draw_desc, BOOL draw_hp, BOOL draw_mana, BO
 		if (draw_btn) {
 			DoBlitScreen(PANEL_LEFT + 8, PANEL_TOP + 5, 72, 119);
 			DoBlitScreen(PANEL_LEFT + 556, PANEL_TOP + 5, 72, 48);
-			if (gbMaxPlayers > 1) {
+			if (gbIsMultiplayer) {
 				DoBlitScreen(PANEL_LEFT + 84, PANEL_TOP + 91, 36, 32);
 				DoBlitScreen(PANEL_LEFT + 524, PANEL_TOP + 91, 36, 32);
 			}
@@ -1511,7 +1545,7 @@ void DrawAndBlit()
 		return;
 	}
 
-	if (SCREEN_WIDTH > PANEL_WIDTH || SCREEN_HEIGHT > VIEWPORT_HEIGHT + PANEL_HEIGHT || force_redraw == 255) {
+	if (SCREEN_WIDTH > PANEL_WIDTH || force_redraw == 255) {
 		drawhpflag = TRUE;
 		drawmanaflag = TRUE;
 		drawbtnflag = TRUE;
@@ -1519,7 +1553,7 @@ void DrawAndBlit()
 		ddsdesc = FALSE;
 		ctrlPan = TRUE;
 		hgt = SCREEN_HEIGHT;
-	} else {
+	} else if (force_redraw == 1) {
 		ddsdesc = TRUE;
 		ctrlPan = FALSE;
 		hgt = VIEWPORT_HEIGHT;

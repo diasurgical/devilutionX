@@ -358,7 +358,7 @@ bool STORMAPI SFileOpenFileEx(HANDLE hMpq, const char * szFileName, DWORD dwSear
 
     // Give the file entry
     if(PtrFile != NULL)
-        PtrFile[0] = hf;
+        *PtrFile = hf;
 
     // Return error code
     if(nError != ERROR_SUCCESS)

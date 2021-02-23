@@ -13,6 +13,10 @@
 #include "DiabloUI/selok.h"
 #include "DiabloUI/selgame.h"
 
+#ifdef __3DS__
+#include "../platform/ctr/keyboard.h"
+#endif
+
 namespace dvl {
 
 const char *selhero_GenerateName(uint8_t hero_class);
@@ -35,8 +39,7 @@ BOOL(*gfnHeroInfo)
 (BOOL (*fninfofunc)(_uiheroinfo *));
 BOOL(*gfnHeroCreate)
 (_uiheroinfo *);
-void(*gfnHeroStats)
-(unsigned int, _uidefaultstats *);
+void (*gfnHeroStats)(unsigned int, _uidefaultstats *);
 
 namespace {
 
@@ -363,6 +366,8 @@ void selhero_ClassSelector_Select(int value)
 	memset(selhero_heroInfo.name, '\0', sizeof(selhero_heroInfo.name));
 #ifdef PREFILL_PLAYER_NAME
 	strncpy(selhero_heroInfo.name, selhero_GenerateName(selhero_heroInfo.heroclass), sizeof(selhero_heroInfo.name) - 1);
+#elif defined __3DS__
+	ctr_vkbdInput("Enter Hero name..", selhero_GenerateName(selhero_heroInfo.heroclass), selhero_heroInfo.name);
 #endif
 	selhero_FreeDlgItems();
 	SDL_Rect rect1 = { PANEL_LEFT + 264, (UI_OFFSET_Y + 211), 320, 33 };
@@ -464,13 +469,13 @@ BOOL SelHero_GetHeroInfo(_uiheroinfo *pInfo)
 	return true;
 }
 
-BOOL UiSelHeroDialog(
+static BOOL UiSelHeroDialog(
     BOOL (*fninfo)(BOOL (*fninfofunc)(_uiheroinfo *)),
     BOOL (*fncreate)(_uiheroinfo *),
     void (*fnstats)(unsigned int, _uidefaultstats *),
     BOOL (*fnremove)(_uiheroinfo *),
     int *dlgresult,
-    char *name)
+    char (*name)[16])
 {
 	bUIElementsLoaded = true;
 
@@ -518,7 +523,7 @@ BOOL UiSelHeroDialog(
 	} while (selhero_navigateYesNo);
 
 	*dlgresult = selhero_result;
-	strncpy(name, selhero_heroInfo.name, 16 - 1);
+	snprintf(*name, sizeof(*name), selhero_heroInfo.name);
 
 	UnloadScrollBar();
 	return true;
@@ -530,7 +535,7 @@ BOOL UiSelHeroSingDialog(
     BOOL (*fnremove)(_uiheroinfo *),
     void (*fnstats)(unsigned int, _uidefaultstats *),
     int *dlgresult,
-    char *name,
+    char (*name)[16],
     int *difficulty)
 {
 	selhero_isMultiPlayer = false;
@@ -546,7 +551,7 @@ BOOL UiSelHeroMultDialog(
     void (*fnstats)(unsigned int, _uidefaultstats *),
     int *dlgresult,
     BOOL *hero_is_created,
-    char *name)
+    char (*name)[16])
 {
 	selhero_isMultiPlayer = true;
 	return UiSelHeroDialog(fninfo, fncreate, fnstats, fnremove, dlgresult, name);

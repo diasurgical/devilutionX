@@ -8,7 +8,7 @@
 DEVILUTION_BEGIN_NAMESPACE
 
 BYTE *sgpBackCel;
-int sgdwProgress;
+DWORD sgdwProgress;
 int progress_id;
 
 /** The colour used for the progress bar as an index into the palette. */
@@ -277,11 +277,11 @@ BOOL IncProgress()
 {
 	interface_msg_pump();
 	sgdwProgress += 23;
-	if ((DWORD)sgdwProgress > 534)
+	if (sgdwProgress > 534)
 		sgdwProgress = 534;
 	if (sgpBackCel)
 		DrawCutscene();
-	return (DWORD)sgdwProgress >= 534;
+	return sgdwProgress >= 534;
 }
 
 void ShowProgress(unsigned int uMsg)
@@ -325,7 +325,7 @@ void ShowProgress(unsigned int uMsg)
 		break;
 	case WM_DIABNEXTLVL:
 		IncProgress();
-		if (gbMaxPlayers == 1) {
+		if (!gbIsMultiplayer) {
 			SaveLevel();
 		} else {
 			DeltaSaveLevel();
@@ -341,7 +341,7 @@ void ShowProgress(unsigned int uMsg)
 		break;
 	case WM_DIABPREVLVL:
 		IncProgress();
-		if (gbMaxPlayers == 1) {
+		if (!gbIsMultiplayer) {
 			SaveLevel();
 		} else {
 			DeltaSaveLevel();
@@ -358,7 +358,7 @@ void ShowProgress(unsigned int uMsg)
 	case WM_DIABSETLVL:
 		SetReturnLvlPos();
 		IncProgress();
-		if (gbMaxPlayers == 1) {
+		if (!gbIsMultiplayer) {
 			SaveLevel();
 		} else {
 			DeltaSaveLevel();
@@ -373,7 +373,7 @@ void ShowProgress(unsigned int uMsg)
 		break;
 	case WM_DIABRTNLVL:
 		IncProgress();
-		if (gbMaxPlayers == 1) {
+		if (!gbIsMultiplayer) {
 			SaveLevel();
 		} else {
 			DeltaSaveLevel();
@@ -388,7 +388,7 @@ void ShowProgress(unsigned int uMsg)
 		break;
 	case WM_DIABWARPLVL:
 		IncProgress();
-		if (gbMaxPlayers == 1) {
+		if (!gbIsMultiplayer) {
 			SaveLevel();
 		} else {
 			DeltaSaveLevel();
@@ -402,7 +402,7 @@ void ShowProgress(unsigned int uMsg)
 		break;
 	case WM_DIABTOWNWARP:
 		IncProgress();
-		if (gbMaxPlayers == 1) {
+		if (!gbIsMultiplayer) {
 			SaveLevel();
 		} else {
 			DeltaSaveLevel();
@@ -418,7 +418,7 @@ void ShowProgress(unsigned int uMsg)
 		break;
 	case WM_DIABTWARPUP:
 		IncProgress();
-		if (gbMaxPlayers == 1) {
+		if (!gbIsMultiplayer) {
 			SaveLevel();
 		} else {
 			DeltaSaveLevel();
@@ -434,7 +434,7 @@ void ShowProgress(unsigned int uMsg)
 		break;
 	case WM_DIABRETOWN:
 		IncProgress();
-		if (gbMaxPlayers == 1) {
+		if (!gbIsMultiplayer) {
 			SaveLevel();
 		} else {
 			DeltaSaveLevel();

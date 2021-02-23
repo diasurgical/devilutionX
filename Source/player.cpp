@@ -3,7 +3,10 @@
  *
  * Implementation of player functionality, leveling, actions, creation, loading, etc.
  */
+#include <algorithm>
+
 #include "all.h"
+#include "../3rdParty/Storm/Source/storm.h"
 
 DEVILUTION_BEGIN_NAMESPACE
 
@@ -212,8 +215,6 @@ const char *const ClassStrTbl[] = {
 	"Rogue",
 	"Warrior",
 };
-/** Unused local of PM_ChangeLightOff, originally for computing light radius. */
-BYTE fix[9] = { 0, 0, 3, 3, 3, 6, 6, 6, 8 };
 
 void SetPlayerGPtrs(BYTE *pData, BYTE **pAnim)
 {
@@ -388,10 +389,10 @@ static DWORD GetPlrGFXSize(const char *szCel)
 					sprintf(Type, "%c%c%c", CharCharHF[c], *a, *w);
 					sprintf(pszName, "PlrGFX\\%s\\%s\\%s%s.CL2", ClassStrTblOld[c], Type, Type, szCel);
 				}
-				if (WOpenFile(pszName, &hsFile, TRUE)) {
+				if (SFileOpenFile(pszName, &hsFile)) {
 					/// ASSERT: assert(hsFile);
-					dwSize = WGetFileSize(hsFile, NULL, pszName);
-					WCloseFile(hsFile);
+					dwSize = SFileGetFileSize(hsFile, NULL);
+					SFileCloseFile(hsFile);
 					if (dwMaxSize <= dwSize) {
 						dwMaxSize = dwSize;
 					}
@@ -411,21 +412,15 @@ void InitPlrGFXMem(int pnum)
 
 	if (!(plr_gfx_flag & 0x1)) { //STAND
 		plr_gfx_flag |= 0x1;
-		if (GetPlrGFXSize("ST") > GetPlrGFXSize("AS")) {
-			plr_sframe_size = GetPlrGFXSize("ST"); //TOWN
-		} else {
-			plr_sframe_size = GetPlrGFXSize("AS"); //DUNGEON
-		}
+		// ST: TOWN, AS: DUNGEON
+		plr_sframe_size = std::max(GetPlrGFXSize("ST"), GetPlrGFXSize("AS"));
 	}
 	plr[pnum]._pNData = DiabloAllocPtr(plr_sframe_size);
 
 	if (!(plr_gfx_flag & 0x2)) { //WALK
 		plr_gfx_flag |= 0x2;
-		if (GetPlrGFXSize("WL") > GetPlrGFXSize("AW")) {
-			plr_wframe_size = GetPlrGFXSize("WL"); //TOWN
-		} else {
-			plr_wframe_size = GetPlrGFXSize("AW"); //DUNGEON
-		}
+		// WL: TOWN, AW: DUNGEON
+		plr_wframe_size = std::max(GetPlrGFXSize("WL"), GetPlrGFXSize("AW"));
 	}
 	plr[pnum]._pWData = DiabloAllocPtr(plr_wframe_size);
 
@@ -697,30 +692,18 @@ void CreatePlayer(int pnum, char c)
 	plr[pnum]._pClass = c;
 
 	val = StrengthTbl[c];
-	if (val < 0) {
-		val = 0;
-	}
 	plr[pnum]._pStrength = val;
 	plr[pnum]._pBaseStr = val;
 
 	val = MagicTbl[c];
-	if (val < 0) {
-		val = 0;
-	}
 	plr[pnum]._pMagic = val;
 	plr[pnum]._pBaseMag = val;
 
 	val = DexterityTbl[c];
-	if (val < 0) {
-		val = 0;
-	}
 	plr[pnum]._pDexterity = val;
 	plr[pnum]._pBaseDex = val;
 
 	val = VitalityTbl[c];
-	if (val < 0) {
-		val = 0;
-	}
 	plr[pnum]._pVitality = val;
 	plr[pnum]._pBaseVit = val;
 
@@ -892,7 +875,7 @@ void NextPlrLevel(int pnum)
 	plr[pnum]._pNextExper = ExpLvlsTbl[plr[pnum]._pLevel];
 
 	hp = plr[pnum]._pClass == PC_SORCERER ? 64 : 128;
-	if (gbMaxPlayers == 1) {
+	if (!gbIsMultiplayer) {
 		hp++;
 	}
 	plr[pnum]._pMaxHP += hp;
@@ -911,7 +894,7 @@ void NextPlrLevel(int pnum)
 	else
 		mana = 128;
 
-	if (gbMaxPlayers == 1) {
+	if (!gbIsMultiplayer) {
 		mana++;
 	}
 	plr[pnum]._pMaxMana += mana;
@@ -928,6 +911,8 @@ void NextPlrLevel(int pnum)
 
 	if (sgbControllerActive)
 		FocusOnCharInfo();
+
+	CalcPlrInv(pnum, TRUE);
 }
 
 void AddPlrExperience(int pnum, int lvl, int exp)
@@ -953,7 +938,7 @@ void AddPlrExperience(int pnum, int lvl, int exp)
 	}
 
 	// Prevent power leveling
-	if (gbMaxPlayers > 1) {
+	if (gbIsMultiplayer) {
 		powerLvlCap = plr[pnum]._pLevel < 0 ? 0 : plr[pnum]._pLevel;
 		if (powerLvlCap >= 50) {
 			powerLvlCap = 50;
@@ -1083,8 +1068,9 @@ void InitPlayer(int pnum, BOOL FirstTime)
 
 		if (pnum == myplr) {
 			plr[pnum]._plid = AddLight(plr[pnum]._px, plr[pnum]._py, plr[pnum]._pLightRad);
+			ChangeLightXY(plr[myplr]._plid, plr[myplr]._px, plr[myplr]._py); // fix for a bug where old light is still visible at the entrance after reentering level
 		} else {
-			plr[pnum]._plid = -1;
+			plr[pnum]._plid = NO_LIGHT;
 		}
 		plr[pnum]._pvid = AddVision(plr[pnum]._px, plr[pnum]._py, plr[pnum]._pLightRad, pnum == myplr);
 	}
@@ -1232,6 +1218,8 @@ void FixPlayerLocation(int pnum, int bDir)
 		ViewX = plr[pnum]._px;
 		ViewY = plr[pnum]._py;
 	}
+	ChangeLightXY(plr[pnum]._plid, plr[pnum]._px, plr[pnum]._py);
+	ChangeVisionXY(plr[pnum]._pvid, plr[pnum]._px, plr[pnum]._py);
 }
 
 void StartStand(int pnum, int dir)
@@ -1289,8 +1277,7 @@ void PM_ChangeLightOff(int pnum)
 		app_fatal("PM_ChangeLightOff: illegal player %d", pnum);
 	}
 
-	// check if issue is upstream
-	if (plr[pnum]._plid == -1)
+	if (plr[pnum]._plid == NO_LIGHT)
 		return;
 
 	l = &LightList[plr[pnum]._plid];
@@ -1357,12 +1344,10 @@ void PM_ChangeOffset(int pnum)
 }
 
 /**
- * @brief Starting a move action towards NW, N, or NE
+ * @brief Start moving a player to a new tile
  */
-void StartWalk(int pnum, int xvel, int yvel, int xadd, int yadd, int EndDir, int sdir)
+void StartWalk(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, int EndDir, int sdir, int variant)
 {
-	int px, py;
-
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartWalk: illegal player %d", pnum);
 	}
@@ -1374,202 +1359,91 @@ void StartWalk(int pnum, int xvel, int yvel, int xadd, int yadd, int EndDir, int
 
 	SetPlayerOld(pnum);
 
-	px = xadd + plr[pnum]._px;
-	py = yadd + plr[pnum]._py;
-
 	if (!PlrDirOK(pnum, EndDir)) {
 		return;
 	}
 
+	//The player's tile position after finishing this movement action
+	int px = xadd + plr[pnum]._px;
+	int py = yadd + plr[pnum]._py;
 	plr[pnum]._pfutx = px;
 	plr[pnum]._pfuty = py;
 
+	//If this is the local player then update the camera offset position
 	if (pnum == myplr) {
 		ScrollInfo._sdx = plr[pnum]._px - ViewX;
 		ScrollInfo._sdy = plr[pnum]._py - ViewY;
 	}
 
-	dPlayer[px][py] = -(pnum + 1);
-	plr[pnum]._pmode = PM_WALK;
-	plr[pnum]._pxvel = xvel;
-	plr[pnum]._pyvel = yvel;
-	plr[pnum]._pxoff = 0;
-	plr[pnum]._pyoff = 0;
-	plr[pnum]._pVar1 = xadd;
-	plr[pnum]._pVar2 = yadd;
-	plr[pnum]._pVar3 = EndDir;
+	switch (variant) {
+	case PM_WALK:
+		dPlayer[px][py] = -(pnum + 1);
+		plr[pnum]._pmode = PM_WALK;
+		plr[pnum]._pxvel = xvel;
+		plr[pnum]._pyvel = yvel;
+		plr[pnum]._pxoff = 0;
+		plr[pnum]._pyoff = 0;
+		plr[pnum]._pVar1 = xadd;
+		plr[pnum]._pVar2 = yadd;
+		plr[pnum]._pVar3 = EndDir;
 
-	if (!(plr[pnum]._pGFXLoad & PFILE_WALK)) {
-		LoadPlrGFX(pnum, PFILE_WALK);
-	}
+		plr[pnum]._pVar6 = 0;
+		plr[pnum]._pVar7 = 0;
+		break;
+	case PM_WALK2:
+		dPlayer[plr[pnum]._px][plr[pnum]._py] = -(pnum + 1);
+		plr[pnum]._pVar1 = plr[pnum]._px;
+		plr[pnum]._pVar2 = plr[pnum]._py;
+		plr[pnum]._px = px; // Move player to the next tile to maintain correct render order
+		plr[pnum]._py = py;
+		dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
+		plr[pnum]._pxoff = xoff; // Offset player sprite to align with their previous tile position
+		plr[pnum]._pyoff = yoff;
 
-	NewPlrAnim(pnum, plr[pnum]._pWAnim[EndDir], plr[pnum]._pWFrames, 0, plr[pnum]._pWWidth);
-
-	plr[pnum]._pdir = EndDir;
-	plr[pnum]._pVar6 = 0;
-	plr[pnum]._pVar7 = 0;
-	plr[pnum]._pVar8 = 0;
-
-	if (pnum != myplr) {
-		return;
-	}
-
-	if (zoomflag) {
-		if (abs(ScrollInfo._sdx) >= 3 || abs(ScrollInfo._sdy) >= 3) {
-			ScrollInfo._sdir = SDIR_NONE;
-		} else {
-			ScrollInfo._sdir = sdir;
-		}
-	} else if (abs(ScrollInfo._sdx) >= 2 || abs(ScrollInfo._sdy) >= 2) {
-		ScrollInfo._sdir = SDIR_NONE;
-	} else {
-		ScrollInfo._sdir = sdir;
-	}
-}
-
-/**
- * @brief Starting a move action towards SW, S, or SE
- */
-#if defined(__clang__) || defined(__GNUC__)
-__attribute__((no_sanitize("shift-base")))
-#endif
-void
-StartWalk2(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int EndDir, int sdir)
-{
-	int px, py;
-
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("StartWalk2: illegal player %d", pnum);
-	}
-
-	if (plr[pnum]._pInvincible && plr[pnum]._pHitPoints == 0 && pnum == myplr) {
-		SyncPlrKill(pnum, -1);
-		return;
-	}
-
-	SetPlayerOld(pnum);
-	px = xadd + plr[pnum]._px;
-	py = yadd + plr[pnum]._py;
-
-	if (!PlrDirOK(pnum, EndDir)) {
-		return;
-	}
-
-	plr[pnum]._pfutx = px;
-	plr[pnum]._pfuty = py;
-
-	if (pnum == myplr) {
-		ScrollInfo._sdx = plr[pnum]._px - ViewX;
-		ScrollInfo._sdy = plr[pnum]._py - ViewY;
-	}
-
-	dPlayer[plr[pnum]._px][plr[pnum]._py] = -1 - pnum;
-	plr[pnum]._pVar1 = plr[pnum]._px;
-	plr[pnum]._pVar2 = plr[pnum]._py;
-	plr[pnum]._px = px; // Move player to the next tile to maintain correct render order
-	plr[pnum]._py = py;
-	dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
-	plr[pnum]._pxoff = xoff; // Offset player sprite to align with their previous tile position
-	plr[pnum]._pyoff = yoff;
-
-	ChangeLightXY(plr[pnum]._plid, plr[pnum]._px, plr[pnum]._py);
-	PM_ChangeLightOff(pnum);
-
-	plr[pnum]._pmode = PM_WALK2;
-	plr[pnum]._pxvel = xvel;
-	plr[pnum]._pyvel = yvel;
-	plr[pnum]._pVar6 = xoff * 256;
-	plr[pnum]._pVar7 = yoff * 256;
-	plr[pnum]._pVar3 = EndDir;
-
-	if (!(plr[pnum]._pGFXLoad & PFILE_WALK)) {
-		LoadPlrGFX(pnum, PFILE_WALK);
-	}
-	NewPlrAnim(pnum, plr[pnum]._pWAnim[EndDir], plr[pnum]._pWFrames, 0, plr[pnum]._pWWidth);
-
-	plr[pnum]._pdir = EndDir;
-	plr[pnum]._pVar8 = 0;
-
-	if (pnum != myplr) {
-		return;
-	}
-
-	if (zoomflag) {
-		if (abs(ScrollInfo._sdx) >= 3 || abs(ScrollInfo._sdy) >= 3) {
-			ScrollInfo._sdir = SDIR_NONE;
-		} else {
-			ScrollInfo._sdir = sdir;
-		}
-	} else if (abs(ScrollInfo._sdx) >= 2 || abs(ScrollInfo._sdy) >= 2) {
-		ScrollInfo._sdir = SDIR_NONE;
-	} else {
-		ScrollInfo._sdir = sdir;
-	}
-}
-
-/**
- * @brief Starting a move action towards W or E
- */
-#if defined(__clang__) || defined(__GNUC__)
-__attribute__((no_sanitize("shift-base")))
-#endif
-void
-StartWalk3(int pnum, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, int EndDir, int sdir)
-{
-	int px, py, x, y;
-
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("StartWalk3: illegal player %d", pnum);
-	}
-
-	if (plr[pnum]._pInvincible && plr[pnum]._pHitPoints == 0 && pnum == myplr) {
-		SyncPlrKill(pnum, -1);
-		return;
-	}
-
-	SetPlayerOld(pnum);
-	px = xadd + plr[pnum]._px;
-	py = yadd + plr[pnum]._py;
-	x = mapx + plr[pnum]._px;
-	y = mapy + plr[pnum]._py;
-
-	if (!PlrDirOK(pnum, EndDir)) {
-		return;
-	}
-
-	plr[pnum]._pfutx = px;
-	plr[pnum]._pfuty = py;
-
-	if (pnum == myplr) {
-		ScrollInfo._sdx = plr[pnum]._px - ViewX;
-		ScrollInfo._sdy = plr[pnum]._py - ViewY;
-	}
-
-	dPlayer[plr[pnum]._px][plr[pnum]._py] = -1 - pnum;
-	dPlayer[px][py] = -1 - pnum;
-	plr[pnum]._pVar4 = x;
-	plr[pnum]._pVar5 = y;
-	dFlags[x][y] |= BFLAG_PLAYERLR;
-	plr[pnum]._pxoff = xoff; // Offset player sprite to align with their previous tile position
-	plr[pnum]._pyoff = yoff;
-
-	if (leveltype != DTYPE_TOWN) {
-		ChangeLightXY(plr[pnum]._plid, x, y);
+		ChangeLightXY(plr[pnum]._plid, plr[pnum]._px, plr[pnum]._py);
 		PM_ChangeLightOff(pnum);
+
+		plr[pnum]._pmode = PM_WALK2;
+		plr[pnum]._pxvel = xvel;
+		plr[pnum]._pyvel = yvel;
+		plr[pnum]._pVar6 = xoff * 256;
+		plr[pnum]._pVar7 = yoff * 256;
+		plr[pnum]._pVar3 = EndDir;
+		break;
+	case PM_WALK3:
+		int x = mapx + plr[pnum]._px;
+		int y = mapy + plr[pnum]._py;
+
+		dPlayer[plr[pnum]._px][plr[pnum]._py] = -(pnum + 1);
+		dPlayer[px][py] = -(pnum + 1);
+		plr[pnum]._pVar4 = x;
+		plr[pnum]._pVar5 = y;
+		dFlags[x][y] |= BFLAG_PLAYERLR;
+		plr[pnum]._pxoff = xoff; // Offset player sprite to align with their previous tile position
+		plr[pnum]._pyoff = yoff;
+
+		if (leveltype != DTYPE_TOWN) {
+			ChangeLightXY(plr[pnum]._plid, x, y);
+			PM_ChangeLightOff(pnum);
+		}
+
+		plr[pnum]._pmode = PM_WALK3;
+		plr[pnum]._pxvel = xvel;
+		plr[pnum]._pyvel = yvel;
+		plr[pnum]._pVar1 = px;
+		plr[pnum]._pVar2 = py;
+		plr[pnum]._pVar6 = xoff * 256;
+		plr[pnum]._pVar7 = yoff * 256;
+		plr[pnum]._pVar3 = EndDir;
+		break;
 	}
 
-	plr[pnum]._pmode = PM_WALK3;
-	plr[pnum]._pxvel = xvel;
-	plr[pnum]._pyvel = yvel;
-	plr[pnum]._pVar1 = px;
-	plr[pnum]._pVar2 = py;
-	plr[pnum]._pVar6 = xoff * 256;
-	plr[pnum]._pVar7 = yoff * 256;
-	plr[pnum]._pVar3 = EndDir;
-
+	//Load walk animation in case it's not loaded yet
 	if (!(plr[pnum]._pGFXLoad & PFILE_WALK)) {
 		LoadPlrGFX(pnum, PFILE_WALK);
 	}
+
+	//Start walk animation
 	NewPlrAnim(pnum, plr[pnum]._pWAnim[EndDir], plr[pnum]._pWFrames, 0, plr[pnum]._pWWidth);
 
 	plr[pnum]._pdir = EndDir;
@@ -1797,7 +1671,6 @@ void StartPlrHit(int pnum, int dam, BOOL forcehit)
 
 	plr[pnum]._pmode = PM_GOTHIT;
 	FixPlayerLocation(pnum, pd);
-	plr[pnum]._pVar8 = 1;
 	FixPlrWalkTags(pnum);
 	dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
 	SetPlayerOld(pnum);
@@ -1809,11 +1682,6 @@ void RespawnDeadItem(ItemStruct *itm, int x, int y)
 
 	if (numitems >= MAXITEMS) {
 		return;
-	}
-
-	if (FindGetItem(itm->IDidx, itm->_iCreateInfo, itm->_iSeed) >= 0) {
-		DrawInvMsg("A duplicate item has been detected.  Destroying duplicate...");
-		SyncGetItem(x, y, itm->IDidx, itm->_iCreateInfo, itm->_iSeed);
 	}
 
 	ii = itemavail[0];
@@ -1886,7 +1754,7 @@ StartPlayerKill(int pnum, int earflag)
 		NetSendCmdParam1(TRUE, CMD_PLRDEAD, earflag);
 	}
 
-	diablolevel = gbMaxPlayers > 1 && plr[pnum].plrlevel == 16;
+	diablolevel = gbIsMultiplayer && plr[pnum].plrlevel == 16;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartPlayerKill: illegal player %d", pnum);
@@ -2116,8 +1984,8 @@ void StripTopGold(int pnum)
 				SetGoldCurs(pnum, i);
 				SetPlrHandItem(&plr[pnum].HoldItem, 0);
 				GetGoldSeed(pnum, &plr[pnum].HoldItem);
-				SetPlrHandGoldCurs(&plr[pnum].HoldItem);
 				plr[pnum].HoldItem._ivalue = val;
+				SetPlrHandGoldCurs(&plr[pnum].HoldItem);
 				if (!GoldAutoPlace(pnum))
 					PlrDeadItem(pnum, &plr[pnum].HoldItem, 0, 0);
 			}
@@ -2246,7 +2114,7 @@ StartNewLvl(int pnum, int fom, int lvl)
 		plr[pnum]._pmode = PM_NEWLVL;
 		plr[pnum]._pInvincible = TRUE;
 		PostMessage(fom, 0, 0);
-		if (gbMaxPlayers > 1) {
+		if (gbIsMultiplayer) {
 			NetSendCmdParam2(TRUE, CMD_NEWLVL, fom, lvl);
 		}
 	}
@@ -2279,7 +2147,7 @@ void StartWarpLvl(int pnum, int pidx)
 {
 	InitLevelChange(pnum);
 
-	if (gbMaxPlayers != 1) {
+	if (gbIsMultiplayer) {
 		if (plr[pnum].plrlevel != 0) {
 			plr[pnum].plrlevel = 0;
 		} else {
@@ -2301,17 +2169,15 @@ BOOL PM_DoStand(int pnum)
 }
 
 /**
- * @brief Movement towards NW, N, and NE
+ * @brief Continue movement towards new tile
  */
-BOOL PM_DoWalk(int pnum)
+bool PM_DoWalk(int pnum, int variant)
 {
-	int anim_len;
-	BOOL rv;
-
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("PM_DoWalk: illegal player %d", pnum);
 	}
 
+	//Play walking sound effect on certain animation frames
 	if (!gbIsHellfire) {
 		if (plr[pnum]._pAnimFrame == 3
 		    || (plr[pnum]._pWFrames == 8 && plr[pnum]._pAnimFrame == 7)
@@ -2319,6 +2185,8 @@ BOOL PM_DoWalk(int pnum)
 			PlaySfxLoc(PS_WALK1, plr[pnum]._px, plr[pnum]._py);
 		}
 	}
+
+	//"Jog" in town which works by doubling movement speed and skipping every other animation frame
 	if (gbIsHellfire && currlevel == 0 && jogging_opt) {
 		if (plr[pnum]._pAnimFrame % 2 == 0) {
 			plr[pnum]._pAnimFrame++;
@@ -2329,22 +2197,42 @@ BOOL PM_DoWalk(int pnum)
 		}
 	}
 
-	anim_len = 8;
+	//Acquire length of walk animation length (this is 8 for every class, so the AnimLenFromClass array is redundant right now)
+	int anim_len = 8;
 	if (currlevel != 0) {
 		anim_len = AnimLenFromClass[plr[pnum]._pClass];
 	}
 
+	//Check if we reached new tile
 	if (plr[pnum]._pVar8 >= anim_len) {
-		dPlayer[plr[pnum]._px][plr[pnum]._py] = 0;
-		plr[pnum]._px += plr[pnum]._pVar1;
-		plr[pnum]._py += plr[pnum]._pVar2;
-		dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
 
+		//Update the player's tile position
+		switch (variant) {
+		case PM_WALK:
+			dPlayer[plr[pnum]._px][plr[pnum]._py] = 0;
+			plr[pnum]._px += plr[pnum]._pVar1;
+			plr[pnum]._py += plr[pnum]._pVar2;
+			dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
+			break;
+		case PM_WALK2:
+			dPlayer[plr[pnum]._pVar1][plr[pnum]._pVar2] = 0;
+			break;
+		case PM_WALK3:
+			dPlayer[plr[pnum]._px][plr[pnum]._py] = 0;
+			dFlags[plr[pnum]._pVar4][plr[pnum]._pVar5] &= ~BFLAG_PLAYERLR;
+			plr[pnum]._px = plr[pnum]._pVar1;
+			plr[pnum]._py = plr[pnum]._pVar2;
+			dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
+			break;
+		}
+
+		//Update the coordinates for lighting and vision entries for the player
 		if (leveltype != DTYPE_TOWN) {
 			ChangeLightXY(plr[pnum]._plid, plr[pnum]._px, plr[pnum]._py);
 			ChangeVisionXY(plr[pnum]._pvid, plr[pnum]._px, plr[pnum]._py);
 		}
 
+		//Update the "camera" tile position
 		if (pnum == myplr && ScrollInfo._sdir) {
 			ViewX = plr[pnum]._px - ScrollInfo._sdx;
 			ViewY = plr[pnum]._py - ScrollInfo._sdy;
@@ -2358,153 +2246,16 @@ BOOL PM_DoWalk(int pnum)
 
 		ClearPlrPVars(pnum);
 
+		//Reset the "sub-tile" position of the player's light entry to 0
 		if (leveltype != DTYPE_TOWN) {
 			ChangeLightOff(plr[pnum]._plid, 0, 0);
 		}
-		rv = TRUE;
-	} else {
+
+		return true;
+	} else { //We didn't reach new tile so update player's "sub-tile" position
 		PM_ChangeOffset(pnum);
-		rv = FALSE;
+		return false;
 	}
-
-	return rv;
-}
-
-/**
- * @brief Movement towards SW, S, and SE
- */
-BOOL PM_DoWalk2(int pnum)
-{
-	int anim_len;
-	BOOL rv;
-
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PM_DoWalk2: illegal player %d", pnum);
-	}
-
-	if (!gbIsHellfire) {
-		if (plr[pnum]._pAnimFrame == 3
-		    || (plr[pnum]._pWFrames == 8 && plr[pnum]._pAnimFrame == 7)
-		    || (plr[pnum]._pWFrames != 8 && plr[pnum]._pAnimFrame == 4)) {
-			PlaySfxLoc(PS_WALK1, plr[pnum]._px, plr[pnum]._py);
-		}
-	}
-	if (gbIsHellfire && currlevel == 0 && jogging_opt) {
-		if (plr[pnum]._pAnimFrame % 2 == 0) {
-			plr[pnum]._pAnimFrame++;
-			plr[pnum]._pVar8++;
-		}
-		if (plr[pnum]._pAnimFrame >= plr[pnum]._pWFrames) {
-			plr[pnum]._pAnimFrame = 0;
-		}
-	}
-
-	anim_len = 8;
-	if (currlevel != 0) {
-		anim_len = AnimLenFromClass[plr[pnum]._pClass];
-	}
-
-	if (plr[pnum]._pVar8 >= anim_len) {
-		dPlayer[plr[pnum]._pVar1][plr[pnum]._pVar2] = 0;
-
-		if (leveltype != DTYPE_TOWN) {
-			ChangeLightXY(plr[pnum]._plid, plr[pnum]._px, plr[pnum]._py);
-			ChangeVisionXY(plr[pnum]._pvid, plr[pnum]._px, plr[pnum]._py);
-		}
-
-		if (pnum == myplr && ScrollInfo._sdir) {
-			ViewX = plr[pnum]._px - ScrollInfo._sdx;
-			ViewY = plr[pnum]._py - ScrollInfo._sdy;
-		}
-
-		if (plr[pnum].walkpath[0] != WALK_NONE) {
-			StartWalkStand(pnum);
-		} else {
-			StartStand(pnum, plr[pnum]._pVar3);
-		}
-
-		ClearPlrPVars(pnum);
-		if (leveltype != DTYPE_TOWN) {
-			ChangeLightOff(plr[pnum]._plid, 0, 0);
-		}
-		rv = TRUE;
-	} else {
-		PM_ChangeOffset(pnum);
-		rv = FALSE;
-	}
-
-	return rv;
-}
-
-/**
- * @brief Movement towards W and E
- */
-BOOL PM_DoWalk3(int pnum)
-{
-	int anim_len;
-	BOOL rv;
-
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PM_DoWalk3: illegal player %d", pnum);
-	}
-
-	if (!gbIsHellfire) {
-		if (plr[pnum]._pAnimFrame == 3
-		    || (plr[pnum]._pWFrames == 8 && plr[pnum]._pAnimFrame == 7)
-		    || (plr[pnum]._pWFrames != 8 && plr[pnum]._pAnimFrame == 4)) {
-			PlaySfxLoc(PS_WALK1, plr[pnum]._px, plr[pnum]._py);
-		}
-	}
-	if (gbIsHellfire && currlevel == 0 && jogging_opt) {
-		if (plr[pnum]._pAnimFrame % 2 == 0) {
-			plr[pnum]._pAnimFrame++;
-			plr[pnum]._pVar8++;
-		}
-		if (plr[pnum]._pAnimFrame >= plr[pnum]._pWFrames) {
-			plr[pnum]._pAnimFrame = 0;
-		}
-	}
-
-	anim_len = 8;
-	if (currlevel != 0) {
-		anim_len = AnimLenFromClass[plr[pnum]._pClass];
-	}
-
-	if (plr[pnum]._pVar8 >= anim_len) {
-		dPlayer[plr[pnum]._px][plr[pnum]._py] = 0;
-		dFlags[plr[pnum]._pVar4][plr[pnum]._pVar5] &= ~BFLAG_PLAYERLR;
-		plr[pnum]._px = plr[pnum]._pVar1;
-		plr[pnum]._py = plr[pnum]._pVar2;
-		dPlayer[plr[pnum]._px][plr[pnum]._py] = pnum + 1;
-
-		if (leveltype != DTYPE_TOWN) {
-			ChangeLightXY(plr[pnum]._plid, plr[pnum]._px, plr[pnum]._py);
-			ChangeVisionXY(plr[pnum]._pvid, plr[pnum]._px, plr[pnum]._py);
-		}
-
-		if (pnum == myplr && ScrollInfo._sdir) {
-			ViewX = plr[pnum]._px - ScrollInfo._sdx;
-			ViewY = plr[pnum]._py - ScrollInfo._sdy;
-		}
-
-		if (plr[pnum].walkpath[0] != WALK_NONE) {
-			StartWalkStand(pnum);
-		} else {
-			StartStand(pnum, plr[pnum]._pVar3);
-		}
-
-		ClearPlrPVars(pnum);
-
-		if (leveltype != DTYPE_TOWN) {
-			ChangeLightOff(plr[pnum]._plid, 0, 0);
-		}
-		rv = TRUE;
-	} else {
-		PM_ChangeOffset(pnum);
-		rv = FALSE;
-	}
-
-	return rv;
 }
 
 static bool WeaponDurDecay(int pnum, int ii)
@@ -3244,7 +2995,6 @@ BOOL PM_DoSpell(int pnum)
 		    plr[pnum]._py,
 		    plr[pnum]._pVar1,
 		    plr[pnum]._pVar2,
-		    0,
 		    plr[pnum]._pVar4);
 
 		if (plr[pnum]._pSplFrom == 0) {
@@ -3277,35 +3027,19 @@ BOOL PM_DoGotHit(int pnum)
 		app_fatal("PM_DoGotHit: illegal player %d", pnum);
 	}
 
-#ifdef HELLFIRE
-	if (plr[pnum]._pIFlags & (ISPL_FASTRECOVER | ISPL_FASTERRECOVER | ISPL_FASTESTRECOVER)) {
-		frame = 3;
-		if (plr[pnum]._pIFlags & ISPL_FASTERRECOVER)
-			frame = 4;
-		if (plr[pnum]._pIFlags & ISPL_FASTESTRECOVER)
-			frame = 5;
-		if (plr[pnum]._pVar8 > 1 && plr[pnum]._pVar8 < frame) {
-			plr[pnum]._pVar8 = frame;
-		}
-		if (plr[pnum]._pVar8 > plr[pnum]._pHFrames)
-			plr[pnum]._pVar8 = plr[pnum]._pHFrames;
-	}
-
-	if (plr[pnum]._pVar8 == plr[pnum]._pHFrames) {
-#else
 	frame = plr[pnum]._pAnimFrame;
 	if (plr[pnum]._pIFlags & ISPL_FASTRECOVER && frame == 3) {
 		plr[pnum]._pAnimFrame++;
 	}
 	if (plr[pnum]._pIFlags & ISPL_FASTERRECOVER && (frame == 3 || frame == 5)) {
-		plr[pnum]._pAnimFrame++;
+		if (!gbIsHellfire || !(plr[pnum]._pIFlags & ISPL_FASTESTRECOVER))
+			plr[pnum]._pAnimFrame++;
 	}
 	if (plr[pnum]._pIFlags & ISPL_FASTESTRECOVER && (frame == 1 || frame == 3 || frame == 5)) {
 		plr[pnum]._pAnimFrame++;
 	}
 
 	if (plr[pnum]._pAnimFrame >= plr[pnum]._pHFrames) {
-#endif
 		StartStand(pnum, plr[pnum]._pdir);
 		ClearPlrPVars(pnum);
 		if (random_(3, 4) != 0) {
@@ -3315,9 +3049,6 @@ BOOL PM_DoGotHit(int pnum)
 		return TRUE;
 	}
 
-#ifdef HELLFIRE
-	plr[pnum]._pVar8++;
-#endif
 	return FALSE;
 }
 
@@ -3332,7 +3063,7 @@ BOOL PM_DoDeath(int pnum)
 			deathdelay--;
 			if (deathdelay == 1) {
 				deathflag = TRUE;
-				if (gbMaxPlayers == 1) {
+				if (!gbIsMultiplayer) {
 					gamemenu_on();
 				}
 			}
@@ -3414,28 +3145,28 @@ void CheckNewPath(int pnum)
 
 			switch (plr[pnum].walkpath[0]) {
 			case WALK_N:
-				StartWalk(pnum, 0, -xvel, -1, -1, DIR_N, SDIR_N);
+				StartWalk(pnum, 0, -xvel, 0, 0, -1, -1, 0, 0, DIR_N, SDIR_N, PM_WALK);
 				break;
 			case WALK_NE:
-				StartWalk(pnum, xvel, -yvel, 0, -1, DIR_NE, SDIR_NE);
+				StartWalk(pnum, xvel, -yvel, 0, 0, 0, -1, 0, 0, DIR_NE, SDIR_NE, PM_WALK);
 				break;
 			case WALK_E:
-				StartWalk3(pnum, xvel3, 0, -32, -16, 1, -1, 1, 0, DIR_E, SDIR_E);
+				StartWalk(pnum, xvel3, 0, -32, -16, 1, -1, 1, 0, DIR_E, SDIR_E, PM_WALK3);
 				break;
 			case WALK_SE:
-				StartWalk2(pnum, xvel, yvel, -32, -16, 1, 0, DIR_SE, SDIR_SE);
+				StartWalk(pnum, xvel, yvel, -32, -16, 1, 0, 0, 0, DIR_SE, SDIR_SE, PM_WALK2);
 				break;
 			case WALK_S:
-				StartWalk2(pnum, 0, xvel, 0, -32, 1, 1, DIR_S, SDIR_S);
+				StartWalk(pnum, 0, xvel, 0, -32, 1, 1, 0, 0, DIR_S, SDIR_S, PM_WALK2);
 				break;
 			case WALK_SW:
-				StartWalk2(pnum, -xvel, yvel, 32, -16, 0, 1, DIR_SW, SDIR_SW);
+				StartWalk(pnum, -xvel, yvel, 32, -16, 0, 1, 0, 0, DIR_SW, SDIR_SW, PM_WALK2);
 				break;
 			case WALK_W:
-				StartWalk3(pnum, -xvel3, 0, 32, -16, -1, 1, 0, 1, DIR_W, SDIR_W);
+				StartWalk(pnum, -xvel3, 0, 32, -16, -1, 1, 0, 1, DIR_W, SDIR_W, PM_WALK3);
 				break;
 			case WALK_NW:
-				StartWalk(pnum, -xvel, -yvel, -1, 0, DIR_NW, SDIR_NW);
+				StartWalk(pnum, -xvel, -yvel, 0, 0, -1, 0, 0, 0, DIR_NW, SDIR_NW, PM_WALK);
 				break;
 			}
 
@@ -3529,7 +3260,7 @@ void CheckNewPath(int pnum)
 			i = plr[pnum].destParam1;
 			x = abs(plr[pnum]._px - object[i]._ox);
 			y = abs(plr[pnum]._py - object[i]._oy);
-			if (y > 1 && dObject[object[i]._ox][object[i]._oy - 1] == -1 - i) {
+			if (y > 1 && dObject[object[i]._ox][object[i]._oy - 1] == -(i + 1)) {
 				y = abs(plr[pnum]._py - object[i]._oy + 1);
 			}
 			if (x <= 1 && y <= 1) {
@@ -3545,7 +3276,7 @@ void CheckNewPath(int pnum)
 			i = plr[pnum].destParam1;
 			x = abs(plr[pnum]._px - object[i]._ox);
 			y = abs(plr[pnum]._py - object[i]._oy);
-			if (y > 1 && dObject[object[i]._ox][object[i]._oy - 1] == -1 - i) {
+			if (y > 1 && dObject[object[i]._ox][object[i]._oy - 1] == -(i + 1)) {
 				y = abs(plr[pnum]._py - object[i]._oy + 1);
 			}
 			if (x <= 1 && y <= 1) {
@@ -3625,7 +3356,7 @@ void CheckNewPath(int pnum)
 			i = plr[pnum].destParam1;
 			x = abs(plr[pnum]._px - object[i]._ox);
 			y = abs(plr[pnum]._py - object[i]._oy);
-			if (y > 1 && dObject[object[i]._ox][object[i]._oy - 1] == -1 - i) {
+			if (y > 1 && dObject[object[i]._ox][object[i]._oy - 1] == -(i + 1)) {
 				y = abs(plr[pnum]._py - object[i]._oy + 1);
 			}
 			if (x <= 1 && y <= 1) {
@@ -3846,13 +3577,9 @@ void ProcessPlayers()
 					tplayer = PM_DoStand(pnum);
 					break;
 				case PM_WALK:
-					tplayer = PM_DoWalk(pnum);
-					break;
 				case PM_WALK2:
-					tplayer = PM_DoWalk2(pnum);
-					break;
 				case PM_WALK3:
-					tplayer = PM_DoWalk3(pnum);
+					tplayer = PM_DoWalk(pnum, plr[pnum]._pmode);
 					break;
 				case PM_ATTACK:
 					tplayer = PM_DoAttack(pnum);
@@ -4188,7 +3915,7 @@ void SyncInitPlrPos(int pnum)
 	plr[pnum]._ptargx = plr[pnum]._px;
 	plr[pnum]._ptargy = plr[pnum]._py;
 
-	if (gbMaxPlayers == 1 || plr[pnum].plrlevel != currlevel) {
+	if (!gbIsMultiplayer || plr[pnum].plrlevel != currlevel) {
 		return;
 	}
 
@@ -4536,7 +4263,7 @@ void PlayDungMsgs()
 		app_fatal("PlayDungMsgs: illegal player %d", myplr);
 	}
 
-	if (currlevel == 1 && !plr[myplr]._pLvlVisited[1] && gbMaxPlayers == 1 && !(plr[myplr].pDungMsgs & DMSG_CATHEDRAL)) {
+	if (currlevel == 1 && !plr[myplr]._pLvlVisited[1] && !gbIsMultiplayer && !(plr[myplr].pDungMsgs & DMSG_CATHEDRAL)) {
 		sfxdelay = 40;
 		if (plr[myplr]._pClass == PC_WARRIOR) {
 			sfxdnum = PS_WARR97;
@@ -4552,7 +4279,7 @@ void PlayDungMsgs()
 			sfxdnum = PS_WARR97;
 		}
 		plr[myplr].pDungMsgs = plr[myplr].pDungMsgs | DMSG_CATHEDRAL;
-	} else if (currlevel == 5 && !plr[myplr]._pLvlVisited[5] && gbMaxPlayers == 1 && !(plr[myplr].pDungMsgs & DMSG_CATACOMBS)) {
+	} else if (currlevel == 5 && !plr[myplr]._pLvlVisited[5] && !gbIsMultiplayer && !(plr[myplr].pDungMsgs & DMSG_CATACOMBS)) {
 		sfxdelay = 40;
 		if (plr[myplr]._pClass == PC_WARRIOR) {
 			sfxdnum = PS_WARR96B;
@@ -4568,7 +4295,7 @@ void PlayDungMsgs()
 			sfxdnum = PS_WARR96B;
 		}
 		plr[myplr].pDungMsgs |= DMSG_CATACOMBS;
-	} else if (currlevel == 9 && !plr[myplr]._pLvlVisited[9] && gbMaxPlayers == 1 && !(plr[myplr].pDungMsgs & DMSG_CAVES)) {
+	} else if (currlevel == 9 && !plr[myplr]._pLvlVisited[9] && !gbIsMultiplayer && !(plr[myplr].pDungMsgs & DMSG_CAVES)) {
 		sfxdelay = 40;
 		if (plr[myplr]._pClass == PC_WARRIOR) {
 			sfxdnum = PS_WARR98;
@@ -4584,7 +4311,7 @@ void PlayDungMsgs()
 			sfxdnum = PS_WARR98;
 		}
 		plr[myplr].pDungMsgs |= DMSG_CAVES;
-	} else if (currlevel == 13 && !plr[myplr]._pLvlVisited[13] && gbMaxPlayers == 1 && !(plr[myplr].pDungMsgs & DMSG_HELL)) {
+	} else if (currlevel == 13 && !plr[myplr]._pLvlVisited[13] && !gbIsMultiplayer && !(plr[myplr].pDungMsgs & DMSG_HELL)) {
 		sfxdelay = 40;
 		if (plr[myplr]._pClass == PC_WARRIOR) {
 			sfxdnum = PS_WARR99;
@@ -4600,24 +4327,24 @@ void PlayDungMsgs()
 			sfxdnum = PS_WARR99;
 		}
 		plr[myplr].pDungMsgs |= DMSG_HELL;
-	} else if (currlevel == 16 && !plr[myplr]._pLvlVisited[15] && gbMaxPlayers == 1 && !(plr[myplr].pDungMsgs & DMSG_DIABLO)) { // BUGFIX: _pLvlVisited should check 16 or this message will never play
+	} else if (currlevel == 16 && !plr[myplr]._pLvlVisited[15] && !gbIsMultiplayer && !(plr[myplr].pDungMsgs & DMSG_DIABLO)) { // BUGFIX: _pLvlVisited should check 16 or this message will never play
 		sfxdelay = 40;
 		if (plr[myplr]._pClass == PC_WARRIOR || plr[myplr]._pClass == PC_ROGUE || plr[myplr]._pClass == PC_SORCERER || plr[myplr]._pClass == PC_MONK || plr[myplr]._pClass == PC_BARD || plr[myplr]._pClass == PC_BARBARIAN) {
 			sfxdnum = PS_DIABLVLINT;
 		}
 		plr[myplr].pDungMsgs |= DMSG_DIABLO;
-	} else if (currlevel == 17 && !plr[myplr]._pLvlVisited[17] && gbMaxPlayers == 1 && !(plr[myplr].pDungMsgs2 & 1)) {
+	} else if (currlevel == 17 && !plr[myplr]._pLvlVisited[17] && !gbIsMultiplayer && !(plr[myplr].pDungMsgs2 & 1)) {
 		sfxdelay = 10;
 		sfxdnum = USFX_DEFILER1;
 		quests[Q_DEFILER]._qactive = 2;
 		quests[Q_DEFILER]._qlog = 1;
 		quests[Q_DEFILER]._qmsg = 286;
 		plr[myplr].pDungMsgs2 |= 1;
-	} else if (currlevel == 19 && !plr[myplr]._pLvlVisited[19] && gbMaxPlayers == 1 && !(plr[myplr].pDungMsgs2 & 4)) {
+	} else if (currlevel == 19 && !plr[myplr]._pLvlVisited[19] && !gbIsMultiplayer && !(plr[myplr].pDungMsgs2 & 4)) {
 		sfxdelay = 10;
 		sfxdnum = USFX_DEFILER3;
 		plr[myplr].pDungMsgs2 |= 4;
-	} else if (currlevel == 21 && !plr[myplr]._pLvlVisited[21] && gbMaxPlayers == 1 && !(plr[myplr].pDungMsgs & 32)) {
+	} else if (currlevel == 21 && !plr[myplr]._pLvlVisited[21] && !gbIsMultiplayer && !(plr[myplr].pDungMsgs & 32)) {
 		sfxdelay = 30;
 		if (plr[myplr]._pClass == PC_WARRIOR) {
 			sfxdnum = PS_WARR92;

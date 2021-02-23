@@ -16,7 +16,6 @@ static int AutoMapX;
 static int AutoMapY;
 /** Specifies whether the automap is enabled. */
 BOOL automapflag;
-char AmShiftTab[32];
 /** Tracks the explored areas of the map. */
 BOOLEAN automapview[DMAXX][DMAXY];
 /** Specifies the scale of the automap. */
@@ -72,7 +71,7 @@ void InitAutomap()
 	DWORD dwTiles;
 	int x, y;
 	BYTE *pAFile, *pTmp;
-	int i;
+	DWORD i;
 
 	memset(automaptype, 0, sizeof(automaptype));
 
@@ -592,7 +591,7 @@ static void DrawAutomapText()
 	char desc[256];
 	int nextline = 20;
 
-	if (gbMaxPlayers > 1) {
+	if (gbIsMultiplayer) {
 		strcat(strcpy(desc, "game: "), szPlayerName);
 		PrintGameStr(8, 20, desc, COL_GOLD);
 		nextline = 35;
