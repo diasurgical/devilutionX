@@ -389,14 +389,9 @@ const char gszHelpText[] = {
 	"Z: Zoom Game Screen|"
 	"+ / -: Zoom Automap|"
 	"1 - 8: Use Belt item|"
-<<<<<<< HEAD
-	"F5, F6, F7, F8:     Set hot key for skill or spell|"
-	"Shift + Left Click: Attack without moving|"
-=======
 	"F5, F6, F7, F8:     Set hotkey for skill or spell|"
 	"Shift + Left Click: Attack without moving|"
 	"Shift + Left Click (on character screen): Assign all stat points|"
->>>>>>> f49b55cbe1e56744faf616cdde64b3a8202b1024
 	"|"
 	"$Movement:|"
 	"If you hold the mouse button down while moving, the character "
