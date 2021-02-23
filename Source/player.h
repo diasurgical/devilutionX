@@ -26,12 +26,13 @@ void SetPlrAnims(int pnum);
 void ClearPlrRVars(PlayerStruct *p);
 void CreatePlayer(int pnum, char c);
 int CalcStatDiff(int pnum);
+#ifdef _DEBUG
 void NextPlrLevel(int pnum);
+#endif
 void AddPlrExperience(int pnum, int lvl, int exp);
 void AddPlrMonstExper(int lvl, int exp, char pmask);
 void InitPlayer(int pnum, BOOL FirstTime);
 void InitMultiView();
-void CheckEFlag(int pnum, BOOL flag);
 BOOL SolidLoc(int x, int y);
 void PlrClrTrans(int x, int y);
 void PlrDoTrans(int x, int y);

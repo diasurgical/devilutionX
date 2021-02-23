@@ -18,6 +18,7 @@ int leverid;
 int objectavail[MAXOBJECTS];
 ObjectStruct object[MAXOBJECTS];
 BOOL InitObjFlag;
+BOOL LoadMapObjsFlag;
 int numobjfiles;
 int dword_6DE0E0;
 
@@ -27,40 +28,40 @@ int bxadd[8] = { -1, 0, 1, -1, 1, -1, 0, 1 };
 int byadd[8] = { -1, -1, -1, 0, 0, 1, 1, 1 };
 /** Maps from shrine_id to shrine name. */
 const char *const shrinestrs[] = {
-	"MNCTN4ECKOE",
-	"CKPLITOE",
-	"MPA4HOE",
-	"CTPAHHOE",
-	"MAFN4ECKOE",
-	"KAMEHHOE",
-	"PE/NFNO3HOE",
-	"3A4APOBAHHOE",
-	"4YDOTBOPHOE",
-	"3ABOPA)KNBAWVEE",
-	"TA&HOE",
-	"MAFN4ECKOE",
-	")KYTKOE",
-	"3/OBEVEE",
-	"#O)KECTBEHHOE",
-	"CBRTOE",
-	"TA&HOE",
-	"DYXOBHOE",
-	"ZPN3PA4HOE",
-	"ZOKNHYTOE",
-	"CTPAUHOE",
-	"TNXOE",
-	"YEDNHEHHOE",
-	"YKPAUEHHOE",
-	"MEPQAWVEE",
-	"3AZRTHAHHOE",
-	"MAC/RHNCTOE",
-	"CNRWVEE",
-	"ACKETN4HOE",
-	"CBEPKAWVEE",
-	"FOPODCKOE",
-	"#/ECTRVEE",
-	"CO/HE4HOE",
-	"N3MEH4NBOE",
+	"Mysterious",
+	"Hidden",
+	"Gloomy",
+	"Weird",
+	"Magical",
+	"Stone",
+	"Religious",
+	"Enchanted",
+	"Thaumaturgic",
+	"Fascinating",
+	"Cryptic",
+	"Magical",
+	"Eldritch",
+	"Eerie",
+	"Divine",
+	"Holy",
+	"Sacred",
+	"Spiritual",
+	"Spooky",
+	"Abandoned",
+	"Creepy",
+	"Quiet",
+	"Secluded",
+	"Ornate",
+	"Glimmering",
+	"Tainted",
+	"Oily",
+	"Glowing",
+	"Mendicant's",
+	"Sparkling",
+	"Town",
+	"Shimmering",
+	"Solar",
+	"Murphy's",
 };
 /** Specifies the minimum dungeon level on which each shrine will appear. */
 char shrinemin[] = {
@@ -181,22 +182,22 @@ BYTE shrineavail[] = {
 };
 /** Maps from book_id to book name. */
 const char *const StoryBookName[] = {
-	"BE/NKN& KOH(P/NKT",
-	"BO&HA ECTL ZPN4NHA FPEXA",
-	"/EFEHDA O XOPADPNME",
-	"N3FHAHNE TLMLI",
-	"BO&HA FPEXA",
-	"O ZONMKE N 3ATO4EHNN TPEX",
-	"DA/LHNE QAPCTBA",
-	"CKA3AHNE O TPEX",
-	"4EPHLI& KOPO/L",
-	")KYPHA/ - 3AK/RTNE",
-	")KYPHA/ - BCTPE4A",
-	")KYPHA/ - CDE/KA",
-	")KYPHA/ - EFO CN/A PACTET",
-	")KYPHA/ - HA-KPY/",
-	")KYPHA/ - KOHEQ",
-	"KHNFA 3AK/NHAHN&",
+	"The Great Conflict",
+	"The Wages of Sin are War",
+	"The Tale of the Horadrim",
+	"The Dark Exile",
+	"The Sin War",
+	"The Binding of the Three",
+	"The Realms Beyond",
+	"Tale of the Three",
+	"The Black King",
+	"Journal: The Ensorcellment",
+	"Journal: The Meeting",
+	"Journal: The Tirade",
+	"Journal: His Power Grows",
+	"Journal: NA-KRUL",
+	"Journal: The End",
+	"A Spellbook",
 };
 /** Specifies the speech IDs of each dungeon type narrator book, for each player class. */
 int StoryText[3][3] = {
@@ -690,6 +691,7 @@ void LoadMapObjects(BYTE *pMap, int startx, int starty, int x1, int y1, int w, i
 	BYTE *lm;
 	long mapoff;
 
+	LoadMapObjsFlag = TRUE;
 	InitObjFlag = TRUE;
 
 	lm = pMap;
@@ -714,6 +716,7 @@ void LoadMapObjects(BYTE *pMap, int startx, int starty, int x1, int y1, int w, i
 		}
 	}
 	InitObjFlag = FALSE;
+	LoadMapObjsFlag = FALSE;
 }
 
 void LoadMapObjs(BYTE *pMap, int startx, int starty)
@@ -723,6 +726,7 @@ void LoadMapObjs(BYTE *pMap, int startx, int starty)
 	BYTE *lm;
 	long mapoff;
 
+	LoadMapObjsFlag = TRUE;
 	InitObjFlag = TRUE;
 	lm = pMap;
 	rw = *lm;
@@ -743,6 +747,7 @@ void LoadMapObjs(BYTE *pMap, int startx, int starty)
 		}
 	}
 	InitObjFlag = FALSE;
+	LoadMapObjsFlag = FALSE;
 }
 
 void AddDiabObjs()
@@ -972,8 +977,8 @@ void InitObjects()
 		AddDiabObjs();
 	} else {
 		InitObjFlag = TRUE;
-		GetRndSeed();
-		if (currlevel == 9 && gbMaxPlayers == 1)
+		AdvanceRndSeed();
+		if (currlevel == 9 && !gbIsMultiplayer)
 			AddSlainHero();
 		if (currlevel == quests[Q_MUSHROOM]._qlevel && quests[Q_MUSHROOM]._qactive == QUEST_INIT)
 			AddMushPatch();
@@ -1078,7 +1083,7 @@ void InitObjects()
 				LoadMapObjs(mem, 2 * setpc_x, 2 * setpc_y);
 				mem_free_dbg(mem);
 			}
-			if (QuestStatus(Q_BETRAYER) && gbMaxPlayers == 1)
+			if (QuestStatus(Q_BETRAYER) && !gbIsMultiplayer)
 				AddLazStand();
 			InitRndBarrels();
 			AddL4Goodies();
@@ -1245,7 +1250,7 @@ void AddChest(int i, int t)
 {
 	if (random_(147, 2) == 0)
 		object[i]._oAnimFrame += 3;
-	object[i]._oRndSeed = GetRndSeed();
+	object[i]._oRndSeed = AdvanceRndSeed();
 	switch (t) {
 	case OBJ_CHEST1:
 	case OBJ_TCHEST1:
@@ -1299,7 +1304,7 @@ void AddSarc(int i)
 {
 	dObject[object[i]._ox][object[i]._oy - 1] = -(i + 1);
 	object[i]._oVar1 = random_(153, 10);
-	object[i]._oRndSeed = GetRndSeed();
+	object[i]._oRndSeed = AdvanceRndSeed();
 	if (object[i]._oVar1 >= 8)
 		object[i]._oVar2 = PreSpawnSkeleton();
 }
@@ -1352,7 +1357,7 @@ void AddObjLight(int i, int r)
 void AddBarrel(int i, int t)
 {
 	object[i]._oVar1 = 0;
-	object[i]._oRndSeed = GetRndSeed();
+	object[i]._oRndSeed = AdvanceRndSeed();
 	object[i]._oVar2 = (t == OBJ_BARRELEX) ? 0 : random_(149, 10);
 	object[i]._oVar3 = random_(149, 3);
 
@@ -1375,10 +1380,10 @@ void AddShrine(int i)
 		} else {
 			slist[j] = 1;
 		}
-		if (gbMaxPlayers != 1 && shrineavail[j] == 1) {
+		if (gbIsMultiplayer && shrineavail[j] == 1) {
 			slist[j] = 0;
 		}
-		if (gbMaxPlayers == 1 && shrineavail[j] == 2) {
+		if (!gbIsMultiplayer && shrineavail[j] == 2) {
 			slist[j] = 0;
 		}
 	}
@@ -1395,18 +1400,18 @@ void AddShrine(int i)
 
 void AddBookcase(int i)
 {
-	object[i]._oRndSeed = GetRndSeed();
+	object[i]._oRndSeed = AdvanceRndSeed();
 	object[i]._oPreFlag = TRUE;
 }
 
 void AddBookstand(int i)
 {
-	object[i]._oRndSeed = GetRndSeed();
+	object[i]._oRndSeed = AdvanceRndSeed();
 }
 
 void AddBloodFtn(int i)
 {
-	object[i]._oRndSeed = GetRndSeed();
+	object[i]._oRndSeed = AdvanceRndSeed();
 }
 
 void AddPurifyingFountain(int i)
@@ -1415,10 +1420,10 @@ void AddPurifyingFountain(int i)
 
 	ox = object[i]._ox;
 	oy = object[i]._oy;
-	dObject[ox][oy - 1] = -1 - i;
-	dObject[ox - 1][oy] = -1 - i;
-	dObject[ox - 1][oy - 1] = -1 - i;
-	object[i]._oRndSeed = GetRndSeed();
+	dObject[ox][oy - 1] = -(i + 1);
+	dObject[ox - 1][oy] = -(i + 1);
+	dObject[ox - 1][oy - 1] = -(i + 1);
+	object[i]._oRndSeed = AdvanceRndSeed();
 }
 
 void AddArmorStand(int i)
@@ -1428,17 +1433,17 @@ void AddArmorStand(int i)
 		object[i]._oSelFlag = 0;
 	}
 
-	object[i]._oRndSeed = GetRndSeed();
+	object[i]._oRndSeed = AdvanceRndSeed();
 }
 
 void AddGoatShrine(int i)
 {
-	object[i]._oRndSeed = GetRndSeed();
+	object[i]._oRndSeed = AdvanceRndSeed();
 }
 
 void AddCauldron(int i)
 {
-	object[i]._oRndSeed = GetRndSeed();
+	object[i]._oRndSeed = AdvanceRndSeed();
 }
 
 void AddMurkyFountain(int i)
@@ -1447,20 +1452,20 @@ void AddMurkyFountain(int i)
 
 	ox = object[i]._ox;
 	oy = object[i]._oy;
-	dObject[ox][oy - 1] = -1 - i;
-	dObject[ox - 1][oy] = -1 - i;
-	dObject[ox - 1][oy - 1] = -1 - i;
-	object[i]._oRndSeed = GetRndSeed();
+	dObject[ox][oy - 1] = -(i + 1);
+	dObject[ox - 1][oy] = -(i + 1);
+	dObject[ox - 1][oy - 1] = -(i + 1);
+	object[i]._oRndSeed = AdvanceRndSeed();
 }
 
 void AddTearFountain(int i)
 {
-	object[i]._oRndSeed = GetRndSeed();
+	object[i]._oRndSeed = AdvanceRndSeed();
 }
 
 void AddDecap(int i)
 {
-	object[i]._oRndSeed = GetRndSeed();
+	object[i]._oRndSeed = AdvanceRndSeed();
 	object[i]._oAnimFrame = random_(151, 8) + 1;
 	object[i]._oPreFlag = TRUE;
 }
@@ -1474,7 +1479,7 @@ void AddVilebook(int i)
 
 void AddMagicCircle(int i)
 {
-	object[i]._oRndSeed = GetRndSeed();
+	object[i]._oRndSeed = AdvanceRndSeed();
 	object[i]._oPreFlag = TRUE;
 	object[i]._oVar6 = 0;
 	object[i]._oVar5 = 1;
@@ -1482,7 +1487,7 @@ void AddMagicCircle(int i)
 
 void AddBrnCross(int i)
 {
-	object[i]._oRndSeed = GetRndSeed();
+	object[i]._oRndSeed = AdvanceRndSeed();
 }
 
 void AddPedistal(int i)
@@ -1491,6 +1496,7 @@ void AddPedistal(int i)
 	object[i]._oVar2 = setpc_y;
 	object[i]._oVar3 = setpc_x + setpc_w;
 	object[i]._oVar4 = setpc_y + setpc_h;
+	object[i]._oVar6 = 0;
 }
 
 void AddStoryBook(int i)
@@ -1515,12 +1521,12 @@ void AddWeaponRack(int i)
 		object[i]._oAnimFlag = 2;
 		object[i]._oSelFlag = 0;
 	}
-	object[i]._oRndSeed = GetRndSeed();
+	object[i]._oRndSeed = AdvanceRndSeed();
 }
 
 void AddTorturedBody(int i)
 {
-	object[i]._oRndSeed = GetRndSeed();
+	object[i]._oRndSeed = AdvanceRndSeed();
 	object[i]._oAnimFrame = random_(0, 4) + 1;
 	object[i]._oPreFlag = TRUE;
 }
@@ -1559,9 +1565,9 @@ void AddMushPatch()
 	if (nobjects < MAXOBJECTS) {
 		i = objectavail[0];
 		GetRndObjLoc(5, &x, &y);
-		dObject[x + 1][y + 1] = -1 - i;
-		dObject[x + 2][y + 1] = -1 - i;
-		dObject[x + 1][y + 2] = -1 - i;
+		dObject[x + 1][y + 1] = -(i + 1);
+		dObject[x + 2][y + 1] = -(i + 1);
+		dObject[x + 1][y + 2] = -(i + 1);
 		AddObject(OBJ_MUSHPATCH, x + 2, y + 2);
 	}
 }
@@ -1866,7 +1872,7 @@ void Obj_Circle(int i)
 		if (ox == 35 && oy == 36 && object[i]._oVar5 == 3) {
 			object[i]._oVar6 = 4;
 			ObjChangeMapResync(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
-			if (quests[Q_BETRAYER]._qactive == QUEST_ACTIVE)
+			if (quests[Q_BETRAYER]._qactive == QUEST_ACTIVE && quests[Q_BETRAYER]._qvar1 <= 4) // BUGFIX stepping on the circle again will break the quest state (fixed)
 				quests[Q_BETRAYER]._qvar1 = 4;
 			AddMissile(plr[myplr]._px, plr[myplr]._py, 35, 46, plr[myplr]._pdir, MIS_RNDTELEPORT, TARGET_MONSTERS, myplr, 0, 0);
 			track_repeat_walk(FALSE);
@@ -2902,26 +2908,26 @@ void OperateBook(int pnum, int i)
 		return;
 
 	if (setlvlnum == SL_BONECHAMB) {
-		plr[myplr]._pMemSpells |= SPELLBIT(SPL_GUARDIAN);
+		plr[pnum]._pMemSpells |= SPELLBIT(SPL_GUARDIAN);
 		if (plr[pnum]._pSplLvl[SPL_GUARDIAN] < MAX_SPELL_LEVEL)
-			plr[myplr]._pSplLvl[SPL_GUARDIAN]++;
+			plr[pnum]._pSplLvl[SPL_GUARDIAN]++;
 		quests[Q_SCHAMB]._qactive = QUEST_DONE;
 		if (!deltaload)
 			PlaySfxLoc(IS_QUESTDN, object[i]._ox, object[i]._oy);
 		InitDiabloMsg(EMSG_BONECHAMB);
 		AddMissile(
-		    plr[myplr]._px,
-		    plr[myplr]._py,
+		    plr[pnum]._px,
+		    plr[pnum]._py,
 		    object[i]._ox - 2,
 		    object[i]._oy - 4,
-		    plr[myplr]._pdir,
+		    plr[pnum]._pdir,
 		    MIS_GUARDIAN,
 		    TARGET_MONSTERS,
-		    myplr,
+		    pnum,
 		    0,
 		    0);
 	}
-	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
+	if (setlvlnum == SL_VILEBETRAYER) {
 		ObjChangeMapResync(
 		    object[i]._oVar1,
 		    object[i]._oVar2,
@@ -2938,6 +2944,9 @@ void OperateBookLever(int pnum, int i)
 
 	x = 2 * setpc_x + 16;
 	y = 2 * setpc_y + 16;
+	if (numitems >= MAXITEMS) {
+		return;
+	}
 	if (object[i]._oSelFlag != 0 && !qtextflag) {
 		if (object[i]._otype == OBJ_BLINDBOOK && quests[Q_BLIND]._qvar1 == 0) {
 			quests[Q_BLIND]._qactive = QUEST_ACTIVE;
@@ -2948,8 +2957,6 @@ void OperateBookLever(int pnum, int i)
 			quests[Q_BLOOD]._qactive = QUEST_ACTIVE;
 			quests[Q_BLOOD]._qlog = TRUE;
 			quests[Q_BLOOD]._qvar1 = 1;
-			SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 19, 2 * setpc_y + 26, 0, 1);
-			SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 31, 2 * setpc_y + 26, 0, 1);
 			SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 25, 2 * setpc_y + 33, 0, 1);
 		}
 		object[i]._otype = object[i]._otype;
@@ -3070,6 +3077,10 @@ void OperateMushPatch(int pnum, int i)
 {
 	int x, y;
 
+	if (numitems >= MAXITEMS) {
+		return;
+	}
+
 	if (quests[Q_MUSHROOM]._qactive != QUEST_ACTIVE || quests[Q_MUSHROOM]._qvar1 < QS_TOMEGIVEN) {
 		if (!deltaload && pnum == myplr) {
 			if (plr[myplr]._pClass == PC_WARRIOR) {
@@ -3104,6 +3115,10 @@ void OperateMushPatch(int pnum, int i)
 void OperateInnSignChest(int pnum, int i)
 {
 	int x, y;
+
+	if (numitems >= MAXITEMS) {
+		return;
+	}
 
 	if (quests[Q_LTBANNER]._qvar1 != 2) {
 		if (!deltaload && pnum == myplr) {
@@ -3249,21 +3264,25 @@ void OperatePedistal(int pnum, int i)
 	BYTE *mem;
 	int iv;
 
-	if (object[i]._oVar6 != 3) {
-		if (PlrHasItem(pnum, IDI_BLDSTONE, &iv) != NULL) {
-			RemoveInvItem(pnum, iv);
-			object[i]._oAnimFrame++;
-			object[i]._oVar6++;
-		}
+	if (numitems >= MAXITEMS) {
+		return;
+	}
+
+	if (object[i]._oVar6 != 3 && PlrHasItem(pnum, IDI_BLDSTONE, &iv) != NULL) {
+		RemoveInvItem(pnum, iv);
+		object[i]._oAnimFrame++;
+		object[i]._oVar6++;
 		if (object[i]._oVar6 == 1) {
 			if (!deltaload)
 				PlaySfxLoc(LS_PUDDLE, object[i]._ox, object[i]._oy);
 			ObjChangeMap(setpc_x, setpc_y + 3, setpc_x + 2, setpc_y + 7);
+			SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 19, 2 * setpc_y + 26, 0, 1);
 		}
 		if (object[i]._oVar6 == 2) {
 			if (!deltaload)
 				PlaySfxLoc(LS_PUDDLE, object[i]._ox, object[i]._oy);
 			ObjChangeMap(setpc_x + 6, setpc_y + 3, setpc_x + setpc_w, setpc_y + 7);
+			SpawnQuestItem(IDI_BLDSTONE, 2 * setpc_x + 31, 2 * setpc_y + 26, 0, 1);
 		}
 		if (object[i]._oVar6 == 3) {
 			if (!deltaload)
@@ -3591,7 +3610,7 @@ void OperateShrine(int pnum, int i, int sType)
 			        || object[v1]._otype == OBJ_CHEST2
 			        || object[v1]._otype == OBJ_CHEST3)
 			    && object[v1]._oSelFlag == 0) {
-				object[v1]._oRndSeed = GetRndSeed();
+				object[v1]._oRndSeed = AdvanceRndSeed();
 				object[v1]._oSelFlag = 1;
 				object[v1]._oAnimFrame -= 2;
 			}
@@ -3771,7 +3790,7 @@ void OperateShrine(int pnum, int i, int sType)
 				r = 5 * leveltype + random_(160, 10 * leveltype);
 				t = plr[pnum]._pNumInv; // check
 				plr[pnum].InvList[t] = golditem;
-				plr[pnum].InvList[t]._iSeed = GetRndSeed();
+				plr[pnum].InvList[t]._iSeed = AdvanceRndSeed();
 				plr[pnum]._pNumInv++;
 				plr[pnum].InvGrid[j] = plr[pnum]._pNumInv;
 				plr[pnum].InvList[t]._ivalue = r;
@@ -3955,7 +3974,7 @@ void OperateShrine(int pnum, int i, int sType)
 		    plr[myplr]._pdir,
 		    MIS_FIREWALL,
 		    TARGET_PLAYERS,
-		    0,
+		    -1,
 		    2 * currlevel + 2,
 		    0);
 		break;
@@ -4006,7 +4025,7 @@ void OperateShrine(int pnum, int i, int sType)
 		    plr[myplr]._pdir,
 		    MIS_FLASH,
 		    TARGET_PLAYERS,
-		    0,
+		    -1,
 		    3 * currlevel + 2,
 		    0);
 		CheckStats(pnum);
@@ -4025,7 +4044,7 @@ void OperateShrine(int pnum, int i, int sType)
 		    plr[myplr]._pdir,
 		    MIS_TOWN,
 		    TARGET_PLAYERS,
-		    0,
+		    pnum,
 		    0,
 		    0);
 		break;
@@ -4191,13 +4210,13 @@ int FindValidShrine(int i)
 			done = TRUE;
 		}
 		if (done) {
-			if (gbMaxPlayers != 1) {
+			if (gbIsMultiplayer) {
 				if (shrineavail[rv] == 1) {
 					done = FALSE;
 					continue;
 				}
 			}
-			if (gbMaxPlayers == 1) {
+			if (!gbIsMultiplayer) {
 				if (shrineavail[rv] == 2) {
 					done = FALSE;
 					continue;
@@ -4376,10 +4395,8 @@ void OperateWeaponRack(int pnum, int i, bool sendmsg)
 	if (deltaload)
 		return;
 
-	if (leveltype > 1)
-		CreateTypeItem(object[i]._ox, object[i]._oy, TRUE, weaponType, IMISC_NONE, sendmsg, FALSE);
-	else
-		CreateTypeItem(object[i]._ox, object[i]._oy, FALSE, weaponType, IMISC_NONE, sendmsg, FALSE);
+	CreateTypeItem(object[i]._ox, object[i]._oy, leveltype > 1, weaponType, IMISC_NONE, sendmsg, FALSE);
+
 	if (pnum == myplr)
 		NetSendCmdParam1(FALSE, CMD_OPERATEOBJ, i);
 }
@@ -4407,6 +4424,10 @@ void OperateStoryBook(int pnum, int i)
 void OperateLazStand(int pnum, int i)
 {
 	int xx, yy;
+
+	if (numitems >= MAXITEMS) {
+		return;
+	}
 
 	if (object[i]._oSelFlag != 0 && !deltaload && !qtextflag && pnum == myplr) {
 		object[i]._oAnimFrame++;
@@ -4600,9 +4621,9 @@ void SyncOpL3Door(int pnum, int cmd, int i)
 		do_sync = TRUE;
 	if (do_sync) {
 		if (object[i]._otype == OBJ_L3LDOOR)
-			OperateL2LDoor(-1, i, FALSE);
+			OperateL3LDoor(-1, i, FALSE);
 		if (object[i]._otype == OBJ_L3RDOOR)
-			OperateL2RDoor(-1, i, FALSE);
+			OperateL3RDoor(-1, i, FALSE);
 	}
 }
 
@@ -5027,11 +5048,11 @@ void GetObjectStr(int i)
 	case OBJ_CRUX1:
 	case OBJ_CRUX2:
 	case OBJ_CRUX3:
-		strcpy(infostr, "BNCRVN& CKE/ET");
+		strcpy(infostr, "Crucified Skeleton");
 		break;
 	case OBJ_LEVER:
 	case OBJ_FLAMELVR:
-		strcpy(infostr, "PLI4AF");
+		strcpy(infostr, "Lever");
 		break;
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
@@ -5040,129 +5061,129 @@ void GetObjectStr(int i)
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
 		if (object[i]._oVar4 == 1)
-			strcpy(infostr, "OTKPLITAR DBEPL");
+			strcpy(infostr, "Open Door");
 		if (object[i]._oVar4 == 0)
-			strcpy(infostr, "3AKPLITAR DBEPL");
+			strcpy(infostr, "Closed Door");
 		if (object[i]._oVar4 == 2)
-			strcpy(infostr, "3A#/OKNPOBAHHAR DBEPL");
+			strcpy(infostr, "Blocked Door");
 		break;
 	case OBJ_BOOK2L:
 		if (setlevel) {
 			if (setlvlnum == SL_BONECHAMB) {
-				strcpy(infostr, "DPEBHN& TOM");
+				strcpy(infostr, "Ancient Tome");
 			} else if (setlvlnum == SL_VILEBETRAYER) {
-				strcpy(infostr, "TOM 3/A");
+				strcpy(infostr, "Book of Vileness");
 			}
 		}
 		break;
 	case OBJ_SWITCHSKL:
-		strcpy(infostr, "PLI4AF");
+		strcpy(infostr, "Skull Lever");
 		break;
 	case OBJ_BOOK2R:
-		strcpy(infostr, "MNCTN4ECKAR KHNFA");
+		strcpy(infostr, "Mythical Book");
 		break;
 	case OBJ_CHEST1:
 	case OBJ_TCHEST1:
-		strcpy(infostr, "MA/LI& CYHDYK");
+		strcpy(infostr, "Small Chest");
 		break;
 	case OBJ_CHEST2:
 	case OBJ_TCHEST2:
-		strcpy(infostr, "CYHDYK");
+		strcpy(infostr, "Chest");
 		break;
 	case OBJ_CHEST3:
 	case OBJ_TCHEST3:
 	case OBJ_SIGNCHEST:
-		strcpy(infostr, "#O/LUO& CYHDYK");
+		strcpy(infostr, "Large Chest");
 		break;
 	case OBJ_SARC:
-		strcpy(infostr, "CAPKO(PAF");
+		strcpy(infostr, "Sarcophagus");
 		break;
 	case OBJ_BOOKSHELF:
-		strcpy(infostr, "KHN)KHAR ZO/KA");
+		strcpy(infostr, "Bookshelf");
 		break;
 	case OBJ_BOOKCASEL:
 	case OBJ_BOOKCASER:
-		strcpy(infostr, "KHN)KHLI& UKA(P");
+		strcpy(infostr, "Bookcase");
 		break;
 	case OBJ_BARREL:
 	case OBJ_BARRELEX:
 		if (currlevel >= 17 && currlevel <= 20)      // for hive levels
-			strcpy(infostr, "KOKOH");                  //Then a barrel is called a pod
+			strcpy(infostr, "Pod");                  //Then a barrel is called a pod
 		else if (currlevel >= 21 && currlevel <= 24) // for crypt levels
-			strcpy(infostr, "YPHA");                  //Then a barrel is called an urn
+			strcpy(infostr, "Urn");                  //Then a barrel is called an urn
 		else
-			strcpy(infostr, "#O4KA");
+			strcpy(infostr, "Barrel");
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
-		sprintf(tempstr, "%s CBRTN/NVE", shrinestrs[object[i]._oVar1]);
+		sprintf(tempstr, "%s Shrine", shrinestrs[object[i]._oVar1]);
 		strcpy(infostr, tempstr);
 		break;
 	case OBJ_SKELBOOK:
-		strcpy(infostr, "TOM CKE/ETOB");
+		strcpy(infostr, "Skeleton Tome");
 		break;
 	case OBJ_BOOKSTAND:
-		strcpy(infostr, "KHNFA");
+		strcpy(infostr, "Library Book");
 		break;
 	case OBJ_BLOODFTN:
-		strcpy(infostr, "(POHTAH KPOBN");
+		strcpy(infostr, "Blood Fountain");
 		break;
 	case OBJ_DECAP:
-		strcpy(infostr, "O#E3F/AB/EHHOE TE/O");
+		strcpy(infostr, "Decapitated Body");
 		break;
 	case OBJ_BLINDBOOK:
-		strcpy(infostr, "KHNFA C/EZLIX");
+		strcpy(infostr, "Book of the Blind");
 		break;
 	case OBJ_BLOODBOOK:
-		strcpy(infostr, "KHNFA KPOBN");
+		strcpy(infostr, "Book of Blood");
 		break;
 	case OBJ_PURIFYINGFTN:
-		strcpy(infostr, "4NCTAR KYZE/L");
+		strcpy(infostr, "Purifying Spring");
 		break;
 	case OBJ_ARMORSTAND:
 	case OBJ_WARARMOR:
-		strcpy(infostr, "DOCZEX");
+		strcpy(infostr, "Armor");
 		break;
 	case OBJ_WARWEAP:
-		strcpy(infostr, "CTO&KA D/R OPY)KNR");
+		strcpy(infostr, "Weapon Rack");
 		break;
 	case OBJ_GOATSHRINE:
-		strcpy(infostr, "POFATAR CBRTLIHR");
+		strcpy(infostr, "Goat Shrine");
 		break;
 	case OBJ_CAULDRON:
-		strcpy(infostr, "KOTE/");
+		strcpy(infostr, "Cauldron");
 		break;
 	case OBJ_MURKYFTN:
-		strcpy(infostr, "MYTHLI& NCTO4HNK");
+		strcpy(infostr, "Murky Pool");
 		break;
 	case OBJ_TEARFTN:
-		strcpy(infostr, "(POHTAH C/S3");
+		strcpy(infostr, "Fountain of Tears");
 		break;
 	case OBJ_STEELTOME:
-		strcpy(infostr, "TOM CTA/N");
+		strcpy(infostr, "Steel Tome");
 		break;
 	case OBJ_PEDISTAL:
-		strcpy(infostr, "ZLEDECTA/ KPOBN");
+		strcpy(infostr, "Pedestal of Blood");
 		break;
 	case OBJ_STORYBOOK:
 		strcpy(infostr, StoryBookName[object[i]._oVar3]);
 		break;
 	case OBJ_WEAPONRACK:
-		strcpy(infostr, "CTO&KA C OPY)KNEM");
+		strcpy(infostr, "Weapon Rack");
 		break;
 	case OBJ_MUSHPATCH:
-		strcpy(infostr, "ZOPOC/L FPN#OB");
+		strcpy(infostr, "Mushroom Patch");
 		break;
 	case OBJ_LAZSTAND:
-		strcpy(infostr, "CTO&KA 3/A");
+		strcpy(infostr, "Vile Stand");
 		break;
 	case OBJ_SLAINHERO:
-		strcpy(infostr, "ZOFN#UN& FEPO&");
+		strcpy(infostr, "Slain Hero");
 		break;
 	}
 	if (plr[myplr]._pClass == PC_ROGUE) {
 		if (object[i]._oTrapFlag) {
-			sprintf(tempstr, "/OBYUKA %s", infostr);
+			sprintf(tempstr, "Trapped %s", infostr);
 			strcpy(infostr, tempstr);
 			infoclr = COL_RED;
 		}

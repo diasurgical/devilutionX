@@ -650,7 +650,6 @@ BOOL mpqapi_has_file(const char *pszName)
 
 BOOL OpenMPQ(const char *pszArchive, DWORD dwChar)
 {
-	DWORD dwFlagsAndAttributes;
 	DWORD key;
 	_FILEHEADER fhdr;
 

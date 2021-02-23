@@ -17,7 +17,7 @@ WORD sgwPackPlrOffsetTbl[MAX_PLRS];
 PkPlayerStruct netplr[MAX_PLRS];
 BOOLEAN sgbPlayerTurnBitTbl[MAX_PLRS];
 BOOLEAN sgbPlayerLeftGameTbl[MAX_PLRS];
-int sgbSentThisCycle;
+DWORD sgbSentThisCycle;
 BOOL gbShouldValidatePackage;
 BYTE gbActivePlayers;
 BOOLEAN gbGameDestroyed;
@@ -32,7 +32,7 @@ DWORD sgdwGameLoops;
  * Specifies the maximum number of players in a game, where 1
  * represents a single player game and 4 represents a multi player game.
  */
-BYTE gbMaxPlayers;
+bool gbIsMultiplayer;
 BOOLEAN sgbTimeout;
 char szPlayerName[128];
 BYTE gbDeltaSender;
@@ -77,7 +77,7 @@ static void multi_copy_packet(TBuffer *buf, void *packet, BYTE size)
 	p[size] = 0;
 }
 
-static BYTE *multi_recv_packet(TBuffer *pBuf, BYTE *body, int *size)
+static BYTE *multi_recv_packet(TBuffer *pBuf, BYTE *body, DWORD *size)
 {
 	BYTE *src_ptr;
 	size_t chunk_size;
@@ -147,9 +147,8 @@ void NetSendHiPri(BYTE *pbMsg, BYTE bLen)
 {
 	BYTE *hipri_body;
 	BYTE *lowpri_body;
-	DWORD len;
+	DWORD size, len;
 	TPkt pkt;
-	int size;
 
 	if (pbMsg && bLen) {
 		multi_copy_packet(&sgHiPriBuf, pbMsg, bLen);
@@ -373,6 +372,9 @@ static void multi_begin_timeout()
 	}
 }
 
+/**
+ * @return Always true for singleplayer
+ */
 int multi_handle_delta()
 {
 	int i;
@@ -604,7 +606,7 @@ static void SetupLocalCoords()
 {
 	int x, y;
 
-	if (!leveldebug || gbMaxPlayers > 1) {
+	if (!leveldebug || gbIsMultiplayer) {
 		currlevel = 0;
 		leveltype = DTYPE_TOWN;
 		setlevel = FALSE;
@@ -720,7 +722,7 @@ void NetClose()
 	tmsg_cleanup();
 	multi_event_handler(FALSE);
 	SNetLeaveGame(3);
-	if (gbMaxPlayers > 1)
+	if (gbIsMultiplayer)
 		SDL_Delay(2000);
 }
 
@@ -730,7 +732,6 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 	_SNETPROGRAMDATA ProgramData;
 	_SNETUIDATA UiData;
 	_SNETPLAYERDATA plrdata;
-	unsigned int len;
 
 	while (1) {
 		*pfExitProgram = FALSE;
@@ -758,7 +759,6 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 		UiData.artcallback = (void (*)())UiArtCallback;
 		UiData.createcallback = (void (*)())UiCreateGameCallback;
 		UiData.drawdesccallback = (void (*)())UiDrawDescCallback;
-		UiData.messageboxcallback = (void (*)())UiMessageBoxCallback;
 		UiData.soundcallback = (void (*)())UiSoundCallback;
 		UiData.authcallback = (void (*)())UiAuthCallback;
 		UiData.getdatacallback = (void (*)())UiGetDataCallback;
@@ -815,12 +815,12 @@ BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram)
 
 	int numberOfLevels = gbIsHellfire ? NUMLEVELS : 17;
 	for (i = 0; i < numberOfLevels; i++) {
-		glSeedTbl[i] = GetRndSeed();
+		glSeedTbl[i] = AdvanceRndSeed();
 		gnLevelTypeTbl[i] = InitLevelType(i);
 	}
-	if (!SNetGetGameInfo(GAMEINFO_NAME, szPlayerName, 128, &len))
+	if (!SNetGetGameInfo(GAMEINFO_NAME, szPlayerName, 128))
 		nthread_terminate_game("SNetGetGameInfo1");
-	if (!SNetGetGameInfo(GAMEINFO_PASSWORD, szPlayerDescript, 128, &len))
+	if (!SNetGetGameInfo(GAMEINFO_PASSWORD, szPlayerDescript, 128))
 		nthread_terminate_game("SNetGetGameInfo2");
 
 	return TRUE;
@@ -841,7 +841,7 @@ BOOL multi_init_single(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info
 	}
 
 	myplr = 0;
-	gbMaxPlayers = 1;
+	gbIsMultiplayer = false;
 
 	return TRUE;
 }
@@ -874,7 +874,7 @@ BOOL multi_init_multi(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info,
 		return FALSE;
 	} else {
 		myplr = playerId;
-		gbMaxPlayers = MAX_PLRS;
+		gbIsMultiplayer = true;
 
 		pfile_read_player_from_save();
 

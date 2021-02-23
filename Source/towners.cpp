@@ -1,7 +1,7 @@
 /**
  * @file towners.cpp
  *
- * Implementation of functionality for loading and spawning towners. 
+ * Implementation of functionality for loading and spawning towners.
  */
 #include "all.h"
 
@@ -11,8 +11,6 @@ BOOL storeflag;
 int sgnCowMsg;
 int numtowners;
 DWORD sgdwCowClicks;
-/** unused 0x6AAC28 */
-BOOL bannerflag;
 BOOL boyloadflag;
 BYTE *pCowCels;
 TownerStruct towner[NUM_TOWNERS];
@@ -213,7 +211,7 @@ void InitTownerInfo(int i, int w, int sel, int t, int x, int y, int ao, int tp)
 	dMonster[x][y] = i + 1;
 	towner[i]._tAnimOrder = ao;
 	towner[i]._tTenPer = tp;
-	towner[i]._tSeed = GetRndSeed();
+	towner[i]._tSeed = AdvanceRndSeed();
 }
 
 void InitQstSnds(int i)
@@ -248,24 +246,21 @@ void InitSmith()
 	}
 	towner[numtowners]._tNFrames = 16;
 	NewTownerAnim(numtowners, towner[numtowners]._tNAnim[DIR_SW], towner[numtowners]._tNFrames, 3);
-	strcpy(towner[numtowners]._tName, "KY3HEQ FPN3BO/LD");
+	strcpy(towner[numtowners]._tName, "Griswold the Blacksmith");
 	numtowners++;
 }
 
 void InitBarOwner()
 {
-	int i;
-
-	bannerflag = FALSE; // unused
 	InitTownerInfo(numtowners, 96, TRUE, TOWN_TAVERN, 55, 62, 3, 10);
 	InitQstSnds(numtowners);
 	towner[numtowners]._tNData = LoadFileInMem("Towners\\TwnF\\TwnFN.CEL", NULL);
-	for (i = 0; i < 8; i++) {
+	for (int i = 0; i < 8; i++) {
 		towner[numtowners]._tNAnim[i] = towner[numtowners]._tNData;
 	}
 	towner[numtowners]._tNFrames = 16;
 	NewTownerAnim(numtowners, towner[numtowners]._tNAnim[DIR_SW], towner[numtowners]._tNFrames, 3);
-	strcpy(towner[numtowners]._tName, "OFDEH, XO3RNH TABEPHLI");
+	strcpy(towner[numtowners]._tName, "Ogden the Tavern owner");
 	numtowners++;
 }
 
@@ -281,7 +276,7 @@ void InitTownDead()
 	}
 	towner[numtowners]._tNFrames = 8;
 	NewTownerAnim(numtowners, towner[numtowners]._tNAnim[DIR_N], towner[numtowners]._tNFrames, 6);
-	strcpy(towner[numtowners]._tName, "PAHEHLI& )KNTE/L");
+	strcpy(towner[numtowners]._tName, "Wounded Townsman");
 	numtowners++;
 }
 
@@ -297,7 +292,7 @@ void InitWitch()
 	}
 	towner[numtowners]._tNFrames = 19;
 	NewTownerAnim(numtowners, towner[numtowners]._tNAnim[DIR_S], towner[numtowners]._tNFrames, 6);
-	strcpy(towner[numtowners]._tName, "BEDLMA ADPNR");
+	strcpy(towner[numtowners]._tName, "Adria the Witch");
 	numtowners++;
 }
 
@@ -313,7 +308,7 @@ void InitBarmaid()
 	}
 	towner[numtowners]._tNFrames = 18;
 	NewTownerAnim(numtowners, towner[numtowners]._tNAnim[DIR_S], towner[numtowners]._tNFrames, 6);
-	strcpy(towner[numtowners]._tName, "ZOMOVHNQA D)KN//NAH");
+	strcpy(towner[numtowners]._tName, "Gillian the Barmaid");
 	numtowners++;
 }
 
@@ -330,7 +325,7 @@ void InitBoy()
 	}
 	towner[numtowners]._tNFrames = 20;
 	NewTownerAnim(numtowners, towner[numtowners]._tNAnim[DIR_S], towner[numtowners]._tNFrames, 6);
-	strcpy(towner[numtowners]._tName, "KA/EKA BNPT");
+	strcpy(towner[numtowners]._tName, "Wirt the Peg-legged boy");
 	numtowners++;
 }
 
@@ -346,7 +341,7 @@ void InitHealer()
 	}
 	towner[numtowners]._tNFrames = 20;
 	NewTownerAnim(numtowners, towner[numtowners]._tNAnim[DIR_SE], towner[numtowners]._tNFrames, 6);
-	strcpy(towner[numtowners]._tName, "QE/NTE/L ZEZNH");
+	strcpy(towner[numtowners]._tName, "Pepin the Healer");
 	numtowners++;
 }
 
@@ -362,7 +357,7 @@ void InitTeller()
 	}
 	towner[numtowners]._tNFrames = 25;
 	NewTownerAnim(numtowners, towner[numtowners]._tNAnim[DIR_S], towner[numtowners]._tNFrames, 3);
-	strcpy(towner[numtowners]._tName, "CTAPOCTA KANH");
+	strcpy(towner[numtowners]._tName, "Cain the Elder");
 	numtowners++;
 }
 
@@ -378,7 +373,7 @@ void InitDrunk()
 	}
 	towner[numtowners]._tNFrames = 18;
 	NewTownerAnim(numtowners, towner[numtowners]._tNAnim[DIR_S], towner[numtowners]._tNFrames, 3);
-	strcpy(towner[numtowners]._tName, "ZLRHNQA (PAPHAM");
+	strcpy(towner[numtowners]._tName, "Farnham the Drunk");
 	numtowners++;
 }
 
@@ -401,7 +396,7 @@ void InitCows()
 		NewTownerAnim(numtowners, towner[numtowners]._tNAnim[dir], towner[numtowners]._tNFrames, 3);
 		towner[numtowners]._tAnimFrame = random_(0, 11) + 1;
 		towner[numtowners]._tSelFlag = TRUE;
-		strcpy(towner[numtowners]._tName, "KOPOBA");
+		strcpy(towner[numtowners]._tName, "Cow");
 
 		xo = x + cowoffx[dir];
 		yo = y + cowoffy[dir];
@@ -428,7 +423,7 @@ void InitFarmer()
 	}
 	towner[numtowners]._tNFrames = 15;
 	NewTownerAnim(numtowners, towner[numtowners]._tNAnim[DIR_S], towner[numtowners]._tNFrames, 3);
-	strcpy(towner[numtowners]._tName, "(PEPMEP /ECTEP");
+	strcpy(towner[numtowners]._tName, "Lester the farmer");
 	numtowners++;
 }
 
@@ -448,7 +443,7 @@ void InitCowFarmer()
 	}
 	towner[numtowners]._tNFrames = 15;
 	NewTownerAnim(numtowners, towner[numtowners]._tNAnim[DIR_SW], towner[numtowners]._tNFrames, 3);
-	strcpy(towner[numtowners]._tName, "ZO/HLI& DYPAK");
+	strcpy(towner[numtowners]._tName, "Complete Nut");
 	numtowners++;
 }
 
@@ -468,7 +463,7 @@ void InitGirl()
 	}
 	towner[numtowners]._tNFrames = 20;
 	NewTownerAnim(numtowners, towner[numtowners]._tNAnim[DIR_S], towner[numtowners]._tNFrames, 6);
-	strcpy(towner[numtowners]._tName, "QE/NR");
+	strcpy(towner[numtowners]._tName, "Celia");
 	numtowners++;
 }
 
@@ -519,6 +514,9 @@ void TownCtrlMsg(int i)
 	int p;
 	int dx, dy;
 
+	if (i == -1)
+		return;
+
 	if (towner[i]._tbtcnt != 0) {
 		p = towner[i]._tVar1;
 		dx = abs(towner[i]._tx - plr[p]._px);
@@ -560,7 +558,7 @@ void TownDead()
 		if (quests[Q_BUTCHER]._qactive != QUEST_INIT) {
 			towner[tidx]._tAnimDelay = 1000;
 			towner[tidx]._tAnimFrame = 1;
-			strcpy(towner[tidx]._tName, "Y#NTLI& )KNTE/L");
+			strcpy(towner[tidx]._tName, "Slain Townsman");
 		}
 	}
 	if (quests[Q_BUTCHER]._qactive != QUEST_INIT)
@@ -789,7 +787,7 @@ void TalkToTowner(int p, int t)
 				NetSendCmdQuest(TRUE, Q_SKELKING);
 			}
 		}
-		if (gbMaxPlayers == 1) {
+		if (!gbIsMultiplayer) {
 			if (plr[p]._pLvlVisited[3] && quests[Q_LTBANNER]._qactive != QUEST_NOTAVAIL) {
 				if ((quests[Q_LTBANNER]._qactive == QUEST_INIT || quests[Q_LTBANNER]._qactive == QUEST_ACTIVE) && quests[Q_LTBANNER]._qvar2 == 0 && !towner[t]._tMsgSaid) {
 					quests[Q_LTBANNER]._qvar2 = 1;
@@ -858,7 +856,7 @@ void TalkToTowner(int p, int t)
 			NetSendCmdQuest(TRUE, Q_BUTCHER);
 		}
 	} else if (t == GetActiveTowner(TOWN_SMITH)) {
-		if (gbMaxPlayers == 1) {
+		if (!gbIsMultiplayer) {
 			if (plr[p]._pLvlVisited[4] && quests[Q_ROCK]._qactive != QUEST_NOTAVAIL) {
 				if (quests[Q_ROCK]._qvar2 == 0) {
 					quests[Q_ROCK]._qvar2 = 1;
@@ -995,7 +993,7 @@ void TalkToTowner(int p, int t)
 			}
 		}
 	} else if (t == GetActiveTowner(TOWN_HEALER)) {
-		if (gbMaxPlayers == 1) {
+		if (!gbIsMultiplayer) {
 			if (plr[p]._pLvlVisited[1] || (gbIsHellfire && plr[p]._pLvlVisited[5])) {
 				if (!towner[t]._tMsgSaid) {
 					if (quests[Q_PWATER]._qactive == QUEST_INIT) {
@@ -1039,7 +1037,7 @@ void TalkToTowner(int p, int t)
 			}
 		}
 	} else if (t == GetActiveTowner(TOWN_STORY)) {
-		if (gbMaxPlayers == 1) {
+		if (!gbIsMultiplayer) {
 			if (quests[Q_BETRAYER]._qactive == QUEST_INIT && PlrHasItem(p, IDI_LAZSTAFF, &i) != NULL) {
 				RemoveInvItem(p, i);
 				quests[Q_BETRAYER]._qvar1 = 2;
@@ -1058,7 +1056,7 @@ void TalkToTowner(int p, int t)
 				quests[Q_DIABLO]._qlog = TRUE;
 			}
 		}
-		if (gbMaxPlayers != 1) {
+		if (gbIsMultiplayer) {
 			if (quests[Q_BETRAYER]._qactive == QUEST_ACTIVE && !quests[Q_BETRAYER]._qlog) {
 				towner[t]._tbtcnt = 150;
 				towner[t]._tVar1 = p;
@@ -1099,13 +1097,13 @@ void TalkToTowner(int p, int t)
 					quests[Q_FARMER]._qlog = 1;
 					quests[Q_FARMER]._qmsg = TEXT_FARMER1;
 					break;
-				} else if (!plr[myplr]._pLvlVisited[9] && plr[myplr]._pLevel < 15) {
+				} else if (!plr[p]._pLvlVisited[9] && plr[p]._pLevel < 15) {
 					qt = 309;
-					if (plr[myplr]._pLvlVisited[2])
+					if (plr[p]._pLvlVisited[2])
 						qt = 281;
-					if (plr[myplr]._pLvlVisited[5])
+					if (plr[p]._pLvlVisited[5])
 						qt = 308;
-					if (plr[myplr]._pLvlVisited[7])
+					if (plr[p]._pLvlVisited[7])
 						qt = 310;
 				} else {
 					qt = TEXT_FARMER1;
@@ -1130,15 +1128,15 @@ void TalkToTowner(int p, int t)
 					quests[Q_FARMER]._qvar1 = 1;
 					quests[Q_FARMER]._qmsg = TEXT_FARMER1;
 					quests[Q_FARMER]._qlog = 1;
-				} else if (!plr[myplr]._pLvlVisited[9] && plr[myplr]._pLevel < 15) {
+				} else if (!plr[p]._pLvlVisited[9] && plr[p]._pLevel < 15) {
 					qt = TEXT_FARMER8;
-					if (plr[myplr]._pLvlVisited[2]) {
+					if (plr[p]._pLvlVisited[2]) {
 						qt = TEXT_FARMER5;
 					}
-					if (plr[myplr]._pLvlVisited[5]) {
+					if (plr[p]._pLvlVisited[5]) {
 						qt = TEXT_FARMER7;
 					}
-					if (plr[myplr]._pLvlVisited[7]) {
+					if (plr[p]._pLvlVisited[7]) {
 						qt = TEXT_FARMER9;
 					}
 				} else {
@@ -1172,7 +1170,7 @@ void TalkToTowner(int p, int t)
 				else
 					PlaySFX(alltext[qt].sfxnr);
 			}
-			if (gbMaxPlayers != 1) {
+			if (gbIsMultiplayer) {
 				NetSendCmdQuest(TRUE, Q_FARMER);
 			}
 		}
@@ -1219,7 +1217,7 @@ void TalkToTowner(int p, int t)
 					quests[Q_JERSEY]._qactive = 9;
 					break;
 				case 9:
-					if (!plr[myplr]._pLvlVisited[9] && plr[myplr]._pLevel < 15) {
+					if (!plr[p]._pLvlVisited[9] && plr[p]._pLevel < 15) {
 						switch (random_(0, 4) + 9) {
 						case 9:
 							qt = TEXT_JERSEY9;
@@ -1256,7 +1254,7 @@ void TalkToTowner(int p, int t)
 				else
 					PlaySFX(alltext[qt].sfxnr);
 			}
-			if (gbMaxPlayers != 1) {
+			if (gbIsMultiplayer) {
 				NetSendCmdQuest(TRUE, Q_JERSEY);
 			}
 		}
@@ -1309,7 +1307,7 @@ void TalkToTowner(int p, int t)
 					PlaySFX(alltext[qt].sfxnr);
 				}
 			}
-			if (gbMaxPlayers != 1) {
+			if (gbIsMultiplayer) {
 				NetSendCmdQuest(TRUE, Q_GIRL);
 			}
 		}

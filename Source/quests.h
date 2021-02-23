@@ -12,8 +12,35 @@ DEVILUTION_BEGIN_NAMESPACE
 extern "C" {
 #endif
 
+typedef struct QuestStruct {
+	Uint8 _qlevel;
+	Uint8 _qtype;
+	Uint8 _qactive;
+	Uint8 _qlvltype;
+	Sint32 _qtx;
+	Sint32 _qty;
+	Uint8 _qslvl;
+	Uint8 _qidx;
+	Uint32 _qmsg;
+	Uint8 _qvar1;
+	Uint8 _qvar2;
+	bool _qlog;
+} QuestStruct;
+
+typedef struct QuestData {
+	Uint8 _qdlvl;
+	Sint8 _qdmultlvl;
+	Uint8 _qlvlt;
+	Uint8 _qdtype;
+	Uint8 _qdrnd;
+	Uint8 _qslvl;
+	Uint32 _qflags; /* unsigned char */
+	Sint32 _qdmsg;
+	const char *_qlstr;
+} QuestData;
+
 extern bool allquests;
-extern BOOL questlog;
+extern bool questlog;
 extern BYTE *pQLogCel;
 extern QuestStruct quests[MAXQUESTS];
 extern int ReturnLvlX;
@@ -29,6 +56,7 @@ void CheckQuestKill(int m, BOOL sendmsg);
 void DRLG_CheckQuests(int x, int y);
 void SetReturnLvlPos();
 void GetReturnLvlPos();
+void LoadPWaterPalette();
 void ResyncMPQuests();
 void ResyncQuests();
 void DrawQuestLog();
