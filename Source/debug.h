@@ -14,10 +14,9 @@ extern "C" {
 
 extern BYTE *pSquareCel;
 
-void LoadDebugGFX();
 void FreeDebugGFX();
 void CheckDungeonClear();
-#ifdef _DEBUG
+void LoadDebugGFX();
 void GiveGoldCheat();
 void TakeGoldCheat();
 void MaxSpellsCheat();
@@ -26,7 +25,6 @@ void PrintDebugPlayer(BOOL bNextPlayer);
 void PrintDebugQuest();
 void GetDebugMonster();
 void NextDebugMonster();
-#endif
 
 #ifdef __cplusplus
 }

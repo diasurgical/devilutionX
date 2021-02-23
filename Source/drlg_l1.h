@@ -14,10 +14,10 @@ extern "C" {
 
 extern int UberRow;
 extern int UberCol;
-extern int IsUberRoomOpened;
+extern bool IsUberRoomOpened;
 extern int UberLeverRow;
 extern int UberLeverCol;
-extern int IsUberLeverActivated;
+extern bool IsUberLeverActivated;
 extern int UberDiabloMonsterIndex;
 
 void DRLG_Init_Globals();

@@ -9,7 +9,6 @@ DEVILUTION_BEGIN_NAMESPACE
 
 #ifdef _DEBUG
 BOOL update_seed_check = FALSE;
-#endif
 
 #define DEBUGSEEDS 4096
 int seed_index;
@@ -48,7 +47,6 @@ void CheckDungeonClear()
 	}
 }
 
-#ifdef _DEBUG
 void GiveGoldCheat()
 {
 	int i, ni;
@@ -203,7 +201,7 @@ void GetDebugMonster()
 		if (mi2 != 0) {
 			mi1 = mi2 - 1;
 			if (mi2 <= 0)
-				mi1 = -1 - mi2;
+				mi1 = -(mi2 + 1);
 		} else {
 			mi1 = dbgmon;
 		}

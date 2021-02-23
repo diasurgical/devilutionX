@@ -19,7 +19,7 @@ typedef struct CodecSignature {
 
 #define BLOCKSIZE 64
 
-static void codec_init_key(int unused, const char *pszPassword)
+static void codec_init_key(const char *pszPassword)
 {
 	char key[136]; // last 64 bytes are the SHA1
 	uint32_t rand_state = 0x7058;
@@ -58,7 +58,7 @@ int codec_decode(BYTE *pbSrcDst, DWORD size, const char *pszPassword)
 	int i;
 	CodecSignature *sig;
 
-	codec_init_key(0, pszPassword);
+	codec_init_key(pszPassword);
 	if (size <= sizeof(CodecSignature))
 		return 0;
 	size -= sizeof(CodecSignature);
@@ -113,7 +113,7 @@ void codec_encode(BYTE *pbSrcDst, DWORD size, int size_64, const char *pszPasswo
 
 	if (size_64 != codec_get_encoded_len(size))
 		app_fatal("Invalid encode parameters");
-	codec_init_key(1, pszPassword);
+	codec_init_key(pszPassword);
 
 	last_chunk = 0;
 	while (size != 0) {

@@ -22,16 +22,16 @@ HALLNODE *pHallList;
 int Area_Min = 2;
 int Room_Max = 10;
 int Room_Min = 4;
-int Dir_Xadd[5] = { 0, 0, 1, 0, -1 };
-int Dir_Yadd[5] = { 0, -1, 0, 1, 0 };
-ShadowStruct SPATSL2[2] = { { 6, 3, 0, 3, 48, 0, 50 }, { 9, 3, 0, 3, 48, 0, 50 } };
+const int Dir_Xadd[5] = { 0, 0, 1, 0, -1 };
+const int Dir_Yadd[5] = { 0, -1, 0, 1, 0 };
+const ShadowStruct SPATSL2[2] = { { 6, 3, 0, 3, 48, 0, 50 }, { 9, 3, 0, 3, 48, 0, 50 } };
 //short word_48489A = 0;
 
-BYTE BTYPESL2[161] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0, 0, 0, 0, 0, 0, 17, 18, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 2, 2, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-BYTE BSTYPESL2[161] = { 0, 1, 2, 3, 0, 0, 6, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 6, 6, 6, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 2, 2, 2, 0, 0, 0, 1, 1, 1, 1, 6, 2, 2, 2, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 2, 2, 3, 3, 3, 3, 1, 1, 2, 2, 3, 3, 3, 3, 1, 1, 3, 3, 2, 2, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+const BYTE BTYPESL2[161] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0, 0, 0, 0, 0, 0, 17, 18, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 2, 2, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+const BYTE BSTYPESL2[161] = { 0, 1, 2, 3, 0, 0, 6, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 6, 6, 6, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 2, 2, 2, 0, 0, 0, 1, 1, 1, 1, 6, 2, 2, 2, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 2, 2, 3, 3, 3, 3, 1, 1, 2, 2, 3, 3, 3, 3, 1, 1, 3, 3, 2, 2, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 /** Miniset: Arch vertical. */
-BYTE VARCH1[] = {
+const BYTE VARCH1[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -47,7 +47,7 @@ BYTE VARCH1[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical. */
-BYTE VARCH2[] = {
+const BYTE VARCH2[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -63,7 +63,7 @@ BYTE VARCH2[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical. */
-BYTE VARCH3[] = {
+const BYTE VARCH3[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -79,7 +79,7 @@ BYTE VARCH3[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical. */
-BYTE VARCH4[] = {
+const BYTE VARCH4[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -95,7 +95,7 @@ BYTE VARCH4[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical. */
-BYTE VARCH5[] = {
+const BYTE VARCH5[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -111,7 +111,7 @@ BYTE VARCH5[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical. */
-BYTE VARCH6[] = {
+const BYTE VARCH6[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -127,7 +127,7 @@ BYTE VARCH6[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical. */
-BYTE VARCH7[] = {
+const BYTE VARCH7[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -143,7 +143,7 @@ BYTE VARCH7[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical. */
-BYTE VARCH8[] = {
+const BYTE VARCH8[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -159,7 +159,7 @@ BYTE VARCH8[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical - corner. */
-BYTE VARCH9[] = {
+const BYTE VARCH9[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -175,7 +175,7 @@ BYTE VARCH9[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical - corner. */
-BYTE VARCH10[] = {
+const BYTE VARCH10[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -191,7 +191,7 @@ BYTE VARCH10[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical - corner. */
-BYTE VARCH11[] = {
+const BYTE VARCH11[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -207,7 +207,7 @@ BYTE VARCH11[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical - corner. */
-BYTE VARCH12[] = {
+const BYTE VARCH12[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -223,7 +223,7 @@ BYTE VARCH12[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical - corner. */
-BYTE VARCH13[] = {
+const BYTE VARCH13[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -239,7 +239,7 @@ BYTE VARCH13[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical - corner. */
-BYTE VARCH14[] = {
+const BYTE VARCH14[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -255,7 +255,7 @@ BYTE VARCH14[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical - corner. */
-BYTE VARCH15[] = {
+const BYTE VARCH15[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -271,7 +271,7 @@ BYTE VARCH15[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical - corner. */
-BYTE VARCH16[] = {
+const BYTE VARCH16[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -287,7 +287,7 @@ BYTE VARCH16[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical - open wall. */
-BYTE VARCH17[] = {
+const BYTE VARCH17[] = {
 	// clang-format off
 	2, 3, // width, height
 
@@ -301,7 +301,7 @@ BYTE VARCH17[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical - open wall. */
-BYTE VARCH18[] = {
+const BYTE VARCH18[] = {
 	// clang-format off
 	2, 3, // width, height
 
@@ -315,7 +315,7 @@ BYTE VARCH18[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical - open wall. */
-BYTE VARCH19[] = {
+const BYTE VARCH19[] = {
 	// clang-format off
 	2, 3, // width, height
 
@@ -329,7 +329,7 @@ BYTE VARCH19[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical - open wall. */
-BYTE VARCH20[] = {
+const BYTE VARCH20[] = {
 	// clang-format off
 	2, 3, // width, height
 
@@ -343,7 +343,7 @@ BYTE VARCH20[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical - open wall. */
-BYTE VARCH21[] = {
+const BYTE VARCH21[] = {
 	// clang-format off
 	2, 3, // width, height
 
@@ -357,7 +357,7 @@ BYTE VARCH21[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical - open wall. */
-BYTE VARCH22[] = {
+const BYTE VARCH22[] = {
 	// clang-format off
 	2, 3, // width, height
 
@@ -371,7 +371,7 @@ BYTE VARCH22[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical - open wall. */
-BYTE VARCH23[] = {
+const BYTE VARCH23[] = {
 	// clang-format off
 	2, 3, // width, height
 
@@ -385,7 +385,7 @@ BYTE VARCH23[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical - open wall. */
-BYTE VARCH24[] = {
+const BYTE VARCH24[] = {
 	// clang-format off
 	2, 3, // width, height
 
@@ -399,7 +399,7 @@ BYTE VARCH24[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical. */
-BYTE VARCH25[] = {
+const BYTE VARCH25[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -415,7 +415,7 @@ BYTE VARCH25[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical. */
-BYTE VARCH26[] = {
+const BYTE VARCH26[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -431,7 +431,7 @@ BYTE VARCH26[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical. */
-BYTE VARCH27[] = {
+const BYTE VARCH27[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -447,7 +447,7 @@ BYTE VARCH27[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical. */
-BYTE VARCH28[] = {
+const BYTE VARCH28[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -463,7 +463,7 @@ BYTE VARCH28[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical. */
-BYTE VARCH29[] = {
+const BYTE VARCH29[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -479,7 +479,7 @@ BYTE VARCH29[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical. */
-BYTE VARCH30[] = {
+const BYTE VARCH30[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -495,7 +495,7 @@ BYTE VARCH30[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical. */
-BYTE VARCH31[] = {
+const BYTE VARCH31[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -511,7 +511,7 @@ BYTE VARCH31[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical. */
-BYTE VARCH32[] = {
+const BYTE VARCH32[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -527,7 +527,7 @@ BYTE VARCH32[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical - room west entrance. */
-BYTE VARCH33[] = {
+const BYTE VARCH33[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -543,7 +543,7 @@ BYTE VARCH33[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical - room west entrance. */
-BYTE VARCH34[] = {
+const BYTE VARCH34[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -559,7 +559,7 @@ BYTE VARCH34[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical - room west entrance. */
-BYTE VARCH35[] = {
+const BYTE VARCH35[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -575,7 +575,7 @@ BYTE VARCH35[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical - room west entrance. */
-BYTE VARCH36[] = {
+const BYTE VARCH36[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -591,7 +591,7 @@ BYTE VARCH36[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical - room west entrance. */
-BYTE VARCH37[] = {
+const BYTE VARCH37[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -607,7 +607,7 @@ BYTE VARCH37[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical - room west entrance. */
-BYTE VARCH38[] = {
+const BYTE VARCH38[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -623,7 +623,7 @@ BYTE VARCH38[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical - room west entrance. */
-BYTE VARCH39[] = {
+const BYTE VARCH39[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -639,7 +639,7 @@ BYTE VARCH39[] = {
 	// clang-format on
 };
 /** Miniset: Arch vertical - room west entrance. */
-BYTE VARCH40[] = {
+const BYTE VARCH40[] = {
 	// clang-format off
 	2, 4, // width, height
 
@@ -655,7 +655,7 @@ BYTE VARCH40[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal. */
-BYTE HARCH1[] = {
+const BYTE HARCH1[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -667,7 +667,7 @@ BYTE HARCH1[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal. */
-BYTE HARCH2[] = {
+const BYTE HARCH2[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -679,7 +679,7 @@ BYTE HARCH2[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal. */
-BYTE HARCH3[] = {
+const BYTE HARCH3[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -691,7 +691,7 @@ BYTE HARCH3[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal. */
-BYTE HARCH4[] = {
+const BYTE HARCH4[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -703,7 +703,7 @@ BYTE HARCH4[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal. */
-BYTE HARCH5[] = {
+const BYTE HARCH5[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -715,7 +715,7 @@ BYTE HARCH5[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal. */
-BYTE HARCH6[] = {
+const BYTE HARCH6[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -727,7 +727,7 @@ BYTE HARCH6[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal. */
-BYTE HARCH7[] = {
+const BYTE HARCH7[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -739,7 +739,7 @@ BYTE HARCH7[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal. */
-BYTE HARCH8[] = {
+const BYTE HARCH8[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -751,7 +751,7 @@ BYTE HARCH8[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal - north corner. */
-BYTE HARCH9[] = {
+const BYTE HARCH9[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -763,7 +763,7 @@ BYTE HARCH9[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal - north corner. */
-BYTE HARCH10[] = {
+const BYTE HARCH10[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -775,7 +775,7 @@ BYTE HARCH10[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal - north corner. */
-BYTE HARCH11[] = {
+const BYTE HARCH11[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -787,7 +787,7 @@ BYTE HARCH11[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal - north corner. */
-BYTE HARCH12[] = {
+const BYTE HARCH12[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -799,7 +799,7 @@ BYTE HARCH12[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal - north corner. */
-BYTE HARCH13[] = {
+const BYTE HARCH13[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -811,7 +811,7 @@ BYTE HARCH13[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal - north corner. */
-BYTE HARCH14[] = {
+const BYTE HARCH14[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -823,7 +823,7 @@ BYTE HARCH14[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal - north corner. */
-BYTE HARCH15[] = {
+const BYTE HARCH15[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -835,7 +835,7 @@ BYTE HARCH15[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal - north corner. */
-BYTE HARCH16[] = {
+const BYTE HARCH16[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -847,7 +847,7 @@ BYTE HARCH16[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal - wall. */
-BYTE HARCH17[] = {
+const BYTE HARCH17[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -859,7 +859,7 @@ BYTE HARCH17[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal - wall. */
-BYTE HARCH18[] = {
+const BYTE HARCH18[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -871,7 +871,7 @@ BYTE HARCH18[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal - wall. */
-BYTE HARCH19[] = {
+const BYTE HARCH19[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -883,7 +883,7 @@ BYTE HARCH19[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal - wall. */
-BYTE HARCH20[] = {
+const BYTE HARCH20[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -895,7 +895,7 @@ BYTE HARCH20[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal - wall. */
-BYTE HARCH21[] = {
+const BYTE HARCH21[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -907,7 +907,7 @@ BYTE HARCH21[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal - wall. */
-BYTE HARCH22[] = {
+const BYTE HARCH22[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -919,7 +919,7 @@ BYTE HARCH22[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal - wall. */
-BYTE HARCH23[] = {
+const BYTE HARCH23[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -931,7 +931,7 @@ BYTE HARCH23[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal - wall. */
-BYTE HARCH24[] = {
+const BYTE HARCH24[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -943,7 +943,7 @@ BYTE HARCH24[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal. */
-BYTE HARCH25[] = {
+const BYTE HARCH25[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -955,7 +955,7 @@ BYTE HARCH25[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal. */
-BYTE HARCH26[] = {
+const BYTE HARCH26[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -967,7 +967,7 @@ BYTE HARCH26[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal. */
-BYTE HARCH27[] = {
+const BYTE HARCH27[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -979,7 +979,7 @@ BYTE HARCH27[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal. */
-BYTE HARCH28[] = {
+const BYTE HARCH28[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -991,7 +991,7 @@ BYTE HARCH28[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal. */
-BYTE HARCH29[] = {
+const BYTE HARCH29[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -1003,7 +1003,7 @@ BYTE HARCH29[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal. */
-BYTE HARCH30[] = {
+const BYTE HARCH30[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -1015,7 +1015,7 @@ BYTE HARCH30[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal. */
-BYTE HARCH31[] = {
+const BYTE HARCH31[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -1027,7 +1027,7 @@ BYTE HARCH31[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal. */
-BYTE HARCH32[] = {
+const BYTE HARCH32[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -1039,7 +1039,7 @@ BYTE HARCH32[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal - west corner. */
-BYTE HARCH33[] = {
+const BYTE HARCH33[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -1051,7 +1051,7 @@ BYTE HARCH33[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal - west corner. */
-BYTE HARCH34[] = {
+const BYTE HARCH34[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -1063,7 +1063,7 @@ BYTE HARCH34[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal - west corner. */
-BYTE HARCH35[] = {
+const BYTE HARCH35[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -1075,7 +1075,7 @@ BYTE HARCH35[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal - west corner. */
-BYTE HARCH36[] = {
+const BYTE HARCH36[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -1087,7 +1087,7 @@ BYTE HARCH36[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal - west corner. */
-BYTE HARCH37[] = {
+const BYTE HARCH37[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -1099,7 +1099,7 @@ BYTE HARCH37[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal - west corner. */
-BYTE HARCH38[] = {
+const BYTE HARCH38[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -1111,7 +1111,7 @@ BYTE HARCH38[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal - west corner. */
-BYTE HARCH39[] = {
+const BYTE HARCH39[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -1123,7 +1123,7 @@ BYTE HARCH39[] = {
 	// clang-format on
 };
 /** Miniset: Arch horizontal - west corner. */
-BYTE HARCH40[] = {
+const BYTE HARCH40[] = {
 	// clang-format off
 	3, 2, // width, height
 
@@ -1135,7 +1135,7 @@ BYTE HARCH40[] = {
 	// clang-format on
 };
 /** Miniset: Stairs up. */
-BYTE USTAIRS[] = {
+const BYTE USTAIRS[] = {
 	// clang-format off
 	4, 4, // width, height
 
@@ -1151,7 +1151,7 @@ BYTE USTAIRS[] = {
 	// clang-format on
 };
 /** Miniset: Stairs down. */
-BYTE DSTAIRS[] = {
+const BYTE DSTAIRS[] = {
 	// clang-format off
 	4, 4, // width, height
 
@@ -1167,7 +1167,7 @@ BYTE DSTAIRS[] = {
 	// clang-format on
 };
 /** Miniset: Stairs to town. */
-BYTE WARPSTAIRS[] = {
+const BYTE WARPSTAIRS[] = {
 	// clang-format off
 	4, 4, // width, height
 
@@ -1183,7 +1183,7 @@ BYTE WARPSTAIRS[] = {
 	// clang-format on
 };
 /** Miniset: Crumbled south pillar. */
-BYTE CRUSHCOL[] = {
+const BYTE CRUSHCOL[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -1197,7 +1197,7 @@ BYTE CRUSHCOL[] = {
 	// clang-format on
 };
 /** Miniset: Vertical oil spill. */
-BYTE BIG1[] = {
+const BYTE BIG1[] = {
 	// clang-format off
 	2, 2, // width, height
 
@@ -1209,7 +1209,7 @@ BYTE BIG1[] = {
 	// clang-format on
 };
 /** Miniset: Horizontal oil spill. */
-BYTE BIG2[] = {
+const BYTE BIG2[] = {
 	// clang-format off
 	2, 2, // width, height
 
@@ -1221,7 +1221,7 @@ BYTE BIG2[] = {
 	// clang-format on
 };
 /** Miniset: Horizontal platform. */
-BYTE BIG3[] = {
+const BYTE BIG3[] = {
 	// clang-format off
 	1, 2, // width, height
 
@@ -1233,7 +1233,7 @@ BYTE BIG3[] = {
 	// clang-format on
 };
 /** Miniset: Vertical platform. */
-BYTE BIG4[] = {
+const BYTE BIG4[] = {
 	// clang-format off
 	2, 1, // width, height
 
@@ -1243,7 +1243,7 @@ BYTE BIG4[] = {
 	// clang-format on
 };
 /** Miniset: Large oil spill. */
-BYTE BIG5[] = {
+const BYTE BIG5[] = {
 	// clang-format off
 	2, 2, // width, height
 
@@ -1255,7 +1255,7 @@ BYTE BIG5[] = {
 	// clang-format on
 };
 /** Miniset: Vertical wall with debris. */
-BYTE BIG6[] = {
+const BYTE BIG6[] = {
 	// clang-format off
 	1, 2, // width, height
 
@@ -1267,7 +1267,7 @@ BYTE BIG6[] = {
 	// clang-format on
 };
 /** Miniset: Horizontal wall with debris. */
-BYTE BIG7[] = {
+const BYTE BIG7[] = {
 	// clang-format off
 	2, 1, // width, height
 
@@ -1277,7 +1277,7 @@ BYTE BIG7[] = {
 	// clang-format on
 };
 /** Miniset: Rock pile. */
-BYTE BIG8[] = {
+const BYTE BIG8[] = {
 	// clang-format off
 	2, 2, // width, height
 
@@ -1289,7 +1289,7 @@ BYTE BIG8[] = {
 	// clang-format on
 };
 /** Miniset: Vertical wall collapsed. */
-BYTE BIG9[] = {
+const BYTE BIG9[] = {
 	// clang-format off
 	2, 2, // width, height
 
@@ -1301,7 +1301,7 @@ BYTE BIG9[] = {
 	// clang-format on
 };
 /** Miniset: Horizontal wall collapsed. */
-BYTE BIG10[] = {
+const BYTE BIG10[] = {
 	// clang-format off
 	2, 2, // width, height
 
@@ -1313,7 +1313,7 @@ BYTE BIG10[] = {
 	// clang-format on
 };
 /** Miniset: Crumbled vertical wall 1. */
-BYTE RUINS1[] = {
+const BYTE RUINS1[] = {
 	// clang-format off
 	1, 1, // width, height
 
@@ -1323,7 +1323,7 @@ BYTE RUINS1[] = {
 	// clang-format on
 };
 /** Miniset: Crumbled vertical wall 2. */
-BYTE RUINS2[] = {
+const BYTE RUINS2[] = {
 	// clang-format off
 	1, 1, // width, height
 
@@ -1333,7 +1333,7 @@ BYTE RUINS2[] = {
 	// clang-format on
 };
 /** Miniset: Crumbled vertical wall 3. */
-BYTE RUINS3[] = {
+const BYTE RUINS3[] = {
 	// clang-format off
 	1, 1, // width, height
 
@@ -1343,7 +1343,7 @@ BYTE RUINS3[] = {
 	// clang-format on
 };
 /** Miniset: Crumbled horizontal wall 1. */
-BYTE RUINS4[] = {
+const BYTE RUINS4[] = {
 	// clang-format off
 	1, 1, // width, height
 
@@ -1353,7 +1353,7 @@ BYTE RUINS4[] = {
 	// clang-format on
 };
 /** Miniset: Crumbled horizontal wall 2. */
-BYTE RUINS5[] = {
+const BYTE RUINS5[] = {
 	// clang-format off
 	1, 1, // width, height
 
@@ -1363,7 +1363,7 @@ BYTE RUINS5[] = {
 	// clang-format on
 };
 /** Miniset: Crumbled horizontal wall 3. */
-BYTE RUINS6[] = {
+const BYTE RUINS6[] = {
 	// clang-format off
 	1, 1, // width, height
 
@@ -1373,7 +1373,7 @@ BYTE RUINS6[] = {
 	// clang-format on
 };
 /** Miniset: Crumbled north pillar. */
-BYTE RUINS7[] = {
+const BYTE RUINS7[] = {
 	// clang-format off
 	1, 1, // width, height
 
@@ -1383,7 +1383,7 @@ BYTE RUINS7[] = {
 	// clang-format on
 };
 /** Miniset: Bloody gib 1. */
-BYTE PANCREAS1[] = {
+const BYTE PANCREAS1[] = {
 	// clang-format off
 	5, 3, // width, height
 
@@ -1397,7 +1397,7 @@ BYTE PANCREAS1[] = {
 	// clang-format on
 };
 /** Miniset: Bloody gib 2. */
-BYTE PANCREAS2[] = {
+const BYTE PANCREAS2[] = {
 	// clang-format off
 	5, 3, // width, height
 
@@ -1411,7 +1411,7 @@ BYTE PANCREAS2[] = {
 	// clang-format on
 };
 /** Miniset: Move vertical doors away from west pillar 1. */
-BYTE CTRDOOR1[] = {
+const BYTE CTRDOOR1[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -1425,7 +1425,7 @@ BYTE CTRDOOR1[] = {
 	// clang-format on
 };
 /** Miniset: Move vertical doors away from west pillar 2. */
-BYTE CTRDOOR2[] = {
+const BYTE CTRDOOR2[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -1439,7 +1439,7 @@ BYTE CTRDOOR2[] = {
 	// clang-format on
 };
 /** Miniset: Move vertical doors away from west pillar 3. */
-BYTE CTRDOOR3[] = {
+const BYTE CTRDOOR3[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -1453,7 +1453,7 @@ BYTE CTRDOOR3[] = {
 	// clang-format on
 };
 /** Miniset: Move vertical doors away from west pillar 4. */
-BYTE CTRDOOR4[] = {
+const BYTE CTRDOOR4[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -1467,7 +1467,7 @@ BYTE CTRDOOR4[] = {
 	// clang-format on
 };
 /** Miniset: Move vertical doors away from west pillar 5. */
-BYTE CTRDOOR5[] = {
+const BYTE CTRDOOR5[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -1481,7 +1481,7 @@ BYTE CTRDOOR5[] = {
 	// clang-format on
 };
 /** Miniset: Move vertical doors away from west pillar 6. */
-BYTE CTRDOOR6[] = {
+const BYTE CTRDOOR6[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -1495,7 +1495,7 @@ BYTE CTRDOOR6[] = {
 	// clang-format on
 };
 /** Miniset: Move vertical doors away from west pillar 7. */
-BYTE CTRDOOR7[] = {
+const BYTE CTRDOOR7[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -1509,7 +1509,7 @@ BYTE CTRDOOR7[] = {
 	// clang-format on
 };
 /** Miniset: Move vertical doors away from west pillar 8. */
-BYTE CTRDOOR8[] = {
+const BYTE CTRDOOR8[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -1596,37 +1596,9 @@ int Patterns[100][10] = {
 	{ 4, 1, 1, 1, 1, 1, 2, 1, 1, 14 },
 	{ 1, 1, 1, 1, 1, 1, 1, 1, 2, 8 },
 	{ 0, 0, 0, 0, 255, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
-static BOOL DRLG_L2PlaceMiniSet(BYTE *miniset, int tmin, int tmax, int cx, int cy, BOOL setview, int ldir)
+static BOOL DRLG_L2PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, BOOL setview, int ldir)
 {
 	int sx, sy, sw, sh, xx, yy, i, ii, numt, bailcnt;
 	BOOL found;
@@ -1712,7 +1684,7 @@ static BOOL DRLG_L2PlaceMiniSet(BYTE *miniset, int tmin, int tmax, int cx, int c
 	return TRUE;
 }
 
-static void DRLG_L2PlaceRndSet(BYTE *miniset, int rndper)
+static void DRLG_L2PlaceRndSet(const BYTE *miniset, int rndper)
 {
 	int sx, sy, sw, sh, xx, yy, ii, kk;
 	BOOL found;
@@ -3466,7 +3438,7 @@ void LoadPreL2Dungeon(const char *sFileName, int vx, int vy)
 
 void CreateL2Dungeon(DWORD rseed, int entry)
 {
-	if (gbMaxPlayers == 1) {
+	if (!gbIsMultiplayer) {
 		if (currlevel == 7 && quests[Q_BLIND]._qactive == QUEST_NOTAVAIL) {
 			currlevel = 6;
 			CreateL2Dungeon(glSeedTbl[6], 4);
