@@ -385,6 +385,7 @@ const char gszHelpText[] = {
 	"Q: Open Quest log|"
 	"F: Reduce screen brightness|"
 	"G: Increase screen brightness|"
+	"W: Switch weapon sets|"
 	"Z: Zoom Game Screen|"
 	"+ / -: Zoom Automap|"
 	"1 - 8: Use Belt item|"
@@ -439,6 +440,13 @@ const char gszHelpText[] = {
 	"$Spell Books|"
 	"Reading more than one book increases your knowledge of that "
 	"spell, allowing you to cast the spell more effectively.|"
+    "|"
+    "$Switch Weapon Sets|"
+	"If you press the 'W' key, the current weapon set will be moved "
+	"into the inventory. Move another weapon set or two-handed weapon into "
+	"the weapon slots and use the 'W' key to switch between weapons. "
+	"To retain one of two equipped items when switching, add the item back "
+	"into the same slot after pressing the 'W' key.|"
 	"&"
 };
 

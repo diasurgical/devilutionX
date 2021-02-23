@@ -351,6 +351,7 @@ typedef struct PlayerStruct {
 	unsigned char *_pDData;
 	unsigned char *_pBData;
 	void *pReserved;
+	int AltItemSeed[NUM_INVLOC] = {0};
 } PlayerStruct;
 
 //////////////////////////////////////////////////
