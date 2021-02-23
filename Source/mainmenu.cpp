@@ -51,23 +51,24 @@ static BOOL mainmenu_init_menu(int type)
 
 static BOOL mainmenu_single_player()
 {
-#ifdef HELLFIRE
 	if (!SRegLoadValue("Hellfire", jogging_title, 0, &jogging_opt)) {
 		jogging_opt = TRUE;
 	}
-#endif
-	gbMaxPlayers = 1;
-
-	if (!SRegLoadValue("devilutionx", "game speed", 0, &ticks_per_sec)) {
-		SRegSaveValue("devilutionx", "game speed", 0, ticks_per_sec);
+	if (!gbIsHellfire) {
+		jogging_opt = FALSE;
 	}
+
+	gbIsMultiplayer = false;
+
+	ticks_per_sec = sgOptions.ticksPerSecound;
 
 	return mainmenu_init_menu(SELHERO_NEW_DUNGEON);
 }
 
 static BOOL mainmenu_multi_player()
 {
-	gbMaxPlayers = MAX_PLRS;
+	jogging_opt = FALSE;
+	gbIsMultiplayer = true;
 	return mainmenu_init_menu(SELHERO_CONNECT);
 }
 
@@ -98,14 +99,14 @@ BOOL mainmenu_select_hero_dialog(
 {
 	BOOL hero_is_created = TRUE;
 	int dlgresult = 0;
-	if (gbMaxPlayers == 1) {
+	if (!gbIsMultiplayer) {
 		if (!UiSelHeroSingDialog(
 		        pfile_ui_set_hero_infos,
 		        pfile_ui_save_create,
 		        pfile_delete_save,
 		        pfile_ui_set_class_stats,
 		        &dlgresult,
-		        gszHero,
+		        &gszHero,
 		        &gnDifficulty))
 			app_fatal("Unable to display SelHeroSing");
 		client_info->initdata->bDiff = gnDifficulty;
@@ -122,7 +123,7 @@ BOOL mainmenu_select_hero_dialog(
 	               pfile_ui_set_class_stats,
 	               &dlgresult,
 	               &hero_is_created,
-	               gszHero)) {
+	               &gszHero)) {
 		app_fatal("Can't load multiplayer dialog");
 	}
 	if (dlgresult == SELHERO_PREVIOUS) {
@@ -173,10 +174,10 @@ void mainmenu_loop()
 				mainmenu_play_intro();
 			break;
 		case MAINMENU_SHOW_CREDITS:
-			UiCreditsDialog(16);
+			UiCreditsDialog();
 			break;
 		case MAINMENU_SHOW_SUPPORT:
-			//UiSupportDialog(16);
+			UiSupportDialog();
 			break;
 		case MAINMENU_EXIT_DIABLO:
 			done = TRUE;

@@ -15,11 +15,11 @@ BOOL jogging_opt = TRUE;
 TMenuItem sgSingleMenu[] = {
 	// clang-format off
 //	  dwFlags,       pszStr,         fnMenu
-	{ GMENU_ENABLED, "COXPAHNTL NFPY",     &gamemenu_save_game  },
-	{ GMENU_ENABLED, "HACTPO&KN",       &gamemenu_options    },
-	{ GMENU_ENABLED, "HOBAR NFPA",      &gamemenu_new_game   },
-	{ GMENU_ENABLED, "3AFPY3NTL NFPY",     &gamemenu_load_game  },
-	{ GMENU_ENABLED, "BLIXOD",     &gamemenu_quit_game  },
+	{ GMENU_ENABLED, "Save Game",     &gamemenu_save_game  },
+	{ GMENU_ENABLED, "Options",       &gamemenu_options    },
+	{ GMENU_ENABLED, "New Game",      &gamemenu_new_game   },
+	{ GMENU_ENABLED, "Load Game",     &gamemenu_load_game  },
+	{ GMENU_ENABLED, "Quit Game",     &gamemenu_quit_game  },
 	{ GMENU_ENABLED, NULL,            NULL }
 	// clang-format on
 };
@@ -27,10 +27,10 @@ TMenuItem sgSingleMenu[] = {
 TMenuItem sgMultiMenu[] = {
 	// clang-format off
 //	  dwFlags,       pszStr,            fnMenu
-	{ GMENU_ENABLED, "HACTPO&KN",         &gamemenu_options      },
-	{ GMENU_ENABLED, "HOBAR NFPA",        &gamemenu_new_game     },
-	{ GMENU_ENABLED, "HA4ATL B FOPODE", &gamemenu_restart_town },
-	{ GMENU_ENABLED, "BLIXOD",       &gamemenu_quit_game    },
+	{ GMENU_ENABLED, "Options",         &gamemenu_options      },
+	{ GMENU_ENABLED, "New Game",        &gamemenu_new_game     },
+	{ GMENU_ENABLED, "Restart In Town", &gamemenu_restart_town },
+	{ GMENU_ENABLED, "Quit Game",       &gamemenu_quit_game    },
 	{ GMENU_ENABLED, NULL,              NULL                   },
 	// clang-format on
 };
@@ -39,31 +39,31 @@ TMenuItem sgOptionsMenu[] = {
 //	  dwFlags,                      pszStr,          fnMenu
 	{ GMENU_ENABLED | GMENU_SLIDER, NULL,            &gamemenu_music_volume  },
 	{ GMENU_ENABLED | GMENU_SLIDER, NULL,            &gamemenu_sound_volume  },
-	{ GMENU_ENABLED | GMENU_SLIDER, "FAMMA",         &gamemenu_gamma         },
+	{ GMENU_ENABLED | GMENU_SLIDER, "Gamma",         &gamemenu_gamma         },
 //	{ GMENU_ENABLED               , NULL,            &gamemenu_color_cycling },
-	{ GMENU_ENABLED | GMENU_SLIDER, "CKOP.",         &gamemenu_speed         },
+	{ GMENU_ENABLED | GMENU_SLIDER, "Speed",         &gamemenu_speed         },
 //	{ GMENU_ENABLED | GMENU_SLIDER, NULL,            &gamemenu_loadjog       },
-	{ GMENU_ENABLED               , "HA3AD", &gamemenu_previous      },
+	{ GMENU_ENABLED               , "Previous Menu", &gamemenu_previous      },
 	{ GMENU_ENABLED               , NULL,            NULL                    },
 	// clang-format on
 };
 /** Specifies the menu names for music enabled and disabled. */
 const char *const music_toggle_names[] = {
-	"MY3LIKA",
-	"MY3LIKA BLIK/.",
+	"Music",
+	"Music Disabled",
 };
 /** Specifies the menu names for sound enabled and disabled. */
 const char *const sound_toggle_names[] = {
-	"3BYK",
-	"3BYK BLIK/.",
+	"Sound",
+	"Sound Disabled",
 };
-char *jogging_toggle_names[] = {
-	"#EF",
-	"XODL#A",
+const char *jogging_toggle_names[] = {
+	"Jog",
+	"Walk",
 };
-char *jogging_title = "Fast Walk";
+const char *jogging_title = "Fast Walk";
 /** Specifies the menu names for colour cycling disabled and enabled. */
-const char *const color_cycling_toggle_names[] = { "QNK/. QBETA BLIK/.", "QNK/. QBETA BK/." };
+const char *const color_cycling_toggle_names[] = { "Color Cycling Off", "Color Cycling On" };
 
 static void gamemenu_update_single(TMenuItem *pMenuItems)
 {
@@ -85,7 +85,7 @@ static void gamemenu_update_multi(TMenuItem *pMenuItems)
 
 void gamemenu_on()
 {
-	if (gbMaxPlayers == 1) {
+	if (!gbIsMultiplayer) {
 		gmenu_set_items(sgSingleMenu, gamemenu_update_single);
 	} else {
 		gmenu_set_items(sgMultiMenu, gamemenu_update_multi);
@@ -149,6 +149,7 @@ void gamemenu_load_game(BOOL bActivate)
 	deathflag = FALSE;
 	force_redraw = 255;
 	DrawAndBlit();
+	LoadPWaterPalette();
 	PaletteFadeIn(8);
 	SetCursor_(CURSOR_HAND);
 	interface_msg_pump();
@@ -232,22 +233,22 @@ static void gamemenu_get_gamma()
 
 static void gamemenu_get_speed()
 {
-	if (gbMaxPlayers != 1) {
+	if (gbIsMultiplayer) {
 		sgOptionsMenu[3].dwFlags &= ~(GMENU_ENABLED | GMENU_SLIDER);
 		if (ticks_per_sec >= 50)
-			sgOptionsMenu[3].pszStr = "O4EHL #LICTPO";
+			sgOptionsMenu[3].pszStr = "Speed: Fastest";
 		else if (ticks_per_sec >= 40)
-			sgOptionsMenu[3].pszStr = "EVE #LICTPEE";
+			sgOptionsMenu[3].pszStr = "Speed: Faster";
 		else if (ticks_per_sec >= 30)
-			sgOptionsMenu[3].pszStr = "#LICTPO";
+			sgOptionsMenu[3].pszStr = "Speed: Fast";
 		else if (ticks_per_sec == 20)
-			sgOptionsMenu[3].pszStr = "HOPMA/LHO";
+			sgOptionsMenu[3].pszStr = "Speed: Normal";
 		return;
 	}
 
 	sgOptionsMenu[3].dwFlags |= GMENU_ENABLED | GMENU_SLIDER;
 
-	sgOptionsMenu[3].pszStr = "CKOP.";
+	sgOptionsMenu[3].pszStr = "Speed";
 	gmenu_slider_steps(&sgOptionsMenu[3], 46);
 	gmenu_slider_set(&sgOptionsMenu[3], 20, 50, ticks_per_sec);
 }
@@ -349,7 +350,7 @@ void gamemenu_sound_volume(BOOL bActivate)
 
 void gamemenu_loadjog(BOOL bActivate)
 {
-	if (gbMaxPlayers == 1) {
+	if (!gbIsMultiplayer) {
 		jogging_opt = !jogging_opt;
 		SRegSaveValue("Hellfire", jogging_title, FALSE, jogging_opt);
 		PlaySFX(IS_TITLEMOV);

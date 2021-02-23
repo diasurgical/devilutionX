@@ -332,8 +332,7 @@ BOOL gmenu_on_mouse_move()
 BOOL gmenu_left_mouse(BOOL isDown)
 {
 	TMenuItem *pItem;
-	DWORD i, w;
-	int dummy;
+	int i, w, dummy;
 
 	if (!isDown) {
 		if (mouseNavigation) {
