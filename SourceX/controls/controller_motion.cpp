@@ -4,6 +4,7 @@
 #include "controls/devices/joystick.h"
 #include "controls/devices/kbcontroller.h"
 #include "controls/controller.h"
+#include "controls/game_controls.h"
 
 namespace dvl {
 
@@ -58,6 +59,8 @@ void ScaleJoystickAxes(float *x, float *y, float deadzone)
 // SELECT + D-Pad to simulate right stick movement.
 bool SimulateRightStickWithDpad(const SDL_Event &event, ControllerButtonEvent ctrl_event)
 {
+	if (dpad_hotkeys)
+		return false;
 	static bool simulating = false;
 	if (ctrl_event.button == ControllerButton_BUTTON_BACK) {
 		if (ctrl_event.up && simulating) {

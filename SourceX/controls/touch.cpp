@@ -4,6 +4,11 @@
 #include "../../defs.h"
 #include <math.h>
 
+#ifdef __vita__
+#include "../3rdParty/Storm/Source/storm.h"
+static bool back_touch = false;
+#endif
+
 static int visible_width;
 static int visible_height;
 static int x_borderwidth;
@@ -27,6 +32,10 @@ static void init_touch(void);
 static void preprocess_events(SDL_Event *event);
 static void preprocess_finger_down(SDL_Event *event);
 static void preprocess_finger_up(SDL_Event *event);
+#ifdef __vita__
+static void preprocess_back_finger_down(SDL_Event *event);
+static void preprocess_back_finger_up(SDL_Event *event);
+#endif
 static void preprocess_finger_motion(SDL_Event *event);
 static void set_mouse_button_event(SDL_Event *event, uint32_t type, uint8_t button, int32_t x, int32_t y);
 static void set_mouse_motion_event(SDL_Event *event, int32_t x, int32_t y, int32_t xrel, int32_t yrel);
@@ -84,6 +93,9 @@ static void init_touch(void)
 	visible_width = (current.h * SCREEN_WIDTH) / SCREEN_HEIGHT;
 	x_borderwidth = (current.w - visible_width) / 2;
 	y_borderwidth = (current.h - visible_height) / 2;
+#ifdef __vita__
+	back_touch = dvl::getIniBool("controls","enable_second_touchscreen", true);
+#endif
 }
 
 static void preprocess_events(SDL_Event *event)
@@ -101,6 +113,18 @@ static void preprocess_events(SDL_Event *event)
 	// front (0) or back (1) panel
 	SDL_TouchID port = event->tfinger.touchId;
 	if (port != 0) {
+#ifdef __vita__
+		if(back_touch) {
+			switch (event->type) {
+				case SDL_FINGERDOWN:
+				preprocess_back_finger_down(event);
+				break;
+			case SDL_FINGERUP:
+				preprocess_back_finger_up(event);
+				break;
+			}
+		}
+#endif
 		return;
 	}
 
@@ -157,6 +181,41 @@ static void preprocess_finger_down(SDL_Event *event)
 		break;
 	}
 }
+#ifdef __vita__
+static void preprocess_back_finger_down(SDL_Event *event)
+{
+	// front (0) or back (1) panel
+	SDL_TouchID port = event->tfinger.touchId;
+
+	if (port != 1) return;
+
+	event->type          = SDL_CONTROLLERAXISMOTION;
+	event->caxis.value = 32767;
+	event->caxis.which = 0;
+	if (event->tfinger.x <= 0.5) {;
+		event->caxis.axis = SDL_CONTROLLER_AXIS_TRIGGERLEFT;
+	} else {
+		event->caxis.axis = SDL_CONTROLLER_AXIS_TRIGGERRIGHT;
+	}
+}
+
+static void preprocess_back_finger_up(SDL_Event *event)
+{
+	// front (0) or back (1) panel
+	SDL_TouchID port = event->tfinger.touchId;
+
+	if (port != 1) return;
+
+	event->type          = SDL_CONTROLLERAXISMOTION;
+	event->caxis.value = 0;
+	event->caxis.which = 0;
+	if (event->tfinger.x <= 0.5) {;
+		event->caxis.axis = SDL_CONTROLLER_AXIS_TRIGGERLEFT;
+	} else {
+		event->caxis.axis = SDL_CONTROLLER_AXIS_TRIGGERRIGHT;
+	}
+}
+#endif
 
 static void preprocess_finger_up(SDL_Event *event)
 {
