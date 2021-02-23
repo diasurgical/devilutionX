@@ -99,7 +99,7 @@ bool loopback::SNetGetOwnerTurnsWaiting(DWORD *turns)
 	return true;
 }
 
-bool loopback::SNetGetTurnsInTransit(int *turns)
+bool loopback::SNetGetTurnsInTransit(DWORD *turns)
 {
 	*turns = 0;
 	return true;
