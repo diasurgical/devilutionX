@@ -334,13 +334,10 @@ typedef struct PlayerStruct {
 	BOOLEAN pManaShield;
 	unsigned char pDungMsgs2;
 	BOOLEAN pOriginalCathedral;
-	char bReserved[2];
 	WORD wReflections;
-	short wReserved[7];
 	DWORD pDiabloKillLevel;
 	int pDifficulty;
 	int pDamAcFlags;
-	int dwReserved[5];
 	unsigned char *_pNData;
 	unsigned char *_pWData;
 	unsigned char *_pAData;
@@ -350,7 +347,6 @@ typedef struct PlayerStruct {
 	unsigned char *_pHData;
 	unsigned char *_pDData;
 	unsigned char *_pBData;
-	void *pReserved;
 } PlayerStruct;
 
 //////////////////////////////////////////////////
@@ -1158,7 +1154,6 @@ typedef struct _SNETPLAYERDATA {
 	int size;
 	char *playername;
 	char *playerdescription;
-	int reserved;
 } _SNETPLAYERDATA;
 
 typedef struct _SNETPROGRAMDATA {
@@ -1167,11 +1162,9 @@ typedef struct _SNETPROGRAMDATA {
 	const char *programdescription;
 	int programid;
 	int versionid;
-	int reserved1;
 	int maxplayers;
 	_gamedata *initdata;
 	int initdatabytes;
-	void *reserved2;
 	int optcategorybits;
 	char *cdkey;
 	char *registereduser;
@@ -1182,28 +1175,15 @@ typedef struct _SNETPROGRAMDATA {
 typedef struct _SNETVERSIONDATA {
 	int size;
 	const char *versionstring;
-	const char *executablefile;
-	const char *originalarchivefile;
-	const char *patcharchivefile;
 } _SNETVERSIONDATA;
 
 typedef struct _SNETUIDATA {
 	int size;
-	int uiflags;
-	void (*artcallback)();
-	void (*authcallback)();
-	void (*createcallback)();
-	void (*drawdesccallback)();
 	void (*selectedcallback)();
-	void (*soundcallback)();
 	void (*statuscallback)();
-	void (*getdatacallback)();
-	void (*categorycallback)();
 	void (*categorylistcallback)();
 	void (*newaccountcallback)();
-	void (*profilecallback)();
 	const char **profilefields;
-	void (*profilebitmapcallback)();
 	int (*selectnamecallback)(
 	    const struct _SNETPROGRAMDATA *,
 	    const struct _SNETPLAYERDATA *,

@@ -23,7 +23,6 @@ void InitPlrGFXMem(int pnum);
 void FreePlayerGFX(int pnum);
 void NewPlrAnim(int pnum, BYTE *Peq, int numFrames, int Delay, int width);
 void SetPlrAnims(int pnum);
-void ClearPlrRVars(PlayerStruct *p);
 void CreatePlayer(int pnum, char c);
 int CalcStatDiff(int pnum);
 #ifdef _DEBUG

@@ -190,7 +190,6 @@ void UnPackPlayer(PkPlayerStruct *pPack, int pnum, BOOL killok)
 	PkItemStruct *pki;
 
 	pPlayer = &plr[pnum];
-	ClearPlrRVars(pPlayer);
 	pPlayer->_px = pPack->px;
 	pPlayer->_py = pPack->py;
 	pPlayer->_pfutx = pPack->px;

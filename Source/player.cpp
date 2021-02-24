@@ -652,26 +652,6 @@ void SetPlrAnims(int pnum)
 	}
 }
 
-void ClearPlrRVars(PlayerStruct *p)
-{
-	// TODO: Missing debug assert p != NULL
-	p->bReserved[0] = 0;
-	p->bReserved[1] = 0;
-
-	p->wReserved[0] = 0;
-	p->wReserved[1] = 0;
-	p->wReserved[2] = 0;
-	p->wReserved[3] = 0;
-	p->wReserved[4] = 0;
-	p->wReserved[5] = 0;
-	p->wReserved[6] = 0;
-
-	p->dwReserved[0] = 0;
-	p->dwReserved[1] = 0;
-	p->dwReserved[2] = 0;
-	p->dwReserved[3] = 0;
-	p->dwReserved[4] = 0;
-}
 
 /**
  * @param c plr_classes value
@@ -683,7 +663,6 @@ void CreatePlayer(int pnum, char c)
 	int i;
 
 	memset(&plr[pnum], 0, sizeof(PlayerStruct));
-	ClearPlrRVars(&plr[pnum]);
 	SetRndSeed(SDL_GetTicks());
 
 	if ((DWORD)pnum >= MAX_PLRS) {
@@ -1003,8 +982,6 @@ void InitPlayer(int pnum, BOOL FirstTime)
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("InitPlayer: illegal player %d", pnum);
 	}
-
-	ClearPlrRVars(&plr[pnum]);
 
 	if (FirstTime) {
 		plr[pnum]._pRSplType = RSPLTYPE_INVALID;
