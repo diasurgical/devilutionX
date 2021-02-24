@@ -1175,7 +1175,7 @@ void PlrDoTrans(int x, int y)
 {
 	int i, j;
 
-	if (leveltype != DTYPE_CATHEDRAL && leveltype != DTYPE_CATACOMBS) {
+	if (leveltype != DTYPE_CATHEDRAL && leveltype != DTYPE_CATACOMBS && leveltype != DTYPE_CRYPT) {
 		TransList[1] = TRUE;
 	} else {
 		for (i = y - 1; i <= y + 1; i++) {

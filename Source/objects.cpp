@@ -274,7 +274,7 @@ bool RndLocOk(int xp, int yp)
 		return FALSE;
 	if (nSolidTable[dPiece[xp][yp]])
 		return FALSE;
-	if (leveltype != DTYPE_CATHEDRAL || dPiece[xp][yp] <= 126 || dPiece[xp][yp] >= 144)
+	if ((leveltype != DTYPE_CATHEDRAL && leveltype != DTYPE_CRYPT) || dPiece[xp][yp] <= 126 || dPiece[xp][yp] >= 144)
 		return TRUE;
 	return FALSE;
 }
@@ -1005,13 +1005,9 @@ void InitObjects()
 			if (QuestStatus(Q_LTBANNER))
 				AddObject(OBJ_SIGNCHEST, 2 * setpc_x + 26, 2 * setpc_y + 19);
 			InitRndLocBigObj(10, 15, OBJ_SARC);
-			if (currlevel >= 21)
-				add_crypt_objs(0, 0, MAXDUNX, MAXDUNY);
-			else
-				AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
+			AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
 			InitRndBarrels();
-		}
-		if (leveltype == DTYPE_CATACOMBS) {
+		} else if (leveltype == DTYPE_CATACOMBS) {
 			if (QuestStatus(Q_ROCK))
 				InitRndLocObj5x5(1, 1, OBJ_STAND);
 			if (QuestStatus(Q_SCHAMB))
@@ -1057,12 +1053,10 @@ void InitObjects()
 				AddObject(OBJ_PEDISTAL, 2 * setpc_x + 25, 2 * setpc_y + 32);
 			}
 			InitRndBarrels();
-		}
-		if (leveltype == DTYPE_CAVES) {
+		} else if (leveltype == DTYPE_CAVES) {
 			AddL3Objs(0, 0, MAXDUNX, MAXDUNY);
 			InitRndBarrels();
-		}
-		if (leveltype == DTYPE_HELL) {
+		} else if (leveltype == DTYPE_HELL) {
 			if (QuestStatus(Q_WARLORD)) {
 				if (plr[myplr]._pClass == PC_WARRIOR) {
 					sp_id = TEXT_BLOODWAR;
@@ -1087,13 +1081,20 @@ void InitObjects()
 				AddLazStand();
 			InitRndBarrels();
 			AddL4Goodies();
+		} else if (leveltype == DTYPE_NEST) {
+			AddL3Objs(0, 0, MAXDUNX, MAXDUNY);
+			InitRndBarrels();
+		} else if (leveltype == DTYPE_CRYPT) {
+			InitRndLocBigObj(10, 15, OBJ_SARC);
+			add_crypt_objs(0, 0, MAXDUNX, MAXDUNY);
+			InitRndBarrels();
 		}
 		InitRndLocObj(5, 10, OBJ_CHEST1);
 		InitRndLocObj(3, 6, OBJ_CHEST2);
 		InitRndLocObj(1, 5, OBJ_CHEST3);
 		if (leveltype != DTYPE_HELL)
 			AddObjTraps();
-		if (leveltype > DTYPE_CATHEDRAL)
+		else if (leveltype != DTYPE_CATHEDRAL && leveltype != DTYPE_CRYPT)
 			AddChestTraps();
 		InitObjFlag = FALSE;
 	}
@@ -2791,7 +2792,7 @@ void ObjChangeMap(int x1, int y1, int x2, int y2)
 			dungeon[i][j] = pdungeon[i][j];
 		}
 	}
-	if (leveltype == DTYPE_CATHEDRAL && currlevel < 17) {
+	if (leveltype == DTYPE_CATHEDRAL) {
 		ObjL1Special(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
 		AddL1Objs(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
 	}
@@ -2811,7 +2812,7 @@ void ObjChangeMapResync(int x1, int y1, int x2, int y2)
 			dungeon[i][j] = pdungeon[i][j];
 		}
 	}
-	if (leveltype == DTYPE_CATHEDRAL && currlevel < 17) {
+	if (leveltype == DTYPE_CATHEDRAL) {
 		ObjL1Special(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
 	}
 	if (leveltype == DTYPE_CATACOMBS) {

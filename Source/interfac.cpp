@@ -34,15 +34,9 @@ static void InitCutscene(unsigned int uMsg)
 			progress_id = 1;
 			break;
 		case DTYPE_CATHEDRAL:
-			if (currlevel < 17) {
-				sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", NULL);
-				LoadPalette("Gendata\\Cutl1d.pal");
-				progress_id = 0;
-			} else {
-				sgpBackCel = LoadFileInMem("Nlevels\\cutl5.CEL", NULL);
-				LoadPalette("Nlevels\\cutl5.pal");
-				progress_id = 1;
-			}
+			sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", NULL);
+			LoadPalette("Gendata\\Cutl1d.pal");
+			progress_id = 0;
 			break;
 		case DTYPE_CATACOMBS:
 			sgpBackCel = LoadFileInMem("Gendata\\Cut2.CEL", NULL);
@@ -50,15 +44,9 @@ static void InitCutscene(unsigned int uMsg)
 			progress_id = 2;
 			break;
 		case DTYPE_CAVES:
-			if (currlevel < 17) {
-				sgpBackCel = LoadFileInMem("Gendata\\Cut3.CEL", NULL);
-				LoadPalette("Gendata\\Cut3.pal");
-				progress_id = 1;
-			} else {
-				sgpBackCel = LoadFileInMem("Nlevels\\cutl6.CEL", NULL);
-				LoadPalette("Nlevels\\cutl6.pal");
-				progress_id = 1;
-			}
+			sgpBackCel = LoadFileInMem("Gendata\\Cut3.CEL", NULL);
+			LoadPalette("Gendata\\Cut3.pal");
+			progress_id = 1;
 			break;
 		case DTYPE_HELL:
 			if (currlevel < 15) {
@@ -71,6 +59,16 @@ static void InitCutscene(unsigned int uMsg)
 				progress_id = 1;
 			}
 			break;
+		case DTYPE_NEST:
+			sgpBackCel = LoadFileInMem("Nlevels\\cutl6.CEL", NULL);
+			LoadPalette("Nlevels\\cutl6.pal");
+			progress_id = 1;
+			break;
+		case DTYPE_CRYPT:
+			sgpBackCel = LoadFileInMem("Nlevels\\cutl5.CEL", NULL);
+			LoadPalette("Nlevels\\cutl5.pal");
+			progress_id = 1;
+			break;
 		default:
 			sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", NULL);
 			LoadPalette("Gendata\\Cutl1d.pal");
@@ -79,7 +77,7 @@ static void InitCutscene(unsigned int uMsg)
 		}
 		break;
 	case WM_DIABPREVLVL:
-		if (gnLevelTypeTbl[currlevel - 1] == 0) {
+		if (gnLevelTypeTbl[currlevel - 1] == DTYPE_TOWN) {
 			sgpBackCel = LoadFileInMem("Gendata\\Cuttt.CEL", NULL);
 			LoadPalette("Gendata\\Cuttt.pal");
 			progress_id = 1;
@@ -91,15 +89,9 @@ static void InitCutscene(unsigned int uMsg)
 				progress_id = 1;
 				break;
 			case DTYPE_CATHEDRAL:
-				if (currlevel < 17) {
-					sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", NULL);
-					LoadPalette("Gendata\\Cutl1d.pal");
-					progress_id = 0;
-				} else {
-					sgpBackCel = LoadFileInMem("Nlevels\\cutl5.CEL", NULL);
-					LoadPalette("Nlevels\\cutl5.pal");
-					progress_id = 1;
-				}
+				sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", NULL);
+				LoadPalette("Gendata\\Cutl1d.pal");
+				progress_id = 0;
 				break;
 			case DTYPE_CATACOMBS:
 				sgpBackCel = LoadFileInMem("Gendata\\Cut2.CEL", NULL);
@@ -107,19 +99,23 @@ static void InitCutscene(unsigned int uMsg)
 				progress_id = 2;
 				break;
 			case DTYPE_CAVES:
-				if (currlevel < 17) {
-					sgpBackCel = LoadFileInMem("Gendata\\Cut3.CEL", NULL);
-					LoadPalette("Gendata\\Cut3.pal");
-					progress_id = 1;
-				} else {
-					sgpBackCel = LoadFileInMem("Nlevels\\cutl6.CEL", NULL);
-					LoadPalette("Nlevels\\cutl6.pal");
-					progress_id = 1;
-				}
+				sgpBackCel = LoadFileInMem("Gendata\\Cut3.CEL", NULL);
+				LoadPalette("Gendata\\Cut3.pal");
+				progress_id = 1;
 				break;
 			case DTYPE_HELL:
 				sgpBackCel = LoadFileInMem("Gendata\\Cut4.CEL", NULL);
 				LoadPalette("Gendata\\Cut4.pal");
+				progress_id = 1;
+				break;
+			case DTYPE_NEST:
+				sgpBackCel = LoadFileInMem("Nlevels\\cutl6.CEL", NULL);
+				LoadPalette("Nlevels\\cutl6.pal");
+				progress_id = 1;
+				break;
+			case DTYPE_CRYPT:
+				sgpBackCel = LoadFileInMem("Nlevels\\cutl5.CEL", NULL);
+				LoadPalette("Nlevels\\cutl5.pal");
 				progress_id = 1;
 				break;
 			default:
@@ -184,15 +180,9 @@ static void InitCutscene(unsigned int uMsg)
 			progress_id = 1;
 			break;
 		case DTYPE_CATHEDRAL:
-			if (plr[myplr].plrlevel < 17) {
-				sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", NULL);
-				LoadPalette("Gendata\\Cutl1d.pal");
-				progress_id = 0;
-			} else {
-				sgpBackCel = LoadFileInMem("Nlevels\\Cutl5.CEL", NULL);
-				LoadPalette("Nlevels\\Cutl5.pal");
-				progress_id = 1;
-			}
+			sgpBackCel = LoadFileInMem("Gendata\\Cutl1d.CEL", NULL);
+			LoadPalette("Gendata\\Cutl1d.pal");
+			progress_id = 0;
 			break;
 		case DTYPE_CATACOMBS:
 			sgpBackCel = LoadFileInMem("Gendata\\Cut2.CEL", NULL);
@@ -200,19 +190,22 @@ static void InitCutscene(unsigned int uMsg)
 			progress_id = 2;
 			break;
 		case DTYPE_CAVES:
-			if (plr[myplr].plrlevel < 17) {
-				sgpBackCel = LoadFileInMem("Gendata\\Cut3.CEL", NULL);
-				LoadPalette("Gendata\\Cut3.pal");
-				progress_id = 1;
-			} else {
-				sgpBackCel = LoadFileInMem("Nlevels\\Cutl6.CEL", NULL);
-				LoadPalette("Nlevels\\Cutl6.pal");
-				progress_id = 1;
-			}
-			break;
+			sgpBackCel = LoadFileInMem("Gendata\\Cut3.CEL", NULL);
+			LoadPalette("Gendata\\Cut3.pal");
+			progress_id = 1;
 		case DTYPE_HELL:
 			sgpBackCel = LoadFileInMem("Gendata\\Cut4.CEL", NULL);
 			LoadPalette("Gendata\\Cut4.pal");
+			progress_id = 1;
+			break;
+		case DTYPE_NEST:
+			sgpBackCel = LoadFileInMem("Nlevels\\Cutl6.CEL", NULL);
+			LoadPalette("Nlevels\\Cutl6.pal");
+			progress_id = 1;
+			break;
+		case DTYPE_CRYPT:
+			sgpBackCel = LoadFileInMem("Nlevels\\Cutl5.CEL", NULL);
+			LoadPalette("Nlevels\\Cutl5.pal");
 			progress_id = 1;
 			break;
 		}

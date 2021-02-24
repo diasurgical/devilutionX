@@ -785,7 +785,8 @@ void LoadGame(BOOL firstflag)
 	setlevel = LoadBool8();
 	setlvlnum = WLoad();
 	currlevel = WLoad();
-	leveltype = WLoad();
+	tbuff += 4; // Skip leveltype
+	leveltype = gnLevelTypeTbl[currlevel];
 	_ViewX = WLoad();
 	_ViewY = WLoad();
 	invflag = LoadBool8();
@@ -797,7 +798,7 @@ void LoadGame(BOOL firstflag)
 
 	for (i = 0; i < giNumberOfLevels; i++) {
 		glSeedTbl[i] = ILoad();
-		gnLevelTypeTbl[i] = WLoad();
+		tbuff += 4; // Skip leveltype
 	}
 
 	LoadPlayer(myplr);
@@ -1559,6 +1560,17 @@ static void SavePortal(int i)
 	CopyInt(&pPortal->setlvl, tbuff);
 }
 
+static int getHelfireLevelType(int type)
+{
+	if (type == DTYPE_CRYPT)
+		return DTYPE_CATHEDRAL;
+
+	if (type == DTYPE_NEST)
+		return DTYPE_CAVES;
+
+	return type;
+}
+
 void SaveGame()
 {
 	int i, j;
@@ -1591,7 +1603,7 @@ void SaveGame()
 	SaveBool8(setlevel);
 	WSave(setlvlnum);
 	WSave(currlevel);
-	WSave(leveltype);
+	WSave(getHelfireLevelType(leveltype));
 	WSave(ViewX);
 	WSave(ViewY);
 	SaveBool8(invflag);
@@ -1603,7 +1615,7 @@ void SaveGame()
 
 	for (i = 0; i < giNumberOfLevels; i++) {
 		ISave(glSeedTbl[i]);
-		WSave(gnLevelTypeTbl[i]);
+		WSave(getHelfireLevelType(gnLevelTypeTbl[i]));
 	}
 
 	plr[myplr].pDifficulty = gnDifficulty;

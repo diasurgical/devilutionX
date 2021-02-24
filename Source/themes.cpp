@@ -152,7 +152,7 @@ BOOL TFit_SkelRoom(int t)
 {
 	int i;
 
-	if (leveltype != DTYPE_CATHEDRAL && leveltype != DTYPE_CATACOMBS) {
+	if (leveltype != DTYPE_CATHEDRAL && leveltype != DTYPE_CATACOMBS && leveltype != DTYPE_CRYPT) {
 		return FALSE;
 	}
 
@@ -220,55 +220,52 @@ BOOL TFit_Obj3(int t)
 
 BOOL CheckThemeReqs(int t)
 {
-	BOOL rv;
-
-	rv = TRUE;
 	switch (t) {
 	case THEME_SHRINE:
 	case THEME_SKELROOM:
 	case THEME_LIBRARY:
-		if (leveltype == DTYPE_CAVES || leveltype == DTYPE_HELL) {
-			rv = FALSE;
+		if (leveltype == DTYPE_CAVES || leveltype == DTYPE_HELL || leveltype == DTYPE_NEST) {
+			return false;
 		}
-		break;
+		return true;
 	case THEME_BLOODFOUNTAIN:
 		if (!bFountainFlag) {
-			rv = FALSE;
+			return false;
 		}
-		break;
+		return true;
 	case THEME_PURIFYINGFOUNTAIN:
 		if (!pFountainFlag) {
-			rv = FALSE;
+			return false;
 		}
-		break;
+		return true;
 	case THEME_ARMORSTAND:
-		if (leveltype == DTYPE_CATHEDRAL) {
-			rv = FALSE;
+		if (leveltype == DTYPE_CATHEDRAL || leveltype == DTYPE_CRYPT) {
+			return false;
 		}
-		break;
+		return true;
 	case THEME_CAULDRON:
 		if (leveltype != DTYPE_HELL || !cauldronFlag) {
-			rv = FALSE;
+			return false;
 		}
-		break;
+		return true;
 	case THEME_MURKYFOUNTAIN:
 		if (!mFountainFlag) {
-			rv = FALSE;
+			return false;
 		}
-		break;
+		return true;
 	case THEME_TEARFOUNTAIN:
 		if (!tFountainFlag) {
-			rv = FALSE;
+			return false;
 		}
-		break;
+		return true;
 	case THEME_WEAPONRACK:
-		if (leveltype == DTYPE_CATHEDRAL) {
-			rv = FALSE;
+		if (leveltype == DTYPE_CATHEDRAL || leveltype == DTYPE_CRYPT) {
+			return false;
 		}
-		break;
+		return true;
 	}
 
-	return rv;
+	return true;
 }
 
 BOOL SpecialThemeFit(int i, int t)
@@ -374,7 +371,7 @@ BOOL CheckThemeRoom(int tv)
 		}
 	}
 
-	if (leveltype == DTYPE_CATHEDRAL && (tarea < 9 || tarea > 100))
+	if ((leveltype == DTYPE_CATHEDRAL && leveltype == DTYPE_CRYPT) && (tarea < 9 || tarea > 100))
 		return FALSE;
 
 	for (j = 0; j < MAXDUNY; j++) {
@@ -414,7 +411,7 @@ void InitThemes()
 	if (currlevel == 16)
 		return;
 
-	if (leveltype == DTYPE_CATHEDRAL) {
+	if (leveltype == DTYPE_CATHEDRAL || leveltype == DTYPE_CRYPT) {
 		for (i = 0; i < sizeof(ThemeGoodIn) / sizeof(ThemeGoodIn[0]); i++)
 			ThemeGoodIn[i] = FALSE;
 
@@ -430,33 +427,36 @@ void InitThemes()
 				numthemes++;
 			}
 		}
+		return;
 	}
-	if (leveltype == DTYPE_CATACOMBS || leveltype == DTYPE_CAVES || leveltype == DTYPE_HELL) {
-		for (i = 0; i < themeCount; i++)
-			themes[i].ttype = THEME_NONE;
-		if (QuestStatus(Q_ZHAR)) {
-			for (j = 0; j < themeCount; j++) {
-				themes[j].ttval = themeLoc[j].ttval;
-				if (SpecialThemeFit(j, THEME_LIBRARY)) {
-					themes[j].ttype = THEME_LIBRARY;
-					zharlib = j;
+
+	for (i = 0; i < themeCount; i++)
+		themes[i].ttype = THEME_NONE;
+
+	if (QuestStatus(Q_ZHAR)) {
+		for (j = 0; j < themeCount; j++) {
+			themes[j].ttval = themeLoc[j].ttval;
+			if (SpecialThemeFit(j, THEME_LIBRARY)) {
+				themes[j].ttype = THEME_LIBRARY;
+				zharlib = j;
+				break;
+			}
+		}
+	}
+
+	for (i = 0; i < themeCount; i++) {
+		if (themes[i].ttype == THEME_NONE) {
+			themes[i].ttval = themeLoc[i].ttval;
+			for (j = ThemeGood[random_(0, 4)];; j = random_(0, 17)) {
+				if (SpecialThemeFit(i, j)) {
 					break;
 				}
 			}
+			themes[i].ttype = j;
 		}
-		for (i = 0; i < themeCount; i++) {
-			if (themes[i].ttype == THEME_NONE) {
-				themes[i].ttval = themeLoc[i].ttval;
-				for (j = ThemeGood[random_(0, 4)];; j = random_(0, 17)) {
-					if (SpecialThemeFit(i, j)) {
-						break;
-					}
-				}
-				themes[i].ttype = j;
-			}
-		}
-		numthemes += themeCount;
 	}
+
+	numthemes += themeCount;
 }
 
 /**
@@ -467,20 +467,22 @@ void HoldThemeRooms()
 	int i, x, y;
 	char v;
 
-	if (currlevel != 16) {
-		if (leveltype == DTYPE_CATHEDRAL) {
-			for (i = 0; i < numthemes; i++) {
-				v = themes[i].ttval;
-				for (y = 0; y < MAXDUNY; y++) {
-					for (x = 0; x < MAXDUNX; x++) {
-						if (dTransVal[x][y] == v) {
-							dFlags[x][y] |= BFLAG_POPULATED;
-						}
-					}
+	if (currlevel == 16)
+		return;
+
+	if (leveltype != DTYPE_CATHEDRAL && leveltype != DTYPE_CRYPT) {
+		DRLG_HoldThemeRooms();
+		return;
+	}
+
+	for (i = 0; i < numthemes; i++) {
+		v = themes[i].ttval;
+		for (y = 0; y < MAXDUNY; y++) {
+			for (x = 0; x < MAXDUNX; x++) {
+				if (dTransVal[x][y] == v) {
+					dFlags[x][y] |= BFLAG_POPULATED;
 				}
 			}
-		} else {
-			DRLG_HoldThemeRooms();
 		}
 	}
 }
@@ -698,7 +700,7 @@ void Theme_Treasure(int t)
 				}
 				if (rv == 0 || rv >= treasrnd[leveltype - 1] - 2) {
 					i = ItemNoFlippy();
-					if (rv >= treasrnd[leveltype - 1] - 2 && leveltype != DTYPE_CATHEDRAL) {
+					if (rv >= treasrnd[leveltype - 1] - 2 && leveltype != DTYPE_CATHEDRAL && leveltype != DTYPE_CRYPT) {
 						item[i]._ivalue >>= 1;
 					}
 				}

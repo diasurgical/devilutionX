@@ -143,22 +143,22 @@ void FillSolidBlockTbls()
 			pSBFile = LoadFileInMem("Levels\\TownData\\Town.SOL", &dwTiles);
 		break;
 	case DTYPE_CATHEDRAL:
-		if (currlevel < 17)
-			pSBFile = LoadFileInMem("Levels\\L1Data\\L1.SOL", &dwTiles);
-		else
-			pSBFile = LoadFileInMem("NLevels\\L5Data\\L5.SOL", &dwTiles);
+		pSBFile = LoadFileInMem("Levels\\L1Data\\L1.SOL", &dwTiles);
 		break;
 	case DTYPE_CATACOMBS:
 		pSBFile = LoadFileInMem("Levels\\L2Data\\L2.SOL", &dwTiles);
 		break;
 	case DTYPE_CAVES:
-		if (currlevel < 17)
-			pSBFile = LoadFileInMem("Levels\\L3Data\\L3.SOL", &dwTiles);
-		else
-			pSBFile = LoadFileInMem("NLevels\\L6Data\\L6.SOL", &dwTiles);
+		pSBFile = LoadFileInMem("Levels\\L3Data\\L3.SOL", &dwTiles);
 		break;
 	case DTYPE_HELL:
 		pSBFile = LoadFileInMem("Levels\\L4Data\\L4.SOL", &dwTiles);
+		break;
+	case DTYPE_NEST:
+		pSBFile = LoadFileInMem("NLevels\\L6Data\\L6.SOL", &dwTiles);
+		break;
+	case DTYPE_CRYPT:
+		pSBFile = LoadFileInMem("NLevels\\L5Data\\L5.SOL", &dwTiles);
 		break;
 	default:
 		app_fatal("FillSolidBlockTbls");
@@ -437,7 +437,7 @@ void DRLG_CreateThemeRoom(int themeIndex)
 					dungeon[xx][yy] = 3;
 				}
 			}
-			if (leveltype == DTYPE_CAVES) {
+			if (leveltype == DTYPE_CAVES || leveltype == DTYPE_NEST) {
 				if (yy == ly || yy == hy - 1) {
 					dungeon[xx][yy] = 134;
 				} else if (xx == lx || xx == hx - 1) {
@@ -464,7 +464,7 @@ void DRLG_CreateThemeRoom(int themeIndex)
 		dungeon[lx][hy - 1] = 9;
 		dungeon[hx - 1][hy - 1] = 6;
 	}
-	if (leveltype == DTYPE_CAVES) {
+	if (leveltype == DTYPE_CAVES || leveltype == DTYPE_NEST) {
 		dungeon[lx][ly] = 150;
 		dungeon[hx - 1][ly] = 151;
 		dungeon[lx][hy - 1] = 152;
@@ -487,7 +487,7 @@ void DRLG_CreateThemeRoom(int themeIndex)
 			break;
 		}
 	}
-	if (leveltype == DTYPE_CAVES) {
+	if (leveltype == DTYPE_CAVES || leveltype == DTYPE_NEST) {
 		switch (random_(0, 2)) {
 		case 0:
 			dungeon[hx - 1][(ly + hy) / 2] = 147;
@@ -547,7 +547,7 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, int rnd
 				themeLoc[themeCount].y = j + 1;
 				themeLoc[themeCount].width = themeW;
 				themeLoc[themeCount].height = themeH;
-				if (leveltype == DTYPE_CAVES)
+				if (leveltype == DTYPE_CAVES || leveltype == DTYPE_NEST)
 					DRLG_RectTrans(2 * i + 20, 2 * j + 20, 2 * (i + themeW) + 15, 2 * (j + themeH) + 15);
 				else
 					DRLG_MRectTrans(i + 1, j + 1, i + themeW, j + themeH);

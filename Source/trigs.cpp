@@ -794,12 +794,14 @@ void CheckTrigForce()
 			trigflag = ForceTownTrig();
 			break;
 		case DTYPE_CATHEDRAL:
+		case DTYPE_CRYPT:
 			trigflag = ForceL1Trig();
 			break;
 		case DTYPE_CATACOMBS:
 			trigflag = ForceL2Trig();
 			break;
 		case DTYPE_CAVES:
+		case DTYPE_NEST:
 			trigflag = ForceL3Trig();
 			break;
 		case DTYPE_HELL:

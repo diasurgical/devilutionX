@@ -43,7 +43,6 @@ BOOLEAN UseBarbarianTest;
 BOOLEAN UseMultiTest;
 int sgnTimeoutCurs;
 char sgbMouseDown;
-int color_cycle_timer;
 int ticks_per_sec = 20;
 WORD tick_delay = 50;
 /** Game options */
@@ -1474,17 +1473,10 @@ void LoadLvlGFX()
 		pSpecialCels = LoadFileInMem("Levels\\TownData\\TownS.CEL", NULL);
 		break;
 	case DTYPE_CATHEDRAL:
-		if (currlevel < 21) {
-			pDungeonCels = LoadFileInMem("Levels\\L1Data\\L1.CEL", NULL);
-			pMegaTiles = LoadFileInMem("Levels\\L1Data\\L1.TIL", NULL);
-			pLevelPieces = LoadFileInMem("Levels\\L1Data\\L1.MIN", NULL);
-			pSpecialCels = LoadFileInMem("Levels\\L1Data\\L1S.CEL", NULL);
-		} else {
-			pDungeonCels = LoadFileInMem("NLevels\\L5Data\\L5.CEL", NULL);
-			pMegaTiles = LoadFileInMem("NLevels\\L5Data\\L5.TIL", NULL);
-			pLevelPieces = LoadFileInMem("NLevels\\L5Data\\L5.MIN", NULL);
-			pSpecialCels = LoadFileInMem("NLevels\\L5Data\\L5S.CEL", NULL);
-		}
+		pDungeonCels = LoadFileInMem("Levels\\L1Data\\L1.CEL", NULL);
+		pMegaTiles = LoadFileInMem("Levels\\L1Data\\L1.TIL", NULL);
+		pLevelPieces = LoadFileInMem("Levels\\L1Data\\L1.MIN", NULL);
+		pSpecialCels = LoadFileInMem("Levels\\L1Data\\L1S.CEL", NULL);
 		break;
 	case DTYPE_CATACOMBS:
 		pDungeonCels = LoadFileInMem("Levels\\L2Data\\L2.CEL", NULL);
@@ -1493,15 +1485,9 @@ void LoadLvlGFX()
 		pSpecialCels = LoadFileInMem("Levels\\L2Data\\L2S.CEL", NULL);
 		break;
 	case DTYPE_CAVES:
-		if (currlevel < 17) {
-			pDungeonCels = LoadFileInMem("Levels\\L3Data\\L3.CEL", NULL);
-			pMegaTiles = LoadFileInMem("Levels\\L3Data\\L3.TIL", NULL);
-			pLevelPieces = LoadFileInMem("Levels\\L3Data\\L3.MIN", NULL);
-		} else {
-			pDungeonCels = LoadFileInMem("NLevels\\L6Data\\L6.CEL", NULL);
-			pMegaTiles = LoadFileInMem("NLevels\\L6Data\\L6.TIL", NULL);
-			pLevelPieces = LoadFileInMem("NLevels\\L6Data\\L6.MIN", NULL);
-		}
+		pDungeonCels = LoadFileInMem("Levels\\L3Data\\L3.CEL", NULL);
+		pMegaTiles = LoadFileInMem("Levels\\L3Data\\L3.TIL", NULL);
+		pLevelPieces = LoadFileInMem("Levels\\L3Data\\L3.MIN", NULL);
 		pSpecialCels = LoadFileInMem("Levels\\L1Data\\L1S.CEL", NULL);
 		break;
 	case DTYPE_HELL:
@@ -1509,6 +1495,18 @@ void LoadLvlGFX()
 		pMegaTiles = LoadFileInMem("Levels\\L4Data\\L4.TIL", NULL);
 		pLevelPieces = LoadFileInMem("Levels\\L4Data\\L4.MIN", NULL);
 		pSpecialCels = LoadFileInMem("Levels\\L2Data\\L2S.CEL", NULL);
+		break;
+	case DTYPE_NEST:
+		pDungeonCels = LoadFileInMem("NLevels\\L6Data\\L6.CEL", NULL);
+		pMegaTiles = LoadFileInMem("NLevels\\L6Data\\L6.TIL", NULL);
+		pLevelPieces = LoadFileInMem("NLevels\\L6Data\\L6.MIN", NULL);
+		pSpecialCels = LoadFileInMem("Levels\\L1Data\\L1S.CEL", NULL);
+		break;
+	case DTYPE_CRYPT:
+		pDungeonCels = LoadFileInMem("NLevels\\L5Data\\L5.CEL", NULL);
+		pMegaTiles = LoadFileInMem("NLevels\\L5Data\\L5.TIL", NULL);
+		pLevelPieces = LoadFileInMem("NLevels\\L5Data\\L5.MIN", NULL);
+		pSpecialCels = LoadFileInMem("NLevels\\L5Data\\L5S.CEL", NULL);
 		break;
 	default:
 		app_fatal("LoadLvlGFX");
@@ -1541,11 +1539,7 @@ void CreateLevel(int lvldir)
 		CreateL5Dungeon(glSeedTbl[currlevel], lvldir);
 		InitL1Triggers();
 		Freeupstairs();
-		if (currlevel < 21) {
-			LoadRndLvlPal(1);
-		} else {
-			LoadRndLvlPal(5);
-		}
+		LoadRndLvlPal(1);
 		break;
 	case DTYPE_CATACOMBS:
 		CreateL2Dungeon(glSeedTbl[currlevel], lvldir);
@@ -1557,17 +1551,25 @@ void CreateLevel(int lvldir)
 		CreateL3Dungeon(glSeedTbl[currlevel], lvldir);
 		InitL3Triggers();
 		Freeupstairs();
-		if (currlevel < 17) {
-			LoadRndLvlPal(3);
-		} else {
-			LoadRndLvlPal(6);
-		}
+		LoadRndLvlPal(3);
 		break;
 	case DTYPE_HELL:
 		CreateL4Dungeon(glSeedTbl[currlevel], lvldir);
 		InitL4Triggers();
 		Freeupstairs();
 		LoadRndLvlPal(4);
+		break;
+	case DTYPE_NEST:
+		CreateL3Dungeon(glSeedTbl[currlevel], lvldir);
+		InitL3Triggers();
+		Freeupstairs();
+		LoadRndLvlPal(6);
+		break;
+	case DTYPE_CRYPT:
+		CreateL5Dungeon(glSeedTbl[currlevel], lvldir);
+		InitL1Triggers();
+		Freeupstairs();
+		LoadRndLvlPal(5);
 		break;
 	default:
 		app_fatal("CreateLevel");
@@ -1921,14 +1923,14 @@ void diablo_color_cyc_logic()
 	if (!palette_get_color_cycling())
 		return;
 
-	if (leveltype == DTYPE_HELL) {
-		lighting_color_cycling();
-	} else if (currlevel >= 21) {
-		palette_update_crypt();
-	} else if (currlevel >= 17) {
-		palette_update_hive();
-	} else if (leveltype == DTYPE_CAVES) {
+	if (leveltype == DTYPE_CAVES) {
 		palette_update_caves();
+	} else if (leveltype == DTYPE_HELL) {
+		lighting_color_cycling();
+	} else if (leveltype == DTYPE_NEST) {
+		palette_update_hive();
+	} else if (leveltype == DTYPE_CRYPT) {
+		palette_update_crypt();
 	}
 }
 
